@@ -21,7 +21,7 @@ struct Hourglass																	// This struct is called Hourglass instead of C
 	uchar	minutes;
 	float	seconds;
 
-	uint previous_ticks;
+	uint previousTicks;
 };
 
 #endif // !__HOURGLASS_H__

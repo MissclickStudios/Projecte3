@@ -17,7 +17,7 @@ Hourglass::Hourglass(uint hours, uchar minutes, float seconds)
 	this->minutes	= minutes;
 	this->seconds	= seconds;
 
-	previous_ticks	= 0;
+	previousTicks	= 0;
 }
 
 /*void Hourglass::Update()
@@ -64,6 +64,6 @@ void Hourglass::ResetClock()
 
 std::string Hourglass::GetTimeAsString()
 {
-	std::string time_string = std::to_string(hours) + "h " + std::to_string(minutes) + "m " + std::to_string(seconds) + "s";
-	return time_string;
+	std::string timeString = std::to_string(hours) + "h " + std::to_string(minutes) + "m " + std::to_string(seconds) + "s";
+	return timeString;
 }
