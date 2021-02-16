@@ -8,7 +8,7 @@ namespace Random
 {
 	namespace LCG																// RNG library included with MathGeoLib. Average Performance (Real random factor...)
 	{	
-		static math::LCG lcg_rand;
+		static math::LCG lcgRand;
 
 		uint32	GetRandomUint();												// 
 		uint32	GetBoundedRandomUint(uint32 min = 0, uint32 max = 4294967295);	// 

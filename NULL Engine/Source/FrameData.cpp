@@ -4,51 +4,51 @@
 
 FrameData::FrameData()
 {
-	time_since_start		= 0;
-	frame_count				= 0;
-	frames_this_second		= 0;
-	frames_last_second		= 0;
+	timeSinceStart		= 0;
+	frameCount				= 0;
+	framesThisSecond		= 0;
+	framesLastSecond		= 0;
 
-	avg_fps					= 0.0f;
-	ms_last_frame			= 0;
+	avgFps					= 0.0f;
+	msLastFrame			= 0;
 
 	dt						= 0.0f;
 
-	frames_this_second		= 0;
-	milliseconds_counter	= 0;
+	framesThisSecond		= 0;
+	millisecondsCounter	= 0;
 }
 
 void FrameData::Update(uint ms)
 {
-	++frame_count;																			// --- DATA SINCE STARTUP
-	time_since_start	+= ms;																// 
-	avg_fps				= (float)frame_count / (time_since_start / 1000.0f);				// ----------------------
+	++frameCount;																			// --- DATA SINCE STARTUP
+	timeSinceStart	+= ms;																// 
+	avgFps				= (float)frameCount / (timeSinceStart / 1000.0f);				// ----------------------
 
-	++frames_this_second;																	// --- FRAMES LAST SECOND
-	milliseconds_counter += ms;																// 
-	if (milliseconds_counter > 1000)														// 
+	++framesThisSecond;																	// --- FRAMES LAST SECOND
+	millisecondsCounter += ms;																// 
+	if (millisecondsCounter > 1000)														// 
 	{																						// 
-		frames_last_second		= frames_this_second;										// 
-		frames_this_second		= 0;														// 
-		milliseconds_counter	= 0;														// 
+		framesLastSecond		= framesThisSecond;										// 
+		framesThisSecond		= 0;														// 
+		millisecondsCounter	= 0;														// 
 	}																						// ----------------------
 
-	ms_last_frame			= ms;															// --- DELTA TIME DATA
+	msLastFrame			= ms;															// --- DELTA TIME DATA
 	dt						= (float)ms / 1000.0f;											// -------------------
 }
 
 void FrameData::ResetData()
 {
-	time_since_start		= 0;
-	frame_count				= 0;
-	frames_this_second		= 0;
-	frames_last_second		= 0;
+	timeSinceStart		= 0;
+	frameCount				= 0;
+	framesThisSecond		= 0;
+	framesLastSecond		= 0;
 
-	avg_fps					= 0.0f;
-	ms_last_frame			= 0;
+	avgFps					= 0.0f;
+	msLastFrame			= 0;
 
 	dt						= 0.0f;
 
-	frames_this_second		= 0;
-	milliseconds_counter	= 0;
+	framesThisSecond		= 0;
+	millisecondsCounter	= 0;
 }

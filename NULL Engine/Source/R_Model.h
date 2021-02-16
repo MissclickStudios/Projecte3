@@ -16,7 +16,7 @@ typedef unsigned __int32 uint32;
 struct ModelNode
 {
 	ModelNode();
-	ModelNode(const char* name, uint32 UID, uint32 parent_UID, Transform transform, uint32 mesh_UID, uint32 material_UID, uint32 texture_UID, std::string texture_name);
+	ModelNode(const char* name, uint32 UID, uint32 parentUID, Transform transform, uint32 meshUID, uint32 materialUID, uint32 textureUID, std::string textureName);
 
 	bool Save(ParsonNode& root) const; 
 	bool Load(const ParsonNode& root); 

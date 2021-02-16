@@ -41,8 +41,8 @@ public:
 
 	bool CleanUp() override;
 
-	bool SaveMeta(ParsonNode& meta_root) const override;
-	bool LoadMeta(const ParsonNode& meta_root) override;
+	bool SaveMeta(ParsonNode& metaRoot) const override;
+	bool LoadMeta(const ParsonNode& metaRoot) override;
 
 public:
 	Texture			GetTextureData			() const;
@@ -60,8 +60,8 @@ public:
 	const char*		GetTextureFormatString	() const;
 
 private:
-	Texture			tex_data;
-	TextureSettings texture_settings;
+	Texture			texData;
+	TextureSettings textureSettings;
 };
 
 #endif // !__R_TEXTURE_H__

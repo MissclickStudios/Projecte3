@@ -17,52 +17,52 @@ void Time::Sleep(uint ms)
 void Time::Real::InitRealClock()
 {
 	//startup_timer.Start();
-	frame_timer.Start();
+	frameTimer.Start();
 }
 
 void Time::Real::Update()
 {
-	uint ms = frame_timer.Read();
+	uint ms = frameTimer.Read();
 
 	clock.Update(ms);
-	frame_data.Update(ms);
+	frameData.Update(ms);
 
-	frame_timer.Start();
+	frameTimer.Start();
 }
 
-void Time::Real::DelayUntilFrameCap(uint frame_cap)
+void Time::Real::DelayUntilFrameCap(uint frameCap)
 {
-	if (frame_cap == 0)														// If frame_cap = 0, then no delay will be applied.
+	if (frameCap == 0)														// If frame_cap = 0, then no delay will be applied.
 	{
 		return;
 	}
 	
-	uint32 current_frame_ms = Utilities::frame_timer.Read();
-	uint32 frame_cap_ms		= 1000 / frame_cap;
+	uint32 currentFrameMs = Utilities::frameTimer.Read();
+	uint32 frameCapMs		= 1000 / frameCap;
 
-	if (current_frame_ms < frame_cap_ms)
+	if (currentFrameMs < frameCapMs)
 	{
 		//precise_delay_timer.Start();
 
-		uint required_delay = frame_cap_ms - current_frame_ms;
+		uint requiredDelay = frameCapMs - currentFrameMs;
 
-		Sleep(required_delay);
+		Sleep(requiredDelay);
 	}
 }
 
 void Time::Real::StartPerfTimer()
 {
-	perf_timer.Start();
+	perfTimer.Start();
 }
 
 void Time::Real::StopPerfTimer()
 {
-	perf_timer.Stop();
+	perfTimer.Stop();
 }
 
 float Time::Real::PeekPerfTimer()
 {
-	return perf_timer.ReadMs();
+	return perfTimer.ReadMs();
 }
 
 Hourglass Time::Real::GetClock()
@@ -72,124 +72,124 @@ Hourglass Time::Real::GetClock()
 
 FrameData Time::Real::GetFrameData()
 {
-	return frame_data;
+	return frameData;
 }
 
 uint64 Time::Real::GetFrameCount()
 {
-	return frame_data.frame_count;
+	return frameData.frameCount;
 }
 
 float Time::Real::GetTimeSinceStart()
 {
-	return frame_data.time_since_start;
+	return frameData.timeSinceStart;
 }
 
 uint32 Time::Real::GetFramesLastSecond()
 {
-	return frame_data.frames_last_second;
+	return frameData.framesLastSecond;
 }
 
 float Time::Real::GetAverageFPS()
 {
-	return frame_data.avg_fps;
+	return frameData.avgFps;
 }
 
 uint32 Time::Real::GetMsLastFrame()
 {
-	return frame_data.ms_last_frame;
+	return frameData.msLastFrame;
 }
 
 float Time::Real::GetDT()
 {
-	return frame_data.dt;
+	return frameData.dt;
 }
 
 // --- GAME CLOCK METHODS ---
 void Time::Game::Update()
 {
-	uint ms = (uint)((float)game_frame_timer.Read() * time_scale);
+	uint ms = (uint)((float)gameFrameTimer.Read() * timeScale);
 
-	game_clock.Update(ms);
-	game_frame_data.Update(ms);
+	gameClock.Update(ms);
+	gameFrameData.Update(ms);
 
-	game_frame_timer.Start();
+	gameFrameTimer.Start();
 }
 
 float Time::Game::GetTimeScale()
 {
-	return time_scale;
+	return timeScale;
 }
 
-void Time::Game::SetTimeScale(float new_time_scale)
+void Time::Game::SetTimeScale(float newTimeScale)
 {
-	if (new_time_scale < 0.25f || new_time_scale > 4.0f)
+	if (newTimeScale < 0.25f || newTimeScale > 4.0f)
 	{
 		LOG("[ERROR] Time: Cannot set Game Time Scale below 0.25 or above 4.00!");
 		return;
 	}
 	
-	time_scale = new_time_scale;
+	timeScale = newTimeScale;
 }
 
 void Time::Game::Play()
 {
-	game_frame_timer.Start();
+	gameFrameTimer.Start();
 }
 
 void Time::Game::Pause()
 {
-	game_frame_timer.Stop();
+	gameFrameTimer.Stop();
 }
 
-void Time::Game::Step(uint num_steps)
+void Time::Game::Step(uint numSteps)
 {
 
 }
 
 void Time::Game::Stop()
 {
-	game_frame_timer.Stop();
-	game_clock.ResetClock();
-	game_frame_data.ResetData();
+	gameFrameTimer.Stop();
+	gameClock.ResetClock();
+	gameFrameData.ResetData();
 }
 
 Hourglass Time::Game::GetClock()
 {
-	return game_clock;
+	return gameClock;
 }
 
 FrameData Time::Game::GetFrameData()
 {
-	return game_frame_data;
+	return gameFrameData;
 }
 
 uint64 Time::Game::GetFrameCount()
 {
-	return game_frame_data.frame_count;
+	return gameFrameData.frameCount;
 }
 
 float Time::Game::GetTimeSinceStart()
 {
-	return game_frame_data.time_since_start;
+	return gameFrameData.timeSinceStart;
 }
 
 uint32 Time::Game::GetFramesLastSecond()
 {
-	return game_frame_data.frames_last_second;
+	return gameFrameData.framesLastSecond;
 }
 
 float Time::Game::GetAverageFPS()
 {
-	return game_frame_data.avg_fps;
+	return gameFrameData.avgFps;
 }
 
 uint32 Time::Game::GetMsLastFrame()
 {
-	return game_frame_data.ms_last_frame;
+	return gameFrameData.msLastFrame;
 }
 
 float Time::Game::GetDT()
 {
-	return game_frame_data.dt;
+	return gameFrameData.dt;
 }

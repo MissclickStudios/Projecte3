@@ -13,8 +13,8 @@ public:
 
 	bool CleanUp();
 
-	bool SaveMeta(ParsonNode& meta_root) const override;
-	bool LoadMeta(const ParsonNode& meta_root) override;
+	bool SaveMeta(ParsonNode& metaRoot) const override;
+	bool LoadMeta(const ParsonNode& metaRoot) override;
 
 private:
 	// NO IMPORT SETTINGS?
