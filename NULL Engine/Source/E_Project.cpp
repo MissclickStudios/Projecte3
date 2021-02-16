@@ -22,25 +22,25 @@
 #define MAX_DIRECTORY_SIZE	500
 
 E_Project::E_Project() : EditorPanel("Project"),
-directory_to_display			(nullptr),
-refresh_root_directory			(true),
-refresh_directory_to_display	(false),
-refresh_window_size				(true),
-icons_are_loaded				(false),
-dragged_resource				(nullptr)
+directoryToDisplay			(nullptr),
+refreshRootDirectory			(true),
+refreshDirectoryToDisplay	(false),
+refreshWindowSize				(true),
+iconsAreLoaded				(false),
+draggedResource				(nullptr)
 {
-	directory_to_display = new char[MAX_DIRECTORY_SIZE];
-	sprintf_s(directory_to_display, MAX_DIRECTORY_SIZE, "%s", ASSETS_PATH);
+	directoryToDisplay = new char[MAX_DIRECTORY_SIZE];
+	sprintf_s(directoryToDisplay, MAX_DIRECTORY_SIZE, "%s", ASSETS_PATH);
 
-	icon_size		= ImVec2(64.0f, 64.0f);
-	icon_offset		= ImVec2(20.0f, 0.0f);
-	text_offset		= ImVec2(icon_offset.x, icon_size.y);
-	win_size		= ImVec2(0.0f, 0.0f);
+	iconSize		= ImVec2(64.0f, 64.0f);
+	iconOffset		= ImVec2(20.0f, 0.0f);
+	textOffset		= ImVec2(iconOffset.x, iconSize.y);
+	winSize		= ImVec2(0.0f, 0.0f);
 }
 
 E_Project::~E_Project()
 {
-	delete[] directory_to_display;
+	delete[] directoryToDisplay;
 }
 
 bool E_Project::Draw(ImGuiIO& io)
@@ -66,8 +66,8 @@ bool E_Project::CleanUp()
 {
 	bool ret = true;
 
-	root_directory.children.clear();
-	dragged_resource = nullptr;
+	rootDirectory.children.clear();
+	draggedResource = nullptr;
 	ClearResourcesToDisplay();
 
 	return ret;
@@ -76,70 +76,70 @@ bool E_Project::CleanUp()
 // --- E_PRROJECT METHODS ---
 Resource* E_Project::GetDraggedResource()
 {
-	return dragged_resource;
+	return draggedResource;
 }
 
 void E_Project::CheckFlags()
 {
-	if (!icons_are_loaded)
+	if (!iconsAreLoaded)
 	{
-		App->editor->GetEngineIconsThroughEditor(engine_icons);
-		icons_are_loaded = true;
+		App->editor->GetEngineIconsThroughEditor(engineIcons);
+		iconsAreLoaded = true;
 	}
 	
-	if (refresh_window_size)
+	if (refreshWindowSize)
 	{
 		OnResize();
-		refresh_window_size = false;
+		refreshWindowSize = false;
 	}
 
-	if (refresh_root_directory)
+	if (refreshRootDirectory)
 	{
 		std::vector<std::string> extensions_to_filter;
 		extensions_to_filter.push_back("meta");
 
-		root_directory = App->file_system->GetAllFiles(ASSETS_DIRECTORY, nullptr, &extensions_to_filter);
+		rootDirectory = App->file_system->GetAllFiles(ASSETS_DIRECTORY, nullptr, &extensions_to_filter);
 
 		extensions_to_filter.clear();
 
-		refresh_root_directory = false;
+		refreshRootDirectory = false;
 	}
 
-	if (refresh_directory_to_display)
+	if (refreshDirectoryToDisplay)
 	{
-		if (directory_to_display == nullptr)
+		if (directoryToDisplay == nullptr)
 		{
-			refresh_directory_to_display = false;
+			refreshDirectoryToDisplay = false;
 			return;
 		}
 		
 		ClearResourcesToDisplay();
 
-		bool success = root_directory.FindChild(directory_to_display, display_directory);
+		bool success = rootDirectory.FindChild(directoryToDisplay, displayDirectory);
 		if (!success)
 		{
-			LOG("[ERROR] Editor Project Panel: Could not Refresh Directory to Display! Error: Could not get { %s }'s PathNode.", directory_to_display);
-			refresh_directory_to_display = false;
+			LOG("[ERROR] Editor Project Panel: Could not Refresh Directory to Display! Error: Could not get { %s }'s PathNode.", directoryToDisplay);
+			refreshDirectoryToDisplay = false;
 			return;
 		}
 
-		for (uint i = 0; i < display_directory.children.size(); ++i)
+		for (uint i = 0; i < displayDirectory.children.size(); ++i)
 		{
-			Resource* resource = App->resource_manager->GetResourceFromMetaFile(display_directory.children[i].path.c_str());
+			Resource* resource = App->resource_manager->GetResourceFromMetaFile(displayDirectory.children[i].path.c_str());
 
 			if (resource != nullptr)
 			{
-				resources_to_display.push_back(resource);
+				resourcesToDisplay.push_back(resource);
 			}
 		}
 
-		refresh_directory_to_display = false;
+		refreshDirectoryToDisplay = false;
 	}
 }
 
 void E_Project::OnResize()
 {
-	win_size = ImVec2((float)App->window->GetWidth(), (float)App->window->GetHeight());
+	winSize = ImVec2((float)App->window->GetWidth(), (float)App->window->GetHeight());
 }
 
 void E_Project::GenerateDockspace(ImGuiIO& io) const
@@ -172,7 +172,7 @@ void E_Project::DrawAssetsTree()
 	if (ImGui::TreeNodeEx(ASSETS_PATH, ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		//DrawDirectoriesTree(ASSETS_PATH, DOTLESS_META_EXTENSION);
-		DrawDirectoriesTree(root_directory);
+		DrawDirectoriesTree(rootDirectory);
 		ImGui::TreePop();
 	}
 
@@ -183,7 +183,7 @@ void E_Project::DrawFolderExplorer()
 {
 	ImGui::Begin("FolderExplorer", false);
 
-	ImGui::Text(directory_to_display);
+	ImGui::Text(directoryToDisplay);
 
 	ImGui::Separator();
 
@@ -211,8 +211,8 @@ void E_Project::DrawDirectoriesTree(const char* root_directory, const char* exte
 		{
 			if (ImGui::IsItemClicked())
 			{
-				sprintf_s(directory_to_display, MAX_DIRECTORY_SIZE, "%s%s/", root_dir.c_str(), directories[i].c_str());
-				refresh_directory_to_display = true;
+				sprintf_s(directoryToDisplay, MAX_DIRECTORY_SIZE, "%s%s/", root_dir.c_str(), directories[i].c_str());
+				refreshDirectoryToDisplay = true;
 			}
 			
 			DrawDirectoriesTree(path.c_str(), extension_to_filter);
@@ -247,10 +247,10 @@ void E_Project::DrawDirectoriesTree(const PathNode& root_node)
 		{
 			if (ImGui::IsItemClicked())
 			{
-				if (strcmp(directory_to_display, path.c_str()) != 0)
+				if (strcmp(directoryToDisplay, path.c_str()) != 0)
 				{
-					sprintf_s(directory_to_display, MAX_DIRECTORY_SIZE, "%s", path.c_str());
-					refresh_directory_to_display = true;
+					sprintf_s(directoryToDisplay, MAX_DIRECTORY_SIZE, "%s", path.c_str());
+					refreshDirectoryToDisplay = true;
 				}
 			}
 
@@ -274,40 +274,40 @@ void E_Project::DrawResourceIcons()
 
 	ImVec2 original_pos		= ImVec2(0.0f, 0.0f);
 	ImTextureID tex_id		= 0;
-	ImVec2 item_offset		= ImVec2(icon_size.x + icon_offset.x, 0.0f);
+	ImVec2 item_offset		= ImVec2(iconSize.x + iconOffset.x, 0.0f);
 	ImVec2 next_item_pos	= ImVec2(0.0f, 0.0f);
 
 	GoToPreviousDirectoryButton();
 
-	for (uint i = 0; i < resources_to_display.size(); ++i)
+	for (uint i = 0; i < resourcesToDisplay.size(); ++i)
 	{	
 		original_pos = ImGui::GetCursorPos();
 		
-		tex_id = GetIconTexID(resources_to_display[i]);
-		ImGui::SetCursorPos(original_pos + icon_offset);
+		tex_id = GetIconTexID(resourcesToDisplay[i]);
+		ImGui::SetCursorPos(original_pos + iconOffset);
 		//ImGui::ImageButtonEx(i + 1, tex_id, icon_size, uv_0, uv_1, padding, bg_color, tint_color);
-		ImGui::Image(tex_id, icon_size, uv_0, uv_1, tint_color, bg_color);
+		ImGui::Image(tex_id, iconSize, uv_0, uv_1, tint_color, bg_color);
 
-		if (resources_to_display[i]->GetType() == RESOURCE_TYPE::FOLDER)
+		if (resourcesToDisplay[i]->GetType() == RESOURCE_TYPE::FOLDER)
 		{
 			if (ImGui::IsItemClicked())
 			{
-				std::string path = resources_to_display[i]->GetAssetsPath();
-				if (strcmp(directory_to_display , path.c_str()) != 0)
+				std::string path = resourcesToDisplay[i]->GetAssetsPath();
+				if (strcmp(directoryToDisplay , path.c_str()) != 0)
 				{
-					sprintf_s(directory_to_display, MAX_DIRECTORY_SIZE, "%s", path.c_str());
-					refresh_directory_to_display = true;
+					sprintf_s(directoryToDisplay, MAX_DIRECTORY_SIZE, "%s", path.c_str());
+					refreshDirectoryToDisplay = true;
 					return;
 				}
 			}
 		}
 		else
 		{
-			ResourceDragAndDropEvent(resources_to_display[i], tex_id);
+			ResourceDragAndDropEvent(resourcesToDisplay[i], tex_id);
 		}
 
-		ImGui::SetCursorPos(original_pos + text_offset);
-		ImGui::Text(GetDisplayString(resources_to_display[i]->GetAssetsFile(), 8).c_str());
+		ImGui::SetCursorPos(original_pos + textOffset);
+		ImGui::Text(GetDisplayString(resourcesToDisplay[i]->GetAssetsFile(), 8).c_str());
 
 		next_item_pos = original_pos + item_offset;
 		if (next_item_pos.x + item_offset.x < ImGui::GetWindowWidth())
@@ -325,22 +325,22 @@ void E_Project::GoToPreviousDirectoryButton()
 	ImVec4 tint_color	= ImVec4(1.0f, 1.0f, 1.0f, 0.5f);
 	
 	ImVec2 original_pos = ImGui::GetCursorPos();
-	ImVec2 item_offset	= ImVec2(icon_size.x + icon_offset.x, 0.0f);
+	ImVec2 item_offset	= ImVec2(iconSize.x + iconOffset.x, 0.0f);
 	
-	ImGui::SetCursorPos(original_pos + icon_offset);
-	ImGui::Image((ImTextureID)engine_icons.folder_icon->GetTextureID(), icon_size, uv_0, uv_1, tint_color, bg_color);
+	ImGui::SetCursorPos(original_pos + iconOffset);
+	ImGui::Image((ImTextureID)engineIcons.folder_icon->GetTextureID(), iconSize, uv_0, uv_1, tint_color, bg_color);
 
 	if (ImGui::IsItemClicked())
 	{
-		std::string prev_dir	= directory_to_display;
+		std::string prev_dir	= directoryToDisplay;
 		uint end_pos			= prev_dir.find_last_of("/");
 		prev_dir				= prev_dir.substr(0, end_pos);
 
-		sprintf_s(directory_to_display, MAX_DIRECTORY_SIZE, "%s", prev_dir.c_str());
-		refresh_directory_to_display = true;
+		sprintf_s(directoryToDisplay, MAX_DIRECTORY_SIZE, "%s", prev_dir.c_str());
+		refreshDirectoryToDisplay = true;
 	}
 
-	ImGui::SetCursorPos(original_pos + text_offset);
+	ImGui::SetCursorPos(original_pos + textOffset);
 	ImGui::Text("../");
 
 	ImVec2 next_item_pos = original_pos + item_offset;
@@ -363,9 +363,9 @@ void E_Project::ResourceDragAndDropEvent(Resource* resource, ImTextureID texture
 		ImGui::SetDragDropPayload("DRAGGED_RESOURCE", resource, sizeof(Resource));
 	
 		ImGui::Text("Dragging %s", resource->GetAssetsFile());
-		ImGui::Image(texture_id, icon_size);
+		ImGui::Image(texture_id, iconSize);
 
-		dragged_resource = resource;
+		draggedResource = resource;
 
 		ImGui::EndDragDropSource();
 	}
@@ -394,13 +394,13 @@ ImTextureID E_Project::GetIconTexID(Resource* resource) const
 	RESOURCE_TYPE type = resource->GetType();
 	switch (type)
 	{
-	case RESOURCE_TYPE::MODEL:		{ tex_id = (ImTextureID)engine_icons.model_icon->GetTextureID(); }		break;
-	case RESOURCE_TYPE::MESH:		{ tex_id = (ImTextureID)engine_icons.file_icon->GetTextureID(); }		break;
-	case RESOURCE_TYPE::MATERIAL:	{ tex_id = (ImTextureID)engine_icons.material_icon->GetTextureID(); }	break;
+	case RESOURCE_TYPE::MODEL:		{ tex_id = (ImTextureID)engineIcons.model_icon->GetTextureID(); }		break;
+	case RESOURCE_TYPE::MESH:		{ tex_id = (ImTextureID)engineIcons.file_icon->GetTextureID(); }		break;
+	case RESOURCE_TYPE::MATERIAL:	{ tex_id = (ImTextureID)engineIcons.material_icon->GetTextureID(); }	break;
 	case RESOURCE_TYPE::TEXTURE:	{ tex_id = (ImTextureID)(((R_Texture*)resource)->GetTextureID()); }		break;
-	case RESOURCE_TYPE::FOLDER:		{ tex_id = (ImTextureID)engine_icons.folder_icon->GetTextureID(); }		break;
-	case RESOURCE_TYPE::SCENE:		{ tex_id = (ImTextureID)engine_icons.model_icon->GetTextureID(); }		break;
-	case RESOURCE_TYPE::ANIMATION:	{ tex_id = (ImTextureID)engine_icons.animation_icon->GetTextureID(); }	break;
+	case RESOURCE_TYPE::FOLDER:		{ tex_id = (ImTextureID)engineIcons.folder_icon->GetTextureID(); }		break;
+	case RESOURCE_TYPE::SCENE:		{ tex_id = (ImTextureID)engineIcons.model_icon->GetTextureID(); }		break;
+	case RESOURCE_TYPE::ANIMATION:	{ tex_id = (ImTextureID)engineIcons.animation_icon->GetTextureID(); }	break;
 	}
 
 	return tex_id;
@@ -427,10 +427,10 @@ std::string E_Project::GetDisplayString(std::string original_string, uint max_le
 
 void E_Project::ClearResourcesToDisplay()
 {
-	for (uint i = 0; i < resources_to_display.size(); ++i)
+	for (uint i = 0; i < resourcesToDisplay.size(); ++i)
 	{
-		App->resource_manager->FreeResource(resources_to_display[i]->GetUID());
+		App->resource_manager->FreeResource(resourcesToDisplay[i]->GetUID());
 	}
 	
-	resources_to_display.clear();
+	resourcesToDisplay.clear();
 }

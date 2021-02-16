@@ -22,16 +22,16 @@ E_Configuration::E_Configuration() : EditorPanel("Configuration")
 {
 	for (int i = 0; i < MAX_HISTOGRAM_SIZE; ++i)
 	{
-		FPS_data[i]	= 0;
-		ms_data[i]	= 0;
+		fpsData[i]	= 0;
+		msData[i]	= 0;
 	}
 
-	peak_FPS	= 0;
-	min_FPS		= 0;
-	peak_ms		= 0;
-	min_ms		= 0;
+	peakFps	= 0;
+	minFps		= 0;
+	peakMs		= 0;
+	minMs		= 0;
 
-	input_log_scroll_to_bottom = true;
+	inputLogScrollToBottom = true;
 }
 
 E_Configuration::~E_Configuration()
@@ -279,30 +279,30 @@ bool E_Configuration::SystemInfoMenu()
 
 	if (ImGui::CollapsingHeader("System"))
 	{
-		HardwareInfo hw_info = App->GetHardwareInfo();
+		HardwareInfo hwInfo = App->GetHardwareInfo();
 
 		ImGui::Indent();
 		
 		if (ImGui::CollapsingHeader("Software"))
 		{
-			SDLInfo(&hw_info);
+			SDLInfo(&hwInfo);
 
 			ImGui::Separator();
 
-			OpenGLInfo(&hw_info);
+			OpenGLInfo(&hwInfo);
 
 			ImGui::Separator();
 
-			DevILInfo(&hw_info);
+			DevILInfo(&hwInfo);
 		}
 
 		if (ImGui::CollapsingHeader("Hardware"))
 		{
-			CPUInfo(&hw_info);
+			CPUInfo(&hwInfo);
 
 			ImGui::Separator();
 
-			GPUInfo(&hw_info);
+			GPUInfo(&hwInfo);
 		}
 
 		ImGui::Unindent();
@@ -320,30 +320,30 @@ bool E_Configuration::TimeManagementMenu()
 		ImGui::TextColored(ImVec4(0.0f, 1.0f, 1.0f, 1.0f), "Real Time Clock:");
 		
 		Hourglass clock				= Time::Real::GetClock();
-		FrameData frame_data		= Time::Real::GetFrameData();
+		FrameData frameData		= Time::Real::GetFrameData();
 
 		ImGui::Text("Time Since Start:");	ImGui::SameLine(); ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "   %s",			clock.GetTimeAsString().c_str());
-		ImGui::Text("Frame Count:");		ImGui::SameLine(); ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "        %llu",	frame_data.frame_count);
+		ImGui::Text("Frame Count:");		ImGui::SameLine(); ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "        %llu",	frameData.frame_count);
 
-		ImGui::Text("Average FPS:");		ImGui::SameLine(); ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "        %.3f",	frame_data.avg_fps);
-		ImGui::Text("Frames Last Second:");	ImGui::SameLine(); ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), " %u",				frame_data.frames_last_second);
-		ImGui::Text("Ms Last Frame:");		ImGui::SameLine(); ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "      %u",		frame_data.ms_last_frame);
-		ImGui::Text("Delta Time:");			ImGui::SameLine(); ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "         %.3f",	frame_data.dt);
+		ImGui::Text("Average FPS:");		ImGui::SameLine(); ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "        %.3f",	frameData.avg_fps);
+		ImGui::Text("Frames Last Second:");	ImGui::SameLine(); ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), " %u",				frameData.frames_last_second);
+		ImGui::Text("Ms Last Frame:");		ImGui::SameLine(); ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "      %u",		frameData.ms_last_frame);
+		ImGui::Text("Delta Time:");			ImGui::SameLine(); ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "         %.3f",	frameData.dt);
 
 		ImGui::Separator();
 
 		ImGui::TextColored(ImVec4(0.0f, 1.0f, 1.0f, 1.0f), "Game Time Clock:");
 
-		Hourglass game_clock		= Time::Game::GetClock();
-		FrameData game_frame_data	= Time::Game::GetFrameData();
+		Hourglass gameClock		= Time::Game::GetClock();
+		FrameData gameFrameData	= Time::Game::GetFrameData();
 
-		ImGui::Text("Time Since Start:");	ImGui::SameLine(); ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "   %s",			game_clock.GetTimeAsString().c_str());
-		ImGui::Text("Frame Count:");		ImGui::SameLine(); ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "        %llu",	game_frame_data.frame_count);
+		ImGui::Text("Time Since Start:");	ImGui::SameLine(); ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "   %s",			gameClock.GetTimeAsString().c_str());
+		ImGui::Text("Frame Count:");		ImGui::SameLine(); ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "        %llu",	gameFrameData.frame_count);
 
-		ImGui::Text("Average FPS:");		ImGui::SameLine(); ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "        %.3f",	game_frame_data.avg_fps);
-		ImGui::Text("Frames Last Second:");	ImGui::SameLine(); ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), " %u",				game_frame_data.frames_last_second);
-		ImGui::Text("Ms Last Frame:");		ImGui::SameLine(); ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "      %u",		game_frame_data.ms_last_frame);
-		ImGui::Text("Delta Time:");			ImGui::SameLine(); ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "         %.3f",	game_frame_data.dt);
+		ImGui::Text("Average FPS:");		ImGui::SameLine(); ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "        %.3f",	gameFrameData.avg_fps);
+		ImGui::Text("Frames Last Second:");	ImGui::SameLine(); ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), " %u",				gameFrameData.frames_last_second);
+		ImGui::Text("Ms Last Frame:");		ImGui::SameLine(); ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "      %u",		gameFrameData.ms_last_frame);
+		ImGui::Text("Delta Time:");			ImGui::SameLine(); ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "         %.3f",	gameFrameData.dt);
 	}
 
 	return ret;
@@ -408,45 +408,45 @@ void E_Configuration::UpdateFrameData(int frames, int ms)
 {
 	for (uint i = 0; i < (MAX_HISTOGRAM_SIZE - 1); ++i)				// All elements in FPS[] and Ms[] are moved forward 1 position.
 	{																// 
-		FPS_data[i]	= FPS_data[i + 1];								// The last position is left "empty".
-		ms_data[i]	= ms_data[i + 1];								// 
+		fpsData[i]	= fpsData[i + 1];								// The last position is left "empty".
+		msData[i]	= msData[i + 1];								// 
 	}																// --------------------
 
-	FPS_data[MAX_HISTOGRAM_SIZE - 1]	= (float)frames;			// Adds to FPS[] the frames per second passed as argument to the last position in it.
-	ms_data[MAX_HISTOGRAM_SIZE - 1]		= (float)ms;				// Adds to Ms[] the ms per frame passed as argument to the last position in it.
+	fpsData[MAX_HISTOGRAM_SIZE - 1]	= (float)frames;			// Adds to FPS[] the frames per second passed as argument to the last position in it.
+	msData[MAX_HISTOGRAM_SIZE - 1]		= (float)ms;				// Adds to Ms[] the ms per frame passed as argument to the last position in it.
 }
 
 void E_Configuration::PlotFrameDataHistogram()
 {
-	float average_FPS	= 0.0f;
-	float average_ms	= 0.0f;
+	float averageFps	= 0.0f;
+	float averageMs	= 0.0f;
 
 	for (int i = 0; i < MAX_HISTOGRAM_SIZE; ++i)
 	{
-		average_FPS += FPS_data[i];
-		average_ms	+= ms_data[i];
+		averageFps += fpsData[i];
+		averageMs	+= msData[i];
 
-		peak_FPS	= (peak_FPS < (uint)FPS_data[i])	? (uint)FPS_data[i] : peak_FPS;
-		min_FPS		= (min_FPS > (uint)FPS_data[i])		? (uint)FPS_data[i] : min_FPS;
-		peak_ms		= (peak_ms < (uint)ms_data[i])		? (uint)ms_data[i] : peak_ms;
-		min_ms		= (min_ms > (uint)ms_data[i])		? (uint)ms_data[i] : min_ms;
+		peakFps	= (peakFps < (uint)fpsData[i])	? (uint)fpsData[i] : peakFps;
+		minFps		= (minFps > (uint)fpsData[i])		? (uint)fpsData[i] : minFps;
+		peakMs		= (peakMs < (uint)msData[i])		? (uint)msData[i] : peakMs;
+		minMs		= (minMs > (uint)msData[i])		? (uint)msData[i] : minMs;
 	}
 
-	average_FPS /= (float)MAX_HISTOGRAM_SIZE;
-	average_ms	/= (float)MAX_HISTOGRAM_SIZE;
+	averageFps /= (float)MAX_HISTOGRAM_SIZE;
+	averageMs	/= (float)MAX_HISTOGRAM_SIZE;
 
 	char overlay[32];
-	sprintf_s(overlay, "Framerate: %.2f", FPS_data[MAX_HISTOGRAM_SIZE - 1]);
-	ImGui::PlotHistogram("FPS", FPS_data, IM_ARRAYSIZE(FPS_data), 0, overlay, 0.0f, 120.0f, ImVec2(0, 80));
-	ImGui::Text("Average FPS:");	ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%.2f", average_FPS);
-	ImGui::Text("Peak FPS:");		ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "   %u", peak_FPS);
-	ImGui::Text("Min FPS:");		ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "    %u", min_FPS);
+	sprintf_s(overlay, "Framerate: %.2f", fpsData[MAX_HISTOGRAM_SIZE - 1]);
+	ImGui::PlotHistogram("FPS", fpsData, IM_ARRAYSIZE(fpsData), 0, overlay, 0.0f, 120.0f, ImVec2(0, 80));
+	ImGui::Text("Average FPS:");	ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%.2f", averageFps);
+	ImGui::Text("Peak FPS:");		ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "   %u", peakFps);
+	ImGui::Text("Min FPS:");		ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "    %u", minFps);
 
-	sprintf_s(overlay, "ms last frame: %.2f", ms_data[MAX_HISTOGRAM_SIZE - 1]);
-	ImGui::PlotHistogram("MS", ms_data, IM_ARRAYSIZE(ms_data), 0, overlay, 0.0f, 40.0f, ImVec2(0, 80));
-	ImGui::Text("Average ms: ");	ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%.2f", average_ms);
-	ImGui::Text("Peak ms:");		ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "   %u", peak_ms);
-	ImGui::Text("Min ms:");			ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "    %u", min_ms);
+	sprintf_s(overlay, "ms last frame: %.2f", msData[MAX_HISTOGRAM_SIZE - 1]);
+	ImGui::PlotHistogram("MS", msData, IM_ARRAYSIZE(msData), 0, overlay, 0.0f, 40.0f, ImVec2(0, 80));
+	ImGui::Text("Average ms: ");	ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%.2f", averageMs);
+	ImGui::Text("Peak ms:");		ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "   %u", peakMs);
+	ImGui::Text("Min ms:");			ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "    %u", minMs);
 }
 
 void E_Configuration::GenerateFrameCapSlider()
@@ -481,11 +481,11 @@ void E_Configuration::GenerateSizeSliders()
 
 	SDL_GetWindowSize(App->window->GetWindow(), &width, &height);
 
-	uint min_width, min_height, max_width, max_height = 0;
-	App->window->GetMinMaxSize(min_width, min_height, max_width, max_height);
+	uint minWidth, minHeight, maxWidth, maxHeight = 0;
+	App->window->GetMinMaxSize(minWidth, minHeight, maxWidth, maxHeight);
 
-	ImGui::SliderInt("Width", &width, min_width, max_width, "%d", ImGuiSliderFlags_AlwaysClamp);
-	ImGui::SliderInt("Height", &height, min_height, max_height, "%d", ImGuiSliderFlags_AlwaysClamp);
+	ImGui::SliderInt("Width", &width, minWidth, maxWidth, "%d", ImGuiSliderFlags_AlwaysClamp);
+	ImGui::SliderInt("Height", &height, minHeight, maxHeight, "%d", ImGuiSliderFlags_AlwaysClamp);
 
 	App->window->SetSize(width, height);
 }
@@ -498,7 +498,7 @@ void E_Configuration::WindowModeFlags()
 	bool fullscreen			= App->window->IsFullscreen();
 	bool resizable			= App->window->IsResizable();
 	bool borderless			= App->window->IsBorderless();
-	bool fullscreen_desktop	= App->window->IsFullscreenDesktop();
+	bool fullscreenDesktop	= App->window->IsFullscreenDesktop();
 
 	if (ImGui::Checkbox("Maximized", &maximized))
 	{
@@ -520,9 +520,9 @@ void E_Configuration::WindowModeFlags()
 		App->window->SetBorderless(borderless);
 	}
 
-	if (ImGui::Checkbox("Fullscreen Desktop", &fullscreen_desktop))
+	if (ImGui::Checkbox("Fullscreen Desktop", &fullscreenDesktop))
 	{
-		App->window->SetFullscreenDesktop(fullscreen_desktop);
+		App->window->SetFullscreenDesktop(fullscreenDesktop);
 	}
 }
 
@@ -537,66 +537,66 @@ void E_Configuration::VsyncMode()
 
 void E_Configuration::RendererFlags()
 {
-	float col_dist = 200.0f;
+	float colDist = 200.0f;
 	
 	ImGui::Text("Renderer flags: ");
 
 	ImGui::Separator();
 	
 	// --- OPENGL FLAGS
-	bool depth_test					= App->renderer->GetGLFlag(RENDERER_FLAGS::DEPTH_TEST);
-	bool cull_face					= App->renderer->GetGLFlag(RENDERER_FLAGS::CULL_FACE);
+	bool depthTest					= App->renderer->GetGLFlag(RENDERER_FLAGS::DEPTH_TEST);
+	bool cullFace					= App->renderer->GetGLFlag(RENDERER_FLAGS::CULL_FACE);
 	bool lighting					= App->renderer->GetGLFlag(RENDERER_FLAGS::LIGHTING);
-	bool color_material				= App->renderer->GetGLFlag(RENDERER_FLAGS::COLOR_MATERIAL);
-	bool texture_2D					= App->renderer->GetGLFlag(RENDERER_FLAGS::TEXTURE_2D);
-	bool alpha_test					= App->renderer->GetGLFlag(RENDERER_FLAGS::ALPHA_TEST);
+	bool colorMaterial				= App->renderer->GetGLFlag(RENDERER_FLAGS::COLOR_MATERIAL);
+	bool texture2D					= App->renderer->GetGLFlag(RENDERER_FLAGS::TEXTURE_2D);
+	bool alphaTest					= App->renderer->GetGLFlag(RENDERER_FLAGS::ALPHA_TEST);
 	bool blend						= App->renderer->GetGLFlag(RENDERER_FLAGS::BLEND);
 
 	// --- SHOW FLAGS
-	bool render_world_grid			= App->renderer->GetRenderWorldGrid();
-	bool render_world_axis			= App->renderer->GetRenderWorldAxis();
-	bool render_wireframes			= App->renderer->GetRenderWireframes();
-	bool render_vertex_normals		= App->renderer->GetRenderVertexNormals();
-	bool render_face_normals		= App->renderer->GetRenderFaceNormals();
-	bool render_bounding_boxes		= App->renderer->GetRenderBoundingBoxes();
-	bool render_skeletons			= App->renderer->GetRenderSkeletons();
-	bool render_primitive_examples	= App->renderer->GetRenderPrimitiveExamples();
-	bool render_others				= false /*App->renderer->GetRenderOthers()*/;
+	bool renderWorldGrid			= App->renderer->GetRenderWorldGrid();
+	bool renderWorldAxis			= App->renderer->GetRenderWorldAxis();
+	bool renderWireframes			= App->renderer->GetRenderWireframes();
+	bool renderWertexNormals		= App->renderer->GetRenderVertexNormals();
+	bool renderFaceNormals		= App->renderer->GetRenderFaceNormals();
+	bool renderBoundingBoxes		= App->renderer->GetRenderBoundingBoxes();
+	bool renderSkeletons			= App->renderer->GetRenderSkeletons();
+	bool renderPrimitiveExamples	= App->renderer->GetRenderPrimitiveExamples();
+	bool renderOthers				= false /*App->renderer->GetRenderOthers()*/;
 
 	// --- OPENGL FLAGS
-	if (ImGui::Checkbox("Depth Test", &depth_test))									{ App->renderer->SetGLFlag(RENDERER_FLAGS::DEPTH_TEST, depth_test); }			ImGui::SameLine(col_dist);
-	if (ImGui::Checkbox("Cull Face", &cull_face))									{ App->renderer->SetGLFlag(RENDERER_FLAGS::CULL_FACE, cull_face); }
+	if (ImGui::Checkbox("Depth Test", &depthTest))									{ App->renderer->SetGLFlag(RENDERER_FLAGS::DEPTH_TEST, depthTest); }			ImGui::SameLine(colDist);
+	if (ImGui::Checkbox("Cull Face", &cullFace))									{ App->renderer->SetGLFlag(RENDERER_FLAGS::CULL_FACE, cullFace); }
 
-	if (ImGui::Checkbox("Lighting", &lighting))										{ App->renderer->SetGLFlag(RENDERER_FLAGS::LIGHTING, lighting); }				ImGui::SameLine(col_dist);
-	if (ImGui::Checkbox("Color Material", &color_material))							{ App->renderer->SetGLFlag(RENDERER_FLAGS::COLOR_MATERIAL, color_material); }
+	if (ImGui::Checkbox("Lighting", &lighting))										{ App->renderer->SetGLFlag(RENDERER_FLAGS::LIGHTING, lighting); }				ImGui::SameLine(colDist);
+	if (ImGui::Checkbox("Color Material", &colorMaterial))							{ App->renderer->SetGLFlag(RENDERER_FLAGS::COLOR_MATERIAL, colorMaterial); }
 
-	if (ImGui::Checkbox("Texture 2D", &texture_2D))									{ App->renderer->SetGLFlag(RENDERER_FLAGS::TEXTURE_2D, texture_2D); }			ImGui::SameLine(col_dist);
-	if (ImGui::Checkbox("Alpha Test", &alpha_test))									{ App->renderer->SetGLFlag(RENDERER_FLAGS::ALPHA_TEST, alpha_test); }
+	if (ImGui::Checkbox("Texture 2D", &texture2D))									{ App->renderer->SetGLFlag(RENDERER_FLAGS::TEXTURE_2D, texture2D); }			ImGui::SameLine(colDist);
+	if (ImGui::Checkbox("Alpha Test", &alphaTest))									{ App->renderer->SetGLFlag(RENDERER_FLAGS::ALPHA_TEST, alphaTest); }
 
-	if (ImGui::Checkbox("Blend", &blend))											{ App->renderer->SetGLFlag(RENDERER_FLAGS::BLEND, blend); }						ImGui::SameLine(col_dist);
+	if (ImGui::Checkbox("Blend", &blend))											{ App->renderer->SetGLFlag(RENDERER_FLAGS::BLEND, blend); }						ImGui::SameLine(colDist);
 
 	// --- SHOW FLAGS
-	if (ImGui::Checkbox("Show World Grid", &render_world_grid))						{ App->renderer->SetRenderWorldGrid(render_world_grid); }
+	if (ImGui::Checkbox("Show World Grid", &renderWorldGrid))						{ App->renderer->SetRenderWorldGrid(renderWorldGrid); }
 
-	if (ImGui::Checkbox("Show World Axis", &render_world_axis))						{ App->renderer->SetRenderWorldAxis(render_world_axis); }						ImGui::SameLine(col_dist);
-	if (ImGui::Checkbox("Show Wireframes", &render_wireframes))						{ App->renderer->SetRenderWireframes(render_wireframes); }
+	if (ImGui::Checkbox("Show World Axis", &renderWorldAxis))						{ App->renderer->SetRenderWorldAxis(renderWorldAxis); }						ImGui::SameLine(colDist);
+	if (ImGui::Checkbox("Show Wireframes", &renderWireframes))						{ App->renderer->SetRenderWireframes(renderWireframes); }
 
-	if (ImGui::Checkbox("Show Vertex Normals", &render_vertex_normals))				{ App->renderer->SetRenderVertexNormals(render_vertex_normals); }				ImGui::SameLine(col_dist);
-	if (ImGui::Checkbox("Show Face Normals", &render_face_normals))					{ App->renderer->SetRenderFaceNormals(render_face_normals); }
+	if (ImGui::Checkbox("Show Vertex Normals", &renderWertexNormals))				{ App->renderer->SetRenderVertexNormals(renderWertexNormals); }				ImGui::SameLine(colDist);
+	if (ImGui::Checkbox("Show Face Normals", &renderFaceNormals))					{ App->renderer->SetRenderFaceNormals(renderFaceNormals); }
 
-	if (ImGui::Checkbox("Show Bounding Boxes", &render_bounding_boxes))				{ App->renderer->SetRenderBoundingBoxes(render_bounding_boxes); }				ImGui::SameLine(col_dist);
-	if (ImGui::Checkbox("Show Skeletons", &render_skeletons))						{ App->renderer->SetRenderSkeletons(render_skeletons); }
+	if (ImGui::Checkbox("Show Bounding Boxes", &renderBoundingBoxes))				{ App->renderer->SetRenderBoundingBoxes(renderBoundingBoxes); }				ImGui::SameLine(colDist);
+	if (ImGui::Checkbox("Show Skeletons", &renderSkeletons))						{ App->renderer->SetRenderSkeletons(renderSkeletons); }
 
-	if (ImGui::Checkbox("Show Primitive Examples", &render_primitive_examples))		{ App->renderer->SetRenderPrimtiveExamples(render_primitive_examples); }		ImGui::SameLine(col_dist);
-	if (ImGui::Checkbox("Show Others (WIP)", &render_others))						{ /*App->renderer->SetRenderOthers();*/ }
+	if (ImGui::Checkbox("Show Primitive Examples", &renderPrimitiveExamples))		{ App->renderer->SetRenderPrimtiveExamples(renderPrimitiveExamples); }		ImGui::SameLine(colDist);
+	if (ImGui::Checkbox("Show Others (WIP)", &renderOthers))						{ /*App->renderer->SetRenderOthers();*/ }
 }
 
 void E_Configuration::RendererSettings()
 {
-	float min_line_width		= 0.1f;
-	float max_line_width		= 10.0f;
+	float minLineWidth		= 0.1f;
+	float maxLineWidth		= 10.0f;
 
-	uint world_grid_size		= App->renderer->GetWorldGridSize();
+	uint worldGridSize		= App->renderer->GetWorldGridSize();
 
 	Color world_grid_color		= App->renderer->GetWorldGridColor(); 
 	Color wireframe_color		= App->renderer->GetWireframeColor();
@@ -630,11 +630,11 @@ void E_Configuration::RendererSettings()
 		{
 			App->renderer->SetWorldGridColor(world_grid_color);
 		}
-		if (ImGui::SliderInt("W.G. Size", (int*)&world_grid_size, 0, 420))
+		if (ImGui::SliderInt("W.G. Size", (int*)&worldGridSize, 0, 420))
 		{
-			App->renderer->SetWorldGridSize(world_grid_size);
+			App->renderer->SetWorldGridSize(worldGridSize);
 		}
-		if (ImGui::SliderFloat("W.G. L. Width", &world_grid_line_width, min_line_width, max_line_width, "%.3f", 1.0f))
+		if (ImGui::SliderFloat("W.G. L. Width", &world_grid_line_width, minLineWidth, maxLineWidth, "%.3f", 1.0f))
 		{
 			App->renderer->SetWorldGridLineWidth(world_grid_line_width);
 		}
@@ -648,7 +648,7 @@ void E_Configuration::RendererSettings()
 		{
 			App->renderer->SetWireframeColor(wireframe_color);
 		}
-		if (ImGui::SliderFloat("WF. L. Width", &wireframe_line_width, min_line_width, max_line_width, "%.3f", 1.0f))
+		if (ImGui::SliderFloat("WF. L. Width", &wireframe_line_width, minLineWidth, maxLineWidth, "%.3f", 1.0f))
 		{
 			App->renderer->SetWireframeLineWidth(wireframe_line_width);
 		}
@@ -662,7 +662,7 @@ void E_Configuration::RendererSettings()
 		{
 			App->renderer->SetVertexNormalsColor(vertex_normals_color);
 		}
-		if (ImGui::SliderFloat("V.N. L. Width", &vertex_normals_width, min_line_width, max_line_width, "%.3f", 1.0f))
+		if (ImGui::SliderFloat("V.N. L. Width", &vertex_normals_width, minLineWidth, maxLineWidth, "%.3f", 1.0f))
 		{
 			App->renderer->SetVertexNormalsWidth(vertex_normals_width);
 		}
@@ -676,7 +676,7 @@ void E_Configuration::RendererSettings()
 		{
 			App->renderer->SetFaceNormalsColor(face_normals_color);
 		}
-		if (ImGui::SliderFloat("F.N. L. Width", &face_normals_width, min_line_width, max_line_width, "%.3f", 1.0f))
+		if (ImGui::SliderFloat("F.N. L. Width", &face_normals_width, minLineWidth, maxLineWidth, "%.3f", 1.0f))
 		{
 			App->renderer->SetFaceNormalsWidth(face_normals_width);
 		}
@@ -690,7 +690,7 @@ void E_Configuration::RendererSettings()
 		{
 			App->renderer->SetAABBColor(aabb_color);
 		}
-		if (ImGui::SliderFloat("AABB E. Width", &aabb_edge_width, min_line_width, max_line_width, "%.3f", 1.0f))
+		if (ImGui::SliderFloat("AABB E. Width", &aabb_edge_width, minLineWidth, maxLineWidth, "%.3f", 1.0f))
 		{
 			App->renderer->SetAABBEdgeWidth(aabb_edge_width);
 		}
@@ -704,7 +704,7 @@ void E_Configuration::RendererSettings()
 		{
 			App->renderer->SetOBBColor(obb_color);
 		}
-		if (ImGui::SliderFloat("OBB E. Width", &obb_edge_width, min_line_width, max_line_width, "%.3f", 1.0f))
+		if (ImGui::SliderFloat("OBB E. Width", &obb_edge_width, minLineWidth, maxLineWidth, "%.3f", 1.0f))
 		{
 			App->renderer->SetOBBEdgeWidth(obb_edge_width);
 		}
@@ -718,7 +718,7 @@ void E_Configuration::RendererSettings()
 		{
 			App->renderer->SetFrustumColor(frustum_color);
 		}
-		if (ImGui::SliderFloat("Ftum E. Width", &frustum_edge_width, min_line_width, max_line_width, "%.3f", 1.0f))
+		if (ImGui::SliderFloat("Ftum E. Width", &frustum_edge_width, minLineWidth, maxLineWidth, "%.3f", 1.0f))
 		{
 			App->renderer->SetFrustumEdgeWidth(frustum_edge_width);
 		}
@@ -732,7 +732,7 @@ void E_Configuration::RendererSettings()
 		{
 			App->renderer->SetRayColor(ray_color);
 		}
-		if (ImGui::SliderFloat("Ray L. Width", &ray_width, min_line_width, max_line_width, "%.3f", 1.0f))
+		if (ImGui::SliderFloat("Ray L. Width", &ray_width, minLineWidth, maxLineWidth, "%.3f", 1.0f))
 		{
 			App->renderer->SetRayWidth(ray_width);
 		}
@@ -746,7 +746,7 @@ void E_Configuration::RendererSettings()
 		{
 			App->renderer->SetBoneColor(bone_color);
 		}
-		if (ImGui::SliderFloat("Bone L. Width", &bone_width, min_line_width, max_line_width, "%.3f", 1.0f))
+		if (ImGui::SliderFloat("Bone L. Width", &bone_width, minLineWidth, maxLineWidth, "%.3f", 1.0f))
 		{
 			App->renderer->SetBoneWidth(bone_width);
 		}
@@ -821,15 +821,15 @@ void E_Configuration::AddInputLog(const char* log)
 	{
 		char* tmp = _strdup(log);
 		
-		input_logs.push_back(tmp);
+		inputLogs.push_back(tmp);
 
-		input_log_scroll_to_bottom = true;
+		inputLogScrollToBottom = true;
 	}
 }
 
 void E_Configuration::ReduceInputLog()
 {
-	if (input_logs.size() > MAX_INPUT_LOG_SIZE)
+	if (inputLogs.size() > MAX_INPUT_LOG_SIZE)
 	{
 		ClearInputLog();
 
@@ -846,44 +846,44 @@ void E_Configuration::MouseInputData()
 
 void E_Configuration::InputLogOutput()
 {
-	for (uint i = 0; i < input_logs.size(); ++i)
+	for (uint i = 0; i < inputLogs.size(); ++i)
 	{
 		ImVec4 text_colour = { 1.0f, 1.0f, 1.0f, 1.0f };									// White is the default colour, but added this to be able to easily change it.					
 
-		if (strstr(input_logs[i], "[KEY]") != nullptr)
+		if (strstr(inputLogs[i], "[KEY]") != nullptr)
 		{
 			text_colour = { 0.0f, 1.0f, 1.0f, 1.0f };
 		}
 		
-		if (strstr(input_logs[i], "[MOUSE]") != nullptr)
+		if (strstr(inputLogs[i], "[MOUSE]") != nullptr)
 		{
 			text_colour = { 1.0f, 0.0f, 1.0f, 1.0f };
 		}
 
 		ImGui::PushStyleColor(ImGuiCol_Text, text_colour);
-		ImGui::TextUnformatted(input_logs[i]);
+		ImGui::TextUnformatted(inputLogs[i]);
 		ImGui::PopStyleColor();
 	}
 }
 
 void E_Configuration::InputLogScrollToBottom()
 {
-	if (input_log_scroll_to_bottom)
+	if (inputLogScrollToBottom)
 	{
 		ImGui::SetScrollHere(1.0f);
 
-		input_log_scroll_to_bottom = false;
+		inputLogScrollToBottom = false;
 	}
 }
 
 void E_Configuration::ClearInputLog()
 {
-	for (uint i = 0; i < input_logs.size(); ++i)
+	for (uint i = 0; i < inputLogs.size(); ++i)
 	{
-		free(input_logs[i]);
+		free(inputLogs[i]);
 	}
 
-	input_logs.clear();
+	inputLogs.clear();
 }
 
 void E_Configuration::GenerateBaseDirectoryText()

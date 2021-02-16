@@ -45,6 +45,14 @@ Class fields | lowerCase | `Vector2 position`
 Class methods | TitleCase | `GetPosition()`
 Ternary Operator | (condition)? result1 : result2 | `printf("Value is 0: %s", (value == 0)? "yes" : "no");`
 
+Fors
+namespace
+else if / ternary
+enum class (to review)
+espais/enters del angel
+class naming E_Class
+file naming E_FileName
+
 Identation:
 
  - Project uses aligned braces or curly brackets:
