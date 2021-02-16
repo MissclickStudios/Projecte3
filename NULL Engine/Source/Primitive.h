@@ -36,15 +36,15 @@ public:
 
 	void Update();
 
-	virtual void	Render() const;
-	virtual void	RenderByIndices();
-	void			LoadBuffersOnMemory();
+	virtual void Render() const;
+	virtual void RenderByIndices();
+	void LoadBuffersOnMemory();
 
 public:
-	void			SetPos(float x, float y, float z);
-	float3			GetPos() const;
-	void			SetRotation(const float3 &u, const float& angle);		// Angle in Radiants.
-	void			Scale(float x, float y, float z);
+	void SetPos(float x, float y, float z);
+	float3 GetPos() const;
+	void SetRotation(const float3 &u, const float& angle);		// Angle in Radiants.
+	void Scale(float x, float y, float z);
 	PRIMITIVE_TYPES	GetType() const;
 
 public:
@@ -56,10 +56,10 @@ public:
 	uint buffers[(uint)BUFFER_TYPE::MAX_BUFFER_TYPES];						// Will hold all the possible buffers that a given primitive might use.
 	uint bufferSize[(uint)BUFFER_TYPE::MAX_BUFFER_TYPES];					// Will be used to define the size in bytes of a given buffer.
 
-	std::vector<float>	vertices;
-	std::vector<float>	normals;
-	std::vector<float>	uvs;
-	std::vector<uint>	indices;
+	std::vector<float> vertices;
+	std::vector<float> normals;
+	std::vector<float> uvs;
+	std::vector<uint> indices;
 
 protected:
 	virtual void InnerRender() const;
@@ -81,8 +81,8 @@ public:
 	void DirectRender() const;
 	void ArrayRender();
 
-	void ApplyTransform(float* coordinates, int array_size);
-	void ApplySize(float* coordinates, int array_size);
+	void ApplyTransform(float* coordinates, int arraySize);
+	void ApplySize(float* coordinates, int arraySize);
 
 protected:
 	void IndicesRender() override;
@@ -96,8 +96,8 @@ private:
 
 	//unsigned int VAO;
 
-	bool loaded_in_array;
-	bool loaded_in_indices;
+	bool loadedInArray;
+	bool loadedInIndices;
 };
 
 // ============================================
@@ -122,7 +122,7 @@ protected:
 	void IndicesRender() override;
 
 protected:
-	bool loaded_buffers;
+	bool loadedBuffers;
 
 private:
 	float radius;
@@ -145,9 +145,9 @@ public:
 	
 	std::vector<float> GetCircularVertices();
 
-	void ConstructCoverVertices(std::vector<float> circular_vertices);
-	void ConstructBaseAndTopVertices(std::vector<float> circular_vertices);
-	void ConstructIndices(uint base_center_index, uint top_center_index);
+	void ConstructCoverVertices(std::vector<float> circularVertices);
+	void ConstructBaseAndTopVertices(std::vector<float> circularVertices);
+	void ConstructIndices(uint baseCenterIndex, uint topCenterIndex);
 
 protected:
 	//void InnerRender() const;
@@ -158,7 +158,7 @@ private:
 	float height;
 	uint sectors;
 
-	bool loaded_in_buffers;
+	bool loadedInBuffers;
 };
 
 // ============================================
@@ -178,7 +178,7 @@ protected:
 private:
 	float3 size;
 
-	bool loaded_in_buffers;
+	bool loadedInBuffers;
 };
 
 // ============================================
@@ -226,16 +226,16 @@ public:
 	void DrawAllExamples();								// Will draw all the examples. All examples are drawn in Direct Mode.
 
 public:
-	void GL_PointsExample			(uint index = 0);
-	void GL_LinesExample			(uint index = 1);
-	void GL_LineStripExample		(uint index = 2);
-	void GL_LineLoopExample			(uint index = 3);
-	void GL_PolygonExample			(uint index = 4);
-	void GL_TrianglesExample		(uint index = 5);
-	void GL_TriangleStripExample	(uint index = 6);
-	void GL_TriangleFanExample		(uint index = 7);
-	void GL_QuadsExample			(uint index = 8);
-	void GL_QuadStripExample		(uint index = 9);
+	void GL_PointsExample(uint index = 0);
+	void GL_LinesExample(uint index = 1);
+	void GL_LineStripExample(uint index = 2);
+	void GL_LineLoopExample(uint index = 3);
+	void GL_PolygonExample(uint index = 4);
+	void GL_TrianglesExample(uint index = 5);
+	void GL_TriangleStripExample(uint index = 6);
+	void GL_TriangleFanExample(uint index = 7);
+	void GL_QuadsExample(uint index = 8);
+	void GL_QuadStripExample(uint index = 9);
 
 public:
 	float3 origin;

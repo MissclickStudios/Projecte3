@@ -112,7 +112,7 @@ void Primitive::Scale(float x, float y, float z)
 
 // CUBE ============================================
 
-P_Cube::P_Cube(const float3& _size, float mass) : Primitive(), size(_size), loaded_in_array(false), loaded_in_indices(false)
+P_Cube::P_Cube(const float3& size, float mass) : Primitive(), size(size), loadedInArray(false), loadedInIndices(false)
 {
 	type = PRIMITIVE_TYPES::CUBE;
 }
@@ -282,16 +282,16 @@ void P_Cube::DirectRender() const
 
 void P_Cube::ArrayRender()
 {	
-	if (!loaded_in_array)
+	if (!loadedInArray)
 	{	
 		uint position	= 0;
 		uint normals	= 0;
-		uint tex_coords = 0;
+		uint texCoords = 0;
 
-		const uint vertex_array_size = 108;									// 6 faces with 2 triangles per face --> 12 vertex with 3 coordinates and 3 vertices. TOTAL: 6 * 2 * 3 * 3 = 108
-		const uint tex_coord_array_size = 72;								// Same as above but 2 coordinates instead of 3.
+		const uint vertexArraySize = 108;									// 6 faces with 2 triangles per face --> 12 vertex with 3 coordinates and 3 vertices. TOTAL: 6 * 2 * 3 * 3 = 108
+		const uint texCoordArraySize = 72;								// Same as above but 2 coordinates instead of 3.
 
-		float cube_vertex_coords[vertex_array_size] =						// Being ABCDEFGH all the vertex in a Cube. Starting at the front bottom left and ending at the back top right.
+		float cubeVertexCoords[vertexArraySize] =						// Being ABCDEFGH all the vertex in a Cube. Starting at the front bottom left and ending at the back top right.
 		{
 			// --- (0.0f, 0.0f, 0.0f) AS THE CENTER
 			// -- FRONT --
@@ -350,7 +350,7 @@ void P_Cube::ArrayRender()
 			// ------------------------------------
 		};
 
-		float cube_tex_coords[tex_coord_array_size] =
+		float cubeTexCoords[texCoordArraySize] =
 		{
 			// --- FRONT ---
 			0.0f, 0.0f,				// ABC
@@ -407,29 +407,29 @@ void P_Cube::ArrayRender()
 			0.0f, 1.0f
 		};
 
-		for (uint i = 0, j = 0; i < vertex_array_size; ++i, ++j)				// Resizing the cube according to the size parameter.
+		for (uint i = 0, j = 0; i < vertexArraySize; ++i, ++j)				// Resizing the cube according to the size parameter.
 		{
 			if (j == 0)
 			{
-				//cube_vertex_coords[i] *= size.x;
-				cube_vertex_coords[i] *= size.x * 0.5f;
+				//cubeVertexCoords[i] *= size.x;
+				cubeVertexCoords[i] *= size.x * 0.5f;
 			}
 			else if (j == 1)
 			{
-				//cube_vertex_coords[i] *= size.y;
-				cube_vertex_coords[i] *= size.y * 0.5f;
+				//cubeVertexCoords[i] *= size.y;
+				cubeVertexCoords[i] *= size.y * 0.5f;
 			}
 			else if (j == 2)
 			{
-				//cube_vertex_coords[i] *= size.z;
-				cube_vertex_coords[i] *= size.z * 0.5f;
+				//cubeVertexCoords[i] *= size.z;
+				cubeVertexCoords[i] *= size.z * 0.5f;
 				j = -1;
 			}
 		}
 
 		/*glGenBuffers(1, (GLuint*)&position);
 		glBindBuffer(GL_ARRAY_BUFFER, position);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 36 * 3, cube_vertex_coords, GL_STATIC_DRAW);*/
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 36 * 3, cubeVertexCoords, GL_STATIC_DRAW);*/
 		
 		VAO = 0;
 
@@ -438,21 +438,21 @@ void P_Cube::ArrayRender()
 
 		glGenBuffers(1, (GLuint*)&position);
 		glBindBuffer(GL_ARRAY_BUFFER, position);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertex_array_size, cube_vertex_coords, GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertexArraySize, cubeVertexCoords, GL_STATIC_DRAW);
 
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, (void*)0);
 		glEnableVertexAttribArray(0);
 
-		glGenBuffers(1, (GLuint*)&tex_coords);
-		glBindBuffer(GL_ARRAY_BUFFER, tex_coords);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * tex_coord_array_size, cube_tex_coords, GL_STATIC_DRAW);
+		glGenBuffers(1, (GLuint*)&texCoords);
+		glBindBuffer(GL_ARRAY_BUFFER, texCoords);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * texCoordArraySize, cubeTexCoords, GL_STATIC_DRAW);
 
 		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, (void*)0);
 		glEnableVertexAttribArray(1);
 
 		glBindVertexArray(0);
 
-		loaded_in_array = true;
+		loadedInArray = true;
 	}
 
 	/*glEnableClientState(GL_VERTEX_ARRAY);
@@ -469,11 +469,11 @@ void P_Cube::ArrayRender()
 
 void P_Cube::IndicesRender()
 {	
-	if (!loaded_in_indices)
+	if (!loadedInIndices)
 	{
-		const uint array_size = 24;						// 8 vertex by 3 coordinates per vertex.
+		const uint arraySize = 24;						// 8 vertex by 3 coordinates per vertex.
 		
-		float cube_vertex_coords[array_size] =			// Being ABCDEFGH all the vertex in a Cube. Starting at the front bottom left and ending at the back top right.
+		float cubeVertexCoords[arraySize] =			// Being ABCDEFGH all the vertex in a Cube. Starting at the front bottom left and ending at the back top right.
 		{
 			// --- (0.0f, 0.0f, 0.0f) AS THE CENTER
 			-1.0f, -1.0f,  1.0f,						// A --- i = 0
@@ -486,8 +486,8 @@ void P_Cube::IndicesRender()
 			 1.0f,  1.0f, -1.0f							// H --- i = 7
 		};
 
-		ApplyTransform(cube_vertex_coords, array_size);
-		ApplySize(cube_vertex_coords, array_size);
+		ApplyTransform(cubeVertexCoords, arraySize);
+		ApplySize(cubeVertexCoords, arraySize);
 
 		uint indices[36] =
 		{
@@ -510,18 +510,18 @@ void P_Cube::IndicesRender()
 			3, 7, 6,				//DHG
 		};
 
-		uint my_id = 0;
-		uint my_indices = 0;
+		uint myId = 0;
+		uint myIndices = 0;
 
 		glGenVertexArrays(1, &VAO);
 		glBindVertexArray(VAO);
 
-		glGenBuffers(1, (GLuint*)&my_id);
-		glBindBuffer(GL_ARRAY_BUFFER, my_id);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 24, cube_vertex_coords, GL_STATIC_DRAW);
+		glGenBuffers(1, (GLuint*)&myId);
+		glBindBuffer(GL_ARRAY_BUFFER, myId);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 24, cubeVertexCoords, GL_STATIC_DRAW);
 
-		glGenBuffers(1, (GLuint*)&my_indices);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, my_indices);
+		glGenBuffers(1, (GLuint*)&myIndices);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, myIndices);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * 36, indices, GL_STATIC_DRAW);
 
 		glEnableVertexAttribArray(0);
@@ -529,7 +529,7 @@ void P_Cube::IndicesRender()
 
 		glBindVertexArray(0);
 
-		loaded_in_indices = true;
+		loadedInIndices = true;
 	}
 
 	glBindVertexArray(VAO);
@@ -553,36 +553,36 @@ void P_Cube::IndicesRender()
 	glPopMatrix();*/
 }
 
-void P_Cube::ApplyTransform(float* coordinates, int array_size)
+void P_Cube::ApplyTransform(float* coordinates, int arraySize)
 {
 	float3 position = GetPos();
 
-	for (int i = 0; i < array_size; ++i)
+	for (int i = 0; i < arraySize; ++i)
 	{
-		coordinates[i]		+= position.x;
-		coordinates[++i]	+= position.y;
-		coordinates[++i]	+= position.z;
+		coordinates[i] += position.x;
+		coordinates[++i] += position.y;
+		coordinates[++i] += position.z;
 	}
 }
 
-void P_Cube::ApplySize(float* coordinates, int array_size)
+void P_Cube::ApplySize(float* coordinates, int arraySize)
 {
-	for (int i = 0; i < array_size; ++i)					// Resizing the cube according to the size parameter.
+	for (int i = 0; i < arraySize; ++i)					// Resizing the cube according to the size parameter.
 	{
-		coordinates[i]		*= size.x * 0.5f;
-		coordinates[++i]	*= size.y * 0.5f;
-		coordinates[++i]	*= size.z * 0.5f;
+		coordinates[i] *= size.x * 0.5f;
+		coordinates[++i] *= size.y * 0.5f;
+		coordinates[++i] *= size.z * 0.5f;
 	}
 }
 
 // SPHERE ============================================
 
-/*Sphere::Sphere(float _radius, float mass) : Primitive(), radius(_radius), rings(1), sectors(1), loaded_buffers(false)
+/*Sphere::Sphere(float _radius, float mass) : Primitive(), radius(_radius), rings(1), sectors(1), loadedBuffers(false)
 {
 	type = PRIMITIVE_TYPES::SPHERE;
 }*/
 
-P_Sphere::P_Sphere(float radius, uint rings, uint sectors) : Primitive(), radius(radius), rings(rings), sectors(sectors), loaded_buffers(false)
+P_Sphere::P_Sphere(float radius, uint rings, uint sectors) : Primitive(), radius(radius), rings(rings), sectors(sectors), loadedBuffers(false)
 {
 	type = PRIMITIVE_TYPES::SPHERE;
 }
@@ -606,32 +606,32 @@ void P_Sphere::SetRings(uint rings)
 {
 	this->rings = rings;
 
-	loaded_buffers = false;
+	loadedBuffers = false;
 }
 
 void P_Sphere::SetSectors(uint sectors)
 {
 	this->sectors = sectors;
 
-	loaded_buffers = false;
+	loadedBuffers = false;
 }
 
 void P_Sphere::IndicesRender()
 {	
-	if (!loaded_buffers)
+	if (!loadedBuffers)
 	{
-		float const ring_constant = 1.0f / (float)(rings - 1);
-		float const sector_constant = 1.0f / (float)(sectors - 1);
+		float const ringConstant = 1.0f / (float)(rings - 1);
+		float const sectorConstant = 1.0f / (float)(sectors - 1);
 
-		const uint vertices_size	= rings * sectors * 3;											// rings per sectors per ring per 3 coordinates per vertex. Total: rings * sectors * 3;
-		const uint normals_size		= rings * sectors * 3;
-		const uint tex_coords_size	= rings * sectors * 2;
-		const uint indices_size		= rings * sectors * 4;
+		const uint verticesSize	= rings * sectors * 3;											// rings per sectors per ring per 3 coordinates per vertex. Total: rings * sectors * 3;
+		const uint normalsSize		= rings * sectors * 3;
+		const uint texCoordsSize	= rings * sectors * 2;
+		const uint indicesSize		= rings * sectors * 4;
 
-		vertices.resize(vertices_size);
-		normals.resize(normals_size);
-		uvs.resize(tex_coords_size);
-		indices.resize(indices_size);
+		vertices.resize(verticesSize);
+		normals.resize(normalsSize);
+		uvs.resize(texCoordsSize);
+		indices.resize(indicesSize);
 
 		std::vector<float>::iterator vert = vertices.begin();
 		std::vector<float>::iterator norm = normals.begin();
@@ -642,9 +642,9 @@ void P_Sphere::IndicesRender()
 		{
 			for (uint sector = 0; sector < sectors; ++sector)
 			{
-				float const x = cos(2 * PI * sector * sector_constant) * sin(PI * ring * ring_constant);
-				float const y = sin(-HALF_PI + PI * ring * ring_constant);
-				float const z = sin(2 * PI * sector * sector_constant) * sin(PI * ring * ring_constant);
+				float const x = cos(2 * PI * sector * sectorConstant) * sin(PI * ring * ringConstant);
+				float const y = sin(-HALF_PI + PI * ring * ringConstant);
+				float const z = sin(2 * PI * sector * sectorConstant) * sin(PI * ring * ringConstant);
 
 				*vert++ = x * radius;																// Calculating the position coordinates of each vertex
 				*vert++ = y * radius;																// according to the axis, the ring and sector consts
@@ -654,8 +654,8 @@ void P_Sphere::IndicesRender()
 				*norm++ = y;																		//
 				*norm++ = z;																		//
 
-				*texc++ = sector * sector_constant;													//
-				*texc++ = ring * ring_constant;														//
+				*texc++ = sector * sectorConstant;													//
+				*texc++ = ring * ringConstant;														//
 			}
 		}
 
@@ -673,18 +673,18 @@ void P_Sphere::IndicesRender()
 
 		LoadBuffersOnMemory();
 		
-		/*uint my_vertices = 0;
-		uint my_indices = 0;
+		/*uint myVertices = 0;
+		uint myIndices = 0;
 		
-		glGenBuffers(1, (GLuint*)&my_vertices);
-		glBindBuffer(GL_ARRAY_BUFFER, my_vertices);
+		glGenBuffers(1, (GLuint*)&myVertices);
+		glBindBuffer(GL_ARRAY_BUFFER, myVertices);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertices.size(), &vertices[0], GL_STATIC_DRAW);
 
-		glGenBuffers(1, (GLuint*)&my_indices);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, my_indices);
+		glGenBuffers(1, (GLuint*)&myIndices);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, myIndices);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * indices.size(), &indices[0], GL_STATIC_DRAW);*/
 
-		loaded_buffers = true;
+		loadedBuffers = true;
 	}
 
 	GLfloat x = (GLfloat)transform.TranslatePart().x;
@@ -716,7 +716,7 @@ void P_Sphere::InnerRender() const
 }
 
 // CYLINDER ============================================
-P_Cylinder::P_Cylinder(float radius, float height, uint sectors, float mass) : Primitive(), radius(radius), height(height), sectors(sectors), loaded_in_buffers(false)
+P_Cylinder::P_Cylinder(float radius, float height, uint sectors, float mass) : Primitive(), radius(radius), height(height), sectors(sectors), loadedInBuffers(false)
 {
 	type = PRIMITIVE_TYPES::CYLINDER;
 }
@@ -739,7 +739,7 @@ uint P_Cylinder::GetSectors() const
 void P_Cylinder::SetSectors(uint sectors)
 {
 	this->sectors = sectors;
-	loaded_in_buffers = false;
+	loadedInBuffers = false;
 }
 
 std::vector<float> P_Cylinder::GetCircularVertices()
@@ -771,35 +771,35 @@ std::vector<float> P_Cylinder::GetCircularVertices()
 
 void P_Cylinder::IndicesRender()
 {
-	if (!loaded_in_buffers)
+	if (!loadedInBuffers)
 	{
 		vertices.clear();
 		normals.clear();
 		uvs.clear();
 		indices.clear();
 
-		std::vector<float> circular_vertices = GetCircularVertices();
+		std::vector<float> circularVertices = GetCircularVertices();
 
-		ConstructCoverVertices(circular_vertices);
+		ConstructCoverVertices(circularVertices);
 
-		uint base_center_index = (int)vertices.size() / 3;						// Gets the index of the vertex at the center of the cylinder's base.
-		uint top_center_index = base_center_index + sectors + 1;				// Gets the index of the vertex at the center of the cylinder's top.
+		uint baseCenterIndex = (int)vertices.size() / 3;						// Gets the index of the vertex at the center of the cylinder's base.
+		uint topCenterIndex = baseCenterIndex + sectors + 1;				// Gets the index of the vertex at the center of the cylinder's top.
 
-		ConstructBaseAndTopVertices(circular_vertices);
+		ConstructBaseAndTopVertices(circularVertices);
 
-		ConstructIndices(base_center_index, top_center_index);
+		ConstructIndices(baseCenterIndex, topCenterIndex);
 
 		LoadBuffersOnMemory();
 
 		/*uint my_vert = 0;
-		uint my_indices = 1;
+		uint myIndices = 1;
 
 		glGenBuffers(1, (GLuint*)&my_vert);
 		glBindBuffer(GL_ARRAY_BUFFER, my_vert);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertices.size(), &vertices[0], GL_STATIC_DRAW);
 
-		glGenBuffers(1, (GLuint*)&my_indices);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, my_indices);
+		glGenBuffers(1, (GLuint*)&myIndices);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, myIndices);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * indices.size(), &indices[0], GL_STATIC_DRAW);*/
 
 		/*glGenBuffers(1, (GLuint*)&buffers[(uint)BUFFER_TYPE::VERTICES]);				// Generating a vertex buffer that will store the vertex positions of the primitives.
@@ -810,7 +810,7 @@ void P_Cylinder::IndicesRender()
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffers[(uint)BUFFER_TYPE::INDICES]);		// --------
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * indices.size(), &indices[0], GL_STATIC_DRAW);	// --------*/
 
-		loaded_in_buffers = true;
+		loadedInBuffers = true;
 	}
 
 	GLfloat x = (GLfloat)transform.TranslatePart().x;
@@ -836,7 +836,7 @@ void P_Cylinder::IndicesRender()
 	glPopMatrix();
 }
 
-void P_Cylinder::ConstructCoverVertices(std::vector<float> circular_vertices)
+void P_Cylinder::ConstructCoverVertices(std::vector<float> circularVertices)
 {
 	// CONSTRUCTING COVER VERTICES
 	for (int ring = 0; ring < 2; ++ring)													// Goes from -h/2 to h/2. Maybe change it so it goes from 0 to 2 directly.
@@ -846,9 +846,9 @@ void P_Cylinder::ConstructCoverVertices(std::vector<float> circular_vertices)
 
 		for (uint sector = 0, i = 0; sector < sectors; ++sector, i += 3)						// Goes through all the sector vertices in a single ring of the cylinder.
 		{
-			float const x = circular_vertices[i];											// X coordinate. 
-			float const y = circular_vertices[i + 1];										// Y coordinate. As the index is increased, it accesses the next element in the vertices vector. (y)
-			float const z = circular_vertices[i + 2];										// Z coordinate. As the index is increased, it accesses the next element in the vertices vector. (z)
+			float const x = circularVertices[i];											// X coordinate. 
+			float const y = circularVertices[i + 1];										// Y coordinate. As the index is increased, it accesses the next element in the vertices vector. (y)
+			float const z = circularVertices[i + 2];										// Z coordinate. As the index is increased, it accesses the next element in the vertices vector. (z)
 
 			// --- POSITION VECTOR
 			vertices.push_back(x * radius);													// vx
@@ -867,7 +867,7 @@ void P_Cylinder::ConstructCoverVertices(std::vector<float> circular_vertices)
 	}
 }
 
-void P_Cylinder::ConstructBaseAndTopVertices(std::vector<float> circular_vertices)
+void P_Cylinder::ConstructBaseAndTopVertices(std::vector<float> circularVertices)
 {
 	// CONSTRUCTING BASE AND TOP VERTICES
 	for (int ring = 0; ring < 2; ++ring)
@@ -888,9 +888,9 @@ void P_Cylinder::ConstructBaseAndTopVertices(std::vector<float> circular_vertice
 
 		for (uint sector = 0, i = 0; sector < sectors; ++sector, i += 3)
 		{
-			float const x = circular_vertices[i];
-			float const y = circular_vertices[i + 1];
-			float const z = circular_vertices[i + 2];
+			float const x = circularVertices[i];
+			float const y = circularVertices[i + 1];
+			float const z = circularVertices[i + 2];
 
 			vertices.push_back(x * radius);													// vx
 			vertices.push_back(h);															// vy
@@ -906,69 +906,69 @@ void P_Cylinder::ConstructBaseAndTopVertices(std::vector<float> circular_vertice
 	}
 }
 
-void P_Cylinder::ConstructIndices(uint base_center_index, uint top_center_index)
+void P_Cylinder::ConstructIndices(uint baseCenterIndex, uint topCenterIndex)
 {
-	uint base_index = 0;														// First vertex index at base.
-	uint top_index = sectors /*+ 1*/;											// First vertex index at top.
+	uint baseIndex = 0;														// First vertex index at base.
+	uint topIndex = sectors /*+ 1*/;											// First vertex index at top.
 
 	// COVER INDICES
-	for (uint sector = 0; sector < sectors; ++sector, ++base_index, ++top_index)
+	for (uint sector = 0; sector < sectors; ++sector, ++baseIndex, ++topIndex)
 	{	
 		// 2 triangles per sector
 
-		if (top_index < (sectors * 2) - 1)										// If the current triangles are not the last ones.
+		if (topIndex < (sectors * 2) - 1)										// If the current triangles are not the last ones.
 		{
-			indices.push_back(base_index);										// b_i => b_i + 1 => t_i  ==  ABC
-			indices.push_back(base_index + 1);									// The triangles must be constructed in counter-clockwise order.
-			indices.push_back(top_index);										// Otherwise the constructed triangles will be culled by the backface culling.
+			indices.push_back(baseIndex);										// b_i => b_i + 1 => t_i  ==  ABC
+			indices.push_back(baseIndex + 1);									// The triangles must be constructed in counter-clockwise order.
+			indices.push_back(topIndex);										// Otherwise the constructed triangles will be culled by the backface culling.
 			
-			indices.push_back(top_index);										// t_i => b_i + 1 => t_i + 1  ==  CBD
-			indices.push_back(base_index + 1);									// 
-			indices.push_back(top_index + 1);									// ---------------------------------- 
+			indices.push_back(topIndex);										// t_i => b_i + 1 => t_i + 1  ==  CBD
+			indices.push_back(baseIndex + 1);									// 
+			indices.push_back(topIndex + 1);									// ---------------------------------- 
 		}
 		else
 		{
-			indices.push_back(base_index);										// As index (sectors * 2) corresponds to the center vertex of the base,
-			indices.push_back(0);												// when top_index == (sectors * 2) - 1 it means that its the
-			indices.push_back(top_index);										// last 2 triangles and we need the indices from the beginning.
+			indices.push_back(baseIndex);										// As index (sectors * 2) corresponds to the center vertex of the base,
+			indices.push_back(0);												// when topIndex == (sectors * 2) - 1 it means that its the
+			indices.push_back(topIndex);										// last 2 triangles and we need the indices from the beginning.
 			
-			indices.push_back(top_index);
+			indices.push_back(topIndex);
 			indices.push_back(0);
-			indices.push_back(base_index + 1);
+			indices.push_back(baseIndex + 1);
 		}
 	}
 
 	// BASE INDICES
-	for (uint sector = 0, circle_index = base_center_index + 1; sector < sectors; ++sector, ++circle_index)
+	for (uint sector = 0, circle_index = baseCenterIndex + 1; sector < sectors; ++sector, ++circle_index)
 	{
 		if (sector < sectors - 1)
 		{
-			indices.push_back(base_center_index);							// Constructing the base triangles indices.
+			indices.push_back(baseCenterIndex);							// Constructing the base triangles indices.
 			indices.push_back(circle_index + 1);							// The first index of the triangle will always
 			indices.push_back(circle_index);								// be the one at the center of the base.
 		}
 		else
 		{
-			indices.push_back(base_center_index);							// Constructing the last triangle indices of the base.
-			indices.push_back(base_center_index + 1);						//
+			indices.push_back(baseCenterIndex);							// Constructing the last triangle indices of the base.
+			indices.push_back(baseCenterIndex + 1);						//
 			indices.push_back(circle_index);								// ---------------------------------------------------
 		}
 	}
 
 	// TOP INDICES
-	for (uint sector = 0, circle_index = top_center_index + 1; sector < sectors; ++sector, ++circle_index)
+	for (uint sector = 0, circle_index = topCenterIndex + 1; sector < sectors; ++sector, ++circle_index)
 	{
 		if (sector < sectors - 1)
 		{
-			indices.push_back(top_center_index);							// The circle index refers to the indexes that are at the borders
+			indices.push_back(topCenterIndex);							// The circle index refers to the indexes that are at the borders
 			indices.push_back(circle_index);								// of the base or the top. In this case it refers to the ones at the top.
 			indices.push_back(circle_index + 1);							//
 		}
 		else
 		{
-			indices.push_back(top_center_index);							// 
+			indices.push_back(topCenterIndex);							// 
 			indices.push_back(circle_index);								// 
-			indices.push_back(top_center_index + 1);						// ---------------------------------------------------------------------- 
+			indices.push_back(topCenterIndex + 1);						// ---------------------------------------------------------------------- 
 		}
 	}
 }
@@ -1021,7 +1021,7 @@ void P_Cylinder::InnerRender() const
 }
 
 // PYRAMID ============================================
-P_Pyramid::P_Pyramid(float3 size) : Primitive(), size(size), loaded_in_buffers(false)
+P_Pyramid::P_Pyramid(float3 size) : Primitive(), size(size), loadedInBuffers(false)
 {
 	type = PRIMITIVE_TYPES::PYRAMID;
 }
@@ -1033,9 +1033,9 @@ void P_Pyramid::InnerRender() const
 
 void P_Pyramid::IndicesRender()
 {	
-	if (!loaded_in_buffers)
+	if (!loadedInBuffers)
 	{
-		float vertices_ex[15] =
+		float verticesEx[15] =
 		{
 			 0.0f,  1.015f,  0.0f,		// A --- i = 0		// Height of a given equilateral pyramid: (sqrt(6) / 3) * a; where a is the length of the sides of the base.
 			-1.0f, -0.615f,  1.0f,		// B --- i = 1
@@ -1044,7 +1044,7 @@ void P_Pyramid::IndicesRender()
 			 1.0f, -0.615f, -1.0f		// E --- i = 4
 		};
 
-		uint indices_ex[18] =
+		uint indicesEx[18] =
 		{
 			0, 1, 2,					// ABC --- FRONT
 			0, 2, 4,					// ACE --- RIGHT
@@ -1055,17 +1055,17 @@ void P_Pyramid::IndicesRender()
 			1, 4, 2						// BEC ---  -
 		};
 
-		uint my_vertices	= 0;
-		uint my_indices		= 0;
+		uint myVertices	= 0;
+		uint myIndices = 0;
 
 		/*for (uint i = 0; i < 15; ++i)
 		{
-			vertices.push_back(vertices_ex[i]);
+			vertices.push_back(verticesEx[i]);
 		}
 
 		for (uint i = 0; i < 18; ++i)
 		{
-			indices.push_back(indices_ex[i]);
+			indices.push_back(indicesEx[i]);
 		}
 
 		LoadBuffersOnMemory();*/
@@ -1073,20 +1073,20 @@ void P_Pyramid::IndicesRender()
 		glGenVertexArrays(1, &VAO);
 		glBindVertexArray(VAO);
 
-		glGenBuffers(1, (GLuint*)&my_vertices);
-		glBindBuffer(GL_ARRAY_BUFFER, my_vertices);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 15, vertices_ex, GL_STATIC_DRAW);
+		glGenBuffers(1, (GLuint*)&myVertices);
+		glBindBuffer(GL_ARRAY_BUFFER, myVertices);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 15, verticesEx, GL_STATIC_DRAW);
 
-		glGenBuffers(1, (GLuint*)&my_indices);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, my_indices);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * 24, indices_ex, GL_STATIC_DRAW);
+		glGenBuffers(1, (GLuint*)&myIndices);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, myIndices);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * 24, indicesEx, GL_STATIC_DRAW);
 
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, (void*)0);
 		glEnableVertexAttribArray(0);
 
 		glBindVertexArray(0);
 
-		loaded_in_buffers = true;
+		loadedInBuffers = true;
 	}
 
 	glBindVertexArray(VAO);
@@ -1150,7 +1150,7 @@ void P_Line::IndicesRender()
 }
 
 // PLANE ==================================================
-P_Plane::P_Plane(const float3& _normal) : Primitive(), normal(_normal)
+P_Plane::P_Plane(const float3& normal) : Primitive(), normal(normal)
 {
 	type = PRIMITIVE_TYPES::PLANE;
 }

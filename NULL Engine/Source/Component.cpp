@@ -6,11 +6,11 @@
 
 #include "Component.h"
 
-Component::Component(GameObject* owner, COMPONENT_TYPE type, bool is_active) :
-id			(Random::LCG::GetRandomUint()),
-type		(type),
-owner		(owner),
-is_active	(is_active)
+Component::Component(GameObject* owner, COMPONENT_TYPE type, bool isActive) :
+id(Random::LCG::GetRandomUint()),
+type(type),
+owner(owner),
+isActive(isActive)
 {
 
 }
@@ -70,12 +70,12 @@ void Component::ResetID()
 
 bool Component::IsActive() const
 {
-	return is_active;
+	return isActive;
 }
 
-void Component::SetIsActive(const bool& set_to)
+void Component::SetIsActive(const bool& setTo)
 {
-	is_active = set_to;
+	isActive = setTo;
 }
 
 GameObject* Component::GetOwner() const

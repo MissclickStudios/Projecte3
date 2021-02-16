@@ -22,7 +22,7 @@ class GameObject
 {
 public:
 	GameObject();
-	GameObject(std::string name , bool is_active = true, bool is_static = false);
+	GameObject(std::string name , bool isActive = true, bool isStatic = false);
 	~GameObject();
 
 	bool			Update				();
@@ -38,11 +38,11 @@ public:
 	void			UpdateBoundingBoxes					();
 	AABB			GetAABB								() const;
 	float3*			GetAABBVertices						() const;
-	void			GetRenderers						(std::vector<MeshRenderer>& mesh_renderers, std::vector<CuboidRenderer>& cuboid_renderers, 
-															std::vector<SkeletonRenderer>& skeleton_renderers); // TODO: Get them elsewhere. Scene maybe?
+	void			GetRenderers						(std::vector<MeshRenderer>& meshRenderers, std::vector<CuboidRenderer>& cuboidRenderers, 
+															std::vector<SkeletonRenderer>& skeletonRenderers); // TODO: Get them elsewhere. Scene maybe?
 
 public:																									// --- PARENT/CHILDS METHODS
-	bool			SetParent							(GameObject* new_parent);
+	bool			SetParent							(GameObject* newParent);
 
 	bool			AddChild							(GameObject* child);							// Adds the given child to this GO's childs. Also dels. it from prev. parent's childs.
 	bool			NewChildIsOwnParent					(GameObject* child);							// Rets. true if passed child is being added to one of it's children or ch. of chs.
@@ -52,7 +52,7 @@ public:																									// --- PARENT/CHILDS METHODS
 	void			GetAllChilds						(std::vector<GameObject*>& childs);	
 	void			GetAllChilds						(std::map<std::string, GameObject*>& childs);
 	void			GetAllChilds						(std::unordered_map<std::string, GameObject*>& childs);
-	GameObject*		FindChild							(const char* child_name);
+	GameObject*		FindChild							(const char* childName);
 
 public:																									// --- GAME OBJECT GETTERS AND SETTERS
 	uint32			GetUID								() const;										//
@@ -61,18 +61,18 @@ public:																									// --- GAME OBJECT GETTERS AND SETTERS
 	bool			IsStatic							() const;										// 
 
 	void			ForceUID							(const uint32& UID);							// 
-	void			SetName								(const char* new_name);							// 
-	void			SetIsActive							(const bool& set_to);							// 
-	void			SetIsStatic							(const bool& set_to);							// 
-	void			SetChildsIsActive					(const bool& set_to, GameObject* parent);		// 
-	void			SetChildsIsStatic					(const bool& set_to, GameObject* parent);		// 
+	void			SetName								(const char* newName);							// 
+	void			SetIsActive							(const bool& setTo);							// 
+	void			SetIsStatic							(const bool& setTo);							// 
+	void			SetChildsIsActive					(const bool& setTo, GameObject* parent);		// 
+	void			SetChildsIsStatic					(const bool& setTo, GameObject* parent);		// 
 
 	uint32			GetParentUID						() const;
-	void			SetParentUID						(const uint32& parent_UID);
+	void			SetParentUID						(const uint32& parentUID);
 
 public:																									// --- COMPONENT GETTERS AND SETTERS
 	Component*		CreateComponent						(COMPONENT_TYPE type);							// Creates a component of the given type and adds it to the components vector.
-	bool			DeleteComponent						(Component* component_to_delete);				// Deletes the given component from the Components vector. Returs False on ERROR.
+	bool			DeleteComponent						(Component* componentToDelete);				// Deletes the given component from the Components vector. Returs False on ERROR.
 	
 	const std::vector<Component*>&	GetAllComponents	() const;										// 
 	bool							GetAllComponents	(std::vector<Component*>& components) const;	// 
@@ -117,18 +117,18 @@ public:																									// --- COMPONENT GETTERS AND SETTERS
 	}
 
 	template <typename T>
-	bool GetComponents(std::vector<T*>& components_with_type)
+	bool GetComponents(std::vector<T*>& componentsWithType)
 	{
 		COMPONENT_TYPE type = T::GetType();
 		for (uint i = 0; i < components.size(); ++i)
 		{
 			if (components[i]->GetType() == type)
 			{
-				components_with_type.push_back((T*)components[i]);
+				componentsWithType.push_back((T*)components[i]);
 			}
 		}
 
-		return  (components_with_type.empty()) ? false : true;
+		return  (componentsWithType.empty()) ? false : true;
 	}
 
 public:
@@ -154,8 +154,8 @@ public:
 private:
 	uint32						uid;
 	std::string					name;
-	bool						is_active;
-	bool						is_static;
+	bool						isActive;
+	bool						isStatic;
 
 	uint32						parent_uid;													// Only for Serialization purposes. Maybe will be repurposed later.
 };
