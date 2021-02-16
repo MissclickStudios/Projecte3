@@ -18,9 +18,9 @@ struct PathNode
 
 	std::vector<PathNode> children;									// List with all the children of a given PathNode. i.e All the sub-folders inside a given folder.
 
-	bool is_leaf				= true;
-	bool is_file				= true;
-	bool is_last_directory		= true;
+	bool isLeaf = true;
+	bool isFile = true;
+	bool isLastDirectory = true;
 };
 
 #endif // !__PATH_NODE_H__

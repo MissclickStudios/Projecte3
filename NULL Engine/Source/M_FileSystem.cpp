@@ -323,9 +323,9 @@ PathNode M_FileSystem::GetFiles(const char* directory, std::vector<std::string>*
 	{
 		PathNode dir;
 
-		dir.is_file = false;
-		dir.is_leaf = false;
-		dir.is_last_directory = IsLastDirectory(dir);
+		dir.isFile = false;
+		dir.isLeaf = false;
+		dir.isLastDirectory = IsLastDirectory(dir);
 
 		root.children.push_back(dir);
 	}
@@ -392,9 +392,9 @@ PathNode M_FileSystem::GetAllFiles(const char* directory, std::vector<std::strin
 			}
 		}
 
-		root.is_file				= HasExtension(root.path.c_str());						// root.isFile will be true if its path has any extensions.
-		root.is_leaf				= root.children.empty();								// root.isLeaf will be true if root has no child nodes.
-		root.is_last_directory		= IsLastDirectory(root);
+		root.isFile				= HasExtension(root.path.c_str());						// root.isFile will be true if its path has any extensions.
+		root.isLeaf				= root.children.empty();								// root.isLeaf will be true if root has no child nodes.
+		root.isLastDirectory		= IsLastDirectory(root);
 	}
 
 	return root;

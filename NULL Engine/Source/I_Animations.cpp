@@ -57,7 +57,7 @@ void Importer::Animations::Utilities::GetPositionKeys(const aiNodeAnim* aiChanne
 		double time		= pk.mTime;
 		float3 position = float3(pk.mValue.x, pk.mValue.y, pk.mValue.z);
 
-		rChannel.position_keyframes.emplace(time, position);
+		rChannel.positionKeyframes.emplace(time, position);
 	}
 }
 
@@ -70,7 +70,7 @@ void Importer::Animations::Utilities::GetRotationKeys(const aiNodeAnim* aiChanne
 		double time		= rk.mTime;
 		Quat rotation	= Quat(rk.mValue.x, rk.mValue.y, rk.mValue.z, rk.mValue.w);
 
-		rChannel.rotation_keyframes.emplace(time, rotation);
+		rChannel.rotationKeyframes.emplace(time, rotation);
 	}
 }
 
@@ -83,7 +83,7 @@ void Importer::Animations::Utilities::GetScaleKeys(const aiNodeAnim* aiChannel, 
 		double time		= sk.mTime;
 		float3 scale	= float3(sk.mValue.x, sk.mValue.y, sk.mValue.z);
 
-		rChannel.scale_keyframes.emplace(time, scale);
+		rChannel.scaleKeyframes.emplace(time, scale);
 	}
 }
 
@@ -237,9 +237,9 @@ uint Importer::Animations::Utilities::GetChannelsDataSize(const R_Animation* rAn
 
 		channelSize += sizeof(uint) * 4;																					// Length of the name and sizes of the keys maps.
 		channelSize += (strlen(rChannel.name.c_str()) * sizeof(char));
-		channelSize += rChannel.position_keyframes.size() * vecKeySize;
-		channelSize += rChannel.rotation_keyframes.size() * quatKeySize;
-		channelSize += rChannel.scale_keyframes.size() * vecKeySize;
+		channelSize += rChannel.positionKeyframes.size() * vecKeySize;
+		channelSize += rChannel.rotationKeyframes.size() * quatKeySize;
+		channelSize += rChannel.scaleKeyframes.size() * vecKeySize;
 
 		channelsSize += channelSize;
 	}
@@ -264,7 +264,7 @@ void Importer::Animations::Utilities::StoreChannelName(const Channel& rChannel, 
 void Importer::Animations::Utilities::StorePositionKeysData(const Channel& rChannel, char** cursor)
 {
 	uint bytes		= 0;
-	uint pkSize	= rChannel.position_keyframes.size();
+	uint pkSize	= rChannel.positionKeyframes.size();
 
 	bytes = sizeof(uint);
 	memcpy(*cursor, (const void*)&pkSize, bytes);
@@ -272,7 +272,7 @@ void Importer::Animations::Utilities::StorePositionKeysData(const Channel& rChan
 
 	bytes = sizeof(double) + (sizeof(float) * 3);																			// Data Size of a Position Keyframe.
 	std::map<double, float3>::const_iterator item;
-	for (item = rChannel.position_keyframes.begin(); item != rChannel.position_keyframes.end(); ++item)
+	for (item = rChannel.positionKeyframes.begin(); item != rChannel.positionKeyframes.end(); ++item)
 	{
 		memcpy(*cursor, (const void*)&item->first, sizeof(double));
 		*cursor += sizeof(double);
@@ -285,7 +285,7 @@ void Importer::Animations::Utilities::StorePositionKeysData(const Channel& rChan
 void Importer::Animations::Utilities::StoreRotationKeysData(const Channel& rChannel, char** cursor)
 {
 	uint bytes		= 0;
-	uint rkSize	= rChannel.rotation_keyframes.size();
+	uint rkSize	= rChannel.rotationKeyframes.size();
 
 	bytes = sizeof(uint);
 	memcpy(*cursor, (const void*)&rkSize, bytes);
@@ -293,7 +293,7 @@ void Importer::Animations::Utilities::StoreRotationKeysData(const Channel& rChan
 	
 	bytes = sizeof(double) + (sizeof(float) * 4);																			// Data Size of a Rotation Keyframe.
 	std::map<double, Quat>::const_iterator item;
-	for (item = rChannel.rotation_keyframes.begin(); item != rChannel.rotation_keyframes.end(); ++item)
+	for (item = rChannel.rotationKeyframes.begin(); item != rChannel.rotationKeyframes.end(); ++item)
 	{
 		memcpy(*cursor, (const void*)&item->first, sizeof(double));
 		*cursor += sizeof(double);
@@ -306,7 +306,7 @@ void Importer::Animations::Utilities::StoreRotationKeysData(const Channel& rChan
 void Importer::Animations::Utilities::StoreScaleKeysData(const Channel& rChannel, char** cursor)
 {
 	uint bytes = 0;
-	uint skSize = rChannel.scale_keyframes.size();
+	uint skSize = rChannel.scaleKeyframes.size();
 
 	bytes = sizeof(uint);
 	memcpy(*cursor, (const void*)&skSize, bytes);
@@ -315,7 +315,7 @@ void Importer::Animations::Utilities::StoreScaleKeysData(const Channel& rChannel
 	bytes = sizeof(double) + (sizeof(float) * 3);
 
 	std::map<double, float3>::const_iterator item;
-	for (item = rChannel.scale_keyframes.begin(); item != rChannel.scale_keyframes.end(); ++item)
+	for (item = rChannel.scaleKeyframes.begin(); item != rChannel.scaleKeyframes.end(); ++item)
 	{
 		memcpy(*cursor, (const void*)&item->first, sizeof(double));
 		*cursor += sizeof(double);
@@ -362,7 +362,7 @@ void Importer::Animations::Utilities::LoadPositionKeysData(char** cursor, Channe
 		memcpy(&position, (const void*)(*cursor), positionBytes);
 		*cursor += positionBytes;
 
-		rChannel.position_keyframes.emplace(time, position);
+		rChannel.positionKeyframes.emplace(time, position);
 	}
 }
 
@@ -388,7 +388,7 @@ void Importer::Animations::Utilities::LoadRotationKeysData(char** cursor, Channe
 		memcpy(&rotation, (const void*)(*cursor), rotationBytes);
 		*cursor += rotationBytes;
 
-		rChannel.rotation_keyframes.emplace(time, rotation);
+		rChannel.rotationKeyframes.emplace(time, rotation);
 	}
 }
 
@@ -414,6 +414,6 @@ void Importer::Animations::Utilities::LoadScaleKeysData(char** cursor, Channel& 
 		memcpy(&scale, (const void*)(*cursor), scaleBytes);
 		*cursor += scaleBytes;
 
-		rChannel.scale_keyframes.emplace(time, scale);
+		rChannel.scaleKeyframes.emplace(time, scale);
 	}
 }

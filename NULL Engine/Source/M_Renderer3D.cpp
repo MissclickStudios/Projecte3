@@ -406,11 +406,11 @@ void M_Renderer3D::InitEngineIcons()
 	R_Texture* material_icon	= (R_Texture*)App->resourceManager->RequestResource(material_icon_uid);
 	R_Texture* model_icon		= (R_Texture*)App->resourceManager->RequestResource(model_icon_uid);
 
-	engineIcons.animation_icon = animation_icon;
-	engineIcons.file_icon		= file_icon;
-	engineIcons.folder_icon	= folder_icon;
-	engineIcons.material_icon	= material_icon;
-	engineIcons.model_icon		= model_icon;
+	engineIcons.animationIcon = animation_icon;
+	engineIcons.fileIcon		= file_icon;
+	engineIcons.folderIcon	= folder_icon;
+	engineIcons.materialIcon	= material_icon;
+	engineIcons.modelIcon		= model_icon;
 }
 
 void M_Renderer3D::InitFramebuffers()

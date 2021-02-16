@@ -503,39 +503,39 @@ void Application::UpdateFrameData(int frames, int ms)
 void Application::LogHardwareInfo() const
 {
 	LOG(" ------------- CPU INFO ------------- ");
-	LOG("CPU Cores: %d",						hardwareInfo.CPU.cpu_count);
-	LOG("CPU Cache Size: %d ",					hardwareInfo.CPU.cache_size);
-	LOG("CPU RAM Size: %.1f GB",				hardwareInfo.CPU.ram_gb);
+	LOG("CPU Cores: %d",						hardwareInfo.CPU.cpuCount);
+	LOG("CPU Cache Size: %d ",					hardwareInfo.CPU.cacheSize);
+	LOG("CPU RAM Size: %.1f GB",				hardwareInfo.CPU.ramGb);
 	LOG(" --- DRIVERS --- ");
-	LOG("CPU RDTSC: %s",						hardwareInfo.CPU.has_RDTSC		?	"True" : "False");
-	LOG("CPU AltiVec: %s",						hardwareInfo.CPU.has_AltiVec	?	"True" : "False");
-	LOG("CPU Now3D: %s",						hardwareInfo.CPU.has_3DNow		?	"True" : "False");
-	LOG("CPU MMX: %s",							hardwareInfo.CPU.has_MMX		?	"True" : "False");
-	LOG("CPU SSE: %s",							hardwareInfo.CPU.has_SSE		?	"True" : "False");
-	LOG("CPU SSE2: %s",							hardwareInfo.CPU.has_SSE2		?	"True" : "False");
-	LOG("CPU SSE3: %s",							hardwareInfo.CPU.has_SSE3		?	"True" : "False");
-	LOG("CPU SSE4.1: %s",						hardwareInfo.CPU.has_SSE41		?	"True" : "False");
-	LOG("CPU SSE4.2: %s",						hardwareInfo.CPU.has_SSE42		?	"True" : "False");
-	LOG("CPU AVX: %s",							hardwareInfo.CPU.has_AVX		?	"True" : "False");
-	LOG("CPU AVX2: %s",							hardwareInfo.CPU.has_AVX2		?	"True" : "False");
+	LOG("CPU RDTSC: %s",						hardwareInfo.CPU.hasRDTSC		?	"True" : "False");
+	LOG("CPU AltiVec: %s",						hardwareInfo.CPU.hasAltiVec	?	"True" : "False");
+	LOG("CPU Now3D: %s",						hardwareInfo.CPU.has3DNow		?	"True" : "False");
+	LOG("CPU MMX: %s",							hardwareInfo.CPU.hasMMX		?	"True" : "False");
+	LOG("CPU SSE: %s",							hardwareInfo.CPU.hasSSE		?	"True" : "False");
+	LOG("CPU SSE2: %s",							hardwareInfo.CPU.hasSSE2		?	"True" : "False");
+	LOG("CPU SSE3: %s",							hardwareInfo.CPU.hasSSE3		?	"True" : "False");
+	LOG("CPU SSE4.1: %s",						hardwareInfo.CPU.hasSSE41		?	"True" : "False");
+	LOG("CPU SSE4.2: %s",						hardwareInfo.CPU.hasSSE42		?	"True" : "False");
+	LOG("CPU AVX: %s",							hardwareInfo.CPU.hasAVX		?	"True" : "False");
+	LOG("CPU AVX2: %s",							hardwareInfo.CPU.hasAVX2		?	"True" : "False");
 
 	LOG(" ------------- GPU INFO ------------- ");
-	LOG("GPU Vendor %d Device %d",				hardwareInfo.GPU.vendor, hardwareInfo.GPU.device_id);
+	LOG("GPU Vendor %d Device %d",				hardwareInfo.GPU.vendor, hardwareInfo.GPU.deviceId);
 	LOG("GPU Brand: %s",						hardwareInfo.GPU.brand);
 	LOG(" --- VRAM --- ");
-	LOG("GPU VRAM Budget: %.1f MB",				hardwareInfo.GPU.vram_mb_budget);
-	LOG("GPU VRAM Usage: %.1f MB",				hardwareInfo.GPU.vram_mb_usage);
-	LOG("GPU VRAM Available: %.1f MB",			hardwareInfo.GPU.vram_mb_available);
-	LOG("GPU VRAM Reserved: %.1f MB",			hardwareInfo.GPU.vram_mb_reserved);
+	LOG("GPU VRAM Budget: %.1f MB",				hardwareInfo.GPU.vramBudget);
+	LOG("GPU VRAM Usage: %.1f MB",				hardwareInfo.GPU.vramUsage);
+	LOG("GPU VRAM Available: %.1f MB",			hardwareInfo.GPU.vramAvailable);
+	LOG("GPU VRAM Reserved: %.1f MB",			hardwareInfo.GPU.vramReserved);
 
 	LOG(" ------------- SDL INFO ------------- ");
-	LOG("SDL Version: %s",						hardwareInfo.SDL.sdl_version);
+	LOG("SDL Version: %s",						hardwareInfo.SDL.SDLVersion);
 
 	LOG(" ------------- OPENGL INFO ------------- ");
-	LOG("OpenGL Model: %s",						hardwareInfo.OpenGL.model_name);
-	LOG("OpenGL Renderer: %s",					hardwareInfo.OpenGL.renderer_name);
+	LOG("OpenGL Model: %s",						hardwareInfo.OpenGL.modelName);
+	LOG("OpenGL Renderer: %s",					hardwareInfo.OpenGL.rendererName);
 	LOG("OpenGL Version: %s",					hardwareInfo.OpenGL.version);
-	LOG("OpenGL Shading Language Version: %s",	hardwareInfo.OpenGL.shading_language_version);
+	LOG("OpenGL Shading Language Version: %s",	hardwareInfo.OpenGL.shadingLanguageVersion);
 	//LOG("OpenGL Extensions: %s",				hardware_info.OpenGL.extensions);
 
 	/*for (int i = 0; i < hardware_info.OpenGL.extensions.size(); ++i)

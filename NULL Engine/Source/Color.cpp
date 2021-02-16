@@ -122,7 +122,7 @@ Color Color::operator -(const Color& color)
 	return col;
 }
 
-Color Color::operator *(const float& scalar)
+Color Color::operator *(float scalar)
 {
 	Color col;
 	
@@ -134,7 +134,7 @@ Color Color::operator *(const float& scalar)
 	return col;
 }
 
-Color Color::operator /(const float& scalar)
+Color Color::operator /(float scalar)
 {
 	Color col;
 
@@ -166,7 +166,7 @@ Color Color::operator -=(const Color& color)
 	return *this;
 }
 
-Color Color::operator *=(const float& scalar)
+Color Color::operator *=(float scalar)
 {
 	r *= scalar;
 	g *= scalar;
@@ -176,7 +176,7 @@ Color Color::operator *=(const float& scalar)
 	return *this;
 }
 
-Color Color::operator /=(const float& scalar)
+Color Color::operator /=(float scalar)
 {
 	r /= scalar;
 	g /= scalar;

@@ -226,7 +226,7 @@ void Importer::Meshes::Utilities::StoreBoneName(const Bone& bone, char** cursor)
 void Importer::Meshes::Utilities::StoreBoneOffsetMatrix(const Bone& bone, char** cursor)
 {
 	uint bytes = 16 * sizeof(float);
-	memcpy(*cursor, (const void*)bone.offset_matrix.ptr(), bytes);
+	memcpy(*cursor, (const void*)bone.offsetMatrix.ptr(), bytes);
 	*cursor += bytes;
 }
 
@@ -263,7 +263,7 @@ void Importer::Meshes::Utilities::LoadBoneName(char** cursor, Bone& bone)
 void Importer::Meshes::Utilities::LoadBoneOffsetMatrix(char** cursor, Bone& bone)
 {
 	uint bytes = 16 * sizeof(float);
-	memcpy(bone.offset_matrix.ptr(), *cursor, bytes);
+	memcpy(bone.offsetMatrix.ptr(), *cursor, bytes);
 	*cursor += bytes;
 }
 
