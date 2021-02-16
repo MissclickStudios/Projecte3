@@ -32,9 +32,9 @@ public:
 
 private:
 	const char*		name;
-	bool			is_active;
-	bool			is_hovered;
-	bool			is_clicked;
+	bool			isActive;
+	bool			isHovered;
+	bool			isClicked;
 };
 
 #endif // !__E_PANEL_H__

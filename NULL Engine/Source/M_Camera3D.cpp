@@ -18,7 +18,7 @@
 #define ROTATION_SPEED 0.05f
 #define ZOOM_SPEED 300.0f
 
-M_Camera3D::M_Camera3D(bool is_active) : Module("Camera3D", is_active),
+M_Camera3D::M_Camera3D(bool isActive) : Module("Camera3D", isActive),
 masterCamera		(nullptr),
 currentCamera		(nullptr),
 drawLastRaycast	(false)
@@ -102,32 +102,32 @@ bool M_Camera3D::SaveConfiguration(ParsonNode& configuration) const
 // -----------------------------------------------------------------
 UPDATE_STATUS M_Camera3D::Update(float dt)
 {
-	if (App->editor->ViewportIsHovered())
+	if (app->editor->ViewportIsHovered())
 	{	
-		if (!App->editor->HoveringGuizmo())
+		if (!app->editor->HoveringGuizmo())
 		{
-			if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_STATE::KEY_DOWN)
+			if (app->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_STATE::KEY_DOWN)
 			{
 				CastRay();
 			}
 		}
 		
-		if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_STATE::KEY_REPEAT)
+		if (app->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_STATE::KEY_REPEAT)
 		{
 			WASDMovement();
 
 			FreeLookAround();
 		}
 
-		if (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_STATE::KEY_REPEAT)
+		if (app->input->GetKey(SDL_SCANCODE_LALT) == KEY_STATE::KEY_REPEAT)
 		{
-			if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_STATE::KEY_REPEAT)
+			if (app->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_STATE::KEY_REPEAT)
 			{
-				if (App->scene->GetSelectedGameObject() != nullptr)
+				if (app->scene->GetSelectedGameObject() != nullptr)
 				{
-					if (App->scene->GetSelectedGameObject()->GetComponent<C_Camera>() != currentCamera)
+					if (app->scene->GetSelectedGameObject()->GetComponent<C_Camera>() != currentCamera)
 					{
-						reference = App->scene->GetSelectedGameObject()->GetComponent<C_Transform>()->GetWorldPosition();
+						reference = app->scene->GetSelectedGameObject()->GetComponent<C_Transform>()->GetWorldPosition();
 					}
 				}
 				else
@@ -139,27 +139,27 @@ UPDATE_STATUS M_Camera3D::Update(float dt)
 			}
 		}
 
-		if (App->input->GetMouseButton(SDL_BUTTON_MIDDLE) == KEY_STATE::KEY_REPEAT)
+		if (app->input->GetMouseButton(SDL_BUTTON_MIDDLE) == KEY_STATE::KEY_REPEAT)
 		{
 			PanCamera();
 		}
 
-		if (App->input->GetMouseZ() != 0)
+		if (app->input->GetMouseZ() != 0)
 		{
 			Zoom();
 		}
 
-		if (App->input->GetKey(SDL_SCANCODE_LCTRL) == KEY_STATE::KEY_IDLE)
+		if (app->input->GetKey(SDL_SCANCODE_LCTRL) == KEY_STATE::KEY_IDLE)
 		{
-			if (App->input->GetKey(SDL_SCANCODE_O) == KEY_STATE::KEY_DOWN)
+			if (app->input->GetKey(SDL_SCANCODE_O) == KEY_STATE::KEY_DOWN)
 			{
 				ReturnToWorldOrigin();
 			}
 		}
 
-		if (App->input->GetKey(SDL_SCANCODE_F) == KEY_STATE::KEY_DOWN)
+		if (app->input->GetKey(SDL_SCANCODE_F) == KEY_STATE::KEY_DOWN)
 		{
-			float3 target = App->scene->GetSelectedGameObject()->GetComponent<C_Transform>()->GetWorldPosition();
+			float3 target = app->scene->GetSelectedGameObject()->GetComponent<C_Transform>()->GetWorldPosition();
 			Focus(target);
 		}
 	}
@@ -174,16 +174,16 @@ void M_Camera3D::CreateMasterCamera()
 	masterCamera->SetName("MasterCamera");
 	masterCamera->CreateComponent(COMPONENT_TYPE::CAMERA);
 	
-	C_Camera* c_camera = masterCamera->GetComponent<C_Camera>();
-	c_camera->SetFarPlaneDistance(1000.0f);
-	SetCurrentCamera(c_camera);
+	C_Camera* cCamera = masterCamera->GetComponent<C_Camera>();
+	cCamera->SetFarPlaneDistance(1000.0f);
+	SetCurrentCamera(cCamera);
 	
-	if (App != nullptr)
+	if (app != nullptr)
 	{
-		float win_width		= (float)App->window->GetWidth();
-		float win_height	= (float)App->window->GetHeight();
+		float winWidth		= (float)app->window->GetWidth();
+		float winHeight	= (float)app->window->GetHeight();
 		
-		c_camera->SetAspectRatio(win_width/ win_height);
+		cCamera->SetAspectRatio(winWidth/ winHeight);
 	}
 }
 
@@ -192,15 +192,15 @@ C_Camera* M_Camera3D::GetCurrentCamera() const
 	return currentCamera;
 }
 
-void M_Camera3D::SetCurrentCamera(C_Camera* c_camera)
+void M_Camera3D::SetCurrentCamera(C_Camera* cCamera)
 {
-	if (c_camera == nullptr)
+	if (cCamera == nullptr)
 	{
 		LOG("[ERROR] Camera: Could not set a new current camera! Error: Given Camera Component was nullptr.");
 		return;
 	}
 
-	if (c_camera->GetOwner() == nullptr)																						// Highly unlikely case. Gets checked just to make sure.
+	if (cCamera->GetOwner() == nullptr)																						// Highly unlikely case. Gets checked just to make sure.
 	{
 		LOG("[ERROR] Camera: Could not set a new current camera! Error: Given Camera Component's owner was nullptr.");
 		return;
@@ -211,13 +211,13 @@ void M_Camera3D::SetCurrentCamera(C_Camera* c_camera)
 		currentCamera->SetFrustumIsHidden(false);
 	}
 	
-	c_camera->SetFrustumIsHidden(true);
-	currentCamera = c_camera;
+	cCamera->SetFrustumIsHidden(true);
+	currentCamera = cCamera;
 	currentCamera->SetUpdateProjectionMatrix(true);
 	
-	if (App != nullptr)																										// TMP (?)
+	if (app != nullptr)																										// TMP (?)
 	{
-		currentCamera->SetAspectRatio(((float)App->window->GetWidth()) / ((float)App->window->GetHeight()));
+		currentCamera->SetAspectRatio(((float)app->window->GetWidth()) / ((float)app->window->GetHeight()));
 	}
 }
 
@@ -233,8 +233,8 @@ void M_Camera3D::SetMasterCameraAsCurrentCamera()
 		CreateMasterCamera();
 	}
 
-	C_Camera* c_camera = masterCamera->GetComponent<C_Camera>();
-	if (c_camera == nullptr)
+	C_Camera* cCamera = masterCamera->GetComponent<C_Camera>();
+	if (cCamera == nullptr)
 	{
 		LOG("[ERROR] Camera: Could not set the master camera as the current camera! Error: Master Camera did not have a Camera Component.");
 		LOG("[WARNING] Camera: Created a new Camera Component for the Master Camera. Reason: Master Camera did not have a Camera Component!");
@@ -242,7 +242,7 @@ void M_Camera3D::SetMasterCameraAsCurrentCamera()
 		masterCamera->CreateComponent(COMPONENT_TYPE::CAMERA);
 	}
 
-	currentCamera = c_camera;
+	currentCamera = cCamera;
 	currentCamera->SetUpdateProjectionMatrix(true);
 }
 
@@ -269,9 +269,9 @@ void M_Camera3D::LookAt(const float3& spot)											// Almost identical to Poi
 }
 
 // -----------------------------------------------------------------
-void M_Camera3D::Focus(const float3& target, const float& distance_from_target)
+void M_Camera3D::Focus(const float3& target, const float& distanceFromTarget)
 {
-	currentCamera->Focus(target, distance_from_target);
+	currentCamera->Focus(target, distanceFromTarget);
 	reference = target;
 }
 
@@ -291,46 +291,46 @@ void M_Camera3D::ReturnToWorldOrigin()
 // -----------------------------------------------------------------
 void M_Camera3D::WASDMovement()
 {
-	float3 new_position		= float3::zero;
+	float3 newPosition		= float3::zero;
 	Frustum frustum			= currentCamera->GetFrustum();
-	float mov_speed			= movementSpeed * Time::Real::GetDT();
+	float movSpeed			= movementSpeed * Time::Real::GetDT();
 	
-	if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_STATE::KEY_REPEAT)								// --- CAMERA MOVEMEMENT BOOST
+	if (app->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_STATE::KEY_REPEAT)								// --- CAMERA MOVEMEMENT BOOST
 	{																									// 
-		mov_speed = movementSpeed * 2 * Time::Real::GetDT();											// 
+		movSpeed = movementSpeed * 2 * Time::Real::GetDT();											// 
 	}																									// ---------------------------
 
 
-	if (App->input->GetKey(SDL_SCANCODE_W) == KEY_STATE::KEY_REPEAT)									// --- FORWARD/BACKARD MOVEMENT (+Z/-Z)
+	if (app->input->GetKey(SDL_SCANCODE_W) == KEY_STATE::KEY_REPEAT)									// --- FORWARD/BACKARD MOVEMENT (+Z/-Z)
 	{																									// 
-		new_position += frustum.Front() * mov_speed;													// 
+		newPosition += frustum.Front() * movSpeed;													// 
 	}																									// 
-	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_STATE::KEY_REPEAT)									// 
+	if (app->input->GetKey(SDL_SCANCODE_S) == KEY_STATE::KEY_REPEAT)									// 
 	{																									// 
-		new_position -= frustum.Front() * mov_speed;													// 
+		newPosition -= frustum.Front() * movSpeed;													// 
 	}																									// ----------------------------------------
 
 
-	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_STATE::KEY_REPEAT)									// --- LEFT/RIGHT MOVEMENT (STRAFE -X/+X)
+	if (app->input->GetKey(SDL_SCANCODE_A) == KEY_STATE::KEY_REPEAT)									// --- LEFT/RIGHT MOVEMENT (STRAFE -X/+X)
 	{																									// 										
-		new_position -= frustum.WorldRight() * mov_speed;												// 										
+		newPosition -= frustum.WorldRight() * movSpeed;												// 										
 	}																									// 										
-	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_STATE::KEY_REPEAT)									// 										
+	if (app->input->GetKey(SDL_SCANCODE_D) == KEY_STATE::KEY_REPEAT)									// 										
 	{																									// 										
-		new_position += frustum.WorldRight() * mov_speed;												// 										
+		newPosition += frustum.WorldRight() * movSpeed;												// 										
 	}																									// ----------------------------------------
 
 
-	if (App->input->GetKey(SDL_SCANCODE_Q) == KEY_STATE::KEY_REPEAT)									// --- UPWARD/DOWNWARD MOVEMENT (+Y/-Y)
+	if (app->input->GetKey(SDL_SCANCODE_Q) == KEY_STATE::KEY_REPEAT)									// --- UPWARD/DOWNWARD MOVEMENT (+Y/-Y)
 	{																									// 
-		new_position += frustum.Up() * mov_speed;														// 
+		newPosition += frustum.Up() * movSpeed;														// 
 	}																									// 
-	if (App->input->GetKey(SDL_SCANCODE_E) == KEY_STATE::KEY_REPEAT)									// 
+	if (app->input->GetKey(SDL_SCANCODE_E) == KEY_STATE::KEY_REPEAT)									// 
 	{																									// 
-		new_position -= frustum.Up() * mov_speed;														// 
+		newPosition -= frustum.Up() * movSpeed;														// 
 	}																									// ------------------------------------
 
-	Move(new_position);
+	Move(newPosition);
 }
 
 void M_Camera3D::FreeLookAround()
@@ -394,7 +394,7 @@ void M_Camera3D::FreeLookAround()
 void M_Camera3D::Orbit()								// Almost identical to FreeLookAround(), but instead of only modifying XYZ, the position of the camera is also modified.
 {	
 	Frustum frustum			= currentCamera->GetFrustum();
-	float2 mouse_motion		= App->editor->GetWorldMouseMotionThroughEditor();
+	float2 mouse_motion		= app->editor->GetWorldMouseMotionThroughEditor();
 	float sensitivity		= rotationSpeed * Time::Real::GetDT();
 
 	float3 new_Z = frustum.Pos() - reference;
@@ -423,7 +423,7 @@ void M_Camera3D::PanCamera()
 	float3 new_position = float3::zero;
 
 	Frustum frustum		= currentCamera->GetFrustum();
-	float2 mouse_motion = App->editor->GetWorldMouseMotionThroughEditor();
+	float2 mouse_motion = app->editor->GetWorldMouseMotionThroughEditor();
 
 	if (mouse_motion.x != 0)
 	{
@@ -443,7 +443,7 @@ void M_Camera3D::PanCamera()
 void M_Camera3D::Zoom()
 {	
 	Frustum frustum		= currentCamera->GetFrustum();
-	float3 new_Z		= frustum.Front() * (float)App->input->GetMouseZ() * zoomSpeed * Time::Real::GetDT();
+	float3 new_Z		= frustum.Front() * (float)app->input->GetMouseZ() * zoomSpeed * Time::Real::GetDT();
 
 	Move(new_Z);
 }
@@ -532,17 +532,17 @@ void M_Camera3D::SetMasterCameraScale(const float3& scale)
 
 void M_Camera3D::CastRay()
 {	
-	float2 mouse_pos = App->editor->GetWorldMousePositionThroughEditor();
+	float2 mouse_pos = app->editor->GetWorldMousePositionThroughEditor();
 
-	float norm_mouse_X = mouse_pos.x / (float)App->window->GetWidth();
-	float norm_mouse_Y = mouse_pos.y / (float)App->window->GetHeight();
+	float norm_mouse_X = mouse_pos.x / (float)app->window->GetWidth();
+	float norm_mouse_Y = mouse_pos.y / (float)app->window->GetHeight();
 
 	float ray_origin_X = (norm_mouse_X - 0.5f) * 2;
 	float ray_origin_Y = (norm_mouse_Y - 0.5f) * 2;
 	
 	lastRaycast = currentCamera->GetFrustum().UnProjectLineSegment(ray_origin_X, ray_origin_Y);
 
-	App->scene->SelectGameObjectThroughRaycast(lastRaycast);
+	app->scene->SelectGameObjectThroughRaycast(lastRaycast);
 }
 
 bool M_Camera3D::DrawLastRaycast() const

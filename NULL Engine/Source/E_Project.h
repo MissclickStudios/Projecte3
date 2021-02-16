@@ -46,27 +46,27 @@ private:
 	void			ClearResourcesToDisplay		();
 
 private:																									// --- ENGINE DIRECTORIES VARS
-	PathNode				root_directory;
+	PathNode				rootDirectory;
 
-	char*					directory_to_display;
-	PathNode				display_directory;
+	char*					directoryToDisplay;
+	PathNode				displayDirectory;
 
-	std::vector<Resource*>	resources_to_display;
+	std::vector<Resource*>	resourcesToDisplay;
 
-	bool					refresh_root_directory;
-	bool					refresh_directory_to_display;
-	bool					refresh_window_size;
+	bool					refreshRootDirectory;
+	bool					refreshDirectoryToDisplay;
+	bool					refreshWindowSize;
 
 private:																									// --- ENGINE ICONS VARS
-	Icons					engine_icons;
-	bool					icons_are_loaded;
+	Icons					engineIcons;
+	bool					iconsAreLoaded;
 
-	ImVec2					icon_size;
-	ImVec2					icon_offset;
-	ImVec2					text_offset;
-	ImVec2					win_size;
+	ImVec2					iconSize;
+	ImVec2					iconOffset;
+	ImVec2					textOffset;
+	ImVec2					winSize;
 
-	Resource*				dragged_resource;
+	Resource*				draggedResource;
 };
 
 #endif // !__E_PROJECT_H__

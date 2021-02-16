@@ -147,8 +147,10 @@ uint Importer::Animations::Save(const R_Animation* rAnimation, char** buffer)
 	}
 
 	// --- SAVING THE BUFFER ---
+
 	std::string path	= ANIMATIONS_PATH + std::to_string(rAnimation->GetUID()) + ANIMATIONS_EXTENSION;
 	written				= App->file_system->Save(path.c_str(), *buffer, size);
+
 	if (written > 0)
 	{
 		LOG("[STATUS] Animations Importer: Successfully Saved Animation { %s } to Library! Path: %s", rAnimation->GetAssetsFile(), path.c_str());

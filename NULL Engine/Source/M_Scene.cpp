@@ -65,7 +65,7 @@ bool M_Scene::Start()
 	LOG("Loading Intro assets");
 	bool ret = true;
 
-	App->camera->LookAt(float3::zero);
+	app->camera->LookAt(float3::zero);
 
 	if (sceneRoot == nullptr)
 	{
@@ -91,7 +91,7 @@ bool M_Scene::Start()
 // Update
 UPDATE_STATUS M_Scene::Update(float dt)
 {
-	if (App->debug == true)
+	if (app->debug == true)
 	{
 		HandleDebugInput();
 	}
@@ -101,17 +101,17 @@ UPDATE_STATUS M_Scene::Update(float dt)
 		C_Animator* root_animator = animationRoot->GetComponent<C_Animator>();
 		if (root_animator != nullptr)
 		{
-			if (App->play)
+			if (app->play)
 			{
-				if (App->input->GetKey(SDL_SCANCODE_KP_1) == KEY_STATE::KEY_DOWN)
+				if (app->input->GetKey(SDL_SCANCODE_KP_1) == KEY_STATE::KEY_DOWN)
 				{
 					root_animator->PlayClip("Running", 8);
 				}
-				if (App->input->GetKey(SDL_SCANCODE_KP_1) == KEY_STATE::KEY_UP)
+				if (app->input->GetKey(SDL_SCANCODE_KP_1) == KEY_STATE::KEY_UP)
 				{
 					root_animator->PlayClip("Idle", 8);
 				}
-				if (App->input->GetKey(SDL_SCANCODE_KP_2) == KEY_STATE::KEY_DOWN)
+				if (app->input->GetKey(SDL_SCANCODE_KP_2) == KEY_STATE::KEY_DOWN)
 				{
 					root_animator->PlayClip("Attack", 8);
 				}
@@ -150,7 +150,7 @@ UPDATE_STATUS M_Scene::Update(float dt)
 	}
 
 	// --- Send Batches to Renderer
-	App->renderer->AddRenderersBatch(mesh_renderers, cuboid_renderers, skeleton_renderers);
+	app->renderer->AddRenderersBatch(mesh_renderers, cuboid_renderers, skeleton_renderers);
 
 	mesh_renderers.clear();
 	cuboid_renderers.clear();
@@ -161,14 +161,14 @@ UPDATE_STATUS M_Scene::Update(float dt)
 		primitives[n]->Update();
 	}
 
-	if (App->input->GetKey(SDL_SCANCODE_F5) == KEY_STATE::KEY_DOWN)
+	if (app->input->GetKey(SDL_SCANCODE_F5) == KEY_STATE::KEY_DOWN)
 	{
-		App->SaveConfiguration("Resources/Engine/Configuration/configuration.JSON");
+		app->SaveConfiguration("Resources/Engine/Configuration/configuration.JSON");
 	}
 
-	if (App->input->GetKey(SDL_SCANCODE_F6) == KEY_STATE::KEY_DOWN)
+	if (app->input->GetKey(SDL_SCANCODE_F6) == KEY_STATE::KEY_DOWN)
 	{
-		App->LoadConfiguration("Resources/Engine/Configuration/configuration.JSON");
+		app->LoadConfiguration("Resources/Engine/Configuration/configuration.JSON");
 	}
 
 	return UPDATE_STATUS::CONTINUE;
@@ -254,11 +254,11 @@ bool M_Scene::SaveScene(const char* scene_name) const
 		LOG("[ERROR] Scene: Could not save the current scene! Error: FileSystem could not write any data!");
 	}
 
-	R_Scene* r_scene			= (R_Scene*)App->resource_manager->CreateResource(RESOURCE_TYPE::SCENE, path.c_str());			// TMP until R_Scene is fully implemented.
+	R_Scene* r_scene			= (R_Scene*)app->resourceManager->CreateResource(RESOURCE_TYPE::SCENE, path.c_str());			// TMP until R_Scene is fully implemented.
 	//App->resource_manager->SaveResourceToLibrary(r_scene);
 
 	std::string library_path	= SCENES_PATH + std::to_string(r_scene->GetUID()) + SCENES_EXTENSION;
-	written = App->file_system->Save(library_path.c_str(), buffer, written);
+	written = app->fileSystem->Save(library_path.c_str(), buffer, written);
 	if (written > 0)
 	{
 		LOG("[SCENE] Scene: Successfully saved the current scene in Library! Path: %s", library_path.c_str());
@@ -268,7 +268,7 @@ bool M_Scene::SaveScene(const char* scene_name) const
 		LOG("[ERROR] Scene: Could not save the current scene in Library! Error: FileSystem could not write any data!");
 	}
 
-	App->resource_manager->DeallocateResource(r_scene);
+	app->resourceManager->DeallocateResource(r_scene);
 
 	RELEASE_ARRAY(buffer);
 
@@ -280,7 +280,7 @@ bool M_Scene::LoadScene(const char* path)
 	bool ret = true;
 
 	char* buffer = nullptr;
-	uint read = App->file_system->Load(path, &buffer);
+	uint read = app->fileSystem->Load(path, &buffer);
 	if (read == 0)
 	{
 		LOG("[ERROR] Scene Loading: Could not load %s from Assets! Error: File system could not read the file!", path);
@@ -353,7 +353,7 @@ bool M_Scene::LoadScene(const char* path)
 		}
 
 		tmp.clear();
-		App->renderer->ClearRenderers();
+		app->renderer->ClearRenderers();
 	}
 
 	return ret;
@@ -420,7 +420,7 @@ void M_Scene::DeleteGameObject(GameObject* game_object, uint index)
 	{
 		for (uint i = 0; i < c_meshes.size(); ++i)
 		{
-			App->renderer->DeleteFromMeshRenderers(c_meshes[i]);
+			app->renderer->DeleteFromMeshRenderers(c_meshes[i]);
 		}
 
 		c_meshes.clear();
@@ -455,7 +455,7 @@ void M_Scene::DeleteGameObject(GameObject* game_object, uint index)
 
 void M_Scene::GenerateGameObjectsFromModel(const uint32& model_UID, const float3& scale)
 {
-	R_Model* r_model = (R_Model*)App->resource_manager->RequestResource(model_UID);
+	R_Model* r_model = (R_Model*)app->resourceManager->RequestResource(model_UID);
 
 	if (r_model == nullptr)
 	{
@@ -538,7 +538,7 @@ void M_Scene::CreateComponentsFromModelNode(const ModelNode& model_node, GameObj
 	if (valid_mesh_uid)
 	{
 		C_Mesh* c_mesh = (C_Mesh*)game_object->CreateComponent(COMPONENT_TYPE::MESH);
-		R_Mesh* r_mesh = (R_Mesh*)App->resource_manager->RequestResource(model_node.mesh_uid);
+		R_Mesh* r_mesh = (R_Mesh*)app->resourceManager->RequestResource(model_node.mesh_uid);
 		if (r_mesh == nullptr)
 		{
 			LOG("[ERROR] Scene: Could not generate the Mesh Resource from the Model Node! Error: R_Mesh* could not be found in resources.");
@@ -553,7 +553,7 @@ void M_Scene::CreateComponentsFromModelNode(const ModelNode& model_node, GameObj
 	if (valid_material_uid)
 	{
 		C_Material* c_material = (C_Material*)game_object->CreateComponent(COMPONENT_TYPE::MATERIAL);
-		R_Material* r_material = (R_Material*)App->resource_manager->RequestResource(model_node.material_uid);
+		R_Material* r_material = (R_Material*)app->resourceManager->RequestResource(model_node.material_uid);
 		if (r_material == nullptr)
 		{
 			LOG("[ERROR] Scene: Could not generate the Material Resource from the Model Node! Error: R_Material* could not be found in resources.");
@@ -566,7 +566,7 @@ void M_Scene::CreateComponentsFromModelNode(const ModelNode& model_node, GameObj
 		// Set Texture
 		if (valid_texture_uid)
 		{
-			R_Texture* r_texture = (R_Texture*)App->resource_manager->RequestResource(model_node.texture_uid);
+			R_Texture* r_texture = (R_Texture*)app->resourceManager->RequestResource(model_node.texture_uid);
 			if (r_texture == nullptr)
 			{
 				LOG("[ERROR] Scene: Could not generate the Texture Resource from the Model Node! Error: R_Texture* could not be found in resources.");
@@ -602,7 +602,7 @@ void M_Scene::CreateAnimationComponentFromModel(const R_Model* r_model, GameObje
 	std::map<uint32, std::string>::const_iterator item;
 	for (item = r_model->animations.cbegin(); item != r_model->animations.cend(); ++item)
 	{
-		R_Animation* r_animation = (R_Animation*)App->resource_manager->RequestResource(item->first);
+		R_Animation* r_animation = (R_Animation*)app->resourceManager->RequestResource(item->first);
 		if (r_animation != nullptr)
 		{
 			c_animation->AddAnimation(r_animation);
@@ -630,7 +630,7 @@ bool M_Scene::ApplyTextureToSelectedGameObject(const uint32& UID)
 		return false;
 	}
 
-	R_Texture* r_texture = (R_Texture*)App->resource_manager->RequestResource(UID);
+	R_Texture* r_texture = (R_Texture*)app->resourceManager->RequestResource(UID);
 
 	if (r_texture == nullptr)
 	{
@@ -640,7 +640,7 @@ bool M_Scene::ApplyTextureToSelectedGameObject(const uint32& UID)
 	if (r_texture->GetTextureID() == 0)
 	{
 		LOG("[ERROR] Could not add the texture to the selected game object! Error: R_Texture* Texture ID was 0.");
-		App->resource_manager->DeallocateResource(r_texture);
+		app->resourceManager->DeallocateResource(r_texture);
 		return false;
 	}
 
@@ -717,7 +717,7 @@ void M_Scene::CreateSceneCamera(const char* camera_name)
 {
 	GameObject* scene_camera = CreateGameObject(camera_name, sceneRoot);
 	scene_camera->CreateComponent(COMPONENT_TYPE::CAMERA);
-	scene_camera->GetComponent<C_Camera>()->SetAspectRatio((float)App->window->GetWidth() / (float)App->window->GetHeight());
+	scene_camera->GetComponent<C_Camera>()->SetAspectRatio((float)app->window->GetWidth() / (float)app->window->GetHeight());
 	scene_camera->GetComponent<C_Transform>()->SetLocalPosition(float3(0.0f, 5.0f, 25.0f));
 }
 
@@ -785,7 +785,7 @@ void M_Scene::SetSelectedGameObject(GameObject* game_object)
 			float3 go_ref		= game_object->GetComponent<C_Transform>()->GetWorldPosition();
 			float3 reference	= { go_ref.x, go_ref.y, go_ref.z };
 
-			App->camera->SetReference(reference);
+			app->camera->SetReference(reference);
 
 			selectedGameObject->show_bounding_boxes = true;
 		}
@@ -896,22 +896,22 @@ void M_Scene::DeleteSelectedGameObject()
 
 void M_Scene::HandleDebugInput()
 {
-	if (App->input->GetKey(SDL_SCANCODE_1) == KEY_STATE::KEY_DOWN)
+	if (app->input->GetKey(SDL_SCANCODE_1) == KEY_STATE::KEY_DOWN)
 	{
 		//DebugSpawnPrimitive(new Sphere(1.0f, 12, 24));
 	}
 
-	if (App->input->GetKey(SDL_SCANCODE_2) == KEY_STATE::KEY_DOWN)
+	if (app->input->GetKey(SDL_SCANCODE_2) == KEY_STATE::KEY_DOWN)
 	{
 		DebugSpawnPrimitive(new P_Cube());
 	}
 
-	if (App->input->GetKey(SDL_SCANCODE_3) == KEY_STATE::KEY_DOWN)
+	if (app->input->GetKey(SDL_SCANCODE_3) == KEY_STATE::KEY_DOWN)
 	{
 		//DebugSpawnPrimitive(new Cylinder());
 	}
 
-	if (App->input->GetKey(SDL_SCANCODE_4) == KEY_STATE::KEY_DOWN)
+	if (app->input->GetKey(SDL_SCANCODE_4) == KEY_STATE::KEY_DOWN)
 	{
 		for (uint n = 0; n < primitives.size(); n++)
 		{

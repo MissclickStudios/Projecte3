@@ -37,6 +37,7 @@ void Importer::Materials::Import(const aiMaterial* assimpMaterial, R_Material* r
 	}
 	
 	std::string dirPath	= ASSETS_TEXTURES_PATH + App->file_system->GetLastDirectory(rMaterial->GetAssetsPath());			// Dirty setting of the assets path.
+
 	std::string file		= "";
 	std::string fullPath	= "";
 	
@@ -121,7 +122,7 @@ uint Importer::Materials::Save(const R_Material* rMaterial, char** buffer)
 	// --- SAVING THE BUFFER ---
 	std::string path = std::string(MATERIALS_PATH) + std::to_string(rMaterial->GetUID()) + std::string(MATERIALS_EXTENSION);
 
-	written = App->file_system->Save(path.c_str(), *buffer, size);
+	written = app->fileSystem->Save(path.c_str(), *buffer, size);
 	if (written > 0)
 	{
 		LOG("[STATUS] Importer Materials: Successfully Saved Material { %s } to Library! Path: { %s }", rMaterial->GetAssetsFile(), path.c_str());

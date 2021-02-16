@@ -68,12 +68,12 @@ UPDATE_STATUS M_Input::PreUpdate(float dt)
 			if (keyboard[i] == KEY_STATE::KEY_IDLE)
 			{
 				keyboard[i] = KEY_STATE::KEY_DOWN;
-				App->editor->AddInputLog(i, (uint)KEY_STATE::KEY_DOWN);
+				app->editor->AddInputLog(i, (uint)KEY_STATE::KEY_DOWN);
 			}
 			else
 			{
 				keyboard[i] = KEY_STATE::KEY_REPEAT;
-				App->editor->AddInputLog(i, (uint)KEY_STATE::KEY_REPEAT);
+				app->editor->AddInputLog(i, (uint)KEY_STATE::KEY_REPEAT);
 			}
 		}
 		else
@@ -81,7 +81,7 @@ UPDATE_STATUS M_Input::PreUpdate(float dt)
 			if (keyboard[i] == KEY_STATE::KEY_REPEAT || keyboard[i] == KEY_STATE::KEY_DOWN)
 			{
 				keyboard[i] = KEY_STATE::KEY_UP;
-				App->editor->AddInputLog(i, (uint)KEY_STATE::KEY_UP);
+				app->editor->AddInputLog(i, (uint)KEY_STATE::KEY_UP);
 			}
 			else
 			{
@@ -103,12 +103,12 @@ UPDATE_STATUS M_Input::PreUpdate(float dt)
 			if (mouse_buttons[i] == KEY_STATE::KEY_IDLE)
 			{
 				mouse_buttons[i] = KEY_STATE::KEY_DOWN;
-				App->editor->AddInputLog(max_num_scancodes + i, (uint)KEY_STATE::KEY_DOWN);
+				app->editor->AddInputLog(max_num_scancodes + i, (uint)KEY_STATE::KEY_DOWN);
 			}
 			else
 			{
 				mouse_buttons[i] = KEY_STATE::KEY_REPEAT;
-				App->editor->AddInputLog(max_num_scancodes + i, (uint)KEY_STATE::KEY_REPEAT);
+				app->editor->AddInputLog(max_num_scancodes + i, (uint)KEY_STATE::KEY_REPEAT);
 			}
 		}
 		else
@@ -116,7 +116,7 @@ UPDATE_STATUS M_Input::PreUpdate(float dt)
 			if(mouse_buttons[i] == KEY_STATE::KEY_REPEAT || mouse_buttons[i] == KEY_STATE::KEY_DOWN)
 			{
 				mouse_buttons[i] = KEY_STATE::KEY_UP;
-				App->editor->AddInputLog(max_num_scancodes + i, (uint)KEY_STATE::KEY_UP);
+				app->editor->AddInputLog(max_num_scancodes + i, (uint)KEY_STATE::KEY_UP);
 			}
 			else
 			{
@@ -131,7 +131,7 @@ UPDATE_STATUS M_Input::PreUpdate(float dt)
 	SDL_Event event;
 	while(SDL_PollEvent(&event))
 	{
-		App->editor->GetEvent(&event);
+		app->editor->GetEvent(&event);
 		
 		switch(event.type)
 		{
@@ -154,16 +154,16 @@ UPDATE_STATUS M_Input::PreUpdate(float dt)
 			break;
 
 			case SDL_WINDOWEVENT:
-				if (event.window.windowID == SDL_GetWindowID(App->window->GetWindow()))
+				if (event.window.windowID == SDL_GetWindowID(app->window->GetWindow()))
 				{
 					if (event.window.event == SDL_WINDOWEVENT_RESIZED)
 					{
-						App->renderer->OnResize();
+						app->renderer->OnResize();
 					}
 
 					if (event.window.event == SDL_WINDOWEVENT_CLOSE)
 					{
-						App->quit = true;
+						app->quit = true;
 						return UPDATE_STATUS::STOP;
 					}
 				}
@@ -173,7 +173,7 @@ UPDATE_STATUS M_Input::PreUpdate(float dt)
 			case SDL_DROPFILE:
 				if (event.drop.file != nullptr)
 				{
-					App->resource_manager->ImportFile(event.drop.file);
+					app->resourceManager->ImportFile(event.drop.file);
 					//Importer::ImportFile(event.drop.file);
 				}
 				else
@@ -192,9 +192,9 @@ UPDATE_STATUS M_Input::PreUpdate(float dt)
 
 UPDATE_STATUS M_Input::Update(float dt)
 {
-	if (App->input->GetKey(SDL_SCANCODE_F1) == KEY_STATE::KEY_DOWN)
+	if (app->input->GetKey(SDL_SCANCODE_F1) == KEY_STATE::KEY_DOWN)
 	{
-		App->debug = !App->debug;
+		app->debug = !app->debug;
 	}
 
 	return UPDATE_STATUS::CONTINUE;
