@@ -538,42 +538,42 @@ void M_Scene::CreateComponentsFromModelNode(const ModelNode& model_node, GameObj
 	if (valid_mesh_uid)
 	{
 		C_Mesh* c_mesh = (C_Mesh*)game_object->CreateComponent(COMPONENT_TYPE::MESH);
-		R_Mesh* r_mesh = (R_Mesh*)App->resourceManager->RequestResource(model_node.mesh_uid);
-		if (r_mesh == nullptr)
+		R_Mesh* rMesh = (R_Mesh*)App->resourceManager->RequestResource(model_node.mesh_uid);
+		if (rMesh == nullptr)
 		{
 			LOG("[ERROR] Scene: Could not generate the Mesh Resource from the Model Node! Error: R_Mesh* could not be found in resources.");
 			game_object->DeleteComponent(c_mesh);
 			return;
 		}
 
-		c_mesh->SetMesh(r_mesh);
+		c_mesh->SetMesh(rMesh);
 	}
 
 	// Set Material
 	if (valid_material_uid)
 	{
 		C_Material* c_material = (C_Material*)game_object->CreateComponent(COMPONENT_TYPE::MATERIAL);
-		R_Material* r_material = (R_Material*)App->resourceManager->RequestResource(model_node.material_uid);
-		if (r_material == nullptr)
+		R_Material* rMaterial = (R_Material*)App->resourceManager->RequestResource(model_node.material_uid);
+		if (rMaterial == nullptr)
 		{
 			LOG("[ERROR] Scene: Could not generate the Material Resource from the Model Node! Error: R_Material* could not be found in resources.");
 			game_object->DeleteComponent(c_material);
 			return;
 		}
 
-		c_material->SetMaterial(r_material);
+		c_material->SetMaterial(rMaterial);
 
 		// Set Texture
 		if (valid_texture_uid)
 		{
-			R_Texture* r_texture = (R_Texture*)App->resourceManager->RequestResource(model_node.texture_uid);
-			if (r_texture == nullptr)
+			R_Texture* rTexture = (R_Texture*)App->resourceManager->RequestResource(model_node.texture_uid);
+			if (rTexture == nullptr)
 			{
 				LOG("[ERROR] Scene: Could not generate the Texture Resource from the Model Node! Error: R_Texture* could not be found in resources.");
 				return;
 			}
 
-			c_material->SetTexture(r_texture);
+			c_material->SetTexture(rTexture);
 		}
 	}
 }
@@ -630,17 +630,17 @@ bool M_Scene::ApplyTextureToSelectedGameObject(const uint32& UID)
 		return false;
 	}
 
-	R_Texture* r_texture = (R_Texture*)App->resourceManager->RequestResource(UID);
+	R_Texture* rTexture = (R_Texture*)App->resourceManager->RequestResource(UID);
 
-	if (r_texture == nullptr)
+	if (rTexture == nullptr)
 	{
 		LOG("[ERROR] Could not add the texture to the selected game object! Error: R_Texture* was nullptr.");
 		return false;
 	}
-	if (r_texture->GetTextureID() == 0)
+	if (rTexture->GetTextureID() == 0)
 	{
 		LOG("[ERROR] Could not add the texture to the selected game object! Error: R_Texture* Texture ID was 0.");
-		App->resourceManager->DeallocateResource(r_texture);
+		App->resourceManager->DeallocateResource(rTexture);
 		return false;
 	}
 
@@ -651,7 +651,7 @@ bool M_Scene::ApplyTextureToSelectedGameObject(const uint32& UID)
 		c_material = (C_Material*)selectedGameObject->CreateComponent(COMPONENT_TYPE::MATERIAL);				// Creating a Material Component if none was found in the selected GO.
 	}
 
-	c_material->SetTexture(r_texture);																			// Setting the Material Component's texture with the newly created one.
+	c_material->SetTexture(rTexture);																			// Setting the Material Component's texture with the newly created one.
 
 	return true;
 }
@@ -818,9 +818,9 @@ void M_Scene::SelectGameObjectThroughRaycast(const LineSegment& ray)
 		std::vector<Triangle> faces;
 		for (uint m = 0; m < c_meshes.size(); ++m)
 		{	
-			R_Mesh* r_mesh = c_meshes[m]->GetMesh();
+			R_Mesh* rMesh = c_meshes[m]->GetMesh();
 
-			if (r_mesh == nullptr)
+			if (rMesh == nullptr)
 			{
 				continue;
 			}
@@ -828,7 +828,7 @@ void M_Scene::SelectGameObjectThroughRaycast(const LineSegment& ray)
 			LineSegment local_ray = ray;
 			local_ray.Transform(item->second->GetComponent<C_Transform>()->GetWorldTransform().Inverted());
 			
-			GetFaces(r_mesh->vertices, faces);
+			GetFaces(rMesh->vertices, faces);
 			for (uint f = 0; f < faces.size(); ++f)
 			{	
 				if (local_ray.Intersects(faces[f], nullptr, nullptr))

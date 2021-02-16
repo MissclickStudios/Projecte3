@@ -53,16 +53,16 @@ bool Importer::ImportTexture(const char* buffer, uint size, R_Texture* rTexture)
 {
 	bool success = Importer::Textures::Import(buffer, size, rTexture);
 
-	/*if (r_texture != nullptr && r_texture->GetTextureID() != 0)
+	/*if (rTexture != nullptr && rTexture->GetTextureID() != 0)
 	{
-		//App->scene->ApplyNewTextureToSelectedGameObject(r_texture->GetUID());					// Put on hold until the project panel is functional and in place.
+		//App->scene->ApplyNewTextureToSelectedGameObject(rTexture->GetUID());					// Put on hold until the project panel is functional and in place.
 	}
 	else
 	{
 		return false;
 		
 		LOG("[ERROR] Importer: Could not import the dropped texture!");
-		RELEASE(r_texture);
+		RELEASE(rTexture);
 		return 0;
 	}*/
 

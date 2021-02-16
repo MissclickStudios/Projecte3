@@ -1186,9 +1186,9 @@ c_material	(c_material)
 
 void MeshRenderer::Render()
 {
-	R_Mesh* r_mesh = c_mesh->GetMesh();
+	R_Mesh* rMesh = c_mesh->GetMesh();
 
-	if (r_mesh == nullptr)
+	if (rMesh == nullptr)
 	{
 		LOG("[ERROR] Renderer 3D: Could not render Mesh! Error: R_Mesh* was nullptr.");
 		return;
@@ -1205,17 +1205,17 @@ void MeshRenderer::Render()
 	glEnableClientState(GL_NORMAL_ARRAY);															// Enables the normal array for writing and to be used during rendering.
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);													// Enables the texture coordinate array for writing and to be used during rendering.
 
-	glBindBuffer(GL_ARRAY_BUFFER, r_mesh->TBO);														// Will bind the buffer object with the mesh->TBO identifyer for rendering.
+	glBindBuffer(GL_ARRAY_BUFFER, rMesh->TBO);														// Will bind the buffer object with the mesh->TBO identifyer for rendering.
 	glTexCoordPointer(2, GL_FLOAT, 0, nullptr);														// Specifies the location and data format of an array of tex coords to use when rendering.
 
-	glBindBuffer(GL_ARRAY_BUFFER, r_mesh->NBO);														// The normal buffer is bound so the normal positions can be interpreted correctly.
+	glBindBuffer(GL_ARRAY_BUFFER, rMesh->NBO);														// The normal buffer is bound so the normal positions can be interpreted correctly.
 	glNormalPointer(GL_FLOAT, 0, nullptr);															// 
 
-	glBindBuffer(GL_ARRAY_BUFFER, r_mesh->VBO);														// The vertex buffer is bound so the vertex positions can be interpreted correctly.
+	glBindBuffer(GL_ARRAY_BUFFER, rMesh->VBO);														// The vertex buffer is bound so the vertex positions can be interpreted correctly.
 	glVertexPointer(3, GL_FLOAT, 0, nullptr);														// Specifies the location and data format of an array of vert coords to use when rendering.
 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, r_mesh->IBO);												// Will bind the buffer object with the mesh->IBO identifyer for rendering.
-	glDrawElements(GL_TRIANGLES, r_mesh->indices.size(), GL_UNSIGNED_INT, nullptr);					// 
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, rMesh->IBO);												// Will bind the buffer object with the mesh->IBO identifyer for rendering.
+	glDrawElements(GL_TRIANGLES, rMesh->indices.size(), GL_UNSIGNED_INT, nullptr);					// 
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);														// Clearing the buffers.
 	glBindBuffer(GL_ARRAY_BUFFER, 0);																// 												
@@ -1229,35 +1229,35 @@ void MeshRenderer::Render()
 	ClearDebugParameters();																			// Clear the specifications applied in ApplyDebugParameters().
 
 	// --- DEBUG DRAW ---
-	if (r_mesh->draw_vertex_normals || App->renderer->GetRenderVertexNormals())
+	if (rMesh->draw_vertex_normals || App->renderer->GetRenderVertexNormals())
 	{
-		RenderVertexNormals(r_mesh);
+		RenderVertexNormals(rMesh);
 	}
 
-	if (r_mesh->draw_face_normals || App->renderer->GetRenderFaceNormals())
+	if (rMesh->draw_face_normals || App->renderer->GetRenderFaceNormals())
 	{
-		RenderFaceNormals(r_mesh);
+		RenderFaceNormals(rMesh);
 	}
 
 	glPopMatrix();
 }
 
-void MeshRenderer::RenderVertexNormals(const R_Mesh* r_mesh)
+void MeshRenderer::RenderVertexNormals(const R_Mesh* rMesh)
 {
-	if (r_mesh == nullptr)
+	if (rMesh == nullptr)
 	{
 		LOG("[ERROR] Renderer 3D: Could not render Mesh Vertex Normals! Error: R_Mesh* was nullptr.");
 		return;
 	}
 	
-	if (r_mesh->vertices.size() != r_mesh->normals.size())
+	if (rMesh->vertices.size() != rMesh->normals.size())
 	{
 		LOG("[ERROR] Renderer 3D: Could not render Mesh Vertex Normals! Error: Num Vertices != Num Normals.");
 		return;
 	}
 
-	std::vector<float> vertices	= r_mesh->vertices;
-	std::vector<float> normals	= r_mesh->normals;
+	std::vector<float> vertices	= rMesh->vertices;
+	std::vector<float> normals	= rMesh->normals;
 
 	glColor4fv(App->renderer->GetVertexNormalsColor().C_Array());
 	glLineWidth(App->renderer->GetVertexNormalsWidth());
@@ -1276,15 +1276,15 @@ void MeshRenderer::RenderVertexNormals(const R_Mesh* r_mesh)
 	// Clear vectors?
 }
 
-void MeshRenderer::RenderFaceNormals(const R_Mesh* r_mesh)
+void MeshRenderer::RenderFaceNormals(const R_Mesh* rMesh)
 {
-	if (r_mesh == nullptr)
+	if (rMesh == nullptr)
 	{
 		LOG("[ERROR] Renderer 3D: Could not render Mesh Face Normals! Error: R_Mesh* was nullptr.");
 		return;
 	}
 	
-	if (r_mesh->vertices.size() != r_mesh->normals.size())
+	if (rMesh->vertices.size() != rMesh->normals.size())
 	{
 		LOG("[ERROR] Renderer 3D: Could not render Mesh Face Normals! Error: Num Vertices != Num Normals.");
 		return;
@@ -1292,7 +1292,7 @@ void MeshRenderer::RenderFaceNormals(const R_Mesh* r_mesh)
 
 	std::vector<Triangle> vertex_faces;
 	std::vector<Triangle> normal_faces;
-	GetFaces(r_mesh, vertex_faces, normal_faces);
+	GetFaces(rMesh, vertex_faces, normal_faces);
 
 	if (vertex_faces.size() != normal_faces.size())
 	{
@@ -1322,23 +1322,23 @@ void MeshRenderer::RenderFaceNormals(const R_Mesh* r_mesh)
 	normal_faces.clear();
 }
 
-void MeshRenderer::GetFaces(const R_Mesh* r_mesh, std::vector<Triangle>& vertex_faces, std::vector<Triangle>& normal_faces)
+void MeshRenderer::GetFaces(const R_Mesh* rMesh, std::vector<Triangle>& vertex_faces, std::vector<Triangle>& normal_faces)
 {
 	std::vector<float3> vertices;
 	std::vector<float3> normals;
 	
-	for (uint i = 0; i < r_mesh->vertices.size(); i += 3)
+	for (uint i = 0; i < rMesh->vertices.size(); i += 3)
 	{
 		float3 vertex;
 		float3 normal;
 
-		vertex.x = r_mesh->vertices[i];
-		vertex.y = r_mesh->vertices[i + 1];
-		vertex.z = r_mesh->vertices[i + 2];
+		vertex.x = rMesh->vertices[i];
+		vertex.y = rMesh->vertices[i + 1];
+		vertex.z = rMesh->vertices[i + 2];
 
-		normal.x = r_mesh->normals[i];
-		normal.y = r_mesh->normals[i + 1];
-		normal.z = r_mesh->normals[i + 2];
+		normal.x = rMesh->normals[i];
+		normal.y = rMesh->normals[i + 1];
+		normal.z = rMesh->normals[i + 2];
 
 		vertices.push_back(vertex);
 		normals.push_back(normal);

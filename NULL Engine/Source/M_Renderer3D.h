@@ -52,10 +52,10 @@ struct MeshRenderer
 
 	void Render						();
 
-	void RenderVertexNormals		(const R_Mesh* r_mesh);
-	void RenderFaceNormals			(const R_Mesh* r_mesh);
+	void RenderVertexNormals		(const R_Mesh* rMesh);
+	void RenderFaceNormals			(const R_Mesh* rMesh);
 
-	void GetFaces					(const R_Mesh* r_mesh, std::vector<Triangle>& vertex_faces, std::vector<Triangle>& normal_faces);
+	void GetFaces					(const R_Mesh* rMesh, std::vector<Triangle>& vertex_faces, std::vector<Triangle>& normal_faces);
 
 	void ApplyDebugParameters		();
 	void ClearDebugParameters		();
