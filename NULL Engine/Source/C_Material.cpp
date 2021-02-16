@@ -43,12 +43,12 @@ bool C_Material::CleanUp()
 
 	if (r_material != nullptr)
 	{
-		App->resource_manager->FreeResource(r_material->GetUID());
+		app->resourceManager->FreeResource(r_material->GetUID());
 		r_material = nullptr;
 	}
 	if (r_texture != nullptr)
 	{
-		App->resource_manager->FreeResource(r_texture->GetUID());
+		app->resourceManager->FreeResource(r_texture->GetUID());
 		r_texture = nullptr;
 	}
 
@@ -99,9 +99,9 @@ bool C_Material::LoadState(ParsonNode& root)
 	if (material_node.NodeIsValid())
 	{
 		std::string material_assets_path = ASSETS_MODELS_PATH + std::string(material_node.GetString("Name"));
-		App->resource_manager->AllocateResource((uint32)material_node.GetNumber("UID"), material_assets_path.c_str());
+		app->resourceManager->AllocateResource((uint32)material_node.GetNumber("UID"), material_assets_path.c_str());
 
-		r_material = (R_Material*)App->resource_manager->RequestResource((uint32)material_node.GetNumber("UID"));
+		r_material = (R_Material*)app->resourceManager->RequestResource((uint32)material_node.GetNumber("UID"));
 
 		if (r_material == nullptr)
 		{
@@ -112,9 +112,9 @@ bool C_Material::LoadState(ParsonNode& root)
 	if (texture_node.NodeIsValid())
 	{
 		std::string texture_assets_path	= ASSETS_TEXTURES_PATH + std::string(texture_node.GetString("Name"));
-		App->resource_manager->AllocateResource((uint32)texture_node.GetNumber("UID"), texture_assets_path.c_str());
+		app->resourceManager->AllocateResource((uint32)texture_node.GetNumber("UID"), texture_assets_path.c_str());
 
-		r_texture = (R_Texture*)App->resource_manager->RequestResource((uint32)texture_node.GetNumber("UID"));
+		r_texture = (R_Texture*)app->resourceManager->RequestResource((uint32)texture_node.GetNumber("UID"));
 
 		if (r_texture == nullptr)
 		{
@@ -144,7 +144,7 @@ void C_Material::SetMaterial(R_Material* r_material)
 {
 	if (this->r_material != nullptr)
 	{
-		App->resource_manager->FreeResource(this->r_material->GetUID());
+		app->resourceManager->FreeResource(this->r_material->GetUID());
 	}
 	
 	this->r_material = r_material;
@@ -155,7 +155,7 @@ void C_Material::SetTexture(R_Texture* r_texture)
 
 	if (this->r_texture != nullptr)
 	{
-		App->resource_manager->FreeResource(this->r_texture->GetUID());
+		app->resourceManager->FreeResource(this->r_texture->GetUID());
 	}
 
 	this->r_texture = r_texture;

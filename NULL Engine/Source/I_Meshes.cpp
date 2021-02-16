@@ -362,7 +362,7 @@ uint Importer::Meshes::Save(const R_Mesh* r_mesh, char** buffer)
 
 	// --- SAVING THE BUFFER ---
 	std::string path	= MESHES_PATH + std::to_string(r_mesh->GetUID()) + MESHES_EXTENSION;
-	written				= App->file_system->Save(path.c_str(), *buffer, size);
+	written				= app->fileSystem->Save(path.c_str(), *buffer, size);
 	if (written > 0)
 	{	
 		LOG("[STATUS] Importer: Successfully Saved Mesh { %s } to Library! Path: %s", r_mesh->GetAssetsFile(), path.c_str());

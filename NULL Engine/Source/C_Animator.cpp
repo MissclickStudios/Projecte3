@@ -76,7 +76,7 @@ bool C_Animator::CleanUp()
 
 	for (uint i = 0; i < animations.size(); ++i)
 	{
-		App->resource_manager->FreeResource(animations[i]->GetUID());
+		app->resourceManager->FreeResource(animations[i]->GetUID());
 	}
 
 	animations.clear();
@@ -149,9 +149,9 @@ bool C_Animator::LoadState(ParsonNode& root)
 		}
 
 		std::string assets_path = ASSETS_MODELS_PATH + std::string(animation_node.GetString("Name"));
-		App->resource_manager->AllocateResource((uint32)animation_node.GetNumber("UID"), assets_path.c_str());
+		app->resourceManager->AllocateResource((uint32)animation_node.GetNumber("UID"), assets_path.c_str());
 		
-		R_Animation* r_animation = (R_Animation*)App->resource_manager->RequestResource((uint32)animation_node.GetNumber("UID"));
+		R_Animation* r_animation = (R_Animation*)app->resourceManager->RequestResource((uint32)animation_node.GetNumber("UID"));
 		if (r_animation != nullptr)
 		{
 			animations_to_add.push_back(r_animation);
@@ -267,7 +267,7 @@ bool C_Animator::StepClips()
 		}
 	}
 	
-	float dt			= (App->play) ? Time::Game::GetDT() : Time::Real::GetDT();											// In case a clip preview is needed outside Game Mode.
+	float dt			= (app->play) ? Time::Game::GetDT() : Time::Real::GetDT();											// In case a clip preview is needed outside Game Mode.
 	float step_value	= dt * playback_speed;
 
 	if (CurrentClipExists())
