@@ -346,7 +346,7 @@ PathNode M_FileSystem::GetAllFiles(const char* directory, std::vector<std::strin
 	if (Exists(directory))
 	{
 		root.path = directory;
-		SplitFilePath(directory, nullptr, &root.local_path);								// Keep this in mind. Originaly it was App->file_system->SplitFilePath().
+		SplitFilePath(directory, nullptr, &root.local_path);								// Keep this in mind. Originaly it was App->fileSystem->SplitFilePath().
 
 		if (root.local_path == "")															// If there is no file path in the passed directory.
 		{

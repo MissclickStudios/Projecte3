@@ -150,13 +150,13 @@ bool E_MainMenuBar::ViewMainMenuItem()
 
 	if (ImGui::BeginMenu("View"))
 	{
-		bool show_grid = App->editor->GetShowWorldGrid();
-		ImGui::MenuItem("World Grid", "F1", &show_grid);
-		App->editor->SetShowWorldGrid(show_grid);
+		bool showGrid = App->editor->GetShowWorldGrid();
+		ImGui::MenuItem("World Grid", "F1", &showGrid);
+		App->editor->SetShowWorldGrid(showGrid);
 		
-		bool show_axis = App->editor->GetShowWorldAxis();
-		ImGui::MenuItem("World Axis", "F2", &show_axis);
-		App->editor->SetShowWorldAxis(show_axis);
+		bool showAxis = App->editor->GetShowWorldAxis();
+		ImGui::MenuItem("World Axis", "F2", &showAxis);
+		App->editor->SetShowWorldAxis(showAxis);
 
 		ImGui::EndMenu();
 	}
@@ -189,9 +189,9 @@ bool E_MainMenuBar::GameObjectsMainMenuItem()
 		
 		if (ImGui::BeginMenu("Primitives"))
 		{
-			bool show_primitive_examples = App->editor->GetShowPrimitiveExamples();
-			ImGui::MenuItem("Show Examples", "", &show_primitive_examples);
-			App->editor->SetShowPrimitiveExamples(show_primitive_examples);
+			bool showPrimitiveExamples = App->editor->GetShowPrimitiveExamples();
+			ImGui::MenuItem("Show Examples", "", &showPrimitiveExamples);
+			App->editor->SetShowPrimitiveExamples(showPrimitiveExamples);
 
 			ImGui::Separator();
 

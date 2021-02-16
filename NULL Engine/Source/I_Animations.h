@@ -15,26 +15,26 @@ namespace Importer
 {
 	namespace Animations
 	{
-		void Import	(const aiAnimation* ai_animation, R_Animation* r_animation);
-		uint Save	(const R_Animation* r_animation, char** buffer);
-		bool Load	(const char* buffer, R_Animation* r_animation);
+		void Import	(const aiAnimation* assimpAnimation, R_Animation* rAnimation);
+		uint Save	(const R_Animation* rAnimation, char** buffer);
+		bool Load	(const char* buffer, R_Animation* rAnimation);
 
 		namespace Utilities
 		{
-			void GetPositionKeys		(const aiNodeAnim* ai_channel, Channel& r_channel);
-			void GetRotationKeys		(const aiNodeAnim* ai_channel, Channel& r_channel);
-			void GetScaleKeys			(const aiNodeAnim* ai_channel, Channel& r_channel);
+			void GetPositionKeys		(const aiNodeAnim* aiChannel, Channel& rChannel);
+			void GetRotationKeys		(const aiNodeAnim* aiChannel, Channel& rChannel);
+			void GetScaleKeys			(const aiNodeAnim* aiChannel, Channel& rChannel);
 
-			uint GetChannelsDataSize	(const R_Animation* r_animation);
-			void StoreChannelName		(const Channel& r_channel, char** cursor);
-			void StorePositionKeysData	(const Channel& r_channel, char** cursor);
-			void StoreRotationKeysData	(const Channel& r_channel, char** cursor);
-			void StoreScaleKeysData		(const Channel& r_channel, char** cursor);
+			uint GetChannelsDataSize	(const R_Animation* rAnimation);
+			void StoreChannelName		(const Channel& rChannel, char** cursor);
+			void StorePositionKeysData	(const Channel& rChannel, char** cursor);
+			void StoreRotationKeysData	(const Channel& rChannel, char** cursor);
+			void StoreScaleKeysData		(const Channel& rChannel, char** cursor);
 
-			void LoadChannelName		(char** cursor, std::string& channel_name);
-			void LoadPositionKeysData	(char** cursor, Channel& r_channel);
-			void LoadRotationKeysData	(char** cursor, Channel& r_channel);
-			void LoadScaleKeysData		(char** cursor, Channel& r_channel);
+			void LoadChannelName		(char** cursor, std::string& channelName);
+			void LoadPositionKeysData	(char** cursor, Channel& rChannel);
+			void LoadRotationKeysData	(char** cursor, Channel& rChannel);
+			void LoadScaleKeysData		(char** cursor, Channel& rChannel);
 		}
 	}
 }

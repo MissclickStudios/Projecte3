@@ -197,8 +197,8 @@ void M_ResourceManager::RefreshDirectory(const char* directory, std::vector<std:
 	std::vector<std::string> meta_files;
 	std::map<std::string, std::string> file_pairs;
 
-	App->file_system->DiscoverAllFiles(directory, asset_files, directories, DOTLESS_META_EXTENSION);				// Directories (folders) will be ignored for now.
-	App->file_system->GetAllFilesWithExtension(directory, DOTLESS_META_EXTENSION, meta_files);
+	App->fileSystem->DiscoverAllFiles(directory, asset_files, directories, DOTLESS_META_EXTENSION);				// Directories (folders) will be ignored for now.
+	App->fileSystem->GetAllFilesWithExtension(directory, DOTLESS_META_EXTENSION, meta_files);
 	
 	FindFilesToImport(asset_files, meta_files, file_pairs, files_to_import);										// Always call in this order!
 	FindFilesToUpdate(file_pairs, files_to_update);																	// At the very least FindFilesToImport() has to be the first to be called
@@ -253,7 +253,7 @@ void M_ResourceManager::FindFilesToUpdate(const std::map<std::string, std::strin
 	std::map<std::string, std::string>::const_iterator item;
 	for (item = file_pairs.begin(); item != file_pairs.end(); ++item)
 	{
-		asset_mod_time	= App->file_system->GetLastModTime(item->first.c_str());						// Files with different modification time than their meta files
+		asset_mod_time	= App->fileSystem->GetLastModTime(item->first.c_str());						// Files with different modification time than their meta files
 		meta_mod_time	= GetAssetFileModTimeFromMeta(item->first.c_str());								// will need to be updated (Delete prev + Import new).
 
 		if (asset_mod_time != meta_mod_time)
@@ -314,7 +314,7 @@ bool M_ResourceManager::DeleteFromAssets(const char* assets_path)
 
 	for (uint i = 0; i < files_to_delete.size(); ++i)
 	{
-		/*ret =*/ App->file_system->Remove(files_to_delete[i].c_str());
+		/*ret =*/ App->fileSystem->Remove(files_to_delete[i].c_str());
 	}
 
 	files_to_delete.clear();
@@ -352,7 +352,7 @@ bool M_ResourceManager::DeleteFromLibrary(const char* assets_path)
 
 	for (uint i = 0; i < files_to_delete.size(); ++i)
 	{
-		App->file_system->Remove(files_to_delete[i].c_str());
+		App->fileSystem->Remove(files_to_delete[i].c_str());
 	}
 
 	files_to_delete.clear();
@@ -660,8 +660,8 @@ uint32 M_ResourceManager::ImportFile(const char* assets_path)
 		return 0;
 	}
 
-	if (App->file_system->GetFileExtension(assets_path) == "json" 
-		|| App->file_system->GetFileExtension(assets_path) == "JSON")													// TMP until R_Scene has been fully implemented.
+	if (App->fileSystem->GetFileExtension(assets_path) == "json" 
+		|| App->fileSystem->GetFileExtension(assets_path) == "JSON")													// TMP until R_Scene has been fully implemented.
 	{
 		return 0;
 	}
@@ -718,7 +718,7 @@ uint32 M_ResourceManager::ImportFromAssets(const char* assets_path)
 	}
 
 	char* buffer = nullptr;
-	uint read = App->file_system->Load(assets_path, &buffer);
+	uint read = App->fileSystem->Load(assets_path, &buffer);
 	if (read > 0)
 	{
 		RESOURCE_TYPE type = GetTypeFromAssetsExtension(assets_path);
@@ -807,7 +807,7 @@ uint32 M_ResourceManager::LoadFromLibrary(const char* assets_path)
 	{
 		ParsonNode contained_node = contained_array.GetNode(i);
 
-		App->file_system->SplitFilePath(assets_path, &contained_path, nullptr, nullptr);									// --- TMP Until Something Functional Is In Place.
+		App->fileSystem->SplitFilePath(assets_path, &contained_path, nullptr, nullptr);									// --- TMP Until Something Functional Is In Place.
 		contained_name	= contained_node.GetString("Name");																	// 
 		contained_path += contained_name;																					// -----------------------------------------------
 
@@ -880,7 +880,7 @@ const char* M_ResourceManager::GetValidPath(const char* assets_path)
 		return nullptr;
 	}
 	
-	std::string norm_path = App->file_system->NormalizePath(assets_path);
+	std::string norm_path = App->fileSystem->NormalizePath(assets_path);
 
 	uint assets_path_start = norm_path.find("Assets");
 	uint engine_path_start = norm_path.find("Engine");
@@ -907,7 +907,7 @@ RESOURCE_TYPE M_ResourceManager::GetTypeFromAssetsExtension(const char* assets_p
 {
 	RESOURCE_TYPE type = RESOURCE_TYPE::NONE;
 
-	std::string extension = App->file_system->GetFileExtension(assets_path);
+	std::string extension = App->fileSystem->GetFileExtension(assets_path);
 
 	if (extension == "fbx" || extension == "FBX" 
 		|| extension == "obj" || extension == "OBJ")
@@ -941,7 +941,7 @@ RESOURCE_TYPE M_ResourceManager::GetTypeFromLibraryExtension(const char* library
 	}
 	
 	RESOURCE_TYPE type		= RESOURCE_TYPE::NONE;
-	std::string extension	= App->file_system->GetFileExtension(library_path);
+	std::string extension	= App->fileSystem->GetFileExtension(library_path);
 	extension				= "." + extension;
 
 	if (extension == MODELS_EXTENSION)
@@ -983,7 +983,7 @@ RESOURCE_TYPE M_ResourceManager::GetTypeFromLibraryExtension(const char* library
 void M_ResourceManager::SetResourceAssetsPathAndFile(const char* assets_path, Resource* resource)
 {
 	resource->SetAssetsPath(assets_path);
-	resource->SetAssetsFile(App->file_system->GetFileAndExtension(assets_path).c_str());
+	resource->SetAssetsFile(App->fileSystem->GetFileAndExtension(assets_path).c_str());
 }
 
 void M_ResourceManager::SetResourceLibraryPathAndFile(Resource* resource)
@@ -1008,7 +1008,7 @@ bool M_ResourceManager::SaveMetaFile(Resource* resource) const
 	meta_root.SetString("Name", resource->GetAssetsFile());																									// 
 	// ASSETS PATH?
 	meta_root.SetString("LibraryPath", resource->GetLibraryPath());																							// 
-	meta_root.SetNumber("ModificationTime", (double)App->file_system->GetLastModTime(resource->GetAssetsPath()));											// ------------------------------
+	meta_root.SetNumber("ModificationTime", (double)App->fileSystem->GetLastModTime(resource->GetAssetsPath()));											// ------------------------------
 
 	resource->SaveMeta(meta_root);																															// --- RESOURCE-SPECIFIC META DATA
 
@@ -1037,7 +1037,7 @@ ParsonNode M_ResourceManager::LoadMetaFile(const char* assets_path, char** buffe
 	}
 
 	std::string meta_path	= assets_path + std::string(META_EXTENSION);
-	uint read				= App->file_system->Load(meta_path.c_str(), buffer);
+	uint read				= App->fileSystem->Load(meta_path.c_str(), buffer);
 	if (read == 0)
 	{
 		LOG("[ERROR] Resource Manager: Could not load the .meta File with Path: %s! Error: No Meta File exists with the given path.", meta_path);
@@ -1056,7 +1056,7 @@ bool M_ResourceManager::HasMetaFile(const char* assets_path)
 
 	std::string meta_path = assets_path + std::string(META_EXTENSION);
 
-	return App->file_system->Exists(meta_path.c_str());
+	return App->fileSystem->Exists(meta_path.c_str());
 }
 
 bool M_ResourceManager::MetaFileIsValid(const char* assets_path)
@@ -1072,7 +1072,7 @@ bool M_ResourceManager::MetaFileIsValid(const char* assets_path)
 	std::string meta_path		= assets_path + std::string(META_EXTENSION);
 	std::string error_string	= "[ERROR] Resource Manager: Could not validate Meta File " + meta_path;
 
-	if (!App->file_system->Exists(meta_path.c_str()))
+	if (!App->fileSystem->Exists(meta_path.c_str()))
 	{
 		LOG("%s! Error: File System could not find the Meta File.", error_string.c_str());
 		return false;
@@ -1096,7 +1096,7 @@ bool M_ResourceManager::MetaFileIsValid(const char* assets_path)
 
 	std::string library_path	= meta_root.GetString("LibraryPath");
 	uint32 resource_uid			= (uint32)meta_root.GetNumber("UID");
-	if (!App->file_system->Exists(library_path.c_str()))
+	if (!App->fileSystem->Exists(library_path.c_str()))
 	{
 		LOG("%s! Error: Resource Custom File could not be found in Library.", error_string.c_str());
 		return false;
@@ -1115,7 +1115,7 @@ bool M_ResourceManager::MetaFileIsValid(const char* assets_path)
 		contained_node			= contained_array.GetNode(i);
 		contained_uid			= (uint32)contained_node.GetNumber("UID");
 		contained_library_path	= contained_node.GetString("LibraryPath");
-		if (!App->file_system->Exists(contained_library_path.c_str()))
+		if (!App->fileSystem->Exists(contained_library_path.c_str()))
 		{
 			LOG("%s! Error: Contained Resource Custom File could not be found in Library.", error_string.c_str());
 			return false;
@@ -1150,7 +1150,7 @@ bool M_ResourceManager::MetaFileIsValid(ParsonNode& meta_root)
 
 	std::string library_path		= meta_root.GetString("LibraryPath");
 	uint32 resource_uid				= (uint32)meta_root.GetNumber("UID");
-	if (!App->file_system->Exists(library_path.c_str()))
+	if (!App->fileSystem->Exists(library_path.c_str()))
 	{
 		LOG("%s! Error: Resource Custom File could not be found in Library.", error_string.c_str());
 		return false;
@@ -1175,7 +1175,7 @@ bool M_ResourceManager::MetaFileIsValid(ParsonNode& meta_root)
 
 		contained_library_path	= contained_node.GetString("LibraryPath");
 		contained_uid			= (uint32)contained_node.GetNumber("UID");
-		if (!App->file_system->Exists(contained_library_path.c_str()))
+		if (!App->fileSystem->Exists(contained_library_path.c_str()))
 		{
 			LOG("%s! Error: Contained Resource Custom File could not be found in Library.", error_string.c_str());
 			return false;
@@ -1218,7 +1218,7 @@ Resource* M_ResourceManager::GetResourceFromMetaFile(const char* assets_path)
 	std::string meta_file		= assets_path + std::string(META_EXTENSION);
 	std::string error_string	= "[ERROR] Resource Manager: Could not get Resource associated with { " + meta_file + " } Meta File";
 
-	if (!App->file_system->Exists(meta_file.c_str()))
+	if (!App->fileSystem->Exists(meta_file.c_str()))
 	{
 		LOG("%s! Error: File System could not find Meta File.", error_string.c_str());
 		return nullptr;
@@ -1408,7 +1408,7 @@ Resource* M_ResourceManager::AllocateResource(const uint32& UID, const char* ass
 
 	char* buffer				= nullptr;
 	const char* library_path	= library.find(UID)->second.c_str();
-	uint read					= App->file_system->Load(library_path, &buffer);
+	uint read					= App->fileSystem->Load(library_path, &buffer);
 	if (read == 0)
 	{
 		LOG("%s! Error: File system could not read File [%s]", error_string.c_str(), library_path);

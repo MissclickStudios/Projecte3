@@ -76,7 +76,7 @@ bool C_Animator::CleanUp()
 
 	for (uint i = 0; i < animations.size(); ++i)
 	{
-		App->resource_manager->FreeResource(animations[i]->GetUID());
+		App->resourceManager->FreeResource(animations[i]->GetUID());
 	}
 
 	animations.clear();
@@ -151,7 +151,7 @@ bool C_Animator::LoadState(ParsonNode& root)
 		std::string assetsPath = ASSETS_MODELS_PATH + std::string(animationNode.GetString("Name"));
 		App->resource_manager->AllocateResource((uint32)animationNode.GetNumber("UID"), assetsPath.c_str());
 		
-		R_Animation* rAnimation = (R_Animation*)App->resource_manager->RequestResource((uint32)animationNode.GetNumber("UID"));
+		R_Animation* rAnimation = (R_Animation*)App->resourceManager->RequestResource((uint32)animationNode.GetNumber("UID"));
 		if (rAnimation != nullptr)
 		{
 			animationsToAdd.push_back(rAnimation);

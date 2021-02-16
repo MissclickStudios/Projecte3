@@ -76,10 +76,10 @@ bool M_Scene::Start()
 
 	CreateSceneCamera("SceneCamera");
 
-	//uint32 street_uid = App->resource_manager->LoadFromLibrary(DEFAULT_SCENE);
+	//uint32 street_uid = App->resourceManager->LoadFromLibrary(DEFAULT_SCENE);
 	//GenerateGameObjectsFromModel(street_uid);
 
-	//uint32 animation_uid = App->resource_manager->LoadFromLibrary(DEFAULT_ANIMATION);
+	//uint32 animation_uid = App->resourceManager->LoadFromLibrary(DEFAULT_ANIMATION);
 	//GenerateGameObjectsFromModel(animation_uid , float3(0.05f, 0.05f, 0.05f));
 	
 	LoadScene("Assets/Scenes/MainScene.json");
@@ -254,11 +254,11 @@ bool M_Scene::SaveScene(const char* scene_name) const
 		LOG("[ERROR] Scene: Could not save the current scene! Error: FileSystem could not write any data!");
 	}
 
-	R_Scene* r_scene			= (R_Scene*)App->resource_manager->CreateResource(RESOURCE_TYPE::SCENE, path.c_str());			// TMP until R_Scene is fully implemented.
-	//App->resource_manager->SaveResourceToLibrary(r_scene);
+	R_Scene* r_scene			= (R_Scene*)App->resourceManager->CreateResource(RESOURCE_TYPE::SCENE, path.c_str());			// TMP until R_Scene is fully implemented.
+	//App->resourceManager->SaveResourceToLibrary(r_scene);
 
 	std::string library_path	= SCENES_PATH + std::to_string(r_scene->GetUID()) + SCENES_EXTENSION;
-	written = App->file_system->Save(library_path.c_str(), buffer, written);
+	written = App->fileSystem->Save(library_path.c_str(), buffer, written);
 	if (written > 0)
 	{
 		LOG("[SCENE] Scene: Successfully saved the current scene in Library! Path: %s", library_path.c_str());
@@ -268,7 +268,7 @@ bool M_Scene::SaveScene(const char* scene_name) const
 		LOG("[ERROR] Scene: Could not save the current scene in Library! Error: FileSystem could not write any data!");
 	}
 
-	App->resource_manager->DeallocateResource(r_scene);
+	App->resourceManager->DeallocateResource(r_scene);
 
 	RELEASE_ARRAY(buffer);
 
@@ -280,7 +280,7 @@ bool M_Scene::LoadScene(const char* path)
 	bool ret = true;
 
 	char* buffer = nullptr;
-	uint read = App->file_system->Load(path, &buffer);
+	uint read = App->fileSystem->Load(path, &buffer);
 	if (read == 0)
 	{
 		LOG("[ERROR] Scene Loading: Could not load %s from Assets! Error: File system could not read the file!", path);
@@ -455,7 +455,7 @@ void M_Scene::DeleteGameObject(GameObject* game_object, uint index)
 
 void M_Scene::GenerateGameObjectsFromModel(const uint32& model_UID, const float3& scale)
 {
-	R_Model* r_model = (R_Model*)App->resource_manager->RequestResource(model_UID);
+	R_Model* r_model = (R_Model*)App->resourceManager->RequestResource(model_UID);
 
 	if (r_model == nullptr)
 	{
@@ -538,7 +538,7 @@ void M_Scene::CreateComponentsFromModelNode(const ModelNode& model_node, GameObj
 	if (valid_mesh_uid)
 	{
 		C_Mesh* c_mesh = (C_Mesh*)game_object->CreateComponent(COMPONENT_TYPE::MESH);
-		R_Mesh* r_mesh = (R_Mesh*)App->resource_manager->RequestResource(model_node.mesh_uid);
+		R_Mesh* r_mesh = (R_Mesh*)App->resourceManager->RequestResource(model_node.mesh_uid);
 		if (r_mesh == nullptr)
 		{
 			LOG("[ERROR] Scene: Could not generate the Mesh Resource from the Model Node! Error: R_Mesh* could not be found in resources.");
@@ -553,7 +553,7 @@ void M_Scene::CreateComponentsFromModelNode(const ModelNode& model_node, GameObj
 	if (valid_material_uid)
 	{
 		C_Material* c_material = (C_Material*)game_object->CreateComponent(COMPONENT_TYPE::MATERIAL);
-		R_Material* r_material = (R_Material*)App->resource_manager->RequestResource(model_node.material_uid);
+		R_Material* r_material = (R_Material*)App->resourceManager->RequestResource(model_node.material_uid);
 		if (r_material == nullptr)
 		{
 			LOG("[ERROR] Scene: Could not generate the Material Resource from the Model Node! Error: R_Material* could not be found in resources.");
@@ -566,7 +566,7 @@ void M_Scene::CreateComponentsFromModelNode(const ModelNode& model_node, GameObj
 		// Set Texture
 		if (valid_texture_uid)
 		{
-			R_Texture* r_texture = (R_Texture*)App->resource_manager->RequestResource(model_node.texture_uid);
+			R_Texture* r_texture = (R_Texture*)App->resourceManager->RequestResource(model_node.texture_uid);
 			if (r_texture == nullptr)
 			{
 				LOG("[ERROR] Scene: Could not generate the Texture Resource from the Model Node! Error: R_Texture* could not be found in resources.");
@@ -602,7 +602,7 @@ void M_Scene::CreateAnimationComponentFromModel(const R_Model* r_model, GameObje
 	std::map<uint32, std::string>::const_iterator item;
 	for (item = r_model->animations.cbegin(); item != r_model->animations.cend(); ++item)
 	{
-		R_Animation* r_animation = (R_Animation*)App->resource_manager->RequestResource(item->first);
+		R_Animation* r_animation = (R_Animation*)App->resourceManager->RequestResource(item->first);
 		if (r_animation != nullptr)
 		{
 			c_animation->AddAnimation(r_animation);
@@ -630,7 +630,7 @@ bool M_Scene::ApplyTextureToSelectedGameObject(const uint32& UID)
 		return false;
 	}
 
-	R_Texture* r_texture = (R_Texture*)App->resource_manager->RequestResource(UID);
+	R_Texture* r_texture = (R_Texture*)App->resourceManager->RequestResource(UID);
 
 	if (r_texture == nullptr)
 	{
@@ -640,7 +640,7 @@ bool M_Scene::ApplyTextureToSelectedGameObject(const uint32& UID)
 	if (r_texture->GetTextureID() == 0)
 	{
 		LOG("[ERROR] Could not add the texture to the selected game object! Error: R_Texture* Texture ID was 0.");
-		App->resource_manager->DeallocateResource(r_texture);
+		App->resourceManager->DeallocateResource(r_texture);
 		return false;
 	}
 

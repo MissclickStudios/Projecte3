@@ -35,20 +35,20 @@ private:
 	void	HandleGuizmos						();
 
 private:
-	ImVec2					tex_size;
-	ImVec2					tex_origin;
-	ImVec2					cursor_pos;
+	ImVec2					texSize;
+	ImVec2					texOrigin;
+	ImVec2					cursorPos;
 
-	ImGuizmo::OPERATION		guizmo_operation;
-	ImGuizmo::MODE			guizmo_mode;
+	ImGuizmo::OPERATION		guizmoOperation;
+	ImGuizmo::MODE			guizmoMode;
 
-	bool					using_guizmo;
+	bool					usingGuizmo;
 
-	bool					scene_focused;
-	bool					game_focused;
+	bool					sceneFocused;
+	bool					gameFocused;
 
 private:
-	bool					want_text_input;
+	bool					wantTextInput;
 };
 
 #endif // !__E_VIEWPORT_H__

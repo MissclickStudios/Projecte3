@@ -13,7 +13,7 @@ public:
 	bool CleanUp	() override;
 
 private:
-	float current_time;
+	float currentTime;
 };
 
 #endif // !__E_TIMELINE_H__

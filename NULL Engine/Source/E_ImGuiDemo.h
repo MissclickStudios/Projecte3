@@ -14,10 +14,10 @@ public:
 	bool CleanUp() override;
 
 private:
-	bool			show_demo_window;
-	bool			show_another_window;
+	bool			showDemoWindow;
+	bool			showAnotherWindow;
 
-	int				current_style;
+	int				currentStyle;
 	const char*		styles;
 
 	float			f;

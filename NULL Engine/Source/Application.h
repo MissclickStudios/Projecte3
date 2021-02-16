@@ -72,8 +72,8 @@ public:
 	M_Renderer3D*			renderer;
 	M_Editor*				editor;
 	M_Camera3D*				camera;
-	M_FileSystem*			file_system;
-	M_ResourceManager*		resource_manager;
+	M_FileSystem*			fileSystem;
+	M_ResourceManager*		resourceManager;
 
 	bool					play;
 	bool					pause;														// Will keep track of whether or not the applcation is currently paused.
@@ -84,30 +84,30 @@ public:
 	bool					debug;														// Will keep track of whether or not the application is in debug mode.
 
 	// --- SAVE & LOAD
-	bool					user_has_saved;												// Will keep track of whether or not the user has saved the app's state at least once since start-up.
+	bool					userHasSaved;												// Will keep track of whether or not the user has saved the app's state at least once since start-up.
 
 	// --- FRAMERATE
-	uint					frame_cap;													// Stores the cap value that will be aplied to the framerate.
-	float					seconds_since_startup;										// Stores the total amount of seconds that have elapsed since application start.
-	bool					frames_are_capped;											// Will keep track of whether or not the frames are currently capped.
-	bool					display_framerate_data;										// Will keep track of whether or not to display the framerate data on the window's title.		
+	uint					frameCap;													// Stores the cap value that will be aplied to the framerate.
+	float					secondsSinceStartup;										// Stores the total amount of seconds that have elapsed since application start.
+	bool					framesAreCapped;											// Will keep track of whether or not the frames are currently capped.
+	bool					displayFramerateData;										// Will keep track of whether or not to display the framerate data on the window's title.		
 
 private:
 	std::vector<Module*>	modules;													// Vector that will contain all the modules. Will be iterated to go through each state of each module.
 
-	std::string				engine_name;												// Window title string. In this case the name of the Game Engine.
+	std::string				engineName;												// Window title string. In this case the name of the Game Engine.
 	std::string				organization;												// String that will store the name of the organization behind the development of this application.
 
 	// --- LOAD & SAVE
 	//ParsonNode				config;														// Interface class that will be used to modify .json files with the parson library.
 	
-	bool					want_to_load;												// Will keep track of whether or not the user wants to load a configuration.
-	bool					want_to_save;												// Will keep track of whether or not the user wants to save a configuration.
-	std::string				load_config_file;											// Will store the name string of the configuration file to be loaded.
-	std::string				save_config_file;											// Will store the name string og the configuration file to be loaded.
+	bool					wantToLoad;												// Will keep track of whether or not the user wants to load a configuration.
+	bool					wantToSave;												// Will keep track of whether or not the user wants to save a configuration.
+	std::string				loadConfigFile;											// Will store the name string of the configuration file to be loaded.
+	std::string				saveConfigFile;											// Will store the name string og the configuration file to be loaded.
 
 	// --- HARDWARE INFO
-	HardwareInfo			hardware_info;												// All the info/data about the software and the hardware of the system will be extracted from here.
+	HardwareInfo			hardwareInfo;												// All the info/data about the software and the hardware of the system will be extracted from here.
 };
 
 extern Application* App;																// Allows to access the Application module from anywhere in the project.

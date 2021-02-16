@@ -5,7 +5,7 @@
 
 #include "E_Toolbar.h"
 
-E_Toolbar::E_Toolbar() : EditorPanel("Toolbar"), played_once(false)
+E_Toolbar::E_Toolbar() : EditorPanel("Toolbar"), playedOnce(false)
 {
 
 }
@@ -57,7 +57,7 @@ void E_Toolbar::PlayAndStopButtons()
 
 		Time::Game::Play();
 
-		played_once = true;																			// Quickfix to avoid having conflicts between stop and pause.
+		playedOnce = true;																			// Quickfix to avoid having conflicts between stop and pause.
 		App->play	= true;
 		App->pause	= false;
 	}
@@ -66,7 +66,7 @@ void E_Toolbar::PlayAndStopButtons()
 
 	if (ImGui::Button("Stop"))
 	{
-		if (!played_once)
+		if (!playedOnce)
 		{
 			LOG("[ERROR] Play&Stop: Cannot Stop something that has not started yet!");
 			return;
@@ -105,10 +105,10 @@ void E_Toolbar::TimeScaleSlider()
 {
 	ImGui::SetNextItemWidth(75.0f);
 
-	float time_scale = Time::Game::GetTimeScale();
-	if (ImGui::SliderFloat("##", &time_scale, 0.250f, 4.000f, "X %.3f", ImGuiSliderFlags_None))
+	float timeScale = Time::Game::GetTimeScale();
+	if (ImGui::SliderFloat("##", &timeScale, 0.250f, 4.000f, "X %.3f", ImGuiSliderFlags_None))
 	{
-		Time::Game::SetTimeScale(time_scale);
+		Time::Game::SetTimeScale(timeScale);
 	}
 }
 

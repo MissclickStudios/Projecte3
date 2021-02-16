@@ -14,9 +14,9 @@ namespace Importer
 	void	InitializeImporters	();
 	void	ShutDownImporters	();
 
-	bool	ImportScene			(const char* buffer, uint size, R_Model* r_model);
-	bool	ImportMesh			(const char* buffer, R_Mesh* r_mesh);
-	bool	ImportTexture		(const char* buffer, uint size, R_Texture* r_texture);
+	bool	ImportScene			(const char* buffer, uint size, R_Model* rModel);
+	bool	ImportMesh			(const char* buffer, R_Mesh* rMesh);
+	bool	ImportTexture		(const char* buffer, uint size, R_Texture* rTexture);
 }
 
 #endif // !__IMPORTER_H__

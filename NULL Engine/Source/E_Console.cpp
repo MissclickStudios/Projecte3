@@ -10,8 +10,8 @@
 
 E_Console::E_Console() : EditorPanel("Console")
 {
-	scroll_to_bottom = true;
-	show_console = IsActive();
+	scrollToBottom = true;
+	showConsole = IsActive();
 }
 
 E_Console::~E_Console()
@@ -57,7 +57,7 @@ void E_Console::AddLog(const char* log)
 
 	logs.push_back(tmp);
 
-	scroll_to_bottom = true;
+	scrollToBottom = true;
 }
 
 void E_Console::ClearLog()
@@ -69,7 +69,7 @@ void E_Console::ClearLog()
 
 	logs.clear();
 
-	scroll_to_bottom = true;
+	scrollToBottom = true;
 }
 
 void E_Console::ConsoleMenuBar()
@@ -100,38 +100,38 @@ void E_Console::ConsoleOutput()
 
 	for (uint i = 0; i < logs.size(); ++i)
 	{
-		ImVec4 text_colour = { 1.0f, 1.0f, 1.0f, 1.0f };
+		ImVec4 textColour = { 1.0f, 1.0f, 1.0f, 1.0f };
 
 		if (strstr(logs[i], "[ERROR]") != nullptr)								// strstr() will look for a specific substring in the given string. Returns nullptr if the substr is not found.
 		{
-			text_colour = { 1.0f, 0.33f, 0.33f, 1.0f };							// [ERROR] logs will be red.
+			textColour = { 1.0f, 0.33f, 0.33f, 1.0f };							// [ERROR] logs will be red.
 		}
 		else if (strstr(logs[i], "[WARNING]") != nullptr)
 		{
-			text_colour = { 1.0f, 1.0f, 0.33f, 1.0f };							// [WARNING] logs will be yellow.
+			textColour = { 1.0f, 1.0f, 0.33f, 1.0f };							// [WARNING] logs will be yellow.
 		}
 		else if (strstr(logs[i], "[STATUS]") != nullptr)
 		{
-			text_colour = { 1.0f, 0.33f, 1.0f, 1.0f };
+			textColour = { 1.0f, 0.33f, 1.0f, 1.0f };
 		}
 		else if (strstr(logs[i], "[FILE_SYSTEM]") != nullptr)
 		{
-			text_colour = { 0.33f, 0.33f, 1.0f, 1.0f };
+			textColour = { 0.33f, 0.33f, 1.0f, 1.0f };
 		}
 		else if (strstr(logs[i], "[IMPORTER]") != nullptr)
 		{
-			text_colour = { 0.33f, 1.0f, 1.0f, 1.0f };
+			textColour = { 0.33f, 1.0f, 1.0f, 1.0f };
 		}
 		else if (strstr(logs[i], "[SCENE]") != nullptr)
 		{
-			text_colour = { 0.33f, 1.0f, 0.33f, 1.0f };
+			textColour = { 0.33f, 1.0f, 0.33f, 1.0f };
 		}
 		else
 		{
-			text_colour = { 1.0f, 1.0f, 1.0f, 1.0f };
+			textColour = { 1.0f, 1.0f, 1.0f, 1.0f };
 		}
 
-		ImGui::PushStyleColor(ImGuiCol_Text, text_colour);
+		ImGui::PushStyleColor(ImGuiCol_Text, textColour);
 		ImGui::TextUnformatted(logs[i]);										// Raw text without formatting. Fast, without memory copies and no buffer size limits. For long chunks of txt.
 		ImGui::PopStyleColor();
 	}
@@ -141,10 +141,10 @@ void E_Console::ConsoleOutput()
 
 void E_Console::ConsoleScrollToBottom()
 {
-	if (scroll_to_bottom)
+	if (scrollToBottom)
 	{
 		ImGui::SetScrollHereY(1.0f);											// Sets the scroll position to the given one. From 0.0f to 1.0f (From above first item to below last item).
 
-		scroll_to_bottom = false;
+		scrollToBottom = false;
 	}
 }

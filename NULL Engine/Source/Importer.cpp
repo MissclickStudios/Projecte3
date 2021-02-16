@@ -30,11 +30,11 @@ void Importer::ShutDownImporters()
 
 }
 
-bool Importer::ImportScene(const char* buffer, uint size, R_Model* r_model)
+bool Importer::ImportScene(const char* buffer, uint size, R_Model* rModel)
 {
-	Importer::Scenes::Import(buffer, size, r_model);
+	Importer::Scenes::Import(buffer, size, rModel);
 
-	if (r_model == nullptr)
+	if (rModel == nullptr)
 	{
 		return false;
 	}
@@ -42,16 +42,16 @@ bool Importer::ImportScene(const char* buffer, uint size, R_Model* r_model)
 	return true;
 }
 
-bool Importer::ImportMesh(const char* buffer, R_Mesh* r_mesh)
+bool Importer::ImportMesh(const char* buffer, R_Mesh* rMesh)
 {
 	//Importer::Meshes::Import(buffer)
 	
 	return false;
 }
 
-bool Importer::ImportTexture(const char* buffer, uint size, R_Texture* r_texture)
+bool Importer::ImportTexture(const char* buffer, uint size, R_Texture* rTexture)
 {
-	bool success = Importer::Textures::Import(buffer, size, r_texture);
+	bool success = Importer::Textures::Import(buffer, size, rTexture);
 
 	/*if (r_texture != nullptr && r_texture->GetTextureID() != 0)
 	{

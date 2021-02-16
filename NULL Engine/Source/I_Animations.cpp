@@ -18,78 +18,78 @@
 
 using namespace Importer::Animations;																	// Not a good thing to do but it will be employed sparsely and only inside this .cpp
 
-void Importer::Animations::Import(const aiAnimation* ai_animation, R_Animation* r_animation)
+void Importer::Animations::Import(const aiAnimation* assimpAnimation, R_Animation* rAnimation)
 {
-	if (r_animation == nullptr)
+	if (rAnimation == nullptr)
 	{
 		LOG("[ERROR] Importer: Could not Import Animation! Error: R_Animation* was nullptr.");
 		return;
 	}
-	if (ai_animation == nullptr)
+	if (assimpAnimation == nullptr)
 	{
-		LOG("[ERROR] Importer: Could not Import Animation { %s }! Error: aiAnimation* was nullptr.", r_animation->GetAssetsFile());
+		LOG("[ERROR] Importer: Could not Import Animation { %s }! Error: aiAnimation* was nullptr.", rAnimation->GetAssetsFile());
 		return;
 	}
 
-	r_animation->SetName(ai_animation->mName.C_Str());
-	r_animation->SetDuration(ai_animation->mDuration);
-	r_animation->SetTicksPerSecond(ai_animation->mTicksPerSecond);
+	rAnimation->SetName(assimpAnimation->mName.C_Str());
+	rAnimation->SetDuration(assimpAnimation->mDuration);
+	rAnimation->SetTicksPerSecond(assimpAnimation->mTicksPerSecond);
 
-	for (uint i = 0; i < ai_animation->mNumChannels; ++i)
+	for (uint i = 0; i < assimpAnimation->mNumChannels; ++i)
 	{
-		aiNodeAnim* ai_channel	= ai_animation->mChannels[i];
-		Channel r_channel		= Channel(ai_channel->mNodeName.C_Str());
+		aiNodeAnim* aiChannel	= assimpAnimation->mChannels[i];
+		Channel rChannel		= Channel(aiChannel->mNodeName.C_Str());
 		
-		Utilities::GetPositionKeys(ai_channel, r_channel);
-		Utilities::GetRotationKeys(ai_channel, r_channel);
-		Utilities::GetScaleKeys(ai_channel, r_channel);
+		Utilities::GetPositionKeys(aiChannel, rChannel);
+		Utilities::GetRotationKeys(aiChannel, rChannel);
+		Utilities::GetScaleKeys(aiChannel, rChannel);
 
-		r_animation->channels.push_back(r_channel);
+		rAnimation->channels.push_back(rChannel);
 	}
 }
 
-void Importer::Animations::Utilities::GetPositionKeys(const aiNodeAnim* ai_channel, Channel& r_channel)
+void Importer::Animations::Utilities::GetPositionKeys(const aiNodeAnim* aiChannel, Channel& rChannel)
 {
-	for (uint i = 0; i < ai_channel->mNumPositionKeys; ++i)
+	for (uint i = 0; i < aiChannel->mNumPositionKeys; ++i)
 	{
-		aiVectorKey pk	= ai_channel->mPositionKeys[i];
+		aiVectorKey pk	= aiChannel->mPositionKeys[i];
 
 		double time		= pk.mTime;
 		float3 position = float3(pk.mValue.x, pk.mValue.y, pk.mValue.z);
 
-		r_channel.position_keyframes.emplace(time, position);
+		rChannel.position_keyframes.emplace(time, position);
 	}
 }
 
-void Importer::Animations::Utilities::GetRotationKeys(const aiNodeAnim* ai_channel, Channel& r_channel)
+void Importer::Animations::Utilities::GetRotationKeys(const aiNodeAnim* aiChannel, Channel& rChannel)
 {
-	for (uint i = 0; i < ai_channel->mNumRotationKeys; ++i)
+	for (uint i = 0; i < aiChannel->mNumRotationKeys; ++i)
 	{
-		aiQuatKey rk	= ai_channel->mRotationKeys[i];
+		aiQuatKey rk	= aiChannel->mRotationKeys[i];
 
 		double time		= rk.mTime;
 		Quat rotation	= Quat(rk.mValue.x, rk.mValue.y, rk.mValue.z, rk.mValue.w);
 
-		r_channel.rotation_keyframes.emplace(time, rotation);
+		rChannel.rotation_keyframes.emplace(time, rotation);
 	}
 }
 
-void Importer::Animations::Utilities::GetScaleKeys(const aiNodeAnim* ai_channel, Channel& r_channel)
+void Importer::Animations::Utilities::GetScaleKeys(const aiNodeAnim* aiChannel, Channel& rChannel)
 {
-	for (uint i = 0; i < ai_channel->mNumScalingKeys; ++i)
+	for (uint i = 0; i < aiChannel->mNumScalingKeys; ++i)
 	{
-		aiVectorKey sk	= ai_channel->mScalingKeys[i];
+		aiVectorKey sk	= aiChannel->mScalingKeys[i];
 
 		double time		= sk.mTime;
 		float3 scale	= float3(sk.mValue.x, sk.mValue.y, sk.mValue.z);
 
-		r_channel.scale_keyframes.emplace(time, scale);
+		rChannel.scale_keyframes.emplace(time, scale);
 	}
 }
 
-uint Importer::Animations::Save(const R_Animation* r_animation, char** buffer)
+uint Importer::Animations::Save(const R_Animation* rAnimation, char** buffer)
 {
-	if (r_animation == nullptr)
+	if (rAnimation == nullptr)
 	{
 		LOG("[ERROR] Animations Importer: Could not Save Animation to Library! Error: R_Animation was nullptr.");
 		return 0;
@@ -99,22 +99,22 @@ uint Importer::Animations::Save(const R_Animation* r_animation, char** buffer)
 	uint size		= 0;
 
 	// --- CALCULATING THE REQUIRED BUFFER SIZE ---
-	uint channels_data_size = Utilities::GetChannelsDataSize(r_animation);
+	uint channelsDataSize = Utilities::GetChannelsDataSize(rAnimation);
 
-	double header_data[HEADER_SIZE] = {
-		(double)strlen(r_animation->GetName()),
-		r_animation->GetDuration(),
-		r_animation->GetTicksPerSecond(),
-		(double)r_animation->channels.size(),
-		(double)channels_data_size
+	double headerData[HEADER_SIZE] = {
+		(double)strlen(rAnimation->GetName()),
+		rAnimation->GetDuration(),
+		rAnimation->GetTicksPerSecond(),
+		(double)rAnimation->channels.size(),
+		(double)channelsDataSize
 	};
 
-	uint header_data_size	= sizeof(header_data) /*+ sizeof(double)*/;
-	uint name_data_size		= (uint)header_data[0] * sizeof(char);
-	size					= header_data_size + name_data_size + channels_data_size;
+	uint headerDataSize	= sizeof(headerData) /*+ sizeof(double)*/;
+	uint nameDataSize		= (uint)headerData[0] * sizeof(char);
+	size					= headerDataSize + nameDataSize + channelsDataSize;
 	if (size == 0)
 	{
-		LOG("[WARNING] Animation { %s } with UID [%lu] had no data to Save!", r_animation->GetAssetsFile(), r_animation->GetUID());
+		LOG("[WARNING] Animation { %s } with UID [%lu] had no data to Save!", rAnimation->GetAssetsFile(), rAnimation->GetUID());
 		return 0;
 	}
 
@@ -124,48 +124,50 @@ uint Importer::Animations::Save(const R_Animation* r_animation, char** buffer)
 	uint bytes		= 0;
 
 	// --- HEADER DATA
-	bytes = header_data_size;
-	memcpy_s(cursor, size, (const void*)header_data, bytes);
+	bytes = headerDataSize;
+	memcpy_s(cursor, size, (const void*)headerData, bytes);
 	cursor += bytes;
 
-	bytes = name_data_size;
-	memcpy_s(cursor, size, (const void*)r_animation->GetName(), bytes);
+	bytes = nameDataSize;
+	memcpy_s(cursor, size, (const void*)rAnimation->GetName(), bytes);
 	cursor += bytes;
 
 	// --- CHANNELS DATA
 	//uint vec_key_data_size	= sizeof(double) + (sizeof(float) * 3);
 	//uint quat_key_data_size = sizeof(double) + (sizeof(float) * 4);
 
-	for (uint i = 0; i < r_animation->channels.size(); ++i)
+	for (uint i = 0; i < rAnimation->channels.size(); ++i)
 	{
-		Channel r_channel = r_animation->channels[i];
+		Channel rChannel = rAnimation->channels[i];
 
-		Utilities::StoreChannelName(r_channel, &cursor);
-		Utilities::StorePositionKeysData(r_channel, &cursor);
-		Utilities::StoreRotationKeysData(r_channel, &cursor);
-		Utilities::StoreScaleKeysData(r_channel, &cursor);
+		Utilities::StoreChannelName(rChannel, &cursor);
+		Utilities::StorePositionKeysData(rChannel, &cursor);
+		Utilities::StoreRotationKeysData(rChannel, &cursor);
+		Utilities::StoreScaleKeysData(rChannel, &cursor);
 	}
 
 	// --- SAVING THE BUFFER ---
-	std::string path	= ANIMATIONS_PATH + std::to_string(r_animation->GetUID()) + ANIMATIONS_EXTENSION;
-	written				= App->file_system->Save(path.c_str(), *buffer, size);
+
+	std::string path	= ANIMATIONS_PATH + std::to_string(rAnimation->GetUID()) + ANIMATIONS_EXTENSION;
+	written				= App->fileSystem->Save(path.c_str(), *buffer, size);
+
 	if (written > 0)
 	{
-		LOG("[STATUS] Animations Importer: Successfully Saved Animation { %s } to Library! Path: %s", r_animation->GetAssetsFile(), path.c_str());
+		LOG("[STATUS] Animations Importer: Successfully Saved Animation { %s } to Library! Path: %s", rAnimation->GetAssetsFile(), path.c_str());
 	}
 	else
 	{
-		LOG("[ERROR] Animations Importer: Could not Save Animation { %s } to Library! Error: File System could not Write File.", r_animation->GetAssetsFile());
+		LOG("[ERROR] Animations Importer: Could not Save Animation { %s } to Library! Error: File System could not Write File.", rAnimation->GetAssetsFile());
 	}
 
 	return written;
 }
 
-bool Importer::Animations::Load(const char* buffer, R_Animation* r_animation)
+bool Importer::Animations::Load(const char* buffer, R_Animation* rAnimation)
 {
 	bool ret = true;
 	
-	if (r_animation == nullptr)
+	if (rAnimation == nullptr)
 	{
 		LOG("[ERROR] Importer: Could not Load Animation from Library! Error: R_Animation* was nullptr.");
 		return false;
@@ -173,7 +175,7 @@ bool Importer::Animations::Load(const char* buffer, R_Animation* r_animation)
 	
 	if (buffer == nullptr)
 	{
-		LOG("[ERROR] Importer: Could not load Animation { %s } from Library! Error: Buffer was nullptr", r_animation->GetAssetsFile());
+		LOG("[ERROR] Importer: Could not load Animation { %s } from Library! Error: Buffer was nullptr", rAnimation->GetAssetsFile());
 		return false;
 	}
 
@@ -181,96 +183,96 @@ bool Importer::Animations::Load(const char* buffer, R_Animation* r_animation)
 	uint bytes		= 0;
 
 	// --- HEADER DATA ---
-	double header_data[HEADER_SIZE];
+	double headerData[HEADER_SIZE];
 
-	bytes = sizeof(header_data);
-	memcpy(header_data, cursor, bytes);
+	bytes = sizeof(headerData);
+	memcpy(headerData, cursor, bytes);
 	cursor += bytes;
 
 	std::string name = "";
-	name.resize((uint)header_data[0]);
-	bytes = (uint)header_data[0] * sizeof(char);
+	name.resize((uint)headerData[0]);
+	bytes = (uint)headerData[0] * sizeof(char);
 	memcpy(&name[0], cursor, bytes);
 	cursor += bytes;
 
-	r_animation->SetName(name.c_str());
-	r_animation->SetDuration(header_data[1]);
-	r_animation->SetTicksPerSecond(header_data[2]);
+	rAnimation->SetName(name.c_str());
+	rAnimation->SetDuration(headerData[1]);
+	rAnimation->SetTicksPerSecond(headerData[2]);
 
 	// --- CHANNELS DATA ---
-	r_animation->channels.resize((uint)header_data[3]);
-	for (uint i = 0; i < r_animation->channels.size(); ++i)
+	rAnimation->channels.resize((uint)headerData[3]);
+	for (uint i = 0; i < rAnimation->channels.size(); ++i)
 	{
-		std::string channel_name = "";
-		Utilities::LoadChannelName(&cursor, channel_name);
+		std::string channelName = "";
+		Utilities::LoadChannelName(&cursor, channelName);
 
-		Channel r_channel = Channel(channel_name.c_str());
+		Channel rChannel = Channel(channelName.c_str());
 		
-		Utilities::LoadPositionKeysData(&cursor, r_channel);
-		Utilities::LoadRotationKeysData(&cursor, r_channel);
-		Utilities::LoadScaleKeysData(&cursor, r_channel);
+		Utilities::LoadPositionKeysData(&cursor, rChannel);
+		Utilities::LoadRotationKeysData(&cursor, rChannel);
+		Utilities::LoadScaleKeysData(&cursor, rChannel);
 
-		r_animation->channels[i] = r_channel;
+		rAnimation->channels[i] = rChannel;
 	}
 
 	return ret;
 }
 
-uint Importer::Animations::Utilities::GetChannelsDataSize(const R_Animation* r_animation)
+uint Importer::Animations::Utilities::GetChannelsDataSize(const R_Animation* rAnimation)
 {
-	uint channels_size = 0;																									// Will contain the total size of all the animation's channels.
+	uint channelsSize = 0;																									// Will contain the total size of all the animation's channels.
 	
-	if (r_animation == nullptr)
+	if (rAnimation == nullptr)
 	{
 		LOG("[ERROR] Animations Importer: Could not get Channels Size Of Data! Error: Argument R_Animation* was nullptr");
 		return 0;
 	}
 
-	uint vec_key_size	= sizeof(double) + (sizeof(float) * 3);																// float3 is composed by 3 floats.
-	uint quat_key_size	= sizeof(double) + (sizeof(float) * 4);																// Quat is composed by 4 floats.
-	for (uint i = 0; i < r_animation->channels.size(); ++i)
+	uint vecKeySize	= sizeof(double) + (sizeof(float) * 3);																// float3 is composed by 3 floats.
+	uint quatKeySize	= sizeof(double) + (sizeof(float) * 4);																// Quat is composed by 4 floats.
+	for (uint i = 0; i < rAnimation->channels.size(); ++i)
 	{
-		const Channel& r_channel = r_animation->channels[i];
-		uint channel_size = 0;
+		const Channel& rChannel = rAnimation->channels[i];
+		uint channelSize = 0;
 
-		channel_size += sizeof(uint) * 4;																					// Length of the name and sizes of the keys maps.
-		channel_size += (strlen(r_channel.name.c_str()) * sizeof(char));
-		channel_size += r_channel.position_keyframes.size() * vec_key_size;
-		channel_size += r_channel.rotation_keyframes.size() * quat_key_size;
-		channel_size += r_channel.scale_keyframes.size() * vec_key_size;
+		channelSize += sizeof(uint) * 4;																					// Length of the name and sizes of the keys maps.
+		channelSize += (strlen(rChannel.name.c_str()) * sizeof(char));
+		channelSize += rChannel.position_keyframes.size() * vecKeySize;
+		channelSize += rChannel.rotation_keyframes.size() * quatKeySize;
+		channelSize += rChannel.scale_keyframes.size() * vecKeySize;
 
-		channels_size += channel_size;
+		channelsSize += channelSize;
 	}
 
-	return channels_size;
+	return channelsSize;
 }
 
-void Importer::Animations::Utilities::StoreChannelName(const Channel& r_channel, char** cursor)
+void Importer::Animations::Utilities::StoreChannelName(const Channel& rChannel, char** cursor)
 {
 	uint bytes			= 0;
-	uint name_length	= r_channel.name.length();
+	uint nameLength	= rChannel.name.length();
 
 	bytes = sizeof(uint);
-	memcpy(*cursor, (const void*)&name_length, bytes);
+	memcpy(*cursor, (const void*)&nameLength, bytes);
 	*cursor += bytes;
 	
-	bytes	= name_length * sizeof(char);
-	memcpy(*cursor, (const void*)r_channel.name.c_str(), bytes);
+	bytes	= nameLength * sizeof(char);
+	memcpy(*cursor, (const void*)rChannel.name.c_str(), bytes);
 	*cursor	+= bytes;
 }
 
-void Importer::Animations::Utilities::StorePositionKeysData(const Channel& r_channel, char** cursor)
+void Importer::Animations::Utilities::StorePositionKeysData(const Channel& rChannel, char** cursor)
 {
 	uint bytes		= 0;
-	uint pk_size	= r_channel.position_keyframes.size();
+	uint pkSize	= rChannel.position_keyframes.size();
 
 	bytes = sizeof(uint);
-	memcpy(*cursor, (const void*)&pk_size, bytes);
+	memcpy(*cursor, (const void*)&pkSize, bytes);
 	*cursor += bytes;
 
 	bytes = sizeof(double) + (sizeof(float) * 3);																			// Data Size of a Position Keyframe.
 	std::map<double, float3>::const_iterator item;
-	for (item = r_channel.position_keyframes.begin(); item != r_channel.position_keyframes.end(); ++item)
+	for (item = rChannel.position_keyframes.begin(); item != rChannel.position_keyframes.end(); ++item)
 	{
 		memcpy(*cursor, (const void*)&item->first, sizeof(double));
 		*cursor += sizeof(double);
@@ -280,18 +282,18 @@ void Importer::Animations::Utilities::StorePositionKeysData(const Channel& r_cha
 	}
 }
 
-void Importer::Animations::Utilities::StoreRotationKeysData(const Channel& r_channel, char** cursor)
+void Importer::Animations::Utilities::StoreRotationKeysData(const Channel& rChannel, char** cursor)
 {
 	uint bytes		= 0;
-	uint rk_size	= r_channel.rotation_keyframes.size();
+	uint rkSize	= rChannel.rotation_keyframes.size();
 
 	bytes = sizeof(uint);
-	memcpy(*cursor, (const void*)&rk_size, bytes);
+	memcpy(*cursor, (const void*)&rkSize, bytes);
 	*cursor += bytes;
 	
 	bytes = sizeof(double) + (sizeof(float) * 4);																			// Data Size of a Rotation Keyframe.
 	std::map<double, Quat>::const_iterator item;
-	for (item = r_channel.rotation_keyframes.begin(); item != r_channel.rotation_keyframes.end(); ++item)
+	for (item = rChannel.rotation_keyframes.begin(); item != rChannel.rotation_keyframes.end(); ++item)
 	{
 		memcpy(*cursor, (const void*)&item->first, sizeof(double));
 		*cursor += sizeof(double);
@@ -301,19 +303,19 @@ void Importer::Animations::Utilities::StoreRotationKeysData(const Channel& r_cha
 	}
 }
 
-void Importer::Animations::Utilities::StoreScaleKeysData(const Channel& r_channel, char** cursor)
+void Importer::Animations::Utilities::StoreScaleKeysData(const Channel& rChannel, char** cursor)
 {
 	uint bytes = 0;
-	uint sk_size = r_channel.scale_keyframes.size();
+	uint skSize = rChannel.scale_keyframes.size();
 
 	bytes = sizeof(uint);
-	memcpy(*cursor, (const void*)&sk_size, bytes);
+	memcpy(*cursor, (const void*)&skSize, bytes);
 	*cursor += bytes;
 	
 	bytes = sizeof(double) + (sizeof(float) * 3);
 
 	std::map<double, float3>::const_iterator item;
-	for (item = r_channel.scale_keyframes.begin(); item != r_channel.scale_keyframes.end(); ++item)
+	for (item = rChannel.scale_keyframes.begin(); item != rChannel.scale_keyframes.end(); ++item)
 	{
 		memcpy(*cursor, (const void*)&item->first, sizeof(double));
 		*cursor += sizeof(double);
@@ -323,95 +325,95 @@ void Importer::Animations::Utilities::StoreScaleKeysData(const Channel& r_channe
 	}
 }
 
-void Importer::Animations::Utilities::LoadChannelName(char** cursor, std::string& channel_name)
+void Importer::Animations::Utilities::LoadChannelName(char** cursor, std::string& channelName)
 {
 	uint bytes			= 0;
-	uint name_length	= 0;
+	uint nameLength	= 0;
 
 	bytes = sizeof(uint);
-	memcpy(&name_length, (const void*)(*cursor), bytes);
+	memcpy(&nameLength, (const void*)(*cursor), bytes);
 	*cursor += bytes;
 	
-	channel_name.resize(name_length);
-	bytes	= name_length * sizeof(char);
-	memcpy(&channel_name[0], *cursor, bytes);
+	channelName.resize(nameLength);
+	bytes	= nameLength * sizeof(char);
+	memcpy(&channelName[0], *cursor, bytes);
 	*cursor += bytes;
 }
 
-void Importer::Animations::Utilities::LoadPositionKeysData(char** cursor, Channel& r_channel)
+void Importer::Animations::Utilities::LoadPositionKeysData(char** cursor, Channel& rChannel)
 {
 	uint bytes		= 0;
-	uint pk_size	= 0;
+	uint pkSize	= 0;
 
 	bytes = sizeof(uint);
-	memcpy(&pk_size, (const void*)(*cursor), bytes);
+	memcpy(&pkSize, (const void*)(*cursor), bytes);
 	*cursor += bytes;
 
-	uint time_bytes		= sizeof(double);
-	uint position_bytes = (sizeof(float) * 3);
-	for (uint i = 0; i < pk_size; ++i)
+	uint timeBytes		= sizeof(double);
+	uint positionBytes = (sizeof(float) * 3);
+	for (uint i = 0; i < pkSize; ++i)
 	{
 		double time			= 0.0;
 		float3 position		= float3::zero;
 		
-		memcpy(&time, (const void*)(*cursor), time_bytes);
-		*cursor += time_bytes;
+		memcpy(&time, (const void*)(*cursor), timeBytes);
+		*cursor += timeBytes;
 
-		memcpy(&position, (const void*)(*cursor), position_bytes);
-		*cursor += position_bytes;
+		memcpy(&position, (const void*)(*cursor), positionBytes);
+		*cursor += positionBytes;
 
-		r_channel.position_keyframes.emplace(time, position);
+		rChannel.position_keyframes.emplace(time, position);
 	}
 }
 
-void Importer::Animations::Utilities::LoadRotationKeysData(char** cursor, Channel& r_channel)
+void Importer::Animations::Utilities::LoadRotationKeysData(char** cursor, Channel& rChannel)
 {
 	uint bytes		= 0;
-	uint rk_size	= 0;
+	uint rkSize	= 0;
 
 	bytes = sizeof(uint);
-	memcpy(&rk_size, (const void*)(*cursor), bytes);
+	memcpy(&rkSize, (const void*)(*cursor), bytes);
 	*cursor += bytes;
 
-	uint time_bytes			= sizeof(double);
-	uint rotation_bytes		= (sizeof(float) * 4);
-	for (uint i = 0; i < rk_size; ++i)
+	uint timeBytes			= sizeof(double);
+	uint rotationBytes		= (sizeof(float) * 4);
+	for (uint i = 0; i < rkSize; ++i)
 	{
 		double time		= 0.0;
 		Quat rotation	= Quat::identity;
 
-		memcpy(&time, (const void*)(*cursor), time_bytes);
-		*cursor += time_bytes;
+		memcpy(&time, (const void*)(*cursor), timeBytes);
+		*cursor += timeBytes;
 
-		memcpy(&rotation, (const void*)(*cursor), rotation_bytes);
-		*cursor += rotation_bytes;
+		memcpy(&rotation, (const void*)(*cursor), rotationBytes);
+		*cursor += rotationBytes;
 
-		r_channel.rotation_keyframes.emplace(time, rotation);
+		rChannel.rotation_keyframes.emplace(time, rotation);
 	}
 }
 
-void Importer::Animations::Utilities::LoadScaleKeysData(char** cursor, Channel& r_channel)
+void Importer::Animations::Utilities::LoadScaleKeysData(char** cursor, Channel& rChannel)
 {
 	uint bytes		= 0;
-	uint sk_size	= 0;
+	uint skSize	= 0;
 
 	bytes = sizeof(uint);
-	memcpy(&sk_size, (const void*)(*cursor), bytes);
+	memcpy(&skSize, (const void*)(*cursor), bytes);
 	*cursor += bytes;
 
-	uint time_bytes		= sizeof(double);
-	uint scale_bytes	= (sizeof(float) * 3);
-	for (uint i = 0; i < sk_size; ++i)
+	uint timeBytes		= sizeof(double);
+	uint scaleBytes	= (sizeof(float) * 3);
+	for (uint i = 0; i < skSize; ++i)
 	{
 		double time		= 0.0;
 		float3 scale	= float3::one;
 
-		memcpy(&time, (const void*)(*cursor), time_bytes);
-		*cursor += time_bytes;
+		memcpy(&time, (const void*)(*cursor), timeBytes);
+		*cursor += timeBytes;
 
-		memcpy(&scale, (const void*)(*cursor), scale_bytes);
-		*cursor += scale_bytes;
+		memcpy(&scale, (const void*)(*cursor), scaleBytes);
+		*cursor += scaleBytes;
 
-		r_channel.scale_keyframes.emplace(time, scale);
+		rChannel.scale_keyframes.emplace(time, scale);
 	}
 }

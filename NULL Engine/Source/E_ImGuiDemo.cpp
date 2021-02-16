@@ -6,10 +6,10 @@
 
 E_ImGuiDemo::E_ImGuiDemo() : EditorPanel("ImGuiDemo")
 {
-	show_demo_window		= true;
-	show_another_window		= false;
+	showDemoWindow		= true;
+	showAnotherWindow		= false;
 
-	current_style			= (int)IMGUI_STYLE::DARK;
+	currentStyle			= (int)IMGUI_STYLE::DARK;
 
 	f						= 0.0f;
 	counter					= 0;
@@ -25,7 +25,7 @@ bool E_ImGuiDemo::Draw(ImGuiIO& io)
 	bool ret = true;
 
 	// Showing ImGui's predetermined demo window
-	if (show_demo_window)
+	if (showDemoWindow)
 	{
 		ImGui::ShowDemoWindow();
 	}
@@ -40,7 +40,7 @@ bool E_ImGuiDemo::Draw(ImGuiIO& io)
 		{
 			//return UPDATE_STATUS::STOP;
 
-			App->display_framerate_data = !App->display_framerate_data;
+			App->displayFramerateData = !App->displayFramerateData;
 		}
 
 		ImGui::SameLine();
@@ -53,21 +53,21 @@ bool E_ImGuiDemo::Draw(ImGuiIO& io)
 		ImGui::CheckboxFlags("io.ConfigFlags: DockingEnable", (unsigned int*)&io.ConfigFlags, ImGuiConfigFlags_DockingEnable);
 
 		ImGui::Text("This text has been brought to you by Euro Shave Club.");			// Will create a label. Can also use format strings.
-		ImGui::Checkbox("ImGui Demo Window", &show_demo_window);						// Checkbox that will modify the bool that it gets passed as argument.
-		ImGui::Checkbox("Sneaky Window", &show_another_window);
+		ImGui::Checkbox("ImGui Demo Window", &showDemoWindow);						// Checkbox that will modify the bool that it gets passed as argument.
+		ImGui::Checkbox("Sneaky Window", &showAnotherWindow);
 
 		const char* styles[] = { "Classic", "Light", "Dark", "TBD" };
-		ImGui::Combo("ImGui Style", &current_style, styles, IM_ARRAYSIZE(styles));
+		ImGui::Combo("ImGui Style", &currentStyle, styles, IM_ARRAYSIZE(styles));
 
-		if (current_style == (int)IMGUI_STYLE::CLASSIC)
+		if (currentStyle == (int)IMGUI_STYLE::CLASSIC)
 		{
 			ImGui::StyleColorsClassic();
 		}
-		else if (current_style == (int)IMGUI_STYLE::LIGHT)
+		else if (currentStyle == (int)IMGUI_STYLE::LIGHT)
 		{
 			ImGui::StyleColorsLight();
 		}
-		else if (current_style == (int)IMGUI_STYLE::DARK)
+		else if (currentStyle == (int)IMGUI_STYLE::DARK)
 		{
 			ImGui::StyleColorsDark();
 		}
@@ -97,14 +97,14 @@ bool E_ImGuiDemo::Draw(ImGuiIO& io)
 		ImGui::End();
 	}
 
-	if (show_another_window)
+	if (showAnotherWindow)
 	{
-		ImGui::Begin("Sneaky Window", &show_another_window);
+		ImGui::Begin("Sneaky Window", &showAnotherWindow);
 		ImGui::Text("Hello from sneaky window!");
 
 		if (ImGui::Button("Close me"))
 		{
-			show_another_window = false;
+			showAnotherWindow = false;
 		}
 
 

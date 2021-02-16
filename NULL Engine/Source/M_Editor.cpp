@@ -504,8 +504,8 @@ void M_Editor::LoadResourceIntoSceneThroughEditor()
 
 void M_Editor::GetResourcesThroughEditor(std::map<uint32, Resource*>& resources) const
 {
-	//resources = App->resource_manager->GetResources();
-	App->resource_manager->GetResources(resources);
+	//resources = App->resourceManager->GetResources();
+	App->resourceManager->GetResources(resources);
 }
 
 void M_Editor::SaveSceneThroughEditor(const char* scene_name)
@@ -515,7 +515,7 @@ void M_Editor::SaveSceneThroughEditor(const char* scene_name)
 
 void M_Editor::LoadFileThroughEditor(const char* path)
 {
-	std::string extension = App->file_system->GetFileExtension(path);
+	std::string extension = App->fileSystem->GetFileExtension(path);
 
 	if (extension == "json" || extension == "JSON")
 	{
@@ -523,7 +523,7 @@ void M_Editor::LoadFileThroughEditor(const char* path)
 	}
 	else
 	{
-		App->resource_manager->ImportFile(path);
+		App->resourceManager->ImportFile(path);
 	}
 }
 

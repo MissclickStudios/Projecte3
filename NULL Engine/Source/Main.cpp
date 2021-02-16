@@ -26,7 +26,7 @@ int main(int argc, char ** argv)
 {
 	LOG("Starting game '%s'...", TITLE);
 
-	int main_return		= EXIT_FAILURE;
+	int mainReturn		= EXIT_FAILURE;
 	MAIN_STATUS state	= MAIN_STATUS::CREATION;
 
 	while (state != MAIN_STATUS::EXIT)
@@ -60,15 +60,15 @@ int main(int argc, char ** argv)
 
 		case MAIN_STATUS::UPDATE:
 		{
-			UPDATE_STATUS update_return = App->Update();							// THIS HERE
+			UPDATE_STATUS updateReturn = App->Update();							// THIS HERE
 
-			if (update_return == UPDATE_STATUS::THROW_ERROR)
+			if (updateReturn == UPDATE_STATUS::THROW_ERROR)
 			{
 				LOG("Application Update exits with ERROR");
 				state = MAIN_STATUS::EXIT;
 			}
 
-			if (update_return == UPDATE_STATUS::STOP)
+			if (updateReturn == UPDATE_STATUS::STOP)
 			{
 				state = MAIN_STATUS::FINISH;
 			}
@@ -84,7 +84,7 @@ int main(int argc, char ** argv)
 			}
 			else
 			{
-				main_return = EXIT_SUCCESS;
+				mainReturn = EXIT_SUCCESS;
 			}
 
 			state = MAIN_STATUS::EXIT;
@@ -98,5 +98,5 @@ int main(int argc, char ** argv)
 
 	LOG("Exiting game '%s'...\n", TITLE);
 
-	return main_return;
+	return mainReturn;
 }

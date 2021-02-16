@@ -394,17 +394,17 @@ void M_Renderer3D::RecalculateProjectionMatrix()
 
 void M_Renderer3D::InitEngineIcons()
 {
-	uint32 animation_icon_uid	= App->resource_manager->LoadFromLibrary(ANIMATION_ICON_PATH);
-	uint32 file_icon_uid		= App->resource_manager->LoadFromLibrary(FILE_ICON_PATH);
-	uint32 folder_icon_uid		= App->resource_manager->LoadFromLibrary(FOLDER_ICON_PATH);
-	uint32 material_icon_uid	= App->resource_manager->LoadFromLibrary(MATERIAL_ICON_PATH);
-	uint32 model_icon_uid		= App->resource_manager->LoadFromLibrary(MODEL_ICON_PATH);
+	uint32 animation_icon_uid	= App->resourceManager->LoadFromLibrary(ANIMATION_ICON_PATH);
+	uint32 file_icon_uid		= App->resourceManager->LoadFromLibrary(FILE_ICON_PATH);
+	uint32 folder_icon_uid		= App->resourceManager->LoadFromLibrary(FOLDER_ICON_PATH);
+	uint32 material_icon_uid	= App->resourceManager->LoadFromLibrary(MATERIAL_ICON_PATH);
+	uint32 model_icon_uid		= App->resourceManager->LoadFromLibrary(MODEL_ICON_PATH);
 
-	R_Texture* animation_icon	= (R_Texture*)App->resource_manager->RequestResource(animation_icon_uid);
-	R_Texture* file_icon		= (R_Texture*)App->resource_manager->RequestResource(file_icon_uid);
-	R_Texture* folder_icon		= (R_Texture*)App->resource_manager->RequestResource(folder_icon_uid);
-	R_Texture* material_icon	= (R_Texture*)App->resource_manager->RequestResource(material_icon_uid);
-	R_Texture* model_icon		= (R_Texture*)App->resource_manager->RequestResource(model_icon_uid);
+	R_Texture* animation_icon	= (R_Texture*)App->resourceManager->RequestResource(animation_icon_uid);
+	R_Texture* file_icon		= (R_Texture*)App->resourceManager->RequestResource(file_icon_uid);
+	R_Texture* folder_icon		= (R_Texture*)App->resourceManager->RequestResource(folder_icon_uid);
+	R_Texture* material_icon	= (R_Texture*)App->resourceManager->RequestResource(material_icon_uid);
+	R_Texture* model_icon		= (R_Texture*)App->resourceManager->RequestResource(model_icon_uid);
 
 	engineIcons.animation_icon = animation_icon;
 	engineIcons.file_icon		= file_icon;

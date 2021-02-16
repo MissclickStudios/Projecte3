@@ -37,396 +37,396 @@
 
 using namespace Importer::Scenes;																		// Not a good thing to do but it will be employed sparsely and only inside this .cpp
 
-void Importer::Scenes::Import(const char* buffer, uint size, R_Model* r_model)
+void Importer::Scenes::Import(const char* buffer, uint size, R_Model* rModel)
 {
-	if (r_model == nullptr)
+	if (rModel == nullptr)
 	{
 		LOG("[ERROR] Importer: Could not Import Model! Error: R_Model* was nullptr.");
 		return;
 	}
 	
-	std::string error_string = "[ERROR] Importer: Could not Import Model { " + std::string(r_model->GetAssetsFile()) + " }";
+	std::string errorString = "[ERROR] Importer: Could not Import Model { " + std::string(rModel->GetAssetsFile()) + " }";
 	
 	if (buffer == nullptr)
 	{
-		LOG("%s! Error: Buffer was nullptr.", error_string.c_str());
+		LOG("%s! Error: Buffer was nullptr.", errorString.c_str());
 		return;
 	}
 	if (size == 0)
 	{
-		LOG("%s! Error: Size was 0.", error_string.c_str());
+		LOG("%s! Error: Size was 0.", errorString.c_str());
 		return;
 	}
 	
-	LOG("[STATUS] Importing Scene: %s", r_model->GetAssetsFile());
+	LOG("[STATUS] Importing Scene: %s", rModel->GetAssetsFile());
 
-	const aiScene* ai_scene = aiImportFileFromMemory(buffer, size, aiProcessPreset_TargetRealtime_MaxQuality, nullptr);
+	const aiScene* assimpScene = aiImportFileFromMemory(buffer, size, aiProcessPreset_TargetRealtime_MaxQuality, nullptr);
 
-	if (ai_scene == nullptr || ai_scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !ai_scene->mRootNode)
+	if (assimpScene == nullptr || assimpScene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !assimpScene->mRootNode)
 	{
-		LOG("%s! Error: Assimp Error [%s]", error_string.c_str(), aiGetErrorString());
+		LOG("%s! Error: Assimp Error [%s]", errorString.c_str(), aiGetErrorString());
 		return;
 	}
 
-	for (uint i = 0; i < ai_scene->mNumMeshes; ++i)
+	for (uint i = 0; i < assimpScene->mNumMeshes; ++i)
 	{
-		Utilities::ai_meshes.push_back(ai_scene->mMeshes[i]);
+		Utilities::aiMeshes.push_back(assimpScene->mMeshes[i]);
 	
-		uint mat_index = ai_scene->mMeshes[i]->mMaterialIndex;
-		if (mat_index >= 0)
+		uint matIndex = assimpScene->mMeshes[i]->mMaterialIndex;
+		if (matIndex >= 0)
 		{
-			Utilities::ai_materials.push_back(ai_scene->mMaterials[mat_index]);
+			Utilities::aiMaterials.push_back(assimpScene->mMaterials[matIndex]);
 		}
 	}
 
-	Utilities::ProcessNode(ai_scene, ai_scene->mRootNode, r_model, ModelNode());							// First Parent is empty. Later assigned to scene_root.
+	Utilities::ProcessNode(assimpScene, assimpScene->mRootNode, rModel, ModelNode());							// First Parent is empty. Later assigned to scene_root.
 
-	Utilities::ImportAnimations(ai_scene, r_model);
+	Utilities::ImportAnimations(assimpScene, rModel);
 
-	Utilities::ai_meshes.clear();
-	Utilities::ai_materials.clear();
-	Utilities::loaded_nodes.clear();
-	Utilities::loaded_textures.clear();
+	Utilities::aiMeshes.clear();
+	Utilities::aiMaterials.clear();
+	Utilities::loadedNodes.clear();
+	Utilities::loadedTextures.clear();
 }
 
-void Importer::Scenes::Utilities::ProcessNode(const aiScene* ai_scene, const aiNode* ai_node, R_Model* r_model, const ModelNode& parent)
+void Importer::Scenes::Utilities::ProcessNode(const aiScene* assimpScene, const aiNode* assimpNode, R_Model* rModel, const ModelNode& parent)
 {
-	ModelNode model_node	= ModelNode();
-	model_node.uid			= Random::LCG::GetRandomUint();
-	model_node.parent_uid	= parent.uid;
+	ModelNode modelNode	= ModelNode();
+	modelNode.uid			= Random::LCG::GetRandomUint();
+	modelNode.parent_uid	= parent.uid;
 
-	ai_node = Utilities::ImportTransform(ai_node, model_node);
-	Utilities::ImportMeshesAndMaterials(ai_scene, ai_node, r_model, model_node);
+	assimpNode = Utilities::ImportTransform(assimpNode, modelNode);
+	Utilities::ImportMeshesAndMaterials(assimpScene, assimpNode, rModel, modelNode);
 
-	model_node.name	= (ai_node == ai_scene->mRootNode) ? r_model->GetAssetsFile() : ai_node->mName.C_Str();
+	modelNode.name	= (assimpNode == assimpScene->mRootNode) ? rModel->GetAssetsFile() : assimpNode->mName.C_Str();
 
-	r_model->model_nodes.push_back(model_node);
+	rModel->model_nodes.push_back(modelNode);
 
-	for (uint i = 0; i < ai_node->mNumChildren; ++i)
+	for (uint i = 0; i < assimpNode->mNumChildren; ++i)
 	{
-		ProcessNode(ai_scene, ai_node->mChildren[i], r_model, model_node);
+		ProcessNode(assimpScene, assimpNode->mChildren[i], rModel, modelNode);
 	}
 }
 
-const aiNode* Importer::Scenes::Utilities::ImportTransform(const aiNode* ai_node, ModelNode& model_node)
+const aiNode* Importer::Scenes::Utilities::ImportTransform(const aiNode* assimpNode, ModelNode& model_node)
 {
 	// Assimp generates dummy nodes to store multiple FBX transformations.
 	// All those transformations will be collapsed to the first non-dummy node.
 	
-	aiTransform ai_t;																						// Transform structure for Assimp. aiVector3D and aiQuaternion.
-	Transform	ma_t;																						// Transform structure for MathGeoLib. float3 and Quat.
+	aiTransform aiT;																						// Transform structure for Assimp. aiVector3D and aiQuaternion.
+	Transform	maT;																						// Transform structure for MathGeoLib. float3 and Quat.
 
-	ai_node->mTransformation.Decompose(ai_t.scale, ai_t.rotation, ai_t.position);							// --- Getting the Transform stored in the node.
+	assimpNode->mTransformation.Decompose(aiT.scale, aiT.rotation, aiT.position);							// --- Getting the Transform stored in the node.
 
-	ma_t.position	= { ai_t.position.x, ai_t.position.y, ai_t.position.z };								// 
-	ma_t.rotation	= { ai_t.rotation.x, ai_t.rotation.y, ai_t.rotation.z, ai_t.rotation.w };				// 
-	ma_t.scale		= { ai_t.scale.x, ai_t.scale.y, ai_t.scale.z };											// ---------------------------------------------
+	maT.position	= { aiT.position.x, aiT.position.y, aiT.position.z };								// 
+	maT.rotation	= { aiT.rotation.x, aiT.rotation.y, aiT.rotation.z, aiT.rotation.w };				// 
+	maT.scale		= { aiT.scale.x, aiT.scale.y, aiT.scale.z };											// ---------------------------------------------
 
-	while (NodeIsDummyNode(*ai_node))																		// All dummy nodes will contain the "_$AssimpFbx$_" string and only one child node.
+	while (NodeIsDummyNode(*assimpNode))																		// All dummy nodes will contain the "_$AssimpFbx$_" string and only one child node.
 	{
-		ai_node = ai_node->mChildren[0];																	// As dummies will only have one child, selecting the next one to process is easy.
+		assimpNode = assimpNode->mChildren[0];																	// As dummies will only have one child, selecting the next one to process is easy.
 
-		ai_node->mTransformation.Decompose(ai_t.scale, ai_t.rotation, ai_t.position);						// --- Getting the Transform stored in the dummy node.
+		assimpNode->mTransformation.Decompose(aiT.scale, aiT.rotation, aiT.position);						// --- Getting the Transform stored in the dummy node.
 
 		Transform dummy;																					// 
-		dummy.position	= { ai_t.position.x, ai_t.position.y, ai_t.position.z };							// 
-		dummy.rotation	= { ai_t.rotation.x, ai_t.rotation.y, ai_t.rotation.z, ai_t.rotation.w };			// 
-		dummy.scale		= { ai_t.scale.x, ai_t.scale.y, ai_t.scale.z };										// ---------------------------------------------------
+		dummy.position	= { aiT.position.x, aiT.position.y, aiT.position.z };							// 
+		dummy.rotation	= { aiT.rotation.x, aiT.rotation.y, aiT.rotation.z, aiT.rotation.w };			// 
+		dummy.scale		= { aiT.scale.x, aiT.scale.y, aiT.scale.z };										// ---------------------------------------------------
 
-		/*ma_t.position	= */ma_t.position.Add(dummy.position);												// --- Adding the dummy's Transform to the current one.
-		/*ma_t.rotation	= */ma_t.rotation.Mul(dummy.rotation);												// 
-		/*ma_t.scale	= */ma_t.scale.Mul(dummy.scale);													// ----------------------------------------------------
+		/*ma_t.position	= */maT.position.Add(dummy.position);												// --- Adding the dummy's Transform to the current one.
+		/*ma_t.rotation	= */maT.rotation.Mul(dummy.rotation);												// 
+		/*ma_t.scale	= */maT.scale.Mul(dummy.scale);													// ----------------------------------------------------
 	}
 	
-	model_node.transform	= ma_t;
+	model_node.transform	= maT;
 
-	LOG("[IMPORTER] Imported the transforms of node: %s", ai_node->mName.C_Str());
+	LOG("[IMPORTER] Imported the transforms of node: %s", assimpNode->mName.C_Str());
 
-	return ai_node;
+	return assimpNode;
 }
 
-void Importer::Scenes::Utilities::ImportMeshesAndMaterials(const aiScene* ai_scene, const aiNode* ai_node, R_Model* r_model, ModelNode& model_node)
+void Importer::Scenes::Utilities::ImportMeshesAndMaterials(const aiScene* assimpScene, const aiNode* assimpNode, R_Model* rModel, ModelNode& modelNode)
 {
-	if (ai_scene == nullptr || ai_node == nullptr || r_model == nullptr)
+	if (assimpScene == nullptr || assimpNode == nullptr || rModel == nullptr)
 	{
 		return;
 	}
-	if (!ai_scene->HasMeshes())
+	if (!assimpScene->HasMeshes())
 	{
 		return;
 	}
 	
-	const char* node_name = ai_node->mName.C_Str();
+	const char* nodeName = assimpNode->mName.C_Str();
 
-	for (uint i = 0; i < ai_node->mNumMeshes; ++i)
+	for (uint i = 0; i < assimpNode->mNumMeshes; ++i)
 	{	
-		std::map<uint, ModelNode>::iterator item = loaded_nodes.find(ai_node->mMeshes[i]);
-		if (item != loaded_nodes.end())
+		std::map<uint, ModelNode>::iterator item = loadedNodes.find(assimpNode->mMeshes[i]);
+		if (item != loadedNodes.end())
 		{
-			model_node.mesh_uid		= item->second.mesh_uid;
-			model_node.material_uid = item->second.material_uid;
-			model_node.texture_uid	= item->second.texture_uid;
+			modelNode.mesh_uid		= item->second.mesh_uid;
+			modelNode.material_uid = item->second.material_uid;
+			modelNode.texture_uid	= item->second.texture_uid;
 			continue;
 		}
 		
-		aiMesh* ai_mesh = ai_scene->mMeshes[ai_node->mMeshes[i]];
+		aiMesh* assimpMesh = assimpScene->mMeshes[assimpNode->mMeshes[i]];
 
-		if (ai_mesh != nullptr && ai_mesh->HasFaces())
+		if (assimpMesh != nullptr && assimpMesh->HasFaces())
 		{
-			Importer::Scenes::Utilities::ImportMesh(node_name, ai_mesh, model_node);
+			Importer::Scenes::Utilities::ImportMesh(nodeName, assimpMesh, modelNode);
 
-			if (ai_mesh->mMaterialIndex >= 0)
+			if (assimpMesh->mMaterialIndex >= 0)
 			{
-				aiMaterial* ai_material = ai_scene->mMaterials[ai_mesh->mMaterialIndex];
+				aiMaterial* assimpMaterial = assimpScene->mMaterials[assimpMesh->mMaterialIndex];
 
-				Importer::Scenes::Utilities::ImportMaterial(node_name, ai_material, r_model, model_node);
+				Importer::Scenes::Utilities::ImportMaterial(nodeName, assimpMaterial, rModel, modelNode);
 			}
 		}
 
-		loaded_nodes.emplace(ai_node->mMeshes[i], model_node);
+		loadedNodes.emplace(assimpNode->mMeshes[i], modelNode);
 	}
 }
 
-void Importer::Scenes::Utilities::ImportMesh(const char* node_name, const aiMesh* ai_mesh, ModelNode& model_node)
+void Importer::Scenes::Utilities::ImportMesh(const char* nodeName, const aiMesh* assimpMesh, ModelNode& modelNode)
 {
-	std::string assets_path = ASSETS_MODELS_PATH + std::string(node_name) + MESHES_EXTENSION;						// As meshes are contained in models, the assets path is kind of made-up.
-	R_Mesh* r_mesh = (R_Mesh*)App->resource_manager->CreateResource(RESOURCE_TYPE::MESH, assets_path.c_str());
+	std::string assetsPath = ASSETS_MODELS_PATH + std::string(nodeName) + MESHES_EXTENSION;						// As meshes are contained in models, the assets path is kind of made-up.
+	R_Mesh* rMesh = (R_Mesh*)App->resourceManager->CreateResource(RESOURCE_TYPE::MESH, assetsPath.c_str());
 
-	Importer::Meshes::Import(ai_mesh, r_mesh);
+	Importer::Meshes::Import(assimpMesh, rMesh);
 
-	if (r_mesh == nullptr)
+	if (rMesh == nullptr)
 	{
 		return;
 	}
 	
-	model_node.mesh_uid = r_mesh->GetUID();
-	App->resource_manager->SaveResourceToLibrary(r_mesh);
-	App->resource_manager->DeallocateResource(r_mesh);
+	modelNode.mesh_uid = rMesh->GetUID();
+	App->resourceManager->SaveResourceToLibrary(rMesh);
+	App->resourceManager->DeallocateResource(rMesh);
 }
 
-void Importer::Scenes::Utilities::ImportMaterial(const char* node_name, const aiMaterial* ai_material, R_Model* r_model, ModelNode& model_node)
+void Importer::Scenes::Utilities::ImportMaterial(const char* nodeName, const aiMaterial* assimpMaterial, R_Model* rModel, ModelNode& modelNode)
 {
-	std::string mat_full_path	= App->file_system->GetDirectory(r_model->GetAssetsPath()) + node_name + MATERIALS_EXTENSION;
-	R_Material* r_material		= (R_Material*)App->resource_manager->CreateResource(RESOURCE_TYPE::MATERIAL, mat_full_path.c_str());			// Only considering one texture per mesh.
+	std::string matFullPath	= App->fileSystem->GetDirectory(rModel->GetAssetsPath()) + nodeName + MATERIALS_EXTENSION;
+	R_Material* rMaterial		= (R_Material*)App->resourceManager->CreateResource(RESOURCE_TYPE::MATERIAL, matFullPath.c_str());			// Only considering one texture per mesh.
 
-	if (r_material == nullptr)
+	if (rMaterial == nullptr)
 	{
 		return;
 	}
 	
-	Importer::Materials::Import(ai_material, r_material);
+	Importer::Materials::Import(assimpMaterial, rMaterial);
 	
-	model_node.material_uid = r_material->GetUID();																								//
+	modelNode.material_uid = rMaterial->GetUID();																								//
 
-	Utilities::ImportTexture(r_material->materials, model_node);
+	Utilities::ImportTexture(rMaterial->materials, modelNode);
 	
-	App->resource_manager->SaveResourceToLibrary(r_material);
-	App->resource_manager->DeallocateResource(r_material);
+	App->resourceManager->SaveResourceToLibrary(rMaterial);
+	App->resourceManager->DeallocateResource(rMaterial);
 }
 
-void Importer::Scenes::Utilities::ImportTexture(const std::vector<MaterialData>& materials, ModelNode& model_node)
+void Importer::Scenes::Utilities::ImportTexture(const std::vector<MaterialData>& materials, ModelNode& modelNode)
 {
 	for (uint i = 0; i < materials.size(); ++i)
 	{
-		const char* tex_path	= materials[i].texture_assets_path.c_str();
+		const char* texPath	= materials[i].texture_assets_path.c_str();
 		char* buffer			= nullptr;
-		uint read				= App->file_system->Load(tex_path, &buffer);
+		uint read				= App->fileSystem->Load(texPath, &buffer);
 		if (buffer != nullptr && read > 0)
 		{
-			std::map<std::string, uint32>::iterator item = loaded_textures.find(tex_path);
-			if (item != loaded_textures.end())
+			std::map<std::string, uint32>::iterator item = loadedTextures.find(texPath);
+			if (item != loadedTextures.end())
 			{
 				if (materials[i].type == TEXTURE_TYPE::DIFFUSE)
 				{
-					model_node.texture_uid = item->second;
-					model_node.texture_name = App->file_system->GetFileAndExtension(tex_path);
+					modelNode.texture_uid = item->second;
+					modelNode.texture_name = App->fileSystem->GetFileAndExtension(texPath);
 				}
 
 				RELEASE_ARRAY(buffer);
 				continue;
 			}
 			
-			R_Texture* r_texture = (R_Texture*)App->resource_manager->CreateResource(RESOURCE_TYPE::TEXTURE, tex_path);
-			uint tex_id = Importer::Textures::Import(buffer, read, r_texture);											//
+			R_Texture* rTexture = (R_Texture*)App->resourceManager->CreateResource(RESOURCE_TYPE::TEXTURE, texPath);
+			uint texId = Importer::Textures::Import(buffer, read, rTexture);											//
 
-			if (tex_id == 0)
+			if (texId == 0)
 			{
-				App->resource_manager->DeleteResource(r_texture);
+				App->resourceManager->DeleteResource(rTexture);
 				RELEASE_ARRAY(buffer);
 				continue;
 			}
 
 			if (materials[i].type == TEXTURE_TYPE::DIFFUSE)																// For now only the diffuse texture will be used on models' meshes.
 			{
-				model_node.texture_uid	= r_texture->GetUID();
-				model_node.texture_name = r_texture->GetAssetsFile();
+				modelNode.texture_uid	= rTexture->GetUID();
+				modelNode.texture_name = rTexture->GetAssetsFile();
 			}
 
-			loaded_textures.emplace(tex_path, r_texture->GetUID());
+			loadedTextures.emplace(texPath, rTexture->GetUID());
 
-			App->resource_manager->SaveResourceToLibrary(r_texture);
-			App->resource_manager->DeallocateResource(r_texture);
+			App->resourceManager->SaveResourceToLibrary(rTexture);
+			App->resourceManager->DeallocateResource(rTexture);
 
 			RELEASE_ARRAY(buffer);
 		}
 		else
 		{
-			LOG("[ERROR] Importer: Could not load texture from given path! Path: %s", tex_path);
+			LOG("[ERROR] Importer: Could not load texture from given path! Path: %s", texPath);
 		}
 	}
 }
 
-void Importer::Scenes::Utilities::ImportAnimations(const aiScene* ai_scene, R_Model* r_model)
+void Importer::Scenes::Utilities::ImportAnimations(const aiScene* assimpScene, R_Model* rModel)
 {
-	if (ai_scene == nullptr)
+	if (assimpScene == nullptr)
 	{
 		LOG("[ERROR] Scene Importer: Could not Import Model's Animations! Error: Given aiScene* was nullptr");
 		return;
 	}
-	if (!ai_scene->HasAnimations())
+	if (!assimpScene->HasAnimations())
 	{
 		LOG("[WARNING] Scene Importer: Model had no animations to import.");
 		return;
 	}
 
-	for (uint i = 0; i < ai_scene->mNumAnimations; ++i)
+	for (uint i = 0; i < assimpScene->mNumAnimations; ++i)
 	{
-		aiAnimation* ai_animation = ai_scene->mAnimations[i];
+		aiAnimation* assimpAnimation = assimpScene->mAnimations[i];
 
-		std::string name			= ai_animation->mName.C_Str();
-		std::string assets_path		= ASSETS_MODELS_PATH + name + ANIMATIONS_EXTENSION;
-		R_Animation* r_animation	= (R_Animation*)App->resource_manager->CreateResource(RESOURCE_TYPE::ANIMATION, assets_path.c_str());
+		std::string name			= assimpAnimation->mName.C_Str();
+		std::string assetsPath		= ASSETS_MODELS_PATH + name + ANIMATIONS_EXTENSION;
+		R_Animation* rAnimation	= (R_Animation*)App->resourceManager->CreateResource(RESOURCE_TYPE::ANIMATION, assetsPath.c_str());
 
-		if (r_animation == nullptr)
+		if (rAnimation == nullptr)
 		{
 			continue;
 		}
 
-		Importer::Animations::Import(ai_animation, r_animation);
+		Importer::Animations::Import(assimpAnimation, rAnimation);
 
-		r_model->animations.emplace(r_animation->GetUID(), r_animation->GetName());
+		rModel->animations.emplace(rAnimation->GetUID(), rAnimation->GetName());
 
-		App->resource_manager->SaveResourceToLibrary(r_animation);
-		App->resource_manager->DeallocateResource(r_animation);
+		App->resourceManager->SaveResourceToLibrary(rAnimation);
+		App->resourceManager->DeallocateResource(rAnimation);
 	}
 }
 
-bool Importer::Scenes::Utilities::NodeIsDummyNode(const aiNode& ai_node)
+bool Importer::Scenes::Utilities::NodeIsDummyNode(const aiNode& assimpNode)
 {
-	return (strstr(ai_node.mName.C_Str(), "_$AssimpFbx$_") != nullptr && ai_node.mNumChildren == 1);	// All dummy nodes will contain the "_$AssimpFbx$_" string and only one child node.
+	return (strstr(assimpNode.mName.C_Str(), "_$AssimpFbx$_") != nullptr && assimpNode.mNumChildren == 1);	// All dummy nodes will contain the "_$AssimpFbx$_" string and only one child node.
 }
 
-uint Importer::Scenes::Save(const R_Model* r_model, char** buffer)
+uint Importer::Scenes::Save(const R_Model* rModel, char** buffer)
 {	
 	uint written = 0;
 
-	if (r_model == nullptr)
+	if (rModel == nullptr)
 	{
 		LOG("[ERROR] Importer: Could not Save R_Model* in Library! Error: Given R_Model* was nullptr.");
 		return 0;
 	}
 
-	std::string error_string = "[ERROR] Importer: Could not Save Model { " + std::string(r_model->GetAssetsFile()) + " } from Library";
+	std::string errorString = "[ERROR] Importer: Could not Save Model { " + std::string(rModel->GetAssetsFile()) + " } from Library";
 
-	ParsonNode root_node			= ParsonNode();																						// --- GENERATING THE REQUIRED PARSON NODE AND ARRAY
-	ParsonArray model_nodes_array	= root_node.SetArray("ModelNodes");																	// -------------------------------------------------
-	ParsonArray animations_array	= root_node.SetArray("Animations");
+	ParsonNode rootNode			= ParsonNode();																						// --- GENERATING THE REQUIRED PARSON NODE AND ARRAY
+	ParsonArray modelNodesArray	= rootNode.SetArray("ModelNodes");																	// -------------------------------------------------
+	ParsonArray animationsArray	= rootNode.SetArray("Animations");
 
-	for (uint i = 0; i < r_model->model_nodes.size(); ++i)																				// --- SAVING MODEL NODE DATA
+	for (uint i = 0; i < rModel->model_nodes.size(); ++i)																				// --- SAVING MODEL NODE DATA
 	{
-		ParsonNode model_node = model_nodes_array.SetNode(r_model->model_nodes[i].name.c_str());
-		r_model->model_nodes[i].Save(model_node);
+		ParsonNode modelNode = modelNodesArray.SetNode(rModel->model_nodes[i].name.c_str());
+		rModel->model_nodes[i].Save(modelNode);
 	}
 
 	std::map<uint32, std::string>::const_iterator item;
-	for (item = r_model->animations.cbegin(); item != r_model->animations.cend(); ++item)
+	for (item = rModel->animations.cbegin(); item != rModel->animations.cend(); ++item)
 	{
-		ParsonNode animation_node = animations_array.SetNode(item->second.c_str());
-		animation_node.SetNumber("UID", (double)item->first);
-		animation_node.SetString("Name", item->second.c_str());
+		ParsonNode animationNode = animationsArray.SetNode(item->second.c_str());
+		animationNode.SetNumber("UID", (double)item->first);
+		animationNode.SetString("Name", item->second.c_str());
 	}
 
-	std::string path	= MODELS_PATH + std::to_string(r_model->GetUID()) + MODELS_EXTENSION;
-	written				= root_node.SerializeToFile(path.c_str(), buffer);
+	std::string path	= MODELS_PATH + std::to_string(rModel->GetUID()) + MODELS_EXTENSION;
+	written				= rootNode.SerializeToFile(path.c_str(), buffer);
 	if (written > 0)
 	{
-		LOG("[STATUS] Importer: Successfully saved Model { %s } in Library! Path: %s", r_model->GetAssetsFile(), path.c_str());
+		LOG("[STATUS] Importer: Successfully saved Model { %s } in Library! Path: %s", rModel->GetAssetsFile(), path.c_str());
 	}
 	else
 	{
-		LOG("%s! Error: File System could not write the file.", error_string.c_str());
+		LOG("%s! Error: File System could not write the file.", errorString.c_str());
 	}
 
 	return written;
 }
 
-bool Importer::Scenes::Load(const char* buffer, R_Model* r_model)
+bool Importer::Scenes::Load(const char* buffer, R_Model* rModel)
 {
 	bool ret = true;
 
-	if (r_model == nullptr)
+	if (rModel == nullptr)
 	{
 		LOG("[ERROR] Importer: Could not Load Model from Library! Error: R_Model was nullptr.");
 		return false;
 	}
 	
-	std::string error_string = "[ERROR] Importer: Could not Load Model { " + std::string(r_model->GetAssetsFile()) + " } from Library";
+	std::string errorString = "[ERROR] Importer: Could not Load Model { " + std::string(rModel->GetAssetsFile()) + " } from Library";
 
 	if (buffer == nullptr)
 	{
-		LOG("%s! Error: Given buffer was nullptr.", error_string.c_str());
+		LOG("%s! Error: Given buffer was nullptr.", errorString.c_str());
 		return false;
 	}
 
-	ParsonNode root_node			= ParsonNode(buffer);
-	ParsonArray model_nodes_array	= root_node.GetArray("ModelNodes");
-	ParsonArray animations_array	= root_node.GetArray("Animations");
-	if (!root_node.NodeIsValid())
+	ParsonNode rootNode			= ParsonNode(buffer);
+	ParsonArray modelNodesArray	= rootNode.GetArray("ModelNodes");
+	ParsonArray animationsArray	= rootNode.GetArray("Animations");
+	if (!rootNode.NodeIsValid())
 	{
-		LOG("%s! Error: Could not get the Root Node from the passed buffer.", error_string.c_str());
+		LOG("%s! Error: Could not get the Root Node from the passed buffer.", errorString.c_str());
 		return false;
 	}
-	if (!model_nodes_array.ArrayIsValid())
+	if (!modelNodesArray.ArrayIsValid())
 	{
-		LOG("%s! Error: Could not get the ModelNodes Array from the Root Node.", error_string.c_str());
+		LOG("%s! Error: Could not get the ModelNodes Array from the Root Node.", errorString.c_str());
 		return false;
 	}
-	if (!animations_array.ArrayIsValid())
+	if (!animationsArray.ArrayIsValid())
 	{
-		LOG("%s! Error: Could not get the Animations Array from the Root Node.", error_string.c_str());
+		LOG("%s! Error: Could not get the Animations Array from the Root Node.", errorString.c_str());
 	}
 
-	for (uint i = 0; i < model_nodes_array.size; ++i)
+	for (uint i = 0; i < modelNodesArray.size; ++i)
 	{
-		ParsonNode parson_node = model_nodes_array.GetNode(i);
-		if (!parson_node.NodeIsValid())
+		ParsonNode parsonNode = modelNodesArray.GetNode(i);
+		if (!parsonNode.NodeIsValid())
 		{
-			LOG("%s! Error: Could not parse Node %s from Model Nodes Array.", error_string.c_str(), i);
+			LOG("%s! Error: Could not parse Node %s from Model Nodes Array.", errorString.c_str(), i);
 			return false;
 		}
 
-		ModelNode model_node = ModelNode();
-		model_node.Load(parson_node);
+		ModelNode modelNode = ModelNode();
+		modelNode.Load(parsonNode);
 
-		r_model->model_nodes.push_back(model_node);
+		rModel->model_nodes.push_back(modelNode);
 	}
 
-	for (uint i = 0; i < animations_array.size; ++i)
+	for (uint i = 0; i < animationsArray.size; ++i)
 	{
-		ParsonNode animations_node = animations_array.GetNode(i);
-		if (!animations_node.NodeIsValid())
+		ParsonNode animationsNode = animationsArray.GetNode(i);
+		if (!animationsNode.NodeIsValid())
 		{
-			LOG("%s! Error: Could not parse Node %s from Animations Array.", error_string.c_str());
+			LOG("%s! Error: Could not parse Node %s from Animations Array.", errorString.c_str());
 			return false;
 		}
 
-		uint32 animation_uid		= (uint32)animations_node.GetNumber("UID");
-		std::string animation_name	= animations_node.GetString("Name");
+		uint32 animationUid		= (uint32)animationsNode.GetNumber("UID");
+		std::string animationName	= animationsNode.GetString("Name");
 
-		r_model->animations.emplace(animation_uid, animation_name);
+		rModel->animations.emplace(animationUid, animationName);
 	}
 
-	LOG("[STATUS] Importer: Successfully loaded Model { %s } from Library! UID: %lu", r_model->GetAssetsFile(), r_model->GetUID());
+	LOG("[STATUS] Importer: Successfully loaded Model { %s } from Library! UID: %lu", rModel->GetAssetsFile(), rModel->GetUID());
 
 	return ret;
 }
