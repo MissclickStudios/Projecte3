@@ -108,7 +108,7 @@ uint Importer::Textures::Save(const R_Texture* r_texture, char** buffer)
 		if (ilSaveL(IL_DDS, data, size) > 0)																					// ilSaveL() saves the current image with the specified type.
 		{	
 			*buffer = (char*)data;
-			written = App->file_system->Save(full_path.c_str(), *buffer, size, false);											// Saving the texture throught the file system.
+			written = app->fileSystem->Save(full_path.c_str(), *buffer, size, false);											// Saving the texture throught the file system.
 			if (written > 0)
 			{	
 				LOG("[IMPORTER] Importer: Successfully Saved { %s } in { %s }", file.c_str(), directory.c_str());

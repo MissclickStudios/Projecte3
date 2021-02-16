@@ -20,13 +20,13 @@ enum class MAIN_STATUS
 	EXIT
 };
 
-Application* App = nullptr;
+Application* app = nullptr;
 
 int main(int argc, char ** argv)
 {
 	LOG("Starting game '%s'...", TITLE);
 
-	int main_return		= EXIT_FAILURE;
+	int mainReturn		= EXIT_FAILURE;
 	MAIN_STATUS state	= MAIN_STATUS::CREATION;
 
 	while (state != MAIN_STATUS::EXIT)
@@ -38,14 +38,14 @@ int main(int argc, char ** argv)
 		case MAIN_STATUS::CREATION:
 
 			LOG("-------------- Application Creation --------------");
-			App		= new Application();
+			app		= new Application();
 			state	= MAIN_STATUS::START;
 			break;
 
 		case MAIN_STATUS::START:
 
 			LOG("-------------- Application Init --------------");
-			if (!App->Init())
+			if (!app->Init())
 			{
 				LOG("Application Init exits with ERROR");
 				state = MAIN_STATUS::EXIT;
@@ -60,15 +60,15 @@ int main(int argc, char ** argv)
 
 		case MAIN_STATUS::UPDATE:
 		{
-			UPDATE_STATUS update_return = App->Update();							// THIS HERE
+			UPDATE_STATUS updateReturn = app->Update();							// THIS HERE
 
-			if (update_return == UPDATE_STATUS::THROW_ERROR)
+			if (updateReturn == UPDATE_STATUS::THROW_ERROR)
 			{
 				LOG("Application Update exits with ERROR");
 				state = MAIN_STATUS::EXIT;
 			}
 
-			if (update_return == UPDATE_STATUS::STOP)
+			if (updateReturn == UPDATE_STATUS::STOP)
 			{
 				state = MAIN_STATUS::FINISH;
 			}
@@ -78,13 +78,13 @@ int main(int argc, char ** argv)
 		case MAIN_STATUS::FINISH:
 
 			LOG("-------------- Application CleanUp --------------");
-			if (!App->CleanUp())
+			if (!app->CleanUp())
 			{
 				LOG("Application CleanUp exits with ERROR");
 			}
 			else
 			{
-				main_return = EXIT_SUCCESS;
+				mainReturn = EXIT_SUCCESS;
 			}
 
 			state = MAIN_STATUS::EXIT;
@@ -94,9 +94,9 @@ int main(int argc, char ** argv)
 		}
 	}
 
-	RELEASE(App);
+	RELEASE(app);
 
 	LOG("Exiting game '%s'...\n", TITLE);
 
-	return main_return;
+	return mainReturn;
 }

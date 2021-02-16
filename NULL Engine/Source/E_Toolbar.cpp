@@ -53,13 +53,13 @@ void E_Toolbar::PlayAndStopButtons()
 {
 	if (ImGui::Button("Play"))
 	{
-		App->editor->SaveSceneThroughEditor("PlayAutosave");
+		app->editor->SaveSceneThroughEditor("PlayAutosave");
 
 		Time::Game::Play();
 
 		played_once = true;																			// Quickfix to avoid having conflicts between stop and pause.
-		App->play	= true;
-		App->pause	= false;
+		app->play	= true;
+		app->pause	= false;
 	}
 
 	ImGui::SameLine();
@@ -72,12 +72,12 @@ void E_Toolbar::PlayAndStopButtons()
 			return;
 		}
 		
-		App->editor->LoadFileThroughEditor("Assets/Scenes/PlayAutosave.json");
+		app->editor->LoadFileThroughEditor("Assets/Scenes/PlayAutosave.json");
 
 		Time::Game::Stop();
 
-		App->play	= false;
-		App->pause	= false;
+		app->play	= false;
+		app->pause	= false;
 	}
 }
 
@@ -87,8 +87,8 @@ void E_Toolbar::PauseAndStepButtons()
 	{
 		Time::Game::Pause();
 
-		App->pause	= true;
-		App->play	= false;
+		app->pause	= true;
+		app->play	= false;
 	}
 
 	ImGui::SameLine();
@@ -97,7 +97,7 @@ void E_Toolbar::PauseAndStepButtons()
 	{
 		Time::Game::Step();
 
-		App->step = true;
+		app->step = true;
 	}
 }
 

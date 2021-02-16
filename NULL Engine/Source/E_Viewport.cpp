@@ -57,14 +57,14 @@ bool E_Viewport::CleanUp()
 // --- E_SCENE METHODS ---
 float2 E_Viewport::GetWorldMousePosition()
 {	
-	float win_width		= (float)App->window->GetWidth();
-	float win_height	= (float)App->window->GetHeight();
+	float win_width		= (float)app->window->GetWidth();
+	float win_height	= (float)app->window->GetHeight();
 	
 	float tex_width		= tex_size.x;
 	float tex_height	= tex_size.y;
 
-	float mouse_X		= (float)App->input->GetMouseX();
-	float mouse_Y		= (float)App->input->GetMouseY();
+	float mouse_X		= (float)app->input->GetMouseX();
+	float mouse_Y		= (float)app->input->GetMouseY();
 
 	float2 screen_mouse_pos = float2(mouse_X, win_height - mouse_Y) - float2(tex_origin.x, tex_origin.y + 22.5f);				// TMP. Un-Hardcode Later.
 	//float2 screen_mouse_pos = GetScreenMousePosition();
@@ -76,14 +76,14 @@ float2 E_Viewport::GetWorldMousePosition()
 
 float2 E_Viewport::GetScreenMousePosition()
 {
-	float win_width		= (float)App->window->GetWidth();
-	float win_height	= (float)App->window->GetHeight();
+	float win_width		= (float)app->window->GetWidth();
+	float win_height	= (float)app->window->GetHeight();
 
 	float tex_width		= tex_size.x;
 	float tex_height	= tex_size.y;
 
-	float mouse_X		= (float)App->input->GetMouseX();
-	float mouse_Y		= (float)App->input->GetMouseY();
+	float mouse_X		= (float)app->input->GetMouseX();
+	float mouse_Y		= (float)app->input->GetMouseY();
 
 	float2 world_mouse_pos	= float2(mouse_X, mouse_Y);
 	float2 norm_world_pos	= float2(world_mouse_pos.x / win_width, world_mouse_pos.y / win_height);
@@ -96,8 +96,8 @@ float2 E_Viewport::GetScreenMousePosition()
 
 float2 E_Viewport::GetWorldMouseMotion()
 {
-	float2 win_mouse_motion	= float2((float)App->input->GetMouseXMotion(), (float)App->input->GetMouseYMotion());
-	float2 win_size			= float2((float)App->window->GetWidth(), (float)App->window->GetHeight());
+	float2 win_mouse_motion	= float2((float)app->input->GetMouseXMotion(), (float)app->input->GetMouseYMotion());
+	float2 win_size			= float2((float)app->window->GetWidth(), (float)app->window->GetHeight());
 	float2 tex_size			= float2(this->tex_size.x, this->tex_size.y);
 
 	float2 local_motion			= float2(win_mouse_motion.x / tex_size.x, win_mouse_motion.y / tex_size.y);
@@ -125,7 +125,7 @@ void E_Viewport::DrawScene()
 {
 	ImGui::Begin("Scene");
 
-	if (!App->play && !scene_focused)
+	if (!app->play && !scene_focused)
 	{
 		ImGui::FocusWindow(ImGui::GetCurrentWindow());
 		ImGui::FocusWindow(nullptr);
@@ -152,7 +152,7 @@ void E_Viewport::DrawGame()
 {
 	ImGui::Begin("Game", (bool*)0, ImGuiWindowFlags_NoFocusOnAppearing);
 
-	if (App->play && !game_focused)
+	if (app->play && !game_focused)
 	{
 		ImGui::FocusWindow(ImGui::GetCurrentWindow());
 		ImGui::FocusWindow(nullptr);
@@ -177,7 +177,7 @@ void E_Viewport::DrawGame()
 
 void E_Viewport::AdaptTextureToWindowSize()
 {	
-	tex_size			= ImVec2((float)App->window->GetWidth(), (float)App->window->GetHeight());
+	tex_size			= ImVec2((float)app->window->GetWidth(), (float)app->window->GetHeight());
 	ImVec2 win_size		= ImGui::GetWindowSize() * 0.975f;													// An offset is added so the image is entirely enclosed by the window.
 
 	float width_ratio	= (tex_size.x / win_size.x);														// tex.x to win.x ratio and tex.y to win.y ratio.
@@ -207,9 +207,9 @@ void E_Viewport::DrawSceneTexture()
 	}
 
 	tex_origin		= screen_cursor_pos + ImVec2(0, tex_size.y);											// Getting the top-left corner at XY.
-	tex_origin.y	= (float)App->window->GetHeight() - tex_origin.y;										// Converting from top-left Y origin to bottom-left Y origin.
+	tex_origin.y	= (float)app->window->GetHeight() - tex_origin.y;										// Converting from top-left Y origin to bottom-left Y origin.
 
-	ImGui::Image((ImTextureID)App->renderer->GetSceneRenderTexture(), tex_size, ImVec2(0.0f, 1.0f), ImVec2(1.0f, 0.0f));
+	ImGui::Image((ImTextureID)app->renderer->GetSceneRenderTexture(), tex_size, ImVec2(0.0f, 1.0f), ImVec2(1.0f, 0.0f));
 	//ImGui::Image((ImTextureID)App->renderer->GetDepthBufferTexture(), tex_size, ImVec2(0.0f, 1.0f), ImVec2(1.0f, 0.0f));
 }
 
@@ -219,7 +219,7 @@ void E_Viewport::ResourceDragAndDropTargetListener()
 	{
 		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DRAGGED_RESOURCE"))
 		{
-			App->editor->LoadResourceIntoSceneThroughEditor();
+			app->editor->LoadResourceIntoSceneThroughEditor();
 		}
 
 		ImGui::EndDragDropTarget();
@@ -234,35 +234,35 @@ void E_Viewport::HandleGuizmos()
 
 	if (!want_text_input)
 	{
-		if (App->input->GetKey(SDL_SCANCODE_W) == KEY_STATE::KEY_DOWN)
+		if (app->input->GetKey(SDL_SCANCODE_W) == KEY_STATE::KEY_DOWN)
 		{
 			guizmo_operation = ImGuizmo::OPERATION::TRANSLATE;
 			guizmo_mode = ImGuizmo::MODE::WORLD;
 		}
-		if (App->input->GetKey(SDL_SCANCODE_E) == KEY_STATE::KEY_DOWN)
+		if (app->input->GetKey(SDL_SCANCODE_E) == KEY_STATE::KEY_DOWN)
 		{
 			guizmo_operation = ImGuizmo::OPERATION::ROTATE;
 			guizmo_mode = ImGuizmo::MODE::WORLD;
 		}
-		if (App->input->GetKey(SDL_SCANCODE_R) == KEY_STATE::KEY_DOWN)
+		if (app->input->GetKey(SDL_SCANCODE_R) == KEY_STATE::KEY_DOWN)
 		{
 			guizmo_operation = ImGuizmo::OPERATION::SCALE;
 			guizmo_mode = ImGuizmo::MODE::LOCAL;
 		}
 	}
 	
-	if (App->editor->GetSelectedGameObjectThroughEditor() == nullptr)
+	if (app->editor->GetSelectedGameObjectThroughEditor() == nullptr)
 	{
 		return;
 	}
 
-	if (App->editor->GetCurrentCameraThroughEditor() == nullptr)
+	if (app->editor->GetCurrentCameraThroughEditor() == nullptr)
 	{
 		return;
 	}
 	
-	GameObject* selected		= App->editor->GetSelectedGameObjectThroughEditor();
-	C_Camera* current_camera	= App->editor->GetCurrentCameraThroughEditor();
+	GameObject* selected		= app->editor->GetSelectedGameObjectThroughEditor();
+	C_Camera* current_camera	= app->editor->GetCurrentCameraThroughEditor();
 
 	float4x4 view_matrix		= current_camera->GetFrustum().ViewMatrix();
 	float4x4 projection_matrix	= current_camera->GetFrustum().ProjectionMatrix();
@@ -273,7 +273,7 @@ void E_Viewport::HandleGuizmos()
 
 	ImGuizmo::SetDrawlist();
 
-	float win_height	= (float)App->window->GetHeight();
+	float win_height	= (float)app->window->GetHeight();
 	float tex_width		= tex_size.y;
 	ImVec2 origin_pos	= ImVec2(tex_origin.x, win_height - tex_origin.y - tex_width);
 

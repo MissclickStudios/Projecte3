@@ -83,7 +83,7 @@ void E_Project::CheckFlags()
 {
 	if (!icons_are_loaded)
 	{
-		App->editor->GetEngineIconsThroughEditor(engine_icons);
+		app->editor->GetEngineIconsThroughEditor(engine_icons);
 		icons_are_loaded = true;
 	}
 	
@@ -98,7 +98,7 @@ void E_Project::CheckFlags()
 		std::vector<std::string> extensions_to_filter;
 		extensions_to_filter.push_back("meta");
 
-		root_directory = App->file_system->GetAllFiles(ASSETS_DIRECTORY, nullptr, &extensions_to_filter);
+		root_directory = app->fileSystem->GetAllFiles(ASSETS_DIRECTORY, nullptr, &extensions_to_filter);
 
 		extensions_to_filter.clear();
 
@@ -125,7 +125,7 @@ void E_Project::CheckFlags()
 
 		for (uint i = 0; i < display_directory.children.size(); ++i)
 		{
-			Resource* resource = App->resource_manager->GetResourceFromMetaFile(display_directory.children[i].path.c_str());
+			Resource* resource = app->resourceManager->GetResourceFromMetaFile(display_directory.children[i].path.c_str());
 
 			if (resource != nullptr)
 			{
@@ -139,7 +139,7 @@ void E_Project::CheckFlags()
 
 void E_Project::OnResize()
 {
-	win_size = ImVec2((float)App->window->GetWidth(), (float)App->window->GetHeight());
+	win_size = ImVec2((float)app->window->GetWidth(), (float)app->window->GetHeight());
 }
 
 void E_Project::GenerateDockspace(ImGuiIO& io) const
@@ -200,12 +200,12 @@ void E_Project::DrawDirectoriesTree(const char* root_directory, const char* exte
 	std::vector<std::string> files;
 	std::string root_dir = root_directory;
 	
-	App->file_system->DiscoverFiles(root_dir.c_str(), files, directories, extension_to_filter);
+	app->fileSystem->DiscoverFiles(root_dir.c_str(), files, directories, extension_to_filter);
 
 	for (uint i = 0; i < directories.size(); ++i)
 	{
 		std::string path	= root_dir + directories[i] + ("/");
-		tree_node_flags		= (!App->file_system->ContainsDirectory(path.c_str())) ? ImGuiTreeNodeFlags_Leaf : ImGuiTreeNodeFlags_None;
+		tree_node_flags		= (!app->fileSystem->ContainsDirectory(path.c_str())) ? ImGuiTreeNodeFlags_Leaf : ImGuiTreeNodeFlags_None;
 
 		if (ImGui::TreeNodeEx(path.c_str(), tree_node_flags, "%s/", directories[i].c_str()))
 		{
@@ -235,7 +235,7 @@ void E_Project::DrawDirectoriesTree(const PathNode& root_node)
 	{
 		PathNode path_node = root_node.children[i];
 
-		if (/*path_node.is_file*/ !App->file_system->IsDirectory(path_node.path.c_str()))
+		if (/*path_node.is_file*/ !app->fileSystem->IsDirectory(path_node.path.c_str()))
 		{
 			continue;
 		}
@@ -429,7 +429,7 @@ void E_Project::ClearResourcesToDisplay()
 {
 	for (uint i = 0; i < resources_to_display.size(); ++i)
 	{
-		App->resource_manager->FreeResource(resources_to_display[i]->GetUID());
+		app->resourceManager->FreeResource(resources_to_display[i]->GetUID());
 	}
 	
 	resources_to_display.clear();

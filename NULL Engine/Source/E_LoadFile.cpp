@@ -32,7 +32,7 @@ bool E_LoadFile::Draw(ImGuiIO& io)
 	
 	ImGui::OpenPopup("Load File");
 
-	if (ImGui::BeginPopupModal("Load File"), &App->editor->showLoadFilePopup, ImGuiWindowFlags_AlwaysAutoResize)
+	if (ImGui::BeginPopupModal("Load File"), &app->editor->showLoadFilePopup, ImGuiWindowFlags_AlwaysAutoResize)
 	{
 		DrawFileBrowser();
 
@@ -44,9 +44,9 @@ bool E_LoadFile::Draw(ImGuiIO& io)
 	if (ready_to_load)
 	{
 		ready_to_load						= false;
-		App->editor->showLoadFilePopup	= false;
+		app->editor->showLoadFilePopup	= false;
 		
-		App->editor->LoadFileThroughEditor(selected_file);
+		app->editor->LoadFileThroughEditor(selected_file);
 		selected_file[0] = '\0';
 	}
 
@@ -101,7 +101,7 @@ void E_LoadFile::DrawFileSelector()
 		selected_file[0] = '\0';
 
 		ready_to_load = false;
-		App->editor->showLoadFilePopup = false;
+		app->editor->showLoadFilePopup = false;
 	}
 }
 
@@ -112,7 +112,7 @@ void E_LoadFile::DrawDirectoriesTree(const char* root_directory, const char* ext
 
 	std::string root_dir = root_directory;
 
-	App->file_system->DiscoverFiles(root_dir.c_str(), files, directories, extension_to_filter);
+	app->fileSystem->DiscoverFiles(root_dir.c_str(), files, directories, extension_to_filter);
 
 	for (uint i = 0; i < directories.size(); ++i)
 	{

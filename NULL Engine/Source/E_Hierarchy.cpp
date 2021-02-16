@@ -41,14 +41,14 @@ bool E_Hierarchy::CleanUp()
 
 void E_Hierarchy::PrintGameObjectsOnHierarchy()
 {	
-	if (App->editor->GetSceneRootThroughEditor() != nullptr)
+	if (app->editor->GetSceneRootThroughEditor() != nullptr)
 	{
 		if (open_hierarchy_tools_popup)
 		{
 			HierarchyToolsPopup();
 		}
 		
-		ProcessGameObject(App->editor->GetSceneRootThroughEditor());
+		ProcessGameObject(app->editor->GetSceneRootThroughEditor());
 	}
 }
 
@@ -72,12 +72,12 @@ void E_Hierarchy::ProcessGameObject(GameObject* game_object)
 		node_flags |= ImGuiTreeNodeFlags_Leaf;
 	}
 
-	if (game_object == App->editor->GetSelectedGameObjectThroughEditor())
+	if (game_object == app->editor->GetSelectedGameObjectThroughEditor())
 	{
 		node_flags |= ImGuiTreeNodeFlags_Selected;
 	}
 
-	if (game_object == App->editor->GetSceneRootThroughEditor())
+	if (game_object == app->editor->GetSceneRootThroughEditor())
 	{
 		node_flags |= ImGuiTreeNodeFlags_DefaultOpen;
 	}
@@ -88,12 +88,12 @@ void E_Hierarchy::ProcessGameObject(GameObject* game_object)
 		{
 			if (ImGui::IsItemClicked(ImGuiMouseButton_Left))								// IsItemClicked() checks if the TreeNode item was clicked.
 			{																				// Arguments:
-				App->editor->SetSelectedGameObjectThroughEditor(game_object);				// 0 = Left Click
+				app->editor->SetSelectedGameObjectThroughEditor(game_object);				// 0 = Left Click
 			}																				// 1 = Right Click
 
 			if (ImGui::IsItemClicked(ImGuiMouseButton_Right))								// 
 			{																				// 
-				App->editor->SetSelectedGameObjectThroughEditor(game_object);				// 
+				app->editor->SetSelectedGameObjectThroughEditor(game_object);				// 
 				open_hierarchy_tools_popup = true;											// 
 			}																				// -----------------------------------------------------------------------------------------------
 
@@ -141,7 +141,7 @@ void E_Hierarchy::HierarchyToolsPopup()
 	{
 		if (ImGui::MenuItem("Create Empty Child GameObject"))
 		{
-			App->editor->CreateGameObject("Empty Child", App->editor->GetSelectedGameObjectThroughEditor());
+			app->editor->CreateGameObject("Empty Child", app->editor->GetSelectedGameObjectThroughEditor());
 			open_hierarchy_tools_popup = false;
 		}
 		
@@ -149,7 +149,7 @@ void E_Hierarchy::HierarchyToolsPopup()
 		{
 			if (SelectedCanBeDeleted())
 			{
-				App->editor->DeleteSelectedGameObject();
+				app->editor->DeleteSelectedGameObject();
 				open_hierarchy_tools_popup = false;
 			}
 		}
@@ -165,19 +165,19 @@ void E_Hierarchy::HierarchyToolsPopup()
 
 bool E_Hierarchy::NodeIsRootObject(GameObject* node)
 {
-	return node == App->editor->GetSceneRootThroughEditor();
+	return node == app->editor->GetSceneRootThroughEditor();
 }
 
 bool E_Hierarchy::SelectedCanBeDeleted()
 {
-	if (App->editor->SelectedIsSceneRoot())
+	if (app->editor->SelectedIsSceneRoot())
 	{
 		LOG("[WARNING] Hierarchy: The Scene's Root Object cannot be deleted!");
 	}
-	if (App->editor->SelectedIsAnimationBone())
+	if (app->editor->SelectedIsAnimationBone())
 	{
 		LOG("[WARNING] Herarchy: An Animation Bone GameObject cannot be deleted! Delete Animation Parent Game Object First.");
 	}
 
-	return (!App->editor->SelectedIsSceneRoot() && !App->editor->SelectedIsAnimationBone());
+	return (!app->editor->SelectedIsSceneRoot() && !app->editor->SelectedIsAnimationBone());
 }
