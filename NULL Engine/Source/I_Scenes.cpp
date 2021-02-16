@@ -291,23 +291,23 @@ void Importer::Scenes::Utilities::ImportAnimations(const aiScene* assimpScene, R
 
 	for (uint i = 0; i < assimpScene->mNumAnimations; ++i)
 	{
-		aiAnimation* ai_animation = assimpScene->mAnimations[i];
+		aiAnimation* assimpAnimation = assimpScene->mAnimations[i];
 
-		std::string name			= ai_animation->mName.C_Str();
-		std::string assets_path		= ASSETS_MODELS_PATH + name + ANIMATIONS_EXTENSION;
-		R_Animation* r_animation	= (R_Animation*)App->resourceManager->CreateResource(RESOURCE_TYPE::ANIMATION, assets_path.c_str());
+		std::string name			= assimpAnimation->mName.C_Str();
+		std::string assetsPath		= ASSETS_MODELS_PATH + name + ANIMATIONS_EXTENSION;
+		R_Animation* rAnimation	= (R_Animation*)App->resourceManager->CreateResource(RESOURCE_TYPE::ANIMATION, assetsPath.c_str());
 
-		if (r_animation == nullptr)
+		if (rAnimation == nullptr)
 		{
 			continue;
 		}
 
-		Importer::Animations::Import(ai_animation, r_animation);
+		Importer::Animations::Import(assimpAnimation, rAnimation);
 
-		rModel->animations.emplace(r_animation->GetUID(), r_animation->GetName());
+		rModel->animations.emplace(rAnimation->GetUID(), rAnimation->GetName());
 
-		App->resourceManager->SaveResourceToLibrary(r_animation);
-		App->resourceManager->DeallocateResource(r_animation);
+		App->resourceManager->SaveResourceToLibrary(rAnimation);
+		App->resourceManager->DeallocateResource(rAnimation);
 	}
 }
 
@@ -405,10 +405,10 @@ bool Importer::Scenes::Load(const char* buffer, R_Model* rModel)
 			return false;
 		}
 
-		ModelNode model_node = ModelNode();
-		model_node.Load(parsonNode);
+		ModelNode modelNode = ModelNode();
+		modelNode.Load(parsonNode);
 
-		rModel->model_nodes.push_back(model_node);
+		rModel->model_nodes.push_back(modelNode);
 	}
 
 	for (uint i = 0; i < animationsArray.size; ++i)

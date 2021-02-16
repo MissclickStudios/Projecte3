@@ -37,7 +37,7 @@ void Importer::Materials::Import(const aiMaterial* assimpMaterial, R_Material* r
 	}
 	
 
-	std::string dir_path	= ASSETS_TEXTURES_PATH + App->fileSystem->GetLastDirectory(rMaterial->GetAssetsPath());			// Dirty setting of the assets path.
+	std::string dirPath	= ASSETS_TEXTURES_PATH + App->fileSystem->GetLastDirectory(rMaterial->GetAssetsPath());			// Dirty setting of the assets path.
 
 	std::string file		= "";
 	std::string fullPath	= "";
@@ -53,7 +53,7 @@ void Importer::Materials::Import(const aiMaterial* assimpMaterial, R_Material* r
 	{
 
 		file		= App->fileSystem->GetFileAndExtension(texPath.C_Str());
-		fullPath	= dir_path + file;
+		fullPath	= dirPath + file;
 		rMaterial->materials.push_back(MaterialData(TEXTURE_TYPE::DIFFUSE, 0, fullPath));
 
 	}
@@ -61,14 +61,14 @@ void Importer::Materials::Import(const aiMaterial* assimpMaterial, R_Material* r
 	{
 
 		file		= App->fileSystem->GetFileAndExtension(texPath.C_Str());
-		fullPath	= dir_path + file;
+		fullPath	= dirPath + file;
 		rMaterial->materials.push_back(MaterialData(TEXTURE_TYPE::SPECULAR, 0, fullPath));
 	}
 	if (assimpMaterial->GetTexture(aiTextureType_AMBIENT, 0, &texPath) == AI_SUCCESS)												// Checking if there is a AMBIENT texture.
 	{
 
 		file		= App->fileSystem->GetFileAndExtension(texPath.C_Str());
-		fullPath	= dir_path + file;
+		fullPath	= dirPath + file;
 		rMaterial->materials.push_back(MaterialData(TEXTURE_TYPE::AMBIENT, 0, fullPath));
 
 	}
@@ -76,14 +76,14 @@ void Importer::Materials::Import(const aiMaterial* assimpMaterial, R_Material* r
 	{
 		
 		file = App->fileSystem->GetFileAndExtension(texPath.C_Str());
-		fullPath = dir_path + file;
+		fullPath = dirPath + file;
 		rMaterial->materials.push_back(MaterialData(TEXTURE_TYPE::EMISSIVE, 0, fullPath));
 	}
 	if (assimpMaterial->GetTexture(aiTextureType_HEIGHT, 0, &texPath) == AI_SUCCESS)												// Checking if there is a HEIGHT texture.
 	{
 
 		file		= App->fileSystem->GetFileAndExtension(texPath.C_Str());
-		fullPath	= dir_path + file;
+		fullPath	= dirPath + file;
 		rMaterial->materials.push_back(MaterialData(TEXTURE_TYPE::HEIGHT, 0, fullPath));
 
 	}
@@ -91,7 +91,7 @@ void Importer::Materials::Import(const aiMaterial* assimpMaterial, R_Material* r
 	{
 
 		file		= App->fileSystem->GetFileAndExtension(texPath.C_Str());
-		fullPath	= dir_path + file;
+		fullPath	= dirPath + file;
 		rMaterial->materials.push_back(MaterialData(TEXTURE_TYPE::NORMALS, 0, fullPath));
 
 	}

@@ -230,12 +230,12 @@ bool Importer::Textures::Load(const char* buffer, const uint size, R_Texture* rT
 
 uint Importer::Textures::Utilities::CreateTexture(const void* data, uint width, uint height, uint target, int wrapping, int filter, int internalFormat, uint format)
 {
-	uint texture_id = 0; 
+	uint textureId = 0; 
 
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-	glGenTextures(1, (GLuint*)&texture_id);
-	glBindTexture(target, texture_id);
+	glGenTextures(1, (GLuint*)&textureId);
+	glBindTexture(target, textureId);
 
 	glTexParameteri(target, GL_TEXTURE_WRAP_S, wrapping);
 	glTexParameteri(target, GL_TEXTURE_WRAP_T, wrapping);
@@ -252,10 +252,10 @@ uint Importer::Textures::Utilities::CreateTexture(const void* data, uint width, 
 
 		if (glewIsSupported("GL_EXT_texture_filter_anisotropic"))												// In case Anisotropic filtering is available, it will be used.
 		{
-			GLfloat max_anisotropy;
+			GLfloat maxAnisotropy;
 
-			glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &max_anisotropy);
-			glTexParameteri(target, GL_TEXTURE_MAX_ANISOTROPY_EXT, (GLint)max_anisotropy);
+			glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &maxAnisotropy);
+			glTexParameteri(target, GL_TEXTURE_MAX_ANISOTROPY_EXT, (GLint)maxAnisotropy);
 		}
 	}
 	else
@@ -269,10 +269,10 @@ uint Importer::Textures::Utilities::CreateTexture(const void* data, uint width, 
 
 	glBindTexture(target, 0);
 
-	if (texture_id != 0)
+	if (textureId != 0)
 	{
-		LOG("[STATUS] Texture Successfully loaded! Id: %u, Size: %u x %u", texture_id, width, height);
+		LOG("[STATUS] Texture Successfully loaded! Id: %u, Size: %u x %u", textureId, width, height);
 	}
 
-	return texture_id;
+	return textureId;
 }

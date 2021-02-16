@@ -183,36 +183,36 @@ bool Importer::Animations::Load(const char* buffer, R_Animation* rAnimation)
 	uint bytes		= 0;
 
 	// --- HEADER DATA ---
-	double header_data[HEADER_SIZE];
+	double headerData[HEADER_SIZE];
 
-	bytes = sizeof(header_data);
-	memcpy(header_data, cursor, bytes);
+	bytes = sizeof(headerData);
+	memcpy(headerData, cursor, bytes);
 	cursor += bytes;
 
 	std::string name = "";
-	name.resize((uint)header_data[0]);
-	bytes = (uint)header_data[0] * sizeof(char);
+	name.resize((uint)headerData[0]);
+	bytes = (uint)headerData[0] * sizeof(char);
 	memcpy(&name[0], cursor, bytes);
 	cursor += bytes;
 
 	rAnimation->SetName(name.c_str());
-	rAnimation->SetDuration(header_data[1]);
-	rAnimation->SetTicksPerSecond(header_data[2]);
+	rAnimation->SetDuration(headerData[1]);
+	rAnimation->SetTicksPerSecond(headerData[2]);
 
 	// --- CHANNELS DATA ---
-	rAnimation->channels.resize((uint)header_data[3]);
+	rAnimation->channels.resize((uint)headerData[3]);
 	for (uint i = 0; i < rAnimation->channels.size(); ++i)
 	{
-		std::string channel_name = "";
-		Utilities::LoadChannelName(&cursor, channel_name);
+		std::string channelName = "";
+		Utilities::LoadChannelName(&cursor, channelName);
 
-		Channel r_channel = Channel(channel_name.c_str());
+		Channel rChannel = Channel(channelName.c_str());
 		
-		Utilities::LoadPositionKeysData(&cursor, r_channel);
-		Utilities::LoadRotationKeysData(&cursor, r_channel);
-		Utilities::LoadScaleKeysData(&cursor, r_channel);
+		Utilities::LoadPositionKeysData(&cursor, rChannel);
+		Utilities::LoadRotationKeysData(&cursor, rChannel);
+		Utilities::LoadScaleKeysData(&cursor, rChannel);
 
-		rAnimation->channels[i] = r_channel;
+		rAnimation->channels[i] = rChannel;
 	}
 
 	return ret;
@@ -232,14 +232,14 @@ uint Importer::Animations::Utilities::GetChannelsDataSize(const R_Animation* rAn
 	uint quatKeySize	= sizeof(double) + (sizeof(float) * 4);																// Quat is composed by 4 floats.
 	for (uint i = 0; i < rAnimation->channels.size(); ++i)
 	{
-		const Channel& r_channel = rAnimation->channels[i];
+		const Channel& rChannel = rAnimation->channels[i];
 		uint channelSize = 0;
 
 		channelSize += sizeof(uint) * 4;																					// Length of the name and sizes of the keys maps.
-		channelSize += (strlen(r_channel.name.c_str()) * sizeof(char));
-		channelSize += r_channel.position_keyframes.size() * vecKeySize;
-		channelSize += r_channel.rotation_keyframes.size() * quatKeySize;
-		channelSize += r_channel.scale_keyframes.size() * vecKeySize;
+		channelSize += (strlen(rChannel.name.c_str()) * sizeof(char));
+		channelSize += rChannel.position_keyframes.size() * vecKeySize;
+		channelSize += rChannel.rotation_keyframes.size() * quatKeySize;
+		channelSize += rChannel.scale_keyframes.size() * vecKeySize;
 
 		channelsSize += channelSize;
 	}
