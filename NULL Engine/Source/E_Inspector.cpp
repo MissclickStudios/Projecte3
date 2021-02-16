@@ -28,17 +28,17 @@
 #define MIN_VALUE -100000
 
 E_Inspector::E_Inspector() : EditorPanel("Inspector"),
-show_delete_component_popup	(false),
-component_type				(0),
-map_to_display				(0),
-component_to_delete			(nullptr)
+showDeleteComponentPopup	(false),
+componentType				(0),
+mapToDisplay				(0),
+componentToDelete			(nullptr)
 {
 
 }
 
 E_Inspector::~E_Inspector()
 {
-	component_to_delete = nullptr;
+	componentToDelete = nullptr;
 }
 
 bool E_Inspector::Draw(ImGuiIO& io)
@@ -49,7 +49,7 @@ bool E_Inspector::Draw(ImGuiIO& io)
 
 	SetIsHovered();
 	
-	GameObject* selected = app->editor->GetSelectedGameObjectThroughEditor();
+	GameObject* selected = App->editor->GetSelectedGameObjectThroughEditor();
 
 	if (selected != nullptr && !selected->is_master_root && !selected->is_scene_root)
 	{	
@@ -60,7 +60,7 @@ bool E_Inspector::Draw(ImGuiIO& io)
 
 		AddComponentCombo(selected);
 
-		if (show_delete_component_popup)
+		if (showDeleteComponentPopup)
 		{
 			DeleteComponentPopup(selected);
 		}
@@ -88,10 +88,10 @@ bool E_Inspector::CleanUp()
 void E_Inspector::DrawGameObjectInfo(GameObject* selected_game_object)
 {
 	// --- IS ACTIVE ---
-	bool game_object_is_active = selected_game_object->IsActive();
-	if (ImGui::Checkbox("Is Active", &game_object_is_active))
+	bool gameObjectIsActive = selected_game_object->IsActive();
+	if (ImGui::Checkbox("Is Active", &gameObjectIsActive))
 	{
-		selected_game_object->SetIsActive(game_object_is_active);
+		selected_game_object->SetIsActive(gameObjectIsActive);
 	}
 
 	ImGui::SameLine();
@@ -111,25 +111,25 @@ void E_Inspector::DrawGameObjectInfo(GameObject* selected_game_object)
 
 	// --- IS STATIC ---
 	//bool is_static = selected_game_object->IsStatic();
-	bool is_static = true;
-	if (ImGui::Checkbox("Is Static", &is_static))
+	bool isStatic = true;
+	if (ImGui::Checkbox("Is Static", &isStatic))
 	{
-		selected_game_object->SetIsStatic(is_static);
+		selected_game_object->SetIsStatic(isStatic);
 	}
 
 	// --- TAG ---
 	ImGui::SetNextItemWidth(ImGui::GetWindowWidth() * 0.33f);
-	static char tag_combo[64] = { "Untagged\0Work\0In\0Progress" };
-	static int current_tag = 0;
-	ImGui::Combo("Tag", &current_tag, tag_combo);
+	static char tagCombo[64] = { "Untagged\0Work\0In\0Progress" };
+	static int currentTag = 0;
+	ImGui::Combo("Tag", &currentTag, tagCombo);
 
 	ImGui::SameLine(218.0f);
 
 	// --- LAYER ---
 	ImGui::SetNextItemWidth(ImGui::GetWindowWidth() * 0.33f);
-	static char layer_combo[64] = { "Default\0Work\0In\0Progress" };
-	static int current_layer = 0;
-	ImGui::Combo("Layer", &current_layer, layer_combo);
+	static char layerCombo[64] = { "Default\0Work\0In\0Progress" };
+	static int currentLayer = 0;
+	ImGui::Combo("Layer", &currentLayer, layerCombo);
 
 	ImGui::Separator();
 }
@@ -178,11 +178,11 @@ void E_Inspector::DrawTransformComponent(C_Transform* c_transform)
 		if (c_transform != nullptr)
 		{
 			// --- IS ACTIVE ---
-			bool transform_is_active = c_transform->IsActive();
-			if (ImGui::Checkbox("Transform Is Active", &transform_is_active))
+			bool transformIsActive = c_transform->IsActive();
+			if (ImGui::Checkbox("Transform Is Active", &transformIsActive))
 			{
 				//transform->SetIsActive(transform_is_active);
-				c_transform->SetIsActive(transform_is_active);
+				c_transform->SetIsActive(transformIsActive);
 			}
 
 			ImGui::Separator();
@@ -244,10 +244,10 @@ void E_Inspector::DrawMeshComponent(C_Mesh* c_mesh)
 		if (c_mesh != nullptr)
 		{
 			// --- IS ACTIVE ---
-			bool mesh_is_active = c_mesh->IsActive();
-			if (ImGui::Checkbox("Mesh Is Active", &mesh_is_active))
+			bool meshIsActive = c_mesh->IsActive();
+			if (ImGui::Checkbox("Mesh Is Active", &meshIsActive))
 			{
-				c_mesh->SetIsActive(mesh_is_active);
+				c_mesh->SetIsActive(meshIsActive);
 			}
 
 			ImGui::Separator();
@@ -260,34 +260,34 @@ void E_Inspector::DrawMeshComponent(C_Mesh* c_mesh)
 			// --- MESH DATA ---
 			ImGui::TextColored(Cyan.C_Array(), "Mesh Data:");
 
-			uint num_vertices		= 0;
-			uint num_normals		= 0;
-			uint num_tex_coords		= 0;
-			uint num_indices		= 0;
-			uint num_bones			= 0;
+			uint numVertices		= 0;
+			uint numNormals		= 0;
+			uint numTexCoords		= 0;
+			uint numIndices		= 0;
+			uint numBones			= 0;
 
-			c_mesh->GetMeshData(num_vertices, num_normals, num_tex_coords, num_indices, num_bones);
+			c_mesh->GetMeshData(numVertices, numNormals, numTexCoords, numIndices, numBones);
 
-			ImGui::Text("Vertices:");		ImGui::SameLine();		ImGui::TextColored(Yellow.C_Array(), "  %u", num_vertices);
-			ImGui::Text("Normals:");		ImGui::SameLine();		ImGui::TextColored(Yellow.C_Array(), "   %u", num_normals);
-			ImGui::Text("Tex Coords:");		ImGui::SameLine();		ImGui::TextColored(Yellow.C_Array(), "%u", num_tex_coords);
-			ImGui::Text("Indices:");		ImGui::SameLine();		ImGui::TextColored(Yellow.C_Array(), "   %u", num_indices);
-			ImGui::Text("Bones: ");			ImGui::SameLine();		ImGui::TextColored(Yellow.C_Array(), "    %u",	num_bones);
+			ImGui::Text("Vertices:");		ImGui::SameLine();		ImGui::TextColored(Yellow.C_Array(), "  %u", numVertices);
+			ImGui::Text("Normals:");		ImGui::SameLine();		ImGui::TextColored(Yellow.C_Array(), "   %u", numNormals);
+			ImGui::Text("Tex Coords:");		ImGui::SameLine();		ImGui::TextColored(Yellow.C_Array(), "%u", numTexCoords);
+			ImGui::Text("Indices:");		ImGui::SameLine();		ImGui::TextColored(Yellow.C_Array(), "   %u", numIndices);
+			ImGui::Text("Bones: ");			ImGui::SameLine();		ImGui::TextColored(Yellow.C_Array(), "    %u",	numBones);
 
 			ImGui::Separator();
 
 			// --- DRAW MODE ---
 			ImGui::TextColored(Cyan.C_Array(), "Draw Mode:");
 
-			bool show_wireframe		= c_mesh->GetShowWireframe();
-			bool show_bounding_box	= c_mesh->GetShowBoundingBox();
-			bool draw_vert_normals	= c_mesh->GetDrawVertexNormals();
-			bool draw_face_normals	= c_mesh->GetDrawFaceNormals();
+			bool showWireframe		= c_mesh->GetShowWireframe();
+			bool showBoundingBox	= c_mesh->GetShowBoundingBox();
+			bool drawVertNormals	= c_mesh->GetDrawVertexNormals();
+			bool drawFaceNormals	= c_mesh->GetDrawFaceNormals();
 
-			if (ImGui::Checkbox("Show Wireframe", &show_wireframe))				{ c_mesh->SetShowWireframe(show_wireframe); }
-			if (ImGui::Checkbox("Show Bounding Box", &show_bounding_box))		{ c_mesh->SetShowBoundingBox(show_bounding_box); }
-			if (ImGui::Checkbox("Draw Vertex Normals", &draw_vert_normals))		{ c_mesh->SetDrawVertexNormals(draw_vert_normals); }
-			if (ImGui::Checkbox("Draw Face Normals", &draw_face_normals))		{ c_mesh->SetDrawFaceNormals(draw_face_normals); }
+			if (ImGui::Checkbox("Show Wireframe", &showWireframe))				{ c_mesh->SetShowWireframe(showWireframe); }
+			if (ImGui::Checkbox("Show Bounding Box", &showBoundingBox))		{ c_mesh->SetShowBoundingBox(showBoundingBox); }
+			if (ImGui::Checkbox("Draw Vertex Normals", &drawVertNormals))		{ c_mesh->SetDrawVertexNormals(drawVertNormals); }
+			if (ImGui::Checkbox("Draw Face Normals", &drawFaceNormals))		{ c_mesh->SetDrawFaceNormals(drawFaceNormals); }
 		}
 		else
 		{
@@ -296,8 +296,8 @@ void E_Inspector::DrawMeshComponent(C_Mesh* c_mesh)
 
 		if (!show)
 		{
-			component_to_delete				= c_mesh;
-			show_delete_component_popup		= true;
+			componentToDelete				= c_mesh;
+			showDeleteComponentPopup		= true;
 		}
 
 		ImGui::Separator();
@@ -311,10 +311,10 @@ void E_Inspector::DrawMaterialComponent(C_Material* c_material)
 	{
 		if (c_material != nullptr)
 		{
-			bool material_is_active = c_material->IsActive();
-			if (ImGui::Checkbox("Material Is Active", &material_is_active))
+			bool materialIsActive = c_material->IsActive();
+			if (ImGui::Checkbox("Material Is Active", &materialIsActive))
 			{
-				c_material->SetIsActive(material_is_active);
+				c_material->SetIsActive(materialIsActive);
 			}
 			
 			ImGui::Separator();
@@ -349,15 +349,15 @@ void E_Inspector::DrawMaterialComponent(C_Material* c_material)
 			// --- MAIN MAPS ---
 			ImGui::TextColored(ImVec4(0.0f, 1.0f, 1.0f, 1.0f), "Main Maps:");
 
-			if (ImGui::Combo("Textures(WIP)", &map_to_display, "Diffuse\0Specular\0Ambient\0Height\0Normal\0"))
+			if (ImGui::Combo("Textures(WIP)", &mapToDisplay, "Diffuse\0Specular\0Ambient\0Height\0Normal\0"))
 			{
-				LOG("[SCENE] Changed to map %d", map_to_display);
+				LOG("[SCENE] Changed to map %d", mapToDisplay);
 			}
 
-			bool use_checkered_tex = c_material->UseDefaultTexture();
-			if (ImGui::Checkbox("Use Default Texture", &use_checkered_tex))
+			bool useCheckeredTex = c_material->UseDefaultTexture();
+			if (ImGui::Checkbox("Use Default Texture", &useCheckeredTex))
 			{
-				c_material->SetUseDefaultTexture(use_checkered_tex);
+				c_material->SetUseDefaultTexture(useCheckeredTex);
 			}
 
 			// --- TEXTURE DISPLAY ---
@@ -370,8 +370,8 @@ void E_Inspector::DrawMaterialComponent(C_Material* c_material)
 
 		if (!show)
 		{
-			component_to_delete				= c_material;
-			show_delete_component_popup		= true;
+			componentToDelete				= c_material;
+			showDeleteComponentPopup		= true;
 		}
 
 		ImGui::Separator();
@@ -385,10 +385,10 @@ void E_Inspector::DrawLightComponent(C_Light* c_light)
 	{
 		if (c_light != nullptr)
 		{
-			bool light_is_active = c_light->IsActive();
-			if (ImGui::Checkbox("Light Is Active", &light_is_active))
+			bool lightIsActive = c_light->IsActive();
+			if (ImGui::Checkbox("Light Is Active", &lightIsActive))
 			{
-				c_light->SetIsActive(light_is_active);
+				c_light->SetIsActive(lightIsActive);
 			}
 			
 			ImGui::Separator();
@@ -398,8 +398,8 @@ void E_Inspector::DrawLightComponent(C_Light* c_light)
 
 		if (!show)
 		{
-			component_to_delete				= c_light;
-			show_delete_component_popup		= true;
+			componentToDelete				= c_light;
+			showDeleteComponentPopup		= true;
 		}
 
 		ImGui::Separator();
@@ -413,55 +413,55 @@ void E_Inspector::DrawCameraComponent(C_Camera* c_camera)
 	{
 		if (c_camera != nullptr)
 		{
-			bool camera_is_active = c_camera->IsActive();
-			if (ImGui::Checkbox("Camera Is Active", &camera_is_active))
+			bool cameraIsActive = c_camera->IsActive();
+			if (ImGui::Checkbox("Camera Is Active", &cameraIsActive))
 			{
-				c_camera->SetIsActive(camera_is_active);
+				c_camera->SetIsActive(cameraIsActive);
 			}
 
 			ImGui::Separator();
 
 			ImGui::TextColored(ImVec4(0.0f, 1.0f, 1.0f, 1.0f), "Camera Flags:");
 			
-			bool camera_is_culling = c_camera->IsCulling();
-			if (ImGui::Checkbox("Culling", &camera_is_culling))
+			bool cameraIsCulling = c_camera->IsCulling();
+			if (ImGui::Checkbox("Culling", &cameraIsCulling))
 			{
-				c_camera->SetIsCulling(camera_is_culling);
+				c_camera->SetIsCulling(cameraIsCulling);
 			}
 
-			bool camera_is_orthogonal = c_camera->OrthogonalView();
-			if (ImGui::Checkbox("Orthogonal", &camera_is_orthogonal))
+			bool cameraIsOrthogonal = c_camera->OrthogonalView();
+			if (ImGui::Checkbox("Orthogonal", &cameraIsOrthogonal))
 			{
-				c_camera->SetOrthogonalView(camera_is_orthogonal);
+				c_camera->SetOrthogonalView(cameraIsOrthogonal);
 			} 
 
-			bool frustum_is_hidden = c_camera->FrustumIsHidden();
-			if (ImGui::Checkbox("Hide Frustum", &frustum_is_hidden))
+			bool frustumIsHidden = c_camera->FrustumIsHidden();
+			if (ImGui::Checkbox("Hide Frustum", &frustumIsHidden))
 			{
-				c_camera->SetFrustumIsHidden(frustum_is_hidden);
+				c_camera->SetFrustumIsHidden(frustumIsHidden);
 			}
 
 			ImGui::Separator();
 
 			ImGui::TextColored(ImVec4(0.0f, 1.0f, 1.0f, 1.0f), "Frustum Settings:");
 
-			float near_plane_distance = c_camera->GetNearPlaneDistance();
-			if (ImGui::SliderFloat("Near Plane", &near_plane_distance, 0.1f, 1000.0f, "%.3f", 0))
+			float nearPlaneDistance = c_camera->GetNearPlaneDistance();
+			if (ImGui::SliderFloat("Near Plane", &nearPlaneDistance, 0.1f, 1000.0f, "%.3f", 0))
 			{
-				c_camera->SetNearPlaneDistance(near_plane_distance);
+				c_camera->SetNearPlaneDistance(nearPlaneDistance);
 			}
 
-			float far_plane_distance = c_camera->GetFarPlaneDistance();
-			if (ImGui::SliderFloat("Far Plane", &far_plane_distance, 0.1f, 1000.0f, "%.3f", 0))
+			float farPlaneDistance = c_camera->GetFarPlaneDistance();
+			if (ImGui::SliderFloat("Far Plane", &farPlaneDistance, 0.1f, 1000.0f, "%.3f", 0))
 			{
-				c_camera->SetFarPlaneDistance(far_plane_distance);
+				c_camera->SetFarPlaneDistance(farPlaneDistance);
 			}
 			
 			int fov			= (int)c_camera->GetVerticalFOV();
-			uint min_fov	= 0;
-			uint max_fov	= 0;
-			c_camera->GetMinMaxFOV(min_fov, max_fov);
-			if (ImGui::SliderInt("FOV", &fov, min_fov, max_fov, "%d"))
+			uint minFov	= 0;
+			uint maxFov	= 0;
+			c_camera->GetMinMaxFOV(minFov, maxFov);
+			if (ImGui::SliderInt("FOV", &fov, minFov, maxFov, "%d"))
 			{
 				c_camera->SetVerticalFOV((float)fov);
 			}
@@ -472,19 +472,19 @@ void E_Inspector::DrawCameraComponent(C_Camera* c_camera)
 
 			if (ImGui::Button("Set as Current Camera"))
 			{
-				app->editor->SetCurrentCameraThroughEditor(c_camera);
+				App->editor->SetCurrentCameraThroughEditor(c_camera);
 			}
 
 			if (ImGui::Button("Return to Master Camera"))
 			{
-				app->editor->SetMasterCameraThroughEditor();
+				App->editor->SetMasterCameraThroughEditor();
 			}
 		}
 
 		if (!show)
 		{
-			component_to_delete				= c_camera;
-			show_delete_component_popup		= true;
+			componentToDelete				= c_camera;
+			showDeleteComponentPopup		= true;
 		}
 
 		ImGui::Separator();
@@ -498,67 +498,67 @@ void E_Inspector::DrawAnimatorComponent(C_Animator* c_animator)								// TODO: 
 	{
 		if (c_animator != nullptr)
 		{
-			bool animation_is_active	= c_animator->IsActive();
-			if (ImGui::Checkbox("Is Active", &animation_is_active))							{ c_animator->SetIsActive(animation_is_active); }
+			bool animationIsActive	= c_animator->IsActive();
+			if (ImGui::Checkbox("Is Active", &animationIsActive))							{ c_animator->SetIsActive(animationIsActive); }
 
 			ImGui::Separator();
 
 			// --- ANIMATOR VARIABLES
-			static int selected_clip			= 0;
-			std::string clip_names_string		= c_animator->GetClipNamesAsString();
+			static int selectedClip			= 0;
+			std::string clipNamesString		= c_animator->GetClipNamesAsString();
 
 			float speed							= c_animator->GetPlaybackSpeed();
-			float min_speed						= 0.1f;
-			float max_speed						= 10.0f;
+			float minSpeed						= 0.1f;
+			float maxSpeed						= 10.0f;
 			
 			bool interpolate					= c_animator->GetInterpolate();
-			bool loop_animation					= c_animator->GetLoopAnimation();
-			bool play_on_start					= c_animator->GetPlayOnStart();
-			bool camera_culling					= c_animator->GetCameraCulling();
-			bool show_bones						= c_animator->GetShowBones();
+			bool loopAnimation					= c_animator->GetLoopAnimation();
+			bool playOnStart					= c_animator->GetPlayOnStart();
+			bool cameraCulling					= c_animator->GetCameraCulling();
+			bool showBones						= c_animator->GetShowBones();
 
 			// -- CURRENT CLIP VARIABLES
-			AnimatorClip* current_clip			= c_animator->GetCurrentClip();
+			AnimatorClip* currentClip			= c_animator->GetCurrentClip();
 
-			if (current_clip == nullptr)
+			if (currentClip == nullptr)
 			{
-				current_clip = &AnimatorClip();
+				currentClip = &AnimatorClip();
 			}
 
-			const char* animation_name			= current_clip->GetAnimationName();
-			float animation_ticks_per_second	= current_clip->GetAnimationTicksPerSecond();
-			float animation_duration			= current_clip->GetAnimationDuration();
+			const char* animationName			= currentClip->GetAnimationName();
+			float animationTicksPerSecond	= currentClip->GetAnimationTicksPerSecond();
+			float animationDuration			= currentClip->GetAnimationDuration();
 
-			const char* current_clip_name		= current_clip->GetName();
-			uint current_clip_start				= current_clip->GetStart();
-			uint current_clip_end				= current_clip->GetEnd();
-			float current_clip_duration			= current_clip->GetDuration();
-			bool current_clip_loop				= current_clip->IsLooped();
+			const char* currentClipName		= currentClip->GetName();
+			uint currentClipStart				= currentClip->GetStart();
+			uint currentClipEnd				= currentClip->GetEnd();
+			float currentClipDuration			= currentClip->GetDuration();
+			bool currentClipLoop				= currentClip->IsLooped();
 
-			float clip_time						= current_clip->GetClipTime();
-			float clip_frame					= current_clip->GetClipFrame();
-			uint clip_ticks						= current_clip->GetClipTick();
+			float clipCime						= currentClip->GetClipTime();
+			float clipFrame					= currentClip->GetClipFrame();
+			uint clipTicks						= currentClip->GetClipTick();
 
 			// --- NEW CLIP VARIABLES
-			static int selected_animation		= 0;
-			std::string animation_names			= c_animator->GetAnimationNamesAsString();
+			static int selectedAnimation		= 0;
+			std::string animationNames			= c_animator->GetAnimationNamesAsString();
 
-			static char new_clip_name[128]		= "Enter Clip Name";
-			ImGuiInputTextFlags input_txt_flags	= ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_AutoSelectAll;
+			static char newClipName[128]		= "Enter Clip Name";
+			ImGuiInputTextFlags inputTxtFlags	= ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_AutoSelectAll;
 
-			static int new_clip_start			= 0;
-			static int new_clip_end				= (int)animation_duration;
-			int new_clip_min					= 0;
-			int new_clip_max					= (int)animation_duration;
+			static int newClipStart			= 0;
+			static int newClipEnd				= (int)animationDuration;
+			int newClipMin					= 0;
+			int newClipMax					= (int)animationDuration;
 			static bool loop					= false;
 
 			static bool success					= false;																			// --- TODO: Transform into non-static variables later.
-			static bool text_timer_running		= false;																			//
-			static float text_timer				= 0.0f;																				//
-			static float text_duration			= 2.5f;																				// ----------------------------------------------------
+			static bool textTimerRunning		= false;																			//
+			static float textTimer				= 0.0f;																				//
+			static float textDuration			= 2.5f;																				// ----------------------------------------------------
 			
 			// --- EXISTING CLIPS VARIABLES
-			std::vector<std::string> clip_names = c_animator->GetClipNamesAsVector();
+			std::vector<std::string> clipNames = c_animator->GetClipNamesAsVector();
 
 			// --- DISPLAY
 			if (ImGui::BeginTabBar("AnimatorTabBar", ImGuiTabBarFlags_None))
@@ -568,10 +568,10 @@ void E_Inspector::DrawAnimatorComponent(C_Animator* c_animator)								// TODO: 
 					// --- ANIMATOR SETTINGS
 					ImGui::TextColored(Cyan.C_Array(), "Animation Settings");
 
-					if (ImGui::Combo("Select Clip", &selected_clip, clip_names_string.c_str()))
+					if (ImGui::Combo("Select Clip", &selectedClip, clipNamesString.c_str()))
 					{
-						char selected_name = clip_names_string[selected_clip];
-						c_animator->SetCurrentClipByIndex((uint)selected_clip);
+						char selected_name = clipNamesString[selectedClip];
+						c_animator->SetCurrentClipByIndex((uint)selectedClip);
 					}
 
 					if (ImGui::Button("Play"))									{ c_animator->Play(); }		ImGui::SameLine();
@@ -579,34 +579,34 @@ void E_Inspector::DrawAnimatorComponent(C_Animator* c_animator)								// TODO: 
 					if (ImGui::Button("Step"))									{ c_animator->Step(); }		ImGui::SameLine();
 					if (ImGui::Button("Stop"))									{ c_animator->Stop(); }
 
-					if (ImGui::SliderFloat("Playback Speed", &speed, min_speed, max_speed, "X %.3f", 0)) { c_animator->SetPlaybackSpeed(speed); }
+					if (ImGui::SliderFloat("Playback Speed", &speed, minSpeed, maxSpeed, "X %.3f", 0)) { c_animator->SetPlaybackSpeed(speed); }
 
 					if (ImGui::Checkbox("Interpolate", &interpolate))			{ c_animator->SetInterpolate(interpolate); }
-					if (ImGui::Checkbox("Loop Animation", &loop_animation))		{ c_animator->SetLoopAnimation(loop_animation); }
-					if (ImGui::Checkbox("Play On Start", &play_on_start))		{ c_animator->SetPlayOnStart(play_on_start); }
-					if (ImGui::Checkbox("Camera Culling", &camera_culling))		{ c_animator->SetCameraCulling(camera_culling); }
-					if (ImGui::Checkbox("Show Bones", &show_bones))				{ c_animator->SetShowBones(show_bones); }
+					if (ImGui::Checkbox("Loop Animation", &loopAnimation))		{ c_animator->SetLoopAnimation(loopAnimation); }
+					if (ImGui::Checkbox("Play On Start", &playOnStart))		{ c_animator->SetPlayOnStart(playOnStart); }
+					if (ImGui::Checkbox("Camera Culling", &cameraCulling))		{ c_animator->SetCameraCulling(cameraCulling); }
+					if (ImGui::Checkbox("Show Bones", &showBones))				{ c_animator->SetShowBones(showBones); }
 
 					ImGui::Separator();
 
 					// --- ANIMATOR STATS
 					ImGui::TextColored(Cyan.C_Array(), "Animation Stats");
 
-					ImGui::Text("Name:");				ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "             %s",		animation_name);
-					ImGui::Text("Ticks Per Second:");	ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), " %.3f",				animation_ticks_per_second);
-					ImGui::Text("Duration:");			ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "         %.3f",		animation_duration);
+					ImGui::Text("Name:");				ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "             %s",		animationName);
+					ImGui::Text("Ticks Per Second:");	ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), " %.3f",				animationTicksPerSecond);
+					ImGui::Text("Duration:");			ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "         %.3f",		animationDuration);
 
 					ImGui::Separator();
 
 					ImGui::TextColored(Cyan.C_Array(), "Clip Stats");
 
-					ImGui::Text("Name:");				ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "             %s",		current_clip_name);
-					ImGui::Text("Time:");				ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "             %.3f",	clip_time);
-					ImGui::Text("Frame:");				ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "            %.3f",	clip_frame);
-					ImGui::Text("Tick:");				ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "		     %u",		clip_ticks);
-					ImGui::Text("Range:");				ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "            %u - %u", current_clip_start, current_clip_end);
-					ImGui::Text("Duration:");			ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "         %.3f",		current_clip_duration);
-					ImGui::Text("Loop:");				ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "             %s",		(current_clip_loop) ? "True" : "False");
+					ImGui::Text("Name:");				ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "             %s",		currentClipName);
+					ImGui::Text("Time:");				ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "             %.3f",	clipCime);
+					ImGui::Text("Frame:");				ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "            %.3f",	clipFrame);
+					ImGui::Text("Tick:");				ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "		     %u",		clipTicks);
+					ImGui::Text("Range:");				ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "            %u - %u", currentClipStart, currentClipEnd);
+					ImGui::Text("Duration:");			ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "         %.3f",		currentClipDuration);
+					ImGui::Text("Loop:");				ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "             %s",		(currentClipLoop) ? "True" : "False");
 
 					ImGui::Separator();
 
@@ -630,20 +630,20 @@ void E_Inspector::DrawAnimatorComponent(C_Animator* c_animator)								// TODO: 
 
 					ImGui::TextColored(Cyan.C_Array(), "Create Clip");
 
-					ImGui::Combo("Select Animation", &selected_animation, animation_names.c_str());
-					ImGui::InputText("Clip Name", new_clip_name, IM_ARRAYSIZE(new_clip_name), input_txt_flags);
-					ImGui::SliderInt("Clip Start", &new_clip_start, new_clip_min, new_clip_max);
-					ImGui::SliderInt("Clip End", &new_clip_end, new_clip_min, new_clip_max);
+					ImGui::Combo("Select Animation", &selectedAnimation, animationNames.c_str());
+					ImGui::InputText("Clip Name", newClipName, IM_ARRAYSIZE(newClipName), inputTxtFlags);
+					ImGui::SliderInt("Clip Start", &newClipStart, newClipMin, newClipMax);
+					ImGui::SliderInt("Clip End", &newClipEnd, newClipMin, newClipMax);
 					ImGui::Checkbox("Loop Clip", &loop);
 
-					if (new_clip_start > new_clip_end) { new_clip_end = new_clip_start; };
+					if (newClipStart > newClipEnd) { newClipEnd = newClipStart; };
 
 					if (ImGui::Button("Create")) 
 					{ 
-						if (!app->play)
+						if (!App->play)
 						{
-							success = c_animator->AddClip(AnimatorClip(c_animator->GetAnimationByIndex((uint)selected_animation), new_clip_name, new_clip_start, new_clip_end, loop));
-							text_timer_running = true;
+							success = c_animator->AddClip(AnimatorClip(c_animator->GetAnimationByIndex((uint)selectedAnimation), newClipName, newClipStart, newClipEnd, loop));
+							textTimerRunning = true;
 						}
 						else
 						{
@@ -652,18 +652,18 @@ void E_Inspector::DrawAnimatorComponent(C_Animator* c_animator)								// TODO: 
 						}
 					}
 
-					if (text_timer_running)
+					if (textTimerRunning)
 					{	
 						ImGui::SameLine();
 						
 						if (success)
 						{
-							static std::string new_clip_name_str = new_clip_name;
+							static std::string new_clip_name_str = newClipName;
 							ImGui::TextColored(Green.C_Array(), "Successfully Created Clip { %s }", new_clip_name_str.c_str());
 
-							strcpy_s(new_clip_name, 128, "Enter Clip Name");																// --- Re-setting the New Clip Parameters
-							new_clip_start	= 0;																							// 
-							new_clip_end	= (int)animation_duration;																		// 
+							strcpy_s(newClipName, 128, "Enter Clip Name");																// --- Re-setting the New Clip Parameters
+							newClipStart	= 0;																							// 
+							newClipEnd	= (int)animationDuration;																		// 
 							loop			= false;																						// --------------------------------------
 						}
 						else
@@ -671,11 +671,11 @@ void E_Inspector::DrawAnimatorComponent(C_Animator* c_animator)								// TODO: 
 							ImGui::TextColored(Red.C_Array(), "A clip with the same name already exists!");
 						}
 
-						text_timer += Time::Real::GetDT();
-						if (text_timer > text_duration)
+						textTimer += Time::Real::GetDT();
+						if (textTimer > textDuration)
 						{
-							text_timer_running = false;
-							text_timer = 0.0f;
+							textTimerRunning = false;
+							textTimer = 0.0f;
 						}
 					}
 
@@ -687,9 +687,9 @@ void E_Inspector::DrawAnimatorComponent(C_Animator* c_animator)								// TODO: 
 
 					ImGui::TextColored(Cyan.C_Array(), "Existing Clips");
 
-					for (uint i = 0; i < clip_names.size(); ++i)
+					for (uint i = 0; i < clipNames.size(); ++i)
 					{	
-						if (ImGui::TreeNodeEx(clip_names[i].c_str(), ImGuiTreeNodeFlags_Bullet))
+						if (ImGui::TreeNodeEx(clipNames[i].c_str(), ImGuiTreeNodeFlags_Bullet))
 						{
 							ImGui::TreePop();
 						}
@@ -713,8 +713,8 @@ void E_Inspector::DrawAnimatorComponent(C_Animator* c_animator)								// TODO: 
 		
 		if (!show)
 		{
-			component_to_delete				= c_animator;
-			show_delete_component_popup		= true;
+			componentToDelete				= c_animator;
+			showDeleteComponentPopup		= true;
 		}
 		
 		ImGui::Separator();
@@ -728,8 +728,8 @@ void E_Inspector::DrawAnimationComponent(C_Animation* c_animation)
 	{
 		if (c_animation != nullptr)
 		{
-			bool is_active = c_animation->IsActive();
-			if (ImGui::Checkbox("Is Active", &is_active)) { c_animation->SetIsActive(is_active); }
+			bool isActive = c_animation->IsActive();
+			if (ImGui::Checkbox("Is Active", &isActive)) { c_animation->SetIsActive(isActive); }
 
 			ImGui::Separator();
 
@@ -740,8 +740,8 @@ void E_Inspector::DrawAnimationComponent(C_Animation* c_animation)
 
 		if (!show)
 		{
-			component_to_delete				= c_animation;
-			show_delete_component_popup		= true;
+			componentToDelete				= c_animation;
+			showDeleteComponentPopup		= true;
 		}
 
 		ImGui::Separator();
@@ -750,15 +750,15 @@ void E_Inspector::DrawAnimationComponent(C_Animation* c_animation)
 
 void E_Inspector::AddComponentCombo(GameObject* selected_game_object)
 {
-	ImGui::Combo("##", &component_type, "Add Component\0Transform\0Mesh\0Material\0Light\0Camera\0Animator\0Animation");
+	ImGui::Combo("##", &componentType, "Add Component\0Transform\0Mesh\0Material\0Light\0Camera\0Animator\0Animation");
 
 	ImGui::SameLine();
 
 	if ((ImGui::Button("ADD")))
 	{ 
-		if (component_type != (int)COMPONENT_TYPE::NONE)
+		if (componentType != (int)COMPONENT_TYPE::NONE)
 		{
-			selected_game_object->CreateComponent((COMPONENT_TYPE)component_type);
+			selected_game_object->CreateComponent((COMPONENT_TYPE)componentType);
 		}
 	}
 }
@@ -766,7 +766,7 @@ void E_Inspector::AddComponentCombo(GameObject* selected_game_object)
 void E_Inspector::DeleteComponentPopup(GameObject* selected_game_object)
 {
 	std::string title	=	"Delete ";																// Generating the specific string for the Popup title.
-	title				+=	component_to_delete->GetNameFromType();									// The string will be specific to the component to delete.
+	title				+=	componentToDelete->GetNameFromType();									// The string will be specific to the component to delete.
 	title				+=	" Component?";															// -------------------------------------------------------
 	
 	ImGui::OpenPopup(title.c_str());
@@ -777,10 +777,10 @@ void E_Inspector::DeleteComponentPopup(GameObject* selected_game_object)
 		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.0f, 1.0f, 0.0f, 0.25f));
 		if (ImGui::Button("CONFIRM"))																// CONFIRM Button. Will delete the component to delete.
 		{
-			selected_game_object->DeleteComponent(component_to_delete);
+			selected_game_object->DeleteComponent(componentToDelete);
 			
-			component_to_delete				= nullptr;
-			show_delete_component_popup		= false;
+			componentToDelete				= nullptr;
+			showDeleteComponentPopup		= false;
 
 			ImGui::CloseCurrentPopup();
 		}
@@ -791,8 +791,8 @@ void E_Inspector::DeleteComponentPopup(GameObject* selected_game_object)
 		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.0f, 0.0f, 0.0f, 0.25f));
 		if (ImGui::Button("CANCEL"))																// CANCEL Button. Will close the Popup.
 		{
-			component_to_delete				= nullptr;
-			show_delete_component_popup		= false;
+			componentToDelete				= nullptr;
+			showDeleteComponentPopup		= false;
 			
 			ImGui::CloseCurrentPopup();
 		}
@@ -800,8 +800,8 @@ void E_Inspector::DeleteComponentPopup(GameObject* selected_game_object)
 
 		if (!show)																					// Popup cross. Will close the Popup. UX.
 		{
-			component_to_delete				= nullptr;
-			show_delete_component_popup		= false;
+			componentToDelete				= nullptr;
+			showDeleteComponentPopup		= false;
 			
 			ImGui::CloseCurrentPopup();
 		}
@@ -837,27 +837,27 @@ void E_Inspector::DisplayTextureData(C_Material* c_material)
 
 void E_Inspector::TextureDisplay(C_Material* c_material)
 {
-	ImTextureID tex_id		= 0;
-	ImVec2 display_size		= { ImGui::GetWindowWidth() * 0.925f , ImGui::GetWindowWidth() * 0.925f };		// Display Size will be 7.5% smaller than the Window Width.
+	ImTextureID texId		= 0;
+	ImVec2 displaySize		= { ImGui::GetWindowWidth() * 0.925f , ImGui::GetWindowWidth() * 0.925f };		// Display Size will be 7.5% smaller than the Window Width.
 	ImVec4 tint				= { 1.0f, 1.0f, 1.0f, 1.0f };
-	ImVec4 border_color		= { 0.0f, 1.0f, 0.0f, 1.0f };
+	ImVec4 borderColor		= { 0.0f, 1.0f, 0.0f, 1.0f };
 
 	if (c_material->UseDefaultTexture())
 	{
-		tex_id = (ImTextureID)app->renderer->GetDebugTextureID();
+		texId = (ImTextureID)App->renderer->GetDebugTextureID();
 		//tex_id = (ImTextureID)App->renderer->GetSceneRenderTexture();
 	}
 	else
 	{
-		tex_id = (ImTextureID)c_material->GetTextureID();
+		texId = (ImTextureID)c_material->GetTextureID();
 	}
 
-	if (tex_id != 0)
+	if (texId != 0)
 	{
 		ImGui::TextColored(ImVec4(0.0f, 1.0f, 1.0f, 1.0f), "Texture Display:");
 
 		ImGui::Spacing();
 
-		ImGui::Image(tex_id, display_size, ImVec2(1.0f, 0.0f), ImVec2(0.0f, 1.0f), tint, border_color);			// ImGui has access to OpenGL's buffers, so only the Texture Id is required.
+		ImGui::Image(texId, displaySize, ImVec2(1.0f, 0.0f), ImVec2(0.0f, 1.0f), tint, borderColor);			// ImGui has access to OpenGL's buffers, so only the Texture Id is required.
 	}
 }

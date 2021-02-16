@@ -5,7 +5,7 @@
 
 #include "E_Toolbar.h"
 
-E_Toolbar::E_Toolbar() : EditorPanel("Toolbar"), played_once(false)
+E_Toolbar::E_Toolbar() : EditorPanel("Toolbar"), playedOnce(false)
 {
 
 }
@@ -53,31 +53,31 @@ void E_Toolbar::PlayAndStopButtons()
 {
 	if (ImGui::Button("Play"))
 	{
-		app->editor->SaveSceneThroughEditor("PlayAutosave");
+		App->editor->SaveSceneThroughEditor("PlayAutosave");
 
 		Time::Game::Play();
 
-		played_once = true;																			// Quickfix to avoid having conflicts between stop and pause.
-		app->play	= true;
-		app->pause	= false;
+		playedOnce = true;																			// Quickfix to avoid having conflicts between stop and pause.
+		App->play	= true;
+		App->pause	= false;
 	}
 
 	ImGui::SameLine();
 
 	if (ImGui::Button("Stop"))
 	{
-		if (!played_once)
+		if (!playedOnce)
 		{
 			LOG("[ERROR] Play&Stop: Cannot Stop something that has not started yet!");
 			return;
 		}
 		
-		app->editor->LoadFileThroughEditor("Assets/Scenes/PlayAutosave.json");
+		App->editor->LoadFileThroughEditor("Assets/Scenes/PlayAutosave.json");
 
 		Time::Game::Stop();
 
-		app->play	= false;
-		app->pause	= false;
+		App->play	= false;
+		App->pause	= false;
 	}
 }
 
@@ -87,8 +87,8 @@ void E_Toolbar::PauseAndStepButtons()
 	{
 		Time::Game::Pause();
 
-		app->pause	= true;
-		app->play	= false;
+		App->pause	= true;
+		App->play	= false;
 	}
 
 	ImGui::SameLine();
@@ -97,7 +97,7 @@ void E_Toolbar::PauseAndStepButtons()
 	{
 		Time::Game::Step();
 
-		app->step = true;
+		App->step = true;
 	}
 }
 
@@ -105,10 +105,10 @@ void E_Toolbar::TimeScaleSlider()
 {
 	ImGui::SetNextItemWidth(75.0f);
 
-	float time_scale = Time::Game::GetTimeScale();
-	if (ImGui::SliderFloat("##", &time_scale, 0.250f, 4.000f, "X %.3f", ImGuiSliderFlags_None))
+	float timeScale = Time::Game::GetTimeScale();
+	if (ImGui::SliderFloat("##", &timeScale, 0.250f, 4.000f, "X %.3f", ImGuiSliderFlags_None))
 	{
-		Time::Game::SetTimeScale(time_scale);
+		Time::Game::SetTimeScale(timeScale);
 	}
 }
 

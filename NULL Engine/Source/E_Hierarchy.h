@@ -25,10 +25,10 @@ private:
 	bool SelectedCanBeDeleted			();
 
 private:
-	ImGuiTreeNodeFlags	default_flags;												// Will define the base configuration of the tree nodes.
-	GameObject*			dragged_game_object;										// Used for the dragging and dropping of game objects withing the hierarchy.
+	ImGuiTreeNodeFlags	defaultFlags;												// Will define the base configuration of the tree nodes.
+	GameObject*			draggedGameObject;										// Used for the dragging and dropping of game objects withing the hierarchy.
 
-	bool				open_hierarchy_tools_popup;									// Will keep track of whether or not the hierarchy tools popup needs to be shown.
+	bool				openHierarchyToolsPopup;									// Will keep track of whether or not the hierarchy tools popup needs to be shown.
 };
 
 #endif // !__E_HIERARCHY_H__

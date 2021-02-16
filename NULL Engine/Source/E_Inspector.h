@@ -58,12 +58,12 @@ private:
 	void DrawAnimationImportSettings	(AnimationSettings animation_settings);
 
 private:
-	bool		show_delete_component_popup;
-	int			component_type;
+	bool		showDeleteComponentPopup;
+	int			componentType;
 
-	int			map_to_display;
+	int			mapToDisplay;
 
-	Component*	component_to_delete;
+	Component*	componentToDelete;
 };
 
 #endif // !__E_INSPECTOR_H__

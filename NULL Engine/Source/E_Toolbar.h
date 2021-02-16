@@ -19,7 +19,7 @@ private:
 	void TimeDisplays();
 
 private:
-	bool played_once;
+	bool playedOnce;
 };
 
 #endif // !__E_TOOLBAR_H__
