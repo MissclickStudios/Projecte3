@@ -131,10 +131,10 @@ bool E_MainMenuBar::WindowMainMenuItem()
 
 	if (ImGui::BeginMenu("Window"))
 	{
-		ImGui::MenuItem("Configuration", "1", &App->editor->show_configuration);
-		ImGui::MenuItem("Hierarchy", "2", &App->editor->show_hierarchy);
-		ImGui::MenuItem("Inspector", "3", &App->editor->show_inspector);
-		ImGui::MenuItem("Console", "4", &App->editor->show_console);
+		ImGui::MenuItem("Configuration", "1", &App->editor->showConfiguration);
+		ImGui::MenuItem("Hierarchy", "2", &App->editor->showHierarchy);
+		ImGui::MenuItem("Inspector", "3", &App->editor->showInspector);
+		ImGui::MenuItem("Console", "4", &App->editor->showConsole);
 		ImGui::MenuItem("GuiDemo", "8", &App->editor->show_imgui_demo);
 		ImGui::MenuItem("About", "9", &App->editor->show_about_popup);
 

@@ -40,8 +40,8 @@
 #pragma comment (lib, "Source/Dependencies/glew/libx86/glew32.lib")
 
 M_Editor::M_Editor(bool is_active) : Module("Editor", is_active),
-clear_color		(0.0f, 0.0f, 0.0f, 1.0f),
-main_menu_bar	(new E_MainMenuBar()),
+clearColor		(0.0f, 0.0f, 0.0f, 1.0f),
+mainMenuBar	(new E_MainMenuBar()),
 toolbar			(new E_Toolbar()),
 configuration	(new E_Configuration()),
 hierarchy		(new E_Hierarchy()),
@@ -53,9 +53,9 @@ resources		(new E_Resources()),
 timeline		(new E_Timeline()),
 imgui_demo		(new E_ImGuiDemo()),
 about			(new E_About()),
-load_file		(new E_LoadFile())
+loadFile		(new E_LoadFile())
 {
-	AddEditorPanel(main_menu_bar);
+	AddEditorPanel(mainMenuBar);
 	AddEditorPanel(toolbar);
 	AddEditorPanel(configuration);
 	AddEditorPanel(hierarchy);
@@ -67,12 +67,12 @@ load_file		(new E_LoadFile())
 	AddEditorPanel(viewport);
 	AddEditorPanel(imgui_demo);
 	AddEditorPanel(about);
-	AddEditorPanel(load_file);
+	AddEditorPanel(loadFile);
 
-	show_configuration		= true;
-	show_hierarchy			= true;
-	show_inspector			= true;
-	show_console			= true;
+	showConfiguration		= true;
+	showHierarchy			= true;
+	showInspector			= true;
+	showConsole			= true;
 	show_imgui_demo			= false;
 	show_about_popup		= false;
 	show_close_app_popup	= false;
@@ -81,13 +81,13 @@ load_file		(new E_LoadFile())
 
 M_Editor::~M_Editor()
 {
-	for (uint i = 0; i < editor_panels.size(); ++i)
+	for (uint i = 0; i < editorPanels.size(); ++i)
 	{
-		editor_panels[i]->CleanUp();
-		RELEASE(editor_panels[i]);
+		editorPanels[i]->CleanUp();
+		RELEASE(editorPanels[i]);
 	}
 
-	editor_panels.clear();
+	editorPanels.clear();
 }
 
 bool M_Editor::Init(ParsonNode& config)
@@ -139,16 +139,16 @@ UPDATE_STATUS M_Editor::PostUpdate(float dt)
 	if (BeginRootWindow(io, "Root window", true, ImGuiWindowFlags_MenuBar))
 	{
 		bool draw = true;
-		for (uint i = 0; i < editor_panels.size(); ++i)
+		for (uint i = 0; i < editorPanels.size(); ++i)
 		{
-			if (editor_panels[i]->IsActive())
+			if (editorPanels[i]->IsActive())
 			{
-				draw = editor_panels[i]->Draw(io);
+				draw = editorPanels[i]->Draw(io);
 
 				if (!draw)
 				{
 					ret = UPDATE_STATUS::STOP;
-					LOG("[EDITOR] Exited through %s Panel", editor_panels[i]->GetName());
+					LOG("[EDITOR] Exited through %s Panel", editorPanels[i]->GetName());
 					break;
 				}
 			}
@@ -192,29 +192,29 @@ bool M_Editor::GetEvent(SDL_Event* event) const
 
 void M_Editor::AddEditorPanel(EditorPanel* panel)
 {
-	editor_panels.push_back(panel);
+	editorPanels.push_back(panel);
 }
 
 void M_Editor::EditorShortcuts()
 {
 	if (App->input->GetKey(SDL_SCANCODE_1) == KEY_STATE::KEY_DOWN)
 	{
-		show_configuration = !show_configuration;
+		showConfiguration = !showConfiguration;
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_2) == KEY_STATE::KEY_DOWN)
 	{
-		show_hierarchy = !show_hierarchy;
+		showHierarchy = !showHierarchy;
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_3) == KEY_STATE::KEY_DOWN)
 	{
-		show_inspector = !show_inspector;
+		showInspector = !showInspector;
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_4) == KEY_STATE::KEY_DOWN)
 	{
-		show_console = !show_console;
+		showConsole = !showConsole;
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_8) == KEY_STATE::KEY_DOWN)
@@ -256,21 +256,21 @@ void M_Editor::EditorShortcuts()
 
 void M_Editor::CheckShowHideFlags()
 {	
-	show_configuration		?	configuration->Enable()	: configuration->Disable();					// Engine Configuration
-	show_hierarchy			?	hierarchy->Enable()		: hierarchy->Disable();						// Hierarchy
-	show_inspector			?	inspector->Enable()		: inspector->Disable();						// Inspector
-	show_console			?	console->Enable()		: console->Disable();						// Console
+	showConfiguration		?	configuration->Enable()	: configuration->Disable();					// Engine Configuration
+	showHierarchy			?	hierarchy->Enable()		: hierarchy->Disable();						// Hierarchy
+	showInspector			?	inspector->Enable()		: inspector->Disable();						// Inspector
+	showConsole			?	console->Enable()		: console->Disable();						// Console
 	show_project			?	project->Enable()		: project->Disable();						// Project
 	show_imgui_demo			?	imgui_demo->Enable()	: imgui_demo->Disable();					// ImGui Demo
 	show_about_popup		?	about->Enable()			: about->Disable();							// About Popup
-	show_load_file_popup	?	load_file->Enable()		: load_file->Disable();						// Load File
+	show_load_file_popup	?	loadFile->Enable()		: loadFile->Disable();						// Load File
 }
 
 bool M_Editor::EditorIsBeingHovered() const
 {
-	for (uint i = 0; i < editor_panels.size(); ++i)
+	for (uint i = 0; i < editorPanels.size(); ++i)
 	{
-		if (editor_panels[i]->IsHovered())
+		if (editorPanels[i]->IsHovered())
 		{
 			return true;
 		}
@@ -286,7 +286,7 @@ bool M_Editor::RenderEditorPanels() const
 
 	ImGui::Render();
 	glViewport(0, 0, (int)io.DisplaySize.x, (int)io.DisplaySize.y);
-	glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
+	glClearColor(clearColor.x, clearColor.y, clearColor.z, clearColor.w);
 	//glClear(GL_COLOR_BUFFER_BIT);
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
@@ -374,7 +374,7 @@ void M_Editor::UpdateFrameData(int frames, int ms)
 
 void M_Editor::AddConsoleLog(const char* log)
 {
-	if (editor_panels.size() > 0)
+	if (editorPanels.size() > 0)
 	{
 		if (console != nullptr)
 		{

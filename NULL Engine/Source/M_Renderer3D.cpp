@@ -572,7 +572,7 @@ void M_Renderer3D::RenderScene()
 	
 	if (App->camera->DrawLastRaycast())
 	{
-		RayRenderer last_ray = RayRenderer(App->camera->last_raycast, ray_color, ray_width);
+		RayRenderer last_ray = RayRenderer(App->camera->lastRaycast, ray_color, ray_width);
 		last_ray.Render();
 	}
 

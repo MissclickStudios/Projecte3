@@ -122,9 +122,9 @@ private:
 	void BeginDockspace(ImGuiIO& io, const char* dockspace_id, ImGuiDockNodeFlags docking_flags = ImGuiDockNodeFlags_None, ImVec2 size = { 0.0f, 0.0f });	// Generates a new dockspace.
 
 public:
-	std::vector<EditorPanel*>	editor_panels;													// Will store all the editor modules. Will be iterated for drawing all the panels.
+	std::vector<EditorPanel*>	editorPanels;													// Will store all the editor modules. Will be iterated for drawing all the panels.
 
-	E_MainMenuBar*				main_menu_bar;
+	E_MainMenuBar*				mainMenuBar;
 	E_Toolbar*					toolbar;
 	E_Configuration*			configuration;
 	E_Hierarchy*				hierarchy;
@@ -136,14 +136,14 @@ public:
 	E_Timeline*					timeline;
 	E_ImGuiDemo*				imgui_demo;
 	E_About*					about;
-	E_LoadFile*					load_file;
+	E_LoadFile*					loadFile;
 
-	ImVec4						clear_color;													// Will be used to set the clear color of the rendering environment.
+	ImVec4						clearColor;													// Will be used to set the clear color of the rendering environment.
 
-	bool						show_configuration;												// Enable/Disable the Configuration window.
-	bool						show_hierarchy;													// Enable/Disable the Hierarchy window.
-	bool						show_inspector;													// Enable/Disable the Inspector window.
-	bool						show_console;													// Enable/Disable the Console window.
+	bool						showConfiguration;												// Enable/Disable the Configuration window.
+	bool						showHierarchy;													// Enable/Disable the Hierarchy window.
+	bool						showInspector;													// Enable/Disable the Inspector window.
+	bool						showConsole;													// Enable/Disable the Console window.
 	bool						show_project;													// Enable/Disable the Project window.
 	bool						show_imgui_demo;												// Enable/Disable the ImGui Demo window.
 	bool						show_about_popup;												// Enable/Disable the About window popup.

@@ -324,21 +324,22 @@ uint Importer::Meshes::Save(const R_Mesh* r_mesh, char** buffer)
 
 	// --- VERTEX ARRAY DATA ---
 	bytes = r_mesh->vertices.size() * sizeof(float);
-	memcpy_s(cursor, size, &r_mesh->vertices, bytes);
+	memcpy_s(cursor, size, &r_mesh->vertices[0], bytes);
 	cursor += bytes;
 
 	bytes = r_mesh->normals.size() * sizeof(float);
-	memcpy_s(cursor, size, &r_mesh->normals, bytes);
+	memcpy_s(cursor, size, &r_mesh->normals[0], bytes);
 	cursor += bytes;
 
-	
-	bytes = r_mesh->tex_coords.size() * sizeof(float);
-	memcpy_s(cursor, size, &r_mesh->tex_coords, bytes);
-	cursor += bytes;
-	
+	if (r_mesh->tex_coords.size() != 0)
+	{
+		bytes = r_mesh->tex_coords.size() * sizeof(float);
+		memcpy_s(cursor, size, &r_mesh->tex_coords[0], bytes);
+		cursor += bytes;
+	}
 
 	bytes = r_mesh->indices.size() * sizeof(uint);
-	memcpy_s(cursor, size, &r_mesh->indices, bytes);
+	memcpy_s(cursor, size, &r_mesh->indices[0], bytes);
 	cursor += bytes;
 
 	// --- BONE DATA ---
@@ -402,22 +403,25 @@ bool Importer::Meshes::Load(const char* buffer, R_Mesh* r_mesh)
 	// --- VERTEX ARRAY DATA ---
 	r_mesh->vertices.resize(header_data[0]);
 	bytes = header_data[0] * sizeof(float);
-	memcpy_s(&r_mesh->vertices, bytes, cursor, bytes);
+	memcpy_s(&r_mesh->vertices[0], bytes, cursor, bytes);
 	cursor += bytes;
 
 	r_mesh->normals.resize(header_data[1]);
 	bytes = header_data[1] * sizeof(float);
-	memcpy_s(&r_mesh->normals, bytes, cursor, bytes);
+	memcpy_s(&r_mesh->normals[0], bytes, cursor, bytes);
 	cursor += bytes;
 
-	r_mesh->tex_coords.resize(header_data[2]);
-	bytes = header_data[2] * sizeof(float);
-	memcpy_s(&r_mesh->tex_coords, bytes, cursor, bytes);
-	cursor += bytes;
+	if (r_mesh->tex_coords.size() != 0)
+	{
+		r_mesh->tex_coords.resize(header_data[2]);
+		bytes = header_data[2] * sizeof(float);
+		memcpy_s(&r_mesh->tex_coords[0], bytes, cursor, bytes);
+		cursor += bytes;
+	}
 
 	r_mesh->indices.resize(header_data[3]);
 	bytes = header_data[3] * sizeof(uint);
-	memcpy_s(&r_mesh->indices, bytes, cursor, bytes);
+	memcpy_s(&r_mesh->indices[0], bytes, cursor, bytes);
 	cursor += bytes;
 
 	// ---BONE DATA ---

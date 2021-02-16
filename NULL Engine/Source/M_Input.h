@@ -52,16 +52,16 @@ private:
 	KEY_STATE		mouse_buttons[MAX_MOUSE_BUTTONS];
 	uint			max_num_scancodes;
 
-	int				mouse_x;
-	int				mouse_y;
-	int				mouse_z;
-	int				mouse_x_motion;
-	int				mouse_y_motion;
-	int				mouse_x_wheel;
-	int				mouse_y_wheel;
+	int				mouseX;
+	int				mouseY;
+	int				mouseZ;
+	int				mouseMotionX;
+	int				mouseMotionY;
+	int				mouseWheelX;
+	int				mouseWheelY;
 
-	int				prev_x_mouse_pos;
-	int				prev_y_mouse_pos;
+	int				prevMousePosX;
+	int				prevMousePosY;
 };
 
 #endif // !__M_INPUT_H__

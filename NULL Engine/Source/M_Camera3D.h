@@ -70,21 +70,21 @@ private:
 	void			Zoom							();								// Will translate the camera along the Z (Forward) axis. The camera will move forwards and backwards. 
 
 public:
-	GameObject*		master_camera;
-	C_Camera*		current_camera;
+	GameObject*		masterCamera;
+	C_Camera*		currentCamera;
 
 	float3			reference;														// Point where the camera will look at and rotate around.
 
-	float3			position_origin;												// 
-	float3			reference_origin;												//
+	float3			positionOrigin;													// 
+	float3			referenceOrigin;												//
 
-	float			movement_speed;													// 
-	float			rotation_speed;													// 
-	float			zoom_speed;														// 
+	float			movementSpeed;													// 
+	float			rotationSpeed;													// 
+	float			zoomSpeed;														// 
 
 public:
-	LineSegment		last_raycast;
-	bool			draw_last_raycast;
+	LineSegment		lastRaycast;
+	bool			drawLastRaycast;
 };
 
 #endif // !__CAMERA_3D_H__
