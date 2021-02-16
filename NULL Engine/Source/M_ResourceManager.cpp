@@ -33,8 +33,8 @@ typedef std::map<uint32, std::string>::iterator					LIBRARY_ITEM;
 typedef std::map<std::string, uint32>::iterator					FILE_ITEM;
 
 M_ResourceManager::M_ResourceManager() : Module("ResourceManager"),
-file_refresh_timer	(0.0f),
-file_refresh_rate	(0.0f)
+fileRefreshTimer	(0.0f),
+fileRefreshRate	(0.0f)
 {
 
 }
@@ -49,7 +49,7 @@ bool M_ResourceManager::Init(ParsonNode& configuration)
 	bool ret = true;
 
 	//file_refresh_rate = (float)configuration.GetNumber("RefreshRate");
-	file_refresh_rate = 5.0f;
+	fileRefreshRate = 5.0f;
 
 	return ret;
 }
@@ -68,9 +68,9 @@ UPDATE_STATUS M_ResourceManager::PreUpdate(float dt)
 {
 	UPDATE_STATUS status = UPDATE_STATUS::CONTINUE;
 
-	file_refresh_timer += Time::Real::GetDT();
+	fileRefreshTimer += Time::Real::GetDT();
 
-	if (file_refresh_timer > file_refresh_rate)
+	if (fileRefreshTimer > fileRefreshRate)
 	{
 		RESOURCE_ITEM item = resources.begin();
 		while (item != resources.end())
@@ -88,7 +88,7 @@ UPDATE_STATUS M_ResourceManager::PreUpdate(float dt)
 		
 		//RefreshDirectoryFiles(ASSETS_DIRECTORY);
 
-		file_refresh_timer = 0.0f;
+		fileRefreshTimer = 0.0f;
 	}
 
 	return status;

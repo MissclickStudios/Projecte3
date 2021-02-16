@@ -50,18 +50,18 @@ public:
 
 private:
 	SDL_Window*		window;														// The window we'll be rendering to
-	SDL_Surface*	screen_surface;												// The surface contained by the window
+	SDL_Surface*	screenSurface;												// The surface contained by the window
 
-	std::string		icon_file;
+	std::string		iconFile;
 
-	uint			screen_width;												// Width of the window in pixels.
-	uint			screen_height;												// Height of the window in pixels.
+	uint			screenWidth;												// Width of the window in pixels.
+	uint			screenHeight;												// Height of the window in pixels.
 
-	bool			is_maximized;												// 
-	bool			is_fullscreen;												// 
-	bool			is_resizable;												// 
-	bool			is_borderless;												// 
-	bool			is_fullscreen_desktop;										// 
+	bool			isMaximized;												// 
+	bool			isFullscreen;												// 
+	bool			isResizable;												// 
+	bool			isBorderless;												// 
+	bool			isFullscreenDesktop;										// 
 };
 
 #endif // __MODULEWINDOW_H__

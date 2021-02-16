@@ -100,8 +100,8 @@ private:
 	std::map<uint32, Resource*>		resources;																		// Resources currently in memory.
 	std::map<uint32, std::string>	library;																		// UID and Library Path string of all loaded resources.
 
-	float							file_refresh_timer;																// 
-	float							file_refresh_rate;																// 
+	float							fileRefreshTimer;																// 
+	float							fileRefreshRate;																// 
 };
 
 #endif // !__M_RESOURCE_MANAGER_H__

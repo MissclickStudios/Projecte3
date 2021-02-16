@@ -144,11 +144,11 @@ public:
 	bool						showHierarchy;													// Enable/Disable the Hierarchy window.
 	bool						showInspector;													// Enable/Disable the Inspector window.
 	bool						showConsole;													// Enable/Disable the Console window.
-	bool						show_project;													// Enable/Disable the Project window.
-	bool						show_imgui_demo;												// Enable/Disable the ImGui Demo window.
-	bool						show_about_popup;												// Enable/Disable the About window popup.
-	bool						show_load_file_popup;											// Enable/Disable the Load File popup.
-	bool						show_close_app_popup;											// Enable/Disable the Close App popup.
+	bool						showProject;													// Enable/Disable the Project window.
+	bool						showImguiDemo;												// Enable/Disable the ImGui Demo window.
+	bool						showAboutPopup;												// Enable/Disable the About window popup.
+	bool						showLoadFilePopup;											// Enable/Disable the Load File popup.
+	bool						showCloseAppPopup;											// Enable/Disable the Close App popup.
 };
 
 #endif // !__M_EDITOR_H__

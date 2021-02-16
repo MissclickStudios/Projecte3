@@ -32,7 +32,7 @@ bool E_LoadFile::Draw(ImGuiIO& io)
 	
 	ImGui::OpenPopup("Load File");
 
-	if (ImGui::BeginPopupModal("Load File"), &App->editor->show_load_file_popup, ImGuiWindowFlags_AlwaysAutoResize)
+	if (ImGui::BeginPopupModal("Load File"), &App->editor->showLoadFilePopup, ImGuiWindowFlags_AlwaysAutoResize)
 	{
 		DrawFileBrowser();
 
@@ -44,7 +44,7 @@ bool E_LoadFile::Draw(ImGuiIO& io)
 	if (ready_to_load)
 	{
 		ready_to_load						= false;
-		App->editor->show_load_file_popup	= false;
+		App->editor->showLoadFilePopup	= false;
 		
 		App->editor->LoadFileThroughEditor(selected_file);
 		selected_file[0] = '\0';
@@ -101,7 +101,7 @@ void E_LoadFile::DrawFileSelector()
 		selected_file[0] = '\0';
 
 		ready_to_load = false;
-		App->editor->show_load_file_popup = false;
+		App->editor->showLoadFilePopup = false;
 	}
 }
 

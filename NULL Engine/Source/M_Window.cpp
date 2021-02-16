@@ -5,16 +5,16 @@
 M_Window::M_Window(bool is_active) : Module("Window", is_active)
 {
 	window					= nullptr;
-	screen_surface			= nullptr;
+	screenSurface			= nullptr;
 
-	screen_width			= 0;
-	screen_height			= 0;
+	screenWidth			= 0;
+	screenHeight			= 0;
 
-	is_maximized			= WIN_MAXIMIZED;
-	is_fullscreen			= WIN_FULLSCREEN;
-	is_resizable			= WIN_RESIZABLE;
-	is_borderless			= WIN_BORDERLESS;
-	is_fullscreen_desktop	= WIN_FULLSCREEN_DESKTOP;
+	isMaximized			= WIN_MAXIMIZED;
+	isFullscreen			= WIN_FULLSCREEN;
+	isResizable			= WIN_RESIZABLE;
+	isBorderless			= WIN_BORDERLESS;
+	isFullscreenDesktop	= WIN_FULLSCREEN_DESKTOP;
 }
 
 // Destructor
@@ -36,8 +36,8 @@ bool M_Window::Init(ParsonNode& config)
 	else
 	{
 		//Create window
-		screen_width	= SCREEN_WIDTH * SCREEN_SIZE;
-		screen_height	= SCREEN_HEIGHT * SCREEN_SIZE;
+		screenWidth	= SCREEN_WIDTH * SCREEN_SIZE;
+		screenHeight	= SCREEN_HEIGHT * SCREEN_SIZE;
 		Uint32 flags	= SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN;
 
 		//Use OpenGL 2.1
@@ -69,7 +69,7 @@ bool M_Window::Init(ParsonNode& config)
 			flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
 		}
 
-		window = SDL_CreateWindow(TITLE, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, screen_width, screen_height, flags);
+		window = SDL_CreateWindow(TITLE, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, screenWidth, screenHeight, flags);
 
 		if(window == nullptr)
 		{
@@ -79,8 +79,8 @@ bool M_Window::Init(ParsonNode& config)
 		else
 		{
 			//Get window surface
-			screen_surface = SDL_GetWindowSurface(window);
-			SDL_GetWindowSize(window, (int*)&screen_width, (int*)&screen_height);												// Dirty fix to generate the framebuffer correctly.
+			screenSurface = SDL_GetWindowSurface(window);
+			SDL_GetWindowSize(window, (int*)&screenWidth, (int*)&screenHeight);												// Dirty fix to generate the framebuffer correctly.
 		}
 	}
 
@@ -145,12 +145,12 @@ void M_Window::SetDefaultIcon()
 
 uint M_Window::GetWidth() const
 {
-	return screen_width;
+	return screenWidth;
 }
 
 uint M_Window::GetHeight() const
 {
-	return screen_height;
+	return screenHeight;
 }
 
 void M_Window::GetMinMaxSize(uint& min_width, uint& min_height, uint& max_width, uint& max_height) const
@@ -194,22 +194,22 @@ int M_Window::GetRefreshRate() const
 
 void M_Window::SetWidth(uint width)
 {
-	screen_width = width;
-	SDL_SetWindowSize(window, screen_width, screen_height);
+	screenWidth = width;
+	SDL_SetWindowSize(window, screenWidth, screenHeight);
 }
 
 void M_Window::SetHeight(uint height)
 {
-	screen_height = height;
-	SDL_SetWindowSize(window, screen_width, screen_height);
+	screenHeight = height;
+	SDL_SetWindowSize(window, screenWidth, screenHeight);
 }
 
 void M_Window::SetSize(uint width, uint height)
 {
-	screen_width = width;
-	screen_height = height;
+	screenWidth = width;
+	screenHeight = height;
 
-	SDL_SetWindowSize(window, screen_width, screen_height);
+	SDL_SetWindowSize(window, screenWidth, screenHeight);
 }
 
 void M_Window::SetBrightness(float brightness)
@@ -224,34 +224,34 @@ void M_Window::SetBrightness(float brightness)
 
 bool M_Window::IsMaximized() const
 {
-	return is_maximized;
+	return isMaximized;
 }
 
 bool M_Window::IsFullscreen() const
 {
-	return is_fullscreen;
+	return isFullscreen;
 }
 
 bool M_Window::IsResizable() const
 {
-	return is_resizable;
+	return isResizable;
 }
 
 bool M_Window::IsBorderless() const
 {
-	return is_borderless;
+	return isBorderless;
 }
 
 bool M_Window::IsFullscreenDesktop() const
 {
-	return is_fullscreen_desktop;
+	return isFullscreenDesktop;
 }
 
 void M_Window::SetMaximized(bool set_to)
 {
-	if (set_to != is_maximized)
+	if (set_to != isMaximized)
 	{
-		is_maximized = set_to;
+		isMaximized = set_to;
 		
 		if (set_to)
 		{
@@ -260,16 +260,16 @@ void M_Window::SetMaximized(bool set_to)
 			SetFullscreen(!set_to);																// If window is maximized it cannot be in fullscreen or fullscreen desktop mode.
 			SetFullscreenDesktop(!set_to);														// ---------
 
-			SDL_GetWindowSize(window, (int*)&screen_width, (int*)&screen_height);
+			SDL_GetWindowSize(window, (int*)&screenWidth, (int*)&screenHeight);
 
-			LOG("[STATUS] MAXIMIZED SCREEN SIZE: %u x %u", screen_width, screen_height);
+			LOG("[STATUS] MAXIMIZED SCREEN SIZE: %u x %u", screenWidth, screenHeight);
 			LOG("[STATUS] Window has been Maximized!");
 		}
 		else
 		{	
 			SDL_RestoreWindow(window);
 			
-			SDL_GetWindowSize(window, (int*)&screen_width, (int*)&screen_height);
+			SDL_GetWindowSize(window, (int*)&screenWidth, (int*)&screenHeight);
 			
 			LOG("[STATUS] Window has been resized to { %u, %u }", SCREEN_WIDTH, SCREEN_HEIGHT);
 		}
@@ -278,7 +278,7 @@ void M_Window::SetMaximized(bool set_to)
 
 void M_Window::SetFullscreen(bool set_to)
 {
-	if (set_to != is_fullscreen)
+	if (set_to != isFullscreen)
 	{
 		LOG("[STATUS] Window: Fullscreen mode is currently disabled!");
 		
@@ -324,7 +324,7 @@ void M_Window::SetFullscreen(bool set_to)
 void M_Window::SetResizable(bool set_to)
 {
 	// Cannot be changed while the application is running, but the change itself can be saved.
-	is_resizable = set_to;
+	isResizable = set_to;
 	
 	/*if (set_to)
 	{
@@ -338,16 +338,16 @@ void M_Window::SetResizable(bool set_to)
 
 void M_Window::SetBorderless(bool set_to)
 {
-	if (set_to != is_borderless && !is_fullscreen && !is_fullscreen_desktop)
+	if (set_to != isBorderless && !isFullscreen && !isFullscreenDesktop)
 	{
-		is_borderless = set_to;																						
-		SDL_SetWindowBordered(window, (SDL_bool)!is_borderless);													// SDL_SetWindowBodered makes the window borderless on SDL_FALSE.
+		isBorderless = set_to;																						
+		SDL_SetWindowBordered(window, (SDL_bool)!isBorderless);													// SDL_SetWindowBodered makes the window borderless on SDL_FALSE.
 	}
 }
 
 void M_Window::SetFullscreenDesktop(bool set_to)
 {	
-	if (set_to != is_fullscreen_desktop)
+	if (set_to != isFullscreenDesktop)
 	{
 		if (set_to)
 		{
@@ -359,10 +359,10 @@ void M_Window::SetFullscreenDesktop(bool set_to)
 			}
 			else
 			{
-				is_fullscreen_desktop = set_to;
-				is_maximized = !set_to;
+				isFullscreenDesktop = set_to;
+				isMaximized = !set_to;
 
-				SDL_GetWindowSize(window, (int*)&screen_width, (int*)&screen_height);
+				SDL_GetWindowSize(window, (int*)&screenWidth, (int*)&screenHeight);
 
 				LOG("[STATUS] Window has been set to Fullscreen Desktop mode!");
 			}
@@ -377,10 +377,10 @@ void M_Window::SetFullscreenDesktop(bool set_to)
 			}
 			else
 			{
-				is_fullscreen_desktop = set_to;
-				is_fullscreen = set_to;
+				isFullscreenDesktop = set_to;
+				isFullscreen = set_to;
 
-				SDL_GetWindowSize(window, (int*)&screen_width, (int*)&screen_height);
+				SDL_GetWindowSize(window, (int*)&screenWidth, (int*)&screenHeight);
 
 				LOG("[STATUS] Window has been resized to { %u, %u }", SCREEN_WIDTH, SCREEN_HEIGHT);
 			}

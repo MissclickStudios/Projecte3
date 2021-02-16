@@ -73,10 +73,10 @@ loadFile		(new E_LoadFile())
 	showHierarchy			= true;
 	showInspector			= true;
 	showConsole			= true;
-	show_imgui_demo			= false;
-	show_about_popup		= false;
-	show_close_app_popup	= false;
-	show_load_file_popup	= false;
+	showImguiDemo			= false;
+	showAboutPopup		= false;
+	showCloseAppPopup	= false;
+	showLoadFilePopup	= false;
 }
 
 M_Editor::~M_Editor()
@@ -219,24 +219,24 @@ void M_Editor::EditorShortcuts()
 
 	if (App->input->GetKey(SDL_SCANCODE_8) == KEY_STATE::KEY_DOWN)
 	{
-		show_imgui_demo = !show_imgui_demo;
+		showImguiDemo = !showImguiDemo;
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_9) == KEY_STATE::KEY_DOWN)
 	{
-		show_about_popup = !show_about_popup;
+		showAboutPopup = !showAboutPopup;
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_STATE::KEY_DOWN)
 	{
-		if (show_about_popup || show_load_file_popup)
+		if (showAboutPopup || showLoadFilePopup)
 		{
-			show_about_popup		= false;
-			show_load_file_popup	= false;
+			showAboutPopup		= false;
+			showLoadFilePopup	= false;
 		}
 		else
 		{
-			show_close_app_popup = !show_close_app_popup;
+			showCloseAppPopup = !showCloseAppPopup;
 		}
 	}
 
@@ -249,7 +249,7 @@ void M_Editor::EditorShortcuts()
 
 		if (App->input->GetKey(SDL_SCANCODE_O) == KEY_STATE::KEY_DOWN)
 		{
-			show_load_file_popup = true;
+			showLoadFilePopup = true;
 		}
 	}
 }
@@ -260,10 +260,10 @@ void M_Editor::CheckShowHideFlags()
 	showHierarchy			?	hierarchy->Enable()		: hierarchy->Disable();						// Hierarchy
 	showInspector			?	inspector->Enable()		: inspector->Disable();						// Inspector
 	showConsole			?	console->Enable()		: console->Disable();						// Console
-	show_project			?	project->Enable()		: project->Disable();						// Project
-	show_imgui_demo			?	imgui_demo->Enable()	: imgui_demo->Disable();					// ImGui Demo
-	show_about_popup		?	about->Enable()			: about->Disable();							// About Popup
-	show_load_file_popup	?	loadFile->Enable()		: loadFile->Disable();						// Load File
+	showProject			?	project->Enable()		: project->Disable();						// Project
+	showImguiDemo			?	imgui_demo->Enable()	: imgui_demo->Disable();					// ImGui Demo
+	showAboutPopup		?	about->Enable()			: about->Disable();							// About Popup
+	showLoadFilePopup	?	loadFile->Enable()		: loadFile->Disable();						// Load File
 }
 
 bool M_Editor::EditorIsBeingHovered() const

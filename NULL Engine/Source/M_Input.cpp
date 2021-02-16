@@ -18,18 +18,18 @@ M_Input::M_Input(bool is_active) : Module("Input", is_active)
 
 	max_num_scancodes = (uint)SDL_NUM_SCANCODES;
 
-	mouse_x			= 0;
-	mouse_y			= 0;
-	mouse_z			= 0;
+	mouseX			= 0;
+	mouseY			= 0;
+	mouseZ			= 0;
 	
-	mouse_x_motion	= 0;
-	mouse_y_motion	= 0;
+	mouseMotionX	= 0;
+	mouseMotionY	= 0;
 
-	mouse_x_wheel	= 0;
-	mouse_y_wheel	= 0;
+	mouseWheelX	= 0;
+	mouseWheelY	= 0;
 
-	prev_x_mouse_pos = 0;
-	prev_y_mouse_pos = 0;
+	prevMousePosX = 0;
+	prevMousePosY = 0;
 }
 
 // Destructor
@@ -90,11 +90,11 @@ UPDATE_STATUS M_Input::PreUpdate(float dt)
 		}
 	}
 
-	Uint32 buttons = SDL_GetMouseState(&mouse_x, &mouse_y);
+	Uint32 buttons = SDL_GetMouseState(&mouseX, &mouseY);
 
-	mouse_x /= SCREEN_SIZE;
-	mouse_y /= SCREEN_SIZE;
-	mouse_z = 0;
+	mouseX /= SCREEN_SIZE;
+	mouseY /= SCREEN_SIZE;
+	mouseZ = 0;
 
 	for(int i = 0; i < 5; ++i)
 	{
@@ -125,7 +125,7 @@ UPDATE_STATUS M_Input::PreUpdate(float dt)
 		}
 	}
 
-	mouse_x_motion = mouse_y_motion = 0;
+	mouseMotionX = mouseMotionY = 0;
 
 	bool quit = false;
 	SDL_Event event;
@@ -136,17 +136,17 @@ UPDATE_STATUS M_Input::PreUpdate(float dt)
 		switch(event.type)
 		{
 			case SDL_MOUSEWHEEL:
-				mouse_x_wheel = event.wheel.x;
-				mouse_y_wheel = event.wheel.y;
-				mouse_z = event.wheel.y;
+				mouseWheelX = event.wheel.x;
+				mouseWheelY = event.wheel.y;
+				mouseZ = event.wheel.y;
 			break;
 
 			case SDL_MOUSEMOTION:
-				mouse_x = event.motion.x / SCREEN_SIZE;
-				mouse_y = event.motion.y / SCREEN_SIZE;
+				mouseX = event.motion.x / SCREEN_SIZE;
+				mouseY = event.motion.y / SCREEN_SIZE;
 
-				mouse_x_motion = event.motion.xrel / SCREEN_SIZE;
-				mouse_y_motion = event.motion.yrel / SCREEN_SIZE;
+				mouseMotionX = event.motion.xrel / SCREEN_SIZE;
+				mouseMotionY = event.motion.yrel / SCREEN_SIZE;
 			break;
 
 			case SDL_QUIT:
@@ -202,8 +202,8 @@ UPDATE_STATUS M_Input::Update(float dt)
 
 UPDATE_STATUS M_Input::PostUpdate(float dt)
 {
-	prev_x_mouse_pos = GetMouseX();										// Will update the previous mouse position with the current one.
-	prev_y_mouse_pos = GetMouseY();										// Placed in the PostUpdate() as the Camera controls are called in M_Camera3D's Update().
+	prevMousePosX = GetMouseX();										// Will update the previous mouse position with the current one.
+	prevMousePosY = GetMouseY();										// Placed in the PostUpdate() as the Camera controls are called in M_Camera3D's Update().
 
 	return UPDATE_STATUS::CONTINUE;
 }
@@ -248,45 +248,45 @@ uint M_Input::GetMaxNumScancodes() const
 
 int M_Input::GetMouseX() const
 {
-	return mouse_x;
+	return mouseX;
 }
 
 int M_Input::GetMouseY() const
 {
-	return mouse_y;
+	return mouseY;
 }
 
 int M_Input::GetMouseZ() const
 {
-	return mouse_z;
+	return mouseZ;
 }
 
 int M_Input::GetMouseXMotion() const
 {
-	return GetMouseX() - prev_x_mouse_pos;
+	return GetMouseX() - prevMousePosX;
 }
 
 int M_Input::GetMouseYMotion() const
 {
-	return GetMouseY() - prev_y_mouse_pos;
+	return GetMouseY() - prevMousePosY;
 }
 
 int M_Input::GetMouseXMotionFromSDL() const
 {
-	return mouse_x_motion;
+	return mouseMotionX;
 }
 
 int M_Input::GetMouseYMotionFromSDL() const
 {
-	return mouse_y_motion;
+	return mouseMotionY;
 }
 
 int M_Input::GetMouseXWheel() const
 {
-	return mouse_x_wheel;
+	return mouseWheelX;
 }
 
 int M_Input::GetMouseYWheel() const
 {
-	return mouse_y_wheel;
+	return mouseWheelY;
 }

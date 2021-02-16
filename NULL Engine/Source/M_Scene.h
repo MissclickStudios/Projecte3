@@ -86,14 +86,14 @@ private:
 	void			DebugSpawnPrimitive(Primitive* p);
 
 private:
-	std::vector<GameObject*>	game_objects;																				// 
+	std::vector<GameObject*>	gameObjects;																				// 
 
-	GameObject*					master_root;																				// Root of everything. Parent of all scenes.
-	GameObject*					scene_root;																					// Root of the current scene.
-	GameObject*					animation_root;																				// TMP Just for the 3rd Assignment Delivery
-	GameObject*					selected_game_object;																		// Represents the game object that's currently being selected.
+	GameObject*					masterRoot;																				// Root of everything. Parent of all scenes.
+	GameObject*					sceneRoot;																					// Root of the current scene.
+	GameObject*					animationRoot;																				// TMP Just for the 3rd Assignment Delivery
+	GameObject*					selectedGameObject;																		// Represents the game object that's currently being selected.
 
-	C_Camera*					culling_camera;																				// Culling Camera
+	C_Camera*					cullingCamera;																				// Culling Camera
 
 	std::vector<Primitive*>		primitives;
 };

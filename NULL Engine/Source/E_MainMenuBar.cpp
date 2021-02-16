@@ -30,7 +30,7 @@ bool E_MainMenuBar::Draw(ImGuiIO& io)
 	GameObjectsMainMenuItem();
 	HelpMainMenuItem();
 
-	if (App->editor->show_close_app_popup)
+	if (App->editor->showCloseAppPopup)
 	{
 		CloseAppPopup();																	// Not actually inside MainMenuBar but related to FileMainMenuItem().
 	}
@@ -58,7 +58,7 @@ bool E_MainMenuBar::FileMainMenuItem()
 		
 		if (ImGui::MenuItem("Open Scene", "Ctrl+O"))
 		{
-			App->editor->show_load_file_popup = true;
+			App->editor->showLoadFilePopup = true;
 		}
 
 		ImGui::Separator();
@@ -80,7 +80,7 @@ bool E_MainMenuBar::FileMainMenuItem()
 
 		ImGui::Separator();
 		
-		ImGui::MenuItem("Quit", "ESC", &App->editor->show_close_app_popup);		// MenuItem(Item name string, shortcut string, bool to modify / get modified by)
+		ImGui::MenuItem("Quit", "ESC", &App->editor->showCloseAppPopup);		// MenuItem(Item name string, shortcut string, bool to modify / get modified by)
 
 		ImGui::EndMenu();
 	}
@@ -135,8 +135,8 @@ bool E_MainMenuBar::WindowMainMenuItem()
 		ImGui::MenuItem("Hierarchy", "2", &App->editor->showHierarchy);
 		ImGui::MenuItem("Inspector", "3", &App->editor->showInspector);
 		ImGui::MenuItem("Console", "4", &App->editor->showConsole);
-		ImGui::MenuItem("GuiDemo", "8", &App->editor->show_imgui_demo);
-		ImGui::MenuItem("About", "9", &App->editor->show_about_popup);
+		ImGui::MenuItem("GuiDemo", "8", &App->editor->showImguiDemo);
+		ImGui::MenuItem("About", "9", &App->editor->showAboutPopup);
 
 		ImGui::EndMenu();
 	}
@@ -254,7 +254,7 @@ bool E_MainMenuBar::HelpMainMenuItem()
 	{
 		if (ImGui::Button("About NULL Engine"))
 		{
-			App->editor->show_about_popup = true;
+			App->editor->showAboutPopup = true;
 		}
 		
 		ImGui::Separator();
@@ -292,7 +292,7 @@ bool E_MainMenuBar::CloseAppPopup()
 		if (ImGui::Button("CONFIRM"))
 		{
 			ImGui::CloseCurrentPopup();
-			App->editor->show_close_app_popup = false;
+			App->editor->showCloseAppPopup = false;
 
 			App->quit = true;
 		}
@@ -304,7 +304,7 @@ bool E_MainMenuBar::CloseAppPopup()
 		if (ImGui::Button("CANCEL"))
 		{
 			ImGui::CloseCurrentPopup();
-			App->editor->show_close_app_popup = false;
+			App->editor->showCloseAppPopup = false;
 		}
 		ImGui::PopStyleColor();
 

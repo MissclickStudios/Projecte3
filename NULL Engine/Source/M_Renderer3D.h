@@ -217,7 +217,7 @@ public:																											// --- DEBUG GET/SET METHODS
 	bool			GetRenderBoundingBoxes		() const;														// 
 	bool			GetRenderSkeletons			() const;														// 
 	bool			GetRenderPrimitiveExamples	() const;														// 
-	
+
 	void			SetWorldGridSize			(const uint& world_grid_size);
 
 	void			SetWorldGridColor			(const Color& world_grid_color);
@@ -258,55 +258,55 @@ public:
 	std::vector<Primitive*>	primitives;
 
 private:
-	std::vector<MeshRenderer>		mesh_renderers;
-	std::vector<CuboidRenderer>		cuboid_renderers;
-	std::vector<SkeletonRenderer>	skeleton_renderers;
+	std::vector<MeshRenderer>		meshRenderers;
+	std::vector<CuboidRenderer>		cuboidRenderers;
+	std::vector<SkeletonRenderer>	skeletonRenderers;
 	
-	Icons					engine_icons;
+	Icons					engineIcons;
 
-	uint					scene_framebuffer;
-	uint					depth_buffer;
-	uint					scene_render_texture;
-	uint					depth_buffer_texture;
-	uint					game_framebuffer;
-	uint					debug_texture_id;
+	uint					sceneFramebuffer;
+	uint					depthBuffer;
+	uint					sceneRenderTexture;
+	uint					depthBufferTexture;
+	uint					gameFramebuffer;
+	uint					debugTextureId;
 
 	bool					vsync;																				// Will keep track of whether or not the vsync is currently active.
 
 private:																										// --- DEBUG VARIABLES ---		// TODO: CREATE A "DEBUGSETTINGS" STRUCTURE
-	uint					world_grid_size;																	//
+	uint					worldGridSize;																	//
 
-	Color					world_grid_color;																	//
-	Color					wireframe_color;																	//
-	Color					vertex_normals_color;																//
-	Color					face_normals_color;																	//
+	Color					worldGridColor;																	//
+	Color					wireframeColor;																	//
+	Color					vertexNormalsColor;																//
+	Color					faceNormalsColor;																	//
 	
-	Color					aabb_color;																			// 
-	Color					obb_color;																			// 
-	Color					frustum_color;																		// 
-	Color					ray_color;																			// 
-	Color					bone_color;																			// 
+	Color					aabbColor;																			// 
+	Color					obbColor;																			// 
+	Color					frustumColor;																		// 
+	Color					rayColor;																			// 
+	Color					boneColor;																			// 
 	
-	float					world_grid_line_width;
-	float					wireframe_line_width;
-	float					vertex_normals_width;
-	float					face_normals_width;
+	float					worldGridLineWidth;
+	float					wireframeLineWidth;
+	float					vertexNormalsWidth;
+	float					faceNormalsWidth;
 
-	float					aabb_edge_width;																	// 
-	float					obb_edge_width;																		// 
-	float					frustum_edge_width;																	// 
-	float					ray_width;																			// 
-	float					bone_width;																			// 
+	float					aabbEdgeWidth;																	// 
+	float					obbEdgeWidth;																		// 
+	float					frustumEdgeWidth;																	// 
+	float					rayWidth;																			// 
+	float					boneWidth;																			// 
 	
-	bool					render_world_grid;																	// 
-	bool					render_world_axis;																	// 
-	bool					render_wireframes;																	//
-	bool					render_vertex_normals;																// 
-	bool					render_face_normals;																// 
-	bool					render_bounding_boxes;																// 
-	bool					render_skeletons;																	//
+	bool					renderWorldGrid;																	// 
+	bool					renderWorldAxis;																	// 
+	bool					renderWireframes;																	//
+	bool					renderWertexNormals;																// 
+	bool					renderFaceNormals;																// 
+	bool					renderBoundingBoxes;																// 
+	bool					renderSkeletons;																	//
 
-	bool					render_primitive_examples;															//
+	bool					renderPrimitiveExamples;															//
 };
 
 #endif // !__M_RENDERER_3D_H__
