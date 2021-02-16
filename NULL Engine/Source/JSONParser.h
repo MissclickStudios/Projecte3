@@ -42,20 +42,20 @@ public:																									// --- GETTERS, SETTERS & UTILITIES
 	ParsonNode				SetNode				(const char* name);										//
 
 public:
-	bool					NodeHasValueOfType	(const char* name, JSON_Value_Type value_type) const;	//
+	bool					NodeHasValueOfType	(const char* name, JSON_Value_Type valueType) const;	//
 	bool					NodeIsValid			();														//
 	JSON_Value*				FindValue			(const char* name, int index);							//
 
 private:
-	JSON_Value*			root_value;																		// First value of a given parsed file. The first JSON Object will be derived from this value.
-	JSON_Object*		root_node;																		// A JSON Object is the same as an XML Node. Main node from which the rest will be derived.
+	JSON_Value*			rootValue;																		// First value of a given parsed file. The first JSON Object will be derived from this value.
+	JSON_Object*		rootNode;																		// A JSON Object is the same as an XML Node. Main node from which the rest will be derived.
 };
 
 class ParsonArray
 {
 public:
 	ParsonArray();
-	ParsonArray(JSON_Array* json_array, const char* name = "Array");
+	ParsonArray(JSON_Array* jsonArray, const char* name = "Array");
 
 public:																										// --- GETTERS, SETTERS & UTILITIES
 	double					GetNumber				(const uint& index) const;								//
@@ -78,12 +78,12 @@ public:																										// --- GETTERS, SETTERS & UTILITIES
 public:
 	uint					GetSize					() const;												//
 	JSON_Value_Type			GetTypeAtIndex			(const uint& index) const;								//
-	bool					HasValueOfTypeAtIndex	(const uint& index, JSON_Value_Type value_type) const;	//
+	bool					HasValueOfTypeAtIndex	(const uint& index, JSON_Value_Type valueType) const;	//
 
 	bool					ArrayIsValid			() const;
 
 public:
-	JSON_Array*			json_array;																			//
+	JSON_Array*			jsonArray;																			//
 	uint				size;																				//
 
 	const char*			name;

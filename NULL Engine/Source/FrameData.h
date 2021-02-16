@@ -13,18 +13,18 @@ struct FrameData
 	void Update		(uint ms);
 	void ResetData	();
 
-	float	time_since_start;													// 
-	uint64	frame_count;														// Amount of frames that have been processed since Application Start.
-	uint32	frames_last_second;													// Amount of frames that have been processed in the last second.
+	float	timeSinceStart;													// 
+	uint64	frameCount;														// Amount of frames that have been processed since Application Start.
+	uint32	framesLastSecond;													// Amount of frames that have been processed in the last second.
 
-	float	avg_fps;															// Average of the amount of frames that the Application processes per second.
-	uint32	ms_last_frame; 														// Amount of milliseconds that have elapsed in the last frame.
+	float	avgFps;															// Average of the amount of frames that the Application processes per second.
+	uint32	msLastFrame; 														// Amount of milliseconds that have elapsed in the last frame.
 
 	float	dt;																	// Amount of ms that have elapsed in a frame. Employed to keep everything in the same timestep.
 
 	// --- Support Vars
-	uint32	frames_this_second;
-	uint32	milliseconds_counter;
+	uint32	framesThisSecond;
+	uint32	millisecondsCounter;
 };
 
 #endif // !__FRAME_DATA_H__

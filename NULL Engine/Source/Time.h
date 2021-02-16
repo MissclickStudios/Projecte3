@@ -18,7 +18,7 @@ namespace Time
 	{
 		void		InitRealClock		();
 		void		Update				();								// Will update the frame data for the frame it was called on. frame_count, prev_sec_frames, dt..
-		void		DelayUntilFrameCap	(uint frame_cap);
+		void		DelayUntilFrameCap	(uint frameCap);
 
 		void		StartPerfTimer		();
 		void		StopPerfTimer		();
@@ -37,10 +37,10 @@ namespace Time
 		namespace Utilities
 		{
 			//static	Timer			startup_timer;
-			static	Timer			frame_timer;
-			static	PerfectTimer	perf_timer;
+			static	Timer			frameTimer;
+			static	PerfectTimer	perfTimer;
 			static	Hourglass		clock;
-			static	FrameData		frame_data;
+			static	FrameData		frameData;
 		}
 	}
 
@@ -48,12 +48,12 @@ namespace Time
 	{
 		void		Update				();
 		
-		void		SetTimeScale		(float new_time_scale);
+		void		SetTimeScale		(float newTimeScale);
 		float		GetTimeScale		();
 
 		void		Play				();
 		void		Pause				();
-		void		Step				(uint num_steps = 1);
+		void		Step				(uint numSteps = 1);
 		void		Stop				();
 
 		Hourglass	GetClock			();
@@ -68,12 +68,12 @@ namespace Time
 
 		namespace Utilities
 		{
-			static float			time_scale;
+			static float			timeScale;
 			
 			//static Timer			startup_timer;
-			static Timer			game_frame_timer;
-			static Hourglass		game_clock;
-			static FrameData		game_frame_data;
+			static Timer			gameFrameTimer;
+			static Hourglass		gameClock;
+			static FrameData		gameFrameData;
 		}
 	}
 }

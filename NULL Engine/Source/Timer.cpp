@@ -10,7 +10,7 @@
 #include "Timer.h"
 
 // ---------------------------------------------
-Timer::Timer() : running(false), started_at(0), stopped_at(0)
+Timer::Timer() : running(false), startedAt(0), stoppedAt(0)
 {
 	Start();
 }
@@ -24,14 +24,14 @@ Timer::~Timer()
 void Timer::Start()
 {
 	running = true;																// Starts the timer.
-	started_at = SDL_GetTicks();												// Registers the starting time in milliseconds.
+	startedAt = SDL_GetTicks();												// Registers the starting time in milliseconds.
 }
 
 // ---------------------------------------------
 void Timer::Stop()
 {
 	running = false;															// Stops the timer.
-	stopped_at = SDL_GetTicks();												// Registers the stopping time in milliseconds.
+	stoppedAt = SDL_GetTicks();												// Registers the stopping time in milliseconds.
 }
 
 // ---------------------------------------------
@@ -39,11 +39,11 @@ Uint32 Timer::Read() const
 {
 	if (running)
 	{
-		return SDL_GetTicks() - started_at;										// Returns the time that has elapsed since the start in milliseconds.
+		return SDL_GetTicks() - startedAt;										// Returns the time that has elapsed since the start in milliseconds.
 	}
 	else
 	{
-		return stopped_at - started_at;											// Returns the time that has elapsed since the stop in milliseconds.
+		return stoppedAt - startedAt;											// Returns the time that has elapsed since the stop in milliseconds.
 	}
 }
 
@@ -52,11 +52,11 @@ float Timer::ReadSec() const
 {
 	if (running)
 	{
-		return (float)(SDL_GetTicks() - started_at) / 1000.0f;					// Returns the time that has elapsed since the start in seconds.
+		return (float)(SDL_GetTicks() - startedAt) / 1000.0f;					// Returns the time that has elapsed since the start in seconds.
 	}
 	else
 	{
-		return (float)(stopped_at - started_at);								// Returns the time that has elapsed since the stop in seconds.
+		return (float)(stoppedAt - startedAt);								// Returns the time that has elapsed since the stop in seconds.
 	}												
 }
 

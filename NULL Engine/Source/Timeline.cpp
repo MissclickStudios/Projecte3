@@ -2,7 +2,7 @@
 
 bool ImGui::BeginTimeline(const char* str_id, const float& max_value)
 {
-	max_timeline_value = max_value;
+	maxTimelineValue = max_value;
 	return BeginChild(str_id);
 }
 
@@ -19,12 +19,12 @@ bool ImGui::TimelineEvent(const char* str_id, float* values)
 	for (int i = 0; i < 2; ++i)
 	{
 		ImVec2 pos = cursor_pos;
-		pos.x += (win->Size.x * values[i]) / (max_timeline_value + timeline_radius);
-		pos.y += timeline_radius;
+		pos.x += (win->Size.x * values[i]) / (maxTimelineValue + timelineRadius);
+		pos.y += timelineRadius;
 
-		SetCursorScreenPos(pos - ImVec2(timeline_radius, timeline_radius));
+		SetCursorScreenPos(pos - ImVec2(timelineRadius, timelineRadius));
 		PushID(i);
-		InvisibleButton(str_id, ImVec2(2 * timeline_radius, 2 * timeline_radius));
+		InvisibleButton(str_id, ImVec2(2 * timelineRadius, 2 * timelineRadius));
 		if (IsItemActive() || IsItemHovered())
 		{
 			ImGui::SetTooltip("%f", values[i]);
@@ -34,25 +34,25 @@ bool ImGui::TimelineEvent(const char* str_id, float* values)
 		}
 		if (IsItemActive() && IsMouseDragging(0))
 		{
-			values[i] += GetIO().MouseDelta.x / (win->Size.x * max_timeline_value);
+			values[i] += GetIO().MouseDelta.x / (win->Size.x * maxTimelineValue);
 			changed = true;
 		}
 		PopID();
-		win->DrawList->AddCircleFilled(pos, timeline_radius, (IsItemActive() || IsItemHovered()) ? active_color : inactive_color);
+		win->DrawList->AddCircleFilled(pos, timelineRadius, (IsItemActive() || IsItemHovered()) ? active_color : inactive_color);
 	}
 
 	ImVec2 start = cursor_pos;
-	start.x += (win->Size.x * values[0]) / (max_timeline_value + 2 * timeline_radius);
-	start.y += timeline_radius * 0.5f;
-	ImVec2 end = start + ImVec2(win->Size.x * ((values[1] - values[0]) / (max_timeline_value - 2 * timeline_radius)), timeline_radius);
+	start.x += (win->Size.x * values[0]) / (maxTimelineValue + 2 * timelineRadius);
+	start.y += timelineRadius * 0.5f;
+	ImVec2 end = start + ImVec2(win->Size.x * ((values[1] - values[0]) / (maxTimelineValue - 2 * timelineRadius)), timelineRadius);
 
 	PushID(-1);
 	SetCursorScreenPos(start);
 	InvisibleButton(str_id, end - start);
 	if (IsItemActive() && IsMouseDragging(0))
 	{
-		values[0] += GetIO().MouseDelta.x / (win->Size.x * max_timeline_value);
-		values[1] += GetIO().MouseDelta.x / (win->Size.x * max_timeline_value);
+		values[0] += GetIO().MouseDelta.x / (win->Size.x * maxTimelineValue);
+		values[1] += GetIO().MouseDelta.x / (win->Size.x * maxTimelineValue);
 
 		changed = true;
 	}
@@ -68,9 +68,9 @@ bool ImGui::TimelineEvent(const char* str_id, float* values)
 		values[0] = values[1];
 		values[1] = tmp;
 	}
-	if (values[1] > max_timeline_value)
+	if (values[1] > maxTimelineValue)
 	{
-		values[1] = max_timeline_value;
+		values[1] = maxTimelineValue;
 	}
 	if (values[0] < 0)
 	{
@@ -98,14 +98,14 @@ void ImGui::EndTimeline()
 	const ImVec2 text_offset(0, GetTextLineHeightWithSpacing());
 	for (int i = 0; i < LINE_COUNT; ++i)
 	{
-		ImVec2 a = GetWindowContentRegionMin() + win->Pos + ImVec2(timeline_radius, 0);
+		ImVec2 a = GetWindowContentRegionMin() + win->Pos + ImVec2(timelineRadius, 0);
 		a.x += i * GetWindowContentRegionWidth() / LINE_COUNT;
 		ImVec2 b = a;
 		b.y = start.y;
 
 		win->DrawList->AddLine(a, b, line_color);
 		char tmp[256];
-		ImFormatString(tmp, sizeof(tmp), "%.2f", i * max_timeline_value / LINE_COUNT);
+		ImFormatString(tmp, sizeof(tmp), "%.2f", i * maxTimelineValue / LINE_COUNT);
 		win->DrawList->AddText(b, text_color, tmp);
 	}
 
@@ -115,13 +115,13 @@ void ImGui::EndTimeline()
 bool ImGui::BeginTimelineEx(const char* str_id, const float& max_value, const int& num_visible_rows, const int& opt_exact_num_rows, ImVec2* popt_offset_and_scale)
 {
 	// reset global variables
-	max_timeline_value = 0.f;
-	timeline_num_rows = timeline_display_start = timeline_display_end = 0;
-	timeline_display_index = -1;
-	ptimeline_offset_and_scale = popt_offset_and_scale;
+	maxTimelineValue = 0.f;
+	timelineNumRows = timelineDisplayStart = timelineDisplayEnd = 0;
+	timelineDisplayIndex = -1;
+	ptimelineOffsetAndScale = popt_offset_and_scale;
 
-	if (ptimeline_offset_and_scale) {
-		if (ptimeline_offset_and_scale->y == 0.f) { ptimeline_offset_and_scale->y = 1.f; }
+	if (ptimelineOffsetAndScale) {
+		if (ptimelineOffsetAndScale->y == 0.f) { ptimelineOffsetAndScale->y = 1.f; }
 	}
 	const float row_height = ImGui::GetTextLineHeightWithSpacing();
 	const bool rv = BeginChild(str_id, ImVec2(0, num_visible_rows >= 0 ? (row_height * num_visible_rows) : (ImGui::GetContentRegionAvail().y - row_height)), false);
@@ -129,22 +129,22 @@ bool ImGui::BeginTimelineEx(const char* str_id, const float& max_value, const in
 	ImGui::Columns(2, str_id);
 	const float contentRegionWidth = ImGui::GetWindowContentRegionWidth();
 	if (ImGui::GetColumnOffset(1) >= contentRegionWidth * 0.48f) ImGui::SetColumnOffset(1, contentRegionWidth * 0.15f);
-	max_timeline_value = max_value >= 0 ? max_value : (contentRegionWidth * 0.85f);
+	maxTimelineValue = max_value >= 0 ? max_value : (contentRegionWidth * 0.85f);
 	if (opt_exact_num_rows > 0) {
 		// Item culling
-		timeline_num_rows = opt_exact_num_rows;
-		ImGui::CalcListClipping(timeline_num_rows, row_height, &timeline_display_start, &timeline_display_end);
-		ImGui::SetCursorPosY(ImGui::GetCursorPosY() + (timeline_display_start * row_height));
+		timelineNumRows = opt_exact_num_rows;
+		ImGui::CalcListClipping(timelineNumRows, row_height, &timelineDisplayStart, &timelineDisplayEnd);
+		ImGui::SetCursorPosY(ImGui::GetCursorPosY() + (timelineDisplayStart * row_height));
 	}
 	return rv;
 }
 
 bool ImGui::TimelineEventEx(const char* str_id, float* values, bool keep_range_constant)
 {
-	++timeline_display_index;
-	if (timeline_num_rows > 0 &&
-		(timeline_display_index < timeline_display_start || timeline_display_index >= timeline_display_end)) {
-		if (timeline_display_index == timeline_display_start - 1) { ImGui::NextColumn(); ImGui::NextColumn(); }    // This fixes a clipping issue at the top visible row
+	++timelineDisplayIndex;
+	if (timelineNumRows > 0 &&
+		(timelineDisplayIndex < timelineDisplayStart || timelineDisplayIndex >= timelineDisplayEnd)) {
+		if (timelineDisplayIndex == timelineDisplayStart - 1) { ImGui::NextColumn(); ImGui::NextColumn(); }    // This fixes a clipping issue at the top visible row
 		return false;   // item culling
 	}
 
@@ -165,8 +165,8 @@ bool ImGui::TimelineEventEx(const char* str_id, float* values, bool keep_range_c
 	ImGui::NextColumn();
 
 
-	const float s_timeline_time_offset = ptimeline_offset_and_scale ? ptimeline_offset_and_scale->x : 0.f;
-	const float s_timeline_time_scale = ptimeline_offset_and_scale ? ptimeline_offset_and_scale->y : 1.f;
+	const float s_timeline_time_offset = ptimelineOffsetAndScale ? ptimelineOffsetAndScale->x : 0.f;
+	const float s_timeline_time_scale = ptimelineOffsetAndScale ? ptimelineOffsetAndScale->y : 1.f;
 
 	const float columnOffset = ImGui::GetColumnOffset(1);
 	const float columnWidth = ImGui::GetColumnWidth(1) - GImGui->Style.ScrollbarSize;
@@ -180,7 +180,7 @@ bool ImGui::TimelineEventEx(const char* str_id, float* values, bool keep_range_c
 	for (int i = 0; i < 2; ++i)
 	{
 		ImVec2 pos = cursor_pos;
-		pos.x += columnWidthScaled * values[i] / max_timeline_value - columnWidthOffsetScaled + TIMELINE_RADIUS;
+		pos.x += columnWidthScaled * values[i] / maxTimelineValue - columnWidthOffsetScaled + TIMELINE_RADIUS;
 		pos.y += row_height_offset + TIMELINE_RADIUS;
 		posx[i] = pos.x;
 		if (pos.x + TIMELINE_RADIUS < cursor_pos.x ||
@@ -206,7 +206,7 @@ bool ImGui::TimelineEventEx(const char* str_id, float* values, bool keep_range_c
 		}
 		if (active && isMouseDraggingZero)
 		{
-			if (!keep_range_constant) values[i] += GetIO().MouseDelta.x / columnWidthScaled * max_timeline_value;
+			if (!keep_range_constant) values[i] += GetIO().MouseDelta.x / columnWidthScaled * maxTimelineValue;
 			else mustMoveBothEnds = true;
 			changed = hovered = true;
 		}
@@ -234,7 +234,7 @@ bool ImGui::TimelineEventEx(const char* str_id, float* values, bool keep_range_c
 	}
 	if ((isInvisibleButtonItemActive && isMouseDraggingZero) || mustMoveBothEnds)
 	{
-		const float deltaX = GetIO().MouseDelta.x / columnWidthScaled * max_timeline_value;
+		const float deltaX = GetIO().MouseDelta.x / columnWidthScaled * maxTimelineValue;
 		values[0] += deltaX;
 		values[1] += deltaX;
 		changed = hovered = true;
@@ -245,7 +245,7 @@ bool ImGui::TimelineEventEx(const char* str_id, float* values, bool keep_range_c
 
 	if (changed) {
 		if (values[0] > values[1]) { float tmp = values[0]; values[0] = values[1]; values[1] = tmp; }
-		if (values[1] > max_timeline_value) { values[0] -= values[1] - max_timeline_value; values[1] = max_timeline_value; }
+		if (values[1] > maxTimelineValue) { values[0] -= values[1] - maxTimelineValue; values[1] = maxTimelineValue; }
 		if (values[0] < 0) { values[1] -= values[0]; values[0] = 0; }
 	}
 
@@ -258,15 +258,15 @@ bool ImGui::TimelineEventEx(const char* str_id, float* values, bool keep_range_c
 void ImGui::EndTimelineEx(const int& num_vertical_grid_lines, const float& current_time, ImU32 timeline_running_color)
 {
 	const float row_height = ImGui::GetTextLineHeightWithSpacing();
-	if (timeline_num_rows > 0) ImGui::SetCursorPosY(ImGui::GetCursorPosY() + ((timeline_num_rows - timeline_display_end) * row_height));
+	if (timelineNumRows > 0) ImGui::SetCursorPosY(ImGui::GetCursorPosY() + ((timelineNumRows - timelineDisplayEnd) * row_height));
 	ImGui::NextColumn();
 
 	ImGuiWindow* win = GetCurrentWindow();
 
 	const float columnOffset = ImGui::GetColumnOffset(1);
 	const float columnWidth = ImGui::GetColumnWidth(1) - GImGui->Style.ScrollbarSize;
-	const float s_timeline_time_offset = ptimeline_offset_and_scale ? ptimeline_offset_and_scale->x : 0.f;
-	const float s_timeline_time_scale = ptimeline_offset_and_scale ? ptimeline_offset_and_scale->y : 1.f;
+	const float s_timeline_time_offset = ptimelineOffsetAndScale ? ptimelineOffsetAndScale->x : 0.f;
+	const float s_timeline_time_scale = ptimelineOffsetAndScale ? ptimelineOffsetAndScale->y : 1.f;
 	const float columnWidthScaled = columnWidth * s_timeline_time_scale;
 	const float columnWidthOffsetScaled = columnWidthScaled * s_timeline_time_offset;
 	const float horizontal_interval = columnWidth / num_vertical_grid_lines;
@@ -287,9 +287,9 @@ void ImGui::EndTimelineEx(const int& num_vertical_grid_lines, const float& curre
 	}
 
 	// Draw moving vertical line
-	if (current_time > 0.f && current_time < max_timeline_value) {
+	if (current_time > 0.f && current_time < maxTimelineValue) {
 		ImVec2 a = GetWindowContentRegionMin() + win->Pos;
-		a.x += columnWidthScaled * (current_time / max_timeline_value) + columnOffset - columnWidthOffsetScaled;
+		a.x += columnWidthScaled * (current_time / maxTimelineValue) + columnOffset - columnWidthOffsetScaled;
 		win->DrawList->AddLine(a, ImVec2(a.x, startY), moving_line_color, 3);
 	}
 
@@ -297,7 +297,7 @@ void ImGui::EndTimelineEx(const int& num_vertical_grid_lines, const float& curre
 	ImGui::PopStyleColor();
 
 	EndChild();
-	const bool isChildWindowHovered = ptimeline_offset_and_scale ? ImGui::IsItemHovered() : false;
+	const bool isChildWindowHovered = ptimelineOffsetAndScale ? ImGui::IsItemHovered() : false;
 
 	// Draw bottom axis ribbon (outside scrolling region)
 	win = GetCurrentWindow();
@@ -308,9 +308,9 @@ void ImGui::EndTimelineEx(const int& num_vertical_grid_lines, const float& curre
 	float maxx = start.x + columnWidthScaled - columnWidthOffsetScaled;
 	if (maxx < end.x) end.x = maxx;
 	if (current_time <= 0)			win->DrawList->AddRectFilled(start, end, color, rounding);
-	else if (current_time > max_timeline_value) win->DrawList->AddRectFilled(start, end, timeline_running_color, rounding);
+	else if (current_time > maxTimelineValue) win->DrawList->AddRectFilled(start, end, timeline_running_color, rounding);
 	else {
-		ImVec2 median(start.x + columnWidthScaled * (current_time / max_timeline_value) - columnWidthOffsetScaled, end.y);
+		ImVec2 median(start.x + columnWidthScaled * (current_time / maxTimelineValue) - columnWidthOffsetScaled, end.y);
 		if (median.x < startx) median.x = startx;
 		else {
 			if (median.x > startx + columnWidth) median.x = startx + columnWidth;
@@ -330,7 +330,7 @@ void ImGui::EndTimelineEx(const int& num_vertical_grid_lines, const float& curre
 		a.x = start.x + s_timeline_time_scale * i * horizontal_interval - columnWidthOffsetScaled;
 		if (a.x < startx || a.x >= startx + columnWidth) continue;
 
-		ImFormatString(tmp, sizeof(tmp), "%.2f", i * max_timeline_value / num_vertical_grid_lines);
+		ImFormatString(tmp, sizeof(tmp), "%.2f", i * maxTimelineValue / num_vertical_grid_lines);
 		win->DrawList->AddText(a, text_color, tmp);
 
 	}
@@ -338,25 +338,25 @@ void ImGui::EndTimelineEx(const int& num_vertical_grid_lines, const float& curre
 
 
 	// zoom and pan
-	if (ptimeline_offset_and_scale) {
+	if (ptimelineOffsetAndScale) {
 		const ImGuiIO& io = ImGui::GetIO();
 		if (isChildWindowHovered && io.KeyCtrl) {
 			if (ImGui::IsMouseDragging(1)) {
 				// pan
-				ptimeline_offset_and_scale->x -= io.MouseDelta.x / columnWidthScaled;
-				if (ptimeline_offset_and_scale->x > 1.f) ptimeline_offset_and_scale->x = 1.f;
-				else if (ptimeline_offset_and_scale->x < 0.f) ptimeline_offset_and_scale->x = 0.f;
+				ptimelineOffsetAndScale->x -= io.MouseDelta.x / columnWidthScaled;
+				if (ptimelineOffsetAndScale->x > 1.f) ptimelineOffsetAndScale->x = 1.f;
+				else if (ptimelineOffsetAndScale->x < 0.f) ptimelineOffsetAndScale->x = 0.f;
 			}
 			else if (io.MouseReleased[2]) {
 				// reset
-				ptimeline_offset_and_scale->x = 0.f;
-				ptimeline_offset_and_scale->y = 1.f;
+				ptimelineOffsetAndScale->x = 0.f;
+				ptimelineOffsetAndScale->y = 1.f;
 			}
 			if (io.MouseWheel != 0) {
 				// zoom
-				ptimeline_offset_and_scale->y *= (io.MouseWheel > 0) ? 1.05f : 0.95f;
-				if (ptimeline_offset_and_scale->y < 0.25f) ptimeline_offset_and_scale->y = 0.25f;
-				else if (ptimeline_offset_and_scale->y > 4.f) ptimeline_offset_and_scale->y = 4.f;
+				ptimelineOffsetAndScale->y *= (io.MouseWheel > 0) ? 1.05f : 0.95f;
+				if (ptimelineOffsetAndScale->y < 0.25f) ptimelineOffsetAndScale->y = 0.25f;
+				else if (ptimelineOffsetAndScale->y > 4.f) ptimelineOffsetAndScale->y = 4.f;
 			}
 		}
 	}
@@ -366,10 +366,10 @@ bool ImGui::PlotTimelineEvents(const char* str_id, float* values, bool keep_rang
 {
 	bool ret = true;
 
-	++timeline_display_index;
-	if (timeline_num_rows > 0 &&
-		(timeline_display_index < timeline_display_start || timeline_display_index >= timeline_display_end)) {
-		if (timeline_display_index == timeline_display_start - 1) { ImGui::NextColumn(); ImGui::NextColumn(); }    // This fixes a clipping issue at the top visible row
+	++timelineDisplayIndex;
+	if (timelineNumRows > 0 &&
+		(timelineDisplayIndex < timelineDisplayStart || timelineDisplayIndex >= timelineDisplayEnd)) {
+		if (timelineDisplayIndex == timelineDisplayStart - 1) { ImGui::NextColumn(); ImGui::NextColumn(); }    // This fixes a clipping issue at the top visible row
 		return false;   // item culling
 	}
 
@@ -390,8 +390,8 @@ bool ImGui::PlotTimelineEvents(const char* str_id, float* values, bool keep_rang
 	ImGui::NextColumn();
 
 
-	const float s_timeline_time_offset = ptimeline_offset_and_scale ? ptimeline_offset_and_scale->x : 0.f;
-	const float s_timeline_time_scale = ptimeline_offset_and_scale ? ptimeline_offset_and_scale->y : 1.f;
+	const float s_timeline_time_offset = ptimelineOffsetAndScale ? ptimelineOffsetAndScale->x : 0.f;
+	const float s_timeline_time_scale = ptimelineOffsetAndScale ? ptimelineOffsetAndScale->y : 1.f;
 
 	const float columnOffset = ImGui::GetColumnOffset(1);
 	const float columnWidth = ImGui::GetColumnWidth(1) - GImGui->Style.ScrollbarSize;
@@ -412,7 +412,7 @@ bool ImGui::PlotTimelineEvents(const char* str_id, float* values, bool keep_rang
 		for (int i = 0; i < 2; ++i)
 		{
 			ImVec2 pos = cursor_pos;
-			pos.x += columnWidthScaled * values[i] / max_timeline_value - columnWidthOffsetScaled + TIMELINE_RADIUS;
+			pos.x += columnWidthScaled * values[i] / maxTimelineValue - columnWidthOffsetScaled + TIMELINE_RADIUS;
 			pos.y += row_height_offset + TIMELINE_RADIUS;
 			posx[i] = pos.x;
 			if (pos.x + TIMELINE_RADIUS < cursor_pos.x ||
@@ -438,7 +438,7 @@ bool ImGui::PlotTimelineEvents(const char* str_id, float* values, bool keep_rang
 			}
 			if (active && isMouseDraggingZero)
 			{
-				if (!keep_range_constant) values[i] += GetIO().MouseDelta.x / columnWidthScaled * max_timeline_value;
+				if (!keep_range_constant) values[i] += GetIO().MouseDelta.x / columnWidthScaled * maxTimelineValue;
 				else mustMoveBothEnds = true;
 				changed = hovered = true;
 			}
@@ -467,7 +467,7 @@ bool ImGui::PlotTimelineEvents(const char* str_id, float* values, bool keep_rang
 	}
 	if ((isInvisibleButtonItemActive && isMouseDraggingZero) || mustMoveBothEnds)
 	{
-		const float deltaX = GetIO().MouseDelta.x / columnWidthScaled * max_timeline_value;
+		const float deltaX = GetIO().MouseDelta.x / columnWidthScaled * maxTimelineValue;
 		values[0] += deltaX;
 		values[1] += deltaX;
 		changed = hovered = true;
@@ -478,7 +478,7 @@ bool ImGui::PlotTimelineEvents(const char* str_id, float* values, bool keep_rang
 
 	if (changed) {
 		if (values[0] > values[1]) { float tmp = values[0]; values[0] = values[1]; values[1] = tmp; }
-		if (values[1] > max_timeline_value) { values[0] -= values[1] - max_timeline_value; values[1] = max_timeline_value; }
+		if (values[1] > maxTimelineValue) { values[0] -= values[1] - maxTimelineValue; values[1] = maxTimelineValue; }
 		if (values[0] < 0) { values[1] -= values[0]; values[0] = 0; }
 	}
 

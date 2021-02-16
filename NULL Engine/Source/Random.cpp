@@ -6,17 +6,17 @@
 // --- LCG ---
 uint32 Random::LCG::GetRandomUint()
 {	
-	return (uint32)lcg_rand.Int();
+	return (uint32)lcgRand.Int();
 }
 
 uint32 Random::LCG::GetBoundedRandomUint(uint32 min, uint32 max)
 {
-	return (uint32)lcg_rand.Int(min, max);
+	return (uint32)lcgRand.Int(min, max);
 }
 
 float Random::LCG::GetBoundedRandomFloat(float min, float max)
 {	
-	return lcg_rand.Float(min, max);
+	return lcgRand.Float(min, max);
 }
 
 // --- PCG ---

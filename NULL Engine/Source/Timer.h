@@ -25,8 +25,8 @@ public:
 
 private:
 	bool		running;						// Will keep track of whether or not the timer is still active.
-	uint32		started_at;						// Will keep track of the exact moment at which the timer started running.
-	uint32		stopped_at;						// Will keep track of the exact moment at which the timer stopped running.
+	uint32		startedAt;						// Will keep track of the exact moment at which the timer started running.
+	uint32		stoppedAt;						// Will keep track of the exact moment at which the timer stopped running.
 };
 
 #endif //__TIMER_H__

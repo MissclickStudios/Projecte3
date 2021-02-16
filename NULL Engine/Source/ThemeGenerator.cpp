@@ -1,8 +1,8 @@
 #include "ThemeGenerator.h"
 
-void ImGui::ThemeGenerator(bool is_window)
+void ImGui::ThemeGenerator(bool isWindow)
 {
-	if (is_window)
+	if (isWindow)
 	{
 		Begin("Theme Generator");
 	}
@@ -10,16 +10,16 @@ void ImGui::ThemeGenerator(bool is_window)
     ColorEdit3("base", (float*) &base, ImGuiColorEditFlags_PickerHueWheel);
     ColorEdit3("bg", (float*) &bg, ImGuiColorEditFlags_PickerHueWheel);
     ColorEdit3("text", (float*) &text, ImGuiColorEditFlags_PickerHueWheel);
-    SliderFloat("high", &high_val, 0, 1);
-    SliderFloat("mid", &mid_val, 0, 1);
-    SliderFloat("low", &low_val, 0, 1);
-    SliderFloat("window", &window_offset, -0.4f, 0.4f);
+    SliderFloat("high", &highVal, 0, 1);
+    SliderFloat("mid", &midVal, 0, 1);
+    SliderFloat("low", &lowVal, 0, 1);
+    SliderFloat("window", &windowOffset, -0.4f, 0.4f);
 
     ImGuiStyle &style = ImGui::GetStyle();
 
     style.Colors[ImGuiCol_Text]                  = MakeText(0.78f);
     style.Colors[ImGuiCol_TextDisabled]          = MakeText(0.28f);
-    style.Colors[ImGuiCol_WindowBg]              = MakeBg(1.00f, window_offset);
+    style.Colors[ImGuiCol_WindowBg]              = MakeBg(1.00f, windowOffset);
     style.Colors[ImGuiCol_ChildBg]               = MakeBg(0.58f);
     style.Colors[ImGuiCol_PopupBg]               = MakeBg(0.9f);
     style.Colors[ImGuiCol_Border]                = MakeBg(0.6f, -0.05f);
@@ -75,7 +75,7 @@ void ImGui::ThemeGenerator(bool is_window)
       ImGui::LogFinish();
     }
 
-	if (is_window)
+	if (isWindow)
 	{
 		ImGui::End();
 	}
@@ -85,7 +85,7 @@ ImVec4 ImGui::MakeHigh(float alpha)
 {
 	ImVec4 res(0, 0, 0, alpha);
 	ColorConvertRGBtoHSV(base.x, base.y, base.z, res.x, res.y, res.z);
-	res.z = high_val;
+	res.z = highVal;
 	ColorConvertHSVtoRGB(res.x, res.y, res.z, res.x, res.y, res.z);
 	
 	return res;
@@ -95,7 +95,7 @@ ImVec4 ImGui::MakeMid(float alpha)
 {
 	ImVec4 res(0, 0, 0, alpha);
 	ImGui::ColorConvertRGBtoHSV(base.x, base.y, base.z, res.x, res.y, res.z);
-	res.z = mid_val;
+	res.z = midVal;
 	ImGui::ColorConvertHSVtoRGB(res.x, res.y, res.z, res.x, res.y, res.z);
 
 	return res;
@@ -105,7 +105,7 @@ ImVec4 ImGui::MakeLow(float alpha)
 {
 	ImVec4 res(0, 0, 0, alpha);
 	ImGui::ColorConvertRGBtoHSV(base.x, base.y, base.z, res.x, res.y, res.z);
-	res.z = low_val;
+	res.z = lowVal;
 	ImGui::ColorConvertHSVtoRGB(res.x, res.y, res.z, res.x, res.y, res.z);
 
 	return res;
