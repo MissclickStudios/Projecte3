@@ -20,7 +20,7 @@ class M_Input : public Module
 {
 public:
 	
-	M_Input(bool is_active = true);
+	M_Input(bool isActive = true);
 	~M_Input();
 
 	bool			Init					(ParsonNode& config) override;
@@ -49,8 +49,8 @@ public:
 
 private:
 	KEY_STATE*		keyboard;
-	KEY_STATE		mouse_buttons[MAX_MOUSE_BUTTONS];
-	uint			max_num_scancodes;
+	KEY_STATE		mouseButtons[MAX_MOUSE_BUTTONS];
+	uint			maxNumScancodes;
 
 	int				mouseX;
 	int				mouseY;

@@ -33,68 +33,68 @@ public:
 
 public:																												// --- ASSETS MONITORING METHODS ---
 	void			RefreshDirectoryFiles			(const char* directory);
-	void			RefreshDirectory				(const char* directory, std::vector<std::string>& files_to_import, 
-														std::vector<std::string>& files_to_update, std::vector<std::string>& files_to_delete);
+	void			RefreshDirectory				(const char* directory, std::vector<std::string>& filesToImport, 
+														std::vector<std::string>& filesToUpdate, std::vector<std::string>& filesToDelete);
 	
-	void			FindFilesToImport				(const std::vector<std::string>& asset_files, const std::vector<std::string>& meta_files, 
-														std::map<std::string, std::string>& file_pairs, std::vector<std::string>& files_to_import);
+	void			FindFilesToImport				(const std::vector<std::string>& assetFiles, const std::vector<std::string>& metaFiles, 
+														std::map<std::string, std::string>& filePairs, std::vector<std::string>& filesToImport);
 	
-	void			FindFilesToUpdate				(const std::map<std::string, std::string>& file_pairs, std::vector<std::string>& files_to_update);
+	void			FindFilesToUpdate				(const std::map<std::string, std::string>& filePairs, std::vector<std::string>& filesToUpdate);
 
-	void			FindFilesToDelete				(const std::vector<std::string>& meta_files, const std::map<std::string, std::string>& file_pairs, 
-														std::vector<std::string>& files_to_delete);
+	void			FindFilesToDelete				(const std::vector<std::string>& metaFiles, const std::map<std::string, std::string>& filePairs, 
+														std::vector<std::string>& filesToDelete);
 
-	void			LoadValidFilesIntoLibrary		(const std::map<std::string, std::string>& file_pairs);
+	void			LoadValidFilesIntoLibrary		(const std::map<std::string, std::string>& filePairs);
 
-	bool			DeleteFromAssets				(const char* assets_path);
-	bool			DeleteFromLibrary				(const char* assets_path);
+	bool			DeleteFromAssets				(const char* assetsPath);
+	bool			DeleteFromLibrary				(const char* assetsPath);
 
-	bool			GetResourceUIDsFromMeta						(const char* assets_path, std::vector<uint32>& resource_UIDs);
-	bool			GetLibraryFilePathsFromMeta					(const char* assets_path, std::vector<std::string>& file_paths);
+	bool			GetResourceUIDsFromMeta						(const char* assetsPath, std::vector<uint32>& resourceUids);
+	bool			GetLibraryFilePathsFromMeta					(const char* assetsPath, std::vector<std::string>& filePaths);
 	bool			GetLibraryDirectoryAndExtensionFromType		(const RESOURCE_TYPE& type, std::string& directory, std::string& extension);
 	
-	bool			LoadMetaLibraryPairsIntoLibrary				(const char* assets_path);
-	bool			GetLibraryPairsFromMeta						(const char* assets_path, std::map<uint32, std::string>& pairs);
+	bool			LoadMetaLibraryPairsIntoLibrary				(const char* assetsPath);
+	bool			GetLibraryPairsFromMeta						(const char* assetsPath, std::map<uint32, std::string>& pairs);
 
-	uint64			GetAssetFileModTimeFromMeta		(const char* assets_path);
+	uint64			GetAssetFileModTimeFromMeta		(const char* assetsPath);
 
 public:																												// --- IMPORT FILE METHODS ---
-	uint32			ImportFile						(const char* assets_path);										// 
-	uint32			ImportFromAssets				(const char* assets_path);										// 
+	uint32			ImportFile						(const char* assetsPath);										// 
+	uint32			ImportFromAssets				(const char* assetsPath);										// 
 	uint			SaveResourceToLibrary			(Resource* resource);											// 
 	
-	uint32			LoadFromLibrary					(const char* assets_path);										// 
+	uint32			LoadFromLibrary					(const char* assetsPath);										// 
 
-	const char*		GetValidPath					(const char* assets_path);										// 
-	RESOURCE_TYPE	GetTypeFromAssetsExtension		(const char* assets_path);										// 
-	RESOURCE_TYPE	GetTypeFromLibraryExtension		(const char* library_path);										// 
+	const char*		GetValidPath					(const char* assetsPath);										// 
+	RESOURCE_TYPE	GetTypeFromAssetsExtension		(const char* assetsPath);										// 
+	RESOURCE_TYPE	GetTypeFromLibraryExtension		(const char* libraryPath);										// 
 
-	void			SetResourceAssetsPathAndFile	(const char* assets_path, Resource* resource);					// 
+	void			SetResourceAssetsPathAndFile	(const char* assetsPath, Resource* resource);					// 
 	void			SetResourceLibraryPathAndFile	(Resource* resource);											// 
 
 public:																												// --- META FILE METHODS ---
 	bool			SaveMetaFile					(Resource* resource) const;										//
-	ParsonNode		LoadMetaFile					(const char* assets_path, char** buffer);						// Passing the buffer so it can be safely RELEASED after calling it.
+	ParsonNode		LoadMetaFile					(const char* assetsPath, char** buffer);						// Passing the buffer so it can be safely RELEASED after calling it.
 	
-	bool			HasMetaFile						(const char* assets_path);
-	bool			MetaFileIsValid					(const char* assets_path);
-	bool			MetaFileIsValid					(ParsonNode& meta_root);
+	bool			HasMetaFile						(const char* assetsPath);
+	bool			MetaFileIsValid					(const char* assetsPath);
+	bool			MetaFileIsValid					(ParsonNode& metaRoot);
 	bool			ResourceHasMetaType				(Resource* resource) const;
 
-	Resource*		GetResourceFromMetaFile			(const char* assets_path);
+	Resource*		GetResourceFromMetaFile			(const char* assetsPath);
 
 public:																												// --- RESOURCE METHODS ---
-	Resource*		CreateResource					(RESOURCE_TYPE type, const char* assets_path = nullptr, const uint32& forced_UID = 0);	// 
-	bool			DeleteResource					(const uint32& UID);																	//
-	bool			DeleteResource					(Resource* resource_to_delete);															// FORCED DELETE
+	Resource*		CreateResource					(RESOURCE_TYPE type, const char* assetsPath = nullptr, const uint32& forcedUid = 0);	// 
+	bool			DeleteResource					(const uint32& uid);																	//
+	bool			DeleteResource					(Resource* resourceToDelete);															// FORCED DELETE
 	void			GetResources					(std::map<uint32, Resource*>& resources) const;											// 
 	
-	Resource*		RequestResource					(const uint32& UID);																	// 
-	bool			FreeResource					(const uint32& UID);																	// 
+	Resource*		RequestResource					(const uint32& uid);																	// 
+	bool			FreeResource					(const uint32& uid);																	// 
 	
-	Resource*		AllocateResource				(const uint32& UID, const char* assets_path = nullptr);									// 
-	bool			DeallocateResource				(const uint32& UID);																	// 
-	bool			DeallocateResource				(Resource* resource_to_deallocate);														// FORCED DEALLOCATE
+	Resource*		AllocateResource				(const uint32& uid, const char* assetsPath = nullptr);									// 
+	bool			DeallocateResource				(const uint32& uid);																	// 
+	bool			DeallocateResource				(Resource* resourceToDeallocate);														// FORCED DEALLOCATE
 	
 private:
 	std::map<uint32, Resource*>		resources;																		// Resources currently in memory.

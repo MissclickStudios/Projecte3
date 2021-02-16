@@ -48,8 +48,8 @@ public:																					// --- APPLICATION & ENGINE STATE
 
 	const char*		GetEngineName			() const;
 	const char*		GetOrganizationName		() const;
-	void			SetEngineName			(const char* engine_name);
-	void			SetOrganizationName		(const char* organization_name);
+	void			SetEngineName			(const char* engineName);
+	void			SetOrganizationName		(const char* organizationName);
 
 	void			EngineShortcuts			();
 

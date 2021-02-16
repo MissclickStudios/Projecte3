@@ -27,7 +27,7 @@ typedef unsigned __int32 uint32;
 class M_Scene : public Module
 {
 public:
-	M_Scene(bool is_active = true);
+	M_Scene(bool isActive = true);
 	~M_Scene();
 
 	bool			Init				(ParsonNode& config) override;
@@ -40,7 +40,7 @@ public:
 	bool			LoadConfiguration	(ParsonNode& root) override;
 
 public:																														// --- GAME OBJECTS METHODS ---
-	bool			SaveScene							(const char* scene_name = nullptr) const;							// If no name is given the scene_root node's name will be used.
+	bool			SaveScene							(const char* sceneName = nullptr) const;							// If no name is given the scene_root node's name will be used.
 	bool			LoadScene							(const char* path);													// 
 
 	void			LoadResourceIntoScene				(Resource* resource);
@@ -48,32 +48,32 @@ public:																														// --- GAME OBJECTS METHODS ---
 	std::vector<GameObject*>* GetGameObjects			();
 	
 	GameObject*		CreateGameObject					(const char* name = nullptr, GameObject* parent = nullptr);			// 
-	void			DeleteGameObject					(GameObject* game_object, uint index = -1);							// 
+	void			DeleteGameObject					(GameObject* gameObject, uint index = -1);							// 
 	
-	void			GenerateGameObjectsFromModel		(const uint32& model_UID, const float3& scale = float3::zero);		//
-	bool			ApplyTextureToSelectedGameObject	(const uint32& texture_UID);										//
+	void			GenerateGameObjectsFromModel		(const uint32& modelUid, const float3& scale = float3::zero);		//
+	bool			ApplyTextureToSelectedGameObject	(const uint32& textureUid);										//
 
-	void			CreateComponentsFromModelNode		(const ModelNode& model_node, GameObject* game_object);
-	void			CreateAnimationComponentFromModel	(const R_Model* r_model, GameObject* game_object);
+	void			CreateComponentsFromModelNode		(const ModelNode& modelNode, GameObject* gameObject);
+	void			CreateAnimationComponentFromModel	(const R_Model* rModel, GameObject* gameObject);
 
 public:																														// --- MASTER ROOT & SCENE ROOT METHODS ---
 	void			CreateMasterRoot					();																	// 
 	void			DeleteMasterRoot					();																	// 
 	GameObject*		GetMasterRoot						() const;															// 
 
-	void			CreateSceneRoot						(const char* scene_name);											//
+	void			CreateSceneRoot						(const char* sceneName);											//
 	GameObject*		GetSceneRoot						() const;															//
-	void			SetSceneRoot						(GameObject* game_object);											//
-	void			ChangeSceneName						(const char* new_name);												//
+	void			SetSceneRoot						(GameObject* gameObject);											//
+	void			ChangeSceneName						(const char* newName);												//
 
-	void			CreateSceneCamera					(const char* camera_name);
+	void			CreateSceneCamera					(const char* cameraName);
 	C_Camera*		GetCullingCamera					() const;
-	void			SetCullingCamera					(C_Camera* culling_camera);
-	bool			GameObjectIsInsideCullingCamera		(GameObject* game_object);
+	void			SetCullingCamera					(C_Camera* cullingCamera);
+	bool			GameObjectIsInsideCullingCamera		(GameObject* gameObject);
 
 public:																														// --- SELECTED GAME OBJECT METHODS ---
 	GameObject*		GetSelectedGameObject				() const;															// 
-	void			SetSelectedGameObject				(GameObject* game_object);											// 
+	void			SetSelectedGameObject				(GameObject* gameObject);											// 
 	void			DeleteSelectedGameObject			();																	// 
 
 public:																														// --- SELECT THROUGH RAYCAST

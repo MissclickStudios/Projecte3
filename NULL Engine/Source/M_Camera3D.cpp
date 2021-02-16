@@ -394,58 +394,58 @@ void M_Camera3D::FreeLookAround()
 void M_Camera3D::Orbit()								// Almost identical to FreeLookAround(), but instead of only modifying XYZ, the position of the camera is also modified.
 {	
 	Frustum frustum			= currentCamera->GetFrustum();
-	float2 mouse_motion		= App->editor->GetWorldMouseMotionThroughEditor();
+	float2 mouseMotion		= App->editor->GetWorldMouseMotionThroughEditor();
 	float sensitivity		= rotationSpeed * Time::Real::GetDT();
 
-	float3 new_Z = frustum.Pos() - reference;
+	float3 newZ = frustum.Pos() - reference;
 
-	if (mouse_motion.x != 0.0f)
+	if (mouseMotion.x != 0.0f)
 	{
-		Quat new_X = Quat(frustum.Up(), -mouse_motion.x * sensitivity);
-		new_Z = new_X.Transform(new_Z);
+		Quat newX = Quat(frustum.Up(), -mouseMotion.x * sensitivity);
+		newZ = newX.Transform(newZ);
 	}
 	
-	if (mouse_motion.y != 0.0f)
+	if (mouseMotion.y != 0.0f)
 	{
-		Quat new_Y = Quat(frustum.WorldRight(), -mouse_motion.y * sensitivity);
-		new_Z = new_Y.Transform(new_Z);
+		Quat newY = Quat(frustum.WorldRight(), -mouseMotion.y * sensitivity);
+		newZ = newY.Transform(newZ);
 	}
 	
-	float3 new_position = new_Z + reference;
+	float3 newPosition = newZ + reference;
 
-	PointAt(new_position, reference, true);
+	PointAt(newPosition, reference, true);
 }
 
 void M_Camera3D::PanCamera()
 {
-	float3 new_X		= float3::zero;
-	float3 new_Y		= float3::zero;
-	float3 new_position = float3::zero;
+	float3 newX		= float3::zero;
+	float3 newY		= float3::zero;
+	float3 newPosition = float3::zero;
 
 	Frustum frustum		= currentCamera->GetFrustum();
-	float2 mouse_motion = App->editor->GetWorldMouseMotionThroughEditor();
+	float2 mouseMotion = App->editor->GetWorldMouseMotionThroughEditor();
 
-	if (mouse_motion.x != 0)
+	if (mouseMotion.x != 0)
 	{
-		new_X = -mouse_motion.x * frustum.WorldRight() * Time::Real::GetDT();
+		newX = -mouseMotion.x * frustum.WorldRight() * Time::Real::GetDT();
 	}
 
-	if (mouse_motion.y != 0)
+	if (mouseMotion.y != 0)
 	{
-		new_Y = mouse_motion.y * frustum.Up() * Time::Real::GetDT();
+		newY = mouseMotion.y * frustum.Up() * Time::Real::GetDT();
 	}
 
-	new_position = new_X + new_Y;
+	newPosition = newX + newY;
 	
-	Move(new_position);
+	Move(newPosition);
 }
 
 void M_Camera3D::Zoom()
 {	
 	Frustum frustum		= currentCamera->GetFrustum();
-	float3 new_Z		= frustum.Front() * (float)App->input->GetMouseZ() * zoomSpeed * Time::Real::GetDT();
+	float3 newZ		= frustum.Front() * (float)App->input->GetMouseZ() * zoomSpeed * Time::Real::GetDT();
 
-	Move(new_Z);
+	Move(newZ);
 }
 
 float3 M_Camera3D::GetPosition() const
@@ -483,19 +483,19 @@ float M_Camera3D::GetZoomSpeed() const
 	return zoomSpeed;
 }
 
-void M_Camera3D::SetMovementSpeed(const float& movement_speed)
+void M_Camera3D::SetMovementSpeed(const float& movementSpeed)
 {
-	this->movementSpeed = movement_speed;
+	this->movementSpeed = movementSpeed;
 }
 
-void M_Camera3D::SetRotationSpeed(const float& rotation_speed)
+void M_Camera3D::SetRotationSpeed(const float& rotationSpeed)
 {
-	this->rotationSpeed = rotation_speed;
+	this->rotationSpeed = rotationSpeed;
 }
 
-void M_Camera3D::SetZoomSpeed(const float& zoom_speed)
+void M_Camera3D::SetZoomSpeed(const float& zoomSpeed)
 {
-	this->zoomSpeed = zoom_speed;
+	this->zoomSpeed = zoomSpeed;
 }
 
 float3 M_Camera3D::GetMasterCameraPosition() const
@@ -532,15 +532,15 @@ void M_Camera3D::SetMasterCameraScale(const float3& scale)
 
 void M_Camera3D::CastRay()
 {	
-	float2 mouse_pos = App->editor->GetWorldMousePositionThroughEditor();
+	float2 mousePos = App->editor->GetWorldMousePositionThroughEditor();
 
-	float norm_mouse_X = mouse_pos.x / (float)App->window->GetWidth();
-	float norm_mouse_Y = mouse_pos.y / (float)App->window->GetHeight();
+	float normMouseX = mousePos.x / (float)App->window->GetWidth();
+	float normMouseY = mousePos.y / (float)App->window->GetHeight();
 
-	float ray_origin_X = (norm_mouse_X - 0.5f) * 2;
-	float ray_origin_Y = (norm_mouse_Y - 0.5f) * 2;
+	float rayOriginX = (normMouseX - 0.5f) * 2;
+	float rayOriginY = (normMouseY - 0.5f) * 2;
 	
-	lastRaycast = currentCamera->GetFrustum().UnProjectLineSegment(ray_origin_X, ray_origin_Y);
+	lastRaycast = currentCamera->GetFrustum().UnProjectLineSegment(rayOriginX, rayOriginY);
 
 	App->scene->SelectGameObjectThroughRaycast(lastRaycast);
 }
@@ -550,7 +550,7 @@ bool M_Camera3D::DrawLastRaycast() const
 	return drawLastRaycast;
 }
 
-void M_Camera3D::SetDrawLastRaycast(const bool& set_to)
+void M_Camera3D::SetDrawLastRaycast(const bool& setTo)
 {
-	drawLastRaycast = set_to;
+	drawLastRaycast = setTo;
 }

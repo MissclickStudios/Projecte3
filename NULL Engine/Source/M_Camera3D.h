@@ -11,7 +11,7 @@ class C_Camera;
 class M_Camera3D : public Module
 {
 public:
-	M_Camera3D(bool is_active = true);
+	M_Camera3D(bool isActive = true);
 	~M_Camera3D();
 
 	bool			Init				(ParsonNode& root) override;
@@ -25,13 +25,13 @@ public:
 public:
 	void			CreateMasterCamera				();
 	C_Camera*		GetCurrentCamera				() const;
-	void			SetCurrentCamera				(C_Camera* c_camera);
+	void			SetCurrentCamera				(C_Camera* cCamera);
 	void			SetMasterCameraAsCurrentCamera	();
 
 public:
 	void			PointAt							(const float3& position, const float3& reference, bool orbit = false);
 	void			LookAt							(const float3& Spot);
-	void			Focus							(const float3& target_position, const float& distance_from_target = 10.0f);
+	void			Focus							(const float3& targetPosition, const float& distanceFromTarget = 10.0f);
 	void			Move							(const float3& velocity);
 
 	void			ReturnToWorldOrigin				();
@@ -45,9 +45,9 @@ public:																				// Camera3D Getters and Setters.
 	float			GetMovementSpeed				() const;
 	float			GetRotationSpeed				() const;
 	float			GetZoomSpeed					() const;
-	void			SetMovementSpeed				(const float& movement_speed);
-	void			SetRotationSpeed				(const float& rotation_speed);
-	void			SetZoomSpeed					(const float& zoom_speed);
+	void			SetMovementSpeed				(const float& movementSpeed);
+	void			SetRotationSpeed				(const float& rotationSpeed);
+	void			SetZoomSpeed					(const float& zoomSpeed);
 
 	float3			GetMasterCameraPosition			() const;
 	float3			GetMasterCameraRotation			() const;
@@ -60,7 +60,7 @@ public:
 	void			CastRay							();
 
 	bool			DrawLastRaycast					() const;
-	void			SetDrawLastRaycast				(const bool& set_to);
+	void			SetDrawLastRaycast				(const bool& setTo);
 
 private:
 	void			WASDMovement					();								// Translates the camera along XYZ (Right, Up, Forward), which will act as the camera's axis.

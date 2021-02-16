@@ -149,7 +149,7 @@ bool C_Animator::LoadState(ParsonNode& root)
 		}
 
 		std::string assetsPath = ASSETS_MODELS_PATH + std::string(animationNode.GetString("Name"));
-		App->resource_manager->AllocateResource((uint32)animationNode.GetNumber("UID"), assetsPath.c_str());
+		App->resourceManager->AllocateResource((uint32)animationNode.GetNumber("UID"), assetsPath.c_str());
 		
 		R_Animation* rAnimation = (R_Animation*)App->resourceManager->RequestResource((uint32)animationNode.GetNumber("UID"));
 		if (rAnimation != nullptr)

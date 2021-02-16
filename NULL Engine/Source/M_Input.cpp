@@ -11,12 +11,12 @@
 #define MAX_KEYS 300
 #define MAX_DIR_LENGTH 300
 
-M_Input::M_Input(bool is_active) : Module("Input", is_active)
+M_Input::M_Input(bool isActive) : Module("Input", isActive)
 {
 	keyboard = new KEY_STATE[MAX_KEYS];
 	memset(keyboard, 0, sizeof(KEY_STATE) * MAX_KEYS);
 
-	max_num_scancodes = (uint)SDL_NUM_SCANCODES;
+	maxNumScancodes = (uint)SDL_NUM_SCANCODES;
 
 	mouseX			= 0;
 	mouseY			= 0;
@@ -100,27 +100,27 @@ UPDATE_STATUS M_Input::PreUpdate(float dt)
 	{
 		if(buttons & SDL_BUTTON(i))
 		{
-			if (mouse_buttons[i] == KEY_STATE::KEY_IDLE)
+			if (mouseButtons[i] == KEY_STATE::KEY_IDLE)
 			{
-				mouse_buttons[i] = KEY_STATE::KEY_DOWN;
-				App->editor->AddInputLog(max_num_scancodes + i, (uint)KEY_STATE::KEY_DOWN);
+				mouseButtons[i] = KEY_STATE::KEY_DOWN;
+				App->editor->AddInputLog(maxNumScancodes + i, (uint)KEY_STATE::KEY_DOWN);
 			}
 			else
 			{
-				mouse_buttons[i] = KEY_STATE::KEY_REPEAT;
-				App->editor->AddInputLog(max_num_scancodes + i, (uint)KEY_STATE::KEY_REPEAT);
+				mouseButtons[i] = KEY_STATE::KEY_REPEAT;
+				App->editor->AddInputLog(maxNumScancodes + i, (uint)KEY_STATE::KEY_REPEAT);
 			}
 		}
 		else
 		{
-			if(mouse_buttons[i] == KEY_STATE::KEY_REPEAT || mouse_buttons[i] == KEY_STATE::KEY_DOWN)
+			if(mouseButtons[i] == KEY_STATE::KEY_REPEAT || mouseButtons[i] == KEY_STATE::KEY_DOWN)
 			{
-				mouse_buttons[i] = KEY_STATE::KEY_UP;
-				App->editor->AddInputLog(max_num_scancodes + i, (uint)KEY_STATE::KEY_UP);
+				mouseButtons[i] = KEY_STATE::KEY_UP;
+				App->editor->AddInputLog(maxNumScancodes + i, (uint)KEY_STATE::KEY_UP);
 			}
 			else
 			{
-				mouse_buttons[i] = KEY_STATE::KEY_IDLE;
+				mouseButtons[i] = KEY_STATE::KEY_IDLE;
 			}
 		}
 	}
@@ -238,12 +238,12 @@ KEY_STATE M_Input::GetKey(int id) const
 
 KEY_STATE M_Input::GetMouseButton(int id) const
 {
-	return mouse_buttons[id];
+	return mouseButtons[id];
 }
 
 uint M_Input::GetMaxNumScancodes() const
 {
-	return max_num_scancodes;
+	return maxNumScancodes;
 }
 
 int M_Input::GetMouseX() const

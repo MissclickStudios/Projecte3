@@ -466,9 +466,9 @@ uint Application::GetFrameCap() const
 	return frameCap;
 }
 
-void Application::SetFrameCap(uint new_cap)
+void Application::SetFrameCap(uint newCap)
 {
-	frameCap = new_cap;
+	frameCap = newCap;
 }
 
 // --- EDITOR METHODS ---

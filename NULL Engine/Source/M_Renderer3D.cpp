@@ -41,7 +41,7 @@
 #define STANDARD_LINE_WIDTH	1.0f
 #define BASE_LINE_WIDTH		3.0f
 
-M_Renderer3D::M_Renderer3D(bool is_active) : Module("Renderer3D", is_active), 
+M_Renderer3D::M_Renderer3D(bool isActive) : Module("Renderer3D", isActive), 
 context						(),
 vsync						(VSYNC),
 sceneFramebuffer			(0),
@@ -98,30 +98,30 @@ UPDATE_STATUS M_Renderer3D::PreUpdate(float dt)
 
 	glMatrixMode(GL_MODELVIEW);
 
-	C_Camera* current_camera = App->camera->GetCurrentCamera();
-	if (current_camera != nullptr)
+	C_Camera* currentCamera = App->camera->GetCurrentCamera();
+	if (currentCamera != nullptr)
 	{
-		if (current_camera->GetUpdateProjectionMatrix())
+		if (currentCamera->GetUpdateProjectionMatrix())
 		{
 			RecalculateProjectionMatrix();
-			current_camera->SetUpdateProjectionMatrix(false);
+			currentCamera->SetUpdateProjectionMatrix(false);
 		}
 	}
 
-	glLoadMatrixf((GLfloat*)current_camera->GetOGLViewMatrix());
+	glLoadMatrixf((GLfloat*)currentCamera->GetOGLViewMatrix());
 
 	// light 0 on cam pos
-	float3 camera_pos = float3::zero;
+	float3 cameraPos = float3::zero;
 	if (App->camera->GetCurrentCamera() != nullptr)
 	{
-		camera_pos = App->camera->GetPosition();
+		cameraPos = App->camera->GetPosition();
 	}
 	else
 	{
-		camera_pos = float3(0.0f, 20.0f, 0.0f);
+		cameraPos = float3(0.0f, 20.0f, 0.0f);
 	}
 
-	lights[0].SetPos(camera_pos.x, camera_pos.y, camera_pos.z);
+	lights[0].SetPos(cameraPos.x, cameraPos.y, cameraPos.z);
 
 	for (uint i = 0; i < MAX_LIGHTS; ++i)
 	{
@@ -190,9 +190,9 @@ bool M_Renderer3D::InitDebugVariables()
 	
 	worldGridSize				= WORLD_GRID_SIZE;
 	
-	worldGridColor			= White;
+	worldGridColor				= White;
 	wireframeColor				= Yellow;
-	vertexNormalsColor		= Yellow;													// TODO: Use other color?
+	vertexNormalsColor			= Yellow;													// TODO: Use other color?
 	faceNormalsColor			= Magenta;
 	aabbColor					= Green;
 	obbColor					= Orange;
@@ -213,9 +213,9 @@ bool M_Renderer3D::InitDebugVariables()
 
 	renderWorldGrid			= true;	
 	renderWorldAxis			= true;
-	renderWireframes			= false;
+	renderWireframes		= false;
 	renderWertexNormals		= false;
-	renderFaceNormals			= false;
+	renderFaceNormals		= false;
 	renderBoundingBoxes		= false;
 	renderSkeletons			= false;
 	renderPrimitiveExamples	= false;
@@ -341,9 +341,9 @@ bool M_Renderer3D::InitGlew()
 	bool ret = true;
 
 	// Initializing glew.
-	GLenum glew_init_return = glewInit();												// glew must be initialized after an OpenGL rendering context has been created.
+	GLenum glewInitReturn = glewInit();												// glew must be initialized after an OpenGL rendering context has been created.
 
-	if (glew_init_return != GLEW_NO_ERROR)
+	if (glewInitReturn != GLEW_NO_ERROR)
 	{
 		LOG("[ERROR] GLEW could not initialize! SDL_Error: %s\n", SDL_GetError());
 
@@ -355,14 +355,14 @@ bool M_Renderer3D::InitGlew()
 
 void M_Renderer3D::OnResize()
 {	
-	float win_width		= (float)App->window->GetWidth();
-	float win_height	= (float)App->window->GetHeight();
+	float winWidth		= (float)App->window->GetWidth();
+	float winHeight	= (float)App->window->GetHeight();
 
-	glViewport(0, 0, (GLsizei)win_width, (GLsizei)win_width);
+	glViewport(0, 0, (GLsizei)winWidth, (GLsizei)winWidth);
 
 	if (App->camera->GetCurrentCamera() != nullptr)
 	{
-		App->camera->GetCurrentCamera()->SetAspectRatio(win_width / win_height);
+		App->camera->GetCurrentCamera()->SetAspectRatio(winWidth / winHeight);
 	}
 	else
 	{
@@ -394,23 +394,23 @@ void M_Renderer3D::RecalculateProjectionMatrix()
 
 void M_Renderer3D::InitEngineIcons()
 {
-	uint32 animation_icon_uid	= App->resourceManager->LoadFromLibrary(ANIMATION_ICON_PATH);
-	uint32 file_icon_uid		= App->resourceManager->LoadFromLibrary(FILE_ICON_PATH);
-	uint32 folder_icon_uid		= App->resourceManager->LoadFromLibrary(FOLDER_ICON_PATH);
-	uint32 material_icon_uid	= App->resourceManager->LoadFromLibrary(MATERIAL_ICON_PATH);
-	uint32 model_icon_uid		= App->resourceManager->LoadFromLibrary(MODEL_ICON_PATH);
+	uint32 animationIconUid	= App->resourceManager->LoadFromLibrary(ANIMATION_ICON_PATH);
+	uint32 fileIconUid		= App->resourceManager->LoadFromLibrary(FILE_ICON_PATH);
+	uint32 folderIconUid		= App->resourceManager->LoadFromLibrary(FOLDER_ICON_PATH);
+	uint32 materialIconUid	= App->resourceManager->LoadFromLibrary(MATERIAL_ICON_PATH);
+	uint32 modelIconUid		= App->resourceManager->LoadFromLibrary(MODEL_ICON_PATH);
 
-	R_Texture* animation_icon	= (R_Texture*)App->resourceManager->RequestResource(animation_icon_uid);
-	R_Texture* file_icon		= (R_Texture*)App->resourceManager->RequestResource(file_icon_uid);
-	R_Texture* folder_icon		= (R_Texture*)App->resourceManager->RequestResource(folder_icon_uid);
-	R_Texture* material_icon	= (R_Texture*)App->resourceManager->RequestResource(material_icon_uid);
-	R_Texture* model_icon		= (R_Texture*)App->resourceManager->RequestResource(model_icon_uid);
+	R_Texture* animationIcon	= (R_Texture*)App->resourceManager->RequestResource(animationIconUid);
+	R_Texture* fileIcon		= (R_Texture*)App->resourceManager->RequestResource(fileIconUid);
+	R_Texture* folderIcon		= (R_Texture*)App->resourceManager->RequestResource(folderIconUid);
+	R_Texture* materialIcon	= (R_Texture*)App->resourceManager->RequestResource(materialIconUid);
+	R_Texture* modelIcon		= (R_Texture*)App->resourceManager->RequestResource(modelIconUid);
 
-	engineIcons.animation_icon = animation_icon;
-	engineIcons.file_icon		= file_icon;
-	engineIcons.folder_icon	= folder_icon;
-	engineIcons.material_icon	= material_icon;
-	engineIcons.model_icon		= model_icon;
+	engineIcons.animation_icon = animationIcon;
+	engineIcons.file_icon		= fileIcon;
+	engineIcons.folder_icon	= folderIcon;
+	engineIcons.material_icon	= materialIcon;
+	engineIcons.model_icon		= modelIcon;
 }
 
 void M_Renderer3D::InitFramebuffers()
@@ -461,7 +461,7 @@ void M_Renderer3D::InitFramebuffers()
 
 void M_Renderer3D::LoadDebugTexture()
 {
-	GLubyte checker_image[CHECKERS_HEIGHT][CHECKERS_WIDTH][4];						// HEIGHT columns, WIDTH rows and 4 variables per checker (for RGBA purposes).
+	GLubyte checkerImage[CHECKERS_HEIGHT][CHECKERS_WIDTH][4];						// HEIGHT columns, WIDTH rows and 4 variables per checker (for RGBA purposes).
 
 	for (int i = 0; i < CHECKERS_HEIGHT; ++i)											// There will be CHECKERS_WIDTH rows per column.
 	{
@@ -469,10 +469,10 @@ void M_Renderer3D::LoadDebugTexture()
 		{
 			int color = ((((i & 0x8) == 0) ^ ((j & 0x8) == 0))) * 255;					// Getting the checker's color (white or black) according to the iteration indices and bitwise ops.
 
-			checker_image[i][j][0] = (GLubyte)color;									// R
-			checker_image[i][j][1] = (GLubyte)color;									// G
-			checker_image[i][j][2] = (GLubyte)color;									// B
-			checker_image[i][j][3] = (GLubyte)255;										// A
+			checkerImage[i][j][0] = (GLubyte)color;									// R
+			checkerImage[i][j][1] = (GLubyte)color;									// G
+			checkerImage[i][j][2] = (GLubyte)color;									// B
+			checkerImage[i][j][3] = (GLubyte)255;										// A
 		}
 	}
 
@@ -488,7 +488,7 @@ void M_Renderer3D::LoadDebugTexture()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);	// MIPMAP_NEAREST: Same as GL_NEAREST but works with the mipmaps generated by glGenerateMipmap() to
 	// --->																				// handle the process of resizing a tex. Takes the mipmap that most closely matches the size of the px.
 
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, CHECKERS_WIDTH, CHECKERS_HEIGHT, 0, GL_RGBA, GL_UNSIGNED_BYTE, checker_image);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, CHECKERS_WIDTH, CHECKERS_HEIGHT, 0, GL_RGBA, GL_UNSIGNED_BYTE, checkerImage);
 
 	glGenerateMipmap(GL_TEXTURE_2D);
 
@@ -535,8 +535,8 @@ void M_Renderer3D::RendererShortcuts()
 	{
 		if (App->camera->GetCurrentCamera() != nullptr)
 		{
-			float current_fov = App->camera->GetCurrentCamera()->GetVerticalFOV();
-			App->camera->GetCurrentCamera()->SetVerticalFOV(current_fov + 5.0f);
+			float currentFov = App->camera->GetCurrentCamera()->GetVerticalFOV();
+			App->camera->GetCurrentCamera()->SetVerticalFOV(currentFov + 5.0f);
 		}
 	}
 	if (App->input->GetKey(SDL_SCANCODE_KP_MINUS) == KEY_STATE::KEY_DOWN)
@@ -642,22 +642,22 @@ void M_Renderer3D::DrawWorldAxis()
 	glLineWidth(STANDARD_LINE_WIDTH);
 }
 
-void M_Renderer3D::AddRenderersBatch(const std::vector<MeshRenderer>& mesh_renderers, const std::vector<CuboidRenderer>& cuboid_renderers, 
-										const std::vector<SkeletonRenderer>& skeleton_renderers)
+void M_Renderer3D::AddRenderersBatch(const std::vector<MeshRenderer>& meshRenderers, const std::vector<CuboidRenderer>& cuboidRenderers, 
+										const std::vector<SkeletonRenderer>& skeletonRenderers)
 {	
-	for (uint i = 0; i < mesh_renderers.size(); ++i)
+	for (uint i = 0; i < meshRenderers.size(); ++i)
 	{
-		this->meshRenderers.push_back(mesh_renderers[i]);
+		this->meshRenderers.push_back(meshRenderers[i]);
 	}
 
-	for (uint i = 0; i < cuboid_renderers.size(); ++i)
+	for (uint i = 0; i < cuboidRenderers.size(); ++i)
 	{
-		this->cuboidRenderers.push_back(cuboid_renderers[i]);
+		this->cuboidRenderers.push_back(cuboidRenderers[i]);
 	}
 
-	for (uint i = 0; i < skeleton_renderers.size(); ++i)
+	for (uint i = 0; i < skeletonRenderers.size(); ++i)
 	{
-		this->skeletonRenderers.push_back(skeleton_renderers[i]);
+		this->skeletonRenderers.push_back(skeletonRenderers[i]);
 	}
 }
 
@@ -710,22 +710,22 @@ void M_Renderer3D::RenderSkeletons()
 	glEnable(GL_LIGHTING);
 }
 
-void M_Renderer3D::DeleteFromMeshRenderers(C_Mesh* c_mesh_to_delete)
+void M_Renderer3D::DeleteFromMeshRenderers(C_Mesh* cMeshToDelete)
 {
 	for (uint i = 0; i < meshRenderers.size(); ++i)
 	{
-		if (meshRenderers[i].c_mesh == c_mesh_to_delete)
+		if (meshRenderers[i].cMesh == cMeshToDelete)
 		{
 			meshRenderers.erase(meshRenderers.begin() + i);
 		}
 	}
 }
 
-void M_Renderer3D::DeleteFromMeshRenderers(R_Mesh* r_mesh_to_delete)
+void M_Renderer3D::DeleteFromMeshRenderers(R_Mesh* rMeshToDelete)
 {
 	for (uint i = 0; i < meshRenderers.size(); ++i)
 	{
-		if (meshRenderers[i].c_mesh->GetMesh() == r_mesh_to_delete)
+		if (meshRenderers[i].cMesh->GetMesh() == rMeshToDelete)
 		{
 			//mesh_renderers[i].c_mesh->SetMesh(nullptr);
 			meshRenderers.erase(meshRenderers.begin() + i);
@@ -837,11 +837,11 @@ bool M_Renderer3D::GetVsync() const
 	return vsync;
 }
 
-void M_Renderer3D::SetVsync(const bool& set_to)
+void M_Renderer3D::SetVsync(const bool& setTo)
 {
-	if (set_to != vsync)
+	if (setTo != vsync)
 	{
-		vsync = set_to;
+		vsync = setTo;
 		
 		int result = SDL_GL_SetSwapInterval(vsync ? 1 : 0);								// 0 for immediate updates, 1 for updates synchronized with vertical retrace.
 
@@ -866,21 +866,21 @@ bool M_Renderer3D::GetGLFlag(RENDERER_FLAGS flag) const
 	return glIsEnabled((GLenum)flag);
 }
 
-void M_Renderer3D::SetGLFlag(GLenum flag, bool set_to)
+void M_Renderer3D::SetGLFlag(GLenum flag, bool setTo)
 {
-	if (set_to != (bool)glIsEnabled(flag))
+	if (setTo != (bool)glIsEnabled(flag))
 	{
-		set_to ? glEnable(flag) : glDisable(flag);
+		setTo ? glEnable(flag) : glDisable(flag);
 	}
 }
 
-void M_Renderer3D::SetGLFlag(RENDERER_FLAGS flag, bool set_to)
+void M_Renderer3D::SetGLFlag(RENDERER_FLAGS flag, bool setTo)
 {
-	GLenum gl_flag = (GLenum)flag;
+	GLenum glFlag = (GLenum)flag;
 	
-	if (set_to != (bool)glIsEnabled(gl_flag))
+	if (setTo != (bool)glIsEnabled(glFlag))
 	{
-		set_to ? glEnable(gl_flag) : glDisable(gl_flag);
+		setTo ? glEnable(glFlag) : glDisable(glFlag);
 	}
 }
 
@@ -1019,116 +1019,116 @@ bool M_Renderer3D::GetRenderPrimitiveExamples() const
 	return renderPrimitiveExamples;
 }
 
-void M_Renderer3D::SetWorldGridSize(const uint& world_grid_size)
+void M_Renderer3D::SetWorldGridSize(const uint& worldGridSize)
 {
-	this->worldGridSize = world_grid_size;
+	this->worldGridSize = worldGridSize;
 }
 
-void M_Renderer3D::SetWorldGridColor(const Color& world_grid_color)
+void M_Renderer3D::SetWorldGridColor(const Color& worldGridColor)
 {
-	this->worldGridColor = world_grid_color;
+	this->worldGridColor = worldGridColor;
 }
 
-void M_Renderer3D::SetWireframeColor(const Color& wireframe_color)
+void M_Renderer3D::SetWireframeColor(const Color& wireframeColor)
 {
-	this->wireframeColor = wireframe_color;
+	this->wireframeColor = wireframeColor;
 }
 
-void M_Renderer3D::SetVertexNormalsColor(const Color& vertex_normals_color)
+void M_Renderer3D::SetVertexNormalsColor(const Color& vertexNormalsColor)
 {
-	this->vertexNormalsColor = vertex_normals_color;
+	this->vertexNormalsColor = vertexNormalsColor;
 }
 
-void M_Renderer3D::SetFaceNormalsColor(const Color& face_normals_color)
+void M_Renderer3D::SetFaceNormalsColor(const Color& faceNormalsColor)
 {
-	this->faceNormalsColor = face_normals_color;
+	this->faceNormalsColor = faceNormalsColor;
 }
 
-void M_Renderer3D::SetAABBColor(const Color& aabb_color)
+void M_Renderer3D::SetAABBColor(const Color& aabbColor)
 {
-	this->aabbColor = aabb_color;
+	this->aabbColor = aabbColor;
 }
 
-void M_Renderer3D::SetOBBColor(const Color& obb_color)
+void M_Renderer3D::SetOBBColor(const Color& obbColor)
 {
-	this->obbColor = obb_color;
+	this->obbColor = obbColor;
 }
 
-void M_Renderer3D::SetFrustumColor(const Color& frustum_color)
+void M_Renderer3D::SetFrustumColor(const Color& frustumColor)
 {
-	this->frustumColor = frustum_color;
+	this->frustumColor = frustumColor;
 }
 
-void M_Renderer3D::SetRayColor(const Color& ray_color)
+void M_Renderer3D::SetRayColor(const Color& rayColor)
 {
-	this->rayColor = ray_color;
+	this->rayColor = rayColor;
 }
 
-void M_Renderer3D::SetBoneColor(const Color& bone_color)
+void M_Renderer3D::SetBoneColor(const Color& boneColor)
 {
-	this->boneColor = bone_color;
+	this->boneColor = boneColor;
 }
 
-void M_Renderer3D::SetWorldGridLineWidth(const float& world_grid_line_width)
+void M_Renderer3D::SetWorldGridLineWidth(const float& worldGridLineWidth)
 {
-	this->worldGridLineWidth = world_grid_line_width;
+	this->worldGridLineWidth = worldGridLineWidth;
 }
 
-void M_Renderer3D::SetWireframeLineWidth(const float& wireframe_line_width)
+void M_Renderer3D::SetWireframeLineWidth(const float& wireframeLineWidth)
 {
-	this->wireframeLineWidth = wireframe_line_width;
+	this->wireframeLineWidth = wireframeLineWidth;
 }
 
-void M_Renderer3D::SetVertexNormalsWidth(const float& vertex_normals_width)
+void M_Renderer3D::SetVertexNormalsWidth(const float& vertexNormalsWidth)
 {
-	this->vertexNormalsWidth = vertex_normals_width;
+	this->vertexNormalsWidth = vertexNormalsWidth;
 }
 
-void M_Renderer3D::SetFaceNormalsWidth(const float& face_normals_width)
+void M_Renderer3D::SetFaceNormalsWidth(const float& faceNormalsWidth)
 {
-	this->faceNormalsWidth = face_normals_width;
+	this->faceNormalsWidth = faceNormalsWidth;
 }
 
-void M_Renderer3D::SetAABBEdgeWidth(const float& aabb_edge_width)
+void M_Renderer3D::SetAABBEdgeWidth(const float& aabbEdgeWidth)
 {
-	this->aabbEdgeWidth = aabb_edge_width;
+	this->aabbEdgeWidth = aabbEdgeWidth;
 }
 
-void M_Renderer3D::SetOBBEdgeWidth(const float& obb_edge_width)
+void M_Renderer3D::SetOBBEdgeWidth(const float& obbEdgeWidth)
 {
-	this->obbEdgeWidth = obb_edge_width;
+	this->obbEdgeWidth = obbEdgeWidth;
 }
 
-void M_Renderer3D::SetFrustumEdgeWidth(const float& frustum_edge_width)
+void M_Renderer3D::SetFrustumEdgeWidth(const float& frustumEdgeWidth)
 {
-	this->frustumEdgeWidth = frustum_edge_width;
+	this->frustumEdgeWidth = frustumEdgeWidth;
 }
 
-void M_Renderer3D::SetRayWidth(const float& ray_width)
+void M_Renderer3D::SetRayWidth(const float& rayWidth)
 {
-	this->rayWidth = ray_width;
+	this->rayWidth = rayWidth;
 }
 
-void M_Renderer3D::SetBoneWidth(const float& bone_width)
+void M_Renderer3D::SetBoneWidth(const float& boneWidth)
 {
-	this->boneWidth = bone_width;
+	this->boneWidth = boneWidth;
 }
 
-void M_Renderer3D::SetRenderWorldGrid(const bool& set_to)
+void M_Renderer3D::SetRenderWorldGrid(const bool& setTo)
 {
-	renderWorldGrid = set_to;
+	renderWorldGrid = setTo;
 }
 
-void M_Renderer3D::SetRenderWorldAxis(const bool& set_to)
+void M_Renderer3D::SetRenderWorldAxis(const bool& setTo)
 {
-	renderWorldAxis = set_to;
+	renderWorldAxis = setTo;
 }
 
-void M_Renderer3D::SetRenderWireframes(const bool& set_to)
+void M_Renderer3D::SetRenderWireframes(const bool& setTo)
 {
-	if (set_to != renderWireframes)
+	if (setTo != renderWireframes)
 	{
-		renderWireframes = set_to;
+		renderWireframes = setTo;
 
 		if (renderWireframes)
 		{
@@ -1149,46 +1149,46 @@ void M_Renderer3D::SetRenderWireframes(const bool& set_to)
 	}
 }
 
-void M_Renderer3D::SetRenderVertexNormals(const bool& set_to)
+void M_Renderer3D::SetRenderVertexNormals(const bool& setTo)
 {
-	renderWertexNormals = set_to;
+	renderWertexNormals = setTo;
 }
 
-void M_Renderer3D::SetRenderFaceNormals(const bool& set_to)
+void M_Renderer3D::SetRenderFaceNormals(const bool& setTo)
 {
-	renderFaceNormals = set_to;
+	renderFaceNormals = setTo;
 }
 
-void M_Renderer3D::SetRenderBoundingBoxes(const bool& set_to)
+void M_Renderer3D::SetRenderBoundingBoxes(const bool& setTo)
 {
-	renderBoundingBoxes = set_to;
+	renderBoundingBoxes = setTo;
 }
 
-void M_Renderer3D::SetRenderSkeletons(const bool& set_to)
+void M_Renderer3D::SetRenderSkeletons(const bool& setTo)
 {
-	renderSkeletons = set_to;
+	renderSkeletons = setTo;
 }
 
-void M_Renderer3D::SetRenderPrimtiveExamples(const bool& set_to)
+void M_Renderer3D::SetRenderPrimtiveExamples(const bool& setTo)
 {
-	renderPrimitiveExamples = set_to;
+	renderPrimitiveExamples = setTo;
 }
 
 // --- RENDERER STRUCTURES METHODS ---
 // --- MESH RENDERER METHODS
-MeshRenderer::MeshRenderer(const float4x4& transform, C_Mesh* c_mesh, C_Material* c_material) :
+MeshRenderer::MeshRenderer(const float4x4& transform, C_Mesh* cMesh, C_Material* cMaterial) :
 transform	(transform),
-c_mesh		(c_mesh),
-c_material	(c_material)
+cMesh		(cMesh),
+cMaterial	(cMaterial)
 {
 
 }
 
 void MeshRenderer::Render()
 {
-	R_Mesh* r_mesh = c_mesh->GetMesh();
+	R_Mesh* rMesh = cMesh->GetMesh();
 
-	if (r_mesh == nullptr)
+	if (rMesh == nullptr)
 	{
 		LOG("[ERROR] Renderer 3D: Could not render Mesh! Error: R_Mesh* was nullptr.");
 		return;
@@ -1205,17 +1205,17 @@ void MeshRenderer::Render()
 	glEnableClientState(GL_NORMAL_ARRAY);															// Enables the normal array for writing and to be used during rendering.
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);													// Enables the texture coordinate array for writing and to be used during rendering.
 
-	glBindBuffer(GL_ARRAY_BUFFER, r_mesh->TBO);														// Will bind the buffer object with the mesh->TBO identifyer for rendering.
+	glBindBuffer(GL_ARRAY_BUFFER, rMesh->TBO);														// Will bind the buffer object with the mesh->TBO identifyer for rendering.
 	glTexCoordPointer(2, GL_FLOAT, 0, nullptr);														// Specifies the location and data format of an array of tex coords to use when rendering.
 
-	glBindBuffer(GL_ARRAY_BUFFER, r_mesh->NBO);														// The normal buffer is bound so the normal positions can be interpreted correctly.
+	glBindBuffer(GL_ARRAY_BUFFER, rMesh->NBO);														// The normal buffer is bound so the normal positions can be interpreted correctly.
 	glNormalPointer(GL_FLOAT, 0, nullptr);															// 
 
-	glBindBuffer(GL_ARRAY_BUFFER, r_mesh->VBO);														// The vertex buffer is bound so the vertex positions can be interpreted correctly.
+	glBindBuffer(GL_ARRAY_BUFFER, rMesh->VBO);														// The vertex buffer is bound so the vertex positions can be interpreted correctly.
 	glVertexPointer(3, GL_FLOAT, 0, nullptr);														// Specifies the location and data format of an array of vert coords to use when rendering.
 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, r_mesh->IBO);												// Will bind the buffer object with the mesh->IBO identifyer for rendering.
-	glDrawElements(GL_TRIANGLES, r_mesh->indices.size(), GL_UNSIGNED_INT, nullptr);					// 
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, rMesh->IBO);												// Will bind the buffer object with the mesh->IBO identifyer for rendering.
+	glDrawElements(GL_TRIANGLES, rMesh->indices.size(), GL_UNSIGNED_INT, nullptr);					// 
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);														// Clearing the buffers.
 	glBindBuffer(GL_ARRAY_BUFFER, 0);																// 												
@@ -1229,35 +1229,35 @@ void MeshRenderer::Render()
 	ClearDebugParameters();																			// Clear the specifications applied in ApplyDebugParameters().
 
 	// --- DEBUG DRAW ---
-	if (r_mesh->draw_vertex_normals || App->renderer->GetRenderVertexNormals())
+	if (rMesh->draw_vertex_normals || App->renderer->GetRenderVertexNormals())
 	{
-		RenderVertexNormals(r_mesh);
+		RenderVertexNormals(rMesh);
 	}
 
-	if (r_mesh->draw_face_normals || App->renderer->GetRenderFaceNormals())
+	if (rMesh->draw_face_normals || App->renderer->GetRenderFaceNormals())
 	{
-		RenderFaceNormals(r_mesh);
+		RenderFaceNormals(rMesh);
 	}
 
 	glPopMatrix();
 }
 
-void MeshRenderer::RenderVertexNormals(const R_Mesh* r_mesh)
+void MeshRenderer::RenderVertexNormals(const R_Mesh* rMesh)
 {
-	if (r_mesh == nullptr)
+	if (rMesh == nullptr)
 	{
 		LOG("[ERROR] Renderer 3D: Could not render Mesh Vertex Normals! Error: R_Mesh* was nullptr.");
 		return;
 	}
 	
-	if (r_mesh->vertices.size() != r_mesh->normals.size())
+	if (rMesh->vertices.size() != rMesh->normals.size())
 	{
 		LOG("[ERROR] Renderer 3D: Could not render Mesh Vertex Normals! Error: Num Vertices != Num Normals.");
 		return;
 	}
 
-	std::vector<float> vertices	= r_mesh->vertices;
-	std::vector<float> normals	= r_mesh->normals;
+	std::vector<float> vertices	= rMesh->vertices;
+	std::vector<float> normals	= rMesh->normals;
 
 	glColor4fv(App->renderer->GetVertexNormalsColor().C_Array());
 	glLineWidth(App->renderer->GetVertexNormalsWidth());
@@ -1276,25 +1276,25 @@ void MeshRenderer::RenderVertexNormals(const R_Mesh* r_mesh)
 	// Clear vectors?
 }
 
-void MeshRenderer::RenderFaceNormals(const R_Mesh* r_mesh)
+void MeshRenderer::RenderFaceNormals(const R_Mesh* rMesh)
 {
-	if (r_mesh == nullptr)
+	if (rMesh == nullptr)
 	{
 		LOG("[ERROR] Renderer 3D: Could not render Mesh Face Normals! Error: R_Mesh* was nullptr.");
 		return;
 	}
 	
-	if (r_mesh->vertices.size() != r_mesh->normals.size())
+	if (rMesh->vertices.size() != rMesh->normals.size())
 	{
 		LOG("[ERROR] Renderer 3D: Could not render Mesh Face Normals! Error: Num Vertices != Num Normals.");
 		return;
 	}
 
-	std::vector<Triangle> vertex_faces;
-	std::vector<Triangle> normal_faces;
-	GetFaces(r_mesh, vertex_faces, normal_faces);
+	std::vector<Triangle> vertexFaces;
+	std::vector<Triangle> normalFaces;
+	GetFaces(rMesh, vertexFaces, normalFaces);
 
-	if (vertex_faces.size() != normal_faces.size())
+	if (vertexFaces.size() != normalFaces.size())
 	{
 		LOG("[ERROR] Renderer 3D: Could not render Mesh Face Normals! Error: Num Vertex Faces != Num Normal Faces.");
 		return;
@@ -1305,10 +1305,10 @@ void MeshRenderer::RenderFaceNormals(const R_Mesh* r_mesh)
 	glBegin(GL_LINES);
 
 
-	for (uint i = 0; i < vertex_faces.size(); ++i)
+	for (uint i = 0; i < vertexFaces.size(); ++i)
 	{
-		float3 origin		= vertex_faces[i].CenterPoint();											// Center vector of Face Vertices
-		float3 destination	= origin + normal_faces[i].CenterPoint();									// Center of Face Vertices + Center of Face Normals.
+		float3 origin		= vertexFaces[i].CenterPoint();											// Center vector of Face Vertices
+		float3 destination	= origin + normalFaces[i].CenterPoint();									// Center of Face Vertices + Center of Face Normals.
 
 		glVertex3f(origin.x, origin.y, origin.z);
 		glVertex3f(destination.x, destination.y, destination.z);
@@ -1318,35 +1318,35 @@ void MeshRenderer::RenderFaceNormals(const R_Mesh* r_mesh)
 	glLineWidth(STANDARD_LINE_WIDTH);
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
-	vertex_faces.clear();
-	normal_faces.clear();
+	vertexFaces.clear();
+	normalFaces.clear();
 }
 
-void MeshRenderer::GetFaces(const R_Mesh* r_mesh, std::vector<Triangle>& vertex_faces, std::vector<Triangle>& normal_faces)
+void MeshRenderer::GetFaces(const R_Mesh* rMesh, std::vector<Triangle>& vertexFaces, std::vector<Triangle>& normalFaces)
 {
 	std::vector<float3> vertices;
 	std::vector<float3> normals;
 	
-	for (uint i = 0; i < r_mesh->vertices.size(); i += 3)
+	for (uint i = 0; i < rMesh->vertices.size(); i += 3)
 	{
 		float3 vertex;
 		float3 normal;
 
-		vertex.x = r_mesh->vertices[i];
-		vertex.y = r_mesh->vertices[i + 1];
-		vertex.z = r_mesh->vertices[i + 2];
+		vertex.x = rMesh->vertices[i];
+		vertex.y = rMesh->vertices[i + 1];
+		vertex.z = rMesh->vertices[i + 2];
 
-		normal.x = r_mesh->normals[i];
-		normal.y = r_mesh->normals[i + 1];
-		normal.z = r_mesh->normals[i + 2];
+		normal.x = rMesh->normals[i];
+		normal.y = rMesh->normals[i + 1];
+		normal.z = rMesh->normals[i + 2];
 
 		vertices.push_back(vertex);
 		normals.push_back(normal);
 
 		if (vertices.size() == 3 && normals.size() == 3)
 		{
-			vertex_faces.push_back(Triangle(vertices[0], vertices[1], vertices[2]));
-			normal_faces.push_back(Triangle(normals[0], normals[1], normals[2]));
+			vertexFaces.push_back(Triangle(vertices[0], vertices[1], vertices[2]));
+			normalFaces.push_back(Triangle(normals[0], normals[1], normals[2]));
 
 			vertices.clear();
 			normals.clear();
@@ -1359,13 +1359,13 @@ void MeshRenderer::GetFaces(const R_Mesh* r_mesh, std::vector<Triangle>& vertex_
 
 void MeshRenderer::ApplyDebugParameters()
 {
-	if (App->renderer->GetRenderWireframes() || c_mesh->GetShowWireframe())
+	if (App->renderer->GetRenderWireframes() || cMesh->GetShowWireframe())
 	{
 		glColor4fv(App->renderer->GetWireframeColor().C_Array());
 		glLineWidth(App->renderer->GetWireframeLineWidth());
 	}
 
-	if (c_mesh->GetShowWireframe() && !App->renderer->GetRenderWireframes())
+	if (cMesh->GetShowWireframe() && !App->renderer->GetRenderWireframes())
 	{
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		glDisable(GL_TEXTURE_2D);
@@ -1375,7 +1375,7 @@ void MeshRenderer::ApplyDebugParameters()
 
 void MeshRenderer::ClearDebugParameters()
 {
-	if (c_mesh->GetShowWireframe() && !App->renderer->GetRenderWireframes())
+	if (cMesh->GetShowWireframe() && !App->renderer->GetRenderWireframes())
 	{
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		glEnable(GL_TEXTURE_2D);
@@ -1388,34 +1388,34 @@ void MeshRenderer::ClearDebugParameters()
 
 void MeshRenderer::ApplyTextureAndMaterial()
 {
-	if (c_material != nullptr)
+	if (cMaterial != nullptr)
 	{
-		if (!c_material->IsActive())
+		if (!cMaterial->IsActive())
 		{
 			glDisable(GL_TEXTURE_2D);
 		}
 
-		if (c_material->GetTexture() == nullptr)														// If the Material Component does not have a Texture Resource.
+		if (cMaterial->GetTexture() == nullptr)														// If the Material Component does not have a Texture Resource.
 		{
-			Color color = c_material->GetMaterialColour();
+			Color color = cMaterial->GetMaterialColour();
 			glColor4f(color.r, color.g, color.b, color.a);												// Apply the diffuse color to the mesh.
 		}
-		else if (c_material->UseDefaultTexture())														// If the default texture is set to be used (bool use_default_texture)
+		else if (cMaterial->UseDefaultTexture())														// If the default texture is set to be used (bool use_default_texture)
 		{
 			glBindTexture(GL_TEXTURE_2D, App->renderer->GetDebugTextureID());							// Binding the texture that will be rendered. Index = 0 means we are clearing the binding.
 		}
 		else
 		{
-			glBindTexture(GL_TEXTURE_2D, c_material->GetTextureID());									// Binding the texture_id in the Texture Resource of the Material Component.
+			glBindTexture(GL_TEXTURE_2D, cMaterial->GetTextureID());									// Binding the texture_id in the Texture Resource of the Material Component.
 		}
 	}
 }
 
 void MeshRenderer::ClearTextureAndMaterial()
 {
-	if (c_material != nullptr)
+	if (cMaterial != nullptr)
 	{
-		if (!c_material->IsActive())
+		if (!cMaterial->IsActive())
 		{
 			glEnable(GL_TEXTURE_2D);
 		}
@@ -1423,11 +1423,11 @@ void MeshRenderer::ClearTextureAndMaterial()
 }
 
 // --- CUBOID RENDERER METHODS
-CuboidRenderer::CuboidRenderer(const float3* vertices, const Color& color, const float& edge_width) :
+CuboidRenderer::CuboidRenderer(const float3* vertices, const Color& color, const float& edgeWidth) :
 vertices	(vertices),
 type		(CUBOID_TYPE::NONE),
 color		(color),
-edge_width	(edge_width)
+edgeWidth	(edgeWidth)
 {
 
 }
@@ -1436,7 +1436,7 @@ CuboidRenderer::CuboidRenderer(const float3* vertices, CUBOID_TYPE type) :
 vertices	(vertices),
 type		(type),
 color		(GetColorByType()),
-edge_width	(GetEdgeWidthByType())
+edgeWidth	(GetEdgeWidthByType())
 {
 
 }
@@ -1454,7 +1454,7 @@ void CuboidRenderer::Render()
 	GLfloat* H = (GLfloat*)&vertices[7];
 
 	glColor4f(color.r, color.g, color.b, color.a);
-	glLineWidth(edge_width);
+	glLineWidth(edgeWidth);
 	glBegin(GL_LINES);
 
 	// --- FRONT
@@ -1523,10 +1523,10 @@ float CuboidRenderer::GetEdgeWidthByType()
 }
 
 // --- RAY RENDERER METHODS
-RayRenderer::RayRenderer(const LineSegment& ray, const Color& color, const float& ray_width) :
+RayRenderer::RayRenderer(const LineSegment& ray, const Color& color, const float& rayWidth) :
 ray			(ray),
 color		(color),
-ray_width	(ray_width)
+rayWidth	(rayWidth)
 {
 	
 }
@@ -1534,7 +1534,7 @@ ray_width	(ray_width)
 RayRenderer::RayRenderer(const LineSegment& ray) : 
 ray			(ray),
 color		(App->renderer->GetRayColor()),
-ray_width	(App->renderer->GetRayWidth())
+rayWidth	(App->renderer->GetRayWidth())
 {
 
 }
@@ -1546,7 +1546,7 @@ void RayRenderer::Render()
 
 	glColor4f(color.r, color.g, color.b, color.a);
 
-	glLineWidth(ray_width);
+	glLineWidth(rayWidth);
 	glBegin(GL_LINES);
 
 	glVertex3fv(A);
@@ -1559,10 +1559,10 @@ void RayRenderer::Render()
 }
 
 // --- SKELETON RENDERER METHODS
-SkeletonRenderer::SkeletonRenderer(const std::vector<LineSegment>& bones, const Color& color, const float& bone_width) :
+SkeletonRenderer::SkeletonRenderer(const std::vector<LineSegment>& bones, const Color& color, const float& boneWidth) :
 bones		(bones),
 color		(color),
-bone_width	(bone_width)
+boneWidth	(boneWidth)
 {
 
 }
@@ -1570,7 +1570,7 @@ bone_width	(bone_width)
 SkeletonRenderer::SkeletonRenderer(const std::vector<LineSegment>& bones) :
 bones		(bones),
 color		(App->renderer->GetBoneColor()),
-bone_width	(App->renderer->GetBoneWidth())
+boneWidth	(App->renderer->GetBoneWidth())
 {
 
 }
@@ -1582,7 +1582,7 @@ void SkeletonRenderer::Render()
 	uint bytes		= sizeof(float) * 3;
 
 	glColor4f(color.r, color.g, color.b, color.a);
-	glLineWidth(bone_width);
+	glLineWidth(boneWidth);
 	glBegin(GL_LINES);
 
 	for (uint i = 0; i < bones.size(); ++i)
