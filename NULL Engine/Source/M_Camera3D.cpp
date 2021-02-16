@@ -18,7 +18,7 @@
 #define ROTATION_SPEED 0.05f
 #define ZOOM_SPEED 300.0f
 
-M_Camera3D::M_Camera3D(bool is_active) : Module("Camera3D", is_active),
+M_Camera3D::M_Camera3D(bool isActive) : Module("Camera3D", isActive),
 masterCamera		(nullptr),
 currentCamera		(nullptr),
 drawLastRaycast	(false)
@@ -174,16 +174,16 @@ void M_Camera3D::CreateMasterCamera()
 	masterCamera->SetName("MasterCamera");
 	masterCamera->CreateComponent(COMPONENT_TYPE::CAMERA);
 	
-	C_Camera* c_camera = masterCamera->GetComponent<C_Camera>();
-	c_camera->SetFarPlaneDistance(1000.0f);
-	SetCurrentCamera(c_camera);
+	C_Camera* cCamera = masterCamera->GetComponent<C_Camera>();
+	cCamera->SetFarPlaneDistance(1000.0f);
+	SetCurrentCamera(cCamera);
 	
 	if (app != nullptr)
 	{
-		float win_width		= (float)app->window->GetWidth();
-		float win_height	= (float)app->window->GetHeight();
+		float winWidth		= (float)app->window->GetWidth();
+		float winHeight	= (float)app->window->GetHeight();
 		
-		c_camera->SetAspectRatio(win_width/ win_height);
+		cCamera->SetAspectRatio(winWidth/ winHeight);
 	}
 }
 
@@ -192,15 +192,15 @@ C_Camera* M_Camera3D::GetCurrentCamera() const
 	return currentCamera;
 }
 
-void M_Camera3D::SetCurrentCamera(C_Camera* c_camera)
+void M_Camera3D::SetCurrentCamera(C_Camera* cCamera)
 {
-	if (c_camera == nullptr)
+	if (cCamera == nullptr)
 	{
 		LOG("[ERROR] Camera: Could not set a new current camera! Error: Given Camera Component was nullptr.");
 		return;
 	}
 
-	if (c_camera->GetOwner() == nullptr)																						// Highly unlikely case. Gets checked just to make sure.
+	if (cCamera->GetOwner() == nullptr)																						// Highly unlikely case. Gets checked just to make sure.
 	{
 		LOG("[ERROR] Camera: Could not set a new current camera! Error: Given Camera Component's owner was nullptr.");
 		return;
@@ -211,8 +211,8 @@ void M_Camera3D::SetCurrentCamera(C_Camera* c_camera)
 		currentCamera->SetFrustumIsHidden(false);
 	}
 	
-	c_camera->SetFrustumIsHidden(true);
-	currentCamera = c_camera;
+	cCamera->SetFrustumIsHidden(true);
+	currentCamera = cCamera;
 	currentCamera->SetUpdateProjectionMatrix(true);
 	
 	if (app != nullptr)																										// TMP (?)
@@ -233,8 +233,8 @@ void M_Camera3D::SetMasterCameraAsCurrentCamera()
 		CreateMasterCamera();
 	}
 
-	C_Camera* c_camera = masterCamera->GetComponent<C_Camera>();
-	if (c_camera == nullptr)
+	C_Camera* cCamera = masterCamera->GetComponent<C_Camera>();
+	if (cCamera == nullptr)
 	{
 		LOG("[ERROR] Camera: Could not set the master camera as the current camera! Error: Master Camera did not have a Camera Component.");
 		LOG("[WARNING] Camera: Created a new Camera Component for the Master Camera. Reason: Master Camera did not have a Camera Component!");
@@ -242,7 +242,7 @@ void M_Camera3D::SetMasterCameraAsCurrentCamera()
 		masterCamera->CreateComponent(COMPONENT_TYPE::CAMERA);
 	}
 
-	currentCamera = c_camera;
+	currentCamera = cCamera;
 	currentCamera->SetUpdateProjectionMatrix(true);
 }
 
@@ -269,9 +269,9 @@ void M_Camera3D::LookAt(const float3& spot)											// Almost identical to Poi
 }
 
 // -----------------------------------------------------------------
-void M_Camera3D::Focus(const float3& target, const float& distance_from_target)
+void M_Camera3D::Focus(const float3& target, const float& distanceFromTarget)
 {
-	currentCamera->Focus(target, distance_from_target);
+	currentCamera->Focus(target, distanceFromTarget);
 	reference = target;
 }
 
@@ -291,46 +291,46 @@ void M_Camera3D::ReturnToWorldOrigin()
 // -----------------------------------------------------------------
 void M_Camera3D::WASDMovement()
 {
-	float3 new_position		= float3::zero;
+	float3 newPosition		= float3::zero;
 	Frustum frustum			= currentCamera->GetFrustum();
-	float mov_speed			= movementSpeed * Time::Real::GetDT();
+	float movSpeed			= movementSpeed * Time::Real::GetDT();
 	
 	if (app->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_STATE::KEY_REPEAT)								// --- CAMERA MOVEMEMENT BOOST
 	{																									// 
-		mov_speed = movementSpeed * 2 * Time::Real::GetDT();											// 
+		movSpeed = movementSpeed * 2 * Time::Real::GetDT();											// 
 	}																									// ---------------------------
 
 
 	if (app->input->GetKey(SDL_SCANCODE_W) == KEY_STATE::KEY_REPEAT)									// --- FORWARD/BACKARD MOVEMENT (+Z/-Z)
 	{																									// 
-		new_position += frustum.Front() * mov_speed;													// 
+		newPosition += frustum.Front() * movSpeed;													// 
 	}																									// 
 	if (app->input->GetKey(SDL_SCANCODE_S) == KEY_STATE::KEY_REPEAT)									// 
 	{																									// 
-		new_position -= frustum.Front() * mov_speed;													// 
+		newPosition -= frustum.Front() * movSpeed;													// 
 	}																									// ----------------------------------------
 
 
 	if (app->input->GetKey(SDL_SCANCODE_A) == KEY_STATE::KEY_REPEAT)									// --- LEFT/RIGHT MOVEMENT (STRAFE -X/+X)
 	{																									// 										
-		new_position -= frustum.WorldRight() * mov_speed;												// 										
+		newPosition -= frustum.WorldRight() * movSpeed;												// 										
 	}																									// 										
 	if (app->input->GetKey(SDL_SCANCODE_D) == KEY_STATE::KEY_REPEAT)									// 										
 	{																									// 										
-		new_position += frustum.WorldRight() * mov_speed;												// 										
+		newPosition += frustum.WorldRight() * movSpeed;												// 										
 	}																									// ----------------------------------------
 
 
 	if (app->input->GetKey(SDL_SCANCODE_Q) == KEY_STATE::KEY_REPEAT)									// --- UPWARD/DOWNWARD MOVEMENT (+Y/-Y)
 	{																									// 
-		new_position += frustum.Up() * mov_speed;														// 
+		newPosition += frustum.Up() * movSpeed;														// 
 	}																									// 
 	if (app->input->GetKey(SDL_SCANCODE_E) == KEY_STATE::KEY_REPEAT)									// 
 	{																									// 
-		new_position -= frustum.Up() * mov_speed;														// 
+		newPosition -= frustum.Up() * movSpeed;														// 
 	}																									// ------------------------------------
 
-	Move(new_position);
+	Move(newPosition);
 }
 
 void M_Camera3D::FreeLookAround()
