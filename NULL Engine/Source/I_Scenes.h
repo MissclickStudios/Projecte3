@@ -21,29 +21,29 @@ namespace Importer
 {
 	namespace Scenes
 	{
-		void Import	(const char* buffer, uint size, R_Model* r_model);
-		uint Save	(const R_Model* r_model, char** buffer);
-		bool Load	(const char* buffer, R_Model* r_model);
+		void Import	(const char* buffer, uint size, R_Model* rModel);
+		uint Save	(const R_Model* rModel, char** buffer);
+		bool Load	(const char* buffer, R_Model* rModel);
 
 		namespace Utilities
 		{
-			void			ProcessNode					(const aiScene* ai_scene, const aiNode* ai_node, R_Model* r_model, const ModelNode& parent);
+			void			ProcessNode					(const aiScene* assimpScene, const aiNode* assimpNode, R_Model* rModel, const ModelNode& parent);
 			
-			const aiNode*	ImportTransform				(const aiNode* ai_node, ModelNode& model_node);
-			void			ImportMeshesAndMaterials	(const aiScene* ai_scene, const aiNode* ai_node, R_Model* r_model, ModelNode& model_node);
+			const aiNode*	ImportTransform				(const aiNode* assimpNode, ModelNode& modelNode);
+			void			ImportMeshesAndMaterials	(const aiScene* assimpScene, const aiNode* assimpNode, R_Model* rModel, ModelNode& modelNode);
 			
-			void			ImportMesh					(const char* node_name, const aiMesh* ai_mesh, ModelNode& model_node);
-			void			ImportMaterial				(const char* node_name, const aiMaterial* ai_material, R_Model* r_model, ModelNode& model_node);
-			void			ImportTexture				(const std::vector<MaterialData>& materials, ModelNode& model_node);
+			void			ImportMesh					(const char* nodeName, const aiMesh* assimpMesh, ModelNode& modelNode);
+			void			ImportMaterial				(const char* nodeName, const aiMaterial* assimpMaterial, R_Model* rModel, ModelNode& modelNode);
+			void			ImportTexture				(const std::vector<MaterialData>& materials, ModelNode& modelNode);
 
-			void			ImportAnimations			(const aiScene* ai_scene, R_Model* model_node);
+			void			ImportAnimations			(const aiScene* assimpScene, R_Model* modelNode);
 
-			bool			NodeIsDummyNode				(const aiNode& ai_node);
+			bool			NodeIsDummyNode				(const aiNode& assimpNode);
 
-			static std::vector<aiMesh*>				ai_meshes;
-			static std::vector<aiMaterial*>			ai_materials;
-			static std::map<uint, ModelNode>		loaded_nodes;
-			static std::map<std::string, uint32>	loaded_textures;
+			static std::vector<aiMesh*>				aiMeshes;
+			static std::vector<aiMaterial*>			aiMaterials;
+			static std::map<uint, ModelNode>		loadedNodes;
+			static std::map<std::string, uint32>	loadedTextures;
 		}
 	}
 }
