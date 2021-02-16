@@ -110,13 +110,13 @@ void E_LoadFile::DrawDirectoriesTree(const char* root_directory, const char* ext
 	std::vector<std::string> directories;
 	std::vector<std::string> files;
 
-	std::string root_dir = root_directory;
+	std::string rootDir = root_directory;
 
-	App->fileSystem->DiscoverFiles(root_dir.c_str(), files, directories, extension_to_filter);
+	App->fileSystem->DiscoverFiles(rootDir.c_str(), files, directories, extension_to_filter);
 
 	for (uint i = 0; i < directories.size(); ++i)
 	{
-		std::string path = root_dir + directories[i] + "/";														// Ex: root_dir + directories[i] = "Assets/Models/"
+		std::string path = rootDir + directories[i] + "/";														// Ex: root_dir + directories[i] = "Assets/Models/"
 		
 		if (ImGui::TreeNodeEx(path.c_str(), 0, "%s/", directories[i].c_str()))
 		{
@@ -133,7 +133,7 @@ void E_LoadFile::DrawDirectoriesTree(const char* root_directory, const char* ext
 		{
 			if (ImGui::IsItemClicked())
 			{
-				sprintf_s(selectedFile, MAX_FILE_SIZE, "%s%s", root_dir.c_str(), files[i].c_str());
+				sprintf_s(selectedFile, MAX_FILE_SIZE, "%s%s", rootDir.c_str(), files[i].c_str());
 
 				if (ImGui::IsMouseDoubleClicked(0))
 				{

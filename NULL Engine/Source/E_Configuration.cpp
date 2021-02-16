@@ -598,27 +598,27 @@ void E_Configuration::RendererSettings()
 
 	uint worldGridSize		= App->renderer->GetWorldGridSize();
 
-	Color world_grid_color		= App->renderer->GetWorldGridColor(); 
-	Color wireframe_color		= App->renderer->GetWireframeColor();
-	Color vertex_normals_color	= App->renderer->GetVertexNormalsColor();
-	Color face_normals_color	= App->renderer->GetFaceNormalsColor();
+	Color worldGridColor		= App->renderer->GetWorldGridColor(); 
+	Color wireframeColor		= App->renderer->GetWireframeColor();
+	Color vertexNormalsColor	= App->renderer->GetVertexNormalsColor();
+	Color faceNormalsColor	= App->renderer->GetFaceNormalsColor();
 
-	Color aabb_color			= App->renderer->GetAABBColor();
-	Color obb_color				= App->renderer->GetOBBColor();
-	Color frustum_color			= App->renderer->GetFrustumColor();
-	Color ray_color				= App->renderer->GetRayColor();
-	Color bone_color			= App->renderer->GetBoneColor();
+	Color aabbColor			= App->renderer->GetAABBColor();
+	Color obbColor				= App->renderer->GetOBBColor();
+	Color frustumColor			= App->renderer->GetFrustumColor();
+	Color rayColor				= App->renderer->GetRayColor();
+	Color boneColor			= App->renderer->GetBoneColor();
 
-	float world_grid_line_width	= App->renderer->GetWorldGridLineWidth();
-	float wireframe_line_width	= App->renderer->GetWireframeLineWidth();
-	float vertex_normals_width	= App->renderer->GetVertexNormalsWidth();
-	float face_normals_width	= App->renderer->GetFaceNormalsWidth();
+	float worldGridLineWidth	= App->renderer->GetWorldGridLineWidth();
+	float wireframeLineWidth	= App->renderer->GetWireframeLineWidth();
+	float vertexNormalsWidth	= App->renderer->GetVertexNormalsWidth();
+	float faceNormalsWidth	= App->renderer->GetFaceNormalsWidth();
 
-	float aabb_edge_width		= App->renderer->GetAABBEdgeWidth();
-	float obb_edge_width		= App->renderer->GetOBBEdgeWidth();
-	float frustum_edge_width	= App->renderer->GetFrustumEdgeWidth();
-	float ray_width				= App->renderer->GetRayWidth();
-	float bone_width			= App->renderer->GetBoneWidth();
+	float aabbEdgeWidth		= App->renderer->GetAABBEdgeWidth();
+	float obbEdgeWidth		= App->renderer->GetOBBEdgeWidth();
+	float frustumEdgeWidth	= App->renderer->GetFrustumEdgeWidth();
+	float rayWidth				= App->renderer->GetRayWidth();
+	float boneWidth			= App->renderer->GetBoneWidth();
 	
 	ImGui::Text("Renderer Settings:");
 
@@ -626,17 +626,17 @@ void E_Configuration::RendererSettings()
 
 	if(ImGui::TreeNodeEx("World Grid"))
 	{
-		if (ImGui::ColorEdit4("W.G. Color", world_grid_color.C_Array(), ImGuiColorEditFlags_None))
+		if (ImGui::ColorEdit4("W.G. Color", worldGridColor.C_Array(), ImGuiColorEditFlags_None))
 		{
-			App->renderer->SetWorldGridColor(world_grid_color);
+			App->renderer->SetWorldGridColor(worldGridColor);
 		}
 		if (ImGui::SliderInt("W.G. Size", (int*)&worldGridSize, 0, 420))
 		{
 			App->renderer->SetWorldGridSize(worldGridSize);
 		}
-		if (ImGui::SliderFloat("W.G. L. Width", &world_grid_line_width, minLineWidth, maxLineWidth, "%.3f", 1.0f))
+		if (ImGui::SliderFloat("W.G. L. Width", &worldGridLineWidth, minLineWidth, maxLineWidth, "%.3f", 1.0f))
 		{
-			App->renderer->SetWorldGridLineWidth(world_grid_line_width);
+			App->renderer->SetWorldGridLineWidth(worldGridLineWidth);
 		}
 
 		ImGui::TreePop();
@@ -644,13 +644,13 @@ void E_Configuration::RendererSettings()
 
 	if (ImGui::TreeNodeEx("Wireframe"))
 	{
-		if (ImGui::ColorEdit4("WF. Color", wireframe_color.C_Array(), ImGuiColorEditFlags_None))
+		if (ImGui::ColorEdit4("WF. Color", wireframeColor.C_Array(), ImGuiColorEditFlags_None))
 		{
-			App->renderer->SetWireframeColor(wireframe_color);
+			App->renderer->SetWireframeColor(wireframeColor);
 		}
-		if (ImGui::SliderFloat("WF. L. Width", &wireframe_line_width, minLineWidth, maxLineWidth, "%.3f", 1.0f))
+		if (ImGui::SliderFloat("WF. L. Width", &wireframeLineWidth, minLineWidth, maxLineWidth, "%.3f", 1.0f))
 		{
-			App->renderer->SetWireframeLineWidth(wireframe_line_width);
+			App->renderer->SetWireframeLineWidth(wireframeLineWidth);
 		}
 
 		ImGui::TreePop();
@@ -658,13 +658,13 @@ void E_Configuration::RendererSettings()
 
 	if (ImGui::TreeNodeEx("Vertex Normals"))
 	{
-		if (ImGui::ColorEdit4("V.N. Color", vertex_normals_color.C_Array(), ImGuiColorEditFlags_None))
+		if (ImGui::ColorEdit4("V.N. Color", vertexNormalsColor.C_Array(), ImGuiColorEditFlags_None))
 		{
-			App->renderer->SetVertexNormalsColor(vertex_normals_color);
+			App->renderer->SetVertexNormalsColor(vertexNormalsColor);
 		}
-		if (ImGui::SliderFloat("V.N. L. Width", &vertex_normals_width, minLineWidth, maxLineWidth, "%.3f", 1.0f))
+		if (ImGui::SliderFloat("V.N. L. Width", &vertexNormalsWidth, minLineWidth, maxLineWidth, "%.3f", 1.0f))
 		{
-			App->renderer->SetVertexNormalsWidth(vertex_normals_width);
+			App->renderer->SetVertexNormalsWidth(vertexNormalsWidth);
 		}
 
 		ImGui::TreePop();
@@ -672,13 +672,13 @@ void E_Configuration::RendererSettings()
 
 	if (ImGui::TreeNodeEx("Face Normals"))
 	{
-		if (ImGui::ColorEdit4("F.N. Color", face_normals_color.C_Array(), ImGuiColorEditFlags_None))
+		if (ImGui::ColorEdit4("F.N. Color", faceNormalsColor.C_Array(), ImGuiColorEditFlags_None))
 		{
-			App->renderer->SetFaceNormalsColor(face_normals_color);
+			App->renderer->SetFaceNormalsColor(faceNormalsColor);
 		}
-		if (ImGui::SliderFloat("F.N. L. Width", &face_normals_width, minLineWidth, maxLineWidth, "%.3f", 1.0f))
+		if (ImGui::SliderFloat("F.N. L. Width", &faceNormalsWidth, minLineWidth, maxLineWidth, "%.3f", 1.0f))
 		{
-			App->renderer->SetFaceNormalsWidth(face_normals_width);
+			App->renderer->SetFaceNormalsWidth(faceNormalsWidth);
 		}
 
 		ImGui::TreePop();
@@ -686,13 +686,13 @@ void E_Configuration::RendererSettings()
 
 	if (ImGui::TreeNodeEx("AABB"))
 	{
-		if (ImGui::ColorEdit4("AABB Color", aabb_color.C_Array(), ImGuiColorEditFlags_None))
+		if (ImGui::ColorEdit4("AABB Color", aabbColor.C_Array(), ImGuiColorEditFlags_None))
 		{
-			App->renderer->SetAABBColor(aabb_color);
+			App->renderer->SetAABBColor(aabbColor);
 		}
-		if (ImGui::SliderFloat("AABB E. Width", &aabb_edge_width, minLineWidth, maxLineWidth, "%.3f", 1.0f))
+		if (ImGui::SliderFloat("AABB E. Width", &aabbEdgeWidth, minLineWidth, maxLineWidth, "%.3f", 1.0f))
 		{
-			App->renderer->SetAABBEdgeWidth(aabb_edge_width);
+			App->renderer->SetAABBEdgeWidth(aabbEdgeWidth);
 		}
 
 		ImGui::TreePop();
@@ -700,13 +700,13 @@ void E_Configuration::RendererSettings()
 
 	if (ImGui::TreeNodeEx("OBB"))
 	{
-		if (ImGui::ColorEdit4("OBB Color", obb_color.C_Array(), ImGuiColorEditFlags_None))
+		if (ImGui::ColorEdit4("OBB Color", obbColor.C_Array(), ImGuiColorEditFlags_None))
 		{
-			App->renderer->SetOBBColor(obb_color);
+			App->renderer->SetOBBColor(obbColor);
 		}
-		if (ImGui::SliderFloat("OBB E. Width", &obb_edge_width, minLineWidth, maxLineWidth, "%.3f", 1.0f))
+		if (ImGui::SliderFloat("OBB E. Width", &obbEdgeWidth, minLineWidth, maxLineWidth, "%.3f", 1.0f))
 		{
-			App->renderer->SetOBBEdgeWidth(obb_edge_width);
+			App->renderer->SetOBBEdgeWidth(obbEdgeWidth);
 		}
 
 		ImGui::TreePop();
@@ -714,13 +714,13 @@ void E_Configuration::RendererSettings()
 
 	if (ImGui::TreeNodeEx("Frustum"))
 	{
-		if (ImGui::ColorEdit4("Ftum Color", frustum_color.C_Array(), ImGuiColorEditFlags_None))
+		if (ImGui::ColorEdit4("Ftum Color", frustumColor.C_Array(), ImGuiColorEditFlags_None))
 		{
-			App->renderer->SetFrustumColor(frustum_color);
+			App->renderer->SetFrustumColor(frustumColor);
 		}
-		if (ImGui::SliderFloat("Ftum E. Width", &frustum_edge_width, minLineWidth, maxLineWidth, "%.3f", 1.0f))
+		if (ImGui::SliderFloat("Ftum E. Width", &frustumEdgeWidth, minLineWidth, maxLineWidth, "%.3f", 1.0f))
 		{
-			App->renderer->SetFrustumEdgeWidth(frustum_edge_width);
+			App->renderer->SetFrustumEdgeWidth(frustumEdgeWidth);
 		}
 
 		ImGui::TreePop();
@@ -728,13 +728,13 @@ void E_Configuration::RendererSettings()
 
 	if (ImGui::TreeNodeEx("Raycast"))
 	{
-		if (ImGui::ColorEdit4("Ray Color", ray_color.C_Array(), ImGuiColorEditFlags_None))
+		if (ImGui::ColorEdit4("Ray Color", rayColor.C_Array(), ImGuiColorEditFlags_None))
 		{
-			App->renderer->SetRayColor(ray_color);
+			App->renderer->SetRayColor(rayColor);
 		}
-		if (ImGui::SliderFloat("Ray L. Width", &ray_width, minLineWidth, maxLineWidth, "%.3f", 1.0f))
+		if (ImGui::SliderFloat("Ray L. Width", &rayWidth, minLineWidth, maxLineWidth, "%.3f", 1.0f))
 		{
-			App->renderer->SetRayWidth(ray_width);
+			App->renderer->SetRayWidth(rayWidth);
 		}
 
 		ImGui::TreePop();
@@ -742,13 +742,13 @@ void E_Configuration::RendererSettings()
 
 	if (ImGui::TreeNodeEx("Skeleton"))
 	{
-		if (ImGui::ColorEdit4("Bone Color", bone_color.C_Array(), ImGuiColorEditFlags_None))
+		if (ImGui::ColorEdit4("Bone Color", boneColor.C_Array(), ImGuiColorEditFlags_None))
 		{
-			App->renderer->SetBoneColor(bone_color);
+			App->renderer->SetBoneColor(boneColor);
 		}
-		if (ImGui::SliderFloat("Bone L. Width", &bone_width, minLineWidth, maxLineWidth, "%.3f", 1.0f))
+		if (ImGui::SliderFloat("Bone L. Width", &boneWidth, minLineWidth, maxLineWidth, "%.3f", 1.0f))
 		{
-			App->renderer->SetBoneWidth(bone_width);
+			App->renderer->SetBoneWidth(boneWidth);
 		}
 
 		ImGui::TreePop();
@@ -757,61 +757,61 @@ void E_Configuration::RendererSettings()
 
 void E_Configuration::GenerateCameraPositionSlider()
 {
-	float3 master_camera_position = App->camera->GetMasterCameraPosition();
-	if (ImGui::DragFloat3("Position", (float*)&master_camera_position, 1.0f, 0.0f, 0.0f, "%.3f", NULL))
+	float3 masterCameraPosition = App->camera->GetMasterCameraPosition();
+	if (ImGui::DragFloat3("Position", (float*)&masterCameraPosition, 1.0f, 0.0f, 0.0f, "%.3f", NULL))
 	{
-		App->camera->SetMasterCameraPosition(master_camera_position);
+		App->camera->SetMasterCameraPosition(masterCameraPosition);
 	}
 }
 
 void E_Configuration::GenerateCameraRotationSlider()
 {
-	float3 master_camera_rotation = App->camera->GetMasterCameraRotation() * RADTODEG;
-	if (ImGui::DragFloat3("Rotation", (float*)&master_camera_rotation, 1.0f, 0.0f, 0.0f, "%.3f", NULL))
+	float3 masterCameraRotation = App->camera->GetMasterCameraRotation() * RADTODEG;
+	if (ImGui::DragFloat3("Rotation", (float*)&masterCameraRotation, 1.0f, 0.0f, 0.0f, "%.3f", NULL))
 	{
-		App->camera->SetMasterCameraRotation(master_camera_rotation * DEGTORAD);
+		App->camera->SetMasterCameraRotation(masterCameraRotation * DEGTORAD);
 	}
 }
 
 void E_Configuration::GenerateCameraScaleSlider()
 {
-	float3 master_camera_scale = App->camera->GetMasterCameraScale();
-	if (ImGui::DragFloat3("Scale", (float*)&master_camera_scale, 1.0f, 0.0f, 0.0f, "%.3f", NULL))
+	float3 masterCameraScale = App->camera->GetMasterCameraScale();
+	if (ImGui::DragFloat3("Scale", (float*)&masterCameraScale, 1.0f, 0.0f, 0.0f, "%.3f", NULL))
 	{
-		App->camera->SetMasterCameraScale(master_camera_scale);
+		App->camera->SetMasterCameraScale(masterCameraScale);
 	}
 }
 
 void E_Configuration::GenerateCameraReferenceSlider()
 {
-	float3 camera_reference = App->camera->GetReference();
-	if (ImGui::DragFloat3("Reference", (float*)&camera_reference, 1.0f, 0.0f, 0.0f, "%.3f", NULL))
+	float3 cameraReference = App->camera->GetReference();
+	if (ImGui::DragFloat3("Reference", (float*)&cameraReference, 1.0f, 0.0f, 0.0f, "%.3f", NULL))
 	{
-		App->camera->SetReference(camera_reference);
+		App->camera->SetReference(cameraReference);
 	}
 }
 
 void E_Configuration::GenerateCameraSpeedSliders()
 {
-	float movement_speed = App->camera->GetMovementSpeed();
-	float rotation_speed = App->camera->GetRotationSpeed();
-	float zoom_speed = App->camera->GetZoomSpeed();
+	float movementSpeed = App->camera->GetMovementSpeed();
+	float rotationSpeed = App->camera->GetRotationSpeed();
+	float zoomSpeed = App->camera->GetZoomSpeed();
 
-	ImGui::DragFloat("Movement Speed", &movement_speed, 0.01f, 0.0f, 0.0f, "%.3f", NULL);
-	ImGui::DragFloat("Rotation Speed", &rotation_speed, 0.01f, 0.0f, 0.0f, "%.3f", NULL);
-	ImGui::DragFloat("Zoom Speed", &zoom_speed, 0.01f, 0.0f, 0.0f, "%.3f", NULL);
+	ImGui::DragFloat("Movement Speed", &movementSpeed, 0.01f, 0.0f, 0.0f, "%.3f", NULL);
+	ImGui::DragFloat("Rotation Speed", &rotationSpeed, 0.01f, 0.0f, 0.0f, "%.3f", NULL);
+	ImGui::DragFloat("Zoom Speed", &zoomSpeed, 0.01f, 0.0f, 0.0f, "%.3f", NULL);
 
-	App->camera->SetMovementSpeed(movement_speed);
-	App->camera->SetRotationSpeed(rotation_speed);
-	App->camera->SetZoomSpeed(zoom_speed);
+	App->camera->SetMovementSpeed(movementSpeed);
+	App->camera->SetRotationSpeed(rotationSpeed);
+	App->camera->SetZoomSpeed(zoomSpeed);
 }
 
 void E_Configuration::GenerateDrawLastRaycastCheckbox()
 {
-	bool draw_last_raycast = App->camera->DrawLastRaycast();
-	if (ImGui::Checkbox("Draw Last Raycast", &draw_last_raycast))
+	bool drawLastRaycast = App->camera->DrawLastRaycast();
+	if (ImGui::Checkbox("Draw Last Raycast", &drawLastRaycast))
 	{
-		App->camera->SetDrawLastRaycast(draw_last_raycast);
+		App->camera->SetDrawLastRaycast(drawLastRaycast);
 	}
 }
 
@@ -848,19 +848,19 @@ void E_Configuration::InputLogOutput()
 {
 	for (uint i = 0; i < inputLogs.size(); ++i)
 	{
-		ImVec4 text_colour = { 1.0f, 1.0f, 1.0f, 1.0f };									// White is the default colour, but added this to be able to easily change it.					
+		ImVec4 textColour = { 1.0f, 1.0f, 1.0f, 1.0f };									// White is the default colour, but added this to be able to easily change it.					
 
 		if (strstr(inputLogs[i], "[KEY]") != nullptr)
 		{
-			text_colour = { 0.0f, 1.0f, 1.0f, 1.0f };
+			textColour = { 0.0f, 1.0f, 1.0f, 1.0f };
 		}
 		
 		if (strstr(inputLogs[i], "[MOUSE]") != nullptr)
 		{
-			text_colour = { 1.0f, 0.0f, 1.0f, 1.0f };
+			textColour = { 1.0f, 0.0f, 1.0f, 1.0f };
 		}
 
-		ImGui::PushStyleColor(ImGuiCol_Text, text_colour);
+		ImGui::PushStyleColor(ImGuiCol_Text, textColour);
 		ImGui::TextUnformatted(inputLogs[i]);
 		ImGui::PopStyleColor();
 	}
