@@ -73,7 +73,7 @@ resourceManager(nullptr)
 	// Framerate variables
 	frameCap				= 0;
 	secondsSinceStartup	= 0.0f;
-	framesAreCapped		= FRAMES_ARE_CAPPED;
+	framesAreCapped		= framesAreCapped;
 	displayFramerateData	= false;
 
 	// Game Mode variables
@@ -354,11 +354,11 @@ void Application::FinishUpdate()
 
 	if (displayFramerateData)
 	{
-		app->window->SetTitle("Go to the Time Management header in the Configuration Panel to see all the Framerate Data.");
+		App->window->SetTitle("Go to the Time Management header in the Configuration Panel to see all the Framerate Data.");
 	}
 	else
 	{
-		app->window->SetTitle(engineName.c_str());
+		App->window->SetTitle(engineName.c_str());
 	}
 
 	// Editor: Configuration Frame Data Histograms
@@ -447,7 +447,7 @@ void Application::SetEngineName(const char* name)
 {
 	engineName = name;
 
-	app->window->SetTitle(engineName.c_str());
+	App->window->SetTitle(engineName.c_str());
 }
 
 void Application::SetOrganizationName(const char* name)
@@ -476,7 +476,7 @@ void Application::AddEditorLog(const char* log)
 {
 	if (!quit && editor != nullptr)													// Second condition is not really necessary. It's more of a reminder to keep it in mind.
 	{
-		//std::string full_log = App->file_system->NormalizePath(log);				// Switching all "\\" for "/". They need to be changed due to "\" being a Windows-specific thing.
+		//std::string full_log = App->fileSystem->NormalizePath(log);				// Switching all "\\" for "/". They need to be changed due to "\" being a Windows-specific thing.
 
 		std::string fullLog = log;													// TMP. Switch to normalize later.
 

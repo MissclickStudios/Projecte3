@@ -112,7 +112,7 @@ void E_LoadFile::DrawDirectoriesTree(const char* root_directory, const char* ext
 
 	std::string root_dir = root_directory;
 
-	App->file_system->DiscoverFiles(root_dir.c_str(), files, directories, extension_to_filter);
+	App->fileSystem->DiscoverFiles(root_dir.c_str(), files, directories, extension_to_filter);
 
 	for (uint i = 0; i < directories.size(); ++i)
 	{

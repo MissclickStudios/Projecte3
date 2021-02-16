@@ -263,7 +263,7 @@ bool E_Configuration::FileSystemMenu()
 
 	if (ImGui::CollapsingHeader("File System"))
 	{
-		ImGui::Text("Is Active:");		ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), App->file_system->IsActive() ? "True" : "False");
+		ImGui::Text("Is Active:");		ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), App->fileSystem->IsActive() ? "True" : "False");
 
 		GenerateBaseDirectoryText();
 		GenerateReadDirectoriesText();
@@ -459,11 +459,11 @@ void E_Configuration::GenerateFrameCapSlider()
 
 	if (cap == 0)
 	{
-		App->frames_are_capped = false;
+		App->framesAreCapped = false;
 	}
 	else
 	{
-		App->frames_are_capped = true;														// [ATTENTION] Could be troubling when trying to manage the framecap elsewhere.
+		App->framesAreCapped = true;														// [ATTENTION] Could be troubling when trying to manage the framecap elsewhere.
 	}
 }
 
@@ -890,7 +890,7 @@ void E_Configuration::GenerateBaseDirectoryText()
 {
 	ImGui::Text("Base Directory:");
 	ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 1.0f, 0.0f, 1.0f));
-	ImGui::TextWrapped(App->file_system->GetBaseDirectory());
+	ImGui::TextWrapped(App->fileSystem->GetBaseDirectory());
 	ImGui::PopStyleColor();
 }
 
@@ -898,7 +898,7 @@ void E_Configuration::GenerateReadDirectoriesText()
 {
 	ImGui::Text("Read Directories:");
 	ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 1.0f, 0.0f, 1.0f));
-	ImGui::TextWrapped(App->file_system->GetReadDirectories());
+	ImGui::TextWrapped(App->fileSystem->GetReadDirectories());
 	ImGui::PopStyleColor();
 }
 
@@ -906,7 +906,7 @@ void E_Configuration::GenerateWriteDirectoryText()
 {
 	ImGui::Text("Write Directory:");
 	ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 1.0f, 0.0f, 1.0f));
-	ImGui::TextWrapped(App->file_system->GetWriteDirectory());
+	ImGui::TextWrapped(App->fileSystem->GetWriteDirectory());
 	ImGui::PopStyleColor();
 }
 

@@ -110,6 +110,6 @@ private:
 	HardwareInfo			hardwareInfo;												// All the info/data about the software and the hardware of the system will be extracted from here.
 };
 
-extern Application* app;																// Allows to access the Application module from anywhere in the project.
+extern Application* App;																// Allows to access the Application module from anywhere in the project.
 
 #endif // !__APPLICATION_H__

@@ -54,7 +54,7 @@ bool C_Camera::CleanUp()
 
 	if (is_culling)
 	{
-		app->scene->SetCullingCamera(nullptr);
+		App->scene->SetCullingCamera(nullptr);
 	}
 
 	return ret;
@@ -456,13 +456,13 @@ void C_Camera::SetIsCulling(const bool& set_to)
 	
 	if (set_to)
 	{
-		app->scene->SetCullingCamera(this);
+		App->scene->SetCullingCamera(this);
 	}
 	else
 	{
-		if (app->scene->GetCullingCamera() == this)
+		if (App->scene->GetCullingCamera() == this)
 		{
-			app->scene->SetCullingCamera(nullptr);
+			App->scene->SetCullingCamera(nullptr);
 		}
 	}
 }

@@ -93,7 +93,7 @@ bool AnimatorClip::LoadState(const ParsonNode& root)
 {
 	bool ret = true;
 	
-	animation				= (R_Animation*)app->resourceManager->RequestResource((uint32)root.GetNumber("AnimationUID"));
+	animation				= (R_Animation*)App->resourceManager->RequestResource((uint32)root.GetNumber("AnimationUID"));
 
 	name					= root.GetString("Name");
 	start					= (uint)root.GetNumber("Start");

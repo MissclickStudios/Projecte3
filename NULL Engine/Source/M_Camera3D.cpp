@@ -102,32 +102,32 @@ bool M_Camera3D::SaveConfiguration(ParsonNode& configuration) const
 // -----------------------------------------------------------------
 UPDATE_STATUS M_Camera3D::Update(float dt)
 {
-	if (app->editor->ViewportIsHovered())
+	if (App->editor->ViewportIsHovered())
 	{	
-		if (!app->editor->HoveringGuizmo())
+		if (!App->editor->HoveringGuizmo())
 		{
-			if (app->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_STATE::KEY_DOWN)
+			if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_STATE::KEY_DOWN)
 			{
 				CastRay();
 			}
 		}
 		
-		if (app->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_STATE::KEY_REPEAT)
+		if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_STATE::KEY_REPEAT)
 		{
 			WASDMovement();
 
 			FreeLookAround();
 		}
 
-		if (app->input->GetKey(SDL_SCANCODE_LALT) == KEY_STATE::KEY_REPEAT)
+		if (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_STATE::KEY_REPEAT)
 		{
-			if (app->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_STATE::KEY_REPEAT)
+			if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_STATE::KEY_REPEAT)
 			{
-				if (app->scene->GetSelectedGameObject() != nullptr)
+				if (App->scene->GetSelectedGameObject() != nullptr)
 				{
-					if (app->scene->GetSelectedGameObject()->GetComponent<C_Camera>() != currentCamera)
+					if (App->scene->GetSelectedGameObject()->GetComponent<C_Camera>() != currentCamera)
 					{
-						reference = app->scene->GetSelectedGameObject()->GetComponent<C_Transform>()->GetWorldPosition();
+						reference = App->scene->GetSelectedGameObject()->GetComponent<C_Transform>()->GetWorldPosition();
 					}
 				}
 				else
@@ -139,27 +139,27 @@ UPDATE_STATUS M_Camera3D::Update(float dt)
 			}
 		}
 
-		if (app->input->GetMouseButton(SDL_BUTTON_MIDDLE) == KEY_STATE::KEY_REPEAT)
+		if (App->input->GetMouseButton(SDL_BUTTON_MIDDLE) == KEY_STATE::KEY_REPEAT)
 		{
 			PanCamera();
 		}
 
-		if (app->input->GetMouseZ() != 0)
+		if (App->input->GetMouseZ() != 0)
 		{
 			Zoom();
 		}
 
-		if (app->input->GetKey(SDL_SCANCODE_LCTRL) == KEY_STATE::KEY_IDLE)
+		if (App->input->GetKey(SDL_SCANCODE_LCTRL) == KEY_STATE::KEY_IDLE)
 		{
-			if (app->input->GetKey(SDL_SCANCODE_O) == KEY_STATE::KEY_DOWN)
+			if (App->input->GetKey(SDL_SCANCODE_O) == KEY_STATE::KEY_DOWN)
 			{
 				ReturnToWorldOrigin();
 			}
 		}
 
-		if (app->input->GetKey(SDL_SCANCODE_F) == KEY_STATE::KEY_DOWN)
+		if (App->input->GetKey(SDL_SCANCODE_F) == KEY_STATE::KEY_DOWN)
 		{
-			float3 target = app->scene->GetSelectedGameObject()->GetComponent<C_Transform>()->GetWorldPosition();
+			float3 target = App->scene->GetSelectedGameObject()->GetComponent<C_Transform>()->GetWorldPosition();
 			Focus(target);
 		}
 	}
@@ -178,10 +178,10 @@ void M_Camera3D::CreateMasterCamera()
 	cCamera->SetFarPlaneDistance(1000.0f);
 	SetCurrentCamera(cCamera);
 	
-	if (app != nullptr)
+	if (App != nullptr)
 	{
-		float winWidth		= (float)app->window->GetWidth();
-		float winHeight	= (float)app->window->GetHeight();
+		float winWidth		= (float)App->window->GetWidth();
+		float winHeight	= (float)App->window->GetHeight();
 		
 		cCamera->SetAspectRatio(winWidth/ winHeight);
 	}
@@ -215,9 +215,9 @@ void M_Camera3D::SetCurrentCamera(C_Camera* cCamera)
 	currentCamera = cCamera;
 	currentCamera->SetUpdateProjectionMatrix(true);
 	
-	if (app != nullptr)																										// TMP (?)
+	if (App != nullptr)																										// TMP (?)
 	{
-		currentCamera->SetAspectRatio(((float)app->window->GetWidth()) / ((float)app->window->GetHeight()));
+		currentCamera->SetAspectRatio(((float)App->window->GetWidth()) / ((float)App->window->GetHeight()));
 	}
 }
 
@@ -295,37 +295,37 @@ void M_Camera3D::WASDMovement()
 	Frustum frustum			= currentCamera->GetFrustum();
 	float movSpeed			= movementSpeed * Time::Real::GetDT();
 	
-	if (app->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_STATE::KEY_REPEAT)								// --- CAMERA MOVEMEMENT BOOST
+	if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_STATE::KEY_REPEAT)								// --- CAMERA MOVEMEMENT BOOST
 	{																									// 
 		movSpeed = movementSpeed * 2 * Time::Real::GetDT();											// 
 	}																									// ---------------------------
 
 
-	if (app->input->GetKey(SDL_SCANCODE_W) == KEY_STATE::KEY_REPEAT)									// --- FORWARD/BACKARD MOVEMENT (+Z/-Z)
+	if (App->input->GetKey(SDL_SCANCODE_W) == KEY_STATE::KEY_REPEAT)									// --- FORWARD/BACKARD MOVEMENT (+Z/-Z)
 	{																									// 
 		newPosition += frustum.Front() * movSpeed;													// 
 	}																									// 
-	if (app->input->GetKey(SDL_SCANCODE_S) == KEY_STATE::KEY_REPEAT)									// 
+	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_STATE::KEY_REPEAT)									// 
 	{																									// 
 		newPosition -= frustum.Front() * movSpeed;													// 
 	}																									// ----------------------------------------
 
 
-	if (app->input->GetKey(SDL_SCANCODE_A) == KEY_STATE::KEY_REPEAT)									// --- LEFT/RIGHT MOVEMENT (STRAFE -X/+X)
+	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_STATE::KEY_REPEAT)									// --- LEFT/RIGHT MOVEMENT (STRAFE -X/+X)
 	{																									// 										
 		newPosition -= frustum.WorldRight() * movSpeed;												// 										
 	}																									// 										
-	if (app->input->GetKey(SDL_SCANCODE_D) == KEY_STATE::KEY_REPEAT)									// 										
+	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_STATE::KEY_REPEAT)									// 										
 	{																									// 										
 		newPosition += frustum.WorldRight() * movSpeed;												// 										
 	}																									// ----------------------------------------
 
 
-	if (app->input->GetKey(SDL_SCANCODE_Q) == KEY_STATE::KEY_REPEAT)									// --- UPWARD/DOWNWARD MOVEMENT (+Y/-Y)
+	if (App->input->GetKey(SDL_SCANCODE_Q) == KEY_STATE::KEY_REPEAT)									// --- UPWARD/DOWNWARD MOVEMENT (+Y/-Y)
 	{																									// 
 		newPosition += frustum.Up() * movSpeed;														// 
 	}																									// 
-	if (app->input->GetKey(SDL_SCANCODE_E) == KEY_STATE::KEY_REPEAT)									// 
+	if (App->input->GetKey(SDL_SCANCODE_E) == KEY_STATE::KEY_REPEAT)									// 
 	{																									// 
 		newPosition -= frustum.Up() * movSpeed;														// 
 	}																									// ------------------------------------
@@ -394,7 +394,7 @@ void M_Camera3D::FreeLookAround()
 void M_Camera3D::Orbit()								// Almost identical to FreeLookAround(), but instead of only modifying XYZ, the position of the camera is also modified.
 {	
 	Frustum frustum			= currentCamera->GetFrustum();
-	float2 mouse_motion		= app->editor->GetWorldMouseMotionThroughEditor();
+	float2 mouse_motion		= App->editor->GetWorldMouseMotionThroughEditor();
 	float sensitivity		= rotationSpeed * Time::Real::GetDT();
 
 	float3 new_Z = frustum.Pos() - reference;
@@ -423,7 +423,7 @@ void M_Camera3D::PanCamera()
 	float3 new_position = float3::zero;
 
 	Frustum frustum		= currentCamera->GetFrustum();
-	float2 mouse_motion = app->editor->GetWorldMouseMotionThroughEditor();
+	float2 mouse_motion = App->editor->GetWorldMouseMotionThroughEditor();
 
 	if (mouse_motion.x != 0)
 	{
@@ -443,7 +443,7 @@ void M_Camera3D::PanCamera()
 void M_Camera3D::Zoom()
 {	
 	Frustum frustum		= currentCamera->GetFrustum();
-	float3 new_Z		= frustum.Front() * (float)app->input->GetMouseZ() * zoomSpeed * Time::Real::GetDT();
+	float3 new_Z		= frustum.Front() * (float)App->input->GetMouseZ() * zoomSpeed * Time::Real::GetDT();
 
 	Move(new_Z);
 }
@@ -532,17 +532,17 @@ void M_Camera3D::SetMasterCameraScale(const float3& scale)
 
 void M_Camera3D::CastRay()
 {	
-	float2 mouse_pos = app->editor->GetWorldMousePositionThroughEditor();
+	float2 mouse_pos = App->editor->GetWorldMousePositionThroughEditor();
 
-	float norm_mouse_X = mouse_pos.x / (float)app->window->GetWidth();
-	float norm_mouse_Y = mouse_pos.y / (float)app->window->GetHeight();
+	float norm_mouse_X = mouse_pos.x / (float)App->window->GetWidth();
+	float norm_mouse_Y = mouse_pos.y / (float)App->window->GetHeight();
 
 	float ray_origin_X = (norm_mouse_X - 0.5f) * 2;
 	float ray_origin_Y = (norm_mouse_Y - 0.5f) * 2;
 	
 	lastRaycast = currentCamera->GetFrustum().UnProjectLineSegment(ray_origin_X, ray_origin_Y);
 
-	app->scene->SelectGameObjectThroughRaycast(lastRaycast);
+	App->scene->SelectGameObjectThroughRaycast(lastRaycast);
 }
 
 bool M_Camera3D::DrawLastRaycast() const

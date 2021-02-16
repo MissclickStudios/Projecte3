@@ -32,7 +32,7 @@ bool R_Mesh::CleanUp()
 {
 	bool ret = true;
 	
-	app->renderer->DeleteFromMeshRenderers(this);
+	App->renderer->DeleteFromMeshRenderers(this);
 
 	// --- Delete Buffers
 	glDeleteBuffers(1, (GLuint*)&VBO);

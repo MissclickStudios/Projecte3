@@ -34,7 +34,7 @@ bool E_Resources::Draw(ImGuiIO& io)
 	std::multimap<uint, Resource*> sorted;
 
 	std::map<uint32, Resource*> resources;
-	app->editor->GetResourcesThroughEditor(resources);
+	App->editor->GetResourcesThroughEditor(resources);
 
 	std::map<uint32, Resource*>::iterator item;
 	for (item = resources.begin(); item != resources.end(); ++item)

@@ -190,7 +190,7 @@ void Importer::Scenes::Utilities::ImportMeshesAndMaterials(const aiScene* ai_sce
 void Importer::Scenes::Utilities::ImportMesh(const char* node_name, const aiMesh* ai_mesh, ModelNode& model_node)
 {
 	std::string assets_path = ASSETS_MODELS_PATH + std::string(node_name) + MESHES_EXTENSION;						// As meshes are contained in models, the assets path is kind of made-up.
-	R_Mesh* r_mesh = (R_Mesh*)app->resourceManager->CreateResource(RESOURCE_TYPE::MESH, assets_path.c_str());
+	R_Mesh* r_mesh = (R_Mesh*)App->resourceManager->CreateResource(RESOURCE_TYPE::MESH, assets_path.c_str());
 
 	Importer::Meshes::Import(ai_mesh, r_mesh);
 
@@ -200,14 +200,14 @@ void Importer::Scenes::Utilities::ImportMesh(const char* node_name, const aiMesh
 	}
 	
 	model_node.mesh_uid = r_mesh->GetUID();
-	app->resourceManager->SaveResourceToLibrary(r_mesh);
-	app->resourceManager->DeallocateResource(r_mesh);
+	App->resourceManager->SaveResourceToLibrary(r_mesh);
+	App->resourceManager->DeallocateResource(r_mesh);
 }
 
 void Importer::Scenes::Utilities::ImportMaterial(const char* node_name, const aiMaterial* ai_material, R_Model* r_model, ModelNode& model_node)
 {
-	std::string mat_full_path	= app->fileSystem->GetDirectory(r_model->GetAssetsPath()) + node_name + MATERIALS_EXTENSION;
-	R_Material* r_material		= (R_Material*)app->resourceManager->CreateResource(RESOURCE_TYPE::MATERIAL, mat_full_path.c_str());			// Only considering one texture per mesh.
+	std::string mat_full_path	= App->fileSystem->GetDirectory(r_model->GetAssetsPath()) + node_name + MATERIALS_EXTENSION;
+	R_Material* r_material		= (R_Material*)App->resourceManager->CreateResource(RESOURCE_TYPE::MATERIAL, mat_full_path.c_str());			// Only considering one texture per mesh.
 
 	if (r_material == nullptr)
 	{
@@ -220,8 +220,8 @@ void Importer::Scenes::Utilities::ImportMaterial(const char* node_name, const ai
 
 	Utilities::ImportTexture(r_material->materials, model_node);
 	
-	app->resourceManager->SaveResourceToLibrary(r_material);
-	app->resourceManager->DeallocateResource(r_material);
+	App->resourceManager->SaveResourceToLibrary(r_material);
+	App->resourceManager->DeallocateResource(r_material);
 }
 
 void Importer::Scenes::Utilities::ImportTexture(const std::vector<MaterialData>& materials, ModelNode& model_node)
@@ -230,7 +230,7 @@ void Importer::Scenes::Utilities::ImportTexture(const std::vector<MaterialData>&
 	{
 		const char* tex_path	= materials[i].texture_assets_path.c_str();
 		char* buffer			= nullptr;
-		uint read				= app->fileSystem->Load(tex_path, &buffer);
+		uint read				= App->fileSystem->Load(tex_path, &buffer);
 		if (buffer != nullptr && read > 0)
 		{
 			std::map<std::string, uint32>::iterator item = loaded_textures.find(tex_path);
@@ -239,19 +239,19 @@ void Importer::Scenes::Utilities::ImportTexture(const std::vector<MaterialData>&
 				if (materials[i].type == TEXTURE_TYPE::DIFFUSE)
 				{
 					model_node.texture_uid = item->second;
-					model_node.texture_name = app->fileSystem->GetFileAndExtension(tex_path);
+					model_node.texture_name = App->fileSystem->GetFileAndExtension(tex_path);
 				}
 
 				RELEASE_ARRAY(buffer);
 				continue;
 			}
 			
-			R_Texture* r_texture = (R_Texture*)app->resourceManager->CreateResource(RESOURCE_TYPE::TEXTURE, tex_path);
+			R_Texture* r_texture = (R_Texture*)App->resourceManager->CreateResource(RESOURCE_TYPE::TEXTURE, tex_path);
 			uint tex_id = Importer::Textures::Import(buffer, read, r_texture);											//
 
 			if (tex_id == 0)
 			{
-				app->resourceManager->DeleteResource(r_texture);
+				App->resourceManager->DeleteResource(r_texture);
 				RELEASE_ARRAY(buffer);
 				continue;
 			}
@@ -264,8 +264,8 @@ void Importer::Scenes::Utilities::ImportTexture(const std::vector<MaterialData>&
 
 			loaded_textures.emplace(tex_path, r_texture->GetUID());
 
-			app->resourceManager->SaveResourceToLibrary(r_texture);
-			app->resourceManager->DeallocateResource(r_texture);
+			App->resourceManager->SaveResourceToLibrary(r_texture);
+			App->resourceManager->DeallocateResource(r_texture);
 
 			RELEASE_ARRAY(buffer);
 		}
@@ -295,7 +295,7 @@ void Importer::Scenes::Utilities::ImportAnimations(const aiScene* ai_scene, R_Mo
 
 		std::string name			= ai_animation->mName.C_Str();
 		std::string assets_path		= ASSETS_MODELS_PATH + name + ANIMATIONS_EXTENSION;
-		R_Animation* r_animation	= (R_Animation*)app->resourceManager->CreateResource(RESOURCE_TYPE::ANIMATION, assets_path.c_str());
+		R_Animation* r_animation	= (R_Animation*)App->resourceManager->CreateResource(RESOURCE_TYPE::ANIMATION, assets_path.c_str());
 
 		if (r_animation == nullptr)
 		{
@@ -306,8 +306,8 @@ void Importer::Scenes::Utilities::ImportAnimations(const aiScene* ai_scene, R_Mo
 
 		r_model->animations.emplace(r_animation->GetUID(), r_animation->GetName());
 
-		app->resourceManager->SaveResourceToLibrary(r_animation);
-		app->resourceManager->DeallocateResource(r_animation);
+		App->resourceManager->SaveResourceToLibrary(r_animation);
+		App->resourceManager->DeallocateResource(r_animation);
 	}
 }
 

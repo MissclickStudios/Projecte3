@@ -85,7 +85,7 @@ uint ParsonNode::SerializeToFile(const char* path, char** buffer)
 		return 0;
 	}
 
-	written = app->fileSystem->Save(path, *buffer, size);
+	written = App->fileSystem->Save(path, *buffer, size);
 	if (written > 0)
 	{
 		LOG("[STATUS] JSON Parser: Successfully Serialized Root Node to File! Path: %s", path);

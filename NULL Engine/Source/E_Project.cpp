@@ -98,7 +98,7 @@ void E_Project::CheckFlags()
 		std::vector<std::string> extensions_to_filter;
 		extensions_to_filter.push_back("meta");
 
-		rootDirectory = App->file_system->GetAllFiles(ASSETS_DIRECTORY, nullptr, &extensions_to_filter);
+		rootDirectory = App->fileSystem->GetAllFiles(ASSETS_DIRECTORY, nullptr, &extensions_to_filter);
 
 		extensions_to_filter.clear();
 
@@ -125,7 +125,7 @@ void E_Project::CheckFlags()
 
 		for (uint i = 0; i < displayDirectory.children.size(); ++i)
 		{
-			Resource* resource = App->resource_manager->GetResourceFromMetaFile(displayDirectory.children[i].path.c_str());
+			Resource* resource = App->resourceManager->GetResourceFromMetaFile(displayDirectory.children[i].path.c_str());
 
 			if (resource != nullptr)
 			{
@@ -200,12 +200,12 @@ void E_Project::DrawDirectoriesTree(const char* root_directory, const char* exte
 	std::vector<std::string> files;
 	std::string root_dir = root_directory;
 	
-	App->file_system->DiscoverFiles(root_dir.c_str(), files, directories, extension_to_filter);
+	App->fileSystem->DiscoverFiles(root_dir.c_str(), files, directories, extension_to_filter);
 
 	for (uint i = 0; i < directories.size(); ++i)
 	{
 		std::string path	= root_dir + directories[i] + ("/");
-		tree_node_flags		= (!App->file_system->ContainsDirectory(path.c_str())) ? ImGuiTreeNodeFlags_Leaf : ImGuiTreeNodeFlags_None;
+		tree_node_flags		= (!App->fileSystem->ContainsDirectory(path.c_str())) ? ImGuiTreeNodeFlags_Leaf : ImGuiTreeNodeFlags_None;
 
 		if (ImGui::TreeNodeEx(path.c_str(), tree_node_flags, "%s/", directories[i].c_str()))
 		{
@@ -235,7 +235,7 @@ void E_Project::DrawDirectoriesTree(const PathNode& root_node)
 	{
 		PathNode path_node = root_node.children[i];
 
-		if (/*path_node.is_file*/ !App->file_system->IsDirectory(path_node.path.c_str()))
+		if (/*path_node.is_file*/ !App->fileSystem->IsDirectory(path_node.path.c_str()))
 		{
 			continue;
 		}
@@ -429,7 +429,7 @@ void E_Project::ClearResourcesToDisplay()
 {
 	for (uint i = 0; i < resourcesToDisplay.size(); ++i)
 	{
-		App->resource_manager->FreeResource(resourcesToDisplay[i]->GetUID());
+		App->resourceManager->FreeResource(resourcesToDisplay[i]->GetUID());
 	}
 	
 	resourcesToDisplay.clear();

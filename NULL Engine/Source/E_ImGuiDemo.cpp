@@ -40,7 +40,7 @@ bool E_ImGuiDemo::Draw(ImGuiIO& io)
 		{
 			//return UPDATE_STATUS::STOP;
 
-			app->displayFramerateData = !app->displayFramerateData;
+			App->displayFramerateData = !App->displayFramerateData;
 		}
 
 		ImGui::SameLine();
@@ -73,7 +73,7 @@ bool E_ImGuiDemo::Draw(ImGuiIO& io)
 		}
 
 		ImGui::SliderFloat("float", &f, 0.0f, 1.0f);									// Will create a slider that will be able to edit 1 variable from 0.0f to 1.0f.
-		ImGui::ColorEdit3("clear color", (float*)&app->editor->clearColor);			// Will create 3 sliders in a row that will represent a colour (RGB).
+		ImGui::ColorEdit3("clear color", (float*)&App->editor->clearColor);			// Will create 3 sliders in a row that will represent a colour (RGB).
 
 		if (ImGui::Button("Button"))
 		{

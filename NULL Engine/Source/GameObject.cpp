@@ -292,13 +292,13 @@ void GameObject::GetRenderers(std::vector<MeshRenderer>& mesh_renderers, std::ve
 
 	if (c_animation != nullptr)
 	{
-		if (c_animation->GetShowBones() || app->renderer->GetRenderSkeletons())
+		if (c_animation->GetShowBones() || App->renderer->GetRenderSkeletons())
 		{
 			skeleton_renderers.push_back(SkeletonRenderer(c_animation->GetDisplayBones()));
 		}
 	}
 
-	if (show_bounding_boxes || app->renderer->GetRenderBoundingBoxes())
+	if (show_bounding_boxes || App->renderer->GetRenderBoundingBoxes())
 	{
 		obb.GetCornerPoints(obb_vertices);
 		aabb.GetCornerPoints(aabb_vertices);
@@ -647,7 +647,7 @@ bool GameObject::DeleteComponent(Component* component_to_delete)
 	switch (component_to_delete->GetType())
 	{
 	case COMPONENT_TYPE::MESH: 
-		app->renderer->DeleteFromMeshRenderers((C_Mesh*)component_to_delete); 
+		App->renderer->DeleteFromMeshRenderers((C_Mesh*)component_to_delete); 
 		show_bounding_boxes = false;
 		break;
 	}

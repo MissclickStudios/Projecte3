@@ -98,7 +98,7 @@ UPDATE_STATUS M_Renderer3D::PreUpdate(float dt)
 
 	glMatrixMode(GL_MODELVIEW);
 
-	C_Camera* current_camera = app->camera->GetCurrentCamera();
+	C_Camera* current_camera = App->camera->GetCurrentCamera();
 	if (current_camera != nullptr)
 	{
 		if (current_camera->GetUpdateProjectionMatrix())
@@ -112,9 +112,9 @@ UPDATE_STATUS M_Renderer3D::PreUpdate(float dt)
 
 	// light 0 on cam pos
 	float3 camera_pos = float3::zero;
-	if (app->camera->GetCurrentCamera() != nullptr)
+	if (App->camera->GetCurrentCamera() != nullptr)
 	{
-		camera_pos = app->camera->GetPosition();
+		camera_pos = App->camera->GetPosition();
 	}
 	else
 	{
@@ -141,9 +141,9 @@ UPDATE_STATUS M_Renderer3D::PostUpdate(float dt)
 	
 	RenderScene();
 
-	app->editor->RenderEditorPanels();
+	App->editor->RenderEditorPanels();
 
-	SDL_GL_SwapWindow(app->window->GetWindow());
+	SDL_GL_SwapWindow(App->window->GetWindow());
 
 	return UPDATE_STATUS::CONTINUE;
 }
@@ -228,7 +228,7 @@ bool M_Renderer3D::InitOpenGL()
 	bool ret = true;
 	
 	//Create OpenGL Context
-	context = SDL_GL_CreateContext(app->window->GetWindow());
+	context = SDL_GL_CreateContext(App->window->GetWindow());
 	if (context == NULL)
 	{
 		LOG("[ERROR] OpenGL context could not be created! SDL_Error: %s\n", SDL_GetError());
@@ -355,14 +355,14 @@ bool M_Renderer3D::InitGlew()
 
 void M_Renderer3D::OnResize()
 {	
-	float win_width		= (float)app->window->GetWidth();
-	float win_height	= (float)app->window->GetHeight();
+	float win_width		= (float)App->window->GetWidth();
+	float win_height	= (float)App->window->GetHeight();
 
 	glViewport(0, 0, (GLsizei)win_width, (GLsizei)win_width);
 
-	if (app->camera->GetCurrentCamera() != nullptr)
+	if (App->camera->GetCurrentCamera() != nullptr)
 	{
-		app->camera->GetCurrentCamera()->SetAspectRatio(win_width / win_height);
+		App->camera->GetCurrentCamera()->SetAspectRatio(win_width / win_height);
 	}
 	else
 	{
@@ -379,9 +379,9 @@ void M_Renderer3D::RecalculateProjectionMatrix()
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 
-	if (app->camera->GetCurrentCamera() != nullptr)
+	if (App->camera->GetCurrentCamera() != nullptr)
 	{
-		glLoadMatrixf((GLfloat*)app->camera->GetCurrentCamera()->GetOGLProjectionMatrix());
+		glLoadMatrixf((GLfloat*)App->camera->GetCurrentCamera()->GetOGLProjectionMatrix());
 	}
 	else
 	{
@@ -394,17 +394,17 @@ void M_Renderer3D::RecalculateProjectionMatrix()
 
 void M_Renderer3D::InitEngineIcons()
 {
-	uint32 animation_icon_uid	= app->resourceManager->LoadFromLibrary(ANIMATION_ICON_PATH);
-	uint32 file_icon_uid		= app->resourceManager->LoadFromLibrary(FILE_ICON_PATH);
-	uint32 folder_icon_uid		= app->resourceManager->LoadFromLibrary(FOLDER_ICON_PATH);
-	uint32 material_icon_uid	= app->resourceManager->LoadFromLibrary(MATERIAL_ICON_PATH);
-	uint32 model_icon_uid		= app->resourceManager->LoadFromLibrary(MODEL_ICON_PATH);
+	uint32 animation_icon_uid	= App->resourceManager->LoadFromLibrary(ANIMATION_ICON_PATH);
+	uint32 file_icon_uid		= App->resourceManager->LoadFromLibrary(FILE_ICON_PATH);
+	uint32 folder_icon_uid		= App->resourceManager->LoadFromLibrary(FOLDER_ICON_PATH);
+	uint32 material_icon_uid	= App->resourceManager->LoadFromLibrary(MATERIAL_ICON_PATH);
+	uint32 model_icon_uid		= App->resourceManager->LoadFromLibrary(MODEL_ICON_PATH);
 
-	R_Texture* animation_icon	= (R_Texture*)app->resourceManager->RequestResource(animation_icon_uid);
-	R_Texture* file_icon		= (R_Texture*)app->resourceManager->RequestResource(file_icon_uid);
-	R_Texture* folder_icon		= (R_Texture*)app->resourceManager->RequestResource(folder_icon_uid);
-	R_Texture* material_icon	= (R_Texture*)app->resourceManager->RequestResource(material_icon_uid);
-	R_Texture* model_icon		= (R_Texture*)app->resourceManager->RequestResource(model_icon_uid);
+	R_Texture* animation_icon	= (R_Texture*)App->resourceManager->RequestResource(animation_icon_uid);
+	R_Texture* file_icon		= (R_Texture*)App->resourceManager->RequestResource(file_icon_uid);
+	R_Texture* folder_icon		= (R_Texture*)App->resourceManager->RequestResource(folder_icon_uid);
+	R_Texture* material_icon	= (R_Texture*)App->resourceManager->RequestResource(material_icon_uid);
+	R_Texture* model_icon		= (R_Texture*)App->resourceManager->RequestResource(model_icon_uid);
 
 	engineIcons.animation_icon = animation_icon;
 	engineIcons.file_icon		= file_icon;
@@ -425,7 +425,7 @@ void M_Renderer3D::InitFramebuffers()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, app->window->GetWidth(), app->window->GetHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, App->window->GetWidth(), App->window->GetHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
 	glBindTexture(GL_TEXTURE_2D, 0);
 
 	// --- DEPTH BUFFER TEXTURE ---
@@ -436,7 +436,7 @@ void M_Renderer3D::InitFramebuffers()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	
 	//glTexStorage2D(GL_TEXTURE_2D, 1, GL_DEPTH_COMPONENT, App->window->GetWidth(), App->window->GetHeight());
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, app->window->GetWidth(), app->window->GetHeight(), 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, App->window->GetWidth(), App->window->GetHeight(), 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
 	glBindTexture(GL_TEXTURE_2D, 0);
 
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, sceneRenderTexture, 0);
@@ -446,7 +446,7 @@ void M_Renderer3D::InitFramebuffers()
 	glGenRenderbuffers(1, (GLuint*)&depthBuffer);
 	glBindRenderbuffer(GL_RENDERBUFFER, depthBuffer);
 	
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, app->window->GetWidth(), app->window->GetHeight());
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, App->window->GetWidth(), App->window->GetHeight());
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthBuffer);
 	glBindRenderbuffer(GL_RENDERBUFFER, 0);
 
@@ -506,45 +506,45 @@ void M_Renderer3D::FreeBuffers()
 
 void M_Renderer3D::RendererShortcuts()
 {
-	if (app->input->GetKey(SDL_SCANCODE_F1) == KEY_STATE::KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_F1) == KEY_STATE::KEY_DOWN)
 	{
 		renderWorldGrid = !renderWorldGrid;
 	}
 
-	if (app->input->GetKey(SDL_SCANCODE_F2) == KEY_STATE::KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_F2) == KEY_STATE::KEY_DOWN)
 	{
 		renderWorldAxis = !renderWorldAxis;
 	}
 	
-	if (app->input->GetKey(SDL_SCANCODE_F3) == KEY_STATE::KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_F3) == KEY_STATE::KEY_DOWN)
 	{
 		SetRenderWireframes(!renderWireframes);
 	}
 
-	if (app->input->GetKey(SDL_SCANCODE_F7) == KEY_STATE::KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_F7) == KEY_STATE::KEY_DOWN)
 	{
 		SetGLFlag(GL_TEXTURE_2D, !GetGLFlag(GL_TEXTURE_2D));
 	}
 
-	if (app->input->GetKey(SDL_SCANCODE_F8) == KEY_STATE::KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_F8) == KEY_STATE::KEY_DOWN)
 	{
 		SetGLFlag(GL_COLOR_MATERIAL, !GetGLFlag(GL_COLOR_MATERIAL));
 	}
 
-	if (app->input->GetKey(SDL_SCANCODE_KP_PLUS) == KEY_STATE::KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_KP_PLUS) == KEY_STATE::KEY_DOWN)
 	{
-		if (app->camera->GetCurrentCamera() != nullptr)
+		if (App->camera->GetCurrentCamera() != nullptr)
 		{
-			float current_fov = app->camera->GetCurrentCamera()->GetVerticalFOV();
-			app->camera->GetCurrentCamera()->SetVerticalFOV(current_fov + 5.0f);
+			float current_fov = App->camera->GetCurrentCamera()->GetVerticalFOV();
+			App->camera->GetCurrentCamera()->SetVerticalFOV(current_fov + 5.0f);
 		}
 	}
-	if (app->input->GetKey(SDL_SCANCODE_KP_MINUS) == KEY_STATE::KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_KP_MINUS) == KEY_STATE::KEY_DOWN)
 	{
-		if (app->camera->GetCurrentCamera() != nullptr)
+		if (App->camera->GetCurrentCamera() != nullptr)
 		{
-			float current_fov = app->camera->GetCurrentCamera()->GetVerticalFOV();
-			app->camera->GetCurrentCamera()->SetVerticalFOV(current_fov - 5.0f);
+			float current_fov = App->camera->GetCurrentCamera()->GetVerticalFOV();
+			App->camera->GetCurrentCamera()->SetVerticalFOV(current_fov - 5.0f);
 		}
 	}
 }
@@ -570,9 +570,9 @@ void M_Renderer3D::RenderScene()
 	//RenderRays();
 	RenderSkeletons();
 	
-	if (app->camera->DrawLastRaycast())
+	if (App->camera->DrawLastRaycast())
 	{
-		RayRenderer last_ray = RayRenderer(app->camera->lastRaycast, rayColor, rayWidth);
+		RayRenderer last_ray = RayRenderer(App->camera->lastRaycast, rayColor, rayWidth);
 		last_ray.Render();
 	}
 
@@ -1229,12 +1229,12 @@ void MeshRenderer::Render()
 	ClearDebugParameters();																			// Clear the specifications applied in ApplyDebugParameters().
 
 	// --- DEBUG DRAW ---
-	if (r_mesh->draw_vertex_normals || app->renderer->GetRenderVertexNormals())
+	if (r_mesh->draw_vertex_normals || App->renderer->GetRenderVertexNormals())
 	{
 		RenderVertexNormals(r_mesh);
 	}
 
-	if (r_mesh->draw_face_normals || app->renderer->GetRenderFaceNormals())
+	if (r_mesh->draw_face_normals || App->renderer->GetRenderFaceNormals())
 	{
 		RenderFaceNormals(r_mesh);
 	}
@@ -1259,8 +1259,8 @@ void MeshRenderer::RenderVertexNormals(const R_Mesh* r_mesh)
 	std::vector<float> vertices	= r_mesh->vertices;
 	std::vector<float> normals	= r_mesh->normals;
 
-	glColor4fv(app->renderer->GetVertexNormalsColor().C_Array());
-	glLineWidth(app->renderer->GetVertexNormalsWidth());
+	glColor4fv(App->renderer->GetVertexNormalsColor().C_Array());
+	glLineWidth(App->renderer->GetVertexNormalsWidth());
 	glBegin(GL_LINES);
 
 	for (uint i = 0; i < vertices.size(); i += 3)
@@ -1300,8 +1300,8 @@ void MeshRenderer::RenderFaceNormals(const R_Mesh* r_mesh)
 		return;
 	}
 
-	glColor4fv(app->renderer->GetFaceNormalsColor().C_Array());
-	glLineWidth(app->renderer->GetFaceNormalsWidth());
+	glColor4fv(App->renderer->GetFaceNormalsColor().C_Array());
+	glLineWidth(App->renderer->GetFaceNormalsWidth());
 	glBegin(GL_LINES);
 
 
@@ -1359,13 +1359,13 @@ void MeshRenderer::GetFaces(const R_Mesh* r_mesh, std::vector<Triangle>& vertex_
 
 void MeshRenderer::ApplyDebugParameters()
 {
-	if (app->renderer->GetRenderWireframes() || c_mesh->GetShowWireframe())
+	if (App->renderer->GetRenderWireframes() || c_mesh->GetShowWireframe())
 	{
-		glColor4fv(app->renderer->GetWireframeColor().C_Array());
-		glLineWidth(app->renderer->GetWireframeLineWidth());
+		glColor4fv(App->renderer->GetWireframeColor().C_Array());
+		glLineWidth(App->renderer->GetWireframeLineWidth());
 	}
 
-	if (c_mesh->GetShowWireframe() && !app->renderer->GetRenderWireframes())
+	if (c_mesh->GetShowWireframe() && !App->renderer->GetRenderWireframes())
 	{
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		glDisable(GL_TEXTURE_2D);
@@ -1375,7 +1375,7 @@ void MeshRenderer::ApplyDebugParameters()
 
 void MeshRenderer::ClearDebugParameters()
 {
-	if (c_mesh->GetShowWireframe() && !app->renderer->GetRenderWireframes())
+	if (c_mesh->GetShowWireframe() && !App->renderer->GetRenderWireframes())
 	{
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		glEnable(GL_TEXTURE_2D);
@@ -1402,7 +1402,7 @@ void MeshRenderer::ApplyTextureAndMaterial()
 		}
 		else if (c_material->UseDefaultTexture())														// If the default texture is set to be used (bool use_default_texture)
 		{
-			glBindTexture(GL_TEXTURE_2D, app->renderer->GetDebugTextureID());							// Binding the texture that will be rendered. Index = 0 means we are clearing the binding.
+			glBindTexture(GL_TEXTURE_2D, App->renderer->GetDebugTextureID());							// Binding the texture that will be rendered. Index = 0 means we are clearing the binding.
 		}
 		else
 		{
@@ -1501,9 +1501,9 @@ Color CuboidRenderer::GetColorByType()
 	switch (type)
 	{
 	case CUBOID_TYPE::NONE:		{ return White; }								break;
-	case CUBOID_TYPE::AABB:		{ return app->renderer->GetAABBColor(); }		break;
-	case CUBOID_TYPE::OBB:		{ return app->renderer->GetOBBColor(); }		break;
-	case CUBOID_TYPE::FRUSTUM:	{ return app->renderer->GetFrustumColor(); }	break;
+	case CUBOID_TYPE::AABB:		{ return App->renderer->GetAABBColor(); }		break;
+	case CUBOID_TYPE::OBB:		{ return App->renderer->GetOBBColor(); }		break;
+	case CUBOID_TYPE::FRUSTUM:	{ return App->renderer->GetFrustumColor(); }	break;
 	}
 
 	return White;
@@ -1514,9 +1514,9 @@ float CuboidRenderer::GetEdgeWidthByType()
 	switch (type)
 	{
 	case CUBOID_TYPE::NONE:		{ return BASE_LINE_WIDTH; }							break;
-	case CUBOID_TYPE::AABB:		{ return app->renderer->GetAABBEdgeWidth(); }		break;
-	case CUBOID_TYPE::OBB:		{ return app->renderer->GetOBBEdgeWidth(); }		break;
-	case CUBOID_TYPE::FRUSTUM:	{ return app->renderer->GetFrustumEdgeWidth(); }	break;
+	case CUBOID_TYPE::AABB:		{ return App->renderer->GetAABBEdgeWidth(); }		break;
+	case CUBOID_TYPE::OBB:		{ return App->renderer->GetOBBEdgeWidth(); }		break;
+	case CUBOID_TYPE::FRUSTUM:	{ return App->renderer->GetFrustumEdgeWidth(); }	break;
 	}
 
 	return STANDARD_LINE_WIDTH;
@@ -1533,8 +1533,8 @@ ray_width	(ray_width)
 
 RayRenderer::RayRenderer(const LineSegment& ray) : 
 ray			(ray),
-color		(app->renderer->GetRayColor()),
-ray_width	(app->renderer->GetRayWidth())
+color		(App->renderer->GetRayColor()),
+ray_width	(App->renderer->GetRayWidth())
 {
 
 }
@@ -1569,8 +1569,8 @@ bone_width	(bone_width)
 
 SkeletonRenderer::SkeletonRenderer(const std::vector<LineSegment>& bones) :
 bones		(bones),
-color		(app->renderer->GetBoneColor()),
-bone_width	(app->renderer->GetBoneWidth())
+color		(App->renderer->GetBoneColor()),
+bone_width	(App->renderer->GetBoneWidth())
 {
 
 }

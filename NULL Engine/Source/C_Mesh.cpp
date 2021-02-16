@@ -40,7 +40,7 @@ bool C_Mesh::CleanUp()
 
 	if (r_mesh != nullptr)
 	{
-		app->resourceManager->FreeResource(r_mesh->GetUID());
+		App->resourceManager->FreeResource(r_mesh->GetUID());
 		r_mesh = nullptr;
 	}
 
@@ -72,9 +72,9 @@ bool C_Mesh::LoadState(ParsonNode& root)
 	r_mesh = nullptr;
 
 	std::string assets_path = ASSETS_MODELS_PATH + std::string(root.GetString("Name"));
-	app->resourceManager->AllocateResource((uint32)root.GetNumber("UID"), assets_path.c_str());
+	App->resourceManager->AllocateResource((uint32)root.GetNumber("UID"), assets_path.c_str());
 	
-	r_mesh					= (R_Mesh*)app->resourceManager->RequestResource((uint32)root.GetNumber("UID"));
+	r_mesh					= (R_Mesh*)App->resourceManager->RequestResource((uint32)root.GetNumber("UID"));
 	show_wireframe			= root.GetBool("ShowWireframe");
 	show_bounding_box		= root.GetBool("ShowBoundingBox");
 
@@ -96,7 +96,7 @@ void C_Mesh::SetMesh(R_Mesh* r_mesh)
 {
 	if (this->r_mesh != nullptr)
 	{
-		app->resourceManager->FreeResource(this->r_mesh->GetUID());
+		App->resourceManager->FreeResource(this->r_mesh->GetUID());
 	}
 	
 	this->r_mesh = r_mesh;
