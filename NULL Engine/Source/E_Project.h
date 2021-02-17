@@ -32,17 +32,17 @@ private:
 	void			DrawAssetsTree				();															// 
 	void			DrawFolderExplorer			();															// 
 
-	void			DrawDirectoriesTree			(const char* root_node, const char* extension_to_filter);
-	void			DrawDirectoriesTree			(const PathNode& root_node);
+	void			DrawDirectoriesTree			(const char* rootNode, const char* extensionToFilter);
+	void			DrawDirectoriesTree			(const PathNode& rootNode);
 
 	void			DrawResourceIcons			();
 
 private:
 	void			GoToPreviousDirectoryButton	();
-	void			ResourceDragAndDropEvent	(Resource* resource, ImTextureID texture_id);
+	void			ResourceDragAndDropEvent	(Resource* resource, ImTextureID textureId);
 	
 	ImTextureID		GetIconTexID				(Resource* resource) const;
-	std::string		GetDisplayString			(std::string original_string, uint max_lenght) const;
+	std::string		GetDisplayString			(std::string originalString, uint maxLenght) const;
 	void			ClearResourcesToDisplay		();
 
 private:																									// --- ENGINE DIRECTORIES VARS

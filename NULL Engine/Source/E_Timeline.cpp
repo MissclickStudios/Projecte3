@@ -42,8 +42,8 @@ bool E_Timeline::Draw(ImGuiIO& io)
 
 	ImGui::Begin("Timeline");
 
-	static ImVec2 offset_and_scale = ImVec2(0.0f, 0.0f);
-	ImGui::BeginTimelineEx("Current Animation", 120.0f, 12, 12, &offset_and_scale);
+	static ImVec2 offsetAndScale = ImVec2(0.0f, 0.0f);
+	ImGui::BeginTimelineEx("Current Animation", 120.0f, 12, 12, &offsetAndScale);
 	//ImGui::PlotTimelineEvents("EVENTS", values4, true);
 	ImGui::TimelineEventEx("Take001", values, true);
 	ImGui::TimelineEventEx("Take002", values2, false);

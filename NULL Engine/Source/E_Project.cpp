@@ -23,9 +23,9 @@
 
 E_Project::E_Project() : EditorPanel("Project"),
 directoryToDisplay			(nullptr),
-refreshRootDirectory			(true),
+refreshRootDirectory		(true),
 refreshDirectoryToDisplay	(false),
-refreshWindowSize				(true),
+refreshWindowSize			(true),
 iconsAreLoaded				(false),
 draggedResource				(nullptr)
 {
@@ -192,15 +192,15 @@ void E_Project::DrawFolderExplorer()
 	ImGui::End();
 }
 
-void E_Project::DrawDirectoriesTree(const char* root_directory, const char* extension_to_filter)
+void E_Project::DrawDirectoriesTree(const char* rootDirectory, const char* extensionToFilter)
 {
 	ImGuiTreeNodeFlags treeNodeFlags = ImGuiTreeNodeFlags_None;
 
 	std::vector<std::string> directories;
 	std::vector<std::string> files;
-	std::string rootDir = root_directory;
+	std::string rootDir = rootDirectory;
 	
-	App->fileSystem->DiscoverFiles(rootDir.c_str(), files, directories, extension_to_filter);
+	App->fileSystem->DiscoverFiles(rootDir.c_str(), files, directories, extensionToFilter);
 
 	for (uint i = 0; i < directories.size(); ++i)
 	{
@@ -215,7 +215,7 @@ void E_Project::DrawDirectoriesTree(const char* root_directory, const char* exte
 				refreshDirectoryToDisplay = true;
 			}
 			
-			DrawDirectoriesTree(path.c_str(), extension_to_filter);
+			DrawDirectoriesTree(path.c_str(), extensionToFilter);
 
 			ImGui::TreePop();
 		}
@@ -225,15 +225,15 @@ void E_Project::DrawDirectoriesTree(const char* root_directory, const char* exte
 	files.clear();
 }
 
-void E_Project::DrawDirectoriesTree(const PathNode& root_node)
+void E_Project::DrawDirectoriesTree(const PathNode& rootNode)
 {
 	ImGuiTreeNodeFlags treeNodeFlags	= ImGuiTreeNodeFlags_None;
 	std::string path					= "[NONE]";
 	std::string directory				= "[NONE]";
 
-	for (uint i = 0; i < root_node.children.size(); ++i)
+	for (uint i = 0; i < rootNode.children.size(); ++i)
 	{
-		PathNode pathNode = root_node.children[i];
+		PathNode pathNode = rootNode.children[i];
 
 		if (/*path_node.is_file*/ !App->fileSystem->IsDirectory(pathNode.path.c_str()))
 		{
@@ -350,7 +350,7 @@ void E_Project::GoToPreviousDirectoryButton()
 	}
 }
 
-void E_Project::ResourceDragAndDropEvent(Resource* resource, ImTextureID texture_id)
+void E_Project::ResourceDragAndDropEvent(Resource* resource, ImTextureID textureId)
 {
 	if (resource == nullptr)
 	{
@@ -363,7 +363,7 @@ void E_Project::ResourceDragAndDropEvent(Resource* resource, ImTextureID texture
 		ImGui::SetDragDropPayload("DRAGGED_RESOURCE", resource, sizeof(Resource));
 	
 		ImGui::Text("Dragging %s", resource->GetAssetsFile());
-		ImGui::Image(texture_id, iconSize);
+		ImGui::Image(textureId, iconSize);
 
 		draggedResource = resource;
 
@@ -397,8 +397,8 @@ ImTextureID E_Project::GetIconTexID(Resource* resource) const
 	case RESOURCE_TYPE::MODEL:		{ texId = (ImTextureID)engineIcons.modelIcon->GetTextureID(); }		break;
 	case RESOURCE_TYPE::MESH:		{ texId = (ImTextureID)engineIcons.fileIcon->GetTextureID(); }		break;
 	case RESOURCE_TYPE::MATERIAL:	{ texId = (ImTextureID)engineIcons.materialIcon->GetTextureID(); }	break;
-	case RESOURCE_TYPE::TEXTURE:	{ texId = (ImTextureID)(((R_Texture*)resource)->GetTextureID()); }		break;
-	case RESOURCE_TYPE::FOLDER:		{ texId = (ImTextureID)engineIcons.folderIcon->GetTextureID(); }		break;
+	case RESOURCE_TYPE::TEXTURE:	{ texId = (ImTextureID)(((R_Texture*)resource)->GetTextureID()); }	break;
+	case RESOURCE_TYPE::FOLDER:		{ texId = (ImTextureID)engineIcons.folderIcon->GetTextureID(); }	break;
 	case RESOURCE_TYPE::SCENE:		{ texId = (ImTextureID)engineIcons.modelIcon->GetTextureID(); }		break;
 	case RESOURCE_TYPE::ANIMATION:	{ texId = (ImTextureID)engineIcons.animationIcon->GetTextureID(); }	break;
 	}
@@ -406,20 +406,20 @@ ImTextureID E_Project::GetIconTexID(Resource* resource) const
 	return texId;
 }
 
-std::string E_Project::GetDisplayString(std::string original_string, uint max_length) const
+std::string E_Project::GetDisplayString(std::string originalString, uint maxLength) const
 {	
-	if (original_string.length() <= max_length)
+	if (originalString.length() <= maxLength)
 	{
-		return original_string;
+		return originalString;
 	}
-	if (max_length == 0)
+	if (maxLength == 0)
 	{
 		return std::string("");
 	}
 
-	std::string displayString = original_string;
+	std::string displayString = originalString;
 
-	displayString.resize(max_length);
+	displayString.resize(maxLength);
 	displayString.append("...");
 
 	return displayString;

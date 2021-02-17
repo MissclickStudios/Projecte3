@@ -105,14 +105,14 @@ void E_LoadFile::DrawFileSelector()
 	}
 }
 
-void E_LoadFile::DrawDirectoriesTree(const char* root_directory, const char* extension_to_filter)
+void E_LoadFile::DrawDirectoriesTree(const char* rootDirectory, const char* extensionToFilter)
 {
 	std::vector<std::string> directories;
 	std::vector<std::string> files;
 
-	std::string rootDir = root_directory;
+	std::string rootDir = rootDirectory;
 
-	App->fileSystem->DiscoverFiles(rootDir.c_str(), files, directories, extension_to_filter);
+	App->fileSystem->DiscoverFiles(rootDir.c_str(), files, directories, extensionToFilter);
 
 	for (uint i = 0; i < directories.size(); ++i)
 	{
@@ -120,7 +120,7 @@ void E_LoadFile::DrawDirectoriesTree(const char* root_directory, const char* ext
 		
 		if (ImGui::TreeNodeEx(path.c_str(), 0, "%s/", directories[i].c_str()))
 		{
-			DrawDirectoriesTree(path.c_str(), extension_to_filter);
+			DrawDirectoriesTree(path.c_str(), extensionToFilter);
 			ImGui::TreePop();
 		}
 	}
