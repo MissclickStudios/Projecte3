@@ -68,8 +68,8 @@ bool C_Mesh::LoadState(ParsonNode& root)
 
 	rMesh = nullptr;
 
-	std::string assets_path = ASSETS_MODELS_PATH + std::string(root.GetString("Name"));
-	App->resourceManager->AllocateResource((uint32)root.GetNumber("UID"), assets_path.c_str());
+	std::string assetsPath = ASSETS_MODELS_PATH + std::string(root.GetString("Name"));
+	App->resourceManager->AllocateResource((uint32)root.GetNumber("UID"), assetsPath.c_str());
 	
 	rMesh = (R_Mesh*)App->resourceManager->RequestResource((uint32)root.GetNumber("UID"));
 	showWireframe = root.GetBool("ShowWireframe");
