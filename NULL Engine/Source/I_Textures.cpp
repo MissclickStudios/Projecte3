@@ -203,7 +203,7 @@ bool Importer::Textures::Load(const char* buffer, const uint size, R_Texture* rT
 			uint texId = Utilities::CreateTexture(ilGetData(), width, height, target, wrapping, filter, format, format);	// Creates an OpenGL texture with the given data and parameters.
 			if (texId != 0)																								// If tex_id == 0, then it means the tex. could not be created.
 			{
-				rTexture->SetTextureData(texId, width, height, depth, bpp, size, (TEXTURE_FORMAT)format);
+				rTexture->SetTextureData(texId, width, height, depth, bpp, size, (TextureFormat)format);
 			}
 			else
 			{

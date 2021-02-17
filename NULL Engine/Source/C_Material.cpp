@@ -165,7 +165,7 @@ Color C_Material::GetMaterialColour()
 {
 	if (rMaterial != nullptr)
 	{
-		return rMaterial->diffuse_color;
+		return rMaterial->diffuseColor;
 	}
 
 	return Color();
@@ -173,7 +173,7 @@ Color C_Material::GetMaterialColour()
 
 void C_Material::SetMaterialColour(const Color& color)
 {
-	rMaterial->diffuse_color = color;
+	rMaterial->diffuseColor = color;
 }
 
 // --- MATERIAL AND TEXTURE GET/SET DATA METHODS
@@ -181,7 +181,7 @@ void C_Material::SetMaterialColour(float r, float g, float b, float a)
 {
 	if (rMaterial != nullptr)
 	{
-		rMaterial->diffuse_color = Color(r, g, b, a);
+		rMaterial->diffuseColor = Color(r, g, b, a);
 	}
 	else
 	{

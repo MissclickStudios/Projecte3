@@ -27,9 +27,9 @@ uint Importer::Folders::Save(const R_Folder* rFolder, char** buffer)
 	ParsonNode rootNode			= ParsonNode();
 	ParsonArray containedArray		= rootNode.SetArray("ContainedResources");
 
-	for (uint i = 0; i < rFolder->contained_resources.size(); ++i)
+	for (uint i = 0; i < rFolder->containedResources.size(); ++i)
 	{
-		containedArray.SetNumber(rFolder->contained_resources[i]);
+		containedArray.SetNumber(rFolder->containedResources[i]);
 	}
 
 	std::string path	= FOLDERS_PATH + std::to_string(rFolder->GetUID()) + FOLDERS_EXTENSION;
@@ -80,7 +80,7 @@ bool Importer::Folders::Load(const char* buffer, R_Folder* rFolder)
 	for (uint i = 0; i < containedArray.size; ++i)
 	{
 		uint32 containedUid = (uint32)containedArray.GetNumber(i);
-		rFolder->contained_resources.push_back(containedUid);
+		rFolder->containedResources.push_back(containedUid);
 	}
 
 	LOG("[STATUS] Importer: Successfully Loaded Folder { %s } from Library! UID: %lu", rFolder->GetAssetsPath(), rFolder->GetUID());

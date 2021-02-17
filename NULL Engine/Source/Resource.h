@@ -32,8 +32,8 @@ public:
 
 	virtual bool CleanUp();
 
-	virtual bool SaveMeta(ParsonNode& meta_root) const;
-	virtual bool LoadMeta(const ParsonNode& meta_root);
+	virtual bool SaveMeta(ParsonNode& metaRoot) const;
+	virtual bool LoadMeta(const ParsonNode& metaRoot);
 
 public:
 	RESOURCE_TYPE		GetType					() const;
@@ -50,10 +50,10 @@ public:
 	const char*			GetLibraryPath			() const;								// 
 	const char*			GetLibraryFile			() const;								// 
 
-	void				SetAssetsPath			(const char* assets_path);				// 
-	void				SetAssetsFile			(const char* assets_file);				// 
-	void				SetLibraryPath			(const char* library_path);				// 
-	void				SetLibraryFile			(const char* library_file);				// 
+	void				SetAssetsPath			(const char* assetsPath);				// 
+	void				SetAssetsFile			(const char* assetsFile);				// 
+	void				SetLibraryPath			(const char* libraryPath);				// 
+	void				SetLibraryFile			(const char* libraryFile);				// 
 
 	void				SetLibraryPathAndFile	();
 
@@ -66,12 +66,12 @@ private:
 	uint32				uid;															// UID for this Resource.
 	uint				references;
 
-	std::string			assets_path;													// Path of the file in the Assets directory. Will be used to avoid making duplicates.
-	std::string			assets_file;													// File and extension string of the texture in the Assets directory.
-	std::string			library_path;													// Path of the file in the Library directory. Will be used to avoid making duplicates.
-	std::string			library_file;													// File and extension string of the texture in the Library directory.
+	std::string			assetsPath;														// Path of the file in the Assets directory. Will be used to avoid making duplicates.
+	std::string			assetsFile;														// File and extension string of the texture in the Assets directory.
+	std::string			libraryPath;													// Path of the file in the Library directory. Will be used to avoid making duplicates.
+	std::string			libraryFile;													// File and extension string of the texture in the Library directory.
 
-	ImportSettings		import_settings;
+	ImportSettings		importSettings;
 };
 
 #endif // !__RESOURCE_H__

@@ -93,14 +93,14 @@ void Importer::Scenes::Utilities::ProcessNode(const aiScene* assimpScene, const 
 {
 	ModelNode modelNode	= ModelNode();
 	modelNode.uid			= Random::LCG::GetRandomUint();
-	modelNode.parent_uid	= parent.uid;
+	modelNode.parentUID	= parent.uid;
 
 	assimpNode = Utilities::ImportTransform(assimpNode, modelNode);
 	Utilities::ImportMeshesAndMaterials(assimpScene, assimpNode, rModel, modelNode);
 
 	modelNode.name	= (assimpNode == assimpScene->mRootNode) ? rModel->GetAssetsFile() : assimpNode->mName.C_Str();
 
-	rModel->model_nodes.push_back(modelNode);
+	rModel->modelNodes.push_back(modelNode);
 
 	for (uint i = 0; i < assimpNode->mNumChildren; ++i)
 	{
@@ -163,9 +163,9 @@ void Importer::Scenes::Utilities::ImportMeshesAndMaterials(const aiScene* assimp
 		std::map<uint, ModelNode>::iterator item = loadedNodes.find(assimpNode->mMeshes[i]);
 		if (item != loadedNodes.end())
 		{
-			modelNode.mesh_uid		= item->second.mesh_uid;
-			modelNode.material_uid = item->second.material_uid;
-			modelNode.texture_uid	= item->second.texture_uid;
+			modelNode.meshUID		= item->second.meshUID;
+			modelNode.materialUID = item->second.materialUID;
+			modelNode.textureUID	= item->second.textureUID;
 			continue;
 		}
 		
@@ -199,7 +199,7 @@ void Importer::Scenes::Utilities::ImportMesh(const char* nodeName, const aiMesh*
 		return;
 	}
 	
-	modelNode.mesh_uid = rMesh->GetUID();
+	modelNode.meshUID = rMesh->GetUID();
 	App->resourceManager->SaveResourceToLibrary(rMesh);
 	App->resourceManager->DeallocateResource(rMesh);
 }
@@ -216,7 +216,7 @@ void Importer::Scenes::Utilities::ImportMaterial(const char* nodeName, const aiM
 	
 	Importer::Materials::Import(assimpMaterial, rMaterial);
 	
-	modelNode.material_uid = rMaterial->GetUID();																								//
+	modelNode.materialUID = rMaterial->GetUID();																								//
 
 	Utilities::ImportTexture(rMaterial->materials, modelNode);
 	
@@ -228,7 +228,7 @@ void Importer::Scenes::Utilities::ImportTexture(const std::vector<MaterialData>&
 {
 	for (uint i = 0; i < materials.size(); ++i)
 	{
-		const char* texPath	= materials[i].texture_assets_path.c_str();
+		const char* texPath	= materials[i].textureAssetsPath.c_str();
 		char* buffer			= nullptr;
 		uint read				= App->fileSystem->Load(texPath, &buffer);
 		if (buffer != nullptr && read > 0)
@@ -236,10 +236,10 @@ void Importer::Scenes::Utilities::ImportTexture(const std::vector<MaterialData>&
 			std::map<std::string, uint32>::iterator item = loadedTextures.find(texPath);
 			if (item != loadedTextures.end())
 			{
-				if (materials[i].type == TEXTURE_TYPE::DIFFUSE)
+				if (materials[i].type == TextureType::DIFFUSE)
 				{
-					modelNode.texture_uid = item->second;
-					modelNode.texture_name = App->fileSystem->GetFileAndExtension(texPath);
+					modelNode.textureUID = item->second;
+					modelNode.textureName = App->fileSystem->GetFileAndExtension(texPath);
 				}
 
 				RELEASE_ARRAY(buffer);
@@ -256,10 +256,10 @@ void Importer::Scenes::Utilities::ImportTexture(const std::vector<MaterialData>&
 				continue;
 			}
 
-			if (materials[i].type == TEXTURE_TYPE::DIFFUSE)																// For now only the diffuse texture will be used on models' meshes.
+			if (materials[i].type == TextureType::DIFFUSE)																// For now only the diffuse texture will be used on models' meshes.
 			{
-				modelNode.texture_uid	= rTexture->GetUID();
-				modelNode.texture_name = rTexture->GetAssetsFile();
+				modelNode.textureUID	= rTexture->GetUID();
+				modelNode.textureName = rTexture->GetAssetsFile();
 			}
 
 			loadedTextures.emplace(texPath, rTexture->GetUID());
@@ -332,10 +332,10 @@ uint Importer::Scenes::Save(const R_Model* rModel, char** buffer)
 	ParsonArray modelNodesArray	= rootNode.SetArray("ModelNodes");																	// -------------------------------------------------
 	ParsonArray animationsArray	= rootNode.SetArray("Animations");
 
-	for (uint i = 0; i < rModel->model_nodes.size(); ++i)																				// --- SAVING MODEL NODE DATA
+	for (uint i = 0; i < rModel->modelNodes.size(); ++i)																				// --- SAVING MODEL NODE DATA
 	{
-		ParsonNode modelNode = modelNodesArray.SetNode(rModel->model_nodes[i].name.c_str());
-		rModel->model_nodes[i].Save(modelNode);
+		ParsonNode modelNode = modelNodesArray.SetNode(rModel->modelNodes[i].name.c_str());
+		rModel->modelNodes[i].Save(modelNode);
 	}
 
 	std::map<uint32, std::string>::const_iterator item;
@@ -408,7 +408,7 @@ bool Importer::Scenes::Load(const char* buffer, R_Model* rModel)
 		ModelNode modelNode = ModelNode();
 		modelNode.Load(parsonNode);
 
-		rModel->model_nodes.push_back(modelNode);
+		rModel->modelNodes.push_back(modelNode);
 	}
 
 	for (uint i = 0; i < animationsArray.size; ++i)

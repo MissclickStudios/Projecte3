@@ -21,15 +21,15 @@ struct ModelNode
 	bool Save(ParsonNode& root) const; 
 	bool Load(const ParsonNode& root); 
 
-	std::string name;																										// Name of the Model Node.
-	uint32		uid;																										// UID of this Model Node.
-	uint32		parent_uid;																									// UID of the parent Model Node.
-	Transform	transform;																									// Transform of the Model Node.
+	std::string		name;																									// Name of the Model Node.
+	uint32			uid;																									// UID of this Model Node.
+	uint32			parentUID;																								// UID of the parent Model Node.
+	Transform		transform;																								// Transform of the Model Node.
 	
-	uint32		mesh_uid;																									// UID of the Mesh Resource (R_Mesh) of the Model Node.
-	uint32		material_uid;																								// UID of the Material Resource (R_Material) of the Model Node.
-	uint32		texture_uid;																								// UID of the Texture Resource (R_Texture) of the Model Node.
-	std::string texture_name;
+	uint32			meshUID;																								// UID of the Mesh Resource (R_Mesh) of the Model Node.
+	uint32			materialUID;																							// UID of the Material Resource (R_Material) of the Model Node.
+	uint32			textureUID;																								// UID of the Texture Resource (R_Texture) of the Model Node.
+	std::string		textureName;
 };
 
 class R_Model : public Resource
@@ -40,14 +40,14 @@ public:
 
 	bool CleanUp() override;
 
-	bool SaveMeta(ParsonNode& meta_root) const override;
-	bool LoadMeta(const ParsonNode& meta_root) override;
+	bool SaveMeta(ParsonNode& metaRoot) const override;
+	bool LoadMeta(const ParsonNode& metaRoot) override;
 
 public:
-	std::vector<ModelNode>			model_nodes;
+	std::vector<ModelNode>			modelNodes;
 	std::map<uint32, std::string>	animations;
 
-	ModelSettings			model_settings;
+	ModelSettings modelSettings;
 };
 
 #endif // !__R_MODEL_H__

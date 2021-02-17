@@ -133,7 +133,7 @@ void C_Mesh::GetMeshData(uint& numVertices, uint& numNormals, uint& numTexCoords
 	{
 		numVertices = rMesh->vertices.size();
 		numNormals = rMesh->normals.size();
-		numTexCoords = rMesh->tex_coords.size();
+		numTexCoords = rMesh->texCoords.size();
 		numIndices = rMesh->indices.size();
 
 		numBones = rMesh->bones.size();
@@ -144,7 +144,7 @@ bool C_Mesh::GetDrawVertexNormals() const
 {
 	if (rMesh != nullptr)
 	{
-		return rMesh->draw_vertex_normals;
+		return rMesh->drawVertexNormals;
 	}
 
 	return false;
@@ -154,7 +154,7 @@ bool C_Mesh::GetDrawFaceNormals() const
 {
 	if (rMesh != nullptr)
 	{
-		return rMesh->draw_face_normals;
+		return rMesh->drawFaceNormals;
 	}
 
 	return false;
@@ -164,7 +164,7 @@ void C_Mesh::SetDrawVertexNormals(const bool& setTo)
 {
 	if (rMesh != nullptr)
 	{
-		rMesh->draw_vertex_normals = setTo;
+		rMesh->drawVertexNormals = setTo;
 	}
 }
 
@@ -172,7 +172,7 @@ void C_Mesh::SetDrawFaceNormals(const bool& setTo)
 {
 	if (rMesh != nullptr)
 	{
-		rMesh->draw_face_normals = setTo;
+		rMesh->drawFaceNormals = setTo;
 	}
 }
 

@@ -18,8 +18,8 @@ public:
 
 	bool CleanUp();
 
-	bool SaveMeta(ParsonNode& meta_root) const override;
-	bool LoadMeta(const ParsonNode& meta_root) override;
+	bool SaveMeta(ParsonNode& metaRoot) const override;
+	bool LoadMeta(const ParsonNode& metaRoot) override;
 
 public:
 	const char* GetName				() const;
@@ -28,7 +28,7 @@ public:
 
 	void		SetName				(const char* name);
 	void		SetDuration			(const double& duration);
-	void		SetTicksPerSecond	(const double& ticks_per_second);
+	void		SetTicksPerSecond	(const double& ticksPerSecond);
 
 public:
 	std::vector<Channel>	channels;
@@ -36,9 +36,9 @@ public:
 private:
 	std::string				name;
 	double					duration;
-	double					ticks_per_second;
+	double					ticksPerSecond;
 	
-	AnimationSettings animation_settings;
+	AnimationSettings animationSettings;
 };
 
 #endif // !__R_ANIMATION_H__

@@ -10,7 +10,7 @@ class ParsonNode;
 
 typedef unsigned int uint;
 
-enum class TEXTURE_TYPE									// The enum values are set according to the values of Assimp's aiTextureType enum.
+enum class TextureType									// The enum values are set according to the values of Assimp's aiTextureType enum.
 {
 	NONE			= 0x0,								// 0x0 = aiTextureType_NONE			--> No texture. The value will be used for all material properties non-related to textures.
 	DIFFUSE			= 0x1,								// 0x1 = aiTextureType_DIFFUSE		--> Tex. will be combined with the diffuse lighting equation's result.
@@ -30,13 +30,13 @@ enum class TEXTURE_TYPE									// The enum values are set according to the valu
 struct MaterialData
 {
 	MaterialData();
-	MaterialData(TEXTURE_TYPE type, uint texture_uid, std::string texture_assets_path);
+	MaterialData(TextureType type, uint textureUID, std::string texturAssetsPath);
 	
 	void CleanUp();
 	
-	TEXTURE_TYPE	type;
-	uint			texture_uid;
-	std::string		texture_assets_path;
+	TextureType		type;
+	uint			textureUID;
+	std::string		textureAssetsPath;
 };
 
 class R_Material : public Resource
@@ -47,15 +47,15 @@ public:
 
 	bool CleanUp() override;
 
-	bool SaveMeta(ParsonNode& meta_root) const override;
-	bool LoadMeta(const ParsonNode& meta_root) override;
+	bool SaveMeta(ParsonNode& metaRoot) const override;
+	bool LoadMeta(const ParsonNode& metaRoot) override;
 
 public:
 	std::vector<MaterialData>	materials;									// In the end the amount of materials that will be used is "constant". It could be an array as mat[7] = { 0, 0,... };
-	Color					diffuse_color;
+	Color						diffuseColor;
 
 private:
-	MaterialSettings		material_settings;
+	MaterialSettings			materialSettings;
 };
 
 #endif // !__R_MATERIAL_H__

@@ -53,13 +53,13 @@ Texture R_Texture::GetTextureData() const
 	return texData;
 }
 
-void R_Texture::SetTextureData(uint id, uint width, uint height, uint depth, uint bpp, uint bytes, TEXTURE_FORMAT format, bool compressed)
+void R_Texture::SetTextureData(uint id, uint width, uint height, uint depth, uint bpp, uint bytes, TextureFormat format, bool compressed)
 {
 	texData.id				= id;
 	texData.width			= width;
 	texData.height			= height;
 	texData.depth			= depth;
-	texData.bpp			= bpp;
+	texData.bpp				= bpp;
 	texData.bytes			= bytes;
 	texData.format			= format;
 	texData.compressed		= compressed;
@@ -95,7 +95,7 @@ uint R_Texture::GetTextureBytes() const
 	return texData.bytes;
 }
 
-TEXTURE_FORMAT R_Texture::GetTextureFormat() const
+TextureFormat R_Texture::GetTextureFormat() const
 {
 	return texData.format;
 }
@@ -109,13 +109,13 @@ const char* R_Texture::GetTextureFormatString() const
 {
 	switch (texData.format)
 	{
-	case TEXTURE_FORMAT::UNKNOWN:		{ return "UNKNOWN"; }		break;
-	case TEXTURE_FORMAT::COLOUR_INDEX:	{ return "COLOUR_INDEX"; }	break;
-	case TEXTURE_FORMAT::RGB:			{ return "RGB"; }			break;
-	case TEXTURE_FORMAT::RGBA:			{ return "RGBA"; }			break;
-	case TEXTURE_FORMAT::BGR:			{ return "BGR"; }			break;
-	case TEXTURE_FORMAT::BGRA:			{ return "BGRA"; }			break;
-	case TEXTURE_FORMAT::LUMINANCE:		{ return "LUMINANCE"; }		break;
+	case TextureFormat::UNKNOWN:		{ return "UNKNOWN"; }		break;
+	case TextureFormat::COLOUR_INDEX:	{ return "COLOUR_INDEX"; }	break;
+	case TextureFormat::RGB:			{ return "RGB"; }			break;
+	case TextureFormat::RGBA:			{ return "RGBA"; }			break;
+	case TextureFormat::BGR:			{ return "BGR"; }			break;
+	case TextureFormat::BGRA:			{ return "BGRA"; }			break;
+	case TextureFormat::LUMINANCE:		{ return "LUMINANCE"; }		break;
 	}
 
 	return "NONE";
@@ -130,6 +130,6 @@ Texture::Texture()
 	depth		= 0;
 	bpp			= 0;
 	bytes		= 0;
-	format		= TEXTURE_FORMAT::UNKNOWN;
+	format		= TextureFormat::UNKNOWN;
 	compressed	= true;
 }

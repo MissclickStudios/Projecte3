@@ -95,12 +95,12 @@ void Importer::Meshes::Utilities::GetTexCoords(const aiMesh* assimpMesh, R_Mesh*
 	}
 
 	uint texCoordsSize = assimpMesh->mNumVertices * 2;												// There will be 2 tex coordinates per vertex.
-	rMesh->tex_coords.resize(texCoordsSize);														// Allocating in advance the memory required to store all the texture coordinates.
+	rMesh->texCoords.resize(texCoordsSize);														// Allocating in advance the memory required to store all the texture coordinates.
 
 	for (uint i = 0; i < assimpMesh->mNumVertices; ++i)
 	{
-		rMesh->tex_coords[i * 2]		= assimpMesh->mTextureCoords[0][i].x;
-		rMesh->tex_coords[i * 2 + 1]	= assimpMesh->mTextureCoords[0][i].y;
+		rMesh->texCoords[i * 2]		= assimpMesh->mTextureCoords[0][i].x;
+		rMesh->texCoords[i * 2 + 1]	= assimpMesh->mTextureCoords[0][i].y;
 	}
 
 	LOG("[STATUS] Imported %u texture coordinates!", texCoordsSize);
@@ -295,7 +295,7 @@ uint Importer::Meshes::Save(const R_Mesh* rMesh, char** buffer)
 	uint headerData[HEADER_SIZE] = {
 		rMesh->vertices.size(),																	// 0 --> Num Vertices
 		rMesh->normals.size(), 																	// 1 --> Num Normals
-		rMesh->tex_coords.size(), 																	// 2 --> Num Texture Coordinates
+		rMesh->texCoords.size(), 																	// 2 --> Num Texture Coordinates
 		rMesh->indices.size(), 																	// 3 --> Num Indices
 		rMesh->bones.size()																		// 4 --> Num Bones
 	};
@@ -331,10 +331,10 @@ uint Importer::Meshes::Save(const R_Mesh* rMesh, char** buffer)
 	memcpy_s(cursor, size, &rMesh->normals[0], bytes);
 	cursor += bytes;
 
-	if (rMesh->tex_coords.size() != 0)
+	if (rMesh->texCoords.size() != 0)
 	{
-		bytes = rMesh->tex_coords.size() * sizeof(float);
-		memcpy_s(cursor, size, &rMesh->tex_coords[0], bytes);
+		bytes = rMesh->texCoords.size() * sizeof(float);
+		memcpy_s(cursor, size, &rMesh->texCoords[0], bytes);
 		cursor += bytes;
 	}
 
@@ -412,11 +412,11 @@ bool Importer::Meshes::Load(const char* buffer, R_Mesh* rMesh)
 	memcpy_s(&rMesh->normals[0], bytes, cursor, bytes);
 	cursor += bytes;
 
-	if (rMesh->tex_coords.size() != 0)
+	if (rMesh->texCoords.size() != 0)
 	{
-		rMesh->tex_coords.resize(headerData[2]);
+		rMesh->texCoords.resize(headerData[2]);
 		bytes = headerData[2] * sizeof(float);
-		memcpy_s(&rMesh->tex_coords[0], bytes, cursor, bytes);
+		memcpy_s(&rMesh->texCoords[0], bytes, cursor, bytes);
 		cursor += bytes;
 	}
 

@@ -11,10 +11,10 @@ Resource::Resource(RESOURCE_TYPE type) :
 type			(type),
 uid				(Random::LCG::GetRandomUint()),
 references		(0),
-assets_path		("[NONE]"), 
-assets_file		("[NONE]"), 
-library_path	("[NONE]"), 
-library_file	("[NONE]")
+assetsPath		("[NONE]"), 
+assetsFile		("[NONE]"), 
+libraryPath		("[NONE]"), 
+libraryFile		("[NONE]")
 {
 
 }
@@ -28,27 +28,27 @@ bool Resource::CleanUp()
 {
 	bool ret = true;
 
-	assets_path.clear();
-	assets_file.clear();
-	library_path.clear();
-	library_file.clear();
+	assetsPath.clear();
+	assetsFile.clear();
+	libraryPath.clear();
+	libraryFile.clear();
 
-	assets_path.shrink_to_fit();
-	assets_file.shrink_to_fit();
-	library_path.shrink_to_fit();
-	library_file.shrink_to_fit();
+	assetsPath.shrink_to_fit();
+	assetsFile.shrink_to_fit();
+	libraryPath.shrink_to_fit();
+	libraryFile.shrink_to_fit();
 
 	return ret;
 }
 
-bool Resource::SaveMeta(ParsonNode& meta_root) const
+bool Resource::SaveMeta(ParsonNode& metaRoot) const
 {
 	bool ret = true;
 
 	return ret;
 }
 
-bool Resource::LoadMeta(const ParsonNode& meta_root)
+bool Resource::LoadMeta(const ParsonNode& metaRoot)
 {
 	bool ret = true;
 
@@ -97,39 +97,39 @@ void Resource::SetReferences(const uint& references)
 
 const char* Resource::GetAssetsPath() const
 {
-	return assets_path.c_str();
+	return assetsPath.c_str();
 }
 const char* Resource::GetAssetsFile() const
 {
-	return assets_file.c_str();
+	return assetsFile.c_str();
 }
 const char* Resource::GetLibraryPath() const
 {
-	return library_path.c_str();
+	return libraryPath.c_str();
 }
 const char* Resource::GetLibraryFile() const
 {
-	return library_file.c_str();
+	return libraryFile.c_str();
 }
 
-void Resource::SetAssetsPath(const char* assets_path)
+void Resource::SetAssetsPath(const char* assetsPath)
 {
-	this->assets_path = assets_path;
+	this->assetsPath = assetsPath;
 }
 
-void Resource::SetAssetsFile(const char* assets_file)
+void Resource::SetAssetsFile(const char* assetsFile)
 {
-	this->assets_file	= assets_file;
+	this->assetsFile	= assetsFile;
 }
 
-void Resource::SetLibraryPath(const char* library_path)
+void Resource::SetLibraryPath(const char* libraryPath)
 {
-	this->library_path = library_path;
+	this->libraryPath = libraryPath;
 }
 
-void Resource::SetLibraryFile(const char* library_file)
+void Resource::SetLibraryFile(const char* libraryFile)
 {
-	this->library_file = library_file;
+	this->libraryFile = libraryFile;
 }
 
 void Resource::SetLibraryPathAndFile()
@@ -176,6 +176,6 @@ void Resource::SetLibraryPathAndFile()
 		break;
 	}
 	
-	library_path = directory + file + extension;
-	library_file = file + extension;
+	libraryPath = directory + file + extension;
+	libraryFile = file + extension;
 }

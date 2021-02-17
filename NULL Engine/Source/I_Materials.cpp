@@ -45,7 +45,7 @@ void Importer::Materials::Import(const aiMaterial* assimpMaterial, R_Material* r
 	aiColor4D color;
 	if (assimpMaterial->Get(AI_MATKEY_COLOR_DIFFUSE, color) == AI_SUCCESS)															// Could also get specular and ambient occlusion colours.
 	{
-		rMaterial->diffuse_color = Color(color.r, color.g, color.b, color.a);
+		rMaterial->diffuseColor = Color(color.r, color.g, color.b, color.a);
 	}
 
 	aiString texPath;
@@ -54,7 +54,7 @@ void Importer::Materials::Import(const aiMaterial* assimpMaterial, R_Material* r
 
 		file		= App->fileSystem->GetFileAndExtension(texPath.C_Str());
 		fullPath	= dirPath + file;
-		rMaterial->materials.push_back(MaterialData(TEXTURE_TYPE::DIFFUSE, 0, fullPath));
+		rMaterial->materials.push_back(MaterialData(TextureType::DIFFUSE, 0, fullPath));
 
 	}
 	if (assimpMaterial->GetTexture(aiTextureType_SPECULAR, 0, &texPath) == AI_SUCCESS)											// Checking if there is a SPECULAR texture.
@@ -62,14 +62,14 @@ void Importer::Materials::Import(const aiMaterial* assimpMaterial, R_Material* r
 
 		file		= App->fileSystem->GetFileAndExtension(texPath.C_Str());
 		fullPath	= dirPath + file;
-		rMaterial->materials.push_back(MaterialData(TEXTURE_TYPE::SPECULAR, 0, fullPath));
+		rMaterial->materials.push_back(MaterialData(TextureType::SPECULAR, 0, fullPath));
 	}
 	if (assimpMaterial->GetTexture(aiTextureType_AMBIENT, 0, &texPath) == AI_SUCCESS)												// Checking if there is a AMBIENT texture.
 	{
 
 		file		= App->fileSystem->GetFileAndExtension(texPath.C_Str());
 		fullPath	= dirPath + file;
-		rMaterial->materials.push_back(MaterialData(TEXTURE_TYPE::AMBIENT, 0, fullPath));
+		rMaterial->materials.push_back(MaterialData(TextureType::AMBIENT, 0, fullPath));
 
 	}
 	if (assimpMaterial->GetTexture(aiTextureType_EMISSIVE, 0, &texPath) == AI_SUCCESS)											// Checking if there is a EMISSIVE texture.
@@ -77,14 +77,14 @@ void Importer::Materials::Import(const aiMaterial* assimpMaterial, R_Material* r
 		
 		file = App->fileSystem->GetFileAndExtension(texPath.C_Str());
 		fullPath = dirPath + file;
-		rMaterial->materials.push_back(MaterialData(TEXTURE_TYPE::EMISSIVE, 0, fullPath));
+		rMaterial->materials.push_back(MaterialData(TextureType::EMISSIVE, 0, fullPath));
 	}
 	if (assimpMaterial->GetTexture(aiTextureType_HEIGHT, 0, &texPath) == AI_SUCCESS)												// Checking if there is a HEIGHT texture.
 	{
 
 		file		= App->fileSystem->GetFileAndExtension(texPath.C_Str());
 		fullPath	= dirPath + file;
-		rMaterial->materials.push_back(MaterialData(TEXTURE_TYPE::HEIGHT, 0, fullPath));
+		rMaterial->materials.push_back(MaterialData(TextureType::HEIGHT, 0, fullPath));
 
 	}
 	if (assimpMaterial->GetTexture(aiTextureType_NORMALS, 0, &texPath) == AI_SUCCESS)												// Checking if there is a NORMALS texture.
@@ -92,7 +92,7 @@ void Importer::Materials::Import(const aiMaterial* assimpMaterial, R_Material* r
 
 		file		= App->fileSystem->GetFileAndExtension(texPath.C_Str());
 		fullPath	= dirPath + file;
-		rMaterial->materials.push_back(MaterialData(TEXTURE_TYPE::NORMALS, 0, fullPath));
+		rMaterial->materials.push_back(MaterialData(TextureType::NORMALS, 0, fullPath));
 
 	}
 }
@@ -108,10 +108,10 @@ uint Importer::Materials::Save(const R_Material* rMaterial, char** buffer)
 	}
 	
 	float color[4] = {
-		rMaterial->diffuse_color.r,
-		rMaterial->diffuse_color.g,
-		rMaterial->diffuse_color.b,
-		rMaterial->diffuse_color.a,
+		rMaterial->diffuseColor.r,
+		rMaterial->diffuseColor.g,
+		rMaterial->diffuseColor.b,
+		rMaterial->diffuseColor.a,
 	};
 
 	uint size = sizeof(color);
@@ -170,7 +170,7 @@ bool Importer::Materials::Load(const char* buffer, R_Material* rMaterial)
 	memcpy_s(color, bytes, cursor, bytes);
 	cursor	+= bytes;
 
-	rMaterial->diffuse_color.Set(color[0], color[1], color[2], color[3]);
+	rMaterial->diffuseColor.Set(color[0], color[1], color[2], color[3]);
 
 	LOG("[STATUS] Importer: Successfully Loaded Material { %s } from Library!", rMaterial->GetAssetsFile());
 

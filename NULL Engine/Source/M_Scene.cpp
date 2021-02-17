@@ -466,19 +466,19 @@ void M_Scene::GenerateGameObjectsFromModel(const uint32& modelUid, const float3&
 	GameObject* parentRoot = nullptr;
 	std::map<uint32, GameObject*> tmp;
 
-	std::vector<ModelNode> mNodes = rModel->model_nodes;
+	std::vector<ModelNode> mNodes = rModel->modelNodes;
 	for (uint i = 0; i < mNodes.size(); ++i)
 	{
 		GameObject* gameObject = new GameObject();
 
 		gameObject->ForceUID(mNodes[i].uid);
-		gameObject->SetParentUID(mNodes[i].parent_uid);
+		gameObject->SetParentUID(mNodes[i].parentUID);
 		gameObject->SetName(mNodes[i].name.c_str());
 		gameObject->GetComponent<C_Transform>()->ImportTransform(mNodes[i].transform);
 
 		CreateComponentsFromModelNode(mNodes[i], gameObject);
 
-		if (mNodes[i].parent_uid == 0)
+		if (mNodes[i].parentUID == 0)
 		{
 			parentRoot = gameObject;
 		}
@@ -530,15 +530,15 @@ void M_Scene::GenerateGameObjectsFromModel(const uint32& modelUid, const float3&
 
 void M_Scene::CreateComponentsFromModelNode(const ModelNode& modelNode, GameObject* gameObject)
 {
-	bool validMeshUid			= (modelNode.mesh_uid != 0)		?	true : false;
-	bool validMaterialUid		= (modelNode.material_uid != 0)	?	true : false;
-	bool validTextureUid		= (modelNode.texture_uid != 0)		?	true : false;
+	bool validMeshUid			= (modelNode.meshUID != 0)		?	true : false;
+	bool validMaterialUid		= (modelNode.materialUID != 0)	?	true : false;
+	bool validTextureUid		= (modelNode.textureUID != 0)		?	true : false;
 	
 	// Set Mesh
 	if (validMeshUid)
 	{
 		C_Mesh* cMesh = (C_Mesh*)gameObject->CreateComponent(COMPONENT_TYPE::MESH);
-		R_Mesh* rMesh = (R_Mesh*)App->resourceManager->RequestResource(modelNode.mesh_uid);
+		R_Mesh* rMesh = (R_Mesh*)App->resourceManager->RequestResource(modelNode.meshUID);
 
 		if (rMesh == nullptr)
 		{
@@ -554,7 +554,7 @@ void M_Scene::CreateComponentsFromModelNode(const ModelNode& modelNode, GameObje
 	if (validMaterialUid)
 	{
 		C_Material* cMaterial = (C_Material*)gameObject->CreateComponent(COMPONENT_TYPE::MATERIAL);
-		R_Material* rMaterial = (R_Material*)App->resourceManager->RequestResource(modelNode.material_uid);
+		R_Material* rMaterial = (R_Material*)App->resourceManager->RequestResource(modelNode.materialUID);
 		if (rMaterial == nullptr)
 		{
 			LOG("[ERROR] Scene: Could not generate the Material Resource from the Model Node! Error: R_Material* could not be found in resources.");
@@ -567,7 +567,7 @@ void M_Scene::CreateComponentsFromModelNode(const ModelNode& modelNode, GameObje
 		// Set Texture
 		if (validTextureUid)
 		{
-			R_Texture* r_texture = (R_Texture*)App->resourceManager->RequestResource(modelNode.texture_uid);
+			R_Texture* r_texture = (R_Texture*)App->resourceManager->RequestResource(modelNode.textureUID);
 			if (r_texture == nullptr)
 			{
 				LOG("[ERROR] Scene: Could not generate the Texture Resource from the Model Node! Error: R_Texture* could not be found in resources.");

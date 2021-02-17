@@ -778,11 +778,11 @@ void M_Renderer3D::GenerateBuffers(const R_Mesh* mesh)
 		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * mesh->normals.size(), &mesh->normals[0], GL_STATIC_DRAW);
 	}
 
-	if (!mesh->tex_coords.empty())
+	if (!mesh->texCoords.empty())
 	{
 		glGenBuffers(1, (GLuint*)&mesh->TBO);
 		glBindBuffer(GL_ARRAY_BUFFER, mesh->TBO);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * mesh->tex_coords.size(), &mesh->tex_coords[0], GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * mesh->texCoords.size(), &mesh->texCoords[0], GL_STATIC_DRAW);
 	}
 
 	if (!mesh->indices.empty())
@@ -1231,12 +1231,12 @@ void MeshRenderer::Render()
 	ClearDebugParameters();																			// Clear the specifications applied in ApplyDebugParameters().
 
 	// --- DEBUG DRAW ---
-	if (rMesh->draw_vertex_normals || App->renderer->GetRenderVertexNormals())
+	if (rMesh->drawVertexNormals || App->renderer->GetRenderVertexNormals())
 	{
 		RenderVertexNormals(rMesh);
 	}
 
-	if (rMesh->draw_face_normals || App->renderer->GetRenderFaceNormals())
+	if (rMesh->drawFaceNormals || App->renderer->GetRenderFaceNormals())
 	{
 		RenderFaceNormals(rMesh);
 	}
