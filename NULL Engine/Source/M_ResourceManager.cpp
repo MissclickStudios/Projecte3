@@ -374,7 +374,7 @@ bool M_ResourceManager::GetResourceUIDsFromMeta(const char* assetsPath, std::vec
 	std::string errorString = "[ERROR] Resource Manager: Could not get Resource UIDs from { " + std::string(assetsPath) + " }'s Meta";
 
 	char* buffer					= nullptr;
-	ParsonNode metaRoot			= LoadMetaFile(assetsPath, &buffer);
+	ParsonNode metaRoot				= LoadMetaFile(assetsPath, &buffer);
 	ParsonArray containedArray		= metaRoot.GetArray("ContainedResources");
 	RELEASE_ARRAY(buffer);
 
@@ -400,7 +400,7 @@ bool M_ResourceManager::GetResourceUIDsFromMeta(const char* assetsPath, std::vec
 	resourceUids.push_back(resourceUid);
 
 	// --- CONTAINED RESOURCES
-	uint32 containedUid		= 0;
+	uint32 containedUid			= 0;
 	ParsonNode containedNode	= ParsonNode();
 	for (uint i = 0; i < containedArray.size; ++i)
 	{
