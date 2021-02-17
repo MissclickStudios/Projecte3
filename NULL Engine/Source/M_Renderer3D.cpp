@@ -411,6 +411,7 @@ void M_Renderer3D::InitEngineIcons()
 	engineIcons.folder_icon	= folderIcon;
 	engineIcons.material_icon	= materialIcon;
 	engineIcons.model_icon		= modelIcon;
+
 }
 
 void M_Renderer3D::InitFramebuffers()
@@ -1186,6 +1187,7 @@ cMaterial	(cMaterial)
 
 void MeshRenderer::Render()
 {
+
 	R_Mesh* rMesh = cMesh->GetMesh();
 
 	if (rMesh == nullptr)

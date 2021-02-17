@@ -25,7 +25,7 @@ public:																																// --- CLIP DEBUG METHODS
 	void				StepClipToNextKeyframe		();
 
 public:																																// --- CLIP TIME DATA GET/SET METHODS
-	void				LoopClip					(const bool& set_to);
+	void				LoopClip					(bool setTo);
 	bool				IsLooped					() const;
 
 	float				GetClipTime					() const;
@@ -48,7 +48,7 @@ public:																																// --- GENERAL CLIP DATA GET METHODS
 	float				GetDurationInSeconds		() const;
 
 public:																																// --- TMP VARIABLES THAT MIGHT CHANGE LATER ON
-	bool				in_new_tick;																								// Tells when a new keyframe/tick/frame has been reached.
+	bool				inNewTick;																									// Tells when a new keyframe/tick/frame has been reached.
 	bool				playing;
 
 private:																															// --- CLIP VARIABLES
@@ -57,7 +57,7 @@ private:																															// --- CLIP VARIABLES
 	uint				start;
 	uint				end;
 	float				duration;
-	float				duration_in_seconds;
+	float				durationInSeconds;
 
 	float				time;
 	float				frame;

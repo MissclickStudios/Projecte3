@@ -13,12 +13,12 @@ name				("[NONE]"),
 start				(0), 
 end					(0), 
 duration			(0.0f),
-duration_in_seconds	(0.0f),
+durationInSeconds	(0.0f),
 loop				(false),
 time				(0.0f),
 frame				(0.0f),
 tick				(0),
-in_new_tick			(false),
+inNewTick			(false),
 playing				(false)
 {
 
@@ -33,19 +33,17 @@ loop		(loop),
 time		(0.0f),
 frame		(0.0f),
 tick		(0),
-in_new_tick	(false),
+inNewTick	(false),
 playing		(false)
 {
 	duration				= (float)(end - start);
-	duration_in_seconds		= (animation != nullptr) ? (duration / animation->GetTicksPerSecond()) : 0.0f;
+	durationInSeconds		= (animation != nullptr) ? (duration / animation->GetTicksPerSecond()) : 0.0f;
 }
 
 bool AnimatorClip::StepClip(const float& dt)
 {
 	if (animation == nullptr)
-	{
 		return false;
-	}
 
 	uint prev_tick = tick;
 
@@ -53,9 +51,9 @@ bool AnimatorClip::StepClip(const float& dt)
 	frame	= time * animation->GetTicksPerSecond();
 	tick	= (uint)floor(frame);
 
-	in_new_tick = (tick != prev_tick);
+	inNewTick = (tick != prev_tick);
 
-	if (time > duration_in_seconds)
+	if (time > durationInSeconds)
 	{
 		ClearClip();
 		return false;
@@ -82,7 +80,7 @@ bool AnimatorClip::SaveState(ParsonNode& root) const
 	root.SetNumber("Start", (double)start);
 	root.SetNumber("End", (double)end);
 	root.SetNumber("Duration", (double)duration);
-	root.SetNumber("DurationInSeconds", (double)duration_in_seconds);
+	root.SetNumber("DurationInSeconds", (double)durationInSeconds);
 
 	root.SetBool("Loop", loop);
 
@@ -99,7 +97,7 @@ bool AnimatorClip::LoadState(const ParsonNode& root)
 	start					= (uint)root.GetNumber("Start");
 	end						= (uint)root.GetNumber("End");
 	duration				= (float)root.GetNumber("Duration");
-	duration_in_seconds		= (float)root.GetNumber("DurationInSeconds");
+	durationInSeconds		= (float)root.GetNumber("DurationInSeconds");
 
 	loop					= root.GetBool("Loop");
 	
@@ -118,9 +116,9 @@ void AnimatorClip::StepClipToNextKeyframe()
 }
 
 // --- CLIP TIME DATA GET/SET METHODS
-void AnimatorClip::LoopClip(const bool& set_to)
+void AnimatorClip::LoopClip(bool setTo)
 {
-	loop = set_to;
+	loop = setTo;
 }
 
 bool AnimatorClip::IsLooped() const
@@ -196,5 +194,5 @@ float AnimatorClip::GetDuration() const
 
 float AnimatorClip::GetDurationInSeconds() const
 {
-	return duration_in_seconds;
+	return durationInSeconds;
 }

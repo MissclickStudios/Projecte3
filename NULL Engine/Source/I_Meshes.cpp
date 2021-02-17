@@ -65,7 +65,7 @@ void Importer::Meshes::Utilities::GetVertices(const aiMesh* assimpMesh, R_Mesh* 
 	uint verticesSize = assimpMesh->mNumVertices * 3;													// There will be 3 coordinates per vertex, hence the size will be numVertices * 3.
 	rMesh->vertices.resize(verticesSize);															// Allocating in advance the memory required to store all the verts.
 
-	memcpy(&rMesh->vertices[0], assimpMesh->mVertices, sizeof(float) * verticesSize);				// &r_mesh->vertices[0] gets a pointer to the beginning of the vector.
+	memcpy(&rMesh->vertices[0], assimpMesh->mVertices, sizeof(float) * verticesSize);				// &rMesh->vertices[0] gets a pointer to the beginning of the vector.
 
 	LOG("[STATUS] Imported %u position vertices!", verticesSize);
 }
@@ -226,7 +226,7 @@ void Importer::Meshes::Utilities::StoreBoneName(const Bone& bone, char** cursor)
 void Importer::Meshes::Utilities::StoreBoneOffsetMatrix(const Bone& bone, char** cursor)
 {
 	uint bytes = 16 * sizeof(float);
-	memcpy(*cursor, (const void*)bone.offset_matrix.ptr(), bytes);
+	memcpy(*cursor, (const void*)bone.offsetMatrix.ptr(), bytes);
 	*cursor += bytes;
 }
 
@@ -263,7 +263,7 @@ void Importer::Meshes::Utilities::LoadBoneName(char** cursor, Bone& bone)
 void Importer::Meshes::Utilities::LoadBoneOffsetMatrix(char** cursor, Bone& bone)
 {
 	uint bytes = 16 * sizeof(float);
-	memcpy(bone.offset_matrix.ptr(), *cursor, bytes);
+	memcpy(bone.offsetMatrix.ptr(), *cursor, bytes);
 	*cursor += bytes;
 }
 

@@ -539,6 +539,7 @@ void M_Scene::CreateComponentsFromModelNode(const ModelNode& modelNode, GameObje
 	{
 		C_Mesh* cMesh = (C_Mesh*)gameObject->CreateComponent(COMPONENT_TYPE::MESH);
 		R_Mesh* rMesh = (R_Mesh*)App->resourceManager->RequestResource(modelNode.mesh_uid);
+
 		if (rMesh == nullptr)
 		{
 			LOG("[ERROR] Scene: Could not generate the Mesh Resource from the Model Node! Error: R_Mesh* could not be found in resources.");
@@ -572,6 +573,7 @@ void M_Scene::CreateComponentsFromModelNode(const ModelNode& modelNode, GameObje
 				LOG("[ERROR] Scene: Could not generate the Texture Resource from the Model Node! Error: R_Texture* could not be found in resources.");
 				return;
 			}
+
 
 			cMaterial->SetTexture(r_texture);
 		}

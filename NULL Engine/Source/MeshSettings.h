@@ -14,7 +14,6 @@ public:
 	bool Save(ParsonNode& settings) const override;
 	bool Load(const ParsonNode& settings) override;
 
-
 private:
 
 };

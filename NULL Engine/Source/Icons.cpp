@@ -5,36 +5,36 @@
 #include "Icons.h"
 
 Icons::Icons() : 
-animation_icon	(nullptr),
-file_icon		(nullptr),
-folder_icon		(nullptr),
-material_icon	(nullptr),
-model_icon		(nullptr)
+animationIcon	(nullptr),
+fileIcon		(nullptr),
+folderIcon		(nullptr),
+materialIcon	(nullptr),
+modelIcon		(nullptr)
 {
 
 }
 
 uint Icons::GetAnimationIconID() const
 {
-	return ((animation_icon != nullptr) ? animation_icon->GetTextureID() : 0);
+	return ((animationIcon != nullptr) ? animationIcon->GetTextureID() : 0);
 }
 
 uint Icons::GetFileIconID() const
 {
-	return ((file_icon != nullptr) ? file_icon->GetTextureID() : 0);
+	return ((fileIcon != nullptr) ? fileIcon->GetTextureID() : 0);
 }
 
 uint Icons::GetFolderIconID() const
 {
-	return ((folder_icon != nullptr) ? folder_icon->GetTextureID() : 0);
+	return ((folderIcon != nullptr) ? folderIcon->GetTextureID() : 0);
 }
 
 uint Icons::GetMaterialIconID() const
 {
-	return ((material_icon != nullptr) ? material_icon->GetTextureID() : 0);
+	return ((materialIcon != nullptr) ? materialIcon->GetTextureID() : 0);
 }
 
 uint Icons::GetModelIconID() const
 {
-	return ((model_icon != nullptr) ? model_icon->GetTextureID() : 0);
+	return ((modelIcon != nullptr) ? modelIcon->GetTextureID() : 0);
 }

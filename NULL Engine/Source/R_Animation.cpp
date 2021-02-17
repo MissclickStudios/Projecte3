@@ -23,9 +23,9 @@ bool R_Animation::CleanUp()
 
 	for (uint i = 0; i < channels.size(); ++i)
 	{
-		channels[i].position_keyframes.clear();
-		channels[i].rotation_keyframes.clear();
-		channels[i].scale_keyframes.clear();
+		channels[i].positionKeyframes.clear();
+		channels[i].rotationKeyframes.clear();
+		channels[i].scaleKeyframes.clear();
 	}
 
 	channels.clear();

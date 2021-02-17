@@ -223,7 +223,7 @@ bool C_Animator::StepAnimation()
 		}
 		else
 		{
-			if (currentClip->in_new_tick)
+			if (currentClip->inNewTick)
 			{
 				Transform& poseToPoseTransform = GetPoseToPoseTransform(currentClip->GetAnimationTick(), bone.channel, originalTransform);
 

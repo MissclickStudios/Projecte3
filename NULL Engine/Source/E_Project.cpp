@@ -242,7 +242,7 @@ void E_Project::DrawDirectoriesTree(const PathNode& root_node)
 
 		path			= pathNode.path;
 		directory		= pathNode.local_path;
-		treeNodeFlags = (pathNode.is_last_directory) ? ImGuiTreeNodeFlags_Leaf : ImGuiTreeNodeFlags_None;
+		treeNodeFlags = (pathNode.isLastDirectory) ? ImGuiTreeNodeFlags_Leaf : ImGuiTreeNodeFlags_None;
 		if (ImGui::TreeNodeEx(path.c_str(), treeNodeFlags, "%s/", directory.c_str()))
 		{
 			if (ImGui::IsItemClicked())
@@ -254,7 +254,7 @@ void E_Project::DrawDirectoriesTree(const PathNode& root_node)
 				}
 			}
 
-			if (!pathNode.is_last_directory)
+			if (!pathNode.isLastDirectory)
 			{
 				DrawDirectoriesTree(pathNode);
 			}
@@ -328,7 +328,7 @@ void E_Project::GoToPreviousDirectoryButton()
 	ImVec2 itemOffset	= ImVec2(iconSize.x + iconOffset.x, 0.0f);
 	
 	ImGui::SetCursorPos(originalPos + iconOffset);
-	ImGui::Image((ImTextureID)engineIcons.folder_icon->GetTextureID(), iconSize, uv0, uv1, tintColor, bgColor);
+	ImGui::Image((ImTextureID)engineIcons.folderIcon->GetTextureID(), iconSize, uv0, uv1, tintColor, bgColor);
 
 	if (ImGui::IsItemClicked())
 	{
@@ -394,13 +394,13 @@ ImTextureID E_Project::GetIconTexID(Resource* resource) const
 	RESOURCE_TYPE type = resource->GetType();
 	switch (type)
 	{
-	case RESOURCE_TYPE::MODEL:		{ texId = (ImTextureID)engineIcons.model_icon->GetTextureID(); }		break;
-	case RESOURCE_TYPE::MESH:		{ texId = (ImTextureID)engineIcons.file_icon->GetTextureID(); }		break;
-	case RESOURCE_TYPE::MATERIAL:	{ texId = (ImTextureID)engineIcons.material_icon->GetTextureID(); }	break;
+	case RESOURCE_TYPE::MODEL:		{ texId = (ImTextureID)engineIcons.modelIcon->GetTextureID(); }		break;
+	case RESOURCE_TYPE::MESH:		{ texId = (ImTextureID)engineIcons.fileIcon->GetTextureID(); }		break;
+	case RESOURCE_TYPE::MATERIAL:	{ texId = (ImTextureID)engineIcons.materialIcon->GetTextureID(); }	break;
 	case RESOURCE_TYPE::TEXTURE:	{ texId = (ImTextureID)(((R_Texture*)resource)->GetTextureID()); }		break;
-	case RESOURCE_TYPE::FOLDER:		{ texId = (ImTextureID)engineIcons.folder_icon->GetTextureID(); }		break;
-	case RESOURCE_TYPE::SCENE:		{ texId = (ImTextureID)engineIcons.model_icon->GetTextureID(); }		break;
-	case RESOURCE_TYPE::ANIMATION:	{ texId = (ImTextureID)engineIcons.animation_icon->GetTextureID(); }	break;
+	case RESOURCE_TYPE::FOLDER:		{ texId = (ImTextureID)engineIcons.folderIcon->GetTextureID(); }		break;
+	case RESOURCE_TYPE::SCENE:		{ texId = (ImTextureID)engineIcons.modelIcon->GetTextureID(); }		break;
+	case RESOURCE_TYPE::ANIMATION:	{ texId = (ImTextureID)engineIcons.animationIcon->GetTextureID(); }	break;
 	}
 
 	return texId;

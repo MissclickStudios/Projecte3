@@ -3,7 +3,7 @@
 
 class ParsonNode;
 
-enum class AXIS_ORIENTATION
+enum class AxisOrientation
 {
 	X_UP,
 	Y_UP,
@@ -20,17 +20,17 @@ public:
 	virtual bool Load(const ParsonNode& settings);
 
 public:
-	float				global_scale;
-	AXIS_ORIENTATION	axis;
-	bool				ignore_cameras;
-	bool				ignore_lights;
+	float				globalScale;
+	AxisOrientation		axis;
+	bool				ignoreCameras;
+	bool				ignoreLights;
 
 	int					compression;
-	bool				flip_X;
-	bool				flip_Y;
+	bool				flipX;
+	bool				flipY;
 	int					wrapping;
 	int					filter;
-	bool				generate_mipmaps;
+	bool				generateMipmaps;
 	bool				anisotropy;
 
 private:
