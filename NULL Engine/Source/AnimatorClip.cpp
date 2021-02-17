@@ -45,13 +45,13 @@ bool AnimatorClip::StepClip(const float& dt)
 	if (animation == nullptr)
 		return false;
 
-	uint prev_tick = tick;
+	uint prevTick = tick;
 
 	time	+= dt;
 	frame	= time * animation->GetTicksPerSecond();
 	tick	= (uint)floor(frame);
 
-	inNewTick = (tick != prev_tick);
+	inNewTick = (tick != prevTick);
 
 	if (time > durationInSeconds)
 	{
