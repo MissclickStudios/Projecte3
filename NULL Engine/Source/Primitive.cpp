@@ -5,11 +5,11 @@
 #include "Primitive.h"
 
 // ------------------------------------------------------------
-Primitive::Primitive() : transform(float4x4::identity), color(White), wire(false), axis(false), type(PRIMITIVE_TYPES::NONE)
+Primitive::Primitive() : transform(float4x4::identity), color(White), wire(false), axis(false), type(PrimitiveTypes::NONE)
 {
 	VAO = 0;
 	
-	for (uint i = 0; i < (uint)BUFFER_TYPE::MAX_BUFFER_TYPES; ++i)				// Initializing the primitive's buffers (vertices, indices...).
+	for (uint i = 0; i < (uint)BufferType::MAX_BUFFER_TYPES; ++i)				// Initializing the primitive's buffers (vertices, indices...).
 	{
 		buffers[i]		= 0;
 		bufferSize[i]	= 0;
@@ -17,7 +17,7 @@ Primitive::Primitive() : transform(float4x4::identity), color(White), wire(false
 }
 
 // ------------------------------------------------------------
-PRIMITIVE_TYPES Primitive::GetType() const
+PrimitiveTypes Primitive::GetType() const
 {
 	return type;
 }
@@ -54,12 +54,12 @@ void Primitive::LoadBuffersOnMemory()
 	glGenVertexArrays(1, (GLuint*)&VAO);																// Generating a vertex array object that will store all buffer objects.
 	glBindVertexArray(VAO);																				// --------
 
-	glGenBuffers(1, (GLuint*)&buffers[(uint)BUFFER_TYPE::VERTICES]);									// Generating a vertex buffer that will store the vertex positions of the primitives.
-	glBindBuffer(GL_ARRAY_BUFFER, buffers[(uint)BUFFER_TYPE::VERTICES]);								// --------
+	glGenBuffers(1, (GLuint*)&buffers[(uint)BufferType::VERTICES]);									// Generating a vertex buffer that will store the vertex positions of the primitives.
+	glBindBuffer(GL_ARRAY_BUFFER, buffers[(uint)BufferType::VERTICES]);								// --------
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertices.size(), &vertices[0], GL_STATIC_DRAW);		// -------- 
 
-	glGenBuffers(1, (GLuint*)&buffers[(uint)BUFFER_TYPE::INDICES]);										// Generating an index buffer that will store the indices of each of the primitives.
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffers[(uint)BUFFER_TYPE::INDICES]);							// --------
+	glGenBuffers(1, (GLuint*)&buffers[(uint)BufferType::INDICES]);										// Generating an index buffer that will store the indices of each of the primitives.
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffers[(uint)BufferType::INDICES]);							// --------
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * indices.size(), &indices[0], GL_STATIC_DRAW);	// --------
 	
 	glEnableVertexAttribArray(0);
@@ -114,7 +114,7 @@ void Primitive::Scale(float x, float y, float z)
 
 P_Cube::P_Cube(const float3& size, float mass) : Primitive(), size(size), loadedInArray(false), loadedInIndices(false)
 {
-	type = PRIMITIVE_TYPES::CUBE;
+	type = PrimitiveTypes::CUBE;
 }
 
 float3 P_Cube::GetSize() const
@@ -584,7 +584,7 @@ void P_Cube::ApplySize(float* coordinates, int arraySize)
 
 P_Sphere::P_Sphere(float radius, uint rings, uint sectors) : Primitive(), radius(radius), rings(rings), sectors(sectors), loadedBuffers(false)
 {
-	type = PRIMITIVE_TYPES::SPHERE;
+	type = PrimitiveTypes::SPHERE;
 }
 
 float P_Sphere::GetRadius() const
@@ -718,7 +718,7 @@ void P_Sphere::InnerRender() const
 // CYLINDER ============================================
 P_Cylinder::P_Cylinder(float radius, float height, uint sectors, float mass) : Primitive(), radius(radius), height(height), sectors(sectors), loadedInBuffers(false)
 {
-	type = PRIMITIVE_TYPES::CYLINDER;
+	type = PrimitiveTypes::CYLINDER;
 }
 
 float P_Cylinder::GetRadius() const
@@ -1023,7 +1023,7 @@ void P_Cylinder::InnerRender() const
 // PYRAMID ============================================
 P_Pyramid::P_Pyramid(float3 size) : Primitive(), size(size), loadedInBuffers(false)
 {
-	type = PRIMITIVE_TYPES::PYRAMID;
+	type = PrimitiveTypes::PYRAMID;
 }
 
 void P_Pyramid::InnerRender() const
@@ -1112,12 +1112,12 @@ void P_Pyramid::IndicesRender()
 // LINE ==================================================
 P_Line::P_Line() : Primitive(), origin(float3::zero), destination(float3::one)
 {
-	type = PRIMITIVE_TYPES::LINE;
+	type = PrimitiveTypes::LINE;
 }
 
 P_Line::P_Line(const float3& A, const float3& B) : Primitive(), origin(A), destination(B)
 {
-	type = PRIMITIVE_TYPES::LINE;
+	type = PrimitiveTypes::LINE;
 }
 
 float3 P_Line::GetOrigin() const
@@ -1152,7 +1152,7 @@ void P_Line::IndicesRender()
 // PLANE ==================================================
 P_Plane::P_Plane(const float3& normal) : Primitive(), normal(normal)
 {
-	type = PRIMITIVE_TYPES::PLANE;
+	type = PrimitiveTypes::PLANE;
 }
 
 float3 P_Plane::GetNormal() const

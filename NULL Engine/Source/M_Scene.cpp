@@ -89,7 +89,7 @@ bool M_Scene::Start()
 }
 
 // Update
-UPDATE_STATUS M_Scene::Update(float dt)
+UpdateStatus M_Scene::Update(float dt)
 {
 	if (App->debug == true)
 	{
@@ -103,15 +103,15 @@ UPDATE_STATUS M_Scene::Update(float dt)
 		{
 			if (App->play)
 			{
-				if (App->input->GetKey(SDL_SCANCODE_KP_1) == KEY_STATE::KEY_DOWN)
+				if (App->input->GetKey(SDL_SCANCODE_KP_1) == KeyState::KEY_DOWN)
 				{
 					rootAnimator->PlayClip("Running", 8);
 				}
-				if (App->input->GetKey(SDL_SCANCODE_KP_1) == KEY_STATE::KEY_UP)
+				if (App->input->GetKey(SDL_SCANCODE_KP_1) == KeyState::KEY_UP)
 				{
 					rootAnimator->PlayClip("Idle", 8);
 				}
-				if (App->input->GetKey(SDL_SCANCODE_KP_2) == KEY_STATE::KEY_DOWN)
+				if (App->input->GetKey(SDL_SCANCODE_KP_2) == KeyState::KEY_DOWN)
 				{
 					rootAnimator->PlayClip("Attack", 8);
 				}
@@ -161,20 +161,20 @@ UPDATE_STATUS M_Scene::Update(float dt)
 		primitives[n]->Update();
 	}
 
-	if (App->input->GetKey(SDL_SCANCODE_F5) == KEY_STATE::KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_F5) == KeyState::KEY_DOWN)
 	{
 		App->SaveConfiguration("Resources/Engine/Configuration/configuration.JSON");
 	}
 
-	if (App->input->GetKey(SDL_SCANCODE_F6) == KEY_STATE::KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_F6) == KeyState::KEY_DOWN)
 	{
 		App->LoadConfiguration("Resources/Engine/Configuration/configuration.JSON");
 	}
 
-	return UPDATE_STATUS::CONTINUE;
+	return UpdateStatus::CONTINUE;
 }
 
-UPDATE_STATUS M_Scene::PostUpdate(float dt)
+UpdateStatus M_Scene::PostUpdate(float dt)
 {
 	BROFILER_CATEGORY("M_Scene PostUpdate", Profiler::Color::Yellow)
 	
@@ -183,7 +183,7 @@ UPDATE_STATUS M_Scene::PostUpdate(float dt)
 		primitives[n]->Render();
 	}
 
-	return UPDATE_STATUS::CONTINUE;
+	return UpdateStatus::CONTINUE;
 }
 
 // Load assets
@@ -254,7 +254,7 @@ bool M_Scene::SaveScene(const char* sceneName) const
 		LOG("[ERROR] Scene: Could not save the current scene! Error: FileSystem could not write any data!");
 	}
 
-	R_Scene* rScene	= (R_Scene*)App->resourceManager->CreateResource(RESOURCE_TYPE::SCENE, path.c_str());			// TMP until R_Scene is fully implemented.
+	R_Scene* rScene	= (R_Scene*)App->resourceManager->CreateResource(ResourceType::SCENE, path.c_str());			// TMP until R_Scene is fully implemented.
 	//App->resourceManager->SaveResourceToLibrary(r_scene);
 
 	std::string libraryPath	= SCENES_PATH + std::to_string(rScene->GetUID()) + SCENES_EXTENSION;
@@ -371,8 +371,8 @@ void M_Scene::LoadResourceIntoScene(Resource* resource)
 
 	switch (resource->GetType())
 	{
-	case::RESOURCE_TYPE::MODEL:		{ GenerateGameObjectsFromModel(resource->GetUID()); }				break;
-	case::RESOURCE_TYPE::TEXTURE:	{ success = ApplyTextureToSelectedGameObject(resource->GetUID()); }	break;
+	case::ResourceType::MODEL:		{ GenerateGameObjectsFromModel(resource->GetUID()); }				break;
+	case::ResourceType::TEXTURE:	{ success = ApplyTextureToSelectedGameObject(resource->GetUID()); }	break;
 	}
 }
 
@@ -537,7 +537,7 @@ void M_Scene::CreateComponentsFromModelNode(const ModelNode& modelNode, GameObje
 	// Set Mesh
 	if (validMeshUid)
 	{
-		C_Mesh* cMesh = (C_Mesh*)gameObject->CreateComponent(COMPONENT_TYPE::MESH);
+		C_Mesh* cMesh = (C_Mesh*)gameObject->CreateComponent(ComponentType::MESH);
 		R_Mesh* rMesh = (R_Mesh*)App->resourceManager->RequestResource(modelNode.meshUID);
 
 		if (rMesh == nullptr)
@@ -553,7 +553,7 @@ void M_Scene::CreateComponentsFromModelNode(const ModelNode& modelNode, GameObje
 	// Set Material
 	if (validMaterialUid)
 	{
-		C_Material* cMaterial = (C_Material*)gameObject->CreateComponent(COMPONENT_TYPE::MATERIAL);
+		C_Material* cMaterial = (C_Material*)gameObject->CreateComponent(ComponentType::MATERIAL);
 		R_Material* rMaterial = (R_Material*)App->resourceManager->RequestResource(modelNode.materialUID);
 		if (rMaterial == nullptr)
 		{
@@ -600,7 +600,7 @@ void M_Scene::CreateAnimationComponentFromModel(const R_Model* rModel, GameObjec
 
 	animationRoot = gameObject;
 
-	C_Animator* cAnimation = (C_Animator*)gameObject->CreateComponent(COMPONENT_TYPE::ANIMATOR);
+	C_Animator* cAnimation = (C_Animator*)gameObject->CreateComponent(ComponentType::ANIMATOR);
 	std::map<uint32, std::string>::const_iterator item;
 	for (item = rModel->animations.cbegin(); item != rModel->animations.cend(); ++item)
 	{
@@ -650,7 +650,7 @@ bool M_Scene::ApplyTextureToSelectedGameObject(const uint32& uid)
 	C_Material* cMaterial = selectedGameObject->GetComponent<C_Material>();									// GetMaterialComponent() == nullptr if GO does not have a C_Material.
 	if (cMaterial == nullptr)
 	{
-		cMaterial = (C_Material*)selectedGameObject->CreateComponent(COMPONENT_TYPE::MATERIAL);				// Creating a Material Component if none was found in the selected GO.
+		cMaterial = (C_Material*)selectedGameObject->CreateComponent(ComponentType::MATERIAL);				// Creating a Material Component if none was found in the selected GO.
 	}
 
 	cMaterial->SetTexture(rTexture);																			// Setting the Material Component's texture with the newly created one.
@@ -718,7 +718,7 @@ void M_Scene::ChangeSceneName(const char* name)
 void M_Scene::CreateSceneCamera(const char* cameraName)
 {
 	GameObject* sceneCamera = CreateGameObject(cameraName, sceneRoot);
-	sceneCamera->CreateComponent(COMPONENT_TYPE::CAMERA);
+	sceneCamera->CreateComponent(ComponentType::CAMERA);
 	sceneCamera->GetComponent<C_Camera>()->SetAspectRatio((float)App->window->GetWidth() / (float)App->window->GetHeight());
 	sceneCamera->GetComponent<C_Transform>()->SetLocalPosition(float3(0.0f, 5.0f, 25.0f));
 }
@@ -898,22 +898,22 @@ void M_Scene::DeleteSelectedGameObject()
 
 void M_Scene::HandleDebugInput()
 {
-	if (App->input->GetKey(SDL_SCANCODE_1) == KEY_STATE::KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_1) == KeyState::KEY_DOWN)
 	{
 		//DebugSpawnPrimitive(new Sphere(1.0f, 12, 24));
 	}
 
-	if (App->input->GetKey(SDL_SCANCODE_2) == KEY_STATE::KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_2) == KeyState::KEY_DOWN)
 	{
 		DebugSpawnPrimitive(new P_Cube());
 	}
 
-	if (App->input->GetKey(SDL_SCANCODE_3) == KEY_STATE::KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_3) == KeyState::KEY_DOWN)
 	{
 		//DebugSpawnPrimitive(new Cylinder());
 	}
 
-	if (App->input->GetKey(SDL_SCANCODE_4) == KEY_STATE::KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_4) == KeyState::KEY_DOWN)
 	{
 		for (uint n = 0; n < primitives.size(); n++)
 		{

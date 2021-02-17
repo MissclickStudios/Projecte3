@@ -32,8 +32,8 @@ public:
 
 	bool			Init				(ParsonNode& config) override;
 	bool			Start				() override;
-	UPDATE_STATUS	Update				(float dt) override;
-	UPDATE_STATUS	PostUpdate			(float dt) override;
+	UpdateStatus	Update				(float dt) override;
+	UpdateStatus	PostUpdate			(float dt) override;
 	bool			CleanUp				() override;
 
 	bool			SaveConfiguration	(ParsonNode& root) const override;

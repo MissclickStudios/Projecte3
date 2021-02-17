@@ -190,28 +190,28 @@ bool Application::Start()												// IS IT NEEDED?
 }
 
 // Call PreUpdate, Update and PostUpdate on all modules
-UPDATE_STATUS Application::Update()
+UpdateStatus Application::Update()
 {
-	UPDATE_STATUS ret = UPDATE_STATUS::CONTINUE;
+	UpdateStatus ret = UpdateStatus::CONTINUE;
 	
 	if (quit)
 	{
-		return UPDATE_STATUS::STOP;
+		return UpdateStatus::STOP;
 	}
 
 	PrepareUpdate();
 
-	if (ret == UPDATE_STATUS::CONTINUE)
+	if (ret == UpdateStatus::CONTINUE)
 	{
 		ret = PreUpdate();
 	}
 	
-	if (ret == UPDATE_STATUS::CONTINUE)
+	if (ret == UpdateStatus::CONTINUE)
 	{
 		ret = DoUpdate();
 	}
 
-	if (ret == UPDATE_STATUS::CONTINUE)
+	if (ret == UpdateStatus::CONTINUE)
 	{
 		ret = PostUpdate();
 	}
@@ -254,13 +254,13 @@ void Application::PrepareUpdate()
 	}
 }
 
-UPDATE_STATUS Application::PreUpdate()
+UpdateStatus Application::PreUpdate()
 {
-	UPDATE_STATUS ret = UPDATE_STATUS::CONTINUE;
+	UpdateStatus ret = UpdateStatus::CONTINUE;
 	
 	std::vector<Module*>::iterator item = modules.begin();
 
-	while (item != modules.end() && ret == UPDATE_STATUS::CONTINUE)
+	while (item != modules.end() && ret == UpdateStatus::CONTINUE)
 	{
 		if ((*item)->IsActive())
 		{
@@ -270,7 +270,7 @@ UPDATE_STATUS Application::PreUpdate()
 		++item;
 	}
 
-	if (ret == UPDATE_STATUS::THROW_ERROR)
+	if (ret == UpdateStatus::THROW_ERROR)
 	{
 		LOG("PreUpdate threw an ERROR at Module %s.", (*item)->GetName());
 	}
@@ -278,15 +278,15 @@ UPDATE_STATUS Application::PreUpdate()
 	return ret;
 }
 
-UPDATE_STATUS Application::DoUpdate()
+UpdateStatus Application::DoUpdate()
 {
-	UPDATE_STATUS ret = UPDATE_STATUS::CONTINUE;
+	UpdateStatus ret = UpdateStatus::CONTINUE;
 
 	std::vector<Module*>::iterator item = modules.begin();
 	
 	item = modules.begin();
 
-	while (item != modules.end() && ret == UPDATE_STATUS::CONTINUE)
+	while (item != modules.end() && ret == UpdateStatus::CONTINUE)
 	{
 		if ((*item)->IsActive())
 		{
@@ -296,7 +296,7 @@ UPDATE_STATUS Application::DoUpdate()
 		++item;
 	}
 
-	if (ret == UPDATE_STATUS::THROW_ERROR)
+	if (ret == UpdateStatus::THROW_ERROR)
 	{
 		LOG("Update threw an ERROR at Module %s.", (*item)->GetName());
 	}
@@ -304,15 +304,15 @@ UPDATE_STATUS Application::DoUpdate()
 	return ret;
 }
 
-UPDATE_STATUS Application::PostUpdate()
+UpdateStatus Application::PostUpdate()
 {
-	UPDATE_STATUS ret = UPDATE_STATUS::CONTINUE;
+	UpdateStatus ret = UpdateStatus::CONTINUE;
 
 	std::vector<Module*>::iterator item = modules.begin();
 	
 	item = modules.begin();
 
-	while (item != modules.end() && ret == UPDATE_STATUS::CONTINUE)
+	while (item != modules.end() && ret == UpdateStatus::CONTINUE)
 	{
 		if ((*item)->IsActive())
 		{
@@ -323,7 +323,7 @@ UPDATE_STATUS Application::PostUpdate()
 		++item;
 	}
 
-	if (ret == UPDATE_STATUS::THROW_ERROR)
+	if (ret == UpdateStatus::THROW_ERROR)
 	{
 		LOG("PostUpdate threw an ERROR at Module %s.", (*item)->GetName());
 	}

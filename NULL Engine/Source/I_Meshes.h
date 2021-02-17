@@ -18,7 +18,7 @@ struct VertexWeight;
 
 typedef unsigned int uint;
 
-enum class HEADER_DATA
+enum class HeaderData
 {
 	VERTICES,
 	NORMALS,

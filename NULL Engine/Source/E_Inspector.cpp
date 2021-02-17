@@ -151,19 +151,19 @@ void E_Inspector::DrawComponents(GameObject* selectedGameObject)
 			continue;
 		}
 		
-		COMPONENT_TYPE type = component->GetType();	
+		ComponentType type = component->GetType();	
 		switch (type)
 		{
-		case COMPONENT_TYPE::TRANSFORM:	{ DrawTransformComponent((C_Transform*)component); }	break;
-		case COMPONENT_TYPE::MESH:		{ DrawMeshComponent((C_Mesh*)component); }				break;
-		case COMPONENT_TYPE::MATERIAL:	{ DrawMaterialComponent((C_Material*)component); }		break;
-		case COMPONENT_TYPE::LIGHT:		{ DrawLightComponent((C_Light*)component); }			break;
-		case COMPONENT_TYPE::CAMERA:	{ DrawCameraComponent((C_Camera*)component); }			break;
-		case COMPONENT_TYPE::ANIMATOR:	{ DrawAnimatorComponent((C_Animator*)component); }		break;
-		case COMPONENT_TYPE::ANIMATION: { DrawAnimationComponent((C_Animation*)component); }	break;
+		case ComponentType::TRANSFORM:	{ DrawTransformComponent((C_Transform*)component); }	break;
+		case ComponentType::MESH:		{ DrawMeshComponent((C_Mesh*)component); }				break;
+		case ComponentType::MATERIAL:	{ DrawMaterialComponent((C_Material*)component); }		break;
+		case ComponentType::LIGHT:		{ DrawLightComponent((C_Light*)component); }			break;
+		case ComponentType::CAMERA:	{ DrawCameraComponent((C_Camera*)component); }			break;
+		case ComponentType::ANIMATOR:	{ DrawAnimatorComponent((C_Animator*)component); }		break;
+		case ComponentType::ANIMATION: { DrawAnimationComponent((C_Animation*)component); }	break;
 		}
 
-		if (type == COMPONENT_TYPE::NONE)
+		if (type == ComponentType::NONE)
 		{
 			LOG("[WARNING] Selected GameObject %s has a non-valid component!", selectedGameObject->GetName());
 		}
@@ -756,9 +756,9 @@ void E_Inspector::AddComponentCombo(GameObject* selectedGameObject)
 
 	if ((ImGui::Button("ADD")))
 	{ 
-		if (componentType != (int)COMPONENT_TYPE::NONE)
+		if (componentType != (int)ComponentType::NONE)
 		{
-			selectedGameObject->CreateComponent((COMPONENT_TYPE)componentType);
+			selectedGameObject->CreateComponent((ComponentType)componentType);
 		}
 	}
 }

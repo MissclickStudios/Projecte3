@@ -25,45 +25,45 @@ public:
 	Application();
 	~Application();
 
-	bool			Init				();
-	bool			Start				();
-	UPDATE_STATUS	Update				();
-	bool			CleanUp				();
+	bool		Init();
+	bool		Start();
+	UpdateStatus Update();
+	bool		CleanUp();
 
-	void			SaveConfiguration	(const char* file);
-	void			LoadConfiguration	(const char* file);
+	void		SaveConfiguration(const char* file);
+	void		LoadConfiguration(const char* file);
 
 private:																				// Exceptionally putting private first due to the special characteristics of Application.h and .cpp.
-	void			PrepareUpdate			();
-	UPDATE_STATUS	PreUpdate				();
-	UPDATE_STATUS	DoUpdate				();
-	UPDATE_STATUS	PostUpdate				();
-	void			FinishUpdate			();
+	void		PrepareUpdate();
+	UpdateStatus PreUpdate();
+	UpdateStatus DoUpdate();
+	UpdateStatus PostUpdate();
+	void		FinishUpdate();
 
-	void			SaveConfigurationNow	(const char* file);
-	void			LoadConfigurationNow	(const char* file);
+	void		SaveConfigurationNow(const char* file);
+	void		LoadConfigurationNow(const char* file);
 
 public:																					// --- APPLICATION & ENGINE STATE
-	void			AddModule				(Module* module);
+	void		AddModule(Module* module);
 
-	const char*		GetEngineName			() const;
-	const char*		GetOrganizationName		() const;
-	void			SetEngineName			(const char* engineName);
-	void			SetOrganizationName		(const char* organizationName);
+	const char*	GetEngineName() const;
+	const char*	GetOrganizationName() const;
+	void		SetEngineName(const char* engineName);
+	void		SetOrganizationName(const char* organizationName);
 
-	void			EngineShortcuts			();
+	void		EngineShortcuts();
 
 public:																					// --- FRAMERATE
-	uint			GetFrameCap				() const;
-	void			SetFrameCap				(uint frame);
+	uint		GetFrameCap() const;
+	void		SetFrameCap(uint frame);
 
 public:																					// --- EDITOR
-	void			AddEditorLog			(const char* log);
-	void			RequestBrowser			(const char* link);
-	void			UpdateFrameData			(int frames, int ms);
+	void		AddEditorLog(const char* log);
+	void		RequestBrowser(const char* link);
+	void		UpdateFrameData(int frames, int ms);
 
-	void			LogHardwareInfo			() const;
-	HardwareInfo	GetHardwareInfo			() const;
+	void		LogHardwareInfo() const;
+	HardwareInfo GetHardwareInfo() const;
 
 public:
 	M_Window*				window;

@@ -9,7 +9,7 @@ E_ImGuiDemo::E_ImGuiDemo() : EditorPanel("ImGuiDemo")
 	showDemoWindow		= true;
 	showAnotherWindow		= false;
 
-	currentStyle			= (int)IMGUI_STYLE::DARK;
+	currentStyle			= (int)ImguiStyle::DARK;
 
 	f						= 0.0f;
 	counter					= 0;
@@ -59,15 +59,15 @@ bool E_ImGuiDemo::Draw(ImGuiIO& io)
 		const char* styles[] = { "Classic", "Light", "Dark", "TBD" };
 		ImGui::Combo("ImGui Style", &currentStyle, styles, IM_ARRAYSIZE(styles));
 
-		if (currentStyle == (int)IMGUI_STYLE::CLASSIC)
+		if (currentStyle == (int)ImguiStyle::CLASSIC)
 		{
 			ImGui::StyleColorsClassic();
 		}
-		else if (currentStyle == (int)IMGUI_STYLE::LIGHT)
+		else if (currentStyle == (int)ImguiStyle::LIGHT)
 		{
 			ImGui::StyleColorsLight();
 		}
-		else if (currentStyle == (int)IMGUI_STYLE::DARK)
+		else if (currentStyle == (int)ImguiStyle::DARK)
 		{
 			ImGui::StyleColorsDark();
 		}

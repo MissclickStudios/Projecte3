@@ -16,7 +16,7 @@ public:
 
 	bool			Init				(ParsonNode& root) override;
 	bool			Start				() override;
-	UPDATE_STATUS	Update				(float dt) override;
+	UpdateStatus	Update				(float dt) override;
 	bool			CleanUp				() override;
 
 	bool			LoadConfiguration	(ParsonNode& configuration) override;

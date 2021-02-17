@@ -8,7 +8,7 @@
 #include "VariableTypedefs.h"
 #include "MathGeoTransform.h"
 
-enum class PRIMITIVE_TYPES
+enum class PrimitiveTypes
 {
 	P_POINT,
 	LINE,
@@ -20,7 +20,7 @@ enum class PRIMITIVE_TYPES
 	NONE
 };
 
-enum class BUFFER_TYPE
+enum class BufferType
 {
 	VERTICES,
 	NORMALS,
@@ -45,7 +45,7 @@ public:
 	float3 GetPos() const;
 	void SetRotation(const float3 &u, const float& angle);		// Angle in Radiants.
 	void Scale(float x, float y, float z);
-	PRIMITIVE_TYPES	GetType() const;
+	PrimitiveTypes	GetType() const;
 
 public:
 	Color color;
@@ -53,8 +53,8 @@ public:
 	bool axis, wire;
 
 	uint VAO;																// Defines the Vertex Array Object that will hold all buffer objects of a primitive.
-	uint buffers[(uint)BUFFER_TYPE::MAX_BUFFER_TYPES];						// Will hold all the possible buffers that a given primitive might use.
-	uint bufferSize[(uint)BUFFER_TYPE::MAX_BUFFER_TYPES];					// Will be used to define the size in bytes of a given buffer.
+	uint buffers[(uint)BufferType::MAX_BUFFER_TYPES];						// Will hold all the possible buffers that a given primitive might use.
+	uint bufferSize[(uint)BufferType::MAX_BUFFER_TYPES];					// Will be used to define the size in bytes of a given buffer.
 
 	std::vector<float> vertices;
 	std::vector<float> normals;
@@ -66,7 +66,7 @@ protected:
 	virtual void IndicesRender();
 
 protected:
-	PRIMITIVE_TYPES type;
+	PrimitiveTypes type;
 };
 
 // ============================================

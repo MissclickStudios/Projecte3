@@ -7,7 +7,7 @@
 
 #include "Resource.h"
 
-Resource::Resource(RESOURCE_TYPE type) : 
+Resource::Resource(ResourceType type) : 
 type			(type),
 uid				(Random::LCG::GetRandomUint()),
 references		(0),
@@ -56,7 +56,7 @@ bool Resource::LoadMeta(const ParsonNode& metaRoot)
 }
 
 // --- RESOURCE METHODS ---
-RESOURCE_TYPE Resource::GetType() const
+ResourceType Resource::GetType() const
 {
 	return type;
 }
@@ -65,9 +65,9 @@ const char* Resource::GetTypeAsString() const
 {
 	switch (type)
 	{
-	case RESOURCE_TYPE::MESH:		{ return "MESH"; }		break;
-	case RESOURCE_TYPE::MATERIAL:	{ return "MATERIAL"; }	break;
-	case RESOURCE_TYPE::TEXTURE:	{ return "TEXTURE"; }	break;
+	case ResourceType::MESH:		{ return "MESH"; }		break;
+	case ResourceType::MATERIAL:	{ return "MATERIAL"; }	break;
+	case ResourceType::TEXTURE:	{ return "TEXTURE"; }	break;
 	}
 
 	return "NONE";
@@ -140,37 +140,37 @@ void Resource::SetLibraryPathAndFile()
 	
 	switch (type)
 	{
-	case RESOURCE_TYPE::ANIMATION:
+	case ResourceType::ANIMATION:
 		directory = ANIMATIONS_PATH;
 		extension = ANIMATIONS_EXTENSION;
 		break;
 
-	case RESOURCE_TYPE::FOLDER:
+	case ResourceType::FOLDER:
 		directory = FOLDERS_PATH;
 		extension =	FOLDERS_EXTENSION;
 		break;
 
-	case RESOURCE_TYPE::MODEL:
+	case ResourceType::MODEL:
 		directory = MODELS_PATH;
 		extension = MODELS_EXTENSION;
 		break;
 
-	case RESOURCE_TYPE::MESH:
+	case ResourceType::MESH:
 		directory = MESHES_PATH;
 		extension = MESHES_EXTENSION;
 		break;
 
-	case RESOURCE_TYPE::MATERIAL:
+	case ResourceType::MATERIAL:
 		directory = MATERIALS_PATH;
 		extension = MATERIALS_EXTENSION;
 		break;
 
-	case RESOURCE_TYPE::TEXTURE:
+	case ResourceType::TEXTURE:
 		directory = TEXTURES_PATH;
 		extension = TEXTURES_EXTENSION;
 		break;
 
-	case RESOURCE_TYPE::SCENE:
+	case ResourceType::SCENE:
 		directory = SCENES_PATH;
 		extension = SCENES_EXTENSION;
 		break;

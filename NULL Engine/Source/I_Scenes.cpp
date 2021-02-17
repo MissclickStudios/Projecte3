@@ -190,7 +190,7 @@ void Importer::Scenes::Utilities::ImportMeshesAndMaterials(const aiScene* assimp
 void Importer::Scenes::Utilities::ImportMesh(const char* nodeName, const aiMesh* assimpMesh, ModelNode& modelNode)
 {
 	std::string assetsPath = ASSETS_MODELS_PATH + std::string(nodeName) + MESHES_EXTENSION;						// As meshes are contained in models, the assets path is kind of made-up.
-	R_Mesh* rMesh = (R_Mesh*)App->resourceManager->CreateResource(RESOURCE_TYPE::MESH, assetsPath.c_str());
+	R_Mesh* rMesh = (R_Mesh*)App->resourceManager->CreateResource(ResourceType::MESH, assetsPath.c_str());
 
 	Importer::Meshes::Import(assimpMesh, rMesh);
 
@@ -207,7 +207,7 @@ void Importer::Scenes::Utilities::ImportMesh(const char* nodeName, const aiMesh*
 void Importer::Scenes::Utilities::ImportMaterial(const char* nodeName, const aiMaterial* assimpMaterial, R_Model* rModel, ModelNode& modelNode)
 {
 	std::string matFullPath	= App->fileSystem->GetDirectory(rModel->GetAssetsPath()) + nodeName + MATERIALS_EXTENSION;
-	R_Material* rMaterial		= (R_Material*)App->resourceManager->CreateResource(RESOURCE_TYPE::MATERIAL, matFullPath.c_str());			// Only considering one texture per mesh.
+	R_Material* rMaterial		= (R_Material*)App->resourceManager->CreateResource(ResourceType::MATERIAL, matFullPath.c_str());			// Only considering one texture per mesh.
 
 	if (rMaterial == nullptr)
 	{
@@ -246,7 +246,7 @@ void Importer::Scenes::Utilities::ImportTexture(const std::vector<MaterialData>&
 				continue;
 			}
 			
-			R_Texture* rTexture = (R_Texture*)App->resourceManager->CreateResource(RESOURCE_TYPE::TEXTURE, texPath);
+			R_Texture* rTexture = (R_Texture*)App->resourceManager->CreateResource(ResourceType::TEXTURE, texPath);
 			uint texId = Importer::Textures::Import(buffer, read, rTexture);											//
 
 			if (texId == 0)
@@ -295,7 +295,7 @@ void Importer::Scenes::Utilities::ImportAnimations(const aiScene* assimpScene, R
 
 		std::string name			= assimpAnimation->mName.C_Str();
 		std::string assetsPath		= ASSETS_MODELS_PATH + name + ANIMATIONS_EXTENSION;
-		R_Animation* rAnimation	= (R_Animation*)App->resourceManager->CreateResource(RESOURCE_TYPE::ANIMATION, assetsPath.c_str());
+		R_Animation* rAnimation	= (R_Animation*)App->resourceManager->CreateResource(ResourceType::ANIMATION, assetsPath.c_str());
 
 		if (rAnimation == nullptr)
 		{

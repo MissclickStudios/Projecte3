@@ -14,7 +14,7 @@
 M_Input::M_Input(bool isActive) : Module("Input", isActive)
 {
 	keyboard = new KEY_STATE[MAX_KEYS];
-	memset(keyboard, 0, sizeof(KEY_STATE) * MAX_KEYS);
+	memset(keyboard, 0, sizeof(KeyState) * MAX_KEYS);
 
 	maxNumScancodes = (uint)SDL_NUM_SCANCODES;
 
@@ -55,7 +55,7 @@ bool M_Input::Init(ParsonNode& config)
 }
 
 // Called every draw update
-UPDATE_STATUS M_Input::PreUpdate(float dt)
+UpdateStatus M_Input::PreUpdate(float dt)
 {
 	SDL_PumpEvents();
 
@@ -65,27 +65,27 @@ UPDATE_STATUS M_Input::PreUpdate(float dt)
 	{
 		if(keys[i] == 1)
 		{
-			if (keyboard[i] == KEY_STATE::KEY_IDLE)
+			if (keyboard[i] == KeyState::KEY_IDLE)
 			{
-				keyboard[i] = KEY_STATE::KEY_DOWN;
-				App->editor->AddInputLog(i, (uint)KEY_STATE::KEY_DOWN);
+				keyboard[i] = KeyState::KEY_DOWN;
+				App->editor->AddInputLog(i, (uint)KeyState::KEY_DOWN);
 			}
 			else
 			{
-				keyboard[i] = KEY_STATE::KEY_REPEAT;
-				App->editor->AddInputLog(i, (uint)KEY_STATE::KEY_REPEAT);
+				keyboard[i] = KeyState::KEY_REPEAT;
+				App->editor->AddInputLog(i, (uint)KeyState::KEY_REPEAT);
 			}
 		}
 		else
 		{
-			if (keyboard[i] == KEY_STATE::KEY_REPEAT || keyboard[i] == KEY_STATE::KEY_DOWN)
+			if (keyboard[i] == KeyState::KEY_REPEAT || keyboard[i] == KeyState::KEY_DOWN)
 			{
-				keyboard[i] = KEY_STATE::KEY_UP;
-				App->editor->AddInputLog(i, (uint)KEY_STATE::KEY_UP);
+				keyboard[i] = KeyState::KEY_UP;
+				App->editor->AddInputLog(i, (uint)KeyState::KEY_UP);
 			}
 			else
 			{
-				keyboard[i] = KEY_STATE::KEY_IDLE;
+				keyboard[i] = KeyState::KEY_IDLE;
 			}
 		}
 	}
@@ -100,27 +100,27 @@ UPDATE_STATUS M_Input::PreUpdate(float dt)
 	{
 		if(buttons & SDL_BUTTON(i))
 		{
-			if (mouseButtons[i] == KEY_STATE::KEY_IDLE)
+			if (mouseButtons[i] == KeyState::KEY_IDLE)
 			{
-				mouseButtons[i] = KEY_STATE::KEY_DOWN;
-				App->editor->AddInputLog(maxNumScancodes + i, (uint)KEY_STATE::KEY_DOWN);
+				mouseButtons[i] = KeyState::KEY_DOWN;
+				App->editor->AddInputLog(maxNumScancodes + i, (uint)KeyState::KEY_DOWN);
 			}
 			else
 			{
-				mouseButtons[i] = KEY_STATE::KEY_REPEAT;
-				App->editor->AddInputLog(maxNumScancodes + i, (uint)KEY_STATE::KEY_REPEAT);
+				mouseButtons[i] = KeyState::KEY_REPEAT;
+				App->editor->AddInputLog(maxNumScancodes + i, (uint)KeyState::KEY_REPEAT);
 			}
 		}
 		else
 		{
-			if(mouseButtons[i] == KEY_STATE::KEY_REPEAT || mouseButtons[i] == KEY_STATE::KEY_DOWN)
+			if(mouseButtons[i] == KeyState::KEY_REPEAT || mouseButtons[i] == KeyState::KEY_DOWN)
 			{
-				mouseButtons[i] = KEY_STATE::KEY_UP;
-				App->editor->AddInputLog(maxNumScancodes + i, (uint)KEY_STATE::KEY_UP);
+				mouseButtons[i] = KeyState::KEY_UP;
+				App->editor->AddInputLog(maxNumScancodes + i, (uint)KeyState::KEY_UP);
 			}
 			else
 			{
-				mouseButtons[i] = KEY_STATE::KEY_IDLE;
+				mouseButtons[i] = KeyState::KEY_IDLE;
 			}
 		}
 	}
@@ -164,7 +164,7 @@ UPDATE_STATUS M_Input::PreUpdate(float dt)
 					if (event.window.event == SDL_WINDOWEVENT_CLOSE)
 					{
 						App->quit = true;
-						return UPDATE_STATUS::STOP;
+						return UpdateStatus::STOP;
 					}
 				}
 
@@ -187,25 +187,25 @@ UPDATE_STATUS M_Input::PreUpdate(float dt)
 		}
 	}
 
-	return UPDATE_STATUS::CONTINUE;
+	return UpdateStatus::CONTINUE;
 }
 
-UPDATE_STATUS M_Input::Update(float dt)
+UpdateStatus M_Input::Update(float dt)
 {
-	if (App->input->GetKey(SDL_SCANCODE_F1) == KEY_STATE::KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_F1) == KeyState::KEY_DOWN)
 	{
 		App->debug = !App->debug;
 	}
 
-	return UPDATE_STATUS::CONTINUE;
+	return UpdateStatus::CONTINUE;
 }
 
-UPDATE_STATUS M_Input::PostUpdate(float dt)
+UpdateStatus M_Input::PostUpdate(float dt)
 {
 	prevMousePosX = GetMouseX();										// Will update the previous mouse position with the current one.
 	prevMousePosY = GetMouseY();										// Placed in the PostUpdate() as the Camera controls are called in M_Camera3D's Update().
 
-	return UPDATE_STATUS::CONTINUE;
+	return UpdateStatus::CONTINUE;
 }
 
 // Called before quitting
@@ -231,12 +231,12 @@ bool M_Input::SaveConfiguration(ParsonNode& root) const
 }
 
 // --------- INPUT METHODS ---------
-KEY_STATE M_Input::GetKey(int id) const
+KeyState M_Input::GetKey(int id) const
 {
 	return keyboard[id];
 }
 
-KEY_STATE M_Input::GetMouseButton(int id) const
+KeyState M_Input::GetMouseButton(int id) const
 {
 	return mouseButtons[id];
 }

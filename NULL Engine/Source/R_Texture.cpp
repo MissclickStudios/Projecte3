@@ -6,7 +6,7 @@
 
 #include "R_Texture.h"
 
-R_Texture::R_Texture() : Resource(RESOURCE_TYPE::TEXTURE)
+R_Texture::R_Texture() : Resource(ResourceType::TEXTURE)
 {
 
 }

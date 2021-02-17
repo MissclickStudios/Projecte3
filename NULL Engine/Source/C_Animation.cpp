@@ -2,7 +2,7 @@
 
 #include "C_Animation.h"
 
-C_Animation::C_Animation(GameObject* owner) : Component(owner, COMPONENT_TYPE::ANIMATION)
+C_Animation::C_Animation(GameObject* owner) : Component(owner, ComponentType::ANIMATION)
 {
 
 }

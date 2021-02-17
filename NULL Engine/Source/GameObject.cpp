@@ -37,7 +37,7 @@ is_bone				(false),
 to_delete			(false),
 show_bounding_boxes	(false)
 {
-	transform = (C_Transform*)CreateComponent(COMPONENT_TYPE::TRANSFORM);
+	transform = (C_Transform*)CreateComponent(ComponentType::TRANSFORM);
 
 	obb.SetNegativeInfinity();
 	aabb.SetNegativeInfinity();
@@ -65,7 +65,7 @@ show_bounding_boxes	(false)
 		name = "GameObject";
 	}
 
-	transform = (C_Transform*)CreateComponent(COMPONENT_TYPE::TRANSFORM);
+	transform = (C_Transform*)CreateComponent(ComponentType::TRANSFORM);
 
 	obb.SetNegativeInfinity();
 	aabb.SetNegativeInfinity();
@@ -158,9 +158,9 @@ bool GameObject::LoadState(ParsonNode& root)
 		if (!componentNode.NodeIsValid())
 			continue;
 		
-		COMPONENT_TYPE type	= (COMPONENT_TYPE)componentNode.GetNumber("Type");
+		ComponentType type	= (ComponentType)componentNode.GetNumber("Type");
 
-		if (type == COMPONENT_TYPE::TRANSFORM)
+		if (type == ComponentType::TRANSFORM)
 		{
 			GetComponent<C_Transform>()->LoadState(componentNode);
 			continue;
@@ -172,12 +172,12 @@ bool GameObject::LoadState(ParsonNode& root)
 			switch (type)
 			{
 			//case COMPONENT_TYPE::TRANSFORM: { component = new C_Transform(this); }	break;
-			case COMPONENT_TYPE::MESH:		{ component = new C_Mesh(this); }		break;
-			case COMPONENT_TYPE::MATERIAL:	{ component = new C_Material(this); }	break;
-			case COMPONENT_TYPE::LIGHT:		{ component = new C_Light(this); }		break;
-			case COMPONENT_TYPE::CAMERA:	{ component = new C_Camera(this); }		break;
-			case COMPONENT_TYPE::ANIMATOR:	{ component = new C_Animator(this); }	break;
-			case COMPONENT_TYPE::ANIMATION: { component = new C_Animation(this); }	break;
+			case ComponentType::MESH:		{ component = new C_Mesh(this); }		break;
+			case ComponentType::MATERIAL:	{ component = new C_Material(this); }	break;
+			case ComponentType::LIGHT:		{ component = new C_Light(this); }		break;
+			case ComponentType::CAMERA:	{ component = new C_Camera(this); }		break;
+			case ComponentType::ANIMATOR:	{ component = new C_Animator(this); }	break;
+			case ComponentType::ANIMATION: { component = new C_Animation(this); }	break;
 			}
 
 			if (component != nullptr)
@@ -284,7 +284,7 @@ void GameObject::GetRenderers(std::vector<MeshRenderer>& meshRenderers, std::vec
 	{
 		if (!cCamera->FrustumIsHidden())
 		{
-			cuboidRenderers.push_back(CuboidRenderer(cCamera->GetFrustumVertices(), CUBOID_TYPE::FRUSTUM));
+			cuboidRenderers.push_back(CuboidRenderer(cCamera->GetFrustumVertices(), CuboidType::FRUSTUM));
 		}
 	}
 
@@ -301,8 +301,8 @@ void GameObject::GetRenderers(std::vector<MeshRenderer>& meshRenderers, std::vec
 		obb.GetCornerPoints(obb_vertices);
 		aabb.GetCornerPoints(aabb_vertices);
 
-		cuboidRenderers.push_back(CuboidRenderer(obb_vertices, CUBOID_TYPE::OBB));
-		cuboidRenderers.push_back(CuboidRenderer(aabb_vertices, CUBOID_TYPE::AABB));
+		cuboidRenderers.push_back(CuboidRenderer(obb_vertices, CuboidType::OBB));
+		cuboidRenderers.push_back(CuboidRenderer(aabb_vertices, CuboidType::AABB));
 	}
 }
 
@@ -606,16 +606,16 @@ void GameObject::SetParentUID(const uint32& parentUID)
 }
 
 // --- COMPONENT METHODS ---
-Component* GameObject::CreateComponent(COMPONENT_TYPE type)
+Component* GameObject::CreateComponent(ComponentType type)
 {
 	Component* component = nullptr;
 
-	if (type == COMPONENT_TYPE::TRANSFORM && GetComponent<C_Transform>() != nullptr)
+	if (type == ComponentType::TRANSFORM && GetComponent<C_Transform>() != nullptr)
 	{
 		LOG("[ERROR] Transform Component could not be added to %s! Error: No duplicates allowed!", name.c_str());
 		return nullptr;
 	}
-	if (type == COMPONENT_TYPE::MATERIAL && GetComponent<C_Material>() != nullptr)
+	if (type == ComponentType::MATERIAL && GetComponent<C_Material>() != nullptr)
 	{
 		LOG("[ERROR] Material Component could not be added to %s! Error: No duplicates allowed!", name.c_str());
 		return nullptr;
@@ -623,13 +623,13 @@ Component* GameObject::CreateComponent(COMPONENT_TYPE type)
 
 	switch(type)
 	{
-	case COMPONENT_TYPE::TRANSFORM:	{ component = new C_Transform(this); }	break;
-	case COMPONENT_TYPE::MESH:		{ component = new C_Mesh(this); }		break;
-	case COMPONENT_TYPE::MATERIAL:	{ component = new C_Material(this); }	break;
-	case COMPONENT_TYPE::LIGHT:		{ component = new C_Light(this); }		break;
-	case COMPONENT_TYPE::CAMERA:	{ component = new C_Camera(this); }		break;
-	case COMPONENT_TYPE::ANIMATOR:	{ component = new C_Animator(this); }	break;
-	case COMPONENT_TYPE::ANIMATION: { component = new C_Animation(this); }	break;
+	case ComponentType::TRANSFORM:	{ component = new C_Transform(this); }	break;
+	case ComponentType::MESH:		{ component = new C_Mesh(this); }		break;
+	case ComponentType::MATERIAL:	{ component = new C_Material(this); }	break;
+	case ComponentType::LIGHT:		{ component = new C_Light(this); }		break;
+	case ComponentType::CAMERA:	{ component = new C_Camera(this); }		break;
+	case ComponentType::ANIMATOR:	{ component = new C_Animator(this); }	break;
+	case ComponentType::ANIMATION: { component = new C_Animation(this); }	break;
 	}
 
 	if (component != nullptr)
@@ -642,7 +642,7 @@ bool GameObject::DeleteComponent(Component* componentToDelete)
 {
 	switch (componentToDelete->GetType())
 	{
-	case COMPONENT_TYPE::MESH: 
+	case ComponentType::MESH: 
 		App->renderer->DeleteFromMeshRenderers((C_Mesh*)componentToDelete); 
 		show_bounding_boxes = false;
 		break;

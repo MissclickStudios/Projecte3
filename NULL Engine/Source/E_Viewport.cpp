@@ -234,17 +234,17 @@ void E_Viewport::HandleGuizmos()
 
 	if (!wantTextInput)
 	{
-		if (App->input->GetKey(SDL_SCANCODE_W) == KEY_STATE::KEY_DOWN)
+		if (App->input->GetKey(SDL_SCANCODE_W) == KeyState::KEY_DOWN)
 		{
 			guizmoOperation = ImGuizmo::OPERATION::TRANSLATE;
 			guizmoMode = ImGuizmo::MODE::WORLD;
 		}
-		if (App->input->GetKey(SDL_SCANCODE_E) == KEY_STATE::KEY_DOWN)
+		if (App->input->GetKey(SDL_SCANCODE_E) == KeyState::KEY_DOWN)
 		{
 			guizmoOperation = ImGuizmo::OPERATION::ROTATE;
 			guizmoMode = ImGuizmo::MODE::WORLD;
 		}
-		if (App->input->GetKey(SDL_SCANCODE_R) == KEY_STATE::KEY_DOWN)
+		if (App->input->GetKey(SDL_SCANCODE_R) == KeyState::KEY_DOWN)
 		{
 			guizmoOperation = ImGuizmo::OPERATION::SCALE;
 			guizmoMode = ImGuizmo::MODE::LOCAL;

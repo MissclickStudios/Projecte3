@@ -17,7 +17,7 @@
 #define MIN_FOV 1
 #define MAX_FOV 120
 
-C_Camera::C_Camera(GameObject* owner) : Component(owner, COMPONENT_TYPE::CAMERA),
+C_Camera::C_Camera(GameObject* owner) : Component(owner, ComponentType::CAMERA),
 frustumPlanes(nullptr),
 frustumVertices(nullptr),
 minFov(MIN_FOV),

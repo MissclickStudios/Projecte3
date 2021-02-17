@@ -24,7 +24,7 @@ public:
 	bool SaveState(ParsonNode& root) const override;
 	bool LoadState(ParsonNode& root) override;
 
-	static inline COMPONENT_TYPE GetType() { return COMPONENT_TYPE::MESH; }			// This is needed to be able to use templates for functions such as GetComponent<>();
+	static inline ComponentType GetType() { return ComponentType::MESH; }			// This is needed to be able to use templates for functions such as GetComponent<>();
 
 public:
 	R_Mesh* GetMesh() const;								// Returns the R_Mesh* variable of the component. If there is no mesh the default value will be nullptr.

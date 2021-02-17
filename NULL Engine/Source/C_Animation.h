@@ -23,7 +23,7 @@ public:
 	bool SaveState	(ParsonNode& root) const override;
 	bool LoadState	(ParsonNode& root) override;
 
-	static inline COMPONENT_TYPE GetType() { return COMPONENT_TYPE::ANIMATION; }
+	static inline ComponentType GetType() { return ComponentType::ANIMATION; }
 
 public:
 	void AddClip(const AnimationClip& animationClip);

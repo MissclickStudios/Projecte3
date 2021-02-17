@@ -40,7 +40,7 @@ struct AnimationBones
 	std::vector<BoneLink> bones;
 };
 
-enum class INTERPOLATION_TYPE																								// WIP IDEA
+enum class InterpolationType																								// WIP IDEA
 {
 	LINEAL,
 	CUSTOM
@@ -58,7 +58,7 @@ public:
 	bool SaveState(ParsonNode& root) const override;
 	bool LoadState(ParsonNode& root) override;
 
-	static inline COMPONENT_TYPE GetType() { return COMPONENT_TYPE::ANIMATOR; }
+	static inline ComponentType GetType() { return ComponentType::ANIMATOR; }
 
 public:
 	void AddAnimation(R_Animation* rAnimation);

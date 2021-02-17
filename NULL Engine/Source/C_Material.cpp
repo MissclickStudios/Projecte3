@@ -16,7 +16,7 @@
 
 #define MAX_MAPS 7
 
-C_Material::C_Material(GameObject* owner) : Component(owner, COMPONENT_TYPE::MATERIAL),
+C_Material::C_Material(GameObject* owner) : Component(owner, ComponentType::MATERIAL),
 rMaterial(nullptr),
 rTexture(nullptr),
 useDefaultTex(false),
@@ -189,12 +189,12 @@ void C_Material::SetMaterialColour(float r, float g, float b, float a)
 	}
 }
 
-void C_Material::AddTextureMap(TEXTURE_MAP textureMap, uint texId)
+void C_Material::AddTextureMap(TextureMap textureMap, uint texId)
 {
 	//texture_maps[(uint)textureMap] = texId;
 }
 
-void C_Material::SetCurrentTextureMap(TEXTURE_MAP textureMap)
+void C_Material::SetCurrentTextureMap(TextureMap textureMap)
 {
 	// currentMap = textureMap;
 	// texId = textureMaps[(uint)currentMap];

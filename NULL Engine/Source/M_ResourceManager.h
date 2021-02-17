@@ -9,7 +9,7 @@
 class ParsonNode;
 class Resource;
 
-enum class RESOURCE_TYPE;
+enum class ResourceType;
 
 typedef unsigned int		uint;
 typedef unsigned __int32	uint32;
@@ -23,9 +23,9 @@ public:
 
 	bool			Init				(ParsonNode& configuration) override;
 	bool			Start				() override;
-	UPDATE_STATUS	PreUpdate			(float dt) override;
-	UPDATE_STATUS	Update				(float dt) override;
-	UPDATE_STATUS	PostUpdate			(float dt) override;
+	UpdateStatus	PreUpdate			(float dt) override;
+	UpdateStatus	Update				(float dt) override;
+	UpdateStatus	PostUpdate			(float dt) override;
 	bool			CleanUp				() override;
 
 	bool			SaveConfiguration	(ParsonNode& configuration) const override;
@@ -51,7 +51,7 @@ public:																												// --- ASSETS MONITORING METHODS ---
 
 	bool			GetResourceUIDsFromMeta						(const char* assetsPath, std::vector<uint32>& resourceUids);
 	bool			GetLibraryFilePathsFromMeta					(const char* assetsPath, std::vector<std::string>& filePaths);
-	bool			GetLibraryDirectoryAndExtensionFromType		(const RESOURCE_TYPE& type, std::string& directory, std::string& extension);
+	bool			GetLibraryDirectoryAndExtensionFromType		(const ResourceType& type, std::string& directory, std::string& extension);
 	
 	bool			LoadMetaLibraryPairsIntoLibrary				(const char* assetsPath);
 	bool			GetLibraryPairsFromMeta						(const char* assetsPath, std::map<uint32, std::string>& pairs);
@@ -66,8 +66,8 @@ public:																												// --- IMPORT FILE METHODS ---
 	uint32			LoadFromLibrary					(const char* assetsPath);										// 
 
 	const char*		GetValidPath					(const char* assetsPath);										// 
-	RESOURCE_TYPE	GetTypeFromAssetsExtension		(const char* assetsPath);										// 
-	RESOURCE_TYPE	GetTypeFromLibraryExtension		(const char* libraryPath);										// 
+	ResourceType	GetTypeFromAssetsExtension		(const char* assetsPath);										// 
+	ResourceType	GetTypeFromLibraryExtension		(const char* libraryPath);										// 
 
 	void			SetResourceAssetsPathAndFile	(const char* assetsPath, Resource* resource);					// 
 	void			SetResourceLibraryPathAndFile	(Resource* resource);											// 
@@ -84,7 +84,7 @@ public:																												// --- META FILE METHODS ---
 	Resource*		GetResourceFromMetaFile			(const char* assetsPath);
 
 public:																												// --- RESOURCE METHODS ---
-	Resource*		CreateResource					(RESOURCE_TYPE type, const char* assetsPath = nullptr, const uint32& forcedUid = 0);	// 
+	Resource*		CreateResource					(ResourceType type, const char* assetsPath = nullptr, const uint32& forcedUid = 0);	// 
 	bool			DeleteResource					(const uint32& uid);																	//
 	bool			DeleteResource					(Resource* resourceToDelete);															// FORCED DELETE
 	void			GetResources					(std::map<uint32, Resource*>& resources) const;											// 

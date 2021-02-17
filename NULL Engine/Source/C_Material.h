@@ -16,7 +16,7 @@ struct Texture;
 
 typedef unsigned int uint;
 
-enum class TEXTURE_MAP												// Will correspond with the indexes of the texture_ids vector. Ex: texture_ids[DIFFUSE] = diffuse tex_id;
+enum class TextureMap												// Will correspond with the indexes of the texture_ids vector. Ex: texture_ids[DIFFUSE] = diffuse tex_id;
 {
 	DEFAULT = 0,												// Will correspond with the Debug Texture (Checkers).
 	DIFFUSE = 1,
@@ -39,7 +39,7 @@ public:
 	bool SaveState(ParsonNode& root) const override;
 	bool LoadState(ParsonNode& root) override;
 
-	static inline COMPONENT_TYPE GetType() { return COMPONENT_TYPE::MATERIAL; }				// This is needed to be able to use templeates for functions such as GetComponent<>();
+	static inline ComponentType GetType() { return ComponentType::MATERIAL; }				// This is needed to be able to use templeates for functions such as GetComponent<>();
 
 public:																						// --- GET/SET RESOURCES
 	R_Material* GetMaterial() const;
@@ -53,8 +53,8 @@ public:																						// --- GET/SET COMPONENT MATERIAL VARIABLES
 	void SetMaterialColour(const Color& newColour);
 	void SetMaterialColour(float r, float g, float b, float a);
 		 
-	void AddTextureMap(TEXTURE_MAP textureMap, uint texId);
-	void SetCurrentTextureMap(TEXTURE_MAP textureMap);
+	void AddTextureMap(TextureMap textureMap, uint texId);
+	void SetCurrentTextureMap(TextureMap textureMap);
 		 
 	bool UseDefaultTexture() const;
 	void SetUseDefaultTexture(const bool& setTo);

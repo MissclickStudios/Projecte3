@@ -46,11 +46,11 @@ bool E_Resources::Draw(ImGuiIO& io)
 
 		switch (item->second->GetType())
 		{
-		case RESOURCE_TYPE::MODEL:		{ ++models; }		break;
-		case RESOURCE_TYPE::MESH:		{ ++meshes; }		break;
-		case RESOURCE_TYPE::MATERIAL:	{ ++materials; }	break;
-		case RESOURCE_TYPE::TEXTURE:	{ ++textures; }		break;
-		case RESOURCE_TYPE::ANIMATION:	{ ++animations; }	break;
+		case ResourceType::MODEL:		{ ++models; }		break;
+		case ResourceType::MESH:		{ ++meshes; }		break;
+		case ResourceType::MATERIAL:	{ ++materials; }	break;
+		case ResourceType::TEXTURE:	{ ++textures; }		break;
+		case ResourceType::ANIMATION:	{ ++animations; }	break;
 		}
 
 		sorted.emplace((uint)item->second->GetType(), item->second);

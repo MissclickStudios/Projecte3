@@ -5,7 +5,7 @@
 
 #include "R_Model.h"
 
-R_Model::R_Model() : Resource(RESOURCE_TYPE::MODEL)
+R_Model::R_Model() : Resource(ResourceType::MODEL)
 {
 
 }
@@ -41,7 +41,7 @@ bool R_Model::SaveMeta(ParsonNode& metaRoot) const
 			ParsonNode mesh_node = contained_array.SetNode(mesh_name.c_str());
 
 			mesh_node.SetNumber("UID", modelNodes[i].meshUID);
-			mesh_node.SetNumber("Type", (uint)RESOURCE_TYPE::MESH);
+			mesh_node.SetNumber("Type", (uint)ResourceType::MESH);
 			mesh_node.SetString("Name", mesh_name.c_str());
 			mesh_node.SetString("LibraryPath", mesh_path.c_str());
 		}
@@ -54,7 +54,7 @@ bool R_Model::SaveMeta(ParsonNode& metaRoot) const
 			ParsonNode material_node = contained_array.SetNode(material_name.c_str());
 
 			material_node.SetNumber("UID", modelNodes[i].materialUID);
-			material_node.SetNumber("Type", (uint)RESOURCE_TYPE::MATERIAL);
+			material_node.SetNumber("Type", (uint)ResourceType::MATERIAL);
 			material_node.SetString("Name", material_name.c_str());
 			material_node.SetString("LibraryPath", material_path.c_str());
 		}
@@ -67,7 +67,7 @@ bool R_Model::SaveMeta(ParsonNode& metaRoot) const
 			ParsonNode texture_node = contained_array.SetNode(texture_name.c_str());
 
 			texture_node.SetNumber("UID", modelNodes[i].textureUID);
-			texture_node.SetNumber("Type", (uint)RESOURCE_TYPE::TEXTURE);
+			texture_node.SetNumber("Type", (uint)ResourceType::TEXTURE);
 			texture_node.SetString("Name", texture_name.c_str());
 			texture_node.SetString("LibraryPath", texture_path.c_str());
 		}
@@ -82,7 +82,7 @@ bool R_Model::SaveMeta(ParsonNode& metaRoot) const
 		ParsonNode animation_node = contained_array.SetNode(animation_name.c_str());
 
 		animation_node.SetNumber("UID", item->first);
-		animation_node.SetNumber("Type", (uint)RESOURCE_TYPE::ANIMATION);
+		animation_node.SetNumber("Type", (uint)ResourceType::ANIMATION);
 		animation_node.SetString("Name", animation_name.c_str());
 		animation_node.SetString("LibraryPath", animation_path.c_str());
 	}

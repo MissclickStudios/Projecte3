@@ -6,7 +6,7 @@
 
 #include "Component.h"
 
-Component::Component(GameObject* owner, COMPONENT_TYPE type, bool isActive) :
+Component::Component(GameObject* owner, ComponentType type, bool isActive) :
 id(Random::LCG::GetRandomUint()),
 type(type),
 owner(owner),
@@ -45,14 +45,14 @@ const char* Component::GetNameFromType() const
 {
 	switch (type)
 	{
-	case COMPONENT_TYPE::NONE:			{ return "NONE"; }			break;
-	case COMPONENT_TYPE::TRANSFORM:		{ return "Transform"; }		break;
-	case COMPONENT_TYPE::MESH:			{ return "Mesh"; }			break;
-	case COMPONENT_TYPE::MATERIAL:		{ return "Material"; }		break;
-	case COMPONENT_TYPE::LIGHT:			{ return "Light"; }			break;
-	case COMPONENT_TYPE::CAMERA:		{ return "Camera"; }		break;
-	case COMPONENT_TYPE::ANIMATOR:		{ return "Animator"; }		break;
-	case COMPONENT_TYPE::ANIMATION:		{ return "Animation"; }		break;
+	case ComponentType::NONE:			{ return "NONE"; }			break;
+	case ComponentType::TRANSFORM:		{ return "Transform"; }		break;
+	case ComponentType::MESH:			{ return "Mesh"; }			break;
+	case ComponentType::MATERIAL:		{ return "Material"; }		break;
+	case ComponentType::LIGHT:			{ return "Light"; }			break;
+	case ComponentType::CAMERA:		{ return "Camera"; }		break;
+	case ComponentType::ANIMATOR:		{ return "Animator"; }		break;
+	case ComponentType::ANIMATION:		{ return "Animation"; }		break;
 	}
 
 	return "NONE";

@@ -12,7 +12,7 @@ class ParsonNode;
 typedef unsigned int		uint;
 typedef unsigned __int32	uint32;
 
-enum class RESOURCE_TYPE
+enum class ResourceType
 {
 	MODEL,
 	MESH,
@@ -27,7 +27,7 @@ enum class RESOURCE_TYPE
 class Resource
 {
 public:
-	Resource(RESOURCE_TYPE type);
+	Resource(ResourceType type);
 	virtual ~Resource();
 
 	virtual bool CleanUp();
@@ -36,7 +36,7 @@ public:
 	virtual bool LoadMeta(const ParsonNode& metaRoot);
 
 public:
-	RESOURCE_TYPE		GetType					() const;
+	ResourceType		GetType					() const;
 	const char*			GetTypeAsString			() const;
 	
 	uint32				GetUID					() const;
@@ -61,7 +61,7 @@ public:
 	//void				SetImporterSettings	(ImporterSettings importer_settings);
 
 private:
-	RESOURCE_TYPE		type;
+	ResourceType		type;
 
 	uint32				uid;															// UID for this Resource.
 	uint				references;

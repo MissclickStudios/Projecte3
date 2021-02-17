@@ -6,7 +6,7 @@
 class ParsonNode;
 typedef unsigned int uint;
 
-enum class KEY_STATE
+enum class KeyState
 {
 	KEY_IDLE = 0,
 	KEY_DOWN,
@@ -24,17 +24,17 @@ public:
 	~M_Input();
 
 	bool			Init					(ParsonNode& config) override;
-	UPDATE_STATUS	PreUpdate				(float dt) override;
-	UPDATE_STATUS	Update					(float dt) override;
-	UPDATE_STATUS	PostUpdate				(float dt) override;
+	UpdateStatus	PreUpdate				(float dt) override;
+	UpdateStatus	Update					(float dt) override;
+	UpdateStatus	PostUpdate				(float dt) override;
 	bool			CleanUp					() override;
 
 	bool			LoadConfiguration		(ParsonNode& root) override;
 	bool			SaveConfiguration		(ParsonNode& root) const override;
 
 public:
-	KEY_STATE		GetKey					(int id) const;
-	KEY_STATE		GetMouseButton			(int id) const;
+	KeyState		GetKey					(int id) const;
+	KeyState		GetMouseButton			(int id) const;
 	uint			GetMaxNumScancodes		() const;
 
 	int				GetMouseX				() const;
@@ -48,8 +48,8 @@ public:
 	int				GetMouseYWheel			() const;
 
 private:
-	KEY_STATE*		keyboard;
-	KEY_STATE		mouseButtons[MAX_MOUSE_BUTTONS];
+	KeyState*		keyboard;
+	KeyState		mouseButtons[MAX_MOUSE_BUTTONS];
 	uint			maxNumScancodes;
 
 	int				mouseX;

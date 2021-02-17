@@ -27,7 +27,7 @@ class Primitive;
 
 typedef unsigned int GLenum;
 
-enum class RENDERER_FLAGS																						// Employed to avoid having OpenGL deps. in some files (M_Editor & "E_" files)
+enum class RendererFlags																						// Employed to avoid having OpenGL deps. in some files (M_Editor & "E_" files)
 {
 	DEPTH_TEST		= 0x0B71,																					// 0x0B71 = GL_DEPTH_TEST
 	CULL_FACE		= 0x0B44,																					// 0x0B44 = GL_CULL_FACE
@@ -38,7 +38,7 @@ enum class RENDERER_FLAGS																						// Employed to avoid having OpenG
 	BLEND			= 0x0BE2																					// 0x0BE2 = GL_BLEND
 };
 
-enum class CUBOID_TYPE
+enum class CuboidType
 {
 	NONE,
 	AABB,
@@ -71,7 +71,7 @@ struct MeshRenderer
 struct CuboidRenderer																							// Will render the wireframe of any given geometric form with 8 vertices.
 {	
 	CuboidRenderer(const float3* vertices, const Color& color, const float& edgeWidth);
-	CuboidRenderer(const float3* vertices, CUBOID_TYPE type);
+	CuboidRenderer(const float3* vertices, CuboidType type);
 
 	void Render();
 
@@ -79,7 +79,7 @@ struct CuboidRenderer																							// Will render the wireframe of any 
 	float GetEdgeWidthByType();
 
 	const float3*	vertices;
-	CUBOID_TYPE		type;
+	CuboidType		type;
 	const Color		color;
 	const float		edgeWidth;
 };
@@ -118,8 +118,8 @@ public:
 
 	bool			Init				(ParsonNode& configuration) override;
 	bool			Start				() override;
-	UPDATE_STATUS	PreUpdate			(float dt) override;
-	UPDATE_STATUS	PostUpdate			(float dt) override;
+	UpdateStatus	PreUpdate			(float dt) override;
+	UpdateStatus	PostUpdate			(float dt) override;
 	bool			CleanUp				() override;
 	
 	bool			LoadConfiguration	(ParsonNode& root) override;
@@ -180,9 +180,9 @@ public:																											// --- GET/SET METHODS
 	void			SetVsync					(const bool& setTo);											// 
 
 	bool			GetGLFlag					(GLenum flag) const;											// 
-	bool			GetGLFlag					(RENDERER_FLAGS flag) const;									// 
+	bool			GetGLFlag					(RendererFlags flag) const;									// 
 	void			SetGLFlag					(GLenum flag, bool setTo);										// 
-	void			SetGLFlag					(RENDERER_FLAGS flag, bool setTo);								// 
+	void			SetGLFlag					(RendererFlags flag, bool setTo);								// 
 
 public:																											// --- DEBUG GET/SET METHODS
 	uint			GetWorldGridSize			() const;

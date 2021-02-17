@@ -30,7 +30,7 @@ class E_LoadFile;
 
 typedef unsigned __int32 uint32;
 
-enum class IMGUI_STYLE
+enum class ImguiStyle
 {
 	CLASSIC,
 	LIGHT,
@@ -38,7 +38,7 @@ enum class IMGUI_STYLE
 	OTHER
 };
 
-enum class EDITOR_EVENT
+enum class EditorEvent
 {
 	CREATE_GAMEOBJECT,
 	SELECT_GAMEOBJECT,
@@ -54,9 +54,9 @@ public:
 
 	bool			Init				(ParsonNode& config) override;
 	bool			Start				() override;
-	UPDATE_STATUS	PreUpdate			(float dt) override;
-	UPDATE_STATUS	Update				(float dt) override;
-	UPDATE_STATUS	PostUpdate			(float dt) override;
+	UpdateStatus	PreUpdate			(float dt) override;
+	UpdateStatus	Update				(float dt) override;
+	UpdateStatus	PostUpdate			(float dt) override;
 	bool			CleanUp				() override;
 
 	bool			LoadConfiguration	(ParsonNode& root) override;

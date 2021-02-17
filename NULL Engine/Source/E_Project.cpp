@@ -288,7 +288,7 @@ void E_Project::DrawResourceIcons()
 		//ImGui::ImageButtonEx(i + 1, tex_id, icon_size, uv_0, uv_1, padding, bg_color, tint_color);
 		ImGui::Image(texId, iconSize, uv0, uv1, tintColor, bgColor);
 
-		if (resourcesToDisplay[i]->GetType() == RESOURCE_TYPE::FOLDER)
+		if (resourcesToDisplay[i]->GetType() == ResourceType::FOLDER)
 		{
 			if (ImGui::IsItemClicked())
 			{
@@ -391,16 +391,16 @@ ImTextureID E_Project::GetIconTexID(Resource* resource) const
 		return 0;
 	}
 
-	RESOURCE_TYPE type = resource->GetType();
+	ResourceType type = resource->GetType();
 	switch (type)
 	{
-	case RESOURCE_TYPE::MODEL:		{ texId = (ImTextureID)engineIcons.modelIcon->GetTextureID(); }		break;
-	case RESOURCE_TYPE::MESH:		{ texId = (ImTextureID)engineIcons.fileIcon->GetTextureID(); }		break;
-	case RESOURCE_TYPE::MATERIAL:	{ texId = (ImTextureID)engineIcons.materialIcon->GetTextureID(); }	break;
-	case RESOURCE_TYPE::TEXTURE:	{ texId = (ImTextureID)(((R_Texture*)resource)->GetTextureID()); }	break;
-	case RESOURCE_TYPE::FOLDER:		{ texId = (ImTextureID)engineIcons.folderIcon->GetTextureID(); }	break;
-	case RESOURCE_TYPE::SCENE:		{ texId = (ImTextureID)engineIcons.modelIcon->GetTextureID(); }		break;
-	case RESOURCE_TYPE::ANIMATION:	{ texId = (ImTextureID)engineIcons.animationIcon->GetTextureID(); }	break;
+	case ResourceType::MODEL:		{ texId = (ImTextureID)engineIcons.modelIcon->GetTextureID(); }		break;
+	case ResourceType::MESH:		{ texId = (ImTextureID)engineIcons.fileIcon->GetTextureID(); }		break;
+	case ResourceType::MATERIAL:	{ texId = (ImTextureID)engineIcons.materialIcon->GetTextureID(); }	break;
+	case ResourceType::TEXTURE:	{ texId = (ImTextureID)(((R_Texture*)resource)->GetTextureID()); }	break;
+	case ResourceType::FOLDER:		{ texId = (ImTextureID)engineIcons.folderIcon->GetTextureID(); }	break;
+	case ResourceType::SCENE:		{ texId = (ImTextureID)engineIcons.modelIcon->GetTextureID(); }		break;
+	case ResourceType::ANIMATION:	{ texId = (ImTextureID)engineIcons.animationIcon->GetTextureID(); }	break;
 	}
 
 	return texId;

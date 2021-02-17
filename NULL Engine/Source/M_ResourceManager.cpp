@@ -64,9 +64,9 @@ bool M_ResourceManager::Start()
 	return ret;
 }
 
-UPDATE_STATUS M_ResourceManager::PreUpdate(float dt)
+UpdateStatus M_ResourceManager::PreUpdate(float dt)
 {
-	UPDATE_STATUS status = UPDATE_STATUS::CONTINUE;
+	UpdateStatus status = UpdateStatus::CONTINUE;
 
 	fileRefreshTimer += Time::Real::GetDT();
 
@@ -94,18 +94,18 @@ UPDATE_STATUS M_ResourceManager::PreUpdate(float dt)
 	return status;
 }
 
-UPDATE_STATUS M_ResourceManager::Update(float dt)
+UpdateStatus M_ResourceManager::Update(float dt)
 {
-	UPDATE_STATUS status = UPDATE_STATUS::CONTINUE;
+	UpdateStatus status = UpdateStatus::CONTINUE;
 
 	
 
 	return status;
 }
 
-UPDATE_STATUS M_ResourceManager::PostUpdate(float dt)
+UpdateStatus M_ResourceManager::PostUpdate(float dt)
 {
-	UPDATE_STATUS status = UPDATE_STATUS::CONTINUE;
+	UpdateStatus status = UpdateStatus::CONTINUE;
 
 
 
@@ -456,7 +456,7 @@ bool M_ResourceManager::GetLibraryFilePathsFromMeta(const char* assetsPath, std:
 
 	// --- MAIN RESOURCE
 	uint32 resourceUid		= (uint32)metaRoot.GetNumber("UID");
-	RESOURCE_TYPE type		= (RESOURCE_TYPE)metaRoot.GetNumber("Type");
+	ResourceType type		= (ResourceType)metaRoot.GetNumber("Type");
 	bool success			= GetLibraryDirectoryAndExtensionFromType(type, directory, extension);
 	if (!success)
 	{
@@ -480,7 +480,7 @@ bool M_ResourceManager::GetLibraryFilePathsFromMeta(const char* assetsPath, std:
 	// --- CONTAINED RESOURCES
 	ParsonNode containedNode		= ParsonNode();
 	uint32 containedUid			= 0;
-	RESOURCE_TYPE containedType	= RESOURCE_TYPE::NONE;
+	ResourceType containedType	= ResourceType::NONE;
 	std::string containedPath		= "[NONE]";
 	for (uint i = 0; i < containedArray.size; ++i)
 	{
@@ -494,7 +494,7 @@ bool M_ResourceManager::GetLibraryFilePathsFromMeta(const char* assetsPath, std:
 		extension = "[NONE]";
 
 		containedUid	= (uint32)containedNode.GetNumber("UID");
-		containedType	= (RESOURCE_TYPE)containedNode.GetNumber("Type");
+		containedType	= (ResourceType)containedNode.GetNumber("Type");
 		success			= GetLibraryDirectoryAndExtensionFromType(containedType, directory, extension);
 		if (!success)
 		{
@@ -516,41 +516,41 @@ bool M_ResourceManager::GetLibraryFilePathsFromMeta(const char* assetsPath, std:
 	return ret;
 }
 
-bool M_ResourceManager::GetLibraryDirectoryAndExtensionFromType(const RESOURCE_TYPE& type, std::string& directory, std::string& extension)
+bool M_ResourceManager::GetLibraryDirectoryAndExtensionFromType(const ResourceType& type, std::string& directory, std::string& extension)
 {
 	bool ret = true;
 	
 	switch (type)
 	{
-	case RESOURCE_TYPE::MODEL:
+	case ResourceType::MODEL:
 		directory = MODELS_PATH;
 		extension = MODELS_EXTENSION;
 		break;
-	case RESOURCE_TYPE::MESH:
+	case ResourceType::MESH:
 		directory = MESHES_PATH;
 		extension = MESHES_EXTENSION;
 		break;
-	case RESOURCE_TYPE::MATERIAL:
+	case ResourceType::MATERIAL:
 		directory = MATERIALS_PATH;
 		extension = MATERIALS_EXTENSION;
 		break;
-	case RESOURCE_TYPE::TEXTURE:
+	case ResourceType::TEXTURE:
 		directory = TEXTURES_PATH;
 		extension = TEXTURES_EXTENSION;
 		break;
-	case RESOURCE_TYPE::FOLDER:
+	case ResourceType::FOLDER:
 		directory = FOLDERS_PATH;
 		extension = FOLDERS_EXTENSION;
 		break;
-	case RESOURCE_TYPE::SCENE:
+	case ResourceType::SCENE:
 		directory = SCENES_PATH;
 		extension = SCENES_EXTENSION;
 		break;
-	case RESOURCE_TYPE::ANIMATION:
+	case ResourceType::ANIMATION:
 		directory = ANIMATIONS_PATH;
 		extension = ANIMATIONS_EXTENSION;
 		break;
-	case RESOURCE_TYPE::NONE:
+	case ResourceType::NONE:
 		ret = false;
 		break;
 	}
@@ -721,16 +721,16 @@ uint32 M_ResourceManager::ImportFromAssets(const char* assetsPath)
 	uint read = App->fileSystem->Load(assetsPath, &buffer);
 	if (read > 0)
 	{
-		RESOURCE_TYPE type = GetTypeFromAssetsExtension(assetsPath);
+		ResourceType type = GetTypeFromAssetsExtension(assetsPath);
 		Resource* resource = CreateResource(type, assetsPath);
 
 		bool success = false;
 		switch (type)
 		{
-		case RESOURCE_TYPE::MODEL:		{ success = Importer::ImportScene(buffer, read, (R_Model*)resource); }		break;
-		case RESOURCE_TYPE::MESH:		{ success = Importer::ImportMesh(buffer, (R_Mesh*)resource); }				break;
-		case RESOURCE_TYPE::TEXTURE:	{ success = Importer::ImportTexture(buffer, read, (R_Texture*)resource); }	break;
-		case RESOURCE_TYPE::SCENE:		{ /*success = HAVE A FUNCTIONAL R_SCENE AND LOAD/SAVE METHODS*/}			break;
+		case ResourceType::MODEL:		{ success = Importer::ImportScene(buffer, read, (R_Model*)resource); }		break;
+		case ResourceType::MESH:		{ success = Importer::ImportMesh(buffer, (R_Mesh*)resource); }				break;
+		case ResourceType::TEXTURE:	{ success = Importer::ImportTexture(buffer, read, (R_Texture*)resource); }	break;
+		case ResourceType::SCENE:		{ /*success = HAVE A FUNCTIONAL R_SCENE AND LOAD/SAVE METHODS*/}			break;
 		}
 
 		RELEASE_ARRAY(buffer);
@@ -845,13 +845,13 @@ uint M_ResourceManager::SaveResourceToLibrary(Resource* resource)
 
 	switch (resource->GetType())
 	{
-	case RESOURCE_TYPE::MODEL:		{ written = Importer::Scenes::Save((R_Model*)resource, &buffer); }			break;
-	case RESOURCE_TYPE::MESH:		{ written = Importer::Meshes::Save((R_Mesh*)resource, &buffer); }			break;
-	case RESOURCE_TYPE::MATERIAL:	{ written = Importer::Materials::Save((R_Material*)resource, &buffer); }	break;
-	case RESOURCE_TYPE::TEXTURE:	{ written = Importer::Textures::Save((R_Texture*)resource, &buffer); }		break;
-	case RESOURCE_TYPE::FOLDER:		{ written = Importer::Folders::Save((R_Folder*)resource, &buffer); }		break;
-	case RESOURCE_TYPE::SCENE:		{ /*written = TODO: HAVE A FUNCTIONAL R_SCENE AND SAVE/LOAD METHODS*/ }		break;
-	case RESOURCE_TYPE::ANIMATION:	{ written = Importer::Animations::Save((R_Animation*)resource, &buffer); }	break;
+	case ResourceType::MODEL:		{ written = Importer::Scenes::Save((R_Model*)resource, &buffer); }			break;
+	case ResourceType::MESH:		{ written = Importer::Meshes::Save((R_Mesh*)resource, &buffer); }			break;
+	case ResourceType::MATERIAL:	{ written = Importer::Materials::Save((R_Material*)resource, &buffer); }	break;
+	case ResourceType::TEXTURE:	{ written = Importer::Textures::Save((R_Texture*)resource, &buffer); }		break;
+	case ResourceType::FOLDER:		{ written = Importer::Folders::Save((R_Folder*)resource, &buffer); }		break;
+	case ResourceType::SCENE:		{ /*written = TODO: HAVE A FUNCTIONAL R_SCENE AND SAVE/LOAD METHODS*/ }		break;
+	case ResourceType::ANIMATION:	{ written = Importer::Animations::Save((R_Animation*)resource, &buffer); }	break;
 	}
 
 	RELEASE_ARRAY(buffer);
@@ -903,26 +903,26 @@ const char* M_ResourceManager::GetValidPath(const char* assetsPath)
 	return assetsPath;
 }
 
-RESOURCE_TYPE M_ResourceManager::GetTypeFromAssetsExtension(const char* assetsPath)
+ResourceType M_ResourceManager::GetTypeFromAssetsExtension(const char* assetsPath)
 {
-	RESOURCE_TYPE type = RESOURCE_TYPE::NONE;
+	ResourceType type = ResourceType::NONE;
 
 	std::string extension = App->fileSystem->GetFileExtension(assetsPath);
 
 	if (extension == "fbx" || extension == "FBX" 
 		|| extension == "obj" || extension == "OBJ")
 	{
-		type = RESOURCE_TYPE::MODEL;
+		type = ResourceType::MODEL;
 	}
 	else if (extension == "png" || extension == "PNG" 
 			|| extension == "tga" || extension == "TGA" 
 			|| extension == "dds" || extension == "DDS")
 	{
-		type = RESOURCE_TYPE::TEXTURE;
+		type = ResourceType::TEXTURE;
 	}
 	else if (extension == "json" || extension == "JSON")
 	{
-		type = RESOURCE_TYPE::SCENE;
+		type = ResourceType::SCENE;
 	}
 	else
 	{
@@ -932,49 +932,49 @@ RESOURCE_TYPE M_ResourceManager::GetTypeFromAssetsExtension(const char* assetsPa
 	return type;
 }
 
-RESOURCE_TYPE M_ResourceManager::GetTypeFromLibraryExtension(const char* libraryPath)
+ResourceType M_ResourceManager::GetTypeFromLibraryExtension(const char* libraryPath)
 {
 	if (libraryPath == nullptr)
 	{
 		LOG("[ERROR] Resource Manager: Could not get the Resource Type from the Library File's Extension! Error: Given Library Path was nullptr.");
-		return RESOURCE_TYPE::NONE;
+		return ResourceType::NONE;
 	}
 	
-	RESOURCE_TYPE type		= RESOURCE_TYPE::NONE;
+	ResourceType type		= ResourceType::NONE;
 	std::string extension	= App->fileSystem->GetFileExtension(libraryPath);
 	extension				= "." + extension;
 
 	if (extension == MODELS_EXTENSION)
 	{
-		type = RESOURCE_TYPE::MODEL;
+		type = ResourceType::MODEL;
 	}
 	else if (extension == MESHES_EXTENSION)
 	{
-		type = RESOURCE_TYPE::MESH;
+		type = ResourceType::MESH;
 	}
 	else if (extension == MATERIALS_EXTENSION)
 	{
-		type = RESOURCE_TYPE::MATERIAL;
+		type = ResourceType::MATERIAL;
 	}
 	else if (extension == TEXTURES_EXTENSION)
 	{
-		type = RESOURCE_TYPE::TEXTURE;
+		type = ResourceType::TEXTURE;
 	}
 	else if (extension == FOLDERS_EXTENSION)
 	{
-		type = RESOURCE_TYPE::FOLDER;
+		type = ResourceType::FOLDER;
 	}
 	else if (extension == SCENES_EXTENSION)
 	{
-		type = RESOURCE_TYPE::SCENE;
+		type = ResourceType::SCENE;
 	}
 	else if (extension == ANIMATIONS_EXTENSION)
 	{
-		type = RESOURCE_TYPE::ANIMATION;
+		type = ResourceType::ANIMATION;
 	}
 	else
 	{
-		type = RESOURCE_TYPE::NONE;
+		type = ResourceType::NONE;
 	}
 
 	return type;
@@ -1198,11 +1198,11 @@ bool M_ResourceManager::ResourceHasMetaType(Resource* resource) const
 		return false;
 	}
 	
-	RESOURCE_TYPE type = resource->GetType();
+	ResourceType type = resource->GetType();
 	
-	return (type == RESOURCE_TYPE::FOLDER
-			|| type == RESOURCE_TYPE::MODEL
-			|| type == RESOURCE_TYPE::TEXTURE);
+	return (type == ResourceType::FOLDER
+			|| type == ResourceType::MODEL
+			|| type == ResourceType::TEXTURE);
 }
 
 Resource* M_ResourceManager::GetResourceFromMetaFile(const char* assetsPath)
@@ -1237,19 +1237,19 @@ Resource* M_ResourceManager::GetResourceFromMetaFile(const char* assetsPath)
 }
 
 // --- RESOURCE METHODS ---
-Resource* M_ResourceManager::CreateResource(RESOURCE_TYPE type, const char* assetsPath, const uint32& forcedUid)
+Resource* M_ResourceManager::CreateResource(ResourceType type, const char* assetsPath, const uint32& forcedUid)
 {
 	Resource* resource = nullptr;
 
 	switch (type)
 	{
-	case RESOURCE_TYPE::MESH:		{ resource = new R_Mesh(); }		break;
-	case RESOURCE_TYPE::MATERIAL:	{ resource = new R_Material(); }	break;
-	case RESOURCE_TYPE::TEXTURE:	{ resource = new R_Texture(); }		break;
-	case RESOURCE_TYPE::MODEL:		{ resource = new R_Model(); }		break;
-	case RESOURCE_TYPE::FOLDER:		{ resource = new R_Folder(); }		break;
-	case RESOURCE_TYPE::SCENE:		{ resource = new R_Scene(); }		break;
-	case RESOURCE_TYPE::ANIMATION:	{ resource = new R_Animation(); }	break;
+	case ResourceType::MESH:		{ resource = new R_Mesh(); }		break;
+	case ResourceType::MATERIAL:	{ resource = new R_Material(); }	break;
+	case ResourceType::TEXTURE:	{ resource = new R_Texture(); }		break;
+	case ResourceType::MODEL:		{ resource = new R_Model(); }		break;
+	case ResourceType::FOLDER:		{ resource = new R_Folder(); }		break;
+	case ResourceType::SCENE:		{ resource = new R_Scene(); }		break;
+	case ResourceType::ANIMATION:	{ resource = new R_Animation(); }	break;
 	}
 
 	if (resource != nullptr)
@@ -1415,18 +1415,18 @@ Resource* M_ResourceManager::AllocateResource(const uint32& uid, const char* ass
 		return nullptr;
 	}
 
-	RESOURCE_TYPE type	= GetTypeFromLibraryExtension(libraryPath);
+	ResourceType type	= GetTypeFromLibraryExtension(libraryPath);
 	Resource* resource	= CreateResource(type, assetsPath, uid);
 	bool success		= false;
 	switch (type)
 	{
-	case RESOURCE_TYPE::MODEL:		{ success = Importer::Scenes::Load(buffer, (R_Model*)resource); }				break;
-	case RESOURCE_TYPE::MESH:		{ success = Importer::Meshes::Load(buffer, (R_Mesh*)resource); }				break;
-	case RESOURCE_TYPE::MATERIAL:	{ success = Importer::Materials::Load(buffer, (R_Material*)resource); }			break;
-	case RESOURCE_TYPE::TEXTURE:	{ success = Importer::Textures::Load(buffer, read, (R_Texture*)resource); }		break;
-	case RESOURCE_TYPE::FOLDER:		{ success = Importer::Folders::Load(buffer, (R_Folder*)resource); }				break;
-	case RESOURCE_TYPE::SCENE:		{ /*success = TODO: HAVE A FUNCTIONAL R_SCENE AND SAVE/LOAD METHODS*/ }			break;
-	case RESOURCE_TYPE::ANIMATION:	{ success = Importer::Animations::Load(buffer, (R_Animation*)resource); }		break;
+	case ResourceType::MODEL:		{ success = Importer::Scenes::Load(buffer, (R_Model*)resource); }				break;
+	case ResourceType::MESH:		{ success = Importer::Meshes::Load(buffer, (R_Mesh*)resource); }				break;
+	case ResourceType::MATERIAL:	{ success = Importer::Materials::Load(buffer, (R_Material*)resource); }			break;
+	case ResourceType::TEXTURE:	{ success = Importer::Textures::Load(buffer, read, (R_Texture*)resource); }		break;
+	case ResourceType::FOLDER:		{ success = Importer::Folders::Load(buffer, (R_Folder*)resource); }				break;
+	case ResourceType::SCENE:		{ /*success = TODO: HAVE A FUNCTIONAL R_SCENE AND SAVE/LOAD METHODS*/ }			break;
+	case ResourceType::ANIMATION:	{ success = Importer::Animations::Load(buffer, (R_Animation*)resource); }		break;
 	}
 
 	RELEASE_ARRAY(buffer);

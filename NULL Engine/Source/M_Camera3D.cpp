@@ -101,28 +101,28 @@ bool M_Camera3D::SaveConfiguration(ParsonNode& configuration) const
 }
 
 // -----------------------------------------------------------------
-UPDATE_STATUS M_Camera3D::Update(float dt)
+UpdateStatus M_Camera3D::Update(float dt)
 {
 	if (App->editor->ViewportIsHovered())
 	{	
 		if (!App->editor->HoveringGuizmo())
 		{
-			if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_STATE::KEY_DOWN)
+			if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KeyState::KEY_DOWN)
 			{
 				CastRay();
 			}
 		}
 		
-		if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_STATE::KEY_REPEAT)
+		if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KeyState::KEY_REPEAT)
 		{
 			WASDMovement();
 
 			FreeLookAround();
 		}
 
-		if (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_STATE::KEY_REPEAT)
+		if (App->input->GetKey(SDL_SCANCODE_LALT) == KeyState::KEY_REPEAT)
 		{
-			if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_STATE::KEY_REPEAT)
+			if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KeyState::KEY_REPEAT)
 			{
 				if (App->scene->GetSelectedGameObject() != nullptr)
 				{
@@ -140,7 +140,7 @@ UPDATE_STATUS M_Camera3D::Update(float dt)
 			}
 		}
 
-		if (App->input->GetMouseButton(SDL_BUTTON_MIDDLE) == KEY_STATE::KEY_REPEAT)
+		if (App->input->GetMouseButton(SDL_BUTTON_MIDDLE) == KeyState::KEY_REPEAT)
 		{
 			PanCamera();
 		}
@@ -150,22 +150,22 @@ UPDATE_STATUS M_Camera3D::Update(float dt)
 			Zoom();
 		}
 
-		if (App->input->GetKey(SDL_SCANCODE_LCTRL) == KEY_STATE::KEY_IDLE)
+		if (App->input->GetKey(SDL_SCANCODE_LCTRL) == KeyState::KEY_IDLE)
 		{
-			if (App->input->GetKey(SDL_SCANCODE_O) == KEY_STATE::KEY_DOWN)
+			if (App->input->GetKey(SDL_SCANCODE_O) == KeyState::KEY_DOWN)
 			{
 				ReturnToWorldOrigin();
 			}
 		}
 
-		if (App->input->GetKey(SDL_SCANCODE_F) == KEY_STATE::KEY_DOWN)
+		if (App->input->GetKey(SDL_SCANCODE_F) == KeyState::KEY_DOWN)
 		{
 			float3 target = App->scene->GetSelectedGameObject()->GetComponent<C_Transform>()->GetWorldPosition();
 			Focus(target);
 		}
 	}
 
-	return UPDATE_STATUS::CONTINUE;
+	return UpdateStatus::CONTINUE;
 }
 
 // -----------------------------------------------------------------
@@ -173,7 +173,7 @@ void M_Camera3D::CreateMasterCamera()
 {
 	masterCamera = new GameObject();
 	masterCamera->SetName("MasterCamera");
-	masterCamera->CreateComponent(COMPONENT_TYPE::CAMERA);
+	masterCamera->CreateComponent(ComponentType::CAMERA);
 	
 	C_Camera* cCamera = masterCamera->GetComponent<C_Camera>();
 	cCamera->SetFarPlaneDistance(1000.0f);
@@ -240,7 +240,7 @@ void M_Camera3D::SetMasterCameraAsCurrentCamera()
 		LOG("[ERROR] Camera: Could not set the master camera as the current camera! Error: Master Camera did not have a Camera Component.");
 		LOG("[WARNING] Camera: Created a new Camera Component for the Master Camera. Reason: Master Camera did not have a Camera Component!");
 
-		masterCamera->CreateComponent(COMPONENT_TYPE::CAMERA);
+		masterCamera->CreateComponent(ComponentType::CAMERA);
 	}
 
 	currentCamera = cCamera;
@@ -296,37 +296,37 @@ void M_Camera3D::WASDMovement()
 	Frustum frustum			= currentCamera->GetFrustum();
 	float movSpeed			= movementSpeed * Time::Real::GetDT();
 	
-	if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_STATE::KEY_REPEAT)								// --- CAMERA MOVEMEMENT BOOST
+	if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KeyState::KEY_REPEAT)								// --- CAMERA MOVEMEMENT BOOST
 	{																									// 
 		movSpeed = movementSpeed * 2 * Time::Real::GetDT();											// 
 	}																									// ---------------------------
 
 
-	if (App->input->GetKey(SDL_SCANCODE_W) == KEY_STATE::KEY_REPEAT)									// --- FORWARD/BACKARD MOVEMENT (+Z/-Z)
+	if (App->input->GetKey(SDL_SCANCODE_W) == KeyState::KEY_REPEAT)									// --- FORWARD/BACKARD MOVEMENT (+Z/-Z)
 	{																									// 
 		newPosition += frustum.Front() * movSpeed;													// 
 	}																									// 
-	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_STATE::KEY_REPEAT)									// 
+	if (App->input->GetKey(SDL_SCANCODE_S) == KeyState::KEY_REPEAT)									// 
 	{																									// 
 		newPosition -= frustum.Front() * movSpeed;													// 
 	}																									// ----------------------------------------
 
 
-	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_STATE::KEY_REPEAT)									// --- LEFT/RIGHT MOVEMENT (STRAFE -X/+X)
+	if (App->input->GetKey(SDL_SCANCODE_A) == KeyState::KEY_REPEAT)									// --- LEFT/RIGHT MOVEMENT (STRAFE -X/+X)
 	{																									// 										
 		newPosition -= frustum.WorldRight() * movSpeed;												// 										
 	}																									// 										
-	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_STATE::KEY_REPEAT)									// 										
+	if (App->input->GetKey(SDL_SCANCODE_D) == KeyState::KEY_REPEAT)									// 										
 	{																									// 										
 		newPosition += frustum.WorldRight() * movSpeed;												// 										
 	}																									// ----------------------------------------
 
 
-	if (App->input->GetKey(SDL_SCANCODE_Q) == KEY_STATE::KEY_REPEAT)									// --- UPWARD/DOWNWARD MOVEMENT (+Y/-Y)
+	if (App->input->GetKey(SDL_SCANCODE_Q) == KeyState::KEY_REPEAT)									// --- UPWARD/DOWNWARD MOVEMENT (+Y/-Y)
 	{																									// 
 		newPosition += frustum.Up() * movSpeed;														// 
 	}																									// 
-	if (App->input->GetKey(SDL_SCANCODE_E) == KEY_STATE::KEY_REPEAT)									// 
+	if (App->input->GetKey(SDL_SCANCODE_E) == KeyState::KEY_REPEAT)									// 
 	{																									// 
 		newPosition -= frustum.Up() * movSpeed;														// 
 	}																									// ------------------------------------

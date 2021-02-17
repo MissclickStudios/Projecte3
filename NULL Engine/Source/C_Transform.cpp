@@ -7,7 +7,7 @@
 
 #include "C_Transform.h"
 
-C_Transform::C_Transform(GameObject* owner) : Component(owner, COMPONENT_TYPE::TRANSFORM),
+C_Transform::C_Transform(GameObject* owner) : Component(owner, ComponentType::TRANSFORM),
 localTransform(float4x4::identity),
 worldTransform(float4x4::identity)
 //syncLocalToGlobal(false),

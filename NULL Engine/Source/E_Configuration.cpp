@@ -534,13 +534,13 @@ void E_Configuration::RendererFlags()
 	ImGui::Separator();
 	
 	// --- OPENGL FLAGS
-	bool depthTest					= App->renderer->GetGLFlag(RENDERER_FLAGS::DEPTH_TEST);
-	bool cullFace					= App->renderer->GetGLFlag(RENDERER_FLAGS::CULL_FACE);
-	bool lighting					= App->renderer->GetGLFlag(RENDERER_FLAGS::LIGHTING);
-	bool colorMaterial				= App->renderer->GetGLFlag(RENDERER_FLAGS::COLOR_MATERIAL);
-	bool texture2D					= App->renderer->GetGLFlag(RENDERER_FLAGS::TEXTURE_2D);
-	bool alphaTest					= App->renderer->GetGLFlag(RENDERER_FLAGS::ALPHA_TEST);
-	bool blend						= App->renderer->GetGLFlag(RENDERER_FLAGS::BLEND);
+	bool depthTest					= App->renderer->GetGLFlag(RendererFlags::DEPTH_TEST);
+	bool cullFace					= App->renderer->GetGLFlag(RendererFlags::CULL_FACE);
+	bool lighting					= App->renderer->GetGLFlag(RendererFlags::LIGHTING);
+	bool colorMaterial				= App->renderer->GetGLFlag(RendererFlags::COLOR_MATERIAL);
+	bool texture2D					= App->renderer->GetGLFlag(RendererFlags::TEXTURE_2D);
+	bool alphaTest					= App->renderer->GetGLFlag(RendererFlags::ALPHA_TEST);
+	bool blend						= App->renderer->GetGLFlag(RendererFlags::BLEND);
 
 	// --- SHOW FLAGS
 	bool renderWorldGrid			= App->renderer->GetRenderWorldGrid();
@@ -554,16 +554,16 @@ void E_Configuration::RendererFlags()
 	bool renderOthers				= false /*App->renderer->GetRenderOthers()*/;
 
 	// --- OPENGL FLAGS
-	if (ImGui::Checkbox("Depth Test", &depthTest))									{ App->renderer->SetGLFlag(RENDERER_FLAGS::DEPTH_TEST, depthTest); }			ImGui::SameLine(colDist);
-	if (ImGui::Checkbox("Cull Face", &cullFace))									{ App->renderer->SetGLFlag(RENDERER_FLAGS::CULL_FACE, cullFace); }
+	if (ImGui::Checkbox("Depth Test", &depthTest))									{ App->renderer->SetGLFlag(RendererFlags::DEPTH_TEST, depthTest); }			ImGui::SameLine(colDist);
+	if (ImGui::Checkbox("Cull Face", &cullFace))									{ App->renderer->SetGLFlag(RendererFlags::CULL_FACE, cullFace); }
 
-	if (ImGui::Checkbox("Lighting", &lighting))										{ App->renderer->SetGLFlag(RENDERER_FLAGS::LIGHTING, lighting); }				ImGui::SameLine(colDist);
-	if (ImGui::Checkbox("Color Material", &colorMaterial))							{ App->renderer->SetGLFlag(RENDERER_FLAGS::COLOR_MATERIAL, colorMaterial); }
+	if (ImGui::Checkbox("Lighting", &lighting))										{ App->renderer->SetGLFlag(RendererFlags::LIGHTING, lighting); }				ImGui::SameLine(colDist);
+	if (ImGui::Checkbox("Color Material", &colorMaterial))							{ App->renderer->SetGLFlag(RendererFlags::COLOR_MATERIAL, colorMaterial); }
 
-	if (ImGui::Checkbox("Texture 2D", &texture2D))									{ App->renderer->SetGLFlag(RENDERER_FLAGS::TEXTURE_2D, texture2D); }			ImGui::SameLine(colDist);
-	if (ImGui::Checkbox("Alpha Test", &alphaTest))									{ App->renderer->SetGLFlag(RENDERER_FLAGS::ALPHA_TEST, alphaTest); }
+	if (ImGui::Checkbox("Texture 2D", &texture2D))									{ App->renderer->SetGLFlag(RendererFlags::TEXTURE_2D, texture2D); }			ImGui::SameLine(colDist);
+	if (ImGui::Checkbox("Alpha Test", &alphaTest))									{ App->renderer->SetGLFlag(RendererFlags::ALPHA_TEST, alphaTest); }
 
-	if (ImGui::Checkbox("Blend", &blend))											{ App->renderer->SetGLFlag(RENDERER_FLAGS::BLEND, blend); }						ImGui::SameLine(colDist);
+	if (ImGui::Checkbox("Blend", &blend))											{ App->renderer->SetGLFlag(RendererFlags::BLEND, blend); }						ImGui::SameLine(colDist);
 
 	// --- SHOW FLAGS
 	if (ImGui::Checkbox("Show World Grid", &renderWorldGrid))						{ App->renderer->SetRenderWorldGrid(renderWorldGrid); }

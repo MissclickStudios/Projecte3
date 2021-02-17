@@ -7,7 +7,7 @@
 class ParsonNode;
 struct PathNode;
 
-enum class PHYSFS_RESULT																	// Every PhysFS method that returns 1 or 0 upon success/failure will be cast to this type.
+enum class PhysfsResult																	// Every PhysFS method that returns 1 or 0 upon success/failure will be cast to this type.
 {
 	FAILURE,
 	SUCCESS

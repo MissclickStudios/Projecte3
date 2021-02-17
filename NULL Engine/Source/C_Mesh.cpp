@@ -12,7 +12,7 @@
 
 #include "C_Mesh.h"
 
-C_Mesh::C_Mesh(GameObject* owner) : Component(owner, COMPONENT_TYPE::MESH),
+C_Mesh::C_Mesh(GameObject* owner) : Component(owner, ComponentType::MESH),
 rMesh(nullptr),
 showWireframe(false),
 showBoundingBox(false)

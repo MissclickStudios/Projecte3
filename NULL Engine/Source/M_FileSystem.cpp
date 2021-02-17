@@ -20,8 +20,8 @@ M_FileSystem::M_FileSystem(bool is_active) : Module("FileSystem", is_active)
 	SDL_free(basePath);																	// Frees the base path.
 
 	// Setting the working directory as the writing directory.
-	PHYSFS_RESULT result = (PHYSFS_RESULT)PHYSFS_setWriteDir(".");							// Method that tells where PhysFS can write files. Sets a new write dir with the given one.
-	if (result == PHYSFS_RESULT::FAILURE)
+	PhysfsResult result = (PhysfsResult)PHYSFS_setWriteDir(".");							// Method that tells where PhysFS can write files. Sets a new write dir with the given one.
+	if (result == PhysfsResult::FAILURE)
 	{
 		LOG("[ERROR] File System:  Could not create Write Directory! Error: %s\n", PHYSFS_getLastError());
 	}
@@ -47,8 +47,8 @@ bool M_FileSystem::Init(ParsonNode& config)
 	// Turn this on while in game mode
 	if (App->play)
 	{
-		PHYSFS_RESULT result = (PHYSFS_RESULT)PHYSFS_setWriteDir(writePath);
-		if (result == PHYSFS_RESULT::FAILURE)
+		PhysfsResult result = (PhysfsResult)PHYSFS_setWriteDir(writePath);
+		if (result == PhysfsResult::FAILURE)
 		{
 			LOG("[ERROR] File System: Could not Create the Write Directory! Error: %s\n", PHYSFS_getLastError());
 		}
@@ -85,9 +85,9 @@ bool M_FileSystem::AddPath(const char* pathOrZip)
 {
 	bool ret = false;
 
-	PHYSFS_RESULT result = (PHYSFS_RESULT)PHYSFS_mount(pathOrZip, nullptr, 1);						// Method that adds an archive or directory to the search path. Returns 0 on FAILURE.
+	PhysfsResult result = (PhysfsResult)PHYSFS_mount(pathOrZip, nullptr, 1);						// Method that adds an archive or directory to the search path. Returns 0 on FAILURE.
 
-	if (result == PHYSFS_RESULT::FAILURE)
+	if (result == PhysfsResult::FAILURE)
 	{
 		LOG("[ERROR] File System: Could not add a path or zip! Error: %s\n", PHYSFS_getLastError());	// Method that returns the string of the last error message issued by PhysFS.
 	}
@@ -101,9 +101,9 @@ bool M_FileSystem::AddPath(const char* pathOrZip)
 
 bool M_FileSystem::Exists(const char* file) const
 {
-	PHYSFS_RESULT result = (PHYSFS_RESULT)PHYSFS_exists(file);											// Checks whether or not a file is in the search path. Returns 0 upon FAILURE.
+	PhysfsResult result = (PhysfsResult)PHYSFS_exists(file);											// Checks whether or not a file is in the search path. Returns 0 upon FAILURE.
 
-	return (result == PHYSFS_RESULT::SUCCESS);
+	return (result == PhysfsResult::SUCCESS);
 }
 
 void M_FileSystem::CreateLibraryDirectories()
@@ -597,7 +597,7 @@ uint M_FileSystem::Load(const char* file, char** buffer) const
 			}
 		}
 
-		if (PHYSFS_close(fsFile) == (int)PHYSFS_RESULT::FAILURE)							// Method that closes a given file previously opened by PhysFS.
+		if (PHYSFS_close(fsFile) == (int)PhysfsResult::FAILURE)							// Method that closes a given file previously opened by PhysFS.
 		{
 			LOG(" [ERROR] File System: Could not close File %s! Error: %s\n", file, PHYSFS_getLastError());
 		}
@@ -655,8 +655,8 @@ uint M_FileSystem::Save(const char* file, const void* buffer, uint size, bool ap
 			ret = written;
 		}
 
-		PHYSFS_RESULT result = (PHYSFS_RESULT)PHYSFS_close(fsFile);						// Method that closes a PhysFS file handle. Returns 1 on success.
-		if (result == PHYSFS_RESULT::FAILURE)
+		PhysfsResult result = (PhysfsResult)PHYSFS_close(fsFile);						// Method that closes a PhysFS file handle. Returns 1 on success.
+		if (result == PhysfsResult::FAILURE)
 		{
 			LOG("[ERROR] File System: Could not close File %s! Error: %s", file, PHYSFS_getLastError());
 		}
@@ -739,8 +739,8 @@ bool M_FileSystem::Remove(const char* file)
 		}
 	}
 
-	PHYSFS_RESULT result = (PHYSFS_RESULT)PHYSFS_delete(file);							// Method that deletes a file or directory. A directory must be empty before it can be deleted.
-	if (result == PHYSFS_RESULT::SUCCESS)
+	PhysfsResult result = (PhysfsResult)PHYSFS_delete(file);							// Method that deletes a file or directory. A directory must be empty before it can be deleted.
+	if (result == PhysfsResult::SUCCESS)
 	{
 		LOG("[FILE_SYSTEM] File System: Successfully deleted File [%s]!", file);
 		ret = true;

@@ -22,7 +22,7 @@ public:
 	bool SaveState(ParsonNode& root) const override;
 	bool LoadState(ParsonNode& root) override;
 
-	static inline COMPONENT_TYPE GetType() { return COMPONENT_TYPE::CAMERA; }								// This is needed to use templeates for functions such as GetComponent<>();
+	static inline ComponentType GetType() { return ComponentType::CAMERA; }								// This is needed to use templeates for functions such as GetComponent<>();
 
 public:																										// --- FRUSTUM METHODS
 	void InitFrustum();

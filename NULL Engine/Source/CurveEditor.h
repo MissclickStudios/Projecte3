@@ -9,7 +9,7 @@ namespace ImGui
 	// From: { https://github.com/nem0/LumixEngine/blob/39e46c18a58111cc3c8c10a4d5ebbb614f19b1b8/external/imgui/imgui_user.inl#L505-L930 }
 	int CurveEditor(const char* label, float* values, int pointsCount, const ImVec2& editorSize, ImU32 flags, int* newCount);
 
-	enum class STORAGE_VALUES : ImGuiID
+	enum class StorageValues : ImGuiID
 	{
 		FROM_X = 100,
 		FROM_Y,
@@ -20,7 +20,7 @@ namespace ImGui
 		POINT_START_Y
 	};
 
-	enum class CURVE_EDITOR_FLAGS
+	enum class CurveEditorFlags
 	{
 		NONE,
 		NO_TANGENTS,

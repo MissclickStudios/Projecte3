@@ -71,7 +71,7 @@ public:																									// --- GAME OBJECT GETTERS AND SETTERS
 	void			SetParentUID						(const uint32& parentUID);
 
 public:																									// --- COMPONENT GETTERS AND SETTERS
-	Component*		CreateComponent						(COMPONENT_TYPE type);							// Creates a component of the given type and adds it to the components vector.
+	Component*		CreateComponent						(ComponentType type);							// Creates a component of the given type and adds it to the components vector.
 	bool			DeleteComponent						(Component* componentToDelete);				// Deletes the given component from the Components vector. Returs False on ERROR.
 	
 	const std::vector<Component*>&	GetAllComponents	() const;										// 
@@ -80,9 +80,9 @@ public:																									// --- COMPONENT GETTERS AND SETTERS
 	template<typename T>
 	T* GetComponent() const
 	{
-		COMPONENT_TYPE type = T::GetType();
+		ComponentType type = T::GetType();
 
-		if (type == COMPONENT_TYPE::TRANSFORM)															// Optimization to avoid having to look for the transform component each time.
+		if (type == ComponentType::TRANSFORM)															// Optimization to avoid having to look for the transform component each time.
 		{
 			return (T*)transform;																		// This can be applied as there will be ONLY ONE TRANSFORM COMPONENT PER GO.
 		}
@@ -101,16 +101,16 @@ public:																									// --- COMPONENT GETTERS AND SETTERS
 	template <typename T>
 	const char* GetComponentName() const
 	{	
-		COMPONENT_TYPE type = T::GetType();
+		ComponentType type = T::GetType();
 		switch (type)
 		{
-		case COMPONENT_TYPE::TRANSFORM: { return "Transform"; } break;
-		case COMPONENT_TYPE::MESH:		{ return "Mesh"; }		break;
-		case COMPONENT_TYPE::MATERIAL:	{ return "Material"; }	break;
-		case COMPONENT_TYPE::LIGHT:		{ return "Light"; }		break;
-		case COMPONENT_TYPE::CAMERA:	{ return "Camera"; }	break;
-		case COMPONENT_TYPE::ANIMATOR:	{ return "Animator"; }	break;
-		case COMPONENT_TYPE::ANIMATION:	{ return "Animation"; } break;
+		case ComponentType::TRANSFORM: { return "Transform"; } break;
+		case ComponentType::MESH:		{ return "Mesh"; }		break;
+		case ComponentType::MATERIAL:	{ return "Material"; }	break;
+		case ComponentType::LIGHT:		{ return "Light"; }		break;
+		case ComponentType::CAMERA:	{ return "Camera"; }	break;
+		case ComponentType::ANIMATOR:	{ return "Animator"; }	break;
+		case ComponentType::ANIMATION:	{ return "Animation"; } break;
 		}
 
 		return "NONE";
@@ -119,7 +119,7 @@ public:																									// --- COMPONENT GETTERS AND SETTERS
 	template <typename T>
 	bool GetComponents(std::vector<T*>& componentsWithType)
 	{
-		COMPONENT_TYPE type = T::GetType();
+		ComponentType type = T::GetType();
 		for (uint i = 0; i < components.size(); ++i)
 		{
 			if (components[i]->GetType() == type)

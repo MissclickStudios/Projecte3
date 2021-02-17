@@ -90,7 +90,7 @@ bool M_Renderer3D::Start()
 }
 
 // PreUpdate: clear buffer
-UPDATE_STATUS M_Renderer3D::PreUpdate(float dt)
+UpdateStatus M_Renderer3D::PreUpdate(float dt)
 {	
 	
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -131,11 +131,11 @@ UPDATE_STATUS M_Renderer3D::PreUpdate(float dt)
 	// --- RENDERER SHORTCUTS
 	RendererShortcuts();
 
-	return UPDATE_STATUS::CONTINUE;
+	return UpdateStatus::CONTINUE;
 }
 
 // PostUpdate present buffer to screen
-UPDATE_STATUS M_Renderer3D::PostUpdate(float dt)
+UpdateStatus M_Renderer3D::PostUpdate(float dt)
 {	
 	BROFILER_CATEGORY("M_Renderer3D PostUpdate", Profiler::Color::Chartreuse);
 	
@@ -145,7 +145,7 @@ UPDATE_STATUS M_Renderer3D::PostUpdate(float dt)
 
 	SDL_GL_SwapWindow(App->window->GetWindow());
 
-	return UPDATE_STATUS::CONTINUE;
+	return UpdateStatus::CONTINUE;
 }
 
 // Called before quitting
@@ -507,32 +507,32 @@ void M_Renderer3D::FreeBuffers()
 
 void M_Renderer3D::RendererShortcuts()
 {
-	if (App->input->GetKey(SDL_SCANCODE_F1) == KEY_STATE::KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_F1) == KeyState::KEY_DOWN)
 	{
 		renderWorldGrid = !renderWorldGrid;
 	}
 
-	if (App->input->GetKey(SDL_SCANCODE_F2) == KEY_STATE::KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_F2) == KeyState::KEY_DOWN)
 	{
 		renderWorldAxis = !renderWorldAxis;
 	}
 	
-	if (App->input->GetKey(SDL_SCANCODE_F3) == KEY_STATE::KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_F3) == KeyState::KEY_DOWN)
 	{
 		SetRenderWireframes(!renderWireframes);
 	}
 
-	if (App->input->GetKey(SDL_SCANCODE_F7) == KEY_STATE::KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_F7) == KeyState::KEY_DOWN)
 	{
 		SetGLFlag(GL_TEXTURE_2D, !GetGLFlag(GL_TEXTURE_2D));
 	}
 
-	if (App->input->GetKey(SDL_SCANCODE_F8) == KEY_STATE::KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_F8) == KeyState::KEY_DOWN)
 	{
 		SetGLFlag(GL_COLOR_MATERIAL, !GetGLFlag(GL_COLOR_MATERIAL));
 	}
 
-	if (App->input->GetKey(SDL_SCANCODE_KP_PLUS) == KEY_STATE::KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_KP_PLUS) == KeyState::KEY_DOWN)
 	{
 		if (App->camera->GetCurrentCamera() != nullptr)
 		{
@@ -540,7 +540,7 @@ void M_Renderer3D::RendererShortcuts()
 			App->camera->GetCurrentCamera()->SetVerticalFOV(currentFov + 5.0f);
 		}
 	}
-	if (App->input->GetKey(SDL_SCANCODE_KP_MINUS) == KEY_STATE::KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_KP_MINUS) == KeyState::KEY_DOWN)
 	{
 		if (App->camera->GetCurrentCamera() != nullptr)
 		{
@@ -862,7 +862,7 @@ bool M_Renderer3D::GetGLFlag(GLenum flag) const
 	return glIsEnabled(flag);
 }
 
-bool M_Renderer3D::GetGLFlag(RENDERER_FLAGS flag) const
+bool M_Renderer3D::GetGLFlag(RendererFlags flag) const
 {
 	return glIsEnabled((GLenum)flag);
 }
@@ -875,7 +875,7 @@ void M_Renderer3D::SetGLFlag(GLenum flag, bool setTo)
 	}
 }
 
-void M_Renderer3D::SetGLFlag(RENDERER_FLAGS flag, bool setTo)
+void M_Renderer3D::SetGLFlag(RendererFlags flag, bool setTo)
 {
 	GLenum glFlag = (GLenum)flag;
 	
@@ -1427,14 +1427,14 @@ void MeshRenderer::ClearTextureAndMaterial()
 // --- CUBOID RENDERER METHODS
 CuboidRenderer::CuboidRenderer(const float3* vertices, const Color& color, const float& edgeWidth) :
 vertices	(vertices),
-type		(CUBOID_TYPE::NONE),
+type		(CuboidType::NONE),
 color		(color),
 edgeWidth	(edgeWidth)
 {
 
 }
 
-CuboidRenderer::CuboidRenderer(const float3* vertices, CUBOID_TYPE type) :
+CuboidRenderer::CuboidRenderer(const float3* vertices, CuboidType type) :
 vertices	(vertices),
 type		(type),
 color		(GetColorByType()),
@@ -1502,10 +1502,10 @@ Color CuboidRenderer::GetColorByType()
 {
 	switch (type)
 	{
-	case CUBOID_TYPE::NONE:		{ return White; }								break;
-	case CUBOID_TYPE::AABB:		{ return App->renderer->GetAABBColor(); }		break;
-	case CUBOID_TYPE::OBB:		{ return App->renderer->GetOBBColor(); }		break;
-	case CUBOID_TYPE::FRUSTUM:	{ return App->renderer->GetFrustumColor(); }	break;
+	case CuboidType::NONE:		{ return White; }								break;
+	case CuboidType::AABB:		{ return App->renderer->GetAABBColor(); }		break;
+	case CuboidType::OBB:		{ return App->renderer->GetOBBColor(); }		break;
+	case CuboidType::FRUSTUM:	{ return App->renderer->GetFrustumColor(); }	break;
 	}
 
 	return White;
@@ -1515,10 +1515,10 @@ float CuboidRenderer::GetEdgeWidthByType()
 {
 	switch (type)
 	{
-	case CUBOID_TYPE::NONE:		{ return BASE_LINE_WIDTH; }							break;
-	case CUBOID_TYPE::AABB:		{ return App->renderer->GetAABBEdgeWidth(); }		break;
-	case CUBOID_TYPE::OBB:		{ return App->renderer->GetOBBEdgeWidth(); }		break;
-	case CUBOID_TYPE::FRUSTUM:	{ return App->renderer->GetFrustumEdgeWidth(); }	break;
+	case CuboidType::NONE:		{ return BASE_LINE_WIDTH; }							break;
+	case CuboidType::AABB:		{ return App->renderer->GetAABBEdgeWidth(); }		break;
+	case CuboidType::OBB:		{ return App->renderer->GetOBBEdgeWidth(); }		break;
+	case CuboidType::FRUSTUM:	{ return App->renderer->GetFrustumEdgeWidth(); }	break;
 	}
 
 	return STANDARD_LINE_WIDTH;

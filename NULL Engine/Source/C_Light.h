@@ -18,7 +18,7 @@ public:
 	bool SaveState	(ParsonNode& root) const override;
 	bool LoadState	(ParsonNode& root) override;
 
-	static inline COMPONENT_TYPE GetType() { return COMPONENT_TYPE::LIGHT; }			// This is needed to be able to use templeates for functions such as GetComponent<>();
+	static inline ComponentType GetType() { return ComponentType::LIGHT; }			// This is needed to be able to use templeates for functions such as GetComponent<>();
 
 private:
 

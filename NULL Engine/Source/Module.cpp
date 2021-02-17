@@ -22,19 +22,19 @@ bool Module::Start()
 	return true;
 }
 
-UPDATE_STATUS Module::PreUpdate(float dt)
+UpdateStatus Module::PreUpdate(float dt)
 {
-	return UPDATE_STATUS::CONTINUE;
+	return UpdateStatus::CONTINUE;
 }
 
-UPDATE_STATUS Module::Update(float dt)
+UpdateStatus Module::Update(float dt)
 {
-	return UPDATE_STATUS::CONTINUE;
+	return UpdateStatus::CONTINUE;
 }
 
-UPDATE_STATUS Module::PostUpdate(float dt)
+UpdateStatus Module::PostUpdate(float dt)
 {
-	return UPDATE_STATUS::CONTINUE;
+	return UpdateStatus::CONTINUE;
 }
 
 bool Module::CleanUp()

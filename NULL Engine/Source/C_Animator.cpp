@@ -22,7 +22,7 @@ typedef std::map<double, float3>::const_iterator	PositionKeyframe;
 typedef std::map<double, Quat>::const_iterator		RotationKeyframe;
 typedef std::map<double, float3>::const_iterator	ScaleKeyframe;
 
-C_Animator::C_Animator(GameObject* owner) : Component(owner, COMPONENT_TYPE::ANIMATOR),
+C_Animator::C_Animator(GameObject* owner) : Component(owner, ComponentType::ANIMATOR),
 currentClip(nullptr),
 blendingClip(nullptr),
 currentRootBone(nullptr)
