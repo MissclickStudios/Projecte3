@@ -84,7 +84,7 @@ public:																												// --- META FILE METHODS ---
 	Resource*		GetResourceFromMetaFile			(const char* assetsPath);
 
 public:																												// --- RESOURCE METHODS ---
-	Resource*		CreateResource					(ResourceType type, const char* assetsPath = nullptr, const uint32& forcedUid = 0);	// 
+	Resource*		CreateResource					(ResourceType type, const char* assetsPath = nullptr, const uint32& forcedUid = 0);		// 
 	bool			DeleteResource					(const uint32& uid);																	//
 	bool			DeleteResource					(Resource* resourceToDelete);															// FORCED DELETE
 	void			GetResources					(std::map<uint32, Resource*>& resources) const;											// 
