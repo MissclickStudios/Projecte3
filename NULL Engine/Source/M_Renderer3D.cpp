@@ -396,21 +396,21 @@ void M_Renderer3D::InitEngineIcons()
 {
 	uint32 animationIconUid	= App->resourceManager->LoadFromLibrary(ANIMATION_ICON_PATH);
 	uint32 fileIconUid		= App->resourceManager->LoadFromLibrary(FILE_ICON_PATH);
-	uint32 folderIconUid		= App->resourceManager->LoadFromLibrary(FOLDER_ICON_PATH);
+	uint32 folderIconUid	= App->resourceManager->LoadFromLibrary(FOLDER_ICON_PATH);
 	uint32 materialIconUid	= App->resourceManager->LoadFromLibrary(MATERIAL_ICON_PATH);
 	uint32 modelIconUid		= App->resourceManager->LoadFromLibrary(MODEL_ICON_PATH);
 
 	R_Texture* animationIcon	= (R_Texture*)App->resourceManager->RequestResource(animationIconUid);
-	R_Texture* fileIcon		= (R_Texture*)App->resourceManager->RequestResource(fileIconUid);
+	R_Texture* fileIcon			= (R_Texture*)App->resourceManager->RequestResource(fileIconUid);
 	R_Texture* folderIcon		= (R_Texture*)App->resourceManager->RequestResource(folderIconUid);
-	R_Texture* materialIcon	= (R_Texture*)App->resourceManager->RequestResource(materialIconUid);
+	R_Texture* materialIcon		= (R_Texture*)App->resourceManager->RequestResource(materialIconUid);
 	R_Texture* modelIcon		= (R_Texture*)App->resourceManager->RequestResource(modelIconUid);
 
-	engineIcons.animation_icon = animationIcon;
-	engineIcons.file_icon		= fileIcon;
-	engineIcons.folder_icon	= folderIcon;
-	engineIcons.material_icon	= materialIcon;
-	engineIcons.model_icon		= modelIcon;
+	engineIcons.animationIcon	= animationIcon;
+	engineIcons.fileIcon		= fileIcon;
+	engineIcons.folderIcon		= folderIcon;
+	engineIcons.materialIcon	= materialIcon;
+	engineIcons.modelIcon		= modelIcon;
 
 }
 
