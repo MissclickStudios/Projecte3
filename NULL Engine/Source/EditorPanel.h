@@ -10,7 +10,7 @@
 class EditorPanel
 {
 public:
-	EditorPanel(const char* name, bool is_active = true);
+	EditorPanel(const char* name, bool isActive = true);
 	virtual ~EditorPanel();
 
 	virtual bool	Draw	(ImGuiIO& io);
@@ -26,7 +26,7 @@ public:
 	bool			IsClicked		() const;
 
 	void			SetIsHovered	();													// Trying out having a Set() function without any parameters. Kinda dirty.
-	void			SetIsClicked	(const bool& set_to);
+	void			SetIsClicked	(const bool& setTo);
 
 	void			HelpMarker		(const char* description);
 

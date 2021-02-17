@@ -52,12 +52,12 @@ void E_Hierarchy::PrintGameObjectsOnHierarchy()
 	}
 }
 
-void E_Hierarchy::ProcessGameObject(GameObject* game_object)
+void E_Hierarchy::ProcessGameObject(GameObject* gameObject)
 {	
 	// ------ Setting the tree node's color. ------
 	ImVec4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
 	
-	if (!game_object->IsActive())														// If the given game object is not active, the text of the tree node will be displayed in GREY.
+	if (!gameObject->IsActive())														// If the given game object is not active, the text of the tree node will be displayed in GREY.
 	{
 		color = { 0.5f, 0.5f, 0.5f, 1.0f };
 	}
@@ -67,41 +67,41 @@ void E_Hierarchy::ProcessGameObject(GameObject* game_object)
 
 	ImGuiTreeNodeFlags nodeFlags = defaultFlags;
 
-	if (game_object->childs.empty())
+	if (gameObject->childs.empty())
 	{
 		nodeFlags |= ImGuiTreeNodeFlags_Leaf;
 	}
 
-	if (game_object == App->editor->GetSelectedGameObjectThroughEditor())
+	if (gameObject == App->editor->GetSelectedGameObjectThroughEditor())
 	{
 		nodeFlags |= ImGuiTreeNodeFlags_Selected;
 	}
 
-	if (game_object == App->editor->GetSceneRootThroughEditor())
+	if (gameObject == App->editor->GetSceneRootThroughEditor())
 	{
 		nodeFlags |= ImGuiTreeNodeFlags_DefaultOpen;
 	}
 
-	if (ImGui::TreeNodeEx(game_object->GetName(), nodeFlags))
+	if (ImGui::TreeNodeEx(gameObject->GetName(), nodeFlags))
 	{
-		if (!NodeIsRootObject(game_object))													// If the game_object being processed is the root object, do not allow any interaction.
+		if (!NodeIsRootObject(gameObject))													// If the game_object being processed is the root object, do not allow any interaction.
 		{
 			if (ImGui::IsItemClicked(ImGuiMouseButton_Left))								// IsItemClicked() checks if the TreeNode item was clicked.
 			{																				// Arguments:
-				App->editor->SetSelectedGameObjectThroughEditor(game_object);				// 0 = Left Click
+				App->editor->SetSelectedGameObjectThroughEditor(gameObject);				// 0 = Left Click
 			}																				// 1 = Right Click
 
 			if (ImGui::IsItemClicked(ImGuiMouseButton_Right))								// 
 			{																				// 
-				App->editor->SetSelectedGameObjectThroughEditor(game_object);				// 
+				App->editor->SetSelectedGameObjectThroughEditor(gameObject);				// 
 				openHierarchyToolsPopup = true;											// 
 			}																				// -----------------------------------------------------------------------------------------------
 
 			if (ImGui::BeginDragDropSource())												// First, it is checked whether or not this node is part of a currently starting drag&drop operation.
 			{
-				ImGui::SetDragDropPayload("DRAGGED_NODE", game_object, sizeof(GameObject));	// Here the payload is being constructed. It can be later identified through the given string.
-				ImGui::Text("Dragging %s", game_object->GetName());							// This specific text, as it is within the DragDropSource, will accompany the dragged node.
-				draggedGameObject = game_object;											// The dragged game object needs to be saved to be later re-integrated into the hierarchy.
+				ImGui::SetDragDropPayload("DRAGGED_NODE", gameObject, sizeof(GameObject));	// Here the payload is being constructed. It can be later identified through the given string.
+				ImGui::Text("Dragging %s", gameObject->GetName());							// This specific text, as it is within the DragDropSource, will accompany the dragged node.
+				draggedGameObject = gameObject;											// The dragged game object needs to be saved to be later re-integrated into the hierarchy.
 
 				ImGui::EndDragDropSource();
 			}
@@ -112,7 +112,7 @@ void E_Hierarchy::ProcessGameObject(GameObject* game_object)
 				{
 					//game_object->AddChild(dragged_game_object);								// (GameObject*)payload->Data would also work. However, it easily breaks, at least in my case.
 
-					draggedGameObject->SetParent(game_object);
+					draggedGameObject->SetParent(gameObject);
 					draggedGameObject = nullptr;
 				}
 
@@ -120,11 +120,11 @@ void E_Hierarchy::ProcessGameObject(GameObject* game_object)
 			}
 		}
 
-		if (!game_object->childs.empty())
+		if (!gameObject->childs.empty())
 		{
-			for (uint i = 0; i < game_object->childs.size(); ++i)
+			for (uint i = 0; i < gameObject->childs.size(); ++i)
 			{
-				ProcessGameObject(game_object->childs[i]);
+				ProcessGameObject(gameObject->childs[i]);
 			}
 		}
 

@@ -56,14 +56,14 @@ bool E_Resources::Draw(ImGuiIO& io)
 		sorted.emplace((uint)item->second->GetType(), item->second);
 	}
 
-	std::multimap<uint, Resource*>::iterator multi_item;
-	for (multi_item = sorted.begin(); multi_item != sorted.end(); ++multi_item)
+	std::multimap<uint, Resource*>::iterator multiItem;
+	for (multiItem = sorted.begin(); multiItem != sorted.end(); ++multiItem)
 	{
-		ImGui::TextColored(ImVec4(0.0f, 1.0f, 1.0f, 1.0f), "%s", multi_item->second->GetAssetsFile());
+		ImGui::TextColored(ImVec4(0.0f, 1.0f, 1.0f, 1.0f), "%s", multiItem->second->GetAssetsFile());
 
-		ImGui::Text("UID:");		ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "       %lu",	multi_item->second->GetUID());
-		ImGui::Text("Type:");		ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "      %s",		multi_item->second->GetTypeAsString());
-		ImGui::Text("References:");	ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%u",			multi_item->second->GetReferences());
+		ImGui::Text("UID:");		ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "       %lu",	multiItem->second->GetUID());
+		ImGui::Text("Type:");		ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "      %s",		multiItem->second->GetTypeAsString());
+		ImGui::Text("References:");	ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%u",			multiItem->second->GetReferences());
 
 		ImGui::Separator();
 	}

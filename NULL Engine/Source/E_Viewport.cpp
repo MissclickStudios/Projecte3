@@ -177,7 +177,7 @@ void E_Viewport::DrawGame()
 
 void E_Viewport::AdaptTextureToWindowSize()
 {	
-	texSize			= ImVec2((float)App->window->GetWidth(), (float)App->window->GetHeight());
+	texSize				= ImVec2((float)App->window->GetWidth(), (float)App->window->GetHeight());
 	ImVec2 winSize		= ImGui::GetWindowSize() * 0.975f;													// An offset is added so the image is entirely enclosed by the window.
 
 	float widthRatio	= (texSize.x / winSize.x);														// tex.x to win.x ratio and tex.y to win.y ratio.
@@ -206,7 +206,7 @@ void E_Viewport::DrawSceneTexture()
 		screenCursorPos.x = screenCursorPos.x - 1920;
 	}
 
-	texOrigin		= screenCursorPos + ImVec2(0, texSize.y);											// Getting the top-left corner at XY.
+	texOrigin	= screenCursorPos + ImVec2(0, texSize.y);											// Getting the top-left corner at XY.
 	texOrigin.y	= (float)App->window->GetHeight() - texOrigin.y;										// Converting from top-left Y origin to bottom-left Y origin.
 
 	ImGui::Image((ImTextureID)App->renderer->GetSceneRenderTexture(), texSize, ImVec2(0.0f, 1.0f), ImVec2(1.0f, 0.0f));
@@ -273,7 +273,7 @@ void E_Viewport::HandleGuizmos()
 
 	ImGuizmo::SetDrawlist();
 
-	float winHeight	= (float)App->window->GetHeight();
+	float winHeight		= (float)App->window->GetHeight();
 	float texWidth		= texSize.y;
 	ImVec2 originPos	= ImVec2(texOrigin.x, winHeight - texOrigin.y - texWidth);
 

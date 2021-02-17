@@ -16,7 +16,7 @@ public:
 
 private:
 	void PrintGameObjectsOnHierarchy	();											// Will process all the GameObjects in the scene through the root and print their corresponding tree nodes on the hierarchy.
-	void ProcessGameObject				(GameObject* game_object);					// Will process the given GameObject and recursively process its childs as well.
+	void ProcessGameObject				(GameObject* gameObject);					// Will process the given GameObject and recursively process its childs as well.
 
 	void HierarchyToolsPopup			();											// Will generate a modal window with the hierarchy tools in it.
 
