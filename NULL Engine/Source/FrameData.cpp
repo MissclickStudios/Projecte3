@@ -20,35 +20,35 @@ FrameData::FrameData()
 
 void FrameData::Update(uint ms)
 {
-	++frameCount;																			// --- DATA SINCE STARTUP
-	timeSinceStart	+= ms;																// 
+	++frameCount;																		// --- DATA SINCE STARTUP
+	timeSinceStart		+= ms;															// 
 	avgFps				= (float)frameCount / (timeSinceStart / 1000.0f);				// ----------------------
 
 	++framesThisSecond;																	// --- FRAMES LAST SECOND
-	millisecondsCounter += ms;																// 
+	millisecondsCounter += ms;															// 
 	if (millisecondsCounter > 1000)														// 
-	{																						// 
-		framesLastSecond		= framesThisSecond;										// 
-		framesThisSecond		= 0;														// 
+	{																					// 
+		framesLastSecond	= framesThisSecond;											// 
+		framesThisSecond	= 0;														// 
 		millisecondsCounter	= 0;														// 
-	}																						// ----------------------
+	}																					// ----------------------
 
 	msLastFrame			= ms;															// --- DELTA TIME DATA
-	dt						= (float)ms / 1000.0f;											// -------------------
+	dt					= (float)ms / 1000.0f;											// -------------------
 }
 
 void FrameData::ResetData()
 {
-	timeSinceStart		= 0;
+	timeSinceStart			= 0;
 	frameCount				= 0;
 	framesThisSecond		= 0;
 	framesLastSecond		= 0;
 
 	avgFps					= 0.0f;
-	msLastFrame			= 0;
+	msLastFrame				= 0;
 
 	dt						= 0.0f;
 
 	framesThisSecond		= 0;
-	millisecondsCounter	= 0;
+	millisecondsCounter		= 0;
 }

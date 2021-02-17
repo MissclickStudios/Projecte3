@@ -117,9 +117,9 @@ private: 																									// --- INTERNAL METHODS
 	bool StepAnimation				();
 	bool StepClips					();
 	bool BlendAnimation				();
-	bool ValidateCurrentClip			();
+	bool ValidateCurrentClip		();
 		 
-	void SwitchBlendingToCurrent		();
+	void SwitchBlendingToCurrent	();
 	void ResetBones					();
 		 
 	void AddAnimationsToAdd			();

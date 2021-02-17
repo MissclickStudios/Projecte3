@@ -11,7 +11,7 @@ struct Light
 
 	void Init();
 	void SetPos(float x, float y, float z);
-	void Active(bool active);
+	void Active(bool isActive);
 	void Render();
 
 	Color ambient;

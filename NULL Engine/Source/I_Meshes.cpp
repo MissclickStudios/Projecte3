@@ -269,7 +269,7 @@ void Importer::Meshes::Utilities::LoadBoneOffsetMatrix(char** cursor, Bone& bone
 
 void Importer::Meshes::Utilities::LoadBoneWeights(char** cursor, Bone& bone)
 {
-	uint bytes			= 0;
+	uint bytes		= 0;
 	uint numWeights	= 0;
 
 	bytes = sizeof(uint);
@@ -412,9 +412,9 @@ bool Importer::Meshes::Load(const char* buffer, R_Mesh* rMesh)
 	memcpy_s(&rMesh->normals[0], bytes, cursor, bytes);
 	cursor += bytes;
 
+	rMesh->texCoords.resize(headerData[2]);
 	if (rMesh->texCoords.size() != 0)
 	{
-		rMesh->texCoords.resize(headerData[2]);
 		bytes = headerData[2] * sizeof(float);
 		memcpy_s(&rMesh->texCoords[0], bytes, cursor, bytes);
 		cursor += bytes;

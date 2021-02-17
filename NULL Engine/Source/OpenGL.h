@@ -13,9 +13,9 @@ struct GLTextureParameters
 	GLsizei width;										// Width of the texture in pixels.
 	GLsizei height;										// Height of the texture in pixels.
 	GLenum	target;										// 
-	GLint	filterType;								// 
+	GLint	filterType;									// 
 	GLint	fillingType;								// 
-	GLint	internalFormat;							// 
+	GLint	internalFormat;								// 
 	GLenum	format;										// 
 	GLenum	type;										// 
 };

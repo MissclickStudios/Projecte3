@@ -5,9 +5,9 @@
 //#include <gl/GLU.h>
 
 Light::Light() : 
-ref(-1), 
-on(false), 
-position(0.0f, 0.0f, 0.0f)
+ref			(-1), 
+on			(false), 
+position	(0.0f, 0.0f, 0.0f)
 {
 
 }
@@ -34,15 +34,12 @@ void Light::Render()
 	}
 }
 
-void Light::Active(bool active)
+void Light::Active(bool isActive)
 {
-	if(on != active)
+	if(on != isActive)
 	{
-		on = !on;
+		on = isActive;
 
-		if(on)
-			glEnable(ref);
-		else
-			glDisable(ref);
+		(on) ? glEnable(ref) : glDisable(ref);
 	}
 }

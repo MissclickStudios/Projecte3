@@ -52,7 +52,7 @@ bool C_Animation::LoadState(ParsonNode& root)
 }
 
 // --- C_ANIMATION METHODS
-void C_Animation::AddClip(const AnimationClip& animation_clip)
+void C_Animation::AddClip(const AnimationClip& animationClip)
 {
-	clips.push_back(animation_clip);
+	clips.push_back(animationClip);
 }
