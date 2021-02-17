@@ -26,7 +26,7 @@ drawLastRaycast	(false)
 	CreateMasterCamera();
 
 	positionOrigin		= float3(60.0f, 40.0f, 60.0f);								//
-	referenceOrigin	= float3(0.0f, 0.0f, 0.0f);									//
+	referenceOrigin		= float3(0.0f, 0.0f, 0.0f);									//
 	reference			= referenceOrigin;											// 
 
 	movementSpeed		= MOVEMENT_SPEED;
@@ -50,7 +50,8 @@ bool M_Camera3D::Init(ParsonNode& root)
 	//Position.z = root.GetNumber("Z");
 	
 	//master_camera->GetComponent<C_Transform>()->SetLocalPosition(float3(60.0f, 40.0f, 60.0f));
-	masterCamera->GetComponent<C_Transform>()->SetLocalPosition(float3(6.5f, 4.0f, 7.0f));
+	//masterCamera->GetComponent<C_Transform>()->SetLocalPosition(float3(6.5f, 4.0f, 7.0f));
+	masterCamera->GetComponent<C_Transform>()->SetLocalPosition(float3(125.0f, 80.0f, 135.0f));
 	LookAt(reference);
 	//current_camera->UpdateFrustumTransform();
 
