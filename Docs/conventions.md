@@ -1,6 +1,6 @@
 # C++ Coding Style Conventions
 
-Here it is a list with some of the conventions used in this project template:
+Here it is a list with some of the conventions used in this project:
 
 ## Project Conventions:
 
@@ -8,11 +8,11 @@ Here it is a list with some of the conventions used in this project template:
 
 - They should be regular, clean and concise.
 - If there is a pushed feature that requires caution from others it should be explained in the push description.
+- Users should caution whenever they are going to work on or modify a file that is not expected of them to change.
 
 ### Issues:
 
-- Issues should be added when a possible bug or crash is noticed.
-- The issue shall follow the template provided in Docs/Issues/issue_template.md.
+- For bug/crash reporting GitHub issues will be used, follow the guidelines defined by Docs/Issues/issues_guidelines.md .
 
 ### Folders:
 
@@ -65,7 +65,7 @@ Ternary Operator | (condition)? result1 : result2 | `printf("Value is 0: %s", (v
 
   
 
- - Children of main classes will be named with X_ after the TitleCase name. X Beign the first letter of the parent class.
+ - Children of main classes will be named with X_ after the TitleCase name. X Being the first letter of the parent class.
 
   ```c++
   class Component
@@ -109,9 +109,9 @@ if(a >= 1)
 ```c++
 switch (type)
 {
-    case RESOURCE_TYPE::MODEL:		{ success = Importer::Scenes::Load(buffer, (R_Model*)resource); } 		break;
-    case RESOURCE_TYPE::MESH:		{ success = Importer::Meshes::Load(buffer, (R_Mesh*)resource); }		break;
-    case RESOURCE_TYPE::MATERIAL:	{ success = Importer::Materials::Load(buffer, (R_Material*)resource); }	 break;
+    case RESOURCE_TYPE::MODEL:		success = Importer::Scenes::Load(buffer, (R_Model*)resource);  		break;
+    case RESOURCE_TYPE::MESH:		success = Importer::Meshes::Load(buffer, (R_Mesh*)resource);		break;
+    case RESOURCE_TYPE::MATERIAL:	success = Importer::Materials::Load(buffer, (R_Material*)resource);	break;
 }
 ```
 
