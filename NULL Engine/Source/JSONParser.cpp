@@ -118,8 +118,8 @@ double ParsonNode::GetNumber(const char* name) const
 	}
 	else
 	{
-		const char* node_name = json_object_get_name(rootNode, 0);
-		LOG("[ERROR] JSON Parser: Node %s's %s did not have a Number variable!", node_name, name);
+		const char* nodeName = json_object_get_name(rootNode, 0);
+		LOG("[ERROR] JSON Parser: Node %s's %s did not have a Number variable!", nodeName, name);
 	}
 
 	return JSONError;
@@ -244,11 +244,11 @@ JSON_Value* ParsonNode::FindValue(const char* name, int index)
 	}
 	else
 	{
-		JSON_Array* json_array = json_object_get_array(rootNode, name);
+		JSON_Array* jsonArray = json_object_get_array(rootNode, name);
 
-		if (json_array != nullptr)
+		if (jsonArray != nullptr)
 		{
-			return json_array_get_value(json_array, index);
+			return json_array_get_value(jsonArray, index);
 		}
 	}
 
@@ -263,15 +263,15 @@ ParsonArray::ParsonArray()
 	name		= "NONE";
 }
 
-ParsonArray::ParsonArray(JSON_Array* json_array, const char* name) : 
+ParsonArray::ParsonArray(JSON_Array* jsonArray, const char* name) : 
 jsonArray	(nullptr), 
 size		(0),
 name		(name)
 {
-	if (json_array != nullptr)
+	if (jsonArray != nullptr)
 	{
-		this->jsonArray	= json_array;
-		size				= json_array_get_count(json_array);
+		this->jsonArray	= jsonArray;
+		size				= json_array_get_count(jsonArray);
 	}
 	else
 	{
@@ -323,12 +323,12 @@ bool ParsonArray::GetBool(const uint& index) const
 
 void ParsonArray::GetColor(const uint& index, Color& color) const
 {
-	bool valid_red		= HasValueOfTypeAtIndex(index, JSONNumber);															// Safety check
-	bool valid_green	= HasValueOfTypeAtIndex(index + 1, JSONNumber);														// Safety check
-	bool valid_blue		= HasValueOfTypeAtIndex(index + 2, JSONNumber);														// Safety check
-	bool valid_alpha	= HasValueOfTypeAtIndex(index + 3, JSONNumber);														// Safety check
+	bool validRed		= HasValueOfTypeAtIndex(index, JSONNumber);															// Safety check
+	bool validGreen	= HasValueOfTypeAtIndex(index + 1, JSONNumber);															// Safety check
+	bool validBlue		= HasValueOfTypeAtIndex(index + 2, JSONNumber);														// Safety check
+	bool validAlpha	= HasValueOfTypeAtIndex(index + 3, JSONNumber);															// Safety check
 
-	if (valid_red && valid_green && valid_blue && valid_alpha)
+	if (validRed && validGreen && validBlue && validAlpha)
 	{
 		color.r = (float)json_array_get_number(jsonArray, index);															// Getting r from the array.
 		color.g = (float)json_array_get_number(jsonArray, index + 1);														// Getting g from the array.
@@ -339,11 +339,11 @@ void ParsonArray::GetColor(const uint& index, Color& color) const
 
 void ParsonArray::GetFloat3(const uint& index, float3& vec3) const
 {
-	bool valid_x = HasValueOfTypeAtIndex(index, JSONNumber);																// Safety check
-	bool valid_y = HasValueOfTypeAtIndex(index + 1, JSONNumber);															// Safety check
-	bool valid_z = HasValueOfTypeAtIndex(index + 2, JSONNumber);															// Safety check
+	bool validX = HasValueOfTypeAtIndex(index, JSONNumber);																	// Safety check
+	bool validY = HasValueOfTypeAtIndex(index + 1, JSONNumber);																// Safety check
+	bool validZ = HasValueOfTypeAtIndex(index + 2, JSONNumber);																// Safety check
 
-	if (valid_x && valid_y && valid_z)
+	if (validX && validY && validZ)
 	{
 		vec3.x = (float)json_array_get_number(jsonArray, index);															// Getting x from the array.
 		vec3.y = (float)json_array_get_number(jsonArray, index + 1);														// Getting y from the array.
@@ -353,12 +353,12 @@ void ParsonArray::GetFloat3(const uint& index, float3& vec3) const
 
 void ParsonArray::GetFloat4(const uint& index, float4& vec4) const
 {
-	bool valid_x = HasValueOfTypeAtIndex(index, JSONNumber);																// Safety check
-	bool valid_y = HasValueOfTypeAtIndex(index + 1, JSONNumber);															// Safety check
-	bool valid_z = HasValueOfTypeAtIndex(index + 2, JSONNumber);															// Safety check
-	bool valid_w = HasValueOfTypeAtIndex(index + 3, JSONNumber);															// Safety check
+	bool validX = HasValueOfTypeAtIndex(index, JSONNumber);																	// Safety check
+	bool validY = HasValueOfTypeAtIndex(index + 1, JSONNumber);																// Safety check
+	bool validZ = HasValueOfTypeAtIndex(index + 2, JSONNumber);																// Safety check
+	bool validW = HasValueOfTypeAtIndex(index + 3, JSONNumber);																// Safety check
 
-	if (valid_x && valid_y && valid_z && valid_w)
+	if (validX && validY && validZ && validW)
 	{
 		vec4.x = (float)json_array_get_number(jsonArray, index);															// Getting x from the array.
 		vec4.y = (float)json_array_get_number(jsonArray, index + 1);														// Getting y from the array.
@@ -369,12 +369,12 @@ void ParsonArray::GetFloat4(const uint& index, float4& vec4) const
 
 void ParsonArray::GetFloat4(const uint& index, Quat& vec4) const
 {
-	bool valid_x = HasValueOfTypeAtIndex(index, JSONNumber);																// Safety check
-	bool valid_y = HasValueOfTypeAtIndex(index + 1, JSONNumber);															// Safety check
-	bool valid_z = HasValueOfTypeAtIndex(index + 2, JSONNumber);															// Safety check
-	bool valid_w = HasValueOfTypeAtIndex(index + 3, JSONNumber);															// Safety check
+	bool validX = HasValueOfTypeAtIndex(index, JSONNumber);																	// Safety check
+	bool validY = HasValueOfTypeAtIndex(index + 1, JSONNumber);																// Safety check
+	bool validZ = HasValueOfTypeAtIndex(index + 2, JSONNumber);																// Safety check
+	bool validW = HasValueOfTypeAtIndex(index + 3, JSONNumber);																// Safety check
 
-	if (valid_x && valid_y && valid_z && valid_w)
+	if (validX && validY && validZ && validW)
 	{
 		vec4.x = (float)json_array_get_number(jsonArray, index);															// Getting x from the array.
 		vec4.y = (float)json_array_get_number(jsonArray, index + 1);														// Getting y from the array.
@@ -437,39 +437,39 @@ void ParsonArray::SetBool(const bool& value)
 
 void ParsonArray::SetColor(const Color& color)
 {
-	JSON_Status status_r = json_array_append_number(jsonArray, color.r);													// Adding the RGBA variables to the JSON_Array.
-	JSON_Status status_g = json_array_append_number(jsonArray, color.g);													// JSON_Status will be used to check whether or
-	JSON_Status status_b = json_array_append_number(jsonArray, color.b);													// not the operation was a success.
-	JSON_Status status_a = json_array_append_number(jsonArray, color.a);													// --------------------------------------------
+	JSON_Status statusR = json_array_append_number(jsonArray, color.r);													// Adding the RGBA variables to the JSON_Array.
+	JSON_Status statusG = json_array_append_number(jsonArray, color.g);													// JSON_Status will be used to check whether or
+	JSON_Status statusB = json_array_append_number(jsonArray, color.b);													// not the operation was a success.
+	JSON_Status statusA = json_array_append_number(jsonArray, color.a);													// --------------------------------------------
 
-	(status_r == JSONFailure) ? LOG("[ERROR] JSON Parser: Could not append Red to %s Array!", name)		: ++size;			// If an operation was not successful then an ERROR is sent
-	(status_g == JSONFailure) ? LOG("[ERROR] JSON Parser: Could not append Green to %s Array!", name)	: ++size;			// to the console.
-	(status_b == JSONFailure) ? LOG("[ERROR] JSON Parser: Could not append Blue to %s Array!", name)	: ++size;			// On success the size variable will be updated.
-	(status_a == JSONFailure) ? LOG("[ERROR] JSON Parser: Could not append Alpha to %s Array!", name)	: ++size;			// ---------------------------------------------------------
+	(statusR == JSONFailure) ? LOG("[ERROR] JSON Parser: Could not append Red to %s Array!", name)		: ++size;			// If an operation was not successful then an ERROR is sent
+	(statusG == JSONFailure) ? LOG("[ERROR] JSON Parser: Could not append Green to %s Array!", name)	: ++size;			// to the console.
+	(statusB == JSONFailure) ? LOG("[ERROR] JSON Parser: Could not append Blue to %s Array!", name)	: ++size;			// On success the size variable will be updated.
+	(statusA == JSONFailure) ? LOG("[ERROR] JSON Parser: Could not append Alpha to %s Array!", name)	: ++size;			// ---------------------------------------------------------
 }
 
 void ParsonArray::SetFloat3(const math::float3& vec3)
 {
-	JSON_Status status_x = json_array_append_number(jsonArray, vec3.x);													// Adding the XYZ variables to the JSON_Array.
-	JSON_Status status_y = json_array_append_number(jsonArray, vec3.y);													//
-	JSON_Status status_z = json_array_append_number(jsonArray, vec3.z);													// -------------------------------------------
+	JSON_Status statusX = json_array_append_number(jsonArray, vec3.x);													// Adding the XYZ variables to the JSON_Array.
+	JSON_Status statusY = json_array_append_number(jsonArray, vec3.y);													//
+	JSON_Status statusZ = json_array_append_number(jsonArray, vec3.z);													// -------------------------------------------
 
-	(status_x == JSONFailure) ? LOG("[ERROR] JSON Parser: Could not append X to %s Array!", name) : ++size;					// If an operation was not successful then an ERROR is sent
-	(status_y == JSONFailure) ? LOG("[ERROR] JSON Parser: Could not append Y to %s Array!", name) : ++size;					// to the console. On success the size var. will be updated.
-	(status_z == JSONFailure) ? LOG("[ERROR] JSON Parser: Could not append Z to %s Array!", name) : ++size;					// ---------------------------------------------------------
+	(statusX == JSONFailure) ? LOG("[ERROR] JSON Parser: Could not append X to %s Array!", name) : ++size;					// If an operation was not successful then an ERROR is sent
+	(statusY == JSONFailure) ? LOG("[ERROR] JSON Parser: Could not append Y to %s Array!", name) : ++size;					// to the console. On success the size var. will be updated.
+	(statusZ == JSONFailure) ? LOG("[ERROR] JSON Parser: Could not append Z to %s Array!", name) : ++size;					// ---------------------------------------------------------
 }
 
 void ParsonArray::SetFloat4(const math::float4& vec4)
 {
-	JSON_Status status_x = json_array_append_number(jsonArray, vec4.x);													// Adding the XYZW variables to the JSON_Array.
-	JSON_Status status_y = json_array_append_number(jsonArray, vec4.y);													//
-	JSON_Status status_z = json_array_append_number(jsonArray, vec4.z);													//
-	JSON_Status status_w = json_array_append_number(jsonArray, vec4.w);													// --------------------------------------------
+	JSON_Status statusX = json_array_append_number(jsonArray, vec4.x);													// Adding the XYZW variables to the JSON_Array.
+	JSON_Status statusY = json_array_append_number(jsonArray, vec4.y);													//
+	JSON_Status statusZ = json_array_append_number(jsonArray, vec4.z);													//
+	JSON_Status statusW = json_array_append_number(jsonArray, vec4.w);													// --------------------------------------------
 
-	(status_x == JSONFailure) ? LOG("[ERROR] JSON Parser: Could not append X to %s Array!", name) : ++size;					// If an operation was not successful then an ERROR is sent
-	(status_y == JSONFailure) ? LOG("[ERROR] JSON Parser: Could not append Y to %s Array!", name) : ++size;					// to the console.
-	(status_z == JSONFailure) ? LOG("[ERROR] JSON Parser: Could not append Z to %s Array!", name) : ++size;					// On success the size variable will be updated.
-	(status_w == JSONFailure) ? LOG("[ERROR] JSON Parser: Could not append W to %s Array!", name) : ++size;					// --------------------------------------------------------
+	(statusX == JSONFailure) ? LOG("[ERROR] JSON Parser: Could not append X to %s Array!", name) : ++size;					// If an operation was not successful then an ERROR is sent
+	(statusY == JSONFailure) ? LOG("[ERROR] JSON Parser: Could not append Y to %s Array!", name) : ++size;					// to the console.
+	(statusZ == JSONFailure) ? LOG("[ERROR] JSON Parser: Could not append Z to %s Array!", name) : ++size;					// On success the size variable will be updated.
+	(statusW == JSONFailure) ? LOG("[ERROR] JSON Parser: Could not append W to %s Array!", name) : ++size;					// --------------------------------------------------------
 }
 
 ParsonNode ParsonArray::SetNode(const char* name)
