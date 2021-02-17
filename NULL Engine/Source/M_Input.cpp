@@ -13,7 +13,7 @@
 
 M_Input::M_Input(bool isActive) : Module("Input", isActive)
 {
-	keyboard = new KEY_STATE[MAX_KEYS];
+	keyboard = new KeyState[MAX_KEYS];
 	memset(keyboard, 0, sizeof(KeyState) * MAX_KEYS);
 
 	maxNumScancodes = (uint)SDL_NUM_SCANCODES;
@@ -25,11 +25,11 @@ M_Input::M_Input(bool isActive) : Module("Input", isActive)
 	mouseMotionX	= 0;
 	mouseMotionY	= 0;
 
-	mouseWheelX	= 0;
-	mouseWheelY	= 0;
+	mouseWheelX		= 0;
+	mouseWheelY		= 0;
 
-	prevMousePosX = 0;
-	prevMousePosY = 0;
+	prevMousePosX	= 0;
+	prevMousePosY	= 0;
 }
 
 // Destructor

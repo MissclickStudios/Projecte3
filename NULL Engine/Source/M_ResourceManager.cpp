@@ -68,7 +68,7 @@ UpdateStatus M_ResourceManager::PreUpdate(float dt)
 {
 	UpdateStatus status = UpdateStatus::CONTINUE;
 
-	fileRefreshTimer += Time::Real::GetDT();
+	/*fileRefreshTimer += Time::Real::GetDT();
 
 	if (fileRefreshTimer > fileRefreshRate)
 	{
@@ -89,7 +89,7 @@ UpdateStatus M_ResourceManager::PreUpdate(float dt)
 		//RefreshDirectoryFiles(ASSETS_DIRECTORY);
 
 		fileRefreshTimer = 0.0f;
-	}
+	}*/
 
 	return status;
 }
