@@ -22,7 +22,7 @@ class ParsonNode;
 class Module
 {
 public:
-	Module(const char* name, bool is_active = true);
+	Module(const char* name, bool isActive = true);
 	virtual ~Module();
 
 	virtual bool			Init				(ParsonNode& config);				// Called immediately after the constructor.
@@ -37,12 +37,12 @@ public:
 
 public:
 	bool					IsActive			() const;
-	bool					SetModuleState		(bool is_active);					// Will modify the state of the module. Will call Start() or CleanUp().
+	bool					SetModuleState		(bool isActive);					// Will modify the state of the module. Will call Start() or CleanUp().
 
 	const char*				GetName				() const;							// Will return the name of the module.
 
 private:
-	bool is_active;																	// State in which the module is currently in. If it is active the module will be looped each frame.
+	bool isActive;																	// State in which the module is currently in. If it is active the module will be looped each frame.
 	char name[MAX_MODULE_NAME_LENGTH];												// The module name string will be mainly used for debug/LOG purposes.
 };
 
