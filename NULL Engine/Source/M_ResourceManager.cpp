@@ -10,6 +10,7 @@
 #include "I_Textures.h"
 #include "I_Folders.h"
 #include "I_Animations.h"
+#include "I_Shaders.h"
 
 #include "Application.h"
 #include "M_FileSystem.h"
@@ -22,6 +23,7 @@
 #include "R_Folder.h"
 #include "R_Scene.h"
 #include "R_Animation.h"
+#include "R_Shader.h"
 
 #include "M_ResourceManager.h"
 
@@ -68,7 +70,7 @@ UpdateStatus M_ResourceManager::PreUpdate(float dt)
 {
 	UpdateStatus status = UpdateStatus::CONTINUE;
 
-	fileRefreshTimer += Time::Real::GetDT();
+	/*fileRefreshTimer += Time::Real::GetDT();
 
 	if (fileRefreshTimer > fileRefreshRate)
 	{
@@ -79,7 +81,7 @@ UpdateStatus M_ResourceManager::PreUpdate(float dt)
 			{																								// FreeResource() method.
 				uint32 resourceUid = item->second->GetUID();												// 
 				++item;																						// Setting item to the next element so the reference is not lost after
-				DeallocateResource(resourceUid);															// erasing the element with the resource_uid from the resources std::map.
+				//DeallocateResource(resourceUid);															// erasing the element with the resource_uid from the resources std::map.
 				continue;																					// Going to the next iteration so item is not updated twice in the same loop.
 			}
 
@@ -89,7 +91,7 @@ UpdateStatus M_ResourceManager::PreUpdate(float dt)
 		//RefreshDirectoryFiles(ASSETS_DIRECTORY);
 
 		fileRefreshTimer = 0.0f;
-	}
+	}*/
 
 	return status;
 }
@@ -456,7 +458,7 @@ bool M_ResourceManager::GetLibraryFilePathsFromMeta(const char* assetsPath, std:
 
 	// --- MAIN RESOURCE
 	uint32 resourceUid		= (uint32)metaRoot.GetNumber("UID");
-	ResourceType type		= (ResourceType)metaRoot.GetNumber("Type");
+	ResourceType type		= (ResourceType)(int)metaRoot.GetNumber("Type");
 	bool success			= GetLibraryDirectoryAndExtensionFromType(type, directory, extension);
 	if (!success)
 	{
@@ -494,7 +496,7 @@ bool M_ResourceManager::GetLibraryFilePathsFromMeta(const char* assetsPath, std:
 		extension = "[NONE]";
 
 		containedUid	= (uint32)containedNode.GetNumber("UID");
-		containedType	= (ResourceType)containedNode.GetNumber("Type");
+		containedType	= (ResourceType)(int)containedNode.GetNumber("Type");
 		success			= GetLibraryDirectoryAndExtensionFromType(containedType, directory, extension);
 		if (!success)
 		{
@@ -549,6 +551,10 @@ bool M_ResourceManager::GetLibraryDirectoryAndExtensionFromType(const ResourceTy
 	case ResourceType::ANIMATION:
 		directory = ANIMATIONS_PATH;
 		extension = ANIMATIONS_EXTENSION;
+		break;
+	case ResourceType::SHADER:
+		directory = SHADERS_PATH;
+		extension = SHADERS_EXTENSION;
 		break;
 	case ResourceType::NONE:
 		ret = false;
@@ -729,8 +735,9 @@ uint32 M_ResourceManager::ImportFromAssets(const char* assetsPath)
 		{
 		case ResourceType::MODEL:		{ success = Importer::ImportScene(buffer, read, (R_Model*)resource); }		break;
 		case ResourceType::MESH:		{ success = Importer::ImportMesh(buffer, (R_Mesh*)resource); }				break;
-		case ResourceType::TEXTURE:	{ success = Importer::ImportTexture(buffer, read, (R_Texture*)resource); }	break;
+		case ResourceType::TEXTURE:		{ success = Importer::ImportTexture(buffer, read, (R_Texture*)resource); }	break;
 		case ResourceType::SCENE:		{ /*success = HAVE A FUNCTIONAL R_SCENE AND LOAD/SAVE METHODS*/}			break;
+		case ResourceType::SHADER:		{success = Importer::Shaders::Import(resource->GetAssetsFile(), (R_Shader*)resource); } break;
 		}
 
 		RELEASE_ARRAY(buffer);
@@ -848,10 +855,11 @@ uint M_ResourceManager::SaveResourceToLibrary(Resource* resource)
 	case ResourceType::MODEL:		{ written = Importer::Scenes::Save((R_Model*)resource, &buffer); }			break;
 	case ResourceType::MESH:		{ written = Importer::Meshes::Save((R_Mesh*)resource, &buffer); }			break;
 	case ResourceType::MATERIAL:	{ written = Importer::Materials::Save((R_Material*)resource, &buffer); }	break;
-	case ResourceType::TEXTURE:	{ written = Importer::Textures::Save((R_Texture*)resource, &buffer); }		break;
+	case ResourceType::TEXTURE:		{ written = Importer::Textures::Save((R_Texture*)resource, &buffer); }		break;
 	case ResourceType::FOLDER:		{ written = Importer::Folders::Save((R_Folder*)resource, &buffer); }		break;
 	case ResourceType::SCENE:		{ /*written = TODO: HAVE A FUNCTIONAL R_SCENE AND SAVE/LOAD METHODS*/ }		break;
 	case ResourceType::ANIMATION:	{ written = Importer::Animations::Save((R_Animation*)resource, &buffer); }	break;
+	case ResourceType::SHADER:		{ written = Importer::Shaders::Save((R_Shader*)resource, &buffer); }		break;
 	}
 
 	RELEASE_ARRAY(buffer);
@@ -971,6 +979,10 @@ ResourceType M_ResourceManager::GetTypeFromLibraryExtension(const char* libraryP
 	else if (extension == ANIMATIONS_EXTENSION)
 	{
 		type = ResourceType::ANIMATION;
+	}
+	else if (extension == SHADERS_EXTENSION)
+	{
+		type = ResourceType::SHADER;
 	}
 	else
 	{
@@ -1245,11 +1257,12 @@ Resource* M_ResourceManager::CreateResource(ResourceType type, const char* asset
 	{
 	case ResourceType::MESH:		{ resource = new R_Mesh(); }		break;
 	case ResourceType::MATERIAL:	{ resource = new R_Material(); }	break;
-	case ResourceType::TEXTURE:	{ resource = new R_Texture(); }		break;
+	case ResourceType::TEXTURE:		{ resource = new R_Texture(); }		break;
 	case ResourceType::MODEL:		{ resource = new R_Model(); }		break;
 	case ResourceType::FOLDER:		{ resource = new R_Folder(); }		break;
 	case ResourceType::SCENE:		{ resource = new R_Scene(); }		break;
 	case ResourceType::ANIMATION:	{ resource = new R_Animation(); }	break;
+	case ResourceType::SHADER:		{ resource = new R_Shader(); }		break;
 	}
 
 	if (resource != nullptr)
@@ -1427,6 +1440,7 @@ Resource* M_ResourceManager::AllocateResource(const uint32& uid, const char* ass
 	case ResourceType::FOLDER:		{ success = Importer::Folders::Load(buffer, (R_Folder*)resource); }				break;
 	case ResourceType::SCENE:		{ /*success = TODO: HAVE A FUNCTIONAL R_SCENE AND SAVE/LOAD METHODS*/ }			break;
 	case ResourceType::ANIMATION:	{ success = Importer::Animations::Load(buffer, (R_Animation*)resource); }		break;
+	case ResourceType::SHADER:		{success = Importer::Shaders::Load(buffer, (R_Shader*)resource); }		break;
 	}
 
 	RELEASE_ARRAY(buffer);

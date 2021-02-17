@@ -58,18 +58,19 @@ public:
 	std::vector<float4x4>		boneTransforms;
 
 	// Buffer data
-	uint						VBO;												// Vertex Buffer Object.	-->		Will store all the buffer data of the vertices of the mesh.
-	uint						NBO;												// Normals Buffer Object.	-->		Will store all the buffer data of the normals of the mesh.
-	uint						TBO;												// Tex Coord Buffer Object. -->		Will store all the buffer data of the tex coords of the mesh.
-	uint						IBO;												// Index Buffer Object.		--> 	Will store all the buffer data of the indices of the mesh.
+	uint		VAO;
+	uint		VBO;												// Vertex Buffer Object.	-->		Will store all the buffer data of the vertices of the mesh.
+	uint		NBO;												// Normals Buffer Object.	-->		Will store all the buffer data of the normals of the mesh.
+	uint		TBO;												// Tex Coord Buffer Object. -->		Will store all the buffer data of the tex coords of the mesh.
+	uint		IBO;												// Index Buffer Object.		--> 	Will store all the buffer data of the indices of the mesh.
 
-	bool						drawVertexNormals;
-	bool						drawFaceNormals;
+	bool		drawVertexNormals;
+	bool		drawFaceNormals;
 
-	AABB						aabb;
+	AABB		aabb;
 
 private:
-	MeshSettings				meshSettings;
+	MeshSettings meshSettings;
 
 };
 

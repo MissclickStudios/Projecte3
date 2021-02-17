@@ -13,6 +13,7 @@
 #define CHECKERS_HEIGHT 64
 
 R_Mesh::R_Mesh() : Resource(ResourceType::MESH), 
+VAO					(0),
 VBO					(0),																								// Initializing the buffers.
 NBO					(0), 																								// 
 TBO					(0), 																								//
@@ -35,6 +36,7 @@ bool R_Mesh::CleanUp()
 	App->renderer->DeleteFromMeshRenderers(this);
 
 	// --- Delete Buffers
+	glDeleteBuffers(1, (GLuint*)&VAO);
 	glDeleteBuffers(1, (GLuint*)&VBO);
 	glDeleteBuffers(1, (GLuint*)&NBO);
 	glDeleteBuffers(1, (GLuint*)&TBO);
@@ -75,6 +77,9 @@ bool R_Mesh::LoadMeta(const ParsonNode& metaRoot)
 // --- R_MESH METHODS
 void R_Mesh::LoadBuffers()
 {
+	glGenVertexArrays(1, &VAO);
+	glBindVertexArray(VAO);
+
 	if (!vertices.empty())
 	{
 		glGenBuffers(1, (GLuint*)&VBO);																			// Generates the Vertex Buffer Object
@@ -82,11 +87,14 @@ void R_Mesh::LoadBuffers()
 		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertices.size(), &vertices[0], GL_STATIC_DRAW);			// Inits the data stored inside VBO and specifies how it will be accessed.
 	}
 
-	if (!normals.empty())
+	if (!indices.empty())
 	{
-		glGenBuffers(1, (GLuint*)&NBO);
-		glBindBuffer(GL_ARRAY_BUFFER, NBO);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * normals.size(), &normals[0], GL_STATIC_DRAW);
+		glGenBuffers(1, (GLuint*)&IBO);																			// Generates the Index Buffer Object
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);																// Binds IBO with the GL_ARRAY_BUFFER binding point (target)
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * indices.size(), &indices[0], GL_STATIC_DRAW);		// Inits the data stored inside IBO and specifies how it will be accessed.
+
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+		glEnableVertexAttribArray(0);
 	}
 
 	if (!texCoords.empty())
@@ -94,13 +102,19 @@ void R_Mesh::LoadBuffers()
 		glGenBuffers(1, (GLuint*)&TBO);
 		glBindBuffer(GL_ARRAY_BUFFER, TBO);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * texCoords.size(), &texCoords[0], GL_STATIC_DRAW);
+
+		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
+		glEnableVertexAttribArray(1);
 	}
 
-	if (!indices.empty())
+	if (!normals.empty())
 	{
-		glGenBuffers(1, (GLuint*)&IBO);																			// Generates the Index Buffer Object
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);																// Binds IBO with the GL_ARRAY_BUFFER binding point (target)
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * indices.size(), &indices[0], GL_STATIC_DRAW);		// Inits the data stored inside IBO and specifies how it will be accessed.
+		glGenBuffers(1, (GLuint*)&NBO);
+		glBindBuffer(GL_ARRAY_BUFFER, NBO);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * normals.size(), &normals[0], GL_STATIC_DRAW);
+	
+		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+		glEnableVertexAttribArray(2);
 	}
 }
 

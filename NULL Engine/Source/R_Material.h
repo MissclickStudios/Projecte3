@@ -7,7 +7,7 @@
 #include "MaterialSettings.h"
 
 class ParsonNode;
-
+class R_Shader;
 typedef unsigned int uint;
 
 enum class TextureType									// The enum values are set according to the values of Assimp's aiTextureType enum.

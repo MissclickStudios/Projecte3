@@ -25,6 +25,7 @@
 #define SCENES_PATH				"Library/Scenes/"
 #define SHADERS_PATH			"Library/Shaders/"
 #define TEXTURES_PATH			"Library/Textures/"
+#define SHADERS_PATH			"Library/Shaders/"
 
 // File Extensions ----------------------------------
 #define ANIMATIONS_EXTENSION	".neanimat"
@@ -34,6 +35,7 @@
 #define MATERIALS_EXTENSION		".nemat"
 #define SCENES_EXTENSION		".nescene"
 #define TEXTURES_EXTENSION		".netex"
+#define SHADERS_EXTENSION		".shader"
 
 #define META_EXTENSION			".meta"
 #define DOTLESS_META_EXTENSION	"meta"

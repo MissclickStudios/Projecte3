@@ -144,7 +144,7 @@ public:
 	void			RenderScene					();
 
 public:																											// --- RENDER GEOMETRY
-	void			GenerateBuffers				(const R_Mesh* rMesh);
+	//void			GenerateBuffers				(const R_Mesh* rMesh);
 		
 	void			DrawWorldGrid				(const int& size);
 	void			DrawWorldAxis				();
