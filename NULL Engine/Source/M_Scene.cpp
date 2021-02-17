@@ -39,7 +39,7 @@ M_Scene::M_Scene(bool isActive) : Module("SceneManager", isActive),
 masterRoot				(nullptr),
 sceneRoot				(nullptr),
 animationRoot			(nullptr),
-selectedGameObject	(nullptr),
+selectedGameObject		(nullptr),
 cullingCamera			(nullptr)
 {
 	CreateMasterRoot();
@@ -202,7 +202,7 @@ bool M_Scene::CleanUp()
 	sceneRoot				= nullptr;
 	animationRoot			= nullptr;
 	cullingCamera			= nullptr;
-	selectedGameObject	= nullptr;
+	selectedGameObject		= nullptr;
 
 	primitives.clear();
 

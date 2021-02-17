@@ -26,7 +26,7 @@ E_Configuration::E_Configuration() : EditorPanel("Configuration")
 		msData[i]	= 0;
 	}
 
-	peakFps	= 0;
+	peakFps		= 0;
 	minFps		= 0;
 	peakMs		= 0;
 	minMs		= 0;
@@ -279,30 +279,30 @@ bool E_Configuration::SystemInfoMenu()
 
 	if (ImGui::CollapsingHeader("System"))
 	{
-		HardwareInfo hwInfo = App->GetHardwareInfo();
+		HardwareInfo hardwareInfo = App->GetHardwareInfo();
 
 		ImGui::Indent();
 		
 		if (ImGui::CollapsingHeader("Software"))
 		{
-			SDLInfo(&hwInfo);
+			SDLInfo(&hardwareInfo);
 
 			ImGui::Separator();
 
-			OpenGLInfo(&hwInfo);
+			OpenGLInfo(&hardwareInfo);
 
 			ImGui::Separator();
 
-			DevILInfo(&hwInfo);
+			DevILInfo(&hardwareInfo);
 		}
 
 		if (ImGui::CollapsingHeader("Hardware"))
 		{
-			CPUInfo(&hwInfo);
+			CPUInfo(&hardwareInfo);
 
 			ImGui::Separator();
 
-			GPUInfo(&hwInfo);
+			GPUInfo(&hardwareInfo);
 		}
 
 		ImGui::Unindent();
@@ -319,14 +319,14 @@ bool E_Configuration::TimeManagementMenu()
 	{
 		ImGui::TextColored(ImVec4(0.0f, 1.0f, 1.0f, 1.0f), "Real Time Clock:");
 		
-		Hourglass clock				= Time::Real::GetClock();
+		Hourglass clock			= Time::Real::GetClock();
 		FrameData frameData		= Time::Real::GetFrameData();
 
 		ImGui::Text("Time Since Start:");	ImGui::SameLine(); ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "   %s",			clock.GetTimeAsString().c_str());
 		ImGui::Text("Frame Count:");		ImGui::SameLine(); ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "        %llu",	frameData.frameCount);
 
 		ImGui::Text("Average FPS:");		ImGui::SameLine(); ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "        %.3f",	frameData.avgFps);
-		ImGui::Text("Frames Last Second:");	ImGui::SameLine(); ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), " %u",				frameData.framesLastSecond);
+		ImGui::Text("Frames Last Second:");	ImGui::SameLine(); ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), " %u",			frameData.framesLastSecond);
 		ImGui::Text("Ms Last Frame:");		ImGui::SameLine(); ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "      %u",		frameData.msLastFrame);
 		ImGui::Text("Delta Time:");			ImGui::SameLine(); ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "         %.3f",	frameData.dt);
 
@@ -341,7 +341,7 @@ bool E_Configuration::TimeManagementMenu()
 		ImGui::Text("Frame Count:");		ImGui::SameLine(); ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "        %llu",	gameFrameData.frameCount);
 
 		ImGui::Text("Average FPS:");		ImGui::SameLine(); ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "        %.3f",	gameFrameData.avgFps);
-		ImGui::Text("Frames Last Second:");	ImGui::SameLine(); ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), " %u",				gameFrameData.framesLastSecond);
+		ImGui::Text("Frames Last Second:");	ImGui::SameLine(); ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), " %u",			gameFrameData.framesLastSecond);
 		ImGui::Text("Ms Last Frame:");		ImGui::SameLine(); ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "      %u",		gameFrameData.msLastFrame);
 		ImGui::Text("Delta Time:");			ImGui::SameLine(); ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "         %.3f",	gameFrameData.dt);
 	}
@@ -426,27 +426,27 @@ void E_Configuration::PlotFrameDataHistogram()
 		averageFps += fpsData[i];
 		averageMs	+= msData[i];
 
-		peakFps	= (peakFps < (uint)fpsData[i])	? (uint)fpsData[i] : peakFps;
-		minFps		= (minFps > (uint)fpsData[i])		? (uint)fpsData[i] : minFps;
-		peakMs		= (peakMs < (uint)msData[i])		? (uint)msData[i] : peakMs;
-		minMs		= (minMs > (uint)msData[i])		? (uint)msData[i] : minMs;
+		peakFps		= (peakFps < (uint)fpsData[i])	? (uint)fpsData[i]	: peakFps;
+		minFps		= (minFps > (uint)fpsData[i])	? (uint)fpsData[i]	: minFps;
+		peakMs		= (peakMs < (uint)msData[i])	? (uint)msData[i]	: peakMs;
+		minMs		= (minMs > (uint)msData[i])		? (uint)msData[i]	: minMs;
 	}
 
-	averageFps /= (float)MAX_HISTOGRAM_SIZE;
+	averageFps	/= (float)MAX_HISTOGRAM_SIZE;
 	averageMs	/= (float)MAX_HISTOGRAM_SIZE;
 
 	char overlay[32];
 	sprintf_s(overlay, "Framerate: %.2f", fpsData[MAX_HISTOGRAM_SIZE - 1]);
 	ImGui::PlotHistogram("FPS", fpsData, IM_ARRAYSIZE(fpsData), 0, overlay, 0.0f, 120.0f, ImVec2(0, 80));
-	ImGui::Text("Average FPS:");	ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%.2f", averageFps);
-	ImGui::Text("Peak FPS:");		ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "   %u", peakFps);
-	ImGui::Text("Min FPS:");		ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "    %u", minFps);
+	ImGui::Text("Average FPS:");	ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%.2f",		averageFps);
+	ImGui::Text("Peak FPS:");		ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "   %u",		peakFps);
+	ImGui::Text("Min FPS:");		ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "    %u",	minFps);
 
 	sprintf_s(overlay, "ms last frame: %.2f", msData[MAX_HISTOGRAM_SIZE - 1]);
 	ImGui::PlotHistogram("MS", msData, IM_ARRAYSIZE(msData), 0, overlay, 0.0f, 40.0f, ImVec2(0, 80));
-	ImGui::Text("Average ms: ");	ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%.2f", averageMs);
-	ImGui::Text("Peak ms:");		ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "   %u", peakMs);
-	ImGui::Text("Min ms:");			ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "    %u", minMs);
+	ImGui::Text("Average ms: ");	ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%.2f",		averageMs);
+	ImGui::Text("Peak ms:");		ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "   %u",		peakMs);
+	ImGui::Text("Min ms:");			ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "    %u",	minMs);
 }
 
 void E_Configuration::GenerateFrameCapSlider()
@@ -457,14 +457,7 @@ void E_Configuration::GenerateFrameCapSlider()
 
 	App->SetFrameCap(cap);
 
-	if (cap == 0)
-	{
-		App->framesAreCapped = false;
-	}
-	else
-	{
-		App->framesAreCapped = true;														// [ATTENTION] Could be troubling when trying to manage the framecap elsewhere.
-	}
+	App->framesAreCapped = (cap == 0) ? false : true;										// [ATTENTION] Could be troubling when trying to manage the framecap elsewhere.
 }
 
 void E_Configuration::GenerateBrightnessSlider()
@@ -476,8 +469,8 @@ void E_Configuration::GenerateBrightnessSlider()
 
 void E_Configuration::GenerateSizeSliders()
 {
-	int width = 0;
-	int height = 0;
+	int width	= 0;
+	int height	= 0;
 
 	SDL_GetWindowSize(App->window->GetWindow(), &width, &height);
 
@@ -529,10 +522,7 @@ void E_Configuration::WindowModeFlags()
 void E_Configuration::VsyncMode()
 {
 	bool vsync = App->renderer->GetVsync();
-	if (ImGui::Checkbox("Vsync", &vsync))
-	{
-		App->renderer->SetVsync(vsync);
-	}
+	if (ImGui::Checkbox("Vsync", &vsync))		{ App->renderer->SetVsync(vsync); }
 }
 
 void E_Configuration::RendererFlags()
@@ -557,7 +547,7 @@ void E_Configuration::RendererFlags()
 	bool renderWorldAxis			= App->renderer->GetRenderWorldAxis();
 	bool renderWireframes			= App->renderer->GetRenderWireframes();
 	bool renderWertexNormals		= App->renderer->GetRenderVertexNormals();
-	bool renderFaceNormals		= App->renderer->GetRenderFaceNormals();
+	bool renderFaceNormals			= App->renderer->GetRenderFaceNormals();
 	bool renderBoundingBoxes		= App->renderer->GetRenderBoundingBoxes();
 	bool renderSkeletons			= App->renderer->GetRenderSkeletons();
 	bool renderPrimitiveExamples	= App->renderer->GetRenderPrimitiveExamples();
@@ -578,47 +568,47 @@ void E_Configuration::RendererFlags()
 	// --- SHOW FLAGS
 	if (ImGui::Checkbox("Show World Grid", &renderWorldGrid))						{ App->renderer->SetRenderWorldGrid(renderWorldGrid); }
 
-	if (ImGui::Checkbox("Show World Axis", &renderWorldAxis))						{ App->renderer->SetRenderWorldAxis(renderWorldAxis); }						ImGui::SameLine(colDist);
+	if (ImGui::Checkbox("Show World Axis", &renderWorldAxis))						{ App->renderer->SetRenderWorldAxis(renderWorldAxis); }							ImGui::SameLine(colDist);
 	if (ImGui::Checkbox("Show Wireframes", &renderWireframes))						{ App->renderer->SetRenderWireframes(renderWireframes); }
 
-	if (ImGui::Checkbox("Show Vertex Normals", &renderWertexNormals))				{ App->renderer->SetRenderVertexNormals(renderWertexNormals); }				ImGui::SameLine(colDist);
+	if (ImGui::Checkbox("Show Vertex Normals", &renderWertexNormals))				{ App->renderer->SetRenderVertexNormals(renderWertexNormals); }					ImGui::SameLine(colDist);
 	if (ImGui::Checkbox("Show Face Normals", &renderFaceNormals))					{ App->renderer->SetRenderFaceNormals(renderFaceNormals); }
 
-	if (ImGui::Checkbox("Show Bounding Boxes", &renderBoundingBoxes))				{ App->renderer->SetRenderBoundingBoxes(renderBoundingBoxes); }				ImGui::SameLine(colDist);
+	if (ImGui::Checkbox("Show Bounding Boxes", &renderBoundingBoxes))				{ App->renderer->SetRenderBoundingBoxes(renderBoundingBoxes); }					ImGui::SameLine(colDist);
 	if (ImGui::Checkbox("Show Skeletons", &renderSkeletons))						{ App->renderer->SetRenderSkeletons(renderSkeletons); }
 
-	if (ImGui::Checkbox("Show Primitive Examples", &renderPrimitiveExamples))		{ App->renderer->SetRenderPrimtiveExamples(renderPrimitiveExamples); }		ImGui::SameLine(colDist);
+	if (ImGui::Checkbox("Show Primitive Examples", &renderPrimitiveExamples))		{ App->renderer->SetRenderPrimtiveExamples(renderPrimitiveExamples); }			ImGui::SameLine(colDist);
 	if (ImGui::Checkbox("Show Others (WIP)", &renderOthers))						{ /*App->renderer->SetRenderOthers();*/ }
 }
 
 void E_Configuration::RendererSettings()
 {
-	float minLineWidth		= 0.1f;
-	float maxLineWidth		= 10.0f;
+	float minLineWidth			= 0.1f;
+	float maxLineWidth			= 10.0f;
 
-	uint worldGridSize		= App->renderer->GetWorldGridSize();
+	uint worldGridSize			= App->renderer->GetWorldGridSize();
 
 	Color worldGridColor		= App->renderer->GetWorldGridColor(); 
 	Color wireframeColor		= App->renderer->GetWireframeColor();
 	Color vertexNormalsColor	= App->renderer->GetVertexNormalsColor();
-	Color faceNormalsColor	= App->renderer->GetFaceNormalsColor();
+	Color faceNormalsColor		= App->renderer->GetFaceNormalsColor();
 
-	Color aabbColor			= App->renderer->GetAABBColor();
+	Color aabbColor				= App->renderer->GetAABBColor();
 	Color obbColor				= App->renderer->GetOBBColor();
 	Color frustumColor			= App->renderer->GetFrustumColor();
 	Color rayColor				= App->renderer->GetRayColor();
-	Color boneColor			= App->renderer->GetBoneColor();
+	Color boneColor				= App->renderer->GetBoneColor();
 
 	float worldGridLineWidth	= App->renderer->GetWorldGridLineWidth();
 	float wireframeLineWidth	= App->renderer->GetWireframeLineWidth();
 	float vertexNormalsWidth	= App->renderer->GetVertexNormalsWidth();
-	float faceNormalsWidth	= App->renderer->GetFaceNormalsWidth();
+	float faceNormalsWidth		= App->renderer->GetFaceNormalsWidth();
 
-	float aabbEdgeWidth		= App->renderer->GetAABBEdgeWidth();
-	float obbEdgeWidth		= App->renderer->GetOBBEdgeWidth();
-	float frustumEdgeWidth	= App->renderer->GetFrustumEdgeWidth();
+	float aabbEdgeWidth			= App->renderer->GetAABBEdgeWidth();
+	float obbEdgeWidth			= App->renderer->GetOBBEdgeWidth();
+	float frustumEdgeWidth		= App->renderer->GetFrustumEdgeWidth();
 	float rayWidth				= App->renderer->GetRayWidth();
-	float boneWidth			= App->renderer->GetBoneWidth();
+	float boneWidth				= App->renderer->GetBoneWidth();
 	
 	ImGui::Text("Renderer Settings:");
 
@@ -854,7 +844,6 @@ void E_Configuration::InputLogOutput()
 		{
 			textColour = { 0.0f, 1.0f, 1.0f, 1.0f };
 		}
-		
 		if (strstr(inputLogs[i], "[MOUSE]") != nullptr)
 		{
 			textColour = { 1.0f, 0.0f, 1.0f, 1.0f };
@@ -911,63 +900,63 @@ void E_Configuration::GenerateWriteDirectoryText()
 }
 
 
-void E_Configuration::SDLInfo(HardwareInfo* hw_info)
+void E_Configuration::SDLInfo(HardwareInfo* hardwareInfo)
 {
 	ImGui::TextColored(ImVec4(0.0f, 1.0f, 1.0f, 1.0f), "SDL Info:");
 
-	ImGui::Text("SDL Version:");		ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%s", hw_info->SDL.SDLVersion);
+	ImGui::Text("SDL Version:");		ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%s", hardwareInfo->SDL.SDLVersion);
 }
 
-void E_Configuration::OpenGLInfo(HardwareInfo* hw_info)
+void E_Configuration::OpenGLInfo(HardwareInfo* hardwareInfo)
 {
 	ImGui::TextColored(ImVec4(0.0f, 1.0f, 1.0f, 1.0f), "OpenGL Info:");
 
-	ImGui::Text("Model:");				ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%s", hw_info->OpenGL.modelName);
-	ImGui::Text("Renderer:");			ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%s", hw_info->OpenGL.rendererName);
-	ImGui::Text("Version:");			ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%s", hw_info->OpenGL.version);
-	ImGui::Text("Shading Language:");	ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%s", hw_info->OpenGL.shadingLanguageVersion);
+	ImGui::Text("Model:");				ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%s", hardwareInfo->OpenGL.modelName);
+	ImGui::Text("Renderer:");			ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%s", hardwareInfo->OpenGL.rendererName);
+	ImGui::Text("Version:");			ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%s", hardwareInfo->OpenGL.version);
+	ImGui::Text("Shading Language:");	ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%s", hardwareInfo->OpenGL.shadingLanguageVersion);
 }
 
-void E_Configuration::DevILInfo(HardwareInfo* hw_info)
+void E_Configuration::DevILInfo(HardwareInfo* hardwareInfo)
 {
 	ImGui::TextColored(ImVec4(0.0f, 1.0f, 1.0f, 1.0f), "DevIL Info:");
 
-	ImGui::Text("Vendor:");				ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%s", hw_info->DevIL.vendor);
-	ImGui::Text("Version:");			ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%s", hw_info->DevIL.version);
+	ImGui::Text("Vendor:");				ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%s", hardwareInfo->DevIL.vendor);
+	ImGui::Text("Version:");			ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%s", hardwareInfo->DevIL.version);
 }
 
-void E_Configuration::CPUInfo(HardwareInfo* hw_info)
+void E_Configuration::CPUInfo(HardwareInfo* hardwareInfo)
 {
 	ImGui::TextColored(ImVec4(0.0f, 1.0f, 1.0f, 1.0f), "CPU Info:");
 
-	ImGui::Text("CPUs:");				ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%u (Cache: %ukb)", hw_info->CPU.cpuCount, hw_info->CPU.cacheSize);
-	ImGui::Text("RAM Size:");			ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%.1f GB", hw_info->CPU.ramGb);
+	ImGui::Text("CPUs:");				ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%u (Cache: %ukb)", hardwareInfo->CPU.cpuCount, hardwareInfo->CPU.cacheSize);
+	ImGui::Text("RAM Size:");			ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%.1f GB", hardwareInfo->CPU.ramGb);
 
 	ImGui::Text("Drivers:");
 	ImGui::SameLine();
 	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%s%s%s%s%s%s",
-		hw_info->CPU.hasRDTSC		?	"RDTSC,"	: "",
-		hw_info->CPU.hasAltiVec	?	"AltiVec,"	: "",
-		hw_info->CPU.has3DNow		?	"3DNow,"	: "",
-		hw_info->CPU.hasMMX		?	"MMX,"		: "",
-		hw_info->CPU.hasSSE		?	"SSE,"		: "",
-		hw_info->CPU.hasSSE2		?	"SSE2,"		: "");
+		hardwareInfo->CPU.hasRDTSC		?	"RDTSC,"	: "",
+		hardwareInfo->CPU.hasAltiVec	?	"AltiVec,"	: "",
+		hardwareInfo->CPU.has3DNow		?	"3DNow,"	: "",
+		hardwareInfo->CPU.hasMMX		?	"MMX,"		: "",
+		hardwareInfo->CPU.hasSSE		?	"SSE,"		: "",
+		hardwareInfo->CPU.hasSSE2		?	"SSE2,"		: "");
 	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%s%s%s%s%s",
-		hw_info->CPU.hasSSE3		?	"SSE3,"		: "",
-		hw_info->CPU.hasSSE41		?	"SSE4.1,"	: "",
-		hw_info->CPU.hasSSE42		?	"SSE4.2,"	: "",
-		hw_info->CPU.hasRDTSC		?	"AVX,"		: "",
-		hw_info->CPU.hasRDTSC		?	"AVX2,"		: "");
+		hardwareInfo->CPU.hasSSE3		?	"SSE3,"		: "",
+		hardwareInfo->CPU.hasSSE41		?	"SSE4.1,"	: "",
+		hardwareInfo->CPU.hasSSE42		?	"SSE4.2,"	: "",
+		hardwareInfo->CPU.hasRDTSC		?	"AVX,"		: "",
+		hardwareInfo->CPU.hasRDTSC		?	"AVX2,"		: "");
 }
 
-void E_Configuration::GPUInfo(HardwareInfo* hw_info)
+void E_Configuration::GPUInfo(HardwareInfo* hardwareInfo)
 {
 	ImGui::TextColored(ImVec4(0.0f, 1.0f, 1.0f, 1.0f), "GPU Info:");
 
-	ImGui::Text("GPU:");				ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Vendor %i Device %i", hw_info->GPU.vendor, hw_info->GPU.deviceId);
-	ImGui::Text("Brand:");				ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%s", hw_info->GPU.brand);
-	ImGui::Text("VRAM Budget:");		ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%.1f MB", hw_info->GPU.vramBudget);
-	ImGui::Text("VRAM Usage:");			ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%.1f MB", hw_info->GPU.vramUsage);
-	ImGui::Text("VRAM Available:");		ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%.1f MB", hw_info->GPU.vramAvailable);
-	ImGui::Text("VRAM Reserved:");		ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%.1f MB", hw_info->GPU.vramReserved);
+	ImGui::Text("GPU:");				ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Vendor %i Device %i",	hardwareInfo->GPU.vendor, hardwareInfo->GPU.deviceId);
+	ImGui::Text("Brand:");				ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%s",					hardwareInfo->GPU.brand);
+	ImGui::Text("VRAM Budget:");		ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%.1f MB",				hardwareInfo->GPU.vramBudget);
+	ImGui::Text("VRAM Usage:");			ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%.1f MB",				hardwareInfo->GPU.vramUsage);
+	ImGui::Text("VRAM Available:");		ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%.1f MB",				hardwareInfo->GPU.vramAvailable);
+	ImGui::Text("VRAM Reserved:");		ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%.1f MB",				hardwareInfo->GPU.vramReserved);
 }

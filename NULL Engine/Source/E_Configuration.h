@@ -65,11 +65,11 @@ private:
 	void GenerateReadDirectoriesText	();								// FileSystem menu: Will generate the texts that will display the Read Directory path.
 	void GenerateWriteDirectoryText		();								// FileSystem menu: Will generate the texts that will display the Write Directory path.
 
-	void SDLInfo						(HardwareInfo* hw_info);		// Hardware menu: Will generate the texts that will display information related with the SDL library.
-	void OpenGLInfo						(HardwareInfo* hw_info);		// Hardware menu: Will generate the texts that will display information related with the OpenGL library.
-	void DevILInfo						(HardwareInfo* hw_info);		// Hardware menu: Will generate the texts that will display information related with the DevIL library.
-	void CPUInfo						(HardwareInfo* hw_info);		// Hardware menu: Will generate the texts that will display information related with the CPU.
-	void GPUInfo						(HardwareInfo* hw_info);		// Hardware menu: Will generate the texts that will display information related with the GPU.
+	void SDLInfo						(HardwareInfo* hardwareInfo);	// Hardware menu: Will generate the texts that will display information related with the SDL library.
+	void OpenGLInfo						(HardwareInfo* hardwareInfo);	// Hardware menu: Will generate the texts that will display information related with the OpenGL library.
+	void DevILInfo						(HardwareInfo* hardwareInfo);	// Hardware menu: Will generate the texts that will display information related with the DevIL library.
+	void CPUInfo						(HardwareInfo* hardwareInfo);	// Hardware menu: Will generate the texts that will display information related with the CPU.
+	void GPUInfo						(HardwareInfo* hardwareInfo);	// Hardware menu: Will generate the texts that will display information related with the GPU.
 
 private:
 	float fpsData[MAX_HISTOGRAM_SIZE];
