@@ -173,7 +173,10 @@ Color C_Material::GetMaterialColour()
 
 void C_Material::SetMaterialColour(const Color& color)
 {
-	rMaterial->diffuseColor = color;
+	if (rMaterial != nullptr)
+	{
+		rMaterial->diffuseColor = color;
+	}
 }
 
 // --- MATERIAL AND TEXTURE GET/SET DATA METHODS
