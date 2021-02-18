@@ -4,7 +4,7 @@
 
 #include "R_Folder.h"
 
-R_Folder::R_Folder() : Resource(RESOURCE_TYPE::FOLDER)
+R_Folder::R_Folder() : Resource(ResourceType::FOLDER)
 {
 
 }
@@ -18,23 +18,21 @@ bool R_Folder::CleanUp()
 {
 	bool ret = true;
 
-	contained_resources.clear();
+	containedResources.clear();
 
 	return ret;
 }
 
-bool R_Folder::SaveMeta(ParsonNode& meta_root) const
+bool R_Folder::SaveMeta(ParsonNode& metaRoot) const
 {
 	bool ret = true;
 
-	ParsonArray contained_array = meta_root.SetArray("ContainedResources");
-
-
+	ParsonArray containedArray = metaRoot.SetArray("ContainedResources");
 
 	return ret;
 }
 
-bool R_Folder::LoadMeta(const ParsonNode& meta_root)
+bool R_Folder::LoadMeta(const ParsonNode& metaRoot)
 {
 	bool ret = true;
 
@@ -46,14 +44,14 @@ bool R_Folder::LoadMeta(const ParsonNode& meta_root)
 // --- R_FOLDER METHODS ---
 std::vector<uint32> R_Folder::GetContainedResources() const
 {
-	return contained_resources;
+	return containedResources;
 }
 
 bool R_Folder::IsContained(uint32 UID) const
 {
-	for (uint i = 0; i < contained_resources.size(); ++i)
+	for (uint i = 0; i < containedResources.size(); ++i)
 	{
-		if (contained_resources[i] == UID)
+		if (containedResources[i] == UID)
 		{
 			return true;
 		}

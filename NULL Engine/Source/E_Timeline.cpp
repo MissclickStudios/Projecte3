@@ -7,7 +7,7 @@
 
 E_Timeline::E_Timeline() : EditorPanel("Timeline")
 {
-	current_time = 0.0f;
+	currentTime = 0.0f;
 }
 
 E_Timeline::~E_Timeline()
@@ -42,13 +42,13 @@ bool E_Timeline::Draw(ImGuiIO& io)
 
 	ImGui::Begin("Timeline");
 
-	static ImVec2 offset_and_scale = ImVec2(0.0f, 0.0f);
-	ImGui::BeginTimelineEx("Current Animation", 120.0f, 12, 12, &offset_and_scale);
+	static ImVec2 offsetAndScale = ImVec2(0.0f, 0.0f);
+	ImGui::BeginTimelineEx("Current Animation", 120.0f, 12, 12, &offsetAndScale);
 	//ImGui::PlotTimelineEvents("EVENTS", values4, true);
 	ImGui::TimelineEventEx("Take001", values, true);
 	ImGui::TimelineEventEx("Take002", values2, false);
 	ImGui::TimelineEventEx("Transition", values3, false);
-	ImGui::EndTimelineEx(12, current_time, ImGui::ColorConvertFloat4ToU32(ImVec4(0.8f, 0.25f, 0.25f, 1.0f)));
+	ImGui::EndTimelineEx(12, currentTime, ImGui::ColorConvertFloat4ToU32(ImVec4(0.8f, 0.25f, 0.25f, 1.0f)));
 
 	/*ImVec2 curve_editor_width = ImGui::GetWindowSize() * ImVec2(0.75f, 0.85f);
 	ImGui::CurveEditor("CURVES", values4, count, curve_editor_width, 2, &count);
@@ -56,11 +56,11 @@ bool E_Timeline::Draw(ImGuiIO& io)
 	
 	ImGui::End();
 
-	current_time += Time::Game::GetDT() * 24;																		// Time * Ticks Per Second
+	currentTime += Time::Game::GetDT() * 24;																		// Time * Ticks Per Second
 
-	if (current_time > 120.0f)
+	if (currentTime > 120.0f)
 	{
-		current_time = 0.0f;
+		currentTime = 0.0f;
 	}
 
 	return ret;

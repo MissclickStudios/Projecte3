@@ -6,7 +6,7 @@
 class ParsonNode;
 typedef unsigned int uint;
 
-enum class KEY_STATE
+enum class KeyState
 {
 	KEY_IDLE = 0,
 	KEY_DOWN,
@@ -20,21 +20,21 @@ class M_Input : public Module
 {
 public:
 	
-	M_Input(bool is_active = true);
+	M_Input(bool isActive = true);
 	~M_Input();
 
 	bool			Init					(ParsonNode& config) override;
-	UPDATE_STATUS	PreUpdate				(float dt) override;
-	UPDATE_STATUS	Update					(float dt) override;
-	UPDATE_STATUS	PostUpdate				(float dt) override;
+	UpdateStatus	PreUpdate				(float dt) override;
+	UpdateStatus	Update					(float dt) override;
+	UpdateStatus	PostUpdate				(float dt) override;
 	bool			CleanUp					() override;
 
 	bool			LoadConfiguration		(ParsonNode& root) override;
 	bool			SaveConfiguration		(ParsonNode& root) const override;
 
 public:
-	KEY_STATE		GetKey					(int id) const;
-	KEY_STATE		GetMouseButton			(int id) const;
+	KeyState		GetKey					(int id) const;
+	KeyState		GetMouseButton			(int id) const;
 	uint			GetMaxNumScancodes		() const;
 
 	int				GetMouseX				() const;
@@ -48,20 +48,20 @@ public:
 	int				GetMouseYWheel			() const;
 
 private:
-	KEY_STATE*		keyboard;
-	KEY_STATE		mouse_buttons[MAX_MOUSE_BUTTONS];
-	uint			max_num_scancodes;
+	KeyState*		keyboard;
+	KeyState		mouseButtons[MAX_MOUSE_BUTTONS];
+	uint			maxNumScancodes;
 
-	int				mouse_x;
-	int				mouse_y;
-	int				mouse_z;
-	int				mouse_x_motion;
-	int				mouse_y_motion;
-	int				mouse_x_wheel;
-	int				mouse_y_wheel;
+	int				mouseX;
+	int				mouseY;
+	int				mouseZ;
+	int				mouseMotionX;
+	int				mouseMotionY;
+	int				mouseWheelX;
+	int				mouseWheelY;
 
-	int				prev_x_mouse_pos;
-	int				prev_y_mouse_pos;
+	int				prevMousePosX;
+	int				prevMousePosY;
 };
 
 #endif // !__M_INPUT_H__

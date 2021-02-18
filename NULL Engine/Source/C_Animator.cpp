@@ -22,31 +22,31 @@ typedef std::map<double, float3>::const_iterator	PositionKeyframe;
 typedef std::map<double, Quat>::const_iterator		RotationKeyframe;
 typedef std::map<double, float3>::const_iterator	ScaleKeyframe;
 
-C_Animator::C_Animator(GameObject* owner) : Component(owner, COMPONENT_TYPE::ANIMATOR),
-current_clip		(nullptr),
-blending_clip		(nullptr),
-current_root_bone	(nullptr)
+C_Animator::C_Animator(GameObject* owner) : Component(owner, ComponentType::ANIMATOR),
+currentClip(nullptr),
+blendingClip(nullptr),
+currentRootBone(nullptr)
 {
-	blend_frames		= 0;
+	blendFrames = 0;
 
-	play				= false;
-	pause				= false;
-	step				= false;
-	stop				= true;
+	play = false;
+	pause = false;
+	step = false;
+	stop = true;
 
-	playback_speed		= 1.0f;
-	interpolate			= true;
-	loop_animation		= false;
-	play_on_start		= true;
-	camera_culling		= true;
-	show_bones			= false;
+	playbackSpeed = 1.0f;
+	interpolate = true;
+	loopAnimation = false;
+	playOnStart = true;
+	cameraCulling = true;
+	showBones = false;
 }
 
 C_Animator::~C_Animator()
 {
-	current_clip		= nullptr;
-	blending_clip		= nullptr;
-	current_root_bone	= nullptr;
+	currentClip = nullptr;
+	blendingClip = nullptr;
+	currentRootBone = nullptr;
 }
 
 bool C_Animator::Update()
@@ -59,7 +59,7 @@ bool C_Animator::Update()
 
 	if (play || step)
 	{
-		if (current_clip != nullptr)
+		if (currentClip != nullptr)
 		{
 			StepAnimation();
 		}
@@ -76,19 +76,19 @@ bool C_Animator::CleanUp()
 
 	for (uint i = 0; i < animations.size(); ++i)
 	{
-		App->resource_manager->FreeResource(animations[i]->GetUID());
+		App->resourceManager->FreeResource(animations[i]->GetUID());
 	}
 
 	animations.clear();
-	animation_bones.clear();
+	animationBones.clear();
 	clips.clear();
 
-	current_bones.clear();
-	blending_bones.clear();
+	currentBones.clear();
+	blendingBones.clear();
 
-	display_bones.clear();
+	displayBones.clear();
 
-	animations_to_add.clear();
+	animationsToAdd.clear();
 
 	return ret;
 }
@@ -100,19 +100,19 @@ bool C_Animator::SaveState(ParsonNode& root) const
 	root.SetNumber("Type", (double)GetType());
 
 	// Animations
-	ParsonArray animations_array = root.SetArray("Animations");
+	ParsonArray animationsArray = root.SetArray("Animations");
 	for (auto animation = animations.cbegin(); animation != animations.cend(); ++animation)
 	{
-		ParsonNode animation_node = animations_array.SetNode((*animation)->GetName());
+		ParsonNode animationNode = animationsArray.SetNode((*animation)->GetName());
 
-		animation_node.SetNumber("UID", (*animation)->GetUID());
-		animation_node.SetString("Name", (*animation)->GetAssetsFile());
-		animation_node.SetString("Path", (*animation)->GetLibraryPath());
-		animation_node.SetString("File", (*animation)->GetLibraryFile());
+		animationNode.SetNumber("UID", (*animation)->GetUID());
+		animationNode.SetString("Name", (*animation)->GetAssetsFile());
+		animationNode.SetString("Path", (*animation)->GetLibraryPath());
+		animationNode.SetString("File", (*animation)->GetLibraryFile());
 	}
 
 	// Clips
-	ParsonArray clips_array = root.SetArray("Clips");
+	ParsonArray clipsArray = root.SetArray("Clips");
 	for (auto clip = clips.cbegin(); clip != clips.cend(); ++clip)
 	{
 		if (strstr(clip->first.c_str(), "Default") != nullptr)
@@ -120,16 +120,16 @@ bool C_Animator::SaveState(ParsonNode& root) const
 			continue;
 		}
 		
-		ParsonNode clip_node = clips_array.SetNode(clip->second.GetName());
-		clip->second.SaveState(clip_node);
+		ParsonNode clipNode = clipsArray.SetNode(clip->second.GetName());
+		clip->second.SaveState(clipNode);
 	}
 
 	// Current Clip
-	if (current_clip != nullptr)
+	if (currentClip != nullptr)
 	{
-		ParsonNode current_clip_node = root.SetNode("CurrentClip");
-		current_clip_node.SetString("AnimationName", current_clip->GetAnimationName());
-		current_clip_node.SetString("Name", current_clip->GetName());
+		ParsonNode currentClipNode = root.SetNode("CurrentClip");
+		currentClipNode.SetString("AnimationName", currentClip->GetAnimationName());
+		currentClipNode.SetString("Name", currentClip->GetName());
 	}
 
 	return ret;
@@ -139,39 +139,39 @@ bool C_Animator::LoadState(ParsonNode& root)
 {
 	bool ret = true;
 
-	ParsonArray animations_array = root.GetArray("Animations");
-	for (uint i = 0; i < animations_array.size; ++i)
+	ParsonArray animationsArray = root.GetArray("Animations");
+	for (uint i = 0; i < animationsArray.size; ++i)
 	{
-		ParsonNode animation_node = animations_array.GetNode(i);
-		if (!animation_node.NodeIsValid())
+		ParsonNode animationNode = animationsArray.GetNode(i);
+		if (!animationNode.NodeIsValid())
 		{
 			continue;
 		}
 
-		std::string assets_path = ASSETS_MODELS_PATH + std::string(animation_node.GetString("Name"));
-		App->resource_manager->AllocateResource((uint32)animation_node.GetNumber("UID"), assets_path.c_str());
+		std::string assetsPath = ASSETS_MODELS_PATH + std::string(animationNode.GetString("Name"));
+		App->resourceManager->AllocateResource((uint32)animationNode.GetNumber("UID"), assetsPath.c_str());
 		
-		R_Animation* r_animation = (R_Animation*)App->resource_manager->RequestResource((uint32)animation_node.GetNumber("UID"));
-		if (r_animation != nullptr)
+		R_Animation* rAnimation = (R_Animation*)App->resourceManager->RequestResource((uint32)animationNode.GetNumber("UID"));
+		if (rAnimation != nullptr)
 		{
-			animations_to_add.push_back(r_animation);
-			//AddAnimation(r_animation);
+			animationsToAdd.push_back(rAnimation);
+			//AddAnimation(rAnimation);
 		}
 	}
 
-	ParsonArray clips_array = root.GetArray("Clips");
-	for (uint i = 0; i < clips_array.size; ++i)
+	ParsonArray clipsArray = root.GetArray("Clips");
+	for (uint i = 0; i < clipsArray.size; ++i)
 	{
-		ParsonNode clip_node	= clips_array.GetNode(i);
-		AnimatorClip clip		= AnimatorClip();
+		ParsonNode clipNode = clipsArray.GetNode(i);
+		AnimatorClip clip = AnimatorClip();
 
-		clip.LoadState(clip_node);
+		clip.LoadState(clipNode);
 
 		clips.emplace(clip.GetName(), clip);
 	}
 
-	ParsonNode current_clip_node = root.GetNode("CurrentClip");
-	auto item = clips.find(current_clip_node.GetString("Name"));
+	ParsonNode currentClipNode = root.GetNode("CurrentClip");
+	auto item = clips.find(currentClipNode.GetString("Name"));
 	if (item != clips.end())
 	{
 		SetCurrentClip(&item->second);
@@ -197,42 +197,42 @@ bool C_Animator::StepAnimation()
 		return false;
 	}
 
-	for (uint i = 0; i < current_bones.size(); ++i)
+	for (uint i = 0; i < currentBones.size(); ++i)
 	{
-		const BoneLink& bone = current_bones[i];
+		const BoneLink& bone = currentBones[i];
 		
-		C_Transform* c_transform = bone.game_object->GetComponent<C_Transform>();
-		if (c_transform == nullptr)
+		C_Transform* cTransform = bone.gameObject->GetComponent<C_Transform>();
+		if (cTransform == nullptr)
 		{
-			LOG("[WARNING] Animation Component: GameObject { %s } did not have a Transform Component!", bone.game_object->GetName());
+			LOG("[WARNING] Animation Component: GameObject { %s } did not have a Transform Component!", bone.gameObject->GetName());
 			continue;
 		}
 
-		const Transform& original_transform = Transform(c_transform->GetLocalTransform());
+		const Transform& originalTransform = Transform(cTransform->GetLocalTransform());
 		
 		if (interpolate)
 		{
-			Transform& interpolated_transform = GetInterpolatedTransform(current_clip->GetAnimationFrame(), bone.channel, original_transform);
+			Transform& interpolatedTransform = GetInterpolatedTransform(currentClip->GetAnimationFrame(), bone.channel, originalTransform);
 			
 			if (BlendingClipExists())
 			{
-				interpolated_transform = GetBlendedTransform(blending_clip->GetAnimationFrame(), blending_bones[i].channel, interpolated_transform);
+				interpolatedTransform = GetBlendedTransform(blendingClip->GetAnimationFrame(), blendingBones[i].channel, interpolatedTransform);
 			}
 
-			c_transform->ImportTransform(interpolated_transform);
+			cTransform->ImportTransform(interpolatedTransform);
 		}
 		else
 		{
-			if (current_clip->in_new_tick)
+			if (currentClip->inNewTick)
 			{
-				Transform& pose_to_pose_transform = GetPoseToPoseTransform(current_clip->GetAnimationTick(), bone.channel, original_transform);
+				Transform& poseToPoseTransform = GetPoseToPoseTransform(currentClip->GetAnimationTick(), bone.channel, originalTransform);
 
 				if (BlendingClipExists())
 				{
-					pose_to_pose_transform = GetBlendedTransform(blending_clip->GetAnimationTick(), blending_bones[i].channel, pose_to_pose_transform);
+					poseToPoseTransform = GetBlendedTransform(blendingClip->GetAnimationTick(), blendingBones[i].channel, poseToPoseTransform);
 				}
 
-				c_transform->ImportTransform(pose_to_pose_transform);
+				cTransform->ImportTransform(poseToPoseTransform);
 			}
 		}
 	}
@@ -246,44 +246,44 @@ bool C_Animator::StepClips()
 {
 	bool ret = true;
 
-	bool current_exists		= CurrentClipExists();
-	bool blending_exists	= BlendingClipExists();
+	bool currentExists		= CurrentClipExists();
+	bool blendingExists	= BlendingClipExists();
 
-	if (!current_exists && !blending_exists)
+	if (!currentExists && !blendingExists)
 	{
 		LOG("[ERROR] Animator Component: Could not Step Clips! Error: There were no Current or Blending Clips set.");
 		return false;
 	}
-	if (!current_exists && blending_exists)
+	if (!currentExists && blendingExists)
 	{
 		SwitchBlendingToCurrent();
 	}
 
 	if (BlendingClipExists())
 	{
-		if (blending_clip->GetAnimationFrame() > (float)(blending_clip->GetStart() + blend_frames))
+		if (blendingClip->GetAnimationFrame() > (float)(blendingClip->GetStart() + blendFrames))
 		{
 			SwitchBlendingToCurrent();
 		}
 	}
 	
 	float dt			= (App->play) ? Time::Game::GetDT() : Time::Real::GetDT();											// In case a clip preview is needed outside Game Mode.
-	float step_value	= dt * playback_speed;
+	float stepValue	= dt * playbackSpeed;
 
 	if (CurrentClipExists())
 	{
-		bool success = current_clip->StepClip(step_value);
+		bool success = currentClip->StepClip(stepValue);
 		if (!success)
 		{
 			if (BlendingClipExists())
 			{
-				blending_clip->StepClip(step_value);
+				blendingClip->StepClip(stepValue);
 				SwitchBlendingToCurrent();
 				return true;
 			}
 			else
 			{
-				if (!current_clip->IsLooped())
+				if (!currentClip->IsLooped())
 				{
 					Stop();
 					ResetBones();
@@ -294,7 +294,7 @@ bool C_Animator::StepClips()
 
 		if (BlendingClipExists())
 		{
-			blending_clip->StepClip(step_value);
+			blendingClip->StepClip(stepValue);
 		}
 	}
 
@@ -314,9 +314,9 @@ bool C_Animator::ValidateCurrentClip()
 {
 	bool ret = true;
 	
-	if (current_clip == nullptr)
+	if (currentClip == nullptr)
 	{
-		if (blending_clip != nullptr)
+		if (blendingClip != nullptr)
 		{
 			SwitchBlendingToCurrent();
 			ret = true;
@@ -332,31 +332,31 @@ bool C_Animator::ValidateCurrentClip()
 
 void C_Animator::SwitchBlendingToCurrent()
 {
-	if (current_clip != nullptr)
+	if (currentClip != nullptr)
 	{
-		current_clip->playing = false;
-		current_clip->ClearClip();
+		currentClip->playing = false;
+		currentClip->ClearClip();
 		ClearCurrentClip();
 	}
 
-	SetCurrentClip(blending_clip);
+	SetCurrentClip(blendingClip);
 	ClearBlendingClip();
 }
 
 void C_Animator::ResetBones()
 {
-	if (current_clip == nullptr)
+	if (currentClip == nullptr)
 	{
 		LOG("[ERROR] Animator Component: Could not Reset Bones! Error: Current Clip was nullptr.");
 		return;
 	}
 	
-	for (auto bone = current_bones.cbegin(); bone != current_bones.cend(); ++bone)
+	for (auto bone = currentBones.cbegin(); bone != currentBones.cend(); ++bone)
 	{
-		const Transform& transform = Transform(bone->game_object->GetComponent<C_Transform>()->GetLocalTransform());
-		const Transform& interpolated_transform = GetInterpolatedTransform((double)current_clip->GetStart(), bone->channel, transform);
+		const Transform& transform = Transform(bone->gameObject->GetComponent<C_Transform>()->GetLocalTransform());
+		const Transform& interpolatedTransform = GetInterpolatedTransform((double)currentClip->GetStart(), bone->channel, transform);
 
-		bone->game_object->GetComponent<C_Transform>()->ImportTransform(interpolated_transform);
+		bone->gameObject->GetComponent<C_Transform>()->ImportTransform(interpolatedTransform);
 	}
 
 	UpdateDisplayBones();
@@ -364,204 +364,204 @@ void C_Animator::ResetBones()
 
 void C_Animator::AddAnimationsToAdd()
 {
-	if (!animations_to_add.empty())
+	if (!animationsToAdd.empty())
 	{
-		for (uint i = 0; i < animations_to_add.size(); ++i)
+		for (uint i = 0; i < animationsToAdd.size(); ++i)
 		{
-			AddAnimation(animations_to_add[i]);
+			AddAnimation(animationsToAdd[i]);
 		}
 
-		animations_to_add.clear();
+		animationsToAdd.clear();
 	}
 }
 
-Transform C_Animator::GetInterpolatedTransform(const double& keyframe, const Channel& channel, const Transform& original_transform) const
+Transform C_Animator::GetInterpolatedTransform(const double& keyframe, const Channel& channel, const Transform& originalTransform) const
 {
-	float3	interpolated_position	= GetInterpolatedPosition(keyframe, channel, original_transform.position);
-	Quat	interpolated_rotation	= GetInterpolatedRotation(keyframe, channel, original_transform.rotation);
-	float3	interpolated_scale		= GetInterpolatedScale(keyframe, channel, original_transform.scale);
+	float3	interpolatedPosition	= GetInterpolatedPosition(keyframe, channel, originalTransform.position);
+	Quat	interpolatedRotation	= GetInterpolatedRotation(keyframe, channel, originalTransform.rotation);
+	float3	interpolatedScale		= GetInterpolatedScale(keyframe, channel, originalTransform.scale);
 
-	return Transform(interpolated_position, interpolated_rotation, interpolated_scale);
+	return Transform(interpolatedPosition, interpolatedRotation, interpolatedScale);
 }
 
-const float3 C_Animator::GetInterpolatedPosition(const double& keyframe, const Channel& channel, const float3& original_position) const
+const float3 C_Animator::GetInterpolatedPosition(const double& keyframe, const Channel& channel, const float3& originalPosition) const
 {
 	if (!channel.HasPositionKeyframes())
 	{
-		return original_position;
+		return originalPosition;
 	}
 
-	PositionKeyframe prev_keyframe = channel.GetClosestPrevPositionKeyframe(keyframe);
-	PositionKeyframe next_keyframe = channel.GetClosestNextPositionKeyframe(keyframe);
+	PositionKeyframe prevKeyframe = channel.GetClosestPrevPositionKeyframe(keyframe);
+	PositionKeyframe nextKeyframe = channel.GetClosestNextPositionKeyframe(keyframe);
 
-	float rate = (float)(keyframe / next_keyframe->first);
-	float3 ret = (prev_keyframe == next_keyframe) ? prev_keyframe->second : prev_keyframe->second.Lerp(next_keyframe->second, rate);
+	float rate = (float)(keyframe / nextKeyframe->first);
+	float3 ret = (prevKeyframe == nextKeyframe) ? prevKeyframe->second : prevKeyframe->second.Lerp(nextKeyframe->second, rate);
 
 	return ret;
 }
 
-const Quat C_Animator::GetInterpolatedRotation(const double& keyframe, const Channel& channel, const Quat& original_rotation) const
+const Quat C_Animator::GetInterpolatedRotation(const double& keyframe, const Channel& channel, const Quat& originalRotation) const
 {
 	if (!channel.HasRotationKeyframes())
 	{
-		return original_rotation;
+		return originalRotation;
 	}
 
-	RotationKeyframe prev_keyframe = channel.GetClosestPrevRotationKeyframe(keyframe);
-	RotationKeyframe next_keyframe = channel.GetClosestNextRotationKeyframe(keyframe);
+	RotationKeyframe prevKeyframe = channel.GetClosestPrevRotationKeyframe(keyframe);
+	RotationKeyframe nextKeyframe = channel.GetClosestNextRotationKeyframe(keyframe);
 
-	float rate	= (float)(keyframe / next_keyframe->first);
-	Quat ret	= (prev_keyframe == next_keyframe) ? prev_keyframe->second : prev_keyframe->second.Slerp(next_keyframe->second, rate);
+	float rate = (float)(keyframe / nextKeyframe->first);
+	Quat ret = (prevKeyframe == nextKeyframe) ? prevKeyframe->second : prevKeyframe->second.Slerp(nextKeyframe->second, rate);
 
 	return ret;
 }
 
-const float3 C_Animator::GetInterpolatedScale(const double& keyframe, const Channel& channel, const float3& original_scale) const
+const float3 C_Animator::GetInterpolatedScale(const double& keyframe, const Channel& channel, const float3& originalScale) const
 {
 	if (!channel.HasScaleKeyframes())
 	{
-		return original_scale;
+		return originalScale;
 	}
 
-	ScaleKeyframe prev_keyframe = channel.GetClosestPrevScaleKeyframe(keyframe);
-	ScaleKeyframe next_keyframe = channel.GetClosestNextScaleKeyframe(keyframe);
+	ScaleKeyframe prevKeyframe = channel.GetClosestPrevScaleKeyframe(keyframe);
+	ScaleKeyframe nextKeyframe = channel.GetClosestNextScaleKeyframe(keyframe);
 
-	float rate = (float)(keyframe / next_keyframe->first);
-	float3 ret = (prev_keyframe == next_keyframe) ? prev_keyframe->second : prev_keyframe->second.Lerp(next_keyframe->second, rate);
+	float rate = (float)(keyframe / nextKeyframe->first);
+	float3 ret = (prevKeyframe == nextKeyframe) ? prevKeyframe->second : prevKeyframe->second.Lerp(nextKeyframe->second, rate);
 
 	return ret;
 }
 
-Transform C_Animator::GetPoseToPoseTransform(const uint& tick, const Channel& channel, const Transform& original_transform) const
+Transform C_Animator::GetPoseToPoseTransform(const uint& tick, const Channel& channel, const Transform& originalTransform) const
 {
-	const float3& position	= GetPoseToPosePosition(tick, channel, original_transform.position);
-	const Quat& rotation	= GetPoseToPoseRotation(tick, channel, original_transform.rotation);
-	const float3& scale		= GetPoseToPoseScale(tick, channel, original_transform.scale);
+	const float3& position	= GetPoseToPosePosition(tick, channel, originalTransform.position);
+	const Quat& rotation	= GetPoseToPoseRotation(tick, channel, originalTransform.rotation);
+	const float3& scale		= GetPoseToPoseScale(tick, channel, originalTransform.scale);
 	
 	return Transform(position, rotation, scale);
 }
 
-const float3 C_Animator::GetPoseToPosePosition(const uint& tick, const Channel& channel, const float3& original_position) const
+const float3 C_Animator::GetPoseToPosePosition(const uint& tick, const Channel& channel, const float3& originalPosition) const
 {
 	if (!channel.HasPositionKeyframes()) 
 	{ 
-		return original_position; 
+		return originalPosition; 
 	}
 
 	return channel.GetPositionKeyframe(tick)->second;
 }
 
-const Quat C_Animator::GetPoseToPoseRotation(const uint& tick, const Channel& channel, const Quat& original_rotation) const
+const Quat C_Animator::GetPoseToPoseRotation(const uint& tick, const Channel& channel, const Quat& originalRotation) const
 {
 	if (!channel.HasRotationKeyframes())
 	{
-		return original_rotation;
+		return originalRotation;
 	}
 
 	return channel.GetRotationKeyframe(tick)->second;
 }
 
-const float3 C_Animator::GetPoseToPoseScale(const uint& tick, const Channel& channel, const float3& original_scale) const
+const float3 C_Animator::GetPoseToPoseScale(const uint& tick, const Channel& channel, const float3& originalScale) const
 {
 	if (!channel.HasScaleKeyframes())
 	{
-		return original_scale;
+		return originalScale;
 	}
 
 	return channel.GetScaleKeyframe(tick)->second;
 }
 
-Transform C_Animator::GetBlendedTransform(const double& blended_keyframe, const Channel& blended_channel, const Transform& original_transform) const
+Transform C_Animator::GetBlendedTransform(const double& blendedKeyframe, const Channel& blendedChannel, const Transform& originalTransform) const
 {
-	const float3& position	= GetBlendedPosition(blended_keyframe, blended_channel, original_transform.position);
-	const Quat& rotation	= GetBlendedRotation(blended_keyframe, blended_channel, original_transform.rotation);
-	const float3& scale		= GetBlendedScale(blended_keyframe, blended_channel, original_transform.scale);
+	const float3& position	= GetBlendedPosition(blendedKeyframe, blendedChannel, originalTransform.position);
+	const Quat& rotation	= GetBlendedRotation(blendedKeyframe, blendedChannel, originalTransform.rotation);
+	const float3& scale		= GetBlendedScale(blendedKeyframe, blendedChannel, originalTransform.scale);
 
 	return Transform(position, rotation, scale);
 }
 
-const float3 C_Animator::GetBlendedPosition(const double& blending_keyframe, const Channel& blending_channel, const float3& original_position) const
+const float3 C_Animator::GetBlendedPosition(const double& blendingKeyframe, const Channel& blendingChannel, const float3& originalPosition) const
 {
-	if (!blending_channel.HasPositionKeyframes())
+	if (!blendingChannel.HasPositionKeyframes())
 	{
-		return original_position;
+		return originalPosition;
 	}
 
-	float3 position			= GetInterpolatedPosition(blending_keyframe, blending_channel, original_position);
+	float3 position			= GetInterpolatedPosition(blendingKeyframe, blendingChannel, originalPosition);
 
-	double blend_frame		= blending_keyframe - blending_clip->GetStart();
-	float blend_rate		= (float)(blend_frame / blend_frames);
-	float3 blended_position	= original_position.Lerp(position, blend_rate);
+	double blendFrame		= blendingKeyframe - blendingClip->GetStart();
+	float blendRate		= (float)(blendFrame / blendFrames);
+	float3 blendedPosition	= originalPosition.Lerp(position, blendRate);
 	
-	return blended_position;
+	return blendedPosition;
 }
 
-const Quat C_Animator::GetBlendedRotation(const double& blending_keyframe, const Channel& blending_channel, const Quat& original_rotation) const
+const Quat C_Animator::GetBlendedRotation(const double& blendingKeyframe, const Channel& blendingChannel, const Quat& originalRotation) const
 {
-	if (!blending_channel.HasRotationKeyframes())
+	if (!blendingChannel.HasRotationKeyframes())
 	{
-		return original_rotation;
+		return originalRotation;
 	}
 
-	Quat rotation			= GetInterpolatedRotation(blending_keyframe, blending_channel, original_rotation);
+	Quat rotation			= GetInterpolatedRotation(blendingKeyframe, blendingChannel, originalRotation);
 
-	double blend_frame		= blending_keyframe - blending_clip->GetStart();
-	float blend_rate		= (float)(blend_frame / blend_frames);
-	Quat blended_rotation	= original_rotation.Slerp(rotation, blend_rate);
+	double blendFrame		= blendingKeyframe - blendingClip->GetStart();
+	float blendRate		= (float)(blendFrame / blendFrames);
+	Quat blendedRotation	= originalRotation.Slerp(rotation, blendRate);
 
-	return blended_rotation;
+	return blendedRotation;
 }
 
-const float3 C_Animator::GetBlendedScale(const double& blending_keyframe, const Channel& blending_channel, const float3& original_scale) const
+const float3 C_Animator::GetBlendedScale(const double& blendingKeyframe, const Channel& blendingChannel, const float3& originalScale) const
 {
-	if (!blending_channel.HasScaleKeyframes())
+	if (!blendingChannel.HasScaleKeyframes())
 	{
-		return original_scale;
+		return originalScale;
 	}
 
-	float3 scale			= GetInterpolatedScale(blending_keyframe, blending_channel, original_scale);
+	float3 scale = GetInterpolatedScale(blendingKeyframe, blendingChannel, originalScale);
 
-	double blend_frame		= blending_keyframe - blending_clip->GetStart();
-	float blend_rate		= (float)(blend_frame / blend_frames);
-	float3 blended_scale	= original_scale.Lerp(scale, blend_rate);
+	double blendFrame = blendingKeyframe - blendingClip->GetStart();
+	float blendRate = (float)(blendFrame / blendFrames);
+	float3 blendedScale	= originalScale.Lerp(scale, blendRate);
 
-	return blended_scale;
+	return blendedScale;
 }
 
-void C_Animator::FindAnimationBones(const R_Animation* r_animation)
+void C_Animator::FindAnimationBones(const R_Animation* rAnimation)
 {
-	if (r_animation == nullptr)
+	if (rAnimation == nullptr)
 	{
 		return;
 	}
-	if (r_animation->channels.empty())
+	if (rAnimation->channels.empty())
 	{
 		return;
 	}
 
 	std::vector<BoneLink> links;
-	bool success = FindBoneLinks(r_animation, links);
+	bool success = FindBoneLinks(rAnimation, links);
 	if (success)
 	{
-		animation_bones.emplace(r_animation->GetUID(), links);
+		animationBones.emplace(rAnimation->GetUID(), links);
 
-		GameObject* root_bone = FindRootBone(links);
-		if (root_bone != nullptr)
+		GameObject* rootBone = FindRootBone(links);
+		if (rootBone != nullptr)
 		{
-			SetRootBone(root_bone);
+			SetRootBone(rootBone);
 			UpdateDisplayBones();
 		}
 	}
 }
 
-bool C_Animator::FindBoneLinks(const R_Animation* r_animation, std::vector<BoneLink>& links)
+bool C_Animator::FindBoneLinks(const R_Animation* rAnimation, std::vector<BoneLink>& links)
 {
-	if (r_animation == nullptr)
+	if (rAnimation == nullptr)
 	{
 		LOG("[ERROR] Animator Component: Could not find Bone Links! Error: Given R_Animation* was nullptr.");
 		return false;
 	}
-	if (r_animation->channels.empty())
+	if (rAnimation->channels.empty())
 	{
 		LOG("[ERROR] Animator Component: Could not find { %s }'s Bone Links! Error: R_Animation* had no channels.");
 		return false;
@@ -575,13 +575,13 @@ bool C_Animator::FindBoneLinks(const R_Animation* r_animation, std::vector<BoneL
 	std::map<std::string, GameObject*> childs;
 	this->GetOwner()->GetAllChilds(childs);
 
-	for (auto channel = r_animation->channels.cbegin(); channel != r_animation->channels.cend(); ++channel)						// Trying out the auto keyword
+	for (auto channel = rAnimation->channels.cbegin(); channel != rAnimation->channels.cend(); ++channel)						// Trying out the auto keyword
 	{
-		auto go_item = childs.find(channel->name);
-		if (go_item != childs.end())
+		auto goItem = childs.find(channel->name);
+		if (goItem != childs.end())
 		{
-			go_item->second->is_bone = true;
-			links.push_back(BoneLink((*channel), go_item->second));
+			goItem->second->is_bone = true;
+			links.push_back(BoneLink((*channel), goItem->second));
 		}
 	}
 
@@ -594,48 +594,48 @@ GameObject* C_Animator::FindRootBone(const std::vector<BoneLink>& links)
 {	
 	for (auto link = links.cbegin(); link != links.cend(); ++link)																// Trying out the auto keyword
 	{
-		if (link->game_object->parent == nullptr)
+		if (link->gameObject->parent == nullptr)
 		{
 			continue;
 		}
 
-		if (!link->game_object->parent->is_bone)
+		if (!link->gameObject->parent->is_bone)
 		{
-			return link->game_object;
+			return link->gameObject;
 		}
 	}
 
 	return nullptr;
 }
 
-void C_Animator::SetRootBone(const GameObject* root_bone)
+void C_Animator::SetRootBone(const GameObject* rootBone)
 {
-	if (root_bone == nullptr)
+	if (rootBone == nullptr)
 	{
 		LOG("[ERROR] Animator Component: Could not Set Root Bone! Error: Given GameObject* was nullptr.");
 		return;
 	}
 	
-	if (current_root_bone == nullptr)
+	if (currentRootBone == nullptr)
 	{
-		current_root_bone = root_bone;
+		currentRootBone = rootBone;
 	}
 	else
 	{
-		if (current_root_bone != root_bone)
+		if (currentRootBone != rootBone)
 		{
-			LOG("[WARNING] Animator Component: Disparity between root bones detected! A: [%s], B: [%s]", current_root_bone->GetName(), root_bone->GetName());
+			LOG("[WARNING] Animator Component: Disparity between root bones detected! A: [%s], B: [%s]", currentRootBone->GetName(), rootBone->GetName());
 		}
 	}
 }
 
 void C_Animator::UpdateDisplayBones()
 {
-	display_bones.clear();
+	displayBones.clear();
 	
-	if (current_root_bone != nullptr)
+	if (currentRootBone != nullptr)
 	{
-		GenerateBoneSegments(current_root_bone);
+		GenerateBoneSegments(currentRootBone);
 	}
 
 	return;
@@ -653,91 +653,91 @@ void C_Animator::GenerateBoneSegments(const GameObject* bone)
 		return;
 	}
 	
-	C_Transform* bone_transform = bone->GetComponent<C_Transform>();
+	C_Transform* boneTransform = bone->GetComponent<C_Transform>();
 
 	for (uint i = 0; i < bone->childs.size(); ++i)
 	{
-		LineSegment display_bone = { float3::zero, float3::zero };
+		LineSegment displayBone = { float3::zero, float3::zero };
 
-		display_bone.a = bone_transform->GetWorldPosition();
-		display_bone.b = bone->childs[i]->GetComponent<C_Transform>()->GetWorldPosition();
+		displayBone.a = boneTransform->GetWorldPosition();
+		displayBone.b = bone->childs[i]->GetComponent<C_Transform>()->GetWorldPosition();
 
-		display_bones.push_back(display_bone);
+		displayBones.push_back(displayBone);
 
 		GenerateBoneSegments(bone->childs[i]);
 	}
 }
 
-bool C_Animator::GenerateDefaultClip(const R_Animation* r_animation, AnimatorClip& default_clip)
+bool C_Animator::GenerateDefaultClip(const R_Animation* rAnimation, AnimatorClip& defaultClip)
 {
-	if (r_animation == nullptr)
+	if (rAnimation == nullptr)
 	{
 		LOG("[ERROR] Animator Component: Could not Generate Default Clip! Error: Given R_Animation* was nullptr.");
 		return false;
 	}
 	
-	std::string default_name	= r_animation->GetName() + std::string(" Default");
-	default_clip				= AnimatorClip(r_animation, default_name, 0, (uint)r_animation->GetDuration(), false);
+	std::string defaultName	= rAnimation->GetName() + std::string(" Default");
+	defaultClip				= AnimatorClip(rAnimation, defaultName, 0, (uint)rAnimation->GetDuration(), false);
 
 	return true;
 }
 
-void C_Animator::SortBoneLinksByHierarchy(const std::vector<BoneLink>& bone_links, const GameObject* root_bone, std::vector<BoneLink>& sorted)
+void C_Animator::SortBoneLinksByHierarchy(const std::vector<BoneLink>& boneLinks, const GameObject* rootBone, std::vector<BoneLink>& sorted)
 {
-	if (root_bone == nullptr)
+	if (rootBone == nullptr)
 	{
 		return;
 	}
 	
-	if (root_bone == current_root_bone)
+	if (rootBone == currentRootBone)
 	{
-		for (uint j = 0; j < bone_links.size(); ++j)
+		for (uint j = 0; j < boneLinks.size(); ++j)
 		{
-			if (bone_links[j].channel.name == root_bone->GetName())
+			if (boneLinks[j].channel.name == rootBone->GetName())
 			{
-				sorted.push_back(bone_links[j]);
+				sorted.push_back(boneLinks[j]);
 			}
 		}
 	}
 
-	for (uint i = 0; i < root_bone->childs.size(); ++i)
+	for (uint i = 0; i < rootBone->childs.size(); ++i)
 	{
-		for (uint j = 0; j < bone_links.size(); ++j)
+		for (uint j = 0; j < boneLinks.size(); ++j)
 		{
-			if (bone_links[j].channel.name == root_bone->childs[i]->GetName())
+			if (boneLinks[j].channel.name == rootBone->childs[i]->GetName())
 			{
-				sorted.push_back(bone_links[j]);
+				sorted.push_back(boneLinks[j]);
 			}
 		}
 	}
 
-	for (uint i = 0; i < root_bone->childs.size(); ++i)
+	for (uint i = 0; i < rootBone->childs.size(); ++i)
 	{
-		SortBoneLinksByHierarchy(bone_links, root_bone->childs[i], sorted);
+		SortBoneLinksByHierarchy(boneLinks, rootBone->childs[i], sorted);
 	}
 }
 
-void C_Animator::AddAnimation(R_Animation* r_animation)
+void C_Animator::AddAnimation(R_Animation* rAnimation)
 {
-	if (r_animation == nullptr)
+	if (rAnimation == nullptr)
 	{
 		LOG("[ERROR] Animator Component: Could not Add Animation to %s's Animation Component! Error: Argument R_Animation* was nullptr.", this->GetOwner()->GetName());
 		return;
 	}
 
-	animations.push_back(r_animation);
+	animations.push_back(rAnimation);
 
-	FindAnimationBones(r_animation);
+	FindAnimationBones(rAnimation);
 
-	AnimatorClip default_clip = AnimatorClip();
-	bool success = GenerateDefaultClip(r_animation, default_clip);
+	AnimatorClip defaultClip = AnimatorClip();
+	bool success = GenerateDefaultClip(rAnimation, defaultClip);
 	if (success)
 	{
-		clips.emplace(default_clip.GetName(), default_clip);
+		clips.emplace(defaultClip.GetName(), defaultClip);
 
-		if (current_clip == nullptr)
+		if (currentClip == nullptr)
 		{
-			SetCurrentClip(&clips.find(default_clip.GetName())->second);
+			SetCurrentClip(&clips.find(defaultClip.GetName())->second);
 		}
 	}
 }
@@ -757,35 +757,35 @@ bool C_Animator::AddClip(const AnimatorClip& clip)
 	
 	clips.emplace(clip.GetName(), clip);
 
-	if (current_clip == nullptr)
+	if (currentClip == nullptr)
 	{
-		current_clip = (AnimatorClip*)&clip;
+		currentClip = (AnimatorClip*)&clip;
 	}
 
 	return true;
 }
 
-void C_Animator::PlayClip(const std::string& clip_name, const uint& blend_frames)
+void C_Animator::PlayClip(const std::string& clipName, const uint& blendFrames)
 {
-	auto item = clips.find(clip_name);
+	auto item = clips.find(clipName);
 	if (item == clips.end())
 	{
 		LOG("[ERROR] Animator Component: Could not Play Clip! Error: Could not find any clip with the given name!");
 		return;
 	}
-	if (current_clip != nullptr && current_clip->GetName() == clip_name)
+	if (currentClip != nullptr && currentClip->GetName() == clipName)
 	{
 		return;
 	}
 	
-	if (current_clip == nullptr || blend_frames == 0 || blend_frames > item->second.GetDuration())
+	if (currentClip == nullptr || blendFrames == 0 || blendFrames > item->second.GetDuration())
 	{
 		Stop();
 		SetCurrentClip(&item->second);
 	}
 	else
 	{
-		SetBlendingClip(&item->second, blend_frames);
+		SetBlendingClip(&item->second, blendFrames);
 	}
 
 	Play();
@@ -793,22 +793,22 @@ void C_Animator::PlayClip(const std::string& clip_name, const uint& blend_frames
 
 bool C_Animator::Play()
 {
-	if (current_clip == nullptr)
+	if (currentClip == nullptr)
 	{
 		return false;
 	}
 	
-	play	= true;
+	play = true;
 
-	pause	= false;
-	step	= false;
-	stop	= false;
+	pause = false;
+	step = false;
+	stop = false;
 
-	current_clip->playing = true;
+	currentClip->playing = true;
 
 	if (BlendingClipExists()) 
 	{ 
-		blending_clip->playing = true; 
+		blendingClip->playing = true; 
 	};
 
 	return play;
@@ -818,9 +818,9 @@ bool C_Animator::Pause()
 {
 	if (play)
 	{
-		pause	= true;
-		play	= false;
-		step	= false;
+		pause = true;
+		play = false;
+		step = false;
 	}
 	else
 	{
@@ -846,19 +846,19 @@ bool C_Animator::Step()
 
 bool C_Animator::Stop()
 {
-	stop	= true;
+	stop = true;
 
-	play	= false;
-	pause	= false;
-	step	= false;
+	play = false;
+	pause = false;
+	step = false;
 	
-	current_clip->playing = false;
-	current_clip->ClearClip();
+	currentClip->playing = false;
+	currentClip->ClearClip();
 
 	if (BlendingClipExists())
 	{
-		blending_clip->playing = false;
-		blending_clip->ClearClip();
+		blendingClip->playing = false;
+		blendingClip->ClearClip();
 	}
 
 	return stop;
@@ -872,20 +872,20 @@ bool C_Animator::StepToPrevKeyframe()
 		LOG("[ERROR] Animator Component: Could not Step Animation to Prev Keyframe! Error: Cannot step an animation that is being currently Played.");
 		return false;
 	}
-	if (current_clip == nullptr)
+	if (currentClip == nullptr)
 	{
 		LOG("[ERROR] Animator Component: Could not Step Animation to Prev Keyframe! Error: Current Clip (AnimatorClip*) was nullptr.");
 		return false;
 	}
 
-	current_clip->StepClipToPrevKeyframe();
+	currentClip->StepClipToPrevKeyframe();
 
-	for (uint i = 0; i < current_bones.size(); ++i)
+	for (uint i = 0; i < currentBones.size(); ++i)
 	{
-		const Transform& transform				= Transform(current_bones[i].game_object->GetComponent<C_Transform>()->GetLocalTransform());
-		const Transform& interpolated_transform = GetInterpolatedTransform((double)current_clip->GetClipTick(), current_bones[i].channel, transform);
+		const Transform& transform				= Transform(currentBones[i].gameObject->GetComponent<C_Transform>()->GetLocalTransform());
+		const Transform& interpolatedTransform = GetInterpolatedTransform((double)currentClip->GetClipTick(), currentBones[i].channel, transform);
 
-		current_bones[i].game_object->GetComponent<C_Transform>()->ImportTransform(interpolated_transform);
+		currentBones[i].gameObject->GetComponent<C_Transform>()->ImportTransform(interpolatedTransform);
 	}
 
 	UpdateDisplayBones();
@@ -900,20 +900,20 @@ bool C_Animator::StepToNextKeyframe()
 		LOG("[ERROR] Animator Component: Could not Step Animation to Next Keyframe! Error: Cannot step an animation that is being currently Played.");
 		return false;
 	}
-	if (current_clip == nullptr)
+	if (currentClip == nullptr)
 	{
 		LOG("[ERROR] Animator Component: Could not Step Animation to Next Keyframe! Error: Current Clip (AnimatorClip*) was nullptr.");
 		return false;
 	}
 	
-	current_clip->StepClipToNextKeyframe();
+	currentClip->StepClipToNextKeyframe();
 
-	for (uint i = 0; i < current_bones.size(); ++i)
+	for (uint i = 0; i < currentBones.size(); ++i)
 	{
-		const Transform& transform				= Transform(current_bones[i].game_object->GetComponent<C_Transform>()->GetLocalTransform());
-		const Transform& interpolated_transform = GetInterpolatedTransform((double)current_clip->GetClipTick(), current_bones[i].channel, transform);
+		const Transform& transform				= Transform(currentBones[i].gameObject->GetComponent<C_Transform>()->GetLocalTransform());
+		const Transform& interpolatedTransform = GetInterpolatedTransform((double)currentClip->GetClipTick(), currentBones[i].channel, transform);
 
-		current_bones[i].game_object->GetComponent<C_Transform>()->ImportTransform(interpolated_transform);
+		currentBones[i].gameObject->GetComponent<C_Transform>()->ImportTransform(interpolatedTransform);
 	}
 
 	UpdateDisplayBones();
@@ -931,79 +931,79 @@ bool C_Animator::RefreshBoneDisplay()
 // --- CURRENT/BLENDING ANIMATION METHODS
 AnimatorClip* C_Animator::GetCurrentClip() const
 {
-	return current_clip;
+	return currentClip;
 }
 
 AnimatorClip* C_Animator::GetBlendingClip() const
 {
-	return blending_clip;
+	return blendingClip;
 }
 
 void C_Animator::SetCurrentClip(AnimatorClip* clip)
 {
-	std::string error_string = "[ERROR] Animator Component: Could not Set Current Clip to { " + std::string(this->GetOwner()->GetName()) + " }'s Animator Component";
+	std::string errorString = "[ERROR] Animator Component: Could not Set Current Clip to { " + std::string(this->GetOwner()->GetName()) + " }'s Animator Component";
 	
 	if (clip == nullptr)
 	{
-		LOG("%s! Error: Given AnimatorClip* was nullptr.", error_string.c_str());
+		LOG("%s! Error: Given AnimatorClip* was nullptr.", errorString.c_str());
 		return;
 	}
 	if (clips.find(clip->GetName()) == clips.end())
 	{
-		LOG("%s! Error: Could not find the given AnimatorClip* in the clips map.", error_string.c_str());
+		LOG("%s! Error: Could not find the given AnimatorClip* in the clips map.", errorString.c_str());
 		return;
 	}
 	if (clip->GetAnimation() == nullptr)
 	{
-		LOG("%s! Error: Given AnimatorClip* had no R_Animation* assigned to it.", error_string.c_str());
+		LOG("%s! Error: Given AnimatorClip* had no R_Animation* assigned to it.", errorString.c_str());
 		return;
 	}
 	
-	auto bones = animation_bones.find(clip->GetAnimation()->GetUID());
-	if (bones == animation_bones.end())
+	auto bones = animationBones.find(clip->GetAnimation()->GetUID());
+	if (bones == animationBones.end())
 	{
 		LOG("%s! Error: Could not find the Bones of the Clip's animation (R_Animation*).");
 		return;
 	}
 
-	current_clip	= clip;
-	current_bones	= bones->second;
+	currentClip = clip;
+	currentBones = bones->second;
 
-	//current_clip->ClearClip();
+	//currentClip->ClearClip();
 }
 
-void C_Animator::SetBlendingClip(AnimatorClip* clip, uint blend_frames)
+void C_Animator::SetBlendingClip(AnimatorClip* clip, uint blendFrames)
 {
-	std::string error_string = "[ERROR] Animator Component: Could not Set Blending Clip in { " + std::string(this->GetOwner()->GetName()) + " }'s Animator Component";
+	std::string errorString = "[ERROR] Animator Component: Could not Set Blending Clip in { " + std::string(this->GetOwner()->GetName()) + " }'s Animator Component";
 
 	if (clip == nullptr)
 	{
-		LOG("%s! Error: Given AnimatorClip* was nullptr.", error_string.c_str());
+		LOG("%s! Error: Given AnimatorClip* was nullptr.", errorString.c_str());
 		return;
 	}
 	if (clips.find(clip->GetName()) == clips.end())
 	{
-		LOG("%s! Error: Could not find the given AnimatorClip* in the clips map.", error_string.c_str());
+		LOG("%s! Error: Could not find the given AnimatorClip* in the clips map.", errorString.c_str());
 		return;
 	}
 	if (clip->GetAnimation() == nullptr)
 	{
-		LOG("%s! Error: Given AnimatorClip* had no R_Animation* assigned to it.", error_string.c_str());
+		LOG("%s! Error: Given AnimatorClip* had no R_Animation* assigned to it.", errorString.c_str());
 		return;
 	}
 
-	auto bones = animation_bones.find(clip->GetAnimation()->GetUID());
-	if (bones == animation_bones.end())
+	auto bones = animationBones.find(clip->GetAnimation()->GetUID());
+	if (bones == animationBones.end())
 	{
 		LOG("%s! Error: Could not find the Bones of the Clip's animation (R_Animation*).");
 		return;
 	}
 	
-	blending_clip		= clip;
-	blending_bones		= bones->second;
-	this->blend_frames	= blend_frames;
+	blendingClip = clip;
+	blendingBones = bones->second;
+	this->blendFrames = blendFrames;
 
-	blending_clip->ClearClip();																					// Resetting the clip just in case.
+	blendingClip->ClearClip();																					// Resetting the clip just in case.
 }
 
 void C_Animator::SetCurrentClipByIndex(const uint& index)
@@ -1014,7 +1014,7 @@ void C_Animator::SetCurrentClipByIndex(const uint& index)
 		return;
 	}
 
-	std::string error_string = "[ERROR] Animator Component: Could not Set Current Clip in { " + std::string(this->GetOwner()->GetName()) + " }'s Animator Component";
+	std::string errorString = "[ERROR] Animator Component: Could not Set Current Clip in { " + std::string(this->GetOwner()->GetName()) + " }'s Animator Component";
 
 	uint i = 0;
 	for (auto item = clips.cbegin(); item != clips.cend(); ++item)
@@ -1023,16 +1023,16 @@ void C_Animator::SetCurrentClipByIndex(const uint& index)
 		{
 			const AnimatorClip& clip = item->second;
 
-			if (animation_bones.find(clip.GetAnimation()->GetUID()) == animation_bones.end())
+			if (animationBones.find(clip.GetAnimation()->GetUID()) == animationBones.end())
 			{
 				LOG("%s! Error: Could not find the Bones of the Clip's animation (R_Animation*).");
 				return;
 			}
 
-			current_clip	= (AnimatorClip*)&clip;
-			current_bones	= animation_bones.find(clip.GetAnimation()->GetUID())->second;
+			currentClip	= (AnimatorClip*)&clip;
+			currentBones = animationBones.find(clip.GetAnimation()->GetUID())->second;
 
-			current_clip->ClearClip();
+			currentClip->ClearClip();
 
 			return;
 		}
@@ -1041,76 +1041,76 @@ void C_Animator::SetCurrentClipByIndex(const uint& index)
 	}
 }
 
-/*void C_Animator::SetBlendingClipByIndex(const uint& index, const uint& blend_frames)
+/*void C_Animator::SetBlendingClipByIndex(const uint& index, const uint& blendFrames)
 {
 
 }*/
 
 bool C_Animator::CurrentClipExists() const
 {
-	return (current_clip != nullptr) ? true : false;
+	return (currentClip != nullptr) ? true : false;
 }
 
 bool C_Animator::BlendingClipExists() const
 {
-	return (blending_clip != nullptr) ? true : false;
+	return (blendingClip != nullptr) ? true : false;
 }
 
 void C_Animator::ClearCurrentClip()
 {
-	current_clip = nullptr;
-	current_bones.clear();
+	currentClip = nullptr;
+	currentBones.clear();
 }
 
 void C_Animator::ClearBlendingClip()
 {
-	blending_clip	= nullptr;
-	blend_frames	= 0;
-	blending_bones.clear();
+	blendingClip = nullptr;
+	blendFrames = 0;
+	blendingBones.clear();
 }
 
 // --- GET/SET METHODS
 std::vector<LineSegment> C_Animator::GetDisplayBones() const
 {
-	return display_bones;
+	return displayBones;
 }
 
 std::vector<std::string> C_Animator::GetClipNamesAsVector() const
 {
-	std::vector<std::string> clip_names;
+	std::vector<std::string> clipNames;
 
 	for (auto clip = clips.cbegin(); clip != clips.cend(); ++clip)
 	{
-		clip_names.push_back(clip->first);
+		clipNames.push_back(clip->first);
 	}
 
-	return clip_names;
+	return clipNames;
 }
 
 std::string C_Animator::GetClipNamesAsString() const
 {
-	std::string clip_names = "";
+	std::string clipNames = "";
 
 	for (auto clip = clips.cbegin(); clip != clips.cend(); ++clip)
 	{
-		clip_names += clip->first.c_str();
-		clip_names += '\0';
+		clipNames += clip->first.c_str();
+		clipNames += '\0';
 	}
 
-	return clip_names;
+	return clipNames;
 }
 
 std::string C_Animator::GetAnimationNamesAsString() const
 {
-	std::string animation_names = "";
+	std::string animationNames = "";
 
 	for (auto animation = animations.cbegin(); animation != animations.cend(); ++animation)
 	{
-		animation_names += (*animation)->GetName();
-		animation_names += '\0';
+		animationNames += (*animation)->GetName();
+		animationNames += '\0';
 	}
 
-	return animation_names;
+	return animationNames;
 }
 
 R_Animation* C_Animator::GetAnimationByIndex(const uint& index) const
@@ -1126,7 +1126,7 @@ R_Animation* C_Animator::GetAnimationByIndex(const uint& index) const
 
 float C_Animator::GetPlaybackSpeed() const
 {
-	return playback_speed;
+	return playbackSpeed;
 }
 
 bool C_Animator::GetInterpolate() const
@@ -1136,65 +1136,65 @@ bool C_Animator::GetInterpolate() const
 
 bool C_Animator::GetLoopAnimation() const
 {
-	return loop_animation;
+	return loopAnimation;
 }
 
 bool C_Animator::GetPlayOnStart() const
 {
-	return play_on_start;
+	return playOnStart;
 }
 
 bool C_Animator::GetCameraCulling() const
 {
-	return camera_culling;
+	return cameraCulling;
 }
 
 bool C_Animator::GetShowBones() const
 {
-	return show_bones;
+	return showBones;
 }
 
-void C_Animator::SetPlaybackSpeed(const float& playback_speed)
+void C_Animator::SetPlaybackSpeed(const float& playbackSpeed)
 {
-	this->playback_speed = playback_speed;
+	this->playbackSpeed = playbackSpeed;
 }
 
-void C_Animator::SetInterpolate(const bool& set_to)
+void C_Animator::SetInterpolate(const bool& setTo)
 {
-	interpolate = set_to;
+	interpolate = setTo;
 }
 
-void C_Animator::SetLoopAnimation(const bool& set_to)
+void C_Animator::SetLoopAnimation(const bool& setTo)
 {
-	loop_animation = set_to;
+	loopAnimation = setTo;
 }
 
-void C_Animator::SetPlayOnStart(const bool& set_to)
+void C_Animator::SetPlayOnStart(const bool& setTo)
 {
-	play_on_start = set_to;
+	playOnStart = setTo;
 }
 
-void C_Animator::SetCameraCulling(const bool& set_to)
+void C_Animator::SetCameraCulling(const bool& setTo)
 {
-	camera_culling = set_to;
+	cameraCulling = setTo;
 }
 
-void C_Animator::SetShowBones(const bool& set_to)
+void C_Animator::SetShowBones(const bool& setTo)
 {
-	show_bones = set_to;
+	showBones = setTo;
 }
 
 // --- BONE LINK METHODS
 BoneLink::BoneLink() : 
 channel(Channel()),
-game_object(nullptr)
+gameObject(nullptr)
 {
 
 }
 
-BoneLink::BoneLink(const Channel& channel, GameObject* game_object) : 
+BoneLink::BoneLink(const Channel& channel, GameObject* gameObject) : 
 channel(channel),
-game_object(game_object)
+gameObject(gameObject)
 {
 
 }

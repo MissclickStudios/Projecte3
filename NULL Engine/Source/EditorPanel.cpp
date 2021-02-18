@@ -1,10 +1,10 @@
 #include "EditorPanel.h"
 
-EditorPanel::EditorPanel(const char* name, bool is_active) : 
+EditorPanel::EditorPanel(const char* name, bool isActive) : 
 name		(name), 
-is_active	(is_active), 
-is_hovered	(false),
-is_clicked	(false)
+isActive	(isActive), 
+isHovered	(false),
+isClicked	(false)
 {
 
 }
@@ -31,50 +31,50 @@ bool EditorPanel::CleanUp()
 // -------- E_PANEL METHODS --------
 void EditorPanel::Enable()
 {
-	if (!is_active)
+	if (!isActive)
 	{
-		is_active = true;
+		isActive = true;
 	}
 }
 
 void EditorPanel::Disable()
 {
-	if (is_active)
+	if (isActive)
 	{
-		is_active = false;
+		isActive = false;
 	}
 }
 
 bool EditorPanel::IsActive() const
 {
-	return is_active;
+	return isActive;
 }
 
 bool EditorPanel::IsHovered() const
 {
-	return is_hovered;
+	return isHovered;
 }
 
 bool EditorPanel::IsClicked() const
 {
-	return is_clicked;
+	return isClicked;
 }
 
 void EditorPanel::SetIsHovered()
 {	
 	if (ImGui::IsWindowHovered())												// Checks if the last generated ImGui window is being hovered.
 	{
-		is_hovered = true;
+		isHovered = true;
 	}
 	else
 	{
-		is_hovered = false;
+		isHovered = false;
 	}
 }
 
-void EditorPanel::SetIsClicked(const bool& set_to)
+void EditorPanel::SetIsClicked(const bool& setTo)
 {
-	is_clicked = set_to;
+	isClicked = setTo;
 }
 
 const char* EditorPanel::GetName() const

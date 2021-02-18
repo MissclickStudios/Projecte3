@@ -10,29 +10,29 @@ typedef unsigned int uint;
 
 struct VertexWeight
 {
-	VertexWeight() : vertex_id(INVALID_VERTEX_ID), weight(0.0f) {}
-	VertexWeight(uint vertex_id, float weight) : vertex_id(vertex_id), weight(weight) {}
+	VertexWeight() : vertexId(INVALID_VERTEX_ID), weight(0.0f) {}
+	VertexWeight(uint vertexId, float weight) : vertexId(vertexId), weight(weight) {}
 
-	uint	vertex_id;
+	uint	vertexId;
 	float	weight;
 };
 
 struct BoneWeight
 {
-	BoneWeight() : bone_id(INVALID_BONE_ID), weight(0.0f) {}
-	BoneWeight(uint bone_id, float weight) : bone_id(bone_id), weight(weight) {}
+	BoneWeight() : boneId(INVALID_BONE_ID), weight(0.0f) {}
+	BoneWeight(uint boneId, float weight) : boneId(boneId), weight(weight) {}
 
-	uint bone_id;
+	uint boneId;
 	float weight;
 };
 
 struct Bone
 {
-	Bone() : name("[NONE]"), offset_matrix(float4x4::identity) {}
-	Bone(const std::string& name, const float4x4& offset_matrix, const std::vector<VertexWeight>& weights) : name(name), offset_matrix(offset_matrix), weights(weights) {}
+	Bone() : name("[NONE]"), offsetMatrix(float4x4::identity) {}
+	Bone(const std::string& name, const float4x4& offsetMatrix, const std::vector<VertexWeight>& weights) : name(name), offsetMatrix(offsetMatrix), weights(weights) {}
 
 	std::string					name;
-	float4x4					offset_matrix;
+	float4x4					offsetMatrix;
 	std::vector<VertexWeight>	weights;
 };
 

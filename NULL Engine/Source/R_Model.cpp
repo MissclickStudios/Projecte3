@@ -5,7 +5,7 @@
 
 #include "R_Model.h"
 
-R_Model::R_Model() : Resource(RESOURCE_TYPE::MODEL)
+R_Model::R_Model() : Resource(ResourceType::MODEL)
 {
 
 }
@@ -19,55 +19,55 @@ bool R_Model::CleanUp()
 {
 	bool ret = true;
 
-	model_nodes.clear();
+	modelNodes.clear();
 	animations.clear();
 
 	return ret;
 }
 
-bool R_Model::SaveMeta(ParsonNode& meta_root) const
+bool R_Model::SaveMeta(ParsonNode& metaRoot) const
 {
 	bool ret = true;
 
-	ParsonArray contained_array = meta_root.SetArray("ContainedResources");
+	ParsonArray contained_array = metaRoot.SetArray("ContainedResources");
 
-	for (uint i = 0; i < model_nodes.size(); ++i)
+	for (uint i = 0; i < modelNodes.size(); ++i)
 	{	
-		if (model_nodes[i].mesh_uid != 0)
+		if (modelNodes[i].meshUID != 0)
 		{
-			std::string mesh_name = model_nodes[i].name + MESHES_EXTENSION;
-			std::string mesh_path = MESHES_PATH + std::to_string(model_nodes[i].mesh_uid) + MESHES_EXTENSION;
+			std::string mesh_name = modelNodes[i].name + MESHES_EXTENSION;
+			std::string mesh_path = MESHES_PATH + std::to_string(modelNodes[i].meshUID) + MESHES_EXTENSION;
 
 			ParsonNode mesh_node = contained_array.SetNode(mesh_name.c_str());
 
-			mesh_node.SetNumber("UID", model_nodes[i].mesh_uid);
-			mesh_node.SetNumber("Type", (uint)RESOURCE_TYPE::MESH);
+			mesh_node.SetNumber("UID", modelNodes[i].meshUID);
+			mesh_node.SetNumber("Type", (uint)ResourceType::MESH);
 			mesh_node.SetString("Name", mesh_name.c_str());
 			mesh_node.SetString("LibraryPath", mesh_path.c_str());
 		}
 
-		if (model_nodes[i].material_uid != 0)
+		if (modelNodes[i].materialUID != 0)
 		{
-			std::string material_name = model_nodes[i].name + MATERIALS_EXTENSION;
-			std::string material_path = MATERIALS_PATH + std::to_string(model_nodes[i].material_uid) + MATERIALS_EXTENSION;
+			std::string material_name = modelNodes[i].name + MATERIALS_EXTENSION;
+			std::string material_path = MATERIALS_PATH + std::to_string(modelNodes[i].materialUID) + MATERIALS_EXTENSION;
 
 			ParsonNode material_node = contained_array.SetNode(material_name.c_str());
 
-			material_node.SetNumber("UID", model_nodes[i].material_uid);
-			material_node.SetNumber("Type", (uint)RESOURCE_TYPE::MATERIAL);
+			material_node.SetNumber("UID", modelNodes[i].materialUID);
+			material_node.SetNumber("Type", (uint)ResourceType::MATERIAL);
 			material_node.SetString("Name", material_name.c_str());
 			material_node.SetString("LibraryPath", material_path.c_str());
 		}
 
-		if (model_nodes[i].texture_uid != 0)
+		if (modelNodes[i].textureUID != 0)
 		{
-			std::string texture_name = model_nodes[i].texture_name;
-			std::string texture_path = TEXTURES_PATH + std::to_string(model_nodes[i].texture_uid) + TEXTURES_EXTENSION;
+			std::string texture_name = modelNodes[i].textureName;
+			std::string texture_path = TEXTURES_PATH + std::to_string(modelNodes[i].textureUID) + TEXTURES_EXTENSION;
 
 			ParsonNode texture_node = contained_array.SetNode(texture_name.c_str());
 
-			texture_node.SetNumber("UID", model_nodes[i].texture_uid);
-			texture_node.SetNumber("Type", (uint)RESOURCE_TYPE::TEXTURE);
+			texture_node.SetNumber("UID", modelNodes[i].textureUID);
+			texture_node.SetNumber("Type", (uint)ResourceType::TEXTURE);
 			texture_node.SetString("Name", texture_name.c_str());
 			texture_node.SetString("LibraryPath", texture_path.c_str());
 		}
@@ -82,18 +82,18 @@ bool R_Model::SaveMeta(ParsonNode& meta_root) const
 		ParsonNode animation_node = contained_array.SetNode(animation_name.c_str());
 
 		animation_node.SetNumber("UID", item->first);
-		animation_node.SetNumber("Type", (uint)RESOURCE_TYPE::ANIMATION);
+		animation_node.SetNumber("Type", (uint)ResourceType::ANIMATION);
 		animation_node.SetString("Name", animation_name.c_str());
 		animation_node.SetString("LibraryPath", animation_path.c_str());
 	}
 
-	ParsonNode settings = meta_root.SetNode("ImportSettings");
-	model_settings.Save(settings);
+	ParsonNode settings = metaRoot.SetNode("ImportSettings");
+	modelSettings.Save(settings);
 
 	return ret;
 }
 
-bool R_Model::LoadMeta(const ParsonNode& meta_root)
+bool R_Model::LoadMeta(const ParsonNode& metaRoot)
 {
 	bool ret = true;
 
@@ -106,25 +106,25 @@ bool R_Model::LoadMeta(const ParsonNode& meta_root)
 ModelNode::ModelNode() :
 name			("[NONE]"),
 uid				(0),
-parent_uid		(0),
+parentUID		(0),
 transform		(Transform()),
-mesh_uid		(0),
-material_uid	(0),
-texture_uid		(0),
-texture_name	("[NONE]")
+meshUID			(0),
+materialUID		(0),
+textureUID		(0),
+textureName		("[NONE]")
 {
 
 }
 
-ModelNode::ModelNode(const char* name, uint32 UID, uint32 parent_UID, Transform transform, uint32 mesh_UID, uint32 material_UID, uint32 texture_UID, std::string texture_name) :
+ModelNode::ModelNode(const char* name, uint32 UID, uint32 parentUID, Transform transform, uint32 meshUID, uint32 materialUID, uint32 textureUID, std::string textureName) :
 name			(name),
 uid				(UID),
-parent_uid		(parent_UID),
+parentUID		(parentUID),
 transform		(transform),
-mesh_uid		(mesh_UID),
-material_uid	(material_UID),
-texture_uid		(texture_UID),
-texture_name	(texture_name)
+meshUID			(meshUID),
+materialUID		(materialUID),
+textureUID		(textureUID),
+textureName		(textureName)
 {
 
 }
@@ -136,22 +136,22 @@ bool ModelNode::Save(ParsonNode& root) const
 	root.SetString("Name", name.c_str());
 
 	root.SetNumber("UID", uid);
-	root.SetNumber("ParentUID", parent_uid);
+	root.SetNumber("ParentUID", parentUID);
 
-	ParsonNode transform_node	= root.SetNode("Transform");
-	ParsonArray position		= transform_node.SetArray("LocalPosition");
-	ParsonArray rotation		= transform_node.SetArray("LocalRotation");
-	ParsonArray scale			= transform_node.SetArray("LocalScale");
+	ParsonNode transformNode	= root.SetNode("Transform");
+	ParsonArray position		= transformNode.SetArray("LocalPosition");
+	ParsonArray rotation		= transformNode.SetArray("LocalRotation");
+	ParsonArray scale			= transformNode.SetArray("LocalScale");
 
 	position.SetFloat3(transform.position);
 	rotation.SetFloat4(transform.rotation.CastToFloat4());
 	scale.SetFloat3(transform.scale);
 
-	root.SetNumber("MeshUID", mesh_uid);
-	root.SetNumber("MaterialUID", material_uid);
-	root.SetNumber("TextureUID", texture_uid);
+	root.SetNumber("MeshUID", meshUID);
+	root.SetNumber("MaterialUID", materialUID);
+	root.SetNumber("TextureUID", textureUID);
 
-	root.SetString("TextureName", texture_name.c_str());
+	root.SetString("TextureName", textureName.c_str());
 
 	return ret;
 }
@@ -163,22 +163,22 @@ bool ModelNode::Load(const ParsonNode& root)
 	name = root.GetString("Name");
 
 	uid				= (uint32)root.GetNumber("UID");
-	parent_uid		= (uint32)root.GetNumber("ParentUID");
+	parentUID		= (uint32)root.GetNumber("ParentUID");
 
-	ParsonNode transform_node	= root.GetNode("Transform");
-	ParsonArray position		= transform_node.GetArray("LocalPosition");
-	ParsonArray rotation		= transform_node.GetArray("LocalRotation");
-	ParsonArray scale			= transform_node.GetArray("LocalScale");
+	ParsonNode transformNode	= root.GetNode("Transform");
+	ParsonArray position		= transformNode.GetArray("LocalPosition");
+	ParsonArray rotation		= transformNode.GetArray("LocalRotation");
+	ParsonArray scale			= transformNode.GetArray("LocalScale");
 
 	position.GetFloat3(0, transform.position);
 	rotation.GetFloat4(0, transform.rotation);
 	scale.GetFloat3(0, transform.scale);
 
-	mesh_uid		= (uint32)root.GetNumber("MeshUID");
-	material_uid	= (uint32)root.GetNumber("MaterialUID");
-	texture_uid		= (uint32)root.GetNumber("TextureUID");
+	meshUID			= (uint32)root.GetNumber("MeshUID");
+	materialUID		= (uint32)root.GetNumber("MaterialUID");
+	textureUID		= (uint32)root.GetNumber("TextureUID");
 
-	texture_name	= root.GetString("TextureName");
+	textureName		= root.GetString("TextureName");
 
 	return ret;
 }

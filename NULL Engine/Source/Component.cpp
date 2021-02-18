@@ -6,11 +6,11 @@
 
 #include "Component.h"
 
-Component::Component(GameObject* owner, COMPONENT_TYPE type, bool is_active) :
-id			(Random::LCG::GetRandomUint()),
-type		(type),
-owner		(owner),
-is_active	(is_active)
+Component::Component(GameObject* owner, ComponentType type, bool isActive) :
+id(Random::LCG::GetRandomUint()),
+type(type),
+owner(owner),
+isActive(isActive)
 {
 
 }
@@ -45,14 +45,14 @@ const char* Component::GetNameFromType() const
 {
 	switch (type)
 	{
-	case COMPONENT_TYPE::NONE:			{ return "NONE"; }			break;
-	case COMPONENT_TYPE::TRANSFORM:		{ return "Transform"; }		break;
-	case COMPONENT_TYPE::MESH:			{ return "Mesh"; }			break;
-	case COMPONENT_TYPE::MATERIAL:		{ return "Material"; }		break;
-	case COMPONENT_TYPE::LIGHT:			{ return "Light"; }			break;
-	case COMPONENT_TYPE::CAMERA:		{ return "Camera"; }		break;
-	case COMPONENT_TYPE::ANIMATOR:		{ return "Animator"; }		break;
-	case COMPONENT_TYPE::ANIMATION:		{ return "Animation"; }		break;
+	case ComponentType::NONE:			{ return "NONE"; }			break;
+	case ComponentType::TRANSFORM:		{ return "Transform"; }		break;
+	case ComponentType::MESH:			{ return "Mesh"; }			break;
+	case ComponentType::MATERIAL:		{ return "Material"; }		break;
+	case ComponentType::LIGHT:			{ return "Light"; }			break;
+	case ComponentType::CAMERA:		{ return "Camera"; }		break;
+	case ComponentType::ANIMATOR:		{ return "Animator"; }		break;
+	case ComponentType::ANIMATION:		{ return "Animation"; }		break;
 	}
 
 	return "NONE";
@@ -70,12 +70,12 @@ void Component::ResetID()
 
 bool Component::IsActive() const
 {
-	return is_active;
+	return isActive;
 }
 
-void Component::SetIsActive(const bool& set_to)
+void Component::SetIsActive(const bool& setTo)
 {
-	is_active = set_to;
+	isActive = setTo;
 }
 
 GameObject* Component::GetOwner() const

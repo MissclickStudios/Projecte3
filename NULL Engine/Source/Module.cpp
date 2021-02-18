@@ -2,7 +2,7 @@
 
 #include "Module.h"
 
-Module::Module(const char* name, bool is_active) : is_active(is_active)
+Module::Module(const char* name, bool isActive) : isActive(isActive)
 {
 	strcpy_s(this->name, MAX_MODULE_NAME_LENGTH, name);							// As one character occupies one byte, we can request exactly as many bytes we need.
 }
@@ -22,19 +22,19 @@ bool Module::Start()
 	return true;
 }
 
-UPDATE_STATUS Module::PreUpdate(float dt)
+UpdateStatus Module::PreUpdate(float dt)
 {
-	return UPDATE_STATUS::CONTINUE;
+	return UpdateStatus::CONTINUE;
 }
 
-UPDATE_STATUS Module::Update(float dt)
+UpdateStatus Module::Update(float dt)
 {
-	return UPDATE_STATUS::CONTINUE;
+	return UpdateStatus::CONTINUE;
 }
 
-UPDATE_STATUS Module::PostUpdate(float dt)
+UpdateStatus Module::PostUpdate(float dt)
 {
-	return UPDATE_STATUS::CONTINUE;
+	return UpdateStatus::CONTINUE;
 }
 
 bool Module::CleanUp()
@@ -55,14 +55,14 @@ bool Module::SaveConfiguration(ParsonNode& file) const
 // ------------ MODULE METHODS ------------
 bool Module::IsActive() const
 {
-	return is_active;
+	return isActive;
 }
 
-bool Module::SetModuleState(bool is_active)
+bool Module::SetModuleState(bool isActive)
 {
-	this->is_active = is_active;
+	this->isActive = isActive;
 	
-	if (is_active)
+	if (isActive)
 	{
 		Start();
 	}
@@ -71,7 +71,7 @@ bool Module::SetModuleState(bool is_active)
 		CleanUp();
 	}
 
-	return this->is_active;
+	return this->isActive;
 }
 
 const char* Module::GetName() const

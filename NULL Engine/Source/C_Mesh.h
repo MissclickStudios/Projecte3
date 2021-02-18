@@ -18,41 +18,41 @@ public:
 	C_Mesh(GameObject* owner);
 	~C_Mesh();
 
-	bool Update		() override;
-	bool CleanUp	() override;
+	bool Update() override;
+	bool CleanUp() override;
 
-	bool SaveState	(ParsonNode& root) const override;
-	bool LoadState	(ParsonNode& root) override;
+	bool SaveState(ParsonNode& root) const override;
+	bool LoadState(ParsonNode& root) override;
 
-	static inline COMPONENT_TYPE GetType() { return COMPONENT_TYPE::MESH; }			// This is needed to be able to use templates for functions such as GetComponent<>();
+	static inline ComponentType GetType() { return ComponentType::MESH; }			// This is needed to be able to use templates for functions such as GetComponent<>();
 
 public:
-	R_Mesh*			GetMesh					() const;								// Returns the R_Mesh* variable of the component. If there is no mesh the default value will be nullptr.
-	void			SetMesh					(R_Mesh* r_mesh);						// Sets the R_Mesh* variable of the component. Will be normally set when a model is imported.
+	R_Mesh* GetMesh() const;								// Returns the R_Mesh* variable of the component. If there is no mesh the default value will be nullptr.
+	void SetMesh(R_Mesh* rMesh);						// Sets the R_Mesh* variable of the component. Will be normally set when a model is imported.
 
-	const char*		GetMeshPath				() const;
-	const char*		GetMeshFile				() const;
-	void			SetMeshPath				(const char* path);
+	const char* GetMeshPath() const;
+	const char* GetMeshFile() const;
+	void SetMeshPath(const char* path);
 
-	void			GetMeshData				(uint& num_vertices, uint& num_normals, uint& num_tex_coords, uint& num_indices, uint& num_bones);
+	void GetMeshData(uint& numVertices, uint& numNormals, uint& numTexCoords, uint& numIndices, uint& numBones);
 
-	bool			GetDrawVertexNormals	() const;
-	bool			GetDrawFaceNormals		() const;
-	void			SetDrawVertexNormals	(const bool& set_to);
-	void			SetDrawFaceNormals		(const bool& set_to);
+	bool GetDrawVertexNormals() const;
+	bool GetDrawFaceNormals() const;
+	void SetDrawVertexNormals(const bool& setTo);
+	void SetDrawFaceNormals(const bool& setTo);
 
-	bool			GetShowWireframe		() const;
-	void			SetShowWireframe		(const bool& set_to);
+	bool GetShowWireframe() const;
+	void SetShowWireframe(const bool& setTo);
 
-	void			GetBoundingBoxVertices	(math::float3* bb_vertices) const;		// TODO: Kinda dirty, should be done elsewhere (?).
-	bool			GetShowBoundingBox		() const;
-	void			SetShowBoundingBox		(const bool& set_to);
+	void GetBoundingBoxVertices(math::float3* bbVertices) const;		// TODO: Kinda dirty, should be done elsewhere (?).
+	bool GetShowBoundingBox() const;
+	void SetShowBoundingBox(const bool& setTo);
 
 private:
-	R_Mesh* r_mesh;
+	R_Mesh* rMesh;
 
-	bool show_wireframe;
-	bool show_bounding_box;
+	bool showWireframe;
+	bool showBoundingBox;
 };
 
 #endif // !__C_MESH_H__

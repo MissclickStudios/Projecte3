@@ -27,8 +27,8 @@ GameObject::GameObject() :
 uid					(Random::LCG::GetRandomUint()),
 parent_uid			(0),
 name				("GameObject"),
-is_active			(true),
-is_static			(false),
+isActive			(true),
+isStatic			(false),
 parent				(nullptr),
 transform			(nullptr),
 is_master_root		(false),
@@ -37,21 +37,21 @@ is_bone				(false),
 to_delete			(false),
 show_bounding_boxes	(false)
 {
-	transform	= (C_Transform*)CreateComponent(COMPONENT_TYPE::TRANSFORM);
+	transform = (C_Transform*)CreateComponent(ComponentType::TRANSFORM);
 
 	obb.SetNegativeInfinity();
 	aabb.SetNegativeInfinity();
 
-	obb_vertices	= new float3[8];																	// Bounding boxes will always have 8 vertices as they are Cuboids.
-	aabb_vertices	= new float3[8];																	// Bounding boxes will always have 8 vertices as they are Cuboids.
+	obb_vertices = new float3[8];																	// Bounding boxes will always have 8 vertices as they are Cuboids.
+	aabb_vertices = new float3[8];																	// Bounding boxes will always have 8 vertices as they are Cuboids.
 }
 
-GameObject::GameObject(std::string name, bool is_active, bool is_static) :
+GameObject::GameObject(std::string name, bool isActive, bool isStatic) :
 uid					(Random::LCG::GetRandomUint()),
 parent_uid			(0),
 name				(name),
-is_active			(is_active),
-is_static			(is_static),
+isActive			(isActive),
+isStatic			(isStatic),
 parent				(nullptr),
 transform			(nullptr),
 is_master_root		(false),
@@ -65,7 +65,7 @@ show_bounding_boxes	(false)
 		name = "GameObject";
 	}
 
-	transform = (C_Transform*)CreateComponent(COMPONENT_TYPE::TRANSFORM);
+	transform = (C_Transform*)CreateComponent(ComponentType::TRANSFORM);
 
 	obb.SetNegativeInfinity();
 	aabb.SetNegativeInfinity();
@@ -114,21 +114,21 @@ bool GameObject::SaveState(ParsonNode& root) const
 
 	root.SetNumber("UID", uid);
 
-	uint parent_UID = (parent != nullptr) ? parent->uid : 0;
-	root.SetNumber("ParentUID", parent_UID);
+	uint parentUID = (parent != nullptr) ? parent->uid : 0;
+	root.SetNumber("ParentUID", parentUID);
 
 	root.SetString("Name", name.c_str());
-	root.SetBool("IsActive", is_active);
-	root.SetBool("IsStatic", is_static);
+	root.SetBool("IsActive", isActive);
+	root.SetBool("IsStatic", isStatic);
 	root.SetBool("IsSceneRoot", is_scene_root);
 	root.SetBool("ShowBoundingBoxes", show_bounding_boxes);
 
-	ParsonArray component_array = root.SetArray("Components");
+	ParsonArray componentArray = root.SetArray("Components");
 
 	for (uint i = 0; i < components.size(); ++i)
 	{
-		ParsonNode component_node = component_array.SetNode(components[i]->GetNameFromType());
-		components[i]->SaveState(component_node);
+		ParsonNode componentNode = componentArray.SetNode(components[i]->GetNameFromType());
+		components[i]->SaveState(componentNode);
 	}
 
 	return ret;
@@ -141,30 +141,28 @@ bool GameObject::LoadState(ParsonNode& root)
 	ForceUID((uint)root.GetNumber("UID"));
 	parent_uid = (uint)root.GetNumber("ParentUID");
 
-	name					= root.GetString("Name");
-	is_active				= root.GetBool("IsActive");
-	is_static				= root.GetBool("IsStatic");
-	is_scene_root			= root.GetBool("IsSceneRoot");
-	show_bounding_boxes		= root.GetBool("ShowBoundingBoxes");
+	name = root.GetString("Name");
+	isActive = root.GetBool("IsActive");
+	isStatic = root.GetBool("IsStatic");
+	is_scene_root = root.GetBool("IsSceneRoot");
+	show_bounding_boxes = root.GetBool("ShowBoundingBoxes");
 
 	// Recalculate AABB and OBB
 
-	ParsonArray components_array = root.GetArray("Components");
+	ParsonArray componentsArray = root.GetArray("Components");
 
-	for (uint i = 0; i < components_array.size; ++i)
+	for (uint i = 0; i < componentsArray.size; ++i)
 	{
-		ParsonNode component_node	= components_array.GetNode(i);
+		ParsonNode componentNode = componentsArray.GetNode(i);
 		
-		if (!component_node.NodeIsValid())
-		{
+		if (!componentNode.NodeIsValid())
 			continue;
-		}
 		
-		COMPONENT_TYPE type	= (COMPONENT_TYPE)component_node.GetNumber("Type");
+		ComponentType type	= (ComponentType)componentNode.GetNumber("Type");
 
-		if (type == COMPONENT_TYPE::TRANSFORM)
+		if (type == ComponentType::TRANSFORM)
 		{
-			GetComponent<C_Transform>()->LoadState(component_node);
+			GetComponent<C_Transform>()->LoadState(componentNode);
 			continue;
 		}
 		else
@@ -174,17 +172,17 @@ bool GameObject::LoadState(ParsonNode& root)
 			switch (type)
 			{
 			//case COMPONENT_TYPE::TRANSFORM: { component = new C_Transform(this); }	break;
-			case COMPONENT_TYPE::MESH:		{ component = new C_Mesh(this); }		break;
-			case COMPONENT_TYPE::MATERIAL:	{ component = new C_Material(this); }	break;
-			case COMPONENT_TYPE::LIGHT:		{ component = new C_Light(this); }		break;
-			case COMPONENT_TYPE::CAMERA:	{ component = new C_Camera(this); }		break;
-			case COMPONENT_TYPE::ANIMATOR:	{ component = new C_Animator(this); }	break;
-			case COMPONENT_TYPE::ANIMATION: { component = new C_Animation(this); }	break;
+			case ComponentType::MESH:		{ component = new C_Mesh(this); }		break;
+			case ComponentType::MATERIAL:	{ component = new C_Material(this); }	break;
+			case ComponentType::LIGHT:		{ component = new C_Light(this); }		break;
+			case ComponentType::CAMERA:	{ component = new C_Camera(this); }		break;
+			case ComponentType::ANIMATOR:	{ component = new C_Animator(this); }	break;
+			case ComponentType::ANIMATION: { component = new C_Animation(this); }	break;
 			}
 
 			if (component != nullptr)
 			{
-				component->LoadState(component_node);
+				component->LoadState(componentNode);
 				components.push_back(component);
 			}
 		}
@@ -230,24 +228,24 @@ void GameObject::FreeChilds()
 
 void GameObject::UpdateBoundingBoxes()
 {
-	std::vector<C_Mesh*> c_meshes;
-	GetComponents<C_Mesh>(c_meshes);
+	std::vector<C_Mesh*> cMeshes;
+	GetComponents<C_Mesh>(cMeshes);
 
-	for (uint i = 0; i < c_meshes.size(); ++i)
+	for (uint i = 0; i < cMeshes.size(); ++i)
 	{
-		if (c_meshes[i] == nullptr || c_meshes[i]->GetMesh() == nullptr)
+		if (cMeshes[i] == nullptr || cMeshes[i]->GetMesh() == nullptr)
 		{
 			continue;
 		}
 		
-		obb = c_meshes[i]->GetMesh()->GetAABB();
+		obb = cMeshes[i]->GetMesh()->GetAABB();
 		obb.Transform(GetComponent<C_Transform>()->GetWorldTransform());
 
 		aabb.SetNegativeInfinity();
 		aabb.Enclose(obb);
 	}
 
-	c_meshes.clear();
+	cMeshes.clear();
 }
 
 AABB GameObject::GetAABB() const
@@ -260,41 +258,41 @@ float3* GameObject::GetAABBVertices() const
 	return aabb_vertices;
 }
 
-void GameObject::GetRenderers(std::vector<MeshRenderer>& mesh_renderers, std::vector<CuboidRenderer>& cuboid_renderers, std::vector<SkeletonRenderer>& skeleton_renderers)
+void GameObject::GetRenderers(std::vector<MeshRenderer>& meshRenderers, std::vector<CuboidRenderer>& cuboidRenderers, std::vector<SkeletonRenderer>& skeletonRenderers)
 {
-	std::vector<C_Mesh*> c_meshes;
-	GetComponents<C_Mesh>(c_meshes);
+	std::vector<C_Mesh*> cMeshes;
+	GetComponents<C_Mesh>(cMeshes);
 
-	C_Material* c_material		= GetComponent<C_Material>();
-	C_Camera* c_camera			= GetComponent<C_Camera>();
-	C_Animator* c_animation	= GetComponent<C_Animator>();
+	C_Material* cMaterial = GetComponent<C_Material>();
+	C_Camera* cCamera = GetComponent<C_Camera>();
+	C_Animator* cAnimation	= GetComponent<C_Animator>();
 
-	for (uint i = 0; i < c_meshes.size(); ++i)
+	for (uint i = 0; i < cMeshes.size(); ++i)
 	{
-		if (c_meshes[i] != nullptr)
+		if (cMeshes[i] != nullptr)
 		{
-			if (c_meshes[i]->IsActive() && c_meshes[i]->GetMesh() != nullptr)
+			if (cMeshes[i]->IsActive() && cMeshes[i]->GetMesh() != nullptr)
 			{
-				mesh_renderers.push_back(MeshRenderer(GetComponent<C_Transform>()->GetWorldTransform(), c_meshes[i], c_material));
+				meshRenderers.push_back(MeshRenderer(GetComponent<C_Transform>()->GetWorldTransform(), cMeshes[i], cMaterial));
 			}
 		}
 	}
 
-	c_meshes.clear();
+	cMeshes.clear();
 
-	if (c_camera != nullptr)
+	if (cCamera != nullptr)
 	{
-		if (!c_camera->FrustumIsHidden())
+		if (!cCamera->FrustumIsHidden())
 		{
-			cuboid_renderers.push_back(CuboidRenderer(c_camera->GetFrustumVertices(), CUBOID_TYPE::FRUSTUM));
+			cuboidRenderers.push_back(CuboidRenderer(cCamera->GetFrustumVertices(), CuboidType::FRUSTUM));
 		}
 	}
 
-	if (c_animation != nullptr)
+	if (cAnimation != nullptr)
 	{
-		if (c_animation->GetShowBones() || App->renderer->GetRenderSkeletons())
+		if (cAnimation->GetShowBones() || App->renderer->GetRenderSkeletons())
 		{
-			skeleton_renderers.push_back(SkeletonRenderer(c_animation->GetDisplayBones()));
+			skeletonRenderers.push_back(SkeletonRenderer(cAnimation->GetDisplayBones()));
 		}
 	}
 
@@ -303,23 +301,23 @@ void GameObject::GetRenderers(std::vector<MeshRenderer>& mesh_renderers, std::ve
 		obb.GetCornerPoints(obb_vertices);
 		aabb.GetCornerPoints(aabb_vertices);
 
-		cuboid_renderers.push_back(CuboidRenderer(obb_vertices, CUBOID_TYPE::OBB));
-		cuboid_renderers.push_back(CuboidRenderer(aabb_vertices, CUBOID_TYPE::AABB));
+		cuboidRenderers.push_back(CuboidRenderer(obb_vertices, CuboidType::OBB));
+		cuboidRenderers.push_back(CuboidRenderer(aabb_vertices, CuboidType::AABB));
 	}
 }
 
 // --- PARENT/CHILDS METHODS
-bool GameObject::SetParent(GameObject* new_parent)
+bool GameObject::SetParent(GameObject* newParent)
 {
 	bool success = true;
 	
-	if (new_parent == nullptr)
+	if (newParent == nullptr)
 	{
 		LOG("[ERROR] Game Objects: SetParent() operation failed! Error: New parent was nullptr.");
 		return false;
 	}
 
-	if (new_parent->NewChildIsOwnParent(this))
+	if (newParent->NewChildIsOwnParent(this))
 	{
 		LOG("[ERROR] Game Objects: Cannot re-parent parents into their own children!");
 		return false;
@@ -339,10 +337,10 @@ bool GameObject::SetParent(GameObject* new_parent)
 		}
 	}
 
-	success = new_parent->AddChild(this);
+	success = newParent->AddChild(this);
 	if (success)
 	{
-		parent = new_parent;
+		parent = newParent;
 	}
 	else
 	{
@@ -404,17 +402,17 @@ bool GameObject::NewChildIsOwnParent(GameObject* child)
 		return false;
 	}
 
-	GameObject* parent_item = this->parent;									// Will set the parent of this object as the starting point of the search.
+	GameObject* parentItem = this->parent;									// Will set the parent of this object as the starting point of the search.
 	
-	while (parent_item != nullptr && !parent_item->is_scene_root)			// Iterate back up to the root object, as it is the parent of everything in the scene. (First check is TMP)
+	while (parentItem != nullptr && !parentItem->is_scene_root)			// Iterate back up to the root object, as it is the parent of everything in the scene. (First check is TMP)
 	{
-		if (parent_item == child)											// Child is the parent of one of the parent objects of this object (the one which called AddChild())
+		if (parentItem == child)											// Child is the parent of one of the parent objects of this object (the one which called AddChild())
 		{
 			ret = true;														// A parent of this object that had the passed child as the parent has been found.
 			break;
 		}
 
-		parent_item = parent_item->parent;									// Setting the next parent GameObject to iterate.
+		parentItem = parentItem->parent;									// Setting the next parent GameObject to iterate.
 	}
 
 	// --- Adding a parent into a child
@@ -495,9 +493,9 @@ void GameObject::GetAllChilds(std::unordered_map<std::string, GameObject*>& chil
 	}
 }
 
-GameObject* GameObject::FindChild(const char* child_name)
+GameObject* GameObject::FindChild(const char* childName)
 {	
-	if (child_name == nullptr)
+	if (childName == nullptr)
 	{
 		LOG("[ERROR] Game Object: Could not Find Child in GameObject { %s }! Error: Argument const char* string was nullptr.");
 		return nullptr;
@@ -507,7 +505,7 @@ GameObject* GameObject::FindChild(const char* child_name)
 	GetAllChilds(childs);
 	for (uint i = 0; i < childs.size(); ++i)
 	{
-		if (strcmp(childs[i]->GetName(), child_name) == 0)
+		if (strcmp(childs[i]->GetName(), childName) == 0)
 		{
 			return childs[i];
 		}
@@ -516,12 +514,12 @@ GameObject* GameObject::FindChild(const char* child_name)
 	GameObject* child = nullptr;
 	for (uint i = 0; i < childs.size(); ++i)
 	{
-		if (strcmp(childs[i]->GetName(), child_name) == 0)
+		if (strcmp(childs[i]->GetName(), childName) == 0)
 		{
 			return childs[i];
 		}
 
-		child = childs[i]->FindChild(child_name);
+		child = childs[i]->FindChild(childName);
 		if (child != nullptr)
 		{
 			return child;
@@ -539,12 +537,12 @@ const char* GameObject::GetName() const
 
 bool GameObject::IsActive() const
 {
-	return is_active;
+	return isActive;
 }
 
 bool GameObject::IsStatic() const
 {
-	return is_static;
+	return isStatic;
 }
 
 void GameObject::ForceUID(const uint32& UID)
@@ -552,47 +550,47 @@ void GameObject::ForceUID(const uint32& UID)
 	uid = UID;
 }
 
-void GameObject::SetName(const char* new_name)
+void GameObject::SetName(const char* newName)
 {
-	name = new_name;
+	name = newName;
 }
 
-void GameObject::SetIsActive(const bool& set_to)
+void GameObject::SetIsActive(const bool& setTo)
 {
-	is_active = set_to;
+	isActive = setTo;
 
-	SetChildsIsActive(set_to, this);
+	SetChildsIsActive(setTo, this);
 }
 
-void GameObject::SetIsStatic(const bool& set_to)
+void GameObject::SetIsStatic(const bool& setTo)
 {
-	is_static = set_to;
+	isStatic = setTo;
 
-	SetChildsIsStatic(set_to, this);
+	SetChildsIsStatic(setTo, this);
 }
 
-void GameObject::SetChildsIsActive(const bool& set_to, GameObject* parent)
+void GameObject::SetChildsIsActive(const bool& setTo, GameObject* parent)
 {
 	if (parent != nullptr)
 	{
 		for (uint i = 0; i < parent->childs.size(); ++i)
 		{
-			parent->childs[i]->is_active = set_to;
+			parent->childs[i]->isActive = setTo;
 
-			SetChildsIsActive(set_to, parent->childs[i]);
+			SetChildsIsActive(setTo, parent->childs[i]);
 		}
 	}
 }
 
-void GameObject::SetChildsIsStatic(const bool& set_to, GameObject* parent)
+void GameObject::SetChildsIsStatic(const bool& setTo, GameObject* parent)
 {
 	if (parent != nullptr)
 	{
 		for (uint i = 0; i < parent->childs.size(); ++i)
 		{
-			parent->childs[i]->is_static = set_to;
+			parent->childs[i]->isStatic = setTo;
 
-			SetChildsIsStatic(set_to, parent->childs[i]);
+			SetChildsIsStatic(setTo, parent->childs[i]);
 		}
 	}
 }
@@ -602,22 +600,22 @@ uint32 GameObject::GetParentUID() const
 	return parent_uid;
 }
 
-void GameObject::SetParentUID(const uint32& parent_UID)
+void GameObject::SetParentUID(const uint32& parentUID)
 {
-	parent_uid = parent_UID;
+	parent_uid = parentUID;
 }
 
 // --- COMPONENT METHODS ---
-Component* GameObject::CreateComponent(COMPONENT_TYPE type)
+Component* GameObject::CreateComponent(ComponentType type)
 {
 	Component* component = nullptr;
 
-	if (type == COMPONENT_TYPE::TRANSFORM && GetComponent<C_Transform>() != nullptr)
+	if (type == ComponentType::TRANSFORM && GetComponent<C_Transform>() != nullptr)
 	{
 		LOG("[ERROR] Transform Component could not be added to %s! Error: No duplicates allowed!", name.c_str());
 		return nullptr;
 	}
-	if (type == COMPONENT_TYPE::MATERIAL && GetComponent<C_Material>() != nullptr)
+	if (type == ComponentType::MATERIAL && GetComponent<C_Material>() != nullptr)
 	{
 		LOG("[ERROR] Material Component could not be added to %s! Error: No duplicates allowed!", name.c_str());
 		return nullptr;
@@ -625,40 +623,38 @@ Component* GameObject::CreateComponent(COMPONENT_TYPE type)
 
 	switch(type)
 	{
-	case COMPONENT_TYPE::TRANSFORM:	{ component = new C_Transform(this); }	break;
-	case COMPONENT_TYPE::MESH:		{ component = new C_Mesh(this); }		break;
-	case COMPONENT_TYPE::MATERIAL:	{ component = new C_Material(this); }	break;
-	case COMPONENT_TYPE::LIGHT:		{ component = new C_Light(this); }		break;
-	case COMPONENT_TYPE::CAMERA:	{ component = new C_Camera(this); }		break;
-	case COMPONENT_TYPE::ANIMATOR:	{ component = new C_Animator(this); }	break;
-	case COMPONENT_TYPE::ANIMATION: { component = new C_Animation(this); }	break;
+	case ComponentType::TRANSFORM:	{ component = new C_Transform(this); }	break;
+	case ComponentType::MESH:		{ component = new C_Mesh(this); }		break;
+	case ComponentType::MATERIAL:	{ component = new C_Material(this); }	break;
+	case ComponentType::LIGHT:		{ component = new C_Light(this); }		break;
+	case ComponentType::CAMERA:	{ component = new C_Camera(this); }		break;
+	case ComponentType::ANIMATOR:	{ component = new C_Animator(this); }	break;
+	case ComponentType::ANIMATION: { component = new C_Animation(this); }	break;
 	}
 
 	if (component != nullptr)
-	{
 		components.push_back(component);
-	}
 
 	return component;
 }
 
-bool GameObject::DeleteComponent(Component* component_to_delete)
+bool GameObject::DeleteComponent(Component* componentToDelete)
 {
-	switch (component_to_delete->GetType())
+	switch (componentToDelete->GetType())
 	{
-	case COMPONENT_TYPE::MESH: 
-		App->renderer->DeleteFromMeshRenderers((C_Mesh*)component_to_delete); 
+	case ComponentType::MESH: 
+		App->renderer->DeleteFromMeshRenderers((C_Mesh*)componentToDelete); 
 		show_bounding_boxes = false;
 		break;
 	}
 
-	std::string component_name = component_to_delete->GetNameFromType();
+	std::string componentName = componentToDelete->GetNameFromType();
 	
-	if (component_to_delete != nullptr)
+	if (componentToDelete != nullptr)
 	{
 		for (uint i = 0; i < components.size(); ++i)
 		{
-			if (components[i] == component_to_delete)
+			if (components[i] == componentToDelete)
 			{
 				components[i]->CleanUp();
 				
@@ -671,7 +667,7 @@ bool GameObject::DeleteComponent(Component* component_to_delete)
 		}
 	}
 
-	LOG("[STATUS] Deleted Component %s of Game Object %s", component_name.c_str(), name.c_str());
+	LOG("[STATUS] Deleted Component %s of Game Object %s", componentName.c_str(), name.c_str());
 
 	return false;
 }

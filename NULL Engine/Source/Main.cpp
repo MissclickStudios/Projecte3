@@ -10,7 +10,7 @@
 #pragma comment( lib, "Source/Dependencies/SDL/libx86/SDL2main.lib" )
 #pragma comment( lib, "Source/Dependencies/Brofiler/libx86/ProfilerCore32.lib" )
 
-enum class MAIN_STATUS
+enum class MainStatus
 {
 	CREATION,
 	AWAKE,
@@ -26,56 +26,56 @@ int main(int argc, char ** argv)
 {
 	LOG("Starting game '%s'...", TITLE);
 
-	int main_return		= EXIT_FAILURE;
-	MAIN_STATUS state	= MAIN_STATUS::CREATION;
+	int mainReturn		= EXIT_FAILURE;
+	MainStatus state	= MainStatus::CREATION;
 
-	while (state != MAIN_STATUS::EXIT)
+	while (state != MainStatus::EXIT)
 	{
 		BROFILER_FRAME("NULL Engine Profiling Test");
 
 		switch (state)
 		{
-		case MAIN_STATUS::CREATION:
+		case MainStatus::CREATION:
 
 			LOG("-------------- Application Creation --------------");
 			App		= new Application();
-			state	= MAIN_STATUS::START;
+			state	= MainStatus::START;
 			break;
 
-		case MAIN_STATUS::START:
+		case MainStatus::START:
 
 			LOG("-------------- Application Init --------------");
 			if (!App->Init())
 			{
 				LOG("Application Init exits with ERROR");
-				state = MAIN_STATUS::EXIT;
+				state = MainStatus::EXIT;
 			}
 			else
 			{
-				state = MAIN_STATUS::UPDATE;
+				state = MainStatus::UPDATE;
 				LOG("-------------- Application Update --------------");
 			}
 
 			break;
 
-		case MAIN_STATUS::UPDATE:
+		case MainStatus::UPDATE:
 		{
-			UPDATE_STATUS update_return = App->Update();							// THIS HERE
+			UpdateStatus updateReturn = App->Update();							// THIS HERE
 
-			if (update_return == UPDATE_STATUS::THROW_ERROR)
+			if (updateReturn == UpdateStatus::THROW_ERROR)
 			{
 				LOG("Application Update exits with ERROR");
-				state = MAIN_STATUS::EXIT;
+				state = MainStatus::EXIT;
 			}
 
-			if (update_return == UPDATE_STATUS::STOP)
+			if (updateReturn == UpdateStatus::STOP)
 			{
-				state = MAIN_STATUS::FINISH;
+				state = MainStatus::FINISH;
 			}
 		}
 			break;
 
-		case MAIN_STATUS::FINISH:
+		case MainStatus::FINISH:
 
 			LOG("-------------- Application CleanUp --------------");
 			if (!App->CleanUp())
@@ -84,10 +84,10 @@ int main(int argc, char ** argv)
 			}
 			else
 			{
-				main_return = EXIT_SUCCESS;
+				mainReturn = EXIT_SUCCESS;
 			}
 
-			state = MAIN_STATUS::EXIT;
+			state = MainStatus::EXIT;
 
 			break;
 
@@ -98,5 +98,5 @@ int main(int argc, char ** argv)
 
 	LOG("Exiting game '%s'...\n", TITLE);
 
-	return main_return;
+	return mainReturn;
 }

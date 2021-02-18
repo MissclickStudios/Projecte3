@@ -32,41 +32,41 @@ private:
 	void			DrawAssetsTree				();															// 
 	void			DrawFolderExplorer			();															// 
 
-	void			DrawDirectoriesTree			(const char* root_node, const char* extension_to_filter);
-	void			DrawDirectoriesTree			(const PathNode& root_node);
+	void			DrawDirectoriesTree			(const char* rootNode, const char* extensionToFilter);
+	void			DrawDirectoriesTree			(const PathNode& rootNode);
 
 	void			DrawResourceIcons			();
 
 private:
 	void			GoToPreviousDirectoryButton	();
-	void			ResourceDragAndDropEvent	(Resource* resource, ImTextureID texture_id);
+	void			ResourceDragAndDropEvent	(Resource* resource, ImTextureID textureId);
 	
 	ImTextureID		GetIconTexID				(Resource* resource) const;
-	std::string		GetDisplayString			(std::string original_string, uint max_lenght) const;
+	std::string		GetDisplayString			(std::string originalString, uint maxLenght) const;
 	void			ClearResourcesToDisplay		();
 
 private:																									// --- ENGINE DIRECTORIES VARS
-	PathNode				root_directory;
+	PathNode				rootDirectory;
 
-	char*					directory_to_display;
-	PathNode				display_directory;
+	char*					directoryToDisplay;
+	PathNode				displayDirectory;
 
-	std::vector<Resource*>	resources_to_display;
+	std::vector<Resource*>	resourcesToDisplay;
 
-	bool					refresh_root_directory;
-	bool					refresh_directory_to_display;
-	bool					refresh_window_size;
+	bool					refreshRootDirectory;
+	bool					refreshDirectoryToDisplay;
+	bool					refreshWindowSize;
 
 private:																									// --- ENGINE ICONS VARS
-	Icons					engine_icons;
-	bool					icons_are_loaded;
+	Icons					engineIcons;
+	bool					iconsAreLoaded;
 
-	ImVec2					icon_size;
-	ImVec2					icon_offset;
-	ImVec2					text_offset;
-	ImVec2					win_size;
+	ImVec2					iconSize;
+	ImVec2					iconOffset;
+	ImVec2					textOffset;
+	ImVec2					winSize;
 
-	Resource*				dragged_resource;
+	Resource*				draggedResource;
 };
 
 #endif // !__E_PROJECT_H__

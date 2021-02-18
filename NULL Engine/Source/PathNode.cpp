@@ -17,7 +17,7 @@ bool PathNode::IsLastFolder() const
 {
 	for (uint i = 0; i < children.size(); ++i)
 	{
-		if (!children[i].is_file)
+		if (!children[i].isFile)
 		{
 			return false;
 		}
@@ -31,9 +31,7 @@ bool PathNode::FindChild(const char* path, PathNode& child) const
 	bool ret = false;
 	
 	if (path == nullptr)
-	{
 		return false;
-	}
 
 	for (uint i = 0; i < children.size(); ++i)
 	{	
@@ -54,5 +52,5 @@ bool PathNode::FindChild(const char* path, PathNode& child) const
 
 bool PathNode::operator ==(const PathNode node) const
 {
-	return path == node.path;
+	return (path == node.path);
 }

@@ -11,15 +11,15 @@ struct Light
 
 	void Init();
 	void SetPos(float x, float y, float z);
-	void Active(bool active);
+	void Active(bool isActive);
 	void Render();
 
-	Color	ambient;
-	Color	diffuse;
-	float3	position;
+	Color ambient;
+	Color diffuse;
+	float3 position;
 
-	int		ref;
-	bool	on;
+	int ref;
+	bool on;
 };
 
 #endif // !__LIGHT_H__

@@ -30,7 +30,7 @@ bool E_MainMenuBar::Draw(ImGuiIO& io)
 	GameObjectsMainMenuItem();
 	HelpMainMenuItem();
 
-	if (App->editor->show_close_app_popup)
+	if (App->editor->showCloseAppPopup)
 	{
 		CloseAppPopup();																	// Not actually inside MainMenuBar but related to FileMainMenuItem().
 	}
@@ -58,7 +58,7 @@ bool E_MainMenuBar::FileMainMenuItem()
 		
 		if (ImGui::MenuItem("Open Scene", "Ctrl+O"))
 		{
-			App->editor->show_load_file_popup = true;
+			App->editor->showLoadFilePopup = true;
 		}
 
 		ImGui::Separator();
@@ -80,7 +80,7 @@ bool E_MainMenuBar::FileMainMenuItem()
 
 		ImGui::Separator();
 		
-		ImGui::MenuItem("Quit", "ESC", &App->editor->show_close_app_popup);		// MenuItem(Item name string, shortcut string, bool to modify / get modified by)
+		ImGui::MenuItem("Quit", "ESC", &App->editor->showCloseAppPopup);		// MenuItem(Item name string, shortcut string, bool to modify / get modified by)
 
 		ImGui::EndMenu();
 	}
@@ -131,12 +131,12 @@ bool E_MainMenuBar::WindowMainMenuItem()
 
 	if (ImGui::BeginMenu("Window"))
 	{
-		ImGui::MenuItem("Configuration", "1", &App->editor->show_configuration);
-		ImGui::MenuItem("Hierarchy", "2", &App->editor->show_hierarchy);
-		ImGui::MenuItem("Inspector", "3", &App->editor->show_inspector);
-		ImGui::MenuItem("Console", "4", &App->editor->show_console);
-		ImGui::MenuItem("GuiDemo", "8", &App->editor->show_imgui_demo);
-		ImGui::MenuItem("About", "9", &App->editor->show_about_popup);
+		ImGui::MenuItem("Configuration", "1", &App->editor->showConfiguration);
+		ImGui::MenuItem("Hierarchy", "2", &App->editor->showHierarchy);
+		ImGui::MenuItem("Inspector", "3", &App->editor->showInspector);
+		ImGui::MenuItem("Console", "4", &App->editor->showConsole);
+		ImGui::MenuItem("GuiDemo", "8", &App->editor->showImguiDemo);
+		ImGui::MenuItem("About", "9", &App->editor->showAboutPopup);
 
 		ImGui::EndMenu();
 	}
@@ -150,13 +150,13 @@ bool E_MainMenuBar::ViewMainMenuItem()
 
 	if (ImGui::BeginMenu("View"))
 	{
-		bool show_grid = App->editor->GetShowWorldGrid();
-		ImGui::MenuItem("World Grid", "F1", &show_grid);
-		App->editor->SetShowWorldGrid(show_grid);
+		bool showGrid = App->editor->GetShowWorldGrid();
+		ImGui::MenuItem("World Grid", "F1", &showGrid);
+		App->editor->SetShowWorldGrid(showGrid);
 		
-		bool show_axis = App->editor->GetShowWorldAxis();
-		ImGui::MenuItem("World Axis", "F2", &show_axis);
-		App->editor->SetShowWorldAxis(show_axis);
+		bool showAxis = App->editor->GetShowWorldAxis();
+		ImGui::MenuItem("World Axis", "F2", &showAxis);
+		App->editor->SetShowWorldAxis(showAxis);
 
 		ImGui::EndMenu();
 	}
@@ -189,9 +189,9 @@ bool E_MainMenuBar::GameObjectsMainMenuItem()
 		
 		if (ImGui::BeginMenu("Primitives"))
 		{
-			bool show_primitive_examples = App->editor->GetShowPrimitiveExamples();
-			ImGui::MenuItem("Show Examples", "", &show_primitive_examples);
-			App->editor->SetShowPrimitiveExamples(show_primitive_examples);
+			bool showPrimitiveExamples = App->editor->GetShowPrimitiveExamples();
+			ImGui::MenuItem("Show Examples", "", &showPrimitiveExamples);
+			App->editor->SetShowPrimitiveExamples(showPrimitiveExamples);
 
 			ImGui::Separator();
 
@@ -254,7 +254,7 @@ bool E_MainMenuBar::HelpMainMenuItem()
 	{
 		if (ImGui::Button("About NULL Engine"))
 		{
-			App->editor->show_about_popup = true;
+			App->editor->showAboutPopup = true;
 		}
 		
 		ImGui::Separator();
@@ -292,7 +292,7 @@ bool E_MainMenuBar::CloseAppPopup()
 		if (ImGui::Button("CONFIRM"))
 		{
 			ImGui::CloseCurrentPopup();
-			App->editor->show_close_app_popup = false;
+			App->editor->showCloseAppPopup = false;
 
 			App->quit = true;
 		}
@@ -304,7 +304,7 @@ bool E_MainMenuBar::CloseAppPopup()
 		if (ImGui::Button("CANCEL"))
 		{
 			ImGui::CloseCurrentPopup();
-			App->editor->show_close_app_popup = false;
+			App->editor->showCloseAppPopup = false;
 		}
 		ImGui::PopStyleColor();
 

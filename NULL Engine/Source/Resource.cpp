@@ -7,14 +7,14 @@
 
 #include "Resource.h"
 
-Resource::Resource(RESOURCE_TYPE type) : 
+Resource::Resource(ResourceType type) : 
 type			(type),
 uid				(Random::LCG::GetRandomUint()),
 references		(0),
-assets_path		("[NONE]"), 
-assets_file		("[NONE]"), 
-library_path	("[NONE]"), 
-library_file	("[NONE]")
+assetsPath		("[NONE]"), 
+assetsFile		("[NONE]"), 
+libraryPath		("[NONE]"), 
+libraryFile		("[NONE]")
 {
 
 }
@@ -28,27 +28,27 @@ bool Resource::CleanUp()
 {
 	bool ret = true;
 
-	assets_path.clear();
-	assets_file.clear();
-	library_path.clear();
-	library_file.clear();
+	assetsPath.clear();
+	assetsFile.clear();
+	libraryPath.clear();
+	libraryFile.clear();
 
-	assets_path.shrink_to_fit();
-	assets_file.shrink_to_fit();
-	library_path.shrink_to_fit();
-	library_file.shrink_to_fit();
+	assetsPath.shrink_to_fit();
+	assetsFile.shrink_to_fit();
+	libraryPath.shrink_to_fit();
+	libraryFile.shrink_to_fit();
 
 	return ret;
 }
 
-bool Resource::SaveMeta(ParsonNode& meta_root) const
+bool Resource::SaveMeta(ParsonNode& metaRoot) const
 {
 	bool ret = true;
 
 	return ret;
 }
 
-bool Resource::LoadMeta(const ParsonNode& meta_root)
+bool Resource::LoadMeta(const ParsonNode& metaRoot)
 {
 	bool ret = true;
 
@@ -56,7 +56,7 @@ bool Resource::LoadMeta(const ParsonNode& meta_root)
 }
 
 // --- RESOURCE METHODS ---
-RESOURCE_TYPE Resource::GetType() const
+ResourceType Resource::GetType() const
 {
 	return type;
 }
@@ -65,9 +65,9 @@ const char* Resource::GetTypeAsString() const
 {
 	switch (type)
 	{
-	case RESOURCE_TYPE::MESH:		{ return "MESH"; }		break;
-	case RESOURCE_TYPE::MATERIAL:	{ return "MATERIAL"; }	break;
-	case RESOURCE_TYPE::TEXTURE:	{ return "TEXTURE"; }	break;
+	case ResourceType::MESH:		{ return "MESH"; }		break;
+	case ResourceType::MATERIAL:	{ return "MATERIAL"; }	break;
+	case ResourceType::TEXTURE:	{ return "TEXTURE"; }	break;
 	}
 
 	return "NONE";
@@ -97,39 +97,39 @@ void Resource::SetReferences(const uint& references)
 
 const char* Resource::GetAssetsPath() const
 {
-	return assets_path.c_str();
+	return assetsPath.c_str();
 }
 const char* Resource::GetAssetsFile() const
 {
-	return assets_file.c_str();
+	return assetsFile.c_str();
 }
 const char* Resource::GetLibraryPath() const
 {
-	return library_path.c_str();
+	return libraryPath.c_str();
 }
 const char* Resource::GetLibraryFile() const
 {
-	return library_file.c_str();
+	return libraryFile.c_str();
 }
 
-void Resource::SetAssetsPath(const char* assets_path)
+void Resource::SetAssetsPath(const char* assetsPath)
 {
-	this->assets_path = assets_path;
+	this->assetsPath = assetsPath;
 }
 
-void Resource::SetAssetsFile(const char* assets_file)
+void Resource::SetAssetsFile(const char* assetsFile)
 {
-	this->assets_file	= assets_file;
+	this->assetsFile	= assetsFile;
 }
 
-void Resource::SetLibraryPath(const char* library_path)
+void Resource::SetLibraryPath(const char* libraryPath)
 {
-	this->library_path = library_path;
+	this->libraryPath = libraryPath;
 }
 
-void Resource::SetLibraryFile(const char* library_file)
+void Resource::SetLibraryFile(const char* libraryFile)
 {
-	this->library_file = library_file;
+	this->libraryFile = libraryFile;
 }
 
 void Resource::SetLibraryPathAndFile()
@@ -140,42 +140,42 @@ void Resource::SetLibraryPathAndFile()
 	
 	switch (type)
 	{
-	case RESOURCE_TYPE::ANIMATION:
+	case ResourceType::ANIMATION:
 		directory = ANIMATIONS_PATH;
 		extension = ANIMATIONS_EXTENSION;
 		break;
 
-	case RESOURCE_TYPE::FOLDER:
+	case ResourceType::FOLDER:
 		directory = FOLDERS_PATH;
 		extension =	FOLDERS_EXTENSION;
 		break;
 
-	case RESOURCE_TYPE::MODEL:
+	case ResourceType::MODEL:
 		directory = MODELS_PATH;
 		extension = MODELS_EXTENSION;
 		break;
 
-	case RESOURCE_TYPE::MESH:
+	case ResourceType::MESH:
 		directory = MESHES_PATH;
 		extension = MESHES_EXTENSION;
 		break;
 
-	case RESOURCE_TYPE::MATERIAL:
+	case ResourceType::MATERIAL:
 		directory = MATERIALS_PATH;
 		extension = MATERIALS_EXTENSION;
 		break;
 
-	case RESOURCE_TYPE::TEXTURE:
+	case ResourceType::TEXTURE:
 		directory = TEXTURES_PATH;
 		extension = TEXTURES_EXTENSION;
 		break;
 
-	case RESOURCE_TYPE::SCENE:
+	case ResourceType::SCENE:
 		directory = SCENES_PATH;
 		extension = SCENES_EXTENSION;
 		break;
 	}
 	
-	library_path = directory + file + extension;
-	library_file = file + extension;
+	libraryPath = directory + file + extension;
+	libraryFile = file + extension;
 }

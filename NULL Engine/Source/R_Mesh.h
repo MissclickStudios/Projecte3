@@ -32,8 +32,8 @@ public:
 
 	bool CleanUp() override;
 
-	bool SaveMeta(ParsonNode& meta_root) const override;
-	bool LoadMeta(const ParsonNode& meta_root) override;
+	bool SaveMeta(ParsonNode& metaRoot) const override;
+	bool LoadMeta(const ParsonNode& metaRoot) override;
 
 public:
 	void LoadBuffers();
@@ -46,16 +46,16 @@ public:
 	//std::vector<Vertex>		vertices;
 	std::vector<float>			vertices;
 	std::vector<float>			normals;
-	std::vector<float>			tex_coords;
+	std::vector<float>			texCoords;
 	std::vector<uint>			indices;
 
 	std::vector<Bone>			bones;
-	std::vector<BoneWeight>		bone_weights;
-	std::vector<float4x4>		bone_offsets;
-	std::map<std::string, uint> bone_mapping;
+	std::vector<BoneWeight>		boneWeights;
+	std::vector<float4x4>		boneOffsets;
+	std::map<std::string, uint> boneMapping;
 	//std::multimap<uint, BoneWeight>	bone_weights;
 
-	std::vector<float4x4>		bone_transforms;
+	std::vector<float4x4>		boneTransforms;
 
 	// Buffer data
 	uint						VBO;												// Vertex Buffer Object.	-->		Will store all the buffer data of the vertices of the mesh.
@@ -63,13 +63,13 @@ public:
 	uint						TBO;												// Tex Coord Buffer Object. -->		Will store all the buffer data of the tex coords of the mesh.
 	uint						IBO;												// Index Buffer Object.		--> 	Will store all the buffer data of the indices of the mesh.
 
-	bool						draw_vertex_normals;
-	bool						draw_face_normals;
+	bool						drawVertexNormals;
+	bool						drawFaceNormals;
 
 	AABB						aabb;
 
 private:
-	MeshSettings				mesh_settings;
+	MeshSettings				meshSettings;
 
 };
 

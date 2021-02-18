@@ -6,7 +6,7 @@ class GameObject;
 
 typedef unsigned __int32 uint32;
 
-enum class COMPONENT_TYPE
+enum class ComponentType
 {
 	NONE,
 	TRANSFORM,
@@ -21,33 +21,33 @@ enum class COMPONENT_TYPE
 class Component
 {
 public:
-	Component(GameObject* owner, COMPONENT_TYPE type, bool is_active = true);
+	Component(GameObject* owner, ComponentType type, bool isActive = true);
 	virtual ~Component();
 
-	virtual bool Update		();
-	virtual bool CleanUp	();
+	virtual bool Update();
+	virtual bool CleanUp();
 
-	virtual bool SaveState	(ParsonNode& root) const;
-	virtual bool LoadState	(ParsonNode& root);
+	virtual bool SaveState(ParsonNode& root) const;
+	virtual bool LoadState(ParsonNode& root);
 
-	virtual inline COMPONENT_TYPE GetType() const { return type; }						// This is needed to be able to use templeates for functions such as GetComponent<>();
+	virtual inline ComponentType GetType() const { return type; }						// This is needed to be able to use templeates for functions such as GetComponent<>();
 
 public:
-	const char*		GetNameFromType		() const;										// Will return a string with the name of the component. Depends on COMPONENT_TYPE.
+	const char* GetNameFromType() const;												// Will return a string with the name of the component. Depends on COMPONENT_TYPE.
 	
-	uint32			GetID				() const;										// Will return the component's ID.
-	void			ResetID				();												// Will reset the component's ID. WARNING: All references to this comp. will be lost (serialization).
+	uint32 GetID() const;																// Will return the component's ID.
+	void ResetID();																		// Will reset the component's ID. WARNING: All references to this comp. will be lost (serialization).
 
-	bool			IsActive			() const;										// 
-	void			SetIsActive			(const bool& set_to);							// 
+	bool IsActive() const;																// 
+	void SetIsActive(const bool& setTo);												// 
 
-	GameObject*		GetOwner	() const;												//
+	GameObject* GetOwner() const;														//
 
 private:
 	uint32			id;																	// 
-	bool			is_active;															//
+	bool			isActive;															//
 
-	COMPONENT_TYPE	type;																//
+	ComponentType	type;																//
 	GameObject*		owner;																// 
 };
 

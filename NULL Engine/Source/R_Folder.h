@@ -15,8 +15,8 @@ public:
 
 	bool CleanUp() override;
 
-	bool SaveMeta(ParsonNode& meta_root) const override;
-	bool LoadMeta(const ParsonNode& meta_root) override;
+	bool SaveMeta(ParsonNode& metaRoot) const override;
+	bool LoadMeta(const ParsonNode& metaRoot) override;
 
 public:
 	std::vector<uint32> GetContainedResources() const;
@@ -24,7 +24,7 @@ public:
 	bool IsContained(uint32 UID) const;
 
 public:
-	std::vector<uint32> contained_resources;
+	std::vector<uint32> containedResources;
 
 private:
 	// NO IMPORT SETTINGS

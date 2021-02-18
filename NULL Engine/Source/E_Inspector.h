@@ -30,40 +30,40 @@ public:
 	bool CleanUp	() override;
 
 private:
-	void DrawGameObjectInfo				(GameObject* selected_game_object);
-	void DrawComponents					(GameObject* selected_game_object);
+	void DrawGameObjectInfo				(GameObject* selectedGameObject);
+	void DrawComponents					(GameObject* selectedGameObject);
 
-	void DrawTransformComponent			(C_Transform* c_transform);
-	void DrawMeshComponent				(C_Mesh* c_mesh);
-	void DrawMaterialComponent			(C_Material* c_material);
-	void DrawLightComponent				(C_Light* c_light);
-	void DrawCameraComponent			(C_Camera* c_camera);
-	void DrawAnimatorComponent			(C_Animator* c_animator);
-	void DrawAnimationComponent			(C_Animation* c_animation);
+	void DrawTransformComponent			(C_Transform* cTransform);
+	void DrawMeshComponent				(C_Mesh* cMesh);
+	void DrawMaterialComponent			(C_Material* cMaterial);
+	void DrawLightComponent				(C_Light* cLight);
+	void DrawCameraComponent			(C_Camera* cCamera);
+	void DrawAnimatorComponent			(C_Animator* cAnimator);
+	void DrawAnimationComponent			(C_Animation* cAnimation);
 
-	void AddComponentCombo				(GameObject* selected_game_object);					// 
-	void DeleteComponentPopup			(GameObject* selected_game_object);					// 
+	void AddComponentCombo				(GameObject* selectedGameObject);					// 
+	void DeleteComponentPopup			(GameObject* selectedGameObject);					// 
 
 	// ------- DRAW COMPONENT METHODS -------
-	void DisplayTextureData				(C_Material* c_material);							// Will display the texture's width, height, depth...
-	void TextureDisplay					(C_Material* c_material);							// Will display the texture as an image through Dear ImGui.
+	void DisplayTextureData				(C_Material* cMaterial);							// Will display the texture's width, height, depth...
+	void TextureDisplay					(C_Material* cMaterial);							// Will display the texture as an image through Dear ImGui.
 
 private:
-	void DrawImportSettings				(Resource* selected_resource);
+	void DrawImportSettings				(Resource* selectedResource);
 
-	void DrawModelImportSettings		(ModelSettings model_settings);
-	void DrawMeshImportSettings			(MeshSettings mesh_settings);
-	void DrawMaterialImportSettings		(MaterialSettings material_settings);
-	void DrawTextureImportSettings		(TextureSettings texture_settings);
-	void DrawAnimationImportSettings	(AnimationSettings animation_settings);
+	void DrawModelImportSettings		(ModelSettings modelSettings);
+	void DrawMeshImportSettings			(MeshSettings meshSettings);
+	void DrawMaterialImportSettings		(MaterialSettings materialSettings);
+	void DrawTextureImportSettings		(TextureSettings textureSettings);
+	void DrawAnimationImportSettings	(AnimationSettings animationSettings);
 
 private:
-	bool		show_delete_component_popup;
-	int			component_type;
+	bool		showDeleteComponentPopup;
+	int			componentType;
 
-	int			map_to_display;
+	int			mapToDisplay;
 
-	Component*	component_to_delete;
+	Component*	componentToDelete;
 };
 
 #endif // !__E_INSPECTOR_H__

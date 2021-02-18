@@ -4,9 +4,9 @@
 
 #include "R_Material.h"
 
-R_Material::R_Material() : Resource(RESOURCE_TYPE::MATERIAL)
+R_Material::R_Material() : Resource(ResourceType::MATERIAL)
 {
-	diffuse_color	= { 1.0f, 1.0f, 1.0f, 1.0f };
+	diffuseColor	= { 1.0f, 1.0f, 1.0f, 1.0f };
 }
 
 R_Material::~R_Material()
@@ -28,19 +28,19 @@ bool R_Material::CleanUp()
 	return ret;
 }
 
-bool R_Material::SaveMeta(ParsonNode& meta_root) const
+bool R_Material::SaveMeta(ParsonNode& metaRoot) const
 {
 	bool ret = true;
 
-	ParsonArray contained_array = meta_root.SetArray("ContainedResources");
+	ParsonArray contained_array = metaRoot.SetArray("ContainedResources");
 
-	ParsonNode settings = meta_root.SetNode("ImportSettings");
-	material_settings.Save(settings);
+	ParsonNode settings = metaRoot.SetNode("ImportSettings");
+	materialSettings.Save(settings);
 
 	return ret;
 }
 
-bool R_Material::LoadMeta(const ParsonNode& meta_root)
+bool R_Material::LoadMeta(const ParsonNode& metaRoot)
 {
 	bool ret = true;
 
@@ -51,23 +51,23 @@ bool R_Material::LoadMeta(const ParsonNode& meta_root)
 
 // --- MATERIAL METHODS ---
 MaterialData::MaterialData() :
-type				(TEXTURE_TYPE::NONE),
-texture_uid			(0),
-texture_assets_path	("[NONE]")
+type				(TextureType::NONE),
+textureUID			(0),
+textureAssetsPath	("[NONE]")
 {
 
 }
 
-MaterialData::MaterialData(TEXTURE_TYPE type, uint texture_uid, std::string texture_assets_path) :
+MaterialData::MaterialData(TextureType type, uint textureUID, std::string textureAssetsPath) :
 type				(type),
-texture_uid			(texture_uid),
-texture_assets_path	(texture_assets_path)
+textureUID			(textureUID),
+textureAssetsPath	(textureAssetsPath)
 {
 
 }
 
 void MaterialData::CleanUp()
 {
-	texture_assets_path.clear();
-	texture_assets_path.shrink_to_fit();
+	textureAssetsPath.clear();
+	textureAssetsPath.shrink_to_fit();
 }

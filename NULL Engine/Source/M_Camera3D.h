@@ -11,12 +11,12 @@ class C_Camera;
 class M_Camera3D : public Module
 {
 public:
-	M_Camera3D(bool is_active = true);
+	M_Camera3D(bool isActive = true);
 	~M_Camera3D();
 
 	bool			Init				(ParsonNode& root) override;
 	bool			Start				() override;
-	UPDATE_STATUS	Update				(float dt) override;
+	UpdateStatus	Update				(float dt) override;
 	bool			CleanUp				() override;
 
 	bool			LoadConfiguration	(ParsonNode& configuration) override;
@@ -25,13 +25,13 @@ public:
 public:
 	void			CreateMasterCamera				();
 	C_Camera*		GetCurrentCamera				() const;
-	void			SetCurrentCamera				(C_Camera* c_camera);
+	void			SetCurrentCamera				(C_Camera* cCamera);
 	void			SetMasterCameraAsCurrentCamera	();
 
 public:
 	void			PointAt							(const float3& position, const float3& reference, bool orbit = false);
 	void			LookAt							(const float3& Spot);
-	void			Focus							(const float3& target_position, const float& distance_from_target = 10.0f);
+	void			Focus							(const float3& targetPosition, const float& distanceFromTarget = 10.0f);
 	void			Move							(const float3& velocity);
 
 	void			ReturnToWorldOrigin				();
@@ -45,9 +45,9 @@ public:																				// Camera3D Getters and Setters.
 	float			GetMovementSpeed				() const;
 	float			GetRotationSpeed				() const;
 	float			GetZoomSpeed					() const;
-	void			SetMovementSpeed				(const float& movement_speed);
-	void			SetRotationSpeed				(const float& rotation_speed);
-	void			SetZoomSpeed					(const float& zoom_speed);
+	void			SetMovementSpeed				(const float& movementSpeed);
+	void			SetRotationSpeed				(const float& rotationSpeed);
+	void			SetZoomSpeed					(const float& zoomSpeed);
 
 	float3			GetMasterCameraPosition			() const;
 	float3			GetMasterCameraRotation			() const;
@@ -60,7 +60,7 @@ public:
 	void			CastRay							();
 
 	bool			DrawLastRaycast					() const;
-	void			SetDrawLastRaycast				(const bool& set_to);
+	void			SetDrawLastRaycast				(const bool& setTo);
 
 private:
 	void			WASDMovement					();								// Translates the camera along XYZ (Right, Up, Forward), which will act as the camera's axis.
@@ -70,21 +70,21 @@ private:
 	void			Zoom							();								// Will translate the camera along the Z (Forward) axis. The camera will move forwards and backwards. 
 
 public:
-	GameObject*		master_camera;
-	C_Camera*		current_camera;
+	GameObject*		masterCamera;
+	C_Camera*		currentCamera;
 
 	float3			reference;														// Point where the camera will look at and rotate around.
 
-	float3			position_origin;												// 
-	float3			reference_origin;												//
+	float3			positionOrigin;													// 
+	float3			referenceOrigin;												//
 
-	float			movement_speed;													// 
-	float			rotation_speed;													// 
-	float			zoom_speed;														// 
+	float			movementSpeed;													// 
+	float			rotationSpeed;													// 
+	float			zoomSpeed;														// 
 
 public:
-	LineSegment		last_raycast;
-	bool			draw_last_raycast;
+	LineSegment		lastRaycast;
+	bool			drawLastRaycast;
 };
 
 #endif // !__CAMERA_3D_H__

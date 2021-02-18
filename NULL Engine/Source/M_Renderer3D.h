@@ -27,7 +27,7 @@ class Primitive;
 
 typedef unsigned int GLenum;
 
-enum class RENDERER_FLAGS																						// Employed to avoid having OpenGL deps. in some files (M_Editor & "E_" files)
+enum class RendererFlags																						// Employed to avoid having OpenGL deps. in some files (M_Editor & "E_" files)
 {
 	DEPTH_TEST		= 0x0B71,																					// 0x0B71 = GL_DEPTH_TEST
 	CULL_FACE		= 0x0B44,																					// 0x0B44 = GL_CULL_FACE
@@ -38,7 +38,7 @@ enum class RENDERER_FLAGS																						// Employed to avoid having OpenG
 	BLEND			= 0x0BE2																					// 0x0BE2 = GL_BLEND
 };
 
-enum class CUBOID_TYPE
+enum class CuboidType
 {
 	NONE,
 	AABB,
@@ -48,14 +48,14 @@ enum class CUBOID_TYPE
 
 struct MeshRenderer
 {
-	MeshRenderer(const float4x4& transform, C_Mesh* c_mesh, C_Material* c_material);							// Will render the given mesh at the given position with the given mat & tex.
+	MeshRenderer(const float4x4& transform, C_Mesh* cMesh, C_Material* cMaterial);							// Will render the given mesh at the given position with the given mat & tex.
 
 	void Render						();
 
-	void RenderVertexNormals		(const R_Mesh* r_mesh);
-	void RenderFaceNormals			(const R_Mesh* r_mesh);
+	void RenderVertexNormals		(const R_Mesh* rMesh);
+	void RenderFaceNormals			(const R_Mesh* rMesh);
 
-	void GetFaces					(const R_Mesh* r_mesh, std::vector<Triangle>& vertex_faces, std::vector<Triangle>& normal_faces);
+	void GetFaces					(const R_Mesh* rMesh, std::vector<Triangle>& vertexFaces, std::vector<Triangle>& normalFaces);
 
 	void ApplyDebugParameters		();
 	void ClearDebugParameters		();
@@ -64,14 +64,14 @@ struct MeshRenderer
 	void ClearTextureAndMaterial	();
 
 	float4x4	transform;
-	C_Mesh*		c_mesh;
-	C_Material*	c_material;
+	C_Mesh*		cMesh;
+	C_Material*	cMaterial;
 };
 
 struct CuboidRenderer																							// Will render the wireframe of any given geometric form with 8 vertices.
 {	
-	CuboidRenderer(const float3* vertices, const Color& color, const float& edge_width);
-	CuboidRenderer(const float3* vertices, CUBOID_TYPE type);
+	CuboidRenderer(const float3* vertices, const Color& color, const float& edgeWidth);
+	CuboidRenderer(const float3* vertices, CuboidType type);
 
 	void Render();
 
@@ -79,33 +79,33 @@ struct CuboidRenderer																							// Will render the wireframe of any 
 	float GetEdgeWidthByType();
 
 	const float3*	vertices;
-	CUBOID_TYPE		type;
+	CuboidType		type;
 	const Color		color;
-	const float		edge_width;
+	const float		edgeWidth;
 };
 
 struct RayRenderer
 {
-	RayRenderer(const LineSegment& ray, const Color& color, const float& ray_width);
+	RayRenderer(const LineSegment& ray, const Color& color, const float& rayWidth);
 	RayRenderer(const LineSegment& ray);
 
 	void Render();
 
 	const LineSegment	ray;
 	const Color			color;
-	const float			ray_width;
+	const float			rayWidth;
 };
 
 struct SkeletonRenderer
 {
-	SkeletonRenderer(const std::vector<LineSegment>& bones, const Color& color, const float& bone_width);
+	SkeletonRenderer(const std::vector<LineSegment>& bones, const Color& color, const float& boneWidth);
 	SkeletonRenderer(const std::vector<LineSegment>& bones);
 
 	void Render();
 
 	const std::vector<LineSegment>	bones;
 	const Color						color;
-	const float						bone_width;
+	const float						boneWidth;
 };
 
 #define MAX_LIGHTS 8
@@ -113,13 +113,13 @@ struct SkeletonRenderer
 class M_Renderer3D : public Module
 {
 public:
-	M_Renderer3D(bool is_active = true);
+	M_Renderer3D(bool isActive = true);
 	~M_Renderer3D();
 
 	bool			Init				(ParsonNode& configuration) override;
 	bool			Start				() override;
-	UPDATE_STATUS	PreUpdate			(float dt) override;
-	UPDATE_STATUS	PostUpdate			(float dt) override;
+	UpdateStatus	PreUpdate			(float dt) override;
+	UpdateStatus	PostUpdate			(float dt) override;
 	bool			CleanUp				() override;
 	
 	bool			LoadConfiguration	(ParsonNode& root) override;
@@ -144,20 +144,20 @@ public:
 	void			RenderScene					();
 
 public:																											// --- RENDER GEOMETRY
-	void			GenerateBuffers				(const R_Mesh* mesh);
+	void			GenerateBuffers				(const R_Mesh* rMesh);
 		
 	void			DrawWorldGrid				(const int& size);
 	void			DrawWorldAxis				();
 
-	void			AddRenderersBatch			(const std::vector<MeshRenderer>& mesh_renderers, const std::vector<CuboidRenderer>& cuboid_renderers, 
-													const std::vector<SkeletonRenderer>& skeleton_renderers);
+	void			AddRenderersBatch			(const std::vector<MeshRenderer>& meshRenderers, const std::vector<CuboidRenderer>& cuboidRenderers, 
+													const std::vector<SkeletonRenderer>& skeletonRenderers);
 	void			RenderMeshes				();
 	void			RenderCuboids				();
 	void			RenderRays					();
 	void			RenderSkeletons				();
-	void			DeleteFromMeshRenderers		(C_Mesh* c_mesh_to_delete);
-	void			DeleteFromMeshRenderers		(R_Mesh* r_mesh_to_delete);
-	void			DeleteFromCuboids			(float3* cuboid_to_delete);
+	void			DeleteFromMeshRenderers		(C_Mesh* cMeshToDelete);
+	void			DeleteFromMeshRenderers		(R_Mesh* rMeshToDelete);
+	void			DeleteFromCuboids			(float3* cuboidToDelete);
 	void			ClearRenderers				();																// Loading scene measure.
 
 	void			AddPrimitive				(Primitive* primitive);
@@ -177,12 +177,12 @@ public:																											// --- GET/SET METHODS
 
 	const char*		GetDrivers					() const;														// 
 	bool			GetVsync					() const;														// 
-	void			SetVsync					(const bool& set_to);											// 
+	void			SetVsync					(const bool& setTo);											// 
 
 	bool			GetGLFlag					(GLenum flag) const;											// 
-	bool			GetGLFlag					(RENDERER_FLAGS flag) const;									// 
-	void			SetGLFlag					(GLenum flag, bool set_to);										// 
-	void			SetGLFlag					(RENDERER_FLAGS flag, bool set_to);								// 
+	bool			GetGLFlag					(RendererFlags flag) const;									// 
+	void			SetGLFlag					(GLenum flag, bool setTo);										// 
+	void			SetGLFlag					(RendererFlags flag, bool setTo);								// 
 
 public:																											// --- DEBUG GET/SET METHODS
 	uint			GetWorldGridSize			() const;
@@ -217,39 +217,39 @@ public:																											// --- DEBUG GET/SET METHODS
 	bool			GetRenderBoundingBoxes		() const;														// 
 	bool			GetRenderSkeletons			() const;														// 
 	bool			GetRenderPrimitiveExamples	() const;														// 
-	
-	void			SetWorldGridSize			(const uint& world_grid_size);
 
-	void			SetWorldGridColor			(const Color& world_grid_color);
-	void			SetWireframeColor			(const Color& wireframe_color);
-	void			SetVertexNormalsColor		(const Color& vertex_normals_color);
-	void			SetFaceNormalsColor			(const Color& face_normals_color);
+	void			SetWorldGridSize			(const uint& worldGridSize);
 
-	void			SetAABBColor				(const Color& aabb_color);
-	void			SetOBBColor					(const Color& obb_color);
-	void			SetFrustumColor				(const Color& frustum_color);
-	void			SetRayColor					(const Color& ray_color);
-	void			SetBoneColor				(const Color& bone_color);
+	void			SetWorldGridColor			(const Color& worldGridColor);
+	void			SetWireframeColor			(const Color& wireframeColor);
+	void			SetVertexNormalsColor		(const Color& vertexNormalsColor);
+	void			SetFaceNormalsColor			(const Color& faceNormalsColor);
 
-	void			SetWorldGridLineWidth		(const float& world_grid_line_width);
-	void			SetWireframeLineWidth		(const float& wireframe_line_width);
-	void			SetVertexNormalsWidth		(const float& vertex_normals_width);
-	void			SetFaceNormalsWidth			(const float& face_normals_width);
+	void			SetAABBColor				(const Color& aabbColor);
+	void			SetOBBColor					(const Color& obbColor);
+	void			SetFrustumColor				(const Color& frustumColor);
+	void			SetRayColor					(const Color& rayColor);
+	void			SetBoneColor				(const Color& boneColor);
 
-	void			SetAABBEdgeWidth			(const float& aabb_edge_width);
-	void			SetOBBEdgeWidth				(const float& obb_edge_width);
-	void			SetFrustumEdgeWidth			(const float& frustum_edge_width);
-	void			SetRayWidth					(const float& width);
-	void			SetBoneWidth				(const float& width);
+	void			SetWorldGridLineWidth		(const float& worldGridLineWidth);
+	void			SetWireframeLineWidth		(const float& wireframeLineWidth);
+	void			SetVertexNormalsWidth		(const float& vertexNormalsWidth);
+	void			SetFaceNormalsWidth			(const float& faceNormalsWidth);
 
-	void			SetRenderWorldGrid			(const bool& set_to);											// 
-	void			SetRenderWorldAxis			(const bool& set_to);											// 
-	void			SetRenderWireframes			(const bool& set_to);											// 
-	void			SetRenderVertexNormals		(const bool& set_to);											// 
-	void			SetRenderFaceNormals		(const bool& set_to);											// 
-	void			SetRenderBoundingBoxes		(const bool& set_to);											// 
-	void			SetRenderSkeletons			(const bool& set_to);
-	void			SetRenderPrimtiveExamples	(const bool& set_to);											// 
+	void			SetAABBEdgeWidth			(const float& aabbEdgeWidth);
+	void			SetOBBEdgeWidth				(const float& obbEdgeWidth);
+	void			SetFrustumEdgeWidth			(const float& frustumEdgeWidth);
+	void			SetRayWidth					(const float& rayWidth);
+	void			SetBoneWidth				(const float& boneWidth);
+
+	void			SetRenderWorldGrid			(const bool& setTo);											// 
+	void			SetRenderWorldAxis			(const bool& setTo);											// 
+	void			SetRenderWireframes			(const bool& setTo);											// 
+	void			SetRenderVertexNormals		(const bool& setTo);											// 
+	void			SetRenderFaceNormals		(const bool& setTo);											// 
+	void			SetRenderBoundingBoxes		(const bool& setTo);											// 
+	void			SetRenderSkeletons			(const bool& setTo);
+	void			SetRenderPrimtiveExamples	(const bool& setTo);											// 
 
 public:
 	Light					lights[MAX_LIGHTS];																	// 
@@ -258,55 +258,55 @@ public:
 	std::vector<Primitive*>	primitives;
 
 private:
-	std::vector<MeshRenderer>		mesh_renderers;
-	std::vector<CuboidRenderer>		cuboid_renderers;
-	std::vector<SkeletonRenderer>	skeleton_renderers;
+	std::vector<MeshRenderer>		meshRenderers;
+	std::vector<CuboidRenderer>		cuboidRenderers;
+	std::vector<SkeletonRenderer>	skeletonRenderers;
 	
-	Icons					engine_icons;
+	Icons					engineIcons;
 
-	uint					scene_framebuffer;
-	uint					depth_buffer;
-	uint					scene_render_texture;
-	uint					depth_buffer_texture;
-	uint					game_framebuffer;
-	uint					debug_texture_id;
+	uint					sceneFramebuffer;
+	uint					depthBuffer;
+	uint					sceneRenderTexture;
+	uint					depthBufferTexture;
+	uint					gameFramebuffer;
+	uint					debugTextureId;
 
 	bool					vsync;																				// Will keep track of whether or not the vsync is currently active.
 
 private:																										// --- DEBUG VARIABLES ---		// TODO: CREATE A "DEBUGSETTINGS" STRUCTURE
-	uint					world_grid_size;																	//
+	uint					worldGridSize;																		//
 
-	Color					world_grid_color;																	//
-	Color					wireframe_color;																	//
-	Color					vertex_normals_color;																//
-	Color					face_normals_color;																	//
+	Color					worldGridColor;																		//
+	Color					wireframeColor;																		//
+	Color					vertexNormalsColor;																	//
+	Color					faceNormalsColor;																	//
 	
-	Color					aabb_color;																			// 
-	Color					obb_color;																			// 
-	Color					frustum_color;																		// 
-	Color					ray_color;																			// 
-	Color					bone_color;																			// 
+	Color					aabbColor;																			// 
+	Color					obbColor;																			// 
+	Color					frustumColor;																		// 
+	Color					rayColor;																			// 
+	Color					boneColor;																			// 
 	
-	float					world_grid_line_width;
-	float					wireframe_line_width;
-	float					vertex_normals_width;
-	float					face_normals_width;
+	float					worldGridLineWidth;
+	float					wireframeLineWidth;
+	float					vertexNormalsWidth;
+	float					faceNormalsWidth;
 
-	float					aabb_edge_width;																	// 
-	float					obb_edge_width;																		// 
-	float					frustum_edge_width;																	// 
-	float					ray_width;																			// 
-	float					bone_width;																			// 
+	float					aabbEdgeWidth;																		// 
+	float					obbEdgeWidth;																		// 
+	float					frustumEdgeWidth;																	// 
+	float					rayWidth;																			// 
+	float					boneWidth;																			// 
 	
-	bool					render_world_grid;																	// 
-	bool					render_world_axis;																	// 
-	bool					render_wireframes;																	//
-	bool					render_vertex_normals;																// 
-	bool					render_face_normals;																// 
-	bool					render_bounding_boxes;																// 
-	bool					render_skeletons;																	//
+	bool					renderWorldGrid;																	// 
+	bool					renderWorldAxis;																	// 
+	bool					renderWireframes;																	//
+	bool					renderWertexNormals;																// 
+	bool					renderFaceNormals;																	// 
+	bool					renderBoundingBoxes;																// 
+	bool					renderSkeletons;																	//
 
-	bool					render_primitive_examples;															//
+	bool					renderPrimitiveExamples;															//
 };
 
 #endif // !__M_RENDERER_3D_H__

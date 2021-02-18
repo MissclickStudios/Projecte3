@@ -12,9 +12,9 @@ namespace Importer
 		void	Init	();
 		void	CleanUp	();
 		
-		bool	Import	(const char* buffer, uint size, R_Texture* r_texture);
-		uint	Save	(const R_Texture* r_texture, char** buffer);
-		bool	Load	(const char* buffer, const uint size, R_Texture* r_texture);
+		bool	Import	(const char* buffer, uint size, R_Texture* rTexture);
+		uint	Save	(const R_Texture* rTexture, char** buffer);
+		bool	Load	(const char* buffer, const uint size, R_Texture* rTexture);
 
 		namespace Utilities
 		{	
@@ -23,7 +23,7 @@ namespace Importer
 													uint target = 0x0DE1, 				// 0x0DE1 = GL_TEXTURE_2D
 													int filter = 0x2600,				// 0x2600 = GL_NEAREST
 													int wrapping = 0x2901,				// 0x2901 = GL_REPEAT
-													int internal_format = 0x1908,		// 0x1908 = GL_RGBA
+													int internalFormat = 0x1908,		// 0x1908 = GL_RGBA
 													uint format = 0x1908); 				// 0x1908 = GL_RGBA
 		}
 	}

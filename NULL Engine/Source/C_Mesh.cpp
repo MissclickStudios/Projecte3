@@ -12,12 +12,11 @@
 
 #include "C_Mesh.h"
 
-C_Mesh::C_Mesh(GameObject* owner) : Component(owner, COMPONENT_TYPE::MESH),
-r_mesh				(nullptr),
-show_wireframe		(false),
-show_bounding_box	(false)
+C_Mesh::C_Mesh(GameObject* owner) : Component(owner, ComponentType::MESH),
+rMesh(nullptr),
+showWireframe(false),
+showBoundingBox(false)
 {
-
 }
 
 C_Mesh::~C_Mesh()
@@ -29,8 +28,6 @@ bool C_Mesh::Update()
 {
 	bool ret = true;
 
-
-
 	return ret;
 }
 
@@ -38,10 +35,10 @@ bool C_Mesh::CleanUp()
 {
 	bool ret = true;
 
-	if (r_mesh != nullptr)
+	if (rMesh != nullptr)
 	{
-		App->resource_manager->FreeResource(r_mesh->GetUID());
-		r_mesh = nullptr;
+		App->resourceManager->FreeResource(rMesh->GetUID());
+		rMesh = nullptr;
 	}
 
 	return ret;
@@ -51,15 +48,15 @@ bool C_Mesh::SaveState(ParsonNode& root) const
 {
 	bool ret = true;
 
-	if (r_mesh != nullptr)
+	if (rMesh != nullptr)
 	{
 		root.SetNumber("Type", (uint)GetType());
-		root.SetNumber("UID", r_mesh->GetUID());
-		root.SetString("Name", r_mesh->GetAssetsFile());
-		root.SetString("Path", r_mesh->GetLibraryPath());
-		root.SetString("File", r_mesh->GetLibraryFile());
-		root.SetBool("ShowWireframe", show_wireframe);
-		root.SetBool("ShowBoundingBox", show_bounding_box);
+		root.SetNumber("UID", rMesh->GetUID());
+		root.SetString("Name", rMesh->GetAssetsFile());
+		root.SetString("Path", rMesh->GetLibraryPath());
+		root.SetString("File", rMesh->GetLibraryFile());
+		root.SetBool("ShowWireframe", showWireframe);
+		root.SetBool("ShowBoundingBox", showBoundingBox);
 	}
 
 	return ret;
@@ -69,16 +66,16 @@ bool C_Mesh::LoadState(ParsonNode& root)
 {
 	bool ret = true;
 
-	r_mesh = nullptr;
+	rMesh = nullptr;
 
-	std::string assets_path = ASSETS_MODELS_PATH + std::string(root.GetString("Name"));
-	App->resource_manager->AllocateResource((uint32)root.GetNumber("UID"), assets_path.c_str());
+	std::string assetsPath = ASSETS_MODELS_PATH + std::string(root.GetString("Name"));
+	App->resourceManager->AllocateResource((uint32)root.GetNumber("UID"), assetsPath.c_str());
 	
-	r_mesh					= (R_Mesh*)App->resource_manager->RequestResource((uint32)root.GetNumber("UID"));
-	show_wireframe			= root.GetBool("ShowWireframe");
-	show_bounding_box		= root.GetBool("ShowBoundingBox");
+	rMesh = (R_Mesh*)App->resourceManager->RequestResource((uint32)root.GetNumber("UID"));
+	showWireframe = root.GetBool("ShowWireframe");
+	showBoundingBox = root.GetBool("ShowBoundingBox");
 
-	if (r_mesh == nullptr)
+	if (rMesh == nullptr)
 	{
 		LOG("[ERROR] Loading Scene: Could not find Mesh %s with UID: %u! Try reimporting the model.", root.GetString("File"), (uint32)root.GetNumber("UID"));
 	}
@@ -89,24 +86,24 @@ bool C_Mesh::LoadState(ParsonNode& root)
 // --- C_MESH METHODS ---
 R_Mesh* C_Mesh::GetMesh() const
 {
-	return r_mesh;
+	return rMesh;
 }
 
-void C_Mesh::SetMesh(R_Mesh* r_mesh)
+void C_Mesh::SetMesh(R_Mesh* rMesh)
 {
-	if (this->r_mesh != nullptr)
+	if (this->rMesh != nullptr)
 	{
-		App->resource_manager->FreeResource(this->r_mesh->GetUID());
+		App->resourceManager->FreeResource(this->rMesh->GetUID());
 	}
 	
-	this->r_mesh = r_mesh;
+	this->rMesh = rMesh;
 }
 
 const char* C_Mesh::GetMeshPath() const
 {
-	if (r_mesh != nullptr)
+	if (rMesh != nullptr)
 	{
-		return r_mesh->GetAssetsPath();
+		return rMesh->GetAssetsPath();
 	}
 
 	return "NONE";
@@ -114,9 +111,9 @@ const char* C_Mesh::GetMeshPath() const
 
 const char* C_Mesh::GetMeshFile() const
 {
-	if (r_mesh != nullptr)
+	if (rMesh != nullptr)
 	{
-		return r_mesh->GetAssetsFile();
+		return rMesh->GetAssetsFile();
 	}
 
 	return "NONE";
@@ -124,30 +121,30 @@ const char* C_Mesh::GetMeshFile() const
 
 void C_Mesh::SetMeshPath(const char* path)
 {
-	if (r_mesh != nullptr)
+	if (rMesh != nullptr)
 	{
-		r_mesh->SetAssetsPath(path);
+		rMesh->SetAssetsPath(path);
 	}
 }
 
-void C_Mesh::GetMeshData(uint& num_vertices, uint& num_normals, uint& num_tex_coords, uint& num_indices, uint& num_bones)
+void C_Mesh::GetMeshData(uint& numVertices, uint& numNormals, uint& numTexCoords, uint& numIndices, uint& numBones)
 {
-	if (r_mesh != nullptr)
+	if (rMesh != nullptr)
 	{
-		num_vertices	= r_mesh->vertices.size();
-		num_normals		= r_mesh->normals.size();
-		num_tex_coords	= r_mesh->tex_coords.size();
-		num_indices		= r_mesh->indices.size();
+		numVertices = rMesh->vertices.size();
+		numNormals = rMesh->normals.size();
+		numTexCoords = rMesh->texCoords.size();
+		numIndices = rMesh->indices.size();
 
-		num_bones		= r_mesh->bones.size();
+		numBones = rMesh->bones.size();
 	}
 }
 
 bool C_Mesh::GetDrawVertexNormals() const
 {
-	if (r_mesh != nullptr)
+	if (rMesh != nullptr)
 	{
-		return r_mesh->draw_vertex_normals;
+		return rMesh->drawVertexNormals;
 	}
 
 	return false;
@@ -155,55 +152,55 @@ bool C_Mesh::GetDrawVertexNormals() const
 
 bool C_Mesh::GetDrawFaceNormals() const
 {
-	if (r_mesh != nullptr)
+	if (rMesh != nullptr)
 	{
-		return r_mesh->draw_face_normals;
+		return rMesh->drawFaceNormals;
 	}
 
 	return false;
 }
 
-void C_Mesh::SetDrawVertexNormals(const bool& set_to)
+void C_Mesh::SetDrawVertexNormals(const bool& setTo)
 {
-	if (r_mesh != nullptr)
+	if (rMesh != nullptr)
 	{
-		r_mesh->draw_vertex_normals = set_to;
+		rMesh->drawVertexNormals = setTo;
 	}
 }
 
-void C_Mesh::SetDrawFaceNormals(const bool& set_to)
+void C_Mesh::SetDrawFaceNormals(const bool& setTo)
 {
-	if (r_mesh != nullptr)
+	if (rMesh != nullptr)
 	{
-		r_mesh->draw_face_normals = set_to;
+		rMesh->drawFaceNormals = setTo;
 	}
 }
 
-void C_Mesh::GetBoundingBoxVertices(math::float3* bb_vertices) const
+void C_Mesh::GetBoundingBoxVertices(math::float3* bbVertices) const
 {
-	if (r_mesh != nullptr)
+	if (rMesh != nullptr)
 	{
-		r_mesh->aabb.GetCornerPoints(bb_vertices);
+		rMesh->aabb.GetCornerPoints(bbVertices);
 	}
 }
 
 bool C_Mesh::GetShowWireframe() const
 {
-	return show_wireframe;
+	return showWireframe;
 }
 
-void C_Mesh::SetShowWireframe(const bool& set_to)
+void C_Mesh::SetShowWireframe(const bool& setTo)
 {
-	show_wireframe = set_to;
+	showWireframe = setTo;
 }
 
 bool C_Mesh::GetShowBoundingBox() const
 {
-	return show_bounding_box;
+	return showBoundingBox;
 }
 
-void C_Mesh::SetShowBoundingBox(const bool& set_to)
+void C_Mesh::SetShowBoundingBox(const bool& setTo)
 {
-	show_bounding_box = set_to;
-	this->GetOwner()->show_bounding_boxes = set_to;
+	showBoundingBox = setTo;
+	this->GetOwner()->show_bounding_boxes = setTo;
 }

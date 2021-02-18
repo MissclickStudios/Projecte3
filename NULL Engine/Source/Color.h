@@ -20,20 +20,20 @@ struct Color
 	void	SetWithinLimits	();												// Will modify this vector to set the RGBA values within Range: 0.0f ~ 1.0f. Used in Gets and Sets.
 
 	// --- OPERATORS
-	float* operator &();												// Returns a float* of the vector.
+	float*	operator &();													// Returns a float* of the vector.
 	
-	Color operator +(const Color& color);								// col.r = r + color.r, ... .	The values are expected to be within Range: 0.0f ~ 1.0f.
-	Color operator -(const Color& color);								// col.r = r - color.r, ... .	The values are expected to be within Range: 0.0f ~ 1.0f.
-	Color operator *(const float& scalar);								// col.r = r * color.r, ... .	Remember that the value of the vector has to remain in Range: 0.0f ~ 1.0f after the ops.
-	Color operator /(const float& scalar);								// col.r = r / color.r, ... .	Remember that the value of the vector has to remain in Range: 0.0f ~ 1.0f after the ops.
+	Color	operator +(const Color& color);									// col.r = r + color.r, ... .	The values are expected to be within Range: 0.0f ~ 1.0f.
+	Color	operator -(const Color& color);									// col.r = r - color.r, ... .	The values are expected to be within Range: 0.0f ~ 1.0f.
+	Color	operator *(float scalar);										// col.r = r * color.r, ... .	Remember that the value of the vector has to remain in Range: 0.0f ~ 1.0f after the ops.
+	Color	operator /(float scalar);										// col.r = r / color.r, ... .	Remember that the value of the vector has to remain in Range: 0.0f ~ 1.0f after the ops.
 
-	Color operator +=(const Color& color);								// r += color.r, ... .			The values are expected to be within Range: 0.0f ~ 1.0f.
-	Color operator -=(const Color& color);								// r -= color.r, ... .			The values are expected to be within Range: 0.0f ~ 1.0f.
-	Color operator *=(const float& scalar);								// r *= color.r, ... .			Remember that the value of the vector has to remain in Range: 0.0f ~ 1.0f after the ops.
-	Color operator /=(const float& scalar);								// r /= color.t. ... .			Remember that the value of the vector has to remain in Range: 0.0f ~ 1.0f after the ops.
+	Color	operator +=(const Color& color);								// r += color.r, ... .			The values are expected to be within Range: 0.0f ~ 1.0f.
+	Color	operator -=(const Color& color);								// r -= color.r, ... .			The values are expected to be within Range: 0.0f ~ 1.0f.
+	Color	operator *=(float scalar);										// r *= color.r, ... .			Remember that the value of the vector has to remain in Range: 0.0f ~ 1.0f after the ops.
+	Color	operator /=(float scalar);										// r /= color.t. ... .			Remember that the value of the vector has to remain in Range: 0.0f ~ 1.0f after the ops.
 
-	Color operator =(const Color& color);								// this = color; Necessary?
-	bool operator ==(const Color& color);								// if (this.r == color.r && ... && this.a == this.a), then return true.
+	Color	operator =(const Color& color);									// this = color; Necessary?
+	bool	operator ==(const Color& color);								// if (this.r == color.r && ... && this.a == this.a), then return true.
 };
 
 extern Color Red;

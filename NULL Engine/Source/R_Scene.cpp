@@ -2,7 +2,7 @@
 
 #include "R_Scene.h"
 
-R_Scene::R_Scene() : Resource(RESOURCE_TYPE::SCENE)
+R_Scene::R_Scene() : Resource(ResourceType::SCENE)
 {
 
 }
@@ -21,16 +21,16 @@ bool R_Scene::CleanUp()
 	return ret;
 }
 
-bool R_Scene::SaveMeta(ParsonNode& meta_root) const
+bool R_Scene::SaveMeta(ParsonNode& metaRoot) const
 {
 	bool ret = true;
 
-	ParsonArray contained_array = meta_root.SetArray("ContainedResources");
+	ParsonArray contained_array = metaRoot.SetArray("ContainedResources");
 
 	return ret;
 }
 
-bool R_Scene::LoadMeta(const ParsonNode& meta_root)
+bool R_Scene::LoadMeta(const ParsonNode& metaRoot)
 {
 	bool ret = true;
 

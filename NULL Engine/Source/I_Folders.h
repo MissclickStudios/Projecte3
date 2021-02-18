@@ -9,8 +9,8 @@ namespace Importer
 {
 	namespace Folders
 	{
-		uint Save(const R_Folder* r_folder, char** buffer);
-		bool Load(const char* buffer, R_Folder* r_folder);
+		uint Save(const R_Folder* rFolder, char** buffer);
+		bool Load(const char* buffer, R_Folder* rFolder);
 	}
 }
 

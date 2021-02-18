@@ -7,7 +7,7 @@
 namespace ImGui
 {
 	// From: { https://github.com/ocornut/imgui/issues/2265#issuecomment-465432091 }
-	void ThemeGenerator(bool is_window = false);
+	void ThemeGenerator(bool isWindow = false);
 
 	inline ImVec4 MakeHigh(float alpha);
 	inline ImVec4 MakeMid(float alpha);
@@ -18,10 +18,10 @@ namespace ImGui
 	static ImVec4		base			= ImVec4(0.502f, 0.075f, 0.256f, 1.0f);
 	static ImVec4		bg				= ImVec4(0.200f, 0.220f, 0.270f, 1.0f);
 	static ImVec4		text			= ImVec4(0.860f, 0.930f, 0.890f, 1.0f);
-	static float		high_val		= 0.8f;
-	static float		mid_val			= 0.5f;
-	static float		low_val			= 0.3f;
-	static float		window_offset	= -0.2f;
+	static float		highVal			= 0.8f;
+	static float		midVal			= 0.5f;
+	static float		lowVal			= 0.3f;
+	static float		windowOffset	= -0.2f;
 }
 
 #endif // !__THEME_GENERATOR_H__

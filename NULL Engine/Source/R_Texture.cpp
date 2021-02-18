@@ -6,7 +6,7 @@
 
 #include "R_Texture.h"
 
-R_Texture::R_Texture() : Resource(RESOURCE_TYPE::TEXTURE)
+R_Texture::R_Texture() : Resource(ResourceType::TEXTURE)
 {
 
 }
@@ -20,24 +20,24 @@ bool R_Texture::CleanUp()
 {
 	bool ret = true;
 
-	glDeleteTextures(1, (GLuint*)&tex_data.id);
+	glDeleteTextures(1, (GLuint*)&texData.id);
 
 	return ret;
 }
 
-bool R_Texture::SaveMeta(ParsonNode& meta_root) const
+bool R_Texture::SaveMeta(ParsonNode& metaRoot) const
 {
 	bool ret = true;
 
-	ParsonArray contained_array = meta_root.SetArray("ContainedResources");
+	ParsonArray containedArray = metaRoot.SetArray("ContainedResources");
 
-	ParsonNode settings = meta_root.SetNode("ImportSettings");
-	texture_settings.Save(settings);
+	ParsonNode settings = metaRoot.SetNode("ImportSettings");
+	textureSettings.Save(settings);
 
 	return ret;
 }
 
-bool R_Texture::LoadMeta(const ParsonNode& meta_root)
+bool R_Texture::LoadMeta(const ParsonNode& metaRoot)
 {
 	bool ret = true;
 
@@ -50,72 +50,72 @@ bool R_Texture::LoadMeta(const ParsonNode& meta_root)
 // --- R_TEXTURE METHODS ---
 Texture R_Texture::GetTextureData() const
 {
-	return tex_data;
+	return texData;
 }
 
-void R_Texture::SetTextureData(uint id, uint width, uint height, uint depth, uint bpp, uint bytes, TEXTURE_FORMAT format, bool compressed)
+void R_Texture::SetTextureData(uint id, uint width, uint height, uint depth, uint bpp, uint bytes, TextureFormat format, bool compressed)
 {
-	tex_data.id				= id;
-	tex_data.width			= width;
-	tex_data.height			= height;
-	tex_data.depth			= depth;
-	tex_data.bpp			= bpp;
-	tex_data.bytes			= bytes;
-	tex_data.format			= format;
-	tex_data.compressed		= compressed;
+	texData.id				= id;
+	texData.width			= width;
+	texData.height			= height;
+	texData.depth			= depth;
+	texData.bpp				= bpp;
+	texData.bytes			= bytes;
+	texData.format			= format;
+	texData.compressed		= compressed;
 }
 
 uint R_Texture::GetTextureID() const
 {
-	return tex_data.id;
+	return texData.id;
 }
 
 uint R_Texture::GetTextureWidth() const
 {
-	return tex_data.width;
+	return texData.width;
 }
 
 uint R_Texture::GetTextureHeight() const
 {
-	return tex_data.height;
+	return texData.height;
 }
 
 uint R_Texture::GetTextureDepth() const
 {
-	return tex_data.depth;
+	return texData.depth;
 }
 
 uint R_Texture::GetTextureBpp() const
 {
-	return tex_data.bpp;
+	return texData.bpp;
 }
 
 uint R_Texture::GetTextureBytes() const
 {
-	return tex_data.bytes;
+	return texData.bytes;
 }
 
-TEXTURE_FORMAT R_Texture::GetTextureFormat() const
+TextureFormat R_Texture::GetTextureFormat() const
 {
-	return tex_data.format;
+	return texData.format;
 }
 
 bool R_Texture::TextureIsCompressed() const
 {
-	return tex_data.compressed;
+	return texData.compressed;
 }
 
 const char* R_Texture::GetTextureFormatString() const
 {
-	switch (tex_data.format)
+	switch (texData.format)
 	{
-	case TEXTURE_FORMAT::UNKNOWN:		{ return "UNKNOWN"; }		break;
-	case TEXTURE_FORMAT::COLOUR_INDEX:	{ return "COLOUR_INDEX"; }	break;
-	case TEXTURE_FORMAT::RGB:			{ return "RGB"; }			break;
-	case TEXTURE_FORMAT::RGBA:			{ return "RGBA"; }			break;
-	case TEXTURE_FORMAT::BGR:			{ return "BGR"; }			break;
-	case TEXTURE_FORMAT::BGRA:			{ return "BGRA"; }			break;
-	case TEXTURE_FORMAT::LUMINANCE:		{ return "LUMINANCE"; }		break;
+	case TextureFormat::UNKNOWN:		{ return "UNKNOWN"; }		break;
+	case TextureFormat::COLOUR_INDEX:	{ return "COLOUR_INDEX"; }	break;
+	case TextureFormat::RGB:			{ return "RGB"; }			break;
+	case TextureFormat::RGBA:			{ return "RGBA"; }			break;
+	case TextureFormat::BGR:			{ return "BGR"; }			break;
+	case TextureFormat::BGRA:			{ return "BGRA"; }			break;
+	case TextureFormat::LUMINANCE:		{ return "LUMINANCE"; }		break;
 	}
 
 	return "NONE";
@@ -130,6 +130,6 @@ Texture::Texture()
 	depth		= 0;
 	bpp			= 0;
 	bytes		= 0;
-	format		= TEXTURE_FORMAT::UNKNOWN;
+	format		= TextureFormat::UNKNOWN;
 	compressed	= true;
 }

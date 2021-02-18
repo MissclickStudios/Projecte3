@@ -35,23 +35,23 @@
 
 #include "MemoryManager.h"
 
-M_Scene::M_Scene(bool is_active) : Module("SceneManager", is_active),
-master_root				(nullptr),
-scene_root				(nullptr),
-animation_root			(nullptr),
-selected_game_object	(nullptr),
-culling_camera			(nullptr)
+M_Scene::M_Scene(bool isActive) : Module("SceneManager", isActive),
+masterRoot				(nullptr),
+sceneRoot				(nullptr),
+animationRoot			(nullptr),
+selectedGameObject		(nullptr),
+cullingCamera			(nullptr)
 {
 	CreateMasterRoot();
 	CreateSceneRoot("MainScene");
 
-	selected_game_object = scene_root;
+	selectedGameObject = sceneRoot;
 }
 
 M_Scene::~M_Scene()
 {
-	master_root->CleanUp();
-	RELEASE(master_root);
+	masterRoot->CleanUp();
+	RELEASE(masterRoot);
 }
 
 bool M_Scene::Init(ParsonNode& config)
@@ -67,19 +67,19 @@ bool M_Scene::Start()
 
 	App->camera->LookAt(float3::zero);
 
-	if (scene_root == nullptr)
+	if (sceneRoot == nullptr)
 	{
-		scene_root = CreateGameObject("Main Scene");
+		sceneRoot = CreateGameObject("Main Scene");
 
-		selected_game_object = scene_root;
+		selectedGameObject = sceneRoot;
 	}
 
 	CreateSceneCamera("SceneCamera");
 
-	//uint32 street_uid = App->resource_manager->LoadFromLibrary(DEFAULT_SCENE);
+	//uint32 street_uid = App->resourceManager->LoadFromLibrary(DEFAULT_SCENE);
 	//GenerateGameObjectsFromModel(street_uid);
 
-	//uint32 animation_uid = App->resource_manager->LoadFromLibrary(DEFAULT_ANIMATION);
+	//uint32 animation_uid = App->resourceManager->LoadFromLibrary(DEFAULT_ANIMATION);
 	//GenerateGameObjectsFromModel(animation_uid , float3(0.05f, 0.05f, 0.05f));
 	
 	LoadScene("Assets/Scenes/MainScene.json");
@@ -89,71 +89,71 @@ bool M_Scene::Start()
 }
 
 // Update
-UPDATE_STATUS M_Scene::Update(float dt)
+UpdateStatus M_Scene::Update(float dt)
 {
 	if (App->debug == true)
 	{
 		HandleDebugInput();
 	}
 
-	if (animation_root != nullptr)
+	if (animationRoot != nullptr)
 	{
-		C_Animator* root_animator = animation_root->GetComponent<C_Animator>();
-		if (root_animator != nullptr)
+		C_Animator* rootAnimator = animationRoot->GetComponent<C_Animator>();
+		if (rootAnimator != nullptr)
 		{
 			if (App->play)
 			{
-				if (App->input->GetKey(SDL_SCANCODE_KP_1) == KEY_STATE::KEY_DOWN)
+				if (App->input->GetKey(SDL_SCANCODE_KP_1) == KeyState::KEY_DOWN)
 				{
-					root_animator->PlayClip("Running", 8);
+					rootAnimator->PlayClip("Running", 8);
 				}
-				if (App->input->GetKey(SDL_SCANCODE_KP_1) == KEY_STATE::KEY_UP)
+				if (App->input->GetKey(SDL_SCANCODE_KP_1) == KeyState::KEY_UP)
 				{
-					root_animator->PlayClip("Idle", 8);
+					rootAnimator->PlayClip("Idle", 8);
 				}
-				if (App->input->GetKey(SDL_SCANCODE_KP_2) == KEY_STATE::KEY_DOWN)
+				if (App->input->GetKey(SDL_SCANCODE_KP_2) == KeyState::KEY_DOWN)
 				{
-					root_animator->PlayClip("Attack", 8);
+					rootAnimator->PlayClip("Attack", 8);
 				}
 
-				if (!root_animator->GetCurrentClip()->playing || !root_animator->CurrentClipExists())
+				if (!rootAnimator->GetCurrentClip()->playing || !rootAnimator->CurrentClipExists())
 				{
-					root_animator->PlayClip("Idle", 8);
+					rootAnimator->PlayClip("Idle", 8);
 				}
 			}
 		}
 	}
 
-	std::vector<MeshRenderer>		mesh_renderers;
-	std::vector<CuboidRenderer>		cuboid_renderers;
-	std::vector<SkeletonRenderer>	skeleton_renderers;
+	std::vector<MeshRenderer>		meshRenderers;
+	std::vector<CuboidRenderer>		cuboidRenderers;
+	std::vector<SkeletonRenderer>	skeletonRenderers;
 
 	// --- Sort GameObjects by Z-Buffer value
 
-	for (uint i = 0; i < game_objects.size(); ++i)
+	for (uint i = 0; i < gameObjects.size(); ++i)
 	{
-		if (game_objects[i]->to_delete)
+		if (gameObjects[i]->to_delete)
 		{
-			DeleteGameObject(game_objects[i], i);
+			DeleteGameObject(gameObjects[i], i);
 			continue;
 		}
 
-		if (game_objects[i]->IsActive())
+		if (gameObjects[i]->IsActive())
 		{
-			game_objects[i]->Update();
+			gameObjects[i]->Update();
 
-			if (GameObjectIsInsideCullingCamera(game_objects[i]) || game_objects[i] == culling_camera->GetOwner())
+			if (GameObjectIsInsideCullingCamera(gameObjects[i]) || gameObjects[i] == cullingCamera->GetOwner())
 			{
-				game_objects[i]->GetRenderers(mesh_renderers, cuboid_renderers, skeleton_renderers);
+				gameObjects[i]->GetRenderers(meshRenderers, cuboidRenderers, skeletonRenderers);
 			}
 		}
 	}
 
 	// --- Send Batches to Renderer
-	App->renderer->AddRenderersBatch(mesh_renderers, cuboid_renderers, skeleton_renderers);
+	App->renderer->AddRenderersBatch(meshRenderers, cuboidRenderers, skeletonRenderers);
 
-	mesh_renderers.clear();
-	cuboid_renderers.clear();
+	meshRenderers.clear();
+	cuboidRenderers.clear();
 	
 	// --- Primitives
 	for (uint n = 0; n < primitives.size(); n++)
@@ -161,20 +161,20 @@ UPDATE_STATUS M_Scene::Update(float dt)
 		primitives[n]->Update();
 	}
 
-	if (App->input->GetKey(SDL_SCANCODE_F5) == KEY_STATE::KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_F5) == KeyState::KEY_DOWN)
 	{
 		App->SaveConfiguration("Resources/Engine/Configuration/configuration.JSON");
 	}
 
-	if (App->input->GetKey(SDL_SCANCODE_F6) == KEY_STATE::KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_F6) == KeyState::KEY_DOWN)
 	{
 		App->LoadConfiguration("Resources/Engine/Configuration/configuration.JSON");
 	}
 
-	return UPDATE_STATUS::CONTINUE;
+	return UpdateStatus::CONTINUE;
 }
 
-UPDATE_STATUS M_Scene::PostUpdate(float dt)
+UpdateStatus M_Scene::PostUpdate(float dt)
 {
 	BROFILER_CATEGORY("M_Scene PostUpdate", Profiler::Color::Yellow)
 	
@@ -183,7 +183,7 @@ UPDATE_STATUS M_Scene::PostUpdate(float dt)
 		primitives[n]->Render();
 	}
 
-	return UPDATE_STATUS::CONTINUE;
+	return UpdateStatus::CONTINUE;
 }
 
 // Load assets
@@ -191,18 +191,18 @@ bool M_Scene::CleanUp()
 {
 	LOG("Unloading Intro scene");
 	
-	for (uint i = 0; i < game_objects.size(); ++i)
+	for (uint i = 0; i < gameObjects.size(); ++i)
 	{
-		game_objects[i]->CleanUp();
-		RELEASE(game_objects[i]);
+		gameObjects[i]->CleanUp();
+		RELEASE(gameObjects[i]);
 	}
 
-	game_objects.clear();
+	gameObjects.clear();
 
-	scene_root				= nullptr;
-	animation_root			= nullptr;
-	culling_camera			= nullptr;
-	selected_game_object	= nullptr;
+	sceneRoot				= nullptr;
+	animationRoot			= nullptr;
+	cullingCamera			= nullptr;
+	selectedGameObject		= nullptr;
 
 	primitives.clear();
 
@@ -228,23 +228,23 @@ bool M_Scene::LoadConfiguration(ParsonNode& root)
 }
 
 // -------------- SCENE METHODS --------------
-bool M_Scene::SaveScene(const char* scene_name) const
+bool M_Scene::SaveScene(const char* sceneName) const
 {
 	bool ret = true;
 
-	ParsonNode root_node		= ParsonNode();
-	ParsonArray object_array	= root_node.SetArray("Game Objects");
+	ParsonNode rootNode		= ParsonNode();
+	ParsonArray objectArray	= rootNode.SetArray("Game Objects");
 
-	for (uint i = 0; i < game_objects.size(); ++i)
+	for (uint i = 0; i < gameObjects.size(); ++i)
 	{
-		ParsonNode array_node = object_array.SetNode(game_objects[i]->GetName());
-		game_objects[i]->SaveState(array_node);
+		ParsonNode array_node = objectArray.SetNode(gameObjects[i]->GetName());
+		gameObjects[i]->SaveState(array_node);
 	}
 
 	char* buffer		= nullptr;
-	std::string name	= (scene_name != nullptr) ? scene_name : scene_root->GetName();
+	std::string name	= (sceneName != nullptr) ? sceneName : sceneRoot->GetName();
 	std::string path	= ASSETS_SCENES_PATH + name + JSON_EXTENSION;
-	uint written = root_node.SerializeToFile(path.c_str(), &buffer);
+	uint written = rootNode.SerializeToFile(path.c_str(), &buffer);
 	if (written > 0)
 	{
 		LOG("[SCENE] Scene: Successfully saved the current scene! Path: %s", path.c_str());
@@ -254,21 +254,21 @@ bool M_Scene::SaveScene(const char* scene_name) const
 		LOG("[ERROR] Scene: Could not save the current scene! Error: FileSystem could not write any data!");
 	}
 
-	R_Scene* r_scene			= (R_Scene*)App->resource_manager->CreateResource(RESOURCE_TYPE::SCENE, path.c_str());			// TMP until R_Scene is fully implemented.
-	//App->resource_manager->SaveResourceToLibrary(r_scene);
+	R_Scene* rScene	= (R_Scene*)App->resourceManager->CreateResource(ResourceType::SCENE, path.c_str());			// TMP until R_Scene is fully implemented.
+	//App->resourceManager->SaveResourceToLibrary(r_scene);
 
-	std::string library_path	= SCENES_PATH + std::to_string(r_scene->GetUID()) + SCENES_EXTENSION;
-	written = App->file_system->Save(library_path.c_str(), buffer, written);
+	std::string libraryPath	= SCENES_PATH + std::to_string(rScene->GetUID()) + SCENES_EXTENSION;
+	written = App->fileSystem->Save(libraryPath.c_str(), buffer, written);
 	if (written > 0)
 	{
-		LOG("[SCENE] Scene: Successfully saved the current scene in Library! Path: %s", library_path.c_str());
+		LOG("[SCENE] Scene: Successfully saved the current scene in Library! Path: %s", libraryPath.c_str());
 	}
 	else
 	{
 		LOG("[ERROR] Scene: Could not save the current scene in Library! Error: FileSystem could not write any data!");
 	}
 
-	App->resource_manager->DeallocateResource(r_scene);
+	App->resourceManager->DeallocateResource(rScene);
 
 	RELEASE_ARRAY(buffer);
 
@@ -280,7 +280,7 @@ bool M_Scene::LoadScene(const char* path)
 	bool ret = true;
 
 	char* buffer = nullptr;
-	uint read = App->file_system->Load(path, &buffer);
+	uint read = App->fileSystem->Load(path, &buffer);
 	if (read == 0)
 	{
 		LOG("[ERROR] Scene Loading: Could not load %s from Assets! Error: File system could not read the file!", path);
@@ -291,65 +291,65 @@ bool M_Scene::LoadScene(const char* path)
 	{
 		CleanUp();
 
-		ParsonNode new_root			= ParsonNode(buffer);
-		ParsonArray objects_array	= new_root.GetArray("Game Objects");
+		ParsonNode newRoot			= ParsonNode(buffer);
+		ParsonArray objectsArray	= newRoot.GetArray("Game Objects");
 		RELEASE_ARRAY(buffer);
 
 		std::map<uint32, GameObject*> tmp;
 
-		for (uint i = 0; i < objects_array.size; ++i)																			// Getting all the GameObjects in the ParsonArray
+		for (uint i = 0; i < objectsArray.size; ++i)																			// Getting all the GameObjects in the ParsonArray
 		{
-			ParsonNode object_node = objects_array.GetNode(i);
-			if (!object_node.NodeIsValid())
+			ParsonNode objectNode = objectsArray.GetNode(i);
+			if (!objectNode.NodeIsValid())
 			{
 				continue;
 			}
 
-			GameObject* game_object = new GameObject();
+			GameObject* gameObject = new GameObject();
 
-			game_object->LoadState(object_node);
+			gameObject->LoadState(objectNode);
 
-			if (game_object->is_scene_root)
+			if (gameObject->is_scene_root)
 			{
-				scene_root = game_object;
-				scene_root->SetParent(master_root);
+				sceneRoot = gameObject;
+				sceneRoot->SetParent(masterRoot);
 			}
 
-			if (game_object->GetComponent<C_Animator>() != nullptr)
+			if (gameObject->GetComponent<C_Animator>() != nullptr)
 			{
-				animation_root = game_object;
+				animationRoot = gameObject;
 			}
 
-			C_Camera* c_camera = game_object->GetComponent<C_Camera>();
-			if (c_camera != nullptr)
+			C_Camera* cCamera = gameObject->GetComponent<C_Camera>();
+			if (cCamera != nullptr)
 			{
-				if (c_camera->IsCulling())
+				if (cCamera->IsCulling())
 				{
-					culling_camera = c_camera;
+					cullingCamera = cCamera;
 				}
 			}
 
-			tmp.emplace(game_object->GetUID(), game_object);
+			tmp.emplace(gameObject->GetUID(), gameObject);
 		}
 
 		// Re-Parenting
 		std::map<uint32, GameObject*>::iterator item;
 		for (item = tmp.begin(); item != tmp.end(); ++item)
 		{
-			uint parent_uid = item->second->GetParentUID();
-			if (parent_uid == 0)
+			uint parentUid = item->second->GetParentUID();
+			if (parentUid == 0)
 			{
 				continue;
 			}
 
-			std::map<uint32, GameObject*>::iterator parent = tmp.find(parent_uid);
+			std::map<uint32, GameObject*>::iterator parent = tmp.find(parentUid);
 			if (parent != tmp.end())
 			{
 				item->second->SetParent(parent->second);
 			}
 
 			item->second->GetComponent<C_Transform>()->Translate(float3::zero);						// Dirty way to refresh the transforms after the import is done. TMP Un-hardcode later.
-			game_objects.push_back(item->second);
+			gameObjects.push_back(item->second);
 		}
 
 		tmp.clear();
@@ -371,135 +371,135 @@ void M_Scene::LoadResourceIntoScene(Resource* resource)
 
 	switch (resource->GetType())
 	{
-	case::RESOURCE_TYPE::MODEL:		{ GenerateGameObjectsFromModel(resource->GetUID()); }				break;
-	case::RESOURCE_TYPE::TEXTURE:	{ success = ApplyTextureToSelectedGameObject(resource->GetUID()); }	break;
+	case::ResourceType::MODEL:		{ GenerateGameObjectsFromModel(resource->GetUID()); }				break;
+	case::ResourceType::TEXTURE:	{ success = ApplyTextureToSelectedGameObject(resource->GetUID()); }	break;
 	}
 }
 
 GameObject* M_Scene::CreateGameObject(const char* name, GameObject* parent)
 {	
-	if (game_objects.empty())
+	if (gameObjects.empty())
 	{
 		CreateSceneRoot(name);
-		return scene_root;
+		return sceneRoot;
 	}
 	
-	GameObject* game_object = new GameObject(name);
+	GameObject* gameObject = new GameObject(name);
 
-	if (game_object != nullptr)
+	if (gameObject != nullptr)
 	{
 		if (parent != nullptr)
 		{
-			game_object->SetParent(parent);
+			gameObject->SetParent(parent);
 			
 			// parent->AddChild(game_object);
 		}
 
-		game_objects.push_back(game_object);
+		gameObjects.push_back(gameObject);
 	}
 
-	return game_object;
+	return gameObject;
 }
 
-void M_Scene::DeleteGameObject(GameObject* game_object, uint index)
+void M_Scene::DeleteGameObject(GameObject* gameObject, uint index)
 {
-	if (game_object == nullptr)
+	if (gameObject == nullptr)
 	{
 		LOG("[ERROR] Scene: Object to delete was nullptr!");
 		return;
 	}
 
-	if (selected_game_object == game_object)
+	if (selectedGameObject == gameObject)
 	{
-		selected_game_object = nullptr;
+		selectedGameObject = nullptr;
 	}
 	
-	std::vector<C_Mesh*> c_meshes;
-	bool found_meshes = game_object->GetComponents<C_Mesh>(c_meshes);
+	std::vector<C_Mesh*> cMeshes;
+	bool found_meshes = gameObject->GetComponents<C_Mesh>(cMeshes);
 	if (found_meshes)
 	{
-		for (uint i = 0; i < c_meshes.size(); ++i)
+		for (uint i = 0; i < cMeshes.size(); ++i)
 		{
-			App->renderer->DeleteFromMeshRenderers(c_meshes[i]);
+			App->renderer->DeleteFromMeshRenderers(cMeshes[i]);
 		}
 
-		c_meshes.clear();
+		cMeshes.clear();
 	}
 
-	if (!game_objects.empty())													// Extra check just to make sure that at least one GameObject remains in the Scene.
+	if (!gameObjects.empty())													// Extra check just to make sure that at least one GameObject remains in the Scene.
 	{
-		game_object->CleanUp();													// As it has not been Cleaned Up by its parent, the GameObject needs to call its CleanUp();
+		gameObject->CleanUp();													// As it has not been Cleaned Up by its parent, the GameObject needs to call its CleanUp();
 		
 		if (index != -1)														// If an index was given.
 		{
-			game_objects.erase(game_objects.begin() + index);					// Delete game object at index.
+			gameObjects.erase(gameObjects.begin() + index);					// Delete game object at index.
 		}
 		else
 		{
-			for (uint i = 0; i < game_objects.size(); ++i)						// If no index was given.
+			for (uint i = 0; i < gameObjects.size(); ++i)						// If no index was given.
 			{
-				if (game_objects[i] == game_object)								// Iterate game_objects until a match is found.
+				if (gameObjects[i] == gameObject)								// Iterate game_objects until a match is found.
 				{
-					game_objects.erase(game_objects.begin() + i);				// Delete the game_object at the current loop index.
+					gameObjects.erase(gameObjects.begin() + i);				// Delete the game_object at the current loop index.
 					break;
 				}
 			}
 		}
 
-		RELEASE(game_object);
+		RELEASE(gameObject);
 		return;
 	}
 
-	LOG("[ERROR] Could not find game object %s in game_objects vector!", game_object->GetName());
+	LOG("[ERROR] Could not find game object %s in game_objects vector!", gameObject->GetName());
 }
 
-void M_Scene::GenerateGameObjectsFromModel(const uint32& model_UID, const float3& scale)
+void M_Scene::GenerateGameObjectsFromModel(const uint32& modelUid, const float3& scale)
 {
-	R_Model* r_model = (R_Model*)App->resource_manager->RequestResource(model_UID);
+	R_Model* rModel = (R_Model*)App->resourceManager->RequestResource(modelUid);
 
-	if (r_model == nullptr)
+	if (rModel == nullptr)
 	{
 		LOG("[ERROR] Scene: Could not generate GameObjects from Model Resource! Error: R_Model* was nullptr.");
 		return;
 	}
 
-	GameObject* parent_root = nullptr;
+	GameObject* parentRoot = nullptr;
 	std::map<uint32, GameObject*> tmp;
 
-	std::vector<ModelNode> m_nodes = r_model->model_nodes;
-	for (uint i = 0; i < m_nodes.size(); ++i)
+	std::vector<ModelNode> mNodes = rModel->modelNodes;
+	for (uint i = 0; i < mNodes.size(); ++i)
 	{
-		GameObject* game_object = new GameObject();
+		GameObject* gameObject = new GameObject();
 
-		game_object->ForceUID(m_nodes[i].uid);
-		game_object->SetParentUID(m_nodes[i].parent_uid);
-		game_object->SetName(m_nodes[i].name.c_str());
-		game_object->GetComponent<C_Transform>()->ImportTransform(m_nodes[i].transform);
+		gameObject->ForceUID(mNodes[i].uid);
+		gameObject->SetParentUID(mNodes[i].parentUID);
+		gameObject->SetName(mNodes[i].name.c_str());
+		gameObject->GetComponent<C_Transform>()->ImportTransform(mNodes[i].transform);
 
-		CreateComponentsFromModelNode(m_nodes[i], game_object);
+		CreateComponentsFromModelNode(mNodes[i], gameObject);
 
-		if (m_nodes[i].parent_uid == 0)
+		if (mNodes[i].parentUID == 0)
 		{
-			parent_root = game_object;
+			parentRoot = gameObject;
 		}
 
-		tmp.emplace(game_object->GetUID(), game_object);
+		tmp.emplace(gameObject->GetUID(), gameObject);
 	}
 	  
-	m_nodes.clear();
+	mNodes.clear();
 
 	// Re-Parenting
 	std::map<uint32, GameObject*>::iterator item;
 	for (item = tmp.begin(); item != tmp.end(); ++item)
 	{
-		uint parent_uid = item->second->GetParentUID();
-		if (parent_uid == 0)
+		uint parentUid = item->second->GetParentUID();
+		if (parentUid == 0)
 		{
-			item->second->SetParent(scene_root);
+			item->second->SetParent(sceneRoot);
 		}
 		else
 		{
-			std::map<uint32, GameObject*>::iterator parent = tmp.find(parent_uid);
+			std::map<uint32, GameObject*>::iterator parent = tmp.find(parentUid);
 			if (parent != tmp.end())
 			{
 				item->second->SetParent(parent->second);
@@ -507,287 +507,289 @@ void M_Scene::GenerateGameObjectsFromModel(const uint32& model_UID, const float3
 		}
 
 		item->second->GetComponent<C_Transform>()->Translate(float3::zero);						// Dirty way to refresh the transforms after the import is done. TMP Un-hardcode later.
-		game_objects.push_back(item->second);
+		gameObjects.push_back(item->second);
 	}
 
-	if (parent_root != nullptr)
+	if (parentRoot != nullptr)
 	{
 		if (scale.x != 0.0f)																	// Dirty way of detecting that the scale is valid.
 		{
-			parent_root->GetComponent<C_Transform>()->SetLocalScale(scale);
+			parentRoot->GetComponent<C_Transform>()->SetLocalScale(scale);
 		}
 
-		if (!r_model->animations.empty())
+		if (!rModel->animations.empty())
 		{
-			CreateAnimationComponentFromModel(r_model, parent_root);							// Must be done last as the parent hierarchy needs to be in place.
+			CreateAnimationComponentFromModel(rModel, parentRoot);							// Must be done last as the parent hierarchy needs to be in place.
 		}
 
-		parent_root = nullptr;
+		parentRoot = nullptr;
 	}
 
 	tmp.clear();
 }
 
-void M_Scene::CreateComponentsFromModelNode(const ModelNode& model_node, GameObject* game_object)
+void M_Scene::CreateComponentsFromModelNode(const ModelNode& modelNode, GameObject* gameObject)
 {
-	bool valid_mesh_uid			= (model_node.mesh_uid != 0)		?	true : false;
-	bool valid_material_uid		= (model_node.material_uid != 0)	?	true : false;
-	bool valid_texture_uid		= (model_node.texture_uid != 0)		?	true : false;
+	bool validMeshUid			= (modelNode.meshUID != 0)		?	true : false;
+	bool validMaterialUid		= (modelNode.materialUID != 0)	?	true : false;
+	bool validTextureUid		= (modelNode.textureUID != 0)		?	true : false;
 	
 	// Set Mesh
-	if (valid_mesh_uid)
+	if (validMeshUid)
 	{
-		C_Mesh* c_mesh = (C_Mesh*)game_object->CreateComponent(COMPONENT_TYPE::MESH);
-		R_Mesh* r_mesh = (R_Mesh*)App->resource_manager->RequestResource(model_node.mesh_uid);
-		if (r_mesh == nullptr)
+		C_Mesh* cMesh = (C_Mesh*)gameObject->CreateComponent(ComponentType::MESH);
+		R_Mesh* rMesh = (R_Mesh*)App->resourceManager->RequestResource(modelNode.meshUID);
+
+		if (rMesh == nullptr)
 		{
 			LOG("[ERROR] Scene: Could not generate the Mesh Resource from the Model Node! Error: R_Mesh* could not be found in resources.");
-			game_object->DeleteComponent(c_mesh);
+			gameObject->DeleteComponent(cMesh);
 			return;
 		}
 
-		c_mesh->SetMesh(r_mesh);
+		cMesh->SetMesh(rMesh);
 	}
 
 	// Set Material
-	if (valid_material_uid)
+	if (validMaterialUid)
 	{
-		C_Material* c_material = (C_Material*)game_object->CreateComponent(COMPONENT_TYPE::MATERIAL);
-		R_Material* r_material = (R_Material*)App->resource_manager->RequestResource(model_node.material_uid);
-		if (r_material == nullptr)
+		C_Material* cMaterial = (C_Material*)gameObject->CreateComponent(ComponentType::MATERIAL);
+		R_Material* rMaterial = (R_Material*)App->resourceManager->RequestResource(modelNode.materialUID);
+		if (rMaterial == nullptr)
 		{
 			LOG("[ERROR] Scene: Could not generate the Material Resource from the Model Node! Error: R_Material* could not be found in resources.");
-			game_object->DeleteComponent(c_material);
+			gameObject->DeleteComponent(cMaterial);
 			return;
 		}
 
-		c_material->SetMaterial(r_material);
+		cMaterial->SetMaterial(rMaterial);
 
 		// Set Texture
-		if (valid_texture_uid)
+		if (validTextureUid)
 		{
-			R_Texture* r_texture = (R_Texture*)App->resource_manager->RequestResource(model_node.texture_uid);
+			R_Texture* r_texture = (R_Texture*)App->resourceManager->RequestResource(modelNode.textureUID);
 			if (r_texture == nullptr)
 			{
 				LOG("[ERROR] Scene: Could not generate the Texture Resource from the Model Node! Error: R_Texture* could not be found in resources.");
 				return;
 			}
 
-			c_material->SetTexture(r_texture);
+
+			cMaterial->SetTexture(r_texture);
 		}
 	}
 }
 
-void M_Scene::CreateAnimationComponentFromModel(const R_Model* r_model, GameObject* game_object)
+void M_Scene::CreateAnimationComponentFromModel(const R_Model* rModel, GameObject* gameObject)
 {
-	if (r_model == nullptr)
+	if (rModel == nullptr)
 	{
 		LOG("[ERROR] Scene: Could not Create Animation Component From Model! Error: Given R_Model* was nullptr.");
 		return;
 	}
-	if (game_object == nullptr)
+	if (gameObject == nullptr)
 	{
 		LOG("[ERROR] Scene: Could not Create Animation Component From Model! Error: Given GameObject* was nullptr.");
 		return;
 	}
-	if (r_model->animations.empty())
+	if (rModel->animations.empty())
 	{
 		LOG("[ERROR] Scene: Could not Create Animation Component From Model! Error: Given R_Model* had no animations.");
 		return;
 	}
 
-	animation_root = game_object;
+	animationRoot = gameObject;
 
-	C_Animator* c_animation = (C_Animator*)game_object->CreateComponent(COMPONENT_TYPE::ANIMATOR);
+	C_Animator* cAnimation = (C_Animator*)gameObject->CreateComponent(ComponentType::ANIMATOR);
 	std::map<uint32, std::string>::const_iterator item;
-	for (item = r_model->animations.cbegin(); item != r_model->animations.cend(); ++item)
+	for (item = rModel->animations.cbegin(); item != rModel->animations.cend(); ++item)
 	{
-		R_Animation* r_animation = (R_Animation*)App->resource_manager->RequestResource(item->first);
-		if (r_animation != nullptr)
+		R_Animation* rAnimation = (R_Animation*)App->resourceManager->RequestResource(item->first);
+		if (rAnimation != nullptr)
 		{
-			c_animation->AddAnimation(r_animation);
+			cAnimation->AddAnimation(rAnimation);
 		}
 	}
 }
 
 std::vector<GameObject*>* M_Scene::GetGameObjects()
 {
-	return &game_objects;
+	return &gameObjects;
 }
 
-bool M_Scene::ApplyTextureToSelectedGameObject(const uint32& UID)
+bool M_Scene::ApplyTextureToSelectedGameObject(const uint32& uid)
 {
 	BROFILER_CATEGORY("ApplyNewTextureToSelectedGameObject()", Profiler::Color::Magenta);
 
-	if (selected_game_object == nullptr)
+	if (selectedGameObject == nullptr)
 	{
 		LOG("[ERROR] Could not add the texture to the selected game object! Error: No game object was being selected.");
 		return false;
 	}
-	if (UID == 0)
+	if (uid == 0)
 	{
 		LOG("[ERROR] Could not add the texture to the selected game object! Error: Given Resource UID was 0.");
 		return false;
 	}
 
-	R_Texture* r_texture = (R_Texture*)App->resource_manager->RequestResource(UID);
+	R_Texture* rTexture = (R_Texture*)App->resourceManager->RequestResource(uid);
 
-	if (r_texture == nullptr)
+	if (rTexture == nullptr)
 	{
 		LOG("[ERROR] Could not add the texture to the selected game object! Error: R_Texture* was nullptr.");
 		return false;
 	}
-	if (r_texture->GetTextureID() == 0)
+	if (rTexture->GetTextureID() == 0)
 	{
 		LOG("[ERROR] Could not add the texture to the selected game object! Error: R_Texture* Texture ID was 0.");
-		App->resource_manager->DeallocateResource(r_texture);
+		App->resourceManager->DeallocateResource(rTexture);
 		return false;
 	}
 
 	// --- SETTING THE NEW TEXTURE ---
-	C_Material* c_material = selected_game_object->GetComponent<C_Material>();									// GetMaterialComponent() == nullptr if GO does not have a C_Material.
-	if (c_material == nullptr)
+	C_Material* cMaterial = selectedGameObject->GetComponent<C_Material>();									// GetMaterialComponent() == nullptr if GO does not have a C_Material.
+	if (cMaterial == nullptr)
 	{
-		c_material = (C_Material*)selected_game_object->CreateComponent(COMPONENT_TYPE::MATERIAL);				// Creating a Material Component if none was found in the selected GO.
+		cMaterial = (C_Material*)selectedGameObject->CreateComponent(ComponentType::MATERIAL);				// Creating a Material Component if none was found in the selected GO.
 	}
 
-	c_material->SetTexture(r_texture);																			// Setting the Material Component's texture with the newly created one.
+	cMaterial->SetTexture(rTexture);																			// Setting the Material Component's texture with the newly created one.
 
 	return true;
 }
 
 void M_Scene::CreateMasterRoot()
 {
-	master_root = new GameObject("MasterRoot");
-	master_root->is_master_root = true;
+	masterRoot = new GameObject("MasterRoot");
+	masterRoot->is_master_root = true;
 }
 
 void M_Scene::DeleteMasterRoot()
 {
-	if (master_root != nullptr)
+	if (masterRoot != nullptr)
 	{
-		master_root->CleanUp();
-		RELEASE(master_root);
+		masterRoot->CleanUp();
+		RELEASE(masterRoot);
 	}
 }
 
 GameObject* M_Scene::GetMasterRoot() const
 {
-	return master_root;
+	return masterRoot;
 }
 
-void M_Scene::CreateSceneRoot(const char* scene_name)
+void M_Scene::CreateSceneRoot(const char* sceneName)
 {
-	if (master_root == nullptr)
+	if (masterRoot == nullptr)
 	{
 		CreateMasterRoot();																	// Safety Check.
 	}
 	
-	scene_root = new GameObject(scene_name);
+	sceneRoot = new GameObject(sceneName);
 
-	scene_root->is_scene_root = true;
+	sceneRoot->is_scene_root = true;
 
-	scene_root->SetParent(master_root);
+	sceneRoot->SetParent(masterRoot);
 	
 	//scene_root->parent = master_root;
 	//master_root->AddChild(scene_root);
 
-	game_objects.push_back(scene_root);
+	gameObjects.push_back(sceneRoot);
 }
 
 GameObject* M_Scene::GetSceneRoot() const
 {
-	return scene_root;
+	return sceneRoot;
 }
 
-void M_Scene::SetSceneRoot(GameObject* game_object)
+void M_Scene::SetSceneRoot(GameObject* gameObject)
 {
-	if (game_object != scene_root)
+	if (gameObject != sceneRoot)
 	{
-		scene_root = game_object;
+		sceneRoot = gameObject;
 	}
 }
 
 void M_Scene::ChangeSceneName(const char* name)
 {
-	scene_root->SetName(name);
+	sceneRoot->SetName(name);
 }
 
-void M_Scene::CreateSceneCamera(const char* camera_name)
+void M_Scene::CreateSceneCamera(const char* cameraName)
 {
-	GameObject* scene_camera = CreateGameObject(camera_name, scene_root);
-	scene_camera->CreateComponent(COMPONENT_TYPE::CAMERA);
-	scene_camera->GetComponent<C_Camera>()->SetAspectRatio((float)App->window->GetWidth() / (float)App->window->GetHeight());
-	scene_camera->GetComponent<C_Transform>()->SetLocalPosition(float3(0.0f, 5.0f, 25.0f));
+	GameObject* sceneCamera = CreateGameObject(cameraName, sceneRoot);
+	sceneCamera->CreateComponent(ComponentType::CAMERA);
+	sceneCamera->GetComponent<C_Camera>()->SetAspectRatio((float)App->window->GetWidth() / (float)App->window->GetHeight());
+	sceneCamera->GetComponent<C_Transform>()->SetLocalPosition(float3(0.0f, 5.0f, 25.0f));
 }
 
 C_Camera* M_Scene::GetCullingCamera() const
 {
-	return culling_camera;
+	return cullingCamera;
 }
 
-void M_Scene::SetCullingCamera(C_Camera* culling_camera)
+void M_Scene::SetCullingCamera(C_Camera* cullingCamera)
 {
-	C_Camera* prev_cull_cam = this->culling_camera;
+	C_Camera* prev_cull_cam = this->cullingCamera;
 
-	this->culling_camera = culling_camera;
+	this->cullingCamera = cullingCamera;
 
 	if (prev_cull_cam != nullptr)
 	{
-		if (prev_cull_cam != culling_camera)
+		if (prev_cull_cam != cullingCamera)
 		{
 			prev_cull_cam->SetIsCulling(false);
 		}
 	}
 }
 
-bool M_Scene::GameObjectIsInsideCullingCamera(GameObject* game_object)
+bool M_Scene::GameObjectIsInsideCullingCamera(GameObject* gameObject)
 {
-	if (culling_camera == nullptr)
+	if (cullingCamera == nullptr)
 	{
 		//LOG("[ERROR] Scene: There is currently no camera with culling activated!");
 		return true;
 	}
 
-	bool intersects = culling_camera->FrustumIntersectsAABB(game_object->GetAABB());
+	bool intersects = cullingCamera->FrustumIntersectsAABB(gameObject->GetAABB());
 
 	return intersects;
 }
 
 GameObject* M_Scene::GetSelectedGameObject() const
 {
-	return selected_game_object;
+	return selectedGameObject;
 }
 
-void M_Scene::SetSelectedGameObject(GameObject* game_object)
+void M_Scene::SetSelectedGameObject(GameObject* gameObject)
 {	
-	if (game_object == nullptr)
+	if (gameObject == nullptr)
 	{
-		if (selected_game_object != nullptr)
+		if (selectedGameObject != nullptr)
 		{
-			LOG("[STATUS] Scene: De-Selected %s!", selected_game_object->GetName());
-			selected_game_object->show_bounding_boxes = false;
+			LOG("[STATUS] Scene: De-Selected %s!", selectedGameObject->GetName());
+			selectedGameObject->show_bounding_boxes = false;
 		}
 
-		selected_game_object = nullptr;
+		selectedGameObject = nullptr;
 	}
 	else
 	{
-		if (game_object != selected_game_object)
+		if (gameObject != selectedGameObject)
 		{
-			if (selected_game_object != nullptr)
+			if (selectedGameObject != nullptr)
 			{
-				selected_game_object->show_bounding_boxes = false;
+				selectedGameObject->show_bounding_boxes = false;
 			}
 			
-			selected_game_object = game_object;
+			selectedGameObject = gameObject;
 			
-			float3 go_ref		= game_object->GetComponent<C_Transform>()->GetWorldPosition();
-			float3 reference	= { go_ref.x, go_ref.y, go_ref.z };
+			float3 goRef		= gameObject->GetComponent<C_Transform>()->GetWorldPosition();
+			float3 reference	= { goRef.x, goRef.y, goRef.z };
 
 			App->camera->SetReference(reference);
 
-			selected_game_object->show_bounding_boxes = true;
+			selectedGameObject->show_bounding_boxes = true;
 		}
 	}	
 }
@@ -804,39 +806,39 @@ void M_Scene::SelectGameObjectThroughRaycast(const LineSegment& ray)
 		return;
 	}
 
-	std::vector<C_Mesh*> c_meshes;
+	std::vector<C_Mesh*> cMeshes;
 	std::map<float, GameObject*>::iterator item;
 	for (item = hits.begin(); item != hits.end(); ++item)
 	{
-		bool found_meshes = item->second->GetComponents<C_Mesh>(c_meshes);
-		if (!found_meshes)
+		bool foundMeshes = item->second->GetComponents<C_Mesh>(cMeshes);
+		if (!foundMeshes)
 		{
 			//LOG("[ERROR] Scene: GameObject hit by Raycast did not have any Mesh Component!");								// Right Now GetHits() returns false positives.
 			continue;
 		}
 		
 		std::vector<Triangle> faces;
-		for (uint m = 0; m < c_meshes.size(); ++m)
+		for (uint m = 0; m < cMeshes.size(); ++m)
 		{	
-			R_Mesh* r_mesh = c_meshes[m]->GetMesh();
+			R_Mesh* rMesh = cMeshes[m]->GetMesh();
 
-			if (r_mesh == nullptr)
+			if (rMesh == nullptr)
 			{
 				continue;
 			}
 			
-			LineSegment local_ray = ray;
-			local_ray.Transform(item->second->GetComponent<C_Transform>()->GetWorldTransform().Inverted());
+			LineSegment localRay = ray;
+			localRay.Transform(item->second->GetComponent<C_Transform>()->GetWorldTransform().Inverted());
 			
-			GetFaces(r_mesh->vertices, faces);
+			GetFaces(rMesh->vertices, faces);
 			for (uint f = 0; f < faces.size(); ++f)
 			{	
-				if (local_ray.Intersects(faces[f], nullptr, nullptr))
+				if (localRay.Intersects(faces[f], nullptr, nullptr))
 				{
 					SetSelectedGameObject(item->second);
 
 					faces.clear();
-					c_meshes.clear();
+					cMeshes.clear();
 					hits.clear();
 
 					return;
@@ -846,7 +848,7 @@ void M_Scene::SelectGameObjectThroughRaycast(const LineSegment& ray)
 			faces.clear();
 		}
 
-		c_meshes.clear();
+		cMeshes.clear();
 	}
 
 	SetSelectedGameObject(nullptr);																							// If no GameObject's Mesh was hit
@@ -855,12 +857,12 @@ void M_Scene::SelectGameObjectThroughRaycast(const LineSegment& ray)
 
 void M_Scene::GetRaycastHits(const LineSegment& ray, std::map<float, GameObject*>& hits)
 {
-	for (uint i = 0; i < game_objects.size(); ++i)
+	for (uint i = 0; i < gameObjects.size(); ++i)
 	{
-		if (ray.Intersects(game_objects[i]->GetAABB()))
+		if (ray.Intersects(gameObjects[i]->GetAABB()))
 		{
-			float3 position = game_objects[i]->GetComponent<C_Transform>()->GetWorldPosition();
-			hits.emplace(ray.Distance(position), game_objects[i]);
+			float3 position = gameObjects[i]->GetComponent<C_Transform>()->GetWorldPosition();
+			hits.emplace(ray.Distance(position), gameObjects[i]);
 		}
 	}
 }
@@ -888,30 +890,30 @@ void M_Scene::GetFaces(const std::vector<float>& vertices, std::vector<Triangle>
 
 void M_Scene::DeleteSelectedGameObject()
 {
-	if (selected_game_object != nullptr)
+	if (selectedGameObject != nullptr)
 	{
-		DeleteGameObject(selected_game_object);
+		DeleteGameObject(selectedGameObject);
 	}
 }
 
 void M_Scene::HandleDebugInput()
 {
-	if (App->input->GetKey(SDL_SCANCODE_1) == KEY_STATE::KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_1) == KeyState::KEY_DOWN)
 	{
 		//DebugSpawnPrimitive(new Sphere(1.0f, 12, 24));
 	}
 
-	if (App->input->GetKey(SDL_SCANCODE_2) == KEY_STATE::KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_2) == KeyState::KEY_DOWN)
 	{
 		DebugSpawnPrimitive(new P_Cube());
 	}
 
-	if (App->input->GetKey(SDL_SCANCODE_3) == KEY_STATE::KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_3) == KeyState::KEY_DOWN)
 	{
 		//DebugSpawnPrimitive(new Cylinder());
 	}
 
-	if (App->input->GetKey(SDL_SCANCODE_4) == KEY_STATE::KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_4) == KeyState::KEY_DOWN)
 	{
 		for (uint n = 0; n < primitives.size(); n++)
 		{

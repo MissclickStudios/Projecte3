@@ -8,7 +8,7 @@ class ParsonNode;
 
 typedef unsigned __int32 uint;
 
-enum class TEXTURE_FORMAT													// The enum values are set according to the values of DevIL's define values/flags.
+enum class TextureFormat													// The enum values are set according to the values of DevIL's define values/flags.
 {
 	UNKNOWN			= 0,													// Default format. It means that DevIL could not find the format of the imported texture.
 	COLOUR_INDEX	= 0x1900,												// 0x1900 = IL_COLOUR_INDEX. 
@@ -29,7 +29,7 @@ struct Texture
 	uint			depth;													// Depth of the texture in pixels.
 	uint			bpp;													// Amount of Bytes Per Pixel.
 	uint			bytes;													// Size of the texture in bytes.
-	TEXTURE_FORMAT	format;													// Colour Index, RGB, RGBA... Adapted to fit the formats that DevIL returns.
+	TextureFormat	format;													// Colour Index, RGB, RGBA... Adapted to fit the formats that DevIL returns.
 	bool			compressed;												// Will be True if the texture comes from a compressed format (DDS, ...).
 };
 
@@ -41,12 +41,12 @@ public:
 
 	bool CleanUp() override;
 
-	bool SaveMeta(ParsonNode& meta_root) const override;
-	bool LoadMeta(const ParsonNode& meta_root) override;
+	bool SaveMeta(ParsonNode& metaRoot) const override;
+	bool LoadMeta(const ParsonNode& metaRoot) override;
 
 public:
 	Texture			GetTextureData			() const;
-	void			SetTextureData			(uint id, uint width, uint height, uint depth, uint bpp, uint bytes, TEXTURE_FORMAT format, bool compressed = true);
+	void			SetTextureData			(uint id, uint width, uint height, uint depth, uint bpp, uint bytes, TextureFormat format, bool compressed = true);
 
 	uint			GetTextureID			() const;						// 
 	uint			GetTextureWidth			() const;						// 
@@ -54,14 +54,14 @@ public:
 	uint			GetTextureDepth			() const;						// 
 	uint			GetTextureBpp			() const;						// 
 	uint			GetTextureBytes			() const;						// 
-	TEXTURE_FORMAT	GetTextureFormat		() const;						// 
+	TextureFormat	GetTextureFormat		() const;						// 
 	bool			TextureIsCompressed		() const;						// 
 
 	const char*		GetTextureFormatString	() const;
 
 private:
-	Texture			tex_data;
-	TextureSettings texture_settings;
+	Texture			texData;
+	TextureSettings textureSettings;
 };
 
 #endif // !__R_TEXTURE_H__

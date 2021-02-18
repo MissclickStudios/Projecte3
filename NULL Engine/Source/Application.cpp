@@ -24,15 +24,15 @@
 Application::Application() :
 quit			(false),
 debug			(false), 
-hardware_info	(),
+hardwareInfo	(),
 window			(nullptr),
 input			(nullptr),
 scene			(nullptr),
 editor			(nullptr),
 renderer		(nullptr),
 camera			(nullptr),
-file_system		(nullptr),
-resource_manager(nullptr)
+fileSystem		(nullptr),
+resourceManager(nullptr)
 {
 	//PERF_TIMER_START(perf_timer);
 	
@@ -43,8 +43,8 @@ resource_manager(nullptr)
 	renderer			= new M_Renderer3D();
 	scene				= new M_Scene();
 	editor				= new M_Editor();
-	file_system			= new M_FileSystem();
-	resource_manager	= new M_ResourceManager();
+	fileSystem			= new M_FileSystem();
+	resourceManager	= new M_ResourceManager();
 
 	// The order of calls is very important!
 	// Modules will Init() Start() and Update in this order
@@ -54,8 +54,8 @@ resource_manager(nullptr)
 	AddModule(window);
 	AddModule(camera);
 	AddModule(input);
-	AddModule(file_system);
-	AddModule(resource_manager);
+	AddModule(fileSystem);
+	AddModule(resourceManager);
 
 	// Scenes
 	AddModule(scene);
@@ -66,15 +66,15 @@ resource_manager(nullptr)
 	// -------------------------------------------
 
 	// Save/Load variables
-	want_to_load			= false;
-	want_to_save			= false;
-	user_has_saved			= false;
+	wantToLoad			= false;
+	wantToSave			= false;
+	userHasSaved			= false;
 
 	// Framerate variables
-	frame_cap				= 0;
-	seconds_since_startup	= 0.0f;
-	frames_are_capped		= FRAMES_ARE_CAPPED;
-	display_framerate_data	= false;
+	frameCap				= 0;
+	secondsSinceStartup	= 0.0f;
+	framesAreCapped		= framesAreCapped;
+	displayFramerateData	= false;
 
 	// Game Mode variables
 	play					= false;
@@ -107,27 +107,27 @@ bool Application::Init()
 	bool ret = true;
 
 	char* buffer = nullptr;
-	uint size = file_system->Load("Engine/Configuration/configuration.JSON", &buffer);
+	uint size = fileSystem->Load("Engine/Configuration/configuration.JSON", &buffer);
 	if (size > 0)																			// Check if the configuration is empty and load the default configuration for the engine.
 	{
-		engine_name			= TITLE;														// Change Later?
+		engineName			= TITLE;														// Change Later?
 		organization		= ORGANIZATION;
-		frame_cap			= 60;
-		frames_are_capped	= true;
+		frameCap			= 60;
+		framesAreCapped	= true;
 	}
 	else
 	{
-		uint default_size = file_system->Load("Engine/Configuration/default_configuration.JSON", &buffer);
-		if (default_size <= 0)
+		uint defaultSize = fileSystem->Load("Engine/Configuration/default_configuration.JSON", &buffer);
+		if (defaultSize <= 0)
 		{
 			LOG("[ERROR] Failed to load project settings.");
 			return false;
 		}
 
-		engine_name			= TITLE;
+		engineName			= TITLE;
 		organization		= ORGANIZATION;
-		frame_cap			= 60;
-		frames_are_capped	= true;
+		frameCap			= 60;
+		framesAreCapped	= true;
 	}
 
 	ParsonNode config(buffer);
@@ -144,7 +144,7 @@ bool Application::Init()
 	RELEASE_ARRAY(buffer);
 
 	// Initializing hardware info and Logging it.
-	hardware_info.InitializeInfo();
+	hardwareInfo.InitializeInfo();
 	LogHardwareInfo();
 	// -----------------------------------------
 
@@ -190,28 +190,28 @@ bool Application::Start()												// IS IT NEEDED?
 }
 
 // Call PreUpdate, Update and PostUpdate on all modules
-UPDATE_STATUS Application::Update()
+UpdateStatus Application::Update()
 {
-	UPDATE_STATUS ret = UPDATE_STATUS::CONTINUE;
+	UpdateStatus ret = UpdateStatus::CONTINUE;
 	
 	if (quit)
 	{
-		return UPDATE_STATUS::STOP;
+		return UpdateStatus::STOP;
 	}
 
 	PrepareUpdate();
 
-	if (ret == UPDATE_STATUS::CONTINUE)
+	if (ret == UpdateStatus::CONTINUE)
 	{
 		ret = PreUpdate();
 	}
 	
-	if (ret == UPDATE_STATUS::CONTINUE)
+	if (ret == UpdateStatus::CONTINUE)
 	{
 		ret = DoUpdate();
 	}
 
-	if (ret == UPDATE_STATUS::CONTINUE)
+	if (ret == UpdateStatus::CONTINUE)
 	{
 		ret = PostUpdate();
 	}
@@ -237,7 +237,7 @@ bool Application::CleanUp()
 
 	modules.clear();
 
-	hardware_info.CleanUp();
+	hardwareInfo.CleanUp();
 
 	return ret;
 }
@@ -254,13 +254,13 @@ void Application::PrepareUpdate()
 	}
 }
 
-UPDATE_STATUS Application::PreUpdate()
+UpdateStatus Application::PreUpdate()
 {
-	UPDATE_STATUS ret = UPDATE_STATUS::CONTINUE;
+	UpdateStatus ret = UpdateStatus::CONTINUE;
 	
 	std::vector<Module*>::iterator item = modules.begin();
 
-	while (item != modules.end() && ret == UPDATE_STATUS::CONTINUE)
+	while (item != modules.end() && ret == UpdateStatus::CONTINUE)
 	{
 		if ((*item)->IsActive())
 		{
@@ -270,7 +270,7 @@ UPDATE_STATUS Application::PreUpdate()
 		++item;
 	}
 
-	if (ret == UPDATE_STATUS::THROW_ERROR)
+	if (ret == UpdateStatus::THROW_ERROR)
 	{
 		LOG("PreUpdate threw an ERROR at Module %s.", (*item)->GetName());
 	}
@@ -278,15 +278,15 @@ UPDATE_STATUS Application::PreUpdate()
 	return ret;
 }
 
-UPDATE_STATUS Application::DoUpdate()
+UpdateStatus Application::DoUpdate()
 {
-	UPDATE_STATUS ret = UPDATE_STATUS::CONTINUE;
+	UpdateStatus ret = UpdateStatus::CONTINUE;
 
 	std::vector<Module*>::iterator item = modules.begin();
 	
 	item = modules.begin();
 
-	while (item != modules.end() && ret == UPDATE_STATUS::CONTINUE)
+	while (item != modules.end() && ret == UpdateStatus::CONTINUE)
 	{
 		if ((*item)->IsActive())
 		{
@@ -296,7 +296,7 @@ UPDATE_STATUS Application::DoUpdate()
 		++item;
 	}
 
-	if (ret == UPDATE_STATUS::THROW_ERROR)
+	if (ret == UpdateStatus::THROW_ERROR)
 	{
 		LOG("Update threw an ERROR at Module %s.", (*item)->GetName());
 	}
@@ -304,15 +304,15 @@ UPDATE_STATUS Application::DoUpdate()
 	return ret;
 }
 
-UPDATE_STATUS Application::PostUpdate()
+UpdateStatus Application::PostUpdate()
 {
-	UPDATE_STATUS ret = UPDATE_STATUS::CONTINUE;
+	UpdateStatus ret = UpdateStatus::CONTINUE;
 
 	std::vector<Module*>::iterator item = modules.begin();
 	
 	item = modules.begin();
 
-	while (item != modules.end() && ret == UPDATE_STATUS::CONTINUE)
+	while (item != modules.end() && ret == UpdateStatus::CONTINUE)
 	{
 		if ((*item)->IsActive())
 		{
@@ -323,7 +323,7 @@ UPDATE_STATUS Application::PostUpdate()
 		++item;
 	}
 
-	if (ret == UPDATE_STATUS::THROW_ERROR)
+	if (ret == UpdateStatus::THROW_ERROR)
 	{
 		LOG("PostUpdate threw an ERROR at Module %s.", (*item)->GetName());
 	}
@@ -333,32 +333,32 @@ UPDATE_STATUS Application::PostUpdate()
 
 void Application::FinishUpdate()
 {
-	if (want_to_load)
+	if (wantToLoad)
 	{
-		LoadConfigurationNow(load_config_file.c_str());
+		LoadConfigurationNow(loadConfigFile.c_str());
 
-		want_to_load = false;
+		wantToLoad = false;
 	}
 
-	if (want_to_save)
+	if (wantToSave)
 	{
-		SaveConfigurationNow(save_config_file.c_str());
+		SaveConfigurationNow(saveConfigFile.c_str());
 
-		want_to_save = false;
+		wantToSave = false;
 	}
 
-	if (frames_are_capped)
+	if (framesAreCapped)
 	{
-		Time::Real::DelayUntilFrameCap(frame_cap);
+		Time::Real::DelayUntilFrameCap(frameCap);
 	}
 
-	if (display_framerate_data)
+	if (displayFramerateData)
 	{
 		App->window->SetTitle("Go to the Time Management header in the Configuration Panel to see all the Framerate Data.");
 	}
 	else
 	{
-		App->window->SetTitle(engine_name.c_str());
+		App->window->SetTitle(engineName.c_str());
 	}
 
 	// Editor: Configuration Frame Data Histograms
@@ -369,21 +369,21 @@ void Application::FinishUpdate()
 // --- SAVE & LOAD ENGINE CONFIGURATION ---
 void Application::SaveConfiguration(const char* file)
 {
-	want_to_save = true;
-	save_config_file = ("Engine/Configuration/configuration.json");
+	wantToSave = true;
+	saveConfigFile = ("Engine/Configuration/configuration.json");
 }
 
 void Application::LoadConfiguration(const char* file)
 {
-	want_to_load = true;
+	wantToLoad = true;
 
-	if (user_has_saved)
+	if (userHasSaved)
 	{
-		load_config_file = ("Configuration.json");
+		loadConfigFile = ("Configuration.json");
 	}
 	else
 	{
-		load_config_file = ("DefaultConfiguration.json");
+		loadConfigFile = ("DefaultConfiguration.json");
 	}
 }
 
@@ -435,7 +435,7 @@ void Application::AddModule(Module* module)
 
 const char* Application::GetEngineName() const
 {
-	return engine_name.c_str();
+	return engineName.c_str();
 }
 
 const char* Application::GetOrganizationName() const
@@ -445,9 +445,9 @@ const char* Application::GetOrganizationName() const
 
 void Application::SetEngineName(const char* name)
 {
-	engine_name = name;
+	engineName = name;
 
-	App->window->SetTitle(engine_name.c_str());
+	App->window->SetTitle(engineName.c_str());
 }
 
 void Application::SetOrganizationName(const char* name)
@@ -463,12 +463,12 @@ void Application::EngineShortcuts()
 // --- FRAMERATE METHODS ---
 uint Application::GetFrameCap() const
 {
-	return frame_cap;
+	return frameCap;
 }
 
-void Application::SetFrameCap(uint new_cap)
+void Application::SetFrameCap(uint newCap)
 {
-	frame_cap = new_cap;
+	frameCap = newCap;
 }
 
 // --- EDITOR METHODS ---
@@ -476,16 +476,16 @@ void Application::AddEditorLog(const char* log)
 {
 	if (!quit && editor != nullptr)													// Second condition is not really necessary. It's more of a reminder to keep it in mind.
 	{
-		//std::string full_log = App->file_system->NormalizePath(log);				// Switching all "\\" for "/". They need to be changed due to "\" being a Windows-specific thing.
+		//std::string full_log = App->fileSystem->NormalizePath(log);				// Switching all "\\" for "/". They need to be changed due to "\" being a Windows-specific thing.
 
-		std::string full_log = log;													// TMP. Switch to normalize later.
+		std::string fullLog = log;													// TMP. Switch to normalize later.
 
-		uint log_start	= full_log.find_last_of("\\") + 1;							// Gets the position of the last "\" in the log string.
-		uint log_end	= full_log.size();											// The last position of the log will be equal to the size of it.
+		uint logStart	= fullLog.find_last_of("\\") + 1;							// Gets the position of the last "\" in the log string.
+		uint logEnd	= fullLog.size();											// The last position of the log will be equal to the size of it.
 
-		std::string short_log = full_log.substr(log_start, log_end);				// Returns the string that is within the given positions.
+		std::string shortLog = fullLog.substr(logStart, logEnd);				// Returns the string that is within the given positions.
 
-		editor->AddConsoleLog(short_log.c_str());									// Priorized readability over reducing to AddConsoleLog(full_log.substr(log_start, log_end)).
+		editor->AddConsoleLog(shortLog.c_str());									// Priorized readability over reducing to AddConsoleLog(full_log.substr(log_start, log_end)).
 	}
 }
 
@@ -503,39 +503,39 @@ void Application::UpdateFrameData(int frames, int ms)
 void Application::LogHardwareInfo() const
 {
 	LOG(" ------------- CPU INFO ------------- ");
-	LOG("CPU Cores: %d",						hardware_info.CPU.cpu_count);
-	LOG("CPU Cache Size: %d ",					hardware_info.CPU.cache_size);
-	LOG("CPU RAM Size: %.1f GB",				hardware_info.CPU.ram_gb);
+	LOG("CPU Cores: %d",						hardwareInfo.CPU.cpuCount);
+	LOG("CPU Cache Size: %d ",					hardwareInfo.CPU.cacheSize);
+	LOG("CPU RAM Size: %.1f GB",				hardwareInfo.CPU.ramGb);
 	LOG(" --- DRIVERS --- ");
-	LOG("CPU RDTSC: %s",						hardware_info.CPU.has_RDTSC		?	"True" : "False");
-	LOG("CPU AltiVec: %s",						hardware_info.CPU.has_AltiVec	?	"True" : "False");
-	LOG("CPU Now3D: %s",						hardware_info.CPU.has_3DNow		?	"True" : "False");
-	LOG("CPU MMX: %s",							hardware_info.CPU.has_MMX		?	"True" : "False");
-	LOG("CPU SSE: %s",							hardware_info.CPU.has_SSE		?	"True" : "False");
-	LOG("CPU SSE2: %s",							hardware_info.CPU.has_SSE2		?	"True" : "False");
-	LOG("CPU SSE3: %s",							hardware_info.CPU.has_SSE3		?	"True" : "False");
-	LOG("CPU SSE4.1: %s",						hardware_info.CPU.has_SSE41		?	"True" : "False");
-	LOG("CPU SSE4.2: %s",						hardware_info.CPU.has_SSE42		?	"True" : "False");
-	LOG("CPU AVX: %s",							hardware_info.CPU.has_AVX		?	"True" : "False");
-	LOG("CPU AVX2: %s",							hardware_info.CPU.has_AVX2		?	"True" : "False");
+	LOG("CPU RDTSC: %s",						hardwareInfo.CPU.hasRDTSC		?	"True" : "False");
+	LOG("CPU AltiVec: %s",						hardwareInfo.CPU.hasAltiVec	?	"True" : "False");
+	LOG("CPU Now3D: %s",						hardwareInfo.CPU.has3DNow		?	"True" : "False");
+	LOG("CPU MMX: %s",							hardwareInfo.CPU.hasMMX		?	"True" : "False");
+	LOG("CPU SSE: %s",							hardwareInfo.CPU.hasSSE		?	"True" : "False");
+	LOG("CPU SSE2: %s",							hardwareInfo.CPU.hasSSE2		?	"True" : "False");
+	LOG("CPU SSE3: %s",							hardwareInfo.CPU.hasSSE3		?	"True" : "False");
+	LOG("CPU SSE4.1: %s",						hardwareInfo.CPU.hasSSE41		?	"True" : "False");
+	LOG("CPU SSE4.2: %s",						hardwareInfo.CPU.hasSSE42		?	"True" : "False");
+	LOG("CPU AVX: %s",							hardwareInfo.CPU.hasAVX		?	"True" : "False");
+	LOG("CPU AVX2: %s",							hardwareInfo.CPU.hasAVX2		?	"True" : "False");
 
 	LOG(" ------------- GPU INFO ------------- ");
-	LOG("GPU Vendor %d Device %d",				hardware_info.GPU.vendor, hardware_info.GPU.device_id);
-	LOG("GPU Brand: %s",						hardware_info.GPU.brand);
+	LOG("GPU Vendor %d Device %d",				hardwareInfo.GPU.vendor, hardwareInfo.GPU.deviceId);
+	LOG("GPU Brand: %s",						hardwareInfo.GPU.brand);
 	LOG(" --- VRAM --- ");
-	LOG("GPU VRAM Budget: %.1f MB",				hardware_info.GPU.vram_mb_budget);
-	LOG("GPU VRAM Usage: %.1f MB",				hardware_info.GPU.vram_mb_usage);
-	LOG("GPU VRAM Available: %.1f MB",			hardware_info.GPU.vram_mb_available);
-	LOG("GPU VRAM Reserved: %.1f MB",			hardware_info.GPU.vram_mb_reserved);
+	LOG("GPU VRAM Budget: %.1f MB",				hardwareInfo.GPU.vramBudget);
+	LOG("GPU VRAM Usage: %.1f MB",				hardwareInfo.GPU.vramUsage);
+	LOG("GPU VRAM Available: %.1f MB",			hardwareInfo.GPU.vramAvailable);
+	LOG("GPU VRAM Reserved: %.1f MB",			hardwareInfo.GPU.vramReserved);
 
 	LOG(" ------------- SDL INFO ------------- ");
-	LOG("SDL Version: %s",						hardware_info.SDL.sdl_version);
+	LOG("SDL Version: %s",						hardwareInfo.SDL.SDLVersion);
 
 	LOG(" ------------- OPENGL INFO ------------- ");
-	LOG("OpenGL Model: %s",						hardware_info.OpenGL.model_name);
-	LOG("OpenGL Renderer: %s",					hardware_info.OpenGL.renderer_name);
-	LOG("OpenGL Version: %s",					hardware_info.OpenGL.version);
-	LOG("OpenGL Shading Language Version: %s",	hardware_info.OpenGL.shading_language_version);
+	LOG("OpenGL Model: %s",						hardwareInfo.OpenGL.modelName);
+	LOG("OpenGL Renderer: %s",					hardwareInfo.OpenGL.rendererName);
+	LOG("OpenGL Version: %s",					hardwareInfo.OpenGL.version);
+	LOG("OpenGL Shading Language Version: %s",	hardwareInfo.OpenGL.shadingLanguageVersion);
 	//LOG("OpenGL Extensions: %s",				hardware_info.OpenGL.extensions);
 
 	/*for (int i = 0; i < hardware_info.OpenGL.extensions.size(); ++i)
@@ -546,7 +546,7 @@ void Application::LogHardwareInfo() const
 
 HardwareInfo Application::GetHardwareInfo() const
 {
-	return hardware_info;
+	return hardwareInfo;
 }
 
 /*if (display_framerate_data)

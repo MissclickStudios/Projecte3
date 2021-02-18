@@ -46,56 +46,56 @@ void Importer::Textures::CleanUp()
 	ilShutDown();
 }
 
-bool Importer::Textures::Import(const char* buffer, uint size, R_Texture* r_texture)
+bool Importer::Textures::Import(const char* buffer, uint size, R_Texture* rTexture)
 {
 	bool success = false;
 
-	if (r_texture == nullptr)
+	if (rTexture == nullptr)
 	{
 		LOG("[ERROR] Could not Import Texture! Error: R_Texture* was nullptr.");
 		return false;
 	}
 	
-	std::string error_string = "[ERROR] Could not Import Texture { " + std::string(r_texture->GetAssetsFile()) + " }";
+	std::string errorString = "[ERROR] Could not Import Texture { " + std::string(rTexture->GetAssetsFile()) + " }";
 
 	if (buffer == nullptr)
 	{
-		LOG("%s! Error: Buffer was nullptr.", error_string.c_str());
+		LOG("%s! Error: Buffer was nullptr.", errorString.c_str());
 		return false;
 	}
 	if (size == 0)
 	{
-		LOG("%s! Error: Buffer Size was 0.", error_string.c_str());
+		LOG("%s! Error: Buffer Size was 0.", errorString.c_str());
 		return false;
 	}
 
-	LOG("[STATUS] Importer: Importing Texture { %s }", r_texture->GetAssetsPath());
+	LOG("[STATUS] Importer: Importing Texture { %s }", rTexture->GetAssetsPath());
 
 	success = ilLoadL(IL_TYPE_UNKNOWN, (const void*)buffer, size);															// Only loading inside DevIL buffers. Needs to be saved after.
 	if (!success)																											// Import settings will be applied at Importer::Textures::Load().
 	{
-		LOG("%s! Error: ilLoadL() Error [%s]", error_string.c_str(), iluErrorString(ilGetError()));
+		LOG("%s! Error: ilLoadL() Error [%s]", errorString.c_str(), iluErrorString(ilGetError()));
 		return false;
 	}
 
 	return success;
 }
 
-uint Importer::Textures::Save(const R_Texture* r_texture, char** buffer)
+uint Importer::Textures::Save(const R_Texture* rTexture, char** buffer)
 {
 	uint written = 0;
 	
-	if (r_texture == nullptr)
+	if (rTexture == nullptr)
 	{
 		LOG("[ERROR] Importer: Could not Save Texture! Error: R_Texture* was nullptr.");
 		return 0;
 	}
 	
-	std::string error_string = "[ERROR] Importer: Could not Save Texture { " + std::string(r_texture->GetAssetsFile()) + " }";
+	std::string errorString = "[ERROR] Importer: Could not Save Texture { " + std::string(rTexture->GetAssetsFile()) + " }";
 
 	std::string directory	= TEXTURES_PATH;																					// --- Getting the path to which save the texture.
-	std::string file		= std::to_string(r_texture->GetUID()) + std::string(TEXTURES_EXTENSION);							// 
-	std::string full_path	= directory + file;																					// -----------------------------------------------
+	std::string file		= std::to_string(rTexture->GetUID()) + std::string(TEXTURES_EXTENSION);							// 
+	std::string fullPath	= directory + file;																					// -----------------------------------------------
 
 	ilEnable(IL_FILE_OVERWRITE);																								// Allowing DevIL to overwrite existing files.
 	ilSetInteger(IL_DXTC_FORMAT, IL_DXT5);																						// Choosing a specific DXT compression.
@@ -108,7 +108,7 @@ uint Importer::Textures::Save(const R_Texture* r_texture, char** buffer)
 		if (ilSaveL(IL_DDS, data, size) > 0)																					// ilSaveL() saves the current image with the specified type.
 		{	
 			*buffer = (char*)data;
-			written = App->file_system->Save(full_path.c_str(), *buffer, size, false);											// Saving the texture throught the file system.
+			written = App->fileSystem->Save(fullPath.c_str(), *buffer, size, false);											// Saving the texture throught the file system.
 			if (written > 0)
 			{	
 				LOG("[IMPORTER] Importer: Successfully Saved { %s } in { %s }", file.c_str(), directory.c_str());
@@ -116,126 +116,126 @@ uint Importer::Textures::Save(const R_Texture* r_texture, char** buffer)
 			else
 			{
 				*buffer = nullptr;
-				LOG("%s! Error: File System could not Write the File.", error_string.c_str());
+				LOG("%s! Error: File System could not Write the File.", errorString.c_str());
 			}
 		}
 		else
 		{
-			LOG("%s! Error: ilSaveL() Error [%s]", error_string.c_str(), iluErrorString(ilGetError()));
+			LOG("%s! Error: ilSaveL() Error [%s]", errorString.c_str(), iluErrorString(ilGetError()));
 		}
 
 		//RELEASE_ARRAY(data);																									// Dealt with in Resource Manager.
 	}
 	else
 	{
-		LOG("%s! ilSaveL() Error: %s", error_string.c_str(), iluErrorString(ilGetError()));
+		LOG("%s! ilSaveL() Error: %s", errorString.c_str(), iluErrorString(ilGetError()));
 	}
 
 	return written;
 }
 
-bool Importer::Textures::Load(const char* buffer, const uint size, R_Texture* r_texture)
+bool Importer::Textures::Load(const char* buffer, const uint size, R_Texture* rTexture)
 {
 	bool ret = true;
 	
-	if (r_texture == nullptr)
+	if (rTexture == nullptr)
 	{
 		LOG("[ERROR] Importer: Could not Load Texture from Library! Error: R_Texture* was nullptr.");
 		return false;
 	}
 
-	std::string error_string = "[ERROR] Importer: Could not Load Texture { " + std::string(r_texture->GetAssetsFile()) + " } from Library";
+	std::string errorString = "[ERROR] Importer: Could not Load Texture { " + std::string(rTexture->GetAssetsFile()) + " } from Library";
 
 	if (buffer == nullptr)
 	{
-		LOG("%s! Error: Buffer was nullptr.", error_string.c_str());
+		LOG("%s! Error: Buffer was nullptr.", errorString.c_str());
 		return false;
 	}
 	if (size == 0)
 	{
-		LOG("%s! Error: Buffer Size was 0", error_string.c_str());
+		LOG("%s! Error: Buffer Size was 0", errorString.c_str());
 		return false;
 	}
 
-	ILuint il_image = 0;																				// Will be used to generate, bind and delete the buffers created by DevIL.
-	ilGenImages(1, &il_image);																			// DevIL's buffers work pretty much the same way as OpenGL's do.
-	ilBindImage(il_image);																				// The first step is to generate a buffer and then bind it.
+	ILuint ilImage = 0;																				// Will be used to generate, bind and delete the buffers created by DevIL.
+	ilGenImages(1, &ilImage);																			// DevIL's buffers work pretty much the same way as OpenGL's do.
+	ilBindImage(ilImage);																				// The first step is to generate a buffer and then bind it.
 
 	bool success = ilLoadL(IL_TYPE_UNKNOWN, (const void*)buffer, size);									// ilLoadL() loads a texture from some buffer data. size == 0 = no bounds check.
 	if (success)																						// --- When type is IL_TYPE_UNKNOWN, DevIL will try to find the type on it's own.
 	{	
-		uint color_channels = ilGetInteger(IL_IMAGE_CHANNELS);
-		if (color_channels == 3)
+		uint colorChannels = ilGetInteger(IL_IMAGE_CHANNELS);
+		if (colorChannels == 3)
 		{
 			success = ilConvertImage(IL_RGB, IL_UNSIGNED_BYTE);											// ilConvertImage() will convert the image to the given format and type.
 		}
-		else if (color_channels == 4)
+		else if (colorChannels == 4)
 		{
 			success = ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE);										// ilConvertImage() will return false if the system cannot store the image with
 		}																								// its new format or the operation is invalid (no bound img. or invalid identifier).
 		else
 		{
-			LOG("[WARNING] Texture has < 3 color channels! Path: %s", r_texture->GetAssetsPath());
+			LOG("[WARNING] Texture has < 3 color channels! Path: %s", rTexture->GetAssetsPath());
 		}
 
 		if (success)
 		{
 			//ilutGLBindTexImage();
 
-			ILinfo il_info;
-			iluGetImageInfo(&il_info);
+			ILinfo ilInfo;
+			iluGetImageInfo(&ilInfo);
 
-			if (il_info.Origin == IL_ORIGIN_UPPER_LEFT)
+			if (ilInfo.Origin == IL_ORIGIN_UPPER_LEFT)
 			{
 				iluFlipImage();
 			}
 			
-			uint width		= il_info.Width;																				// --------------------- Getting the imported texture's data.
-			uint height		= il_info.Height;																				// 
-			uint depth		= il_info.Depth;																				// 
-			uint bpp		= il_info.Bpp;																					// 
-			uint size		= il_info.SizeOfData;																			// 
-			uint format		= il_info.Format;																				// Internal format will be forced to be the same as format.
+			uint width		= ilInfo.Width;																				// --------------------- Getting the imported texture's data.
+			uint height		= ilInfo.Height;																				// 
+			uint depth		= ilInfo.Depth;																				// 
+			uint bpp		= ilInfo.Bpp;																					// 
+			uint size		= ilInfo.SizeOfData;																			// 
+			uint format		= ilInfo.Format;																				// Internal format will be forced to be the same as format.
 			uint target		= (uint)GL_TEXTURE_2D;																			// 
 			int wrapping	= (int)GL_REPEAT;																				// 
 			int filter		= (int)GL_LINEAR;																				// ----------------------------------------------------------
 
-			uint tex_id = Utilities::CreateTexture(ilGetData(), width, height, target, wrapping, filter, format, format);	// Creates an OpenGL texture with the given data and parameters.
-			if (tex_id != 0)																								// If tex_id == 0, then it means the tex. could not be created.
+			uint texId = Utilities::CreateTexture(ilGetData(), width, height, target, wrapping, filter, format, format);	// Creates an OpenGL texture with the given data and parameters.
+			if (texId != 0)																								// If tex_id == 0, then it means the tex. could not be created.
 			{
-				r_texture->SetTextureData(tex_id, width, height, depth, bpp, size, (TEXTURE_FORMAT)format);
+				rTexture->SetTextureData(texId, width, height, depth, bpp, size, (TextureFormat)format);
 			}
 			else
 			{
-				LOG("%s! Error: Could not get texture ID.", error_string.c_str());
+				LOG("%s! Error: Could not get texture ID.", errorString.c_str());
 				ret = false;
 			}
 		}
 		else
 		{
-			LOG("%s! Error: ilConvertImage() Error [%s]", error_string.c_str(), iluErrorString(ilGetError()));
+			LOG("%s! Error: ilConvertImage() Error [%s]", errorString.c_str(), iluErrorString(ilGetError()));
 			ret = false;
 		}
 	}
 	else
 	{
-		LOG("%s! Error: ilLoadL() Error [%s]", error_string.c_str(), iluErrorString(ilGetError()));
+		LOG("%s! Error: ilLoadL() Error [%s]", errorString.c_str(), iluErrorString(ilGetError()));
 		ret = false;
 	}
 
-	ilDeleteImages(1, &il_image);
+	ilDeleteImages(1, &ilImage);
 
 	return ret;
 }
 
-uint Importer::Textures::Utilities::CreateTexture(const void* data, uint width, uint height, uint target, int wrapping, int filter, int internal_format, uint format)
+uint Importer::Textures::Utilities::CreateTexture(const void* data, uint width, uint height, uint target, int wrapping, int filter, int internalFormat, uint format)
 {
-	uint texture_id = 0; 
+	uint textureId = 0; 
 
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-	glGenTextures(1, (GLuint*)&texture_id);
-	glBindTexture(target, texture_id);
+	glGenTextures(1, (GLuint*)&textureId);
+	glBindTexture(target, textureId);
 
 	glTexParameteri(target, GL_TEXTURE_WRAP_S, wrapping);
 	glTexParameteri(target, GL_TEXTURE_WRAP_T, wrapping);
@@ -252,10 +252,10 @@ uint Importer::Textures::Utilities::CreateTexture(const void* data, uint width, 
 
 		if (glewIsSupported("GL_EXT_texture_filter_anisotropic"))												// In case Anisotropic filtering is available, it will be used.
 		{
-			GLfloat max_anisotropy;
+			GLfloat maxAnisotropy;
 
-			glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &max_anisotropy);
-			glTexParameteri(target, GL_TEXTURE_MAX_ANISOTROPY_EXT, (GLint)max_anisotropy);
+			glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &maxAnisotropy);
+			glTexParameteri(target, GL_TEXTURE_MAX_ANISOTROPY_EXT, (GLint)maxAnisotropy);
 		}
 	}
 	else
@@ -263,16 +263,16 @@ uint Importer::Textures::Utilities::CreateTexture(const void* data, uint width, 
 		LOG("[ERROR] Invalid filter type! Supported filters: GL_LINEAR and GL_NEAREST.");
 	}
 
-	glTexImage2D(target, 0, internal_format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+	glTexImage2D(target, 0, internalFormat, width, height, 0, format, GL_UNSIGNED_BYTE, data);
 
 	glGenerateMipmap(target);
 
 	glBindTexture(target, 0);
 
-	if (texture_id != 0)
+	if (textureId != 0)
 	{
-		LOG("[STATUS] Texture Successfully loaded! Id: %u, Size: %u x %u", texture_id, width, height);
+		LOG("[STATUS] Texture Successfully loaded! Id: %u, Size: %u x %u", textureId, width, height);
 	}
 
-	return texture_id;
+	return textureId;
 }

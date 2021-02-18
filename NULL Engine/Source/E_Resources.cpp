@@ -46,24 +46,24 @@ bool E_Resources::Draw(ImGuiIO& io)
 
 		switch (item->second->GetType())
 		{
-		case RESOURCE_TYPE::MODEL:		{ ++models; }		break;
-		case RESOURCE_TYPE::MESH:		{ ++meshes; }		break;
-		case RESOURCE_TYPE::MATERIAL:	{ ++materials; }	break;
-		case RESOURCE_TYPE::TEXTURE:	{ ++textures; }		break;
-		case RESOURCE_TYPE::ANIMATION:	{ ++animations; }	break;
+		case ResourceType::MODEL:		{ ++models; }		break;
+		case ResourceType::MESH:		{ ++meshes; }		break;
+		case ResourceType::MATERIAL:	{ ++materials; }	break;
+		case ResourceType::TEXTURE:	{ ++textures; }		break;
+		case ResourceType::ANIMATION:	{ ++animations; }	break;
 		}
 
 		sorted.emplace((uint)item->second->GetType(), item->second);
 	}
 
-	std::multimap<uint, Resource*>::iterator multi_item;
-	for (multi_item = sorted.begin(); multi_item != sorted.end(); ++multi_item)
+	std::multimap<uint, Resource*>::iterator multiItem;
+	for (multiItem = sorted.begin(); multiItem != sorted.end(); ++multiItem)
 	{
-		ImGui::TextColored(ImVec4(0.0f, 1.0f, 1.0f, 1.0f), "%s", multi_item->second->GetAssetsFile());
+		ImGui::TextColored(ImVec4(0.0f, 1.0f, 1.0f, 1.0f), "%s", multiItem->second->GetAssetsFile());
 
-		ImGui::Text("UID:");		ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "       %lu",	multi_item->second->GetUID());
-		ImGui::Text("Type:");		ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "      %s",		multi_item->second->GetTypeAsString());
-		ImGui::Text("References:");	ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%u",			multi_item->second->GetReferences());
+		ImGui::Text("UID:");		ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "       %lu",	multiItem->second->GetUID());
+		ImGui::Text("Type:");		ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "      %s",		multiItem->second->GetTypeAsString());
+		ImGui::Text("References:");	ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%u",			multiItem->second->GetReferences());
 
 		ImGui::Separator();
 	}

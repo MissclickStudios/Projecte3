@@ -14,11 +14,11 @@
 #define MAX_FILE_SIZE 500
 
 E_LoadFile::E_LoadFile() : EditorPanel("LoadFile", false),
-selected_file	(nullptr),
-ready_to_load	(false)
+selectedFile	(nullptr),
+readyToLoad	(false)
 {
-	selected_file = new char[MAX_FILE_SIZE];
-	selected_file[0] = '\0';
+	selectedFile = new char[MAX_FILE_SIZE];
+	selectedFile[0] = '\0';
 }
 
 E_LoadFile::~E_LoadFile()
@@ -32,7 +32,7 @@ bool E_LoadFile::Draw(ImGuiIO& io)
 	
 	ImGui::OpenPopup("Load File");
 
-	if (ImGui::BeginPopupModal("Load File"), &App->editor->show_load_file_popup, ImGuiWindowFlags_AlwaysAutoResize)
+	if (ImGui::BeginPopupModal("Load File"), &App->editor->showLoadFilePopup, ImGuiWindowFlags_AlwaysAutoResize)
 	{
 		DrawFileBrowser();
 
@@ -41,13 +41,13 @@ bool E_LoadFile::Draw(ImGuiIO& io)
 		ImGui::EndPopup();
 	}
 
-	if (ready_to_load)
+	if (readyToLoad)
 	{
-		ready_to_load						= false;
-		App->editor->show_load_file_popup	= false;
+		readyToLoad						= false;
+		App->editor->showLoadFilePopup	= false;
 		
-		App->editor->LoadFileThroughEditor(selected_file);
-		selected_file[0] = '\0';
+		App->editor->LoadFileThroughEditor(selectedFile);
+		selectedFile[0] = '\0';
 	}
 
 	return ret;
@@ -57,7 +57,7 @@ bool E_LoadFile::CleanUp()
 {
 	bool ret = true;
 
-	RELEASE_ARRAY(selected_file);
+	RELEASE_ARRAY(selectedFile);
 
 	return ret;
 }
@@ -81,9 +81,9 @@ void E_LoadFile::DrawFileBrowser()
 void E_LoadFile::DrawFileSelector()
 {
 	ImGui::PushItemWidth(250.0f);
-	if (ImGui::InputText("##file_selector", selected_file, MAX_FILE_SIZE, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_AutoSelectAll))
+	if (ImGui::InputText("##file_selector", selectedFile, MAX_FILE_SIZE, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_AutoSelectAll))
 	{
-		ready_to_load = true;
+		readyToLoad = true;
 	}
 	ImGui::PopItemWidth();
 
@@ -91,36 +91,36 @@ void E_LoadFile::DrawFileSelector()
 
 	if (ImGui::Button("Confirm"))
 	{
-		ready_to_load = true;
+		readyToLoad = true;
 	}
 
 	ImGui::SameLine();
 
 	if (ImGui::Button("Cancel"))
 	{
-		selected_file[0] = '\0';
+		selectedFile[0] = '\0';
 
-		ready_to_load = false;
-		App->editor->show_load_file_popup = false;
+		readyToLoad = false;
+		App->editor->showLoadFilePopup = false;
 	}
 }
 
-void E_LoadFile::DrawDirectoriesTree(const char* root_directory, const char* extension_to_filter)
+void E_LoadFile::DrawDirectoriesTree(const char* rootDirectory, const char* extensionToFilter)
 {
 	std::vector<std::string> directories;
 	std::vector<std::string> files;
 
-	std::string root_dir = root_directory;
+	std::string rootDir = rootDirectory;
 
-	App->file_system->DiscoverFiles(root_dir.c_str(), files, directories, extension_to_filter);
+	App->fileSystem->DiscoverFiles(rootDir.c_str(), files, directories, extensionToFilter);
 
 	for (uint i = 0; i < directories.size(); ++i)
 	{
-		std::string path = root_dir + directories[i] + "/";														// Ex: root_dir + directories[i] = "Assets/Models/"
+		std::string path = rootDir + directories[i] + "/";														// Ex: root_dir + directories[i] = "Assets/Models/"
 		
 		if (ImGui::TreeNodeEx(path.c_str(), 0, "%s/", directories[i].c_str()))
 		{
-			DrawDirectoriesTree(path.c_str(), extension_to_filter);
+			DrawDirectoriesTree(path.c_str(), extensionToFilter);
 			ImGui::TreePop();
 		}
 	}
@@ -133,11 +133,11 @@ void E_LoadFile::DrawDirectoriesTree(const char* root_directory, const char* ext
 		{
 			if (ImGui::IsItemClicked())
 			{
-				sprintf_s(selected_file, MAX_FILE_SIZE, "%s%s", root_dir.c_str(), files[i].c_str());
+				sprintf_s(selectedFile, MAX_FILE_SIZE, "%s%s", rootDir.c_str(), files[i].c_str());
 
 				if (ImGui::IsMouseDoubleClicked(0))
 				{
-					ready_to_load = true;
+					readyToLoad = true;
 					ImGui::TreePop();
 					return;
 				}

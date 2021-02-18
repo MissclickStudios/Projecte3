@@ -39,9 +39,9 @@
 
 #pragma comment (lib, "Source/Dependencies/glew/libx86/glew32.lib")
 
-M_Editor::M_Editor(bool is_active) : Module("Editor", is_active),
-clear_color		(0.0f, 0.0f, 0.0f, 1.0f),
-main_menu_bar	(new E_MainMenuBar()),
+M_Editor::M_Editor(bool isActive) : Module("Editor", isActive),
+clearColor		(0.0f, 0.0f, 0.0f, 1.0f),
+mainMenuBar	(new E_MainMenuBar()),
 toolbar			(new E_Toolbar()),
 configuration	(new E_Configuration()),
 hierarchy		(new E_Hierarchy()),
@@ -51,11 +51,11 @@ project			(new E_Project()),
 viewport		(new E_Viewport()),
 resources		(new E_Resources()),
 timeline		(new E_Timeline()),
-imgui_demo		(new E_ImGuiDemo()),
+imguiDemo		(new E_ImGuiDemo()),
 about			(new E_About()),
-load_file		(new E_LoadFile())
+loadFile		(new E_LoadFile())
 {
-	AddEditorPanel(main_menu_bar);
+	AddEditorPanel(mainMenuBar);
 	AddEditorPanel(toolbar);
 	AddEditorPanel(configuration);
 	AddEditorPanel(hierarchy);
@@ -65,29 +65,29 @@ load_file		(new E_LoadFile())
 	AddEditorPanel(console);
 	AddEditorPanel(project);
 	AddEditorPanel(viewport);
-	AddEditorPanel(imgui_demo);
+	AddEditorPanel(imguiDemo);
 	AddEditorPanel(about);
-	AddEditorPanel(load_file);
+	AddEditorPanel(loadFile);
 
-	show_configuration		= true;
-	show_hierarchy			= true;
-	show_inspector			= true;
-	show_console			= true;
-	show_imgui_demo			= false;
-	show_about_popup		= false;
-	show_close_app_popup	= false;
-	show_load_file_popup	= false;
+	showConfiguration	= true;
+	showHierarchy		= true;
+	showInspector		= true;
+	showConsole			= true;
+	showImguiDemo		= false;
+	showAboutPopup		= false;
+	showCloseAppPopup	= false;
+	showLoadFilePopup	= false;
 }
 
 M_Editor::~M_Editor()
 {
-	for (uint i = 0; i < editor_panels.size(); ++i)
+	for (uint i = 0; i < editorPanels.size(); ++i)
 	{
-		editor_panels[i]->CleanUp();
-		RELEASE(editor_panels[i]);
+		editorPanels[i]->CleanUp();
+		RELEASE(editorPanels[i]);
 	}
 
-	editor_panels.clear();
+	editorPanels.clear();
 }
 
 bool M_Editor::Init(ParsonNode& config)
@@ -106,9 +106,9 @@ bool M_Editor::Start()
 	return ret;
 }
 
-UPDATE_STATUS M_Editor::PreUpdate(float dt)
+UpdateStatus M_Editor::PreUpdate(float dt)
 {
-	UPDATE_STATUS ret = UPDATE_STATUS::CONTINUE;
+	UpdateStatus ret = UpdateStatus::CONTINUE;
 
 	EditorShortcuts();
 	CheckShowHideFlags();
@@ -116,18 +116,18 @@ UPDATE_STATUS M_Editor::PreUpdate(float dt)
 	return ret;
 }
 
-UPDATE_STATUS M_Editor::Update(float dt)
+UpdateStatus M_Editor::Update(float dt)
 {
-	UPDATE_STATUS ret = UPDATE_STATUS::CONTINUE;
+	UpdateStatus ret = UpdateStatus::CONTINUE;
 
 	return ret;
 }
 
-UPDATE_STATUS M_Editor::PostUpdate(float dt)
+UpdateStatus M_Editor::PostUpdate(float dt)
 {
 	BROFILER_CATEGORY("Editor PostUpdate", Profiler::Color::IndianRed);
 	
-	UPDATE_STATUS ret = UPDATE_STATUS::CONTINUE;
+	UpdateStatus ret = UpdateStatus::CONTINUE;
 	
 	ImGuiIO& io = ImGui::GetIO();
 
@@ -139,16 +139,16 @@ UPDATE_STATUS M_Editor::PostUpdate(float dt)
 	if (BeginRootWindow(io, "Root window", true, ImGuiWindowFlags_MenuBar))
 	{
 		bool draw = true;
-		for (uint i = 0; i < editor_panels.size(); ++i)
+		for (uint i = 0; i < editorPanels.size(); ++i)
 		{
-			if (editor_panels[i]->IsActive())
+			if (editorPanels[i]->IsActive())
 			{
-				draw = editor_panels[i]->Draw(io);
+				draw = editorPanels[i]->Draw(io);
 
 				if (!draw)
 				{
-					ret = UPDATE_STATUS::STOP;
-					LOG("[EDITOR] Exited through %s Panel", editor_panels[i]->GetName());
+					ret = UpdateStatus::STOP;
+					LOG("[EDITOR] Exited through %s Panel", editorPanels[i]->GetName());
 					break;
 				}
 			}
@@ -192,85 +192,85 @@ bool M_Editor::GetEvent(SDL_Event* event) const
 
 void M_Editor::AddEditorPanel(EditorPanel* panel)
 {
-	editor_panels.push_back(panel);
+	editorPanels.push_back(panel);
 }
 
 void M_Editor::EditorShortcuts()
 {
-	if (App->input->GetKey(SDL_SCANCODE_1) == KEY_STATE::KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_1) == KeyState::KEY_DOWN)
 	{
-		show_configuration = !show_configuration;
+		showConfiguration = !showConfiguration;
 	}
 
-	if (App->input->GetKey(SDL_SCANCODE_2) == KEY_STATE::KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_2) == KeyState::KEY_DOWN)
 	{
-		show_hierarchy = !show_hierarchy;
+		showHierarchy = !showHierarchy;
 	}
 
-	if (App->input->GetKey(SDL_SCANCODE_3) == KEY_STATE::KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_3) == KeyState::KEY_DOWN)
 	{
-		show_inspector = !show_inspector;
+		showInspector = !showInspector;
 	}
 
-	if (App->input->GetKey(SDL_SCANCODE_4) == KEY_STATE::KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_4) == KeyState::KEY_DOWN)
 	{
-		show_console = !show_console;
+		showConsole = !showConsole;
 	}
 
-	if (App->input->GetKey(SDL_SCANCODE_8) == KEY_STATE::KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_8) == KeyState::KEY_DOWN)
 	{
-		show_imgui_demo = !show_imgui_demo;
+		showImguiDemo = !showImguiDemo;
 	}
 
-	if (App->input->GetKey(SDL_SCANCODE_9) == KEY_STATE::KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_9) == KeyState::KEY_DOWN)
 	{
-		show_about_popup = !show_about_popup;
+		showAboutPopup = !showAboutPopup;
 	}
 
-	if (App->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_STATE::KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_ESCAPE) == KeyState::KEY_DOWN)
 	{
-		if (show_about_popup || show_load_file_popup)
+		if (showAboutPopup || showLoadFilePopup)
 		{
-			show_about_popup		= false;
-			show_load_file_popup	= false;
+			showAboutPopup		= false;
+			showLoadFilePopup	= false;
 		}
 		else
 		{
-			show_close_app_popup = !show_close_app_popup;
+			showCloseAppPopup = !showCloseAppPopup;
 		}
 	}
 
-	if (App->input->GetKey(SDL_SCANCODE_LCTRL) == KEY_STATE::KEY_REPEAT)
+	if (App->input->GetKey(SDL_SCANCODE_LCTRL) == KeyState::KEY_REPEAT)
 	{
-		if (App->input->GetKey(SDL_SCANCODE_S) == KEY_STATE::KEY_DOWN)
+		if (App->input->GetKey(SDL_SCANCODE_S) == KeyState::KEY_DOWN)
 		{
 			App->scene->SaveScene();
 		}
 
-		if (App->input->GetKey(SDL_SCANCODE_O) == KEY_STATE::KEY_DOWN)
+		if (App->input->GetKey(SDL_SCANCODE_O) == KeyState::KEY_DOWN)
 		{
-			show_load_file_popup = true;
+			showLoadFilePopup = true;
 		}
 	}
 }
 
 void M_Editor::CheckShowHideFlags()
 {	
-	show_configuration		?	configuration->Enable()	: configuration->Disable();					// Engine Configuration
-	show_hierarchy			?	hierarchy->Enable()		: hierarchy->Disable();						// Hierarchy
-	show_inspector			?	inspector->Enable()		: inspector->Disable();						// Inspector
-	show_console			?	console->Enable()		: console->Disable();						// Console
-	show_project			?	project->Enable()		: project->Disable();						// Project
-	show_imgui_demo			?	imgui_demo->Enable()	: imgui_demo->Disable();					// ImGui Demo
-	show_about_popup		?	about->Enable()			: about->Disable();							// About Popup
-	show_load_file_popup	?	load_file->Enable()		: load_file->Disable();						// Load File
+	showConfiguration	?	configuration->Enable()	: configuration->Disable();				// Engine Configuration
+	showHierarchy		?	hierarchy->Enable()		: hierarchy->Disable();					// Hierarchy
+	showInspector		?	inspector->Enable()		: inspector->Disable();					// Inspector
+	showConsole			?	console->Enable()		: console->Disable();					// Console
+	showProject			?	project->Enable()		: project->Disable();					// Project
+	showImguiDemo		?	imguiDemo->Enable()		: imguiDemo->Disable();					// ImGui Demo
+	showAboutPopup		?	about->Enable()			: about->Disable();						// About Popup
+	showLoadFilePopup	?	loadFile->Enable()		: loadFile->Disable();					// Load File
 }
 
 bool M_Editor::EditorIsBeingHovered() const
 {
-	for (uint i = 0; i < editor_panels.size(); ++i)
+	for (uint i = 0; i < editorPanels.size(); ++i)
 	{
-		if (editor_panels[i]->IsHovered())
+		if (editorPanels[i]->IsHovered())
 		{
 			return true;
 		}
@@ -286,20 +286,20 @@ bool M_Editor::RenderEditorPanels() const
 
 	ImGui::Render();
 	glViewport(0, 0, (int)io.DisplaySize.x, (int)io.DisplaySize.y);
-	glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
+	glClearColor(clearColor.x, clearColor.y, clearColor.z, clearColor.w);
 	//glClear(GL_COLOR_BUFFER_BIT);
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
 	// Updating and rendering additional platform windows
 	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
 	{
-		SDL_Window* backup_current_window		= SDL_GL_GetCurrentWindow();
-		SDL_GLContext backup_current_context	= SDL_GL_GetCurrentContext();
+		SDL_Window* backupCurrentWindow		= SDL_GL_GetCurrentWindow();
+		SDL_GLContext backupCurrentContext	= SDL_GL_GetCurrentContext();
 
 		ImGui::UpdatePlatformWindows();
 		ImGui::RenderPlatformWindowsDefault();
 
-		SDL_GL_MakeCurrent(backup_current_window, backup_current_context);
+		SDL_GL_MakeCurrent(backupCurrentWindow, backupCurrentContext);
 	}
 
 	return true;
@@ -352,19 +352,19 @@ bool M_Editor::GetShowPrimitiveExamples() const
 	return App->renderer->GetRenderPrimitiveExamples();
 }
 
-void M_Editor::SetShowWorldGrid(bool set_to)
+void M_Editor::SetShowWorldGrid(bool setTo)
 {
-	App->renderer->SetRenderWorldGrid(set_to);
+	App->renderer->SetRenderWorldGrid(setTo);
 }
 
-void M_Editor::SetShowWorldAxis(bool set_to)
+void M_Editor::SetShowWorldAxis(bool setTo)
 {
-	App->renderer->SetRenderWorldAxis(set_to);
+	App->renderer->SetRenderWorldAxis(setTo);
 }
 
-void M_Editor::SetShowPrimitiveExamples(bool set_to)
+void M_Editor::SetShowPrimitiveExamples(bool setTo)
 {
-	App->renderer->SetRenderPrimtiveExamples(set_to);
+	App->renderer->SetRenderPrimtiveExamples(setTo);
 }
 
 void M_Editor::UpdateFrameData(int frames, int ms)
@@ -374,7 +374,7 @@ void M_Editor::UpdateFrameData(int frames, int ms)
 
 void M_Editor::AddConsoleLog(const char* log)
 {
-	if (editor_panels.size() > 0)
+	if (editorPanels.size() > 0)
 	{
 		if (console != nullptr)
 		{
@@ -392,15 +392,15 @@ void M_Editor::AddInputLog(uint key, uint state)
 	{
 		if (key < App->input->GetMaxNumScancodes())
 		{
-			const char* key_name = SDL_GetKeyName(SDL_GetKeyFromScancode((SDL_Scancode)key));		// Through the scancode it is possible to get a string with the name of the key.
+			const char* keyName = SDL_GetKeyName(SDL_GetKeyFromScancode((SDL_Scancode)key));		// Through the scancode it is possible to get a string with the name of the key.
 
-			sprintf_s(input, 128, "[KEY] %02u %s - %s\n", key, key_name, states[state]);
+			sprintf_s(input, 128, "[KEY] %02u %s - %s\n", key, keyName, states[state]);
 		}
 		else
 		{
-			uint mouse_button = key - App->input->GetMaxNumScancodes();
+			uint mouseButton = key - App->input->GetMaxNumScancodes();
 
-			sprintf_s(input, 128, "[MOUSE] %02u - %s\n", mouse_button, states[state]);
+			sprintf_s(input, 128, "[MOUSE] %02u - %s\n", mouseButton, states[state]);
 		}
 
 		configuration->AddInputLog(input);
@@ -412,9 +412,9 @@ GameObject* M_Editor::GetSceneRootThroughEditor() const
 	return App->scene->GetSceneRoot();
 }
 
-void M_Editor::SetSceneRootThroughEditor(GameObject* game_object)
+void M_Editor::SetSceneRootThroughEditor(GameObject* gameObject)
 {
-	App->scene->SetSceneRoot(game_object);
+	App->scene->SetSceneRoot(gameObject);
 }
 
 GameObject* M_Editor::GetSelectedGameObjectThroughEditor() const
@@ -422,9 +422,9 @@ GameObject* M_Editor::GetSelectedGameObjectThroughEditor() const
 	return App->scene->GetSelectedGameObject();
 }
 
-void M_Editor::SetSelectedGameObjectThroughEditor(GameObject* game_object)
+void M_Editor::SetSelectedGameObjectThroughEditor(GameObject* gameObject)
 {
-	App->scene->SetSelectedGameObject(game_object);
+	App->scene->SetSelectedGameObject(gameObject);
 }
 
 void M_Editor::DeleteSelectedGameObject()
@@ -442,9 +442,9 @@ C_Camera* M_Editor::GetCurrentCameraThroughEditor() const
 	return App->camera->GetCurrentCamera();
 }
 
-void M_Editor::SetCurrentCameraThroughEditor(C_Camera* game_object)
+void M_Editor::SetCurrentCameraThroughEditor(C_Camera* gameObject)
 {
-	App->camera->SetCurrentCamera(game_object);
+	App->camera->SetCurrentCamera(gameObject);
 }
 
 void M_Editor::SetMasterCameraThroughEditor()
@@ -492,9 +492,9 @@ bool M_Editor::SelectedIsAnimationBone() const
 	return App->scene->GetSelectedGameObject()->is_bone;
 }
 
-void M_Editor::GetEngineIconsThroughEditor(Icons& engine_icons)
+void M_Editor::GetEngineIconsThroughEditor(Icons& engineIcons)
 {
-	engine_icons = App->renderer->GetEngineIcons();
+	engineIcons = App->renderer->GetEngineIcons();
 }
 
 void M_Editor::LoadResourceIntoSceneThroughEditor()
@@ -504,18 +504,18 @@ void M_Editor::LoadResourceIntoSceneThroughEditor()
 
 void M_Editor::GetResourcesThroughEditor(std::map<uint32, Resource*>& resources) const
 {
-	//resources = App->resource_manager->GetResources();
-	App->resource_manager->GetResources(resources);
+	//resources = App->resourceManager->GetResources();
+	App->resourceManager->GetResources(resources);
 }
 
-void M_Editor::SaveSceneThroughEditor(const char* scene_name)
+void M_Editor::SaveSceneThroughEditor(const char* sceneName)
 {
-	App->scene->SaveScene(scene_name);
+	App->scene->SaveScene(sceneName);
 }
 
 void M_Editor::LoadFileThroughEditor(const char* path)
 {
-	std::string extension = App->file_system->GetFileExtension(path);
+	std::string extension = App->fileSystem->GetFileExtension(path);
 
 	if (extension == "json" || extension == "JSON")
 	{
@@ -523,11 +523,11 @@ void M_Editor::LoadFileThroughEditor(const char* path)
 	}
 	else
 	{
-		App->resource_manager->ImportFile(path);
+		App->resourceManager->ImportFile(path);
 	}
 }
 
-bool M_Editor::BeginRootWindow(ImGuiIO& io, const char* window_id, bool docking, ImGuiWindowFlags window_flags)
+bool M_Editor::BeginRootWindow(ImGuiIO& io, const char* windowId, bool docking, ImGuiWindowFlags windowFlags)
 {
 	bool ret = true;
 	
@@ -540,27 +540,27 @@ bool M_Editor::BeginRootWindow(ImGuiIO& io, const char* window_id, bool docking,
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
 
-	window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove
+	windowFlags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove
 					| ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus
 					| ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoBackground;
 
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
-	ret = ImGui::Begin(window_id, &ret, window_flags);
+	ret = ImGui::Begin(windowId, &ret, windowFlags);
 	ImGui::PopStyleVar(3);
 
 	if (docking)
 	{	
-		BeginDockspace(io, window_id, ImGuiDockNodeFlags_PassthruCentralNode);
+		BeginDockspace(io, windowId, ImGuiDockNodeFlags_PassthruCentralNode);
 	}
 
 	return ret;
 }	
 	
-void M_Editor::BeginDockspace(ImGuiIO& io, const char* dockspace_id, ImGuiDockNodeFlags docking_flags, ImVec2 size)
+void M_Editor::BeginDockspace(ImGuiIO& io, const char* dockspaceId, ImGuiDockNodeFlags dockingFlags, ImVec2 size)
 {
 	if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
 	{
-		ImGuiID dckspace_id = ImGui::GetID(dockspace_id);
-		ImGui::DockSpace(dckspace_id, size, docking_flags);
+		ImGuiID dckspace_id = ImGui::GetID(dockspaceId);
+		ImGui::DockSpace(dckspace_id, size, dockingFlags);
 	}
 }

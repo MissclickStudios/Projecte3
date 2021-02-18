@@ -12,13 +12,13 @@
 #define CHECKERS_WIDTH 64
 #define CHECKERS_HEIGHT 64
 
-R_Mesh::R_Mesh() : Resource(RESOURCE_TYPE::MESH), 
+R_Mesh::R_Mesh() : Resource(ResourceType::MESH), 
 VBO					(0),																								// Initializing the buffers.
 NBO					(0), 																								// 
 TBO					(0), 																								//
 IBO					(0), 																								// -------------------------
-draw_vertex_normals	(false), 
-draw_face_normals	(false)
+drawVertexNormals	(false), 
+drawFaceNormals		(false)
 {
 	
 }
@@ -43,7 +43,7 @@ bool R_Mesh::CleanUp()
 	// --- Clear vectors
 	vertices.clear();
 	normals.clear();
-	tex_coords.clear();
+	texCoords.clear();
 	indices.clear();
 
 	bones.clear();
@@ -51,19 +51,19 @@ bool R_Mesh::CleanUp()
 	return true;
 }
 
-bool R_Mesh::SaveMeta(ParsonNode& meta_root) const
+bool R_Mesh::SaveMeta(ParsonNode& metaRoot) const
 {
 	bool ret = true;
 
-	ParsonArray contained_array = meta_root.SetArray("ContainedResources");
+	ParsonArray contained_array = metaRoot.SetArray("ContainedResources");
 
-	ParsonNode settings = meta_root.SetNode("ImportSettings");
-	mesh_settings.Save(settings);
+	ParsonNode settings = metaRoot.SetNode("ImportSettings");
+	meshSettings.Save(settings);
 
 	return ret;
 }
 
-bool R_Mesh::LoadMeta(const ParsonNode& meta_root)
+bool R_Mesh::LoadMeta(const ParsonNode& metaRoot)
 {
 	bool ret = true;
 
@@ -89,11 +89,11 @@ void R_Mesh::LoadBuffers()
 		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * normals.size(), &normals[0], GL_STATIC_DRAW);
 	}
 
-	if (!tex_coords.empty())
+	if (!texCoords.empty())
 	{
 		glGenBuffers(1, (GLuint*)&TBO);
 		glBindBuffer(GL_ARRAY_BUFFER, TBO);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * tex_coords.size(), &tex_coords[0], GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * texCoords.size(), &texCoords[0], GL_STATIC_DRAW);
 	}
 
 	if (!indices.empty())

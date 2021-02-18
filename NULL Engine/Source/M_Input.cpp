@@ -11,25 +11,25 @@
 #define MAX_KEYS 300
 #define MAX_DIR_LENGTH 300
 
-M_Input::M_Input(bool is_active) : Module("Input", is_active)
+M_Input::M_Input(bool isActive) : Module("Input", isActive)
 {
-	keyboard = new KEY_STATE[MAX_KEYS];
-	memset(keyboard, 0, sizeof(KEY_STATE) * MAX_KEYS);
+	keyboard = new KeyState[MAX_KEYS];
+	memset(keyboard, 0, sizeof(KeyState) * MAX_KEYS);
 
-	max_num_scancodes = (uint)SDL_NUM_SCANCODES;
+	maxNumScancodes = (uint)SDL_NUM_SCANCODES;
 
-	mouse_x			= 0;
-	mouse_y			= 0;
-	mouse_z			= 0;
+	mouseX			= 0;
+	mouseY			= 0;
+	mouseZ			= 0;
 	
-	mouse_x_motion	= 0;
-	mouse_y_motion	= 0;
+	mouseMotionX	= 0;
+	mouseMotionY	= 0;
 
-	mouse_x_wheel	= 0;
-	mouse_y_wheel	= 0;
+	mouseWheelX		= 0;
+	mouseWheelY		= 0;
 
-	prev_x_mouse_pos = 0;
-	prev_y_mouse_pos = 0;
+	prevMousePosX	= 0;
+	prevMousePosY	= 0;
 }
 
 // Destructor
@@ -55,7 +55,7 @@ bool M_Input::Init(ParsonNode& config)
 }
 
 // Called every draw update
-UPDATE_STATUS M_Input::PreUpdate(float dt)
+UpdateStatus M_Input::PreUpdate(float dt)
 {
 	SDL_PumpEvents();
 
@@ -65,67 +65,67 @@ UPDATE_STATUS M_Input::PreUpdate(float dt)
 	{
 		if(keys[i] == 1)
 		{
-			if (keyboard[i] == KEY_STATE::KEY_IDLE)
+			if (keyboard[i] == KeyState::KEY_IDLE)
 			{
-				keyboard[i] = KEY_STATE::KEY_DOWN;
-				App->editor->AddInputLog(i, (uint)KEY_STATE::KEY_DOWN);
+				keyboard[i] = KeyState::KEY_DOWN;
+				App->editor->AddInputLog(i, (uint)KeyState::KEY_DOWN);
 			}
 			else
 			{
-				keyboard[i] = KEY_STATE::KEY_REPEAT;
-				App->editor->AddInputLog(i, (uint)KEY_STATE::KEY_REPEAT);
+				keyboard[i] = KeyState::KEY_REPEAT;
+				App->editor->AddInputLog(i, (uint)KeyState::KEY_REPEAT);
 			}
 		}
 		else
 		{
-			if (keyboard[i] == KEY_STATE::KEY_REPEAT || keyboard[i] == KEY_STATE::KEY_DOWN)
+			if (keyboard[i] == KeyState::KEY_REPEAT || keyboard[i] == KeyState::KEY_DOWN)
 			{
-				keyboard[i] = KEY_STATE::KEY_UP;
-				App->editor->AddInputLog(i, (uint)KEY_STATE::KEY_UP);
+				keyboard[i] = KeyState::KEY_UP;
+				App->editor->AddInputLog(i, (uint)KeyState::KEY_UP);
 			}
 			else
 			{
-				keyboard[i] = KEY_STATE::KEY_IDLE;
+				keyboard[i] = KeyState::KEY_IDLE;
 			}
 		}
 	}
 
-	Uint32 buttons = SDL_GetMouseState(&mouse_x, &mouse_y);
+	Uint32 buttons = SDL_GetMouseState(&mouseX, &mouseY);
 
-	mouse_x /= SCREEN_SIZE;
-	mouse_y /= SCREEN_SIZE;
-	mouse_z = 0;
+	mouseX /= SCREEN_SIZE;
+	mouseY /= SCREEN_SIZE;
+	mouseZ = 0;
 
 	for(int i = 0; i < 5; ++i)
 	{
 		if(buttons & SDL_BUTTON(i))
 		{
-			if (mouse_buttons[i] == KEY_STATE::KEY_IDLE)
+			if (mouseButtons[i] == KeyState::KEY_IDLE)
 			{
-				mouse_buttons[i] = KEY_STATE::KEY_DOWN;
-				App->editor->AddInputLog(max_num_scancodes + i, (uint)KEY_STATE::KEY_DOWN);
+				mouseButtons[i] = KeyState::KEY_DOWN;
+				App->editor->AddInputLog(maxNumScancodes + i, (uint)KeyState::KEY_DOWN);
 			}
 			else
 			{
-				mouse_buttons[i] = KEY_STATE::KEY_REPEAT;
-				App->editor->AddInputLog(max_num_scancodes + i, (uint)KEY_STATE::KEY_REPEAT);
+				mouseButtons[i] = KeyState::KEY_REPEAT;
+				App->editor->AddInputLog(maxNumScancodes + i, (uint)KeyState::KEY_REPEAT);
 			}
 		}
 		else
 		{
-			if(mouse_buttons[i] == KEY_STATE::KEY_REPEAT || mouse_buttons[i] == KEY_STATE::KEY_DOWN)
+			if(mouseButtons[i] == KeyState::KEY_REPEAT || mouseButtons[i] == KeyState::KEY_DOWN)
 			{
-				mouse_buttons[i] = KEY_STATE::KEY_UP;
-				App->editor->AddInputLog(max_num_scancodes + i, (uint)KEY_STATE::KEY_UP);
+				mouseButtons[i] = KeyState::KEY_UP;
+				App->editor->AddInputLog(maxNumScancodes + i, (uint)KeyState::KEY_UP);
 			}
 			else
 			{
-				mouse_buttons[i] = KEY_STATE::KEY_IDLE;
+				mouseButtons[i] = KeyState::KEY_IDLE;
 			}
 		}
 	}
 
-	mouse_x_motion = mouse_y_motion = 0;
+	mouseMotionX = mouseMotionY = 0;
 
 	bool quit = false;
 	SDL_Event event;
@@ -136,17 +136,17 @@ UPDATE_STATUS M_Input::PreUpdate(float dt)
 		switch(event.type)
 		{
 			case SDL_MOUSEWHEEL:
-				mouse_x_wheel = event.wheel.x;
-				mouse_y_wheel = event.wheel.y;
-				mouse_z = event.wheel.y;
+				mouseWheelX = event.wheel.x;
+				mouseWheelY = event.wheel.y;
+				mouseZ = event.wheel.y;
 			break;
 
 			case SDL_MOUSEMOTION:
-				mouse_x = event.motion.x / SCREEN_SIZE;
-				mouse_y = event.motion.y / SCREEN_SIZE;
+				mouseX = event.motion.x / SCREEN_SIZE;
+				mouseY = event.motion.y / SCREEN_SIZE;
 
-				mouse_x_motion = event.motion.xrel / SCREEN_SIZE;
-				mouse_y_motion = event.motion.yrel / SCREEN_SIZE;
+				mouseMotionX = event.motion.xrel / SCREEN_SIZE;
+				mouseMotionY = event.motion.yrel / SCREEN_SIZE;
 			break;
 
 			case SDL_QUIT:
@@ -164,7 +164,7 @@ UPDATE_STATUS M_Input::PreUpdate(float dt)
 					if (event.window.event == SDL_WINDOWEVENT_CLOSE)
 					{
 						App->quit = true;
-						return UPDATE_STATUS::STOP;
+						return UpdateStatus::STOP;
 					}
 				}
 
@@ -173,7 +173,7 @@ UPDATE_STATUS M_Input::PreUpdate(float dt)
 			case SDL_DROPFILE:
 				if (event.drop.file != nullptr)
 				{
-					App->resource_manager->ImportFile(event.drop.file);
+					App->resourceManager->ImportFile(event.drop.file);
 					//Importer::ImportFile(event.drop.file);
 				}
 				else
@@ -187,25 +187,25 @@ UPDATE_STATUS M_Input::PreUpdate(float dt)
 		}
 	}
 
-	return UPDATE_STATUS::CONTINUE;
+	return UpdateStatus::CONTINUE;
 }
 
-UPDATE_STATUS M_Input::Update(float dt)
+UpdateStatus M_Input::Update(float dt)
 {
-	if (App->input->GetKey(SDL_SCANCODE_F1) == KEY_STATE::KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_F1) == KeyState::KEY_DOWN)
 	{
 		App->debug = !App->debug;
 	}
 
-	return UPDATE_STATUS::CONTINUE;
+	return UpdateStatus::CONTINUE;
 }
 
-UPDATE_STATUS M_Input::PostUpdate(float dt)
+UpdateStatus M_Input::PostUpdate(float dt)
 {
-	prev_x_mouse_pos = GetMouseX();										// Will update the previous mouse position with the current one.
-	prev_y_mouse_pos = GetMouseY();										// Placed in the PostUpdate() as the Camera controls are called in M_Camera3D's Update().
+	prevMousePosX = GetMouseX();										// Will update the previous mouse position with the current one.
+	prevMousePosY = GetMouseY();										// Placed in the PostUpdate() as the Camera controls are called in M_Camera3D's Update().
 
-	return UPDATE_STATUS::CONTINUE;
+	return UpdateStatus::CONTINUE;
 }
 
 // Called before quitting
@@ -231,62 +231,62 @@ bool M_Input::SaveConfiguration(ParsonNode& root) const
 }
 
 // --------- INPUT METHODS ---------
-KEY_STATE M_Input::GetKey(int id) const
+KeyState M_Input::GetKey(int id) const
 {
 	return keyboard[id];
 }
 
-KEY_STATE M_Input::GetMouseButton(int id) const
+KeyState M_Input::GetMouseButton(int id) const
 {
-	return mouse_buttons[id];
+	return mouseButtons[id];
 }
 
 uint M_Input::GetMaxNumScancodes() const
 {
-	return max_num_scancodes;
+	return maxNumScancodes;
 }
 
 int M_Input::GetMouseX() const
 {
-	return mouse_x;
+	return mouseX;
 }
 
 int M_Input::GetMouseY() const
 {
-	return mouse_y;
+	return mouseY;
 }
 
 int M_Input::GetMouseZ() const
 {
-	return mouse_z;
+	return mouseZ;
 }
 
 int M_Input::GetMouseXMotion() const
 {
-	return GetMouseX() - prev_x_mouse_pos;
+	return GetMouseX() - prevMousePosX;
 }
 
 int M_Input::GetMouseYMotion() const
 {
-	return GetMouseY() - prev_y_mouse_pos;
+	return GetMouseY() - prevMousePosY;
 }
 
 int M_Input::GetMouseXMotionFromSDL() const
 {
-	return mouse_x_motion;
+	return mouseMotionX;
 }
 
 int M_Input::GetMouseYMotionFromSDL() const
 {
-	return mouse_y_motion;
+	return mouseMotionY;
 }
 
 int M_Input::GetMouseXWheel() const
 {
-	return mouse_x_wheel;
+	return mouseWheelX;
 }
 
 int M_Input::GetMouseYWheel() const
 {
-	return mouse_y_wheel;
+	return mouseWheelY;
 }
