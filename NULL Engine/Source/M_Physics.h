@@ -45,6 +45,8 @@ public:
 	void AddActor(physx::PxActor* actor);
 	void DeleteActor(physx::PxActor* actor);
 
+	physx::PxPhysics* physics = nullptr;
+
 private:
 
 	physx::PxPvd* pvd = nullptr;
@@ -52,7 +54,6 @@ private:
 	physx::PxPvdSceneClient* pvdClient = nullptr;
 	physx::PxFoundation* foundation = nullptr;
 	physx::PxControllerManager* controllerManager = nullptr;
-	physx::PxPhysics* physics = nullptr;
 	physx::PxScene* scene = nullptr;
 	physx::PxMaterial* material = nullptr;
 	physx::PxRigidStatic* plane = nullptr;
