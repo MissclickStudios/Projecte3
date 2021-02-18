@@ -10,7 +10,7 @@ public:
 	~M_Audio();
 
 private:
-	 
+
 };
 
 #endif //__AUDIO_H__
