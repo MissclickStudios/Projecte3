@@ -39,7 +39,6 @@ Always / High / Average / Low
 
 **Additional context**
 
-//Add images inside Docs/Issues/Images/issue_image.png.
 - {Screenshots... here}
 
 **Suggested Assignees**

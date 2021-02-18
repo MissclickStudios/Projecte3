@@ -93,12 +93,13 @@ Ternary Operator | (condition)? result1 : result2 | `printf("Value is 0: %s", (v
 
  - Project uses aligned braces or curly brackets:
 
-   ```c++
-   void SomeFunction()
-   {
-   	// TODO: Do something here!
-   }
-   ```
+```c++
+void SomeFunction()
+{
+   // TODO: Do something here!
+}
+```
+
  - if() statements with only one line of code:
 ```c++
 if(a >= 1)
@@ -115,6 +116,9 @@ switch (type)
 }
 ```
 
+### LOGS
+
+To be discussed
 
 
 ### Others:
