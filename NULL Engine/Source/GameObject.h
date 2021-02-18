@@ -104,13 +104,14 @@ public:																									// --- COMPONENT GETTERS AND SETTERS
 		ComponentType type = T::GetType();
 		switch (type)
 		{
-		case ComponentType::TRANSFORM: { return "Transform"; } break;
+		case ComponentType::TRANSFORM:	{ return "Transform"; } break;
 		case ComponentType::MESH:		{ return "Mesh"; }		break;
 		case ComponentType::MATERIAL:	{ return "Material"; }	break;
 		case ComponentType::LIGHT:		{ return "Light"; }		break;
-		case ComponentType::CAMERA:	{ return "Camera"; }	break;
+		case ComponentType::CAMERA:		{ return "Camera"; }	break;
 		case ComponentType::ANIMATOR:	{ return "Animator"; }	break;
 		case ComponentType::ANIMATION:	{ return "Animation"; } break;
+		case ComponentType::RIGIDBODY:	{ return "RigidBody"; } break;
 		}
 
 		return "NONE";

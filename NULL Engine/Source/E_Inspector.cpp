@@ -21,6 +21,7 @@
 #include "C_Camera.h"
 #include "C_Animator.h"
 #include "C_Animation.h"
+#include "C_RigidBody.h"
 
 #include "E_Inspector.h"
 
@@ -742,6 +743,29 @@ void E_Inspector::DrawAnimationComponent(C_Animation* cAnimation)
 		{
 			componentToDelete				= cAnimation;
 			showDeleteComponentPopup		= true;
+		}
+
+		ImGui::Separator();
+	}
+}
+
+void E_Inspector::DrawRigidBodyComponent(C_RigidBody* cRigidBody)
+{
+	static bool show = true;
+	if (ImGui::CollapsingHeader("RigidBody", &show, ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		if (cRigidBody != nullptr)
+		{
+			bool isActive = cRigidBody->IsActive();
+			if (ImGui::Checkbox("Is Active", &isActive)) { cRigidBody->SetIsActive(isActive); }
+
+			ImGui::Separator();
+		}
+
+		if (!show)
+		{
+			componentToDelete = cRigidBody;
+			showDeleteComponentPopup = true;
 		}
 
 		ImGui::Separator();

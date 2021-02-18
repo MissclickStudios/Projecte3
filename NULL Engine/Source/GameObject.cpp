@@ -18,6 +18,7 @@
 #include "C_Camera.h"
 #include "C_Animator.h"
 #include "C_Animation.h"
+#include "C_RigidBody.h"
 
 #include "GameObject.h"
 
@@ -175,9 +176,10 @@ bool GameObject::LoadState(ParsonNode& root)
 			case ComponentType::MESH:		{ component = new C_Mesh(this); }		break;
 			case ComponentType::MATERIAL:	{ component = new C_Material(this); }	break;
 			case ComponentType::LIGHT:		{ component = new C_Light(this); }		break;
-			case ComponentType::CAMERA:	{ component = new C_Camera(this); }		break;
+			case ComponentType::CAMERA:		{ component = new C_Camera(this); }		break;
 			case ComponentType::ANIMATOR:	{ component = new C_Animator(this); }	break;
-			case ComponentType::ANIMATION: { component = new C_Animation(this); }	break;
+			case ComponentType::ANIMATION:	{ component = new C_Animation(this); }	break;
+			case ComponentType::RIGIDBODY:	{ component = new C_RigidBody(this); }	break;
 			}
 
 			if (component != nullptr)
@@ -627,9 +629,10 @@ Component* GameObject::CreateComponent(ComponentType type)
 	case ComponentType::MESH:		{ component = new C_Mesh(this); }		break;
 	case ComponentType::MATERIAL:	{ component = new C_Material(this); }	break;
 	case ComponentType::LIGHT:		{ component = new C_Light(this); }		break;
-	case ComponentType::CAMERA:	{ component = new C_Camera(this); }		break;
+	case ComponentType::CAMERA:		{ component = new C_Camera(this); }		break;
 	case ComponentType::ANIMATOR:	{ component = new C_Animator(this); }	break;
-	case ComponentType::ANIMATION: { component = new C_Animation(this); }	break;
+	case ComponentType::ANIMATION:	{ component = new C_Animation(this); }	break;
+	case ComponentType::RIGIDBODY:	{ component = new C_RigidBody(this); }	break;
 	}
 
 	if (component != nullptr)
