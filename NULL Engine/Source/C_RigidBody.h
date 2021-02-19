@@ -31,6 +31,7 @@ public:
 	inline bool				IsKinematic() { return isKinematic; }
 	inline void				SetKinematic(bool enable) { isKinematic = enable; update = true; }
 
+	float					GetSpeed() { return linearVel.Length(); }
 	inline float3			GetLinearVelocity() { return linearVel; }
 	inline float3			GetAngularVelocity() { return angularVel; }
 	inline void				SetLinearVelocity(float3 vel) { linearVel = vel; update = true; }
@@ -53,6 +54,8 @@ public:
 	inline void				FreezeRotationX(bool enable) { freezeRotationX = enable; update = true; }
 	inline void				FreezeRotationY(bool enable) { freezeRotationY = enable; update = true; }
 	inline void				FreezeRotationZ(bool enable) { freezeRotationZ = enable; update = true; }
+
+	bool					IsSleeping() { return rigidBody->isSleeping(); }
 
 	inline const physx::PxRigidDynamic* const GetRigidBody() { return rigidBody; }
 

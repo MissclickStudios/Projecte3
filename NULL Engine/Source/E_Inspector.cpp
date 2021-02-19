@@ -820,6 +820,9 @@ void E_Inspector::DrawRigidBodyComponent(C_RigidBody* cRigidBody)
 
 			if (ImGui::TreeNodeEx("Info"))
 			{
+				float speed = cRigidBody->GetSpeed();
+				ImGui::InputFloat("Speed", &speed, 0, 0, 4, ImGuiInputTextFlags_ReadOnly);
+
 				float3 vel = cRigidBody->GetLinearVelocity();
 				float velocity[3] = { vel.x, vel.y,vel.z };
 				ImGui::InputFloat3("Velocity", velocity, 4, ImGuiInputTextFlags_ReadOnly);
@@ -827,6 +830,10 @@ void E_Inspector::DrawRigidBodyComponent(C_RigidBody* cRigidBody)
 				vel = cRigidBody->GetAngularVelocity();
 				float angVelocity[3] = { vel.x, vel.y,vel.z };
 				ImGui::InputFloat3("Angulat Velocity", angVelocity, 4, ImGuiInputTextFlags_ReadOnly);
+
+				bool isSleeping = cRigidBody->IsSleeping();
+				ImGui::Checkbox("Is Sleeping", &isSleeping);
+
 				ImGui::TreePop();
 			}
 		}
