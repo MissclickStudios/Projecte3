@@ -75,6 +75,20 @@ bool C_RigidBody::LoadState(ParsonNode& root)
 	return true;
 }
 
+void C_RigidBody::SetIsActive(bool setTo)
+{
+	isActive = setTo;
+
+	if(rigidBody)
+		if (isActive)
+		{
+			TransformMovesRigidBody(false);
+			App->physics->AddActor(rigidBody);
+		}
+		else
+			App->physics->DeleteActor(rigidBody);
+}
+
 void C_RigidBody::MakeStatic()
 {
 	isStatic = true;

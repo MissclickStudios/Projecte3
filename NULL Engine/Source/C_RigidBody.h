@@ -19,6 +19,8 @@ public:
 	bool SaveState(ParsonNode& root) const override;
 	bool LoadState(ParsonNode& root) override;
 
+	void SetIsActive(bool setTo) override;
+
 	static inline ComponentType GetType() { return ComponentType::RIGIDBODY; }			// This is needed to be able to use templates for functions such as GetComponent<>();
 	
 	inline float			GetMass() { return mass; }

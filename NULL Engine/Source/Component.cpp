@@ -50,9 +50,10 @@ const char* Component::GetNameFromType() const
 	case ComponentType::MESH:			{ return "Mesh"; }			break;
 	case ComponentType::MATERIAL:		{ return "Material"; }		break;
 	case ComponentType::LIGHT:			{ return "Light"; }			break;
-	case ComponentType::CAMERA:		{ return "Camera"; }		break;
+	case ComponentType::CAMERA:			{ return "Camera"; }		break;
 	case ComponentType::ANIMATOR:		{ return "Animator"; }		break;
 	case ComponentType::ANIMATION:		{ return "Animation"; }		break;
+	case ComponentType::RIGIDBODY:		{ return "RigidBody"; }		break;
 	}
 
 	return "NONE";
@@ -73,7 +74,7 @@ bool Component::IsActive() const
 	return isActive;
 }
 
-void Component::SetIsActive(const bool& setTo)
+void Component::SetIsActive(bool setTo)
 {
 	isActive = setTo;
 }
