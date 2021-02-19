@@ -9,6 +9,8 @@ public:
 	M_Audio(bool isActive = true);
 	~M_Audio();
 
+	bool InitSoundEngine();
+
 private:
 
 };
