@@ -103,7 +103,12 @@ bool M_Physics::Start()
 
 UpdateStatus M_Physics::Update(float dt)
 {
-	if (scene && !App->pause)
+	if (App->play && !App->pause)
+		simulating = true;
+	else
+		simulating = false;
+
+	if (scene && simulating)
 	{
 		scene->simulate(dt);
 		scene->fetchResults(true);

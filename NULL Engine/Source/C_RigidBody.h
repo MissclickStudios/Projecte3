@@ -23,9 +23,12 @@ public:
 	
 	inline float			GetMass() { return mass; }
 	inline void				SetMass(float mass)	{ this->mass = mass; update = true; }
+	inline float			GetDensity() { return density; }
 	inline void				SetDensity(float density) { this->density = density; update = true; }
 
+	inline bool				UsingGravity() { return useGravity; }
 	inline void				UseGravity(bool enable) { useGravity = enable; update = true; }
+	inline bool				IsKinematic() { return isKinematic; }
 	inline void				SetKinematic(bool enable) { isKinematic = enable; update = true; }
 
 	inline float3			GetLinearVelocity() { return linearVel; }
@@ -41,12 +44,15 @@ public:
 	inline void				AddForce(physx::PxVec3 force, physx::PxForceMode::Enum mode) { if (rigidBody) rigidBody->addForce(force, mode); }
 	inline void				AddTorque(physx::PxVec3 force, physx::PxForceMode::Enum mode) { if (rigidBody)rigidBody->addTorque(force, mode); }
 
-	inline void				FreezePositionX(bool enable) { freezePositionX = true; update = true; }
-	inline void				FreezePositionY(bool enable) { freezePositionY = true; update = true; }
-	inline void				FreezePositionZ(bool enable) { freezePositionZ = true; update = true; }
-	inline void				FreezeRotationX(bool enable) { freezeRotationX = true; update = true; }
-	inline void				FreezeRotationY(bool enable) { freezeRotationY = true; update = true; }
-	inline void				FreezeRotationZ(bool enable) { freezeRotationZ = true; update = true; }
+	inline void				FrozenPositions(bool& x, bool& y, bool& z) { x = freezePositionX; y = freezePositionY; z = freezePositionZ; }
+	inline void				FreezePositionX(bool enable) { freezePositionX = enable; update = true; }
+	inline void				FreezePositionY(bool enable) { freezePositionY = enable; update = true; }
+	inline void				FreezePositionZ(bool enable) { freezePositionZ = enable; update = true; }
+
+	inline void				FrozenRotations(bool& x, bool& y, bool& z) { x = freezeRotationX; y = freezeRotationY; z = freezeRotationZ; }
+	inline void				FreezeRotationX(bool enable) { freezeRotationX = enable; update = true; }
+	inline void				FreezeRotationY(bool enable) { freezeRotationY = enable; update = true; }
+	inline void				FreezeRotationZ(bool enable) { freezeRotationZ = enable; update = true; }
 
 	inline const physx::PxRigidDynamic* const GetRigidBody() { return rigidBody; }
 

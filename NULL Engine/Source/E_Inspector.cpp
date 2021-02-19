@@ -159,9 +159,10 @@ void E_Inspector::DrawComponents(GameObject* selectedGameObject)
 		case ComponentType::MESH:		{ DrawMeshComponent((C_Mesh*)component); }				break;
 		case ComponentType::MATERIAL:	{ DrawMaterialComponent((C_Material*)component); }		break;
 		case ComponentType::LIGHT:		{ DrawLightComponent((C_Light*)component); }			break;
-		case ComponentType::CAMERA:	{ DrawCameraComponent((C_Camera*)component); }			break;
+		case ComponentType::CAMERA:		{ DrawCameraComponent((C_Camera*)component); }			break;
 		case ComponentType::ANIMATOR:	{ DrawAnimatorComponent((C_Animator*)component); }		break;
-		case ComponentType::ANIMATION: { DrawAnimationComponent((C_Animation*)component); }	break;
+		case ComponentType::ANIMATION:	{ DrawAnimationComponent((C_Animation*)component); }	break;
+		case ComponentType::RIGIDBODY:	{ DrawRigidBodyComponent((C_RigidBody*)component); }	break;
 		}
 
 		if (type == ComponentType::NONE)
@@ -752,14 +753,82 @@ void E_Inspector::DrawAnimationComponent(C_Animation* cAnimation)
 void E_Inspector::DrawRigidBodyComponent(C_RigidBody* cRigidBody)
 {
 	static bool show = true;
+
+	if (cRigidBody->IsStatic())
+	{
+		ImGui::CollapsingHeader("Static RigidBody", ImGuiTreeNodeFlags_Leaf);
+		return;
+	}
+
 	if (ImGui::CollapsingHeader("RigidBody", &show, ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		if (cRigidBody != nullptr)
 		{
 			bool isActive = cRigidBody->IsActive();
-			if (ImGui::Checkbox("Is Active", &isActive)) { cRigidBody->SetIsActive(isActive); }
+			if (ImGui::Checkbox("RigidBody Is Active", &isActive)) 
+				cRigidBody->SetIsActive(isActive);
 
 			ImGui::Separator();
+
+			float mass = cRigidBody->GetMass();
+			if (ImGui::InputFloat("Mass", &mass, 0, 0, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue))
+				cRigidBody->SetMass(mass);
+			float density = cRigidBody->GetDensity();
+			if (ImGui::InputFloat("Denstity", &density, 0, 0, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue))
+				cRigidBody->SetDensity(density);
+
+			bool useGravity = cRigidBody->UsingGravity();
+			if (ImGui::Checkbox("Use Gravity", &useGravity))
+				cRigidBody->UseGravity(useGravity);
+			bool isKinematic = cRigidBody->IsKinematic();
+			if (ImGui::Checkbox("Is Kinematic", &isKinematic))
+				cRigidBody->SetKinematic(isKinematic);
+
+			if (ImGui::TreeNodeEx("Constrains"))
+			{
+				ImGui::Text("Freeze Position");
+				ImGui::SameLine();
+
+				bool x, y, z;
+				cRigidBody->FrozenPositions(x, y, z);
+
+				if (ImGui::Checkbox("X", &x))
+					cRigidBody->FreezePositionX(x);
+				ImGui::SameLine();
+				if (ImGui::Checkbox("Y", &y))
+					cRigidBody->FreezePositionY(y);
+				ImGui::SameLine();
+				if (ImGui::Checkbox("Z", &z))
+					cRigidBody->FreezePositionZ(z);
+
+				ImGui::Text("Freeze Rotation");
+				ImGui::SameLine();
+
+				cRigidBody->FrozenRotations(x, y, z);
+
+				if (ImGui::Checkbox("x", &x))
+					cRigidBody->FreezeRotationX(x);
+				ImGui::SameLine();
+				if (ImGui::Checkbox("y", &y))
+					cRigidBody->FreezeRotationY(y);
+				ImGui::SameLine();
+				if (ImGui::Checkbox("z", &z))
+					cRigidBody->FreezeRotationZ(z);
+
+				ImGui::TreePop();
+			}
+
+			if (ImGui::TreeNodeEx("Info"))
+			{
+				float3 vel = cRigidBody->GetLinearVelocity();
+				float velocity[3] = { vel.x, vel.y,vel.z };
+				ImGui::InputFloat3("Velocity", velocity, 4, ImGuiInputTextFlags_ReadOnly);
+
+				vel = cRigidBody->GetAngularVelocity();
+				float angVelocity[3] = { vel.x, vel.y,vel.z };
+				ImGui::InputFloat3("Angulat Velocity", angVelocity, 4, ImGuiInputTextFlags_ReadOnly);
+				ImGui::TreePop();
+			}
 		}
 
 		if (!show)
@@ -774,7 +843,7 @@ void E_Inspector::DrawRigidBodyComponent(C_RigidBody* cRigidBody)
 
 void E_Inspector::AddComponentCombo(GameObject* selectedGameObject)
 {
-	ImGui::Combo("##", &componentType, "Add Component\0Transform\0Mesh\0Material\0Light\0Camera\0Animator\0Animation");
+	ImGui::Combo("##", &componentType, "Add Component\0Transform\0Mesh\0Material\0Light\0Camera\0Animator\0Animation\0RigidBody");
 
 	ImGui::SameLine();
 

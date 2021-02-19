@@ -622,6 +622,11 @@ Component* GameObject::CreateComponent(ComponentType type)
 		LOG("[ERROR] Material Component could not be added to %s! Error: No duplicates allowed!", name.c_str());
 		return nullptr;
 	}
+	if (type == ComponentType::RIGIDBODY && GetComponent<C_RigidBody>() != nullptr)
+	{
+		LOG("[ERROR] RigidBody Component could not be added to %s! Error: No duplicates allowed!", name.c_str());
+		return nullptr;
+	}
 
 	switch(type)
 	{

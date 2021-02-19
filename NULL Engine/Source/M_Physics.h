@@ -46,6 +46,7 @@ public:
 	void DeleteActor(physx::PxActor* actor);
 
 	physx::PxPhysics* physics = nullptr;
+	bool simulating = false;
 
 private:
 

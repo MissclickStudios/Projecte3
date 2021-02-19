@@ -41,12 +41,17 @@ C_RigidBody::~C_RigidBody()
 
 bool C_RigidBody::Update()
 {
-	if (App->pause)
+	if (!App->physics->simulating)
 		return true;
 
 	if (rigidBody)
 	{
 		RigidBodyMovesTransform();
+
+		physx::PxVec3 lVel = rigidBody->getLinearVelocity();
+		linearVel = { lVel.x, lVel.y, lVel.z };
+		physx::PxVec3 aVel = rigidBody->getAngularVelocity();
+		angularVel = { aVel.x, aVel.y, aVel.z };
 
 		if (update)
 			ApplyPhysicsChanges();
