@@ -784,6 +784,9 @@ void E_Inspector::DrawRigidBodyComponent(C_RigidBody* cRigidBody)
 			if (ImGui::Checkbox("Is Kinematic", &isKinematic))
 				cRigidBody->SetKinematic(isKinematic);
 
+			if (ImGui::Button("Stop Inertia"))
+				cRigidBody->TransformMovesRigidBody(true);
+
 			if (ImGui::TreeNodeEx("Constrains"))
 			{
 				ImGui::Text("Freeze Position");
@@ -806,13 +809,13 @@ void E_Inspector::DrawRigidBodyComponent(C_RigidBody* cRigidBody)
 
 				cRigidBody->FrozenRotations(x, y, z);
 
-				if (ImGui::Checkbox("x", &x))
+				if (ImGui::Checkbox("X##", &x))
 					cRigidBody->FreezeRotationX(x);
 				ImGui::SameLine();
-				if (ImGui::Checkbox("y", &y))
+				if (ImGui::Checkbox("Y##", &y))
 					cRigidBody->FreezeRotationY(y);
 				ImGui::SameLine();
-				if (ImGui::Checkbox("z", &z))
+				if (ImGui::Checkbox("Z##", &z))
 					cRigidBody->FreezeRotationZ(z);
 
 				ImGui::TreePop();

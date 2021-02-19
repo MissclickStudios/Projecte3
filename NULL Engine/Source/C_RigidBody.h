@@ -63,11 +63,12 @@ public:
 	void MakeStatic();
 	void MakeDynamic();
 
+	void TransformMovesRigidBody(bool stopInertia);
+
 private:
 
 	void ApplyPhysicsChanges();
 
-	void TransformMovesRigidBody(bool stopInertia);
 	void RigidBodyMovesTransform();
 
 	physx::PxRigidDynamic* rigidBody = nullptr;

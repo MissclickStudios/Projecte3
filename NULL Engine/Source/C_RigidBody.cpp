@@ -148,7 +148,7 @@ void C_RigidBody::TransformMovesRigidBody(bool stopInertia)
 		return;
 
 	if (stopInertia)
-		SetLinearVelocity(float3::zero);
+		rigidBody->setLinearVelocity(physx::PxVec3(0,0,0));
 
 	App->physics->DeleteActor(rigidBody);
 
