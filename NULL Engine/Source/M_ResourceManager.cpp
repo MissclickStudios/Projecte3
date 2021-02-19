@@ -729,7 +729,7 @@ uint32 M_ResourceManager::ImportFromAssets(const char* assetsPath)
 		{
 		case ResourceType::MODEL:		{ success = Importer::ImportScene(buffer, read, (R_Model*)resource); }		break;
 		case ResourceType::MESH:		{ success = Importer::ImportMesh(buffer, (R_Mesh*)resource); }				break;
-		case ResourceType::TEXTURE:	{ success = Importer::ImportTexture(buffer, read, (R_Texture*)resource); }	break;
+		case ResourceType::TEXTURE:		{ success = Importer::ImportTexture(buffer, read, (R_Texture*)resource); }	break;
 		case ResourceType::SCENE:		{ /*success = HAVE A FUNCTIONAL R_SCENE AND LOAD/SAVE METHODS*/}			break;
 		}
 
@@ -848,7 +848,7 @@ uint M_ResourceManager::SaveResourceToLibrary(Resource* resource)
 	case ResourceType::MODEL:		{ written = Importer::Scenes::Save((R_Model*)resource, &buffer); }			break;
 	case ResourceType::MESH:		{ written = Importer::Meshes::Save((R_Mesh*)resource, &buffer); }			break;
 	case ResourceType::MATERIAL:	{ written = Importer::Materials::Save((R_Material*)resource, &buffer); }	break;
-	case ResourceType::TEXTURE:	{ written = Importer::Textures::Save((R_Texture*)resource, &buffer); }		break;
+	case ResourceType::TEXTURE:		{ written = Importer::Textures::Save((R_Texture*)resource, &buffer); }		break;
 	case ResourceType::FOLDER:		{ written = Importer::Folders::Save((R_Folder*)resource, &buffer); }		break;
 	case ResourceType::SCENE:		{ /*written = TODO: HAVE A FUNCTIONAL R_SCENE AND SAVE/LOAD METHODS*/ }		break;
 	case ResourceType::ANIMATION:	{ written = Importer::Animations::Save((R_Animation*)resource, &buffer); }	break;
@@ -1245,7 +1245,7 @@ Resource* M_ResourceManager::CreateResource(ResourceType type, const char* asset
 	{
 	case ResourceType::MESH:		{ resource = new R_Mesh(); }		break;
 	case ResourceType::MATERIAL:	{ resource = new R_Material(); }	break;
-	case ResourceType::TEXTURE:	{ resource = new R_Texture(); }		break;
+	case ResourceType::TEXTURE:		{ resource = new R_Texture(); }		break;
 	case ResourceType::MODEL:		{ resource = new R_Model(); }		break;
 	case ResourceType::FOLDER:		{ resource = new R_Folder(); }		break;
 	case ResourceType::SCENE:		{ resource = new R_Scene(); }		break;
@@ -1423,7 +1423,7 @@ Resource* M_ResourceManager::AllocateResource(const uint32& uid, const char* ass
 	case ResourceType::MODEL:		{ success = Importer::Scenes::Load(buffer, (R_Model*)resource); }				break;
 	case ResourceType::MESH:		{ success = Importer::Meshes::Load(buffer, (R_Mesh*)resource); }				break;
 	case ResourceType::MATERIAL:	{ success = Importer::Materials::Load(buffer, (R_Material*)resource); }			break;
-	case ResourceType::TEXTURE:	{ success = Importer::Textures::Load(buffer, read, (R_Texture*)resource); }		break;
+	case ResourceType::TEXTURE:		{ success = Importer::Textures::Load(buffer, read, (R_Texture*)resource); }		break;
 	case ResourceType::FOLDER:		{ success = Importer::Folders::Load(buffer, (R_Folder*)resource); }				break;
 	case ResourceType::SCENE:		{ /*success = TODO: HAVE A FUNCTIONAL R_SCENE AND SAVE/LOAD METHODS*/ }			break;
 	case ResourceType::ANIMATION:	{ success = Importer::Animations::Load(buffer, (R_Animation*)resource); }		break;
