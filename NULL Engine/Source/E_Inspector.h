@@ -13,6 +13,7 @@ class C_Camera;
 class C_Animator;
 class C_Animation;
 class C_RigidBody;
+class C_Collider;
 
 class Resource;
 class ModelSettings;
@@ -42,6 +43,9 @@ private:
 	void DrawAnimatorComponent			(C_Animator* cAnimator);
 	void DrawAnimationComponent			(C_Animation* cAnimation);
 	void DrawRigidBodyComponent			(C_RigidBody* cRigidBody);
+	void DrawBoxColliderComponent		(C_Collider* cCollider);
+	void DrawSphereColliderComponent	(C_Collider* cCollider);
+	void DrawCapsuleColliderComponent	(C_Collider* cCollider);
 
 	void AddComponentCombo				(GameObject* selectedGameObject);					// 
 	void DeleteComponentPopup			(GameObject* selectedGameObject);					// 

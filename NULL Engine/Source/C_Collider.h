@@ -47,7 +47,7 @@ public:
 
 	void DisplayComponentMenu();
 
-	ColliderType colType = ColliderType::NONE;
+	ColliderType GetColliderType() { return colType; }
 
 	float3 centerPosition = float3::zero;
 
@@ -57,6 +57,8 @@ public:
 private:
 
 	ComponentType GetComponentType(ColliderType type);
+
+	ColliderType colType = ColliderType::NONE;
 
 	physx::PxShape* shape = nullptr;
 	float3 colliderSize = float3(10, 10, 10);
