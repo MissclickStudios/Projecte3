@@ -16,7 +16,8 @@ enum class ComponentType
 	CAMERA,
 	ANIMATOR,
 	ANIMATION,
-	RIGIDBODY
+	RIGIDBODY,
+	COLLIDER
 };
 
 class Component

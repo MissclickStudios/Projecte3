@@ -46,6 +46,8 @@ public:
 	void DeleteActor(physx::PxActor* actor);
 
 	physx::PxPhysics* physics = nullptr;
+	physx::PxMaterial* material = nullptr;
+
 	bool simulating = false;
 
 private:
@@ -56,7 +58,7 @@ private:
 	physx::PxFoundation* foundation = nullptr;
 	physx::PxControllerManager* controllerManager = nullptr;
 	physx::PxScene* scene = nullptr;
-	physx::PxMaterial* material = nullptr;
+
 	physx::PxRigidStatic* plane = nullptr;
 	physx::RaycastCCDManager* raycastManager = nullptr;
 

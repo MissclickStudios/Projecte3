@@ -61,7 +61,7 @@ public:
 
 	bool					IsSleeping() { return rigidBody->isSleeping(); }
 
-	inline const physx::PxRigidDynamic* const GetRigidBody() { return rigidBody; }
+	inline physx::PxRigidDynamic* const GetRigidBody() { return rigidBody; }
 
 	bool IsStatic() { return isStatic; }
 	void MakeStatic();
