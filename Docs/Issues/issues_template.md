@@ -14,7 +14,7 @@ ASAP / High / Medium / Low
 
 Always / High / Average / Low
 
-(Delete upper section from description until here)
+// -------------- (Delete upper section from description until here) -------------- //
 
 
 **Date of Detection**
