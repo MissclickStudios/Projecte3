@@ -752,7 +752,7 @@ void E_Inspector::DrawAnimationComponent(C_Animation* cAnimation)
 
 void E_Inspector::DrawRigidBodyComponent(C_RigidBody* cRigidBody)
 {
-	static bool show = true;
+	bool show = true;
 
 	if (cRigidBody->IsStatic())
 	{
