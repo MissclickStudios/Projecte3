@@ -1,3 +1,5 @@
+#include "JSONParser.h"
+
 #include "Application.h"
 #include "M_Physics.h"
 
@@ -35,7 +37,6 @@ C_RigidBody::~C_RigidBody()
 	{
 		App->physics->DeleteActor(rigidBody);
 		rigidBody->release();
-		//GetOwner()->rigidbody = nullptr;
 	}
 }
 
@@ -53,7 +54,7 @@ bool C_RigidBody::Update()
 		physx::PxVec3 aVel = rigidBody->getAngularVelocity();
 		angularVel = { aVel.x, aVel.y, aVel.z };
 
-		if (update)
+		if (toUpdate)
 			ApplyPhysicsChanges();
 	}
 
@@ -67,11 +68,50 @@ bool C_RigidBody::CleanUp()
 
 bool C_RigidBody::SaveState(ParsonNode& root) const
 {
+	if (!rigidBody)
+		return false;
+
+	root.SetNumber("Type", (uint)GetType());
+
+	root.SetNumber("Mass", (double)mass);
+	root.SetNumber("Density", (double)density);
+	root.SetNumber("Linear Damping", (double)linearDamping);
+	root.SetNumber("Angular Damping", (double)angularDamping);
+
+	root.SetBool("Use Gravity", useGravity);
+	root.SetBool("Is Kinematic", isKinematic);
+	root.SetBool("Freeze Position X", freezePositionX);
+	root.SetBool("Freeze Position Y", freezePositionY);
+	root.SetBool("Freeze Position Z", freezePositionZ);
+	root.SetBool("Freeze Rotation X", freezeRotationX);
+	root.SetBool("Freeze Rotation Y", freezeRotationY);
+	root.SetBool("Freeze Rotation Z", freezeRotationZ);
+
+	root.SetBool("Is Static", isStatic);
+
 	return true;
 }
 
 bool C_RigidBody::LoadState(ParsonNode& root)
 {
+	mass = (float)root.GetNumber("Mass");
+	density = (float)root.GetNumber("Density");
+	linearDamping = (float)root.GetNumber("Linear Damping");
+	angularDamping = (float)root.GetNumber("Angular Damping");
+
+	useGravity = root.GetBool("Use Gravity");
+	isKinematic = root.GetBool("Is Kinematic");
+	freezePositionX = root.GetBool("Freeze Position X");
+	freezePositionY = root.GetBool("Freeze Position Y");
+	freezePositionZ = root.GetBool("Freeze Position Z");
+	freezeRotationX = root.GetBool("Freeze Rotation X");
+	freezeRotationY = root.GetBool("Freeze Rotation Y");
+	freezeRotationZ = root.GetBool("Freeze Rotation Z");
+
+	isStatic = root.GetBool("Is Static");
+
+	ApplyPhysicsChanges();
+
 	return true;
 }
 
@@ -89,6 +129,17 @@ void C_RigidBody::SetIsActive(bool setTo)
 			App->physics->DeleteActor(rigidBody);
 }
 
+void C_RigidBody::StopInertia()
+{
+	rigidBody->setLinearVelocity(physx::PxVec3(0, 0, 0));
+	rigidBody->setAngularVelocity(physx::PxVec3(0, 0, 0));
+
+	physx::PxVec3 lVel = rigidBody->getLinearVelocity();
+	linearVel = { lVel.x, lVel.y, lVel.z };
+	physx::PxVec3 aVel = rigidBody->getAngularVelocity();
+	angularVel = { aVel.x, aVel.y, aVel.z };
+}
+
 void C_RigidBody::MakeStatic()
 {
 	isStatic = true;
@@ -101,11 +152,8 @@ void C_RigidBody::MakeStatic()
 	freezeRotationZ = true;
 	useGravity = false;
 	mass = 1000000.0f;
-	massBuffer = mass;
 	density = 1000.0f;
-	densityBuffer = density;
 
-	update = true;
 	ApplyPhysicsChanges();
 }
 
@@ -121,9 +169,7 @@ void C_RigidBody::MakeDynamic()
 	freezeRotationZ = false;
 	useGravity = true;
 	mass = 10.0f;
-	massBuffer = mass;
 	density = 1.0f;
-	densityBuffer = density;
 
 	ApplyPhysicsChanges();
 }
@@ -153,7 +199,7 @@ void C_RigidBody::ApplyPhysicsChanges()
 	App->physics->AddActor(rigidBody);
 
 	rigidBody->wakeUp();
-	update = false;
+	toUpdate = false;
 }
 
 void C_RigidBody::TransformMovesRigidBody(bool stopInertia)
@@ -162,7 +208,7 @@ void C_RigidBody::TransformMovesRigidBody(bool stopInertia)
 		return;
 
 	if (stopInertia)
-		rigidBody->setLinearVelocity(physx::PxVec3(0,0,0));
+		StopInertia();
 
 	App->physics->DeleteActor(rigidBody);
 

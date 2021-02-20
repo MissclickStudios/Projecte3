@@ -785,7 +785,7 @@ void E_Inspector::DrawRigidBodyComponent(C_RigidBody* cRigidBody)
 				cRigidBody->SetKinematic(isKinematic);
 
 			if (ImGui::Button("Stop Inertia"))
-				cRigidBody->TransformMovesRigidBody(true);
+				cRigidBody->StopInertia();
 
 			if (ImGui::TreeNodeEx("Constrains"))
 			{
