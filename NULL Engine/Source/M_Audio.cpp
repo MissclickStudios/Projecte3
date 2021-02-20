@@ -32,6 +32,23 @@ M_Audio::~M_Audio()
 {
 }
 
+bool M_Audio::Start()
+{
+	InitSoundEngine();
+	return true;
+}
+
+UpdateStatus M_Audio::Update(float dt)
+{
+	return UpdateStatus::CONTINUE;
+}
+
+bool M_Audio::CleanUp()
+{
+	TermSoundEngine();
+	return true;
+}
+
 // We're using the default Low-Level I/O implementation that's part
 // of the SDK's sample code, with the file package extension
 CAkFilePackageLowLevelIOBlocking g_lowLevelIO;
@@ -137,7 +154,7 @@ bool M_Audio::InitSoundEngine()
 }
 
 
-void TermSoundEngine()
+void M_Audio::TermSoundEngine()
 {
 #ifndef AK_OPTIMIZED
 	// Terminate Communication Services

@@ -9,7 +9,13 @@ public:
 	M_Audio(bool isActive = true);
 	~M_Audio();
 
+	bool Start() override;
+	UpdateStatus Update(float dt) override;
+	bool CleanUp() override;
+
 	bool InitSoundEngine();
+
+	void TermSoundEngine();
 
 private:
 

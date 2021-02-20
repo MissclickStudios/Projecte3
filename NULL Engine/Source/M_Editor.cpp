@@ -41,7 +41,7 @@
 
 M_Editor::M_Editor(bool isActive) : Module("Editor", isActive),
 clearColor		(0.0f, 0.0f, 0.0f, 1.0f),
-mainMenuBar	(new E_MainMenuBar()),
+mainMenuBar		(new E_MainMenuBar()),
 toolbar			(new E_Toolbar()),
 configuration	(new E_Configuration()),
 hierarchy		(new E_Hierarchy()),
