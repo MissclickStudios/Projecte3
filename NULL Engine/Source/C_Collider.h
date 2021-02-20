@@ -26,12 +26,12 @@ namespace physx
 }
 
 
-class ColliderComponent : public Component
+class C_Collider : public Component
 {
 public:
 
-	ColliderComponent(GameObject* owner, ColliderType type);
-	virtual ~ColliderComponent();
+	C_Collider(GameObject* owner, ColliderType type);
+	virtual ~C_Collider();
 
 	bool Update() override;
 	bool CleanUp() override;
@@ -47,7 +47,7 @@ public:
 
 	void DisplayComponentMenu();
 
-	ColliderType type = ColliderType::NONE;
+	ColliderType colType = ColliderType::NONE;
 
 	float3 centerPosition = float3::zero;
 
@@ -55,6 +55,8 @@ public:
 	void SetTrigger(bool enable) { isTrigger = enable; }
 
 private:
+
+	ComponentType GetComponentType(ColliderType type);
 
 	physx::PxShape* shape = nullptr;
 	float3 colliderSize = float3(10, 10, 10);

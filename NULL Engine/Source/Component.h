@@ -17,7 +17,9 @@ enum class ComponentType
 	ANIMATOR,
 	ANIMATION,
 	RIGIDBODY,
-	COLLIDER
+	BOX_COLLIDER,
+	SPHERE_COLLIDER,
+	CAPSULE_COLLIDER
 };
 
 class Component

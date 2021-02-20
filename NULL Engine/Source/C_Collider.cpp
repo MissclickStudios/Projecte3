@@ -6,13 +6,13 @@
 #include "C_Transform.h"
 #include "PhysX_3.4/Include/PxPhysicsAPI.h"
 
-ColliderComponent::ColliderComponent(GameObject* owner, ColliderType type) : Component(owner, ComponentType::COLLIDER)
+C_Collider::C_Collider(GameObject* owner, ColliderType type) : Component(owner, GetComponentType(type))
 {
-	this->type = type;
-	CreateCollider(this->type);
+	colType = type;
+	CreateCollider(colType);
 }
 
-ColliderComponent::~ColliderComponent()
+C_Collider::~C_Collider()
 {
 	if (GetOwner()->GetComponent<C_RigidBody>() && GetOwner()->GetComponent<C_RigidBody>()->IsStatic())
 		GetOwner()->DeleteComponent(GetOwner()->GetComponent<C_RigidBody>());
@@ -21,32 +21,32 @@ ColliderComponent::~ColliderComponent()
 		shape->release();
 }
 
-bool ColliderComponent::Update()
+bool C_Collider::Update()
 {
 	return true;
 }
 
-bool ColliderComponent::CleanUp()
+bool C_Collider::CleanUp()
 {
 	return true;
 }
 
-bool ColliderComponent::SaveState(ParsonNode& root) const
+bool C_Collider::SaveState(ParsonNode& root) const
 {
 	return false;
 }
 
-bool ColliderComponent::LoadState(ParsonNode& root)
+bool C_Collider::LoadState(ParsonNode& root)
 {
 	return false;
 }
 
-void ColliderComponent::SetIsActive(bool setTo)
+void C_Collider::SetIsActive(bool setTo)
 {
 	isActive = setTo;
 }
 
-void ColliderComponent::CreateCollider(ColliderType type, bool createAgain)
+void C_Collider::CreateCollider(ColliderType type, bool createAgain)
 {
 	if (shape)
 	{
@@ -100,6 +100,20 @@ void ColliderComponent::CreateCollider(ColliderType type, bool createAgain)
 	App->physics->AddActor(GetOwner()->GetComponent<C_RigidBody>()->GetRigidBody());
 }
 
-void ColliderComponent::DisplayComponentMenu()
+void C_Collider::DisplayComponentMenu()
 {
+}
+
+ComponentType C_Collider::GetComponentType(ColliderType type)
+{
+	switch (type)
+	{
+	case ColliderType::BOX:
+		return ComponentType::BOX_COLLIDER;
+	case ColliderType::SPHERE:
+		return ComponentType::SPHERE_COLLIDER;
+	case ColliderType::CAPSULE:
+		return ComponentType::CAPSULE_COLLIDER;
+	}
+	return ComponentType::NONE;
 }
