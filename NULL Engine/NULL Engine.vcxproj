@@ -14,6 +14,12 @@
     <ClCompile Include="Source\AnimationSettings.cpp" />
     <ClCompile Include="Source\AnimatorClip.cpp" />
     <ClCompile Include="Source\Application.cpp" />
+    <ClCompile Include="Source\Dependencies\Wwise\samples\SoundEngine\Common\AkDefaultLowLevelIODispatcher.cpp" />
+    <ClCompile Include="Source\Dependencies\Wwise\samples\SoundEngine\Common\AkFileLocationBase.cpp" />
+    <ClCompile Include="Source\Dependencies\Wwise\samples\SoundEngine\Common\AkFilePackage.cpp" />
+    <ClCompile Include="Source\Dependencies\Wwise\samples\SoundEngine\Common\AkFilePackageLUT.cpp" />
+    <ClCompile Include="Source\Dependencies\Wwise\samples\SoundEngine\Common\AkMultipleFileLocation.cpp" />
+    <ClCompile Include="Source\Dependencies\Wwise\samples\SoundEngine\Win32\AkDefaultIOHookBlocking.cpp" />
     <ClCompile Include="Source\M_Audio.cpp" />
     <ClCompile Include="Source\Channel.cpp" />
     <ClCompile Include="Source\CurveEditor.cpp" />
@@ -154,6 +160,14 @@
     <ClInclude Include="Source\CurveEditor.h" />
     <ClInclude Include="Source\C_Animation.h" />
     <ClInclude Include="Source\C_Animator.h" />
+    <ClInclude Include="Source\Dependencies\Wwise\samples\SoundEngine\Common\AkDefaultLowLevelIODispatcher.h" />
+    <ClInclude Include="Source\Dependencies\Wwise\samples\SoundEngine\Common\AkFileLocationBase.h" />
+    <ClInclude Include="Source\Dependencies\Wwise\samples\SoundEngine\Common\AkFilePackage.h" />
+    <ClInclude Include="Source\Dependencies\Wwise\samples\SoundEngine\Common\AkFilePackageLowLevelIO.h" />
+    <ClInclude Include="Source\Dependencies\Wwise\samples\SoundEngine\Common\AkFilePackageLUT.h" />
+    <ClInclude Include="Source\Dependencies\Wwise\samples\SoundEngine\Common\AkMultipleFileLocation.h" />
+    <ClInclude Include="Source\Dependencies\Wwise\samples\SoundEngine\Win32\AkDefaultIOHookBlocking.h" />
+    <ClInclude Include="Source\Dependencies\Wwise\samples\SoundEngine\Win32\AkFileHelpers.h" />
     <ClInclude Include="Source\EasingFunctions.h" />
     <ClInclude Include="Source\E_Resources.h" />
     <ClInclude Include="Source\E_Timeline.h" />
@@ -352,6 +366,7 @@
   <ItemGroup>
     <None Include="Resources\Engine\Configuration\configuration.JSON" />
     <None Include="Resources\Engine\Configuration\default_configuration.JSON" />
+    <None Include="Source\Dependencies\Wwise\samples\SoundEngine\Common\AkFilePackageLowLevelIO.inl" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{746CC4C3-787F-4B0E-AA66-E388FE3FF4F6}</ProjectGuid>
@@ -402,7 +417,7 @@
       <SDLCheck>false</SDLCheck>
       <ExceptionHandling>false</ExceptionHandling>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <AdditionalIncludeDirectories>$(ProjectDir)Source\Dependencies;$(ProjectDir)Source\Dependencies\Wwise\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Source\Dependencies;$(ProjectDir)Source\Dependencies\Wwise\include;$(ProjectDir)Source\Dependencies\Wwise\samples\SoundEngine\Win32;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WINDOWS_IGNORE_PACKING_MISMATCH;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -422,7 +437,7 @@
       <SDLCheck>false</SDLCheck>
       <ExceptionHandling>false</ExceptionHandling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <AdditionalIncludeDirectories>$(ProjectDir)Source\Dependencies;$(ProjectDir)Source\Dependencies\Wwise\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Source\Dependencies;$(ProjectDir)Source\Dependencies\Wwise\include;$(ProjectDir)Source\Dependencies\Wwise\samples\SoundEngine\Win32;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WINDOWS_IGNORE_PACKING_MISMATCH;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>

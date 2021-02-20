@@ -552,6 +552,24 @@
     <ClCompile Include="Source\M_Audio.cpp">
       <Filter>Source\1_Modules</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Dependencies\Wwise\samples\SoundEngine\Common\AkDefaultLowLevelIODispatcher.cpp">
+      <Filter>Dependencies\Wwise</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Dependencies\Wwise\samples\SoundEngine\Common\AkFileLocationBase.cpp">
+      <Filter>Dependencies\Wwise</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Dependencies\Wwise\samples\SoundEngine\Common\AkFilePackage.cpp">
+      <Filter>Dependencies\Wwise</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Dependencies\Wwise\samples\SoundEngine\Common\AkFilePackageLUT.cpp">
+      <Filter>Dependencies\Wwise</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Dependencies\Wwise\samples\SoundEngine\Common\AkMultipleFileLocation.cpp">
+      <Filter>Dependencies\Wwise</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Dependencies\Wwise\samples\SoundEngine\Win32\AkDefaultIOHookBlocking.cpp">
+      <Filter>Dependencies\Wwise</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application.h">
@@ -1166,6 +1184,30 @@
     <ClInclude Include="Source\M_Audio.h">
       <Filter>Source\1_Modules</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Dependencies\Wwise\samples\SoundEngine\Common\AkDefaultLowLevelIODispatcher.h">
+      <Filter>Dependencies\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Dependencies\Wwise\samples\SoundEngine\Common\AkFileLocationBase.h">
+      <Filter>Dependencies\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Dependencies\Wwise\samples\SoundEngine\Common\AkFilePackage.h">
+      <Filter>Dependencies\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Dependencies\Wwise\samples\SoundEngine\Common\AkFilePackageLowLevelIO.h">
+      <Filter>Dependencies\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Dependencies\Wwise\samples\SoundEngine\Common\AkFilePackageLUT.h">
+      <Filter>Dependencies\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Dependencies\Wwise\samples\SoundEngine\Common\AkMultipleFileLocation.h">
+      <Filter>Dependencies\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Dependencies\Wwise\samples\SoundEngine\Win32\AkDefaultIOHookBlocking.h">
+      <Filter>Dependencies\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Dependencies\Wwise\samples\SoundEngine\Win32\AkFileHelpers.h">
+      <Filter>Dependencies\Wwise</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Engine\Configuration\configuration.JSON">
@@ -1173,6 +1215,9 @@
     </None>
     <None Include="Resources\Engine\Configuration\default_configuration.JSON">
       <Filter>Source\8_ConfigurationFiles</Filter>
+    </None>
+    <None Include="Source\Dependencies\Wwise\samples\SoundEngine\Common\AkFilePackageLowLevelIO.inl">
+      <Filter>Dependencies\Wwise</Filter>
     </None>
   </ItemGroup>
 </Project>

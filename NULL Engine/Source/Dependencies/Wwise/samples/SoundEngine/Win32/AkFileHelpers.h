@@ -211,7 +211,7 @@ public:
 	/// Returns AK_Success if the directory is valid, AK_Fail if not.
 	/// For validation purposes only.
 	/// Some platforms may return AK_NotImplemented, in this case you cannot rely on it.
-	static AKRESULT CheckDirectoryExists( const char* in_pszBasePath )
+	static AKRESULT CheckDirectoryExists( const AkOSChar* in_pszBasePath )
 	{
 		DWORD fileAttributes = INVALID_FILE_ATTRIBUTES;
 #ifdef AK_USE_UWP_API
@@ -221,7 +221,7 @@ public:
 			fileAttributes = fileInfo.dwFileAttributes;
 		}
 #else
-		fileAttributes = GetFileAttributes( in_pszBasePath );
+		fileAttributes = GetFileAttributes((LPCSTR) in_pszBasePath );
 #endif
 		if (fileAttributes == INVALID_FILE_ATTRIBUTES)
 			return AK_Fail;  //something is wrong with your path!
