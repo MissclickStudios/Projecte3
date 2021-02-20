@@ -197,36 +197,6 @@ void M_Editor::AddEditorPanel(EditorPanel* panel)
 
 void M_Editor::EditorShortcuts()
 {
-	if (App->input->GetKey(SDL_SCANCODE_1) == KeyState::KEY_DOWN)
-	{
-		showConfiguration = !showConfiguration;
-	}
-
-	if (App->input->GetKey(SDL_SCANCODE_2) == KeyState::KEY_DOWN)
-	{
-		showHierarchy = !showHierarchy;
-	}
-
-	if (App->input->GetKey(SDL_SCANCODE_3) == KeyState::KEY_DOWN)
-	{
-		showInspector = !showInspector;
-	}
-
-	if (App->input->GetKey(SDL_SCANCODE_4) == KeyState::KEY_DOWN)
-	{
-		showConsole = !showConsole;
-	}
-
-	if (App->input->GetKey(SDL_SCANCODE_8) == KeyState::KEY_DOWN)
-	{
-		showImguiDemo = !showImguiDemo;
-	}
-
-	if (App->input->GetKey(SDL_SCANCODE_9) == KeyState::KEY_DOWN)
-	{
-		showAboutPopup = !showAboutPopup;
-	}
-
 	if (App->input->GetKey(SDL_SCANCODE_ESCAPE) == KeyState::KEY_DOWN)
 	{
 		if (showAboutPopup || showLoadFilePopup)
@@ -242,11 +212,36 @@ void M_Editor::EditorShortcuts()
 
 	if (App->input->GetKey(SDL_SCANCODE_LCTRL) == KeyState::KEY_REPEAT)
 	{
+		if (App->input->GetKey(SDL_SCANCODE_1) == KeyState::KEY_DOWN)
+		{
+			showConfiguration = !showConfiguration;
+		}
+		if (App->input->GetKey(SDL_SCANCODE_2) == KeyState::KEY_DOWN)
+		{
+			showHierarchy = !showHierarchy;
+		}
+		if (App->input->GetKey(SDL_SCANCODE_3) == KeyState::KEY_DOWN)
+		{
+			showInspector = !showInspector;
+		}
+		if (App->input->GetKey(SDL_SCANCODE_4) == KeyState::KEY_DOWN)
+		{
+			showConsole = !showConsole;
+		}
+		if (App->input->GetKey(SDL_SCANCODE_8) == KeyState::KEY_DOWN)
+		{
+			showImguiDemo = !showImguiDemo;
+		}
+		if (App->input->GetKey(SDL_SCANCODE_9) == KeyState::KEY_DOWN)
+		{
+			showAboutPopup = !showAboutPopup;
+		}
+		
+
 		if (App->input->GetKey(SDL_SCANCODE_S) == KeyState::KEY_DOWN)
 		{
 			App->scene->SaveScene();
 		}
-
 		if (App->input->GetKey(SDL_SCANCODE_O) == KeyState::KEY_DOWN)
 		{
 			showLoadFilePopup = true;

@@ -5,7 +5,7 @@
 
 #include "E_Toolbar.h"
 
-E_Toolbar::E_Toolbar() : EditorPanel("Toolbar"), playedOnce(false)
+E_Toolbar::E_Toolbar() : EditorPanel("Toolbar")
 {
 
 }
@@ -51,44 +51,54 @@ bool E_Toolbar::CleanUp()
 
 void E_Toolbar::PlayAndStopButtons()
 {
-	if (ImGui::Button("Play"))
+	if (!App->play)
 	{
-		App->editor->SaveSceneThroughEditor("PlayAutosave");
-
-		Time::Game::Play();
-
-		playedOnce = true;																			// Quickfix to avoid having conflicts between stop and pause.
-		App->play	= true;
-		App->pause	= false;
-	}
-
-	ImGui::SameLine();
-
-	if (ImGui::Button("Stop"))
-	{
-		if (!playedOnce)
+		if (ImGui::Button("Play"))
 		{
-			LOG("[ERROR] Play&Stop: Cannot Stop something that has not started yet!");
-			return;
+			App->editor->SaveSceneThroughEditor("PlayAutosave");
+
+			Time::Game::Play();
+
+			App->play = true;
+			App->pause = false;
 		}
-		
-		App->editor->LoadFileThroughEditor("Assets/Scenes/PlayAutosave.json");
+	}
+	else
+	{
+		if (ImGui::Button("Stop"))
+		{
+			App->editor->LoadFileThroughEditor("Assets/Scenes/PlayAutosave.json");
 
-		Time::Game::Stop();
+			Time::Game::Stop();
 
-		App->play	= false;
-		App->pause	= false;
+			App->play = false;
+			App->pause = false;
+		}
 	}
 }
 
 void E_Toolbar::PauseAndStepButtons()
 {
-	if (ImGui::Button("Pause"))
+	if (!App->pause)
 	{
-		Time::Game::Pause();
+		if (ImGui::Button("Pause"))
+		{
+			if (App->play)
+			{
+				Time::Game::Pause();
 
-		App->pause	= true;
-		App->play	= false;
+				App->pause = true;
+			}
+		}
+	}
+	else
+	{
+		if (ImGui::Button("Resume"))
+		{
+			Time::Game::Play();
+
+			App->pause = false;
+		}
 	}
 
 	ImGui::SameLine();

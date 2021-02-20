@@ -101,7 +101,7 @@ UpdateStatus M_Scene::Update(float dt)
 		C_Animator* rootAnimator = animationRoot->GetComponent<C_Animator>();
 		if (rootAnimator != nullptr)
 		{
-			if (App->play)
+			if (App->play && !App->pause)
 			{
 				if (App->input->GetKey(SDL_SCANCODE_KP_1) == KeyState::KEY_DOWN)
 				{
