@@ -105,17 +105,17 @@ public:																									// --- COMPONENT GETTERS AND SETTERS
 		ComponentType type = T::GetType();
 		switch (type)
 		{
-		case ComponentType::TRANSFORM:			{ return "Transform"; }		break;
-		case ComponentType::MESH:				{ return "Mesh"; }			break;
-		case ComponentType::MATERIAL:			{ return "Material"; }		break;
-		case ComponentType::LIGHT:				{ return "Light"; }			break;
-		case ComponentType::CAMERA:				{ return "Camera"; }		break;
-		case ComponentType::ANIMATOR:			{ return "Animator"; }		break;
-		case ComponentType::ANIMATION:			{ return "Animation"; }		break;
-		case ComponentType::RIGIDBODY:			{ return "RigidBody"; }		break;
-		case ComponentType::BOX_COLLIDER:		{ return "Box Collider"; }	break;
-		case ComponentType::SPHERE_COLLIDER:	{ return "RigidBody"; }		break;
-		case ComponentType::CAPSULE_COLLIDER:	{ return "RigidBody"; }		break;
+		case ComponentType::TRANSFORM:			{ return "Transform"; }			break;
+		case ComponentType::MESH:				{ return "Mesh"; }				break;
+		case ComponentType::MATERIAL:			{ return "Material"; }			break;
+		case ComponentType::LIGHT:				{ return "Light"; }				break;
+		case ComponentType::CAMERA:				{ return "Camera"; }			break;
+		case ComponentType::ANIMATOR:			{ return "Animator"; }			break;
+		case ComponentType::ANIMATION:			{ return "Animation"; }			break;
+		case ComponentType::RIGIDBODY:			{ return "RigidBody"; }			break;
+		case ComponentType::BOX_COLLIDER:		{ return "Box Collider"; }		break;
+		case ComponentType::SPHERE_COLLIDER:	{ return "Sphere Collider"; }	break;
+		case ComponentType::CAPSULE_COLLIDER:	{ return "Capsule Collider"; }	break;
 		}
 
 		return "NONE";

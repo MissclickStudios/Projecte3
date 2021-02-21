@@ -22,7 +22,9 @@
 #include "C_Animator.h"
 #include "C_Animation.h"
 #include "C_RigidBody.h"
-#include "C_Collider.h"
+#include "C_BoxCollider.h"
+#include "C_SphereCollider.h"
+#include "C_CapsuleCollider.h"
 
 #include "E_Inspector.h"
 
@@ -156,17 +158,17 @@ void E_Inspector::DrawComponents(GameObject* selectedGameObject)
 		ComponentType type = component->GetType();	
 		switch (type)
 		{
-		case ComponentType::TRANSFORM:			{ DrawTransformComponent((C_Transform*)component); }		break;
-		case ComponentType::MESH:				{ DrawMeshComponent((C_Mesh*)component); }					break;
-		case ComponentType::MATERIAL:			{ DrawMaterialComponent((C_Material*)component); }			break;
-		case ComponentType::LIGHT:				{ DrawLightComponent((C_Light*)component); }				break;
-		case ComponentType::CAMERA:				{ DrawCameraComponent((C_Camera*)component); }				break;
-		case ComponentType::ANIMATOR:			{ DrawAnimatorComponent((C_Animator*)component); }			break;
-		case ComponentType::ANIMATION:			{ DrawAnimationComponent((C_Animation*)component); }		break;
-		case ComponentType::RIGIDBODY:			{ DrawRigidBodyComponent((C_RigidBody*)component); }		break;
-		case ComponentType::BOX_COLLIDER:		{ DrawBoxColliderComponent((C_Collider*)component); }		break;
-		case ComponentType::SPHERE_COLLIDER:	{ DrawSphereColliderComponent((C_Collider*)component); }	break;
-		case ComponentType::CAPSULE_COLLIDER:	{ DrawCapsuleColliderComponent((C_Collider*)component); }	break;
+		case ComponentType::TRANSFORM:			{ DrawTransformComponent((C_Transform*)component); }				break;
+		case ComponentType::MESH:				{ DrawMeshComponent((C_Mesh*)component); }							break;
+		case ComponentType::MATERIAL:			{ DrawMaterialComponent((C_Material*)component); }					break;
+		case ComponentType::LIGHT:				{ DrawLightComponent((C_Light*)component); }						break;
+		case ComponentType::CAMERA:				{ DrawCameraComponent((C_Camera*)component); }						break;
+		case ComponentType::ANIMATOR:			{ DrawAnimatorComponent((C_Animator*)component); }					break;
+		case ComponentType::ANIMATION:			{ DrawAnimationComponent((C_Animation*)component); }				break;
+		case ComponentType::RIGIDBODY:			{ DrawRigidBodyComponent((C_RigidBody*)component); }				break;
+		case ComponentType::BOX_COLLIDER:		{ DrawBoxColliderComponent((C_BoxCollider*)component); }			break;
+		case ComponentType::SPHERE_COLLIDER:	{ DrawSphereColliderComponent((C_SphereCollider*)component); }		break;
+		case ComponentType::CAPSULE_COLLIDER:	{ DrawCapsuleColliderComponent((C_CapsuleCollider*)component); }	break;
 		}
 
 		if (type == ComponentType::NONE)
@@ -880,7 +882,7 @@ void E_Inspector::DrawRigidBodyComponent(C_RigidBody* cRigidBody)
 	}
 }
 
-void E_Inspector::DrawBoxColliderComponent(C_Collider* cCollider)
+void E_Inspector::DrawBoxColliderComponent(C_BoxCollider* cCollider)
 {
 	bool show = true;
 	if (ImGui::CollapsingHeader("Box Collider", &show, ImGuiTreeNodeFlags_DefaultOpen))
@@ -918,7 +920,7 @@ void E_Inspector::DrawBoxColliderComponent(C_Collider* cCollider)
 	}
 }
 
-void E_Inspector::DrawSphereColliderComponent(C_Collider* cCollider)
+void E_Inspector::DrawSphereColliderComponent(C_SphereCollider* cCollider)
 {
 	bool show = true;
 	if (ImGui::CollapsingHeader("Sphere Collider", &show, ImGuiTreeNodeFlags_DefaultOpen))
@@ -954,7 +956,7 @@ void E_Inspector::DrawSphereColliderComponent(C_Collider* cCollider)
 	}
 }
 
-void E_Inspector::DrawCapsuleColliderComponent(C_Collider* cCollider)
+void E_Inspector::DrawCapsuleColliderComponent(C_CapsuleCollider* cCollider)
 {
 	bool show = true;
 	if (ImGui::CollapsingHeader("Capsule Collider", &show, ImGuiTreeNodeFlags_DefaultOpen))
