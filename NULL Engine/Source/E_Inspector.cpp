@@ -760,7 +760,27 @@ void E_Inspector::DrawRigidBodyComponent(C_RigidBody* cRigidBody)
 
 	if (cRigidBody->IsStatic())
 	{
-		ImGui::CollapsingHeader("Static RigidBody", ImGuiTreeNodeFlags_Leaf);
+		if (ImGui::CollapsingHeader("Static RigidBody", &show, ImGuiTreeNodeFlags_Leaf))
+		{
+			bool isActive = cRigidBody->IsActive();
+			if (ImGui::Checkbox("RigidBody Is Active", &isActive))
+				cRigidBody->SetIsActive(isActive);
+
+			ImGui::SameLine();
+
+			if (ImGui::Button("Make Dynamic"))
+				cRigidBody->MakeDynamic();
+
+			ImGui::Separator();
+
+			if (!show)
+			{
+				componentToDelete = cRigidBody;
+				showDeleteComponentPopup = true;
+			}
+
+			ImGui::Separator();
+		}
 		return;
 	}
 
@@ -769,8 +789,13 @@ void E_Inspector::DrawRigidBodyComponent(C_RigidBody* cRigidBody)
 		if (cRigidBody != nullptr)
 		{
 			bool isActive = cRigidBody->IsActive();
-			if (ImGui::Checkbox("RigidBody Is Active", &isActive)) 
+			if (ImGui::Checkbox("RigidBody Is Active", &isActive))
 				cRigidBody->SetIsActive(isActive);
+
+			ImGui::SameLine();
+
+			if (ImGui::Button("Make Static"))
+				cRigidBody->MakeStatic();
 
 			ImGui::Separator();
 
@@ -858,15 +883,29 @@ void E_Inspector::DrawRigidBodyComponent(C_RigidBody* cRigidBody)
 void E_Inspector::DrawBoxColliderComponent(C_Collider* cCollider)
 {
 	bool show = true;
-	if (ImGui::CollapsingHeader("Box Collider##", &show, ImGuiTreeNodeFlags_DefaultOpen))
+	if (ImGui::CollapsingHeader("Box Collider", &show, ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		if (cCollider != nullptr)
 		{
 			bool isActive = cCollider->IsActive();
-			if (ImGui::Checkbox("Collider is Active", &isActive)) { cCollider->SetIsActive(isActive); }
+			if (ImGui::Checkbox("Collider is Active##1", &isActive))
+				cCollider->SetIsActive(isActive);
 
 			ImGui::Separator();
 
+			bool isTrigger = cCollider->IsTrigger();
+			if (ImGui::Checkbox("Is Trigger##1", &isTrigger))
+				cCollider->SetTrigger(isTrigger);
+
+			float3 size = cCollider->Size();
+			float s[3] = { size.x, size.y, size.z };
+			if (ImGui::InputFloat3("Size##1", s, 4, ImGuiInputTextFlags_EnterReturnsTrue))
+				cCollider->SetSize(s[0], s[1], s[2]);
+
+			float3 center = cCollider->GetCenter();
+			float c[3] = { center.x, center.y, center.z };
+			if (ImGui::InputFloat3("Center##1", c, 4, ImGuiInputTextFlags_EnterReturnsTrue))
+				cCollider->SetCenter(c[0], c[1], c[2]);
 		}
 
 		if (!show)
@@ -882,15 +921,27 @@ void E_Inspector::DrawBoxColliderComponent(C_Collider* cCollider)
 void E_Inspector::DrawSphereColliderComponent(C_Collider* cCollider)
 {
 	bool show = true;
-	if (ImGui::CollapsingHeader("Sphere Collider##", &show, ImGuiTreeNodeFlags_DefaultOpen))
+	if (ImGui::CollapsingHeader("Sphere Collider", &show, ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		if (cCollider != nullptr)
 		{
 			bool isActive = cCollider->IsActive();
-			if (ImGui::Checkbox("Collider is Active##", &isActive)) { cCollider->SetIsActive(isActive); }
+			if (ImGui::Checkbox("Collider is Active##2", &isActive)) { cCollider->SetIsActive(isActive); }
 
 			ImGui::Separator();
 
+			bool isTrigger = cCollider->IsTrigger();
+			if (ImGui::Checkbox("Is Trigger##2", &isTrigger))
+				cCollider->SetTrigger(isTrigger);
+
+			float radius = cCollider->Radius();
+			if (ImGui::InputFloat("Radius##2", &radius, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
+				cCollider->SetRadius(radius);
+
+			float3 center = cCollider->GetCenter();
+			float c[3] = { center.x, center.y, center.z };
+			if (ImGui::InputFloat3("Center##2", c, 4, ImGuiInputTextFlags_EnterReturnsTrue))
+				cCollider->SetCenter(c[0], c[1], c[2]);
 		}
 
 		if (!show)
@@ -906,15 +957,31 @@ void E_Inspector::DrawSphereColliderComponent(C_Collider* cCollider)
 void E_Inspector::DrawCapsuleColliderComponent(C_Collider* cCollider)
 {
 	bool show = true;
-	if (ImGui::CollapsingHeader("Capsule Collider##", &show, ImGuiTreeNodeFlags_DefaultOpen))
+	if (ImGui::CollapsingHeader("Capsule Collider", &show, ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		if (cCollider != nullptr)
 		{
 			bool isActive = cCollider->IsActive();
-			if (ImGui::Checkbox("Collider is Active###", &isActive)) { cCollider->SetIsActive(isActive); }
+			if (ImGui::Checkbox("Collider is Active##3", &isActive)) { cCollider->SetIsActive(isActive); }
 
 			ImGui::Separator();
 
+			bool isTrigger = cCollider->IsTrigger();
+			if (ImGui::Checkbox("Is Trigger##3", &isTrigger))
+				cCollider->SetTrigger(isTrigger);
+
+			float radius = cCollider->Radius();
+			if (ImGui::InputFloat("Radius##3", &radius, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
+				cCollider->SetRadius(radius);
+
+			float height = cCollider->Height();
+			if (ImGui::InputFloat("Height##3", &height, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
+				cCollider->SetHeight(height);
+
+			float3 center = cCollider->GetCenter();
+			float c[3] = { center.x, center.y, center.z };
+			if (ImGui::InputFloat3("Center##3", c, 4, ImGuiInputTextFlags_EnterReturnsTrue))
+				cCollider->SetCenter(c[0], c[1], c[2]);
 		}
 
 		if (!show)

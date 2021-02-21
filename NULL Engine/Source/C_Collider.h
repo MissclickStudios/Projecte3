@@ -25,6 +25,13 @@ namespace physx
 	//typedef uint16_t PxU16;
 }
 
+enum class ColliderUpdateType
+{
+	NONE = 0,
+	STATE = 1,
+	SHAPE = 2,
+	ALL = 3
+};
 
 class C_Collider : public Component
 {
@@ -43,29 +50,38 @@ public:
 
 	static inline ComponentType GetType() { return ComponentType::RIGIDBODY; }			// This is needed to be able to use templates for functions such as GetComponent<>();
 
-	void CreateCollider(ColliderType type, bool createAgain = false);
+	const ColliderType GetColliderType() const { return colType; }
 
-	void DisplayComponentMenu();
+	bool IsTrigger() const { return isTrigger; }
+	void SetTrigger(bool enable) { isTrigger = enable; ToUpdate(ColliderUpdateType::STATE); }
 
-	ColliderType GetColliderType() { return colType; }
+	const float3	Size() const { return colliderSize; }
+	void			SetSize(float x, float y, float z) { colliderSize = { x,y,z }; ToUpdate(ColliderUpdateType::SHAPE);}
+	const float3	GetCenter() const { return centerPosition; }
+	void			SetCenter(float x, float y, float z) { centerPosition = { x,y,z }; ToUpdate(ColliderUpdateType::SHAPE); }
 
-	float3 centerPosition = float3::zero;
-
-	bool IsTrigger() { return isTrigger; }
-	void SetTrigger(bool enable) { isTrigger = enable; }
+	const float		Radius() const { return radius; }
+	void			SetRadius(float r) { if (colType != ColliderType::BOX) { radius = r; ToUpdate(ColliderUpdateType::SHAPE); } }
+	const float		Height() const { return height; }
+	void			SetHeight(float h) { if (colType == ColliderType::CAPSULE) { height = h; ToUpdate(ColliderUpdateType::SHAPE); } }
 
 private:
 
 	ComponentType GetComponentType(ColliderType type);
+	void CreateCollider(ColliderType type);
 
 	ColliderType colType = ColliderType::NONE;
 
 	physx::PxShape* shape = nullptr;
-	float3 colliderSize = float3(10, 10, 10);
 
+	bool isTrigger = false;
+	float3 colliderSize = float3(10, 10, 10);
+	float3 centerPosition = float3::zero;
 	float radius = 1.0f;
 	float height = 2.0f;
-	bool isTrigger = false;
+
+	ColliderUpdateType toUpdate = ColliderUpdateType::NONE;
+	void ToUpdate(ColliderUpdateType update);
 };
 
 #endif //__C_COLLIDERCOMPONENT_H__

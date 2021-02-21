@@ -14,20 +14,60 @@ C_Collider::C_Collider(GameObject* owner, ColliderType type) : Component(owner, 
 
 C_Collider::~C_Collider()
 {
-	if (GetOwner()->GetComponent<C_RigidBody>() && GetOwner()->GetComponent<C_RigidBody>()->IsStatic())
-		GetOwner()->DeleteComponent(GetOwner()->GetComponent<C_RigidBody>());
-
-	if (shape)
-		shape->release();
 }
 
 bool C_Collider::Update()
 {
+	if (toUpdate != ColliderUpdateType::NONE)
+	{
+		GetOwner()->GetComponent<C_RigidBody>()->GetRigidBody()->detachShape(*shape);
+
+		if (toUpdate == ColliderUpdateType::STATE || toUpdate == ColliderUpdateType::ALL)
+		{
+			shape->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE, !isTrigger);
+			shape->setFlag(physx::PxShapeFlag::eTRIGGER_SHAPE, isTrigger);
+		}
+		if (toUpdate == ColliderUpdateType::SHAPE || toUpdate == ColliderUpdateType::ALL)
+		{
+			shape->release();
+
+			switch (colType)
+			{
+			case ColliderType::BOX:
+			{
+				physx::PxBoxGeometry boxGeometry = physx::PxBoxGeometry(physx::PxVec3(colliderSize.x / 2, colliderSize.y / 2, colliderSize.z / 2));
+				shape = App->physics->physics->createShape(boxGeometry, *App->physics->material);
+				break;
+			}
+			case ColliderType::SPHERE:
+			{
+				physx::PxSphereGeometry SphereGeometry(radius);
+				shape = App->physics->physics->createShape(SphereGeometry, *App->physics->material);
+				break;
+			}
+			case ColliderType::CAPSULE:
+			{
+				physx::PxCapsuleGeometry CapsuleGeometry(radius, height);
+				shape = App->physics->physics->createShape(CapsuleGeometry, *App->physics->material);
+				break;
+			}
+			}
+			physx::PxVec3 p = physx::PxVec3(centerPosition.x, centerPosition.y, centerPosition.z);
+			shape->setLocalPose(physx::PxTransform(p));
+		}
+		toUpdate = ColliderUpdateType::NONE;
+
+		GetOwner()->GetComponent<C_RigidBody>()->GetRigidBody()->attachShape(*shape);
+	}
+
 	return true;
 }
 
 bool C_Collider::CleanUp()
 {
+	if (shape)
+		shape->release();
+
 	return true;
 }
 
@@ -44,9 +84,14 @@ bool C_Collider::LoadState(ParsonNode& root)
 void C_Collider::SetIsActive(bool setTo)
 {
 	isActive = setTo;
+
+	if(isActive)
+		GetOwner()->GetComponent<C_RigidBody>()->GetRigidBody()->attachShape(*shape);
+	else
+		GetOwner()->GetComponent<C_RigidBody>()->GetRigidBody()->detachShape(*shape);
 }
 
-void C_Collider::CreateCollider(ColliderType type, bool createAgain)
+void C_Collider::CreateCollider(ColliderType type)
 {
 	if (shape)
 	{
@@ -100,8 +145,12 @@ void C_Collider::CreateCollider(ColliderType type, bool createAgain)
 	App->physics->AddActor(GetOwner()->GetComponent<C_RigidBody>()->GetRigidBody());
 }
 
-void C_Collider::DisplayComponentMenu()
+void C_Collider::ToUpdate(ColliderUpdateType update)
 {
+	if (toUpdate == ColliderUpdateType::NONE) 
+		toUpdate = update;
+	else  
+		toUpdate = ColliderUpdateType::ALL;
 }
 
 ComponentType C_Collider::GetComponentType(ColliderType type)

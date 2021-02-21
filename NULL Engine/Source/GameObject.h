@@ -89,10 +89,11 @@ public:																									// --- COMPONENT GETTERS AND SETTERS
 
 		for (uint i = 0; i < components.size(); ++i)
 		{
-			if (components[i]->GetType() == type)
-			{
-				return (T*)components[i];
-			}
+			if(components[i])
+				if (components[i]->GetType() == type)
+				{
+					return (T*)components[i];
+				}
 		}
 
 		return nullptr;
