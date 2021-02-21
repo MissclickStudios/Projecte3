@@ -280,8 +280,8 @@ bool M_Editor::RenderEditorPanels() const
 	ImGuiIO& io = ImGui::GetIO();
 
 	ImGui::Render();
-	glViewport(0, 0, (int)io.DisplaySize.x, (int)io.DisplaySize.y);
-	glClearColor(clearColor.x, clearColor.y, clearColor.z, clearColor.w);
+	//glViewport(0, 0, (int)io.DisplaySize.x, (int)io.DisplaySize.y);
+	//glClearColor(clearColor.x, clearColor.y, clearColor.z, clearColor.w);
 	//glClear(GL_COLOR_BUFFER_BIT);
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
@@ -328,6 +328,8 @@ bool M_Editor::InitializeImGui() const
 
 	ImGui_ImplSDL2_InitForOpenGL(App->window->GetWindow(), App->renderer->context);				// Setting up Platform/Renderer bindings
 	ImGui_ImplOpenGL3_Init(0);																	// -------------------------------------
+
+	glClearColor(clearColor.x, clearColor.y, clearColor.z, clearColor.w);
 
 	return ret;
 }
