@@ -18,6 +18,7 @@
 #include "C_Camera.h"
 #include "C_Animator.h"
 #include "C_Animation.h"
+#include "C_Canvas.h"
 
 #include "GameObject.h"
 
@@ -630,6 +631,7 @@ Component* GameObject::CreateComponent(ComponentType type)
 	case ComponentType::CAMERA:	{ component = new C_Camera(this); }		break;
 	case ComponentType::ANIMATOR:	{ component = new C_Animator(this); }	break;
 	case ComponentType::ANIMATION: { component = new C_Animation(this); }	break;
+	case ComponentType::CANVAS: {component = new C_Canvas(this); } break;
 	}
 
 	if (component != nullptr)

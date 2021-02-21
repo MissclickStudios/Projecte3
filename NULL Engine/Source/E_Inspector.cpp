@@ -21,6 +21,7 @@
 #include "C_Camera.h"
 #include "C_Animator.h"
 #include "C_Animation.h"
+#include "C_Canvas.h"
 
 #include "E_Inspector.h"
 
@@ -161,6 +162,7 @@ void E_Inspector::DrawComponents(GameObject* selectedGameObject)
 		case ComponentType::CAMERA:	{ DrawCameraComponent((C_Camera*)component); }			break;
 		case ComponentType::ANIMATOR:	{ DrawAnimatorComponent((C_Animator*)component); }		break;
 		case ComponentType::ANIMATION: { DrawAnimationComponent((C_Animation*)component); }	break;
+		case ComponentType::CANVAS: { DrawCanvasComponent((C_Canvas*)component); }	break;
 		}
 
 		if (type == ComponentType::NONE)
@@ -748,9 +750,47 @@ void E_Inspector::DrawAnimationComponent(C_Animation* cAnimation)
 	}
 }
 
+void E_Inspector::DrawCanvasComponent(C_Canvas* cCanvas)
+{
+	static bool show = true;
+	if (ImGui::CollapsingHeader("Canvas", &show, ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		if (cCanvas != nullptr)
+		{
+			bool isActive = cCanvas->IsActive();
+			if (ImGui::Checkbox("Is Active", &isActive)) { cCanvas->SetIsActive(isActive); }
+
+			ImGui::Separator();
+
+			ImGui::TextColored(Cyan.C_Array(), "Canvas Settings:");
+
+			ImGui::Separator();
+
+			// --- RECT ---
+			ImGui::Text("Rect");
+
+			ImGui::SameLine(100.0f);
+
+			float2 size = { cCanvas->GetRect().w, cCanvas->GetRect().h };
+			if (ImGui::DragFloat2("Rect Size", (float*)&size, 0.05f, 0.0f, 0.0f, "%.3f", NULL))
+			{
+				cCanvas->SetSize(size);
+			}
+		}
+
+		if (!show)
+		{
+			componentToDelete = cCanvas;
+			showDeleteComponentPopup = true;
+		}
+
+		ImGui::Separator();
+	}
+}
+
 void E_Inspector::AddComponentCombo(GameObject* selectedGameObject)
 {
-	ImGui::Combo("##", &componentType, "Add Component\0Transform\0Mesh\0Material\0Light\0Camera\0Animator\0Animation");
+	ImGui::Combo("##", &componentType, "Add Component\0Transform\0Mesh\0Material\0Light\0Camera\0Animator\0Animation\0Canvas");
 
 	ImGui::SameLine();
 
