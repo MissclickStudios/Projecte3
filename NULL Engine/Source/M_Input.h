@@ -47,6 +47,8 @@ public:
 	int				GetMouseXWheel			() const;
 	int				GetMouseYWheel			() const;
 
+	bool			WindowSizeWasManipulated(Uint8 windowEvent) const;										// Uint8 is an SDL typedef for unsigned char.
+
 private:
 	KeyState*		keyboard;
 	KeyState		mouseButtons[MAX_MOUSE_BUTTONS];
