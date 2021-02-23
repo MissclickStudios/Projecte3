@@ -9,6 +9,14 @@ enum class UIElementType
 	BUTTON
 };
 
+enum class UIElementState
+{
+	NONE,
+	HOVERED,
+	PRESSED,
+	RELEASED,
+};
+
 class UIElement
 {
 public:
@@ -29,6 +37,9 @@ private:
 
 	UIElementType type;
 	C_Canvas* owner;
+	bool isInvisible;
+	bool isDraggable;
+
 };
 
 #endif // !__UIELEMENT_H__
