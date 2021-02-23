@@ -16,6 +16,7 @@
 #include "M_Camera3D.h"
 #include "M_FileSystem.h"
 #include "M_ResourceManager.h"
+#include "M_UISystem.h"
 
 #include "Application.h"
 
@@ -32,7 +33,8 @@ editor			(nullptr),
 renderer		(nullptr),
 camera			(nullptr),
 fileSystem		(nullptr),
-resourceManager(nullptr)
+resourceManager	(nullptr),
+uiSystem		(nullptr)
 {
 	//PERF_TIMER_START(perf_timer);
 	
@@ -45,6 +47,7 @@ resourceManager(nullptr)
 	editor				= new M_Editor();
 	fileSystem			= new M_FileSystem();
 	resourceManager	= new M_ResourceManager();
+	uiSystem = new M_UISystem();
 
 	// The order of calls is very important!
 	// Modules will Init() Start() and Update in this order
@@ -56,6 +59,7 @@ resourceManager(nullptr)
 	AddModule(input);
 	AddModule(fileSystem);
 	AddModule(resourceManager);
+	AddModule(uiSystem);
 
 	// Scenes
 	AddModule(scene);
