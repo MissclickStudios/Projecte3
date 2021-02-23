@@ -1,5 +1,6 @@
 #include "Profiler.h"													
 #include "OpenGL.h"														
+#include "Time.h"
 
 #include "Macros.h"														
 #include "Log.h"														
@@ -18,7 +19,8 @@
 
 #include "R_Mesh.h"														
 #include "R_Material.h"													
-#include "R_Texture.h"													
+#include "R_Texture.h"
+#include "R_Shader.h"
 
 #include "I_Textures.h"													
 
@@ -30,6 +32,9 @@
 #include "M_Renderer3D.h"												
 
 #include "MemoryManager.h"
+//////////////////////////////////////////////////
+#include "I_Shaders.h"							//TODO: erase
+/////////////////////////////////////////////////
 
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */	
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */	
@@ -1197,12 +1202,12 @@ void MeshRenderer::Render()
 	}
 
 	//glMatrixMode(GL_MODELVIEW);
-	glPushMatrix();
-	glMultMatrixf((GLfloat*)&transform.Transposed());												// OpenGL requires that the 4x4 matrices are column-major instead of row-major.
+	//glPushMatrix();
+	//glMultMatrixf((GLfloat*)&transform.Transposed());												// OpenGL requires that the 4x4 matrices are column-major instead of row-major.
 
 	ApplyDebugParameters();																			// Enable Wireframe Mode for this specific mesh, etc.
 	ApplyTextureAndMaterial();																		// Apply resource texture or default texture, mesh color...
-
+	ApplyShader();
 	//glEnableClientState(GL_VERTEX_ARRAY);															// Enables the vertex array for writing and to be used during rendering.
 	//glEnableClientState(GL_NORMAL_ARRAY);															// Enables the normal array for writing and to be used during rendering.
 	//glEnableClientState(GL_TEXTURE_COORD_ARRAY);													// Enables the texture coordinate array for writing and to be used during rendering.
@@ -1232,7 +1237,7 @@ void MeshRenderer::Render()
 	
 	ClearTextureAndMaterial();																		// Clear the specifications applied in ApplyTextureAndMaterial().
 	ClearDebugParameters();																			// Clear the specifications applied in ApplyDebugParameters().
-
+	ClearShader();
 	// --- DEBUG DRAW ---
 	if (rMesh->drawVertexNormals || App->renderer->GetRenderVertexNormals())
 	{
@@ -1244,7 +1249,7 @@ void MeshRenderer::Render()
 		RenderFaceNormals(rMesh);
 	}
 
-	glPopMatrix();
+	//glPopMatrix();
 }
 
 void MeshRenderer::RenderVertexNormals(const R_Mesh* rMesh)
@@ -1426,6 +1431,61 @@ void MeshRenderer::ClearTextureAndMaterial()
 		}
 	}
 }
+
+void MeshRenderer::ApplyShader()
+{
+	uint32 shaderProgram = 0;
+	if (cMaterial != nullptr)
+	{
+		//if(cMaterial->GetShader()) shaderProgram = cMaterial->GetShader()->shaderProgramID;
+
+		cMaterial->GetShader() ? shaderProgram = cMaterial->GetShader()->shaderProgramID : shaderProgram;
+
+		shaderProgram ? shaderProgram : shaderProgram = SetDefaultShader(cMaterial);
+
+		glUseProgram(shaderProgram);
+
+		cMaterial->GetTexture() ? cMaterial->GetShader()->SetUniform1i("hasTexture", (GLint)true) : cMaterial->GetShader()->SetUniform1i("hasTexture", (GLint)false);
+
+		if (shaderProgram != 0)
+		{
+			cMaterial->GetShader()->SetUniformVec4f("inColor", (GLfloat*)&cMaterial->GetMaterialColour());
+
+			cMaterial->GetShader()->SetUniformMatrix4("modelMatrix", transform.Transposed().ptr());
+
+			cMaterial->GetShader()->SetUniformMatrix4("viewMatrix", App->camera->GetCurrentCamera()->GetOGLViewMatrix());
+
+			cMaterial->GetShader()->SetUniformMatrix4("projectionMatrix", App->camera->GetCurrentCamera()->GetOGLProjectionMatrix());
+
+			cMaterial->GetShader()->SetUniform1f("time", Time::Game::GetTimeSinceStart());
+
+			cMaterial->GetShader()->SetUniform1i("skybox", 11);
+
+			cMaterial->GetShader()->SetUniformVec3f("cameraPosition", (GLfloat*)&App->camera->GetCurrentCamera()->GetFrustum().Pos());
+
+			Importer::Shaders::SetShaderUniforms(cMaterial->GetShader());
+		}
+	}
+}
+
+uint32 MeshRenderer::SetDefaultShader(C_Material* cMaterial)
+{
+	R_Shader* rShader = nullptr;
+
+	rShader = App->resourceManager->GetDefaultShader();	
+
+	cMaterial->SetShader(rShader);
+
+	return cMaterial->GetShaderProgramID();
+}
+
+void MeshRenderer::ClearShader()
+{
+	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+	glUseProgram(0);
+}
+
+
 
 // --- CUBOID RENDERER METHODS
 CuboidRenderer::CuboidRenderer(const float3* vertices, const Color& color, const float& edgeWidth) :

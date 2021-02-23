@@ -1,3 +1,7 @@
+#include "VariableTypedefs.h"
+
+#include "JSONParser.h"
+
 #include "R_Shader.h"
 
 R_Shader::R_Shader() : Resource(ResourceType::SHADER)
@@ -7,6 +11,24 @@ R_Shader::R_Shader() : Resource(ResourceType::SHADER)
 R_Shader::~R_Shader()
 {
 
+}
+
+bool R_Shader::SaveMeta(ParsonNode& metaRoot) const
+{
+	bool ret = true;
+
+	ParsonArray contained_array = metaRoot.SetArray("ContainedResources");
+
+	return ret;
+}
+
+bool R_Shader::LoadMeta(const ParsonNode& metaRoot)
+{
+	bool ret = true;
+
+
+
+	return ret;
 }
 
 void R_Shader::SetUniformMatrix4(std::string name, GLfloat* value)

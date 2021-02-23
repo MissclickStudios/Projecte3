@@ -71,6 +71,18 @@ bool R_Model::SaveMeta(ParsonNode& metaRoot) const
 			texture_node.SetString("Name", texture_name.c_str());
 			texture_node.SetString("LibraryPath", texture_path.c_str());
 		}
+		if (modelNodes[i].shaderUID != 0)
+		{
+			std::string shader_name = modelNodes[i].name + SHADERS_EXTENSION;
+			std::string shader_path = SHADERS_PATH + std::to_string(modelNodes[i].shaderUID) + SHADERS_EXTENSION;
+
+			ParsonNode texture_node = contained_array.SetNode(shader_name.c_str());
+
+			texture_node.SetNumber("UID", modelNodes[i].shaderUID);
+			texture_node.SetNumber("Type", (uint)ResourceType::SHADER);
+			texture_node.SetString("Name", shader_name.c_str());
+			texture_node.SetString("LibraryPath", shader_path.c_str());
+		}
 	}
 
 	std::map<uint32, std::string>::const_iterator item;
@@ -111,12 +123,13 @@ transform		(Transform()),
 meshUID			(0),
 materialUID		(0),
 textureUID		(0),
+shaderUID		(0),
 textureName		("[NONE]")
 {
 
 }
 
-ModelNode::ModelNode(const char* name, uint32 UID, uint32 parentUID, Transform transform, uint32 meshUID, uint32 materialUID, uint32 textureUID, std::string textureName) :
+ModelNode::ModelNode(const char* name, uint32 UID, uint32 parentUID, Transform transform, uint32 meshUID, uint32 materialUID, uint32 textureUID,uint32 shaderUID, std::string textureName) :
 name			(name),
 uid				(UID),
 parentUID		(parentUID),
@@ -124,6 +137,7 @@ transform		(transform),
 meshUID			(meshUID),
 materialUID		(materialUID),
 textureUID		(textureUID),
+shaderUID		(shaderUID),
 textureName		(textureName)
 {
 
@@ -150,6 +164,7 @@ bool ModelNode::Save(ParsonNode& root) const
 	root.SetNumber("MeshUID", meshUID);
 	root.SetNumber("MaterialUID", materialUID);
 	root.SetNumber("TextureUID", textureUID);
+	root.SetNumber("ShaderUID", shaderUID);
 
 	root.SetString("TextureName", textureName.c_str());
 
@@ -177,6 +192,7 @@ bool ModelNode::Load(const ParsonNode& root)
 	meshUID			= (uint32)root.GetNumber("MeshUID");
 	materialUID		= (uint32)root.GetNumber("MaterialUID");
 	textureUID		= (uint32)root.GetNumber("TextureUID");
+	shaderUID		= (uint32)root.GetNumber("ShaderUID");
 
 	textureName		= root.GetString("TextureName");
 

@@ -47,6 +47,9 @@ public:
 	R_Shader();
 	~R_Shader();
 
+	bool SaveMeta(ParsonNode& metaRoot) const override;
+	bool LoadMeta(const ParsonNode& metaRoot) override;
+
 	void		SetUniformMatrix4(std::string name, GLfloat* value);
 
 	void		SetUniformVec2f(std::string name, GLfloat* value);

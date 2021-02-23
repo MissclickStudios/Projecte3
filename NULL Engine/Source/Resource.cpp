@@ -174,6 +174,11 @@ void Resource::SetLibraryPathAndFile()
 		directory = SCENES_PATH;
 		extension = SCENES_EXTENSION;
 		break;
+
+	case ResourceType::SHADER:
+		directory = SHADERS_PATH;
+		extension = SHADERS_EXTENSION;
+		break;
 	}
 	
 	libraryPath = directory + file + extension;

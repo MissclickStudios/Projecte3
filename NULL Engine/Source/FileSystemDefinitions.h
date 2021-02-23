@@ -7,6 +7,7 @@
 #define ASSETS_MODELS_PATH		"Assets/Models/"
 #define ASSETS_SCENES_PATH		"Assets/Scenes/"
 #define ASSETS_TEXTURES_PATH	"Assets/Textures/"
+#define ASSETS_SHADERS_PATH		"Assets/Shaders/"
 
 #define ENGINE_PATH				"Engine/"
 #define ENGINE_DIRECTORY		"Engine"
@@ -25,7 +26,6 @@
 #define SCENES_PATH				"Library/Scenes/"
 #define SHADERS_PATH			"Library/Shaders/"
 #define TEXTURES_PATH			"Library/Textures/"
-#define SHADERS_PATH			"Library/Shaders/"
 
 // File Extensions ----------------------------------
 #define ANIMATIONS_EXTENSION	".neanimat"

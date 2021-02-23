@@ -10,6 +10,7 @@ class ParsonNode;
 class Resource;
 
 enum class ResourceType;
+class R_Shader;
 
 typedef unsigned int		uint;
 typedef unsigned __int32	uint32;
@@ -96,6 +97,7 @@ public:																												// --- RESOURCE METHODS ---
 	bool			DeallocateResource				(const uint32& uid);																	// 
 	bool			DeallocateResource				(Resource* resourceToDeallocate);														// FORCED DEALLOCATE
 	
+	R_Shader*		GetDefaultShader();
 private:
 	std::map<uint32, Resource*>		resources;																		// Resources currently in memory.
 	std::map<uint32, std::string>	library;																		// UID and Library Path string of all loaded resources.

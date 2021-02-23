@@ -225,8 +225,16 @@ void Importer::Shaders::SetShaderUniforms(R_Shader* shader)
 
 uint Importer::Shaders::Save(const R_Shader* shader, char** buffer)
 {
-	
-	ParsonNode parsonFile;
+	uint written = 0;
+
+	if (shader == nullptr)
+	{
+		LOG("[ERROR] Importer: Could not Save R_Shader* in Library! Error: Given R_Shader* was nullptr.");
+		return 0;
+	}
+
+
+	ParsonNode parsonFile = ParsonNode();
 	ParsonArray parsonArrray = parsonFile.SetArray("Uniforms");
 
 	for (uint i = 0; i < shader->uniforms.size(); i++)
@@ -247,9 +255,12 @@ uint Importer::Shaders::Save(const R_Shader* shader, char** buffer)
 		}
 	}
 
-	uint size = parsonFile.SerializeToBuffer(buffer);
+	
+	
+	std::string path = SHADERS_PATH + std::to_string(shader->GetUID()) + SHADERS_EXTENSION;
+	written = parsonFile.SerializeToFile(path.c_str(), buffer);
 
-	return size;
+	return written;
 }
 
 bool Importer::Shaders::Load(const char* buffer, R_Shader* shader, uint size)
@@ -289,5 +300,5 @@ void Importer::Shaders::Recompile(R_Shader* shader)
 	glDetachShader(shader->shaderProgramID, shader->fragmentID);
 	glDeleteProgram(shader->shaderProgramID);
 
-	Importer::Shaders::Import(shader->GetAssetsFile(), shader);
+	Importer::Shaders::Import(shader->GetAssetsPath(), shader);
 }
