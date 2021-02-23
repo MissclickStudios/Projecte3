@@ -15,6 +15,7 @@ bool C_Canvas::Update()
 {
 	bool ret = true;
 
+	//This will be world space only
 	if (IsActive())
 	{
 		glLineWidth(2.0f);
