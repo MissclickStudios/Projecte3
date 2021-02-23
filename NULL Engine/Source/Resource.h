@@ -21,6 +21,7 @@ enum class ResourceType
 	FOLDER,
 	ANIMATION,
 	SCENE,
+	PARTICLE_SYSTEM,
 	NONE
 };
 

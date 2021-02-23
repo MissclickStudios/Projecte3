@@ -15,7 +15,8 @@ enum class ComponentType
 	LIGHT,
 	CAMERA,
 	ANIMATOR,
-	ANIMATION
+	ANIMATION,
+	PARTICLE_SYSTEM,
 };
 
 class Component

@@ -18,7 +18,10 @@
     <ClCompile Include="Source\CurveEditor.cpp" />
     <ClCompile Include="Source\C_Animation.cpp" />
     <ClCompile Include="Source\C_Animator.cpp" />
+    <ClCompile Include="Source\C_ParticleSystem.cpp" />
     <ClCompile Include="Source\EasingFunctions.cpp" />
+    <ClCompile Include="Source\Emitter.cpp" />
+    <ClCompile Include="Source\EmitterInstance.cpp" />
     <ClCompile Include="Source\E_Resources.cpp" />
     <ClCompile Include="Source\E_Timeline.cpp" />
     <ClCompile Include="Source\Hourglass.cpp" />
@@ -127,6 +130,7 @@
     <ClCompile Include="Source\Random.cpp" />
     <ClCompile Include="Source\R_Animation.cpp" />
     <ClCompile Include="Source\R_Folder.cpp" />
+    <ClCompile Include="Source\R_ParticleSystem.cpp" />
     <ClCompile Include="Source\R_Scene.cpp" />
     <ClCompile Include="Source\R_Texture.cpp" />
     <ClCompile Include="Source\SoftwareInfo.cpp" />
@@ -144,7 +148,6 @@
     <ClCompile Include="Source\Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Particle.h" />
     <ClInclude Include="Source\AnimationClip.h" />
     <ClInclude Include="Source\AnimationSettings.h" />
     <ClInclude Include="Source\AnimatorClip.h" />
@@ -155,7 +158,10 @@
     <ClInclude Include="Source\CurveEditor.h" />
     <ClInclude Include="Source\C_Animation.h" />
     <ClInclude Include="Source\C_Animator.h" />
+    <ClInclude Include="Source\C_ParticleSystem.h" />
     <ClInclude Include="Source\EasingFunctions.h" />
+    <ClInclude Include="Source\Emitter.h" />
+    <ClInclude Include="Source\EmitterInstance.h" />
     <ClInclude Include="Source\E_Resources.h" />
     <ClInclude Include="Source\E_Timeline.h" />
     <ClInclude Include="Source\Hourglass.h" />
@@ -325,11 +331,13 @@
     <ClInclude Include="Source\M_Window.h" />
     <ClInclude Include="Source\M_FileSystem.h" />
     <ClInclude Include="Source\OpenGL.h" />
+    <ClInclude Include="Source\Particle.h" />
     <ClInclude Include="Source\PathNode.h" />
     <ClInclude Include="Source\Profiler.h" />
     <ClInclude Include="Source\Random.h" />
     <ClInclude Include="Source\R_Animation.h" />
     <ClInclude Include="Source\R_Folder.h" />
+    <ClInclude Include="Source\R_ParticleSystem.h" />
     <ClInclude Include="Source\R_Scene.h" />
     <ClInclude Include="Source\R_Texture.h" />
     <ClInclude Include="Source\SoftwareInfo.h" />
