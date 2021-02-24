@@ -1,12 +1,11 @@
-#ifndef __UIE_BUTTON_H__
-#define __UIE_BUTTON_H__
+#ifndef __UI_BUTTON_H__
+#define __UI_BUTTON_H__
 
 #include <string>
 
 #include "UIElement.h"
 
 class C_Canvas;
-struct AnimationClip;
 
 class UIE_Button : public UIElement
 {
@@ -26,4 +25,4 @@ private:
 	std::string text;
 };
 
-#endif // !__C_ANIMATION_H__
+#endif // !__UI_BUTTON_H__

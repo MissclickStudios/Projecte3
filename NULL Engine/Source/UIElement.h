@@ -6,7 +6,8 @@ class C_Canvas;
 enum class UIElementType
 {
 	NONE,
-	BUTTON
+	BUTTON,
+	IMAGE
 };
 
 enum class UIElementState

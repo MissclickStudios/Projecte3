@@ -1,13 +1,23 @@
-#include "GameObject.h"
-#include "C_Transform.h"
+#include "Application.h"
 
+#include "M_Renderer3D.h"
+#include "M_Camera3D.h"
+#include "M_Editor.h"
+
+#include "GameObject.h"
+
+#include "C_Camera.h"
+#include "C_Transform.h"
 #include "C_Canvas.h"
+
+#include "E_Viewport.h"
 
 #include "OpenGL.h"
 
 C_Canvas::C_Canvas(GameObject* owner) : Component(owner, ComponentType::CANVAS)
 {
-	pivot = { GetPosition().x, GetPosition().y };
+	pivot = GetPosition();
+	isInvisible = false;
 }
 
 C_Canvas::~C_Canvas()
@@ -22,25 +32,69 @@ bool C_Canvas::Update()
 	//This will be world space only
 	if (IsActive())
 	{
+		pivot.z = GetPosition().z;
+
 		GameObject* owner = GetOwner();
 		SetPosition(owner->transform->GetWorldPosition());
 		
-		//glLineWidth(2.0f);
-
-		//glBegin(GL_LINES);
-
-		//glColor4f(1.0f, 0.0f, 0.0f, 1.0f);											// X Axis.
-		//glVertex3f(rect.x - rect.w, rect.y + rect.h, rect.z);		glVertex3f(rect.x + rect.w, rect.y + rect.h, rect.z);
-		//glVertex3f(rect.x + rect.w, rect.y + rect.h, rect.z);		glVertex3f(rect.x + rect.w, rect.y - rect.h, rect.z);
-		//glVertex3f(rect.x + rect.w, rect.y - rect.h, rect.z);		glVertex3f(rect.x - rect.w, rect.y - rect.h, rect.z);
-		//glVertex3f(rect.x - rect.w, rect.y - rect.h, rect.z);		glVertex3f(rect.x - rect.w, rect.y + rect.h, rect.z);
-
-		//glEnd();
-
-		//glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 	}
 
 	return ret;
+}
+
+void C_Canvas::Draw()
+{
+	//Activates orthogonal but only for non master camera aka all component cameras
+	if (App->camera->currentCamera != App->camera->masterCamera->GetComponent<C_Camera>())
+	{
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		glOrtho(-App->editor->viewport->GetSceneTextureSize().x / 2, App->editor->viewport->GetSceneTextureSize().x / 2, -App->editor->viewport->GetSceneTextureSize().y / 2, App->editor->viewport->GetSceneTextureSize().y / 2, 100.0f, -100.0f);
+		//glOrtho(-App->camera->GetCurrentCamera()->GetFrustum().NearPlaneWidth() / 2, App->camera->GetCurrentCamera()->GetFrustum().NearPlaneWidth() / 2, -App->camera->GetCurrentCamera()->GetFrustum().NearPlaneHeight() / 2, App->camera->GetCurrentCamera()->GetFrustum().NearPlaneHeight() / 2, 100.0f, -100.0f);
+		glMatrixMode(GL_MODELVIEW);
+		glLoadMatrixf(App->camera->GetCurrentCamera()->GetOGLViewMatrix());
+	}
+
+
+	glLineWidth(2.0f);
+
+	glBegin(GL_LINES);
+
+	glColor4f(1.0f, 0.0f, 0.0f, 1.0f);										// X Axis.
+	glVertex3f(rect.x - rect.w / 2, rect.y + rect.h / 2, rect.z);			glVertex3f(rect.x + rect.w / 2, rect.y + rect.h / 2, rect.z);
+	glVertex3f(rect.x + rect.w / 2, rect.y + rect.h / 2, rect.z);			glVertex3f(rect.x + rect.w / 2, rect.y - rect.h / 2, rect.z);
+	glVertex3f(rect.x + rect.w / 2, rect.y - rect.h / 2, rect.z);			glVertex3f(rect.x - rect.w / 2, rect.y - rect.h / 2, rect.z);
+	glVertex3f(rect.x - rect.w / 2, rect.y - rect.h / 2, rect.z);			glVertex3f(rect.x - rect.w / 2, rect.y + rect.h / 2, rect.z);
+
+	glEnd();
+
+	//Pivot
+	glBegin(GL_LINE_LOOP);
+	for (int i = 0; i < 50; i++)
+	{
+		float angle = 2.0f * 3.1415926f * float(i) / float(50);				//get the current angle
+
+		float sizeAv = (rect.w + rect.h) / 80;
+		float x = sizeAv * cosf(angle);										//calculate the x component
+		float y = sizeAv * sinf(angle);										//calculate the y component
+
+		glVertex3f(rect.x + pivot.x + x, rect.y + pivot.y + y, rect.z);		//output vertex
+
+	}
+	glEnd();
+
+
+	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+	glLineWidth(1.0f);
+
+
+	if (App->camera->currentCamera != App->camera->masterCamera->GetComponent<C_Camera>())
+	{
+		glMatrixMode(GL_PROJECTION);
+		glLoadMatrixf(App->camera->GetCurrentCamera()->GetOGLProjectionMatrix());
+		glMatrixMode(GL_MODELVIEW);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	}
 }
 
 bool C_Canvas::CleanUp()
@@ -99,4 +153,14 @@ void C_Canvas::SetRect(const Rect& rect)
 	this->rect.z = rect.z;
 	this->rect.w = rect.w;
 	this->rect.h = rect.h;
+}
+
+void C_Canvas::SetIsInvisible(const bool setTo)
+{
+	isInvisible = setTo;
+}
+
+bool C_Canvas::IsInvisible() const
+{
+	return isInvisible;
 }

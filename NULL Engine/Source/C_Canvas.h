@@ -32,6 +32,8 @@ public:
 
 	static inline ComponentType GetType() { return ComponentType::CANVAS; }
 
+	void Draw();
+
 public:
 
 	float3 GetPosition() const;
@@ -41,14 +43,19 @@ public:
 	void SetPosition(const float3& postion);
 	void SetSize(const float2& size);
 	void SetRect(const Rect& rect);
+	void SetIsInvisible(const bool setTo);
+
+	bool IsInvisible() const;
+
 
 	//Temp. here
-	float2 pivot;
+	float3 pivot = { 0,0,0 };
 
 private:
 	std::vector<UIElement*>	uiElements;
 
 	Rect rect = { 0,0,0,50,50 };
+	bool isInvisible; // This is not the same as active, this just prevents drawing
 };
 
 #endif // !__C_CANVAS_H__

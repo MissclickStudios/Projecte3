@@ -15,8 +15,6 @@
 struct Color;
 class ParsonNode;
 
-class GameObject;
-
 class R_Model;
 class R_Mesh;
 class R_Material;
@@ -157,7 +155,7 @@ public:																											// --- RENDER GEOMETRY
 	void			RenderCuboids				();
 	void			RenderRays					();
 	void			RenderSkeletons				();
-	void			RenderUI(GameObject* go);
+	void			RenderUI();
 	void			DeleteFromMeshRenderers		(C_Mesh* cMeshToDelete);
 	void			DeleteFromMeshRenderers		(R_Mesh* rMeshToDelete);
 	void			DeleteFromCuboids			(float3* cuboidToDelete);
