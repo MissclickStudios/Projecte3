@@ -90,10 +90,10 @@ bool C_Material::SaveState(ParsonNode& root) const
 	{
 		ParsonNode shader = root.SetNode("Shader");
 
-		shader.SetNumber("UID", rTexture->GetUID());
-		shader.SetString("Name", rTexture->GetAssetsFile());
-		shader.SetString("Path", rTexture->GetLibraryPath());
-		shader.SetString("File", rTexture->GetLibraryFile());
+		shader.SetNumber("UID", rShader->GetUID());
+		shader.SetString("Name", rShader->GetAssetsFile());
+		shader.SetString("Path", rShader->GetLibraryPath());
+		shader.SetString("File", rShader->GetLibraryFile());
 	}
 	return ret;
 }
