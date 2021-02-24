@@ -260,19 +260,18 @@ void M_Window::SetMaximized(bool setTo)
 			SetFullscreen(!setTo);																// If window is maximized it cannot be in fullscreen or fullscreen desktop mode.
 			SetFullscreenDesktop(!setTo);														// ---------
 
-			SDL_GetWindowSize(window, (int*)&screenWidth, (int*)&screenHeight);
-
-			LOG("[STATUS] MAXIMIZED SCREEN SIZE: %u x %u", screenWidth, screenHeight);
 			LOG("[STATUS] Window has been Maximized!");
 		}
 		else
 		{	
 			SDL_RestoreWindow(window);
-			
-			SDL_GetWindowSize(window, (int*)&screenWidth, (int*)&screenHeight);
-			
-			LOG("[STATUS] Window has been resized to { %u, %u }", SCREEN_WIDTH, SCREEN_HEIGHT);
+
+			LOG("[STATUS] Window has been Unmaximized!");
 		}
+
+		RecalculateWindowSize();
+
+		LOG("[STATUS] New Window Size { %u, %u }", screenWidth, screenHeight);
 	}
 }
 
@@ -362,7 +361,7 @@ void M_Window::SetFullscreenDesktop(bool setTo)
 				isFullscreenDesktop = setTo;
 				isMaximized = !setTo;
 
-				SDL_GetWindowSize(window, (int*)&screenWidth, (int*)&screenHeight);
+				RecalculateWindowSize();
 
 				LOG("[STATUS] Window has been set to Fullscreen Desktop mode!");
 			}
@@ -380,10 +379,15 @@ void M_Window::SetFullscreenDesktop(bool setTo)
 				isFullscreenDesktop = setTo;
 				isFullscreen = setTo;
 
-				SDL_GetWindowSize(window, (int*)&screenWidth, (int*)&screenHeight);
+				RecalculateWindowSize();
 
 				LOG("[STATUS] Window has been resized to { %u, %u }", SCREEN_WIDTH, SCREEN_HEIGHT);
 			}
 		}
 	}
+}
+
+void M_Window::RecalculateWindowSize()
+{
+	SDL_GetWindowSize(window, (int*)&screenWidth, (int*)&screenHeight);
 }

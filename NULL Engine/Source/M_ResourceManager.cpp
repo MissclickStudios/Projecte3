@@ -202,11 +202,11 @@ void M_ResourceManager::RefreshDirectory(const char* directory, std::vector<std:
 	App->fileSystem->DiscoverAllFiles(directory, assetFiles, directories, DOTLESS_META_EXTENSION);				// Directories (folders) will be ignored for now.
 	App->fileSystem->GetAllFilesWithExtension(directory, DOTLESS_META_EXTENSION, metaFiles);
 	
-	FindFilesToImport(assetFiles, metaFiles, filePairs, filesToImport);										// Always call in this order!
-	FindFilesToUpdate(filePairs, filesToUpdate);																	// At the very least FindFilesToImport() has to be the first to be called
+	FindFilesToImport(assetFiles, metaFiles, filePairs, filesToImport);											// Always call in this order!
+	FindFilesToUpdate(filePairs, filesToUpdate);																// At the very least FindFilesToImport() has to be the first to be called
 	FindFilesToDelete(metaFiles, filePairs, filesToDelete);														// as it is the one to fill file_pairs with asset and meta files!
 
-	LoadValidFilesIntoLibrary(filePairs);																			// Will emplace all valid files' UID & library path into the library map.
+	LoadValidFilesIntoLibrary(filePairs);																		// Will emplace all valid files' UID & library path into the library map.
 
 	filePairs.clear();
 	metaFiles.clear();
@@ -376,7 +376,7 @@ bool M_ResourceManager::GetResourceUIDsFromMeta(const char* assetsPath, std::vec
 	std::string errorString = "[ERROR] Resource Manager: Could not get Resource UIDs from { " + std::string(assetsPath) + " }'s Meta";
 
 	char* buffer					= nullptr;
-	ParsonNode metaRoot			= LoadMetaFile(assetsPath, &buffer);
+	ParsonNode metaRoot				= LoadMetaFile(assetsPath, &buffer);
 	ParsonArray containedArray		= metaRoot.GetArray("ContainedResources");
 	RELEASE_ARRAY(buffer);
 
@@ -402,7 +402,7 @@ bool M_ResourceManager::GetResourceUIDsFromMeta(const char* assetsPath, std::vec
 	resourceUids.push_back(resourceUid);
 
 	// --- CONTAINED RESOURCES
-	uint32 containedUid		= 0;
+	uint32 containedUid			= 0;
 	ParsonNode containedNode	= ParsonNode();
 	for (uint i = 0; i < containedArray.size; ++i)
 	{
@@ -793,7 +793,7 @@ uint32 M_ResourceManager::LoadFromLibrary(const char* assetsPath)
 		return 0;
 	}
 
-	resourceUid					= (uint32)metaRoot.GetNumber("UID");
+	resourceUid						= (uint32)metaRoot.GetNumber("UID");
 	ParsonArray containedArray		= metaRoot.GetArray("ContainedResources");
 	
 	if (resources.find(resourceUid) != resources.end())
@@ -816,7 +816,7 @@ uint32 M_ResourceManager::LoadFromLibrary(const char* assetsPath)
 		ParsonNode containedNode = containedArray.GetNode(i);
 
 		App->fileSystem->SplitFilePath(assetsPath, &containedPath, nullptr, nullptr);									// --- TMP Until Something Functional Is In Place.
-		containedName	= containedNode.GetString("Name");																	// 
+		containedName	= containedNode.GetString("Name");																// 
 		containedPath += containedName;																					// -----------------------------------------------
 
 		uint32 containedUid = (uint32)containedNode.GetNumber("UID");
@@ -1427,7 +1427,7 @@ Resource* M_ResourceManager::AllocateResource(const uint32& uid, const char* ass
 	}
 
 	char* buffer				= nullptr;
-	const char* libraryPath	= library.find(uid)->second.c_str();
+	const char* libraryPath		= library.find(uid)->second.c_str();
 	uint read					= App->fileSystem->Load(libraryPath, &buffer);
 	if (read == 0)
 	{
@@ -1443,7 +1443,7 @@ Resource* M_ResourceManager::AllocateResource(const uint32& uid, const char* ass
 	case ResourceType::MODEL:		{ success = Importer::Scenes::Load(buffer, (R_Model*)resource); }				break;
 	case ResourceType::MESH:		{ success = Importer::Meshes::Load(buffer, (R_Mesh*)resource); }				break;
 	case ResourceType::MATERIAL:	{ success = Importer::Materials::Load(buffer, (R_Material*)resource); }			break;
-	case ResourceType::TEXTURE:	{ success = Importer::Textures::Load(buffer, read, (R_Texture*)resource); }		break;
+	case ResourceType::TEXTURE:		{ success = Importer::Textures::Load(buffer, read, (R_Texture*)resource); }		break;
 	case ResourceType::FOLDER:		{ success = Importer::Folders::Load(buffer, (R_Folder*)resource); }				break;
 	case ResourceType::SCENE:		{ /*success = TODO: HAVE A FUNCTIONAL R_SCENE AND SAVE/LOAD METHODS*/ }			break;
 	case ResourceType::ANIMATION:	{ success = Importer::Animations::Load(buffer, (R_Animation*)resource); }		break;

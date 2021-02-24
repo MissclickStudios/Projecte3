@@ -360,10 +360,12 @@ bool M_Renderer3D::InitGlew()
 
 void M_Renderer3D::OnResize()
 {	
-	float winWidth		= (float)App->window->GetWidth();
+	App->window->RecalculateWindowSize();
+	
+	float winWidth	= (float)App->window->GetWidth();
 	float winHeight	= (float)App->window->GetHeight();
 
-	glViewport(0, 0, (GLsizei)winWidth, (GLsizei)winWidth);
+	glViewport(0, 0, (GLsizei)winWidth, (GLsizei)winHeight);
 
 	if (App->camera->GetCurrentCamera() != nullptr)
 	{

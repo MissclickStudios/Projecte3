@@ -1,22 +1,25 @@
+**Title Template**
+
+(Summary of the problem) T_[Bug type] P_[Priority] F_[Frequency]
+
 **Bug Type**
 
-- [ ] Fatal
-- [ ] Unintended Action
-- [ ] Aesthetic
+Fatal / Malfunction / Unintended Action / Aesthetic
 
 **Priority**
 
-- [ ] ASAP
-- [ ] High
-- [ ] Medium
-- [ ] Low
+ASAP / High / Medium / Low
 
 **Frequency**
 
-- [ ] Always
-- [ ] High
-- [ ] Average
-- [ ] Low
+Always / High / Average / Low
+
+// -------------- (Delete upper section from description until here) -------------- //
+
+
+**Date of Detection**
+
+- XX/XX/2021
 
 **Description**
 
@@ -30,13 +33,12 @@
 
 - {Decribe the expected behaviour here}
 
-**Game Version**
+**Engine Version**
 
 - {Write here the build version where the bug has been found here}
 
 **Additional context**
 
-//Add images inside Docs/Issues/Images/issue_image.png.
 - {Screenshots... here}
 
 **Suggested Assignees**

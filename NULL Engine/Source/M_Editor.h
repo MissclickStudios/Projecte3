@@ -99,7 +99,7 @@ public:																							// --- Panel/Window Methods. Acts as an interface 
 	bool			SelectedIsAnimationBone				() const;								// Hierarchy & Inspector: Will check whether or not the selected GameObject is an anim. bone.
 	void			CreateGameObject					(const char* name, GameObject* parent);	// Hierarchy & Inspector: Will call the Module Scene's create GameObject method.
 	C_Camera*		GetCurrentCameraThroughEditor		() const;								// Hierarchy & Inspector: 
-	void			SetCurrentCameraThroughEditor		(C_Camera* gameObject);				// Hierarchy & Inspector:  
+	void			SetCurrentCameraThroughEditor		(C_Camera* gameObject);					// Hierarchy & Inspector:  
 	void			SetMasterCameraThroughEditor		();										// Hierarchy & Inspector: 
 
 	float2			GetWorldMousePositionThroughEditor	() const;								// Viewport: 

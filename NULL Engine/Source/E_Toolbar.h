@@ -17,9 +17,6 @@ private:
 	void PauseAndStepButtons();
 	void TimeScaleSlider();
 	void TimeDisplays();
-
-private:
-	bool playedOnce;
 };
 
 #endif // !__E_TOOLBAR_H__

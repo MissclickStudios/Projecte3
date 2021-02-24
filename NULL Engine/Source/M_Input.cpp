@@ -25,11 +25,11 @@ M_Input::M_Input(bool isActive) : Module("Input", isActive)
 	mouseMotionX	= 0;
 	mouseMotionY	= 0;
 
-	mouseWheelX	= 0;
-	mouseWheelY	= 0;
+	mouseWheelX		= 0;
+	mouseWheelY		= 0;
 
-	prevMousePosX = 0;
-	prevMousePosY = 0;
+	prevMousePosX	= 0;
+	prevMousePosY	= 0;
 }
 
 // Destructor
@@ -156,7 +156,7 @@ UpdateStatus M_Input::PreUpdate(float dt)
 			case SDL_WINDOWEVENT:
 				if (event.window.windowID == SDL_GetWindowID(App->window->GetWindow()))
 				{
-					if (event.window.event == SDL_WINDOWEVENT_RESIZED)
+					if (WindowSizeWasManipulated(event.window.event))
 					{
 						App->renderer->OnResize();
 					}
@@ -289,4 +289,13 @@ int M_Input::GetMouseXWheel() const
 int M_Input::GetMouseYWheel() const
 {
 	return mouseWheelY;
+}
+
+bool M_Input::WindowSizeWasManipulated(Uint8 windowEvent) const
+{
+	return (windowEvent == SDL_WINDOWEVENT_RESIZED
+			/*|| windowEvent == SDL_WINDOWEVENT_SIZE_CHANGED
+			|| windowEvent == SDL_WINDOWEVENT_RESTORED
+			|| windowEvent == SDL_WINDOWEVENT_MAXIMIZED
+			|| windowEvent == SDL_WINDOWEVENT_MINIMIZED*/);
 }
