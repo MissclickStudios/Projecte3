@@ -1,9 +1,13 @@
+#include "GameObject.h"
+#include "C_Transform.h"
+
 #include "C_Canvas.h"
+
 #include "OpenGL.h"
 
 C_Canvas::C_Canvas(GameObject* owner) : Component(owner, ComponentType::CANVAS)
 {
-
+	pivot = { GetPosition().x, GetPosition().y };
 }
 
 C_Canvas::~C_Canvas()
@@ -18,20 +22,22 @@ bool C_Canvas::Update()
 	//This will be world space only
 	if (IsActive())
 	{
-		glLineWidth(2.0f);
+		GameObject* owner = GetOwner();
+		SetPosition(owner->transform->GetWorldPosition());
+		
+		//glLineWidth(2.0f);
 
-		glBegin(GL_LINES);
+		//glBegin(GL_LINES);
 
-		glColor4f(1.0f, 0.0f, 0.0f, 1.0f);											// X Axis.
-		glVertex3f(rect.x, rect.y, rect.z);							glVertex3f(rect.x, rect.y + rect.h, rect.z);
-		glVertex3f(rect.x, rect.y + rect.h, rect.z);				glVertex3f(rect.x + rect.w, rect.y + rect.h, rect.z);
-		glVertex3f(rect.x + rect.w, rect.y + rect.h, rect.z);		glVertex3f(rect.x + rect.w, rect.y, rect.z);
-		glVertex3f(rect.x + rect.w, rect.y, rect.z);				glVertex3f(rect.x, rect.y, rect.z);
+		//glColor4f(1.0f, 0.0f, 0.0f, 1.0f);											// X Axis.
+		//glVertex3f(rect.x - rect.w, rect.y + rect.h, rect.z);		glVertex3f(rect.x + rect.w, rect.y + rect.h, rect.z);
+		//glVertex3f(rect.x + rect.w, rect.y + rect.h, rect.z);		glVertex3f(rect.x + rect.w, rect.y - rect.h, rect.z);
+		//glVertex3f(rect.x + rect.w, rect.y - rect.h, rect.z);		glVertex3f(rect.x - rect.w, rect.y - rect.h, rect.z);
+		//glVertex3f(rect.x - rect.w, rect.y - rect.h, rect.z);		glVertex3f(rect.x - rect.w, rect.y + rect.h, rect.z);
 
-		glEnd();
+		//glEnd();
 
-		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-		//glLineWidth(STANDARD_LINE_WIDTH);
+		//glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 	}
 
 	return ret;

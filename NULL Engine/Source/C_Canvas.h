@@ -42,10 +42,13 @@ public:
 	void SetSize(const float2& size);
 	void SetRect(const Rect& rect);
 
+	//Temp. here
+	float2 pivot;
+
 private:
 	std::vector<UIElement*>	uiElements;
 
-	Rect rect = { 0,0,0,1,1 };
+	Rect rect = { 0,0,0,50,50 };
 };
 
 #endif // !__C_CANVAS_H__

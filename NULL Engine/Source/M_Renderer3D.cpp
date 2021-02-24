@@ -15,6 +15,7 @@
 #include "M_FileSystem.h"																		// 
 #include "M_ResourceManager.h"																	// 
 #include "M_Editor.h"																			// -----------------------
+#include "M_Scene.h"
 
 #include "R_Mesh.h"																				// Resources
 #include "R_Material.h"																			//
@@ -26,6 +27,9 @@
 #include "C_Mesh.h"																				// 
 #include "C_Material.h"																			// 
 #include "C_Camera.h"																			// -------------------------
+#include "C_Canvas.h"
+
+#include "E_Viewport.h"
 
 #include "M_Renderer3D.h"																		// Header of this .cpp file.
 
@@ -570,6 +574,15 @@ void M_Renderer3D::RenderScene()
 	RenderCuboids();
 	//RenderRays();
 	RenderSkeletons();
+
+	for (std::vector<GameObject*>::iterator it = App->scene->GetGameObjects()->begin(); it != App->scene->GetGameObjects()->end(); it++)
+	{
+		if ((*it)->GetComponent<C_Canvas>() != nullptr)
+		{
+			RenderUI(*it);
+		}
+	}
+	
 	
 	if (App->camera->DrawLastRaycast())
 	{
@@ -614,6 +627,47 @@ void M_Renderer3D::DrawWorldGrid(const int& size)
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 }
 
+void M_Renderer3D::RenderUI(GameObject* go)
+{
+	//Activates orthogonal but only for non master camera aka all component cameras
+	if (App->camera->currentCamera != App->camera->masterCamera->GetComponent<C_Camera>())
+	{
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		glOrtho(-App->editor->viewport->GetSceneTextureSize().x / 2, App->editor->viewport->GetSceneTextureSize().x / 2, -App->editor->viewport->GetSceneTextureSize().y / 2, App->editor->viewport->GetSceneTextureSize().y / 2, -0.1f, 100.0f);
+		glMatrixMode(GL_MODELVIEW);
+		glLoadMatrixf(App->camera->GetCurrentCamera()->GetOGLViewMatrix());
+	}
+
+	if (go->GetComponent<C_Canvas>()->IsActive())
+	{
+		glLineWidth(2.0f);
+
+		glBegin(GL_LINES);
+
+		Rect rect = go->GetComponent<C_Canvas>()->GetRect();
+
+		glColor4f(1.0f, 0.0f, 0.0f, 1.0f);											// X Axis.
+		glVertex3f(rect.x - rect.w / 2, rect.y + rect.h / 2, rect.z);	glVertex3f(rect.x + rect.w / 2, rect.y + rect.h / 2, rect.z);
+		glVertex3f(rect.x + rect.w / 2, rect.y + rect.h / 2, rect.z);	glVertex3f(rect.x + rect.w / 2, rect.y - rect.h / 2, rect.z);
+		glVertex3f(rect.x + rect.w / 2, rect.y - rect.h / 2, rect.z);	glVertex3f(rect.x - rect.w / 2, rect.y - rect.w / 2, rect.z);
+		glVertex3f(rect.x - rect.w / 2, rect.y - rect.h / 2, rect.z);	glVertex3f(rect.x - rect.w / 2, rect.y + rect.h / 2, rect.z);
+
+		glEnd();
+
+		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+		glLineWidth(STANDARD_LINE_WIDTH);
+	}
+
+	if (App->camera->currentCamera != App->camera->masterCamera->GetComponent<C_Camera>())
+	{
+		glMatrixMode(GL_PROJECTION);
+		glLoadMatrixf(App->camera->GetCurrentCamera()->GetOGLProjectionMatrix());
+		glMatrixMode(GL_MODELVIEW);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	}
+}
+
 void M_Renderer3D::DrawWorldAxis()
 {
 	glLineWidth(2.0f);
@@ -621,21 +675,21 @@ void M_Renderer3D::DrawWorldAxis()
 	glBegin(GL_LINES);
 
 	glColor4f(1.0f, 0.0f, 0.0f, 1.0f);											// X Axis.
-	glVertex3f(0.0f, 0.0f, 0.0f);		glVertex3f(1.0f,  0.0f, 0.0f);
+	glVertex3f(0.0f, 0.0f, 0.0f);		glVertex3f(1.0f, 0.0f, 0.0f);
 	glVertex3f(1.0f, 0.1f, 0.0f);		glVertex3f(1.1f, -0.1f, 0.0f);
 	glVertex3f(1.1f, 0.1f, 0.0f);		glVertex3f(1.0f, -0.1f, 0.0f);
 
 	glColor4f(0.0f, 1.0f, 0.0f, 1.0f);											// Y Axis.
-	glVertex3f( 0.0f,  0.0f,  0.0f);	glVertex3f(0.0f, 1.0f,  0.0f);
+	glVertex3f(0.0f, 0.0f, 0.0f);	glVertex3f(0.0f, 1.0f, 0.0f);
 	glVertex3f(-0.05f, 1.25f, 0.0f);	glVertex3f(0.0f, 1.15f, 0.0f);
-	glVertex3f( 0.05f, 1.25f, 0.0f);	glVertex3f(0.0f, 1.15f, 0.0f);
-	glVertex3f( 0.0f,  1.15f, 0.0f);	glVertex3f(0.0f, 1.05f, 0.0f);
+	glVertex3f(0.05f, 1.25f, 0.0f);	glVertex3f(0.0f, 1.15f, 0.0f);
+	glVertex3f(0.0f, 1.15f, 0.0f);	glVertex3f(0.0f, 1.05f, 0.0f);
 
 	glColor4f(0.0f, 0.0f, 1.0f, 1.0f);											// Z Axis.
-	glVertex3f( 0.0f,   0.0f, 0.0f);	glVertex3f( 0.0f,   0.0f, 1.0f);
-	glVertex3f(-0.05f,  0.1f, 1.05f);	glVertex3f( 0.05f,  0.1f, 1.05f);
-	glVertex3f( 0.05f,  0.1f, 1.05f);	glVertex3f(-0.05f, -0.1f, 1.05f);
-	glVertex3f(-0.05f, -0.1f, 1.05f);	glVertex3f( 0.05f, -0.1f, 1.05f);
+	glVertex3f(0.0f, 0.0f, 0.0f);	glVertex3f(0.0f, 0.0f, 1.0f);
+	glVertex3f(-0.05f, 0.1f, 1.05f);	glVertex3f(0.05f, 0.1f, 1.05f);
+	glVertex3f(0.05f, 0.1f, 1.05f);	glVertex3f(-0.05f, -0.1f, 1.05f);
+	glVertex3f(-0.05f, -0.1f, 1.05f);	glVertex3f(0.05f, -0.1f, 1.05f);
 
 	glEnd();
 

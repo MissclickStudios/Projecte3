@@ -34,13 +34,6 @@ UpdateStatus M_UISystem::PreUpdate(float dt)
 
 UpdateStatus M_UISystem::Update(float dt)
 {
-	for (std::vector<GameObject*>::iterator it = App->scene->GetGameObjects()->begin(); it != App->scene->GetGameObjects()->end(); it++)
-	{
-		if ((*it)->GetComponent<C_Canvas>() != nullptr)
-		{
-			(*it)->GetComponent<C_Canvas>()->Update();
-		}
-	}
 	return UpdateStatus::CONTINUE;
 }
 
