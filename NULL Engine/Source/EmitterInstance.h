@@ -4,9 +4,10 @@
 #include "Globals.h"
 #include "Particle.h"
 #include "Emitter.h"
-//#include "C_ParticleSystem"
 
 #include <vector>
+
+class C_ParticleSystem;
 
 class EmitterInstance
 {
@@ -14,11 +15,19 @@ public:
 	EmitterInstance();
 	~EmitterInstance();
 
+	void Init();
+	void UpdateModules();
+	void DrawParticles();
+
+private:
+	void KillDeadParticles();
+	void KillAll();
+
 public:
 	std::vector<Particle> particles;
-	Emitter emitter;
-	//C_ParticleSystem* owner;
-
+	
+	Emitter* emitter;
+	C_ParticleSystem* component;
 };
 
 

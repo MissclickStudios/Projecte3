@@ -23,7 +23,6 @@ public:
 	std::string name = "Particle Emitter";
 //	std::vector<ParticleModule*> modules;
 
-
 	int maxParticleCount = 100;
 };
 
