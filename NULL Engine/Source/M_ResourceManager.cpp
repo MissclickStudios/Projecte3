@@ -200,11 +200,11 @@ void M_ResourceManager::RefreshDirectory(const char* directory, std::vector<std:
 	App->fileSystem->DiscoverAllFiles(directory, assetFiles, directories, DOTLESS_META_EXTENSION);				// Directories (folders) will be ignored for now.
 	App->fileSystem->GetAllFilesWithExtension(directory, DOTLESS_META_EXTENSION, metaFiles);
 	
-	FindFilesToImport(assetFiles, metaFiles, filePairs, filesToImport);										// Always call in this order!
-	FindFilesToUpdate(filePairs, filesToUpdate);																	// At the very least FindFilesToImport() has to be the first to be called
+	FindFilesToImport(assetFiles, metaFiles, filePairs, filesToImport);											// Always call in this order!
+	FindFilesToUpdate(filePairs, filesToUpdate);																// At the very least FindFilesToImport() has to be the first to be called
 	FindFilesToDelete(metaFiles, filePairs, filesToDelete);														// as it is the one to fill file_pairs with asset and meta files!
 
-	LoadValidFilesIntoLibrary(filePairs);																			// Will emplace all valid files' UID & library path into the library map.
+	LoadValidFilesIntoLibrary(filePairs);																		// Will emplace all valid files' UID & library path into the library map.
 
 	filePairs.clear();
 	metaFiles.clear();
@@ -785,7 +785,7 @@ uint32 M_ResourceManager::LoadFromLibrary(const char* assetsPath)
 		return 0;
 	}
 
-	resourceUid					= (uint32)metaRoot.GetNumber("UID");
+	resourceUid						= (uint32)metaRoot.GetNumber("UID");
 	ParsonArray containedArray		= metaRoot.GetArray("ContainedResources");
 	
 	if (resources.find(resourceUid) != resources.end())
@@ -808,7 +808,7 @@ uint32 M_ResourceManager::LoadFromLibrary(const char* assetsPath)
 		ParsonNode containedNode = containedArray.GetNode(i);
 
 		App->fileSystem->SplitFilePath(assetsPath, &containedPath, nullptr, nullptr);									// --- TMP Until Something Functional Is In Place.
-		containedName	= containedNode.GetString("Name");																	// 
+		containedName	= containedNode.GetString("Name");																// 
 		containedPath += containedName;																					// -----------------------------------------------
 
 		uint32 containedUid = (uint32)containedNode.GetNumber("UID");
@@ -1407,7 +1407,7 @@ Resource* M_ResourceManager::AllocateResource(const uint32& uid, const char* ass
 	}
 
 	char* buffer				= nullptr;
-	const char* libraryPath	= library.find(uid)->second.c_str();
+	const char* libraryPath		= library.find(uid)->second.c_str();
 	uint read					= App->fileSystem->Load(libraryPath, &buffer);
 	if (read == 0)
 	{
