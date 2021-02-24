@@ -7,6 +7,7 @@
 #define ASSETS_MODELS_PATH		"Assets/Models/"
 #define ASSETS_SCENES_PATH		"Assets/Scenes/"
 #define ASSETS_TEXTURES_PATH	"Assets/Textures/"
+#define ASSETS_SHADERS_PATH		"Assets/Shaders/"
 
 #define ENGINE_PATH				"Engine/"
 #define ENGINE_DIRECTORY		"Engine"
@@ -34,6 +35,7 @@
 #define MATERIALS_EXTENSION		".nemat"
 #define SCENES_EXTENSION		".nescene"
 #define TEXTURES_EXTENSION		".netex"
+#define SHADERS_EXTENSION		".shader"
 
 #define META_EXTENSION			".meta"
 #define DOTLESS_META_EXTENSION	"meta"

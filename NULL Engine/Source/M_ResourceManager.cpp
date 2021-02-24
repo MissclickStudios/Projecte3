@@ -10,6 +10,7 @@
 #include "I_Textures.h"
 #include "I_Folders.h"
 #include "I_Animations.h"
+#include "I_Shaders.h"
 
 #include "Application.h"
 #include "M_FileSystem.h"
@@ -22,6 +23,7 @@
 #include "R_Folder.h"
 #include "R_Scene.h"
 #include "R_Animation.h"
+#include "R_Shader.h"
 
 #include "M_ResourceManager.h"
 
@@ -79,7 +81,7 @@ UpdateStatus M_ResourceManager::PreUpdate(float dt)
 			{																								// FreeResource() method.
 				uint32 resourceUid = item->second->GetUID();												// 
 				++item;																						// Setting item to the next element so the reference is not lost after
-				DeallocateResource(resourceUid);															// erasing the element with the resource_uid from the resources std::map.
+				//DeallocateResource(resourceUid);															// erasing the element with the resource_uid from the resources std::map.
 				continue;																					// Going to the next iteration so item is not updated twice in the same loop.
 			}
 
@@ -456,7 +458,7 @@ bool M_ResourceManager::GetLibraryFilePathsFromMeta(const char* assetsPath, std:
 
 	// --- MAIN RESOURCE
 	uint32 resourceUid		= (uint32)metaRoot.GetNumber("UID");
-	ResourceType type		= (ResourceType)metaRoot.GetNumber("Type");
+	ResourceType type		= (ResourceType)(int)metaRoot.GetNumber("Type");
 	bool success			= GetLibraryDirectoryAndExtensionFromType(type, directory, extension);
 	if (!success)
 	{
@@ -494,7 +496,7 @@ bool M_ResourceManager::GetLibraryFilePathsFromMeta(const char* assetsPath, std:
 		extension = "[NONE]";
 
 		containedUid	= (uint32)containedNode.GetNumber("UID");
-		containedType	= (ResourceType)containedNode.GetNumber("Type");
+		containedType	= (ResourceType)(int)containedNode.GetNumber("Type");
 		success			= GetLibraryDirectoryAndExtensionFromType(containedType, directory, extension);
 		if (!success)
 		{
@@ -549,6 +551,10 @@ bool M_ResourceManager::GetLibraryDirectoryAndExtensionFromType(const ResourceTy
 	case ResourceType::ANIMATION:
 		directory = ANIMATIONS_PATH;
 		extension = ANIMATIONS_EXTENSION;
+		break;
+	case ResourceType::SHADER:
+		directory = SHADERS_PATH;
+		extension = SHADERS_EXTENSION;
 		break;
 	case ResourceType::NONE:
 		ret = false;
@@ -731,6 +737,8 @@ uint32 M_ResourceManager::ImportFromAssets(const char* assetsPath)
 		case ResourceType::MESH:		{ success = Importer::ImportMesh(buffer, (R_Mesh*)resource); }				break;
 		case ResourceType::TEXTURE:		{ success = Importer::ImportTexture(buffer, read, (R_Texture*)resource); }	break;
 		case ResourceType::SCENE:		{ /*success = HAVE A FUNCTIONAL R_SCENE AND LOAD/SAVE METHODS*/}			break;
+		case ResourceType::SHADER:		
+		{success = Importer::Shaders::Import(resource->GetAssetsPath(), (R_Shader*)resource); } break;
 		}
 
 		RELEASE_ARRAY(buffer);
@@ -852,6 +860,8 @@ uint M_ResourceManager::SaveResourceToLibrary(Resource* resource)
 	case ResourceType::FOLDER:		{ written = Importer::Folders::Save((R_Folder*)resource, &buffer); }		break;
 	case ResourceType::SCENE:		{ /*written = TODO: HAVE A FUNCTIONAL R_SCENE AND SAVE/LOAD METHODS*/ }		break;
 	case ResourceType::ANIMATION:	{ written = Importer::Animations::Save((R_Animation*)resource, &buffer); }	break;
+	case ResourceType::SHADER:		
+	{ written = Importer::Shaders::Save((R_Shader*)resource, &buffer); }		break;
 	}
 
 	RELEASE_ARRAY(buffer);
@@ -924,6 +934,10 @@ ResourceType M_ResourceManager::GetTypeFromAssetsExtension(const char* assetsPat
 	{
 		type = ResourceType::SCENE;
 	}
+	else if (extension == "shader")
+	{
+		type = ResourceType::SHADER;
+	}
 	else
 	{
 		LOG("[ERROR] Resource Manager: Could not import from the given Assets Path! Error: File extension is not supported!");
@@ -971,6 +985,10 @@ ResourceType M_ResourceManager::GetTypeFromLibraryExtension(const char* libraryP
 	else if (extension == ANIMATIONS_EXTENSION)
 	{
 		type = ResourceType::ANIMATION;
+	}
+	else if (extension == SHADERS_EXTENSION)
+	{
+		type = ResourceType::SHADER;
 	}
 	else
 	{
@@ -1202,7 +1220,8 @@ bool M_ResourceManager::ResourceHasMetaType(Resource* resource) const
 	
 	return (type == ResourceType::FOLDER
 			|| type == ResourceType::MODEL
-			|| type == ResourceType::TEXTURE);
+			|| type == ResourceType::TEXTURE
+			|| type == ResourceType::SHADER);
 }
 
 Resource* M_ResourceManager::GetResourceFromMetaFile(const char* assetsPath)
@@ -1250,6 +1269,7 @@ Resource* M_ResourceManager::CreateResource(ResourceType type, const char* asset
 	case ResourceType::FOLDER:		{ resource = new R_Folder(); }		break;
 	case ResourceType::SCENE:		{ resource = new R_Scene(); }		break;
 	case ResourceType::ANIMATION:	{ resource = new R_Animation(); }	break;
+	case ResourceType::SHADER:		{ resource = new R_Shader(); }		break;
 	}
 
 	if (resource != nullptr)
@@ -1427,6 +1447,7 @@ Resource* M_ResourceManager::AllocateResource(const uint32& uid, const char* ass
 	case ResourceType::FOLDER:		{ success = Importer::Folders::Load(buffer, (R_Folder*)resource); }				break;
 	case ResourceType::SCENE:		{ /*success = TODO: HAVE A FUNCTIONAL R_SCENE AND SAVE/LOAD METHODS*/ }			break;
 	case ResourceType::ANIMATION:	{ success = Importer::Animations::Load(buffer, (R_Animation*)resource); }		break;
+	case ResourceType::SHADER:		{success = Importer::Shaders::Load(buffer, (R_Shader*)resource); }		break;
 	}
 
 	RELEASE_ARRAY(buffer);
@@ -1496,6 +1517,34 @@ bool M_ResourceManager::DeallocateResource(Resource* resourceToDeallocate)
 	}
 
 	return ret;
+}
+
+R_Shader* M_ResourceManager::GetDefaultShader()
+{
+	
+	std::string defaultPath = ASSETS_SHADERS_PATH + std::string("DefaultShader") + SHADERS_EXTENSION;
+	uint shaderUID = App->resourceManager->LoadFromLibrary(defaultPath.c_str());
+
+	
+	R_Shader* tempShader = new R_Shader();
+	std::map<uint32, Resource*>::iterator item;
+	for (item = resources.begin(); item != resources.end(); item++)
+	{
+		if (item->second->GetType() == ResourceType::SHADER && item->second->GetUID() == shaderUID)
+		{
+			tempShader = (R_Shader*)item->second;
+
+			if (tempShader->shaderProgramID > 500)
+			{
+				tempShader->shaderProgramID = 0;
+				tempShader->fragmentID = 0;
+				tempShader->vertexID = 0;
+			}
+			
+		}
+
+	}
+	return tempShader;
 }
 
 void M_ResourceManager::GetResources(std::map<uint32, Resource*>& resources) const

@@ -35,6 +35,7 @@ namespace Importer
 			void			ImportMesh					(const char* nodeName, const aiMesh* assimpMesh, ModelNode& modelNode);
 			void			ImportMaterial				(const char* nodeName, const aiMaterial* assimpMaterial, R_Model* rModel, ModelNode& modelNode);
 			void			ImportTexture				(const std::vector<MaterialData>& materials, ModelNode& modelNode);
+			void			ImportShader				(const char* nodeName, R_Model* rModel, ModelNode& modelNode);
 
 			void			ImportAnimations			(const aiScene* assimpScene, R_Model* modelNode);
 
