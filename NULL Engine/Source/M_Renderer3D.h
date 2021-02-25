@@ -63,6 +63,10 @@ struct MeshRenderer
 	void ApplyTextureAndMaterial	();
 	void ClearTextureAndMaterial	();
 
+	void ApplyShader();
+	uint32 SetDefaultShader(C_Material* cMaterial);
+	void ClearShader();
+
 	float4x4	transform;
 	C_Mesh*		cMesh;
 	C_Material*	cMaterial;
@@ -144,7 +148,7 @@ public:
 	void			RenderScene					();
 
 public:																											// --- RENDER GEOMETRY
-	void			GenerateBuffers				(const R_Mesh* rMesh);
+	//void			GenerateBuffers				(const R_Mesh* rMesh);
 		
 	void			DrawWorldGrid				(const int& size);
 	void			DrawWorldAxis				();

@@ -23,12 +23,13 @@
 #include "R_Material.h"																					// 
 #include "R_Texture.h"																					//
 #include "R_Animation.h"																				// --------------------------------------------------------------
+#include "R_Shader.h"
 
 #include "I_Meshes.h"
 #include "I_Materials.h"
 #include "I_Textures.h"
 #include "I_Animations.h"
-
+#include "I_Shaders.h"
 #include "I_Scenes.h"
 
 #include "MemoryManager.h"
@@ -164,8 +165,9 @@ void Importer::Scenes::Utilities::ImportMeshesAndMaterials(const aiScene* assimp
 		if (item != loadedNodes.end())
 		{
 			modelNode.meshUID		= item->second.meshUID;
-			modelNode.materialUID = item->second.materialUID;
+			modelNode.materialUID	= item->second.materialUID;
 			modelNode.textureUID	= item->second.textureUID;
+			modelNode.shaderUID		= item->second.shaderUID;
 			continue;
 		}
 		
@@ -207,7 +209,7 @@ void Importer::Scenes::Utilities::ImportMesh(const char* nodeName, const aiMesh*
 void Importer::Scenes::Utilities::ImportMaterial(const char* nodeName, const aiMaterial* assimpMaterial, R_Model* rModel, ModelNode& modelNode)
 {
 	std::string matFullPath	= App->fileSystem->GetDirectory(rModel->GetAssetsPath()) + nodeName + MATERIALS_EXTENSION;
-	R_Material* rMaterial		= (R_Material*)App->resourceManager->CreateResource(ResourceType::MATERIAL, matFullPath.c_str());			// Only considering one texture per mesh.
+	R_Material* rMaterial	= (R_Material*)App->resourceManager->CreateResource(ResourceType::MATERIAL, matFullPath.c_str());			// Only considering one texture per mesh.
 
 	if (rMaterial == nullptr)
 	{
@@ -274,6 +276,24 @@ void Importer::Scenes::Utilities::ImportTexture(const std::vector<MaterialData>&
 			LOG("[ERROR] Importer: Could not load texture from given path! Path: %s", texPath);
 		}
 	}
+}
+
+void Importer::Scenes::Utilities::ImportShader(const char* nodeName, R_Model* rModel, ModelNode& modelNode)
+{
+	std::string sFullPath = App->fileSystem->GetDirectory(rModel->GetAssetsPath()) + nodeName + SHADERS_EXTENSION;
+	R_Shader* rShader = (R_Shader*)App->resourceManager->CreateResource(ResourceType::SHADER, sFullPath.c_str());			// Only considering one texture per mesh.
+
+	if (rShader == nullptr)
+	{
+		return;
+	}
+
+	Importer::Shaders::Import(sFullPath.c_str(), rShader);
+
+	modelNode.materialUID = rShader->GetUID();																								//
+
+	App->resourceManager->SaveResourceToLibrary(rShader);
+	App->resourceManager->DeallocateResource(rShader);
 }
 
 void Importer::Scenes::Utilities::ImportAnimations(const aiScene* assimpScene, R_Model* rModel)

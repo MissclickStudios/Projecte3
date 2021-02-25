@@ -164,8 +164,9 @@ bool E_Configuration::RendererMenu()
 	if (ImGui::CollapsingHeader("Renderer"))
 	{
 		// --- IS ACTIVE AND CURRENT DRIVER
-		ImGui::Text("Is Active:");		ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), App->renderer->IsActive() ? "True" : "False");
-		ImGui::Text("Driver:");			ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), App->renderer->GetDrivers());
+		ImGui::Text("Is Active:");			ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), App->renderer->IsActive() ? "True" : "False");
+		ImGui::Text("Driver:");				ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), App->renderer->GetDrivers());
+		ImGui::Text("Total Polycount:");	ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), /*App->renderer->GetPolycount()*/ "0");
 
 		// --- VSYNC
 		VsyncMode();

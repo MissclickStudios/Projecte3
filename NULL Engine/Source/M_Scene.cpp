@@ -101,7 +101,7 @@ UpdateStatus M_Scene::Update(float dt)
 		C_Animator* rootAnimator = animationRoot->GetComponent<C_Animator>();
 		if (rootAnimator != nullptr)
 		{
-			if (App->play)
+			if (App->play && !App->pause)
 			{
 				if (App->input->GetKey(SDL_SCANCODE_KP_1) == KeyState::KEY_DOWN)
 				{
@@ -532,7 +532,8 @@ void M_Scene::CreateComponentsFromModelNode(const ModelNode& modelNode, GameObje
 {
 	bool validMeshUid			= (modelNode.meshUID != 0)		?	true : false;
 	bool validMaterialUid		= (modelNode.materialUID != 0)	?	true : false;
-	bool validTextureUid		= (modelNode.textureUID != 0)		?	true : false;
+	bool validTextureUid		= (modelNode.textureUID != 0)	?	true : false;
+	bool validShaderUid			= (modelNode.shaderUID != 0)	?	true : false;
 	
 	// Set Mesh
 	if (validMeshUid)
@@ -555,6 +556,7 @@ void M_Scene::CreateComponentsFromModelNode(const ModelNode& modelNode, GameObje
 	{
 		C_Material* cMaterial = (C_Material*)gameObject->CreateComponent(ComponentType::MATERIAL);
 		R_Material* rMaterial = (R_Material*)App->resourceManager->RequestResource(modelNode.materialUID);
+		
 		if (rMaterial == nullptr)
 		{
 			LOG("[ERROR] Scene: Could not generate the Material Resource from the Model Node! Error: R_Material* could not be found in resources.");
@@ -563,6 +565,7 @@ void M_Scene::CreateComponentsFromModelNode(const ModelNode& modelNode, GameObje
 		}
 
 		cMaterial->SetMaterial(rMaterial);
+		
 
 		// Set Texture
 		if (validTextureUid)
@@ -576,6 +579,17 @@ void M_Scene::CreateComponentsFromModelNode(const ModelNode& modelNode, GameObje
 
 
 			cMaterial->SetTexture(r_texture);
+		}
+
+		if (validShaderUid)
+		{
+			R_Shader* rShader = (R_Shader*)App->resourceManager->RequestResource(modelNode.shaderUID);
+			if (rShader == nullptr)
+			{
+				LOG("[ERROR] Scene: Could not generate the Shader Resource from the Model Node! Error: R_Shader* could not be found in resources.");
+				return;
+			}
+			cMaterial->SetShader(rShader);
 		}
 	}
 }

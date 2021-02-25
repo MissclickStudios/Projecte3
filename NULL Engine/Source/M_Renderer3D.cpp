@@ -1,39 +1,44 @@
-#include "Profiler.h"																			// Libraries & Other 3rd Party Softwares
-#include "OpenGL.h"																				// -------------------------------------
+#include "Profiler.h"													
+#include "OpenGL.h"														
+#include "Time.h"
 
-#include "Macros.h"																				// Global Utilities
-#include "Log.h"																				// ----------------
+#include "Macros.h"														
+#include "Log.h"														
 
-#include "Color.h"																				// Containers
-#include "Icons.h"																				// 
-#include "Primitive.h"																			// ----------
+#include "Color.h"														
+#include "Icons.h"														
+#include "Primitive.h"													
 
-#include "Application.h"																		// Application and Modules
-#include "M_Window.h"																			// 
-#include "M_Camera3D.h"																			// 
-#include "M_Input.h"																			// 
-#include "M_FileSystem.h"																		// 
-#include "M_ResourceManager.h"																	// 
-#include "M_Editor.h"																			// -----------------------
+#include "Application.h"												
+#include "M_Window.h"													
+#include "M_Camera3D.h"													
+#include "M_Input.h"													
+#include "M_FileSystem.h"												
+#include "M_ResourceManager.h"											
+#include "M_Editor.h"													
 
-#include "R_Mesh.h"																				// Resources
-#include "R_Material.h"																			//
-#include "R_Texture.h"																			// ---------
+#include "R_Mesh.h"														
+#include "R_Material.h"													
+#include "R_Texture.h"
+#include "R_Shader.h"
 
-#include "I_Textures.h"																			// Importers
+#include "I_Textures.h"													
 
-#include "GameObject.h"																			// GameObject and Components Trading these two deps. for a much cleaner RenderMesh() method.
-#include "C_Mesh.h"																				// 
-#include "C_Material.h"																			// 
-#include "C_Camera.h"																			// -------------------------
+#include "GameObject.h"													
+#include "C_Mesh.h"														
+#include "C_Material.h"													
+#include "C_Camera.h"													
 
-#include "M_Renderer3D.h"																		// Header of this .cpp file.
+#include "M_Renderer3D.h"												
 
 #include "MemoryManager.h"
+//////////////////////////////////////////////////
+#include "I_Shaders.h"							//TODO: erase
+/////////////////////////////////////////////////
 
-#pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */							// Libraries Pragma Comments
-#pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */							// 
-#pragma comment (lib, "Source/Dependencies/Assimp/libx86/assimp.lib")							// -------------------------
+#pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */	
+#pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */	
+#pragma comment (lib, "Source/Dependencies/Assimp/libx86/assimp.lib")	
 
 #define WORLD_GRID_SIZE		64
 #define CHECKERS_WIDTH		64
@@ -355,10 +360,12 @@ bool M_Renderer3D::InitGlew()
 
 void M_Renderer3D::OnResize()
 {	
-	float winWidth		= (float)App->window->GetWidth();
+	App->window->RecalculateWindowSize();
+	
+	float winWidth	= (float)App->window->GetWidth();
 	float winHeight	= (float)App->window->GetHeight();
 
-	glViewport(0, 0, (GLsizei)winWidth, (GLsizei)winWidth);
+	glViewport(0, 0, (GLsizei)winWidth, (GLsizei)winHeight);
 
 	if (App->camera->GetCurrentCamera() != nullptr)
 	{
@@ -762,7 +769,7 @@ void M_Renderer3D::CreatePrimitiveExamples()
 	primitives.push_back(pyramid);
 }
 
-void M_Renderer3D::GenerateBuffers(const R_Mesh* mesh)
+/*void M_Renderer3D::GenerateBuffers(const R_Mesh* mesh)
 {
 	if (!mesh->vertices.empty())
 	{
@@ -791,7 +798,7 @@ void M_Renderer3D::GenerateBuffers(const R_Mesh* mesh)
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->IBO);																// Binds IBO with the GL_ARRAY_BUFFER biding point (target):
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * mesh->indices.size(), &mesh->indices[0], GL_STATIC_DRAW);	// Inits the data stored inside IBO and specifies how the data will be accessed.
 	}
-}
+}*/
 
 Icons M_Renderer3D::GetEngineIcons() const
 {
@@ -1197,39 +1204,42 @@ void MeshRenderer::Render()
 	}
 
 	//glMatrixMode(GL_MODELVIEW);
-	glPushMatrix();
-	glMultMatrixf((GLfloat*)&transform.Transposed());												// OpenGL requires that the 4x4 matrices are column-major instead of row-major.
+	//glPushMatrix();
+	//glMultMatrixf((GLfloat*)&transform.Transposed());												// OpenGL requires that the 4x4 matrices are column-major instead of row-major.
 
 	ApplyDebugParameters();																			// Enable Wireframe Mode for this specific mesh, etc.
 	ApplyTextureAndMaterial();																		// Apply resource texture or default texture, mesh color...
+	ApplyShader();
+	//glEnableClientState(GL_VERTEX_ARRAY);															// Enables the vertex array for writing and to be used during rendering.
+	//glEnableClientState(GL_NORMAL_ARRAY);															// Enables the normal array for writing and to be used during rendering.
+	//glEnableClientState(GL_TEXTURE_COORD_ARRAY);													// Enables the texture coordinate array for writing and to be used during rendering.
 
-	glEnableClientState(GL_VERTEX_ARRAY);															// Enables the vertex array for writing and to be used during rendering.
-	glEnableClientState(GL_NORMAL_ARRAY);															// Enables the normal array for writing and to be used during rendering.
-	glEnableClientState(GL_TEXTURE_COORD_ARRAY);													// Enables the texture coordinate array for writing and to be used during rendering.
+	//glBindBuffer(GL_ARRAY_BUFFER, rMesh->TBO);														// Will bind the buffer object with the mesh->TBO identifyer for rendering.
+	//glTexCoordPointer(2, GL_FLOAT, 0, nullptr);														// Specifies the location and data format of an array of tex coords to use when rendering.
 
-	glBindBuffer(GL_ARRAY_BUFFER, rMesh->TBO);														// Will bind the buffer object with the mesh->TBO identifyer for rendering.
-	glTexCoordPointer(2, GL_FLOAT, 0, nullptr);														// Specifies the location and data format of an array of tex coords to use when rendering.
+	//glBindBuffer(GL_ARRAY_BUFFER, rMesh->NBO);														// The normal buffer is bound so the normal positions can be interpreted correctly.
+	//glNormalPointer(GL_FLOAT, 0, nullptr);															// 
 
-	glBindBuffer(GL_ARRAY_BUFFER, rMesh->NBO);														// The normal buffer is bound so the normal positions can be interpreted correctly.
-	glNormalPointer(GL_FLOAT, 0, nullptr);															// 
+	//glBindBuffer(GL_ARRAY_BUFFER, rMesh->VBO);														// The vertex buffer is bound so the vertex positions can be interpreted correctly.
+	//glVertexPointer(3, GL_FLOAT, 0, nullptr);														// Specifies the location and data format of an array of vert coords to use when rendering.
 
-	glBindBuffer(GL_ARRAY_BUFFER, rMesh->VBO);														// The vertex buffer is bound so the vertex positions can be interpreted correctly.
-	glVertexPointer(3, GL_FLOAT, 0, nullptr);														// Specifies the location and data format of an array of vert coords to use when rendering.
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, rMesh->IBO);												// Will bind the buffer object with the mesh->IBO identifyer for rendering.
+	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, rMesh->IBO);												// Will bind the buffer object with the mesh->IBO identifyer for rendering.
+	
+	glBindVertexArray(rMesh->VAO);
 	glDrawElements(GL_TRIANGLES, rMesh->indices.size(), GL_UNSIGNED_INT, nullptr);					// 
 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);														// Clearing the buffers.
-	glBindBuffer(GL_ARRAY_BUFFER, 0);																// 												
+	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);														// Clearing the buffers.
+	//glBindBuffer(GL_ARRAY_BUFFER, 0);																// 												
+
+	//glDisableClientState(GL_TEXTURE_COORD_ARRAY);													// Disabling the client-side capabilities enabled at the beginning.
+	//glDisableClientState(GL_NORMAL_ARRAY);															// 
+	//glDisableClientState(GL_VERTEX_ARRAY);															// Disabling GL_TEXTURE_COORD_ARRAY, GL_NORMAL_ARRAY and GL_VERTEX_ARRAY.
+
 	glBindTexture(GL_TEXTURE_2D, 0);																// ---------------------
-
-	glDisableClientState(GL_TEXTURE_COORD_ARRAY);													// Disabling the client-side capabilities enabled at the beginning.
-	glDisableClientState(GL_NORMAL_ARRAY);															// 
-	glDisableClientState(GL_VERTEX_ARRAY);															// Disabling GL_TEXTURE_COORD_ARRAY, GL_NORMAL_ARRAY and GL_VERTEX_ARRAY.
-
+	
 	ClearTextureAndMaterial();																		// Clear the specifications applied in ApplyTextureAndMaterial().
 	ClearDebugParameters();																			// Clear the specifications applied in ApplyDebugParameters().
-
+	ClearShader();
 	// --- DEBUG DRAW ---
 	if (rMesh->drawVertexNormals || App->renderer->GetRenderVertexNormals())
 	{
@@ -1241,7 +1251,7 @@ void MeshRenderer::Render()
 		RenderFaceNormals(rMesh);
 	}
 
-	glPopMatrix();
+	//glPopMatrix();
 }
 
 void MeshRenderer::RenderVertexNormals(const R_Mesh* rMesh)
@@ -1423,6 +1433,61 @@ void MeshRenderer::ClearTextureAndMaterial()
 		}
 	}
 }
+
+void MeshRenderer::ApplyShader()
+{
+	uint32 shaderProgram = 0;
+	if (cMaterial != nullptr)
+	{
+		//if(cMaterial->GetShader()) shaderProgram = cMaterial->GetShader()->shaderProgramID;
+
+		cMaterial->GetShader() ? shaderProgram = cMaterial->GetShader()->shaderProgramID : shaderProgram;
+
+		shaderProgram ? shaderProgram : shaderProgram = SetDefaultShader(cMaterial);
+
+		glUseProgram(shaderProgram);
+
+		cMaterial->GetTexture() ? cMaterial->GetShader()->SetUniform1i("hasTexture", (GLint)true) : cMaterial->GetShader()->SetUniform1i("hasTexture", (GLint)false);
+
+		if (shaderProgram != 0)
+		{
+			cMaterial->GetShader()->SetUniformVec4f("inColor", (GLfloat*)&cMaterial->GetMaterialColour());
+
+			cMaterial->GetShader()->SetUniformMatrix4("modelMatrix", transform.Transposed().ptr());
+
+			cMaterial->GetShader()->SetUniformMatrix4("viewMatrix", App->camera->GetCurrentCamera()->GetOGLViewMatrix());
+
+			cMaterial->GetShader()->SetUniformMatrix4("projectionMatrix", App->camera->GetCurrentCamera()->GetOGLProjectionMatrix());
+
+			cMaterial->GetShader()->SetUniform1f("time", Time::Game::GetTimeSinceStart());
+
+			cMaterial->GetShader()->SetUniform1i("skybox", 11);
+
+			cMaterial->GetShader()->SetUniformVec3f("cameraPosition", (GLfloat*)&App->camera->GetCurrentCamera()->GetFrustum().Pos());
+
+			Importer::Shaders::SetShaderUniforms(cMaterial->GetShader());
+		}
+	}
+}
+
+uint32 MeshRenderer::SetDefaultShader(C_Material* cMaterial)
+{
+	R_Shader* rShader = nullptr;
+
+	rShader = App->resourceManager->GetDefaultShader();	
+
+	cMaterial->SetShader(rShader);
+
+	return cMaterial->GetShaderProgramID();
+}
+
+void MeshRenderer::ClearShader()
+{
+	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+	glUseProgram(0);
+}
+
+
 
 // --- CUBOID RENDERER METHODS
 CuboidRenderer::CuboidRenderer(const float3* vertices, const Color& color, const float& edgeWidth) :

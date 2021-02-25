@@ -48,6 +48,8 @@ public:
 	void		SetBorderless			(bool setTo);							// 
 	void		SetFullscreenDesktop	(bool setTo);							// 
 
+	void		RecalculateWindowSize	();
+
 private:
 	SDL_Window*		window;														// The window we'll be rendering to
 	SDL_Surface*	screenSurface;												// The surface contained by the window
