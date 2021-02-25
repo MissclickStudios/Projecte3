@@ -6,6 +6,14 @@
 #include "Dependencies/MathGeoLib/include/Math/float3.h"
 #include "Dependencies/MathGeoLib/include/Math/Quat.h"
 
+enum class Billboarding 
+{
+	SCREEN_ALIGNED,
+	WORLD_ALIGNED,
+	AXIS_ALIGNED,
+	NONE
+};
+
 class Particle
 {
 public:
@@ -14,6 +22,8 @@ public:
 	~Particle();
 
 	void Update(float dt);
+
+	void ApplyBillboarding(Billboarding type = Billboarding::NONE);
 
 public:
 	float3 position;
@@ -26,6 +36,7 @@ public:
 	float size = 1.0f;
 	float color;
 	float distanceToCamera;
+	bool usesBillboarding;
 };
 
 #endif // !__PARTICLE_H__
