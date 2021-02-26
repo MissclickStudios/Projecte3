@@ -6,6 +6,8 @@
 #include "Dependencies/MathGeoLib/include/Math/float3.h"
 #include "Dependencies/MathGeoLib/include/Math/Quat.h"
 
+class C_Camera;
+
 enum class Billboarding 
 {
 	SCREEN_ALIGNED,
@@ -22,6 +24,10 @@ public:
 	~Particle();
 
 	void Update(float dt);
+
+	void ScreenAligned(C_Camera* currentCamera = nullptr);
+	void WorldAligned(C_Camera* currentCamera = nullptr);
+	void AxisAligned(C_Camera* currentCamera = nullptr);
 
 	void ApplyBillboarding(Billboarding type = Billboarding::NONE);
 
