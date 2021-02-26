@@ -1,8 +1,9 @@
 #include "Application.h"
-
 #include "M_Physics.h"
 
-#include "PhysX_3.4/Include/PxPhysicsAPI.h"
+#include "GameObject.h"
+
+#include "SimulationCallback.h" // PhysxAPI already included in here
 
 #define BOUNCE_THRESHOLD 0.2f
 #define THREADS 4
@@ -40,6 +41,20 @@ bool M_Physics::Init(ParsonNode& root)
 	return true;
 }
 
+physx::PxFilterFlags customFilterShader(
+	physx::PxFilterObjectAttributes attributes0, physx::PxFilterData filterData0,
+	physx::PxFilterObjectAttributes attributes1, physx::PxFilterData filterData1,
+	physx::PxPairFlags& pairFlags, const void* constantBlock, physx::PxU32 constantBlockSize)
+{
+	pairFlags = physx::PxPairFlag::eCONTACT_DEFAULT;
+	pairFlags |= physx::PxPairFlag::eNOTIFY_CONTACT_POINTS;
+	pairFlags |= physx::PxPairFlag::eNOTIFY_TOUCH_FOUND;
+	pairFlags |= physx::PxPairFlag::eNOTIFY_TOUCH_PERSISTS;
+	pairFlags |= physx::PxPairFlag::eNOTIFY_TOUCH_LOST;
+
+	return physx::PxFilterFlag::eDEFAULT;
+}
+
 bool M_Physics::Start()
 {
 	LOG("Initializing PhysX 3.4 --------------");
@@ -72,13 +87,19 @@ bool M_Physics::Start()
 	}
 	LOG("Physics Cooking created succesfully");
 
+	simulationCallback = new SimulationCallback();
 	physx::PxSceneDesc sceneDesc(physics->getTolerancesScale());
+
+	
 	sceneDesc.gravity = physx::PxVec3(0.0f, -gravity, 0.0f);
 	sceneDesc.bounceThresholdVelocity = gravity * BOUNCE_THRESHOLD;
 	sceneDesc.cpuDispatcher = physx::PxDefaultCpuDispatcherCreate(THREADS);
 	sceneDesc.flags |= physx::PxSceneFlag::eENABLE_KINEMATIC_PAIRS | physx::PxSceneFlag::eENABLE_KINEMATIC_STATIC_PAIRS;
-	sceneDesc.filterShader = physx::PxDefaultSimulationFilterShader;
+	sceneDesc.filterShader = customFilterShader;
+	sceneDesc.simulationEventCallback = simulationCallback;
+
 	scene = physics->createScene(sceneDesc);
+
 	if (!scene)
 	{
 		LOG("[ERROR] Physics Module: createScene failed!");
@@ -129,18 +150,13 @@ bool M_Physics::CleanUp()
 		scene->release();
 	if (physics)
 		physics->release();
-	if (pvd)
-		pvd->release();
 	if (foundation)
 		foundation->release();
-	if (raycastManager)
-		delete raycastManager;
 
 	controllerManager = nullptr;
 	physics = nullptr;
 	foundation = nullptr;
 	scene = nullptr;
-	pvd = nullptr;
 
 	return true;
 }
@@ -157,12 +173,23 @@ bool M_Physics::SaveConfiguration(ParsonNode& configuration) const
 
 void M_Physics::AddActor(physx::PxActor* actor)
 {
-	if (actor)
-		scene->addActor(*actor);
+	if (!actor)
+		return;
+	if (!actor->userData)
+	{
+		LOG("[ERROR] Physics Module: Cant add an actor not attached to a GameObject!");
+		return;
+	}
+
+	scene->addActor(*actor);
+	actors.insert(std::make_pair<physx::PxRigidDynamic*, GameObject*>((physx::PxRigidDynamic*)actor, (GameObject*)actor->userData));
 }
 
 void M_Physics::DeleteActor(physx::PxActor* actor)
 {
-	if (actor)
-		scene->removeActor(*actor);
+	if (!actor)
+		return;
+
+	scene->removeActor(*actor);
+	actors.erase((physx::PxRigidDynamic*)actor);
 }

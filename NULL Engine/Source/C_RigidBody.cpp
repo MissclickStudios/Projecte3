@@ -18,6 +18,9 @@ C_RigidBody::C_RigidBody(GameObject* owner) : Component(owner, ComponentType::RI
 		physx::PxTransform(physx::PxVec3(position.x, position.y, position.z),
 			physx::PxQuat(rotation.x, rotation.y, rotation.z, rotation.w)));
 
+	//We save a pointer to the gameobject inside the physically simulated body
+	rigidBody->userData = this;
+
 	if (!rigidBody)
 	{
 		delete this;

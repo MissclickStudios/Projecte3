@@ -154,6 +154,9 @@
     <Filter Include="Source\6_Containers\Animation">
       <UniqueIdentifier>{29e2c196-174d-4b25-be5b-98a268ce9867}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\7_Tools\Physics">
+      <UniqueIdentifier>{6f17c2fe-18ff-4f0e-820e-ee49f0d45e1d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Application.cpp">
@@ -560,6 +563,9 @@
     </ClCompile>
     <ClCompile Include="Source\C_SphereCollider.cpp">
       <Filter>Source\5_GameObjects\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\SimulationCallback.cpp">
+      <Filter>Source\7_Tools\Physics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1178,9 +1184,6 @@
     <ClInclude Include="Source\C_RigidBody.h">
       <Filter>Source\5_GameObjects\Components</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Collider.h">
-      <Filter>Source\7_Tools\Includes</Filter>
-    </ClInclude>
     <ClInclude Include="Source\C_BoxCollider.h">
       <Filter>Source\5_GameObjects\Components</Filter>
     </ClInclude>
@@ -1189,6 +1192,12 @@
     </ClInclude>
     <ClInclude Include="Source\C_CapsuleCollider.h">
       <Filter>Source\5_GameObjects\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Collider.h">
+      <Filter>Source\7_Tools\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\SimulationCallback.h">
+      <Filter>Source\7_Tools\Physics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

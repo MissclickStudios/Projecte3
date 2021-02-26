@@ -5,27 +5,19 @@
 
 namespace physx
 {
-	class PxPvd;
-	class PxPvdSceneClient;
 	class PxFoundation;
 	class PxPhysics;
 	class PxScene;
 	class PxMaterial;
-	class PxRigidStatic;
-	class PxControllerManager;
-	class PxRigidActor;
-	class PxVolumeCache;
+	class PxRigidDynamic;
 	class PxSimulationEventCallback;
 	class PxActor;
-	struct PxActorShape;
-	class PxQueryFilterCallback;
-	class RaycastCCDManager;
+	class PxControllerManager;
 	class PxCooking;
-	class PxConvexMesh;
-	class PxBase;
-
-	typedef uint32_t PxU32;
 };
+
+class GameObject;
+class SimulationCallback;
 
 class M_Physics : public Module
 {
@@ -47,20 +39,18 @@ public:
 
 	physx::PxPhysics* physics = nullptr;
 	physx::PxMaterial* material = nullptr;
+	std::map<physx::PxRigidDynamic*, GameObject*> actors;
 
 	bool simulating = false;
 
 private:
 
-	physx::PxPvd* pvd = nullptr;
 	physx::PxCooking* cooking = nullptr;
-	physx::PxPvdSceneClient* pvdClient = nullptr;
 	physx::PxFoundation* foundation = nullptr;
 	physx::PxControllerManager* controllerManager = nullptr;
 	physx::PxScene* scene = nullptr;
 
-	physx::PxRigidStatic* plane = nullptr;
-	physx::RaycastCCDManager* raycastManager = nullptr;
+	SimulationCallback* simulationCallback = nullptr;
 
 	float gravity = 9.8f;
 };
