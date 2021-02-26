@@ -230,7 +230,7 @@ void Importer::Scenes::Utilities::ImportTexture(const std::vector<MaterialData>&
 {
 	for (uint i = 0; i < materials.size(); ++i)
 	{
-		const char* texPath	= materials[i].textureAssetsPath.c_str();
+		const char* texPath		= materials[i].textureAssetsPath.c_str();
 		char* buffer			= nullptr;
 		uint read				= App->fileSystem->Load(texPath, &buffer);
 		if (buffer != nullptr && read > 0)
@@ -249,11 +249,11 @@ void Importer::Scenes::Utilities::ImportTexture(const std::vector<MaterialData>&
 			}
 			
 			R_Texture* rTexture = (R_Texture*)App->resourceManager->CreateResource(ResourceType::TEXTURE, texPath);
-			uint texId = Importer::Textures::Import(buffer, read, rTexture);											//
-
-			if (texId == 0)
+			
+			bool success = Importer::Textures::Import(buffer, read, rTexture);											//
+			if (success == 0)
 			{
-				App->resourceManager->DeleteResource(rTexture);
+				App->resourceManager->DeallocateResource(rTexture);
 				RELEASE_ARRAY(buffer);
 				continue;
 			}
@@ -261,12 +261,12 @@ void Importer::Scenes::Utilities::ImportTexture(const std::vector<MaterialData>&
 			if (materials[i].type == TextureType::DIFFUSE)																// For now only the diffuse texture will be used on models' meshes.
 			{
 				modelNode.textureUID	= rTexture->GetUID();
-				modelNode.textureName = rTexture->GetAssetsFile();
+				modelNode.textureName	= rTexture->GetAssetsFile();
 			}
 
 			loadedTextures.emplace(texPath, rTexture->GetUID());
 
-			App->resourceManager->SaveResourceToLibrary(rTexture);
+			App->resourceManager->SaveResourceToLibrary(rTexture);														// Generating custom file + meta and emplacing in library.
 			App->resourceManager->DeallocateResource(rTexture);
 
 			RELEASE_ARRAY(buffer);
@@ -285,6 +285,7 @@ void Importer::Scenes::Utilities::ImportShader(const char* nodeName, R_Model* rM
 
 	if (rShader == nullptr)
 	{
+		LOG("[ERROR] Importer: Could not Import Shader! Error: Given R_Shader* was nullptr.");
 		return;
 	}
 

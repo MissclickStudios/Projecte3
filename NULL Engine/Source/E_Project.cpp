@@ -125,7 +125,7 @@ void E_Project::CheckFlags()
 
 		for (uint i = 0; i < displayDirectory.children.size(); ++i)
 		{
-			Resource* resource = App->resourceManager->GetResourceFromMetaFile(displayDirectory.children[i].path.c_str());
+			Resource* resource = App->resourceManager->GetResourceFromLibrary(displayDirectory.children[i].path.c_str());
 
 			if (resource != nullptr)
 			{
