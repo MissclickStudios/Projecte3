@@ -9,7 +9,6 @@ SimulationCallback::SimulationCallback() {}
 
 void SimulationCallback::onContact(const physx::PxContactPairHeader& pairHeader, const physx::PxContactPair* pairs, physx::PxU32 nbPairs)
 {
-	LOG("CONTACT");
 	for (physx::PxU32 i = 0; i < nbPairs; ++i)
 	{
 		const physx::PxContactPair& cPair = pairs[i];
@@ -23,14 +22,14 @@ void SimulationCallback::onContact(const physx::PxContactPairHeader& pairHeader,
 		{
 			if (cPair.events & physx::PxPairFlag::eNOTIFY_TOUCH_FOUND)
 			{
-				LOG("DOWN");
+				LOG("CONTACT: DOWN");
 			}
 			else if (cPair.events & physx::PxPairFlag::eNOTIFY_TOUCH_PERSISTS)
 			{
 			}
 			else if (cPair.events & physx::PxPairFlag::eNOTIFY_TOUCH_LOST)
 			{
-				LOG("UP");
+				LOG("CONTACT: UP");
 			}
 		}
 	}
@@ -38,7 +37,6 @@ void SimulationCallback::onContact(const physx::PxContactPairHeader& pairHeader,
 
 void SimulationCallback::onTrigger(physx::PxTriggerPair* pairs, physx::PxU32 count)
 {
-	LOG("TRIGGER");
 	for (physx::PxU32 i = 0; i < count; ++i)
 	{
 		GameObject* gameObject1 = nullptr;
@@ -51,11 +49,11 @@ void SimulationCallback::onTrigger(physx::PxTriggerPair* pairs, physx::PxU32 cou
 		{
 			if ((pairs[i].status & physx::PxPairFlag::eNOTIFY_TOUCH_FOUND))
 			{
-				LOG("DOWN");
+				LOG("TRIGGER: DOWN");
 			}
 			else if ((pairs[i].status & physx::PxPairFlag::eNOTIFY_TOUCH_LOST))
 			{
-				LOG("UP");
+				LOG("TRIGGER: UP");
 			}
 		}
 	}
