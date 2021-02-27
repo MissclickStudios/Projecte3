@@ -87,7 +87,7 @@ private:
 	float3 angularVel = float3::zero;
 
 	bool useGravity = true;
-	bool isKinematic = false;
+	bool isKinematic = true;
 	bool freezePositionX = false;
 	bool freezePositionY = false;
 	bool freezePositionZ = false;

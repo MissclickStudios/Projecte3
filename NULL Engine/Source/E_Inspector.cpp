@@ -767,20 +767,20 @@ void E_Inspector::DrawRigidBodyComponent(C_RigidBody* cRigidBody)
 			bool isActive = cRigidBody->IsActive();
 			if (ImGui::Checkbox("RigidBody Is Active", &isActive))
 				cRigidBody->SetIsActive(isActive);
-
+	
 			ImGui::SameLine();
-
+	
 			if (ImGui::Button("Make Dynamic"))
 				cRigidBody->MakeDynamic();
-
+	
 			ImGui::Separator();
-
+	
 			if (!show)
 			{
 				componentToDelete = cRigidBody;
 				showDeleteComponentPopup = true;
 			}
-
+	
 			ImGui::Separator();
 		}
 		return;

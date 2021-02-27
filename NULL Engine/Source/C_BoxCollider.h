@@ -39,7 +39,7 @@ private:
 	physx::PxShape* shape = nullptr;
 
 	bool isTrigger = false;
-	float3 colliderSize = float3(10, 10, 10);
+	float3 colliderSize = float3(1, 1, 1);
 	float3 centerPosition = float3::zero;
 
 	ColliderUpdateType toUpdate = ColliderUpdateType::NONE;

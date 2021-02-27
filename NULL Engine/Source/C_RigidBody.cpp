@@ -23,9 +23,9 @@ C_RigidBody::C_RigidBody(GameObject* owner) : Component(owner, ComponentType::RI
 
 	if (!rigidBody)
 	{
+		LOG("[ERROR] RigidBody Component: Couldn't create rigidbody");
 		delete this;
 
-		LOG("[ERROR] RigidBody Component: Couldn't create rigidbody");
 		return;
 	}
 
@@ -147,34 +147,14 @@ void C_RigidBody::MakeStatic()
 {
 	isStatic = true;
 
-	freezePositionX = true;
-	freezePositionY = true;
-	freezePositionZ = true;
-	freezeRotationX = true;
-	freezeRotationY = true;
-	freezeRotationZ = true;
-	useGravity = false;
-	mass = 1000000.0f;
-	density = 1000.0f;
-
-	ApplyPhysicsChanges();
+	rigidBody->setRigidBodyFlag(physx::PxRigidBodyFlag::eKINEMATIC, true);
 }
 
 void C_RigidBody::MakeDynamic()
 {
 	isStatic = false;
 
-	freezePositionX = false;
-	freezePositionY = false;
-	freezePositionZ = false;
-	freezeRotationX = false;
-	freezeRotationY = false;
-	freezeRotationZ = false;
-	useGravity = true;
-	mass = 10.0f;
-	density = 1.0f;
-
-	ApplyPhysicsChanges();
+	rigidBody->setRigidBodyFlag(physx::PxRigidBodyFlag::eKINEMATIC, false);
 }
 
 void C_RigidBody::ApplyPhysicsChanges()
@@ -185,7 +165,7 @@ void C_RigidBody::ApplyPhysicsChanges()
 	physx::PxRigidBodyExt::updateMassAndInertia(*rigidBody, density);
 
 	rigidBody->setActorFlag(physx::PxActorFlag::eDISABLE_GRAVITY, !useGravity);
-	rigidBody->setRigidBodyFlag(physx::PxRigidBodyFlag::eKINEMATIC, isKinematic);
+	rigidBody->setRigidBodyFlag(physx::PxRigidBodyFlag::eKINEMATIC, !isKinematic);
 
 	rigidBody->setLinearVelocity(physx::PxVec3(linearVel.x, linearVel.y, linearVel.z));
 	rigidBody->setAngularVelocity(physx::PxVec3(angularVel.x, angularVel.y, angularVel.z));

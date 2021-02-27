@@ -115,19 +115,14 @@ void C_BoxCollider::CreateCollider()
 		GetOwner()->GetComponent<C_RigidBody>()->MakeStatic();
 	}
 
-	float3 size;
-	if (colliderSize.IsZero())
-		size = GetOwner()->transform->GetWorldScale();
-	else
-		size = colliderSize;
+	float3 size = colliderSize;
 
-	colliderSize = { size.x, size.y, size.z };
 	physx::PxBoxGeometry boxGeometry = physx::PxBoxGeometry(physx::PxVec3(size.x / 2, size.y / 2, size.z / 2));
 	shape = App->physics->physics->createShape(boxGeometry, *App->physics->material);
 
 	physx::PxVec3 p = physx::PxVec3(centerPosition.x, centerPosition.y + colliderSize.y / 2, centerPosition.z);
 	shape->setLocalPose(physx::PxTransform(p));
-
+	
 	shape->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE, !isTrigger);
 	shape->setFlag(physx::PxShapeFlag::eTRIGGER_SHAPE, isTrigger);
 
