@@ -166,7 +166,6 @@ void E_Inspector::DrawComponents(GameObject* selectedGameObject)
 		case ComponentType::ANIMATOR:	{ DrawAnimatorComponent((C_Animator*)component); }		break;
 		case ComponentType::ANIMATION: { DrawAnimationComponent((C_Animation*)component); }	break;
 		case ComponentType::CANVAS: { DrawCanvasComponent((C_Canvas*)component); }				break;
-		case ComponentType::TRANSFORM2D: { DrawTransform2DComponent((C_Transform2D*)component); }	break;
 		}
 
 		if (type == ComponentType::NONE)
@@ -824,8 +823,18 @@ void E_Inspector::DrawCanvasComponent(C_Canvas* cCanvas)
 
 			if (ImGui::Button("Add Image"))
 			{
-				UI_Image* image = new UI_Image(cCanvas);
+				UI_Image* image = new UI_Image(cCanvas, { 0,0,100,100 });
 				cCanvas->uiElements.push_back(image);
+			}
+
+			for (std::vector<UIElement*>::iterator uiIt = cCanvas->uiElements.begin(); uiIt != cCanvas->uiElements.end(); uiIt++)
+			{
+				switch ((*uiIt)->GetType())
+				{
+				case UIElementType::NONE: break;
+				case UIElementType::IMAGE: { DrawUIImage((UI_Image*)*uiIt); } break;
+				case UIElementType::BUTTON: break;
+				}
 			}
 		}
 
@@ -840,38 +849,50 @@ void E_Inspector::DrawCanvasComponent(C_Canvas* cCanvas)
 }
 
 
-void E_Inspector::DrawTransform2DComponent(C_Transform2D* transform2D)
+void E_Inspector::DrawUIImage(UI_Image* image)
 {
 	static bool show = true;
-	if (ImGui::CollapsingHeader("Transform2D", &show, ImGuiTreeNodeFlags_DefaultOpen))
+	if (ImGui::CollapsingHeader("Image", &show, ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		if (transform2D != nullptr)
-		{
-			bool isActive = transform2D->IsActive();
-			if (ImGui::Checkbox("Transform2D Is Active", &isActive)) { transform2D->SetIsActive(isActive); }
-
-			ImGui::Separator();
-
-			ImGui::TextColored(Cyan.C_Array(), "Transform2D Settings:");
-
-			ImGui::Separator();
-
-			float2 pos = transform2D->GetPosition();
-
-			if (ImGui::DragFloat2("Position 2D", (float*)&pos, 0.05f, 0.0f, 0.0f, "%.3f", NULL))
-			{
-				transform2D->SetPosition(pos);
-			}
-		}
-
-		if (!show)
-		{
-			componentToDelete = transform2D;
-			showDeleteComponentPopup = true;
-		}
+		bool isActive = image->IsActive();
+		if (ImGui::Checkbox("Image Is Active", &isActive)) { image->SetIsActive(isActive); }
 
 		ImGui::Separator();
+
+		// --- RECT ---
+		float2 pos = { image->GetRect().x, image->GetRect().y };
+		float2 size = { image->GetRect().w, image->GetRect().h };
+
+		C_Canvas* canvas = image->GetCanvas();
+
+		if (ImGui::DragFloat2("Image Pos", (float*)&pos, 0.05f, 0.0f, 0.0f, "%.3f", NULL))
+		{
+			if (pos.x - size.x / 2 < canvas->GetPosition().x - canvas->GetSize().x / 2)
+				pos.x = canvas->GetPosition().x - canvas->GetSize().x / 2 + size.x / 2;
+
+			if (pos.x + size.x / 2 > canvas->GetPosition().x + canvas->GetSize().x / 2)
+				pos.x = canvas->GetPosition().x + canvas->GetSize().x / 2 - size.x / 2;
+
+
+			if (pos.y - size.y / 2 < canvas->GetPosition().y - canvas->GetSize().y / 2)
+				pos.y = canvas->GetPosition().y - canvas->GetSize().y / 2 + size.y / 2;
+
+			if (pos.y + size.y / 2 > canvas->GetPosition().y + canvas->GetSize().y / 2)
+				pos.y = canvas->GetPosition().y + canvas->GetSize().y / 2 - size.y / 2;
+
+			image->SetX(pos.x);
+			image->SetY(pos.y);
+		}
+
+		if (ImGui::DragFloat2("Image Size", (float*)&size, 0.05f, 0.0f, 0.0f, "%.3f", NULL))
+		{
+			image->SetW(size.x);
+			image->SetH(size.y);
+		}
 	}
+
+	ImGui::Separator();
+
 }
 
 void E_Inspector::AddComponentCombo(GameObject* selectedGameObject)

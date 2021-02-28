@@ -21,6 +21,7 @@ class MeshSettings;
 class MaterialSettings;
 class TextureSettings;
 class AnimationSettings;
+class UI_Image;
 
 class E_Inspector : public EditorPanel
 {
@@ -43,7 +44,7 @@ private:
 	void DrawAnimatorComponent			(C_Animator* cAnimator);
 	void DrawAnimationComponent			(C_Animation* cAnimation);
 	void DrawCanvasComponent			(C_Canvas* cCanvas);
-	void DrawTransform2DComponent		(C_Transform2D* transform2D);
+	void DrawUIImage					(UI_Image* image);
 
 	void AddComponentCombo				(GameObject* selectedGameObject);					// 
 	void DeleteComponentPopup			(GameObject* selectedGameObject);					// 

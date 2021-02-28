@@ -10,7 +10,7 @@ class C_Canvas;
 class UIE_Button : public UIElement
 {
 public:
-	UIE_Button(C_Canvas* owner);
+	UIE_Button(C_Canvas* owner, Rect rect);
 	~UIE_Button();
 
 	bool Update() override;

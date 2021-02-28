@@ -1,6 +1,6 @@
 #include "UI_Button.h"
 
-UIE_Button::UIE_Button(C_Canvas* owner) : UIElement(owner, UIElementType::BUTTON)
+UIE_Button::UIE_Button(C_Canvas* owner, Rect rect) : UIElement(owner, UIElementType::BUTTON, rect)
 {
 
 }

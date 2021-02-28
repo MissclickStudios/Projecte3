@@ -125,12 +125,7 @@ void C_Transform2D::SetSize(float2 size)
 
 void C_Transform2D::UpdateZ()
 {
-	if (GetOwner()->components.size() > 1) {
-		z_depth_with_layers = z_depth * ((UIElement*)GetOwner()->components[1])->uiLayer + z_depth;
-	}
-	else {
-		z_depth_with_layers = z_depth;
-	}
+	
 }
 
 bool C_Transform2D::UpdateMatrixBillboard()
@@ -189,12 +184,7 @@ void C_Transform2D::SetMatricesWithNewParent(float4x4 parent_global_matrix)
 
 	position = { pos.x,pos.y };
 	z_depth = pos.z;
-	if (GetOwner()->components.size() > 1) {
-		z_depth_with_layers = z_depth * ((UIElement*)GetOwner()->components[1])->uiLayer + z_depth;
-	}
-	else {
-		z_depth_with_layers = z_depth;
-	}
+	
 	size = { s.x,s.y };
 	relative_size.x = App->window->GetWidth() / size.x;
 	relative_size.y = App->window->GetHeight() / size.y;

@@ -10,7 +10,7 @@ class C_Canvas;
 class UI_Image : public UIElement
 {
 public:
-	UI_Image(C_Canvas* canvas);
+	UI_Image(C_Canvas* canvas, Rect rect);
 	~UI_Image();
 
 	bool Update() override;
@@ -18,7 +18,8 @@ public:
 
 	static UIElementType GetType() { return UIElementType::IMAGE; }
 
-	void RenderImage();
+	void RenderImage2D();
+	void RenderImage3D();
 
 public:
 

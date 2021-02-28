@@ -33,11 +33,9 @@ bool C_Canvas::Update()
 	//This will be world space only
 	if (IsActive())
 	{
-		pivot.z = GetPosition().z;
-
 		GameObject* owner = GetOwner();
-		SetPosition(owner->transform->GetWorldPosition());
-		
+		SetPosition({ owner->transform->GetWorldPosition().x, owner->transform->GetWorldPosition().y });
+		z = owner->transform->GetWorldPosition().z;
 	}
 
 	return ret;
@@ -58,10 +56,10 @@ void C_Canvas::Draw2D()
 	glBegin(GL_LINES);
 
 	glColor4f(1.0f, 0.0f, 0.0f, 1.0f);										// X Axis.
-	glVertex3f(rect.x - rect.w / 2, rect.y + rect.h / 2, rect.z);			glVertex3f(rect.x + rect.w / 2, rect.y + rect.h / 2, rect.z);
-	glVertex3f(rect.x + rect.w / 2, rect.y + rect.h / 2, rect.z);			glVertex3f(rect.x + rect.w / 2, rect.y - rect.h / 2, rect.z);
-	glVertex3f(rect.x + rect.w / 2, rect.y - rect.h / 2, rect.z);			glVertex3f(rect.x - rect.w / 2, rect.y - rect.h / 2, rect.z);
-	glVertex3f(rect.x - rect.w / 2, rect.y - rect.h / 2, rect.z);			glVertex3f(rect.x - rect.w / 2, rect.y + rect.h / 2, rect.z);
+	glVertex2f(rect.x - rect.w / 2, rect.y + rect.h / 2);			glVertex2f(rect.x + rect.w / 2, rect.y + rect.h / 2);
+	glVertex2f(rect.x + rect.w / 2, rect.y + rect.h / 2);			glVertex2f(rect.x + rect.w / 2, rect.y - rect.h / 2);
+	glVertex2f(rect.x + rect.w / 2, rect.y - rect.h / 2);			glVertex2f(rect.x - rect.w / 2, rect.y - rect.h / 2);
+	glVertex2f(rect.x - rect.w / 2, rect.y - rect.h / 2);			glVertex2f(rect.x - rect.w / 2, rect.y + rect.h / 2);
 
 	glEnd();
 
@@ -75,7 +73,7 @@ void C_Canvas::Draw2D()
 		float x = sizeAv * cosf(angle);										//calculate the x component
 		float y = sizeAv * sinf(angle);										//calculate the y component
 
-		glVertex3f(rect.x + pivot.x + x, rect.y + pivot.y + y, rect.z);		//output vertex
+		glVertex2f(rect.x + pivot.x + x, rect.y + pivot.y + y);		//output vertex
 
 	}
 	glEnd();
@@ -100,10 +98,10 @@ void C_Canvas::Draw3D()
 	glBegin(GL_LINES);
 
 	glColor4f(1.0f, 0.0f, 0.0f, 1.0f);										// X Axis.
-	glVertex3f(- rect.w / 2, + rect.h / 2, 0);			glVertex3f(+ rect.w / 2, + rect.h / 2, 0);
-	glVertex3f(+ rect.w / 2, + rect.h / 2, 0);			glVertex3f(+ rect.w / 2, - rect.h / 2, 0);
-	glVertex3f(+ rect.w / 2, - rect.h / 2, 0);			glVertex3f(- rect.w / 2, - rect.h / 2, 0);
-	glVertex3f(- rect.w / 2, - rect.h / 2, 0);			glVertex3f(- rect.w / 2, + rect.h / 2, 0);
+	glVertex2f(- rect.w / 2, + rect.h / 2);			glVertex2f(+ rect.w / 2, + rect.h / 2);
+	glVertex2f(+ rect.w / 2, + rect.h / 2);			glVertex2f(+ rect.w / 2, - rect.h / 2);
+	glVertex2f(+ rect.w / 2, - rect.h / 2);			glVertex2f(- rect.w / 2, - rect.h / 2);
+	glVertex2f(- rect.w / 2, - rect.h / 2);			glVertex2f(- rect.w / 2, + rect.h / 2);
 
 	glEnd();
 
@@ -150,9 +148,9 @@ bool C_Canvas::LoadState(ParsonNode& root)
 	return ret;
 }
 
-float3 C_Canvas::GetPosition() const
+float2 C_Canvas::GetPosition() const
 {
-	return { rect.x, rect.y, rect.z };
+	return { rect.x, rect.y };
 }
 
 float2 C_Canvas::GetSize() const
@@ -165,11 +163,16 @@ Rect C_Canvas::GetRect() const
 	return rect;
 }
 
-void C_Canvas::SetPosition(const float3& position)
+float C_Canvas::GetZ() const
+{
+	return z;
+}
+
+
+void C_Canvas::SetPosition(const float2& position)
 {
 	this->rect.x = position.x;
 	this->rect.y = position.y;
-	this->rect.z = position.z;
 }
 
 void C_Canvas::SetSize(const float2& size)
@@ -182,7 +185,6 @@ void C_Canvas::SetRect(const Rect& rect)
 {
 	this->rect.x = rect.x;
 	this->rect.y = rect.y;
-	this->rect.z = rect.z;
 	this->rect.w = rect.w;
 	this->rect.h = rect.h;
 }
@@ -190,6 +192,11 @@ void C_Canvas::SetRect(const Rect& rect)
 void C_Canvas::SetIsInvisible(const bool setTo)
 {
 	isInvisible = setTo;
+}
+
+void C_Canvas::SetZ(const float& z)
+{
+	this->z = z;
 }
 
 bool C_Canvas::IsInvisible() const

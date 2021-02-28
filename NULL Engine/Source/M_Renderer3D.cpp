@@ -27,7 +27,8 @@
 #include "C_Mesh.h"																				// 
 #include "C_Material.h"																			// 
 #include "C_Camera.h"																			// -------------------------
-#include "C_Canvas.h"
+
+#include "UIElement.h"
 
 #include "M_Renderer3D.h"																		// Header of this .cpp file.
 
