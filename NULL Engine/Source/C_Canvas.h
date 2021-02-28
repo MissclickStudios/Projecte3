@@ -31,7 +31,8 @@ public:
 
 	static inline ComponentType GetType() { return ComponentType::CANVAS; }
 
-	void Draw();
+	void Draw2D();
+	void Draw3D();
 
 public:
 

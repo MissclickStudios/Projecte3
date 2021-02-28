@@ -43,20 +43,15 @@ bool C_Canvas::Update()
 	return ret;
 }
 
-void C_Canvas::Draw()
+void C_Canvas::Draw2D()
 {
-	//Activates orthogonal but only for non master camera aka all component cameras
-	if (App->camera->currentCamera != App->camera->masterCamera->GetComponent<C_Camera>())
-	{
-		glMatrixMode(GL_PROJECTION);
-		glLoadIdentity();
-		// Not sure if it should be SceneTexture
-		glOrtho(-App->editor->viewport->GetSceneTextureSize().x / 2, App->editor->viewport->GetSceneTextureSize().x / 2, -App->editor->viewport->GetSceneTextureSize().y / 2, App->editor->viewport->GetSceneTextureSize().y / 2, 100.0f, -100.0f);
-		//glOrtho(-App->camera->GetCurrentCamera()->GetFrustum().NearPlaneWidth() / 2, App->camera->GetCurrentCamera()->GetFrustum().NearPlaneWidth() / 2, -App->camera->GetCurrentCamera()->GetFrustum().NearPlaneHeight() / 2, App->camera->GetCurrentCamera()->GetFrustum().NearPlaneHeight() / 2, 100.0f, -100.0f);
-		glMatrixMode(GL_MODELVIEW);
-		glLoadMatrixf(App->camera->GetCurrentCamera()->GetOGLViewMatrix());
-	}
-
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	// Not sure if it should be SceneTexture
+	glOrtho(-App->editor->viewport->GetSceneTextureSize().x / 2, App->editor->viewport->GetSceneTextureSize().x / 2, -App->editor->viewport->GetSceneTextureSize().y / 2, App->editor->viewport->GetSceneTextureSize().y / 2, 100.0f, -100.0f);
+	//glOrtho(-App->camera->GetCurrentCamera()->GetFrustum().NearPlaneWidth() / 2, App->camera->GetCurrentCamera()->GetFrustum().NearPlaneWidth() / 2, -App->camera->GetCurrentCamera()->GetFrustum().NearPlaneHeight() / 2, App->camera->GetCurrentCamera()->GetFrustum().NearPlaneHeight() / 2, 100.0f, -100.0f);
+	glMatrixMode(GL_MODELVIEW);
+	glLoadMatrixf(App->camera->GetCurrentCamera()->GetOGLViewMatrix());
 
 	glLineWidth(2.0f);
 
@@ -84,19 +79,54 @@ void C_Canvas::Draw()
 
 	}
 	glEnd();
+	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+	glLineWidth(1.0f);
 
+	glMatrixMode(GL_PROJECTION);
+	glLoadMatrixf(App->camera->GetCurrentCamera()->GetOGLProjectionMatrix());
+	glMatrixMode(GL_MODELVIEW);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+
+}
+
+void C_Canvas::Draw3D()
+{
+	glPushMatrix();
+	glMultMatrixf((GLfloat*)&GetOwner()->GetComponent<C_Transform>()->GetWorldTransform().Transposed());
+
+	glLineWidth(2.0f);
+
+	glBegin(GL_LINES);
+
+	glColor4f(1.0f, 0.0f, 0.0f, 1.0f);										// X Axis.
+	glVertex3f(- rect.w / 2, + rect.h / 2, 0);			glVertex3f(+ rect.w / 2, + rect.h / 2, 0);
+	glVertex3f(+ rect.w / 2, + rect.h / 2, 0);			glVertex3f(+ rect.w / 2, - rect.h / 2, 0);
+	glVertex3f(+ rect.w / 2, - rect.h / 2, 0);			glVertex3f(- rect.w / 2, - rect.h / 2, 0);
+	glVertex3f(- rect.w / 2, - rect.h / 2, 0);			glVertex3f(- rect.w / 2, + rect.h / 2, 0);
+
+	glEnd();
+
+	//Pivot
+	glBegin(GL_LINE_LOOP);
+	for (int i = 0; i < 50; i++)
+	{
+		float angle = 2.0f * 3.1415926f * float(i) / float(50);				
+
+		float sizeAv = (rect.w + rect.h) / 80;
+		float x = sizeAv * cosf(angle);										
+		float y = sizeAv * sinf(angle);										
+
+		glVertex3f(pivot.x + x, pivot.y + y, 0);							
+
+	}
+	glEnd();
 
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 	glLineWidth(1.0f);
 
+	glPopMatrix();
 
-	if (App->camera->currentCamera != App->camera->masterCamera->GetComponent<C_Camera>())
-	{
-		glMatrixMode(GL_PROJECTION);
-		glLoadMatrixf(App->camera->GetCurrentCamera()->GetOGLProjectionMatrix());
-		glMatrixMode(GL_MODELVIEW);
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	}
 }
 
 bool C_Canvas::CleanUp()

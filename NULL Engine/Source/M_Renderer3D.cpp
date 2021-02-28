@@ -635,7 +635,16 @@ void M_Renderer3D::RenderUI()
 			}
 
 			if (!canvasIt->IsInvisible())
-				canvasIt->Draw();
+			{
+				if (App->camera->currentCamera != App->camera->masterCamera->GetComponent<C_Camera>())
+				{
+					canvasIt->Draw2D();
+				}
+				else
+				{
+					canvasIt->Draw3D();
+				}
+			}	
 		}
 	}
 }
