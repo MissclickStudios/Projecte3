@@ -11,7 +11,6 @@
 
 class ParsonNode;
 class GameObject;
-struct AnimationClip;
 
 struct Rect
 {
@@ -51,8 +50,9 @@ public:
 	//Temp. here
 	float3 pivot = { 0,0,0 };
 
-private:
 	std::vector<UIElement*>	uiElements;
+
+private:
 
 	Rect rect = { 0,0,0,50,50 };
 	bool isInvisible; // This is not the same as active, this just prevents drawing

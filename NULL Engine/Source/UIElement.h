@@ -22,7 +22,7 @@ class UIElement
 {
 public:
 
-	UIElement(C_Canvas* owner, UIElementType type, bool isActive = true);
+	UIElement(C_Canvas* canvas, UIElementType type, bool isActive = true);
 	virtual ~UIElement();
 
 	virtual bool Update();
@@ -30,15 +30,19 @@ public:
 
 	virtual UIElementType GetType() const { return type; }	
 
-	C_Canvas* GetOwner() const;
+	C_Canvas* GetCanvas() const;
+	
+	void SetCanvas(C_Canvas* canvas);
 
+	//Temp
+	int uiLayer = 0;
+	
 private:
 
 	bool isActive;
 
 	UIElementType type;
-	C_Canvas* owner;
-	bool isInvisible;
+	C_Canvas* canvas;
 	bool isDraggable;
 
 };

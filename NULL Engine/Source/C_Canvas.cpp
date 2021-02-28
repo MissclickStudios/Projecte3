@@ -3,6 +3,7 @@
 #include "M_Renderer3D.h"
 #include "M_Camera3D.h"
 #include "M_Editor.h"
+#include "M_Window.h"
 
 #include "GameObject.h"
 
@@ -49,6 +50,7 @@ void C_Canvas::Draw()
 	{
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
+		// Not sure if it should be SceneTexture
 		glOrtho(-App->editor->viewport->GetSceneTextureSize().x / 2, App->editor->viewport->GetSceneTextureSize().x / 2, -App->editor->viewport->GetSceneTextureSize().y / 2, App->editor->viewport->GetSceneTextureSize().y / 2, 100.0f, -100.0f);
 		//glOrtho(-App->camera->GetCurrentCamera()->GetFrustum().NearPlaneWidth() / 2, App->camera->GetCurrentCamera()->GetFrustum().NearPlaneWidth() / 2, -App->camera->GetCurrentCamera()->GetFrustum().NearPlaneHeight() / 2, App->camera->GetCurrentCamera()->GetFrustum().NearPlaneHeight() / 2, 100.0f, -100.0f);
 		glMatrixMode(GL_MODELVIEW);

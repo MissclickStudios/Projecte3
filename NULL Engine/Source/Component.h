@@ -16,7 +16,9 @@ enum class ComponentType
 	CAMERA,
 	ANIMATOR,
 	ANIMATION,
-	CANVAS
+	CANVAS,
+	TRANSFORM2D,
+	IMAGE
 };
 
 class Component

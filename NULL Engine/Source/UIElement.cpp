@@ -1,8 +1,8 @@
 #include "UIElement.h"
 
-//#include "C_Canvas.h" // Not sure if this is needed
+#include "C_Canvas.h" // Not sure if this is needed
 
-UIElement::UIElement(C_Canvas* owner, UIElementType type, bool isActive) :	type(type),	owner(owner), isActive(isActive)
+UIElement::UIElement(C_Canvas* canvas, UIElementType type, bool isActive) :	type(type),	canvas(canvas), isActive(isActive), isDraggable(false)
 {
 
 }
@@ -22,7 +22,12 @@ bool UIElement::CleanUp()
 	return true;
 }
 
-C_Canvas* UIElement::GetOwner() const
+C_Canvas* UIElement::GetCanvas() const
 {
-	return owner;
+	return canvas;
+}
+
+void UIElement::SetCanvas(C_Canvas* canvas)
+{
+	this->canvas = canvas;
 }

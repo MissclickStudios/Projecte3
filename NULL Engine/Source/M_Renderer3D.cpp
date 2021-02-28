@@ -623,9 +623,19 @@ void M_Renderer3D::RenderUI()
 {
 	for (std::vector<GameObject*>::iterator it = App->scene->GetGameObjects()->begin(); it != App->scene->GetGameObjects()->end(); it++)
 	{
-		if ((*it)->GetComponent<C_Canvas>() != nullptr && (*it)->GetComponent<C_Canvas>()->IsActive() && !(*it)->GetComponent<C_Canvas>()->IsInvisible())
+		C_Canvas* canvasIt = (*it)->GetComponent<C_Canvas>();
+		if (canvasIt != nullptr && canvasIt->IsActive())
 		{
-			(*it)->GetComponent<C_Canvas>()->Draw();
+			if (!canvasIt->uiElements.empty())
+			{
+				for (std::vector<UIElement*>::iterator uiIt = canvasIt->uiElements.begin(); uiIt != canvasIt->uiElements.end(); uiIt++)
+				{
+					(*uiIt)->Update();
+				}
+			}
+
+			if (!canvasIt->IsInvisible())
+				canvasIt->Draw();
 		}
 	}
 }

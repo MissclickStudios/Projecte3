@@ -10,13 +10,15 @@ class C_Canvas;
 class UI_Image : public UIElement
 {
 public:
-	UI_Image(C_Canvas* owner);
+	UI_Image(C_Canvas* canvas);
 	~UI_Image();
 
 	bool Update() override;
 	bool CleanUp() override;
 
 	static UIElementType GetType() { return UIElementType::IMAGE; }
+
+	void RenderImage();
 
 public:
 

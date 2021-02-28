@@ -22,6 +22,9 @@
 #include "C_Animator.h"
 #include "C_Animation.h"
 #include "C_Canvas.h"
+#include "C_Transform2D.h"
+
+#include "UI_Image.h"
 
 #include "E_Inspector.h"
 
@@ -162,7 +165,8 @@ void E_Inspector::DrawComponents(GameObject* selectedGameObject)
 		case ComponentType::CAMERA:	{ DrawCameraComponent((C_Camera*)component); }			break;
 		case ComponentType::ANIMATOR:	{ DrawAnimatorComponent((C_Animator*)component); }		break;
 		case ComponentType::ANIMATION: { DrawAnimationComponent((C_Animation*)component); }	break;
-		case ComponentType::CANVAS: { DrawCanvasComponent((C_Canvas*)component); }	break;
+		case ComponentType::CANVAS: { DrawCanvasComponent((C_Canvas*)component); }				break;
+		case ComponentType::TRANSFORM2D: { DrawTransform2DComponent((C_Transform2D*)component); }	break;
 		}
 
 		if (type == ComponentType::NONE)
@@ -818,6 +822,11 @@ void E_Inspector::DrawCanvasComponent(C_Canvas* cCanvas)
 			if (ImGui::Button("Reset Pivot"))
 				cCanvas->pivot = cCanvas->GetPosition();
 
+			if (ImGui::Button("Add Image"))
+			{
+				UI_Image* image = new UI_Image(cCanvas);
+				cCanvas->uiElements.push_back(image);
+			}
 		}
 
 		if (!show)
@@ -830,9 +839,44 @@ void E_Inspector::DrawCanvasComponent(C_Canvas* cCanvas)
 	}
 }
 
+
+void E_Inspector::DrawTransform2DComponent(C_Transform2D* transform2D)
+{
+	static bool show = true;
+	if (ImGui::CollapsingHeader("Transform2D", &show, ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		if (transform2D != nullptr)
+		{
+			bool isActive = transform2D->IsActive();
+			if (ImGui::Checkbox("Transform2D Is Active", &isActive)) { transform2D->SetIsActive(isActive); }
+
+			ImGui::Separator();
+
+			ImGui::TextColored(Cyan.C_Array(), "Transform2D Settings:");
+
+			ImGui::Separator();
+
+			float2 pos = transform2D->GetPosition();
+
+			if (ImGui::DragFloat2("Position 2D", (float*)&pos, 0.05f, 0.0f, 0.0f, "%.3f", NULL))
+			{
+				transform2D->SetPosition(pos);
+			}
+		}
+
+		if (!show)
+		{
+			componentToDelete = transform2D;
+			showDeleteComponentPopup = true;
+		}
+
+		ImGui::Separator();
+	}
+}
+
 void E_Inspector::AddComponentCombo(GameObject* selectedGameObject)
 {
-	ImGui::Combo("##", &componentType, "Add Component\0Transform\0Mesh\0Material\0Light\0Camera\0Animator\0Animation\0Canvas");
+	ImGui::Combo("##", &componentType, "Add Component\0Transform\0Mesh\0Material\0Light\0Camera\0Animator\0Animation\0Canvas\0Transform2D");
 
 	ImGui::SameLine();
 

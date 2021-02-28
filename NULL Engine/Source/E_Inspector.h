@@ -13,6 +13,7 @@ class C_Camera;
 class C_Animator;
 class C_Animation;
 class C_Canvas;
+class C_Transform2D;
 
 class Resource;
 class ModelSettings;
@@ -42,6 +43,7 @@ private:
 	void DrawAnimatorComponent			(C_Animator* cAnimator);
 	void DrawAnimationComponent			(C_Animation* cAnimation);
 	void DrawCanvasComponent			(C_Canvas* cCanvas);
+	void DrawTransform2DComponent		(C_Transform2D* transform2D);
 
 	void AddComponentCombo				(GameObject* selectedGameObject);					// 
 	void DeleteComponentPopup			(GameObject* selectedGameObject);					// 

@@ -19,6 +19,7 @@
 #include "C_Animator.h"
 #include "C_Animation.h"
 #include "C_Canvas.h"
+#include "C_Transform2D.h"
 
 #include "GameObject.h"
 
@@ -632,6 +633,7 @@ Component* GameObject::CreateComponent(ComponentType type)
 	case ComponentType::ANIMATOR:	{ component = new C_Animator(this); }	break;
 	case ComponentType::ANIMATION: { component = new C_Animation(this); }	break;
 	case ComponentType::CANVAS: {component = new C_Canvas(this); } break;
+	case ComponentType::TRANSFORM2D: {component = new C_Transform2D(this); } break;
 	}
 
 	if (component != nullptr)
