@@ -31,7 +31,8 @@
 
 #include "MemoryManager.h"
 
-#pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */							// Libraries Pragma Comments
+																								/* link OpenGL Utility lib     */							
+																								// Libraries Pragma Comments
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */							// 
 #pragma comment (lib, "Source/Dependencies/Assimp/libx86/assimp.lib")							// -------------------------
 #pragma comment (lib, "Source/Dependencies/glew/libx86/glew32.lib")
@@ -277,7 +278,7 @@ bool M_Renderer3D::InitOpenGL()
 		GLenum error = glGetError();
 		if (error != GL_NO_ERROR)
 		{
-			LOG("[ERROR] Error initializing OpenGL! %s\n", gluErrorString(error));
+			LOG("[ERROR] Error initializing OpenGL! %s\n", glewGetErrorString(error));
 			ret = false;
 		}
 
@@ -289,7 +290,7 @@ bool M_Renderer3D::InitOpenGL()
 		error = glGetError();
 		if (error != GL_NO_ERROR)
 		{
-			LOG("[ERROR] Error initializing OpenGL! %s\n", gluErrorString(error));
+			LOG("[ERROR] Error initializing OpenGL! %s\n", glewGetErrorString(error));
 			ret = false;
 		}
 
@@ -304,7 +305,7 @@ bool M_Renderer3D::InitOpenGL()
 		error = glGetError();
 		if (error != GL_NO_ERROR)
 		{
-			LOG("[ERROR] Error initializing OpenGL! %s\n", gluErrorString(error));
+			LOG("[ERROR] Error initializing OpenGL! %s\n", glewGetErrorString(error));
 			ret = false;
 		}
 
@@ -461,7 +462,7 @@ void M_Renderer3D::InitFramebuffers()
 
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 	{
-		LOG("[ERROR] Renderer 3D: Could not generate the scene's frame buffer! Error: %s", gluErrorString(glGetError()));
+		LOG("[ERROR] Renderer 3D: Could not generate the scene's frame buffer! Error: %s", glewGetErrorString(glGetError()));
 	}
 
 	// --- UNBINDING THE FRAMEBUFFER ---
