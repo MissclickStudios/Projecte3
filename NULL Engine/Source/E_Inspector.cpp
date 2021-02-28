@@ -526,17 +526,17 @@ void E_Inspector::DrawAnimatorComponent(C_Animator* cAnimator)								// TODO: S
 			}
 
 			const char* animationName			= currentClip->GetAnimationName();
-			float animationTicksPerSecond	= currentClip->GetAnimationTicksPerSecond();
-			float animationDuration			= currentClip->GetAnimationDuration();
+			float animationTicksPerSecond		= currentClip->GetAnimationTicksPerSecond();
+			float animationDuration				= currentClip->GetAnimationDuration();
 
-			const char* currentClipName		= currentClip->GetName();
+			const char* currentClipName			= currentClip->GetName();
 			uint currentClipStart				= currentClip->GetStart();
-			uint currentClipEnd				= currentClip->GetEnd();
+			uint currentClipEnd					= currentClip->GetEnd();
 			float currentClipDuration			= currentClip->GetDuration();
 			bool currentClipLoop				= currentClip->IsLooped();
 
 			float clipCime						= currentClip->GetClipTime();
-			float clipFrame					= currentClip->GetClipFrame();
+			float clipFrame						= currentClip->GetClipFrame();
 			uint clipTicks						= currentClip->GetClipTick();
 
 			// --- NEW CLIP VARIABLES
@@ -546,10 +546,10 @@ void E_Inspector::DrawAnimatorComponent(C_Animator* cAnimator)								// TODO: S
 			static char newClipName[128]		= "Enter Clip Name";
 			ImGuiInputTextFlags inputTxtFlags	= ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_AutoSelectAll;
 
-			static int newClipStart			= 0;
+			static int newClipStart				= 0;
 			static int newClipEnd				= (int)animationDuration;
-			int newClipMin					= 0;
-			int newClipMax					= (int)animationDuration;
+			int newClipMin						= 0;
+			int newClipMax						= (int)animationDuration;
 			static bool loop					= false;
 
 			static bool success					= false;																			// --- TODO: Transform into non-static variables later.

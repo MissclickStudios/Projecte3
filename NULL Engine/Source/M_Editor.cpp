@@ -496,7 +496,21 @@ void M_Editor::GetEngineIconsThroughEditor(Icons& engineIcons)
 
 void M_Editor::LoadResourceIntoSceneThroughEditor()
 {
-	App->scene->LoadResourceIntoScene(project->GetDraggedResource());
+	const char* draggedAssetPath = project->GetDraggedAsset();
+	if (draggedAssetPath != nullptr)
+	{
+		Resource* draggedResource = App->resourceManager->GetResourceFromLibrary(draggedAssetPath);
+		if (draggedResource != nullptr)
+		{
+			App->scene->LoadResourceIntoScene(draggedResource);
+		}
+	}
+	else
+	{
+		LOG("[ERROR] DRAGGED PATH WAS NULLPTR!!!");
+	}
+	
+	//App->scene->LoadResourceIntoScene(project->GetDraggedResource());
 }
 
 void M_Editor::GetResourcesThroughEditor(std::map<uint32, Resource*>& resources) const

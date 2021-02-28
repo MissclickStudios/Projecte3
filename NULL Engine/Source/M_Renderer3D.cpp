@@ -1227,6 +1227,7 @@ void MeshRenderer::Render()
 	
 	glBindVertexArray(rMesh->VAO);
 	glDrawElements(GL_TRIANGLES, rMesh->indices.size(), GL_UNSIGNED_INT, nullptr);					// 
+	glBindVertexArray(0);
 
 	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);														// Clearing the buffers.
 	//glBindBuffer(GL_ARRAY_BUFFER, 0);																// 												

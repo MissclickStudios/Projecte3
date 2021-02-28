@@ -196,8 +196,20 @@ bool M_Scene::CleanUp()
 		gameObjects[i]->CleanUp();
 		RELEASE(gameObjects[i]);
 	}
+	
+	/*for (auto item = gameObjects.begin(); item < gameObjects.end(); ++item)
+	{
+		(*item)->CleanUp();
+		RELEASE((*item));
+	}*/
+
+	for (auto item = models.begin(); item != models.end(); ++item)
+	{
+		App->resourceManager->FreeResource(item->second.first);
+	}
 
 	gameObjects.clear();
+	models.clear();
 
 	sceneRoot				= nullptr;
 	animationRoot			= nullptr;
@@ -233,13 +245,28 @@ bool M_Scene::SaveScene(const char* sceneName) const
 	bool ret = true;
 
 	ParsonNode rootNode		= ParsonNode();
-	ParsonArray objectArray	= rootNode.SetArray("Game Objects");
 
-	for (uint i = 0; i < gameObjects.size(); ++i)
+	ParsonArray modelArray = rootNode.SetArray("Models In Scene");
+	for (auto item = models.begin(); item != models.end(); ++item)
+	{
+		ParsonNode modelNode = modelArray.SetNode("ModelInScene");
+		modelNode.SetNumber("GameObjectUID", (double)item->first);
+		modelNode.SetNumber("ModelResourceUID", (double)item->second.first);
+		modelNode.SetString("ModelAssetsPath", item->second.second.c_str());
+	}
+
+	ParsonArray objectArray	= rootNode.SetArray("Game Objects");
+	for (auto item = gameObjects.begin(); item != gameObjects.end(); ++item)
+	{
+		ParsonNode arrayNode = objectArray.SetNode((*item)->GetName());
+		(*item)->SaveState(arrayNode);
+	}
+
+	/*for (uint i = 0; i < gameObjects.size(); ++i)
 	{
 		ParsonNode array_node = objectArray.SetNode(gameObjects[i]->GetName());
 		gameObjects[i]->SaveState(array_node);
-	}
+	}*/
 
 	char* buffer		= nullptr;
 	std::string name	= (sceneName != nullptr) ? sceneName : sceneRoot->GetName();
@@ -292,8 +319,28 @@ bool M_Scene::LoadScene(const char* path)
 		CleanUp();
 
 		ParsonNode newRoot			= ParsonNode(buffer);
+		ParsonArray modelsArray		= newRoot.GetArray("Models In Scene");
 		ParsonArray objectsArray	= newRoot.GetArray("Game Objects");
 		RELEASE_ARRAY(buffer);
+
+		for (uint i = 0; i < modelsArray.size; ++i)
+		{
+			ParsonNode modelNode = modelsArray.GetNode(i);
+			if (!modelNode.NodeIsValid())
+			{
+				continue;
+			}
+
+			uint32 gameObjectUID		= (uint32)modelNode.GetNumber("GameObjectUID");
+			uint32 modelResourceUID		= (uint32)modelNode.GetNumber("ModelResourceUID");
+			const char* modelAssetsPath = modelNode.GetString("ModelAssetsPath");
+
+			if (App->resourceManager->GetResourceFromLibrary(modelAssetsPath) != nullptr)
+			{
+				std::pair<uint32, std::string> modelResource = { modelResourceUID, modelAssetsPath };
+				models.emplace(gameObjectUID, modelResource);
+			}
+		}
 
 		std::map<uint32, GameObject*> tmp;
 
@@ -371,7 +418,7 @@ void M_Scene::LoadResourceIntoScene(Resource* resource)
 
 	switch (resource->GetType())
 	{
-	case::ResourceType::MODEL:		{ GenerateGameObjectsFromModel(resource->GetUID()); }				break;
+	case::ResourceType::MODEL:		{ GenerateGameObjectsFromModel((R_Model*)resource); }				break;
 	case::ResourceType::TEXTURE:	{ success = ApplyTextureToSelectedGameObject(resource->GetUID()); }	break;
 	}
 }
@@ -413,6 +460,17 @@ void M_Scene::DeleteGameObject(GameObject* gameObject, uint index)
 	{
 		selectedGameObject = nullptr;
 	}
+	if (gameObject == animationRoot)
+	{
+		animationRoot = nullptr;
+	}
+	
+	auto item = models.find(gameObject->GetUID());
+	if (item != models.end())
+	{
+		App->resourceManager->FreeResource(item->second.first);
+		models.erase(item);
+	}
 	
 	std::vector<C_Mesh*> cMeshes;
 	bool found_meshes = gameObject->GetComponents<C_Mesh>(cMeshes);
@@ -436,9 +494,9 @@ void M_Scene::DeleteGameObject(GameObject* gameObject, uint index)
 		}
 		else
 		{
-			for (uint i = 0; i < gameObjects.size(); ++i)						// If no index was given.
+			for (uint i = 0; i < gameObjects.size(); ++i)					// If no index was given.
 			{
-				if (gameObjects[i] == gameObject)								// Iterate game_objects until a match is found.
+				if (gameObjects[i] == gameObject)							// Iterate game_objects until a match is found.
 				{
 					gameObjects.erase(gameObjects.begin() + i);				// Delete the game_object at the current loop index.
 					break;
@@ -453,9 +511,9 @@ void M_Scene::DeleteGameObject(GameObject* gameObject, uint index)
 	LOG("[ERROR] Could not find game object %s in game_objects vector!", gameObject->GetName());
 }
 
-void M_Scene::GenerateGameObjectsFromModel(const uint32& modelUid, const float3& scale)
+void M_Scene::GenerateGameObjectsFromModel(const R_Model* rModel, const float3& scale)
 {
-	R_Model* rModel = (R_Model*)App->resourceManager->RequestResource(modelUid);
+	//R_Model* rModel = (R_Model*)App->resourceManager->RequestResource(modelUid);
 
 	if (rModel == nullptr)
 	{
@@ -481,6 +539,9 @@ void M_Scene::GenerateGameObjectsFromModel(const uint32& modelUid, const float3&
 		if (mNodes[i].parentUID == 0)
 		{
 			parentRoot = gameObject;
+
+			std::pair<uint32, std::string> modelResource = { rModel->GetUID(), rModel->GetAssetsPath() };
+			models.emplace(parentRoot->GetUID(), modelResource);
 		}
 
 		tmp.emplace(gameObject->GetUID(), gameObject);

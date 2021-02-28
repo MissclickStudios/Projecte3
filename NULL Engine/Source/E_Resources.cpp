@@ -49,7 +49,7 @@ bool E_Resources::Draw(ImGuiIO& io)
 		case ResourceType::MODEL:		{ ++models; }		break;
 		case ResourceType::MESH:		{ ++meshes; }		break;
 		case ResourceType::MATERIAL:	{ ++materials; }	break;
-		case ResourceType::TEXTURE:	{ ++textures; }		break;
+		case ResourceType::TEXTURE:		{ ++textures; }		break;
 		case ResourceType::ANIMATION:	{ ++animations; }	break;
 		}
 

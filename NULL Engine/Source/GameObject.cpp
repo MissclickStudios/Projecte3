@@ -141,10 +141,10 @@ bool GameObject::LoadState(ParsonNode& root)
 	ForceUID((uint)root.GetNumber("UID"));
 	parent_uid = (uint)root.GetNumber("ParentUID");
 
-	name = root.GetString("Name");
-	isActive = root.GetBool("IsActive");
-	isStatic = root.GetBool("IsStatic");
-	is_scene_root = root.GetBool("IsSceneRoot");
+	name				= root.GetString("Name");
+	isActive			= root.GetBool("IsActive");
+	isStatic			= root.GetBool("IsStatic");
+	is_scene_root		= root.GetBool("IsSceneRoot");
 	show_bounding_boxes = root.GetBool("ShowBoundingBoxes");
 
 	// Recalculate AABB and OBB
@@ -213,8 +213,21 @@ void GameObject::FreeChilds()
 		parent->DeleteChild(this);											// Deleting this GameObject from the childs list of its parent.
 	}
 
-	for (uint i = 0; i < childs.size(); ++i)
+	/*if (parent != nullptr)													// Dirty fix to avoid innecessary calls to GetAllChilds().
 	{
+		std::vector<GameObject*> childsToDelete;
+		GetAllChilds(childsToDelete);
+		for (uint i = 0; i < childsToDelete.size(); ++i)
+		{
+			childsToDelete[i]->parent = nullptr;
+			childsToDelete[i]->to_delete = true;
+		}
+
+		childsToDelete.clear();
+	}*/
+
+	for (uint i = 0; i < childs.size(); ++i)
+	{	
 		if (childs[i] != nullptr)
 		{
 			childs[i]->parent = nullptr;
@@ -260,6 +273,11 @@ float3* GameObject::GetAABBVertices() const
 
 void GameObject::GetRenderers(std::vector<MeshRenderer>& meshRenderers, std::vector<CuboidRenderer>& cuboidRenderers, std::vector<SkeletonRenderer>& skeletonRenderers)
 {
+	/*if (to_delete || (parent != nullptr && parent->to_delete))			// TMP Quickfix. Deleted GameObjects could potentially generate Renderers. Fix the issue at the root later.
+	{
+		return;
+	}*/
+	
 	std::vector<C_Mesh*> cMeshes;
 	GetComponents<C_Mesh>(cMeshes);
 
@@ -452,7 +470,7 @@ void GameObject::GetAllChilds(std::vector<GameObject*>& childs)
 {
 	if (this->childs.empty())
 	{
-		LOG("[WARNING] Game Object: GameObject { %s } did not have any childs!");
+		LOG("[WARNING] Game Object: GameObject { %s } did not have any childs!", this->GetName());
 		return;
 	}
 	

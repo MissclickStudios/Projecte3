@@ -39,6 +39,9 @@ public:																								// --- RESOURCE MANAGER API ---
 	uint32			LoadFromLibrary					(const char* assetsPath);						// Loads a resource registered in the Library onto memory. Returns the resource's UID.
 	Resource*		GetResourceFromLibrary			(const char* assetsPath);						// Same as LoadFromLibrary() but it returns the resource instead of its UID.
 
+	// --- META FILE METHODS
+	ResourceType	GetTypeFromAssetsExtension		(const char* assetsPath);						// Returns the type of the resource related with the given Asset.
+
 	// --- RESOURCE METHODS
 	Resource*		CreateResource					(ResourceType type, const char* assetsPath = nullptr, uint32 forcedUID = 0);	// Generates a rsrc with the spec. params. No emplace.
 	Resource*		RequestResource					(uint32 UID);									// Returns an active resource with the given UID. Increases the rsrc's references by 1.
@@ -90,7 +93,7 @@ private:																											// --- IMPORT FILE METHODS ---
 	uint32			ImportFromAssets				(const char* assetsPath);										// 
 
 	const char*		GetValidPath					(const char* assetsPath);										// 
-	ResourceType	GetTypeFromAssetsExtension		(const char* assetsPath);										// 
+	//ResourceType	GetTypeFromAssetsExtension		(const char* assetsPath);										// 
 	ResourceType	GetTypeFromLibraryExtension		(const char* libraryPath);										// 
 
 	void			SetResourceAssetsPathAndFile	(const char* assetsPath, Resource* resource);					// 
