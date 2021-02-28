@@ -11,7 +11,7 @@
 
 #include "PhysX_3.4/Include/PxPhysicsAPI.h"
 
-C_CapsuleCollider::C_CapsuleCollider(GameObject* owner) : Component(owner, ComponentType::SPHERE_COLLIDER)
+C_CapsuleCollider::C_CapsuleCollider(GameObject* owner) : Component(owner, ComponentType::CAPSULE_COLLIDER)
 {
 	CreateCollider();
 }
@@ -51,8 +51,14 @@ bool C_CapsuleCollider::Update()
 
 bool C_CapsuleCollider::CleanUp()
 {
-	if (shape)
-		shape->release();
+	if (!shape)
+		return true;
+
+	if (GetOwner()->GetComponent<C_RigidBody>())
+		GetOwner()->GetComponent<C_RigidBody>()->GetRigidBody()->detachShape(*shape);
+
+	shape->release();
+	shape = nullptr;
 
 	return true;
 }

@@ -51,8 +51,14 @@ bool C_BoxCollider::Update()
 
 bool C_BoxCollider::CleanUp()
 {
-	if (shape)
-		shape->release();
+	if (!shape)
+		return true;
+
+	if (GetOwner()->GetComponent<C_RigidBody>())
+		GetOwner()->GetComponent<C_RigidBody>()->GetRigidBody()->detachShape(*shape);
+
+	shape->release();
+	shape = nullptr;
 
 	return true;
 }
