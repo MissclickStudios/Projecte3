@@ -198,16 +198,6 @@ void C_Material::SetShader(R_Shader* rShader)
 	this->rShader = rShader;
 }
 
-void C_Material::SetDefaultShader()
-{
-	R_Shader* rShader = nullptr;
-
-	rShader = App->resourceManager->GetDefaultShader();
-
-	SetShader(rShader);
-
-}
-
 Color C_Material::GetMaterialColour()
 {
 	if (rMaterial != nullptr)

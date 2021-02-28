@@ -82,6 +82,8 @@ bool M_Renderer3D::Init(ParsonNode& configuration)
 	//InitFramebuffers();
 	LoadDebugTexture();
 
+
+
 	return ret;
 }
 
@@ -90,6 +92,11 @@ bool M_Renderer3D::Start()
 	bool ret = true;
 
 	InitEngineIcons();
+	//SetUp the Skybox 
+	defaultSkyBox.SetUpSkyBoxBuffers();
+
+	defaultSkyBox.CreateSkybox();
+
 
 	return ret;
 }
@@ -144,6 +151,9 @@ UpdateStatus M_Renderer3D::PostUpdate(float dt)
 {	
 	BROFILER_CATEGORY("M_Renderer3D PostUpdate", Profiler::Color::Chartreuse);
 	
+	//The Skybox renderer must be the first one always
+	//defaultSkyBox.RenderSkybox();
+
 	RenderScene();
 
 	App->editor->RenderEditorPanels();
@@ -573,6 +583,7 @@ void M_Renderer3D::RenderScene()
 		DrawWorldAxis();
 	}
 
+ 
 	RenderMeshes();
 	RenderCuboids();
 	//RenderRays();
@@ -1203,43 +1214,22 @@ void MeshRenderer::Render()
 		return;
 	}
 
-	//glMatrixMode(GL_MODELVIEW);
-	//glPushMatrix();
-	//glMultMatrixf((GLfloat*)&transform.Transposed());												// OpenGL requires that the 4x4 matrices are column-major instead of row-major.
-
 	ApplyDebugParameters();																			// Enable Wireframe Mode for this specific mesh, etc.
 	ApplyTextureAndMaterial();																		// Apply resource texture or default texture, mesh color...
 	ApplyShader();
-	//glEnableClientState(GL_VERTEX_ARRAY);															// Enables the vertex array for writing and to be used during rendering.
-	//glEnableClientState(GL_NORMAL_ARRAY);															// Enables the normal array for writing and to be used during rendering.
-	//glEnableClientState(GL_TEXTURE_COORD_ARRAY);													// Enables the texture coordinate array for writing and to be used during rendering.
-
-	//glBindBuffer(GL_ARRAY_BUFFER, rMesh->TBO);														// Will bind the buffer object with the mesh->TBO identifyer for rendering.
-	//glTexCoordPointer(2, GL_FLOAT, 0, nullptr);														// Specifies the location and data format of an array of tex coords to use when rendering.
-
-	//glBindBuffer(GL_ARRAY_BUFFER, rMesh->NBO);														// The normal buffer is bound so the normal positions can be interpreted correctly.
-	//glNormalPointer(GL_FLOAT, 0, nullptr);															// 
-
-	//glBindBuffer(GL_ARRAY_BUFFER, rMesh->VBO);														// The vertex buffer is bound so the vertex positions can be interpreted correctly.
-	//glVertexPointer(3, GL_FLOAT, 0, nullptr);														// Specifies the location and data format of an array of vert coords to use when rendering.
-
-	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, rMesh->IBO);												// Will bind the buffer object with the mesh->IBO identifyer for rendering.
 	
 	glBindVertexArray(rMesh->VAO);
+
 	glDrawElements(GL_TRIANGLES, rMesh->indices.size(), GL_UNSIGNED_INT, nullptr);					// 
-
-	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);														// Clearing the buffers.
-	//glBindBuffer(GL_ARRAY_BUFFER, 0);																// 												
-
-	//glDisableClientState(GL_TEXTURE_COORD_ARRAY);													// Disabling the client-side capabilities enabled at the beginning.
-	//glDisableClientState(GL_NORMAL_ARRAY);															// 
-	//glDisableClientState(GL_VERTEX_ARRAY);															// Disabling GL_TEXTURE_COORD_ARRAY, GL_NORMAL_ARRAY and GL_VERTEX_ARRAY.
+	
+	glBindVertexArray(0);
 
 	glBindTexture(GL_TEXTURE_2D, 0);																// ---------------------
 	
 	ClearTextureAndMaterial();																		// Clear the specifications applied in ApplyTextureAndMaterial().
 	ClearDebugParameters();																			// Clear the specifications applied in ApplyDebugParameters().
 	ClearShader();
+
 	// --- DEBUG DRAW ---
 	if (rMesh->drawVertexNormals || App->renderer->GetRenderVertexNormals())
 	{
@@ -1250,8 +1240,6 @@ void MeshRenderer::Render()
 	{
 		RenderFaceNormals(rMesh);
 	}
-
-	//glPopMatrix();
 }
 
 void MeshRenderer::RenderVertexNormals(const R_Mesh* rMesh)
@@ -1474,7 +1462,7 @@ uint32 MeshRenderer::SetDefaultShader(C_Material* cMaterial)
 {
 	R_Shader* rShader = nullptr;
 
-	rShader = App->resourceManager->GetDefaultShader();	
+	rShader = App->resourceManager->GetShader("DefaultShader");	
 
 	cMaterial->SetShader(rShader);
 

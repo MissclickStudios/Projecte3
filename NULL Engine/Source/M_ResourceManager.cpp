@@ -1519,10 +1519,10 @@ bool M_ResourceManager::DeallocateResource(Resource* resourceToDeallocate)
 	return ret;
 }
 
-R_Shader* M_ResourceManager::GetDefaultShader()
+R_Shader* M_ResourceManager::GetShader(const char* name)
 {
 	
-	std::string defaultPath = ASSETS_SHADERS_PATH + std::string("DefaultShader") + SHADERS_EXTENSION;
+	std::string defaultPath = ASSETS_SHADERS_PATH + std::string(name) + SHADERS_EXTENSION;
 	uint shaderUID = App->resourceManager->LoadFromLibrary(defaultPath.c_str());
 
 	
@@ -1532,19 +1532,16 @@ R_Shader* M_ResourceManager::GetDefaultShader()
 	{
 		if (item->second->GetType() == ResourceType::SHADER && item->second->GetUID() == shaderUID)
 		{
-			tempShader = (R_Shader*)item->second;
-
-			if (tempShader->shaderProgramID > 500)
-			{
-				tempShader->shaderProgramID = 0;
-				tempShader->fragmentID = 0;
-				tempShader->vertexID = 0;
-			}
-			
+			tempShader = (R_Shader*)item->second;		
 		}
 
 	}
 	return tempShader;
+}
+
+void M_ResourceManager::GetAllShaders(std::vector<R_Shader> shaders)
+{
+
 }
 
 void M_ResourceManager::GetResources(std::map<uint32, Resource*>& resources) const

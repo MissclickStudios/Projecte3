@@ -50,7 +50,6 @@ public:																						// --- GET/SET RESOURCES
 	void SetMaterial(R_Material* material);
 	void SetTexture(R_Texture* texture);
 	void SetShader(R_Shader* rShader);
-	void SetDefaultShader();
 																							// --- GET/SET COMPONENT MATERIAL VARIABLES
 	
 	Color GetMaterialColour();

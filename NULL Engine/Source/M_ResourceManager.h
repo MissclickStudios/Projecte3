@@ -97,7 +97,8 @@ public:																												// --- RESOURCE METHODS ---
 	bool			DeallocateResource				(const uint32& uid);																	// 
 	bool			DeallocateResource				(Resource* resourceToDeallocate);														// FORCED DEALLOCATE
 	
-	R_Shader*		GetDefaultShader();
+	R_Shader*		GetShader(const char* name);
+	void			GetAllShaders(std::vector<R_Shader> shaders);
 private:
 	std::map<uint32, Resource*>		resources;																		// Resources currently in memory.
 	std::map<uint32, std::string>	library;																		// UID and Library Path string of all loaded resources.
