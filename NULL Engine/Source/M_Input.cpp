@@ -68,12 +68,10 @@ UpdateStatus M_Input::PreUpdate(float dt)
 			if (keyboard[i] == KeyState::KEY_IDLE)
 			{
 				keyboard[i] = KeyState::KEY_DOWN;
-				App->editor->AddInputLog(i, (uint)KeyState::KEY_DOWN);
 			}
 			else
 			{
 				keyboard[i] = KeyState::KEY_REPEAT;
-				App->editor->AddInputLog(i, (uint)KeyState::KEY_REPEAT);
 			}
 		}
 		else
@@ -81,7 +79,6 @@ UpdateStatus M_Input::PreUpdate(float dt)
 			if (keyboard[i] == KeyState::KEY_REPEAT || keyboard[i] == KeyState::KEY_DOWN)
 			{
 				keyboard[i] = KeyState::KEY_UP;
-				App->editor->AddInputLog(i, (uint)KeyState::KEY_UP);
 			}
 			else
 			{
@@ -103,12 +100,10 @@ UpdateStatus M_Input::PreUpdate(float dt)
 			if (mouseButtons[i] == KeyState::KEY_IDLE)
 			{
 				mouseButtons[i] = KeyState::KEY_DOWN;
-				App->editor->AddInputLog(maxNumScancodes + i, (uint)KeyState::KEY_DOWN);
 			}
 			else
 			{
 				mouseButtons[i] = KeyState::KEY_REPEAT;
-				App->editor->AddInputLog(maxNumScancodes + i, (uint)KeyState::KEY_REPEAT);
 			}
 		}
 		else
@@ -116,7 +111,6 @@ UpdateStatus M_Input::PreUpdate(float dt)
 			if(mouseButtons[i] == KeyState::KEY_REPEAT || mouseButtons[i] == KeyState::KEY_DOWN)
 			{
 				mouseButtons[i] = KeyState::KEY_UP;
-				App->editor->AddInputLog(maxNumScancodes + i, (uint)KeyState::KEY_UP);
 			}
 			else
 			{
@@ -131,7 +125,12 @@ UpdateStatus M_Input::PreUpdate(float dt)
 	SDL_Event event;
 	while(SDL_PollEvent(&event))
 	{
-		App->editor->GetEvent(&event);
+		//Process other modules input
+		for (std::vector<Module*>::const_iterator it = ModulesProcessInput.cbegin(); it != ModulesProcessInput.cend(); ++it)
+		{
+			if((*it)->IsActive())
+				(*it)->ProcessInput(event);
+		}
 		
 		switch(event.type)
 		{
@@ -298,4 +297,9 @@ bool M_Input::WindowSizeWasManipulated(Uint8 windowEvent) const
 			|| windowEvent == SDL_WINDOWEVENT_RESTORED
 			|| windowEvent == SDL_WINDOWEVENT_MAXIMIZED
 			|| windowEvent == SDL_WINDOWEVENT_MINIMIZED*/);
+}
+
+void M_Input::AddModuleToProcessInput(Module* module)
+{
+	ModulesProcessInput.push_back(module);
 }

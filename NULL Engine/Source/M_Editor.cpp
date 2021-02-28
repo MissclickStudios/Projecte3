@@ -36,8 +36,8 @@
 #include "M_Editor.h"
 
 #include "MemoryManager.h"
+#include "Time.h"
 
-#pragma comment (lib, "Source/Dependencies/glew/libx86/glew32.lib")
 
 M_Editor::M_Editor(bool isActive) : Module("Editor", isActive),
 clearColor		(0.0f, 0.0f, 0.0f, 1.0f),
@@ -113,14 +113,15 @@ UpdateStatus M_Editor::PreUpdate(float dt)
 	EditorShortcuts();
 	CheckShowHideFlags();
 
+	EditorCameraUpdate();
+
 	return ret;
 }
 
 UpdateStatus M_Editor::Update(float dt)
 {
-	UpdateStatus ret = UpdateStatus::CONTINUE;
 
-	return ret;
+	return UpdateStatus::CONTINUE;
 }
 
 UpdateStatus M_Editor::PostUpdate(float dt)
@@ -157,6 +158,8 @@ UpdateStatus M_Editor::PostUpdate(float dt)
 		ImGui::End();
 	}
 	
+	// Editor: Configuration Frame Data Histograms
+	UpdateFrameData(Time::Real::GetFramesLastSecond(), Time::Real::GetMsLastFrame());
 	return ret;
 }
 
@@ -185,11 +188,6 @@ bool M_Editor::SaveConfiguration(ParsonNode& root) const
 }
 
 // -------------- EDITOR METHODS --------------
-bool M_Editor::GetEvent(SDL_Event* event) const
-{
-	return ImGui_ImplSDL2_ProcessEvent(event);											
-}
-
 void M_Editor::AddEditorPanel(EditorPanel* panel)
 {
 	editorPanels.push_back(panel);
@@ -272,32 +270,6 @@ bool M_Editor::EditorIsBeingHovered() const
 	}
 
 	return false;
-}
-
-bool M_Editor::RenderEditorPanels() const
-{
-	// Rendering all ImGui elements
-	ImGuiIO& io = ImGui::GetIO();
-
-	ImGui::Render();
-	//glViewport(0, 0, (int)io.DisplaySize.x, (int)io.DisplaySize.y);
-	//glClearColor(clearColor.x, clearColor.y, clearColor.z, clearColor.w);
-	//glClear(GL_COLOR_BUFFER_BIT);
-	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
-	// Updating and rendering additional platform windows
-	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
-	{
-		SDL_Window* backupCurrentWindow		= SDL_GL_GetCurrentWindow();
-		SDL_GLContext backupCurrentContext	= SDL_GL_GetCurrentContext();
-
-		ImGui::UpdatePlatformWindows();
-		ImGui::RenderPlatformWindowsDefault();
-
-		SDL_GL_MakeCurrent(backupCurrentWindow, backupCurrentContext);
-	}
-
-	return true;
 }
 
 bool M_Editor::InitializeImGui() const
@@ -559,5 +531,100 @@ void M_Editor::BeginDockspace(ImGuiIO& io, const char* dockspaceId, ImGuiDockNod
 	{
 		ImGuiID dckspace_id = ImGui::GetID(dockspaceId);
 		ImGui::DockSpace(dckspace_id, size, dockingFlags);
+	}
+}
+
+
+//EDITOR CAMERA FUNCTIONALLITY
+void M_Editor::EditorCameraUpdate() {
+	if (ViewportIsHovered())
+	{
+		if (!HoveringGuizmo())
+		{
+			if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KeyState::KEY_DOWN)
+			{
+				App->camera->CastRay(GetWorldMousePositionThroughEditor());
+			}
+		}
+
+		if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KeyState::KEY_REPEAT)
+		{
+			App->camera->WASDMovement();
+
+			App->camera->FreeLookAround();
+		}
+
+		if (App->input->GetKey(SDL_SCANCODE_LALT) == KeyState::KEY_REPEAT)
+		{
+			if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KeyState::KEY_REPEAT)
+			{
+				if (App->scene->GetSelectedGameObject() != nullptr)
+				{
+					if (App->scene->GetSelectedGameObject()->GetComponent<C_Camera>() != currentCamera)
+					{
+						App->camera->reference = App->scene->GetSelectedGameObject()->GetComponent<C_Transform>()->GetWorldPosition();
+					}
+				}
+				else
+				{
+					App->camera->reference = float3::zero;
+				}
+
+				App->camera->Orbit(GetWorldMousePositionThroughEditor());
+			}
+		}
+
+		if (App->input->GetMouseButton(SDL_BUTTON_MIDDLE) == KeyState::KEY_REPEAT)
+		{
+			App->camera->PanCamera(GetWorldMousePositionThroughEditor());
+		}
+
+		if (App->input->GetMouseZ() != 0)
+		{
+			App->camera->Zoom();
+		}
+
+		if (App->input->GetKey(SDL_SCANCODE_LCTRL) == KeyState::KEY_IDLE)
+		{
+			if (App->input->GetKey(SDL_SCANCODE_O) == KeyState::KEY_DOWN)
+			{
+				App->camera->ReturnToWorldOrigin();
+			}
+		}
+
+		if (App->input->GetKey(SDL_SCANCODE_F) == KeyState::KEY_DOWN)
+		{
+			float3 target = App->scene->GetSelectedGameObject()->GetComponent<C_Transform>()->GetWorldPosition();
+			App->camera->Focus(target);
+		}
+	}
+}
+
+void M_Editor::ProcessInput(SDL_Event& event)
+{
+	ImGui_ImplSDL2_ProcessEvent(event);
+}
+
+void M_Editor::PostSceneRendering()
+{
+	// Rendering all ImGui elements
+	ImGuiIO& io = ImGui::GetIO();
+
+	ImGui::Render();
+	//glViewport(0, 0, (int)io.DisplaySize.x, (int)io.DisplaySize.y);
+	//glClearColor(clearColor.x, clearColor.y, clearColor.z, clearColor.w);
+	//glClear(GL_COLOR_BUFFER_BIT);
+	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+	// Updating and rendering additional platform windows
+	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+	{
+		SDL_Window* backupCurrentWindow = SDL_GL_GetCurrentWindow();
+		SDL_GLContext backupCurrentContext = SDL_GL_GetCurrentContext();
+
+		ImGui::UpdatePlatformWindows();
+		ImGui::RenderPlatformWindowsDefault();
+
+		SDL_GL_MakeCurrent(backupCurrentWindow, backupCurrentContext);
 	}
 }

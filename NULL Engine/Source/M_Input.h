@@ -2,6 +2,7 @@
 #define __M_INPUT_H__
 
 #include "Module.h"
+#include <vector>
 
 class ParsonNode;
 typedef unsigned int uint;
@@ -48,6 +49,8 @@ public:
 	int				GetMouseYWheel			() const;
 
 	bool			WindowSizeWasManipulated(Uint8 windowEvent) const;										// Uint8 is an SDL typedef for unsigned char.
+	
+	void			AddModuleToProcessInput(Module* module);												//Add a module that needs SDL_Events inputs info
 
 private:
 	KeyState*		keyboard;
@@ -64,6 +67,8 @@ private:
 
 	int				prevMousePosX;
 	int				prevMousePosY;
+
+	std::vector<Module*> ModulesProcessInput;
 };
 
 #endif // !__M_INPUT_H__

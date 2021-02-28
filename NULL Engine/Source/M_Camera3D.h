@@ -56,18 +56,17 @@ public:																				// Camera3D Getters and Setters.
 	void			SetMasterCameraRotation			(const float3& rotation);
 	void			SetMasterCameraScale			(const float3& scale);
 
-public:
-	void			CastRay							();
-
+public:																				//Ray Functionallity
 	bool			DrawLastRaycast					() const;
 	void			SetDrawLastRaycast				(const bool& setTo);
+	void			CastRay							(const float2& position);
 
-private:
-	void			WASDMovement					();								// Translates the camera along XYZ (Right, Up, Forward), which will act as the camera's axis.
-	void			FreeLookAround					();								// Receives information about the mouse's motion values and rotates the camera on it's axis.
-	void			Orbit							();								// Will rotate the camera around a point specified by the reference var.. ~identical to FreeLookAround();
-	void			PanCamera						();								// Will translate the camera along XY (Right, Up). Moving the camera in the plane of the camera frame.
-	void			Zoom							();								// Will translate the camera along the Z (Forward) axis. The camera will move forwards and backwards. 
+public:
+	void FreeLookAround();															// Receives information about the mouse's motion values and rotates the camera on it's axis.
+	void Orbit(const float2& orbitPoint);											// Will rotate the camera around a point specified by the reference var.. ~identical to FreeLookAround();
+	void PanCamera(const float2& panPoint);										// Will translate the camera along XY (Right, Up). Moving the camera in the plane of the camera frame.
+	void Zoom();																	// Will translate the camera along the Z (Forward) axis. The camera will move forwards and backwards. 
+	void WASDMovement();															// Translates the camera along XYZ (Right, Up, Forward), which will act as the camera's axis.		
 
 public:
 	GameObject*		masterCamera;
@@ -83,8 +82,8 @@ public:
 	float			zoomSpeed;														// 
 
 public:
-	LineSegment		lastRaycast;
 	bool			drawLastRaycast;
+	LineSegment		lastRaycast;
 };
 
 #endif // !__CAMERA_3D_H__

@@ -252,6 +252,9 @@ public:																											// --- DEBUG GET/SET METHODS
 	void			SetRenderPrimtiveExamples	(const bool& setTo);											// 
 
 public:
+	void AddPostSceneRenderModule(Module* module);
+
+public:
 	Light					lights[MAX_LIGHTS];																	// 
 	SDL_GLContext			context;																			// 
 
@@ -307,6 +310,9 @@ private:																										// --- DEBUG VARIABLES ---		// TODO: CREATE A 
 	bool					renderSkeletons;																	//
 
 	bool					renderPrimitiveExamples;															//
+
+
+	std::vector<Module*>	PostSceneRenderModules;
 };
 
 #endif // !__M_RENDERER_3D_H__

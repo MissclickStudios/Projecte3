@@ -15,12 +15,9 @@
     <ClCompile Include="Source\AnimatorClip.cpp" />
     <ClCompile Include="Source\Application.cpp" />
     <ClCompile Include="Source\Channel.cpp" />
-    <ClCompile Include="Source\CurveEditor.cpp" />
     <ClCompile Include="Source\C_Animation.cpp" />
     <ClCompile Include="Source\C_Animator.cpp" />
     <ClCompile Include="Source\EasingFunctions.cpp" />
-    <ClCompile Include="Source\E_Resources.cpp" />
-    <ClCompile Include="Source\E_Timeline.cpp" />
     <ClCompile Include="Source\Hourglass.cpp" />
     <ClCompile Include="Source\Color.cpp" />
     <ClCompile Include="Source\Component.cpp" />
@@ -30,13 +27,6 @@
     <ClCompile Include="Source\C_Mesh.cpp" />
     <ClCompile Include="Source\C_Transform.cpp" />
     <ClCompile Include="Source\Dependencies\gpudetect\include\DeviceId.cpp" />
-    <ClCompile Include="Source\Dependencies\ImGuizmo\include\ImGuizmo.cpp" />
-    <ClCompile Include="Source\Dependencies\ImGui\include\imgui.cpp" />
-    <ClCompile Include="Source\Dependencies\ImGui\include\imgui_demo.cpp" />
-    <ClCompile Include="Source\Dependencies\ImGui\include\imgui_draw.cpp" />
-    <ClCompile Include="Source\Dependencies\ImGui\include\imgui_impl_opengl3.cpp" />
-    <ClCompile Include="Source\Dependencies\ImGui\include\imgui_impl_sdl.cpp" />
-    <ClCompile Include="Source\Dependencies\ImGui\include\imgui_widgets.cpp" />
     <ClCompile Include="Source\Dependencies\MathGeoLib\include\Algorithm\GJK.cpp" />
     <ClCompile Include="Source\Dependencies\MathGeoLib\include\Algorithm\GJK2D.cpp" />
     <ClCompile Include="Source\Dependencies\MathGeoLib\include\Algorithm\Random\LCG.cpp" />
@@ -82,18 +72,6 @@
     <ClCompile Include="Source\Dependencies\mmgr\include\mmgr.cpp" />
     <ClCompile Include="Source\Dependencies\parson\include\parson.c" />
     <ClCompile Include="Source\Dependencies\PCG\include\pcg_basic.c" />
-    <ClCompile Include="Source\E_About.cpp" />
-    <ClCompile Include="Source\E_Configuration.cpp" />
-    <ClCompile Include="Source\E_Console.cpp" />
-    <ClCompile Include="Source\E_Hierarchy.cpp" />
-    <ClCompile Include="Source\E_Inspector.cpp" />
-    <ClCompile Include="Source\E_LoadFile.cpp" />
-    <ClCompile Include="Source\EditorPanel.cpp" />
-    <ClCompile Include="Source\E_ImGuiDemo.cpp" />
-    <ClCompile Include="Source\E_Project.cpp" />
-    <ClCompile Include="Source\E_Viewport.cpp" />
-    <ClCompile Include="Source\E_MainMenuBar.cpp" />
-    <ClCompile Include="Source\E_Toolbar.cpp" />
     <ClCompile Include="Source\FrameData.cpp" />
     <ClCompile Include="Source\GameObject.cpp" />
     <ClCompile Include="Source\HardwareInfo.cpp" />
@@ -111,7 +89,6 @@
     <ClCompile Include="Source\MaterialSettings.cpp" />
     <ClCompile Include="Source\MeshSettings.cpp" />
     <ClCompile Include="Source\ModelSettings.cpp" />
-    <ClCompile Include="Source\M_Editor.cpp" />
     <ClCompile Include="Source\Light.cpp" />
     <ClCompile Include="Source\EngineMain.h" />
     <ClCompile Include="Source\Module.cpp" />
@@ -131,7 +108,6 @@
     <ClCompile Include="Source\SoftwareInfo.cpp" />
     <ClCompile Include="Source\SystemInfo.cpp" />
     <ClCompile Include="Source\TextureSettings.cpp" />
-    <ClCompile Include="Source\ThemeGenerator.cpp" />
     <ClCompile Include="Source\Time.cpp" />
     <ClCompile Include="Source\PerfectTimer.cpp" />
     <ClCompile Include="Source\Primitive.cpp" />
@@ -139,7 +115,6 @@
     <ClCompile Include="Source\R_Material.cpp" />
     <ClCompile Include="Source\R_Mesh.cpp" />
     <ClCompile Include="Source\R_Model.cpp" />
-    <ClCompile Include="Source\Timeline.cpp" />
     <ClCompile Include="Source\Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -150,12 +125,9 @@
     <ClInclude Include="Source\Assimp.h" />
     <ClInclude Include="Source\Bone.h" />
     <ClInclude Include="Source\Channel.h" />
-    <ClInclude Include="Source\CurveEditor.h" />
     <ClInclude Include="Source\C_Animation.h" />
     <ClInclude Include="Source\C_Animator.h" />
     <ClInclude Include="Source\EasingFunctions.h" />
-    <ClInclude Include="Source\E_Resources.h" />
-    <ClInclude Include="Source\E_Timeline.h" />
     <ClInclude Include="Source\Hourglass.h" />
     <ClInclude Include="Source\Color.h" />
     <ClInclude Include="Source\Component.h" />
@@ -183,15 +155,6 @@
     <ClInclude Include="Source\Dependencies\glew\include\wglew.h" />
     <ClInclude Include="Source\Dependencies\gpudetect\include\DeviceId.h" />
     <ClInclude Include="Source\Dependencies\gpudetect\include\dxgi1_4.h" />
-    <ClInclude Include="Source\Dependencies\ImGuizmo\include\ImGuizmo.h" />
-    <ClInclude Include="Source\Dependencies\ImGui\include\imconfig.h" />
-    <ClInclude Include="Source\Dependencies\ImGui\include\imgui.h" />
-    <ClInclude Include="Source\Dependencies\ImGui\include\imgui_impl_opengl3.h" />
-    <ClInclude Include="Source\Dependencies\ImGui\include\imgui_impl_sdl.h" />
-    <ClInclude Include="Source\Dependencies\ImGui\include\imgui_internal.h" />
-    <ClInclude Include="Source\Dependencies\ImGui\include\imstb_rectpack.h" />
-    <ClInclude Include="Source\Dependencies\ImGui\include\imstb_textedit.h" />
-    <ClInclude Include="Source\Dependencies\ImGui\include\imstb_truetype.h" />
     <ClInclude Include="Source\Dependencies\MathGeoLib\include\Algorithm\GJK.h" />
     <ClInclude Include="Source\Dependencies\MathGeoLib\include\Algorithm\GJK2D.h" />
     <ClInclude Include="Source\Dependencies\MathGeoLib\include\Algorithm\Random\LCG.h" />
@@ -273,24 +236,11 @@
     <ClInclude Include="Source\Dependencies\PCG\include\pcg_basic.h" />
     <ClInclude Include="Source\Dependencies\PhysFS\include\physfs.h" />
     <ClInclude Include="Source\DevIL.h" />
-    <ClInclude Include="Source\E_LoadFile.h" />
-    <ClInclude Include="Source\E_Project.h" />
-    <ClInclude Include="Source\E_Toolbar.h" />
     <ClInclude Include="Source\FileSystemDefinitions.h" />
-    <ClInclude Include="Source\E_About.h" />
-    <ClInclude Include="Source\E_Configuration.h" />
-    <ClInclude Include="Source\E_Console.h" />
-    <ClInclude Include="Source\E_Hierarchy.h" />
-    <ClInclude Include="Source\E_Inspector.h" />
-    <ClInclude Include="Source\EditorPanel.h" />
-    <ClInclude Include="Source\E_ImGuiDemo.h" />
-    <ClInclude Include="Source\E_Viewport.h" />
-    <ClInclude Include="Source\E_MainMenuBar.h" />
     <ClInclude Include="Source\FrameData.h" />
     <ClInclude Include="Source\GameObject.h" />
     <ClInclude Include="Source\HardwareInfo.h" />
     <ClInclude Include="Source\Icons.h" />
-    <ClInclude Include="Source\ImGuiCustom.h" />
     <ClInclude Include="Source\Importer.h" />
     <ClInclude Include="Source\ImportSettings.h" />
     <ClInclude Include="Source\I_Animations.h" />
@@ -310,7 +260,6 @@
     <ClInclude Include="Source\MemoryManager.h" />
     <ClInclude Include="Source\MeshSettings.h" />
     <ClInclude Include="Source\ModelSettings.h" />
-    <ClInclude Include="Source\M_Editor.h" />
     <ClInclude Include="Source\Globals.h" />
     <ClInclude Include="Source\ImGui.h" />
     <ClInclude Include="Source\Light.h" />
@@ -333,7 +282,6 @@
     <ClInclude Include="Source\SoftwareInfo.h" />
     <ClInclude Include="Source\SystemInfo.h" />
     <ClInclude Include="Source\TextureSettings.h" />
-    <ClInclude Include="Source\ThemeGenerator.h" />
     <ClInclude Include="Source\Time.h" />
     <ClInclude Include="Source\PerfectTimer.h" />
     <ClInclude Include="Source\Primitive.h" />
@@ -341,7 +289,6 @@
     <ClInclude Include="Source\R_Material.h" />
     <ClInclude Include="Source\R_Mesh.h" />
     <ClInclude Include="Source\R_Model.h" />
-    <ClInclude Include="Source\Timeline.h" />
     <ClInclude Include="Source\Timer.h" />
     <ClInclude Include="Source\UpdateStatus.h" />
     <ClInclude Include="Source\VariableDefinitions.h" />

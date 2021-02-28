@@ -34,6 +34,7 @@
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */							// Libraries Pragma Comments
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */							// 
 #pragma comment (lib, "Source/Dependencies/Assimp/libx86/assimp.lib")							// -------------------------
+#pragma comment (lib, "Source/Dependencies/glew/libx86/glew32.lib")
 
 #define WORLD_GRID_SIZE		64
 #define CHECKERS_WIDTH		64
@@ -141,7 +142,12 @@ UpdateStatus M_Renderer3D::PostUpdate(float dt)
 	
 	RenderScene();
 
-	App->editor->RenderEditorPanels();
+	//Render systems from other modules (example ImGUi)
+	for (std::vector<Module*>::const_iterator it = PostSceneRenderModules.cbegin(); it != PostSceneRenderModules.cend(); ++it) 
+	{
+		if ((*it)->IsActive())
+			(*it)->PostSceneRendering();
+	}
 
 	SDL_GL_SwapWindow(App->window->GetWindow());
 
@@ -1175,6 +1181,11 @@ void M_Renderer3D::SetRenderSkeletons(const bool& setTo)
 void M_Renderer3D::SetRenderPrimtiveExamples(const bool& setTo)
 {
 	renderPrimitiveExamples = setTo;
+}
+
+void M_Renderer3D::AddPostSceneRenderModule(Module* module)
+{
+	PostSceneRenderModules.push_back(module);
 }
 
 // --- RENDERER STRUCTURES METHODS ---

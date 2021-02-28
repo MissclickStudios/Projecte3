@@ -14,7 +14,6 @@ class M_Window;
 class M_Input;
 class M_Scene;
 class M_Renderer3D;
-class M_Editor;
 class M_Camera3D;
 class M_FileSystem;
 class M_ResourceManager;
@@ -60,7 +59,6 @@ public:																					// --- FRAMERATE
 public:																					// --- EDITOR
 	void		AddEditorLog(const char* log);
 	void		RequestBrowser(const char* link);
-	void		UpdateFrameData(int frames, int ms);
 
 	void		LogHardwareInfo() const;
 	HardwareInfo GetHardwareInfo() const;
@@ -70,7 +68,6 @@ public:
 	M_Input*				input;
 	M_Scene*				scene;
 	M_Renderer3D*			renderer;
-	M_Editor*				editor;
 	M_Camera3D*				camera;
 	M_FileSystem*			fileSystem;
 	M_ResourceManager*		resourceManager;
@@ -108,6 +105,8 @@ private:
 
 	// --- HARDWARE INFO
 	HardwareInfo			hardwareInfo;												// All the info/data about the software and the hardware of the system will be extracted from here.
+private:
+	Module* logger;
 };
 
 extern Application* App;																// Allows to access the Application module from anywhere in the project.

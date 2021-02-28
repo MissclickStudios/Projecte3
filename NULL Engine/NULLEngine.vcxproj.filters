@@ -1,0 +1,207 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Source">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Source\Editor">
+      <UniqueIdentifier>{78719196-0e61-4201-9dd2-326dcfd423b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Editor\Panels">
+      <UniqueIdentifier>{80d4f0a6-df0b-4455-b83d-43b8f9d0c006}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Editor\Panels\Popups">
+      <UniqueIdentifier>{4c519394-a07a-4909-88b6-da8c14c363d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Modules">
+      <UniqueIdentifier>{15ac23ef-5866-4355-8bb1-5e375496e74c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Dependencies">
+      <UniqueIdentifier>{b789b513-87de-454b-9f62-802425f7eb40}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Dependencies\ImGui">
+      <UniqueIdentifier>{1bfe72bc-619f-45c2-bda0-0f50e55e4992}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Dependencies\ImGuiCustom">
+      <UniqueIdentifier>{41e54226-ec4b-400c-b2e3-f2ad04ebdb46}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Dependencies\ImGuiCustom\CustomWidgets">
+      <UniqueIdentifier>{996e71e3-f947-4f36-a71f-6ffa18b40e28}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Dependencies\ImGuizmo">
+      <UniqueIdentifier>{8031d735-344f-4275-97ba-d07ff166cf58}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Source\EditorPanel.cpp">
+      <Filter>Source\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\E_Resources.cpp">
+      <Filter>Source\Editor\Panels</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\E_Timeline.cpp">
+      <Filter>Source\Editor\Panels</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\E_Configuration.cpp">
+      <Filter>Source\Editor\Panels</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\E_Console.cpp">
+      <Filter>Source\Editor\Panels</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\E_Hierarchy.cpp">
+      <Filter>Source\Editor\Panels</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\E_Inspector.cpp">
+      <Filter>Source\Editor\Panels</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\E_ImGuiDemo.cpp">
+      <Filter>Source\Editor\Panels</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\E_Project.cpp">
+      <Filter>Source\Editor\Panels</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\E_Viewport.cpp">
+      <Filter>Source\Editor\Panels</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\E_MainMenuBar.cpp">
+      <Filter>Source\Editor\Panels</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\E_Toolbar.cpp">
+      <Filter>Source\Editor\Panels</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\E_About.cpp">
+      <Filter>Source\Editor\Panels\Popups</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\E_LoadFile.cpp">
+      <Filter>Source\Editor\Panels\Popups</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\M_Editor.cpp">
+      <Filter>Source\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Dependencies\ImGui\include\imgui.cpp">
+      <Filter>Dependencies\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Dependencies\ImGui\include\imgui_demo.cpp">
+      <Filter>Dependencies\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Dependencies\ImGui\include\imgui_draw.cpp">
+      <Filter>Dependencies\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Dependencies\ImGui\include\imgui_impl_opengl3.cpp">
+      <Filter>Dependencies\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Dependencies\ImGui\include\imgui_impl_sdl.cpp">
+      <Filter>Dependencies\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Dependencies\ImGui\include\imgui_widgets.cpp">
+      <Filter>Dependencies\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Dependencies\ImGuizmo\include\ImGuizmo.cpp">
+      <Filter>Dependencies\ImGuizmo</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\CurveEditor.cpp">
+      <Filter>Dependencies\ImGuiCustom\CustomWidgets</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ThemeGenerator.cpp">
+      <Filter>Dependencies\ImGuiCustom\CustomWidgets</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Timeline.cpp">
+      <Filter>Dependencies\ImGuiCustom\CustomWidgets</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Source\EditorPanel.h">
+      <Filter>Source\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\E_Resources.h">
+      <Filter>Source\Editor\Panels</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\E_Timeline.h">
+      <Filter>Source\Editor\Panels</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\E_Project.h">
+      <Filter>Source\Editor\Panels</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\E_Toolbar.h">
+      <Filter>Source\Editor\Panels</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\E_Configuration.h">
+      <Filter>Source\Editor\Panels</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\E_Console.h">
+      <Filter>Source\Editor\Panels</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\E_Hierarchy.h">
+      <Filter>Source\Editor\Panels</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\E_Inspector.h">
+      <Filter>Source\Editor\Panels</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\E_ImGuiDemo.h">
+      <Filter>Source\Editor\Panels</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\E_Viewport.h">
+      <Filter>Source\Editor\Panels</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\E_MainMenuBar.h">
+      <Filter>Source\Editor\Panels</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\E_LoadFile.h">
+      <Filter>Source\Editor\Panels\Popups</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\E_About.h">
+      <Filter>Source\Editor\Panels\Popups</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\M_Editor.h">
+      <Filter>Source\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Dependencies\ImGui\include\imconfig.h">
+      <Filter>Dependencies\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Dependencies\ImGui\include\imgui.h">
+      <Filter>Dependencies\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Dependencies\ImGui\include\imgui_impl_opengl3.h">
+      <Filter>Dependencies\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Dependencies\ImGui\include\imgui_impl_sdl.h">
+      <Filter>Dependencies\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Dependencies\ImGui\include\imgui_internal.h">
+      <Filter>Dependencies\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Dependencies\ImGui\include\imstb_rectpack.h">
+      <Filter>Dependencies\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Dependencies\ImGui\include\imstb_textedit.h">
+      <Filter>Dependencies\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Dependencies\ImGui\include\imstb_truetype.h">
+      <Filter>Dependencies\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Dependencies\ImGuizmo\include\ImGuizmo.h">
+      <Filter>Dependencies\ImGuizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ImGuiCustom.h">
+      <Filter>Dependencies\ImGuiCustom</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\CurveEditor.h">
+      <Filter>Dependencies\ImGuiCustom\CustomWidgets</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ThemeGenerator.h">
+      <Filter>Dependencies\ImGuiCustom\CustomWidgets</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Timeline.h">
+      <Filter>Dependencies\ImGuiCustom\CustomWidgets</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

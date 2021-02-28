@@ -414,7 +414,7 @@ void E_Configuration::UpdateFrameData(int frames, int ms)
 	}																// --------------------
 
 	fpsData[MAX_HISTOGRAM_SIZE - 1]	= (float)frames;			// Adds to FPS[] the frames per second passed as argument to the last position in it.
-	msData[MAX_HISTOGRAM_SIZE - 1]		= (float)ms;				// Adds to Ms[] the ms per frame passed as argument to the last position in it.
+	msData[MAX_HISTOGRAM_SIZE - 1]	= (float)ms;				// Adds to Ms[] the ms per frame passed as argument to the last position in it.
 }
 
 void E_Configuration::PlotFrameDataHistogram()
@@ -806,6 +806,7 @@ void E_Configuration::GenerateDrawLastRaycastCheckbox()
 	}
 }
 
+//Redo
 void E_Configuration::AddInputLog(const char* log)
 {
 	if (log != nullptr)

@@ -12,7 +12,6 @@
 #include "M_Input.h"
 #include "M_Scene.h"
 #include "M_Renderer3D.h"
-#include "M_Editor.h"
 #include "M_Camera3D.h"
 #include "M_FileSystem.h"
 #include "M_ResourceManager.h"
@@ -28,11 +27,11 @@ hardwareInfo	(),
 window			(nullptr),
 input			(nullptr),
 scene			(nullptr),
-editor			(nullptr),
 renderer		(nullptr),
 camera			(nullptr),
 fileSystem		(nullptr),
-resourceManager(nullptr)
+resourceManager(nullptr),
+logger			(nullptr)
 {
 	//PERF_TIMER_START(perf_timer);
 	
@@ -42,9 +41,8 @@ resourceManager(nullptr)
 	camera				= new M_Camera3D();
 	renderer			= new M_Renderer3D();
 	scene				= new M_Scene();
-	editor				= new M_Editor();
 	fileSystem			= new M_FileSystem();
-	resourceManager	= new M_ResourceManager();
+	resourceManager		= new M_ResourceManager();
 
 	// The order of calls is very important!
 	// Modules will Init() Start() and Update in this order
@@ -59,7 +57,6 @@ resourceManager(nullptr)
 
 	// Scenes
 	AddModule(scene);
-	AddModule(editor);
 
 	// Renderer last!
 	AddModule(renderer);
@@ -360,9 +357,6 @@ void Application::FinishUpdate()
 	{
 		App->window->SetTitle(engineName.c_str());
 	}
-
-	// Editor: Configuration Frame Data Histograms
-	UpdateFrameData(Time::Real::GetFramesLastSecond(), Time::Real::GetMsLastFrame());
 }
 // ---------------------------------------------
 
@@ -474,7 +468,7 @@ void Application::SetFrameCap(uint newCap)
 // --- EDITOR METHODS ---
 void Application::AddEditorLog(const char* log)
 {
-	if (!quit && editor != nullptr)													// Second condition is not really necessary. It's more of a reminder to keep it in mind.
+	if (!quit && logger != nullptr)													// Second condition is not really necessary. It's more of a reminder to keep it in mind.
 	{
 		//std::string full_log = App->fileSystem->NormalizePath(log);				// Switching all "\\" for "/". They need to be changed due to "\" being a Windows-specific thing.
 
@@ -485,18 +479,13 @@ void Application::AddEditorLog(const char* log)
 
 		std::string shortLog = fullLog.substr(logStart, logEnd);				// Returns the string that is within the given positions.
 
-		editor->AddConsoleLog(shortLog.c_str());									// Priorized readability over reducing to AddConsoleLog(full_log.substr(log_start, log_end)).
+		logger->AddConsoleLog(shortLog.c_str());									// Priorized readability over reducing to AddConsoleLog(full_log.substr(log_start, log_end)).
 	}
 }
 
 void Application::RequestBrowser(const char* link)
 {
 	ShellExecuteA(NULL, "open", link, NULL, "", 0);
-}
-
-void Application::UpdateFrameData(int frames, int ms)
-{
-	editor->UpdateFrameData(frames, ms);
 }
 
 
