@@ -50,8 +50,8 @@ public:																														// --- GAME OBJECTS METHODS ---
 	GameObject*		CreateGameObject					(const char* name = nullptr, GameObject* parent = nullptr);			// 
 	void			DeleteGameObject					(GameObject* gameObject, uint index = -1);							// 
 	
-	void			GenerateGameObjectsFromModel		(const uint32& modelUid, const float3& scale = float3::zero);		//
-	bool			ApplyTextureToSelectedGameObject	(const uint32& textureUid);										//
+	void			GenerateGameObjectsFromModel		(const R_Model* rModel, const float3& scale = float3::zero);		//
+	bool			ApplyTextureToSelectedGameObject	(const uint32& textureUid);											//
 
 	void			CreateComponentsFromModelNode		(const ModelNode& modelNode, GameObject* gameObject);
 	void			CreateAnimationComponentFromModel	(const R_Model* rModel, GameObject* gameObject);
@@ -86,16 +86,17 @@ private:
 	void			DebugSpawnPrimitive(Primitive* p);
 
 private:
-	std::vector<GameObject*>	gameObjects;																				// 
+	std::vector<GameObject*>		gameObjects;																			// 
+	std::multimap<uint32, std::pair<uint32, std::string>> models;															// Models currently loaded on scene and their correspondent GO.
 
-	GameObject*					masterRoot;																				// Root of everything. Parent of all scenes.
-	GameObject*					sceneRoot;																					// Root of the current scene.
-	GameObject*					animationRoot;																				// TMP Just for the 3rd Assignment Delivery
-	GameObject*					selectedGameObject;																		// Represents the game object that's currently being selected.
+	GameObject*						masterRoot;																				// Root of everything. Parent of all scenes.
+	GameObject*						sceneRoot;																				// Root of the current scene.
+	GameObject*						animationRoot;																			// TMP Just for the 3rd Assignment Delivery
+	GameObject*						selectedGameObject;																		// Represents the game object that's currently being selected.
 
-	C_Camera*					cullingCamera;																				// Culling Camera
+	C_Camera*						cullingCamera;																			// Culling Camera
 
-	std::vector<Primitive*>		primitives;
+	std::vector<Primitive*>			primitives;
 };
 
 #endif // !__M_SCENE_H__

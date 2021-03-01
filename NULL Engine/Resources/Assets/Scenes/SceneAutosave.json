@@ -1,38 +1,20 @@
 {
-    "Game Objects": [
+    "Models In Scene": [
         {
-            "UID": 1549712,
-            "ParentUID": 766191773,
-            "Name": "Camera001.Target",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        -28.132621765136719,
-                        20.873329162597656,
-                        -35.064212799072266
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                }
-            ]
+            "GameObjectUID": 240786681,
+            "ModelResourceUID": 115766032,
+            "ModelAssetsPath": "Assets\/Models\/Skeleton_Model\/aniTest.fbx"
         },
         {
-            "UID": 25002371,
-            "ParentUID": 1463210910,
+            "GameObjectUID": 748752638,
+            "ModelResourceUID": 1328581382,
+            "ModelAssetsPath": "Assets\/Models\/street\/Street environment_V01.FBX"
+        }
+    ],
+    "Game Objects": [
+        {
+            "UID": 16526312,
+            "ParentUID": 2074226194,
             "Name": "Bip001 R UpperArm",
             "IsActive": true,
             "IsStatic": false,
@@ -61,9 +43,9 @@
             ]
         },
         {
-            "UID": 88736681,
-            "ParentUID": 1492730819,
-            "Name": "Bip001 L UpperArm",
+            "UID": 17339263,
+            "ParentUID": 748752638,
+            "Name": "Camera001",
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
@@ -72,28 +54,265 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        0.98625397682189941,
+                        -78.312431335449219,
+                        45.251216888427734,
+                        -97.031112670898438
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 21521583,
+            "ParentUID": 1943164402,
+            "Name": "Bip001 L Finger11",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0.3415369987487793,
                         4.76837158203125e-07,
                         4.76837158203125e-07
                     ],
                     "LocalRotation": [
-                        -0.24484546482563019,
-                        0.32088923454284668,
-                        -0.12854091823101044,
-                        0.90584659576416016
+                        -0.080333918333053589,
+                        -0.021903494372963905,
+                        0.26213955879211426,
+                        0.96143096685409546
                     ],
                     "LocalScale": [
                         1.0000001192092896,
-                        1.0000001192092896,
+                        1,
+                        1.0000001192092896
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 51424011,
+            "ParentUID": 439917025,
+            "Name": "Bip001 L Hand",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        1.8464145660400391,
+                        2.384185791015625e-07,
+                        -4.76837158203125e-07
+                    ],
+                    "LocalRotation": [
+                        -0.18265573680400848,
+                        0.041462939232587814,
+                        0.1005433201789856,
+                        0.97714316844940186
+                    ],
+                    "LocalScale": [
+                        0.99999982118606567,
+                        0.99999982118606567,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 108094194,
+            "ParentUID": 1595600317,
+            "Name": "Bip001 R Finger0",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0.94094610214233398,
+                        0.081812381744384766,
+                        0.58038055896759033
+                    ],
+                    "LocalRotation": [
+                        -0.55319339036941528,
+                        -0.34493878483772278,
+                        0.19145211577415466,
+                        0.73371684551239014
+                    ],
+                    "LocalScale": [
+                        0.99999994039535522,
+                        0.99999988079071045,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 240786681,
+            "ParentUID": 1156379299,
+            "Name": "aniTest.fbx",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": true,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 6,
+                    "Animations": [],
+                    "Clips": [
+                        {
+                            "AnimationUID": 517000381,
+                            "Name": "Running",
+                            "Start": 47,
+                            "End": 70,
+                            "Duration": 23,
+                            "DurationInSeconds": 0.95833331346511841,
+                            "Loop": true
+                        },
+                        {
+                            "AnimationUID": 517000381,
+                            "Name": "Idle",
+                            "Start": 0,
+                            "End": 46,
+                            "Duration": 46,
+                            "DurationInSeconds": 1.9166666269302368,
+                            "Loop": true
+                        },
+                        {
+                            "AnimationUID": 517000381,
+                            "Name": "Attack",
+                            "Start": 71,
+                            "End": 119,
+                            "Duration": 48,
+                            "DurationInSeconds": 2,
+                            "Loop": false
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 261774129,
+            "ParentUID": 2087343016,
+            "Name": "Object010",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -2.5033531188964844,
+                        15.800846099853516,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 1430406667,
+                    "Name": "Object010.nemesh",
+                    "Path": "Library\/Meshes\/1430406667.nemesh",
+                    "File": "1430406667.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 1083400876,
+                        "Name": "Object010.nemat",
+                        "Path": "Library\/Materials\/1083400876.nemat",
+                        "File": "1083400876.nemat"
+                    },
+                    "Shader": {
+                        "UID": 307946123,
+                        "Name": "DefaultShader.shader",
+                        "Path": "Library\/Shaders\/307946123.shader",
+                        "File": "307946123.shader"
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 283306155,
+            "ParentUID": 2010719464,
+            "Name": "Bip001 R Calf",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        2.6564340591430664,
+                        2.384185791015625e-07,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        -0.46143847703933716,
+                        0.88717222213745117
+                    ],
+                    "LocalScale": [
+                        0.99999988079071045,
+                        0.99999994039535522,
                         0.99999994039535522
                     ]
                 }
             ]
         },
         {
-            "UID": 110725316,
-            "ParentUID": 1688497425,
-            "Name": "City_building_023",
+            "UID": 291019709,
+            "ParentUID": 748752638,
+            "Name": "Camera001.Target",
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
@@ -102,9 +321,9 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        42.130641937255859,
-                        37.4932861328125,
-                        -1.5106878663573298e-06
+                        -28.132621765136719,
+                        20.873329162597656,
+                        -35.064212799072266
                     ],
                     "LocalRotation": [
                         0,
@@ -117,17 +336,13 @@
                         1,
                         1
                     ]
-                },
-                {},
-                {
-                    "Type": 3
                 }
             ]
         },
         {
-            "UID": 209277011,
-            "ParentUID": 1688497425,
-            "Name": "City_building_030",
+            "UID": 322174509,
+            "ParentUID": 1611241981,
+            "Name": "Bip001 R Finger12",
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
@@ -136,231 +351,27 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        -42.807239532470703,
-                        -41.835563659667969,
-                        -9.3834518111179932e-07
+                        0.25260305404663086,
+                        -4.76837158203125e-07,
+                        2.384185791015625e-07
                     ],
                     "LocalRotation": [
-                        0,
-                        0,
-                        -0.70710676908493042,
-                        0.70710676908493042
+                        -1.6042795536463927e-08,
+                        2.511588270692755e-08,
+                        0.53830677270889282,
+                        0.84274893999099731
                     ],
                     "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {},
-                {
-                    "Type": 3
-                }
-            ]
-        },
-        {
-            "UID": 236809151,
-            "ParentUID": 1688497425,
-            "Name": "City_building_011",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        30.134540557861328,
-                        37.4932861328125,
-                        -1.5106878663573298e-06
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {},
-                {
-                    "Type": 3
-                }
-            ]
-        },
-        {
-            "UID": 311366092,
-            "ParentUID": 1647022424,
-            "Name": "Bip001 Pelvis",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        0,
-                        0
-                    ],
-                    "LocalRotation": [
-                        -0.49999967217445374,
-                        -0.50000035762786865,
-                        -0.49999967217445374,
-                        0.50000029802322388
-                    ],
-                    "LocalScale": [
-                        0.99999988079071045,
-                        0.99999988079071045,
-                        0.99999982118606567
+                        0.9999997615814209,
+                        0.99999994039535522,
+                        0.99999994039535522
                     ]
                 }
             ]
         },
         {
-            "UID": 311853665,
-            "ParentUID": 1688497425,
-            "Name": "Plane001",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        -0.02860260009765625,
-                        0.026032090187072754,
-                        0
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        0.99663525819778442,
-                        0.97061645984649658,
-                        0.99663525819778442
-                    ]
-                },
-                {},
-                {
-                    "Type": 3
-                }
-            ]
-        },
-        {
-            "UID": 324578731,
-            "ParentUID": 1688497425,
-            "Name": "City_building_041",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        30.695278167724609,
-                        21.612646102905273,
-                        2.1210729528320371e-07
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0.70710676908493042,
-                        0.70710676908493042
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {},
-                {
-                    "Type": 3
-                }
-            ]
-        },
-        {
-            "UID": 345085675,
-            "ParentUID": 1688497425,
-            "Name": "City_building_026",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        31.51188850402832,
-                        -16.446016311645508,
-                        0
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        1,
-                        4.3711388286737929e-08
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {},
-                {
-                    "Type": 3
-                }
-            ]
-        },
-        {
-            "UID": 382134390,
-            "ParentUID": 1688497425,
-            "Name": "City_building_035",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        13.38798999786377,
-                        -40.802516937255859,
-                        -9.3834518111179932e-07
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {},
-                {
-                    "Type": 3
-                }
-            ]
-        },
-        {
-            "UID": 517953482,
-            "ParentUID": 1063092197,
+            "UID": 335830282,
+            "ParentUID": 51424011,
             "Name": "Bip001 L Finger0",
             "IsActive": true,
             "IsStatic": false,
@@ -389,9 +400,9 @@
             ]
         },
         {
-            "UID": 518316802,
-            "ParentUID": 766191773,
-            "Name": "Spot001",
+            "UID": 346784400,
+            "ParentUID": 2087343016,
+            "Name": "City_building_032",
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
@@ -400,45 +411,15 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        -66.721267700195313,
-                        141.93412780761719,
-                        6.2041376622801181e-06
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                }
-            ]
-        },
-        {
-            "UID": 595185682,
-            "ParentUID": 1688497425,
-            "Name": "City_building_038",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        -41.649002075195313,
-                        -16.495393753051758,
+                        -29.478403091430664,
+                        21.01409912109375,
                         0
                     ],
                     "LocalRotation": [
                         0,
                         0,
-                        -0.7071068286895752,
-                        0.70710670948028564
+                        0,
+                        1
                     ],
                     "LocalScale": [
                         1,
@@ -446,16 +427,42 @@
                         1
                     ]
                 },
-                {},
                 {
-                    "Type": 3
+                    "Type": 2,
+                    "UID": 731636566,
+                    "Name": "City_building_004.nemesh",
+                    "Path": "Library\/Meshes\/731636566.nemesh",
+                    "File": "731636566.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 1104738293,
+                        "Name": "City_building_004.nemat",
+                        "Path": "Library\/Materials\/1104738293.nemat",
+                        "File": "1104738293.nemat"
+                    },
+                    "Texture": {
+                        "UID": 857879648,
+                        "Name": "building03_c.tga",
+                        "Path": "Library\/Textures\/857879648.netex",
+                        "File": "857879648.netex"
+                    },
+                    "Shader": {
+                        "UID": 307946123,
+                        "Name": "DefaultShader.shader",
+                        "Path": "Library\/Shaders\/307946123.shader",
+                        "File": "307946123.shader"
+                    }
                 }
             ]
         },
         {
-            "UID": 657943752,
-            "ParentUID": 1688497425,
-            "Name": "City_building_013",
+            "UID": 390592618,
+            "ParentUID": 1733637286,
+            "Name": "Bip001 L Toe0",
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
@@ -464,32 +471,28 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        -42.288055419921875,
-                        33.201576232910156,
-                        5.0146070407208754e-07
+                        0.80660265684127808,
+                        1.325963020324707,
+                        0
                     ],
                     "LocalRotation": [
-                        0,
-                        0,
-                        0.70710676908493042,
-                        0.70710676908493042
+                        -1.4984837548581709e-07,
+                        6.9308947558965883e-07,
+                        0.70710724592208862,
+                        0.70710629224777222
                     ],
                     "LocalScale": [
+                        1.0000001192092896,
                         1,
-                        1,
-                        1
+                        1.0000001192092896
                     ]
-                },
-                {},
-                {
-                    "Type": 3
                 }
             ]
         },
         {
-            "UID": 664239440,
-            "ParentUID": 918758314,
-            "Name": "Bip001 R Thigh",
+            "UID": 439917025,
+            "ParentUID": 2053535050,
+            "Name": "Bip001 L Forearm",
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
@@ -498,27 +501,87 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        -0.62810516357421875,
-                        -0.31749773025512695,
-                        -1.1535696983337402
+                        2.3758382797241211,
+                        0,
+                        4.76837158203125e-07
                     ],
                     "LocalRotation": [
-                        0.46175748109817505,
-                        0.86204314231872559,
-                        0.015326983295381069,
-                        0.20839101076126099
+                        0,
+                        0,
+                        -0.32770109176635742,
+                        0.94478142261505127
                     ],
                     "LocalScale": [
-                        0.99999988079071045,
-                        0.99999994039535522,
+                        1.0000001192092896,
+                        1,
                         1
                     ]
                 }
             ]
         },
         {
-            "UID": 677965786,
-            "ParentUID": 1271146336,
+            "UID": 542240799,
+            "ParentUID": 2087343016,
+            "Name": "City_building_004",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -41.47589111328125,
+                        21.01409912109375,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 731636566,
+                    "Name": "City_building_004.nemesh",
+                    "Path": "Library\/Meshes\/731636566.nemesh",
+                    "File": "731636566.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 1104738293,
+                        "Name": "City_building_004.nemat",
+                        "Path": "Library\/Materials\/1104738293.nemat",
+                        "File": "1104738293.nemat"
+                    },
+                    "Texture": {
+                        "UID": 857879648,
+                        "Name": "building03_c.tga",
+                        "Path": "Library\/Textures\/857879648.netex",
+                        "File": "857879648.netex"
+                    },
+                    "Shader": {
+                        "UID": 307946123,
+                        "Name": "DefaultShader.shader",
+                        "Path": "Library\/Shaders\/307946123.shader",
+                        "File": "307946123.shader"
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 552169419,
+            "ParentUID": 240786681,
             "Name": "Object02",
             "IsActive": true,
             "IsStatic": false,
@@ -544,16 +607,42 @@
                         2.5399999618530273
                     ]
                 },
-                {},
                 {
-                    "Type": 3
+                    "Type": 2,
+                    "UID": 482355252,
+                    "Name": "Object02.nemesh",
+                    "Path": "Library\/Meshes\/482355252.nemesh",
+                    "File": "482355252.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 1853211353,
+                        "Name": "Object02.nemat",
+                        "Path": "Library\/Materials\/1853211353.nemat",
+                        "File": "1853211353.nemat"
+                    },
+                    "Texture": {
+                        "UID": 2082839328,
+                        "Name": "Skeleton_D.png",
+                        "Path": "Library\/Textures\/2082839328.netex",
+                        "File": "2082839328.netex"
+                    },
+                    "Shader": {
+                        "UID": 307946123,
+                        "Name": "DefaultShader.shader",
+                        "Path": "Library\/Shaders\/307946123.shader",
+                        "File": "307946123.shader"
+                    }
                 }
             ]
         },
         {
-            "UID": 719293289,
-            "ParentUID": 1688497425,
-            "Name": "City_building_033",
+            "UID": 553000296,
+            "ParentUID": 2087343016,
+            "Name": "City_building_031",
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
@@ -562,9 +651,69 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        -32.361495971679688,
-                        42.37042236328125,
-                        5.0146070407208754e-07
+                        -34.679481506347656,
+                        -41.835563659667969,
+                        -9.3834518111179932e-07
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        -0.70710676908493042,
+                        0.70710676908493042
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 1889436847,
+                    "Name": "City_building_028.nemesh",
+                    "Path": "Library\/Meshes\/1889436847.nemesh",
+                    "File": "1889436847.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 371928002,
+                        "Name": "City_building_028.nemat",
+                        "Path": "Library\/Materials\/371928002.nemat",
+                        "File": "371928002.nemat"
+                    },
+                    "Texture": {
+                        "UID": 1789095363,
+                        "Name": "Building_V01_C.png",
+                        "Path": "Library\/Textures\/1789095363.netex",
+                        "File": "1789095363.netex"
+                    },
+                    "Shader": {
+                        "UID": 307946123,
+                        "Name": "DefaultShader.shader",
+                        "Path": "Library\/Shaders\/307946123.shader",
+                        "File": "307946123.shader"
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 623783044,
+            "ParentUID": 2087343016,
+            "Name": "City_building_001",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        17.707164764404297,
+                        20.053276062011719,
+                        2.1210729528320371e-07
                     ],
                     "LocalRotation": [
                         0,
@@ -578,14 +727,160 @@
                         1
                     ]
                 },
-                {},
                 {
-                    "Type": 3
+                    "Type": 2,
+                    "UID": 1984996690,
+                    "Name": "City_building_001.nemesh",
+                    "Path": "Library\/Meshes\/1984996690.nemesh",
+                    "File": "1984996690.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 439419099,
+                        "Name": "City_building_001.nemat",
+                        "Path": "Library\/Materials\/439419099.nemat",
+                        "File": "439419099.nemat"
+                    },
+                    "Texture": {
+                        "UID": 1892539964,
+                        "Name": "Building_V02_C.png",
+                        "Path": "Library\/Textures\/1892539964.netex",
+                        "File": "1892539964.netex"
+                    },
+                    "Shader": {
+                        "UID": 307946123,
+                        "Name": "DefaultShader.shader",
+                        "Path": "Library\/Shaders\/307946123.shader",
+                        "File": "307946123.shader"
+                    }
                 }
             ]
         },
         {
-            "UID": 766191773,
+            "UID": 681769381,
+            "ParentUID": 2087343016,
+            "Name": "City_building_026",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        31.51188850402832,
+                        -16.446016311645508,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        1,
+                        4.3711388286737929e-08
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 1782508607,
+                    "Name": "City_building_026.nemesh",
+                    "Path": "Library\/Meshes\/1782508607.nemesh",
+                    "File": "1782508607.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 1246735111,
+                        "Name": "City_building_026.nemat",
+                        "Path": "Library\/Materials\/1246735111.nemat",
+                        "File": "1246735111.nemat"
+                    },
+                    "Texture": {
+                        "UID": 1086369922,
+                        "Name": "building05 _c.tga",
+                        "Path": "Library\/Textures\/1086369922.netex",
+                        "File": "1086369922.netex"
+                    },
+                    "Shader": {
+                        "UID": 307946123,
+                        "Name": "DefaultShader.shader",
+                        "Path": "Library\/Shaders\/307946123.shader",
+                        "File": "307946123.shader"
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 696884032,
+            "ParentUID": 2087343016,
+            "Name": "City_building_035",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        13.38798999786377,
+                        -40.802516937255859,
+                        -9.3834518111179932e-07
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 1889436847,
+                    "Name": "City_building_028.nemesh",
+                    "Path": "Library\/Meshes\/1889436847.nemesh",
+                    "File": "1889436847.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 371928002,
+                        "Name": "City_building_028.nemat",
+                        "Path": "Library\/Materials\/371928002.nemat",
+                        "File": "371928002.nemat"
+                    },
+                    "Texture": {
+                        "UID": 1789095363,
+                        "Name": "Building_V01_C.png",
+                        "Path": "Library\/Textures\/1789095363.netex",
+                        "File": "1789095363.netex"
+                    },
+                    "Shader": {
+                        "UID": 307946123,
+                        "Name": "DefaultShader.shader",
+                        "Path": "Library\/Shaders\/307946123.shader",
+                        "File": "307946123.shader"
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 748752638,
             "ParentUID": 1156379299,
             "Name": "Street environment_V01.FBX",
             "IsActive": true,
@@ -620,268 +915,8 @@
             ]
         },
         {
-            "UID": 770600294,
-            "ParentUID": 1688497425,
-            "Name": "City_building_001",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        17.707164764404297,
-                        20.053276062011719,
-                        2.1210729528320371e-07
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {},
-                {
-                    "Type": 3
-                }
-            ]
-        },
-        {
-            "UID": 775047292,
-            "ParentUID": 1445948291,
-            "Name": "Bip001 R Finger11",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0.3415369987487793,
-                        0,
-                        0
-                    ],
-                    "LocalRotation": [
-                        -2.6954577236892874e-08,
-                        -1.2713349484272385e-08,
-                        0.42658922076225281,
-                        0.90444546937942505
-                    ],
-                    "LocalScale": [
-                        0.99999988079071045,
-                        1,
-                        1
-                    ]
-                }
-            ]
-        },
-        {
-            "UID": 783003036,
-            "ParentUID": 1688497425,
-            "Name": "City_building_008",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        40.979995727539063,
-                        18.270824432373047,
-                        -2.0522466002148576e-06
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0.70710676908493042,
-                        0.70710676908493042
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {},
-                {
-                    "Type": 3
-                }
-            ]
-        },
-        {
-            "UID": 784793651,
-            "ParentUID": 1688497425,
-            "Name": "City_building_010",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        25.154010772705078,
-                        -39.153720855712891,
-                        8.5538641769744572e-07
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0.70710676908493042,
-                        0.70710676908493042
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {},
-                {
-                    "Type": 3
-                }
-            ]
-        },
-        {
-            "UID": 824216575,
-            "ParentUID": 1343234004,
-            "Name": "Bip001 L Calf",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        2.6564340591430664,
-                        1.1920928955078125e-07,
-                        2.384185791015625e-07
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        -0.3290940523147583,
-                        0.944297194480896
-                    ],
-                    "LocalScale": [
-                        0.99999988079071045,
-                        1.0000001192092896,
-                        1
-                    ]
-                }
-            ]
-        },
-        {
-            "UID": 866553827,
-            "ParentUID": 1688497425,
-            "Name": "City_building_037",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        -20.317693710327148,
-                        -16.163608551025391,
-                        0
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        1,
-                        1.9470718370939721e-07
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {},
-                {
-                    "Type": 3
-                }
-            ]
-        },
-        {
-            "UID": 918486450,
-            "ParentUID": 1688497425,
-            "Name": "City_building_040",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        -34.679481506347656,
-                        -30.643888473510742,
-                        -9.3834518111179932e-07
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        -0.70710676908493042,
-                        0.70710676908493042
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {},
-                {
-                    "Type": 3
-                }
-            ]
-        },
-        {
-            "UID": 918758314,
-            "ParentUID": 311366092,
-            "Name": "Bip001 Spine",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0.62785243988037109,
-                        0.3180011510848999,
-                        -1.7881393432617188e-07
-                    ],
-                    "LocalRotation": [
-                        -2.0821623820665991e-06,
-                        -6.9000770963612013e-07,
-                        0.00039814418414607644,
-                        0.99999994039535522
-                    ],
-                    "LocalScale": [
-                        1.0000001192092896,
-                        1.0000001192092896,
-                        1
-                    ]
-                }
-            ]
-        },
-        {
-            "UID": 921101478,
-            "ParentUID": 1321797882,
+            "UID": 767562949,
+            "ParentUID": 1568003207,
             "Name": "Bip001 R Toe0",
             "IsActive": true,
             "IsStatic": false,
@@ -910,9 +945,9 @@
             ]
         },
         {
-            "UID": 958018811,
-            "ParentUID": 1688497425,
-            "Name": "City_building_028",
+            "UID": 822022773,
+            "ParentUID": 2087343016,
+            "Name": "Plane001",
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
@@ -921,9 +956,303 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        13.38798999786377,
-                        -33.755039215087891,
-                        -9.3834518111179932e-07
+                        -0.02860260009765625,
+                        0.026032090187072754,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        0.99663525819778442,
+                        0.97061645984649658,
+                        0.99663525819778442
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 1755770130,
+                    "Name": "Plane001.nemesh",
+                    "Path": "Library\/Meshes\/1755770130.nemesh",
+                    "File": "1755770130.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 1555549843,
+                        "Name": "Plane001.nemat",
+                        "Path": "Library\/Materials\/1555549843.nemat",
+                        "File": "1555549843.nemat"
+                    },
+                    "Shader": {
+                        "UID": 307946123,
+                        "Name": "DefaultShader.shader",
+                        "Path": "Library\/Shaders\/307946123.shader",
+                        "File": "307946123.shader"
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 837254899,
+            "ParentUID": 2087343016,
+            "Name": "City_building_038",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -41.649002075195313,
+                        -16.495393753051758,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        -0.7071068286895752,
+                        0.70710670948028564
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 1374692758,
+                    "Name": "City_building_038.nemesh",
+                    "Path": "Library\/Meshes\/1374692758.nemesh",
+                    "File": "1374692758.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 580808869,
+                        "Name": "City_building_038.nemat",
+                        "Path": "Library\/Materials\/580808869.nemat",
+                        "File": "580808869.nemat"
+                    },
+                    "Texture": {
+                        "UID": 1086369922,
+                        "Name": "building05 _c.tga",
+                        "Path": "Library\/Textures\/1086369922.netex",
+                        "File": "1086369922.netex"
+                    },
+                    "Shader": {
+                        "UID": 307946123,
+                        "Name": "DefaultShader.shader",
+                        "Path": "Library\/Shaders\/307946123.shader",
+                        "File": "307946123.shader"
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 838276193,
+            "ParentUID": 1595600317,
+            "Name": "Bip001 R Finger1",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        1.7707755565643311,
+                        0.00036144256591796875,
+                        0.041458725929260254
+                    ],
+                    "LocalRotation": [
+                        0.0051076384261250496,
+                        0.19857686758041382,
+                        0.39499667286872864,
+                        0.89694970846176147
+                    ],
+                    "LocalScale": [
+                        1,
+                        0.99999994039535522,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 843181386,
+            "ParentUID": 108094194,
+            "Name": "Bip001 R Finger01",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0.51724481582641602,
+                        0,
+                        -2.384185791015625e-07
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0.23338103294372559,
+                        0.97238534688949585
+                    ],
+                    "LocalScale": [
+                        1.0000001192092896,
+                        0.99999994039535522,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 843298442,
+            "ParentUID": 2104127207,
+            "Name": "Bip001 Spine",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0.62785243988037109,
+                        0.3180011510848999,
+                        -1.7881393432617188e-07
+                    ],
+                    "LocalRotation": [
+                        -2.0821623820665991e-06,
+                        -6.9000770963612013e-07,
+                        0.00039814418414607644,
+                        0.99999994039535522
+                    ],
+                    "LocalScale": [
+                        1.0000001192092896,
+                        1.0000001192092896,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 849034160,
+            "ParentUID": 1225405149,
+            "Name": "Bip001 Neck",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        2.9972019195556641,
+                        -0.23436117172241211,
+                        -4.1723251342773438e-07
+                    ],
+                    "LocalRotation": [
+                        -0.031273826956748962,
+                        0.19982597231864929,
+                        0.15219809114933014,
+                        0.96743333339691162
+                    ],
+                    "LocalScale": [
+                        1.0000001192092896,
+                        1.0000001192092896,
+                        0.99999988079071045
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 852720653,
+            "ParentUID": 2087343016,
+            "Name": "City_building_037",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -20.317693710327148,
+                        -16.163608551025391,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        1,
+                        1.9470718370939721e-07
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 79161198,
+                    "Name": "City_building_037.nemesh",
+                    "Path": "Library\/Meshes\/79161198.nemesh",
+                    "File": "79161198.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 838727756,
+                        "Name": "City_building_037.nemat",
+                        "Path": "Library\/Materials\/838727756.nemat",
+                        "File": "838727756.nemat"
+                    },
+                    "Texture": {
+                        "UID": 1086369922,
+                        "Name": "building05 _c.tga",
+                        "Path": "Library\/Textures\/1086369922.netex",
+                        "File": "1086369922.netex"
+                    },
+                    "Shader": {
+                        "UID": 307946123,
+                        "Name": "DefaultShader.shader",
+                        "Path": "Library\/Shaders\/307946123.shader",
+                        "File": "307946123.shader"
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 889362920,
+            "ParentUID": 748752638,
+            "Name": "Sky001",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        18.153732299804688,
+                        0,
+                        58.960910797119141
                     ],
                     "LocalRotation": [
                         0,
@@ -936,16 +1265,102 @@
                         1,
                         1
                     ]
-                },
-                {},
-                {
-                    "Type": 3
                 }
             ]
         },
         {
-            "UID": 978597346,
-            "ParentUID": 1688497425,
+            "UID": 903121056,
+            "ParentUID": 2087343016,
+            "Name": "City_building_041",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        30.695278167724609,
+                        21.612646102905273,
+                        2.1210729528320371e-07
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0.70710676908493042,
+                        0.70710676908493042
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 1984996690,
+                    "Name": "City_building_001.nemesh",
+                    "Path": "Library\/Meshes\/1984996690.nemesh",
+                    "File": "1984996690.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 439419099,
+                        "Name": "City_building_001.nemat",
+                        "Path": "Library\/Materials\/439419099.nemat",
+                        "File": "439419099.nemat"
+                    },
+                    "Texture": {
+                        "UID": 1892539964,
+                        "Name": "Building_V02_C.png",
+                        "Path": "Library\/Textures\/1892539964.netex",
+                        "File": "1892539964.netex"
+                    },
+                    "Shader": {
+                        "UID": 307946123,
+                        "Name": "DefaultShader.shader",
+                        "Path": "Library\/Shaders\/307946123.shader",
+                        "File": "307946123.shader"
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 915350906,
+            "ParentUID": 1792281821,
+            "Name": "Bone001",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0.19279478490352631,
+                        0.020197272300720215,
+                        -9.5367431640625e-07
+                    ],
+                    "LocalRotation": [
+                        0.58754855394363403,
+                        0.80878400802612305,
+                        0.020709311589598656,
+                        0.015043343417346478
+                    ],
+                    "LocalScale": [
+                        1.0000001192092896,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 941320310,
+            "ParentUID": 2087343016,
             "Name": "Line002",
             "IsActive": true,
             "IsStatic": false,
@@ -971,16 +1386,36 @@
                         1
                     ]
                 },
-                {},
                 {
-                    "Type": 3
+                    "Type": 2,
+                    "UID": 902847011,
+                    "Name": "Line002.nemesh",
+                    "Path": "Library\/Meshes\/902847011.nemesh",
+                    "File": "902847011.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 265405141,
+                        "Name": "Line002.nemat",
+                        "Path": "Library\/Materials\/265405141.nemat",
+                        "File": "265405141.nemat"
+                    },
+                    "Shader": {
+                        "UID": 307946123,
+                        "Name": "DefaultShader.shader",
+                        "Path": "Library\/Shaders\/307946123.shader",
+                        "File": "307946123.shader"
+                    }
                 }
             ]
         },
         {
-            "UID": 983216335,
-            "ParentUID": 1130681027,
-            "Name": "Bip001 L Finger12",
+            "UID": 943324239,
+            "ParentUID": 2087343016,
+            "Name": "City_building_034",
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
@@ -989,45 +1424,15 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        0.25260353088378906,
-                        -4.76837158203125e-07,
-                        -2.384185791015625e-07
-                    ],
-                    "LocalRotation": [
-                        -0.079598948359489441,
-                        -0.024439839646220207,
-                        0.29249438643455505,
-                        0.95263516902923584
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        0.99999994039535522
-                    ]
-                }
-            ]
-        },
-        {
-            "UID": 993055210,
-            "ParentUID": 1688497425,
-            "Name": "City_building_022",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        -20.831323623657227,
-                        -27.426488876342773,
+                        16.049516677856445,
+                        -16.696884155273438,
                         0
                     ],
                     "LocalRotation": [
                         0,
                         0,
-                        1,
-                        1.9470718370939721e-07
+                        -0.7071068286895752,
+                        0.70710670948028564
                     ],
                     "LocalScale": [
                         1,
@@ -1035,9 +1440,35 @@
                         1
                     ]
                 },
-                {},
                 {
-                    "Type": 3
+                    "Type": 2,
+                    "UID": 831950865,
+                    "Name": "City_building_034.nemesh",
+                    "Path": "Library\/Meshes\/831950865.nemesh",
+                    "File": "831950865.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 1469728928,
+                        "Name": "City_building_034.nemat",
+                        "Path": "Library\/Materials\/1469728928.nemat",
+                        "File": "1469728928.nemat"
+                    },
+                    "Texture": {
+                        "UID": 1086369922,
+                        "Name": "building05 _c.tga",
+                        "Path": "Library\/Textures\/1086369922.netex",
+                        "File": "1086369922.netex"
+                    },
+                    "Shader": {
+                        "UID": 307946123,
+                        "Name": "DefaultShader.shader",
+                        "Path": "Library\/Shaders\/307946123.shader",
+                        "File": "307946123.shader"
+                    }
                 }
             ]
         },
@@ -1080,381 +1511,8 @@
             ]
         },
         {
-            "UID": 1037831962,
-            "ParentUID": 2019120235,
-            "Name": "Bip001 L Toe0",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0.80660265684127808,
-                        1.325963020324707,
-                        0
-                    ],
-                    "LocalRotation": [
-                        -1.4984837548581709e-07,
-                        6.9308947558965883e-07,
-                        0.70710724592208862,
-                        0.70710629224777222
-                    ],
-                    "LocalScale": [
-                        1.0000001192092896,
-                        1,
-                        1.0000001192092896
-                    ]
-                }
-            ]
-        },
-        {
-            "UID": 1063092197,
-            "ParentUID": 1773499129,
-            "Name": "Bip001 L Hand",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        1.8464145660400391,
-                        2.384185791015625e-07,
-                        -4.76837158203125e-07
-                    ],
-                    "LocalRotation": [
-                        -0.18265573680400848,
-                        0.041462939232587814,
-                        0.1005433201789856,
-                        0.97714316844940186
-                    ],
-                    "LocalScale": [
-                        0.99999982118606567,
-                        0.99999982118606567,
-                        1
-                    ]
-                }
-            ]
-        },
-        {
-            "UID": 1093272272,
-            "ParentUID": 1917208017,
-            "Name": "Bip001 R Finger02",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0.30469560623168945,
-                        1.1920928955078125e-07,
-                        4.76837158203125e-07
-                    ],
-                    "LocalRotation": [
-                        9.5310026537731574e-09,
-                        3.1927779531315537e-08,
-                        0.17268142104148865,
-                        0.98497772216796875
-                    ],
-                    "LocalScale": [
-                        0.99999988079071045,
-                        1.0000001192092896,
-                        1
-                    ]
-                }
-            ]
-        },
-        {
-            "UID": 1101197742,
-            "ParentUID": 664239440,
-            "Name": "Bip001 R Calf",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        2.6564340591430664,
-                        2.384185791015625e-07,
-                        0
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        -0.46143847703933716,
-                        0.88717222213745117
-                    ],
-                    "LocalScale": [
-                        0.99999988079071045,
-                        0.99999994039535522,
-                        0.99999994039535522
-                    ]
-                }
-            ]
-        },
-        {
-            "UID": 1127047044,
-            "ParentUID": 2041453545,
-            "Name": "Bip001 L Finger02",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0.30469608306884766,
-                        0,
-                        2.384185791015625e-07
-                    ],
-                    "LocalRotation": [
-                        1.4677311810373794e-08,
-                        2.5731552444341332e-09,
-                        0.1726815402507782,
-                        0.98497772216796875
-                    ],
-                    "LocalScale": [
-                        0.99999994039535522,
-                        0.99999994039535522,
-                        1
-                    ]
-                }
-            ]
-        },
-        {
-            "UID": 1130681027,
-            "ParentUID": 1384756238,
-            "Name": "Bip001 L Finger11",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0.3415369987487793,
-                        4.76837158203125e-07,
-                        4.76837158203125e-07
-                    ],
-                    "LocalRotation": [
-                        -0.080333918333053589,
-                        -0.021903494372963905,
-                        0.26213955879211426,
-                        0.96143096685409546
-                    ],
-                    "LocalScale": [
-                        1.0000001192092896,
-                        1,
-                        1.0000001192092896
-                    ]
-                }
-            ]
-        },
-        {
-            "UID": 1156379299,
-            "ParentUID": 856444621,
-            "Name": "MainScene",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": true,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        0,
-                        0
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                }
-            ]
-        },
-        {
-            "UID": 1228317321,
-            "ParentUID": 25002371,
-            "Name": "Bip001 R Forearm",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        2.3758378028869629,
-                        3.5762786865234375e-07,
-                        4.76837158203125e-07
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        -0.27229419350624084,
-                        0.96221405267715454
-                    ],
-                    "LocalScale": [
-                        0.99999988079071045,
-                        1,
-                        1
-                    ]
-                }
-            ]
-        },
-        {
-            "UID": 1237011645,
-            "ParentUID": 1688497425,
-            "Name": "City_building_016",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        34.270423889160156,
-                        -41.972747802734375,
-                        8.5538641769744572e-07
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        1,
-                        -4.3711388286737929e-08
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {},
-                {
-                    "Type": 3
-                }
-            ]
-        },
-        {
-            "UID": 1271146336,
-            "ParentUID": 1156379299,
-            "Name": "aniTest.fbx",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        0,
-                        0
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {
-                    "Type": 6,
-                    "Animations": [],
-                    "Clips": []
-                }
-            ]
-        },
-        {
-            "UID": 1291948185,
-            "ParentUID": 1688497425,
-            "Name": "City_building_014",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        -19.439706802368164,
-                        32.061729431152344,
-                        0
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        1,
-                        -4.3711388286737929e-08
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {},
-                {
-                    "Type": 3
-                }
-            ]
-        },
-        {
-            "UID": 1321797882,
-            "ParentUID": 1101197742,
-            "Name": "Bip001 R Foot",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        3.3164165019989014,
-                        -2.384185791015625e-07,
-                        2.384185791015625e-07
-                    ],
-                    "LocalRotation": [
-                        -0.04051082581281662,
-                        0.14072474837303162,
-                        0.12133371829986572,
-                        0.9817502498626709
-                    ],
-                    "LocalScale": [
-                        1.0000001192092896,
-                        0.99999994039535522,
-                        0.99999988079071045
-                    ]
-                }
-            ]
-        },
-        {
-            "UID": 1343234004,
-            "ParentUID": 918758314,
+            "UID": 1068201901,
+            "ParentUID": 843298442,
             "Name": "Bip001 L Thigh",
             "IsActive": true,
             "IsStatic": false,
@@ -1483,294 +1541,8 @@
             ]
         },
         {
-            "UID": 1372614470,
-            "ParentUID": 1733898154,
-            "Name": "Bip001 R Finger0",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0.94094610214233398,
-                        0.081812381744384766,
-                        0.58038055896759033
-                    ],
-                    "LocalRotation": [
-                        -0.55319339036941528,
-                        -0.34493878483772278,
-                        0.19145211577415466,
-                        0.73371684551239014
-                    ],
-                    "LocalScale": [
-                        0.99999994039535522,
-                        0.99999988079071045,
-                        1
-                    ]
-                }
-            ]
-        },
-        {
-            "UID": 1374472768,
-            "ParentUID": 1688497425,
-            "Name": "City_building_034",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        16.049516677856445,
-                        -16.696884155273438,
-                        0
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        -0.7071068286895752,
-                        0.70710670948028564
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {},
-                {
-                    "Type": 3
-                }
-            ]
-        },
-        {
-            "UID": 1382855988,
-            "ParentUID": 1688497425,
-            "Name": "Object010",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        -2.5033531188964844,
-                        15.800846099853516,
-                        0
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {},
-                {
-                    "Type": 3
-                }
-            ]
-        },
-        {
-            "UID": 1384756238,
-            "ParentUID": 1063092197,
-            "Name": "Bip001 L Finger1",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        1.770775318145752,
-                        0.00036072731018066406,
-                        -0.041458606719970703
-                    ],
-                    "LocalRotation": [
-                        -0.086713187396526337,
-                        -0.063716135919094086,
-                        0.1964249312877655,
-                        0.97459650039672852
-                    ],
-                    "LocalScale": [
-                        0.99999994039535522,
-                        0.99999988079071045,
-                        0.99999988079071045
-                    ]
-                }
-            ]
-        },
-        {
-            "UID": 1445948291,
-            "ParentUID": 1733898154,
-            "Name": "Bip001 R Finger1",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        1.7707755565643311,
-                        0.00036144256591796875,
-                        0.041458725929260254
-                    ],
-                    "LocalRotation": [
-                        0.0051076384261250496,
-                        0.19857686758041382,
-                        0.39499667286872864,
-                        0.89694970846176147
-                    ],
-                    "LocalScale": [
-                        1,
-                        0.99999994039535522,
-                        1
-                    ]
-                }
-            ]
-        },
-        {
-            "UID": 1451040904,
-            "ParentUID": 1688497425,
-            "Name": "City_building_017",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        44.260082244873047,
-                        -39.153720855712891,
-                        8.5538641769744572e-07
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0.70710676908493042,
-                        0.70710676908493042
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {},
-                {
-                    "Type": 3
-                }
-            ]
-        },
-        {
-            "UID": 1463210910,
-            "ParentUID": 1714467313,
-            "Name": "Bip001 R Clavicle",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0.26788139343261719,
-                        -0.097359657287597656,
-                        -0.87843036651611328
-                    ],
-                    "LocalRotation": [
-                        -0.63901758193969727,
-                        -0.064629927277565002,
-                        0.74503195285797119,
-                        0.18001922965049744
-                    ],
-                    "LocalScale": [
-                        1,
-                        1.0000001192092896,
-                        0.99999994039535522
-                    ]
-                }
-            ]
-        },
-        {
-            "UID": 1469213841,
-            "ParentUID": 1538710209,
-            "Name": "Bone001",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0.19279478490352631,
-                        0.020197272300720215,
-                        -9.5367431640625e-07
-                    ],
-                    "LocalRotation": [
-                        0.58754855394363403,
-                        0.80878400802612305,
-                        0.020709311589598656,
-                        0.015043343417346478
-                    ],
-                    "LocalScale": [
-                        1.0000001192092896,
-                        1,
-                        1
-                    ]
-                }
-            ]
-        },
-        {
-            "UID": 1488416153,
-            "ParentUID": 1688497425,
-            "Name": "City_building_024",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        -20.572771072387695,
-                        43.060829162597656,
-                        -0.069194458425045013
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        1,
-                        4.3711388286737929e-08
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {},
-                {
-                    "Type": 3
-                }
-            ]
-        },
-        {
-            "UID": 1492730819,
-            "ParentUID": 1714467313,
+            "UID": 1119869685,
+            "ParentUID": 849034160,
             "Name": "Bip001 L Clavicle",
             "IsActive": true,
             "IsStatic": false,
@@ -1799,234 +1571,12 @@
             ]
         },
         {
-            "UID": 1538710209,
-            "ParentUID": 1714467313,
-            "Name": "Bip001 Head",
+            "UID": 1156379299,
+            "ParentUID": 1511652902,
+            "Name": "MainScene",
             "IsActive": true,
             "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        1.1019048690795898,
-                        -9.5367431640625e-07,
-                        0
-                    ],
-                    "LocalRotation": [
-                        -0.33161324262619019,
-                        -0.046233125030994415,
-                        -0.46153590083122253,
-                        0.82151061296463013
-                    ],
-                    "LocalScale": [
-                        1.0000001192092896,
-                        1,
-                        1.0000001192092896
-                    ]
-                }
-            ]
-        },
-        {
-            "UID": 1545721583,
-            "ParentUID": 1688497425,
-            "Name": "City_building_031",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        -34.679481506347656,
-                        -41.835563659667969,
-                        -9.3834518111179932e-07
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        -0.70710676908493042,
-                        0.70710676908493042
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {},
-                {
-                    "Type": 3
-                }
-            ]
-        },
-        {
-            "UID": 1550947154,
-            "ParentUID": 1688497425,
-            "Name": "City_building_036",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        -31.216331481933594,
-                        33.201576232910156,
-                        5.0146070407208754e-07
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        -0.70710676908493042,
-                        0.70710676908493042
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {},
-                {
-                    "Type": 3
-                }
-            ]
-        },
-        {
-            "UID": 1566351501,
-            "ParentUID": 766191773,
-            "Name": "Spot001.Target",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        28.890945434570313,
-                        -60.963882446289063,
-                        -2.6648158382158726e-06
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                }
-            ]
-        },
-        {
-            "UID": 1624389145,
-            "ParentUID": 1688497425,
-            "Name": "City_building_004",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        -41.47589111328125,
-                        21.01409912109375,
-                        0
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {},
-                {
-                    "Type": 3
-                }
-            ]
-        },
-        {
-            "UID": 1647022424,
-            "ParentUID": 1271146336,
-            "Name": "transform1",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        -1.1161036491394043,
-                        15.688704490661621,
-                        -0.13840684294700623
-                    ],
-                    "LocalRotation": [
-                        -0.44879189133644104,
-                        -0.33055087924003601,
-                        -0.44800519943237305,
-                        0.69900882244110107
-                    ],
-                    "LocalScale": [
-                        2.5399997234344482,
-                        2.5399997234344482,
-                        2.5399999618530273
-                    ]
-                }
-            ]
-        },
-        {
-            "UID": 1672897217,
-            "ParentUID": 766191773,
-            "Name": "Camera001",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        -78.312431335449219,
-                        45.251216888427734,
-                        -97.031112670898438
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                }
-            ]
-        },
-        {
-            "UID": 1688497425,
-            "ParentUID": 766191773,
-            "Name": "Dummy001",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
+            "IsSceneRoot": true,
             "ShowBoundingBoxes": false,
             "Components": [
                 {
@@ -2037,36 +1587,6 @@
                         0
                     ],
                     "LocalRotation": [
-                        -0.70710676908493042,
-                        0,
-                        0,
-                        0.70710676908493042
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                }
-            ]
-        },
-        {
-            "UID": 1691120200,
-            "ParentUID": 766191773,
-            "Name": "Sky001",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        18.153732299804688,
-                        0,
-                        58.960910797119141
-                    ],
-                    "LocalRotation": [
                         0,
                         0,
                         0,
@@ -2081,256 +1601,8 @@
             ]
         },
         {
-            "UID": 1714467313,
-            "ParentUID": 2072153099,
-            "Name": "Bip001 Neck",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        2.9972019195556641,
-                        -0.23436117172241211,
-                        -4.1723251342773438e-07
-                    ],
-                    "LocalRotation": [
-                        -0.031273826956748962,
-                        0.19982597231864929,
-                        0.15219809114933014,
-                        0.96743333339691162
-                    ],
-                    "LocalScale": [
-                        1.0000001192092896,
-                        1.0000001192092896,
-                        0.99999988079071045
-                    ]
-                }
-            ]
-        },
-        {
-            "UID": 1733898154,
-            "ParentUID": 1228317321,
-            "Name": "Bip001 R Hand",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        1.8464140892028809,
-                        -9.5367431640625e-07,
-                        0
-                    ],
-                    "LocalRotation": [
-                        0.56023645401000977,
-                        0.069631285965442657,
-                        0.16953533887863159,
-                        0.80780220031738281
-                    ],
-                    "LocalScale": [
-                        0.99999988079071045,
-                        0.99999994039535522,
-                        1
-                    ]
-                }
-            ]
-        },
-        {
-            "UID": 1773499129,
-            "ParentUID": 88736681,
-            "Name": "Bip001 L Forearm",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        2.3758382797241211,
-                        0,
-                        4.76837158203125e-07
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        -0.32770109176635742,
-                        0.94478142261505127
-                    ],
-                    "LocalScale": [
-                        1.0000001192092896,
-                        1,
-                        1
-                    ]
-                }
-            ]
-        },
-        {
-            "UID": 1799376295,
-            "ParentUID": 1688497425,
-            "Name": "City_building_039",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        -42.807239532470703,
-                        -30.643888473510742,
-                        -9.3834518111179932e-07
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        -0.70710676908493042,
-                        0.70710676908493042
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {},
-                {
-                    "Type": 3
-                }
-            ]
-        },
-        {
-            "UID": 1893401810,
-            "ParentUID": 775047292,
-            "Name": "Bip001 R Finger12",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0.25260305404663086,
-                        -4.76837158203125e-07,
-                        2.384185791015625e-07
-                    ],
-                    "LocalRotation": [
-                        -1.6042795536463927e-08,
-                        2.511588270692755e-08,
-                        0.53830677270889282,
-                        0.84274893999099731
-                    ],
-                    "LocalScale": [
-                        0.9999997615814209,
-                        0.99999994039535522,
-                        0.99999994039535522
-                    ]
-                }
-            ]
-        },
-        {
-            "UID": 1917208017,
-            "ParentUID": 1372614470,
-            "Name": "Bip001 R Finger01",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0.51724481582641602,
-                        0,
-                        -2.384185791015625e-07
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0.23338103294372559,
-                        0.97238534688949585
-                    ],
-                    "LocalScale": [
-                        1.0000001192092896,
-                        0.99999994039535522,
-                        1
-                    ]
-                }
-            ]
-        },
-        {
-            "UID": 1985291731,
-            "ParentUID": 1688497425,
-            "Name": "City_building_007",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        16.010492324829102,
-                        37.4932861328125,
-                        -1.5106878663573298e-06
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {},
-                {
-                    "Type": 3
-                }
-            ]
-        },
-        {
-            "UID": 2019120235,
-            "ParentUID": 824216575,
-            "Name": "Bip001 L Foot",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        3.3164162635803223,
-                        -1.4901161193847656e-07,
-                        0
-                    ],
-                    "LocalRotation": [
-                        0.13742436468601227,
-                        -0.15049974620342255,
-                        0.19602574408054352,
-                        0.95918625593185425
-                    ],
-                    "LocalScale": [
-                        1,
-                        0.9999997615814209,
-                        1.0000001192092896
-                    ]
-                }
-            ]
-        },
-        {
-            "UID": 2041453545,
-            "ParentUID": 517953482,
+            "UID": 1185598233,
+            "ParentUID": 335830282,
             "Name": "Bip001 L Finger01",
             "IsActive": true,
             "IsStatic": false,
@@ -2359,8 +1631,8 @@
             ]
         },
         {
-            "UID": 2072153099,
-            "ParentUID": 918758314,
+            "UID": 1225405149,
+            "ParentUID": 843298442,
             "Name": "Bip001 Spine1",
             "IsActive": true,
             "IsStatic": false,
@@ -2389,9 +1661,9 @@
             ]
         },
         {
-            "UID": 2129295226,
-            "ParentUID": 1688497425,
-            "Name": "City_building_032",
+            "UID": 1326006653,
+            "ParentUID": 2087343016,
+            "Name": "City_building_016",
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
@@ -2400,9 +1672,369 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        -29.478403091430664,
-                        21.01409912109375,
+                        34.270423889160156,
+                        -41.972747802734375,
+                        8.5538641769744572e-07
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        1,
+                        -4.3711388286737929e-08
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 1685193446,
+                    "Name": "City_building_010.nemesh",
+                    "Path": "Library\/Meshes\/1685193446.nemesh",
+                    "File": "1685193446.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 1378817415,
+                        "Name": "City_building_010.nemat",
+                        "Path": "Library\/Materials\/1378817415.nemat",
+                        "File": "1378817415.nemat"
+                    },
+                    "Texture": {
+                        "UID": 1614253557,
+                        "Name": "building 01_c.tga",
+                        "Path": "Library\/Textures\/1614253557.netex",
+                        "File": "1614253557.netex"
+                    },
+                    "Shader": {
+                        "UID": 307946123,
+                        "Name": "DefaultShader.shader",
+                        "Path": "Library\/Shaders\/307946123.shader",
+                        "File": "307946123.shader"
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 1335301293,
+            "ParentUID": 2087343016,
+            "Name": "City_building_010",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        25.154010772705078,
+                        -39.153720855712891,
+                        8.5538641769744572e-07
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0.70710676908493042,
+                        0.70710676908493042
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 1685193446,
+                    "Name": "City_building_010.nemesh",
+                    "Path": "Library\/Meshes\/1685193446.nemesh",
+                    "File": "1685193446.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 1378817415,
+                        "Name": "City_building_010.nemat",
+                        "Path": "Library\/Materials\/1378817415.nemat",
+                        "File": "1378817415.nemat"
+                    },
+                    "Texture": {
+                        "UID": 1614253557,
+                        "Name": "building 01_c.tga",
+                        "Path": "Library\/Textures\/1614253557.netex",
+                        "File": "1614253557.netex"
+                    },
+                    "Shader": {
+                        "UID": 307946123,
+                        "Name": "DefaultShader.shader",
+                        "Path": "Library\/Shaders\/307946123.shader",
+                        "File": "307946123.shader"
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 1341819724,
+            "ParentUID": 2087343016,
+            "Name": "City_building_022",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -20.831323623657227,
+                        -27.426488876342773,
                         0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        1,
+                        1.9470718370939721e-07
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 1144876457,
+                    "Name": "City_building_022.nemesh",
+                    "Path": "Library\/Meshes\/1144876457.nemesh",
+                    "File": "1144876457.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 1440770745,
+                        "Name": "City_building_022.nemat",
+                        "Path": "Library\/Materials\/1440770745.nemat",
+                        "File": "1440770745.nemat"
+                    },
+                    "Texture": {
+                        "UID": 1086369922,
+                        "Name": "building05 _c.tga",
+                        "Path": "Library\/Textures\/1086369922.netex",
+                        "File": "1086369922.netex"
+                    },
+                    "Shader": {
+                        "UID": 307946123,
+                        "Name": "DefaultShader.shader",
+                        "Path": "Library\/Shaders\/307946123.shader",
+                        "File": "307946123.shader"
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 1364977925,
+            "ParentUID": 2087343016,
+            "Name": "City_building_024",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -20.572771072387695,
+                        43.060829162597656,
+                        -0.069194458425045013
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        1,
+                        4.3711388286737929e-08
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 1391984914,
+                    "Name": "City_building_008.nemesh",
+                    "Path": "Library\/Meshes\/1391984914.nemesh",
+                    "File": "1391984914.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 1887159425,
+                        "Name": "City_building_008.nemat",
+                        "Path": "Library\/Materials\/1887159425.nemat",
+                        "File": "1887159425.nemat"
+                    },
+                    "Texture": {
+                        "UID": 729320818,
+                        "Name": "building_025_c.tga",
+                        "Path": "Library\/Textures\/729320818.netex",
+                        "File": "729320818.netex"
+                    },
+                    "Shader": {
+                        "UID": 307946123,
+                        "Name": "DefaultShader.shader",
+                        "Path": "Library\/Shaders\/307946123.shader",
+                        "File": "307946123.shader"
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 1384254415,
+            "ParentUID": 2087343016,
+            "Name": "City_building_030",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -42.807239532470703,
+                        -41.835563659667969,
+                        -9.3834518111179932e-07
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        -0.70710676908493042,
+                        0.70710676908493042
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 1889436847,
+                    "Name": "City_building_028.nemesh",
+                    "Path": "Library\/Meshes\/1889436847.nemesh",
+                    "File": "1889436847.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 371928002,
+                        "Name": "City_building_028.nemat",
+                        "Path": "Library\/Materials\/371928002.nemat",
+                        "File": "371928002.nemat"
+                    },
+                    "Texture": {
+                        "UID": 1789095363,
+                        "Name": "Building_V01_C.png",
+                        "Path": "Library\/Textures\/1789095363.netex",
+                        "File": "1789095363.netex"
+                    },
+                    "Shader": {
+                        "UID": 307946123,
+                        "Name": "DefaultShader.shader",
+                        "Path": "Library\/Shaders\/307946123.shader",
+                        "File": "307946123.shader"
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 1446190804,
+            "ParentUID": 2087343016,
+            "Name": "City_building_014",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -19.439706802368164,
+                        32.061729431152344,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        1,
+                        -4.3711388286737929e-08
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 479175689,
+                    "Name": "City_building_014.nemesh",
+                    "Path": "Library\/Meshes\/479175689.nemesh",
+                    "File": "479175689.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 1679671371,
+                        "Name": "City_building_014.nemat",
+                        "Path": "Library\/Materials\/1679671371.nemat",
+                        "File": "1679671371.nemat"
+                    },
+                    "Texture": {
+                        "UID": 857879648,
+                        "Name": "building03_c.tga",
+                        "Path": "Library\/Textures\/857879648.netex",
+                        "File": "857879648.netex"
+                    },
+                    "Shader": {
+                        "UID": 307946123,
+                        "Name": "DefaultShader.shader",
+                        "Path": "Library\/Shaders\/307946123.shader",
+                        "File": "307946123.shader"
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 1465552826,
+            "ParentUID": 2087343016,
+            "Name": "City_building_033",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -32.361495971679688,
+                        42.37042236328125,
+                        5.0146070407208754e-07
                     ],
                     "LocalRotation": [
                         0,
@@ -2416,9 +2048,1205 @@
                         1
                     ]
                 },
-                {},
                 {
-                    "Type": 3
+                    "Type": 2,
+                    "UID": 2010262682,
+                    "Name": "City_building_033.nemesh",
+                    "Path": "Library\/Meshes\/2010262682.nemesh",
+                    "File": "2010262682.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 693941238,
+                        "Name": "City_building_033.nemat",
+                        "Path": "Library\/Materials\/693941238.nemat",
+                        "File": "693941238.nemat"
+                    },
+                    "Texture": {
+                        "UID": 803387739,
+                        "Name": "building 06_ c.tga",
+                        "Path": "Library\/Textures\/803387739.netex",
+                        "File": "803387739.netex"
+                    },
+                    "Shader": {
+                        "UID": 307946123,
+                        "Name": "DefaultShader.shader",
+                        "Path": "Library\/Shaders\/307946123.shader",
+                        "File": "307946123.shader"
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 1524679286,
+            "ParentUID": 2087343016,
+            "Name": "City_building_039",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -42.807239532470703,
+                        -30.643888473510742,
+                        -9.3834518111179932e-07
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        -0.70710676908493042,
+                        0.70710676908493042
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 1889436847,
+                    "Name": "City_building_028.nemesh",
+                    "Path": "Library\/Meshes\/1889436847.nemesh",
+                    "File": "1889436847.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 371928002,
+                        "Name": "City_building_028.nemat",
+                        "Path": "Library\/Materials\/371928002.nemat",
+                        "File": "371928002.nemat"
+                    },
+                    "Texture": {
+                        "UID": 1789095363,
+                        "Name": "Building_V01_C.png",
+                        "Path": "Library\/Textures\/1789095363.netex",
+                        "File": "1789095363.netex"
+                    },
+                    "Shader": {
+                        "UID": 307946123,
+                        "Name": "DefaultShader.shader",
+                        "Path": "Library\/Shaders\/307946123.shader",
+                        "File": "307946123.shader"
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 1558028084,
+            "ParentUID": 21521583,
+            "Name": "Bip001 L Finger12",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0.25260353088378906,
+                        -4.76837158203125e-07,
+                        -2.384185791015625e-07
+                    ],
+                    "LocalRotation": [
+                        -0.079598948359489441,
+                        -0.024439839646220207,
+                        0.29249438643455505,
+                        0.95263516902923584
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        0.99999994039535522
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1568003207,
+            "ParentUID": 283306155,
+            "Name": "Bip001 R Foot",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        3.3164165019989014,
+                        -2.384185791015625e-07,
+                        2.384185791015625e-07
+                    ],
+                    "LocalRotation": [
+                        -0.04051082581281662,
+                        0.14072474837303162,
+                        0.12133371829986572,
+                        0.9817502498626709
+                    ],
+                    "LocalScale": [
+                        1.0000001192092896,
+                        0.99999994039535522,
+                        0.99999988079071045
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1595600317,
+            "ParentUID": 1674616607,
+            "Name": "Bip001 R Hand",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        1.8464140892028809,
+                        -9.5367431640625e-07,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0.56023645401000977,
+                        0.069631285965442657,
+                        0.16953533887863159,
+                        0.80780220031738281
+                    ],
+                    "LocalScale": [
+                        0.99999988079071045,
+                        0.99999994039535522,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1610095453,
+            "ParentUID": 240786681,
+            "Name": "transform1",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -1.1161036491394043,
+                        15.688704490661621,
+                        -0.13840684294700623
+                    ],
+                    "LocalRotation": [
+                        -0.44879189133644104,
+                        -0.33055087924003601,
+                        -0.44800519943237305,
+                        0.69900882244110107
+                    ],
+                    "LocalScale": [
+                        2.5399997234344482,
+                        2.5399997234344482,
+                        2.5399999618530273
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1611241981,
+            "ParentUID": 838276193,
+            "Name": "Bip001 R Finger11",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0.3415369987487793,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        -2.6954577236892874e-08,
+                        -1.2713349484272385e-08,
+                        0.42658922076225281,
+                        0.90444546937942505
+                    ],
+                    "LocalScale": [
+                        0.99999988079071045,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1636620703,
+            "ParentUID": 2087343016,
+            "Name": "City_building_013",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -42.288055419921875,
+                        33.201576232910156,
+                        5.0146070407208754e-07
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0.70710676908493042,
+                        0.70710676908493042
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 1982621037,
+                    "Name": "City_building_013.nemesh",
+                    "Path": "Library\/Meshes\/1982621037.nemesh",
+                    "File": "1982621037.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 400322405,
+                        "Name": "City_building_013.nemat",
+                        "Path": "Library\/Materials\/400322405.nemat",
+                        "File": "400322405.nemat"
+                    },
+                    "Texture": {
+                        "UID": 803387739,
+                        "Name": "building 06_ c.tga",
+                        "Path": "Library\/Textures\/803387739.netex",
+                        "File": "803387739.netex"
+                    },
+                    "Shader": {
+                        "UID": 307946123,
+                        "Name": "DefaultShader.shader",
+                        "Path": "Library\/Shaders\/307946123.shader",
+                        "File": "307946123.shader"
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 1665671959,
+            "ParentUID": 2087343016,
+            "Name": "City_building_007",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        16.010492324829102,
+                        37.4932861328125,
+                        -1.5106878663573298e-06
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 1630519539,
+                    "Name": "City_building_007.nemesh",
+                    "Path": "Library\/Meshes\/1630519539.nemesh",
+                    "File": "1630519539.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 267760652,
+                        "Name": "City_building_007.nemat",
+                        "Path": "Library\/Materials\/267760652.nemat",
+                        "File": "267760652.nemat"
+                    },
+                    "Texture": {
+                        "UID": 1606296932,
+                        "Name": "building_016_c.tga",
+                        "Path": "Library\/Textures\/1606296932.netex",
+                        "File": "1606296932.netex"
+                    },
+                    "Shader": {
+                        "UID": 307946123,
+                        "Name": "DefaultShader.shader",
+                        "Path": "Library\/Shaders\/307946123.shader",
+                        "File": "307946123.shader"
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 1665783961,
+            "ParentUID": 843181386,
+            "Name": "Bip001 R Finger02",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0.30469560623168945,
+                        1.1920928955078125e-07,
+                        4.76837158203125e-07
+                    ],
+                    "LocalRotation": [
+                        9.5310026537731574e-09,
+                        3.1927779531315537e-08,
+                        0.17268142104148865,
+                        0.98497772216796875
+                    ],
+                    "LocalScale": [
+                        0.99999988079071045,
+                        1.0000001192092896,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1674616607,
+            "ParentUID": 16526312,
+            "Name": "Bip001 R Forearm",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        2.3758378028869629,
+                        3.5762786865234375e-07,
+                        4.76837158203125e-07
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        -0.27229419350624084,
+                        0.96221405267715454
+                    ],
+                    "LocalScale": [
+                        0.99999988079071045,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1722434491,
+            "ParentUID": 748752638,
+            "Name": "Spot001",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -66.721267700195313,
+                        141.93412780761719,
+                        6.2041376622801181e-06
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1727383043,
+            "ParentUID": 2087343016,
+            "Name": "City_building_040",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -34.679481506347656,
+                        -30.643888473510742,
+                        -9.3834518111179932e-07
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        -0.70710676908493042,
+                        0.70710676908493042
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 1889436847,
+                    "Name": "City_building_028.nemesh",
+                    "Path": "Library\/Meshes\/1889436847.nemesh",
+                    "File": "1889436847.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 371928002,
+                        "Name": "City_building_028.nemat",
+                        "Path": "Library\/Materials\/371928002.nemat",
+                        "File": "371928002.nemat"
+                    },
+                    "Texture": {
+                        "UID": 1789095363,
+                        "Name": "Building_V01_C.png",
+                        "Path": "Library\/Textures\/1789095363.netex",
+                        "File": "1789095363.netex"
+                    },
+                    "Shader": {
+                        "UID": 307946123,
+                        "Name": "DefaultShader.shader",
+                        "Path": "Library\/Shaders\/307946123.shader",
+                        "File": "307946123.shader"
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 1733637286,
+            "ParentUID": 1925853911,
+            "Name": "Bip001 L Foot",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        3.3164162635803223,
+                        -1.4901161193847656e-07,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0.13742436468601227,
+                        -0.15049974620342255,
+                        0.19602574408054352,
+                        0.95918625593185425
+                    ],
+                    "LocalScale": [
+                        1,
+                        0.9999997615814209,
+                        1.0000001192092896
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1787785247,
+            "ParentUID": 2087343016,
+            "Name": "City_building_008",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        40.979995727539063,
+                        18.270824432373047,
+                        -2.0522466002148576e-06
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0.70710676908493042,
+                        0.70710676908493042
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 1391984914,
+                    "Name": "City_building_008.nemesh",
+                    "Path": "Library\/Meshes\/1391984914.nemesh",
+                    "File": "1391984914.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 1887159425,
+                        "Name": "City_building_008.nemat",
+                        "Path": "Library\/Materials\/1887159425.nemat",
+                        "File": "1887159425.nemat"
+                    },
+                    "Texture": {
+                        "UID": 729320818,
+                        "Name": "building_025_c.tga",
+                        "Path": "Library\/Textures\/729320818.netex",
+                        "File": "729320818.netex"
+                    },
+                    "Shader": {
+                        "UID": 307946123,
+                        "Name": "DefaultShader.shader",
+                        "Path": "Library\/Shaders\/307946123.shader",
+                        "File": "307946123.shader"
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 1792281821,
+            "ParentUID": 849034160,
+            "Name": "Bip001 Head",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        1.1019048690795898,
+                        -9.5367431640625e-07,
+                        0
+                    ],
+                    "LocalRotation": [
+                        -0.33161324262619019,
+                        -0.046233125030994415,
+                        -0.46153590083122253,
+                        0.82151061296463013
+                    ],
+                    "LocalScale": [
+                        1.0000001192092896,
+                        1,
+                        1.0000001192092896
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1812638848,
+            "ParentUID": 2087343016,
+            "Name": "City_building_036",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -31.216331481933594,
+                        33.201576232910156,
+                        5.0146070407208754e-07
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        -0.70710676908493042,
+                        0.70710676908493042
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 1982621037,
+                    "Name": "City_building_013.nemesh",
+                    "Path": "Library\/Meshes\/1982621037.nemesh",
+                    "File": "1982621037.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 400322405,
+                        "Name": "City_building_013.nemat",
+                        "Path": "Library\/Materials\/400322405.nemat",
+                        "File": "400322405.nemat"
+                    },
+                    "Texture": {
+                        "UID": 803387739,
+                        "Name": "building 06_ c.tga",
+                        "Path": "Library\/Textures\/803387739.netex",
+                        "File": "803387739.netex"
+                    },
+                    "Shader": {
+                        "UID": 307946123,
+                        "Name": "DefaultShader.shader",
+                        "Path": "Library\/Shaders\/307946123.shader",
+                        "File": "307946123.shader"
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 1853123601,
+            "ParentUID": 1185598233,
+            "Name": "Bip001 L Finger02",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0.30469608306884766,
+                        0,
+                        2.384185791015625e-07
+                    ],
+                    "LocalRotation": [
+                        1.4677311810373794e-08,
+                        2.5731552444341332e-09,
+                        0.1726815402507782,
+                        0.98497772216796875
+                    ],
+                    "LocalScale": [
+                        0.99999994039535522,
+                        0.99999994039535522,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1882171277,
+            "ParentUID": 2087343016,
+            "Name": "City_building_017",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        44.260082244873047,
+                        -39.153720855712891,
+                        8.5538641769744572e-07
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0.70710676908493042,
+                        0.70710676908493042
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 1685193446,
+                    "Name": "City_building_010.nemesh",
+                    "Path": "Library\/Meshes\/1685193446.nemesh",
+                    "File": "1685193446.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 1378817415,
+                        "Name": "City_building_010.nemat",
+                        "Path": "Library\/Materials\/1378817415.nemat",
+                        "File": "1378817415.nemat"
+                    },
+                    "Texture": {
+                        "UID": 1614253557,
+                        "Name": "building 01_c.tga",
+                        "Path": "Library\/Textures\/1614253557.netex",
+                        "File": "1614253557.netex"
+                    },
+                    "Shader": {
+                        "UID": 307946123,
+                        "Name": "DefaultShader.shader",
+                        "Path": "Library\/Shaders\/307946123.shader",
+                        "File": "307946123.shader"
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 1925853911,
+            "ParentUID": 1068201901,
+            "Name": "Bip001 L Calf",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        2.6564340591430664,
+                        1.1920928955078125e-07,
+                        2.384185791015625e-07
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        -0.3290940523147583,
+                        0.944297194480896
+                    ],
+                    "LocalScale": [
+                        0.99999988079071045,
+                        1.0000001192092896,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1933775869,
+            "ParentUID": 2087343016,
+            "Name": "City_building_023",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        42.130641937255859,
+                        37.4932861328125,
+                        -1.5106878663573298e-06
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 1630519539,
+                    "Name": "City_building_007.nemesh",
+                    "Path": "Library\/Meshes\/1630519539.nemesh",
+                    "File": "1630519539.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 267760652,
+                        "Name": "City_building_007.nemat",
+                        "Path": "Library\/Materials\/267760652.nemat",
+                        "File": "267760652.nemat"
+                    },
+                    "Texture": {
+                        "UID": 1606296932,
+                        "Name": "building_016_c.tga",
+                        "Path": "Library\/Textures\/1606296932.netex",
+                        "File": "1606296932.netex"
+                    },
+                    "Shader": {
+                        "UID": 307946123,
+                        "Name": "DefaultShader.shader",
+                        "Path": "Library\/Shaders\/307946123.shader",
+                        "File": "307946123.shader"
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 1943164402,
+            "ParentUID": 51424011,
+            "Name": "Bip001 L Finger1",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        1.770775318145752,
+                        0.00036072731018066406,
+                        -0.041458606719970703
+                    ],
+                    "LocalRotation": [
+                        -0.086713187396526337,
+                        -0.063716135919094086,
+                        0.1964249312877655,
+                        0.97459650039672852
+                    ],
+                    "LocalScale": [
+                        0.99999994039535522,
+                        0.99999988079071045,
+                        0.99999988079071045
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1951118485,
+            "ParentUID": 2087343016,
+            "Name": "City_building_028",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        13.38798999786377,
+                        -33.755039215087891,
+                        -9.3834518111179932e-07
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 1889436847,
+                    "Name": "City_building_028.nemesh",
+                    "Path": "Library\/Meshes\/1889436847.nemesh",
+                    "File": "1889436847.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 371928002,
+                        "Name": "City_building_028.nemat",
+                        "Path": "Library\/Materials\/371928002.nemat",
+                        "File": "371928002.nemat"
+                    },
+                    "Texture": {
+                        "UID": 1789095363,
+                        "Name": "Building_V01_C.png",
+                        "Path": "Library\/Textures\/1789095363.netex",
+                        "File": "1789095363.netex"
+                    },
+                    "Shader": {
+                        "UID": 307946123,
+                        "Name": "DefaultShader.shader",
+                        "Path": "Library\/Shaders\/307946123.shader",
+                        "File": "307946123.shader"
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 2010719464,
+            "ParentUID": 843298442,
+            "Name": "Bip001 R Thigh",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -0.62810516357421875,
+                        -0.31749773025512695,
+                        -1.1535696983337402
+                    ],
+                    "LocalRotation": [
+                        0.46175748109817505,
+                        0.86204314231872559,
+                        0.015326983295381069,
+                        0.20839101076126099
+                    ],
+                    "LocalScale": [
+                        0.99999988079071045,
+                        0.99999994039535522,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 2053535050,
+            "ParentUID": 1119869685,
+            "Name": "Bip001 L UpperArm",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0.98625397682189941,
+                        4.76837158203125e-07,
+                        4.76837158203125e-07
+                    ],
+                    "LocalRotation": [
+                        -0.24484546482563019,
+                        0.32088923454284668,
+                        -0.12854091823101044,
+                        0.90584659576416016
+                    ],
+                    "LocalScale": [
+                        1.0000001192092896,
+                        1.0000001192092896,
+                        0.99999994039535522
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 2074226194,
+            "ParentUID": 849034160,
+            "Name": "Bip001 R Clavicle",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0.26788139343261719,
+                        -0.097359657287597656,
+                        -0.87843036651611328
+                    ],
+                    "LocalRotation": [
+                        -0.63901758193969727,
+                        -0.064629927277565002,
+                        0.74503195285797119,
+                        0.18001922965049744
+                    ],
+                    "LocalScale": [
+                        1,
+                        1.0000001192092896,
+                        0.99999994039535522
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 2087343016,
+            "ParentUID": 748752638,
+            "Name": "Dummy001",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        -0.70710676908493042,
+                        0,
+                        0,
+                        0.70710676908493042
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 2104127207,
+            "ParentUID": 1610095453,
+            "Name": "Bip001 Pelvis",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        -0.49999967217445374,
+                        -0.50000035762786865,
+                        -0.49999967217445374,
+                        0.50000029802322388
+                    ],
+                    "LocalScale": [
+                        0.99999988079071045,
+                        0.99999988079071045,
+                        0.99999982118606567
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 2124849431,
+            "ParentUID": 748752638,
+            "Name": "Spot001.Target",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        28.890945434570313,
+                        -60.963882446289063,
+                        -2.6648158382158726e-06
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 2128228815,
+            "ParentUID": 2087343016,
+            "Name": "City_building_011",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        30.134540557861328,
+                        37.4932861328125,
+                        -1.5106878663573298e-06
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 1630519539,
+                    "Name": "City_building_007.nemesh",
+                    "Path": "Library\/Meshes\/1630519539.nemesh",
+                    "File": "1630519539.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 267760652,
+                        "Name": "City_building_007.nemat",
+                        "Path": "Library\/Materials\/267760652.nemat",
+                        "File": "267760652.nemat"
+                    },
+                    "Texture": {
+                        "UID": 1606296932,
+                        "Name": "building_016_c.tga",
+                        "Path": "Library\/Textures\/1606296932.netex",
+                        "File": "1606296932.netex"
+                    },
+                    "Shader": {
+                        "UID": 307946123,
+                        "Name": "DefaultShader.shader",
+                        "Path": "Library\/Shaders\/307946123.shader",
+                        "File": "307946123.shader"
+                    }
                 }
             ]
         }

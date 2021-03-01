@@ -73,7 +73,7 @@ bool AnimatorClip::SaveState(ParsonNode& root) const
 {
 	bool ret = true;
 
-	if(animation != nullptr)
+	if (animation != nullptr)
 		root.SetNumber("AnimationUID", (double)animation->GetUID());
 
 	root.SetString("Name", name.c_str());
@@ -91,7 +91,7 @@ bool AnimatorClip::LoadState(const ParsonNode& root)
 {
 	bool ret = true;
 	
-	animation				= (R_Animation*)App->resourceManager->RequestResource((uint32)root.GetNumber("AnimationUID"));
+	animation				= (R_Animation*)App->resourceManager->RequestResource((uint32)root.GetNumber("AnimationUID"));		// TMP FIX. Read the one already in C_Animator later.
 
 	name					= root.GetString("Name");
 	start					= (uint)root.GetNumber("Start");
