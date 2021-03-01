@@ -1539,11 +1539,6 @@ R_Shader* M_ResourceManager::GetShader(const char* name)
 	return tempShader;
 }
 
-void M_ResourceManager::GetAllShaders(std::vector<R_Shader> shaders)
-{
-
-}
-
 void M_ResourceManager::GetResources(std::map<uint32, Resource*>& resources) const
 {
 	resources = this->resources;

@@ -72,9 +72,10 @@ private:
 
 	Component*	componentToDelete;
 
-	//Shader editor utilities
+	//Shader inspector utilities
+
 	std::vector<R_Shader>	allShaders;
-	R_Shader*				shaderToRecompile = nullptr;
+	R_Shader*				shaderToRecompile;
 	TextEditor				editor;
 	std::string				fileToEdit;
 };

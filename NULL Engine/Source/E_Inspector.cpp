@@ -40,7 +40,8 @@ showTextEditorWindow		(false),
 showSaveEditorPopup			(false),
 componentType				(0),
 mapToDisplay				(0),
-componentToDelete			(nullptr)
+componentToDelete			(nullptr),
+shaderToRecompile			(nullptr)
 {
 
 }
