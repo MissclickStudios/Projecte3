@@ -456,7 +456,7 @@ bool M_ResourceManager::GetLibraryFilePathsFromMeta(const char* assetsPath, std:
 
 	// --- MAIN RESOURCE
 	uint32 resourceUid		= (uint32)metaRoot.GetNumber("UID");
-	ResourceType type		= (ResourceType)metaRoot.GetNumber("Type");
+	ResourceType type		= (ResourceType)(int)metaRoot.GetNumber("Type");
 	bool success			= GetLibraryDirectoryAndExtensionFromType(type, directory, extension);
 	if (!success)
 	{
@@ -494,7 +494,7 @@ bool M_ResourceManager::GetLibraryFilePathsFromMeta(const char* assetsPath, std:
 		extension = "[NONE]";
 
 		containedUid	= (uint32)containedNode.GetNumber("UID");
-		containedType	= (ResourceType)containedNode.GetNumber("Type");
+		containedType	= (ResourceType)(int)containedNode.GetNumber("Type");
 		success			= GetLibraryDirectoryAndExtensionFromType(containedType, directory, extension);
 		if (!success)
 		{
