@@ -997,6 +997,10 @@ ResourceType M_ResourceManager::GetTypeFromAssetsExtension(const char* assetsPat
 	{
 		type = ResourceType::SHADER;
 	}
+	else if (extension == "[NONE]")
+	{
+		type = ResourceType::FOLDER;
+	}
 	else
 	{
 		LOG("[ERROR] Resource Manager: Could not import from the given Assets Path! Error: File extension { %s } is not supported!", extension.c_str());

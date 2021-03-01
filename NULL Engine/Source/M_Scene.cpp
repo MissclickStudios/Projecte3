@@ -191,6 +191,8 @@ bool M_Scene::CleanUp()
 {
 	LOG("Unloading Intro scene");
 	
+	//App->renderer->ClearRenderers();
+
 	for (uint i = 0; i < gameObjects.size(); ++i)
 	{
 		gameObjects[i]->CleanUp();
@@ -316,6 +318,7 @@ bool M_Scene::LoadScene(const char* path)
 
 	if (buffer != nullptr)
 	{
+		App->renderer->ClearRenderers();
 		CleanUp();
 
 		ParsonNode newRoot			= ParsonNode(buffer);
