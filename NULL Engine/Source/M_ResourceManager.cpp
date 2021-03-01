@@ -797,9 +797,7 @@ uint32 M_ResourceManager::ImportFromAssets(const char* assetsPath)
 		case ResourceType::MESH:		{ success = Importer::ImportMesh(buffer, (R_Mesh*)resource); }				break;
 		case ResourceType::TEXTURE:		{ success = Importer::ImportTexture(buffer, read, (R_Texture*)resource); }	break;
 		case ResourceType::SCENE:		{ /*success = HAVE A FUNCTIONAL R_SCENE AND LOAD/SAVE METHODS*/}			break;
-		case ResourceType::SHADER:		
-		{success = Importer::Shaders::Import(resource->GetAssetsPath(), (R_Shader*)resource); } break;
-		}
+		case ResourceType::SHADER:		{success = Importer::Shaders::Import(resource->GetAssetsPath(), (R_Shader*)resource); } break;}
 
 		RELEASE_ARRAY(buffer);
 
@@ -919,8 +917,7 @@ uint M_ResourceManager::SaveResourceToLibrary(Resource* resource)
 	case ResourceType::FOLDER:		{ written = Importer::Folders::Save((R_Folder*)resource, &buffer); }		break;
 	case ResourceType::SCENE:		{ /*written = TODO: HAVE A FUNCTIONAL R_SCENE AND SAVE/LOAD METHODS*/ }		break;
 	case ResourceType::ANIMATION:	{ written = Importer::Animations::Save((R_Animation*)resource, &buffer); }	break;
-	case ResourceType::SHADER:		
-	{ written = Importer::Shaders::Save((R_Shader*)resource, &buffer); }		break;
+	case ResourceType::SHADER:		{ written = Importer::Shaders::Save((R_Shader*)resource, &buffer); }		break;
 	}
 
 	RELEASE_ARRAY(buffer);
@@ -1574,11 +1571,12 @@ bool M_ResourceManager::DeallocateResource(Resource* resourceToDeallocate)
 	return true;
 }
 
-R_Shader* M_ResourceManager::GetDefaultShader()
+R_Shader* M_ResourceManager::GetShader(const char* name)
 {
-	std::string defaultPath		= ASSETS_SHADERS_PATH + std::string("DefaultShader") + SHADERS_EXTENSION;						// Getting the path. It will ALWAYS be the same.
-	uint32 shaderUID			= LoadFromLibrary(defaultPath.c_str());															// Loading the shader onto memory in case it wasn't already.
-	R_Shader* tempShader		= (R_Shader*)RequestResource(shaderUID);														// Actually requesting the Resource with the given UID.
+	R_Shader* tempShader = nullptr;
+
+	std::string defaultPath = ASSETS_SHADERS_PATH + std::string(name) + SHADERS_EXTENSION; 
+	tempShader = (R_Shader*)App->resourceManager->GetResourceFromLibrary(defaultPath.c_str());
 
 	if (tempShader == nullptr)
 	{
@@ -1586,14 +1584,27 @@ R_Shader* M_ResourceManager::GetDefaultShader()
 		return nullptr;
 	}
 
-	if (tempShader->shaderProgramID > 500)
-	{
-		tempShader->shaderProgramID = 0;
-		tempShader->fragmentID		= 0;
-		tempShader->vertexID		= 0;
-	}
-
 	return tempShader;
+}
+
+void M_ResourceManager::GetAllShaders(std::vector<R_Shader*>& shaders)
+{
+	R_Shader* tempShader = nullptr;
+	std::vector<std::string> shaderFiles;
+	App->fileSystem->GetAllFilesWithExtension(ASSETS_SHADERS_PATH, "shader", shaderFiles);
+	for (uint i = 0; i < shaderFiles.size(); i++)
+	{
+		//std::string defaultPath = ASSETS_SHADERS_PATH + std::string(shaderFiles[i]) + SHADERS_EXTENSION;
+		tempShader = (R_Shader*)App->resourceManager->GetResourceFromLibrary(shaderFiles[i].c_str());
+		if (tempShader == nullptr)
+		{
+			LOG("[ERROR] Could not get the %s Error: %s could not be found in active resources.", shaderFiles[i], shaderFiles[i]);
+		}
+		else
+		{
+			shaders.push_back(tempShader);
+		}
+	}
 }
 
 void M_ResourceManager::GetResources(std::map<uint32, Resource*>& resources) const

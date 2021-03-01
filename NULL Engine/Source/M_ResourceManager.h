@@ -55,8 +55,11 @@ public:																								// --- RESOURCE MANAGER API ---
 	bool			DeleteResource					(Resource* resourceToDelete);					// Same as the above but directly passing the resource as the argument.
 	
 	void			GetResources					(std::map<uint32, Resource*>& resources) const;	// Returns a map filled with all the resources currently loaded onto memory.
-	R_Shader*		GetDefaultShader();																// Returns the predetermined Default Shader.
 
+	R_Shader*		GetShader(const char* name);													//Look for a shader in the library and load and return it
+	void			GetAllShaders(std::vector<R_Shader*>& shaders);									//Retrieve all the shaders in the library
+
+	
 private:																															// --- ASSETS MONITORING METHODS ---
 	void			RefreshDirectoryFiles			(const char* directory);
 	void			RefreshDirectory				(const char* directory, std::vector<std::string>& filesToImport, 
@@ -109,8 +112,6 @@ private:																											// --- META FILE METHODS ---
 	bool			MetaFileIsValid					(const char* assetsPath);
 	bool			MetaFileIsValid					(ParsonNode& metaRoot);
 	bool			ResourceHasMetaType				(Resource* resource) const;
-
-	//Resource*		GetResourceFromMetaFile			(const char* assetsPath);
 
 private:
 	std::map<uint32, Resource*>		resources;																		// Resources currently in memory.

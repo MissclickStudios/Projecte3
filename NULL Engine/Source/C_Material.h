@@ -50,7 +50,6 @@ public:																						// --- GET/SET RESOURCES
 	void SetMaterial(R_Material* material);
 	void SetTexture(R_Texture* texture);
 	void SetShader(R_Shader* rShader);
-	void SetDefaultShader();
 																							// --- GET/SET COMPONENT MATERIAL VARIABLES
 	
 	Color GetMaterialColour();
@@ -85,7 +84,6 @@ private:
 	R_Material*	rMaterial;													// Currently used material.
 	R_Texture*	rTexture;													// Currently used texture.
 	R_Shader*	rShader;
-	R_Shader*	defaultShader;
 
 	bool		useDefaultTex;
 	bool		useAlbedoTex;

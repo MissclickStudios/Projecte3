@@ -8,6 +8,7 @@
 #define ASSETS_SCENES_PATH		"Assets/Scenes/"
 #define ASSETS_TEXTURES_PATH	"Assets/Textures/"
 #define ASSETS_SHADERS_PATH		"Assets/Shaders/"
+#define ASSETS_SKYBOX_PATH		"Assets/Textures/Skybox/"
 
 #define ENGINE_PATH				"Engine/"
 #define ENGINE_DIRECTORY		"Engine"
