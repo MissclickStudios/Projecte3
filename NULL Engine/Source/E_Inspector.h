@@ -74,7 +74,7 @@ private:
 
 	//Shader inspector utilities
 
-	std::vector<R_Shader>	allShaders;
+	std::vector<R_Shader*>	allShaders;
 	R_Shader*				shaderToRecompile;
 	TextEditor				editor;
 	std::string				fileToEdit;

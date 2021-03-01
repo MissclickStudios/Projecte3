@@ -358,6 +358,23 @@ void E_Inspector::DrawMaterialComponent(C_Material* cMaterial)
 			ImGui::SameLine();
 			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), cMaterial->GetShader()->GetAssetsFile());
 
+			if(allShaders.empty()) App->resourceManager->GetAllShaders(allShaders);
+			std::string shaderName = cMaterial->GetShader()->GetAssetsFile();
+			if (ImGui::BeginCombo("Shader", cMaterial->GetShader()->GetAssetsFile(), ImGuiComboFlags_PopupAlignLeft))
+			{
+				for (uint i = 0; i < allShaders.size(); i++)
+				{
+					const bool selectedShader = (shaderName == allShaders[i]->GetAssetsFile());
+					if (ImGui::Selectable(allShaders[i]->GetAssetsFile(), selectedShader))
+					{
+						cMaterial->SetShader(allShaders[i]);
+
+						shaderName = allShaders[i]->GetAssetsFile();
+					}
+				}
+				ImGui::EndCombo();
+			}
+
 			if (ImGui::Button("Edit Shader"))
 			{
 				CallTextEditor(cMaterial);

@@ -85,16 +85,16 @@ bool C_Material::SaveState(ParsonNode& root) const
 		texture.SetString("File", rTexture->GetLibraryFile());
 	}
 
-	//// --- R_SHADER ---
-	//if (rShader != nullptr)
-	//{
-	//	ParsonNode shader = root.SetNode("Shader");
+	// --- R_SHADER ---
+	if (rShader != nullptr)
+	{
+		ParsonNode shader = root.SetNode("Shader");
 
-	//	shader.SetNumber("UID", rShader->GetUID());
-	//	shader.SetString("Name", rShader->GetAssetsFile());
-	//	shader.SetString("Path", rShader->GetLibraryPath());
-	//	shader.SetString("File", rShader->GetLibraryFile());
-	//}
+		shader.SetNumber("UID", rShader->GetUID());
+		shader.SetString("Name", rShader->GetAssetsFile());
+		shader.SetString("Path", rShader->GetLibraryPath());
+		shader.SetString("File", rShader->GetLibraryFile());
+	}
 	return ret;
 }
 
@@ -104,11 +104,11 @@ bool C_Material::LoadState(ParsonNode& root)
 
 	rMaterial = nullptr;
 	rTexture = nullptr;
-	//rShader = nullptr;
+	rShader = nullptr;
 
 	ParsonNode materialNode	= root.GetNode("Material");
 	ParsonNode textureNode = root.GetNode("Texture");
-	//ParsonNode shaderNode = root.GetNode("Shader");
+	ParsonNode shaderNode = root.GetNode("Shader");
 	
 	if (materialNode.NodeIsValid())
 	{
@@ -140,7 +140,7 @@ bool C_Material::LoadState(ParsonNode& root)
 		LOG("[WARNING] Loading Scene: Could not find any Texture for %s! Check whether or not this is intended.", this->GetOwner()->GetName());
 	}
 
-	/*if (shaderNode.NodeIsValid())
+	if (shaderNode.NodeIsValid())
 	{
 		std::string shader_assets_path = ASSETS_SHADERS_PATH + std::string(shaderNode.GetString("Name"));
 		App->resourceManager->AllocateResource((uint32)shaderNode.GetNumber("UID"), shader_assets_path.c_str());
@@ -151,7 +151,7 @@ bool C_Material::LoadState(ParsonNode& root)
 		{
 			LOG("[ERROR] Loading Scene: Could not find Texture %s with UID: %u! Try reimporting the model.", shaderNode.GetString("File"), (uint32)shaderNode.GetNumber("UID"));
 		}
-	}*/
+	}
 
 	return ret;
 }

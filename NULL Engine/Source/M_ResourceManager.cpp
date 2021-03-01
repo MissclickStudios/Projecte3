@@ -1576,16 +1576,7 @@ R_Shader* M_ResourceManager::GetShader(const char* name)
 	R_Shader* tempShader = nullptr;
 
 	std::string defaultPath = ASSETS_SHADERS_PATH + std::string(name) + SHADERS_EXTENSION; 
-	uint shaderUID = App->resourceManager->LoadFromLibrary(defaultPath.c_str());
-
-	std::map<uint32, Resource*>::iterator item;
-	for (item = resources.begin(); item != resources.end(); item++)
-	{
-		if (item->second->GetType() == ResourceType::SHADER && item->second->GetUID() == shaderUID)
-		{
-			tempShader = (R_Shader*)item->second;
-		}	
-	}
+	tempShader = (R_Shader*)App->resourceManager->GetResourceFromLibrary(defaultPath.c_str());
 
 	if (tempShader == nullptr)
 	{
@@ -1594,6 +1585,26 @@ R_Shader* M_ResourceManager::GetShader(const char* name)
 	}
 
 	return tempShader;
+}
+
+void M_ResourceManager::GetAllShaders(std::vector<R_Shader*>& shaders)
+{
+	R_Shader* tempShader = nullptr;
+	std::vector<std::string> shaderFiles;
+	App->fileSystem->GetAllFilesWithExtension(ASSETS_SHADERS_PATH, "shader", shaderFiles);
+	for (uint i = 0; i < shaderFiles.size(); i++)
+	{
+		//std::string defaultPath = ASSETS_SHADERS_PATH + std::string(shaderFiles[i]) + SHADERS_EXTENSION;
+		tempShader = (R_Shader*)App->resourceManager->GetResourceFromLibrary(shaderFiles[i].c_str());
+		if (tempShader == nullptr)
+		{
+			LOG("[ERROR] Could not get the %s Error: %s could not be found in active resources.", shaderFiles[i], shaderFiles[i]);
+		}
+		else
+		{
+			shaders.push_back(tempShader);
+		}
+	}
 }
 
 void M_ResourceManager::GetResources(std::map<uint32, Resource*>& resources) const
