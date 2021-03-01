@@ -797,9 +797,7 @@ uint32 M_ResourceManager::ImportFromAssets(const char* assetsPath)
 		case ResourceType::MESH:		{ success = Importer::ImportMesh(buffer, (R_Mesh*)resource); }				break;
 		case ResourceType::TEXTURE:		{ success = Importer::ImportTexture(buffer, read, (R_Texture*)resource); }	break;
 		case ResourceType::SCENE:		{ /*success = HAVE A FUNCTIONAL R_SCENE AND LOAD/SAVE METHODS*/}			break;
-		case ResourceType::SHADER:		
-		{success = Importer::Shaders::Import(resource->GetAssetsPath(), (R_Shader*)resource); } break;
-		}
+		case ResourceType::SHADER:		{success = Importer::Shaders::Import(resource->GetAssetsPath(), (R_Shader*)resource); } break;}
 
 		RELEASE_ARRAY(buffer);
 
@@ -919,8 +917,7 @@ uint M_ResourceManager::SaveResourceToLibrary(Resource* resource)
 	case ResourceType::FOLDER:		{ written = Importer::Folders::Save((R_Folder*)resource, &buffer); }		break;
 	case ResourceType::SCENE:		{ /*written = TODO: HAVE A FUNCTIONAL R_SCENE AND SAVE/LOAD METHODS*/ }		break;
 	case ResourceType::ANIMATION:	{ written = Importer::Animations::Save((R_Animation*)resource, &buffer); }	break;
-	case ResourceType::SHADER:		
-	{ written = Importer::Shaders::Save((R_Shader*)resource, &buffer); }		break;
+	case ResourceType::SHADER:		{ written = Importer::Shaders::Save((R_Shader*)resource, &buffer); }		break;
 	}
 
 	RELEASE_ARRAY(buffer);
@@ -1576,19 +1573,24 @@ bool M_ResourceManager::DeallocateResource(Resource* resourceToDeallocate)
 
 R_Shader* M_ResourceManager::GetShader(const char* name)
 {
-	std::string defaultPath = ASSETS_SHADERS_PATH + std::string(name) + SHADERS_EXTENSION;
+	R_Shader* tempShader = nullptr;
+
+	std::string defaultPath = ASSETS_SHADERS_PATH + std::string(name) + SHADERS_EXTENSION; 
 	uint shaderUID = App->resourceManager->LoadFromLibrary(defaultPath.c_str());
+
+	std::map<uint32, Resource*>::iterator item;
+	for (item = resources.begin(); item != resources.end(); item++)
+	{
+		if (item->second->GetType() == ResourceType::SHADER && item->second->GetUID() == shaderUID)
+		{
+			tempShader = (R_Shader*)item->second;
+		}	
+	}
 
 	if (tempShader == nullptr)
 	{
-
-		if (item->second->GetType() == ResourceType::SHADER && item->second->GetUID() == shaderUID)
-		{
-			tempShader = (R_Shader*)item->second;		
-		}
-
-		//LOG("[ERROR] Could not get the Default Shader! Error: Default Shader could not be found in active resources.");
-		//return nullptr;
+		LOG("[ERROR] Could not get the Default Shader! Error: Default Shader could not be found in active resources.");
+		return nullptr;
 	}
 
 	return tempShader;

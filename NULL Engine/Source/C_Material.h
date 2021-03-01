@@ -84,7 +84,6 @@ private:
 	R_Material*	rMaterial;													// Currently used material.
 	R_Texture*	rTexture;													// Currently used texture.
 	R_Shader*	rShader;
-	R_Shader*	defaultShader;
 
 	bool		useDefaultTex;
 	bool		useAlbedoTex;

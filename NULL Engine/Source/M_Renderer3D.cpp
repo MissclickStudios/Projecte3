@@ -92,10 +92,11 @@ bool M_Renderer3D::Start()
 	bool ret = true;
 
 	InitEngineIcons();
+	
 	//SetUp the Skybox 
-	defaultSkyBox.SetUpSkyBoxBuffers();
+	/*defaultSkyBox.SetUpSkyBoxBuffers();
 
-	defaultSkyBox.CreateSkybox();
+	defaultSkyBox.CreateSkybox();*/
 
 
 	return ret;
@@ -1200,7 +1201,7 @@ transform	(transform),
 cMesh		(cMesh),
 cMaterial	(cMaterial)
 {
-
+	
 }
 
 void MeshRenderer::Render()
@@ -1427,7 +1428,6 @@ void MeshRenderer::ApplyShader()
 	uint32 shaderProgram = 0;
 	if (cMaterial != nullptr)
 	{
-		//if(cMaterial->GetShader()) shaderProgram = cMaterial->GetShader()->shaderProgramID;
 
 		cMaterial->GetShader() ? shaderProgram = cMaterial->GetShader()->shaderProgramID : shaderProgram;
 
@@ -1453,18 +1453,17 @@ void MeshRenderer::ApplyShader()
 
 			cMaterial->GetShader()->SetUniformVec3f("cameraPosition", (GLfloat*)&App->camera->GetCurrentCamera()->GetFrustum().Pos());
 
-			Importer::Shaders::SetShaderUniforms(cMaterial->GetShader());
+			if(cMaterial->GetShader()) Importer::Shaders::SetShaderUniforms(cMaterial->GetShader());
 		}
 	}
 }
 
 uint32 MeshRenderer::SetDefaultShader(C_Material* cMaterial)
 {
-	R_Shader* rShader = nullptr;
-
-	rShader = App->resourceManager->GetShader("DefaultShader");	
-
-	cMaterial->SetShader(rShader);
+	//Assign the default Shader
+	if (!App->renderer->defaultShader) App->renderer->defaultShader = App->resourceManager->GetShader("DefaultShader");
+	
+	cMaterial->SetShader(App->renderer->defaultShader);
 
 	return cMaterial->GetShaderProgramID();
 }

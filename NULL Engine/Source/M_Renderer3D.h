@@ -21,6 +21,7 @@ class R_Model;
 class R_Mesh;
 class R_Material;
 class R_Texture;
+class R_Shader;
 
 class C_Mesh;	
 class C_Material;
@@ -260,6 +261,7 @@ public:																											// --- DEBUG GET/SET METHODS
 public:
 	Light					lights[MAX_LIGHTS];																	// 
 	SDL_GLContext			context;																			// 
+	R_Shader*				defaultShader = nullptr;
 
 	std::vector<Primitive*>	primitives;
 
@@ -270,6 +272,7 @@ private:
 
 	Skybox					defaultSkyBox;
 	
+
 	Icons					engineIcons;
 
 	uint					sceneFramebuffer;
