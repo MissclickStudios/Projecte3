@@ -219,7 +219,7 @@ bool M_Renderer3D::InitDebugVariables()
 	renderWorldGrid			= true;	
 	renderWorldAxis			= true;
 	renderWireframes		= false;
-	renderWertexNormals		= false;
+	renderVertexNormals		= false;
 	renderFaceNormals		= false;
 	renderBoundingBoxes		= false;
 	renderSkeletons			= false;
@@ -1004,7 +1004,7 @@ bool M_Renderer3D::GetRenderWireframes() const
 
 bool M_Renderer3D::GetRenderVertexNormals() const
 {
-	return renderWertexNormals;
+	return renderVertexNormals;
 }
 
 bool M_Renderer3D::GetRenderFaceNormals() const
@@ -1159,7 +1159,7 @@ void M_Renderer3D::SetRenderWireframes(const bool& setTo)
 
 void M_Renderer3D::SetRenderVertexNormals(const bool& setTo)
 {
-	renderWertexNormals = setTo;
+	renderVertexNormals = setTo;
 }
 
 void M_Renderer3D::SetRenderFaceNormals(const bool& setTo)

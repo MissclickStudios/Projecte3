@@ -12,14 +12,7 @@
 #define CHECKERS_WIDTH 64
 #define CHECKERS_HEIGHT 64
 
-R_Mesh::R_Mesh() : Resource(ResourceType::MESH), 
-VAO					(0),
-VBO					(0),																								// Initializing the buffers.
-NBO					(0), 																								// 
-TBO					(0), 																								//
-IBO					(0), 																								// -------------------------
-drawVertexNormals	(false), 
-drawFaceNormals		(false)
+R_Mesh::R_Mesh() : Resource(ResourceType::MESH)
 {
 	
 }
@@ -48,7 +41,7 @@ bool R_Mesh::CleanUp()
 	texCoords.clear();
 	indices.clear();
 
-	bones.clear();
+	//bones.clear();
 
 	return true;
 }
@@ -120,10 +113,10 @@ void R_Mesh::LoadBuffers()
 
 void R_Mesh::SwapBonesToVertexArray()
 {
-	for (auto bone = bones.cbegin(); bone != bones.cend(); ++bone)
+	/*for (auto bone = bones.cbegin(); bone != bones.cend(); ++bone)
 	{
 
-	}
+	}*/
 	
 	// Bone Weights
 	//bone_weights.push_back(BoneWeight(bone_id, weight));

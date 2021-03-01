@@ -136,7 +136,7 @@ void C_Mesh::GetMeshData(uint& numVertices, uint& numNormals, uint& numTexCoords
 		numTexCoords = rMesh->texCoords.size();
 		numIndices = rMesh->indices.size();
 
-		numBones = rMesh->bones.size();
+		numBones = rMesh->boneMapping.size();
 	}
 }
 

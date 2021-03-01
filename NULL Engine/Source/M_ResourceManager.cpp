@@ -1522,7 +1522,7 @@ bool M_ResourceManager::DeallocateResource(Resource* resourceToDeallocate)
 R_Shader* M_ResourceManager::GetDefaultShader()
 {
 	
-	std::string defaultPath = ASSETS_SHADERS_PATH + std::string("WaterShader") + SHADERS_EXTENSION;
+	std::string defaultPath = ASSETS_SHADERS_PATH + std::string("DefaultShader") + SHADERS_EXTENSION;
 	uint shaderUID = App->resourceManager->LoadFromLibrary(defaultPath.c_str());
 
 	
