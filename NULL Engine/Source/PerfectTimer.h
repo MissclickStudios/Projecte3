@@ -1,9 +1,11 @@
 #ifndef __PERFECT_TIMER_H__
 #define __PERFECT_TIMER_H__
 
+#include "Macros.h"
+
 typedef unsigned __int64 uint64;
 
-class PerfectTimer
+class NULL_API PerfectTimer
 {
 public:
 	PerfectTimer();							// Constructor

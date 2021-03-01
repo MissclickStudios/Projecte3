@@ -291,7 +291,7 @@ static	void	doCleanupLogOnFirstRun()
 {
 	if (cleanupLogOnFirstRun)
 	{
-		unlink(memoryLogFile);
+		_unlink(memoryLogFile);
 		cleanupLogOnFirstRun = false;
 
 		// Print a header for the log

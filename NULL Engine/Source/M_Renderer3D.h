@@ -80,8 +80,8 @@ struct CuboidRenderer																							// Will render the wireframe of any 
 
 	const float3*	vertices;
 	CuboidType		type;
-	const Color		color;
-	const float		edgeWidth;
+	Color		color;
+	float		edgeWidth;
 };
 
 struct RayRenderer
@@ -103,14 +103,14 @@ struct SkeletonRenderer
 
 	void Render();
 
-	const std::vector<LineSegment>	bones;
-	const Color						color;
-	const float						boneWidth;
+	std::vector<LineSegment>	bones;
+	Color						color;
+	float						boneWidth;
 };
 
 #define MAX_LIGHTS 8
 
-class M_Renderer3D : public Module
+class NULL_API M_Renderer3D : public Module
 {
 public:
 	M_Renderer3D(bool isActive = true);

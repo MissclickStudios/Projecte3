@@ -2,12 +2,13 @@
 #define __TIMER_H__
 
 #include "Hourglass.h"
+#include "Macros.h"
 
 typedef unsigned char		uchar;
 typedef unsigned int		uint;
 typedef unsigned __int32	uint32;
 
-class Timer
+class NULL_API Timer
 {
 public:
 	Timer();								// Constructor
