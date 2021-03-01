@@ -15,7 +15,7 @@ public:
 	EmitterInstance();
 	~EmitterInstance();
 
-	void Init();
+	void Init(Emitter* emitter, C_ParticleSystem* component);
 	void UpdateModules();
 	void DrawParticles();
 
@@ -24,11 +24,11 @@ private:
 	void KillAll();
 
 public:
+	unsigned int activeParticles = 0;
 	std::vector<Particle> particles;
 	
 	Emitter* emitter;
 	C_ParticleSystem* component;
 };
-
 
 #endif //!__EMITTER_INSTANCE_H__

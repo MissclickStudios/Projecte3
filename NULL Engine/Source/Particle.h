@@ -16,6 +16,8 @@ public:
 	void Update(float dt);
 
 public:
+	bool active;
+
 	float3 position;
 	Quat worldRotation;
 
