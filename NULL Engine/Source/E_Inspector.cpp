@@ -12,6 +12,7 @@
 #include "M_Renderer3D.h"
 #include "M_Editor.h"
 #include "M_FileSystem.h"
+#include "M_ResourceManager.h"
 
 #include "GameObject.h"
 #include "Component.h"
@@ -35,6 +36,8 @@
 
 E_Inspector::E_Inspector() : EditorPanel("Inspector"),
 showDeleteComponentPopup	(false),
+showTextEditorWindow		(false),
+showSaveEditorPopup			(false),
 componentType				(0),
 mapToDisplay				(0),
 componentToDelete			(nullptr)
@@ -352,11 +355,37 @@ void E_Inspector::DrawMaterialComponent(C_Material* cMaterial)
 
 			ImGui::Text("Shader Active:");
 			ImGui::SameLine();
-			ImGui::TextColored(ImVec4(0.0f, 1.0f, 1.0f, 1.0f), cMaterial->GetShader()->GetAssetsFile());
+			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), cMaterial->GetShader()->GetAssetsFile());
 
 			if (ImGui::Button("Edit Shader"))
 			{
 				CallTextEditor(cMaterial);
+			}
+
+			R_Shader* shader = cMaterial->GetShader();
+
+			for (uint i = 0; i < shader->uniforms.size(); i++)
+			{
+				switch (shader->uniforms[i].uniformType)
+				{
+				case  UniformType::INT:	ImGui::DragInt(shader->uniforms[i].name.c_str(), &shader->uniforms[i].integer, 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None); break;
+				case  UniformType::FLOAT: ImGui::DragFloat(shader->uniforms[i].name.c_str(), &shader->uniforms[i].floatNumber, 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None); break;
+				case  UniformType::INT_VEC2: ImGui::DragInt2(shader->uniforms[i].name.c_str(), (int*)&shader->uniforms[i].vec2, 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None); break;
+				case  UniformType::INT_VEC3: ImGui::DragInt3(shader->uniforms[i].name.c_str(), (int*)&shader->uniforms[i].vec3, 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None); break;
+				case  UniformType::INT_VEC4: ImGui::DragInt4(shader->uniforms[i].name.c_str(), (int*)&shader->uniforms[i].vec4, 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None); break;
+				case  UniformType::FLOAT_VEC2: ImGui::DragFloat2(shader->uniforms[i].name.c_str(), (float*)&shader->uniforms[i].vec2, 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None); break;
+				case  UniformType::FLOAT_VEC3: ImGui::DragFloat3(shader->uniforms[i].name.c_str(), (float*)&shader->uniforms[i].vec3, 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None); break;
+				case  UniformType::FLOAT_VEC4: ImGui::DragFloat4(shader->uniforms[i].name.c_str(), (float*)&shader->uniforms[i].vec4, 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None); break;
+				case UniformType::MATRIX4: ImGui::DragFloat4(shader->uniforms[i].name.c_str(), shader->uniforms[i].matrix4.ToEulerXYZ().ptr(), 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None); break;
+				}
+			}
+
+			if (!cMaterial->GetShader()->uniforms.empty())
+			{
+				if (ImGui::Button("Save Uniforms"))
+				{
+					App->resourceManager->SaveResourceToLibrary(cMaterial->GetShader());
+				}
 			}
 
 			ImGui::Separator();
