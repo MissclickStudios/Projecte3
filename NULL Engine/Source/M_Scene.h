@@ -24,7 +24,7 @@ struct ModelNode;
 
 typedef unsigned __int32 uint32;
 
-class M_Scene : public Module
+class NULL_API M_Scene : public Module
 {
 public:
 	M_Scene(bool isActive = true);

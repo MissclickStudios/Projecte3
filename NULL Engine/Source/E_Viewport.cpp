@@ -1,7 +1,7 @@
 #include "MathGeoTransform.h"
 #include "MathGeoFrustum.h"
 
-#include "Application.h"
+#include "EngineApplication.h"
 #include "M_Window.h"
 #include "M_Renderer3D.h"
 #include "M_Input.h"
@@ -57,14 +57,14 @@ bool E_Viewport::CleanUp()
 // --- E_SCENE METHODS ---
 float2 E_Viewport::GetWorldMousePosition()
 {	
-	float winWidth		= (float)App->window->GetWidth();
-	float winHeight	= (float)App->window->GetHeight();
+	float winWidth		= (float)EngineApp->window->GetWidth();
+	float winHeight	= (float)EngineApp->window->GetHeight();
 	
 	float texWidth		= texSize.x;
 	float texHeight	= texSize.y;
 
-	float mouseX		= (float)App->input->GetMouseX();
-	float mouseY		= (float)App->input->GetMouseY();
+	float mouseX		= (float)EngineApp->input->GetMouseX();
+	float mouseY		= (float)EngineApp->input->GetMouseY();
 
 	float2 screenMousePos = float2(mouseX, winHeight - mouseY) - float2(texOrigin.x, texOrigin.y + 22.5f);				// TMP. Un-Hardcode Later.
 	//float2 screen_mouse_pos = GetScreenMousePosition();
@@ -76,14 +76,14 @@ float2 E_Viewport::GetWorldMousePosition()
 
 float2 E_Viewport::GetScreenMousePosition()
 {
-	float winWidth		= (float)App->window->GetWidth();
-	float winHeight	= (float)App->window->GetHeight();
+	float winWidth		= (float)EngineApp->window->GetWidth();
+	float winHeight	= (float)EngineApp->window->GetHeight();
 
 	float texWidth		= texSize.x;
 	float texHeight	= texSize.y;
 
-	float mouseX		= (float)App->input->GetMouseX();
-	float mouseY		= (float)App->input->GetMouseY();
+	float mouseX		= (float)EngineApp->input->GetMouseX();
+	float mouseY		= (float)EngineApp->input->GetMouseY();
 
 	float2 worldMousePos	= float2(mouseX, mouseY);
 	float2 normWorldPos	= float2(worldMousePos.x / winWidth, worldMousePos.y / winHeight);
@@ -96,8 +96,8 @@ float2 E_Viewport::GetScreenMousePosition()
 
 float2 E_Viewport::GetWorldMouseMotion()
 {
-	float2 winMouseMotion	= float2((float)App->input->GetMouseXMotion(), (float)App->input->GetMouseYMotion());
-	float2 winSize			= float2((float)App->window->GetWidth(), (float)App->window->GetHeight());
+	float2 winMouseMotion	= float2((float)EngineApp->input->GetMouseXMotion(), (float)EngineApp->input->GetMouseYMotion());
+	float2 winSize			= float2((float)EngineApp->window->GetWidth(), (float)EngineApp->window->GetHeight());
 	float2 texSize			= float2(this->texSize.x, this->texSize.y);
 
 	float2 localMotion			= float2(winMouseMotion.x / texSize.x, winMouseMotion.y / texSize.y);
@@ -125,7 +125,7 @@ void E_Viewport::DrawScene()
 {
 	ImGui::Begin("Scene");
 
-	if (!App->play && !sceneFocused)
+	if (!EngineApp->play && !sceneFocused)
 	{
 		ImGui::FocusWindow(ImGui::GetCurrentWindow());
 		ImGui::FocusWindow(nullptr);
@@ -152,7 +152,7 @@ void E_Viewport::DrawGame()
 {
 	ImGui::Begin("Game", (bool*)0, ImGuiWindowFlags_NoFocusOnAppearing);
 
-	if (App->play && !gameFocused)
+	if (EngineApp->play && !gameFocused)
 	{
 		ImGui::FocusWindow(ImGui::GetCurrentWindow());
 		ImGui::FocusWindow(nullptr);
@@ -177,7 +177,7 @@ void E_Viewport::DrawGame()
 
 void E_Viewport::AdaptTextureToWindowSize()
 {	
-	texSize				= ImVec2((float)App->window->GetWidth(), (float)App->window->GetHeight());
+	texSize				= ImVec2((float)EngineApp->window->GetWidth(), (float)EngineApp->window->GetHeight());
 	ImVec2 winSize		= ImGui::GetWindowSize() * 0.975f;													// An offset is added so the image is entirely enclosed by the window.
 
 	float widthRatio	= (texSize.x / winSize.x);														// tex.x to win.x ratio and tex.y to win.y ratio.
@@ -207,10 +207,10 @@ void E_Viewport::DrawSceneTexture()
 	}
 
 	texOrigin	= screenCursorPos + ImVec2(0, texSize.y);											// Getting the top-left corner at XY.
-	texOrigin.y	= (float)App->window->GetHeight() - texOrigin.y;										// Converting from top-left Y origin to bottom-left Y origin.
+	texOrigin.y	= (float)EngineApp->window->GetHeight() - texOrigin.y;										// Converting from top-left Y origin to bottom-left Y origin.
 
-	ImGui::Image((ImTextureID)App->renderer->GetSceneRenderTexture(), texSize, ImVec2(0.0f, 1.0f), ImVec2(1.0f, 0.0f));
-	//ImGui::Image((ImTextureID)App->renderer->GetDepthBufferTexture(), tex_size, ImVec2(0.0f, 1.0f), ImVec2(1.0f, 0.0f));
+	ImGui::Image((ImTextureID)EngineApp->renderer->GetSceneRenderTexture(), texSize, ImVec2(0.0f, 1.0f), ImVec2(1.0f, 0.0f));
+	//ImGui::Image((ImTextureID)EngineApp->renderer->GetDepthBufferTexture(), tex_size, ImVec2(0.0f, 1.0f), ImVec2(1.0f, 0.0f));
 }
 
 void E_Viewport::ResourceDragAndDropTargetListener()
@@ -219,7 +219,7 @@ void E_Viewport::ResourceDragAndDropTargetListener()
 	{
 		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DRAGGED_RESOURCE"))
 		{
-			App->editor->LoadResourceIntoSceneThroughEditor();
+			EngineApp->editor->LoadResourceIntoSceneThroughEditor();
 		}
 
 		ImGui::EndDragDropTarget();
@@ -234,35 +234,35 @@ void E_Viewport::HandleGuizmos()
 
 	if (!wantTextInput)
 	{
-		if (App->input->GetKey(SDL_SCANCODE_W) == KeyState::KEY_DOWN)
+		if (EngineApp->input->GetKey(SDL_SCANCODE_W) == KeyState::KEY_DOWN)
 		{
 			guizmoOperation = ImGuizmo::OPERATION::TRANSLATE;
 			guizmoMode = ImGuizmo::MODE::WORLD;
 		}
-		if (App->input->GetKey(SDL_SCANCODE_E) == KeyState::KEY_DOWN)
+		if (EngineApp->input->GetKey(SDL_SCANCODE_E) == KeyState::KEY_DOWN)
 		{
 			guizmoOperation = ImGuizmo::OPERATION::ROTATE;
 			guizmoMode = ImGuizmo::MODE::WORLD;
 		}
-		if (App->input->GetKey(SDL_SCANCODE_R) == KeyState::KEY_DOWN)
+		if (EngineApp->input->GetKey(SDL_SCANCODE_R) == KeyState::KEY_DOWN)
 		{
 			guizmoOperation = ImGuizmo::OPERATION::SCALE;
 			guizmoMode = ImGuizmo::MODE::LOCAL;
 		}
 	}
 	
-	if (App->editor->GetSelectedGameObjectThroughEditor() == nullptr)
+	if (EngineApp->editor->GetSelectedGameObjectThroughEditor() == nullptr)
 	{
 		return;
 	}
 
-	if (App->editor->GetCurrentCameraThroughEditor() == nullptr)
+	if (EngineApp->editor->GetCurrentCameraThroughEditor() == nullptr)
 	{
 		return;
 	}
 	
-	GameObject* selected		= App->editor->GetSelectedGameObjectThroughEditor();
-	C_Camera* currentCamera	= App->editor->GetCurrentCameraThroughEditor();
+	GameObject* selected		= EngineApp->editor->GetSelectedGameObjectThroughEditor();
+	C_Camera* currentCamera	= EngineApp->editor->GetCurrentCameraThroughEditor();
 
 	float4x4 viewMatrix		= currentCamera->GetFrustum().ViewMatrix();
 	float4x4 projectionMatrix	= currentCamera->GetFrustum().ProjectionMatrix();
@@ -273,7 +273,7 @@ void E_Viewport::HandleGuizmos()
 
 	ImGuizmo::SetDrawlist();
 
-	float winHeight		= (float)App->window->GetHeight();
+	float winHeight		= (float)EngineApp->window->GetHeight();
 	float texWidth		= texSize.y;
 	ImVec2 originPos	= ImVec2(texOrigin.x, winHeight - texOrigin.y - texWidth);
 

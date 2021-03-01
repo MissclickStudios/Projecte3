@@ -8,7 +8,7 @@
 
 #include "Time.h"
 
-#include "Application.h"
+#include "EngineApplication.h"
 #include "M_Renderer3D.h"
 #include "M_Editor.h"
 
@@ -49,7 +49,7 @@ bool E_Inspector::Draw(ImGuiIO& io)
 
 	SetIsHovered();
 	
-	GameObject* selected = App->editor->GetSelectedGameObjectThroughEditor();
+	GameObject* selected = EngineApp->editor->GetSelectedGameObjectThroughEditor();
 
 	if (selected != nullptr && !selected->is_master_root && !selected->is_scene_root)
 	{	
@@ -472,12 +472,12 @@ void E_Inspector::DrawCameraComponent(C_Camera* cCamera)
 
 			if (ImGui::Button("Set as Current Camera"))
 			{
-				App->editor->SetCurrentCameraThroughEditor(cCamera);
+				EngineApp->editor->SetCurrentCameraThroughEditor(cCamera);
 			}
 
 			if (ImGui::Button("Return to Master Camera"))
 			{
-				App->editor->SetMasterCameraThroughEditor();
+				EngineApp->editor->SetMasterCameraThroughEditor();
 			}
 		}
 
@@ -640,7 +640,7 @@ void E_Inspector::DrawAnimatorComponent(C_Animator* cAnimator)								// TODO: S
 
 					if (ImGui::Button("Create")) 
 					{ 
-						if (!App->play)
+						if (!EngineApp->play)
 						{
 							success = cAnimator->AddClip(AnimatorClip(cAnimator->GetAnimationByIndex((uint)selectedAnimation), newClipName, newClipStart, newClipEnd, loop));
 							textTimerRunning = true;
@@ -844,8 +844,8 @@ void E_Inspector::TextureDisplay(C_Material* cMaterial)
 
 	if (cMaterial->UseDefaultTexture())
 	{
-		texId = (ImTextureID)App->renderer->GetDebugTextureID();
-		//tex_id = (ImTextureID)App->renderer->GetSceneRenderTexture();
+		texId = (ImTextureID)EngineApp->renderer->GetDebugTextureID();
+		//tex_id = (ImTextureID)EngineApp->renderer->GetSceneRenderTexture();
 	}
 	else
 	{

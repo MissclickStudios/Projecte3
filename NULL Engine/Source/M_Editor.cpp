@@ -5,7 +5,7 @@
 
 #include "Icons.h"
 
-#include "Application.h"															// ATTENTION: Globals.h already included in Module.h
+#include "EngineApplication.h"															// ATTENTION: Globals.h already included in Module.h
 #include "M_Window.h"
 #include "M_Renderer3D.h"
 #include "M_Camera3D.h"
@@ -134,7 +134,7 @@ UpdateStatus M_Editor::PostUpdate(float dt)
 
 	//Start Dear ImGui's frame
 	ImGui_ImplOpenGL3_NewFrame();
-	ImGui_ImplSDL2_NewFrame(App->window->GetWindow());
+	ImGui_ImplSDL2_NewFrame(EngineApp->window->GetWindow());
 	ImGui::NewFrame();
 
 	if (BeginRootWindow(io, "Root window", true, ImGuiWindowFlags_MenuBar))
@@ -195,7 +195,7 @@ void M_Editor::AddEditorPanel(EditorPanel* panel)
 
 void M_Editor::EditorShortcuts()
 {
-	if (App->input->GetKey(SDL_SCANCODE_ESCAPE) == KeyState::KEY_DOWN)
+	if (EngineApp->input->GetKey(SDL_SCANCODE_ESCAPE) == KeyState::KEY_DOWN)
 	{
 		if (showAboutPopup || showLoadFilePopup)
 		{
@@ -208,39 +208,39 @@ void M_Editor::EditorShortcuts()
 		}
 	}
 
-	if (App->input->GetKey(SDL_SCANCODE_LCTRL) == KeyState::KEY_REPEAT)
+	if (EngineApp->input->GetKey(SDL_SCANCODE_LCTRL) == KeyState::KEY_REPEAT)
 	{
-		if (App->input->GetKey(SDL_SCANCODE_1) == KeyState::KEY_DOWN)
+		if (EngineApp->input->GetKey(SDL_SCANCODE_1) == KeyState::KEY_DOWN)
 		{
 			showConfiguration = !showConfiguration;
 		}
-		if (App->input->GetKey(SDL_SCANCODE_2) == KeyState::KEY_DOWN)
+		if (EngineApp->input->GetKey(SDL_SCANCODE_2) == KeyState::KEY_DOWN)
 		{
 			showHierarchy = !showHierarchy;
 		}
-		if (App->input->GetKey(SDL_SCANCODE_3) == KeyState::KEY_DOWN)
+		if (EngineApp->input->GetKey(SDL_SCANCODE_3) == KeyState::KEY_DOWN)
 		{
 			showInspector = !showInspector;
 		}
-		if (App->input->GetKey(SDL_SCANCODE_4) == KeyState::KEY_DOWN)
+		if (EngineApp->input->GetKey(SDL_SCANCODE_4) == KeyState::KEY_DOWN)
 		{
 			showConsole = !showConsole;
 		}
-		if (App->input->GetKey(SDL_SCANCODE_8) == KeyState::KEY_DOWN)
+		if (EngineApp->input->GetKey(SDL_SCANCODE_8) == KeyState::KEY_DOWN)
 		{
 			showImguiDemo = !showImguiDemo;
 		}
-		if (App->input->GetKey(SDL_SCANCODE_9) == KeyState::KEY_DOWN)
+		if (EngineApp->input->GetKey(SDL_SCANCODE_9) == KeyState::KEY_DOWN)
 		{
 			showAboutPopup = !showAboutPopup;
 		}
 		
 
-		if (App->input->GetKey(SDL_SCANCODE_S) == KeyState::KEY_DOWN)
+		if (EngineApp->input->GetKey(SDL_SCANCODE_S) == KeyState::KEY_DOWN)
 		{
-			App->scene->SaveScene();
+			EngineApp->scene->SaveScene();
 		}
-		if (App->input->GetKey(SDL_SCANCODE_O) == KeyState::KEY_DOWN)
+		if (EngineApp->input->GetKey(SDL_SCANCODE_O) == KeyState::KEY_DOWN)
 		{
 			showLoadFilePopup = true;
 		}
@@ -298,7 +298,7 @@ bool M_Editor::InitializeImGui() const
 		style.Colors[ImGuiCol_WindowBg].w = 1.0f;												// Setting the windows Alpha to 255, making them completely opaque.
 	}																							// -----------------------------------------------
 
-	ImGui_ImplSDL2_InitForOpenGL(App->window->GetWindow(), App->renderer->context);				// Setting up Platform/Renderer bindings
+	ImGui_ImplSDL2_InitForOpenGL(EngineApp->window->GetWindow(), EngineApp->renderer->context);				// Setting up Platform/Renderer bindings
 	ImGui_ImplOpenGL3_Init(0);																	// -------------------------------------
 
 	glClearColor(clearColor.x, clearColor.y, clearColor.z, clearColor.w);
@@ -308,32 +308,32 @@ bool M_Editor::InitializeImGui() const
 
 bool M_Editor::GetShowWorldGrid() const
 {
-	return App->renderer->GetRenderWorldGrid();
+	return EngineApp->renderer->GetRenderWorldGrid();
 }
 
 bool M_Editor::GetShowWorldAxis() const
 {
-	return App->renderer->GetRenderWorldAxis();
+	return EngineApp->renderer->GetRenderWorldAxis();
 }
 
 bool M_Editor::GetShowPrimitiveExamples() const
 {
-	return App->renderer->GetRenderPrimitiveExamples();
+	return EngineApp->renderer->GetRenderPrimitiveExamples();
 }
 
 void M_Editor::SetShowWorldGrid(bool setTo)
 {
-	App->renderer->SetRenderWorldGrid(setTo);
+	EngineApp->renderer->SetRenderWorldGrid(setTo);
 }
 
 void M_Editor::SetShowWorldAxis(bool setTo)
 {
-	App->renderer->SetRenderWorldAxis(setTo);
+	EngineApp->renderer->SetRenderWorldAxis(setTo);
 }
 
 void M_Editor::SetShowPrimitiveExamples(bool setTo)
 {
-	App->renderer->SetRenderPrimtiveExamples(setTo);
+	EngineApp->renderer->SetRenderPrimtiveExamples(setTo);
 }
 
 void M_Editor::UpdateFrameData(int frames, int ms)
@@ -359,7 +359,7 @@ void M_Editor::AddInputLog(uint key, uint state)
 	
 	if (configuration != nullptr)
 	{
-		if (key < App->input->GetMaxNumScancodes())
+		if (key < EngineApp->input->GetMaxNumScancodes())
 		{
 			const char* keyName = SDL_GetKeyName(SDL_GetKeyFromScancode((SDL_Scancode)key));		// Through the scancode it is possible to get a string with the name of the key.
 
@@ -367,7 +367,7 @@ void M_Editor::AddInputLog(uint key, uint state)
 		}
 		else
 		{
-			uint mouseButton = key - App->input->GetMaxNumScancodes();
+			uint mouseButton = key - EngineApp->input->GetMaxNumScancodes();
 
 			sprintf_s(input, 128, "[MOUSE] %02u - %s\n", mouseButton, states[state]);
 		}
@@ -378,47 +378,47 @@ void M_Editor::AddInputLog(uint key, uint state)
 
 GameObject* M_Editor::GetSceneRootThroughEditor() const
 {
-	return App->scene->GetSceneRoot();
+	return EngineApp->scene->GetSceneRoot();
 }
 
 void M_Editor::SetSceneRootThroughEditor(GameObject* gameObject)
 {
-	App->scene->SetSceneRoot(gameObject);
+	EngineApp->scene->SetSceneRoot(gameObject);
 }
 
 GameObject* M_Editor::GetSelectedGameObjectThroughEditor() const
 {
-	return App->scene->GetSelectedGameObject();
+	return EngineApp->scene->GetSelectedGameObject();
 }
 
 void M_Editor::SetSelectedGameObjectThroughEditor(GameObject* gameObject)
 {
-	App->scene->SetSelectedGameObject(gameObject);
+	EngineApp->scene->SetSelectedGameObject(gameObject);
 }
 
 void M_Editor::DeleteSelectedGameObject()
 {
-	App->scene->DeleteSelectedGameObject();
+	EngineApp->scene->DeleteSelectedGameObject();
 }
 
 void M_Editor::CreateGameObject(const char* name, GameObject* parent)
 {
-	App->scene->CreateGameObject(name, parent);
+	EngineApp->scene->CreateGameObject(name, parent);
 }
 
 C_Camera* M_Editor::GetCurrentCameraThroughEditor() const
 {
-	return App->camera->GetCurrentCamera();
+	return EngineApp->camera->GetCurrentCamera();
 }
 
 void M_Editor::SetCurrentCameraThroughEditor(C_Camera* gameObject)
 {
-	App->camera->SetCurrentCamera(gameObject);
+	EngineApp->camera->SetCurrentCamera(gameObject);
 }
 
 void M_Editor::SetMasterCameraThroughEditor()
 {
-	App->camera->SetMasterCameraAsCurrentCamera();
+	EngineApp->camera->SetMasterCameraAsCurrentCamera();
 }
 
 float2 M_Editor::GetWorldMousePositionThroughEditor() const
@@ -453,46 +453,46 @@ bool M_Editor::HoveringGuizmo() const
 
 bool M_Editor::SelectedIsSceneRoot() const
 {
-	return (App->scene->GetSelectedGameObject() == App->scene->GetSceneRoot());
+	return (EngineApp->scene->GetSelectedGameObject() == EngineApp->scene->GetSceneRoot());
 }
 
 bool M_Editor::SelectedIsAnimationBone() const
 {
-	return App->scene->GetSelectedGameObject()->is_bone;
+	return EngineApp->scene->GetSelectedGameObject()->is_bone;
 }
 
 void M_Editor::GetEngineIconsThroughEditor(Icons& engineIcons)
 {
-	engineIcons = App->renderer->GetEngineIcons();
+	engineIcons = EngineApp->renderer->GetEngineIcons();
 }
 
 void M_Editor::LoadResourceIntoSceneThroughEditor()
 {
-	App->scene->LoadResourceIntoScene(project->GetDraggedResource());
+	EngineApp->scene->LoadResourceIntoScene(project->GetDraggedResource());
 }
 
 void M_Editor::GetResourcesThroughEditor(std::map<uint32, Resource*>& resources) const
 {
-	//resources = App->resourceManager->GetResources();
-	App->resourceManager->GetResources(resources);
+	//resources = EngineApp->resourceManager->GetResources();
+	EngineApp->resourceManager->GetResources(resources);
 }
 
 void M_Editor::SaveSceneThroughEditor(const char* sceneName)
 {
-	App->scene->SaveScene(sceneName);
+	EngineApp->scene->SaveScene(sceneName);
 }
 
 void M_Editor::LoadFileThroughEditor(const char* path)
 {
-	std::string extension = App->fileSystem->GetFileExtension(path);
+	std::string extension = EngineApp->fileSystem->GetFileExtension(path);
 
 	if (extension == "json" || extension == "JSON")
 	{
-		App->scene->LoadScene(path);
+		EngineApp->scene->LoadScene(path);
 	}
 	else
 	{
-		App->resourceManager->ImportFile(path);
+		EngineApp->resourceManager->ImportFile(path);
 	}
 }
 
@@ -541,68 +541,68 @@ void M_Editor::EditorCameraUpdate() {
 	{
 		if (!HoveringGuizmo())
 		{
-			if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KeyState::KEY_DOWN)
+			if (EngineApp->input->GetMouseButton(SDL_BUTTON_LEFT) == KeyState::KEY_DOWN)
 			{
-				App->camera->CastRay(GetWorldMousePositionThroughEditor());
+				EngineApp->camera->CastRay(GetWorldMousePositionThroughEditor());
 			}
 		}
 
-		if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KeyState::KEY_REPEAT)
+		if (EngineApp->input->GetMouseButton(SDL_BUTTON_RIGHT) == KeyState::KEY_REPEAT)
 		{
-			App->camera->WASDMovement();
+			EngineApp->camera->WASDMovement();
 
-			App->camera->FreeLookAround();
+			EngineApp->camera->FreeLookAround();
 		}
 
-		if (App->input->GetKey(SDL_SCANCODE_LALT) == KeyState::KEY_REPEAT)
+		if (EngineApp->input->GetKey(SDL_SCANCODE_LALT) == KeyState::KEY_REPEAT)
 		{
-			if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KeyState::KEY_REPEAT)
+			if (EngineApp->input->GetMouseButton(SDL_BUTTON_RIGHT) == KeyState::KEY_REPEAT)
 			{
-				if (App->scene->GetSelectedGameObject() != nullptr)
+				if (EngineApp->scene->GetSelectedGameObject() != nullptr)
 				{
-					if (App->scene->GetSelectedGameObject()->GetComponent<C_Camera>() != currentCamera)
+					if (EngineApp->scene->GetSelectedGameObject()->GetComponent<C_Camera>() != currentCamera)
 					{
-						App->camera->reference = App->scene->GetSelectedGameObject()->GetComponent<C_Transform>()->GetWorldPosition();
+						EngineApp->camera->reference = EngineApp->scene->GetSelectedGameObject()->GetComponent<C_Transform>()->GetWorldPosition();
 					}
 				}
 				else
 				{
-					App->camera->reference = float3::zero;
+					EngineApp->camera->reference = float3::zero;
 				}
 
-				App->camera->Orbit(GetWorldMousePositionThroughEditor());
+				EngineApp->camera->Orbit(GetWorldMousePositionThroughEditor());
 			}
 		}
 
-		if (App->input->GetMouseButton(SDL_BUTTON_MIDDLE) == KeyState::KEY_REPEAT)
+		if (EngineApp->input->GetMouseButton(SDL_BUTTON_MIDDLE) == KeyState::KEY_REPEAT)
 		{
-			App->camera->PanCamera(GetWorldMousePositionThroughEditor());
+			EngineApp->camera->PanCamera(GetWorldMousePositionThroughEditor());
 		}
 
-		if (App->input->GetMouseZ() != 0)
+		if (EngineApp->input->GetMouseZ() != 0)
 		{
-			App->camera->Zoom();
+			EngineApp->camera->Zoom();
 		}
 
-		if (App->input->GetKey(SDL_SCANCODE_LCTRL) == KeyState::KEY_IDLE)
+		if (EngineApp->input->GetKey(SDL_SCANCODE_LCTRL) == KeyState::KEY_IDLE)
 		{
-			if (App->input->GetKey(SDL_SCANCODE_O) == KeyState::KEY_DOWN)
+			if (EngineApp->input->GetKey(SDL_SCANCODE_O) == KeyState::KEY_DOWN)
 			{
-				App->camera->ReturnToWorldOrigin();
+				EngineApp->camera->ReturnToWorldOrigin();
 			}
 		}
 
-		if (App->input->GetKey(SDL_SCANCODE_F) == KeyState::KEY_DOWN)
+		if (EngineApp->input->GetKey(SDL_SCANCODE_F) == KeyState::KEY_DOWN)
 		{
-			float3 target = App->scene->GetSelectedGameObject()->GetComponent<C_Transform>()->GetWorldPosition();
-			App->camera->Focus(target);
+			float3 target = EngineApp->scene->GetSelectedGameObject()->GetComponent<C_Transform>()->GetWorldPosition();
+			EngineApp->camera->Focus(target);
 		}
 	}
 }
 
 void M_Editor::ProcessInput(SDL_Event& event)
 {
-	ImGui_ImplSDL2_ProcessEvent(event);
+	ImGui_ImplSDL2_ProcessEvent(&event);
 }
 
 void M_Editor::PostSceneRendering()

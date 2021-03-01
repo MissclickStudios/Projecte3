@@ -5,7 +5,7 @@
 
 class ParsonNode;
 
-class M_Window : public Module
+class NULL_API M_Window : public Module
 {
 public:
 	M_Window(bool isActive = true);

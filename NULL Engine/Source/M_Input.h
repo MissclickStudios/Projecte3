@@ -17,7 +17,7 @@ enum class KeyState
 
 #define MAX_MOUSE_BUTTONS 5
 
-class M_Input : public Module
+class NULL_API M_Input : public Module
 {
 public:
 	

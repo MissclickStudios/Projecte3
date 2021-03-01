@@ -3,7 +3,7 @@
 
 #include "Macros.h"
 
-#include "Application.h"
+#include "EngineApplication.h"
 #include "M_FileSystem.h"
 #include "M_Editor.h"
 
@@ -32,7 +32,7 @@ bool E_LoadFile::Draw(ImGuiIO& io)
 	
 	ImGui::OpenPopup("Load File");
 
-	if (ImGui::BeginPopupModal("Load File"), &App->editor->showLoadFilePopup, ImGuiWindowFlags_AlwaysAutoResize)
+	if (ImGui::BeginPopupModal("Load File"), &EngineApp->editor->showLoadFilePopup, ImGuiWindowFlags_AlwaysAutoResize)
 	{
 		DrawFileBrowser();
 
@@ -44,9 +44,9 @@ bool E_LoadFile::Draw(ImGuiIO& io)
 	if (readyToLoad)
 	{
 		readyToLoad						= false;
-		App->editor->showLoadFilePopup	= false;
+		EngineApp->editor->showLoadFilePopup	= false;
 		
-		App->editor->LoadFileThroughEditor(selectedFile);
+		EngineApp->editor->LoadFileThroughEditor(selectedFile);
 		selectedFile[0] = '\0';
 	}
 
@@ -101,7 +101,7 @@ void E_LoadFile::DrawFileSelector()
 		selectedFile[0] = '\0';
 
 		readyToLoad = false;
-		App->editor->showLoadFilePopup = false;
+		EngineApp->editor->showLoadFilePopup = false;
 	}
 }
 
@@ -112,7 +112,7 @@ void E_LoadFile::DrawDirectoriesTree(const char* rootDirectory, const char* exte
 
 	std::string rootDir = rootDirectory;
 
-	App->fileSystem->DiscoverFiles(rootDir.c_str(), files, directories, extensionToFilter);
+	EngineApp->fileSystem->DiscoverFiles(rootDir.c_str(), files, directories, extensionToFilter);
 
 	for (uint i = 0; i < directories.size(); ++i)
 	{

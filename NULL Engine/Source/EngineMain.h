@@ -1,6 +1,6 @@
 #include <stdlib.h>
 																
-#include "Application.h"																	// ATTENTION: Already included in Application.h.
+#include "Application.h"
 
 #include "SDL/include/SDL.h"
 #include "Profiler.h"
@@ -20,7 +20,9 @@ enum class MainStatus
 	EXIT
 };
 
-Application* App = nullptr;
+extern /*Enginenamespace::*/Application* /*EngineNamespace::*/CreateApplication();
+
+/*Enginenamespace::*/Application* mainApp = nullptr;
 
 int main(int argc, char ** argv)
 {
@@ -38,14 +40,14 @@ int main(int argc, char ** argv)
 		case MainStatus::CREATION:
 
 			LOG("-------------- Application Creation --------------");
-			App		= new Application();
+			mainApp	= CreateApplication();
 			state	= MainStatus::START;
 			break;
 
 		case MainStatus::START:
 
 			LOG("-------------- Application Init --------------");
-			if (!App->Init())
+			if (!mainApp->Init())
 			{
 				LOG("Application Init exits with ERROR");
 				state = MainStatus::EXIT;
@@ -78,7 +80,7 @@ int main(int argc, char ** argv)
 		case MainStatus::FINISH:
 
 			LOG("-------------- Application CleanUp --------------");
-			if (!App->CleanUp())
+			if (!mainApp->CleanUp())
 			{
 				LOG("Application CleanUp exits with ERROR");
 			}
@@ -94,7 +96,7 @@ int main(int argc, char ** argv)
 		}
 	}
 
-	RELEASE(App);
+	RELEASE(mainApp);
 
 	LOG("Exiting game '%s'...\n", TITLE);
 

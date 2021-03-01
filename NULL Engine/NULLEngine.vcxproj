@@ -72,9 +72,13 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <OutDir>.\Build\EngineExe\$(Configuration)\</OutDir>
+    <IntDir>.\Intermediate\EngineExe\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
+    <OutDir>.\Build\EngineExe\$(Configuration)\</OutDir>
+    <IntDir>.\Intermediate\EngineExe\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -88,6 +92,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(ProjectDir)\Source\Dependencies</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -102,6 +107,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(ProjectDir)\Source\Dependencies</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -148,6 +154,7 @@
     <ClCompile Include="Source\Dependencies\ImGui\include\imgui_impl_sdl.cpp" />
     <ClCompile Include="Source\Dependencies\ImGui\include\imgui_widgets.cpp" />
     <ClCompile Include="Source\EditorPanel.cpp" />
+    <ClCompile Include="Source\EngineApplication.cpp" />
     <ClCompile Include="Source\E_About.cpp" />
     <ClCompile Include="Source\E_Configuration.cpp" />
     <ClCompile Include="Source\E_Console.cpp" />
@@ -177,6 +184,7 @@
     <ClInclude Include="Source\Dependencies\ImGui\include\imstb_textedit.h" />
     <ClInclude Include="Source\Dependencies\ImGui\include\imstb_truetype.h" />
     <ClInclude Include="Source\EditorPanel.h" />
+    <ClInclude Include="Source\EngineApplication.h" />
     <ClInclude Include="Source\E_About.h" />
     <ClInclude Include="Source\E_Configuration.h" />
     <ClInclude Include="Source\E_Console.h" />
@@ -194,6 +202,11 @@
     <ClInclude Include="Source\M_Editor.h" />
     <ClInclude Include="Source\ThemeGenerator.h" />
     <ClInclude Include="Source\Timeline.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="EngineCore.vcxproj">
+      <Project>{746cc4c3-787f-4b0e-aa66-e388fe3ff4f6}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

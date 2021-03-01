@@ -1,6 +1,6 @@
-#include <functional>			//function pointers
+/*#include <functional>			//function pointers
 #include <algorithm>			//for_each()
-#include <memory>				//Smart pointers
+#include <memory>				//Smart pointers*/
 
 #include "JSONParser.h"
 #include "Time.h"
@@ -20,6 +20,8 @@
 
 #include "MemoryManager.h"
 
+Application* App = nullptr;
+
 Application::Application() :
 quit			(false),
 debug			(false), 
@@ -33,6 +35,7 @@ fileSystem		(nullptr),
 resourceManager(nullptr),
 logger			(nullptr)
 {
+	App = this;
 	//PERF_TIMER_START(perf_timer);
 	
 	// Modules -----------------------------------
@@ -48,7 +51,7 @@ logger			(nullptr)
 	// Modules will Init() Start() and Update in this order
 	// They will CleanUp() in reverse order
 
-	// Main Modules
+	/*// Main Modules
 	AddModule(window);
 	AddModule(camera);
 	AddModule(input);
@@ -60,7 +63,7 @@ logger			(nullptr)
 
 	// Renderer last!
 	AddModule(renderer);
-	// -------------------------------------------
+	// -------------------------------------------*/
 
 	// Save/Load variables
 	wantToLoad			= false;

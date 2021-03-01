@@ -8,7 +8,7 @@ class ParsonNode;
 class GameObject;
 class C_Camera;
 
-class M_Camera3D : public Module
+class NULL_API M_Camera3D : public Module
 {
 public:
 	M_Camera3D(bool isActive = true);

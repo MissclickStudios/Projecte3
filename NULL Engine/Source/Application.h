@@ -18,7 +18,7 @@ class M_Camera3D;
 class M_FileSystem;
 class M_ResourceManager;
 
-class Application
+class NULL_API Application
 {
 public:
 	Application();
@@ -109,6 +109,7 @@ private:
 	Module* logger;
 };
 
-extern Application* App;																// Allows to access the Application module from anywhere in the project.
+extern NULL_API Application* App;													// Allows to access the Application module from anywhere in the project.
+Application* CreateApplication();																
 
 #endif // !__APPLICATION_H__

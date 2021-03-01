@@ -1,6 +1,7 @@
 #ifndef __GAME_OBJECT_H__
 #define __GAME_OBJECT_H__
 
+#include "Macros.h"
 #include <string>
 #include <vector>
 #include <map>
@@ -18,7 +19,7 @@ struct SkeletonRenderer;
 
 typedef unsigned __int32 uint32;
 
-class GameObject
+class NULL_API GameObject
 {
 public:
 	GameObject();

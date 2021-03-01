@@ -90,7 +90,6 @@
     <ClCompile Include="Source\MeshSettings.cpp" />
     <ClCompile Include="Source\ModelSettings.cpp" />
     <ClCompile Include="Source\Light.cpp" />
-    <ClCompile Include="Source\EngineMain.h" />
     <ClCompile Include="Source\Module.cpp" />
     <ClCompile Include="Source\M_Camera3D.cpp" />
     <ClCompile Include="Source\M_Input.cpp" />
@@ -128,6 +127,7 @@
     <ClInclude Include="Source\C_Animation.h" />
     <ClInclude Include="Source\C_Animator.h" />
     <ClInclude Include="Source\EasingFunctions.h" />
+    <ClCompile Include="Source\EngineMain.h" />
     <ClInclude Include="Source\Hourglass.h" />
     <ClInclude Include="Source\Color.h" />
     <ClInclude Include="Source\Component.h" />
@@ -344,7 +344,7 @@
       <ExceptionHandling>false</ExceptionHandling>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <AdditionalIncludeDirectories>$(ProjectDir)\Source\Dependencies;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WINDOWS_IGNORE_PACKING_MISMATCH;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WINDOWS_IGNORE_PACKING_MISMATCH;NULL_BUILD_DLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -364,7 +364,7 @@
       <ExceptionHandling>false</ExceptionHandling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <AdditionalIncludeDirectories>$(ProjectDir)\Source\Dependencies;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WINDOWS_IGNORE_PACKING_MISMATCH;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WINDOWS_IGNORE_PACKING_MISMATCH;NULL_BUILD_DLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
