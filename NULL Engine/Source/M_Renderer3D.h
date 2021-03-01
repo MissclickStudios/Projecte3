@@ -7,6 +7,8 @@
 #include "MathGeoLib/include/Geometry/LineSegment.h"
 #include "MathGeoLib/include/Geometry/Triangle.h"
 
+#include "SkyBox.h"
+
 #include "Icons.h"
 
 #include "Module.h"
@@ -265,6 +267,8 @@ private:
 	std::vector<MeshRenderer>		meshRenderers;
 	std::vector<CuboidRenderer>		cuboidRenderers;
 	std::vector<SkeletonRenderer>	skeletonRenderers;
+
+	Skybox					defaultSkyBox;
 	
 	Icons					engineIcons;
 

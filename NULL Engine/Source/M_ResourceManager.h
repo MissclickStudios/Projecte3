@@ -112,6 +112,12 @@ private:																											// --- META FILE METHODS ---
 
 	//Resource*		GetResourceFromMetaFile			(const char* assetsPath);
 
+public:																												// --- RESOURCE METHODS ---
+
+	R_Shader*		GetShader(const char* name); //Look for a shader in the library and load and return it
+
+	void			GetAllShaders(std::vector<R_Shader> shaders); //Retrieve all the shaders in the library
+
 private:
 	std::map<uint32, Resource*>		resources;																		// Resources currently in memory.
 	std::map<uint32, std::string>	library;																		// UID and Library Path string of all loaded resources.

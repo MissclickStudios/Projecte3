@@ -35,6 +35,9 @@ public:																										// --- FRUSTUM METHODS
 	float* GetOGLViewMatrix();
 	float* GetOGLProjectionMatrix();
 
+	math::float4x4 GetViewMatrixTransposed() const;
+	math::float4x4 GetProjectionMatrixTransposed() const;
+
 public:																										// --- CAMERA TRANSFORM
 	void PointAt(const float3& position, const float3& target);
 	void LookAt(const float3& target);
