@@ -26,6 +26,8 @@ void Particle::Update(float dt)
 
 void Particle::ScreenAligned(C_Camera* currentCamera)
 {
+	//particleMesh->SetRotation(currentCamera->GetMatrixRotation());
+	//currentCamera->GetOGLViewMatrix().RotatePart();
 }
 
 void Particle::WorldAligned(C_Camera* currentCamera)
