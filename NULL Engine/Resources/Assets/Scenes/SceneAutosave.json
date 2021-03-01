@@ -9,6 +9,11 @@
             "GameObjectUID": 1766909030,
             "ModelResourceUID": 2094054046,
             "ModelAssetsPath": "Assets\/Models\/Skeleton_Model\/aniTest.fbx"
+        },
+        {
+            "GameObjectUID": 2145671784,
+            "ModelResourceUID": 1216679690,
+            "ModelAssetsPath": "Assets\/Models\/3CubeOrient.FBX"
         }
     ],
     "Game Objects": [
@@ -1021,6 +1026,60 @@
             ]
         },
         {
+            "UID": 557821250,
+            "ParentUID": 2145671784,
+            "Name": "Box001",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        -2.5,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 450461309,
+                    "Name": "Box001.nemesh",
+                    "Path": "Library\/Meshes\/450461309.nemesh",
+                    "File": "450461309.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 1863096748,
+                        "Name": "Box001.nemat",
+                        "Path": "Library\/Materials\/1863096748.nemat",
+                        "File": "1863096748.nemat"
+                    },
+                    "Shader": {
+                        "UID": 307946123,
+                        "Name": "DefaultShader.shader",
+                        "Path": "Library\/Shaders\/307946123.shader",
+                        "File": "307946123.shader"
+                    }
+                }
+            ]
+        },
+        {
             "UID": 611047608,
             "ParentUID": 1960871022,
             "Name": "City_building_010",
@@ -1561,6 +1620,60 @@
             ]
         },
         {
+            "UID": 821258448,
+            "ParentUID": 2145671784,
+            "Name": "Box003",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        -1.25,
+                        -5
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 641662308,
+                    "Name": "Box003.nemesh",
+                    "Path": "Library\/Meshes\/641662308.nemesh",
+                    "File": "641662308.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 1216720374,
+                        "Name": "Box003.nemat",
+                        "Path": "Library\/Materials\/1216720374.nemat",
+                        "File": "1216720374.nemat"
+                    },
+                    "Shader": {
+                        "UID": 307946123,
+                        "Name": "DefaultShader.shader",
+                        "Path": "Library\/Shaders\/307946123.shader",
+                        "File": "307946123.shader"
+                    }
+                }
+            ]
+        },
+        {
             "UID": 875367037,
             "ParentUID": 1960871022,
             "Name": "City_building_030",
@@ -1935,7 +2048,7 @@
         },
         {
             "UID": 1156379299,
-            "ParentUID": 1730858593,
+            "ParentUID": 1062887609,
             "Name": "MainScene",
             "IsActive": true,
             "IsStatic": false,
@@ -2768,6 +2881,60 @@
             ]
         },
         {
+            "UID": 1810491489,
+            "ParentUID": 2145671784,
+            "Name": "Box002",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        2.5,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 461786656,
+                    "Name": "Box002.nemesh",
+                    "Path": "Library\/Meshes\/461786656.nemesh",
+                    "File": "461786656.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 71098139,
+                        "Name": "Box002.nemat",
+                        "Path": "Library\/Materials\/71098139.nemat",
+                        "File": "71098139.nemat"
+                    },
+                    "Shader": {
+                        "UID": 307946123,
+                        "Name": "DefaultShader.shader",
+                        "Path": "Library\/Shaders\/307946123.shader",
+                        "File": "307946123.shader"
+                    }
+                }
+            ]
+        },
+        {
             "UID": 1815310176,
             "ParentUID": 1766909030,
             "Name": "Object02",
@@ -3241,6 +3408,36 @@
                     ],
                     "LocalScale": [
                         1.0000001192092896,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 2145671784,
+            "ParentUID": 1156379299,
+            "Name": "3CubeOrient.FBX",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        43.375953674316406,
+                        36.153812408447266
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
                         1,
                         1
                     ]

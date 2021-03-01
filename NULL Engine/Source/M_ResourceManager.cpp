@@ -36,7 +36,7 @@ typedef std::map<std::string, uint32>::iterator					FILE_ITEM;
 
 M_ResourceManager::M_ResourceManager() : Module("ResourceManager"),
 fileRefreshTimer	(0.0f),
-fileRefreshRate	(0.0f)
+fileRefreshRate		(0.0f)
 {
 
 }
@@ -236,8 +236,8 @@ void M_ResourceManager::FindFilesToImport(const std::vector<std::string>& assetF
 
 			if (!MetaFileIsValid(assetFiles[i].c_str()))															// In case the pair exists but the meta file is outdated.
 			{
-				filesToImport.push_back(assetFiles[i]);
-			}
+				filesToImport.push_back(assetFiles[i]);																// SHARING SCENES: STEP 1
+			} 
 		}
 		else
 		{
@@ -365,8 +365,6 @@ bool M_ResourceManager::DeleteFromLibrary(const char* assetsPath)
 
 bool M_ResourceManager::GetResourceUIDsFromMeta(const char* assetsPath, std::vector<uint32>& resourceUids)
 {
-	bool ret = true;
-
 	if (assetsPath == nullptr)
 	{
 		LOG("[ERROR] Resource Manager: Could not get Resource UIDs from Meta! Error: Given Assets Path was nullptr.");
@@ -423,7 +421,69 @@ bool M_ResourceManager::GetResourceUIDsFromMeta(const char* assetsPath, std::vec
 		resourceUids.push_back(containedUid);
 	}
 
-	return ret;
+	return true;
+}
+
+bool M_ResourceManager::GetForcedUIDsFromMeta(const char* assetsPath, std::map<std::string, uint32>& forcedUIDs)
+{
+	if (assetsPath == nullptr)
+	{
+		LOG("[ERROR] Resource Manager: Could not get Forced UIDs from Meta! Error: Given Assets Path was nullptr.");
+		return false;
+	}
+
+	std::string errorString = "[ERROR] Resource Manager: Could not get Forced UIDs from { " + std::string(assetsPath) + " }'s Meta File.";
+
+	char* buffer				= nullptr;
+	ParsonNode metaRoot			= LoadMetaFile(assetsPath, &buffer);
+	ParsonArray containedArray	= metaRoot.GetArray("ContainedResources");
+	RELEASE_ARRAY(buffer);
+
+	if (!metaRoot.NodeIsValid())
+	{
+		LOG("%s! Error: Given Assets Path had no correspondent Meta File.", errorString.c_str());
+		return false;
+	}
+	if (!containedArray.ArrayIsValid())
+	{
+		LOG("%s! Error: Contained Array in Meta File was not valid.", errorString.c_str());
+		return false;
+	}
+
+	// --- MAIN RESOURCE
+	std::string assetName	= metaRoot.GetString("Name");
+	uint32 resourceUID		= (uint32)metaRoot.GetNumber("UID");
+	if (resourceUID == 0)
+	{
+		LOG("%s! Error: Main ResourceUID was 0.", errorString.c_str());
+		return false;
+	}
+
+	forcedUIDs.emplace(assetName, resourceUID);
+
+	// --- CONTAINED RESOURCES
+	uint32 containedUID			= 0;
+	std::string containedName	= "[NONE]";
+	ParsonNode containedNode	= ParsonNode();
+	for (uint i = 0; i < containedArray.size; ++i)
+	{
+		containedNode	= containedArray.GetNode(i);
+		if (!containedNode.NodeIsValid())
+		{
+			continue;
+		}
+
+		containedName	= containedNode.GetString("Name");
+		containedUID	= (uint32)containedNode.GetNumber("UID");
+		if (containedUID == 0)
+		{
+			continue;
+		}
+
+		forcedUIDs.emplace(containedName, containedUID);
+	}
+
+	return true;
 }
 
 bool M_ResourceManager::GetLibraryFilePathsFromMeta(const char* assetsPath, std::vector<std::string>& filePaths)
@@ -438,9 +498,9 @@ bool M_ResourceManager::GetLibraryFilePathsFromMeta(const char* assetsPath, std:
 	
 	std::string errorString = "[ERROR] Resoruce Manager: Could not get Library File Paths from { " + std::string(assetsPath) + " }'s Meta File";
 
-	char* buffer					= nullptr;
+	char* buffer				= nullptr;
 	ParsonNode metaRoot			= LoadMetaFile(assetsPath, &buffer);
-	ParsonArray containedArray		= metaRoot.GetArray("ContainedResources");
+	ParsonArray containedArray	= metaRoot.GetArray("ContainedResources");
 	RELEASE_ARRAY(buffer);
 
 	if (!metaRoot.NodeIsValid())
@@ -457,9 +517,9 @@ bool M_ResourceManager::GetLibraryFilePathsFromMeta(const char* assetsPath, std:
 	std::string extension = "[NONE]";
 
 	// --- MAIN RESOURCE
-	uint32 resourceUid		= (uint32)metaRoot.GetNumber("UID");
-	ResourceType type		= (ResourceType)(int)metaRoot.GetNumber("Type");
-	bool success			= GetLibraryDirectoryAndExtensionFromType(type, directory, extension);
+	uint32 resourceUid	= (uint32)metaRoot.GetNumber("UID");
+	ResourceType type	= (ResourceType)(int)metaRoot.GetNumber("Type");
+	bool success		= GetLibraryDirectoryAndExtensionFromType(type, directory, extension);
 	if (!success)
 	{
 		LOG("%s! Error: Could not get the Library Directory and Extension from Resource Type.", errorString.c_str());
@@ -939,7 +999,7 @@ ResourceType M_ResourceManager::GetTypeFromAssetsExtension(const char* assetsPat
 	}
 	else
 	{
-		LOG("[ERROR] Resource Manager: Could not import from the given Assets Path! Error: File extension is not supported!");
+		LOG("[ERROR] Resource Manager: Could not import from the given Assets Path! Error: File extension { %s } is not supported!", extension.c_str());
 	}
 
 	return type;
@@ -1087,7 +1147,7 @@ bool M_ResourceManager::MetaFileIsValid(const char* assetsPath)
 	}
 
 	std::string metaPath		= assetsPath + std::string(META_EXTENSION);
-	std::string errorString	= "[ERROR] Resource Manager: Could not validate Meta File " + metaPath;
+	std::string errorString		= "[ERROR] Resource Manager: Could not validate Meta File " + metaPath;
 
 	if (!App->fileSystem->Exists(metaPath.c_str()))
 	{
@@ -1096,7 +1156,7 @@ bool M_ResourceManager::MetaFileIsValid(const char* assetsPath)
 	}
 
 	char* buffer					= nullptr;
-	ParsonNode metaRoot			= LoadMetaFile(assetsPath, &buffer);
+	ParsonNode metaRoot				= LoadMetaFile(assetsPath, &buffer);
 	ParsonArray containedArray		= metaRoot.GetArray("ContainedResources");
 	RELEASE_ARRAY(buffer);
 
@@ -1111,7 +1171,7 @@ bool M_ResourceManager::MetaFileIsValid(const char* assetsPath)
 		return false;
 	}
 
-	std::string libraryPath	= metaRoot.GetString("LibraryPath");
+	std::string libraryPath		= metaRoot.GetString("LibraryPath");
 	uint32 resourceUid			= (uint32)metaRoot.GetNumber("UID");
 	if (!App->fileSystem->Exists(libraryPath.c_str()))
 	{

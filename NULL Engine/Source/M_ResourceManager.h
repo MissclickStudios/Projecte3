@@ -41,7 +41,8 @@ public:																								// --- RESOURCE MANAGER API ---
 
 	// --- META FILE METHODS
 	ResourceType	GetTypeFromAssetsExtension		(const char* assetsPath);						// Returns the type of the resource related with the given Asset.
-
+	bool			GetForcedUIDsFromMeta(const char* assetsPath, std::map<std::string, uint32>& forcedUIDs);						// TMP. See if it can be done another way.
+																																	// Gets the UIDs stored in a .meta and assets path.
 	// --- RESOURCE METHODS
 	Resource*		CreateResource					(ResourceType type, const char* assetsPath = nullptr, uint32 forcedUID = 0);	// Generates a rsrc with the spec. params. No emplace.
 	Resource*		RequestResource					(uint32 UID);									// Returns an active resource with the given UID. Increases the rsrc's references by 1.
@@ -75,6 +76,7 @@ private:																															// --- ASSETS MONITORING METHODS ---
 	bool			DeleteFromLibrary				(const char* assetsPath);
 
 	bool			GetResourceUIDsFromMeta						(const char* assetsPath, std::vector<uint32>& resourceUids);
+	//bool			GetForcedUIDsFromMeta						(const char* assetsPath, std::map<std::string, uint32>& forcedUIDs);
 	bool			GetLibraryFilePathsFromMeta					(const char* assetsPath, std::vector<std::string>& filePaths);
 	bool			GetLibraryDirectoryAndExtensionFromType		(const ResourceType& type, std::string& directory, std::string& extension);
 	
