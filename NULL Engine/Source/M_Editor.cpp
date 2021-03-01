@@ -38,6 +38,8 @@
 #include "MemoryManager.h"
 #include "Time.h"
 
+#include "C_Transform.h"
+
 
 M_Editor::M_Editor(bool isActive) : Module("Editor", isActive),
 clearColor		(0.0f, 0.0f, 0.0f, 1.0f),
@@ -560,7 +562,7 @@ void M_Editor::EditorCameraUpdate() {
 			{
 				if (EngineApp->scene->GetSelectedGameObject() != nullptr)
 				{
-					if (EngineApp->scene->GetSelectedGameObject()->GetComponent<C_Camera>() != currentCamera)
+					if (EngineApp->scene->GetSelectedGameObject()->GetComponent<C_Camera>() != EngineApp->camera->currentCamera)
 					{
 						EngineApp->camera->reference = EngineApp->scene->GetSelectedGameObject()->GetComponent<C_Transform>()->GetWorldPosition();
 					}

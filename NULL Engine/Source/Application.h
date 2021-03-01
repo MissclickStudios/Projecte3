@@ -1,5 +1,5 @@
 #ifndef __APPLICATION_H__
-#define __APPLICATION_H_
+#define __APPLICATION_H__
 
 #include <vector>
 #include <string>

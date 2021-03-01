@@ -167,7 +167,8 @@ void E_Project::DrawMenuBar() const
 
 void E_Project::DrawAssetsTree()
 {
-	ImGui::Begin("AssetsTree", false);
+	bool retraso = false;
+	ImGui::Begin("AssetsTree", &retraso);
 
 	if (ImGui::TreeNodeEx(ASSETS_PATH, ImGuiTreeNodeFlags_DefaultOpen))
 	{
@@ -181,7 +182,8 @@ void E_Project::DrawAssetsTree()
 
 void E_Project::DrawFolderExplorer()
 {
-	ImGui::Begin("FolderExplorer", false);
+	bool retraso = false;
+	ImGui::Begin("FolderExplorer", &retraso);
 
 	ImGui::Text(directoryToDisplay);
 

@@ -522,7 +522,8 @@ void E_Inspector::DrawAnimatorComponent(C_Animator* cAnimator)								// TODO: S
 
 			if (currentClip == nullptr)
 			{
-				currentClip = &AnimatorClip();
+				AnimatorClip Clip = AnimatorClip();
+				currentClip = &Clip;
 			}
 
 			const char* animationName			= currentClip->GetAnimationName();

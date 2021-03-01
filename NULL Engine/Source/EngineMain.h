@@ -40,7 +40,9 @@ int main(int argc, char ** argv)
 		case MainStatus::CREATION:
 
 			LOG("-------------- Application Creation --------------");
+#ifndef NULL_BUILD_DLL
 			mainApp	= CreateApplication();
+#endif
 			state	= MainStatus::START;
 			break;
 
@@ -62,7 +64,7 @@ int main(int argc, char ** argv)
 
 		case MainStatus::UPDATE:
 		{
-			UpdateStatus updateReturn = App->Update();							// THIS HERE
+			UpdateStatus updateReturn = App->Update();							//Why App->Update???
 
 			if (updateReturn == UpdateStatus::THROW_ERROR)
 			{

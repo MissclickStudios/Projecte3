@@ -9,6 +9,7 @@
 
 #include "MathGeoBoundingBox.h"
 #include "Component.h"
+#include "C_Camera.h" //TODO: Why do we need to include this ????
 
 class ParsonNode;
 class C_Transform;
