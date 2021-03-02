@@ -23,6 +23,10 @@
 #include "C_Camera.h"
 #include "C_Animator.h"
 #include "C_Animation.h"
+#include "C_RigidBody.h"
+#include "C_BoxCollider.h"
+#include "C_SphereCollider.h"
+#include "C_CapsuleCollider.h"
 
 #include "R_Shader.h"
 #include "I_Shaders.h"
@@ -164,13 +168,17 @@ void E_Inspector::DrawComponents(GameObject* selectedGameObject)
 		ComponentType type = component->GetType();	
 		switch (type)
 		{
-		case ComponentType::TRANSFORM:	{ DrawTransformComponent((C_Transform*)component); }	break;
-		case ComponentType::MESH:		{ DrawMeshComponent((C_Mesh*)component); }				break;
-		case ComponentType::MATERIAL:	{ DrawMaterialComponent((C_Material*)component); }		break;
-		case ComponentType::LIGHT:		{ DrawLightComponent((C_Light*)component); }			break;
-		case ComponentType::CAMERA:	{ DrawCameraComponent((C_Camera*)component); }			break;
-		case ComponentType::ANIMATOR:	{ DrawAnimatorComponent((C_Animator*)component); }		break;
-		case ComponentType::ANIMATION: { DrawAnimationComponent((C_Animation*)component); }	break;
+		case ComponentType::TRANSFORM:			{ DrawTransformComponent((C_Transform*)component); }				break;
+		case ComponentType::MESH:				{ DrawMeshComponent((C_Mesh*)component); }							break;
+		case ComponentType::MATERIAL:			{ DrawMaterialComponent((C_Material*)component); }					break;
+		case ComponentType::LIGHT:				{ DrawLightComponent((C_Light*)component); }						break;
+		case ComponentType::CAMERA:				{ DrawCameraComponent((C_Camera*)component); }						break;
+		case ComponentType::ANIMATOR:			{ DrawAnimatorComponent((C_Animator*)component); }					break;
+		case ComponentType::ANIMATION:			{ DrawAnimationComponent((C_Animation*)component); }				break;
+		case ComponentType::RIGIDBODY:			{ DrawRigidBodyComponent((C_RigidBody*)component); }				break;
+		case ComponentType::BOX_COLLIDER:		{ DrawBoxColliderComponent((C_BoxCollider*)component); }			break;
+		case ComponentType::SPHERE_COLLIDER:	{ DrawSphereColliderComponent((C_SphereCollider*)component); }		break;
+		case ComponentType::CAPSULE_COLLIDER:	{ DrawCapsuleColliderComponent((C_CapsuleCollider*)component); }	break;
 		}
 
 		if (type == ComponentType::NONE)
@@ -815,9 +823,249 @@ void E_Inspector::DrawAnimationComponent(C_Animation* cAnimation)
 	}
 }
 
+void E_Inspector::DrawRigidBodyComponent(C_RigidBody* cRigidBody)
+{
+	bool show = true;
+
+	if (cRigidBody->IsStatic())
+	{
+		if (ImGui::CollapsingHeader("Static RigidBody", &show, ImGuiTreeNodeFlags_Leaf))
+		{
+			bool isActive = cRigidBody->IsActive();
+			if (ImGui::Checkbox("RigidBody Is Active", &isActive))
+				cRigidBody->SetIsActive(isActive);
+	
+			ImGui::SameLine();
+	
+			if (ImGui::Button("Make Dynamic"))
+				cRigidBody->MakeDynamic();
+	
+			ImGui::Separator();
+	
+			if (!show)
+			{
+				componentToDelete = cRigidBody;
+				showDeleteComponentPopup = true;
+			}
+	
+			ImGui::Separator();
+		}
+		return;
+	}
+
+	if (ImGui::CollapsingHeader("RigidBody", &show, ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		if (cRigidBody != nullptr)
+		{
+			bool isActive = cRigidBody->IsActive();
+			if (ImGui::Checkbox("RigidBody Is Active", &isActive))
+				cRigidBody->SetIsActive(isActive);
+
+			ImGui::SameLine();
+
+			if (ImGui::Button("Make Static"))
+				cRigidBody->MakeStatic();
+
+			ImGui::Separator();
+
+			float mass = cRigidBody->GetMass();
+			if (ImGui::InputFloat("Mass", &mass, 0, 0, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue))
+				cRigidBody->SetMass(mass);
+			float density = cRigidBody->GetDensity();
+			if (ImGui::InputFloat("Denstity", &density, 0, 0, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue))
+				cRigidBody->SetDensity(density);
+
+			bool useGravity = cRigidBody->UsingGravity();
+			if (ImGui::Checkbox("Use Gravity", &useGravity))
+				cRigidBody->UseGravity(useGravity);
+			bool isKinematic = cRigidBody->IsKinematic();
+			if (ImGui::Checkbox("Is Kinematic", &isKinematic))
+				cRigidBody->SetKinematic(isKinematic);
+
+			if (ImGui::Button("Stop Inertia"))
+				cRigidBody->StopInertia();
+
+			if (ImGui::TreeNodeEx("Constrains"))
+			{
+				ImGui::Text("Freeze Position");
+				ImGui::SameLine();
+
+				bool x, y, z;
+				cRigidBody->FrozenPositions(x, y, z);
+
+				if (ImGui::Checkbox("X", &x))
+					cRigidBody->FreezePositionX(x);
+				ImGui::SameLine();
+				if (ImGui::Checkbox("Y", &y))
+					cRigidBody->FreezePositionY(y);
+				ImGui::SameLine();
+				if (ImGui::Checkbox("Z", &z))
+					cRigidBody->FreezePositionZ(z);
+
+				ImGui::Text("Freeze Rotation");
+				ImGui::SameLine();
+
+				cRigidBody->FrozenRotations(x, y, z);
+
+				if (ImGui::Checkbox("X##", &x))
+					cRigidBody->FreezeRotationX(x);
+				ImGui::SameLine();
+				if (ImGui::Checkbox("Y##", &y))
+					cRigidBody->FreezeRotationY(y);
+				ImGui::SameLine();
+				if (ImGui::Checkbox("Z##", &z))
+					cRigidBody->FreezeRotationZ(z);
+
+				ImGui::TreePop();
+			}
+
+			if (ImGui::TreeNodeEx("Info"))
+			{
+				float speed = cRigidBody->GetSpeed();
+				ImGui::InputFloat("Speed", &speed, 0, 0, 4, ImGuiInputTextFlags_ReadOnly);
+
+				float3 vel = cRigidBody->GetLinearVelocity();
+				float velocity[3] = { vel.x, vel.y,vel.z };
+				ImGui::InputFloat3("Velocity", velocity, 4, ImGuiInputTextFlags_ReadOnly);
+
+				vel = cRigidBody->GetAngularVelocity();
+				float angVelocity[3] = { vel.x, vel.y,vel.z };
+				ImGui::InputFloat3("Angulat Velocity", angVelocity, 4, ImGuiInputTextFlags_ReadOnly);
+
+				bool isSleeping = cRigidBody->IsSleeping();
+				ImGui::Checkbox("Is Sleeping", &isSleeping);
+
+				ImGui::TreePop();
+			}
+		}
+
+		if (!show)
+		{
+			componentToDelete = cRigidBody;
+			showDeleteComponentPopup = true;
+		}
+
+		ImGui::Separator();
+	}
+}
+
+void E_Inspector::DrawBoxColliderComponent(C_BoxCollider* cCollider)
+{
+	bool show = true;
+	if (ImGui::CollapsingHeader("Box Collider", &show, ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		if (cCollider != nullptr)
+		{
+			bool isActive = cCollider->IsActive();
+			if (ImGui::Checkbox("Collider is Active##1", &isActive))
+				cCollider->SetIsActive(isActive);
+
+			ImGui::Separator();
+
+			bool isTrigger = cCollider->IsTrigger();
+			if (ImGui::Checkbox("Is Trigger##1", &isTrigger))
+				cCollider->SetTrigger(isTrigger);
+
+			float3 size = cCollider->Size();
+			float s[3] = { size.x, size.y, size.z };
+			if (ImGui::InputFloat3("Size##1", s, 4, ImGuiInputTextFlags_EnterReturnsTrue))
+				cCollider->SetSize(s[0], s[1], s[2]);
+
+			float3 center = cCollider->GetCenter();
+			float c[3] = { center.x, center.y, center.z };
+			if (ImGui::InputFloat3("Center##1", c, 4, ImGuiInputTextFlags_EnterReturnsTrue))
+				cCollider->SetCenter(c[0], c[1], c[2]);
+		}
+
+		if (!show)
+		{
+			componentToDelete = cCollider;
+			showDeleteComponentPopup = true;
+		}
+
+		ImGui::Separator();
+	}
+}
+
+void E_Inspector::DrawSphereColliderComponent(C_SphereCollider* cCollider)
+{
+	bool show = true;
+	if (ImGui::CollapsingHeader("Sphere Collider", &show, ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		if (cCollider != nullptr)
+		{
+			bool isActive = cCollider->IsActive();
+			if (ImGui::Checkbox("Collider is Active##2", &isActive)) { cCollider->SetIsActive(isActive); }
+
+			ImGui::Separator();
+
+			bool isTrigger = cCollider->IsTrigger();
+			if (ImGui::Checkbox("Is Trigger##2", &isTrigger))
+				cCollider->SetTrigger(isTrigger);
+
+			float radius = cCollider->Radius();
+			if (ImGui::InputFloat("Radius##2", &radius, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
+				cCollider->SetRadius(radius);
+
+			float3 center = cCollider->GetCenter();
+			float c[3] = { center.x, center.y, center.z };
+			if (ImGui::InputFloat3("Center##2", c, 4, ImGuiInputTextFlags_EnterReturnsTrue))
+				cCollider->SetCenter(c[0], c[1], c[2]);
+		}
+
+		if (!show)
+		{
+			componentToDelete = cCollider;
+			showDeleteComponentPopup = true;
+		}
+
+		ImGui::Separator();
+	}
+}
+
+void E_Inspector::DrawCapsuleColliderComponent(C_CapsuleCollider* cCollider)
+{
+	bool show = true;
+	if (ImGui::CollapsingHeader("Capsule Collider", &show, ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		if (cCollider != nullptr)
+		{
+			bool isActive = cCollider->IsActive();
+			if (ImGui::Checkbox("Collider is Active##3", &isActive)) { cCollider->SetIsActive(isActive); }
+
+			ImGui::Separator();
+
+			bool isTrigger = cCollider->IsTrigger();
+			if (ImGui::Checkbox("Is Trigger##3", &isTrigger))
+				cCollider->SetTrigger(isTrigger);
+
+			float radius = cCollider->Radius();
+			if (ImGui::InputFloat("Radius##3", &radius, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
+				cCollider->SetRadius(radius);
+
+			float height = cCollider->Height();
+			if (ImGui::InputFloat("Height##3", &height, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
+				cCollider->SetHeight(height);
+
+			float3 center = cCollider->GetCenter();
+			float c[3] = { center.x, center.y, center.z };
+			if (ImGui::InputFloat3("Center##3", c, 4, ImGuiInputTextFlags_EnterReturnsTrue))
+				cCollider->SetCenter(c[0], c[1], c[2]);
+		}
+
+		if (!show)
+		{
+			componentToDelete = cCollider;
+			showDeleteComponentPopup = true;
+		}
+
+		ImGui::Separator();
+	}
+}
+
 void E_Inspector::AddComponentCombo(GameObject* selectedGameObject)
 {
-	ImGui::Combo("##", &componentType, "Add Component\0Transform\0Mesh\0Material\0Light\0Camera\0Animator\0Animation");
+	ImGui::Combo("##", &componentType, "Add Component\0Transform\0Mesh\0Material\0Light\0Camera\0Animator\0Animation\0RigidBody\0Box Collider\0Sphere Collider\0Capsule Collider");
 
 	ImGui::SameLine();
 

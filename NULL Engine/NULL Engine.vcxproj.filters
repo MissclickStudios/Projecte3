@@ -154,6 +154,8 @@
     <Filter Include="Source\6_Containers\Animation">
       <UniqueIdentifier>{29e2c196-174d-4b25-be5b-98a268ce9867}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\7_Tools\Physics">
+      <UniqueIdentifier>{6f17c2fe-18ff-4f0e-820e-ee49f0d45e1d}</UniqueIdentifier>
     <Filter Include="Source\7_Tools\SkyBox">
       <UniqueIdentifier>{97789d57-76ae-4122-8172-38538bb1d72f}</UniqueIdentifier>
     </Filter>
@@ -552,6 +554,23 @@
     <ClCompile Include="Source\AnimatorClip.cpp">
       <Filter>Source\6_Containers\Animator</Filter>
     </ClCompile>
+    <ClCompile Include="Source\M_Physics.cpp">
+      <Filter>Source\1_Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\C_RigidBody.cpp">
+      <Filter>Source\5_GameObjects\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\C_BoxCollider.cpp">
+      <Filter>Source\5_GameObjects\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\C_CapsuleCollider.cpp">
+      <Filter>Source\5_GameObjects\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\C_SphereCollider.cpp">
+      <Filter>Source\5_GameObjects\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\SimulationCallback.cpp">
+      <Filter>Source\7_Tools\Physics</Filter>
     <ClCompile Include="Source\I_Shaders.cpp">
       <Filter>Source\4_Importers</Filter>
     </ClCompile>
@@ -1175,6 +1194,26 @@
     <ClInclude Include="Source\Bone.h">
       <Filter>Source\6_Containers\Animator</Filter>
     </ClInclude>
+    <ClInclude Include="Source\M_Physics.h">
+      <Filter>Source\1_Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\C_RigidBody.h">
+      <Filter>Source\5_GameObjects\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\C_BoxCollider.h">
+      <Filter>Source\5_GameObjects\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\C_SphereCollider.h">
+      <Filter>Source\5_GameObjects\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\C_CapsuleCollider.h">
+      <Filter>Source\5_GameObjects\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Collider.h">
+      <Filter>Source\7_Tools\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\SimulationCallback.h">
+      <Filter>Source\7_Tools\Physics</Filter>
     <ClInclude Include="Source\I_Shaders.h">
       <Filter>Source\4_Importers</Filter>
     </ClInclude>

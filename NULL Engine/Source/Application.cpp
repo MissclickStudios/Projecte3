@@ -16,6 +16,7 @@
 #include "M_Camera3D.h"
 #include "M_FileSystem.h"
 #include "M_ResourceManager.h"
+#include "M_Physics.h"
 
 #include "Application.h"
 
@@ -44,7 +45,8 @@ resourceManager(nullptr)
 	scene				= new M_Scene();
 	editor				= new M_Editor();
 	fileSystem			= new M_FileSystem();
-	resourceManager	= new M_ResourceManager();
+	resourceManager		= new M_ResourceManager();
+	physics				= new M_Physics();
 
 	// The order of calls is very important!
 	// Modules will Init() Start() and Update in this order
@@ -56,6 +58,7 @@ resourceManager(nullptr)
 	AddModule(input);
 	AddModule(fileSystem);
 	AddModule(resourceManager);
+	AddModule(physics);
 
 	// Scenes
 	AddModule(scene);

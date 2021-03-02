@@ -13,6 +13,10 @@ class C_Light;
 class C_Camera;
 class C_Animator;
 class C_Animation;
+class C_RigidBody;
+class C_BoxCollider;
+class C_SphereCollider;
+class C_CapsuleCollider;
 
 class Resource;
 class R_Shader;
@@ -42,6 +46,10 @@ private:
 	void DrawCameraComponent			(C_Camera* cCamera);
 	void DrawAnimatorComponent			(C_Animator* cAnimator);
 	void DrawAnimationComponent			(C_Animation* cAnimation);
+	void DrawRigidBodyComponent			(C_RigidBody* cRigidBody);
+	void DrawBoxColliderComponent		(C_BoxCollider* cCollider);
+	void DrawSphereColliderComponent	(C_SphereCollider* cCollider);
+	void DrawCapsuleColliderComponent	(C_CapsuleCollider* cCollider);
 
 	void AddComponentCombo				(GameObject* selectedGameObject);					// 
 	void DeleteComponentPopup			(GameObject* selectedGameObject);					// 

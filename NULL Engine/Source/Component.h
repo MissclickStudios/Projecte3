@@ -15,7 +15,11 @@ enum class ComponentType
 	LIGHT,
 	CAMERA,
 	ANIMATOR,
-	ANIMATION
+	ANIMATION,
+	RIGIDBODY,
+	BOX_COLLIDER,
+	SPHERE_COLLIDER,
+	CAPSULE_COLLIDER
 };
 
 class Component
@@ -39,13 +43,15 @@ public:
 	void ResetID();																		// Will reset the component's ID. WARNING: All references to this comp. will be lost (serialization).
 
 	bool IsActive() const;																// 
-	void SetIsActive(const bool& setTo);												// 
+	virtual void SetIsActive(bool setTo);												// 
 
 	GameObject* GetOwner() const;														//
 
+protected:
+	bool			isActive;
+
 private:
 	uint32			id;																	// 
-	bool			isActive;															//
 
 	ComponentType	type;																//
 	GameObject*		owner;																// 

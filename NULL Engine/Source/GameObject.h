@@ -89,10 +89,11 @@ public:																									// --- COMPONENT GETTERS AND SETTERS
 
 		for (uint i = 0; i < components.size(); ++i)
 		{
-			if (components[i]->GetType() == type)
-			{
-				return (T*)components[i];
-			}
+			if(components[i])
+				if (components[i]->GetType() == type)
+				{
+					return (T*)components[i];
+				}
 		}
 
 		return nullptr;
@@ -104,13 +105,17 @@ public:																									// --- COMPONENT GETTERS AND SETTERS
 		ComponentType type = T::GetType();
 		switch (type)
 		{
-		case ComponentType::TRANSFORM: { return "Transform"; } break;
-		case ComponentType::MESH:		{ return "Mesh"; }		break;
-		case ComponentType::MATERIAL:	{ return "Material"; }	break;
-		case ComponentType::LIGHT:		{ return "Light"; }		break;
-		case ComponentType::CAMERA:	{ return "Camera"; }	break;
-		case ComponentType::ANIMATOR:	{ return "Animator"; }	break;
-		case ComponentType::ANIMATION:	{ return "Animation"; } break;
+		case ComponentType::TRANSFORM:			{ return "Transform"; }			break;
+		case ComponentType::MESH:				{ return "Mesh"; }				break;
+		case ComponentType::MATERIAL:			{ return "Material"; }			break;
+		case ComponentType::LIGHT:				{ return "Light"; }				break;
+		case ComponentType::CAMERA:				{ return "Camera"; }			break;
+		case ComponentType::ANIMATOR:			{ return "Animator"; }			break;
+		case ComponentType::ANIMATION:			{ return "Animation"; }			break;
+		case ComponentType::RIGIDBODY:			{ return "RigidBody"; }			break;
+		case ComponentType::BOX_COLLIDER:		{ return "Box Collider"; }		break;
+		case ComponentType::SPHERE_COLLIDER:	{ return "Sphere Collider"; }	break;
+		case ComponentType::CAPSULE_COLLIDER:	{ return "Capsule Collider"; }	break;
 		}
 
 		return "NONE";

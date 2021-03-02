@@ -517,9 +517,11 @@ bool M_ResourceManager::GetLibraryFilePathsFromMeta(const char* assetsPath, std:
 	std::string extension = "[NONE]";
 
 	// --- MAIN RESOURCE
+
 	uint32 resourceUid	= (uint32)metaRoot.GetNumber("UID");
 	ResourceType type	= (ResourceType)(int)metaRoot.GetNumber("Type");
 	bool success		= GetLibraryDirectoryAndExtensionFromType(type, directory, extension);
+
 	if (!success)
 	{
 		LOG("%s! Error: Could not get the Library Directory and Extension from Resource Type.", errorString.c_str());
