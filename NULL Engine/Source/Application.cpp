@@ -36,7 +36,7 @@ renderer		(nullptr),
 camera			(nullptr),
 fileSystem		(nullptr),
 resourceManager	(nullptr),
-audio			(nullptr)
+audio			(nullptr),
 uiSystem		(nullptr)
 {
 	//PERF_TIMER_START(perf_timer);

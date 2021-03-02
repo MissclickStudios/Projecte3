@@ -1294,7 +1294,7 @@ void E_Inspector::AddComponentCombo(GameObject* selectedGameObject)
 {
 
 	ImGui::Combo("##", &componentType, "Add Component\0Transform\0Mesh\0Material\0Light\0Camera\0Animator\0Animation\0RigidBody\0Box Collider\0Sphere Collider\0Capsule Collider\0Particle System\0Canvas\0AudioSource\0AudioListener");
-  ImGui::SameLine();
+	ImGui::SameLine();
 
 	if ((ImGui::Button("ADD")))
 	{ 
