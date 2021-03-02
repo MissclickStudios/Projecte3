@@ -9,6 +9,7 @@
 #include "GameObject.h"
 #include "C_Transform.h"
 #include "C_Camera.h"
+#include "C_AudioListener.h"
 
 #include "M_Camera3D.h"
 
@@ -53,6 +54,7 @@ bool M_Camera3D::Init(ParsonNode& root)
 	//masterCamera->GetComponent<C_Transform>()->SetLocalPosition(float3(6.5f, 4.0f, 7.0f));
 	masterCamera->GetComponent<C_Transform>()->SetLocalPosition(float3(125.0f, 80.0f, 135.0f));
 	LookAt(reference);
+
 	//current_camera->UpdateFrustumTransform();
 
 	return true;

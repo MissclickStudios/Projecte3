@@ -18,6 +18,8 @@
 #include "C_Camera.h"
 #include "C_Animator.h"
 #include "C_Animation.h"
+#include "C_AudioSource.h"
+#include "C_AudioListener.h"
 #include "C_RigidBody.h"
 #include "C_BoxCollider.h"
 #include "C_SphereCollider.h"
@@ -177,16 +179,19 @@ bool GameObject::LoadState(ParsonNode& root)
 			switch (type)
 			{
 			//case COMPONENT_TYPE::TRANSFORM: { component = new C_Transform(this); }	break;
-			case ComponentType::MESH:				{ component = new C_Mesh(this); }				break;
-			case ComponentType::MATERIAL:			{ component = new C_Material(this); }			break;
-			case ComponentType::LIGHT:				{ component = new C_Light(this); }				break;
-			case ComponentType::CAMERA:				{ component = new C_Camera(this); }				break;
-			case ComponentType::ANIMATOR:			{ component = new C_Animator(this); }			break;
-			case ComponentType::ANIMATION:			{ component = new C_Animation(this); }			break;
+			case ComponentType::MESH:		{ component = new C_Mesh(this); }		break;
+			case ComponentType::MATERIAL:	{ component = new C_Material(this); }	break;
+			case ComponentType::LIGHT:		{ component = new C_Light(this); }		break;
+			case ComponentType::CAMERA:	{ component = new C_Camera(this); }		break;
+			case ComponentType::ANIMATOR:	{ component = new C_Animator(this); }	break;
+			case ComponentType::ANIMATION: { component = new C_Animation(this); }	break;
+			case ComponentType::AUDIOSOURCE: { component = new C_AudioSource(this); } break;
+			case ComponentType::AUDIOLISTENER: { component = new C_AudioListener(this); } break;
 			case ComponentType::RIGIDBODY:			{ component = new C_RigidBody(this); }			break;
 			case ComponentType::BOX_COLLIDER:		{ component = new C_BoxCollider(this); }		break;
 			case ComponentType::SPHERE_COLLIDER:	{ component = new C_SphereCollider(this); }		break;
 			case ComponentType::CAPSULE_COLLIDER:	{ component = new C_CapsuleCollider(this); }	break;
+
 			}
 
 			if (component != nullptr)
@@ -655,20 +660,20 @@ Component* GameObject::CreateComponent(ComponentType type)
 
 	switch(type)
 	{
-
-	case ComponentType::TRANSFORM:			{ component = new C_Transform(this); }			break;
-	case ComponentType::MESH:				{ component = new C_Mesh(this); }				break;
-	case ComponentType::MATERIAL:			{ component = new C_Material(this); }			break;
-	case ComponentType::LIGHT:				{ component = new C_Light(this); }				break;
-	case ComponentType::CAMERA:				{ component = new C_Camera(this); }				break;
-	case ComponentType::ANIMATOR:			{ component = new C_Animator(this); }			break;
-	case ComponentType::ANIMATION:			{ component = new C_Animation(this); }			break;
+	case ComponentType::TRANSFORM:	{ component = new C_Transform(this); }	break;
+	case ComponentType::MESH:		{ component = new C_Mesh(this); }		break;
+	case ComponentType::MATERIAL:	{ component = new C_Material(this); }	break;
+	case ComponentType::LIGHT:		{ component = new C_Light(this); }		break;
+	case ComponentType::CAMERA:	{ component = new C_Camera(this); }		break;
+	case ComponentType::ANIMATOR:	{ component = new C_Animator(this); }	break;
+	case ComponentType::ANIMATION: { component = new C_Animation(this); }	break;
+	case ComponentType::AUDIOSOURCE: { component = new C_AudioSource(this); } break;
+	case ComponentType::AUDIOLISTENER: {component = new C_AudioListener(this); } break;
 	case ComponentType::RIGIDBODY:			{ component = new C_RigidBody(this); }			break;
 	case ComponentType::BOX_COLLIDER:		{ component = new C_BoxCollider(this); }		break;
 	case ComponentType::SPHERE_COLLIDER:	{ component = new C_SphereCollider(this); }		break;
 	case ComponentType::CAPSULE_COLLIDER:	{ component = new C_CapsuleCollider(this); }	break;
 	case ComponentType::CANVAS:				{component = new C_Canvas(this); } break;
-
 	}
 
 	if (component != nullptr)

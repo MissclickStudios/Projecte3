@@ -17,6 +17,7 @@ struct CuboidRenderer;
 struct SkeletonRenderer;
 
 typedef unsigned __int32 uint32;
+typedef unsigned int uint;
 
 class GameObject
 {
@@ -105,13 +106,15 @@ public:																									// --- COMPONENT GETTERS AND SETTERS
 		ComponentType type = T::GetType();
 		switch (type)
 		{
-		case ComponentType::TRANSFORM:			{ return "Transform"; }			break;
-		case ComponentType::MESH:				{ return "Mesh"; }				break;
-		case ComponentType::MATERIAL:			{ return "Material"; }			break;
-		case ComponentType::LIGHT:				{ return "Light"; }				break;
-		case ComponentType::CAMERA:				{ return "Camera"; }			break;
-		case ComponentType::ANIMATOR:			{ return "Animator"; }			break;
-		case ComponentType::ANIMATION:			{ return "Animation"; }			break;
+		case ComponentType::TRANSFORM: { return "Transform"; } break;
+		case ComponentType::MESH:		{ return "Mesh"; }		break;
+		case ComponentType::MATERIAL:	{ return "Material"; }	break;
+		case ComponentType::LIGHT:		{ return "Light"; }		break;
+		case ComponentType::CAMERA:	{ return "Camera"; }	break;
+		case ComponentType::ANIMATOR:	{ return "Animator"; }	break;
+		case ComponentType::ANIMATION:	{ return "Animation"; } break;
+		case ComponentType::AUDIOSOURCE: { return "Audio Source"; } break;
+		case ComponentType::AUDIOLISTENER:	{ return "Audio Listener"; } break;
 		case ComponentType::RIGIDBODY:			{ return "RigidBody"; }			break;
 		case ComponentType::BOX_COLLIDER:		{ return "Box Collider"; }		break;
 		case ComponentType::SPHERE_COLLIDER:	{ return "Sphere Collider"; }	break;

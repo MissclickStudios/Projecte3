@@ -116,10 +116,10 @@ UpdateStatus M_Scene::Update(float dt)
 					rootAnimator->PlayClip("Attack", 8);
 				}
 
-				if (!rootAnimator->GetCurrentClip()->playing || !rootAnimator->CurrentClipExists())
+				/*if (!rootAnimator->GetCurrentClip()->playing || !rootAnimator->CurrentClipExists())
 				{
 					rootAnimator->PlayClip("Idle", 8);
-				}
+				}*/
 			}
 		}
 	}

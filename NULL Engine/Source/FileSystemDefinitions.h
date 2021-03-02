@@ -7,6 +7,7 @@
 #define ASSETS_MODELS_PATH		"Assets/Models/"
 #define ASSETS_SCENES_PATH		"Assets/Scenes/"
 #define ASSETS_TEXTURES_PATH	"Assets/Textures/"
+#define ASSETS_SOUNDBANKS_PATH	"Assets/SoundBanks/"
 #define ASSETS_SHADERS_PATH		"Assets/Shaders/"
 #define ASSETS_SKYBOX_PATH		"Assets/Textures/Skybox/"
 #define ASSETS_PREBAFS_PATH		"Assets/Prefabs/"

@@ -18,6 +18,7 @@ class M_Editor;
 class M_Camera3D;
 class M_FileSystem;
 class M_ResourceManager;
+class M_Audio;
 class M_Physics;
 class M_UISystem;
 
@@ -76,6 +77,7 @@ public:
 	M_Camera3D*				camera;
 	M_FileSystem*			fileSystem;
 	M_ResourceManager*		resourceManager;
+	M_Audio*				audio;
 	M_Physics*				physics;
 	M_UISystem*				uiSystem;
 

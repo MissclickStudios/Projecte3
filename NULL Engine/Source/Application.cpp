@@ -16,6 +16,7 @@
 #include "M_Camera3D.h"
 #include "M_FileSystem.h"
 #include "M_ResourceManager.h"
+#include "M_Audio.h"
 #include "M_Physics.h"
 #include "M_UISystem.h"
 
@@ -35,6 +36,7 @@ renderer		(nullptr),
 camera			(nullptr),
 fileSystem		(nullptr),
 resourceManager	(nullptr),
+audio			(nullptr)
 uiSystem		(nullptr)
 {
 	//PERF_TIMER_START(perf_timer);
@@ -48,6 +50,7 @@ uiSystem		(nullptr)
 	editor				= new M_Editor();
 	fileSystem			= new M_FileSystem();
 	resourceManager		= new M_ResourceManager();
+	audio				= new M_Audio();
 	physics				= new M_Physics();
 	uiSystem = new M_UISystem();
 
@@ -61,6 +64,7 @@ uiSystem		(nullptr)
 	AddModule(input);
 	AddModule(fileSystem);
 	AddModule(resourceManager);
+	AddModule(audio);
 	AddModule(physics);
 	AddModule(uiSystem);
 

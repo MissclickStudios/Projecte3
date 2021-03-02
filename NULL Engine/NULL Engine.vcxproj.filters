@@ -154,6 +154,9 @@
     <Filter Include="Source\6_Containers\Animation">
       <UniqueIdentifier>{29e2c196-174d-4b25-be5b-98a268ce9867}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Dependencies\Wwise">
+      <UniqueIdentifier>{2d5e7567-39c3-40fa-a3da-1b2f8c633cd6}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Source\7_Tools\Physics">
       <UniqueIdentifier>{6f17c2fe-18ff-4f0e-820e-ee49f0d45e1d}</UniqueIdentifier>
     </Filter>
@@ -563,6 +566,33 @@
     </ClCompile>
     <ClCompile Include="Source\AnimatorClip.cpp">
       <Filter>Source\6_Containers\Animator</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\M_Audio.cpp">
+      <Filter>Source\1_Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Dependencies\Wwise\samples\SoundEngine\Common\AkDefaultLowLevelIODispatcher.cpp">
+      <Filter>Dependencies\Wwise</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Dependencies\Wwise\samples\SoundEngine\Common\AkFileLocationBase.cpp">
+      <Filter>Dependencies\Wwise</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Dependencies\Wwise\samples\SoundEngine\Common\AkFilePackage.cpp">
+      <Filter>Dependencies\Wwise</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Dependencies\Wwise\samples\SoundEngine\Common\AkFilePackageLUT.cpp">
+      <Filter>Dependencies\Wwise</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Dependencies\Wwise\samples\SoundEngine\Common\AkMultipleFileLocation.cpp">
+      <Filter>Dependencies\Wwise</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Dependencies\Wwise\samples\SoundEngine\Win32\AkDefaultIOHookBlocking.cpp">
+      <Filter>Dependencies\Wwise</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\C_AudioSource.cpp">
+      <Filter>Source\5_GameObjects\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\C_AudioListener.cpp">
+      <Filter>Source\5_GameObjects\Components</Filter>
     </ClCompile>
     <ClCompile Include="Source\M_Physics.cpp">
       <Filter>Source\1_Modules</Filter>
@@ -1238,6 +1268,39 @@
     <ClInclude Include="Source\Bone.h">
       <Filter>Source\6_Containers\Animator</Filter>
     </ClInclude>
+    <ClInclude Include="Source\M_Audio.h">
+      <Filter>Source\1_Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Dependencies\Wwise\samples\SoundEngine\Common\AkDefaultLowLevelIODispatcher.h">
+      <Filter>Dependencies\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Dependencies\Wwise\samples\SoundEngine\Common\AkFileLocationBase.h">
+      <Filter>Dependencies\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Dependencies\Wwise\samples\SoundEngine\Common\AkFilePackage.h">
+      <Filter>Dependencies\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Dependencies\Wwise\samples\SoundEngine\Common\AkFilePackageLowLevelIO.h">
+      <Filter>Dependencies\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Dependencies\Wwise\samples\SoundEngine\Common\AkFilePackageLUT.h">
+      <Filter>Dependencies\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Dependencies\Wwise\samples\SoundEngine\Common\AkMultipleFileLocation.h">
+      <Filter>Dependencies\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Dependencies\Wwise\samples\SoundEngine\Win32\AkDefaultIOHookBlocking.h">
+      <Filter>Dependencies\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Dependencies\Wwise\samples\SoundEngine\Win32\AkFileHelpers.h">
+      <Filter>Dependencies\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\C_AudioSource.h">
+      <Filter>Source\5_GameObjects\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\C_AudioListener.h">
+      <Filter>Source\5_GameObjects\Components</Filter>
+    </ClInclude>
     <ClInclude Include="Source\M_Physics.h">
       <Filter>Source\1_Modules</Filter>
     </ClInclude>
@@ -1451,6 +1514,7 @@
     <ClInclude Include="Source\Dependencies\FreeType\include\freetype\tttables.h">
       <Filter>Dependencies\FreeType</Filter>
     </ClInclude>
+
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Engine\Configuration\configuration.JSON">
@@ -1458,6 +1522,9 @@
     </None>
     <None Include="Resources\Engine\Configuration\default_configuration.JSON">
       <Filter>Source\8_ConfigurationFiles</Filter>
+    </None>
+    <None Include="Source\Dependencies\Wwise\samples\SoundEngine\Common\AkFilePackageLowLevelIO.inl">
+      <Filter>Dependencies\Wwise</Filter>
     </None>
   </ItemGroup>
 </Project>

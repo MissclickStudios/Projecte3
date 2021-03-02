@@ -11,6 +11,7 @@
 #include "Application.h"
 #include "M_Renderer3D.h"
 #include "M_Editor.h"
+#include "M_Audio.h"
 #include "M_FileSystem.h"
 #include "M_ResourceManager.h"
 
@@ -23,6 +24,8 @@
 #include "C_Camera.h"
 #include "C_Animator.h"
 #include "C_Animation.h"
+#include "C_AudioSource.h"
+#include "C_AudioListener.h"
 #include "C_RigidBody.h"
 #include "C_BoxCollider.h"
 #include "C_SphereCollider.h"
@@ -171,13 +174,15 @@ void E_Inspector::DrawComponents(GameObject* selectedGameObject)
 		ComponentType type = component->GetType();	
 		switch (type)
 		{
-		case ComponentType::TRANSFORM:			{ DrawTransformComponent((C_Transform*)component); }				break;
-		case ComponentType::MESH:				{ DrawMeshComponent((C_Mesh*)component); }							break;
-		case ComponentType::MATERIAL:			{ DrawMaterialComponent((C_Material*)component); }					break;
-		case ComponentType::LIGHT:				{ DrawLightComponent((C_Light*)component); }						break;
-		case ComponentType::CAMERA:				{ DrawCameraComponent((C_Camera*)component); }						break;
-		case ComponentType::ANIMATOR:			{ DrawAnimatorComponent((C_Animator*)component); }					break;
-		case ComponentType::ANIMATION:			{ DrawAnimationComponent((C_Animation*)component); }				break;
+		case ComponentType::TRANSFORM:	{ DrawTransformComponent((C_Transform*)component); }	break;
+		case ComponentType::MESH:		{ DrawMeshComponent((C_Mesh*)component); }				break;
+		case ComponentType::MATERIAL:	{ DrawMaterialComponent((C_Material*)component); }		break;
+		case ComponentType::LIGHT:		{ DrawLightComponent((C_Light*)component); }			break;
+		case ComponentType::CAMERA:	{ DrawCameraComponent((C_Camera*)component); }			break;
+		case ComponentType::ANIMATOR:	{ DrawAnimatorComponent((C_Animator*)component); }		break;
+		case ComponentType::ANIMATION: { DrawAnimationComponent((C_Animation*)component); }	break;
+		case ComponentType::AUDIOSOURCE: { DrawAudioSourceComponent((C_AudioSource*)component); } break;
+		case ComponentType::AUDIOLISTENER: { DrawAudioListenerComponent((C_AudioListener*)component); } break;
 		case ComponentType::RIGIDBODY:			{ DrawRigidBodyComponent((C_RigidBody*)component); }				break;
 		case ComponentType::BOX_COLLIDER:		{ DrawBoxColliderComponent((C_BoxCollider*)component); }			break;
 		case ComponentType::SPHERE_COLLIDER:	{ DrawSphereColliderComponent((C_SphereCollider*)component); }		break;
@@ -830,6 +835,60 @@ void E_Inspector::DrawAnimationComponent(C_Animation* cAnimation)
 	}
 }
 
+void E_Inspector::DrawAudioSourceComponent(C_AudioSource* cAudioSource)
+{
+	bool show = true;
+	if (ImGui::CollapsingHeader("Audio Source", &show, ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		if (cAudioSource != nullptr)
+		{
+			int id = cAudioSource->GetId();
+			ImGui::Text("");
+
+			std::vector<std::string> eventName;
+
+			for (std::map<std::string, unsigned int>::const_iterator it = App->audio->eventMap.cbegin(); it != App->audio->eventMap.cend(); ++it)
+			{
+				eventName.push_back((*it).first);
+			}
+
+			static int item = 0;
+			const char* label = eventName[item].c_str();
+			unsigned int eventId = App->audio->eventMap[label];
+			if (ImGui::BeginCombo("##Audio", label))
+			{
+				for (int i = 0; i < eventName.size(); ++i)
+				{
+					bool is_selected = (label == eventName[i].c_str());
+					if (ImGui::Selectable(eventName[i].c_str(), is_selected)) {
+						item = i;
+						cAudioSource->PauseFx(eventId);
+
+					}
+					if (is_selected)
+						ImGui::SetItemDefaultFocus();
+				}
+				ImGui::EndCombo();
+			}
+
+			if ((ImGui::Button("Play")))
+			{
+				cAudioSource->SetId(eventId);
+				cAudioSource->PlayFx(eventId);
+			}
+			if ((ImGui::Button("Stop")))
+			{
+				cAudioSource->StopFx(eventId);
+			}
+		}
+		if (!show)
+		{
+			componentToDelete = cAudioSource;
+    }
+    ImGui::Separator();
+  }
+}
+
 
 void E_Inspector::DrawRigidBodyComponent(C_RigidBody* cRigidBody)
 {
@@ -1128,6 +1187,23 @@ void E_Inspector::DrawSphereColliderComponent(C_SphereCollider* cCollider)
 	}
 }
 
+void E_Inspector::DrawAudioListenerComponent(C_AudioListener* cAudioListener)
+{
+	bool show = true;
+	if (ImGui::CollapsingHeader("Audio Listener", &show, ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		if (cAudioListener != nullptr)
+		{
+
+		}
+		if (!show)
+		{
+			componentToDelete = cAudioListener;
+			showDeleteComponentPopup = true;
+		}
+		ImGui::Separator();
+	}
+}
 void E_Inspector::DrawCapsuleColliderComponent(C_CapsuleCollider* cCollider)
 {
 	bool show = true;
@@ -1211,13 +1287,14 @@ void E_Inspector::DrawUIImage(UI_Image* image)
 	}
 
 	ImGui::Separator();
+
 }
 
 void E_Inspector::AddComponentCombo(GameObject* selectedGameObject)
 {
-	ImGui::Combo("##", &componentType, "Add Component\0Transform\0Mesh\0Material\0Light\0Camera\0Animator\0Animation\0RigidBody\0Box Collider\0Sphere Collider\0Capsule Collider\0Particle System\0Canvas");
 
-	ImGui::SameLine();
+	ImGui::Combo("##", &componentType, "Add Component\0Transform\0Mesh\0Material\0Light\0Camera\0Animator\0Animation\0RigidBody\0Box Collider\0Sphere Collider\0Capsule Collider\0Particle System\0Canvas\0AudioSource\0AudioListener");
+  ImGui::SameLine();
 
 	if ((ImGui::Button("ADD")))
 	{ 

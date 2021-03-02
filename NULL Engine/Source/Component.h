@@ -22,7 +22,9 @@ enum class ComponentType
 	CAPSULE_COLLIDER,
 	PARTICLE_SYSTEM,
 	CANVAS,
-	IMAGE
+	IMAGE,
+  AUDIOSOURCE,
+	AUDIOLISTENER
 };
 
 class Component
