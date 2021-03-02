@@ -338,7 +338,7 @@ void E_Inspector::DrawMaterialComponent(C_Material* cMaterial)
 			{
 				cMaterial->SetIsActive(materialIsActive);
 			}
-			
+
 			ImGui::Separator();
 
 			// --- MATERIAL PATH ---
@@ -368,56 +368,59 @@ void E_Inspector::DrawMaterialComponent(C_Material* cMaterial)
 
 			ImGui::Text("Shader Active:");
 			ImGui::SameLine();
-			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), cMaterial->GetShader()->GetAssetsFile());
 
-			if(allShaders.empty()) App->resourceManager->GetAllShaders(allShaders);
-			std::string shaderName = cMaterial->GetShader()->GetAssetsFile();
-			if (ImGui::BeginCombo("Shader", cMaterial->GetShader()->GetAssetsFile(), ImGuiComboFlags_PopupAlignLeft))
+			if (cMaterial->GetShader() != nullptr)
 			{
-				for (uint i = 0; i < allShaders.size(); i++)
-				{
-					const bool selectedShader = (shaderName == allShaders[i]->GetAssetsFile());
-					if (ImGui::Selectable(allShaders[i]->GetAssetsFile(), selectedShader))
-					{
-						cMaterial->SetShader(allShaders[i]);
+					ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), cMaterial->GetShader()->GetAssetsFile());
 
-						shaderName = allShaders[i]->GetAssetsFile();
+				if (allShaders.empty()) App->resourceManager->GetAllShaders(allShaders);
+				std::string shaderName = cMaterial->GetShader()->GetAssetsFile();
+				if (ImGui::BeginCombo("Shader", cMaterial->GetShader()->GetAssetsFile(), ImGuiComboFlags_PopupAlignLeft))
+				{
+					for (uint i = 0; i < allShaders.size(); i++)
+					{
+						const bool selectedShader = (shaderName == allShaders[i]->GetAssetsFile());
+						if (ImGui::Selectable(allShaders[i]->GetAssetsFile(), selectedShader))
+						{
+							cMaterial->SetShader(allShaders[i]);
+
+							shaderName = allShaders[i]->GetAssetsFile();
+						}
+					}
+					ImGui::EndCombo();
+				}
+
+				if (ImGui::Button("Edit Shader"))
+				{
+					CallTextEditor(cMaterial);
+				}
+
+				R_Shader* shader = cMaterial->GetShader();
+
+				for (uint i = 0; i < shader->uniforms.size(); i++)
+				{
+					switch (shader->uniforms[i].uniformType)
+					{
+					case  UniformType::INT:	ImGui::DragInt(shader->uniforms[i].name.c_str(), &shader->uniforms[i].integer, 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None); break;
+					case  UniformType::FLOAT: ImGui::DragFloat(shader->uniforms[i].name.c_str(), &shader->uniforms[i].floatNumber, 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None); break;
+					case  UniformType::INT_VEC2: ImGui::DragInt2(shader->uniforms[i].name.c_str(), (int*)&shader->uniforms[i].vec2, 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None); break;
+					case  UniformType::INT_VEC3: ImGui::DragInt3(shader->uniforms[i].name.c_str(), (int*)&shader->uniforms[i].vec3, 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None); break;
+					case  UniformType::INT_VEC4: ImGui::DragInt4(shader->uniforms[i].name.c_str(), (int*)&shader->uniforms[i].vec4, 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None); break;
+					case  UniformType::FLOAT_VEC2: ImGui::DragFloat2(shader->uniforms[i].name.c_str(), (float*)&shader->uniforms[i].vec2, 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None); break;
+					case  UniformType::FLOAT_VEC3: ImGui::DragFloat3(shader->uniforms[i].name.c_str(), (float*)&shader->uniforms[i].vec3, 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None); break;
+					case  UniformType::FLOAT_VEC4: ImGui::DragFloat4(shader->uniforms[i].name.c_str(), (float*)&shader->uniforms[i].vec4, 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None); break;
+					case UniformType::MATRIX4: ImGui::DragFloat4(shader->uniforms[i].name.c_str(), shader->uniforms[i].matrix4.ToEulerXYZ().ptr(), 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None); break;
 					}
 				}
-				ImGui::EndCombo();
-			}
 
-			if (ImGui::Button("Edit Shader"))
-			{
-				CallTextEditor(cMaterial);
-			}
-
-			R_Shader* shader = cMaterial->GetShader();
-
-			for (uint i = 0; i < shader->uniforms.size(); i++)
-			{
-				switch (shader->uniforms[i].uniformType)
+				if (!cMaterial->GetShader()->uniforms.empty())
 				{
-				case  UniformType::INT:	ImGui::DragInt(shader->uniforms[i].name.c_str(), &shader->uniforms[i].integer, 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None); break;
-				case  UniformType::FLOAT: ImGui::DragFloat(shader->uniforms[i].name.c_str(), &shader->uniforms[i].floatNumber, 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None); break;
-				case  UniformType::INT_VEC2: ImGui::DragInt2(shader->uniforms[i].name.c_str(), (int*)&shader->uniforms[i].vec2, 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None); break;
-				case  UniformType::INT_VEC3: ImGui::DragInt3(shader->uniforms[i].name.c_str(), (int*)&shader->uniforms[i].vec3, 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None); break;
-				case  UniformType::INT_VEC4: ImGui::DragInt4(shader->uniforms[i].name.c_str(), (int*)&shader->uniforms[i].vec4, 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None); break;
-				case  UniformType::FLOAT_VEC2: ImGui::DragFloat2(shader->uniforms[i].name.c_str(), (float*)&shader->uniforms[i].vec2, 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None); break;
-				case  UniformType::FLOAT_VEC3: ImGui::DragFloat3(shader->uniforms[i].name.c_str(), (float*)&shader->uniforms[i].vec3, 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None); break;
-				case  UniformType::FLOAT_VEC4: ImGui::DragFloat4(shader->uniforms[i].name.c_str(), (float*)&shader->uniforms[i].vec4, 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None); break;
-				case UniformType::MATRIX4: ImGui::DragFloat4(shader->uniforms[i].name.c_str(), shader->uniforms[i].matrix4.ToEulerXYZ().ptr(), 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None); break;
+					if (ImGui::Button("Save Uniforms"))
+					{
+						App->resourceManager->SaveResourceToLibrary(cMaterial->GetShader());
+					}
 				}
 			}
-
-			if (!cMaterial->GetShader()->uniforms.empty())
-			{
-				if (ImGui::Button("Save Uniforms"))
-				{
-					App->resourceManager->SaveResourceToLibrary(cMaterial->GetShader());
-				}
-			}
-
 			ImGui::Separator();
 
 			// --- TEXTURE DATA ---
@@ -995,7 +998,7 @@ void E_Inspector::DrawBoxColliderComponent(C_BoxCollider* cCollider)
 
 void E_Inspector::DrawCanvasComponent(C_Canvas* cCanvas)
 {
-	static bool show = true;
+	bool show = true;
 	if (ImGui::CollapsingHeader("Canvas", &show, ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		if (cCanvas != nullptr)
@@ -1212,7 +1215,7 @@ void E_Inspector::DrawUIImage(UI_Image* image)
 
 void E_Inspector::AddComponentCombo(GameObject* selectedGameObject)
 {
-	ImGui::Combo("##", &componentType, "Add Component\0Transform\0Mesh\0Material\0Light\0Camera\0Animator\0Animation\0RigidBody\0Box Collider\0Sphere Collider\0Capsule Collider\0Canvas");
+	ImGui::Combo("##", &componentType, "Add Component\0Transform\0Mesh\0Material\0Light\0Camera\0Animator\0Animation\0RigidBody\0Box Collider\0Sphere Collider\0Capsule Collider\0Particle System\0Canvas");
 
 	ImGui::SameLine();
 

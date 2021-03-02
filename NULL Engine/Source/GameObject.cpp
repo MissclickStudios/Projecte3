@@ -667,7 +667,7 @@ Component* GameObject::CreateComponent(ComponentType type)
 	case ComponentType::BOX_COLLIDER:		{ component = new C_BoxCollider(this); }		break;
 	case ComponentType::SPHERE_COLLIDER:	{ component = new C_SphereCollider(this); }		break;
 	case ComponentType::CAPSULE_COLLIDER:	{ component = new C_CapsuleCollider(this); }	break;
-	case ComponentType::CANVAS: {component = new C_Canvas(this); } break;
+	case ComponentType::CANVAS:				{component = new C_Canvas(this); } break;
 
 	}
 
