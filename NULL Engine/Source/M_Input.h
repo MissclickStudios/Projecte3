@@ -3,6 +3,18 @@
 
 #include "Module.h"
 
+#define NUM_CONTROLLER_BUTTONS 15
+#define NUM_CONTROLLER_AXIS 4
+#define NUM_CONTROLLER_TRIGGERS 2
+
+#define MAX_AXIS 32767								
+#define CONTROLLER_INDEX 0							
+#define TRIGGER_INDEX 4								
+
+#define LEFT_TRIGGER 0								
+#define RIGHT_TRIGGER 1								
+
+struct _SDL_GameController;
 class ParsonNode;
 typedef unsigned int uint;
 
@@ -12,6 +24,41 @@ enum class KeyState
 	KEY_DOWN,
 	KEY_REPEAT,
 	KEY_UP
+};
+
+enum class ButtonState								
+{
+	BUTTON_IDLE,
+	BUTTON_DOWN,
+	BUTTON_REPEAT,
+	BUTTON_UP,
+	UNKNOWN_BUTTON									
+};
+
+enum class AxisState
+{								
+	AXIS_IDLE,
+	POSITIVE_AXIS_DOWN,
+	POSITIVE_AXIS_REPEAT,
+	POSITIVE_AXIS_RELEASE,
+	NEGATIVE_AXIS_DOWN,
+	NEGATIVE_AXIS_REPEAT,
+	NEGATIVE_AXIS_RELEASE,
+	UNKNOWN_AXIS								
+};
+
+
+struct GameController
+{
+	_SDL_GameController*    id;							
+	int						index;						
+
+	ButtonState*			buttons;
+	ButtonState*			triggers;					
+	AxisState*				axis;
+
+	float					max_axis_input_threshold;	
+	float					min_axis_input_threshold;	
 };
 
 #define MAX_MOUSE_BUTTONS 5
@@ -49,7 +96,12 @@ public:
 
 	bool			WindowSizeWasManipulated(Uint8 windowEvent) const;										// Uint8 is an SDL typedef for unsigned char.
 
+	void			CheckGameControllerState();
+
 private:
+
+	GameController  gameController;
+	
 	KeyState*		keyboard;
 	KeyState		mouseButtons[MAX_MOUSE_BUTTONS];
 	uint			maxNumScancodes;
