@@ -12,6 +12,8 @@
 #include "M_Renderer3D.h"
 #include "M_Editor.h"
 #include "M_Audio.h"
+#include "M_FileSystem.h"
+#include "M_ResourceManager.h"
 
 #include "GameObject.h"
 #include "Component.h"
@@ -24,18 +26,32 @@
 #include "C_Animation.h"
 #include "C_AudioSource.h"
 #include "C_AudioListener.h"
+#include "C_RigidBody.h"
+#include "C_BoxCollider.h"
+#include "C_SphereCollider.h"
+#include "C_CapsuleCollider.h"
 
+#include "R_Shader.h"
+#include "I_Shaders.h"
+
+#include "C_Canvas.h"
+#include "UI_Image.h"
 
 #include "E_Inspector.h"
+
+#include <fstream>
 
 #define MAX_VALUE 100000
 #define MIN_VALUE -100000
 
 E_Inspector::E_Inspector() : EditorPanel("Inspector"),
 showDeleteComponentPopup	(false),
+showTextEditorWindow		(false),
+showSaveEditorPopup			(false),
 componentType				(0),
 mapToDisplay				(0),
-componentToDelete			(nullptr)
+componentToDelete			(nullptr),
+shaderToRecompile			(nullptr)
 {
 
 }
@@ -59,7 +75,7 @@ bool E_Inspector::Draw(ImGuiIO& io)
 	{	
 		DrawGameObjectInfo(selected);
 		DrawComponents(selected);
-
+		TextEditorWindow();
 		ImGui::Separator();
 
 		AddComponentCombo(selected);
@@ -167,6 +183,11 @@ void E_Inspector::DrawComponents(GameObject* selectedGameObject)
 		case ComponentType::ANIMATION: { DrawAnimationComponent((C_Animation*)component); }	break;
 		case ComponentType::AUDIOSOURCE: { DrawAudioSourceComponent((C_AudioSource*)component); } break;
 		case ComponentType::AUDIOLISTENER: { DrawAudioListenerComponent((C_AudioListener*)component); } break;
+		case ComponentType::RIGIDBODY:			{ DrawRigidBodyComponent((C_RigidBody*)component); }				break;
+		case ComponentType::BOX_COLLIDER:		{ DrawBoxColliderComponent((C_BoxCollider*)component); }			break;
+		case ComponentType::SPHERE_COLLIDER:	{ DrawSphereColliderComponent((C_SphereCollider*)component); }		break;
+		case ComponentType::CAPSULE_COLLIDER:	{ DrawCapsuleColliderComponent((C_CapsuleCollider*)component); }	break;
+		case ComponentType::CANVAS: { DrawCanvasComponent((C_Canvas*)component); }				break;
 		}
 
 		if (type == ComponentType::NONE)
@@ -322,7 +343,7 @@ void E_Inspector::DrawMaterialComponent(C_Material* cMaterial)
 			{
 				cMaterial->SetIsActive(materialIsActive);
 			}
-			
+
 			ImGui::Separator();
 
 			// --- MATERIAL PATH ---
@@ -345,6 +366,66 @@ void E_Inspector::DrawMaterialComponent(C_Material* cMaterial)
 				cMaterial->SetMaterialColour(color);
 			}
 
+			ImGui::Separator();
+
+			// --- SHADER DATA ---
+			ImGui::TextColored(ImVec4(0.0f, 1.0f, 1.0f, 1.0f), "Shader Data:");
+
+			ImGui::Text("Shader Active:");
+			ImGui::SameLine();
+
+			if (cMaterial->GetShader() != nullptr)
+			{
+					ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), cMaterial->GetShader()->GetAssetsFile());
+
+				if (allShaders.empty()) App->resourceManager->GetAllShaders(allShaders);
+				std::string shaderName = cMaterial->GetShader()->GetAssetsFile();
+				if (ImGui::BeginCombo("Shader", cMaterial->GetShader()->GetAssetsFile(), ImGuiComboFlags_PopupAlignLeft))
+				{
+					for (uint i = 0; i < allShaders.size(); i++)
+					{
+						const bool selectedShader = (shaderName == allShaders[i]->GetAssetsFile());
+						if (ImGui::Selectable(allShaders[i]->GetAssetsFile(), selectedShader))
+						{
+							cMaterial->SetShader(allShaders[i]);
+
+							shaderName = allShaders[i]->GetAssetsFile();
+						}
+					}
+					ImGui::EndCombo();
+				}
+
+				if (ImGui::Button("Edit Shader"))
+				{
+					CallTextEditor(cMaterial);
+				}
+
+				R_Shader* shader = cMaterial->GetShader();
+
+				for (uint i = 0; i < shader->uniforms.size(); i++)
+				{
+					switch (shader->uniforms[i].uniformType)
+					{
+					case  UniformType::INT:	ImGui::DragInt(shader->uniforms[i].name.c_str(), &shader->uniforms[i].integer, 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None); break;
+					case  UniformType::FLOAT: ImGui::DragFloat(shader->uniforms[i].name.c_str(), &shader->uniforms[i].floatNumber, 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None); break;
+					case  UniformType::INT_VEC2: ImGui::DragInt2(shader->uniforms[i].name.c_str(), (int*)&shader->uniforms[i].vec2, 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None); break;
+					case  UniformType::INT_VEC3: ImGui::DragInt3(shader->uniforms[i].name.c_str(), (int*)&shader->uniforms[i].vec3, 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None); break;
+					case  UniformType::INT_VEC4: ImGui::DragInt4(shader->uniforms[i].name.c_str(), (int*)&shader->uniforms[i].vec4, 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None); break;
+					case  UniformType::FLOAT_VEC2: ImGui::DragFloat2(shader->uniforms[i].name.c_str(), (float*)&shader->uniforms[i].vec2, 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None); break;
+					case  UniformType::FLOAT_VEC3: ImGui::DragFloat3(shader->uniforms[i].name.c_str(), (float*)&shader->uniforms[i].vec3, 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None); break;
+					case  UniformType::FLOAT_VEC4: ImGui::DragFloat4(shader->uniforms[i].name.c_str(), (float*)&shader->uniforms[i].vec4, 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None); break;
+					case UniformType::MATRIX4: ImGui::DragFloat4(shader->uniforms[i].name.c_str(), shader->uniforms[i].matrix4.ToEulerXYZ().ptr(), 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None); break;
+					}
+				}
+
+				if (!cMaterial->GetShader()->uniforms.empty())
+				{
+					if (ImGui::Button("Save Uniforms"))
+					{
+						App->resourceManager->SaveResourceToLibrary(cMaterial->GetShader());
+					}
+				}
+			}
 			ImGui::Separator();
 
 			// --- TEXTURE DATA ---
@@ -532,17 +613,17 @@ void E_Inspector::DrawAnimatorComponent(C_Animator* cAnimator)								// TODO: S
 			}
 
 			const char* animationName			= currentClip->GetAnimationName();
-			float animationTicksPerSecond	= currentClip->GetAnimationTicksPerSecond();
-			float animationDuration			= currentClip->GetAnimationDuration();
+			float animationTicksPerSecond		= currentClip->GetAnimationTicksPerSecond();
+			float animationDuration				= currentClip->GetAnimationDuration();
 
-			const char* currentClipName		= currentClip->GetName();
+			const char* currentClipName			= currentClip->GetName();
 			uint currentClipStart				= currentClip->GetStart();
-			uint currentClipEnd				= currentClip->GetEnd();
+			uint currentClipEnd					= currentClip->GetEnd();
 			float currentClipDuration			= currentClip->GetDuration();
 			bool currentClipLoop				= currentClip->IsLooped();
 
 			float clipCime						= currentClip->GetClipTime();
-			float clipFrame					= currentClip->GetClipFrame();
+			float clipFrame						= currentClip->GetClipFrame();
 			uint clipTicks						= currentClip->GetClipTick();
 
 			// --- NEW CLIP VARIABLES
@@ -552,10 +633,10 @@ void E_Inspector::DrawAnimatorComponent(C_Animator* cAnimator)								// TODO: S
 			static char newClipName[128]		= "Enter Clip Name";
 			ImGuiInputTextFlags inputTxtFlags	= ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_AutoSelectAll;
 
-			static int newClipStart			= 0;
+			static int newClipStart				= 0;
 			static int newClipEnd				= (int)animationDuration;
-			int newClipMin					= 0;
-			int newClipMax					= (int)animationDuration;
+			int newClipMin						= 0;
+			int newClipMax						= (int)animationDuration;
 			static bool loop					= false;
 
 			static bool success					= false;																			// --- TODO: Transform into non-static variables later.
@@ -729,7 +810,7 @@ void E_Inspector::DrawAnimatorComponent(C_Animator* cAnimator)								// TODO: S
 
 void E_Inspector::DrawAnimationComponent(C_Animation* cAnimation)
 {
-	static bool show = true;
+	bool show = true;
 	if (ImGui::CollapsingHeader("Animation", &show, ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		if (cAnimation != nullptr)
@@ -803,6 +884,302 @@ void E_Inspector::DrawAudioSourceComponent(C_AudioSource* cAudioSource)
 		if (!show)
 		{
 			componentToDelete = cAudioSource;
+    }
+    ImGui::Separator();
+  }
+}
+
+
+void E_Inspector::DrawRigidBodyComponent(C_RigidBody* cRigidBody)
+{
+	bool show = true;
+
+	if (cRigidBody->IsStatic())
+	{
+		if (ImGui::CollapsingHeader("Static RigidBody", &show, ImGuiTreeNodeFlags_Leaf))
+		{
+			bool isActive = cRigidBody->IsActive();
+			if (ImGui::Checkbox("RigidBody Is Active", &isActive))
+				cRigidBody->SetIsActive(isActive);
+	
+			ImGui::SameLine();
+	
+			if (ImGui::Button("Make Dynamic"))
+				cRigidBody->MakeDynamic();
+	
+			ImGui::Separator();
+	
+			if (!show)
+			{
+				componentToDelete = cRigidBody;
+				showDeleteComponentPopup = true;
+			}
+	
+			ImGui::Separator();
+		}
+		return;
+	}
+
+	if (ImGui::CollapsingHeader("RigidBody", &show, ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		if (cRigidBody != nullptr)
+		{
+			bool isActive = cRigidBody->IsActive();
+			if (ImGui::Checkbox("RigidBody Is Active", &isActive))
+				cRigidBody->SetIsActive(isActive);
+
+			ImGui::SameLine();
+
+			if (ImGui::Button("Make Static"))
+				cRigidBody->MakeStatic();
+
+			ImGui::Separator();
+
+			float mass = cRigidBody->GetMass();
+			if (ImGui::InputFloat("Mass", &mass, 0, 0, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue))
+				cRigidBody->SetMass(mass);
+			float density = cRigidBody->GetDensity();
+			if (ImGui::InputFloat("Denstity", &density, 0, 0, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue))
+				cRigidBody->SetDensity(density);
+
+			bool useGravity = cRigidBody->UsingGravity();
+			if (ImGui::Checkbox("Use Gravity", &useGravity))
+				cRigidBody->UseGravity(useGravity);
+			bool isKinematic = cRigidBody->IsKinematic();
+			if (ImGui::Checkbox("Is Kinematic", &isKinematic))
+				cRigidBody->SetKinematic(isKinematic);
+
+			if (ImGui::Button("Stop Inertia"))
+				cRigidBody->StopInertia();
+
+			if (ImGui::TreeNodeEx("Constrains"))
+			{
+				ImGui::Text("Freeze Position");
+				ImGui::SameLine();
+
+				bool x, y, z;
+				cRigidBody->FrozenPositions(x, y, z);
+
+				if (ImGui::Checkbox("X", &x))
+					cRigidBody->FreezePositionX(x);
+				ImGui::SameLine();
+				if (ImGui::Checkbox("Y", &y))
+					cRigidBody->FreezePositionY(y);
+				ImGui::SameLine();
+				if (ImGui::Checkbox("Z", &z))
+					cRigidBody->FreezePositionZ(z);
+
+				ImGui::Text("Freeze Rotation");
+				ImGui::SameLine();
+
+				cRigidBody->FrozenRotations(x, y, z);
+
+				if (ImGui::Checkbox("X##", &x))
+					cRigidBody->FreezeRotationX(x);
+				ImGui::SameLine();
+				if (ImGui::Checkbox("Y##", &y))
+					cRigidBody->FreezeRotationY(y);
+				ImGui::SameLine();
+				if (ImGui::Checkbox("Z##", &z))
+					cRigidBody->FreezeRotationZ(z);
+
+				ImGui::TreePop();
+			}
+
+			if (ImGui::TreeNodeEx("Info"))
+			{
+				float speed = cRigidBody->GetSpeed();
+				ImGui::InputFloat("Speed", &speed, 0, 0, 4, ImGuiInputTextFlags_ReadOnly);
+
+				float3 vel = cRigidBody->GetLinearVelocity();
+				float velocity[3] = { vel.x, vel.y,vel.z };
+				ImGui::InputFloat3("Velocity", velocity, 4, ImGuiInputTextFlags_ReadOnly);
+
+				vel = cRigidBody->GetAngularVelocity();
+				float angVelocity[3] = { vel.x, vel.y,vel.z };
+				ImGui::InputFloat3("Angulat Velocity", angVelocity, 4, ImGuiInputTextFlags_ReadOnly);
+
+				bool isSleeping = cRigidBody->IsSleeping();
+				ImGui::Checkbox("Is Sleeping", &isSleeping);
+
+				ImGui::TreePop();
+			}
+		}
+
+		if (!show)
+		{
+			componentToDelete = cRigidBody;
+			showDeleteComponentPopup = true;
+		}
+
+		ImGui::Separator();
+	}
+}
+
+void E_Inspector::DrawBoxColliderComponent(C_BoxCollider* cCollider)
+{
+	bool show = true;
+	if (ImGui::CollapsingHeader("Box Collider", &show, ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		if (cCollider != nullptr)
+		{
+			bool isActive = cCollider->IsActive();
+			if (ImGui::Checkbox("Collider is Active##1", &isActive))
+				cCollider->SetIsActive(isActive);
+
+			ImGui::Separator();
+
+			bool isTrigger = cCollider->IsTrigger();
+			if (ImGui::Checkbox("Is Trigger##1", &isTrigger))
+				cCollider->SetTrigger(isTrigger);
+
+			float3 size = cCollider->Size();
+			float s[3] = { size.x, size.y, size.z };
+			if (ImGui::InputFloat3("Size##1", s, 4, ImGuiInputTextFlags_EnterReturnsTrue))
+				cCollider->SetSize(s[0], s[1], s[2]);
+
+			float3 center = cCollider->GetCenter();
+			float c[3] = { center.x, center.y, center.z };
+			if (ImGui::InputFloat3("Center##1", c, 4, ImGuiInputTextFlags_EnterReturnsTrue))
+				cCollider->SetCenter(c[0], c[1], c[2]);
+
+		}
+
+		if (!show)
+		{
+			componentToDelete = cCollider;
+
+			showDeleteComponentPopup = true;
+		}
+
+	}
+}
+
+void E_Inspector::DrawCanvasComponent(C_Canvas* cCanvas)
+{
+	bool show = true;
+	if (ImGui::CollapsingHeader("Canvas", &show, ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		if (cCanvas != nullptr)
+		{
+			bool isActive = cCanvas->IsActive();
+			if (ImGui::Checkbox("Canvas Is Active", &isActive)) { cCanvas->SetIsActive(isActive); }
+
+			bool isInvisible = cCanvas->IsInvisible();
+			if (ImGui::Checkbox("Canvas Is Invisible", &isInvisible)) { cCanvas->SetIsInvisible(isInvisible); }
+
+			ImGui::Separator();
+
+			ImGui::TextColored(Cyan.C_Array(), "Canvas Settings:");
+
+			ImGui::Separator();
+
+			// --- RECT ---
+			float2 size = { cCanvas->GetRect().w, cCanvas->GetRect().h };
+			float2 pivot = { cCanvas->pivot.x, cCanvas->pivot.y };
+
+			if (ImGui::DragFloat2("Rect", (float*)&size, 0.05f, 0.0f, 0.0f, "%.3f", NULL))
+			{
+				cCanvas->SetSize(size);
+
+				if (pivot.x < cCanvas->GetPosition().x - cCanvas->GetSize().x / 2)
+					pivot.x = cCanvas->GetPosition().x - cCanvas->GetSize().x / 2;
+
+				if (pivot.x > cCanvas->GetPosition().x + cCanvas->GetSize().x / 2)
+					pivot.x = cCanvas->GetPosition().x + cCanvas->GetSize().x / 2;
+
+
+				if (pivot.y < cCanvas->GetPosition().y - cCanvas->GetSize().y / 2)
+					pivot.y = cCanvas->GetPosition().y - cCanvas->GetSize().y / 2;
+
+				if (pivot.y > cCanvas->GetPosition().y + cCanvas->GetSize().y / 2)
+					pivot.y = cCanvas->GetPosition().y + cCanvas->GetSize().y / 2;
+
+				cCanvas->pivot.x = pivot.x;
+				cCanvas->pivot.y = pivot.y;
+			}
+
+			// --- PIVOT ---
+			if (ImGui::DragFloat2("Pivot", (float*)&pivot, 0.05f, 0.0f, 0.0f, "%.3f", NULL))
+			{
+
+				if (pivot.x < cCanvas->GetPosition().x - cCanvas->GetSize().x / 2)
+					pivot.x = cCanvas->GetPosition().x - cCanvas->GetSize().x / 2;
+
+				if (pivot.x > cCanvas->GetPosition().x + cCanvas->GetSize().x / 2)
+					pivot.x = cCanvas->GetPosition().x + cCanvas->GetSize().x / 2;
+
+
+				if (pivot.y < cCanvas->GetPosition().y - cCanvas->GetSize().y / 2)
+					pivot.y = cCanvas->GetPosition().y - cCanvas->GetSize().y / 2;
+
+				if (pivot.y > cCanvas->GetPosition().y + cCanvas->GetSize().y / 2)
+					pivot.y = cCanvas->GetPosition().y + cCanvas->GetSize().y / 2;
+
+				cCanvas->pivot.x = pivot.x;
+				cCanvas->pivot.y = pivot.y;
+			}
+
+			if (ImGui::Button("Reset Pivot"))
+				cCanvas->pivot = cCanvas->GetPosition();
+
+			if (ImGui::Button("Add Image"))
+			{
+				UI_Image* image = new UI_Image(cCanvas, { 0,0,100,100 });
+				cCanvas->uiElements.push_back(image);
+			}
+
+			for (std::vector<UIElement*>::iterator uiIt = cCanvas->uiElements.begin(); uiIt != cCanvas->uiElements.end(); uiIt++)
+			{
+				switch ((*uiIt)->GetType())
+				{
+				case UIElementType::NONE: break;
+				case UIElementType::IMAGE: { DrawUIImage((UI_Image*)*uiIt); } break;
+				case UIElementType::TEXT: break;
+				}
+			}
+		}
+
+		if (!show)
+		{
+			componentToDelete = cCanvas;
+
+			showDeleteComponentPopup = true;
+		}
+
+		ImGui::Separator();
+	}
+}
+
+void E_Inspector::DrawSphereColliderComponent(C_SphereCollider* cCollider)
+{
+	bool show = true;
+	if (ImGui::CollapsingHeader("Sphere Collider", &show, ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		if (cCollider != nullptr)
+		{
+			bool isActive = cCollider->IsActive();
+			if (ImGui::Checkbox("Collider is Active##2", &isActive)) { cCollider->SetIsActive(isActive); }
+
+			ImGui::Separator();
+
+			bool isTrigger = cCollider->IsTrigger();
+			if (ImGui::Checkbox("Is Trigger##2", &isTrigger))
+				cCollider->SetTrigger(isTrigger);
+
+			float radius = cCollider->Radius();
+			if (ImGui::InputFloat("Radius##2", &radius, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
+				cCollider->SetRadius(radius);
+
+			float3 center = cCollider->GetCenter();
+			float c[3] = { center.x, center.y, center.z };
+			if (ImGui::InputFloat3("Center##2", c, 4, ImGuiInputTextFlags_EnterReturnsTrue))
+				cCollider->SetCenter(c[0], c[1], c[2]);
+		}
+
+		if (!show)
+		{
+			componentToDelete = cCollider;
 			showDeleteComponentPopup = true;
 		}
 
@@ -827,12 +1204,97 @@ void E_Inspector::DrawAudioListenerComponent(C_AudioListener* cAudioListener)
 		ImGui::Separator();
 	}
 }
+void E_Inspector::DrawCapsuleColliderComponent(C_CapsuleCollider* cCollider)
+{
+	bool show = true;
+	if (ImGui::CollapsingHeader("Capsule Collider", &show, ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		if (cCollider != nullptr)
+		{
+			bool isActive = cCollider->IsActive();
+			if (ImGui::Checkbox("Collider is Active##3", &isActive)) { cCollider->SetIsActive(isActive); }
+
+			ImGui::Separator();
+
+			bool isTrigger = cCollider->IsTrigger();
+			if (ImGui::Checkbox("Is Trigger##3", &isTrigger))
+				cCollider->SetTrigger(isTrigger);
+
+			float radius = cCollider->Radius();
+			if (ImGui::InputFloat("Radius##3", &radius, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
+				cCollider->SetRadius(radius);
+
+			float height = cCollider->Height();
+			if (ImGui::InputFloat("Height##3", &height, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
+				cCollider->SetHeight(height);
+
+			float3 center = cCollider->GetCenter();
+			float c[3] = { center.x, center.y, center.z };
+			if (ImGui::InputFloat3("Center##3", c, 4, ImGuiInputTextFlags_EnterReturnsTrue))
+				cCollider->SetCenter(c[0], c[1], c[2]);
+		}
+
+		if (!show)
+		{
+			componentToDelete = cCollider;
+			showDeleteComponentPopup = true;
+		}
+
+		ImGui::Separator();
+	}
+}
+
+void E_Inspector::DrawUIImage(UI_Image* image)
+{
+	static bool show = true;
+	if (ImGui::CollapsingHeader("Image", &show, ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		bool isActive = image->IsActive();
+		if (ImGui::Checkbox("Image Is Active", &isActive)) { image->SetIsActive(isActive); }
+
+		ImGui::Separator();
+
+		// --- RECT ---
+		float2 pos = { image->GetRect().x, image->GetRect().y };
+		float2 size = { image->GetRect().w, image->GetRect().h };
+
+		C_Canvas* canvas = image->GetCanvas();
+
+		if (ImGui::DragFloat2("Image Pos", (float*)&pos, 0.05f, 0.0f, 0.0f, "%.3f", NULL))
+		{
+			if (pos.x - size.x / 2 < canvas->GetPosition().x - canvas->GetSize().x / 2)
+				pos.x = canvas->GetPosition().x - canvas->GetSize().x / 2 + size.x / 2;
+
+			if (pos.x + size.x / 2 > canvas->GetPosition().x + canvas->GetSize().x / 2)
+				pos.x = canvas->GetPosition().x + canvas->GetSize().x / 2 - size.x / 2;
+
+
+			if (pos.y - size.y / 2 < canvas->GetPosition().y - canvas->GetSize().y / 2)
+				pos.y = canvas->GetPosition().y - canvas->GetSize().y / 2 + size.y / 2;
+
+			if (pos.y + size.y / 2 > canvas->GetPosition().y + canvas->GetSize().y / 2)
+				pos.y = canvas->GetPosition().y + canvas->GetSize().y / 2 - size.y / 2;
+
+			image->SetX(pos.x);
+			image->SetY(pos.y);
+		}
+
+		if (ImGui::DragFloat2("Image Size", (float*)&size, 0.05f, 0.0f, 0.0f, "%.3f", NULL))
+		{
+			image->SetW(size.x);
+			image->SetH(size.y);
+		}
+	}
+
+	ImGui::Separator();
+
+}
 
 void E_Inspector::AddComponentCombo(GameObject* selectedGameObject)
 {
-	ImGui::Combo("##", &componentType, "Add Component\0Transform\0Mesh\0Material\0Light\0Camera\0Animator\0Animation\0AudioSource\0AudioListener");
 
-	ImGui::SameLine();
+	ImGui::Combo("##", &componentType, "Add Component\0Transform\0Mesh\0Material\0Light\0Camera\0Animator\0Animation\0RigidBody\0Box Collider\0Sphere Collider\0Capsule Collider\0Particle System\0Canvas\0AudioSource\0AudioListener");
+  ImGui::SameLine();
 
 	if ((ImGui::Button("ADD")))
 	{ 
@@ -940,4 +1402,145 @@ void E_Inspector::TextureDisplay(C_Material* cMaterial)
 
 		ImGui::Image(texId, displaySize, ImVec2(1.0f, 0.0f), ImVec2(0.0f, 1.0f), tint, borderColor);			// ImGui has access to OpenGL's buffers, so only the Texture Id is required.
 	}
+}
+
+void E_Inspector::TextEditorWindow()
+{
+
+	if (showTextEditorWindow)
+	{
+		if (showSaveEditorPopup)
+		{
+			ImGui::OpenPopup("Save Previous File");
+			showSaveEditorPopup = false;
+		}
+
+		if (ImGui::BeginPopupModal("Save Previous File", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+		{
+			ImGui::Text("Do you want to save changes before closing the editor? \n\n");
+			if (ImGui::Button("Save Changes"))
+			{
+				std::string textToSave = editor.GetText();
+				App->fileSystem->Remove(fileToEdit.c_str());
+				App->fileSystem->Save(fileToEdit.c_str(), textToSave.c_str(), editor.GetText().size());
+
+				glDetachShader(shaderToRecompile->shaderProgramID, shaderToRecompile->vertexID);
+				glDetachShader(shaderToRecompile->shaderProgramID, shaderToRecompile->fragmentID);
+				glDeleteProgram(shaderToRecompile->shaderProgramID);
+
+				Importer::Shaders::Import(shaderToRecompile->GetAssetsPath(), shaderToRecompile);
+
+				showSaveEditorPopup = false;
+				showTextEditorWindow = true;
+
+				ImGui::CloseCurrentPopup();
+			}
+			ImGui::SameLine();
+			if (ImGui::Button("Don't Save"))
+			{
+				showSaveEditorPopup = false;
+				showTextEditorWindow = true;
+
+				ImGui::CloseCurrentPopup();
+			}
+			ImGui::EndPopup();
+		}
+		if (ImGui::Begin("Text Editor", &showTextEditorWindow, ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoCollapse))
+		{
+
+			//Update
+			auto cpos = editor.GetCursorPosition();
+			if (ImGui::BeginMenuBar())
+			{
+				if (ImGui::BeginMenu("File"))
+				{
+					if (ImGui::MenuItem("Save"))
+					{
+						std::string textToSave = editor.GetText();
+
+						App->fileSystem->Remove(fileToEdit.c_str());
+						App->fileSystem->Save(fileToEdit.c_str(), textToSave.c_str(), editor.GetText().size());
+
+						glDetachShader(shaderToRecompile->shaderProgramID, shaderToRecompile->vertexID);
+						glDetachShader(shaderToRecompile->shaderProgramID, shaderToRecompile->fragmentID);
+						glDeleteProgram(shaderToRecompile->shaderProgramID);
+
+						Importer::Shaders::Import(shaderToRecompile->GetAssetsPath(), shaderToRecompile);
+					}
+
+					ImGui::EndMenu();
+				}
+				if (ImGui::BeginMenu("Edit"))
+				{
+					bool ro = editor.IsReadOnly();
+					if (ImGui::MenuItem("Read-only mode", nullptr, &ro))
+						editor.SetReadOnly(ro);
+					ImGui::Separator();
+
+					if (ImGui::MenuItem("Undo", "ALT-Backspace", nullptr, !ro && editor.CanUndo()))
+						editor.Undo();
+					if (ImGui::MenuItem("Redo", "Ctrl-Y", nullptr, !ro && editor.CanRedo()))
+						editor.Redo();
+
+					ImGui::Separator();
+
+					if (ImGui::MenuItem("Copy", "Ctrl-C", nullptr, editor.HasSelection()))
+						editor.Copy();
+					if (ImGui::MenuItem("Cut", "Ctrl-X", nullptr, !ro && editor.HasSelection()))
+						editor.Cut();
+					if (ImGui::MenuItem("Delete", "Del", nullptr, !ro && editor.HasSelection()))
+						editor.Delete();
+					if (ImGui::MenuItem("Paste", "Ctrl-V", nullptr, !ro && ImGui::GetClipboardText() != nullptr))
+						editor.Paste();
+
+					ImGui::Separator();
+
+					if (ImGui::MenuItem("Select all", nullptr, nullptr))
+						editor.SetSelection(TextEditor::Coordinates(), TextEditor::Coordinates(editor.GetTotalLines(), 0));
+
+					ImGui::EndMenu();
+				}
+				if (ImGui::BeginMenu("View")) //Might not be necessary? 
+				{
+					if (ImGui::MenuItem("Dark palette"))
+						editor.SetPalette(TextEditor::GetDarkPalette());
+					if (ImGui::MenuItem("Light palette"))
+						editor.SetPalette(TextEditor::GetLightPalette());
+					if (ImGui::MenuItem("Retro blue palette"))
+						editor.SetPalette(TextEditor::GetRetroBluePalette());
+					ImGui::EndMenu();
+				}
+				ImGui::EndMenuBar();
+			}
+
+			ImGui::Text("%6d/%-6d %6d lines  | %s | %s | %s | %s", cpos.mLine + 1, cpos.mColumn + 1, editor.GetTotalLines(),
+				editor.IsOverwrite() ? "Ovr" : "Ins",
+				editor.CanUndo() ? "*" : " ",
+				editor.GetLanguageDefinition().mName.c_str(), fileToEdit.c_str());
+
+			editor.Render("TextEditor");
+			ImGui::End();
+		}
+	}
+}
+
+void E_Inspector::CallTextEditor(C_Material* cMaterial)
+{
+	//Only Handles GLSL
+	TextEditor::LanguageDefinition lang = TextEditor::LanguageDefinition::GLSL();
+
+	fileToEdit = cMaterial->GetShader()->GetAssetsPath();
+	editor.SetShowWhitespaces(false);
+
+	std::ifstream t(fileToEdit.c_str());
+	if (t.good())
+	{
+		std::string str((std::istreambuf_iterator<char>(t)), std::istreambuf_iterator<char>());
+		editor.SetText(str);
+	}
+
+	showSaveEditorPopup = true;
+	showTextEditorWindow = true;
+
+	shaderToRecompile = cMaterial->GetShader();
 }

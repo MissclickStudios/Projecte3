@@ -55,6 +55,11 @@ const char* Component::GetNameFromType() const
 	case ComponentType::ANIMATION: { return "Animation"; }		break;
 	case ComponentType::AUDIOSOURCE: {return "Audio Source";} break;
 	case ComponentType::AUDIOLISTENER: {return "Audio Listener"; } break;
+	case ComponentType::RIGIDBODY:		  { return "RigidBody"; }			break;
+	case ComponentType::BOX_COLLIDER:	  { return "Box Collider"; }		break;
+	case ComponentType::SPHERE_COLLIDER:  { return "Sphere  Collider"; }	break;
+	case ComponentType::CAPSULE_COLLIDER: { return "Capsule Collider"; }	break;
+	case ComponentType::CANVAS:			{ return "Canvas"; }		break;
 	}
 	return "NONE";
 }
@@ -74,7 +79,7 @@ bool Component::IsActive() const
 	return isActive;
 }
 
-void Component::SetIsActive(const bool& setTo)
+void Component::SetIsActive(bool setTo)
 {
 	isActive = setTo;
 }

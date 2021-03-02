@@ -4,16 +4,6 @@ Here it is a list with some of the conventions used in this project:
 
 ## Project Conventions:
 
-### Pushes:
-
-- They should be regular, clean and concise.
-- If there is a pushed feature that requires caution from others it should be explained in the push description.
-- Users should caution whenever they are going to work on or modify a file that is not expected of them to change.
-
-### Issues:
-
-- For bug/crash reporting GitHub issues will be used, follow the guidelines defined by Docs/Issues/issues_guidelines.md .
-
 ### Folders:
 
 Folder Name | TitleCase | `Assets`
@@ -63,8 +53,6 @@ Ternary Operator | (condition)? result1 : result2 | `printf("Value is 0: %s", (v
   int maxFPS = 60;
   ```
 
-  
-
  - Children of main classes will be named with X_ after the TitleCase name. X Being the first letter of the parent class.
 
   ```c++
@@ -93,12 +81,13 @@ Ternary Operator | (condition)? result1 : result2 | `printf("Value is 0: %s", (v
 
  - Project uses aligned braces or curly brackets:
 
-   ```c++
-   void SomeFunction()
-   {
-   	// TODO: Do something here!
-   }
-   ```
+```c++
+void SomeFunction()
+{
+   // TODO: Do something here!
+}
+```
+
  - if() statements with only one line of code:
 ```c++
 if(a >= 1)
@@ -115,6 +104,20 @@ switch (type)
 }
 ```
 
+## If() statements
+
+If condition consists of checking a bool, use it as follows:
+
+```
+if(isTrue && !loading)
+{
+    //Do stuff here
+}
+```
+
+### LOGS
+
+To be discussed
 
 
 ### Others:

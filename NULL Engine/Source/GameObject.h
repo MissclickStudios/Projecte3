@@ -73,7 +73,7 @@ public:																									// --- GAME OBJECT GETTERS AND SETTERS
 
 public:																									// --- COMPONENT GETTERS AND SETTERS
 	Component*		CreateComponent						(ComponentType type);							// Creates a component of the given type and adds it to the components vector.
-	bool			DeleteComponent						(Component* componentToDelete);				// Deletes the given component from the Components vector. Returs False on ERROR.
+	bool			DeleteComponent						(Component* componentToDelete);					// Deletes the given component from the Components vector. Returs False on ERROR.
 	
 	const std::vector<Component*>&	GetAllComponents	() const;										// 
 	bool							GetAllComponents	(std::vector<Component*>& components) const;	// 
@@ -90,10 +90,11 @@ public:																									// --- COMPONENT GETTERS AND SETTERS
 
 		for (uint i = 0; i < components.size(); ++i)
 		{
-			if (components[i]->GetType() == type)
-			{
-				return (T*)components[i];
-			}
+			if(components[i])
+				if (components[i]->GetType() == type)
+				{
+					return (T*)components[i];
+				}
 		}
 
 		return nullptr;
@@ -114,6 +115,10 @@ public:																									// --- COMPONENT GETTERS AND SETTERS
 		case ComponentType::ANIMATION:	{ return "Animation"; } break;
 		case ComponentType::AUDIOSOURCE: { return "Audio Source"; } break;
 		case ComponentType::AUDIOLISTENER:	{ return "Audio Listener"; } break;
+		case ComponentType::RIGIDBODY:			{ return "RigidBody"; }			break;
+		case ComponentType::BOX_COLLIDER:		{ return "Box Collider"; }		break;
+		case ComponentType::SPHERE_COLLIDER:	{ return "Sphere Collider"; }	break;
+		case ComponentType::CAPSULE_COLLIDER:	{ return "Capsule Collider"; }	break;
 		}
 
 		return "NONE";

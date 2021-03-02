@@ -156,7 +156,7 @@ UpdateStatus M_Input::PreUpdate(float dt)
 			case SDL_WINDOWEVENT:
 				if (event.window.windowID == SDL_GetWindowID(App->window->GetWindow()))
 				{
-					if (event.window.event == SDL_WINDOWEVENT_RESIZED)
+					if (WindowSizeWasManipulated(event.window.event))
 					{
 						App->renderer->OnResize();
 					}
@@ -289,4 +289,146 @@ int M_Input::GetMouseXWheel() const
 int M_Input::GetMouseYWheel() const
 {
 	return mouseWheelY;
+}
+
+bool M_Input::WindowSizeWasManipulated(Uint8 windowEvent) const
+{
+	return (windowEvent == SDL_WINDOWEVENT_RESIZED
+			/*|| windowEvent == SDL_WINDOWEVENT_SIZE_CHANGED
+			|| windowEvent == SDL_WINDOWEVENT_RESTORED
+			|| windowEvent == SDL_WINDOWEVENT_MAXIMIZED
+			|| windowEvent == SDL_WINDOWEVENT_MINIMIZED*/);
+}
+
+void M_Input::CheckGameControllerState()
+{
+	if (SDL_GameControllerGetAttached(gameController.id))													
+	{
+
+		for (int i = 0; i < SDL_CONTROLLER_BUTTON_MAX; ++i)														
+		{
+			if (SDL_GameControllerGetButton(gameController.id, SDL_GameControllerButton(i)) == SDL_PRESSED)	
+			{
+				if (gameController.buttons[i] == ButtonState::BUTTON_IDLE)
+				{
+					gameController.buttons[i] = ButtonState::BUTTON_DOWN;
+				}
+				else
+				{
+					gameController.buttons[i] = ButtonState::BUTTON_REPEAT;
+				}
+			}
+			else
+			{
+				if (gameController.buttons[i] == ButtonState::BUTTON_DOWN || gameController.buttons[i] == ButtonState::BUTTON_REPEAT)
+				{
+					gameController.buttons[i] = ButtonState::BUTTON_UP;
+				}
+				else
+				{
+					gameController.buttons[i] = ButtonState::BUTTON_IDLE;
+				}
+			}
+		}
+
+		for (int i = 0; i < NUM_CONTROLLER_TRIGGERS; ++i)
+		{
+			int trigger_value = SDL_GameControllerGetAxis(gameController.id, SDL_GameControllerAxis(TRIGGER_INDEX + i));
+
+			if (trigger_value > gameController.max_axis_input_threshold* MAX_AXIS)
+			{
+				if (gameController.triggers[i] == ButtonState::BUTTON_IDLE)
+				{
+					gameController.triggers[i] = ButtonState::BUTTON_DOWN;
+				}
+				else
+				{
+					gameController.triggers[i] = ButtonState::BUTTON_REPEAT;
+				}
+			}
+			else
+			{
+				if (gameController.triggers[i] == ButtonState::BUTTON_DOWN || gameController.triggers[i] == ButtonState::BUTTON_REPEAT)
+				{
+					gameController.triggers[i] = ButtonState::BUTTON_UP;
+				}
+				else
+				{
+					gameController.triggers[i] = ButtonState::BUTTON_IDLE;
+				}
+			}
+		}
+
+		int max_positive_threshold = (int)(gameController.max_axis_input_threshold * MAX_AXIS);			
+		int max_negative_threshold = -(int)(gameController.max_axis_input_threshold * MAX_AXIS);
+		int min_positive_threshold = (int)(gameController.min_axis_input_threshold * MAX_AXIS);
+		int min_negative_threshold = -(int)(gameController.min_axis_input_threshold * MAX_AXIS);
+
+		for (int i = 0; i < NUM_CONTROLLER_AXIS; ++i)
+		{
+			int axis_value = SDL_GameControllerGetAxis(gameController.id, SDL_GameControllerAxis(i));		
+
+			if (abs(axis_value) < gameController.min_axis_input_threshold * MAX_AXIS)
+			{
+				axis_value = 0;																				
+			}
+
+			if (axis_value > max_positive_threshold)														
+			{
+				if (gameController.axis[i] == AxisState::AXIS_IDLE)
+				{
+					gameController.axis[i] = AxisState::POSITIVE_AXIS_DOWN;
+				}
+				else
+				{
+					gameController.axis[i] = AxisState::POSITIVE_AXIS_REPEAT;
+				}
+			}
+			else
+			{
+				if (axis_value < min_positive_threshold && axis_value > min_negative_threshold)			
+				{
+					if (gameController.axis[i] == AxisState::POSITIVE_AXIS_DOWN || gameController.axis[i] == AxisState::POSITIVE_AXIS_REPEAT)
+					{
+						gameController.axis[i] = AxisState::POSITIVE_AXIS_RELEASE;
+					}
+					else
+					{
+						gameController.axis[i] = AxisState::AXIS_IDLE;
+					}
+				}
+			}
+
+			if (axis_value < max_negative_threshold)														
+			{
+				if (gameController.axis[i] == AxisState::AXIS_IDLE)
+				{
+					gameController.axis[i] = AxisState::NEGATIVE_AXIS_DOWN;
+				}
+				else
+				{
+					gameController.axis[i] = AxisState::NEGATIVE_AXIS_REPEAT;
+				}
+			}
+			else if (axis_value > min_negative_threshold&& axis_value < min_positive_threshold)													
+			{
+				if (gameController.axis[i] == AxisState::NEGATIVE_AXIS_DOWN || gameController.axis[i] == AxisState::NEGATIVE_AXIS_REPEAT)
+				{
+					gameController.axis[i] = AxisState::NEGATIVE_AXIS_RELEASE;
+				}
+				else
+				{
+					gameController.axis[i] = AxisState::AXIS_IDLE;
+				}
+			}
+		}
+	}
+	else																											
+	{
+		if (gameController.id != nullptr)																			
+		{
+			SDL_GameControllerClose(gameController.id);
+			gameController.id = nullptr;
+		}
+	}
 }

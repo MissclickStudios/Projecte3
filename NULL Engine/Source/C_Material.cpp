@@ -9,6 +9,7 @@
 
 #include "R_Material.h"
 #include "R_Texture.h"
+#include "R_Shader.h"
 
 #include "GameObject.h"
 
@@ -19,10 +20,11 @@
 C_Material::C_Material(GameObject* owner) : Component(owner, ComponentType::MATERIAL),
 rMaterial(nullptr),
 rTexture(nullptr),
+rShader(nullptr),
 useDefaultTex(false),
 useAlbedoTex(true)
 {
-	//memset(textureMaps, 0, sizeof(uint) * MAX_MAPS);
+	
 }
 
 C_Material::~C_Material()
@@ -83,6 +85,16 @@ bool C_Material::SaveState(ParsonNode& root) const
 		texture.SetString("File", rTexture->GetLibraryFile());
 	}
 
+	// --- R_SHADER ---
+	if (rShader != nullptr)
+	{
+		ParsonNode shader = root.SetNode("Shader");
+
+		shader.SetNumber("UID", rShader->GetUID());
+		shader.SetString("Name", rShader->GetAssetsFile());
+		shader.SetString("Path", rShader->GetLibraryPath());
+		shader.SetString("File", rShader->GetLibraryFile());
+	}
 	return ret;
 }
 
@@ -92,9 +104,11 @@ bool C_Material::LoadState(ParsonNode& root)
 
 	rMaterial = nullptr;
 	rTexture = nullptr;
+	rShader = nullptr;
 
 	ParsonNode materialNode	= root.GetNode("Material");
 	ParsonNode textureNode = root.GetNode("Texture");
+	ParsonNode shaderNode = root.GetNode("Shader");
 	
 	if (materialNode.NodeIsValid())
 	{
@@ -126,6 +140,19 @@ bool C_Material::LoadState(ParsonNode& root)
 		LOG("[WARNING] Loading Scene: Could not find any Texture for %s! Check whether or not this is intended.", this->GetOwner()->GetName());
 	}
 
+	if (shaderNode.NodeIsValid())
+	{
+		std::string shader_assets_path = ASSETS_SHADERS_PATH + std::string(shaderNode.GetString("Name"));
+		App->resourceManager->AllocateResource((uint32)shaderNode.GetNumber("UID"), shader_assets_path.c_str());
+
+		rShader = (R_Shader*)App->resourceManager->RequestResource((uint32)shaderNode.GetNumber("UID"));
+
+		if (rShader == nullptr)
+		{
+			LOG("[ERROR] Loading Scene: Could not find Texture %s with UID: %u! Try reimporting the model.", shaderNode.GetString("File"), (uint32)shaderNode.GetNumber("UID"));
+		}
+	}
+
 	return ret;
 }
 
@@ -138,6 +165,11 @@ R_Material* C_Material::GetMaterial() const
 R_Texture* C_Material::GetTexture() const
 {
 	return rTexture;
+}
+
+R_Shader* C_Material::GetShader() const
+{
+	return rShader;
 }
 
 void C_Material::SetMaterial(R_Material* rMaterial)
@@ -161,6 +193,11 @@ void C_Material::SetTexture(R_Texture* rTexture)
 	this->rTexture = rTexture;
 }
 
+void C_Material::SetShader(R_Shader* rShader)
+{
+	this->rShader = rShader;
+}
+
 Color C_Material::GetMaterialColour()
 {
 	if (rMaterial != nullptr)
@@ -173,7 +210,10 @@ Color C_Material::GetMaterialColour()
 
 void C_Material::SetMaterialColour(const Color& color)
 {
-	rMaterial->diffuseColor = color;
+	if (rMaterial != nullptr)
+	{
+		rMaterial->diffuseColor = color;
+	}
 }
 
 // --- MATERIAL AND TEXTURE GET/SET DATA METHODS
@@ -255,4 +295,14 @@ void C_Material::GetTextureInfo(uint& id, uint& width, uint& height, uint& depth
 	{
 		//LOG("[ERROR] Material Component of %s has no Texture Resource!", owner->GetName());
 	}
+}
+
+uint32 const C_Material::GetShaderProgramID()
+{
+	return rShader->shaderProgramID;
+}
+
+void C_Material::SetShaderProgramID(uint32 ID)
+{
+	rShader->shaderProgramID = ID;
 }

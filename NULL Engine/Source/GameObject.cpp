@@ -20,6 +20,11 @@
 #include "C_Animation.h"
 #include "C_AudioSource.h"
 #include "C_AudioListener.h"
+#include "C_RigidBody.h"
+#include "C_BoxCollider.h"
+#include "C_SphereCollider.h"
+#include "C_CapsuleCollider.h"
+#include "C_Canvas.h"
 
 #include "GameObject.h"
 
@@ -143,10 +148,10 @@ bool GameObject::LoadState(ParsonNode& root)
 	ForceUID((uint)root.GetNumber("UID"));
 	parent_uid = (uint)root.GetNumber("ParentUID");
 
-	name = root.GetString("Name");
-	isActive = root.GetBool("IsActive");
-	isStatic = root.GetBool("IsStatic");
-	is_scene_root = root.GetBool("IsSceneRoot");
+	name				= root.GetString("Name");
+	isActive			= root.GetBool("IsActive");
+	isStatic			= root.GetBool("IsStatic");
+	is_scene_root		= root.GetBool("IsSceneRoot");
 	show_bounding_boxes = root.GetBool("ShowBoundingBoxes");
 
 	// Recalculate AABB and OBB
@@ -160,7 +165,7 @@ bool GameObject::LoadState(ParsonNode& root)
 		if (!componentNode.NodeIsValid())
 			continue;
 		
-		ComponentType type	= (ComponentType)componentNode.GetNumber("Type");
+		ComponentType type	= (ComponentType)(int)componentNode.GetNumber("Type");
 
 		if (type == ComponentType::TRANSFORM)
 		{
@@ -182,6 +187,11 @@ bool GameObject::LoadState(ParsonNode& root)
 			case ComponentType::ANIMATION: { component = new C_Animation(this); }	break;
 			case ComponentType::AUDIOSOURCE: { component = new C_AudioSource(this); } break;
 			case ComponentType::AUDIOLISTENER: { component = new C_AudioListener(this); } break;
+			case ComponentType::RIGIDBODY:			{ component = new C_RigidBody(this); }			break;
+			case ComponentType::BOX_COLLIDER:		{ component = new C_BoxCollider(this); }		break;
+			case ComponentType::SPHERE_COLLIDER:	{ component = new C_SphereCollider(this); }		break;
+			case ComponentType::CAPSULE_COLLIDER:	{ component = new C_CapsuleCollider(this); }	break;
+
 			}
 
 			if (component != nullptr)
@@ -217,8 +227,21 @@ void GameObject::FreeChilds()
 		parent->DeleteChild(this);											// Deleting this GameObject from the childs list of its parent.
 	}
 
-	for (uint i = 0; i < childs.size(); ++i)
+	/*if (parent != nullptr)													// Dirty fix to avoid innecessary calls to GetAllChilds().
 	{
+		std::vector<GameObject*> childsToDelete;
+		GetAllChilds(childsToDelete);
+		for (uint i = 0; i < childsToDelete.size(); ++i)
+		{
+			childsToDelete[i]->parent = nullptr;
+			childsToDelete[i]->to_delete = true;
+		}
+
+		childsToDelete.clear();
+	}*/
+
+	for (uint i = 0; i < childs.size(); ++i)
+	{	
 		if (childs[i] != nullptr)
 		{
 			childs[i]->parent = nullptr;
@@ -264,6 +287,11 @@ float3* GameObject::GetAABBVertices() const
 
 void GameObject::GetRenderers(std::vector<MeshRenderer>& meshRenderers, std::vector<CuboidRenderer>& cuboidRenderers, std::vector<SkeletonRenderer>& skeletonRenderers)
 {
+	/*if (to_delete || (parent != nullptr && parent->to_delete))			// TMP Quickfix. Deleted GameObjects could potentially generate Renderers. Fix the issue at the root later.
+	{
+		return;
+	}*/
+	
 	std::vector<C_Mesh*> cMeshes;
 	GetComponents<C_Mesh>(cMeshes);
 
@@ -456,7 +484,7 @@ void GameObject::GetAllChilds(std::vector<GameObject*>& childs)
 {
 	if (this->childs.empty())
 	{
-		LOG("[WARNING] Game Object: GameObject { %s } did not have any childs!");
+		LOG("[WARNING] Game Object: GameObject { %s } did not have any childs!", this->GetName());
 		return;
 	}
 	
@@ -624,6 +652,11 @@ Component* GameObject::CreateComponent(ComponentType type)
 		LOG("[ERROR] Material Component could not be added to %s! Error: No duplicates allowed!", name.c_str());
 		return nullptr;
 	}
+	if (type == ComponentType::RIGIDBODY && GetComponent<C_RigidBody>() != nullptr)
+	{
+		LOG("[ERROR] RigidBody Component could not be added to %s! Error: No duplicates allowed!", name.c_str());
+		return nullptr;
+	}
 
 	switch(type)
 	{
@@ -636,6 +669,11 @@ Component* GameObject::CreateComponent(ComponentType type)
 	case ComponentType::ANIMATION: { component = new C_Animation(this); }	break;
 	case ComponentType::AUDIOSOURCE: { component = new C_AudioSource(this); } break;
 	case ComponentType::AUDIOLISTENER: {component = new C_AudioListener(this); } break;
+	case ComponentType::RIGIDBODY:			{ component = new C_RigidBody(this); }			break;
+	case ComponentType::BOX_COLLIDER:		{ component = new C_BoxCollider(this); }		break;
+	case ComponentType::SPHERE_COLLIDER:	{ component = new C_SphereCollider(this); }		break;
+	case ComponentType::CAPSULE_COLLIDER:	{ component = new C_CapsuleCollider(this); }	break;
+	case ComponentType::CANVAS:				{component = new C_Canvas(this); } break;
 	}
 
 	if (component != nullptr)

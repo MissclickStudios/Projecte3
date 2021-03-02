@@ -962,7 +962,7 @@ void C_Animator::SetCurrentClip(AnimatorClip* clip)
 	auto bones = animationBones.find(clip->GetAnimation()->GetUID());
 	if (bones == animationBones.end())
 	{
-		LOG("%s! Error: Could not find the Bones of the Clip's animation (R_Animation*).");
+		LOG("%s! Error: Could not find the Bones of the Clip's animation (R_Animation*).", errorString.c_str());
 		return;
 	}
 

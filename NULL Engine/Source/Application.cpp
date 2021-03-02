@@ -17,6 +17,8 @@
 #include "M_FileSystem.h"
 #include "M_ResourceManager.h"
 #include "M_Audio.h"
+#include "M_Physics.h"
+#include "M_UISystem.h"
 
 #include "Application.h"
 
@@ -35,6 +37,7 @@ camera			(nullptr),
 fileSystem		(nullptr),
 resourceManager	(nullptr),
 audio			(nullptr)
+uiSystem		(nullptr)
 {
 	//PERF_TIMER_START(perf_timer);
 	
@@ -48,6 +51,8 @@ audio			(nullptr)
 	fileSystem			= new M_FileSystem();
 	resourceManager		= new M_ResourceManager();
 	audio				= new M_Audio();
+	physics				= new M_Physics();
+	uiSystem = new M_UISystem();
 
 	// The order of calls is very important!
 	// Modules will Init() Start() and Update in this order
@@ -60,6 +65,8 @@ audio			(nullptr)
 	AddModule(fileSystem);
 	AddModule(resourceManager);
 	AddModule(audio);
+	AddModule(physics);
+	AddModule(uiSystem);
 
 	// Scenes
 	AddModule(scene);
@@ -251,7 +258,7 @@ void Application::PrepareUpdate()
 {
 	Time::Real::Update();
 
-	if (play || step)
+	if ((play && !pause) || step)
 	{
 		Time::Game::Update();
 		step = false;

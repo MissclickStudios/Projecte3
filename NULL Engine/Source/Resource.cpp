@@ -65,9 +65,12 @@ const char* Resource::GetTypeAsString() const
 {
 	switch (type)
 	{
+	case ResourceType::MODEL:		{ return "MODEL"; }		break;
 	case ResourceType::MESH:		{ return "MESH"; }		break;
 	case ResourceType::MATERIAL:	{ return "MATERIAL"; }	break;
-	case ResourceType::TEXTURE:	{ return "TEXTURE"; }	break;
+	case ResourceType::TEXTURE:		{ return "TEXTURE"; }	break;
+	case ResourceType::ANIMATION:	{ return "ANIMATION"; }	break;
+	case ResourceType::SHADER:		{ return "SHADER"; }	break;
 	}
 
 	return "NONE";
@@ -173,6 +176,11 @@ void Resource::SetLibraryPathAndFile()
 	case ResourceType::SCENE:
 		directory = SCENES_PATH;
 		extension = SCENES_EXTENSION;
+		break;
+
+	case ResourceType::SHADER:
+		directory = SHADERS_PATH;
+		extension = SHADERS_EXTENSION;
 		break;
 	}
 	

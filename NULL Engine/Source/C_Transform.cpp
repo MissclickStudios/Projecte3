@@ -4,6 +4,7 @@
 
 #include "GameObject.h"
 #include "C_Camera.h"
+#include "C_RigidBody.h"
 
 #include "C_Transform.h"
 
@@ -194,6 +195,12 @@ void C_Transform::SyncLocalToWorld()
 	if (cCamera != nullptr)
 	{
 		cCamera->UpdateFrustumTransform();
+	}
+
+	C_RigidBody* c_rigidBody = owner->GetComponent<C_RigidBody>();
+	if (c_rigidBody != nullptr)
+	{
+		c_rigidBody->TransformMovesRigidBody(false);
 	}
 
 	//syncLocalToGlobal = false;

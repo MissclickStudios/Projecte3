@@ -10,6 +10,7 @@ class ParsonNode;
 class Resource;
 
 enum class ResourceType;
+class R_Shader;
 
 typedef unsigned int		uint;
 typedef unsigned __int32	uint32;
@@ -31,7 +32,35 @@ public:
 	bool			SaveConfiguration	(ParsonNode& configuration) const override;
 	bool			LoadConfiguration	(ParsonNode& configuration) override;
 
-public:																												// --- ASSETS MONITORING METHODS ---
+public:																								// --- RESOURCE MANAGER API ---
+	// --- IMPORT FILE METHODS
+	uint32			ImportFile						(const char* assetsPath);						// Imports a file into the Library.
+	uint			SaveResourceToLibrary			(Resource* resource);							// Saves a resource into the Library. Generates a custom file and a .meta file.
+	uint32			LoadFromLibrary					(const char* assetsPath);						// Loads a resource registered in the Library onto memory. Returns the resource's UID.
+	Resource*		GetResourceFromLibrary			(const char* assetsPath);						// Same as LoadFromLibrary() but it returns the resource instead of its UID.
+
+	// --- META FILE METHODS
+	ResourceType	GetTypeFromAssetsExtension		(const char* assetsPath);						// Returns the type of the resource related with the given Asset.
+	bool			GetForcedUIDsFromMeta(const char* assetsPath, std::map<std::string, uint32>& forcedUIDs);						// TMP. See if it can be done another way.
+																																	// Gets the UIDs stored in a .meta and assets path.
+	// --- RESOURCE METHODS
+	Resource*		CreateResource					(ResourceType type, const char* assetsPath = nullptr, uint32 forcedUID = 0);	// Generates a rsrc with the spec. params. No emplace.
+	Resource*		RequestResource					(uint32 UID);									// Returns an active resource with the given UID. Increases the rsrc's references by 1.
+	bool			AllocateResource				(uint32 UID, const char* assetsPath = nullptr);	// Loads the rsrc with the given UID onto memory. LoadFromLibrary() calls this.
+	
+	bool			FreeResource					(uint32 UID);									// Reduces the ref. count of the rsrc with the given UID by 1. If refs = 0, it is dealloc.
+	bool			DeallocateResource				(uint32 UID);									// Deletes an active resource from memory. It still remains in the Library.
+	bool			DeallocateResource				(Resource* resourceToDeallocate);				// Same as the above but directly passing the resource as the argument.
+	bool			DeleteResource					(uint32 UID);									// Completely erases a resource, both from memory and from the library.
+	bool			DeleteResource					(Resource* resourceToDelete);					// Same as the above but directly passing the resource as the argument.
+	
+	void			GetResources					(std::map<uint32, Resource*>& resources) const;	// Returns a map filled with all the resources currently loaded onto memory.
+
+	R_Shader*		GetShader(const char* name);													//Look for a shader in the library and load and return it
+	void			GetAllShaders(std::vector<R_Shader*>& shaders);									//Retrieve all the shaders in the library
+
+	
+private:																															// --- ASSETS MONITORING METHODS ---
 	void			RefreshDirectoryFiles			(const char* directory);
 	void			RefreshDirectory				(const char* directory, std::vector<std::string>& filesToImport, 
 														std::vector<std::string>& filesToUpdate, std::vector<std::string>& filesToDelete);
@@ -50,6 +79,7 @@ public:																												// --- ASSETS MONITORING METHODS ---
 	bool			DeleteFromLibrary				(const char* assetsPath);
 
 	bool			GetResourceUIDsFromMeta						(const char* assetsPath, std::vector<uint32>& resourceUids);
+	//bool			GetForcedUIDsFromMeta						(const char* assetsPath, std::map<std::string, uint32>& forcedUIDs);
 	bool			GetLibraryFilePathsFromMeta					(const char* assetsPath, std::vector<std::string>& filePaths);
 	bool			GetLibraryDirectoryAndExtensionFromType		(const ResourceType& type, std::string& directory, std::string& extension);
 	
@@ -58,21 +88,23 @@ public:																												// --- ASSETS MONITORING METHODS ---
 
 	uint64			GetAssetFileModTimeFromMeta		(const char* assetsPath);
 
-public:																												// --- IMPORT FILE METHODS ---
-	uint32			ImportFile						(const char* assetsPath);										// 
-	uint32			ImportFromAssets				(const char* assetsPath);										// 
-	uint			SaveResourceToLibrary			(Resource* resource);											// 
+private:																											// --- IMPORT FILE METHODS ---
+	//uint32		ImportFile						(const char* assetsPath);										// 
+	//uint32		ImportFromAssets				(const char* assetsPath);										// 
+	//uint			SaveResourceToLibrary			(Resource* resource);											// 
 	
-	uint32			LoadFromLibrary					(const char* assetsPath);										// 
+	//uint32		LoadFromLibrary					(const char* assetsPath);										// 
+
+	uint32			ImportFromAssets				(const char* assetsPath);										// 
 
 	const char*		GetValidPath					(const char* assetsPath);										// 
-	ResourceType	GetTypeFromAssetsExtension		(const char* assetsPath);										// 
+	//ResourceType	GetTypeFromAssetsExtension		(const char* assetsPath);										// 
 	ResourceType	GetTypeFromLibraryExtension		(const char* libraryPath);										// 
 
 	void			SetResourceAssetsPathAndFile	(const char* assetsPath, Resource* resource);					// 
 	void			SetResourceLibraryPathAndFile	(Resource* resource);											// 
 
-public:																												// --- META FILE METHODS ---
+private:																											// --- META FILE METHODS ---
 	bool			SaveMetaFile					(Resource* resource) const;										//
 	ParsonNode		LoadMetaFile					(const char* assetsPath, char** buffer);						// Passing the buffer so it can be safely RELEASED after calling it.
 	
@@ -81,21 +113,6 @@ public:																												// --- META FILE METHODS ---
 	bool			MetaFileIsValid					(ParsonNode& metaRoot);
 	bool			ResourceHasMetaType				(Resource* resource) const;
 
-	Resource*		GetResourceFromMetaFile			(const char* assetsPath);
-
-public:																												// --- RESOURCE METHODS ---
-	Resource*		CreateResource					(ResourceType type, const char* assetsPath = nullptr, const uint32& forcedUid = 0);		// 
-	bool			DeleteResource					(const uint32& uid);																	//
-	bool			DeleteResource					(Resource* resourceToDelete);															// FORCED DELETE
-	void			GetResources					(std::map<uint32, Resource*>& resources) const;											// 
-	
-	Resource*		RequestResource					(const uint32& uid);																	// 
-	bool			FreeResource					(const uint32& uid);																	// 
-	
-	Resource*		AllocateResource				(const uint32& uid, const char* assetsPath = nullptr);									// 
-	bool			DeallocateResource				(const uint32& uid);																	// 
-	bool			DeallocateResource				(Resource* resourceToDeallocate);														// FORCED DEALLOCATE
-	
 private:
 	std::map<uint32, Resource*>		resources;																		// Resources currently in memory.
 	std::map<uint32, std::string>	library;																		// UID and Library Path string of all loaded resources.
