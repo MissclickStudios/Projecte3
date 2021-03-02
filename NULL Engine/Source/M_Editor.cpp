@@ -197,36 +197,6 @@ void M_Editor::AddEditorPanel(EditorPanel* panel)
 
 void M_Editor::EditorShortcuts()
 {
-	if (App->input->GetKey(SDL_SCANCODE_1) == KeyState::KEY_DOWN)
-	{
-		showConfiguration = !showConfiguration;
-	}
-
-	if (App->input->GetKey(SDL_SCANCODE_2) == KeyState::KEY_DOWN)
-	{
-		showHierarchy = !showHierarchy;
-	}
-
-	if (App->input->GetKey(SDL_SCANCODE_3) == KeyState::KEY_DOWN)
-	{
-		showInspector = !showInspector;
-	}
-
-	if (App->input->GetKey(SDL_SCANCODE_4) == KeyState::KEY_DOWN)
-	{
-		showConsole = !showConsole;
-	}
-
-	if (App->input->GetKey(SDL_SCANCODE_8) == KeyState::KEY_DOWN)
-	{
-		showImguiDemo = !showImguiDemo;
-	}
-
-	if (App->input->GetKey(SDL_SCANCODE_9) == KeyState::KEY_DOWN)
-	{
-		showAboutPopup = !showAboutPopup;
-	}
-
 	if (App->input->GetKey(SDL_SCANCODE_ESCAPE) == KeyState::KEY_DOWN)
 	{
 		if (showAboutPopup || showLoadFilePopup)
@@ -242,11 +212,36 @@ void M_Editor::EditorShortcuts()
 
 	if (App->input->GetKey(SDL_SCANCODE_LCTRL) == KeyState::KEY_REPEAT)
 	{
+		if (App->input->GetKey(SDL_SCANCODE_1) == KeyState::KEY_DOWN)
+		{
+			showConfiguration = !showConfiguration;
+		}
+		if (App->input->GetKey(SDL_SCANCODE_2) == KeyState::KEY_DOWN)
+		{
+			showHierarchy = !showHierarchy;
+		}
+		if (App->input->GetKey(SDL_SCANCODE_3) == KeyState::KEY_DOWN)
+		{
+			showInspector = !showInspector;
+		}
+		if (App->input->GetKey(SDL_SCANCODE_4) == KeyState::KEY_DOWN)
+		{
+			showConsole = !showConsole;
+		}
+		if (App->input->GetKey(SDL_SCANCODE_8) == KeyState::KEY_DOWN)
+		{
+			showImguiDemo = !showImguiDemo;
+		}
+		if (App->input->GetKey(SDL_SCANCODE_9) == KeyState::KEY_DOWN)
+		{
+			showAboutPopup = !showAboutPopup;
+		}
+		
+
 		if (App->input->GetKey(SDL_SCANCODE_S) == KeyState::KEY_DOWN)
 		{
 			App->scene->SaveScene();
 		}
-
 		if (App->input->GetKey(SDL_SCANCODE_O) == KeyState::KEY_DOWN)
 		{
 			showLoadFilePopup = true;
@@ -285,8 +280,8 @@ bool M_Editor::RenderEditorPanels() const
 	ImGuiIO& io = ImGui::GetIO();
 
 	ImGui::Render();
-	glViewport(0, 0, (int)io.DisplaySize.x, (int)io.DisplaySize.y);
-	glClearColor(clearColor.x, clearColor.y, clearColor.z, clearColor.w);
+	//glViewport(0, 0, (int)io.DisplaySize.x, (int)io.DisplaySize.y);
+	//glClearColor(clearColor.x, clearColor.y, clearColor.z, clearColor.w);
 	//glClear(GL_COLOR_BUFFER_BIT);
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
@@ -333,6 +328,8 @@ bool M_Editor::InitializeImGui() const
 
 	ImGui_ImplSDL2_InitForOpenGL(App->window->GetWindow(), App->renderer->context);				// Setting up Platform/Renderer bindings
 	ImGui_ImplOpenGL3_Init(0);																	// -------------------------------------
+
+	glClearColor(clearColor.x, clearColor.y, clearColor.z, clearColor.w);
 
 	return ret;
 }
@@ -499,7 +496,21 @@ void M_Editor::GetEngineIconsThroughEditor(Icons& engineIcons)
 
 void M_Editor::LoadResourceIntoSceneThroughEditor()
 {
-	App->scene->LoadResourceIntoScene(project->GetDraggedResource());
+	const char* draggedAssetPath = project->GetDraggedAsset();
+	if (draggedAssetPath != nullptr)
+	{
+		Resource* draggedResource = App->resourceManager->GetResourceFromLibrary(draggedAssetPath);
+		if (draggedResource != nullptr)
+		{
+			App->scene->LoadResourceIntoScene(draggedResource);
+		}
+	}
+	else
+	{
+		LOG("[ERROR] DRAGGED PATH WAS NULLPTR!!!");
+	}
+	
+	//App->scene->LoadResourceIntoScene(project->GetDraggedResource());
 }
 
 void M_Editor::GetResourcesThroughEditor(std::map<uint32, Resource*>& resources) const

@@ -10,6 +10,7 @@
 class ParsonNode;
 class R_Material;
 class R_Texture;
+class R_Shader;
 class GameObject;
 
 struct Texture;
@@ -44,11 +45,13 @@ public:
 public:																						// --- GET/SET RESOURCES
 	R_Material* GetMaterial() const;
 	R_Texture* GetTexture() const;
-
+	R_Shader*  GetShader() const;
+	
 	void SetMaterial(R_Material* material);
 	void SetTexture(R_Texture* texture);
-
-public:																						// --- GET/SET COMPONENT MATERIAL VARIABLES
+	void SetShader(R_Shader* rShader);
+																							// --- GET/SET COMPONENT MATERIAL VARIABLES
+	
 	Color GetMaterialColour();
 	void SetMaterialColour(const Color& newColour);
 	void SetMaterialColour(float r, float g, float b, float a);
@@ -58,8 +61,7 @@ public:																						// --- GET/SET COMPONENT MATERIAL VARIABLES
 		 
 	bool UseDefaultTexture() const;
 	void SetUseDefaultTexture(const bool& setTo);
-
-public:																						//  --- GET RESOURCE TEXTURE DATA
+																							//  --- GET RESOURCE TEXTURE DATA
 	const char* GetTexturePath() const;
 	const char* GetTextureFile() const;
 
@@ -68,6 +70,9 @@ public:																						//  --- GET RESOURCE TEXTURE DATA
 		 
 	void GetTextureInfo(uint& id, uint& width, uint& height, uint& depth, uint& bpp, uint& bytes, std::string& format, bool& compressed);
 
+	uint32 const GetShaderProgramID();
+	void SetShaderProgramID(uint32 ID);
+	
 public:
 	//std::vector<R_Texture*>		textures;												// Will store all the textures that this component can have.
 	//std::vector<uint>				texture_ids;											// Will store all the Texture Id's related with this Material Component.
@@ -76,11 +81,12 @@ public:
 	//TEXTURE_MAP					current_map;
 
 private:
-	R_Material* rMaterial;													// Currently used material.
-	R_Texture* rTexture;													// Currently used texture.
+	R_Material*	rMaterial;													// Currently used material.
+	R_Texture*	rTexture;													// Currently used texture.
+	R_Shader*	rShader;
 
-	bool useDefaultTex;
-	bool useAlbedoTex;
+	bool		useDefaultTex;
+	bool		useAlbedoTex;
 };
 
 #endif // !__C_MATERIAL_H__

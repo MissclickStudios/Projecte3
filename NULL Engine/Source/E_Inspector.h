@@ -2,7 +2,8 @@
 #define __E_INSPECTOR_H__
 
 #include "EditorPanel.h"
-
+#include "TextEditor.h"
+#include <vector>
 class GameObject;
 class Component;
 class C_Transform;
@@ -18,6 +19,7 @@ class C_SphereCollider;
 class C_CapsuleCollider;
 
 class Resource;
+class R_Shader;
 class ModelSettings;
 class MeshSettings;
 class MaterialSettings;
@@ -52,6 +54,9 @@ private:
 	void AddComponentCombo				(GameObject* selectedGameObject);					// 
 	void DeleteComponentPopup			(GameObject* selectedGameObject);					// 
 
+	void TextEditorWindow();
+	void CallTextEditor(C_Material* cMaterial);
+
 	// ------- DRAW COMPONENT METHODS -------
 	void DisplayTextureData				(C_Material* cMaterial);							// Will display the texture's width, height, depth...
 	void TextureDisplay					(C_Material* cMaterial);							// Will display the texture as an image through Dear ImGui.
@@ -67,11 +72,20 @@ private:
 
 private:
 	bool		showDeleteComponentPopup;
+	bool		showTextEditorWindow;
+	bool		showSaveEditorPopup;
 	int			componentType;
 
 	int			mapToDisplay;
 
 	Component*	componentToDelete;
+
+	//Shader inspector utilities
+
+	std::vector<R_Shader*>	allShaders;
+	R_Shader*				shaderToRecompile;
+	TextEditor				editor;
+	std::string				fileToEdit;
 };
 
 #endif // !__E_INSPECTOR_H__

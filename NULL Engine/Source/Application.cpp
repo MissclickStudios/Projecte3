@@ -250,7 +250,7 @@ void Application::PrepareUpdate()
 {
 	Time::Real::Update();
 
-	if (play || step)
+	if ((play && !pause) || step)
 	{
 		Time::Game::Update();
 		step = false;

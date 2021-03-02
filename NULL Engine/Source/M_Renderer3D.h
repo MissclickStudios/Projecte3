@@ -7,6 +7,8 @@
 #include "MathGeoLib/include/Geometry/LineSegment.h"
 #include "MathGeoLib/include/Geometry/Triangle.h"
 
+#include "SkyBox.h"
+
 #include "Icons.h"
 
 #include "Module.h"
@@ -19,6 +21,7 @@ class R_Model;
 class R_Mesh;
 class R_Material;
 class R_Texture;
+class R_Shader;
 
 class C_Mesh;	
 class C_Material;
@@ -62,6 +65,10 @@ struct MeshRenderer
 	
 	void ApplyTextureAndMaterial	();
 	void ClearTextureAndMaterial	();
+
+	void ApplyShader();
+	uint32 SetDefaultShader(C_Material* cMaterial);
+	void ClearShader();
 
 	float4x4	transform;
 	C_Mesh*		cMesh;
@@ -144,7 +151,7 @@ public:
 	void			RenderScene					();
 
 public:																											// --- RENDER GEOMETRY
-	void			GenerateBuffers				(const R_Mesh* rMesh);
+	//void			GenerateBuffers				(const R_Mesh* rMesh);
 		
 	void			DrawWorldGrid				(const int& size);
 	void			DrawWorldAxis				();
@@ -254,6 +261,7 @@ public:																											// --- DEBUG GET/SET METHODS
 public:
 	Light					lights[MAX_LIGHTS];																	// 
 	SDL_GLContext			context;																			// 
+	R_Shader*				defaultShader = nullptr;
 
 	std::vector<Primitive*>	primitives;
 
@@ -261,7 +269,10 @@ private:
 	std::vector<MeshRenderer>		meshRenderers;
 	std::vector<CuboidRenderer>		cuboidRenderers;
 	std::vector<SkeletonRenderer>	skeletonRenderers;
+
+	Skybox					defaultSkyBox;
 	
+
 	Icons					engineIcons;
 
 	uint					sceneFramebuffer;
