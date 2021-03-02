@@ -1574,6 +1574,7 @@ bool M_ResourceManager::DeallocateResource(Resource* resourceToDeallocate)
 
 R_Shader* M_ResourceManager::GetShader(const char* name)
 {
+
 	R_Shader* tempShader = nullptr;
 
 	std::string defaultPath = ASSETS_SHADERS_PATH + std::string(name) + SHADERS_EXTENSION; 

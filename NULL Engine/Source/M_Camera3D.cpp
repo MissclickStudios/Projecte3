@@ -162,8 +162,11 @@ UpdateStatus M_Camera3D::Update(float dt)
 
 		if (App->input->GetKey(SDL_SCANCODE_F) == KeyState::KEY_DOWN)
 		{
-			float3 target = App->scene->GetSelectedGameObject()->GetComponent<C_Transform>()->GetWorldPosition();
-			Focus(target);
+			if (App->scene->GetSelectedGameObject() != nullptr)
+			{
+				float3 target = App->scene->GetSelectedGameObject()->GetComponent<C_Transform>()->GetWorldPosition();
+				Focus(target);
+			}
 		}
 	}
 

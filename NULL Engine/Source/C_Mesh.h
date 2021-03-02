@@ -53,6 +53,8 @@ private:
 
 	bool showWireframe;
 	bool showBoundingBox;
+
+	std::vector<float4x4> boneTransforms;
 };
 
 #endif // !__C_MESH_H__

@@ -547,7 +547,7 @@ void E_Configuration::RendererFlags()
 	bool renderWorldGrid			= App->renderer->GetRenderWorldGrid();
 	bool renderWorldAxis			= App->renderer->GetRenderWorldAxis();
 	bool renderWireframes			= App->renderer->GetRenderWireframes();
-	bool renderWertexNormals		= App->renderer->GetRenderVertexNormals();
+	bool renderVertexNormals		= App->renderer->GetRenderVertexNormals();
 	bool renderFaceNormals			= App->renderer->GetRenderFaceNormals();
 	bool renderBoundingBoxes		= App->renderer->GetRenderBoundingBoxes();
 	bool renderSkeletons			= App->renderer->GetRenderSkeletons();
@@ -572,7 +572,7 @@ void E_Configuration::RendererFlags()
 	if (ImGui::Checkbox("Show World Axis", &renderWorldAxis))						{ App->renderer->SetRenderWorldAxis(renderWorldAxis); }							ImGui::SameLine(colDist);
 	if (ImGui::Checkbox("Show Wireframes", &renderWireframes))						{ App->renderer->SetRenderWireframes(renderWireframes); }
 
-	if (ImGui::Checkbox("Show Vertex Normals", &renderWertexNormals))				{ App->renderer->SetRenderVertexNormals(renderWertexNormals); }					ImGui::SameLine(colDist);
+	if (ImGui::Checkbox("Show Vertex Normals", &renderVertexNormals))				{ App->renderer->SetRenderVertexNormals(renderVertexNormals); }					ImGui::SameLine(colDist);
 	if (ImGui::Checkbox("Show Face Normals", &renderFaceNormals))					{ App->renderer->SetRenderFaceNormals(renderFaceNormals); }
 
 	if (ImGui::Checkbox("Show Bounding Boxes", &renderBoundingBoxes))				{ App->renderer->SetRenderBoundingBoxes(renderBoundingBoxes); }					ImGui::SameLine(colDist);
