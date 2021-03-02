@@ -17,6 +17,7 @@
 #include "M_FileSystem.h"
 #include "M_ResourceManager.h"
 #include "M_Physics.h"
+#include "M_UISystem.h"
 
 #include "Application.h"
 
@@ -33,7 +34,8 @@ editor			(nullptr),
 renderer		(nullptr),
 camera			(nullptr),
 fileSystem		(nullptr),
-resourceManager(nullptr)
+resourceManager	(nullptr),
+uiSystem		(nullptr)
 {
 	//PERF_TIMER_START(perf_timer);
 	
@@ -47,6 +49,7 @@ resourceManager(nullptr)
 	fileSystem			= new M_FileSystem();
 	resourceManager		= new M_ResourceManager();
 	physics				= new M_Physics();
+	uiSystem = new M_UISystem();
 
 	// The order of calls is very important!
 	// Modules will Init() Start() and Update in this order
@@ -59,6 +62,7 @@ resourceManager(nullptr)
 	AddModule(fileSystem);
 	AddModule(resourceManager);
 	AddModule(physics);
+	AddModule(uiSystem);
 
 	// Scenes
 	AddModule(scene);

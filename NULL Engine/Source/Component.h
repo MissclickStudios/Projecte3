@@ -20,7 +20,9 @@ enum class ComponentType
 	BOX_COLLIDER,
 	SPHERE_COLLIDER,
 	CAPSULE_COLLIDER,
-	PARTICLE_SYSTEM
+	PARTICLE_SYSTEM,
+	CANVAS,
+	IMAGE
 };
 
 class Component

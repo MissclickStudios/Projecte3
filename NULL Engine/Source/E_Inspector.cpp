@@ -31,6 +31,9 @@
 #include "R_Shader.h"
 #include "I_Shaders.h"
 
+#include "C_Canvas.h"
+#include "UI_Image.h"
+
 #include "E_Inspector.h"
 
 #include <fstream>
@@ -179,6 +182,7 @@ void E_Inspector::DrawComponents(GameObject* selectedGameObject)
 		case ComponentType::BOX_COLLIDER:		{ DrawBoxColliderComponent((C_BoxCollider*)component); }			break;
 		case ComponentType::SPHERE_COLLIDER:	{ DrawSphereColliderComponent((C_SphereCollider*)component); }		break;
 		case ComponentType::CAPSULE_COLLIDER:	{ DrawCapsuleColliderComponent((C_CapsuleCollider*)component); }	break;
+		case ComponentType::CANVAS: { DrawCanvasComponent((C_Canvas*)component); }				break;
 		}
 
 		if (type == ComponentType::NONE)
@@ -823,6 +827,7 @@ void E_Inspector::DrawAnimationComponent(C_Animation* cAnimation)
 	}
 }
 
+
 void E_Inspector::DrawRigidBodyComponent(C_RigidBody* cRigidBody)
 {
 	bool show = true;
@@ -975,11 +980,108 @@ void E_Inspector::DrawBoxColliderComponent(C_BoxCollider* cCollider)
 			float c[3] = { center.x, center.y, center.z };
 			if (ImGui::InputFloat3("Center##1", c, 4, ImGuiInputTextFlags_EnterReturnsTrue))
 				cCollider->SetCenter(c[0], c[1], c[2]);
+
 		}
 
 		if (!show)
 		{
 			componentToDelete = cCollider;
+
+			showDeleteComponentPopup = true;
+		}
+
+	}
+}
+
+void E_Inspector::DrawCanvasComponent(C_Canvas* cCanvas)
+{
+	static bool show = true;
+	if (ImGui::CollapsingHeader("Canvas", &show, ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		if (cCanvas != nullptr)
+		{
+			bool isActive = cCanvas->IsActive();
+			if (ImGui::Checkbox("Canvas Is Active", &isActive)) { cCanvas->SetIsActive(isActive); }
+
+			bool isInvisible = cCanvas->IsInvisible();
+			if (ImGui::Checkbox("Canvas Is Invisible", &isInvisible)) { cCanvas->SetIsInvisible(isInvisible); }
+
+			ImGui::Separator();
+
+			ImGui::TextColored(Cyan.C_Array(), "Canvas Settings:");
+
+			ImGui::Separator();
+
+			// --- RECT ---
+			float2 size = { cCanvas->GetRect().w, cCanvas->GetRect().h };
+			float2 pivot = { cCanvas->pivot.x, cCanvas->pivot.y };
+
+			if (ImGui::DragFloat2("Rect", (float*)&size, 0.05f, 0.0f, 0.0f, "%.3f", NULL))
+			{
+				cCanvas->SetSize(size);
+
+				if (pivot.x < cCanvas->GetPosition().x - cCanvas->GetSize().x / 2)
+					pivot.x = cCanvas->GetPosition().x - cCanvas->GetSize().x / 2;
+
+				if (pivot.x > cCanvas->GetPosition().x + cCanvas->GetSize().x / 2)
+					pivot.x = cCanvas->GetPosition().x + cCanvas->GetSize().x / 2;
+
+
+				if (pivot.y < cCanvas->GetPosition().y - cCanvas->GetSize().y / 2)
+					pivot.y = cCanvas->GetPosition().y - cCanvas->GetSize().y / 2;
+
+				if (pivot.y > cCanvas->GetPosition().y + cCanvas->GetSize().y / 2)
+					pivot.y = cCanvas->GetPosition().y + cCanvas->GetSize().y / 2;
+
+				cCanvas->pivot.x = pivot.x;
+				cCanvas->pivot.y = pivot.y;
+			}
+
+			// --- PIVOT ---
+			if (ImGui::DragFloat2("Pivot", (float*)&pivot, 0.05f, 0.0f, 0.0f, "%.3f", NULL))
+			{
+
+				if (pivot.x < cCanvas->GetPosition().x - cCanvas->GetSize().x / 2)
+					pivot.x = cCanvas->GetPosition().x - cCanvas->GetSize().x / 2;
+
+				if (pivot.x > cCanvas->GetPosition().x + cCanvas->GetSize().x / 2)
+					pivot.x = cCanvas->GetPosition().x + cCanvas->GetSize().x / 2;
+
+
+				if (pivot.y < cCanvas->GetPosition().y - cCanvas->GetSize().y / 2)
+					pivot.y = cCanvas->GetPosition().y - cCanvas->GetSize().y / 2;
+
+				if (pivot.y > cCanvas->GetPosition().y + cCanvas->GetSize().y / 2)
+					pivot.y = cCanvas->GetPosition().y + cCanvas->GetSize().y / 2;
+
+				cCanvas->pivot.x = pivot.x;
+				cCanvas->pivot.y = pivot.y;
+			}
+
+			if (ImGui::Button("Reset Pivot"))
+				cCanvas->pivot = cCanvas->GetPosition();
+
+			if (ImGui::Button("Add Image"))
+			{
+				UI_Image* image = new UI_Image(cCanvas, { 0,0,100,100 });
+				cCanvas->uiElements.push_back(image);
+			}
+
+			for (std::vector<UIElement*>::iterator uiIt = cCanvas->uiElements.begin(); uiIt != cCanvas->uiElements.end(); uiIt++)
+			{
+				switch ((*uiIt)->GetType())
+				{
+				case UIElementType::NONE: break;
+				case UIElementType::IMAGE: { DrawUIImage((UI_Image*)*uiIt); } break;
+				case UIElementType::TEXT: break;
+				}
+			}
+		}
+
+		if (!show)
+		{
+			componentToDelete = cCanvas;
+
 			showDeleteComponentPopup = true;
 		}
 
@@ -1063,9 +1165,54 @@ void E_Inspector::DrawCapsuleColliderComponent(C_CapsuleCollider* cCollider)
 	}
 }
 
+void E_Inspector::DrawUIImage(UI_Image* image)
+{
+	static bool show = true;
+	if (ImGui::CollapsingHeader("Image", &show, ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		bool isActive = image->IsActive();
+		if (ImGui::Checkbox("Image Is Active", &isActive)) { image->SetIsActive(isActive); }
+
+		ImGui::Separator();
+
+		// --- RECT ---
+		float2 pos = { image->GetRect().x, image->GetRect().y };
+		float2 size = { image->GetRect().w, image->GetRect().h };
+
+		C_Canvas* canvas = image->GetCanvas();
+
+		if (ImGui::DragFloat2("Image Pos", (float*)&pos, 0.05f, 0.0f, 0.0f, "%.3f", NULL))
+		{
+			if (pos.x - size.x / 2 < canvas->GetPosition().x - canvas->GetSize().x / 2)
+				pos.x = canvas->GetPosition().x - canvas->GetSize().x / 2 + size.x / 2;
+
+			if (pos.x + size.x / 2 > canvas->GetPosition().x + canvas->GetSize().x / 2)
+				pos.x = canvas->GetPosition().x + canvas->GetSize().x / 2 - size.x / 2;
+
+
+			if (pos.y - size.y / 2 < canvas->GetPosition().y - canvas->GetSize().y / 2)
+				pos.y = canvas->GetPosition().y - canvas->GetSize().y / 2 + size.y / 2;
+
+			if (pos.y + size.y / 2 > canvas->GetPosition().y + canvas->GetSize().y / 2)
+				pos.y = canvas->GetPosition().y + canvas->GetSize().y / 2 - size.y / 2;
+
+			image->SetX(pos.x);
+			image->SetY(pos.y);
+		}
+
+		if (ImGui::DragFloat2("Image Size", (float*)&size, 0.05f, 0.0f, 0.0f, "%.3f", NULL))
+		{
+			image->SetW(size.x);
+			image->SetH(size.y);
+		}
+	}
+
+	ImGui::Separator();
+}
+
 void E_Inspector::AddComponentCombo(GameObject* selectedGameObject)
 {
-	ImGui::Combo("##", &componentType, "Add Component\0Transform\0Mesh\0Material\0Light\0Camera\0Animator\0Animation\0RigidBody\0Box Collider\0Sphere Collider\0Capsule Collider");
+	ImGui::Combo("##", &componentType, "Add Component\0Transform\0Mesh\0Material\0Light\0Camera\0Animator\0Animation\0RigidBody\0Box Collider\0Sphere Collider\0Capsule Collider\0Canvas");
 
 	ImGui::SameLine();
 

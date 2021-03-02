@@ -16,6 +16,7 @@
 #include "M_FileSystem.h"												
 #include "M_ResourceManager.h"											
 #include "M_Editor.h"													
+#include "M_Scene.h"
 
 #include "R_Mesh.h"														
 #include "R_Material.h"													
@@ -28,8 +29,9 @@
 #include "C_Mesh.h"														
 #include "C_Material.h"													
 #include "C_Camera.h"													
-
-#include "M_Renderer3D.h"												
+										
+#include "UIElement.h"
+#include "M_Renderer3D.h"
 
 #include "MemoryManager.h"
 //////////////////////////////////////////////////
@@ -589,6 +591,9 @@ void M_Renderer3D::RenderScene()
 	RenderCuboids();
 	//RenderRays();
 	RenderSkeletons();
+	RenderUI();
+	
+	
 	
 	if (App->camera->DrawLastRaycast())
 	{
@@ -633,6 +638,36 @@ void M_Renderer3D::DrawWorldGrid(const int& size)
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 }
 
+void M_Renderer3D::RenderUI()
+{
+	for (std::vector<GameObject*>::iterator it = App->scene->GetGameObjects()->begin(); it != App->scene->GetGameObjects()->end(); it++)
+	{
+		C_Canvas* canvasIt = (*it)->GetComponent<C_Canvas>();
+		if (canvasIt != nullptr && canvasIt->IsActive())
+		{
+			if (!canvasIt->uiElements.empty())
+			{
+				for (std::vector<UIElement*>::iterator uiIt = canvasIt->uiElements.begin(); uiIt != canvasIt->uiElements.end(); uiIt++)
+				{
+					(*uiIt)->Update();
+				}
+			}
+
+			if (!canvasIt->IsInvisible())
+			{
+				if (App->camera->currentCamera != App->camera->masterCamera->GetComponent<C_Camera>())
+				{
+					canvasIt->Draw2D();
+				}
+				else
+				{
+					canvasIt->Draw3D();
+				}
+			}	
+		}
+	}
+}
+
 void M_Renderer3D::DrawWorldAxis()
 {
 	glLineWidth(2.0f);
@@ -640,21 +675,21 @@ void M_Renderer3D::DrawWorldAxis()
 	glBegin(GL_LINES);
 
 	glColor4f(1.0f, 0.0f, 0.0f, 1.0f);											// X Axis.
-	glVertex3f(0.0f, 0.0f, 0.0f);		glVertex3f(1.0f,  0.0f, 0.0f);
+	glVertex3f(0.0f, 0.0f, 0.0f);		glVertex3f(1.0f, 0.0f, 0.0f);
 	glVertex3f(1.0f, 0.1f, 0.0f);		glVertex3f(1.1f, -0.1f, 0.0f);
 	glVertex3f(1.1f, 0.1f, 0.0f);		glVertex3f(1.0f, -0.1f, 0.0f);
 
 	glColor4f(0.0f, 1.0f, 0.0f, 1.0f);											// Y Axis.
-	glVertex3f( 0.0f,  0.0f,  0.0f);	glVertex3f(0.0f, 1.0f,  0.0f);
+	glVertex3f(0.0f, 0.0f, 0.0f);	glVertex3f(0.0f, 1.0f, 0.0f);
 	glVertex3f(-0.05f, 1.25f, 0.0f);	glVertex3f(0.0f, 1.15f, 0.0f);
-	glVertex3f( 0.05f, 1.25f, 0.0f);	glVertex3f(0.0f, 1.15f, 0.0f);
-	glVertex3f( 0.0f,  1.15f, 0.0f);	glVertex3f(0.0f, 1.05f, 0.0f);
+	glVertex3f(0.05f, 1.25f, 0.0f);	glVertex3f(0.0f, 1.15f, 0.0f);
+	glVertex3f(0.0f, 1.15f, 0.0f);	glVertex3f(0.0f, 1.05f, 0.0f);
 
 	glColor4f(0.0f, 0.0f, 1.0f, 1.0f);											// Z Axis.
-	glVertex3f( 0.0f,   0.0f, 0.0f);	glVertex3f( 0.0f,   0.0f, 1.0f);
-	glVertex3f(-0.05f,  0.1f, 1.05f);	glVertex3f( 0.05f,  0.1f, 1.05f);
-	glVertex3f( 0.05f,  0.1f, 1.05f);	glVertex3f(-0.05f, -0.1f, 1.05f);
-	glVertex3f(-0.05f, -0.1f, 1.05f);	glVertex3f( 0.05f, -0.1f, 1.05f);
+	glVertex3f(0.0f, 0.0f, 0.0f);	glVertex3f(0.0f, 0.0f, 1.0f);
+	glVertex3f(-0.05f, 0.1f, 1.05f);	glVertex3f(0.05f, 0.1f, 1.05f);
+	glVertex3f(0.05f, 0.1f, 1.05f);	glVertex3f(-0.05f, -0.1f, 1.05f);
+	glVertex3f(-0.05f, -0.1f, 1.05f);	glVertex3f(0.05f, -0.1f, 1.05f);
 
 	glEnd();
 

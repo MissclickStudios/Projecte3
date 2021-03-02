@@ -17,6 +17,7 @@ class C_RigidBody;
 class C_BoxCollider;
 class C_SphereCollider;
 class C_CapsuleCollider;
+class C_Canvas;
 
 class Resource;
 class R_Shader;
@@ -25,6 +26,7 @@ class MeshSettings;
 class MaterialSettings;
 class TextureSettings;
 class AnimationSettings;
+class UI_Image;
 
 class E_Inspector : public EditorPanel
 {
@@ -50,6 +52,9 @@ private:
 	void DrawBoxColliderComponent		(C_BoxCollider* cCollider);
 	void DrawSphereColliderComponent	(C_SphereCollider* cCollider);
 	void DrawCapsuleColliderComponent	(C_CapsuleCollider* cCollider);
+	void DrawCanvasComponent			(C_Canvas* cCanvas);
+	void DrawUIImage					(UI_Image* image);
+
 
 	void AddComponentCombo				(GameObject* selectedGameObject);					// 
 	void DeleteComponentPopup			(GameObject* selectedGameObject);					// 

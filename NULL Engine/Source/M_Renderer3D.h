@@ -162,6 +162,7 @@ public:																											// --- RENDER GEOMETRY
 	void			RenderCuboids				();
 	void			RenderRays					();
 	void			RenderSkeletons				();
+	void			RenderUI();
 	void			DeleteFromMeshRenderers		(C_Mesh* cMeshToDelete);
 	void			DeleteFromMeshRenderers		(R_Mesh* rMeshToDelete);
 	void			DeleteFromCuboids			(float3* cuboidToDelete);

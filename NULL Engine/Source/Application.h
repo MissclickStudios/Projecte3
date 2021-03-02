@@ -19,6 +19,7 @@ class M_Camera3D;
 class M_FileSystem;
 class M_ResourceManager;
 class M_Physics;
+class M_UISystem;
 
 class Application
 {
@@ -76,6 +77,7 @@ public:
 	M_FileSystem*			fileSystem;
 	M_ResourceManager*		resourceManager;
 	M_Physics*				physics;
+	M_UISystem*				uiSystem;
 
 	bool					play;
 	bool					pause;														// Will keep track of whether or not the applcation is currently paused.
