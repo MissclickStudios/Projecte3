@@ -39,6 +39,7 @@ public:
 	float2 GetPosition() const;
 	float2 GetSize() const;
 	Rect GetRect() const;
+	bool IsInvisible() const;
 	float GetZ() const;
 
 	void SetPosition(const float2& postion);
@@ -47,7 +48,6 @@ public:
 	void SetIsInvisible(const bool setTo);
 	void SetZ(const float& z);
 
-	bool IsInvisible() const;
 
 
 	//Temp. here

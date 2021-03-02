@@ -22,7 +22,6 @@
 #include "C_Animator.h"
 #include "C_Animation.h"
 #include "C_Canvas.h"
-#include "C_Transform2D.h"
 
 #include "UI_Image.h"
 
@@ -833,7 +832,7 @@ void E_Inspector::DrawCanvasComponent(C_Canvas* cCanvas)
 				{
 				case UIElementType::NONE: break;
 				case UIElementType::IMAGE: { DrawUIImage((UI_Image*)*uiIt); } break;
-				case UIElementType::BUTTON: break;
+				case UIElementType::TEXT: break;
 				}
 			}
 		}

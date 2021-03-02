@@ -16,7 +16,7 @@ const char* UIElement::GetNameFromType() const
 	{
 	case UIElementType::NONE: { return "NONE"; } break;
 	case UIElementType::IMAGE: { return "Image"; } break;
-	case UIElementType::BUTTON: { return "Button"; } break;
+	case UIElementType::TEXT: { return "Text"; } break;
 	}
 
 	return "NONE";

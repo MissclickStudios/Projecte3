@@ -17,7 +17,6 @@ enum class ComponentType
 	ANIMATOR,
 	ANIMATION,
 	CANVAS,
-	TRANSFORM2D,
 	IMAGE
 };
 

@@ -6,7 +6,7 @@
 enum class UIElementType
 {
 	NONE,
-	BUTTON,
+	TEXT,
 	IMAGE
 };
 

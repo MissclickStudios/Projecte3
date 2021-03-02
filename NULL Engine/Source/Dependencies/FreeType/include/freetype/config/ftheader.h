@@ -107,7 +107,7 @@
    *
    */
 #ifndef FT_CONFIG_CONFIG_H
-#define FT_CONFIG_CONFIG_H  <freetype/config/ftconfig.h>
+#define FT_CONFIG_CONFIG_H  "config/ftconfig.h"
 #endif
 
 
@@ -122,7 +122,7 @@
    *
    */
 #ifndef FT_CONFIG_STANDARD_LIBRARY_H
-#define FT_CONFIG_STANDARD_LIBRARY_H  <freetype/config/ftstdlib.h>
+#define FT_CONFIG_STANDARD_LIBRARY_H  "config/ftstdlib.h"
 #endif
 
 
@@ -137,7 +137,7 @@
    *
    */
 #ifndef FT_CONFIG_OPTIONS_H
-#define FT_CONFIG_OPTIONS_H  <freetype/config/ftoption.h>
+#define FT_CONFIG_OPTIONS_H  "config/ftoption.h"
 #endif
 
 
@@ -153,7 +153,7 @@
    *
    */
 #ifndef FT_CONFIG_MODULES_H
-#define FT_CONFIG_MODULES_H  <freetype/config/ftmodule.h>
+#define FT_CONFIG_MODULES_H  "config/ftmodule.h"
 #endif
 
   /* */
@@ -170,7 +170,7 @@
    *   base FreeType~2 API.
    *
    */
-#define FT_FREETYPE_H  <freetype/freetype.h>
+#define FT_FREETYPE_H  "freetype.h"
 
 
   /*************************************************************************
@@ -185,7 +185,7 @@
    *   It is included by @FT_FREETYPE_H.
    *
    */
-#define FT_ERRORS_H  <freetype/fterrors.h>
+#define FT_ERRORS_H  "fterrors.h"
 
 
   /*************************************************************************
@@ -198,7 +198,7 @@
    *   list of FreeType~2 module error offsets (and messages).
    *
    */
-#define FT_MODULE_ERRORS_H  <freetype/ftmoderr.h>
+#define FT_MODULE_ERRORS_H  "ftmoderr.h"
 
 
   /*************************************************************************
@@ -214,7 +214,7 @@
    *   It is included by @FT_FREETYPE_H.
    *
    */
-#define FT_SYSTEM_H  <freetype/ftsystem.h>
+#define FT_SYSTEM_H  "ftsystem.h"
 
 
   /*************************************************************************
@@ -230,7 +230,7 @@
    *   It is included by @FT_FREETYPE_H.
    *
    */
-#define FT_IMAGE_H  <freetype/ftimage.h>
+#define FT_IMAGE_H  "ftimage.h"
 
 
   /*************************************************************************
@@ -245,7 +245,7 @@
    *   It is included by @FT_FREETYPE_H.
    *
    */
-#define FT_TYPES_H  <freetype/fttypes.h>
+#define FT_TYPES_H  "fttypes.h"
 
 
   /*************************************************************************

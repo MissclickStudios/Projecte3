@@ -38,9 +38,9 @@
 #ifndef FTCONFIG_H_
 #define FTCONFIG_H_
 
-#include <ft2build.h>
-#include FT_CONFIG_OPTIONS_H
-#include FT_CONFIG_STANDARD_LIBRARY_H
+#include "../../ft2build.h"
+#include "ftoption.h"
+#include "ftstdlib.h"
 
 
 FT_BEGIN_HEADER
@@ -457,7 +457,7 @@ FT_BEGIN_HEADER
 
 #ifdef FT2_BUILD_LIBRARY
 
-#if defined( _WINDOWS )
+#if defined( _WIN32 ) && ( defined( _DLL ) || defined( DLL_EXPORT ) )
 #define FT_EXPORT( x )  __declspec( dllexport )  x
 #elif defined( __GNUC__ ) && __GNUC__ >= 4
 #define FT_EXPORT( x )  __attribute__(( visibility( "default" ) ))  x

@@ -3,6 +3,9 @@
 
 #include "Module.h"
 
+#include "Dependencies/FreeType/include/ft2build.h"
+#include "Dependencies/FreeType/include/freetype/freetype.h"
+
 class ParsonNode;
 typedef unsigned int uint;
 
@@ -25,7 +28,10 @@ public:
 	bool SaveConfiguration(ParsonNode& root) const override;
 
 public:
-	
+	//temp
+	FT_Error error;
+	FT_Library libraryFT;
+	FT_Face face;
 
 private:
 	

@@ -7,9 +7,22 @@
 
 #include "M_UISystem.h"
 
+#pragma comment (lib, "Source/Dependencies/FreeType/libx86/freetype.lib")
+
 M_UISystem::M_UISystem(bool isActive) : Module("UISystem", isActive)
 {
+	error = FT_Init_FreeType(&libraryFT);
+	if (error)
+		LOG("Error initiallizing FreeType");
 	
+	// Create a new font
+	error = FT_New_Face(libraryFT, "Assets/Fonts/arial.ttf", 0, &face);
+
+	if (error == FT_Err_Unknown_File_Format) 
+		LOG("Failed to open font: unknown font format");
+	
+	else if (error) 
+		LOG("Failed to open font");
 }
 
 // Destructor

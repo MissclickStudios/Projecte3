@@ -54,7 +54,6 @@ const char* Component::GetNameFromType() const
 	case ComponentType::ANIMATOR:		{ return "Animator"; }		break;
 	case ComponentType::ANIMATION:		{ return "Animation"; }		break;
 	case ComponentType::CANVAS:			{ return "Canvas"; }		break;
-	case ComponentType::TRANSFORM2D:	{return "Transform2D"; }	break;
 	}
 
 	return "NONE";
