@@ -88,7 +88,7 @@ bool R_Model::SaveMeta(ParsonNode& metaRoot) const
 	std::map<uint32, std::string>::const_iterator item;
 	for (item = animations.cbegin(); item != animations.cend(); ++item)
 	{
-		std::string animation_name = item->second;
+		std::string animation_name = item->second + ANIMATIONS_EXTENSION;
 		std::string animation_path = ANIMATIONS_PATH + std::to_string(item->first) + ANIMATIONS_EXTENSION;
 		
 		ParsonNode animation_node = contained_array.SetNode(animation_name.c_str());

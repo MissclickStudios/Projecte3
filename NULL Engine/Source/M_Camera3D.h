@@ -7,6 +7,7 @@
 class ParsonNode;
 class GameObject;
 class C_Camera;
+class C_AudioListener;
 
 class M_Camera3D : public Module
 {

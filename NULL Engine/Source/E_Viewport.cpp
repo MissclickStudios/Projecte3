@@ -15,14 +15,14 @@
 
 E_Viewport::E_Viewport() : EditorPanel("Viewport"),
 texSize			({ 0.0f, 0.0f }),
-texOrigin			({ 0.0f, 0.0f }),
-cursorPos			({ 0.0f, 0.0f }),
+texOrigin		({ 0.0f, 0.0f }),
+cursorPos		({ 0.0f, 0.0f }),
 guizmoOperation	(ImGuizmo::OPERATION::TRANSLATE),
-guizmoMode			(ImGuizmo::MODE::WORLD),
+guizmoMode		(ImGuizmo::MODE::WORLD),
 usingGuizmo		(false),
-sceneFocused		(false),
+sceneFocused	(false),
 gameFocused		(false),
-wantTextInput		(false)
+wantTextInput	(false)
 {
 
 }
@@ -217,7 +217,7 @@ void E_Viewport::ResourceDragAndDropTargetListener()
 {
 	if (ImGui::BeginDragDropTarget())
 	{
-		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DRAGGED_RESOURCE"))
+		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DRAGGED_ASSET"))
 		{
 			App->editor->LoadResourceIntoSceneThroughEditor();
 		}

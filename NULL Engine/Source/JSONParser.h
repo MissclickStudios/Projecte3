@@ -32,12 +32,12 @@ public:
 	bool		Release	();											
 
 public:																
-	int			GetInteger(const const char* name);
+	int			GetInteger(const char* name);
 	double		GetNumber(const char* name) const;	
-	float2		GetFloat2(const const char* name);
-	float3		GetFloat3(const const char* name);
-	float4		GetFloat4(const const char* name);
-	Quat		GetQuat(const const char* name);
+	float2		GetFloat2(const char* name);
+	float3		GetFloat3(const char* name);
+	float4		GetFloat4(const char* name);
+	Quat		GetQuat(const char* name);
 	const char*	GetString(const char* name) const;						
 	bool		GetBool	(const char* name) const;						
 	ParsonArray	GetArray(const char* name) const;						
@@ -45,10 +45,10 @@ public:
 
 	void		SetInteger(const char* name, int number);
 	void		SetNumber(const char* name, double number);	
-	void		SetFloat2(const const char* name, const float2 float2);
-	void		SetFloat3(const const char* name, const float3 float3);
-	void		SetFloat4(const const char* name, const float4 float4);
-	void		SetQuat(const const char* name, const Quat quat);
+	void		SetFloat2(const char* name, const float2 float2);
+	void		SetFloat3(const char* name, const float3 float3);
+	void		SetFloat4(const char* name, const float4 float4);
+	void		SetQuat(const char* name, const Quat quat);
 	void		SetString(const char* name, const char* string);		
 	void		SetBool	(const char* name, bool value);					
 	ParsonArray	SetArray(const char* name);								

@@ -22,6 +22,7 @@ enum class ResourceType
 	ANIMATION,
 	SCENE,
 	SHADER,
+	PARTICLE_SYSTEM,
 	NONE
 };
 

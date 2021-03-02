@@ -16,6 +16,7 @@
 #include "M_FileSystem.h"												
 #include "M_ResourceManager.h"											
 #include "M_Editor.h"													
+#include "M_Scene.h"
 
 #include "R_Mesh.h"														
 #include "R_Material.h"													
@@ -28,8 +29,9 @@
 #include "C_Mesh.h"														
 #include "C_Material.h"													
 #include "C_Camera.h"													
-
-#include "M_Renderer3D.h"												
+										
+#include "UIElement.h"
+#include "M_Renderer3D.h"
 
 #include "MemoryManager.h"
 //////////////////////////////////////////////////
@@ -82,6 +84,8 @@ bool M_Renderer3D::Init(ParsonNode& configuration)
 	//InitFramebuffers();
 	LoadDebugTexture();
 
+
+
 	return ret;
 }
 
@@ -90,6 +94,12 @@ bool M_Renderer3D::Start()
 	bool ret = true;
 
 	InitEngineIcons();
+	
+	//SetUp the Skybox 
+	/*defaultSkyBox.SetUpSkyBoxBuffers();
+
+	defaultSkyBox.CreateSkybox();*/
+
 
 	return ret;
 }
@@ -144,6 +154,9 @@ UpdateStatus M_Renderer3D::PostUpdate(float dt)
 {	
 	BROFILER_CATEGORY("M_Renderer3D PostUpdate", Profiler::Color::Chartreuse);
 	
+	//The Skybox renderer must be the first one always
+	//defaultSkyBox.RenderSkybox();
+
 	RenderScene();
 
 	App->editor->RenderEditorPanels();
@@ -573,10 +586,14 @@ void M_Renderer3D::RenderScene()
 		DrawWorldAxis();
 	}
 
+ 
 	RenderMeshes();
 	RenderCuboids();
 	//RenderRays();
 	RenderSkeletons();
+	RenderUI();
+	
+	
 	
 	if (App->camera->DrawLastRaycast())
 	{
@@ -621,6 +638,36 @@ void M_Renderer3D::DrawWorldGrid(const int& size)
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 }
 
+void M_Renderer3D::RenderUI()
+{
+	for (std::vector<GameObject*>::iterator it = App->scene->GetGameObjects()->begin(); it != App->scene->GetGameObjects()->end(); it++)
+	{
+		C_Canvas* canvasIt = (*it)->GetComponent<C_Canvas>();
+		if (canvasIt != nullptr && canvasIt->IsActive())
+		{
+			if (!canvasIt->uiElements.empty())
+			{
+				for (std::vector<UIElement*>::iterator uiIt = canvasIt->uiElements.begin(); uiIt != canvasIt->uiElements.end(); uiIt++)
+				{
+					(*uiIt)->Update();
+				}
+			}
+
+			if (!canvasIt->IsInvisible())
+			{
+				if (App->camera->currentCamera != App->camera->masterCamera->GetComponent<C_Camera>())
+				{
+					canvasIt->Draw2D();
+				}
+				else
+				{
+					canvasIt->Draw3D();
+				}
+			}	
+		}
+	}
+}
+
 void M_Renderer3D::DrawWorldAxis()
 {
 	glLineWidth(2.0f);
@@ -628,21 +675,21 @@ void M_Renderer3D::DrawWorldAxis()
 	glBegin(GL_LINES);
 
 	glColor4f(1.0f, 0.0f, 0.0f, 1.0f);											// X Axis.
-	glVertex3f(0.0f, 0.0f, 0.0f);		glVertex3f(1.0f,  0.0f, 0.0f);
+	glVertex3f(0.0f, 0.0f, 0.0f);		glVertex3f(1.0f, 0.0f, 0.0f);
 	glVertex3f(1.0f, 0.1f, 0.0f);		glVertex3f(1.1f, -0.1f, 0.0f);
 	glVertex3f(1.1f, 0.1f, 0.0f);		glVertex3f(1.0f, -0.1f, 0.0f);
 
 	glColor4f(0.0f, 1.0f, 0.0f, 1.0f);											// Y Axis.
-	glVertex3f( 0.0f,  0.0f,  0.0f);	glVertex3f(0.0f, 1.0f,  0.0f);
+	glVertex3f(0.0f, 0.0f, 0.0f);	glVertex3f(0.0f, 1.0f, 0.0f);
 	glVertex3f(-0.05f, 1.25f, 0.0f);	glVertex3f(0.0f, 1.15f, 0.0f);
-	glVertex3f( 0.05f, 1.25f, 0.0f);	glVertex3f(0.0f, 1.15f, 0.0f);
-	glVertex3f( 0.0f,  1.15f, 0.0f);	glVertex3f(0.0f, 1.05f, 0.0f);
+	glVertex3f(0.05f, 1.25f, 0.0f);	glVertex3f(0.0f, 1.15f, 0.0f);
+	glVertex3f(0.0f, 1.15f, 0.0f);	glVertex3f(0.0f, 1.05f, 0.0f);
 
 	glColor4f(0.0f, 0.0f, 1.0f, 1.0f);											// Z Axis.
-	glVertex3f( 0.0f,   0.0f, 0.0f);	glVertex3f( 0.0f,   0.0f, 1.0f);
-	glVertex3f(-0.05f,  0.1f, 1.05f);	glVertex3f( 0.05f,  0.1f, 1.05f);
-	glVertex3f( 0.05f,  0.1f, 1.05f);	glVertex3f(-0.05f, -0.1f, 1.05f);
-	glVertex3f(-0.05f, -0.1f, 1.05f);	glVertex3f( 0.05f, -0.1f, 1.05f);
+	glVertex3f(0.0f, 0.0f, 0.0f);	glVertex3f(0.0f, 0.0f, 1.0f);
+	glVertex3f(-0.05f, 0.1f, 1.05f);	glVertex3f(0.05f, 0.1f, 1.05f);
+	glVertex3f(0.05f, 0.1f, 1.05f);	glVertex3f(-0.05f, -0.1f, 1.05f);
+	glVertex3f(-0.05f, -0.1f, 1.05f);	glVertex3f(0.05f, -0.1f, 1.05f);
 
 	glEnd();
 
@@ -1189,7 +1236,7 @@ transform	(transform),
 cMesh		(cMesh),
 cMaterial	(cMaterial)
 {
-
+	
 }
 
 void MeshRenderer::Render()
@@ -1203,43 +1250,22 @@ void MeshRenderer::Render()
 		return;
 	}
 
-	//glMatrixMode(GL_MODELVIEW);
-	//glPushMatrix();
-	//glMultMatrixf((GLfloat*)&transform.Transposed());												// OpenGL requires that the 4x4 matrices are column-major instead of row-major.
-
 	ApplyDebugParameters();																			// Enable Wireframe Mode for this specific mesh, etc.
 	ApplyTextureAndMaterial();																		// Apply resource texture or default texture, mesh color...
 	ApplyShader();
-	//glEnableClientState(GL_VERTEX_ARRAY);															// Enables the vertex array for writing and to be used during rendering.
-	//glEnableClientState(GL_NORMAL_ARRAY);															// Enables the normal array for writing and to be used during rendering.
-	//glEnableClientState(GL_TEXTURE_COORD_ARRAY);													// Enables the texture coordinate array for writing and to be used during rendering.
-
-	//glBindBuffer(GL_ARRAY_BUFFER, rMesh->TBO);														// Will bind the buffer object with the mesh->TBO identifyer for rendering.
-	//glTexCoordPointer(2, GL_FLOAT, 0, nullptr);														// Specifies the location and data format of an array of tex coords to use when rendering.
-
-	//glBindBuffer(GL_ARRAY_BUFFER, rMesh->NBO);														// The normal buffer is bound so the normal positions can be interpreted correctly.
-	//glNormalPointer(GL_FLOAT, 0, nullptr);															// 
-
-	//glBindBuffer(GL_ARRAY_BUFFER, rMesh->VBO);														// The vertex buffer is bound so the vertex positions can be interpreted correctly.
-	//glVertexPointer(3, GL_FLOAT, 0, nullptr);														// Specifies the location and data format of an array of vert coords to use when rendering.
-
-	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, rMesh->IBO);												// Will bind the buffer object with the mesh->IBO identifyer for rendering.
 	
 	glBindVertexArray(rMesh->VAO);
+
 	glDrawElements(GL_TRIANGLES, rMesh->indices.size(), GL_UNSIGNED_INT, nullptr);					// 
-
-	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);														// Clearing the buffers.
-	//glBindBuffer(GL_ARRAY_BUFFER, 0);																// 												
-
-	//glDisableClientState(GL_TEXTURE_COORD_ARRAY);													// Disabling the client-side capabilities enabled at the beginning.
-	//glDisableClientState(GL_NORMAL_ARRAY);															// 
-	//glDisableClientState(GL_VERTEX_ARRAY);															// Disabling GL_TEXTURE_COORD_ARRAY, GL_NORMAL_ARRAY and GL_VERTEX_ARRAY.
+	
+	glBindVertexArray(0);
 
 	glBindTexture(GL_TEXTURE_2D, 0);																// ---------------------
 	
 	ClearTextureAndMaterial();																		// Clear the specifications applied in ApplyTextureAndMaterial().
 	ClearDebugParameters();																			// Clear the specifications applied in ApplyDebugParameters().
 	ClearShader();
+
 	// --- DEBUG DRAW ---
 	if (rMesh->drawVertexNormals || App->renderer->GetRenderVertexNormals())
 	{
@@ -1250,8 +1276,6 @@ void MeshRenderer::Render()
 	{
 		RenderFaceNormals(rMesh);
 	}
-
-	//glPopMatrix();
 }
 
 void MeshRenderer::RenderVertexNormals(const R_Mesh* rMesh)
@@ -1439,7 +1463,6 @@ void MeshRenderer::ApplyShader()
 	uint32 shaderProgram = 0;
 	if (cMaterial != nullptr)
 	{
-		//if(cMaterial->GetShader()) shaderProgram = cMaterial->GetShader()->shaderProgramID;
 
 		cMaterial->GetShader() ? shaderProgram = cMaterial->GetShader()->shaderProgramID : shaderProgram;
 
@@ -1465,18 +1488,17 @@ void MeshRenderer::ApplyShader()
 
 			cMaterial->GetShader()->SetUniformVec3f("cameraPosition", (GLfloat*)&App->camera->GetCurrentCamera()->GetFrustum().Pos());
 
-			Importer::Shaders::SetShaderUniforms(cMaterial->GetShader());
+			if(cMaterial->GetShader()) Importer::Shaders::SetShaderUniforms(cMaterial->GetShader());
 		}
 	}
 }
 
 uint32 MeshRenderer::SetDefaultShader(C_Material* cMaterial)
 {
-	R_Shader* rShader = nullptr;
-
-	rShader = App->resourceManager->GetDefaultShader();	
-
-	cMaterial->SetShader(rShader);
+	//Assign the default Shader
+	if (!App->renderer->defaultShader) App->renderer->defaultShader = App->resourceManager->GetShader("DefaultShader");
+	
+	cMaterial->SetShader(App->renderer->defaultShader);
 
 	return cMaterial->GetShaderProgramID();
 }
