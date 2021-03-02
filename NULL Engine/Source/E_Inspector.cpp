@@ -790,7 +790,7 @@ void E_Inspector::DrawAnimatorComponent(C_Animator* cAnimator)								// TODO: S
 
 void E_Inspector::DrawAnimationComponent(C_Animation* cAnimation)
 {
-	static bool show = true;
+	bool show = true;
 	if (ImGui::CollapsingHeader("Animation", &show, ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		if (cAnimation != nullptr)
