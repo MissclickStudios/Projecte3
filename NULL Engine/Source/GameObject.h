@@ -17,6 +17,7 @@ struct CuboidRenderer;
 struct SkeletonRenderer;
 
 typedef unsigned __int32 uint32;
+typedef unsigned int uint;
 
 class GameObject
 {
@@ -111,6 +112,8 @@ public:																									// --- COMPONENT GETTERS AND SETTERS
 		case ComponentType::CAMERA:	{ return "Camera"; }	break;
 		case ComponentType::ANIMATOR:	{ return "Animator"; }	break;
 		case ComponentType::ANIMATION:	{ return "Animation"; } break;
+		case ComponentType::AUDIOSOURCE: { return "Audio Source"; } break;
+		case ComponentType::AUDIOLISTENER:	{ return "Audio Listener"; } break;
 		}
 
 		return "NONE";

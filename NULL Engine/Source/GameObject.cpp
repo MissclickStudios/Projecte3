@@ -18,6 +18,8 @@
 #include "C_Camera.h"
 #include "C_Animator.h"
 #include "C_Animation.h"
+#include "C_AudioSource.h"
+#include "C_AudioListener.h"
 
 #include "GameObject.h"
 
@@ -178,6 +180,8 @@ bool GameObject::LoadState(ParsonNode& root)
 			case ComponentType::CAMERA:	{ component = new C_Camera(this); }		break;
 			case ComponentType::ANIMATOR:	{ component = new C_Animator(this); }	break;
 			case ComponentType::ANIMATION: { component = new C_Animation(this); }	break;
+			case ComponentType::AUDIOSOURCE: { component = new C_AudioSource(this); } break;
+			case ComponentType::AUDIOLISTENER: { component = new C_AudioListener(this); } break;
 			}
 
 			if (component != nullptr)
@@ -630,6 +634,8 @@ Component* GameObject::CreateComponent(ComponentType type)
 	case ComponentType::CAMERA:	{ component = new C_Camera(this); }		break;
 	case ComponentType::ANIMATOR:	{ component = new C_Animator(this); }	break;
 	case ComponentType::ANIMATION: { component = new C_Animation(this); }	break;
+	case ComponentType::AUDIOSOURCE: { component = new C_AudioSource(this); } break;
+	case ComponentType::AUDIOLISTENER: {component = new C_AudioListener(this); } break;
 	}
 
 	if (component != nullptr)

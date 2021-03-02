@@ -17,29 +17,74 @@
 #include "AK/MusicEngine/Common/AkMusicEngine.h"	// Music Engine
 #include "AK/SpatialAudio/Common/AkSpatialAudio.h"	// Spatial Audio
 
-/*#include "AK/SoundEngine/Common/AkStreamMgrModule.h"
-#include "AK/SoundEngine/Common/AkSoundEngine.h"
-#include "AK/MusicEngine/Common/AkMusicEngine.h"
-#include "AK/SoundEngine/Common/AkTypes.h"
-#include "AK/Tools/Common/AkPlatformFuncs.h"
-#include "AK/AkPlatforms.h"*/
+#include "Application.h"
+#include "M_FileSystem.h"
+#include "FileSystemDefinitions.h"
+#include "JSONParser.h"
+
+#include <utility>
+#include <iostream>
 
 M_Audio::M_Audio(bool isActive) : Module("Audio", isActive)
 {
+
 }
 
 M_Audio::~M_Audio()
 {
+	for (int i = 0; i < audioListenerList.size(); ++i)
+	{
+		delete audioListenerList[i];
+		audioListenerList[i] = nullptr;
+	}
+
+	for (int i = 0; i < audioSourceList.size(); ++i)
+	{
+		delete audioSourceList[i];
+		audioSourceList[i] = nullptr;
+	}
+}
+
+bool M_Audio::Init(ParsonNode& root)
+{
+	InitSoundEngine();
+
+	std::vector<std::string> banks;
+	FindSoundBanks(&banks);
+
+	for (std::vector<std::string>::iterator it = banks.begin(); it != banks.end(); ++it)
+	{
+		LoadSoundBank((*it).c_str());
+	}
+
+	return true;
 }
 
 bool M_Audio::Start()
 {
-	InitSoundEngine();
+	LoadEventsFromJson();
 	return true;
 }
 
 UpdateStatus M_Audio::Update(float dt)
 {
+	AK::SoundEngine::RenderAudio();
+
+	//Depending on the engine state pause/play/resume/stop events
+
+	if (App->play)
+	{
+		ResumeAll();
+	}
+	if (App->pause)
+	{
+		PauseAll();
+	}
+	if (!App->play)
+	{
+		StopAll();
+	}
+
 	return UpdateStatus::CONTINUE;
 }
 
@@ -59,9 +104,6 @@ bool M_Audio::InitSoundEngine()
 	AK::MemoryMgr::GetDefaultSettings(memSettings);
 	if (AK::MemoryMgr::Init(&memSettings) != AK_Success)
 	{
-
-		AKASSERT(!"Could not create the memory manager.");
-
 		return false;
 	}
    // Create and initialize an instance of the default streaming manager. Note
@@ -75,7 +117,6 @@ bool M_Audio::InitSoundEngine()
 
 	if (!AK::StreamMgr::Create(stmSettings))
 	{
-		//assert(!"Could not create the Streaming Manager");
 		return false;
 	}
 
@@ -92,8 +133,6 @@ bool M_Audio::InitSoundEngine()
 
 	if (g_lowLevelIO.Init(deviceSettings) != AK_Success)
 	{
-		//assert(!"Could not create the streaming device and Low-Level I/O system");
-
 		return false;
 	}
 
@@ -107,8 +146,6 @@ bool M_Audio::InitSoundEngine()
 
 	if (AK::SoundEngine::Init(&initSettings, &platformInitSettings) != AK_Success)
 	{
-		//assert(!"Could not initialize the Sound Engine.");
-
 		return false;
 	}
 
@@ -119,21 +156,9 @@ bool M_Audio::InitSoundEngine()
 
 	if (AK::MusicEngine::Init(&musicInit) != AK_Success)
 	{
-		//assert(!"Could not initialize the Music Engine.");
-
 		return false;
 	}
 
-	/*// Initialize Spatial Audio
-	// Using default initialization parameters
-	AkSpatialAudioInitSettings settings; // The constructor fills AkSpatialAudioInitSettings with the recommended default settings. 
-
-	if (AK::SpatialAudio::Init(settings) != AK_Success)
-	{
-		//assert(!"Could not initialize the Spatial Audio.");
-
-		return false;
-	}*/
 
 #ifndef AK_OPTIMIZED
 
@@ -151,8 +176,13 @@ bool M_Audio::InitSoundEngine()
 
 #endif // AK_OPTIMIZED
 
-}
+	std::string initBankPath = "Assets/SoundBanks/Init.bnk";
+	AkBankID bankID;
+	AKRESULT result  = AK::SoundEngine::LoadBank(initBankPath.c_str(), bankID);
 
+	if (result == AK_Success)
+		LOG("Loaded %s", initBankPath.c_str());
+}
 
 void M_Audio::TermSoundEngine()
 {
@@ -180,55 +210,235 @@ void M_Audio::TermSoundEngine()
 	AK::MemoryMgr::Term();
 }
 
-/*void M_Audio::SndInit()
+void M_Audio::SetWwiseState(const char* stateGroup, const char* state)
 {
-	// Initialize audio engine
-	// Memory.
-	AkMemSettings memSettings;
-	memSettings.uMaxNumPools = 20;
-	// Streaming.
-	AkStreamMgrSettings stmSettings;
-	AK::StreamMgr::GetDefaultSettings(stmSettings);
-	AkDeviceSettings deviceSettings;
-	AK::StreamMgr::GetDefaultDeviceSettings(deviceSettings);
-	AkInitSettings l_InitSettings;
-	AkPlatformInitSettings l_platInitSetings;
-	AK::SoundEngine::GetDefaultInitSettings(l_InitSettings);
-	AK::SoundEngine::GetDefaultPlatformInitSettings(l_platInitSetings);
-	// Setting pool sizes for this game. Here, allow for user content; every game should determine its own optimal values.
-	l_InitSettings.uDefaultPoolSize = 2 * 1024 * 1024;
-	l_platInitSetings.uLEngineDefaultPoolSize = 4 * 1024 * 1024;
-	AkMusicSettings musicInit;
-	AK::MusicEngine::GetDefaultInitSettings(musicInit);
-	// Create and initialise an instance of our memory manager.
-	if (AK::MemoryMgr::Init(&memSettings) != AK_Success)
+	AK::SoundEngine::SetState(stateGroup, state);
+}
+
+void M_Audio::PauseAll()
+{
+	AK::SoundEngine::Suspend();
+}
+
+void M_Audio::ResumeAll()
+{
+	AK::SoundEngine::WakeupFromSuspend();
+}
+
+void M_Audio::StopAll()
+{
+	AK::SoundEngine::StopAll();
+}
+
+void M_Audio::LoadSoundBank(const char* soundbankPath)
+{
+	std::string fullPath = ASSETS_SOUNDBANKS_PATH;
+	fullPath += soundbankPath;
+	fullPath += ".bnk";
+
+	AkBankID bankId;
+
+	AKRESULT result = AK::SoundEngine::LoadBank(fullPath.c_str(),bankId);
+
+	if (result == AK_Success)
+		LOG("Loaded %s", fullPath.c_str());
+}
+
+void M_Audio::UnloadSoundBank(const char* soundbankPath)
+{
+	std::string fullPath = ASSETS_SOUNDBANKS_PATH;
+	fullPath += soundbankPath;
+	fullPath += ".bnk";
+
+	AKRESULT result = AK::SoundEngine::UnloadBank(fullPath.c_str(), NULL);
+
+	if (result == AK_Success)
+		LOG("Unloaded %s", fullPath.c_str());
+}
+
+void M_Audio::FindSoundBanks(std::vector<std::string>* banks)
+{
+	std::vector<std::string> files;
+	std::vector<std::string> dirs;
+	App->fileSystem->DiscoverFiles(ASSETS_SOUNDBANKS_PATH, files,dirs);
+
+	std::string extension = "bnk";
+	std::string file_extension;
+	std::string file_name;
+	for (std::vector<std::string>::iterator it = files.begin(); it != files.end(); ++it)
 	{
-		AKASSERT(!"Could not create the memory manager.");
-		return;
+		App->fileSystem->SplitFilePath((*it).c_str(), nullptr, &file_name, &file_extension);
+		if (!file_extension.compare(extension)) 
+		{
+			
+			if (!file_name.compare("Init")) 
+				continue;
+
+			banks->push_back(file_name);
+		}
 	}
-	// Create and initialise an instance of the default stream manager.
-	if (!AK::StreamMgr::Create(stmSettings))
+}
+
+void M_Audio::LoadEventsFromJson()
+{
+	std::vector<std::string> eventList;
+	FindSoundBanks(&eventList);
+
+	std::vector<std::string>::iterator it = eventList.begin();
+
+	for (it; it != eventList.end(); ++it)
 	{
-		AKASSERT(!"Could not create the Stream Manager");
-		return;
+		std::string path = ASSETS_SOUNDBANKS_PATH + (*it) + ".json";
+
+		unsigned int id = 0;
+
+		char* buffer = nullptr;
+		unsigned int load = App->fileSystem->Load(path.c_str(), &buffer);
+
+		ParsonNode eventJson = ParsonNode(buffer);	
+
+		ParsonNode soundBankInfo = eventJson.GetNode("SoundBanksInfo");
+
+		if (!soundBankInfo.NodeIsValid())
+			continue;
+			
+		ParsonArray soundBanks = soundBankInfo.GetArray("SoundBanks");
+
+		if (!soundBanks.ArrayIsValid())
+			continue;
+
+		ParsonNode bankNode = soundBanks.GetNode(0);
+
+		if (!bankNode.NodeIsValid())
+			continue;
+
+		ParsonArray eventArray = bankNode.GetArray("IncludedEvents");
+
+		for (unsigned int i = 0; i < eventArray.size; ++i)
+		{
+			ParsonNode eventsJson = eventArray.GetNode(i);
+
+			std::string eventId = eventsJson.GetString("Id");
+			std::string eventName = eventsJson.GetString("Name");
+
+			id = std::stoul(eventId);
+
+			eventMap.insert(std::pair<std::string, unsigned int>(eventName, id));
+		}
+		
 	}
-	// Create an IO device.
-	if (g_lowLevelIO.Init(deviceSettings) != AK_Success)
-	{
-		AKASSERT(!"Cannot create streaming I/O device");
-		return;
-	}
-	// Initialize sound engine.
-	if (AK::SoundEngine::Init(&l_InitSettings, &l_platInitSetings) != AK_Success)
-	{
-		AKASSERT(!"Cannot initialize sound engine");
-		return;
-	}
-	// Initialize music engine.
-	if (AK::MusicEngine::Init(&musicInit) != AK_Success)
-	{
-		AKASSERT(!"Cannot initialize music engine");
-		return;
-	}
-	// load initialization and main soundbanks
-}*/
+}
+
+// Wwise Object
+WwiseObject::WwiseObject(unsigned int id, const char* name)
+{
+	position.Zero();
+	orientationFront.Zero();
+	orientationUp.Zero();
+
+	this->name = name;
+	objectId = id;
+
+	AK::SoundEngine::RegisterGameObj((AkGameObjectID) id, name);
+}
+
+WwiseObject::~WwiseObject()
+{
+	//AK::SoundEngine::UnregisterGameObj((AkGameObjectID)objectId);
+}
+
+void WwiseObject::SetPos(float3 pos, float3 front, float3 up)
+{
+	position = float3ToAkVector(pos);
+	orientationFront = float3ToAkVector(front);
+	orientationUp = float3ToAkVector(up);
+
+	AkSoundPosition soundPos;
+	soundPos.Set(position, orientationFront, orientationUp);
+	AK::SoundEngine::SetPosition(objectId, soundPos);
+}
+
+void WwiseObject::PlayEvent(unsigned int eventId)
+{
+	AK::SoundEngine::PostEvent(eventId, this->objectId);
+}
+
+void WwiseObject::PauseEvent(unsigned int eventId)
+{
+	AK::SoundEngine::ExecuteActionOnEvent(eventId, AK::SoundEngine::AkActionOnEventType::AkActionOnEventType_Pause, this->objectId);
+}
+
+void WwiseObject::ResumeEvent(unsigned int eventId)
+{
+	AK::SoundEngine::ExecuteActionOnEvent(eventId, AK::SoundEngine::AkActionOnEventType::AkActionOnEventType_Resume, this->objectId);
+}
+
+void WwiseObject::StopEvent(unsigned int eventId)
+{
+	AK::SoundEngine::ExecuteActionOnEvent(eventId, AK::SoundEngine::AkActionOnEventType::AkActionOnEventType_Stop, this->objectId);
+}
+
+void WwiseObject::SetVolume(float volume)
+{
+	AK::SoundEngine::SetGameObjectOutputBusVolume(this->objectId, AK_INVALID_GAME_OBJECT, volume);
+	this->volume = volume;
+}
+
+WwiseObject* WwiseObject::CreateAudioSource(unsigned int id, const char* name, float3 position)
+{
+	WwiseObject* wwiseObject = new WwiseObject(id, name);
+	wwiseObject->SetPos(position);
+	App->audio->audioSourceList.push_back(wwiseObject);
+
+	return wwiseObject;
+}
+
+WwiseObject* WwiseObject::CreateAudioListener(unsigned int id, const char* name, float3 position)
+{
+	WwiseObject* wwiseObject = new WwiseObject(id, name);
+
+	AkGameObjectID listenerID = wwiseObject->GetId();
+	AK::SoundEngine::SetDefaultListeners(&listenerID, 1);
+	wwiseObject->SetPos(position);
+	App->audio->audioListenerList.push_back(wwiseObject);
+
+	return wwiseObject;
+}
+
+void WwiseObject::SetAudioSwitch(const char* switchGroup, const char* switchState, unsigned int objectId)
+{
+	AKRESULT result = AK::SoundEngine::SetSwitch(switchGroup, switchState, objectId);
+	if (result == AK_Success)
+		LOG("Set switch");
+}
+
+void WwiseObject::SetAudioTrigger(const char* trigger, unsigned int objectId)
+{
+	AKRESULT result = AK::SoundEngine::PostTrigger(trigger, objectId);
+	if (result == AK_Success)
+		LOG("Set trigger");
+}
+
+void WwiseObject::SetAudioRtcp(const char* rtpc, int value, unsigned int objectId)
+{
+	AKRESULT result = AK::SoundEngine::SetRTPCValue(rtpc, value, objectId);
+	if (result == AK_Success)
+		LOG("Set trigger");
+}
+
+unsigned int WwiseObject::GetId() const
+{
+	return objectId;
+}
+
+AkVector WwiseObject::float3ToAkVector(float3 value)
+{
+	AkVector temp;
+
+	temp.X = value.x;
+	temp.Y = value.y;
+	temp.Z = value.z;
+
+	return temp;
+}
+

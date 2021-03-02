@@ -15,7 +15,9 @@ enum class ComponentType
 	LIGHT,
 	CAMERA,
 	ANIMATOR,
-	ANIMATION
+	ANIMATION,
+	AUDIOSOURCE,
+	AUDIOLISTENER
 };
 
 class Component

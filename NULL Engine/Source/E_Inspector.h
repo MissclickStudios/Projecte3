@@ -12,6 +12,8 @@ class C_Light;
 class C_Camera;
 class C_Animator;
 class C_Animation;
+class C_AudioSource;
+class C_AudioListener;
 
 class Resource;
 class ModelSettings;
@@ -40,6 +42,8 @@ private:
 	void DrawCameraComponent			(C_Camera* cCamera);
 	void DrawAnimatorComponent			(C_Animator* cAnimator);
 	void DrawAnimationComponent			(C_Animation* cAnimation);
+	void DrawAudioSourceComponent		(C_AudioSource* cAudioSource);
+	void DrawAudioListenerComponent		(C_AudioListener* cAudioListener);
 
 	void AddComponentCombo				(GameObject* selectedGameObject);					// 
 	void DeleteComponentPopup			(GameObject* selectedGameObject);					// 
