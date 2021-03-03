@@ -32,7 +32,7 @@ scene			(nullptr),
 renderer		(nullptr),
 camera			(nullptr),
 fileSystem		(nullptr),
-resourceManager(nullptr),
+resourceManager	(nullptr),
 logger			(nullptr)
 {
 	App = this;

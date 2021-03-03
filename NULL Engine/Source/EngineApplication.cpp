@@ -43,6 +43,7 @@ EngineApplication::EngineApplication()
 
 	input->AddModuleToProcessInput(editor);
 	renderer->AddPostSceneRenderModule(editor);
+	logger = editor;
 }
 
 EngineApplication::~EngineApplication()

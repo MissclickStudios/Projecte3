@@ -105,7 +105,7 @@ private:
 
 	// --- HARDWARE INFO
 	HardwareInfo			hardwareInfo;												// All the info/data about the software and the hardware of the system will be extracted from here.
-private:
+protected:
 	Module* logger;
 };
 

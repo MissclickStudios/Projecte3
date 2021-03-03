@@ -39,6 +39,7 @@
 #include "Time.h"
 
 #include "C_Transform.h"
+#include "Log.h"
 
 #pragma comment (lib, "Source/Dependencies/glew/libx86/glew32.lib") //Needed for ImGui
 #pragma comment (lib, "opengl32.lib")								//link Microsoft OpenGL lib
@@ -46,7 +47,7 @@
 
 M_Editor::M_Editor(bool isActive) : Module("Editor", isActive),
 clearColor		(0.0f, 0.0f, 0.0f, 1.0f),
-mainMenuBar	(new E_MainMenuBar()),
+mainMenuBar		(new E_MainMenuBar()),
 toolbar			(new E_Toolbar()),
 configuration	(new E_Configuration()),
 hierarchy		(new E_Hierarchy()),
@@ -125,7 +126,6 @@ UpdateStatus M_Editor::PreUpdate(float dt)
 
 UpdateStatus M_Editor::Update(float dt)
 {
-
 	return UpdateStatus::CONTINUE;
 }
 
@@ -575,13 +575,13 @@ void M_Editor::EditorCameraUpdate() {
 					EngineApp->camera->reference = float3::zero;
 				}
 
-				EngineApp->camera->Orbit(GetWorldMousePositionThroughEditor());
+				EngineApp->camera->Orbit(GetWorldMouseMotionThroughEditor());
 			}
 		}
 
 		if (EngineApp->input->GetMouseButton(SDL_BUTTON_MIDDLE) == KeyState::KEY_REPEAT)
 		{
-			EngineApp->camera->PanCamera(GetWorldMousePositionThroughEditor());
+			EngineApp->camera->PanCamera(GetWorldMouseMotionThroughEditor());
 		}
 
 		if (EngineApp->input->GetMouseZ() != 0)
