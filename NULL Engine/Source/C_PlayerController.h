@@ -14,9 +14,9 @@ public:
 	bool Update() override;
 	bool CleanUp() override;
 
-	void Move();		//
-	void Rotate();
-	void OnCollision();
+	void Move();		//diagonals
+	void Rotate();		//free rotation 
+	void OnCollision();	
 
 public: 
 	
@@ -27,9 +27,8 @@ public:
 	float minMoveDistance;
 
 	//collision flags		//What part of the capsule collided with the environment
-	//collider radius?
 	//skin width?		    //distance that the collider allows being penetrated
-	bool detectCollisions;
+	bool detectCollisions = true;
 
 };
 

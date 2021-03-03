@@ -60,6 +60,7 @@ const char* Component::GetNameFromType() const
 	case ComponentType::SPHERE_COLLIDER:  { return "Sphere  Collider"; }	break;
 	case ComponentType::CAPSULE_COLLIDER: { return "Capsule Collider"; }	break;
 	case ComponentType::CANVAS:			{ return "Canvas"; }		break;
+	case ComponentType::PLAYER_CONTROLLER: { return "Player Controller"; }	break;
 	}
 	return "NONE";
 }
