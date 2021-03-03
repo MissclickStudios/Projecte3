@@ -32,9 +32,9 @@ namespace Importer
 {
 	namespace Meshes
 	{
-		void Import	(const aiMesh* assimpMesh, R_Mesh* rMesh);													// Loads all mesh data from the given aiNode & stores it in a new R_Mesh.
-		uint Save (const R_Mesh* rMesh, char** buffer);													// Processes R_Mesh data into ready-to-save buffer. Will return the buffer's size.
-		bool Load (const char* buffer, R_Mesh* rMesh);													// Processes buffer data into a ready-to-use R_Mesh. Will return nullptr on ERROR.
+		void Import	(const aiMesh* assimpMesh, R_Mesh* rMesh);										// Loads all mesh data from the given aiNode & stores it in a new R_Mesh.
+		uint Save	(const R_Mesh* rMesh, char** buffer);											// Processes R_Mesh data into ready-to-save buffer. Will return the buffer's size.
+		bool Load	(const char* buffer, R_Mesh* rMesh);											// Processes buffer data into a ready-to-use R_Mesh. Will return nullptr on ERROR.
 
 		namespace Utilities
 		{

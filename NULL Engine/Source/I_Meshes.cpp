@@ -84,7 +84,6 @@ void Importer::Meshes::Utilities::GetNormals(const aiMesh* assimpMesh, R_Mesh* r
 
 void Importer::Meshes::Utilities::GetTexCoords(const aiMesh* assimpMesh, R_Mesh* rMesh)
 {	
-
 	uint texCoordsSize = assimpMesh->mNumVertices * 2;												// There will be 2 tex coordinates per vertex.
 	rMesh->texCoords.resize(texCoordsSize);														// Allocating in advance the memory required to store all the texture coordinates.
 

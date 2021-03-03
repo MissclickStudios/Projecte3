@@ -49,8 +49,8 @@ public:
 	std::vector<float>			texCoords;
 	std::vector<uint>			indices;
 
-	int* boneIDs = nullptr;
-	float* boneWeights = nullptr;
+	int* boneIDs				= nullptr;
+	float* boneWeights			= nullptr;
 	std::vector<float4x4>		boneOffsets;
 	std::map<std::string, uint> boneMapping;
 
