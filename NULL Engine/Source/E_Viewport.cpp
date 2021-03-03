@@ -58,10 +58,10 @@ bool E_Viewport::CleanUp()
 float2 E_Viewport::GetWorldMousePosition()
 {	
 	float winWidth		= (float)EngineApp->window->GetWidth();
-	float winHeight	= (float)EngineApp->window->GetHeight();
+	float winHeight		= (float)EngineApp->window->GetHeight();
 	
 	float texWidth		= texSize.x;
-	float texHeight	= texSize.y;
+	float texHeight		= texSize.y;
 
 	float mouseX		= (float)EngineApp->input->GetMouseX();
 	float mouseY		= (float)EngineApp->input->GetMouseY();
@@ -80,7 +80,7 @@ float2 E_Viewport::GetScreenMousePosition()
 	float winHeight	= (float)EngineApp->window->GetHeight();
 
 	float texWidth		= texSize.x;
-	float texHeight	= texSize.y;
+	float texHeight		= texSize.y;
 
 	float mouseX		= (float)EngineApp->input->GetMouseX();
 	float mouseY		= (float)EngineApp->input->GetMouseY();
@@ -131,7 +131,7 @@ void E_Viewport::DrawScene()
 		ImGui::FocusWindow(nullptr);
 		
 		sceneFocused	= true;
-		gameFocused	= false;
+		gameFocused		= false;
 	}
 	
 	if (sceneFocused)
@@ -157,7 +157,7 @@ void E_Viewport::DrawGame()
 		ImGui::FocusWindow(ImGui::GetCurrentWindow());
 		ImGui::FocusWindow(nullptr);
 
-		gameFocused	= true;
+		gameFocused		= true;
 		sceneFocused	= false;
 	}
 
@@ -252,14 +252,10 @@ void E_Viewport::HandleGuizmos()
 	}
 	
 	if (EngineApp->editor->GetSelectedGameObjectThroughEditor() == nullptr)
-	{
 		return;
-	}
 
 	if (EngineApp->editor->GetCurrentCameraThroughEditor() == nullptr)
-	{
 		return;
-	}
 	
 	GameObject* selected		= EngineApp->editor->GetSelectedGameObjectThroughEditor();
 	C_Camera* currentCamera	= EngineApp->editor->GetCurrentCameraThroughEditor();

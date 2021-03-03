@@ -316,7 +316,7 @@ private:																										// --- DEBUG VARIABLES ---		// TODO: CREATE A 
 	bool					renderWorldGrid;																	// 
 	bool					renderWorldAxis;																	// 
 	bool					renderWireframes;																	//
-	bool					renderWertexNormals;																// 
+	bool					renderVertexNormals;																// 
 	bool					renderFaceNormals;																	// 
 	bool					renderBoundingBoxes;																// 
 	bool					renderSkeletons;																	//

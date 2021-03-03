@@ -37,7 +37,7 @@ camera			(nullptr),
 fileSystem		(nullptr),
 resourceManager	(nullptr),
 audio			(nullptr),
-uiSystem		(nullptr)
+uiSystem		(nullptr),
 logger			(nullptr)
 {
 	App = this;

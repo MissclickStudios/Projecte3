@@ -479,7 +479,7 @@ void M_Editor::LoadResourceIntoSceneThroughEditor()
 		Resource* draggedResource = EngineApp->resourceManager->GetResourceFromLibrary(draggedAssetPath);
 		if (draggedResource != nullptr)
 		{
-			EngineApp->scene->LoadResourceIntoScene(project->GetDraggedResource());
+			EngineApp->scene->LoadResourceIntoScene(draggedResource);
 		}
 	}
 	else

@@ -8,7 +8,7 @@
 
 #pragma comment( lib, "Source/Dependencies/SDL/libx86/SDL2.lib" )
 #pragma comment( lib, "Source/Dependencies/SDL/libx86/SDL2main.lib" )
-#pragma comment( lib, "Source/Dependencies/Brofiler/libx86/ProfilerCore32.lib" )
+#pragma comment( lib, "Source/Dependencies/Brofiler/libx86/ProfilerCore32.lib" ) //TODO: if build configuration not link this
 
 enum class MainStatus
 {

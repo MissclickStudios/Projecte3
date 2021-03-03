@@ -8,6 +8,9 @@
 #include "M_Camera3D.h"
 #include "M_FileSystem.h"
 #include "M_ResourceManager.h"
+#include "M_Audio.h"
+#include "M_Physics.h"
+#include "M_UISystem.h"
 #include "M_Editor.h"
 
 #include "MemoryManager.h"
@@ -36,6 +39,9 @@ EngineApplication::EngineApplication()
 	// Scenes
 	AddModule(scene);
 	AddModule(editor);
+	AddModule(audio);
+	AddModule(physics);
+	AddModule(uiSystem);
 
 	// Renderer last!
 	AddModule(renderer);

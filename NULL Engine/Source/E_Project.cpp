@@ -139,7 +139,7 @@ void E_Project::CheckFlags()
 			
 			//if (type != ResourceType::NONE) //TODO check this
 
-			Resource* resource = EngineApp->resourceManager->GetResourceFromMetaFile(displayDirectory.children[i].path.c_str());
+			Resource* resource = EngineApp->resourceManager->GetResourceFromLibrary(displayDirectory.children[i].path.c_str());
 
 			if (resource != nullptr)
 			{
@@ -453,12 +453,10 @@ void E_Project::ClearAssetsToDisplay()
 	for (auto item = assetsToDisplay.begin(); item != assetsToDisplay.end(); ++item)
 	{
 
-		// if (item->type == ResourceType::TEXTURE && item->assetTexture != nullptr) //TODO check this
-		// {
-		// 	App->resourceManager->FreeResource(item->assetTexture->GetUID());
-		// }
+		if (item->type == ResourceType::TEXTURE && item->assetTexture != nullptr) //TODO check this
+			EngineApp->resourceManager->FreeResource(item->assetTexture->GetUID());
 
-		EngineApp->resourceManager->FreeResource(resourcesToDisplay[i]->GetUID());
+		//EngineApp->resourceManager->FreeResource(resourcesToDisplay[i]->GetUID());
 	}
 
 	assetsToDisplay.clear();
