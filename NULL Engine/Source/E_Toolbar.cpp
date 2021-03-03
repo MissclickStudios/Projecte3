@@ -1,6 +1,6 @@
 #include "Time.h"
 
-#include "Application.h"
+#include "EngineApplication.h"
 #include "M_Editor.h"
 
 #include "E_Toolbar.h"
@@ -51,43 +51,43 @@ bool E_Toolbar::CleanUp()
 
 void E_Toolbar::PlayAndStopButtons()
 {
-	if (!App->play)
+	if (!EngineApp->play)
 	{
 		if (ImGui::Button("Play"))
 		{
-			App->editor->SaveSceneThroughEditor("PlayAutosave");
+			EngineApp->editor->SaveSceneThroughEditor("PlayAutosave");
 
 			Time::Game::Play();
 
-			App->play = true;
-			App->pause = false;
+			EngineApp->play = true;
+			EngineApp->pause = false;
 		}
 	}
 	else
 	{
 		if (ImGui::Button("Stop"))
 		{
-			App->editor->LoadFileThroughEditor("Assets/Scenes/PlayAutosave.json");
+			EngineApp->editor->LoadFileThroughEditor("Assets/Scenes/PlayAutosave.json");
 
 			Time::Game::Stop();
 
-			App->play = false;
-			App->pause = false;
+			EngineApp->play = false;
+			EngineApp->pause = false;
 		}
 	}
 }
 
 void E_Toolbar::PauseAndStepButtons()
 {
-	if (!App->pause)
+	if (!EngineApp->pause)
 	{
 		if (ImGui::Button("Pause"))
 		{
-			if (App->play)
+			if (EngineApp->play)
 			{
 				Time::Game::Pause();
 
-				App->pause = true;
+				EngineApp->pause = true;
 			}
 		}
 	}
@@ -97,7 +97,7 @@ void E_Toolbar::PauseAndStepButtons()
 		{
 			Time::Game::Play();
 
-			App->pause = false;
+			EngineApp->pause = false;
 		}
 	}
 
@@ -107,7 +107,7 @@ void E_Toolbar::PauseAndStepButtons()
 	{
 		Time::Game::Step();
 
-		App->step = true;
+		EngineApp->step = true;
 	}
 }
 

@@ -1,11 +1,13 @@
 #ifndef __FRAME_DATA_H__
 #define __FRAME_DATA_H__
 
+#include "Macros.h"
+
 typedef unsigned int		uint;
 typedef unsigned __int32	uint32;
 typedef unsigned __int64	uint64;
 
-struct FrameData
+struct NULL_API FrameData
 {
 	FrameData();
 	

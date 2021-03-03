@@ -6,7 +6,7 @@
 class ParsonNode;
 class GameObject;
 
-class C_Light : public Component
+class NULL_API C_Light : public Component
 {
 public:
 	C_Light(GameObject* owner);

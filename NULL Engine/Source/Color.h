@@ -1,7 +1,9 @@
 #ifndef __COLOR_H__
 #define __COLOR_H__
 
-struct Color
+#include "Macros.h"
+
+struct NULL_API Color
 {
 	float r, g, b, a;
 	
@@ -36,15 +38,15 @@ struct Color
 	bool	operator ==(const Color& color);								// if (this.r == color.r && ... && this.a == this.a), then return true.
 };
 
-extern Color Red;
-extern Color Green;
-extern Color Blue;
-extern Color Cyan;
-extern Color Magenta;
-extern Color Yellow;
-extern Color Orange;
-extern Color Pink;
-extern Color Black;
-extern Color White;
+extern NULL_API Color Red;
+extern NULL_API Color Green;
+extern NULL_API Color Blue;
+extern NULL_API Color Cyan;
+extern NULL_API Color Magenta;
+extern NULL_API Color Yellow;
+extern NULL_API Color Orange;
+extern NULL_API Color Pink;
+extern NULL_API Color Black;
+extern NULL_API Color White;
 
 #endif // !__COLOR_H__

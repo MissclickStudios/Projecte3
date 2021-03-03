@@ -24,7 +24,7 @@ struct Vertex
 	float2 tex_coords;
 };
 
-class R_Mesh : public Resource
+class NULL_API R_Mesh : public Resource
 {
 public:
 	R_Mesh();

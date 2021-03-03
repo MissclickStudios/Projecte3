@@ -2,13 +2,14 @@
 #define __ANIMATOR_CLIP_H__
 
 #include <string>
+#include "Macros.h"
 
 class ParsonNode;
 class R_Animation;
 
 typedef unsigned int uint;
 
-class AnimatorClip
+class NULL_API AnimatorClip
 {
 public:
 	AnimatorClip();
