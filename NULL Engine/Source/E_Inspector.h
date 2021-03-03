@@ -23,6 +23,7 @@ class C_Canvas;
 
 class Resource;
 class R_Shader;
+class R_Texture;
 class ModelSettings;
 class MeshSettings;
 class MaterialSettings;
@@ -94,6 +95,9 @@ private:
 	R_Shader*				shaderToRecompile;
 	TextEditor				editor;
 	std::string				fileToEdit;
+
+	std::vector<R_Texture*>	allTextures;
+
 };
 
 #endif // !__E_INSPECTOR_H__

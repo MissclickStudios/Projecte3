@@ -444,7 +444,7 @@ bool Importer::Meshes::Load(const char* buffer, R_Mesh* rMesh)
 	Utilities::LoadBoneMapping(&cursor, rMesh, headerData[4]);
 
 	//boneOffsets
-	Utilities::LoadBoneOffset(&cursor, rMesh, headerData[4]);
+	if(headerData[4] != 0) Utilities::LoadBoneOffset(&cursor, rMesh, headerData[4]);
 
 	// --- PRECALCULATED DATA ---
 	float3 aabbCorners[8];

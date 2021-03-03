@@ -32,6 +32,7 @@
 #include "C_CapsuleCollider.h"
 
 #include "R_Shader.h"
+#include "R_Texture.h"
 #include "I_Shaders.h"
 
 #include "C_Canvas.h"
@@ -429,6 +430,37 @@ void E_Inspector::DrawMaterialComponent(C_Material* cMaterial)
 			ImGui::Separator();
 
 			// --- TEXTURE DATA ---
+
+			
+
+			//ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), cMaterial->GetTexture()->GetAssetsFile());
+
+			if (allTextures.empty()) App->resourceManager->GetAllTextures(allTextures);
+			std::string texName;
+			if (cMaterial->GetTexture() == nullptr)
+			{
+				texName = "NONE";
+			}
+			else
+			{
+			 texName = cMaterial->GetTexture()->GetAssetsFile();
+
+			}
+			if (ImGui::BeginCombo("Texture", texName.c_str(), ImGuiComboFlags_PopupAlignLeft))
+			{
+				for (uint i = 0; i < allTextures.size(); i++)
+				{
+					const bool selectedShader = (texName == allTextures[i]->GetAssetsFile());
+					if (ImGui::Selectable(allTextures[i]->GetAssetsFile(), selectedShader))
+					{
+						cMaterial->SetTexture(allTextures[i]);
+
+						texName = allTextures[i]->GetAssetsFile();
+					}
+				}
+				ImGui::EndCombo();
+			}
+
 			DisplayTextureData(cMaterial);
 
 			ImGui::Separator();
