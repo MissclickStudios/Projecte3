@@ -1,6 +1,7 @@
 #include "C_PlayerController.h"
+#include "Component.h"
 
-C_PlayerManager::C_PlayerManager(GameObject* owner)
+C_PlayerManager::C_PlayerManager(GameObject* owner) : Component(owner, ComponentType::PLAYER_CONTROLLER)
 {
 }
 
