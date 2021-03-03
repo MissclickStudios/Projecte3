@@ -28,7 +28,7 @@ enum class TextureMap												// Will correspond with the indexes of the text
 	NORMAL = 6,
 };
 
-class C_Material : public Component
+class NULL_API C_Material : public Component
 {
 public:
 	C_Material(GameObject* owner);

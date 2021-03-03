@@ -47,6 +47,18 @@ bool Module::LoadConfiguration(ParsonNode& file)
 	return true;
 }
 
+void Module::ProcessInput(SDL_Event& event)
+{
+}
+
+void Module::PostSceneRendering()
+{
+}
+
+void Module::AddConsoleLog(const char* log)
+{
+}
+
 bool Module::SaveConfiguration(ParsonNode& file) const
 {
 	return true;

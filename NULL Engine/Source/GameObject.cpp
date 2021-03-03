@@ -165,7 +165,7 @@ bool GameObject::LoadState(ParsonNode& root)
 		if (!componentNode.NodeIsValid())
 			continue;
 		
-		ComponentType type	= (ComponentType)(int)componentNode.GetNumber("Type");
+		ComponentType type	= (ComponentType)((int)componentNode.GetNumber("Type"));
 
 		if (type == ComponentType::TRANSFORM)
 		{

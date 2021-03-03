@@ -2,7 +2,7 @@
 
 #include "VariableTypedefs.h"
 
-#include "Application.h"
+#include "EngineApplication.h"
 #include "M_Editor.h"
 
 #include "Resource.h"
@@ -34,7 +34,7 @@ bool E_Resources::Draw(ImGuiIO& io)
 	std::multimap<uint, Resource*> sorted;
 
 	std::map<uint32, Resource*> resources;
-	App->editor->GetResourcesThroughEditor(resources);
+	EngineApp->editor->GetResourcesThroughEditor(resources);
 
 	std::map<uint32, Resource*>::iterator item;
 	for (item = resources.begin(); item != resources.end(); ++item)

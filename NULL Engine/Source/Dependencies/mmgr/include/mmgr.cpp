@@ -190,7 +190,7 @@ static	const	unsigned int	paddingSize            = 4;
 		#define m_assert(x) {}
 	#endif
 #else	// Linux uses assert, which we can use safely, since it doesn't bring up a dialog within the program.
-	#define	m_assert(cond) assert(cond)
+	#define	m_assert(cond) /*assert(cond)*///TODO: FIX MEMORY MANAGER ASSERT
 #endif
 
 // ---------------------------------------------------------------------------------------------------------------------------------
@@ -291,7 +291,7 @@ static	void	doCleanupLogOnFirstRun()
 {
 	if (cleanupLogOnFirstRun)
 	{
-		unlink(memoryLogFile);
+		_unlink(memoryLogFile);
 		cleanupLogOnFirstRun = false;
 
 		// Print a header for the log

@@ -3,8 +3,9 @@
 
 #include <string>
 #include <vector>
+#include "Macros.h"
 
-struct PathNode
+struct NULL_API PathNode
 {
 	PathNode();
 
