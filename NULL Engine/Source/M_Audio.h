@@ -46,7 +46,7 @@ private:
 
 };
 
-class M_Audio : public Module
+class NULL_API M_Audio : public Module
 {
 public:
 

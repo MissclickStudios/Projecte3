@@ -19,7 +19,7 @@ namespace physx
 class GameObject;
 class SimulationCallback;
 
-class M_Physics : public Module
+class NULL_API M_Physics : public Module
 {
 public:
 

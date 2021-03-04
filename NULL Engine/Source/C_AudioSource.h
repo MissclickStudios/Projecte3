@@ -6,7 +6,7 @@
 class GameObject;
 class WwiseObject;
 
-class C_AudioSource : public Component
+class NULL_API C_AudioSource : public Component
 {
 public:
 	C_AudioSource(GameObject* owner);

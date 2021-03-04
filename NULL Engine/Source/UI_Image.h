@@ -7,7 +7,7 @@
 
 class C_Canvas;
 
-class UI_Image : public UIElement
+class NULL_API UI_Image : public UIElement
 {
 public:
 	UI_Image(C_Canvas* canvas, Rect rect);

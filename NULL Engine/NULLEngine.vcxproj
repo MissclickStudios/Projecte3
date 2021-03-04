@@ -99,7 +99,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>Xcopy $(ProjectDir)Resources\ Build\CoreDll\$(Configuration)\EngineCore.dll /s /y</Command>
+      <Command>Xcopy $(ProjectDir)Build\CoreDll\$(Configuration)\EngineCore.dll $(ProjectDir)Resources\  /s /y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -119,7 +119,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>Xcopy $(ProjectDir)Resources\ Build\CoreDll\$(Configuration)\EngineCore.dll /s /y</Command>
+      <Command>Xcopy "$(ProjectDir)Build\CoreDll\$(Configuration)\EngineCore.dll" "$(ProjectDir)Resources\" /s /y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">

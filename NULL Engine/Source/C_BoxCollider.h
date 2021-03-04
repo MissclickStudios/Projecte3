@@ -7,7 +7,7 @@
 
 #include "MathGeoLib/include/Math/float3.h"
 
-class C_BoxCollider : public Component
+class NULL_API C_BoxCollider : public Component
 {
 public:
 
