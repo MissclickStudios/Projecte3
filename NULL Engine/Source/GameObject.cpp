@@ -25,6 +25,7 @@
 #include "C_SphereCollider.h"
 #include "C_CapsuleCollider.h"
 #include "C_Canvas.h"
+#include "C_PlayerController.h"
 
 #include "GameObject.h"
 
@@ -191,7 +192,7 @@ bool GameObject::LoadState(ParsonNode& root)
 			case ComponentType::BOX_COLLIDER:		{ component = new C_BoxCollider(this); }		break;
 			case ComponentType::SPHERE_COLLIDER:	{ component = new C_SphereCollider(this); }		break;
 			case ComponentType::CAPSULE_COLLIDER:	{ component = new C_CapsuleCollider(this); }	break;
-
+			case ComponentType::PLAYER_CONTROLLER: { component = new C_PlayerController(this); } break;
 			}
 
 			if (component != nullptr)
@@ -657,23 +658,29 @@ Component* GameObject::CreateComponent(ComponentType type)
 		LOG("[ERROR] RigidBody Component could not be added to %s! Error: No duplicates allowed!", name.c_str());
 		return nullptr;
 	}
+	if (type == ComponentType::PLAYER_CONTROLLER && GetComponent<C_PlayerController>() != nullptr)
+	{
+		LOG("[ERROR] Player Controller Component could not be added to %s! Error: No duplicates allowed!", name.c_str());
+		return nullptr;
+	}
 
 	switch(type)
 	{
-	case ComponentType::TRANSFORM:	{ component = new C_Transform(this); }	break;
-	case ComponentType::MESH:		{ component = new C_Mesh(this); }		break;
-	case ComponentType::MATERIAL:	{ component = new C_Material(this); }	break;
-	case ComponentType::LIGHT:		{ component = new C_Light(this); }		break;
-	case ComponentType::CAMERA:	{ component = new C_Camera(this); }		break;
-	case ComponentType::ANIMATOR:	{ component = new C_Animator(this); }	break;
-	case ComponentType::ANIMATION: { component = new C_Animation(this); }	break;
-	case ComponentType::AUDIOSOURCE: { component = new C_AudioSource(this); } break;
-	case ComponentType::AUDIOLISTENER: {component = new C_AudioListener(this); } break;
+	case ComponentType::TRANSFORM:			{ component = new C_Transform(this); }			break;
+	case ComponentType::MESH:				{ component = new C_Mesh(this); }				break;
+	case ComponentType::MATERIAL:			{ component = new C_Material(this); }			break;
+	case ComponentType::LIGHT:				{ component = new C_Light(this); }				break;
+	case ComponentType::CAMERA:				{ component = new C_Camera(this); }				break;
+	case ComponentType::ANIMATOR:			{ component = new C_Animator(this); }			break;
+	case ComponentType::ANIMATION:			{ component = new C_Animation(this); }			break;
+	case ComponentType::AUDIOSOURCE:		{ component = new C_AudioSource(this); }		break;
+	case ComponentType::AUDIOLISTENER:		{ component = new C_AudioListener(this); }		break;
 	case ComponentType::RIGIDBODY:			{ component = new C_RigidBody(this); }			break;
 	case ComponentType::BOX_COLLIDER:		{ component = new C_BoxCollider(this); }		break;
 	case ComponentType::SPHERE_COLLIDER:	{ component = new C_SphereCollider(this); }		break;
 	case ComponentType::CAPSULE_COLLIDER:	{ component = new C_CapsuleCollider(this); }	break;
-	case ComponentType::CANVAS:				{component = new C_Canvas(this); } break;
+	case ComponentType::CANVAS:				{ component = new C_Canvas(this); }				break;
+	case ComponentType::PLAYER_CONTROLLER:	{ component = new C_PlayerController(this); }	break;
 	}
 
 	if (component != nullptr)

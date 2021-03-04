@@ -1,35 +1,33 @@
-#ifndef	__C_PLAYERMANAGER__
-#define	__C_PLAYERMANAGER__
+#ifndef	__C_PLAYERCONTROLLER__
+#define	__C_PLAYERCONTROLLER__
 
 #include "Component.h"
 #include "MathGeoLib/include/Math/float3.h"
 
-class C_PlayerManager : public Component
+class C_PlayerController : public Component
 {
 public:
 
-	C_PlayerManager(GameObject* owner);
-	~C_PlayerManager();
+	C_PlayerController(GameObject* owner);
+	~C_PlayerController();
 
 	bool Update() override;
 	bool CleanUp() override;
 
-	void Move();		//diagonals
-	void Rotate();		//free rotation 
-	void OnCollision();	
+	bool SaveState(ParsonNode& root) const override;
+	bool LoadState(ParsonNode& root) override;
 
-public: 
-	
-	float3 center;
-	float height;
+	static inline ComponentType GetType() { return ComponentType::PLAYER_CONTROLLER; }			// This is needed to be able to use templates for functions such as GetComponent<>();
 
-	float currentVelocity;
-	float minMoveDistance;
+private: 
 
-	//collision flags		//What part of the capsule collided with the environment
-	//skin width?		    //distance that the collider allows being penetrated
-	bool detectCollisions = true;
+	void Move();
+	void Rotate();
 
+	float speed = 2.0f;
+	float acceleration = 10.0f;
+	float deceleration = 10.0f;
+	float maxSpeed = 1.0f;
 };
 
-#endif // !__C_PLAYERMANAGER__
+#endif // !__C_PLAYERCONTROLLER__
