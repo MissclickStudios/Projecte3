@@ -265,9 +265,9 @@ uint Importer::Meshes::Save(const R_Mesh* rMesh, char** buffer)
 	uint headerData[HEADER_SIZE] = {
 		rMesh->vertices.size(),																	// 0 --> Num Vertices
 		rMesh->normals.size(), 																	// 1 --> Num Normals
-		rMesh->texCoords.size(), 																	// 2 --> Num Texture Coordinates
+		rMesh->texCoords.size(), 																// 2 --> Num Texture Coordinates
 		rMesh->indices.size(), 																	// 3 --> Num Indices
-		rMesh->boneMapping.size()																	// 4 --> Num Bones
+		rMesh->boneMapping.size()																// 4 --> Num Bones
 	};
 
 	uint headerDataSize			= sizeof(headerData) + sizeof(uint);

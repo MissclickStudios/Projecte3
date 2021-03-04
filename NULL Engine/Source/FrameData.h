@@ -17,12 +17,12 @@ struct NULL_API FrameData
 
 	float	timeSinceStart;													// 
 	uint64	frameCount;														// Amount of frames that have been processed since Application Start.
-	uint32	framesLastSecond;													// Amount of frames that have been processed in the last second.
+	uint32	framesLastSecond;												// Amount of frames that have been processed in the last second.
 
 	float	avgFps;															// Average of the amount of frames that the Application processes per second.
-	uint32	msLastFrame; 														// Amount of milliseconds that have elapsed in the last frame.
+	uint32	msLastFrame; 													// Amount of milliseconds that have elapsed in the last frame.
 
-	float	dt;																	// Amount of ms that have elapsed in a frame. Employed to keep everything in the same timestep.
+	float	dt;																// Amount of ms that have elapsed in a frame. Employed to keep everything in the same timestep.
 
 	// --- Support Vars
 	uint32	framesThisSecond;

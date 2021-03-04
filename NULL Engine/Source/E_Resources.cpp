@@ -1,5 +1,7 @@
 #include <map>
 
+#include "Profiler.h"
+
 #include "VariableTypedefs.h"
 
 #include "EngineApplication.h"
@@ -23,6 +25,8 @@ bool E_Resources::Draw(ImGuiIO& io)
 {
 	bool ret = true;
 
+	BROFILER_CATEGORY("Editor Resources Draw", Profiler::Color::DarkSlateBlue);
+
 	ImGui::Begin("References");
 	
 	uint models		= 0;
@@ -34,7 +38,7 @@ bool E_Resources::Draw(ImGuiIO& io)
 	std::multimap<uint, Resource*> sorted;
 
 	std::map<uint32, Resource*> resources;
-	EngineApp->editor->GetResourcesThroughEditor(resources);
+	//EngineApp->editor->GetResourcesThroughEditor(resources);
 
 	std::map<uint32, Resource*>::iterator item;
 	for (item = resources.begin(); item != resources.end(); ++item)
