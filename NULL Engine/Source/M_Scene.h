@@ -15,6 +15,7 @@ namespace math
 class ParsonNode;
 class Primitive;
 class Resource;
+class R_Scene;
 class R_Model;
 class R_Texture;
 class GameObject;
@@ -97,6 +98,9 @@ private:
 	C_Camera*						cullingCamera;																			// Culling Camera
 
 	std::vector<Primitive*>			primitives;
+
+
+	std::vector<std::string>			rooms;
 };
 
 #endif // !__M_SCENE_H__

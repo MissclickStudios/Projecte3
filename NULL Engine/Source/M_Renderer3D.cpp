@@ -96,9 +96,9 @@ bool M_Renderer3D::Start()
 	InitEngineIcons();
 	
 	//SetUp the Skybox 
-	/*defaultSkyBox.SetUpSkyBoxBuffers();
+	defaultSkyBox.SetUpSkyBoxBuffers();
 
-	defaultSkyBox.CreateSkybox();*/
+	defaultSkyBox.CreateSkybox();
 
 
 	return ret;
@@ -155,7 +155,7 @@ UpdateStatus M_Renderer3D::PostUpdate(float dt)
 	BROFILER_CATEGORY("M_Renderer3D PostUpdate", Profiler::Color::Chartreuse);
 	
 	//The Skybox renderer must be the first one always
-	//defaultSkyBox.RenderSkybox();
+	defaultSkyBox.RenderSkybox();
 
 	RenderScene();
 

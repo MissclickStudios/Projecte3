@@ -95,8 +95,10 @@ private:
 	R_Shader*				shaderToRecompile;
 	TextEditor				editor;
 	std::string				fileToEdit;
+	std::string				shaderName;
 
 	std::vector<R_Texture*>	allTextures;
+	std::string				texName;
 
 };
 

@@ -52,7 +52,8 @@ showSaveEditorPopup			(false),
 componentType				(0),
 mapToDisplay				(0),
 componentToDelete			(nullptr),
-shaderToRecompile			(nullptr)
+shaderToRecompile			(nullptr),
+texName						("NONE")
 {
 
 }
@@ -380,7 +381,7 @@ void E_Inspector::DrawMaterialComponent(C_Material* cMaterial)
 					ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), cMaterial->GetShader()->GetAssetsFile());
 
 				if (allShaders.empty()) App->resourceManager->GetAllShaders(allShaders);
-				std::string shaderName = cMaterial->GetShader()->GetAssetsFile();
+				shaderName = cMaterial->GetShader()->GetAssetsFile();
 				if (ImGui::BeginCombo("Shader", cMaterial->GetShader()->GetAssetsFile(), ImGuiComboFlags_PopupAlignLeft))
 				{
 					for (uint i = 0; i < allShaders.size(); i++)
@@ -431,29 +432,21 @@ void E_Inspector::DrawMaterialComponent(C_Material* cMaterial)
 
 			// --- TEXTURE DATA ---
 
+			if (allTextures.empty()) 
+				App->resourceManager->GetAllTextures(allTextures);
 			
-
-			//ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), cMaterial->GetTexture()->GetAssetsFile());
-
-			if (allTextures.empty()) App->resourceManager->GetAllTextures(allTextures);
-			std::string texName;
-			if (cMaterial->GetTexture() == nullptr)
+			if (texName == "NONE" && cMaterial->GetTexture())
 			{
-				texName = "NONE";
-			}
-			else
-			{
-			 texName = cMaterial->GetTexture()->GetAssetsFile();
-
+				texName = cMaterial->GetTexture()->GetAssetsFile();
 			}
 			if (ImGui::BeginCombo("Texture", texName.c_str(), ImGuiComboFlags_PopupAlignLeft))
 			{
 				for (uint i = 0; i < allTextures.size(); i++)
 				{
-					const bool selectedShader = (texName == allTextures[i]->GetAssetsFile());
+					const bool selectedShader = (texName.c_str() == allTextures[i]->GetAssetsFile());
 					if (ImGui::Selectable(allTextures[i]->GetAssetsFile(), selectedShader))
 					{
-						cMaterial->SetTexture(allTextures[i]);
+						cMaterial->SwapTexture(allTextures[i]);
 
 						texName = allTextures[i]->GetAssetsFile();
 					}

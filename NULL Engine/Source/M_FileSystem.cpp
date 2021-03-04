@@ -272,6 +272,28 @@ void M_FileSystem::DiscoverAllFiles(const char* directory, std::vector<std::stri
 	PHYSFS_freeList(fileListing);
 }
 
+void M_FileSystem::GetAllFilesWithExtensionAndName(const char* directory, const char* extension, const char* name, std::vector<std::string>& fileList) const
+{
+	std::vector<std::string> files;
+	std::vector<std::string> directories;
+
+	//DiscoverFiles(directory, files, directories);											// Returns a file and directory lists in the given search path's directory.
+	DiscoverAllFiles(directory, files, directories);										// Returns a file and directory lists in the given search path's directory.
+
+	for (uint i = 0; i < files.size(); ++i)
+	{
+		std::string ext;
+		std::string file;
+		SplitFilePath(files[i].c_str(), nullptr, &file, &ext);							// Gets the extension string/path of the file being currently iterated, if it has any.
+
+		std::size_t found = file.find(name);
+		if (ext == extension && found != std::string::npos)																// If the extension of the file is the same as the one passed as argument
+		{
+			fileList.push_back(files[i]);													// The file currently being iterated will be added to the file list passed as argument.
+		}
+	}
+}
+
 void M_FileSystem::GetAllFilesWithExtension(const char* directory, const char* extension, std::vector<std::string>& fileList) const
 {
 	std::vector<std::string> files;

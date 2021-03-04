@@ -175,6 +175,9 @@
     <Filter Include="Dependencies\FreeType">
       <UniqueIdentifier>{08e3945a-3181-41f1-84b6-7bdcb659c99d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\7_Tools\LevelGenerator">
+      <UniqueIdentifier>{fdf862ce-3553-4188-9f73-dc50be6e4396}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Application.cpp">
@@ -656,6 +659,9 @@
     </ClCompile>
     <ClCompile Include="Source\UI_Text.cpp">
       <Filter>Source\5_GameObjects\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\LevelGenerator.cpp">
+      <Filter>Source\7_Tools\LevelGenerator</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1514,7 +1520,9 @@
     <ClInclude Include="Source\Dependencies\FreeType\include\freetype\tttables.h">
       <Filter>Dependencies\FreeType</Filter>
     </ClInclude>
-
+    <ClInclude Include="Source\LevelGenerator.h">
+      <Filter>Source\7_Tools\LevelGenerator</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Engine\Configuration\configuration.JSON">

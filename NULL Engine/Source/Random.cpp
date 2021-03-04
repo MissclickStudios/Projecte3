@@ -40,5 +40,5 @@ uint32 Random::PCG::GetBoundedRandomUint(uint32 max)
 
 float Random::PCG::GetBoundedRandomFloat(float max)
 {
-	return 0.0f;
+	return pcg32_boundedrand(max);
 }

@@ -193,6 +193,11 @@ void C_Material::SetTexture(R_Texture* rTexture)
 	this->rTexture = rTexture;
 }
 
+void C_Material::SwapTexture(R_Texture* rTexture)
+{
+	this->rTexture = rTexture;
+}
+
 void C_Material::SetShader(R_Shader* rShader)
 {
 	this->rShader = rShader;

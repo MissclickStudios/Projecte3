@@ -41,6 +41,7 @@ public:
 
 	void			DiscoverFiles				(const char* directory, std::vector<std::string>& files, std::vector<std::string>& directories, const char* filter = nullptr) const;	// Will return two lists with every file in a given directory.
 	void			DiscoverAllFiles			(const char* directory, std::vector<std::string>& files, std::vector<std::string>& directories, const char* filter = nullptr) const;	// Will return two lists with every file in a given directory.
+	void			GetAllFilesWithExtensionAndName	(const char* directory, const char* extension,const char* name,std::vector<std::string>& fileList) const;
 	void			GetAllFilesWithExtension	(const char* directory, const char* extension, std::vector<std::string>& fileList) const;												// Will return a list with all files with the given extension.
 	bool			ContainsDirectory			(const char* directory) const;
 	
