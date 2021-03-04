@@ -99,7 +99,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>Xcopy $(ProjectDir)Build\CoreDll\$(Configuration)\EngineCore.dll $(ProjectDir)Resources\  /s /y</Command>
+      <Command>Xcopy "$(ProjectDir)Build\CoreDll\$(Configuration)\EngineCore.dll" "$(ProjectDir)Resources\" /s /y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
