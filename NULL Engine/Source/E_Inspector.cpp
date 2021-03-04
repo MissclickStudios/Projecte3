@@ -1298,10 +1298,29 @@ void E_Inspector::DrawPlayerControllerComponent(C_PlayerController* cController)
 	if (ImGui::CollapsingHeader("Player Controller", &show, ImGuiTreeNodeFlags_Leaf))
 	{
 		bool isActive = cController->IsActive();
-		if (ImGui::Checkbox("RigidBody Is Active", &isActive))
+		if (ImGui::Checkbox("Controller Is Active", &isActive))
 			cController->SetIsActive(isActive);
 
 		ImGui::Separator();
+
+		float speed = cController->Speed();
+		if (ImGui::InputFloat("Speed", &speed, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
+			cController->SetSpeed(speed);
+
+		bool useAcceleration = cController->UsingAcceleration();
+		if (ImGui::Checkbox("Use Acceleration", &useAcceleration))
+			cController->UseAcceleration(useAcceleration);
+
+		if (cController->UsingAcceleration())
+		{
+			float acceleration = cController->Acceleration();
+			if (ImGui::InputFloat("Acceleration", &acceleration, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
+				cController->SetAcceleration(acceleration);
+
+			float deceleration = cController->Deceleration();
+			if (ImGui::InputFloat("Deceleration", &deceleration, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
+				cController->SetDeceleration(deceleration);
+		}
 
 		if (!show)
 		{

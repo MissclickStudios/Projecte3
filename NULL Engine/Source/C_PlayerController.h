@@ -4,6 +4,8 @@
 #include "Component.h"
 #include "MathGeoLib/include/Math/float3.h"
 
+class C_RigidBody;
+
 class C_PlayerController : public Component
 {
 public:
@@ -19,15 +21,30 @@ public:
 
 	static inline ComponentType GetType() { return ComponentType::PLAYER_CONTROLLER; }			// This is needed to be able to use templates for functions such as GetComponent<>();
 
+	const float Speed() const { return speed; }
+	void SetSpeed(float speed) { this->speed = speed; }
+
+	const bool UsingAcceleration() const { return useAcceleration; }
+	void UseAcceleration(bool enable) { useAcceleration = enable; }
+
+	const float Acceleration() const { return acceleration; }
+	void SetAcceleration(float force) { this->acceleration = force; }
+	const float Deceleration() const { return deceleration; }
+	//The deceleration is internaly inverted, so setting a negative deceleration will cause an acceleration
+	void SetDeceleration(float force) { this->deceleration = force; }
+
 private: 
 
-	void Move();
+	void MoveVelocity(C_RigidBody* rigidBody);
+	void MoveAcceleration(C_RigidBody* rigidBody);
 	void Rotate();
 
-	float speed = 2.0f;
-	float acceleration = 10.0f;
-	float deceleration = 10.0f;
-	float maxSpeed = 1.0f;
+	float speed = 10.0f;
+
+	bool useAcceleration = false;
+
+	float acceleration = 2.0f;
+	float deceleration = 2.0f;
 };
 
 #endif // !__C_PLAYERCONTROLLER__
