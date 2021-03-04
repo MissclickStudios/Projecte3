@@ -397,7 +397,7 @@ WwiseObject* WwiseObject::CreateAudioListener(unsigned int id, const char* name,
 {
 	WwiseObject* wwiseObject = new WwiseObject(id, name);
 
-	AkGameObjectID listenerID = wwiseObject->GetId();
+	AkGameObjectID listenerID = id;
 	AK::SoundEngine::SetDefaultListeners(&listenerID, 1);
 	wwiseObject->SetPos(position);
 	App->audio->audioListenerList.push_back(wwiseObject);
