@@ -50,11 +50,13 @@ bool C_Mesh::SaveState(ParsonNode& root) const
 
 	if (rMesh != nullptr)
 	{
-		root.SetNumber("Type", (uint)GetType());
+		root.SetNumber("Type", (double)GetType());
+
 		root.SetNumber("UID", rMesh->GetUID());
 		root.SetString("Name", rMesh->GetAssetsFile());
 		root.SetString("Path", rMesh->GetLibraryPath());
 		root.SetString("File", rMesh->GetLibraryFile());
+
 		root.SetBool("ShowWireframe", showWireframe);
 		root.SetBool("ShowBoundingBox", showBoundingBox);
 	}

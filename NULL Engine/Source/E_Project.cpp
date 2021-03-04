@@ -1,6 +1,8 @@
 #include <vector>
 #include <algorithm>
 
+#include "Profiler.h"
+
 #include "VariableTypedefs.h"
 #include "Macros.h"
 
@@ -47,6 +49,8 @@ E_Project::~E_Project()
 bool E_Project::Draw(ImGuiIO& io)
 {
 	bool ret = true;
+
+	BROFILER_CATEGORY("Project Panel", Profiler::Color::HoneyDew);
 
 	CheckFlags();
 
@@ -137,13 +141,16 @@ void E_Project::CheckFlags()
 				assetTexture = (R_Texture*)EngineApp->resourceManager->GetResourceFromLibrary(path);
 			}
 			
-			//if (type != ResourceType::NONE) //TODO check this
-
-			uint32 resourceUID = EngineApp->resourceManager->LoadFromLibrary(displayDirectory.children[i].path.c_str());
-
-			if (resourceUID != 0)
+			if (type != ResourceType::NONE) //TODO check this
 			{
 				assetsToDisplay.push_back({ path, file, type, assetTexture });
+				
+				/*Resource* resource = EngineApp->resourceManager->GetResourceFromLibrary(displayDirectory.children[i].path.c_str());	// Check Library But Not Load
+
+				if (resource != nullptr)
+				{
+					assetsToDisplay.push_back({ path, file, type, assetTexture });
+				}*/
 			}
 		}
 
@@ -258,7 +265,7 @@ void E_Project::DrawDirectoriesTree(const PathNode& rootNode)
 
 		path			= pathNode.path;
 		directory		= pathNode.local_path;
-		treeNodeFlags = (pathNode.isLastDirectory) ? ImGuiTreeNodeFlags_Leaf : ImGuiTreeNodeFlags_None;
+		treeNodeFlags	= (pathNode.isLastDirectory) ? ImGuiTreeNodeFlags_Leaf : ImGuiTreeNodeFlags_None;
 		if (ImGui::TreeNodeEx(path.c_str(), treeNodeFlags, "%s/", directory.c_str()))
 		{
 			if (ImGui::IsItemClicked())
@@ -452,7 +459,6 @@ void E_Project::ClearAssetsToDisplay()
 {
 	for (auto item = assetsToDisplay.begin(); item != assetsToDisplay.end(); ++item)
 	{
-
 		if (item->type == ResourceType::TEXTURE && item->assetTexture != nullptr) //TODO check this
 		{
 			EngineApp->resourceManager->FreeResource(item->assetTexture->GetUID());
