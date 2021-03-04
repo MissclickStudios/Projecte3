@@ -68,8 +68,8 @@ loadFile		(new E_LoadFile())
 	AddEditorPanel(resources);
 	AddEditorPanel(inspector);
 	AddEditorPanel(timeline);
-	AddEditorPanel(console);
 	AddEditorPanel(project);
+	AddEditorPanel(console);
 	AddEditorPanel(viewport);
 	AddEditorPanel(imguiDemo);
 	AddEditorPanel(about);
@@ -79,6 +79,7 @@ loadFile		(new E_LoadFile())
 	showHierarchy		= true;
 	showInspector		= true;
 	showConsole			= true;
+	showProject			= true;
 	showImguiDemo		= false;
 	showAboutPopup		= false;
 	showCloseAppPopup	= false;

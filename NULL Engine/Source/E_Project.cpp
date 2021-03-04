@@ -36,7 +36,7 @@ draggedAsset				("[NONE]")
 	iconSize		= ImVec2(64.0f, 64.0f);
 	iconOffset		= ImVec2(20.0f, 0.0f);
 	textOffset		= ImVec2(iconOffset.x, iconSize.y);
-	winSize		= ImVec2(0.0f, 0.0f);
+	winSize			= ImVec2(0.0f, 0.0f);
 }
 
 E_Project::~E_Project()
@@ -139,9 +139,9 @@ void E_Project::CheckFlags()
 			
 			//if (type != ResourceType::NONE) //TODO check this
 
-			Resource* resource = EngineApp->resourceManager->GetResourceFromLibrary(displayDirectory.children[i].path.c_str());
+			uint32 resourceUID = EngineApp->resourceManager->LoadFromLibrary(displayDirectory.children[i].path.c_str());
 
-			if (resource != nullptr)
+			if (resourceUID != 0)
 			{
 				assetsToDisplay.push_back({ path, file, type, assetTexture });
 			}
@@ -454,7 +454,9 @@ void E_Project::ClearAssetsToDisplay()
 	{
 
 		if (item->type == ResourceType::TEXTURE && item->assetTexture != nullptr) //TODO check this
+		{
 			EngineApp->resourceManager->FreeResource(item->assetTexture->GetUID());
+		}
 
 		//EngineApp->resourceManager->FreeResource(resourcesToDisplay[i]->GetUID());
 	}

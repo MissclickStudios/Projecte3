@@ -54,7 +54,7 @@ void Importer::Meshes::Import(const aiMesh* assimpMesh, R_Mesh* rMesh)
 
 	// Loading and reorganizing the bone data from the mesh
 	if (assimpMesh->HasBones())
-		Utilities::GetBones(assimpMesh, rMesh);
+		//Utilities::GetBones(assimpMesh, rMesh);
 
 	//rMesh->SwapBonesToVertexArray();
 
@@ -420,7 +420,7 @@ bool Importer::Meshes::Load(const char* buffer, R_Mesh* rMesh)
 	cursor += bytes;
 
 	// ---BONE DATA ---
-	uint nVertices = rMesh->vertices.size() / 3 * 4;
+	/*uint nVertices = rMesh->vertices.size() / 3 * 4;
 
 	rMesh->boneIDs = new int[nVertices];
 	rMesh->boneWeights = new float[nVertices];
@@ -443,7 +443,7 @@ bool Importer::Meshes::Load(const char* buffer, R_Mesh* rMesh)
 	Utilities::LoadBoneMapping(&cursor, rMesh, headerData[4]);
 
 	//boneOffsets
-	Utilities::LoadBoneOffset(&cursor, rMesh, headerData[4]);
+	Utilities::LoadBoneOffset(&cursor, rMesh, headerData[4]);*/
 
 	// --- PRECALCULATED DATA ---
 	float3 aabbCorners[8];
