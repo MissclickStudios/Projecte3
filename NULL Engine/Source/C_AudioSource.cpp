@@ -113,6 +113,11 @@ void C_AudioSource::StopFx(unsigned int eventId)
 	wwiseObject->StopEvent(eventId);
 }
 
+float C_AudioSource::GetVolume()
+{
+	return wwiseObject->GetVolume();
+}
+
 void C_AudioSource::SetVolume(float volume)
 {
 	wwiseObject->SetVolume(volume);

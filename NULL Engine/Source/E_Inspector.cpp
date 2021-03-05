@@ -864,7 +864,7 @@ void E_Inspector::DrawAudioSourceComponent(C_AudioSource* cAudioSource)
 				ImGui::EndCombo();
 			}
 
-			static float volume = 0.0f;
+			static float volume = cAudioSource->GetVolume();
 			if (ImGui::DragFloat("Volume", &volume, 0.01f, 0.01f, 1.0f))
 			{
 				cAudioSource->SetVolume(volume);

@@ -377,6 +377,11 @@ void WwiseObject::StopEvent(unsigned int eventId)
 	AK::SoundEngine::ExecuteActionOnEvent(eventId, AK::SoundEngine::AkActionOnEventType::AkActionOnEventType_Stop, objectId);
 }
 
+float WwiseObject::GetVolume()
+{
+	return volume;
+}
+
 void WwiseObject::SetVolume(float volume)
 {
 	AK::SoundEngine::SetGameObjectOutputBusVolume(objectId, AK_INVALID_GAME_OBJECT, volume);

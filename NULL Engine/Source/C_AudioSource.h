@@ -33,6 +33,7 @@ public:
 	void ResumeFx(unsigned int eventId);
 	void StopFx(unsigned int eventId);
 
+	float GetVolume();
 	void SetVolume(float volume);
 	
 private:

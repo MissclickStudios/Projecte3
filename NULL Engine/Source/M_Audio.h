@@ -22,6 +22,7 @@ public:
 	void		ResumeEvent(unsigned int eventId);
 	void		StopEvent(unsigned int eventId);
 
+	float		GetVolume();
 	void		SetVolume(float volume);
 
 	WwiseObject* CreateAudioSource(unsigned int id, const char* name, float3 position);
@@ -39,7 +40,7 @@ private:
 
 	std::string name;
 	unsigned int objectId;
-	float volume = 0;
+	float volume = 1.0f;
 	AkVector position;
 	AkVector orientationFront;
 	AkVector orientationUp;
