@@ -11,6 +11,7 @@ class Resource;
 
 enum class ResourceType;
 class R_Shader;
+class R_Texture;
 
 typedef unsigned int		uint;
 typedef unsigned __int32	uint32;
@@ -59,6 +60,8 @@ public:																								// --- RESOURCE MANAGER API ---
 
 	R_Shader*		GetShader(const char* name);													//Look for a shader in the library and load and return it
 	void			GetAllShaders(std::vector<R_Shader*>& shaders);									//Retrieve all the shaders in the library
+
+	void			GetAllTextures(std::vector<R_Texture*>& textures);									//Retrieve all the shaders in the library
 
 	
 private:																															// --- ASSETS MONITORING METHODS ---
