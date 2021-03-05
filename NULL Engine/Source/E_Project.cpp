@@ -453,7 +453,7 @@ void E_Project::ClearAssetsToDisplay()
 	{
 		if (item->type == ResourceType::TEXTURE && item->assetTexture != nullptr) //TODO check this
 		{
-			EngineApp->resourceManager->FreeResource(item->assetTexture->GetUID());
+			//EngineApp->resourceManager->FreeResource(item->assetTexture->GetUID());
 		}
 
 		//EngineApp->resourceManager->FreeResource(resourcesToDisplay[i]->GetUID());

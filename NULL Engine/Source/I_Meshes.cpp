@@ -53,8 +53,8 @@ void Importer::Meshes::Import(const aiMesh* assimpMesh, R_Mesh* rMesh)
 		Utilities::GetIndices(assimpMesh, rMesh);													// Gets the indices data stored in the given ai_mesh.
 
 	// Loading and reorganizing the bone data from the mesh
-	//if (assimpMesh->HasBones())
-		//Utilities::GetBones(assimpMesh, rMesh);
+	if (assimpMesh->HasBones())
+		Utilities::GetBones(assimpMesh, rMesh);
 
 	rMesh->LoadBuffers();																			// 
 	rMesh->SetAABB();																				// 
@@ -350,7 +350,7 @@ uint Importer::Meshes::Save(const R_Mesh* rMesh, char** buffer)
 	// --- BONE DATA ---
 	if (rMesh->hasBones)
 	{
-		/*uint nVertices = (rMesh->vertices.size() / 3) * 4;
+		uint nVertices = (rMesh->vertices.size() / 3) * 4;
 
 		bytes = nVertices * sizeof(uint);
 		memcpy_s(cursor, size, &rMesh->boneIDs[0], bytes);
@@ -364,7 +364,7 @@ uint Importer::Meshes::Save(const R_Mesh* rMesh, char** buffer)
 		memcpy(cursor, &rMesh->boneOffsets[0], bytes);
 		cursor += bytes;
 
-		Utilities::SaveBoneMapping(&cursor, rMesh->boneMapping);*/
+		Utilities::SaveBoneMapping(&cursor, rMesh->boneMapping);
 	}
 
 	// --- PRECALCULATED DATA ---
@@ -445,7 +445,7 @@ bool Importer::Meshes::Load(const char* buffer, R_Mesh* rMesh)
 	// ---BONE DATA ---
 	if (headerData[4] != 0)
 	{
-		/*uint nVertices = (rMesh->vertices.size() / 3) * 4;
+		uint nVertices = (rMesh->vertices.size() / 3) * 4;
 
 		rMesh->boneIDs.resize(nVertices);
 		rMesh->boneWeights.resize(nVertices);
@@ -459,6 +459,11 @@ bool Importer::Meshes::Load(const char* buffer, R_Mesh* rMesh)
 		memcpy_s(&rMesh->boneWeights[0], bytes, cursor, bytes);
 		cursor += bytes;
 
+		for (int i = 0; i < 10; i++)
+		{
+			LOG("boneWeights %d = %f", i, rMesh->boneWeights[i]);
+		}
+
 		uint bytes = headerData[4] * sizeof(float4x4);
 		memcpy(&rMesh->boneOffsets[0], cursor, bytes);
 		cursor += bytes;
@@ -468,7 +473,7 @@ bool Importer::Meshes::Load(const char* buffer, R_Mesh* rMesh)
 		for (auto bone = rMesh->boneMapping.begin(); bone != rMesh->boneMapping.end(); ++bone)
 		{
 			LOG("BONE { %s } ==> ID { %u }", bone->first.c_str(), bone->second);
-		}*/
+		}
 	}
 
 	// --- PRECALCULATED DATA ---
