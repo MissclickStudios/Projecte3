@@ -493,7 +493,13 @@ void M_Editor::LoadResourceIntoSceneThroughEditor()
 void M_Editor::GetResourcesThroughEditor(std::map<uint32, Resource*>& resources) const
 {
 	//resources = EngineApp->resourceManager->GetResources();
+	//TODO: this function call from editor resources causes memleak
 	EngineApp->resourceManager->GetResources(resources);
+}
+
+const std::map<uint32, Resource*>* M_Editor::GetResourcesThroughEditor() const
+{
+	return EngineApp->resourceManager->GetResources();
 }
 
 void M_Editor::SaveSceneThroughEditor(const char* sceneName)
@@ -503,7 +509,17 @@ void M_Editor::SaveSceneThroughEditor(const char* sceneName)
 
 void M_Editor::LoadFileThroughEditor(const char* path)
 {
-	std::string extension = EngineApp->fileSystem->GetFileExtension(path);
+	//TODO: return string from dll memo leak
+	//----------------call to get file expension function---------------------------
+	std::string fullPath = path;
+	std::string extension = "";
+
+	size_t dotPosition = fullPath.find_last_of(".");
+
+	extension = (dotPosition != fullPath.npos) ? fullPath.substr(dotPosition + 1) : "[NONE]";
+	//--------------------------------------------------------------------------------------
+	//std::string extension = EngineApp->fileSystem->GetFileExtension(path);
+	//if i call it i get a memory leak when i return the std::string ???
 
 	if (extension == "json" || extension == "JSON")
 	{

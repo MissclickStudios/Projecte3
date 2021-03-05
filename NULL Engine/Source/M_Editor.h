@@ -109,7 +109,8 @@ public:																							// --- Panel/Window Methods. Acts as an interface 
 	void			GetEngineIconsThroughEditor			(Icons& engineIcons);					// Project:
 	void			LoadResourceIntoSceneThroughEditor	();										// Project: As of now Drag&Drop Source is in Project and Target in Viewport. TODO FIX LATER
 
-	void			GetResourcesThroughEditor			(std::map<uint32, Resource*>& resources) const;	// Resources: 
+	void			GetResourcesThroughEditor			(std::map<uint32, Resource*>& resources) const;	// Resources:
+	const std::map<uint32, Resource*>* GetResourcesThroughEditor () const;	// Resources: 
 
 	void			SaveSceneThroughEditor				(const char* sceneName);
 	void			LoadFileThroughEditor				(const char* path);						// Load File: Will send the given path to the Importer.

@@ -190,7 +190,7 @@ static	const	unsigned int	paddingSize            = 4;
 		#define m_assert(x) {}
 	#endif
 #else	// Linux uses assert, which we can use safely, since it doesn't bring up a dialog within the program.
-	#define	m_assert(cond) /*assert(cond)*///TODO: FIX MEMORY MANAGER ASSERT
+	#define	m_assert(cond) assert(cond)
 #endif
 
 // ---------------------------------------------------------------------------------------------------------------------------------

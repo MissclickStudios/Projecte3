@@ -314,8 +314,6 @@ bool E_Configuration::SystemInfoMenu()
 
 bool E_Configuration::TimeManagementMenu()
 {
-	bool ret = true;
-	
 	if (ImGui::CollapsingHeader("Time Management"))
 	{
 		ImGui::TextColored(ImVec4(0.0f, 1.0f, 1.0f, 1.0f), "Real Time Clock:");
@@ -347,7 +345,7 @@ bool E_Configuration::TimeManagementMenu()
 		ImGui::Text("Delta Time:");			ImGui::SameLine(); ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "         %.3f",	gameFrameData.dt);
 	}
 
-	return ret;
+	return true;
 }
 
 bool E_Configuration::ImGuiEditorsMenu()

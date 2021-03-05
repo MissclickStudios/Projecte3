@@ -55,6 +55,7 @@ public:																								// --- RESOURCE MANAGER API ---
 	bool			DeleteResource					(Resource* resourceToDelete);					// Same as the above but directly passing the resource as the argument.
 	
 	void			GetResources					(std::map<uint32, Resource*>& resources) const;	// Returns a map filled with all the resources currently loaded onto memory.
+	const std::map<uint32, Resource*>* GetResources() const;
 
 	R_Shader*		GetShader(const char* name);													//Look for a shader in the library and load and return it
 	void			GetAllShaders(std::vector<R_Shader*>& shaders);									//Retrieve all the shaders in the library
