@@ -224,9 +224,9 @@ bool M_Renderer3D::InitDebugVariables()
 	rayColor					= Cyan;
 	boneColor					= Pink;
 
-	worldGridLineWidth		= STANDARD_LINE_WIDTH;
-	wireframeLineWidth		= STANDARD_LINE_WIDTH;
-	vertexNormalsWidth		= BASE_LINE_WIDTH;
+	worldGridLineWidth			= STANDARD_LINE_WIDTH;
+	wireframeLineWidth			= STANDARD_LINE_WIDTH;
+	vertexNormalsWidth			= BASE_LINE_WIDTH;
 	faceNormalsWidth			= BASE_LINE_WIDTH;
 
 	aabbEdgeWidth				= BASE_LINE_WIDTH;
