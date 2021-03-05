@@ -113,6 +113,8 @@ void R_Mesh::LoadBuffers()
 		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 		glEnableVertexAttribArray(2);
 	}
+
+	glBindVertexArray(0);
 }
 
 AABB R_Mesh::GetAABB() const
