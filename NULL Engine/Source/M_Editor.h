@@ -1,6 +1,8 @@
 #ifndef __M_EDITOR_H__
 #define __M_EDITOR_H__
 
+#include <map>
+
 #include "ImGui/include/imgui.h"
 #include "MathGeoLib/include/Math/float2.h"
 #include "Module.h"

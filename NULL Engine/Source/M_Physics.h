@@ -1,6 +1,7 @@
 #ifndef __PHYSICS_H__
 #define __PHYSICS_H__
 
+#include <map>
 #include "Module.h"
 
 namespace physx

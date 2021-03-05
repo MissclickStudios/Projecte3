@@ -7,13 +7,11 @@
 #ifndef __MODULE_H__
 #define __MODULE_H__
 
-#include <vector>
-#include <map>
-#include <string>
-
 #include "SDL/include/SDL.h"														// TMP. Delete later
 
-#include "Globals.h"																// TMP. Delete later
+//#include "Globals.h"																// TMP. Delete later
+#include "UpdateStatus.h"
+#include "Macros.h"
 
 class ParsonNode;
 
