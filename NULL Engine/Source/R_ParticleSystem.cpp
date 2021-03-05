@@ -8,16 +8,15 @@ R_ParticleSystem::~R_ParticleSystem()
 {
 }
 
+void R_ParticleSystem::InitDefaultSystem()
+{
+	emitters.clear();
+	emitters.reserve(4);
+	AddDefaultEmitter();
+}
+
 void R_ParticleSystem::AddDefaultEmitter()
 {
+	//pushback an emitter and add it the standard particle modules
 }
 
-bool R_ParticleSystem::SaveMeta(ParsonNode& metaRoot) const
-{
-	return true;
-}
-
-bool R_ParticleSystem::LoadMeta(const ParsonNode& metaRoot)
-{
-	return true;
-}

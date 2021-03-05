@@ -12,8 +12,10 @@ public:
 
 	//save/load?
 
-	bool Update();
+	bool Update(float dt);
 	void Reset();
+
+	//set resource?
 	
 public:
 	std::vector<EmitterInstance> emitterInstances;
