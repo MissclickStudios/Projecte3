@@ -31,7 +31,7 @@ public:
 	void		SetAudioTrigger(const char* trigger, unsigned int objectId);
 	void		SetAudioRtcp(const char* rtpc, int value, unsigned int objectId);
 
-	unsigned int GetId() const;
+	unsigned int GetWwiseObjectId() const;
 
 	AkVector	float3ToAkVector(float3 value);
 

@@ -7,6 +7,8 @@
 #include "C_Camera.h"
 #include "GameObject.h"
 #include "M_Audio.h"
+
+#include "JSONParser.h"
 #include "MathGeoLib/include/Math/float3.h"
 
 C_AudioListener::C_AudioListener(GameObject* owner) : Component(owner, ComponentType::AUDIOLISTENER)
@@ -19,6 +21,16 @@ C_AudioListener::C_AudioListener(GameObject* owner) : Component(owner, Component
 
 C_AudioListener::~C_AudioListener()
 {
+    for (std::vector<WwiseObject*>::iterator it = App->audio->audioListenerList.begin(); it != App->audio->audioListenerList.end(); ++it)
+    {
+        if ((*it)->GetWwiseObjectId() == wwiseObject->GetWwiseObjectId())
+        {
+            delete (*it);
+            (*it) = nullptr;
+            App->audio->audioListenerList.erase((it));
+            break;
+        }
+    }
 }
 
 bool C_AudioListener::Update()
@@ -40,6 +52,7 @@ bool C_AudioListener::CleanUp()
 
 bool C_AudioListener::SaveState(ParsonNode& root) const
 {
+    root.SetNumber("Type", (uint)GetType());
     return true;
 }
 

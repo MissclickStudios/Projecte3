@@ -842,51 +842,50 @@ void E_Inspector::DrawAudioSourceComponent(C_AudioSource* cAudioSource)
 	{
 		if (cAudioSource != nullptr)
 		{
-			int id = cAudioSource->GetId();
-			ImGui::Text("");
+			unsigned int currentEvent = cAudioSource->GetEvent().second;
+			std::string currentEventName = cAudioSource->GetEvent().first.c_str();
 
-			std::vector<std::string> eventName;
+			ImGui::Text("Event playing %s", cAudioSource->GetEvent().first.c_str());
+			ImGui::Text("Event id %u", cAudioSource->GetEvent().second);
 
-			for (std::map<std::string, unsigned int>::const_iterator it = App->audio->eventMap.cbegin(); it != App->audio->eventMap.cend(); ++it)
+			if (ImGui::BeginCombo("##Audio", currentEventName.c_str()))
 			{
-				eventName.push_back((*it).first);
-			}
-
-			static int item = 0;
-			const char* label = eventName[item].c_str();
-			unsigned int eventId = App->audio->eventMap[label];
-			if (ImGui::BeginCombo("##Audio", label))
-			{
-				for (int i = 0; i < eventName.size(); ++i)
+				for (auto it = App->audio->eventMap.cbegin(); it != App->audio->eventMap.cend(); ++it)
 				{
-					bool is_selected = (label == eventName[i].c_str());
-					if (ImGui::Selectable(eventName[i].c_str(), is_selected)) {
-						item = i;
-						cAudioSource->PauseFx(eventId);
-
+					bool isSelected = (currentEventName == it->first);
+					if (ImGui::Selectable(it->first.c_str(), isSelected)) {
+							currentEventName = it->first;
+							currentEvent = it->second;
+							cAudioSource->SetEvent(currentEventName, currentEvent);		
 					}
-					if (is_selected)
+					if (isSelected)
 						ImGui::SetItemDefaultFocus();
 				}
 				ImGui::EndCombo();
 			}
 
+			static float volume = 0.0f;
+			if (ImGui::DragFloat("Volume", &volume, 0.01f, 0.01f, 1.0f))
+			{
+				cAudioSource->SetVolume(volume);
+			}
+
 			if ((ImGui::Button("Play")))
 			{
-				cAudioSource->SetId(eventId);
-				cAudioSource->PlayFx(eventId);
+				cAudioSource->PlayFx(cAudioSource->GetEvent().first);
 			}
 			if ((ImGui::Button("Stop")))
 			{
-				cAudioSource->StopFx(eventId);
+				cAudioSource->StopFx(cAudioSource->GetEvent().second);
 			}
 		}
 		if (!show)
 		{
 			componentToDelete = cAudioSource;
+			showDeleteComponentPopup = true;
+		}
     }
     ImGui::Separator();
-  }
 }
 
 
@@ -1194,7 +1193,7 @@ void E_Inspector::DrawAudioListenerComponent(C_AudioListener* cAudioListener)
 	{
 		if (cAudioListener != nullptr)
 		{
-
+	
 		}
 		if (!show)
 		{
