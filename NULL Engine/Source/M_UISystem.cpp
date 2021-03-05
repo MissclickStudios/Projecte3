@@ -1,4 +1,5 @@
 #include "Application.h"
+#include "Log.h"
 
 #include "M_Scene.h"
 

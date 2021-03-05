@@ -18,6 +18,7 @@
 #include "AK/SpatialAudio/Common/AkSpatialAudio.h"	// Spatial Audio
 
 #include "Application.h"
+#include "Log.h"
 #include "M_FileSystem.h"
 #include "FileSystemDefinitions.h"
 #include "JSONParser.h"

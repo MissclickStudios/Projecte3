@@ -1,6 +1,8 @@
 #include <stdlib.h>
 																
 #include "Application.h"
+#include "ConfigurationSettings.h"
+#include "Log.h"
 
 #include "SDL/include/SDL.h"
 #include "Profiler.h"

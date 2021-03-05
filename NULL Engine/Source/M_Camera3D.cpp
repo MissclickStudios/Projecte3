@@ -1,6 +1,7 @@
 #include "Time.h"
 
-#include "Application.h"															// ATTENTION: Globals.h already included in Application.h.
+#include "Application.h"
+#include "Log.h"
 #include "M_Window.h"
 #include "M_Input.h"
 #include "M_Scene.h"

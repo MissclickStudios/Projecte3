@@ -3,7 +3,9 @@
 
 #include "PhysFS/include/physfs.h"
 
-#include "Application.h"																	// ATTENTION: Globals.h already included in Module.h
+#include "Application.h"
+#include "Log.h"
+#include "FileSystemDefinitions.h"
 #include "PathNode.h"
 
 #include "M_FileSystem.h"

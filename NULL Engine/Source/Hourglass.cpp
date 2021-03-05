@@ -1,7 +1,7 @@
 #include "SDL/include/SDL_timer.h"
 
 #include "Hourglass.h"
-
+#include "Log.h"
 #include "MemoryManager.h"
 
 /*Hourglass::Hourglass()
@@ -66,5 +66,6 @@ void Hourglass::ResetClock()
 
 std::string Hourglass::GetTimeAsString()
 {
-	return std::to_string(hours) + "h " + std::to_string(minutes) + "m " + std::to_string(seconds) + "s";
+	LOG("%d", sizeof(std::string));
+	return (std::to_string(hours) + "h " + std::to_string(minutes) + "m " + std::to_string(seconds) + "s");
 }

@@ -130,6 +130,8 @@ void E_Toolbar::TimeDisplays()
 	//can't call Time::Real::GetClock().GetTimeAsString() ???
 	Hourglass realTime = Time::Real::GetClock();
 	Hourglass gameTime = Time::Game::GetClock();
+	std::string hi = gameTime.GetTimeAsString();
+	LOG("%d", sizeof(std::string));
 	ImGui::Text("Real Time: "); ImGui::SameLine(); ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%s", std::string(std::to_string(realTime.hours) + "h " + std::to_string(realTime.minutes) + "m " + std::to_string(realTime.seconds) + "s").c_str());
 	ImGui::SameLine();
 	ImGui::Text("Game Time: "); ImGui::SameLine(); ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%s", std::string(std::to_string(gameTime.hours) + "h " + std::to_string(gameTime.minutes) + "m " + std::to_string(gameTime.seconds) + "s").c_str());

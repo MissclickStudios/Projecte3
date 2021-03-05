@@ -1,6 +1,7 @@
 #include "JSONParser.h"
 
 #include "Application.h"
+#include "VariableDefinitions.h"
 
 #include "GameObject.h"
 #include "C_Camera.h"

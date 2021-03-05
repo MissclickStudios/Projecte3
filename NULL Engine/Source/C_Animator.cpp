@@ -9,6 +9,8 @@
 #include "AnimatorClip.h"
 
 #include "Application.h"
+#include "FileSystemDefinitions.h"
+
 #include "M_ResourceManager.h"
 
 #include "R_Animation.h"

@@ -1,7 +1,7 @@
 #include "OpenGL.h"
 
-#include "Application.h"														// Globals.h already included in Application.h.
-
+#include "Application.h"
+#include "VariableDefinitions.h"
 #include "Primitive.h"
 
 #include "MemoryManager.h"

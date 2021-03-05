@@ -1,4 +1,5 @@
 #include "Application.h"
+#include "FileSystemDefinitions.h"
 #include "I_Shaders.h"
 #include "R_Shader.h"
 #include "M_FileSystem.h"
