@@ -33,6 +33,8 @@ public:
 	//The deceleration is internaly inverted, so setting a negative deceleration will cause an acceleration
 	void SetDeceleration(float force) { this->deceleration = force; }
 
+	float3 MousePositionToWorldPosition(float mapPositionY = 0);
+
 private: 
 
 	void MoveVelocity(C_RigidBody* rigidBody);

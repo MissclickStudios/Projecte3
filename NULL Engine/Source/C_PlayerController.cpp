@@ -9,6 +9,11 @@
 #include "C_RigidBody.h"
 #include "C_Transform.h"
 #include "C_PlayerController.h"
+#include "C_Camera.h"
+#include "M_Camera3D.h"
+#include "M_Window.h"
+#include "M_Editor.h"
+
 
 C_PlayerController::C_PlayerController(GameObject* owner) : Component(owner, ComponentType::PLAYER_CONTROLLER)
 {
@@ -70,6 +75,21 @@ bool C_PlayerController::LoadState(ParsonNode& root)
 	useAcceleration = root.GetBool("Use Acceleration");
 
 	return true;
+}
+
+float3 C_PlayerController::MousePositionToWorldPosition(float mapPositionY)
+{
+	float2 mousePos = App->editor->GetWorldMousePositionThroughEditor();
+
+	float normMouseX = mousePos.x / (float)App->window->GetWidth();
+	float normMouseY = mousePos.y / (float)App->window->GetHeight();
+
+	float rayOriginX = (normMouseX - 0.5f) * 2;
+	float rayOriginY = (normMouseY - 0.5f) * 2;
+
+	LineSegment raycast = App->camera->currentCamera->GetFrustum().UnProjectLineSegment(rayOriginX, rayOriginY);
+
+	return float3();
 }
 
 void C_PlayerController::MoveVelocity(C_RigidBody* rigidBody)
