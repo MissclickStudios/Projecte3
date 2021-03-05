@@ -12,7 +12,10 @@
 #define CHECKERS_WIDTH 64
 #define CHECKERS_HEIGHT 64
 
-R_Mesh::R_Mesh() : Resource(ResourceType::MESH)
+R_Mesh::R_Mesh() : Resource(ResourceType::MESH),
+drawVertexNormals	(false),
+drawFaceNormals		(false),
+hasBones			(false)
 {
 	
 }
@@ -24,8 +27,6 @@ R_Mesh::~R_Mesh()
 
 bool R_Mesh::CleanUp()
 {
-	bool ret = true;
-	
 	App->renderer->DeleteFromMeshRenderers(this);
 
 	// --- Delete Buffers
@@ -41,7 +42,10 @@ bool R_Mesh::CleanUp()
 	texCoords.clear();
 	indices.clear();
 
-	//bones.clear();
+	boneIDs.clear();
+	boneWeights.clear();
+	boneOffsets.clear();
+	boneMapping.clear();
 
 	return true;
 }
@@ -109,26 +113,6 @@ void R_Mesh::LoadBuffers()
 		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 		glEnableVertexAttribArray(2);
 	}
-}
-
-void R_Mesh::SwapBonesToVertexArray()
-{
-	/*for (auto bone = bones.cbegin(); bone != bones.cend(); ++bone)
-	{
-
-	}*/
-	
-	// Bone Weights
-	//bone_weights.push_back(BoneWeight(bone_id, weight));
-
-	// Bone offsets
-	//bone_offsets.push_back(offset_matrix);
-
-	// Bone Mapping
-	//bone_mapping.emplace(bone_name, bone_id);
-	
-	// Bone transforms
-
 }
 
 AABB R_Mesh::GetAABB() const

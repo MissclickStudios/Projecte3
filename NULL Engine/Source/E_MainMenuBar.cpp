@@ -1,4 +1,4 @@
-#include "Application.h"
+#include "EngineApplication.h"
 #include "M_Renderer3D.h"
 #include "M_Editor.h"
 #include "M_Scene.h"
@@ -30,7 +30,7 @@ bool E_MainMenuBar::Draw(ImGuiIO& io)
 	GameObjectsMainMenuItem();
 	HelpMainMenuItem();
 
-	if (App->editor->showCloseAppPopup)
+	if (EngineApp->editor->showCloseAppPopup)
 	{
 		CloseAppPopup();																	// Not actually inside MainMenuBar but related to FileMainMenuItem().
 	}
@@ -58,14 +58,14 @@ bool E_MainMenuBar::FileMainMenuItem()
 		
 		if (ImGui::MenuItem("Open Scene", "Ctrl+O"))
 		{
-			App->editor->showLoadFilePopup = true;
+			EngineApp->editor->showLoadFilePopup = true;
 		}
 
 		ImGui::Separator();
 
 		if (ImGui::MenuItem("Save", "Ctrl+S"))
 		{
-			App->scene->SaveScene();
+			EngineApp->scene->SaveScene();
 			
 			LOG("[SCENE] SAVED THE SCENE >:DDD");
 		}
@@ -80,7 +80,7 @@ bool E_MainMenuBar::FileMainMenuItem()
 
 		ImGui::Separator();
 		
-		ImGui::MenuItem("Quit", "ESC", &App->editor->showCloseAppPopup);		// MenuItem(Item name string, shortcut string, bool to modify / get modified by)
+		ImGui::MenuItem("Quit", "ESC", &EngineApp->editor->showCloseAppPopup);		// MenuItem(Item name string, shortcut string, bool to modify / get modified by)
 
 		ImGui::EndMenu();
 	}
@@ -131,12 +131,12 @@ bool E_MainMenuBar::WindowMainMenuItem()
 
 	if (ImGui::BeginMenu("Window"))
 	{
-		ImGui::MenuItem("Configuration", "1", &App->editor->showConfiguration);
-		ImGui::MenuItem("Hierarchy", "2", &App->editor->showHierarchy);
-		ImGui::MenuItem("Inspector", "3", &App->editor->showInspector);
-		ImGui::MenuItem("Console", "4", &App->editor->showConsole);
-		ImGui::MenuItem("GuiDemo", "8", &App->editor->showImguiDemo);
-		ImGui::MenuItem("About", "9", &App->editor->showAboutPopup);
+		ImGui::MenuItem("Configuration", "1", &EngineApp->editor->showConfiguration);
+		ImGui::MenuItem("Hierarchy", "2", &EngineApp->editor->showHierarchy);
+		ImGui::MenuItem("Inspector", "3", &EngineApp->editor->showInspector);
+		ImGui::MenuItem("Console", "4", &EngineApp->editor->showConsole);
+		ImGui::MenuItem("GuiDemo", "8", &EngineApp->editor->showImguiDemo);
+		ImGui::MenuItem("About", "9", &EngineApp->editor->showAboutPopup);
 
 		ImGui::EndMenu();
 	}
@@ -150,13 +150,13 @@ bool E_MainMenuBar::ViewMainMenuItem()
 
 	if (ImGui::BeginMenu("View"))
 	{
-		bool showGrid = App->editor->GetShowWorldGrid();
+		bool showGrid = EngineApp->editor->GetShowWorldGrid();
 		ImGui::MenuItem("World Grid", "F1", &showGrid);
-		App->editor->SetShowWorldGrid(showGrid);
+		EngineApp->editor->SetShowWorldGrid(showGrid);
 		
-		bool showAxis = App->editor->GetShowWorldAxis();
+		bool showAxis = EngineApp->editor->GetShowWorldAxis();
 		ImGui::MenuItem("World Axis", "F2", &showAxis);
-		App->editor->SetShowWorldAxis(showAxis);
+		EngineApp->editor->SetShowWorldAxis(showAxis);
 
 		ImGui::EndMenu();
 	}
@@ -172,7 +172,7 @@ bool E_MainMenuBar::GameObjectsMainMenuItem()
 	{
 		if (ImGui::MenuItem("Create Empty"))
 		{
-			App->scene->CreateGameObject("EmptyGameObject", App->scene->GetSceneRoot());
+			EngineApp->scene->CreateGameObject("EmptyGameObject", EngineApp->scene->GetSceneRoot());
 
 			LOG("[SCENE] Created An Empty Object. Root Object defaults as parent.");
 		}
@@ -181,7 +181,7 @@ bool E_MainMenuBar::GameObjectsMainMenuItem()
 		{
 			for (uint i = 0; i < 10; ++i)
 			{
-				App->scene->CreateGameObject("EmptyGameObject", App->scene->GetSceneRoot());
+				EngineApp->scene->CreateGameObject("EmptyGameObject", EngineApp->scene->GetSceneRoot());
 			}
 
 			LOG("[SCENE] Created 10 Empty Objects. Root Object defaults as parent.");
@@ -189,9 +189,9 @@ bool E_MainMenuBar::GameObjectsMainMenuItem()
 		
 		if (ImGui::BeginMenu("Primitives"))
 		{
-			bool showPrimitiveExamples = App->editor->GetShowPrimitiveExamples();
+			bool showPrimitiveExamples = EngineApp->editor->GetShowPrimitiveExamples();
 			ImGui::MenuItem("Show Examples", "", &showPrimitiveExamples);
-			App->editor->SetShowPrimitiveExamples(showPrimitiveExamples);
+			EngineApp->editor->SetShowPrimitiveExamples(showPrimitiveExamples);
 
 			ImGui::Separator();
 
@@ -209,21 +209,21 @@ bool E_MainMenuBar::GameObjectsMainMenuItem()
 
 		if (ImGui::BeginMenu("Draw Mode"))
 		{
-			bool mesh = !App->renderer->GetRenderWireframes();
-			bool wire = App->renderer->GetRenderWireframes();
+			bool mesh = !EngineApp->renderer->GetRenderWireframes();
+			bool wire = EngineApp->renderer->GetRenderWireframes();
 			bool vert = false;
 
 			if (ImGui::MenuItem("Mesh", "TBD", &mesh))
 			{
 				if (wire)
 				{
-					App->renderer->SetRenderWireframes(false);
+					EngineApp->renderer->SetRenderWireframes(false);
 				}
 			}
 			
 			if (ImGui::MenuItem("Wireframe", "F3", &wire))
 			{
-				App->renderer->SetRenderWireframes(wire);
+				EngineApp->renderer->SetRenderWireframes(wire);
 			}
 			
 			ImGui::MenuItem("Vertices", "TBD", &vert, false);
@@ -254,24 +254,24 @@ bool E_MainMenuBar::HelpMainMenuItem()
 	{
 		if (ImGui::Button("About NULL Engine"))
 		{
-			App->editor->showAboutPopup = true;
+			EngineApp->editor->showAboutPopup = true;
 		}
 		
 		ImGui::Separator();
 		
 		if (ImGui::MenuItem("Documentation"))
 		{
-			App->RequestBrowser("https://github.com/BarcinoLechiguino/NULL_Engine");
+			EngineApp->RequestBrowser("https://github.com/BarcinoLechiguino/NULL_Engine");
 		}
 
 		if (ImGui::MenuItem("Download Latest"))
 		{
-			App->RequestBrowser("https://github.com/BarcinoLechiguino/NULL_Engine/tags");
+			EngineApp->RequestBrowser("https://github.com/BarcinoLechiguino/NULL_Engine/tags");
 		}
 
 		if (ImGui::MenuItem("Report a Bug"))
 		{
-			App->RequestBrowser("https://github.com/BarcinoLechiguino/NULL_Engine/issues/new");
+			EngineApp->RequestBrowser("https://github.com/BarcinoLechiguino/NULL_Engine/issues/new");
 		}
 
 		ImGui::EndMenu();
@@ -292,9 +292,9 @@ bool E_MainMenuBar::CloseAppPopup()
 		if (ImGui::Button("CONFIRM"))
 		{
 			ImGui::CloseCurrentPopup();
-			App->editor->showCloseAppPopup = false;
+			EngineApp->editor->showCloseAppPopup = false;
 
-			App->quit = true;
+			EngineApp->quit = true;
 		}
 		ImGui::PopStyleColor();
 
@@ -304,7 +304,7 @@ bool E_MainMenuBar::CloseAppPopup()
 		if (ImGui::Button("CANCEL"))
 		{
 			ImGui::CloseCurrentPopup();
-			App->editor->showCloseAppPopup = false;
+			EngineApp->editor->showCloseAppPopup = false;
 		}
 		ImGui::PopStyleColor();
 

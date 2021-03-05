@@ -517,9 +517,9 @@ bool M_ResourceManager::GetLibraryFilePathsFromMeta(const char* assetsPath, std:
 	std::string extension = "[NONE]";
 
 	// --- MAIN RESOURCE
-	uint32 resourceUid	= (uint32)metaRoot.GetNumber("UID");
-	ResourceType type	= (ResourceType)(int)metaRoot.GetNumber("Type");
-	bool success		= GetLibraryDirectoryAndExtensionFromType(type, directory, extension);
+	uint32 resourceUid		= (uint32)metaRoot.GetNumber("UID");
+	ResourceType type		= (ResourceType)((int)metaRoot.GetNumber("Type"));
+	bool success			= GetLibraryDirectoryAndExtensionFromType(type, directory, extension);
 
 	if (!success)
 	{
@@ -557,7 +557,8 @@ bool M_ResourceManager::GetLibraryFilePathsFromMeta(const char* assetsPath, std:
 		extension = "[NONE]";
 
 		containedUid	= (uint32)containedNode.GetNumber("UID");
-		containedType	= (ResourceType)(int)containedNode.GetNumber("Type");
+		containedType	= (ResourceType)((int)containedNode.GetNumber("Type"));
+
 		success			= GetLibraryDirectoryAndExtensionFromType(containedType, directory, extension);
 		if (!success)
 		{
@@ -1611,5 +1612,11 @@ void M_ResourceManager::GetAllShaders(std::vector<R_Shader*>& shaders)
 
 void M_ResourceManager::GetResources(std::map<uint32, Resource*>& resources) const
 {
+	//TODO: this function call from editor resources causes memleak
 	resources = this->resources;
+}
+
+const std::map<uint32, Resource*>* M_ResourceManager::GetResources() const
+{
+	return &this->resources;
 }

@@ -2,6 +2,7 @@
 #define __M_INPUT_H__
 
 #include "Module.h"
+#include <vector>
 
 #define NUM_CONTROLLER_BUTTONS 15
 #define NUM_CONTROLLER_AXIS 4
@@ -63,7 +64,7 @@ struct GameController
 
 #define MAX_MOUSE_BUTTONS 5
 
-class M_Input : public Module
+class NULL_API M_Input : public Module
 {
 public:
 	
@@ -95,6 +96,8 @@ public:
 	int				GetMouseYWheel			() const;
 
 	bool			WindowSizeWasManipulated(Uint8 windowEvent) const;										// Uint8 is an SDL typedef for unsigned char.
+	
+	void			AddModuleToProcessInput(Module* module);												//Add a module that needs SDL_Events inputs info
 
 	void			CheckGameControllerState();
 
@@ -116,6 +119,8 @@ private:
 
 	int				prevMousePosX;
 	int				prevMousePosY;
+
+	std::vector<Module*> ModulesProcessInput;
 };
 
 #endif // !__M_INPUT_H__

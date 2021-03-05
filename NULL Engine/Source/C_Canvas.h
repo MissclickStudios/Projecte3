@@ -17,7 +17,7 @@ struct Rect
 	float x, y, w, h;
 };
 
-class C_Canvas : public Component
+class NULL_API C_Canvas : public Component
 {
 public:
 	C_Canvas(GameObject* owner);

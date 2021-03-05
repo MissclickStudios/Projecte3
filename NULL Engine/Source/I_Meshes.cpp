@@ -41,22 +41,20 @@ void Importer::Meshes::Import(const aiMesh* assimpMesh, R_Mesh* rMesh)
 	
 	// Loading the data from the mesh into the corresponding vectors
 	if (assimpMesh->HasPositions())
-		Utilities::GetVertices(assimpMesh, rMesh);														// Gets the vertices data stored in the given ai_mesh.
+		Utilities::GetVertices(assimpMesh, rMesh);													// Gets the vertices data stored in the given ai_mesh.
 
 	if (assimpMesh->HasNormals())
-		Utilities::GetNormals(assimpMesh, rMesh);															// Gets the normals data stored in the given ai_mesh
+		Utilities::GetNormals(assimpMesh, rMesh);													// Gets the normals data stored in the given ai_mesh
 
 	if (assimpMesh->HasTextureCoords(0))
-		Utilities::GetTexCoords(assimpMesh, rMesh);														// Gets the tex coords data stored in the given ai_mesh.
+		Utilities::GetTexCoords(assimpMesh, rMesh);													// Gets the tex coords data stored in the given ai_mesh.
 
 	if (assimpMesh->HasFaces())																		// Double checked if for whatever reason Generate Mesh is called independently.
-		Utilities::GetIndices(assimpMesh, rMesh);															// Gets the indices data stored in the given ai_mesh.
+		Utilities::GetIndices(assimpMesh, rMesh);													// Gets the indices data stored in the given ai_mesh.
 
 	// Loading and reorganizing the bone data from the mesh
 	if (assimpMesh->HasBones())
 		Utilities::GetBones(assimpMesh, rMesh);
-
-	//rMesh->SwapBonesToVertexArray();
 
 	rMesh->LoadBuffers();																			// 
 	rMesh->SetAABB();																				// 
@@ -84,7 +82,6 @@ void Importer::Meshes::Utilities::GetNormals(const aiMesh* assimpMesh, R_Mesh* r
 
 void Importer::Meshes::Utilities::GetTexCoords(const aiMesh* assimpMesh, R_Mesh* rMesh)
 {	
-
 	uint texCoordsSize = assimpMesh->mNumVertices * 2;												// There will be 2 tex coordinates per vertex.
 	rMesh->texCoords.resize(texCoordsSize);														// Allocating in advance the memory required to store all the texture coordinates.
 
@@ -122,28 +119,24 @@ void Importer::Meshes::Utilities::GetIndices(const aiMesh* assimpMesh, R_Mesh* r
 
 void Importer::Meshes::Utilities::GetBones(const aiMesh* assimpMesh, R_Mesh* rMesh)
 {
-	rMesh->isSkinned = true;
+	rMesh->hasBones = true;
 
-	rMesh->boneIDs = new int[assimpMesh->mNumVertices * 4];		//Usually between 1 and 4
-	rMesh->boneWeights = new float[assimpMesh->mNumVertices * 4];
+	std::multimap<uint, BoneWeight> weights;
 
 	for (uint i = 0; i < assimpMesh->mNumBones; ++i)
 	{
-		aiBone* assimpBone = assimpMesh->mBones[i];
-		std::string name = assimpBone->mName.C_Str();
-		
-		rMesh->boneMapping.emplace(name, i);
+		aiBone* assimpBone		= assimpMesh->mBones[i];
+		std::string boneName	= assimpBone->mName.C_Str();
+		rMesh->boneMapping.emplace(boneName, i);
 
-		float4x4 offsetMatrix = float4x4::identity;
+		float4x4 offsetMatrix	= float4x4::identity;
 		Utilities::GetOffsetMatrix(assimpBone, offsetMatrix);
 		rMesh->boneOffsets.push_back(offsetMatrix);
-
-		for (uint j = 0; j < assimpBone->mNumWeights; ++j)
-		{
-			rMesh->boneIDs[i + j] = assimpBone->mWeights[j].mVertexId;
-			rMesh->boneWeights[i + j] = assimpBone->mWeights[j].mWeight;
-		}
+		
+		Utilities::GetWeights(assimpBone, i, weights);
 	}
+
+	SetBoneIDsAndWeights(weights, rMesh);
 }
 
 void Importer::Meshes::Utilities::GetOffsetMatrix(const aiBone* assimpBone, float4x4& offsetMatrix)
@@ -160,9 +153,45 @@ void Importer::Meshes::Utilities::GetOffsetMatrix(const aiBone* assimpBone, floa
 	offsetMatrix = float4x4::FromTRS(maT.position, maT.rotation, maT.scale);
 }
 
-void Importer::Meshes::Utilities::GetWeights(const aiBone* assimpBone, std::vector<VertexWeight>& weights)
+void Importer::Meshes::Utilities::GetWeights(const aiBone* assimpBone, uint boneID, std::multimap<uint, BoneWeight>& weights)
 {
+	if (assimpBone == nullptr)
+		return;
+
+	for (uint i = 0; i < assimpBone->mNumWeights; ++i)
+	{
+		weights.emplace(assimpBone->mWeights[i].mVertexId, BoneWeight(boneID, assimpBone->mWeights[i].mWeight));
+	}
+}
+
+void Importer::Meshes::Utilities::SetBoneIDsAndWeights(const std::multimap<uint, BoneWeight>& weights, R_Mesh* rMesh)
+{
+	//uint bufferSize = assimpMesh->mNumVertices * 4;											// TMP. IS IT BETTER TO USE mNumVertices at GetBones() or call (vertices.size() / 3) here?
+	uint bufferSize = (rMesh->vertices.size() / 3) * 4;											// size / 3 as vertex axis are stored individually in the vector. (1 vert = 3 positions).
+	rMesh->boneIDs.resize(bufferSize);															// Each vertex will be affected by 1 to 4 bones each.
+	rMesh->boneWeights.resize(bufferSize);
+
+	memset(&rMesh->boneIDs[0], INVALID_BONE_ID, bufferSize);
+	memset(&rMesh->boneWeights[0], 0, bufferSize);
 	
+	uint totalBones		= 0;
+	uint currentBone	= 0;
+	for (auto item = weights.begin(); item != weights.end(); ++item)
+	{
+		if (totalBones == 0)																	// Dirty way to know at which position of the vectors to write to.
+		{																						//
+			totalBones	= weights.count(item->first);											//
+			currentBone = 0;																	//
+		}																						//
+
+		uint index = item->first * 4 + currentBone;												// ---
+
+		rMesh->boneIDs[index] = item->second.boneId;
+		rMesh->boneWeights[index] = item->second.weight;
+
+		--totalBones;
+		++currentBone;
+	}
 }
 
 uint Importer::Meshes::Utilities::GetBonesDataSize(const R_Mesh* rMesh)
@@ -173,33 +202,45 @@ uint Importer::Meshes::Utilities::GetBonesDataSize(const R_Mesh* rMesh)
 		return 0;
 	}
 	
-	uint size = 0;
+	uint boneBufferSize = (rMesh->vertices.size() / 3) * 4;
 
-	size += sizeof(int) * rMesh->vertices.size()/3 * 4 + sizeof(float) * rMesh->vertices.size()/3 * 4
-		+ sizeof(uint) * rMesh->boneMapping.size() * 2	//Store bone names size and boneIds
-		+ sizeof(float4x4) * rMesh->boneOffsets.size();
-	
-	for (std::map<std::string, uint>::const_iterator bone = rMesh->boneMapping.begin(); bone != rMesh->boneMapping.end(); bone++)
-	{
-		size += bone->first.size() * sizeof(char);
-	}
-	
-	return size;
+	uint sizeBoneIDs = boneBufferSize * sizeof(uint);
+	uint sizeWeights = boneBufferSize * sizeof(float);
+	uint sizeOffsets = rMesh->boneOffsets.size() * sizeof(float4x4);
+	uint sizeMapping = GetBoneMappingSize(rMesh->boneMapping);
+
+	return (sizeBoneIDs + sizeWeights + sizeOffsets + sizeMapping);
 }
 
-void Importer::Meshes::Utilities::SaveBoneMapping(char** cursor,const R_Mesh* rMesh)
+uint Importer::Meshes::Utilities::GetBoneMappingSize(const std::map<std::string, uint>& boneMapping)
 {
-	uint bytes = 0;
+	uint sizeMap = sizeof(uint);
+	uint sizeIDs = boneMapping.size() * sizeof(uint);
+	uint sizeStr = boneMapping.size() * sizeof(uint);									// Size required to store the size of each of the strings.
 
-	for (std::map<std::string, uint>::const_iterator bone = rMesh->boneMapping.begin(); bone != rMesh->boneMapping.end(); ++bone)
+	uint sizeNames = 0;
+	for (auto bone = boneMapping.begin(); bone != boneMapping.end(); ++bone)
 	{
-		uint nameLength[1] = { bone->first.length() };
+		sizeNames += bone->first.size() * sizeof(char);
+	}
+
+	return (sizeMap + sizeIDs + sizeStr + sizeNames);
+}
+
+void Importer::Meshes::Utilities::SaveBoneMapping(char** cursor, const std::map<std::string, uint>& boneMapping)
+{
+	uint bytes		= 0;
+	uint nameLength = 0;
+
+	for (auto bone = boneMapping.begin(); bone != boneMapping.end(); ++bone)
+	{
+		nameLength = bone->first.length();
 
 		bytes = sizeof(uint);
-		memcpy(*cursor, &nameLength[0], bytes);
+		memcpy(*cursor, (const void*)&nameLength, bytes);
 		*cursor += bytes;
 
-		bytes = bone->first.length() * sizeof(char);
+		bytes = nameLength * sizeof(char);
 		memcpy(*cursor, bone->first.c_str(), bytes);
 		*cursor += bytes;
 
@@ -211,22 +252,15 @@ void Importer::Meshes::Utilities::SaveBoneMapping(char** cursor,const R_Mesh* rM
 	}
 }
 
-void Importer::Meshes::Utilities::SaveBoneOffset(char** cursor, const R_Mesh* rMesh)
-{
-	uint bytes = sizeof(float4x4) * rMesh->boneOffsets.size();
-	memcpy(*cursor, &rMesh->boneOffsets[0], bytes);
-	*cursor += bytes;
-}
-
 void Importer::Meshes::Utilities::LoadBoneMapping(char** cursor, R_Mesh* rMesh, uint bonesSize)
 {
 	uint nameLength = 0;
 	uint bytes = 0;
 
-	for (uint i =0; i < bonesSize;i++)
+	for (uint i = 0; i < bonesSize; ++i)
 	{
 		std::string name;
-		uint uid = 0;
+		uint boneID = 0;
 
 		bytes = sizeof(uint);
 		memcpy(&nameLength ,*cursor, bytes);
@@ -238,10 +272,10 @@ void Importer::Meshes::Utilities::LoadBoneMapping(char** cursor, R_Mesh* rMesh, 
 		*cursor += bytes;
 
 		bytes = sizeof(uint);
-		memcpy(&uid, *cursor, bytes);
+		memcpy(&boneID, *cursor, bytes);
 		*cursor += bytes;
 
-		rMesh->boneMapping.emplace(name, uid);
+		rMesh->boneMapping.emplace(name, boneID);
 	}
 }
 
@@ -266,19 +300,14 @@ uint Importer::Meshes::Save(const R_Mesh* rMesh, char** buffer)
 	uint headerData[HEADER_SIZE] = {
 		rMesh->vertices.size(),																	// 0 --> Num Vertices
 		rMesh->normals.size(), 																	// 1 --> Num Normals
-		rMesh->texCoords.size(), 																	// 2 --> Num Texture Coordinates
+		rMesh->texCoords.size(), 																// 2 --> Num Texture Coordinates
 		rMesh->indices.size(), 																	// 3 --> Num Indices
-		rMesh->boneMapping.size()																	// 4 --> Num Bones
+		rMesh->boneMapping.size()																// 4 --> Num Bones
 	};
 
 	uint headerDataSize			= sizeof(headerData) + sizeof(uint);
 	uint arrayDataSize			= (headerData[0] + headerData[1] + headerData[2]) * sizeof(float) + headerData[3] * sizeof(uint);
-	
-	uint bonesDataSize = 0;
-
-	if(rMesh->isSkinned)
-		bonesDataSize = Utilities::GetBonesDataSize(rMesh);
-
+	uint bonesDataSize			= (rMesh->hasBones) ? Utilities::GetBonesDataSize(rMesh) : 0;
 	uint precalculatedDataSize	= rMesh->aabb.NumVertices() * sizeof(float) * 3;
 
 	uint size = headerDataSize + arrayDataSize + bonesDataSize + precalculatedDataSize;
@@ -289,9 +318,9 @@ uint Importer::Meshes::Save(const R_Mesh* rMesh, char** buffer)
 		return 0;
 	}
 
-	*buffer	= new char[size];
-	char* cursor = *buffer;
-	uint bytes	= 0;
+	*buffer			= new char[size];
+	char* cursor	= *buffer;
+	uint bytes		= 0;
 
 	// --- HEADER DATA ---
 	bytes = sizeof(headerData);
@@ -319,30 +348,23 @@ uint Importer::Meshes::Save(const R_Mesh* rMesh, char** buffer)
 	cursor += bytes;
 
 	// --- BONE DATA ---
-	if (rMesh->isSkinned)
+	if (rMesh->hasBones)
 	{
-		uint nVertices = rMesh->vertices.size() / 3 * 4;
+		uint nVertices = (rMesh->vertices.size() / 3) * 4;
 
 		bytes = nVertices * sizeof(uint);
 		memcpy_s(cursor, size, &rMesh->boneIDs[0], bytes);
 		cursor += bytes;
 
-		for (int i = 0; i < 10; i++)
-		{
-			LOG("boneIDs %d %d",i,rMesh->boneIDs[i]);
-		}
-
 		bytes = nVertices * sizeof(float);
 		memcpy_s(cursor, size, &rMesh->boneWeights[0], bytes);
 		cursor += bytes;
 
-		for (int i = 0; i < 10; i++)
-		{
-			LOG("boneIDs %d %f", i, rMesh->boneWeights[i]);
-		}
+		uint bytes = rMesh->boneOffsets.size() * sizeof(float4x4);
+		memcpy(cursor, &rMesh->boneOffsets[0], bytes);
+		cursor += bytes;
 
-		Utilities::SaveBoneMapping(&cursor,rMesh);
-		Utilities::SaveBoneOffset(&cursor, rMesh);
+		Utilities::SaveBoneMapping(&cursor, rMesh->boneMapping);
 	}
 
 	// --- PRECALCULATED DATA ---
@@ -421,30 +443,38 @@ bool Importer::Meshes::Load(const char* buffer, R_Mesh* rMesh)
 	cursor += bytes;
 
 	// ---BONE DATA ---
-	uint nVertices = rMesh->vertices.size() / 3 * 4;
-
-	rMesh->boneIDs = new int[nVertices];
-	rMesh->boneWeights = new float[nVertices];
-
-	bytes = nVertices * sizeof(uint);
-	memcpy_s(rMesh->boneIDs,bytes,cursor, bytes);
-	cursor += bytes;
-	for (int i = 0; i < 10; i++)
+	if (headerData[4] != 0)
 	{
-		LOG("boneIDs %d %d", i, rMesh->boneIDs[i]);
-	}
-	bytes = nVertices * sizeof(float);
-	memcpy_s(rMesh->boneWeights, bytes, cursor, bytes);
-	cursor += bytes;
-	for (int i = 0; i < 10; i++)
-	{
-		LOG("boneIDs %d %f", i, rMesh->boneWeights[i]);
-	}
-	//bone mapping
-	Utilities::LoadBoneMapping(&cursor, rMesh, headerData[4]);
+		uint nVertices = (rMesh->vertices.size() / 3) * 4;
 
-	//boneOffsets
-	Utilities::LoadBoneOffset(&cursor, rMesh, headerData[4]);
+		rMesh->boneIDs.resize(nVertices);
+		rMesh->boneWeights.resize(nVertices);
+		rMesh->boneOffsets.resize(headerData[4]);
+
+		bytes = nVertices * sizeof(uint);
+		memcpy_s(&rMesh->boneIDs[0], bytes, cursor, bytes);
+		cursor += bytes;
+
+		bytes = nVertices * sizeof(float);
+		memcpy_s(&rMesh->boneWeights[0], bytes, cursor, bytes);
+		cursor += bytes;
+
+		for (int i = 0; i < 10; i++)
+		{
+			LOG("boneWeights %d = %f", i, rMesh->boneWeights[i]);
+		}
+
+		uint bytes = headerData[4] * sizeof(float4x4);
+		memcpy(&rMesh->boneOffsets[0], cursor, bytes);
+		cursor += bytes;
+
+		Utilities::LoadBoneMapping(&cursor, rMesh, headerData[4]);
+
+		for (auto bone = rMesh->boneMapping.begin(); bone != rMesh->boneMapping.end(); ++bone)
+		{
+			LOG("BONE { %s } ==> ID { %u }", bone->first.c_str(), bone->second);
+		}
+	}
 
 	// --- PRECALCULATED DATA ---
 	float3 aabbCorners[8];

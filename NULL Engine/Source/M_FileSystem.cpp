@@ -838,10 +838,10 @@ std::string M_FileSystem::GetFileExtension(const char* path)
 
 	extension = (dotPosition != fullPath.npos) ? fullPath.substr(dotPosition + 1) : "[NONE]";
 
-	if (extension == "[NONE]")
+	/*if (extension == "[NONE]")
 	{
 		//LOG("[WARNING] File System: Path %s does not have any file extension!", path);
-	}
+	}*/
 
 	return extension;
 }

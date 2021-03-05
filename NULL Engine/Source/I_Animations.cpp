@@ -249,7 +249,7 @@ uint Importer::Animations::Utilities::GetChannelsDataSize(const R_Animation* rAn
 
 void Importer::Animations::Utilities::StoreChannelName(const Channel& rChannel, char** cursor)
 {
-	uint bytes			= 0;
+	uint bytes		= 0;
 	uint nameLength	= rChannel.name.length();
 
 	bytes = sizeof(uint);
@@ -327,7 +327,7 @@ void Importer::Animations::Utilities::StoreScaleKeysData(const Channel& rChannel
 
 void Importer::Animations::Utilities::LoadChannelName(char** cursor, std::string& channelName)
 {
-	uint bytes			= 0;
+	uint bytes		= 0;
 	uint nameLength	= 0;
 
 	bytes = sizeof(uint);
@@ -335,7 +335,7 @@ void Importer::Animations::Utilities::LoadChannelName(char** cursor, std::string
 	*cursor += bytes;
 	
 	channelName.resize(nameLength);
-	bytes	= nameLength * sizeof(char);
+	bytes = nameLength * sizeof(char);
 	memcpy(&channelName[0], *cursor, bytes);
 	*cursor += bytes;
 }

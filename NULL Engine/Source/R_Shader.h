@@ -40,7 +40,7 @@ struct Uniform
 
 };
 
-class R_Shader : public Resource
+class NULL_API R_Shader : public Resource
 {
 public:
 

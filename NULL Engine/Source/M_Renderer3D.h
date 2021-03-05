@@ -87,8 +87,8 @@ struct CuboidRenderer																							// Will render the wireframe of any 
 
 	const float3*	vertices;
 	CuboidType		type;
-	const Color		color;
-	const float		edgeWidth;
+	Color		color;
+	float		edgeWidth;
 };
 
 struct RayRenderer
@@ -110,14 +110,14 @@ struct SkeletonRenderer
 
 	void Render();
 
-	const std::vector<LineSegment>	bones;
-	const Color						color;
-	const float						boneWidth;
+	std::vector<LineSegment>	bones;
+	Color						color;
+	float						boneWidth;
 };
 
 #define MAX_LIGHTS 8
 
-class M_Renderer3D : public Module
+class NULL_API M_Renderer3D : public Module
 {
 public:
 	M_Renderer3D(bool isActive = true);
@@ -260,6 +260,9 @@ public:																											// --- DEBUG GET/SET METHODS
 	void			SetRenderPrimtiveExamples	(const bool& setTo);											// 
 
 public:
+	void AddPostSceneRenderModule(Module* module);
+
+public:
 	Light					lights[MAX_LIGHTS];																	// 
 	SDL_GLContext			context;																			// 
 	R_Shader*				defaultShader = nullptr;
@@ -310,15 +313,17 @@ private:																										// --- DEBUG VARIABLES ---		// TODO: CREATE A 
 	float	rayWidth;																			// 
 	float	boneWidth;																			// 
 	
-	bool	renderWorldGrid;																	// 
-	bool	renderWorldAxis;																	// 
-	bool	renderWireframes;																	//
-	bool	renderVertexNormals;																// 
-	bool	renderFaceNormals;																	// 
-	bool	renderBoundingBoxes;																// 
-	bool	renderSkeletons;																	//
+	bool					renderWorldGrid;																	// 
+	bool					renderWorldAxis;																	// 
+	bool					renderWireframes;																	//
+	bool					renderVertexNormals;																// 
+	bool					renderFaceNormals;																	// 
+	bool					renderBoundingBoxes;																// 
+	bool					renderSkeletons;																	//
 
-	bool	renderPrimitiveExamples;															//
+	bool					renderPrimitiveExamples;															//
+
+	std::vector<Module*>	PostSceneRenderModules;
 };
 
 #endif // !__M_RENDERER_3D_H__

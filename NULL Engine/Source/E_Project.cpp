@@ -1,12 +1,14 @@
 #include <vector>
 #include <algorithm>
 
+#include "Profiler.h"
+
 #include "VariableTypedefs.h"
 #include "Macros.h"
 
 #include "PathNode.h"
 
-#include "Application.h"
+#include "EngineApplication.h"
 #include "M_Window.h"
 #include "M_FileSystem.h"
 #include "M_ResourceManager.h"
@@ -36,7 +38,7 @@ draggedAsset				("[NONE]")
 	iconSize		= ImVec2(64.0f, 64.0f);
 	iconOffset		= ImVec2(20.0f, 0.0f);
 	textOffset		= ImVec2(iconOffset.x, iconSize.y);
-	winSize		= ImVec2(0.0f, 0.0f);
+	winSize			= ImVec2(0.0f, 0.0f);
 }
 
 E_Project::~E_Project()
@@ -47,6 +49,8 @@ E_Project::~E_Project()
 bool E_Project::Draw(ImGuiIO& io)
 {
 	bool ret = true;
+
+	BROFILER_CATEGORY("Project Panel", Profiler::Color::HoneyDew);
 
 	CheckFlags();
 
@@ -84,7 +88,7 @@ void E_Project::CheckFlags()
 {
 	if (!iconsAreLoaded)
 	{
-		App->editor->GetEngineIconsThroughEditor(engineIcons);
+		EngineApp->editor->GetEngineIconsThroughEditor(engineIcons);
 		iconsAreLoaded = true;
 	}
 	
@@ -99,7 +103,7 @@ void E_Project::CheckFlags()
 		std::vector<std::string> extensionsToFilter;
 		extensionsToFilter.push_back("meta");
 
-		rootDirectory = App->fileSystem->GetAllFiles(ASSETS_DIRECTORY, nullptr, &extensionsToFilter);
+		rootDirectory = EngineApp->fileSystem->GetAllFiles(ASSETS_DIRECTORY, nullptr, &extensionsToFilter);
 
 		extensionsToFilter.clear();
 
@@ -127,16 +131,16 @@ void E_Project::CheckFlags()
 		for (uint i = 0; i < displayDirectory.children.size(); ++i)
 		{
 			const char* path		= displayDirectory.children[i].path.c_str();
-			std::string file		= App->fileSystem->GetFileAndExtension(path);
-			ResourceType type		= App->resourceManager->GetTypeFromAssetsExtension(path);
+			std::string file		= EngineApp->fileSystem->GetFileAndExtension(path);
+			ResourceType type		= EngineApp->resourceManager->GetTypeFromAssetsExtension(path);
 			
 			R_Texture* assetTexture = nullptr;
 			if (type == ResourceType::TEXTURE)
 			{
-				assetTexture = (R_Texture*)App->resourceManager->GetResourceFromLibrary(path);
+				assetTexture = (R_Texture*)EngineApp->resourceManager->GetResourceFromLibrary(path);
 			}
 			
-			if (type != ResourceType::NONE)
+			if (type != ResourceType::NONE) //TODO check this
 			{
 				assetsToDisplay.push_back({ path, file, type, assetTexture });
 			}
@@ -148,7 +152,7 @@ void E_Project::CheckFlags()
 
 void E_Project::OnResize()
 {
-	winSize = ImVec2((float)App->window->GetWidth(), (float)App->window->GetHeight());
+	winSize = ImVec2((float)EngineApp->window->GetWidth(), (float)EngineApp->window->GetHeight());
 }
 
 void E_Project::GenerateDockspace(ImGuiIO& io) const
@@ -176,7 +180,8 @@ void E_Project::DrawMenuBar() const
 
 void E_Project::DrawAssetsTree()
 {
-	ImGui::Begin("AssetsTree", false);
+	bool retraso = false;
+	ImGui::Begin("AssetsTree", &retraso);
 
 	if (ImGui::TreeNodeEx(ASSETS_PATH, ImGuiTreeNodeFlags_DefaultOpen))
 	{
@@ -190,7 +195,8 @@ void E_Project::DrawAssetsTree()
 
 void E_Project::DrawFolderExplorer()
 {
-	ImGui::Begin("FolderExplorer", false);
+	bool retraso = false;
+	ImGui::Begin("FolderExplorer", &retraso);
 
 	ImGui::Text(directoryToDisplay);
 
@@ -209,12 +215,12 @@ void E_Project::DrawDirectoriesTree(const char* rootDirectory, const char* exten
 	std::vector<std::string> files;
 	std::string rootDir = rootDirectory;
 	
-	App->fileSystem->DiscoverFiles(rootDir.c_str(), files, directories, extensionToFilter);
+	EngineApp->fileSystem->DiscoverFiles(rootDir.c_str(), files, directories, extensionToFilter);
 
 	for (uint i = 0; i < directories.size(); ++i)
 	{
 		std::string path	= rootDir + directories[i] + ("/");
-		treeNodeFlags		= (!App->fileSystem->ContainsDirectory(path.c_str())) ? ImGuiTreeNodeFlags_Leaf : ImGuiTreeNodeFlags_None;
+		treeNodeFlags		= (!EngineApp->fileSystem->ContainsDirectory(path.c_str())) ? ImGuiTreeNodeFlags_Leaf : ImGuiTreeNodeFlags_None;
 
 		if (ImGui::TreeNodeEx(path.c_str(), treeNodeFlags, "%s/", directories[i].c_str()))
 		{
@@ -244,14 +250,14 @@ void E_Project::DrawDirectoriesTree(const PathNode& rootNode)
 	{
 		PathNode pathNode = rootNode.children[i];
 
-		if (/*path_node.is_file*/ !App->fileSystem->IsDirectory(pathNode.path.c_str()))
+		if (/*path_node.is_file*/ !EngineApp->fileSystem->IsDirectory(pathNode.path.c_str()))
 		{
 			continue;
 		}
 
 		path			= pathNode.path;
 		directory		= pathNode.local_path;
-		treeNodeFlags = (pathNode.isLastDirectory) ? ImGuiTreeNodeFlags_Leaf : ImGuiTreeNodeFlags_None;
+		treeNodeFlags	= (pathNode.isLastDirectory) ? ImGuiTreeNodeFlags_Leaf : ImGuiTreeNodeFlags_None;
 		if (ImGui::TreeNodeEx(path.c_str(), treeNodeFlags, "%s/", directory.c_str()))
 		{
 			if (ImGui::IsItemClicked())
@@ -319,7 +325,7 @@ void E_Project::DrawResourceIcons()
 		}
 		else
 		{
-			ResourceDragAndDropEvent(item->path, texID);
+			AssetDragAndDropEvent(item->path, texID);
 		}
 
 		ImGui::SetCursorPos(originalPos + textOffset);
@@ -366,7 +372,7 @@ void E_Project::DrawGoToPreviousDirectoryButton()
 	}
 }
 
-void E_Project::ResourceDragAndDropEvent(const char* assetPath, ImTextureID textureID)
+void E_Project::AssetDragAndDropEvent(const char* assetPath, ImTextureID textureID)
 {
 	if (assetPath == nullptr)
 	{
@@ -445,10 +451,12 @@ void E_Project::ClearAssetsToDisplay()
 {
 	for (auto item = assetsToDisplay.begin(); item != assetsToDisplay.end(); ++item)
 	{
-		if (item->type == ResourceType::TEXTURE && item->assetTexture != nullptr)
+		if (item->type == ResourceType::TEXTURE && item->assetTexture != nullptr) //TODO check this
 		{
-			App->resourceManager->FreeResource(item->assetTexture->GetUID());
+			EngineApp->resourceManager->FreeResource(item->assetTexture->GetUID());
 		}
+
+		//EngineApp->resourceManager->FreeResource(resourcesToDisplay[i]->GetUID());
 	}
 
 	assetsToDisplay.clear();

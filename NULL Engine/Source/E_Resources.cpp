@@ -1,8 +1,10 @@
 #include <map>
 
+#include "Profiler.h"
+
 #include "VariableTypedefs.h"
 
-#include "Application.h"
+#include "EngineApplication.h"
 #include "M_Editor.h"
 
 #include "Resource.h"
@@ -21,7 +23,7 @@ E_Resources::~E_Resources()
 
 bool E_Resources::Draw(ImGuiIO& io)
 {
-	bool ret = true;
+	BROFILER_CATEGORY("Editor Resources Draw", Profiler::Color::DarkSlateBlue);
 
 	ImGui::Begin("References");
 	
@@ -33,16 +35,13 @@ bool E_Resources::Draw(ImGuiIO& io)
 
 	std::multimap<uint, Resource*> sorted;
 
-	std::map<uint32, Resource*> resources;
-	App->editor->GetResourcesThroughEditor(resources);
+	const std::map<uint32, Resource*>* resources = EngineApp->editor->GetResourcesThroughEditor();
 
-	std::map<uint32, Resource*>::iterator item;
-	for (item = resources.begin(); item != resources.end(); ++item)
+	std::map<uint32, Resource*>::const_iterator item;
+	for (item = resources->cbegin(); item != resources->cend(); ++item)
 	{
 		if (item->second == nullptr)
-		{
 			continue;
-		}
 
 		switch (item->second->GetType())
 		{
@@ -61,9 +60,9 @@ bool E_Resources::Draw(ImGuiIO& io)
 	{
 		ImGui::TextColored(ImVec4(0.0f, 1.0f, 1.0f, 1.0f), "%s", multiItem->second->GetAssetsFile());
 
-		ImGui::Text("UID:");		ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "       %lu",	multiItem->second->GetUID());
-		ImGui::Text("Type:");		ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "      %s",		multiItem->second->GetTypeAsString());
-		ImGui::Text("References:");	ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%u",			multiItem->second->GetReferences());
+		ImGui::Text("UID:");		ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "	%lu",	multiItem->second->GetUID());
+		ImGui::Text("Type:");		ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "	%s",	multiItem->second->GetTypeAsString());
+		ImGui::Text("References:");	ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "	%u",	multiItem->second->GetReferences());
 
 		ImGui::Separator();
 	}
@@ -72,13 +71,13 @@ bool E_Resources::Draw(ImGuiIO& io)
 
 	ImGui::Text("Num Models:");		ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "    %u",	models);
 	ImGui::Text("Num Meshes:");		ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "    %u",	meshes);
-	ImGui::Text("Num Materials:");	ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), " %u",		materials);
-	ImGui::Text("Num Textures:");	ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "  %u",		textures);
-	ImGui::Text("Num Animations:");	ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%u",		animations);
-
+	ImGui::Text("Num Materials:");	ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "	%u",	materials);
+	ImGui::Text("Num Textures:");	ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "	%u",	textures);
+	ImGui::Text("Num Animations:");	ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "	%u",	animations);
+	
 	ImGui::End();
-
-	return ret;
+	
+	return true;
 }
 
 bool E_Resources::CleanUp()

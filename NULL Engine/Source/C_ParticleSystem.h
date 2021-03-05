@@ -4,7 +4,7 @@
 #include "Component.h"
 #include "EmitterInstance.h"
 
-class C_ParticleSystem : public Component
+class NULL_API C_ParticleSystem : public Component
 {
 public:
 	C_ParticleSystem(GameObject* owner);
