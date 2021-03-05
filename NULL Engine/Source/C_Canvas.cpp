@@ -166,6 +166,7 @@ bool C_Canvas::LoadState(ParsonNode& root)
 	r.y = canvas.GetNumber("Y");
 	r.w = canvas.GetNumber("W");
 	r.h = canvas.GetNumber("H");
+
 	SetRect(r);
 	SetZ(canvas.GetNumber("Z"));
 

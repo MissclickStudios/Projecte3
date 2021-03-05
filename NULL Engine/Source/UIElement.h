@@ -22,7 +22,7 @@ class UIElement
 {
 public:
 
-	UIElement(C_Canvas* canvas, UIElementType type, Rect rect, bool isActive = true);
+	UIElement(GameObject* owner, UIElementType type, Rect rect, bool isActive = true);
 	virtual ~UIElement();
 
 	virtual bool Update();
@@ -34,6 +34,7 @@ public:
 
 	const char* GetNameFromType() const;
 
+	GameObject* GetOwner() const;
 	C_Canvas* GetCanvas() const;
 	Rect GetRect() const;
 	float GetX() const;
@@ -42,7 +43,7 @@ public:
 	float GetH() const;
 	bool IsActive() const;
 
-	
+	void SetOwner(GameObject* owner);
 	void SetCanvas(C_Canvas* canvas);
 	void SetRect(const Rect& rect);
 	void SetX(const float x);
@@ -56,7 +57,8 @@ private:
 	bool isActive;
 
 	UIElementType type;
-	C_Canvas* canvas;
+	GameObject* owner;
+	C_Canvas* canvas = nullptr;
 	bool isDraggable;
 	Rect rect;
 

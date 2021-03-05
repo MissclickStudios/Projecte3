@@ -16,7 +16,7 @@
 
 #include "OpenGL.h"
 
-UI_Image::UI_Image(C_Canvas* canvas, Rect rect) : UIElement(canvas, UIElementType::IMAGE, rect)
+UI_Image::UI_Image(GameObject* owner, Rect rect) : UIElement(owner, UIElementType::IMAGE, rect)
 {
 
 }
@@ -30,7 +30,10 @@ bool UI_Image::Update()
 {
 	bool ret = true;
 
-	if (!IsActive())
+	//if (!IsActive())
+		//return ret;
+
+	if (GetCanvas() == nullptr)
 		return ret;
 
 	if (GetRect().w > GetCanvas()->GetRect().w)
@@ -60,7 +63,7 @@ bool UI_Image::CleanUp()
 
 void UI_Image::RenderImage2D()
 {
-	GameObject* go = GetCanvas()->GetOwner();
+	GameObject* go = GetOwner();
 	if (go->GetComponent<C_Material>() == nullptr) return;
 
 	glMatrixMode(GL_PROJECTION);
@@ -92,7 +95,6 @@ void UI_Image::RenderImage2D()
 
 	glEnable(GL_LIGHTING);
 	glEnable(GL_DEPTH_TEST);
-	glDisable(GL_BLEND);
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadMatrixf(App->camera->GetCurrentCamera()->GetOGLProjectionMatrix());
@@ -102,11 +104,11 @@ void UI_Image::RenderImage2D()
 
 void UI_Image::RenderImage3D()
 {
-	GameObject* go = GetCanvas()->GetOwner();
+	GameObject* go = GetOwner();
 	if (go->GetComponent<C_Material>() == nullptr) return;
 	
 	glPushMatrix();
-	glMultMatrixf((GLfloat*)&go->GetComponent<C_Transform>()->GetWorldTransform().Transposed());
+	glMultMatrixf((GLfloat*)&GetCanvas()->GetOwner()->GetComponent<C_Transform>()->GetWorldTransform().Transposed());
 
 	glDisable(GL_DEPTH_TEST);
 	glDisable(GL_LIGHTING);
@@ -129,7 +131,6 @@ void UI_Image::RenderImage3D()
 
 	glEnable(GL_LIGHTING);
 	glEnable(GL_DEPTH_TEST);
-	glDisable(GL_BLEND);
 
 	glPopMatrix();
 

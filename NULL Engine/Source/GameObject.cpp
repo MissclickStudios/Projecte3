@@ -20,6 +20,9 @@
 #include "C_Animation.h"
 #include "C_Canvas.h"
 
+#include "UI_Image.h"
+#include "UI_Text.h"
+
 #include "GameObject.h"
 
 #include "MemoryManager.h"
@@ -688,6 +691,49 @@ bool GameObject::GetAllComponents(std::vector<Component*>& components) const
 
 	return components.empty() ? false : true;
 }
+
+
+// --- UIELEMENTS METHODS ---
+UIElement* GameObject::CreateUIElement(UIElementType type)
+{
+	UIElement* element = nullptr;
+
+	switch (type)
+	{
+	case UIElementType::IMAGE: { element = new UI_Image(this); }	break;
+	case UIElementType::TEXT: { element = new UI_Text(this); }		break;
+	}
+
+	if (element != nullptr)
+		uiElement = element;
+
+	return element;
+}
+
+UIElement* GameObject::GetUIElement() const
+{
+	return uiElement;
+}
+
+bool GameObject::DeleteUIElement()
+{
+
+	std::string uiElementName = uiElement->GetNameFromType();
+
+	if (uiElement != nullptr)
+	{
+		uiElement->CleanUp();
+		RELEASE(uiElement);
+
+		return true;
+	}
+
+	LOG("[STATUS] Deleted Component %s of Game Object %s", uiElementName.c_str(), name.c_str());
+
+	return false;
+}
+
+
 
 uint32 GameObject::GetUID() const
 {

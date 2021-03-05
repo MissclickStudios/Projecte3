@@ -166,10 +166,21 @@ void E_Inspector::DrawComponents(GameObject* selectedGameObject)
 		case ComponentType::ANIMATION: { DrawAnimationComponent((C_Animation*)component); }	break;
 		case ComponentType::CANVAS: { DrawCanvasComponent((C_Canvas*)component); }				break;
 		}
+	
 
 		if (type == ComponentType::NONE)
 		{
 			LOG("[WARNING] Selected GameObject %s has a non-valid component!", selectedGameObject->GetName());
+		}
+	}
+
+	if (selectedGameObject->GetUIElement() != nullptr)
+	{
+		UIElementType type = selectedGameObject->GetUIElement()->GetType();
+		switch (type)
+		{
+		case UIElementType::IMAGE: { DrawUIImage((UI_Image*)selectedGameObject->GetUIElement()); }	break;
+		case UIElementType::TEXT: {} break;
 		}
 	}
 }
@@ -822,19 +833,14 @@ void E_Inspector::DrawCanvasComponent(C_Canvas* cCanvas)
 
 			if (ImGui::Button("Add Image"))
 			{
-				UI_Image* image = new UI_Image(cCanvas, { 0,0,100,100 });
-				cCanvas->uiElements.push_back(image);
+				GameObject* gameObject = new GameObject("UI Image");
+				//cCanvas->GetOwner()->AddChild(gameObject);
+				gameObject->SetParent(cCanvas->GetOwner());
+				
+				gameObject->CreateUIElement(UIElementType::IMAGE);
+				cCanvas->uiElements.push_back(gameObject->GetUIElement());
 			}
 
-			for (std::vector<UIElement*>::iterator uiIt = cCanvas->uiElements.begin(); uiIt != cCanvas->uiElements.end(); uiIt++)
-			{
-				switch ((*uiIt)->GetType())
-				{
-				case UIElementType::NONE: break;
-				case UIElementType::IMAGE: { DrawUIImage((UI_Image*)*uiIt); } break;
-				case UIElementType::TEXT: break;
-				}
-			}
 		}
 
 		if (!show)
@@ -864,6 +870,12 @@ void E_Inspector::DrawUIImage(UI_Image* image)
 
 		C_Canvas* canvas = image->GetCanvas();
 
+		if (ImGui::DragFloat2("Image Size", (float*)&size, 0.05f, 0.0f, 0.0f, "%.3f", NULL))
+		{
+			image->SetW(size.x);
+			image->SetH(size.y);
+		}
+
 		if (ImGui::DragFloat2("Image Pos", (float*)&pos, 0.05f, 0.0f, 0.0f, "%.3f", NULL))
 		{
 			if (pos.x - size.x / 2 < canvas->GetPosition().x - canvas->GetSize().x / 2)
@@ -881,12 +893,6 @@ void E_Inspector::DrawUIImage(UI_Image* image)
 
 			image->SetX(pos.x);
 			image->SetY(pos.y);
-		}
-
-		if (ImGui::DragFloat2("Image Size", (float*)&size, 0.05f, 0.0f, 0.0f, "%.3f", NULL))
-		{
-			image->SetW(size.x);
-			image->SetH(size.y);
 		}
 	}
 

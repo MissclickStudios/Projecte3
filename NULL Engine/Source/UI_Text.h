@@ -11,7 +11,7 @@ class C_Canvas;
 class UI_Text : public UIElement
 {
 public:
-	UI_Text(C_Canvas* owner, Rect rect);
+	UI_Text(GameObject* owner, Rect rect = { 0,0,50,50 });
 	~UI_Text();
 
 	bool Update() override;
