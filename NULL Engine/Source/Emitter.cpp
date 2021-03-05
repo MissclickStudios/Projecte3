@@ -1,5 +1,7 @@
 #include "Emitter.h"
 
+#include "MemoryManager.h"
+
 Emitter::Emitter()
 {
 }

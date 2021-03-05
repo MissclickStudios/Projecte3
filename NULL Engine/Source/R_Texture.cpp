@@ -6,6 +6,8 @@
 
 #include "R_Texture.h"
 
+#include "MemoryManager.h"
+
 R_Texture::R_Texture() : Resource(ResourceType::TEXTURE)
 {
 

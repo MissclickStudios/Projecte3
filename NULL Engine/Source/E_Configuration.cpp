@@ -16,6 +16,8 @@
 
 #include "E_Configuration.h"
 
+#include "MemoryManager.h"
+
 #define MAX_INPUT_LOG_SIZE 1000
 
 E_Configuration::E_Configuration() : EditorPanel("Configuration")

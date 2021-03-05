@@ -25,6 +25,8 @@
 #include <utility>
 #include <iostream>
 
+#include "MemoryManager.h"
+
 M_Audio::M_Audio(bool isActive) : Module("Audio", isActive)
 {
 

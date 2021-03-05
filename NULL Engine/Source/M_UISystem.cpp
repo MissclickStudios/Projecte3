@@ -7,6 +7,8 @@
 
 #include "M_UISystem.h"
 
+#include "MemoryManager.h"
+
 #pragma comment (lib, "Source/Dependencies/FreeType/libx86/freetype.lib")
 
 M_UISystem::M_UISystem(bool isActive) : Module("UISystem", isActive)

@@ -15,6 +15,8 @@
 
 #include "OpenGL.h"
 
+#include "MemoryManager.h"
+
 C_Canvas::C_Canvas(GameObject* owner) : Component(owner, ComponentType::CANVAS)
 {
 	pivot = GetPosition();

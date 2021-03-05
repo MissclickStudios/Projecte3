@@ -10,6 +10,8 @@
 
 #include "MathGeoLib/include/Math/Quat.h"
 
+#include "MemoryManager.h"
+
 C_RigidBody::C_RigidBody(GameObject* owner) : Component(owner, ComponentType::RIGIDBODY)
 {
 	float3 position = GetOwner()->transform->GetWorldPosition();

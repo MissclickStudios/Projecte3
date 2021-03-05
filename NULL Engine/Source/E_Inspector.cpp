@@ -41,6 +41,8 @@
 
 #include <fstream>
 
+#include "MemoryManager.h"
+
 #define MAX_VALUE 100000
 #define MIN_VALUE -100000
 

@@ -15,6 +15,8 @@
 
 #include "C_Material.h"
 
+#include "MemoryManager.h"
+
 #define MAX_MAPS 7
 
 C_Material::C_Material(GameObject* owner) : Component(owner, ComponentType::MATERIAL),

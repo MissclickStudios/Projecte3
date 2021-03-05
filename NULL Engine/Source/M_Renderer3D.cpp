@@ -33,9 +33,9 @@
 #include "UIElement.h"
 #include "M_Renderer3D.h"
 
-#include "MemoryManager.h"
-
 #include "I_Shaders.h"							//TODO: erase
+
+#include "MemoryManager.h"
 
 
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */	

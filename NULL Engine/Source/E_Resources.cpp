@@ -11,6 +11,8 @@
 
 #include "E_Resources.h"
 
+#include "MemoryManager.h"
+
 E_Resources::E_Resources() : EditorPanel("Resources")
 {
 

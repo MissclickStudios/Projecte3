@@ -4,6 +4,8 @@
 
 #include "E_ImGuiDemo.h"
 
+#include "MemoryManager.h"
+
 E_ImGuiDemo::E_ImGuiDemo() : EditorPanel("ImGuiDemo")
 {
 	showDemoWindow		= true;

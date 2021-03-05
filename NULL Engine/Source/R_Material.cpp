@@ -4,6 +4,8 @@
 
 #include "R_Material.h"
 
+#include "MemoryManager.h"
+
 R_Material::R_Material() : Resource(ResourceType::MATERIAL)
 {
 	diffuseColor	= { 1.0f, 1.0f, 1.0f, 1.0f };

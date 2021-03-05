@@ -11,6 +11,8 @@
 
 #include "R_Mesh.h"
 
+#include "MemoryManager.h"
+
 #define CHECKERS_WIDTH 64
 #define CHECKERS_HEIGHT 64
 

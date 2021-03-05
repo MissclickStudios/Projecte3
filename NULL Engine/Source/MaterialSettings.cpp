@@ -2,6 +2,8 @@
 
 #include "MaterialSettings.h"
 
+#include "MemoryManager.h"
+
 MaterialSettings::MaterialSettings() : ImportSettings()
 {
 

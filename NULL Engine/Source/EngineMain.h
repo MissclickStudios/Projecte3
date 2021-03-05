@@ -2,7 +2,6 @@
 																
 #include "Application.h"
 
-#include "MemoryManager.h"
 #include "SDL/include/SDL.h"
 #include "Profiler.h"
 

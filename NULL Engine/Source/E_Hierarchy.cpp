@@ -5,6 +5,8 @@
 
 #include "E_Hierarchy.h"
 
+#include "MemoryManager.h"
+
 E_Hierarchy::E_Hierarchy() : EditorPanel("Hierarchy"), 
 draggedGameObject			(nullptr), 
 openHierarchyToolsPopup	(false)

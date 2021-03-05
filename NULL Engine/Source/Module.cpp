@@ -2,6 +2,8 @@
 
 #include "Module.h"
 
+#include "MemoryManager.h"
+
 Module::Module(const char* name, bool isActive) : isActive(isActive)
 {
 	strcpy_s(this->name, MAX_MODULE_NAME_LENGTH, name);							// As one character occupies one byte, we can request exactly as many bytes we need.

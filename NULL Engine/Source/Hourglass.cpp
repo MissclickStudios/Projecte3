@@ -2,6 +2,8 @@
 
 #include "Hourglass.h"
 
+#include "MemoryManager.h"
+
 /*Hourglass::Hourglass()
 {
 	hours			= 0;

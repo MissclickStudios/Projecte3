@@ -1,5 +1,7 @@
 #include "UIElement.h"
 
+#include "MemoryManager.h"
+
 UIElement::UIElement(C_Canvas* canvas, UIElementType type, Rect rect, bool isActive) :	type(type),	canvas(canvas), rect(rect), isActive(isActive), isDraggable(false)
 {
 

@@ -2,6 +2,8 @@
 
 #include "TextureSettings.h"
 
+#include "MemoryManager.h"
+
 TextureSettings::TextureSettings() : ImportSettings()
 {
 

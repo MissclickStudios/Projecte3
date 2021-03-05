@@ -7,6 +7,8 @@
 
 #include "SimulationCallback.h"
 
+#include "MemoryManager.h"
+
 SimulationCallback::SimulationCallback() {}
 
 void SimulationCallback::onContact(const physx::PxContactPairHeader& pairHeader, const physx::PxContactPair* pairs, physx::PxU32 nbPairs)

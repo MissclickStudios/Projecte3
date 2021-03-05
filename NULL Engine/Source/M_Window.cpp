@@ -2,6 +2,8 @@
 
 #include "M_Window.h"
 
+#include "MemoryManager.h"
+
 M_Window::M_Window(bool isActive) : Module("Window", isActive)
 {
 	window				= nullptr;

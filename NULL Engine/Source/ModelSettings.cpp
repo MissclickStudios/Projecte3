@@ -2,6 +2,8 @@
 
 #include "ModelSettings.h"
 
+#include "MemoryManager.h"
+
 ModelSettings::ModelSettings() : ImportSettings()
 {
 

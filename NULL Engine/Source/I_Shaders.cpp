@@ -5,6 +5,8 @@
 #include "OpenGL.h"
 #include "JSONParser.h"
 
+#include "MemoryManager.h"
+
 
 bool Importer::Shaders::Import(const char* fullPath, R_Shader* shader)
 {

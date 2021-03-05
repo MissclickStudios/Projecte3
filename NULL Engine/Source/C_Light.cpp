@@ -4,6 +4,8 @@
 
 #include "C_Light.h"
 
+#include "MemoryManager.h"
+
 C_Light::C_Light(GameObject* owner) : Component(owner, ComponentType::LIGHT)
 {
 

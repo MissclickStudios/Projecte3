@@ -5,6 +5,8 @@
 
 #include "E_Toolbar.h"
 
+#include "MemoryManager.h"
+
 E_Toolbar::E_Toolbar() : EditorPanel("Toolbar")
 {
 

@@ -11,6 +11,8 @@
 
 #include "PhysX_3.4/Include/PxPhysicsAPI.h"
 
+#include "MemoryManager.h"
+
 C_SphereCollider::C_SphereCollider(GameObject* owner) : Component(owner, ComponentType::SPHERE_COLLIDER)
 {
 	CreateCollider();

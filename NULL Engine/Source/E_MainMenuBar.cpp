@@ -5,6 +5,8 @@
 
 #include "E_MainMenuBar.h"
 
+#include "MemoryManager.h"
+
 E_MainMenuBar::E_MainMenuBar() : EditorPanel("MainMenuBar")
 {
 
