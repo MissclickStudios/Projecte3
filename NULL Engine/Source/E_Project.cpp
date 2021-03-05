@@ -130,7 +130,6 @@ void E_Project::CheckFlags()
 
 		for (uint i = 0; i < displayDirectory.children.size(); ++i)
 		{
-
 			const char* path		= displayDirectory.children[i].path.c_str();
 			std::string file		= EngineApp->fileSystem->GetFileAndExtension(path);
 			ResourceType type		= EngineApp->resourceManager->GetTypeFromAssetsExtension(path);
@@ -144,13 +143,6 @@ void E_Project::CheckFlags()
 			if (type != ResourceType::NONE) //TODO check this
 			{
 				assetsToDisplay.push_back({ path, file, type, assetTexture });
-				
-				/*Resource* resource = EngineApp->resourceManager->GetResourceFromLibrary(displayDirectory.children[i].path.c_str());	// Check Library But Not Load
-
-				if (resource != nullptr)
-				{
-					assetsToDisplay.push_back({ path, file, type, assetTexture });
-				}*/
 			}
 		}
 
@@ -333,7 +325,7 @@ void E_Project::DrawResourceIcons()
 		}
 		else
 		{
-			ResourceDragAndDropEvent(item->path, texID);
+			AssetDragAndDropEvent(item->path, texID);
 		}
 
 		ImGui::SetCursorPos(originalPos + textOffset);
@@ -380,7 +372,7 @@ void E_Project::DrawGoToPreviousDirectoryButton()
 	}
 }
 
-void E_Project::ResourceDragAndDropEvent(const char* assetPath, ImTextureID textureID)
+void E_Project::AssetDragAndDropEvent(const char* assetPath, ImTextureID textureID)
 {
 	if (assetPath == nullptr)
 	{

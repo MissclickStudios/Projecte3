@@ -1,5 +1,7 @@
 #include <map>
 
+#include "Profiler.h"
+
 #include "VariableTypedefs.h"
 
 #include "EngineApplication.h"
@@ -21,6 +23,8 @@ E_Resources::~E_Resources()
 
 bool E_Resources::Draw(ImGuiIO& io)
 {
+	BROFILER_CATEGORY("Editor Resources Draw", Profiler::Color::DarkSlateBlue);
+
 	ImGui::Begin("References");
 	
 	uint models		= 0;
@@ -72,6 +76,7 @@ bool E_Resources::Draw(ImGuiIO& io)
 	ImGui::Text("Num Animations:");	ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "	%u",	animations);
 	
 	ImGui::End();
+	
 	return true;
 }
 

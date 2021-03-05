@@ -37,7 +37,6 @@ public:
 
 public:
 	void LoadBuffers();
-	void SwapBonesToVertexArray();
 
 	AABB GetAABB() const;
 	void SetAABB();
@@ -49,10 +48,15 @@ public:
 	std::vector<float>			texCoords;
 	std::vector<uint>			indices;
 
-	int* boneIDs				= nullptr;
-	float* boneWeights			= nullptr;
+	std::vector<uint>			boneIDs;
+	std::vector<float>			boneWeights;
 	std::vector<float4x4>		boneOffsets;
 	std::map<std::string, uint> boneMapping;
+
+	/*int* boneIDs				= nullptr;
+	float* boneWeights			= nullptr;
+	std::vector<float4x4>		boneOffsets;
+	std::map<std::string, uint> boneMapping;*/
 
 	// Buffer data
 	uint VAO = 0;
@@ -61,9 +65,9 @@ public:
 	uint TBO = 0;												// Tex Coord Buffer Object. -->		Will store all the buffer data of the tex coords of the mesh.
 	uint IBO = 0;												// Index Buffer Object.		--> 	Will store all the buffer data of the indices of the mesh.
 
-	bool isSkinned = false;
-	bool drawVertexNormals = false;
-	bool drawFaceNormals = false;
+	bool drawVertexNormals;
+	bool drawFaceNormals;
+	bool hasBones;
 
 	AABB aabb;
 
