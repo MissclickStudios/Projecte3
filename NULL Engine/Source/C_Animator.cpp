@@ -27,30 +27,30 @@ typedef std::map<double, Quat>::const_iterator		RotationKeyframe;
 typedef std::map<double, float3>::const_iterator	ScaleKeyframe;
 
 C_Animator::C_Animator(GameObject* owner) : Component(owner, ComponentType::ANIMATOR),
-currentClip(nullptr),
-blendingClip(nullptr),
-currentRootBone(nullptr)
+currentClip		(nullptr),
+blendingClip	(nullptr),
+currentRootBone	(nullptr)
 {
 	blendFrames = 0;
 
-	play = false;
-	pause = false;
-	step = false;
-	stop = true;
+	play	= false;
+	pause	= false;
+	step	= false;
+	stop	= true;
 
-	playbackSpeed = 1.0f;
-	interpolate = true;
-	loopAnimation = false;
-	playOnStart = true;
-	cameraCulling = true;
-	showBones = false;
+	playbackSpeed	= 1.0f;
+	interpolate		= true;
+	loopAnimation	= false;
+	playOnStart		= true;
+	cameraCulling	= true;
+	showBones		= false;
 }
 
 C_Animator::~C_Animator()
 {
-	currentClip = nullptr;
-	blendingClip = nullptr;
-	currentRootBone = nullptr;
+	currentClip		= nullptr;
+	blendingClip	= nullptr;
+	currentRootBone	= nullptr;
 }
 
 bool C_Animator::Update()
@@ -189,13 +189,12 @@ bool C_Animator::StepAnimation()
 {
 	bool ret = true;
 
-	bool success = ValidateCurrentClip();
-	if (!success)
+	if (!CurrentClipIsValid())
 	{
 		return false;
 	}
 	
-	success = StepClips();
+	bool success = StepClips();
 	if (!success)
 	{
 		return false;
@@ -218,6 +217,8 @@ bool C_Animator::StepAnimation()
 		{
 			Transform& interpolatedTransform = GetInterpolatedTransform(currentClip->GetAnimationFrame(), bone.channel, originalTransform);
 			
+			LOG("ANIMATION FRAME { %.3f }, ANIMATION TICK { %u }", currentClip->GetAnimationFrame(), currentClip->GetAnimationTick());
+
 			if (BlendingClipExists())
 			{
 				interpolatedTransform = GetBlendedTransform(blendingClip->GetAnimationFrame(), blendingBones[i].channel, interpolatedTransform);
@@ -250,7 +251,7 @@ bool C_Animator::StepClips()
 {
 	bool ret = true;
 
-	bool currentExists		= CurrentClipExists();
+	bool currentExists	= CurrentClipExists();
 	bool blendingExists	= BlendingClipExists();
 
 	if (!currentExists && !blendingExists)
@@ -271,7 +272,7 @@ bool C_Animator::StepClips()
 		}
 	}
 	
-	float dt			= (App->play) ? Time::Game::GetDT() : Time::Real::GetDT();											// In case a clip preview is needed outside Game Mode.
+	float dt		= (App->play) ? Time::Game::GetDT() : Time::Real::GetDT();											// In case a clip preview is needed outside Game Mode.
 	float stepValue	= dt * playbackSpeed;
 
 	if (CurrentClipExists())
@@ -314,7 +315,7 @@ bool C_Animator::BlendAnimation()
 	return ret;
 }
 
-bool C_Animator::ValidateCurrentClip()
+bool C_Animator::CurrentClipIsValid()
 {
 	bool ret = true;
 	

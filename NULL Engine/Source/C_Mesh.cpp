@@ -15,9 +15,10 @@
 #include "MemoryManager.h"
 
 C_Mesh::C_Mesh(GameObject* owner) : Component(owner, ComponentType::MESH),
-rMesh(nullptr),
-showWireframe(false),
-showBoundingBox(false)
+rMesh			(nullptr),
+skinningMesh	(nullptr),
+showWireframe	(false),
+showBoundingBox	(false)
 {
 }
 
@@ -42,6 +43,8 @@ bool C_Mesh::CleanUp()
 		App->resourceManager->FreeResource(rMesh->GetUID());
 		rMesh = nullptr;
 	}
+
+	skinningMesh = nullptr;
 
 	return ret;
 }

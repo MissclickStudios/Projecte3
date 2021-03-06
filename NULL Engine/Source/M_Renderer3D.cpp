@@ -97,9 +97,9 @@ bool M_Renderer3D::Start()
 	InitEngineIcons();
 	
 	//SetUp the Skybox 
-	/*defaultSkyBox.SetUpSkyBoxBuffers();
+	defaultSkyBox.SetUpSkyBoxBuffers();
 
-	defaultSkyBox.CreateSkybox();*/
+	defaultSkyBox.CreateSkybox();
 
 
 	return ret;
@@ -156,9 +156,23 @@ UpdateStatus M_Renderer3D::PostUpdate(float dt)
 	BROFILER_CATEGORY("M_Renderer3D PostUpdate", Profiler::Color::Chartreuse);
 	
 	//The Skybox renderer must be the first one always
-	//defaultSkyBox.RenderSkybox();
+	//defaultSkyBox.RenderSkybox(); //TODO crashes
 
 	RenderScene();
+
+	glClear(GL_COLOR_BUFFER_BIT);
+	glBindTexture(GL_TEXTURE_2D, gameFramebuffer);
+	glBegin(GL_QUADS);
+	glTexCoord2f(0, 0);
+	glVertex2f(0, 0);
+	glTexCoord2f(1, 0);
+	glVertex2f(500, 0);
+	glTexCoord2f(1, 1);
+	glVertex2f(500, 500);
+	glTexCoord2f(0, 1);
+	glVertex2f(0, 500);
+	glEnd();
+	glFlush();
 
 	//Render systems from other modules (example ImGUi)
 	for (std::vector<Module*>::const_iterator it = PostSceneRenderModules.cbegin(); it != PostSceneRenderModules.cend(); ++it) 
@@ -224,9 +238,9 @@ bool M_Renderer3D::InitDebugVariables()
 	rayColor					= Cyan;
 	boneColor					= Pink;
 
-	worldGridLineWidth		= STANDARD_LINE_WIDTH;
-	wireframeLineWidth		= STANDARD_LINE_WIDTH;
-	vertexNormalsWidth		= BASE_LINE_WIDTH;
+	worldGridLineWidth			= STANDARD_LINE_WIDTH;
+	wireframeLineWidth			= STANDARD_LINE_WIDTH;
+	vertexNormalsWidth			= BASE_LINE_WIDTH;
 	faceNormalsWidth			= BASE_LINE_WIDTH;
 
 	aabbEdgeWidth				= BASE_LINE_WIDTH;

@@ -19,13 +19,6 @@ struct BoneWeight;
 
 typedef unsigned int uint;
 
-struct Vertex
-{
-	float3 position;
-	float3 normals;
-	float2 tex_coords;
-};
-
 class NULL_API R_Mesh : public Resource
 {
 public:
@@ -44,7 +37,6 @@ public:
 	void SetAABB();
 
 public:
-	//std::vector<Vertex>		vertices;
 	std::vector<float>			vertices;
 	std::vector<float>			normals;
 	std::vector<float>			texCoords;
@@ -54,11 +46,6 @@ public:
 	std::vector<float>			boneWeights;
 	std::vector<float4x4>		boneOffsets;
 	std::map<std::string, uint> boneMapping;
-
-	/*int* boneIDs				= nullptr;
-	float* boneWeights			= nullptr;
-	std::vector<float4x4>		boneOffsets;
-	std::map<std::string, uint> boneMapping;*/
 
 	// Buffer data
 	uint VAO = 0;
@@ -75,7 +62,6 @@ public:
 
 private:
 	MeshSettings meshSettings;
-
 };
 
 #endif // !__R_MESH_H__
