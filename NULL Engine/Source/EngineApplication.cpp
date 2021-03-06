@@ -38,11 +38,11 @@ EngineApplication::EngineApplication()
 	AddModule(resourceManager);
 
 	// Scenes
-	AddModule(scene);
 	AddModule(editor);
 	AddModule(audio);
 	AddModule(physics);
 	AddModule(uiSystem);
+	AddModule(scene);
 
 	// Renderer last!
 	AddModule(renderer);

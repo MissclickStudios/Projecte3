@@ -1307,7 +1307,7 @@
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
+            "ShowBoundingBoxes": true,
             "Components": [
                 {
                     "Type": 1,
@@ -1334,7 +1334,7 @@
                     "MaxFOV": 120,
                     "Culling": false,
                     "OrthogonalView": false,
-                    "HideFrustum": false
+                    "HideFrustum": true
                 }
             ]
         },
@@ -1820,7 +1820,7 @@
         },
         {
             "UID": 1304503906,
-            "ParentUID": 623865310,
+            "ParentUID": 970427554,
             "Name": "MainScene",
             "IsActive": true,
             "IsStatic": false,
@@ -2215,14 +2215,14 @@
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
-            "ShowBoundingBoxes": true,
+            "ShowBoundingBoxes": false,
             "Components": [
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        0,
-                        0,
-                        0
+                        -0.3399968147277832,
+                        -9.8000018624588847e-06,
+                        -0.87000346183776855
                     ],
                     "LocalRotation": [
                         0,
@@ -2303,6 +2303,46 @@
                     "Deceleration": 2,
                     "Use Acceleration": false
                 }
+            ]
+        },
+        {
+            "UID": 1533748248,
+            "ParentUID": 1304503906,
+            "Name": "EmptyGameObject",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": true,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        67.454879760742188,
+                        29.902421951293945,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 3,
+                    "Texture": {
+                        "UID": 1649664284,
+                        "Name": "Building_V01_C.png",
+                        "Path": "Library\/Textures\/1649664284.netex",
+                        "File": "1649664284.netex"
+                    }
+                },
+                {}
             ]
         },
         {
@@ -3286,6 +3326,44 @@
                         0.99999994039535522,
                         1
                     ]
+                }
+            ]
+        },
+        {
+            "UID": 1377155317,
+            "ParentUID": 1304503906,
+            "Name": "EmptyGameObject",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        71.919670104980469
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 5,
+                    "MinFOV": 1,
+                    "MaxFOV": 120,
+                    "Culling": false,
+                    "OrthogonalView": false,
+                    "HideFrustum": false
                 }
             ]
         }
