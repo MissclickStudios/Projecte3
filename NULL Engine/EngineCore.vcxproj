@@ -16,6 +16,7 @@
     <ClCompile Include="Source\Application.cpp" />
     <ClCompile Include="Source\C_AudioListener.cpp" />
     <ClCompile Include="Source\C_AudioSource.cpp" />
+    <ClCompile Include="Source\Dependencies\mmgr\include\mmgr.cpp" />
     <ClCompile Include="Source\Dependencies\Wwise\samples\SoundEngine\Common\AkDefaultLowLevelIODispatcher.cpp" />
     <ClCompile Include="Source\Dependencies\Wwise\samples\SoundEngine\Common\AkFileLocationBase.cpp" />
     <ClCompile Include="Source\Dependencies\Wwise\samples\SoundEngine\Common\AkFilePackage.cpp" />
@@ -86,7 +87,6 @@
     <ClCompile Include="Source\Dependencies\MathGeoLib\include\Math\SSEMath.cpp" />
     <ClCompile Include="Source\Dependencies\MathGeoLib\include\Math\TransformOps.cpp" />
     <ClCompile Include="Source\Dependencies\MathGeoLib\include\Time\Clock.cpp" />
-    <ClCompile Include="Source\Dependencies\mmgr\include\mmgr.cpp" />
     <ClCompile Include="Source\Dependencies\parson\include\parson.c" />
     <ClCompile Include="Source\Dependencies\PCG\include\pcg_basic.c" />
     <ClCompile Include="Source\FrameData.cpp" />
@@ -158,6 +158,8 @@
     <ClInclude Include="Source\C_Animator.h" />
     <ClInclude Include="Source\C_AudioListener.h" />
     <ClInclude Include="Source\C_AudioSource.h" />
+    <ClInclude Include="Source\Dependencies\mmgr\include\mmgr.h" />
+    <ClInclude Include="Source\Dependencies\mmgr\include\nommgr.h" />
     <ClInclude Include="Source\Dependencies\Wwise\samples\SoundEngine\Common\AkDefaultLowLevelIODispatcher.h" />
     <ClInclude Include="Source\Dependencies\Wwise\samples\SoundEngine\Common\AkFileLocationBase.h" />
     <ClInclude Include="Source\Dependencies\Wwise\samples\SoundEngine\Common\AkFilePackage.h" />
@@ -327,8 +329,6 @@
     <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\TransformOps.h" />
     <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\vec2d.h" />
     <ClInclude Include="Source\Dependencies\MathGeoLib\include\Time\Clock.h" />
-    <ClInclude Include="Source\Dependencies\mmgr\include\mmgr.h" />
-    <ClInclude Include="Source\Dependencies\mmgr\include\nommgr.h" />
     <ClInclude Include="Source\Dependencies\parson\include\parson.h" />
     <ClInclude Include="Source\Dependencies\PCG\include\pcg_basic.h" />
     <ClInclude Include="Source\Dependencies\PhysFS\include\physfs.h" />
@@ -458,7 +458,7 @@
       <ExceptionHandling>false</ExceptionHandling>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <AdditionalIncludeDirectories>$(ProjectDir)\Source\Dependencies;$(ProjectDir)Source\Dependencies\Wwise\include;$(ProjectDir)Source\Dependencies\Wwise\samples\SoundEngine\Win32;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>NULL_BUILD_DLL;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NULL_BUILD_DLL;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -481,7 +481,7 @@
       <ExceptionHandling>false</ExceptionHandling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <AdditionalIncludeDirectories>$(ProjectDir)\Source\Dependencies;$(ProjectDir)Source\Dependencies\Wwise\include;$(ProjectDir)Source\Dependencies\Wwise\samples\SoundEngine\Win32;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>NULL_BUILD_DLL;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NULL_BUILD_DLL;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>

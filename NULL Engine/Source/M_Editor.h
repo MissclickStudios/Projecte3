@@ -6,6 +6,7 @@
 #include "ImGui/include/imgui.h"
 #include "MathGeoLib/include/Math/float2.h"
 #include "Module.h"
+#include "VariableTypedefs.h"
 
 struct Icons;
 class ParsonNode;
