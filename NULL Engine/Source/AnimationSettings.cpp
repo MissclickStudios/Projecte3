@@ -1,6 +1,7 @@
 #include "JSONParser.h"
 
 #include "AnimationSettings.h"
+#include "MemoryManager.h"
 
 AnimationSettings::AnimationSettings() : ImportSettings()
 {

@@ -4,6 +4,8 @@
 #include <windows.h>
 #include <stdio.h>
 
+#include "MemoryManager.h"
+
 void log(const char file[], int line, const char* format, ...)
 {
 	static char tmpString[4096];

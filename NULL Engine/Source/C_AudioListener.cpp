@@ -9,6 +9,8 @@
 #include "M_Audio.h"
 #include "MathGeoLib/include/Math/float3.h"
 
+#include "MemoryManager.h"
+
 C_AudioListener::C_AudioListener(GameObject* owner) : Component(owner, ComponentType::AUDIOLISTENER)
 {
     float3 pos = owner->GetComponent<C_Transform>()->GetWorldPosition();

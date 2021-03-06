@@ -8,6 +8,8 @@
 
 #include "PathNode.h"
 
+#include "MemoryManager.h"
+
 PathNode::PathNode() : path("")
 {
 

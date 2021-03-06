@@ -8,6 +8,8 @@
 
 #include "E_About.h"
 
+#include "MemoryManager.h"
+
 E_About::E_About() : EditorPanel("About", false)
 {
 

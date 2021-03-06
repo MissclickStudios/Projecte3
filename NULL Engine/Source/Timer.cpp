@@ -9,6 +9,8 @@
 
 #include "Timer.h"
 
+#include "MemoryManager.h"
+
 // ---------------------------------------------
 Timer::Timer() : running(false), startedAt(0), stoppedAt(0)
 {

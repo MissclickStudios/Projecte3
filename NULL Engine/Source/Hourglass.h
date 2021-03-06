@@ -16,7 +16,7 @@ struct NULL_API Hourglass																	// This struct is called Hourglass ins
 	void Update(uint ms);
 	void ResetClock();
 
-	std::string GetTimeAsString();
+	//std::string GetTimeAsString(); //cant't return a temporary string across dll boundaries !!!! (runetime library is mt!!!)
 
 	uint	hours;
 	uchar	minutes;

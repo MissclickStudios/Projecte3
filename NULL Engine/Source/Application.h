@@ -4,7 +4,8 @@
 #include <vector>
 #include <string>
 
-#include "Globals.h"
+#include "UpdateStatus.h"
+#include "Macros.h"
 #include "Timer.h"
 #include "PerfectTimer.h"
 #include "HardwareInfo.h"

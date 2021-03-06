@@ -8,10 +8,12 @@
 
 #include "Log.h"
 #include "VariableTypedefs.h"
+#include "FileSystemDefinitions.h"
 
 #include "Bone.h"
 
 #include "Application.h"
+#include "VariableDefinitions.h"
 #include "M_FileSystem.h"
 
 #include "R_Mesh.h"

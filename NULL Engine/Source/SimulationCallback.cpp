@@ -1,9 +1,14 @@
+#include <map>
+
 #include "Application.h"
+#include "Log.h"
 #include "M_Physics.h"
 
 #include "GameObject.h"
 
 #include "SimulationCallback.h"
+
+#include "MemoryManager.h"
 
 SimulationCallback::SimulationCallback() {}
 

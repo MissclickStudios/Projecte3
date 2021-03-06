@@ -4,6 +4,8 @@
 #include "C_Transform.h"
 #include "GameObject.h"
 
+#include "MemoryManager.h"
+
 void EmitterBase::Spawn(EmitterInstance* emitter, Particle* particle)
 {
 	GameObject* go = emitter->component->GetOwner();

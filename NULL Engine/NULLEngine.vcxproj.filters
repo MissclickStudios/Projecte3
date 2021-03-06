@@ -38,9 +38,6 @@
     <Filter Include="Dependencies\MathGeoLib\Time">
       <UniqueIdentifier>{530bd4c2-9925-423c-a609-a09ae1b5e50f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Dependencies\mmgr">
-      <UniqueIdentifier>{1b0d3537-ec33-4a08-a452-af8e0865cd6f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Dependencies\parson">
       <UniqueIdentifier>{29b20db1-299f-4fa0-891f-a3f521d091d3}</UniqueIdentifier>
     </Filter>
@@ -58,6 +55,9 @@
     </Filter>
     <Filter Include="Source\2_Editor\Panels\Popups">
       <UniqueIdentifier>{4c519394-a07a-4909-88b6-da8c14c363d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Dependencies\mmgr">
+      <UniqueIdentifier>{1273f2f5-607c-4b30-be11-5d12ab33f401}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -262,9 +262,6 @@
     <ClCompile Include="Source\Dependencies\MathGeoLib\include\Time\Clock.cpp">
       <Filter>Dependencies\MathGeoLib\Time</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Dependencies\mmgr\include\mmgr.cpp">
-      <Filter>Dependencies\mmgr</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Dependencies\parson\include\parson.c">
       <Filter>Dependencies\parson</Filter>
     </ClCompile>
@@ -273,6 +270,9 @@
     </ClCompile>
     <ClCompile Include="Source\EngineApplication.cpp">
       <Filter>Source\0_Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Dependencies\mmgr\include\mmgr.cpp">
+      <Filter>Dependencies\mmgr</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -585,12 +585,6 @@
     <ClInclude Include="Source\Dependencies\MathGeoLib\include\Time\Clock.h">
       <Filter>Dependencies\MathGeoLib\Time</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Dependencies\mmgr\include\mmgr.h">
-      <Filter>Dependencies\mmgr</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\mmgr\include\nommgr.h">
-      <Filter>Dependencies\mmgr</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Dependencies\parson\include\parson.h">
       <Filter>Dependencies\parson</Filter>
     </ClInclude>
@@ -599,6 +593,12 @@
     </ClInclude>
     <ClInclude Include="Source\EngineApplication.h">
       <Filter>Source\0_Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Dependencies\mmgr\include\mmgr.h">
+      <Filter>Dependencies\mmgr</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Dependencies\mmgr\include\nommgr.h">
+      <Filter>Dependencies\mmgr</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -13,6 +13,7 @@
 #include "I_Shaders.h"
 
 #include "Application.h"
+#include "FileSystemDefinitions.h"
 #include "M_FileSystem.h"
 
 #include "Resource.h"

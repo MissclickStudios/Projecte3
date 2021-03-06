@@ -5,6 +5,8 @@
 
 #include "R_Model.h"
 
+#include "MemoryManager.h"
+
 R_Model::R_Model() : Resource(ResourceType::MODEL)
 {
 

@@ -9,6 +9,7 @@
 #include "PathNode.h"
 
 #include "EngineApplication.h"
+#include "FileSystemDefinitions.h"
 #include "M_Window.h"
 #include "M_FileSystem.h"
 #include "M_ResourceManager.h"

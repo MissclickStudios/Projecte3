@@ -13,6 +13,8 @@
 
 #include "DevIL.h"
 
+#include "MemoryManager.h"
+
 #pragma comment (lib, "Source/Dependencies/DevIL/libx86/DevIL.lib")
 #pragma comment (lib, "Source/Dependencies/DevIL/libx86/ILU.lib")
 #pragma comment (lib, "Source/Dependencies/DevIL/libx86/ILUT.lib")

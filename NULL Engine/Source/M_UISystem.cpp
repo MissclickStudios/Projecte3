@@ -1,4 +1,5 @@
 #include "Application.h"
+#include "Log.h"
 
 #include "M_Scene.h"
 
@@ -6,6 +7,8 @@
 #include "C_Canvas.h"
 
 #include "M_UISystem.h"
+
+#include "MemoryManager.h"
 
 #pragma comment (lib, "Source/Dependencies/FreeType/libx86/freetype.lib")
 

@@ -5,6 +5,8 @@
 #include "M_Audio.h"
 #include "MathGeoLib/include/Math/float3.h"
 
+#include "MemoryManager.h"
+
 C_AudioSource::C_AudioSource(GameObject* owner) : Component(owner, ComponentType::AUDIOSOURCE)
 {
 	float3 pos = owner->GetComponent<C_Transform>()->GetWorldPosition();

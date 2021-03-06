@@ -12,6 +12,8 @@
 
 #include "C_Mesh.h"
 
+#include "MemoryManager.h"
+
 C_Mesh::C_Mesh(GameObject* owner) : Component(owner, ComponentType::MESH),
 rMesh			(nullptr),
 skinningMesh	(nullptr),

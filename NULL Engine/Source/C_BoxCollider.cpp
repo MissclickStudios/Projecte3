@@ -11,6 +11,8 @@
 
 #include "PhysX_3.4/Include/PxPhysicsAPI.h"
 
+#include "MemoryManager.h"
+
 C_BoxCollider::C_BoxCollider(GameObject* owner) : Component(owner, ComponentType::BOX_COLLIDER)
 {
 	CreateCollider();

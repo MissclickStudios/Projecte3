@@ -5,6 +5,7 @@
 #include "Color.h"
 
 #include "Application.h"
+#include "FileSystemDefinitions.h"
 #include "M_ResourceManager.h"
 
 #include "R_Material.h"
@@ -14,6 +15,8 @@
 #include "GameObject.h"
 
 #include "C_Material.h"
+
+#include "MemoryManager.h"
 
 #define MAX_MAPS 7
 

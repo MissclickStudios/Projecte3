@@ -1,3 +1,4 @@
+#include "Resource.h"
 #include "OpenGL.h"
 
 #include "VariableTypedefs.h"
@@ -7,7 +8,10 @@
 #include "Application.h"
 #include "M_Renderer3D.h"
 
+
 #include "R_Mesh.h"
+
+#include "MemoryManager.h"
 
 #define CHECKERS_WIDTH 64
 #define CHECKERS_HEIGHT 64

@@ -1,9 +1,9 @@
-#include "Time.h"
-
-#include "EngineApplication.h"
 #include "M_Editor.h"
-
+#include "Time.h"
+#include "EngineApplication.h"
 #include "E_Toolbar.h"
+
+#include "MemoryManager.h"
 
 E_Toolbar::E_Toolbar() : EditorPanel("Toolbar")
 {
@@ -128,7 +128,9 @@ void E_Toolbar::TimeDisplays()
 	//can't call Time::Real::GetClock().GetTimeAsString() ???
 	Hourglass realTime = Time::Real::GetClock();
 	Hourglass gameTime = Time::Game::GetClock();
-	ImGui::Text("Real Time: "); ImGui::SameLine(); ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%s", std::string(std::to_string(realTime.hours) + "h " + std::to_string(realTime.minutes) + "m " + std::to_string(realTime.seconds) + "s").c_str());
+	ImGui::Text("Real Time: "); ImGui::SameLine(); 
+	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%s", std::string(std::to_string(realTime.hours) + "h " + std::to_string(realTime.minutes) + "m " + std::to_string(realTime.seconds) + "s").c_str());
 	ImGui::SameLine();
-	ImGui::Text("Game Time: "); ImGui::SameLine(); ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%s", std::string(std::to_string(gameTime.hours) + "h " + std::to_string(gameTime.minutes) + "m " + std::to_string(gameTime.seconds) + "s").c_str());
+	ImGui::Text("Game Time: "); ImGui::SameLine(); 
+	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%s", std::string(std::to_string(gameTime.hours) + "h " + std::to_string(gameTime.minutes) + "m " + std::to_string(gameTime.seconds) + "s").c_str());
 }

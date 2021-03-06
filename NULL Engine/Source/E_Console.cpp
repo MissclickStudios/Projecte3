@@ -6,6 +6,8 @@
 
 #include "E_Console.h"
 
+#include "MemoryManager.h"
+
 #define MAX_CONSOLE_LOG_SIZE 1000
 
 E_Console::E_Console() : EditorPanel("Console")

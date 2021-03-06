@@ -9,6 +9,8 @@
 #include "AnimatorClip.h"
 
 #include "Application.h"
+#include "FileSystemDefinitions.h"
+
 #include "M_ResourceManager.h"
 
 #include "R_Animation.h"
@@ -17,6 +19,8 @@
 #include "C_Transform.h"
 
 #include "C_Animator.h"
+
+#include "MemoryManager.h"
 
 typedef std::map<double, float3>::const_iterator	PositionKeyframe;
 typedef std::map<double, Quat>::const_iterator		RotationKeyframe;

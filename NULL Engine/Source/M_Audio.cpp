@@ -18,12 +18,15 @@
 #include "AK/SpatialAudio/Common/AkSpatialAudio.h"	// Spatial Audio
 
 #include "Application.h"
+#include "Log.h"
 #include "M_FileSystem.h"
 #include "FileSystemDefinitions.h"
 #include "JSONParser.h"
 
 #include <utility>
 #include <iostream>
+
+#include "MemoryManager.h"
 
 M_Audio::M_Audio(bool isActive) : Module("Audio", isActive)
 {

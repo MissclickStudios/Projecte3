@@ -1,10 +1,11 @@
 #include <stdlib.h>
 																
 #include "Application.h"
+#include "ConfigurationSettings.h"
+#include "Log.h"
 
 #include "SDL/include/SDL.h"
 #include "Profiler.h"
-#include "MemoryManager.h"
 
 #pragma comment( lib, "Source/Dependencies/SDL/libx86/SDL2.lib" )
 #pragma comment( lib, "Source/Dependencies/SDL/libx86/SDL2main.lib" )

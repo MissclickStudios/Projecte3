@@ -41,6 +41,8 @@
 #include "C_Transform.h"
 #include "Log.h"
 
+#include "MemoryManager.h"
+
 #pragma comment (lib, "Source/Dependencies/glew/libx86/glew32.lib") //Needed for ImGui
 #pragma comment (lib, "opengl32.lib")								//link Microsoft OpenGL lib
 

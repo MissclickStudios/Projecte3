@@ -13,6 +13,8 @@
 
 #include "E_Viewport.h"
 
+#include "MemoryManager.h"
+
 E_Viewport::E_Viewport() : EditorPanel("Viewport"),
 texSize			({ 0.0f, 0.0f }),
 texOrigin		({ 0.0f, 0.0f }),

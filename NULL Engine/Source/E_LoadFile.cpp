@@ -4,6 +4,7 @@
 #include "Macros.h"
 
 #include "EngineApplication.h"
+#include "FileSystemDefinitions.h"
 #include "M_FileSystem.h"
 #include "M_Editor.h"
 

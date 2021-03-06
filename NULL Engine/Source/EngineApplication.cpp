@@ -13,8 +13,9 @@
 #include "M_UISystem.h"
 #include "M_Editor.h"
 
-#include "MemoryManager.h"
 #include "EngineMain.h"
+
+#include "MemoryManager.h"
 
 EngineApplication* EngineApp = NULL;
 

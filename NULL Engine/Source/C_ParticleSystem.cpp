@@ -1,5 +1,7 @@
 #include "C_ParticleSystem.h"
 
+#include "MemoryManager.h"
+
 C_ParticleSystem::C_ParticleSystem(GameObject* owner) : Component(owner, ComponentType::TRANSFORM)
 {
 }

@@ -1,12 +1,15 @@
 #include "JSONParser.h"
 
 #include "Application.h"
+#include "VariableDefinitions.h"
 
 #include "GameObject.h"
 #include "C_Camera.h"
 #include "C_RigidBody.h"
 
 #include "C_Transform.h"
+
+#include "MemoryManager.h"
 
 C_Transform::C_Transform(GameObject* owner) : Component(owner, ComponentType::TRANSFORM),
 localTransform(float4x4::identity),

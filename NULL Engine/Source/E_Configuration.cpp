@@ -16,6 +16,8 @@
 
 #include "E_Configuration.h"
 
+#include "MemoryManager.h"
+
 #define MAX_INPUT_LOG_SIZE 1000
 
 E_Configuration::E_Configuration() : EditorPanel("Configuration")
@@ -276,7 +278,6 @@ bool E_Configuration::FileSystemMenu()
 
 bool E_Configuration::SystemInfoMenu()
 {
-	bool ret = true;
 
 	if (ImGui::CollapsingHeader("System"))
 	{
@@ -309,7 +310,7 @@ bool E_Configuration::SystemInfoMenu()
 		ImGui::Unindent();
 	}
  
-	return ret;
+	return true;
 }
 
 bool E_Configuration::TimeManagementMenu()
@@ -321,7 +322,7 @@ bool E_Configuration::TimeManagementMenu()
 		Hourglass clock			= Time::Real::GetClock();
 		FrameData frameData		= Time::Real::GetFrameData();
 
-		ImGui::Text("Time Since Start:");	ImGui::SameLine(); ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "   %s",			clock.GetTimeAsString().c_str());
+		ImGui::Text("Time Since Start:");	ImGui::SameLine(); ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "   %s", std::string(std::to_string(clock.hours) + "h " + std::to_string(clock.minutes) + "m " + std::to_string(clock.seconds) + "s").c_str()); //TODO: can't return an std::string across dll without memo leack
 		ImGui::Text("Frame Count:");		ImGui::SameLine(); ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "        %llu",	frameData.frameCount);
 
 		ImGui::Text("Average FPS:");		ImGui::SameLine(); ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "        %.3f",	frameData.avgFps);
@@ -336,7 +337,7 @@ bool E_Configuration::TimeManagementMenu()
 		Hourglass gameClock		= Time::Game::GetClock();
 		FrameData gameFrameData	= Time::Game::GetFrameData();
 
-		ImGui::Text("Time Since Start:");	ImGui::SameLine(); ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "   %s",			gameClock.GetTimeAsString().c_str());
+		ImGui::Text("Time Since Start:");	ImGui::SameLine(); ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "   %s", std::string(std::to_string(gameClock.hours) + "h " + std::to_string(gameClock.minutes) + "m " + std::to_string(gameClock.seconds) + "s").c_str()); //TODO: can't return an std::string across dll without memo leack
 		ImGui::Text("Frame Count:");		ImGui::SameLine(); ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "        %llu",	gameFrameData.frameCount);
 
 		ImGui::Text("Average FPS:");		ImGui::SameLine(); ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "        %.3f",	gameFrameData.avgFps);

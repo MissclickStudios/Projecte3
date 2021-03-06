@@ -1,6 +1,8 @@
 #ifndef __R_MESH_H__
 #define __R_MESH_H__
 
+#include <map>
+
 #include "MathGeoBoundingBox.h"
 #include "MathGeoLib/include/Math/float2.h"
 #include "MathGeoLib/include/Math/float4x4.h"

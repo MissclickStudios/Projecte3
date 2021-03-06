@@ -1,11 +1,11 @@
 #ifndef __AUDIO_H__
 #define __AUDIO_H__
 
-#include "Module.h"
-
 #include <string>
 #include <vector>
+#include <map>
 
+#include "Module.h"
 #include "MathGeoLib/include/Math/float3.h"
 #include "AK/SoundEngine/Common/AkTypes.h"
 

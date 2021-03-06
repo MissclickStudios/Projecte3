@@ -16,6 +16,8 @@
 
 #include "OpenGL.h"
 
+#include "MemoryManager.h"
+
 UI_Image::UI_Image(C_Canvas* canvas, Rect rect) : UIElement(canvas, UIElementType::IMAGE, rect)
 {
 
