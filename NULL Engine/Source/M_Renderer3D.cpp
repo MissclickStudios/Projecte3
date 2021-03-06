@@ -156,7 +156,7 @@ UpdateStatus M_Renderer3D::PostUpdate(float dt)
 	BROFILER_CATEGORY("M_Renderer3D PostUpdate", Profiler::Color::Chartreuse);
 	
 	//The Skybox renderer must be the first one always
-	defaultSkyBox.RenderSkybox();
+	//defaultSkyBox.RenderSkybox(); //TODO crashes
 
 	RenderScene();
 
