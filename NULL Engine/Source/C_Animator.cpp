@@ -217,7 +217,7 @@ bool C_Animator::StepAnimation()
 		{
 			Transform& interpolatedTransform = GetInterpolatedTransform(currentClip->GetAnimationFrame(), bone.channel, originalTransform);
 			
-			LOG("ANIMATION FRAME { %.3f }, ANIMATION TICK { %u }", currentClip->GetAnimationFrame(), currentClip->GetAnimationTick());
+			//LOG("ANIMATION FRAME { %.3f }, ANIMATION TICK { %u }", currentClip->GetAnimationFrame(), currentClip->GetAnimationTick());
 
 			if (BlendingClipExists())
 			{

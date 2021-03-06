@@ -477,7 +477,7 @@ bool Importer::Meshes::Load(const char* buffer, R_Mesh* rMesh)
 			LOG("BONE { %s } ==> ID { %u }", bone->first.c_str(), bone->second);
 		}
 
-		Utilities::LoadBoneOffset(&cursor, rMesh, headerData[4]);
+		
 	}
 
 
