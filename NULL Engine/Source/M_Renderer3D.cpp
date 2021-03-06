@@ -627,17 +627,25 @@ void M_Renderer3D::RenderUI()
 		C_Canvas* canvasIt = (*it)->GetComponent<C_Canvas>();
 		if (canvasIt != nullptr && canvasIt->IsActive())
 		{
+			bool is2D = false;
+			if (App->camera->currentCamera != App->camera->masterCamera->GetComponent<C_Camera>())
+			{
+				is2D = true;
+				SetCamera2DSettings(is2D);
+			}
+
 			if (!canvasIt->uiElements.empty())
 			{
 				for (std::vector<UIElement*>::iterator uiIt = canvasIt->uiElements.begin(); uiIt != canvasIt->uiElements.end(); uiIt++)
 				{
+					(*uiIt)->SetIsUI(is2D);
 					(*uiIt)->Update();
 				}
 			}
 
 			if (!canvasIt->IsInvisible())
 			{
-				if (App->camera->currentCamera != App->camera->masterCamera->GetComponent<C_Camera>())
+				if (is2D)
 				{
 					canvasIt->Draw2D();
 				}
@@ -645,7 +653,10 @@ void M_Renderer3D::RenderUI()
 				{
 					canvasIt->Draw3D();
 				}
-			}	
+			}
+
+			if (is2D)
+				SetCamera2DSettings(false);
 		}
 	}
 }
@@ -1210,6 +1221,29 @@ void M_Renderer3D::SetRenderPrimtiveExamples(const bool& setTo)
 {
 	renderPrimitiveExamples = setTo;
 }
+
+void M_Renderer3D::SetCamera2DSettings(const bool& setTo)
+{
+	if (setTo)
+	{
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		// Not sure if it should be SceneTexture
+		//glOrtho(-App->editor->viewport->GetSceneTextureSize().x / 2, App->editor->viewport->GetSceneTextureSize().x / 2, -App->editor->viewport->GetSceneTextureSize().y / 2, App->editor->viewport->GetSceneTextureSize().y / 2, 100.0f, -100.0f);
+		glOrtho(-App->camera->GetCurrentCamera()->GetFrustum().NearPlaneWidth() / 2, App->camera->GetCurrentCamera()->GetFrustum().NearPlaneWidth() / 2, -App->camera->GetCurrentCamera()->GetFrustum().NearPlaneHeight() / 2, App->camera->GetCurrentCamera()->GetFrustum().NearPlaneHeight() / 2, 100.0f, -100.0f);
+		glMatrixMode(GL_MODELVIEW);
+		glLoadMatrixf(App->camera->GetCurrentCamera()->GetOGLViewMatrix());
+	}
+	else
+	{
+		glMatrixMode(GL_PROJECTION);
+		glLoadMatrixf(App->camera->GetCurrentCamera()->GetOGLProjectionMatrix());
+		glMatrixMode(GL_MODELVIEW);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	}
+}
+
+
 
 // --- RENDERER STRUCTURES METHODS ---
 // --- MESH RENDERER METHODS

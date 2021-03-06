@@ -252,6 +252,8 @@ public:																											// --- DEBUG GET/SET METHODS
 	void			SetRenderSkeletons			(const bool& setTo);
 	void			SetRenderPrimtiveExamples	(const bool& setTo);											// 
 
+	void SetCamera2DSettings(const bool& setTo);
+
 public:
 	Light					lights[MAX_LIGHTS];																	// 
 	SDL_GLContext			context;																			// 

@@ -46,13 +46,13 @@ bool C_Canvas::Update()
 
 void C_Canvas::Draw2D()
 {
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	// Not sure if it should be SceneTexture
-	glOrtho(-App->editor->viewport->GetSceneTextureSize().x / 2, App->editor->viewport->GetSceneTextureSize().x / 2, -App->editor->viewport->GetSceneTextureSize().y / 2, App->editor->viewport->GetSceneTextureSize().y / 2, 100.0f, -100.0f);
+	//glMatrixMode(GL_PROJECTION);
+	//glLoadIdentity();
+	//// Not sure if it should be SceneTexture
+	////glOrtho(-App->editor->viewport->GetSceneTextureSize().x / 2, App->editor->viewport->GetSceneTextureSize().x / 2, -App->editor->viewport->GetSceneTextureSize().y / 2, App->editor->viewport->GetSceneTextureSize().y / 2, 100.0f, -100.0f);
 	//glOrtho(-App->camera->GetCurrentCamera()->GetFrustum().NearPlaneWidth() / 2, App->camera->GetCurrentCamera()->GetFrustum().NearPlaneWidth() / 2, -App->camera->GetCurrentCamera()->GetFrustum().NearPlaneHeight() / 2, App->camera->GetCurrentCamera()->GetFrustum().NearPlaneHeight() / 2, 100.0f, -100.0f);
-	glMatrixMode(GL_MODELVIEW);
-	glLoadMatrixf(App->camera->GetCurrentCamera()->GetOGLViewMatrix());
+	//glMatrixMode(GL_MODELVIEW);
+	//glLoadMatrixf(App->camera->GetCurrentCamera()->GetOGLViewMatrix());
 
 	glLineWidth(2.0f);
 
@@ -83,10 +83,11 @@ void C_Canvas::Draw2D()
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 	glLineWidth(1.0f);
 
-	glMatrixMode(GL_PROJECTION);
+	/*glMatrixMode(GL_PROJECTION);
 	glLoadMatrixf(App->camera->GetCurrentCamera()->GetOGLProjectionMatrix());
 	glMatrixMode(GL_MODELVIEW);
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	*/
+	//glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 
 }

@@ -42,6 +42,7 @@ public:
 	float GetW() const;
 	float GetH() const;
 	bool IsActive() const;
+	bool IsUI() const;
 
 	void SetOwner(GameObject* owner);
 	void SetCanvas(C_Canvas* canvas);
@@ -51,10 +52,12 @@ public:
 	void SetW(const float w);
 	void SetH(const float h);
 	void SetIsActive(const bool& setTo);
+	void SetIsUI(const bool& setTo);
 
 private:
 
 	bool isActive;
+	bool isUI;
 
 	UIElementType type;
 	GameObject* owner;

@@ -82,6 +82,11 @@ bool UIElement::IsActive() const
 	return isActive;
 }
 
+bool UIElement::IsUI() const
+{
+	return isUI;
+}
+
 
 void UIElement::SetOwner(GameObject* owner)
 {
@@ -121,4 +126,9 @@ void UIElement::SetH(const float h)
 void UIElement::SetIsActive(const bool& setTo)
 {
 	this->isActive = setTo;
+}
+
+void UIElement::SetIsUI(const bool& setTo)
+{
+	this->isUI = setTo;
 }

@@ -42,7 +42,7 @@ bool UI_Image::Update()
 	if(GetRect().h > GetCanvas()->GetRect().h)
 		SetH(GetCanvas()->GetRect().h);
 
-	if (App->camera->currentCamera != App->camera->masterCamera->GetComponent<C_Camera>())
+	if (IsUI())
 	{
 		RenderImage2D();
 	}
@@ -66,16 +66,16 @@ void UI_Image::RenderImage2D()
 	GameObject* go = GetOwner();
 	if (go->GetComponent<C_Material>() == nullptr) return;
 
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	// Not sure if it should be SceneTexture
-	glOrtho(-App->editor->viewport->GetSceneTextureSize().x / 2, App->editor->viewport->GetSceneTextureSize().x / 2, -App->editor->viewport->GetSceneTextureSize().y / 2, App->editor->viewport->GetSceneTextureSize().y / 2, 100.0f, -100.0f);
-	//glOrtho(-App->camera->GetCurrentCamera()->GetFrustum().NearPlaneWidth() / 2, App->camera->GetCurrentCamera()->GetFrustum().NearPlaneWidth() / 2, -App->camera->GetCurrentCamera()->GetFrustum().NearPlaneHeight() / 2, App->camera->GetCurrentCamera()->GetFrustum().NearPlaneHeight() / 2, 100.0f, -100.0f);
-	glMatrixMode(GL_MODELVIEW);
-	glLoadMatrixf(App->camera->GetCurrentCamera()->GetOGLViewMatrix());
+	//glMatrixMode(GL_PROJECTION);
+	//glLoadIdentity();
+	//// Not sure if it should be SceneTexture
+	//glOrtho(-App->editor->viewport->GetSceneTextureSize().x / 2, App->editor->viewport->GetSceneTextureSize().x / 2, -App->editor->viewport->GetSceneTextureSize().y / 2, App->editor->viewport->GetSceneTextureSize().y / 2, 100.0f, -100.0f);
+	////glOrtho(-App->camera->GetCurrentCamera()->GetFrustum().NearPlaneWidth() / 2, App->camera->GetCurrentCamera()->GetFrustum().NearPlaneWidth() / 2, -App->camera->GetCurrentCamera()->GetFrustum().NearPlaneHeight() / 2, App->camera->GetCurrentCamera()->GetFrustum().NearPlaneHeight() / 2, 100.0f, -100.0f);
+	//glMatrixMode(GL_MODELVIEW);
+	//glLoadMatrixf(App->camera->GetCurrentCamera()->GetOGLViewMatrix());
 
-	glDisable(GL_DEPTH_TEST);
-	glDisable(GL_LIGHTING);
+	//glDisable(GL_DEPTH_TEST);
+	//glDisable(GL_LIGHTING);
 
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
@@ -93,13 +93,13 @@ void UI_Image::RenderImage2D()
 
 	glBindTexture(GL_TEXTURE_2D, 0);
 
-	glEnable(GL_LIGHTING);
-	glEnable(GL_DEPTH_TEST);
+	//glEnable(GL_LIGHTING);
+	//glEnable(GL_DEPTH_TEST);
 
-	glMatrixMode(GL_PROJECTION);
+	/*glMatrixMode(GL_PROJECTION);
 	glLoadMatrixf(App->camera->GetCurrentCamera()->GetOGLProjectionMatrix());
-	glMatrixMode(GL_MODELVIEW);
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glMatrixMode(GL_MODELVIEW);*/
+	//glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 void UI_Image::RenderImage3D()
@@ -110,8 +110,8 @@ void UI_Image::RenderImage3D()
 	glPushMatrix();
 	glMultMatrixf((GLfloat*)&GetCanvas()->GetOwner()->GetComponent<C_Transform>()->GetWorldTransform().Transposed());
 
-	glDisable(GL_DEPTH_TEST);
-	glDisable(GL_LIGHTING);
+	//glDisable(GL_DEPTH_TEST);
+	//glDisable(GL_LIGHTING);
 
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
