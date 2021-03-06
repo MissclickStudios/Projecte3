@@ -4,6 +4,8 @@
 
 #include "R_Animation.h"
 
+#include "MemoryManager.h"
+
 R_Animation::R_Animation() : Resource(ResourceType::ANIMATION),
 name				("[NONE]"),
 duration			(0.0f),

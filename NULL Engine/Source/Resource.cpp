@@ -7,6 +7,8 @@
 
 #include "Resource.h"
 
+#include "MemoryManager.h"
+
 Resource::Resource(ResourceType type) : 
 type			(type),
 uid				(Random::LCG::GetRandomUint()),

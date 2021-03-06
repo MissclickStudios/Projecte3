@@ -14,6 +14,7 @@
 #include "Random.h"
 
 #include "Application.h"
+#include "FileSystemDefinitions.h"
 #include "M_FileSystem.h"
 #include "M_ResourceManager.h"
 

@@ -1,6 +1,7 @@
 #ifndef __GAME_OBJECT_H__
 #define __GAME_OBJECT_H__
 
+#include "Macros.h"
 #include <string>
 #include <vector>
 #include <map>
@@ -8,6 +9,7 @@
 
 #include "MathGeoBoundingBox.h"
 #include "Component.h"
+#include "C_Camera.h" //TODO: Why do we need to include this ????
 
 class ParsonNode;
 class C_Transform;
@@ -19,7 +21,7 @@ struct SkeletonRenderer;
 typedef unsigned __int32 uint32;
 typedef unsigned int uint;
 
-class GameObject
+class NULL_API GameObject
 {
 public:
 	GameObject();

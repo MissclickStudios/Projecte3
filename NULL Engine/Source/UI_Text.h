@@ -8,7 +8,7 @@
 
 class C_Canvas;
 
-class UI_Text : public UIElement
+class NULL_API UI_Text : public UIElement
 {
 public:
 	UI_Text(C_Canvas* owner, Rect rect);

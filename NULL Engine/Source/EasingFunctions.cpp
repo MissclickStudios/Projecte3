@@ -1,5 +1,7 @@
 #include "EasingFunctions.h"
 
+#include "MemoryManager.h"
+
 float EasingFunctions::Lineal(float start, float end, float rate)
 {
 	/*float increment = (end - start) * rate;

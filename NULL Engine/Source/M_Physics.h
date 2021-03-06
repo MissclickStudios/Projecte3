@@ -1,6 +1,7 @@
 #ifndef __PHYSICS_H__
 #define __PHYSICS_H__
 
+#include <map>
 #include "Module.h"
 
 namespace physx
@@ -19,7 +20,7 @@ namespace physx
 class GameObject;
 class SimulationCallback;
 
-class M_Physics : public Module
+class NULL_API M_Physics : public Module
 {
 public:
 

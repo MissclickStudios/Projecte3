@@ -28,7 +28,7 @@ enum class TextureMap												// Will correspond with the indexes of the text
 	NORMAL = 6,
 };
 
-class C_Material : public Component
+class NULL_API C_Material : public Component
 {
 public:
 	C_Material(GameObject* owner);
@@ -49,6 +49,7 @@ public:																						// --- GET/SET RESOURCES
 	
 	void SetMaterial(R_Material* material);
 	void SetTexture(R_Texture* texture);
+	void SwapTexture(R_Texture* rTexture); //Set the texture without freeing the resource
 	void SetShader(R_Shader* rShader);
 																							// --- GET/SET COMPONENT MATERIAL VARIABLES
 	

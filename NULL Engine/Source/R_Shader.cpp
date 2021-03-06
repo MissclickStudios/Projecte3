@@ -4,6 +4,8 @@
 
 #include "R_Shader.h"
 
+#include "MemoryManager.h"
+
 R_Shader::R_Shader() : Resource(ResourceType::SHADER)
 {
 }

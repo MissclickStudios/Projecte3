@@ -1,6 +1,8 @@
 #ifndef __COMPONENT_H__
 #define __COMPONENT_H__
 
+#include "Macros.h"
+
 class ParsonNode;
 class GameObject;
 
@@ -28,7 +30,7 @@ enum class ComponentType
 	IMAGE
 };
 
-class Component
+class NULL_API Component
 {
 public:
 	Component(GameObject* owner, ComponentType type, bool isActive = true);

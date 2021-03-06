@@ -1,5 +1,7 @@
 #include "R_ParticleSystem.h"
 
+#include "MemoryManager.h"
+
 R_ParticleSystem::R_ParticleSystem() : Resource(ResourceType::PARTICLE_SYSTEM)
 {
 }

@@ -11,12 +11,13 @@ class Resource;
 
 enum class ResourceType;
 class R_Shader;
+class R_Texture;
 
 typedef unsigned int		uint;
 typedef unsigned __int32	uint32;
 typedef unsigned __int64	uint64;
 
-class M_ResourceManager : public Module
+class NULL_API M_ResourceManager : public Module
 {
 public:
 	M_ResourceManager();
@@ -41,7 +42,7 @@ public:																								// --- RESOURCE MANAGER API ---
 
 	// --- META FILE METHODS
 	ResourceType	GetTypeFromAssetsExtension		(const char* assetsPath);						// Returns the type of the resource related with the given Asset.
-	bool			GetForcedUIDsFromMeta(const char* assetsPath, std::map<std::string, uint32>& forcedUIDs);						// TMP. See if it can be done another way.
+	bool			GetForcedUIDsFromMeta			(const char* assetsPath, std::map<std::string, uint32>& forcedUIDs);			// TMP. See if it can be done another way.
 																																	// Gets the UIDs stored in a .meta and assets path.
 	// --- RESOURCE METHODS
 	Resource*		CreateResource					(ResourceType type, const char* assetsPath = nullptr, uint32 forcedUID = 0);	// Generates a rsrc with the spec. params. No emplace.
@@ -55,9 +56,12 @@ public:																								// --- RESOURCE MANAGER API ---
 	bool			DeleteResource					(Resource* resourceToDelete);					// Same as the above but directly passing the resource as the argument.
 	
 	void			GetResources					(std::map<uint32, Resource*>& resources) const;	// Returns a map filled with all the resources currently loaded onto memory.
+	const std::map<uint32, Resource*>* GetResources() const;
 
 	R_Shader*		GetShader(const char* name);													//Look for a shader in the library and load and return it
 	void			GetAllShaders(std::vector<R_Shader*>& shaders);									//Retrieve all the shaders in the library
+
+	void			GetAllTextures(std::vector<R_Texture*>& textures);									//Retrieve all the shaders in the library
 
 	
 private:																															// --- ASSETS MONITORING METHODS ---

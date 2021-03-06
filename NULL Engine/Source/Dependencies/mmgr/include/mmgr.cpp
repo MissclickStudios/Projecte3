@@ -275,7 +275,7 @@ static	void	log(const char *format, ...)
 
 	// If you hit this assert, then the memory logger is unable to log information to a file (can't open the file for some
 	// reason.) You can interrogate the variable 'buffer' to see what was supposed to be logged (but won't be.)
-	m_assert(fp);
+	m_assert((int)fp);
 
 	if (!fp) return;
 
@@ -291,7 +291,7 @@ static	void	doCleanupLogOnFirstRun()
 {
 	if (cleanupLogOnFirstRun)
 	{
-		unlink(memoryLogFile);
+		_unlink(memoryLogFile);
 		cleanupLogOnFirstRun = false;
 
 		// Print a header for the log
@@ -538,7 +538,7 @@ static	void	dumpLeakReport()
 
 	// If you hit this assert, then the memory report generator is unable to log information to a file (can't open the file for
 	// some reason.)
-	m_assert(fp);
+	m_assert((int)fp);
 	if (!fp) return;
 
 	// Any leaks?
@@ -1085,7 +1085,7 @@ void	*m_allocator(const char *sourceFile, const unsigned int sourceLine, const c
 			// Add this address to our reservoirBuffer so we can free it later
 
 			sAllocUnit	**temp = (sAllocUnit **) realloc(reservoirBuffer, (reservoirBufferSize + 1) * sizeof(sAllocUnit *));
-			m_assert(temp);
+			m_assert((int)temp);
 			if (temp)
 			{
 				reservoirBuffer = temp;
@@ -1249,7 +1249,7 @@ void	*m_reallocator(const char *sourceFile, const unsigned int sourceLine, const
 		sAllocUnit	*au = findAllocUnit(reportedAddress);
 
 		// If you hit this assert, you tried to reallocate RAM that wasn't allocated by this memory manager.
-		m_assert(au != NULL);
+		//m_assert(au != NULL);
 		if (au == NULL) throw "Request to reallocate RAM that was never allocated";
 
 		// If you hit this assert, then the allocation unit that is about to be reallocated is damaged. But you probably
@@ -1303,7 +1303,7 @@ void	*m_reallocator(const char *sourceFile, const unsigned int sourceLine, const
 		// If you hit this assert, then the requested allocation simply failed (you're out of memory) Interrogate the
 		// variable 'au' to see the original allocation. You can also query 'newActualSize' to see the amount of memory
 		// trying to be allocated. Finally, you can query 'reportedSize' to see how much memory was requested by the caller.
-		m_assert(newActualAddress);
+		m_assert((int)newActualAddress);
 		#endif
 
 		if (!newActualAddress) throw "Request for reallocation failed. Out of memory.";
@@ -1690,7 +1690,7 @@ void	m_dumpMemoryReport(const char *filename, const bool overwrite)
 
 	// If you hit this assert, then the memory report generator is unable to log information to a file (can't open the file for
 	// some reason.)
-	m_assert(fp);
+	m_assert((int)fp);
 	if (!fp) return;
 
         // Header

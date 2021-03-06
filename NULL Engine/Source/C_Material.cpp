@@ -5,6 +5,7 @@
 #include "Color.h"
 
 #include "Application.h"
+#include "FileSystemDefinitions.h"
 #include "M_ResourceManager.h"
 
 #include "R_Material.h"
@@ -14,6 +15,8 @@
 #include "GameObject.h"
 
 #include "C_Material.h"
+
+#include "MemoryManager.h"
 
 #define MAX_MAPS 7
 
@@ -190,6 +193,11 @@ void C_Material::SetTexture(R_Texture* rTexture)
 		App->resourceManager->FreeResource(this->rTexture->GetUID());
 	}
 
+	this->rTexture = rTexture;
+}
+
+void C_Material::SwapTexture(R_Texture* rTexture)
+{
 	this->rTexture = rTexture;
 }
 

@@ -8,7 +8,7 @@
 
 #include "Time.h"
 
-#include "Application.h"
+#include "EngineApplication.h"
 #include "M_Renderer3D.h"
 #include "M_Editor.h"
 #include "M_Audio.h"
@@ -33,6 +33,7 @@
 #include "C_PlayerController.h"
 
 #include "R_Shader.h"
+#include "R_Texture.h"
 #include "I_Shaders.h"
 
 #include "C_Canvas.h"
@@ -41,6 +42,8 @@
 #include "E_Inspector.h"
 
 #include <fstream>
+
+#include "MemoryManager.h"
 
 #define MAX_VALUE 100000
 #define MIN_VALUE -100000
@@ -52,7 +55,8 @@ showSaveEditorPopup			(false),
 componentType				(0),
 mapToDisplay				(0),
 componentToDelete			(nullptr),
-shaderToRecompile			(nullptr)
+shaderToRecompile			(nullptr),
+texName						("NONE")
 {
 
 }
@@ -70,7 +74,7 @@ bool E_Inspector::Draw(ImGuiIO& io)
 
 	SetIsHovered();
 	
-	GameObject* selected = App->editor->GetSelectedGameObjectThroughEditor();
+	GameObject* selected = EngineApp->editor->GetSelectedGameObjectThroughEditor();
 
 	if (selected != nullptr && !selected->is_master_root && !selected->is_scene_root)
 	{	
@@ -381,7 +385,7 @@ void E_Inspector::DrawMaterialComponent(C_Material* cMaterial)
 					ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), cMaterial->GetShader()->GetAssetsFile());
 
 				if (allShaders.empty()) App->resourceManager->GetAllShaders(allShaders);
-				std::string shaderName = cMaterial->GetShader()->GetAssetsFile();
+				shaderName = cMaterial->GetShader()->GetAssetsFile();
 				if (ImGui::BeginCombo("Shader", cMaterial->GetShader()->GetAssetsFile(), ImGuiComboFlags_PopupAlignLeft))
 				{
 					for (uint i = 0; i < allShaders.size(); i++)
@@ -431,6 +435,29 @@ void E_Inspector::DrawMaterialComponent(C_Material* cMaterial)
 			ImGui::Separator();
 
 			// --- TEXTURE DATA ---
+
+			if (allTextures.empty()) 
+				App->resourceManager->GetAllTextures(allTextures);
+			
+			if (texName == "NONE" && cMaterial->GetTexture())
+			{
+				texName = cMaterial->GetTexture()->GetAssetsFile();
+			}
+			if (ImGui::BeginCombo("Texture", texName.c_str(), ImGuiComboFlags_PopupAlignLeft))
+			{
+				for (uint i = 0; i < allTextures.size(); i++)
+				{
+					const bool selectedShader = (texName.c_str() == allTextures[i]->GetAssetsFile());
+					if (ImGui::Selectable(allTextures[i]->GetAssetsFile(), selectedShader))
+					{
+						cMaterial->SwapTexture(allTextures[i]);
+
+						texName = allTextures[i]->GetAssetsFile();
+					}
+				}
+				ImGui::EndCombo();
+			}
+
 			DisplayTextureData(cMaterial);
 
 			ImGui::Separator();
@@ -561,12 +588,12 @@ void E_Inspector::DrawCameraComponent(C_Camera* cCamera)
 
 			if (ImGui::Button("Set as Current Camera"))
 			{
-				App->editor->SetCurrentCameraThroughEditor(cCamera);
+				EngineApp->editor->SetCurrentCameraThroughEditor(cCamera);
 			}
 
 			if (ImGui::Button("Return to Master Camera"))
 			{
-				App->editor->SetMasterCameraThroughEditor();
+				EngineApp->editor->SetMasterCameraThroughEditor();
 			}
 		}
 
@@ -611,7 +638,8 @@ void E_Inspector::DrawAnimatorComponent(C_Animator* cAnimator)								// TODO: S
 
 			if (currentClip == nullptr)
 			{
-				currentClip = &AnimatorClip();
+				AnimatorClip Clip = AnimatorClip();
+				currentClip = &Clip;
 			}
 
 			const char* animationName			= currentClip->GetAnimationName();
@@ -729,7 +757,7 @@ void E_Inspector::DrawAnimatorComponent(C_Animator* cAnimator)								// TODO: S
 
 					if (ImGui::Button("Create")) 
 					{ 
-						if (!App->play)
+						if (!EngineApp->play)
 						{
 							success = cAnimator->AddClip(AnimatorClip(cAnimator->GetAnimationByIndex((uint)selectedAnimation), newClipName, newClipStart, newClipEnd, loop));
 							textTimerRunning = true;
@@ -1429,8 +1457,8 @@ void E_Inspector::TextureDisplay(C_Material* cMaterial)
 
 	if (cMaterial->UseDefaultTexture())
 	{
-		texId = (ImTextureID)App->renderer->GetDebugTextureID();
-		//tex_id = (ImTextureID)App->renderer->GetSceneRenderTexture();
+		texId = (ImTextureID)EngineApp->renderer->GetDebugTextureID();
+		//tex_id = (ImTextureID)EngineApp->renderer->GetSceneRenderTexture();
 	}
 	else
 	{

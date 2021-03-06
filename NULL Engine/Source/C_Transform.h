@@ -7,7 +7,7 @@
 class ParsonNode;
 class GameObject;
 
-class C_Transform : public Component
+class NULL_API C_Transform : public Component
 {
 public:
 	C_Transform(GameObject* owner);

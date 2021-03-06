@@ -34,6 +34,7 @@
 #include "M_Scene.h"
 
 #include "MemoryManager.h"
+#include "LevelGenerator.h"
 
 M_Scene::M_Scene(bool isActive) : Module("SceneManager", isActive),
 masterRoot				(nullptr),
@@ -169,6 +170,18 @@ UpdateStatus M_Scene::Update(float dt)
 	if (App->input->GetKey(SDL_SCANCODE_F6) == KeyState::KEY_DOWN)
 	{
 		App->LoadConfiguration("Resources/Engine/Configuration/configuration.JSON");
+	}
+
+	// --- Room Generation
+	if (rooms.empty()) App->fileSystem->GetAllFilesWithExtensionAndName(ASSETS_SCENES_PATH, "json", "Room", rooms);;
+
+	if (!rooms.empty())
+	{
+		if (App->input->GetKey(SDL_SCANCODE_N) == KeyState::KEY_DOWN)
+		{
+			float random = Random::PCG::GetBoundedRandomFloat(4);
+			LoadScene(rooms[random].c_str());
+		}
 	}
 
 	return UpdateStatus::CONTINUE;

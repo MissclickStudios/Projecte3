@@ -7,19 +7,17 @@
 #ifndef __MODULE_H__
 #define __MODULE_H__
 
-#include <vector>
-#include <map>
-#include <string>
-
 #include "SDL/include/SDL.h"														// TMP. Delete later
 
-#include "Globals.h"																// TMP. Delete later
+//#include "Globals.h"																// TMP. Delete later
+#include "UpdateStatus.h"
+#include "Macros.h"
 
 class ParsonNode;
 
 #define MAX_MODULE_NAME_LENGTH 25
 
-class Module
+class NULL_API Module
 {
 public:
 	Module(const char* name, bool isActive = true);
@@ -35,6 +33,9 @@ public:
 	virtual bool			SaveConfiguration	(ParsonNode& root) const;			// Will save the current configuration of the calling module in a JSON file.
 	virtual bool			LoadConfiguration	(ParsonNode& root);					// Will load the configuration of the calling module from a JSON file.
 
+	virtual void			ProcessInput(SDL_Event& event);							//
+	virtual void			PostSceneRendering();
+	virtual void			AddConsoleLog(const char* log);										//Quick solution to have an engine Logger outside the core Dll
 public:
 	bool					IsActive			() const;
 	bool					SetModuleState		(bool isActive);					// Will modify the state of the module. Will call Start() or CleanUp().

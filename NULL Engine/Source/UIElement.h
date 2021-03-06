@@ -18,7 +18,7 @@ enum class UIElementState
 	RELEASED,
 };
 
-class UIElement
+class NULL_API UIElement
 {
 public:
 

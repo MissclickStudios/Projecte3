@@ -18,6 +18,8 @@
 
 #include "Importer.h"
 
+#include "MemoryManager.h"
+
 using namespace Importer;																						// Not a good thing to do but it will be employed only inside this .cpp file.
 
 void Importer::InitializeImporters()

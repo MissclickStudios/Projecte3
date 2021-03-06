@@ -15,6 +15,7 @@ namespace math
 class ParsonNode;
 class Primitive;
 class Resource;
+class R_Scene;
 class R_Model;
 class R_Texture;
 class GameObject;
@@ -24,7 +25,7 @@ struct ModelNode;
 
 typedef unsigned __int32 uint32;
 
-class M_Scene : public Module
+class NULL_API M_Scene : public Module
 {
 public:
 	M_Scene(bool isActive = true);
@@ -97,6 +98,9 @@ private:
 	C_Camera*						cullingCamera;																			// Culling Camera
 
 	std::vector<Primitive*>			primitives;
+
+
+	std::vector<std::string>			rooms;
 };
 
 #endif // !__M_SCENE_H__

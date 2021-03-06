@@ -13,6 +13,7 @@
 #include "I_Shaders.h"
 
 #include "Application.h"
+#include "FileSystemDefinitions.h"
 #include "M_FileSystem.h"
 
 #include "Resource.h"
@@ -517,9 +518,9 @@ bool M_ResourceManager::GetLibraryFilePathsFromMeta(const char* assetsPath, std:
 	std::string extension = "[NONE]";
 
 	// --- MAIN RESOURCE
-	uint32 resourceUid	= (uint32)metaRoot.GetNumber("UID");
-	ResourceType type	= (ResourceType)(int)metaRoot.GetNumber("Type");
-	bool success		= GetLibraryDirectoryAndExtensionFromType(type, directory, extension);
+	uint32 resourceUid		= (uint32)metaRoot.GetNumber("UID");
+	ResourceType type		= (ResourceType)((int)metaRoot.GetNumber("Type"));
+	bool success			= GetLibraryDirectoryAndExtensionFromType(type, directory, extension);
 
 	if (!success)
 	{
@@ -557,7 +558,8 @@ bool M_ResourceManager::GetLibraryFilePathsFromMeta(const char* assetsPath, std:
 		extension = "[NONE]";
 
 		containedUid	= (uint32)containedNode.GetNumber("UID");
-		containedType	= (ResourceType)(int)containedNode.GetNumber("Type");
+		containedType	= (ResourceType)((int)containedNode.GetNumber("Type"));
+
 		success			= GetLibraryDirectoryAndExtensionFromType(containedType, directory, extension);
 		if (!success)
 		{
@@ -1609,7 +1611,34 @@ void M_ResourceManager::GetAllShaders(std::vector<R_Shader*>& shaders)
 	}
 }
 
+void M_ResourceManager::GetAllTextures(std::vector<R_Texture*>& textures)
+{
+	R_Texture* tempTex = nullptr;
+	std::vector<std::string> textureFiles;
+	App->fileSystem->GetAllFilesWithExtension(ASSETS_TEXTURES_PATH, "png", textureFiles);
+	App->fileSystem->GetAllFilesWithExtension(ASSETS_TEXTURES_PATH, "tga", textureFiles);
+	App->fileSystem->GetAllFilesWithExtension(ASSETS_TEXTURES_PATH, "dds", textureFiles);
+	for (uint i = 0; i < textureFiles.size(); i++)
+	{
+		tempTex = (R_Texture*)App->resourceManager->GetResourceFromLibrary(textureFiles[i].c_str());
+		if (tempTex == nullptr)
+		{
+			LOG("[ERROR] Could not get the %s Error: %s could not be found in active resources.", textureFiles[i], textureFiles[i]);
+		}
+		else
+		{
+			textures.push_back(tempTex);
+		}
+	}
+}
+
 void M_ResourceManager::GetResources(std::map<uint32, Resource*>& resources) const
 {
+	//TODO: this function call from editor resources causes memleak
 	resources = this->resources;
+}
+
+const std::map<uint32, Resource*>* M_ResourceManager::GetResources() const
+{
+	return &this->resources;
 }

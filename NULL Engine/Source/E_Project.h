@@ -55,7 +55,7 @@ private:
 
 private:
 	void			DrawGoToPreviousDirectoryButton	();
-	void			ResourceDragAndDropEvent		(const char* assetsPath, ImTextureID textureID);
+	void			AssetDragAndDropEvent			(const char* assetsPath, ImTextureID textureID);
 	
 	ImTextureID		GetIconTexID					(const AssetDisplay& assetDisplay) const;
 	uint			GetOGLTextureID					(R_Texture* assetTexture) const;

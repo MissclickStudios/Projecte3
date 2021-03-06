@@ -1,6 +1,13 @@
 #ifndef __MACROS_H__
 #define __MACROS_H__
 
+//Import/export define
+#ifdef NULL_BUILD_DLL
+#define NULL_API __declspec(dllexport)
+#else
+#define NULL_API __declspec(dllimport)
+#endif
+
 // Performance macros
 #define TIMER_START(timer) timer.Start();																				// 
 #define TIMER_PEEK(timer) LOG("%s took %f s", __FUNCTION__, timer.ReadSec())											// 

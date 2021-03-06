@@ -33,7 +33,7 @@ struct ModelNode
 	std::string		textureName;
 };
 
-class R_Model : public Resource
+class NULL_API R_Model : public Resource
 {
 public:
 	R_Model();
