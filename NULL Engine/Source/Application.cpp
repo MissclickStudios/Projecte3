@@ -39,6 +39,7 @@ resourceManager	(nullptr),
 audio			(nullptr),
 uiSystem		(nullptr),
 logger			(nullptr)
+
 {
 	App = this;
 	//PERF_TIMER_START(perf_timer);
