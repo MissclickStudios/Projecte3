@@ -18,5 +18,10 @@ void R_ParticleSystem::InitDefaultSystem()
 void R_ParticleSystem::AddDefaultEmitter()
 {
 	//pushback an emitter and add it the standard particle modules
+	emitters.push_back(Emitter());
+
+	emitters.back().modules.push_back(new EmitterBase());
+	emitters.back().modules.push_back(new ParticleColor());
+	emitters.back().modules.push_back(new EmitterSpawn());
 }
 

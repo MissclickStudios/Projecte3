@@ -10,13 +10,21 @@ C_ParticleSystem::~C_ParticleSystem()
 
 bool C_ParticleSystem::Update(float dt)
 {
-	//loop all emitters and trigger update() method
+	//loop all emitterInstances and trigger update() method
+	for (unsigned int i = 0; i < emitterInstances.size(); i++)
+	{
+		emitterInstances[i].Update(dt);
+	}
 
 	return true;
 }
 
 void C_ParticleSystem::Reset()
 {
-	//loop all emitters and trigger reset() method
+	//loop all emitterInstances and trigger reset() methodç
+	for (unsigned int i = 0; i < emitterInstances.size(); i++)
+	{
+		emitterInstances[i].Reset();
+	}
 }
 
