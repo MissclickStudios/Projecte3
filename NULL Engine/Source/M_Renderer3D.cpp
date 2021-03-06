@@ -160,6 +160,20 @@ UpdateStatus M_Renderer3D::PostUpdate(float dt)
 
 	RenderScene();
 
+	glClear(GL_COLOR_BUFFER_BIT);
+	glBindTexture(GL_TEXTURE_2D, gameFramebuffer);
+	glBegin(GL_QUADS);
+	glTexCoord2f(0, 0);
+	glVertex2f(0, 0);
+	glTexCoord2f(1, 0);
+	glVertex2f(500, 0);
+	glTexCoord2f(1, 1);
+	glVertex2f(500, 500);
+	glTexCoord2f(0, 1);
+	glVertex2f(0, 500);
+	glEnd();
+	glFlush();
+
 	//Render systems from other modules (example ImGUi)
 	for (std::vector<Module*>::const_iterator it = PostSceneRenderModules.cbegin(); it != PostSceneRenderModules.cend(); ++it) 
 	{
