@@ -17,6 +17,9 @@
 
 #include "MemoryManager.h"
 
+#include "JSONParser.h"
+
+
 C_Canvas::C_Canvas(GameObject* owner) : Component(owner, ComponentType::CANVAS)
 {
 	pivot = GetPosition();
@@ -140,12 +143,34 @@ bool C_Canvas::SaveState(ParsonNode& root) const
 {
 	bool ret = true;
 
+	root.SetNumber("Type", (uint)GetType());
+
+	ParsonNode canvas = root.SetNode("Canvas");
+
+	canvas.SetNumber("X", GetRect().x);
+	canvas.SetNumber("Y", GetRect().y);
+	canvas.SetNumber("W", GetRect().w);
+	canvas.SetNumber("H", GetRect().h);
+	canvas.SetNumber("Z", GetZ());
+
 	return ret;
 }
 
 bool C_Canvas::LoadState(ParsonNode& root)
 {
 	bool ret = true;
+
+	ParsonNode canvas = root.GetNode("Canvas");
+
+	Rect r;
+
+	r.x = canvas.GetNumber("X");
+	r.y = canvas.GetNumber("Y");
+	r.w = canvas.GetNumber("W");
+	r.h = canvas.GetNumber("H");
+
+	SetRect(r);
+	SetZ(canvas.GetNumber("Z"));
 
 	return ret;
 }
