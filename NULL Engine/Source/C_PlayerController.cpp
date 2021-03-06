@@ -2,6 +2,7 @@
 
 #include "Application.h"
 #include "M_Input.h"
+#include "Log.h"
 
 #include "GameObject.h"
 #include "C_RigidBody.h"
@@ -79,7 +80,8 @@ bool C_PlayerController::LoadState(ParsonNode& root)
 
 float3 C_PlayerController::MousePositionToWorldPosition(float mapPositionY)
 {
-	float2 mousePos = App->editor->GetWorldMousePositionThroughEditor();
+	//float2 mousePos = App->editor->GetWorldMousePositionThroughEditor();
+	float2 mousePos = float2(App->input->GetMouseX(), App->input->GetMouseY());
 
 	float normMouseX = mousePos.x / (float)App->window->GetWidth();
 	float normMouseY = mousePos.y / (float)App->window->GetHeight();
