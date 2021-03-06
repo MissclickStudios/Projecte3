@@ -26,6 +26,7 @@ enum class ComponentType
 	CANVAS,
 	AUDIOSOURCE,
 	AUDIOLISTENER,
+	PLAYER_CONTROLLER,
 	IMAGE
 };
 

@@ -121,6 +121,7 @@ public:																									// --- COMPONENT GETTERS AND SETTERS
 		case ComponentType::BOX_COLLIDER:		{ return "Box Collider"; }		break;
 		case ComponentType::SPHERE_COLLIDER:	{ return "Sphere Collider"; }	break;
 		case ComponentType::CAPSULE_COLLIDER:	{ return "Capsule Collider"; }	break;
+		case ComponentType::PLAYER_CONTROLLER: { return "Player Controller"; } break;
 		}
 
 		return "NONE";

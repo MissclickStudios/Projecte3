@@ -20,6 +20,7 @@ class C_BoxCollider;
 class C_SphereCollider;
 class C_CapsuleCollider;
 class C_Canvas;
+class C_PlayerController;
 
 class Resource;
 class R_Shader;
@@ -59,6 +60,7 @@ private:
 	void DrawCapsuleColliderComponent	(C_CapsuleCollider* cCollider);
 	void DrawCanvasComponent			(C_Canvas* cCanvas);
 	void DrawUIImage					(UI_Image* image);
+	void DrawPlayerControllerComponent	(C_PlayerController* controller);
 
 	void AddComponentCombo				(GameObject* selectedGameObject);					// 
 	void DeleteComponentPopup			(GameObject* selectedGameObject);					// 

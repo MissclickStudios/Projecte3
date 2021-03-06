@@ -30,6 +30,7 @@
 #include "C_BoxCollider.h"
 #include "C_SphereCollider.h"
 #include "C_CapsuleCollider.h"
+#include "C_PlayerController.h"
 
 #include "R_Shader.h"
 #include "R_Texture.h"
@@ -178,20 +179,21 @@ void E_Inspector::DrawComponents(GameObject* selectedGameObject)
 		ComponentType type = component->GetType();	
 		switch (type)
 		{
-		case ComponentType::TRANSFORM:	{ DrawTransformComponent((C_Transform*)component); }	break;
-		case ComponentType::MESH:		{ DrawMeshComponent((C_Mesh*)component); }				break;
-		case ComponentType::MATERIAL:	{ DrawMaterialComponent((C_Material*)component); }		break;
-		case ComponentType::LIGHT:		{ DrawLightComponent((C_Light*)component); }			break;
-		case ComponentType::CAMERA:	{ DrawCameraComponent((C_Camera*)component); }			break;
-		case ComponentType::ANIMATOR:	{ DrawAnimatorComponent((C_Animator*)component); }		break;
-		case ComponentType::ANIMATION: { DrawAnimationComponent((C_Animation*)component); }	break;
-		case ComponentType::AUDIOSOURCE: { DrawAudioSourceComponent((C_AudioSource*)component); } break;
-		case ComponentType::AUDIOLISTENER: { DrawAudioListenerComponent((C_AudioListener*)component); } break;
+		case ComponentType::TRANSFORM:			{ DrawTransformComponent((C_Transform*)component); }				break;
+		case ComponentType::MESH:				{ DrawMeshComponent((C_Mesh*)component); }							break;
+		case ComponentType::MATERIAL:			{ DrawMaterialComponent((C_Material*)component); }					break;
+		case ComponentType::LIGHT:				{ DrawLightComponent((C_Light*)component); }						break;
+		case ComponentType::CAMERA:				{ DrawCameraComponent((C_Camera*)component); }						break;
+		case ComponentType::ANIMATOR:			{ DrawAnimatorComponent((C_Animator*)component); }					break;
+		case ComponentType::ANIMATION:			{ DrawAnimationComponent((C_Animation*)component); }				break;
+		case ComponentType::AUDIOSOURCE:		{ DrawAudioSourceComponent((C_AudioSource*)component); }			break;
+		case ComponentType::AUDIOLISTENER:		{ DrawAudioListenerComponent((C_AudioListener*)component); }		break;
 		case ComponentType::RIGIDBODY:			{ DrawRigidBodyComponent((C_RigidBody*)component); }				break;
 		case ComponentType::BOX_COLLIDER:		{ DrawBoxColliderComponent((C_BoxCollider*)component); }			break;
 		case ComponentType::SPHERE_COLLIDER:	{ DrawSphereColliderComponent((C_SphereCollider*)component); }		break;
 		case ComponentType::CAPSULE_COLLIDER:	{ DrawCapsuleColliderComponent((C_CapsuleCollider*)component); }	break;
-		case ComponentType::CANVAS: { DrawCanvasComponent((C_Canvas*)component); }				break;
+		case ComponentType::CANVAS:				{ DrawCanvasComponent((C_Canvas*)component); }						break;
+		case ComponentType::PLAYER_CONTROLLER:	{ DrawPlayerControllerComponent((C_PlayerController*)component); }	break;
 		}
 
 		if (type == ComponentType::NONE)
@@ -1318,10 +1320,51 @@ void E_Inspector::DrawUIImage(UI_Image* image)
 
 }
 
+void E_Inspector::DrawPlayerControllerComponent(C_PlayerController* cController)
+{
+	bool show = true;
+	if (ImGui::CollapsingHeader("Player Controller", &show, ImGuiTreeNodeFlags_Leaf))
+	{
+		bool isActive = cController->IsActive();
+		if (ImGui::Checkbox("Controller Is Active", &isActive))
+			cController->SetIsActive(isActive);
+
+		ImGui::Separator();
+
+		float speed = cController->Speed();
+		if (ImGui::InputFloat("Speed", &speed, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
+			cController->SetSpeed(speed);
+
+		bool useAcceleration = cController->UsingAcceleration();
+		if (ImGui::Checkbox("Use Acceleration", &useAcceleration))
+			cController->UseAcceleration(useAcceleration);
+
+		if (cController->UsingAcceleration())
+		{
+			float acceleration = cController->Acceleration();
+			if (ImGui::InputFloat("Acceleration", &acceleration, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
+				cController->SetAcceleration(acceleration);
+
+			float deceleration = cController->Deceleration();
+			if (ImGui::InputFloat("Deceleration", &deceleration, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
+				cController->SetDeceleration(deceleration);
+		}
+
+		if (!show)
+		{
+			componentToDelete = cController;
+			showDeleteComponentPopup = true;
+		}
+
+		ImGui::Separator();
+	}
+	return;
+}
+
 void E_Inspector::AddComponentCombo(GameObject* selectedGameObject)
 {
 
-	ImGui::Combo("##", &componentType, "Add Component\0Transform\0Mesh\0Material\0Light\0Camera\0Animator\0Animation\0RigidBody\0Box Collider\0Sphere Collider\0Capsule Collider\0Particle System\0Canvas\0AudioSource\0AudioListener");
+	ImGui::Combo("##", &componentType, "Add Component\0Transform\0Mesh\0Material\0Light\0Camera\0Animator\0Animation\0RigidBody\0Box Collider\0Sphere Collider\0Capsule Collider\0Particle System\0Canvas\0Audio Source\0Audio Listener\0Player Controller");
 	ImGui::SameLine();
 
 	if ((ImGui::Button("ADD")))

@@ -25,6 +25,7 @@
 #include "C_SphereCollider.h"
 #include "C_CapsuleCollider.h"
 #include "C_Canvas.h"
+#include "C_PlayerController.h"
 
 #include "GameObject.h"
 
@@ -191,7 +192,7 @@ bool GameObject::LoadState(ParsonNode& root)
 			case ComponentType::BOX_COLLIDER:		{ component = new C_BoxCollider(this); }		break;
 			case ComponentType::SPHERE_COLLIDER:	{ component = new C_SphereCollider(this); }		break;
 			case ComponentType::CAPSULE_COLLIDER:	{ component = new C_CapsuleCollider(this); }	break;
-
+			case ComponentType::PLAYER_CONTROLLER: { component = new C_PlayerController(this); } break;
 			}
 
 			if (component != nullptr)
@@ -657,6 +658,11 @@ Component* GameObject::CreateComponent(ComponentType type)
 		LOG("[ERROR] RigidBody Component could not be added to %s! Error: No duplicates allowed!", name.c_str());
 		return nullptr;
 	}
+	if (type == ComponentType::PLAYER_CONTROLLER && GetComponent<C_PlayerController>() != nullptr)
+	{
+		LOG("[ERROR] Player Controller Component could not be added to %s! Error: No duplicates allowed!", name.c_str());
+		return nullptr;
+	}
 
 	switch(type)
 	{
@@ -674,6 +680,7 @@ Component* GameObject::CreateComponent(ComponentType type)
 	case ComponentType::SPHERE_COLLIDER:	{ component = new C_SphereCollider(this); }		break;
 	case ComponentType::CAPSULE_COLLIDER:	{ component = new C_CapsuleCollider(this); }	break;
 	case ComponentType::CANVAS:				{ component = new C_Canvas(this); }				break;
+	case ComponentType::PLAYER_CONTROLLER:	{ component = new C_PlayerController(this); }	break;
 	}
 
 	if (component != nullptr)
