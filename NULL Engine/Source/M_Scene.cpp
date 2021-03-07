@@ -101,7 +101,7 @@ UpdateStatus M_Scene::Update(float dt)
 		C_Animator* rootAnimator = animationRoot->GetComponent<C_Animator>();
 		if (rootAnimator != nullptr)
 		{
-			if (App->play && !App->pause)
+			if (App->gameState == GameState::PLAY)
 			{
 				if (App->input->GetKey(SDL_SCANCODE_KP_1) == KeyState::KEY_DOWN)
 				{
@@ -116,10 +116,10 @@ UpdateStatus M_Scene::Update(float dt)
 					rootAnimator->PlayClip("Attack", 8);
 				}
 
-				/*if (!rootAnimator->GetCurrentClip()->playing || !rootAnimator->CurrentClipExists())
+				if (!rootAnimator->CurrentClipExists() || !rootAnimator->GetCurrentClip()->playing)
 				{
 					rootAnimator->PlayClip("Idle", 8);
-				}*/
+				}
 			}
 		}
 	}

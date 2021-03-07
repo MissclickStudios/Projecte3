@@ -45,7 +45,7 @@ bool M_FileSystem::Init(ParsonNode& config)
 	char* writePath = SDL_GetPrefPath(App->GetOrganizationName(), App->GetEngineName());	// SDL_GetPrefPath() returns the user-and-app-specific path where files can be written.
 
 	// Turn this on while in game mode
-	if (App->play)
+	if (App->gameState == GameState::PLAY)
 	{
 		PhysfsResult result = (PhysfsResult)PHYSFS_setWriteDir(writePath);
 		if (result == PhysfsResult::FAILURE)

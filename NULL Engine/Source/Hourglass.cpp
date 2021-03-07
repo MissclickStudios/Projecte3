@@ -64,5 +64,5 @@ void Hourglass::ResetClock()
 
 std::string Hourglass::GetTimeAsString()
 {
-	return std::to_string(hours) + "h " + std::to_string(minutes) + "m " + std::to_string(seconds) + "s";
+	return (std::to_string(hours) + "h " + std::to_string(minutes) + "m " + std::to_string(seconds) + "s");
 }

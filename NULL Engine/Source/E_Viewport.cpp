@@ -125,7 +125,7 @@ void E_Viewport::DrawScene()
 {
 	ImGui::Begin("Scene");
 
-	if (!EngineApp->play && !sceneFocused)
+	if ((EngineApp->gameState != GameState::PLAY) && !sceneFocused)
 	{
 		ImGui::FocusWindow(ImGui::GetCurrentWindow());
 		ImGui::FocusWindow(nullptr);
@@ -152,7 +152,7 @@ void E_Viewport::DrawGame()
 {
 	ImGui::Begin("Game", (bool*)0, ImGuiWindowFlags_NoFocusOnAppearing);
 
-	if (EngineApp->play && !gameFocused)
+	if ((EngineApp->gameState == GameState::PLAY) && !gameFocused)
 	{
 		ImGui::FocusWindow(ImGui::GetCurrentWindow());
 		ImGui::FocusWindow(nullptr);

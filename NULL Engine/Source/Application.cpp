@@ -29,31 +29,21 @@ Application::Application() :
 quit			(false),
 debug			(false), 
 hardwareInfo	(),
-window			(nullptr),
-input			(nullptr),
-scene			(nullptr),
-renderer		(nullptr),
-camera			(nullptr),
-fileSystem		(nullptr),
-resourceManager	(nullptr),
-audio			(nullptr),
-uiSystem		(nullptr),
-logger			(nullptr)
+window			(new M_Window()),
+input			(new M_Input()),
+camera			(new M_Camera3D()),
+renderer		(new M_Renderer3D()),
+scene			(new M_Scene()),
+fileSystem		(new M_FileSystem()),
+resourceManager	(new M_ResourceManager()),
+audio			(new M_Audio()),
+physics			(new M_Physics()),
+uiSystem		(new M_UISystem()),
+logger			(nullptr),
+gameState		(GameState::STOP)
 {
 	App = this;
 	//PERF_TIMER_START(perf_timer);
-	
-	// Modules -----------------------------------
-	window				= new M_Window();
-	input				= new M_Input();
-	camera				= new M_Camera3D();
-	renderer			= new M_Renderer3D();
-	scene				= new M_Scene();
-	fileSystem			= new M_FileSystem();
-	resourceManager		= new M_ResourceManager();
-	audio				= new M_Audio();
-	physics				= new M_Physics();
-	uiSystem 			= new M_UISystem();
 
 	// The order of calls is very important!
 	// Modules will Init() Start() and Update in this order
@@ -77,21 +67,15 @@ logger			(nullptr)
 	// -------------------------------------------*/
 
 	// Save/Load variables
-	wantToLoad			= false;
-	wantToSave			= false;
+	wantToLoad				= false;
+	wantToSave				= false;
 	userHasSaved			= false;
 
 	// Framerate variables
 	frameCap				= 0;
-	secondsSinceStartup	= 0.0f;
-	framesAreCapped		= framesAreCapped;
+	secondsSinceStartup		= 0.0f;
+	framesAreCapped			= framesAreCapped;
 	displayFramerateData	= false;
-
-	// Game Mode variables
-	play					= false;
-	pause					= false;
-	step					= false;
-	stop					= false;
 
 	//PERF_TIMER_PEEK(perf_timer);
 }
@@ -124,7 +108,7 @@ bool Application::Init()
 		engineName			= TITLE;														// Change Later?
 		organization		= ORGANIZATION;
 		frameCap			= 60;
-		framesAreCapped	= true;
+		framesAreCapped		= true;
 	}
 	else
 	{
@@ -138,7 +122,7 @@ bool Application::Init()
 		engineName			= TITLE;
 		organization		= ORGANIZATION;
 		frameCap			= 60;
-		framesAreCapped	= true;
+		framesAreCapped		= true;
 	}
 
 	ParsonNode config(buffer);
@@ -256,12 +240,24 @@ bool Application::CleanUp()
 // ---------------------------------------------
 void Application::PrepareUpdate()
 {
+	static bool stepped = false;
+	
 	Time::Real::Update();
 
-	if ((play && !pause) || step)
+	if (stepped)																										// TMP. Dirty fix so Animations can be stepped. Clean Later.
+	{
+		gameState	= GameState::PAUSE;
+		stepped		= false;
+	}
+
+	if (gameState == GameState::PLAY || gameState == GameState::STEP)
 	{
 		Time::Game::Update();
-		step = false;
+
+		if (gameState == GameState::STEP)
+		{
+			stepped = true;
+		}
 	}
 }
 
@@ -343,7 +339,7 @@ UpdateStatus Application::PostUpdate()
 }
 
 void Application::FinishUpdate()
-{
+{	
 	if (wantToLoad)
 	{
 		LoadConfigurationNow(loadConfigFile.c_str());
@@ -551,6 +547,8 @@ HardwareInfo Application::GetHardwareInfo() const
 {
 	return hardwareInfo;
 }
+
+// --- GAME STATE METHODS
 
 /*if (display_framerate_data)
 {
