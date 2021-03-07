@@ -196,6 +196,8 @@ void E_Inspector::DrawComponents(GameObject* selectedGameObject)
 		case ComponentType::CAPSULE_COLLIDER:	{ DrawCapsuleColliderComponent((C_CapsuleCollider*)component); }	break;
 		case ComponentType::CANVAS:				{ DrawCanvasComponent((C_Canvas*)component); }						break;
 		case ComponentType::PLAYER_CONTROLLER:	{ DrawPlayerControllerComponent((C_PlayerController*)component); }	break;
+		case ComponentType::BULLET_BEHAVIOR: { DrawBulletBehaviorComponent((C_BulletBehavior*)component); }	break;
+		case ComponentType::PROP_BEHAVIOR: { DrawPropBehaviorComponent((C_PropBehavior*)component); }	break;
 		}
 
 		if (type == ComponentType::NONE)

@@ -34,6 +34,11 @@
             "GameObjectUID": 1898101802,
             "ModelResourceUID": 1266705681,
             "ModelAssetsPath": "Assets\/Models\/Primitives\/cube.fbx"
+        },
+        {
+            "GameObjectUID": 1925250670,
+            "ModelResourceUID": 1993753731,
+            "ModelAssetsPath": "Assets\/Models\/TestProp\/prop_tatooine.FBX"
         }
     ],
     "Game Objects": [
@@ -178,6 +183,62 @@
             ]
         },
         {
+            "UID": 330678654,
+            "ParentUID": 386803536,
+            "Name": "Cube Waall",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        63.543228149414063,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        0.99999994039535522,
+                        1,
+                        0.99999994039535522
+                    ]
+                },
+                {
+                    "Type": 8,
+                    "Mass": 10,
+                    "Density": 1,
+                    "Linear Damping": 0,
+                    "Angular Damping": 0,
+                    "Use Gravity": false,
+                    "Is Kinematic": false,
+                    "Freeze Position X": true,
+                    "Freeze Position Y": true,
+                    "Freeze Position Z": true,
+                    "Freeze Rotation X": true,
+                    "Freeze Rotation Y": true,
+                    "Freeze Rotation Z": true,
+                    "Is Static": true
+                },
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Size X": 9,
+                    "Size Y": 3,
+                    "Size Z": 150,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
+                }
+            ]
+        },
+        {
             "UID": 386803536,
             "ParentUID": 1304503906,
             "Name": "Obstacles",
@@ -204,6 +265,60 @@
                         1,
                         1
                     ]
+                }
+            ]
+        },
+        {
+            "UID": 537584918,
+            "ParentUID": 1925250670,
+            "Name": "Cylinder001",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0.085521608591079712,
+                        0,
+                        -0.12156292051076889
+                    ],
+                    "LocalRotation": [
+                        -0.7071068286895752,
+                        0,
+                        0,
+                        0.7071068286895752
+                    ],
+                    "LocalScale": [
+                        0.20000000298023224,
+                        0.20000000298023224,
+                        0.20000000298023224
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 1733380495,
+                    "Name": "Cylinder001.nemesh",
+                    "Path": "Library\/Meshes\/1733380495.nemesh",
+                    "File": "1733380495.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 1839899230,
+                        "Name": "Cylinder001.nemat",
+                        "Path": "Library\/Materials\/1839899230.nemat",
+                        "File": "1839899230.nemat"
+                    },
+                    "Shader": {
+                        "UID": 583895723,
+                        "Name": "DefaultShader.shader",
+                        "Path": "Library\/Shaders\/583895723.shader",
+                        "File": "583895723.shader"
+                    }
                 }
             ]
         },
@@ -437,6 +552,60 @@
             ]
         },
         {
+            "UID": 1153874294,
+            "ParentUID": 330678654,
+            "Name": "pCube1",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        124.00043487548828
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 670899066,
+                    "Name": "pCube1.nemesh",
+                    "Path": "Library\/Meshes\/670899066.nemesh",
+                    "File": "670899066.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 894551736,
+                        "Name": "pCube1.nemat",
+                        "Path": "Library\/Materials\/894551736.nemat",
+                        "File": "894551736.nemat"
+                    },
+                    "Shader": {
+                        "UID": 583895723,
+                        "Name": "DefaultShader.shader",
+                        "Path": "Library\/Shaders\/583895723.shader",
+                        "File": "583895723.shader"
+                    }
+                }
+            ]
+        },
+        {
             "UID": 1202662504,
             "ParentUID": 209858145,
             "Name": "Banana",
@@ -546,7 +715,7 @@
         },
         {
             "UID": 1304503906,
-            "ParentUID": 1610843735,
+            "ParentUID": 676821543,
             "Name": "MainScene",
             "IsActive": true,
             "IsStatic": false,
@@ -687,6 +856,65 @@
             ]
         },
         {
+            "UID": 1925250670,
+            "ParentUID": 1304503906,
+            "Name": "prop_tatooine.FBX",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": true,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -31.63505744934082,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 8,
+                    "Mass": 10,
+                    "Density": 1,
+                    "Linear Damping": 0,
+                    "Angular Damping": 0,
+                    "Use Gravity": false,
+                    "Is Kinematic": false,
+                    "Freeze Position X": true,
+                    "Freeze Position Y": true,
+                    "Freeze Position Z": true,
+                    "Freeze Rotation X": true,
+                    "Freeze Rotation Y": true,
+                    "Freeze Rotation Z": true,
+                    "Is Static": true
+                },
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Size X": 6,
+                    "Size Y": 25,
+                    "Size Z": 6,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
+                },
+                {
+                    "Type": 18
+                }
+            ]
+        },
+        {
             "UID": 2141598923,
             "ParentUID": 1304503906,
             "Name": "Camera",
@@ -746,116 +974,6 @@
                     "Use Acceleration": false,
                     "Bullet Speed": 100,
                     "Camera Mode": true
-                }
-            ]
-        },
-        {
-            "UID": 330678654,
-            "ParentUID": 386803536,
-            "Name": "Cube Waall",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        63.543228149414063,
-                        0,
-                        0
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        0.99999994039535522,
-                        1,
-                        0.99999994039535522
-                    ]
-                },
-                {
-                    "Type": 8,
-                    "Mass": 10,
-                    "Density": 1,
-                    "Linear Damping": 0,
-                    "Angular Damping": 0,
-                    "Use Gravity": false,
-                    "Is Kinematic": false,
-                    "Freeze Position X": true,
-                    "Freeze Position Y": true,
-                    "Freeze Position Z": true,
-                    "Freeze Rotation X": true,
-                    "Freeze Rotation Y": true,
-                    "Freeze Rotation Z": true,
-                    "Is Static": true
-                },
-                {
-                    "Type": 9,
-                    "Is Trigger": false,
-                    "Size X": 9,
-                    "Size Y": 3,
-                    "Size Z": 150,
-                    "Center X": 0,
-                    "Center Y": 0,
-                    "Center Z": 0
-                }
-            ]
-        },
-        {
-            "UID": 1153874294,
-            "ParentUID": 330678654,
-            "Name": "pCube1",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        0,
-                        0
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        124.00043487548828
-                    ]
-                },
-                {
-                    "Type": 2,
-                    "UID": 670899066,
-                    "Name": "pCube1.nemesh",
-                    "Path": "Library\/Meshes\/670899066.nemesh",
-                    "File": "670899066.nemesh",
-                    "ShowWireframe": false,
-                    "ShowBoundingBox": false
-                },
-                {
-                    "Type": 3,
-                    "Material": {
-                        "UID": 894551736,
-                        "Name": "pCube1.nemat",
-                        "Path": "Library\/Materials\/894551736.nemat",
-                        "File": "894551736.nemat"
-                    },
-                    "Shader": {
-                        "UID": 583895723,
-                        "Name": "DefaultShader.shader",
-                        "Path": "Library\/Shaders\/583895723.shader",
-                        "File": "583895723.shader"
-                    }
                 }
             ]
         }
