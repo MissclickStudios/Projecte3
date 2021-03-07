@@ -40,6 +40,7 @@ bool C_Canvas::Update()
 	{
 		GameObject* owner = GetOwner();
 
+		//owner->GetComponent<C_Transform>()->SetLocalRotation(owner->GetComponent<C_Transform>()->GetWorldRotation());
 		//SetPosition({ owner->transform->GetWorldPosition().x, owner->transform->GetWorldPosition().y });
 		
 		

@@ -15,7 +15,7 @@
 
 #pragma comment (lib, "Source/Dependencies/FreeType/libx86/freetype.lib")
 
-M_UISystem::M_UISystem(bool isActive) : Module("UISystem", isActive)
+M_UISystem::M_UISystem(bool isActive) : Module("UISystem", isActive), isCameraSwap(false)
 {
 	error = FT_Init_FreeType(&libraryFT);
 	if (error)
@@ -42,7 +42,6 @@ bool M_UISystem::Init(ParsonNode& config)
 {
 	bool ret = true;
 
-	isCameraSwap = false;
 
 	return ret;
 }
@@ -70,11 +69,11 @@ UpdateStatus M_UISystem::PostUpdate(float dt)
 			{
 				canvasIt->SetSize({ App->camera->GetCurrentCamera()->GetFrustum().NearPlaneWidth(), App->camera->GetCurrentCamera()->GetFrustum().NearPlaneHeight() });
 				canvasIt->SetPosition({ canvasIt->GetOwner()->GetComponent<C_Transform>()->GetWorldPosition().x, canvasIt->GetOwner()->GetComponent<C_Transform>()->GetWorldPosition().y });
-			
-				for (std::vector<UIElement*>::iterator uiIt = canvasIt->uiElements.begin(); uiIt != canvasIt->uiElements.end(); uiIt++)
-				{
+				canvasIt->GetOwner()->GetComponent<C_Transform>()->SetLocalEulerRotation(App->camera->masterCamera->GetComponent<C_Transform>()->GetLocalEulerRotation());
 
-					if (isCameraSwap)
+				if (isCameraSwap)
+				{
+					for (std::vector<UIElement*>::iterator uiIt = canvasIt->uiElements.begin(); uiIt != canvasIt->uiElements.end(); uiIt++)
 					{
 						(*uiIt)->SetW(canvasIt->GetSize().x);
 						(*uiIt)->SetH(canvasIt->GetSize().y);
@@ -88,6 +87,7 @@ UpdateStatus M_UISystem::PostUpdate(float dt)
 			}
 		}
 	}
+
 	return UpdateStatus::CONTINUE;
 }
 
