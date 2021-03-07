@@ -5,7 +5,7 @@ using UnityEngine;
 public class CamFollow : MonoBehaviour
 {
     public Transform target;
-    [Range(1f,40f)] public float laziness = 10f;
+    [Range(1f,40f)] public float laziness = 10f; //This will always be 10 no need to modify it.
     public bool lookAtTarget = true;
     public bool takeOffsetFromInitialPos = true;
     public Vector3 generalOffset;
@@ -25,7 +25,6 @@ public class CamFollow : MonoBehaviour
             if (lookAtTarget) transform.LookAt(target);
         } else {
             if (!warningAlreadyShown) {
-                Debug.Log("Warning: You should specify a target in the simpleCamFollow script.", gameObject);
                 warningAlreadyShown = true;
             }
         }
