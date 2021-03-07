@@ -4,9 +4,11 @@
 #include "Application.h"
 #include "M_Input.h"
 #include "M_Scene.h"
+#include "M_ResourceManager.h"
 
 #include "GameObject.h"
 #include "C_RigidBody.h"
+#include "C_Mesh.h"
 
 #include "C_RigidBody.h"
 #include "C_Transform.h"
@@ -57,14 +59,17 @@ bool C_PlayerController::Update()
 
 			if (App->input->GetMouseButton(1) == KeyState::KEY_DOWN)
 			{
-				GameObject* bullet = App->scene->CreateGameObject("scene", App->scene->GetMasterRoot());
-				bullet->transform->SetWorldPosition(GetOwner()->transform->GetWorldPosition());
-				C_RigidBody* rigidBody = (C_RigidBody*)bullet->CreateComponent(ComponentType::RIGIDBODY);
-				rigidBody->FreezePositionY(true);
-				rigidBody->SetLinearVelocity(bulletVel);
-				App->scene->SetSelectedGameObject(bullet);
-			}
+				Resource* resource = App->resourceManager->GetResourceFromLibrary("Assets/Models/Primitives/sphere.fbx");
+				if (resource != nullptr)
+				{
+					GameObject* bullet = App->scene->GenerateGameObjectsFromModel((R_Model*)resource);
 
+					bullet->transform->SetWorldPosition(GetOwner()->transform->GetWorldPosition());
+					C_RigidBody* rigidBody = (C_RigidBody*)bullet->CreateComponent(ComponentType::RIGIDBODY);
+					rigidBody->FreezePositionY(true);
+					rigidBody->SetLinearVelocity(bulletVel);
+				}
+			}
 		}
 		else
 			if (App->input->GetKey(SDL_SCANCODE_W) == KeyState::KEY_DOWN || 
