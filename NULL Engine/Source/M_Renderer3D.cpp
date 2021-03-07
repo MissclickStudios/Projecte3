@@ -686,8 +686,7 @@ void M_Renderer3D::RenderFramebufferTexture()
 	//glViewport(0, 0, App->window->GetWidth(), App->window->GetHeight());
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	R_Shader* default = App->resourceManager->GetShader("ScreenShader");
-	glUseProgram(default->shaderProgramID);
+	glUseProgram(App->resourceManager->GetShader("ScreenShader")->shaderProgramID);
 	glBindVertexArray(quadScreenVAO);
 	glDisable(GL_DEPTH_TEST);
 	glBindTexture(GL_TEXTURE_2D, sceneRenderTexture);
