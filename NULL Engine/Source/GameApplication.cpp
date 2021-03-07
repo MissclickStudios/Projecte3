@@ -39,9 +39,9 @@ GameApplication::GameApplication()
 
 	// Scenes
 	AddModule(manager);
-	AddModule(scene);
 	AddModule(audio);
 	AddModule(physics);
+	AddModule(scene);
 	AddModule(uiSystem);
 
 	// Renderer last!
