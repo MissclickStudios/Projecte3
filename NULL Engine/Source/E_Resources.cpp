@@ -25,7 +25,7 @@ E_Resources::~E_Resources()
 
 bool E_Resources::Draw(ImGuiIO& io)
 {
-	BROFILER_CATEGORY("Editor Resources Draw", Profiler::Color::DarkSlateBlue);
+	BROFILERCATEGORY("Editor Resources Draw", Profiler::Color::DarkSlateBlue);
 
 	ImGui::Begin("References");
 	

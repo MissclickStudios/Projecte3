@@ -9,7 +9,9 @@
 
 #pragma comment( lib, "Source/Dependencies/SDL/libx86/SDL2.lib" )
 #pragma comment( lib, "Source/Dependencies/SDL/libx86/SDL2main.lib" )
+#ifndef GAMEBUILD
 #pragma comment( lib, "Source/Dependencies/Brofiler/libx86/ProfilerCore32.lib" ) //TODO: if build configuration not link this
+#endif // !GAMEBUILD
 
 enum class MainStatus
 {
@@ -34,7 +36,7 @@ int main(int argc, char ** argv)
 
 	while (state != MainStatus::EXIT)
 	{
-		BROFILER_FRAME("NULL Engine Profiling Test");
+		BROFILERFRAME("NULL Engine Profiling Test");
 
 		switch (state)
 		{

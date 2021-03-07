@@ -187,7 +187,7 @@ UpdateStatus M_Scene::Update(float dt)
 
 UpdateStatus M_Scene::PostUpdate(float dt)
 {
-	BROFILER_CATEGORY("M_Scene PostUpdate", Profiler::Color::Yellow)
+	BROFILERCATEGORY("M_Scene PostUpdate", Profiler::Color::Yellow)
 	
 	for (uint n = 0; n < primitives.size(); n++)
 	{
@@ -708,7 +708,7 @@ std::vector<GameObject*>* M_Scene::GetGameObjects()
 
 bool M_Scene::ApplyTextureToSelectedGameObject(const uint32& uid)
 {
-	BROFILER_CATEGORY("ApplyNewTextureToSelectedGameObject()", Profiler::Color::Magenta);
+	BROFILERCATEGORY("ApplyNewTextureToSelectedGameObject()", Profiler::Color::Magenta);
 
 	if (selectedGameObject == nullptr)
 	{

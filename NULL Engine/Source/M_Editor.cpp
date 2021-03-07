@@ -138,7 +138,7 @@ UpdateStatus M_Editor::Update(float dt)
 
 UpdateStatus M_Editor::PostUpdate(float dt)
 {
-	BROFILER_CATEGORY("Editor PostUpdate", Profiler::Color::IndianRed);
+	BROFILERCATEGORY("Editor PostUpdate", Profiler::Color::IndianRed);
 	
 	UpdateStatus ret = UpdateStatus::CONTINUE;
 	
