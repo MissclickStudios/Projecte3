@@ -1453,7 +1453,7 @@ void	m_deallocator(const char *sourceFile, const unsigned int sourceLine, const 
 
 			// If you hit this assert, you were trying to deallocate RAM that was not allocated in a way that is compatible with
 			// the deallocation method requested. In other words, you have a allocation/deallocation mismatch.
-			m_assert((deallocationType == m_alloc_delete       && au->allocationType == m_alloc_new      ) ||
+			m_assert((deallocationType == m_alloc_delete  && au->allocationType == m_alloc_new      ) ||
 				(deallocationType == m_alloc_delete_array && au->allocationType == m_alloc_new_array) ||
 				(deallocationType == m_alloc_free         && au->allocationType == m_alloc_malloc   ) ||
 				(deallocationType == m_alloc_free         && au->allocationType == m_alloc_calloc   ) ||

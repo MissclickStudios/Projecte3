@@ -92,8 +92,6 @@ bool M_Renderer3D::Init(ParsonNode& configuration)
 
 bool M_Renderer3D::Start()
 {
-	bool ret = true;
-
 	InitEngineIcons();
 	
 	//SetUp the Skybox 
@@ -101,8 +99,9 @@ bool M_Renderer3D::Start()
 
 	defaultSkyBox.CreateSkybox();
 
+	GenScreenBuffer();
 
-	return ret;
+	return true;
 }
 
 // PreUpdate: clear buffer
@@ -490,9 +489,7 @@ void M_Renderer3D::InitFramebuffers()
 	glBindRenderbuffer(GL_RENDERBUFFER, 0);
 
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-	{
 		LOG("[ERROR] Renderer 3D: Could not generate the scene's frame buffer! Error: %s", glewGetErrorString(glGetError()));
-	}
 
 	// --- UNBINDING THE FRAMEBUFFER ---
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -599,14 +596,10 @@ void M_Renderer3D::RenderScene()
 	defaultSkyBox.RenderSkybox();
 
 	if (renderWorldGrid)
-	{
 		DrawWorldGrid(worldGridSize);
-	}
 
 	if (renderWorldAxis)
-	{
 		DrawWorldAxis();
-	}
 
  
 	RenderMeshes();
@@ -635,7 +628,6 @@ void M_Renderer3D::RenderScene()
 			primitives[i]->RenderByIndices();
 		}
 	}
-
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
@@ -688,6 +680,23 @@ void M_Renderer3D::RenderUI()
 			}	
 		}
 	}
+}
+
+void M_Renderer3D::RenderFramebufferTexture()
+{
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	//glViewport(0, 0, App->window->GetWidth(), App->window->GetHeight());
+	glClear(GL_COLOR_BUFFER_BIT);
+
+	glUseProgram(App->resourceManager->GetShader("ScreenShader")->shaderProgramID);
+	glBindVertexArray(quadScreenVAO);
+	glDisable(GL_DEPTH_TEST);
+	glBindTexture(GL_TEXTURE_2D, sceneRenderTexture);
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glBindVertexArray(0);
+	glUseProgram(0);
+	glEnable(GL_DEPTH_TEST);
 }
 
 void M_Renderer3D::DrawWorldAxis()
@@ -1254,6 +1263,33 @@ void M_Renderer3D::SetRenderPrimtiveExamples(const bool& setTo)
 void M_Renderer3D::AddPostSceneRenderModule(Module* module)
 {
 	PostSceneRenderModules.push_back(module);
+}
+
+void M_Renderer3D::GenScreenBuffer()
+{
+	glGenVertexArrays(1, &quadScreenVAO);
+	glBindVertexArray(quadScreenVAO);
+
+	const GLfloat g_quad_vertex_buffer_data[] = {
+		-1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
+		1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
+		-1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
+		-1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
+		1.0f,  -1.0f, 0.0f, 1.0f, 0.0f,
+		1.0f, 1.0f, 0.0f, 1.0f, 1.0f
+	};
+
+	GLuint quad_vertexbuffer;
+	glGenBuffers(1, &quad_vertexbuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, quad_vertexbuffer);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(g_quad_vertex_buffer_data), g_quad_vertex_buffer_data, GL_STATIC_DRAW);
+
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 5, (void*)0);
+
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 5, (void*)(sizeof(float) * 3));
+
 }
 
 // --- RENDERER STRUCTURES METHODS ---
