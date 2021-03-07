@@ -26,7 +26,7 @@ void C_ParticleSystem::Reset()
 	//loop all emitterInstances and trigger reset() methodç
 	for (unsigned int i = 0; i < emitterInstances.size(); i++)
 	{
-		//emitterInstances[i].Reset();
+		emitterInstances[i].Reset();
 	}
 }
 
