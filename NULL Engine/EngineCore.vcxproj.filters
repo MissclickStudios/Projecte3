@@ -136,8 +136,11 @@
     <Filter Include="Dependencies\mmgr">
       <UniqueIdentifier>{163b4e95-82bd-494a-ab19-d1a2fb05c39b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\7_Tools\LevelGenerator">
-      <UniqueIdentifier>{fdf862ce-3553-4188-9f73-dc50be6e4396}</UniqueIdentifier>
+    <Filter Include="Source\GameObjects\Components\Behaviors">
+      <UniqueIdentifier>{19b55606-53e2-4f7e-b776-d8a7260d4865}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Tools\Physics">
+      <UniqueIdentifier>{2319339e-a9a2-405e-9f30-ab3d223ca6dc}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -472,21 +475,15 @@
     <ClCompile Include="Source\C_AudioListener.cpp" />
     <ClCompile Include="Source\C_AudioSource.cpp" />
     <ClCompile Include="Source\M_Audio.cpp" />
-    <ClCompile Include="Source\C_BoxCollider.cpp" />
-    <ClCompile Include="Source\C_CapsuleCollider.cpp" />
-    <ClCompile Include="Source\C_RigidBody.cpp" />
-    <ClCompile Include="Source\C_SphereCollider.cpp" />
     <ClCompile Include="Source\C_ParticleSystem.cpp" />
     <ClCompile Include="Source\C_Canvas.cpp" />
     <ClCompile Include="Source\Emitter.cpp" />
     <ClCompile Include="Source\EmitterInstance.cpp" />
     <ClCompile Include="Source\I_Shaders.cpp" />
-    <ClCompile Include="Source\M_Physics.cpp" />
     <ClCompile Include="Source\M_UISystem.cpp" />
     <ClCompile Include="Source\Particle.cpp" />
     <ClCompile Include="Source\R_ParticleSystem.cpp" />
     <ClCompile Include="Source\R_Shader.cpp" />
-    <ClCompile Include="Source\SimulationCallback.cpp" />
     <ClCompile Include="Source\SkyBox.cpp" />
     <ClCompile Include="Source\ParticleModule.cpp" />
     <ClCompile Include="Source\UIElement.cpp" />
@@ -495,11 +492,30 @@
     <ClCompile Include="Source\Dependencies\mmgr\include\mmgr.cpp">
       <Filter>Dependencies\mmgr</Filter>
     </ClCompile>
-    <ClCompile Include="Source\LevelGenerator.cpp">
-      <Filter>Source\7_Tools\LevelGenerator</Filter>
-    </ClCompile>
+    <ClCompile Include="Source\LevelGenerator.cpp" />
     <ClCompile Include="Source\C_PlayerController.cpp">
-      <Filter>Source\5_GameObjects\Components</Filter>
+      <Filter>Source\GameObjects\Components\Behaviors</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\C_BoxCollider.cpp">
+      <Filter>Source\GameObjects\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\C_CapsuleCollider.cpp">
+      <Filter>Source\GameObjects\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\C_RigidBody.cpp">
+      <Filter>Source\GameObjects\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\C_SphereCollider.cpp">
+      <Filter>Source\GameObjects\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\M_Physics.cpp">
+      <Filter>Source\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\SimulationCallback.cpp">
+      <Filter>Source\Tools\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\C_BulletBehavior.cpp">
+      <Filter>Source\GameObjects\Components\Behaviors</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1193,26 +1209,19 @@
     <ClInclude Include="Source\Dependencies\FreeType\include\freetype\tttables.h">
       <Filter>Dependencies\FreeType</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Collider.h" />
     <ClInclude Include="Source\C_AudioListener.h" />
     <ClInclude Include="Source\C_AudioSource.h" />
-    <ClInclude Include="Source\C_BoxCollider.h" />
-    <ClInclude Include="Source\C_CapsuleCollider.h" />
-    <ClInclude Include="Source\C_RigidBody.h" />
-    <ClInclude Include="Source\C_SphereCollider.h" />
     <ClInclude Include="Source\C_ParticleSystem.h" />
     <ClInclude Include="Source\C_Canvas.h" />
     <ClInclude Include="Source\Emitter.h" />
     <ClInclude Include="Source\EmitterInstance.h" />
     <ClInclude Include="Source\I_Shaders.h" />
     <ClInclude Include="Source\M_Audio.h" />
-    <ClInclude Include="Source\M_Physics.h" />
     <ClInclude Include="Source\M_UISystem.h" />
     <ClInclude Include="Source\Particle.h" />
     <ClInclude Include="Source\ParticleModule.h" />
     <ClInclude Include="Source\R_ParticleSystem.h" />
     <ClInclude Include="Source\R_Shader.h" />
-    <ClInclude Include="Source\SimulationCallback.h" />
     <ClInclude Include="Source\SkyBox.h" />
     <ClInclude Include="Source\UIElement.h" />
     <ClInclude Include="Source\UI_Text.h" />
@@ -1223,11 +1232,33 @@
     <ClInclude Include="Source\Dependencies\mmgr\include\nommgr.h">
       <Filter>Dependencies\mmgr</Filter>
     </ClInclude>
-    <ClInclude Include="Source\LevelGenerator.h">
-      <Filter>Source\7_Tools\LevelGenerator</Filter>
-    </ClInclude>
+    <ClInclude Include="Source\LevelGenerator.h" />
     <ClInclude Include="Source\C_PlayerController.h">
-      <Filter>Source\5_GameObjects\Components</Filter>
+      <Filter>Source\GameObjects\Components\Behaviors</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\C_BoxCollider.h">
+      <Filter>Source\GameObjects\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\C_CapsuleCollider.h">
+      <Filter>Source\GameObjects\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\C_RigidBody.h">
+      <Filter>Source\GameObjects\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\C_SphereCollider.h">
+      <Filter>Source\GameObjects\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\M_Physics.h">
+      <Filter>Source\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\SimulationCallback.h">
+      <Filter>Source\Tools\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Collider.h">
+      <Filter>Source\Tools\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\C_BulletBehavior.h">
+      <Filter>Source\GameObjects\Components\Behaviors</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

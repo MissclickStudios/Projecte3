@@ -43,31 +43,38 @@ bool C_PlayerController::Update()
 			else
 				MoveVelocity(rigidBody);
 
-			float2 mouse, center, direction;
-			mouse = MousePositionToWorldPosition();
-			center.x = GetOwner()->transform->GetWorldPosition().x;
-			center.y = GetOwner()->transform->GetWorldPosition().z;
-			mouse.y *= -1;
-			direction = mouse - center;
-			direction.Normalize();
-
-			float rad = direction.AimedAngle();
-			float3 bulletVel = { bulletSpeed * math::Cos(rad) , 0, bulletSpeed * math::Sin(rad) };
-
-			float angle = RadToDeg(-rad) + 90;
-			GetOwner()->transform->SetLocalEulerRotation(float3(0, angle, 0));
-
-			if (App->input->GetMouseButton(1) == KeyState::KEY_DOWN)
+			if (!cameraMode)
 			{
-				Resource* resource = App->resourceManager->GetResourceFromLibrary("Assets/Models/Primitives/sphere.fbx");
-				if (resource != nullptr)
-				{
-					GameObject* bullet = App->scene->GenerateGameObjectsFromModel((R_Model*)resource);
+				float2 mouse, center, direction;
+				mouse = MousePositionToWorldPosition();
+				center.x = GetOwner()->transform->GetWorldPosition().x;
+				center.y = GetOwner()->transform->GetWorldPosition().z;
+				mouse.y *= -1;
+				direction = mouse - center;
+				direction.Normalize();
 
-					bullet->transform->SetWorldPosition(GetOwner()->transform->GetWorldPosition());
-					C_RigidBody* rigidBody = (C_RigidBody*)bullet->CreateComponent(ComponentType::RIGIDBODY);
-					rigidBody->FreezePositionY(true);
-					rigidBody->SetLinearVelocity(bulletVel);
+				float rad = direction.AimedAngle();
+				float3 bulletVel = { bulletSpeed * math::Cos(rad) , 0, bulletSpeed * math::Sin(rad) };
+
+				float angle = RadToDeg(-rad) + 90;
+				GetOwner()->transform->SetLocalEulerRotation(float3(0, angle, 0));
+
+				if (App->input->GetMouseButton(1) == KeyState::KEY_DOWN)
+				{
+					Resource* resource = App->resourceManager->GetResourceFromLibrary("Assets/Models/Primitives/sphere.fbx");
+					if (resource != nullptr)
+					{
+						GameObject* bullet = App->scene->GenerateGameObjectsFromModel((R_Model*)resource);
+
+						bullet->transform->SetWorldPosition(GetOwner()->transform->GetWorldPosition());
+						C_RigidBody* rigidBody = (C_RigidBody*)bullet->CreateComponent(ComponentType::RIGIDBODY);
+						rigidBody->FreezePositionY(true);
+						rigidBody->FreezeRotationX(true);
+						rigidBody->FreezeRotationY(true);
+						rigidBody->FreezeRotationZ(true);
+						rigidBody->SetLinearVelocity(bulletVel);
+						bullet->CreateComponent(ComponentType::SPHERE_COLLIDER);
+					}
 				}
 			}
 		}
@@ -97,6 +104,10 @@ bool C_PlayerController::SaveState(ParsonNode& root) const
 
 	root.SetBool("Use Acceleration", useAcceleration);
 
+	root.SetNumber("Bullet Speed", (double)bulletSpeed);
+
+	root.SetBool("Camera Mode", cameraMode);
+
 	return true;
 }
 
@@ -107,6 +118,10 @@ bool C_PlayerController::LoadState(ParsonNode& root)
 	deceleration = (float)root.GetNumber("Deceleration");
 
 	useAcceleration = root.GetBool("Use Acceleration");
+
+	bulletSpeed = (float)root.GetNumber("Bullet Speed");
+
+	cameraMode = root.GetBool("Camera Mode");
 
 	return true;
 }

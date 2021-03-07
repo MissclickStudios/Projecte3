@@ -27,14 +27,12 @@ void SimulationCallback::onContact(const physx::PxContactPairHeader& pairHeader,
 		{
 			if (cPair.events & physx::PxPairFlag::eNOTIFY_TOUCH_FOUND)
 			{
-				LOG("CONTACT: DOWN");
 			}
 			else if (cPair.events & physx::PxPairFlag::eNOTIFY_TOUCH_PERSISTS)
 			{
 			}
 			else if (cPair.events & physx::PxPairFlag::eNOTIFY_TOUCH_LOST)
 			{
-				LOG("CONTACT: UP");
 			}
 		}
 	}
@@ -54,11 +52,9 @@ void SimulationCallback::onTrigger(physx::PxTriggerPair* pairs, physx::PxU32 cou
 		{
 			if ((pairs[i].status & physx::PxPairFlag::eNOTIFY_TOUCH_FOUND))
 			{
-				LOG("TRIGGER: DOWN");
 			}
 			else if ((pairs[i].status & physx::PxPairFlag::eNOTIFY_TOUCH_LOST))
 			{
-				LOG("TRIGGER: UP");
 			}
 		}
 	}

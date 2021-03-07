@@ -1329,6 +1329,12 @@ void E_Inspector::DrawPlayerControllerComponent(C_PlayerController* cController)
 		if (ImGui::Checkbox("Controller Is Active", &isActive))
 			cController->SetIsActive(isActive);
 
+		ImGui::SameLine();
+
+		bool cameraMode = cController->IsCamera();
+		if (ImGui::Checkbox("Camera Mode", &cameraMode))
+			cController->SetCameraMode(cameraMode);
+
 		ImGui::Separator();
 
 		float speed = cController->Speed();
@@ -1348,6 +1354,15 @@ void E_Inspector::DrawPlayerControllerComponent(C_PlayerController* cController)
 			float deceleration = cController->Deceleration();
 			if (ImGui::InputFloat("Deceleration", &deceleration, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
 				cController->SetDeceleration(deceleration);
+		}
+
+		if (!cController->IsCamera())
+		{
+			ImGui::Separator();
+
+			float bulletSpeed = cController->BulletSpeed();
+			if (ImGui::InputFloat("Bullet Speed", &bulletSpeed, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
+				cController->SetBulletSpeed(bulletSpeed);
 		}
 
 		if (!show)

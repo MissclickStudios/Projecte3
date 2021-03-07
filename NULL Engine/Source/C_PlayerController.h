@@ -33,6 +33,12 @@ public:
 	//The deceleration is internaly inverted, so setting a negative deceleration will cause an acceleration
 	void SetDeceleration(float force) { this->deceleration = force; }
 
+	const float BulletSpeed() const { return bulletSpeed; }
+	void SetBulletSpeed(float speed) { bulletSpeed = speed; }
+
+	const bool IsCamera() const { return cameraMode; }
+	void SetCameraMode(bool enable) { cameraMode = enable; }
+
 private: 
 
 	void MoveVelocity(C_RigidBody* rigidBody);
@@ -49,6 +55,8 @@ private:
 	float deceleration = 2.0f;
 
 	float bulletSpeed = 100.0f;
+
+	bool cameraMode = false;
 };
 
 #endif // !__C_PLAYERCONTROLLER__
