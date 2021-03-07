@@ -32,6 +32,7 @@
 #include "E_ImGuiDemo.h"
 #include "E_About.h"
 #include "E_LoadFile.h"
+#include "E_SaveFile.h"
 
 #include "M_Editor.h"
 
@@ -61,7 +62,8 @@ resources		(new E_Resources()),
 timeline		(new E_Timeline()),
 imguiDemo		(new E_ImGuiDemo()),
 about			(new E_About()),
-loadFile		(new E_LoadFile())
+loadFile		(new E_LoadFile()),
+saveFile		(new E_SaveFile())
 {
 	AddEditorPanel(mainMenuBar);
 	AddEditorPanel(toolbar);
@@ -76,6 +78,7 @@ loadFile		(new E_LoadFile())
 	AddEditorPanel(imguiDemo);
 	AddEditorPanel(about);
 	AddEditorPanel(loadFile);
+	AddEditorPanel(saveFile);
 
 	showConfiguration	= true;
 	showHierarchy		= true;
@@ -86,6 +89,7 @@ loadFile		(new E_LoadFile())
 	showAboutPopup		= false;
 	showCloseAppPopup	= false;
 	showLoadFilePopup	= false;
+	showSaveFilePopup	= false;
 }
 
 M_Editor::~M_Editor()
@@ -212,10 +216,11 @@ void M_Editor::EditorShortcuts()
 {
 	if (EngineApp->input->GetKey(SDL_SCANCODE_ESCAPE) == KeyState::KEY_DOWN)
 	{
-		if (showAboutPopup || showLoadFilePopup)
+		if (showAboutPopup || showLoadFilePopup || showSaveFilePopup)
 		{
 			showAboutPopup		= false;
 			showLoadFilePopup	= false;
+			showSaveFilePopup	= false;
 		}
 		else
 		{
@@ -253,7 +258,7 @@ void M_Editor::EditorShortcuts()
 
 		if (EngineApp->input->GetKey(SDL_SCANCODE_S) == KeyState::KEY_DOWN)
 		{
-			EngineApp->scene->SaveScene();
+			showSaveFilePopup = true;
 		}
 		if (EngineApp->input->GetKey(SDL_SCANCODE_O) == KeyState::KEY_DOWN)
 		{
@@ -272,6 +277,7 @@ void M_Editor::CheckShowHideFlags()
 	showImguiDemo		?	imguiDemo->Enable()		: imguiDemo->Disable();					// ImGui Demo
 	showAboutPopup		?	about->Enable()			: about->Disable();						// About Popup
 	showLoadFilePopup	?	loadFile->Enable()		: loadFile->Disable();					// Load File
+	showSaveFilePopup	?	saveFile->Enable()		: saveFile->Disable();					// Load File
 }
 
 bool M_Editor::EditorIsBeingHovered() const
