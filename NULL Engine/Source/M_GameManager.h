@@ -19,6 +19,8 @@ public:
 	bool			LoadConfiguration(ParsonNode& root) override;
 	bool			SaveConfiguration(ParsonNode& root) const override;*/
 
+	void PostSceneRendering() override;
+
 };
 
 #endif // !__M_GAMEMANAGER_H__

@@ -46,6 +46,8 @@ GameApplication::GameApplication()
 
 	// Renderer last!
 	AddModule(renderer);
+
+	renderer->AddPostSceneRenderModule(manager);
 }
 
 GameApplication::~GameApplication()

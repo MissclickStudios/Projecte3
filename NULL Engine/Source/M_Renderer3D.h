@@ -162,7 +162,8 @@ public:																											// --- RENDER GEOMETRY
 	void			RenderCuboids				();
 	void			RenderRays					();
 	void			RenderSkeletons				();
-	void			RenderUI();
+	void			RenderUI					();
+	void			RenderFramebufferTexture	();
 	void			DeleteFromMeshRenderers		(C_Mesh* cMeshToDelete);
 	void			DeleteFromMeshRenderers		(R_Mesh* rMeshToDelete);
 	void			DeleteFromCuboids			(float3* cuboidToDelete);
@@ -261,6 +262,8 @@ public:																											// --- DEBUG GET/SET METHODS
 
 public:
 	void AddPostSceneRenderModule(Module* module);
+private:
+	void			GenScreenBuffer();
 
 public:
 	Light					lights[MAX_LIGHTS];																	// 
@@ -285,6 +288,7 @@ private:
 	uint					depthBufferTexture;
 	uint					gameFramebuffer;
 	uint					debugTextureId;
+	uint					quadScreenVAO;
 
 	bool					vsync;																				// Will keep track of whether or not the vsync is currently active.
 
