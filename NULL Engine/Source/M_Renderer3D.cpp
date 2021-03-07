@@ -690,10 +690,8 @@ void M_Renderer3D::RenderFramebufferTexture()
 	glUseProgram(default->shaderProgramID);
 	glBindVertexArray(quadScreenVAO);
 	glDisable(GL_DEPTH_TEST);
-	//glBindTexture(GL_TEXTURE_2D, debugTextureId);
 	glBindTexture(GL_TEXTURE_2D, sceneRenderTexture);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
-	//glDrawArrays(GL_QUADS, 0, 4);
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glBindVertexArray(0);
 	glUseProgram(0);
