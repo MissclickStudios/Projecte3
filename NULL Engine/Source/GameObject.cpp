@@ -26,6 +26,8 @@
 #include "C_CapsuleCollider.h"
 #include "C_Canvas.h"
 #include "C_PlayerController.h"
+#include "C_BulletBehavior.h"
+#include "C_PropBehavior.h"
 
 #include "GameObject.h"
 
@@ -193,6 +195,8 @@ bool GameObject::LoadState(ParsonNode& root)
 			case ComponentType::SPHERE_COLLIDER:	{ component = new C_SphereCollider(this); }		break;
 			case ComponentType::CAPSULE_COLLIDER:	{ component = new C_CapsuleCollider(this); }	break;
 			case ComponentType::PLAYER_CONTROLLER: { component = new C_PlayerController(this); } break;
+			case ComponentType::BULLET_BEHAVIOR: { component = new C_BulletBehavior(this); }	break;
+			case ComponentType::PROP_BEHAVIOR: { component = new C_PropBehavior(this); }	break;
 			}
 
 			if (component != nullptr)
@@ -681,6 +685,8 @@ Component* GameObject::CreateComponent(ComponentType type)
 	case ComponentType::CAPSULE_COLLIDER:	{ component = new C_CapsuleCollider(this); }	break;
 	case ComponentType::CANVAS:				{ component = new C_Canvas(this); }				break;
 	case ComponentType::PLAYER_CONTROLLER:	{ component = new C_PlayerController(this); }	break;
+	case ComponentType::BULLET_BEHAVIOR: { component = new C_BulletBehavior(this); }	break;
+	case ComponentType::PROP_BEHAVIOR: { component = new C_PropBehavior(this); }	break;
 	}
 
 	if (component != nullptr)

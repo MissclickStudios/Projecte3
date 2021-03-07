@@ -74,6 +74,7 @@ bool C_PlayerController::Update()
 						rigidBody->FreezeRotationZ(true);
 						rigidBody->SetLinearVelocity(bulletVel);
 						bullet->CreateComponent(ComponentType::SPHERE_COLLIDER);
+						bullet->CreateComponent(ComponentType::BULLET_BEHAVIOR);
 					}
 				}
 			}

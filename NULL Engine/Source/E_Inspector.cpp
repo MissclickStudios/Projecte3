@@ -31,6 +31,8 @@
 #include "C_SphereCollider.h"
 #include "C_CapsuleCollider.h"
 #include "C_PlayerController.h"
+#include "C_BulletBehavior.h"
+#include "C_PropBehavior.h"
 
 #include "R_Shader.h"
 #include "R_Texture.h"
@@ -1376,10 +1378,42 @@ void E_Inspector::DrawPlayerControllerComponent(C_PlayerController* cController)
 	return;
 }
 
+void E_Inspector::DrawBulletBehaviorComponent(C_BulletBehavior* cBehavior)
+{
+	bool show = true;
+	if (ImGui::CollapsingHeader("Bullet Bahavior", &show, ImGuiTreeNodeFlags_Leaf))
+	{
+		if (!show)
+		{
+			componentToDelete = cBehavior;
+			showDeleteComponentPopup = true;
+		}
+
+		ImGui::Separator();
+	}
+	return;
+}
+
+void E_Inspector::DrawPropBehaviorComponent(C_PropBehavior* cBehavior)
+{
+	bool show = true;
+	if (ImGui::CollapsingHeader("Prop Bahavior", &show, ImGuiTreeNodeFlags_Leaf))
+	{
+		if (!show)
+		{
+			componentToDelete = cBehavior;
+			showDeleteComponentPopup = true;
+		}
+
+		ImGui::Separator();
+	}
+	return;
+}
+
 void E_Inspector::AddComponentCombo(GameObject* selectedGameObject)
 {
 
-	ImGui::Combo("##", &componentType, "Add Component\0Transform\0Mesh\0Material\0Light\0Camera\0Animator\0Animation\0RigidBody\0Box Collider\0Sphere Collider\0Capsule Collider\0Particle System\0Canvas\0Audio Source\0Audio Listener\0Player Controller");
+	ImGui::Combo("##", &componentType, "Add Component\0Transform\0Mesh\0Material\0Light\0Camera\0Animator\0Animation\0RigidBody\0Box Collider\0Sphere Collider\0Capsule Collider\0Particle System\0Canvas\0Audio Source\0Audio Listener\0Player Controller\0Bullet Behavior\0Prop Behavior");
 	ImGui::SameLine();
 
 	if ((ImGui::Button("ADD")))

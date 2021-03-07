@@ -21,6 +21,8 @@ class C_SphereCollider;
 class C_CapsuleCollider;
 class C_Canvas;
 class C_PlayerController;
+class C_BulletBehavior;
+class C_PropBehavior;
 
 class Resource;
 class R_Shader;
@@ -61,6 +63,8 @@ private:
 	void DrawCanvasComponent			(C_Canvas* cCanvas);
 	void DrawUIImage					(UI_Image* image);
 	void DrawPlayerControllerComponent	(C_PlayerController* controller);
+	void DrawBulletBehaviorComponent	(C_BulletBehavior* behavior);
+	void DrawPropBehaviorComponent		(C_PropBehavior* behavior);
 
 	void AddComponentCombo				(GameObject* selectedGameObject);					// 
 	void DeleteComponentPopup			(GameObject* selectedGameObject);					// 
