@@ -18,13 +18,6 @@ void EmitterInstance::Init(Emitter* emitter, C_ParticleSystem* component)
 	particles.resize(emitter->maxParticleCount);
 }
 
-void EmitterInstance::Update(float dt)
-{
-	KillDeadParticles();
-	UpdateModules();
-	DrawParticles();
-}
-
 void EmitterInstance::UpdateModules()
 {
 	/*for (int i = 0; i < emitter->modules.size(); ++i)
