@@ -1,8 +1,9 @@
 #include "JSONParser.h"
+#include "Log.h"
 
 #include "Application.h"
 #include "M_Input.h"
-#include "Log.h"
+#include "M_Scene.h"
 
 #include "GameObject.h"
 #include "C_RigidBody.h"
@@ -14,6 +15,8 @@
 #include "M_Camera3D.h"
 #include "M_Window.h"
 #include "M_Editor.h"
+
+#include "MathGeoLib/include/Geometry/Line.h"
 
 
 C_PlayerController::C_PlayerController(GameObject* owner) : Component(owner, ComponentType::PLAYER_CONTROLLER)
@@ -37,6 +40,31 @@ bool C_PlayerController::Update()
 				MoveAcceleration(rigidBody);
 			else
 				MoveVelocity(rigidBody);
+
+			float2 mouse, center, direction;
+			mouse = MousePositionToWorldPosition();
+			center.x = GetOwner()->transform->GetWorldPosition().x;
+			center.y = GetOwner()->transform->GetWorldPosition().z;
+			mouse.y *= -1;
+			direction = mouse - center;
+			direction.Normalize();
+
+			float rad = direction.AimedAngle();
+			float3 bulletVel = { bulletSpeed * math::Cos(rad) , 0, bulletSpeed * math::Sin(rad) };
+
+			float angle = RadToDeg(-rad) + 90;
+			GetOwner()->transform->SetLocalEulerRotation(float3(0, angle, 0));
+
+			if (App->input->GetMouseButton(1) == KeyState::KEY_DOWN)
+			{
+				GameObject* bullet = App->scene->CreateGameObject("scene", App->scene->GetMasterRoot());
+				bullet->transform->SetWorldPosition(GetOwner()->transform->GetWorldPosition());
+				C_RigidBody* rigidBody = (C_RigidBody*)bullet->CreateComponent(ComponentType::RIGIDBODY);
+				rigidBody->FreezePositionY(true);
+				rigidBody->SetLinearVelocity(bulletVel);
+				App->scene->SetSelectedGameObject(bullet);
+			}
+
 		}
 		else
 			if (App->input->GetKey(SDL_SCANCODE_W) == KeyState::KEY_DOWN || 
@@ -78,9 +106,8 @@ bool C_PlayerController::LoadState(ParsonNode& root)
 	return true;
 }
 
-float3 C_PlayerController::MousePositionToWorldPosition(float mapPositionY)
+float2 C_PlayerController::MousePositionToWorldPosition(float mapPositionY)
 {
-	//float2 mousePos = App->editor->GetWorldMousePositionThroughEditor();
 	float2 mousePos = float2(App->input->GetMouseX(), App->input->GetMouseY());
 
 	float normMouseX = mousePos.x / (float)App->window->GetWidth();
@@ -89,9 +116,15 @@ float3 C_PlayerController::MousePositionToWorldPosition(float mapPositionY)
 	float rayOriginX = (normMouseX - 0.5f) * 2;
 	float rayOriginY = (normMouseY - 0.5f) * 2;
 
-	LineSegment raycast = App->camera->currentCamera->GetFrustum().UnProjectLineSegment(rayOriginX, rayOriginY);
+	LineSegment ray = App->camera->currentCamera->GetFrustum().UnProjectLineSegment(rayOriginX, rayOriginY);
+	float3 direction = ray.Dir();
+	float3 point = ray.AnyPointFast();
 
-	return float3();
+	float2 position = float2::zero;
+	position.x = (-1 * direction.x * point.y) / direction.y + point.x;
+	position.y = (-1 * direction.z * point.y) / direction.y + point.z;
+
+	return position;
 }
 
 void C_PlayerController::MoveVelocity(C_RigidBody* rigidBody)

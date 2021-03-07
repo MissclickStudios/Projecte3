@@ -33,20 +33,22 @@ public:
 	//The deceleration is internaly inverted, so setting a negative deceleration will cause an acceleration
 	void SetDeceleration(float force) { this->deceleration = force; }
 
-	float3 MousePositionToWorldPosition(float mapPositionY = 0);
-
 private: 
 
 	void MoveVelocity(C_RigidBody* rigidBody);
 	void MoveAcceleration(C_RigidBody* rigidBody);
 	void Rotate();
 
-	float speed = 10.0f;
+	float2 MousePositionToWorldPosition(float mapPositionY = 0);
+
+	float speed = 30.0f;
 
 	bool useAcceleration = false;
 
 	float acceleration = 2.0f;
 	float deceleration = 2.0f;
+
+	float bulletSpeed = 100.0f;
 };
 
 #endif // !__C_PLAYERCONTROLLER__
