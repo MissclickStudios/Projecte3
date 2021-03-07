@@ -1579,7 +1579,7 @@ R_Shader* M_ResourceManager::GetShader(const char* name)
 
 	R_Shader* tempShader = nullptr;
 
-	std::string defaultPath = ASSETS_SHADERS_PATH + std::string(name) + SHADERS_EXTENSION; 
+	std::string defaultPath = ASSETS_SHADERS_PATH + std::string(name) + ".shader"; 
 	tempShader = (R_Shader*)App->resourceManager->GetResourceFromLibrary(defaultPath.c_str());
 
 	if (tempShader == nullptr)

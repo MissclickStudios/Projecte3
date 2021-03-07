@@ -54,6 +54,8 @@ void E_SaveFile::DrawTextEditor()
 		EngineApp->scene->SaveScene(sceneName.c_str());
 
 		ImGui::CloseCurrentPopup();
+		readyToSave = false;
+		EngineApp->editor->showSaveFilePopup = false;
 
 	}
 

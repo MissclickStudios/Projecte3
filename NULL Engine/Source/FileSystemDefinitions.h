@@ -38,7 +38,7 @@
 #define MATERIALS_EXTENSION		".nemat"
 #define SCENES_EXTENSION		".nescene"
 #define TEXTURES_EXTENSION		".netex"
-#define SHADERS_EXTENSION		".shader"
+#define SHADERS_EXTENSION		".neshader"
 
 #define PREFAB_EXTENSION		".prefab"
 
