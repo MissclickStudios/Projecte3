@@ -2,11 +2,14 @@
 #include "Log.h"
 
 #include "M_Scene.h"
+#include "M_UISystem.h"
+#include "M_Camera3D.h"
 
 #include "GameObject.h"
-#include "C_Canvas.h"
 
-#include "M_UISystem.h"
+#include "C_Canvas.h"
+#include "C_Camera.h"
+#include "C_Transform.h"
 
 #include "MemoryManager.h"
 
@@ -39,12 +42,15 @@ bool M_UISystem::Init(ParsonNode& config)
 {
 	bool ret = true;
 
+	isCameraSwap = false;
+
 	return ret;
 }
 
 // Called every draw update
 UpdateStatus M_UISystem::PreUpdate(float dt)
 {
+	
 	return UpdateStatus::CONTINUE;
 }
 
@@ -55,6 +61,33 @@ UpdateStatus M_UISystem::Update(float dt)
 
 UpdateStatus M_UISystem::PostUpdate(float dt)
 {
+	for (std::vector<GameObject*>::iterator it = App->scene->GetGameObjects()->begin(); it != App->scene->GetGameObjects()->end(); it++)
+	{
+		C_Canvas* canvasIt = (*it)->GetComponent<C_Canvas>();
+		if (canvasIt != nullptr && canvasIt->IsActive())
+		{
+			if (App->camera->GetCurrentCamera() != App->camera->masterCamera->GetComponent<C_Camera>())
+			{
+				canvasIt->SetSize({ App->camera->GetCurrentCamera()->GetFrustum().NearPlaneWidth(), App->camera->GetCurrentCamera()->GetFrustum().NearPlaneHeight() });
+				canvasIt->SetPosition({ canvasIt->GetOwner()->GetComponent<C_Transform>()->GetWorldPosition().x, canvasIt->GetOwner()->GetComponent<C_Transform>()->GetWorldPosition().y });
+			
+				for (std::vector<UIElement*>::iterator uiIt = canvasIt->uiElements.begin(); uiIt != canvasIt->uiElements.end(); uiIt++)
+				{
+
+					if (isCameraSwap)
+					{
+						(*uiIt)->SetW(canvasIt->GetSize().x);
+						(*uiIt)->SetH(canvasIt->GetSize().y);
+
+						(*uiIt)->SetX(canvasIt->GetPosition().x);
+						(*uiIt)->SetY(canvasIt->GetPosition().y);
+
+						isCameraSwap = false;
+					}
+				}
+			}
+		}
+	}
 	return UpdateStatus::CONTINUE;
 }
 
@@ -76,4 +109,14 @@ bool M_UISystem::SaveConfiguration(ParsonNode& root) const
 	bool ret = true;
 
 	return ret;
+}
+
+bool M_UISystem::IsCameraSwap() const
+{
+	return isCameraSwap;
+}
+
+void M_UISystem::SetIsCameraSwap()
+{
+	isCameraSwap = true;
 }

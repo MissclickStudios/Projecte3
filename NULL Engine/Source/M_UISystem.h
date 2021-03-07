@@ -33,7 +33,14 @@ public:
 	FT_Library libraryFT;
 	FT_Face face;
 
+
+	bool IsCameraSwap() const;
+
+	void SetIsCameraSwap();
+
 private:
+
+	bool isCameraSwap;
 	
 };
 

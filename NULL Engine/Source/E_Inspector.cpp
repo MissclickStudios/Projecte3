@@ -14,6 +14,7 @@
 #include "M_Audio.h"
 #include "M_FileSystem.h"
 #include "M_ResourceManager.h"
+#include "M_UISystem.h"
 
 #include "GameObject.h"
 #include "Component.h"
@@ -600,11 +601,13 @@ void E_Inspector::DrawCameraComponent(C_Camera* cCamera)
 			if (ImGui::Button("Set as Current Camera"))
 			{
 				EngineApp->editor->SetCurrentCameraThroughEditor(cCamera);
+				App->uiSystem->SetIsCameraSwap();
 			}
 
 			if (ImGui::Button("Return to Master Camera"))
 			{
 				EngineApp->editor->SetMasterCameraThroughEditor();
+				App->uiSystem->SetIsCameraSwap();
 			}
 		}
 
@@ -1121,6 +1124,13 @@ void E_Inspector::DrawCanvasComponent(C_Canvas* cCanvas)
 
 			if (ImGui::DragFloat2("Rect", (float*)&size, 0.05f, 0.0f, 0.0f, "%.3f", NULL))
 			{
+				if (size.x < 0)
+					size.x = 0;
+				if (size.y < 0)
+					size.y = 0;
+					
+				
+					
 				cCanvas->SetSize(size);
 
 				if (pivot.x < cCanvas->GetPosition().x - cCanvas->GetSize().x / 2)
@@ -1298,6 +1308,11 @@ void E_Inspector::DrawUIImage(UI_Image* image)
 
 		if (ImGui::DragFloat2("Image Size", (float*)&size, 0.05f, 0.0f, 0.0f, "%.3f", NULL))
 		{
+			if (size.x < 0)
+				size.x = 0;
+			if (size.y < 0)
+				size.y = 0;
+
 			image->SetW(size.x);
 			image->SetH(size.y);
 		}
