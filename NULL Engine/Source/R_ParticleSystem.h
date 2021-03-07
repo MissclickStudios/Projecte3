@@ -12,6 +12,7 @@ public:
 
 	//default emitter creation
 	void AddDefaultEmitter();
+	void InitDefaultSystem();
 
 	bool SaveMeta(ParsonNode& metaRoot) const override;
 	bool LoadMeta(const ParsonNode& metaRoot) override;

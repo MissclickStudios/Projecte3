@@ -12,12 +12,11 @@ class Emitter
 public:
 	Emitter();
 
-	//Loop through all modules, loop through particles, update them
 	void Update(float dt);
 
 	//Save and load?
 
-	//bool AddModuleFromType(ParticleModule::Type type);
+	bool AddModuleFromType(ParticleModule::Type type);
 
 public:
 	std::string name = "Particle Emitter";
