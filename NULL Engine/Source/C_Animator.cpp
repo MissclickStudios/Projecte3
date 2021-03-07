@@ -386,6 +386,12 @@ Transform C_Animator::GetInterpolatedTransform(const double& keyframe, const Cha
 	Quat	interpolatedRotation	= GetInterpolatedRotation(keyframe, channel, originalTransform.rotation);
 	float3	interpolatedScale		= GetInterpolatedScale(keyframe, channel, originalTransform.scale);
 
+	if (channel.type == ChannelType::ROTATION)
+	{
+		
+		interpolatedPosition = originalTransform.position;
+	}
+
 	return Transform(interpolatedPosition, interpolatedRotation, interpolatedScale);
 }
 
