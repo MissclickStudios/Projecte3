@@ -67,7 +67,8 @@ bool E_MainMenuBar::FileMainMenuItem()
 
 		if (ImGui::MenuItem("Save", "Ctrl+S"))
 		{
-			EngineApp->scene->SaveScene();
+			EngineApp->editor->showSaveFilePopup = true;
+			//EngineApp->scene->SaveScene();
 			
 			LOG("[SCENE] SAVED THE SCENE >:DDD");
 		}

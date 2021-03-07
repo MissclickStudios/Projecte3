@@ -75,7 +75,7 @@ UpdateStatus M_Audio::Update(float dt)
 
 	//Depending on the engine state pause/play/resume/stop events
 
-	if (App->play)
+	/*if (App->play)
 	{
 		ResumeAll();
 	}
@@ -86,7 +86,7 @@ UpdateStatus M_Audio::Update(float dt)
 	if (!App->play)
 	{
 		StopAll();
-	}
+	}*/
 
 	return UpdateStatus::CONTINUE;
 }
@@ -347,7 +347,6 @@ WwiseObject::WwiseObject(unsigned int id, const char* name)
 
 WwiseObject::~WwiseObject()
 {
-	//AK::SoundEngine::UnregisterGameObj((AkGameObjectID)objectId);
 }
 
 void WwiseObject::SetPos(float3 pos, float3 front, float3 up)
@@ -363,27 +362,32 @@ void WwiseObject::SetPos(float3 pos, float3 front, float3 up)
 
 void WwiseObject::PlayEvent(unsigned int eventId)
 {
-	AK::SoundEngine::PostEvent(eventId, this->objectId);
+	AK::SoundEngine::PostEvent(eventId, objectId);
 }
 
 void WwiseObject::PauseEvent(unsigned int eventId)
 {
-	AK::SoundEngine::ExecuteActionOnEvent(eventId, AK::SoundEngine::AkActionOnEventType::AkActionOnEventType_Pause, this->objectId);
+	AK::SoundEngine::ExecuteActionOnEvent(eventId, AK::SoundEngine::AkActionOnEventType::AkActionOnEventType_Pause, objectId);
 }
 
 void WwiseObject::ResumeEvent(unsigned int eventId)
 {
-	AK::SoundEngine::ExecuteActionOnEvent(eventId, AK::SoundEngine::AkActionOnEventType::AkActionOnEventType_Resume, this->objectId);
+	AK::SoundEngine::ExecuteActionOnEvent(eventId, AK::SoundEngine::AkActionOnEventType::AkActionOnEventType_Resume, objectId);
 }
 
 void WwiseObject::StopEvent(unsigned int eventId)
 {
-	AK::SoundEngine::ExecuteActionOnEvent(eventId, AK::SoundEngine::AkActionOnEventType::AkActionOnEventType_Stop, this->objectId);
+	AK::SoundEngine::ExecuteActionOnEvent(eventId, AK::SoundEngine::AkActionOnEventType::AkActionOnEventType_Stop, objectId);
+}
+
+float WwiseObject::GetVolume()
+{
+	return volume;
 }
 
 void WwiseObject::SetVolume(float volume)
 {
-	AK::SoundEngine::SetGameObjectOutputBusVolume(this->objectId, AK_INVALID_GAME_OBJECT, volume);
+	AK::SoundEngine::SetGameObjectOutputBusVolume(objectId, AK_INVALID_GAME_OBJECT, volume);
 	this->volume = volume;
 }
 
@@ -400,7 +404,7 @@ WwiseObject* WwiseObject::CreateAudioListener(unsigned int id, const char* name,
 {
 	WwiseObject* wwiseObject = new WwiseObject(id, name);
 
-	AkGameObjectID listenerID = wwiseObject->GetId();
+	AkGameObjectID listenerID = id;
 	AK::SoundEngine::SetDefaultListeners(&listenerID, 1);
 	wwiseObject->SetPos(position);
 	App->audio->audioListenerList.push_back(wwiseObject);
@@ -429,7 +433,7 @@ void WwiseObject::SetAudioRtcp(const char* rtpc, int value, unsigned int objectI
 		LOG("Set trigger");
 }
 
-unsigned int WwiseObject::GetId() const
+unsigned int WwiseObject::GetWwiseObjectId() const
 {
 	return objectId;
 }

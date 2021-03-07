@@ -217,7 +217,7 @@ bool C_Animator::StepAnimation()
 		{
 			Transform& interpolatedTransform = GetInterpolatedTransform(currentClip->GetAnimationFrame(), bone.channel, originalTransform);
 			
-			LOG("ANIMATION FRAME { %.3f }, ANIMATION TICK { %u }", currentClip->GetAnimationFrame(), currentClip->GetAnimationTick());
+			//LOG("ANIMATION FRAME { %.3f }, ANIMATION TICK { %u }", currentClip->GetAnimationFrame(), currentClip->GetAnimationTick());
 
 			if (BlendingClipExists())
 			{
@@ -385,6 +385,12 @@ Transform C_Animator::GetInterpolatedTransform(const double& keyframe, const Cha
 	float3	interpolatedPosition	= GetInterpolatedPosition(keyframe, channel, originalTransform.position);
 	Quat	interpolatedRotation	= GetInterpolatedRotation(keyframe, channel, originalTransform.rotation);
 	float3	interpolatedScale		= GetInterpolatedScale(keyframe, channel, originalTransform.scale);
+
+	if (channel.type == ChannelType::ROTATION)
+	{
+		
+		interpolatedPosition = originalTransform.position;
+	}
 
 	return Transform(interpolatedPosition, interpolatedRotation, interpolatedScale);
 }

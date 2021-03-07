@@ -3,6 +3,9 @@
 
 #include "Component.h"
 
+#include <utility>
+#include <string>
+
 class GameObject;
 class WwiseObject;
 
@@ -18,22 +21,25 @@ public:
 	bool SaveState(ParsonNode& root) const override;
 	bool LoadState(ParsonNode& root) override;
 
-	void SetId(unsigned int id);
-	const unsigned int GetId();
+	void SetEvent(std::string name, unsigned int id);
+	const std::pair<std::string, unsigned int> GetEvent();
 
 	static inline ComponentType GetType() { return ComponentType::AUDIOSOURCE; }
 
 	void PlayFx(unsigned int eventId);
+	void PlayFx(std::string name);
+
 	void PauseFx(unsigned int eventId);
 	void ResumeFx(unsigned int eventId);
 	void StopFx(unsigned int eventId);
 
+	float GetVolume();
 	void SetVolume(float volume);
 	
 private:
 
 	WwiseObject* wwiseObject = nullptr;
-	unsigned int id = 0;
+	std::pair<std::string, unsigned int> eventInfo;
 };
 
 #endif // __C_AUDIOSOURCE__

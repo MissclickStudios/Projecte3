@@ -34,7 +34,7 @@
 #include "M_Scene.h"
 
 #include "MemoryManager.h"
-#include "LevelGenerator.h"
+
 
 M_Scene::M_Scene(bool isActive) : Module("SceneManager", isActive),
 masterRoot				(nullptr),
@@ -83,8 +83,12 @@ bool M_Scene::Start()
 	//uint32 animation_uid = App->resourceManager->LoadFromLibrary(DEFAULT_ANIMATION);
 	//GenerateGameObjectsFromModel(animation_uid , float3(0.05f, 0.05f, 0.05f));
 	
-	LoadScene("Assets/Scenes/MainScene.json");
-	SaveScene("SceneAutosave");																			// Autosave just right after loading the scene.
+	//LoadScene("Assets/Scenes/MainScene.json");
+	//SaveScene("SceneAutosave");																			// Autosave just right after loading the scene.
+
+	level.GetRooms();
+	level.GenerateLevel();
+	level.GenerateRoom(0);
 
 	return ret;
 }
@@ -173,16 +177,10 @@ UpdateStatus M_Scene::Update(float dt)
 	}
 
 	// --- Room Generation
-	if (rooms.empty()) App->fileSystem->GetAllFilesWithExtensionAndName(ASSETS_SCENES_PATH, "json", "Room", rooms);;
 
-	if (!rooms.empty())
-	{
-		if (App->input->GetKey(SDL_SCANCODE_N) == KeyState::KEY_DOWN)
-		{
-			float random = Random::PCG::GetBoundedRandomFloat(4);
-			LoadScene(rooms[random].c_str());
-		}
-	}
+	level.HandleRoomGeneration();
+
+
 
 	return UpdateStatus::CONTINUE;
 }

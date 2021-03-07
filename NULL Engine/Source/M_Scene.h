@@ -6,6 +6,7 @@
 #include "MathGeoLib/include/Geometry/LineSegment.h"
 #include "MathGeoLib/include/Geometry/Triangle.h"
 #include "Module.h"
+#include "LevelGenerator.h"
 
 namespace math
 {
@@ -20,6 +21,7 @@ class R_Model;
 class R_Texture;
 class GameObject;
 class C_Camera;
+//class LevelGenerator;
 
 struct ModelNode;
 
@@ -99,8 +101,8 @@ private:
 
 	std::vector<Primitive*>			primitives;
 
-
-	std::vector<std::string>			rooms;
+	LevelGenerator level;
+	
 };
 
 #endif // !__M_SCENE_H__

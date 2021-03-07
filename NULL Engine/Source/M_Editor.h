@@ -30,6 +30,7 @@ class E_Timeline;
 class E_ImGuiDemo;
 class E_About;
 class E_LoadFile;
+class E_SaveFile;
 
 typedef unsigned __int32 uint32;
 
@@ -143,6 +144,7 @@ public:
 	E_ImGuiDemo*				imguiDemo;
 	E_About*					about;
 	E_LoadFile*					loadFile;
+	E_SaveFile*					saveFile;
 
 	ImVec4						clearColor;														// Will be used to set the clear color of the rendering environment.
 
@@ -154,6 +156,7 @@ public:
 	bool						showImguiDemo;													// Enable/Disable the ImGui Demo window.
 	bool						showAboutPopup;													// Enable/Disable the About window popup.
 	bool						showLoadFilePopup;												// Enable/Disable the Load File popup.
+	bool						showSaveFilePopup;
 	bool						showCloseAppPopup;												// Enable/Disable the Close App popup.
 };
 

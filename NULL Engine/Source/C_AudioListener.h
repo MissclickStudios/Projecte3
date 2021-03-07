@@ -24,7 +24,6 @@ public:
 private:
 
 	WwiseObject* wwiseObject = nullptr;;
-	unsigned int id = 0;
 };
 
 #endif // __C_AUDIOLISTENER__
