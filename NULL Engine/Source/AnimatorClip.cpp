@@ -7,6 +7,8 @@
 
 #include "AnimatorClip.h"
 
+#include "MemoryManager.h"
+
 AnimatorClip::AnimatorClip() : 
 animation			(nullptr), 
 name				("[NONE]"), 

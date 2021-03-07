@@ -2,7 +2,7 @@
 
 #include "Time.h"
 
-#include "Application.h"
+#include "EngineApplication.h"
 #include "M_Window.h"
 #include "M_Renderer3D.h"
 #include "M_Camera3D.h"
@@ -15,6 +15,8 @@
 #include "C_Camera.h"
 
 #include "E_Configuration.h"
+
+#include "MemoryManager.h"
 
 #define MAX_INPUT_LOG_SIZE 1000
 
@@ -115,11 +117,11 @@ bool E_Configuration::ApplicationMenu()
 	if (ImGui::CollapsingHeader("Application"))
 	{
 		char buffer[128];
-		strcpy_s(buffer, App->GetEngineName());
+		strcpy_s(buffer, EngineApp->GetEngineName());
 
 		if (ImGui::InputText("Engine Name", buffer, IM_ARRAYSIZE(buffer), ImGuiInputTextFlags_EnterReturnsTrue))
 		{
-			App->SetEngineName(buffer);
+			EngineApp->SetEngineName(buffer);
 		}
 
 		PlotFrameDataHistogram();
@@ -136,7 +138,7 @@ bool E_Configuration::WindowMenu()
 	if (ImGui::CollapsingHeader("Window"))
 	{
 		// --- IS ACTIVE & ICON
-		ImGui::Text("Is Active");		ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), App->window->IsActive() ? "True" : "False");
+		ImGui::Text("Is Active");		ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), EngineApp->window->IsActive() ? "True" : "False");
 		ImGui::Text("Icon:");			ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "None (WIP)");
 
 		// --- WINDOW BRIGHTNESS
@@ -146,7 +148,7 @@ bool E_Configuration::WindowMenu()
 		GenerateSizeSliders();
 
 		// --- REFRESH RATE
-		ImGui::Text("Refresh Rate:");  ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%d", App->window->GetRefreshRate());
+		ImGui::Text("Refresh Rate:");  ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%d", EngineApp->window->GetRefreshRate());
 
 		ImGui::Separator();
 
@@ -164,9 +166,9 @@ bool E_Configuration::RendererMenu()
 	if (ImGui::CollapsingHeader("Renderer"))
 	{
 		// --- IS ACTIVE AND CURRENT DRIVER
-		ImGui::Text("Is Active:");			ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), App->renderer->IsActive() ? "True" : "False");
-		ImGui::Text("Driver:");				ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), App->renderer->GetDrivers());
-		ImGui::Text("Total Polycount:");	ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), /*App->renderer->GetPolycount()*/ "0");
+		ImGui::Text("Is Active:");			ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), EngineApp->renderer->IsActive() ? "True" : "False");
+		ImGui::Text("Driver:");				ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), EngineApp->renderer->GetDrivers());
+		ImGui::Text("Total Polycount:");	ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), /*EngineApp->renderer->GetPolycount()*/ "0");
 
 		// --- VSYNC
 		VsyncMode();
@@ -197,13 +199,13 @@ bool E_Configuration::CameraMenu()
 	if (ImGui::CollapsingHeader("Camera"))
 	{
 		// --- IS ACTIVE
-		ImGui::Text("Is Active:"); ImGui::SameLine(); ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), App->camera->IsActive() ? "True" : "False");
+		ImGui::Text("Is Active:"); ImGui::SameLine(); ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), EngineApp->camera->IsActive() ? "True" : "False");
 
 		ImGui::SameLine(152.5f);
 
 		if (ImGui::Button("Return to Origin"))
 		{
-			App->camera->ReturnToWorldOrigin();
+			EngineApp->camera->ReturnToWorldOrigin();
 		}
 
 		ImGui::Separator();
@@ -238,7 +240,7 @@ bool E_Configuration::InputMenu()
 	if (ImGui::CollapsingHeader("Input"))
 	{
 		// --- IS ACTIVE
-		ImGui::Text("Is Active:");		ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), App->input->IsActive() ? "True" : "False");
+		ImGui::Text("Is Active:");		ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), EngineApp->input->IsActive() ? "True" : "False");
 		
 		// --- MOUSE POSITION, MOTION & WHEEL
 		MouseInputData();
@@ -264,7 +266,7 @@ bool E_Configuration::FileSystemMenu()
 
 	if (ImGui::CollapsingHeader("File System"))
 	{
-		ImGui::Text("Is Active:");		ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), App->fileSystem->IsActive() ? "True" : "False");
+		ImGui::Text("Is Active:");		ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), EngineApp->fileSystem->IsActive() ? "True" : "False");
 
 		GenerateBaseDirectoryText();
 		GenerateReadDirectoriesText();
@@ -276,11 +278,10 @@ bool E_Configuration::FileSystemMenu()
 
 bool E_Configuration::SystemInfoMenu()
 {
-	bool ret = true;
 
 	if (ImGui::CollapsingHeader("System"))
 	{
-		HardwareInfo hardwareInfo = App->GetHardwareInfo();
+		HardwareInfo hardwareInfo = EngineApp->GetHardwareInfo();
 
 		ImGui::Indent();
 		
@@ -309,13 +310,11 @@ bool E_Configuration::SystemInfoMenu()
 		ImGui::Unindent();
 	}
  
-	return ret;
+	return true;
 }
 
 bool E_Configuration::TimeManagementMenu()
 {
-	bool ret = true;
-	
 	if (ImGui::CollapsingHeader("Time Management"))
 	{
 		ImGui::TextColored(ImVec4(0.0f, 1.0f, 1.0f, 1.0f), "Real Time Clock:");
@@ -323,7 +322,7 @@ bool E_Configuration::TimeManagementMenu()
 		Hourglass clock			= Time::Real::GetClock();
 		FrameData frameData		= Time::Real::GetFrameData();
 
-		ImGui::Text("Time Since Start:");	ImGui::SameLine(); ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "   %s",			clock.GetTimeAsString().c_str());
+		ImGui::Text("Time Since Start:");	ImGui::SameLine(); ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "   %s", std::string(std::to_string(clock.hours) + "h " + std::to_string(clock.minutes) + "m " + std::to_string(clock.seconds) + "s").c_str()); //TODO: can't return an std::string across dll without memo leack
 		ImGui::Text("Frame Count:");		ImGui::SameLine(); ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "        %llu",	frameData.frameCount);
 
 		ImGui::Text("Average FPS:");		ImGui::SameLine(); ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "        %.3f",	frameData.avgFps);
@@ -338,7 +337,7 @@ bool E_Configuration::TimeManagementMenu()
 		Hourglass gameClock		= Time::Game::GetClock();
 		FrameData gameFrameData	= Time::Game::GetFrameData();
 
-		ImGui::Text("Time Since Start:");	ImGui::SameLine(); ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "   %s",			gameClock.GetTimeAsString().c_str());
+		ImGui::Text("Time Since Start:");	ImGui::SameLine(); ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "   %s", std::string(std::to_string(gameClock.hours) + "h " + std::to_string(gameClock.minutes) + "m " + std::to_string(gameClock.seconds) + "s").c_str()); //TODO: can't return an std::string across dll without memo leack
 		ImGui::Text("Frame Count:");		ImGui::SameLine(); ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "        %llu",	gameFrameData.frameCount);
 
 		ImGui::Text("Average FPS:");		ImGui::SameLine(); ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "        %.3f",	gameFrameData.avgFps);
@@ -347,7 +346,7 @@ bool E_Configuration::TimeManagementMenu()
 		ImGui::Text("Delta Time:");			ImGui::SameLine(); ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "         %.3f",	gameFrameData.dt);
 	}
 
-	return ret;
+	return true;
 }
 
 bool E_Configuration::ImGuiEditorsMenu()
@@ -414,7 +413,7 @@ void E_Configuration::UpdateFrameData(int frames, int ms)
 	}																// --------------------
 
 	fpsData[MAX_HISTOGRAM_SIZE - 1]	= (float)frames;			// Adds to FPS[] the frames per second passed as argument to the last position in it.
-	msData[MAX_HISTOGRAM_SIZE - 1]		= (float)ms;				// Adds to Ms[] the ms per frame passed as argument to the last position in it.
+	msData[MAX_HISTOGRAM_SIZE - 1]	= (float)ms;				// Adds to Ms[] the ms per frame passed as argument to the last position in it.
 }
 
 void E_Configuration::PlotFrameDataHistogram()
@@ -452,20 +451,20 @@ void E_Configuration::PlotFrameDataHistogram()
 
 void E_Configuration::GenerateFrameCapSlider()
 {
-	int cap = App->GetFrameCap();
+	int cap = EngineApp->GetFrameCap();
 
 	ImGui::SliderInt("Frame Cap", &cap, 0, 60, "%d", ImGuiSliderFlags_AlwaysClamp);
 
-	App->SetFrameCap(cap);
+	EngineApp->SetFrameCap(cap);
 
-	App->framesAreCapped = (cap == 0) ? false : true;										// [ATTENTION] Could be troubling when trying to manage the framecap elsewhere.
+	EngineApp->framesAreCapped = (cap == 0) ? false : true;										// [ATTENTION] Could be troubling when trying to manage the framecap elsewhere.
 }
 
 void E_Configuration::GenerateBrightnessSlider()
 {
-	float brightness = App->window->GetBrightness();
+	float brightness = EngineApp->window->GetBrightness();
 	ImGui::SliderFloat("Brightness", &brightness, 0.250f, 1.0f, "%.3f", 0);
-	App->window->SetBrightness(brightness);
+	EngineApp->window->SetBrightness(brightness);
 }
 
 void E_Configuration::GenerateSizeSliders()
@@ -473,57 +472,57 @@ void E_Configuration::GenerateSizeSliders()
 	int width	= 0;
 	int height	= 0;
 
-	SDL_GetWindowSize(App->window->GetWindow(), &width, &height);
+	SDL_GetWindowSize(EngineApp->window->GetWindow(), &width, &height);
 
 	uint minWidth, minHeight, maxWidth, maxHeight = 0;
-	App->window->GetMinMaxSize(minWidth, minHeight, maxWidth, maxHeight);
+	EngineApp->window->GetMinMaxSize(minWidth, minHeight, maxWidth, maxHeight);
 
 	ImGui::SliderInt("Width", &width, minWidth, maxWidth, "%d", ImGuiSliderFlags_AlwaysClamp);
 	ImGui::SliderInt("Height", &height, minHeight, maxHeight, "%d", ImGuiSliderFlags_AlwaysClamp);
 
-	App->window->SetSize(width, height);
+	EngineApp->window->SetSize(width, height);
 }
 
 void E_Configuration::WindowModeFlags()
 {
 	ImGui::Text("Window Mode:");
 
-	bool maximized			= App->window->IsMaximized();
-	bool fullscreen			= App->window->IsFullscreen();
-	bool resizable			= App->window->IsResizable();
-	bool borderless			= App->window->IsBorderless();
-	bool fullscreenDesktop	= App->window->IsFullscreenDesktop();
+	bool maximized			= EngineApp->window->IsMaximized();
+	bool fullscreen			= EngineApp->window->IsFullscreen();
+	bool resizable			= EngineApp->window->IsResizable();
+	bool borderless			= EngineApp->window->IsBorderless();
+	bool fullscreenDesktop	= EngineApp->window->IsFullscreenDesktop();
 
 	if (ImGui::Checkbox("Maximized", &maximized))
 	{
-		App->window->SetMaximized(maximized);
+		EngineApp->window->SetMaximized(maximized);
 	}
 
 	if (ImGui::Checkbox("Fullscreen", &fullscreen))
 	{
-		App->window->SetFullscreen(fullscreen);
+		EngineApp->window->SetFullscreen(fullscreen);
 	}
 
 	if (ImGui::Checkbox("Resizable", &resizable))
 	{
-		App->window->SetResizable(resizable);
+		EngineApp->window->SetResizable(resizable);
 	}
 
 	if (ImGui::Checkbox("Borderless", &borderless))
 	{
-		App->window->SetBorderless(borderless);
+		EngineApp->window->SetBorderless(borderless);
 	}
 
 	if (ImGui::Checkbox("Fullscreen Desktop", &fullscreenDesktop))
 	{
-		App->window->SetFullscreenDesktop(fullscreenDesktop);
+		EngineApp->window->SetFullscreenDesktop(fullscreenDesktop);
 	}
 }
 
 void E_Configuration::VsyncMode()
 {
-	bool vsync = App->renderer->GetVsync();
-	if (ImGui::Checkbox("Vsync", &vsync))		{ App->renderer->SetVsync(vsync); }
+	bool vsync = EngineApp->renderer->GetVsync();
+	if (ImGui::Checkbox("Vsync", &vsync))		{ EngineApp->renderer->SetVsync(vsync); }
 }
 
 void E_Configuration::RendererFlags()
@@ -535,51 +534,51 @@ void E_Configuration::RendererFlags()
 	ImGui::Separator();
 	
 	// --- OPENGL FLAGS
-	bool depthTest					= App->renderer->GetGLFlag(RendererFlags::DEPTH_TEST);
-	bool cullFace					= App->renderer->GetGLFlag(RendererFlags::CULL_FACE);
-	bool lighting					= App->renderer->GetGLFlag(RendererFlags::LIGHTING);
-	bool colorMaterial				= App->renderer->GetGLFlag(RendererFlags::COLOR_MATERIAL);
-	bool texture2D					= App->renderer->GetGLFlag(RendererFlags::TEXTURE_2D);
-	bool alphaTest					= App->renderer->GetGLFlag(RendererFlags::ALPHA_TEST);
-	bool blend						= App->renderer->GetGLFlag(RendererFlags::BLEND);
+	bool depthTest					= EngineApp->renderer->GetGLFlag(RendererFlags::DEPTH_TEST);
+	bool cullFace					= EngineApp->renderer->GetGLFlag(RendererFlags::CULL_FACE);
+	bool lighting					= EngineApp->renderer->GetGLFlag(RendererFlags::LIGHTING);
+	bool colorMaterial				= EngineApp->renderer->GetGLFlag(RendererFlags::COLOR_MATERIAL);
+	bool texture2D					= EngineApp->renderer->GetGLFlag(RendererFlags::TEXTURE_2D);
+	bool alphaTest					= EngineApp->renderer->GetGLFlag(RendererFlags::ALPHA_TEST);
+	bool blend						= EngineApp->renderer->GetGLFlag(RendererFlags::BLEND);
 
 	// --- SHOW FLAGS
-	bool renderWorldGrid			= App->renderer->GetRenderWorldGrid();
-	bool renderWorldAxis			= App->renderer->GetRenderWorldAxis();
-	bool renderWireframes			= App->renderer->GetRenderWireframes();
-	bool renderVertexNormals		= App->renderer->GetRenderVertexNormals();
-	bool renderFaceNormals			= App->renderer->GetRenderFaceNormals();
-	bool renderBoundingBoxes		= App->renderer->GetRenderBoundingBoxes();
-	bool renderSkeletons			= App->renderer->GetRenderSkeletons();
-	bool renderPrimitiveExamples	= App->renderer->GetRenderPrimitiveExamples();
-	bool renderOthers				= false /*App->renderer->GetRenderOthers()*/;
+	bool renderWorldGrid			= EngineApp->renderer->GetRenderWorldGrid();
+	bool renderWorldAxis			= EngineApp->renderer->GetRenderWorldAxis();
+	bool renderWireframes			= EngineApp->renderer->GetRenderWireframes();
+	bool renderWertexNormals		= EngineApp->renderer->GetRenderVertexNormals();
+	bool renderFaceNormals			= EngineApp->renderer->GetRenderFaceNormals();
+	bool renderBoundingBoxes		= EngineApp->renderer->GetRenderBoundingBoxes();
+	bool renderSkeletons			= EngineApp->renderer->GetRenderSkeletons();
+	bool renderPrimitiveExamples	= EngineApp->renderer->GetRenderPrimitiveExamples();
+	bool renderOthers				= false /*EngineApp->renderer->GetRenderOthers()*/;
 
 	// --- OPENGL FLAGS
-	if (ImGui::Checkbox("Depth Test", &depthTest))									{ App->renderer->SetGLFlag(RendererFlags::DEPTH_TEST, depthTest); }			ImGui::SameLine(colDist);
-	if (ImGui::Checkbox("Cull Face", &cullFace))									{ App->renderer->SetGLFlag(RendererFlags::CULL_FACE, cullFace); }
+	if (ImGui::Checkbox("Depth Test", &depthTest))									{ EngineApp->renderer->SetGLFlag(RendererFlags::DEPTH_TEST, depthTest); }			ImGui::SameLine(colDist);
+	if (ImGui::Checkbox("Cull Face", &cullFace))									{ EngineApp->renderer->SetGLFlag(RendererFlags::CULL_FACE, cullFace); }
 
-	if (ImGui::Checkbox("Lighting", &lighting))										{ App->renderer->SetGLFlag(RendererFlags::LIGHTING, lighting); }				ImGui::SameLine(colDist);
-	if (ImGui::Checkbox("Color Material", &colorMaterial))							{ App->renderer->SetGLFlag(RendererFlags::COLOR_MATERIAL, colorMaterial); }
+	if (ImGui::Checkbox("Lighting", &lighting))										{ EngineApp->renderer->SetGLFlag(RendererFlags::LIGHTING, lighting); }				ImGui::SameLine(colDist);
+	if (ImGui::Checkbox("Color Material", &colorMaterial))							{ EngineApp->renderer->SetGLFlag(RendererFlags::COLOR_MATERIAL, colorMaterial); }
 
-	if (ImGui::Checkbox("Texture 2D", &texture2D))									{ App->renderer->SetGLFlag(RendererFlags::TEXTURE_2D, texture2D); }			ImGui::SameLine(colDist);
-	if (ImGui::Checkbox("Alpha Test", &alphaTest))									{ App->renderer->SetGLFlag(RendererFlags::ALPHA_TEST, alphaTest); }
+	if (ImGui::Checkbox("Texture 2D", &texture2D))									{ EngineApp->renderer->SetGLFlag(RendererFlags::TEXTURE_2D, texture2D); }			ImGui::SameLine(colDist);
+	if (ImGui::Checkbox("Alpha Test", &alphaTest))									{ EngineApp->renderer->SetGLFlag(RendererFlags::ALPHA_TEST, alphaTest); }
 
-	if (ImGui::Checkbox("Blend", &blend))											{ App->renderer->SetGLFlag(RendererFlags::BLEND, blend); }						ImGui::SameLine(colDist);
+	if (ImGui::Checkbox("Blend", &blend))											{ EngineApp->renderer->SetGLFlag(RendererFlags::BLEND, blend); }						ImGui::SameLine(colDist);
 
 	// --- SHOW FLAGS
-	if (ImGui::Checkbox("Show World Grid", &renderWorldGrid))						{ App->renderer->SetRenderWorldGrid(renderWorldGrid); }
+	if (ImGui::Checkbox("Show World Grid", &renderWorldGrid))						{ EngineApp->renderer->SetRenderWorldGrid(renderWorldGrid); }
 
-	if (ImGui::Checkbox("Show World Axis", &renderWorldAxis))						{ App->renderer->SetRenderWorldAxis(renderWorldAxis); }							ImGui::SameLine(colDist);
-	if (ImGui::Checkbox("Show Wireframes", &renderWireframes))						{ App->renderer->SetRenderWireframes(renderWireframes); }
+	if (ImGui::Checkbox("Show World Axis", &renderWorldAxis))						{ EngineApp->renderer->SetRenderWorldAxis(renderWorldAxis); }							ImGui::SameLine(colDist);
+	if (ImGui::Checkbox("Show Wireframes", &renderWireframes))						{ EngineApp->renderer->SetRenderWireframes(renderWireframes); }
 
-	if (ImGui::Checkbox("Show Vertex Normals", &renderVertexNormals))				{ App->renderer->SetRenderVertexNormals(renderVertexNormals); }					ImGui::SameLine(colDist);
-	if (ImGui::Checkbox("Show Face Normals", &renderFaceNormals))					{ App->renderer->SetRenderFaceNormals(renderFaceNormals); }
+	if (ImGui::Checkbox("Show Vertex Normals", &renderWertexNormals))				{ EngineApp->renderer->SetRenderVertexNormals(renderWertexNormals); }					ImGui::SameLine(colDist);
+	if (ImGui::Checkbox("Show Face Normals", &renderFaceNormals))					{ EngineApp->renderer->SetRenderFaceNormals(renderFaceNormals); }
 
-	if (ImGui::Checkbox("Show Bounding Boxes", &renderBoundingBoxes))				{ App->renderer->SetRenderBoundingBoxes(renderBoundingBoxes); }					ImGui::SameLine(colDist);
-	if (ImGui::Checkbox("Show Skeletons", &renderSkeletons))						{ App->renderer->SetRenderSkeletons(renderSkeletons); }
+	if (ImGui::Checkbox("Show Bounding Boxes", &renderBoundingBoxes))				{ EngineApp->renderer->SetRenderBoundingBoxes(renderBoundingBoxes); }					ImGui::SameLine(colDist);
+	if (ImGui::Checkbox("Show Skeletons", &renderSkeletons))						{ EngineApp->renderer->SetRenderSkeletons(renderSkeletons); }
 
-	if (ImGui::Checkbox("Show Primitive Examples", &renderPrimitiveExamples))		{ App->renderer->SetRenderPrimtiveExamples(renderPrimitiveExamples); }			ImGui::SameLine(colDist);
-	if (ImGui::Checkbox("Show Others (WIP)", &renderOthers))						{ /*App->renderer->SetRenderOthers();*/ }
+	if (ImGui::Checkbox("Show Primitive Examples", &renderPrimitiveExamples))		{ EngineApp->renderer->SetRenderPrimtiveExamples(renderPrimitiveExamples); }			ImGui::SameLine(colDist);
+	if (ImGui::Checkbox("Show Others (WIP)", &renderOthers))						{ /*EngineApp->renderer->SetRenderOthers();*/ }
 }
 
 void E_Configuration::RendererSettings()
@@ -587,29 +586,29 @@ void E_Configuration::RendererSettings()
 	float minLineWidth			= 0.1f;
 	float maxLineWidth			= 10.0f;
 
-	uint worldGridSize			= App->renderer->GetWorldGridSize();
+	uint worldGridSize			= EngineApp->renderer->GetWorldGridSize();
 
-	Color worldGridColor		= App->renderer->GetWorldGridColor(); 
-	Color wireframeColor		= App->renderer->GetWireframeColor();
-	Color vertexNormalsColor	= App->renderer->GetVertexNormalsColor();
-	Color faceNormalsColor		= App->renderer->GetFaceNormalsColor();
+	Color worldGridColor		= EngineApp->renderer->GetWorldGridColor(); 
+	Color wireframeColor		= EngineApp->renderer->GetWireframeColor();
+	Color vertexNormalsColor	= EngineApp->renderer->GetVertexNormalsColor();
+	Color faceNormalsColor		= EngineApp->renderer->GetFaceNormalsColor();
 
-	Color aabbColor				= App->renderer->GetAABBColor();
-	Color obbColor				= App->renderer->GetOBBColor();
-	Color frustumColor			= App->renderer->GetFrustumColor();
-	Color rayColor				= App->renderer->GetRayColor();
-	Color boneColor				= App->renderer->GetBoneColor();
+	Color aabbColor				= EngineApp->renderer->GetAABBColor();
+	Color obbColor				= EngineApp->renderer->GetOBBColor();
+	Color frustumColor			= EngineApp->renderer->GetFrustumColor();
+	Color rayColor				= EngineApp->renderer->GetRayColor();
+	Color boneColor				= EngineApp->renderer->GetBoneColor();
 
-	float worldGridLineWidth	= App->renderer->GetWorldGridLineWidth();
-	float wireframeLineWidth	= App->renderer->GetWireframeLineWidth();
-	float vertexNormalsWidth	= App->renderer->GetVertexNormalsWidth();
-	float faceNormalsWidth		= App->renderer->GetFaceNormalsWidth();
+	float worldGridLineWidth	= EngineApp->renderer->GetWorldGridLineWidth();
+	float wireframeLineWidth	= EngineApp->renderer->GetWireframeLineWidth();
+	float vertexNormalsWidth	= EngineApp->renderer->GetVertexNormalsWidth();
+	float faceNormalsWidth		= EngineApp->renderer->GetFaceNormalsWidth();
 
-	float aabbEdgeWidth			= App->renderer->GetAABBEdgeWidth();
-	float obbEdgeWidth			= App->renderer->GetOBBEdgeWidth();
-	float frustumEdgeWidth		= App->renderer->GetFrustumEdgeWidth();
-	float rayWidth				= App->renderer->GetRayWidth();
-	float boneWidth				= App->renderer->GetBoneWidth();
+	float aabbEdgeWidth			= EngineApp->renderer->GetAABBEdgeWidth();
+	float obbEdgeWidth			= EngineApp->renderer->GetOBBEdgeWidth();
+	float frustumEdgeWidth		= EngineApp->renderer->GetFrustumEdgeWidth();
+	float rayWidth				= EngineApp->renderer->GetRayWidth();
+	float boneWidth				= EngineApp->renderer->GetBoneWidth();
 	
 	ImGui::Text("Renderer Settings:");
 
@@ -619,15 +618,15 @@ void E_Configuration::RendererSettings()
 	{
 		if (ImGui::ColorEdit4("W.G. Color", worldGridColor.C_Array(), ImGuiColorEditFlags_None))
 		{
-			App->renderer->SetWorldGridColor(worldGridColor);
+			EngineApp->renderer->SetWorldGridColor(worldGridColor);
 		}
 		if (ImGui::SliderInt("W.G. Size", (int*)&worldGridSize, 0, 420))
 		{
-			App->renderer->SetWorldGridSize(worldGridSize);
+			EngineApp->renderer->SetWorldGridSize(worldGridSize);
 		}
 		if (ImGui::SliderFloat("W.G. L. Width", &worldGridLineWidth, minLineWidth, maxLineWidth, "%.3f", 1.0f))
 		{
-			App->renderer->SetWorldGridLineWidth(worldGridLineWidth);
+			EngineApp->renderer->SetWorldGridLineWidth(worldGridLineWidth);
 		}
 
 		ImGui::TreePop();
@@ -637,11 +636,11 @@ void E_Configuration::RendererSettings()
 	{
 		if (ImGui::ColorEdit4("WF. Color", wireframeColor.C_Array(), ImGuiColorEditFlags_None))
 		{
-			App->renderer->SetWireframeColor(wireframeColor);
+			EngineApp->renderer->SetWireframeColor(wireframeColor);
 		}
 		if (ImGui::SliderFloat("WF. L. Width", &wireframeLineWidth, minLineWidth, maxLineWidth, "%.3f", 1.0f))
 		{
-			App->renderer->SetWireframeLineWidth(wireframeLineWidth);
+			EngineApp->renderer->SetWireframeLineWidth(wireframeLineWidth);
 		}
 
 		ImGui::TreePop();
@@ -651,11 +650,11 @@ void E_Configuration::RendererSettings()
 	{
 		if (ImGui::ColorEdit4("V.N. Color", vertexNormalsColor.C_Array(), ImGuiColorEditFlags_None))
 		{
-			App->renderer->SetVertexNormalsColor(vertexNormalsColor);
+			EngineApp->renderer->SetVertexNormalsColor(vertexNormalsColor);
 		}
 		if (ImGui::SliderFloat("V.N. L. Width", &vertexNormalsWidth, minLineWidth, maxLineWidth, "%.3f", 1.0f))
 		{
-			App->renderer->SetVertexNormalsWidth(vertexNormalsWidth);
+			EngineApp->renderer->SetVertexNormalsWidth(vertexNormalsWidth);
 		}
 
 		ImGui::TreePop();
@@ -665,11 +664,11 @@ void E_Configuration::RendererSettings()
 	{
 		if (ImGui::ColorEdit4("F.N. Color", faceNormalsColor.C_Array(), ImGuiColorEditFlags_None))
 		{
-			App->renderer->SetFaceNormalsColor(faceNormalsColor);
+			EngineApp->renderer->SetFaceNormalsColor(faceNormalsColor);
 		}
 		if (ImGui::SliderFloat("F.N. L. Width", &faceNormalsWidth, minLineWidth, maxLineWidth, "%.3f", 1.0f))
 		{
-			App->renderer->SetFaceNormalsWidth(faceNormalsWidth);
+			EngineApp->renderer->SetFaceNormalsWidth(faceNormalsWidth);
 		}
 
 		ImGui::TreePop();
@@ -679,11 +678,11 @@ void E_Configuration::RendererSettings()
 	{
 		if (ImGui::ColorEdit4("AABB Color", aabbColor.C_Array(), ImGuiColorEditFlags_None))
 		{
-			App->renderer->SetAABBColor(aabbColor);
+			EngineApp->renderer->SetAABBColor(aabbColor);
 		}
 		if (ImGui::SliderFloat("AABB E. Width", &aabbEdgeWidth, minLineWidth, maxLineWidth, "%.3f", 1.0f))
 		{
-			App->renderer->SetAABBEdgeWidth(aabbEdgeWidth);
+			EngineApp->renderer->SetAABBEdgeWidth(aabbEdgeWidth);
 		}
 
 		ImGui::TreePop();
@@ -693,11 +692,11 @@ void E_Configuration::RendererSettings()
 	{
 		if (ImGui::ColorEdit4("OBB Color", obbColor.C_Array(), ImGuiColorEditFlags_None))
 		{
-			App->renderer->SetOBBColor(obbColor);
+			EngineApp->renderer->SetOBBColor(obbColor);
 		}
 		if (ImGui::SliderFloat("OBB E. Width", &obbEdgeWidth, minLineWidth, maxLineWidth, "%.3f", 1.0f))
 		{
-			App->renderer->SetOBBEdgeWidth(obbEdgeWidth);
+			EngineApp->renderer->SetOBBEdgeWidth(obbEdgeWidth);
 		}
 
 		ImGui::TreePop();
@@ -707,11 +706,11 @@ void E_Configuration::RendererSettings()
 	{
 		if (ImGui::ColorEdit4("Ftum Color", frustumColor.C_Array(), ImGuiColorEditFlags_None))
 		{
-			App->renderer->SetFrustumColor(frustumColor);
+			EngineApp->renderer->SetFrustumColor(frustumColor);
 		}
 		if (ImGui::SliderFloat("Ftum E. Width", &frustumEdgeWidth, minLineWidth, maxLineWidth, "%.3f", 1.0f))
 		{
-			App->renderer->SetFrustumEdgeWidth(frustumEdgeWidth);
+			EngineApp->renderer->SetFrustumEdgeWidth(frustumEdgeWidth);
 		}
 
 		ImGui::TreePop();
@@ -721,11 +720,11 @@ void E_Configuration::RendererSettings()
 	{
 		if (ImGui::ColorEdit4("Ray Color", rayColor.C_Array(), ImGuiColorEditFlags_None))
 		{
-			App->renderer->SetRayColor(rayColor);
+			EngineApp->renderer->SetRayColor(rayColor);
 		}
 		if (ImGui::SliderFloat("Ray L. Width", &rayWidth, minLineWidth, maxLineWidth, "%.3f", 1.0f))
 		{
-			App->renderer->SetRayWidth(rayWidth);
+			EngineApp->renderer->SetRayWidth(rayWidth);
 		}
 
 		ImGui::TreePop();
@@ -735,11 +734,11 @@ void E_Configuration::RendererSettings()
 	{
 		if (ImGui::ColorEdit4("Bone Color", boneColor.C_Array(), ImGuiColorEditFlags_None))
 		{
-			App->renderer->SetBoneColor(boneColor);
+			EngineApp->renderer->SetBoneColor(boneColor);
 		}
 		if (ImGui::SliderFloat("Bone L. Width", &boneWidth, minLineWidth, maxLineWidth, "%.3f", 1.0f))
 		{
-			App->renderer->SetBoneWidth(boneWidth);
+			EngineApp->renderer->SetBoneWidth(boneWidth);
 		}
 
 		ImGui::TreePop();
@@ -748,64 +747,65 @@ void E_Configuration::RendererSettings()
 
 void E_Configuration::GenerateCameraPositionSlider()
 {
-	float3 masterCameraPosition = App->camera->GetMasterCameraPosition();
+	float3 masterCameraPosition = EngineApp->camera->GetMasterCameraPosition();
 	if (ImGui::DragFloat3("Position", (float*)&masterCameraPosition, 1.0f, 0.0f, 0.0f, "%.3f", NULL))
 	{
-		App->camera->SetMasterCameraPosition(masterCameraPosition);
+		EngineApp->camera->SetMasterCameraPosition(masterCameraPosition);
 	}
 }
 
 void E_Configuration::GenerateCameraRotationSlider()
 {
-	float3 masterCameraRotation = App->camera->GetMasterCameraRotation() * RADTODEG;
+	float3 masterCameraRotation = EngineApp->camera->GetMasterCameraRotation() * RADTODEG;
 	if (ImGui::DragFloat3("Rotation", (float*)&masterCameraRotation, 1.0f, 0.0f, 0.0f, "%.3f", NULL))
 	{
-		App->camera->SetMasterCameraRotation(masterCameraRotation * DEGTORAD);
+		EngineApp->camera->SetMasterCameraRotation(masterCameraRotation * DEGTORAD);
 	}
 }
 
 void E_Configuration::GenerateCameraScaleSlider()
 {
-	float3 masterCameraScale = App->camera->GetMasterCameraScale();
+	float3 masterCameraScale = EngineApp->camera->GetMasterCameraScale();
 	if (ImGui::DragFloat3("Scale", (float*)&masterCameraScale, 1.0f, 0.0f, 0.0f, "%.3f", NULL))
 	{
-		App->camera->SetMasterCameraScale(masterCameraScale);
+		EngineApp->camera->SetMasterCameraScale(masterCameraScale);
 	}
 }
 
 void E_Configuration::GenerateCameraReferenceSlider()
 {
-	float3 cameraReference = App->camera->GetReference();
+	float3 cameraReference = EngineApp->camera->GetReference();
 	if (ImGui::DragFloat3("Reference", (float*)&cameraReference, 1.0f, 0.0f, 0.0f, "%.3f", NULL))
 	{
-		App->camera->SetReference(cameraReference);
+		EngineApp->camera->SetReference(cameraReference);
 	}
 }
 
 void E_Configuration::GenerateCameraSpeedSliders()
 {
-	float movementSpeed = App->camera->GetMovementSpeed();
-	float rotationSpeed = App->camera->GetRotationSpeed();
-	float zoomSpeed = App->camera->GetZoomSpeed();
+	float movementSpeed = EngineApp->camera->GetMovementSpeed();
+	float rotationSpeed = EngineApp->camera->GetRotationSpeed();
+	float zoomSpeed = EngineApp->camera->GetZoomSpeed();
 
 	ImGui::DragFloat("Movement Speed", &movementSpeed, 0.01f, 0.0f, 0.0f, "%.3f", NULL);
 	ImGui::DragFloat("Rotation Speed", &rotationSpeed, 0.01f, 0.0f, 0.0f, "%.3f", NULL);
 	ImGui::DragFloat("Zoom Speed", &zoomSpeed, 0.01f, 0.0f, 0.0f, "%.3f", NULL);
 
-	App->camera->SetMovementSpeed(movementSpeed);
-	App->camera->SetRotationSpeed(rotationSpeed);
-	App->camera->SetZoomSpeed(zoomSpeed);
+	EngineApp->camera->SetMovementSpeed(movementSpeed);
+	EngineApp->camera->SetRotationSpeed(rotationSpeed);
+	EngineApp->camera->SetZoomSpeed(zoomSpeed);
 }
 
 void E_Configuration::GenerateDrawLastRaycastCheckbox()
 {
-	bool drawLastRaycast = App->camera->DrawLastRaycast();
+	bool drawLastRaycast = EngineApp->camera->DrawLastRaycast();
 	if (ImGui::Checkbox("Draw Last Raycast", &drawLastRaycast))
 	{
-		App->camera->SetDrawLastRaycast(drawLastRaycast);
+		EngineApp->camera->SetDrawLastRaycast(drawLastRaycast);
 	}
 }
 
+//Redo
 void E_Configuration::AddInputLog(const char* log)
 {
 	if (log != nullptr)
@@ -830,9 +830,9 @@ void E_Configuration::ReduceInputLog()
 
 void E_Configuration::MouseInputData()
 {
-	ImGui::Text("Mouse Position:"); ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "x: %i y: %i", App->input->GetMouseX(), App->input->GetMouseY());
-	ImGui::Text("Mouse Motion:");	ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "x: %i y: %i", App->input->GetMouseXMotionFromSDL(), App->input->GetMouseYMotionFromSDL());
-	ImGui::Text("Mouse Wheel:");	ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "x: %i y: %i", App->input->GetMouseXWheel(), App->input->GetMouseYWheel());
+	ImGui::Text("Mouse Position:"); ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "x: %i y: %i", EngineApp->input->GetMouseX(), EngineApp->input->GetMouseY());
+	ImGui::Text("Mouse Motion:");	ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "x: %i y: %i", EngineApp->input->GetMouseXMotionFromSDL(), EngineApp->input->GetMouseYMotionFromSDL());
+	ImGui::Text("Mouse Wheel:");	ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "x: %i y: %i", EngineApp->input->GetMouseXWheel(), EngineApp->input->GetMouseYWheel());
 }
 
 void E_Configuration::InputLogOutput()
@@ -880,7 +880,7 @@ void E_Configuration::GenerateBaseDirectoryText()
 {
 	ImGui::Text("Base Directory:");
 	ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 1.0f, 0.0f, 1.0f));
-	ImGui::TextWrapped(App->fileSystem->GetBaseDirectory());
+	ImGui::TextWrapped(EngineApp->fileSystem->GetBaseDirectory());
 	ImGui::PopStyleColor();
 }
 
@@ -888,7 +888,7 @@ void E_Configuration::GenerateReadDirectoriesText()
 {
 	ImGui::Text("Read Directories:");
 	ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 1.0f, 0.0f, 1.0f));
-	ImGui::TextWrapped(App->fileSystem->GetReadDirectories());
+	ImGui::TextWrapped(EngineApp->fileSystem->GetReadDirectories());
 	ImGui::PopStyleColor();
 }
 
@@ -896,7 +896,7 @@ void E_Configuration::GenerateWriteDirectoryText()
 {
 	ImGui::Text("Write Directory:");
 	ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 1.0f, 0.0f, 1.0f));
-	ImGui::TextWrapped(App->fileSystem->GetWriteDirectory());
+	ImGui::TextWrapped(EngineApp->fileSystem->GetWriteDirectory());
 	ImGui::PopStyleColor();
 }
 

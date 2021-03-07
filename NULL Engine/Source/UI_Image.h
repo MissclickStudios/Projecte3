@@ -7,10 +7,10 @@
 
 class C_Canvas;
 
-class UI_Image : public UIElement
+class NULL_API UI_Image : public UIElement
 {
 public:
-	UI_Image(C_Canvas* canvas, Rect rect);
+	UI_Image(GameObject* owner, Rect rect = { 0,0,50,50 });
 	~UI_Image();
 
 	bool Update() override;

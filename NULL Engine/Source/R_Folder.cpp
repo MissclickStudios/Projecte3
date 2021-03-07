@@ -4,6 +4,8 @@
 
 #include "R_Folder.h"
 
+#include "MemoryManager.h"
+
 R_Folder::R_Folder() : Resource(ResourceType::FOLDER)
 {
 

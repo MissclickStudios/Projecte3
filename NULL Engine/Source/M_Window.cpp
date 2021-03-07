@@ -1,6 +1,10 @@
-#include "Application.h"																					// ATTENTION: Globals.h already included in Application.h.
+#include "Application.h"
+#include "ConfigurationSettings.h"
+#include "Log.h"
 
 #include "M_Window.h"
+
+#include "MemoryManager.h"
 
 M_Window::M_Window(bool isActive) : Module("Window", isActive)
 {

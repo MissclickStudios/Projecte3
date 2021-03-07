@@ -1,6 +1,9 @@
 #include "JSONParser.h"
 
 #include "Application.h"
+#include "VariableDefinitions.h"
+#include "FileSystemDefinitions.h"
+#include "Log.h"
 #include "M_Window.h"
 #include "M_Scene.h"
 

@@ -3,7 +3,9 @@
 
 #include "PhysFS/include/physfs.h"
 
-#include "Application.h"																	// ATTENTION: Globals.h already included in Module.h
+#include "Application.h"
+#include "Log.h"
+#include "FileSystemDefinitions.h"
 #include "PathNode.h"
 
 #include "M_FileSystem.h"
@@ -860,10 +862,10 @@ std::string M_FileSystem::GetFileExtension(const char* path)
 
 	extension = (dotPosition != fullPath.npos) ? fullPath.substr(dotPosition + 1) : "[NONE]";
 
-	if (extension == "[NONE]")
+	/*if (extension == "[NONE]")
 	{
 		//LOG("[WARNING] File System: Path %s does not have any file extension!", path);
-	}
+	}*/
 
 	return extension;
 }

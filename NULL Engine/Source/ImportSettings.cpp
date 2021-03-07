@@ -2,6 +2,8 @@
 
 #include "ImportSettings.h"
 
+#include "MemoryManager.h"
+
 ImportSettings::ImportSettings()
 {
 	globalScale		= 1.0f;

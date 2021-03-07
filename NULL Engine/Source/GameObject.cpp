@@ -25,6 +25,10 @@
 #include "C_SphereCollider.h"
 #include "C_CapsuleCollider.h"
 #include "C_Canvas.h"
+#include "C_PlayerController.h"
+
+#include "UI_Image.h"
+#include "UI_Text.h"
 
 #include "GameObject.h"
 
@@ -165,7 +169,7 @@ bool GameObject::LoadState(ParsonNode& root)
 		if (!componentNode.NodeIsValid())
 			continue;
 		
-		ComponentType type	= (ComponentType)(int)componentNode.GetNumber("Type");
+		ComponentType type	= (ComponentType)((int)componentNode.GetNumber("Type"));
 
 		if (type == ComponentType::TRANSFORM)
 		{
@@ -191,7 +195,7 @@ bool GameObject::LoadState(ParsonNode& root)
 			case ComponentType::BOX_COLLIDER:		{ component = new C_BoxCollider(this); }		break;
 			case ComponentType::SPHERE_COLLIDER:	{ component = new C_SphereCollider(this); }		break;
 			case ComponentType::CAPSULE_COLLIDER:	{ component = new C_CapsuleCollider(this); }	break;
-
+			case ComponentType::PLAYER_CONTROLLER: { component = new C_PlayerController(this); } break;
 			}
 
 			if (component != nullptr)
@@ -657,23 +661,29 @@ Component* GameObject::CreateComponent(ComponentType type)
 		LOG("[ERROR] RigidBody Component could not be added to %s! Error: No duplicates allowed!", name.c_str());
 		return nullptr;
 	}
+	if (type == ComponentType::PLAYER_CONTROLLER && GetComponent<C_PlayerController>() != nullptr)
+	{
+		LOG("[ERROR] Player Controller Component could not be added to %s! Error: No duplicates allowed!", name.c_str());
+		return nullptr;
+	}
 
 	switch(type)
 	{
-	case ComponentType::TRANSFORM:	{ component = new C_Transform(this); }	break;
-	case ComponentType::MESH:		{ component = new C_Mesh(this); }		break;
-	case ComponentType::MATERIAL:	{ component = new C_Material(this); }	break;
-	case ComponentType::LIGHT:		{ component = new C_Light(this); }		break;
-	case ComponentType::CAMERA:	{ component = new C_Camera(this); }		break;
-	case ComponentType::ANIMATOR:	{ component = new C_Animator(this); }	break;
-	case ComponentType::ANIMATION: { component = new C_Animation(this); }	break;
-	case ComponentType::AUDIOSOURCE: { component = new C_AudioSource(this); } break;
-	case ComponentType::AUDIOLISTENER: {component = new C_AudioListener(this); } break;
+	case ComponentType::TRANSFORM:			{ component = new C_Transform(this); }			break;
+	case ComponentType::MESH:				{ component = new C_Mesh(this); }				break;
+	case ComponentType::MATERIAL:			{ component = new C_Material(this); }			break;
+	case ComponentType::LIGHT:				{ component = new C_Light(this); }				break;
+	case ComponentType::CAMERA:				{ component = new C_Camera(this); }				break;
+	case ComponentType::ANIMATOR:			{ component = new C_Animator(this); }			break;
+	case ComponentType::ANIMATION:			{ component = new C_Animation(this); }			break;
+	case ComponentType::AUDIOSOURCE:		{ component = new C_AudioSource(this); }		break;
+	case ComponentType::AUDIOLISTENER:		{ component = new C_AudioListener(this); }		break;
 	case ComponentType::RIGIDBODY:			{ component = new C_RigidBody(this); }			break;
 	case ComponentType::BOX_COLLIDER:		{ component = new C_BoxCollider(this); }		break;
 	case ComponentType::SPHERE_COLLIDER:	{ component = new C_SphereCollider(this); }		break;
 	case ComponentType::CAPSULE_COLLIDER:	{ component = new C_CapsuleCollider(this); }	break;
-	case ComponentType::CANVAS:				{component = new C_Canvas(this); } break;
+	case ComponentType::CANVAS:				{ component = new C_Canvas(this); }				break;
+	case ComponentType::PLAYER_CONTROLLER:	{ component = new C_PlayerController(this); }	break;
 	}
 
 	if (component != nullptr)
@@ -730,6 +740,49 @@ bool GameObject::GetAllComponents(std::vector<Component*>& components) const
 
 	return components.empty() ? false : true;
 }
+
+
+// --- UIELEMENTS METHODS ---
+UIElement* GameObject::CreateUIElement(UIElementType type)
+{
+	UIElement* element = nullptr;
+
+	switch (type)
+	{
+	case UIElementType::IMAGE: { element = new UI_Image(this); }	break;
+	case UIElementType::TEXT: { element = new UI_Text(this); }		break;
+	}
+
+	if (element != nullptr)
+		uiElement = element;
+
+	return element;
+}
+
+UIElement* GameObject::GetUIElement() const
+{
+	return uiElement;
+}
+
+bool GameObject::DeleteUIElement()
+{
+
+	std::string uiElementName = uiElement->GetNameFromType();
+
+	if (uiElement != nullptr)
+	{
+		uiElement->CleanUp();
+		RELEASE(uiElement);
+
+		return true;
+	}
+
+	LOG("[STATUS] Deleted Component %s of Game Object %s", uiElementName.c_str(), name.c_str());
+
+	return false;
+}
+
+
 
 uint32 GameObject::GetUID() const
 {

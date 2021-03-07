@@ -6,7 +6,7 @@
 class GameObject;
 class WwiseObject;
 
-class C_AudioListener : public Component
+class NULL_API C_AudioListener : public Component
 {
 public:
 	C_AudioListener(GameObject* owner);
@@ -24,7 +24,6 @@ public:
 private:
 
 	WwiseObject* wwiseObject = nullptr;;
-	unsigned int id = 0;
 };
 
 #endif // __C_AUDIOLISTENER__

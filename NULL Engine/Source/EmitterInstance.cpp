@@ -1,5 +1,7 @@
 #include "EmitterInstance.h"
 
+#include "MemoryManager.h"
+
 EmitterInstance::EmitterInstance()
 {
 }

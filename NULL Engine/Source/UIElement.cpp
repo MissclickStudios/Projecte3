@@ -1,8 +1,20 @@
+#include "GameObject.h"
+
 #include "UIElement.h"
 
-UIElement::UIElement(C_Canvas* canvas, UIElementType type, Rect rect, bool isActive) :	type(type),	canvas(canvas), rect(rect), isActive(isActive), isDraggable(false)
-{
+#include "MemoryManager.h"
 
+UIElement::UIElement(GameObject* owner, UIElementType type, Rect rect, bool isActive) :	type(type),	owner(owner), rect(rect), isActive(isActive), isDraggable(false)
+{
+	GameObject* parent = owner->parent;
+	if (parent != nullptr)
+	{
+		C_Canvas* canvas = parent->GetComponent<C_Canvas>();
+		if (canvas != nullptr)
+		{
+			SetCanvas(canvas);
+		}
+	}
 }
 
 UIElement::~UIElement()
@@ -30,6 +42,11 @@ bool UIElement::Update()
 bool UIElement::CleanUp()
 {
 	return true;
+}
+
+GameObject* UIElement::GetOwner() const
+{
+	return owner;
 }
 
 C_Canvas* UIElement::GetCanvas() const
@@ -67,6 +84,11 @@ bool UIElement::IsActive() const
 	return isActive;
 }
 
+
+void UIElement::SetOwner(GameObject* owner)
+{
+	this->owner = owner;
+}
 
 void UIElement::SetCanvas(C_Canvas* canvas)
 {

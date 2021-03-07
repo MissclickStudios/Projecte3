@@ -1,6 +1,7 @@
 #ifndef __GAME_OBJECT_H__
 #define __GAME_OBJECT_H__
 
+#include "Macros.h"
 #include <string>
 #include <vector>
 #include <map>
@@ -8,6 +9,11 @@
 
 #include "MathGeoBoundingBox.h"
 #include "Component.h"
+
+#include "C_Camera.h" //TODO: Why do we need to include this ????
+
+#include "UIElement.h"
+
 
 class ParsonNode;
 class C_Transform;
@@ -19,7 +25,7 @@ struct SkeletonRenderer;
 typedef unsigned __int32 uint32;
 typedef unsigned int uint;
 
-class GameObject
+class NULL_API GameObject
 {
 public:
 	GameObject();
@@ -75,6 +81,7 @@ public:																									// --- COMPONENT GETTERS AND SETTERS
 	Component*		CreateComponent						(ComponentType type);							// Creates a component of the given type and adds it to the components vector.
 	bool			DeleteComponent						(Component* componentToDelete);					// Deletes the given component from the Components vector. Returs False on ERROR.
 	
+
 	const std::vector<Component*>&	GetAllComponents	() const;										// 
 	bool							GetAllComponents	(std::vector<Component*>& components) const;	// 
 
@@ -88,7 +95,7 @@ public:																									// --- COMPONENT GETTERS AND SETTERS
 			return (T*)transform;																		// This can be applied as there will be ONLY ONE TRANSFORM COMPONENT PER GO.
 		}
 
-		for (uint i = 0; i < components.size(); ++i)
+		for (int i = 0; i < components.size(); ++i)
 		{
 			if(components[i])
 				if (components[i]->GetType() == type)
@@ -119,6 +126,7 @@ public:																									// --- COMPONENT GETTERS AND SETTERS
 		case ComponentType::BOX_COLLIDER:		{ return "Box Collider"; }		break;
 		case ComponentType::SPHERE_COLLIDER:	{ return "Sphere Collider"; }	break;
 		case ComponentType::CAPSULE_COLLIDER:	{ return "Capsule Collider"; }	break;
+		case ComponentType::PLAYER_CONTROLLER: { return "Player Controller"; } break;
 		}
 
 		return "NONE";
@@ -140,11 +148,19 @@ public:																									// --- COMPONENT GETTERS AND SETTERS
 	}
 
 public:
+
+	UIElement* CreateUIElement(UIElementType type);								// Creates a UI Element of the given type.
+	bool DeleteUIElement();														// Deletes the UI Element. Returs False on ERROR.
+
+	UIElement* GetUIElement() const;
+
+public:
 	std::vector<Component*>		components;
 	std::vector<GameObject*>	childs;
 
 	GameObject*					parent;
 	C_Transform*				transform;													// Don't know what to do with this. Maybe like Unity? Or have it like the rest of comps?
+
 
 	bool						is_master_root;												//
 	bool						is_scene_root;												// Will be set to true if this GameObject is M_Scene's scene root object.
@@ -166,6 +182,8 @@ private:
 	bool						isStatic;
 
 	uint32						parent_uid;													// Only for Serialization purposes. Maybe will be repurposed later.
+
+	UIElement* uiElement = nullptr;
 };
 
 #endif // !__GAME_OBJECT_H__

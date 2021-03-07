@@ -3,8 +3,9 @@
 
 #include "MathGeoLib/include/Math/float4x4.h"
 
-#define INVALID_VERTEX_ID 4294967295																// TMP
-#define INVALID_BONE_ID 4294967295																	// TMP
+#define INVALID_VERTEX_ID	4294967295																// TMP
+#define INVALID_BONE_ID		4294967295																// TMP. MAX POSSIBLE VALUE FOR AN UINT.
+#define INVALID_WEIGHT		2.0f																	// INVALID AS THE TOTAL VALUE OF ALL 4 POSSIBLE WEIGHTS ALWAYS HAS TO BE 1.0f.
 
 typedef unsigned int uint;
 

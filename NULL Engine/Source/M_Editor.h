@@ -1,9 +1,12 @@
 #ifndef __M_EDITOR_H__
 #define __M_EDITOR_H__
 
+#include <map>
+
 #include "ImGui/include/imgui.h"
 #include "MathGeoLib/include/Math/float2.h"
 #include "Module.h"
+#include "VariableTypedefs.h"
 
 struct Icons;
 class ParsonNode;
@@ -63,15 +66,12 @@ public:
 	bool			SaveConfiguration	(ParsonNode& root) const override;
 
 public:
-	bool			GetEvent							(SDL_Event* event) const;				// Will return false if there was no event to read.
-
 	void			AddEditorPanel						(EditorPanel* panel);					// Will add the E_Panel* passed as argument to the gui_panels vector.
 
 	void			EditorShortcuts						();										// All the shortcuts related to the editor have been gathered here.
 	void			CheckShowHideFlags					();										// Will check whether or not each of the panels must be enabled or disabled.
 
 	bool			EditorIsBeingHovered				() const;								// Will check whether or not any of the editor panels is being hovered.
-	bool			RenderEditorPanels					() const;								// Will call ImGui::Render() to render all the panels on the screen.
 	bool			InitializeImGui						() const;								// Creates an ImGui Context and sets an initial configuration for it.
 	
 public:
@@ -88,7 +88,7 @@ public:																							// --- Panel/Window Methods. Acts as an interface 
 	void			UpdateFrameData						(int frames, int ms);					// Configuration: Passing the received frame data to the configuration editor module.
 	void			AddInputLog							(uint key, uint state);					// Configuration: Receives an input key and a state and passes a log to the config editor mod.
 
-	void			AddConsoleLog						(const char* log);						// Console: Passing the received console log to the console editor module.
+	void			AddConsoleLog						(const char* log) override;						// Console: Passing the received console log to the console editor module.
 
 	GameObject*		GetSceneRootThroughEditor			() const;								// Hierarchy & inspector: Will return the current root GameObjcect.
 	void			SetSceneRootThroughEditor			(GameObject* gameObject);				// Hierarchy & inspector: Will set the scene's root GameObject with the passed one.
@@ -112,7 +112,8 @@ public:																							// --- Panel/Window Methods. Acts as an interface 
 	void			GetEngineIconsThroughEditor			(Icons& engineIcons);					// Project:
 	void			LoadResourceIntoSceneThroughEditor	();										// Project: As of now Drag&Drop Source is in Project and Target in Viewport. TODO FIX LATER
 
-	void			GetResourcesThroughEditor			(std::map<uint32, Resource*>& resources) const;	// Resources: 
+	void			GetResourcesThroughEditor			(std::map<uint32, Resource*>& resources) const;	// Resources:
+	const std::map<uint32, Resource*>* GetResourcesThroughEditor () const;	// Resources: 
 
 	void			SaveSceneThroughEditor				(const char* sceneName);
 	void			LoadFileThroughEditor				(const char* path);						// Load File: Will send the given path to the Importer.
@@ -120,6 +121,11 @@ public:																							// --- Panel/Window Methods. Acts as an interface 
 private:
 	bool BeginRootWindow(ImGuiIO& io, const char* windowId, bool docking, ImGuiWindowFlags windowFlags = ImGuiWindowFlags_None);							// Generates a root window for docking.
 	void BeginDockspace(ImGuiIO& io, const char* dockspaceId, ImGuiDockNodeFlags dockingFlags = ImGuiDockNodeFlags_None, ImVec2 size = { 0.0f, 0.0f });	// Generates a new dockspace.
+
+private:																						
+	void EditorCameraUpdate();																	//Editor camera Update
+	void ProcessInput(SDL_Event& event) override;												//Process ImGui events from SDL
+	void PostSceneRendering() override;															//Render ImGui
 
 public:
 	std::vector<EditorPanel*>	editorPanels;													// Will store all the editor modules. Will be iterated for drawing all the panels.

@@ -46,7 +46,7 @@ enum class InterpolationType																								// WIP IDEA
 	CUSTOM
 };
 
-class C_Animator : public Component																							// In charge of managing Skeletal Animation
+class NULL_API C_Animator : public Component																							// In charge of managing Skeletal Animation
 {
 public:
 	C_Animator(GameObject* owner);
@@ -117,7 +117,7 @@ private: 																									// --- INTERNAL METHODS
 	bool StepAnimation				();
 	bool StepClips					();
 	bool BlendAnimation				();
-	bool ValidateCurrentClip		();
+	bool CurrentClipIsValid			();
 		 
 	void SwitchBlendingToCurrent	();
 	void ResetBones					();

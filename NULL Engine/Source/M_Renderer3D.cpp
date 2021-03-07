@@ -33,14 +33,15 @@
 #include "UIElement.h"
 #include "M_Renderer3D.h"
 
-#include "MemoryManager.h"
-//////////////////////////////////////////////////
 #include "I_Shaders.h"							//TODO: erase
-/////////////////////////////////////////////////
+
+#include "MemoryManager.h"
+
 
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */	
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */	
 #pragma comment (lib, "Source/Dependencies/Assimp/libx86/assimp.lib")	
+#pragma comment (lib, "Source/Dependencies/glew/libx86/glew32.lib")
 
 #define WORLD_GRID_SIZE		64
 #define CHECKERS_WIDTH		64
@@ -155,11 +156,30 @@ UpdateStatus M_Renderer3D::PostUpdate(float dt)
 	BROFILER_CATEGORY("M_Renderer3D PostUpdate", Profiler::Color::Chartreuse);
 	
 	//The Skybox renderer must be the first one always
-	defaultSkyBox.RenderSkybox();
+	//defaultSkyBox.RenderSkybox(); //TODO crashes
 
 	RenderScene();
 
-	App->editor->RenderEditorPanels();
+	glClear(GL_COLOR_BUFFER_BIT);
+	glBindTexture(GL_TEXTURE_2D, gameFramebuffer);
+	glBegin(GL_QUADS);
+	glTexCoord2f(0, 0);
+	glVertex2f(0, 0);
+	glTexCoord2f(1, 0);
+	glVertex2f(500, 0);
+	glTexCoord2f(1, 1);
+	glVertex2f(500, 500);
+	glTexCoord2f(0, 1);
+	glVertex2f(0, 500);
+	glEnd();
+	glFlush();
+
+	//Render systems from other modules (example ImGUi)
+	for (std::vector<Module*>::const_iterator it = PostSceneRenderModules.cbegin(); it != PostSceneRenderModules.cend(); ++it) 
+	{
+		if ((*it)->IsActive())
+			(*it)->PostSceneRendering();
+	}
 
 	SDL_GL_SwapWindow(App->window->GetWindow());
 
@@ -218,9 +238,9 @@ bool M_Renderer3D::InitDebugVariables()
 	rayColor					= Cyan;
 	boneColor					= Pink;
 
-	worldGridLineWidth		= STANDARD_LINE_WIDTH;
-	wireframeLineWidth		= STANDARD_LINE_WIDTH;
-	vertexNormalsWidth		= BASE_LINE_WIDTH;
+	worldGridLineWidth			= STANDARD_LINE_WIDTH;
+	wireframeLineWidth			= STANDARD_LINE_WIDTH;
+	vertexNormalsWidth			= BASE_LINE_WIDTH;
 	faceNormalsWidth			= BASE_LINE_WIDTH;
 
 	aabbEdgeWidth				= BASE_LINE_WIDTH;
@@ -289,7 +309,7 @@ bool M_Renderer3D::InitOpenGL()
 		GLenum error = glGetError();
 		if (error != GL_NO_ERROR)
 		{
-			LOG("[ERROR] Error initializing OpenGL! %s\n", gluErrorString(error));
+			LOG("[ERROR] Error initializing OpenGL! %s\n", glewGetErrorString(error));
 			ret = false;
 		}
 
@@ -301,7 +321,7 @@ bool M_Renderer3D::InitOpenGL()
 		error = glGetError();
 		if (error != GL_NO_ERROR)
 		{
-			LOG("[ERROR] Error initializing OpenGL! %s\n", gluErrorString(error));
+			LOG("[ERROR] Error initializing OpenGL! %s\n", glewGetErrorString(error));
 			ret = false;
 		}
 
@@ -316,7 +336,7 @@ bool M_Renderer3D::InitOpenGL()
 		error = glGetError();
 		if (error != GL_NO_ERROR)
 		{
-			LOG("[ERROR] Error initializing OpenGL! %s\n", gluErrorString(error));
+			LOG("[ERROR] Error initializing OpenGL! %s\n", glewGetErrorString(error));
 			ret = false;
 		}
 
@@ -473,7 +493,7 @@ void M_Renderer3D::InitFramebuffers()
 
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 	{
-		LOG("[ERROR] Renderer 3D: Could not generate the scene's frame buffer! Error: %s", gluErrorString(glGetError()));
+		LOG("[ERROR] Renderer 3D: Could not generate the scene's frame buffer! Error: %s", glewGetErrorString(glGetError()));
 	}
 
 	// --- UNBINDING THE FRAMEBUFFER ---
@@ -1227,6 +1247,11 @@ void M_Renderer3D::SetRenderSkeletons(const bool& setTo)
 void M_Renderer3D::SetRenderPrimtiveExamples(const bool& setTo)
 {
 	renderPrimitiveExamples = setTo;
+}
+
+void M_Renderer3D::AddPostSceneRenderModule(Module* module)
+{
+	PostSceneRenderModules.push_back(module);
 }
 
 // --- RENDERER STRUCTURES METHODS ---

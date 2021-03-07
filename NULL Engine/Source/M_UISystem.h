@@ -11,7 +11,7 @@ typedef unsigned int uint;
 
 class GameObject;
 
-class M_UISystem : public Module
+class NULL_API M_UISystem : public Module
 {
 public:
 

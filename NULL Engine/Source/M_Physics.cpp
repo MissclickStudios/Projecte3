@@ -1,9 +1,12 @@
 #include "Application.h"
+#include "Log.h"
 #include "M_Physics.h"
 
 #include "GameObject.h"
 
 #include "SimulationCallback.h" // PhysxAPI already included in here
+
+#include "MemoryManager.h"
 
 #define BOUNCE_THRESHOLD 0.2f
 #define THREADS 4

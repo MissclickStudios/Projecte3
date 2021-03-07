@@ -1,6 +1,6 @@
-#include <functional>			//function pointers
+/*#include <functional>			//function pointers
 #include <algorithm>			//for_each()
-#include <memory>				//Smart pointers
+#include <memory>				//Smart pointers*/
 
 #include "JSONParser.h"
 #include "Time.h"
@@ -12,7 +12,6 @@
 #include "M_Input.h"
 #include "M_Scene.h"
 #include "M_Renderer3D.h"
-#include "M_Editor.h"
 #include "M_Camera3D.h"
 #include "M_FileSystem.h"
 #include "M_ResourceManager.h"
@@ -24,6 +23,8 @@
 
 #include "MemoryManager.h"
 
+Application* App = nullptr;
+
 Application::Application() :
 quit			(false),
 debug			(false), 
@@ -31,14 +32,16 @@ hardwareInfo	(),
 window			(nullptr),
 input			(nullptr),
 scene			(nullptr),
-editor			(nullptr),
 renderer		(nullptr),
 camera			(nullptr),
 fileSystem		(nullptr),
 resourceManager	(nullptr),
 audio			(nullptr),
-uiSystem		(nullptr)
+uiSystem		(nullptr),
+logger			(nullptr)
+
 {
+	App = this;
 	//PERF_TIMER_START(perf_timer);
 	
 	// Modules -----------------------------------
@@ -47,18 +50,17 @@ uiSystem		(nullptr)
 	camera				= new M_Camera3D();
 	renderer			= new M_Renderer3D();
 	scene				= new M_Scene();
-	editor				= new M_Editor();
 	fileSystem			= new M_FileSystem();
 	resourceManager		= new M_ResourceManager();
 	audio				= new M_Audio();
 	physics				= new M_Physics();
-	uiSystem = new M_UISystem();
+	uiSystem 			= new M_UISystem();
 
 	// The order of calls is very important!
 	// Modules will Init() Start() and Update in this order
 	// They will CleanUp() in reverse order
 
-	// Main Modules
+	/*// Main Modules
 	AddModule(window);
 	AddModule(camera);
 	AddModule(input);
@@ -70,11 +72,10 @@ uiSystem		(nullptr)
 
 	// Scenes
 	AddModule(scene);
-	AddModule(editor);
 
 	// Renderer last!
 	AddModule(renderer);
-	// -------------------------------------------
+	// -------------------------------------------*/
 
 	// Save/Load variables
 	wantToLoad			= false;
@@ -371,9 +372,6 @@ void Application::FinishUpdate()
 	{
 		App->window->SetTitle(engineName.c_str());
 	}
-
-	// Editor: Configuration Frame Data Histograms
-	UpdateFrameData(Time::Real::GetFramesLastSecond(), Time::Real::GetMsLastFrame());
 }
 // ---------------------------------------------
 
@@ -485,7 +483,7 @@ void Application::SetFrameCap(uint newCap)
 // --- EDITOR METHODS ---
 void Application::AddEditorLog(const char* log)
 {
-	if (!quit && editor != nullptr)													// Second condition is not really necessary. It's more of a reminder to keep it in mind.
+	if (!quit && logger != nullptr)													// Second condition is not really necessary. It's more of a reminder to keep it in mind.
 	{
 		//std::string full_log = App->fileSystem->NormalizePath(log);				// Switching all "\\" for "/". They need to be changed due to "\" being a Windows-specific thing.
 
@@ -496,18 +494,13 @@ void Application::AddEditorLog(const char* log)
 
 		std::string shortLog = fullLog.substr(logStart, logEnd);				// Returns the string that is within the given positions.
 
-		editor->AddConsoleLog(shortLog.c_str());									// Priorized readability over reducing to AddConsoleLog(full_log.substr(log_start, log_end)).
+		logger->AddConsoleLog(shortLog.c_str());									// Priorized readability over reducing to AddConsoleLog(full_log.substr(log_start, log_end)).
 	}
 }
 
 void Application::RequestBrowser(const char* link)
 {
 	ShellExecuteA(NULL, "open", link, NULL, "", 0);
-}
-
-void Application::UpdateFrameData(int frames, int ms)
-{
-	editor->UpdateFrameData(frames, ms);
 }
 
 

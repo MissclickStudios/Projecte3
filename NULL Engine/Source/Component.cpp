@@ -6,6 +6,8 @@
 
 #include "Component.h"
 
+#include "MemoryManager.h"
+
 Component::Component(GameObject* owner, ComponentType type, bool isActive) :
 id(Random::LCG::GetRandomUint()),
 type(type),
@@ -60,6 +62,7 @@ const char* Component::GetNameFromType() const
 	case ComponentType::SPHERE_COLLIDER:  { return "Sphere  Collider"; }	break;
 	case ComponentType::CAPSULE_COLLIDER: { return "Capsule Collider"; }	break;
 	case ComponentType::CANVAS:			{ return "Canvas"; }		break;
+	case ComponentType::PLAYER_CONTROLLER: { return "Player Controller"; }	break;
 	}
 	return "NONE";
 }

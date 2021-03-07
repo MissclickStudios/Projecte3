@@ -1,6 +1,7 @@
 #include "JSONParser.h"
 
 #include "Application.h"
+#include "Log.h"
 #include "M_Physics.h"
 
 #include "C_RigidBody.h"
@@ -9,6 +10,8 @@
 #include "C_Transform.h"
 
 #include "MathGeoLib/include/Math/Quat.h"
+
+#include "MemoryManager.h"
 
 C_RigidBody::C_RigidBody(GameObject* owner) : Component(owner, ComponentType::RIGIDBODY)
 {
@@ -52,13 +55,13 @@ bool C_RigidBody::Update()
 	{
 		RigidBodyMovesTransform();
 
+		if (toUpdate)
+			ApplyPhysicsChanges();
+
 		physx::PxVec3 lVel = rigidBody->getLinearVelocity();
 		linearVel = { lVel.x, lVel.y, lVel.z };
 		physx::PxVec3 aVel = rigidBody->getAngularVelocity();
 		angularVel = { aVel.x, aVel.y, aVel.z };
-
-		if (toUpdate)
-			ApplyPhysicsChanges();
 	}
 
 	return true;

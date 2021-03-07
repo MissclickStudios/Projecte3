@@ -3,6 +3,8 @@
 
 #include "Random.h"
 
+#include "MemoryManager.h"
+
 // --- LCG ---
 uint32 Random::LCG::GetRandomUint()
 {	

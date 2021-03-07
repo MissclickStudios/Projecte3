@@ -1,10 +1,12 @@
 #include "Macros.h"
 
-#include "Application.h"
+#include "EngineApplication.h"
 #include "M_Window.h"
 #include "M_Editor.h"
 
 #include "E_Console.h"
+
+#include "MemoryManager.h"
 
 #define MAX_CONSOLE_LOG_SIZE 1000
 

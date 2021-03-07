@@ -8,7 +8,7 @@
 
 #include "Time.h"
 
-#include "Application.h"
+#include "EngineApplication.h"
 #include "M_Renderer3D.h"
 #include "M_Editor.h"
 #include "M_Audio.h"
@@ -30,6 +30,7 @@
 #include "C_BoxCollider.h"
 #include "C_SphereCollider.h"
 #include "C_CapsuleCollider.h"
+#include "C_PlayerController.h"
 
 #include "R_Shader.h"
 #include "R_Texture.h"
@@ -41,6 +42,8 @@
 #include "E_Inspector.h"
 
 #include <fstream>
+
+#include "MemoryManager.h"
 
 #define MAX_VALUE 100000
 #define MIN_VALUE -100000
@@ -71,7 +74,7 @@ bool E_Inspector::Draw(ImGuiIO& io)
 
 	SetIsHovered();
 	
-	GameObject* selected = App->editor->GetSelectedGameObjectThroughEditor();
+	GameObject* selected = EngineApp->editor->GetSelectedGameObjectThroughEditor();
 
 	if (selected != nullptr && !selected->is_master_root && !selected->is_scene_root)
 	{	
@@ -176,25 +179,37 @@ void E_Inspector::DrawComponents(GameObject* selectedGameObject)
 		ComponentType type = component->GetType();	
 		switch (type)
 		{
-		case ComponentType::TRANSFORM:	{ DrawTransformComponent((C_Transform*)component); }	break;
-		case ComponentType::MESH:		{ DrawMeshComponent((C_Mesh*)component); }				break;
-		case ComponentType::MATERIAL:	{ DrawMaterialComponent((C_Material*)component); }		break;
-		case ComponentType::LIGHT:		{ DrawLightComponent((C_Light*)component); }			break;
-		case ComponentType::CAMERA:	{ DrawCameraComponent((C_Camera*)component); }			break;
-		case ComponentType::ANIMATOR:	{ DrawAnimatorComponent((C_Animator*)component); }		break;
-		case ComponentType::ANIMATION: { DrawAnimationComponent((C_Animation*)component); }	break;
-		case ComponentType::AUDIOSOURCE: { DrawAudioSourceComponent((C_AudioSource*)component); } break;
-		case ComponentType::AUDIOLISTENER: { DrawAudioListenerComponent((C_AudioListener*)component); } break;
+		case ComponentType::TRANSFORM:			{ DrawTransformComponent((C_Transform*)component); }				break;
+		case ComponentType::MESH:				{ DrawMeshComponent((C_Mesh*)component); }							break;
+		case ComponentType::MATERIAL:			{ DrawMaterialComponent((C_Material*)component); }					break;
+		case ComponentType::LIGHT:				{ DrawLightComponent((C_Light*)component); }						break;
+		case ComponentType::CAMERA:				{ DrawCameraComponent((C_Camera*)component); }						break;
+		case ComponentType::ANIMATOR:			{ DrawAnimatorComponent((C_Animator*)component); }					break;
+		case ComponentType::ANIMATION:			{ DrawAnimationComponent((C_Animation*)component); }				break;
+		case ComponentType::AUDIOSOURCE:		{ DrawAudioSourceComponent((C_AudioSource*)component); }			break;
+		case ComponentType::AUDIOLISTENER:		{ DrawAudioListenerComponent((C_AudioListener*)component); }		break;
 		case ComponentType::RIGIDBODY:			{ DrawRigidBodyComponent((C_RigidBody*)component); }				break;
 		case ComponentType::BOX_COLLIDER:		{ DrawBoxColliderComponent((C_BoxCollider*)component); }			break;
 		case ComponentType::SPHERE_COLLIDER:	{ DrawSphereColliderComponent((C_SphereCollider*)component); }		break;
 		case ComponentType::CAPSULE_COLLIDER:	{ DrawCapsuleColliderComponent((C_CapsuleCollider*)component); }	break;
-		case ComponentType::CANVAS: { DrawCanvasComponent((C_Canvas*)component); }				break;
+		case ComponentType::CANVAS:				{ DrawCanvasComponent((C_Canvas*)component); }						break;
+		case ComponentType::PLAYER_CONTROLLER:	{ DrawPlayerControllerComponent((C_PlayerController*)component); }	break;
 		}
+	
 
 		if (type == ComponentType::NONE)
 		{
 			LOG("[WARNING] Selected GameObject %s has a non-valid component!", selectedGameObject->GetName());
+		}
+	}
+
+	if (selectedGameObject->GetUIElement() != nullptr)
+	{
+		UIElementType type = selectedGameObject->GetUIElement()->GetType();
+		switch (type)
+		{
+		case UIElementType::IMAGE: { DrawUIImage((UI_Image*)selectedGameObject->GetUIElement()); }	break;
+		case UIElementType::TEXT: {} break;
 		}
 	}
 }
@@ -584,12 +599,12 @@ void E_Inspector::DrawCameraComponent(C_Camera* cCamera)
 
 			if (ImGui::Button("Set as Current Camera"))
 			{
-				App->editor->SetCurrentCameraThroughEditor(cCamera);
+				EngineApp->editor->SetCurrentCameraThroughEditor(cCamera);
 			}
 
 			if (ImGui::Button("Return to Master Camera"))
 			{
-				App->editor->SetMasterCameraThroughEditor();
+				EngineApp->editor->SetMasterCameraThroughEditor();
 			}
 		}
 
@@ -634,7 +649,8 @@ void E_Inspector::DrawAnimatorComponent(C_Animator* cAnimator)								// TODO: S
 
 			if (currentClip == nullptr)
 			{
-				currentClip = &AnimatorClip();
+				AnimatorClip Clip = AnimatorClip();
+				currentClip = &Clip;
 			}
 
 			const char* animationName			= currentClip->GetAnimationName();
@@ -752,7 +768,7 @@ void E_Inspector::DrawAnimatorComponent(C_Animator* cAnimator)								// TODO: S
 
 					if (ImGui::Button("Create")) 
 					{ 
-						if (!App->play)
+						if (!EngineApp->play)
 						{
 							success = cAnimator->AddClip(AnimatorClip(cAnimator->GetAnimationByIndex((uint)selectedAnimation), newClipName, newClipStart, newClipEnd, loop));
 							textTimerRunning = true;
@@ -867,51 +883,50 @@ void E_Inspector::DrawAudioSourceComponent(C_AudioSource* cAudioSource)
 	{
 		if (cAudioSource != nullptr)
 		{
-			int id = cAudioSource->GetId();
-			ImGui::Text("");
+			unsigned int currentEvent = cAudioSource->GetEvent().second;
+			std::string currentEventName = cAudioSource->GetEvent().first.c_str();
 
-			std::vector<std::string> eventName;
+			ImGui::Text("Event playing %s", cAudioSource->GetEvent().first.c_str());
+			ImGui::Text("Event id %u", cAudioSource->GetEvent().second);
 
-			for (std::map<std::string, unsigned int>::const_iterator it = App->audio->eventMap.cbegin(); it != App->audio->eventMap.cend(); ++it)
+			if (ImGui::BeginCombo("##Audio", currentEventName.c_str()))
 			{
-				eventName.push_back((*it).first);
-			}
-
-			static int item = 0;
-			const char* label = eventName[item].c_str();
-			unsigned int eventId = App->audio->eventMap[label];
-			if (ImGui::BeginCombo("##Audio", label))
-			{
-				for (int i = 0; i < eventName.size(); ++i)
+				for (auto it = App->audio->eventMap.cbegin(); it != App->audio->eventMap.cend(); ++it)
 				{
-					bool is_selected = (label == eventName[i].c_str());
-					if (ImGui::Selectable(eventName[i].c_str(), is_selected)) {
-						item = i;
-						cAudioSource->PauseFx(eventId);
-
+					bool isSelected = (currentEventName == it->first);
+					if (ImGui::Selectable(it->first.c_str(), isSelected)) {
+							currentEventName = it->first;
+							currentEvent = it->second;
+							cAudioSource->SetEvent(currentEventName, currentEvent);		
 					}
-					if (is_selected)
+					if (isSelected)
 						ImGui::SetItemDefaultFocus();
 				}
 				ImGui::EndCombo();
 			}
 
+			static float volume = cAudioSource->GetVolume();
+			if (ImGui::DragFloat("Volume", &volume, 0.01f, 0.01f, 1.0f))
+			{
+				cAudioSource->SetVolume(volume);
+			}
+
 			if ((ImGui::Button("Play")))
 			{
-				cAudioSource->SetId(eventId);
-				cAudioSource->PlayFx(eventId);
+				cAudioSource->PlayFx(cAudioSource->GetEvent().first);
 			}
 			if ((ImGui::Button("Stop")))
 			{
-				cAudioSource->StopFx(eventId);
+				cAudioSource->StopFx(cAudioSource->GetEvent().second);
 			}
 		}
 		if (!show)
 		{
 			componentToDelete = cAudioSource;
+			showDeleteComponentPopup = true;
+		}
     }
     ImGui::Separator();
-  }
 }
 
 
@@ -1150,19 +1165,14 @@ void E_Inspector::DrawCanvasComponent(C_Canvas* cCanvas)
 
 			if (ImGui::Button("Add Image"))
 			{
-				UI_Image* image = new UI_Image(cCanvas, { 0,0,100,100 });
-				cCanvas->uiElements.push_back(image);
+				GameObject* gameObject = new GameObject("UI Image");
+				//cCanvas->GetOwner()->AddChild(gameObject);
+				gameObject->SetParent(cCanvas->GetOwner());
+				
+				gameObject->CreateUIElement(UIElementType::IMAGE);
+				cCanvas->uiElements.push_back(gameObject->GetUIElement());
 			}
 
-			for (std::vector<UIElement*>::iterator uiIt = cCanvas->uiElements.begin(); uiIt != cCanvas->uiElements.end(); uiIt++)
-			{
-				switch ((*uiIt)->GetType())
-				{
-				case UIElementType::NONE: break;
-				case UIElementType::IMAGE: { DrawUIImage((UI_Image*)*uiIt); } break;
-				case UIElementType::TEXT: break;
-				}
-			}
 		}
 
 		if (!show)
@@ -1219,7 +1229,7 @@ void E_Inspector::DrawAudioListenerComponent(C_AudioListener* cAudioListener)
 	{
 		if (cAudioListener != nullptr)
 		{
-
+	
 		}
 		if (!show)
 		{
@@ -1285,6 +1295,12 @@ void E_Inspector::DrawUIImage(UI_Image* image)
 
 		C_Canvas* canvas = image->GetCanvas();
 
+		if (ImGui::DragFloat2("Image Size", (float*)&size, 0.05f, 0.0f, 0.0f, "%.3f", NULL))
+		{
+			image->SetW(size.x);
+			image->SetH(size.y);
+		}
+
 		if (ImGui::DragFloat2("Image Pos", (float*)&pos, 0.05f, 0.0f, 0.0f, "%.3f", NULL))
 		{
 			if (pos.x - size.x / 2 < canvas->GetPosition().x - canvas->GetSize().x / 2)
@@ -1303,22 +1319,57 @@ void E_Inspector::DrawUIImage(UI_Image* image)
 			image->SetX(pos.x);
 			image->SetY(pos.y);
 		}
-
-		if (ImGui::DragFloat2("Image Size", (float*)&size, 0.05f, 0.0f, 0.0f, "%.3f", NULL))
-		{
-			image->SetW(size.x);
-			image->SetH(size.y);
-		}
 	}
 
 	ImGui::Separator();
 
 }
 
+void E_Inspector::DrawPlayerControllerComponent(C_PlayerController* cController)
+{
+	bool show = true;
+	if (ImGui::CollapsingHeader("Player Controller", &show, ImGuiTreeNodeFlags_Leaf))
+	{
+		bool isActive = cController->IsActive();
+		if (ImGui::Checkbox("Controller Is Active", &isActive))
+			cController->SetIsActive(isActive);
+
+		ImGui::Separator();
+
+		float speed = cController->Speed();
+		if (ImGui::InputFloat("Speed", &speed, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
+			cController->SetSpeed(speed);
+
+		bool useAcceleration = cController->UsingAcceleration();
+		if (ImGui::Checkbox("Use Acceleration", &useAcceleration))
+			cController->UseAcceleration(useAcceleration);
+
+		if (cController->UsingAcceleration())
+		{
+			float acceleration = cController->Acceleration();
+			if (ImGui::InputFloat("Acceleration", &acceleration, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
+				cController->SetAcceleration(acceleration);
+
+			float deceleration = cController->Deceleration();
+			if (ImGui::InputFloat("Deceleration", &deceleration, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
+				cController->SetDeceleration(deceleration);
+		}
+
+		if (!show)
+		{
+			componentToDelete = cController;
+			showDeleteComponentPopup = true;
+		}
+
+		ImGui::Separator();
+	}
+	return;
+}
+
 void E_Inspector::AddComponentCombo(GameObject* selectedGameObject)
 {
 
-	ImGui::Combo("##", &componentType, "Add Component\0Transform\0Mesh\0Material\0Light\0Camera\0Animator\0Animation\0RigidBody\0Box Collider\0Sphere Collider\0Capsule Collider\0Particle System\0Canvas\0AudioSource\0AudioListener");
+	ImGui::Combo("##", &componentType, "Add Component\0Transform\0Mesh\0Material\0Light\0Camera\0Animator\0Animation\0RigidBody\0Box Collider\0Sphere Collider\0Capsule Collider\0Particle System\0Canvas\0Audio Source\0Audio Listener\0Player Controller");
 	ImGui::SameLine();
 
 	if ((ImGui::Button("ADD")))
@@ -1411,8 +1462,8 @@ void E_Inspector::TextureDisplay(C_Material* cMaterial)
 
 	if (cMaterial->UseDefaultTexture())
 	{
-		texId = (ImTextureID)App->renderer->GetDebugTextureID();
-		//tex_id = (ImTextureID)App->renderer->GetSceneRenderTexture();
+		texId = (ImTextureID)EngineApp->renderer->GetDebugTextureID();
+		//tex_id = (ImTextureID)EngineApp->renderer->GetSceneRenderTexture();
 	}
 	else
 	{

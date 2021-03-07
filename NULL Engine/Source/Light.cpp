@@ -4,6 +4,8 @@
 #include <gl/GL.h>
 //#include <gl/GLU.h>
 
+#include "MemoryManager.h"
+
 Light::Light() : 
 ref			(-1), 
 on			(false), 
