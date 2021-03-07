@@ -56,7 +56,7 @@ void LevelGenerator::GenerateRoom(int room)
 
 void LevelGenerator::HandleRoomGeneration()
 {
-	if (App->input->GetKey(SDL_SCANCODE_N) == KeyState::KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_KP_6) == KeyState::KEY_DOWN)
 	{
 		if (roomNum < levelRooms.size()-1)
 		{
@@ -68,7 +68,7 @@ void LevelGenerator::HandleRoomGeneration()
 			LOG("End of the level reached.");
 		}
 	}
-	if (App->input->GetKey(SDL_SCANCODE_M) == KeyState::KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_KP_4) == KeyState::KEY_DOWN)
 	{
 		if (roomNum > 0)
 		{
