@@ -97,7 +97,7 @@ bool M_Physics::Start()
 	sceneDesc.gravity = physx::PxVec3(0.0f, -gravity, 0.0f);
 	sceneDesc.bounceThresholdVelocity = gravity * BOUNCE_THRESHOLD;
 	sceneDesc.cpuDispatcher = physx::PxDefaultCpuDispatcherCreate(THREADS);
-	sceneDesc.flags |= physx::PxSceneFlag::eENABLE_KINEMATIC_PAIRS | physx::PxSceneFlag::eENABLE_KINEMATIC_STATIC_PAIRS;
+	sceneDesc.flags |= physx::PxSceneFlag::eENABLE_KINEMATIC_PAIRS | physx::PxSceneFlag::eENABLE_KINEMATIC_STATIC_PAIRS | physx::PxSceneFlag::eENABLE_PCM;
 	sceneDesc.filterShader = customFilterShader;
 	sceneDesc.simulationEventCallback = simulationCallback;
 

@@ -6,9 +6,29 @@
             "ModelAssetsPath": "Assets\/Models\/Primitives\/cylinder.fbx"
         },
         {
+            "GameObjectUID": 209858145,
+            "ModelResourceUID": 1857086092,
+            "ModelAssetsPath": "Assets\/Models\/Primitives\/banana.fbx"
+        },
+        {
+            "GameObjectUID": 330678654,
+            "ModelResourceUID": 12774054,
+            "ModelAssetsPath": "Assets\/Models\/simp\/simpleAnimation.fbx"
+        },
+        {
+            "GameObjectUID": 689991424,
+            "ModelResourceUID": 1396247187,
+            "ModelAssetsPath": "Assets\/Models\/Primitives\/sphere.fbx"
+        },
+        {
             "GameObjectUID": 1841939332,
             "ModelResourceUID": 964348615,
             "ModelAssetsPath": "Assets\/Models\/Primitives\/pyramid.fbx"
+        },
+        {
+            "GameObjectUID": 1898101802,
+            "ModelResourceUID": 1266705681,
+            "ModelAssetsPath": "Assets\/Models\/Primitives\/cube.fbx"
         },
         {
             "GameObjectUID": 1898101802,
@@ -24,7 +44,7 @@
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
+            "ShowBoundingBoxes": true,
             "Components": [
                 {
                     "Type": 1,
@@ -42,7 +62,7 @@
                     "LocalScale": [
                         20,
                         30,
-                        1
+                        3
                     ]
                 },
                 {
@@ -98,6 +118,118 @@
                         1,
                         1
                     ]
+                }
+            ]
+        },
+        {
+            "UID": 209858145,
+            "ParentUID": 386803536,
+            "Name": "Banana Wall",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        62.446304321289063
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 8,
+                    "Mass": 10,
+                    "Density": 1,
+                    "Linear Damping": 0,
+                    "Angular Damping": 0,
+                    "Use Gravity": false,
+                    "Is Kinematic": false,
+                    "Freeze Position X": true,
+                    "Freeze Position Y": true,
+                    "Freeze Position Z": true,
+                    "Freeze Rotation X": true,
+                    "Freeze Rotation Y": true,
+                    "Freeze Rotation Z": true,
+                    "Is Static": true
+                },
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Size X": 150,
+                    "Size Y": 1,
+                    "Size Z": 9,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
+                }
+            ]
+        },
+        {
+            "UID": 330678654,
+            "ParentUID": 386803536,
+            "Name": "Cube Waall",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        63.543228149414063,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        0.99999994039535522,
+                        1,
+                        0.99999994039535522
+                    ]
+                },
+                {
+                    "Type": 8,
+                    "Mass": 10,
+                    "Density": 1,
+                    "Linear Damping": 0,
+                    "Angular Damping": 0,
+                    "Use Gravity": false,
+                    "Is Kinematic": false,
+                    "Freeze Position X": true,
+                    "Freeze Position Y": true,
+                    "Freeze Position Z": true,
+                    "Freeze Rotation X": true,
+                    "Freeze Rotation Y": true,
+                    "Freeze Rotation Z": true,
+                    "Is Static": true
+                },
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Size X": 9,
+                    "Size Y": 3,
+                    "Size Z": 150,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
                 }
             ]
         },
@@ -191,7 +323,7 @@
                     "Size Y": 3,
                     "Size Z": 1,
                     "Center X": 0,
-                    "Center Y": 1,
+                    "Center Y": 0,
                     "Center Z": 0
                 }
             ]
@@ -213,15 +345,15 @@
                         0
                     ],
                     "LocalRotation": [
-                        0.7071068286895752,
+                        -0.7071068286895752,
                         0,
                         0,
-                        -0.7071068286895752
+                        0.70710670948028564
                     ],
                     "LocalScale": [
                         3,
-                        4,
-                        3
+                        142.17041015625,
+                        3.0000004768371582
                     ]
                 },
                 {
@@ -240,6 +372,224 @@
                         "Name": "Pyramid001.nemat",
                         "Path": "Library\/Materials\/624268113.nemat",
                         "File": "624268113.nemat"
+                    },
+                    "Shader": {
+                        "UID": 583895723,
+                        "Name": "DefaultShader.shader",
+                        "Path": "Library\/Shaders\/583895723.shader",
+                        "File": "583895723.shader"
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 689991424,
+            "ParentUID": 386803536,
+            "Name": "Sphere Wall",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": true,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -0.52474784851074219,
+                        0,
+                        -58.224739074707031
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 8,
+                    "Mass": 10,
+                    "Density": 1,
+                    "Linear Damping": 0,
+                    "Angular Damping": 0,
+                    "Use Gravity": false,
+                    "Is Kinematic": false,
+                    "Freeze Position X": true,
+                    "Freeze Position Y": true,
+                    "Freeze Position Z": true,
+                    "Freeze Rotation X": true,
+                    "Freeze Rotation Y": true,
+                    "Freeze Rotation Z": true,
+                    "Is Static": true
+                },
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Size X": 150,
+                    "Size Y": 1,
+                    "Size Z": 9,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
+                }
+            ]
+        },
+        {
+            "UID": 831230561,
+            "ParentUID": 689991424,
+            "Name": "Sphere001",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        1.5867177248001099,
+                        0,
+                        -0.32440948486328125
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        71.480056762695313,
+                        6.1893529891967773,
+                        1
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 411059187,
+                    "Name": "Sphere001.nemesh",
+                    "Path": "Library\/Meshes\/411059187.nemesh",
+                    "File": "411059187.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 984578205,
+                        "Name": "Sphere001.nemat",
+                        "Path": "Library\/Materials\/984578205.nemat",
+                        "File": "984578205.nemat"
+                    },
+                    "Shader": {
+                        "UID": 583895723,
+                        "Name": "DefaultShader.shader",
+                        "Path": "Library\/Shaders\/583895723.shader",
+                        "File": "583895723.shader"
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 1153874294,
+            "ParentUID": 330678654,
+            "Name": "pCube1",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        124.00043487548828
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 670899066,
+                    "Name": "pCube1.nemesh",
+                    "Path": "Library\/Meshes\/670899066.nemesh",
+                    "File": "670899066.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 894551736,
+                        "Name": "pCube1.nemat",
+                        "Path": "Library\/Materials\/894551736.nemat",
+                        "File": "894551736.nemat"
+                    },
+                    "Shader": {
+                        "UID": 583895723,
+                        "Name": "DefaultShader.shader",
+                        "Path": "Library\/Shaders\/583895723.shader",
+                        "File": "583895723.shader"
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 1202662504,
+            "ParentUID": 209858145,
+            "Name": "Banana",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        -0.70710676908493042,
+                        0,
+                        0,
+                        0.7071068286895752
+                    ],
+                    "LocalScale": [
+                        25.853439331054688,
+                        0.99999994039535522,
+                        6.9189162254333496
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 571654826,
+                    "Name": "Banana.nemesh",
+                    "Path": "Library\/Meshes\/571654826.nemesh",
+                    "File": "571654826.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 2013694742,
+                        "Name": "Banana.nemat",
+                        "Path": "Library\/Materials\/2013694742.nemat",
+                        "File": "2013694742.nemat"
                     },
                     "Shader": {
                         "UID": 583895723,
@@ -306,7 +656,7 @@
         },
         {
             "UID": 1304503906,
-            "ParentUID": 1703709034,
+            "ParentUID": 1610843735,
             "Name": "MainScene",
             "IsActive": true,
             "IsStatic": false,
@@ -337,7 +687,7 @@
         {
             "UID": 1841939332,
             "ParentUID": 386803536,
-            "Name": "Spike",
+            "Name": "Pyramid Wall",
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
@@ -346,7 +696,7 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        -20,
+                        -63.245719909667969,
                         0,
                         10
                     ],
@@ -381,9 +731,9 @@
                 {
                     "Type": 9,
                     "Is Trigger": false,
-                    "Size X": 3,
+                    "Size X": 9,
                     "Size Y": 4,
-                    "Size Z": 3,
+                    "Size Z": 150,
                     "Center X": 0,
                     "Center Y": 0,
                     "Center Z": 0
@@ -397,7 +747,7 @@
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
+            "ShowBoundingBoxes": true,
             "Components": [
                 {
                     "Type": 1,
@@ -453,7 +803,7 @@
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
-            "ShowBoundingBoxes": true,
+            "ShowBoundingBoxes": false,
             "Components": [
                 {
                     "Type": 1,
@@ -480,7 +830,7 @@
                     "MaxFOV": 120,
                     "Culling": false,
                     "OrthogonalView": false,
-                    "HideFrustum": true
+                    "HideFrustum": false
                 },
                 {
                     "Type": 8,
