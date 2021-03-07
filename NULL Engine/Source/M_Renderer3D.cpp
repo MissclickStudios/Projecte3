@@ -1253,7 +1253,7 @@ cMaterial	(cMaterial)
 void MeshRenderer::Render()
 {
 
-	R_Mesh* rMesh = cMesh->GetMesh();
+	R_Mesh* rMesh = (cMesh->GetSkinnedMesh() != nullptr) ? cMesh->GetSkinnedMesh() : cMesh->GetMesh();
 
 	if (rMesh == nullptr)
 	{

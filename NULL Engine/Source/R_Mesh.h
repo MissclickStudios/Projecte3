@@ -36,13 +36,13 @@ public:
 	bool LoadMeta(const ParsonNode& metaRoot) override;
 
 public:
-	void LoadBuffers();
+	void LoadStaticBuffers		();
+	void LoadSkinningBuffers	(bool initStatic = false);
 
-	AABB GetAABB() const;
-	void SetAABB();
+	AABB GetAABB				() const;
+	void SetAABB				();
 
 public:
-	//std::vector<Vertex>		vertices;
 	std::vector<float>			vertices;
 	std::vector<float>			normals;
 	std::vector<float>			texCoords;
@@ -52,11 +52,6 @@ public:
 	std::vector<float>			boneWeights;
 	std::vector<float4x4>		boneOffsets;
 	std::map<std::string, uint> boneMapping;
-
-	/*int* boneIDs				= nullptr;
-	float* boneWeights			= nullptr;
-	std::vector<float4x4>		boneOffsets;
-	std::map<std::string, uint> boneMapping;*/
 
 	// Buffer data
 	uint VAO = 0;

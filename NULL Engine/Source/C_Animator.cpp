@@ -12,10 +12,12 @@
 #include "Application.h"
 #include "M_ResourceManager.h"
 
+#include "R_Mesh.h"
 #include "R_Animation.h"
 
 #include "GameObject.h"
 #include "C_Transform.h"
+#include "C_Mesh.h"
 
 #include "C_Animator.h"
 
@@ -37,6 +39,8 @@ animatorState	(AnimatorState::STOP)
 	playOnStart		= true;
 	cameraCulling	= true;
 	showBones		= false;
+
+	foundAnimMeshes = false;
 }
 
 C_Animator::~C_Animator()
@@ -49,6 +53,12 @@ C_Animator::~C_Animator()
 bool C_Animator::Update()
 {
 	BROFILER_CATEGORY("Animation Component Update", Profiler::Color::DarkSlateBlue);
+
+	if (!foundAnimMeshes)																									// TMP.
+	{
+		GetAnimatedMeshes();
+		foundAnimMeshes = true;
+	}
 
 	AddAnimationsToAdd();
 
@@ -89,6 +99,8 @@ bool C_Animator::CleanUp()
 	displayBones.clear();
 
 	animationsToAdd.clear();
+
+	animatedMeshes.clear();
 
 	return ret;
 }
@@ -225,7 +237,7 @@ bool C_Animator::StepAnimation()
 
 	UpdateChannelTransforms();
 
-	UpdateMeshSkinning();
+	UpdateMeshSkinning(this->GetOwner());
 
 	UpdateDisplayBones();
 
@@ -411,9 +423,22 @@ void C_Animator::UpdateChannelTransforms()
 	}
 }
 
-void C_Animator::UpdateMeshSkinning()
+void C_Animator::UpdateMeshSkinning(const GameObject* gameObject)
 {
+	C_Mesh* cMesh = gameObject->GetComponent<C_Mesh>();														// TODO: HAVE A VECTOR WITH ALL THE ANIMATED MESHES AT COMPONENT CREATION?
+	if (cMesh != nullptr)
+	{
+		bool success = cMesh->RefreshSkinning();
+		if (success)
+		{
+			cMesh->AnimateMesh();
+		}
+	}
 
+	for (auto child = gameObject->childs.begin(); child != gameObject->childs.end(); ++child)
+	{
+		UpdateMeshSkinning((*child));
+	}
 }
 
 void C_Animator::UpdateDisplayBones()
@@ -688,7 +713,7 @@ GameObject* C_Animator::FindRootBone(const std::vector<BoneLink>& links)
 	return nullptr;
 }
 
-void C_Animator::SetRootBone(const GameObject* rootBone)
+void C_Animator::SetRootBone(GameObject* rootBone)
 {
 	if (rootBone == nullptr)
 	{
@@ -699,6 +724,11 @@ void C_Animator::SetRootBone(const GameObject* rootBone)
 	if (currentRootBone == nullptr)
 	{
 		currentRootBone = rootBone;
+
+		for (auto cMesh = animatedMeshes.begin(); cMesh != animatedMeshes.end(); ++cMesh)
+		{
+			(*cMesh)->SetRootBone(currentRootBone);
+		}
 	}
 	else
 	{
@@ -707,6 +737,11 @@ void C_Animator::SetRootBone(const GameObject* rootBone)
 			LOG("[WARNING] Animator Component: Disparity between root bones detected! A: [%s], B: [%s]", currentRootBone->GetName(), rootBone->GetName());
 		}
 	}
+}
+
+GameObject* C_Animator::GetRootBone() const
+{
+	return currentRootBone;
 }
 
 void C_Animator::SortBoneLinksByHierarchy(const std::vector<BoneLink>& boneLinks, const GameObject* rootBone, std::vector<BoneLink>& sorted)
@@ -744,6 +779,29 @@ void C_Animator::SortBoneLinksByHierarchy(const std::vector<BoneLink>& boneLinks
 	}
 }
 
+void C_Animator::GetAnimatedMeshes()
+{
+	std::map<std::string, GameObject*> childs;
+	this->GetOwner()->GetAllChilds(childs);
+	std::vector<C_Mesh*> cMeshes;
+	for (auto child = childs.begin(); child != childs.end(); ++child)
+	{
+		cMeshes.clear();
+		child->second->GetComponents<C_Mesh>(cMeshes);
+
+		for (uint i = 0; i < cMeshes.size(); ++i)
+		{
+			R_Mesh* rMesh = cMeshes[i]->GetMesh();
+			if (rMesh != nullptr && !rMesh->boneMapping.empty())
+			{
+				animatedMeshes.push_back(cMeshes[i]);
+				cMeshes[i]->SetAnimatorOwner(this->GetOwner());
+			}
+		}
+	}
+}
+
+// --- PUBLIC C_ANIMATOR METHODS
 void C_Animator::AddAnimation(R_Animation* rAnimation)
 {
 	if (rAnimation == nullptr)
@@ -1206,19 +1264,4 @@ void C_Animator::SetCameraCulling(bool setTo)
 void C_Animator::SetShowBones(bool setTo)
 {
 	showBones = setTo;
-}
-
-// --- BONE LINK METHODS
-BoneLink::BoneLink() : 
-channel		(Channel()),
-gameObject	(nullptr)
-{
-
-}
-
-BoneLink::BoneLink(const Channel& channel, GameObject* gameObject) : 
-channel		(channel),
-gameObject	(gameObject)
-{
-
 }

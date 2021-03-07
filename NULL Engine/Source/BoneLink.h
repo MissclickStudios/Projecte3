@@ -10,8 +10,8 @@ class GameObject;
 
 struct BoneLink
 {
-	BoneLink();
-	BoneLink(const Channel& channel, GameObject* gameObject);
+	BoneLink() : channel(Channel()), gameObject(nullptr) {}
+	BoneLink(const Channel& channel, GameObject* gameObject) : channel(channel), gameObject(gameObject) {}
 
 	Channel channel;
 	GameObject* gameObject;

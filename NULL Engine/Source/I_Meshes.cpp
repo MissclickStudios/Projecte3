@@ -56,7 +56,7 @@ void Importer::Meshes::Import(const aiMesh* assimpMesh, R_Mesh* rMesh)
 	if (assimpMesh->HasBones())
 		Utilities::GetBones(assimpMesh, rMesh);
 
-	rMesh->LoadBuffers();																			// 
+	rMesh->LoadStaticBuffers();																			// 
 	rMesh->SetAABB();																				// 
 }
 
@@ -484,7 +484,7 @@ bool Importer::Meshes::Load(const char* buffer, R_Mesh* rMesh)
 	cursor += bytes;
 
 	rMesh->aabb = AABB(aabbCorners[0], aabbCorners[7]);
-	rMesh->LoadBuffers();																									// STORING VBO, NBO, TBO, IBO DATA IS IRRELEVANT IN THIS CASE
+	rMesh->LoadStaticBuffers();																									// STORING VBO, NBO, TBO, IBO DATA IS IRRELEVANT IN THIS CASE
 
 	LOG("[STATUS] Importer: Successfully Loaded Mesh { %s } from Library!", rMesh->GetAssetsFile());
 

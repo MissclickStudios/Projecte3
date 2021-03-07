@@ -128,12 +128,11 @@ private: 																									// --- INTERNAL METHODS
 	void			SwitchBlendingToCurrent			();
 	void			ResetBones						();
 					
-
 	bool			GenerateDefaultClip				(const R_Animation* rAnimation, AnimatorClip& defaultClip);
 
 private:
 	void			UpdateChannelTransforms			();
-	void			UpdateMeshSkinning				();
+	void			UpdateMeshSkinning				(const GameObject* gameObject);
 	void			UpdateDisplayBones				();
 	void			GenerateBoneSegments			(const GameObject* bone);
 	
@@ -155,9 +154,12 @@ private:
 	void			FindAnimationBones				(const R_Animation* rAnimation);
 	bool			FindBoneLinks					(const R_Animation* rAnimation, std::vector<BoneLink>& links);
 	GameObject*		FindRootBone					(const std::vector<BoneLink>& links);
-	void			SetRootBone						(const GameObject* rootBone);
+	void			SetRootBone						(GameObject* rootBone);
+	GameObject*		GetRootBone						() const;
 		 
 	void			SortBoneLinksByHierarchy		(const std::vector<BoneLink>& boneLinks, const GameObject* rootBone, std::vector<BoneLink>& sorted);
+
+	void			GetAnimatedMeshes				();
 
 private:
 	std::vector<R_Animation*>						animations;											// Animation Resources. Contain bone information (transforms...).
@@ -174,7 +176,10 @@ private:
 	AnimatorClip*				currentClip;
 	AnimatorClip*				blendingClip;
 
-	const GameObject*			currentRootBone;
+	GameObject*					currentRootBone;
+
+	std::vector<C_Mesh*>		animatedMeshes;															// TMP. Until a better implementation is found;
+	bool						foundAnimMeshes;														// -------------------------------------------- 
 
 private:																								// --- FUNCTIONALITY VARIABLES
 	AnimatorState	animatorState;
