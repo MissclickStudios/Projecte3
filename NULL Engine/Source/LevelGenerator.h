@@ -3,6 +3,7 @@
 
 #include "Globals.h"
 #include <vector>
+#include <string>
 class R_Scene;
 
 class LevelGenerator
@@ -13,11 +14,16 @@ public:
 	~LevelGenerator();
 
 	void		GetRooms();
-	void		GenerateRoom();
+	void		GenerateLevel();
+	void		GenerateRoom(int room);
+	void		HandleRoomGeneration();
+	void		CleanUp();
 
 public:
-	
-
+	std::vector<std::string>			allRooms;
+	std::vector<std::string>			levelRooms;
+	float		roomsToAdd;
+	int			roomNum;
 
 };
 #endif //__LEVELGENERATOR_H__
