@@ -1,6 +1,7 @@
 #include "GameApplication.h"
 #include "M_GameManager.h"
 #include "M_Renderer3D.h"
+#include "Time.h"
 
 M_GameManager::M_GameManager(bool isActive) : Module("GameManager", isActive)
 {
@@ -11,6 +12,16 @@ M_GameManager::M_GameManager(bool isActive) : Module("GameManager", isActive)
 M_GameManager::~M_GameManager()
 {
 
+}
+
+bool M_GameManager::Init(ParsonNode& config)
+{
+	Time::Game::Play();
+	GameApp->play = true;
+	GameApp->pause = false;
+	GameApp->renderer->SetRenderWorldGrid(false);
+	GameApp->renderer->SetRenderWorldAxis(false);
+	return true;
 }
 
 void M_GameManager::PostSceneRendering()
