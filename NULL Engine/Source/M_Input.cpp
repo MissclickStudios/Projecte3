@@ -469,6 +469,36 @@ int M_Input::GetMouseYWheel() const
 	return mouseWheelY;
 }
 
+ButtonState M_Input::GetGameControllerButton(int id) const
+{
+	if (gameController.id != nullptr)
+	{
+		return gameController.buttons[id];
+	}
+
+	return ButtonState::UNKNOWN_BUTTON;
+}
+
+ButtonState M_Input::GetGameControllerTrigger(int id) const
+{
+	if (gameController.id != nullptr)
+	{
+		return gameController.triggers[id];
+	}
+
+	return ButtonState::UNKNOWN_BUTTON;
+}
+
+AxisState M_Input::GetGameControllerAxis(int id) const
+{
+	if (gameController.id != nullptr)
+	{
+		return gameController.axis[id];
+	}
+
+	return AxisState::UNKNOWN_AXIS;
+}
+
 bool M_Input::WindowSizeWasManipulated(Uint8 windowEvent) const
 {
 	return (windowEvent == SDL_WINDOWEVENT_RESIZED
