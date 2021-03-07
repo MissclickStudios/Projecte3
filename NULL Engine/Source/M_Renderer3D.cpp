@@ -154,9 +154,7 @@ UpdateStatus M_Renderer3D::PreUpdate(float dt)
 UpdateStatus M_Renderer3D::PostUpdate(float dt)
 {	
 	BROFILER_CATEGORY("M_Renderer3D PostUpdate", Profiler::Color::Chartreuse);
-	
-	//The Skybox renderer must be the first one always
-	//defaultSkyBox.RenderSkybox(); //TODO crashes
+
 
 	RenderScene();
 
@@ -595,6 +593,10 @@ void M_Renderer3D::RenderScene()
 	glBindFramebuffer(GL_FRAMEBUFFER, sceneFramebuffer);
 	glClear(GL_DEPTH_BUFFER_BIT);
 	glClear(GL_COLOR_BUFFER_BIT);
+
+
+	//The Skybox renderer must be the first one always
+	defaultSkyBox.RenderSkybox();
 
 	if (renderWorldGrid)
 	{

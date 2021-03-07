@@ -30,7 +30,7 @@ void LevelGenerator::GenerateLevel()
 	{
 		while (roomsToAdd > 0)
 		{
-			randomNum = Random::LCG::GetBoundedRandomUint(0,3);
+			randomNum = Random::LCG::GetBoundedRandomUint(0,allRooms.size() - 1);
 			if (allRooms[randomNum] != "")
 			{
 				levelRooms.push_back(allRooms[randomNum]);
