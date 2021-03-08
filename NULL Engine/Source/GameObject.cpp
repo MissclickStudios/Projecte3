@@ -230,7 +230,7 @@ void GameObject::FreeComponents()
 		RELEASE(components[i]);
 	}
 
-	components.clear();
+	if(!components.empty()) components.clear();
 }
 
 void GameObject::FreeChilds()

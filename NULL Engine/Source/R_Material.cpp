@@ -51,6 +51,11 @@ bool R_Material::LoadMeta(const ParsonNode& metaRoot)
 	return ret;
 }
 
+void R_Material::SetColor(Color color)
+{
+	diffuseColor = color;
+}
+
 // --- MATERIAL METHODS ---
 MaterialData::MaterialData() :
 type				(TextureType::NONE),

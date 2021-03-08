@@ -389,6 +389,11 @@ void E_Inspector::DrawMaterialComponent(C_Material* cMaterial)
 				cMaterial->SetMaterialColour(color);
 			}
 
+			if (ImGui::Button("Save Material"))
+			{
+				//App->resourceManager->SaveResourceToLibrary((Resource*)cMaterial->GetMaterial());
+			}
+
 			ImGui::Separator();
 
 			// --- SHADER DATA ---
