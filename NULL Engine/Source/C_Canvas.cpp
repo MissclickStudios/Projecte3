@@ -192,8 +192,8 @@ bool C_Canvas::LoadState(ParsonNode& root)
 	if (imageNode.NodeIsValid())
 	{
 		UIElement* uiElement = GetOwner()->CreateUIElement(UIElementType::IMAGE);
+		uiElement->SetCanvas(this);
 		uiElements.push_back(uiElement);
-
 		Rect rI;
 
 		rI.x = imageNode.GetNumber("X");
