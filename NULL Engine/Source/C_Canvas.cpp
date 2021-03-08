@@ -148,7 +148,7 @@ bool C_Canvas::SaveState(ParsonNode& root) const
 {
 	bool ret = true;
 
-	/*root.SetNumber("Type", (uint)GetType());
+	root.SetNumber("Type", (uint)GetType());
 
 	ParsonNode canvas = root.SetNode("Canvas");
 
@@ -158,8 +158,7 @@ bool C_Canvas::SaveState(ParsonNode& root) const
 	canvas.SetNumber("H", GetRect().h);
 	canvas.SetNumber("Z", GetZ());
 
-	std::vector<UIElement*>::const_iterator uiIt = uiElements.begin();
-	if ((*uiIt) != nullptr)
+	if (!uiElements.empty())
 	{
 		ParsonNode image = root.SetNode("Image");
 
@@ -167,7 +166,7 @@ bool C_Canvas::SaveState(ParsonNode& root) const
 		image.SetNumber("Y", GetRect().y);
 		image.SetNumber("W", GetRect().w);
 		image.SetNumber("H", GetRect().h);
-	}*/
+	}
 
 	return ret;
 }
@@ -176,7 +175,7 @@ bool C_Canvas::LoadState(ParsonNode& root)
 {
 	bool ret = true;
 
-	/*ParsonNode canvas = root.GetNode("Canvas");
+	ParsonNode canvas = root.GetNode("Canvas");
 
 	Rect r;
 
@@ -202,7 +201,7 @@ bool C_Canvas::LoadState(ParsonNode& root)
 		rI.h = imageNode.GetNumber("H");
 
 		uiElement->SetRect(rI);
-	}*/
+	}
 
 	return ret;
 }
