@@ -15,6 +15,7 @@
 #include "M_FileSystem.h"
 #include "M_ResourceManager.h"
 #include "M_UISystem.h"
+#include "M_Scene.h"
 
 #include "GameObject.h"
 #include "Component.h"
@@ -1177,12 +1178,11 @@ void E_Inspector::DrawCanvasComponent(C_Canvas* cCanvas)
 
 			if (ImGui::Button("Add Image"))
 			{
-				GameObject* gameObject = new GameObject("UI Image");
-				//cCanvas->GetOwner()->AddChild(gameObject);
-				gameObject->SetParent(cCanvas->GetOwner());
-				
-				gameObject->CreateUIElement(UIElementType::IMAGE);
-				cCanvas->uiElements.push_back(gameObject->GetUIElement());
+
+				GameObject* go = EngineApp->scene->CreateGameObject("UI Image", cCanvas->GetOwner());
+
+				go->CreateUIElement(UIElementType::IMAGE);
+				cCanvas->uiElements.push_back(go->GetUIElement());
 			}
 
 		}
