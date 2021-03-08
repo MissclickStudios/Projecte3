@@ -7,6 +7,8 @@
 class C_AudioSource;
 class C_RigidBody;
 
+class Timer;
+
 class C_PlayerController : public Component
 {
 public:
@@ -46,6 +48,8 @@ private:
 	void MoveAcceleration(C_RigidBody* rigidBody);
 	void Rotate();
 
+	void StepSound(bool a, bool b, bool c, bool d );
+
 	float2 MousePositionToWorldPosition(float mapPositionY = 0);
 
 	float speed = 30.0f;
@@ -58,6 +62,9 @@ private:
 	float bulletSpeed = 100.0f;
 
 	bool cameraMode = false;
+
+	Timer* stepTimer = nullptr;
+	bool isStepPlaying = false;
 
 	C_AudioSource* aSource;
 };

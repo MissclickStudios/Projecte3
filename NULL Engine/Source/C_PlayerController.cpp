@@ -1,5 +1,6 @@
 #include "JSONParser.h"
 #include "Log.h"
+#include "Timer.h"
 
 #include "Application.h"
 #include "M_Input.h"
@@ -27,6 +28,8 @@ C_PlayerController::C_PlayerController(GameObject* owner) : Component(owner, Com
 {
 	if (!GetOwner()->GetComponent<C_RigidBody>())
 		GetOwner()->CreateComponent(ComponentType::RIGIDBODY);
+
+	stepTimer = new Timer();
 }
 
 C_PlayerController::~C_PlayerController()
@@ -79,8 +82,10 @@ bool C_PlayerController::Update()
 						bullet->CreateComponent(ComponentType::SPHERE_COLLIDER);
 						bullet->CreateComponent(ComponentType::BULLET_BEHAVIOR);
 						bullet->CreateComponent(ComponentType::AUDIOSOURCE);
-						bullet->GetComponent<C_AudioSource>()->SetEvent("Mando_blaster_shot",App->audio->eventMap.at("Mando_blaster_shot"));
-						bullet->GetComponent<C_AudioSource>()->PlayFx(bullet->GetComponent<C_AudioSource>()->GetEvent().second);
+						C_AudioSource* source = bullet->GetComponent<C_AudioSource>();
+						source->SetEvent("Mando_blaster_shot",App->audio->eventMap.at("Mando_blaster_shot"));
+						source->PlayFx(source->GetEvent().second);
+						source->SetVolume(0.5);
 					}
 				}
 			}
@@ -190,13 +195,7 @@ void C_PlayerController::MoveVelocity(C_RigidBody* rigidBody)
 	if (left)
 		vel.x -= speed;
 
-	if (forward || backwards || right || left && aSource->isPlaying)
-	{
-		aSource = GetOwner()->GetComponent<C_AudioSource>();
-		aSource->PlayFx(aSource->GetEvent().second);
-
-		aSource->isPlaying = true;
-	}
+	StepSound(forward, backwards, left, right);
 	
 
 	rigidBody->SetLinearVelocity(vel);
@@ -259,12 +258,26 @@ void C_PlayerController::MoveAcceleration(C_RigidBody* rigidBody)
 		rigidBody->SetLinearVelocity(vel);
 
 
-	if (forward || backward || right || left && aSource->isPlaying)
-	{
-		aSource = GetOwner()->GetComponent<C_AudioSource>();
-		aSource->PlayFx(aSource->GetEvent().second);
+	StepSound(forward, backward, left, right);
+}
 
-		aSource->isPlaying = true;
+void C_PlayerController::StepSound(bool a, bool b, bool c, bool d)
+{
+	if (a || b || c || d)
+	{
+		if (!isStepPlaying)
+		{
+			isStepPlaying = true;
+			stepTimer->Start();
+
+			aSource = GetOwner()->GetComponent<C_AudioSource>();
+			aSource->PlayFx(aSource->GetEvent().second);
+		}
+	}
+
+	if (isStepPlaying && stepTimer->ReadSec() >= 0.80)
+	{
+		isStepPlaying = false;
 	}
 }
 
