@@ -27,6 +27,7 @@ class C_Mesh;
 class C_Material;
 
 class Primitive;
+class GameObject;
 
 typedef unsigned int GLenum;
 
@@ -261,7 +262,8 @@ public:																											// --- DEBUG GET/SET METHODS
 	void			SetRenderPrimtiveExamples	(const bool& setTo);											// 
 
 public:
-	void AddPostSceneRenderModule(Module* module);
+	void			AddPostSceneRenderModule(Module* module);
+	void			GenerateSceneLight();
 private:
 	void			GenScreenBuffer();
 
@@ -269,6 +271,7 @@ public:
 	Light					lights[MAX_LIGHTS];																	// 
 	SDL_GLContext			context;																			// 
 	R_Shader*				defaultShader = nullptr;
+	GameObject*				lightPoint;
 
 	std::vector<Primitive*>	primitives;
 
