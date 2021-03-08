@@ -72,6 +72,7 @@ bool C_Material::SaveState(ParsonNode& root) const
 		ParsonNode material = root.SetNode("Material");
 
 		material.SetNumber("UID", rMaterial->GetUID());
+		material.SetFloat4("Color", (math::float4) &rMaterial->diffuseColor);
 		material.SetString("Name", rMaterial->GetAssetsFile());
 		material.SetString("Path", rMaterial->GetLibraryPath());
 		material.SetString("File", rMaterial->GetLibraryFile());
@@ -119,6 +120,7 @@ bool C_Material::LoadState(ParsonNode& root)
 		App->resourceManager->AllocateResource((uint32)materialNode.GetNumber("UID"), material_assets_path.c_str());
 
 		rMaterial = (R_Material*)App->resourceManager->RequestResource((uint32)materialNode.GetNumber("UID"));
+		SetMaterialColour((Color&)materialNode.GetFloat4("Color"));
 
 		if (rMaterial == nullptr)
 		{

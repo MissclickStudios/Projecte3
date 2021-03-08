@@ -30,6 +30,8 @@ bool C_Light::CleanUp()
 {
 	bool ret = true;
 
+	light = nullptr;
+	
 	return ret;
 }
 
