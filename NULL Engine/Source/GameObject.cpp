@@ -8,6 +8,8 @@
 #include "Application.h"
 #include "M_Renderer3D.h"																				// TMP. Move the Renderers generation elsewhere.
 
+#include "M_Camera3D.h"																					//TEMP. putting the cam if game time
+
 #include "R_Mesh.h"
 
 #include "Component.h"
@@ -189,7 +191,7 @@ bool GameObject::LoadState(ParsonNode& root)
 			case ComponentType::MESH:		{ component = new C_Mesh(this); }		break;
 			case ComponentType::MATERIAL:	{ component = new C_Material(this); }	break;
 			case ComponentType::LIGHT:		{ component = new C_Light(this); }		break;
-			case ComponentType::CAMERA:	{ component = new C_Camera(this); }		break;
+			case ComponentType::CAMERA: { component = new C_Camera(this); if (App->play) App->camera->SetCurrentCamera((C_Camera*)component); }		break; //TODO: Harcoded the set the camera when playing
 			case ComponentType::ANIMATOR:	{ component = new C_Animator(this); }	break;
 			case ComponentType::ANIMATION: { component = new C_Animation(this); }	break;
 			case ComponentType::AUDIOSOURCE: { component = new C_AudioSource(this); } break;
