@@ -36,10 +36,19 @@ void Importer::Animations::Import(const aiAnimation* assimpAnimation, R_Animatio
 	rAnimation->SetTicksPerSecond(assimpAnimation->mTicksPerSecond);
 
 	for (uint i = 0; i < assimpAnimation->mNumChannels; ++i)
-	{
+	{		
 		aiNodeAnim* aiChannel	= assimpAnimation->mChannels[i];
 		Channel rChannel		= Channel(aiChannel->mNodeName.C_Str());
-		
+
+		if (strstr(rChannel.name.c_str(), "_$AssimpFbx$_") != nullptr)
+		{
+			uint pos = rChannel.name.find_first_of("$");
+			if (pos != rChannel.name.npos)
+			{
+				rChannel.name = rChannel.name.substr(0, pos - 1);
+			}
+		}
+
 		Utilities::GetPositionKeys(aiChannel, rChannel);
 		Utilities::GetRotationKeys(aiChannel, rChannel);
 		Utilities::GetScaleKeys(aiChannel, rChannel);

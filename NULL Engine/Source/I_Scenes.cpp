@@ -326,11 +326,11 @@ void Importer::Scenes::Utilities::ImportAnimations(const aiScene* assimpScene, R
 
 	for (uint i = 0; i < assimpScene->mNumAnimations; ++i)
 	{
-		aiAnimation* assimpAnimation = assimpScene->mAnimations[i];
+		aiAnimation* assimpAnimation	= assimpScene->mAnimations[i];
 
-		std::string name			= assimpAnimation->mName.C_Str();
-		std::string assetsPath		= ASSETS_MODELS_PATH + name + ANIMATIONS_EXTENSION;
-		R_Animation* rAnimation	= (R_Animation*)App->resourceManager->CreateResource(ResourceType::ANIMATION, assetsPath.c_str());
+		std::string name				= assimpAnimation->mName.C_Str();
+		std::string assetsPath			= ASSETS_MODELS_PATH + name + ANIMATIONS_EXTENSION;
+		R_Animation* rAnimation			= (R_Animation*)App->resourceManager->CreateResource(ResourceType::ANIMATION, assetsPath.c_str());
 
 		if (rAnimation == nullptr)
 		{
