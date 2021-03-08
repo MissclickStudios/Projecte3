@@ -79,6 +79,7 @@ void UI_Image::RenderImage2D()
 
 	glDisable(GL_DEPTH_TEST);
 	glDisable(GL_LIGHTING);
+	glEnable(GL_BLEND);
 
 	glPushMatrix();
 	glMultMatrixf((GLfloat*)&GetCanvas()->GetOwner()->GetComponent<C_Transform>()->GetWorldTransform().Transposed());
@@ -103,6 +104,7 @@ void UI_Image::RenderImage2D()
 
 	glEnable(GL_LIGHTING);
 	glEnable(GL_DEPTH_TEST);
+	glDisable(GL_BLEND);
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadMatrixf(App->camera->GetCurrentCamera()->GetOGLProjectionMatrix());
@@ -119,6 +121,7 @@ void UI_Image::RenderImage3D()
 
 	glDisable(GL_DEPTH_TEST);
 	glDisable(GL_LIGHTING);
+	glEnable(GL_BLEND);
 
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
@@ -138,6 +141,7 @@ void UI_Image::RenderImage3D()
 
 	glEnable(GL_LIGHTING);
 	glEnable(GL_DEPTH_TEST);
+	glDisable(GL_BLEND);
 
 	glPopMatrix();
 
