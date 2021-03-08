@@ -15,7 +15,7 @@
 
 #pragma comment (lib, "Source/Dependencies/FreeType/libx86/freetype.lib")
 
-M_UISystem::M_UISystem(bool isActive) : Module("UISystem", isActive), isCameraSwap(true)
+M_UISystem::M_UISystem(bool isActive) : Module("UISystem", isActive)
 {
 	error = FT_Init_FreeType(&libraryFT);
 	if (error)
@@ -67,23 +67,8 @@ UpdateStatus M_UISystem::PostUpdate(float dt)
 		{
 			if (App->camera->GetCurrentCamera() != App->camera->masterCamera->GetComponent<C_Camera>())
 			{
+				// Canvas size will be directly and permanently linked to the near plane of the current camera
 				canvasIt->SetSize({ App->camera->GetCurrentCamera()->GetFrustum().NearPlaneWidth(), App->camera->GetCurrentCamera()->GetFrustum().NearPlaneHeight() });
-				//canvasIt->SetPosition({ canvasIt->GetOwner()->GetComponent<C_Transform>()->GetWorldPosition().x, canvasIt->GetOwner()->GetComponent<C_Transform>()->GetWorldPosition().y });
-				//canvasIt->GetOwner()->GetComponent<C_Transform>()->SetLocalEulerRotation(App->camera->masterCamera->GetComponent<C_Transform>()->GetLocalEulerRotation());
-
-				if (isCameraSwap)
-				{
-					for (std::vector<UIElement*>::iterator uiIt = canvasIt->uiElements.begin(); uiIt != canvasIt->uiElements.end(); uiIt++)
-					{
-						(*uiIt)->SetW(canvasIt->GetSize().x);
-						(*uiIt)->SetH(canvasIt->GetSize().y);
-
-						(*uiIt)->SetX(canvasIt->GetPosition().x);
-						(*uiIt)->SetY(canvasIt->GetPosition().y);
-
-						isCameraSwap = false;
-					}
-				}
 			}
 		}
 	}
@@ -109,14 +94,4 @@ bool M_UISystem::SaveConfiguration(ParsonNode& root) const
 	bool ret = true;
 
 	return ret;
-}
-
-bool M_UISystem::IsCameraSwap() const
-{
-	return isCameraSwap;
-}
-
-void M_UISystem::SetIsCameraSwap()
-{
-	isCameraSwap = true;
 }

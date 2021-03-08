@@ -35,8 +35,8 @@ bool UI_Image::Update()
 {
 	bool ret = true;
 
-	//if (!IsActive())
-		//return ret;
+	if (IsActive() == false)
+		return ret;
 
 	if (GetCanvas() == nullptr)
 		return ret;
