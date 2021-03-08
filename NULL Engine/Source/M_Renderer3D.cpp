@@ -360,12 +360,14 @@ bool M_Renderer3D::InitOpenGL()
 		SetGLFlag(GL_COLOR_MATERIAL, true);
 		SetGLFlag(GL_TEXTURE_2D, true);
 
-		SetGLFlag(GL_ALPHA_TEST, true);
+		SetGLFlag(GL_ALPHA_TEST, false);
 		glAlphaFunc(GL_GREATER, 0.20f);													// Have alpha test in c_material (color alpha)?
 
-		SetGLFlag(GL_BLEND, true);
+		SetGLFlag(GL_BLEND, false);
 		glBlendEquation(GL_FUNC_ADD);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+		glEnable(GL_LIGHTING);
 	}
 
 	return ret;
@@ -1222,7 +1224,7 @@ void M_Renderer3D::SetRenderWireframes(const bool& setTo)
 			//glLineWidth(wireframe_line_width);
 			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 			SetGLFlag(GL_TEXTURE_2D, false);
-			SetGLFlag(GL_LIGHTING, false);
+			//SetGLFlag(GL_LIGHTING, false);
 		}
 		else
 		{
@@ -1468,7 +1470,7 @@ void MeshRenderer::ApplyDebugParameters()
 	{
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		glDisable(GL_TEXTURE_2D);
-		glDisable(GL_LIGHTING);
+		//glDisable(GL_LIGHTING);
 	}
 }
 
@@ -1544,6 +1546,10 @@ void MeshRenderer::ApplyShader()
 			cMaterial->GetShader()->SetUniformMatrix4("viewMatrix", App->camera->GetCurrentCamera()->GetOGLViewMatrix());
 
 			cMaterial->GetShader()->SetUniformMatrix4("projectionMatrix", App->camera->GetCurrentCamera()->GetOGLProjectionMatrix());
+
+			cMaterial->GetShader()->SetUniformVec4f("lightColor", (GLfloat*)&App->renderer->lights[0].diffuse);
+
+			cMaterial->GetShader()->SetUniformVec3f("lightPos", (GLfloat*)&App->renderer->lights[0].position);
 
 			cMaterial->GetShader()->SetUniform1f("time", Time::Game::GetTimeSinceStart());
 
