@@ -59,7 +59,7 @@ bool C_PlayerController::Update()
 				float angle = RadToDeg(-rad) + 90;
 				GetOwner()->transform->SetLocalEulerRotation(float3(0, angle, 0));
 
-				if (App->input->GetMouseButton(1) == KeyState::KEY_DOWN)
+				if (App->input->GetMouseButton(1) == KeyState::KEY_DOWN || App->input->GetGameControllerTrigger(1) == ButtonState::BUTTON_DOWN)
 				{
 					Resource* resource = App->resourceManager->GetResourceFromLibrary("Assets/Models/Primitives/sphere.fbx");
 					if (resource != nullptr)
@@ -164,6 +164,16 @@ void C_PlayerController::MoveVelocity(C_RigidBody* rigidBody)
 		right = true;
 	if (App->input->GetKey(SDL_SCANCODE_D) == KeyState::KEY_REPEAT)
 		left = true;
+
+	if (App->input->GetGameControllerAxis(1) == AxisState::POSITIVE_AXIS_REPEAT)
+		forward = true;
+	if (App->input->GetGameControllerAxis(1) == AxisState::NEGATIVE_AXIS_REPEAT)
+		backwards = true;
+	if (App->input->GetGameControllerAxis(0) == AxisState::POSITIVE_AXIS_REPEAT)
+		right = true;
+	if (App->input->GetGameControllerAxis(0) == AxisState::NEGATIVE_AXIS_REPEAT)
+		left = true;
+
 
 	if (forward)
 		vel.z += speed;
