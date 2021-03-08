@@ -5,6 +5,8 @@
 #include "M_Physics.h"
 
 #include "GameObject.h"
+#include "C_BulletBehavior.h"
+#include "C_PropBehavior.h"
 
 #include "SimulationCallback.h"
 
@@ -25,16 +27,38 @@ void SimulationCallback::onContact(const physx::PxContactPairHeader& pairHeader,
 
 		if (gameObject1 && gameObject2)
 		{
+			for (int i = 0; i < gameObject1->components.size(); ++i)
+			{
+				if (gameObject1->components[i]->GetType() == ComponentType::PLAYER_CONTROLLER)
+					return;
+			}
+			for (int i = 0; i < gameObject2->components.size(); ++i)
+			{
+				if (gameObject2->components[i]->GetType() == ComponentType::PLAYER_CONTROLLER)
+					return;
+			}
 			if (cPair.events & physx::PxPairFlag::eNOTIFY_TOUCH_FOUND)
 			{
-				LOG("CONTACT: DOWN");
+				for (int i = 0; i < gameObject1->components.size(); ++i)
+				{
+					if (gameObject1->components[i]->GetType() == ComponentType::BULLET_BEHAVIOR)
+						((C_BulletBehavior*)gameObject1->components[i])->OnCollisionEnter();
+					else if (gameObject1->components[i]->GetType() == ComponentType::PROP_BEHAVIOR)
+						((C_PropBehavior*)gameObject1->components[i])->OnCollisionEnter();
+				}
+				for (int i = 0; i < gameObject2->components.size(); ++i)
+				{
+					if (gameObject2->components[i]->GetType() == ComponentType::BULLET_BEHAVIOR)
+						((C_BulletBehavior*)gameObject2->components[i])->OnCollisionEnter();
+					else if (gameObject2->components[i]->GetType() == ComponentType::PROP_BEHAVIOR)
+						((C_PropBehavior*)gameObject2->components[i])->OnCollisionEnter();
+				}
 			}
 			else if (cPair.events & physx::PxPairFlag::eNOTIFY_TOUCH_PERSISTS)
 			{
 			}
 			else if (cPair.events & physx::PxPairFlag::eNOTIFY_TOUCH_LOST)
 			{
-				LOG("CONTACT: UP");
 			}
 		}
 	}
@@ -54,11 +78,9 @@ void SimulationCallback::onTrigger(physx::PxTriggerPair* pairs, physx::PxU32 cou
 		{
 			if ((pairs[i].status & physx::PxPairFlag::eNOTIFY_TOUCH_FOUND))
 			{
-				LOG("TRIGGER: DOWN");
 			}
 			else if ((pairs[i].status & physx::PxPairFlag::eNOTIFY_TOUCH_LOST))
 			{
-				LOG("TRIGGER: UP");
 			}
 		}
 	}

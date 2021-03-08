@@ -127,7 +127,7 @@ void C_SphereCollider::CreateCollider()
 
 	GetOwner()->GetComponent<C_RigidBody>()->GetRigidBody()->attachShape(*shape);
 
-	App->physics->AddActor(GetOwner()->GetComponent<C_RigidBody>()->GetRigidBody());
+	App->physics->AddActor(GetOwner()->GetComponent<C_RigidBody>()->GetRigidBody(), GetOwner());
 }
 
 void C_SphereCollider::ToUpdate(ColliderUpdateType update)
