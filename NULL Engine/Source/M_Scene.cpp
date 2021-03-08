@@ -85,12 +85,12 @@ bool M_Scene::Start()
 	//uint32 animation_uid = App->resourceManager->LoadFromLibrary(DEFAULT_ANIMATION);
 	//GenerateGameObjectsFromModel(animation_uid , float3(0.05f, 0.05f, 0.05f));
 	
-	//LoadScene("Assets/Scenes/MainScene.json");
+	LoadScene("Assets/Scenes/FinalScene.json");
 	//SaveScene("SceneAutosave");																			// Autosave just right after loading the scene.
 
-	level.GetRooms();
-	level.GenerateLevel();
-	level.GenerateRoom(0);
+	//level.GetRooms();
+	//level.GenerateLevel();
+	//level.GenerateRoom(0);
 
 	if(!CheckSceneLight()) SetSceneLight(App->renderer->GenerateSceneLight());
 	
