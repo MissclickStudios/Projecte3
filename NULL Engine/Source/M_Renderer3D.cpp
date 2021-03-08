@@ -1568,9 +1568,9 @@ void MeshRenderer::ApplyShader()
 
 			cMaterial->GetShader()->SetUniformMatrix4("projectionMatrix", App->camera->GetCurrentCamera()->GetOGLProjectionMatrix());
 
-			cMaterial->GetShader()->SetUniformVec4f("lightColor", (GLfloat*)&App->scene->GetSceneLight()->GetComponent<C_Light>()->GetLight()->diffuse);
+			if(App->scene->GetSceneLight()) cMaterial->GetShader()->SetUniformVec4f("lightColor", (GLfloat*)&App->scene->GetSceneLight()->GetComponent<C_Light>()->GetLight()->diffuse);
 
-			cMaterial->GetShader()->SetUniformVec3f("lightPos", (GLfloat*)&App->scene->GetSceneLight()->transform->GetWorldPosition());
+			if(App->scene->GetSceneLight()) cMaterial->GetShader()->SetUniformVec3f("lightPos", (GLfloat*)&App->scene->GetSceneLight()->transform->GetWorldPosition());
 
 			cMaterial->GetShader()->SetUniform1f("time", Time::Game::GetTimeSinceStart());
 

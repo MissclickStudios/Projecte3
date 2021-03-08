@@ -429,6 +429,10 @@ bool M_Scene::LoadScene(const char* path)
 		App->renderer->ClearRenderers();
 	}
 
+	//FIX THIS
+
+	if (!CheckSceneLight()) SetSceneLight(App->renderer->GenerateSceneLight());
+
 	return ret;
 }
 
