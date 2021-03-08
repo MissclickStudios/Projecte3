@@ -271,7 +271,8 @@ void C_PlayerController::StepSound(bool a, bool b, bool c, bool d)
 			stepTimer->Start();
 
 			aSource = GetOwner()->GetComponent<C_AudioSource>();
-			aSource->PlayFx(aSource->GetEvent().second);
+			if(aSource != nullptr)
+				aSource->PlayFx(aSource->GetEvent().second);
 		}
 	}
 
