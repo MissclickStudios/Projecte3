@@ -84,6 +84,9 @@ public:																														// --- SELECT THROUGH RAYCAST
 	void			GetRaycastHits						(const LineSegment& ray, std::map<float, GameObject*>& hits);
 	void			GetFaces							(const std::vector<float>& vertices, std::vector<Triangle>& faces);
 
+public:
+	//GameObject*		GetSceneLight();
+
 private:
 	void			HandleDebugInput();
 	void			DebugSpawnPrimitive(Primitive* p);
@@ -101,7 +104,7 @@ private:
 
 	std::vector<Primitive*>			primitives;
 
-	LevelGenerator level;
+	LevelGenerator					level;
 	
 };
 

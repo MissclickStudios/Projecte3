@@ -25,10 +25,12 @@
 
 #include "I_Textures.h"													
 
-#include "GameObject.h"													
+#include "GameObject.h"	
+#include "C_Transform.h"
 #include "C_Mesh.h"														
 #include "C_Material.h"													
-#include "C_Camera.h"													
+#include "C_Camera.h"	
+#include "C_Light.h"
 										
 #include "UIElement.h"
 #include "M_Renderer3D.h"
@@ -80,7 +82,7 @@ bool M_Renderer3D::Init(ParsonNode& configuration)
 	
 	Importer::Textures::Init();																	// Initializing DevIL.
 
-	CreatePrimitiveExamples();																	// Adding one of each available primitice to the primitives vector for later display.
+	//CreatePrimitiveExamples();																	// Adding one of each available primitice to the primitives vector for later display.
 
 	//InitFramebuffers();
 	LoadDebugTexture();
@@ -93,13 +95,16 @@ bool M_Renderer3D::Init(ParsonNode& configuration)
 bool M_Renderer3D::Start()
 {
 	InitEngineIcons();
-	
+
 	//SetUp the Skybox 
 	defaultSkyBox.SetUpSkyBoxBuffers();
 
 	defaultSkyBox.CreateSkybox();
 
 	GenScreenBuffer();
+
+	GenerateSceneLight();
+
 
 	return true;
 }
@@ -342,7 +347,7 @@ bool M_Renderer3D::InitOpenGL()
 
 		lights[0].ref = GL_LIGHT0;
 		lights[0].ambient.Set(0.25f, 0.25f, 0.25f, 1.0f);
-		lights[0].diffuse.Set(0.75f, 0.75f, 0.75f, 1.0f);
+		lights[0].diffuse.Set(1.0f,1.0f,1.0f, 1.0f);
 		lights[0].SetPos(0.0f, 0.0f, 2.5f);
 		lights[0].Init();
 
@@ -623,13 +628,12 @@ void M_Renderer3D::RenderScene()
 
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
-	if (renderPrimitiveExamples)
+
+	for (uint i = 0; i < primitives.size(); ++i)
 	{
-		for (uint i = 0; i < primitives.size(); ++i)
-		{
-			primitives[i]->RenderByIndices();
-		}
+		primitives[i]->RenderByIndices();
 	}
+	
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
@@ -1267,6 +1271,21 @@ void M_Renderer3D::AddPostSceneRenderModule(Module* module)
 	PostSceneRenderModules.push_back(module);
 }
 
+void M_Renderer3D::GenerateSceneLight()
+{
+	lightPoint = App->scene->CreateGameObject("LightPoint");
+	lightPoint->CreateComponent(ComponentType::LIGHT);
+	C_Light* lightComp = lightPoint->GetComponent<C_Light>();
+	lightComp->GetLight()->Active(true);
+
+	lightComp->GetLight()->ref = GL_LIGHT0;
+	lightComp->GetLight()->ambient.Set(0.25f, 0.25f, 0.25f, 1.0f);
+	lightComp->GetLight()->diffuse.Set(1.0f, 1.0f, 1.0f, 1.0f);
+	lightComp->GetLight()->Init();
+
+	App->scene->GetSceneRoot()->AddChild(lightPoint);
+}
+
 void M_Renderer3D::GenScreenBuffer()
 {
 	glGenVertexArrays(1, &quadScreenVAO);
@@ -1547,9 +1566,9 @@ void MeshRenderer::ApplyShader()
 
 			cMaterial->GetShader()->SetUniformMatrix4("projectionMatrix", App->camera->GetCurrentCamera()->GetOGLProjectionMatrix());
 
-			cMaterial->GetShader()->SetUniformVec4f("lightColor", (GLfloat*)&App->renderer->lights[0].diffuse);
+			cMaterial->GetShader()->SetUniformVec4f("lightColor", (GLfloat*)&App->renderer->lightPoint->GetComponent<C_Light>()->GetLight()->diffuse);
 
-			cMaterial->GetShader()->SetUniformVec3f("lightPos", (GLfloat*)&App->renderer->lights[0].position);
+			cMaterial->GetShader()->SetUniformVec3f("lightPos", (GLfloat*)&App->renderer->lightPoint->transform->GetWorldPosition());
 
 			cMaterial->GetShader()->SetUniform1f("time", Time::Game::GetTimeSinceStart());
 

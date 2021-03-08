@@ -30,6 +30,7 @@
 #include "C_Material.h"
 #include "C_Camera.h"
 #include "C_Animator.h"
+#include "C_Light.h"
 
 #include "M_Scene.h"
 
@@ -89,6 +90,9 @@ bool M_Scene::Start()
 	//level.GetRooms();
 	//level.GenerateLevel();
 	//level.GenerateRoom(0);
+
+	
+	
 
 	return ret;
 }

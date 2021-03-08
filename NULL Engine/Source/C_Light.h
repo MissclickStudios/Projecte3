@@ -5,6 +5,7 @@
 
 class ParsonNode;
 class GameObject;
+struct Light;
 
 class NULL_API C_Light : public Component
 {
@@ -18,10 +19,13 @@ public:
 	bool SaveState	(ParsonNode& root) const override;
 	bool LoadState	(ParsonNode& root) override;
 
+	Light* GetLight() { return light; }
+
 	static inline ComponentType GetType() { return ComponentType::LIGHT; }			// This is needed to be able to use templeates for functions such as GetComponent<>();
 
 private:
 
+	Light* light;
 };
 
 #endif // !__C_LIGHT_H__
