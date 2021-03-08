@@ -22,7 +22,8 @@ void main()
     TexCoord = texCoord;
     objectColor = inColor;
     fragPos = vec3(modelMatrix * vec4(position, 1.0));
-    modelNormal = normal;
+    //modelNormal = normal;
+    modelNormal = mat3(transpose(inverse(modelMatrix))) * normal;  
 }
 
 #endif
@@ -56,7 +57,6 @@ void main()
    
    vec4 resultColor = (ambient + diffuse) * objectColor;
    
-   
    vec4 texColor = (hasTexture) ? texture(ourTexture, TexCoord) : vec4(1,1,1,1);
    
    color = texColor  * resultColor;
@@ -64,6 +64,9 @@ void main()
 }
 
 #endif
+
+
+
 
 
 

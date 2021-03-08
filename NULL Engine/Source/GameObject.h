@@ -21,6 +21,7 @@ class C_Transform;
 struct MeshRenderer;
 struct CuboidRenderer;
 struct SkeletonRenderer;
+struct Light;
 
 typedef unsigned __int32 uint32;
 typedef unsigned int uint;
