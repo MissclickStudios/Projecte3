@@ -76,20 +76,20 @@ float2 E_Viewport::GetWorldMousePosition()
 
 float2 E_Viewport::GetScreenMousePosition()
 {
-	float winWidth		= (float)EngineApp->window->GetWidth();
-	float winHeight	= (float)EngineApp->window->GetHeight();
+	float winHeight			= (float)EngineApp->window->GetHeight();
+	float winWidth			= (float)EngineApp->window->GetWidth();
 
-	float texWidth		= texSize.x;
-	float texHeight		= texSize.y;
+	float texWidth			= texSize.x;
+	float texHeight			= texSize.y;
 
-	float mouseX		= (float)EngineApp->input->GetMouseX();
-	float mouseY		= (float)EngineApp->input->GetMouseY();
+	float mouseX			= (float)EngineApp->input->GetMouseX();
+	float mouseY			= (float)EngineApp->input->GetMouseY();
 
 	float2 worldMousePos	= float2(mouseX, mouseY);
-	float2 normWorldPos	= float2(worldMousePos.x / winWidth, worldMousePos.y / winHeight);
-	float2 screenMousePos = float2(normWorldPos.x * texWidth, normWorldPos.y * texHeight);
+	float2 normWorldPos		= float2(worldMousePos.x / winWidth, worldMousePos.y / winHeight);
+	float2 screenMousePos	= float2(normWorldPos.x * texWidth, normWorldPos.y * texHeight);
 
-	screenMousePos		+= float2(texOrigin.x, texOrigin.y);
+	screenMousePos			+= float2(texOrigin.x, texOrigin.y);
 
 	return screenMousePos;
 }
@@ -100,7 +100,7 @@ float2 E_Viewport::GetWorldMouseMotion()
 	float2 winSize			= float2((float)EngineApp->window->GetWidth(), (float)EngineApp->window->GetHeight());
 	float2 texSize			= float2(this->texSize.x, this->texSize.y);
 
-	float2 localMotion			= float2(winMouseMotion.x / texSize.x, winMouseMotion.y / texSize.y);
+	float2 localMotion		= float2(winMouseMotion.x / texSize.x, winMouseMotion.y / texSize.y);
 	float2 worldMouseMotion	= float2(localMotion.x * winSize.x, localMotion.y * winSize.y);
 
 	return worldMouseMotion;
@@ -260,11 +260,11 @@ void E_Viewport::HandleGuizmos()
 	GameObject* selected		= EngineApp->editor->GetSelectedGameObjectThroughEditor();
 	C_Camera* currentCamera	= EngineApp->editor->GetCurrentCameraThroughEditor();
 
-	float4x4 viewMatrix		= currentCamera->GetFrustum().ViewMatrix();
+	float4x4 viewMatrix			= currentCamera->GetFrustum().ViewMatrix();
 	float4x4 projectionMatrix	= currentCamera->GetFrustum().ProjectionMatrix();
-	float4x4 worldTransform	= selected->GetComponent<C_Transform>()->GetWorldTransform();
+	float4x4 worldTransform		= selected->GetComponent<C_Transform>()->GetWorldTransform();
 	viewMatrix.Transpose();																				// MathGeoLib works with Row-Major matrices and ImGuizmo works with
-	projectionMatrix.Transpose();																			// Column-Major matrices. Hence the need to transpose them.
+	projectionMatrix.Transpose();																		// Column-Major matrices. Hence the need to transpose them.
 	worldTransform.Transpose();																			// ----------------------------------------------------------------
 
 	ImGuizmo::SetDrawlist();

@@ -1253,7 +1253,7 @@ cMaterial	(cMaterial)
 void MeshRenderer::Render()
 {
 
-	R_Mesh* rMesh = (cMesh->GetSkinnedMesh() != nullptr) ? cMesh->GetSkinnedMesh() : cMesh->GetMesh();
+	R_Mesh* rMesh = cMesh->GetMesh();
 
 	if (rMesh == nullptr)
 	{
@@ -1265,7 +1265,14 @@ void MeshRenderer::Render()
 	ApplyTextureAndMaterial();																		// Apply resource texture or default texture, mesh color...
 	ApplyShader();
 	
-	glBindVertexArray(rMesh->VAO);
+	if (cMesh->GetSkinnedMesh() == nullptr)
+	{
+		glBindVertexArray(rMesh->VAO);
+	}
+	else
+	{
+		glBindVertexArray(cMesh->GetSkinnedMesh()->VAO);
+	}
 
 	glDrawElements(GL_TRIANGLES, rMesh->indices.size(), GL_UNSIGNED_INT, nullptr);					// 
 	

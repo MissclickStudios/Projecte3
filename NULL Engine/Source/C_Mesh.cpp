@@ -110,16 +110,16 @@ bool C_Mesh::RefreshSkinning()
 	if (rMesh == nullptr)
 		return false;
 	
-	bool isNewMesh = false;
+	bool newSkinningMesh = false;
 	if (skinnedMesh == nullptr)
 	{
-		isNewMesh = true;
-		skinnedMesh = (R_Mesh*)App->resourceManager->CreateResource(ResourceType::MESH, rMesh->GetAssetsPath());
+		newSkinningMesh = true;
+		skinnedMesh		= (R_Mesh*)App->resourceManager->CreateResource(ResourceType::MESH, rMesh->GetAssetsPath());
 
 		skinnedMesh->vertices.resize(rMesh->vertices.size());
-		skinnedMesh->indices.resize(rMesh->indices.size());
-		skinnedMesh->texCoords.resize(rMesh->texCoords.size());
 		skinnedMesh->normals.resize(rMesh->normals.size());
+		skinnedMesh->texCoords.resize(rMesh->texCoords.size());
+		skinnedMesh->indices.resize(rMesh->indices.size());
 
 		memcpy(&skinnedMesh->indices[0], &rMesh->indices[0], (rMesh->indices.size() * sizeof(uint)));
 		memcpy(&skinnedMesh->texCoords[0], &rMesh->texCoords[0], (rMesh->texCoords.size() * sizeof(float)));
@@ -129,18 +129,12 @@ bool C_Mesh::RefreshSkinning()
 	{
 		memset(&skinnedMesh->vertices[0], 0, (skinnedMesh->vertices.size() * sizeof(float)));
 	}
-
 	if (!skinnedMesh->normals.empty())
 	{
 		memset(&skinnedMesh->normals[0], 0, (skinnedMesh->normals.size() * sizeof(float)));
 	}
 
-	if (!skinnedMesh->texCoords.empty())
-	{
-		//memset(&skinnedMesh->texCoords[0], 0, (skinnedMesh->texCoords.size() * sizeof(float)));
-	}
-
-	if (isNewMesh)
+	if (newSkinningMesh)
 	{
 		RefreshBoneMapping();
 		skinnedMesh->LoadSkinningBuffers(true);
@@ -165,19 +159,22 @@ void C_Mesh::AnimateMesh()
 	boneTransforms.resize(rMesh->boneOffsets.size());
 	for (auto bone = rMesh->boneMapping.begin(); bone != rMesh->boneMapping.end(); ++bone)
 	{
-		GameObject* currentBone = boneMapping[bone->first];
+		auto bmItem = boneMapping.find(bone->first);
+		if (bmItem == boneMapping.end())
+		{
+			continue;
+		}
 
-		float4x4 delta = currentBone->GetComponent<C_Transform>()->GetWorldTransform();
-		delta = delta * this->GetOwner()->GetComponent<C_Transform>()->GetWorldTransform().Inverted();
+		currentBone = bmItem->second;
 
-		float4x4 delta = float4x4::identity;																												// --- Bone Global Transform
-		delta = (cAnimatorOwner != nullptr) ? (cAnimatorOwner->GetComponent<C_Transform>()->GetWorldTransform().Inverted() * delta) : float4x4::identity;	//
-		delta = (currentBone->GetComponent<C_Transform>()->GetWorldTransform() * delta);																	//
-		delta = (this->GetOwner()->GetComponent<C_Transform>()->GetWorldTransform().Inverted() * delta);													// -------------------------
+		float4x4 delta = float4x4::identity;
+		delta = (currentBone->GetComponent<C_Transform>()->GetWorldTransform() * delta);																	// --- Bone Transform
+		delta = (this->GetOwner()->GetComponent<C_Transform>()->GetWorldTransform().Inverted() * delta);													// Bone World Transform
+		delta = delta * rMesh->boneOffsets[bone->second];																									// Bone Transform Matrix
 
-		delta = delta * rMesh->boneOffsets[bone->second];																									// --- Bone Transform Matrix
 		boneTransforms[bone->second] = delta;																												// -------------------------
 	}
+
 
 	uint verticesSize = (rMesh->vertices.size() / 3);
 	for (uint v = 0; v < verticesSize; ++v)																													// --- Iterating the mesh's verts.
@@ -192,21 +189,22 @@ void C_Mesh::AnimateMesh()
 				continue;
 			}
 
-			float3 transform = boneTransforms[boneID].TransformPos(float3(&rMesh->vertices[v * 3]));														// --- Trnsfrm the original vert.
-
+			float3 vTransform = float3::zero;																												// --- Trnsfrm the original vert.
 			if (!rMesh->vertices.empty())
 			{
-				skinnedMesh->vertices[(v * 3)]		+= transform.x * boneWeight;
-				skinnedMesh->vertices[(v * 3) + 1]	+= transform.y * boneWeight;
-				skinnedMesh->vertices[(v * 3) + 2]	+= transform.z * boneWeight;
+				vTransform = boneTransforms[boneID].TransformPos(float3(&rMesh->vertices[v * 3]));
+
+				skinnedMesh->vertices[(v * 3)]		+= vTransform.x * boneWeight;
+				skinnedMesh->vertices[(v * 3) + 1]	+= vTransform.y * boneWeight; 
+				skinnedMesh->vertices[(v * 3) + 2]	+= vTransform.z * boneWeight;
 			}
 			if (!rMesh->normals.empty())
 			{
-				transform = boneTransforms[boneID].TransformPos(float3(&rMesh->normals[v * 3]));
+				vTransform = boneTransforms[boneID].TransformPos(float3(&rMesh->normals[v * 3]));
 
-				skinnedMesh->normals[(v * 3)]		+= transform.x * boneWeight;
-				skinnedMesh->normals[(v * 3) + 1]	+= transform.y * boneWeight;
-				skinnedMesh->normals[(v * 3) + 2]	+= transform.z * boneWeight;
+				skinnedMesh->normals[(v * 3)]		+= vTransform.x * boneWeight;
+				skinnedMesh->normals[(v * 3) + 1]	+= vTransform.y * boneWeight;
+				skinnedMesh->normals[(v * 3) + 2]	+= vTransform.z * boneWeight;
 			}
 		}
 	}
