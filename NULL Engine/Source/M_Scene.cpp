@@ -42,6 +42,7 @@ masterRoot				(nullptr),
 sceneRoot				(nullptr),
 animationRoot			(nullptr),
 selectedGameObject		(nullptr),
+lightPoint				(nullptr),
 cullingCamera			(nullptr)
 {
 	CreateMasterRoot();
@@ -389,8 +390,6 @@ bool M_Scene::LoadScene(const char* path)
 			if (gameObject->GetComponent<C_Light>() != nullptr)
 			{
 				lightPoint = gameObject;
-				lightPoint->SetParent(sceneRoot);
-				gameObjects.push_back(lightPoint);
 			}
 
 			C_Camera* cCamera = gameObject->GetComponent<C_Camera>();
@@ -493,6 +492,10 @@ void M_Scene::DeleteGameObject(GameObject* gameObject, uint index)
 	if (gameObject == animationRoot)
 	{
 		animationRoot = nullptr;
+	}
+	if (lightPoint == gameObject)
+	{
+		lightPoint =  nullptr;
 	}
 	
 	auto item = models.find(gameObject->GetUID());
