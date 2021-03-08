@@ -180,14 +180,7 @@ UpdateStatus M_Scene::Update(float dt)
 
 	level.HandleRoomGeneration();
 
-	if (!rooms.empty())
-	{
-		/*if (App->input->GetKey(SDL_SCANCODE_N) == KeyState::KEY_DOWN)
-		{
-			float random = Random::PCG::GetBoundedRandomFloat(4);
-			LoadScene(rooms[random].c_str());
-		}*/
-	}
+	
 
 
 	return UpdateStatus::CONTINUE;
