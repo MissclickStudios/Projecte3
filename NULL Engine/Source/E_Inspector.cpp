@@ -1183,8 +1183,11 @@ void E_Inspector::DrawCanvasComponent(C_Canvas* cCanvas)
 				//go->CreateUIElement(UIElementType::IMAGE);
 				//cCanvas->uiElements.push_back(go->GetUIElement());
 
-				UIElement* uiElement = cCanvas->GetOwner()->CreateUIElement(UIElementType::IMAGE);			
-				cCanvas->uiElements.push_back(uiElement);
+				if (cCanvas->uiElements.empty())
+				{
+					UIElement* uiElement = cCanvas->GetOwner()->CreateUIElement(UIElementType::IMAGE);
+					cCanvas->uiElements.push_back(uiElement);
+				}
 			}
 
 		}
