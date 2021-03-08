@@ -4,7 +4,10 @@
 #include "Component.h"
 #include "MathGeoLib/include/Math/float3.h"
 
+class C_AudioSource;
 class C_RigidBody;
+
+class Timer;
 
 class C_PlayerController : public Component
 {
@@ -33,7 +36,11 @@ public:
 	//The deceleration is internaly inverted, so setting a negative deceleration will cause an acceleration
 	void SetDeceleration(float force) { this->deceleration = force; }
 
-	float3 MousePositionToWorldPosition(float mapPositionY = 0);
+	const float BulletSpeed() const { return bulletSpeed; }
+	void SetBulletSpeed(float speed) { bulletSpeed = speed; }
+
+	const bool IsCamera() const { return cameraMode; }
+	void SetCameraMode(bool enable) { cameraMode = enable; }
 
 private: 
 
@@ -41,12 +48,25 @@ private:
 	void MoveAcceleration(C_RigidBody* rigidBody);
 	void Rotate();
 
-	float speed = 10.0f;
+	void StepSound(bool a, bool b, bool c, bool d );
+
+	float2 MousePositionToWorldPosition(float mapPositionY = 0);
+
+	float speed = 30.0f;
 
 	bool useAcceleration = false;
 
 	float acceleration = 2.0f;
 	float deceleration = 2.0f;
+
+	float bulletSpeed = 100.0f;
+
+	bool cameraMode = false;
+
+	Timer* stepTimer = nullptr;
+	bool isStepPlaying = false;
+
+	C_AudioSource* aSource;
 };
 
 #endif // !__C_PLAYERCONTROLLER__

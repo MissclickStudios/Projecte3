@@ -2,11 +2,14 @@
 #include "Log.h"
 
 #include "M_Scene.h"
+#include "M_UISystem.h"
+#include "M_Camera3D.h"
 
 #include "GameObject.h"
-#include "C_Canvas.h"
 
-#include "M_UISystem.h"
+#include "C_Canvas.h"
+#include "C_Camera.h"
+#include "C_Transform.h"
 
 #include "MemoryManager.h"
 
@@ -39,12 +42,14 @@ bool M_UISystem::Init(ParsonNode& config)
 {
 	bool ret = true;
 
+
 	return ret;
 }
 
 // Called every draw update
 UpdateStatus M_UISystem::PreUpdate(float dt)
 {
+	
 	return UpdateStatus::CONTINUE;
 }
 
@@ -55,6 +60,19 @@ UpdateStatus M_UISystem::Update(float dt)
 
 UpdateStatus M_UISystem::PostUpdate(float dt)
 {
+	for (std::vector<GameObject*>::iterator it = App->scene->GetGameObjects()->begin(); it != App->scene->GetGameObjects()->end(); it++)
+	{
+		C_Canvas* canvasIt = (*it)->GetComponent<C_Canvas>();
+		if (canvasIt != nullptr && canvasIt->IsActive())
+		{
+			if (App->camera->GetCurrentCamera() != App->camera->masterCamera->GetComponent<C_Camera>())
+			{
+				// Canvas size will be directly and permanently linked to the near plane of the current camera
+				canvasIt->SetSize({ App->camera->GetCurrentCamera()->GetFrustum().NearPlaneWidth(), App->camera->GetCurrentCamera()->GetFrustum().NearPlaneHeight() });
+			}
+		}
+	}
+
 	return UpdateStatus::CONTINUE;
 }
 

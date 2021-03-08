@@ -39,7 +39,12 @@ bool C_Canvas::Update()
 	if (IsActive())
 	{
 		GameObject* owner = GetOwner();
-		SetPosition({ owner->transform->GetWorldPosition().x, owner->transform->GetWorldPosition().y });
+
+		//owner->GetComponent<C_Transform>()->SetLocalRotation(owner->GetComponent<C_Transform>()->GetWorldRotation());
+		//SetPosition({ owner->transform->GetWorldPosition().x, owner->transform->GetWorldPosition().y });
+		
+		
+
 		z = owner->transform->GetWorldPosition().z;
 	}
 
@@ -50,11 +55,12 @@ void C_Canvas::Draw2D()
 {
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	// Not sure if it should be SceneTexture
-	//glOrtho(-App->editor->viewport->GetSceneTextureSize().x / 2, App->editor->viewport->GetSceneTextureSize().x / 2, -App->editor->viewport->GetSceneTextureSize().y / 2, App->editor->viewport->GetSceneTextureSize().y / 2, 100.0f, -100.0f);
-	glOrtho(-App->camera->GetCurrentCamera()->GetFrustum().NearPlaneWidth() / 2, App->camera->GetCurrentCamera()->GetFrustum().NearPlaneWidth() / 2, -App->camera->GetCurrentCamera()->GetFrustum().NearPlaneHeight() / 2, App->camera->GetCurrentCamera()->GetFrustum().NearPlaneHeight() / 2, 100.0f, -100.0f);
+	glOrtho(-App->camera->GetCurrentCamera()->GetFrustum().NearPlaneWidth() / 2, App->camera->GetCurrentCamera()->GetFrustum().NearPlaneWidth() / 2, -App->camera->GetCurrentCamera()->GetFrustum().NearPlaneHeight() / 2, App->camera->GetCurrentCamera()->GetFrustum().NearPlaneHeight() / 2, 1000.0f, -1000.0f);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadMatrixf(App->camera->GetCurrentCamera()->GetOGLViewMatrix());
+
+	glPushMatrix();
+	glMultMatrixf((GLfloat*)&GetOwner()->GetComponent<C_Transform>()->GetWorldTransform().Transposed());
 
 	glLineWidth(2.0f);
 
@@ -85,12 +91,11 @@ void C_Canvas::Draw2D()
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 	glLineWidth(1.0f);
 
+	glPopMatrix();
+
 	glMatrixMode(GL_PROJECTION);
 	glLoadMatrixf(App->camera->GetCurrentCamera()->GetOGLProjectionMatrix());
 	glMatrixMode(GL_MODELVIEW);
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-
 }
 
 void C_Canvas::Draw3D()
@@ -103,27 +108,27 @@ void C_Canvas::Draw3D()
 	glBegin(GL_LINES);
 
 	glColor4f(1.0f, 0.0f, 0.0f, 1.0f);										// X Axis.
-	glVertex2f(- rect.w / 2, + rect.h / 2);			glVertex2f(+ rect.w / 2, + rect.h / 2);
-	glVertex2f(+ rect.w / 2, + rect.h / 2);			glVertex2f(+ rect.w / 2, - rect.h / 2);
-	glVertex2f(+ rect.w / 2, - rect.h / 2);			glVertex2f(- rect.w / 2, - rect.h / 2);
-	glVertex2f(- rect.w / 2, - rect.h / 2);			glVertex2f(- rect.w / 2, + rect.h / 2);
+	glVertex2f(GetOwner()->GetComponent<C_Transform>()->GetLocalPosition().x - rect.w / 2, GetOwner()->GetComponent<C_Transform>()->GetLocalPosition().y + rect.h / 2);			glVertex2f(GetOwner()->GetComponent<C_Transform>()->GetLocalPosition().x + rect.w / 2, GetOwner()->GetComponent<C_Transform>()->GetLocalPosition().y + rect.h / 2);
+	glVertex2f(GetOwner()->GetComponent<C_Transform>()->GetLocalPosition().x + rect.w / 2, GetOwner()->GetComponent<C_Transform>()->GetLocalPosition().y + rect.h / 2);			glVertex2f(GetOwner()->GetComponent<C_Transform>()->GetLocalPosition().x + rect.w / 2, GetOwner()->GetComponent<C_Transform>()->GetLocalPosition().y - rect.h / 2);
+	glVertex2f(GetOwner()->GetComponent<C_Transform>()->GetLocalPosition().x + rect.w / 2, GetOwner()->GetComponent<C_Transform>()->GetLocalPosition().y - rect.h / 2);			glVertex2f(GetOwner()->GetComponent<C_Transform>()->GetLocalPosition().x - rect.w / 2, GetOwner()->GetComponent<C_Transform>()->GetLocalPosition().y - rect.h / 2);
+	glVertex2f(GetOwner()->GetComponent<C_Transform>()->GetLocalPosition().x - rect.w / 2, GetOwner()->GetComponent<C_Transform>()->GetLocalPosition().y - rect.h / 2);			glVertex2f(GetOwner()->GetComponent<C_Transform>()->GetLocalPosition().x - rect.w / 2, GetOwner()->GetComponent<C_Transform>()->GetLocalPosition().y + rect.h / 2);
 
 	glEnd();
 
 	//Pivot
-	glBegin(GL_LINE_LOOP);
-	for (int i = 0; i < 50; i++)
-	{
-		float angle = 2.0f * 3.1415926f * float(i) / float(50);				
-
-		float sizeAv = (rect.w + rect.h) / 80;
-		float x = sizeAv * cosf(angle);										
-		float y = sizeAv * sinf(angle);										
-
-		glVertex3f(pivot.x + x, pivot.y + y, 0);							
-
-	}
-	glEnd();
+	//glBegin(GL_LINE_LOOP);
+	//for (int i = 0; i < 50; i++)
+	//{
+	//	float angle = 2.0f * 3.1415926f * float(i) / float(50);				
+	//
+	//	float sizeAv = (rect.w + rect.h) / 80;
+	//	float x = sizeAv * cosf(angle);										
+	//	float y = sizeAv * sinf(angle);										
+	//
+	//	glVertex3f(pivot.x + x, pivot.y + y, 0);							
+	//
+	//}
+	//glEnd();
 
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 	glLineWidth(1.0f);

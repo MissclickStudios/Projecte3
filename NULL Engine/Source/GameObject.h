@@ -128,6 +128,9 @@ public:																									// --- COMPONENT GETTERS AND SETTERS
 		case ComponentType::SPHERE_COLLIDER:	{ return "Sphere Collider"; }	break;
 		case ComponentType::CAPSULE_COLLIDER:	{ return "Capsule Collider"; }	break;
 		case ComponentType::PLAYER_CONTROLLER: { return "Player Controller"; } break;
+		case ComponentType::BULLET_BEHAVIOR: { return "Bullet Behavior"; }	break;
+		case ComponentType::PROP_BEHAVIOR: { return "Prop Behavior"; }	break;
+		case ComponentType::CAMERA_BEHAVIOR: { return "Camera Behavior"; }	break;
 		}
 
 		return "NONE";
