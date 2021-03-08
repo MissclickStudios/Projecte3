@@ -1,291 +1,25 @@
 {
     "Models In Scene": [
         {
-            "GameObjectUID": 201283786,
-            "ModelResourceUID": 613109061,
-            "ModelAssetsPath": "Assets\/Models\/Primitives\/cylinder.fbx"
+            "GameObjectUID": 368645150,
+            "ModelResourceUID": 2043372159,
+            "ModelAssetsPath": "Assets\/Models\/Running.fbx"
         },
         {
-            "GameObjectUID": 209858145,
-            "ModelResourceUID": 1857086092,
-            "ModelAssetsPath": "Assets\/Models\/Primitives\/banana.fbx"
+            "GameObjectUID": 907505606,
+            "ModelResourceUID": 726380591,
+            "ModelAssetsPath": "Assets\/Models\/Roomv2.fbx"
         },
         {
-            "GameObjectUID": 330678654,
-            "ModelResourceUID": 12774054,
-            "ModelAssetsPath": "Assets\/Models\/simp\/simpleAnimation.fbx"
-        },
-        {
-            "GameObjectUID": 689991424,
-            "ModelResourceUID": 1396247187,
-            "ModelAssetsPath": "Assets\/Models\/Primitives\/sphere.fbx"
-        },
-        {
-            "GameObjectUID": 1841939332,
-            "ModelResourceUID": 964348615,
-            "ModelAssetsPath": "Assets\/Models\/Primitives\/pyramid.fbx"
-        },
-        {
-            "GameObjectUID": 1898101802,
-            "ModelResourceUID": 1266705681,
-            "ModelAssetsPath": "Assets\/Models\/Primitives\/cube.fbx"
-        },
-        {
-            "GameObjectUID": 1898101802,
-            "ModelResourceUID": 1266705681,
-            "ModelAssetsPath": "Assets\/Models\/Primitives\/cube.fbx"
-        },
-        {
-            "GameObjectUID": 1925250670,
-            "ModelResourceUID": 1993753731,
-            "ModelAssetsPath": "Assets\/Models\/TestProp\/prop_tatooine.FBX"
-        },
-        {
-            "GameObjectUID": 1925250670,
-            "ModelResourceUID": 1993753731,
-            "ModelAssetsPath": "Assets\/Models\/TestProp\/prop_tatooine.FBX"
-        },
-        {
-            "GameObjectUID": 1925250670,
-            "ModelResourceUID": 1993753731,
-            "ModelAssetsPath": "Assets\/Models\/TestProp\/prop_tatooine.FBX"
-        },
-        {
-            "GameObjectUID": 1925250670,
+            "GameObjectUID": 2094368595,
             "ModelResourceUID": 1993753731,
             "ModelAssetsPath": "Assets\/Models\/TestProp\/prop_tatooine.FBX"
         }
     ],
     "Game Objects": [
         {
-            "UID": 191855250,
-            "ParentUID": 1898101802,
-            "Name": "Box001",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": true,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        0,
-                        0
-                    ],
-                    "LocalRotation": [
-                        -0.70710676908493042,
-                        0,
-                        0,
-                        0.70710676908493042
-                    ],
-                    "LocalScale": [
-                        20,
-                        30,
-                        3
-                    ]
-                },
-                {
-                    "Type": 2,
-                    "UID": 1348672898,
-                    "Name": "Box001.nemesh",
-                    "Path": "Library\/Meshes\/1348672898.nemesh",
-                    "File": "1348672898.nemesh",
-                    "ShowWireframe": false,
-                    "ShowBoundingBox": false
-                },
-                {
-                    "Type": 3,
-                    "Material": {
-                        "UID": 1528333877,
-                        "Name": "Box001.nemat",
-                        "Path": "Library\/Materials\/1528333877.nemat",
-                        "File": "1528333877.nemat"
-                    },
-                    "Shader": {
-                        "UID": 411808307,
-                        "Name": "DefaultShader.shader",
-                        "Path": "Library\/Shaders\/411808307.neshader",
-                        "File": "411808307.neshader"
-                    }
-                }
-            ]
-        },
-        {
-            "UID": 201283786,
-            "ParentUID": 589636102,
-            "Name": "Mesh",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        0,
-                        0
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                }
-            ]
-        },
-        {
-            "UID": 209858145,
-            "ParentUID": 386803536,
-            "Name": "Banana Wall",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        0,
-                        62.446304321289063
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {
-                    "Type": 8,
-                    "Mass": 10,
-                    "Density": 1,
-                    "Linear Damping": 0,
-                    "Angular Damping": 0,
-                    "Use Gravity": false,
-                    "Is Kinematic": false,
-                    "Freeze Position X": true,
-                    "Freeze Position Y": true,
-                    "Freeze Position Z": true,
-                    "Freeze Rotation X": true,
-                    "Freeze Rotation Y": true,
-                    "Freeze Rotation Z": true,
-                    "Is Static": true
-                },
-                {
-                    "Type": 9,
-                    "Is Trigger": false,
-                    "Size X": 150,
-                    "Size Y": 1,
-                    "Size Z": 9,
-                    "Center X": 0,
-                    "Center Y": 0,
-                    "Center Z": 0
-                }
-            ]
-        },
-        {
-            "UID": 330678654,
-            "ParentUID": 386803536,
-            "Name": "Cube Waall",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        63.543228149414063,
-                        0,
-                        0
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        0.99999994039535522,
-                        1,
-                        0.99999994039535522
-                    ]
-                },
-                {
-                    "Type": 8,
-                    "Mass": 10,
-                    "Density": 1,
-                    "Linear Damping": 0,
-                    "Angular Damping": 0,
-                    "Use Gravity": false,
-                    "Is Kinematic": false,
-                    "Freeze Position X": true,
-                    "Freeze Position Y": true,
-                    "Freeze Position Z": true,
-                    "Freeze Rotation X": true,
-                    "Freeze Rotation Y": true,
-                    "Freeze Rotation Z": true,
-                    "Is Static": true
-                },
-                {
-                    "Type": 9,
-                    "Is Trigger": false,
-                    "Size X": 9,
-                    "Size Y": 3,
-                    "Size Z": 150,
-                    "Center X": 0,
-                    "Center Y": 0,
-                    "Center Z": 0
-                }
-            ]
-        },
-        {
-            "UID": 386803536,
-            "ParentUID": 1304503906,
-            "Name": "Obstacles",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        0,
-                        0
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                }
-            ]
-        },
-        {
-            "UID": 537584918,
-            "ParentUID": 1925250670,
+            "UID": 43804842,
+            "ParentUID": 2094368595,
             "Name": "Cylinder001",
             "IsActive": true,
             "IsStatic": false,
@@ -295,20 +29,20 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        0.085521608591079712,
-                        0,
-                        -0.12156292051076889
+                        -21.658000946044922,
+                        4.7672367095947266,
+                        -70.34100341796875
                     ],
                     "LocalRotation": [
                         -0.7071068286895752,
                         0,
                         0,
-                        0.7071068286895752
+                        0.70710670948028564
                     ],
                     "LocalScale": [
-                        0.20000000298023224,
-                        0.20000000298023224,
-                        0.20000000298023224
+                        0.11999999731779099,
+                        0.11999999731779099,
+                        0.11999999731779099
                     ]
                 },
                 {
@@ -324,23 +58,89 @@
                     "Type": 3,
                     "Material": {
                         "UID": 1839899230,
+                        "Color": [
+                            0.80000001192092896,
+                            0.80000001192092896,
+                            0.80000001192092896,
+                            1
+                        ],
                         "Name": "Cylinder001.nemat",
                         "Path": "Library\/Materials\/1839899230.nemat",
                         "File": "1839899230.nemat"
                     },
                     "Shader": {
-                        "UID": 411808307,
+                        "UID": 1958998782,
                         "Name": "DefaultShader.shader",
-                        "Path": "Library\/Shaders\/411808307.neshader",
-                        "File": "411808307.neshader"
+                        "Path": "Library\/Shaders\/1958998782.neshader",
+                        "File": "1958998782.neshader"
                     }
                 }
             ]
         },
         {
-            "UID": 589636102,
+            "UID": 70532525,
+            "ParentUID": 1803188938,
+            "Name": "mixamorig:LeftFoot",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -6.6295058331888868e-10,
+                        15.307278633117676,
+                        5.3899650964694956e-08
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 78555095,
+            "ParentUID": 103024575,
+            "Name": "mixamorig:Head",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        2.61517333984375,
+                        0.3552132248878479
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 96720295,
             "ParentUID": 1304503906,
-            "Name": "Player",
+            "Name": "Canvas",
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
@@ -365,47 +165,13 @@
                         1
                     ]
                 },
-                {
-                    "Type": 8,
-                    "Mass": 10,
-                    "Density": 1,
-                    "Linear Damping": 0,
-                    "Angular Damping": 0,
-                    "Use Gravity": false,
-                    "Is Kinematic": true,
-                    "Freeze Position X": false,
-                    "Freeze Position Y": true,
-                    "Freeze Position Z": false,
-                    "Freeze Rotation X": true,
-                    "Freeze Rotation Y": false,
-                    "Freeze Rotation Z": true,
-                    "Is Static": false
-                },
-                {
-                    "Type": 16,
-                    "Speed": 30,
-                    "Acceleration": 30,
-                    "Deceleration": 30,
-                    "Use Acceleration": false,
-                    "Bullet Speed": 100,
-                    "Camera Mode": false
-                },
-                {
-                    "Type": 9,
-                    "Is Trigger": false,
-                    "Size X": 1,
-                    "Size Y": 3,
-                    "Size Z": 1,
-                    "Center X": 0,
-                    "Center Y": 0,
-                    "Center Z": 0
-                }
+                {}
             ]
         },
         {
-            "UID": 672252567,
-            "ParentUID": 1841939332,
-            "Name": "Pyramid001",
+            "UID": 103024575,
+            "ParentUID": 2132679362,
+            "Name": "mixamorig:Neck",
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
@@ -415,51 +181,237 @@
                     "Type": 1,
                     "LocalPosition": [
                         0,
-                        0,
-                        0
+                        6.6270833015441895,
+                        -3.0971526143730443e-07
                     ],
                     "LocalRotation": [
-                        -0.7071068286895752,
                         0,
                         0,
-                        0.70710670948028564
+                        0,
+                        1
                     ],
                     "LocalScale": [
-                        3,
-                        142.17041015625,
-                        3.0000004768371582
+                        1,
+                        1,
+                        1
                     ]
-                },
-                {
-                    "Type": 2,
-                    "UID": 2012575082,
-                    "Name": "Pyramid001.nemesh",
-                    "Path": "Library\/Meshes\/2012575082.nemesh",
-                    "File": "2012575082.nemesh",
-                    "ShowWireframe": false,
-                    "ShowBoundingBox": false
-                },
-                {
-                    "Type": 3,
-                    "Material": {
-                        "UID": 624268113,
-                        "Name": "Pyramid001.nemat",
-                        "Path": "Library\/Materials\/624268113.nemat",
-                        "File": "624268113.nemat"
-                    },
-                    "Shader": {
-                        "UID": 411808307,
-                        "Name": "DefaultShader.shader",
-                        "Path": "Library\/Shaders\/411808307.neshader",
-                        "File": "411808307.neshader"
-                    }
                 }
             ]
         },
         {
-            "UID": 689991424,
-            "ParentUID": 386803536,
-            "Name": "Sphere Wall",
+            "UID": 108641411,
+            "ParentUID": 1814386345,
+            "Name": "mixamorig:LeftHandIndex2",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0.017169145867228508,
+                        1.682147741317749,
+                        1.6507115674357919e-08
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 171231602,
+            "ParentUID": 1944122758,
+            "Name": "mixamorig:RightHand",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        4.0778765253435267e-08,
+                        10.303922653198242,
+                        -4.2661341126404295e-09
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 183024391,
+            "ParentUID": 1391898746,
+            "Name": "mixamorig:RightHandMiddle2",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -0.021960519254207611,
+                        1.8723105192184448,
+                        -2.8373193572406308e-08
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 250749005,
+            "ParentUID": 1406026886,
+            "Name": "mixamorig:LeftHandThumb3",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -0.14111220836639404,
+                        1.9029600620269775,
+                        6.9562233306896815e-08
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 252420245,
+            "ParentUID": 775671474,
+            "Name": "mixamorig:LeftForeArm",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        2.7979242034348317e-08,
+                        14.277151107788086,
+                        -6.4842879510251805e-08
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 286270497,
+            "ParentUID": 108641411,
+            "Name": "mixamorig:LeftHandIndex3",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -0.02779027447104454,
+                        1.7100825309753418,
+                        8.1511984717508312e-08
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 317419646,
+            "ParentUID": 891193744,
+            "Name": "mixamorig:LeftHandRing1",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0.70734834671020508,
+                        5.3825011253356934,
+                        -0.091378696262836456
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 331416939,
+            "ParentUID": 907505606,
+            "Name": "pCube1",
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
@@ -468,9 +420,9 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        -0.52474784851074219,
                         0,
-                        -58.224739074707031
+                        0,
+                        0
                     ],
                     "LocalRotation": [
                         0,
@@ -479,43 +431,47 @@
                         1
                     ],
                     "LocalScale": [
-                        1,
-                        1,
-                        1
+                        10,
+                        10,
+                        10
                     ]
                 },
                 {
-                    "Type": 8,
-                    "Mass": 10,
-                    "Density": 1,
-                    "Linear Damping": 0,
-                    "Angular Damping": 0,
-                    "Use Gravity": false,
-                    "Is Kinematic": false,
-                    "Freeze Position X": true,
-                    "Freeze Position Y": true,
-                    "Freeze Position Z": true,
-                    "Freeze Rotation X": true,
-                    "Freeze Rotation Y": true,
-                    "Freeze Rotation Z": true,
-                    "Is Static": true
+                    "Type": 2,
+                    "UID": 446507240,
+                    "Name": "pCube1.nemesh",
+                    "Path": "Library\/Meshes\/446507240.nemesh",
+                    "File": "446507240.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false
                 },
                 {
-                    "Type": 9,
-                    "Is Trigger": false,
-                    "Size X": 150,
-                    "Size Y": 1,
-                    "Size Z": 9,
-                    "Center X": 0,
-                    "Center Y": 0,
-                    "Center Z": 0
+                    "Type": 3,
+                    "Material": {
+                        "UID": 1454765715,
+                        "Color": [
+                            0.89771425724029541,
+                            0.97549021244049072,
+                            0.59772688150405884,
+                            1
+                        ],
+                        "Name": "pCube1.nemat",
+                        "Path": "Library\/Materials\/1454765715.nemat",
+                        "File": "1454765715.nemat"
+                    },
+                    "Shader": {
+                        "UID": 1958998782,
+                        "Name": "DefaultShader.shader",
+                        "Path": "Library\/Shaders\/1958998782.neshader",
+                        "File": "1958998782.neshader"
+                    }
                 }
             ]
         },
         {
-            "UID": 831230561,
-            "ParentUID": 689991424,
-            "Name": "Sphere001",
+            "UID": 333201055,
+            "ParentUID": 1320648160,
+            "Name": "mixamorig:RightHandMiddle4",
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
@@ -524,9 +480,9 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        1.5867177248001099,
-                        0,
-                        -0.32440948486328125
+                        0.014118661172688007,
+                        1.338651180267334,
+                        -1.5747517068120942e-08
                     ],
                     "LocalRotation": [
                         0,
@@ -535,41 +491,17 @@
                         1
                     ],
                     "LocalScale": [
-                        71.480056762695313,
-                        6.1893529891967773,
+                        1,
+                        1,
                         1
                     ]
-                },
-                {
-                    "Type": 2,
-                    "UID": 411059187,
-                    "Name": "Sphere001.nemesh",
-                    "Path": "Library\/Meshes\/411059187.nemesh",
-                    "File": "411059187.nemesh",
-                    "ShowWireframe": false,
-                    "ShowBoundingBox": false
-                },
-                {
-                    "Type": 3,
-                    "Material": {
-                        "UID": 984578205,
-                        "Name": "Sphere001.nemat",
-                        "Path": "Library\/Materials\/984578205.nemat",
-                        "File": "984578205.nemat"
-                    },
-                    "Shader": {
-                        "UID": 411808307,
-                        "Name": "DefaultShader.shader",
-                        "Path": "Library\/Shaders\/411808307.neshader",
-                        "File": "411808307.neshader"
-                    }
                 }
             ]
         },
         {
-            "UID": 1153874294,
-            "ParentUID": 330678654,
-            "Name": "pCube1",
+            "UID": 368645150,
+            "ParentUID": 1175088466,
+            "Name": "Running.fbx",
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
@@ -589,41 +521,628 @@
                         1
                     ],
                     "LocalScale": [
-                        1,
-                        1,
-                        124.00043487548828
+                        0.10000000149011612,
+                        0.10000000149011612,
+                        0.10000000149011612
                     ]
                 },
                 {
-                    "Type": 2,
-                    "UID": 670899066,
-                    "Name": "pCube1.nemesh",
-                    "Path": "Library\/Meshes\/670899066.nemesh",
-                    "File": "670899066.nemesh",
-                    "ShowWireframe": false,
-                    "ShowBoundingBox": false
+                    "Type": 6,
+                    "Animations": [
+                        {
+                            "UID": 1174549066,
+                            "Name": "mixamo.com.neanimat",
+                            "Path": "Library\/Animations\/1174549066.neanimat",
+                            "File": "1174549066.neanimat"
+                        }
+                    ],
+                    "Clips": [],
+                    "CurrentClip": {
+                        "AnimationName": "mixamo.com",
+                        "Name": "mixamo.com Default"
+                    }
                 },
                 {
-                    "Type": 3,
-                    "Material": {
-                        "UID": 894551736,
-                        "Name": "pCube1.nemat",
-                        "Path": "Library\/Materials\/894551736.nemat",
-                        "File": "894551736.nemat"
-                    },
-                    "Shader": {
-                        "UID": 411808307,
-                        "Name": "DefaultShader.shader",
-                        "Path": "Library\/Shaders\/411808307.neshader",
-                        "File": "411808307.neshader"
-                    }
+                    "Type": 14,
+                    "Playing Event": [
+                        "Mando_footsteps_desert",
+                        407837268
+                    ]
+                },
+                {
+                    "Type": 15
                 }
             ]
         },
         {
-            "UID": 1202662504,
-            "ParentUID": 209858145,
-            "Name": "Banana",
+            "UID": 373821670,
+            "ParentUID": 1912509191,
+            "Name": "mixamorig:RightToe_End",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        2.5224021982239719e-08,
+                        4.1593842506408691,
+                        -1.8408851110152114e-09
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 443796294,
+            "ParentUID": 941005263,
+            "Name": "mixamorig:LeftHandMiddle3",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -0.015284547582268715,
+                        1.8519802093505859,
+                        -6.7473990839062026e-09
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 473467887,
+            "ParentUID": 776661700,
+            "Name": "mixamorig:LeftHandPinky2",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -0.010690060444176197,
+                        1.6104114055633545,
+                        3.0044049026400899e-08
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 479004725,
+            "ParentUID": 1595914098,
+            "Name": "mixamorig:RightHandPinky3",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -0.0053714364767074585,
+                        1.2872984409332275,
+                        6.8756378368561855e-08
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 501910642,
+            "ParentUID": 250749005,
+            "Name": "mixamorig:LeftHandThumb4",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0.19756881892681122,
+                        1.5164462327957153,
+                        -6.7087171373714227e-08
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 501974961,
+            "ParentUID": 636192416,
+            "Name": "mixamorig:RightHandThumb4",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -0.25693705677986145,
+                        1.65032958984375,
+                        -1.0615225143340012e-08
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 511314096,
+            "ParentUID": 1581263024,
+            "Name": "mixamorig:LeftHandPinky4",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0.0015633999137207866,
+                        1.1020917892456055,
+                        8.7403478232772613e-08
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 514404962,
+            "ParentUID": 479004725,
+            "Name": "mixamorig:RightHandPinky4",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -0.00070768746081739664,
+                        1.0332231521606445,
+                        2.5887388233059028e-08
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 576340634,
+            "ParentUID": 1304503906,
+            "Name": "LightPoint",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -58.113269805908203,
+                        63.268608093261719,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 4,
+                    "Diffuse": [
+                        1,
+                        1,
+                        1,
+                        1
+                    ],
+                    "Ambient": [
+                        0.25,
+                        0.25,
+                        0.25,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 633638345,
+            "ParentUID": 171231602,
+            "Name": "mixamorig:RightHandThumb1",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        1.5895953178405762,
+                        1.2923107147216797,
+                        0.30890381336212158
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 636192416,
+            "ParentUID": 926140571,
+            "Name": "mixamorig:RightHandThumb3",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0.24240215122699738,
+                        1.9621762037277222,
+                        -6.0316902583679166e-09
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 672295261,
+            "ParentUID": 171231602,
+            "Name": "mixamorig:RightHandRing1",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -0.71546715497970581,
+                        5.2819070816040039,
+                        -0.025326550006866455
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 702121900,
+            "ParentUID": 891193744,
+            "Name": "mixamorig:LeftHandThumb1",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -1.6993772983551025,
+                        1.3006929159164429,
+                        0.37069621682167053
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 711133626,
+            "ParentUID": 1766337954,
+            "Name": "mixamorig:RightHandRing4",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0.0047510182484984398,
+                        1.4628617763519287,
+                        9.9220656579745992e-08
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 731973513,
+            "ParentUID": 891193744,
+            "Name": "mixamorig:LeftHandMiddle1",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -0.61288803815841675,
+                        5.3103737831115723,
+                        -0.08406202495098114
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 775671474,
+            "ParentUID": 1692217521,
+            "Name": "mixamorig:LeftArm",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        5.0396531392493671e-10,
+                        5.7822170257568359,
+                        1.6234167787843035e-08
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 776661700,
+            "ParentUID": 891193744,
+            "Name": "mixamorig:LeftHandPinky1",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        1.8601677417755127,
+                        4.9849944114685059,
+                        -0.14653566479682922
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 816198007,
+            "ParentUID": 1210907366,
+            "Name": "mixamorig:Spine",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        4.4143295288085938,
+                        0.18147188425064087
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 830633343,
+            "ParentUID": 1397305983,
+            "Name": "mixamorig:LeftToe_End",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        6.8998797786434807e-09,
+                        4.1282448768615723,
+                        3.3930938059256732e-09
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 866922853,
+            "ParentUID": 368645150,
+            "Name": "MandoUVS",
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
@@ -640,44 +1159,110 @@
                         -0.70710676908493042,
                         0,
                         0,
-                        0.7071068286895752
+                        0.70710676908493042
                     ],
                     "LocalScale": [
-                        25.853439331054688,
-                        0.99999994039535522,
-                        6.9189162254333496
+                        1,
+                        1,
+                        1
                     ]
                 },
                 {
                     "Type": 2,
-                    "UID": 571654826,
-                    "Name": "Banana.nemesh",
-                    "Path": "Library\/Meshes\/571654826.nemesh",
-                    "File": "571654826.nemesh",
+                    "UID": 263954223,
+                    "Name": "MandoUVS.nemesh",
+                    "Path": "Library\/Meshes\/263954223.nemesh",
+                    "File": "263954223.nemesh",
                     "ShowWireframe": false,
                     "ShowBoundingBox": false
                 },
                 {
                     "Type": 3,
                     "Material": {
-                        "UID": 2013694742,
-                        "Name": "Banana.nemat",
-                        "Path": "Library\/Materials\/2013694742.nemat",
-                        "File": "2013694742.nemat"
+                        "UID": 739392104,
+                        "Color": [
+                            0.58823531866073608,
+                            0.58823531866073608,
+                            0.58823531866073608,
+                            1
+                        ],
+                        "Name": "MandoUVS.nemat",
+                        "Path": "Library\/Materials\/739392104.nemat",
+                        "File": "739392104.nemat"
                     },
                     "Shader": {
-                        "UID": 411808307,
+                        "UID": 1958998782,
                         "Name": "DefaultShader.shader",
-                        "Path": "Library\/Shaders\/411808307.neshader",
-                        "File": "411808307.neshader"
+                        "Path": "Library\/Shaders\/1958998782.neshader",
+                        "File": "1958998782.neshader"
                     }
                 }
             ]
         },
         {
-            "UID": 1247668431,
-            "ParentUID": 201283786,
-            "Name": "Cylinder001",
+            "UID": 890377312,
+            "ParentUID": 1997372150,
+            "Name": "mixamorig:RightHandIndex2",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -0.015956901013851166,
+                        1.6966351270675659,
+                        7.1312626914732391e-09
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 891193744,
+            "ParentUID": 252420245,
+            "Name": "mixamorig:LeftHand",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -3.1872840366986566e-08,
+                        10.286170959472656,
+                        -4.2331436134190881e-09
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 907505606,
+            "ParentUID": 1304503906,
+            "Name": "Roomv2.fbx",
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
@@ -687,50 +1272,231 @@
                     "Type": 1,
                     "LocalPosition": [
                         0,
-                        3,
+                        0,
                         0
                     ],
                     "LocalRotation": [
-                        0.7071068286895752,
                         0,
                         0,
-                        0.7071068286895752
+                        0,
+                        1
                     ],
                     "LocalScale": [
                         1,
                         1,
-                        3
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 926140571,
+            "ParentUID": 633638345,
+            "Name": "mixamorig:RightHandThumb2",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0.014534847810864449,
+                        1.6573649644851685,
+                        -1.1819288658898586e-08
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 941005263,
+            "ParentUID": 731973513,
+            "Name": "mixamorig:LeftHandMiddle2",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0.026886938139796257,
+                        1.8937416076660156,
+                        -1.7813434283198148e-08
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 981880124,
+            "ParentUID": 1954220829,
+            "Name": "mixamorig:LeftHandRing4",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -0.0050059831701219082,
+                        1.4298496246337891,
+                        -5.470297637089061e-08
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 988834796,
+            "ParentUID": 2084326587,
+            "Name": "mixamorig:RightLeg",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -3.9701102849676317e-08,
+                        17.429067611694336,
+                        -1.8535503798489117e-08
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1175088466,
+            "ParentUID": 1304503906,
+            "Name": "Player",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": true,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -4.0070624351501465,
+                        5.2107982635498047,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
                     ]
                 },
                 {
-                    "Type": 2,
-                    "UID": 2130350259,
-                    "Name": "Cylinder001.nemesh",
-                    "Path": "Library\/Meshes\/2130350259.nemesh",
-                    "File": "2130350259.nemesh",
-                    "ShowWireframe": false,
-                    "ShowBoundingBox": false
+                    "Type": 8,
+                    "Mass": 10,
+                    "Density": 1,
+                    "Linear Damping": 0,
+                    "Angular Damping": 0,
+                    "Use Gravity": true,
+                    "Is Kinematic": true,
+                    "Freeze Position X": false,
+                    "Freeze Position Y": true,
+                    "Freeze Position Z": false,
+                    "Freeze Rotation X": false,
+                    "Freeze Rotation Y": false,
+                    "Freeze Rotation Z": false,
+                    "Is Static": false
                 },
                 {
-                    "Type": 3,
-                    "Material": {
-                        "UID": 1157301784,
-                        "Name": "Cylinder001.nemat",
-                        "Path": "Library\/Materials\/1157301784.nemat",
-                        "File": "1157301784.nemat"
-                    },
-                    "Shader": {
-                        "UID": 411808307,
-                        "Name": "DefaultShader.shader",
-                        "Path": "Library\/Shaders\/411808307.neshader",
-                        "File": "411808307.neshader"
-                    }
+                    "Type": 16,
+                    "Speed": 30,
+                    "Acceleration": 2,
+                    "Deceleration": 2,
+                    "Use Acceleration": false,
+                    "Bullet Speed": 100,
+                    "Camera Mode": false
+                }
+            ]
+        },
+        {
+            "UID": 1210907366,
+            "ParentUID": 368645150,
+            "Name": "mixamorig:Hips",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -1.1088225841522217,
+                        42.633651733398438,
+                        -0.15282058715820313
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
                 }
             ]
         },
         {
             "UID": 1304503906,
-            "ParentUID": 925663096,
+            "ParentUID": 1199253618,
             "Name": "MainScene",
             "IsActive": true,
             "IsStatic": false,
@@ -759,9 +1525,9 @@
             ]
         },
         {
-            "UID": 1841939332,
-            "ParentUID": 386803536,
-            "Name": "Pyramid Wall",
+            "UID": 1320648160,
+            "ParentUID": 183024391,
+            "Name": "mixamorig:RightHandMiddle3",
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
@@ -770,9 +1536,9 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        -63.245719909667969,
-                        0,
-                        10
+                        0.007841791957616806,
+                        1.7697865962982178,
+                        2.789144559756096e-08
                     ],
                     "LocalRotation": [
                         0,
@@ -785,95 +1551,13 @@
                         1,
                         1
                     ]
-                },
-                {
-                    "Type": 8,
-                    "Mass": 10,
-                    "Density": 1,
-                    "Linear Damping": 0,
-                    "Angular Damping": 0,
-                    "Use Gravity": false,
-                    "Is Kinematic": false,
-                    "Freeze Position X": true,
-                    "Freeze Position Y": true,
-                    "Freeze Position Z": true,
-                    "Freeze Rotation X": true,
-                    "Freeze Rotation Y": true,
-                    "Freeze Rotation Z": true,
-                    "Is Static": true
-                },
-                {
-                    "Type": 9,
-                    "Is Trigger": false,
-                    "Size X": 9,
-                    "Size Y": 4,
-                    "Size Z": 150,
-                    "Center X": 0,
-                    "Center Y": 0,
-                    "Center Z": 0
                 }
             ]
         },
         {
-            "UID": 1898101802,
-            "ParentUID": 386803536,
-            "Name": "Wall",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": true,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        21.461280822753906,
-                        0,
-                        0
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {
-                    "Type": 8,
-                    "Mass": 10,
-                    "Density": 1,
-                    "Linear Damping": 0,
-                    "Angular Damping": 0,
-                    "Use Gravity": false,
-                    "Is Kinematic": false,
-                    "Freeze Position X": true,
-                    "Freeze Position Y": true,
-                    "Freeze Position Z": true,
-                    "Freeze Rotation X": true,
-                    "Freeze Rotation Y": true,
-                    "Freeze Rotation Z": true,
-                    "Is Static": true
-                },
-                {
-                    "Type": 9,
-                    "Is Trigger": false,
-                    "Size X": 20,
-                    "Size Y": 1,
-                    "Size Z": 30,
-                    "Center X": 0,
-                    "Center Y": 0,
-                    "Center Z": 0
-                }
-            ]
-        },
-        {
-            "UID": 1925250670,
-            "ParentUID": 386803536,
-            "Name": "Prop",
+            "UID": 1360052870,
+            "ParentUID": 1843368097,
+            "Name": "mixamorig:RightHandIndex4",
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
@@ -882,9 +1566,9 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        -31.63505744934082,
-                        0,
-                        0
+                        -0.0050388369709253311,
+                        1.2636460065841675,
+                        -4.0985895566336694e-08
                     ],
                     "LocalRotation": [
                         0,
@@ -897,112 +1581,263 @@
                         1,
                         1
                     ]
-                },
-                {
-                    "Type": 8,
-                    "Mass": 10,
-                    "Density": 1,
-                    "Linear Damping": 0,
-                    "Angular Damping": 0,
-                    "Use Gravity": false,
-                    "Is Kinematic": false,
-                    "Freeze Position X": true,
-                    "Freeze Position Y": true,
-                    "Freeze Position Z": true,
-                    "Freeze Rotation X": true,
-                    "Freeze Rotation Y": true,
-                    "Freeze Rotation Z": true,
-                    "Is Static": true
-                },
-                {
-                    "Type": 9,
-                    "Is Trigger": false,
-                    "Size X": 6,
-                    "Size Y": 25,
-                    "Size Z": 6,
-                    "Center X": 0,
-                    "Center Y": 0,
-                    "Center Z": 0
-                },
-                {
-                    "Type": 18
                 }
             ]
         },
         {
-            "UID": 2141598923,
+            "UID": 1365643809,
+            "ParentUID": 1509744944,
+            "Name": "mixamorig:RightArm",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        1.8393229161972613e-09,
+                        5.7822170257568359,
+                        1.613093303376445e-08
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1391898746,
+            "ParentUID": 171231602,
+            "Name": "mixamorig:RightHandMiddle1",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0.59761768579483032,
+                        5.5149345397949219,
+                        -0.1500929594039917
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1397305983,
+            "ParentUID": 70532525,
+            "Name": "mixamorig:LeftToeBase",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -9.0554591603009271e-10,
+                        10.501276969909668,
+                        9.7305104418410338e-08
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1406026886,
+            "ParentUID": 702121900,
+            "Name": "mixamorig:LeftHandThumb2",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -0.05645684152841568,
+                        1.7365932464599609,
+                        1.2106362135000381e-08
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1462279716,
+            "ParentUID": 672295261,
+            "Name": "mixamorig:RightHandRing2",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -0.014974494464695454,
+                        1.8813917636871338,
+                        -1.7408652297490335e-09
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1466446536,
+            "ParentUID": 317419646,
+            "Name": "mixamorig:LeftHandRing2",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0.018820000812411308,
+                        1.8701860904693604,
+                        5.4996505127746786e-09
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1509744944,
+            "ParentUID": 2132679362,
+            "Name": "mixamorig:RightShoulder",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -2.683443546295166,
+                        5.5827255249023438,
+                        0.053018331527709961
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1581263024,
+            "ParentUID": 473467887,
+            "Name": "mixamorig:LeftHandPinky3",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0.0091266743838787079,
+                        1.3635703325271606,
+                        -6.2796630118100438e-08
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1583198537,
             "ParentUID": 1304503906,
             "Name": "Camera",
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
-            "ShowBoundingBoxes": true,
+            "ShowBoundingBoxes": false,
             "Components": [
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        0,
-                        45,
-                        -35
-                    ],
-                    "LocalRotation": [
-                        -6.8424334642713802e-08,
-                        -0.90630781650543213,
-                        -0.42261824011802673,
-                        3.1906790098901183e-08
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        0.99999994039535522
-                    ]
-                },
-                {
-                    "Type": 5,
-                    "MinFOV": 1,
-                    "MaxFOV": 120,
-                    "Culling": false,
-                    "OrthogonalView": false,
-                    "HideFrustum": true
-                },
-                {
-                    "Type": 8,
-                    "Mass": 10,
-                    "Density": 1,
-                    "Linear Damping": 0,
-                    "Angular Damping": 0,
-                    "Use Gravity": false,
-                    "Is Kinematic": true,
-                    "Freeze Position X": false,
-                    "Freeze Position Y": true,
-                    "Freeze Position Z": false,
-                    "Freeze Rotation X": true,
-                    "Freeze Rotation Y": false,
-                    "Freeze Rotation Z": true,
-                    "Is Static": false
-                },
-                {
-                    "Type": 19,
-                    "Offset X": 0,
-                    "Offset Y": 45,
-                    "Offset Z": -35
-                }
-            ]
-        },
-        {
-            "UID": 1027342293,
-            "ParentUID": 0,
-            "Name": "LightPoint",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": true,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        26.176296234130859,
+                        -4.0070624351501465,
+                        5.2107982635498047,
                         0
                     ],
                     "LocalRotation": [
@@ -1018,17 +1853,608 @@
                     ]
                 },
                 {
-                    "Type": 4,
-                    "Diffuse": [
-                        1,
+                    "Type": 19,
+                    "Offset X": 0,
+                    "Offset Y": 0,
+                    "Offset Z": 0
+                }
+            ]
+        },
+        {
+            "UID": 1590903733,
+            "ParentUID": 78555095,
+            "Name": "mixamorig:HeadTop_End",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        10.092559814453125,
+                        1.3708500862121582
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
                         1,
                         1,
                         1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1595914098,
+            "ParentUID": 1746177808,
+            "Name": "mixamorig:RightHandPinky2",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0.0060790129937231541,
+                        1.5918823480606079,
+                        3.3415275879633555e-08
                     ],
-                    "Ambient": [
-                        0.25,
-                        0.25,
-                        0.25,
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1692217521,
+            "ParentUID": 2132679362,
+            "Name": "mixamorig:LeftShoulder",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        2.683443546295166,
+                        5.5818977355957031,
+                        0.032881759107112885
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1694555185,
+            "ParentUID": 443796294,
+            "Name": "mixamorig:LeftHandMiddle4",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -0.011602370999753475,
+                        1.4848235845565796,
+                        -4.6184581492525467e-08
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1746177808,
+            "ParentUID": 171231602,
+            "Name": "mixamorig:RightHandPinky1",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -1.9609580039978027,
+                        5.1818957328796387,
+                        -0.21089905500411987
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1766337954,
+            "ParentUID": 1462279716,
+            "Name": "mixamorig:RightHandRing3",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0.010223457589745522,
+                        1.7822508811950684,
+                        -7.3183755944228324e-08
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1784060437,
+            "ParentUID": 988834796,
+            "Name": "mixamorig:RightFoot",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -1.8346611341257812e-08,
+                        15.302711486816406,
+                        7.9123736895780894e-08
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1790027477,
+            "ParentUID": 286270497,
+            "Name": "mixamorig:LeftHandIndex4",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0.010621150024235249,
+                        1.3420604467391968,
+                        3.3601210702727258e-08
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1803188938,
+            "ParentUID": 1950562030,
+            "Name": "mixamorig:LeftLeg",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        2.8607365365473925e-08,
+                        17.438129425048828,
+                        6.1151382624302641e-08
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1814386345,
+            "ParentUID": 891193744,
+            "Name": "mixamorig:LeftHandIndex1",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -1.9546282291412354,
+                        5.2946767807006836,
+                        -0.13371996581554413
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1843368097,
+            "ParentUID": 890377312,
+            "Name": "mixamorig:RightHandIndex3",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0.020995726808905602,
+                        1.5875692367553711,
+                        -5.4163166396392626e-08
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1912509191,
+            "ParentUID": 1784060437,
+            "Name": "mixamorig:RightToeBase",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        4.382920693046799e-08,
+                        10.560494422912598,
+                        -2.715376581363671e-07
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1944122758,
+            "ParentUID": 1365643809,
+            "Name": "mixamorig:RightForeArm",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        3.6132767888830131e-08,
+                        14.281989097595215,
+                        1.0880989265160679e-07
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1950562030,
+            "ParentUID": 1210907366,
+            "Name": "mixamorig:LeftUpLeg",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        3.064298152923584,
+                        -2.4528007507324219,
+                        0.92025202512741089
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1954220829,
+            "ParentUID": 1466446536,
+            "Name": "mixamorig:LeftHandRing3",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -0.013814056292176247,
+                        1.7220915555953979,
+                        6.6411075749783777e-08
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1997372150,
+            "ParentUID": 171231602,
+            "Name": "mixamorig:RightHandIndex1",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        2.0788075923919678,
+                        5.4838676452636719,
+                        -0.1389748603105545
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 2084326587,
+            "ParentUID": 1210907366,
+            "Name": "mixamorig:RightUpLeg",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -3.064298152923584,
+                        -2.4528007507324219,
+                        1.0392366647720337
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 2094368595,
+            "ParentUID": 1304503906,
+            "Name": "prop_tatooine.FBX",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        -3.3711719512939453
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 2104145727,
+            "ParentUID": 816198007,
+            "Name": "mixamorig:Spine1",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        5.1543974876403809,
+                        -1.3600670811797499e-08
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 2132679362,
+            "ParentUID": 2104145727,
+            "Name": "mixamorig:Spine2",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        5.8907365798950195,
+                        -5.2548241313843391e-09
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
                         1
                     ]
                 }
