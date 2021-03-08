@@ -9,7 +9,8 @@ UIElement::UIElement(GameObject* owner, UIElementType type, Rect rect, bool isAc
 	GameObject* parent = owner->parent;
 	if (parent != nullptr)
 	{
-		C_Canvas* canvas = parent->GetComponent<C_Canvas>();
+		//Revert UI changes
+		C_Canvas* canvas = owner->GetComponent<C_Canvas>();
 		if (canvas != nullptr)
 		{
 			SetCanvas(canvas);

@@ -69,7 +69,9 @@ bool UI_Image::CleanUp()
 void UI_Image::RenderImage2D()
 {
 	GameObject* go = GetOwner();
-	if (go->GetComponent<C_Material>() == nullptr) return;
+
+	// Revert UI changes
+	if (GetCanvas()->GetOwner()->GetComponent<C_Material>() == nullptr) return;
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
@@ -85,8 +87,9 @@ void UI_Image::RenderImage2D()
 	glMultMatrixf((GLfloat*)&GetCanvas()->GetOwner()->GetComponent<C_Transform>()->GetWorldTransform().Transposed());
 
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-
-	uint32 id = go->GetComponent<C_Material>()->GetTextureID();
+	
+	// Revert UI changes
+	uint32 id = GetCanvas()->GetOwner()->GetComponent<C_Material>()->GetTextureID();
 	glBindTexture(GL_TEXTURE_2D, id);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
@@ -114,7 +117,7 @@ void UI_Image::RenderImage2D()
 void UI_Image::RenderImage3D()
 {
 	GameObject* go = GetOwner();
-	if (go->GetComponent<C_Material>() == nullptr) return;
+	if (GetCanvas()->GetOwner()->GetComponent<C_Material>() == nullptr) return;
 	
 	glPushMatrix();
 	glMultMatrixf((GLfloat*)&GetOwner()->GetComponent<C_Transform>()->GetWorldTransform().Transposed());
@@ -125,7 +128,7 @@ void UI_Image::RenderImage3D()
 
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
-	uint32 id = go->GetComponent<C_Material>()->GetTextureID();
+	uint32 id = GetCanvas()->GetOwner()->GetComponent<C_Material>()->GetTextureID();
 	glBindTexture(GL_TEXTURE_2D, id); // Not sure
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
