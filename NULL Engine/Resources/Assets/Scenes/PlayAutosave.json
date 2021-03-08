@@ -11,6 +11,11 @@
             "ModelAssetsPath": "Assets\/Models\/Primitives\/banana.fbx"
         },
         {
+            "GameObjectUID": 250722808,
+            "ModelResourceUID": 726380591,
+            "ModelAssetsPath": "Assets\/Models\/Roomv2.fbx"
+        },
+        {
             "GameObjectUID": 330678654,
             "ModelResourceUID": 12774054,
             "ModelAssetsPath": "Assets\/Models\/simp\/simpleAnimation.fbx"
@@ -162,6 +167,36 @@
                         0.0015633999137207866,
                         1.1020917892456055,
                         8.7403478232772613e-08
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 91020627,
+            "ParentUID": 1896615056,
+            "Name": "UI Image",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
                     ],
                     "LocalRotation": [
                         0,
@@ -343,10 +378,10 @@
                         "File": "1528333877.nemat"
                     },
                     "Shader": {
-                        "UID": 974544654,
+                        "UID": 1224359858,
                         "Name": "DefaultShader.shader",
-                        "Path": "Library\/Shaders\/974544654.neshader",
-                        "File": "974544654.neshader"
+                        "Path": "Library\/Shaders\/1224359858.neshader",
+                        "File": "1224359858.neshader"
                     }
                 }
             ]
@@ -528,6 +563,36 @@
                         0.010621150024235249,
                         1.3420604467391968,
                         3.3601210702727258e-08
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 250722808,
+            "ParentUID": 1304503906,
+            "Name": "Roomv2.fbx",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
                     ],
                     "LocalRotation": [
                         0,
@@ -906,7 +971,7 @@
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
+            "ShowBoundingBoxes": true,
             "Components": [
                 {
                     "Type": 1,
@@ -945,10 +1010,10 @@
                         "File": "739392104.nemat"
                     },
                     "Shader": {
-                        "UID": 974544654,
+                        "UID": 1224359858,
                         "Name": "DefaultShader.shader",
-                        "Path": "Library\/Shaders\/974544654.neshader",
-                        "File": "974544654.neshader"
+                        "Path": "Library\/Shaders\/1224359858.neshader",
+                        "File": "1224359858.neshader"
                     }
                 }
             ]
@@ -999,10 +1064,10 @@
                         "File": "1839899230.nemat"
                     },
                     "Shader": {
-                        "UID": 974544654,
+                        "UID": 1224359858,
                         "Name": "DefaultShader.shader",
-                        "Path": "Library\/Shaders\/974544654.neshader",
-                        "File": "974544654.neshader"
+                        "Path": "Library\/Shaders\/1224359858.neshader",
+                        "File": "1224359858.neshader"
                     }
                 }
             ]
@@ -1074,14 +1139,14 @@
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
+            "ShowBoundingBoxes": true,
             "Components": [
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        0,
-                        0,
-                        5.5363998413085938
+                        -20.100000381469727,
+                        10.954999923706055,
+                        -8.5
                     ],
                     "LocalRotation": [
                         0,
@@ -1308,10 +1373,10 @@
                         "File": "624268113.nemat"
                     },
                     "Shader": {
-                        "UID": 974544654,
+                        "UID": 1224359858,
                         "Name": "DefaultShader.shader",
-                        "Path": "Library\/Shaders\/974544654.neshader",
-                        "File": "974544654.neshader"
+                        "Path": "Library\/Shaders\/1224359858.neshader",
+                        "File": "1224359858.neshader"
                     }
                 }
             ]
@@ -1523,6 +1588,60 @@
             ]
         },
         {
+            "UID": 825532952,
+            "ParentUID": 250722808,
+            "Name": "pCube1",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -51.173999786376953,
+                        0.5,
+                        52.592891693115234
+                    ],
+                    "LocalRotation": [
+                        0,
+                        -0.38268345594406128,
+                        0,
+                        0.92387950420379639
+                    ],
+                    "LocalScale": [
+                        10.000002861022949,
+                        10,
+                        10.000002861022949
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 446507240,
+                    "Name": "pCube1.nemesh",
+                    "Path": "Library\/Meshes\/446507240.nemesh",
+                    "File": "446507240.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 1454765715,
+                        "Name": "pCube1.nemat",
+                        "Path": "Library\/Materials\/1454765715.nemat",
+                        "File": "1454765715.nemat"
+                    },
+                    "Shader": {
+                        "UID": 1224359858,
+                        "Name": "DefaultShader.shader",
+                        "Path": "Library\/Shaders\/1224359858.neshader",
+                        "File": "1224359858.neshader"
+                    }
+                }
+            ]
+        },
+        {
             "UID": 831230561,
             "ParentUID": 689991424,
             "Name": "Sphere001",
@@ -1568,10 +1687,10 @@
                         "File": "984578205.nemat"
                     },
                     "Shader": {
-                        "UID": 974544654,
+                        "UID": 1224359858,
                         "Name": "DefaultShader.shader",
-                        "Path": "Library\/Shaders\/974544654.neshader",
-                        "File": "974544654.neshader"
+                        "Path": "Library\/Shaders\/1224359858.neshader",
+                        "File": "1224359858.neshader"
                     }
                 }
             ]
@@ -1922,10 +2041,10 @@
                         "File": "894551736.nemat"
                     },
                     "Shader": {
-                        "UID": 974544654,
+                        "UID": 1224359858,
                         "Name": "DefaultShader.shader",
-                        "Path": "Library\/Shaders\/974544654.neshader",
-                        "File": "974544654.neshader"
+                        "Path": "Library\/Shaders\/1224359858.neshader",
+                        "File": "1224359858.neshader"
                     }
                 }
             ]
@@ -2036,10 +2155,10 @@
                         "File": "2013694742.nemat"
                     },
                     "Shader": {
-                        "UID": 974544654,
+                        "UID": 1224359858,
                         "Name": "DefaultShader.shader",
-                        "Path": "Library\/Shaders\/974544654.neshader",
-                        "File": "974544654.neshader"
+                        "Path": "Library\/Shaders\/1224359858.neshader",
+                        "File": "1224359858.neshader"
                     }
                 }
             ]
@@ -2226,7 +2345,7 @@
         },
         {
             "UID": 1304503906,
-            "ParentUID": 961283314,
+            "ParentUID": 1573559852,
             "Name": "MainScene",
             "IsActive": true,
             "IsStatic": false,
@@ -2641,6 +2760,46 @@
             ]
         },
         {
+            "UID": 1896615056,
+            "ParentUID": 2141598923,
+            "Name": "EmptyGameObject",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 13,
+                    "Canvas": {
+                        "X": 0,
+                        "Y": 0,
+                        "W": 1.0926049947738647,
+                        "H": 0.5787392258644104,
+                        "Z": -53.5
+                    }
+                }
+            ]
+        },
+        {
             "UID": 1898101802,
             "ParentUID": 386803536,
             "Name": "Wall",
@@ -2917,20 +3076,20 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        0,
-                        30,
-                        -34.463600158691406
+                        -20.100000381469727,
+                        60.955001831054688,
+                        -53.5
                     ],
                     "LocalRotation": [
-                        -0.0030103214085102081,
-                        0.95031309127807617,
-                        0.31127965450286865,
-                        0.00098604534287005663
+                        -6.9932866608723998e-08,
+                        0.92628878355026245,
+                        0.37681439518928528,
+                        2.8448678079939782e-08
                     ],
                     "LocalScale": [
-                        1.0000143051147461,
-                        0.99999982118606567,
-                        1.0000119209289551
+                        1.0000498294830322,
+                        1.0000066757202148,
+                        1.0000524520874023
                     ]
                 },
                 {
@@ -2944,48 +3103,8 @@
                 {
                     "Type": 19,
                     "Offset X": 0,
-                    "Offset Y": 30,
-                    "Offset Z": -40
-                }
-            ]
-        },
-        {
-            "UID": 1896615056,
-            "ParentUID": 2141598923,
-            "Name": "EmptyGameObject",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        0,
-                        0
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {
-                    "Type": 13,
-                    "Canvas": {
-                        "X": 0,
-                        "Y": 0,
-                        "W": 0.10926049947738647,
-                        "H": 0.0578739233314991,
-                        "Z": -34.463600158691406
-                    }
+                    "Offset Y": 50,
+                    "Offset Z": -45
                 }
             ]
         }

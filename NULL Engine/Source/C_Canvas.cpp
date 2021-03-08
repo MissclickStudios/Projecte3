@@ -158,6 +158,10 @@ bool C_Canvas::SaveState(ParsonNode& root) const
 	canvas.SetNumber("H", GetRect().h);
 	canvas.SetNumber("Z", GetZ());
 
+	if (!uiElements.empty())
+		canvas.SetNumber("NumElements", uiElements.size());
+
+
 	return ret;
 }
 
