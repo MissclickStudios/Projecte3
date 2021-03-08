@@ -59,6 +59,9 @@ void C_Canvas::Draw2D()
 	glMatrixMode(GL_MODELVIEW);
 	glLoadMatrixf(App->camera->GetCurrentCamera()->GetOGLViewMatrix());
 
+	glPushMatrix();
+	glMultMatrixf((GLfloat*)&GetOwner()->GetComponent<C_Transform>()->GetWorldTransform().Transposed());
+
 	glLineWidth(2.0f);
 
 	glBegin(GL_LINES);
@@ -87,6 +90,8 @@ void C_Canvas::Draw2D()
 	glEnd();
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 	glLineWidth(1.0f);
+
+	glPopMatrix();
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadMatrixf(App->camera->GetCurrentCamera()->GetOGLProjectionMatrix());

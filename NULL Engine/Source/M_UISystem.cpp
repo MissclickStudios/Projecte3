@@ -15,7 +15,7 @@
 
 #pragma comment (lib, "Source/Dependencies/FreeType/libx86/freetype.lib")
 
-M_UISystem::M_UISystem(bool isActive) : Module("UISystem", isActive), isCameraSwap(false)
+M_UISystem::M_UISystem(bool isActive) : Module("UISystem", isActive), isCameraSwap(true)
 {
 	error = FT_Init_FreeType(&libraryFT);
 	if (error)
@@ -68,8 +68,8 @@ UpdateStatus M_UISystem::PostUpdate(float dt)
 			if (App->camera->GetCurrentCamera() != App->camera->masterCamera->GetComponent<C_Camera>())
 			{
 				canvasIt->SetSize({ App->camera->GetCurrentCamera()->GetFrustum().NearPlaneWidth(), App->camera->GetCurrentCamera()->GetFrustum().NearPlaneHeight() });
-				canvasIt->SetPosition({ canvasIt->GetOwner()->GetComponent<C_Transform>()->GetWorldPosition().x, canvasIt->GetOwner()->GetComponent<C_Transform>()->GetWorldPosition().y });
-				canvasIt->GetOwner()->GetComponent<C_Transform>()->SetLocalEulerRotation(App->camera->masterCamera->GetComponent<C_Transform>()->GetLocalEulerRotation());
+				//canvasIt->SetPosition({ canvasIt->GetOwner()->GetComponent<C_Transform>()->GetWorldPosition().x, canvasIt->GetOwner()->GetComponent<C_Transform>()->GetWorldPosition().y });
+				//canvasIt->GetOwner()->GetComponent<C_Transform>()->SetLocalEulerRotation(App->camera->masterCamera->GetComponent<C_Transform>()->GetLocalEulerRotation());
 
 				if (isCameraSwap)
 				{

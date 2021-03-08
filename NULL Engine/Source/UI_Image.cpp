@@ -80,6 +80,9 @@ void UI_Image::RenderImage2D()
 	glDisable(GL_DEPTH_TEST);
 	glDisable(GL_LIGHTING);
 
+	glPushMatrix();
+	glMultMatrixf((GLfloat*)&GetCanvas()->GetOwner()->GetComponent<C_Transform>()->GetWorldTransform().Transposed());
+
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
 	uint32 id = go->GetComponent<C_Material>()->GetTextureID();
@@ -93,6 +96,8 @@ void UI_Image::RenderImage2D()
 	glTexCoord2f(1, 1); glVertex2f(GetCanvas()->GetPosition().x + GetRect().x + GetRect().w / 2, GetCanvas()->GetPosition().y + GetRect().y + GetRect().h / 2);
 	glTexCoord2f(0, 1); glVertex2f(GetCanvas()->GetPosition().x + GetRect().x - GetRect().w / 2, GetCanvas()->GetPosition().y + GetRect().y + GetRect().h / 2);
 	glEnd();
+
+	glPopMatrix();
 
 	glBindTexture(GL_TEXTURE_2D, 0);
 

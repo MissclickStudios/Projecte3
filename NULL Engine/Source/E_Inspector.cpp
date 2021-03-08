@@ -601,13 +601,11 @@ void E_Inspector::DrawCameraComponent(C_Camera* cCamera)
 			if (ImGui::Button("Set as Current Camera"))
 			{
 				EngineApp->editor->SetCurrentCameraThroughEditor(cCamera);
-				App->uiSystem->SetIsCameraSwap();
 			}
 
 			if (ImGui::Button("Return to Master Camera"))
 			{
 				EngineApp->editor->SetMasterCameraThroughEditor();
-				App->uiSystem->SetIsCameraSwap();
 			}
 		}
 
