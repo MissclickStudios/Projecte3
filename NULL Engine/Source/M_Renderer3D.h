@@ -263,7 +263,7 @@ public:																											// --- DEBUG GET/SET METHODS
 
 public:
 	void			AddPostSceneRenderModule(Module* module);
-	void			GenerateSceneLight();
+	GameObject*		GenerateSceneLight();
 private:
 	void			GenScreenBuffer();
 
@@ -271,7 +271,7 @@ public:
 	Light					lights[MAX_LIGHTS];																	// 
 	SDL_GLContext			context;																			// 
 	R_Shader*				defaultShader = nullptr;
-	GameObject*				lightPoint;
+	
 
 	std::vector<Primitive*>	primitives;
 

@@ -103,7 +103,7 @@ bool M_Renderer3D::Start()
 
 	GenScreenBuffer();
 
-	GenerateSceneLight();
+	
 
 
 	return true;
@@ -1271,19 +1271,21 @@ void M_Renderer3D::AddPostSceneRenderModule(Module* module)
 	PostSceneRenderModules.push_back(module);
 }
 
-void M_Renderer3D::GenerateSceneLight()
+GameObject* M_Renderer3D::GenerateSceneLight()
 {
+	GameObject* lightPoint;
 	lightPoint = App->scene->CreateGameObject("LightPoint");
 	lightPoint->CreateComponent(ComponentType::LIGHT);
 	C_Light* lightComp = lightPoint->GetComponent<C_Light>();
 	lightComp->GetLight()->Active(true);
 
-	lightComp->GetLight()->ref = GL_LIGHT0;
 	lightComp->GetLight()->ambient.Set(0.25f, 0.25f, 0.25f, 1.0f);
 	lightComp->GetLight()->diffuse.Set(1.0f, 1.0f, 1.0f, 1.0f);
 	lightComp->GetLight()->Init();
 
 	App->scene->GetSceneRoot()->AddChild(lightPoint);
+	
+	return lightPoint;
 }
 
 void M_Renderer3D::GenScreenBuffer()
@@ -1566,9 +1568,9 @@ void MeshRenderer::ApplyShader()
 
 			cMaterial->GetShader()->SetUniformMatrix4("projectionMatrix", App->camera->GetCurrentCamera()->GetOGLProjectionMatrix());
 
-			cMaterial->GetShader()->SetUniformVec4f("lightColor", (GLfloat*)&App->renderer->lightPoint->GetComponent<C_Light>()->GetLight()->diffuse);
+			cMaterial->GetShader()->SetUniformVec4f("lightColor", (GLfloat*)&App->scene->GetSceneLight()->GetComponent<C_Light>()->GetLight()->diffuse);
 
-			cMaterial->GetShader()->SetUniformVec3f("lightPos", (GLfloat*)&App->renderer->lightPoint->transform->GetWorldPosition());
+			cMaterial->GetShader()->SetUniformVec3f("lightPos", (GLfloat*)&App->scene->GetSceneLight()->transform->GetWorldPosition());
 
 			cMaterial->GetShader()->SetUniform1f("time", Time::Game::GetTimeSinceStart());
 

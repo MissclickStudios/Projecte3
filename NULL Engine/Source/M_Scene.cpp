@@ -91,7 +91,7 @@ bool M_Scene::Start()
 	//level.GenerateLevel();
 	//level.GenerateRoom(0);
 
-	
+	if(!CheckSceneLight()) SetSceneLight(App->renderer->GenerateSceneLight());
 	
 
 	return ret;
@@ -384,6 +384,13 @@ bool M_Scene::LoadScene(const char* path)
 			if (gameObject->GetComponent<C_Animator>() != nullptr)
 			{
 				animationRoot = gameObject;
+			}
+
+			if (gameObject->GetComponent<C_Light>() != nullptr)
+			{
+				lightPoint = gameObject;
+				lightPoint->SetParent(sceneRoot);
+				gameObjects.push_back(lightPoint);
 			}
 
 			C_Camera* cCamera = gameObject->GetComponent<C_Camera>();
@@ -982,6 +989,29 @@ void M_Scene::GetFaces(const std::vector<float>& vertices, std::vector<Triangle>
 	}
 
 	verts.clear();
+}
+
+bool M_Scene::CheckSceneLight()
+{
+	for (int i = 0; i < gameObjects.size(); i++)
+	{
+		if (gameObjects[i]->GetComponent<C_Light>() != nullptr)
+		{
+			return true;
+		}
+	}
+	
+	return false;
+}
+
+GameObject* M_Scene::GetSceneLight()
+{
+	return lightPoint;
+}
+
+void M_Scene::SetSceneLight(GameObject* lightPoint)
+{
+	this->lightPoint = lightPoint;
 }
 
 void M_Scene::DeleteSelectedGameObject()
