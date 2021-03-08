@@ -3,6 +3,7 @@
 
 #include "MathGeoFrustum.h"
 #include "MathGeoLib/include/Math/float2.h"
+#include "MathGeoLib/include/Math/Quat.h"
 #include "Component.h"
 
 class ParsonNode;
