@@ -1178,9 +1178,7 @@ void E_Inspector::DrawCanvasComponent(C_Canvas* cCanvas)
 
 			if (ImGui::Button("Add Image"))
 			{
-
 				GameObject* go = EngineApp->scene->CreateGameObject("UI Image", cCanvas->GetOwner());
-
 				go->CreateUIElement(UIElementType::IMAGE);
 				cCanvas->uiElements.push_back(go->GetUIElement());
 			}

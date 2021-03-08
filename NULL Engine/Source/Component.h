@@ -30,9 +30,7 @@ enum class ComponentType
 	PLAYER_CONTROLLER,
 	BULLET_BEHAVIOR,
 	PROP_BEHAVIOR,
-	CAMERA_BEHAVIOR,
-	// ---
-	IMAGE
+	CAMERA_BEHAVIOR
 };
 
 class NULL_API Component
