@@ -28,6 +28,7 @@
 #include "C_PlayerController.h"
 #include "C_BulletBehavior.h"
 #include "C_PropBehavior.h"
+#include "C_CameraBehavior.h"
 
 #include "GameObject.h"
 
@@ -197,6 +198,7 @@ bool GameObject::LoadState(ParsonNode& root)
 			case ComponentType::PLAYER_CONTROLLER: { component = new C_PlayerController(this); } break;
 			case ComponentType::BULLET_BEHAVIOR: { component = new C_BulletBehavior(this); }	break;
 			case ComponentType::PROP_BEHAVIOR: { component = new C_PropBehavior(this); }	break;
+			case ComponentType::CAMERA_BEHAVIOR: { component = new C_CameraBehavior(this); }	break;
 			}
 
 			if (component != nullptr)
@@ -687,6 +689,7 @@ Component* GameObject::CreateComponent(ComponentType type)
 	case ComponentType::PLAYER_CONTROLLER:	{ component = new C_PlayerController(this); }	break;
 	case ComponentType::BULLET_BEHAVIOR: { component = new C_BulletBehavior(this); }	break;
 	case ComponentType::PROP_BEHAVIOR: { component = new C_PropBehavior(this); }	break;
+	case ComponentType::CAMERA_BEHAVIOR: { component = new C_CameraBehavior(this); }	break;
 	}
 
 	if (component != nullptr)

@@ -39,6 +39,21 @@
             "GameObjectUID": 1925250670,
             "ModelResourceUID": 1993753731,
             "ModelAssetsPath": "Assets\/Models\/TestProp\/prop_tatooine.FBX"
+        },
+        {
+            "GameObjectUID": 1925250670,
+            "ModelResourceUID": 1993753731,
+            "ModelAssetsPath": "Assets\/Models\/TestProp\/prop_tatooine.FBX"
+        },
+        {
+            "GameObjectUID": 1925250670,
+            "ModelResourceUID": 1993753731,
+            "ModelAssetsPath": "Assets\/Models\/TestProp\/prop_tatooine.FBX"
+        },
+        {
+            "GameObjectUID": 1925250670,
+            "ModelResourceUID": 1993753731,
+            "ModelAssetsPath": "Assets\/Models\/TestProp\/prop_tatooine.FBX"
         }
     ],
     "Game Objects": [
@@ -715,7 +730,7 @@
         },
         {
             "UID": 1304503906,
-            "ParentUID": 676821543,
+            "ParentUID": 2001119961,
             "Name": "MainScene",
             "IsActive": true,
             "IsStatic": false,
@@ -857,12 +872,12 @@
         },
         {
             "UID": 1925250670,
-            "ParentUID": 1304503906,
-            "Name": "prop_tatooine.FBX",
+            "ParentUID": 386803536,
+            "Name": "Prop",
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
-            "ShowBoundingBoxes": true,
+            "ShowBoundingBoxes": false,
             "Components": [
                 {
                     "Type": 1,
@@ -927,19 +942,19 @@
                     "Type": 1,
                     "LocalPosition": [
                         0,
-                        30,
-                        -40
+                        45,
+                        -35
                     ],
                     "LocalRotation": [
-                        4.2221959262178643e-08,
-                        -0.96592581272125244,
-                        -0.25881907343864441,
-                        -1.1313341374830088e-08
+                        -6.8424334642713802e-08,
+                        -0.90630781650543213,
+                        -0.42261824011802673,
+                        3.1906790098901183e-08
                     ],
                     "LocalScale": [
                         1,
                         1,
-                        1
+                        0.99999994039535522
                     ]
                 },
                 {
@@ -948,7 +963,7 @@
                     "MaxFOV": 120,
                     "Culling": false,
                     "OrthogonalView": false,
-                    "HideFrustum": false
+                    "HideFrustum": true
                 },
                 {
                     "Type": 8,
@@ -967,13 +982,10 @@
                     "Is Static": false
                 },
                 {
-                    "Type": 16,
-                    "Speed": 30,
-                    "Acceleration": 2,
-                    "Deceleration": 2,
-                    "Use Acceleration": false,
-                    "Bullet Speed": 100,
-                    "Camera Mode": true
+                    "Type": 19,
+                    "Offset X": 0,
+                    "Offset Y": 45,
+                    "Offset Z": -35
                 }
             ]
         }

@@ -33,6 +33,7 @@
 #include "C_PlayerController.h"
 #include "C_BulletBehavior.h"
 #include "C_PropBehavior.h"
+#include "C_CameraBehavior.h"
 
 #include "R_Shader.h"
 #include "R_Texture.h"
@@ -196,10 +197,11 @@ void E_Inspector::DrawComponents(GameObject* selectedGameObject)
 		case ComponentType::CAPSULE_COLLIDER:	{ DrawCapsuleColliderComponent((C_CapsuleCollider*)component); }	break;
 		case ComponentType::CANVAS:				{ DrawCanvasComponent((C_Canvas*)component); }						break;
 		case ComponentType::PLAYER_CONTROLLER:	{ DrawPlayerControllerComponent((C_PlayerController*)component); }	break;
-		case ComponentType::BULLET_BEHAVIOR: { DrawBulletBehaviorComponent((C_BulletBehavior*)component); }	break;
-		case ComponentType::PROP_BEHAVIOR: { DrawPropBehaviorComponent((C_PropBehavior*)component); }	break;
+		case ComponentType::BULLET_BEHAVIOR:	{ DrawBulletBehaviorComponent((C_BulletBehavior*)component); }		break;
+		case ComponentType::PROP_BEHAVIOR:		{ DrawPropBehaviorComponent((C_PropBehavior*)component); }			break;
+		case ComponentType::CAMERA_BEHAVIOR:	{ DrawCameraBehaviorComponent((C_CameraBehavior*)component); }		break;
 		}
-
+		
 		if (type == ComponentType::NONE)
 		{
 			LOG("[WARNING] Selected GameObject %s has a non-valid component!", selectedGameObject->GetName());
@@ -1385,6 +1387,10 @@ void E_Inspector::DrawBulletBehaviorComponent(C_BulletBehavior* cBehavior)
 	bool show = true;
 	if (ImGui::CollapsingHeader("Bullet Bahavior", &show, ImGuiTreeNodeFlags_Leaf))
 	{
+		bool isActive = cBehavior->IsActive();
+		if (ImGui::Checkbox("Bullet Is Active", &isActive))
+			cBehavior->SetIsActive(isActive);
+
 		if (!show)
 		{
 			componentToDelete = cBehavior;
@@ -1401,6 +1407,37 @@ void E_Inspector::DrawPropBehaviorComponent(C_PropBehavior* cBehavior)
 	bool show = true;
 	if (ImGui::CollapsingHeader("Prop Bahavior", &show, ImGuiTreeNodeFlags_Leaf))
 	{
+		bool isActive = cBehavior->IsActive();
+		if (ImGui::Checkbox("Prop Is Active", &isActive))
+			cBehavior->SetIsActive(isActive);
+
+		if (!show)
+		{
+			componentToDelete = cBehavior;
+			showDeleteComponentPopup = true;
+		}
+
+		ImGui::Separator();
+	}
+	return;
+}
+
+void E_Inspector::DrawCameraBehaviorComponent(C_CameraBehavior* cBehavior)
+{
+	bool show = true;
+	if (ImGui::CollapsingHeader("Camera Bahavior", &show, ImGuiTreeNodeFlags_Leaf))
+	{
+		bool isActive = cBehavior->IsActive();
+		if (ImGui::Checkbox("Camera Behavior Is Active", &isActive))
+			cBehavior->SetIsActive(isActive);
+
+		ImGui::Separator();
+
+		float3 offset = cBehavior->GetOffset();
+		float o[3] = { offset.x, offset.y, offset.z };
+		if (ImGui::InputFloat3("Offset", o, 4, ImGuiInputTextFlags_EnterReturnsTrue))
+			cBehavior->SetOffset(float3(o[0], o[1], o[2]));
+
 		if (!show)
 		{
 			componentToDelete = cBehavior;
@@ -1415,7 +1452,7 @@ void E_Inspector::DrawPropBehaviorComponent(C_PropBehavior* cBehavior)
 void E_Inspector::AddComponentCombo(GameObject* selectedGameObject)
 {
 
-	ImGui::Combo("##", &componentType, "Add Component\0Transform\0Mesh\0Material\0Light\0Camera\0Animator\0Animation\0RigidBody\0Box Collider\0Sphere Collider\0Capsule Collider\0Particle System\0Canvas\0Audio Source\0Audio Listener\0Player Controller\0Bullet Behavior\0Prop Behavior");
+	ImGui::Combo("##", &componentType, "Add Component\0Transform\0Mesh\0Material\0Light\0Camera\0Animator\0Animation\0RigidBody\0Box Collider\0Sphere Collider\0Capsule Collider\0Particle System\0Canvas\0Audio Source\0Audio Listener\0Player Controller\0Bullet Behavior\0Prop Behavior\0Camera Behavior");
 	ImGui::SameLine();
 
 	if ((ImGui::Button("ADD")))
