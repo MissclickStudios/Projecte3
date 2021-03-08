@@ -161,11 +161,6 @@ bool C_Canvas::SaveState(ParsonNode& root) const
 	if (!uiElements.empty())
 		canvas.SetNumber("NumElements", uiElements.size());
 
-	
-	for (std::vector<UIElement*>::const_iterator uiIt = uiElements.begin(); uiIt != uiElements.end(); uiIt++)
-	{
-		ParsonNode element = root.SetNode()
-	}
 
 	return ret;
 }
