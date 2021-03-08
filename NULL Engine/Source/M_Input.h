@@ -27,17 +27,17 @@ enum class KeyState
 	KEY_UP
 };
 
-enum class ButtonState
+enum class ButtonState								
 {
 	BUTTON_IDLE,
 	BUTTON_DOWN,
 	BUTTON_REPEAT,
 	BUTTON_UP,
-	UNKNOWN_BUTTON
+	UNKNOWN_BUTTON									
 };
 
 enum class AxisState
-{
+{								
 	AXIS_IDLE,
 	POSITIVE_AXIS_DOWN,
 	POSITIVE_AXIS_REPEAT,
@@ -45,21 +45,21 @@ enum class AxisState
 	NEGATIVE_AXIS_DOWN,
 	NEGATIVE_AXIS_REPEAT,
 	NEGATIVE_AXIS_RELEASE,
-	UNKNOWN_AXIS
+	UNKNOWN_AXIS								
 };
 
 
 struct GameController
 {
-	_SDL_GameController* id;
-	int						index;
+	_SDL_GameController*    id;							
+	int						index;						
 
-	ButtonState* buttons;
-	ButtonState* triggers;
-	AxisState* axis;
+	ButtonState*			buttons;
+	ButtonState*			triggers;					
+	AxisState*				axis;
 
-	float					max_axis_input_threshold;
-	float					min_axis_input_threshold;
+	float					max_axis_input_threshold;	
+	float					min_axis_input_threshold;	
 };
 
 #define MAX_MOUSE_BUTTONS 5
@@ -67,47 +67,45 @@ struct GameController
 class NULL_API M_Input : public Module
 {
 public:
-
+	
 	M_Input(bool isActive = true);
 	~M_Input();
 
-	bool			Init(ParsonNode& config) override;
-	UpdateStatus	PreUpdate(float dt) override;
-	UpdateStatus	Update(float dt) override;
-	UpdateStatus	PostUpdate(float dt) override;
-	bool			CleanUp() override;
+	bool			Init					(ParsonNode& config) override;
+	UpdateStatus	PreUpdate				(float dt) override;
+	UpdateStatus	Update					(float dt) override;
+	UpdateStatus	PostUpdate				(float dt) override;
+	bool			CleanUp					() override;
 
-	bool			LoadConfiguration(ParsonNode& root) override;
-	bool			SaveConfiguration(ParsonNode& root) const override;
+	bool			LoadConfiguration		(ParsonNode& root) override;
+	bool			SaveConfiguration		(ParsonNode& root) const override;
 
 public:
-	KeyState		GetKey(int id) const;
-	KeyState		GetMouseButton(int id) const;
-	uint			GetMaxNumScancodes() const;
+	KeyState		GetKey					(int id) const;
+	KeyState		GetMouseButton			(int id) const;
+	uint			GetMaxNumScancodes		() const;
 
-	int				GetMouseX() const;
-	int				GetMouseY() const;
-	int				GetMouseZ() const;
-	int				GetMouseXMotion() const;
-	int				GetMouseYMotion() const;
-	int				GetMouseXMotionFromSDL() const;
-	int				GetMouseYMotionFromSDL() const;
-	int				GetMouseXWheel() const;
-	int				GetMouseYWheel() const;
-
-	ButtonState		GetGameControllerButton(int id) const;
-	ButtonState		GetGameControllerTrigger(int id) const;
-	AxisState		GetGameControllerAxis(int id) const;	
+	int				GetMouseX				() const;
+	int				GetMouseY				() const;
+	int				GetMouseZ				() const;
+	int				GetMouseXMotion			() const;
+	int				GetMouseYMotion			() const;
+	int				GetMouseXMotionFromSDL	() const;
+	int				GetMouseYMotionFromSDL	() const;
+	int				GetMouseXWheel			() const;
+	int				GetMouseYWheel			() const;
 
 	bool			WindowSizeWasManipulated(Uint8 windowEvent) const;										// Uint8 is an SDL typedef for unsigned char.
-
+	
 	void			AddModuleToProcessInput(Module* module);												//Add a module that needs SDL_Events inputs info
+
+	void			CheckGameControllerState();
 
 private:
 
 	GameController  gameController;
-
-	KeyState* keyboard;
+	
+	KeyState*		keyboard;
 	KeyState		mouseButtons[MAX_MOUSE_BUTTONS];
 	uint			maxNumScancodes;
 

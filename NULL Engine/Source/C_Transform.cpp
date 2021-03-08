@@ -203,7 +203,7 @@ void C_Transform::SyncLocalToWorld()
 	C_RigidBody* c_rigidBody = owner->GetComponent<C_RigidBody>();
 	if (c_rigidBody != nullptr)
 	{
-		if(!App->play || App->pause)
+		if(!App->play)
 			c_rigidBody->TransformMovesRigidBody(false);
 	}
 

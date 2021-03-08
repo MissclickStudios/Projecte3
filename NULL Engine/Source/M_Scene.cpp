@@ -525,14 +525,14 @@ void M_Scene::DeleteGameObject(GameObject* gameObject, uint index)
 	LOG("[ERROR] Could not find game object %s in game_objects vector!", gameObject->GetName());
 }
 
-GameObject* M_Scene::GenerateGameObjectsFromModel(const R_Model* rModel, const float3& scale)
+void M_Scene::GenerateGameObjectsFromModel(const R_Model* rModel, const float3& scale)
 {
 	//R_Model* rModel = (R_Model*)App->resourceManager->RequestResource(modelUid);
 
 	if (rModel == nullptr)
 	{
 		LOG("[ERROR] Scene: Could not generate GameObjects from Model Resource! Error: R_Model* was nullptr.");
-		return nullptr;
+		return;
 	}
 
 	GameObject* parentRoot = nullptr;
@@ -597,12 +597,10 @@ GameObject* M_Scene::GenerateGameObjectsFromModel(const R_Model* rModel, const f
 			CreateAnimationComponentFromModel(rModel, parentRoot);							// Must be done last as the parent hierarchy needs to be in place.
 		}
 
-		//parentRoot = nullptr; //I David Rami purposelly and for a reason comented this
+		parentRoot = nullptr;
 	}
 
 	tmp.clear();
-
-	return parentRoot;
 }
 
 void M_Scene::CreateComponentsFromModelNode(const ModelNode& modelNode, GameObject* gameObject)

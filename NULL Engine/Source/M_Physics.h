@@ -35,7 +35,7 @@ public:
 	bool LoadConfiguration(ParsonNode& configuration) override;
 	bool SaveConfiguration(ParsonNode& configuration) const override;
 
-	void AddActor(physx::PxActor* actor, GameObject* owner);
+	void AddActor(physx::PxActor* actor);
 	void DeleteActor(physx::PxActor* actor);
 
 	physx::PxPhysics* physics = nullptr;

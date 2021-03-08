@@ -21,6 +21,9 @@ C_RigidBody::C_RigidBody(GameObject* owner) : Component(owner, ComponentType::RI
 		physx::PxTransform(physx::PxVec3(position.x, position.y, position.z),
 			physx::PxQuat(rotation.x, rotation.y, rotation.z, rotation.w)));
 
+	//We save a pointer to the gameobject inside the physically simulated body
+	rigidBody->userData = this;
+
 	if (!rigidBody)
 	{
 		LOG("[ERROR] RigidBody Component: Couldn't create rigidbody");
@@ -31,7 +34,7 @@ C_RigidBody::C_RigidBody(GameObject* owner) : Component(owner, ComponentType::RI
 
 	ApplyPhysicsChanges();
 
-	App->physics->AddActor(rigidBody, GetOwner());
+	App->physics->AddActor(rigidBody);
 }
 
 C_RigidBody::~C_RigidBody()
@@ -126,7 +129,7 @@ void C_RigidBody::SetIsActive(bool setTo)
 		if (isActive)
 		{
 			TransformMovesRigidBody(false);
-			App->physics->AddActor(rigidBody, GetOwner());
+			App->physics->AddActor(rigidBody);
 		}
 		else
 			App->physics->DeleteActor(rigidBody);
@@ -179,7 +182,7 @@ void C_RigidBody::ApplyPhysicsChanges()
 	rigidBody->setRigidDynamicLockFlag(physx::PxRigidDynamicLockFlag::eLOCK_ANGULAR_Y, freezeRotationY);
 	rigidBody->setRigidDynamicLockFlag(physx::PxRigidDynamicLockFlag::eLOCK_ANGULAR_Z, freezeRotationZ);
 
-	App->physics->AddActor(rigidBody, GetOwner());
+	App->physics->AddActor(rigidBody);
 
 	rigidBody->wakeUp();
 	toUpdate = false;
@@ -203,7 +206,7 @@ void C_RigidBody::TransformMovesRigidBody(bool stopInertia)
 	physx::PxTransform transform = physx::PxTransform(newPosition, newRotation);
 	rigidBody->setGlobalPose(transform, true);
 
-	App->physics->AddActor(rigidBody, GetOwner());
+	App->physics->AddActor(rigidBody);
 }
 
 void C_RigidBody::RigidBodyMovesTransform()

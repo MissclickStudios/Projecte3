@@ -129,7 +129,7 @@ void C_CapsuleCollider::CreateCollider()
 
 	GetOwner()->GetComponent<C_RigidBody>()->GetRigidBody()->attachShape(*shape);
 
-	App->physics->AddActor(GetOwner()->GetComponent<C_RigidBody>()->GetRigidBody(), GetOwner());
+	App->physics->AddActor(GetOwner()->GetComponent<C_RigidBody>()->GetRigidBody());
 }
 
 void C_CapsuleCollider::ToUpdate(ColliderUpdateType update)

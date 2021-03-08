@@ -53,7 +53,7 @@ public:																														// --- GAME OBJECTS METHODS ---
 	GameObject*		CreateGameObject					(const char* name = nullptr, GameObject* parent = nullptr);			// 
 	void			DeleteGameObject					(GameObject* gameObject, uint index = -1);							// 
 	
-	GameObject*		GenerateGameObjectsFromModel		(const R_Model* rModel, const float3& scale = float3::zero);		//
+	void			GenerateGameObjectsFromModel		(const R_Model* rModel, const float3& scale = float3::zero);		//
 	bool			ApplyTextureToSelectedGameObject	(const uint32& textureUid);											//
 
 	void			CreateComponentsFromModelNode		(const ModelNode& modelNode, GameObject* gameObject);

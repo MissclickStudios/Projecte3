@@ -97,7 +97,7 @@ bool M_Physics::Start()
 	sceneDesc.gravity = physx::PxVec3(0.0f, -gravity, 0.0f);
 	sceneDesc.bounceThresholdVelocity = gravity * BOUNCE_THRESHOLD;
 	sceneDesc.cpuDispatcher = physx::PxDefaultCpuDispatcherCreate(THREADS);
-	sceneDesc.flags |= physx::PxSceneFlag::eENABLE_KINEMATIC_PAIRS | physx::PxSceneFlag::eENABLE_KINEMATIC_STATIC_PAIRS | physx::PxSceneFlag::eENABLE_PCM;
+	sceneDesc.flags |= physx::PxSceneFlag::eENABLE_KINEMATIC_PAIRS | physx::PxSceneFlag::eENABLE_KINEMATIC_STATIC_PAIRS;
 	sceneDesc.filterShader = customFilterShader;
 	sceneDesc.simulationEventCallback = simulationCallback;
 
@@ -174,13 +174,18 @@ bool M_Physics::SaveConfiguration(ParsonNode& configuration) const
 	return true;
 }
 
-void M_Physics::AddActor(physx::PxActor* actor, GameObject* owner)
+void M_Physics::AddActor(physx::PxActor* actor)
 {
 	if (!actor)
 		return;
+	if (!actor->userData)
+	{
+		LOG("[ERROR] Physics Module: Cant add an actor not attached to a GameObject!");
+		return;
+	}
 
 	scene->addActor(*actor);
-	actors.insert(std::make_pair<physx::PxRigidDynamic*, GameObject*>((physx::PxRigidDynamic*)actor, (GameObject*)(void*)owner));
+	actors.insert(std::make_pair<physx::PxRigidDynamic*, GameObject*>((physx::PxRigidDynamic*)actor, (GameObject*)actor->userData));
 }
 
 void M_Physics::DeleteActor(physx::PxActor* actor)

@@ -136,7 +136,7 @@ void C_BoxCollider::CreateCollider()
 
 	GetOwner()->GetComponent<C_RigidBody>()->GetRigidBody()->attachShape(*shape);
 
-	App->physics->AddActor(GetOwner()->GetComponent<C_RigidBody>()->GetRigidBody(), GetOwner());
+	App->physics->AddActor(GetOwner()->GetComponent<C_RigidBody>()->GetRigidBody());
 }
 
 void C_BoxCollider::ToUpdate(ColliderUpdateType update)
