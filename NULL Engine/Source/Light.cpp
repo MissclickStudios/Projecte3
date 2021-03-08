@@ -18,6 +18,7 @@ void Light::Init()
 {
 	glLightfv(ref, GL_AMBIENT, &ambient);
 	glLightfv(ref, GL_DIFFUSE, &diffuse);
+	ref = GL_LIGHT0;
 }
 
 void Light::SetPos(float x, float y, float z)

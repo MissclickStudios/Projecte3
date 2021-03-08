@@ -84,8 +84,10 @@ public:																														// --- SELECT THROUGH RAYCAST
 	void			GetRaycastHits						(const LineSegment& ray, std::map<float, GameObject*>& hits);
 	void			GetFaces							(const std::vector<float>& vertices, std::vector<Triangle>& faces);
 
-public:
-	//GameObject*		GetSceneLight();
+public:	
+	bool			CheckSceneLight();	//Check if there is a light already in the scene
+	GameObject*		GetSceneLight();	//Return the light in the scene
+	void			SetSceneLight(GameObject* lightPoint);	//Set the light in the scene with the given
 
 private:
 	void			HandleDebugInput();
@@ -105,7 +107,7 @@ private:
 	std::vector<Primitive*>			primitives;
 
 	LevelGenerator					level;
-	
+	GameObject*						lightPoint;
 };
 
 #endif // !__M_SCENE_H__
