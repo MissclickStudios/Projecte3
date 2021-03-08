@@ -202,6 +202,7 @@ bool GameObject::LoadState(ParsonNode& root)
 			case ComponentType::BULLET_BEHAVIOR: { component = new C_BulletBehavior(this); }	break;
 			case ComponentType::PROP_BEHAVIOR: { component = new C_PropBehavior(this); }	break;
 			case ComponentType::CAMERA_BEHAVIOR: { component = new C_CameraBehavior(this); }	break;
+			case ComponentType::CANVAS: { component = new C_Canvas(this); }	break;
 			}
 
 			if (component != nullptr)

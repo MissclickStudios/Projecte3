@@ -117,8 +117,8 @@ void UI_Image::RenderImage3D()
 	glPushMatrix();
 	glMultMatrixf((GLfloat*)&GetOwner()->GetComponent<C_Transform>()->GetWorldTransform().Transposed());
 
-	//glDisable(GL_DEPTH_TEST);
-	//glDisable(GL_LIGHTING);
+	glDisable(GL_DEPTH_TEST);
+	glDisable(GL_LIGHTING);
 
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
@@ -136,8 +136,8 @@ void UI_Image::RenderImage3D()
 
 	glBindTexture(GL_TEXTURE_2D, 0);
 
-	//glEnable(GL_LIGHTING);
-	//glEnable(GL_DEPTH_TEST);
+	glEnable(GL_LIGHTING);
+	glEnable(GL_DEPTH_TEST);
 
 	glPopMatrix();
 
