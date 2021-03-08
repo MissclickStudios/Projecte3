@@ -17,6 +17,8 @@
 #include "M_Camera3D.h"
 #include "M_Window.h"
 #include "M_Editor.h"
+#include "M_Audio.h"
+#include "C_AudioSource.h"
 
 #include "MathGeoLib/include/Geometry/Line.h"
 
@@ -36,6 +38,7 @@ bool C_PlayerController::Update()
 	if (App->play && !App->pause)
 	{
 		C_RigidBody* rigidBody = GetOwner()->GetComponent<C_RigidBody>();
+
 		if (rigidBody)
 		{
 			if (useAcceleration)
@@ -75,6 +78,9 @@ bool C_PlayerController::Update()
 						rigidBody->SetLinearVelocity(bulletVel);
 						bullet->CreateComponent(ComponentType::SPHERE_COLLIDER);
 						bullet->CreateComponent(ComponentType::BULLET_BEHAVIOR);
+						bullet->CreateComponent(ComponentType::AUDIOSOURCE);
+						bullet->GetComponent<C_AudioSource>()->SetEvent("Mando_blaster_shot",App->audio->eventMap.at("Mando_blaster_shot"));
+						bullet->GetComponent<C_AudioSource>()->PlayFx(bullet->GetComponent<C_AudioSource>()->GetEvent().second);
 					}
 				}
 			}
@@ -184,6 +190,15 @@ void C_PlayerController::MoveVelocity(C_RigidBody* rigidBody)
 	if (left)
 		vel.x -= speed;
 
+	if (forward || backwards || right || left && aSource->isPlaying)
+	{
+		aSource = GetOwner()->GetComponent<C_AudioSource>();
+		aSource->PlayFx(aSource->GetEvent().second);
+
+		aSource->isPlaying = true;
+	}
+	
+
 	rigidBody->SetLinearVelocity(vel);
 }
 
@@ -242,6 +257,15 @@ void C_PlayerController::MoveAcceleration(C_RigidBody* rigidBody)
 		}
 	if (changed)
 		rigidBody->SetLinearVelocity(vel);
+
+
+	if (forward || backward || right || left && aSource->isPlaying)
+	{
+		aSource = GetOwner()->GetComponent<C_AudioSource>();
+		aSource->PlayFx(aSource->GetEvent().second);
+
+		aSource->isPlaying = true;
+	}
 }
 
 void C_PlayerController::Rotate()

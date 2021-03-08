@@ -36,10 +36,14 @@ public:
 	float GetVolume();
 	void SetVolume(float volume);
 	
+	bool isPlaying = false;
+	bool isPause = false;
+
 private:
 
 	WwiseObject* wwiseObject = nullptr;
 	std::pair<std::string, unsigned int> eventInfo;
+
 };
 
 #endif // __C_AUDIOSOURCE__

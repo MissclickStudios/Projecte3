@@ -4,6 +4,7 @@
 #include "Component.h"
 #include "MathGeoLib/include/Math/float3.h"
 
+class C_AudioSource;
 class C_RigidBody;
 
 class C_PlayerController : public Component
@@ -57,6 +58,8 @@ private:
 	float bulletSpeed = 100.0f;
 
 	bool cameraMode = false;
+
+	C_AudioSource* aSource;
 };
 
 #endif // !__C_PLAYERCONTROLLER__
