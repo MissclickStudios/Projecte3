@@ -20,16 +20,19 @@ public:
 	void DrawParticles();
 
 	void Spawn();
-
+	void ResetEmitter();
 private:	
-	void UpdateModules();
+	void UpdateModules(float dt);
 	void KillDeadParticles();
 	void KillAll();
 
 public:
 	unsigned int activeParticles = 0;
 	std::vector<Particle> particles;
+	unsigned int* particleIndices;
 	
+	float emitterTime = 0.0f;
+
 	Emitter* emitter;
 	C_ParticleSystem* component;
 };
