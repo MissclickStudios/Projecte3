@@ -30,16 +30,19 @@
 #include "C_Material.h"
 #include "C_Camera.h"
 #include "C_Animator.h"
+#include "C_Light.h"
 
 #include "M_Scene.h"
 
 #include "MemoryManager.h"
+
 
 M_Scene::M_Scene(bool isActive) : Module("SceneManager", isActive),
 masterRoot				(nullptr),
 sceneRoot				(nullptr),
 animationRoot			(nullptr),
 selectedGameObject		(nullptr),
+lightPoint				(nullptr),
 cullingCamera			(nullptr)
 {
 	CreateMasterRoot();
@@ -82,8 +85,15 @@ bool M_Scene::Start()
 	//uint32 animation_uid = App->resourceManager->LoadFromLibrary(DEFAULT_ANIMATION);
 	//GenerateGameObjectsFromModel(animation_uid , float3(0.05f, 0.05f, 0.05f));
 	
-	LoadScene("Assets/Scenes/MainScene.json");
-	SaveScene("SceneAutosave");																					// Autosave just right after loading the scene.
+	LoadScene("Assets/Scenes/FinalScene.json");
+	//SaveScene("SceneAutosave");																			// Autosave just right after loading the scene.
+
+	//level.GetRooms();
+	//level.GenerateLevel();
+	//level.GenerateRoom(0);
+
+	if(!CheckSceneLight()) SetSceneLight(App->renderer->GenerateSceneLight());
+	
 
 	return ret;
 }
@@ -101,7 +111,7 @@ UpdateStatus M_Scene::Update(float dt)
 		C_Animator* rootAnimator = animationRoot->GetComponent<C_Animator>();
 		if (rootAnimator != nullptr)
 		{
-			if (App->play)
+			if (App->play && !App->pause)
 			{
 				if (App->input->GetKey(SDL_SCANCODE_KP_1) == KeyState::KEY_DOWN)
 				{
@@ -116,10 +126,10 @@ UpdateStatus M_Scene::Update(float dt)
 					rootAnimator->PlayClip("Attack", 8);
 				}
 
-				if (!rootAnimator->GetCurrentClip()->playing || !rootAnimator->CurrentClipExists())
+				/*if (!rootAnimator->GetCurrentClip()->playing || !rootAnimator->CurrentClipExists())
 				{
 					rootAnimator->PlayClip("Idle", 8);
-				}
+				}*/
 			}
 		}
 	}
@@ -171,12 +181,19 @@ UpdateStatus M_Scene::Update(float dt)
 		App->LoadConfiguration("Resources/Engine/Configuration/configuration.JSON");
 	}
 
+	// --- Room Generation
+
+	level.HandleRoomGeneration();
+
+	
+
+
 	return UpdateStatus::CONTINUE;
 }
 
 UpdateStatus M_Scene::PostUpdate(float dt)
 {
-	BROFILER_CATEGORY("M_Scene PostUpdate", Profiler::Color::Yellow)
+	BROFILERCATEGORY("M_Scene PostUpdate", Profiler::Color::Yellow)
 	
 	for (uint n = 0; n < primitives.size(); n++)
 	{
@@ -191,13 +208,27 @@ bool M_Scene::CleanUp()
 {
 	LOG("Unloading Intro scene");
 	
+	//App->renderer->ClearRenderers();
+
 	for (uint i = 0; i < gameObjects.size(); ++i)
 	{
 		gameObjects[i]->CleanUp();
 		RELEASE(gameObjects[i]);
 	}
+	
+	/*for (auto item = gameObjects.begin(); item < gameObjects.end(); ++item)
+	{
+		(*item)->CleanUp();
+		RELEASE((*item));
+	}*/
+
+	for (auto item = models.begin(); item != models.end(); ++item)
+	{
+		App->resourceManager->FreeResource(item->second.first);
+	}
 
 	gameObjects.clear();
+	models.clear();
 
 	sceneRoot				= nullptr;
 	animationRoot			= nullptr;
@@ -233,13 +264,28 @@ bool M_Scene::SaveScene(const char* sceneName) const
 	bool ret = true;
 
 	ParsonNode rootNode		= ParsonNode();
-	ParsonArray objectArray	= rootNode.SetArray("Game Objects");
 
-	for (uint i = 0; i < gameObjects.size(); ++i)
+	ParsonArray modelArray = rootNode.SetArray("Models In Scene");
+	for (auto item = models.begin(); item != models.end(); ++item)
+	{
+		ParsonNode modelNode = modelArray.SetNode("ModelInScene");
+		modelNode.SetNumber("GameObjectUID", (double)item->first);
+		modelNode.SetNumber("ModelResourceUID", (double)item->second.first);
+		modelNode.SetString("ModelAssetsPath", item->second.second.c_str());
+	}
+
+	ParsonArray objectArray	= rootNode.SetArray("Game Objects");
+	for (auto item = gameObjects.begin(); item != gameObjects.end(); ++item)
+	{
+		ParsonNode arrayNode = objectArray.SetNode((*item)->GetName());
+		(*item)->SaveState(arrayNode);
+	}
+
+	/*for (uint i = 0; i < gameObjects.size(); ++i)
 	{
 		ParsonNode array_node = objectArray.SetNode(gameObjects[i]->GetName());
 		gameObjects[i]->SaveState(array_node);
-	}
+	}*/
 
 	char* buffer		= nullptr;
 	std::string name	= (sceneName != nullptr) ? sceneName : sceneRoot->GetName();
@@ -289,11 +335,32 @@ bool M_Scene::LoadScene(const char* path)
 
 	if (buffer != nullptr)
 	{
+		App->renderer->ClearRenderers();
 		CleanUp();
 
 		ParsonNode newRoot			= ParsonNode(buffer);
+		ParsonArray modelsArray		= newRoot.GetArray("Models In Scene");
 		ParsonArray objectsArray	= newRoot.GetArray("Game Objects");
 		RELEASE_ARRAY(buffer);
+
+		for (uint i = 0; i < modelsArray.size; ++i)
+		{
+			ParsonNode modelNode = modelsArray.GetNode(i);
+			if (!modelNode.NodeIsValid())
+			{
+				continue;
+			}
+
+			uint32 gameObjectUID		= (uint32)modelNode.GetNumber("GameObjectUID");
+			uint32 modelResourceUID		= (uint32)modelNode.GetNumber("ModelResourceUID");
+			const char* modelAssetsPath = modelNode.GetString("ModelAssetsPath");
+
+			if (App->resourceManager->GetResourceFromLibrary(modelAssetsPath) != nullptr)
+			{
+				std::pair<uint32, std::string> modelResource = { modelResourceUID, modelAssetsPath };
+				models.emplace(gameObjectUID, modelResource);
+			}
+		}
 
 		std::map<uint32, GameObject*> tmp;
 
@@ -318,6 +385,11 @@ bool M_Scene::LoadScene(const char* path)
 			if (gameObject->GetComponent<C_Animator>() != nullptr)
 			{
 				animationRoot = gameObject;
+			}
+
+			if (gameObject->GetComponent<C_Light>() != nullptr)
+			{
+				lightPoint = gameObject;
 			}
 
 			C_Camera* cCamera = gameObject->GetComponent<C_Camera>();
@@ -356,6 +428,10 @@ bool M_Scene::LoadScene(const char* path)
 		App->renderer->ClearRenderers();
 	}
 
+	//FIX THIS
+
+	if (!CheckSceneLight()) SetSceneLight(App->renderer->GenerateSceneLight());
+
 	return ret;
 }
 
@@ -371,7 +447,7 @@ void M_Scene::LoadResourceIntoScene(Resource* resource)
 
 	switch (resource->GetType())
 	{
-	case::ResourceType::MODEL:		{ GenerateGameObjectsFromModel(resource->GetUID()); }				break;
+	case::ResourceType::MODEL:		{ GenerateGameObjectsFromModel((R_Model*)resource); }				break;
 	case::ResourceType::TEXTURE:	{ success = ApplyTextureToSelectedGameObject(resource->GetUID()); }	break;
 	}
 }
@@ -413,6 +489,21 @@ void M_Scene::DeleteGameObject(GameObject* gameObject, uint index)
 	{
 		selectedGameObject = nullptr;
 	}
+	if (gameObject == animationRoot)
+	{
+		animationRoot = nullptr;
+	}
+	if (lightPoint == gameObject)
+	{
+		lightPoint =  nullptr;
+	}
+	
+	auto item = models.find(gameObject->GetUID());
+	if (item != models.end())
+	{
+		App->resourceManager->FreeResource(item->second.first);
+		models.erase(item);
+	}
 	
 	std::vector<C_Mesh*> cMeshes;
 	bool found_meshes = gameObject->GetComponents<C_Mesh>(cMeshes);
@@ -436,9 +527,9 @@ void M_Scene::DeleteGameObject(GameObject* gameObject, uint index)
 		}
 		else
 		{
-			for (uint i = 0; i < gameObjects.size(); ++i)						// If no index was given.
+			for (uint i = 0; i < gameObjects.size(); ++i)					// If no index was given.
 			{
-				if (gameObjects[i] == gameObject)								// Iterate game_objects until a match is found.
+				if (gameObjects[i] == gameObject)							// Iterate game_objects until a match is found.
 				{
 					gameObjects.erase(gameObjects.begin() + i);				// Delete the game_object at the current loop index.
 					break;
@@ -453,14 +544,14 @@ void M_Scene::DeleteGameObject(GameObject* gameObject, uint index)
 	LOG("[ERROR] Could not find game object %s in game_objects vector!", gameObject->GetName());
 }
 
-void M_Scene::GenerateGameObjectsFromModel(const uint32& modelUid, const float3& scale)
+GameObject* M_Scene::GenerateGameObjectsFromModel(const R_Model* rModel, const float3& scale)
 {
-	R_Model* rModel = (R_Model*)App->resourceManager->RequestResource(modelUid);
+	//R_Model* rModel = (R_Model*)App->resourceManager->RequestResource(modelUid);
 
 	if (rModel == nullptr)
 	{
 		LOG("[ERROR] Scene: Could not generate GameObjects from Model Resource! Error: R_Model* was nullptr.");
-		return;
+		return nullptr;
 	}
 
 	GameObject* parentRoot = nullptr;
@@ -481,6 +572,9 @@ void M_Scene::GenerateGameObjectsFromModel(const uint32& modelUid, const float3&
 		if (mNodes[i].parentUID == 0)
 		{
 			parentRoot = gameObject;
+
+			std::pair<uint32, std::string> modelResource = { rModel->GetUID(), rModel->GetAssetsPath() };
+			models.emplace(parentRoot->GetUID(), modelResource);
 		}
 
 		tmp.emplace(gameObject->GetUID(), gameObject);
@@ -522,17 +616,20 @@ void M_Scene::GenerateGameObjectsFromModel(const uint32& modelUid, const float3&
 			CreateAnimationComponentFromModel(rModel, parentRoot);							// Must be done last as the parent hierarchy needs to be in place.
 		}
 
-		parentRoot = nullptr;
+		//parentRoot = nullptr; //I David Rami purposelly and for a reason comented this
 	}
 
 	tmp.clear();
+
+	return parentRoot;
 }
 
 void M_Scene::CreateComponentsFromModelNode(const ModelNode& modelNode, GameObject* gameObject)
 {
 	bool validMeshUid			= (modelNode.meshUID != 0)		?	true : false;
 	bool validMaterialUid		= (modelNode.materialUID != 0)	?	true : false;
-	bool validTextureUid		= (modelNode.textureUID != 0)		?	true : false;
+	bool validTextureUid		= (modelNode.textureUID != 0)	?	true : false;
+	bool validShaderUid			= (modelNode.shaderUID != 0)	?	true : false;
 	
 	// Set Mesh
 	if (validMeshUid)
@@ -555,6 +652,7 @@ void M_Scene::CreateComponentsFromModelNode(const ModelNode& modelNode, GameObje
 	{
 		C_Material* cMaterial = (C_Material*)gameObject->CreateComponent(ComponentType::MATERIAL);
 		R_Material* rMaterial = (R_Material*)App->resourceManager->RequestResource(modelNode.materialUID);
+		
 		if (rMaterial == nullptr)
 		{
 			LOG("[ERROR] Scene: Could not generate the Material Resource from the Model Node! Error: R_Material* could not be found in resources.");
@@ -563,6 +661,7 @@ void M_Scene::CreateComponentsFromModelNode(const ModelNode& modelNode, GameObje
 		}
 
 		cMaterial->SetMaterial(rMaterial);
+		
 
 		// Set Texture
 		if (validTextureUid)
@@ -576,6 +675,17 @@ void M_Scene::CreateComponentsFromModelNode(const ModelNode& modelNode, GameObje
 
 
 			cMaterial->SetTexture(r_texture);
+		}
+
+		if (validShaderUid)
+		{
+			R_Shader* rShader = (R_Shader*)App->resourceManager->RequestResource(modelNode.shaderUID);
+			if (rShader == nullptr)
+			{
+				LOG("[ERROR] Scene: Could not generate the Shader Resource from the Model Node! Error: R_Shader* could not be found in resources.");
+				return;
+			}
+			cMaterial->SetShader(rShader);
 		}
 	}
 }
@@ -619,7 +729,7 @@ std::vector<GameObject*>* M_Scene::GetGameObjects()
 
 bool M_Scene::ApplyTextureToSelectedGameObject(const uint32& uid)
 {
-	BROFILER_CATEGORY("ApplyNewTextureToSelectedGameObject()", Profiler::Color::Magenta);
+	BROFILERCATEGORY("ApplyNewTextureToSelectedGameObject()", Profiler::Color::Magenta);
 
 	if (selectedGameObject == nullptr)
 	{
@@ -886,6 +996,29 @@ void M_Scene::GetFaces(const std::vector<float>& vertices, std::vector<Triangle>
 	}
 
 	verts.clear();
+}
+
+bool M_Scene::CheckSceneLight()
+{
+	for (int i = 0; i < gameObjects.size(); i++)
+	{
+		if (gameObjects[i]->GetComponent<C_Light>() != nullptr)
+		{
+			return true;
+		}
+	}
+	
+	return false;
+}
+
+GameObject* M_Scene::GetSceneLight()
+{
+	return lightPoint;
+}
+
+void M_Scene::SetSceneLight(GameObject* lightPoint)
+{
+	this->lightPoint = lightPoint;
 }
 
 void M_Scene::DeleteSelectedGameObject()

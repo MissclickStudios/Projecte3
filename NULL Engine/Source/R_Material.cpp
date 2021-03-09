@@ -4,6 +4,8 @@
 
 #include "R_Material.h"
 
+#include "MemoryManager.h"
+
 R_Material::R_Material() : Resource(ResourceType::MATERIAL)
 {
 	diffuseColor	= { 1.0f, 1.0f, 1.0f, 1.0f };
@@ -47,6 +49,11 @@ bool R_Material::LoadMeta(const ParsonNode& metaRoot)
 
 
 	return ret;
+}
+
+void R_Material::SetColor(Color color)
+{
+	diffuseColor = color;
 }
 
 // --- MATERIAL METHODS ---

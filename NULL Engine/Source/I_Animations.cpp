@@ -38,8 +38,18 @@ void Importer::Animations::Import(const aiAnimation* assimpAnimation, R_Animatio
 	for (uint i = 0; i < assimpAnimation->mNumChannels; ++i)
 	{
 		aiNodeAnim* aiChannel	= assimpAnimation->mChannels[i];
+
 		Channel rChannel		= Channel(aiChannel->mNodeName.C_Str());
+
+		std::string channelName = rChannel.name.c_str();
+		rChannel.name = channelName.substr(0, channelName.find("_$AssimpFbx$_"));
 		
+		if (channelName.find("Rotation"))
+		{
+			rChannel.type = ChannelType::ROTATION;
+		}
+
+
 		Utilities::GetPositionKeys(aiChannel, rChannel);
 		Utilities::GetRotationKeys(aiChannel, rChannel);
 		Utilities::GetScaleKeys(aiChannel, rChannel);
@@ -140,6 +150,10 @@ uint Importer::Animations::Save(const R_Animation* rAnimation, char** buffer)
 	{
 		Channel rChannel = rAnimation->channels[i];
 
+		bytes = sizeof(uint);
+		memcpy_s(cursor, size, &rChannel.type, bytes);
+		cursor += bytes;
+
 		Utilities::StoreChannelName(rChannel, &cursor);
 		Utilities::StorePositionKeysData(rChannel, &cursor);
 		Utilities::StoreRotationKeysData(rChannel, &cursor);
@@ -203,11 +217,17 @@ bool Importer::Animations::Load(const char* buffer, R_Animation* rAnimation)
 	rAnimation->channels.resize((uint)headerData[3]);
 	for (uint i = 0; i < rAnimation->channels.size(); ++i)
 	{
+		uint type = 0;
+		bytes = sizeof(uint);
+		memcpy(&type, cursor, bytes);
+		cursor += bytes;
+
 		std::string channelName = "";
 		Utilities::LoadChannelName(&cursor, channelName);
 
 		Channel rChannel = Channel(channelName.c_str());
-		
+		rChannel.type = (ChannelType)type;
+
 		Utilities::LoadPositionKeysData(&cursor, rChannel);
 		Utilities::LoadRotationKeysData(&cursor, rChannel);
 		Utilities::LoadScaleKeysData(&cursor, rChannel);
@@ -235,6 +255,7 @@ uint Importer::Animations::Utilities::GetChannelsDataSize(const R_Animation* rAn
 		const Channel& rChannel = rAnimation->channels[i];
 		uint channelSize = 0;
 
+		channelSize += sizeof(uint); //Channel Type
 		channelSize += sizeof(uint) * 4;																					// Length of the name and sizes of the keys maps.
 		channelSize += (strlen(rChannel.name.c_str()) * sizeof(char));
 		channelSize += rChannel.positionKeyframes.size() * vecKeySize;
@@ -249,7 +270,7 @@ uint Importer::Animations::Utilities::GetChannelsDataSize(const R_Animation* rAn
 
 void Importer::Animations::Utilities::StoreChannelName(const Channel& rChannel, char** cursor)
 {
-	uint bytes			= 0;
+	uint bytes		= 0;
 	uint nameLength	= rChannel.name.length();
 
 	bytes = sizeof(uint);
@@ -327,7 +348,7 @@ void Importer::Animations::Utilities::StoreScaleKeysData(const Channel& rChannel
 
 void Importer::Animations::Utilities::LoadChannelName(char** cursor, std::string& channelName)
 {
-	uint bytes			= 0;
+	uint bytes		= 0;
 	uint nameLength	= 0;
 
 	bytes = sizeof(uint);
@@ -335,7 +356,7 @@ void Importer::Animations::Utilities::LoadChannelName(char** cursor, std::string
 	*cursor += bytes;
 	
 	channelName.resize(nameLength);
-	bytes	= nameLength * sizeof(char);
+	bytes = nameLength * sizeof(char);
 	memcpy(&channelName[0], *cursor, bytes);
 	*cursor += bytes;
 }

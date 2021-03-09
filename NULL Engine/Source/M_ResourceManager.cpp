@@ -10,8 +10,10 @@
 #include "I_Textures.h"
 #include "I_Folders.h"
 #include "I_Animations.h"
+#include "I_Shaders.h"
 
 #include "Application.h"
+#include "FileSystemDefinitions.h"
 #include "M_FileSystem.h"
 
 #include "Resource.h"
@@ -22,6 +24,7 @@
 #include "R_Folder.h"
 #include "R_Scene.h"
 #include "R_Animation.h"
+#include "R_Shader.h"
 
 #include "M_ResourceManager.h"
 
@@ -34,7 +37,7 @@ typedef std::map<std::string, uint32>::iterator					FILE_ITEM;
 
 M_ResourceManager::M_ResourceManager() : Module("ResourceManager"),
 fileRefreshTimer	(0.0f),
-fileRefreshRate	(0.0f)
+fileRefreshRate		(0.0f)
 {
 
 }
@@ -68,7 +71,7 @@ UpdateStatus M_ResourceManager::PreUpdate(float dt)
 {
 	UpdateStatus status = UpdateStatus::CONTINUE;
 
-	/*fileRefreshTimer += Time::Real::GetDT();
+	fileRefreshTimer += Time::Real::GetDT();
 
 	if (fileRefreshTimer > fileRefreshRate)
 	{
@@ -89,7 +92,7 @@ UpdateStatus M_ResourceManager::PreUpdate(float dt)
 		//RefreshDirectoryFiles(ASSETS_DIRECTORY);
 
 		fileRefreshTimer = 0.0f;
-	}*/
+	}
 
 	return status;
 }
@@ -200,11 +203,11 @@ void M_ResourceManager::RefreshDirectory(const char* directory, std::vector<std:
 	App->fileSystem->DiscoverAllFiles(directory, assetFiles, directories, DOTLESS_META_EXTENSION);				// Directories (folders) will be ignored for now.
 	App->fileSystem->GetAllFilesWithExtension(directory, DOTLESS_META_EXTENSION, metaFiles);
 	
-	FindFilesToImport(assetFiles, metaFiles, filePairs, filesToImport);										// Always call in this order!
-	FindFilesToUpdate(filePairs, filesToUpdate);																	// At the very least FindFilesToImport() has to be the first to be called
+	FindFilesToImport(assetFiles, metaFiles, filePairs, filesToImport);											// Always call in this order!
+	FindFilesToUpdate(filePairs, filesToUpdate);																// At the very least FindFilesToImport() has to be the first to be called
 	FindFilesToDelete(metaFiles, filePairs, filesToDelete);														// as it is the one to fill file_pairs with asset and meta files!
 
-	LoadValidFilesIntoLibrary(filePairs);																			// Will emplace all valid files' UID & library path into the library map.
+	LoadValidFilesIntoLibrary(filePairs);																		// Will emplace all valid files' UID & library path into the library map.
 
 	filePairs.clear();
 	metaFiles.clear();
@@ -234,8 +237,8 @@ void M_ResourceManager::FindFilesToImport(const std::vector<std::string>& assetF
 
 			if (!MetaFileIsValid(assetFiles[i].c_str()))															// In case the pair exists but the meta file is outdated.
 			{
-				filesToImport.push_back(assetFiles[i]);
-			}
+				filesToImport.push_back(assetFiles[i]);																// SHARING SCENES: STEP 1
+			} 
 		}
 		else
 		{
@@ -297,19 +300,19 @@ bool M_ResourceManager::DeleteFromAssets(const char* assetsPath)
 		return false;
 	}
 
-	std::vector<uint32> resourceUids;
+	std::vector<uint32> resourceUIDs;
 	std::vector<std::string> filesToDelete;
 
-	GetResourceUIDsFromMeta(assetsPath, resourceUids);
+	GetResourceUIDsFromMeta(assetsPath, resourceUIDs);
 	GetLibraryFilePathsFromMeta(assetsPath, filesToDelete);
 	
 	std::string metaPath = assetsPath + std::string(META_EXTENSION);
 	filesToDelete.push_back(assetsPath);
 	filesToDelete.push_back(metaPath);
 
-	for (uint i = 0; i < resourceUids.size(); ++i)
+	for (uint i = 0; i < resourceUIDs.size(); ++i)
 	{
-		DeleteResource(resourceUids[i]);
+		DeleteResource(resourceUIDs[i]);
 	}
 
 	for (uint i = 0; i < filesToDelete.size(); ++i)
@@ -318,7 +321,7 @@ bool M_ResourceManager::DeleteFromAssets(const char* assetsPath)
 	}
 
 	filesToDelete.clear();
-	resourceUids.clear();
+	resourceUIDs.clear();
 
 	return ret;
 }
@@ -363,8 +366,6 @@ bool M_ResourceManager::DeleteFromLibrary(const char* assetsPath)
 
 bool M_ResourceManager::GetResourceUIDsFromMeta(const char* assetsPath, std::vector<uint32>& resourceUids)
 {
-	bool ret = true;
-
 	if (assetsPath == nullptr)
 	{
 		LOG("[ERROR] Resource Manager: Could not get Resource UIDs from Meta! Error: Given Assets Path was nullptr.");
@@ -421,7 +422,69 @@ bool M_ResourceManager::GetResourceUIDsFromMeta(const char* assetsPath, std::vec
 		resourceUids.push_back(containedUid);
 	}
 
-	return ret;
+	return true;
+}
+
+bool M_ResourceManager::GetForcedUIDsFromMeta(const char* assetsPath, std::map<std::string, uint32>& forcedUIDs)
+{
+	if (assetsPath == nullptr)
+	{
+		LOG("[ERROR] Resource Manager: Could not get Forced UIDs from Meta! Error: Given Assets Path was nullptr.");
+		return false;
+	}
+
+	std::string errorString = "[ERROR] Resource Manager: Could not get Forced UIDs from { " + std::string(assetsPath) + " }'s Meta File.";
+
+	char* buffer				= nullptr;
+	ParsonNode metaRoot			= LoadMetaFile(assetsPath, &buffer);
+	ParsonArray containedArray	= metaRoot.GetArray("ContainedResources");
+	RELEASE_ARRAY(buffer);
+
+	if (!metaRoot.NodeIsValid())
+	{
+		LOG("%s! Error: Given Assets Path had no correspondent Meta File.", errorString.c_str());
+		return false;
+	}
+	if (!containedArray.ArrayIsValid())
+	{
+		LOG("%s! Error: Contained Array in Meta File was not valid.", errorString.c_str());
+		return false;
+	}
+
+	// --- MAIN RESOURCE
+	std::string assetName	= metaRoot.GetString("Name");
+	uint32 resourceUID		= (uint32)metaRoot.GetNumber("UID");
+	if (resourceUID == 0)
+	{
+		LOG("%s! Error: Main ResourceUID was 0.", errorString.c_str());
+		return false;
+	}
+
+	forcedUIDs.emplace(assetName, resourceUID);
+
+	// --- CONTAINED RESOURCES
+	uint32 containedUID			= 0;
+	std::string containedName	= "[NONE]";
+	ParsonNode containedNode	= ParsonNode();
+	for (uint i = 0; i < containedArray.size; ++i)
+	{
+		containedNode	= containedArray.GetNode(i);
+		if (!containedNode.NodeIsValid())
+		{
+			continue;
+		}
+
+		containedName	= containedNode.GetString("Name");
+		containedUID	= (uint32)containedNode.GetNumber("UID");
+		if (containedUID == 0)
+		{
+			continue;
+		}
+
+		forcedUIDs.emplace(containedName, containedUID);
+	}
+
+	return true;
 }
 
 bool M_ResourceManager::GetLibraryFilePathsFromMeta(const char* assetsPath, std::vector<std::string>& filePaths)
@@ -436,9 +499,9 @@ bool M_ResourceManager::GetLibraryFilePathsFromMeta(const char* assetsPath, std:
 	
 	std::string errorString = "[ERROR] Resoruce Manager: Could not get Library File Paths from { " + std::string(assetsPath) + " }'s Meta File";
 
-	char* buffer					= nullptr;
+	char* buffer				= nullptr;
 	ParsonNode metaRoot			= LoadMetaFile(assetsPath, &buffer);
-	ParsonArray containedArray		= metaRoot.GetArray("ContainedResources");
+	ParsonArray containedArray	= metaRoot.GetArray("ContainedResources");
 	RELEASE_ARRAY(buffer);
 
 	if (!metaRoot.NodeIsValid())
@@ -456,8 +519,9 @@ bool M_ResourceManager::GetLibraryFilePathsFromMeta(const char* assetsPath, std:
 
 	// --- MAIN RESOURCE
 	uint32 resourceUid		= (uint32)metaRoot.GetNumber("UID");
-	ResourceType type		= (ResourceType)(int)metaRoot.GetNumber("Type");
+	ResourceType type		= (ResourceType)((int)metaRoot.GetNumber("Type"));
 	bool success			= GetLibraryDirectoryAndExtensionFromType(type, directory, extension);
+
 	if (!success)
 	{
 		LOG("%s! Error: Could not get the Library Directory and Extension from Resource Type.", errorString.c_str());
@@ -494,7 +558,8 @@ bool M_ResourceManager::GetLibraryFilePathsFromMeta(const char* assetsPath, std:
 		extension = "[NONE]";
 
 		containedUid	= (uint32)containedNode.GetNumber("UID");
-		containedType	= (ResourceType)(int)containedNode.GetNumber("Type");
+		containedType	= (ResourceType)((int)containedNode.GetNumber("Type"));
+
 		success			= GetLibraryDirectoryAndExtensionFromType(containedType, directory, extension);
 		if (!success)
 		{
@@ -549,6 +614,10 @@ bool M_ResourceManager::GetLibraryDirectoryAndExtensionFromType(const ResourceTy
 	case ResourceType::ANIMATION:
 		directory = ANIMATIONS_PATH;
 		extension = ANIMATIONS_EXTENSION;
+		break;
+	case ResourceType::SHADER:
+		directory = SHADERS_PATH;
+		extension = SHADERS_EXTENSION;
 		break;
 	case ResourceType::NONE:
 		ret = false;
@@ -729,9 +798,9 @@ uint32 M_ResourceManager::ImportFromAssets(const char* assetsPath)
 		{
 		case ResourceType::MODEL:		{ success = Importer::ImportScene(buffer, read, (R_Model*)resource); }		break;
 		case ResourceType::MESH:		{ success = Importer::ImportMesh(buffer, (R_Mesh*)resource); }				break;
-		case ResourceType::TEXTURE:	{ success = Importer::ImportTexture(buffer, read, (R_Texture*)resource); }	break;
+		case ResourceType::TEXTURE:		{ success = Importer::ImportTexture(buffer, read, (R_Texture*)resource); }	break;
 		case ResourceType::SCENE:		{ /*success = HAVE A FUNCTIONAL R_SCENE AND LOAD/SAVE METHODS*/}			break;
-		}
+		case ResourceType::SHADER:		{success = Importer::Shaders::Import(resource->GetAssetsPath(), (R_Shader*)resource); } break;}
 
 		RELEASE_ARRAY(buffer);
 
@@ -770,7 +839,7 @@ uint32 M_ResourceManager::LoadFromLibrary(const char* assetsPath)
 	}
 
 	char* buffer			= nullptr;
-	ParsonNode metaRoot	= LoadMetaFile(assetsPath, &buffer);
+	ParsonNode metaRoot		= LoadMetaFile(assetsPath, &buffer);
 	RELEASE_ARRAY(buffer);
 
 	bool metaIsValid		= MetaFileIsValid(metaRoot);
@@ -785,7 +854,7 @@ uint32 M_ResourceManager::LoadFromLibrary(const char* assetsPath)
 		return 0;
 	}
 
-	resourceUid					= (uint32)metaRoot.GetNumber("UID");
+	resourceUid						= (uint32)metaRoot.GetNumber("UID");
 	ParsonArray containedArray		= metaRoot.GetArray("ContainedResources");
 	
 	if (resources.find(resourceUid) != resources.end())
@@ -793,9 +862,8 @@ uint32 M_ResourceManager::LoadFromLibrary(const char* assetsPath)
 		return resourceUid;																									// If the File To Load's Resource is already in memory.
 	}	
 
-	Resource* result	= nullptr;
-	result				= AllocateResource(resourceUid, assetsPath);
-	if (result == nullptr)
+	bool success = AllocateResource(resourceUid, assetsPath);
+	if (!success)
 	{
 		LOG("[ERROR] Resource Manager: Could not Allocate Resource %lu in memory!", resourceUid);
 		return 0;
@@ -808,7 +876,7 @@ uint32 M_ResourceManager::LoadFromLibrary(const char* assetsPath)
 		ParsonNode containedNode = containedArray.GetNode(i);
 
 		App->fileSystem->SplitFilePath(assetsPath, &containedPath, nullptr, nullptr);									// --- TMP Until Something Functional Is In Place.
-		containedName	= containedNode.GetString("Name");																	// 
+		containedName	= containedNode.GetString("Name");																// 
 		containedPath += containedName;																					// -----------------------------------------------
 
 		uint32 containedUid = (uint32)containedNode.GetNumber("UID");
@@ -818,8 +886,8 @@ uint32 M_ResourceManager::LoadFromLibrary(const char* assetsPath)
 			continue;
 		}
 
-		result = AllocateResource(containedUid, containedPath.c_str());
-		if (result == nullptr)
+		success = AllocateResource(containedUid, containedPath.c_str());
+		if (!success)
 		{
 			LOG("[WARNING] Resource Manager: Could not allocate Contained Resource! UID: %lu, Name: %s", containedUid, containedName.c_str());
 		}
@@ -848,10 +916,11 @@ uint M_ResourceManager::SaveResourceToLibrary(Resource* resource)
 	case ResourceType::MODEL:		{ written = Importer::Scenes::Save((R_Model*)resource, &buffer); }			break;
 	case ResourceType::MESH:		{ written = Importer::Meshes::Save((R_Mesh*)resource, &buffer); }			break;
 	case ResourceType::MATERIAL:	{ written = Importer::Materials::Save((R_Material*)resource, &buffer); }	break;
-	case ResourceType::TEXTURE:	{ written = Importer::Textures::Save((R_Texture*)resource, &buffer); }		break;
+	case ResourceType::TEXTURE:		{ written = Importer::Textures::Save((R_Texture*)resource, &buffer); }		break;
 	case ResourceType::FOLDER:		{ written = Importer::Folders::Save((R_Folder*)resource, &buffer); }		break;
 	case ResourceType::SCENE:		{ /*written = TODO: HAVE A FUNCTIONAL R_SCENE AND SAVE/LOAD METHODS*/ }		break;
 	case ResourceType::ANIMATION:	{ written = Importer::Animations::Save((R_Animation*)resource, &buffer); }	break;
+	case ResourceType::SHADER:		{ written = Importer::Shaders::Save((R_Shader*)resource, &buffer); }		break;
 	}
 
 	RELEASE_ARRAY(buffer);
@@ -924,9 +993,17 @@ ResourceType M_ResourceManager::GetTypeFromAssetsExtension(const char* assetsPat
 	{
 		type = ResourceType::SCENE;
 	}
+	else if (extension == "shader")
+	{
+		type = ResourceType::SHADER;
+	}
+	else if (extension == "[NONE]")
+	{
+		type = ResourceType::FOLDER;
+	}
 	else
 	{
-		LOG("[ERROR] Resource Manager: Could not import from the given Assets Path! Error: File extension is not supported!");
+		LOG("[ERROR] Resource Manager: Could not import from the given Assets Path! Error: File extension { %s } is not supported!", extension.c_str());
 	}
 
 	return type;
@@ -972,6 +1049,10 @@ ResourceType M_ResourceManager::GetTypeFromLibraryExtension(const char* libraryP
 	{
 		type = ResourceType::ANIMATION;
 	}
+	else if (extension == SHADERS_EXTENSION)
+	{
+		type = ResourceType::SHADER;
+	}
 	else
 	{
 		type = ResourceType::NONE;
@@ -1008,7 +1089,7 @@ bool M_ResourceManager::SaveMetaFile(Resource* resource) const
 	metaRoot.SetString("Name", resource->GetAssetsFile());																									// 
 	// ASSETS PATH?
 	metaRoot.SetString("LibraryPath", resource->GetLibraryPath());																							// 
-	metaRoot.SetNumber("ModificationTime", (double)App->fileSystem->GetLastModTime(resource->GetAssetsPath()));											// ------------------------------
+	metaRoot.SetNumber("ModificationTime", (double)App->fileSystem->GetLastModTime(resource->GetAssetsPath()));												// ------------------------------
 
 	resource->SaveMeta(metaRoot);																															// --- RESOURCE-SPECIFIC META DATA
 
@@ -1070,7 +1151,7 @@ bool M_ResourceManager::MetaFileIsValid(const char* assetsPath)
 	}
 
 	std::string metaPath		= assetsPath + std::string(META_EXTENSION);
-	std::string errorString	= "[ERROR] Resource Manager: Could not validate Meta File " + metaPath;
+	std::string errorString		= "[ERROR] Resource Manager: Could not validate Meta File " + metaPath;
 
 	if (!App->fileSystem->Exists(metaPath.c_str()))
 	{
@@ -1079,7 +1160,7 @@ bool M_ResourceManager::MetaFileIsValid(const char* assetsPath)
 	}
 
 	char* buffer					= nullptr;
-	ParsonNode metaRoot			= LoadMetaFile(assetsPath, &buffer);
+	ParsonNode metaRoot				= LoadMetaFile(assetsPath, &buffer);
 	ParsonArray containedArray		= metaRoot.GetArray("ContainedResources");
 	RELEASE_ARRAY(buffer);
 
@@ -1094,7 +1175,7 @@ bool M_ResourceManager::MetaFileIsValid(const char* assetsPath)
 		return false;
 	}
 
-	std::string libraryPath	= metaRoot.GetString("LibraryPath");
+	std::string libraryPath		= metaRoot.GetString("LibraryPath");
 	uint32 resourceUid			= (uint32)metaRoot.GetNumber("UID");
 	if (!App->fileSystem->Exists(libraryPath.c_str()))
 	{
@@ -1202,10 +1283,11 @@ bool M_ResourceManager::ResourceHasMetaType(Resource* resource) const
 	
 	return (type == ResourceType::FOLDER
 			|| type == ResourceType::MODEL
-			|| type == ResourceType::TEXTURE);
+			|| type == ResourceType::TEXTURE
+			|| type == ResourceType::SHADER);
 }
 
-Resource* M_ResourceManager::GetResourceFromMetaFile(const char* assetsPath)
+Resource* M_ResourceManager::GetResourceFromLibrary(const char* assetsPath)
 {
 	Resource* resource = nullptr;
 	
@@ -1237,7 +1319,7 @@ Resource* M_ResourceManager::GetResourceFromMetaFile(const char* assetsPath)
 }
 
 // --- RESOURCE METHODS ---
-Resource* M_ResourceManager::CreateResource(ResourceType type, const char* assetsPath, const uint32& forcedUid)
+Resource* M_ResourceManager::CreateResource(ResourceType type, const char* assetsPath, uint32 forcedUID)
 {
 	Resource* resource = nullptr;
 
@@ -1245,11 +1327,12 @@ Resource* M_ResourceManager::CreateResource(ResourceType type, const char* asset
 	{
 	case ResourceType::MESH:		{ resource = new R_Mesh(); }		break;
 	case ResourceType::MATERIAL:	{ resource = new R_Material(); }	break;
-	case ResourceType::TEXTURE:	{ resource = new R_Texture(); }		break;
+	case ResourceType::TEXTURE:		{ resource = new R_Texture(); }		break;
 	case ResourceType::MODEL:		{ resource = new R_Model(); }		break;
 	case ResourceType::FOLDER:		{ resource = new R_Folder(); }		break;
 	case ResourceType::SCENE:		{ resource = new R_Scene(); }		break;
 	case ResourceType::ANIMATION:	{ resource = new R_Animation(); }	break;
+	case ResourceType::SHADER:		{ resource = new R_Shader(); }		break;
 	}
 
 	if (resource != nullptr)
@@ -1259,9 +1342,9 @@ Resource* M_ResourceManager::CreateResource(ResourceType type, const char* asset
 			SetResourceAssetsPathAndFile(assetsPath, resource);
 		}
 
-		if (forcedUid != 0)
+		if (forcedUID != 0)
 		{
-			resource->ForceUID(forcedUid);
+			resource->ForceUID(forcedUID);
 		}
 
 		SetResourceLibraryPathAndFile(resource);
@@ -1270,18 +1353,18 @@ Resource* M_ResourceManager::CreateResource(ResourceType type, const char* asset
 	return resource;
 }
 
-bool M_ResourceManager::DeleteResource(const uint32& uid)
+bool M_ResourceManager::DeleteResource(uint32 UID)
 {
 	bool ret = true;
 	
-	if (library.find(uid) != library.end())
+	if (library.find(UID) != library.end())
 	{
-		library.erase(uid);
+		library.erase(UID);
 	}
 
 	Resource* resourceToDelete = nullptr;
 
-	std::map<uint32, Resource*>::iterator item = resources.find(uid);
+	std::map<uint32, Resource*>::iterator item = resources.find(UID);
 	if(item == resources.end())
 	{
 		LOG("[ERROR] Resource Manager: Resource to delete was not inside the resources std::map!");
@@ -1295,7 +1378,7 @@ bool M_ResourceManager::DeleteResource(const uint32& uid)
 		RELEASE(resourceToDelete);
 	}
 
-	resources.erase(uid);
+	resources.erase(UID);
 
 	return ret;
 }
@@ -1313,10 +1396,11 @@ bool M_ResourceManager::DeleteResource(Resource* resourceToDelete)
 	resourceToDelete->CleanUp();
 	RELEASE(resourceToDelete);
 
-	if (library.find(resourceUid) != library.end())
+	/*if (library.find(resourceUid) != library.end())
 	{
 		library.erase(resourceUid);
-	}
+	}*/
+
 	if (resources.find(resourceUid) != resources.end())
 	{
 		resources.erase(resourceUid);
@@ -1325,17 +1409,16 @@ bool M_ResourceManager::DeleteResource(Resource* resourceToDelete)
 	return true;
 }
 
-Resource* M_ResourceManager::RequestResource(const uint32& uid)
+Resource* M_ResourceManager::RequestResource(uint32 UID)
 {	
-	if (uid == 0)
+	if (UID == 0)
 	{
 		LOG("[ERROR] Resource Manager: Resource Request Failed! Error: Requested UID was 0.");
 		return nullptr;
 	}
 	
-	Resource* resource		= nullptr;
-	RESOURCE_ITEM rItem	= resources.find(uid);
-	
+	Resource* resource	= nullptr;
+	auto rItem			= resources.find(UID);
 	if (rItem != resources.end())
 	{
 		rItem->second->SetReferences(rItem->second->GetReferences() + 1);
@@ -1345,88 +1428,83 @@ Resource* M_ResourceManager::RequestResource(const uint32& uid)
 	return resource;
 }
 
-bool M_ResourceManager::FreeResource(const uint32& uid)
-{
-	bool ret = true;
-	
-	if (uid == 0)
+bool M_ResourceManager::FreeResource(uint32 UID)
+{	
+	if (UID == 0)
 	{
 		LOG("[ERROR] Resource Manager: Free Resource Operation Failed! Error: Freed UID was 0.");
 		return false;
 	}
 	
-	RESOURCE_ITEM rItem = resources.find(uid);
-	if (rItem != resources.end())
-	{
-		if (rItem->second->GetReferences() == 0)																					// Safety check in case resource already has 0 references.
-		{
-			DeallocateResource(uid);
-		}
-		
-		rItem->second->SetReferences(rItem->second->GetReferences() - 1);
-
-		if (rItem->second->GetReferences() == 0)																					// Deallocating the resource in case it has 0 references.
-		{
-			DeallocateResource(uid);
-		}
-	}
-	else
+	RESOURCE_ITEM rItem = resources.find(UID);
+	if (rItem == resources.end())
 	{
 		LOG("[ERROR] Resource Manager: Free Resource Operation Failed! Error: Given UID could not be found in Resources Map.");
 		return false;
 	}
 
-	return ret;
+	uint current_references = rItem->second->GetReferences();
+	if (current_references == 0 || (current_references - 1) == 0)																// Safety check in case resource already has 0 references.
+	{
+		DeallocateResource(UID);
+	}
+	else
+	{
+		rItem->second->SetReferences(current_references - 1);
+	}
+
+	return true;
 }
 
-Resource* M_ResourceManager::AllocateResource(const uint32& uid, const char* assetsPath)
+bool M_ResourceManager::AllocateResource(uint32 UID, const char* assetsPath)
 {
 	if (assetsPath == nullptr)
 	{
 		LOG("[ERROR] Resource Manager: Could not allocate Resource in Memory! Error: Given Path was nullptr.");
-		return nullptr;
+		return false;
 	}
 
 	std::string errorString = "[ERROR] Resource Manager: Could not allocate Resource {" + std::string(assetsPath) + "} in Memory";
 
-	if (uid == 0)
+	if (UID == 0)
 	{
 		LOG("%s! Error: Invalid UID.", errorString.c_str());
-		return nullptr;
+		return false;
 	}
-	if (library.find(uid) == library.end())
+	if (library.find(UID) == library.end())
 	{
 		LOG("%s! Error: Resource could not be found in Library.", errorString.c_str());
-		return nullptr;
+		return false;
 	}
 
-	auto item = resources.find(uid);
+	auto item = resources.find(UID);
 	if (item != resources.end())
 	{
-		return item->second;
+		return true;
 	}
 
 	char* buffer				= nullptr;
-	const char* libraryPath	= library.find(uid)->second.c_str();
+	const char* libraryPath		= library.find(UID)->second.c_str();
 	uint read					= App->fileSystem->Load(libraryPath, &buffer);
 	if (read == 0)
 	{
 		LOG("%s! Error: File system could not read File [%s]", errorString.c_str(), libraryPath);
-		return nullptr;
+		return false;
 	}
 
 	ResourceType type	= GetTypeFromLibraryExtension(libraryPath);
-	Resource* resource	= CreateResource(type, assetsPath, uid);
+	Resource* resource	= CreateResource(type, assetsPath, UID);
 	bool success		= false;
 	switch (type)
 	{
 	case ResourceType::MODEL:		{ success = Importer::Scenes::Load(buffer, (R_Model*)resource); }				break;
 	case ResourceType::MESH:		{ success = Importer::Meshes::Load(buffer, (R_Mesh*)resource); }				break;
 	case ResourceType::MATERIAL:	{ success = Importer::Materials::Load(buffer, (R_Material*)resource); }			break;
-	case ResourceType::TEXTURE:	{ success = Importer::Textures::Load(buffer, read, (R_Texture*)resource); }		break;
+	case ResourceType::TEXTURE:		{ success = Importer::Textures::Load(buffer, read, (R_Texture*)resource); }		break;
 	case ResourceType::FOLDER:		{ success = Importer::Folders::Load(buffer, (R_Folder*)resource); }				break;
 	case ResourceType::SCENE:		{ /*success = TODO: HAVE A FUNCTIONAL R_SCENE AND SAVE/LOAD METHODS*/ }			break;
 	case ResourceType::ANIMATION:	{ success = Importer::Animations::Load(buffer, (R_Animation*)resource); }		break;
+	case ResourceType::SHADER:		{ success = Importer::Shaders::Load(buffer, (R_Shader*)resource); }				break;
 	}
 
 	RELEASE_ARRAY(buffer);
@@ -1442,30 +1520,30 @@ Resource* M_ResourceManager::AllocateResource(const uint32& uid, const char* ass
 		LOG("%s! Error: Importer could not load the Resource Data from File [%s].", errorString.c_str(), libraryPath);
 	}
 
-	return resource;
+	return success;
 }
 
-bool M_ResourceManager::DeallocateResource(const uint32& uid)
+bool M_ResourceManager::DeallocateResource(uint32 UID)
 {
 	bool ret = true;
 	
-	if (uid == 0)
+	if (UID == 0)
 	{
 		LOG("[ERROR] Resource Manager: Could not Deallocate Resource! Error: Given UID was 0");
 		return false;
 	}
 
-	RESOURCE_ITEM item = resources.find(uid);
+	RESOURCE_ITEM item = resources.find(UID);
 	if (item != resources.end())
 	{
 		item->second->CleanUp();
 		RELEASE(item->second);
-		resources.erase(uid);
+		resources.erase(UID);
 		return true;
 	}
 	else
 	{
-		LOG("[ERROR] Resource Manager: Could not Deallocate Resource %lu! Error: Resource was not allocated in memory.", uid);
+		LOG("[ERROR] Resource Manager: Could not Deallocate Resource %lu! Error: Resource was not allocated in memory.", UID);
 	}
 
 	return ret;
@@ -1473,11 +1551,9 @@ bool M_ResourceManager::DeallocateResource(const uint32& uid)
 
 bool M_ResourceManager::DeallocateResource(Resource* resourceToDeallocate)
 {
-	bool ret = true;
-
 	if (resourceToDeallocate == nullptr)
 	{
-		LOG("[ERROR] Resource Manager: Could not deallocate Resource! Error: Given Resource* was nullptr");
+		LOG("[ERROR] Resource Manager: Could not deallocate Resource! Error: Given Resource* was nullptr.");
 		return false;
 	}
 
@@ -1495,10 +1571,74 @@ bool M_ResourceManager::DeallocateResource(Resource* resourceToDeallocate)
 		//LOG("[WARNING] Resource Manager: Deallocated Resource was not stored in the Resources Map!");
 	}
 
-	return ret;
+	return true;
+}
+
+R_Shader* M_ResourceManager::GetShader(const char* name)
+{
+
+	R_Shader* tempShader = nullptr;
+
+	std::string defaultPath = ASSETS_SHADERS_PATH + std::string(name) + ".shader"; 
+	tempShader = (R_Shader*)App->resourceManager->GetResourceFromLibrary(defaultPath.c_str());
+
+	if (tempShader == nullptr)
+	{
+		LOG("[ERROR] Could not get the Default Shader! Error: Default Shader could not be found in active resources.");
+		return nullptr;
+	}
+
+	return tempShader;
+}
+
+void M_ResourceManager::GetAllShaders(std::vector<R_Shader*>& shaders)
+{
+	R_Shader* tempShader = nullptr;
+	std::vector<std::string> shaderFiles;
+	App->fileSystem->GetAllFilesWithExtension(ASSETS_SHADERS_PATH, "shader", shaderFiles);
+	for (uint i = 0; i < shaderFiles.size(); i++)
+	{
+		//std::string defaultPath = ASSETS_SHADERS_PATH + std::string(shaderFiles[i]) + SHADERS_EXTENSION;
+		tempShader = (R_Shader*)App->resourceManager->GetResourceFromLibrary(shaderFiles[i].c_str());
+		if (tempShader == nullptr)
+		{
+			LOG("[ERROR] Could not get the %s Error: %s could not be found in active resources.", shaderFiles[i], shaderFiles[i]);
+		}
+		else
+		{
+			shaders.push_back(tempShader);
+		}
+	}
+}
+
+void M_ResourceManager::GetAllTextures(std::vector<R_Texture*>& textures)
+{
+	R_Texture* tempTex = nullptr;
+	std::vector<std::string> textureFiles;
+	App->fileSystem->GetAllFilesWithExtension(ASSETS_TEXTURES_PATH, "png", textureFiles);
+	App->fileSystem->GetAllFilesWithExtension(ASSETS_TEXTURES_PATH, "tga", textureFiles);
+	App->fileSystem->GetAllFilesWithExtension(ASSETS_TEXTURES_PATH, "dds", textureFiles);
+	for (uint i = 0; i < textureFiles.size(); i++)
+	{
+		tempTex = (R_Texture*)App->resourceManager->GetResourceFromLibrary(textureFiles[i].c_str());
+		if (tempTex == nullptr)
+		{
+			LOG("[ERROR] Could not get the %s Error: %s could not be found in active resources.", textureFiles[i], textureFiles[i]);
+		}
+		else
+		{
+			textures.push_back(tempTex);
+		}
+	}
 }
 
 void M_ResourceManager::GetResources(std::map<uint32, Resource*>& resources) const
 {
+	//TODO: this function call from editor resources causes memleak
 	resources = this->resources;
+}
+
+const std::map<uint32, Resource*>* M_ResourceManager::GetResources() const
+{
+	return &this->resources;
 }

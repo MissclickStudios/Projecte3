@@ -1,8 +1,10 @@
-#include "Application.h"
+#include "EngineApplication.h"
 #include "M_Window.h"
 #include "M_Editor.h"
 
 #include "E_ImGuiDemo.h"
+
+#include "MemoryManager.h"
 
 E_ImGuiDemo::E_ImGuiDemo() : EditorPanel("ImGuiDemo")
 {
@@ -40,7 +42,7 @@ bool E_ImGuiDemo::Draw(ImGuiIO& io)
 		{
 			//return UPDATE_STATUS::STOP;
 
-			App->displayFramerateData = !App->displayFramerateData;
+			EngineApp->displayFramerateData = !EngineApp->displayFramerateData;
 		}
 
 		ImGui::SameLine();
@@ -73,7 +75,7 @@ bool E_ImGuiDemo::Draw(ImGuiIO& io)
 		}
 
 		ImGui::SliderFloat("float", &f, 0.0f, 1.0f);									// Will create a slider that will be able to edit 1 variable from 0.0f to 1.0f.
-		ImGui::ColorEdit3("clear color", (float*)&App->editor->clearColor);			// Will create 3 sliders in a row that will represent a colour (RGB).
+		ImGui::ColorEdit3("clear color", (float*)&EngineApp->editor->clearColor);			// Will create 3 sliders in a row that will represent a colour (RGB).
 
 		if (ImGui::Button("Button"))
 		{

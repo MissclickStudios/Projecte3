@@ -1,11 +1,14 @@
 #include "Emitter.h"
 
+#include "MemoryManager.h"
+
 Emitter::Emitter()
 {
 }
 
 void Emitter::Update(float dt)
 {
+
 	//---
 }
 
@@ -30,4 +33,5 @@ bool Emitter::AddModuleFromType(ParticleModule::Type type)
 			return false;
 	}
 	return true;
+
 }

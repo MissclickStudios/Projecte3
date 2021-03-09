@@ -4,7 +4,7 @@
 #include "Component.h"
 #include "EmitterInstance.h"
 
-class C_ParticleSystem : public Component
+class NULL_API C_ParticleSystem : public Component
 {
 public:
 	C_ParticleSystem(GameObject* owner);
@@ -12,10 +12,8 @@ public:
 
 	//save/load?
 
-	bool Update(float dt);
+	bool Update();
 	void Reset();
-
-	//set resource?
 	
 public:
 	std::vector<EmitterInstance> emitterInstances;

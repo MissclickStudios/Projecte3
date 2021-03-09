@@ -5,7 +5,7 @@
 
 #include "Icons.h"
 
-#include "Application.h"															// ATTENTION: Globals.h already included in Module.h
+#include "EngineApplication.h"															// ATTENTION: Globals.h already included in Module.h
 #include "M_Window.h"
 #include "M_Renderer3D.h"
 #include "M_Camera3D.h"
@@ -32,16 +32,25 @@
 #include "E_ImGuiDemo.h"
 #include "E_About.h"
 #include "E_LoadFile.h"
+#include "E_SaveFile.h"
 
 #include "M_Editor.h"
 
 #include "MemoryManager.h"
+#include "Time.h"
 
-#pragma comment (lib, "Source/Dependencies/glew/libx86/glew32.lib")
+#include "C_Transform.h"
+#include "Log.h"
+
+#include "MemoryManager.h"
+
+#pragma comment (lib, "Source/Dependencies/glew/libx86/glew32.lib") //Needed for ImGui
+#pragma comment (lib, "opengl32.lib")								//link Microsoft OpenGL lib
+
 
 M_Editor::M_Editor(bool isActive) : Module("Editor", isActive),
 clearColor		(0.0f, 0.0f, 0.0f, 1.0f),
-mainMenuBar	(new E_MainMenuBar()),
+mainMenuBar		(new E_MainMenuBar()),
 toolbar			(new E_Toolbar()),
 configuration	(new E_Configuration()),
 hierarchy		(new E_Hierarchy()),
@@ -53,7 +62,8 @@ resources		(new E_Resources()),
 timeline		(new E_Timeline()),
 imguiDemo		(new E_ImGuiDemo()),
 about			(new E_About()),
-loadFile		(new E_LoadFile())
+loadFile		(new E_LoadFile()),
+saveFile		(new E_SaveFile())
 {
 	AddEditorPanel(mainMenuBar);
 	AddEditorPanel(toolbar);
@@ -62,21 +72,24 @@ loadFile		(new E_LoadFile())
 	AddEditorPanel(resources);
 	AddEditorPanel(inspector);
 	AddEditorPanel(timeline);
-	AddEditorPanel(console);
 	AddEditorPanel(project);
+	AddEditorPanel(console);
 	AddEditorPanel(viewport);
 	AddEditorPanel(imguiDemo);
 	AddEditorPanel(about);
 	AddEditorPanel(loadFile);
+	AddEditorPanel(saveFile);
 
 	showConfiguration	= true;
 	showHierarchy		= true;
 	showInspector		= true;
 	showConsole			= true;
+	showProject			= true;
 	showImguiDemo		= false;
 	showAboutPopup		= false;
 	showCloseAppPopup	= false;
 	showLoadFilePopup	= false;
+	showSaveFilePopup	= false;
 }
 
 M_Editor::~M_Editor()
@@ -113,19 +126,19 @@ UpdateStatus M_Editor::PreUpdate(float dt)
 	EditorShortcuts();
 	CheckShowHideFlags();
 
+	EditorCameraUpdate();
+
 	return ret;
 }
 
 UpdateStatus M_Editor::Update(float dt)
 {
-	UpdateStatus ret = UpdateStatus::CONTINUE;
-
-	return ret;
+	return UpdateStatus::CONTINUE;
 }
 
 UpdateStatus M_Editor::PostUpdate(float dt)
 {
-	BROFILER_CATEGORY("Editor PostUpdate", Profiler::Color::IndianRed);
+	BROFILERCATEGORY("Editor PostUpdate", Profiler::Color::IndianRed);
 	
 	UpdateStatus ret = UpdateStatus::CONTINUE;
 	
@@ -133,8 +146,10 @@ UpdateStatus M_Editor::PostUpdate(float dt)
 
 	//Start Dear ImGui's frame
 	ImGui_ImplOpenGL3_NewFrame();
-	ImGui_ImplSDL2_NewFrame(App->window->GetWindow());
+	ImGui_ImplSDL2_NewFrame(EngineApp->window->GetWindow());
 	ImGui::NewFrame();
+
+	float total_time = 0.0f;
 
 	if (BeginRootWindow(io, "Root window", true, ImGuiWindowFlags_MenuBar))
 	{
@@ -143,6 +158,11 @@ UpdateStatus M_Editor::PostUpdate(float dt)
 		{
 			if (editorPanels[i]->IsActive())
 			{
+				/*total_time = Time::Real::PeekPerfTimer();
+				draw = editorPanels[i]->Draw(io);
+				total_time = Time::Real::PeekPerfTimer() - total_time;
+				LOG("TOTAL TIME { %s } ==> { %.3f }", editorPanels[i]->GetName(), total_time);*/
+
 				draw = editorPanels[i]->Draw(io);
 
 				if (!draw)
@@ -157,6 +177,8 @@ UpdateStatus M_Editor::PostUpdate(float dt)
 		ImGui::End();
 	}
 	
+	// Editor: Configuration Frame Data Histograms
+	UpdateFrameData(Time::Real::GetFramesLastSecond(), Time::Real::GetMsLastFrame());
 	return ret;
 }
 
@@ -185,11 +207,6 @@ bool M_Editor::SaveConfiguration(ParsonNode& root) const
 }
 
 // -------------- EDITOR METHODS --------------
-bool M_Editor::GetEvent(SDL_Event* event) const
-{
-	return ImGui_ImplSDL2_ProcessEvent(event);											
-}
-
 void M_Editor::AddEditorPanel(EditorPanel* panel)
 {
 	editorPanels.push_back(panel);
@@ -197,42 +214,13 @@ void M_Editor::AddEditorPanel(EditorPanel* panel)
 
 void M_Editor::EditorShortcuts()
 {
-	if (App->input->GetKey(SDL_SCANCODE_1) == KeyState::KEY_DOWN)
+	if (EngineApp->input->GetKey(SDL_SCANCODE_ESCAPE) == KeyState::KEY_DOWN)
 	{
-		showConfiguration = !showConfiguration;
-	}
-
-	if (App->input->GetKey(SDL_SCANCODE_2) == KeyState::KEY_DOWN)
-	{
-		showHierarchy = !showHierarchy;
-	}
-
-	if (App->input->GetKey(SDL_SCANCODE_3) == KeyState::KEY_DOWN)
-	{
-		showInspector = !showInspector;
-	}
-
-	if (App->input->GetKey(SDL_SCANCODE_4) == KeyState::KEY_DOWN)
-	{
-		showConsole = !showConsole;
-	}
-
-	if (App->input->GetKey(SDL_SCANCODE_8) == KeyState::KEY_DOWN)
-	{
-		showImguiDemo = !showImguiDemo;
-	}
-
-	if (App->input->GetKey(SDL_SCANCODE_9) == KeyState::KEY_DOWN)
-	{
-		showAboutPopup = !showAboutPopup;
-	}
-
-	if (App->input->GetKey(SDL_SCANCODE_ESCAPE) == KeyState::KEY_DOWN)
-	{
-		if (showAboutPopup || showLoadFilePopup)
+		if (showAboutPopup || showLoadFilePopup || showSaveFilePopup)
 		{
 			showAboutPopup		= false;
 			showLoadFilePopup	= false;
+			showSaveFilePopup	= false;
 		}
 		else
 		{
@@ -240,14 +228,39 @@ void M_Editor::EditorShortcuts()
 		}
 	}
 
-	if (App->input->GetKey(SDL_SCANCODE_LCTRL) == KeyState::KEY_REPEAT)
+	if (EngineApp->input->GetKey(SDL_SCANCODE_LCTRL) == KeyState::KEY_REPEAT)
 	{
-		if (App->input->GetKey(SDL_SCANCODE_S) == KeyState::KEY_DOWN)
+		if (EngineApp->input->GetKey(SDL_SCANCODE_1) == KeyState::KEY_DOWN)
 		{
-			App->scene->SaveScene();
+			showConfiguration = !showConfiguration;
 		}
+		if (EngineApp->input->GetKey(SDL_SCANCODE_2) == KeyState::KEY_DOWN)
+		{
+			showHierarchy = !showHierarchy;
+		}
+		if (EngineApp->input->GetKey(SDL_SCANCODE_3) == KeyState::KEY_DOWN)
+		{
+			showInspector = !showInspector;
+		}
+		if (EngineApp->input->GetKey(SDL_SCANCODE_4) == KeyState::KEY_DOWN)
+		{
+			showConsole = !showConsole;
+		}
+		if (EngineApp->input->GetKey(SDL_SCANCODE_8) == KeyState::KEY_DOWN)
+		{
+			showImguiDemo = !showImguiDemo;
+		}
+		if (EngineApp->input->GetKey(SDL_SCANCODE_9) == KeyState::KEY_DOWN)
+		{
+			showAboutPopup = !showAboutPopup;
+		}
+		
 
-		if (App->input->GetKey(SDL_SCANCODE_O) == KeyState::KEY_DOWN)
+		if (EngineApp->input->GetKey(SDL_SCANCODE_S) == KeyState::KEY_DOWN)
+		{
+			showSaveFilePopup = true;
+		}
+		if (EngineApp->input->GetKey(SDL_SCANCODE_O) == KeyState::KEY_DOWN)
 		{
 			showLoadFilePopup = true;
 		}
@@ -264,6 +277,7 @@ void M_Editor::CheckShowHideFlags()
 	showImguiDemo		?	imguiDemo->Enable()		: imguiDemo->Disable();					// ImGui Demo
 	showAboutPopup		?	about->Enable()			: about->Disable();						// About Popup
 	showLoadFilePopup	?	loadFile->Enable()		: loadFile->Disable();					// Load File
+	showSaveFilePopup	?	saveFile->Enable()		: saveFile->Disable();					// Load File
 }
 
 bool M_Editor::EditorIsBeingHovered() const
@@ -277,32 +291,6 @@ bool M_Editor::EditorIsBeingHovered() const
 	}
 
 	return false;
-}
-
-bool M_Editor::RenderEditorPanels() const
-{
-	// Rendering all ImGui elements
-	ImGuiIO& io = ImGui::GetIO();
-
-	ImGui::Render();
-	glViewport(0, 0, (int)io.DisplaySize.x, (int)io.DisplaySize.y);
-	glClearColor(clearColor.x, clearColor.y, clearColor.z, clearColor.w);
-	//glClear(GL_COLOR_BUFFER_BIT);
-	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
-	// Updating and rendering additional platform windows
-	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
-	{
-		SDL_Window* backupCurrentWindow		= SDL_GL_GetCurrentWindow();
-		SDL_GLContext backupCurrentContext	= SDL_GL_GetCurrentContext();
-
-		ImGui::UpdatePlatformWindows();
-		ImGui::RenderPlatformWindowsDefault();
-
-		SDL_GL_MakeCurrent(backupCurrentWindow, backupCurrentContext);
-	}
-
-	return true;
 }
 
 bool M_Editor::InitializeImGui() const
@@ -331,40 +319,42 @@ bool M_Editor::InitializeImGui() const
 		style.Colors[ImGuiCol_WindowBg].w = 1.0f;												// Setting the windows Alpha to 255, making them completely opaque.
 	}																							// -----------------------------------------------
 
-	ImGui_ImplSDL2_InitForOpenGL(App->window->GetWindow(), App->renderer->context);				// Setting up Platform/Renderer bindings
+	ImGui_ImplSDL2_InitForOpenGL(EngineApp->window->GetWindow(), EngineApp->renderer->context);				// Setting up Platform/Renderer bindings
 	ImGui_ImplOpenGL3_Init(0);																	// -------------------------------------
+
+	glClearColor(clearColor.x, clearColor.y, clearColor.z, clearColor.w);
 
 	return ret;
 }
 
 bool M_Editor::GetShowWorldGrid() const
 {
-	return App->renderer->GetRenderWorldGrid();
+	return EngineApp->renderer->GetRenderWorldGrid();
 }
 
 bool M_Editor::GetShowWorldAxis() const
 {
-	return App->renderer->GetRenderWorldAxis();
+	return EngineApp->renderer->GetRenderWorldAxis();
 }
 
 bool M_Editor::GetShowPrimitiveExamples() const
 {
-	return App->renderer->GetRenderPrimitiveExamples();
+	return EngineApp->renderer->GetRenderPrimitiveExamples();
 }
 
 void M_Editor::SetShowWorldGrid(bool setTo)
 {
-	App->renderer->SetRenderWorldGrid(setTo);
+	EngineApp->renderer->SetRenderWorldGrid(setTo);
 }
 
 void M_Editor::SetShowWorldAxis(bool setTo)
 {
-	App->renderer->SetRenderWorldAxis(setTo);
+	EngineApp->renderer->SetRenderWorldAxis(setTo);
 }
 
 void M_Editor::SetShowPrimitiveExamples(bool setTo)
 {
-	App->renderer->SetRenderPrimtiveExamples(setTo);
+	EngineApp->renderer->SetRenderPrimtiveExamples(setTo);
 }
 
 void M_Editor::UpdateFrameData(int frames, int ms)
@@ -390,7 +380,7 @@ void M_Editor::AddInputLog(uint key, uint state)
 	
 	if (configuration != nullptr)
 	{
-		if (key < App->input->GetMaxNumScancodes())
+		if (key < EngineApp->input->GetMaxNumScancodes())
 		{
 			const char* keyName = SDL_GetKeyName(SDL_GetKeyFromScancode((SDL_Scancode)key));		// Through the scancode it is possible to get a string with the name of the key.
 
@@ -398,7 +388,7 @@ void M_Editor::AddInputLog(uint key, uint state)
 		}
 		else
 		{
-			uint mouseButton = key - App->input->GetMaxNumScancodes();
+			uint mouseButton = key - EngineApp->input->GetMaxNumScancodes();
 
 			sprintf_s(input, 128, "[MOUSE] %02u - %s\n", mouseButton, states[state]);
 		}
@@ -409,47 +399,47 @@ void M_Editor::AddInputLog(uint key, uint state)
 
 GameObject* M_Editor::GetSceneRootThroughEditor() const
 {
-	return App->scene->GetSceneRoot();
+	return EngineApp->scene->GetSceneRoot();
 }
 
 void M_Editor::SetSceneRootThroughEditor(GameObject* gameObject)
 {
-	App->scene->SetSceneRoot(gameObject);
+	EngineApp->scene->SetSceneRoot(gameObject);
 }
 
 GameObject* M_Editor::GetSelectedGameObjectThroughEditor() const
 {
-	return App->scene->GetSelectedGameObject();
+	return EngineApp->scene->GetSelectedGameObject();
 }
 
 void M_Editor::SetSelectedGameObjectThroughEditor(GameObject* gameObject)
 {
-	App->scene->SetSelectedGameObject(gameObject);
+	EngineApp->scene->SetSelectedGameObject(gameObject);
 }
 
 void M_Editor::DeleteSelectedGameObject()
 {
-	App->scene->DeleteSelectedGameObject();
+	EngineApp->scene->DeleteSelectedGameObject();
 }
 
 void M_Editor::CreateGameObject(const char* name, GameObject* parent)
 {
-	App->scene->CreateGameObject(name, parent);
+	EngineApp->scene->CreateGameObject(name, parent);
 }
 
 C_Camera* M_Editor::GetCurrentCameraThroughEditor() const
 {
-	return App->camera->GetCurrentCamera();
+	return EngineApp->camera->GetCurrentCamera();
 }
 
 void M_Editor::SetCurrentCameraThroughEditor(C_Camera* gameObject)
 {
-	App->camera->SetCurrentCamera(gameObject);
+	EngineApp->camera->SetCurrentCamera(gameObject);
 }
 
 void M_Editor::SetMasterCameraThroughEditor()
 {
-	App->camera->SetMasterCameraAsCurrentCamera();
+	EngineApp->camera->SetMasterCameraAsCurrentCamera();
 }
 
 float2 M_Editor::GetWorldMousePositionThroughEditor() const
@@ -484,46 +474,75 @@ bool M_Editor::HoveringGuizmo() const
 
 bool M_Editor::SelectedIsSceneRoot() const
 {
-	return (App->scene->GetSelectedGameObject() == App->scene->GetSceneRoot());
+	return (EngineApp->scene->GetSelectedGameObject() == EngineApp->scene->GetSceneRoot());
 }
 
 bool M_Editor::SelectedIsAnimationBone() const
 {
-	return App->scene->GetSelectedGameObject()->is_bone;
+	return EngineApp->scene->GetSelectedGameObject()->is_bone;
 }
 
 void M_Editor::GetEngineIconsThroughEditor(Icons& engineIcons)
 {
-	engineIcons = App->renderer->GetEngineIcons();
+	engineIcons = EngineApp->renderer->GetEngineIcons();
 }
 
 void M_Editor::LoadResourceIntoSceneThroughEditor()
 {
-	App->scene->LoadResourceIntoScene(project->GetDraggedResource());
+	const char* draggedAssetPath = project->GetDraggedAsset();
+	if (draggedAssetPath != nullptr)
+	{
+		Resource* draggedResource = EngineApp->resourceManager->GetResourceFromLibrary(draggedAssetPath);
+		if (draggedResource != nullptr)
+		{
+			EngineApp->scene->LoadResourceIntoScene(draggedResource);
+		}
+	}
+	else
+	{
+		LOG("[ERROR] DRAGGED PATH WAS NULLPTR!!!");
+	}
+	
 }
 
 void M_Editor::GetResourcesThroughEditor(std::map<uint32, Resource*>& resources) const
 {
-	//resources = App->resourceManager->GetResources();
-	App->resourceManager->GetResources(resources);
+	//resources = EngineApp->resourceManager->GetResources();
+	//TODO: this function call from editor resources causes memleak
+	EngineApp->resourceManager->GetResources(resources);
+}
+
+const std::map<uint32, Resource*>* M_Editor::GetResourcesThroughEditor() const
+{
+	return EngineApp->resourceManager->GetResources();
 }
 
 void M_Editor::SaveSceneThroughEditor(const char* sceneName)
 {
-	App->scene->SaveScene(sceneName);
+	EngineApp->scene->SaveScene(sceneName);
 }
 
 void M_Editor::LoadFileThroughEditor(const char* path)
 {
-	std::string extension = App->fileSystem->GetFileExtension(path);
+	//TODO: return string from dll memo leak
+	//----------------call to get file expension function---------------------------
+	std::string fullPath = path;
+	std::string extension = "";
+
+	size_t dotPosition = fullPath.find_last_of(".");
+
+	extension = (dotPosition != fullPath.npos) ? fullPath.substr(dotPosition + 1) : "[NONE]";
+	//--------------------------------------------------------------------------------------
+	//std::string extension = EngineApp->fileSystem->GetFileExtension(path);
+	//if i call it i get a memory leak when i return the std::string ???
 
 	if (extension == "json" || extension == "JSON")
 	{
-		App->scene->LoadScene(path);
+		EngineApp->scene->LoadScene(path);
 	}
 	else
 	{
-		App->resourceManager->ImportFile(path);
+		EngineApp->resourceManager->ImportFile(path);
 	}
 }
 
@@ -562,5 +581,100 @@ void M_Editor::BeginDockspace(ImGuiIO& io, const char* dockspaceId, ImGuiDockNod
 	{
 		ImGuiID dckspace_id = ImGui::GetID(dockspaceId);
 		ImGui::DockSpace(dckspace_id, size, dockingFlags);
+	}
+}
+
+
+//EDITOR CAMERA FUNCTIONALLITY
+void M_Editor::EditorCameraUpdate() {
+	if (ViewportIsHovered())
+	{
+		if (!HoveringGuizmo())
+		{
+			if (EngineApp->input->GetMouseButton(SDL_BUTTON_LEFT) == KeyState::KEY_DOWN)
+			{
+				EngineApp->camera->CastRay(GetWorldMousePositionThroughEditor());
+			}
+		}
+
+		if (EngineApp->input->GetMouseButton(SDL_BUTTON_RIGHT) == KeyState::KEY_REPEAT)
+		{
+			EngineApp->camera->WASDMovement();
+
+			EngineApp->camera->FreeLookAround();
+		}
+
+		if (EngineApp->input->GetKey(SDL_SCANCODE_LALT) == KeyState::KEY_REPEAT)
+		{
+			if (EngineApp->input->GetMouseButton(SDL_BUTTON_RIGHT) == KeyState::KEY_REPEAT)
+			{
+				if (EngineApp->scene->GetSelectedGameObject() != nullptr)
+				{
+					if (EngineApp->scene->GetSelectedGameObject()->GetComponent<C_Camera>() != EngineApp->camera->currentCamera)
+					{
+						EngineApp->camera->reference = EngineApp->scene->GetSelectedGameObject()->GetComponent<C_Transform>()->GetWorldPosition();
+					}
+				}
+				else
+				{
+					EngineApp->camera->reference = float3::zero;
+				}
+
+				EngineApp->camera->Orbit(GetWorldMouseMotionThroughEditor());
+			}
+		}
+
+		if (EngineApp->input->GetMouseButton(SDL_BUTTON_MIDDLE) == KeyState::KEY_REPEAT)
+		{
+			EngineApp->camera->PanCamera(GetWorldMouseMotionThroughEditor());
+		}
+
+		if (EngineApp->input->GetMouseZ() != 0)
+		{
+			EngineApp->camera->Zoom();
+		}
+
+		if (EngineApp->input->GetKey(SDL_SCANCODE_LCTRL) == KeyState::KEY_IDLE)
+		{
+			if (EngineApp->input->GetKey(SDL_SCANCODE_O) == KeyState::KEY_DOWN)
+			{
+				EngineApp->camera->ReturnToWorldOrigin();
+			}
+		}
+
+		if (EngineApp->input->GetKey(SDL_SCANCODE_F) == KeyState::KEY_DOWN)
+		{
+			float3 target = EngineApp->scene->GetSelectedGameObject()->GetComponent<C_Transform>()->GetWorldPosition();
+			EngineApp->camera->Focus(target);
+		}
+	}
+}
+
+void M_Editor::ProcessInput(SDL_Event& event)
+{
+	ImGui_ImplSDL2_ProcessEvent(&event);
+}
+
+void M_Editor::PostSceneRendering()
+{
+	// Rendering all ImGui elements
+	ImGuiIO& io = ImGui::GetIO();
+
+	ImGui::Render();
+	//glViewport(0, 0, (int)io.DisplaySize.x, (int)io.DisplaySize.y);
+	//glClearColor(clearColor.x, clearColor.y, clearColor.z, clearColor.w);
+	//glClear(GL_COLOR_BUFFER_BIT);
+	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+	// Updating and rendering additional platform windows
+	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+	{
+		SDL_Window* backupCurrentWindow = SDL_GL_GetCurrentWindow();
+		SDL_GLContext backupCurrentContext = SDL_GL_GetCurrentContext();
+
+		ImGui::UpdatePlatformWindows();
+		ImGui::RenderPlatformWindowsDefault();
+
+		SDL_GL_MakeCurrent(backupCurrentWindow, backupCurrentContext);
 	}
 }

@@ -1,6 +1,13 @@
 #ifndef __PROFILER_H__
 #define __PROFILER_H__
 
+#ifndef GAMEBUILD
 #include "Brofiler/include/Brofiler.h"
+#define BROFILERFRAME(FRAME_NAME) BROFILER_FRAME(FRAME_NAME)
+#define BROFILERCATEGORY(NAME, COLOR) BROFILER_CATEGORY(NAME, COLOR)
+#else
+#define BROFILERFRAME(FRAME_NAME)
+#define BROFILERCATEGORY(NAME, COLOR)
+#endif // !GAMEBUILD
 
 #endif // !__PROFILER_H__

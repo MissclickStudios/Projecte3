@@ -1,10 +1,11 @@
 #ifndef __APPLICATION_H__
-#define __APPLICATION_H_
+#define __APPLICATION_H__
 
 #include <vector>
 #include <string>
 
-#include "Globals.h"
+#include "UpdateStatus.h"
+#include "Macros.h"
 #include "Timer.h"
 #include "PerfectTimer.h"
 #include "HardwareInfo.h"
@@ -14,12 +15,14 @@ class M_Window;
 class M_Input;
 class M_Scene;
 class M_Renderer3D;
-class M_Editor;
 class M_Camera3D;
 class M_FileSystem;
 class M_ResourceManager;
+class M_Audio;
+class M_Physics;
+class M_UISystem;
 
-class Application
+class NULL_API Application
 {
 public:
 	Application();
@@ -60,7 +63,6 @@ public:																					// --- FRAMERATE
 public:																					// --- EDITOR
 	void		AddEditorLog(const char* log);
 	void		RequestBrowser(const char* link);
-	void		UpdateFrameData(int frames, int ms);
 
 	void		LogHardwareInfo() const;
 	HardwareInfo GetHardwareInfo() const;
@@ -70,10 +72,12 @@ public:
 	M_Input*				input;
 	M_Scene*				scene;
 	M_Renderer3D*			renderer;
-	M_Editor*				editor;
 	M_Camera3D*				camera;
 	M_FileSystem*			fileSystem;
 	M_ResourceManager*		resourceManager;
+	M_Audio*				audio;
+	M_Physics*				physics;
+	M_UISystem*				uiSystem;
 
 	bool					play;
 	bool					pause;														// Will keep track of whether or not the applcation is currently paused.
@@ -108,8 +112,11 @@ private:
 
 	// --- HARDWARE INFO
 	HardwareInfo			hardwareInfo;												// All the info/data about the software and the hardware of the system will be extracted from here.
+protected:
+	Module* logger;
 };
 
-extern Application* App;																// Allows to access the Application module from anywhere in the project.
+extern NULL_API Application* App;													// Allows to access the Application module from anywhere in the project.
+Application* CreateApplication();																
 
 #endif // !__APPLICATION_H__

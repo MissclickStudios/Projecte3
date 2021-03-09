@@ -1,6 +1,8 @@
 #ifndef __COMPONENT_H__
 #define __COMPONENT_H__
 
+#include "Macros.h"
+
 class ParsonNode;
 class GameObject;
 
@@ -16,10 +18,22 @@ enum class ComponentType
 	CAMERA,
 	ANIMATOR,
 	ANIMATION,
+	RIGIDBODY,
+	BOX_COLLIDER,
+	SPHERE_COLLIDER,
+	CAPSULE_COLLIDER,
 	PARTICLE_SYSTEM,
+	CANVAS,
+	AUDIOSOURCE,
+	AUDIOLISTENER,
+	// Behaviors
+	PLAYER_CONTROLLER,
+	BULLET_BEHAVIOR,
+	PROP_BEHAVIOR,
+	CAMERA_BEHAVIOR
 };
 
-class Component
+class NULL_API Component
 {
 public:
 	Component(GameObject* owner, ComponentType type, bool isActive = true);
@@ -40,13 +54,15 @@ public:
 	void ResetID();																		// Will reset the component's ID. WARNING: All references to this comp. will be lost (serialization).
 
 	bool IsActive() const;																// 
-	void SetIsActive(const bool& setTo);												// 
+	virtual void SetIsActive(bool setTo);												// 
 
 	GameObject* GetOwner() const;														//
 
+protected:
+	bool			isActive;
+
 private:
 	uint32			id;																	// 
-	bool			isActive;															//
 
 	ComponentType	type;																//
 	GameObject*		owner;																// 

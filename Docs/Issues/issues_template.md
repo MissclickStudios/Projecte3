@@ -14,7 +14,7 @@ ASAP / High / Medium / Low
 
 Always / High / Average / Low
 
-(Delete upper section from description until here)
+// -------------- (Delete upper section from description until here) -------------- //
 
 
 **Date of Detection**
@@ -39,7 +39,6 @@ Always / High / Average / Low
 
 **Additional context**
 
-//Add images inside Docs/Issues/Images/issue_image.png.
 - {Screenshots... here}
 
 **Suggested Assignees**

@@ -12,10 +12,13 @@
 
 #include "C_Mesh.h"
 
+#include "MemoryManager.h"
+
 C_Mesh::C_Mesh(GameObject* owner) : Component(owner, ComponentType::MESH),
-rMesh(nullptr),
-showWireframe(false),
-showBoundingBox(false)
+rMesh			(nullptr),
+skinningMesh	(nullptr),
+showWireframe	(false),
+showBoundingBox	(false)
 {
 }
 
@@ -41,6 +44,8 @@ bool C_Mesh::CleanUp()
 		rMesh = nullptr;
 	}
 
+	skinningMesh = nullptr;
+
 	return ret;
 }
 
@@ -50,11 +55,13 @@ bool C_Mesh::SaveState(ParsonNode& root) const
 
 	if (rMesh != nullptr)
 	{
-		root.SetNumber("Type", (uint)GetType());
+		root.SetNumber("Type", (double)GetType());
+
 		root.SetNumber("UID", rMesh->GetUID());
 		root.SetString("Name", rMesh->GetAssetsFile());
 		root.SetString("Path", rMesh->GetLibraryPath());
 		root.SetString("File", rMesh->GetLibraryFile());
+
 		root.SetBool("ShowWireframe", showWireframe);
 		root.SetBool("ShowBoundingBox", showBoundingBox);
 	}
@@ -136,7 +143,7 @@ void C_Mesh::GetMeshData(uint& numVertices, uint& numNormals, uint& numTexCoords
 		numTexCoords = rMesh->texCoords.size();
 		numIndices = rMesh->indices.size();
 
-		numBones = rMesh->bones.size();
+		numBones = rMesh->boneMapping.size();
 	}
 }
 

@@ -6,6 +6,7 @@
 #include "MathGeoLib/include/Geometry/LineSegment.h"
 #include "MathGeoLib/include/Geometry/Triangle.h"
 #include "Module.h"
+#include "LevelGenerator.h"
 
 namespace math
 {
@@ -15,16 +16,18 @@ namespace math
 class ParsonNode;
 class Primitive;
 class Resource;
+class R_Scene;
 class R_Model;
 class R_Texture;
 class GameObject;
 class C_Camera;
+//class LevelGenerator;
 
 struct ModelNode;
 
 typedef unsigned __int32 uint32;
 
-class M_Scene : public Module
+class NULL_API M_Scene : public Module
 {
 public:
 	M_Scene(bool isActive = true);
@@ -50,8 +53,8 @@ public:																														// --- GAME OBJECTS METHODS ---
 	GameObject*		CreateGameObject					(const char* name = nullptr, GameObject* parent = nullptr);			// 
 	void			DeleteGameObject					(GameObject* gameObject, uint index = -1);							// 
 	
-	void			GenerateGameObjectsFromModel		(const uint32& modelUid, const float3& scale = float3::zero);		//
-	bool			ApplyTextureToSelectedGameObject	(const uint32& textureUid);										//
+	GameObject*		GenerateGameObjectsFromModel		(const R_Model* rModel, const float3& scale = float3::zero);		//
+	bool			ApplyTextureToSelectedGameObject	(const uint32& textureUid);											//
 
 	void			CreateComponentsFromModelNode		(const ModelNode& modelNode, GameObject* gameObject);
 	void			CreateAnimationComponentFromModel	(const R_Model* rModel, GameObject* gameObject);
@@ -81,21 +84,30 @@ public:																														// --- SELECT THROUGH RAYCAST
 	void			GetRaycastHits						(const LineSegment& ray, std::map<float, GameObject*>& hits);
 	void			GetFaces							(const std::vector<float>& vertices, std::vector<Triangle>& faces);
 
+public:	
+	bool			CheckSceneLight();	//Check if there is a light already in the scene
+	GameObject*		GetSceneLight();	//Return the light in the scene
+	void			SetSceneLight(GameObject* lightPoint);	//Set the light in the scene with the given
+
 private:
 	void			HandleDebugInput();
 	void			DebugSpawnPrimitive(Primitive* p);
 
 private:
-	std::vector<GameObject*>	gameObjects;																				// 
+	std::vector<GameObject*>		gameObjects;																			// 
+	std::multimap<uint32, std::pair<uint32, std::string>> models;															// Models currently loaded on scene and their correspondent GO.
 
-	GameObject*					masterRoot;																				// Root of everything. Parent of all scenes.
-	GameObject*					sceneRoot;																					// Root of the current scene.
-	GameObject*					animationRoot;																				// TMP Just for the 3rd Assignment Delivery
-	GameObject*					selectedGameObject;																		// Represents the game object that's currently being selected.
+	GameObject*						masterRoot;																				// Root of everything. Parent of all scenes.
+	GameObject*						sceneRoot;																				// Root of the current scene.
+	GameObject*						animationRoot;																			// TMP Just for the 3rd Assignment Delivery
+	GameObject*						selectedGameObject;																		// Represents the game object that's currently being selected.
 
-	C_Camera*					cullingCamera;																				// Culling Camera
+	C_Camera*						cullingCamera;																			// Culling Camera
 
-	std::vector<Primitive*>		primitives;
+	std::vector<Primitive*>			primitives;
+
+	LevelGenerator					level;
+	GameObject*						lightPoint;
 };
 
 #endif // !__M_SCENE_H__

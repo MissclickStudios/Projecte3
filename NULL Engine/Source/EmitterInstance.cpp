@@ -1,5 +1,7 @@
 #include "EmitterInstance.h"
 
+#include "MemoryManager.h"
+
 EmitterInstance::EmitterInstance()
 {
 }
@@ -16,6 +18,7 @@ void EmitterInstance::Init(Emitter* emitter, C_ParticleSystem* component)
 	particles.resize(emitter->maxParticleCount);
 }
 
+
 void EmitterInstance::Update(float dt)
 {
 	KillDeadParticles();
@@ -25,7 +28,7 @@ void EmitterInstance::Update(float dt)
 
 void EmitterInstance::Spawn()
 {
-	//call the emitter reference to use the modules to spawn a particle. 
+  //call the emitter reference to use the modules to spawn a particle. 
 	//then add 1 to active particles.
 }
 

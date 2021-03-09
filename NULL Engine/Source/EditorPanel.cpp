@@ -1,5 +1,7 @@
 #include "EditorPanel.h"
 
+#include "MemoryManager.h"
+
 EditorPanel::EditorPanel(const char* name, bool isActive) : 
 name		(name), 
 isActive	(isActive), 

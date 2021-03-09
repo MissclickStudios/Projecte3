@@ -1,5 +1,7 @@
 #include "Channel.h"
 
+#include "MemoryManager.h"
+
 Channel::Channel()
 {
 	name = "[NONE]";

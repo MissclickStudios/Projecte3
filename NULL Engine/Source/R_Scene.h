@@ -5,7 +5,7 @@
 
 class ParsonNode;
 
-class R_Scene : public Resource
+class NULL_API R_Scene : public Resource
 {
 public:
 	R_Scene();

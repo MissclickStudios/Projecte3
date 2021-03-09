@@ -4,6 +4,8 @@
 #include <gl/GL.h>
 //#include <gl/GLU.h>
 
+#include "MemoryManager.h"
+
 Light::Light() : 
 ref			(-1), 
 on			(false), 
@@ -16,6 +18,7 @@ void Light::Init()
 {
 	glLightfv(ref, GL_AMBIENT, &ambient);
 	glLightfv(ref, GL_DIFFUSE, &diffuse);
+	ref = GL_LIGHT0;
 }
 
 void Light::SetPos(float x, float y, float z)

@@ -7,7 +7,7 @@ class ParsonNode;
 
 typedef unsigned __int32 uint32;
 
-class R_Folder : public Resource
+class NULL_API R_Folder : public Resource
 {
 public:
 	R_Folder();

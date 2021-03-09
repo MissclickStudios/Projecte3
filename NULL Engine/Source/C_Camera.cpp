@@ -1,6 +1,9 @@
 #include "JSONParser.h"
 
 #include "Application.h"
+#include "VariableDefinitions.h"
+#include "FileSystemDefinitions.h"
+#include "Log.h"
 #include "M_Window.h"
 #include "M_Scene.h"
 
@@ -146,6 +149,19 @@ float* C_Camera::GetOGLViewMatrix()
 	viewMatrix.Transpose();
 
 	return (float*)viewMatrix.v;
+}
+
+math::float4x4 C_Camera::GetViewMatrixTransposed() const
+{
+	math::float4x4 matrix = frustum.ViewMatrix();
+	return matrix.Transposed();
+}
+
+math::float4x4 C_Camera::GetProjectionMatrixTransposed() const
+{
+	math::float4x4 matrix = frustum.ProjectionMatrix();
+	matrix.Transpose();
+	return matrix;
 }
 
 float* C_Camera::GetOGLProjectionMatrix()

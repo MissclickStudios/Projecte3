@@ -6,6 +6,7 @@
 #include "OpenGL.h"
 #include "DevIL.h"
 
+#include "FileSystemDefinitions.h"
 #include "VariableTypedefs.h"
 #include "Log.h"
 

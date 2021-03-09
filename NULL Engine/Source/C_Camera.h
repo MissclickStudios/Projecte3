@@ -3,6 +3,7 @@
 
 #include "MathGeoFrustum.h"
 #include "MathGeoLib/include/Math/float2.h"
+#include "MathGeoLib/include/Math/Quat.h"
 #include "Component.h"
 
 class ParsonNode;
@@ -10,7 +11,7 @@ class GameObject;
 
 typedef unsigned int uint;
 
-class C_Camera : public Component
+class NULL_API C_Camera : public Component
 {
 public:
 	C_Camera(GameObject* owner);
@@ -34,6 +35,9 @@ public:																										// --- FRUSTUM METHODS
 
 	float* GetOGLViewMatrix();
 	float* GetOGLProjectionMatrix();
+
+	math::float4x4 GetViewMatrixTransposed() const;
+	math::float4x4 GetProjectionMatrixTransposed() const;
 
 public:																										// --- CAMERA TRANSFORM
 	void PointAt(const float3& position, const float3& target);

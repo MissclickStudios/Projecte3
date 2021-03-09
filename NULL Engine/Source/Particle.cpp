@@ -4,6 +4,8 @@
 #include "C_Camera.h"
 #include "M_Camera3D.h"
 
+#include "MemoryManager.h"
+
 Particle::Particle()
 {
 

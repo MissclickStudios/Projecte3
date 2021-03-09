@@ -4,6 +4,7 @@
 // Employed to serialize scenes and game objects.
 // ----------------------------------------------------
 
+#include "MathGeoLib/include/Math/float2.h"
 #include "MathGeoLib/include/Math/float3.h"
 #include "MathGeoLib/include/Math/float4.h"
 #include "MathGeoLib/include/Math/Quat.h"
@@ -108,6 +109,11 @@ bool ParsonNode::Release()
 	return true;
 }
 
+int ParsonNode::GetInteger(const const char* name)
+{
+	return json_object_get_number(rootNode, name);
+}
+
 // --- PARSON NODE METHODS ---
 // --- GETTERS AND SETTERS
 double ParsonNode::GetNumber(const char* name) const
@@ -123,6 +129,50 @@ double ParsonNode::GetNumber(const char* name) const
 	}
 
 	return JSONError;
+}
+
+float2 ParsonNode::GetFloat2(const const char* name)
+{
+	JSON_Array* tempArray = json_object_get_array(rootNode, name);
+	float2 floats;
+	floats.x = json_array_get_number(tempArray, 0);
+	floats.y = json_array_get_number(tempArray, 1);
+
+	return floats;
+}
+
+float3 ParsonNode::GetFloat3(const const char* name)
+{
+	JSON_Array* tempArray = json_object_get_array(rootNode, name);
+	float3 floats;
+	floats.x = json_array_get_number(tempArray, 0);
+	floats.y = json_array_get_number(tempArray, 1);
+	floats.z = json_array_get_number(tempArray, 2);
+
+	return floats;
+}
+
+float4 ParsonNode::GetFloat4(const const char* name)
+{
+	JSON_Array* tempArray = json_object_get_array(rootNode, name);
+	float4 floats;
+	floats.x = json_array_get_number(tempArray, 0);
+	floats.y = json_array_get_number(tempArray, 1);
+	floats.z = json_array_get_number(tempArray, 2);
+	floats.w = json_array_get_number(tempArray, 3);
+	return floats;
+}
+
+Quat ParsonNode::GetQuat(const const char* name)
+{
+	JSON_Array* tempArray = json_object_get_array(rootNode, name);
+	Quat quat;
+	quat.x = json_array_get_number(tempArray, 0);
+	quat.y = json_array_get_number(tempArray, 1);
+	quat.z = json_array_get_number(tempArray, 2);
+	quat.w = json_array_get_number(tempArray, 3);
+
+	return quat;
 }
 
 const char* ParsonNode::GetString(const char* name) const
@@ -177,6 +227,11 @@ ParsonNode ParsonNode::GetNode(const char* name) const
 	return ParsonNode(json_object_get_object(rootNode, name));									// json_object_get_object() returns NULL if no JSON_Object can be found. Remember to check!
 }
 
+void ParsonNode::SetInteger(const char* name, int number)
+{
+	json_object_set_number(rootNode, name, number);
+}
+
 void ParsonNode::SetNumber(const char* name, double number)
 {
 	JSON_Status status = json_object_set_number(rootNode, name, number);
@@ -185,6 +240,71 @@ void ParsonNode::SetNumber(const char* name, double number)
 	{
 		LOG("[ERROR] JSON Parser: Could not set %s with the given Number!", name);
 	}
+}
+
+void ParsonNode::SetFloat2(const const char* name, const float2 float2)
+{
+	JSON_Array* tempArray = json_object_get_array(rootNode, name);
+	if (tempArray == nullptr) {
+		JSON_Value* val = json_value_init_array();
+		tempArray = json_value_get_array(val);
+		json_object_dotset_value(rootNode, name, val);
+	}
+	else {
+		json_array_clear(tempArray);
+	}
+	json_array_append_number(tempArray, float2.x);
+	json_array_append_number(tempArray, float2.y);
+}
+
+void ParsonNode::SetFloat3(const const char* name, const float3 float3)
+{
+	JSON_Array* tempArray = json_object_get_array(rootNode, name);
+	if (tempArray == nullptr) {
+		JSON_Value* val = json_value_init_array();
+		tempArray = json_value_get_array(val);
+		json_object_dotset_value(rootNode, name, val);
+	}
+	else {
+		json_array_clear(tempArray);
+	}
+	json_array_append_number(tempArray, float3.x);
+	json_array_append_number(tempArray, float3.y);
+	json_array_append_number(tempArray, float3.z);
+}
+
+void ParsonNode::SetFloat4(const const char* name, const float4 float4)
+{
+	JSON_Array* tempArray = json_object_get_array(rootNode, name);
+	if (tempArray == nullptr) {
+		JSON_Value* val = json_value_init_array();
+		tempArray = json_value_get_array(val);
+		json_object_dotset_value(rootNode, name, val);
+	}
+	else {
+		json_array_clear(tempArray);
+	}
+	json_array_append_number(tempArray, float4.x);
+	json_array_append_number(tempArray, float4.y);
+	json_array_append_number(tempArray, float4.z);
+	json_array_append_number(tempArray, float4.w);
+}
+
+void ParsonNode::SetQuat(const const char* name, const Quat quat)
+{
+	JSON_Array* tempArray = json_object_get_array(rootNode, name);
+	if (tempArray == nullptr) {
+		JSON_Value* val = json_value_init_array();
+		tempArray = json_value_get_array(val);
+		json_object_dotset_value(rootNode, name, val);
+	}
+	else {
+		json_array_clear(tempArray);
+	}
+	json_array_append_number(tempArray, quat.x);
+	json_array_append_number(tempArray, quat.y);
+	json_array_append_number(tempArray, quat.z);
+	json_array_append_number(tempArray, quat.w);
 }
 
 void ParsonNode::SetString(const char* name, const char* string)
@@ -479,6 +599,11 @@ ParsonNode ParsonArray::SetNode(const char* name)
 	(status == JSONFailure) ? LOG("[ERROR] JSON Parser: Could not append Node to %s Array!", name) : ++size;
 
 	return ParsonNode(json_array_get_object(jsonArray, size - 1));															// As the object was just appended, it will be located at the end.
+}
+
+uint ParsonArray::GetSize() const
+{
+	return size;
 }
 
 JSON_Value_Type ParsonArray::GetTypeAtIndex(const uint& index) const

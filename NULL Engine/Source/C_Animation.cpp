@@ -2,6 +2,8 @@
 
 #include "C_Animation.h"
 
+#include "MemoryManager.h"
+
 C_Animation::C_Animation(GameObject* owner) : Component(owner, ComponentType::ANIMATION)
 {
 

@@ -5,6 +5,8 @@
 
 #include "E_Timeline.h"
 
+#include "MemoryManager.h"
+
 E_Timeline::E_Timeline() : EditorPanel("Timeline")
 {
 	currentTime = 0.0f;
