@@ -19,12 +19,12 @@ void EmitterInstance::Init(Emitter* emitter, C_ParticleSystem* component)
 }
 
 
-void EmitterInstance::Update(float dt)
+/*void EmitterInstance::Update(float dt)
 {
 	KillDeadParticles();
 	UpdateModules(dt);
 	DrawParticles();
-}
+}*/
 
 void EmitterInstance::Spawn()
 {
