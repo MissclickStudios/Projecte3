@@ -32,8 +32,7 @@ public:
 	void ApplyBillboarding(Billboarding type = Billboarding::NONE);
 
 public:
-	bool active;
-
+	
 	float3 position;
 	Quat worldRotation;
 
