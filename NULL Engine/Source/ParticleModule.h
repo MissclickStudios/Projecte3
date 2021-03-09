@@ -2,11 +2,12 @@
 #define __PARTICLE_MODULE_H__
 
 #include "MathGeoLib/include/Math/float3.h"
+#include "Macros.h"
 
 class Particle;
 class EmitterInstance;
 
-struct ParticleModule
+struct NULL_API ParticleModule
 {
 	enum Type
 	{
