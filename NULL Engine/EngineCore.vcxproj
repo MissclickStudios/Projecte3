@@ -473,6 +473,7 @@
     <IntDir>.\Intermediate\CoreDll\$(Configuration)\</IntDir>
     <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86)</LibraryPath>
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <TargetName>$(ProjectName)R</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Build|Win32'">
     <OutDir>.\Build\CoreDll\$(Configuration)\</OutDir>
@@ -523,7 +524,7 @@
       <AdditionalDependencies>AkSoundEngine.lib;AkMemoryMgr.lib;AkStreamMgr.lib;AkMusicEngine.lib;AkSpatialAudio.lib;dinput8.lib;dsound.lib;dxguid.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>Xcopy "$(ProjectDir)Build\CoreDll\$(Configuration)\EngineCore.dll" "$(ProjectDir)Resources\" /s /y</Command>
+      <Command>Xcopy "$(ProjectDir)Build\CoreDll\$(Configuration)\EngineCoreR.dll" "$(ProjectDir)Resources\" /s /y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Build|Win32'">
