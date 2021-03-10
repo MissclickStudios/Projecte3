@@ -90,6 +90,10 @@ bool M_Scene::Start()
 
 	level.GetRooms();
 	level.GenerateLevel();
+	level.AddFixedRoom("Beggining", 0);
+	level.AddFixedRoom("Boss", 20);
+	
+	//Last level function to call
 	level.GenerateRoom(0);
 
 	if(!CheckSceneLight()) SetSceneLight(App->renderer->GenerateSceneLight());
@@ -493,7 +497,7 @@ void M_Scene::DeleteGameObject(GameObject* gameObject, uint index)
 	{
 		animationRoot = nullptr;
 	}
-	if (lightPoint == gameObject)
+	if (lightPoint->GetUID() == gameObject->GetUID())
 	{
 		lightPoint =  nullptr;
 	}
@@ -1013,7 +1017,14 @@ bool M_Scene::CheckSceneLight()
 
 GameObject* M_Scene::GetSceneLight()
 {
-	return lightPoint;
+	if (lightPoint)
+	{
+		return lightPoint;
+	}
+	else 
+	{
+		return nullptr;
+	}
 }
 
 void M_Scene::SetSceneLight(GameObject* lightPoint)

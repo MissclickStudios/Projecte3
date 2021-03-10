@@ -96,7 +96,6 @@ void Skybox::RenderSkybox()
 	glDepthFunc(GL_LEQUAL);
 
 	float3 translation = App->camera->GetCurrentCamera()->GetFrustum().WorldMatrix().TranslatePart();
-	//float3 translation = App->camera->currentCamera->frustum.worldMatrix.TranslatePart();
 	float4x4 modelMatrix = math::float4x4::identity;
 	modelMatrix.SetTranslatePart(translation);
 	modelMatrix.Scale(50,50,50);

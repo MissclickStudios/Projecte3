@@ -1560,6 +1560,8 @@ void MeshRenderer::ApplyShader()
 
 		if (shaderProgram != 0)
 		{
+			//Model
+			
 			cMaterial->GetShader()->SetUniformVec4f("inColor", (GLfloat*)&cMaterial->GetMaterialColour());
 
 			cMaterial->GetShader()->SetUniformMatrix4("modelMatrix", transform.Transposed().ptr());
@@ -1568,15 +1570,23 @@ void MeshRenderer::ApplyShader()
 
 			cMaterial->GetShader()->SetUniformMatrix4("projectionMatrix", App->camera->GetCurrentCamera()->GetOGLProjectionMatrix());
 
-			if(App->scene->GetSceneLight()) cMaterial->GetShader()->SetUniformVec4f("lightColor", (GLfloat*)&App->scene->GetSceneLight()->GetComponent<C_Light>()->GetLight()->diffuse);
-
-			if(App->scene->GetSceneLight()) cMaterial->GetShader()->SetUniformVec3f("lightPos", (GLfloat*)&App->scene->GetSceneLight()->transform->GetWorldPosition());
-
 			cMaterial->GetShader()->SetUniform1f("time", Time::Game::GetTimeSinceStart());
 
+			cMaterial->GetShader()->SetUniformVec3f("cameraPosition", (GLfloat*)&App->camera->GetCurrentCamera()->GetFrustum().Pos());
+			
+ 			//Skybox
+			
 			cMaterial->GetShader()->SetUniform1i("skybox", 11);
 
-			cMaterial->GetShader()->SetUniformVec3f("cameraPosition", (GLfloat*)&App->camera->GetCurrentCamera()->GetFrustum().Pos());
+			// Light 
+
+			if (App->scene->GetSceneLight())cMaterial->GetShader()->SetUniformVec4f("lightColor", (GLfloat*)&App->scene->GetSceneLight()->GetComponent<C_Light>()->GetLight()->diffuse);
+
+			else cMaterial->GetShader()->SetUniformVec4f("lightColor", (GLfloat*)&float4(0.1f, 0.1f, 0.1f, 0.1f));
+
+			if (App->scene->GetSceneLight()) cMaterial->GetShader()->SetUniformVec3f("lightPos", (GLfloat*)&App->scene->GetSceneLight()->transform->GetWorldPosition());
+
+			//Set Uniforms
 
 			if(cMaterial->GetShader()) Importer::Shaders::SetShaderUniforms(cMaterial->GetShader());
 		}
