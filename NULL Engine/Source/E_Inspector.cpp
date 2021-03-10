@@ -36,13 +36,13 @@
 #include "C_BulletBehavior.h"
 #include "C_PropBehavior.h"
 #include "C_CameraBehavior.h"
+#include "C_Canvas.h"
+#include "C_UI_Image.h"
 
 #include "R_Shader.h"
 #include "R_Texture.h"
 #include "I_Shaders.h"
 
-#include "C_Canvas.h"
-#include "UI_Image.h"
 
 #include "E_Inspector.h"
 
@@ -198,6 +198,7 @@ void E_Inspector::DrawComponents(GameObject* selectedGameObject)
 		case ComponentType::SPHERE_COLLIDER:	{ DrawSphereColliderComponent((C_SphereCollider*)component); }		break;
 		case ComponentType::CAPSULE_COLLIDER:	{ DrawCapsuleColliderComponent((C_CapsuleCollider*)component); }	break;
 		case ComponentType::CANVAS:				{ DrawCanvasComponent((C_Canvas*)component); }						break;
+		case ComponentType::UI_IMAGE:			{ DrawUIImageComponent((C_UI_Image*)component); }					break;
 		case ComponentType::PLAYER_CONTROLLER:	{ DrawPlayerControllerComponent((C_PlayerController*)component); }	break;
 		case ComponentType::BULLET_BEHAVIOR:	{ DrawBulletBehaviorComponent((C_BulletBehavior*)component); }		break;
 		case ComponentType::PROP_BEHAVIOR:		{ DrawPropBehaviorComponent((C_PropBehavior*)component); }			break;
@@ -206,16 +207,6 @@ void E_Inspector::DrawComponents(GameObject* selectedGameObject)
 		if (type == ComponentType::NONE)
 		{
 			LOG("[WARNING] Selected GameObject %s has a non-valid component!", selectedGameObject->GetName());
-		}
-	}
-
-	if (selectedGameObject->GetUIElement() != nullptr)
-	{
-		UIElementType type = selectedGameObject->GetUIElement()->GetType();
-		switch (type)
-		{
-		case UIElementType::IMAGE: { DrawUIImage((UI_Image*)selectedGameObject->GetUIElement()); }	break;
-		case UIElementType::TEXT: {} break;
 		}
 	}
 }
@@ -1181,20 +1172,6 @@ void E_Inspector::DrawCanvasComponent(C_Canvas* cCanvas)
 			if (ImGui::Button("Reset Pivot"))
 				cCanvas->pivot = cCanvas->GetPosition();
 
-			if (ImGui::Button("Add Image"))
-			{
-				// Revert UI changes
-				//GameObject* go = EngineApp->scene->CreateGameObject("UI Image", cCanvas->GetOwner());
-				//go->CreateUIElement(UIElementType::IMAGE);
-				//cCanvas->uiElements.push_back(go->GetUIElement());
-
-				if (cCanvas->uiElements.empty())
-				{
-					UIElement* uiElement = cCanvas->GetOwner()->CreateUIElement(UIElementType::IMAGE);
-					cCanvas->uiElements.push_back(uiElement);
-				}
-			}
-
 		}
 
 		if (!show)
@@ -1301,7 +1278,7 @@ void E_Inspector::DrawCapsuleColliderComponent(C_CapsuleCollider* cCollider)
 	}
 }
 
-void E_Inspector::DrawUIImage(UI_Image* image)
+void E_Inspector::DrawUIImageComponent(C_UI_Image* image)
 {
 	static bool show = true;
 	if (ImGui::CollapsingHeader("Image", &show, ImGuiTreeNodeFlags_DefaultOpen))
@@ -1315,7 +1292,7 @@ void E_Inspector::DrawUIImage(UI_Image* image)
 		float2 pos = { image->GetRect().x, image->GetRect().y };
 		float2 size = { image->GetRect().w, image->GetRect().h };
 
-		C_Canvas* canvas = image->GetCanvas();
+		C_Canvas* canvas = image->GetOwner()->parent->GetComponent<C_Canvas>();
 
 		if (ImGui::DragFloat2("Image Size", (float*)&size, 0.05f, 0.0f, 0.0f, "%.3f", NULL))
 		{
@@ -1478,14 +1455,47 @@ void E_Inspector::DrawCameraBehaviorComponent(C_CameraBehavior* cBehavior)
 void E_Inspector::AddComponentCombo(GameObject* selectedGameObject)
 {
 
-	ImGui::Combo("##", &componentType, "Add Component\0Transform\0Mesh\0Material\0Light\0Camera\0Animator\0Animation\0RigidBody\0Box Collider\0Sphere Collider\0Capsule Collider\0Particle System\0Canvas\0Audio Source\0Audio Listener\0Player Controller\0Bullet Behavior\0Prop Behavior\0Camera Behavior");
+	ImGui::Combo("##", &componentType, "Add Component\0Transform\0Mesh\0Material\0Light\0Camera\0Animator\0Animation\0RigidBody\0Box Collider\0Sphere Collider\0Capsule Collider\0Particle System\0Canvas\0Audio Source\0Audio Listener\0Player Controller\0Bullet Behavior\0Prop Behavior\0Camera Behavior\0UI Image");
 	ImGui::SameLine();
 
 	if ((ImGui::Button("ADD")))
 	{ 
 		if (componentType != (int)ComponentType::NONE)
 		{
-			selectedGameObject->CreateComponent((ComponentType)componentType);
+			if (componentType == (int)ComponentType::UI_IMAGE)
+				AddUIComponent(selectedGameObject, ComponentType::UI_IMAGE);
+			
+			else
+				selectedGameObject->CreateComponent((ComponentType)componentType);
+		}
+	}
+}
+
+void E_Inspector::AddUIComponent(GameObject* selectedGameObject, ComponentType type)
+{
+	if (type == ComponentType::UI_IMAGE)
+	{
+		// Option 1: selectedGameObject has a canvas
+		if (selectedGameObject->GetComponent<C_Canvas>() != nullptr)
+		{
+			GameObject* newGO;
+			newGO = App->scene->CreateGameObject("UI Image", selectedGameObject);
+			newGO->CreateComponent(ComponentType::UI_IMAGE);
+		}
+		// Option 2: selectedGameObject's parent has a canvas
+		else if (selectedGameObject->parent->GetComponent<C_Canvas>() != nullptr)
+		{
+			selectedGameObject->SetName("UI Image");
+			selectedGameObject->CreateComponent(ComponentType::UI_IMAGE);
+		}
+		// Option 3: need to crete a canvas
+		else
+		{
+			selectedGameObject->SetName("Canvas");
+			selectedGameObject->CreateComponent(ComponentType::CANVAS);
+
+			GameObject* newImage = App->scene->CreateGameObject("UI Image", selectedGameObject);
+			newImage->CreateComponent(ComponentType::UI_IMAGE);
 		}
 	}
 }

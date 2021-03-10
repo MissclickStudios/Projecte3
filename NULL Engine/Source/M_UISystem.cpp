@@ -60,19 +60,6 @@ UpdateStatus M_UISystem::Update(float dt)
 
 UpdateStatus M_UISystem::PostUpdate(float dt)
 {
-	for (std::vector<GameObject*>::iterator it = App->scene->GetGameObjects()->begin(); it != App->scene->GetGameObjects()->end(); it++)
-	{
-		C_Canvas* canvasIt = (*it)->GetComponent<C_Canvas>();
-		if (canvasIt != nullptr && canvasIt->IsActive())
-		{
-			if (App->camera->GetCurrentCamera() != App->camera->masterCamera->GetComponent<C_Camera>())
-			{
-				// Canvas size will be directly and permanently linked to the near plane of the current camera
-				canvasIt->SetSize({ App->camera->GetCurrentCamera()->GetFrustum().NearPlaneWidth(), App->camera->GetCurrentCamera()->GetFrustum().NearPlaneHeight() });
-			}
-		}
-	}
-
 	return UpdateStatus::CONTINUE;
 }
 

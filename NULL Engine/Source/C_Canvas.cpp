@@ -40,12 +40,8 @@ bool C_Canvas::Update()
 	{
 		GameObject* owner = GetOwner();
 
-		//owner->GetComponent<C_Transform>()->SetLocalRotation(owner->GetComponent<C_Transform>()->GetWorldRotation());
-		//SetPosition({ owner->transform->GetWorldPosition().x, owner->transform->GetWorldPosition().y });
-		
-		
-
-		z = owner->transform->GetWorldPosition().z;
+		if (App->camera->GetCurrentCamera() != App->camera->masterCamera->GetComponent<C_Camera>())
+			SetSize({ App->camera->GetCurrentCamera()->GetFrustum().NearPlaneWidth(), App->camera->GetCurrentCamera()->GetFrustum().NearPlaneHeight() });
 	}
 
 	return ret;
@@ -156,17 +152,7 @@ bool C_Canvas::SaveState(ParsonNode& root) const
 	canvas.SetNumber("Y", GetRect().y);
 	canvas.SetNumber("W", GetRect().w);
 	canvas.SetNumber("H", GetRect().h);
-	canvas.SetNumber("Z", GetZ());
-
-	if (!uiElements.empty())
-	{
-		ParsonNode image = root.SetNode("Image");
-
-		image.SetNumber("X", GetRect().x);
-		image.SetNumber("Y", GetRect().y);
-		image.SetNumber("W", GetRect().w);
-		image.SetNumber("H", GetRect().h);
-	}
+	canvas.SetBool("IsInvisible", isInvisible);
 
 	return ret;
 }
@@ -177,7 +163,7 @@ bool C_Canvas::LoadState(ParsonNode& root)
 
 	ParsonNode canvas = root.GetNode("Canvas");
 
-	Rect r;
+	Rect2D r;
 
 	r.x = canvas.GetNumber("X");
 	r.y = canvas.GetNumber("Y");
@@ -185,23 +171,9 @@ bool C_Canvas::LoadState(ParsonNode& root)
 	r.h = canvas.GetNumber("H");
 
 	SetRect(r);
-	SetZ(canvas.GetNumber("Z"));
 
-	ParsonNode imageNode = root.GetNode("Image");
-	if (imageNode.NodeIsValid())
-	{
-		UIElement* uiElement = GetOwner()->CreateUIElement(UIElementType::IMAGE);
-		uiElement->SetCanvas(this);
-		uiElements.push_back(uiElement);
-		Rect rI;
-
-		rI.x = imageNode.GetNumber("X");
-		rI.y = imageNode.GetNumber("Y");
-		rI.w = imageNode.GetNumber("W");
-		rI.h = imageNode.GetNumber("H");
-
-		uiElement->SetRect(rI);
-	}
+	bool isInvis = canvas.GetBool("IsInvisible");
+	SetIsInvisible(isInvis);
 
 	return ret;
 }
@@ -216,15 +188,16 @@ float2 C_Canvas::GetSize() const
 	return { rect.w, rect.h };
 }
 
-Rect C_Canvas::GetRect() const
+Rect2D C_Canvas::GetRect() const
 {
 	return rect;
 }
 
-float C_Canvas::GetZ() const
+bool C_Canvas::IsInvisible() const
 {
-	return z;
+	return isInvisible;
 }
+
 
 
 void C_Canvas::SetPosition(const float2& position)
@@ -239,7 +212,7 @@ void C_Canvas::SetSize(const float2& size)
 	this->rect.h = size.y;
 }
 
-void C_Canvas::SetRect(const Rect& rect)
+void C_Canvas::SetRect(const Rect2D& rect)
 {
 	this->rect.x = rect.x;
 	this->rect.y = rect.y;
@@ -252,12 +225,3 @@ void C_Canvas::SetIsInvisible(const bool setTo)
 	isInvisible = setTo;
 }
 
-void C_Canvas::SetZ(const float& z)
-{
-	this->z = z;
-}
-
-bool C_Canvas::IsInvisible() const
-{
-	return isInvisible;
-}

@@ -31,8 +31,9 @@
 #include "C_Material.h"													
 #include "C_Camera.h"	
 #include "C_Light.h"
-										
-#include "UIElement.h"
+#include "C_Canvas.h"
+#include "C_UI_Image.h"
+
 #include "M_Renderer3D.h"
 
 #include "I_Shaders.h"							//TODO: erase
@@ -665,11 +666,18 @@ void M_Renderer3D::RenderUI()
 		C_Canvas* canvasIt = (*it)->GetComponent<C_Canvas>();
 		if (canvasIt != nullptr && canvasIt->IsActive())
 		{
-			if (!canvasIt->uiElements.empty())
+			if (!(*it)->childs.empty())
 			{
-				for (std::vector<UIElement*>::iterator uiIt = canvasIt->uiElements.begin(); uiIt != canvasIt->uiElements.end(); uiIt++)
+				for (std::vector<GameObject*>::iterator uiIt = (*it)->childs.begin(); uiIt != (*it)->childs.end(); uiIt++)
 				{
-					(*uiIt)->Update();
+					if (App->camera->currentCamera != App->camera->masterCamera->GetComponent<C_Camera>())
+					{
+						(*uiIt)->GetComponent<C_UI_Image>()->Draw2D();
+					}
+					else
+					{
+						(*uiIt)->GetComponent<C_UI_Image>()->Draw3D();
+					}
 				}
 			}
 

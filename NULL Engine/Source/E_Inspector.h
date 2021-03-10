@@ -19,11 +19,12 @@ class C_RigidBody;
 class C_BoxCollider;
 class C_SphereCollider;
 class C_CapsuleCollider;
-class C_Canvas;
 class C_PlayerController;
 class C_BulletBehavior;
 class C_PropBehavior;
 class C_CameraBehavior;
+class C_Canvas;
+class C_UI_Image;
 
 class Resource;
 class R_Shader;
@@ -33,7 +34,7 @@ class MeshSettings;
 class MaterialSettings;
 class TextureSettings;
 class AnimationSettings;
-class UI_Image;
+
 
 class E_Inspector : public EditorPanel
 {
@@ -62,7 +63,7 @@ private:
 	void DrawSphereColliderComponent	(C_SphereCollider* cCollider);
 	void DrawCapsuleColliderComponent	(C_CapsuleCollider* cCollider);
 	void DrawCanvasComponent			(C_Canvas* cCanvas);
-	void DrawUIImage					(UI_Image* image);
+	void DrawUIImageComponent			(C_UI_Image* image);
 	void DrawPlayerControllerComponent	(C_PlayerController* controller);
 	void DrawBulletBehaviorComponent	(C_BulletBehavior* behavior);
 	void DrawPropBehaviorComponent		(C_PropBehavior* behavior);
@@ -70,6 +71,7 @@ private:
 
 	void AddComponentCombo				(GameObject* selectedGameObject);					// 
 	void DeleteComponentPopup			(GameObject* selectedGameObject);					// 
+	void AddUIComponent					(GameObject* selectedGameObject, ComponentType type);
 
 	void TextEditorWindow();
 	void CallTextEditor(C_Material* cMaterial);
