@@ -351,9 +351,9 @@ WwiseObject::~WwiseObject()
 
 void WwiseObject::SetPos(float3 pos, float3 front, float3 up)
 {
-	position = float3ToAkVector(pos);
-	orientationFront = float3ToAkVector(front);
-	orientationUp = float3ToAkVector(up);
+	position = float3ToAkVector(pos.Normalized());
+	orientationFront = float3ToAkVector(front.Normalized());
+	orientationUp = float3ToAkVector(up.Normalized());
 
 	AkSoundPosition soundPos;
 	soundPos.Set(position, orientationFront, orientationUp);
