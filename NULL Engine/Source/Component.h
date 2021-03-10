@@ -31,8 +31,9 @@ enum class ComponentType
 	BULLET_BEHAVIOR,
 	PROP_BEHAVIOR,
 	CAMERA_BEHAVIOR,
-	//ui
-	UI_IMAGE
+	//UI
+	UI_IMAGE,
+	UI_TEXT
 };
 
 class NULL_API Component

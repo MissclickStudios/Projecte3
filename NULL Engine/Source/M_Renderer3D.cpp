@@ -661,37 +661,55 @@ void M_Renderer3D::DrawWorldGrid(const int& size)
 
 void M_Renderer3D::RenderUI()
 {
-	for (std::vector<GameObject*>::iterator it = App->scene->GetGameObjects()->begin(); it != App->scene->GetGameObjects()->end(); it++)
+	C_Canvas* canvas = nullptr;
+	for (std::vector<GameObject*>::iterator uiIt = App->scene->GetGameObjects()->begin(); uiIt != App->scene->GetGameObjects()->end(); uiIt++)
 	{
-		C_Canvas* canvasIt = (*it)->GetComponent<C_Canvas>();
-		if (canvasIt != nullptr && canvasIt->IsActive())
+		canvas = (*uiIt)->GetComponent<C_Canvas>();
+		if (canvas != nullptr)
 		{
-			if (!(*it)->childs.empty())
-			{
-				for (std::vector<GameObject*>::iterator uiIt = (*it)->childs.begin(); uiIt != (*it)->childs.end(); uiIt++)
-				{
-					if (App->camera->currentCamera != App->camera->masterCamera->GetComponent<C_Camera>())
-					{
-						(*uiIt)->GetComponent<C_UI_Image>()->Draw2D();
-					}
-					else
-					{
-						(*uiIt)->GetComponent<C_UI_Image>()->Draw3D();
-					}
-				}
-			}
+			RenderUIComponent(*uiIt);
 
-			if (!canvasIt->IsInvisible())
+			if (!canvas->IsInvisible())
 			{
 				if (App->camera->currentCamera != App->camera->masterCamera->GetComponent<C_Camera>())
-				{
-					canvasIt->Draw2D();
-				}
+					canvas->Draw2D();
+
 				else
+					canvas->Draw3D();
+			}
+		}
+	}
+}
+
+void M_Renderer3D::RenderUIComponent(GameObject* gameObject)
+{
+	for (std::vector<GameObject*>::iterator it = gameObject->childs.begin(); it != gameObject->childs.end(); it++)
+	{		
+		for (std::vector<Component*>::const_iterator componentIt = (*it)->GetAllComponents().begin(); componentIt != (*it)->GetAllComponents().end(); componentIt++)
+		{
+			switch ((*componentIt)->GetType())
+			{
+			case ComponentType::UI_IMAGE:
 				{
-					canvasIt->Draw3D();
+					C_UI_Image* image = (C_UI_Image*)(*componentIt);
+
+					if (App->camera->currentCamera != App->camera->masterCamera->GetComponent<C_Camera>())
+						image->Draw2D();
+
+					else
+						image->Draw3D();
+
 				}
-			}	
+			case ComponentType::UI_TEXT:
+				{
+
+				}
+			}
+		}
+
+		for (std::vector<GameObject*>::iterator childIt = (*it)->childs.begin(); childIt != (*it)->childs.end(); childIt++)
+		{
+			RenderUIComponent(*childIt);
 		}
 	}
 }

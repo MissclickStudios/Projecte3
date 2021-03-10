@@ -164,6 +164,7 @@ public:																											// --- RENDER GEOMETRY
 	void			RenderRays					();
 	void			RenderSkeletons				();
 	void			RenderUI					();
+	void			RenderUIComponent			(GameObject* gameObject);
 	void			RenderFramebufferTexture	();
 	void			DeleteFromMeshRenderers		(C_Mesh* cMeshToDelete);
 	void			DeleteFromMeshRenderers		(R_Mesh* rMeshToDelete);

@@ -34,7 +34,6 @@ public:
 	void SetW(const float w);
 	void SetH(const float h);
 
-
 private:
 
 	Rect2D rect = { 0,0,50,50 };
