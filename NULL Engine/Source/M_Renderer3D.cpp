@@ -659,8 +659,36 @@ void M_Renderer3D::DrawWorldGrid(const int& size)
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 }
 
+void M_Renderer3D::SetTo2DRenderSettings(const bool& setTo)
+{
+	if (setTo)
+	{
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		glOrtho(-App->camera->GetCurrentCamera()->GetFrustum().NearPlaneWidth() / 2, App->camera->GetCurrentCamera()->GetFrustum().NearPlaneWidth() / 2, -App->camera->GetCurrentCamera()->GetFrustum().NearPlaneHeight() / 2, App->camera->GetCurrentCamera()->GetFrustum().NearPlaneHeight() / 2, 100.0f, -100.0f);
+		glMatrixMode(GL_MODELVIEW);
+		glLoadMatrixf(App->camera->GetCurrentCamera()->GetOGLViewMatrix());
+
+		glDisable(GL_DEPTH_TEST);
+		glDisable(GL_LIGHTING);
+		glEnable(GL_BLEND);
+	}
+	else
+	{
+		glMatrixMode(GL_PROJECTION);
+		glLoadMatrixf(App->camera->GetCurrentCamera()->GetOGLProjectionMatrix());
+		glMatrixMode(GL_MODELVIEW);
+
+		glEnable(GL_LIGHTING);
+		glEnable(GL_DEPTH_TEST);
+		glDisable(GL_BLEND);
+	}
+}
+
 void M_Renderer3D::RenderUI()
 {
+	SetTo2DRenderSettings(true);
+
 	C_Canvas* canvas = nullptr;
 	for (std::vector<GameObject*>::iterator uiIt = App->scene->GetGameObjects()->begin(); uiIt != App->scene->GetGameObjects()->end(); uiIt++)
 	{
@@ -679,6 +707,8 @@ void M_Renderer3D::RenderUI()
 			}
 		}
 	}
+
+	SetTo2DRenderSettings(false);
 }
 
 void M_Renderer3D::RenderUIComponent(GameObject* gameObject)

@@ -74,16 +74,6 @@ void C_UI_Image::Draw2D()
 	C_Canvas* canvas = GetOwner()->parent->GetComponent<C_Canvas>();
 	if (canvas == nullptr) return;
 
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	glOrtho(-App->camera->GetCurrentCamera()->GetFrustum().NearPlaneWidth() / 2, App->camera->GetCurrentCamera()->GetFrustum().NearPlaneWidth() / 2, -App->camera->GetCurrentCamera()->GetFrustum().NearPlaneHeight() / 2, App->camera->GetCurrentCamera()->GetFrustum().NearPlaneHeight() / 2, 100.0f, -100.0f);
-	glMatrixMode(GL_MODELVIEW);
-	glLoadMatrixf(App->camera->GetCurrentCamera()->GetOGLViewMatrix());
-
-	glDisable(GL_DEPTH_TEST);
-	glDisable(GL_LIGHTING);
-	glEnable(GL_BLEND);
-
 	glPushMatrix();
 	glMultMatrixf((GLfloat*)&GetOwner()->parent->GetComponent<C_Transform>()->GetWorldTransform().Transposed());
 
@@ -105,13 +95,6 @@ void C_UI_Image::Draw2D()
 
 	glBindTexture(GL_TEXTURE_2D, 0);
 
-	glEnable(GL_LIGHTING);
-	glEnable(GL_DEPTH_TEST);
-	glDisable(GL_BLEND);
-
-	glMatrixMode(GL_PROJECTION);
-	glLoadMatrixf(App->camera->GetCurrentCamera()->GetOGLProjectionMatrix());
-	glMatrixMode(GL_MODELVIEW);
 }
 
 void C_UI_Image::Draw3D()

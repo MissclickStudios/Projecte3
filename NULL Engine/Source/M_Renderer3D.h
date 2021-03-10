@@ -174,6 +174,7 @@ public:																											// --- RENDER GEOMETRY
 	void			AddPrimitive				(Primitive* primitive);
 	void			CreatePrimitiveExamples		();
 
+	void			SetTo2DRenderSettings		(const bool& setTo);
 
 public:																											// --- GET/SET METHODS
 	Icons			GetEngineIcons				() const;
