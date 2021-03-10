@@ -17,6 +17,7 @@ LevelGenerator::~LevelGenerator()
 {
 }
 
+
 void LevelGenerator::GetRooms()
 {
 	App->fileSystem->GetAllFilesWithExtensionAndName(ASSETS_SCENES_PATH, "json", "Room", allRooms);
@@ -52,6 +53,30 @@ void LevelGenerator::GenerateRoom(int room)
 	{
 		App->scene->LoadScene(levelRooms[room].c_str());
 	}
+}
+
+void LevelGenerator::AddFixedRoom(std::string name, int position)
+{
+	std::string roomPath = ASSETS_SCENES_PATH + name + ".json";
+
+	if (App->fileSystem->Exists(roomPath.c_str()))
+	{
+		//std::string tempRoom;
+		if (levelRooms.size() <= position)
+		{
+			position = levelRooms.size() - 1;
+		}
+		for (int i = 0; i < levelRooms.size(); i++)
+		{
+			if (i == position)
+			{
+				//tempRoom = levelRooms[i];
+				levelRooms[i] = roomPath;
+			}
+			
+		}
+	}
+	
 }
 
 void LevelGenerator::HandleRoomGeneration()

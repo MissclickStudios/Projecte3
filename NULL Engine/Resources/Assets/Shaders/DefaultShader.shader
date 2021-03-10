@@ -60,10 +60,13 @@ void main()
    vec4 texColor = (hasTexture) ? texture(ourTexture, TexCoord) : vec4(1,1,1,1);
    
    color = texColor  * resultColor;
+  
 
 }
 
 #endif
+
+
 
 
 
