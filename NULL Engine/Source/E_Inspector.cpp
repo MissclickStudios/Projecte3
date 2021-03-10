@@ -894,11 +894,12 @@ void E_Inspector::DrawAudioSourceComponent(C_AudioSource* cAudioSource)
 	{
 		if (cAudioSource != nullptr)
 		{
-			unsigned int currentEvent = cAudioSource->GetEvent().second;
-			std::string currentEventName = cAudioSource->GetEvent().first.c_str();
+			unsigned int currentEvent = cAudioSource->GetEventId();
+			const std::string& currentEventName = cAudioSource->GetEventName();
+			//cAudioSource->GetEvent(&currentEventName,&currentEvent);
 
-			ImGui::Text("Event playing %s", cAudioSource->GetEvent().first.c_str());
-			ImGui::Text("Event id %u", cAudioSource->GetEvent().second);
+			ImGui::Text("Event playing %s", currentEventName.c_str());
+			ImGui::Text("Event id %u", currentEvent);
 
 			if (ImGui::BeginCombo("##Audio", currentEventName.c_str()))
 			{
@@ -906,9 +907,9 @@ void E_Inspector::DrawAudioSourceComponent(C_AudioSource* cAudioSource)
 				{
 					bool isSelected = (currentEventName == it->first);
 					if (ImGui::Selectable(it->first.c_str(), isSelected)) {
-							currentEventName = it->first;
+							//currentEventName = it->first;
 							currentEvent = it->second;
-							cAudioSource->SetEvent(currentEventName, currentEvent);		
+							cAudioSource->SetEvent(it->first, currentEvent);
 					}
 					if (isSelected)
 						ImGui::SetItemDefaultFocus();
@@ -924,11 +925,11 @@ void E_Inspector::DrawAudioSourceComponent(C_AudioSource* cAudioSource)
 
 			if ((ImGui::Button("Play")))
 			{
-				cAudioSource->PlayFx(cAudioSource->GetEvent().first);
+				cAudioSource->PlayFx(currentEvent);
 			}
 			if ((ImGui::Button("Stop")))
 			{
-				cAudioSource->StopFx(cAudioSource->GetEvent().second);
+				cAudioSource->StopFx(currentEvent);
 			}
 		}
 		if (!show)

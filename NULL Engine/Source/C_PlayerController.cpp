@@ -84,7 +84,9 @@ bool C_PlayerController::Update()
 						bullet->CreateComponent(ComponentType::AUDIOSOURCE);
 						C_AudioSource* source = bullet->GetComponent<C_AudioSource>();
 						source->SetEvent("Mando_blaster_shot",App->audio->eventMap.at("Mando_blaster_shot"));
-						source->PlayFx(source->GetEvent().second);
+						unsigned int id;
+						source->GetEvent(nullptr, &id);
+						source->PlayFx(id);
 						source->SetVolume(0.5);
 					}
 				}
@@ -271,8 +273,10 @@ void C_PlayerController::StepSound(bool a, bool b, bool c, bool d)
 			stepTimer->Start();
 
 			aSource = GetOwner()->GetComponent<C_AudioSource>();
-			if(aSource != nullptr)
-				aSource->PlayFx(aSource->GetEvent().second);
+			if (aSource != nullptr){
+				unsigned int id; aSource->GetEvent(nullptr, &id);
+				aSource->PlayFx(id);
+			}
 		}
 	}
 
