@@ -10,16 +10,22 @@ R_ParticleSystem::~R_ParticleSystem()
 {
 }
 
-void R_ParticleSystem::AddDefaultEmitter()
+/*void R_ParticleSystem::InitDefaultSystem()
 {
-}
+  
+}*/
 
 bool R_ParticleSystem::SaveMeta(ParsonNode& metaRoot) const
 {
-	return true;
+	return false;
 }
 
 bool R_ParticleSystem::LoadMeta(const ParsonNode& metaRoot)
 {
-	return true;
+	return false;
+}
+
+void R_ParticleSystem::AddDefaultEmitter()
+{
+	
 }

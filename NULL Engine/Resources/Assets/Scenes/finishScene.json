@@ -125,10 +125,10 @@
                         "File": "1839899230.nemat"
                     },
                     "Shader": {
-                        "UID": 2081829149,
+                        "UID": 1958998782,
                         "Name": "DefaultShader.shader",
-                        "Path": "Library\/Shaders\/2081829149.neshader",
-                        "File": "2081829149.neshader"
+                        "Path": "Library\/Shaders\/1958998782.neshader",
+                        "File": "1958998782.neshader"
                     }
                 }
             ]
@@ -195,7 +195,7 @@
         },
         {
             "UID": 96720295,
-            "ParentUID": 1583198537,
+            "ParentUID": 1304503906,
             "Name": "Canvas",
             "IsActive": true,
             "IsStatic": false,
@@ -220,31 +220,6 @@
                         1,
                         1
                     ]
-                },
-                {
-                    "Type": 13,
-                    "Canvas": {
-                        "X": 0,
-                        "Y": 0,
-                        "W": 1.0926049947738647,
-                        "H": 0.60150182247161865,
-                        "Z": -46.533981323242188
-                    },
-                    "Image": {
-                        "X": 0,
-                        "Y": 0,
-                        "W": 1.0926049947738647,
-                        "H": 0.60150182247161865
-                    }
-                },
-                {
-                    "Type": 3,
-                    "Texture": {
-                        "UID": 618493932,
-                        "Name": "FinalHUD.png",
-                        "Path": "Library\/Textures\/618493932.netex",
-                        "File": "618493932.netex"
-                    }
                 }
             ]
         },
@@ -708,10 +683,10 @@
                         "File": "1454765715.nemat"
                     },
                     "Shader": {
-                        "UID": 2081829149,
+                        "UID": 1958998782,
                         "Name": "DefaultShader.shader",
-                        "Path": "Library\/Shaders\/2081829149.neshader",
-                        "File": "2081829149.neshader"
+                        "Path": "Library\/Shaders\/1958998782.neshader",
+                        "File": "1958998782.neshader"
                     }
                 }
             ]
@@ -789,6 +764,13 @@
                         "AnimationName": "mixamo.com",
                         "Name": "mixamo.com Default"
                     }
+                },
+                {
+                    "Type": 14,
+                    "Playing Event": [
+                        "Mando_footsteps_desert",
+                        407837268
+                    ]
                 },
                 {
                     "Type": 15
@@ -1077,62 +1059,6 @@
                         0.25,
                         1
                     ]
-                }
-            ]
-        },
-        {
-            "UID": 586790697,
-            "ParentUID": 1107007135,
-            "Name": "SantiWall",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": true,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        47.706436157226563,
-                        0,
-                        3.4361200332641602
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {
-                    "Type": 8,
-                    "Mass": 10,
-                    "Density": 1,
-                    "Linear Damping": 0,
-                    "Angular Damping": 0,
-                    "Use Gravity": false,
-                    "Is Kinematic": false,
-                    "Freeze Position X": true,
-                    "Freeze Position Y": true,
-                    "Freeze Position Z": true,
-                    "Freeze Rotation X": true,
-                    "Freeze Rotation Y": true,
-                    "Freeze Rotation Z": true,
-                    "Is Static": true
-                },
-                {
-                    "Type": 9,
-                    "Is Trigger": false,
-                    "Size X": 10,
-                    "Size Y": 10,
-                    "Size Z": 50,
-                    "Center X": 0,
-                    "Center Y": 0,
-                    "Center Z": 0
                 }
             ]
         },
@@ -1488,10 +1414,10 @@
                         "File": "739392104.nemat"
                     },
                     "Shader": {
-                        "UID": 2081829149,
+                        "UID": 1958998782,
                         "Name": "DefaultShader.shader",
-                        "Path": "Library\/Shaders\/2081829149.neshader",
-                        "File": "2081829149.neshader"
+                        "Path": "Library\/Shaders\/1958998782.neshader",
+                        "File": "1958998782.neshader"
                     }
                 }
             ]
@@ -1854,13 +1780,6 @@
                     "Center X": 0,
                     "Center Y": 0,
                     "Center Z": 0
-                },
-                {
-                    "Type": 14,
-                    "Playing Event": [
-                        "Mando_footsteps_desert",
-                        407837268
-                    ]
                 }
             ]
         },
@@ -1896,7 +1815,7 @@
         },
         {
             "UID": 1304503906,
-            "ParentUID": 486480810,
+            "ParentUID": 922144037,
             "Name": "MainScene",
             "IsActive": true,
             "IsStatic": false,
@@ -2231,7 +2150,7 @@
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
-            "ShowBoundingBoxes": true,
+            "ShowBoundingBoxes": false,
             "Components": [
                 {
                     "Type": 1,
@@ -2264,7 +2183,7 @@
                     "MaxFOV": 120,
                     "Culling": false,
                     "OrthogonalView": false,
-                    "HideFrustum": true
+                    "HideFrustum": false
                 }
             ]
         },
@@ -3062,6 +2981,62 @@
                         1,
                         1
                     ]
+                }
+            ]
+        },
+        {
+            "UID": 586790697,
+            "ParentUID": 1107007135,
+            "Name": "SantiWall",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": true,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        47.706436157226563,
+                        0,
+                        3.4361200332641602
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 8,
+                    "Mass": 10,
+                    "Density": 1,
+                    "Linear Damping": 0,
+                    "Angular Damping": 0,
+                    "Use Gravity": false,
+                    "Is Kinematic": false,
+                    "Freeze Position X": true,
+                    "Freeze Position Y": true,
+                    "Freeze Position Z": true,
+                    "Freeze Rotation X": true,
+                    "Freeze Rotation Y": true,
+                    "Freeze Rotation Z": true,
+                    "Is Static": true
+                },
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Size X": 10,
+                    "Size Y": 10,
+                    "Size Z": 50,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
                 }
             ]
         }

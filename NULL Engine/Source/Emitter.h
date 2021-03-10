@@ -17,7 +17,7 @@ public:
 
 	//Save and load?
 
-	//bool AddModuleFromType(ParticleModule::Type type);
+	bool AddModuleFromType(ParticleModule::Type type);
 
 public:
 	std::string name = "Particle Emitter";

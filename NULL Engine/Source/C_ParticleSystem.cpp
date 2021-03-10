@@ -17,5 +17,11 @@ bool C_ParticleSystem::Update()
 
 void C_ParticleSystem::Reset()
 {
+	//loop all emitterInstances and trigger reset() method�
+	for (unsigned int i = 0; i < emitterInstances.size(); i++)
+	{
+		emitterInstances[i].ResetEmitter();
+	}
+
 }
 
