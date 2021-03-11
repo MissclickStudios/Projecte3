@@ -65,6 +65,10 @@ public:																								// --- RESOURCE MANAGER API ---
 
 	void			GetAllTextures(std::vector<R_Texture*>& textures);									//Retrieve all the shaders in the library
 
+	void CreatePrefab(GameObject* gameObject);
+	void SavePrefab(GameObject* gameObject, uint _prefabId);
+
+	void SavePrefabObject(GameObject* gameObject, ParsonNode* node);
 	
 private:																															// --- ASSETS MONITORING METHODS ---
 	void			RefreshDirectoryFiles			(const char* directory);
@@ -118,11 +122,6 @@ private:																											// --- META FILE METHODS ---
 	bool			MetaFileIsValid					(const char* assetsPath);
 	bool			MetaFileIsValid					(ParsonNode& metaRoot);
 	bool			ResourceHasMetaType				(Resource* resource) const;
-
-	void CreatePrefab(GameObject* gameObject);
-	void SavePrefab(GameObject* gameObject, uint _prefabId);
-
-	void SavePrefabObject(GameObject* gameObject,ParsonNode node);
 
 private:
 	std::map<uint32, Resource*>		resources;																		// Resources currently in memory.

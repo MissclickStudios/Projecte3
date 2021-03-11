@@ -1298,23 +1298,28 @@ void M_ResourceManager::CreatePrefab(GameObject* gameObject)
 	gameObject->SetAsPrefab(id);
 
 	SavePrefab(gameObject, id);
+
+
 }
 
 void M_ResourceManager::SavePrefab(GameObject* gameObject, uint _prefabId)
 {
-	//create json
-	//Save in file
-
 	ParsonNode rootNode;
 
-	SavePrefabObject(gameObject,rootNode);
+	SavePrefabObject(gameObject,&rootNode);
+
+	char* buffer=nullptr;
+	std::string fileName = PREBAFS_PATH + std::to_string(_prefabId) + PREFAB_EXTENSION;
+	rootNode.SerializeToFile(fileName.c_str(),&buffer);
+
+	if (buffer != nullptr)
+		delete[] buffer;
 }
 
-void M_ResourceManager::SavePrefabObject(GameObject* gameObject, ParsonNode node)
+void M_ResourceManager::SavePrefabObject(GameObject* gameObject, ParsonNode* node)
 {
-	//node.SetInteger("GameObjectUID", gameObject->GetUID());
 
-	ParsonArray componentsArray = node.SetArray("Components");
+	ParsonArray componentsArray = node->SetArray("Components");
 
 	for (auto component = gameObject->components.begin(); component != gameObject->components.end(); component++)
 	{
@@ -1322,12 +1327,12 @@ void M_ResourceManager::SavePrefabObject(GameObject* gameObject, ParsonNode node
 		(*component)->SaveState(componentNode);
 	}
 
-	ParsonArray childsArray = node.SetArray("Children");
+	ParsonArray childsArray = node->SetArray("Children");
 
 	for (auto child = gameObject->childs.begin(); child != gameObject->childs.end(); child++)
 	{
 		ParsonNode childNode = childsArray.SetNode("child");
-		SavePrefabObject((*child), childNode);
+		SavePrefabObject((*child), &childNode);
 	}
 }
 
