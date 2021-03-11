@@ -574,6 +574,18 @@ GameObject* GameObject::FindChild(const char* childName)
 	return nullptr;
 }
 
+void GameObject::SetAsPrefab(uint _prefabID)
+{
+	//set the childs to the prefab uid and the bool
+	prefabID = _prefabID;
+	isPrefab = true;
+
+	for(auto child = childs.begin() ; child != childs.end();child++)
+	{
+		(*child)->SetAsPrefab(_prefabID);
+	}
+}
+
 // --- GAME OBJECT GETTERS AND SETTERS ---
 const char* GameObject::GetName() const
 {

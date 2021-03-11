@@ -2,6 +2,8 @@
 #include "JSONParser.h"
 
 #include "Time.h"
+#include "Random.h"
+#include "GameObject.h"
 
 #include "Importer.h"
 #include "I_Scenes.h"
@@ -1285,6 +1287,48 @@ bool M_ResourceManager::ResourceHasMetaType(Resource* resource) const
 			|| type == ResourceType::MODEL
 			|| type == ResourceType::TEXTURE
 			|| type == ResourceType::SHADER);
+}
+
+void M_ResourceManager::CreatePrefab(GameObject* gameObject)
+{
+	//random uid and call SetAsPrefab to game object
+	//save in cff (json model file)
+	
+	uint id = Random::PCG::GetRandomUint();
+	gameObject->SetAsPrefab(id);
+
+	SavePrefab(gameObject, id);
+}
+
+void M_ResourceManager::SavePrefab(GameObject* gameObject, uint _prefabId)
+{
+	//create json
+	//Save in file
+
+	ParsonNode rootNode;
+
+	SavePrefabObject(gameObject,rootNode);
+}
+
+void M_ResourceManager::SavePrefabObject(GameObject* gameObject, ParsonNode node)
+{
+	//node.SetInteger("GameObjectUID", gameObject->GetUID());
+
+	ParsonArray componentsArray = node.SetArray("Components");
+
+	for (auto component = gameObject->components.begin(); component != gameObject->components.end(); component++)
+	{
+		ParsonNode componentNode = componentsArray.SetNode("Component");
+		(*component)->SaveState(componentNode);
+	}
+
+	ParsonArray childsArray = node.SetArray("Children");
+
+	for (auto child = gameObject->childs.begin(); child != gameObject->childs.end(); child++)
+	{
+		ParsonNode childNode = childsArray.SetNode("child");
+		SavePrefabObject((*child), childNode);
+	}
 }
 
 Resource* M_ResourceManager::GetResourceFromLibrary(const char* assetsPath)

@@ -162,6 +162,11 @@ void E_Inspector::DrawGameObjectInfo(GameObject* selectedGameObject)
 	ImGui::Combo("Layer", &currentLayer, layerCombo);
 
 	ImGui::Separator();
+
+	if (ImGui::Button("Create Prefab"))
+	{
+		//App->resourceManager->
+	}
 }
 
 void E_Inspector::DrawComponents(GameObject* selectedGameObject)

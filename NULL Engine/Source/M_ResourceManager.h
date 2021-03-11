@@ -13,6 +13,8 @@ enum class ResourceType;
 class R_Shader;
 class R_Texture;
 
+class GameObject;
+
 typedef unsigned int		uint;
 typedef unsigned __int32	uint32;
 typedef unsigned __int64	uint64;
@@ -116,6 +118,11 @@ private:																											// --- META FILE METHODS ---
 	bool			MetaFileIsValid					(const char* assetsPath);
 	bool			MetaFileIsValid					(ParsonNode& metaRoot);
 	bool			ResourceHasMetaType				(Resource* resource) const;
+
+	void CreatePrefab(GameObject* gameObject);
+	void SavePrefab(GameObject* gameObject, uint _prefabId);
+
+	void SavePrefabObject(GameObject* gameObject,ParsonNode node);
 
 private:
 	std::map<uint32, Resource*>		resources;																		// Resources currently in memory.
