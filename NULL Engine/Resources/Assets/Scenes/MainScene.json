@@ -55,7 +55,7 @@
                         0.7071068286895752
                     ],
                     "LocalScale": [
-                        100,
+                        20,
                         100,
                         1
                     ]
@@ -99,7 +99,7 @@
                     "Type": 1,
                     "LocalPosition": [
                         0,
-                        0,
+                        -5,
                         0
                     ],
                     "LocalRotation": [
@@ -152,15 +152,15 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        2.0974621772766113,
-                        9.9959573745727539,
-                        -1.7545640468597412
+                        1.9963607788085938,
+                        10,
+                        0
                     ],
                     "LocalRotation": [
                         0,
+                        0.38284578919410706,
                         0,
-                        0,
-                        1
+                        0.92381227016448975
                     ],
                     "LocalScale": [
                         0.99989140033721924,
@@ -174,14 +174,14 @@
                     "Density": 1,
                     "Linear Damping": 0,
                     "Angular Damping": 0,
-                    "Use Gravity": true,
+                    "Use Gravity": false,
                     "Is Kinematic": true,
                     "Freeze Position X": false,
-                    "Freeze Position Y": false,
+                    "Freeze Position Y": true,
                     "Freeze Position Z": false,
-                    "Freeze Rotation X": false,
-                    "Freeze Rotation Y": false,
-                    "Freeze Rotation Z": false,
+                    "Freeze Rotation X": true,
+                    "Freeze Rotation Y": true,
+                    "Freeze Rotation Z": true,
                     "Is Static": false
                 },
                 {
@@ -191,8 +191,17 @@
                     "Size Y": 10,
                     "Size Z": 10,
                     "Center X": 0,
-                    "Center Y": 5,
+                    "Center Y": 0,
                     "Center Z": 0
+                },
+                {
+                    "Type": 16,
+                    "Speed": 30,
+                    "Acceleration": 20,
+                    "Deceleration": 20,
+                    "Use Acceleration": true,
+                    "Bullet Speed": 100,
+                    "Camera Mode": false
                 }
             ]
         },
@@ -208,8 +217,8 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        0,
-                        0,
+                        -17.043895721435547,
+                        12.985588073730469,
                         0
                     ],
                     "LocalRotation": [
@@ -224,27 +233,12 @@
                         1
                     ]
                 },
-                {
-                    "Type": 8,
-                    "Mass": 1,
-                    "Density": 1,
-                    "Linear Damping": 0,
-                    "Angular Damping": 0,
-                    "Use Gravity": false,
-                    "Is Kinematic": false,
-                    "Freeze Position X": true,
-                    "Freeze Position Y": true,
-                    "Freeze Position Z": true,
-                    "Freeze Rotation X": true,
-                    "Freeze Rotation Y": true,
-                    "Freeze Rotation Z": true,
-                    "Is Static": false
-                },
+                {},
                 {
                     "Type": 9,
                     "Is Trigger": false,
-                    "Size X": 100,
-                    "Size Y": 1,
+                    "Size X": 20,
+                    "Size Y": 10,
                     "Size Z": 100,
                     "Center X": 0,
                     "Center Y": -0.5,
@@ -254,7 +248,7 @@
         },
         {
             "UID": 1304503906,
-            "ParentUID": 869691424,
+            "ParentUID": 854238003,
             "Name": "MainScene",
             "IsActive": true,
             "IsStatic": false,

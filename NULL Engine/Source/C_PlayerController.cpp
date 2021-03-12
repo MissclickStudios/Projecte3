@@ -43,41 +43,41 @@ bool C_PlayerController::Update()
 			else
 				MoveVelocity(rigidBody);
 
-			if (!cameraMode)
-			{
-				float2 mouse, center, direction;
-				mouse = MousePositionToWorldPosition();
-				center.x = GetOwner()->transform->GetWorldPosition().x;
-				center.y = GetOwner()->transform->GetWorldPosition().z;
-				mouse.y *= -1;
-				direction = mouse - center;
-				direction.Normalize();
-
-				float rad = direction.AimedAngle();
-				float3 bulletVel = { bulletSpeed * math::Cos(rad) , 0, bulletSpeed * math::Sin(rad) };
-
-				float angle = RadToDeg(-rad) + 90;
-				GetOwner()->transform->SetLocalEulerRotation(float3(0, angle, 0));
-
-				if (App->input->GetMouseButton(1) == KeyState::KEY_DOWN || App->input->GetGameControllerTrigger(1) == ButtonState::BUTTON_DOWN)
-				{
-					Resource* resource = App->resourceManager->GetResourceFromLibrary("Assets/Models/Primitives/sphere.fbx");
-					if (resource != nullptr)
-					{
-						GameObject* bullet = App->scene->GenerateGameObjectsFromModel((R_Model*)resource);
-
-						bullet->transform->SetWorldPosition(GetOwner()->transform->GetWorldPosition());
-						C_RigidBody* rigidBody = (C_RigidBody*)bullet->CreateComponent(ComponentType::RIGIDBODY);
-						rigidBody->FreezePositionY(true);
-						rigidBody->FreezeRotationX(true);
-						rigidBody->FreezeRotationY(true);
-						rigidBody->FreezeRotationZ(true);
-						rigidBody->SetLinearVelocity(bulletVel);
-						bullet->CreateComponent(ComponentType::SPHERE_COLLIDER);
-						bullet->CreateComponent(ComponentType::BULLET_BEHAVIOR);
-					}
-				}
-			}
+			// if (!cameraMode)
+			// {
+			// 	float2 mouse, center, direction;
+			// 	mouse = MousePositionToWorldPosition();
+			// 	center.x = GetOwner()->transform->GetWorldPosition().x;
+			// 	center.y = GetOwner()->transform->GetWorldPosition().z;
+			// 	mouse.y *= -1;
+			// 	direction = mouse - center;
+			// 	direction.Normalize();
+			// 
+			// 	float rad = direction.AimedAngle();
+			// 	float3 bulletVel = { bulletSpeed * math::Cos(rad) , 0, bulletSpeed * math::Sin(rad) };
+			// 
+			// 	float angle = RadToDeg(-rad) + 90;
+			// 	GetOwner()->transform->SetLocalEulerRotation(float3(0, angle, 0));
+			// 
+			// 	if (App->input->GetMouseButton(1) == KeyState::KEY_DOWN || App->input->GetGameControllerTrigger(1) == ButtonState::BUTTON_DOWN)
+			// 	{
+			// 		Resource* resource = App->resourceManager->GetResourceFromLibrary("Assets/Models/Primitives/sphere.fbx");
+			// 		if (resource != nullptr)
+			// 		{
+			// 			GameObject* bullet = App->scene->GenerateGameObjectsFromModel((R_Model*)resource);
+			// 
+			// 			bullet->transform->SetWorldPosition(GetOwner()->transform->GetWorldPosition());
+			// 			C_RigidBody* rigidBody = (C_RigidBody*)bullet->CreateComponent(ComponentType::RIGIDBODY);
+			// 			rigidBody->FreezePositionY(true);
+			// 			rigidBody->FreezeRotationX(true);
+			// 			rigidBody->FreezeRotationY(true);
+			// 			rigidBody->FreezeRotationZ(true);
+			// 			rigidBody->SetLinearVelocity(bulletVel);
+			// 			bullet->CreateComponent(ComponentType::SPHERE_COLLIDER);
+			// 			bullet->CreateComponent(ComponentType::BULLET_BEHAVIOR);
+			// 		}
+			// 	}
+			// }
 		}
 		else
 			if (App->input->GetKey(SDL_SCANCODE_W) == KeyState::KEY_DOWN || 
@@ -188,14 +188,14 @@ void C_PlayerController::MoveVelocity(C_RigidBody* rigidBody)
 	{
 		rightDash = true;
 		dashTimer = dashCooldown;
-		rigidBody->AddForce(physx::PxVec3(dashForce, 0, 0), physx::PxForceMode::eVELOCITY_CHANGE);
+		rigidBody->AddForce(physx::PxVec3(dashForce, 0, 0), physx::PxForceMode::eIMPULSE);
 	}
 		
 	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_DOWN && left && dashTimer == 0)
 	{
 		leftDash = true;
 		dashTimer = dashCooldown;
-		rigidBody->AddForce(physx::PxVec3(-dashForce, 0, 0), physx::PxForceMode::eVELOCITY_CHANGE);
+		rigidBody->AddForce(physx::PxVec3(-dashForce, 0, 0), physx::PxForceMode::eIMPULSE);
 	}
 
 	if (forward)
@@ -228,43 +228,43 @@ void C_PlayerController::MoveAcceleration(C_RigidBody* rigidBody)
 		left = true;
 
 	if (forward)
-		rigidBody->AddForce(physx::PxVec3(0, 0, acceleration), physx::PxForceMode::eVELOCITY_CHANGE);
+		rigidBody->AddForce(physx::PxVec3(0, 0, acceleration), physx::PxForceMode::eACCELERATION);
 	else if (!backward)
 		if (vel.z > 0)
-			rigidBody->AddForce(physx::PxVec3(0, 0, -deceleration), physx::PxForceMode::eVELOCITY_CHANGE);
+			rigidBody->AddForce(physx::PxVec3(0, 0, -deceleration), physx::PxForceMode::eACCELERATION);
 
 	if (backward)
-		rigidBody->AddForce(physx::PxVec3(0, 0, -acceleration), physx::PxForceMode::eVELOCITY_CHANGE);
+		rigidBody->AddForce(physx::PxVec3(0, 0, -acceleration), physx::PxForceMode::eACCELERATION);
 	else if (!forward)
 		if (vel.z < 0)
-			rigidBody->AddForce(physx::PxVec3(0, 0, deceleration), physx::PxForceMode::eVELOCITY_CHANGE);
+			rigidBody->AddForce(physx::PxVec3(0, 0, deceleration), physx::PxForceMode::eACCELERATION);
 
 	if (left)
-		rigidBody->AddForce(physx::PxVec3(acceleration, 0, 0), physx::PxForceMode::eVELOCITY_CHANGE);
+		rigidBody->AddForce(physx::PxVec3(acceleration, 0, 0), physx::PxForceMode::eACCELERATION);
 	else if (!right)
 		if (vel.x > 0)
-			rigidBody->AddForce(physx::PxVec3(-deceleration, 0, 0), physx::PxForceMode::eVELOCITY_CHANGE);
+			rigidBody->AddForce(physx::PxVec3(-deceleration, 0, 0), physx::PxForceMode::eACCELERATION);
 
 	if (right)
-		rigidBody->AddForce(physx::PxVec3(-acceleration, 0, 0), physx::PxForceMode::eVELOCITY_CHANGE);
+		rigidBody->AddForce(physx::PxVec3(-acceleration, 0, 0), physx::PxForceMode::eACCELERATION);
 	else if (!left)
 		if (vel.x < 0)
-			rigidBody->AddForce(physx::PxVec3(deceleration, 0, 0), physx::PxForceMode::eVELOCITY_CHANGE);
+			rigidBody->AddForce(physx::PxVec3(deceleration, 0, 0), physx::PxForceMode::eACCELERATION);
 
-	bool changed = false;
-	for (int i = 0; i < 3; i++)
-		if (vel[i] > speed)
-		{
-			vel[i] = speed;
-			changed = true;
-		}
-		else if (vel[i] < -speed)
-		{
-			vel[i] = -speed;
-			changed = true;
-		}
-	if (changed)
-		rigidBody->SetLinearVelocity(vel);
+	//bool changed = false;
+	//for (int i = 0; i < 3; i++)
+	//	if (vel[i] > speed)
+	//	{
+	//		vel[i] = speed;
+	//		changed = true;
+	//	}
+	//	else if (vel[i] < -speed)
+	//	{
+	//		vel[i] = -speed;
+	//		changed = true;
+	//	}
+	//if (changed)
+	//	rigidBody->SetLinearVelocity(vel);
 }
 
 void C_PlayerController::Rotate()

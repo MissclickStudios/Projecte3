@@ -180,7 +180,7 @@ void M_Physics::AddActor(physx::PxActor* actor, GameObject* owner)
 		return;
 
 	scene->addActor(*actor);
-	actors.insert(std::make_pair<physx::PxRigidDynamic*, GameObject*>((physx::PxRigidDynamic*)actor, (GameObject*)(void*)owner));
+	actors.insert(std::make_pair<physx::PxRigidActor*, GameObject*>((physx::PxRigidActor*)actor, (GameObject*)(void*)owner));
 }
 
 void M_Physics::DeleteActor(physx::PxActor* actor)
@@ -189,5 +189,5 @@ void M_Physics::DeleteActor(physx::PxActor* actor)
 		return;
 
 	scene->removeActor(*actor);
-	actors.erase((physx::PxRigidDynamic*)actor);
+	actors.erase((physx::PxRigidActor*)actor);
 }

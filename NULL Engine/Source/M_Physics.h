@@ -10,7 +10,7 @@ namespace physx
 	class PxPhysics;
 	class PxScene;
 	class PxMaterial;
-	class PxRigidDynamic;
+	class PxRigidActor;
 	class PxSimulationEventCallback;
 	class PxActor;
 	class PxControllerManager;
@@ -40,7 +40,7 @@ public:
 
 	physx::PxPhysics* physics = nullptr;
 	physx::PxMaterial* material = nullptr;
-	std::map<physx::PxRigidDynamic*, GameObject*> actors;
+	std::map<physx::PxRigidActor*, GameObject*> actors;
 
 	bool simulating = false;
 
