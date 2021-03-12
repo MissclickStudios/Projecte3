@@ -39,7 +39,7 @@ public:
 	const bool IsCamera() const { return cameraMode; }
 	void SetCameraMode(bool enable) { cameraMode = enable; }
 
-	int dashCooldown = 40;
+	int dashCooldown = 50;
 
 private: 
 
@@ -66,7 +66,7 @@ private:
 	//Temporal dash timer cause there is no dt in update method  
 	int dashTimer = 0;
 
-	float dashForce = 20.0f;
+	float dashForce = 320.0f;
 };
 
 #endif // !__C_PLAYERCONTROLLER__

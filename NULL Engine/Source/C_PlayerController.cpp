@@ -85,6 +85,15 @@ bool C_PlayerController::Update()
 				App->input->GetKey(SDL_SCANCODE_A) == KeyState::KEY_DOWN ||
 				App->input->GetKey(SDL_SCANCODE_D) == KeyState::KEY_DOWN)
 				LOG("Player controller error! No RigidBody found!");
+	
+		if (dashTimer == 0)
+		{
+			dashTimer = 0;
+		}
+		else 
+		{
+			dashTimer--;
+		}
 	}
 
 	return true;
@@ -179,14 +188,14 @@ void C_PlayerController::MoveVelocity(C_RigidBody* rigidBody)
 	{
 		rightDash = true;
 		dashTimer = dashCooldown;
-		rigidBody->AddForce(physx::PxVec3(-dashForce, 0, 0), physx::PxForceMode::eVELOCITY_CHANGE);
+		rigidBody->AddForce(physx::PxVec3(dashForce, 0, 0), physx::PxForceMode::eVELOCITY_CHANGE);
 	}
 		
 	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_DOWN && left && dashTimer == 0)
 	{
 		leftDash = true;
 		dashTimer = dashCooldown;
-		rigidBody->AddForce(physx::PxVec3(dashForce, 0, 0), physx::PxForceMode::eVELOCITY_CHANGE);
+		rigidBody->AddForce(physx::PxVec3(-dashForce, 0, 0), physx::PxForceMode::eVELOCITY_CHANGE);
 	}
 
 	if (forward)
