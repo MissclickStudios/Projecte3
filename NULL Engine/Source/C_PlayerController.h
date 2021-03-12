@@ -39,6 +39,8 @@ public:
 	const bool IsCamera() const { return cameraMode; }
 	void SetCameraMode(bool enable) { cameraMode = enable; }
 
+	int dashCooldown = 40;
+
 private: 
 
 	void MoveVelocity(C_RigidBody* rigidBody);
@@ -57,6 +59,12 @@ private:
 	float bulletSpeed = 100.0f;
 
 	bool cameraMode = false;
+
+	bool rightDash = false;
+	bool leftDash = false;
+
+	//Temporal dash timer cause there is no dt in update method  
+	int dashTimer = 0;
 };
 
 #endif // !__C_PLAYERCONTROLLER__

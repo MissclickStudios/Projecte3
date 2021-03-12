@@ -156,6 +156,7 @@ void C_PlayerController::MoveVelocity(C_RigidBody* rigidBody)
 	bool backwards = false;
 	bool right = false;
 	bool left = false;
+
 	if (App->input->GetKey(SDL_SCANCODE_W) == KeyState::KEY_REPEAT)
 		forward = true;
 	if (App->input->GetKey(SDL_SCANCODE_S) == KeyState::KEY_REPEAT)
@@ -174,6 +175,17 @@ void C_PlayerController::MoveVelocity(C_RigidBody* rigidBody)
 	if (App->input->GetGameControllerAxis(0) == AxisState::NEGATIVE_AXIS_REPEAT)
 		left = true;
 
+	if(App->input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_DOWN || right || dashTimer == 0)
+	{
+		rightDash = true;
+		dashTimer = dashCooldown;
+	}
+		
+	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_DOWN || left || dashTimer == 0)
+	{
+		leftDash = true;
+		dashTimer = dashCooldown;
+	}
 
 	if (forward)
 		vel.z += speed;
