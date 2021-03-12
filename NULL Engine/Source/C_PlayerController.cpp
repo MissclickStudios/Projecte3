@@ -175,16 +175,18 @@ void C_PlayerController::MoveVelocity(C_RigidBody* rigidBody)
 	if (App->input->GetGameControllerAxis(0) == AxisState::NEGATIVE_AXIS_REPEAT)
 		left = true;
 
-	if(App->input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_DOWN || right || dashTimer == 0)
+	if(App->input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_DOWN && right && dashTimer == 0)
 	{
 		rightDash = true;
 		dashTimer = dashCooldown;
+		rigidBody->AddForce(physx::PxVec3(-dashForce, 0, 0), physx::PxForceMode::eVELOCITY_CHANGE);
 	}
 		
-	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_DOWN || left || dashTimer == 0)
+	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_DOWN && left && dashTimer == 0)
 	{
 		leftDash = true;
 		dashTimer = dashCooldown;
+		rigidBody->AddForce(physx::PxVec3(dashForce, 0, 0), physx::PxForceMode::eVELOCITY_CHANGE);
 	}
 
 	if (forward)

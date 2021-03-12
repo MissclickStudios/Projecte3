@@ -65,6 +65,8 @@ private:
 
 	//Temporal dash timer cause there is no dt in update method  
 	int dashTimer = 0;
+
+	float dashForce = 20.0f;
 };
 
 #endif // !__C_PLAYERCONTROLLER__
