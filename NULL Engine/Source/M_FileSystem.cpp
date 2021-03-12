@@ -114,6 +114,7 @@ void M_FileSystem::CreateLibraryDirectories()
 	CreateDir(ASSETS_MODELS_PATH);
 	CreateDir(ASSETS_SCENES_PATH);
 	CreateDir(ASSETS_TEXTURES_PATH);
+	CreateDir(ASSETS_PREFABS_PATH);
 
 	CreateDir(LIBRARY_PATH);
 	CreateDir(ANIMATIONS_PATH);
@@ -126,6 +127,7 @@ void M_FileSystem::CreateLibraryDirectories()
 	CreateDir(SCENES_PATH);
 	CreateDir(SHADERS_PATH);
 	CreateDir(TEXTURES_PATH);
+	
 }
 
 bool M_FileSystem::CreateDir(const char* directory)

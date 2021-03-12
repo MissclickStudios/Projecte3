@@ -67,6 +67,7 @@ public:																								// --- RESOURCE MANAGER API ---
 
 	void CreatePrefab(GameObject* gameObject);
 	void SavePrefab(GameObject* gameObject, uint _prefabId);
+	void LoadPrefab(uint _prefabId);
 
 	void SavePrefabObject(GameObject* gameObject, ParsonNode* node);
 	

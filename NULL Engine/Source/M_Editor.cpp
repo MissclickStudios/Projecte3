@@ -489,9 +489,17 @@ void M_Editor::GetEngineIconsThroughEditor(Icons& engineIcons)
 
 void M_Editor::LoadResourceIntoSceneThroughEditor()
 {
+	
 	const char* draggedAssetPath = project->GetDraggedAsset();
 	if (draggedAssetPath != nullptr)
 	{
+		if (App->fileSystem->GetFileExtension(draggedAssetPath) == "prefab")
+		{
+			std::string prefabId;
+			EngineApp->fileSystem->SplitFilePath(draggedAssetPath, nullptr, &prefabId, nullptr);
+			EngineApp->resourceManager->LoadPrefab(std::stoi(prefabId));
+		}
+
 		Resource* draggedResource = EngineApp->resourceManager->GetResourceFromLibrary(draggedAssetPath);
 		if (draggedResource != nullptr)
 		{
