@@ -162,8 +162,10 @@ public:
 
 	float3*						obb_vertices;
 	float3*						aabb_vertices;
+	float3*						boxColliderVertices;
 
 	bool						show_bounding_boxes;
+	bool						showBoxCollider;
 
 private:
 	uint32						uid;

@@ -11,6 +11,9 @@
 
 #include "PhysX_3.4/Include/PxPhysicsAPI.h"
 
+#include "MathGeoLib/include/Math/float3x3.h"
+#include "MathGeoBoundingBox.h"
+
 #include "MemoryManager.h"
 
 C_BoxCollider::C_BoxCollider(GameObject* owner) : Component(owner, ComponentType::BOX_COLLIDER)
@@ -105,6 +108,15 @@ void C_BoxCollider::SetIsActive(bool setTo)
 		GetOwner()->GetComponent<C_RigidBody>()->GetRigidBody()->attachShape(*shape);
 	else
 		GetOwner()->GetComponent<C_RigidBody>()->GetRigidBody()->detachShape(*shape);
+}
+
+void C_BoxCollider::GetCornerPoints(float3* outPointArray) const
+{
+	float3x3 rotation = GetOwner()->transform->GetWorldRotation().ToFloat3x3().Inverted();
+	float3 axis[3] = { rotation.Row(0), rotation.Row(1), rotation.Row(2) };
+	OBB obb(GetOwner()->transform->GetWorldPosition() + centerPosition, colliderSize / 2, axis[0], axis[1], axis[2]);
+
+	obb.GetCornerPoints(outPointArray);
 }
 
 void C_BoxCollider::CreateCollider()

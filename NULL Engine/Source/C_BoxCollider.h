@@ -32,6 +32,8 @@ public:
 	const float3	GetCenter() const { return centerPosition; }
 	void			SetCenter(float x, float y, float z) { centerPosition = { x,y,z }; ToUpdate(ColliderUpdateType::SHAPE); }
 
+	void GetCornerPoints(float3* outPointArray) const;
+
 private:
 
 	void CreateCollider();

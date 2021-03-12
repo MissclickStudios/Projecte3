@@ -1618,6 +1618,7 @@ Color CuboidRenderer::GetColorByType()
 	case CuboidType::AABB:		{ return App->renderer->GetAABBColor(); }		break;
 	case CuboidType::OBB:		{ return App->renderer->GetOBBColor(); }		break;
 	case CuboidType::FRUSTUM:	{ return App->renderer->GetFrustumColor(); }	break;
+	case CuboidType::COLLIDER:	{ return Green; }								break;
 	}
 
 	return White;
@@ -1631,6 +1632,7 @@ float CuboidRenderer::GetEdgeWidthByType()
 	case CuboidType::AABB:		{ return App->renderer->GetAABBEdgeWidth(); }		break;
 	case CuboidType::OBB:		{ return App->renderer->GetOBBEdgeWidth(); }		break;
 	case CuboidType::FRUSTUM:	{ return App->renderer->GetFrustumEdgeWidth(); }	break;
+	case CuboidType::COLLIDER:	{ return App->renderer->GetOBBEdgeWidth(); }		break;
 	}
 
 	return STANDARD_LINE_WIDTH;
