@@ -36,7 +36,7 @@ bool C_PlayerController::Update()
 	if (App->play && !App->pause)
 	{
 		C_RigidBody* rigidBody = GetOwner()->GetComponent<C_RigidBody>();
-		if (rigidBody)
+		if (rigidBody && !rigidBody->IsStatic())
 		{
 			if (useAcceleration)
 				MoveAcceleration(rigidBody);
@@ -212,8 +212,6 @@ void C_PlayerController::MoveVelocity(C_RigidBody* rigidBody)
 
 void C_PlayerController::MoveAcceleration(C_RigidBody* rigidBody)
 {
-	float3 vel = rigidBody->GetLinearVelocity();
-
 	bool forward = false;
 	bool backward = false;
 	bool right = false;
@@ -227,44 +225,34 @@ void C_PlayerController::MoveAcceleration(C_RigidBody* rigidBody)
 	if (App->input->GetKey(SDL_SCANCODE_A) == KeyState::KEY_REPEAT)
 		left = true;
 
-	if (forward)
+	physx::PxVec3 vel = ((physx::PxRigidDynamic*)rigidBody->GetRigidBody())->getLinearVelocity();
+
+	if (forward && vel.z < speed)
 		rigidBody->AddForce(physx::PxVec3(0, 0, acceleration), physx::PxForceMode::eACCELERATION);
 	else if (!backward)
 		if (vel.z > 0)
 			rigidBody->AddForce(physx::PxVec3(0, 0, -deceleration), physx::PxForceMode::eACCELERATION);
 
-	if (backward)
+	if (backward && vel.z > -speed)
 		rigidBody->AddForce(physx::PxVec3(0, 0, -acceleration), physx::PxForceMode::eACCELERATION);
 	else if (!forward)
 		if (vel.z < 0)
 			rigidBody->AddForce(physx::PxVec3(0, 0, deceleration), physx::PxForceMode::eACCELERATION);
 
-	if (left)
+	if (left && vel.x < speed)
 		rigidBody->AddForce(physx::PxVec3(acceleration, 0, 0), physx::PxForceMode::eACCELERATION);
 	else if (!right)
 		if (vel.x > 0)
 			rigidBody->AddForce(physx::PxVec3(-deceleration, 0, 0), physx::PxForceMode::eACCELERATION);
 
-	if (right)
+	if (right && vel.x > -speed)
 		rigidBody->AddForce(physx::PxVec3(-acceleration, 0, 0), physx::PxForceMode::eACCELERATION);
 	else if (!left)
 		if (vel.x < 0)
 			rigidBody->AddForce(physx::PxVec3(deceleration, 0, 0), physx::PxForceMode::eACCELERATION);
 
-	//bool changed = false;
-	//for (int i = 0; i < 3; i++)
-	//	if (vel[i] > speed)
-	//	{
-	//		vel[i] = speed;
-	//		changed = true;
-	//	}
-	//	else if (vel[i] < -speed)
-	//	{
-	//		vel[i] = -speed;
-	//		changed = true;
-	//	}
-	//if (changed)
-	//	rigidBody->SetLinearVelocity(vel);
+	if (!forward && !backward && !right && !left)
+		rigidBody->SetLinearVelocity(float3::zero);
 }
 
 void C_PlayerController::Rotate()
