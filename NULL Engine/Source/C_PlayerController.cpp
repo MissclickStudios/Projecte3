@@ -143,6 +143,44 @@ float2 C_PlayerController::MousePositionToWorldPosition(float mapPositionY)
 	return position;
 }
 
+Direction C_PlayerController::ReturnPlayerDirection()
+{
+	bool north = false;
+	bool west = false;
+	bool south = false;
+	bool east = false;
+
+	if (App->input->GetGameControllerAxis(3) == AxisState::POSITIVE_AXIS_REPEAT)
+		north = true;
+	if (App->input->GetGameControllerAxis(3) == AxisState::NEGATIVE_AXIS_REPEAT)
+		south = true;
+	if (App->input->GetGameControllerAxis(2) == AxisState::POSITIVE_AXIS_REPEAT)
+		west = true;
+	if (App->input->GetGameControllerAxis(2) == AxisState::NEGATIVE_AXIS_REPEAT)
+		east = true;
+
+	if (north && west)
+		return Direction::NORTH_WEST;
+	if (north && east)
+		return Direction::NORTH_EAST;
+	if (south && west)
+		return Direction::SOUTH_WEST;
+	if (south && east)
+		return Direction::SOUTH_EAST;
+
+	if (north)
+		return Direction::NORTH;
+	if (south)
+		return Direction::SOUTH;
+	if (west)
+		return Direction::WEST;
+	if (east)
+		return Direction::EAST;
+
+	// we need to return last Direction
+	return Direction::NORTH;
+}
+
 void C_PlayerController::Move(C_RigidBody* rigidBody)
 {
 	bool forward = false;
@@ -157,6 +195,34 @@ void C_PlayerController::Move(C_RigidBody* rigidBody)
 		right = true;
 	if (App->input->GetKey(SDL_SCANCODE_A) == KeyState::KEY_REPEAT)
 		left = true;
+
+
+	///
+
+	if (App->input->GetGameControllerAxis(1) == AxisState::POSITIVE_AXIS_REPEAT)
+		forward = true;
+	if (App->input->GetGameControllerAxis(1) == AxisState::NEGATIVE_AXIS_REPEAT)
+		backward = true;
+	if (App->input->GetGameControllerAxis(0) == AxisState::POSITIVE_AXIS_REPEAT)
+		right = true;
+	if (App->input->GetGameControllerAxis(0) == AxisState::NEGATIVE_AXIS_REPEAT)
+		left = true;
+
+	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_DOWN && right && dashTimer == 0)
+	{
+		rightDash = true;
+		dashTimer = dashCooldown;
+		rigidBody->AddForce(physx::PxVec3(dashForce, 0, 0), physx::PxForceMode::eIMPULSE);
+	}
+
+	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_DOWN && left && dashTimer == 0)
+	{
+		leftDash = true;
+		dashTimer = dashCooldown;
+		rigidBody->AddForce(physx::PxVec3(-dashForce, 0, 0), physx::PxForceMode::eIMPULSE);
+	}
+
+	///
 
 	physx::PxVec3 vel = ((physx::PxRigidDynamic*)rigidBody->GetRigidBody())->getLinearVelocity();
 

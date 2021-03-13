@@ -6,6 +6,17 @@
 
 class C_RigidBody;
 
+enum class Direction {
+	NORTH,
+	NORTH_WEST,
+	WEST,
+	SOUTH_WEST,
+	SOUTH,
+	SOUTH_EAST,
+	EAST,
+	NORTH_EAST,
+};
+
 class C_PlayerController : public Component
 {
 public:
@@ -33,6 +44,8 @@ public:
 	const float BulletSpeed() const { return bulletSpeed; }
 	void SetBulletSpeed(float speed) { bulletSpeed = speed; }
 
+	Direction ReturnPlayerDirection();
+
 	int dashCooldown = 50;
 
 private: 
@@ -43,6 +56,8 @@ private:
 	float2 MousePositionToWorldPosition(float mapPositionY = 0);
 
 	float speed = 30.0f;
+
+	Direction playerDirection = Direction::NORTH;
 
 	float acceleration = 2.0f;
 	float deceleration = 2.0f;
