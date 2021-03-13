@@ -46,8 +46,7 @@ is_master_root		(false),
 is_scene_root		(false),
 is_bone				(false),
 to_delete			(false),
-show_bounding_boxes	(false),
-showBoxCollider		(false)
+show_bounding_boxes	(false)
 {
 	transform = (C_Transform*)CreateComponent(ComponentType::TRANSFORM);
 
@@ -56,7 +55,6 @@ showBoxCollider		(false)
 
 	obb_vertices = new float3[8];																	// Bounding boxes will always have 8 vertices as they are Cuboids.
 	aabb_vertices = new float3[8];																	// Bounding boxes will always have 8 vertices as they are Cuboids.
-	boxColliderVertices = new float3[8];
 }
 
 GameObject::GameObject(std::string name, bool isActive, bool isStatic) :
@@ -70,8 +68,7 @@ transform			(nullptr),
 is_master_root		(false),
 is_scene_root		(false),
 is_bone				(false),
-to_delete			(false),
-show_bounding_boxes	(false)
+to_delete			(false)
 {
 	if (name.empty())
 	{
@@ -85,14 +82,12 @@ show_bounding_boxes	(false)
 
 	obb_vertices	= new float3[8];																		// Bounding boxes will always have 8 vertices as they are Cuboids.
 	aabb_vertices	= new float3[8];																		// Bounding boxes will always have 8 vertices as they are Cuboids.
-	boxColliderVertices = new float3[8];
 }
 
 GameObject::~GameObject()
 {
 	RELEASE_ARRAY(obb_vertices);
 	RELEASE_ARRAY(aabb_vertices);
-	RELEASE_ARRAY(boxColliderVertices);
 }
 
 bool GameObject::Update()
@@ -349,10 +344,9 @@ void GameObject::GetRenderers(std::vector<MeshRenderer>& meshRenderers, std::vec
 	}
 
 	C_BoxCollider* collider = GetComponent<C_BoxCollider>();
-	if (collider/* && showBoxCollider*/)
+	if (collider && collider->ToShowCollider())
 	{
-		collider->GetCornerPoints(boxColliderVertices);
-		cuboidRenderers.push_back(CuboidRenderer(boxColliderVertices, CuboidType::COLLIDER));
+		cuboidRenderers.push_back(CuboidRenderer(collider->GetCornerPoints(), CuboidType::COLLIDER));
 	}
 }
 

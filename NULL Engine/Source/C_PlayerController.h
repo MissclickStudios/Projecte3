@@ -24,9 +24,6 @@ public:
 	const float Speed() const { return speed; }
 	void SetSpeed(float speed) { this->speed = speed; }
 
-	const bool UsingAcceleration() const { return useAcceleration; }
-	void UseAcceleration(bool enable) { useAcceleration = enable; }
-
 	const float Acceleration() const { return acceleration; }
 	void SetAcceleration(float force) { this->acceleration = force; }
 	const float Deceleration() const { return deceleration; }
@@ -36,29 +33,21 @@ public:
 	const float BulletSpeed() const { return bulletSpeed; }
 	void SetBulletSpeed(float speed) { bulletSpeed = speed; }
 
-	const bool IsCamera() const { return cameraMode; }
-	void SetCameraMode(bool enable) { cameraMode = enable; }
-
 	int dashCooldown = 50;
 
 private: 
 
-	void MoveVelocity(C_RigidBody* rigidBody);
-	void MoveAcceleration(C_RigidBody* rigidBody);
+	void Move(C_RigidBody* rigidBody);
 	void Rotate();
 
 	float2 MousePositionToWorldPosition(float mapPositionY = 0);
 
 	float speed = 30.0f;
 
-	bool useAcceleration = false;
-
 	float acceleration = 2.0f;
 	float deceleration = 2.0f;
 
 	float bulletSpeed = 100.0f;
-
-	bool cameraMode = false;
 
 	bool rightDash = false;
 	bool leftDash = false;

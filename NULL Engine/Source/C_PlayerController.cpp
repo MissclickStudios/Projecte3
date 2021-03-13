@@ -38,46 +38,40 @@ bool C_PlayerController::Update()
 		C_RigidBody* rigidBody = GetOwner()->GetComponent<C_RigidBody>();
 		if (rigidBody && !rigidBody->IsStatic())
 		{
-			if (useAcceleration)
-				MoveAcceleration(rigidBody);
-			else
-				MoveVelocity(rigidBody);
+			Move(rigidBody);
 
-			// if (!cameraMode)
-			// {
-			// 	float2 mouse, center, direction;
-			// 	mouse = MousePositionToWorldPosition();
-			// 	center.x = GetOwner()->transform->GetWorldPosition().x;
-			// 	center.y = GetOwner()->transform->GetWorldPosition().z;
-			// 	mouse.y *= -1;
-			// 	direction = mouse - center;
-			// 	direction.Normalize();
-			// 
-			// 	float rad = direction.AimedAngle();
-			// 	float3 bulletVel = { bulletSpeed * math::Cos(rad) , 0, bulletSpeed * math::Sin(rad) };
-			// 
-			// 	float angle = RadToDeg(-rad) + 90;
-			// 	GetOwner()->transform->SetLocalEulerRotation(float3(0, angle, 0));
-			// 
-			// 	if (App->input->GetMouseButton(1) == KeyState::KEY_DOWN || App->input->GetGameControllerTrigger(1) == ButtonState::BUTTON_DOWN)
-			// 	{
-			// 		Resource* resource = App->resourceManager->GetResourceFromLibrary("Assets/Models/Primitives/sphere.fbx");
-			// 		if (resource != nullptr)
-			// 		{
-			// 			GameObject* bullet = App->scene->GenerateGameObjectsFromModel((R_Model*)resource);
-			// 
-			// 			bullet->transform->SetWorldPosition(GetOwner()->transform->GetWorldPosition());
-			// 			C_RigidBody* rigidBody = (C_RigidBody*)bullet->CreateComponent(ComponentType::RIGIDBODY);
-			// 			rigidBody->FreezePositionY(true);
-			// 			rigidBody->FreezeRotationX(true);
-			// 			rigidBody->FreezeRotationY(true);
-			// 			rigidBody->FreezeRotationZ(true);
-			// 			rigidBody->SetLinearVelocity(bulletVel);
-			// 			bullet->CreateComponent(ComponentType::SPHERE_COLLIDER);
-			// 			bullet->CreateComponent(ComponentType::BULLET_BEHAVIOR);
-			// 		}
-			// 	}
-			// }
+			//float2 mouse, center, direction;
+			//mouse = MousePositionToWorldPosition();
+			//center.x = GetOwner()->transform->GetWorldPosition().x;
+			//center.y = GetOwner()->transform->GetWorldPosition().z;
+			//mouse.y *= -1;
+			//direction = mouse - center;
+			//direction.Normalize();
+			//
+			//float rad = direction.AimedAngle();
+			//float3 bulletVel = { bulletSpeed * math::Cos(rad) , 0, bulletSpeed * math::Sin(rad) };
+			//
+			//float angle = RadToDeg(-rad) + 90;
+			//GetOwner()->transform->SetLocalEulerRotation(float3(0, angle, 0));
+			//
+			//if (App->input->GetMouseButton(1) == KeyState::KEY_DOWN || App->input->GetGameControllerTrigger(1) == ButtonState::BUTTON_DOWN)
+			//{
+			//	Resource* resource = App->resourceManager->GetResourceFromLibrary("Assets/Models/Primitives/sphere.fbx");
+			//	if (resource != nullptr)
+			//	{
+			//		GameObject* bullet = App->scene->GenerateGameObjectsFromModel((R_Model*)resource);
+			//
+			//		bullet->transform->SetWorldPosition(GetOwner()->transform->GetWorldPosition());
+			//		C_RigidBody* rigidBody = (C_RigidBody*)bullet->CreateComponent(ComponentType::RIGIDBODY);
+			//		rigidBody->FreezePositionY(true);
+			//		rigidBody->FreezeRotationX(true);
+			//		rigidBody->FreezeRotationY(true);
+			//		rigidBody->FreezeRotationZ(true);
+			//		rigidBody->SetLinearVelocity(bulletVel);
+			//		bullet->CreateComponent(ComponentType::SPHERE_COLLIDER);
+			//		bullet->CreateComponent(ComponentType::BULLET_BEHAVIOR);
+			//	}
+			//}
 		}
 		else
 			if (App->input->GetKey(SDL_SCANCODE_W) == KeyState::KEY_DOWN || 
@@ -112,11 +106,7 @@ bool C_PlayerController::SaveState(ParsonNode& root) const
 	root.SetNumber("Acceleration", (double)acceleration);
 	root.SetNumber("Deceleration", (double)deceleration);
 
-	root.SetBool("Use Acceleration", useAcceleration);
-
 	root.SetNumber("Bullet Speed", (double)bulletSpeed);
-
-	root.SetBool("Camera Mode", cameraMode);
 
 	return true;
 }
@@ -127,11 +117,7 @@ bool C_PlayerController::LoadState(ParsonNode& root)
 	acceleration = (float)root.GetNumber("Acceleration");
 	deceleration = (float)root.GetNumber("Deceleration");
 
-	useAcceleration = root.GetBool("Use Acceleration");
-
 	bulletSpeed = (float)root.GetNumber("Bullet Speed");
-
-	cameraMode = root.GetBool("Camera Mode");
 
 	return true;
 }
@@ -157,60 +143,7 @@ float2 C_PlayerController::MousePositionToWorldPosition(float mapPositionY)
 	return position;
 }
 
-void C_PlayerController::MoveVelocity(C_RigidBody* rigidBody)
-{
-	float3 vel = float3::zero;
-
-	bool forward = false;
-	bool backwards = false;
-	bool right = false;
-	bool left = false;
-
-	if (App->input->GetKey(SDL_SCANCODE_W) == KeyState::KEY_REPEAT)
-		forward = true;
-	if (App->input->GetKey(SDL_SCANCODE_S) == KeyState::KEY_REPEAT)
-		backwards = true;
-	if (App->input->GetKey(SDL_SCANCODE_A) == KeyState::KEY_REPEAT)
-		right = true;
-	if (App->input->GetKey(SDL_SCANCODE_D) == KeyState::KEY_REPEAT)
-		left = true;
-
-	if (App->input->GetGameControllerAxis(1) == AxisState::POSITIVE_AXIS_REPEAT)
-		forward = true;
-	if (App->input->GetGameControllerAxis(1) == AxisState::NEGATIVE_AXIS_REPEAT)
-		backwards = true;
-	if (App->input->GetGameControllerAxis(0) == AxisState::POSITIVE_AXIS_REPEAT)
-		right = true;
-	if (App->input->GetGameControllerAxis(0) == AxisState::NEGATIVE_AXIS_REPEAT)
-		left = true;
-
-	if(App->input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_DOWN && right && dashTimer == 0)
-	{
-		rightDash = true;
-		dashTimer = dashCooldown;
-		rigidBody->AddForce(physx::PxVec3(dashForce, 0, 0), physx::PxForceMode::eIMPULSE);
-	}
-		
-	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_DOWN && left && dashTimer == 0)
-	{
-		leftDash = true;
-		dashTimer = dashCooldown;
-		rigidBody->AddForce(physx::PxVec3(-dashForce, 0, 0), physx::PxForceMode::eIMPULSE);
-	}
-
-	if (forward)
-		vel.z += speed;
-	if (backwards)
-		vel.z -= speed;
-	if (right)
-		vel.x += speed;
-	if (left)
-		vel.x -= speed;
-
-	rigidBody->SetLinearVelocity(vel);
-}
-
-void C_PlayerController::MoveAcceleration(C_RigidBody* rigidBody)
+void C_PlayerController::Move(C_RigidBody* rigidBody)
 {
 	bool forward = false;
 	bool backward = false;

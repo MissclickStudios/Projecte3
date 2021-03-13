@@ -18,11 +18,14 @@
 
 C_BoxCollider::C_BoxCollider(GameObject* owner) : Component(owner, ComponentType::BOX_COLLIDER)
 {
+	boxColliderVertices = new float3[8];
+
 	CreateCollider();
 }
 
 C_BoxCollider::~C_BoxCollider()
 {
+	RELEASE_ARRAY(boxColliderVertices);
 }
 
 bool C_BoxCollider::Update()
@@ -73,6 +76,7 @@ bool C_BoxCollider::SaveState(ParsonNode& root) const
 	root.SetNumber("Type", (uint)GetType());
 	
 	root.SetBool("Is Trigger", isTrigger);
+	root.SetBool("Show Collider", showBoxCollider);
 	
 	root.SetNumber("Size X", (double)colliderSize.x);
 	root.SetNumber("Size Y", (double)colliderSize.y);
@@ -87,6 +91,7 @@ bool C_BoxCollider::SaveState(ParsonNode& root) const
 bool C_BoxCollider::LoadState(ParsonNode& root)
 {
 	isTrigger = root.GetBool("Is Trigger");
+	showBoxCollider = root.GetBool("Show Collider");
 	
 	colliderSize.x = (float)root.GetNumber("Size X");
 	colliderSize.y = (float)root.GetNumber("Size Y");
@@ -110,13 +115,16 @@ void C_BoxCollider::SetIsActive(bool setTo)
 		GetOwner()->GetComponent<C_RigidBody>()->GetRigidBody()->detachShape(*shape);
 }
 
-void C_BoxCollider::GetCornerPoints(float3* outPointArray) const
+float3* C_BoxCollider::GetCornerPoints() const
 {
-	float3x3 rotation = GetOwner()->transform->GetWorldRotation().ToFloat3x3().Inverted();
+	physx::PxTransform transform = GetOwner()->GetComponent<C_RigidBody>()->GetRigidBody()->getGlobalPose();
+	float3x3 rotation = Quat(transform.q.x, transform.q.y, transform.q.z, transform.q.w).ToFloat3x3().Inverted();
+
 	float3 axis[3] = { rotation.Row(0), rotation.Row(1), rotation.Row(2) };
 	OBB obb(GetOwner()->transform->GetWorldPosition() + centerPosition, colliderSize / 2, axis[0], axis[1], axis[2]);
+	obb.GetCornerPoints(boxColliderVertices);
 
-	obb.GetCornerPoints(outPointArray);
+	return boxColliderVertices;
 }
 
 void C_BoxCollider::CreateCollider()

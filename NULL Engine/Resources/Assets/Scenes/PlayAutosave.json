@@ -39,7 +39,7 @@
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
+            "ShowBoundingBoxes": true,
             "Components": [
                 {
                     "Type": 1,
@@ -153,14 +153,14 @@
                     "Type": 1,
                     "LocalPosition": [
                         1.9963607788085938,
-                        10,
+                        5.174921989440918,
                         0
                     ],
                     "LocalRotation": [
                         0,
-                        0.38284578919410706,
                         0,
-                        0.92381227016448975
+                        0,
+                        1
                     ],
                     "LocalScale": [
                         0.99989140033721924,
@@ -177,16 +177,17 @@
                     "Use Gravity": false,
                     "Is Kinematic": true,
                     "Freeze Position X": false,
-                    "Freeze Position Y": true,
+                    "Freeze Position Y": false,
                     "Freeze Position Z": false,
-                    "Freeze Rotation X": true,
-                    "Freeze Rotation Y": true,
-                    "Freeze Rotation Z": true,
+                    "Freeze Rotation X": false,
+                    "Freeze Rotation Y": false,
+                    "Freeze Rotation Z": false,
                     "Is Static": false
                 },
                 {
                     "Type": 9,
                     "Is Trigger": false,
+                    "Show Collider": false,
                     "Size X": 10,
                     "Size Y": 10,
                     "Size Z": 10,
@@ -199,9 +200,7 @@
                     "Speed": 10,
                     "Acceleration": 100,
                     "Deceleration": 100,
-                    "Use Acceleration": true,
-                    "Bullet Speed": 100,
-                    "Camera Mode": false
+                    "Bullet Speed": 100
                 }
             ]
         },
@@ -237,6 +236,7 @@
                 {
                     "Type": 9,
                     "Is Trigger": false,
+                    "Show Collider": false,
                     "Size X": 20,
                     "Size Y": 10,
                     "Size Z": 100,
@@ -248,7 +248,7 @@
         },
         {
             "UID": 1304503906,
-            "ParentUID": 258192188,
+            "ParentUID": 190540461,
             "Name": "MainScene",
             "IsActive": true,
             "IsStatic": false,

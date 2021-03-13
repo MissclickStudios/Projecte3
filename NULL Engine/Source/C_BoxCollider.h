@@ -32,7 +32,9 @@ public:
 	const float3	GetCenter() const { return centerPosition; }
 	void			SetCenter(float x, float y, float z) { centerPosition = { x,y,z }; ToUpdate(ColliderUpdateType::SHAPE); }
 
-	void GetCornerPoints(float3* outPointArray) const;
+	float3*			GetCornerPoints() const;
+	bool			ToShowCollider() const { return showBoxCollider; }
+	void			SetShowCollider(bool enable) { showBoxCollider = enable; }
 
 private:
 
@@ -46,6 +48,9 @@ private:
 
 	ColliderUpdateType toUpdate = ColliderUpdateType::NONE;
 	void ToUpdate(ColliderUpdateType update);
+
+	float3* boxColliderVertices;
+	bool showBoxCollider = false;
 };
 
 #endif // !__C_BOXCOLLIDERCOMPONENT_H__

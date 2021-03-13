@@ -1063,6 +1063,12 @@ void E_Inspector::DrawBoxColliderComponent(C_BoxCollider* cCollider)
 			if (ImGui::Checkbox("Collider is Active##1", &isActive))
 				cCollider->SetIsActive(isActive);
 
+			ImGui::SameLine();
+
+			bool showCollider = cCollider->ToShowCollider();
+			if (ImGui::Checkbox("Show Collider##1", &showCollider))
+				cCollider->SetShowCollider(showCollider);
+
 			ImGui::Separator();
 
 			bool isTrigger = cCollider->IsTrigger();
@@ -1335,41 +1341,25 @@ void E_Inspector::DrawPlayerControllerComponent(C_PlayerController* cController)
 		if (ImGui::Checkbox("Controller Is Active", &isActive))
 			cController->SetIsActive(isActive);
 
-		ImGui::SameLine();
-
-		bool cameraMode = cController->IsCamera();
-		if (ImGui::Checkbox("Camera Mode", &cameraMode))
-			cController->SetCameraMode(cameraMode);
-
 		ImGui::Separator();
 
 		float speed = cController->Speed();
 		if (ImGui::InputFloat("Speed", &speed, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
 			cController->SetSpeed(speed);
 
-		bool useAcceleration = cController->UsingAcceleration();
-		if (ImGui::Checkbox("Use Acceleration", &useAcceleration))
-			cController->UseAcceleration(useAcceleration);
+		float acceleration = cController->Acceleration();
+		if (ImGui::InputFloat("Acceleration", &acceleration, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
+			cController->SetAcceleration(acceleration);
 
-		if (cController->UsingAcceleration())
-		{
-			float acceleration = cController->Acceleration();
-			if (ImGui::InputFloat("Acceleration", &acceleration, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
-				cController->SetAcceleration(acceleration);
+		float deceleration = cController->Deceleration();
+		if (ImGui::InputFloat("Deceleration", &deceleration, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
+			cController->SetDeceleration(deceleration);
 
-			float deceleration = cController->Deceleration();
-			if (ImGui::InputFloat("Deceleration", &deceleration, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
-				cController->SetDeceleration(deceleration);
-		}
+		ImGui::Separator();
 
-		if (!cController->IsCamera())
-		{
-			ImGui::Separator();
-
-			float bulletSpeed = cController->BulletSpeed();
-			if (ImGui::InputFloat("Bullet Speed", &bulletSpeed, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
-				cController->SetBulletSpeed(bulletSpeed);
-		}
+		float bulletSpeed = cController->BulletSpeed();
+		if (ImGui::InputFloat("Bullet Speed", &bulletSpeed, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
+			cController->SetBulletSpeed(bulletSpeed);
 
 		if (!show)
 		{
