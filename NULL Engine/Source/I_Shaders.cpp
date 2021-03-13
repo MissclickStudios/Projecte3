@@ -145,7 +145,7 @@ void Importer::Shaders::GetShaderUniforms(R_Shader* shader)
 		glGetActiveUniform(shader->shaderProgramID, i, sizeof(name), &length, &size, &uniform.GLtype, name);
 		uniform.name = name;
 		if (uniform.name != "inColor" && uniform.name != "time" && uniform.name != "modelMatrix" && uniform.name != "viewMatrix" && uniform.name != "projectionMatrix" && uniform.name != "cameraPosition" &&
-			uniform.name != "lightColor" && uniform.name != "lightPos" )
+			uniform.name != "lightPos" && uniform.name != "light.diffuse"  && uniform.name != "light.ambient" && uniform.name != "light.specular" && uniform.name != "light.direction" && uniform.name != "viewPos")
 		{
 			uint uinformLoc = glGetUniformLocation(shader->shaderProgramID, uniform.name.c_str());
 

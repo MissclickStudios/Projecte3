@@ -12,9 +12,9 @@
 #include "Icons.h"
 
 #include "Module.h"
+
 #include "Light.h"
 
-struct Color;
 class ParsonNode;
 
 class R_Model;
@@ -263,12 +263,13 @@ public:																											// --- DEBUG GET/SET METHODS
 
 public:
 	void			AddPostSceneRenderModule(Module* module);
-	GameObject*		GenerateSceneLight();
+	GameObject*		GenerateSceneLight(Color diffuse, Color ambient, Color specular, LightType lightType);
 private:
 	void			GenScreenBuffer();
 
 public:
-	Light					lights[MAX_LIGHTS];																	// 
+	//Light					lights[MAX_LIGHTS];																	// 
+	
 	SDL_GLContext			context;																			// 
 	R_Shader*				defaultShader = nullptr;
 	

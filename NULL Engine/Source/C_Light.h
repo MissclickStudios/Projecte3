@@ -2,15 +2,15 @@
 #define __C_LIGHT_H__
 
 #include "Component.h"
+#include "DirectionalLight.h"
 
 class ParsonNode;
 class GameObject;
-struct Light;
 
 class NULL_API C_Light : public Component
 {
 public:
-	C_Light(GameObject* owner);
+	C_Light(GameObject* owner, LightType lightType = LightType::NONE);
 	~C_Light();
 
 	bool Update		() override;
@@ -19,13 +19,15 @@ public:
 	bool SaveState	(ParsonNode& root) const override;
 	bool LoadState	(ParsonNode& root) override;
 
-	Light* GetLight() { return light; }
+	inline LightType GetLightType() const { return lightType; }
+	inline DirectionalLight* GetDirectionalLight() { if(directional) return directional; }
 
 	static inline ComponentType GetType() { return ComponentType::LIGHT; }			// This is needed to be able to use templeates for functions such as GetComponent<>();
 
 private:
+	LightType lightType;
 
-	Light* light;
+	DirectionalLight* directional;
 };
 
 #endif // !__C_LIGHT_H__

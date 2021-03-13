@@ -5,18 +5,38 @@
 #include "MathGeoTransform.h"
 //#include "MathGeoLib/include/Math/float3.h"
 
-struct Light
+enum class LightType
 {
-	Light();
+	NONE,
+	DIRECTIONAL,
+	SPOTLIGHT,
+	POINTLIGHT
+};
 
-	void Init();
-	void SetPos(float x, float y, float z);
-	void Active(bool isActive);
-	void Render();
 
+
+class Light
+{
+public:
+
+	Light(LightType type);
+	~Light();
+
+	virtual void Init();
+	virtual void SetPos(float x, float y, float z);
+	virtual void Active(bool isActive);
+	virtual void Render();
+
+	virtual inline LightType GetType() const { return type; }
+
+public:
 	Color ambient;
 	Color diffuse;
+	Color specular;
+	
 	float3 position;
+
+	LightType type;
 
 	int ref;
 	bool on;

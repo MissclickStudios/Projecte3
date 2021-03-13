@@ -1,6 +1,7 @@
 #include "glew/include/glew.h"						// Maybe remove later so dependencies are kept to the minimum?
 
 #include "Time.h"
+#include "Color.h"
 
 #include "EngineApplication.h"
 #include "M_Window.h"

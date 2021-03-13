@@ -5,9 +5,11 @@
 #include "Macros.h"														
 #include "Log.h"														
 
-#include "Color.h"														
+														
 #include "Icons.h"														
-#include "Primitive.h"													
+#include "Primitive.h"
+#include "Light.h"
+#include "DirectionalLight.h"
 
 #include "Application.h"												
 #include "M_Window.h"													
@@ -141,12 +143,12 @@ UpdateStatus M_Renderer3D::PreUpdate(float dt)
 		cameraPos = float3(0.0f, 20.0f, 0.0f);
 	}
 
-	lights[0].SetPos(cameraPos.x, cameraPos.y, cameraPos.z);
+	//lights[0].SetPos(cameraPos.x, cameraPos.y, cameraPos.z);
 
-	for (uint i = 0; i < MAX_LIGHTS; ++i)
-	{
-		lights[i].Render();
-	}
+	//for (uint i = 0; i < MAX_LIGHTS; ++i)
+	//{
+	//	lights[i].Render();
+	//}
 
 	// --- RENDERER SHORTCUTS
 	RendererShortcuts();
@@ -345,19 +347,11 @@ bool M_Renderer3D::InitOpenGL()
 		GLfloat LightModelAmbient[] = { 0.0f, 0.0f, 0.0f, 1.0f };
 		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, LightModelAmbient);
 
-		lights[0].ref = GL_LIGHT0;
-		lights[0].ambient.Set(0.25f, 0.25f, 0.25f, 1.0f);
-		lights[0].diffuse.Set(1.0f,1.0f,1.0f, 1.0f);
-		lights[0].SetPos(0.0f, 0.0f, 2.5f);
-		lights[0].Init();
-
 		GLfloat MaterialAmbient[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 		glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, MaterialAmbient);
 
 		GLfloat MaterialDiffuse[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 		glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, MaterialDiffuse);
-
-		lights[0].Active(true);
 
 		SetGLFlag(GL_DEPTH_TEST, true);
 		SetGLFlag(GL_CULL_FACE, false);
@@ -1271,17 +1265,41 @@ void M_Renderer3D::AddPostSceneRenderModule(Module* module)
 	PostSceneRenderModules.push_back(module);
 }
 
-GameObject* M_Renderer3D::GenerateSceneLight()
+GameObject* M_Renderer3D::GenerateSceneLight(Color diffuse, Color ambient, Color specular, LightType lightType)
 {
+	//Create GameObject
 	GameObject* lightPoint;
-	lightPoint = App->scene->CreateGameObject("LightPoint");
-	lightPoint->CreateComponent(ComponentType::LIGHT);
-	C_Light* lightComp = lightPoint->GetComponent<C_Light>();
-	lightComp->GetLight()->Active(true);
+	std::string name;
+	switch (lightType)
+	{
+	case LightType::DIRECTIONAL: name = "DirectionalLight";  break;
+	case LightType::POINTLIGHT: name = "PointLight";  break;
+	case LightType::SPOTLIGHT: name = "SpotLight"; break;
+	case LightType::NONE: break;
+	}
+	lightPoint = App->scene->CreateGameObject(name.c_str());
 
-	lightComp->GetLight()->ambient.Set(0.25f, 0.25f, 0.25f, 1.0f);
-	lightComp->GetLight()->diffuse.Set(1.0f, 1.0f, 1.0f, 1.0f);
-	lightComp->GetLight()->Init();
+	//Create and Add Component
+	Component* component = nullptr;
+	component = new C_Light(lightPoint, lightType);
+	lightPoint->components.push_back(component);
+
+	//Set the light attributes
+	C_Light* lightComp = lightPoint->GetComponent<C_Light>();
+	switch (lightType)
+	{
+	case LightType::DIRECTIONAL: 
+		lightComp->GetDirectionalLight()->Active(true);
+		lightComp->GetDirectionalLight()->ambient.Set(ambient);
+		lightComp->GetDirectionalLight()->diffuse.Set(diffuse);
+		lightComp->GetDirectionalLight()->specular.Set(specular);
+		lightComp->GetDirectionalLight()->Init();
+		break;
+	case LightType::POINTLIGHT: break;
+	case LightType::SPOTLIGHT: break;
+	case LightType::NONE: break;
+	}
+
 
 	App->scene->GetSceneRoot()->AddChild(lightPoint);
 	
@@ -1580,11 +1598,40 @@ void MeshRenderer::ApplyShader()
 
 			// Light 
 
-			if (App->scene->GetSceneLight())cMaterial->GetShader()->SetUniformVec4f("lightColor", (GLfloat*)&App->scene->GetSceneLight()->GetComponent<C_Light>()->GetLight()->diffuse);
+			if (App->scene->GetSceneLight())
+			{
+				LightType lightType = App->scene->GetSceneLight()->GetComponent<C_Light>()->GetLightType();
+
+				switch (lightType)
+				{
+				case LightType::DIRECTIONAL: 
+
+					cMaterial->GetShader()->SetUniformVec4f("light.diffuse", (GLfloat*)&App->scene->GetSceneLight()->GetComponent<C_Light>()->GetDirectionalLight()->diffuse);
+					cMaterial->GetShader()->SetUniformVec4f("light.ambient", (GLfloat*)&App->scene->GetSceneLight()->GetComponent<C_Light>()->GetDirectionalLight()->ambient);
+					cMaterial->GetShader()->SetUniformVec4f("light.specular", (GLfloat*)&App->scene->GetSceneLight()->GetComponent<C_Light>()->GetDirectionalLight()->specular);
+					cMaterial->GetShader()->SetUniformVec3f("light.direction", (GLfloat*)&App->scene->GetSceneLight()->GetComponent<C_Light>()->GetDirectionalLight()->GetDirection());
+					break;
+				case LightType::POINTLIGHT: break;
+				case LightType::SPOTLIGHT: break;
+				case LightType::NONE: break;
+				}
+
+				cMaterial->GetShader()->SetUniformVec3f("lightPos", (GLfloat*)&App->scene->GetSceneLight()->transform->GetWorldPosition());
+				cMaterial->GetShader()->SetUniformVec3f("viewPos", (GLfloat*)&App->camera->GetCurrentCamera()->GetFrustum().Pos());
+			}
+
+
+			/*if (App->scene->GetSceneLight())cMaterial->GetShader()->SetUniformVec4f("lightColor", (GLfloat*)&App->scene->GetSceneLight()->GetComponent<C_Light>()->GetLight()->diffuse);
 
 			else cMaterial->GetShader()->SetUniformVec4f("lightColor", (GLfloat*)&float4(0.1f, 0.1f, 0.1f, 0.1f));
 
+			if (App->scene->GetSceneLight())cMaterial->GetShader()->SetUniformVec4f("ambientColor", (GLfloat*)&App->scene->GetSceneLight()->GetComponent<C_Light>()->GetLight()->ambient);
+
+			else cMaterial->GetShader()->SetUniformVec4f("ambientColor", (GLfloat*)&float4(0.1f, 0.1f, 0.1f, 0.1f));
+
 			if (App->scene->GetSceneLight()) cMaterial->GetShader()->SetUniformVec3f("lightPos", (GLfloat*)&App->scene->GetSceneLight()->transform->GetWorldPosition());
+
+			cMaterial->GetShader()->SetUniformVec3f("viewPos", (GLfloat*)&App->camera->GetCurrentCamera()->GetFrustum().Pos());*/
 
 			//Set Uniforms
 

@@ -85,7 +85,7 @@ bool M_Scene::Start()
 	//uint32 animation_uid = App->resourceManager->LoadFromLibrary(DEFAULT_ANIMATION);
 	//GenerateGameObjectsFromModel(animation_uid , float3(0.05f, 0.05f, 0.05f));
 	
-	LoadScene("Assets/Scenes/FinalScene.json");
+	//LoadScene("Assets/Scenes/FinalScene.json");
 	//SaveScene("SceneAutosave");																			// Autosave just right after loading the scene.
 
 	level.GetRooms();
@@ -95,9 +95,9 @@ bool M_Scene::Start()
 	//level.AddFixedRoom("Boss", 20);
 	
 	//Last level function to call
-	level.GenerateRoom(0);
+	//level.GenerateRoom(0);
 
-	if(!CheckSceneLight()) SetSceneLight(App->renderer->GenerateSceneLight());
+	if(!CheckSceneLight()) SetSceneLight(App->renderer->GenerateSceneLight(Color(1.0f, 1.0f, 1.0f, 1.0f), Color(0.6,0.6,0.6,0.5), Color(0.6, 0.6, 0.6, 0.5), LightType::DIRECTIONAL));
 	
 
 	return ret;
@@ -435,7 +435,7 @@ bool M_Scene::LoadScene(const char* path)
 
 	//FIX THIS
 
-	if (!CheckSceneLight()) SetSceneLight(App->renderer->GenerateSceneLight());
+	if (!CheckSceneLight()) SetSceneLight(App->renderer->GenerateSceneLight(Color(1.0f, 1.0f, 1.0f, 1.0f), Color(0.6, 0.6, 0.6, 0.5), Color(0.6, 0.6, 0.6, 0.5), LightType::DIRECTIONAL));
 
 	return ret;
 }

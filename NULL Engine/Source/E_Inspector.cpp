@@ -458,7 +458,7 @@ void E_Inspector::DrawMaterialComponent(C_Material* cMaterial)
 
 			// --- TEXTURE DATA ---
 
-			if (allTextures.empty()) 
+			/*if (allTextures.empty()) 
 				App->resourceManager->GetAllTextures(allTextures);
 			
 			if (texName == "NONE" && cMaterial->GetTexture())
@@ -478,7 +478,7 @@ void E_Inspector::DrawMaterialComponent(C_Material* cMaterial)
 					}
 				}
 				ImGui::EndCombo();
-			}
+			}*/
 
 			DisplayTextureData(cMaterial);
 
