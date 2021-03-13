@@ -2,6 +2,8 @@
 #include "JSONParser.h"
 
 #include "Time.h"
+#include "Random.h"
+#include "GameObject.h"
 
 #include "Importer.h"
 #include "I_Scenes.h"
@@ -15,6 +17,7 @@
 #include "Application.h"
 #include "FileSystemDefinitions.h"
 #include "M_FileSystem.h"
+#include "M_Scene.h"
 
 #include "Resource.h"
 #include "R_Mesh.h"
@@ -1001,6 +1004,10 @@ ResourceType M_ResourceManager::GetTypeFromAssetsExtension(const char* assetsPat
 	{
 		type = ResourceType::FOLDER;
 	}
+	else if (extension == "prefab")
+	{
+		type = ResourceType::PREFAB;
+	}
 	else
 	{
 		LOG("[ERROR] Resource Manager: Could not import from the given Assets Path! Error: File extension { %s } is not supported!", extension.c_str());
@@ -1285,6 +1292,65 @@ bool M_ResourceManager::ResourceHasMetaType(Resource* resource) const
 			|| type == ResourceType::MODEL
 			|| type == ResourceType::TEXTURE
 			|| type == ResourceType::SHADER);
+}
+
+void M_ResourceManager::CreatePrefab(GameObject* gameObject)
+{
+	uint id = Random::PCG::GetRandomUint();
+	gameObject->SetAsPrefab(id);
+
+	SavePrefab(gameObject, id);
+}
+
+void M_ResourceManager::SavePrefab(GameObject* gameObject, uint _prefabId)
+{
+	ParsonNode rootNode;
+
+	SavePrefabObject(gameObject,&rootNode);
+
+	char* buffer=nullptr;
+	std::string fileName = ASSETS_PREFABS_PATH + std::to_string(_prefabId) + PREFAB_EXTENSION;
+	rootNode.SerializeToFile(fileName.c_str(),&buffer);
+
+	if (buffer != nullptr)
+		delete[] buffer;
+}
+
+void M_ResourceManager::LoadPrefab(uint _prefabId)
+{
+	char* buffer = nullptr;
+	std::string fileName = ASSETS_PREFABS_PATH + std::to_string(_prefabId) + PREFAB_EXTENSION;
+	App->fileSystem->Load(fileName.c_str(), &buffer);
+
+	ParsonNode prefabRoot(buffer);
+
+	GameObject* gameObject = new GameObject();
+
+	gameObject->LoadState(prefabRoot);
+
+	gameObject->SetParent(App->scene->GetSceneRoot());
+
+	ParsonArray childArray = prefabRoot.GetArray("Children");
+
+	for (int i = 0; i < childArray.size; i++)
+	{
+		App->scene->LoadPrefabObject(gameObject, &childArray.GetNode(i));
+	}
+
+	//App->scene..push_back(gameObject);
+}
+
+void M_ResourceManager::SavePrefabObject(GameObject* gameObject, ParsonNode* node)
+{
+	gameObject->SaveState(*node);
+
+	ParsonArray childsArray = node->SetArray("Children");
+
+	for (auto child = gameObject->childs.begin(); child != gameObject->childs.end(); child++)
+	{
+		ParsonNode childNode = childsArray.SetNode("child");
+		SavePrefabObject((*child), &childNode);
+	}
 }
 
 Resource* M_ResourceManager::GetResourceFromLibrary(const char* assetsPath)

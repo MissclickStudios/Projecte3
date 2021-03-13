@@ -13,6 +13,8 @@ enum class ResourceType;
 class R_Shader;
 class R_Texture;
 
+class GameObject;
+
 typedef unsigned int		uint;
 typedef unsigned __int32	uint32;
 typedef unsigned __int64	uint64;
@@ -63,6 +65,11 @@ public:																								// --- RESOURCE MANAGER API ---
 
 	void			GetAllTextures(std::vector<R_Texture*>& textures);									//Retrieve all the shaders in the library
 
+	void CreatePrefab(GameObject* gameObject);
+	void SavePrefab(GameObject* gameObject, uint _prefabId);
+	void LoadPrefab(uint _prefabId);
+
+	void SavePrefabObject(GameObject* gameObject, ParsonNode* node);
 	
 private:																															// --- ASSETS MONITORING METHODS ---
 	void			RefreshDirectoryFiles			(const char* directory);

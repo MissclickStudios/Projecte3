@@ -48,6 +48,10 @@ public:																														// --- GAME OBJECTS METHODS ---
 
 	void			LoadResourceIntoScene				(Resource* resource);
 
+	void LoadPrefabIntoScene(ParsonNode* node);
+
+	void LoadPrefabObject(GameObject* gameObject,ParsonNode* node);
+
 	std::vector<GameObject*>* GetGameObjects			();
 	
 	GameObject*		CreateGameObject					(const char* name = nullptr, GameObject* parent = nullptr);			// 

@@ -413,6 +413,7 @@ ImTextureID E_Project::GetIconTexID(const AssetDisplay& assetDisplay) const
 	case ResourceType::FOLDER:		{ texId = (ImTextureID)engineIcons.folderIcon->GetTextureID(); }		break;
 	case ResourceType::SCENE:		{ texId = (ImTextureID)engineIcons.modelIcon->GetTextureID(); }			break;
 	case ResourceType::ANIMATION:	{ texId = (ImTextureID)engineIcons.animationIcon->GetTextureID(); }		break;
+	case ResourceType::PREFAB: { texId = (ImTextureID)engineIcons.modelIcon->GetTextureID(); }		break;
 	}
 
 	return texId;

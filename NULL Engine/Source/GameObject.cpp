@@ -133,6 +133,9 @@ bool GameObject::SaveState(ParsonNode& root) const
 	uint parentUID = (parent != nullptr) ? parent->uid : 0;
 	root.SetNumber("ParentUID", parentUID);
 
+	root.SetNumber("PrefabID", prefabID);
+	root.SetBool("IsPrefab", isPrefab);
+
 	root.SetString("Name", name.c_str());
 	root.SetBool("IsActive", isActive);
 	root.SetBool("IsStatic", isStatic);
@@ -156,6 +159,9 @@ bool GameObject::LoadState(ParsonNode& root)
 	
 	ForceUID((uint)root.GetNumber("UID"));
 	parent_uid = (uint)root.GetNumber("ParentUID");
+
+	prefabID = (uint)root.GetNumber("PrefabID");
+	isPrefab = root.GetBool("IsPrefab");
 
 	name				= root.GetString("Name");
 	isActive			= root.GetBool("IsActive");
@@ -572,6 +578,18 @@ GameObject* GameObject::FindChild(const char* childName)
 	}
 
 	return nullptr;
+}
+
+void GameObject::SetAsPrefab(uint _prefabID)
+{
+	//set the childs to the prefab uid and the bool
+	prefabID = _prefabID;
+	isPrefab = true;
+
+	for(auto child = childs.begin() ; child != childs.end();child++)
+	{
+		(*child)->SetAsPrefab(_prefabID);
+	}
 }
 
 // --- GAME OBJECT GETTERS AND SETTERS ---
