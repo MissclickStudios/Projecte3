@@ -544,8 +544,33 @@ void E_Inspector::DrawLightComponent(C_Light* cLight)
 			}
 			
 			ImGui::Separator();
+			float4 diffuse = (float4)&cLight->GetDirectionalLight()->diffuse;
+			float4 ambient = (float4)&cLight->GetDirectionalLight()->ambient;
+			float4 specular = (float4)&cLight->GetDirectionalLight()->specular;
+			float3 direction = cLight->GetDirectionalLight()->GetDirection();
+			switch (cLight->GetLightType())
+			{
+			case LightType::DIRECTIONAL: 
+				if (ImGui::DragFloat4("Diffuse", (float*)&diffuse, 0.05f, 0.0f, 0.0f, "%.3f", NULL))
+				{
+					cLight->GetDirectionalLight()->diffuse = (Color&)diffuse;
+				}
+				if (ImGui::DragFloat4("Ambient", (float*)&ambient, 0.05f, 0.0f, 0.0f, "%.3f", NULL))
+				{
+					cLight->GetDirectionalLight()->ambient = (Color&)ambient;
+				}
+				if (ImGui::DragFloat4("Specular", (float*)&specular, 0.05f, 0.0f, 0.0f, "%.3f", NULL))
+				{
+					cLight->GetDirectionalLight()->specular = (Color&)specular;
+				}
+				break;
+			case LightType::POINTLIGHT: break;
+			case LightType::SPOTLIGHT: break;
+			case LightType::NONE: break;
+			}
+
+
 			
-			ImGui::Text("WORK IN PROGRESS");
 		}
 
 		if (!show)

@@ -8,6 +8,7 @@
 #include "Light.h"
 #include "Color.h"
 #include "MemoryManager.h"
+#include "VariableDefinitions.h"
 
 C_Light::C_Light(GameObject* owner, LightType lightType) : Component(owner, ComponentType::LIGHT),
 lightType(lightType),
@@ -15,7 +16,11 @@ directional(nullptr)
 {
 	switch (lightType)
 	{
-	case LightType::DIRECTIONAL: directional = new DirectionalLight(); break;
+	case LightType::DIRECTIONAL: 
+		directional = new DirectionalLight(); 
+		directional->SetDirection(float3(-0.2f, -1.0f, -0.3f));
+		this->GetOwner()->transform->SetLocalEulerRotation(directional->GetDirection());
+		break;
 	case LightType::POINTLIGHT: break;
 	case LightType::SPOTLIGHT: break;
 	case LightType::NONE: break;
@@ -31,7 +36,7 @@ bool C_Light::Update()
 {
 	bool ret = true;
 
-	directional->SetDirection(float3(-0.2f, -1.0f, -0.3f));
+	directional->SetDirection(this->GetOwner()->transform->GetLocalEulerRotation()* RADTODEG);
 
 	return ret;
 }
