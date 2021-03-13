@@ -40,18 +40,11 @@ void Importer::Animations::Import(const aiAnimation* assimpAnimation, R_Animatio
 		aiNodeAnim* aiChannel	= assimpAnimation->mChannels[i];
 		Channel rChannel		= Channel(aiChannel->mNodeName.C_Str());
 
-		if (strstr(rChannel.name.c_str(), "_$AssimpFbx$_") != nullptr)
-		{
-			uint pos = rChannel.name.find_first_of("$");
-			if (pos != rChannel.name.npos)
-			{
-				rChannel.name = rChannel.name.substr(0, pos - 1);
-			}
-		}
-
 		Utilities::GetPositionKeys(aiChannel, rChannel);
 		Utilities::GetRotationKeys(aiChannel, rChannel);
 		Utilities::GetScaleKeys(aiChannel, rChannel);
+
+		Utilities::ValidateChannel(rChannel);
 
 		rAnimation->channels.push_back(rChannel);
 	}
@@ -377,7 +370,7 @@ void Importer::Animations::Utilities::LoadPositionKeysData(char** cursor, Channe
 
 void Importer::Animations::Utilities::LoadRotationKeysData(char** cursor, Channel& rChannel)
 {
-	uint bytes		= 0;
+	uint bytes	= 0;
 	uint rkSize	= 0;
 
 	bytes = sizeof(uint);
@@ -403,7 +396,7 @@ void Importer::Animations::Utilities::LoadRotationKeysData(char** cursor, Channe
 
 void Importer::Animations::Utilities::LoadScaleKeysData(char** cursor, Channel& rChannel)
 {
-	uint bytes		= 0;
+	uint bytes	= 0;
 	uint skSize	= 0;
 
 	bytes = sizeof(uint);
@@ -411,7 +404,7 @@ void Importer::Animations::Utilities::LoadScaleKeysData(char** cursor, Channel& 
 	*cursor += bytes;
 
 	uint timeBytes		= sizeof(double);
-	uint scaleBytes	= (sizeof(float) * 3);
+	uint scaleBytes		= (sizeof(float) * 3);
 	for (uint i = 0; i < skSize; ++i)
 	{
 		double time		= 0.0;
@@ -424,5 +417,43 @@ void Importer::Animations::Utilities::LoadScaleKeysData(char** cursor, Channel& 
 		*cursor += scaleBytes;
 
 		rChannel.scaleKeyframes.emplace(time, scale);
+	}
+}
+
+void Importer::Animations::Utilities::ValidateChannel(Channel& rChannel)
+{
+	if (strstr(rChannel.name.c_str(), "_$AssimpFbx$_") != nullptr)
+	{
+		if (strstr(rChannel.name.c_str(), "_$AssimpFbx$_Translation") != nullptr)
+		{
+			rChannel.rotationKeyframes.clear();
+			rChannel.rotationKeyframes.emplace(-1.0, Quat::identity);
+			
+			rChannel.scaleKeyframes.clear();
+			rChannel.scaleKeyframes.emplace(-1.0, float3::zero);
+
+		}
+		else if (strstr(rChannel.name.c_str(), "_$AssimpFbx$_Rotation") != nullptr) 
+		{ 
+			rChannel.positionKeyframes.clear();
+			rChannel.positionKeyframes.emplace(-1.0, float3::zero);
+			
+			rChannel.scaleKeyframes.clear();
+			rChannel.scaleKeyframes.emplace(-1.0, float3::zero);
+		}
+		else if (strstr(rChannel.name.c_str(), "_$AssimpFbx$_Scaling") != nullptr)
+		{
+			rChannel.positionKeyframes.clear();
+			rChannel.positionKeyframes.emplace(-1.0, float3::zero);
+			
+			rChannel.rotationKeyframes.clear();
+			rChannel.rotationKeyframes.emplace(-1.0, Quat::identity);
+		}
+		
+		uint pos = rChannel.name.find_first_of("$");
+		if (pos != rChannel.name.npos)
+		{
+			rChannel.name = rChannel.name.substr(0, pos - 1);
+		}
 	}
 }

@@ -1,3 +1,5 @@
+#include "Profiler.h"
+
 #include "JSONParser.h"
 
 #include "Application.h"
@@ -87,6 +89,7 @@ bool C_Mesh::LoadState(ParsonNode& root)
 	App->resourceManager->AllocateResource((uint32)root.GetNumber("UID"), assetsPath.c_str());
 	
 	rMesh = (R_Mesh*)App->resourceManager->RequestResource((uint32)root.GetNumber("UID"));
+
 	showWireframe = root.GetBool("ShowWireframe");
 	showBoundingBox = root.GetBool("ShowBoundingBox");
 
@@ -105,8 +108,13 @@ R_Mesh* C_Mesh::GetSkinnedMesh() const
 	return skinnedMesh;
 }
 
-bool C_Mesh::RefreshSkinning()
+void C_Mesh::GetBoneMapping(std::map<std::string, GameObject*>& boneMapping)
 {
+	boneMapping = this->boneMapping;
+}
+
+bool C_Mesh::RefreshSkinning()
+{	
 	if (rMesh == nullptr)
 		return false;
 	
@@ -144,7 +152,9 @@ bool C_Mesh::RefreshSkinning()
 }
 
 void C_Mesh::AnimateMesh()
-{
+{	
+	BROFILER_CATEGORY("Animation Component Update", Profiler::Color::Red);
+	
 	if (rMesh == nullptr)
 	{
 		return;
@@ -194,17 +204,17 @@ void C_Mesh::AnimateMesh()
 			{
 				vTransform = boneTransforms[boneID].TransformPos(float3(&rMesh->vertices[v * 3]));
 
-				skinnedMesh->vertices[(v * 3)]		+= vTransform.x * boneWeight;
-				skinnedMesh->vertices[(v * 3) + 1]	+= vTransform.y * boneWeight; 
-				skinnedMesh->vertices[(v * 3) + 2]	+= vTransform.z * boneWeight;
+				skinnedMesh->vertices[(v * 3)]		+= (vTransform.x * boneWeight);
+				skinnedMesh->vertices[(v * 3) + 1]	+= (vTransform.y * boneWeight); 
+				skinnedMesh->vertices[(v * 3) + 2]	+= (vTransform.z * boneWeight);
 			}
 			if (!rMesh->normals.empty())
 			{
 				vTransform = boneTransforms[boneID].TransformPos(float3(&rMesh->normals[v * 3]));
 
-				skinnedMesh->normals[(v * 3)]		+= vTransform.x * boneWeight;
-				skinnedMesh->normals[(v * 3) + 1]	+= vTransform.y * boneWeight;
-				skinnedMesh->normals[(v * 3) + 2]	+= vTransform.z * boneWeight;
+				skinnedMesh->normals[(v * 3)]		+= (vTransform.x * boneWeight);
+				skinnedMesh->normals[(v * 3) + 1]	+= (vTransform.y * boneWeight);
+				skinnedMesh->normals[(v * 3) + 2]	+= (vTransform.z * boneWeight);
 			}
 		}
 	}
@@ -213,13 +223,14 @@ void C_Mesh::AnimateMesh()
 }
 
 void C_Mesh::RefreshBoneMapping()
-{
-	boneMapping.clear();
-
+{	
 	if (rootBone == nullptr)
 	{
+		LOG("[ERROR] Component Mesh: Could not Refresh Bone Mapping! Error: Root Bone was nullptr.");
 		return;
 	}
+
+	boneMapping.clear();
 
 	boneMapping.emplace(rootBone->GetName(), rootBone);
 	rootBone->GetAllChilds(boneMapping);

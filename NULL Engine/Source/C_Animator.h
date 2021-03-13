@@ -62,129 +62,128 @@ public:
 	static inline ComponentType GetType() { return ComponentType::ANIMATOR; }
 
 public:
-	void			AddAnimation					(R_Animation* rAnimation);
-	bool			AddClip							(const AnimatorClip& clip);
-	void			PlayClip						(const std::string& clipName, uint blendFrames);
+	void			AddAnimation							(R_Animation* rAnimation);
+	bool			AddClip									(const AnimatorClip& clip);
+	void			PlayClip								(const std::string& clipName, uint blendFrames);
 	
-	bool			Play							();
-	bool			Pause							();
-	bool			Step							();
-	bool			Stop							();
+	bool			Play									();
+	bool			Pause									();
+	bool			Step									();
+	bool			Stop									();
 
 public:																														// --- DEBUG METHODS
-	bool			StepToPrevKeyframe				();
-	bool			StepToNextKeyframe				();
-	bool			RefreshBoneDisplay				();
+	bool			StepToPrevKeyframe						();
+	bool			StepToNextKeyframe						();
+	bool			RefreshBoneDisplay						();
 
 public:																														// --- CURRENT/BLENDING ANIMATION METHODS
-	AnimatorClip*	GetCurrentClip					() const;
-	AnimatorClip*	GetBlendingClip					() const;
+	AnimatorClip*	GetCurrentClip							() const;
+	AnimatorClip*	GetBlendingClip							() const;
 
-	void			SetCurrentClip					(AnimatorClip* clip);
-	void			SetBlendingClip					(AnimatorClip* clip, uint blendFrames);
+	void			SetCurrentClip							(AnimatorClip* clip);
+	void			SetBlendingClip							(AnimatorClip* clip, uint blendFrames);
 
-	void			SetCurrentClipByIndex			(uint index);
-	void			SetBlendingClipByIndex			(uint index, uint blendFrames);
+	void			SetCurrentClipByIndex					(uint index);
+	void			SetBlendingClipByIndex					(uint index, uint blendFrames);
 
-	bool			CurrentClipExists				() const;
-	bool			BlendingClipExists				() const;
+	bool			CurrentClipExists						() const;
+	bool			BlendingClipExists						() const;
 
-	void			ClearCurrentClip				();
-	void			ClearBlendingClip				();
+	void			ClearCurrentClip						();
+	void			ClearBlendingClip						();
 
 public:																														// --- GET/SET METHODS
-	std::vector<LineSegment> GetDisplayBones		() const;
-	std::vector<std::string> GetClipNamesAsVector	() const;
+	std::vector<LineSegment> GetDisplayBones				() const;
+	std::vector<std::string> GetClipNamesAsVector			() const;
 
-	std::string		GetAnimatorStateAsString		() const;
+	std::string		GetAnimatorStateAsString				() const;
 
-	std::string		GetClipNamesAsString			() const;
-	std::string		GetAnimationNamesAsString		() const;
-	R_Animation*	GetAnimationByIndex				(uint index) const;
+	std::string		GetClipNamesAsString					() const;
+	std::string		GetAnimationNamesAsString				() const;
+	R_Animation*	GetAnimationByIndex						(uint index) const;
 
-	float			GetPlaybackSpeed				() const;
-	bool			GetInterpolate					() const;
-	bool			GetLoopAnimation				() const;
-	bool			GetPlayOnStart					() const;
-	bool			GetCameraCulling				() const;
-	bool			GetShowBones					() const;
+	float			GetPlaybackSpeed						() const;
+	bool			GetInterpolate							() const;
+	bool			GetLoopAnimation						() const;
+	bool			GetPlayOnStart							() const;
+	bool			GetCameraCulling						() const;
+	bool			GetShowBones							() const;
 
-	void			SetPlaybackSpeed				(float playbackSpeed);
-	void			SetInterpolate					(bool setTo);
-	void			SetLoopAnimation				(bool setTo);
-	void			SetPlayOnStart					(bool setTo);
-	void			SetCameraCulling				(bool setTo);
-	void			SetShowBones					(bool setTo);
+	void			SetPlaybackSpeed						(float playbackSpeed);
+	void			SetInterpolate							(bool setTo);
+	void			SetLoopAnimation						(bool setTo);
+	void			SetPlayOnStart							(bool setTo);
+	void			SetCameraCulling						(bool setTo);
+	void			SetShowBones							(bool setTo);
 		 
-private: 																									// --- INTERNAL METHODS
-	void			AddAnimationsToAdd				();
-	void			CheckGameState					();
+private: 																													// --- C_ANIMATOR INITIALIZATION METHODS
+	void			GetAnimatedMeshes						();
+	void			FindBones								();
+	void			FindBoneLinks							();
+	void			GenerateDefaultClips					();
 	
-	bool			StepAnimation					();
-	bool			StepClips						();
-	bool			BlendAnimation					();
-	bool			ValidateCurrentClip				();
-					
-	void			SwitchBlendingToCurrent			();
-	void			ResetBones						();
-					
-	bool			GenerateDefaultClip				(const R_Animation* rAnimation, AnimatorClip& defaultClip);
-
-private:
-	void			UpdateChannelTransforms			();
-	void			UpdateMeshSkinning				(const GameObject* gameObject);
-	void			UpdateDisplayBones				();
-	void			GenerateBoneSegments			(const GameObject* bone);
+	void			SetRootBone								(GameObject* rootBone);
+	GameObject*		GetRootBone								() const;
+	void			CrossCheckBonesWithMeshBoneMapping		();
 	
-	Transform		GetInterpolatedTransform		(double keyframe, const Channel& channel, const Transform& originalTransform) const;
-	const float3	GetInterpolatedPosition			(double keyframe, const Channel& channel, const float3& originalPosition) const;
-	const Quat		GetInterpolatedRotation			(double keyframe, const Channel& channel, const Quat& originalRotation) const;
-	const float3	GetInterpolatedScale			(double keyframe, const Channel& channel, const float3& originalScale) const;
+	bool			GenerateDefaultClip						(const R_Animation* rAnimation, AnimatorClip& defaultClip);
 
-	Transform		GetPoseToPoseTransform			(uint tick, const Channel& channel, const Transform& originalTransform) const;
-	const float3	GetPoseToPosePosition			(uint tick, const Channel& channel, const float3& originalPosition) const;
-	const Quat		GetPoseToPoseRotation			(uint tick, const Channel& channel, const Quat& originalRotation) const;
-	const float3	GetPoseToPoseScale				(uint tick, const Channel& channel, const float3& originalScale) const;
+private:																													// --- ANIMATION/CLIP REPRODUCTION METHODS
+	void			CheckGameState							();
+	
+	bool			StepAnimation							();
+	bool			StepClips								();
+	bool			BlendAnimation							();
+	bool			ValidateCurrentClip						();
+					
+	void			SwitchBlendingToCurrent					();
+	void			ResetBones								();
 
-	Transform		GetBlendedTransform				(double blendingKeyframe, const Channel& blendingChannel, const Transform& originalTransform) const;
-	const float3	GetBlendedPosition				(double blendingKeyframe, const Channel& blendingChannel, const float3& originalPosition) const;
-	const Quat		GetBlendedRotation				(double blendingKeyframe, const Channel& blendingChannel, const Quat& originalRotation) const;
-	const float3	GetBlendedScale					(double blendingKeyframe, const Channel& blendingChannel, const float3& originalScale) const;
+private:																													// --- BONE/CHANNEL UPDATE METHODS
+	void			UpdateChannelTransforms					();
+	void			UpdateMeshSkinning						();
+	void			UpdateDisplayBones						();
+	void			GenerateBoneSegments					(const GameObject* bone);
+	
+	Transform		GetInterpolatedTransform				(double keyframe, const Channel& channel, const Transform& originalTransform) const;
+	const float3	GetInterpolatedPosition					(double keyframe, const Channel& channel, const float3& originalPosition) const;
+	const Quat		GetInterpolatedRotation					(double keyframe, const Channel& channel, const Quat& originalRotation) const;
+	const float3	GetInterpolatedScale					(double keyframe, const Channel& channel, const float3& originalScale) const;
 
-	void			FindAnimationBones				(const R_Animation* rAnimation);
-	bool			FindBoneLinks					(const R_Animation* rAnimation, std::vector<BoneLink>& links);
-	GameObject*		FindRootBone					(const std::vector<BoneLink>& links);
-	void			SetRootBone						(GameObject* rootBone);
-	GameObject*		GetRootBone						() const;
-		 
-	void			SortBoneLinksByHierarchy		(const std::vector<BoneLink>& boneLinks, const GameObject* rootBone, std::vector<BoneLink>& sorted);
+	Transform		GetPoseToPoseTransform					(uint tick, const Channel& channel, const Transform& originalTransform) const;
+	const float3	GetPoseToPosePosition					(uint tick, const Channel& channel, const float3& originalPosition) const;
+	const Quat		GetPoseToPoseRotation					(uint tick, const Channel& channel, const Quat& originalRotation) const;
+	const float3	GetPoseToPoseScale						(uint tick, const Channel& channel, const float3& originalScale) const;
 
-	void			GetAnimatedMeshes				();
+	Transform		GetBlendedTransform						(double blendingKeyframe, const Channel& blendingChannel, const Transform& originalTransform) const;
+	const float3	GetBlendedPosition						(double blendingKeyframe, const Channel& blendingChannel, const float3& originalPosition) const;
+	const Quat		GetBlendedRotation						(double blendingKeyframe, const Channel& blendingChannel, const Quat& originalRotation) const;
+	const float3	GetBlendedScale							(double blendingKeyframe, const Channel& blendingChannel, const float3& originalScale) const;
 
 private:
 	std::vector<R_Animation*>						animations;											// Animation Resources. Contain bone information (transforms...).
 	std::map<uint32, std::vector<BoneLink>>			animationBones;
-	std::unordered_map<std::string, AnimatorClip>	clips;												// Segments of animations. "Idle", "Walk", "Attack"...
 	
-	std::vector<BoneLink>		currentBones;															// Multiple animations will have the same bones.
-	std::vector<BoneLink>		blendingBones;
+	std::vector<C_Mesh*>							animatedMeshes;										// TMP. Until a better implementation is found;
 
-	std::vector<LineSegment>	displayBones;															// Line Segments between GO bones. For debug purposes.
+	std::vector<GameObject*>						bones;												//
+	std::vector<BoneLink>							currentBones;										// Multiple animations will have the same bones.
+	std::vector<BoneLink>							blendingBones;										//
+	std::vector<LineSegment>						displayBones;										// Line Segments between GO bones. For debug purposes.
 
-	std::vector<R_Animation*>	animationsToAdd;														// TODO: Change this to something cleaner later.
+	std::unordered_map<std::string, AnimatorClip>	clips;												// Segments of animations. "Idle", "Walk", "Attack"...
 
 	AnimatorClip*				currentClip;
 	AnimatorClip*				blendingClip;
 
-	GameObject*					currentRootBone;
-
-	std::vector<C_Mesh*>		animatedMeshes;															// TMP. Until a better implementation is found;
-	bool						foundAnimMeshes;														// -------------------------------------------- 
+	GameObject*					rootBone;
 
 private:																								// --- FUNCTIONALITY VARIABLES
 	AnimatorState	animatorState;
 
 	uint			blendFrames;
+
+	bool			needsInit;
 
 private:																								// --- GET/SET VARIABLES	
 	float			playbackSpeed;

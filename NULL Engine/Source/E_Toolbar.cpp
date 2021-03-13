@@ -60,10 +60,7 @@ void E_Toolbar::PlayAndStopButtons()
 			EngineApp->gameState = GameState::PLAY;
 			Time::Game::Play();
 
-			if (EngineApp->gameState == GameState::STOP)
-			{
-				EngineApp->editor->SaveSceneThroughEditor("PlayAutosave");
-			}
+			EngineApp->editor->SaveSceneThroughEditor("PlayAutosave");
 		}
 	}
 	else

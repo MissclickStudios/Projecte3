@@ -125,24 +125,24 @@ const aiNode* Importer::Scenes::Utilities::ImportTransform(const aiNode* assimpN
 
 	assimpNode->mTransformation.Decompose(aiT.scale, aiT.rotation, aiT.position);							// --- Getting the Transform stored in the node.
 
-	maT.position	= { aiT.position.x, aiT.position.y, aiT.position.z };								// 
-	maT.rotation	= { aiT.rotation.x, aiT.rotation.y, aiT.rotation.z, aiT.rotation.w };				// 
+	maT.position	= { aiT.position.x, aiT.position.y, aiT.position.z };									// 
+	maT.rotation	= { aiT.rotation.x, aiT.rotation.y, aiT.rotation.z, aiT.rotation.w };					// 
 	maT.scale		= { aiT.scale.x, aiT.scale.y, aiT.scale.z };											// ---------------------------------------------
 
-	while (NodeIsDummyNode(*assimpNode))																		// All dummy nodes will contain the "_$AssimpFbx$_" string and only one child node.
+	while (NodeIsDummyNode(*assimpNode))																	// All dummy nodes will contain the "_$AssimpFbx$_" string and only 1 child node.
 	{
-		assimpNode = assimpNode->mChildren[0];																	// As dummies will only have one child, selecting the next one to process is easy.
-
+		assimpNode = assimpNode->mChildren[0];																// As dummies will only have one child, selecting the next one to process is easy.
+		
 		assimpNode->mTransformation.Decompose(aiT.scale, aiT.rotation, aiT.position);						// --- Getting the Transform stored in the dummy node.
 
 		Transform dummy;																					// 
-		dummy.position	= { aiT.position.x, aiT.position.y, aiT.position.z };							// 
-		dummy.rotation	= { aiT.rotation.x, aiT.rotation.y, aiT.rotation.z, aiT.rotation.w };			// 
+		dummy.position	= { aiT.position.x, aiT.position.y, aiT.position.z };								// 
+		dummy.rotation	= { aiT.rotation.x, aiT.rotation.y, aiT.rotation.z, aiT.rotation.w };				// 
 		dummy.scale		= { aiT.scale.x, aiT.scale.y, aiT.scale.z };										// ---------------------------------------------------
 
-		/*ma_t.position	= */maT.position.Add(dummy.position);												// --- Adding the dummy's Transform to the current one.
-		/*ma_t.rotation	= */maT.rotation.Mul(dummy.rotation);												// 
-		/*ma_t.scale	= */maT.scale.Mul(dummy.scale);													// ----------------------------------------------------
+		maT.position	+= dummy.position;																	// --- Adding the dummy's Transform to the current one.
+		maT.rotation	= maT.rotation * dummy.rotation;													// 
+		maT.scale		= { maT.scale.x * dummy.scale.x, maT.scale.y * dummy.scale.y, maT.scale.z * dummy.scale.z }; // ----------------------------------------------------
 	}
 	
 	model_node.transform	= maT;

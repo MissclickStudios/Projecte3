@@ -56,13 +56,13 @@ void Importer::Meshes::Import(const aiMesh* assimpMesh, R_Mesh* rMesh)
 	if (assimpMesh->HasBones())
 		Utilities::GetBones(assimpMesh, rMesh);
 
-	rMesh->LoadStaticBuffers();																			// 
+	rMesh->LoadStaticBuffers();																		// 
 	rMesh->SetAABB();																				// 
 }
 
 void Importer::Meshes::Utilities::GetVertices(const aiMesh* assimpMesh, R_Mesh* rMesh)
 {
-	uint verticesSize = assimpMesh->mNumVertices * 3;													// There will be 3 coordinates per vertex, hence the size will be numVertices * 3.
+	uint verticesSize = assimpMesh->mNumVertices * 3;												// There will be 3 coordinates per vertex, hence the size will be numVertices * 3.
 	rMesh->vertices.resize(verticesSize);															// Allocating in advance the memory required to store all the verts.
 
 	memcpy(&rMesh->vertices[0], assimpMesh->mVertices, sizeof(float) * verticesSize);				// &rMesh->vertices[0] gets a pointer to the beginning of the vector.
@@ -445,6 +445,8 @@ bool Importer::Meshes::Load(const char* buffer, R_Mesh* rMesh)
 	// ---BONE DATA ---
 	if (headerData[4] != 0)
 	{
+		rMesh->hasBones = true;
+		
 		uint nVertices = (rMesh->vertices.size() / 3) * 4;
 
 		rMesh->boneIDs.resize(nVertices);
@@ -458,11 +460,6 @@ bool Importer::Meshes::Load(const char* buffer, R_Mesh* rMesh)
 		bytes = nVertices * sizeof(float);
 		memcpy_s(&rMesh->boneWeights[0], bytes, cursor, bytes);
 		cursor += bytes;
-
-		for (int i = 0; i < 10; i++)
-		{
-			LOG("boneWeights %d = %f", i, rMesh->boneWeights[i]);
-		}
 
 		uint bytes = headerData[4] * sizeof(float4x4);
 		memcpy(&rMesh->boneOffsets[0], cursor, bytes);

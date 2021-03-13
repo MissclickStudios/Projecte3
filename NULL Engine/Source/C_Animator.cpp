@@ -28,7 +28,7 @@ typedef std::map<double, float3>::const_iterator	ScaleKeyframe;
 C_Animator::C_Animator(GameObject* owner) : Component(owner, ComponentType::ANIMATOR),
 currentClip		(nullptr),
 blendingClip	(nullptr),
-currentRootBone	(nullptr), 
+rootBone		(nullptr), 
 animatorState	(AnimatorState::STOP)
 {
 	blendFrames		= 0;
@@ -40,27 +40,31 @@ animatorState	(AnimatorState::STOP)
 	cameraCulling	= true;
 	showBones		= false;
 
-	foundAnimMeshes = false;
+	needsInit		= true;
 }
 
 C_Animator::~C_Animator()
 {
 	currentClip		= nullptr;
 	blendingClip	= nullptr;
-	currentRootBone = nullptr;
+	rootBone		= nullptr;
 }
 
 bool C_Animator::Update()
 {
 	BROFILER_CATEGORY("Animation Component Update", Profiler::Color::DarkSlateBlue);
 
-	if (!foundAnimMeshes)																									// TMP.
+	if (needsInit)
 	{
 		GetAnimatedMeshes();
-		foundAnimMeshes = true;
-	}
+		FindBones();
+		FindBoneLinks();
+		GenerateDefaultClips();
 
-	AddAnimationsToAdd();
+		UpdateDisplayBones();
+
+		needsInit = false;
+	}
 
 	CheckGameState();
 
@@ -91,16 +95,15 @@ bool C_Animator::CleanUp()
 
 	animations.clear();
 	animationBones.clear();
-	clips.clear();
+	
+	animatedMeshes.clear();
 
+	bones.clear();
 	currentBones.clear();
 	blendingBones.clear();
-
 	displayBones.clear();
 
-	animationsToAdd.clear();
-
-	animatedMeshes.clear();
+	clips.clear();
 
 	return ret;
 }
@@ -166,7 +169,8 @@ bool C_Animator::LoadState(ParsonNode& root)
 		R_Animation* rAnimation = (R_Animation*)App->resourceManager->RequestResource((uint32)animationNode.GetNumber("UID"));
 		if (rAnimation != nullptr)
 		{
-			animationsToAdd.push_back(rAnimation);
+			animations.push_back(rAnimation);
+			//animationsToAdd.push_back(rAnimation);
 			//AddAnimation(rAnimation);
 		}
 	}
@@ -193,19 +197,6 @@ bool C_Animator::LoadState(ParsonNode& root)
 }
 
 // --- C_ANIMATION METHODS ---
-void C_Animator::AddAnimationsToAdd()
-{
-	if (!animationsToAdd.empty())
-	{
-		for (uint i = 0; i < animationsToAdd.size(); ++i)
-		{
-			AddAnimation(animationsToAdd[i]);
-		}
-
-		animationsToAdd.clear();
-	}
-}
-
 void C_Animator::CheckGameState()
 {	
 	if (App->gameState == GameState::STEP && animatorState != AnimatorState::STEP)
@@ -220,9 +211,7 @@ void C_Animator::CheckGameState()
 }
 
 bool C_Animator::StepAnimation()
-{
-	bool ret = true;
-
+{	
 	bool success = ValidateCurrentClip();
 	if (!success)
 	{
@@ -236,18 +225,15 @@ bool C_Animator::StepAnimation()
 	}
 
 	UpdateChannelTransforms();
-
-	UpdateMeshSkinning(this->GetOwner());
+	UpdateMeshSkinning();
 
 	UpdateDisplayBones();
 
-	return ret;
+	return true;
 }
 
 bool C_Animator::StepClips()
 {
-	bool ret = true;
-
 	bool currentExists	= CurrentClipExists();
 	bool blendingExists	= BlendingClipExists();
 
@@ -300,7 +286,7 @@ bool C_Animator::StepClips()
 		}
 	}
 
-	return ret;
+	return true;
 }
 
 bool C_Animator::BlendAnimation()
@@ -313,23 +299,20 @@ bool C_Animator::BlendAnimation()
 }
 
 bool C_Animator::ValidateCurrentClip()
-{
-	bool ret = true;
-	
+{	
 	if (currentClip == nullptr)
 	{
 		if (blendingClip != nullptr)
 		{
 			SwitchBlendingToCurrent();
-			ret = true;
 		}
 		else
 		{
-			ret = false;
+			return false;
 		}
 	}
 
-	return ret;
+	return true;
 }
 
 void C_Animator::SwitchBlendingToCurrent()
@@ -381,7 +364,7 @@ bool C_Animator::GenerateDefaultClip(const R_Animation* rAnimation, AnimatorClip
 
 // --- ANIMATION TRANSFORMS METHODS
 void C_Animator::UpdateChannelTransforms()
-{
+{	
 	for (uint i = 0; i < currentBones.size(); ++i)
 	{
 		const BoneLink& bone = currentBones[i];
@@ -423,21 +406,21 @@ void C_Animator::UpdateChannelTransforms()
 	}
 }
 
-void C_Animator::UpdateMeshSkinning(const GameObject* gameObject)
-{
-	C_Mesh* cMesh = gameObject->GetComponent<C_Mesh>();														// TODO: HAVE A VECTOR WITH ALL THE ANIMATED MESHES AT COMPONENT CREATION?
-	if (cMesh != nullptr)
+void C_Animator::UpdateMeshSkinning()
+{	
+	if (animatedMeshes.empty())
 	{
-		bool success = cMesh->RefreshSkinning();
+		return;
+	}
+	
+	bool success = false;
+	for (auto mesh = animatedMeshes.begin(); mesh != animatedMeshes.end(); ++mesh)
+	{
+		success = (*mesh)->RefreshSkinning();
 		if (success)
 		{
-			cMesh->AnimateMesh();
+			(*mesh)->AnimateMesh();
 		}
-	}
-
-	for (auto child = gameObject->childs.begin(); child != gameObject->childs.end(); ++child)
-	{
-		UpdateMeshSkinning((*child));
 	}
 }
 
@@ -445,9 +428,9 @@ void C_Animator::UpdateDisplayBones()
 {
 	displayBones.clear();
 
-	if (currentRootBone != nullptr)
+	if (rootBone != nullptr)
 	{
-		GenerateBoneSegments(currentRootBone);
+		GenerateBoneSegments(rootBone);
 	}
 
 	return;
@@ -460,7 +443,7 @@ void C_Animator::GenerateBoneSegments(const GameObject* bone)
 		LOG("[ERROR] Animation Component: Could not Generate Bone Segments! Error: Given GameObject* was nullptr.");
 		return;
 	}
-	if (bone->childs.empty() || !bone->is_bone)
+	if (bone->childs.empty() /*|| !bone->is_bone*/)
 	{
 		return;
 	}
@@ -499,7 +482,8 @@ const float3 C_Animator::GetInterpolatedPosition(double keyframe, const Channel&
 	PositionKeyframe prevKeyframe = channel.GetClosestPrevPositionKeyframe(keyframe);
 	PositionKeyframe nextKeyframe = channel.GetClosestNextPositionKeyframe(keyframe);
 
-	float rate = (float)(keyframe / nextKeyframe->first);
+	//float rate = (float)(keyframe / nextKeyframe->first);
+	float rate = (float)(keyframe - prevKeyframe->first / nextKeyframe->first - prevKeyframe->first);
 	float3 ret = (prevKeyframe == nextKeyframe) ? prevKeyframe->second : prevKeyframe->second.Lerp(nextKeyframe->second, rate);
 
 	return ret;
@@ -515,8 +499,9 @@ const Quat C_Animator::GetInterpolatedRotation(double keyframe, const Channel& c
 	RotationKeyframe prevKeyframe = channel.GetClosestPrevRotationKeyframe(keyframe);
 	RotationKeyframe nextKeyframe = channel.GetClosestNextRotationKeyframe(keyframe);
 
-	float rate = (float)(keyframe / nextKeyframe->first);
-	Quat ret = (prevKeyframe == nextKeyframe) ? prevKeyframe->second : prevKeyframe->second.Slerp(nextKeyframe->second, rate);
+	//float rate = (float)(keyframe / nextKeyframe->first);
+	float rate	= (float)(keyframe - prevKeyframe->first / nextKeyframe->first - prevKeyframe->first);
+	Quat ret	= (prevKeyframe == nextKeyframe) ? prevKeyframe->second : prevKeyframe->second.Slerp(nextKeyframe->second, rate);
 
 	return ret;
 }
@@ -531,7 +516,8 @@ const float3 C_Animator::GetInterpolatedScale(double keyframe, const Channel& ch
 	ScaleKeyframe prevKeyframe = channel.GetClosestPrevScaleKeyframe(keyframe);
 	ScaleKeyframe nextKeyframe = channel.GetClosestNextScaleKeyframe(keyframe);
 
-	float rate = (float)(keyframe / nextKeyframe->first);
+	//float rate = (float)(keyframe / nextKeyframe->first);
+	float rate = (float)(keyframe - prevKeyframe->first / nextKeyframe->first - prevKeyframe->first);
 	float3 ret = (prevKeyframe == nextKeyframe) ? prevKeyframe->second : prevKeyframe->second.Lerp(nextKeyframe->second, rate);
 
 	return ret;
@@ -633,86 +619,6 @@ const float3 C_Animator::GetBlendedScale(double blendingKeyframe, const Channel&
 	return blendedScale;
 }
 
-void C_Animator::FindAnimationBones(const R_Animation* rAnimation)
-{
-	if (rAnimation == nullptr)
-	{
-		return;
-	}
-	if (rAnimation->channels.empty())
-	{
-		return;
-	}
-
-	std::vector<BoneLink> links;
-	bool success = FindBoneLinks(rAnimation, links);
-	if (success)
-	{
-		animationBones.emplace(rAnimation->GetUID(), links);
-
-		GameObject* rootBone = FindRootBone(links);
-		if (rootBone != nullptr)
-		{
-			SetRootBone(rootBone);
-			UpdateDisplayBones();
-		}
-	}
-}
-
-bool C_Animator::FindBoneLinks(const R_Animation* rAnimation, std::vector<BoneLink>& links)
-{
-	if (rAnimation == nullptr)
-	{
-		LOG("[ERROR] Animator Component: Could not find Bone Links! Error: Given R_Animation* was nullptr.");
-		return false;
-	}
-	if (rAnimation->channels.empty())
-	{
-		LOG("[ERROR] Animator Component: Could not find { %s }'s Bone Links! Error: R_Animation* had no channels.");
-		return false;
-	}
-	if (this->GetOwner()->childs.empty())
-	{
-		LOG("[ERROR] Animator Component: Could not find { %s }'s Bone Links! Error: Component Owner { %s } had no Childs.", this->GetOwner()->GetName());
-		return false;
-	} 
-	
-	std::map<std::string, GameObject*> childs;
-	this->GetOwner()->GetAllChilds(childs);
-
-	for (auto channel = rAnimation->channels.cbegin(); channel != rAnimation->channels.cend(); ++channel)						// Trying out the auto keyword
-	{
-		auto goItem = childs.find(channel->name);
-		if (goItem != childs.end())
-		{
-			goItem->second->is_bone = true;
-			links.push_back(BoneLink((*channel), goItem->second));
-		}
-	}
-
-	childs.clear();
-
-	return true;
-}
-
-GameObject* C_Animator::FindRootBone(const std::vector<BoneLink>& links)
-{	
-	for (auto link = links.cbegin(); link != links.cend(); ++link)																// Trying out the auto keyword
-	{
-		if (link->gameObject->parent == nullptr)
-		{
-			continue;
-		}
-
-		if (!link->gameObject->parent->is_bone)
-		{
-			return link->gameObject;
-		}
-	}
-
-	return nullptr;
-}
-
 void C_Animator::SetRootBone(GameObject* rootBone)
 {
 	if (rootBone == nullptr)
@@ -721,62 +627,27 @@ void C_Animator::SetRootBone(GameObject* rootBone)
 		return;
 	}
 	
-	if (currentRootBone == nullptr)
+	if (this->rootBone == nullptr)
 	{
-		currentRootBone = rootBone;
+		this->rootBone = rootBone;
 
 		for (auto cMesh = animatedMeshes.begin(); cMesh != animatedMeshes.end(); ++cMesh)
 		{
-			(*cMesh)->SetRootBone(currentRootBone);
+			(*cMesh)->SetRootBone(this->rootBone);
 		}
 	}
 	else
 	{
-		if (currentRootBone != rootBone)
+		if (this->rootBone != rootBone)
 		{
-			LOG("[WARNING] Animator Component: Disparity between root bones detected! A: [%s], B: [%s]", currentRootBone->GetName(), rootBone->GetName());
+			LOG("[WARNING] Animator Component: Disparity between root bones detected! A: [%s], B: [%s]", this->rootBone->GetName(), rootBone->GetName());
 		}
 	}
 }
 
 GameObject* C_Animator::GetRootBone() const
 {
-	return currentRootBone;
-}
-
-void C_Animator::SortBoneLinksByHierarchy(const std::vector<BoneLink>& boneLinks, const GameObject* rootBone, std::vector<BoneLink>& sorted)
-{
-	if (rootBone == nullptr)
-	{
-		return;
-	}
-	
-	if (rootBone == currentRootBone)
-	{
-		for (uint j = 0; j < boneLinks.size(); ++j)
-		{
-			if (boneLinks[j].channel.name == rootBone->GetName())
-			{
-				sorted.push_back(boneLinks[j]);
-			}
-		}
-	}
-
-	for (uint i = 0; i < rootBone->childs.size(); ++i)
-	{
-		for (uint j = 0; j < boneLinks.size(); ++j)
-		{
-			if (boneLinks[j].channel.name == rootBone->childs[i]->GetName())
-			{
-				sorted.push_back(boneLinks[j]);
-			}
-		}
-	}
-
-	for (uint i = 0; i < rootBone->childs.size(); ++i)
-	{
-		SortBoneLinksByHierarchy(boneLinks, rootBone->childs[i], sorted);
-	}
+	return rootBone;
 }
 
 void C_Animator::GetAnimatedMeshes()
@@ -788,7 +659,6 @@ void C_Animator::GetAnimatedMeshes()
 	{
 		cMeshes.clear();
 		child->second->GetComponents<C_Mesh>(cMeshes);
-
 		for (uint i = 0; i < cMeshes.size(); ++i)
 		{
 			R_Mesh* rMesh = cMeshes[i]->GetMesh();
@@ -796,6 +666,136 @@ void C_Animator::GetAnimatedMeshes()
 			{
 				animatedMeshes.push_back(cMeshes[i]);
 				cMeshes[i]->SetAnimatorOwner(this->GetOwner());
+			}
+		}
+	}
+}
+
+void C_Animator::FindBones()
+{
+	std::vector<GameObject*> childs = this->GetOwner()->childs;
+	for (auto child = childs.begin(); child != childs.end(); ++child)								// TMP. Superficial check to find root bone. Change later for something cleaner.
+	{
+		if (!(*child)->childs.empty())																// If child has childs.
+		{
+			if (!(*child)->childs[0]->childs.empty())												// If child of child has childs.
+			{
+				rootBone = (*child);
+				break;
+			}
+		}
+	}
+
+	if (rootBone != nullptr)
+	{
+		bones.push_back(rootBone);
+		rootBone->GetAllChilds(bones);
+
+		for (auto animesh = animatedMeshes.cbegin(); animesh != animatedMeshes.cend(); ++animesh)
+		{
+			(*animesh)->SetRootBone(rootBone);
+		}
+
+		CrossCheckBonesWithMeshBoneMapping();
+	}
+}
+
+void C_Animator::FindBoneLinks()
+{
+	if (animations.empty())
+	{
+		LOG("[ERROR] Animator Component: Could not find Bone Links! Error: Animations Vector was Empty.");
+		return;
+	}
+	if (bones.empty())
+	{
+		LOG("[ERROR] Animator Component: Could not find Bone Links! Error: Root Bone was nullptr.");
+		return;
+	}
+
+	std::map<std::string, GameObject*> boneMap;
+	for (auto bone = bones.cbegin(); bone != bones.cend(); ++bone)														// Passing bones to a map for easy access.
+	{
+		boneMap.emplace((*bone)->GetName(), (*bone));
+	}
+
+	for (auto animation = animations.cbegin(); animation != animations.cend(); ++animation)
+	{
+		if ((*animation)->channels.empty())
+		{
+			continue;
+		}
+		
+		std::vector<BoneLink> boneLinks;
+		for (auto channel = (*animation)->channels.cbegin(); channel != (*animation)->channels.cend(); ++channel)
+		{
+			auto result = boneMap.find((*channel).name);
+			if (result != boneMap.end())
+			{
+				boneLinks.push_back(BoneLink((*channel), result->second));
+			}
+		}
+
+		if (boneLinks.empty())
+		{
+			LOG("[WARNING] Animator Component: Animation { %s } had no Bone Links!", (*animation)->GetName());
+		}
+
+		animationBones.emplace((*animation)->GetUID(), boneLinks);
+		boneLinks.clear();
+	}
+
+	boneMap.clear();
+}
+
+void C_Animator::GenerateDefaultClips()
+{
+	if (animations.empty())
+	{
+		return;
+	}
+
+	for (auto animation = animations.begin(); animation < animations.end(); ++animation)
+	{
+		std::string defaultName		= (*animation)->GetName() + std::string(" Default");
+		AnimatorClip& defaultClip	= AnimatorClip((*animation), defaultName, 0, (uint)(*animation)->GetDuration(), false);
+		
+		clips.emplace(defaultClip.GetName(), defaultClip);
+
+		if (currentClip == nullptr)
+		{
+			SetCurrentClip(&clips.find(defaultClip.GetName())->second);															// .find instead of passing the clip to make sure it exists.
+		}
+	}
+}
+
+void C_Animator::CrossCheckBonesWithMeshBoneMapping()
+{
+	if (animatedMeshes.empty())
+	{
+		LOG("[ERROR] Animator Component: Could not Cross Check Bones! Error: Animated Meshes Vector was Empty.");
+		return;
+	}
+	if (bones.empty())
+	{
+		LOG("[ERROR] Animator Component: Could not Cross Check Bones! Error: Bones Vector was Empty.");
+		return;
+	}
+
+	for (auto animesh = animatedMeshes.begin(); animesh != animatedMeshes.end(); ++animesh)
+	{
+		std::map<std::string, uint> mapping = (*animesh)->GetMesh()->boneMapping;
+		if (mapping.empty())
+		{
+			continue;
+		}
+
+		for (auto bone = bones.begin(); bone != bones.end(); ++bone)
+		{
+			auto result = mapping.find((*bone)->GetName());
+			if (result != mapping.end())
+			{
+				(*bone)->is_bone = true;
 			}
 		}
 	}
@@ -812,7 +812,7 @@ void C_Animator::AddAnimation(R_Animation* rAnimation)
 
 	animations.push_back(rAnimation);
 
-	FindAnimationBones(rAnimation);
+	//FindAnimationBones(rAnimation);
 
 	AnimatorClip defaultClip = AnimatorClip();
 	bool success = GenerateDefaultClip(rAnimation, defaultClip);
@@ -1037,6 +1037,8 @@ void C_Animator::SetCurrentClip(AnimatorClip* clip)
 
 	currentClip = clip;
 	currentBones = bones->second;
+
+	//LOG("PLAYING CLIP { %s }", clip->GetName());
 
 	//currentClip->ClearClip();
 }

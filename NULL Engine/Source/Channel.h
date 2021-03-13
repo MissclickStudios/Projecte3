@@ -10,6 +10,14 @@ typedef std::map<double, float3>::const_iterator	PositionKeyframe;												//
 typedef std::map<double, Quat>::const_iterator		RotationKeyframe;												// PositionKeyframe and ScaleKeyframe are technically the same.
 typedef std::map<double, float3>::const_iterator	ScaleKeyframe;													// However, they have been separated for differentiation.
 
+enum class ChannelType
+{
+	POSITION,
+	ROTATION,
+	SCALE,
+	COMPLETE
+};
+
 enum class KeyframeType
 {
 	POSITION,
