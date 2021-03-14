@@ -45,16 +45,12 @@ bool Resource::CleanUp()
 
 bool Resource::SaveMeta(ParsonNode& metaRoot) const
 {
-	bool ret = true;
-
-	return ret;
+	return true;
 }
 
 bool Resource::LoadMeta(const ParsonNode& metaRoot)
 {
-	bool ret = true;
-
-	return ret;
+	return true;
 }
 
 // --- RESOURCE METHODS ---
@@ -73,6 +69,7 @@ const char* Resource::GetTypeAsString() const
 	case ResourceType::TEXTURE:		{ return "TEXTURE"; }	break;
 	case ResourceType::ANIMATION:	{ return "ANIMATION"; }	break;
 	case ResourceType::SHADER:		{ return "SHADER"; }	break;
+	case ResourceType::SCRIPT:		{ return "SCRIPT"; }	break;
 	}
 
 	return "NONE";

@@ -1075,7 +1075,6 @@ void M_ResourceManager::SetResourceLibraryPathAndFile(Resource* resource)
 // --- META FILE METHODS ---
 bool M_ResourceManager::SaveMetaFile(Resource* resource) const
 {
-	bool ret = true;
 
 	if (resource == nullptr)
 	{
@@ -1107,7 +1106,7 @@ bool M_ResourceManager::SaveMetaFile(Resource* resource) const
 
 	RELEASE_ARRAY(buffer);
 
-	return ret;
+	return true;
 }
 
 ParsonNode M_ResourceManager::LoadMetaFile(const char* assetsPath, char** buffer)
