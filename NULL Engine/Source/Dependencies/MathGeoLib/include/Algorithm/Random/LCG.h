@@ -22,6 +22,13 @@
 
 #include "../../Math/MathTypes.h"
 
+//Import/export engine core define
+#ifdef NULL_BUILD_DLL
+#define NULL_API __declspec(dllexport)
+#else
+#define NULL_API __declspec(dllimport)
+#endif
+
 /** @brief A linear congruential random number generator.
 
 	Uses D.H. Lehmer's Linear Congruential Method (1949) for generating random numbers.
@@ -60,7 +67,7 @@
 
 MATH_BEGIN_NAMESPACE
 
-class LCG
+class NULL_API LCG
 {
 public:
 	/// Initializes the generator from the current system clock.

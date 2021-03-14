@@ -20,11 +20,18 @@
 #include "../MathGeoLibFwd.h"
 #include "../Math/float2.h"
 
+//Import/export engine core define
+#ifdef NULL_BUILD_DLL
+#define NULL_API __declspec(dllexport)
+#else
+#define NULL_API __declspec(dllimport)
+#endif
+
 MATH_BEGIN_NAMESPACE
 
 /// A two-dimensional circle in 2D space.
 /** This class represents both a hollow circle (only edge) and a solid circle (disc). */
-class Circle2D
+class NULL_API Circle2D
 {
 public:
 	/// The center position of this circle.

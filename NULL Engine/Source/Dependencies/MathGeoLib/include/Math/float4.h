@@ -29,13 +29,20 @@
 #include "SSEMath.h"
 #include "assume.h"
 
+//Import/export engine core define
+#ifdef NULL_BUILD_DLL
+#define NULL_API __declspec(dllexport)
+#else
+#define NULL_API __declspec(dllimport)
+#endif
+
 MATH_BEGIN_NAMESPACE
 
 /// A 3D vector of form (x,y,z,w) in a 4D homogeneous coordinate space.
 /** This class has two sets of member functions. The functions ending in a suffix '3' operate only on the
 	(x, y, z) part, ignoring the w component (or assuming a value of 0 or 1, where expectable). The functions
 	without the '3' suffix operate on all four elements of the vector. */
-class ALIGN16 float4
+class ALIGN16 NULL_API float4
 {
 public:
 	enum

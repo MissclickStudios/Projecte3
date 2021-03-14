@@ -27,10 +27,17 @@
 #include "MathConstants.h"
 #include "assume.h"
 
+//Import/export engine core define
+#ifdef NULL_BUILD_DLL
+#define NULL_API __declspec(dllexport)
+#else
+#define NULL_API __declspec(dllimport)
+#endif
+
 MATH_BEGIN_NAMESPACE
 
 /// A vector of form (x,y,z).
-class float3
+class NULL_API float3
 {
 public:
 	enum

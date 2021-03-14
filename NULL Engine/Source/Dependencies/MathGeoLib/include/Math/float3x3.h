@@ -26,6 +26,13 @@
 #include "MatrixProxy.h"
 #include "../Math/float3.h"
 
+//Import/export engine core define
+#ifdef NULL_BUILD_DLL
+#define NULL_API __declspec(dllexport)
+#else
+#define NULL_API __declspec(dllimport)
+#endif
+
 MATH_BEGIN_NAMESPACE
 
 /// A 3-by-3 matrix for linear transformations of 3D geometry.
@@ -57,7 +64,7 @@ MATH_BEGIN_NAMESPACE
 	There the elements for a single column of the matrix hold successive memory addresses.
 	This is exactly opposite from the standard C++ multidimensional arrays, since if you have e.g.
 	int v[10][10], then v[0][9] comes in memory right before v[1][0]. ( [0][0], [0][1], [0][2], ... [1][0], [1][1], ...) */
-class float3x3
+class NULL_API float3x3
 {
 public:
 	/// Specifies the height of this matrix.

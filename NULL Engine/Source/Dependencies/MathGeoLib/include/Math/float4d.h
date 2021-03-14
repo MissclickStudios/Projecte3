@@ -23,9 +23,16 @@
 #include "float4_sse.h"
 #include "MathFunc.h"
 
+//Import/export engine core define
+#ifdef NULL_BUILD_DLL
+#define NULL_API __declspec(dllexport)
+#else
+#define NULL_API __declspec(dllimport)
+#endif
+
 MATH_BEGIN_NAMESPACE
 
-class ALIGN16 float4d
+class ALIGN16 NULL_API float4d
 {
 public:
 #if defined(MATH_SSE2)

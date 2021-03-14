@@ -20,11 +20,18 @@
 #include "../MathGeoLibFwd.h"
 #include "../Math/float3.h"
 
+//Import/export engine core define
+#ifdef NULL_BUILD_DLL
+#define NULL_API __declspec(dllexport)
+#else
+#define NULL_API __declspec(dllimport)
+#endif
+
 MATH_BEGIN_NAMESPACE
 
 /// Specifies a triangle through three points in 3D space.
 /** This class stores three member vertices a, b and c to specify the triangle. */
-class Triangle
+class NULL_API Triangle
 {
 public:
 	/// The first triangle endpoint.
