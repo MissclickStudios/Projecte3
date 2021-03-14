@@ -19,17 +19,31 @@ void EmitterInstance::Init(Emitter* emitter, C_ParticleSystem* component)
 }
 
 
-/*void EmitterInstance::Update(float dt)
+void EmitterInstance::Update(float dt)
 {
 	KillDeadParticles();
 	UpdateModules(dt);
 	DrawParticles();
-}*/
+}
 
-void EmitterInstance::Spawn()
+void EmitterInstance::SpawnParticle()
 {
-  //call the emitter reference to use the modules to spawn a particle. 
+	//check whether all particles are active or not
+	//call the emitter reference to use the modules to spawn a particle. 
 	//then add 1 to active particles.
+
+	if (activeParticles == particles.size())
+		return;
+
+	unsigned int particleIndex = particleIndices[activeParticles];
+	Particle* particle = &particles[particleIndex];
+
+	for (unsigned int i = 0; i < emitter->modules.size(); i++)
+	{
+		emitter->modules[i]->Spawn(this, particle);
+	}
+
+	++activeParticles;
 }
 
 void EmitterInstance::ResetEmitter()
@@ -50,8 +64,12 @@ void EmitterInstance::DrawParticles()
 {
 	//draw should ask the renderer to print a particle and give the details(transform, material, color,
 	//distance to camera, and any other thing i consider necesary).
+	for (int i = 0; i < activeParticles; i++)
+	{
+		//now just ask for a basic openGL square
 
-	//now just ask for a basic openGL square
+	}
+	
 }
 
 void EmitterInstance::KillDeadParticles()

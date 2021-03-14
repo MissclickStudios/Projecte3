@@ -56,16 +56,16 @@ struct EmitterSpawn : ParticleModule
 	float timer = 0.0f;
 };
 
-struct ParticlePosition : ParticleModule
-{
-	ParticlePosition() : ParticleModule(Type::ParticlePosition) {};
-
-	void Spawn(EmitterInstance* emitter, Particle* particle);	//random pos between initialPosition1 and 2
-	void Update(float dt, EmitterInstance* emitter);
-
-	float3 initialPosition1 = float3::zero;
-	float3 initialPosition2 = float3::zero;
-};
+//struct ParticlePosition : ParticleModule
+//{
+//	ParticlePosition() : ParticleModule(Type::ParticlePosition) {};
+//
+//	void Spawn(EmitterInstance* emitter, Particle* particle);	//random pos between initialPosition1 and 2
+//	void Update(float dt, EmitterInstance* emitter);
+//
+//	float3 initialPosition1 = float3::zero;
+//	float3 initialPosition2 = float3::zero;
+//};
 
 struct ParticleColor : ParticleModule
 {
@@ -74,8 +74,17 @@ struct ParticleColor : ParticleModule
 	void Spawn(EmitterInstance* emitter, Particle* particle);
 	void Update(float dt, EmitterInstance* emitter);
 
-	float4 initialColor1 = float4(1.0f, 1.0f, 1.0f, 1.0f);
-	float4 initialColor2 = float4(1.0f, 1.0f, 1.0f, 1.0f);
+	float4 initialColor = float4(1.0f, 1.0f, 1.0f, 1.0f); //black by default
+};
+
+struct ParticleLifetime : ParticleModule
+{
+	ParticleLifetime() : ParticleModule(Type::ParticleLifetime) {};
+
+	void Spawn(EmitterInstance* emitter, Particle* particle);
+	void Update(float dt, EmitterInstance* emitter);
+
+	float initialLifetime;
 };
 
 #endif
