@@ -141,16 +141,23 @@ void Importer::Meshes::Utilities::GetBones(const aiMesh* assimpMesh, R_Mesh* rMe
 
 void Importer::Meshes::Utilities::GetOffsetMatrix(const aiBone* assimpBone, float4x4& offsetMatrix)
 {
-	aiTransform aiT;
+	/*aiTransform aiT;
 	Transform	maT;
-
-	assimpBone->mOffsetMatrix.Decompose(aiT.position, aiT.rotation, aiT.scale);
+	
+	assimpBone->mOffsetMatrix.Decompose(aiT.scale, aiT.rotation, aiT.position);
 
 	maT.position	= { aiT.position.x, aiT.position.y, aiT.position.z };
 	maT.rotation	= { aiT.rotation.x, aiT.rotation.y, aiT.rotation.z, aiT.rotation.w };
 	maT.scale		= { aiT.scale.x, aiT.scale.y, aiT.scale.z };
 
-	offsetMatrix = float4x4::FromTRS(maT.position, maT.rotation, maT.scale);
+	offsetMatrix = float4x4::FromTRS(maT.position, maT.rotation, maT.scale);*/
+
+	const aiMatrix4x4& aiOffsetMat = assimpBone->mOffsetMatrix;
+	
+	offsetMatrix = float4x4(aiOffsetMat.a1, aiOffsetMat.a2, aiOffsetMat.a3, aiOffsetMat.a4,
+							aiOffsetMat.b1, aiOffsetMat.b2, aiOffsetMat.b3, aiOffsetMat.b4, 
+							aiOffsetMat.c1, aiOffsetMat.c2, aiOffsetMat.c3, aiOffsetMat.c4, 
+							aiOffsetMat.d1, aiOffsetMat.d2, aiOffsetMat.d3, aiOffsetMat.d4);
 }
 
 void Importer::Meshes::Utilities::GetWeights(const aiBone* assimpBone, uint boneID, std::multimap<uint, BoneWeight>& weights)

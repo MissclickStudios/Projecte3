@@ -115,7 +115,7 @@ void C_Mesh::GetBoneMapping(std::map<std::string, GameObject*>& boneMapping)
 
 bool C_Mesh::RefreshSkinning()
 {	
-	if (rMesh == nullptr)
+	if (rMesh == nullptr || !this->isActive)
 		return false;
 	
 	bool newSkinningMesh = false;
@@ -153,7 +153,7 @@ bool C_Mesh::RefreshSkinning()
 
 void C_Mesh::AnimateMesh()
 {	
-	BROFILER_CATEGORY("Animation Component Update", Profiler::Color::Red);
+	BROFILER_CATEGORY("Animate Mesh", Profiler::Color::Red);
 	
 	if (rMesh == nullptr)
 	{
@@ -199,7 +199,7 @@ void C_Mesh::AnimateMesh()
 				continue;
 			}
 
-			float3 vTransform = float3::zero;																												// --- Trnsfrm the original vert.
+			float3 vTransform	= float3::zero;																												// --- Trnsfrm the original vert.
 			if (!rMesh->vertices.empty())
 			{
 				vTransform = boneTransforms[boneID].TransformPos(float3(&rMesh->vertices[v * 3]));
