@@ -464,7 +464,7 @@ void C_Animator::GenerateBoneSegments(const GameObject* bone)
 }
 
 Transform C_Animator::GetInterpolatedTransform(double keyframe, const Channel& channel, const Transform& originalTransform) const
-{
+{	
 	float3	interpolatedPosition	= GetInterpolatedPosition(keyframe, channel, originalTransform.position);
 	Quat	interpolatedRotation	= GetInterpolatedRotation(keyframe, channel, originalTransform.rotation);
 	float3	interpolatedScale		= GetInterpolatedScale(keyframe, channel, originalTransform.scale);
@@ -482,8 +482,7 @@ const float3 C_Animator::GetInterpolatedPosition(double keyframe, const Channel&
 	PositionKeyframe prevKeyframe = channel.GetClosestPrevPositionKeyframe(keyframe);
 	PositionKeyframe nextKeyframe = channel.GetClosestNextPositionKeyframe(keyframe);
 
-	//float rate = (float)(keyframe / nextKeyframe->first);
-	float rate = (float)(keyframe - prevKeyframe->first / nextKeyframe->first - prevKeyframe->first);
+	float rate = (float)((keyframe - prevKeyframe->first) / (nextKeyframe->first - prevKeyframe->first));
 	float3 ret = (prevKeyframe == nextKeyframe) ? prevKeyframe->second : prevKeyframe->second.Lerp(nextKeyframe->second, rate);
 
 	return ret;
@@ -499,8 +498,7 @@ const Quat C_Animator::GetInterpolatedRotation(double keyframe, const Channel& c
 	RotationKeyframe prevKeyframe = channel.GetClosestPrevRotationKeyframe(keyframe);
 	RotationKeyframe nextKeyframe = channel.GetClosestNextRotationKeyframe(keyframe);
 
-	//float rate = (float)(keyframe / nextKeyframe->first);
-	float rate	= (float)(keyframe - prevKeyframe->first / nextKeyframe->first - prevKeyframe->first);
+	float rate	= (float)((keyframe - prevKeyframe->first) / (nextKeyframe->first - prevKeyframe->first));
 	Quat ret	= (prevKeyframe == nextKeyframe) ? prevKeyframe->second : prevKeyframe->second.Slerp(nextKeyframe->second, rate);
 
 	return ret;
@@ -516,8 +514,7 @@ const float3 C_Animator::GetInterpolatedScale(double keyframe, const Channel& ch
 	ScaleKeyframe prevKeyframe = channel.GetClosestPrevScaleKeyframe(keyframe);
 	ScaleKeyframe nextKeyframe = channel.GetClosestNextScaleKeyframe(keyframe);
 
-	//float rate = (float)(keyframe / nextKeyframe->first);
-	float rate = (float)(keyframe - prevKeyframe->first / nextKeyframe->first - prevKeyframe->first);
+	float rate = (float)((keyframe - prevKeyframe->first) / (nextKeyframe->first - prevKeyframe->first));
 	float3 ret = (prevKeyframe == nextKeyframe) ? prevKeyframe->second : prevKeyframe->second.Lerp(nextKeyframe->second, rate);
 
 	return ret;
