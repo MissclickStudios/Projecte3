@@ -8,8 +8,8 @@
 Light::Light(LightType lightType) :
 type		(lightType),
 ref			(-1), 
-on			(false), 
-position	(0.0f, 0.0f, 0.0f)
+on			(false)
+//position	(0.0f, 0.0f, 0.0f)
 {
 
 }
@@ -27,9 +27,9 @@ void Light::Init()
 
 void Light::SetPos(float x, float y, float z)
 {
-	position.x = x;
+	/*position.x = x;
 	position.y = y;
-	position.z = z;
+	position.z = z;*/
 }
 
 void Light::Render()

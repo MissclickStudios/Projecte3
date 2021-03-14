@@ -22,9 +22,9 @@ void DirectionalLight::Init()
 
 void DirectionalLight::SetPos(float x, float y, float z)
 {
-	position.x = x;
+	/*position.x = x;
 	position.y = y;
-	position.z = z;
+	position.z = z;*/
 }
 
 void DirectionalLight::Active(bool isActive)
@@ -39,9 +39,9 @@ void DirectionalLight::Active(bool isActive)
 
 void DirectionalLight::Render()
 {
-	if (on)
+	/*if (on)
 	{
 		float pos[] = { position.x, position.y, position.z, 1.0f };
 		glLightfv(ref, GL_POSITION, pos);
-	}
+	}*/
 }

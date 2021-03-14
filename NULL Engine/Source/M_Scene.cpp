@@ -42,7 +42,6 @@ masterRoot				(nullptr),
 sceneRoot				(nullptr),
 animationRoot			(nullptr),
 selectedGameObject		(nullptr),
-lightPoint				(nullptr),
 cullingCamera			(nullptr)
 {
 	CreateMasterRoot();
@@ -97,7 +96,7 @@ bool M_Scene::Start()
 	//Last level function to call
 	//level.GenerateRoom(0);
 
-	if(!CheckSceneLight()) SetSceneLight(App->renderer->GenerateSceneLight(Color(1.0f, 1.0f, 1.0f, 1.0f), Color(0.6,0.6,0.6,0.5), Color(0.6, 0.6, 0.6, 0.5), LightType::DIRECTIONAL));
+	if(!CheckSceneLight()) App->renderer->GenerateSceneLight(Color(1.0f, 1.0f, 1.0f, 1.0f), Color(0.6,0.6,0.6,0.5), Color(0.6, 0.6, 0.6, 0.5), LightType::DIRECTIONAL);
 	
 
 	return ret;
@@ -394,7 +393,7 @@ bool M_Scene::LoadScene(const char* path)
 
 			if (gameObject->GetComponent<C_Light>() != nullptr)
 			{
-				lightPoint = gameObject;
+				lights.push_back( gameObject);
 			}
 
 			C_Camera* cCamera = gameObject->GetComponent<C_Camera>();
@@ -435,7 +434,7 @@ bool M_Scene::LoadScene(const char* path)
 
 	//FIX THIS
 
-	if (!CheckSceneLight()) SetSceneLight(App->renderer->GenerateSceneLight(Color(1.0f, 1.0f, 1.0f, 1.0f), Color(0.6, 0.6, 0.6, 0.5), Color(0.6, 0.6, 0.6, 0.5), LightType::DIRECTIONAL));
+	if (!CheckSceneLight()) AddSceneLight(App->renderer->GenerateSceneLight(Color(1.0f, 1.0f, 1.0f, 1.0f), Color(0.6, 0.6, 0.6, 0.5), Color(0.6, 0.6, 0.6, 0.5), LightType::DIRECTIONAL));
 
 	return ret;
 }
@@ -520,9 +519,13 @@ void M_Scene::DeleteGameObject(GameObject* gameObject, uint index)
 	{
 		animationRoot = nullptr;
 	}
-	if (lightPoint->GetUID() == gameObject->GetUID())
+	for (uint i = 0; i < lights.size(); i++)
 	{
-		lightPoint =  nullptr;
+		if (lights[i]->GetUID() == gameObject->GetUID())
+		{
+			lights.erase(lights.begin() + i);
+			lights[i] = nullptr;
+		}
 	}
 	
 	auto item = models.find(gameObject->GetUID());
@@ -1038,21 +1041,17 @@ bool M_Scene::CheckSceneLight()
 	return false;
 }
 
-GameObject* M_Scene::GetSceneLight()
+std::vector<GameObject*> M_Scene::GetSceneLight()
 {
-	if (lightPoint)
+	if (!lights.empty())
 	{
-		return lightPoint;
-	}
-	else 
-	{
-		return nullptr;
+		return lights;
 	}
 }
 
-void M_Scene::SetSceneLight(GameObject* lightPoint)
+void M_Scene::AddSceneLight(GameObject* light)
 {
-	this->lightPoint = lightPoint;
+	lights.push_back(light);
 }
 
 void M_Scene::DeleteSelectedGameObject()

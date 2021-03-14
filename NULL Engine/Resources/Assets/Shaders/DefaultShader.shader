@@ -35,18 +35,33 @@ void main()
 
 #ifdef __Fragment_Shader__
 
-struct Light
+struct DirLight
 {
-vec4 diffuse;
-vec4 ambient;
-vec4 specular;
+    vec4 diffuse;
+    vec4 ambient;
+    vec4 specular;
 
-vec3 direction;
+    vec3 direction;
 };
 
-uniform Light light;
-uniform vec3 lightPos;
+struct PointLight 
+{    
+    vec3 position;
+    
+    float constant;
+    float linear;
+    float quadratic;  
+
+    vec4 ambient;
+    vec4 diffuse;
+    vec4 specular;
+};
+
+uniform bool usingPointLights;
+uniform DirLight dirLight;
+uniform PointLight pointLight;
 uniform vec3 viewPos; 
+uniform float specularStrength = 0.5;
 
 in vec4 objectColor;
 in vec2 TexCoord;
@@ -56,31 +71,41 @@ out vec4 color;
 
 uniform bool hasTexture;
 uniform sampler2D ourTexture;
+
+vec4 CalculateDirectional(DirLight light, vec3 normal, vec3 viewDir, float specularStrength, vec4 objectColor);
+vec4 CalculatePointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir, float specularStrength, vec4 objectColor);
+
 void main()
 {
-	//Direction and normals calculations
-	
-   float specularStrength = 0.5; 
-   
-   vec3 norm = normalize(modelNormal);
-   
-   //vec3 lightDir = normalize(lightPos - fragPos); 
-   
-    vec3 lightDir = normalize(-light.direction);
 
-   vec3 viewDir = normalize(viewPos - fragPos);
-   
-   vec3 reflectDir = reflect(-lightDir, norm);
+    vec3 norm = normalize(modelNormal);
+    vec3 viewDir = normalize(viewPos - fragPos);
+
+   vec4 outputColor =  CalculateDirectional(dirLight, norm, viewDir, specularStrength, objectColor); 
+   if(usingPointLights) outputColor += CalculatePointLight(pointLight, norm, fragPos, viewDir, specularStrength, objectColor);
+
+  vec4 texColor = (hasTexture) ? texture(ourTexture, TexCoord) : vec4(1,1,1,1);
+
+   color = outputColor * texColor;
+
+}
+
+vec4 CalculateDirectional(DirLight light, vec3 normal, vec3 viewDir, float specularStrength, vec4 objectColor)
+{
+    
+    vec3 lightDir = normalize(-light.direction); 
+    
+    vec3 reflectDir = reflect(-lightDir, normal);
    
    //Specular
    
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
     
-    vec4 resultSpecular = specularStrength * spec * light.diffuse; 
+    vec4 resultSpecular = specularStrength * spec * light.specular; 
     
     //Diffuse  
    
-   float diff = max(dot(norm, lightDir), 0.0);
+   float diff = max(dot(normal, lightDir), 0.0);
    
    vec4 resultDiffuse = diff * light.diffuse;
    
@@ -88,11 +113,33 @@ void main()
    
    vec4 resultColor = (light.ambient + resultDiffuse + resultSpecular) * objectColor;
    
-   vec4 texColor = (hasTexture) ? texture(ourTexture, TexCoord) : vec4(1,1,1,1);
-   
-   color = texColor  * resultColor;
-  
+   return (resultColor);
+}
 
+vec4 CalculatePointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir, float specularStrength, vec4 objectColor)
+{
+     vec3 lightDir = normalize(light.position - fragPos);
+
+    // diffuse 
+    float diff = max(dot(normal, lightDir), 0.0);
+
+    vec4 resultDiffuse = diff * light.diffuse;
+    // specular 
+    vec3 reflectDir = reflect(-lightDir, normal);
+
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
+
+     vec4 resultSpecular = specularStrength * spec * light.specular; 
+    // attenuation
+    float distance    = length(light.position - fragPos);
+
+    float attenuation = 1.0 / (light.constant + light.linear * distance + 
+  			     light.quadratic * (distance * distance));    
+
+
+    vec4 resultColor = (light.ambient + resultDiffuse + resultSpecular) * objectColor;
+   
+   return (resultColor * attenuation);
 }
 
 #endif

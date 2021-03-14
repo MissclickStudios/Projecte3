@@ -13,8 +13,6 @@ enum class LightType
 	POINTLIGHT
 };
 
-
-
 class Light
 {
 public:
@@ -33,8 +31,6 @@ public:
 	Color ambient;
 	Color diffuse;
 	Color specular;
-	
-	float3 position;
 
 	LightType type;
 

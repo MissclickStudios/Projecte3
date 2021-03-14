@@ -90,8 +90,8 @@ public:																														// --- SELECT THROUGH RAYCAST
 
 public:	
 	bool			CheckSceneLight();	//Check if there is a light already in the scene
-	GameObject*		GetSceneLight();	//Return the light in the scene
-	void			SetSceneLight(GameObject* lightPoint);	//Set the light in the scene with the given
+	std::vector<GameObject*> GetSceneLight();	//Return the light in the scene
+	void			AddSceneLight(GameObject* light);	//Set the light in the scene with the given
 
 private:
 	void			HandleDebugInput();
@@ -111,7 +111,8 @@ private:
 	std::vector<Primitive*>			primitives;
 
 	LevelGenerator					level;
-	GameObject*						lightPoint;
+
+	std::vector<GameObject*>		lights;
 };
 
 #endif // !__M_SCENE_H__

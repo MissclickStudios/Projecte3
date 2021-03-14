@@ -30,6 +30,7 @@ bool E_MainMenuBar::Draw(ImGuiIO& io)
 	WindowMainMenuItem();
 	ViewMainMenuItem();
 	GameObjectsMainMenuItem();
+	CreateMainMenuItem();
 	HelpMainMenuItem();
 
 	if (EngineApp->editor->showCloseAppPopup)
@@ -247,6 +248,32 @@ bool E_MainMenuBar::GameObjectsMainMenuItem()
 	}
 
 	return ret;
+}
+
+bool E_MainMenuBar::CreateMainMenuItem()
+{
+
+	if (ImGui::BeginMenu("Create"))
+	{
+
+		if (ImGui::MenuItem("Directional Light"))
+		{
+			App->renderer->GenerateSceneLight(Color(1.0f, 1.0f, 1.0f, 1.0f), Color(0.6, 0.6, 0.6, 0.5), Color(0.6, 0.6, 0.6, 0.5), LightType::DIRECTIONAL);
+		}
+
+		ImGui::Separator();
+
+		if (ImGui::MenuItem("Point Light"))
+		{
+			App->renderer->GenerateSceneLight(Color(1.0f, 1.0f, 1.0f, 1.0f), Color(0.6, 0.6, 0.6, 0.5), Color(0.6, 0.6, 0.6, 0.5), LightType::POINTLIGHT);
+		}
+
+
+		ImGui::EndMenu();
+	}
+
+	
+	return false;
 }
 
 bool E_MainMenuBar::HelpMainMenuItem()
