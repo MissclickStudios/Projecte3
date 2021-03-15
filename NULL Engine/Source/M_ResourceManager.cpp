@@ -52,22 +52,22 @@ M_ResourceManager::~M_ResourceManager()
  
 bool M_ResourceManager::Init(ParsonNode& configuration)
 {
-	bool ret = true;
-
 	//file_refresh_rate = (float)configuration.GetNumber("RefreshRate");
 	fileRefreshRate = 5.0f;
 
-	return ret;
+	return true;
 }
 
 bool M_ResourceManager::Start()
 {
-	bool ret = true;
 
 	RefreshDirectoryFiles(ASSETS_DIRECTORY);
 	RefreshDirectoryFiles(ENGINE_DIRECTORY);
 
-	return ret;
+
+	//FindPrefabs();
+
+	return true;
 }
 
 UpdateStatus M_ResourceManager::PreUpdate(float dt)
@@ -719,6 +719,28 @@ uint64 M_ResourceManager::GetAssetFileModTimeFromMeta(const char* assetsPath)
 	ret = (uint64)metaRoot.GetNumber("ModificationTime");
 
 	return ret;
+}
+
+void M_ResourceManager::FindPrefabs()
+{
+	std::vector<std::string> files,directories;
+	App->fileSystem->DiscoverFiles(ASSETS_PREFABS_PATH,files,directories);
+	std::string fileName;
+
+	char* buffer = nullptr;
+	for (auto file = files.begin(); file != files.end(); file++)
+	{
+		
+		fileName = ASSETS_PREFABS_PATH + (*file);
+		App->fileSystem->Load(fileName.c_str(), &buffer);
+
+		ParsonNode prefab(buffer);
+
+		std::string id;
+		App->fileSystem->SplitFilePath((*file).c_str(),nullptr,&id);
+		
+		prefabs.emplace(atoi((*file).c_str()),prefab.GetString("Name"));
+	}
 }
 
 // --- IMPORT FILE METHODS--
