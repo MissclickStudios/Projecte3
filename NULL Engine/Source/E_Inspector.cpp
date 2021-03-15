@@ -544,13 +544,18 @@ void E_Inspector::DrawLightComponent(C_Light* cLight)
 			}
 			
 			ImGui::Separator();
-			float4 diffuse = (float4)&cLight->GetDirectionalLight()->diffuse;
-			float4 ambient = (float4)&cLight->GetDirectionalLight()->ambient;
-			float4 specular = (float4)&cLight->GetDirectionalLight()->specular;
-			float3 direction = cLight->GetDirectionalLight()->GetDirection();
+			float4 diffuse;
+			float4 ambient;
+			float4 specular;
+			float3 direction;
 			switch (cLight->GetLightType())
 			{
 			case LightType::DIRECTIONAL: 
+
+				diffuse = (float4)&cLight->GetDirectionalLight()->diffuse;
+				ambient = (float4)&cLight->GetDirectionalLight()->ambient;
+				specular = (float4)&cLight->GetDirectionalLight()->specular;
+				direction = cLight->GetDirectionalLight()->GetDirection();
 				if (ImGui::DragFloat4("Diffuse", (float*)&diffuse, 0.05f, 0.0f, 0.0f, "%.3f", NULL))
 				{
 					cLight->GetDirectionalLight()->diffuse = (Color&)diffuse;
@@ -564,7 +569,23 @@ void E_Inspector::DrawLightComponent(C_Light* cLight)
 					cLight->GetDirectionalLight()->specular = (Color&)specular;
 				}
 				break;
-			case LightType::POINTLIGHT: break;
+			case LightType::POINTLIGHT: 
+				diffuse = (float4)&cLight->GetPointLight()->diffuse;
+				ambient = (float4)&cLight->GetPointLight()->ambient;
+				specular = (float4)&cLight->GetPointLight()->specular;
+				if (ImGui::DragFloat4("Diffuse", (float*)&diffuse, 0.05f, 0.0f, 0.0f, "%.3f", NULL))
+				{
+					cLight->GetPointLight()->diffuse = (Color&)diffuse;
+				}
+				if (ImGui::DragFloat4("Ambient", (float*)&ambient, 0.05f, 0.0f, 0.0f, "%.3f", NULL))
+				{
+					cLight->GetPointLight()->ambient = (Color&)ambient;
+				}
+				if (ImGui::DragFloat4("Specular", (float*)&specular, 0.05f, 0.0f, 0.0f, "%.3f", NULL))
+				{
+					cLight->GetPointLight()->specular = (Color&)specular;
+				}
+				break;
 			case LightType::SPOTLIGHT: break;
 			case LightType::NONE: break;
 			}
