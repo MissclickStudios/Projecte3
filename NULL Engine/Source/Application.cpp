@@ -6,6 +6,7 @@
 #include "Time.h"
 #include "FrameData.h"
 #include "Hourglass.h"
+#include "Profiler.h"
 
 #include "Module.h"
 #include "M_Window.h"
@@ -204,6 +205,7 @@ bool Application::Start()												// IS IT NEEDED?
 // Call PreUpdate, Update and PostUpdate on all modules
 UpdateStatus Application::Update()
 {
+	BROFILERCATEGORY("Application Update", Profiler::Color::Aqua);
 	UpdateStatus ret = UpdateStatus::CONTINUE;
 	
 	if (quit)
@@ -213,16 +215,19 @@ UpdateStatus Application::Update()
 
 	PrepareUpdate();
 
+	
 	if (ret == UpdateStatus::CONTINUE)
 	{
 		ret = PreUpdate();
 	}
+	
 	
 	if (ret == UpdateStatus::CONTINUE)
 	{
 		ret = DoUpdate();
 	}
 
+	
 	if (ret == UpdateStatus::CONTINUE)
 	{
 		ret = PostUpdate();
@@ -268,14 +273,17 @@ void Application::PrepareUpdate()
 
 UpdateStatus Application::PreUpdate()
 {
+	BROFILERCATEGORY("Application PreUpdate", Profiler::Color::Aqua);
 	UpdateStatus ret = UpdateStatus::CONTINUE;
 	
 	std::vector<Module*>::iterator item = modules.begin();
 
+	BROFILERCATEGORY("Modules PreUpdate", Profiler::Color::Aqua);
 	while (item != modules.end() && ret == UpdateStatus::CONTINUE)
 	{
 		if ((*item)->IsActive())
 		{
+			BROFILERCATEGORY((*item)->GetName(), Profiler::Color::Aqua);
 			ret = (*item)->PreUpdate(Time::Game::GetDT());
 		}
 
@@ -292,12 +300,13 @@ UpdateStatus Application::PreUpdate()
 
 UpdateStatus Application::DoUpdate()
 {
+	BROFILERCATEGORY("Application Update", Profiler::Color::Aqua);
 	UpdateStatus ret = UpdateStatus::CONTINUE;
 
 	std::vector<Module*>::iterator item = modules.begin();
 	
+	BROFILERCATEGORY("Modules Update", Profiler::Color::Aqua);
 	item = modules.begin();
-
 	while (item != modules.end() && ret == UpdateStatus::CONTINUE)
 	{
 		if ((*item)->IsActive())
@@ -318,12 +327,13 @@ UpdateStatus Application::DoUpdate()
 
 UpdateStatus Application::PostUpdate()
 {
+	BROFILERCATEGORY("Application PostUpdate", Profiler::Color::Aqua);
 	UpdateStatus ret = UpdateStatus::CONTINUE;
 
 	std::vector<Module*>::iterator item = modules.begin();
 	
 	item = modules.begin();
-
+	BROFILERCATEGORY("Modules PostUpdate", Profiler::Color::Aqua);
 	while (item != modules.end() && ret == UpdateStatus::CONTINUE)
 	{
 		if ((*item)->IsActive())

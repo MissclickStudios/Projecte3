@@ -105,6 +105,7 @@ bool M_Scene::Start()
 // Update
 UpdateStatus M_Scene::Update(float dt)
 {
+	BROFILERCATEGORY(GetName(), Profiler::Color::Aqua);
 	if (App->debug == true)
 	{
 		HandleDebugInput();

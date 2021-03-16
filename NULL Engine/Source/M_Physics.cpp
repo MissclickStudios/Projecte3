@@ -1,5 +1,7 @@
 #include "Application.h"
 #include "Log.h"
+#include "Profiler.h"
+
 #include "M_Physics.h"
 
 #include "GameObject.h"
@@ -127,6 +129,8 @@ bool M_Physics::Start()
 
 UpdateStatus M_Physics::Update(float dt)
 {
+	BROFILERCATEGORY("Physics", Profiler::Color::Aqua);
+
 	if (App->play && !App->pause)
 		simulating = true;
 	else

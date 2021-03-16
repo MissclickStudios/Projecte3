@@ -1,7 +1,7 @@
 #include "JSONParser.h"
 
 #include "Module.h"
-
+#include "Profiler.h"
 #include "MemoryManager.h"
 
 Module::Module(const char* name, bool isActive) : isActive(isActive)
@@ -31,6 +31,7 @@ UpdateStatus Module::PreUpdate(float dt)
 
 UpdateStatus Module::Update(float dt)
 {
+	BROFILERCATEGORY(GetName(), Profiler::Color::Aqua);
 	return UpdateStatus::CONTINUE;
 }
 

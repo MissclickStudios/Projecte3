@@ -2,7 +2,7 @@
 #include "Time.h"
 #include "EngineApplication.h"
 #include "E_Toolbar.h"
-
+#include "Profiler.h"
 #include "MemoryManager.h"
 
 E_Toolbar::E_Toolbar() : EditorPanel("Toolbar")
@@ -18,6 +18,8 @@ E_Toolbar::~E_Toolbar()
 bool E_Toolbar::Draw(ImGuiIO& io)
 {
 	bool ret = true;
+
+	BROFILERCATEGORY(GetName(), Profiler::Color::IndianRed);
 
 	ImGui::Begin("Toolbar");
 

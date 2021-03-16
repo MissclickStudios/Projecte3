@@ -3,7 +3,7 @@
 #include "M_Editor.h"
 
 #include "E_ImGuiDemo.h"
-
+#include "Profiler.h"
 #include "MemoryManager.h"
 
 E_ImGuiDemo::E_ImGuiDemo() : EditorPanel("ImGuiDemo")
@@ -25,6 +25,8 @@ E_ImGuiDemo::~E_ImGuiDemo()
 bool E_ImGuiDemo::Draw(ImGuiIO& io)
 {
 	bool ret = true;
+
+	BROFILERCATEGORY(GetName(), Profiler::Color::IndianRed);
 
 	// Showing ImGui's predetermined demo window
 	if (showDemoWindow)
