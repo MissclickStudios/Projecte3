@@ -41,6 +41,8 @@ public:
 	//The deceleration is internaly inverted, so setting a negative deceleration will cause an acceleration
 	void SetDeceleration(float force) { this->deceleration = force; }
 
+	void Dash(C_RigidBody * rigidBody,bool forward, bool backward, bool right, bool left);
+
 	const float BulletSpeed() const { return bulletSpeed; }
 	void SetBulletSpeed(float speed) { bulletSpeed = speed; }
 

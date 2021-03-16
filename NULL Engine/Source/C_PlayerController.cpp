@@ -175,6 +175,23 @@ float2 C_PlayerController::MousePositionToWorldPosition(float mapPositionY)
 	return position;
 }
 
+void C_PlayerController::Dash(C_RigidBody* rigidBody, bool forward, bool backward, bool right, bool left)
+{
+	if (!forward && !backward && right && !left) 
+	{
+		rigidBody->AddForce(physx::PxVec3(-dashForce, 0, 0), physx::PxForceMode::eIMPULSE);
+		rightDash = true;
+		dashTimer = dashCooldown;
+	}
+
+	if (!forward && !backward && !right && left)
+	{
+		rigidBody->AddForce(physx::PxVec3(dashForce, 0, 0), physx::PxForceMode::eIMPULSE);
+		leftDash = true;
+		dashTimer = dashCooldown;
+	}
+}
+
 Direction C_PlayerController::ReturnPlayerDirection()
 {
 	bool north = false;
@@ -241,20 +258,15 @@ void C_PlayerController::Move(C_RigidBody* rigidBody)
 
 	if ((App->input->GetKey(SDL_SCANCODE_E) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(1) == ButtonState::BUTTON_DOWN ) && right && dashTimer == 0)
 	{	
-		rigidBody->AddForce(physx::PxVec3(-dashForce, 0, 0), physx::PxForceMode::eIMPULSE);
-		rightDash = true;
-		dashTimer = dashCooldown;
+		Dash(rigidBody, forward, backward, right, left);
 	}
 
 	
 	if ((App->input->GetKey(SDL_SCANCODE_E) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(1) == ButtonState::BUTTON_DOWN) && left && dashTimer == 0)
 	{
-		rigidBody->AddForce(physx::PxVec3(dashForce, 0, 0), physx::PxForceMode::eIMPULSE);
-		leftDash = true;
-		dashTimer = dashCooldown;
+		Dash(rigidBody, forward, backward, right, left);
 	}
 
-	///
 
 	physx::PxVec3 vel = ((physx::PxRigidDynamic*)rigidBody->GetRigidBody())->getLinearVelocity();
 
@@ -288,4 +300,5 @@ void C_PlayerController::Move(C_RigidBody* rigidBody)
 
 void C_PlayerController::Rotate()
 {
+
 }
