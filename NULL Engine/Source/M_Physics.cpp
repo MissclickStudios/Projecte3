@@ -95,7 +95,7 @@ bool M_Physics::Start()
 
 	
 	sceneDesc.gravity = physx::PxVec3(0.0f, -gravity, 0.0f);
-	sceneDesc.bounceThresholdVelocity = gravity * BOUNCE_THRESHOLD;
+	sceneDesc.bounceThresholdVelocity = gravity* BOUNCE_THRESHOLD;
 	sceneDesc.cpuDispatcher = physx::PxDefaultCpuDispatcherCreate(THREADS);
 	sceneDesc.flags |= physx::PxSceneFlag::eENABLE_KINEMATIC_PAIRS | physx::PxSceneFlag::eENABLE_KINEMATIC_STATIC_PAIRS | physx::PxSceneFlag::eENABLE_PCM;
 	sceneDesc.filterShader = customFilterShader;
@@ -117,7 +117,7 @@ bool M_Physics::Start()
 		return false;
 	}
 
-	material = physics->createMaterial(2, 1, 0.25);
+	material = physics->createMaterial(0, 0, 0);
 
 	LOG("Physics Controller Manager created succesfully");
 	LOG("PhysX 3.4 Initialized correctly --------------");

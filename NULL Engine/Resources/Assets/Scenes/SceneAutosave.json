@@ -76,6 +76,12 @@
                         "Name": "Plane001.nemat",
                         "Path": "Library\/Materials\/1705422038.nemat",
                         "File": "1705422038.nemat"
+                    },
+                    "Shader": {
+                        "UID": 832866239,
+                        "Name": "DefaultShader.shader",
+                        "Path": "Library\/Shaders\/832866239.shader",
+                        "File": "832866239.shader"
                     }
                 }
             ]
@@ -124,6 +130,12 @@
                         "Name": "Pyramid001.nemat",
                         "Path": "Library\/Materials\/624268113.nemat",
                         "File": "624268113.nemat"
+                    },
+                    "Shader": {
+                        "UID": 832866239,
+                        "Name": "DefaultShader.shader",
+                        "Path": "Library\/Shaders\/832866239.shader",
+                        "File": "832866239.shader"
                     }
                 }
             ]
@@ -135,7 +147,7 @@
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
-            "ShowBoundingBoxes": true,
+            "ShowBoundingBoxes": false,
             "Components": [
                 {
                     "Type": 1,
@@ -165,17 +177,17 @@
                     "Use Gravity": false,
                     "Is Kinematic": true,
                     "Freeze Position X": false,
-                    "Freeze Position Y": false,
+                    "Freeze Position Y": true,
                     "Freeze Position Z": false,
-                    "Freeze Rotation X": false,
-                    "Freeze Rotation Y": false,
-                    "Freeze Rotation Z": false,
+                    "Freeze Rotation X": true,
+                    "Freeze Rotation Y": true,
+                    "Freeze Rotation Z": true,
                     "Is Static": false
                 },
                 {
                     "Type": 9,
                     "Is Trigger": false,
-                    "Show Collider": false,
+                    "Show Collider": true,
                     "Size X": 10,
                     "Size Y": 10,
                     "Size Z": 10,
@@ -186,8 +198,8 @@
                 {
                     "Type": 16,
                     "Speed": 10,
-                    "Acceleration": 100,
-                    "Deceleration": 100,
+                    "Acceleration": 200,
+                    "Deceleration": 200,
                     "Bullet Speed": 100
                 }
             ]
@@ -224,9 +236,9 @@
                 {
                     "Type": 9,
                     "Is Trigger": false,
-                    "Show Collider": false,
+                    "Show Collider": true,
                     "Size X": 20,
-                    "Size Y": 10,
+                    "Size Y": 50,
                     "Size Z": 100,
                     "Center X": 0,
                     "Center Y": -0.5,
@@ -236,7 +248,7 @@
         },
         {
             "UID": 1304503906,
-            "ParentUID": 1854733449,
+            "ParentUID": 1512692556,
             "Name": "MainScene",
             "IsActive": true,
             "IsStatic": false,

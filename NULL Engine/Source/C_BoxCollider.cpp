@@ -119,9 +119,10 @@ float3* C_BoxCollider::GetCornerPoints() const
 {
 	physx::PxTransform transform = GetOwner()->GetComponent<C_RigidBody>()->GetRigidBody()->getGlobalPose();
 	float3x3 rotation = Quat(transform.q.x, transform.q.y, transform.q.z, transform.q.w).ToFloat3x3().Inverted();
+	float3 position = float3(transform.p.x, transform.p.y, transform.p.z);
 
 	float3 axis[3] = { rotation.Row(0), rotation.Row(1), rotation.Row(2) };
-	OBB obb(GetOwner()->transform->GetWorldPosition() + centerPosition, colliderSize / 2, axis[0], axis[1], axis[2]);
+	OBB obb(position + centerPosition, colliderSize / 2, axis[0], axis[1], axis[2]);
 	obb.GetCornerPoints(boxColliderVertices);
 
 	return boxColliderVertices;
