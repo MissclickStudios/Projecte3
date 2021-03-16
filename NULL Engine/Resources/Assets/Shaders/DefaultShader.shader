@@ -83,7 +83,7 @@ void main()
     vec3 viewDir = normalize(viewPos - fragPos);
 
    vec4 outputColor =  CalculateDirectional(dirLight, norm, viewDir, specularStrength, objectColor); 
-    outputColor += CalculatePointLight(pointLight, norm, fragPos, viewDir, specularStrength, objectColor);
+   
    if(numPointLights > 0) 
    {
        for(int i = 0; i < numPointLights; i++)

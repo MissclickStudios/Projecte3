@@ -59,6 +59,8 @@ bool Importer::ImportTexture(const char* buffer, uint size, R_Texture* rTexture)
 	if (!forcedUIDs.empty())
 	{
 		rTexture->ForceUID(forcedUIDs.begin()->second);
+		//App->resourceManager->SetResourceLibraryPathAndFile((Resource*)rTexture);
+		rTexture->SetLibraryPathAndFile();
 	}
 	
 	bool success = Importer::Textures::Import(buffer, size, rTexture);
