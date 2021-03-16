@@ -56,12 +56,13 @@ struct PointLight
     vec4 diffuse;
     vec4 specular;
 };
+#define MAX_LIGHTPOINTS 5
 
-uniform bool usingPointLights;
+uniform int numPointLights;
 uniform DirLight dirLight;
-uniform PointLight pointLight;
+uniform PointLight pointLight[MAX_LIGHTPOINTS];
 uniform vec3 viewPos; 
-uniform float specularStrength = 0.5;
+float specularStrength = 0.5;
 
 in vec4 objectColor;
 in vec2 TexCoord;
@@ -82,8 +83,14 @@ void main()
     vec3 viewDir = normalize(viewPos - fragPos);
 
    vec4 outputColor =  CalculateDirectional(dirLight, norm, viewDir, specularStrength, objectColor); 
-   if(usingPointLights) outputColor += CalculatePointLight(pointLight, norm, fragPos, viewDir, specularStrength, objectColor);
-
+    outputColor += CalculatePointLight(pointLight, norm, fragPos, viewDir, specularStrength, objectColor);
+   if(numPointLights > 0) 
+   {
+       for(int i = 0; i < numPointLights; i++)
+       {
+            outputColor += CalculatePointLight(pointLight[i], norm, fragPos, viewDir, specularStrength, objectColor);
+       }
+   }
   vec4 texColor = (hasTexture) ? texture(ourTexture, TexCoord) : vec4(1,1,1,1);
 
    color = outputColor * texColor;

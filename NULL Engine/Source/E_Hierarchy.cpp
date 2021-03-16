@@ -134,7 +134,8 @@ void E_Hierarchy::ProcessGameObject(GameObject* gameObject)
 		{
 			for (uint i = 0; i < gameObject->childs.size(); ++i)
 			{
-				ProcessGameObject(gameObject->childs[i]);
+				if(gameObject->childs[i] != nullptr) 
+					ProcessGameObject(gameObject->childs[i]);
 			}
 		}
 

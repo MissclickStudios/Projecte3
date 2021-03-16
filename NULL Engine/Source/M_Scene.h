@@ -90,8 +90,10 @@ public:																														// --- SELECT THROUGH RAYCAST
 
 public:	
 	bool			CheckSceneLight();	//Check if there is a light already in the scene
-	std::vector<GameObject*> GetSceneLight();	//Return the light in the scene
+	std::vector<GameObject*> GetAllLights();	//Return the light in the scene
 	void			AddSceneLight(GameObject* light);	//Set the light in the scene with the given
+	std::vector<GameObject*> GetDirLights();
+	std::vector<GameObject*> GetPointLights();
 
 private:
 	void			HandleDebugInput();
