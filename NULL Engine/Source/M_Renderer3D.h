@@ -47,7 +47,8 @@ enum class CuboidType
 	NONE,
 	AABB,
 	OBB,
-	FRUSTUM
+	FRUSTUM,
+	COLLIDER
 };
 
 struct MeshRenderer

@@ -97,7 +97,7 @@ bool M_Physics::Start()
 
 	
 	sceneDesc.gravity = physx::PxVec3(0.0f, -gravity, 0.0f);
-	sceneDesc.bounceThresholdVelocity = gravity * BOUNCE_THRESHOLD;
+	sceneDesc.bounceThresholdVelocity = gravity* BOUNCE_THRESHOLD;
 	sceneDesc.cpuDispatcher = physx::PxDefaultCpuDispatcherCreate(THREADS);
 	sceneDesc.flags |= physx::PxSceneFlag::eENABLE_KINEMATIC_PAIRS | physx::PxSceneFlag::eENABLE_KINEMATIC_STATIC_PAIRS | physx::PxSceneFlag::eENABLE_PCM;
 	sceneDesc.filterShader = customFilterShader;
@@ -119,7 +119,7 @@ bool M_Physics::Start()
 		return false;
 	}
 
-	material = physics->createMaterial(2, 1, 0.25);
+	material = physics->createMaterial(0, 0, 0);
 
 	LOG("Physics Controller Manager created succesfully");
 	LOG("PhysX 3.4 Initialized correctly --------------");
@@ -184,7 +184,7 @@ void M_Physics::AddActor(physx::PxActor* actor, GameObject* owner)
 		return;
 
 	scene->addActor(*actor);
-	actors.insert(std::make_pair<physx::PxRigidDynamic*, GameObject*>((physx::PxRigidDynamic*)actor, (GameObject*)(void*)owner));
+	actors.insert(std::make_pair<physx::PxRigidActor*, GameObject*>((physx::PxRigidActor*)actor, (GameObject*)(void*)owner));
 }
 
 void M_Physics::DeleteActor(physx::PxActor* actor)
@@ -193,5 +193,5 @@ void M_Physics::DeleteActor(physx::PxActor* actor)
 		return;
 
 	scene->removeActor(*actor);
-	actors.erase((physx::PxRigidDynamic*)actor);
+	actors.erase((physx::PxRigidActor*)actor);
 }
