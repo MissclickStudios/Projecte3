@@ -1279,7 +1279,7 @@ GameObject* M_Renderer3D::GenerateSceneLight(Color diffuse, Color ambient, Color
 	}
 	
 	if (!App->scene->GetAllLights().empty()) 
-		name += std::to_string(App->scene->GetAllLights().size());
+		name += std::to_string(App->scene->GetPointLights().size());
 
 	light = App->scene->CreateGameObject(name.c_str(), App->scene->GetSceneRoot());
 
@@ -1312,7 +1312,7 @@ GameObject* M_Renderer3D::GenerateSceneLight(Color diffuse, Color ambient, Color
 	case LightType::SPOTLIGHT: break;
 	case LightType::NONE: break;
 	}
-	App->scene->AddSceneLight(light);
+	//App->scene->AddSceneLight(light);
 	
 	return light;
 }

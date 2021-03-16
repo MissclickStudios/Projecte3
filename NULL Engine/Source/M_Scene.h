@@ -114,7 +114,7 @@ private:
 
 	LevelGenerator					level;
 
-	std::vector<GameObject*>		lights;
+	//std::vector<GameObject*>		lights;
 };
 
 #endif // !__M_SCENE_H__

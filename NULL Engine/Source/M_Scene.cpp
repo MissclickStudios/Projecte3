@@ -218,14 +218,9 @@ bool M_Scene::CleanUp()
 	for (uint i = 0; i < gameObjects.size(); ++i)
 	{
 		gameObjects[i]->CleanUp();
+		//gameObjects.erase(gameObjects.begin() + i);
 		RELEASE(gameObjects[i]);
 	}
-	
-	/*for (auto item = gameObjects.begin(); item < gameObjects.end(); ++item)
-	{
-		(*item)->CleanUp();
-		RELEASE((*item));
-	}*/
 
 	for (auto item = models.begin(); item != models.end(); ++item)
 	{
@@ -392,11 +387,6 @@ bool M_Scene::LoadScene(const char* path)
 				animationRoot = gameObject;
 			}
 
-			if (gameObject->GetComponent<C_Light>() != nullptr)
-			{
-				lights.push_back( gameObject);
-			}
-
 			C_Camera* cCamera = gameObject->GetComponent<C_Camera>();
 			if (cCamera != nullptr)
 			{
@@ -519,14 +509,6 @@ void M_Scene::DeleteGameObject(GameObject* gameObject, uint index)
 	if (gameObject == animationRoot)
 	{
 		animationRoot = nullptr;
-	}
-	for (uint i = 0; i < lights.size(); i++)
-	{
-		if (lights[i]->GetUID() == gameObject->GetUID())
-		{
-			lights[i] = nullptr; 
-			lights.erase(lights.begin() + i);
-		}
 	}
 	
 	auto item = models.find(gameObject->GetUID());
@@ -1033,7 +1015,7 @@ bool M_Scene::CheckSceneLight()
 {
 	for (int i = 0; i < gameObjects.size(); i++)
 	{
-		if (gameObjects[i]->GetComponent<C_Light>() != nullptr)
+		if (gameObjects[i]->GetComponent<C_Light>())
 		{
 			return true;
 		}
@@ -1044,26 +1026,36 @@ bool M_Scene::CheckSceneLight()
 
 std::vector<GameObject*> M_Scene::GetAllLights()
 {
-	//if (!lights.empty())
-	//{
-	//}
-		return lights;
+	std::vector<GameObject*> allLights;
+	for (uint i = 0; i < gameObjects.size(); i++)
+	{
+		if (gameObjects[i]->GetComponent<C_Light>())
+		{
+			allLights.push_back(gameObjects[i]);
+		}
+		
+	}
+	return allLights;
 }
 
 void M_Scene::AddSceneLight(GameObject* light)
 {
-	lights.push_back(light);
+	gameObjects.push_back(light);
 }
 
 std::vector<GameObject*> M_Scene::GetDirLights()
 {
 	std::vector<GameObject*> dirLights;
-	for (uint i = 0; i < lights.size(); i++)
+	for (uint i = 0; i < gameObjects.size(); i++)
 	{
-		if (lights[i]->GetComponent<C_Light>()->GetLightType() == LightType::DIRECTIONAL)
+		if (gameObjects[i]->GetComponent<C_Light>())
 		{
-			dirLights.push_back(lights[i]);
+			if (gameObjects[i]->GetComponent<C_Light>()->GetLightType() == LightType::DIRECTIONAL)
+			{
+				dirLights.push_back(gameObjects[i]);
+			}
 		}
+		
 	}
 	return dirLights;
 }
@@ -1071,11 +1063,14 @@ std::vector<GameObject*> M_Scene::GetDirLights()
 std::vector<GameObject*> M_Scene::GetPointLights()
 {
 	std::vector<GameObject*> pointLights;
-	for (uint i = 0; i < lights.size(); i++)
+	for (uint i = 0; i < gameObjects.size(); i++)
 	{
-		if (lights[i]->GetComponent<C_Light>()->GetLightType() == LightType::POINTLIGHT)
+		if (gameObjects[i]->GetComponent<C_Light>())
 		{
-			pointLights.push_back(lights[i]);
+			if (gameObjects[i]->GetComponent<C_Light>()->GetLightType() == LightType::POINTLIGHT)
+			{
+				pointLights.push_back(gameObjects[i]);
+			}
 		}
 	}
 	return pointLights;

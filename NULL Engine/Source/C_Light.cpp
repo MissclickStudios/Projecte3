@@ -60,7 +60,9 @@ bool C_Light::SaveState(ParsonNode& root) const
 {
 	bool ret = true;
 
-	root.SetNumber("Type", (uint)GetType());
+	root.SetNumber("Type", (double)GetType());
+	
+	root.SetNumber("LightType", (uint)lightType);
 
 	if (directional)
 	{
@@ -86,12 +88,25 @@ bool C_Light::SaveState(ParsonNode& root) const
 bool C_Light::LoadState(ParsonNode& root)
 {
 	bool ret = true;
+
+	lightType = (LightType)(uint)root.GetNumber("LightType");
+
+	switch (lightType)
+	{
+	case LightType::DIRECTIONAL:	directional = new DirectionalLight();	break;
+	case LightType::POINTLIGHT:		pointLight = new PointLight();			break;
+	case LightType::SPOTLIGHT: break;
+	case LightType::NONE: break;
+	}
+
 	if (directional)
 	{
 		directional->Active(true);
 		directional->diffuse.Set((Color&)root.GetFloat4("Diffuse"));
 		directional->ambient.Set((Color&)root.GetFloat4("Ambient"));
 		directional->specular.Set((Color&)root.GetFloat4("Specular"));
+		directional->SetDirection(root.GetFloat3("Direction"));
+		this->GetOwner()->transform->SetLocalEulerRotation(directional->GetDirection());
 		directional->Init();
 	}
 	if (pointLight)
@@ -106,6 +121,8 @@ bool C_Light::LoadState(ParsonNode& root)
 		pointLight->SetPosition(root.GetFloat3("Position"));
 		pointLight->Init();
 	}
+
+	
 
 	return ret;
 }
