@@ -181,7 +181,7 @@ void C_Mesh::AnimateMesh()
 		delta = (currentBone->GetComponent<C_Transform>()->GetWorldTransform() * delta);																	// --- Bone Transform
 		delta = (this->GetOwner()->GetComponent<C_Transform>()->GetWorldTransform().Inverted() * delta);													// Bone World Transform
 		delta = delta * rMesh->boneOffsets[bone->second];																									// Bone Transform Matrix
-
+		
 		boneTransforms[bone->second] = delta;																												// -------------------------
 	}
 
@@ -199,10 +199,9 @@ void C_Mesh::AnimateMesh()
 				continue;
 			}
 
-			float3 vTransform	= float3::zero;																												// --- Trnsfrm the original vert.
 			if (!rMesh->vertices.empty())
 			{
-				vTransform = boneTransforms[boneID].TransformPos(float3(&rMesh->vertices[v * 3]));
+				float3 vTransform = boneTransforms[boneID].TransformPos(float3(&rMesh->vertices[v * 3]));													// --- Trnsfrm the original vert.
 
 				skinnedMesh->vertices[(v * 3)]		+= (vTransform.x * boneWeight);
 				skinnedMesh->vertices[(v * 3) + 1]	+= (vTransform.y * boneWeight); 
@@ -210,7 +209,7 @@ void C_Mesh::AnimateMesh()
 			}
 			if (!rMesh->normals.empty())
 			{
-				vTransform = boneTransforms[boneID].TransformPos(float3(&rMesh->normals[v * 3]));
+				float3 vTransform = boneTransforms[boneID].TransformPos(float3(&rMesh->normals[v * 3]));
 
 				skinnedMesh->normals[(v * 3)]		+= (vTransform.x * boneWeight);
 				skinnedMesh->normals[(v * 3) + 1]	+= (vTransform.y * boneWeight);

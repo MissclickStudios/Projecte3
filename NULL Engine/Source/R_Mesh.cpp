@@ -1,4 +1,5 @@
 #include "OpenGL.h"
+#include "Profiler.h"
 
 #include "VariableTypedefs.h"
 
@@ -117,6 +118,8 @@ void R_Mesh::LoadStaticBuffers()
 
 void R_Mesh::LoadSkinningBuffers(bool initStatic)
 {
+	BROFILER_CATEGORY("Load Skinning Buffers", Profiler::Color::Green);
+	
 	if (initStatic)
 	{
 		glGenVertexArrays(1, &VAO);
