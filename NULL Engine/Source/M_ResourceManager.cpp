@@ -1587,7 +1587,7 @@ bool M_ResourceManager::AllocateResource(uint32 UID, const char* assetsPath)
 	case ResourceType::TEXTURE:		{ success = Importer::Textures::Load(buffer, read, (R_Texture*)resource); }		break;
 	case ResourceType::FOLDER:		{ success = Importer::Folders::Load(buffer, (R_Folder*)resource); }				break;
 	case ResourceType::SCENE:		{ /*success = TODO: HAVE A FUNCTIONAL R_SCENE AND SAVE/LOAD METHODS*/ }			break;
-	//case ResourceType::ANIMATION:	{ success = Importer::Animations::Load(buffer, (R_Animation*)resource); }		break;
+	case ResourceType::ANIMATION:	{ success = Importer::Animations::Load(buffer, (R_Animation*)resource); }		break;
 	case ResourceType::SHADER:		{ success = Importer::Shaders::Load(buffer, (R_Shader*)resource); }				break;
 	}
 

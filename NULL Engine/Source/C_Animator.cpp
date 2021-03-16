@@ -189,7 +189,6 @@ bool C_Animator::LoadState(ParsonNode& root)
 		{
 			clip.SetAnimation(animations[(uint32)clipNode.GetNumber("AnimationUID")]);
 		}*/
-		clip.SetAnimation(animations[(uint32)clipNode.GetNumber("AnimationUID")]);
 
 		clip.LoadState(clipNode);
 
