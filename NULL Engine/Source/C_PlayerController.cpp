@@ -29,7 +29,7 @@ C_PlayerController::C_PlayerController(GameObject* owner) : Component(owner, Com
 	if (!GetOwner()->GetComponent<C_RigidBody>())
 		GetOwner()->CreateComponent(ComponentType::RIGIDBODY);
 
-	stepTimer = new Timer();
+	//stepTimer = new Timer();
 }
 
 C_PlayerController::~C_PlayerController()
