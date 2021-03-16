@@ -185,10 +185,11 @@ bool C_Animator::LoadState(ParsonNode& root)
 		ParsonNode clipNode = clipsArray.GetNode(i);
 		AnimatorClip clip = AnimatorClip();
 
-		if (animations.find((uint32)clipNode.GetNumber("AnimationUID")) != animations.end())
+		/*if (animations.find((uint32)clipNode.GetNumber("AnimationUID")) != animations.end())
 		{
 			clip.SetAnimation(animations[(uint32)clipNode.GetNumber("AnimationUID")]);
-		}
+		}*/
+		clip.SetAnimation(animations[(uint32)clipNode.GetNumber("AnimationUID")]);
 
 		clip.LoadState(clipNode);
 
@@ -227,7 +228,7 @@ bool C_Animator::StepAnimation()
 		return false;
 	}
 	
-	bool success = StepClips();
+	success = StepClips();
 	if (!success)
 	{
 		return false;
@@ -474,12 +475,6 @@ Transform C_Animator::GetInterpolatedTransform(double keyframe, const Channel& c
 	float3	interpolatedPosition	= GetInterpolatedPosition(keyframe, channel, originalTransform.position);
 	Quat	interpolatedRotation	= GetInterpolatedRotation(keyframe, channel, originalTransform.rotation);
 	float3	interpolatedScale		= GetInterpolatedScale(keyframe, channel, originalTransform.scale);
-
-	if (channel.type == ChannelType::ROTATION)
-	{
-		
-		interpolatedPosition = originalTransform.position;
-	}
 
 	return Transform(interpolatedPosition, interpolatedRotation, interpolatedScale);
 }

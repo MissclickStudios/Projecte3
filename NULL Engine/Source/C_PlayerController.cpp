@@ -38,7 +38,7 @@ C_PlayerController::~C_PlayerController()
 
 bool C_PlayerController::Update()
 {
-	if (App->play && !App->pause)
+	if (App->gameState == GameState::PLAY)
 	{
 		C_RigidBody* rigidBody = GetOwner()->GetComponent<C_RigidBody>();
 

@@ -124,7 +124,7 @@ void R_Mesh::LoadStaticBuffers()
 
 void R_Mesh::LoadSkinningBuffers(bool initStatic)
 {
-	BROFILER_CATEGORY("Load Skinning Buffers", Profiler::Color::Green);
+	OPTICK_CATEGORY("Load Skinning Buffers", Optick::Category::Animation)
 	
 	if (initStatic)
 	{

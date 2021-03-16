@@ -155,7 +155,6 @@ bool C_Mesh::RefreshSkinning()
 
 void C_Mesh::AnimateMesh()
 {	
-	BROFILER_CATEGORY("Animate Mesh", Profiler::Color::Red);
 	
 	if (rMesh == nullptr)
 	{

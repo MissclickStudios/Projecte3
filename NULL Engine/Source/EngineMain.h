@@ -10,11 +10,10 @@
 #pragma comment( lib, "Source/Dependencies/SDL/libx86/SDL2.lib" )
 #pragma comment( lib, "Source/Dependencies/SDL/libx86/SDL2main.lib" )
 #ifndef GAMEBUILD
-#pragma comment( lib, "Source/Dependencies/Brofiler/libx86/ProfilerCore32.lib" ) //TODO: if build configuration not link this
-
+#pragma comment( lib, "Source/Dependencies/Optik/OptickCore.lib" ) //TODO: if build configuration not link this
 #endif // !GAMEBUILD
 
-#pragma comment( lib, "Source/Dependencies/Optik/OptickCore.lib" ) //TODO: if build configuration not link this
+
 
 enum class MainStatus
 {

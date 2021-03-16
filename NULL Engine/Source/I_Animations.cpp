@@ -141,11 +141,6 @@ uint Importer::Animations::Save(const R_Animation* rAnimation, char** buffer)
 	for (uint i = 0; i < rAnimation->channels.size(); ++i)
 	{
 		Channel rChannel = rAnimation->channels[i];
-
-		bytes = sizeof(uint);
-		memcpy_s(cursor, size, &rChannel.type, bytes);
-		cursor += bytes;
-
 		Utilities::StoreChannelName(rChannel, &cursor);
 		Utilities::StorePositionKeysData(rChannel, &cursor);
 		Utilities::StoreRotationKeysData(rChannel, &cursor);
@@ -209,16 +204,11 @@ bool Importer::Animations::Load(const char* buffer, R_Animation* rAnimation)
 	rAnimation->channels.resize((uint)headerData[3]);
 	for (uint i = 0; i < rAnimation->channels.size(); ++i)
 	{
-		uint type = 0;
-		bytes = sizeof(uint);
-		memcpy(&type, cursor, bytes);
-		cursor += bytes;
 
 		std::string channelName = "";
 		Utilities::LoadChannelName(&cursor, channelName);
 
 		Channel rChannel = Channel(channelName.c_str());
-		rChannel.type = (ChannelType)type;
 
 		Utilities::LoadPositionKeysData(&cursor, rChannel);
 		Utilities::LoadRotationKeysData(&cursor, rChannel);

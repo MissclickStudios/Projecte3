@@ -25,14 +25,6 @@ enum class KeyframeType
 	SCALE
 };
 
-enum class ChannelType
-{
-	POSITION,
-	ROTATION,
-	SCALE,
-	DEFAULT
-};
-
 struct Channel																										// Channels are the "Bones" of the animation. For distinction between this
 {																													// "Bones" and the Mesh's bones they have been re-named to Channels.
 	Channel();
@@ -68,8 +60,6 @@ struct Channel																										// Channels are the "Bones" of the anima
 	std::map<double, float3>	scaleKeyframes;																		// Scale-related keyframes.
 
 	std::string					name;																				// Name of the Channel/Bone
-
-	ChannelType type = ChannelType::DEFAULT;
 };
 
 #endif // !__CHANNEL_H__
