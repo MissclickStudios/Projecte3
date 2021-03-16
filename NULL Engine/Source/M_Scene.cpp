@@ -83,21 +83,9 @@ bool M_Scene::Start()
 
 	//uint32 animation_uid = App->resourceManager->LoadFromLibrary(DEFAULT_ANIMATION);
 	//GenerateGameObjectsFromModel(animation_uid , float3(0.05f, 0.05f, 0.05f));
-	
-	//LoadScene("Assets/Scenes/FinalScene.json");
-	//SaveScene("SceneAutosave");																			// Autosave just right after loading the scene.
 
-	level.GetRooms();
-	level.GenerateLevel();
-	
-	//level.AddFixedRoom("Beggining", 0);
-	//level.AddFixedRoom("Boss", 20);
-	
-	//Last level function to call
-	//level.GenerateRoom(0);
-
-	if(!CheckSceneLight()) App->renderer->GenerateSceneLight(Color(1.0f, 1.0f, 1.0f, 1.0f), Color(0.6,0.6,0.6,0.5), Color(0.6, 0.6, 0.6, 0.5), LightType::DIRECTIONAL);
-	
+	LoadScene("Assets/Scenes/MainScene.json");
+	SaveScene("SceneAutosave");																			// Autosave just right after loading the scene.
 
 	return ret;
 }
@@ -115,7 +103,7 @@ UpdateStatus M_Scene::Update(float dt)
 		C_Animator* rootAnimator = animationRoot->GetComponent<C_Animator>();
 		if (rootAnimator != nullptr)
 		{
-			if (App->play && !App->pause)
+			if (App->gameState == GameState::PLAY)
 			{
 				if (App->input->GetKey(SDL_SCANCODE_KP_1) == KeyState::KEY_DOWN)
 				{
@@ -130,10 +118,10 @@ UpdateStatus M_Scene::Update(float dt)
 					rootAnimator->PlayClip("Attack", 8);
 				}
 
-				/*if (!rootAnimator->GetCurrentClip()->playing || !rootAnimator->CurrentClipExists())
+				if (!rootAnimator->CurrentClipExists() || !rootAnimator->GetCurrentClip()->playing)
 				{
 					rootAnimator->PlayClip("Idle", 8);
-				}*/
+				}
 			}
 		}
 	}

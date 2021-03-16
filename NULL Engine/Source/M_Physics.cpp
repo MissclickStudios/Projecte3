@@ -129,8 +129,7 @@ bool M_Physics::Start()
 
 UpdateStatus M_Physics::Update(float dt)
 {
-
-	if (App->play && !App->pause)
+	if (App->gameState == GameState::PLAY)
 		simulating = true;
 	else
 		simulating = false;

@@ -1355,30 +1355,29 @@ cMaterial	(cMaterial)
 
 void MeshRenderer::Render()
 {
-
 	R_Mesh* rMesh = cMesh->GetMesh();
-
+	
 	if (rMesh == nullptr)
 	{
 		LOG("[ERROR] Renderer 3D: Could not render Mesh! Error: R_Mesh* was nullptr.");
 		return;
 	}
 
-	ApplyDebugParameters();																			// Enable Wireframe Mode for this specific mesh, etc.
-	ApplyTextureAndMaterial();																		// Apply resource texture or default texture, mesh color...
-	ApplyShader();
-	
-	glBindVertexArray(rMesh->VAO);
+	ApplyDebugParameters();																									// Enable Wireframe Mode for this specific mesh, etc.
+	ApplyTextureAndMaterial();																								// Apply resource texture or default texture, mesh color...
+	ApplyShader();																											// 
 
-	glDrawElements(GL_TRIANGLES, rMesh->indices.size(), GL_UNSIGNED_INT, nullptr);					// 
-	
-	glBindVertexArray(0);
+	(cMesh->GetSkinnedMesh() == nullptr) ? glBindVertexArray(rMesh->VAO) : glBindVertexArray(cMesh->GetSkinnedMesh()->VAO);	// 
 
-	glBindTexture(GL_TEXTURE_2D, 0);																// ---------------------
+	glDrawElements(GL_TRIANGLES, rMesh->indices.size(), GL_UNSIGNED_INT, nullptr);											// 
 	
-	ClearTextureAndMaterial();																		// Clear the specifications applied in ApplyTextureAndMaterial().
-	ClearDebugParameters();																			// Clear the specifications applied in ApplyDebugParameters().
-	ClearShader();
+	glBindVertexArray(0);																									//
+
+	glBindTexture(GL_TEXTURE_2D, 0);																						// ---------------------
+	
+	ClearShader();																											// Clear the specifications applied in ApplyShader().
+	ClearTextureAndMaterial();																								// Clear the specifications applied in ApplyTextureAndMaterial().
+	ClearDebugParameters();																									// Clear the specifications applied in ApplyDebugParameters().
 
 	// --- DEBUG DRAW ---
 	if (rMesh->drawVertexNormals || App->renderer->GetRenderVertexNormals())

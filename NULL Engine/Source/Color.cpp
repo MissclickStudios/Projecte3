@@ -83,15 +83,15 @@ void Color::SetFromRGB255(const Color& color)
 
 void Color::SetWithinLimits()
 {	
-	r = (r < 0.0f ? 0.0f : r);								// ----------------------------------------
-	g = (g < 0.0f ? 0.0f : g);								// If value is less than 0.0f, set to 0.0f.
-	b = (b < 0.0f ? 0.0f : b);								// In case rgba exceeds the lowest value.
-	a = (a < 0.0f ? 0.0f : a);								// ----------------------------------------
+	r = (r < 0.0f) ? 0.0f : r;								// ----------------------------------------
+	g = (g < 0.0f) ? 0.0f : g;								// If value is less than 0.0f, set to 0.0f.
+	b = (b < 0.0f) ? 0.0f : b;								// In case rgba exceeds the lowest value.
+	a = (a < 0.0f) ? 0.0f : a;								// ----------------------------------------
 
-	r = (r > 1.0f ? 1.0f : r);								// ----------------------------------------
-	g = (g > 1.0f ? 1.0f : g);								// If value is more than 1.0f, set to 1.0f.
-	b = (b > 1.0f ? 1.0f : b);								// In case rgba exceeds the lowest value.
-	a = (a > 1.0f ? 1.0f : a);								// ----------------------------------------
+	r = (r > 1.0f) ? 1.0f : r;								// ----------------------------------------
+	g = (g > 1.0f) ? 1.0f : g;								// If value is more than 1.0f, set to 1.0f.
+	b = (b > 1.0f) ? 1.0f : b;								// In case rgba exceeds the highest value.
+	a = (a > 1.0f) ? 1.0f : a;								// ----------------------------------------
 }
 
 // --- OPERATOR METHODS

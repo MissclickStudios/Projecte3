@@ -31,10 +31,11 @@ public:
 	bool LoadMeta(const ParsonNode& metaRoot) override;
 
 public:
-	void LoadBuffers();
+	void LoadStaticBuffers		();
+	void LoadSkinningBuffers	(bool initStatic = false);
 
-	AABB GetAABB() const;
-	void SetAABB();
+	AABB GetAABB				() const;
+	void SetAABB				();
 
 public:
 	std::vector<float>			vertices;

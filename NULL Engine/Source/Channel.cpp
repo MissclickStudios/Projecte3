@@ -16,9 +16,9 @@ bool Channel::HasKeyframes(KeyframeType type) const
 {
 	switch (type)
 	{
-	case KeyframeType::POSITION:	{ return !(positionKeyframes.size() == 1 && positionKeyframes.begin()->first == -1); }	break;
-	case KeyframeType::ROTATION:	{ return !(rotationKeyframes.size() == 1 && rotationKeyframes.begin()->first == -1); }	break;
-	case KeyframeType::SCALE:		{ return !(scaleKeyframes.size() == 1 && scaleKeyframes.begin()->first == -1); }			break;
+	case KeyframeType::POSITION:	{ return !(positionKeyframes.size() == 1 && positionKeyframes.begin()->first == -1.0); }	break;
+	case KeyframeType::ROTATION:	{ return !(rotationKeyframes.size() == 1 && rotationKeyframes.begin()->first == -1.0); }	break;
+	case KeyframeType::SCALE:		{ return !(scaleKeyframes.size() == 1 && scaleKeyframes.begin()->first == -1.0); }			break;
 	}
 
 	return false;
@@ -26,17 +26,17 @@ bool Channel::HasKeyframes(KeyframeType type) const
 
 bool Channel::HasPositionKeyframes() const
 {
-	return HasKeyframes(KeyframeType::POSITION);
+	return !(positionKeyframes.size() == 1 && positionKeyframes.begin()->first == -1.0);
 }
 
 bool Channel::HasRotationKeyframes() const
 {
-	return HasKeyframes(KeyframeType::ROTATION);
+	return !(rotationKeyframes.size() == 1 && rotationKeyframes.begin()->first == -1.0);
 }
 
 bool Channel::HasScaleKeyframes() const
 {
-	return HasKeyframes(KeyframeType::SCALE);
+	return !(scaleKeyframes.size() == 1 && scaleKeyframes.begin()->first == -1.0);
 }
 
 PositionKeyframe Channel::GetPositionKeyframe(double keyframe) const

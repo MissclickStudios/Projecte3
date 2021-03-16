@@ -9,12 +9,10 @@ typedef unsigned int		uint;
 
 struct NULL_API Hourglass																	// This struct is called Hourglass instead of Clock due to Linker conflicts with MathGeoLib.
 {
-	//Hourglass();
 	Hourglass(uint hours = 0, uchar minutes = 0, float seconds = 0.0f);
 
-	//void Update();
-	void Update(uint ms);
-	void ResetClock();
+	void Update		(uint ms);
+	void ResetClock	();
 
 	//std::string GetTimeAsString(); //cant't return a temporary string across dll boundaries !!!! (runetime library is mt!!!)
 
@@ -22,7 +20,7 @@ struct NULL_API Hourglass																	// This struct is called Hourglass ins
 	uchar	minutes;
 	float	seconds;
 
-	uint previousTicks;
+	uint	previousTicks;
 };
 
 #endif // !__HOURGLASS_H__

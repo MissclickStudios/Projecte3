@@ -51,7 +51,7 @@ bool AnimatorClip::StepClip(const float& dt)
 
 	time	+= dt;
 	frame	= time * animation->GetTicksPerSecond();
-	tick	= (uint)floor(frame);
+	tick	= (uint)frame;																		// Casting to uint has the same effect as calling floor() but without the performance loss.
 
 	inNewTick = (tick != prevTick);
 
@@ -93,15 +93,15 @@ bool AnimatorClip::LoadState(const ParsonNode& root)
 {
 	bool ret = true;
 	
-	animation				= (R_Animation*)App->resourceManager->RequestResource((uint32)root.GetNumber("AnimationUID"));		// TMP FIX. Read the one already in C_Animator later.
+	animation			= (R_Animation*)App->resourceManager->RequestResource((uint32)root.GetNumber("AnimationUID"));		// TMP FIX. Read the one already in C_Animator later.
 
-	name					= root.GetString("Name");
-	start					= (uint)root.GetNumber("Start");
-	end						= (uint)root.GetNumber("End");
-	duration				= (float)root.GetNumber("Duration");
-	durationInSeconds		= (float)root.GetNumber("DurationInSeconds");
+	name				= root.GetString("Name");
+	start				= (uint)root.GetNumber("Start");
+	end					= (uint)root.GetNumber("End");
+	duration			= (float)root.GetNumber("Duration");
+	durationInSeconds	= (float)root.GetNumber("DurationInSeconds");
 
-	loop					= root.GetBool("Loop");
+	loop				= root.GetBool("Loop");
 	
 	return ret;
 }
@@ -157,6 +157,11 @@ uint AnimatorClip::GetAnimationTick() const
 const R_Animation* AnimatorClip::GetAnimation() const
 {
 	return animation;
+}
+
+void AnimatorClip::SetAnimation(R_Animation* rAnimation)
+{
+	animation = rAnimation;
 }
 
 const char* AnimatorClip::GetAnimationName() const
