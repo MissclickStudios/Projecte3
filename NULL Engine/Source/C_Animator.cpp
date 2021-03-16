@@ -181,6 +181,11 @@ bool C_Animator::LoadState(ParsonNode& root)
 		ParsonNode clipNode = clipsArray.GetNode(i);
 		AnimatorClip clip = AnimatorClip();
 
+		if (animations.find((uint32)clipNode.GetNumber("AnimationUID")) != animations.end())
+		{
+			clip.SetAnimation(animations[(uint32)clipNode.GetNumber("AnimationUID")]);
+		}
+
 		clip.LoadState(clipNode);
 
 		clips.emplace(clip.GetName(), clip);
@@ -291,11 +296,9 @@ bool C_Animator::StepClips()
 
 bool C_Animator::BlendAnimation()
 {
-	bool ret = true;
 
 
-
-	return ret;
+	return true;
 }
 
 bool C_Animator::ValidateCurrentClip()
