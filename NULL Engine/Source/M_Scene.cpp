@@ -105,7 +105,6 @@ bool M_Scene::Start()
 // Update
 UpdateStatus M_Scene::Update(float dt)
 {
-	BROFILERCATEGORY(GetName(), Profiler::Color::Aqua);
 	if (App->debug == true)
 	{
 		HandleDebugInput();
@@ -198,7 +197,6 @@ UpdateStatus M_Scene::Update(float dt)
 
 UpdateStatus M_Scene::PostUpdate(float dt)
 {
-	BROFILERCATEGORY("M_Scene PostUpdate", Profiler::Color::Yellow)
 	
 	for (uint n = 0; n < primitives.size(); n++)
 	{
@@ -742,7 +740,6 @@ std::vector<GameObject*>* M_Scene::GetGameObjects()
 
 bool M_Scene::ApplyTextureToSelectedGameObject(const uint32& uid)
 {
-	BROFILERCATEGORY("ApplyNewTextureToSelectedGameObject()", Profiler::Color::Magenta);
 
 	if (selectedGameObject == nullptr)
 	{

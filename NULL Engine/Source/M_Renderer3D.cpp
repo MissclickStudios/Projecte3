@@ -159,7 +159,6 @@ UpdateStatus M_Renderer3D::PreUpdate(float dt)
 // PostUpdate present buffer to screen
 UpdateStatus M_Renderer3D::PostUpdate(float dt)
 {	
-	BROFILERCATEGORY("M_Renderer3D PostUpdate", Profiler::Color::Chartreuse);
 
 
 	RenderScene();

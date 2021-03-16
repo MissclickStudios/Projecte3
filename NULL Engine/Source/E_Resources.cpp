@@ -25,7 +25,6 @@ E_Resources::~E_Resources()
 
 bool E_Resources::Draw(ImGuiIO& io)
 {
-	BROFILERCATEGORY(GetName(), Profiler::Color::DarkSlateBlue);
 
 	ImGui::Begin("References");
 	

@@ -46,7 +46,6 @@ bool E_Configuration::Draw(ImGuiIO& io)
 {
 	bool ret = true;
 
-	BROFILERCATEGORY(GetName(), Profiler::Color::IndianRed);
 
 	ImGui::Begin(GetName(), nullptr, ImGuiWindowFlags_MenuBar);
 

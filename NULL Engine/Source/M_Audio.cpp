@@ -72,7 +72,6 @@ bool M_Audio::Start()
 
 UpdateStatus M_Audio::Update(float dt)
 {
-	BROFILERCATEGORY(GetName(), Profiler::Color::Aqua);
 	AK::SoundEngine::RenderAudio();
 
 	//Depending on the engine state pause/play/resume/stop events

@@ -31,7 +31,6 @@ UpdateStatus Module::PreUpdate(float dt)
 
 UpdateStatus Module::Update(float dt)
 {
-	BROFILERCATEGORY(GetName(), Profiler::Color::Aqua);
 	return UpdateStatus::CONTINUE;
 }
 

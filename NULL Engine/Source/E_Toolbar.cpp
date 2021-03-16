@@ -19,7 +19,6 @@ bool E_Toolbar::Draw(ImGuiIO& io)
 {
 	bool ret = true;
 
-	BROFILERCATEGORY(GetName(), Profiler::Color::IndianRed);
 
 	ImGui::Begin("Toolbar");
 

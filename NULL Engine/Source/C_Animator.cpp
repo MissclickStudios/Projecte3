@@ -55,7 +55,7 @@ C_Animator::~C_Animator()
 
 bool C_Animator::Update()
 {
-	BROFILERCATEGORY("Animation Component Update", Profiler::Color::DarkSlateBlue);
+
 	
 	bool ret = true;
 

@@ -129,7 +129,6 @@ bool M_Physics::Start()
 
 UpdateStatus M_Physics::Update(float dt)
 {
-	BROFILERCATEGORY("Physics", Profiler::Color::Aqua);
 
 	if (App->play && !App->pause)
 		simulating = true;

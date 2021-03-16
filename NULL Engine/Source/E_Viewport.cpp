@@ -39,7 +39,6 @@ bool E_Viewport::Draw(ImGuiIO& io)
 {
 	bool ret = true;
 
-	BROFILERCATEGORY(GetName(), Profiler::Color::IndianRed);
 	
 	wantTextInput = io.WantTextInput;																	// Later Generalize as a M_Editor Variable/Method.
 	

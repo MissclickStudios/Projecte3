@@ -75,7 +75,6 @@ bool E_Inspector::Draw(ImGuiIO& io)
 {
 	bool ret = true;
 
-	BROFILERCATEGORY(GetName(), Profiler::Color::IndianRed);
 
 	ImGui::Begin("Inspector");
 

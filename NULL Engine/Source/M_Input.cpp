@@ -371,7 +371,6 @@ UpdateStatus M_Input::PreUpdate(float dt)
 
 UpdateStatus M_Input::Update(float dt)
 {
-	BROFILERCATEGORY("Input", Profiler::Color::Aqua);
 	if (App->input->GetKey(SDL_SCANCODE_F1) == KeyState::KEY_DOWN)
 	{
 		App->debug = !App->debug;

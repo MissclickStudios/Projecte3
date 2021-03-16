@@ -205,7 +205,7 @@ bool Application::Start()												// IS IT NEEDED?
 // Call PreUpdate, Update and PostUpdate on all modules
 UpdateStatus Application::Update()
 {
-	BROFILERCATEGORY("Application Update", Profiler::Color::Aqua);
+	OPTICK_CATEGORY("Application Update",Optick::Category::AI)
 	UpdateStatus ret = UpdateStatus::CONTINUE;
 	
 	if (quit)
@@ -273,17 +273,14 @@ void Application::PrepareUpdate()
 
 UpdateStatus Application::PreUpdate()
 {
-	BROFILERCATEGORY("Application PreUpdate", Profiler::Color::Aqua);
 	UpdateStatus ret = UpdateStatus::CONTINUE;
 	
 	std::vector<Module*>::iterator item = modules.begin();
 
-	BROFILERCATEGORY("Modules PreUpdate", Profiler::Color::Aqua);
 	while (item != modules.end() && ret == UpdateStatus::CONTINUE)
 	{
 		if ((*item)->IsActive())
 		{
-			BROFILERCATEGORY((*item)->GetName(), Profiler::Color::Aqua);
 			ret = (*item)->PreUpdate(Time::Game::GetDT());
 		}
 
@@ -300,12 +297,13 @@ UpdateStatus Application::PreUpdate()
 
 UpdateStatus Application::DoUpdate()
 {
-	BROFILERCATEGORY("Application Update", Profiler::Color::Aqua);
+
 	UpdateStatus ret = UpdateStatus::CONTINUE;
 
 	std::vector<Module*>::iterator item = modules.begin();
-	
-	BROFILERCATEGORY("Modules Update", Profiler::Color::Aqua);
+
+	OPTICK_CATEGORY("Modules update", Optick::Category::Update)
+
 	item = modules.begin();
 	while (item != modules.end() && ret == UpdateStatus::CONTINUE)
 	{
@@ -327,13 +325,11 @@ UpdateStatus Application::DoUpdate()
 
 UpdateStatus Application::PostUpdate()
 {
-	BROFILERCATEGORY("Application PostUpdate", Profiler::Color::Aqua);
 	UpdateStatus ret = UpdateStatus::CONTINUE;
 
 	std::vector<Module*>::iterator item = modules.begin();
 	
 	item = modules.begin();
-	BROFILERCATEGORY("Modules PostUpdate", Profiler::Color::Aqua);
 	while (item != modules.end() && ret == UpdateStatus::CONTINUE)
 	{
 		if ((*item)->IsActive())

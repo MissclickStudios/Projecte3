@@ -51,7 +51,6 @@ bool E_Project::Draw(ImGuiIO& io)
 {
 	bool ret = true;
 
-	BROFILERCATEGORY(GetName(), Profiler::Color::HoneyDew);
 
 	CheckFlags();
 
