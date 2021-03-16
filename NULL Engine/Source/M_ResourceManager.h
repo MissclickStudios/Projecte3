@@ -99,6 +99,8 @@ private:																															// --- ASSETS MONITORING METHODS ---
 
 	uint64			GetAssetFileModTimeFromMeta		(const char* assetsPath);
 
+	void FindPrefabs(); //Finds all prefabs in Assets/Prefabs
+
 private:																											// --- IMPORT FILE METHODS ---
 	//uint32		ImportFile						(const char* assetsPath);										// 
 	//uint32		ImportFromAssets				(const char* assetsPath);										// 
@@ -127,6 +129,7 @@ private:																											// --- META FILE METHODS ---
 private:
 	std::map<uint32, Resource*>		resources;																		// Resources currently in memory.
 	std::map<uint32, std::string>	library;																		// UID and Library Path string of all loaded resources.
+	std::map<uint32, std::string> prefabs;
 
 	float							fileRefreshTimer;																// 
 	float							fileRefreshRate;																// 
