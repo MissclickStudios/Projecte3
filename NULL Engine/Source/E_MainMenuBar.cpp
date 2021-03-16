@@ -2,7 +2,7 @@
 #include "M_Renderer3D.h"
 #include "M_Editor.h"
 #include "M_Scene.h"
-
+#include "Profiler.h"
 #include "E_MainMenuBar.h"
 
 #include "MemoryManager.h"
@@ -20,6 +20,8 @@ E_MainMenuBar::~E_MainMenuBar()
 bool E_MainMenuBar::Draw(ImGuiIO& io)
 {
 	bool ret = true;
+
+	BROFILERCATEGORY(GetName(), Profiler::Color::IndianRed);
 
 	ImGui::BeginMainMenuBar();
 

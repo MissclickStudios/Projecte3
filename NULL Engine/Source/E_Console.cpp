@@ -5,7 +5,7 @@
 #include "M_Editor.h"
 
 #include "E_Console.h"
-
+#include "Profiler.h"
 #include "MemoryManager.h"
 
 #define MAX_CONSOLE_LOG_SIZE 1000
@@ -24,6 +24,8 @@ E_Console::~E_Console()
 bool E_Console::Draw(ImGuiIO& io)
 {
 	bool ret = true;
+
+	BROFILERCATEGORY(GetName(), Profiler::Color::IndianRed);
 
 	ImGui::Begin(GetName(), NULL, ImGuiWindowFlags_MenuBar);
 	

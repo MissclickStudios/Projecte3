@@ -1,6 +1,6 @@
 #include "VariableTypedefs.h"
 #include "JSONParser.h"
-
+#include "Profiler.h"
 #include "Time.h"
 #include "Random.h"
 #include "GameObject.h"
@@ -102,11 +102,7 @@ UpdateStatus M_ResourceManager::PreUpdate(float dt)
 
 UpdateStatus M_ResourceManager::Update(float dt)
 {
-	UpdateStatus status = UpdateStatus::CONTINUE;
-
-	
-
-	return status;
+	return UpdateStatus::CONTINUE;
 }
 
 UpdateStatus M_ResourceManager::PostUpdate(float dt)

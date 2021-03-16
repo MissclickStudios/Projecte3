@@ -7,6 +7,7 @@
 #include "M_Input.h"
 
 #include "MemoryManager.h"
+#include "Profiler.h"
 
 #define MAX_KEYS 300
 #define MAX_DIR_LENGTH 300
@@ -370,6 +371,7 @@ UpdateStatus M_Input::PreUpdate(float dt)
 
 UpdateStatus M_Input::Update(float dt)
 {
+	BROFILERCATEGORY("Input", Profiler::Color::Aqua);
 	if (App->input->GetKey(SDL_SCANCODE_F1) == KeyState::KEY_DOWN)
 	{
 		App->debug = !App->debug;

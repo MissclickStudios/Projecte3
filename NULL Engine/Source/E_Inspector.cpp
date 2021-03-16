@@ -2,7 +2,7 @@
 #include <string>
 
 #include "MathGeoTransform.h"
-
+#include "Profiler.h"
 #include "Color.h"
 #include "AnimatorClip.h"
 
@@ -74,6 +74,8 @@ E_Inspector::~E_Inspector()
 bool E_Inspector::Draw(ImGuiIO& io)
 {
 	bool ret = true;
+
+	BROFILERCATEGORY(GetName(), Profiler::Color::IndianRed);
 
 	ImGui::Begin("Inspector");
 

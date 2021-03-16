@@ -1,5 +1,6 @@
 #include "MathGeoTransform.h"
 #include "MathGeoFrustum.h"
+#include "Profiler.h"
 
 #include "EngineApplication.h"
 #include "M_Window.h"
@@ -37,6 +38,8 @@ E_Viewport::~E_Viewport()
 bool E_Viewport::Draw(ImGuiIO& io)
 {
 	bool ret = true;
+
+	BROFILERCATEGORY(GetName(), Profiler::Color::IndianRed);
 	
 	wantTextInput = io.WantTextInput;																	// Later Generalize as a M_Editor Variable/Method.
 	

@@ -2,7 +2,7 @@
 
 #include "Time.h"
 #include "Color.h"
-
+#include "Profiler.h"
 #include "EngineApplication.h"
 #include "M_Window.h"
 #include "M_Renderer3D.h"
@@ -45,6 +45,8 @@ E_Configuration::~E_Configuration()
 bool E_Configuration::Draw(ImGuiIO& io)
 {
 	bool ret = true;
+
+	BROFILERCATEGORY(GetName(), Profiler::Color::IndianRed);
 
 	ImGui::Begin(GetName(), nullptr, ImGuiWindowFlags_MenuBar);
 

@@ -4,7 +4,7 @@
 #include "GameObject.h"
 
 #include "E_Hierarchy.h"
-
+#include "Profiler.h"
 #include "MemoryManager.h"
 
 E_Hierarchy::E_Hierarchy() : EditorPanel("Hierarchy"), 
@@ -22,6 +22,8 @@ E_Hierarchy::~E_Hierarchy()
 bool E_Hierarchy::Draw(ImGuiIO& io)
 {
 	bool ret = true;
+
+	BROFILERCATEGORY(GetName(), Profiler::Color::IndianRed);
 
 	ImGui::Begin("Hierarchy");
 

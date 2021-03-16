@@ -151,6 +151,8 @@ UpdateStatus M_Editor::PostUpdate(float dt)
 
 	float total_time = 0.0f;
 
+	
+
 	if (BeginRootWindow(io, "Root window", true, ImGuiWindowFlags_MenuBar))
 	{
 		bool draw = true;
@@ -158,10 +160,6 @@ UpdateStatus M_Editor::PostUpdate(float dt)
 		{
 			if (editorPanels[i]->IsActive())
 			{
-				/*total_time = Time::Real::PeekPerfTimer();
-				draw = editorPanels[i]->Draw(io);
-				total_time = Time::Real::PeekPerfTimer() - total_time;
-				LOG("TOTAL TIME { %s } ==> { %.3f }", editorPanels[i]->GetName(), total_time);*/
 
 				draw = editorPanels[i]->Draw(io);
 
