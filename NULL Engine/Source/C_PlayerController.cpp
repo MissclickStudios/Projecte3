@@ -78,29 +78,32 @@ bool C_PlayerController::Update()
 			//direction.Normalize();
 			//
 			//float rad = direction.AimedAngle();
-			//float3 bulletVel = { bulletSpeed * math::Cos(rad) , 0, bulletSpeed * math::Sin(rad) };
+			//
 			//
 			//float angle = RadToDeg(-rad) + 90;
 			//GetOwner()->transform->SetLocalEulerRotation(float3(0, angle, 0));
 			//
-			//if (App->input->GetMouseButton(1) == KeyState::KEY_DOWN || App->input->GetGameControllerTrigger(1) == ButtonState::BUTTON_DOWN)
-			//{
-			//	Resource* resource = App->resourceManager->GetResourceFromLibrary("Assets/Models/Primitives/sphere.fbx");
-			//	if (resource != nullptr)
-			//	{
-			//		GameObject* bullet = App->scene->GenerateGameObjectsFromModel((R_Model*)resource);
-			//
-			//		bullet->transform->SetWorldPosition(GetOwner()->transform->GetWorldPosition());
-			//		C_RigidBody* rigidBody = (C_RigidBody*)bullet->CreateComponent(ComponentType::RIGIDBODY);
-			//		rigidBody->FreezePositionY(true);
-			//		rigidBody->FreezeRotationX(true);
-			//		rigidBody->FreezeRotationY(true);
-			//		rigidBody->FreezeRotationZ(true);
-			//		rigidBody->SetLinearVelocity(bulletVel);
-			//		bullet->CreateComponent(ComponentType::SPHERE_COLLIDER);
-			//		bullet->CreateComponent(ComponentType::BULLET_BEHAVIOR);
-			//	}
-			//}
+			float3 ownerRotation = GetOwner()->transform->GetLocalEulerRotation();
+			float3 bulletVel = { bulletSpeed * math::Cos(DegToRad(ownerRotation.x)) , 0, bulletSpeed * math::Sin(DegToRad(ownerRotation.x)) };
+
+			if (App->input->GetMouseButton(1) == KeyState::KEY_DOWN || App->input->GetGameControllerTrigger(1) == ButtonState::BUTTON_DOWN)
+			{
+				Resource* resource = App->resourceManager->GetResourceFromLibrary("Assets/Models/Primitives/sphere.fbx");
+				if (resource != nullptr)
+				{
+					GameObject* bullet = App->scene->GenerateGameObjectsFromModel((R_Model*)resource);
+			
+					bullet->transform->SetWorldPosition(GetOwner()->transform->GetWorldPosition());
+					C_RigidBody* rigidBody = (C_RigidBody*)bullet->CreateComponent(ComponentType::RIGIDBODY);
+					rigidBody->FreezePositionY(true);
+					rigidBody->FreezeRotationX(true);
+					rigidBody->FreezeRotationY(true);
+					rigidBody->FreezeRotationZ(true);
+					rigidBody->SetLinearVelocity(bulletVel);
+					bullet->CreateComponent(ComponentType::SPHERE_COLLIDER);
+					bullet->CreateComponent(ComponentType::BULLET_BEHAVIOR);
+				}
+			}
 		}
 		else
 			if (App->input->GetKey(SDL_SCANCODE_W) == KeyState::KEY_DOWN || 
@@ -216,6 +219,7 @@ void C_PlayerController::Move(C_RigidBody* rigidBody)
 	bool backward = false;
 	bool right = false;
 	bool left = false;
+
 	if (App->input->GetKey(SDL_SCANCODE_W) == KeyState::KEY_REPEAT)
 		forward = true;
 	if (App->input->GetKey(SDL_SCANCODE_S) == KeyState::KEY_REPEAT)
@@ -225,9 +229,7 @@ void C_PlayerController::Move(C_RigidBody* rigidBody)
 	if (App->input->GetKey(SDL_SCANCODE_A) == KeyState::KEY_REPEAT)
 		left = true;
 
-
-	///
-
+	// Controller movement
 	if (App->input->GetGameControllerAxis(1) == AxisState::POSITIVE_AXIS_REPEAT)
 		forward = true;
 	if (App->input->GetGameControllerAxis(1) == AxisState::NEGATIVE_AXIS_REPEAT)
@@ -237,18 +239,19 @@ void C_PlayerController::Move(C_RigidBody* rigidBody)
 	if (App->input->GetGameControllerAxis(0) == AxisState::POSITIVE_AXIS_REPEAT)
 		left = true;
 
-	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_DOWN && right && dashTimer == 0)
-	{
+	if ((App->input->GetKey(SDL_SCANCODE_E) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(1) == ButtonState::BUTTON_DOWN ) && right && dashTimer == 0)
+	{	
+		rigidBody->AddForce(physx::PxVec3(-dashForce, 0, 0), physx::PxForceMode::eIMPULSE);
 		rightDash = true;
 		dashTimer = dashCooldown;
-		rigidBody->AddForce(physx::PxVec3(dashForce, 0, 0), physx::PxForceMode::eIMPULSE);
 	}
 
-	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_DOWN && left && dashTimer == 0)
+	
+	if ((App->input->GetKey(SDL_SCANCODE_E) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(1) == ButtonState::BUTTON_DOWN) && left && dashTimer == 0)
 	{
+		rigidBody->AddForce(physx::PxVec3(dashForce, 0, 0), physx::PxForceMode::eIMPULSE);
 		leftDash = true;
 		dashTimer = dashCooldown;
-		rigidBody->AddForce(physx::PxVec3(-dashForce, 0, 0), physx::PxForceMode::eIMPULSE);
 	}
 
 	///
