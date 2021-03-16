@@ -40,6 +40,35 @@ bool C_PlayerController::Update()
 		{
 			Move(rigidBody);
 
+			playerDirection = ReturnPlayerDirection();
+
+			switch(playerDirection)
+			{
+			case Direction::NORTH:
+				GetOwner()->transform->SetLocalEulerRotation(float3(0, 0, 0));
+			break;
+			case Direction::NORTH_WEST:
+				GetOwner()->transform->SetLocalEulerRotation(float3(0, 45, 0));
+				break;
+			case Direction::WEST:
+				GetOwner()->transform->SetLocalEulerRotation(float3(0, 90, 0));
+				break;
+			case Direction::SOUTH_WEST:
+				GetOwner()->transform->SetLocalEulerRotation(float3(0, 135, 0));
+				break;
+			case Direction::SOUTH:
+				GetOwner()->transform->SetLocalEulerRotation(float3(0, 180, 0));
+				break;
+			case Direction::SOUTH_EAST:
+				GetOwner()->transform->SetLocalEulerRotation(float3(0, 225, 0));
+				break;
+			case Direction::EAST:
+				GetOwner()->transform->SetLocalEulerRotation(float3(0, 270, 0));
+				break;
+			case Direction::NORTH_EAST:
+				GetOwner()->transform->SetLocalEulerRotation(float3(0, 315, 0));
+				break;
+			}
 			//float2 mouse, center, direction;
 			//mouse = MousePositionToWorldPosition();
 			//center.x = GetOwner()->transform->GetWorldPosition().x;
@@ -203,9 +232,9 @@ void C_PlayerController::Move(C_RigidBody* rigidBody)
 		forward = true;
 	if (App->input->GetGameControllerAxis(1) == AxisState::NEGATIVE_AXIS_REPEAT)
 		backward = true;
-	if (App->input->GetGameControllerAxis(0) == AxisState::POSITIVE_AXIS_REPEAT)
-		right = true;
 	if (App->input->GetGameControllerAxis(0) == AxisState::NEGATIVE_AXIS_REPEAT)
+		right = true;
+	if (App->input->GetGameControllerAxis(0) == AxisState::POSITIVE_AXIS_REPEAT)
 		left = true;
 
 	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_DOWN && right && dashTimer == 0)
