@@ -42,6 +42,9 @@ public:																								// --- RESOURCE MANAGER API ---
 	uint32			LoadFromLibrary					(const char* assetsPath);						// Loads a resource registered in the Library onto memory. Returns the resource's UID.
 	Resource*		GetResourceFromLibrary			(const char* assetsPath);						// Same as LoadFromLibrary() but it returns the resource instead of its UID.
 
+	void			RefreshProjectDirectories		();												// 
+	void			RefreshProjectDirectory			(const char* directoryToRefresh);				// 
+
 	// --- META FILE METHODS
 	ResourceType	GetTypeFromAssetsExtension		(const char* assetsPath);						// Returns the type of the resource related with the given Asset.
 	bool			GetForcedUIDsFromMeta			(const char* assetsPath, std::map<std::string, uint32>& forcedUIDs);			// TMP. See if it can be done another way.
@@ -60,11 +63,12 @@ public:																								// --- RESOURCE MANAGER API ---
 	void			GetResources					(std::map<uint32, Resource*>& resources) const;	// Returns a map filled with all the resources currently loaded onto memory.
 	const std::map<uint32, Resource*>* GetResources	() const;
 
-	R_Shader*		GetShader(const char* name);													//Look for a shader in the library and load and return it
-	void			GetAllShaders(std::vector<R_Shader*>& shaders);									//Retrieve all the shaders in the library
+	R_Shader*		GetShader						(const char* name);								//Look for a shader in the library and load and return it
+	void			GetAllShaders					(std::vector<R_Shader*>& shaders);				//Retrieve all the shaders in the library
 
-	void			GetAllTextures(std::vector<R_Texture*>& textures);								//Retrieve all the shaders in the library
+	void			GetAllTextures					(std::vector<R_Texture*>& textures);			//Retrieve all the shaders in the library
 
+	// --- PREFAB METHODS
 	void CreatePrefab(GameObject* gameObject);
 
 	void UpdatePrefab(GameObject* gameObject);
@@ -105,16 +109,9 @@ private:																															// --- ASSETS MONITORING METHODS ---
 	void FindPrefabs(); //Finds all prefabs in Assets/Prefabs
 
 private:																											// --- IMPORT FILE METHODS ---
-	//uint32		ImportFile						(const char* assetsPath);										// 
-	//uint32		ImportFromAssets				(const char* assetsPath);										// 
-	//uint			SaveResourceToLibrary			(Resource* resource);											// 
-	
-	//uint32		LoadFromLibrary					(const char* assetsPath);										// 
-
 	uint32			ImportFromAssets				(const char* assetsPath);										// 
 
 	const char*		GetValidPath					(const char* assetsPath);										// 
-	//ResourceType	GetTypeFromAssetsExtension		(const char* assetsPath);										// 
 	ResourceType	GetTypeFromLibraryExtension		(const char* libraryPath);										// 
 
 	void			SetResourceAssetsPathAndFile	(const char* assetsPath, Resource* resource);					// 
@@ -132,7 +129,7 @@ private:																											// --- META FILE METHODS ---
 private:
 	std::map<uint32, Resource*>		resources;																		// Resources currently in memory.
 	std::map<uint32, std::string>	library;																		// UID and Library Path string of all loaded resources.
-	std::map<uint32, std::string> prefabs;
+	std::map<uint32, std::string>	prefabs;
 
 	float							fileRefreshTimer;																// 
 	float							fileRefreshRate;																// 

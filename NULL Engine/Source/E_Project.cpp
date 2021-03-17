@@ -164,13 +164,27 @@ void E_Project::GenerateDockspace(ImGuiIO& io) const
 	}
 }
 
-void E_Project::DrawMenuBar() const
+void E_Project::DrawMenuBar()
 {
 	ImGui::BeginMenuBar();
 
 	if (ImGui::BeginMenu("Options"))
 	{
 		ImGui::MenuItem("Show In Explorer", nullptr, false, false);
+
+		if (ImGui::MenuItem("Refresh All Directories", nullptr, false))
+		{
+			App->resourceManager->RefreshProjectDirectories();
+			refreshRootDirectory		= true;
+			refreshDirectoryToDisplay	= true;
+		}
+
+		if (ImGui::MenuItem("Refresh Current Directory", nullptr, false))
+		{
+			App->resourceManager->RefreshProjectDirectory(directoryToDisplay);
+			refreshRootDirectory		= true;
+			refreshDirectoryToDisplay	= true;
+		}
 
 		ImGui::EndMenu();
 	}
