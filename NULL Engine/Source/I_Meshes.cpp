@@ -58,13 +58,13 @@ void Importer::Meshes::Import(const aiMesh* assimpMesh, R_Mesh* rMesh)
 	if (assimpMesh->HasBones())
 		Utilities::GetBones(assimpMesh, rMesh);
 
-	rMesh->LoadBuffers();																			// 
+	rMesh->LoadStaticBuffers();																		// 
 	rMesh->SetAABB();																				// 
 }
 
 void Importer::Meshes::Utilities::GetVertices(const aiMesh* assimpMesh, R_Mesh* rMesh)
 {
-	uint verticesSize = assimpMesh->mNumVertices * 3;													// There will be 3 coordinates per vertex, hence the size will be numVertices * 3.
+	uint verticesSize = assimpMesh->mNumVertices * 3;												// There will be 3 coordinates per vertex, hence the size will be numVertices * 3.
 	rMesh->vertices.resize(verticesSize);															// Allocating in advance the memory required to store all the verts.
 
 	memcpy(&rMesh->vertices[0], assimpMesh->mVertices, sizeof(float) * verticesSize);				// &rMesh->vertices[0] gets a pointer to the beginning of the vector.
@@ -143,16 +143,23 @@ void Importer::Meshes::Utilities::GetBones(const aiMesh* assimpMesh, R_Mesh* rMe
 
 void Importer::Meshes::Utilities::GetOffsetMatrix(const aiBone* assimpBone, float4x4& offsetMatrix)
 {
-	aiTransform aiT;
+	/*aiTransform aiT;
 	Transform	maT;
-
-	assimpBone->mOffsetMatrix.Decompose(aiT.position, aiT.rotation, aiT.scale);
+	
+	assimpBone->mOffsetMatrix.Decompose(aiT.scale, aiT.rotation, aiT.position);
 
 	maT.position	= { aiT.position.x, aiT.position.y, aiT.position.z };
 	maT.rotation	= { aiT.rotation.x, aiT.rotation.y, aiT.rotation.z, aiT.rotation.w };
 	maT.scale		= { aiT.scale.x, aiT.scale.y, aiT.scale.z };
 
-	offsetMatrix = float4x4::FromTRS(maT.position, maT.rotation, maT.scale);
+	offsetMatrix = float4x4::FromTRS(maT.position, maT.rotation, maT.scale);*/
+
+	const aiMatrix4x4& aiOffsetMat = assimpBone->mOffsetMatrix;
+	
+	offsetMatrix = float4x4(aiOffsetMat.a1, aiOffsetMat.a2, aiOffsetMat.a3, aiOffsetMat.a4,
+							aiOffsetMat.b1, aiOffsetMat.b2, aiOffsetMat.b3, aiOffsetMat.b4, 
+							aiOffsetMat.c1, aiOffsetMat.c2, aiOffsetMat.c3, aiOffsetMat.c4, 
+							aiOffsetMat.d1, aiOffsetMat.d2, aiOffsetMat.d3, aiOffsetMat.d4);
 }
 
 void Importer::Meshes::Utilities::GetWeights(const aiBone* assimpBone, uint boneID, std::multimap<uint, BoneWeight>& weights)
@@ -447,6 +454,8 @@ bool Importer::Meshes::Load(const char* buffer, R_Mesh* rMesh)
 	// ---BONE DATA ---
 	if (headerData[4] != 0)
 	{
+		rMesh->hasBones = true;
+		
 		uint nVertices = (rMesh->vertices.size() / 3) * 4;
 
 		rMesh->boneIDs.resize(nVertices);
@@ -460,11 +469,6 @@ bool Importer::Meshes::Load(const char* buffer, R_Mesh* rMesh)
 		bytes = nVertices * sizeof(float);
 		memcpy_s(&rMesh->boneWeights[0], bytes, cursor, bytes);
 		cursor += bytes;
-
-		for (int i = 0; i < 10; i++)
-		{
-			LOG("boneWeights %d = %f", i, rMesh->boneWeights[i]);
-		}
 
 		uint bytes = headerData[4] * sizeof(float4x4);
 		memcpy(&rMesh->boneOffsets[0], cursor, bytes);
@@ -489,7 +493,7 @@ bool Importer::Meshes::Load(const char* buffer, R_Mesh* rMesh)
 	cursor += bytes;
 
 	rMesh->aabb = AABB(aabbCorners[0], aabbCorners[7]);
-	rMesh->LoadBuffers();																									// STORING VBO, NBO, TBO, IBO DATA IS IRRELEVANT IN THIS CASE
+	rMesh->LoadStaticBuffers();																									// STORING VBO, NBO, TBO, IBO DATA IS IRRELEVANT IN THIS CASE
 
 	LOG("[STATUS] Importer: Successfully Loaded Mesh { %s } from Library!", rMesh->GetAssetsFile());
 

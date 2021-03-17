@@ -23,7 +23,6 @@ bool E_Hierarchy::Draw(ImGuiIO& io)
 {
 	bool ret = true;
 
-	BROFILERCATEGORY(GetName(), Profiler::Color::IndianRed);
 
 	ImGui::Begin("Hierarchy");
 

@@ -44,7 +44,7 @@ private:
 	void			GenerateDockspace				(ImGuiIO& io) const;										// 
 
 private:
-	void			DrawMenuBar						() const;													// 
+	void			DrawMenuBar						();															// 
 	void			DrawAssetsTree					();															// 
 	void			DrawFolderExplorer				();															// 
 

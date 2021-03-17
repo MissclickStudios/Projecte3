@@ -73,8 +73,7 @@ transform			(nullptr),
 is_master_root		(false),
 is_scene_root		(false),
 is_bone				(false),
-to_delete			(false),
-show_bounding_boxes	(false)
+to_delete			(false)
 {
 	if (name.empty())
 	{
@@ -194,19 +193,20 @@ bool GameObject::LoadState(ParsonNode& root)
 			switch (type)
 			{
 			//case COMPONENT_TYPE::TRANSFORM: { component = new C_Transform(this); }	break;
-			case ComponentType::MESH:		{ component = new C_Mesh(this); }		break;
-			case ComponentType::MATERIAL:	{ component = new C_Material(this); }	break;
-			case ComponentType::LIGHT:		{ component = new C_Light(this); }		break;
-			case ComponentType::CAMERA: { component = new C_Camera(this); if (App->play) App->camera->SetCurrentCamera((C_Camera*)component); }		break; //TODO: Harcoded the set the camera when playing
-			case ComponentType::ANIMATOR:	{ component = new C_Animator(this); }	break;
-			case ComponentType::ANIMATION: { component = new C_Animation(this); }	break;
-			case ComponentType::AUDIOSOURCE: { component = new C_AudioSource(this); } break;
-			case ComponentType::AUDIOLISTENER: { component = new C_AudioListener(this); } break;
+
+			case ComponentType::MESH:				{ component = new C_Mesh(this); }				break;
+			case ComponentType::MATERIAL:			{ component = new C_Material(this); }			break;
+			case ComponentType::LIGHT:				{ component = new C_Light(this); }				break;
+			case ComponentType::CAMERA:				{ component = new C_Camera(this); }				break;
+			case ComponentType::ANIMATOR:			{ component = new C_Animator(this); }			break;
+			case ComponentType::ANIMATION:			{ component = new C_Animation(this); }			break;
+			case ComponentType::AUDIOSOURCE:		{ component = new C_AudioSource(this); }		break;
+			case ComponentType::AUDIOLISTENER:		{ component = new C_AudioListener(this); }		break;
 			case ComponentType::RIGIDBODY:			{ component = new C_RigidBody(this); }			break;
 			case ComponentType::BOX_COLLIDER:		{ component = new C_BoxCollider(this); }		break;
 			case ComponentType::SPHERE_COLLIDER:	{ component = new C_SphereCollider(this); }		break;
 			case ComponentType::CAPSULE_COLLIDER:	{ component = new C_CapsuleCollider(this); }	break;
-			case ComponentType::PLAYER_CONTROLLER: { component = new C_PlayerController(this); } break;
+			case ComponentType::PLAYER_CONTROLLER:	{ component = new C_PlayerController(this); } break;
 			case ComponentType::BULLET_BEHAVIOR: { component = new C_BulletBehavior(this); }	break;
 			case ComponentType::PROP_BEHAVIOR: { component = new C_PropBehavior(this); }	break;
 			case ComponentType::CAMERA_BEHAVIOR: { component = new C_CameraBehavior(this); }	break;
@@ -243,7 +243,7 @@ void GameObject::FreeChilds()
 {
 	if (parent != nullptr)
 	{
-		parent->DeleteChild(this);											// Deleting this GameObject from the childs list of its parent.
+		parent->DeleteChild(this);												// Deleting this GameObject from the childs list of its parent.
 	}
 
 	/*if (parent != nullptr)													// Dirty fix to avoid innecessary calls to GetAllChilds().
@@ -354,6 +354,12 @@ void GameObject::GetRenderers(std::vector<MeshRenderer>& meshRenderers, std::vec
 
 		cuboidRenderers.push_back(CuboidRenderer(obb_vertices, CuboidType::OBB));
 		cuboidRenderers.push_back(CuboidRenderer(aabb_vertices, CuboidType::AABB));
+	}
+
+	C_BoxCollider* collider = GetComponent<C_BoxCollider>();
+	if (collider && collider->ToShowCollider())
+	{
+		cuboidRenderers.push_back(CuboidRenderer(collider->GetCornerPoints(), CuboidType::COLLIDER));
 	}
 }
 
@@ -518,7 +524,7 @@ void GameObject::GetAllChilds(std::map<std::string, GameObject*>& childs)
 {
 	if (this->childs.empty())
 	{
-		LOG("[WARNING] Game Object: GameObject { %s } did not have any childs!", this->GetName());
+		//LOG("[WARNING] Game Object: GameObject { %s } did not have any childs!", this->GetName());
 		return;
 	}
 

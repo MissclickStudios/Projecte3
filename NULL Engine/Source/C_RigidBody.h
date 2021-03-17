@@ -46,8 +46,8 @@ public:
 	inline physx::PxReal	GetAngularDamping() { return angularDamping; }
 	inline physx::PxReal	GetLinearDamping() { return linearDamping; }
 
-	inline void				AddForce(physx::PxVec3 force, physx::PxForceMode::Enum mode) { if (rigidBody) rigidBody->addForce(force, mode); }
-	inline void				AddTorque(physx::PxVec3 force, physx::PxForceMode::Enum mode) { if (rigidBody)rigidBody->addTorque(force, mode); }
+	inline void				AddForce(physx::PxVec3 force, physx::PxForceMode::Enum mode) { if (dynamicBody) dynamicBody->addForce(force, mode); }
+	inline void				AddTorque(physx::PxVec3 force, physx::PxForceMode::Enum mode) { if (dynamicBody)dynamicBody->addTorque(force, mode); }
 
 	inline void				FrozenPositions(bool& x, bool& y, bool& z) { x = freezePositionX; y = freezePositionY; z = freezePositionZ; }
 	inline void				FreezePositionX(bool enable) { freezePositionX = enable; toUpdate = true; }
@@ -59,9 +59,9 @@ public:
 	inline void				FreezeRotationY(bool enable) { freezeRotationY = enable; toUpdate = true; }
 	inline void				FreezeRotationZ(bool enable) { freezeRotationZ = enable; toUpdate = true; }
 
-	bool					IsSleeping() { return rigidBody->isSleeping(); }
+	bool					IsSleeping() { return dynamicBody->isSleeping(); }
 
-	inline physx::PxRigidDynamic* const GetRigidBody() { return rigidBody; }
+	inline physx::PxRigidActor* const GetRigidBody() { if (isStatic) return staticBody; else return dynamicBody; }
 
 	bool IsStatic() { return isStatic; }
 	void MakeStatic();
@@ -75,7 +75,10 @@ private:
 
 	void RigidBodyMovesTransform();
 
-	physx::PxRigidDynamic* rigidBody = nullptr;
+	bool isStatic = false;
+	physx::PxRigidDynamic* dynamicBody = nullptr;
+	physx::PxRigidStatic* staticBody = nullptr;
+
 	bool toUpdate = false;
 
 	float mass = 10.f;
@@ -94,8 +97,6 @@ private:
 	bool freezeRotationX = false;
 	bool freezeRotationY = false;
 	bool freezeRotationZ = false;
-
-	bool isStatic = false;
 };
 
 #endif // !__C_RIGIDBODY_H__

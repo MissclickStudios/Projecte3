@@ -1,6 +1,7 @@
 #include "Profiler.h"													
 #include "OpenGL.h"														
 #include "Time.h"
+#include "JSONParser.h"
 
 #include "Macros.h"														
 #include "Log.h"														
@@ -89,7 +90,26 @@ bool M_Renderer3D::Init(ParsonNode& configuration)
 	//InitFramebuffers();
 	LoadDebugTexture();
 
+	SetVsync(configuration.GetBool("Vsync"));
 
+	renderWorldGrid = configuration.GetBool("renderWorldGrid");
+	renderWorldAxis = configuration.GetBool("renderWorldAxis");
+	renderWireframes = configuration.GetBool("renderWireFrame");
+	renderVertexNormals = configuration.GetBool("renderVertexNormals");
+	renderFaceNormals = configuration.GetBool("renderFaceNormals");
+	renderBoundingBoxes = configuration.GetBool("renderBoundingBoxes");
+	renderSkeletons = configuration.GetBool("renderSkeletons");
+
+	worldGridColor = configuration.GetFloat4("worldGridColor");
+	wireframeColor = configuration.GetFloat4("wireframeColor");
+	vertexNormalsColor = configuration.GetFloat4("vertexNormalsColor");
+	faceNormalsColor = configuration.GetFloat4("faceNormalsColor");
+
+	aabbColor = configuration.GetFloat4("aabbColor");
+	obbColor = configuration.GetFloat4("obbColor");
+	frustumColor = configuration.GetFloat4("frustumColor");
+	rayColor = configuration.GetFloat4("rayColor");
+	boneColor = configuration.GetFloat4("boneColor");
 
 	return ret;
 }
@@ -104,9 +124,6 @@ bool M_Renderer3D::Start()
 	defaultSkyBox.CreateSkybox();
 
 	GenScreenBuffer();
-
-	
-
 
 	return true;
 }
@@ -152,7 +169,6 @@ UpdateStatus M_Renderer3D::PreUpdate(float dt)
 // PostUpdate present buffer to screen
 UpdateStatus M_Renderer3D::PostUpdate(float dt)
 {	
-	BROFILERCATEGORY("M_Renderer3D PostUpdate", Profiler::Color::Chartreuse);
 
 
 	RenderScene();
@@ -206,16 +222,37 @@ bool M_Renderer3D::CleanUp()
 
 bool M_Renderer3D::LoadConfiguration(ParsonNode& root)
 {
-	bool ret = true;
+	vsync = root.GetBool("Vsync");
 
-	return ret;
+	return true;
 }
 
 bool M_Renderer3D::SaveConfiguration(ParsonNode& root) const
 {
-	bool ret = true;
+	root.SetBool("Vsync", vsync);
 
-	return ret;
+	uint	worldGridSize;																		//
+	
+	root.SetFloat4("worldGridColor", float4(&worldGridColor));
+	root.SetFloat4("wireframeColor", float4(&wireframeColor));
+	root.SetFloat4("vertexNormalsColor", float4(&vertexNormalsColor));
+	root.SetFloat4("faceNormalsColor", float4(&faceNormalsColor));
+
+	root.SetFloat4("aabbColor", float4(&aabbColor));
+	root.SetFloat4("obbColor", float4(&obbColor));
+	root.SetFloat4("frustumColor", float4(&frustumColor));
+	root.SetFloat4("rayColor", float4(&rayColor));
+	root.SetFloat4("boneColor", float4(&boneColor));
+
+	root.SetBool("renderWorldGrid",renderWorldGrid);	
+	root.SetBool("renderWorldAxis", renderWorldAxis);
+	root.SetBool("renderWireFrame", renderWireframes);
+	root.SetBool("renderVertexNormals", renderVertexNormals);
+	root.SetBool("renderFaceNormals", renderFaceNormals);
+	root.SetBool("renderBoundingBoxes", renderBoundingBoxes);
+	root.SetBool("renderSkeletons", renderSkeletons);
+
+	return true;
 }
 
 // ----------- RENDERER METHODS -----------
@@ -936,6 +973,8 @@ void M_Renderer3D::SetVsync(const bool& setTo)
 			LOG("[STATUS] Vsync has been %s", vsync ? "activated" : "deactivated");
 		}
 	}
+
+	vsync ? App->framesAreCapped = false : App->framesAreCapped = true;
 }
 
 bool M_Renderer3D::GetGLFlag(GLenum flag) const
@@ -1352,30 +1391,29 @@ cMaterial	(cMaterial)
 
 void MeshRenderer::Render()
 {
-
 	R_Mesh* rMesh = cMesh->GetMesh();
-
+	
 	if (rMesh == nullptr)
 	{
 		LOG("[ERROR] Renderer 3D: Could not render Mesh! Error: R_Mesh* was nullptr.");
 		return;
 	}
 
-	ApplyDebugParameters();																			// Enable Wireframe Mode for this specific mesh, etc.
-	ApplyTextureAndMaterial();																		// Apply resource texture or default texture, mesh color...
-	ApplyShader();
-	
-	glBindVertexArray(rMesh->VAO);
+	ApplyDebugParameters();																									// Enable Wireframe Mode for this specific mesh, etc.
+	ApplyTextureAndMaterial();																								// Apply resource texture or default texture, mesh color...
+	ApplyShader();																											// 
 
-	glDrawElements(GL_TRIANGLES, rMesh->indices.size(), GL_UNSIGNED_INT, nullptr);					// 
-	
-	glBindVertexArray(0);
+	(cMesh->GetSkinnedMesh() == nullptr) ? glBindVertexArray(rMesh->VAO) : glBindVertexArray(cMesh->GetSkinnedMesh()->VAO);	// 
 
-	glBindTexture(GL_TEXTURE_2D, 0);																// ---------------------
+	glDrawElements(GL_TRIANGLES, rMesh->indices.size(), GL_UNSIGNED_INT, nullptr);											// 
 	
-	ClearTextureAndMaterial();																		// Clear the specifications applied in ApplyTextureAndMaterial().
-	ClearDebugParameters();																			// Clear the specifications applied in ApplyDebugParameters().
-	ClearShader();
+	glBindVertexArray(0);																									//
+
+	glBindTexture(GL_TEXTURE_2D, 0);																						// ---------------------
+	
+	ClearShader();																											// Clear the specifications applied in ApplyShader().
+	ClearTextureAndMaterial();																								// Clear the specifications applied in ApplyTextureAndMaterial().
+	ClearDebugParameters();																									// Clear the specifications applied in ApplyDebugParameters().
 
 	// --- DEBUG DRAW ---
 	if (rMesh->drawVertexNormals || App->renderer->GetRenderVertexNormals())
@@ -1755,6 +1793,7 @@ Color CuboidRenderer::GetColorByType()
 	case CuboidType::AABB:		{ return App->renderer->GetAABBColor(); }		break;
 	case CuboidType::OBB:		{ return App->renderer->GetOBBColor(); }		break;
 	case CuboidType::FRUSTUM:	{ return App->renderer->GetFrustumColor(); }	break;
+	case CuboidType::COLLIDER:	{ return Green; }								break;
 	}
 
 	return White;
@@ -1768,6 +1807,7 @@ float CuboidRenderer::GetEdgeWidthByType()
 	case CuboidType::AABB:		{ return App->renderer->GetAABBEdgeWidth(); }		break;
 	case CuboidType::OBB:		{ return App->renderer->GetOBBEdgeWidth(); }		break;
 	case CuboidType::FRUSTUM:	{ return App->renderer->GetFrustumEdgeWidth(); }	break;
+	case CuboidType::COLLIDER:	{ return App->renderer->GetOBBEdgeWidth(); }		break;
 	}
 
 	return STANDARD_LINE_WIDTH;

@@ -83,21 +83,23 @@ bool M_Scene::Start()
 
 	//uint32 animation_uid = App->resourceManager->LoadFromLibrary(DEFAULT_ANIMATION);
 	//GenerateGameObjectsFromModel(animation_uid , float3(0.05f, 0.05f, 0.05f));
-	
-	//LoadScene("Assets/Scenes/FinalScene.json");
-	//SaveScene("SceneAutosave");																			// Autosave just right after loading the scene.
 
-	level.GetRooms();
-	level.GenerateLevel();
+	//level.GetRooms();
+	//level.GenerateLevel();
 	
-	level.AddFixedRoom("Shop", 3);
+	//level.AddFixedRoom("Shop", 3);
 	//level.AddFixedRoom("Boss", 20);
 	
 	//Last level function to call
-	level.GenerateRoom(0);
+	//level.GenerateRoom(0);
 
-	if(!CheckSceneLight()) App->renderer->GenerateSceneLight(Color(1.0f, 1.0f, 1.0f, 1.0f), Color(0.6,0.6,0.6,0.5), Color(0.6, 0.6, 0.6, 0.5), LightType::DIRECTIONAL);
-	
+	LoadScene("Assets/Scenes/MainScene.json");
+	SaveScene("SceneAutosave");																			// Autosave just right after loading the scene.
+
+
+
+	std::vector<R_Texture*> texs;
+	App->resourceManager->GetAllTextures(texs);
 
 	return ret;
 }
@@ -105,7 +107,6 @@ bool M_Scene::Start()
 // Update
 UpdateStatus M_Scene::Update(float dt)
 {
-	BROFILERCATEGORY(GetName(), Profiler::Color::Aqua);
 	if (App->debug == true)
 	{
 		HandleDebugInput();
@@ -116,7 +117,7 @@ UpdateStatus M_Scene::Update(float dt)
 		C_Animator* rootAnimator = animationRoot->GetComponent<C_Animator>();
 		if (rootAnimator != nullptr)
 		{
-			if (App->play && !App->pause)
+			if (App->gameState == GameState::PLAY)
 			{
 				if (App->input->GetKey(SDL_SCANCODE_KP_1) == KeyState::KEY_DOWN)
 				{
@@ -131,10 +132,10 @@ UpdateStatus M_Scene::Update(float dt)
 					rootAnimator->PlayClip("Attack", 8);
 				}
 
-				/*if (!rootAnimator->GetCurrentClip()->playing || !rootAnimator->CurrentClipExists())
+				if (!rootAnimator->CurrentClipExists() || !rootAnimator->GetCurrentClip()->playing)
 				{
 					rootAnimator->PlayClip("Idle", 8);
-				}*/
+				}
 			}
 		}
 	}
@@ -198,7 +199,6 @@ UpdateStatus M_Scene::Update(float dt)
 
 UpdateStatus M_Scene::PostUpdate(float dt)
 {
-	BROFILERCATEGORY("M_Scene PostUpdate", Profiler::Color::Yellow)
 	
 	for (uint n = 0; n < primitives.size(); n++)
 	{
@@ -745,7 +745,6 @@ std::vector<GameObject*>* M_Scene::GetGameObjects()
 
 bool M_Scene::ApplyTextureToSelectedGameObject(const uint32& uid)
 {
-	BROFILERCATEGORY("ApplyNewTextureToSelectedGameObject()", Profiler::Color::Magenta);
 
 	if (selectedGameObject == nullptr)
 	{

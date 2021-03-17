@@ -124,14 +124,7 @@ void C_Transform::UpdateWorldTransform()
 {
 	GameObject* owner = GetOwner();
 
-	if (owner->parent != nullptr)
-	{
-		worldTransform = owner->parent->GetComponent<C_Transform>()->worldTransform * localTransform;
-	}
-	else
-	{
-		worldTransform = localTransform;
-	}
+	worldTransform = (owner->parent != nullptr) ? owner->parent->GetComponent<C_Transform>()->worldTransform * localTransform : localTransform;
 
 	for (uint i = 0; i < owner->childs.size(); ++i)
 	{
@@ -152,14 +145,7 @@ void C_Transform::SyncWorldToLocal()
 {
 	const GameObject* owner = GetOwner();
 
-	if (owner->parent != nullptr)
-	{
-		worldTransform = owner->parent->GetComponent<C_Transform>()->worldTransform * localTransform;
-	}
-	else
-	{
-		worldTransform = localTransform;
-	}
+	worldTransform = (owner->parent != nullptr) ? owner->parent->GetComponent<C_Transform>()->worldTransform * localTransform : localTransform;
 
 	for (uint i = 0; i < owner->childs.size(); ++i)
 	{
@@ -172,21 +158,9 @@ void C_Transform::SyncLocalToWorld()
 {
 	GameObject* owner = GetOwner();
 	
-	if (owner->parent != nullptr)
-	{
-		localTransform = owner->parent->GetComponent<C_Transform>()->worldTransform.Inverted() * worldTransform;
-	}
-	else
-	{
-		localTransform = worldTransform;
-	}
+	localTransform = (owner->parent != nullptr) ? owner->parent->GetComponent<C_Transform>()->worldTransform.Inverted() * worldTransform : worldTransform;
 
-	localPosition = localTransform.TranslatePart();
-	float3 euler = localTransform.RotatePart().ToEulerXYZ();
-	localRotation = Quat::FromEulerXYZ(euler.x, euler.y, euler.z);
-	localScale = localTransform.GetScale();
-
-	localEulerRotation = euler;
+	SetLocalTransform(localTransform);
 
 	for (uint i = 0; i < owner->childs.size(); ++i)
 	{
@@ -203,8 +177,8 @@ void C_Transform::SyncLocalToWorld()
 	C_RigidBody* c_rigidBody = owner->GetComponent<C_RigidBody>();
 	if (c_rigidBody != nullptr)
 	{
-		if(!App->play || App->pause)
-			c_rigidBody->TransformMovesRigidBody(false);
+		//if(!App->play || App->pause)
+		//	c_rigidBody->TransformMovesRigidBody(false);
 	}
 
 	//syncLocalToGlobal = false;
@@ -224,12 +198,8 @@ void C_Transform::SetLocalTransform(const float4x4& localTransform)
 {
 	this->localTransform = localTransform;
 
-	localPosition = localTransform.TranslatePart();
-	float3 euler = localTransform.RotatePart().ToEulerXYZ();
-	localRotation = Quat::FromEulerXYZ(euler.x, euler.y, euler.z);
-	localScale = localTransform.GetScale();
-
-	localEulerRotation = euler;
+	localTransform.Decompose(localPosition, localRotation, localScale);
+	localEulerRotation = localTransform.RotatePart().ToEulerXYZ();
 
 	UpdateWorldTransform();
 

@@ -1,4 +1,5 @@
 #include "Time.h"
+#include "JSONParser.h"
 
 #include "Application.h"
 #include "Log.h"
@@ -46,13 +47,12 @@ M_Camera3D::~M_Camera3D()
 // -----------------------------------------------------------------
 bool M_Camera3D::Init(ParsonNode& root)
 {
-	//Position.x = root.GetNumber("X");
-	//Position.y = root.GetNumber("Y");
-	//Position.z = root.GetNumber("Z");
-	
-	//master_camera->GetComponent<C_Transform>()->SetLocalPosition(float3(60.0f, 40.0f, 60.0f));
-	//masterCamera->GetComponent<C_Transform>()->SetLocalPosition(float3(6.5f, 4.0f, 7.0f));
-	masterCamera->GetComponent<C_Transform>()->SetLocalPosition(float3(125.0f, 80.0f, 135.0f));
+
+	reference = root.GetFloat3("reference");
+
+	masterCamera->GetComponent<C_Transform>()->SetLocalPosition(root.GetFloat3("cameraPosition"));
+	masterCamera->GetComponent<C_Transform>()->SetLocalRotation(Quat(root.GetFloat4("cameraRotation").ptr()));
+
 	LookAt(reference);
 
 	//current_camera->UpdateFrustumTransform();
@@ -91,15 +91,12 @@ bool M_Camera3D::LoadConfiguration(ParsonNode& configuration)
 
 bool M_Camera3D::SaveConfiguration(ParsonNode& configuration) const
 {
-	bool ret = true;
+	configuration.SetFloat3("cameraPosition", masterCamera->transform->GetLocalPosition());
+	configuration.SetFloat4("cameraRotation", float4(masterCamera->transform->GetLocalRotation().ptr()));
 
-	//root.SetNumber("X", Position.x);
-	//root.SetNumber("Y", Position.y);
-	//root.SetNumber("Z", Position.z);
+	configuration.SetFloat3("reference", reference);
 
-	LOG("SAVED CAMERA INFO");
-
-	return ret;
+	return true;
 }
 
 // -----------------------------------------------------------------

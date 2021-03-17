@@ -47,7 +47,8 @@ enum class CuboidType
 	NONE,
 	AABB,
 	OBB,
-	FRUSTUM
+	FRUSTUM,
+	COLLIDER
 };
 
 struct MeshRenderer
@@ -321,13 +322,13 @@ private:																										// --- DEBUG VARIABLES ---		// TODO: CREATE A 
 	float	rayWidth;																			// 
 	float	boneWidth;																			// 
 	
-	bool					renderWorldGrid;																	// 
-	bool					renderWorldAxis;																	// 
-	bool					renderWireframes;																	//
-	bool					renderVertexNormals;																// 
-	bool					renderFaceNormals;																	// 
-	bool					renderBoundingBoxes;																// 
-	bool					renderSkeletons;																	//
+	bool	renderWorldGrid;																	// 
+	bool	renderWorldAxis;																	// 
+	bool	renderWireframes;																	//
+	bool	renderVertexNormals;																// 
+	bool	renderFaceNormals;																	// 
+	bool	renderBoundingBoxes;																// 
+	bool	renderSkeletons;																	//
 
 	bool					renderPrimitiveExamples;															//
 

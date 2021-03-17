@@ -75,7 +75,6 @@ bool E_Inspector::Draw(ImGuiIO& io)
 {
 	bool ret = true;
 
-	BROFILERCATEGORY(GetName(), Profiler::Color::IndianRed);
 
 	ImGui::Begin("Inspector");
 
@@ -165,16 +164,15 @@ void E_Inspector::DrawGameObjectInfo(GameObject* selectedGameObject)
 
 	ImGui::Separator();
 
-	if (!selectedGameObject->isPrefab)
+	if (!selectedGameObject->isPrefab)	// --- PREFAB ---
 	{
 		if (ImGui::Button("Create Prefab"))
-		{
 			App->resourceManager->CreatePrefab(selectedGameObject);
-		}
 	}
 	else
 	{
-		ImGui::Text("Object is Prefab");
+		if (ImGui::Button("Update Prefab"))
+			App->resourceManager->UpdatePrefab(selectedGameObject);
 	}
 
 	ImGui::Separator();
@@ -445,20 +443,19 @@ void E_Inspector::DrawMaterialComponent(C_Material* cMaterial)
 				}
 
 				R_Shader* shader = cMaterial->GetShader();
-
 				for (uint i = 0; i < shader->uniforms.size(); i++)
 				{
 					switch (shader->uniforms[i].uniformType)
 					{
-					case  UniformType::INT:	ImGui::DragInt(shader->uniforms[i].name.c_str(), &shader->uniforms[i].integer, 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None); break;
-					case  UniformType::FLOAT: ImGui::DragFloat(shader->uniforms[i].name.c_str(), &shader->uniforms[i].floatNumber, 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None); break;
-					case  UniformType::INT_VEC2: ImGui::DragInt2(shader->uniforms[i].name.c_str(), (int*)&shader->uniforms[i].vec2, 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None); break;
-					case  UniformType::INT_VEC3: ImGui::DragInt3(shader->uniforms[i].name.c_str(), (int*)&shader->uniforms[i].vec3, 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None); break;
-					case  UniformType::INT_VEC4: ImGui::DragInt4(shader->uniforms[i].name.c_str(), (int*)&shader->uniforms[i].vec4, 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None); break;
-					case  UniformType::FLOAT_VEC2: ImGui::DragFloat2(shader->uniforms[i].name.c_str(), (float*)&shader->uniforms[i].vec2, 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None); break;
-					case  UniformType::FLOAT_VEC3: ImGui::DragFloat3(shader->uniforms[i].name.c_str(), (float*)&shader->uniforms[i].vec3, 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None); break;
-					case  UniformType::FLOAT_VEC4: ImGui::DragFloat4(shader->uniforms[i].name.c_str(), (float*)&shader->uniforms[i].vec4, 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None); break;
-					case UniformType::MATRIX4: ImGui::DragFloat4(shader->uniforms[i].name.c_str(), shader->uniforms[i].matrix4.ToEulerXYZ().ptr(), 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None); break;
+					case UniformType::INT:			ImGui::DragInt(shader->uniforms[i].name.c_str(), &shader->uniforms[i].integer, 0.02f, 0.0f, 0.0f, "%.2f");							break;
+					case UniformType::FLOAT:		ImGui::DragFloat(shader->uniforms[i].name.c_str(), &shader->uniforms[i].floatNumber, 0.02f, 0.0f, 0.0f, "%.2f");					break;
+					case UniformType::INT_VEC2:		ImGui::DragInt2(shader->uniforms[i].name.c_str(), (int*)&shader->uniforms[i].vec2, 0.02f, 0.0f, 0.0f, "%.2f");						break;
+					case UniformType::INT_VEC3:		ImGui::DragInt3(shader->uniforms[i].name.c_str(), (int*)&shader->uniforms[i].vec3, 0.02f, 0.0f, 0.0f, "%.2f");						break;
+					case UniformType::INT_VEC4:		ImGui::DragInt4(shader->uniforms[i].name.c_str(), (int*)&shader->uniforms[i].vec4, 0.02f, 0.0f, 0.0f, "%.2f");						break;
+					case UniformType::FLOAT_VEC2:	ImGui::DragFloat2(shader->uniforms[i].name.c_str(), (float*)&shader->uniforms[i].vec2, 0.02f, 0.0f, 0.0f, "%.2f");					break;
+					case UniformType::FLOAT_VEC3:	ImGui::DragFloat3(shader->uniforms[i].name.c_str(), (float*)&shader->uniforms[i].vec3, 0.02f, 0.0f, 0.0f, "%.2f");					break;
+					case UniformType::FLOAT_VEC4:	ImGui::DragFloat4(shader->uniforms[i].name.c_str(), (float*)&shader->uniforms[i].vec4, 0.02f, 0.0f, 0.0f, "%.2f");					break;
+					case UniformType::MATRIX4:		ImGui::DragFloat4(shader->uniforms[i].name.c_str(), shader->uniforms[i].matrix4.ToEulerXYZ().ptr(), 0.02f, 0.0f, 0.0f, "%.2f");		break;
 					}
 				}
 
@@ -699,13 +696,18 @@ void E_Inspector::DrawAnimatorComponent(C_Animator* cAnimator)								// TODO: S
 		if (cAnimator != nullptr)
 		{
 			bool animationIsActive	= cAnimator->IsActive();
-			if (ImGui::Checkbox("Is Active", &animationIsActive))							{ cAnimator->SetIsActive(animationIsActive); }
+			if (ImGui::Checkbox("Is Active", &animationIsActive))	{ cAnimator->SetIsActive(animationIsActive); }
+			
+			ImGui::SameLine(ImGui::GetWindowWidth() * 0.69f);
+
+			std::string animatorStateString = cAnimator->GetAnimatorStateAsString();
+			ImGui::Text("State:"); ImGui::SameLine(); ImGui::TextColored(&Yellow, "{ %s }", animatorStateString.c_str());
 
 			ImGui::Separator();
 
 			// --- ANIMATOR VARIABLES
-			static int selectedClip			= 0;
-			std::string clipNamesString		= cAnimator->GetClipNamesAsString();
+			static int selectedClip				= 0;
+			std::string clipNamesString			= cAnimator->GetClipNamesAsString();
 
 			float speed							= cAnimator->GetPlaybackSpeed();
 			float minSpeed						= 0.1f;
@@ -775,18 +777,18 @@ void E_Inspector::DrawAnimatorComponent(C_Animator* cAnimator)								// TODO: S
 						cAnimator->SetCurrentClipByIndex((uint)selectedClip);
 					}
 
-					if (ImGui::Button("Play"))									{ cAnimator->Play(); }		ImGui::SameLine();
-					if (ImGui::Button("Pause"))									{ cAnimator->Pause(); }	ImGui::SameLine();
-					if (ImGui::Button("Step"))									{ cAnimator->Step(); }		ImGui::SameLine();
-					if (ImGui::Button("Stop"))									{ cAnimator->Stop(); }
+					if (ImGui::Button("Play"))	{ cAnimator->Play(); }	ImGui::SameLine();
+					if (ImGui::Button("Pause"))	{ cAnimator->Pause(); }	ImGui::SameLine();
+					if (ImGui::Button("Step"))	{ cAnimator->Step(); }	ImGui::SameLine();
+					if (ImGui::Button("Stop"))	{ cAnimator->Stop(); }
 
 					if (ImGui::SliderFloat("Playback Speed", &speed, minSpeed, maxSpeed, "X %.3f", 0)) { cAnimator->SetPlaybackSpeed(speed); }
 
-					if (ImGui::Checkbox("Interpolate", &interpolate))			{ cAnimator->SetInterpolate(interpolate); }
-					if (ImGui::Checkbox("Loop Animation", &loopAnimation))		{ cAnimator->SetLoopAnimation(loopAnimation); }
-					if (ImGui::Checkbox("Play On Start", &playOnStart))			{ cAnimator->SetPlayOnStart(playOnStart); }
-					if (ImGui::Checkbox("Camera Culling", &cameraCulling))		{ cAnimator->SetCameraCulling(cameraCulling); }
-					if (ImGui::Checkbox("Show Bones", &showBones))				{ cAnimator->SetShowBones(showBones); }
+					if (ImGui::Checkbox("Interpolate", &interpolate))		{ cAnimator->SetInterpolate(interpolate); }
+					if (ImGui::Checkbox("Loop Animation", &loopAnimation))	{ cAnimator->SetLoopAnimation(loopAnimation); }
+					if (ImGui::Checkbox("Play On Start", &playOnStart))		{ cAnimator->SetPlayOnStart(playOnStart); }
+					if (ImGui::Checkbox("Camera Culling", &cameraCulling))	{ cAnimator->SetCameraCulling(cameraCulling); }
+					if (ImGui::Checkbox("Show Bones", &showBones))			{ cAnimator->SetShowBones(showBones); }
 
 					ImGui::Separator();
 
@@ -841,7 +843,7 @@ void E_Inspector::DrawAnimatorComponent(C_Animator* cAnimator)								// TODO: S
 
 					if (ImGui::Button("Create")) 
 					{ 
-						if (!EngineApp->play)
+						if (EngineApp->gameState != GameState::PLAY)
 						{
 							success = cAnimator->AddClip(AnimatorClip(cAnimator->GetAnimationByIndex((uint)selectedAnimation), newClipName, newClipStart, newClipEnd, loop));
 							textTimerRunning = true;
@@ -863,9 +865,9 @@ void E_Inspector::DrawAnimatorComponent(C_Animator* cAnimator)								// TODO: S
 							ImGui::TextColored(Green.C_Array(), "Successfully Created Clip { %s }", new_clip_name_str.c_str());
 
 							strcpy_s(newClipName, 128, "Enter Clip Name");																// --- Re-setting the New Clip Parameters
-							newClipStart	= 0;																							// 
-							newClipEnd	= (int)animationDuration;																		// 
-							loop			= false;																						// --------------------------------------
+							newClipStart	= 0;																						// 
+							newClipEnd		= (int)animationDuration;																	// 
+							loop			= false;																					// --------------------------------------
 						}
 						else
 						{
@@ -1140,6 +1142,12 @@ void E_Inspector::DrawBoxColliderComponent(C_BoxCollider* cCollider)
 			bool isActive = cCollider->IsActive();
 			if (ImGui::Checkbox("Collider is Active##1", &isActive))
 				cCollider->SetIsActive(isActive);
+
+			ImGui::SameLine();
+
+			bool showCollider = cCollider->ToShowCollider();
+			if (ImGui::Checkbox("Show Collider##1", &showCollider))
+				cCollider->SetShowCollider(showCollider);
 
 			ImGui::Separator();
 
@@ -1424,40 +1432,52 @@ void E_Inspector::DrawPlayerControllerComponent(C_PlayerController* cController)
 		if (ImGui::Checkbox("Controller Is Active", &isActive))
 			cController->SetIsActive(isActive);
 
-		ImGui::SameLine();
-
-		bool cameraMode = cController->IsCamera();
-		if (ImGui::Checkbox("Camera Mode", &cameraMode))
-			cController->SetCameraMode(cameraMode);
-
 		ImGui::Separator();
-
-		float speed = cController->Speed();
-		if (ImGui::InputFloat("Speed", &speed, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
-			cController->SetSpeed(speed);
-
-		bool useAcceleration = cController->UsingAcceleration();
-		if (ImGui::Checkbox("Use Acceleration", &useAcceleration))
-			cController->UseAcceleration(useAcceleration);
-
-		if (cController->UsingAcceleration())
+		if (ImGui::TreeNodeEx("Character"))
 		{
-			float acceleration = cController->Acceleration();
-			if (ImGui::InputFloat("Acceleration", &acceleration, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
-				cController->SetAcceleration(acceleration);
+			float speed = cController->Speed();
+			if (ImGui::InputFloat("Speed", &speed, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
+				cController->SetSpeed(speed);
 
-			float deceleration = cController->Deceleration();
-			if (ImGui::InputFloat("Deceleration", &deceleration, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
-				cController->SetDeceleration(deceleration);
-		}
-
-		if (!cController->IsCamera())
-		{
 			ImGui::Separator();
 
+			ImGui::TreePop();
+		}
+
+		if (ImGui::TreeNodeEx("Weapon"))
+		{
 			float bulletSpeed = cController->BulletSpeed();
 			if (ImGui::InputFloat("Bullet Speed", &bulletSpeed, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
 				cController->SetBulletSpeed(bulletSpeed);
+
+			float fireRate = cController->FireRate();
+			if (ImGui::InputFloat("Fire Rate", &fireRate, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
+				cController->SetFireRate(fireRate);
+
+			bool automatic = cController->IsAutomatic();
+			if (ImGui::Checkbox("Automatic", &automatic))
+				cController->SetAutomatic(automatic);
+
+			ImGui::Separator();
+
+			ImGui::TreePop();
+		}
+
+		if (ImGui::TreeNodeEx("Dash"))
+		{
+			float dashSpeed = cController->DashSpeed();
+			if (ImGui::InputFloat("Dash Speed", &dashSpeed, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
+				cController->SetDashSpeed(dashSpeed);
+
+			float dashTime = cController->DashTime();
+			if (ImGui::InputFloat("Dash Time", &dashTime, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
+				cController->SetDashTime(dashTime);
+
+			float dashColdown = cController->DashColdown();
+			if (ImGui::InputFloat("Dash Coldown", &dashColdown, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
+				cController->SetDashColdown(dashColdown);
+
+			ImGui::TreePop();
 		}
 
 		if (!show)

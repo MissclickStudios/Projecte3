@@ -371,7 +371,6 @@ UpdateStatus M_Input::PreUpdate(float dt)
 
 UpdateStatus M_Input::Update(float dt)
 {
-	BROFILERCATEGORY("Input", Profiler::Color::Aqua);
 	if (App->input->GetKey(SDL_SCANCODE_F1) == KeyState::KEY_DOWN)
 	{
 		App->debug = !App->debug;
@@ -499,6 +498,18 @@ AxisState M_Input::GetGameControllerAxis(int id) const
 	}
 
 	return AxisState::UNKNOWN_AXIS;
+}
+
+int M_Input::GetGameControllerAxisValue(int id) const
+{
+	if (gameController.id != nullptr) {
+		if(SDL_GameControllerGetAxis(gameController.id, SDL_GameControllerAxis(id)) < -JOYSTICK_THRESHOLD)
+		return SDL_GameControllerGetAxis(gameController.id, SDL_GameControllerAxis(id));
+
+		if (SDL_GameControllerGetAxis(gameController.id, SDL_GameControllerAxis(id)) > JOYSTICK_THRESHOLD)
+		return SDL_GameControllerGetAxis(gameController.id, SDL_GameControllerAxis(id));
+	}
+	return 0;
 }
 
 bool M_Input::WindowSizeWasManipulated(Uint8 windowEvent) const

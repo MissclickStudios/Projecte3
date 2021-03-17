@@ -26,7 +26,6 @@ bool E_ImGuiDemo::Draw(ImGuiIO& io)
 {
 	bool ret = true;
 
-	BROFILERCATEGORY(GetName(), Profiler::Color::IndianRed);
 
 	// Showing ImGui's predetermined demo window
 	if (showDemoWindow)

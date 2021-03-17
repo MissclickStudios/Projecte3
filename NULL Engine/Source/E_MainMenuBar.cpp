@@ -21,8 +21,6 @@ bool E_MainMenuBar::Draw(ImGuiIO& io)
 {
 	bool ret = true;
 
-	BROFILERCATEGORY(GetName(), Profiler::Color::IndianRed);
-
 	ImGui::BeginMainMenuBar();
 
 	SetIsHovered();

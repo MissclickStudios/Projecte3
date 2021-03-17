@@ -22,7 +22,6 @@ bool E_Timeline::Draw(ImGuiIO& io)
 {
 	bool ret = true;
 
-	BROFILERCATEGORY(GetName(), Profiler::Color::IndianRed);
 
 	static float values[2]	= { 1.0f, 15.0f };
 	float values2[2]		= { 15.0f, 30.0f };
