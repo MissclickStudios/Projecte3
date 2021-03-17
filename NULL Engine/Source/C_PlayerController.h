@@ -34,7 +34,7 @@ public:
 	bool SaveState(ParsonNode& root) const override;
 	bool LoadState(ParsonNode& root) override;
 
-	static inline ComponentType GetType() { return ComponentType::PLAYER_CONTROLLER; }			// This is needed to be able to use templates for functions such as GetComponent<>();
+	static inline ComponentType GetType() { return ComponentType::PLAYER_CONTROLLER; }
 
 	const float Speed() const { return speed; }
 	void SetSpeed(float speed) { this->speed = speed; }
@@ -59,6 +59,7 @@ public:
 
 private: 
 
+	void Movement();
 	void Move(C_RigidBody* rigidBody, int axisX, int axisY);
 	void Dash(C_RigidBody * rigidBody, int axisX, int axisY);
 	void Rotate();
@@ -70,22 +71,25 @@ private:
 	void GetMovementVectorAxis(int &axisX, int &axisY);
 	void GetAimVectorAxis(int &axisX, int &axisY);
 
+	// Character
 	float speed = 20.0f;
-
-	Direction playerDirection = Direction::NORTH;
-
 	float deceleration = 200.0f;
 	float acceleration = 200.0f;
 
+	Direction playerDirection = Direction::NORTH;
+
+	// Weapon
+	float bulletSpeed = 100.0f;
+
+	// Dash
+	float dashSpeed = 100.0f;
 	float dashingTime = 0.2f;
 	float dashingColdown = 1.0f;
 
-	float bulletSpeed = 100.0f;
+	float3 lastDirection = float3::zero;
 
-	float dashSpeed = 100.0f;
-
-	Timer dashTime;			// Duration of the dash
-	Timer dashColdown;		// Coldown of the dash
+	Timer dashTime;// Duration of the dash
+	Timer dashColdown;
 };
 
 #endif // !__C_PLAYERCONTROLLER__

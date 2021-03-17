@@ -45,40 +45,7 @@ bool C_PlayerController::Update()
 	if (!App->play || App->pause)
 		return true;
 
-	C_RigidBody* rigidBody = GetOwner()->GetComponent<C_RigidBody>();
-	if (!rigidBody || rigidBody->IsStatic())
-		return false;
-
-	if (!dashTime.IsActive())
-	{
-		int movX = 0;
-		int movY = 0;
-		// Controller movement
-		GetMovementVectorAxis(movX, movY);
-		// Keyboard movement
-		if (movX + movY == 0)
-		{
-			if (App->input->GetKey(SDL_SCANCODE_W) == KeyState::KEY_REPEAT)
-				movY = MAX_JOYSTICK_INPUT;
-			if (App->input->GetKey(SDL_SCANCODE_S) == KeyState::KEY_REPEAT)
-				movY = -MAX_JOYSTICK_INPUT;
-			if (App->input->GetKey(SDL_SCANCODE_D) == KeyState::KEY_REPEAT)
-				movX = -MAX_JOYSTICK_INPUT;
-			if (App->input->GetKey(SDL_SCANCODE_A) == KeyState::KEY_REPEAT)
-				movX = MAX_JOYSTICK_INPUT;
-		}
-		Move(rigidBody, movX, movY);
-
-		if (dashColdown.IsActive())
-		{
-			if (dashColdown.ReadSec() >= dashingColdown)
-				dashColdown.Stop();
-		}
-		else if ((App->input->GetKey(SDL_SCANCODE_LSHIFT) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(1) == ButtonState::BUTTON_DOWN))
-			Dash(rigidBody, movX, movY);
-	}
-	else if(dashTime.ReadSec() >= dashingTime)
-		dashTime.Stop();
+	Movement();
 
 	playerDirection = ReturnPlayerDirection();
 
@@ -211,13 +178,54 @@ Direction C_PlayerController::ReturnPlayerDirection()
 	return Direction::NORTH;
 }
 
+void C_PlayerController::Movement()
+{
+	C_RigidBody* rigidBody = GetOwner()->GetComponent<C_RigidBody>();
+	if (!rigidBody || rigidBody->IsStatic())
+		return;
+
+	if (!dashTime.IsActive())
+	{
+		int movX = 0;
+		int movY = 0;
+		// Controller movement
+		GetMovementVectorAxis(movX, movY);
+		// Keyboard movement
+		if (movX + movY == 0)
+		{
+			if (App->input->GetKey(SDL_SCANCODE_W) == KeyState::KEY_REPEAT)
+				movY = MAX_JOYSTICK_INPUT;
+			if (App->input->GetKey(SDL_SCANCODE_S) == KeyState::KEY_REPEAT)
+				movY = -MAX_JOYSTICK_INPUT;
+			if (App->input->GetKey(SDL_SCANCODE_D) == KeyState::KEY_REPEAT)
+				movX = -MAX_JOYSTICK_INPUT;
+			if (App->input->GetKey(SDL_SCANCODE_A) == KeyState::KEY_REPEAT)
+				movX = MAX_JOYSTICK_INPUT;
+		}
+		Move(rigidBody, movX, movY);
+
+		if (dashColdown.IsActive())
+		{
+			if (dashColdown.ReadSec() >= dashingColdown)
+				dashColdown.Stop();
+		}
+		else if ((App->input->GetKey(SDL_SCANCODE_LSHIFT) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(1) == ButtonState::BUTTON_DOWN))
+			Dash(rigidBody, movX, movY);
+	}
+	else if (dashTime.ReadSec() >= dashingTime)
+		dashTime.Stop();
+}
+
 void C_PlayerController::Move(C_RigidBody* rigidBody, int axisX, int axisY)
 {
 	float3 direction = { (float)axisX, 0, (float)axisY };
 
 	if (axisX == 0 && axisY == 0) {}
 	else
+	{
 		direction.Normalize();
+		lastDirection = direction;
+	}
 
 	direction *= speed;
 	rigidBody->SetLinearVelocity(direction);
@@ -225,17 +233,27 @@ void C_PlayerController::Move(C_RigidBody* rigidBody, int axisX, int axisY)
 
 void C_PlayerController::Dash(C_RigidBody* rigidBody, int axisX, int axisY)
 {
-	float3 direction = { (float)axisX, 0, (float)axisY };
-
-	if (axisX == 0 && axisY == 0) {}
-	else
-		direction.Normalize();
-
-	direction *= dashSpeed;
-	rigidBody->SetLinearVelocity(direction);
+	rigidBody->SetLinearVelocity(lastDirection * dashSpeed);
 
 	dashColdown.Start();
 	dashTime.Start();
+}
+
+void C_PlayerController::Rotate()
+{
+	//float2 mouse, center, direction;
+	//mouse = MousePositionToWorldPosition();
+	//center.x = GetOwner()->transform->GetWorldPosition().x;
+	//center.y = GetOwner()->transform->GetWorldPosition().z;
+	//mouse.y *= -1;
+	//direction = mouse - center;
+	//direction.Normalize();
+	//
+	//float rad = direction.AimedAngle();
+	//
+	//
+	//float angle = RadToDeg(-rad) + 90;
+	//GetOwner()->transform->SetLocalEulerRotation(float3(0, angle, 0));
 }
 
 float2 C_PlayerController::MousePositionToWorldPosition(float mapPositionY)
@@ -289,21 +307,4 @@ void C_PlayerController::GetAimVectorAxis(int& axisX, int& axisY)
 {
 	axisX = App->input->GetGameControllerAxisValue(2);
 	axisY = App->input->GetGameControllerAxisValue(3);
-}
-
-void C_PlayerController::Rotate()
-{
-	//float2 mouse, center, direction;
-	//mouse = MousePositionToWorldPosition();
-	//center.x = GetOwner()->transform->GetWorldPosition().x;
-	//center.y = GetOwner()->transform->GetWorldPosition().z;
-	//mouse.y *= -1;
-	//direction = mouse - center;
-	//direction.Normalize();
-	//
-	//float rad = direction.AimedAngle();
-	//
-	//
-	//float angle = RadToDeg(-rad) + 90;
-	//GetOwner()->transform->SetLocalEulerRotation(float3(0, angle, 0));
 }

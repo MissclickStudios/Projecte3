@@ -1431,38 +1431,52 @@ void E_Inspector::DrawPlayerControllerComponent(C_PlayerController* cController)
 			cController->SetIsActive(isActive);
 
 		ImGui::Separator();
+		if (ImGui::TreeNodeEx("Character"))
+		{
+			float speed = cController->Speed();
+			if (ImGui::InputFloat("Speed", &speed, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
+				cController->SetSpeed(speed);
 
-		float speed = cController->Speed();
-		if (ImGui::InputFloat("Speed", &speed, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
-			cController->SetSpeed(speed);
+			float acceleration = cController->Acceleration();
+			if (ImGui::InputFloat("Acceleration", &acceleration, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
+				cController->SetAcceleration(acceleration);
 
-		float acceleration = cController->Acceleration();
-		if (ImGui::InputFloat("Acceleration", &acceleration, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
-			cController->SetAcceleration(acceleration);
+			float deceleration = cController->Deceleration();
+			if (ImGui::InputFloat("Deceleration", &deceleration, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
+				cController->SetDeceleration(deceleration);
 
-		float deceleration = cController->Deceleration();
-		if (ImGui::InputFloat("Deceleration", &deceleration, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
-			cController->SetDeceleration(deceleration);
+			ImGui::Separator();
 
-		ImGui::Separator();
+			ImGui::TreePop();
+		}
 
-		float bulletSpeed = cController->BulletSpeed();
-		if (ImGui::InputFloat("Bullet Speed", &bulletSpeed, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
-			cController->SetBulletSpeed(bulletSpeed);
+		if (ImGui::TreeNodeEx("Weapon"))
+		{
+			float bulletSpeed = cController->BulletSpeed();
+			if (ImGui::InputFloat("Bullet Speed", &bulletSpeed, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
+				cController->SetBulletSpeed(bulletSpeed);
 
-		ImGui::Separator();
+			ImGui::Separator();
 
-		float dashSpeed = cController->DashSpeed();
-		if (ImGui::InputFloat("Dash Speed", &dashSpeed, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
-			cController->SetDashSpeed(dashSpeed);
+			ImGui::TreePop();
+		}
 
-		float dashTime = cController->DashTime();
-		if (ImGui::InputFloat("Dash Time", &dashTime, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
-			cController->SetDashTime(dashTime);
+		if (ImGui::TreeNodeEx("Dash"))
+		{
+			float dashSpeed = cController->DashSpeed();
+			if (ImGui::InputFloat("Dash Speed", &dashSpeed, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
+				cController->SetDashSpeed(dashSpeed);
 
-		float dashColdown = cController->DashColdown();
-		if (ImGui::InputFloat("Dash Coldown", &dashColdown, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
-			cController->SetDashColdown(dashColdown);
+			float dashTime = cController->DashTime();
+			if (ImGui::InputFloat("Dash Time", &dashTime, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
+				cController->SetDashTime(dashTime);
+
+			float dashColdown = cController->DashColdown();
+			if (ImGui::InputFloat("Dash Coldown", &dashColdown, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
+				cController->SetDashColdown(dashColdown);
+
+			ImGui::TreePop();
+		}
 
 		if (!show)
 		{
