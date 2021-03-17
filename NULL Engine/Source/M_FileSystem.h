@@ -25,8 +25,7 @@ public:
 	bool SaveConfiguration	(ParsonNode& root) const override;																	// Necessary?
 	bool LoadConfiguration	(ParsonNode& root) override;																		// ----------
 
-public:
-	// Utility functions
+public:																															// --- UTILITY METHODS
 	bool			AddPath						(const char* pathOrZip);														// Will add a new zip file or folder. Whichever it is, it will be used by PhysFS.
 	bool			Exists						(const char* file) const;														// Will check whether or not a file exists in the PHYSFS search path.
 
@@ -41,14 +40,17 @@ public:
 
 	void			DiscoverFiles				(const char* directory, std::vector<std::string>& files, std::vector<std::string>& directories, const char* filter = nullptr) const;	// Will return two lists with every file in a given directory.
 	void			DiscoverAllFiles			(const char* directory, std::vector<std::string>& files, std::vector<std::string>& directories, const char* filter = nullptr) const;	// Will return two lists with every file in a given directory.
-	void			GetAllFilesWithExtensionAndName	(const char* directory, const char* extension,const char* name,std::vector<std::string>& fileList) const;
-	void			GetAllFilesWithExtension	(const char* directory, const char* extension, std::vector<std::string>& fileList) const;												// Will return a list with all files with the given extension.
-	bool			ContainsDirectory			(const char* directory) const;
+	void			DiscoverAllFilesFiltered	(const char* directory, std::vector<std::string>& files, std::vector<std::string>& filteredFiles, const char* filter = nullptr) const;	// 
+	void			GetAllFilesWithFilter		(const char* directory, std::vector<std::string>& fileList, const char* nameFilter = nullptr, const char* extFilter = nullptr) const;	// Will return a list with all the files that pass the given filters.
+	void			GetAllFilesWithFilters		(const char* directory, std::vector<std::string>& fileList, std::vector<std::string>& nameFilters, std::vector<std::string>& extFilters) const;	// Will return a list with all the files that pass the given filters.
+	bool			ContainsDirectory			(const char* directory) const;													// 
 	
-	PathNode		GetFiles					(const char* directory, std::vector<std::string>* filterExt = nullptr, std::vector<std::string>* ignoreExt = nullptr) const;
+	PathNode		GetFiles					(const char* directory, std::vector<std::string>* filterExt = nullptr, std::vector<std::string>* ignoreExt = nullptr) const;			// 
 	PathNode		GetAllFiles					(const char* directory, std::vector<std::string>* filterExt = nullptr, std::vector<std::string>* ignoreExt = nullptr) const;			// 
-	bool			IsLastDirectory				(const PathNode& pathNode) const;
+	bool			IsLastDirectory				(const PathNode& pathNode) const;												// 
 
+	bool			HasName						(const char* path, std::vector<std::string> names) const;						// 
+	
 	bool			HasExtension				(const char* path) const;														// Will check whether or not the given path has any extension in it.
 	bool			HasExtension				(const char* path, std::string extension) const;								// Will check whether or not the given path has the given extension in it.
 	bool			HasExtension				(const char* path, std::vector<std::string> extensions) const;					// Will check whether or not the given path has any of the extensions given in the list in it.
@@ -57,14 +59,14 @@ public:
 	bool			PathIsNormalized			(const char* fullPath) const;
 	void			SplitFilePath				(const char* fullPath, std::string* path, std::string* file = nullptr, std::string* extension = nullptr) const;	// Will "return" 3 separate strs: path, file & ext.
 
-	// Open for Read/Write
+public:																															// --- READ & WRITE METHODS
 	uint			Load						(const char* path, const char* file, char** buffer) const;						// Adds the file string to the path string and calls the below Load method.
 	uint			Load						(const char* file, char** buffer) const;										// Will open the given file for reading and will store the read data in the given buffer.
 	
 	uint			Save						(const char* file, const void* buffer, uint size, bool append = false) const;	// Will open the given file for writing and will write in it the data stored in the given buffer.
 
 	bool			DuplicateFile				(const char* file, const char* destinationFolder, std::string& relativePath);	// Will get the dst file string to which duplicate the file and call the method below.
-	bool			DuplicateFile				(const char* sourceFile, const char* destinationFile);						// Reads all the data inside the source file and writes it in the destination file.
+	bool			DuplicateFile				(const char* sourceFile, const char* destinationFile);							// Reads all the data inside the source file and writes it in the destination file.
 
 	bool			Remove						(const char* file);																// Deletes the given file. If it is a directory all files inside it are deleted before it.
 

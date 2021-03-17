@@ -276,44 +276,145 @@ void M_FileSystem::DiscoverAllFiles(const char* directory, std::vector<std::stri
 	PHYSFS_freeList(fileListing);
 }
 
-void M_FileSystem::GetAllFilesWithExtensionAndName(const char* directory, const char* extension, const char* name, std::vector<std::string>& fileList) const
+void M_FileSystem::DiscoverAllFilesFiltered(const char* directory, std::vector<std::string>& files, std::vector<std::string>& filteredFiles, const char* filter) const
 {
+	if (directory == nullptr)
+	{
+		LOG("[ERROR] File System: Could not Discover All Files inside the given directory! Error: Given Directory string was nullptr.");
+		return;
+	}
+	if (!Exists(directory))
+	{
+		LOG("[ERROR] File System: Could not Discover All Files inside the { %s } directory! Error: Given Directory does not exist.", directory);
+		return;
+	}
+	if (filter == nullptr)
+	{
+		std::vector<std::string> directories;
+		DiscoverAllFiles(directory, files, directories, nullptr);
+		directories.clear();
+		return;
+	}
+
+	char** fileListing = PHYSFS_enumerateFiles(directory);
+
+	for (char** file = fileListing; *file != nullptr; ++file)
+	{
+		std::string path = directory + std::string("/") + *file;
+
+		if (IsDirectory(path.c_str()))
+		{
+			DiscoverAllFilesFiltered(path.c_str(), files, filteredFiles, filter);
+		}
+		else
+		{
+			(HasExtension(*file, filter)) ? filteredFiles.push_back(path): files.push_back(path);
+		}
+	}
+
+	PHYSFS_freeList(fileListing);
+}
+
+void M_FileSystem::GetAllFilesWithFilter(const char* directory, std::vector<std::string>& fileList, const char* nameFilter, const char* extFilter) const
+{	
+	bool noFilter	= (nameFilter == nullptr && extFilter == nullptr);
+	bool onlyName	= (nameFilter != nullptr && extFilter == nullptr);
+	bool onlyExt	= (nameFilter == nullptr && extFilter != nullptr);
+	
 	std::vector<std::string> files;
 	std::vector<std::string> directories;
 
-	//DiscoverFiles(directory, files, directories);											// Returns a file and directory lists in the given search path's directory.
-	DiscoverAllFiles(directory, files, directories);										// Returns a file and directory lists in the given search path's directory.
+	DiscoverAllFiles(directory, files, directories, nullptr);										// Returns a file and directory lists in the given search path's directory.
 
-	for (uint i = 0; i < files.size(); ++i)
+	std::string file	= "[NONE]";
+	std::string ext		= "[NONE]";
+	for (auto item = files.begin(); item != files.end(); ++item)
 	{
-		std::string ext;
-		std::string file;
-		SplitFilePath(files[i].c_str(), nullptr, &file, &ext);							// Gets the extension string/path of the file being currently iterated, if it has any.
+		SplitFilePath((*item).c_str(), nullptr, &file, &ext);										// Gets the extension string/path of the file being currently iterated, if it has any.
 
-		std::size_t found = file.find(name);
-		if (ext == extension && found != std::string::npos)																// If the extension of the file is the same as the one passed as argument
+		if (noFilter)
+		{																							// If the extension of the file is the same as the one passed as argument
+			fileList = files;
+			break;																					// The file currently being iterated will be added to the file list passed as argument.
+		}
+		else if (onlyName)
 		{
-			fileList.push_back(files[i]);													// The file currently being iterated will be added to the file list passed as argument.
+			if (file.find(nameFilter) != file.npos)
+			{
+				fileList.push_back((*item));
+			}
+		}
+		else if (onlyExt)
+		{
+			if (ext == extFilter)
+			{
+				fileList.push_back((*item));
+			}
+		}
+		else																									// Full Filter
+		{
+			if ((file.find(nameFilter) != file.npos) && (ext == extFilter))
+			{
+				fileList.push_back((*item));
+			}
 		}
 	}
 }
 
-void M_FileSystem::GetAllFilesWithExtension(const char* directory, const char* extension, std::vector<std::string>& fileList) const
+void M_FileSystem::GetAllFilesWithFilters(const char* directory, std::vector<std::string>& fileList, std::vector<std::string>& nameFilters, std::vector<std::string>& extFilters) const
 {
+	bool noFilter	= (nameFilters.empty() && extFilters.empty());
+	bool onlyName	= (!nameFilters.empty() && extFilters.empty());
+	bool onlyExt	= (nameFilters.empty() && !extFilters.empty());
+
 	std::vector<std::string> files;
 	std::vector<std::string> directories;
 
-	//DiscoverFiles(directory, files, directories);											// Returns a file and directory lists in the given search path's directory.
-	DiscoverAllFiles(directory, files, directories);										// Returns a file and directory lists in the given search path's directory.
+	DiscoverAllFiles(directory, files, directories, nullptr);										// Returns a file and directory lists in the given search path's directory.
 
-	for (uint i = 0; i < files.size(); ++i)
+	std::string file = "[NONE]";
+	std::string ext = "[NONE]";
+	for (auto item = files.begin(); item != files.end(); ++item)
 	{
-		std::string ext;
-		SplitFilePath(files[i].c_str(), nullptr, nullptr, &ext);							// Gets the extension string/path of the file being currently iterated, if it has any.
+		SplitFilePath((*item).c_str(), nullptr, &file, &ext);										// Gets the extension string/path of the file being currently iterated, if it has any.
 
-		if (ext == extension)																// If the extension of the file is the same as the one passed as argument
+		if (noFilter)
+		{																							// If the extension of the file is the same as the one passed as argument
+			fileList = files;
+			break;																					// The file currently being iterated will be added to the file list passed as argument.
+		}
+		else if (onlyName)
 		{
-			fileList.push_back(files[i]);													// The file currently being iterated will be added to the file list passed as argument.
+			for (uint i = 0; i < nameFilters.size(); ++i)
+			{
+				if (file.find(nameFilters[i]) != file.npos)
+				{
+					fileList.push_back((*item));
+				}
+			}
+		}
+		else if (onlyExt)
+		{
+			for (uint i = 0; i < extFilters.size(); ++i)
+			{
+				if (ext == extFilters[i])
+				{
+					fileList.push_back(*item);
+				}
+			}
+		}
+		else																									// Full Filter
+		{
+			for (uint i = 0; i < nameFilters.size(); ++i)
+			{
+				for (uint j = 0; j < extFilters.size(); ++j)
+				{
+					if ((file.find(nameFilters[i]) != file.npos) && (ext == extFilters[j]))
+					{
+						fileList.push_back((*item));
+					}
+				}
+			}
 		}
 	}
 }
@@ -467,6 +568,13 @@ bool M_FileSystem::IsLastDirectory(const PathNode& pathNode) const
 	return true;
 }
 
+bool M_FileSystem::HasName(const char* path, std::vector<std::string> names) const
+{
+	
+	
+	return false;
+}
+
 bool M_FileSystem::HasExtension(const char* path) const
 {
 	std::string extension = "";
@@ -482,7 +590,7 @@ bool M_FileSystem::HasExtension(const char* path, std::string extension) const
 
 	SplitFilePath(path, nullptr, nullptr, &ext);											// Will fill the extension string with the extension string in the given path, if there is any.
 
-	return ext == extension;																// Returns true if the given path has the given extension in it.
+	return (ext == extension);																// Returns true if the given path has the given extension in it.
 }
 
 bool M_FileSystem::HasExtension(const char* path, std::vector<std::string> extensions) const
@@ -542,43 +650,22 @@ void M_FileSystem::SplitFilePath(const char* fullPath, std::string* path, std::s
 	if (fullPath != nullptr)
 	{
 		std::string full(fullPath);
-		size_t positionSeparator = full.find_last_of("\\/");								// find_last_of() returns the position of the specified character.
-		size_t positionDot = full.find_last_of(".");										// It returns size_t. (size_t == uint but defined in vcruntime.h)
+		size_t slashPos = full.find_last_of("\\/");										// find_last_of() returns the position of the specified character.
+		size_t dotPos	= full.find_last_of(".");										// It returns size_t. (size_t == uint but defined in vcruntime.h)
 
 		if (path != nullptr)
 		{
-			if (positionSeparator < full.length())
-			{
-				*path = full.substr(0, positionSeparator + 1);								// The path will be the string from position 0 to the position of the separator.
-			}
-			else
-			{
-				path->clear();																// If the last separator's position is equal to fullPath's length then there is no path.
-			}
+			*path = (slashPos < full.length()) ? full.substr(0, slashPos + 1) : full.substr(0, 0);		// full.substr(0, 0) instead of (*path).clear() to use ternary operator.
 		}
 
 		if (file != nullptr)
 		{
-			if (positionSeparator < full.length())
-			{
-				*file = full.substr(positionSeparator + 1, positionDot - positionSeparator - 1);	// The file string will be from the position of the separator to (Complete later).
-			}
-			else
-			{
-				*file = full.substr(0, positionDot);										// The file string will be the string from postion 0 to the last dot's position.
-			}
+			*file = (slashPos < full.length()) ? full.substr(slashPos + 1, dotPos - slashPos - 1) : full.substr(0, dotPos);
 		}
 
 		if (extension != nullptr)
 		{
-			if (positionDot < full.length())
-			{
-				*extension = full.substr(positionDot + 1);									// The extension string will span from the position of the last dot to the end of the string.
-			}
-			else
-			{
-				extension->clear();															// If the last dot's position is the same as full_path's length, then there is no extension.
-			}
+			*extension = (dotPos < full.length()) ? full.substr(dotPos + 1) : full.substr(0, 0);
 		}
 	}
 }

@@ -20,7 +20,8 @@ LevelGenerator::~LevelGenerator()
 
 void LevelGenerator::GetRooms()
 {
-	App->fileSystem->GetAllFilesWithExtensionAndName(ASSETS_SCENES_PATH, "json", "Room", allRooms);
+	App->fileSystem->GetAllFilesWithFilter(ASSETS_SCENES_PATH, allRooms, "Room", "json");
+	//App->fileSystem->GetAllFilesWithExtensionAndName(ASSETS_SCENES_PATH, "json", "Room", allRooms);
 	roomsToAdd = allRooms.size();
 }
 

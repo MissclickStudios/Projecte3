@@ -194,14 +194,12 @@ void M_ResourceManager::RefreshDirectory(const char* directory, std::vector<std:
 		return;
 	}
 	
-	std::vector<std::string> directories;
 	std::vector<std::string> assetFiles;
 	std::vector<std::string> metaFiles;
 	std::map<std::string, std::string> filePairs;
 
-	App->fileSystem->DiscoverAllFiles(directory, assetFiles, directories, DOTLESS_META_EXTENSION);				// Directories (folders) will be ignored for now.
-	App->fileSystem->GetAllFilesWithExtension(directory, DOTLESS_META_EXTENSION, metaFiles);
-	
+	App->fileSystem->DiscoverAllFilesFiltered(directory, assetFiles, metaFiles, DOTLESS_META_EXTENSION);
+
 	FindFilesToImport(assetFiles, metaFiles, filePairs, filesToImport);											// Always call in this order!
 	FindFilesToUpdate(filePairs, filesToUpdate);																// At the very least FindFilesToImport() has to be the first to be called
 	FindFilesToDelete(metaFiles, filePairs, filesToDelete);														// as it is the one to fill file_pairs with asset and meta files!
@@ -211,7 +209,6 @@ void M_ResourceManager::RefreshDirectory(const char* directory, std::vector<std:
 	filePairs.clear();
 	metaFiles.clear();
 	assetFiles.clear();
-	directories.clear();
 }
 
 void M_ResourceManager::FindFilesToImport(const std::vector<std::string>& assetFiles, const std::vector<std::string>& metaFiles, 
@@ -1679,7 +1676,8 @@ void M_ResourceManager::GetAllShaders(std::vector<R_Shader*>& shaders)
 {
 	R_Shader* tempShader = nullptr;
 	std::vector<std::string> shaderFiles;
-	App->fileSystem->GetAllFilesWithExtension(ASSETS_SHADERS_PATH, "shader", shaderFiles);
+	App->fileSystem->GetAllFilesWithFilter(ASSETS_SHADERS_PATH, shaderFiles, nullptr, "shader");
+	//App->fileSystem->GetAllFilesWithExtension(ASSETS_SHADERS_PATH, "shader", shaderFiles);
 	for (uint i = 0; i < shaderFiles.size(); i++)
 	{
 		//std::string defaultPath = ASSETS_SHADERS_PATH + std::string(shaderFiles[i]) + SHADERS_EXTENSION;
@@ -1697,11 +1695,32 @@ void M_ResourceManager::GetAllShaders(std::vector<R_Shader*>& shaders)
 
 void M_ResourceManager::GetAllTextures(std::vector<R_Texture*>& textures)
 {
-	R_Texture* tempTex = nullptr;
 	std::vector<std::string> textureFiles;
-	App->fileSystem->GetAllFilesWithExtension(ASSETS_TEXTURES_PATH, "png", textureFiles);
-	App->fileSystem->GetAllFilesWithExtension(ASSETS_TEXTURES_PATH, "tga", textureFiles);
-	App->fileSystem->GetAllFilesWithExtension(ASSETS_TEXTURES_PATH, "dds", textureFiles);
+	std::vector<std::string> nameFilters;
+	std::vector<std::string> extFilters;
+	extFilters.push_back("png");
+	extFilters.push_back("tga");
+	extFilters.push_back("dds");
+
+	float time = Time::Real::PeekPerfTimer();
+	
+	App->fileSystem->GetAllFilesWithFilters(ASSETS_TEXTURES_PATH, textureFiles, nameFilters, extFilters);
+
+	time = Time::Real::PeekPerfTimer() - time;
+
+	textureFiles.clear();
+
+	float time2 = Time::Real::PeekPerfTimer();
+
+	App->fileSystem->GetAllFilesWithFilter(ASSETS_TEXTURES_PATH, textureFiles, nullptr, "png");
+	App->fileSystem->GetAllFilesWithFilter(ASSETS_TEXTURES_PATH, textureFiles, nullptr, "tga");
+	App->fileSystem->GetAllFilesWithFilter(ASSETS_TEXTURES_PATH, textureFiles, nullptr, "dds");
+	
+	time2 = Time::Real::PeekPerfTimer() - time2;
+
+	int a = 0;
+
+	R_Texture* tempTex = nullptr;
 	for (uint i = 0; i < textureFiles.size(); i++)
 	{
 		tempTex = (R_Texture*)App->resourceManager->GetResourceFromLibrary(textureFiles[i].c_str());
@@ -1714,6 +1733,10 @@ void M_ResourceManager::GetAllTextures(std::vector<R_Texture*>& textures)
 			textures.push_back(tempTex);
 		}
 	}
+
+	textureFiles.clear();
+	nameFilters.clear();
+	extFilters.clear();
 }
 
 void M_ResourceManager::GetResources(std::map<uint32, Resource*>& resources) const
