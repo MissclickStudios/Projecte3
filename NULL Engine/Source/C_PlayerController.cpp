@@ -67,6 +67,8 @@ bool C_PlayerController::SaveState(ParsonNode& root) const
 
 	root.SetNumber("Bullet Speed", (double)bulletSpeed);
 	root.SetNumber("Fire Rate", (double)fireRate);
+	root.SetNumber("Ammo", (double)ammo);
+	root.SetNumber("Max Ammo", (double)maxAmmo);
 	root.SetBool("Automatic", automatic);
 
 	root.SetNumber("Dash Speed", (double)dashSpeed);
@@ -84,6 +86,8 @@ bool C_PlayerController::LoadState(ParsonNode& root)
 
 	bulletSpeed = (float)root.GetNumber("Bullet Speed");
 	fireRate = (float)root.GetNumber("Fire Rate");
+	ammo = (float)root.GetNumber("Ammo");
+	maxAmmo = (float)root.GetNumber("Max Ammo");
 	automatic = root.GetBool("Automatic");
 
 	dashSpeed = (float)root.GetNumber("Dash Speed");
@@ -186,25 +190,30 @@ void C_PlayerController::Weapon()
 	else
 		direction.Normalize();
 
-	if (!automatic)
+	if (App->input->GetKey(SDL_SCANCODE_R) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(0) == ButtonState::BUTTON_DOWN)
+		ammo = maxAmmo;
+	if (ammo > 0)
 	{
-		if (App->input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_DOWN || App->input->GetGameControllerTrigger(1) == ButtonState::BUTTON_DOWN)
-			SpawnBullet(direction);
-	}
-	else
-	{
-		if (App->input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_REPEAT || App->input->GetGameControllerTrigger(1) == ButtonState::BUTTON_REPEAT)
+		if (!automatic)
 		{
-			if (!fireRateTimer.IsActive())
-			{
+			if (App->input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_DOWN || App->input->GetGameControllerTrigger(1) == ButtonState::BUTTON_DOWN)
 				SpawnBullet(direction);
-				fireRateTimer.Start();
-			}
-			else if (fireRateTimer.ReadSec() >= fireRate)
+		}
+		else
+		{
+			if (App->input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_REPEAT || App->input->GetGameControllerTrigger(1) == ButtonState::BUTTON_REPEAT)
 			{
-				SpawnBullet(direction);
-				fireRateTimer.Stop();
-				fireRateTimer.Start();
+				if (!fireRateTimer.IsActive())
+				{
+					SpawnBullet(direction);
+					fireRateTimer.Start();
+				}
+				else if (fireRateTimer.ReadSec() >= fireRate)
+				{
+					SpawnBullet(direction);
+					fireRateTimer.Stop();
+					fireRateTimer.Start();
+				}
 			}
 		}
 	}
@@ -227,6 +236,12 @@ void C_PlayerController::SpawnBullet(float3 direction)
 	rigidBody->SetLinearVelocity(direction * bulletSpeed);
 	bullet->CreateComponent(ComponentType::SPHERE_COLLIDER);
 	bullet->CreateComponent(ComponentType::BULLET_BEHAVIOR);
+
+	--ammo;
+}
+
+void C_PlayerController::Reload()
+{
 }
 
 float2 C_PlayerController::MousePositionToWorldPosition(float mapPositionY)

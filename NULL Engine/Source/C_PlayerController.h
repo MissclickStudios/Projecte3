@@ -38,6 +38,10 @@ public:
 	void SetBulletSpeed(float speed) { bulletSpeed = speed; }
 	const float FireRate() const { return fireRate; }
 	void SetFireRate(float rate) { fireRate = rate; }
+	const int CurrentAmmo() const { return ammo; }
+	void SetCurrentAmmo(int amount) { ammo = amount; }
+	const int MaxAmmo() const { return maxAmmo; }
+	void SetMaxAmmo(int amount) { maxAmmo = amount; }
 
 	const bool IsAutomatic() const { return automatic; }
 	void SetAutomatic(bool enable) { automatic = enable; }
@@ -58,6 +62,7 @@ private:
 
 	void Weapon();
 	void SpawnBullet(float3 direction);
+	void Reload();
 
 	void StepSound(bool a, bool b, bool c, bool d );
 
@@ -74,6 +79,9 @@ private:
 	// Weapon
 	float bulletSpeed = 100.0f;
 	float fireRate = 0.25f;
+
+	int ammo = 10;
+	int maxAmmo = 10;
 
 	bool automatic = true;
 
