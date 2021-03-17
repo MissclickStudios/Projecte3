@@ -90,11 +90,11 @@ bool M_Scene::Start()
 	level.GetRooms();
 	level.GenerateLevel();
 	
-	//level.AddFixedRoom("Beggining", 0);
+	level.AddFixedRoom("Shop", 3);
 	//level.AddFixedRoom("Boss", 20);
 	
 	//Last level function to call
-	//level.GenerateRoom(0);
+	level.GenerateRoom(0);
 
 	if(!CheckSceneLight()) App->renderer->GenerateSceneLight(Color(1.0f, 1.0f, 1.0f, 1.0f), Color(0.6,0.6,0.6,0.5), Color(0.6, 0.6, 0.6, 0.5), LightType::DIRECTIONAL);
 	
@@ -214,6 +214,8 @@ bool M_Scene::CleanUp()
 	LOG("Unloading Intro scene");
 	
 	//App->renderer->ClearRenderers();
+
+	App->renderer->defaultSkyBox.CleanUp();
 
 	for (uint i = 0; i < gameObjects.size(); ++i)
 	{
@@ -424,6 +426,7 @@ bool M_Scene::LoadScene(const char* path)
 	}
 
 	//FIX THIS
+	App->renderer->defaultSkyBox.SetUpSkyBoxBuffers();
 
 	if (!CheckSceneLight()) AddSceneLight(App->renderer->GenerateSceneLight(Color(1.0f, 1.0f, 1.0f, 1.0f), Color(0.6, 0.6, 0.6, 0.5), Color(0.6, 0.6, 0.6, 0.5), LightType::DIRECTIONAL));
 
