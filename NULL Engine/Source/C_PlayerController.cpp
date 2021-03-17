@@ -23,6 +23,8 @@
 
 #include "MathGeoLib/include/Geometry/Line.h"
 
+#define MAX_JOYSTICK_INPUT 32767
+
 
 C_PlayerController::C_PlayerController(GameObject* owner) : Component(owner, ComponentType::PLAYER_CONTROLLER)
 {
@@ -44,28 +46,23 @@ bool C_PlayerController::Update()
 
 		if (rigidBody && !rigidBody->IsStatic())
 		{
-			int axisX = 0;
-			int axisY = 0;
-			// Keyboard movement
-			if (App->input->GetKey(SDL_SCANCODE_W) == KeyState::KEY_REPEAT)
-				axisY += 32000;
-			if (App->input->GetKey(SDL_SCANCODE_S) == KeyState::KEY_REPEAT)
-				axisY += -32000;
-			if (App->input->GetKey(SDL_SCANCODE_D) == KeyState::KEY_REPEAT)
-				axisX += -32000;
-			if (App->input->GetKey(SDL_SCANCODE_A) == KeyState::KEY_REPEAT)
-				axisX += 32000;
+			int movX = 0;
+			int movY = 0;
 			// Controller movement
-			if (App->input->GetGameControllerAxis(1) == AxisState::POSITIVE_AXIS_REPEAT)
-				axisY = 32000;
-			if (App->input->GetGameControllerAxis(1) == AxisState::NEGATIVE_AXIS_REPEAT)
-				axisY = -32000;
-			if (App->input->GetGameControllerAxis(0) == AxisState::NEGATIVE_AXIS_REPEAT)
-				axisX = -32000;
-			if (App->input->GetGameControllerAxis(0) == AxisState::POSITIVE_AXIS_REPEAT)
-				axisX = 32000;
-
-			Move(rigidBody, axisX, axisY);
+			GetMovementVectorAxis(movX, movY);
+			// Keyboard movement
+			if (movX + movY == 0)
+			{
+				if (App->input->GetKey(SDL_SCANCODE_W) == KeyState::KEY_REPEAT)
+					movY += MAX_JOYSTICK_INPUT;
+				if (App->input->GetKey(SDL_SCANCODE_S) == KeyState::KEY_REPEAT)
+					movY += -MAX_JOYSTICK_INPUT;
+				if (App->input->GetKey(SDL_SCANCODE_D) == KeyState::KEY_REPEAT)
+					movX += -MAX_JOYSTICK_INPUT;
+				if (App->input->GetKey(SDL_SCANCODE_A) == KeyState::KEY_REPEAT)
+					movX += MAX_JOYSTICK_INPUT;
+			}
+			Move(rigidBody, movX, movY);
 
 			playerDirection = ReturnPlayerDirection();
 
@@ -109,7 +106,7 @@ bool C_PlayerController::Update()
 			//
 			//float angle = RadToDeg(-rad) + 90;
 			//GetOwner()->transform->SetLocalEulerRotation(float3(0, angle, 0));
-			//
+
 			float3 ownerRotation = GetOwner()->transform->GetLocalEulerRotation();
 			float3 bulletVel = { bulletSpeed * math::Cos(DegToRad(ownerRotation.x)) , 0, bulletSpeed * math::Sin(DegToRad(ownerRotation.x)) };
 
@@ -141,14 +138,10 @@ bool C_PlayerController::Update()
 				App->input->GetKey(SDL_SCANCODE_D) == KeyState::KEY_DOWN)
 				LOG("Player controller error! No RigidBody found!");
 	
-		if (dashTimer == 0)
-		{
+		if (!dashTimer)
 			dashTimer = 0;
-		}
 		else 
-		{
 			dashTimer--;
-		}
 	}
 
 	return true;
@@ -204,20 +197,16 @@ float2 C_PlayerController::MousePositionToWorldPosition(float mapPositionY)
 	return position;
 }
 
-float2 C_PlayerController::GetMovementVectorAxis()
+void C_PlayerController::GetMovementVectorAxis(int& axisX, int& axisY)
 {
-	float2 movement = float2::zero;
-	movement.x = App->input->GetGameControllerAxisValue(0) / 32767;
-	movement.y = App->input->GetGameControllerAxisValue(1) / 32767;
-	return movement;
+	axisX = App->input->GetGameControllerAxisValue(0);
+	axisY = App->input->GetGameControllerAxisValue(1);
 }
 
-float2 C_PlayerController::GetAimVectorAxis()
+void C_PlayerController::GetAimVectorAxis(int& axisX, int& axisY)
 {
-	float2 aim = float2::zero;
-	aim.x = App->input->GetGameControllerAxisValue(2) / 32767;
-	aim.y = App->input->GetGameControllerAxisValue(3) / 32767;
-	return aim;
+	axisX = App->input->GetGameControllerAxisValue(2);
+	axisY = App->input->GetGameControllerAxisValue(3);
 }
 
 void C_PlayerController::Dash(C_RigidBody* rigidBody, bool forward, bool backward, bool right, bool left)

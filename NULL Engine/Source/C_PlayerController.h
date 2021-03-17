@@ -62,8 +62,8 @@ private:
 
 	float2 MousePositionToWorldPosition(float mapPositionY = 0);
 
-	float2 GetMovementVectorAxis();
-	float2 GetAimVectorAxis();
+	void GetMovementVectorAxis(int &axisX, int &axisY);
+	void GetAimVectorAxis(int &axisX, int &axisY);
 
 
 	float speed = 30.0f;

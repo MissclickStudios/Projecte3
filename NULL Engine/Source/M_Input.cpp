@@ -504,9 +504,8 @@ AxisState M_Input::GetGameControllerAxis(int id) const
 int M_Input::GetGameControllerAxisValue(int id) const
 {
 	if (gameController.id != nullptr)
-	{
 		return SDL_GameControllerGetAxis(gameController.id, SDL_GameControllerAxis(id));
-	}
+
 	return 0;
 }
 
