@@ -10,7 +10,8 @@
 
 #define MAX_AXIS 32767								
 #define CONTROLLER_INDEX 0							
-#define TRIGGER_INDEX 4								
+#define TRIGGER_INDEX 4		
+#define JOYSTICK_THRESHOLD 4000
 
 #define LEFT_TRIGGER 0								
 #define RIGHT_TRIGGER 1								
@@ -97,7 +98,8 @@ public:
 
 	ButtonState		GetGameControllerButton(int id) const;
 	ButtonState		GetGameControllerTrigger(int id) const;
-	AxisState		GetGameControllerAxis(int id) const;	
+	AxisState		GetGameControllerAxis(int id) const;
+	int				GetGameControllerAxisValue(int id) const;
 
 	bool			WindowSizeWasManipulated(Uint8 windowEvent) const;										// Uint8 is an SDL typedef for unsigned char.
 
