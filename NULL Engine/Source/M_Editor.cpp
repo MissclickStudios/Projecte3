@@ -647,10 +647,13 @@ void M_Editor::EditorCameraUpdate() {
 			}
 		}
 
-		if (EngineApp->input->GetKey(SDL_SCANCODE_F) == KeyState::KEY_DOWN)
+		if (EngineApp->scene->GetSelectedGameObject() != nullptr)
 		{
-			float3 target = EngineApp->scene->GetSelectedGameObject()->GetComponent<C_Transform>()->GetWorldPosition();
-			EngineApp->camera->Focus(target);
+			if (EngineApp->input->GetKey(SDL_SCANCODE_F) == KeyState::KEY_DOWN)
+			{
+				float3 target = EngineApp->scene->GetSelectedGameObject()->GetComponent<C_Transform>()->GetWorldPosition();
+				EngineApp->camera->Focus(target);
+			}
 		}
 	}
 }

@@ -1,6 +1,7 @@
 #include "Profiler.h"													
 #include "OpenGL.h"														
 #include "Time.h"
+#include "JSONParser.h"
 
 #include "Macros.h"														
 #include "Log.h"														
@@ -89,7 +90,26 @@ bool M_Renderer3D::Init(ParsonNode& configuration)
 	//InitFramebuffers();
 	LoadDebugTexture();
 
+	SetVsync(configuration.GetBool("Vsync"));
 
+	renderWorldGrid = configuration.GetBool("renderWorldGrid");
+	renderWorldAxis = configuration.GetBool("renderWorldAxis");
+	renderWireframes = configuration.GetBool("renderWireFrame");
+	renderVertexNormals = configuration.GetBool("renderVertexNormals");
+	renderFaceNormals = configuration.GetBool("renderFaceNormals");
+	renderBoundingBoxes = configuration.GetBool("renderBoundingBoxes");
+	renderSkeletons = configuration.GetBool("renderSkeletons");
+
+	worldGridColor = configuration.GetFloat4("worldGridColor");
+	wireframeColor = configuration.GetFloat4("wireframeColor");
+	vertexNormalsColor = configuration.GetFloat4("vertexNormalsColor");
+	faceNormalsColor = configuration.GetFloat4("faceNormalsColor");
+
+	aabbColor = configuration.GetFloat4("aabbColor");
+	obbColor = configuration.GetFloat4("obbColor");
+	frustumColor = configuration.GetFloat4("frustumColor");
+	rayColor = configuration.GetFloat4("rayColor");
+	boneColor = configuration.GetFloat4("boneColor");
 
 	return ret;
 }
@@ -104,9 +124,6 @@ bool M_Renderer3D::Start()
 	defaultSkyBox.CreateSkybox();
 
 	GenScreenBuffer();
-
-	
-
 
 	return true;
 }
@@ -212,16 +229,37 @@ bool M_Renderer3D::CleanUp()
 
 bool M_Renderer3D::LoadConfiguration(ParsonNode& root)
 {
-	bool ret = true;
+	vsync = root.GetBool("Vsync");
 
-	return ret;
+	return true;
 }
 
 bool M_Renderer3D::SaveConfiguration(ParsonNode& root) const
 {
-	bool ret = true;
+	root.SetBool("Vsync", vsync);
 
-	return ret;
+	uint	worldGridSize;																		//
+	
+	root.SetFloat4("worldGridColor", float4(&worldGridColor));
+	root.SetFloat4("wireframeColor", float4(&wireframeColor));
+	root.SetFloat4("vertexNormalsColor", float4(&vertexNormalsColor));
+	root.SetFloat4("faceNormalsColor", float4(&faceNormalsColor));
+
+	root.SetFloat4("aabbColor", float4(&aabbColor));
+	root.SetFloat4("obbColor", float4(&obbColor));
+	root.SetFloat4("frustumColor", float4(&frustumColor));
+	root.SetFloat4("rayColor", float4(&rayColor));
+	root.SetFloat4("boneColor", float4(&boneColor));
+
+	root.SetBool("renderWorldGrid",renderWorldGrid);	
+	root.SetBool("renderWorldAxis", renderWorldAxis);
+	root.SetBool("renderWireFrame", renderWireframes);
+	root.SetBool("renderVertexNormals", renderVertexNormals);
+	root.SetBool("renderFaceNormals", renderFaceNormals);
+	root.SetBool("renderBoundingBoxes", renderBoundingBoxes);
+	root.SetBool("renderSkeletons", renderSkeletons);
+
+	return true;
 }
 
 // ----------- RENDERER METHODS -----------
@@ -939,6 +977,8 @@ void M_Renderer3D::SetVsync(const bool& setTo)
 			LOG("[STATUS] Vsync has been %s", vsync ? "activated" : "deactivated");
 		}
 	}
+
+	vsync ? App->framesAreCapped = false : App->framesAreCapped = true;
 }
 
 bool M_Renderer3D::GetGLFlag(GLenum flag) const

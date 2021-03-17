@@ -1317,6 +1317,13 @@ void M_ResourceManager::CreatePrefab(GameObject* gameObject)
 	SavePrefab(gameObject, id);
 }
 
+void M_ResourceManager::UpdatePrefab(GameObject* gameObject)
+{
+	gameObject->SetAsPrefab(gameObject->prefabID);
+
+	SavePrefab(gameObject, gameObject->prefabID);
+}
+
 void M_ResourceManager::SavePrefab(GameObject* gameObject, uint _prefabId)
 {
 	ParsonNode rootNode;

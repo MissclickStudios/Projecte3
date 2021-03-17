@@ -164,16 +164,15 @@ void E_Inspector::DrawGameObjectInfo(GameObject* selectedGameObject)
 
 	ImGui::Separator();
 
-	if (!selectedGameObject->isPrefab)
+	if (!selectedGameObject->isPrefab)	// --- PREFAB ---
 	{
 		if (ImGui::Button("Create Prefab"))
-		{
 			App->resourceManager->CreatePrefab(selectedGameObject);
-		}
 	}
 	else
 	{
-		ImGui::Text("Object is Prefab");
+		if (ImGui::Button("Update Prefab"))
+			App->resourceManager->UpdatePrefab(selectedGameObject);
 	}
 
 	ImGui::Separator();

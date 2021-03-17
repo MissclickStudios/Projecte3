@@ -103,37 +103,20 @@ bool Application::Init()
 	bool ret = true;
 
 	char* buffer = nullptr;
-	uint size = fileSystem->Load("Engine/Configuration/configuration.JSON", &buffer);
-	if (size > 0)																			// Check if the configuration is empty and load the default configuration for the engine.
-	{
-		engineName			= TITLE;														// Change Later?
-		organization		= ORGANIZATION;
-		frameCap			= 60;
-		framesAreCapped		= true;
-	}
-	else
-	{
-		uint defaultSize = fileSystem->Load("Engine/Configuration/default_configuration.JSON", &buffer);
-		if (defaultSize <= 0)
-		{
-			LOG("[ERROR] Failed to load project settings.");
-			return false;
-		}
+	uint size = fileSystem->Load(CONFIGURATION_FILE_PATH, &buffer);
 
-		engineName			= TITLE;
-		organization		= ORGANIZATION;
-		frameCap			= 60;
-		framesAreCapped		= true;
-	}
-
+	engineName			= TITLE;														// Change Later?
+	organization		= ORGANIZATION;
+	frameCap			= 60;
+	framesAreCapped		= true;
+	
 	ParsonNode config(buffer);
-	ParsonNode node = config.GetNode("EditorState");
 
 	std::vector<Module*>::iterator item = modules.begin();
 
 	while (item != modules.end() && ret)
 	{
-		ret = (*item)->Init(node.GetNode((*item)->GetName()));		// Constructs and gives every module a handle for their own configuration node. M_Input -> "Input".
+		ret = (*item)->Init(config.GetNode((*item)->GetName()));		// Constructs and gives every module a handle for their own configuration node. M_Input -> "Input".
 		++item;
 	}
 	
@@ -224,6 +207,8 @@ UpdateStatus Application::Update()
 bool Application::CleanUp()
 {
 	bool ret = true;
+
+	SaveConfigurationNow();
 
 	std::vector<Module*>::reverse_iterator item = modules.rbegin();
 
@@ -348,14 +333,13 @@ void Application::FinishUpdate()
 {	
 	if (wantToLoad)
 	{
-		LoadConfigurationNow(loadConfigFile.c_str());
 
 		wantToLoad = false;
 	}
 
 	if (wantToSave)
 	{
-		SaveConfigurationNow(saveConfigFile.c_str());
+		SaveConfigurationNow();
 
 		wantToSave = false;
 	}
@@ -380,33 +364,17 @@ void Application::FinishUpdate()
 void Application::SaveConfiguration(const char* file)
 {
 	wantToSave = true;
-	saveConfigFile = ("Engine/Configuration/configuration.json");
 }
 
 void Application::LoadConfiguration(const char* file)
 {
 	wantToLoad = true;
-
-	if (userHasSaved)
-	{
-		loadConfigFile = ("Configuration.json");
-	}
-	else
-	{
-		loadConfigFile = ("DefaultConfiguration.json");
-	}
 }
 
-void Application::SaveConfigurationNow(const char* file)
+void Application::SaveConfigurationNow()
 {
-	if (file == nullptr)
-	{
-		LOG("[ERROR] Application: Could not Save Engine Configuration! Error: Given File Path string was nullptr.");
-		return;
-	}
 	
 	ParsonNode config;
-	ParsonNode node = config.SetNode("EditorState");
 
 	for (uint i = 0; i < modules.size(); ++i)
 	{
@@ -414,10 +382,10 @@ void Application::SaveConfigurationNow(const char* file)
 	}
 
 	char* buffer = nullptr;
-	uint written = config.SerializeToFile(file, &buffer);
+	uint written = config.SerializeToFile(CONFIGURATION_FILE_PATH, &buffer);
 	if (written > 0)
 	{
-		LOG("[STATE] Application: Successfully Saved Engine Configuration! Path: %s", file);
+		LOG("[STATE] Application: Successfully Saved Engine Configuration! Path: %s");
 	}
 	else
 	{
@@ -425,16 +393,6 @@ void Application::SaveConfigurationNow(const char* file)
 	}
 
 	RELEASE_ARRAY(buffer);
-}
-
-void Application::LoadConfigurationNow(const char* file)
-{
-	for (uint i = 0; i < modules.size(); ++i)
-	{
-		//JSON_Object* obj = 
-
-		//modules[i]->LoadConfiguration(Configuration());
-	}
 }
 
 // --- APPLICATION & ENGINE STATE ---

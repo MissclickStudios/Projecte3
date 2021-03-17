@@ -1,5 +1,5 @@
 #include "Color.h"
-
+#include "MathGeoLib/include/Math/float4.h"
 #include "MemoryManager.h"
 
 Color::Color() : r(0.0f), g(0.0f), b(0.0f), a(1.0f)
@@ -100,6 +100,11 @@ float* Color::operator &()
 	return (float*)this;
 }
 
+float* Color::operator &() const
+{
+	return (float*)this;
+}
+
 Color Color::operator +(const Color& color)
 {	
 	Color col;
@@ -194,6 +199,16 @@ Color Color::operator =(const Color& color)
 	g = color.g;
 	b = color.b;
 	a = color.a;
+
+	return *this;
+}
+
+Color Color::operator =(const math::float4& color)
+{
+	r = color.x;
+	g = color.y;
+	b = color.z;
+	a = color.w;
 
 	return *this;
 }
