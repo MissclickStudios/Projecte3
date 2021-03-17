@@ -33,11 +33,6 @@
 
 #include "MemoryManager.h"
 
-typedef std::pair<std::map<uint32, Resource*>::iterator, bool>	INSERT_RESULT;													// Also valid for emplace oparations.
-typedef std::map<uint32, Resource*>::iterator					RESOURCE_ITEM;
-typedef std::map<uint32, std::string>::iterator					LIBRARY_ITEM;
-typedef std::map<std::string, uint32>::iterator					FILE_ITEM;
-
 M_ResourceManager::M_ResourceManager() : Module("ResourceManager"),
 fileRefreshTimer	(0.0f),
 fileRefreshRate		(0.0f)
@@ -78,7 +73,7 @@ UpdateStatus M_ResourceManager::PreUpdate(float dt)
 
 	if (fileRefreshTimer > fileRefreshRate)
 	{
-		RESOURCE_ITEM item = resources.begin();
+		auto item = resources.begin();
 		while (item != resources.end())
 		{
 			if (item->second->GetReferences() == 0)															// Clear all Reference 0 resources that might have gone past the 
@@ -1524,7 +1519,7 @@ bool M_ResourceManager::FreeResource(uint32 UID)
 		return false;
 	}
 	
-	RESOURCE_ITEM rItem = resources.find(UID);
+	auto rItem = resources.find(UID);
 	if (rItem == resources.end())
 	{
 		LOG("[ERROR] Resource Manager: Free Resource Operation Failed! Error: Given UID could not be found in Resources Map.");
@@ -1621,7 +1616,7 @@ bool M_ResourceManager::DeallocateResource(uint32 UID)
 		return false;
 	}
 
-	RESOURCE_ITEM item = resources.find(UID);
+	auto item = resources.find(UID);
 	if (item != resources.end())
 	{
 		item->second->CleanUp();
@@ -1684,7 +1679,6 @@ void M_ResourceManager::GetAllShaders(std::vector<R_Shader*>& shaders)
 	R_Shader* tempShader = nullptr;
 	std::vector<std::string> shaderFiles;
 	App->fileSystem->GetAllFilesWithFilter(ASSETS_SHADERS_PATH, shaderFiles, nullptr, "shader");
-	//App->fileSystem->GetAllFilesWithExtension(ASSETS_SHADERS_PATH, "shader", shaderFiles);
 	for (uint i = 0; i < shaderFiles.size(); i++)
 	{
 		//std::string defaultPath = ASSETS_SHADERS_PATH + std::string(shaderFiles[i]) + SHADERS_EXTENSION;
@@ -1708,24 +1702,8 @@ void M_ResourceManager::GetAllTextures(std::vector<R_Texture*>& textures)
 	extFilters.push_back("png");
 	extFilters.push_back("tga");
 	extFilters.push_back("dds");
-
-	float time = Time::Real::PeekPerfTimer();
 	
 	App->fileSystem->GetAllFilesWithFilters(ASSETS_TEXTURES_PATH, textureFiles, nameFilters, extFilters);
-
-	time = Time::Real::PeekPerfTimer() - time;
-
-	textureFiles.clear();
-
-	float time2 = Time::Real::PeekPerfTimer();
-
-	App->fileSystem->GetAllFilesWithFilter(ASSETS_TEXTURES_PATH, textureFiles, nullptr, "png");
-	App->fileSystem->GetAllFilesWithFilter(ASSETS_TEXTURES_PATH, textureFiles, nullptr, "tga");
-	App->fileSystem->GetAllFilesWithFilter(ASSETS_TEXTURES_PATH, textureFiles, nullptr, "dds");
-	
-	time2 = Time::Real::PeekPerfTimer() - time2;
-
-	int a = 0;
 
 	R_Texture* tempTex = nullptr;
 	for (uint i = 0; i < textureFiles.size(); i++)
