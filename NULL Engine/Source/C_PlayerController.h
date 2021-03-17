@@ -43,7 +43,7 @@ public:
 	//The deceleration is internaly inverted, so setting a negative deceleration will cause an acceleration
 	void SetDeceleration(float force) { this->deceleration = force; }
 
-	void Dash(C_RigidBody * rigidBody,bool forward, bool backward, bool right, bool left);
+
 
 	const float BulletSpeed() const { return bulletSpeed; }
 	void SetBulletSpeed(float speed) { bulletSpeed = speed; }
@@ -55,11 +55,16 @@ public:
 private: 
 
 	void Move(C_RigidBody* rigidBody);
+	void Dash(C_RigidBody * rigidBody,bool forward, bool backward, bool right, bool left);
 	void Rotate();
 
 	void StepSound(bool a, bool b, bool c, bool d );
 
 	float2 MousePositionToWorldPosition(float mapPositionY = 0);
+
+	float2 GetMovementVectorAxis();
+	float2 GetAimVectorAxis();
+
 
 	float speed = 30.0f;
 

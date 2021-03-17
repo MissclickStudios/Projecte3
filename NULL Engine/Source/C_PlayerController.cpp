@@ -29,7 +29,7 @@ C_PlayerController::C_PlayerController(GameObject* owner) : Component(owner, Com
 	if (!GetOwner()->GetComponent<C_RigidBody>())
 		GetOwner()->CreateComponent(ComponentType::RIGIDBODY);
 
-	stepTimer = new Timer();
+	//stepTimer = new Timer();
 }
 
 C_PlayerController::~C_PlayerController()
@@ -181,6 +181,22 @@ float2 C_PlayerController::MousePositionToWorldPosition(float mapPositionY)
 	position.y = (-1 * direction.z * point.y) / direction.y + point.z;
 
 	return position;
+}
+
+float2 C_PlayerController::GetMovementVectorAxis()
+{
+	float2 movement = float2::zero;
+	movement.x = App->input->GetGameControllerAxisValue(0) / 32767;
+	movement.y = App->input->GetGameControllerAxisValue(1) / 32767;
+	return movement;
+}
+
+float2 C_PlayerController::GetAimVectorAxis()
+{
+	float2 aim = float2::zero;
+	aim.x = App->input->GetGameControllerAxisValue(2) / 32767;
+	aim.y = App->input->GetGameControllerAxisValue(3) / 32767;
+	return aim;
 }
 
 void C_PlayerController::Dash(C_RigidBody* rigidBody, bool forward, bool backward, bool right, bool left)
