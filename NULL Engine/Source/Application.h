@@ -51,8 +51,7 @@ private:																			// Exceptionally putting private first due to the spe
 	UpdateStatus	PostUpdate		();
 	void			FinishUpdate	();
 
-	void			SaveConfigurationNow	(const char* file);
-	void			LoadConfigurationNow	(const char* file);
+	void			SaveConfigurationNow	();
 
 public:																				// --- APPLICATION & ENGINE STATE
 	void			AddModule				(Module* module);
@@ -112,8 +111,6 @@ private:
 	
 	bool					wantToLoad;												// Will keep track of whether or not the user wants to load a configuration.
 	bool					wantToSave;												// Will keep track of whether or not the user wants to save a configuration.
-	std::string				loadConfigFile;											// Will store the name string of the configuration file to be loaded.
-	std::string				saveConfigFile;											// Will store the name string og the configuration file to be loaded.
 
 	// --- HARDWARE INFO
 	HardwareInfo			hardwareInfo;											// All the info/data about the software and the hardware of the system will be extracted from here.

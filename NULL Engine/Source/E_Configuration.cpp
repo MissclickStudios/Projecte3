@@ -439,13 +439,13 @@ void E_Configuration::PlotFrameDataHistogram()
 
 	char overlay[32];
 	sprintf_s(overlay, "Framerate: %.2f", fpsData[MAX_HISTOGRAM_SIZE - 1]);
-	ImGui::PlotHistogram("FPS", fpsData, IM_ARRAYSIZE(fpsData), 0, overlay, 0.0f, 120.0f, ImVec2(0, 80));
+	ImGui::PlotHistogram("FPS", fpsData, IM_ARRAYSIZE(fpsData), 0, overlay, 0.0f, 144.0f, ImVec2(0, 80));
 	ImGui::Text("Average FPS:");	ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%.2f",		averageFps);
 	ImGui::Text("Peak FPS:");		ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "   %u",		peakFps);
 	ImGui::Text("Min FPS:");		ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "    %u",	minFps);
 
 	sprintf_s(overlay, "ms last frame: %.2f", msData[MAX_HISTOGRAM_SIZE - 1]);
-	ImGui::PlotHistogram("MS", msData, IM_ARRAYSIZE(msData), 0, overlay, 0.0f, 40.0f, ImVec2(0, 80));
+	ImGui::PlotHistogram("MS", msData, IM_ARRAYSIZE(msData), 0, overlay, 0.0f, 50.0f, ImVec2(0, 80));
 	ImGui::Text("Average ms: ");	ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%.2f",		averageMs);
 	ImGui::Text("Peak ms:");		ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "   %u",		peakMs);
 	ImGui::Text("Min ms:");			ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "    %u",	minMs);
@@ -455,11 +455,11 @@ void E_Configuration::GenerateFrameCapSlider()
 {
 	int cap = EngineApp->GetFrameCap();
 
-	ImGui::SliderInt("Frame Cap", &cap, 0, 60, "%d", ImGuiSliderFlags_AlwaysClamp);
+	ImGui::SliderInt("Frame Cap", &cap, 0, 144, "%d", ImGuiSliderFlags_AlwaysClamp);
 
 	EngineApp->SetFrameCap(cap);
 
-	EngineApp->framesAreCapped = (cap == 0) ? false : true;										// [ATTENTION] Could be troubling when trying to manage the framecap elsewhere.
+	//EngineApp->framesAreCapped = (cap == 0) ? false : true;										// [ATTENTION] Could be troubling when trying to manage the framecap elsewhere.
 }
 
 void E_Configuration::GenerateBrightnessSlider()

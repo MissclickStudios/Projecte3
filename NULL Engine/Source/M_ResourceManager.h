@@ -66,6 +66,9 @@ public:																								// --- RESOURCE MANAGER API ---
 	void			GetAllTextures(std::vector<R_Texture*>& textures);									//Retrieve all the shaders in the library
 
 	void CreatePrefab(GameObject* gameObject);
+
+	void UpdatePrefab(GameObject* gameObject);
+
 	void SavePrefab(GameObject* gameObject, uint _prefabId);
 	void LoadPrefab(uint _prefabId);
 
