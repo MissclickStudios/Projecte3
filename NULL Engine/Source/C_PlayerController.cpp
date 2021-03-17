@@ -23,12 +23,17 @@
 
 #include "MathGeoLib/include/Geometry/Line.h"
 
+#define MAX_JOYSTICK_INPUT 32767
+
 
 C_PlayerController::C_PlayerController(GameObject* owner) : Component(owner, ComponentType::PLAYER_CONTROLLER)
 {
 	if (!GetOwner()->GetComponent<C_RigidBody>())
 		GetOwner()->CreateComponent(ComponentType::RIGIDBODY);
 
+	fireRateTimer.Stop();
+	dashTime.Stop();
+	dashColdown.Stop();
 	//stepTimer = new Timer();
 }
 
@@ -39,96 +44,10 @@ C_PlayerController::~C_PlayerController()
 bool C_PlayerController::Update()
 {
 	if (App->gameState == GameState::PLAY)
-	{
-		C_RigidBody* rigidBody = GetOwner()->GetComponent<C_RigidBody>();
+		return true;
 
-		if (rigidBody && !rigidBody->IsStatic())
-		{
-			Move(rigidBody);
-
-			playerDirection = ReturnPlayerDirection();
-
-			switch(playerDirection)
-			{
-			case Direction::NORTH:
-				GetOwner()->transform->SetLocalEulerRotation(float3(0, 0, 0));
-			break;
-			case Direction::NORTH_WEST:
-				GetOwner()->transform->SetLocalEulerRotation(float3(0, 45, 0));
-				break;
-			case Direction::WEST:
-				GetOwner()->transform->SetLocalEulerRotation(float3(0, 90, 0));
-				break;
-			case Direction::SOUTH_WEST:
-				GetOwner()->transform->SetLocalEulerRotation(float3(0, 135, 0));
-				break;
-			case Direction::SOUTH:
-				GetOwner()->transform->SetLocalEulerRotation(float3(0, 180, 0));
-				break;
-			case Direction::SOUTH_EAST:
-				GetOwner()->transform->SetLocalEulerRotation(float3(0, 225, 0));
-				break;
-			case Direction::EAST:
-				GetOwner()->transform->SetLocalEulerRotation(float3(0, 270, 0));
-				break;
-			case Direction::NORTH_EAST:
-				GetOwner()->transform->SetLocalEulerRotation(float3(0, 315, 0));
-				break;
-			}
-			//float2 mouse, center, direction;
-			//mouse = MousePositionToWorldPosition();
-			//center.x = GetOwner()->transform->GetWorldPosition().x;
-			//center.y = GetOwner()->transform->GetWorldPosition().z;
-			//mouse.y *= -1;
-			//direction = mouse - center;
-			//direction.Normalize();
-			//
-			//float rad = direction.AimedAngle();
-			//
-			//
-			//float angle = RadToDeg(-rad) + 90;
-			//GetOwner()->transform->SetLocalEulerRotation(float3(0, angle, 0));
-			//
-			float3 ownerRotation = GetOwner()->transform->GetLocalEulerRotation();
-			float3 bulletVel = { bulletSpeed * math::Cos(DegToRad(ownerRotation.x)) , 0, bulletSpeed * math::Sin(DegToRad(ownerRotation.x)) };
-
-			if (App->input->GetMouseButton(1) == KeyState::KEY_DOWN || App->input->GetGameControllerTrigger(1) == ButtonState::BUTTON_DOWN)
-			{
-				Resource* resource = App->resourceManager->GetResourceFromLibrary("Assets/Models/Primitives/sphere.fbx");
-				if (resource != nullptr)
-				{
-
-					GameObject* bullet = App->scene->GenerateGameObjectsFromModel((R_Model*)resource);
-			
-					bullet->transform->SetWorldPosition(GetOwner()->transform->GetWorldPosition());
-					C_RigidBody* rigidBody = (C_RigidBody*)bullet->CreateComponent(ComponentType::RIGIDBODY);
-					rigidBody->FreezePositionY(true);
-					rigidBody->FreezeRotationX(true);
-					rigidBody->FreezeRotationY(true);
-					rigidBody->FreezeRotationZ(true);
-					rigidBody->SetLinearVelocity(bulletVel);
-					bullet->CreateComponent(ComponentType::SPHERE_COLLIDER);
-					bullet->CreateComponent(ComponentType::BULLET_BEHAVIOR);
-
-				}
-			}
-		}
-		else
-			if (App->input->GetKey(SDL_SCANCODE_W) == KeyState::KEY_DOWN || 
-				App->input->GetKey(SDL_SCANCODE_S) == KeyState::KEY_DOWN ||
-				App->input->GetKey(SDL_SCANCODE_A) == KeyState::KEY_DOWN ||
-				App->input->GetKey(SDL_SCANCODE_D) == KeyState::KEY_DOWN)
-				LOG("Player controller error! No RigidBody found!");
-	
-		if (dashTimer == 0)
-		{
-			dashTimer = 0;
-		}
-		else 
-		{
-			dashTimer--;
-		}
-	}
+	Movement();
+	Weapon();
 
 	return true;
 }
@@ -147,6 +66,12 @@ bool C_PlayerController::SaveState(ParsonNode& root) const
 	root.SetNumber("Deceleration", (double)deceleration);
 
 	root.SetNumber("Bullet Speed", (double)bulletSpeed);
+	root.SetNumber("Fire Rate", (double)fireRate);
+	root.SetBool("Automatic", automatic);
+
+	root.SetNumber("Dash Speed", (double)dashSpeed);
+	root.SetNumber("Dash Time", (double)dashingTime);
+	root.SetNumber("Dash Coldown", (double)dashingColdown);
 
 	return true;
 }
@@ -158,8 +83,150 @@ bool C_PlayerController::LoadState(ParsonNode& root)
 	deceleration = (float)root.GetNumber("Deceleration");
 
 	bulletSpeed = (float)root.GetNumber("Bullet Speed");
+	fireRate = (float)root.GetNumber("Fire Rate");
+	automatic = root.GetBool("Automatic");
+
+	dashSpeed = (float)root.GetNumber("Dash Speed");
+	dashingTime = (float)root.GetNumber("Dash Time");
+	dashingColdown = (float)root.GetNumber("Dash Coldown");
 
 	return true;
+}
+
+void C_PlayerController::Movement()
+{
+	C_RigidBody* rigidBody = GetOwner()->GetComponent<C_RigidBody>();
+	if (!rigidBody || rigidBody->IsStatic())
+		return;
+
+	if (!dashTime.IsActive())
+	{
+		int movX = 0;
+		int movY = 0;
+		// Controller movement
+		GetMovementVectorAxis(movX, movY);
+		// Keyboard movement
+		if (movX + movY == 0)
+		{
+			if (App->input->GetKey(SDL_SCANCODE_W) == KeyState::KEY_REPEAT)
+				movY = MAX_JOYSTICK_INPUT;
+			if (App->input->GetKey(SDL_SCANCODE_S) == KeyState::KEY_REPEAT)
+				movY = -MAX_JOYSTICK_INPUT;
+			if (App->input->GetKey(SDL_SCANCODE_D) == KeyState::KEY_REPEAT)
+				movX = -MAX_JOYSTICK_INPUT;
+			if (App->input->GetKey(SDL_SCANCODE_A) == KeyState::KEY_REPEAT)
+				movX = MAX_JOYSTICK_INPUT;
+		}
+		Move(rigidBody, movX, movY);
+
+		if (dashColdown.IsActive())
+		{
+			if (dashColdown.ReadSec() >= dashingColdown)
+				dashColdown.Stop();
+		}
+		else if ((App->input->GetKey(SDL_SCANCODE_LSHIFT) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(1) == ButtonState::BUTTON_DOWN))
+			Dash(rigidBody, movX, movY);
+	}
+	else if (dashTime.ReadSec() >= dashingTime)
+		dashTime.Stop();
+}
+
+void C_PlayerController::Move(C_RigidBody* rigidBody, int axisX, int axisY)
+{
+	float3 direction = { (float)axisX, 0, (float)axisY };
+
+	if (axisX == 0 && axisY == 0) {}
+	else
+	{
+		direction.Normalize();
+		lastDirection = direction;
+	}
+
+	direction *= speed;
+	rigidBody->SetLinearVelocity(direction);
+}
+
+void C_PlayerController::Dash(C_RigidBody* rigidBody, int axisX, int axisY)
+{
+	rigidBody->SetLinearVelocity(lastDirection * dashSpeed);
+
+	dashColdown.Start();
+	dashTime.Start();
+}
+
+void C_PlayerController::Rotate()
+{
+	//float2 mouse, center, direction;
+	//mouse = MousePositionToWorldPosition();
+	//center.x = GetOwner()->transform->GetWorldPosition().x;
+	//center.y = GetOwner()->transform->GetWorldPosition().z;
+	//mouse.y *= -1;
+	//direction = mouse - center;
+	//direction.Normalize();
+	//
+	//float rad = direction.AimedAngle();
+	//
+	//
+	//float angle = RadToDeg(-rad) + 90;
+	//GetOwner()->transform->SetLocalEulerRotation(float3(0, angle, 0));
+}
+
+void C_PlayerController::Weapon()
+{
+	int aimX = 0;
+	int aimY = 0;
+	// Controller aim
+	GetAimVectorAxis(aimX, aimY);
+	// Mouse aim
+	// TODO
+
+	float3 direction = { (float)aimX, 0, (float)aimY };
+	if (aimX == 0 && aimY == 0)
+		direction.z++; // No mouse aim picking
+	else
+		direction.Normalize();
+
+	if (!automatic)
+	{
+		if (App->input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_DOWN || App->input->GetGameControllerTrigger(1) == ButtonState::BUTTON_DOWN)
+			SpawnBullet(direction);
+	}
+	else
+	{
+		if (App->input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_REPEAT || App->input->GetGameControllerTrigger(1) == ButtonState::BUTTON_REPEAT)
+		{
+			if (!fireRateTimer.IsActive())
+			{
+				SpawnBullet(direction);
+				fireRateTimer.Start();
+			}
+			else if (fireRateTimer.ReadSec() >= fireRate)
+			{
+				SpawnBullet(direction);
+				fireRateTimer.Stop();
+				fireRateTimer.Start();
+			}
+		}
+	}
+}
+
+void C_PlayerController::SpawnBullet(float3 direction)
+{
+	Resource* resource = App->resourceManager->GetResourceFromLibrary("Assets/Models/Primitives/sphere.fbx");
+	if (!resource)
+		return;
+
+	GameObject* bullet = App->scene->GenerateGameObjectsFromModel((R_Model*)resource);
+
+	bullet->transform->SetWorldPosition(GetOwner()->transform->GetWorldPosition());
+	C_RigidBody* rigidBody = (C_RigidBody*)bullet->CreateComponent(ComponentType::RIGIDBODY);
+	rigidBody->FreezePositionY(true);
+	rigidBody->FreezeRotationX(true);
+	rigidBody->FreezeRotationY(true);
+	rigidBody->FreezeRotationZ(true);
+	rigidBody->SetLinearVelocity(direction * bulletSpeed);
+	bullet->CreateComponent(ComponentType::SPHERE_COLLIDER);
+	bullet->CreateComponent(ComponentType::BULLET_BEHAVIOR);
 }
 
 float2 C_PlayerController::MousePositionToWorldPosition(float mapPositionY)
@@ -183,153 +250,34 @@ float2 C_PlayerController::MousePositionToWorldPosition(float mapPositionY)
 	return position;
 }
 
-void C_PlayerController::Dash(C_RigidBody* rigidBody, bool forward, bool backward, bool right, bool left)
+void C_PlayerController::StepSound(bool a, bool b, bool c, bool d)
 {
-	if (!forward && !backward && right && !left) 
-	{
-		rigidBody->AddForce(physx::PxVec3(-dashForce, 0, 0), physx::PxForceMode::eIMPULSE);
-		rightDash = true;
-		dashTimer = dashCooldown;
-	}
-
-	if (!forward && !backward && !right && left)
-	{
-		rigidBody->AddForce(physx::PxVec3(dashForce, 0, 0), physx::PxForceMode::eIMPULSE);
-		leftDash = true;
-		dashTimer = dashCooldown;
-	}
+	//if (a || b || c || d)
+	//	if (!isStepPlaying)
+	//	{
+	//		isStepPlaying = true;
+	//		stepTimer->Start();
+	
+	//		aSource = GetOwner()->GetComponent<C_AudioSource>();
+	//		if (aSource != nullptr)
+	//		{
+	//			unsigned int id; aSource->GetEvent(nullptr, &id);
+	//			aSource->PlayFx(id);
+	//		}
+	//	
+	// 		if (isStepPlaying && stepTimer->ReadSec() >= 0.80)
+	// 			isStepPlaying = false;
+	//	}
 }
 
-Direction C_PlayerController::ReturnPlayerDirection()
+void C_PlayerController::GetMovementVectorAxis(int& axisX, int& axisY)
 {
-	bool north = false;
-	bool west = false;
-	bool south = false;
-	bool east = false;
-
-	if (App->input->GetGameControllerAxis(3) == AxisState::POSITIVE_AXIS_REPEAT)
-		north = true;
-	if (App->input->GetGameControllerAxis(3) == AxisState::NEGATIVE_AXIS_REPEAT)
-		south = true;
-	if (App->input->GetGameControllerAxis(2) == AxisState::POSITIVE_AXIS_REPEAT)
-		west = true;
-	if (App->input->GetGameControllerAxis(2) == AxisState::NEGATIVE_AXIS_REPEAT)
-		east = true;
-
-	if (north && west)
-		return Direction::NORTH_WEST;
-	if (north && east)
-		return Direction::NORTH_EAST;
-	if (south && west)
-		return Direction::SOUTH_WEST;
-	if (south && east)
-		return Direction::SOUTH_EAST;
-
-	if (north)
-		return Direction::NORTH;
-	if (south)
-		return Direction::SOUTH;
-	if (west)
-		return Direction::WEST;
-	if (east)
-		return Direction::EAST;
-
-	// we need to return last Direction
-	return Direction::NORTH;
+	axisX = App->input->GetGameControllerAxisValue(0);
+	axisY = App->input->GetGameControllerAxisValue(1);
 }
 
-void C_PlayerController::Move(C_RigidBody* rigidBody)
+void C_PlayerController::GetAimVectorAxis(int& axisX, int& axisY)
 {
-	bool forward = false;
-	bool backward = false;
-	bool right = false;
-	bool left = false;
-
-	if (App->input->GetKey(SDL_SCANCODE_W) == KeyState::KEY_REPEAT)
-		forward = true;
-	if (App->input->GetKey(SDL_SCANCODE_S) == KeyState::KEY_REPEAT)
-		backward = true;
-	if (App->input->GetKey(SDL_SCANCODE_D) == KeyState::KEY_REPEAT)
-		right = true;
-	if (App->input->GetKey(SDL_SCANCODE_A) == KeyState::KEY_REPEAT)
-		left = true;
-
-	// Controller movement
-	if (App->input->GetGameControllerAxis(1) == AxisState::POSITIVE_AXIS_REPEAT)
-		forward = true;
-	if (App->input->GetGameControllerAxis(1) == AxisState::NEGATIVE_AXIS_REPEAT)
-		backward = true;
-	if (App->input->GetGameControllerAxis(0) == AxisState::NEGATIVE_AXIS_REPEAT)
-		right = true;
-	if (App->input->GetGameControllerAxis(0) == AxisState::POSITIVE_AXIS_REPEAT)
-		left = true;
-
-	if ((App->input->GetKey(SDL_SCANCODE_E) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(1) == ButtonState::BUTTON_DOWN ) && right && dashTimer == 0)
-	{	
-		Dash(rigidBody, forward, backward, right, left);
-	}
-
-	if ((App->input->GetKey(SDL_SCANCODE_E) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(1) == ButtonState::BUTTON_DOWN) && left && dashTimer == 0)
-	{
-		Dash(rigidBody, forward, backward, right, left);
-	}
-
-
-	physx::PxVec3 vel = ((physx::PxRigidDynamic*)rigidBody->GetRigidBody())->getLinearVelocity();
-
-	if (forward && vel.z < speed)
-		rigidBody->AddForce(physx::PxVec3(0, 0, acceleration), physx::PxForceMode::eACCELERATION);
-	else if (!backward)
-		if (vel.z > 0)
-			rigidBody->AddForce(physx::PxVec3(0, 0, -deceleration), physx::PxForceMode::eACCELERATION);
-
-	if (backward && vel.z > -speed)
-		rigidBody->AddForce(physx::PxVec3(0, 0, -acceleration), physx::PxForceMode::eACCELERATION);
-	else if (!forward)
-		if (vel.z < 0)
-			rigidBody->AddForce(physx::PxVec3(0, 0, deceleration), physx::PxForceMode::eACCELERATION);
-
-	if (left && vel.x < speed)
-		rigidBody->AddForce(physx::PxVec3(acceleration, 0, 0), physx::PxForceMode::eACCELERATION);
-	else if (!right)
-		if (vel.x > 0)
-			rigidBody->AddForce(physx::PxVec3(-deceleration, 0, 0), physx::PxForceMode::eACCELERATION);
-
-	if (right && vel.x > -speed)
-		rigidBody->AddForce(physx::PxVec3(-acceleration, 0, 0), physx::PxForceMode::eACCELERATION);
-	else if (!left)
-		if (vel.x < 0)
-			rigidBody->AddForce(physx::PxVec3(deceleration, 0, 0), physx::PxForceMode::eACCELERATION);
-
-	if (!forward && !backward && !right && !left)
-		rigidBody->SetLinearVelocity(float3::zero);
-
-}
-
-// void C_PlayerController::StepSound(bool a, bool b, bool c, bool d)
-// {
-// 	if (a || b || c || d)
-// 	{
-// 		if (!isStepPlaying)
-// 		{
-// 			isStepPlaying = true;
-// 			stepTimer->Start();
-
-// 			aSource = GetOwner()->GetComponent<C_AudioSource>();
-// 			if (aSource != nullptr){
-// 				unsigned int id; aSource->GetEvent(nullptr, &id);
-// 				aSource->PlayFx(id);
-// 			}
-// 		}
-// 	}
-
-// 	if (isStepPlaying && stepTimer->ReadSec() >= 0.80)
-// 	{
-// 		isStepPlaying = false;
-// 	}
-// }
-
-void C_PlayerController::Rotate()
-{
-
+	axisX = App->input->GetGameControllerAxisValue(2);
+	axisY = App->input->GetGameControllerAxisValue(3);
 }
