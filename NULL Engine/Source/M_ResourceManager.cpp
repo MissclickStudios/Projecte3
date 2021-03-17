@@ -65,7 +65,7 @@ bool M_ResourceManager::Start()
 	RefreshDirectoryFiles(ENGINE_DIRECTORY);
 
 
-	//FindPrefabs();
+	FindPrefabs();
 
 	return true;
 }
@@ -1311,7 +1311,7 @@ bool M_ResourceManager::ResourceHasMetaType(Resource* resource) const
 
 void M_ResourceManager::CreatePrefab(GameObject* gameObject)
 {
-	uint id = Random::PCG::GetRandomUint();
+	uint id = Random::LCG::GetRandomUint();
 	gameObject->SetAsPrefab(id);
 
 	SavePrefab(gameObject, id);

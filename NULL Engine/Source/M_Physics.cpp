@@ -1,6 +1,7 @@
 #include "Application.h"
 #include "Log.h"
 #include "Profiler.h"
+#include "JSONParser.h"
 
 #include "M_Physics.h"
 
@@ -43,6 +44,8 @@ M_Physics::~M_Physics()
 
 bool M_Physics::Init(ParsonNode& root)
 {
+	gravity = root.GetNumber("gravity");
+
 	return true;
 }
 
@@ -173,6 +176,7 @@ bool M_Physics::LoadConfiguration(ParsonNode& configuration)
 
 bool M_Physics::SaveConfiguration(ParsonNode& configuration) const
 {
+	configuration.SetNumber("gravity", gravity);
 	return true;
 }
 
