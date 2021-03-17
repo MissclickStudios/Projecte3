@@ -1437,14 +1437,6 @@ void E_Inspector::DrawPlayerControllerComponent(C_PlayerController* cController)
 			if (ImGui::InputFloat("Speed", &speed, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
 				cController->SetSpeed(speed);
 
-			float acceleration = cController->Acceleration();
-			if (ImGui::InputFloat("Acceleration", &acceleration, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
-				cController->SetAcceleration(acceleration);
-
-			float deceleration = cController->Deceleration();
-			if (ImGui::InputFloat("Deceleration", &deceleration, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
-				cController->SetDeceleration(deceleration);
-
 			ImGui::Separator();
 
 			ImGui::TreePop();
@@ -1455,6 +1447,14 @@ void E_Inspector::DrawPlayerControllerComponent(C_PlayerController* cController)
 			float bulletSpeed = cController->BulletSpeed();
 			if (ImGui::InputFloat("Bullet Speed", &bulletSpeed, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
 				cController->SetBulletSpeed(bulletSpeed);
+
+			float fireRate = cController->FireRate();
+			if (ImGui::InputFloat("Fire Rate", &fireRate, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
+				cController->SetFireRate(fireRate);
+
+			bool automatic = cController->IsAutomatic();
+			if (ImGui::Checkbox("Automatic", &automatic))
+				cController->SetAutomatic(automatic);
 
 			ImGui::Separator();
 

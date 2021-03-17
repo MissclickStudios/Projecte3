@@ -47,6 +47,11 @@ public:
 
 	const float BulletSpeed() const { return bulletSpeed; }
 	void SetBulletSpeed(float speed) { bulletSpeed = speed; }
+	const float FireRate() const { return fireRate; }
+	void SetFireRate(float rate) { fireRate = rate; }
+
+	const bool IsAutomatic() const { return automatic; }
+	void SetAutomatic(bool enable) { automatic = enable; }
 
 	const float DashSpeed() const { return dashSpeed; }
 	void SetDashSpeed(float speed) { dashSpeed = speed; }
@@ -61,8 +66,11 @@ private:
 
 	void Movement();
 	void Move(C_RigidBody* rigidBody, int axisX, int axisY);
-	void Dash(C_RigidBody * rigidBody, int axisX, int axisY);
+	void Dash(C_RigidBody* rigidBody, int axisX, int axisY);
 	void Rotate();
+
+	void Weapon();
+	void SpawnBullet(float3 direction);
 
 	void StepSound(bool a, bool b, bool c, bool d );
 
@@ -80,6 +88,11 @@ private:
 
 	// Weapon
 	float bulletSpeed = 100.0f;
+	float fireRate = 0.25f;
+
+	bool automatic = true;
+
+	Timer fireRateTimer;
 
 	// Dash
 	float dashSpeed = 100.0f;

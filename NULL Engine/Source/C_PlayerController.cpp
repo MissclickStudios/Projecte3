@@ -31,6 +31,7 @@ C_PlayerController::C_PlayerController(GameObject* owner) : Component(owner, Com
 	if (!GetOwner()->GetComponent<C_RigidBody>())
 		GetOwner()->CreateComponent(ComponentType::RIGIDBODY);
 
+	fireRateTimer.Stop();
 	dashTime.Stop();
 	dashColdown.Stop();
 	//stepTimer = new Timer();
@@ -46,6 +47,7 @@ bool C_PlayerController::Update()
 		return true;
 
 	Movement();
+	Weapon();
 
 	playerDirection = ReturnPlayerDirection();
 
@@ -77,29 +79,6 @@ bool C_PlayerController::Update()
 		break;
 	}
 
-	float3 ownerRotation = GetOwner()->transform->GetLocalEulerRotation();
-	float3 bulletVel = { bulletSpeed * math::Cos(DegToRad(ownerRotation.x)) , 0, bulletSpeed * math::Sin(DegToRad(ownerRotation.x)) };
-
-	if (App->input->GetMouseButton(1) == KeyState::KEY_DOWN || App->input->GetGameControllerTrigger(1) == ButtonState::BUTTON_DOWN)
-	{
-		Resource* resource = App->resourceManager->GetResourceFromLibrary("Assets/Models/Primitives/sphere.fbx");
-		if (resource != nullptr)
-		{
-			GameObject* bullet = App->scene->GenerateGameObjectsFromModel((R_Model*)resource);
-	
-			bullet->transform->SetWorldPosition(GetOwner()->transform->GetWorldPosition());
-			C_RigidBody* rigidBody = (C_RigidBody*)bullet->CreateComponent(ComponentType::RIGIDBODY);
-			rigidBody->FreezePositionY(true);
-			rigidBody->FreezeRotationX(true);
-			rigidBody->FreezeRotationY(true);
-			rigidBody->FreezeRotationZ(true);
-			rigidBody->SetLinearVelocity(bulletVel);
-			bullet->CreateComponent(ComponentType::SPHERE_COLLIDER);
-			bullet->CreateComponent(ComponentType::BULLET_BEHAVIOR);
-
-		}
-	}
-
 	return true;
 }
 
@@ -117,6 +96,8 @@ bool C_PlayerController::SaveState(ParsonNode& root) const
 	root.SetNumber("Deceleration", (double)deceleration);
 
 	root.SetNumber("Bullet Speed", (double)bulletSpeed);
+	root.SetNumber("Fire Rate", (double)fireRate);
+	root.SetBool("Automatic", automatic);
 
 	root.SetNumber("Dash Speed", (double)dashSpeed);
 	root.SetNumber("Dash Time", (double)dashingTime);
@@ -132,6 +113,8 @@ bool C_PlayerController::LoadState(ParsonNode& root)
 	deceleration = (float)root.GetNumber("Deceleration");
 
 	bulletSpeed = (float)root.GetNumber("Bullet Speed");
+	fireRate = (float)root.GetNumber("Fire Rate");
+	automatic = root.GetBool("Automatic");
 
 	dashSpeed = (float)root.GetNumber("Dash Speed");
 	dashingTime = (float)root.GetNumber("Dash Time");
@@ -254,6 +237,64 @@ void C_PlayerController::Rotate()
 	//
 	//float angle = RadToDeg(-rad) + 90;
 	//GetOwner()->transform->SetLocalEulerRotation(float3(0, angle, 0));
+}
+
+void C_PlayerController::Weapon()
+{
+	int aimX = 0;
+	int aimY = 0;
+	// Controller aim
+	GetAimVectorAxis(aimX, aimY);
+	// Mouse aim
+	// TODO
+
+	float3 direction = { (float)aimX, 0, (float)aimY };
+	if (aimX == 0 && aimY == 0)
+		direction.z++; // No mouse aim picking
+	else
+		direction.Normalize();
+
+	if (!automatic)
+	{
+		if (App->input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_DOWN || App->input->GetGameControllerTrigger(1) == ButtonState::BUTTON_DOWN)
+			SpawnBullet(direction);
+	}
+	else
+	{
+		if (App->input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_REPEAT || App->input->GetGameControllerTrigger(1) == ButtonState::BUTTON_REPEAT)
+		{
+			if (!fireRateTimer.IsActive())
+			{
+				SpawnBullet(direction);
+				fireRateTimer.Start();
+			}
+			else if (fireRateTimer.ReadSec() >= fireRate)
+			{
+				SpawnBullet(direction);
+				fireRateTimer.Stop();
+				fireRateTimer.Start();
+			}
+		}
+	}
+}
+
+void C_PlayerController::SpawnBullet(float3 direction)
+{
+	Resource* resource = App->resourceManager->GetResourceFromLibrary("Assets/Models/Primitives/sphere.fbx");
+	if (!resource)
+		return;
+
+	GameObject* bullet = App->scene->GenerateGameObjectsFromModel((R_Model*)resource);
+
+	bullet->transform->SetWorldPosition(GetOwner()->transform->GetWorldPosition());
+	C_RigidBody* rigidBody = (C_RigidBody*)bullet->CreateComponent(ComponentType::RIGIDBODY);
+	rigidBody->FreezePositionY(true);
+	rigidBody->FreezeRotationX(true);
+	rigidBody->FreezeRotationY(true);
+	rigidBody->FreezeRotationZ(true);
+	rigidBody->SetLinearVelocity(direction * bulletSpeed);
+	bullet->CreateComponent(ComponentType::SPHERE_COLLIDER);
+	bullet->CreateComponent(ComponentType::BULLET_BEHAVIOR);
 }
 
 float2 C_PlayerController::MousePositionToWorldPosition(float mapPositionY)
