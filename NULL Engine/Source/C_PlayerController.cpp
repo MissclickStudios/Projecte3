@@ -43,7 +43,7 @@ C_PlayerController::~C_PlayerController()
 
 bool C_PlayerController::Update()
 {
-	if (App->gameState == GameState::PLAY)
+	if (App->gameState != GameState::PLAY)
 		return true;
 
 	Movement();

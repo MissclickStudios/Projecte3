@@ -58,7 +58,7 @@ bool M_ResourceManager::Start()
 	RefreshDirectoryFiles(ASSETS_DIRECTORY);
 	RefreshDirectoryFiles(ENGINE_DIRECTORY);
 
-	//FindPrefabs();
+	FindPrefabs();
 
 	return true;
 }
@@ -800,7 +800,7 @@ void M_ResourceManager::GetAllTextures(std::vector<R_Texture*>& textures)
 // --- PREFAB METHODS
 void M_ResourceManager::CreatePrefab(GameObject* gameObject)
 {
-	uint id = Random::PCG::GetRandomUint();
+	uint id = Random::LCG::GetRandomUint();
 	gameObject->SetAsPrefab(id);
 
 	SavePrefab(gameObject, id);
