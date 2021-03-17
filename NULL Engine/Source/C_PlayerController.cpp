@@ -49,36 +49,6 @@ bool C_PlayerController::Update()
 	Movement();
 	Weapon();
 
-	playerDirection = ReturnPlayerDirection();
-
-	switch(playerDirection)
-	{
-	case Direction::NORTH:
-		GetOwner()->transform->SetLocalEulerRotation(float3(0, 0, 0));
-	break;
-	case Direction::NORTH_WEST:
-		GetOwner()->transform->SetLocalEulerRotation(float3(0, 45, 0));
-		break;
-	case Direction::WEST:
-		GetOwner()->transform->SetLocalEulerRotation(float3(0, 90, 0));
-		break;
-	case Direction::SOUTH_WEST:
-		GetOwner()->transform->SetLocalEulerRotation(float3(0, 135, 0));
-		break;
-	case Direction::SOUTH:
-		GetOwner()->transform->SetLocalEulerRotation(float3(0, 180, 0));
-		break;
-	case Direction::SOUTH_EAST:
-		GetOwner()->transform->SetLocalEulerRotation(float3(0, 225, 0));
-		break;
-	case Direction::EAST:
-		GetOwner()->transform->SetLocalEulerRotation(float3(0, 270, 0));
-		break;
-	case Direction::NORTH_EAST:
-		GetOwner()->transform->SetLocalEulerRotation(float3(0, 315, 0));
-		break;
-	}
-
 	return true;
 }
 
@@ -121,44 +91,6 @@ bool C_PlayerController::LoadState(ParsonNode& root)
 	dashingColdown = (float)root.GetNumber("Dash Coldown");
 
 	return true;
-}
-
-Direction C_PlayerController::ReturnPlayerDirection()
-{
-	bool north = false;
-	bool west = false;
-	bool south = false;
-	bool east = false;
-
-	if (App->input->GetGameControllerAxis(3) == AxisState::POSITIVE_AXIS_REPEAT)
-		north = true;
-	if (App->input->GetGameControllerAxis(3) == AxisState::NEGATIVE_AXIS_REPEAT)
-		south = true;
-	if (App->input->GetGameControllerAxis(2) == AxisState::POSITIVE_AXIS_REPEAT)
-		west = true;
-	if (App->input->GetGameControllerAxis(2) == AxisState::NEGATIVE_AXIS_REPEAT)
-		east = true;
-
-	if (north && west)
-		return Direction::NORTH_WEST;
-	if (north && east)
-		return Direction::NORTH_EAST;
-	if (south && west)
-		return Direction::SOUTH_WEST;
-	if (south && east)
-		return Direction::SOUTH_EAST;
-
-	if (north)
-		return Direction::NORTH;
-	if (south)
-		return Direction::SOUTH;
-	if (west)
-		return Direction::WEST;
-	if (east)
-		return Direction::EAST;
-
-	// we need to return last Direction
-	return Direction::NORTH;
 }
 
 void C_PlayerController::Movement()

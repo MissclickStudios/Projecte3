@@ -10,17 +10,6 @@
 class C_AudioSource;
 class C_RigidBody;
 
-enum class Direction {
-	NORTH,
-	NORTH_WEST,
-	WEST,
-	SOUTH_WEST,
-	SOUTH,
-	SOUTH_EAST,
-	EAST,
-	NORTH_EAST,
-};
-
 class C_PlayerController : public Component
 {
 public:
@@ -60,8 +49,6 @@ public:
 	const float DashColdown() const { return dashingColdown; }
 	void SetDashColdown(float time) { dashingColdown = time; }
 
-	Direction ReturnPlayerDirection();
-
 private: 
 
 	void Movement();
@@ -83,8 +70,6 @@ private:
 	float speed = 20.0f;
 	float deceleration = 200.0f;
 	float acceleration = 200.0f;
-
-	Direction playerDirection = Direction::NORTH;
 
 	// Weapon
 	float bulletSpeed = 100.0f;
