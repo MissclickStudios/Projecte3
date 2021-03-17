@@ -97,7 +97,8 @@ public:
 
 	ButtonState		GetGameControllerButton(int id) const;
 	ButtonState		GetGameControllerTrigger(int id) const;
-	AxisState		GetGameControllerAxis(int id) const;	
+	AxisState		GetGameControllerAxis(int id) const;
+	int				GetGameControllerAxisValue(int id) const;
 
 	bool			WindowSizeWasManipulated(Uint8 windowEvent) const;										// Uint8 is an SDL typedef for unsigned char.
 

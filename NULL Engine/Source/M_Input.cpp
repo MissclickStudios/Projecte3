@@ -501,6 +501,15 @@ AxisState M_Input::GetGameControllerAxis(int id) const
 	return AxisState::UNKNOWN_AXIS;
 }
 
+int M_Input::GetGameControllerAxisValue(int id) const
+{
+	if (gameController.id != nullptr)
+	{
+		return SDL_GameControllerGetAxis(gameController.id, SDL_GameControllerAxis(id));
+	}
+	return 0;
+}
+
 bool M_Input::WindowSizeWasManipulated(Uint8 windowEvent) const
 {
 	return (windowEvent == SDL_WINDOWEVENT_RESIZED
