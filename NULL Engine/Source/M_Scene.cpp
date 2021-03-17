@@ -87,6 +87,10 @@ bool M_Scene::Start()
 	LoadScene("Assets/Scenes/MainScene.json");
 	SaveScene("SceneAutosave");																			// Autosave just right after loading the scene.
 
+
+	std::vector<R_Texture*> texs;
+	App->resourceManager->GetAllTextures(texs);
+
 	return ret;
 }
 
