@@ -54,7 +54,7 @@ public:
 
 private: 
 
-	void Move(C_RigidBody* rigidBody);
+	void Move(C_RigidBody* rigidBody, int axisX, int axisY);
 	void Dash(C_RigidBody * rigidBody,bool forward, bool backward, bool right, bool left);
 	void Rotate();
 

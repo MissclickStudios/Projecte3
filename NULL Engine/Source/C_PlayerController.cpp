@@ -44,7 +44,28 @@ bool C_PlayerController::Update()
 
 		if (rigidBody && !rigidBody->IsStatic())
 		{
-			Move(rigidBody);
+			int axisX = 0;
+			int axisY = 0;
+			// Keyboard movement
+			if (App->input->GetKey(SDL_SCANCODE_W) == KeyState::KEY_REPEAT)
+				axisY += 32000;
+			if (App->input->GetKey(SDL_SCANCODE_S) == KeyState::KEY_REPEAT)
+				axisY += -32000;
+			if (App->input->GetKey(SDL_SCANCODE_D) == KeyState::KEY_REPEAT)
+				axisX += -32000;
+			if (App->input->GetKey(SDL_SCANCODE_A) == KeyState::KEY_REPEAT)
+				axisX += 32000;
+			// Controller movement
+			if (App->input->GetGameControllerAxis(1) == AxisState::POSITIVE_AXIS_REPEAT)
+				axisY = 32000;
+			if (App->input->GetGameControllerAxis(1) == AxisState::NEGATIVE_AXIS_REPEAT)
+				axisY = -32000;
+			if (App->input->GetGameControllerAxis(0) == AxisState::NEGATIVE_AXIS_REPEAT)
+				axisX = -32000;
+			if (App->input->GetGameControllerAxis(0) == AxisState::POSITIVE_AXIS_REPEAT)
+				axisX = 32000;
+
+			Move(rigidBody, axisX, axisY);
 
 			playerDirection = ReturnPlayerDirection();
 
@@ -254,31 +275,12 @@ Direction C_PlayerController::ReturnPlayerDirection()
 	return Direction::NORTH;
 }
 
-void C_PlayerController::Move(C_RigidBody* rigidBody)
+void C_PlayerController::Move(C_RigidBody* rigidBody, int axisX, int axisY)
 {
 	bool forward = false;
 	bool backward = false;
 	bool right = false;
 	bool left = false;
-
-	if (App->input->GetKey(SDL_SCANCODE_W) == KeyState::KEY_REPEAT)
-		forward = true;
-	if (App->input->GetKey(SDL_SCANCODE_S) == KeyState::KEY_REPEAT)
-		backward = true;
-	if (App->input->GetKey(SDL_SCANCODE_D) == KeyState::KEY_REPEAT)
-		right = true;
-	if (App->input->GetKey(SDL_SCANCODE_A) == KeyState::KEY_REPEAT)
-		left = true;
-
-	// Controller movement
-	if (App->input->GetGameControllerAxis(1) == AxisState::POSITIVE_AXIS_REPEAT)
-		forward = true;
-	if (App->input->GetGameControllerAxis(1) == AxisState::NEGATIVE_AXIS_REPEAT)
-		backward = true;
-	if (App->input->GetGameControllerAxis(0) == AxisState::NEGATIVE_AXIS_REPEAT)
-		right = true;
-	if (App->input->GetGameControllerAxis(0) == AxisState::POSITIVE_AXIS_REPEAT)
-		left = true;
 
 	if ((App->input->GetKey(SDL_SCANCODE_E) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(1) == ButtonState::BUTTON_DOWN ) && right && dashTimer == 0)
 	{	
@@ -290,36 +292,12 @@ void C_PlayerController::Move(C_RigidBody* rigidBody)
 		Dash(rigidBody, forward, backward, right, left);
 	}
 
+	float3 direction = { (float)axisX, 0, (float)axisY };
+	if (axisX + axisY != 0)
+		direction.Normalize();
+	direction *= speed;
 
-	physx::PxVec3 vel = ((physx::PxRigidDynamic*)rigidBody->GetRigidBody())->getLinearVelocity();
-
-	if (forward && vel.z < speed)
-		rigidBody->AddForce(physx::PxVec3(0, 0, acceleration), physx::PxForceMode::eACCELERATION);
-	else if (!backward)
-		if (vel.z > 0)
-			rigidBody->AddForce(physx::PxVec3(0, 0, -deceleration), physx::PxForceMode::eACCELERATION);
-
-	if (backward && vel.z > -speed)
-		rigidBody->AddForce(physx::PxVec3(0, 0, -acceleration), physx::PxForceMode::eACCELERATION);
-	else if (!forward)
-		if (vel.z < 0)
-			rigidBody->AddForce(physx::PxVec3(0, 0, deceleration), physx::PxForceMode::eACCELERATION);
-
-	if (left && vel.x < speed)
-		rigidBody->AddForce(physx::PxVec3(acceleration, 0, 0), physx::PxForceMode::eACCELERATION);
-	else if (!right)
-		if (vel.x > 0)
-			rigidBody->AddForce(physx::PxVec3(-deceleration, 0, 0), physx::PxForceMode::eACCELERATION);
-
-	if (right && vel.x > -speed)
-		rigidBody->AddForce(physx::PxVec3(-acceleration, 0, 0), physx::PxForceMode::eACCELERATION);
-	else if (!left)
-		if (vel.x < 0)
-			rigidBody->AddForce(physx::PxVec3(deceleration, 0, 0), physx::PxForceMode::eACCELERATION);
-
-	if (!forward && !backward && !right && !left)
-		rigidBody->SetLinearVelocity(float3::zero);
-
+	rigidBody->SetLinearVelocity(direction);
 }
 
 // void C_PlayerController::StepSound(bool a, bool b, bool c, bool d)
