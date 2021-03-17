@@ -154,6 +154,9 @@
     <Filter Include="Source\5_Containers\Physics">
       <UniqueIdentifier>{ce9a542f-7964-4e81-b664-d8a917d2ac2d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\4_GameObjects\Components\Behaviors">
+      <UniqueIdentifier>{5fc47805-65d8-4143-b0c7-3a4feb07d31c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Application.cpp">
@@ -525,18 +528,12 @@
     <ClCompile Include="Source\C_ParticleSystem.cpp">
       <Filter>Source\4_GameObjects\Components</Filter>
     </ClCompile>
-    <ClCompile Include="Source\C_PlayerController.cpp">
-      <Filter>Source\4_GameObjects\Components</Filter>
-    </ClCompile>
     <ClCompile Include="Source\C_RigidBody.cpp">
       <Filter>Source\4_GameObjects\Components</Filter>
     </ClCompile>
     <ClCompile Include="Source\C_SphereCollider.cpp">
       <Filter>Source\4_GameObjects\Components</Filter>
     </ClCompile>
-    <ClCompile Include="Source\C_BulletBehavior.cpp" />
-    <ClCompile Include="Source\C_CameraBehavior.cpp" />
-    <ClCompile Include="Source\C_PropBehavior.cpp" />
     <ClCompile Include="Source\UIElement.cpp">
       <Filter>Source\5_Containers\GUI</Filter>
     </ClCompile>
@@ -572,6 +569,18 @@
     </ClCompile>
     <ClCompile Include="Source\PointLight.cpp">
       <Filter>Source\4_GameObjects\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\C_BulletBehavior.cpp">
+      <Filter>Source\4_GameObjects\Components\Behaviors</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\C_CameraBehavior.cpp">
+      <Filter>Source\4_GameObjects\Components\Behaviors</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\C_PropBehavior.cpp">
+      <Filter>Source\4_GameObjects\Components\Behaviors</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\C_PlayerController.cpp">
+      <Filter>Source\4_GameObjects\Components\Behaviors</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1313,15 +1322,9 @@
     <ClInclude Include="Source\C_ParticleSystem.h">
       <Filter>Source\4_GameObjects\Components</Filter>
     </ClInclude>
-    <ClInclude Include="Source\C_PlayerController.h">
-      <Filter>Source\4_GameObjects\Components</Filter>
-    </ClInclude>
     <ClInclude Include="Source\C_RigidBody.h">
       <Filter>Source\4_GameObjects\Components</Filter>
     </ClInclude>
-    <ClInclude Include="Source\C_BulletBehavior.h" />
-    <ClInclude Include="Source\C_CameraBehavior.h" />
-    <ClInclude Include="Source\C_PropBehavior.h" />
     <ClInclude Include="Source\UIElement.h">
       <Filter>Source\5_Containers\GUI</Filter>
     </ClInclude>
@@ -1357,6 +1360,18 @@
     </ClInclude>
     <ClInclude Include="Source\PointLight.h">
       <Filter>Source\4_GameObjects\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\C_BulletBehavior.h">
+      <Filter>Source\4_GameObjects\Components\Behaviors</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\C_CameraBehavior.h">
+      <Filter>Source\4_GameObjects\Components\Behaviors</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\C_PropBehavior.h">
+      <Filter>Source\4_GameObjects\Components\Behaviors</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\C_PlayerController.h">
+      <Filter>Source\4_GameObjects\Components\Behaviors</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

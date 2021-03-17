@@ -1450,6 +1450,20 @@ void E_Inspector::DrawPlayerControllerComponent(C_PlayerController* cController)
 		if (ImGui::InputFloat("Bullet Speed", &bulletSpeed, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
 			cController->SetBulletSpeed(bulletSpeed);
 
+		ImGui::Separator();
+
+		float dashSpeed = cController->DashSpeed();
+		if (ImGui::InputFloat("Dash Speed", &dashSpeed, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
+			cController->SetDashSpeed(dashSpeed);
+
+		float dashTime = cController->DashTime();
+		if (ImGui::InputFloat("Dash Time", &dashTime, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
+			cController->SetDashTime(dashTime);
+
+		float dashColdown = cController->DashColdown();
+		if (ImGui::InputFloat("Dash Coldown", &dashColdown, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
+			cController->SetDashColdown(dashColdown);
+
 		if (!show)
 		{
 			componentToDelete = cController;
