@@ -17,8 +17,7 @@ M_GameManager::~M_GameManager()
 bool M_GameManager::Init(ParsonNode& config)
 {
 	Time::Game::Play();
-	GameApp->play = true;
-	GameApp->pause = false;
+	GameApp->gameState = GameState::PLAY;
 	GameApp->renderer->SetRenderWorldGrid(false);
 	GameApp->renderer->SetRenderWorldAxis(false);
 	return true;
