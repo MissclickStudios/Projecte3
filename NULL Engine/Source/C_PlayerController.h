@@ -9,6 +9,7 @@
 
 class C_AudioSource;
 class C_RigidBody;
+class GameObject;
 
 class C_PlayerController : public Component
 {
@@ -66,6 +67,8 @@ private:
 	void GetMovementVectorAxis(int &axisX, int &axisY);
 	void GetAimVectorAxis(int &axisX, int &axisY);
 
+	void HandleHp();
+
 	// Character
 	float speed = 20.0f;
 	float deceleration = 200.0f;
@@ -88,6 +91,9 @@ private:
 
 	Timer dashTime;// Duration of the dash
 	Timer dashColdown;
+
+	GameObject* hearts[3] = { nullptr, nullptr, nullptr };
+	float heart = 3;
 };
 
 #endif // !__C_PLAYERCONTROLLER__

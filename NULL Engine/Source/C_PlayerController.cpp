@@ -20,6 +20,7 @@
 #include "M_Editor.h"
 #include "M_Audio.h"
 #include "C_AudioSource.h"
+#include "C_Material.h"
 
 #include "MathGeoLib/include/Geometry/Line.h"
 
@@ -48,6 +49,7 @@ bool C_PlayerController::Update()
 
 	Movement();
 	Weapon();
+	HandleHp();
 
 	return true;
 }
@@ -280,4 +282,76 @@ void C_PlayerController::GetAimVectorAxis(int& axisX, int& axisY)
 {
 	axisX = App->input->GetGameControllerAxisValue(2);
 	axisY = App->input->GetGameControllerAxisValue(3);
+}
+
+void C_PlayerController::HandleHp()
+{
+	int i = 0;
+	std::vector<GameObject*>::iterator it = App->scene->GetGameObjects()->begin();
+
+	for (it; it != App->scene->GetGameObjects()->end(); ++it)
+	{
+		if (strstr((*it)->GetName(), "Heart") != nullptr)
+		{
+			hearts[i] = (*it);
+			i++;
+		}
+	}
+
+	R_Texture* half = (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/HUD/HeartHalf.png");
+	R_Texture* full = (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/HUD/HeartFull.png");
+	R_Texture* empty = (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/HUD/HeartEmpty.png");
+
+	if (App->input->GetKey(SDL_SCANCODE_K) == KeyState::KEY_DOWN && hearts != nullptr)
+	{
+		heart -= 0.5;
+
+		if (heart < 0)
+			heart = 0;
+
+		if (heart == 2.5)
+			hearts[(int)heart]->GetComponent<C_Material>()->SwapTexture(half);
+
+		else if (heart == 2)
+			hearts[(int)heart]->GetComponent<C_Material>()->SwapTexture(empty);
+
+		else if (heart == 1.5)
+			hearts[(int)heart]->GetComponent<C_Material>()->SwapTexture(half);
+
+		else if (heart == 1)
+			hearts[(int)heart]->GetComponent<C_Material>()->SwapTexture(empty);
+
+		else if (heart == 0.5)
+			hearts[(int)heart]->GetComponent<C_Material>()->SwapTexture(half);
+
+		else if (heart == 0)
+			hearts[(int)heart]->GetComponent<C_Material>()->SwapTexture(empty);
+	}
+
+	if (App->input->GetKey(SDL_SCANCODE_L) == KeyState::KEY_DOWN && hearts != nullptr)
+	{
+
+		if (heart == 2.5)
+			hearts[(int)heart]->GetComponent<C_Material>()->SwapTexture(full);
+
+		else if (heart == 2)
+			hearts[(int)heart]->GetComponent<C_Material>()->SwapTexture(half);
+
+		else if (heart == 1.5)
+			hearts[(int)heart]->GetComponent<C_Material>()->SwapTexture(full);
+
+		else if (heart == 1)
+			hearts[(int)heart]->GetComponent<C_Material>()->SwapTexture(half);
+
+		else if (heart == 0.5)
+			hearts[(int)heart]->GetComponent<C_Material>()->SwapTexture(full);
+
+		else if (heart == 0)
+			hearts[(int)heart]->GetComponent<C_Material>()->SwapTexture(half);
+
+		heart += 0.5;
+
+		if (heart > 3)
+			heart = 3;
+	}
 }
