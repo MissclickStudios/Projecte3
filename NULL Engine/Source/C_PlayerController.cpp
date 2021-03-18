@@ -286,15 +286,25 @@ void C_PlayerController::GetAimVectorAxis(int& axisX, int& axisY)
 
 void C_PlayerController::HandleHp()
 {
-	int i = 0;
+
 	std::vector<GameObject*>::iterator it = App->scene->GetGameObjects()->begin();
 
 	for (it; it != App->scene->GetGameObjects()->end(); ++it)
 	{
 		if (strstr((*it)->GetName(), "Heart") != nullptr)
 		{
-			hearts[i] = (*it);
-			i++;
+			if (strstr((*it)->GetName(), "1") != nullptr)
+			{
+				hearts[0] = (*it);
+			}		
+			else if (strstr((*it)->GetName(), "2") != nullptr)
+			{
+				hearts[1] = (*it);
+			}
+			else if (strstr((*it)->GetName(), "3") != nullptr)
+			{
+				hearts[2] = (*it);
+			}
 		}
 	}
 
