@@ -326,6 +326,8 @@ bool M_Scene::LoadScene(const char* path)
 {
 	bool ret = true;
 
+	App->camera->SetMasterCameraAsCurrentCamera();
+
 	char* buffer = nullptr;
 	uint read = App->fileSystem->Load(path, &buffer);
 	if (read == 0)
@@ -419,7 +421,6 @@ bool M_Scene::LoadScene(const char* path)
 			item->second->GetComponent<C_Transform>()->Translate(float3::zero);						// Dirty way to refresh the transforms after the import is done. TMP Un-hardcode later.
 			gameObjects.push_back(item->second);
 		}
-
 		tmp.clear();
 		App->renderer->ClearRenderers();
 	}
