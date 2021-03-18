@@ -30,10 +30,10 @@ Skybox::~Skybox()
 }
 
 void Skybox::SetUpSkyBoxBuffers()
-{
-	glGenBuffers(1, (GLuint*)&(Skybox_id));
-	glBindBuffer(GL_ARRAY_BUFFER, Skybox_id);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 36 * 3, Skybox_vertices, GL_STATIC_DRAW);
+{	
+	glGenBuffers(1, (GLuint*)&(skyboxId));
+	glBindBuffer(GL_ARRAY_BUFFER, skyboxId);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 36 * 3, skyboxVertices, GL_STATIC_DRAW);
 }
 
 void Skybox::CreateSkybox()
@@ -75,25 +75,27 @@ void Skybox::CreateSkybox()
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
-	SkyboxTex_id = textureID;
+	skyboxTexId = textureID;
 }
 
 void Skybox::RenderSkybox()
 {
-	if (Skybox_programid == 0)
+
+	glDepthMask(GL_FALSE);
+	glCullFace(GL_FRONT);
+	glDepthFunc(GL_LEQUAL);
+	
+	if (skyboxProgramId == 0)
 	{
-		Skybox_programid = App->resourceManager->GetShader("SkyBoxShader")->shaderProgramID;
-		glUseProgram(Skybox_programid);
+		skyboxProgramId = App->resourceManager->GetShader("SkyBoxShader")->shaderProgramID;
+		glUseProgram(skyboxProgramId);
 	}
-	else if (Skybox_programid != 0)
+	else if (skyboxProgramId != 0)
 	{
-		glUseProgram(Skybox_programid);
+		glUseProgram(skyboxProgramId);
 	}
 	else LOG("Error loading skybox shader program");
 
-
-	glCullFace(GL_FRONT);
-	glDepthFunc(GL_LEQUAL);
 
 	float3 translation = App->camera->GetCurrentCamera()->GetFrustum().WorldMatrix().TranslatePart();
 	float4x4 modelMatrix = math::float4x4::identity;
@@ -102,19 +104,30 @@ void Skybox::RenderSkybox()
 
 	math::float4x4 resultMatrix = modelMatrix.Transposed() * App->camera->currentCamera->GetViewMatrixTransposed() * App->camera->currentCamera->GetProjectionMatrixTransposed();
 
-	GLint uinformLoc = glGetUniformLocation(Skybox_programid, "resultMatrix");
+	GLint uinformLoc = glGetUniformLocation(skyboxProgramId, "resultMatrix");
 	glUniformMatrix4fv(uinformLoc, 1, GL_FALSE, *resultMatrix.v);
 
-	glActiveTexture(GL_TEXTURE11);
-	glBindTexture(GL_TEXTURE_CUBE_MAP, SkyboxTex_id);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, skyboxTexId);
 
 	glEnableClientState(GL_VERTEX_ARRAY);
-	glBindBuffer(GL_ARRAY_BUFFER, Skybox_id);
+	glBindBuffer(GL_ARRAY_BUFFER, skyboxId);
 	glVertexPointer(3, GL_FLOAT, 0, NULL);
 
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 	glDisableClientState(GL_VERTEX_ARRAY);
 
+	glDepthMask(GL_TRUE);
+	glDepthFunc(GL_LESS);
+
 	glActiveTexture(GL_TEXTURE0);
 	glUseProgram(0);
+
+	
+}
+
+void Skybox::CleanUp()
+{
+	glDeleteVertexArrays(1, &skyboxId);
+	glDeleteBuffers(1, &skyboxId);
 }

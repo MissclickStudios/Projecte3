@@ -84,8 +84,18 @@ bool M_Scene::Start()
 	//uint32 animation_uid = App->resourceManager->LoadFromLibrary(DEFAULT_ANIMATION);
 	//GenerateGameObjectsFromModel(animation_uid , float3(0.05f, 0.05f, 0.05f));
 
+	//level.GetRooms();
+	//level.GenerateLevel();
+	
+	//level.AddFixedRoom("Shop", 3);
+	//level.AddFixedRoom("Boss", 20);
+	
+	//Last level function to call
+	//level.GenerateRoom(0);
+
 	LoadScene("Assets/Scenes/MainScene.json");
 	SaveScene("SceneAutosave");																			// Autosave just right after loading the scene.
+
 
 
 	std::vector<R_Texture*> texs;
@@ -204,6 +214,8 @@ bool M_Scene::CleanUp()
 	LOG("Unloading Intro scene");
 	
 	//App->renderer->ClearRenderers();
+
+	App->renderer->defaultSkyBox.CleanUp();
 
 	for (uint i = 0; i < gameObjects.size(); ++i)
 	{
@@ -414,6 +426,7 @@ bool M_Scene::LoadScene(const char* path)
 	}
 
 	//FIX THIS
+	App->renderer->defaultSkyBox.SetUpSkyBoxBuffers();
 
 	if (!CheckSceneLight()) AddSceneLight(App->renderer->GenerateSceneLight(Color(1.0f, 1.0f, 1.0f, 1.0f), Color(0.6, 0.6, 0.6, 0.5), Color(0.6, 0.6, 0.6, 0.5), LightType::DIRECTIONAL));
 

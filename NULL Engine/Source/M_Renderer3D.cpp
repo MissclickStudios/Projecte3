@@ -160,13 +160,6 @@ UpdateStatus M_Renderer3D::PreUpdate(float dt)
 		cameraPos = float3(0.0f, 20.0f, 0.0f);
 	}
 
-	//lights[0].SetPos(cameraPos.x, cameraPos.y, cameraPos.z);
-
-	//for (uint i = 0; i < MAX_LIGHTS; ++i)
-	//{
-	//	lights[i].Render();
-	//}
-
 	// --- RENDERER SHORTCUTS
 	RendererShortcuts();
 
@@ -630,8 +623,7 @@ void M_Renderer3D::RenderScene()
 	glClear(GL_COLOR_BUFFER_BIT);
 
 
-	//The Skybox renderer must be the first one always
-	defaultSkyBox.RenderSkybox();
+	
 
 	if (renderWorldGrid)
 		DrawWorldGrid(worldGridSize);
@@ -657,7 +649,6 @@ void M_Renderer3D::RenderScene()
 	//PrimitiveDrawExamples p_ex = PrimitiveDrawExamples();
 	//p_ex.DrawAllExamples();
 
-	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
 
 	for (uint i = 0; i < primitives.size(); ++i)
@@ -665,6 +656,11 @@ void M_Renderer3D::RenderScene()
 		primitives[i]->RenderByIndices();
 	}
 	
+	//The Skybox renderer must be the first one always
+	defaultSkyBox.RenderSkybox();
+
+	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 

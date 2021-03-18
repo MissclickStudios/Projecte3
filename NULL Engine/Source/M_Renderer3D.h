@@ -273,7 +273,7 @@ public:
 	
 	SDL_GLContext			context;																			// 
 	R_Shader*				defaultShader = nullptr;
-	
+	Skybox					defaultSkyBox;
 
 	std::vector<Primitive*>	primitives;
 
@@ -282,7 +282,7 @@ private:
 	std::vector<CuboidRenderer>		cuboidRenderers;
 	std::vector<SkeletonRenderer>	skeletonRenderers;
 
-	Skybox					defaultSkyBox;
+	
 	
 
 	Icons					engineIcons;
