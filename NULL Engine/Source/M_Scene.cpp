@@ -326,6 +326,8 @@ bool M_Scene::LoadScene(const char* path)
 {
 	bool ret = true;
 
+	App->camera->SetMasterCameraAsCurrentCamera();
+
 	char* buffer = nullptr;
 	uint read = App->fileSystem->Load(path, &buffer);
 	if (read == 0)
@@ -419,7 +421,6 @@ bool M_Scene::LoadScene(const char* path)
 			item->second->GetComponent<C_Transform>()->Translate(float3::zero);						// Dirty way to refresh the transforms after the import is done. TMP Un-hardcode later.
 			gameObjects.push_back(item->second);
 		}
-
 		tmp.clear();
 		App->renderer->ClearRenderers();
 	}
@@ -449,26 +450,21 @@ void M_Scene::LoadResourceIntoScene(Resource* resource)
 	}
 }
 
-void M_Scene::LoadPrefabIntoScene(ParsonNode* node)
-{
-	
-}
-
 void M_Scene::LoadPrefabObject(GameObject* _gameObject, ParsonNode* node)
 {
-	gameObjects.push_back(_gameObject);
-
 	GameObject* gameObject = new GameObject();
+
 	gameObject->LoadState(*node);
+
 	gameObject->SetParent(_gameObject);
+
+	gameObjects.push_back(gameObject);
 
 	ParsonArray childArray = node->GetArray("Children");
 	for (int i = 0; i < childArray.size; i++)
 	{
 		LoadPrefabObject(gameObject, &childArray.GetNode(i));
 	}
-
-	gameObjects.push_back(gameObject);
 }
 
 GameObject* M_Scene::CreateGameObject(const char* name, GameObject* parent)

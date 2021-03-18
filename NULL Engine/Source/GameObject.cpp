@@ -154,6 +154,8 @@ bool GameObject::SaveState(ParsonNode& root) const
 bool GameObject::LoadState(ParsonNode& root)
 {
 	bool ret = true;
+
+
 	
 	ForceUID((uint)root.GetNumber("UID"));
 	parent_uid = (uint)root.GetNumber("ParentUID");
@@ -196,7 +198,7 @@ bool GameObject::LoadState(ParsonNode& root)
 			case ComponentType::MESH:				{ component = new C_Mesh(this); }				break;
 			case ComponentType::MATERIAL:			{ component = new C_Material(this); }			break;
 			case ComponentType::LIGHT:				{ component = new C_Light(this); }				break;
-			case ComponentType::CAMERA:				{ component = new C_Camera(this); }				break;
+			case ComponentType::CAMERA:				{ component = new C_Camera(this);  if (App->gameState == GameState::PLAY) App->camera->SetCurrentCamera((C_Camera*)component); }			break; //TODO fix this hardcode
 			case ComponentType::ANIMATOR:			{ component = new C_Animator(this); }			break;
 			case ComponentType::ANIMATION:			{ component = new C_Animation(this); }			break;
 			case ComponentType::AUDIOSOURCE:		{ component = new C_AudioSource(this); }		break;
@@ -396,6 +398,7 @@ bool GameObject::SetParent(GameObject* newParent)
 	}
 
 	success = newParent->AddChild(this);
+
 	if (success)
 	{
 		parent = newParent;
@@ -696,6 +699,11 @@ Component* GameObject::CreateComponent(ComponentType type)
 		return nullptr;
 	}
 	if (type == ComponentType::PLAYER_CONTROLLER && GetComponent<C_PlayerController>() != nullptr)
+	{
+		LOG("[ERROR] Player Controller Component could not be added to %s! Error: No duplicates allowed!", name.c_str());
+		return nullptr;
+	}
+	if (type == ComponentType::UI_IMAGE && GetComponent<C_UI_Image>() != nullptr)
 	{
 		LOG("[ERROR] Player Controller Component could not be added to %s! Error: No duplicates allowed!", name.c_str());
 		return nullptr;

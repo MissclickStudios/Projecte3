@@ -168,7 +168,10 @@ void E_Inspector::DrawGameObjectInfo(GameObject* selectedGameObject)
 	if (!selectedGameObject->isPrefab)	// --- PREFAB ---
 	{
 		if (ImGui::Button("Create Prefab"))
+		{
+			App->resourceManager->RefreshProjectDirectories(); //Should only refresh prefabs
 			App->resourceManager->CreatePrefab(selectedGameObject);
+		}
 	}
 	else
 	{
