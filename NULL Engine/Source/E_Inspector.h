@@ -25,6 +25,7 @@ class C_PropBehavior;
 class C_CameraBehavior;
 class C_Canvas;
 class C_UI_Image;
+class C_UI_Text;
 
 class Resource;
 class R_Shader;
@@ -64,6 +65,7 @@ private:
 	void DrawCapsuleColliderComponent	(C_CapsuleCollider* cCollider);
 	void DrawCanvasComponent			(C_Canvas* cCanvas);
 	void DrawUIImageComponent			(C_UI_Image* image);
+	void DrawUITextComponent			(C_UI_Text* text);
 	void DrawPlayerControllerComponent	(C_PlayerController* controller);
 	void DrawBulletBehaviorComponent	(C_BulletBehavior* behavior);
 	void DrawPropBehaviorComponent		(C_PropBehavior* behavior);

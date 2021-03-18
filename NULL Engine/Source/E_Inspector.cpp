@@ -38,6 +38,7 @@
 #include "C_CameraBehavior.h"
 #include "C_Canvas.h"
 #include "C_UI_Image.h"
+#include "C_UI_Text.h"
 
 #include "R_Shader.h"
 #include "R_Texture.h"
@@ -199,6 +200,7 @@ void E_Inspector::DrawComponents(GameObject* selectedGameObject)
 		case ComponentType::CAPSULE_COLLIDER:	{ DrawCapsuleColliderComponent((C_CapsuleCollider*)component); }	break;
 		case ComponentType::CANVAS:				{ DrawCanvasComponent((C_Canvas*)component); }						break;
 		case ComponentType::UI_IMAGE:			{ DrawUIImageComponent((C_UI_Image*)component); }					break;
+		case ComponentType::UI_TEXT:			{ DrawUITextComponent((C_UI_Text*)component); }						break;
 		case ComponentType::PLAYER_CONTROLLER:	{ DrawPlayerControllerComponent((C_PlayerController*)component); }	break;
 		case ComponentType::BULLET_BEHAVIOR:	{ DrawBulletBehaviorComponent((C_BulletBehavior*)component); }		break;
 		case ComponentType::PROP_BEHAVIOR:		{ DrawPropBehaviorComponent((C_PropBehavior*)component); }			break;
@@ -1329,6 +1331,22 @@ void E_Inspector::DrawUIImageComponent(C_UI_Image* image)
 
 }
 
+void E_Inspector::DrawUITextComponent(C_UI_Text* text)
+{
+	static bool show = true;
+	if (ImGui::CollapsingHeader("Text", &show, ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		bool isActive = text->IsActive();
+		if (ImGui::Checkbox("Text Is Active", &isActive)) { text->SetIsActive(isActive); }
+
+		ImGui::Separator();
+
+		ImGui::Text(text->text.c_str());
+	}
+	ImGui::Separator();
+
+}
+
 void E_Inspector::DrawPlayerControllerComponent(C_PlayerController* cController)
 {
 	bool show = true;
@@ -1455,7 +1473,7 @@ void E_Inspector::DrawCameraBehaviorComponent(C_CameraBehavior* cBehavior)
 void E_Inspector::AddComponentCombo(GameObject* selectedGameObject)
 {
 
-	ImGui::Combo("##", &componentType, "Add Component\0Transform\0Mesh\0Material\0Light\0Camera\0Animator\0Animation\0RigidBody\0Box Collider\0Sphere Collider\0Capsule Collider\0Particle System\0Canvas\0Audio Source\0Audio Listener\0Player Controller\0Bullet Behavior\0Prop Behavior\0Camera Behavior\0UI Image");
+	ImGui::Combo("##", &componentType, "Add Component\0Transform\0Mesh\0Material\0Light\0Camera\0Animator\0Animation\0RigidBody\0Box Collider\0Sphere Collider\0Capsule Collider\0Particle System\0Canvas\0Audio Source\0Audio Listener\0Player Controller\0Bullet Behavior\0Prop Behavior\0Camera Behavior\0UI Image\0UI Text");
 	ImGui::SameLine();
 
 	if ((ImGui::Button("ADD")))
@@ -1464,7 +1482,9 @@ void E_Inspector::AddComponentCombo(GameObject* selectedGameObject)
 		{
 			if (componentType == (int)ComponentType::UI_IMAGE)
 				AddUIComponent(selectedGameObject, ComponentType::UI_IMAGE);
-			
+			else if(componentType == (int)ComponentType::UI_TEXT)
+				AddUIComponent(selectedGameObject, ComponentType::UI_TEXT);
+
 			else
 				selectedGameObject->CreateComponent((ComponentType)componentType);
 		}
@@ -1496,6 +1516,32 @@ void E_Inspector::AddUIComponent(GameObject* selectedGameObject, ComponentType t
 
 			GameObject* newImage = App->scene->CreateGameObject("UI Image", selectedGameObject);
 			newImage->CreateComponent(ComponentType::UI_IMAGE);
+		}
+	}
+
+	else if (type == ComponentType::UI_TEXT)
+	{
+		// Option 1: selectedGameObject has a canvas
+		if (selectedGameObject->GetComponent<C_Canvas>() != nullptr)
+		{
+			GameObject* newGO;
+			newGO = App->scene->CreateGameObject("UI Text", selectedGameObject);
+			newGO->CreateComponent(ComponentType::UI_TEXT);
+		}
+		// Option 2: selectedGameObject's parent has a canvas
+		else if (selectedGameObject->parent->GetComponent<C_Canvas>() != nullptr)
+		{
+			selectedGameObject->SetName("UI Text");
+			selectedGameObject->CreateComponent(ComponentType::UI_TEXT);
+		}
+		// Option 3: need to crete a canvas
+		else
+		{
+			selectedGameObject->SetName("Canvas");
+			selectedGameObject->CreateComponent(ComponentType::CANVAS);
+
+			GameObject* newText = App->scene->CreateGameObject("UI Text", selectedGameObject);
+			newText->CreateComponent(ComponentType::UI_TEXT);
 		}
 	}
 }

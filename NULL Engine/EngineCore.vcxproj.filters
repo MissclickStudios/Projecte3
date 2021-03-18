@@ -61,18 +61,6 @@
     <Filter Include="Source\Importers">
       <UniqueIdentifier>{41994cb1-bb1d-4cb8-851d-cd929e1d1ca6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\GameObjects">
-      <UniqueIdentifier>{89d9c265-e7ec-4b81-b8e3-1466b0cf3102}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\GameObjects\Components">
-      <UniqueIdentifier>{c68e88bb-471c-4d14-bd73-268ca1a3fc4f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\GameObjects\Primitives">
-      <UniqueIdentifier>{cee3d9d8-82ce-44fb-9b7d-440b0f93cc4a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\GameObjects\Light">
-      <UniqueIdentifier>{a98d25d7-2c83-45fa-a41c-8e3fc94ae71c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\Containers">
       <UniqueIdentifier>{1e102abd-c9e5-43e3-80d1-7bdfd5aae25a}</UniqueIdentifier>
     </Filter>
@@ -142,13 +130,25 @@
     <Filter Include="Source\Tools\SkyBox">
       <UniqueIdentifier>{77f57b8d-5f02-4867-abd7-0eeace15c191}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Containers\GameObjects">
+      <UniqueIdentifier>{89d9c265-e7ec-4b81-b8e3-1466b0cf3102}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Containers\GameObjects\Components">
+      <UniqueIdentifier>{c68e88bb-471c-4d14-bd73-268ca1a3fc4f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Containers\GameObjects\Primitives">
+      <UniqueIdentifier>{cee3d9d8-82ce-44fb-9b7d-440b0f93cc4a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Containers\GameObjects\Light">
+      <UniqueIdentifier>{a98d25d7-2c83-45fa-a41c-8e3fc94ae71c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Application.cpp">
       <Filter>Source\Core</Filter>
     </ClCompile>
     <ClCompile Include="Source\Light.cpp">
-      <Filter>Source\GameObjects\Light</Filter>
+      <Filter>Source\Containers\GameObjects\Light</Filter>
     </ClCompile>
     <ClCompile Include="Source\M_Input.cpp">
       <Filter>Source\Modules</Filter>
@@ -175,22 +175,22 @@
       <Filter>Source\Resources</Filter>
     </ClCompile>
     <ClCompile Include="Source\Primitive.cpp">
-      <Filter>Source\GameObjects\Primitives</Filter>
+      <Filter>Source\Containers\GameObjects\Primitives</Filter>
     </ClCompile>
     <ClCompile Include="Source\I_Materials.cpp">
       <Filter>Source\Importers</Filter>
     </ClCompile>
     <ClCompile Include="Source\C_Mesh.cpp">
-      <Filter>Source\GameObjects\Components</Filter>
+      <Filter>Source\Containers\GameObjects\Components</Filter>
     </ClCompile>
     <ClCompile Include="Source\C_Transform.cpp">
-      <Filter>Source\GameObjects\Components</Filter>
+      <Filter>Source\Containers\GameObjects\Components</Filter>
     </ClCompile>
     <ClCompile Include="Source\Component.cpp">
-      <Filter>Source\GameObjects\Components</Filter>
+      <Filter>Source\Containers\GameObjects\Components</Filter>
     </ClCompile>
     <ClCompile Include="Source\GameObject.cpp">
-      <Filter>Source\GameObjects</Filter>
+      <Filter>Source\Containers\GameObjects</Filter>
     </ClCompile>
     <ClCompile Include="Source\R_Model.cpp">
       <Filter>Source\Resources</Filter>
@@ -202,16 +202,16 @@
       <Filter>Source\Resources</Filter>
     </ClCompile>
     <ClCompile Include="Source\C_Light.cpp">
-      <Filter>Source\GameObjects\Components</Filter>
+      <Filter>Source\Containers\GameObjects\Components</Filter>
     </ClCompile>
     <ClCompile Include="Source\C_Material.cpp">
-      <Filter>Source\GameObjects\Components</Filter>
+      <Filter>Source\Containers\GameObjects\Components</Filter>
     </ClCompile>
     <ClCompile Include="Source\M_Scene.cpp">
       <Filter>Source\Modules</Filter>
     </ClCompile>
     <ClCompile Include="Source\C_Camera.cpp">
-      <Filter>Source\GameObjects\Components</Filter>
+      <Filter>Source\Containers\GameObjects\Components</Filter>
     </ClCompile>
     <ClCompile Include="Source\Dependencies\gpudetect\include\DeviceId.cpp">
       <Filter>Dependencies\gpudetect</Filter>
@@ -445,10 +445,10 @@
       <Filter>Source\Tools\EasingFunctions</Filter>
     </ClCompile>
     <ClCompile Include="Source\C_Animator.cpp">
-      <Filter>Source\GameObjects\Components</Filter>
+      <Filter>Source\Containers\GameObjects\Components</Filter>
     </ClCompile>
     <ClCompile Include="Source\C_Animation.cpp">
-      <Filter>Source\GameObjects\Components</Filter>
+      <Filter>Source\Containers\GameObjects\Components</Filter>
     </ClCompile>
     <ClCompile Include="Source\AnimatorClip.cpp">
       <Filter>Source\Containers\Animator</Filter>
@@ -502,31 +502,31 @@
       <Filter>Source\Modules</Filter>
     </ClCompile>
     <ClCompile Include="Source\C_AudioListener.cpp">
-      <Filter>Source\GameObjects\Components</Filter>
+      <Filter>Source\Containers\GameObjects\Components</Filter>
     </ClCompile>
     <ClCompile Include="Source\C_AudioSource.cpp">
-      <Filter>Source\GameObjects\Components</Filter>
+      <Filter>Source\Containers\GameObjects\Components</Filter>
     </ClCompile>
     <ClCompile Include="Source\C_BoxCollider.cpp">
-      <Filter>Source\GameObjects\Components</Filter>
+      <Filter>Source\Containers\GameObjects\Components</Filter>
     </ClCompile>
     <ClCompile Include="Source\C_Canvas.cpp">
-      <Filter>Source\GameObjects\Components</Filter>
+      <Filter>Source\Containers\GameObjects\Components</Filter>
     </ClCompile>
     <ClCompile Include="Source\C_CapsuleCollider.cpp">
-      <Filter>Source\GameObjects\Components</Filter>
+      <Filter>Source\Containers\GameObjects\Components</Filter>
     </ClCompile>
     <ClCompile Include="Source\C_ParticleSystem.cpp">
-      <Filter>Source\GameObjects\Components</Filter>
+      <Filter>Source\Containers\GameObjects\Components</Filter>
     </ClCompile>
     <ClCompile Include="Source\C_PlayerController.cpp">
-      <Filter>Source\GameObjects\Components</Filter>
+      <Filter>Source\Containers\GameObjects\Components</Filter>
     </ClCompile>
     <ClCompile Include="Source\C_RigidBody.cpp">
-      <Filter>Source\GameObjects\Components</Filter>
+      <Filter>Source\Containers\GameObjects\Components</Filter>
     </ClCompile>
     <ClCompile Include="Source\C_SphereCollider.cpp">
-      <Filter>Source\GameObjects\Components</Filter>
+      <Filter>Source\Containers\GameObjects\Components</Filter>
     </ClCompile>
     <ClCompile Include="Source\R_ParticleSystem.cpp">
       <Filter>Source</Filter>
@@ -535,6 +535,9 @@
     <ClCompile Include="Source\C_CameraBehavior.cpp" />
     <ClCompile Include="Source\C_PropBehavior.cpp" />
     <ClCompile Include="Source\C_UI_Image.cpp" />
+    <ClCompile Include="Source\C_UI_Text.cpp">
+      <Filter>Source\Containers\GameObjects\Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application.h">
@@ -544,7 +547,7 @@
       <Filter>Source\Core</Filter>
     </ClInclude>
     <ClInclude Include="Source\Light.h">
-      <Filter>Source\GameObjects\Light</Filter>
+      <Filter>Source\Containers\GameObjects\Light</Filter>
     </ClInclude>
     <ClInclude Include="Source\Dependencies\glew\include\eglew.h">
       <Filter>Dependencies\glew</Filter>
@@ -619,22 +622,22 @@
       <Filter>Dependencies\Assimp</Filter>
     </ClInclude>
     <ClInclude Include="Source\Primitive.h">
-      <Filter>Source\GameObjects\Primitives</Filter>
+      <Filter>Source\Containers\GameObjects\Primitives</Filter>
     </ClInclude>
     <ClInclude Include="Source\I_Materials.h">
       <Filter>Source\Importers</Filter>
     </ClInclude>
     <ClInclude Include="Source\C_Mesh.h">
-      <Filter>Source\GameObjects\Components</Filter>
+      <Filter>Source\Containers\GameObjects\Components</Filter>
     </ClInclude>
     <ClInclude Include="Source\C_Transform.h">
-      <Filter>Source\GameObjects\Components</Filter>
+      <Filter>Source\Containers\GameObjects\Components</Filter>
     </ClInclude>
     <ClInclude Include="Source\Component.h">
-      <Filter>Source\GameObjects\Components</Filter>
+      <Filter>Source\Containers\GameObjects\Components</Filter>
     </ClInclude>
     <ClInclude Include="Source\GameObject.h">
-      <Filter>Source\GameObjects</Filter>
+      <Filter>Source\Containers\GameObjects</Filter>
     </ClInclude>
     <ClInclude Include="Source\Dependencies\Brofiler\include\Brofiler.h">
       <Filter>Dependencies\Brofiler</Filter>
@@ -649,16 +652,16 @@
       <Filter>Source\Resources</Filter>
     </ClInclude>
     <ClInclude Include="Source\C_Light.h">
-      <Filter>Source\GameObjects\Components</Filter>
+      <Filter>Source\Containers\GameObjects\Components</Filter>
     </ClInclude>
     <ClInclude Include="Source\C_Material.h">
-      <Filter>Source\GameObjects\Components</Filter>
+      <Filter>Source\Containers\GameObjects\Components</Filter>
     </ClInclude>
     <ClInclude Include="Source\M_Scene.h">
       <Filter>Source\Modules</Filter>
     </ClInclude>
     <ClInclude Include="Source\C_Camera.h">
-      <Filter>Source\GameObjects\Components</Filter>
+      <Filter>Source\Containers\GameObjects\Components</Filter>
     </ClInclude>
     <ClInclude Include="Source\Dependencies\gpudetect\include\DeviceId.h">
       <Filter>Dependencies\gpudetect</Filter>
@@ -1045,10 +1048,10 @@
       <Filter>Source\Containers\Animator</Filter>
     </ClInclude>
     <ClInclude Include="Source\C_Animator.h">
-      <Filter>Source\GameObjects\Components</Filter>
+      <Filter>Source\Containers\GameObjects\Components</Filter>
     </ClInclude>
     <ClInclude Include="Source\C_Animation.h">
-      <Filter>Source\GameObjects\Components</Filter>
+      <Filter>Source\Containers\GameObjects\Components</Filter>
     </ClInclude>
     <ClInclude Include="Source\AnimationClip.h">
       <Filter>Source\Containers\Animation</Filter>
@@ -1261,31 +1264,31 @@
       <Filter>Source\Modules</Filter>
     </ClInclude>
     <ClInclude Include="Source\C_SphereCollider.h">
-      <Filter>Source\GameObjects\Components</Filter>
+      <Filter>Source\Containers\GameObjects\Components</Filter>
     </ClInclude>
     <ClInclude Include="Source\C_AudioListener.h">
-      <Filter>Source\GameObjects\Components</Filter>
+      <Filter>Source\Containers\GameObjects\Components</Filter>
     </ClInclude>
     <ClInclude Include="Source\C_AudioSource.h">
-      <Filter>Source\GameObjects\Components</Filter>
+      <Filter>Source\Containers\GameObjects\Components</Filter>
     </ClInclude>
     <ClInclude Include="Source\C_BoxCollider.h">
-      <Filter>Source\GameObjects\Components</Filter>
+      <Filter>Source\Containers\GameObjects\Components</Filter>
     </ClInclude>
     <ClInclude Include="Source\C_Canvas.h">
-      <Filter>Source\GameObjects\Components</Filter>
+      <Filter>Source\Containers\GameObjects\Components</Filter>
     </ClInclude>
     <ClInclude Include="Source\C_CapsuleCollider.h">
-      <Filter>Source\GameObjects\Components</Filter>
+      <Filter>Source\Containers\GameObjects\Components</Filter>
     </ClInclude>
     <ClInclude Include="Source\C_ParticleSystem.h">
-      <Filter>Source\GameObjects\Components</Filter>
+      <Filter>Source\Containers\GameObjects\Components</Filter>
     </ClInclude>
     <ClInclude Include="Source\C_PlayerController.h">
-      <Filter>Source\GameObjects\Components</Filter>
+      <Filter>Source\Containers\GameObjects\Components</Filter>
     </ClInclude>
     <ClInclude Include="Source\C_RigidBody.h">
-      <Filter>Source\GameObjects\Components</Filter>
+      <Filter>Source\Containers\GameObjects\Components</Filter>
     </ClInclude>
     <ClInclude Include="Source\R_ParticleSystem.h">
       <Filter>Source</Filter>
@@ -1294,6 +1297,9 @@
     <ClInclude Include="Source\C_CameraBehavior.h" />
     <ClInclude Include="Source\C_PropBehavior.h" />
     <ClInclude Include="Source\C_UI_Image.h" />
+    <ClInclude Include="Source\C_UI_Text.h">
+      <Filter>Source\Containers\GameObjects\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Source\Dependencies\Wwise\samples\SoundEngine\Common\AkFilePackageLowLevelIO.inl">

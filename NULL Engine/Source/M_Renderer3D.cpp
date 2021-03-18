@@ -33,6 +33,7 @@
 #include "C_Light.h"
 #include "C_Canvas.h"
 #include "C_UI_Image.h"
+#include "C_UI_Text.h"
 
 #include "M_Renderer3D.h"
 
@@ -714,28 +715,28 @@ void M_Renderer3D::RenderUI()
 void M_Renderer3D::RenderUIComponent(GameObject* gameObject)
 {
 	for (std::vector<GameObject*>::iterator it = gameObject->childs.begin(); it != gameObject->childs.end(); it++)
-	{		
-		for (std::vector<Component*>::const_iterator componentIt = (*it)->GetAllComponents().begin(); componentIt != (*it)->GetAllComponents().end(); componentIt++)
+	{
+
+		C_UI_Image* image = (*it)->GetComponent<C_UI_Image>();
+		if (image != nullptr)
 		{
-			switch ((*componentIt)->GetType())
-			{
-			case ComponentType::UI_IMAGE:
-				{
-					C_UI_Image* image = (C_UI_Image*)(*componentIt);
+			if (App->camera->currentCamera != App->camera->masterCamera->GetComponent<C_Camera>())
+				image->Draw2D();
 
-					if (App->camera->currentCamera != App->camera->masterCamera->GetComponent<C_Camera>())
-						image->Draw2D();
-
-					else
-						image->Draw3D();
-
-				}
-			case ComponentType::UI_TEXT:
-				{
-
-				}
-			}
+			else
+				image->Draw3D();
 		}
+
+		C_UI_Text* text = (*it)->GetComponent<C_UI_Text>();
+		if (text != nullptr)
+		{
+			if (App->camera->currentCamera != App->camera->masterCamera->GetComponent<C_Camera>())
+				text->Draw2D();
+
+			else
+				text->Draw3D();
+		}
+
 
 		for (std::vector<GameObject*>::iterator childIt = (*it)->childs.begin(); childIt != (*it)->childs.end(); childIt++)
 		{

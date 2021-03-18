@@ -32,6 +32,7 @@
 #include "C_CameraBehavior.h"
 #include "C_Canvas.h"
 #include "C_UI_Image.h"
+#include "C_UI_Text.h"
 
 #include "GameObject.h"
 
@@ -204,6 +205,7 @@ bool GameObject::LoadState(ParsonNode& root)
 			case ComponentType::CAMERA_BEHAVIOR: { component = new C_CameraBehavior(this); }	break;
 			case ComponentType::CANVAS: { component = new C_Canvas(this); }	break;
 			case ComponentType::UI_IMAGE: {component = new C_UI_Image(this); } break;
+			case ComponentType::UI_TEXT: {component = new C_UI_Text(this); } break;
 			}
 
 			if (component != nullptr)
@@ -692,6 +694,7 @@ Component* GameObject::CreateComponent(ComponentType type)
 	case ComponentType::CAPSULE_COLLIDER:	{ component = new C_CapsuleCollider(this); }	break;
 	case ComponentType::CANVAS:				{ component = new C_Canvas(this); }				break;
 	case ComponentType::UI_IMAGE:			{ component = new C_UI_Image(this); }			break;
+	case ComponentType::UI_TEXT:			{ component = new C_UI_Text(this); }			break;
 	case ComponentType::PLAYER_CONTROLLER:	{ component = new C_PlayerController(this); }	break;
 	case ComponentType::BULLET_BEHAVIOR: { component = new C_BulletBehavior(this); }	break;
 	case ComponentType::PROP_BEHAVIOR: { component = new C_PropBehavior(this); }	break;

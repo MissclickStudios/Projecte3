@@ -48,15 +48,6 @@ bool C_UI_Image::Update()
 	if(GetRect().h > canvas->GetRect().h)
 		SetH(canvas->GetRect().h);
 
-	if (App->camera->currentCamera != App->camera->masterCamera->GetComponent<C_Camera>())
-	{
-		Draw2D();
-	}
-	else
-	{
-		Draw3D();
-	}
-
 	return ret;
 }
 
