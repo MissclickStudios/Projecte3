@@ -703,6 +703,11 @@ Component* GameObject::CreateComponent(ComponentType type)
 		LOG("[ERROR] Player Controller Component could not be added to %s! Error: No duplicates allowed!", name.c_str());
 		return nullptr;
 	}
+	if (type == ComponentType::UI_IMAGE && GetComponent<C_UI_Image>() != nullptr)
+	{
+		LOG("[ERROR] Player Controller Component could not be added to %s! Error: No duplicates allowed!", name.c_str());
+		return nullptr;
+	}
 
 	switch(type)
 	{
