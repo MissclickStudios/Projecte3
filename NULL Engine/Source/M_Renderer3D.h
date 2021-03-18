@@ -165,6 +165,7 @@ public:																											// --- RENDER GEOMETRY
 	void			RenderRays					();
 	void			RenderSkeletons				();
 	void			RenderUI					();
+	void			RenderUIComponent			(GameObject* gameObject);
 	void			RenderFramebufferTexture	();
 	void			DeleteFromMeshRenderers		(C_Mesh* cMeshToDelete);
 	void			DeleteFromMeshRenderers		(R_Mesh* rMeshToDelete);
@@ -174,6 +175,7 @@ public:																											// --- RENDER GEOMETRY
 	void			AddPrimitive				(Primitive* primitive);
 	void			CreatePrimitiveExamples		();
 
+	void			SetTo2DRenderSettings		(const bool& setTo);
 
 public:																											// --- GET/SET METHODS
 	Icons			GetEngineIcons				() const;

@@ -62,6 +62,8 @@ const char* Component::GetNameFromType() const
 	case ComponentType::SPHERE_COLLIDER:  { return "Sphere  Collider"; }	break;
 	case ComponentType::CAPSULE_COLLIDER: { return "Capsule Collider"; }	break;
 	case ComponentType::CANVAS:			{ return "Canvas"; }		break;
+	case ComponentType::UI_IMAGE: { return "UI Image"; } break;
+	case ComponentType::UI_TEXT: {return "UI Text"; } break;
 	case ComponentType::PLAYER_CONTROLLER: { return "Player Controller"; }	break;
 	case ComponentType::BULLET_BEHAVIOR: { return "Bullet Behavior"; }	break;
 	case ComponentType::PROP_BEHAVIOR: { return "Prop Behavior"; }	break;

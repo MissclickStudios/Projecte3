@@ -12,8 +12,6 @@
 
 #include "C_Camera.h" //TODO: Why do we need to include this ????
 
-#include "UIElement.h"
-
 
 class ParsonNode;
 class C_Transform;
@@ -155,7 +153,6 @@ public:																									// --- COMPONENT GETTERS AND SETTERS
 	}
 
 public:
-
 	UIElement* CreateUIElement(UIElementType type);								// Creates a UI Element of the given type.
 	bool DeleteUIElement();														// Deletes the UI Element. Returs False on ERROR.
 
@@ -193,7 +190,6 @@ private:
 
 	uint32 parent_uid;													// Only for Serialization purposes. Maybe will be repurposed later.
 
-	UIElement* uiElement = nullptr;
 };
 
 #endif // !__GAME_OBJECT_H__

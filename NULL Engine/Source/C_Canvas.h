@@ -12,7 +12,7 @@ class ParsonNode;
 class GameObject;
 class UIElement;
 
-struct Rect
+struct Rect2D
 {
 	float x, y, w, h;
 };
@@ -38,27 +38,20 @@ public:
 
 	float2 GetPosition() const;
 	float2 GetSize() const;
-	Rect GetRect() const;
+	Rect2D GetRect() const;
 	bool IsInvisible() const;
-	float GetZ() const;
 
 	void SetPosition(const float2& postion);
 	void SetSize(const float2& size);
-	void SetRect(const Rect& rect);
+	void SetRect(const Rect2D& rect);
 	void SetIsInvisible(const bool setTo);
-	void SetZ(const float& z);
-
-
 
 	//Temp. here
 	float2 pivot = { 0,0 };
 
-	std::vector<UIElement*>	uiElements;
-
 private:
 
-	Rect rect = { 0,0,50,50 };
-	float z = 0;
+	Rect2D rect = { 0,0,50,50 };
 	bool isInvisible; // This is not the same as active, this just prevents drawing
 };
 

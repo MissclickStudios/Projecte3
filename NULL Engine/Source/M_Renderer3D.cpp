@@ -34,8 +34,10 @@
 #include "C_Material.h"													
 #include "C_Camera.h"	
 #include "C_Light.h"
-										
-#include "UIElement.h"
+#include "C_Canvas.h"
+#include "C_UI_Image.h"
+#include "C_UI_Text.h"
+
 #include "M_Renderer3D.h"
 
 #include "I_Shaders.h"							//TODO: erase
@@ -685,32 +687,87 @@ void M_Renderer3D::DrawWorldGrid(const int& size)
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 }
 
+void M_Renderer3D::SetTo2DRenderSettings(const bool& setTo)
+{
+	if (setTo)
+	{
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		glOrtho(-App->camera->GetCurrentCamera()->GetFrustum().NearPlaneWidth() / 2, App->camera->GetCurrentCamera()->GetFrustum().NearPlaneWidth() / 2, -App->camera->GetCurrentCamera()->GetFrustum().NearPlaneHeight() / 2, App->camera->GetCurrentCamera()->GetFrustum().NearPlaneHeight() / 2, 100.0f, -100.0f);
+		glMatrixMode(GL_MODELVIEW);
+		glLoadMatrixf(App->camera->GetCurrentCamera()->GetOGLViewMatrix());
+
+		glDisable(GL_DEPTH_TEST);
+		glDisable(GL_LIGHTING);
+		glEnable(GL_BLEND);
+	}
+	else
+	{
+		glMatrixMode(GL_PROJECTION);
+		glLoadMatrixf(App->camera->GetCurrentCamera()->GetOGLProjectionMatrix());
+		glMatrixMode(GL_MODELVIEW);
+
+		glEnable(GL_LIGHTING);
+		glEnable(GL_DEPTH_TEST);
+		glDisable(GL_BLEND);
+	}
+}
+
 void M_Renderer3D::RenderUI()
 {
-	for (std::vector<GameObject*>::iterator it = App->scene->GetGameObjects()->begin(); it != App->scene->GetGameObjects()->end(); it++)
-	{
-		C_Canvas* canvasIt = (*it)->GetComponent<C_Canvas>();
-		if (canvasIt != nullptr && canvasIt->IsActive())
-		{
-			if (!canvasIt->uiElements.empty())
-			{
-				for (std::vector<UIElement*>::iterator uiIt = canvasIt->uiElements.begin(); uiIt != canvasIt->uiElements.end(); uiIt++)
-				{
-					(*uiIt)->Update();
-				}
-			}
+	SetTo2DRenderSettings(true);
 
-			if (!canvasIt->IsInvisible())
+	C_Canvas* canvas = nullptr;
+	for (std::vector<GameObject*>::iterator uiIt = App->scene->GetGameObjects()->begin(); uiIt != App->scene->GetGameObjects()->end(); uiIt++)
+	{
+		canvas = (*uiIt)->GetComponent<C_Canvas>();
+		if (canvas != nullptr)
+		{
+			RenderUIComponent(*uiIt);
+
+			if (!canvas->IsInvisible())
 			{
 				if (App->camera->currentCamera != App->camera->masterCamera->GetComponent<C_Camera>())
-				{
-					canvasIt->Draw2D();
-				}
+					canvas->Draw2D();
+
 				else
-				{
-					canvasIt->Draw3D();
-				}
-			}	
+					canvas->Draw3D();
+			}
+		}
+	}
+
+	SetTo2DRenderSettings(false);
+}
+
+void M_Renderer3D::RenderUIComponent(GameObject* gameObject)
+{
+	for (std::vector<GameObject*>::iterator it = gameObject->childs.begin(); it != gameObject->childs.end(); it++)
+	{
+
+		C_UI_Image* image = (*it)->GetComponent<C_UI_Image>();
+		if (image != nullptr)
+		{
+			if (App->camera->currentCamera != App->camera->masterCamera->GetComponent<C_Camera>())
+				image->Draw2D();
+
+			else
+				image->Draw3D();
+		}
+
+		C_UI_Text* text = (*it)->GetComponent<C_UI_Text>();
+		if (text != nullptr)
+		{
+			if (App->camera->currentCamera != App->camera->masterCamera->GetComponent<C_Camera>())
+				text->Draw2D();
+
+			else
+				text->Draw3D();
+		}
+
+
+		for (std::vector<GameObject*>::iterator childIt = (*it)->childs.begin(); childIt != (*it)->childs.end(); childIt++)
+		{
+			RenderUIComponent(*childIt);
 		}
 	}
 }

@@ -83,6 +83,8 @@
       <UniqueIdentifier>{a98d25d7-2c83-45fa-a41c-8e3fc94ae71c}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\5_Containers">
+    <Filter Include="Source\Containers">
+    </Filter>
       <UniqueIdentifier>{1e102abd-c9e5-43e3-80d1-7bdfd5aae25a}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\5_Containers\SystemInfo">
@@ -159,6 +161,18 @@
     </Filter>
     <Filter Include="Source\4_GameObjects\Components\Behaviors">
       <UniqueIdentifier>{143fbc63-acff-4389-8f27-99d31261ff53}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Containers\GameObjects">
+      <UniqueIdentifier>{89d9c265-e7ec-4b81-b8e3-1466b0cf3102}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Containers\GameObjects\Components">
+      <UniqueIdentifier>{c68e88bb-471c-4d14-bd73-268ca1a3fc4f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Containers\GameObjects\Primitives">
+      <UniqueIdentifier>{cee3d9d8-82ce-44fb-9b7d-440b0f93cc4a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Containers\GameObjects\Light">
+      <UniqueIdentifier>{a98d25d7-2c83-45fa-a41c-8e3fc94ae71c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -585,6 +599,13 @@
     <ClCompile Include="Source\C_PlayerController.cpp">
       <Filter>Source\4_GameObjects\Components\Behaviors</Filter>
     </ClCompile>
+    <ClCompile Include="Source\C_BulletBehavior.cpp" />
+    <ClCompile Include="Source\C_CameraBehavior.cpp" />
+    <ClCompile Include="Source\C_PropBehavior.cpp" />
+    <ClCompile Include="Source\C_UI_Image.cpp" />
+    <ClCompile Include="Source\C_UI_Text.cpp">
+      <Filter>Source\Containers\GameObjects\Components</Filter>
+    </ClCompile>e
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application.h">
@@ -1277,6 +1298,12 @@
     <ClInclude Include="Source\Dependencies\FreeType\include\freetype\tttables.h">
       <Filter>Dependencies\FreeType</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Collider.h" />
+    <ClInclude Include="Source\Emitter.h" />
+    <ClInclude Include="Source\EmitterInstance.h" />
+    <ClInclude Include="Source\Particle.h" />
+    <ClInclude Include="Source\ParticleModule.h" />
+    <ClInclude Include="Source\SimulationCallback.h" />
     <ClInclude Include="Source\Dependencies\mmgr\include\mmgr.h">
       <Filter>Dependencies\mmgr</Filter>
     </ClInclude>
@@ -1384,6 +1411,13 @@
     </ClInclude>
     <ClInclude Include="Source\C_PlayerController.h">
       <Filter>Source\4_GameObjects\Components\Behaviors</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\C_BulletBehavior.h" />
+    <ClInclude Include="Source\C_CameraBehavior.h" />
+    <ClInclude Include="Source\C_PropBehavior.h" />
+    <ClInclude Include="Source\C_UI_Image.h" />
+    <ClInclude Include="Source\C_UI_Text.h">
+      <Filter>Source\Containers\GameObjects\Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
