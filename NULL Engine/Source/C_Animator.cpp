@@ -622,6 +622,30 @@ const float3 C_Animator::GetBlendedScale(double blendingKeyframe, const Channel&
 	return blendedScale;
 }
 
+void C_Animator::FindRootBone()
+{
+	std::vector<GameObject*> childs;
+	this->GetOwner()->GetAllChilds(childs);
+	for (auto animesh = animatedMeshes.begin(); animesh != animatedMeshes.end(); ++animesh)							// Finding root bone by cross-checking with animesh. Maybe overengineered?
+	{
+		std::map<std::string, uint> mapping = (*animesh)->GetMesh()->boneMapping;
+		if (mapping.empty())
+		{
+			continue;
+		}
+
+		for (auto child = childs.begin(); child != childs.end(); ++child)
+		{
+			auto result = mapping.find((*child)->GetName());
+			if (result != mapping.end())
+			{
+				rootBone = (*child);																				// 1st bone to be found in the mapping is the most likely to be the root.
+				break;
+			}
+		}
+	}
+}
+
 void C_Animator::SetRootBone(GameObject* rootBone)
 {
 	if (rootBone == nullptr)
@@ -676,18 +700,7 @@ void C_Animator::GetAnimatedMeshes()
 
 void C_Animator::FindBones()
 {
-	std::vector<GameObject*> childs = this->GetOwner()->childs;
-	for (auto child = childs.begin(); child != childs.end(); ++child)								// TMP. Superficial check to find root bone. Change later for something cleaner.
-	{
-		if (!(*child)->childs.empty())																// If child has childs.
-		{
-			if (!(*child)->childs[0]->childs.empty())												// If child of child has childs.
-			{
-				rootBone = (*child);
-				break;
-			}
-		}
-	}
+	FindRootBone();
 
 	if (rootBone != nullptr)
 	{
@@ -696,7 +709,7 @@ void C_Animator::FindBones()
 
 		for (auto animesh = animatedMeshes.cbegin(); animesh != animatedMeshes.cend(); ++animesh)
 		{
-			(*animesh)->SetRootBone(rootBone);
+			(*animesh)->SetRootBone(rootBone);															// Setting the root bone for the Animated Mesh, not this Component. Necessary?
 		}
 
 		CrossCheckBonesWithMeshBoneMapping();

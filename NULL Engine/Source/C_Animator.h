@@ -122,6 +122,7 @@ private: 																													// --- C_ANIMATOR INITIALIZATION METHODS
 	void			FindBoneLinks							();
 	void			GenerateDefaultClips					();
 	
+	void			FindRootBone							();
 	void			SetRootBone								(GameObject* rootBone);
 	GameObject*		GetRootBone								() const;
 	void			CrossCheckBonesWithMeshBoneMapping		();
