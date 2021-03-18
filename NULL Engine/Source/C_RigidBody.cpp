@@ -34,16 +34,7 @@ C_RigidBody::C_RigidBody(GameObject* owner) : Component(owner, ComponentType::RI
 
 C_RigidBody::~C_RigidBody()
 {
-	if (dynamicBody)
-	{
-		App->physics->DeleteActor(dynamicBody);
-		dynamicBody->release();
-	}
-	if (staticBody)
-	{
-		App->physics->DeleteActor(staticBody);
-		staticBody->release();
-	}
+
 }
 
 bool C_RigidBody::Update()
@@ -74,6 +65,17 @@ bool C_RigidBody::Update()
 
 bool C_RigidBody::CleanUp()
 {
+	if (dynamicBody)
+	{
+		App->physics->DeleteActor(dynamicBody);
+		dynamicBody->release();
+	}
+	if (staticBody)
+	{
+		App->physics->DeleteActor(staticBody);
+		staticBody->release();
+	}
+	
 	return true;
 }
 

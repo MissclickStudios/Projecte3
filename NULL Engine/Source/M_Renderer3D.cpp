@@ -637,10 +637,7 @@ void M_Renderer3D::RenderScene()
 	RenderMeshes();
 	RenderCuboids();
 	//RenderRays();
-	RenderSkeletons();
-	RenderUI();
-	
-	
+	RenderSkeletons();	
 	
 	if (App->camera->DrawLastRaycast())
 	{
@@ -651,15 +648,14 @@ void M_Renderer3D::RenderScene()
 	//PrimitiveDrawExamples p_ex = PrimitiveDrawExamples();
 	//p_ex.DrawAllExamples();
 
-
-
 	for (uint i = 0; i < primitives.size(); ++i)
 	{
 		primitives[i]->RenderByIndices();
 	}
 	
-	//The Skybox renderer must be the first one always
 	defaultSkyBox.RenderSkybox();
+
+	RenderUI();
 
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
@@ -1690,7 +1686,7 @@ void MeshRenderer::ApplyShader()
 
 			cMaterial->GetShader()->SetUniformMatrix4("projectionMatrix", App->camera->GetCurrentCamera()->GetOGLProjectionMatrix());
 
-			cMaterial->GetShader()->SetUniform1f("time", Time::Game::GetTimeSinceStart());
+			//cMaterial->GetShader()->SetUniform1f("time", Time::Game::GetTimeSinceStart());
 
 			cMaterial->GetShader()->SetUniformVec3f("cameraPosition", (GLfloat*)&App->camera->GetCurrentCamera()->GetFrustum().Pos());
 			
