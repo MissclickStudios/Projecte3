@@ -92,7 +92,7 @@ bool M_Scene::Start()
 	//Last level function to call
 	level.GenerateRoom(0);
 
-	//LoadScene("Assets/Scenes/MainScene.json");
+	//LoadScene("Assets/Scenes/UITestScene.json");
 	//SaveScene("SceneAutosave");																			// Autosave just right after loading the scene.
 
 
