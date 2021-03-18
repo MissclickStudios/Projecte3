@@ -396,6 +396,7 @@ bool GameObject::SetParent(GameObject* newParent)
 	}
 
 	success = newParent->AddChild(this);
+
 	if (success)
 	{
 		parent = newParent;
