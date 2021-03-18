@@ -66,7 +66,6 @@ bool M_Scene::Start()
 {
 	LOG("Loading Intro assets");
 	bool ret = true;
-
 	App->camera->LookAt(float3::zero);
 
 	if (sceneRoot == nullptr)
@@ -84,17 +83,17 @@ bool M_Scene::Start()
 	//uint32 animation_uid = App->resourceManager->LoadFromLibrary(DEFAULT_ANIMATION);
 	//GenerateGameObjectsFromModel(animation_uid , float3(0.05f, 0.05f, 0.05f));
 
-	//level.GetRooms();
-	//level.GenerateLevel();
+	level.GetRooms();
+	level.GenerateLevel();
 	
-	//level.AddFixedRoom("Shop", 3);
-	//level.AddFixedRoom("Boss", 20);
+	//level.AddFixedRoom("Shop", 12);
+	//level.AddFixedRoom("Boss", 20); 
 	
 	//Last level function to call
-	//level.GenerateRoom(0);
+	level.GenerateRoom(0);
 
-	LoadScene("Assets/Scenes/MainScene.json");
-	SaveScene("SceneAutosave");																			// Autosave just right after loading the scene.
+	//LoadScene("Assets/Scenes/MainScene.json");
+	//SaveScene("SceneAutosave");																			// Autosave just right after loading the scene.
 
 
 
