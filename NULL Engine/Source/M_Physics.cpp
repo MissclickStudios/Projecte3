@@ -1,3 +1,5 @@
+#include "JSONParser.h"
+
 #include "Application.h"
 #include "Log.h"
 #include "Profiler.h"
@@ -43,6 +45,8 @@ M_Physics::~M_Physics()
 
 bool M_Physics::Init(ParsonNode& root)
 {
+	LoadConfiguration(root);
+
 	return true;
 }
 
@@ -95,7 +99,6 @@ bool M_Physics::Start()
 	simulationCallback = new SimulationCallback();
 	physx::PxSceneDesc sceneDesc(physics->getTolerancesScale());
 
-	
 	sceneDesc.gravity = physx::PxVec3(0.0f, -gravity, 0.0f);
 	sceneDesc.bounceThresholdVelocity = gravity* BOUNCE_THRESHOLD;
 	sceneDesc.cpuDispatcher = physx::PxDefaultCpuDispatcherCreate(THREADS);
@@ -168,13 +171,63 @@ bool M_Physics::CleanUp()
 	return true;
 }
 
-bool M_Physics::LoadConfiguration(ParsonNode& configuration)
+bool M_Physics::LoadConfiguration(ParsonNode& root)
 {
+	if (filters.size() != 0)
+		filters.erase(filters.begin(), filters.end());
+
+	ParsonArray filtersArray = root.GetArray("Filters");
+	for (uint i = 0; i < filtersArray.size; ++i)
+		filters.push_back(filtersArray.GetString(i));
+
+	if (filterInteractions)
+	{
+		for (uint i = 0; i < filters.size(); ++i)
+			delete[] filterInteractions[i];
+		delete[] filterInteractions;
+
+		filterInteractions = nullptr;
+	}
+	if (!filters.size())
+		return true;
+
+	filterInteractions = new bool*[filters.size()];
+	for (uint i = 0; i < filters.size(); ++i)
+		filterInteractions[i] = new bool[filters.size()];
+
+	ParsonArray interactionsArray = root.GetArray("Interactions");
+	uint x = 0;
+	uint y = 0;
+	for (uint i = 0; i < interactionsArray.size; ++i)
+	{
+		filterInteractions[x][y] = interactionsArray.GetBool(i);
+
+		++x;
+		if (x >= interactionsArray.size)
+		{
+			x = 0;
+			++y;
+		}
+	}
+
 	return true;
 }
 
-bool M_Physics::SaveConfiguration(ParsonNode& configuration) const
+bool M_Physics::SaveConfiguration(ParsonNode& root) const
 {
+	int size = filters.size();
+
+	ParsonArray filtersArray = root.SetArray("Filters");
+	for (uint i = 0; i < size; ++i)
+		filtersArray.SetString(filters[i].c_str());
+
+	if (!filterInteractions)
+		return true;
+	ParsonArray interactionsArray = root.SetArray("Interactions");
+	for (uint y = 0; y < size; ++y)
+		for (uint x = 0; x < size; ++x)
+			filtersArray.SetBool(filterInteractions[x][y]);
+
 	return true;
 }
 

@@ -34,7 +34,6 @@ C_PlayerController::C_PlayerController(GameObject* owner) : Component(owner, Com
 	fireRateTimer.Stop();
 	dashTime.Stop();
 	dashColdown.Stop();
-	//stepTimer = new Timer();
 }
 
 C_PlayerController::~C_PlayerController()
