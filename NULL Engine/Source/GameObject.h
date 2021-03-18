@@ -152,11 +152,6 @@ public:																									// --- COMPONENT GETTERS AND SETTERS
 		return  (componentsWithType.empty()) ? false : true;
 	}
 
-public:
-	UIElement* CreateUIElement(UIElementType type);								// Creates a UI Element of the given type.
-	bool DeleteUIElement();														// Deletes the UI Element. Returs False on ERROR.
-
-	UIElement* GetUIElement() const;
 
 public:
 	std::vector<Component*>	components;
