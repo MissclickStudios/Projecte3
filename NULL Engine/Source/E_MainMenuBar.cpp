@@ -63,16 +63,25 @@ bool E_MainMenuBar::FileMainMenuItem()
 		{
 			EngineApp->editor->showLoadFilePopup = true;
 		}
-
 		ImGui::Separator();
 
 		if (ImGui::MenuItem("Save", "Ctrl+S"))
 		{
+			EngineApp->scene->SaveScene();
+		}
+
+		ImGui::Separator();
+
+		if (ImGui::MenuItem("Save As"))
+		{
 			EngineApp->editor->showSaveFilePopup = true;
-			//EngineApp->scene->SaveScene();
 			
 			LOG("[SCENE] SAVED THE SCENE >:DDD");
 		}
+
+
+
+		
 		
 		ImGui::MenuItem("Save As...", "Ctrl+Shift+S", nullptr, false);
 
