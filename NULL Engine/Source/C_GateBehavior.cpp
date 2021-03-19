@@ -1,3 +1,5 @@
+#include "JSONParser.h"
+
 #include "Application.h"
 #include "M_Scene.h"
 
@@ -23,6 +25,8 @@ bool C_GateBehavior::CleanUp()
 
 bool C_GateBehavior::SaveState(ParsonNode& root) const
 {
+	root.SetNumber("Type", (uint)GetType());
+
 	return true;
 }
 
