@@ -1,6 +1,7 @@
 #ifndef __PHYSICS_H__
 #define __PHYSICS_H__
 
+#include <vector>
 #include <map>
 #include "Module.h"
 
@@ -54,6 +55,9 @@ private:
 	SimulationCallback* simulationCallback = nullptr;
 
 	float gravity = 9.8f;
+
+	std::vector<std::string> filters;
+	bool** filterInteractions = nullptr;
 };
 
 #endif //__PHYSICS_H__

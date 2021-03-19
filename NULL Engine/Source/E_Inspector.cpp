@@ -1453,6 +1453,14 @@ void E_Inspector::DrawPlayerControllerComponent(C_PlayerController* cController)
 			if (ImGui::InputFloat("Fire Rate", &fireRate, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
 				cController->SetFireRate(fireRate);
 
+			int ammo = cController->CurrentAmmo();
+			if (ImGui::InputInt("Ammo", &ammo, 1, 10, ImGuiInputTextFlags_EnterReturnsTrue))
+				cController->SetCurrentAmmo(ammo);
+
+			int maxAmmo = cController->MaxAmmo();
+			if (ImGui::InputInt("Max Ammo", &maxAmmo, 1, 10, ImGuiInputTextFlags_EnterReturnsTrue))
+				cController->SetMaxAmmo(maxAmmo);
+
 			bool automatic = cController->IsAutomatic();
 			if (ImGui::Checkbox("Automatic", &automatic))
 				cController->SetAutomatic(automatic);
@@ -1498,6 +1506,12 @@ void E_Inspector::DrawBulletBehaviorComponent(C_BulletBehavior* cBehavior)
 		bool isActive = cBehavior->IsActive();
 		if (ImGui::Checkbox("Bullet Is Active", &isActive))
 			cBehavior->SetIsActive(isActive);
+
+		ImGui::Separator();
+
+		float autodestruct = cBehavior->GetAutodestruct();
+		if (ImGui::InputFloat("Autodestruction", &autodestruct, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
+			cBehavior->SetAutodestruct(autodestruct);
 
 		if (!show)
 		{

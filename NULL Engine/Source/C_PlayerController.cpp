@@ -35,7 +35,6 @@ C_PlayerController::C_PlayerController(GameObject* owner) : Component(owner, Com
 	fireRateTimer.Stop();
 	dashTime.Stop();
 	dashColdown.Stop();
-	//stepTimer = new Timer();
 }
 
 C_PlayerController::~C_PlayerController()
@@ -69,6 +68,8 @@ bool C_PlayerController::SaveState(ParsonNode& root) const
 
 	root.SetNumber("Bullet Speed", (double)bulletSpeed);
 	root.SetNumber("Fire Rate", (double)fireRate);
+	root.SetNumber("Ammo", (double)ammo);
+	root.SetNumber("Max Ammo", (double)maxAmmo);
 	root.SetBool("Automatic", automatic);
 
 	root.SetNumber("Dash Speed", (double)dashSpeed);
@@ -86,6 +87,8 @@ bool C_PlayerController::LoadState(ParsonNode& root)
 
 	bulletSpeed = (float)root.GetNumber("Bullet Speed");
 	fireRate = (float)root.GetNumber("Fire Rate");
+	ammo = (float)root.GetNumber("Ammo");
+	maxAmmo = (float)root.GetNumber("Max Ammo");
 	automatic = root.GetBool("Automatic");
 
 	dashSpeed = (float)root.GetNumber("Dash Speed");
@@ -183,30 +186,50 @@ void C_PlayerController::Weapon()
 	// TODO
 
 	float3 direction = { (float)aimX, 0, (float)aimY };
-	if (aimX == 0 && aimY == 0)
-		direction.z++; // No mouse aim picking
+	if (aimX == 0 && aimY == 0) {}
 	else
+	{
 		direction.Normalize();
-
-	if (!automatic)
-	{
-		if (App->input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_DOWN || App->input->GetGameControllerTrigger(1) == ButtonState::BUTTON_DOWN)
-			SpawnBullet(direction);
+		lastAim = direction;
 	}
-	else
+
+	if (GetOwner()->childs.size())
 	{
-		if (App->input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_REPEAT || App->input->GetGameControllerTrigger(1) == ButtonState::BUTTON_REPEAT)
+		GameObject* mesh = GetOwner()->childs[0];
+		if (mesh)
 		{
-			if (!fireRateTimer.IsActive())
+			lastAim = { 0,0,1 };
+			float2 dir = { lastAim.x, lastAim.z };
+			float rad = dir.AimedAngle();
+			
+			mesh->transform->SetLocalRotation(float3( 0, rad ,0 ));
+		}
+	}
+
+	if (App->input->GetKey(SDL_SCANCODE_R) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(0) == ButtonState::BUTTON_DOWN)
+		Reload();
+	if (ammo > 0)
+	{
+		if (!automatic)
+		{
+			if (App->input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_DOWN || App->input->GetGameControllerTrigger(1) == ButtonState::BUTTON_DOWN)
+				SpawnBullet(lastAim);
+		}
+		else
+		{
+			if (App->input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_REPEAT || App->input->GetGameControllerTrigger(1) == ButtonState::BUTTON_REPEAT)
 			{
-				SpawnBullet(direction);
-				fireRateTimer.Start();
-			}
-			else if (fireRateTimer.ReadSec() >= fireRate)
-			{
-				SpawnBullet(direction);
-				fireRateTimer.Stop();
-				fireRateTimer.Start();
+				if (!fireRateTimer.IsActive())
+				{
+					SpawnBullet(direction);
+					fireRateTimer.Start();
+				}
+				else if (fireRateTimer.ReadSec() >= fireRate)
+				{
+					SpawnBullet(direction);
+					fireRateTimer.Stop();
+					fireRateTimer.Start();
+				}
 			}
 		}
 	}
@@ -214,6 +237,9 @@ void C_PlayerController::Weapon()
 
 void C_PlayerController::SpawnBullet(float3 direction)
 {
+	if (direction.IsZero())
+		++direction.z;
+
 	Resource* resource = App->resourceManager->GetResourceFromLibrary("Assets/Models/Primitives/sphere.fbx");
 	if (!resource)
 		return;
@@ -229,6 +255,13 @@ void C_PlayerController::SpawnBullet(float3 direction)
 	rigidBody->SetLinearVelocity(direction * bulletSpeed);
 	bullet->CreateComponent(ComponentType::SPHERE_COLLIDER);
 	bullet->CreateComponent(ComponentType::BULLET_BEHAVIOR);
+
+	--ammo;
+}
+
+void C_PlayerController::Reload()
+{
+	ammo = maxAmmo;
 }
 
 float2 C_PlayerController::MousePositionToWorldPosition(float mapPositionY)
