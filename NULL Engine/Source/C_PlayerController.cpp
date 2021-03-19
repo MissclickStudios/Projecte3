@@ -184,19 +184,34 @@ void C_PlayerController::Weapon()
 	// TODO
 
 	float3 direction = { (float)aimX, 0, (float)aimY };
-	if (aimX == 0 && aimY == 0)
-		direction.z++; // No mouse aim picking
+	if (aimX == 0 && aimY == 0) {}
 	else
+	{
 		direction.Normalize();
+		lastAim = direction;
+	}
+
+	if (GetOwner()->childs.size())
+	{
+		GameObject* mesh = GetOwner()->childs[0];
+		if (mesh)
+		{
+			lastAim = { 0,0,1 };
+			float2 dir = { lastAim.x, lastAim.z };
+			float rad = dir.AimedAngle();
+			
+			mesh->transform->SetLocalRotation(float3( 0, rad ,0 ));
+		}
+	}
 
 	if (App->input->GetKey(SDL_SCANCODE_R) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(0) == ButtonState::BUTTON_DOWN)
-		ammo = maxAmmo;
+		Reload();
 	if (ammo > 0)
 	{
 		if (!automatic)
 		{
 			if (App->input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_DOWN || App->input->GetGameControllerTrigger(1) == ButtonState::BUTTON_DOWN)
-				SpawnBullet(direction);
+				SpawnBullet(lastAim);
 		}
 		else
 		{
@@ -220,6 +235,9 @@ void C_PlayerController::Weapon()
 
 void C_PlayerController::SpawnBullet(float3 direction)
 {
+	if (direction.IsZero())
+		++direction.z;
+
 	Resource* resource = App->resourceManager->GetResourceFromLibrary("Assets/Models/Primitives/sphere.fbx");
 	if (!resource)
 		return;
@@ -241,6 +259,7 @@ void C_PlayerController::SpawnBullet(float3 direction)
 
 void C_PlayerController::Reload()
 {
+	ammo = maxAmmo;
 }
 
 float2 C_PlayerController::MousePositionToWorldPosition(float mapPositionY)

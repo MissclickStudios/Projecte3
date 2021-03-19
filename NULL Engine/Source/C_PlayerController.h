@@ -93,6 +93,7 @@ private:
 	float dashingColdown = 1.0f;
 
 	float3 lastDirection = float3::zero;
+	float3 lastAim = float3::zero;
 
 	Timer dashTime;// Duration of the dash
 	Timer dashColdown;
