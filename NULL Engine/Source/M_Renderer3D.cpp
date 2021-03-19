@@ -115,6 +115,19 @@ bool M_Renderer3D::Init(ParsonNode& configuration)
 	rayColor			= configuration.GetFloat4("rayColor");
 	boneColor			= configuration.GetFloat4("boneColor");
 
+	if (App->gameState == GameState::PLAY)
+	{
+		renderWorldGrid = false;
+		renderWorldAxis = false;
+		renderWireframes = false;
+		renderVertexNormals = false;
+		renderFaceNormals = false;
+		renderBoundingBoxes = false;
+		renderSkeletons = false;
+		renderColliders = false;
+		renderCanvas = false;
+	}
+
 	return ret;
 }
 
@@ -165,7 +178,8 @@ UpdateStatus M_Renderer3D::PreUpdate(float dt)
 	}
 
 	// --- RENDERER SHORTCUTS
-	RendererShortcuts();
+	if (App->gameState != GameState::PLAY)
+		RendererShortcuts();
 
 	return UpdateStatus::CONTINUE;
 }

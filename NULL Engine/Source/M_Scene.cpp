@@ -96,38 +96,6 @@ UpdateStatus M_Scene::Update(float dt)
 {
 	OPTICK_CATEGORY("Scene Update", Optick::Category::Update);
 	
-	if (App->debug == true)
-	{
-		HandleDebugInput();
-	}
-
-	/*if (animationRoot != nullptr)
-	{
-		C_Animator* rootAnimator = animationRoot->GetComponent<C_Animator>();
-		if (rootAnimator != nullptr)
-		{
-			if (App->gameState == GameState::PLAY)
-			{
-				if (App->input->GetKey(SDL_SCANCODE_KP_1) == KeyState::KEY_DOWN)
-				{
-					rootAnimator->PlayClip("Running", 8);
-				}
-				if (App->input->GetKey(SDL_SCANCODE_KP_1) == KeyState::KEY_UP)
-				{
-					rootAnimator->PlayClip("Idle", 8);
-				}
-				if (App->input->GetKey(SDL_SCANCODE_KP_2) == KeyState::KEY_DOWN)
-				{
-					rootAnimator->PlayClip("Attack", 8);
-				}
-
-				if (!rootAnimator->CurrentClipExists() || !rootAnimator->GetCurrentClip()->playing)
-				{
-					rootAnimator->PlayClip("Idle", 8);
-				}
-			}
-		}
-	}*/
 
 	std::vector<MeshRenderer>		meshRenderers;
 	std::vector<CuboidRenderer>		cuboidRenderers;
@@ -166,12 +134,12 @@ UpdateStatus M_Scene::Update(float dt)
 		primitives[n]->Update();
 	}
 
-	if (App->input->GetKey(SDL_SCANCODE_F5) == KeyState::KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_F5) == KeyState::KEY_DOWN && App->gameState != GameState::PLAY)
 	{
 		App->SaveConfiguration("Resources/Engine/Configuration/configuration.JSON");
 	}
 
-	if (App->input->GetKey(SDL_SCANCODE_F6) == KeyState::KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_F6) == KeyState::KEY_DOWN && App->gameState != GameState::PLAY)
 	{
 		App->LoadConfiguration("Resources/Engine/Configuration/configuration.JSON");
 	}
@@ -1096,55 +1064,4 @@ void M_Scene::DeleteSelectedGameObject()
 	{
 		DeleteGameObject(selectedGameObject);
 	}
-}
-
-void M_Scene::HandleDebugInput()
-{
-	if (App->input->GetKey(SDL_SCANCODE_1) == KeyState::KEY_DOWN)
-	{
-		//DebugSpawnPrimitive(new Sphere(1.0f, 12, 24));
-	}
-
-	if (App->input->GetKey(SDL_SCANCODE_2) == KeyState::KEY_DOWN)
-	{
-		DebugSpawnPrimitive(new P_Cube());
-	}
-
-	if (App->input->GetKey(SDL_SCANCODE_3) == KeyState::KEY_DOWN)
-	{
-		//DebugSpawnPrimitive(new Cylinder());
-	}
-
-	if (App->input->GetKey(SDL_SCANCODE_4) == KeyState::KEY_DOWN)
-	{
-		for (uint n = 0; n < primitives.size(); n++)
-		{
-			primitives[n]->SetPos((float)(std::rand() % 40 - 20), 10.f, (float)(std::rand() % 40 - 20));
-		}
-	}
-
-	//if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_STATE::KEY_DOWN)
-	//{
-	//	//Get a vector indicating the direction from the camera viewpoint to the "mouse"
-	//	float mouse_x_position = ((float)App->input->GetMouseX() / (float)App->window->GetWidth()) * 2.f - 1.f;
-	//	float mouse_y_position = -((float)App->input->GetMouseY() / (float)App->window->GetHeight()) * 2.f + 1.f;
-	//
-	//	/*const float2 mouse_pos(mouse_x_position, mouse_y_position);
-	//
-	//	const float4 ray_eye = App->renderer->GetProjectionMatrix().Inverted() * float4(mouse_pos.x, mouse_pos.y, -1.f, 1.f);
-	//	const float4 ray_world(App->camera->GetViewMatrix().Inverted() * float4(ray_eye.x, ray_eye.y, -1.f, 0.f));*/
-	//
-	//	const vec2 mouse_pos(mouse_x_position, mouse_y_position);
-	//
-	//	const vec4 ray_eye = inverse(App->renderer->GetProjectionMatrix()) * vec4(mouse_pos.x, mouse_pos.y, -1.f, 1.f);
-	//	const vec4 ray_world(inverse(App->camera->GetViewMatrix()) * vec4(ray_eye.x, ray_eye.y, -1.f, 0.f));
-	//
-	//	float3 dir(ray_world.x, ray_world.y, ray_world.z);
-	//}
-}
-
-void M_Scene::DebugSpawnPrimitive(Primitive* p)
-{
-	//primitives.push_back(p);
-	//p->SetPos(App->camera->position.x, App->camera->position.y, App->camera->position.z);
 }

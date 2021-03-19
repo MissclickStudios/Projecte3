@@ -121,14 +121,12 @@ bool M_Editor::Start()
 
 UpdateStatus M_Editor::PreUpdate(float dt)
 {
-	UpdateStatus ret = UpdateStatus::CONTINUE;
-
 	EditorShortcuts();
 	CheckShowHideFlags();
 
 	EditorCameraUpdate();
 
-	return ret;
+	return UpdateStatus::CONTINUE;
 }
 
 UpdateStatus M_Editor::Update(float dt)
@@ -590,6 +588,7 @@ void M_Editor::BeginDockspace(ImGuiIO& io, const char* dockspaceId, ImGuiDockNod
 
 //EDITOR CAMERA FUNCTIONALLITY
 void M_Editor::EditorCameraUpdate() {
+
 	if (ViewportIsHovered())
 	{
 		if (!HoveringGuizmo())

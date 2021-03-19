@@ -52,6 +52,8 @@ bool C_PlayerController::Update()
 	Weapon();
 	HandleHp();
 
+	
+
 	return true;
 }
 
