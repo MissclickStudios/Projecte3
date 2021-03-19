@@ -28,6 +28,8 @@ public:
 	//Handle how and when to load the following or previous room/scene
 	void		HandleRoomGeneration();
 
+	void NextRoom();
+
 	void		CleanUp();
 
 public:

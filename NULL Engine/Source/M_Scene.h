@@ -94,6 +94,7 @@ public:
 	std::vector<GameObject*> GetDirLights();
 	std::vector<GameObject*> GetPointLights();
 
+	void NextRoom();
 private:
 	void			HandleDebugInput();
 	void			DebugSpawnPrimitive(Primitive* p);

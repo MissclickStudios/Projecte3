@@ -35,11 +35,6 @@
 #include "C_UI_Image.h"
 #include "C_UI_Text.h"
 
-
-
-#include "UI_Image.h"
-#include "UI_Text.h"
-
 #include "GameObject.h"
 
 #include "MemoryManager.h"

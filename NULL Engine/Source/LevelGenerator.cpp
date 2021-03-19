@@ -108,6 +108,19 @@ void LevelGenerator::HandleRoomGeneration()
 	}
 }
 
+void LevelGenerator::NextRoom()
+{
+	if (roomNum < levelRooms.size() - 1)
+	{
+		roomNum++;
+		GenerateRoom(roomNum);
+	}
+	else
+	{
+		LOG("End of the level reached.");
+	}
+}
+
 void LevelGenerator::CleanUp()
 {
 }

@@ -34,11 +34,7 @@ bool C_GateBehavior::LoadState(ParsonNode& root)
 void C_GateBehavior::OnCollisionEnter()
 {
 	// Change Sceme
-	int i = 0;
-	i++;
-
-	int a = 2;
-	int b = a + i;
+	App->scene->NextRoom();
 
 	return;
 }
