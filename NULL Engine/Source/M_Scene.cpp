@@ -77,28 +77,16 @@ bool M_Scene::Start()
 
 	CreateSceneCamera("SceneCamera");
 
-	//uint32 street_uid = App->resourceManager->LoadFromLibrary(DEFAULT_SCENE);
-	//GenerateGameObjectsFromModel(street_uid);
-
-	//uint32 animation_uid = App->resourceManager->LoadFromLibrary(DEFAULT_ANIMATION);
-	//GenerateGameObjectsFromModel(animation_uid , float3(0.05f, 0.05f, 0.05f));
-
 	level.GetRooms();
 	level.GenerateLevel();
 	
 	//level.AddFixedRoom("Shop", 12);
 	//level.AddFixedRoom("Boss", 20); 
 	
-	//Last level function to call
 	level.GenerateRoom(0);
 
 	//LoadScene("Assets/Scenes/UITestScene.json");
 	//SaveScene("SceneAutosave");																			// Autosave just right after loading the scene.
-
-
-
-	std::vector<R_Texture*> texs;
-	App->resourceManager->GetAllTextures(texs);
 
 	return ret;
 }
@@ -111,7 +99,7 @@ UpdateStatus M_Scene::Update(float dt)
 		HandleDebugInput();
 	}
 
-	if (animationRoot != nullptr)
+	/*if (animationRoot != nullptr)
 	{
 		C_Animator* rootAnimator = animationRoot->GetComponent<C_Animator>();
 		if (rootAnimator != nullptr)
@@ -137,7 +125,7 @@ UpdateStatus M_Scene::Update(float dt)
 				}
 			}
 		}
-	}
+	}*/
 
 	std::vector<MeshRenderer>		meshRenderers;
 	std::vector<CuboidRenderer>		cuboidRenderers;
