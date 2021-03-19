@@ -260,22 +260,38 @@ float3 C_Transform::GetLocalScale() const
 
 float3 C_Transform::GetWorldPosition() const
 {
-	return worldTransform.TranslatePart();
+	float3 p, s;
+	Quat rotation;
+	worldTransform.Decompose(p, rotation, s);
+
+	return p;
 }
 
 Quat C_Transform::GetWorldRotation() const
 {
-	return worldTransform.RotatePart().ToQuat();
+	float3 p, s;
+	Quat rotation;
+	worldTransform.Decompose(p,rotation,s);
+
+	return rotation;
 }
 
 float3 C_Transform::GetWorldEulerRotation() const
 {
-	return worldTransform.RotatePart().ToEulerXYZ();
+	float3 p, s;
+	Quat rotation;
+	worldTransform.Decompose(p, rotation, s);
+
+	return rotation.ToEulerXYZ() * RADTODEG;
 }
 
 float3 C_Transform::GetWorldScale() const
 {
-	return worldTransform.GetScale();
+	float3 p, s;
+	Quat rotation;
+	worldTransform.Decompose(p, rotation, s);
+
+	return s;
 }
 
 // -- SET METHODS
