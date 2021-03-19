@@ -835,20 +835,9 @@ void M_ResourceManager::LoadPrefab(uint _prefabId)
 
 	ParsonNode prefabRoot(buffer);
 
-	GameObject* gameObject = new GameObject();
+	App->scene->LoadPrefabIntoScene(&prefabRoot);
 
-	gameObject->LoadState(prefabRoot);
-
-	gameObject->SetParent(App->scene->GetSceneRoot());
-
-	ParsonArray childArray = prefabRoot.GetArray("Children");
-
-	for (int i = 0; i < childArray.size; i++)
-	{
-		App->scene->LoadPrefabObject(gameObject, &childArray.GetNode(i));
-	}
-
-	//App->scene..push_back(gameObject);
+	
 }
 
 void M_ResourceManager::SavePrefabObject(GameObject* gameObject, ParsonNode* node)

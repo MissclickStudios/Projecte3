@@ -450,6 +450,24 @@ void M_Scene::LoadResourceIntoScene(Resource* resource)
 	}
 }
 
+void M_Scene::LoadPrefabIntoScene(ParsonNode* a)
+{
+	GameObject* gameObject = new GameObject();
+
+	gameObject->LoadState(*a);
+
+	gameObject->SetParent(App->scene->GetSceneRoot());
+
+	gameObjects.push_back(gameObject);
+
+	ParsonArray childArray = a->GetArray("Children");
+
+	for (int i = 0; i < childArray.size; i++)
+	{
+		App->scene->LoadPrefabObject(gameObject, &childArray.GetNode(i));
+	}
+}
+
 void M_Scene::LoadPrefabObject(GameObject* _gameObject, ParsonNode* node)
 {
 	GameObject* gameObject = new GameObject();
