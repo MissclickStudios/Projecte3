@@ -361,10 +361,13 @@ void GameObject::GetRenderers(std::vector<MeshRenderer>& meshRenderers, std::vec
 		cuboidRenderers.push_back(CuboidRenderer(aabb_vertices, CuboidType::AABB));
 	}
 
-	C_BoxCollider* collider = GetComponent<C_BoxCollider>();
-	if (collider && collider->ToShowCollider())
+	if (App->renderer->GetRenderColliders())
 	{
-		cuboidRenderers.push_back(CuboidRenderer(collider->GetCornerPoints(), CuboidType::COLLIDER));
+		C_BoxCollider* collider = GetComponent<C_BoxCollider>();
+		if (collider && collider->ToShowCollider())
+		{
+			cuboidRenderers.push_back(CuboidRenderer(collider->GetCornerPoints(), CuboidType::COLLIDER));
+		}
 	}
 }
 

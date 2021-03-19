@@ -230,6 +230,7 @@ public:																											// --- DEBUG GET/SET METHODS
 	bool			GetRenderBoundingBoxes		() const;														// 
 	bool			GetRenderSkeletons			() const;														// 
 	bool			GetRenderPrimitiveExamples	() const;														// 
+	bool			GetRenderColliders() const;
 
 	void			SetWorldGridSize			(const uint& worldGridSize);
 
@@ -263,7 +264,7 @@ public:																											// --- DEBUG GET/SET METHODS
 	void			SetRenderBoundingBoxes		(const bool& setTo);											// 
 	void			SetRenderSkeletons			(const bool& setTo);
 	void			SetRenderPrimtiveExamples	(const bool& setTo);											// 
-
+	void			SetRenderColliders (const bool& setTo);
 public:
 	void			AddPostSceneRenderModule(Module* module);
 	GameObject*		GenerateSceneLight(Color diffuse, Color ambient, Color specular, LightType lightType);
@@ -300,37 +301,38 @@ private:
 	bool					vsync;																				// Will keep track of whether or not the vsync is currently active.
 
 private:																										// --- DEBUG VARIABLES ---		// TODO: CREATE A "DEBUGSETTINGS" STRUCTURE
-	uint	worldGridSize;																		//
+	uint	worldGridSize;		
 
-	Color	worldGridColor;																		//
-	Color	wireframeColor;																		//
-	Color	vertexNormalsColor;																	//
-	Color	faceNormalsColor;																	//
+	Color	worldGridColor;		
+	Color	wireframeColor;		
+	Color	vertexNormalsColor;	
+	Color	faceNormalsColor;	
 	
-	Color	aabbColor;																			// 
-	Color	obbColor;																			// 
-	Color	frustumColor;																		// 
-	Color	rayColor;																			// 
-	Color	boneColor;																			// 
+	Color	aabbColor;			
+	Color	obbColor;			
+	Color	frustumColor;		
+	Color	rayColor;			
+	Color	boneColor;			
 	
 	float	worldGridLineWidth;
 	float	wireframeLineWidth;
 	float	vertexNormalsWidth;
 	float	faceNormalsWidth;
 
-	float	aabbEdgeWidth;																		// 
-	float	obbEdgeWidth;																		// 
-	float	frustumEdgeWidth;																	// 
-	float	rayWidth;																			// 
-	float	boneWidth;																			// 
+	float	aabbEdgeWidth;		
+	float	obbEdgeWidth;		
+	float	frustumEdgeWidth;	
+	float	rayWidth;			
+	float	boneWidth;			
 	
-	bool	renderWorldGrid;																	// 
-	bool	renderWorldAxis;																	// 
-	bool	renderWireframes;																	//
-	bool	renderVertexNormals;																// 
-	bool	renderFaceNormals;																	// 
-	bool	renderBoundingBoxes;																// 
-	bool	renderSkeletons;																	//
+	bool	renderWorldGrid;	
+	bool	renderWorldAxis;	
+	bool	renderWireframes;	
+	bool	renderVertexNormals;
+	bool	renderFaceNormals;	
+	bool	renderBoundingBoxes;
+	bool	renderSkeletons;	
+	bool	renderColliders = false;
 
 	bool					renderPrimitiveExamples;															//
 
