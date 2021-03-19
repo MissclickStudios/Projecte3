@@ -9,7 +9,7 @@
 
 C_BulletBehavior::C_BulletBehavior(GameObject* owner) : Component(owner, ComponentType::BULLET_BEHAVIOR)
 {
-	autodestructTimer.Stop(); // Deleting yourself crashes the engine
+	//autodestructTimer.Start(); // Deleting yourself crashes the engine
 }
 
 C_BulletBehavior::~C_BulletBehavior()
@@ -19,7 +19,7 @@ C_BulletBehavior::~C_BulletBehavior()
 bool C_BulletBehavior::Update()
 {
 	if (autodestructTimer.ReadSec() >= autodestruct)
-		App->scene->DeleteGameObject(GetOwner());
+		GetOwner()->to_delete = true;
 
 	return true;
 }

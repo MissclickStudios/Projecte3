@@ -219,12 +219,12 @@ void C_PlayerController::Weapon()
 			{
 				if (!fireRateTimer.IsActive())
 				{
-					SpawnBullet(direction);
+					SpawnBullet(lastAim);
 					fireRateTimer.Start();
 				}
 				else if (fireRateTimer.ReadSec() >= fireRate)
 				{
-					SpawnBullet(direction);
+					SpawnBullet(lastAim);
 					fireRateTimer.Stop();
 					fireRateTimer.Start();
 				}

@@ -27,7 +27,7 @@ public:
 
 private:
 
-	float autodestruct = 5.0f;
+	float autodestruct = 3.0f;
 	Timer autodestructTimer;
 };
 
