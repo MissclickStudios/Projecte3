@@ -94,6 +94,8 @@ bool M_Scene::Start()
 // Update
 UpdateStatus M_Scene::Update(float dt)
 {
+	OPTICK_CATEGORY("Scene Update", Optick::Category::Update);
+	
 	if (App->debug == true)
 	{
 		HandleDebugInput();

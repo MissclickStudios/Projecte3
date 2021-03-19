@@ -138,7 +138,8 @@ UpdateStatus M_Editor::Update(float dt)
 
 UpdateStatus M_Editor::PostUpdate(float dt)
 {
-	
+	OPTICK_CATEGORY("Editor Post Update", Optick::Category::Update);
+
 	UpdateStatus ret = UpdateStatus::CONTINUE;
 	
 	ImGuiIO& io = ImGui::GetIO();
@@ -147,10 +148,6 @@ UpdateStatus M_Editor::PostUpdate(float dt)
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplSDL2_NewFrame(EngineApp->window->GetWindow());
 	ImGui::NewFrame();
-
-	float total_time = 0.0f;
-
-	
 
 	if (BeginRootWindow(io, "Root window", true, ImGuiWindowFlags_MenuBar))
 	{
@@ -176,6 +173,7 @@ UpdateStatus M_Editor::PostUpdate(float dt)
 	
 	// Editor: Configuration Frame Data Histograms
 	UpdateFrameData(Time::Real::GetFramesLastSecond(), Time::Real::GetMsLastFrame());
+	
 	return ret;
 }
 

@@ -57,14 +57,14 @@
 #define BASE_LINE_WIDTH		3.0f
 
 M_Renderer3D::M_Renderer3D(bool isActive) : Module("Renderer3D", isActive), 
-context						(),
-vsync						(VSYNC),
-sceneFramebuffer			(0),
-depthBuffer				(0),
-sceneRenderTexture		(0),
-depthBufferTexture		(0),
-gameFramebuffer			(0),
-debugTextureId			(0)
+context				(),
+vsync				(VSYNC),
+sceneFramebuffer	(0),
+depthBuffer			(0),
+sceneRenderTexture	(0),
+depthBufferTexture	(0),
+gameFramebuffer		(0),
+debugTextureId		(0)
 {
 	InitDebugVariables();
 }
@@ -94,26 +94,26 @@ bool M_Renderer3D::Init(ParsonNode& configuration)
 
 	SetVsync(configuration.GetBool("Vsync"));
 
-	renderWorldGrid = configuration.GetBool("renderWorldGrid");
-	renderWorldAxis = configuration.GetBool("renderWorldAxis");
-	renderWireframes = configuration.GetBool("renderWireFrame");
+	renderWorldGrid		= configuration.GetBool("renderWorldGrid");
+	renderWorldAxis		= configuration.GetBool("renderWorldAxis");
+	renderWireframes	= configuration.GetBool("renderWireFrame");
 	renderVertexNormals = configuration.GetBool("renderVertexNormals");
-	renderFaceNormals = configuration.GetBool("renderFaceNormals");
+	renderFaceNormals	= configuration.GetBool("renderFaceNormals");
 	renderBoundingBoxes = configuration.GetBool("renderBoundingBoxes");
 	renderSkeletons = configuration.GetBool("renderSkeletons");
 	renderColliders = configuration.GetBool("renderColliders");
 	renderCanvas = configuration.GetBool("renderCanvas");
 
-	worldGridColor = configuration.GetFloat4("worldGridColor");
-	wireframeColor = configuration.GetFloat4("wireframeColor");
-	vertexNormalsColor = configuration.GetFloat4("vertexNormalsColor");
-	faceNormalsColor = configuration.GetFloat4("faceNormalsColor");
+	worldGridColor		= configuration.GetFloat4("worldGridColor");
+	wireframeColor		= configuration.GetFloat4("wireframeColor");
+	vertexNormalsColor	= configuration.GetFloat4("vertexNormalsColor");
+	faceNormalsColor	= configuration.GetFloat4("faceNormalsColor");
 
-	aabbColor = configuration.GetFloat4("aabbColor");
-	obbColor = configuration.GetFloat4("obbColor");
-	frustumColor = configuration.GetFloat4("frustumColor");
-	rayColor = configuration.GetFloat4("rayColor");
-	boneColor = configuration.GetFloat4("boneColor");
+	aabbColor			= configuration.GetFloat4("aabbColor");
+	obbColor			= configuration.GetFloat4("obbColor");
+	frustumColor		= configuration.GetFloat4("frustumColor");
+	rayColor			= configuration.GetFloat4("rayColor");
+	boneColor			= configuration.GetFloat4("boneColor");
 
 	return ret;
 }
@@ -173,7 +173,7 @@ UpdateStatus M_Renderer3D::PreUpdate(float dt)
 // PostUpdate present buffer to screen
 UpdateStatus M_Renderer3D::PostUpdate(float dt)
 {	
-
+	OPTICK_CATEGORY("Renderer Post Update", Optick::Category::Update);
 
 	RenderScene();
 

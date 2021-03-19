@@ -57,7 +57,6 @@ C_Animator::~C_Animator()
 
 bool C_Animator::Update()
 {
-
 	if (needsInit)
 	{
 		GetAnimatedMeshes();
@@ -70,6 +69,11 @@ bool C_Animator::Update()
 		needsInit = false;
 	}
 
+	if (showBones)
+	{
+		UpdateDisplayBones();
+	}
+	
 	CheckGameState();
 
 	if (animatorState == AnimatorState::PLAY || animatorState == AnimatorState::STEP)
@@ -221,6 +225,8 @@ void C_Animator::CheckGameState()
 
 bool C_Animator::StepAnimation()
 {	
+	OPTICK_CATEGORY("Step Animation", Optick::Category::Animation);
+	
 	bool success = ValidateCurrentClip();
 	if (!success)
 	{
@@ -371,6 +377,8 @@ bool C_Animator::GenerateDefaultClip(const R_Animation* rAnimation, AnimatorClip
 // --- ANIMATION TRANSFORMS METHODS
 void C_Animator::UpdateChannelTransforms()
 {	
+	OPTICK_CATEGORY("Update Channel Transforms", Optick::Category::Animation);
+	
 	for (uint i = 0; i < currentBones.size(); ++i)
 	{
 		const BoneLink& bone = currentBones[i];
@@ -414,6 +422,8 @@ void C_Animator::UpdateChannelTransforms()
 
 void C_Animator::UpdateMeshSkinning()
 {	
+	OPTICK_CATEGORY("Update Mesh Skinning", Optick::Category::Animation);
+	
 	if (animatedMeshes.empty())
 	{
 		return;
