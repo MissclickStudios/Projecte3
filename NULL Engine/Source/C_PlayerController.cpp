@@ -198,10 +198,8 @@ void C_PlayerController::Weapon()
 		GameObject* mesh = GetOwner()->childs[0];
 		if (mesh)
 		{
-			lastAim = { 0,0,1 };
-			float2 dir = { lastAim.x, lastAim.z };
+			float2 dir = { lastAim.x, -lastAim.z };
 			float rad = dir.AimedAngle();
-			
 			mesh->transform->SetLocalRotation(float3( 0, rad ,0 ));
 		}
 	}

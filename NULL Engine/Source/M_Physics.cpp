@@ -218,7 +218,7 @@ bool M_Physics::LoadConfiguration(ParsonNode& root)
 bool M_Physics::SaveConfiguration(ParsonNode& root) const
 {
 
-	configuration.SetNumber("gravity", gravity);
+	root.SetNumber("gravity", gravity);
 
 	int size = filters.size();
 
