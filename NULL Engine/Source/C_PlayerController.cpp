@@ -14,6 +14,7 @@
 #include "C_RigidBody.h"
 #include "C_Transform.h"
 #include "C_PlayerController.h"
+#include "C_SphereCollider.h"
 #include "C_Camera.h"
 #include "M_Camera3D.h"
 #include "M_Window.h"
@@ -114,13 +115,13 @@ void C_PlayerController::Movement()
 		if (movX + movY == 0)
 		{
 			if (App->input->GetKey(SDL_SCANCODE_W) == KeyState::KEY_REPEAT)
-				movY = MAX_JOYSTICK_INPUT;
-			if (App->input->GetKey(SDL_SCANCODE_S) == KeyState::KEY_REPEAT)
 				movY = -MAX_JOYSTICK_INPUT;
+			if (App->input->GetKey(SDL_SCANCODE_S) == KeyState::KEY_REPEAT)
+				movY = MAX_JOYSTICK_INPUT;
 			if (App->input->GetKey(SDL_SCANCODE_D) == KeyState::KEY_REPEAT)
-				movX = -MAX_JOYSTICK_INPUT;
-			if (App->input->GetKey(SDL_SCANCODE_A) == KeyState::KEY_REPEAT)
 				movX = MAX_JOYSTICK_INPUT;
+			if (App->input->GetKey(SDL_SCANCODE_A) == KeyState::KEY_REPEAT)
+				movX = -MAX_JOYSTICK_INPUT;
 		}
 		Move(rigidBody, movX, movY);
 
@@ -244,15 +245,21 @@ void C_PlayerController::SpawnBullet(float3 direction)
 
 	GameObject* bullet = App->scene->GenerateGameObjectsFromModel((R_Model*)resource);
 
-	bullet->transform->SetWorldPosition(GetOwner()->transform->GetWorldPosition());
+	float3 position = GetOwner()->transform->GetWorldPosition();
+	position.y += 4;
+
+	bullet->transform->SetWorldPosition(position);
 	C_RigidBody* rigidBody = (C_RigidBody*)bullet->CreateComponent(ComponentType::RIGIDBODY);
 	rigidBody->FreezePositionY(true);
 	rigidBody->FreezeRotationX(true);
 	rigidBody->FreezeRotationY(true);
 	rigidBody->FreezeRotationZ(true);
 	rigidBody->SetLinearVelocity(direction * bulletSpeed);
-	bullet->CreateComponent(ComponentType::SPHERE_COLLIDER);
+	((C_SphereCollider*)bullet->CreateComponent(ComponentType::SPHERE_COLLIDER))->SetTrigger(true);
 	bullet->CreateComponent(ComponentType::BULLET_BEHAVIOR);
+
+	float3 scale = { 0.5, 0.5, 0.5 };
+	bullet->transform->SetLocalScale(scale);
 
 	--ammo;
 }
