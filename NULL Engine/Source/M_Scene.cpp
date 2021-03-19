@@ -178,9 +178,6 @@ UpdateStatus M_Scene::Update(float dt)
 
 	level.HandleRoomGeneration();
 
-	
-
-
 	return UpdateStatus::CONTINUE;
 }
 
