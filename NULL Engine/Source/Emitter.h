@@ -17,13 +17,15 @@ public:
 
 	//Save and load?
 
+	void SetAsDefault();
 	bool AddModuleFromType(ParticleModule::Type type);
 
 public:
 	std::string name = "Particle Emitter";
 	std::vector<ParticleModule*> modules;
+	R_Material* emitterMaterial;
 
-	int maxParticleCount = 10;
+	int maxParticleCount = 1;
 };
 
 #endif // !__EMITTER_H__

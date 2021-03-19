@@ -3,6 +3,7 @@
 
 #include "MathGeoLib/include/Math/float3.h"
 #include "Macros.h"
+#include "Color.h"
 
 class Particle;
 class EmitterInstance;
@@ -74,7 +75,7 @@ struct ParticleColor : ParticleModule
 	void Spawn(EmitterInstance* emitter, Particle* particle);
 	void Update(float dt, EmitterInstance* emitter);
 
-	float4 initialColor = float4(1.0f, 1.0f, 1.0f, 1.0f); //black by default
+	Color initialColor = Color(1.0f, 1.0f, 1.0f, 1.0f); //black by default
 };
 
 struct ParticleLifetime : ParticleModule

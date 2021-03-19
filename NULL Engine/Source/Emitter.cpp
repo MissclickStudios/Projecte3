@@ -12,6 +12,11 @@ void Emitter::Update(float dt)
 	//---
 }
 
+void Emitter::SetAsDefault()
+{
+	AddModuleFromType(ParticleModule::EmitterBase);
+}
+
 bool Emitter::AddModuleFromType(ParticleModule::Type type)
 {
 	//switch (type) and in each case a type of particlemodule to add to the emitter.

@@ -802,6 +802,61 @@ void M_Renderer3D::RenderSkeletons()
 	glEnable(GL_LIGHTING);
 }
 
+void M_Renderer3D::AddParticle(const float4x4& transform, R_Material* material, Color color, float distanceToCamera)
+{
+	particles.insert(std::make_pair(distanceToCamera, ParticleRenderer(material, color, transform)));
+}
+
+void M_Renderer3D::RenderAllParticles()
+{
+	std::map<float, ParticleRenderer>::reverse_iterator it;				//Render from far to close to the camera
+	for (it = particles.rbegin(); it != particles.rend(); ++it)			
+	{
+		RenderParticle(it->second);
+	}
+}
+
+void M_Renderer3D::RenderParticle(ParticleRenderer& renderParticle)
+{
+	glPushMatrix();
+	glMultMatrixf((float*)&renderParticle.transform);
+
+	////Binding particle Texture
+	//if (renderParticle.mat)
+	//{
+	//	if (R_Texture* rTex = renderParticle.mat.)
+	//	{
+	//		if (rTex && rTex->buffer != 0)
+	//		{
+	//			glBindTexture(GL_TEXTURE_2D, rTex->buffer);
+	//		}
+	//	}
+	//}
+
+	glColor4f(renderParticle.color.r, renderParticle.color.g, renderParticle.color.b, renderParticle.color.a);
+
+	//Drawing to tris in direct mode
+	glBegin(GL_TRIANGLES);
+
+	glTexCoord2f(1.0f, 0.0f);
+	glVertex3f(.5f, -.5f, .0f);
+	glTexCoord2f(0.0f, 1.0f);
+	glVertex3f(-.5f, .5f, .0f);
+	glTexCoord2f(0.0f, 0.0f);
+	glVertex3f(-.5f, -.5f, .0f);
+
+	glTexCoord2f(1.0f, 0.0f);
+	glVertex3f(.5f, -.5f, .0f);
+	glTexCoord2f(1.0f, 1.0f);
+	glVertex3f(.5f, .5f, .0f);
+	glTexCoord2f(0.0f, 1.0f);
+	glVertex3f(-.5f, .5f, .0f);
+
+	glEnd();
+	glPopMatrix();
+	glBindTexture(GL_TEXTURE_2D, 0);
+}
+
 void M_Renderer3D::DeleteFromMeshRenderers(C_Mesh* cMeshToDelete)
 {
 	for (uint i = 0; i < meshRenderers.size(); ++i)
@@ -1776,4 +1831,13 @@ void SkeletonRenderer::Render()
 	glEnd();
 	glLineWidth(STANDARD_LINE_WIDTH);
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+}
+
+// -- PARTICLE RENDERER METHODS
+ParticleRenderer::ParticleRenderer(R_Material* mat, Color color, const float4x4 transform) : 
+mat(mat),
+color(color),
+transform(transform)
+{
+
 }

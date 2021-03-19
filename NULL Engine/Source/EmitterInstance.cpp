@@ -1,6 +1,10 @@
 #include "EmitterInstance.h"
-
+#include "Application.h"
+#include "M_Renderer3D.h"
 #include "MemoryManager.h"
+#include "Emitter.h"
+
+#include "MathGeoLib/include/Math/float4x4.h"
 
 EmitterInstance::EmitterInstance()
 {
@@ -8,6 +12,7 @@ EmitterInstance::EmitterInstance()
 
 EmitterInstance::~EmitterInstance()
 {
+	delete emitter;
 }
 
 void EmitterInstance::Init(Emitter* emitter, C_ParticleSystem* component)
@@ -62,14 +67,15 @@ void EmitterInstance::UpdateModules(float dt)
 
 void EmitterInstance::DrawParticles()
 {
-	//draw should ask the renderer to print a particle and give the details(transform, material, color,
-	//distance to camera, and any other thing i consider necesary).
+	//draw should ask the renderer to print a particle and give the details(transform, material, and color + distance to camera for sorting).
 	for (int i = 0; i < activeParticles; i++)
 	{
-		//now just ask for a basic openGL square
+		unsigned int particleIndex = particleIndices[i];
+		Particle* particle = &particles[particleIndex];
 
+		float4x4 transform = float4x4::FromTRS(particle->position, particle->worldRotation, float3(particle->size)).Transposed();
+		App->renderer->AddParticle(transform, emitter->emitterMaterial, particle->color, particle->distanceToCamera);
 	}
-	
 }
 
 void EmitterInstance::KillDeadParticles()

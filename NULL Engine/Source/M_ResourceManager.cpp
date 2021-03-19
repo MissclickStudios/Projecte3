@@ -1333,6 +1333,8 @@ Resource* M_ResourceManager::CreateResource(ResourceType type, const char* asset
 	case ResourceType::SCENE:		{ resource = new R_Scene(); }		break;
 	case ResourceType::ANIMATION:	{ resource = new R_Animation(); }	break;
 	case ResourceType::SHADER:		{ resource = new R_Shader(); }		break;
+	case ResourceType::PARTICLE_SYSTEM: { resource = new R_Shader(); }	break;
+
 	}
 
 	if (resource != nullptr)
@@ -1505,6 +1507,7 @@ bool M_ResourceManager::AllocateResource(uint32 UID, const char* assetsPath)
 	case ResourceType::SCENE:		{ /*success = TODO: HAVE A FUNCTIONAL R_SCENE AND SAVE/LOAD METHODS*/ }			break;
 	case ResourceType::ANIMATION:	{ success = Importer::Animations::Load(buffer, (R_Animation*)resource); }		break;
 	case ResourceType::SHADER:		{ success = Importer::Shaders::Load(buffer, (R_Shader*)resource); }				break;
+	case ResourceType::PARTICLE_SYSTEM: {/*success = missing impoter*/}												break;
 	}
 
 	RELEASE_ARRAY(buffer);

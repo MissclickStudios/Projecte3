@@ -2,6 +2,7 @@
 #define __M_RENDERER_3D_H__
 
 #include <vector>
+#include <map>
 
 #include "MathGeoTransform.h"
 #include "MathGeoLib/include/Geometry/LineSegment.h"
@@ -116,6 +117,15 @@ struct SkeletonRenderer
 	float						boneWidth;
 };
 
+struct ParticleRenderer
+{
+	ParticleRenderer(R_Material* mat, Color color, const float4x4 transform);
+
+	R_Material* mat;
+	Color color;
+	float4x4 transform;
+};
+
 #define MAX_LIGHTS 8
 
 class NULL_API M_Renderer3D : public Module
@@ -164,6 +174,7 @@ public:																											// --- RENDER GEOMETRY
 	void			RenderRays					();
 	void			RenderSkeletons				();
 	void			RenderUI					();
+	void			RenderParticle				(ParticleRenderer& renderParticle);
 	void			RenderFramebufferTexture	();
 	void			DeleteFromMeshRenderers		(C_Mesh* cMeshToDelete);
 	void			DeleteFromMeshRenderers		(R_Mesh* rMeshToDelete);
@@ -173,6 +184,8 @@ public:																											// --- RENDER GEOMETRY
 	void			AddPrimitive				(Primitive* primitive);
 	void			CreatePrimitiveExamples		();
 
+	void			AddParticle					(const float4x4& transform, R_Material* material, Color color, float distanceToCamera);
+	void			RenderAllParticles			();
 
 public:																											// --- GET/SET METHODS
 	Icons			GetEngineIcons				() const;
@@ -331,6 +344,8 @@ private:																										// --- DEBUG VARIABLES ---		// TODO: CREATE A 
 	bool					renderPrimitiveExamples;															//
 
 	std::vector<Module*>	PostSceneRenderModules;
+
+	std::map<float, ParticleRenderer> particles;												//map of the particles to render. It is ordered depending on the (float)distance to camera. Allows propper rendering
 };
 
 #endif // !__M_RENDERER_3D_H__

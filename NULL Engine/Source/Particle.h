@@ -2,6 +2,7 @@
 #define __PARTICLE_H__
 
 #include "Globals.h"
+#include "Color.h"
 
 #include "Dependencies/MathGeoLib/include/Math/float3.h"
 #include "Dependencies/MathGeoLib/include/Math/Quat.h"
@@ -42,7 +43,7 @@ public:
 	float rotation;
 	float4 velocity;
 	float size = 1.0f;
-	float4 color;
+	Color color;
 	float distanceToCamera;
 	bool usesBillboarding;
 };
