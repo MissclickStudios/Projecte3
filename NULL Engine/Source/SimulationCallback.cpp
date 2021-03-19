@@ -7,6 +7,8 @@
 #include "GameObject.h"
 #include "C_BulletBehavior.h"
 #include "C_PropBehavior.h"
+#include "C_GateBehavior.h"
+#include "C_PlayerController.h"
 
 #include "SimulationCallback.h"
 
@@ -27,6 +29,17 @@ void SimulationCallback::onContact(const physx::PxContactPairHeader& pairHeader,
 
 		if (gameObject1 && gameObject2)
 		{
+			if (gameObject1->GetComponent<C_GateBehavior>() && gameObject2->GetComponent<C_PlayerController>())
+			{
+				gameObject1->GetComponent<C_GateBehavior>()->OnCollisionEnter();
+				return;
+			}
+			if (gameObject2->GetComponent<C_GateBehavior>() && gameObject1->GetComponent<C_PlayerController>())
+			{
+				gameObject2->GetComponent<C_GateBehavior>()->OnCollisionEnter();
+				return;
+			}
+
 			for (int i = 0; i < gameObject1->components.size(); ++i)
 			{
 				if (gameObject1->components[i]->GetType() == ComponentType::PLAYER_CONTROLLER)
