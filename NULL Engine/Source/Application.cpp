@@ -171,7 +171,8 @@ bool Application::Start()												// IS IT NEEDED?
 // Call PreUpdate, Update and PostUpdate on all modules
 UpdateStatus Application::Update()
 {
-	OPTICK_CATEGORY("Application Update",Optick::Category::AI)
+	OPTICK_CATEGORY("Application Update",Optick::Category::Update)
+
 	UpdateStatus ret = UpdateStatus::CONTINUE;
 	
 	if (quit)
@@ -181,19 +182,14 @@ UpdateStatus Application::Update()
 
 	PrepareUpdate();
 
-	
 	if (ret == UpdateStatus::CONTINUE)
 	{
 		ret = PreUpdate();
 	}
-	
-	
 	if (ret == UpdateStatus::CONTINUE)
 	{
 		ret = DoUpdate();
 	}
-
-	
 	if (ret == UpdateStatus::CONTINUE)
 	{
 		ret = PostUpdate();
@@ -305,6 +301,8 @@ UpdateStatus Application::DoUpdate()
 
 UpdateStatus Application::PostUpdate()
 {
+	OPTICK_CATEGORY("Application Post Update", Optick::Category::Update)
+	
 	UpdateStatus ret = UpdateStatus::CONTINUE;
 
 	std::vector<Module*>::iterator item = modules.begin();
