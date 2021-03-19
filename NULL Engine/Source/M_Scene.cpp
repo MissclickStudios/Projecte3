@@ -186,7 +186,12 @@ UpdateStatus M_Scene::Update(float dt)
 
 UpdateStatus M_Scene::PostUpdate(float dt)
 {
-	
+	if (nextScene)
+	{
+		level.NextRoom();
+		nextScene = false;
+	}
+
 	for (uint n = 0; n < primitives.size(); n++)
 	{
 		primitives[n]->Render();
@@ -1081,7 +1086,7 @@ std::vector<GameObject*> M_Scene::GetPointLights()
 
 void M_Scene::NextRoom()
 {
-	level.NextRoom();
+	nextScene = true;
 }
 
 void M_Scene::DeleteSelectedGameObject()
