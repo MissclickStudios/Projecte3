@@ -231,6 +231,7 @@ public:																											// --- DEBUG GET/SET METHODS
 	bool			GetRenderSkeletons			() const;														// 
 	bool			GetRenderPrimitiveExamples	() const;														// 
 	bool			GetRenderColliders() const;
+	bool			GetRenderCanvas() const;
 
 	void			SetWorldGridSize			(const uint& worldGridSize);
 
@@ -265,6 +266,8 @@ public:																											// --- DEBUG GET/SET METHODS
 	void			SetRenderSkeletons			(const bool& setTo);
 	void			SetRenderPrimtiveExamples	(const bool& setTo);											// 
 	void			SetRenderColliders (const bool& setTo);
+	void			SetRenderCanvas(const bool& setTo);
+
 public:
 	void			AddPostSceneRenderModule(Module* module);
 	GameObject*		GenerateSceneLight(Color diffuse, Color ambient, Color specular, LightType lightType);
@@ -333,6 +336,7 @@ private:																										// --- DEBUG VARIABLES ---		// TODO: CREATE A 
 	bool	renderBoundingBoxes;
 	bool	renderSkeletons;	
 	bool	renderColliders = false;
+	bool	renderCanvas = false;
 
 	bool					renderPrimitiveExamples;															//
 

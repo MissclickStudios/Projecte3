@@ -418,6 +418,8 @@ bool M_Scene::LoadScene(const char* path)
 	//FIX THIS
 	App->renderer->defaultSkyBox.SetUpSkyBoxBuffers();
 
+	LOG("Successfully Loaded Scene: %s", path);
+
 	//if (!CheckSceneLight()) AddSceneLight(App->renderer->GenerateSceneLight(Color(1.0f, 1.0f, 1.0f, 1.0f), Color(0.6, 0.6, 0.6, 0.5), Color(0.6, 0.6, 0.6, 0.5), LightType::DIRECTIONAL));
 
 	return ret;

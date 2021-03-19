@@ -553,6 +553,8 @@ void E_Configuration::RendererFlags()
 	bool renderBoundingBoxes		= EngineApp->renderer->GetRenderBoundingBoxes();
 	bool renderSkeletons			= EngineApp->renderer->GetRenderSkeletons();
 	bool renderPrimitiveExamples	= EngineApp->renderer->GetRenderPrimitiveExamples();
+	bool renderColliders			= EngineApp->renderer->GetRenderColliders();
+	bool renderCanvas = EngineApp->renderer->GetRenderCanvas();
 	bool renderOthers				= false /*EngineApp->renderer->GetRenderOthers()*/;
 
 	// --- OPENGL FLAGS
@@ -578,6 +580,8 @@ void E_Configuration::RendererFlags()
 
 	if (ImGui::Checkbox("Show Bounding Boxes", &renderBoundingBoxes))				{ EngineApp->renderer->SetRenderBoundingBoxes(renderBoundingBoxes); }					ImGui::SameLine(colDist);
 	if (ImGui::Checkbox("Show Skeletons", &renderSkeletons))						{ EngineApp->renderer->SetRenderSkeletons(renderSkeletons); }
+	if (ImGui::Checkbox("Show Colliders", &renderColliders)) { EngineApp->renderer->SetRenderColliders(renderColliders); }													ImGui::SameLine(colDist);
+	if (ImGui::Checkbox("Show Canvas", &renderCanvas)) { EngineApp->renderer->SetRenderColliders(renderCanvas); }													ImGui::SameLine(colDist);
 
 	if (ImGui::Checkbox("Show Primitive Examples", &renderPrimitiveExamples))		{ EngineApp->renderer->SetRenderPrimtiveExamples(renderPrimitiveExamples); }			ImGui::SameLine(colDist);
 	if (ImGui::Checkbox("Show Others (WIP)", &renderOthers))						{ /*EngineApp->renderer->SetRenderOthers();*/ }
