@@ -30,9 +30,15 @@
 #include "C_BulletBehavior.h"
 #include "C_PropBehavior.h"
 #include "C_CameraBehavior.h"
+#include "C_GateBehavior.h"
 #include "C_Canvas.h"
 #include "C_UI_Image.h"
 #include "C_UI_Text.h"
+
+
+
+#include "UI_Image.h"
+#include "UI_Text.h"
 
 #include "GameObject.h"
 
@@ -211,6 +217,7 @@ bool GameObject::LoadState(ParsonNode& root)
 			case ComponentType::BULLET_BEHAVIOR: { component = new C_BulletBehavior(this); }	break;
 			case ComponentType::PROP_BEHAVIOR: { component = new C_PropBehavior(this); }	break;
 			case ComponentType::CAMERA_BEHAVIOR: { component = new C_CameraBehavior(this); }	break;
+			case ComponentType::GATE_BEHAVIOR: { component = new C_GateBehavior(this); }	break;
 			case ComponentType::CANVAS: { component = new C_Canvas(this); }	break;
 			case ComponentType::UI_IMAGE: {component = new C_UI_Image(this); } break;
 			case ComponentType::UI_TEXT: {component = new C_UI_Text(this); } break;
@@ -731,6 +738,7 @@ Component* GameObject::CreateComponent(ComponentType type)
 	case ComponentType::BULLET_BEHAVIOR: { component = new C_BulletBehavior(this); }	break;
 	case ComponentType::PROP_BEHAVIOR: { component = new C_PropBehavior(this); }	break;
 	case ComponentType::CAMERA_BEHAVIOR: { component = new C_CameraBehavior(this); }	break;
+	case ComponentType::GATE_BEHAVIOR: { component = new C_GateBehavior(this); }	break;
 	}
 
 	if (component != nullptr)

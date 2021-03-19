@@ -36,9 +36,11 @@
 #include "C_BulletBehavior.h"
 #include "C_PropBehavior.h"
 #include "C_CameraBehavior.h"
+#include "C_GateBehavior.h"
 #include "C_Canvas.h"
 #include "C_UI_Image.h"
 #include "C_UI_Text.h"
+
 
 #include "R_Shader.h"
 #include "R_Texture.h"
@@ -223,6 +225,7 @@ void E_Inspector::DrawComponents(GameObject* selectedGameObject)
 		case ComponentType::BULLET_BEHAVIOR:	{ DrawBulletBehaviorComponent((C_BulletBehavior*)component); }		break;
 		case ComponentType::PROP_BEHAVIOR:		{ DrawPropBehaviorComponent((C_PropBehavior*)component); }			break;
 		case ComponentType::CAMERA_BEHAVIOR:	{ DrawCameraBehaviorComponent((C_CameraBehavior*)component); }		break;
+		case ComponentType::GATE_BEHAVIOR:		{ DrawGateBehaviorComponent((C_GateBehavior*)component); }			break;
 		}
 		if (type == ComponentType::NONE)
 		{
@@ -1571,10 +1574,31 @@ void E_Inspector::DrawCameraBehaviorComponent(C_CameraBehavior* cBehavior)
 	return;
 }
 
+void E_Inspector::DrawGateBehaviorComponent(C_GateBehavior* cBehavior)
+{
+	bool show = true;
+	if (ImGui::CollapsingHeader("Gate Bahavior", &show, ImGuiTreeNodeFlags_Leaf))
+	{
+		bool isActive = cBehavior->IsActive();
+		if (ImGui::Checkbox("Gate Is Active", &isActive))
+			cBehavior->SetIsActive(isActive);
+
+		ImGui::Separator();
+
+		if (!show)
+		{
+			componentToDelete = cBehavior;
+			showDeleteComponentPopup = true;
+		}
+
+		ImGui::Separator();
+	}
+	return;
+}
+
 void E_Inspector::AddComponentCombo(GameObject* selectedGameObject)
 {
-
-	ImGui::Combo("##", &componentType, "Add Component\0Transform\0Mesh\0Material\0Light\0Camera\0Animator\0Animation\0RigidBody\0Box Collider\0Sphere Collider\0Capsule Collider\0Particle System\0Canvas\0Audio Source\0Audio Listener\0Player Controller\0Bullet Behavior\0Prop Behavior\0Camera Behavior\0UI Image\0UI Text");
+	ImGui::Combo("##", &componentType, "Add Component\0Transform\0Mesh\0Material\0Light\0Camera\0Animator\0Animation\0RigidBody\0Box Collider\0Sphere Collider\0Capsule Collider\0Particle System\0Canvas\0Audio Source\0Audio Listener\0Player Controller\0Bullet Behavior\0Prop Behavior\0Camera Behavior\0Gate Behavior\0UI Image\0UI Text");
 	ImGui::SameLine();
 
 	if ((ImGui::Button("ADD")))

@@ -23,6 +23,7 @@ class C_PlayerController;
 class C_BulletBehavior;
 class C_PropBehavior;
 class C_CameraBehavior;
+class C_GateBehavior;
 class C_Canvas;
 class C_UI_Image;
 class C_UI_Text;
@@ -69,7 +70,8 @@ private:
 	void DrawPlayerControllerComponent	(C_PlayerController* controller);
 	void DrawBulletBehaviorComponent	(C_BulletBehavior* behavior);
 	void DrawPropBehaviorComponent		(C_PropBehavior* behavior);
-	void DrawCameraBehaviorComponent	(C_CameraBehavior* behavior);
+	void DrawCameraBehaviorComponent	(C_CameraBehavior* behavior); 
+	void DrawGateBehaviorComponent		(C_GateBehavior* behavior);
 
 	void AddComponentCombo				(GameObject* selectedGameObject);					// 
 	void DeleteComponentPopup			(GameObject* selectedGameObject);					// 
