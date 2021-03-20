@@ -265,6 +265,11 @@ void C_PlayerController::SpawnBullet(float3 direction)
 	((C_SphereCollider*)bullet->CreateComponent(ComponentType::SPHERE_COLLIDER))->SetTrigger(true);
 	bullet->CreateComponent(ComponentType::BULLET_BEHAVIOR);
 
+	bullet->CreateComponent(ComponentType::AUDIOSOURCE);
+	C_AudioSource* source = bullet->GetComponent<C_AudioSource>();
+	source->SetEvent("Mando_blaster_shot", App->audio->eventMap.at("Mando_blaster_shot"));
+	source->PlayFx(source->GetEventId()); 
+
 	float3 scale = { 0.5, 0.5, 0.5 };
 	bullet->transform->SetLocalScale(scale);
 
