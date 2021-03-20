@@ -36,6 +36,7 @@ C_PlayerController::C_PlayerController(GameObject* owner) : Component(owner, Com
 	fireRateTimer.Stop();
 	dashTime.Stop();
 	dashColdown.Stop();
+	stepTimer.Stop();
 }
 
 C_PlayerController::~C_PlayerController()
@@ -50,6 +51,8 @@ bool C_PlayerController::Update()
 	Movement();
 	Weapon();
 	HandleHp();
+
+	
 
 	return true;
 }
@@ -146,6 +149,7 @@ void C_PlayerController::Move(C_RigidBody* rigidBody, int axisX, int axisY)
 	{
 		direction.Normalize();
 		lastDirection = direction;
+		StepSound();
 	}
 
 	direction *= speed;
@@ -290,24 +294,23 @@ float2 C_PlayerController::MousePositionToWorldPosition(float mapPositionY)
 	return position;
 }
 
-void C_PlayerController::StepSound(bool a, bool b, bool c, bool d)
+void C_PlayerController::StepSound()
 {
-	//if (a || b || c || d)
-	//	if (!isStepPlaying)
-	//	{
-	//		isStepPlaying = true;
-	//		stepTimer->Start();
+	if (!isStepPlaying)
+	{
+		isStepPlaying = true;
+		stepTimer.Start();
 	
-	//		aSource = GetOwner()->GetComponent<C_AudioSource>();
-	//		if (aSource != nullptr)
-	//		{
-	//			unsigned int id; aSource->GetEvent(nullptr, &id);
-	//			aSource->PlayFx(id);
-	//		}
-	//	
-	// 		if (isStepPlaying && stepTimer->ReadSec() >= 0.80)
-	// 			isStepPlaying = false;
-	//	}
+		aSource = GetOwner()->GetComponent<C_AudioSource>();
+		if (aSource != nullptr)
+		{
+			uint id = aSource->GetEventId();
+			aSource->PlayFx(id);
+		}
+	}
+	else
+		if (stepTimer.ReadSec() >= 0.80)
+			isStepPlaying = false;
 }
 
 void C_PlayerController::GetMovementVectorAxis(int& axisX, int& axisY)

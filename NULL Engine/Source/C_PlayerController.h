@@ -65,7 +65,7 @@ private:
 	void SpawnBullet(float3 direction);
 	void Reload();
 
-	void StepSound(bool a, bool b, bool c, bool d );
+	void StepSound();
 
 	float2 MousePositionToWorldPosition(float mapPositionY = 0);
 
@@ -78,6 +78,10 @@ private:
 	float speed = 20.0f;
 	float deceleration = 200.0f;
 	float acceleration = 200.0f;
+
+	bool isStepPlaying = false;
+	Timer stepTimer;
+	C_AudioSource*aSource = nullptr;
 
 	// Weapon
 	float bulletSpeed = 100.0f;

@@ -100,8 +100,9 @@ bool M_Renderer3D::Init(ParsonNode& configuration)
 	renderVertexNormals = configuration.GetBool("renderVertexNormals");
 	renderFaceNormals	= configuration.GetBool("renderFaceNormals");
 	renderBoundingBoxes = configuration.GetBool("renderBoundingBoxes");
-	renderSkeletons 	= configuration.GetBool("renderSkeletons");
-	renderColliders 	= configuration.GetBool("renderColliders");
+	renderSkeletons = configuration.GetBool("renderSkeletons");
+	renderColliders = configuration.GetBool("renderColliders");
+	renderCanvas = configuration.GetBool("renderCanvas");
 
 	worldGridColor		= configuration.GetFloat4("worldGridColor");
 	wireframeColor		= configuration.GetFloat4("wireframeColor");
@@ -113,6 +114,19 @@ bool M_Renderer3D::Init(ParsonNode& configuration)
 	frustumColor		= configuration.GetFloat4("frustumColor");
 	rayColor			= configuration.GetFloat4("rayColor");
 	boneColor			= configuration.GetFloat4("boneColor");
+
+	if (App->gameState == GameState::PLAY)
+	{
+		renderWorldGrid = false;
+		renderWorldAxis = false;
+		renderWireframes = false;
+		renderVertexNormals = false;
+		renderFaceNormals = false;
+		renderBoundingBoxes = false;
+		renderSkeletons = false;
+		renderColliders = false;
+		renderCanvas = false;
+	}
 
 	return ret;
 }
@@ -164,7 +178,8 @@ UpdateStatus M_Renderer3D::PreUpdate(float dt)
 	}
 
 	// --- RENDERER SHORTCUTS
-	RendererShortcuts();
+	if (App->gameState != GameState::PLAY)
+		RendererShortcuts();
 
 	return UpdateStatus::CONTINUE;
 }
@@ -255,6 +270,8 @@ bool M_Renderer3D::SaveConfiguration(ParsonNode& root) const
 	root.SetBool("renderBoundingBoxes", renderBoundingBoxes);
 	root.SetBool("renderSkeletons", renderSkeletons);
 	root.SetBool("renderColliders", renderColliders);
+	root.SetBool("renderCanvas", renderCanvas);
+
 	return true;
 }
 
@@ -1199,6 +1216,11 @@ bool M_Renderer3D::GetRenderColliders() const
 	return renderColliders;
 }
 
+bool M_Renderer3D::GetRenderCanvas() const
+{
+	return renderCanvas;
+}
+
 void M_Renderer3D::SetWorldGridSize(const uint& worldGridSize)
 {
 	this->worldGridSize = worldGridSize;
@@ -1357,6 +1379,11 @@ void M_Renderer3D::SetRenderPrimtiveExamples(const bool& setTo)
 void M_Renderer3D::SetRenderColliders(const bool& setTo)
 {
 	renderColliders = setTo;
+}
+
+void M_Renderer3D::SetRenderCanvas(const bool& setTo)
+{
+	renderCanvas = setTo;
 }
 
 void M_Renderer3D::AddPostSceneRenderModule(Module* module)

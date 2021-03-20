@@ -49,78 +49,85 @@ bool C_Canvas::Update()
 
 void C_Canvas::Draw2D()
 {
-	glPushMatrix();
-	glMultMatrixf((GLfloat*)&GetOwner()->GetComponent<C_Transform>()->GetWorldTransform().Transposed());
-
-	glLineWidth(2.0f);
-
-	glBegin(GL_LINES);
-
-	glColor4f(1.0f, 0.0f, 0.0f, 1.0f);										// X Axis.
-	glVertex2f(rect.x - rect.w / 2, rect.y + rect.h / 2);			glVertex2f(rect.x + rect.w / 2, rect.y + rect.h / 2);
-	glVertex2f(rect.x + rect.w / 2, rect.y + rect.h / 2);			glVertex2f(rect.x + rect.w / 2, rect.y - rect.h / 2);
-	glVertex2f(rect.x + rect.w / 2, rect.y - rect.h / 2);			glVertex2f(rect.x - rect.w / 2, rect.y - rect.h / 2);
-	glVertex2f(rect.x - rect.w / 2, rect.y - rect.h / 2);			glVertex2f(rect.x - rect.w / 2, rect.y + rect.h / 2);
-
-	glEnd();
-
-	//Pivot
-	glBegin(GL_LINE_LOOP);
-	for (int i = 0; i < 50; i++)
+	if (App->renderer->GetRenderCanvas())
 	{
-		float angle = 2.0f * 3.1415926f * float(i) / float(50);				//get the current angle
+		glPushMatrix();
+		glMultMatrixf((GLfloat*)&GetOwner()->GetComponent<C_Transform>()->GetWorldTransform().Transposed());
 
-		float sizeAv = (rect.w + rect.h) / 80;
-		float x = sizeAv * cosf(angle);										//calculate the x component
-		float y = sizeAv * sinf(angle);										//calculate the y component
+		glLineWidth(2.0f);
 
-		glVertex2f(rect.x + pivot.x + x, rect.y + pivot.y + y);		//output vertex
 
+		glBegin(GL_LINES);
+
+		glColor4f(1.0f, 0.0f, 0.0f, 1.0f);										// X Axis.
+		glVertex2f(rect.x - rect.w / 2, rect.y + rect.h / 2);			glVertex2f(rect.x + rect.w / 2, rect.y + rect.h / 2);
+		glVertex2f(rect.x + rect.w / 2, rect.y + rect.h / 2);			glVertex2f(rect.x + rect.w / 2, rect.y - rect.h / 2);
+		glVertex2f(rect.x + rect.w / 2, rect.y - rect.h / 2);			glVertex2f(rect.x - rect.w / 2, rect.y - rect.h / 2);
+		glVertex2f(rect.x - rect.w / 2, rect.y - rect.h / 2);			glVertex2f(rect.x - rect.w / 2, rect.y + rect.h / 2);
+
+		glEnd();
+
+		//Pivot
+		glBegin(GL_LINE_LOOP);
+		for (int i = 0; i < 50; i++)
+		{
+			float angle = 2.0f * 3.1415926f * float(i) / float(50);				//get the current angle
+
+			float sizeAv = (rect.w + rect.h) / 80;
+			float x = sizeAv * cosf(angle);										//calculate the x component
+			float y = sizeAv * sinf(angle);										//calculate the y component
+
+			glVertex2f(rect.x + pivot.x + x, rect.y + pivot.y + y);		//output vertex
+
+		}
+		glEnd();
+		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+		glLineWidth(1.0f);
+
+		glPopMatrix();
 	}
-	glEnd();
-	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-	glLineWidth(1.0f);
-
-	glPopMatrix();
 }
 
 void C_Canvas::Draw3D()
 {
-	glPushMatrix();
-	glMultMatrixf((GLfloat*)&GetOwner()->GetComponent<C_Transform>()->GetWorldTransform().Transposed());
-
-	glLineWidth(2.0f);
-
-	glBegin(GL_LINES);
-
-	glColor4f(1.0f, 0.0f, 0.0f, 1.0f);										// X Axis.
-	glVertex2f(GetOwner()->GetComponent<C_Transform>()->GetLocalPosition().x - rect.w / 2, GetOwner()->GetComponent<C_Transform>()->GetLocalPosition().y + rect.h / 2);			glVertex2f(GetOwner()->GetComponent<C_Transform>()->GetLocalPosition().x + rect.w / 2, GetOwner()->GetComponent<C_Transform>()->GetLocalPosition().y + rect.h / 2);
-	glVertex2f(GetOwner()->GetComponent<C_Transform>()->GetLocalPosition().x + rect.w / 2, GetOwner()->GetComponent<C_Transform>()->GetLocalPosition().y + rect.h / 2);			glVertex2f(GetOwner()->GetComponent<C_Transform>()->GetLocalPosition().x + rect.w / 2, GetOwner()->GetComponent<C_Transform>()->GetLocalPosition().y - rect.h / 2);
-	glVertex2f(GetOwner()->GetComponent<C_Transform>()->GetLocalPosition().x + rect.w / 2, GetOwner()->GetComponent<C_Transform>()->GetLocalPosition().y - rect.h / 2);			glVertex2f(GetOwner()->GetComponent<C_Transform>()->GetLocalPosition().x - rect.w / 2, GetOwner()->GetComponent<C_Transform>()->GetLocalPosition().y - rect.h / 2);
-	glVertex2f(GetOwner()->GetComponent<C_Transform>()->GetLocalPosition().x - rect.w / 2, GetOwner()->GetComponent<C_Transform>()->GetLocalPosition().y - rect.h / 2);			glVertex2f(GetOwner()->GetComponent<C_Transform>()->GetLocalPosition().x - rect.w / 2, GetOwner()->GetComponent<C_Transform>()->GetLocalPosition().y + rect.h / 2);
-
-	glEnd();
-
-	// Pivot
-	glBegin(GL_LINE_LOOP);
-	for (int i = 0; i < 50; i++)
+	if (App->renderer->GetRenderCanvas())
 	{
-		float angle = 2.0f * 3.1415926f * float(i) / float(50);				
-	
-		float sizeAv = (rect.w + rect.h) / 80;
-		float x = sizeAv * cosf(angle);										
-		float y = sizeAv * sinf(angle);										
-	
-		glVertex3f(pivot.x + x, pivot.y + y, 0);							
-	
+		glPushMatrix();
+		glMultMatrixf((GLfloat*)&GetOwner()->GetComponent<C_Transform>()->GetWorldTransform().Transposed());
+
+		glLineWidth(2.0f);
+
+		glBegin(GL_LINES);
+
+		glColor4f(1.0f, 0.0f, 0.0f, 1.0f);										// X Axis.
+		glVertex2f(GetOwner()->GetComponent<C_Transform>()->GetLocalPosition().x - rect.w / 2, GetOwner()->GetComponent<C_Transform>()->GetLocalPosition().y + rect.h / 2);			glVertex2f(GetOwner()->GetComponent<C_Transform>()->GetLocalPosition().x + rect.w / 2, GetOwner()->GetComponent<C_Transform>()->GetLocalPosition().y + rect.h / 2);
+		glVertex2f(GetOwner()->GetComponent<C_Transform>()->GetLocalPosition().x + rect.w / 2, GetOwner()->GetComponent<C_Transform>()->GetLocalPosition().y + rect.h / 2);			glVertex2f(GetOwner()->GetComponent<C_Transform>()->GetLocalPosition().x + rect.w / 2, GetOwner()->GetComponent<C_Transform>()->GetLocalPosition().y - rect.h / 2);
+		glVertex2f(GetOwner()->GetComponent<C_Transform>()->GetLocalPosition().x + rect.w / 2, GetOwner()->GetComponent<C_Transform>()->GetLocalPosition().y - rect.h / 2);			glVertex2f(GetOwner()->GetComponent<C_Transform>()->GetLocalPosition().x - rect.w / 2, GetOwner()->GetComponent<C_Transform>()->GetLocalPosition().y - rect.h / 2);
+		glVertex2f(GetOwner()->GetComponent<C_Transform>()->GetLocalPosition().x - rect.w / 2, GetOwner()->GetComponent<C_Transform>()->GetLocalPosition().y - rect.h / 2);			glVertex2f(GetOwner()->GetComponent<C_Transform>()->GetLocalPosition().x - rect.w / 2, GetOwner()->GetComponent<C_Transform>()->GetLocalPosition().y + rect.h / 2);
+
+		glEnd();
+
+
+		// Pivot
+		glBegin(GL_LINE_LOOP);
+		for (int i = 0; i < 50; i++)
+		{
+			float angle = 2.0f * 3.1415926f * float(i) / float(50);
+
+			float sizeAv = (rect.w + rect.h) / 80;
+			float x = sizeAv * cosf(angle);
+			float y = sizeAv * sinf(angle);
+
+			glVertex3f(pivot.x + x, pivot.y + y, 0);
+
+		}
+		glEnd();
+
+		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+		glLineWidth(1.0f);
+
+		glPopMatrix();
 	}
-	glEnd();
-
-	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-	glLineWidth(1.0f);
-
-	glPopMatrix();
-
 }
 
 bool C_Canvas::CleanUp()
@@ -187,8 +194,6 @@ bool C_Canvas::IsInvisible() const
 {
 	return isInvisible;
 }
-
-
 
 void C_Canvas::SetPosition(const float2& position)
 {
