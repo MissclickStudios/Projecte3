@@ -58,8 +58,8 @@ show_bounding_boxes	(false)
 	obb.SetNegativeInfinity();
 	aabb.SetNegativeInfinity();
 
-	obb_vertices = new float3[8];																	// Bounding boxes will always have 8 vertices as they are Cuboids.
-	aabb_vertices = new float3[8];																	// Bounding boxes will always have 8 vertices as they are Cuboids.
+	obb_vertices	= new float3[8];																		// Bounding boxes will always have 8 vertices as they are Cuboids.
+	aabb_vertices	= new float3[8];																		// Bounding boxes will always have 8 vertices as they are Cuboids.
 }
 
 GameObject::GameObject(std::string name, bool isActive, bool isStatic) :
@@ -194,12 +194,11 @@ bool GameObject::LoadState(ParsonNode& root)
 
 			switch (type)
 			{
-			//case COMPONENT_TYPE::TRANSFORM: { component = new C_Transform(this); }	break;
-
+			//case COMPONENT_TYPE::TRANSFORM:		{ component = new C_Transform(this); }			break;
 			case ComponentType::MESH:				{ component = new C_Mesh(this); }				break;
 			case ComponentType::MATERIAL:			{ component = new C_Material(this); }			break;
 			case ComponentType::LIGHT:				{ component = new C_Light(this); }				break;
-			case ComponentType::CAMERA:				{ component = new C_Camera(this);  if (App->gameState == GameState::PLAY) App->camera->SetCurrentCamera((C_Camera*)component); }			break; //TODO fix this hardcode
+			case ComponentType::CAMERA:				{ component = new C_Camera(this); } 			break;
 			case ComponentType::ANIMATOR:			{ component = new C_Animator(this); }			break;
 			case ComponentType::ANIMATION:			{ component = new C_Animation(this); }			break;
 			case ComponentType::AUDIOSOURCE:		{ component = new C_AudioSource(this); }		break;
@@ -208,18 +207,23 @@ bool GameObject::LoadState(ParsonNode& root)
 			case ComponentType::BOX_COLLIDER:		{ component = new C_BoxCollider(this); }		break;
 			case ComponentType::SPHERE_COLLIDER:	{ component = new C_SphereCollider(this); }		break;
 			case ComponentType::CAPSULE_COLLIDER:	{ component = new C_CapsuleCollider(this); }	break;
-			case ComponentType::PLAYER_CONTROLLER:	{ component = new C_PlayerController(this); } break;
-			case ComponentType::BULLET_BEHAVIOR: { component = new C_BulletBehavior(this); }	break;
-			case ComponentType::PROP_BEHAVIOR: { component = new C_PropBehavior(this); }	break;
-			case ComponentType::CAMERA_BEHAVIOR: { component = new C_CameraBehavior(this); }	break;
-			case ComponentType::GATE_BEHAVIOR: { component = new C_GateBehavior(this); }	break;
-			case ComponentType::CANVAS: { component = new C_Canvas(this); }	break;
-			case ComponentType::UI_IMAGE: {component = new C_UI_Image(this); } break;
-			case ComponentType::UI_TEXT: {component = new C_UI_Text(this); } break;
+			case ComponentType::PLAYER_CONTROLLER:	{ component = new C_PlayerController(this); }	break;
+			case ComponentType::BULLET_BEHAVIOR:	{ component = new C_BulletBehavior(this); }		break;
+			case ComponentType::PROP_BEHAVIOR:		{ component = new C_PropBehavior(this); }		break;
+			case ComponentType::CAMERA_BEHAVIOR:	{ component = new C_CameraBehavior(this); }		break;
+			case ComponentType::GATE_BEHAVIOR:		{ component = new C_GateBehavior(this); }		break;
+			case ComponentType::CANVAS:				{ component = new C_Canvas(this); }				break;
+			case ComponentType::UI_IMAGE:			{ component = new C_UI_Image(this); }			break;
+			case ComponentType::UI_TEXT:			{ component = new C_UI_Text(this); }			break;
 			}
 
 			if (component != nullptr)
 			{
+				if ((component->GetType() == ComponentType::CAMERA) && (App->gameState == GameState::PLAY)) //TODO fix this hardcode
+				{
+					App->camera->SetCurrentCamera((C_Camera*)component);
+				}
+
 				component->LoadState(componentNode);
 				components.push_back(component);
 			}
@@ -319,8 +323,9 @@ void GameObject::GetRenderers(std::vector<MeshRenderer>& meshRenderers, std::vec
 	std::vector<C_Mesh*> cMeshes;
 	GetComponents<C_Mesh>(cMeshes);
 
-	C_Material* cMaterial = GetComponent<C_Material>();
-	C_Camera* cCamera = GetComponent<C_Camera>();
+	C_Transform* cTransform = GetComponent<C_Transform>();
+	C_Material* cMaterial	= GetComponent<C_Material>();
+	C_Camera* cCamera		= GetComponent<C_Camera>();
 	C_Animator* cAnimation	= GetComponent<C_Animator>();
 
 	for (uint i = 0; i < cMeshes.size(); ++i)
@@ -328,8 +333,8 @@ void GameObject::GetRenderers(std::vector<MeshRenderer>& meshRenderers, std::vec
 		if (cMeshes[i] != nullptr)
 		{
 			if (cMeshes[i]->IsActive() && cMeshes[i]->GetMesh() != nullptr)
-			{
-				meshRenderers.push_back(MeshRenderer(GetComponent<C_Transform>()->GetWorldTransform(), cMeshes[i], cMaterial));
+			{				
+				meshRenderers.push_back(MeshRenderer(cTransform->GetWorldTransformPtr(), cMeshes[i], cMaterial));
 			}
 		}
 	}
@@ -733,10 +738,10 @@ Component* GameObject::CreateComponent(ComponentType type)
 	case ComponentType::UI_IMAGE:			{ component = new C_UI_Image(this); }			break;
 	case ComponentType::UI_TEXT:			{ component = new C_UI_Text(this); }			break;
 	case ComponentType::PLAYER_CONTROLLER:	{ component = new C_PlayerController(this); }	break;
-	case ComponentType::BULLET_BEHAVIOR: { component = new C_BulletBehavior(this); }	break;
-	case ComponentType::PROP_BEHAVIOR: { component = new C_PropBehavior(this); }	break;
-	case ComponentType::CAMERA_BEHAVIOR: { component = new C_CameraBehavior(this); }	break;
-	case ComponentType::GATE_BEHAVIOR: { component = new C_GateBehavior(this); }	break;
+	case ComponentType::BULLET_BEHAVIOR:	{ component = new C_BulletBehavior(this); }		break;
+	case ComponentType::PROP_BEHAVIOR:		{ component = new C_PropBehavior(this); }		break;
+	case ComponentType::CAMERA_BEHAVIOR:	{ component = new C_CameraBehavior(this); }		break;
+	case ComponentType::GATE_BEHAVIOR:		{ component = new C_GateBehavior(this); }		break;
 	}
 
 	if (component != nullptr)
@@ -795,7 +800,6 @@ bool GameObject::GetAllComponents(std::vector<Component*>& components) const
 }
 
 // ---
-
 uint32 GameObject::GetUID() const
 {
 	return uid;

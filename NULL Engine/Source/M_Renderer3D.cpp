@@ -1472,12 +1472,12 @@ void M_Renderer3D::GenScreenBuffer()
 
 // --- RENDERER STRUCTURES METHODS ---
 // --- MESH RENDERER METHODS
-MeshRenderer::MeshRenderer(const float4x4& transform, C_Mesh* cMesh, C_Material* cMaterial) :
+MeshRenderer::MeshRenderer(float4x4* transform, C_Mesh* cMesh,  C_Material* cMaterial) :
 transform	(transform),
 cMesh		(cMesh),
 cMaterial	(cMaterial)
 {
-	
+
 }
 
 void MeshRenderer::Render()
@@ -1718,7 +1718,7 @@ void MeshRenderer::ApplyShader()
 			
 			cMaterial->GetShader()->SetUniformVec4f("inColor", (GLfloat*)&cMaterial->GetMaterialColour());
 
-			cMaterial->GetShader()->SetUniformMatrix4("modelMatrix", transform.Transposed().ptr());
+			cMaterial->GetShader()->SetUniformMatrix4("modelMatrix", transform->Transposed().ptr());
 
 			cMaterial->GetShader()->SetUniformMatrix4("viewMatrix", App->camera->GetCurrentCamera()->GetOGLViewMatrix());
 

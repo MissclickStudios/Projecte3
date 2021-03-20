@@ -194,6 +194,11 @@ float4x4 C_Transform::GetWorldTransform() const
 	return worldTransform;
 }
 
+float4x4* C_Transform::GetWorldTransformPtr()
+{
+	return &worldTransform;
+}
+
 void C_Transform::SetLocalTransform(const float4x4& localTransform)
 {
 	this->localTransform = localTransform;

@@ -96,7 +96,6 @@ UpdateStatus M_Scene::Update(float dt)
 {
 	OPTICK_CATEGORY("Scene Update", Optick::Category::Update);
 	
-
 	std::vector<MeshRenderer>		meshRenderers;
 	std::vector<CuboidRenderer>		cuboidRenderers;
 	std::vector<SkeletonRenderer>	skeletonRenderers;
@@ -115,17 +114,6 @@ UpdateStatus M_Scene::Update(float dt)
 		{
 			gameObjects[i]->Update();
 
-			/*if (GameObjectIsInsideCullingCamera(gameObjects[i]) || gameObjects[i] == cullingCamera->GetOwner())
-			{
-				gameObjects[i]->GetRenderers(meshRenderers, cuboidRenderers, skeletonRenderers);
-			}*/
-		}
-	}
-
-	for (uint i = 0; i < gameObjects.size(); ++i)
-	{
-		if (gameObjects[i]->IsActive())
-		{
 			if (GameObjectIsInsideCullingCamera(gameObjects[i]) || gameObjects[i] == cullingCamera->GetOwner())
 			{
 				gameObjects[i]->GetRenderers(meshRenderers, cuboidRenderers, skeletonRenderers);

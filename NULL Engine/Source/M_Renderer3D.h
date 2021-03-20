@@ -53,7 +53,7 @@ enum class CuboidType
 
 struct MeshRenderer
 {
-	MeshRenderer(const float4x4& transform, C_Mesh* cMesh, C_Material* cMaterial);							// Will render the given mesh at the given position with the given mat & tex.
+	MeshRenderer(float4x4* transform, C_Mesh* cMesh, C_Material* cMaterial);								// Will render the given mesh at the given position with the given mat & tex.
 
 	void Render						();
 
@@ -68,11 +68,11 @@ struct MeshRenderer
 	void ApplyTextureAndMaterial	();
 	void ClearTextureAndMaterial	();
 
-	void ApplyShader();
-	uint32 SetDefaultShader(C_Material* cMaterial);
-	void ClearShader();
+	void ApplyShader				();
+	uint32 SetDefaultShader			(C_Material* cMaterial);
+	void ClearShader				();
 
-	float4x4	transform;
+	float4x4*	transform;
 	C_Mesh*		cMesh;
 	C_Material*	cMaterial;
 };
