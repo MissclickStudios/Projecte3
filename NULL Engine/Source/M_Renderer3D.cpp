@@ -935,7 +935,7 @@ void M_Renderer3D::DrawParticle(ParticleRenderer& renderParticle)
 	//	}
 	//}
 
-	glColor4f(renderParticle.color.r, renderParticle.color.g, renderParticle.color.b, renderParticle.color.a);
+	glColor4f(0.0f, 1.0f, 1.0f, 1.0f);
 
 	//Drawing to tris in direct mode
 	glBegin(GL_TRIANGLES);

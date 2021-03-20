@@ -35,8 +35,8 @@
 #include "C_ParticleSystem.h"
 
 #include "C_Canvas.h"
-#include "UI_Image.h"
-#include "UI_Text.h"
+#include "C_UI_Image.h"
+#include "C_UI_Text.h"
 
 
 #include "GameObject.h"
@@ -746,7 +746,7 @@ Component* GameObject::CreateComponent(ComponentType type)
 	case ComponentType::PROP_BEHAVIOR:		{ component = new C_PropBehavior(this); }		break;
 	case ComponentType::CAMERA_BEHAVIOR:	{ component = new C_CameraBehavior(this); }		break;
 	case ComponentType::GATE_BEHAVIOR:		{ component = new C_GateBehavior(this); }		break;
-  case ComponentType::PARTICLE_SYSTEM: { component = new C_ParticleSystem(this); }	break;
+	case ComponentType::PARTICLE_SYSTEM: { component = new C_ParticleSystem(this); }	break;
 	}
 
 	if (component != nullptr)
