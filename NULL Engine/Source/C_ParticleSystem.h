@@ -14,9 +14,13 @@ public:
 
 	bool Update();
 	void Reset();
-	
+
+	bool SetAsDefaultComponent();		//Reset the component, add an emitterInstance to the list and assign it the default emitter
+	void AddDefaultEmitter();			//Create a default emitter
+
 public:
-	std::vector<EmitterInstance> emitterInstances;
+	Emitter* defaultEmitter;
+	std::vector<EmitterInstance*> emitterInstances;
 };
 
 #endif //!__C_PARTICLE_SYSTEM_H__

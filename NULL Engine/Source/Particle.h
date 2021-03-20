@@ -2,6 +2,7 @@
 #define __PARTICLE_H__
 
 #include "Globals.h"
+#include "Color.h"
 
 #include "Dependencies/MathGeoLib/include/Math/float3.h"
 #include "Dependencies/MathGeoLib/include/Math/Quat.h"
@@ -36,12 +37,13 @@ public:
 	float3 position;
 	Quat worldRotation;
 
-	float relativeLifetime;  //Lifetime in range [0, 1]
+	float maxLifetime;
+	float relativeLifetime = 0;  //Lifetime in range [0, 1]
 
 	float rotation;
 	float4 velocity;
 	float size = 1.0f;
-	float color;
+	Color color;
 	float distanceToCamera;
 	bool usesBillboarding;
 };

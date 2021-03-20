@@ -3,11 +3,11 @@
 
 #include "Globals.h"
 #include "Particle.h"
-#include "Emitter.h"
 
 #include <vector>
 
 class C_ParticleSystem;
+class Emitter;
 
 class EmitterInstance
 {
@@ -15,12 +15,14 @@ public:
 	EmitterInstance();
 	~EmitterInstance();
 
-	void Init(Emitter* emitter, C_ParticleSystem* component);
-	void UpdateModules();
+	//if emitter equals null, a default emitter is added
+	void Init(Emitter* emitter, C_ParticleSystem* component);		
+	void Update(float dt);
 	void DrawParticles();
 
-	void Spawn();
+	void SpawnParticle();
 	void ResetEmitter();
+
 private:	
 	void UpdateModules(float dt);
 	void KillDeadParticles();

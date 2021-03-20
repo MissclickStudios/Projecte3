@@ -12,6 +12,12 @@ void Emitter::Update(float dt)
 	//---
 }
 
+void Emitter::SetAsDefault()
+{
+	AddModuleFromType(ParticleModule::EmitterBase);
+	AddModuleFromType(ParticleModule::EmitterSpawn);
+}
+
 bool Emitter::AddModuleFromType(ParticleModule::Type type)
 {
 	//switch (type) and in each case a type of particlemodule to add to the emitter.
@@ -23,9 +29,9 @@ bool Emitter::AddModuleFromType(ParticleModule::Type type)
 		case (ParticleModule::Type::EmitterSpawn):
 			modules.push_back(new EmitterSpawn);
 			break;
-		case(ParticleModule::Type::ParticlePosition):
-			modules.push_back(new ParticlePosition);
-			break;
+		//case(ParticleModule::Type::ParticlePosition):
+		//	modules.push_back(new ParticlePosition);
+		//	break;
 		case(ParticleModule::Type::ParticleColor):
 			modules.push_back(new ParticleColor);
 			break;	
