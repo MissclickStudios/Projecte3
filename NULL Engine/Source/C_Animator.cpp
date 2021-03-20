@@ -481,155 +481,101 @@ void C_Animator::GenerateBoneSegments(const GameObject* bone)
 
 Transform C_Animator::GetInterpolatedTransform(double keyframe, const Channel& channel, const Transform& originalTransform) const
 {	
-	const float3&	interpolatedPosition	= GetInterpolatedPosition(keyframe, channel, originalTransform.position);
-	const Quat&		interpolatedRotation	= GetInterpolatedRotation(keyframe, channel, originalTransform.rotation);
-	const float3&	interpolatedScale		= GetInterpolatedScale(keyframe, channel, originalTransform.scale);
+	const float3&	newPosition	= (channel.HasPositionKeyframes()) ? GetInterpolatedPosition(keyframe, channel) : originalTransform.position;
+	const Quat&		newRotation	= (channel.HasRotationKeyframes()) ? GetInterpolatedRotation(keyframe, channel) : originalTransform.rotation;
+	const float3&	newScale	= (channel.HasScaleKeyframes()) ? GetInterpolatedScale(keyframe, channel) : originalTransform.scale;
 
-	return Transform(interpolatedPosition, interpolatedRotation, interpolatedScale);
+	return Transform(newPosition, newRotation, newScale);
 }
 
-const float3 C_Animator::GetInterpolatedPosition(double keyframe, const Channel& channel, const float3& originalPosition) const
+const float3 C_Animator::GetInterpolatedPosition(double keyframe, const Channel& channel) const
 {
-	if (!channel.HasPositionKeyframes())
-	{
-		return originalPosition;
-	}
-
 	PositionKeyframe prevKeyframe = channel.GetClosestPrevPositionKeyframe(keyframe);
 	PositionKeyframe nextKeyframe = channel.GetClosestNextPositionKeyframe(keyframe);
 
-	float rate = (float)((keyframe - prevKeyframe->first) / (nextKeyframe->first - prevKeyframe->first));
-	float3 ret = (prevKeyframe == nextKeyframe) ? prevKeyframe->second : prevKeyframe->second.Lerp(nextKeyframe->second, rate);
-
-	return ret;
+	if (prevKeyframe == nextKeyframe)
+	{
+		return prevKeyframe->second;
+	}
+	else
+	{
+		float rate = (float)((keyframe - prevKeyframe->first) / (nextKeyframe->first - prevKeyframe->first));
+		return (prevKeyframe->second.Lerp(nextKeyframe->second, rate));
+	}
 }
 
-const Quat C_Animator::GetInterpolatedRotation(double keyframe, const Channel& channel, const Quat& originalRotation) const
+const Quat C_Animator::GetInterpolatedRotation(double keyframe, const Channel& channel) const
 {
-	if (!channel.HasRotationKeyframes())
-	{
-		return originalRotation;
-	}
-
 	RotationKeyframe prevKeyframe = channel.GetClosestPrevRotationKeyframe(keyframe);
 	RotationKeyframe nextKeyframe = channel.GetClosestNextRotationKeyframe(keyframe);
 
-	float rate	= (float)((keyframe - prevKeyframe->first) / (nextKeyframe->first - prevKeyframe->first));
-	Quat ret	= (prevKeyframe == nextKeyframe) ? prevKeyframe->second : prevKeyframe->second.Slerp(nextKeyframe->second, rate);
-
-	return ret;
+	if (prevKeyframe == nextKeyframe)
+	{
+		return prevKeyframe->second;
+	}
+	else
+	{
+		float rate = (float)((keyframe - prevKeyframe->first) / (nextKeyframe->first - prevKeyframe->first));
+		return (prevKeyframe->second.Slerp(nextKeyframe->second, rate));
+	}
 }
 
-const float3 C_Animator::GetInterpolatedScale(double keyframe, const Channel& channel, const float3& originalScale) const
+const float3 C_Animator::GetInterpolatedScale(double keyframe, const Channel& channel) const
 {
-	if (!channel.HasScaleKeyframes())
-	{
-		return originalScale;
-	}
-
 	ScaleKeyframe prevKeyframe = channel.GetClosestPrevScaleKeyframe(keyframe);
 	ScaleKeyframe nextKeyframe = channel.GetClosestNextScaleKeyframe(keyframe);
 
-	float rate = (float)((keyframe - prevKeyframe->first) / (nextKeyframe->first - prevKeyframe->first));
-	float3 ret = (prevKeyframe == nextKeyframe) ? prevKeyframe->second : prevKeyframe->second.Lerp(nextKeyframe->second, rate);
-
-	return ret;
+	if (prevKeyframe == nextKeyframe)
+	{
+		return prevKeyframe->second;
+	}
+	else
+	{
+		float rate = (float)((keyframe - prevKeyframe->first) / (nextKeyframe->first - prevKeyframe->first));
+		return (prevKeyframe->second.Lerp(nextKeyframe->second, rate));
+	}
 }
 
 Transform C_Animator::GetPoseToPoseTransform(uint tick, const Channel& channel, const Transform& originalTransform) const
 {
-	const float3& position	= GetPoseToPosePosition(tick, channel, originalTransform.position);
-	const Quat& rotation	= GetPoseToPoseRotation(tick, channel, originalTransform.rotation);
-	const float3& scale		= GetPoseToPoseScale(tick, channel, originalTransform.scale);
+	const float3&	position	= (channel.HasPositionKeyframes()) ? channel.GetPositionKeyframe(tick)->second : originalTransform.position;
+	const Quat&		rotation	= (channel.HasRotationKeyframes()) ? channel.GetRotationKeyframe(tick)->second : originalTransform.rotation;
+	const float3&	scale		= (channel.HasScaleKeyframes()) ? channel.GetScaleKeyframe(tick)->second : originalTransform.scale;
 	
 	return Transform(position, rotation, scale);
 }
 
-const float3 C_Animator::GetPoseToPosePosition(uint tick, const Channel& channel, const float3& originalPosition) const
-{
-	if (!channel.HasPositionKeyframes()) 
-	{ 
-		return originalPosition; 
-	}
-
-	return channel.GetPositionKeyframe(tick)->second;
-}
-
-const Quat C_Animator::GetPoseToPoseRotation(uint tick, const Channel& channel, const Quat& originalRotation) const
-{
-	if (!channel.HasRotationKeyframes())
-	{
-		return originalRotation;
-	}
-
-	return channel.GetRotationKeyframe(tick)->second;
-}
-
-const float3 C_Animator::GetPoseToPoseScale(uint tick, const Channel& channel, const float3& originalScale) const
-{
-	if (!channel.HasScaleKeyframes())
-	{
-		return originalScale;
-	}
-
-	return channel.GetScaleKeyframe(tick)->second;
-}
-
 Transform C_Animator::GetBlendedTransform(double blendedKeyframe, const Channel& blendedChannel, const Transform& originalTransform) const
 {
-	const float3& position	= GetBlendedPosition(blendedKeyframe, blendedChannel, originalTransform.position);
-	const Quat& rotation	= GetBlendedRotation(blendedKeyframe, blendedChannel, originalTransform.rotation);
-	const float3& scale		= GetBlendedScale(blendedKeyframe, blendedChannel, originalTransform.scale);
+	const float3&	position	= (blendedChannel.HasPositionKeyframes()) ? GetBlendedPosition(blendedKeyframe, blendedChannel, originalTransform.position) : originalTransform.position;
+	const Quat&		rotation	= (blendedChannel.HasRotationKeyframes()) ? GetBlendedRotation(blendedKeyframe, blendedChannel, originalTransform.rotation) : originalTransform.rotation;
+	const float3&	scale		= (blendedChannel.HasScaleKeyframes()) ? GetBlendedScale(blendedKeyframe, blendedChannel, originalTransform.scale) : originalTransform.scale;
 
 	return Transform(position, rotation, scale);
 }
 
 const float3 C_Animator::GetBlendedPosition(double blendingKeyframe, const Channel& blendingChannel, const float3& originalPosition) const
 {
-	if (!blendingChannel.HasPositionKeyframes())
-	{
-		return originalPosition;
-	}
-
-	float3 position			= GetInterpolatedPosition(blendingKeyframe, blendingChannel, originalPosition);
-
-	double blendFrame		= blendingKeyframe - blendingClip->GetStart();
-	float blendRate			= (float)(blendFrame / blendFrames);
-	float3 blendedPosition	= originalPosition.Lerp(position, blendRate);
+	float3 position	= GetInterpolatedPosition(blendingKeyframe, blendingChannel);
+	float blendRate	= (float)((blendingKeyframe - blendingClip->GetStart()) / blendFrames);
 	
-	return blendedPosition;
+	return originalPosition.Lerp(position, blendRate);
 }
 
 const Quat C_Animator::GetBlendedRotation(double blendingKeyframe, const Channel& blendingChannel, const Quat& originalRotation) const
 {
-	if (!blendingChannel.HasRotationKeyframes())
-	{
-		return originalRotation;
-	}
+	Quat rotation	= GetInterpolatedRotation(blendingKeyframe, blendingChannel);
+	float blendRate	= (float)((blendingKeyframe - blendingClip->GetStart()) / blendFrames);
 
-	Quat rotation			= GetInterpolatedRotation(blendingKeyframe, blendingChannel, originalRotation);
-
-	double blendFrame		= blendingKeyframe - blendingClip->GetStart();
-	float blendRate			= (float)(blendFrame / blendFrames);
-	Quat blendedRotation	= originalRotation.Slerp(rotation, blendRate);
-
-	return blendedRotation;
+	return originalRotation.Slerp(rotation, blendRate);
 }
 
 const float3 C_Animator::GetBlendedScale(double blendingKeyframe, const Channel& blendingChannel, const float3& originalScale) const
 {
-	if (!blendingChannel.HasScaleKeyframes())
-	{
-		return originalScale;
-	}
+	float3 scale	= GetInterpolatedScale(blendingKeyframe, blendingChannel);
+	float blendRate	= (float)((blendingKeyframe - blendingClip->GetStart()) / blendFrames);
 
-	float3 scale = GetInterpolatedScale(blendingKeyframe, blendingChannel, originalScale);
-
-	double blendFrame	= blendingKeyframe - blendingClip->GetStart();
-	float blendRate		= (float)(blendFrame / blendFrames);
-	float3 blendedScale	= originalScale.Lerp(scale, blendRate);
-
-	return blendedScale;
+	return originalScale.Lerp(scale, blendRate);
 }
 
 void C_Animator::FindRootBone()

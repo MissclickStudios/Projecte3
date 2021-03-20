@@ -147,14 +147,11 @@ private:																													// --- BONE/CHANNEL UPDATE METHODS
 	void			GenerateBoneSegments					(const GameObject* bone);
 	
 	Transform		GetInterpolatedTransform				(double keyframe, const Channel& channel, const Transform& originalTransform) const;
-	const float3	GetInterpolatedPosition					(double keyframe, const Channel& channel, const float3& originalPosition) const;
-	const Quat		GetInterpolatedRotation					(double keyframe, const Channel& channel, const Quat& originalRotation) const;
-	const float3	GetInterpolatedScale					(double keyframe, const Channel& channel, const float3& originalScale) const;
+	const float3	GetInterpolatedPosition					(double keyframe, const Channel& channel) const;
+	const Quat		GetInterpolatedRotation					(double keyframe, const Channel& channel) const;
+	const float3	GetInterpolatedScale					(double keyframe, const Channel& channel) const;
 
 	Transform		GetPoseToPoseTransform					(uint tick, const Channel& channel, const Transform& originalTransform) const;
-	const float3	GetPoseToPosePosition					(uint tick, const Channel& channel, const float3& originalPosition) const;
-	const Quat		GetPoseToPoseRotation					(uint tick, const Channel& channel, const Quat& originalRotation) const;
-	const float3	GetPoseToPoseScale						(uint tick, const Channel& channel, const float3& originalScale) const;
 
 	Transform		GetBlendedTransform						(double blendingKeyframe, const Channel& blendingChannel, const Transform& originalTransform) const;
 	const float3	GetBlendedPosition						(double blendingKeyframe, const Channel& blendingChannel, const float3& originalPosition) const;

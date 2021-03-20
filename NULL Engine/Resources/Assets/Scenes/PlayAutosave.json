@@ -9,6 +9,11 @@
             "GameObjectUID": 1436570477,
             "ModelResourceUID": 2024607900,
             "ModelAssetsPath": "Assets\/Models\/Mando\/MandoAnimations.fbx"
+        },
+        {
+            "GameObjectUID": 1620529779,
+            "ModelResourceUID": 1678532239,
+            "ModelAssetsPath": "Assets\/Models\/Skeleton_Model\/aniTest.fbx"
         }
     ],
     "Game Objects": [
@@ -234,9 +239,9 @@
                     "Material": {
                         "UID": 743583687,
                         "Color": [
-                            0.026864659041166306,
-                            0.42156863212585449,
-                            0.18938970565795898,
+                            0.38636812567710876,
+                            0.39705884456634521,
+                            0.21799308061599731,
                             1
                         ],
                         "Name": "pCube226.nemat",
@@ -1596,7 +1601,7 @@
         },
         {
             "UID": 888400124,
-            "ParentUID": 1912048710,
+            "ParentUID": 1628362846,
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "MainScene",
@@ -2146,7 +2151,7 @@
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
-            "ShowBoundingBoxes": true,
+            "ShowBoundingBoxes": false,
             "Components": [
                 {
                     "Type": 1,
@@ -2565,7 +2570,7 @@
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
+            "ShowBoundingBoxes": true,
             "Components": [
                 {
                     "Type": 1,
@@ -2642,6 +2647,16 @@
                     "Center X": 0,
                     "Center Y": 0,
                     "Center Z": 0
+                },
+                {
+                    "Type": 14,
+                    "Playing Event": [
+                        "Mando_footsteps_desert",
+                        407837268
+                    ]
+                },
+                {
+                    "Type": 15
                 }
             ]
         },
@@ -3836,6 +3851,1246 @@
                     "Offset X": 0,
                     "Offset Y": 40,
                     "Offset Z": 30
+                }
+            ]
+        },
+        {
+            "UID": 13345215,
+            "ParentUID": 272888944,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Bip001 L Toe0",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0.80660271644592285,
+                        1.3259632587432861,
+                        1.3518358343844739e-07
+                    ],
+                    "LocalRotation": [
+                        -5.3699450290878303e-06,
+                        2.1461810320033692e-05,
+                        0.70707523822784424,
+                        0.7071382999420166
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 13347173,
+            "ParentUID": 843404414,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Bip001 L Forearm",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        2.3758387565612793,
+                        -3.4573517382341379e-09,
+                        -7.8201082942541689e-08
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        -0.37378427386283875,
+                        0.92751568555831909
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 219075795,
+            "ParentUID": 1651397167,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Bip001 Head",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        1.1019048690795898,
+                        3.9482267766288714e-07,
+                        -7.1049150562885188e-08
+                    ],
+                    "LocalRotation": [
+                        -0.27906468510627747,
+                        -0.059018343687057495,
+                        -0.44040271639823914,
+                        0.85128456354141235
+                    ],
+                    "LocalScale": [
+                        0.99999988079071045,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 272888944,
+            "ParentUID": 873513197,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Bip001 L Foot",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        3.3164157867431641,
+                        -1.7559572995651251e-07,
+                        -3.0946770834816562e-07
+                    ],
+                    "LocalRotation": [
+                        0.12575028836727142,
+                        -0.15377862751483917,
+                        0.17361654341220856,
+                        0.96457052230834961
+                    ],
+                    "LocalScale": [
+                        1,
+                        0.99999994039535522,
+                        0.99999988079071045
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 358654622,
+            "ParentUID": 377397927,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Bip001 R Finger02",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0.30469560623168945,
+                        -9.7751353678177111e-08,
+                        -9.7691426503843104e-08
+                    ],
+                    "LocalRotation": [
+                        1.9359424285880777e-08,
+                        -3.5953542365518842e-09,
+                        0.17268145084381104,
+                        0.98497772216796875
+                    ],
+                    "LocalScale": [
+                        0.9999997615814209,
+                        0.99999988079071045,
+                        0.99999994039535522
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 377397927,
+            "ParentUID": 1718769641,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Bip001 R Finger01",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0.51724457740783691,
+                        -2.9200364792814071e-07,
+                        -1.2516951031216195e-08
+                    ],
+                    "LocalRotation": [
+                        -1.2998080833881431e-08,
+                        2.133803711501514e-08,
+                        0.23338103294372559,
+                        0.9723854660987854
+                    ],
+                    "LocalScale": [
+                        1.0000002384185791,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 397423175,
+            "ParentUID": 1620529779,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "transform1",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -1.1161036491394043,
+                        15.688704490661621,
+                        -0.13840684294700623
+                    ],
+                    "LocalRotation": [
+                        -0.44879189133644104,
+                        -0.33055087924003601,
+                        -0.44800519943237305,
+                        0.69900882244110107
+                    ],
+                    "LocalScale": [
+                        2.5399997234344482,
+                        2.5399997234344482,
+                        2.5399999618530273
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 473592137,
+            "ParentUID": 1394278011,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Bip001 R Calf",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        2.6564342975616455,
+                        7.1049150562885188e-08,
+                        -1.9931803763029166e-07
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        -0.36260148882865906,
+                        0.93194425106048584
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 555381320,
+            "ParentUID": 1620529779,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Object02",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        -0.70710676908493042,
+                        0,
+                        0,
+                        0.70710676908493042
+                    ],
+                    "LocalScale": [
+                        2.5399999618530273,
+                        2.5399999618530273,
+                        2.5399999618530273
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 1239822215,
+                    "Name": "Object02.nemesh",
+                    "Path": "Library\/Meshes\/1239822215.nemesh",
+                    "File": "1239822215.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 1704722997,
+                        "Color": [
+                            0.80000001192092896,
+                            0.80000001192092896,
+                            0.80000001192092896,
+                            1
+                        ],
+                        "Name": "Object02.nemat",
+                        "Path": "Library\/Materials\/1704722997.nemat",
+                        "File": "1704722997.nemat"
+                    },
+                    "Shader": {
+                        "UID": 992548386,
+                        "Name": "DefaultShader.shader",
+                        "Path": "Library\/Shaders\/992548386.neshader",
+                        "File": "992548386.neshader"
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 672330271,
+            "ParentUID": 764233883,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Bip001 L Finger12",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0.25260317325592041,
+                        3.9100541471270844e-08,
+                        6.4134439980989555e-08
+                    ],
+                    "LocalRotation": [
+                        -0.079598933458328247,
+                        -0.02443983405828476,
+                        0.29249438643455505,
+                        0.95263516902923584
+                    ],
+                    "LocalScale": [
+                        0.99999988079071045,
+                        1,
+                        0.99999988079071045
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 764233883,
+            "ParentUID": 1336724775,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Bip001 L Finger11",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0.34153738617897034,
+                        0,
+                        1.2826887996197911e-07
+                    ],
+                    "LocalRotation": [
+                        -0.080333955585956573,
+                        -0.021903522312641144,
+                        0.26213967800140381,
+                        0.96143096685409546
+                    ],
+                    "LocalScale": [
+                        0.99999994039535522,
+                        0.99999994039535522,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 803324476,
+            "ParentUID": 1408379069,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Bip001 L Finger02",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0.30469578504562378,
+                        0,
+                        2.934934286713542e-07
+                    ],
+                    "LocalRotation": [
+                        1.1024098078848965e-08,
+                        1.0510526671225762e-08,
+                        0.1726815402507782,
+                        0.98497772216796875
+                    ],
+                    "LocalScale": [
+                        0.99999988079071045,
+                        0.99999988079071045,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 819558727,
+            "ParentUID": 397423175,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Bip001 Pelvis",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0.54349440336227417,
+                        0.54349499940872192,
+                        0.45234191417694092,
+                        -0.45234274864196777
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        0.99999994039535522
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 843404414,
+            "ParentUID": 2090154268,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Bip001 L UpperArm",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0.98625373840332031,
+                        -1.6808596114969987e-07,
+                        -5.2690495522256242e-07
+                    ],
+                    "LocalRotation": [
+                        -0.28962355852127075,
+                        0.26428046822547913,
+                        -0.085282497107982635,
+                        0.91597002744674683
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1.0000002384185791
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 847062701,
+            "ParentUID": 219075795,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Bone001",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0.19279478490352631,
+                        0.020197272300720215,
+                        -9.5367431640625e-07
+                    ],
+                    "LocalRotation": [
+                        0.61083334684371948,
+                        0.79168552160263062,
+                        -0.010804657824337482,
+                        -8.0598976637702435e-05
+                    ],
+                    "LocalScale": [
+                        1.0000001192092896,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 873513197,
+            "ParentUID": 1303876054,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Bip001 L Calf",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        2.6564342975616455,
+                        -1.0311637765880732e-07,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        -0.29580673575401306,
+                        0.95524781942367554
+                    ],
+                    "LocalScale": [
+                        0.99999988079071045,
+                        0.99999994039535522,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 927857004,
+            "ParentUID": 1859339777,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Bip001 R Forearm",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        2.3758378028869629,
+                        1.2826887996197911e-07,
+                        1.6206476516344992e-07
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        -0.38342809677124023,
+                        0.92357069253921509
+                    ],
+                    "LocalScale": [
+                        0.99999988079071045,
+                        0.99999988079071045,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 959498969,
+            "ParentUID": 2005115324,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Bip001 Spine1",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        1.7979795932769775,
+                        -0.0014345385134220123,
+                        -0.00040132412686944008
+                    ],
+                    "LocalRotation": [
+                        0.17186379432678223,
+                        -0.17232099175453186,
+                        0.30752173066139221,
+                        0.9198906421661377
+                    ],
+                    "LocalScale": [
+                        0.99999994039535522,
+                        0.99999988079071045,
+                        0.99999994039535522
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1101074593,
+            "ParentUID": 2024373724,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Bip001 R Finger1",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        1.770775318145752,
+                        0.00036051392089575529,
+                        0.041458852589130402
+                    ],
+                    "LocalRotation": [
+                        0.0051076998934149742,
+                        0.19857688248157501,
+                        0.39499664306640625,
+                        0.89694976806640625
+                    ],
+                    "LocalScale": [
+                        0.99999988079071045,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1303876054,
+            "ParentUID": 2005115324,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Bip001 L Thigh",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -0.78879594802856445,
+                        -0.40897294878959656,
+                        1.139856219291687
+                    ],
+                    "LocalRotation": [
+                        0.26656603813171387,
+                        0.95808142423629761,
+                        0.054290667176246643,
+                        -0.089861579239368439
+                    ],
+                    "LocalScale": [
+                        0.99999988079071045,
+                        0.99999988079071045,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1333125122,
+            "ParentUID": 1530595929,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Bip001 L Finger0",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0.94094651937484741,
+                        0.081812001764774323,
+                        -0.58038091659545898
+                    ],
+                    "LocalRotation": [
+                        0.58262795209884644,
+                        0.39404582977294922,
+                        0.071983367204666138,
+                        0.70717108249664307
+                    ],
+                    "LocalScale": [
+                        1.0000002384185791,
+                        0.99999994039535522,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1336724775,
+            "ParentUID": 1530595929,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Bip001 L Finger1",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        1.770775318145752,
+                        0.00036058403202332556,
+                        -0.041458874940872192
+                    ],
+                    "LocalRotation": [
+                        -0.086713194847106934,
+                        -0.063716121017932892,
+                        0.1964249461889267,
+                        0.97459650039672852
+                    ],
+                    "LocalScale": [
+                        1,
+                        0.99999994039535522,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1337975941,
+            "ParentUID": 1101074593,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Bip001 R Finger11",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0.3415374755859375,
+                        -6.4134439980989555e-08,
+                        -1.9550270735635422e-08
+                    ],
+                    "LocalRotation": [
+                        -2.2178211267487313e-08,
+                        2.4107144724894169e-08,
+                        0.42658928036689758,
+                        0.9044455885887146
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1394278011,
+            "ParentUID": 2005115324,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Bip001 R Thigh",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -0.42613464593887329,
+                        -0.30149656534194946,
+                        -1.136049747467041
+                    ],
+                    "LocalRotation": [
+                        0.41053810715675354,
+                        0.88558155298233032,
+                        0.02588934637606144,
+                        0.21571642160415649
+                    ],
+                    "LocalScale": [
+                        0.99999988079071045,
+                        0.99999988079071045,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1408379069,
+            "ParentUID": 1333125122,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Bip001 L Finger01",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0.51724421977996826,
+                        -1.6033609995247389e-08,
+                        -3.0946770834816562e-07
+                    ],
+                    "LocalRotation": [
+                        -5.2655151350222695e-09,
+                        -1.7364166993161234e-08,
+                        0.078393086791038513,
+                        0.99692255258560181
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1530595929,
+            "ParentUID": 13347173,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Bip001 L Hand",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        1.84641432762146,
+                        9.6083041967176541e-08,
+                        0
+                    ],
+                    "LocalRotation": [
+                        -0.18265576660633087,
+                        0.041462939232587814,
+                        0.10054333508014679,
+                        0.97714316844940186
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        0.99999988079071045
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1620529779,
+            "ParentUID": 888400124,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "aniTest.fbx",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": true,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 6,
+                    "Animations": [
+                        {
+                            "UID": 1038687089,
+                            "Name": "Take 001.neanimat",
+                            "Path": "Library\/Animations\/1038687089.neanimat",
+                            "File": "1038687089.neanimat"
+                        }
+                    ],
+                    "Clips": [
+                        {
+                            "AnimationUID": 1038687089,
+                            "Name": "Enter Clip Name",
+                            "Start": 0,
+                            "End": 119,
+                            "Duration": 119,
+                            "DurationInSeconds": 4.9583334922790527,
+                            "Loop": true
+                        }
+                    ],
+                    "CurrentClip": {
+                        "AnimationName": "Take 001",
+                        "Name": "Enter Clip Name"
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 1641737686,
+            "ParentUID": 473592137,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Bip001 R Foot",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        3.3164162635803223,
+                        -5.3286861145807052e-08,
+                        3.9100541471270844e-08
+                    ],
+                    "LocalRotation": [
+                        -0.024946745485067368,
+                        0.13372676074504852,
+                        0.083211131393909454,
+                        0.98720353841781616
+                    ],
+                    "LocalScale": [
+                        1.0000001192092896,
+                        0.99999994039535522,
+                        0.99999994039535522
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1651397167,
+            "ParentUID": 959498969,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Bip001 Neck",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        2.9972012042999268,
+                        -0.23436072468757629,
+                        -3.5643189733036706e-08
+                    ],
+                    "LocalRotation": [
+                        -0.031273826956748962,
+                        0.1998259425163269,
+                        0.15219809114933014,
+                        0.96743333339691162
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1718769641,
+            "ParentUID": 2024373724,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Bip001 R Finger0",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0.94094634056091309,
+                        0.081811673939228058,
+                        0.58038067817687988
+                    ],
+                    "LocalRotation": [
+                        -0.55319344997406006,
+                        -0.34493878483772278,
+                        0.19145210087299347,
+                        0.73371684551239014
+                    ],
+                    "LocalScale": [
+                        1,
+                        0.99999994039535522,
+                        0.99999994039535522
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1749809078,
+            "ParentUID": 1641737686,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Bip001 R Toe0",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0.80660271644592285,
+                        1.3259632587432861,
+                        1.7428412490971823e-07
+                    ],
+                    "LocalRotation": [
+                        5.8384133083677625e-09,
+                        1.8228638509754092e-07,
+                        0.70710718631744385,
+                        0.70710635185241699
+                    ],
+                    "LocalScale": [
+                        0.99999988079071045,
+                        0.99999994039535522,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1752227279,
+            "ParentUID": 1651397167,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Bip001 R Clavicle",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0.26788157224655151,
+                        -0.097358301281929016,
+                        -0.87843036651611328
+                    ],
+                    "LocalRotation": [
+                        -0.61388760805130005,
+                        -0.12559077143669128,
+                        0.75581920146942139,
+                        0.19001676142215729
+                    ],
+                    "LocalScale": [
+                        0.99999988079071045,
+                        1,
+                        0.99999994039535522
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1859339777,
+            "ParentUID": 1752227279,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Bip001 R UpperArm",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0.98625349998474121,
+                        -3.4856824981943646e-07,
+                        3.4856824981943646e-07
+                    ],
+                    "LocalRotation": [
+                        0.38571488857269287,
+                        -0.33639541268348694,
+                        -0.052249472588300705,
+                        0.85751521587371826
+                    ],
+                    "LocalScale": [
+                        1.0000001192092896,
+                        0.99999994039535522,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1972316089,
+            "ParentUID": 1337975941,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Bip001 R Finger12",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0.25260305404663086,
+                        1.9550252972067028e-08,
+                        0
+                    ],
+                    "LocalRotation": [
+                        -8.237983628589518e-09,
+                        -5.2620210411191692e-09,
+                        0.53830677270889282,
+                        0.84274899959564209
+                    ],
+                    "LocalScale": [
+                        1.0000001192092896,
+                        1.0000001192092896,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 2005115324,
+            "ParentUID": 819558727,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Bip001 Spine",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0.61733871698379517,
+                        0.31800448894500732,
+                        -0.11391749233007431
+                    ],
+                    "LocalRotation": [
+                        -0.021122926846146584,
+                        0.079496338963508606,
+                        -0.028284128755331039,
+                        0.99620997905731201
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 2024373724,
+            "ParentUID": 927857004,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Bip001 R Hand",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        1.8464140892028809,
+                        -1.7333007917841314e-07,
+                        -1.8763623188533529e-07
+                    ],
+                    "LocalRotation": [
+                        0.64426088333129883,
+                        0.11600960046052933,
+                        0.19606670737266541,
+                        0.73008739948272705
+                    ],
+                    "LocalScale": [
+                        1,
+                        0.99999988079071045,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 2090154268,
+            "ParentUID": 1651397167,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Bip001 L Clavicle",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -0.45527303218841553,
+                        -0.096787281334400177,
+                        0.79764354228973389
+                    ],
+                    "LocalRotation": [
+                        0.28569948673248291,
+                        -0.080022834241390228,
+                        0.94522702693939209,
+                        0.13608147203922272
+                    ],
+                    "LocalScale": [
+                        0.9999997615814209,
+                        0.99999988079071045,
+                        1
+                    ]
                 }
             ]
         }
