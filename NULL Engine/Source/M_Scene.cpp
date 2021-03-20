@@ -423,6 +423,8 @@ void M_Scene::LoadPrefabIntoScene(ParsonNode* a)
 
 	ParsonArray childArray = a->GetArray("Children");
 
+	gameObject->ForceUID(Random::LCG::GetRandomUint());
+
 	for (int i = 0; i < childArray.size; i++)
 	{
 		App->scene->LoadPrefabObject(gameObject, &childArray.GetNode(i));
@@ -438,6 +440,8 @@ void M_Scene::LoadPrefabObject(GameObject* _gameObject, ParsonNode* node)
 	gameObject->SetParent(_gameObject);
 
 	gameObjects.push_back(gameObject);
+
+	gameObject->ForceUID(Random::LCG::GetRandomUint());
 
 	ParsonArray childArray = node->GetArray("Children");
 	for (int i = 0; i < childArray.size; i++)
