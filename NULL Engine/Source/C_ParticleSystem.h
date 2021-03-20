@@ -10,7 +10,8 @@ public:
 	C_ParticleSystem(GameObject* owner);
 	~C_ParticleSystem();
 
-	//save/load?
+	bool SaveState(ParsonNode& root) const override;
+	bool LoadState(ParsonNode& root) override;
 
 	bool Update();
 	void Reset();
