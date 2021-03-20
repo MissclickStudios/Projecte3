@@ -2,7 +2,7 @@
 //using System.Collections.Generic;
 using UnityEngine;
 
-public class CamFollow : MonoBehaviour
+public class CamFollow1 : MonoBehaviour
 {
     public Transform target;
     [Range(1f, 40f)] public float laziness = 10f; //This will always be 10 no need to modify it.
