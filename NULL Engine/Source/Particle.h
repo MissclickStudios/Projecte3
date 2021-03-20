@@ -38,7 +38,7 @@ public:
 	Quat worldRotation;
 
 	float maxLifetime;
-	float relativeLifetime;  //Lifetime in range [0, 1]
+	float relativeLifetime = 0;  //Lifetime in range [0, 1]
 
 	float rotation;
 	float4 velocity;

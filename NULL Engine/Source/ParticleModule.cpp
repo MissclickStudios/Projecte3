@@ -9,8 +9,14 @@
 void EmitterBase::Spawn(EmitterInstance* emitter, Particle* particle)
 {
 	GameObject* go = emitter->component->GetOwner();
+
 	float3 position = go->GetComponent<C_Transform>()->GetWorldPosition();
-	particle->position += position + origin;
+	position += origin;
+	particle->position = position;
+
+	//temporary
+	Quat rotation = go->GetComponent<C_Transform>()->GetWorldRotation();
+	particle->worldRotation = rotation;
 }
 
 void EmitterBase::Update(float dt, EmitterInstance* emitter)
@@ -21,7 +27,7 @@ void EmitterBase::Update(float dt, EmitterInstance* emitter)
 		unsigned int particleIndex = emitter->particleIndices[i];
 		Particle* particle = &emitter->particles[particleIndex];
 
-		//billboarding related things: world rotation and distance to camera.
+		//update world rotation and distance to camera.
 	}
 }
 

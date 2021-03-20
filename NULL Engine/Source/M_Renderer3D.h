@@ -174,7 +174,8 @@ public:																											// --- RENDER GEOMETRY
 	void			RenderRays					();
 	void			RenderSkeletons				();
 	void			RenderUI					();
-	void			RenderParticle				(ParticleRenderer& renderParticle);
+	void			RenderParticles				();
+
 	void			RenderFramebufferTexture	();
 	void			DeleteFromMeshRenderers		(C_Mesh* cMeshToDelete);
 	void			DeleteFromMeshRenderers		(R_Mesh* rMeshToDelete);
@@ -185,7 +186,7 @@ public:																											// --- RENDER GEOMETRY
 	void			CreatePrimitiveExamples		();
 
 	void			AddParticle					(const float4x4& transform, R_Material* material, Color color, float distanceToCamera);
-	void			RenderAllParticles			();
+	void			DrawParticle				(ParticleRenderer& renderParticle);
 
 public:																											// --- GET/SET METHODS
 	Icons			GetEngineIcons				() const;

@@ -614,7 +614,7 @@ void M_Renderer3D::RenderScene()
 	//RenderRays();
 	RenderSkeletons();
 	RenderUI();
-	
+	RenderParticles();
 	
 	
 	if (App->camera->DrawLastRaycast())
@@ -807,16 +807,16 @@ void M_Renderer3D::AddParticle(const float4x4& transform, R_Material* material, 
 	particles.insert(std::make_pair(distanceToCamera, ParticleRenderer(material, color, transform)));
 }
 
-void M_Renderer3D::RenderAllParticles()
+void M_Renderer3D::RenderParticles()
 {
 	std::map<float, ParticleRenderer>::reverse_iterator it;				//Render from far to close to the camera
 	for (it = particles.rbegin(); it != particles.rend(); ++it)			
 	{
-		RenderParticle(it->second);
+		DrawParticle(it->second);
 	}
 }
 
-void M_Renderer3D::RenderParticle(ParticleRenderer& renderParticle)
+void M_Renderer3D::DrawParticle(ParticleRenderer& renderParticle)
 {
 	glPushMatrix();
 	glMultMatrixf((float*)&renderParticle.transform);

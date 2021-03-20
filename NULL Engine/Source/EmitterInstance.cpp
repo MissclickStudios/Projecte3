@@ -13,6 +13,8 @@ EmitterInstance::EmitterInstance()
 EmitterInstance::~EmitterInstance()
 {
 	delete emitter;
+	delete[] particleIndices;
+	
 }
 
 void EmitterInstance::Init(Emitter* emitter, C_ParticleSystem* component)
@@ -21,8 +23,14 @@ void EmitterInstance::Init(Emitter* emitter, C_ParticleSystem* component)
 	this->component = component;
 
 	particles.resize(emitter->maxParticleCount);
-}
 
+	particleIndices = new unsigned int[emitter->maxParticleCount];
+
+	for (uint i = 0; i < emitter->maxParticleCount; ++i)
+	{
+		particleIndices[i] = i;
+	}
+}
 
 void EmitterInstance::Update(float dt)
 {
@@ -54,7 +62,7 @@ void EmitterInstance::SpawnParticle()
 void EmitterInstance::ResetEmitter()
 {
 	emitterTime = 0.0f;
-	KillAll();
+	activeParticles = 0; //kill all
 }
 
 void EmitterInstance::UpdateModules(float dt)
@@ -100,7 +108,3 @@ void EmitterInstance::KillDeadParticles()
 	}
 }
 
-void EmitterInstance::KillAll()
-{
-	activeParticles = 0;
-}
