@@ -147,6 +147,17 @@ UpdateStatus M_Scene::Update(float dt)
 		{
 			gameObjects[i]->Update();
 
+			/*if (GameObjectIsInsideCullingCamera(gameObjects[i]) || gameObjects[i] == cullingCamera->GetOwner())
+			{
+				gameObjects[i]->GetRenderers(meshRenderers, cuboidRenderers, skeletonRenderers);
+			}*/
+		}
+	}
+
+	for (uint i = 0; i < gameObjects.size(); ++i)
+	{
+		if (gameObjects[i]->IsActive())
+		{
 			if (GameObjectIsInsideCullingCamera(gameObjects[i]) || gameObjects[i] == cullingCamera->GetOwner())
 			{
 				gameObjects[i]->GetRenderers(meshRenderers, cuboidRenderers, skeletonRenderers);
@@ -184,7 +195,7 @@ UpdateStatus M_Scene::Update(float dt)
 }
 
 UpdateStatus M_Scene::PostUpdate(float dt)
-{
+{	
 	if (nextScene)
 	{
 		level.NextRoom();

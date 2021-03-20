@@ -215,6 +215,12 @@ void C_Mesh::AnimateMesh()
 				skinnedMesh->normals[(v * 3)]		+= (vTransform.x * boneWeight);
 				skinnedMesh->normals[(v * 3) + 1]	+= (vTransform.y * boneWeight);
 				skinnedMesh->normals[(v * 3) + 2]	+= (vTransform.z * boneWeight);
+
+				vTransform = (float3(skinnedMesh->normals[(v * 3)], skinnedMesh->normals[(v * 3) + 1], skinnedMesh->normals[(v * 3) + 2]).Normalized());
+
+				skinnedMesh->normals[(v * 3)]		= vTransform.x;
+				skinnedMesh->normals[(v * 3) + 1]	= vTransform.y;
+				skinnedMesh->normals[(v * 3) + 2]	= vTransform.z;
 			}
 		}
 	}

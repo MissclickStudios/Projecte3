@@ -481,9 +481,9 @@ void C_Animator::GenerateBoneSegments(const GameObject* bone)
 
 Transform C_Animator::GetInterpolatedTransform(double keyframe, const Channel& channel, const Transform& originalTransform) const
 {	
-	float3	interpolatedPosition	= GetInterpolatedPosition(keyframe, channel, originalTransform.position);
-	Quat	interpolatedRotation	= GetInterpolatedRotation(keyframe, channel, originalTransform.rotation);
-	float3	interpolatedScale		= GetInterpolatedScale(keyframe, channel, originalTransform.scale);
+	const float3&	interpolatedPosition	= GetInterpolatedPosition(keyframe, channel, originalTransform.position);
+	const Quat&		interpolatedRotation	= GetInterpolatedRotation(keyframe, channel, originalTransform.rotation);
+	const float3&	interpolatedScale		= GetInterpolatedScale(keyframe, channel, originalTransform.scale);
 
 	return Transform(interpolatedPosition, interpolatedRotation, interpolatedScale);
 }
