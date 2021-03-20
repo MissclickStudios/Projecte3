@@ -3,6 +3,8 @@
 
 #include "Component.h"
 
+#include "Timer.h"
+
 class C_BulletBehavior : public Component
 {
 public:
@@ -19,6 +21,14 @@ public:
 	static inline ComponentType GetType() { return ComponentType::BULLET_BEHAVIOR; }			// This is needed to be able to use templates for functions such as GetComponent<>();
 
 	void OnCollisionEnter();
+
+	const float GetAutodestruct() const { return autodestruct; }
+	void SetAutodestruct(float time) { autodestruct = time; }
+
+private:
+
+	float autodestruct = 3.0f;
+	Timer autodestructTimer;
 };
 
 #endif

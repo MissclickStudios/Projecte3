@@ -13,6 +13,8 @@ enum class ResourceType;
 class R_Shader;
 class R_Texture;
 
+class GameObject;
+
 typedef unsigned int		uint;
 typedef unsigned __int32	uint32;
 typedef unsigned __int64	uint64;
@@ -40,6 +42,9 @@ public:																								// --- RESOURCE MANAGER API ---
 	uint32			LoadFromLibrary					(const char* assetsPath);						// Loads a resource registered in the Library onto memory. Returns the resource's UID.
 	Resource*		GetResourceFromLibrary			(const char* assetsPath);						// Same as LoadFromLibrary() but it returns the resource instead of its UID.
 
+	void			RefreshProjectDirectories		();												// 
+	void			RefreshProjectDirectory			(const char* directoryToRefresh);				// 
+
 	// --- META FILE METHODS
 	ResourceType	GetTypeFromAssetsExtension		(const char* assetsPath);						// Returns the type of the resource related with the given Asset.
 	bool			GetForcedUIDsFromMeta			(const char* assetsPath, std::map<std::string, uint32>& forcedUIDs);			// TMP. See if it can be done another way.
@@ -56,13 +61,22 @@ public:																								// --- RESOURCE MANAGER API ---
 	bool			DeleteResource					(Resource* resourceToDelete);					// Same as the above but directly passing the resource as the argument.
 	
 	void			GetResources					(std::map<uint32, Resource*>& resources) const;	// Returns a map filled with all the resources currently loaded onto memory.
-	const std::map<uint32, Resource*>* GetResources() const;
+	const std::map<uint32, Resource*>* GetResources	() const;
 
-	R_Shader*		GetShader(const char* name);													//Look for a shader in the library and load and return it
-	void			GetAllShaders(std::vector<R_Shader*>& shaders);									//Retrieve all the shaders in the library
+	R_Shader*		GetShader						(const char* name);								//Look for a shader in the library and load and return it
+	void			GetAllShaders					(std::vector<R_Shader*>& shaders);				//Retrieve all the shaders in the library
 
-	void			GetAllTextures(std::vector<R_Texture*>& textures);									//Retrieve all the shaders in the library
+	void			GetAllTextures					(std::vector<R_Texture*>& textures);			//Retrieve all the shaders in the library
 
+	// --- PREFAB METHODS
+	void CreatePrefab(GameObject* gameObject);
+
+	void UpdatePrefab(GameObject* gameObject);
+
+	void SavePrefab(GameObject* gameObject, uint _prefabId);
+	void LoadPrefab(uint _prefabId);
+
+	void SavePrefabObject(GameObject* gameObject, ParsonNode* node);
 	
 private:																															// --- ASSETS MONITORING METHODS ---
 	void			RefreshDirectoryFiles			(const char* directory);
@@ -92,17 +106,12 @@ private:																															// --- ASSETS MONITORING METHODS ---
 
 	uint64			GetAssetFileModTimeFromMeta		(const char* assetsPath);
 
-private:																											// --- IMPORT FILE METHODS ---
-	//uint32		ImportFile						(const char* assetsPath);										// 
-	//uint32		ImportFromAssets				(const char* assetsPath);										// 
-	//uint			SaveResourceToLibrary			(Resource* resource);											// 
-	
-	//uint32		LoadFromLibrary					(const char* assetsPath);										// 
+	void FindPrefabs(); //Finds all prefabs in Assets/Prefabs
 
+private:																											// --- IMPORT FILE METHODS ---
 	uint32			ImportFromAssets				(const char* assetsPath);										// 
 
 	const char*		GetValidPath					(const char* assetsPath);										// 
-	//ResourceType	GetTypeFromAssetsExtension		(const char* assetsPath);										// 
 	ResourceType	GetTypeFromLibraryExtension		(const char* libraryPath);										// 
 
 	void			SetResourceAssetsPathAndFile	(const char* assetsPath, Resource* resource);					// 
@@ -123,6 +132,9 @@ private:
 
 	float							fileRefreshTimer;																// 
 	float							fileRefreshRate;																// 
+
+public:
+	std::map<uint32, std::string> prefabs;
 };
 
 #endif // !__M_RESOURCE_MANAGER_H__

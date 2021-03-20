@@ -8,6 +8,7 @@
 
 #include "JSONParser.h"
 #include "MathGeoLib/include/Math/float3.h"
+#include "Log.h"
 
 #include "MemoryManager.h"
 
@@ -18,7 +19,8 @@ C_AudioSource::C_AudioSource(GameObject* owner) : Component(owner, ComponentType
 
 	wwiseObject = wwiseObject->CreateAudioSource(owner->GetUID(), owner->GetName(), pos);
 
-	eventInfo = { "None", 0 };
+	eventName = "None";
+	eventId = 0;
 }
 
 C_AudioSource::~C_AudioSource()
@@ -57,8 +59,8 @@ bool C_AudioSource::SaveState(ParsonNode& root) const
 
 	ParsonArray eventInfoArray = root.SetArray("Playing Event");
 
-	eventInfoArray.SetString(eventInfo.first.c_str());
-	eventInfoArray.SetNumber(eventInfo.second);
+	eventInfoArray.SetString(eventName.c_str());
+	eventInfoArray.SetNumber(eventId);
 
 
 	return true;
@@ -68,21 +70,32 @@ bool C_AudioSource::LoadState(ParsonNode& root)
 {
 	ParsonArray eventInfoArray = root.GetArray("Playing Event");
 
-	eventInfo.first = (std::string)eventInfoArray.GetString(0);
-	eventInfo.second = (unsigned int)eventInfoArray.GetNumber(1);
+	eventName = (std::string)eventInfoArray.GetString(0);
+	eventId = (unsigned int)eventInfoArray.GetNumber(1);
 
 	return true;
 }
 
 void C_AudioSource::SetEvent(std::string name,  unsigned int id)
 {
-	eventInfo.first = name;
-	eventInfo.second = id;
+	eventName = name;
+	eventId = id;
 }
 
-const std::pair<std::string, unsigned int> C_AudioSource::GetEvent()
+void C_AudioSource::GetEvent(std::string* deu, unsigned int* ola) const
 {
-	return eventInfo;
+	*deu = eventName;
+	*ola = eventId;
+}
+
+const std::string& C_AudioSource::GetEventName() const
+{
+	return eventName;
+}
+
+unsigned int C_AudioSource::GetEventId() const
+{
+	return eventId;
 }
 
 void C_AudioSource::PlayFx(unsigned int eventId)
@@ -96,7 +109,7 @@ void C_AudioSource::PlayFx(std::string name)
 
 	if (it != App->audio->eventMap.end())
 	{
-		wwiseObject->PlayEvent(eventInfo.second);
+		wwiseObject->PlayEvent(eventId);
 	}
 }
 

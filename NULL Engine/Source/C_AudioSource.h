@@ -3,7 +3,6 @@
 
 #include "Component.h"
 
-#include <utility>
 #include <string>
 
 class GameObject;
@@ -22,7 +21,9 @@ public:
 	bool LoadState(ParsonNode& root) override;
 
 	void SetEvent(std::string name, unsigned int id);
-	const std::pair<std::string, unsigned int> GetEvent();
+	void GetEvent(std::string* name, unsigned int* id) const;
+	const std::string& GetEventName() const;
+	unsigned int GetEventId() const;
 
 	static inline ComponentType GetType() { return ComponentType::AUDIOSOURCE; }
 
@@ -42,7 +43,8 @@ public:
 private:
 
 	WwiseObject* wwiseObject = nullptr;
-	std::pair<std::string, unsigned int> eventInfo;
+	std::string eventName;
+	unsigned int eventId;
 
 };
 

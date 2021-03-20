@@ -7,6 +7,7 @@
 #include "M_Input.h"
 
 #include "MemoryManager.h"
+#include "Profiler.h"
 
 #define MAX_KEYS 300
 #define MAX_DIR_LENGTH 300
@@ -497,6 +498,18 @@ AxisState M_Input::GetGameControllerAxis(int id) const
 	}
 
 	return AxisState::UNKNOWN_AXIS;
+}
+
+int M_Input::GetGameControllerAxisValue(int id) const
+{
+	if (gameController.id != nullptr) {
+		if(SDL_GameControllerGetAxis(gameController.id, SDL_GameControllerAxis(id)) < -JOYSTICK_THRESHOLD)
+		return SDL_GameControllerGetAxis(gameController.id, SDL_GameControllerAxis(id));
+
+		if (SDL_GameControllerGetAxis(gameController.id, SDL_GameControllerAxis(id)) > JOYSTICK_THRESHOLD)
+		return SDL_GameControllerGetAxis(gameController.id, SDL_GameControllerAxis(id));
+	}
+	return 0;
 }
 
 bool M_Input::WindowSizeWasManipulated(Uint8 windowEvent) const

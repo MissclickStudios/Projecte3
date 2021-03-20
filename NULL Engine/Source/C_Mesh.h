@@ -18,44 +18,60 @@ public:
 	C_Mesh(GameObject* owner);
 	~C_Mesh();
 
-	bool Update() override;
-	bool CleanUp() override;
+	bool Update		() override;
+	bool CleanUp	() override;
 
-	bool SaveState(ParsonNode& root) const override;
-	bool LoadState(ParsonNode& root) override;
+	bool SaveState	(ParsonNode& root) const override;
+	bool LoadState	(ParsonNode& root) override;
 
-	static inline ComponentType GetType() { return ComponentType::MESH; }			// This is needed to be able to use templates for functions such as GetComponent<>();
+	static inline ComponentType GetType() { return ComponentType::MESH; }															// Required for templated methods such as GetComponent().
 
-public:
-	R_Mesh* GetMesh				() const;								// Returns the R_Mesh* variable of the component. If there is no mesh the default value will be nullptr.
-	void	SetMesh				(R_Mesh* rMesh);						// Sets the R_Mesh* variable of the component. Will be normally set when a model is imported.
+public:																																// --- RESOURCE MESH METHODS
+	R_Mesh*		GetMesh					() const;																					// If there is no rMesh it returns nullptr.
+	void		SetMesh					(R_Mesh* rMesh);																			// rMesh will be normally set when a model is imported.
 
-	const char* GetMeshPath		() const;
-	const char* GetMeshFile		() const;
-	void SetMeshPath			(const char* path);
+	const char* GetMeshPath				() const;																					// 
+	const char* GetMeshFile				() const;																					// 
+	void		SetMeshPath				(const char* path);																			// 
 
-	void GetMeshData			(uint& numVertices, uint& numNormals, uint& numTexCoords, uint& numIndices, uint& numBones);
+public:																																// --- MESH SKINNING METHODS
+	R_Mesh*		GetSkinnedMesh			() const;
+	void		GetBoneMapping			(std::map<std::string, GameObject*>& boneMapping);
+	
+	bool		RefreshSkinning			();																							// 
+	void		AnimateMesh				();																							// 
 
-	bool GetDrawVertexNormals	() const;
-	bool GetDrawFaceNormals		() const;
-	void SetDrawVertexNormals	(const bool& setTo);
-	void SetDrawFaceNormals		(const bool& setTo);
+	void		RefreshBoneMapping		();
+	void		SetRootBone				(GameObject* rootBone);
+	void		SetAnimatorOwner		(GameObject* cAnimatorOwner);																// TMP. Ambiguous name. Change Later.
 
-	bool GetShowWireframe		() const;
-	void SetShowWireframe		(const bool& setTo);
+public:																																// --- C_MESH DEBUG METHODS
+	void		GetMeshData				(uint& numVertices, uint& numNormals, uint& numTexCoords, uint& numIndices, uint& numBones);
+	void		GetBoundingBoxVertices	(math::float3* bbVertices) const;															// TODO: Kinda dirty, should be done elsewhere (?).
 
-	void GetBoundingBoxVertices	(math::float3* bbVertices) const;		// TODO: Kinda dirty, should be done elsewhere (?).
-	bool GetShowBoundingBox		() const;
-	void SetShowBoundingBox		(const bool& setTo);
+	bool		GetDrawVertexNormals	() const;
+	bool		GetDrawFaceNormals		() const;
+	bool		GetShowWireframe		() const;
+	bool		GetShowBoundingBox		() const;
+	
+	void		SetDrawVertexNormals	(bool setTo);
+	void		SetDrawFaceNormals		(bool setTo);
+	void		SetShowWireframe		(bool setTo);
+	void		SetShowBoundingBox		(bool setTo);
 
 private:
-	R_Mesh* rMesh;
-	R_Mesh* skinningMesh;
+	R_Mesh*		rMesh;
+	R_Mesh*		skinnedMesh;
 
-	bool showWireframe;
-	bool showBoundingBox;
+	GameObject* rootBone;
+	GameObject* cAnimatorOwner;
 
-	std::vector<float4x4> boneTransforms;
+	std::vector<float4x4>				boneTransforms;
+	std::map<std::string, GameObject*>	boneMapping;
+	
+private:																															// --- COMPONENT MESH DEBUG VARIABLES
+	bool	showWireframe;
+	bool	showBoundingBox;
 };
 
 #endif // !__C_MESH_H__

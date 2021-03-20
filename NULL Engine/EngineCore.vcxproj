@@ -22,6 +22,8 @@
     <ClCompile Include="Source\C_AudioSource.cpp" />
     <ClCompile Include="Source\C_BulletBehavior.cpp" />
     <ClCompile Include="Source\C_CameraBehavior.cpp" />
+    <ClCompile Include="Source\C_UI_Text.cpp" />
+    <ClCompile Include="Source\C_GateBehavior.cpp" />
     <ClCompile Include="Source\Dependencies\mmgr\include\mmgr.cpp" />
     <ClCompile Include="Source\C_PlayerController.cpp" />
     <ClCompile Include="Source\Dependencies\Wwise\samples\SoundEngine\Common\AkDefaultLowLevelIODispatcher.cpp" />
@@ -30,6 +32,7 @@
     <ClCompile Include="Source\Dependencies\Wwise\samples\SoundEngine\Common\AkFilePackageLUT.cpp" />
     <ClCompile Include="Source\Dependencies\Wwise\samples\SoundEngine\Common\AkMultipleFileLocation.cpp" />
     <ClCompile Include="Source\Dependencies\Wwise\samples\SoundEngine\Win32\AkDefaultIOHookBlocking.cpp" />
+    <ClCompile Include="Source\DirectionalLight.cpp" />
     <ClCompile Include="Source\LevelGenerator.cpp" />
     <ClCompile Include="Source\M_Audio.cpp" />
     <ClCompile Include="Source\Channel.cpp" />
@@ -129,6 +132,7 @@
     <ClCompile Include="Source\Particle.cpp" />
     <ClCompile Include="Source\PathNode.cpp" />
     <ClCompile Include="Source\C_PropBehavior.cpp" />
+    <ClCompile Include="Source\PointLight.cpp" />
     <ClCompile Include="Source\Random.cpp" />
     <ClCompile Include="Source\R_Animation.cpp" />
     <ClCompile Include="Source\R_Folder.cpp" />
@@ -150,13 +154,12 @@
     <ClCompile Include="Source\R_Mesh.cpp" />
     <ClCompile Include="Source\R_Model.cpp" />
     <ClCompile Include="Source\Timer.cpp" />
-    <ClCompile Include="Source\UIElement.cpp" />
-    <ClCompile Include="Source\UI_Text.cpp" />
-    <ClCompile Include="Source\UI_Image.cpp" />
+    <ClCompile Include="Source\C_UI_Image.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\AnimationClip.h" />
     <ClInclude Include="Source\AnimationSettings.h" />
+    <ClInclude Include="Source\BoneLink.h" />
     <ClInclude Include="Source\AnimatorClip.h" />
     <ClInclude Include="Source\Application.h" />
     <ClInclude Include="Source\Assimp.h" />
@@ -169,9 +172,13 @@
     <ClInclude Include="Source\C_AudioSource.h" />
     <ClInclude Include="Source\C_BulletBehavior.h" />
     <ClInclude Include="Source\C_CameraBehavior.h" />
+    <ClInclude Include="Source\C_UI_Text.h" />
+    <ClInclude Include="Source\C_GateBehavior.h" />
     <ClInclude Include="Source\Dependencies\mmgr\include\mmgr.h" />
     <ClInclude Include="Source\Dependencies\mmgr\include\nommgr.h" />
     <ClInclude Include="Source\C_PlayerController.h" />
+    <ClInclude Include="Source\Dependencies\Optik\include\optick.config.h" />
+    <ClInclude Include="Source\Dependencies\Optik\include\optick.h" />
     <ClInclude Include="Source\Dependencies\Wwise\samples\SoundEngine\Common\AkDefaultLowLevelIODispatcher.h" />
     <ClInclude Include="Source\Dependencies\Wwise\samples\SoundEngine\Common\AkFileLocationBase.h" />
     <ClInclude Include="Source\Dependencies\Wwise\samples\SoundEngine\Common\AkFilePackage.h" />
@@ -235,6 +242,7 @@
     <ClInclude Include="Source\Dependencies\FreeType\include\freetype\tttables.h" />
     <ClInclude Include="Source\Dependencies\FreeType\include\freetype\tttags.h" />
     <ClInclude Include="Source\Dependencies\FreeType\include\ft2build.h" />
+    <ClInclude Include="Source\DirectionalLight.h" />
     <ClInclude Include="Source\EasingFunctions.h" />
     <ClInclude Include="Source\Emitter.h" />
     <ClInclude Include="Source\EmitterInstance.h" />
@@ -389,6 +397,7 @@
     <ClInclude Include="Source\Particle.h" />
     <ClInclude Include="Source\ParticleModule.h" />
     <ClInclude Include="Source\PathNode.h" />
+    <ClInclude Include="Source\PointLight.h" />
     <ClInclude Include="Source\Profiler.h" />
     <ClInclude Include="Source\C_PropBehavior.h" />
     <ClInclude Include="Source\Random.h" />
@@ -411,9 +420,7 @@
     <ClInclude Include="Source\R_Mesh.h" />
     <ClInclude Include="Source\R_Model.h" />
     <ClInclude Include="Source\Timer.h" />
-    <ClInclude Include="Source\UIElement.h" />
-    <ClInclude Include="Source\UI_Text.h" />
-    <ClInclude Include="Source\UI_Image.h" />
+    <ClInclude Include="Source\C_UI_Image.h" />
     <ClInclude Include="Source\UpdateStatus.h" />
     <ClInclude Include="Source\VariableDefinitions.h" />
     <ClInclude Include="Source\VariableTypedefs.h" />
@@ -473,6 +480,7 @@
     <IntDir>.\Intermediate\CoreDll\$(Configuration)\</IntDir>
     <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86)</LibraryPath>
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <TargetName>$(ProjectName)R</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Build|Win32'">
     <OutDir>.\Build\CoreDll\$(Configuration)\</OutDir>
@@ -523,7 +531,7 @@
       <AdditionalDependencies>AkSoundEngine.lib;AkMemoryMgr.lib;AkStreamMgr.lib;AkMusicEngine.lib;AkSpatialAudio.lib;dinput8.lib;dsound.lib;dxguid.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>Xcopy "$(ProjectDir)Build\CoreDll\$(Configuration)\EngineCore.dll" "$(ProjectDir)Resources\" /s /y</Command>
+      <Command>Xcopy "$(ProjectDir)Build\CoreDll\$(Configuration)\EngineCoreR.dll" "$(ProjectDir)Resources\" /s /y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Build|Win32'">

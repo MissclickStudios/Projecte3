@@ -26,15 +26,18 @@
 #include "C_BoxCollider.h"
 #include "C_SphereCollider.h"
 #include "C_CapsuleCollider.h"
-#include "C_Canvas.h"
 #include "C_PlayerController.h"
 #include "C_BulletBehavior.h"
 #include "C_PropBehavior.h"
 #include "C_CameraBehavior.h"
+#include "C_GateBehavior.h"
+
 #include "C_ParticleSystem.h"
 
+#include "C_Canvas.h"
 #include "UI_Image.h"
 #include "UI_Text.h"
+
 
 #include "GameObject.h"
 
@@ -59,8 +62,8 @@ show_bounding_boxes	(false)
 	obb.SetNegativeInfinity();
 	aabb.SetNegativeInfinity();
 
-	obb_vertices = new float3[8];																	// Bounding boxes will always have 8 vertices as they are Cuboids.
-	aabb_vertices = new float3[8];																	// Bounding boxes will always have 8 vertices as they are Cuboids.
+	obb_vertices	= new float3[8];																		// Bounding boxes will always have 8 vertices as they are Cuboids.
+	aabb_vertices	= new float3[8];																		// Bounding boxes will always have 8 vertices as they are Cuboids.
 }
 
 GameObject::GameObject(std::string name, bool isActive, bool isStatic) :
@@ -74,8 +77,7 @@ transform			(nullptr),
 is_master_root		(false),
 is_scene_root		(false),
 is_bone				(false),
-to_delete			(false),
-show_bounding_boxes	(false)
+to_delete			(false)
 {
 	if (name.empty())
 	{
@@ -134,6 +136,9 @@ bool GameObject::SaveState(ParsonNode& root) const
 	uint parentUID = (parent != nullptr) ? parent->uid : 0;
 	root.SetNumber("ParentUID", parentUID);
 
+	root.SetNumber("PrefabID", prefabID);
+	root.SetBool("IsPrefab", isPrefab);
+
 	root.SetString("Name", name.c_str());
 	root.SetBool("IsActive", isActive);
 	root.SetBool("IsStatic", isStatic);
@@ -154,9 +159,14 @@ bool GameObject::SaveState(ParsonNode& root) const
 bool GameObject::LoadState(ParsonNode& root)
 {
 	bool ret = true;
+
+
 	
 	ForceUID((uint)root.GetNumber("UID"));
 	parent_uid = (uint)root.GetNumber("ParentUID");
+
+	prefabID = (uint)root.GetNumber("PrefabID");
+	isPrefab = root.GetBool("IsPrefab");
 
 	name				= root.GetString("Name");
 	isActive			= root.GetBool("IsActive");
@@ -188,28 +198,36 @@ bool GameObject::LoadState(ParsonNode& root)
 
 			switch (type)
 			{
-			//case COMPONENT_TYPE::TRANSFORM: { component = new C_Transform(this); }	break;
-			case ComponentType::MESH:		{ component = new C_Mesh(this); }		break;
-			case ComponentType::MATERIAL:	{ component = new C_Material(this); }	break;
-			case ComponentType::LIGHT:		{ component = new C_Light(this); }		break;
-			case ComponentType::CAMERA: { component = new C_Camera(this); if (App->play) App->camera->SetCurrentCamera((C_Camera*)component); }		break; //TODO: Harcoded the set the camera when playing
-			case ComponentType::ANIMATOR:	{ component = new C_Animator(this); }	break;
-			case ComponentType::ANIMATION: { component = new C_Animation(this); }	break;
-			case ComponentType::AUDIOSOURCE: { component = new C_AudioSource(this); } break;
-			case ComponentType::AUDIOLISTENER: { component = new C_AudioListener(this); } break;
+			//case COMPONENT_TYPE::TRANSFORM:		{ component = new C_Transform(this); }			break;
+			case ComponentType::MESH:				{ component = new C_Mesh(this); }				break;
+			case ComponentType::MATERIAL:			{ component = new C_Material(this); }			break;
+			case ComponentType::LIGHT:				{ component = new C_Light(this); }				break;
+			case ComponentType::CAMERA:				{ component = new C_Camera(this); } 			break;
+			case ComponentType::ANIMATOR:			{ component = new C_Animator(this); }			break;
+			case ComponentType::ANIMATION:			{ component = new C_Animation(this); }			break;
+			case ComponentType::AUDIOSOURCE:		{ component = new C_AudioSource(this); }		break;
+			case ComponentType::AUDIOLISTENER:		{ component = new C_AudioListener(this); }		break;
 			case ComponentType::RIGIDBODY:			{ component = new C_RigidBody(this); }			break;
 			case ComponentType::BOX_COLLIDER:		{ component = new C_BoxCollider(this); }		break;
 			case ComponentType::SPHERE_COLLIDER:	{ component = new C_SphereCollider(this); }		break;
 			case ComponentType::CAPSULE_COLLIDER:	{ component = new C_CapsuleCollider(this); }	break;
-			case ComponentType::PLAYER_CONTROLLER: { component = new C_PlayerController(this); } break;
-			case ComponentType::BULLET_BEHAVIOR: { component = new C_BulletBehavior(this); }	break;
-			case ComponentType::PROP_BEHAVIOR: { component = new C_PropBehavior(this); }	break;
-			case ComponentType::CAMERA_BEHAVIOR: { component = new C_CameraBehavior(this); }	break;
-			case ComponentType::CANVAS: { component = new C_Canvas(this); }	break;
+			case ComponentType::PLAYER_CONTROLLER:	{ component = new C_PlayerController(this); }	break;
+			case ComponentType::BULLET_BEHAVIOR:	{ component = new C_BulletBehavior(this); }		break;
+			case ComponentType::PROP_BEHAVIOR:		{ component = new C_PropBehavior(this); }		break;
+			case ComponentType::CAMERA_BEHAVIOR:	{ component = new C_CameraBehavior(this); }		break;
+			case ComponentType::GATE_BEHAVIOR:		{ component = new C_GateBehavior(this); }		break;
+			case ComponentType::CANVAS:				{ component = new C_Canvas(this); }				break;
+			case ComponentType::UI_IMAGE:			{ component = new C_UI_Image(this); }			break;
+			case ComponentType::UI_TEXT:			{ component = new C_UI_Text(this); }			break;
 			}
 
 			if (component != nullptr)
 			{
+				if ((component->GetType() == ComponentType::CAMERA) && (App->gameState == GameState::PLAY)) //TODO fix this hardcode
+				{
+					App->camera->SetCurrentCamera((C_Camera*)component);
+				}
+
 				component->LoadState(componentNode);
 				components.push_back(component);
 			}
@@ -238,7 +256,7 @@ void GameObject::FreeChilds()
 {
 	if (parent != nullptr)
 	{
-		parent->DeleteChild(this);											// Deleting this GameObject from the childs list of its parent.
+		parent->DeleteChild(this);												// Deleting this GameObject from the childs list of its parent.
 	}
 
 	/*if (parent != nullptr)													// Dirty fix to avoid innecessary calls to GetAllChilds().
@@ -309,8 +327,9 @@ void GameObject::GetRenderers(std::vector<MeshRenderer>& meshRenderers, std::vec
 	std::vector<C_Mesh*> cMeshes;
 	GetComponents<C_Mesh>(cMeshes);
 
-	C_Material* cMaterial = GetComponent<C_Material>();
-	C_Camera* cCamera = GetComponent<C_Camera>();
+	C_Transform* cTransform = GetComponent<C_Transform>();
+	C_Material* cMaterial	= GetComponent<C_Material>();
+	C_Camera* cCamera		= GetComponent<C_Camera>();
 	C_Animator* cAnimation	= GetComponent<C_Animator>();
 
 	for (uint i = 0; i < cMeshes.size(); ++i)
@@ -318,8 +337,8 @@ void GameObject::GetRenderers(std::vector<MeshRenderer>& meshRenderers, std::vec
 		if (cMeshes[i] != nullptr)
 		{
 			if (cMeshes[i]->IsActive() && cMeshes[i]->GetMesh() != nullptr)
-			{
-				meshRenderers.push_back(MeshRenderer(GetComponent<C_Transform>()->GetWorldTransform(), cMeshes[i], cMaterial));
+			{				
+				meshRenderers.push_back(MeshRenderer(cTransform->GetWorldTransformPtr(), cMeshes[i], cMaterial));
 			}
 		}
 	}
@@ -349,6 +368,15 @@ void GameObject::GetRenderers(std::vector<MeshRenderer>& meshRenderers, std::vec
 
 		cuboidRenderers.push_back(CuboidRenderer(obb_vertices, CuboidType::OBB));
 		cuboidRenderers.push_back(CuboidRenderer(aabb_vertices, CuboidType::AABB));
+	}
+
+	if (App->renderer->GetRenderColliders())
+	{
+		C_BoxCollider* collider = GetComponent<C_BoxCollider>();
+		if (collider && collider->ToShowCollider())
+		{
+			cuboidRenderers.push_back(CuboidRenderer(collider->GetCornerPoints(), CuboidType::COLLIDER));
+		}
 	}
 }
 
@@ -384,6 +412,7 @@ bool GameObject::SetParent(GameObject* newParent)
 	}
 
 	success = newParent->AddChild(this);
+
 	if (success)
 	{
 		parent = newParent;
@@ -498,7 +527,7 @@ void GameObject::GetAllChilds(std::vector<GameObject*>& childs)
 {
 	if (this->childs.empty())
 	{
-		LOG("[WARNING] Game Object: GameObject { %s } did not have any childs!", this->GetName());
+		//LOG("[WARNING] Game Object: GameObject { %s } did not have any childs!", this->GetName());
 		return;
 	}
 	
@@ -513,7 +542,7 @@ void GameObject::GetAllChilds(std::map<std::string, GameObject*>& childs)
 {
 	if (this->childs.empty())
 	{
-		LOG("[WARNING] Game Object: GameObject { %s } did not have any childs!", this->GetName());
+		//LOG("[WARNING] Game Object: GameObject { %s } did not have any childs!", this->GetName());
 		return;
 	}
 
@@ -573,6 +602,18 @@ GameObject* GameObject::FindChild(const char* childName)
 	}
 
 	return nullptr;
+}
+
+void GameObject::SetAsPrefab(uint _prefabID)
+{
+	//set the childs to the prefab uid and the bool
+	prefabID = _prefabID;
+	isPrefab = true;
+
+	for(auto child = childs.begin() ; child != childs.end();child++)
+	{
+		(*child)->SetAsPrefab(_prefabID);
+	}
 }
 
 // --- GAME OBJECT GETTERS AND SETTERS ---
@@ -676,6 +717,11 @@ Component* GameObject::CreateComponent(ComponentType type)
 		LOG("[ERROR] Player Controller Component could not be added to %s! Error: No duplicates allowed!", name.c_str());
 		return nullptr;
 	}
+	if (type == ComponentType::UI_IMAGE && GetComponent<C_UI_Image>() != nullptr)
+	{
+		LOG("[ERROR] Player Controller Component could not be added to %s! Error: No duplicates allowed!", name.c_str());
+		return nullptr;
+	}
 
 	switch(type)
 	{
@@ -693,11 +739,14 @@ Component* GameObject::CreateComponent(ComponentType type)
 	case ComponentType::SPHERE_COLLIDER:	{ component = new C_SphereCollider(this); }		break;
 	case ComponentType::CAPSULE_COLLIDER:	{ component = new C_CapsuleCollider(this); }	break;
 	case ComponentType::CANVAS:				{ component = new C_Canvas(this); }				break;
+	case ComponentType::UI_IMAGE:			{ component = new C_UI_Image(this); }			break;
+	case ComponentType::UI_TEXT:			{ component = new C_UI_Text(this); }			break;
 	case ComponentType::PLAYER_CONTROLLER:	{ component = new C_PlayerController(this); }	break;
-	case ComponentType::BULLET_BEHAVIOR: { component = new C_BulletBehavior(this); }	break;
-	case ComponentType::PROP_BEHAVIOR: { component = new C_PropBehavior(this); }	break;
-	case ComponentType::CAMERA_BEHAVIOR: { component = new C_CameraBehavior(this); }	break;
-	case ComponentType::PARTICLE_SYSTEM: { component = new C_ParticleSystem(this); }	break;
+	case ComponentType::BULLET_BEHAVIOR:	{ component = new C_BulletBehavior(this); }		break;
+	case ComponentType::PROP_BEHAVIOR:		{ component = new C_PropBehavior(this); }		break;
+	case ComponentType::CAMERA_BEHAVIOR:	{ component = new C_CameraBehavior(this); }		break;
+	case ComponentType::GATE_BEHAVIOR:		{ component = new C_GateBehavior(this); }		break;
+  case ComponentType::PARTICLE_SYSTEM: { component = new C_ParticleSystem(this); }	break;
 	}
 
 	if (component != nullptr)
@@ -755,49 +804,7 @@ bool GameObject::GetAllComponents(std::vector<Component*>& components) const
 	return components.empty() ? false : true;
 }
 
-
-// --- UIELEMENTS METHODS ---
-UIElement* GameObject::CreateUIElement(UIElementType type)
-{
-	UIElement* element = nullptr;
-
-	switch (type)
-	{
-	case UIElementType::IMAGE: { element = new UI_Image(this); }	break;
-	case UIElementType::TEXT: { element = new UI_Text(this); }		break;
-	}
-
-	if (element != nullptr)
-		uiElement = element;
-
-	return element;
-}
-
-UIElement* GameObject::GetUIElement() const
-{
-	return uiElement;
-}
-
-bool GameObject::DeleteUIElement()
-{
-
-	std::string uiElementName = uiElement->GetNameFromType();
-
-	if (uiElement != nullptr)
-	{
-		uiElement->CleanUp();
-		RELEASE(uiElement);
-
-		return true;
-	}
-
-	LOG("[STATUS] Deleted Component %s of Game Object %s", uiElementName.c_str(), name.c_str());
-
-	return false;
-}
-
-
-
+// ---
 uint32 GameObject::GetUID() const
 {
 	return uid;

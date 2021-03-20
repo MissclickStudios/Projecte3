@@ -26,6 +26,7 @@ public:																				// --- C_TRANSFORM METHODS ---
 	
 	float4x4 GetLocalTransform() const;									// Returns the local transform's 4x4 matrix. 
 	float4x4 GetWorldTransform() const;									// Returns the world transform's 4x4 matrix.
+	float4x4* GetWorldTransformPtr();									// Needed for renderers. The transform will be updated even if it is already in a renderer.
 
 	void SetLocalTransform(const float4x4& localTransform);			// Sets the local transform's 4x4 matrix with the one passed as argument.
 	void SetWorldTransform(const float4x4& worldTransform);			// Sets the world transform's 4x4 matrix with the one passed as argument.

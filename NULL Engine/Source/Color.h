@@ -3,6 +3,11 @@
 
 #include "Macros.h"
 
+namespace math
+{
+	class float4;
+}
+
 struct NULL_API Color
 {
 	float r, g, b, a;
@@ -23,7 +28,8 @@ struct NULL_API Color
 
 	// --- OPERATORS
 	float*	operator &();													// Returns a float* of the vector.
-	
+	 float* operator &() const;													// Returns a float* of the vector.
+
 	Color	operator +(const Color& color);									// col.r = r + color.r, ... .	The values are expected to be within Range: 0.0f ~ 1.0f.
 	Color	operator -(const Color& color);									// col.r = r - color.r, ... .	The values are expected to be within Range: 0.0f ~ 1.0f.
 	Color	operator *(float scalar);										// col.r = r * color.r, ... .	Remember that the value of the vector has to remain in Range: 0.0f ~ 1.0f after the ops.
@@ -35,6 +41,7 @@ struct NULL_API Color
 	Color	operator /=(float scalar);										// r /= color.t. ... .			Remember that the value of the vector has to remain in Range: 0.0f ~ 1.0f after the ops.
 
 	Color	operator =(const Color& color);									// this = color; Necessary?
+	Color	operator =(const math::float4& color);									// this = color; Necessary?
 	bool	operator ==(const Color& color);								// if (this.r == color.r && ... && this.a == this.a), then return true.
 };
 

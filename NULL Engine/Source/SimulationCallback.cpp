@@ -7,6 +7,8 @@
 #include "GameObject.h"
 #include "C_BulletBehavior.h"
 #include "C_PropBehavior.h"
+#include "C_GateBehavior.h"
+#include "C_PlayerController.h"
 
 #include "SimulationCallback.h"
 
@@ -27,32 +29,19 @@ void SimulationCallback::onContact(const physx::PxContactPairHeader& pairHeader,
 
 		if (gameObject1 && gameObject2)
 		{
-			for (int i = 0; i < gameObject1->components.size(); ++i)
+			if (gameObject1->GetComponent<C_GateBehavior>() && gameObject2->GetComponent<C_PlayerController>())
 			{
-				if (gameObject1->components[i]->GetType() == ComponentType::PLAYER_CONTROLLER)
-					return;
+				gameObject1->GetComponent<C_GateBehavior>()->OnCollisionEnter();
+				return;
 			}
-			for (int i = 0; i < gameObject2->components.size(); ++i)
+			if (gameObject2->GetComponent<C_GateBehavior>() && gameObject1->GetComponent<C_PlayerController>())
 			{
-				if (gameObject2->components[i]->GetType() == ComponentType::PLAYER_CONTROLLER)
-					return;
+				gameObject2->GetComponent<C_GateBehavior>()->OnCollisionEnter();
+				return;
 			}
+
 			if (cPair.events & physx::PxPairFlag::eNOTIFY_TOUCH_FOUND)
 			{
-				for (int i = 0; i < gameObject1->components.size(); ++i)
-				{
-					if (gameObject1->components[i]->GetType() == ComponentType::BULLET_BEHAVIOR)
-						((C_BulletBehavior*)gameObject1->components[i])->OnCollisionEnter();
-					else if (gameObject1->components[i]->GetType() == ComponentType::PROP_BEHAVIOR)
-						((C_PropBehavior*)gameObject1->components[i])->OnCollisionEnter();
-				}
-				for (int i = 0; i < gameObject2->components.size(); ++i)
-				{
-					if (gameObject2->components[i]->GetType() == ComponentType::BULLET_BEHAVIOR)
-						((C_BulletBehavior*)gameObject2->components[i])->OnCollisionEnter();
-					else if (gameObject2->components[i]->GetType() == ComponentType::PROP_BEHAVIOR)
-						((C_PropBehavior*)gameObject2->components[i])->OnCollisionEnter();
-				}
 			}
 			else if (cPair.events & physx::PxPairFlag::eNOTIFY_TOUCH_PERSISTS)
 			{
@@ -76,8 +65,24 @@ void SimulationCallback::onTrigger(physx::PxTriggerPair* pairs, physx::PxU32 cou
 
 		if (gameObject1 != nullptr && gameObject2 != nullptr)
 		{
+			if (gameObject1->GetComponent<C_PlayerController>())
+				return;
+			if (gameObject2->GetComponent<C_PlayerController>())
+				return;
 			if ((pairs[i].status & physx::PxPairFlag::eNOTIFY_TOUCH_FOUND))
 			{
+				if (gameObject1->GetComponent<C_BulletBehavior>())
+				{
+					gameObject1->GetComponent<C_BulletBehavior>()->OnCollisionEnter();
+					if (gameObject2->GetComponent<C_PropBehavior>())
+						gameObject2->GetComponent<C_PropBehavior>()->OnCollisionEnter();
+				}
+				if (gameObject2->GetComponent<C_BulletBehavior>())
+				{
+					gameObject2->GetComponent<C_BulletBehavior>()->OnCollisionEnter();
+					if (gameObject1->GetComponent<C_PropBehavior>())
+						gameObject1->GetComponent<C_PropBehavior>()->OnCollisionEnter();
+				}
 			}
 			else if ((pairs[i].status & physx::PxPairFlag::eNOTIFY_TOUCH_LOST))
 			{

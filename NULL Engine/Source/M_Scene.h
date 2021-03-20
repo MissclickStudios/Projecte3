@@ -48,6 +48,9 @@ public:																														// --- GAME OBJECTS METHODS ---
 
 	void			LoadResourceIntoScene				(Resource* resource);
 
+	void LoadPrefabIntoScene(ParsonNode* a);
+	void LoadPrefabObject(GameObject* gameObject,ParsonNode* node);
+
 	std::vector<GameObject*>* GetGameObjects			();
 	
 	GameObject*		CreateGameObject					(const char* name = nullptr, GameObject* parent = nullptr);			// 
@@ -86,12 +89,12 @@ public:																														// --- SELECT THROUGH RAYCAST
 
 public:	
 	bool			CheckSceneLight();	//Check if there is a light already in the scene
-	GameObject*		GetSceneLight();	//Return the light in the scene
-	void			SetSceneLight(GameObject* lightPoint);	//Set the light in the scene with the given
+	std::vector<GameObject*> GetAllLights();	//Return the light in the scene
+	void			AddSceneLight(GameObject* light);	//Set the light in the scene with the given
+	std::vector<GameObject*> GetDirLights();
+	std::vector<GameObject*> GetPointLights();
 
-private:
-	void			HandleDebugInput();
-	void			DebugSpawnPrimitive(Primitive* p);
+	void NextRoom();
 
 private:
 	std::vector<GameObject*>		gameObjects;																			// 
@@ -107,7 +110,8 @@ private:
 	std::vector<Primitive*>			primitives;
 
 	LevelGenerator					level;
-	GameObject*						lightPoint;
+
+	bool nextScene = false;
 };
 
 #endif // !__M_SCENE_H__

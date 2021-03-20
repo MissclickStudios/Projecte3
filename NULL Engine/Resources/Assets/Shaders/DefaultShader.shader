@@ -19,10 +19,13 @@ uniform mat4 projectionMatrix;
 void main()
 {
     gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(position, 1.0f);
+    
     TexCoord = texCoord;
+    
     objectColor = inColor;
+    
     fragPos = vec3(modelMatrix * vec4(position, 1.0));
-    //modelNormal = normal;
+    
     modelNormal = mat3(transpose(inverse(modelMatrix))) * normal;  
 }
 
@@ -31,9 +34,35 @@ void main()
 //--------------------
 
 #ifdef __Fragment_Shader__
-uniform vec4 lightColor;
 
-uniform vec3 lightPos; 
+struct DirLight
+{
+    vec4 diffuse;
+    vec4 ambient;
+    vec4 specular;
+
+    vec3 direction;
+};
+
+struct PointLight 
+{    
+    vec3 position;
+    
+    float constant;
+    float linear;
+    float quadratic;  
+
+    vec4 ambient;
+    vec4 diffuse;
+    vec4 specular;
+};
+#define MAX_LIGHTPOINTS 5
+
+uniform int numPointLights;
+uniform DirLight dirLight;
+uniform PointLight pointLight[MAX_LIGHTPOINTS];
+uniform vec3 viewPos; 
+float specularStrength = 0.5;
 
 in vec4 objectColor;
 in vec2 TexCoord;
@@ -43,34 +72,84 @@ out vec4 color;
 
 uniform bool hasTexture;
 uniform sampler2D ourTexture;
+
+vec4 CalculateDirectional(DirLight light, vec3 normal, vec3 viewDir, float specularStrength, vec4 objectColor);
+vec4 CalculatePointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir, float specularStrength, vec4 objectColor);
+
 void main()
 {
-   vec3 norm = normalize(modelNormal);
+
+    vec3 norm = normalize(modelNormal);
+    vec3 viewDir = normalize(viewPos - fragPos);
+
+   vec4 outputColor =  CalculateDirectional(dirLight, norm, viewDir, specularStrength, objectColor); 
    
-   vec3 lightDir = normalize(lightPos - fragPos);  
-   
-   float diff = max(dot(norm, lightDir), 0.0);
-   
-   vec4 diffuse = diff * lightColor;
-   
-   vec4 ambient = 0.1 * lightColor;
-   
-   vec4 resultColor = (ambient + diffuse) * objectColor;
-   
-   vec4 texColor = (hasTexture) ? texture(ourTexture, TexCoord) : vec4(1,1,1,1);
-   
-   color = texColor  * resultColor;
+   if(numPointLights > 0) 
+   {
+       for(int i = 0; i < numPointLights; i++)
+       {
+            outputColor += CalculatePointLight(pointLight[i], norm, fragPos, viewDir, specularStrength, objectColor);
+       }
+   }
+  vec4 texColor = (hasTexture) ? texture(ourTexture, TexCoord) : vec4(1,1,1,1);
+
+   color = outputColor * texColor;
 
 }
 
+vec4 CalculateDirectional(DirLight light, vec3 normal, vec3 viewDir, float specularStrength, vec4 objectColor)
+{
+    
+    vec3 lightDir = normalize(-light.direction); 
+    
+    vec3 reflectDir = reflect(-lightDir, normal);
+   
+   //Specular
+   
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
+    
+    vec4 resultSpecular = specularStrength * spec * light.specular; 
+    
+    //Diffuse  
+   
+   float diff = max(dot(normal, lightDir), 0.0);
+   
+   vec4 resultDiffuse = diff * light.diffuse;
+   
+   //Resulting Color and Texture
+   
+   vec4 resultColor = (light.ambient + resultDiffuse + resultSpecular) * objectColor;
+   
+   return (resultColor);
+}
+
+vec4 CalculatePointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir, float specularStrength, vec4 objectColor)
+{
+     vec3 lightDir = normalize(light.position - fragPos);
+
+    // diffuse 
+    float diff = max(dot(normal, lightDir), 0.0);
+
+    vec4 resultDiffuse = diff * light.diffuse;
+    // specular 
+    vec3 reflectDir = reflect(-lightDir, normal);
+
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
+
+     vec4 resultSpecular = specularStrength * spec * light.specular; 
+    // attenuation
+    float distance    = length(light.position - fragPos);
+
+    float attenuation = 1.0 / (light.constant + light.linear * distance + 
+  			     light.quadratic * (distance * distance));    
+
+
+    vec4 resultColor = (light.ambient + resultDiffuse + resultSpecular) * objectColor;
+   
+   return (resultColor * attenuation);
+}
+
 #endif
-
-
-
-
-
-
-
 
 
 

@@ -2,7 +2,7 @@
 #include <string>
 
 #include "MathGeoTransform.h"
-
+#include "Profiler.h"
 #include "Color.h"
 #include "AnimatorClip.h"
 
@@ -36,13 +36,16 @@
 #include "C_BulletBehavior.h"
 #include "C_PropBehavior.h"
 #include "C_CameraBehavior.h"
+#include "C_GateBehavior.h"
+#include "C_Canvas.h"
+#include "C_UI_Image.h"
+#include "C_UI_Text.h"
+
 
 #include "R_Shader.h"
 #include "R_Texture.h"
 #include "I_Shaders.h"
 
-#include "C_Canvas.h"
-#include "UI_Image.h"
 
 #include "E_Inspector.h"
 
@@ -74,6 +77,7 @@ E_Inspector::~E_Inspector()
 bool E_Inspector::Draw(ImGuiIO& io)
 {
 	bool ret = true;
+
 
 	ImGui::Begin("Inspector");
 
@@ -162,6 +166,23 @@ void E_Inspector::DrawGameObjectInfo(GameObject* selectedGameObject)
 	ImGui::Combo("Layer", &currentLayer, layerCombo);
 
 	ImGui::Separator();
+
+	if (!selectedGameObject->isPrefab)	// --- PREFAB ---
+	{
+		if (ImGui::Button("Create Prefab"))
+		{
+			
+			App->resourceManager->CreatePrefab(selectedGameObject);
+			//App->resourceManager->RefreshProjectDirectories(); //Should only refresh prefabs
+		}
+	}
+	else
+	{
+		if (ImGui::Button("Update Prefab"))
+			App->resourceManager->UpdatePrefab(selectedGameObject);
+	}
+
+	ImGui::Separator();
 }
 
 void E_Inspector::DrawComponents(GameObject* selectedGameObject)
@@ -198,24 +219,17 @@ void E_Inspector::DrawComponents(GameObject* selectedGameObject)
 		case ComponentType::SPHERE_COLLIDER:	{ DrawSphereColliderComponent((C_SphereCollider*)component); }		break;
 		case ComponentType::CAPSULE_COLLIDER:	{ DrawCapsuleColliderComponent((C_CapsuleCollider*)component); }	break;
 		case ComponentType::CANVAS:				{ DrawCanvasComponent((C_Canvas*)component); }						break;
+		case ComponentType::UI_IMAGE:			{ DrawUIImageComponent((C_UI_Image*)component); }					break;
+		case ComponentType::UI_TEXT:			{ DrawUITextComponent((C_UI_Text*)component); }						break;
 		case ComponentType::PLAYER_CONTROLLER:	{ DrawPlayerControllerComponent((C_PlayerController*)component); }	break;
 		case ComponentType::BULLET_BEHAVIOR:	{ DrawBulletBehaviorComponent((C_BulletBehavior*)component); }		break;
 		case ComponentType::PROP_BEHAVIOR:		{ DrawPropBehaviorComponent((C_PropBehavior*)component); }			break;
 		case ComponentType::CAMERA_BEHAVIOR:	{ DrawCameraBehaviorComponent((C_CameraBehavior*)component); }		break;
+		case ComponentType::GATE_BEHAVIOR:		{ DrawGateBehaviorComponent((C_GateBehavior*)component); }			break;
 		}
 		if (type == ComponentType::NONE)
 		{
 			LOG("[WARNING] Selected GameObject %s has a non-valid component!", selectedGameObject->GetName());
-		}
-	}
-
-	if (selectedGameObject->GetUIElement() != nullptr)
-	{
-		UIElementType type = selectedGameObject->GetUIElement()->GetType();
-		switch (type)
-		{
-		case UIElementType::IMAGE: { DrawUIImage((UI_Image*)selectedGameObject->GetUIElement()); }	break;
-		case UIElementType::TEXT: {} break;
 		}
 	}
 }
@@ -429,20 +443,19 @@ void E_Inspector::DrawMaterialComponent(C_Material* cMaterial)
 				}
 
 				R_Shader* shader = cMaterial->GetShader();
-
 				for (uint i = 0; i < shader->uniforms.size(); i++)
 				{
 					switch (shader->uniforms[i].uniformType)
 					{
-					case  UniformType::INT:	ImGui::DragInt(shader->uniforms[i].name.c_str(), &shader->uniforms[i].integer, 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None); break;
-					case  UniformType::FLOAT: ImGui::DragFloat(shader->uniforms[i].name.c_str(), &shader->uniforms[i].floatNumber, 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None); break;
-					case  UniformType::INT_VEC2: ImGui::DragInt2(shader->uniforms[i].name.c_str(), (int*)&shader->uniforms[i].vec2, 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None); break;
-					case  UniformType::INT_VEC3: ImGui::DragInt3(shader->uniforms[i].name.c_str(), (int*)&shader->uniforms[i].vec3, 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None); break;
-					case  UniformType::INT_VEC4: ImGui::DragInt4(shader->uniforms[i].name.c_str(), (int*)&shader->uniforms[i].vec4, 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None); break;
-					case  UniformType::FLOAT_VEC2: ImGui::DragFloat2(shader->uniforms[i].name.c_str(), (float*)&shader->uniforms[i].vec2, 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None); break;
-					case  UniformType::FLOAT_VEC3: ImGui::DragFloat3(shader->uniforms[i].name.c_str(), (float*)&shader->uniforms[i].vec3, 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None); break;
-					case  UniformType::FLOAT_VEC4: ImGui::DragFloat4(shader->uniforms[i].name.c_str(), (float*)&shader->uniforms[i].vec4, 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None); break;
-					case UniformType::MATRIX4: ImGui::DragFloat4(shader->uniforms[i].name.c_str(), shader->uniforms[i].matrix4.ToEulerXYZ().ptr(), 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None); break;
+					case UniformType::INT:			ImGui::DragInt(shader->uniforms[i].name.c_str(), &shader->uniforms[i].integer, 0.02f, 0.0f, 0.0f, "%.2f");							break;
+					case UniformType::FLOAT:		ImGui::DragFloat(shader->uniforms[i].name.c_str(), &shader->uniforms[i].floatNumber, 0.02f, 0.0f, 0.0f, "%.2f");					break;
+					case UniformType::INT_VEC2:		ImGui::DragInt2(shader->uniforms[i].name.c_str(), (int*)&shader->uniforms[i].vec2, 0.02f, 0.0f, 0.0f, "%.2f");						break;
+					case UniformType::INT_VEC3:		ImGui::DragInt3(shader->uniforms[i].name.c_str(), (int*)&shader->uniforms[i].vec3, 0.02f, 0.0f, 0.0f, "%.2f");						break;
+					case UniformType::INT_VEC4:		ImGui::DragInt4(shader->uniforms[i].name.c_str(), (int*)&shader->uniforms[i].vec4, 0.02f, 0.0f, 0.0f, "%.2f");						break;
+					case UniformType::FLOAT_VEC2:	ImGui::DragFloat2(shader->uniforms[i].name.c_str(), (float*)&shader->uniforms[i].vec2, 0.02f, 0.0f, 0.0f, "%.2f");					break;
+					case UniformType::FLOAT_VEC3:	ImGui::DragFloat3(shader->uniforms[i].name.c_str(), (float*)&shader->uniforms[i].vec3, 0.02f, 0.0f, 0.0f, "%.2f");					break;
+					case UniformType::FLOAT_VEC4:	ImGui::DragFloat4(shader->uniforms[i].name.c_str(), (float*)&shader->uniforms[i].vec4, 0.02f, 0.0f, 0.0f, "%.2f");					break;
+					case UniformType::MATRIX4:		ImGui::DragFloat4(shader->uniforms[i].name.c_str(), shader->uniforms[i].matrix4.ToEulerXYZ().ptr(), 0.02f, 0.0f, 0.0f, "%.2f");		break;
 					}
 				}
 
@@ -458,7 +471,7 @@ void E_Inspector::DrawMaterialComponent(C_Material* cMaterial)
 
 			// --- TEXTURE DATA ---
 
-			if (allTextures.empty()) 
+			/*if (allTextures.empty()) 
 				App->resourceManager->GetAllTextures(allTextures);
 			
 			if (texName == "NONE" && cMaterial->GetTexture())
@@ -478,7 +491,7 @@ void E_Inspector::DrawMaterialComponent(C_Material* cMaterial)
 					}
 				}
 				ImGui::EndCombo();
-			}
+			}*/
 
 			DisplayTextureData(cMaterial);
 
@@ -530,8 +543,54 @@ void E_Inspector::DrawLightComponent(C_Light* cLight)
 			}
 			
 			ImGui::Separator();
+			float4 diffuse;
+			float4 ambient;
+			float4 specular;
+			float3 direction;
+			switch (cLight->GetLightType())
+			{
+			case LightType::DIRECTIONAL: 
+
+				diffuse = (float4)&cLight->GetDirectionalLight()->diffuse;
+				ambient = (float4)&cLight->GetDirectionalLight()->ambient;
+				specular = (float4)&cLight->GetDirectionalLight()->specular;
+				direction = cLight->GetDirectionalLight()->GetDirection();
+				if (ImGui::DragFloat4("Diffuse", (float*)&diffuse, 0.05f, 0.0f, 0.0f, "%.3f", NULL))
+				{
+					cLight->GetDirectionalLight()->diffuse = (Color&)diffuse;
+				}
+				if (ImGui::DragFloat4("Ambient", (float*)&ambient, 0.05f, 0.0f, 0.0f, "%.3f", NULL))
+				{
+					cLight->GetDirectionalLight()->ambient = (Color&)ambient;
+				}
+				if (ImGui::DragFloat4("Specular", (float*)&specular, 0.05f, 0.0f, 0.0f, "%.3f", NULL))
+				{
+					cLight->GetDirectionalLight()->specular = (Color&)specular;
+				}
+				break;
+			case LightType::POINTLIGHT: 
+				diffuse = (float4)&cLight->GetPointLight()->diffuse;
+				ambient = (float4)&cLight->GetPointLight()->ambient;
+				specular = (float4)&cLight->GetPointLight()->specular;
+				if (ImGui::DragFloat4("Diffuse", (float*)&diffuse, 0.05f, 0.0f, 0.0f, "%.3f", NULL))
+				{
+					cLight->GetPointLight()->diffuse = (Color&)diffuse;
+				}
+				if (ImGui::DragFloat4("Ambient", (float*)&ambient, 0.05f, 0.0f, 0.0f, "%.3f", NULL))
+				{
+					cLight->GetPointLight()->ambient = (Color&)ambient;
+				}
+				if (ImGui::DragFloat4("Specular", (float*)&specular, 0.05f, 0.0f, 0.0f, "%.3f", NULL))
+				{
+					cLight->GetPointLight()->specular = (Color&)specular;
+				}
+				break;
+			case LightType::SPOTLIGHT: break;
+			case LightType::NONE: break;
+			}
+
+
 			
-			ImGui::Text("WORK IN PROGRESS");
 		}
 
 		if (!show)
@@ -637,13 +696,18 @@ void E_Inspector::DrawAnimatorComponent(C_Animator* cAnimator)								// TODO: S
 		if (cAnimator != nullptr)
 		{
 			bool animationIsActive	= cAnimator->IsActive();
-			if (ImGui::Checkbox("Is Active", &animationIsActive))							{ cAnimator->SetIsActive(animationIsActive); }
+			if (ImGui::Checkbox("Is Active", &animationIsActive))	{ cAnimator->SetIsActive(animationIsActive); }
+			
+			ImGui::SameLine(ImGui::GetWindowWidth() * 0.69f);
+
+			std::string animatorStateString = cAnimator->GetAnimatorStateAsString();
+			ImGui::Text("State:"); ImGui::SameLine(); ImGui::TextColored(&Yellow, "{ %s }", animatorStateString.c_str());
 
 			ImGui::Separator();
 
 			// --- ANIMATOR VARIABLES
-			static int selectedClip			= 0;
-			std::string clipNamesString		= cAnimator->GetClipNamesAsString();
+			static int selectedClip				= 0;
+			std::string clipNamesString			= cAnimator->GetClipNamesAsString();
 
 			float speed							= cAnimator->GetPlaybackSpeed();
 			float minSpeed						= 0.1f;
@@ -713,18 +777,18 @@ void E_Inspector::DrawAnimatorComponent(C_Animator* cAnimator)								// TODO: S
 						cAnimator->SetCurrentClipByIndex((uint)selectedClip);
 					}
 
-					if (ImGui::Button("Play"))									{ cAnimator->Play(); }		ImGui::SameLine();
-					if (ImGui::Button("Pause"))									{ cAnimator->Pause(); }	ImGui::SameLine();
-					if (ImGui::Button("Step"))									{ cAnimator->Step(); }		ImGui::SameLine();
-					if (ImGui::Button("Stop"))									{ cAnimator->Stop(); }
+					if (ImGui::Button("Play"))	{ cAnimator->Play(); }	ImGui::SameLine();
+					if (ImGui::Button("Pause"))	{ cAnimator->Pause(); }	ImGui::SameLine();
+					if (ImGui::Button("Step"))	{ cAnimator->Step(); }	ImGui::SameLine();
+					if (ImGui::Button("Stop"))	{ cAnimator->Stop(); }
 
 					if (ImGui::SliderFloat("Playback Speed", &speed, minSpeed, maxSpeed, "X %.3f", 0)) { cAnimator->SetPlaybackSpeed(speed); }
 
-					if (ImGui::Checkbox("Interpolate", &interpolate))			{ cAnimator->SetInterpolate(interpolate); }
-					if (ImGui::Checkbox("Loop Animation", &loopAnimation))		{ cAnimator->SetLoopAnimation(loopAnimation); }
-					if (ImGui::Checkbox("Play On Start", &playOnStart))			{ cAnimator->SetPlayOnStart(playOnStart); }
-					if (ImGui::Checkbox("Camera Culling", &cameraCulling))		{ cAnimator->SetCameraCulling(cameraCulling); }
-					if (ImGui::Checkbox("Show Bones", &showBones))				{ cAnimator->SetShowBones(showBones); }
+					if (ImGui::Checkbox("Interpolate", &interpolate))		{ cAnimator->SetInterpolate(interpolate); }
+					if (ImGui::Checkbox("Loop Animation", &loopAnimation))	{ cAnimator->SetLoopAnimation(loopAnimation); }
+					if (ImGui::Checkbox("Play On Start", &playOnStart))		{ cAnimator->SetPlayOnStart(playOnStart); }
+					if (ImGui::Checkbox("Camera Culling", &cameraCulling))	{ cAnimator->SetCameraCulling(cameraCulling); }
+					if (ImGui::Checkbox("Show Bones", &showBones))			{ cAnimator->SetShowBones(showBones); }
 
 					ImGui::Separator();
 
@@ -779,7 +843,7 @@ void E_Inspector::DrawAnimatorComponent(C_Animator* cAnimator)								// TODO: S
 
 					if (ImGui::Button("Create")) 
 					{ 
-						if (!EngineApp->play)
+						if (EngineApp->gameState != GameState::PLAY)
 						{
 							success = cAnimator->AddClip(AnimatorClip(cAnimator->GetAnimationByIndex((uint)selectedAnimation), newClipName, newClipStart, newClipEnd, loop));
 							textTimerRunning = true;
@@ -801,9 +865,9 @@ void E_Inspector::DrawAnimatorComponent(C_Animator* cAnimator)								// TODO: S
 							ImGui::TextColored(Green.C_Array(), "Successfully Created Clip { %s }", new_clip_name_str.c_str());
 
 							strcpy_s(newClipName, 128, "Enter Clip Name");																// --- Re-setting the New Clip Parameters
-							newClipStart	= 0;																							// 
-							newClipEnd	= (int)animationDuration;																		// 
-							loop			= false;																						// --------------------------------------
+							newClipStart	= 0;																						// 
+							newClipEnd		= (int)animationDuration;																	// 
+							loop			= false;																					// --------------------------------------
 						}
 						else
 						{
@@ -894,11 +958,12 @@ void E_Inspector::DrawAudioSourceComponent(C_AudioSource* cAudioSource)
 	{
 		if (cAudioSource != nullptr)
 		{
-			unsigned int currentEvent = cAudioSource->GetEvent().second;
-			std::string currentEventName = cAudioSource->GetEvent().first.c_str();
+			unsigned int currentEvent = cAudioSource->GetEventId();
+			const std::string& currentEventName = cAudioSource->GetEventName();
+			//cAudioSource->GetEvent(&currentEventName,&currentEvent);
 
-			ImGui::Text("Event playing %s", cAudioSource->GetEvent().first.c_str());
-			ImGui::Text("Event id %u", cAudioSource->GetEvent().second);
+			ImGui::Text("Event playing %s", currentEventName.c_str());
+			ImGui::Text("Event id %u", currentEvent);
 
 			if (ImGui::BeginCombo("##Audio", currentEventName.c_str()))
 			{
@@ -906,9 +971,9 @@ void E_Inspector::DrawAudioSourceComponent(C_AudioSource* cAudioSource)
 				{
 					bool isSelected = (currentEventName == it->first);
 					if (ImGui::Selectable(it->first.c_str(), isSelected)) {
-							currentEventName = it->first;
+							//currentEventName = it->first;
 							currentEvent = it->second;
-							cAudioSource->SetEvent(currentEventName, currentEvent);		
+							cAudioSource->SetEvent(it->first, currentEvent);
 					}
 					if (isSelected)
 						ImGui::SetItemDefaultFocus();
@@ -924,11 +989,11 @@ void E_Inspector::DrawAudioSourceComponent(C_AudioSource* cAudioSource)
 
 			if ((ImGui::Button("Play")))
 			{
-				cAudioSource->PlayFx(cAudioSource->GetEvent().first);
+				cAudioSource->PlayFx(currentEvent);
 			}
 			if ((ImGui::Button("Stop")))
 			{
-				cAudioSource->StopFx(cAudioSource->GetEvent().second);
+				cAudioSource->StopFx(currentEvent);
 			}
 		}
 		if (!show)
@@ -1078,6 +1143,12 @@ void E_Inspector::DrawBoxColliderComponent(C_BoxCollider* cCollider)
 			if (ImGui::Checkbox("Collider is Active##1", &isActive))
 				cCollider->SetIsActive(isActive);
 
+			ImGui::SameLine();
+
+			bool showCollider = cCollider->ToShowCollider();
+			if (ImGui::Checkbox("Show Collider##1", &showCollider))
+				cCollider->SetShowCollider(showCollider);
+
 			ImGui::Separator();
 
 			bool isTrigger = cCollider->IsTrigger();
@@ -1180,20 +1251,6 @@ void E_Inspector::DrawCanvasComponent(C_Canvas* cCanvas)
 
 			if (ImGui::Button("Reset Pivot"))
 				cCanvas->pivot = cCanvas->GetPosition();
-
-			if (ImGui::Button("Add Image"))
-			{
-				// Revert UI changes
-				//GameObject* go = EngineApp->scene->CreateGameObject("UI Image", cCanvas->GetOwner());
-				//go->CreateUIElement(UIElementType::IMAGE);
-				//cCanvas->uiElements.push_back(go->GetUIElement());
-
-				if (cCanvas->uiElements.empty())
-				{
-					UIElement* uiElement = cCanvas->GetOwner()->CreateUIElement(UIElementType::IMAGE);
-					cCanvas->uiElements.push_back(uiElement);
-				}
-			}
 
 		}
 
@@ -1301,7 +1358,7 @@ void E_Inspector::DrawCapsuleColliderComponent(C_CapsuleCollider* cCollider)
 	}
 }
 
-void E_Inspector::DrawUIImage(UI_Image* image)
+void E_Inspector::DrawUIImageComponent(C_UI_Image* image)
 {
 	static bool show = true;
 	if (ImGui::CollapsingHeader("Image", &show, ImGuiTreeNodeFlags_DefaultOpen))
@@ -1315,7 +1372,7 @@ void E_Inspector::DrawUIImage(UI_Image* image)
 		float2 pos = { image->GetRect().x, image->GetRect().y };
 		float2 size = { image->GetRect().w, image->GetRect().h };
 
-		C_Canvas* canvas = image->GetCanvas();
+		C_Canvas* canvas = image->GetOwner()->parent->GetComponent<C_Canvas>();
 
 		if (ImGui::DragFloat2("Image Size", (float*)&size, 0.05f, 0.0f, 0.0f, "%.3f", NULL))
 		{
@@ -1352,6 +1409,22 @@ void E_Inspector::DrawUIImage(UI_Image* image)
 
 }
 
+void E_Inspector::DrawUITextComponent(C_UI_Text* text)
+{
+	static bool show = true;
+	if (ImGui::CollapsingHeader("Text", &show, ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		bool isActive = text->IsActive();
+		if (ImGui::Checkbox("Text Is Active", &isActive)) { text->SetIsActive(isActive); }
+
+		ImGui::Separator();
+
+		ImGui::Text(text->text.c_str());
+	}
+	ImGui::Separator();
+
+}
+
 void E_Inspector::DrawPlayerControllerComponent(C_PlayerController* cController)
 {
 	bool show = true;
@@ -1361,40 +1434,60 @@ void E_Inspector::DrawPlayerControllerComponent(C_PlayerController* cController)
 		if (ImGui::Checkbox("Controller Is Active", &isActive))
 			cController->SetIsActive(isActive);
 
-		ImGui::SameLine();
-
-		bool cameraMode = cController->IsCamera();
-		if (ImGui::Checkbox("Camera Mode", &cameraMode))
-			cController->SetCameraMode(cameraMode);
-
 		ImGui::Separator();
-
-		float speed = cController->Speed();
-		if (ImGui::InputFloat("Speed", &speed, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
-			cController->SetSpeed(speed);
-
-		bool useAcceleration = cController->UsingAcceleration();
-		if (ImGui::Checkbox("Use Acceleration", &useAcceleration))
-			cController->UseAcceleration(useAcceleration);
-
-		if (cController->UsingAcceleration())
+		if (ImGui::TreeNodeEx("Character"))
 		{
-			float acceleration = cController->Acceleration();
-			if (ImGui::InputFloat("Acceleration", &acceleration, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
-				cController->SetAcceleration(acceleration);
+			float speed = cController->Speed();
+			if (ImGui::InputFloat("Speed", &speed, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
+				cController->SetSpeed(speed);
 
-			float deceleration = cController->Deceleration();
-			if (ImGui::InputFloat("Deceleration", &deceleration, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
-				cController->SetDeceleration(deceleration);
-		}
-
-		if (!cController->IsCamera())
-		{
 			ImGui::Separator();
 
+			ImGui::TreePop();
+		}
+
+		if (ImGui::TreeNodeEx("Weapon"))
+		{
 			float bulletSpeed = cController->BulletSpeed();
 			if (ImGui::InputFloat("Bullet Speed", &bulletSpeed, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
 				cController->SetBulletSpeed(bulletSpeed);
+
+			float fireRate = cController->FireRate();
+			if (ImGui::InputFloat("Fire Rate", &fireRate, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
+				cController->SetFireRate(fireRate);
+
+			int ammo = cController->CurrentAmmo();
+			if (ImGui::InputInt("Ammo", &ammo, 1, 10, ImGuiInputTextFlags_EnterReturnsTrue))
+				cController->SetCurrentAmmo(ammo);
+
+			int maxAmmo = cController->MaxAmmo();
+			if (ImGui::InputInt("Max Ammo", &maxAmmo, 1, 10, ImGuiInputTextFlags_EnterReturnsTrue))
+				cController->SetMaxAmmo(maxAmmo);
+
+			bool automatic = cController->IsAutomatic();
+			if (ImGui::Checkbox("Automatic", &automatic))
+				cController->SetAutomatic(automatic);
+
+			ImGui::Separator();
+
+			ImGui::TreePop();
+		}
+
+		if (ImGui::TreeNodeEx("Dash"))
+		{
+			float dashSpeed = cController->DashSpeed();
+			if (ImGui::InputFloat("Dash Speed", &dashSpeed, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
+				cController->SetDashSpeed(dashSpeed);
+
+			float dashTime = cController->DashTime();
+			if (ImGui::InputFloat("Dash Time", &dashTime, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
+				cController->SetDashTime(dashTime);
+
+			float dashColdown = cController->DashColdown();
+			if (ImGui::InputFloat("Dash Coldown", &dashColdown, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
+				cController->SetDashColdown(dashColdown);
+
+			ImGui::TreePop();
 		}
 
 		if (!show)
@@ -1416,6 +1509,12 @@ void E_Inspector::DrawBulletBehaviorComponent(C_BulletBehavior* cBehavior)
 		bool isActive = cBehavior->IsActive();
 		if (ImGui::Checkbox("Bullet Is Active", &isActive))
 			cBehavior->SetIsActive(isActive);
+
+		ImGui::Separator();
+
+		float autodestruct = cBehavior->GetAutodestruct();
+		if (ImGui::InputFloat("Autodestruction", &autodestruct, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
+			cBehavior->SetAutodestruct(autodestruct);
 
 		if (!show)
 		{
@@ -1475,17 +1574,99 @@ void E_Inspector::DrawCameraBehaviorComponent(C_CameraBehavior* cBehavior)
 	return;
 }
 
+void E_Inspector::DrawGateBehaviorComponent(C_GateBehavior* cBehavior)
+{
+	bool show = true;
+	if (ImGui::CollapsingHeader("Gate Bahavior", &show, ImGuiTreeNodeFlags_Leaf))
+	{
+		bool isActive = cBehavior->IsActive();
+		if (ImGui::Checkbox("Gate Is Active", &isActive))
+			cBehavior->SetIsActive(isActive);
+
+		ImGui::Separator();
+
+		if (!show)
+		{
+			componentToDelete = cBehavior;
+			showDeleteComponentPopup = true;
+		}
+
+		ImGui::Separator();
+	}
+	return;
+}
+
 void E_Inspector::AddComponentCombo(GameObject* selectedGameObject)
 {
-
-	ImGui::Combo("##", &componentType, "Add Component\0Transform\0Mesh\0Material\0Light\0Camera\0Animator\0Animation\0RigidBody\0Box Collider\0Sphere Collider\0Capsule Collider\0Particle System\0Canvas\0Audio Source\0Audio Listener\0Player Controller\0Bullet Behavior\0Prop Behavior\0Camera Behavior");
+	ImGui::Combo("##", &componentType, "Add Component\0Transform\0Mesh\0Material\0Light\0Camera\0Animator\0Animation\0RigidBody\0Box Collider\0Sphere Collider\0Capsule Collider\0Particle System\0Canvas\0Audio Source\0Audio Listener\0Player Controller\0Bullet Behavior\0Prop Behavior\0Camera Behavior\0Gate Behavior\0UI Image\0UI Text");
 	ImGui::SameLine();
 
 	if ((ImGui::Button("ADD")))
 	{ 
 		if (componentType != (int)ComponentType::NONE)
 		{
-			selectedGameObject->CreateComponent((ComponentType)componentType);
+			if (componentType == (int)ComponentType::UI_IMAGE)
+				AddUIComponent(selectedGameObject, ComponentType::UI_IMAGE);
+			else if(componentType == (int)ComponentType::UI_TEXT)
+				AddUIComponent(selectedGameObject, ComponentType::UI_TEXT);
+
+			else
+				selectedGameObject->CreateComponent((ComponentType)componentType);
+		}
+	}
+}
+
+void E_Inspector::AddUIComponent(GameObject* selectedGameObject, ComponentType type)
+{
+	if (type == ComponentType::UI_IMAGE)
+	{
+		// Option 1: selectedGameObject has a canvas
+		if (selectedGameObject->GetComponent<C_Canvas>() != nullptr)
+		{
+			GameObject* newGO;
+			newGO = App->scene->CreateGameObject("UI Image", selectedGameObject);
+			newGO->CreateComponent(ComponentType::UI_IMAGE);
+		}
+		// Option 2: selectedGameObject's parent has a canvas
+		else if (selectedGameObject->parent->GetComponent<C_Canvas>() != nullptr)
+		{
+			selectedGameObject->SetName("UI Image");
+			selectedGameObject->CreateComponent(ComponentType::UI_IMAGE);
+		}
+		// Option 3: need to crete a canvas
+		else
+		{
+			selectedGameObject->SetName("Canvas");
+			selectedGameObject->CreateComponent(ComponentType::CANVAS);
+
+			GameObject* newImage = App->scene->CreateGameObject("UI Image", selectedGameObject);
+			newImage->CreateComponent(ComponentType::UI_IMAGE);
+		}
+	}
+
+	else if (type == ComponentType::UI_TEXT)
+	{
+		// Option 1: selectedGameObject has a canvas
+		if (selectedGameObject->GetComponent<C_Canvas>() != nullptr)
+		{
+			GameObject* newGO;
+			newGO = App->scene->CreateGameObject("UI Text", selectedGameObject);
+			newGO->CreateComponent(ComponentType::UI_TEXT);
+		}
+		// Option 2: selectedGameObject's parent has a canvas
+		else if (selectedGameObject->parent->GetComponent<C_Canvas>() != nullptr)
+		{
+			selectedGameObject->SetName("UI Text");
+			selectedGameObject->CreateComponent(ComponentType::UI_TEXT);
+		}
+		// Option 3: need to crete a canvas
+		else
+		{
+			selectedGameObject->SetName("Canvas");
+			selectedGameObject->CreateComponent(ComponentType::CANVAS);
+
+			GameObject* newText = App->scene->CreateGameObject("UI Text", selectedGameObject);
+			newText->CreateComponent(ComponentType::UI_TEXT);
 		}
 	}
 }

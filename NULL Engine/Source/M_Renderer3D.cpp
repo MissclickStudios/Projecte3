@@ -1,13 +1,16 @@
 #include "Profiler.h"													
 #include "OpenGL.h"														
 #include "Time.h"
+#include "JSONParser.h"
 
 #include "Macros.h"														
 #include "Log.h"														
 
-#include "Color.h"														
+														
 #include "Icons.h"														
-#include "Primitive.h"													
+#include "Primitive.h"
+#include "Light.h"
+#include "DirectionalLight.h"
 
 #include "Application.h"												
 #include "M_Window.h"													
@@ -31,8 +34,10 @@
 #include "C_Material.h"													
 #include "C_Camera.h"	
 #include "C_Light.h"
-										
-#include "UIElement.h"
+#include "C_Canvas.h"
+#include "C_UI_Image.h"
+#include "C_UI_Text.h"
+
 #include "M_Renderer3D.h"
 
 #include "I_Shaders.h"							//TODO: erase
@@ -52,14 +57,14 @@
 #define BASE_LINE_WIDTH		3.0f
 
 M_Renderer3D::M_Renderer3D(bool isActive) : Module("Renderer3D", isActive), 
-context						(),
-vsync						(VSYNC),
-sceneFramebuffer			(0),
-depthBuffer				(0),
-sceneRenderTexture		(0),
-depthBufferTexture		(0),
-gameFramebuffer			(0),
-debugTextureId			(0)
+context				(),
+vsync				(VSYNC),
+sceneFramebuffer	(0),
+depthBuffer			(0),
+sceneRenderTexture	(0),
+depthBufferTexture	(0),
+gameFramebuffer		(0),
+debugTextureId		(0)
 {
 	InitDebugVariables();
 }
@@ -87,7 +92,41 @@ bool M_Renderer3D::Init(ParsonNode& configuration)
 	//InitFramebuffers();
 	LoadDebugTexture();
 
+	SetVsync(configuration.GetBool("Vsync"));
 
+	renderWorldGrid		= configuration.GetBool("renderWorldGrid");
+	renderWorldAxis		= configuration.GetBool("renderWorldAxis");
+	renderWireframes	= configuration.GetBool("renderWireFrame");
+	renderVertexNormals = configuration.GetBool("renderVertexNormals");
+	renderFaceNormals	= configuration.GetBool("renderFaceNormals");
+	renderBoundingBoxes = configuration.GetBool("renderBoundingBoxes");
+	renderSkeletons = configuration.GetBool("renderSkeletons");
+	renderColliders = configuration.GetBool("renderColliders");
+	renderCanvas = configuration.GetBool("renderCanvas");
+
+	worldGridColor		= configuration.GetFloat4("worldGridColor");
+	wireframeColor		= configuration.GetFloat4("wireframeColor");
+	vertexNormalsColor	= configuration.GetFloat4("vertexNormalsColor");
+	faceNormalsColor	= configuration.GetFloat4("faceNormalsColor");
+
+	aabbColor			= configuration.GetFloat4("aabbColor");
+	obbColor			= configuration.GetFloat4("obbColor");
+	frustumColor		= configuration.GetFloat4("frustumColor");
+	rayColor			= configuration.GetFloat4("rayColor");
+	boneColor			= configuration.GetFloat4("boneColor");
+
+	if (App->gameState == GameState::PLAY)
+	{
+		renderWorldGrid = false;
+		renderWorldAxis = false;
+		renderWireframes = false;
+		renderVertexNormals = false;
+		renderFaceNormals = false;
+		renderBoundingBoxes = false;
+		renderSkeletons = false;
+		renderColliders = false;
+		renderCanvas = false;
+	}
 
 	return ret;
 }
@@ -102,9 +141,6 @@ bool M_Renderer3D::Start()
 	defaultSkyBox.CreateSkybox();
 
 	GenScreenBuffer();
-
-	
-
 
 	return true;
 }
@@ -141,15 +177,9 @@ UpdateStatus M_Renderer3D::PreUpdate(float dt)
 		cameraPos = float3(0.0f, 20.0f, 0.0f);
 	}
 
-	lights[0].SetPos(cameraPos.x, cameraPos.y, cameraPos.z);
-
-	for (uint i = 0; i < MAX_LIGHTS; ++i)
-	{
-		lights[i].Render();
-	}
-
 	// --- RENDERER SHORTCUTS
-	RendererShortcuts();
+	if (App->gameState != GameState::PLAY)
+		RendererShortcuts();
 
 	return UpdateStatus::CONTINUE;
 }
@@ -157,8 +187,7 @@ UpdateStatus M_Renderer3D::PreUpdate(float dt)
 // PostUpdate present buffer to screen
 UpdateStatus M_Renderer3D::PostUpdate(float dt)
 {	
-	BROFILERCATEGORY("M_Renderer3D PostUpdate", Profiler::Color::Chartreuse);
-
+	OPTICK_CATEGORY("Renderer Post Update", Optick::Category::Update);
 
 	RenderScene();
 
@@ -211,16 +240,39 @@ bool M_Renderer3D::CleanUp()
 
 bool M_Renderer3D::LoadConfiguration(ParsonNode& root)
 {
-	bool ret = true;
+	vsync = root.GetBool("Vsync");
 
-	return ret;
+	return true;
 }
 
 bool M_Renderer3D::SaveConfiguration(ParsonNode& root) const
 {
-	bool ret = true;
+	root.SetBool("Vsync", vsync);
 
-	return ret;
+	uint	worldGridSize;																		//
+	
+	root.SetFloat4("worldGridColor", float4(&worldGridColor));
+	root.SetFloat4("wireframeColor", float4(&wireframeColor));
+	root.SetFloat4("vertexNormalsColor", float4(&vertexNormalsColor));
+	root.SetFloat4("faceNormalsColor", float4(&faceNormalsColor));
+
+	root.SetFloat4("aabbColor", float4(&aabbColor));
+	root.SetFloat4("obbColor", float4(&obbColor));
+	root.SetFloat4("frustumColor", float4(&frustumColor));
+	root.SetFloat4("rayColor", float4(&rayColor));
+	root.SetFloat4("boneColor", float4(&boneColor));
+
+	root.SetBool("renderWorldGrid",renderWorldGrid);	
+	root.SetBool("renderWorldAxis", renderWorldAxis);
+	root.SetBool("renderWireFrame", renderWireframes);
+	root.SetBool("renderVertexNormals", renderVertexNormals);
+	root.SetBool("renderFaceNormals", renderFaceNormals);
+	root.SetBool("renderBoundingBoxes", renderBoundingBoxes);
+	root.SetBool("renderSkeletons", renderSkeletons);
+	root.SetBool("renderColliders", renderColliders);
+	root.SetBool("renderCanvas", renderCanvas);
+
+	return true;
 }
 
 // ----------- RENDERER METHODS -----------
@@ -345,19 +397,11 @@ bool M_Renderer3D::InitOpenGL()
 		GLfloat LightModelAmbient[] = { 0.0f, 0.0f, 0.0f, 1.0f };
 		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, LightModelAmbient);
 
-		lights[0].ref = GL_LIGHT0;
-		lights[0].ambient.Set(0.25f, 0.25f, 0.25f, 1.0f);
-		lights[0].diffuse.Set(1.0f,1.0f,1.0f, 1.0f);
-		lights[0].SetPos(0.0f, 0.0f, 2.5f);
-		lights[0].Init();
-
 		GLfloat MaterialAmbient[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 		glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, MaterialAmbient);
 
 		GLfloat MaterialDiffuse[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 		glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, MaterialDiffuse);
-
-		lights[0].Active(true);
 
 		SetGLFlag(GL_DEPTH_TEST, true);
 		SetGLFlag(GL_CULL_FACE, false);
@@ -599,8 +643,7 @@ void M_Renderer3D::RenderScene()
 	glClear(GL_COLOR_BUFFER_BIT);
 
 
-	//The Skybox renderer must be the first one always
-	defaultSkyBox.RenderSkybox();
+	
 
 	if (renderWorldGrid)
 		DrawWorldGrid(worldGridSize);
@@ -611,11 +654,12 @@ void M_Renderer3D::RenderScene()
  
 	RenderMeshes();
 	RenderCuboids();
+  
 	//RenderRays();
 	RenderSkeletons();
-	RenderUI();
+  
 	RenderParticles();
-	
+
 	
 	if (App->camera->DrawLastRaycast())
 	{
@@ -626,14 +670,17 @@ void M_Renderer3D::RenderScene()
 	//PrimitiveDrawExamples p_ex = PrimitiveDrawExamples();
 	//p_ex.DrawAllExamples();
 
-	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-
-
 	for (uint i = 0; i < primitives.size(); ++i)
 	{
 		primitives[i]->RenderByIndices();
 	}
 	
+	defaultSkyBox.RenderSkybox();
+
+	RenderUI();
+
+	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
@@ -658,32 +705,87 @@ void M_Renderer3D::DrawWorldGrid(const int& size)
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 }
 
+void M_Renderer3D::SetTo2DRenderSettings(const bool& setTo)
+{
+	if (setTo)
+	{
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		glOrtho(-App->camera->GetCurrentCamera()->GetFrustum().NearPlaneWidth() / 2, App->camera->GetCurrentCamera()->GetFrustum().NearPlaneWidth() / 2, -App->camera->GetCurrentCamera()->GetFrustum().NearPlaneHeight() / 2, App->camera->GetCurrentCamera()->GetFrustum().NearPlaneHeight() / 2, 100.0f, -100.0f);
+		glMatrixMode(GL_MODELVIEW);
+		glLoadMatrixf(App->camera->GetCurrentCamera()->GetOGLViewMatrix());
+
+		glDisable(GL_DEPTH_TEST);
+		glDisable(GL_LIGHTING);
+		glEnable(GL_BLEND);
+	}
+	else
+	{
+		glMatrixMode(GL_PROJECTION);
+		glLoadMatrixf(App->camera->GetCurrentCamera()->GetOGLProjectionMatrix());
+		glMatrixMode(GL_MODELVIEW);
+
+		glEnable(GL_LIGHTING);
+		glEnable(GL_DEPTH_TEST);
+		glDisable(GL_BLEND);
+	}
+}
+
 void M_Renderer3D::RenderUI()
 {
-	for (std::vector<GameObject*>::iterator it = App->scene->GetGameObjects()->begin(); it != App->scene->GetGameObjects()->end(); it++)
-	{
-		C_Canvas* canvasIt = (*it)->GetComponent<C_Canvas>();
-		if (canvasIt != nullptr && canvasIt->IsActive())
-		{
-			if (!canvasIt->uiElements.empty())
-			{
-				for (std::vector<UIElement*>::iterator uiIt = canvasIt->uiElements.begin(); uiIt != canvasIt->uiElements.end(); uiIt++)
-				{
-					(*uiIt)->Update();
-				}
-			}
+	SetTo2DRenderSettings(true);
 
-			if (!canvasIt->IsInvisible())
+	C_Canvas* canvas = nullptr;
+	for (std::vector<GameObject*>::iterator uiIt = App->scene->GetGameObjects()->begin(); uiIt != App->scene->GetGameObjects()->end(); uiIt++)
+	{
+		canvas = (*uiIt)->GetComponent<C_Canvas>();
+		if (canvas != nullptr)
+		{
+			RenderUIComponent(*uiIt);
+
+			if (!canvas->IsInvisible())
 			{
 				if (App->camera->currentCamera != App->camera->masterCamera->GetComponent<C_Camera>())
-				{
-					canvasIt->Draw2D();
-				}
+					canvas->Draw2D();
+
 				else
-				{
-					canvasIt->Draw3D();
-				}
-			}	
+					canvas->Draw3D();
+			}
+		}
+	}
+
+	SetTo2DRenderSettings(false);
+}
+
+void M_Renderer3D::RenderUIComponent(GameObject* gameObject)
+{
+	for (std::vector<GameObject*>::iterator it = gameObject->childs.begin(); it != gameObject->childs.end(); it++)
+	{
+
+		C_UI_Image* image = (*it)->GetComponent<C_UI_Image>();
+		if (image != nullptr)
+		{
+			if (App->camera->currentCamera != App->camera->masterCamera->GetComponent<C_Camera>())
+				image->Draw2D();
+
+			else
+				image->Draw3D();
+		}
+
+		C_UI_Text* text = (*it)->GetComponent<C_UI_Text>();
+		if (text != nullptr)
+		{
+			if (App->camera->currentCamera != App->camera->masterCamera->GetComponent<C_Camera>())
+				text->Draw2D();
+
+			else
+				text->Draw3D();
+		}
+
+
+		for (std::vector<GameObject*>::iterator childIt = (*it)->childs.begin(); childIt != (*it)->childs.end(); childIt++)
+		{
+			RenderUIComponent(*childIt);
 		}
 	}
 }
@@ -1001,6 +1103,8 @@ void M_Renderer3D::SetVsync(const bool& setTo)
 			LOG("[STATUS] Vsync has been %s", vsync ? "activated" : "deactivated");
 		}
 	}
+
+	vsync ? App->framesAreCapped = false : App->framesAreCapped = true;
 }
 
 bool M_Renderer3D::GetGLFlag(GLenum flag) const
@@ -1166,6 +1270,16 @@ bool M_Renderer3D::GetRenderPrimitiveExamples() const
 	return renderPrimitiveExamples;
 }
 
+bool M_Renderer3D::GetRenderColliders() const
+{
+	return renderColliders;
+}
+
+bool M_Renderer3D::GetRenderCanvas() const
+{
+	return renderCanvas;
+}
+
 void M_Renderer3D::SetWorldGridSize(const uint& worldGridSize)
 {
 	this->worldGridSize = worldGridSize;
@@ -1321,26 +1435,71 @@ void M_Renderer3D::SetRenderPrimtiveExamples(const bool& setTo)
 	renderPrimitiveExamples = setTo;
 }
 
+void M_Renderer3D::SetRenderColliders(const bool& setTo)
+{
+	renderColliders = setTo;
+}
+
+void M_Renderer3D::SetRenderCanvas(const bool& setTo)
+{
+	renderCanvas = setTo;
+}
+
 void M_Renderer3D::AddPostSceneRenderModule(Module* module)
 {
 	PostSceneRenderModules.push_back(module);
 }
 
-GameObject* M_Renderer3D::GenerateSceneLight()
+GameObject* M_Renderer3D::GenerateSceneLight(Color diffuse, Color ambient, Color specular, LightType lightType)
 {
-	GameObject* lightPoint;
-	lightPoint = App->scene->CreateGameObject("LightPoint");
-	lightPoint->CreateComponent(ComponentType::LIGHT);
-	C_Light* lightComp = lightPoint->GetComponent<C_Light>();
-	lightComp->GetLight()->Active(true);
-
-	lightComp->GetLight()->ambient.Set(0.25f, 0.25f, 0.25f, 1.0f);
-	lightComp->GetLight()->diffuse.Set(1.0f, 1.0f, 1.0f, 1.0f);
-	lightComp->GetLight()->Init();
-
-	App->scene->GetSceneRoot()->AddChild(lightPoint);
+	//Create GameObject
+	GameObject* light;
+	std::string name;
+	switch (lightType)
+	{
+	case LightType::DIRECTIONAL: name = "DirectionalLight";  break;
+	case LightType::POINTLIGHT: name = "PointLight";  break;
+	case LightType::SPOTLIGHT: name = "SpotLight"; break;
+	case LightType::NONE: break;
+	}
 	
-	return lightPoint;
+	if (!App->scene->GetAllLights().empty()) 
+		name += std::to_string(App->scene->GetPointLights().size());
+
+	light = App->scene->CreateGameObject(name.c_str(), App->scene->GetSceneRoot());
+
+	//Create and Add Component
+	Component* component = nullptr;
+	component = new C_Light(light, lightType);
+	light->components.push_back(component);
+
+	//Set the light attributes
+	C_Light* lightComp = light->GetComponent<C_Light>();
+	switch (lightType)
+	{
+	case LightType::DIRECTIONAL: 
+		lightComp->GetDirectionalLight()->Active(true);
+		lightComp->GetDirectionalLight()->ambient.Set(ambient);
+		lightComp->GetDirectionalLight()->diffuse.Set(diffuse);
+		lightComp->GetDirectionalLight()->specular.Set(specular);
+		lightComp->GetDirectionalLight()->Init();
+		break;
+	case LightType::POINTLIGHT: 
+		lightComp->GetPointLight()->Active(true);
+		lightComp->GetPointLight()->ambient.Set(ambient);
+		lightComp->GetPointLight()->diffuse.Set(diffuse);
+		lightComp->GetPointLight()->specular.Set(specular);
+		lightComp->GetPointLight()->SetConstant(1.0f);
+		lightComp->GetPointLight()->SetLinear(0.09f);
+		lightComp->GetPointLight()->SetQuadratic(0.032f);
+		lightComp->GetPointLight()->Init();
+		break;
+	case LightType::SPOTLIGHT: break;
+	case LightType::NONE: break;
+	}
+	//App->scene->AddSceneLight(light);
+	
+	return light;
 }
 
 void M_Renderer3D::GenScreenBuffer()
@@ -1372,40 +1531,39 @@ void M_Renderer3D::GenScreenBuffer()
 
 // --- RENDERER STRUCTURES METHODS ---
 // --- MESH RENDERER METHODS
-MeshRenderer::MeshRenderer(const float4x4& transform, C_Mesh* cMesh, C_Material* cMaterial) :
+MeshRenderer::MeshRenderer(float4x4* transform, C_Mesh* cMesh,  C_Material* cMaterial) :
 transform	(transform),
 cMesh		(cMesh),
 cMaterial	(cMaterial)
 {
-	
+
 }
 
 void MeshRenderer::Render()
 {
-
 	R_Mesh* rMesh = cMesh->GetMesh();
-
+	
 	if (rMesh == nullptr)
 	{
 		LOG("[ERROR] Renderer 3D: Could not render Mesh! Error: R_Mesh* was nullptr.");
 		return;
 	}
 
-	ApplyDebugParameters();																			// Enable Wireframe Mode for this specific mesh, etc.
-	ApplyTextureAndMaterial();																		// Apply resource texture or default texture, mesh color...
-	ApplyShader();
-	
-	glBindVertexArray(rMesh->VAO);
+	ApplyDebugParameters();																									// Enable Wireframe Mode for this specific mesh, etc.
+	ApplyTextureAndMaterial();																								// Apply resource texture or default texture, mesh color...
+	ApplyShader();																											// 
 
-	glDrawElements(GL_TRIANGLES, rMesh->indices.size(), GL_UNSIGNED_INT, nullptr);					// 
-	
-	glBindVertexArray(0);
+	(cMesh->GetSkinnedMesh() == nullptr) ? glBindVertexArray(rMesh->VAO) : glBindVertexArray(cMesh->GetSkinnedMesh()->VAO);	// 
 
-	glBindTexture(GL_TEXTURE_2D, 0);																// ---------------------
+	glDrawElements(GL_TRIANGLES, rMesh->indices.size(), GL_UNSIGNED_INT, nullptr);											// 
 	
-	ClearTextureAndMaterial();																		// Clear the specifications applied in ApplyTextureAndMaterial().
-	ClearDebugParameters();																			// Clear the specifications applied in ApplyDebugParameters().
-	ClearShader();
+	glBindVertexArray(0);																									//
+
+	glBindTexture(GL_TEXTURE_2D, 0);																						// ---------------------
+	
+	ClearShader();																											// Clear the specifications applied in ApplyShader().
+	ClearTextureAndMaterial();																								// Clear the specifications applied in ApplyTextureAndMaterial().
+	ClearDebugParameters();																									// Clear the specifications applied in ApplyDebugParameters().
 
 	// --- DEBUG DRAW ---
 	if (rMesh->drawVertexNormals || App->renderer->GetRenderVertexNormals())
@@ -1615,23 +1773,70 @@ void MeshRenderer::ApplyShader()
 
 		if (shaderProgram != 0)
 		{
+			//Model
+			
 			cMaterial->GetShader()->SetUniformVec4f("inColor", (GLfloat*)&cMaterial->GetMaterialColour());
 
-			cMaterial->GetShader()->SetUniformMatrix4("modelMatrix", transform.Transposed().ptr());
+			cMaterial->GetShader()->SetUniformMatrix4("modelMatrix", transform->Transposed().ptr());
 
 			cMaterial->GetShader()->SetUniformMatrix4("viewMatrix", App->camera->GetCurrentCamera()->GetOGLViewMatrix());
 
 			cMaterial->GetShader()->SetUniformMatrix4("projectionMatrix", App->camera->GetCurrentCamera()->GetOGLProjectionMatrix());
 
-			if(App->scene->GetSceneLight()) cMaterial->GetShader()->SetUniformVec4f("lightColor", (GLfloat*)&App->scene->GetSceneLight()->GetComponent<C_Light>()->GetLight()->diffuse);
-
-			if(App->scene->GetSceneLight()) cMaterial->GetShader()->SetUniformVec3f("lightPos", (GLfloat*)&App->scene->GetSceneLight()->transform->GetWorldPosition());
-
-			cMaterial->GetShader()->SetUniform1f("time", Time::Game::GetTimeSinceStart());
-
-			cMaterial->GetShader()->SetUniform1i("skybox", 11);
+			//cMaterial->GetShader()->SetUniform1f("time", Time::Game::GetTimeSinceStart());
 
 			cMaterial->GetShader()->SetUniformVec3f("cameraPosition", (GLfloat*)&App->camera->GetCurrentCamera()->GetFrustum().Pos());
+			
+ 			//Skybox
+			
+			cMaterial->GetShader()->SetUniform1i("skybox", 11);
+
+			// Light 
+			std::vector<GameObject*> dirLights = App->scene->GetDirLights();
+			std::vector<GameObject*> pointLights = App->scene->GetPointLights();
+
+			if (!dirLights.empty())
+			{
+				for (uint i = 0; i < dirLights.size(); i++)
+				{
+						cMaterial->GetShader()->SetUniformVec4f("dirLight.diffuse", (GLfloat*)&dirLights[i]->GetComponent<C_Light>()->GetDirectionalLight()->diffuse);
+						cMaterial->GetShader()->SetUniformVec4f("dirLight.ambient", (GLfloat*)&dirLights[i]->GetComponent<C_Light>()->GetDirectionalLight()->ambient);
+						cMaterial->GetShader()->SetUniformVec4f("dirLight.specular", (GLfloat*)&dirLights[i]->GetComponent<C_Light>()->GetDirectionalLight()->specular);
+						cMaterial->GetShader()->SetUniformVec3f("dirLight.direction", (GLfloat*)&dirLights[i]->GetComponent<C_Light>()->GetDirectionalLight()->GetDirection());
+
+						cMaterial->GetShader()->SetUniformVec3f("viewPos", (GLfloat*)&App->camera->GetCurrentCamera()->GetFrustum().Pos());
+				}
+			}
+
+			if (!pointLights.empty())
+			{
+				for (uint i = 0; i < pointLights.size(); i++)
+				{
+					std::string pointLightName = "pointLight";
+					pointLightName += "[" + std::to_string(i) + "]";
+
+					cMaterial->GetShader()->SetUniform1i("numPointLights", pointLights.size());
+					cMaterial->GetShader()->SetUniformVec4f(pointLightName += ".diffuse", (GLfloat*)&pointLights[i]->GetComponent<C_Light>()->GetPointLight()->diffuse);
+					pointLightName = "pointLight";
+					pointLightName += "[" + std::to_string(i) + "]";
+					cMaterial->GetShader()->SetUniformVec4f(pointLightName += ".ambient", (GLfloat*)&pointLights[i]->GetComponent<C_Light>()->GetPointLight()->ambient);
+					pointLightName = "pointLight";
+					pointLightName += "[" + std::to_string(i) + "]";
+					cMaterial->GetShader()->SetUniformVec4f(pointLightName += ".specular", (GLfloat*)&pointLights[i]->GetComponent<C_Light>()->GetPointLight()->specular);
+					pointLightName = "pointLight";
+					pointLightName += "[" + std::to_string(i) + "]";
+					cMaterial->GetShader()->SetUniform1f(pointLightName += ".constant", pointLights[i]->GetComponent<C_Light>()->GetPointLight()->GetConstant());
+					pointLightName = "pointLight";
+					pointLightName += "[" + std::to_string(i) + "]";
+					cMaterial->GetShader()->SetUniform1f(pointLightName += ".linear", pointLights[i]->GetComponent<C_Light>()->GetPointLight()->GetLinear());
+					pointLightName = "pointLight";
+					pointLightName += "[" + std::to_string(i) + "]";
+					cMaterial->GetShader()->SetUniform1f(pointLightName += ".quadratic", pointLights[i]->GetComponent<C_Light>()->GetPointLight()->GetQuadratic());
+					pointLightName = "pointLight";
+					pointLightName += "[" + std::to_string(i) + "]";
+					cMaterial->GetShader()->SetUniformVec3f(pointLightName += ".position", (GLfloat*)&pointLights[i]->transform->GetWorldPosition());
+				}
+			}
 
 			if(cMaterial->GetShader()) Importer::Shaders::SetShaderUniforms(cMaterial->GetShader());
 		}
@@ -1738,6 +1943,7 @@ Color CuboidRenderer::GetColorByType()
 	case CuboidType::AABB:		{ return App->renderer->GetAABBColor(); }		break;
 	case CuboidType::OBB:		{ return App->renderer->GetOBBColor(); }		break;
 	case CuboidType::FRUSTUM:	{ return App->renderer->GetFrustumColor(); }	break;
+	case CuboidType::COLLIDER:	{ return Green; }								break;
 	}
 
 	return White;
@@ -1751,6 +1957,7 @@ float CuboidRenderer::GetEdgeWidthByType()
 	case CuboidType::AABB:		{ return App->renderer->GetAABBEdgeWidth(); }		break;
 	case CuboidType::OBB:		{ return App->renderer->GetOBBEdgeWidth(); }		break;
 	case CuboidType::FRUSTUM:	{ return App->renderer->GetFrustumEdgeWidth(); }	break;
+	case CuboidType::COLLIDER:	{ return App->renderer->GetOBBEdgeWidth(); }		break;
 	}
 
 	return STANDARD_LINE_WIDTH;

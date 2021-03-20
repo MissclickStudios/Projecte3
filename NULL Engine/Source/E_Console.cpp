@@ -5,7 +5,7 @@
 #include "M_Editor.h"
 
 #include "E_Console.h"
-
+#include "Profiler.h"
 #include "MemoryManager.h"
 
 #define MAX_CONSOLE_LOG_SIZE 1000
@@ -25,6 +25,7 @@ bool E_Console::Draw(ImGuiIO& io)
 {
 	bool ret = true;
 
+
 	ImGui::Begin(GetName(), NULL, ImGuiWindowFlags_MenuBar);
 	
 	SetIsHovered();
@@ -40,11 +41,10 @@ bool E_Console::Draw(ImGuiIO& io)
 
 bool E_Console::CleanUp()
 {
-	bool ret = true;
 
 	ClearLog();
 
-	return ret;
+	return true;
 }
 
 void E_Console::AddLog(const char* log)
@@ -55,8 +55,10 @@ void E_Console::AddLog(const char* log)
 		//LOG("[WARNING] Console: Cleared Input Log: Exceeded maximum input log size!");
 	}
 	
-	char* tmp = _strdup(log);											// strdup() duplicates the log string. This is necessary so when log is modified the console strings remain the same.
-
+	//--------------------------------------------------------------------TODO:Console memo leak solved--------------------------------------------------------------------------------
+	//char* tmp = _strdup(log);											// strdup() duplicates the log string. This is necessary so when log is modified the console strings remain the same.
+	char* tmp = (char*)malloc(strlen(log)+1);							//allocating memory for the string outside the dll boundary (+1 nullterminated character)
+	strcpy(tmp, log);													//duplicating the string from the dll to the .exe
 	logs.push_back(tmp);
 
 	scrollToBottom = true;

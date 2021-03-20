@@ -12,8 +12,6 @@
 
 #include "C_Camera.h" //TODO: Why do we need to include this ????
 
-#include "UIElement.h"
-
 
 class ParsonNode;
 class C_Transform;
@@ -61,6 +59,9 @@ public:																									// --- PARENT/CHILDS METHODS
 	void			GetAllChilds						(std::map<std::string, GameObject*>& childs);
 	void			GetAllChilds						(std::unordered_map<std::string, GameObject*>& childs);
 	GameObject*		FindChild							(const char* childName);
+
+	void SetAsPrefab(uint _prefabID);	//Prefabs
+
 
 public:																									// --- GAME OBJECT GETTERS AND SETTERS
 	uint32			GetUID								() const;										//
@@ -114,23 +115,24 @@ public:																									// --- COMPONENT GETTERS AND SETTERS
 		ComponentType type = T::GetType();
 		switch (type)
 		{
-		case ComponentType::TRANSFORM: { return "Transform"; } break;
-		case ComponentType::MESH:		{ return "Mesh"; }		break;
-		case ComponentType::MATERIAL:	{ return "Material"; }	break;
-		case ComponentType::LIGHT:		{ return "Light"; }		break;
-		case ComponentType::CAMERA:	{ return "Camera"; }	break;
-		case ComponentType::ANIMATOR:	{ return "Animator"; }	break;
-		case ComponentType::ANIMATION:	{ return "Animation"; } break;
-		case ComponentType::AUDIOSOURCE: { return "Audio Source"; } break;
-		case ComponentType::AUDIOLISTENER:	{ return "Audio Listener"; } break;
+		case ComponentType::TRANSFORM:			{ return "Transform"; }			break;
+		case ComponentType::MESH:				{ return "Mesh"; }				break;
+		case ComponentType::MATERIAL:			{ return "Material"; }			break;
+		case ComponentType::LIGHT:				{ return "Light"; }				break;
+		case ComponentType::CAMERA:				{ return "Camera"; }			break;
+		case ComponentType::ANIMATOR:			{ return "Animator"; }			break;
+		case ComponentType::ANIMATION:			{ return "Animation"; }			break;
+		case ComponentType::AUDIOSOURCE:		{ return "Audio Source"; }		break;
+		case ComponentType::AUDIOLISTENER:		{ return "Audio Listener"; }	break;
 		case ComponentType::RIGIDBODY:			{ return "RigidBody"; }			break;
 		case ComponentType::BOX_COLLIDER:		{ return "Box Collider"; }		break;
 		case ComponentType::SPHERE_COLLIDER:	{ return "Sphere Collider"; }	break;
 		case ComponentType::CAPSULE_COLLIDER:	{ return "Capsule Collider"; }	break;
-		case ComponentType::PLAYER_CONTROLLER: { return "Player Controller"; } break;
-		case ComponentType::BULLET_BEHAVIOR: { return "Bullet Behavior"; }	break;
-		case ComponentType::PROP_BEHAVIOR: { return "Prop Behavior"; }	break;
-		case ComponentType::CAMERA_BEHAVIOR: { return "Camera Behavior"; }	break;
+		case ComponentType::PLAYER_CONTROLLER:	{ return "Player Controller"; } break;
+		case ComponentType::BULLET_BEHAVIOR:	{ return "Bullet Behavior"; }	break;
+		case ComponentType::PROP_BEHAVIOR:		{ return "Prop Behavior"; }		break;
+		case ComponentType::CAMERA_BEHAVIOR:	{ return "Camera Behavior"; }	break;
+		case ComponentType::GATE_BEHAVIOR:		{ return "Gate Behavior"; }		break;
 		}
 
 		return "NONE";
@@ -151,43 +153,39 @@ public:																									// --- COMPONENT GETTERS AND SETTERS
 		return  (componentsWithType.empty()) ? false : true;
 	}
 
-public:
-
-	UIElement* CreateUIElement(UIElementType type);								// Creates a UI Element of the given type.
-	bool DeleteUIElement();														// Deletes the UI Element. Returs False on ERROR.
-
-	UIElement* GetUIElement() const;
 
 public:
-	std::vector<Component*>		components;
-	std::vector<GameObject*>	childs;
+	std::vector<Component*>	components;
+	std::vector<GameObject*> childs;
 
-	GameObject*					parent;
-	C_Transform*				transform;													// Don't know what to do with this. Maybe like Unity? Or have it like the rest of comps?
+	GameObject* parent;
+	C_Transform* transform;													// Don't know what to do with this. Maybe like Unity? Or have it like the rest of comps?
 
 
-	bool						is_master_root;												//
-	bool						is_scene_root;												// Will be set to true if this GameObject is M_Scene's scene root object.
-	bool						is_bone;
-	bool						to_delete;													// Will determine whether or not the GO should be deleted. See M_Scene's DeleteGameObject().
+	bool is_master_root;												//
+	bool is_scene_root;												// Will be set to true if this GameObject is M_Scene's scene root object.
+	bool is_bone;
+	bool to_delete;													// Will determine whether or not the GO should be deleted. See M_Scene's DeleteGameObject().
 
-	OBB							obb;
-	AABB						aabb;
+	OBB	 obb;
+	AABB aabb;
 
-	float3*						obb_vertices;
-	float3*						aabb_vertices;
+	float3*	obb_vertices;
+	float3*	aabb_vertices;
 
-	bool						show_bounding_boxes;
+	bool show_bounding_boxes;
+
+	bool isPrefab = false; //Defines if the object is part of a prefav
+	uint prefabID = 0;	//Id of the prefab the game object is part of
 
 private:
-	uint32						uid;
-	std::string					name;
-	bool						isActive;
-	bool						isStatic;
+	uint32 uid;
+	std::string name;
+	bool isActive;
+	bool isStatic;
 
-	uint32						parent_uid;													// Only for Serialization purposes. Maybe will be repurposed later.
+	uint32 parent_uid;													// Only for Serialization purposes. Maybe will be repurposed later.
 
-	UIElement* uiElement = nullptr;
 };
 
 #endif // !__GAME_OBJECT_H__

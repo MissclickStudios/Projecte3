@@ -14,14 +14,16 @@ public:
 	void		SetUpSkyBoxBuffers();
 	void		CreateSkybox();
 	void		RenderSkybox();
+	void		CleanUp();
 	//uint32		SetSkyboxShader();
 
 
 public:
-	uint		SkyboxTex_id = 0; 
-	uint		Skybox_VAO = 0;
-	uint		Skybox_id = 0;
-	uint32		Skybox_programid = 0;
+	uint		skyboxTexId = 0; 
+	uint		skyboxVBO = 0;
+	uint		skyboxVAO = 0;
+	uint		skyboxId = 0;
+	uint32		skyboxProgramId = 0;
 
 	std::vector<std::string> faces
 	{
@@ -34,7 +36,7 @@ public:
 
 	}; //Add proper names
 
-	float Skybox_vertices[108] = {
+	float skyboxVertices[108] = {
 
 		-1.0f,  1.0f, -1.0f,
 		-1.0f, -1.0f, -1.0f,

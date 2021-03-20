@@ -1,7 +1,8 @@
 #include "glew/include/glew.h"						// Maybe remove later so dependencies are kept to the minimum?
 
 #include "Time.h"
-
+#include "Color.h"
+#include "Profiler.h"
 #include "EngineApplication.h"
 #include "M_Window.h"
 #include "M_Renderer3D.h"
@@ -44,6 +45,7 @@ E_Configuration::~E_Configuration()
 bool E_Configuration::Draw(ImGuiIO& io)
 {
 	bool ret = true;
+
 
 	ImGui::Begin(GetName(), nullptr, ImGuiWindowFlags_MenuBar);
 
@@ -437,13 +439,13 @@ void E_Configuration::PlotFrameDataHistogram()
 
 	char overlay[32];
 	sprintf_s(overlay, "Framerate: %.2f", fpsData[MAX_HISTOGRAM_SIZE - 1]);
-	ImGui::PlotHistogram("FPS", fpsData, IM_ARRAYSIZE(fpsData), 0, overlay, 0.0f, 120.0f, ImVec2(0, 80));
+	ImGui::PlotHistogram("FPS", fpsData, IM_ARRAYSIZE(fpsData), 0, overlay, 0.0f, 144.0f, ImVec2(0, 80));
 	ImGui::Text("Average FPS:");	ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%.2f",		averageFps);
 	ImGui::Text("Peak FPS:");		ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "   %u",		peakFps);
 	ImGui::Text("Min FPS:");		ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "    %u",	minFps);
 
 	sprintf_s(overlay, "ms last frame: %.2f", msData[MAX_HISTOGRAM_SIZE - 1]);
-	ImGui::PlotHistogram("MS", msData, IM_ARRAYSIZE(msData), 0, overlay, 0.0f, 40.0f, ImVec2(0, 80));
+	ImGui::PlotHistogram("MS", msData, IM_ARRAYSIZE(msData), 0, overlay, 0.0f, 50.0f, ImVec2(0, 80));
 	ImGui::Text("Average ms: ");	ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%.2f",		averageMs);
 	ImGui::Text("Peak ms:");		ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "   %u",		peakMs);
 	ImGui::Text("Min ms:");			ImGui::SameLine();	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "    %u",	minMs);
@@ -453,11 +455,11 @@ void E_Configuration::GenerateFrameCapSlider()
 {
 	int cap = EngineApp->GetFrameCap();
 
-	ImGui::SliderInt("Frame Cap", &cap, 0, 60, "%d", ImGuiSliderFlags_AlwaysClamp);
+	ImGui::SliderInt("Frame Cap", &cap, 0, 144, "%d", ImGuiSliderFlags_AlwaysClamp);
 
 	EngineApp->SetFrameCap(cap);
 
-	EngineApp->framesAreCapped = (cap == 0) ? false : true;										// [ATTENTION] Could be troubling when trying to manage the framecap elsewhere.
+	//EngineApp->framesAreCapped = (cap == 0) ? false : true;										// [ATTENTION] Could be troubling when trying to manage the framecap elsewhere.
 }
 
 void E_Configuration::GenerateBrightnessSlider()
@@ -551,6 +553,8 @@ void E_Configuration::RendererFlags()
 	bool renderBoundingBoxes		= EngineApp->renderer->GetRenderBoundingBoxes();
 	bool renderSkeletons			= EngineApp->renderer->GetRenderSkeletons();
 	bool renderPrimitiveExamples	= EngineApp->renderer->GetRenderPrimitiveExamples();
+	bool renderColliders			= EngineApp->renderer->GetRenderColliders();
+	bool renderCanvas = EngineApp->renderer->GetRenderCanvas();
 	bool renderOthers				= false /*EngineApp->renderer->GetRenderOthers()*/;
 
 	// --- OPENGL FLAGS
@@ -576,6 +580,8 @@ void E_Configuration::RendererFlags()
 
 	if (ImGui::Checkbox("Show Bounding Boxes", &renderBoundingBoxes))				{ EngineApp->renderer->SetRenderBoundingBoxes(renderBoundingBoxes); }					ImGui::SameLine(colDist);
 	if (ImGui::Checkbox("Show Skeletons", &renderSkeletons))						{ EngineApp->renderer->SetRenderSkeletons(renderSkeletons); }
+	if (ImGui::Checkbox("Show Colliders", &renderColliders)) { EngineApp->renderer->SetRenderColliders(renderColliders); }													ImGui::SameLine(colDist);
+	if (ImGui::Checkbox("Show Canvas", &renderCanvas)) { EngineApp->renderer->SetRenderColliders(renderCanvas); }													ImGui::SameLine(colDist);
 
 	if (ImGui::Checkbox("Show Primitive Examples", &renderPrimitiveExamples))		{ EngineApp->renderer->SetRenderPrimtiveExamples(renderPrimitiveExamples); }			ImGui::SameLine(colDist);
 	if (ImGui::Checkbox("Show Others (WIP)", &renderOthers))						{ /*EngineApp->renderer->SetRenderOthers();*/ }

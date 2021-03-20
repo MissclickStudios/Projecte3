@@ -10,7 +10,7 @@
 #define ASSETS_SOUNDBANKS_PATH	"Assets/SoundBanks/"
 #define ASSETS_SHADERS_PATH		"Assets/Shaders/"
 #define ASSETS_SKYBOX_PATH		"Assets/Textures/Skybox/"
-#define ASSETS_PREBAFS_PATH		"Assets/Prefabs/"
+#define ASSETS_PREFABS_PATH			"Assets/Prefabs/"
 
 #define ENGINE_PATH				"Engine/"
 #define ENGINE_DIRECTORY		"Engine"

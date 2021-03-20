@@ -121,14 +121,12 @@ bool M_Editor::Start()
 
 UpdateStatus M_Editor::PreUpdate(float dt)
 {
-	UpdateStatus ret = UpdateStatus::CONTINUE;
-
 	EditorShortcuts();
 	CheckShowHideFlags();
 
 	EditorCameraUpdate();
 
-	return ret;
+	return UpdateStatus::CONTINUE;
 }
 
 UpdateStatus M_Editor::Update(float dt)
@@ -138,8 +136,8 @@ UpdateStatus M_Editor::Update(float dt)
 
 UpdateStatus M_Editor::PostUpdate(float dt)
 {
-	BROFILERCATEGORY("Editor PostUpdate", Profiler::Color::IndianRed);
-	
+	OPTICK_CATEGORY("Editor Post Update", Optick::Category::Update);
+
 	UpdateStatus ret = UpdateStatus::CONTINUE;
 	
 	ImGuiIO& io = ImGui::GetIO();
@@ -149,8 +147,6 @@ UpdateStatus M_Editor::PostUpdate(float dt)
 	ImGui_ImplSDL2_NewFrame(EngineApp->window->GetWindow());
 	ImGui::NewFrame();
 
-	float total_time = 0.0f;
-
 	if (BeginRootWindow(io, "Root window", true, ImGuiWindowFlags_MenuBar))
 	{
 		bool draw = true;
@@ -158,10 +154,6 @@ UpdateStatus M_Editor::PostUpdate(float dt)
 		{
 			if (editorPanels[i]->IsActive())
 			{
-				/*total_time = Time::Real::PeekPerfTimer();
-				draw = editorPanels[i]->Draw(io);
-				total_time = Time::Real::PeekPerfTimer() - total_time;
-				LOG("TOTAL TIME { %s } ==> { %.3f }", editorPanels[i]->GetName(), total_time);*/
 
 				draw = editorPanels[i]->Draw(io);
 
@@ -179,6 +171,7 @@ UpdateStatus M_Editor::PostUpdate(float dt)
 	
 	// Editor: Configuration Frame Data Histograms
 	UpdateFrameData(Time::Real::GetFramesLastSecond(), Time::Real::GetMsLastFrame());
+	
 	return ret;
 }
 
@@ -489,9 +482,17 @@ void M_Editor::GetEngineIconsThroughEditor(Icons& engineIcons)
 
 void M_Editor::LoadResourceIntoSceneThroughEditor()
 {
+	
 	const char* draggedAssetPath = project->GetDraggedAsset();
 	if (draggedAssetPath != nullptr)
 	{
+		if (App->fileSystem->GetFileExtension(draggedAssetPath) == "prefab")
+		{
+			std::string prefabId;
+			EngineApp->fileSystem->SplitFilePath(draggedAssetPath, nullptr, &prefabId, nullptr);
+			EngineApp->resourceManager->LoadPrefab(std::stoi(prefabId));
+		}
+
 		Resource* draggedResource = EngineApp->resourceManager->GetResourceFromLibrary(draggedAssetPath);
 		if (draggedResource != nullptr)
 		{
@@ -587,6 +588,7 @@ void M_Editor::BeginDockspace(ImGuiIO& io, const char* dockspaceId, ImGuiDockNod
 
 //EDITOR CAMERA FUNCTIONALLITY
 void M_Editor::EditorCameraUpdate() {
+
 	if (ViewportIsHovered())
 	{
 		if (!HoveringGuizmo())
@@ -642,10 +644,13 @@ void M_Editor::EditorCameraUpdate() {
 			}
 		}
 
-		if (EngineApp->input->GetKey(SDL_SCANCODE_F) == KeyState::KEY_DOWN)
+		if (EngineApp->scene->GetSelectedGameObject() != nullptr)
 		{
-			float3 target = EngineApp->scene->GetSelectedGameObject()->GetComponent<C_Transform>()->GetWorldPosition();
-			EngineApp->camera->Focus(target);
+			if (EngineApp->input->GetKey(SDL_SCANCODE_F) == KeyState::KEY_DOWN)
+			{
+				float3 target = EngineApp->scene->GetSelectedGameObject()->GetComponent<C_Transform>()->GetWorldPosition();
+				EngineApp->camera->Focus(target);
+			}
 		}
 	}
 }

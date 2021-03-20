@@ -1,6 +1,7 @@
 #ifndef __PHYSICS_H__
 #define __PHYSICS_H__
 
+#include <vector>
 #include <map>
 #include "Module.h"
 
@@ -10,7 +11,7 @@ namespace physx
 	class PxPhysics;
 	class PxScene;
 	class PxMaterial;
-	class PxRigidDynamic;
+	class PxRigidActor;
 	class PxSimulationEventCallback;
 	class PxActor;
 	class PxControllerManager;
@@ -40,7 +41,7 @@ public:
 
 	physx::PxPhysics* physics = nullptr;
 	physx::PxMaterial* material = nullptr;
-	std::map<physx::PxRigidDynamic*, GameObject*> actors;
+	std::map<physx::PxRigidActor*, GameObject*> actors;
 
 	bool simulating = false;
 
@@ -54,6 +55,9 @@ private:
 	SimulationCallback* simulationCallback = nullptr;
 
 	float gravity = 9.8f;
+
+	std::vector<std::string> filters;
+	bool** filterInteractions = nullptr;
 };
 
 #endif //__PHYSICS_H__

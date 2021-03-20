@@ -1,7 +1,7 @@
 #include "Application.h"
 #include "ConfigurationSettings.h"
 #include "Log.h"
-
+#include "JSONParser.h"
 #include "M_Window.h"
 
 #include "MemoryManager.h"
@@ -11,8 +11,8 @@ M_Window::M_Window(bool isActive) : Module("Window", isActive)
 	window				= nullptr;
 	screenSurface		= nullptr;
 
-	screenWidth			= 0;
-	screenHeight		= 0;
+	screenWidth			= SCREEN_WIDTH;
+	screenHeight = SCREEN_HEIGHT;
 
 	isMaximized			= WIN_MAXIMIZED;
 	isFullscreen		= WIN_FULLSCREEN;
@@ -40,38 +40,41 @@ bool M_Window::Init(ParsonNode& config)
 	else
 	{
 		//Create window
-		screenWidth		= SCREEN_WIDTH * SCREEN_SIZE;
-		screenHeight	= SCREEN_HEIGHT * SCREEN_SIZE;
+
+		screenWidth = config.GetInteger("screenWidth");
+		screenHeight = config.GetInteger("screenHeight");
+
+		if (screenWidth <= 0)
+			screenWidth = 1280;
+		if (screenHeight <= 0)
+			screenHeight = 720;
+
+		isMaximized = config.GetBool("isMaximized");
+		isFullscreen = config.GetBool("isFullscreen");
+		isResizable = config.GetBool("isResizable");
+		isBorderless = config.GetBool("isBorderless");
+		isFullscreenDesktop = config.GetBool("isFullscreenDesktop");
+
 		Uint32 flags	= SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN;
 
 		//Use OpenGL 2.1
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
 		
-		if (WIN_MAXIMIZED == true)
-		{
+		if (isMaximized)
 			flags |= SDL_WINDOW_MAXIMIZED;
-		}
 		
-		if(WIN_FULLSCREEN == true)
-		{
+		if(isFullscreen)
 			flags |= SDL_WINDOW_FULLSCREEN;
-		}
 
-		if(WIN_RESIZABLE == true)
-		{
+		if(isResizable)
 			flags |= SDL_WINDOW_RESIZABLE;
-		}
 
-		if(WIN_BORDERLESS == true)
-		{
+		if(isBorderless)
 			flags |= SDL_WINDOW_BORDERLESS;
-		}
 
-		if(WIN_FULLSCREEN_DESKTOP == true)
-		{
+		if(isFullscreenDesktop)
 			flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
-		}
 
 		window = SDL_CreateWindow(TITLE, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, screenWidth, screenHeight, flags);
 
@@ -109,16 +112,22 @@ bool M_Window::CleanUp()
 
 bool M_Window::LoadConfiguration(ParsonNode& root)
 {
-	bool ret = true;
 
-	return ret;
+	return true;
 }
 
 bool M_Window::SaveConfiguration(ParsonNode& root) const
 {
-	bool ret = true;
+	root.SetInteger("screenWidth", screenWidth);
+	root.SetInteger("screenHeight", screenHeight);
 
-	return ret;
+	root.SetBool("isMaximized",isMaximized);
+	root.SetBool("isFullscreen",isFullscreen);
+	root.SetBool("isResizable",isResizable);
+	root.SetBool("isBorderless",isBorderless);
+	root.SetBool("isFullscreenDesktop",isFullscreenDesktop);
+
+	return true;
 }
 
 // -------- WINDOW METHODS --------

@@ -4,7 +4,7 @@
 #include "GameObject.h"
 
 #include "E_Hierarchy.h"
-
+#include "Profiler.h"
 #include "MemoryManager.h"
 
 E_Hierarchy::E_Hierarchy() : EditorPanel("Hierarchy"), 
@@ -22,6 +22,7 @@ E_Hierarchy::~E_Hierarchy()
 bool E_Hierarchy::Draw(ImGuiIO& io)
 {
 	bool ret = true;
+
 
 	ImGui::Begin("Hierarchy");
 
@@ -61,9 +62,12 @@ void E_Hierarchy::ProcessGameObject(GameObject* gameObject)
 	
 	if (!gameObject->IsActive())														// If the given game object is not active, the text of the tree node will be displayed in GREY.
 	{
+		/*if(gameObject->isPrefab)
+			color = { 0.2f, 0.2f, 1.0f, 1.0f };
+		else*/
 		color = { 0.5f, 0.5f, 0.5f, 1.0f };
 	}
-	
+
 	ImGui::PushStyleColor(ImGuiCol_Text, color);
 	// --------------------------------------------
 
@@ -84,7 +88,12 @@ void E_Hierarchy::ProcessGameObject(GameObject* gameObject)
 		nodeFlags |= ImGuiTreeNodeFlags_DefaultOpen;
 	}
 
-	if (ImGui::TreeNodeEx(gameObject->GetName(), nodeFlags))
+	std::string name = gameObject->GetName();
+
+	if (gameObject->isPrefab)
+		name += " (Prefab)";
+
+	if (ImGui::TreeNodeEx(name.c_str(), nodeFlags))
 	{
 		if (!NodeIsRootObject(gameObject))													// If the game_object being processed is the root object, do not allow any interaction.
 		{
@@ -126,7 +135,8 @@ void E_Hierarchy::ProcessGameObject(GameObject* gameObject)
 		{
 			for (uint i = 0; i < gameObject->childs.size(); ++i)
 			{
-				ProcessGameObject(gameObject->childs[i]);
+				if(gameObject->childs[i] != nullptr) 
+					ProcessGameObject(gameObject->childs[i]);
 			}
 		}
 

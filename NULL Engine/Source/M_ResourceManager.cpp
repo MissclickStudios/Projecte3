@@ -1,7 +1,9 @@
 #include "VariableTypedefs.h"
 #include "JSONParser.h"
-
+#include "Profiler.h"
 #include "Time.h"
+#include "Random.h"
+#include "GameObject.h"
 
 #include "Importer.h"
 #include "I_Scenes.h"
@@ -15,6 +17,7 @@
 #include "Application.h"
 #include "FileSystemDefinitions.h"
 #include "M_FileSystem.h"
+#include "M_Scene.h"
 
 #include "Resource.h"
 #include "R_Mesh.h"
@@ -30,11 +33,6 @@
 
 #include "MemoryManager.h"
 
-typedef std::pair<std::map<uint32, Resource*>::iterator, bool>	INSERT_RESULT;													// Also valid for emplace oparations.
-typedef std::map<uint32, Resource*>::iterator					RESOURCE_ITEM;
-typedef std::map<uint32, std::string>::iterator					LIBRARY_ITEM;
-typedef std::map<std::string, uint32>::iterator					FILE_ITEM;
-
 M_ResourceManager::M_ResourceManager() : Module("ResourceManager"),
 fileRefreshTimer	(0.0f),
 fileRefreshRate		(0.0f)
@@ -49,22 +47,20 @@ M_ResourceManager::~M_ResourceManager()
  
 bool M_ResourceManager::Init(ParsonNode& configuration)
 {
-	bool ret = true;
-
 	//file_refresh_rate = (float)configuration.GetNumber("RefreshRate");
 	fileRefreshRate = 5.0f;
 
-	return ret;
+	return true;
 }
 
 bool M_ResourceManager::Start()
 {
-	bool ret = true;
-
 	RefreshDirectoryFiles(ASSETS_DIRECTORY);
 	RefreshDirectoryFiles(ENGINE_DIRECTORY);
 
-	return ret;
+	FindPrefabs();
+
+	return true;
 }
 
 UpdateStatus M_ResourceManager::PreUpdate(float dt)
@@ -75,7 +71,7 @@ UpdateStatus M_ResourceManager::PreUpdate(float dt)
 
 	if (fileRefreshTimer > fileRefreshRate)
 	{
-		RESOURCE_ITEM item = resources.begin();
+		auto item = resources.begin();
 		while (item != resources.end())
 		{
 			if (item->second->GetReferences() == 0)															// Clear all Reference 0 resources that might have gone past the 
@@ -99,11 +95,7 @@ UpdateStatus M_ResourceManager::PreUpdate(float dt)
 
 UpdateStatus M_ResourceManager::Update(float dt)
 {
-	UpdateStatus status = UpdateStatus::CONTINUE;
-
-	
-
-	return status;
+	return UpdateStatus::CONTINUE;
 }
 
 UpdateStatus M_ResourceManager::PostUpdate(float dt)
@@ -151,6 +143,716 @@ bool M_ResourceManager::LoadConfiguration(ParsonNode& configuration)
 }
 
 // ----- M_RESOURCEMANAGER METHODS -----
+// --- IMPORT FILE METHODS--
+uint32 M_ResourceManager::ImportFile(const char* assetsPath)
+{
+	uint32 resourceUid = 0;
+
+	if (assetsPath == nullptr)
+	{
+		LOG("[ERROR] Resource Manager: Could not Import File from the given path! Error: Path was nullptr.");
+		return 0;
+	}
+
+	if (App->fileSystem->GetFileExtension(assetsPath) == "json" 
+		|| App->fileSystem->GetFileExtension(assetsPath) == "JSON")													// TMP until R_Scene has been fully implemented.
+	{
+		return 0;
+	}
+
+	assetsPath			= GetValidPath(assetsPath);
+	bool metaIsValid	= MetaFileIsValid(assetsPath);
+	if (!metaIsValid)
+	{
+		if (HasMetaFile(assetsPath))
+		{
+			DeleteFromLibrary(assetsPath);																				// Cleaning any remaining Library files.
+		}
+		
+		resourceUid = ImportFromAssets(assetsPath); 
+
+		if (resourceUid == 0)
+		{
+			LOG("[ERROR] Resource Manager: Could not Import File { %s }! Error: See [IMPORTER] and Resource Manager ERRORS.", assetsPath);
+			return 0;
+		}
+	}
+	else
+	{
+		LOG("[WARNING] Resource Manager: The File to Import was already in the Library!");
+
+		std::map<uint32, std::string> libraryItems;
+		GetLibraryPairsFromMeta(assetsPath, libraryItems);
+
+		std::map<uint32, std::string>::iterator item;
+		for (item = libraryItems.begin(); item != libraryItems.end(); ++item)
+		{
+			if (library.find(item->first) == library.end())
+			{
+				library.emplace(item->first, item->second);
+			}
+		}
+
+		resourceUid = libraryItems.begin()->first;
+
+		libraryItems.clear();
+	}
+
+	return resourceUid;
+}
+
+uint M_ResourceManager::SaveResourceToLibrary(Resource* resource)
+{	
+	uint written = 0;
+	
+	if (resource == nullptr)
+	{
+		LOG("[ERROR] Resource Manager: Could not Save Resource to Library! Error: Resource* was nullptr.");
+		return 0;
+	}
+
+	char* buffer = nullptr;
+
+	switch (resource->GetType())
+	{
+	case ResourceType::MODEL:		{ written = Importer::Scenes::Save((R_Model*)resource, &buffer); }			break;
+	case ResourceType::MESH:		{ written = Importer::Meshes::Save((R_Mesh*)resource, &buffer); }			break;
+	case ResourceType::MATERIAL:	{ written = Importer::Materials::Save((R_Material*)resource, &buffer); }	break;
+	case ResourceType::TEXTURE:		{ written = Importer::Textures::Save((R_Texture*)resource, &buffer); }		break;
+	case ResourceType::FOLDER:		{ written = Importer::Folders::Save((R_Folder*)resource, &buffer); }		break;
+	case ResourceType::SCENE:		{ /*written = TODO: HAVE A FUNCTIONAL R_SCENE AND SAVE/LOAD METHODS*/ }		break;
+	case ResourceType::ANIMATION:	{ written = Importer::Animations::Save((R_Animation*)resource, &buffer); }	break;
+	case ResourceType::SHADER:		{ written = Importer::Shaders::Save((R_Shader*)resource, &buffer); }		break;
+	}
+
+	RELEASE_ARRAY(buffer);
+
+	if (written == 0)
+	{
+		LOG("[ERROR] Resource Manager: Could not save Resource in the Library! Error: Check for Importer Errors in the Console Panel.");
+		return 0;
+	}
+
+	if (ResourceHasMetaType(resource))
+	{
+		SaveMetaFile(resource);
+	}
+
+	library.emplace(resource->GetUID(), resource->GetLibraryPath());
+
+	return written;
+}
+
+uint32 M_ResourceManager::LoadFromLibrary(const char* assetsPath)
+{
+	uint32 resourceUid = 0;
+	
+	std::string errorString = "[ERROR] Resource Manager: Could not Load File from the given Library Path";
+
+	assetsPath = GetValidPath(assetsPath);
+
+	if (assetsPath == nullptr)
+	{
+		LOG("%s! Error: Path was nullptr.", errorString.c_str());
+		return 0;
+	}
+
+	char* buffer			= nullptr;
+	ParsonNode metaRoot		= LoadMetaFile(assetsPath, &buffer);
+	RELEASE_ARRAY(buffer);
+
+	bool metaIsValid		= MetaFileIsValid(metaRoot);
+	if (!metaRoot.NodeIsValid())
+	{
+		LOG("%s! Error: Could not get the Meta Root Node.", errorString.c_str());
+		return 0;
+	}
+	if (!metaIsValid)
+	{
+		LOG("%s! Error: Could not Validate the Meta File.", errorString.c_str());
+		return 0;
+	}
+
+	resourceUid						= (uint32)metaRoot.GetNumber("UID");
+	ParsonArray containedArray		= metaRoot.GetArray("ContainedResources");
+	
+	if (resources.find(resourceUid) != resources.end())
+	{
+		return resourceUid;																									// If the File To Load's Resource is already in memory.
+	}	
+
+	bool success = AllocateResource(resourceUid, assetsPath);
+	if (!success)
+	{
+		LOG("[ERROR] Resource Manager: Could not Allocate Resource %lu in memory!", resourceUid);
+		return 0;
+	}
+
+	std::string containedPath = "";
+	std::string containedName = "";
+	for (uint i = 0; i < containedArray.size; ++i)
+	{
+		ParsonNode containedNode = containedArray.GetNode(i);
+
+		App->fileSystem->SplitFilePath(assetsPath, &containedPath, nullptr, nullptr);									// --- TMP Until Something Functional Is In Place.
+		containedName = containedNode.GetString("Name");																// 
+		containedPath += containedName;																					// -----------------------------------------------
+
+		uint32 containedUid = (uint32)containedNode.GetNumber("UID");
+
+		if (resources.find(containedUid) != resources.end())																// No need to allocate if it is already allocated.
+		{
+			continue;
+		}
+
+		success = AllocateResource(containedUid, containedPath.c_str());
+		if (!success)
+		{
+			LOG("[WARNING] Resource Manager: Could not allocate Contained Resource! UID: %lu, Name: %s", containedUid, containedName.c_str());
+		}
+
+		containedName.clear();
+		containedPath.clear();
+	}
+
+	return resourceUid;
+}
+
+Resource* M_ResourceManager::GetResourceFromLibrary(const char* assetsPath)
+{
+	Resource* resource = nullptr;
+
+	if (assetsPath == nullptr)
+	{
+		LOG("[ERROR] Resource Manager: Could not get Resource associated with Meta File! Error: Given Assets Path was nullptr.");
+		return nullptr;
+	}
+
+	std::string metaFile = assetsPath + std::string(META_EXTENSION);
+	std::string errorString = "[ERROR] Resource Manager: Could not get Resource associated with { " + metaFile + " } Meta File";
+
+	if (!App->fileSystem->Exists(metaFile.c_str()))
+	{
+		LOG("%s! Error: File System could not find Meta File.", errorString.c_str());
+		return nullptr;
+	}
+
+	uint32 resourceUid = LoadFromLibrary(assetsPath);
+	if (resourceUid == 0)
+	{
+		//LOG("%s! Error: Could not get Resource UID from Assets Path.", error_string.c_str());
+		return nullptr;
+	}
+
+	resource = RequestResource(resourceUid);
+
+	return resource;
+}
+
+void M_ResourceManager::RefreshProjectDirectories()
+{
+	RefreshDirectoryFiles(ASSETS_DIRECTORY);
+	RefreshDirectoryFiles(ENGINE_DIRECTORY);
+}
+
+void M_ResourceManager::RefreshProjectDirectory(const char* directoryToRefresh)
+{
+	RefreshDirectoryFiles(directoryToRefresh);
+}
+
+ResourceType M_ResourceManager::GetTypeFromAssetsExtension(const char* assetsPath)
+{
+	ResourceType type = ResourceType::NONE;
+
+	std::string extension = App->fileSystem->GetFileExtension(assetsPath);
+
+	if (extension == "fbx" || extension == "FBX" 
+		|| extension == "obj" || extension == "OBJ")
+	{
+		type = ResourceType::MODEL;
+	}
+	else if (extension == "png" || extension == "PNG" 
+			|| extension == "tga" || extension == "TGA" 
+			|| extension == "dds" || extension == "DDS")
+	{
+		type = ResourceType::TEXTURE;
+	}
+	else if (extension == "json" || extension == "JSON")
+	{
+		type = ResourceType::SCENE;
+	}
+	else if (extension == "shader")
+	{
+		type = ResourceType::SHADER;
+	}
+	else if (extension == "[NONE]")
+	{
+		type = ResourceType::FOLDER;
+	}
+	else if (extension == "prefab")
+	{
+		type = ResourceType::PREFAB;
+	}
+	else
+	{
+		LOG("[ERROR] Resource Manager: Could not import from the given Assets Path! Error: File extension { %s } is not supported!", extension.c_str());
+	}
+
+	return type;
+}
+
+bool M_ResourceManager::GetForcedUIDsFromMeta(const char* assetsPath, std::map<std::string, uint32>& forcedUIDs)
+{
+	if (assetsPath == nullptr)
+	{
+		LOG("[ERROR] Resource Manager: Could not get Forced UIDs from Meta! Error: Given Assets Path was nullptr.");
+		return false;
+	}
+
+	std::string errorString = "[ERROR] Resource Manager: Could not get Forced UIDs from { " + std::string(assetsPath) + " }'s Meta File.";
+
+	char* buffer				= nullptr;
+	ParsonNode metaRoot			= LoadMetaFile(assetsPath, &buffer);
+	ParsonArray containedArray	= metaRoot.GetArray("ContainedResources");
+	RELEASE_ARRAY(buffer);
+
+	if (!metaRoot.NodeIsValid())
+	{
+		LOG("%s! Error: Given Assets Path had no correspondent Meta File.", errorString.c_str());
+		return false;
+	}
+	if (!containedArray.ArrayIsValid())
+	{
+		LOG("%s! Error: Contained Array in Meta File was not valid.", errorString.c_str());
+		return false;
+	}
+
+	// --- MAIN RESOURCE
+	std::string assetName	= metaRoot.GetString("Name");
+	uint32 resourceUID		= (uint32)metaRoot.GetNumber("UID");
+	if (resourceUID == 0)
+	{
+		LOG("%s! Error: Main ResourceUID was 0.", errorString.c_str());
+		return false;
+	}
+
+	forcedUIDs.emplace(assetName, resourceUID);
+
+	// --- CONTAINED RESOURCES
+	uint32 containedUID			= 0;
+	std::string containedName	= "[NONE]";
+	ParsonNode containedNode	= ParsonNode();
+	for (uint i = 0; i < containedArray.size; ++i)
+	{
+		containedNode	= containedArray.GetNode(i);
+		if (!containedNode.NodeIsValid())
+		{
+			continue;
+		}
+
+		containedName	= containedNode.GetString("Name");
+		containedUID	= (uint32)containedNode.GetNumber("UID");
+		if (containedUID == 0)
+		{
+			continue;
+		}
+
+		forcedUIDs.emplace(containedName, containedUID);
+	}
+
+	return true;
+}
+
+// --- RESOURCE METHODS ---
+Resource* M_ResourceManager::CreateResource(ResourceType type, const char* assetsPath, uint32 forcedUID)
+{
+	Resource* resource = nullptr;
+
+	switch (type)
+	{
+	case ResourceType::MESH:		{ resource = new R_Mesh(); }		break;
+	case ResourceType::MATERIAL:	{ resource = new R_Material(); }	break;
+	case ResourceType::TEXTURE:		{ resource = new R_Texture(); }		break;
+	case ResourceType::MODEL:		{ resource = new R_Model(); }		break;
+	case ResourceType::FOLDER:		{ resource = new R_Folder(); }		break;
+	case ResourceType::SCENE:		{ resource = new R_Scene(); }		break;
+	case ResourceType::ANIMATION:	{ resource = new R_Animation(); }	break;
+	case ResourceType::SHADER:		{ resource = new R_Shader(); }		break;
+	}
+
+	if (resource != nullptr)
+	{
+		if (assetsPath != nullptr)
+		{
+			SetResourceAssetsPathAndFile(assetsPath, resource);
+		}
+
+		if (forcedUID != 0)
+		{
+			resource->ForceUID(forcedUID);
+		}
+
+		SetResourceLibraryPathAndFile(resource);
+	}
+
+	return resource;
+}
+
+Resource* M_ResourceManager::RequestResource(uint32 UID)
+{	
+	if (UID == 0)
+	{
+		LOG("[ERROR] Resource Manager: Resource Request Failed! Error: Requested UID was 0.");
+		return nullptr;
+	}
+	
+	Resource* resource	= nullptr;
+	auto rItem			= resources.find(UID);
+	if (rItem != resources.end())
+	{
+		rItem->second->SetReferences(rItem->second->GetReferences() + 1);
+		resource = rItem->second;
+	}
+
+	return resource;
+}
+
+bool M_ResourceManager::AllocateResource(uint32 UID, const char* assetsPath)
+{
+	if (assetsPath == nullptr)
+	{
+		LOG("[ERROR] Resource Manager: Could not allocate Resource in Memory! Error: Given Path was nullptr.");
+		return false;
+	}
+
+	std::string errorString = "[ERROR] Resource Manager: Could not allocate Resource {" + std::string(assetsPath) + "} in Memory";
+
+	if (UID == 0)
+	{
+		LOG("%s! Error: Invalid UID.", errorString.c_str());
+		return false;
+	}
+	if (library.find(UID) == library.end())
+	{
+		LOG("%s! Error: Resource could not be found in Library.", errorString.c_str());
+		return false;
+	}
+
+	auto item = resources.find(UID);
+	if (item != resources.end())
+	{
+		return true;
+	}
+
+	char* buffer				= nullptr;
+	const char* libraryPath		= library.find(UID)->second.c_str();
+	uint read					= App->fileSystem->Load(libraryPath, &buffer);
+	if (read == 0)
+	{
+		LOG("%s! Error: File system could not read File [%s]", errorString.c_str(), libraryPath);
+		return false;
+	}
+
+	ResourceType type	= GetTypeFromLibraryExtension(libraryPath);
+	Resource* resource	= CreateResource(type, assetsPath, UID);
+	bool success		= false;
+	switch (type)
+	{
+	case ResourceType::MODEL:		{ success = Importer::Scenes::Load(buffer, (R_Model*)resource); }				break;
+	case ResourceType::MESH:		{ success = Importer::Meshes::Load(buffer, (R_Mesh*)resource); }				break;
+	case ResourceType::MATERIAL:	{ success = Importer::Materials::Load(buffer, (R_Material*)resource); }			break;
+	case ResourceType::TEXTURE:		{ success = Importer::Textures::Load(buffer, read, (R_Texture*)resource); }		break;
+	case ResourceType::FOLDER:		{ success = Importer::Folders::Load(buffer, (R_Folder*)resource); }				break;
+	case ResourceType::SCENE:		{ /*success = TODO: HAVE A FUNCTIONAL R_SCENE AND SAVE/LOAD METHODS*/ }			break;
+	case ResourceType::ANIMATION:	{ success = Importer::Animations::Load(buffer, (R_Animation*)resource); }		break;
+	case ResourceType::SHADER:		{ success = Importer::Shaders::Load(buffer, (R_Shader*)resource); }				break;
+	}
+
+	RELEASE_ARRAY(buffer);
+
+	if (success)
+	{
+		resources.emplace(resource->GetUID(), resource);
+		LOG("[STATUS] Resource Manager: Successfully Allocated Resource %s in Memory!", resource->GetAssetsFile());
+	}
+	else
+	{
+		DeleteResource(resource);																									// ATTENTION: This deletes from resources and library!.
+		LOG("%s! Error: Importer could not load the Resource Data from File [%s].", errorString.c_str(), libraryPath);
+	}
+
+	return success;
+}
+
+bool M_ResourceManager::FreeResource(uint32 UID)
+{	
+	if (UID == 0)
+	{
+		LOG("[ERROR] Resource Manager: Free Resource Operation Failed! Error: Freed UID was 0.");
+		return false;
+	}
+	
+	auto rItem = resources.find(UID);
+	if (rItem == resources.end())
+	{
+		LOG("[ERROR] Resource Manager: Free Resource Operation Failed! Error: Given UID could not be found in Resources Map.");
+		return false;
+	}
+
+	uint current_references = rItem->second->GetReferences();
+	if (current_references == 0 || (current_references - 1) == 0)																// Safety check in case resource already has 0 references.
+	{
+		DeallocateResource(UID);
+	}
+	else
+	{
+		rItem->second->SetReferences(current_references - 1);
+	}
+
+	return true;
+}
+
+bool M_ResourceManager::DeallocateResource(uint32 UID)
+{
+	bool ret = true;
+	
+	if (UID == 0)
+	{
+		LOG("[ERROR] Resource Manager: Could not Deallocate Resource! Error: Given UID was 0");
+		return false;
+	}
+
+	auto item = resources.find(UID);
+	if (item != resources.end())
+	{
+		item->second->CleanUp();
+		RELEASE(item->second);
+		resources.erase(UID);
+		return true;
+	}
+	else
+	{
+		LOG("[ERROR] Resource Manager: Could not Deallocate Resource %lu! Error: Resource was not allocated in memory.", UID);
+	}
+
+	return ret;
+}
+
+bool M_ResourceManager::DeallocateResource(Resource* resourceToDeallocate)
+{
+	if (resourceToDeallocate == nullptr)
+	{
+		LOG("[ERROR] Resource Manager: Could not deallocate Resource! Error: Given Resource* was nullptr.");
+		return false;
+	}
+
+	uint32 resourceUid = resourceToDeallocate->GetUID();
+
+	resourceToDeallocate->CleanUp();
+	RELEASE(resourceToDeallocate);
+
+	if (resources.find(resourceUid) != resources.end())
+	{
+		resources.erase(resourceUid);
+	}
+	else
+	{
+		//LOG("[WARNING] Resource Manager: Deallocated Resource was not stored in the Resources Map!");
+	}
+
+	return true;
+}
+
+bool M_ResourceManager::DeleteResource(uint32 UID)
+{
+	bool ret = true;
+	
+	if (library.find(UID) != library.end())
+	{
+		library.erase(UID);
+	}
+
+	Resource* resourceToDelete = nullptr;
+
+	std::map<uint32, Resource*>::iterator item = resources.find(UID);
+	if(item == resources.end())
+	{
+		LOG("[ERROR] Resource Manager: Resource to delete was not inside the resources std::map!");
+		return false;
+	}
+
+	resourceToDelete = item->second;
+	if (resourceToDelete != nullptr)
+	{
+		resourceToDelete->CleanUp();
+		RELEASE(resourceToDelete);
+	}
+
+	resources.erase(UID);
+
+	return ret;
+}
+
+bool M_ResourceManager::DeleteResource(Resource* resourceToDelete)
+{
+	if (resourceToDelete == nullptr)
+	{
+		LOG("[ERROR] Resource Manager: Could not delete given Resource! Error: Given Resource* was nullptr.");
+		return false;
+	}
+	
+	uint32 resourceUid = resourceToDelete->GetUID();
+
+	resourceToDelete->CleanUp();
+	RELEASE(resourceToDelete);
+
+	/*if (library.find(resourceUid) != library.end())
+	{
+		library.erase(resourceUid);
+	}*/
+
+	if (resources.find(resourceUid) != resources.end())
+	{
+		resources.erase(resourceUid);
+	}
+
+	return true;
+}
+
+void M_ResourceManager::GetResources(std::map<uint32, Resource*>& resources) const
+{
+	//TODO: this function call from editor resources causes memleak
+	resources = this->resources;
+}
+
+const std::map<uint32, Resource*>* M_ResourceManager::GetResources() const
+{
+	return &this->resources;
+}
+
+R_Shader* M_ResourceManager::GetShader(const char* name)
+{
+
+	R_Shader* tempShader = nullptr;
+
+	std::string defaultPath = ASSETS_SHADERS_PATH + std::string(name) + ".shader"; 
+	tempShader = (R_Shader*)App->resourceManager->GetResourceFromLibrary(defaultPath.c_str());
+
+	if (tempShader == nullptr)
+	{
+		LOG("[ERROR] Could not get the Default Shader! Error: Default Shader could not be found in active resources.");
+		return nullptr;
+	}
+
+	return tempShader;
+}
+
+void M_ResourceManager::GetAllShaders(std::vector<R_Shader*>& shaders)
+{
+	R_Shader* tempShader = nullptr;
+	std::vector<std::string> shaderFiles;
+	App->fileSystem->GetAllFilesWithFilter(ASSETS_SHADERS_PATH, shaderFiles, nullptr, "shader");
+	for (uint i = 0; i < shaderFiles.size(); i++)
+	{
+		//std::string defaultPath = ASSETS_SHADERS_PATH + std::string(shaderFiles[i]) + SHADERS_EXTENSION;
+		tempShader = (R_Shader*)App->resourceManager->GetResourceFromLibrary(shaderFiles[i].c_str());
+		if (tempShader == nullptr)
+		{
+			LOG("[ERROR] Could not get the %s Error: %s could not be found in active resources.", shaderFiles[i], shaderFiles[i]);
+		}
+		else
+		{
+			shaders.push_back(tempShader);
+		}
+	}
+}
+
+void M_ResourceManager::GetAllTextures(std::vector<R_Texture*>& textures)
+{
+	std::vector<std::string> textureFiles;
+	std::vector<std::string> nameFilters;
+	std::vector<std::string> extFilters;
+	extFilters.push_back("png");
+	extFilters.push_back("tga");
+	extFilters.push_back("dds");
+	
+	App->fileSystem->GetAllFilesWithFilters(ASSETS_TEXTURES_PATH, textureFiles, nameFilters, extFilters);
+
+	R_Texture* tempTex = nullptr;
+	for (uint i = 0; i < textureFiles.size(); i++)
+	{
+		tempTex = (R_Texture*)App->resourceManager->GetResourceFromLibrary(textureFiles[i].c_str());
+		if (tempTex == nullptr)
+		{
+			LOG("[ERROR] Could not get the %s Error: %s could not be found in active resources.", textureFiles[i], textureFiles[i]);
+		}
+		else
+		{
+			textures.push_back(tempTex);
+		}
+	}
+
+	textureFiles.clear();
+	nameFilters.clear();
+	extFilters.clear();
+}
+
+// --- PREFAB METHODS
+void M_ResourceManager::CreatePrefab(GameObject* gameObject)
+{
+	uint id = Random::LCG::GetRandomUint();
+	gameObject->SetAsPrefab(id);
+
+	SavePrefab(gameObject, id);
+}
+
+void M_ResourceManager::UpdatePrefab(GameObject* gameObject)
+{
+	gameObject->SetAsPrefab(gameObject->prefabID);
+
+	SavePrefab(gameObject, gameObject->prefabID);
+}
+
+void M_ResourceManager::SavePrefab(GameObject* gameObject, uint _prefabId)
+{
+	ParsonNode rootNode;
+
+	SavePrefabObject(gameObject,&rootNode);
+
+	char* buffer=nullptr;
+	std::string fileName = ASSETS_PREFABS_PATH + std::to_string(_prefabId) + PREFAB_EXTENSION;
+	rootNode.SerializeToFile(fileName.c_str(),&buffer);
+
+	if (buffer != nullptr)
+		delete[] buffer;
+}
+
+void M_ResourceManager::LoadPrefab(uint _prefabId)
+{
+	char* buffer = nullptr;
+	std::string fileName = ASSETS_PREFABS_PATH + std::to_string(_prefabId) + PREFAB_EXTENSION;
+	App->fileSystem->Load(fileName.c_str(), &buffer);
+
+	ParsonNode prefabRoot(buffer);
+
+	App->scene->LoadPrefabIntoScene(&prefabRoot);
+
+	
+}
+
+void M_ResourceManager::SavePrefabObject(GameObject* gameObject, ParsonNode* node)
+{
+	gameObject->SaveState(*node);
+
+	ParsonArray childsArray = node->SetArray("Children");
+
+	for (auto child = gameObject->childs.begin(); child != gameObject->childs.end(); child++)
+	{
+		ParsonNode childNode = childsArray.SetNode("child");
+		SavePrefabObject((*child), &childNode);
+	}
+}
+
 // --- ASSETS MONITORING METHODS ---
 void M_ResourceManager::RefreshDirectoryFiles(const char* directory)
 {
@@ -195,14 +897,12 @@ void M_ResourceManager::RefreshDirectory(const char* directory, std::vector<std:
 		return;
 	}
 	
-	std::vector<std::string> directories;
 	std::vector<std::string> assetFiles;
 	std::vector<std::string> metaFiles;
 	std::map<std::string, std::string> filePairs;
 
-	App->fileSystem->DiscoverAllFiles(directory, assetFiles, directories, DOTLESS_META_EXTENSION);				// Directories (folders) will be ignored for now.
-	App->fileSystem->GetAllFilesWithExtension(directory, DOTLESS_META_EXTENSION, metaFiles);
-	
+	App->fileSystem->DiscoverAllFilesFiltered(directory, assetFiles, metaFiles, DOTLESS_META_EXTENSION);
+
 	FindFilesToImport(assetFiles, metaFiles, filePairs, filesToImport);											// Always call in this order!
 	FindFilesToUpdate(filePairs, filesToUpdate);																// At the very least FindFilesToImport() has to be the first to be called
 	FindFilesToDelete(metaFiles, filePairs, filesToDelete);														// as it is the one to fill file_pairs with asset and meta files!
@@ -212,7 +912,6 @@ void M_ResourceManager::RefreshDirectory(const char* directory, std::vector<std:
 	filePairs.clear();
 	metaFiles.clear();
 	assetFiles.clear();
-	directories.clear();
 }
 
 void M_ResourceManager::FindFilesToImport(const std::vector<std::string>& assetFiles, const std::vector<std::string>& metaFiles, 
@@ -420,68 +1119,6 @@ bool M_ResourceManager::GetResourceUIDsFromMeta(const char* assetsPath, std::vec
 		}
 
 		resourceUids.push_back(containedUid);
-	}
-
-	return true;
-}
-
-bool M_ResourceManager::GetForcedUIDsFromMeta(const char* assetsPath, std::map<std::string, uint32>& forcedUIDs)
-{
-	if (assetsPath == nullptr)
-	{
-		LOG("[ERROR] Resource Manager: Could not get Forced UIDs from Meta! Error: Given Assets Path was nullptr.");
-		return false;
-	}
-
-	std::string errorString = "[ERROR] Resource Manager: Could not get Forced UIDs from { " + std::string(assetsPath) + " }'s Meta File.";
-
-	char* buffer				= nullptr;
-	ParsonNode metaRoot			= LoadMetaFile(assetsPath, &buffer);
-	ParsonArray containedArray	= metaRoot.GetArray("ContainedResources");
-	RELEASE_ARRAY(buffer);
-
-	if (!metaRoot.NodeIsValid())
-	{
-		LOG("%s! Error: Given Assets Path had no correspondent Meta File.", errorString.c_str());
-		return false;
-	}
-	if (!containedArray.ArrayIsValid())
-	{
-		LOG("%s! Error: Contained Array in Meta File was not valid.", errorString.c_str());
-		return false;
-	}
-
-	// --- MAIN RESOURCE
-	std::string assetName	= metaRoot.GetString("Name");
-	uint32 resourceUID		= (uint32)metaRoot.GetNumber("UID");
-	if (resourceUID == 0)
-	{
-		LOG("%s! Error: Main ResourceUID was 0.", errorString.c_str());
-		return false;
-	}
-
-	forcedUIDs.emplace(assetName, resourceUID);
-
-	// --- CONTAINED RESOURCES
-	uint32 containedUID			= 0;
-	std::string containedName	= "[NONE]";
-	ParsonNode containedNode	= ParsonNode();
-	for (uint i = 0; i < containedArray.size; ++i)
-	{
-		containedNode	= containedArray.GetNode(i);
-		if (!containedNode.NodeIsValid())
-		{
-			continue;
-		}
-
-		containedName	= containedNode.GetString("Name");
-		containedUID	= (uint32)containedNode.GetNumber("UID");
-		if (containedUID == 0)
-		{
-			continue;
-		}
-
-		forcedUIDs.emplace(containedName, containedUID);
 	}
 
 	return true;
@@ -718,64 +1355,29 @@ uint64 M_ResourceManager::GetAssetFileModTimeFromMeta(const char* assetsPath)
 	return ret;
 }
 
-// --- IMPORT FILE METHODS--
-uint32 M_ResourceManager::ImportFile(const char* assetsPath)
+void M_ResourceManager::FindPrefabs()
 {
-	uint32 resourceUid = 0;
+	std::vector<std::string> files,directories;
+	App->fileSystem->DiscoverFiles(ASSETS_PREFABS_PATH,files,directories);
+	std::string fileName;
 
-	if (assetsPath == nullptr)
+	char* buffer = nullptr;
+	for (auto file = files.begin(); file != files.end(); file++)
 	{
-		LOG("[ERROR] Resource Manager: Could not Import File from the given path! Error: Path was nullptr.");
-		return 0;
-	}
-
-	if (App->fileSystem->GetFileExtension(assetsPath) == "json" 
-		|| App->fileSystem->GetFileExtension(assetsPath) == "JSON")													// TMP until R_Scene has been fully implemented.
-	{
-		return 0;
-	}
-
-	assetsPath			= GetValidPath(assetsPath);
-	bool metaIsValid	= MetaFileIsValid(assetsPath);
-	if (!metaIsValid)
-	{
-		if (HasMetaFile(assetsPath))
-		{
-			DeleteFromLibrary(assetsPath);																				// Cleaning any remaining Library files.
-		}
 		
-		resourceUid = ImportFromAssets(assetsPath); 
+		fileName = ASSETS_PREFABS_PATH + (*file);
+		App->fileSystem->Load(fileName.c_str(), &buffer);
 
-		if (resourceUid == 0)
-		{
-			LOG("[ERROR] Resource Manager: Could not Import File { %s }! Error: See [IMPORTER] and Resource Manager ERRORS.", assetsPath);
-			return 0;
-		}
+		ParsonNode prefab(buffer);
+
+		std::string id;
+		App->fileSystem->SplitFilePath((*file).c_str(),nullptr,&id);
+		
+		prefabs.emplace(atoi((*file).c_str()),prefab.GetString("Name"));
 	}
-	else
-	{
-		LOG("[WARNING] Resource Manager: The File to Import was already in the Library!");
-
-		std::map<uint32, std::string> libraryItems;
-		GetLibraryPairsFromMeta(assetsPath, libraryItems);
-
-		std::map<uint32, std::string>::iterator item;
-		for (item = libraryItems.begin(); item != libraryItems.end(); ++item)
-		{
-			if (library.find(item->first) == library.end())
-			{
-				library.emplace(item->first, item->second);
-			}
-		}
-
-		resourceUid = libraryItems.begin()->first;
-
-		libraryItems.clear();
-	}
-
-	return resourceUid;
 }
 
+// --- IMPORT FILE METHODS ---
 uint32 M_ResourceManager::ImportFromAssets(const char* assetsPath)
 {
 	uint32 resourceUid = 0;
@@ -796,11 +1398,12 @@ uint32 M_ResourceManager::ImportFromAssets(const char* assetsPath)
 		bool success = false;
 		switch (type)
 		{
-		case ResourceType::MODEL:		{ success = Importer::ImportScene(buffer, read, (R_Model*)resource); }		break;
-		case ResourceType::MESH:		{ success = Importer::ImportMesh(buffer, (R_Mesh*)resource); }				break;
-		case ResourceType::TEXTURE:		{ success = Importer::ImportTexture(buffer, read, (R_Texture*)resource); }	break;
-		case ResourceType::SCENE:		{ /*success = HAVE A FUNCTIONAL R_SCENE AND LOAD/SAVE METHODS*/}			break;
-		case ResourceType::SHADER:		{success = Importer::Shaders::Import(resource->GetAssetsPath(), (R_Shader*)resource); } break;}
+		case ResourceType::MODEL:		{ success = Importer::ImportScene(buffer, read, (R_Model*)resource); }						break;
+		case ResourceType::MESH:		{ success = Importer::ImportMesh(buffer, (R_Mesh*)resource); }								break;
+		case ResourceType::TEXTURE:		{ success = Importer::ImportTexture(buffer, read, (R_Texture*)resource); }					break;
+		case ResourceType::SCENE:		{ /*success = HAVE A FUNCTIONAL R_SCENE AND LOAD/SAVE METHODS*/}							break;
+		case ResourceType::SHADER:		{ success = Importer::Shaders::Import(resource->GetAssetsPath(), (R_Shader*)resource); }	break;
+		}
 
 		RELEASE_ARRAY(buffer);
 
@@ -822,123 +1425,6 @@ uint32 M_ResourceManager::ImportFromAssets(const char* assetsPath)
 	}
 
 	return resourceUid;
-}
-
-uint32 M_ResourceManager::LoadFromLibrary(const char* assetsPath)
-{
-	uint32 resourceUid = 0;
-	
-	std::string errorString = "[ERROR] Resource Manager: Could not Load File from the given Library Path";
-
-	assetsPath = GetValidPath(assetsPath);
-
-	if (assetsPath == nullptr)
-	{
-		LOG("%s! Error: Path was nullptr.", errorString.c_str());
-		return 0;
-	}
-
-	char* buffer			= nullptr;
-	ParsonNode metaRoot		= LoadMetaFile(assetsPath, &buffer);
-	RELEASE_ARRAY(buffer);
-
-	bool metaIsValid		= MetaFileIsValid(metaRoot);
-	if (!metaRoot.NodeIsValid())
-	{
-		LOG("%s! Error: Could not get the Meta Root Node.", errorString.c_str());
-		return 0;
-	}
-	if (!metaIsValid)
-	{
-		LOG("%s! Error: Could not Validate the Meta File.", errorString.c_str());
-		return 0;
-	}
-
-	resourceUid						= (uint32)metaRoot.GetNumber("UID");
-	ParsonArray containedArray		= metaRoot.GetArray("ContainedResources");
-	
-	if (resources.find(resourceUid) != resources.end())
-	{
-		return resourceUid;																									// If the File To Load's Resource is already in memory.
-	}	
-
-	bool success = AllocateResource(resourceUid, assetsPath);
-	if (!success)
-	{
-		LOG("[ERROR] Resource Manager: Could not Allocate Resource %lu in memory!", resourceUid);
-		return 0;
-	}
-
-	std::string containedPath = "";
-	std::string containedName = "";
-	for (uint i = 0; i < containedArray.size; ++i)
-	{
-		ParsonNode containedNode = containedArray.GetNode(i);
-
-		App->fileSystem->SplitFilePath(assetsPath, &containedPath, nullptr, nullptr);									// --- TMP Until Something Functional Is In Place.
-		containedName	= containedNode.GetString("Name");																// 
-		containedPath += containedName;																					// -----------------------------------------------
-
-		uint32 containedUid = (uint32)containedNode.GetNumber("UID");
-
-		if (resources.find(containedUid) != resources.end())																// No need to allocate if it is already allocated.
-		{
-			continue;
-		}
-
-		success = AllocateResource(containedUid, containedPath.c_str());
-		if (!success)
-		{
-			LOG("[WARNING] Resource Manager: Could not allocate Contained Resource! UID: %lu, Name: %s", containedUid, containedName.c_str());
-		}
-
-		containedName.clear();
-		containedPath.clear();
-	}
-
-	return resourceUid;
-}
-
-uint M_ResourceManager::SaveResourceToLibrary(Resource* resource)
-{	
-	uint written = 0;
-	
-	if (resource == nullptr)
-	{
-		LOG("[ERROR] Resource Manager: Could not Save Resource to Library! Error: Resource* was nullptr.");
-		return 0;
-	}
-
-	char* buffer = nullptr;
-
-	switch (resource->GetType())
-	{
-	case ResourceType::MODEL:		{ written = Importer::Scenes::Save((R_Model*)resource, &buffer); }			break;
-	case ResourceType::MESH:		{ written = Importer::Meshes::Save((R_Mesh*)resource, &buffer); }			break;
-	case ResourceType::MATERIAL:	{ written = Importer::Materials::Save((R_Material*)resource, &buffer); }	break;
-	case ResourceType::TEXTURE:		{ written = Importer::Textures::Save((R_Texture*)resource, &buffer); }		break;
-	case ResourceType::FOLDER:		{ written = Importer::Folders::Save((R_Folder*)resource, &buffer); }		break;
-	case ResourceType::SCENE:		{ /*written = TODO: HAVE A FUNCTIONAL R_SCENE AND SAVE/LOAD METHODS*/ }		break;
-	case ResourceType::ANIMATION:	{ written = Importer::Animations::Save((R_Animation*)resource, &buffer); }	break;
-	case ResourceType::SHADER:		{ written = Importer::Shaders::Save((R_Shader*)resource, &buffer); }		break;
-	}
-
-	RELEASE_ARRAY(buffer);
-
-	if (written == 0)
-	{
-		LOG("[ERROR] Resource Manager: Could not save Resource in the Library! Error: Check for Importer Errors in the Console Panel.");
-		return 0;
-	}
-
-	if (ResourceHasMetaType(resource))
-	{
-		SaveMetaFile(resource);
-	}
-
-	library.emplace(resource->GetUID(), resource->GetLibraryPath());
-
-	return written;
 }
 
 const char* M_ResourceManager::GetValidPath(const char* assetsPath)
@@ -970,43 +1456,6 @@ const char* M_ResourceManager::GetValidPath(const char* assetsPath)
 	}
 
 	return assetsPath;
-}
-
-ResourceType M_ResourceManager::GetTypeFromAssetsExtension(const char* assetsPath)
-{
-	ResourceType type = ResourceType::NONE;
-
-	std::string extension = App->fileSystem->GetFileExtension(assetsPath);
-
-	if (extension == "fbx" || extension == "FBX" 
-		|| extension == "obj" || extension == "OBJ")
-	{
-		type = ResourceType::MODEL;
-	}
-	else if (extension == "png" || extension == "PNG" 
-			|| extension == "tga" || extension == "TGA" 
-			|| extension == "dds" || extension == "DDS")
-	{
-		type = ResourceType::TEXTURE;
-	}
-	else if (extension == "json" || extension == "JSON")
-	{
-		type = ResourceType::SCENE;
-	}
-	else if (extension == "shader")
-	{
-		type = ResourceType::SHADER;
-	}
-	else if (extension == "[NONE]")
-	{
-		type = ResourceType::FOLDER;
-	}
-	else
-	{
-		LOG("[ERROR] Resource Manager: Could not import from the given Assets Path! Error: File extension { %s } is not supported!", extension.c_str());
-	}
-
-	return type;
 }
 
 ResourceType M_ResourceManager::GetTypeFromLibraryExtension(const char* libraryPath)
@@ -1189,7 +1638,7 @@ bool M_ResourceManager::MetaFileIsValid(const char* assetsPath)
 	}
 
 	ParsonNode containedNode			= ParsonNode();
-	uint32 containedUid				= 0;
+	uint32 containedUid					= 0;
 	std::string containedLibraryPath	= "[NONE]";
 	for (uint i = 0; i < containedArray.size; ++i)
 	{
@@ -1285,363 +1734,4 @@ bool M_ResourceManager::ResourceHasMetaType(Resource* resource) const
 			|| type == ResourceType::MODEL
 			|| type == ResourceType::TEXTURE
 			|| type == ResourceType::SHADER);
-}
-
-Resource* M_ResourceManager::GetResourceFromLibrary(const char* assetsPath)
-{
-	Resource* resource = nullptr;
-	
-	if (assetsPath == nullptr)
-	{
-		LOG("[ERROR] Resource Manager: Could not get Resource associated with Meta File! Error: Given Assets Path was nullptr.");
-		return nullptr;
-	}
-
-	std::string metaFile		= assetsPath + std::string(META_EXTENSION);
-	std::string errorString	= "[ERROR] Resource Manager: Could not get Resource associated with { " + metaFile + " } Meta File";
-
-	if (!App->fileSystem->Exists(metaFile.c_str()))
-	{
-		LOG("%s! Error: File System could not find Meta File.", errorString.c_str());
-		return nullptr;
-	}
-
-	uint32 resourceUid = LoadFromLibrary(assetsPath);
-	if (resourceUid == 0)
-	{
-		//LOG("%s! Error: Could not get Resource UID from Assets Path.", error_string.c_str());
-		return nullptr;
-	}
-
-	resource = RequestResource(resourceUid);
-
-	return resource;
-}
-
-// --- RESOURCE METHODS ---
-Resource* M_ResourceManager::CreateResource(ResourceType type, const char* assetsPath, uint32 forcedUID)
-{
-	Resource* resource = nullptr;
-
-	switch (type)
-	{
-	case ResourceType::MESH:		{ resource = new R_Mesh(); }		break;
-	case ResourceType::MATERIAL:	{ resource = new R_Material(); }	break;
-	case ResourceType::TEXTURE:		{ resource = new R_Texture(); }		break;
-	case ResourceType::MODEL:		{ resource = new R_Model(); }		break;
-	case ResourceType::FOLDER:		{ resource = new R_Folder(); }		break;
-	case ResourceType::SCENE:		{ resource = new R_Scene(); }		break;
-	case ResourceType::ANIMATION:	{ resource = new R_Animation(); }	break;
-	case ResourceType::SHADER:		{ resource = new R_Shader(); }		break;
-	case ResourceType::PARTICLE_SYSTEM: { resource = new R_Shader(); }	break;
-
-	}
-
-	if (resource != nullptr)
-	{
-		if (assetsPath != nullptr)
-		{
-			SetResourceAssetsPathAndFile(assetsPath, resource);
-		}
-
-		if (forcedUID != 0)
-		{
-			resource->ForceUID(forcedUID);
-		}
-
-		SetResourceLibraryPathAndFile(resource);
-	}
-
-	return resource;
-}
-
-bool M_ResourceManager::DeleteResource(uint32 UID)
-{
-	bool ret = true;
-	
-	if (library.find(UID) != library.end())
-	{
-		library.erase(UID);
-	}
-
-	Resource* resourceToDelete = nullptr;
-
-	std::map<uint32, Resource*>::iterator item = resources.find(UID);
-	if(item == resources.end())
-	{
-		LOG("[ERROR] Resource Manager: Resource to delete was not inside the resources std::map!");
-		return false;
-	}
-
-	resourceToDelete = item->second;
-	if (resourceToDelete != nullptr)
-	{
-		resourceToDelete->CleanUp();
-		RELEASE(resourceToDelete);
-	}
-
-	resources.erase(UID);
-
-	return ret;
-}
-
-bool M_ResourceManager::DeleteResource(Resource* resourceToDelete)
-{
-	if (resourceToDelete == nullptr)
-	{
-		LOG("[ERROR] Resource Manager: Could not delete given Resource! Error: Given Resource* was nullptr.");
-		return false;
-	}
-	
-	uint32 resourceUid = resourceToDelete->GetUID();
-
-	resourceToDelete->CleanUp();
-	RELEASE(resourceToDelete);
-
-	/*if (library.find(resourceUid) != library.end())
-	{
-		library.erase(resourceUid);
-	}*/
-
-	if (resources.find(resourceUid) != resources.end())
-	{
-		resources.erase(resourceUid);
-	}
-
-	return true;
-}
-
-Resource* M_ResourceManager::RequestResource(uint32 UID)
-{	
-	if (UID == 0)
-	{
-		LOG("[ERROR] Resource Manager: Resource Request Failed! Error: Requested UID was 0.");
-		return nullptr;
-	}
-	
-	Resource* resource	= nullptr;
-	auto rItem			= resources.find(UID);
-	if (rItem != resources.end())
-	{
-		rItem->second->SetReferences(rItem->second->GetReferences() + 1);
-		resource = rItem->second;
-	}
-
-	return resource;
-}
-
-bool M_ResourceManager::FreeResource(uint32 UID)
-{	
-	if (UID == 0)
-	{
-		LOG("[ERROR] Resource Manager: Free Resource Operation Failed! Error: Freed UID was 0.");
-		return false;
-	}
-	
-	RESOURCE_ITEM rItem = resources.find(UID);
-	if (rItem == resources.end())
-	{
-		LOG("[ERROR] Resource Manager: Free Resource Operation Failed! Error: Given UID could not be found in Resources Map.");
-		return false;
-	}
-
-	uint current_references = rItem->second->GetReferences();
-	if (current_references == 0 || (current_references - 1) == 0)																// Safety check in case resource already has 0 references.
-	{
-		DeallocateResource(UID);
-	}
-	else
-	{
-		rItem->second->SetReferences(current_references - 1);
-	}
-
-	return true;
-}
-
-bool M_ResourceManager::AllocateResource(uint32 UID, const char* assetsPath)
-{
-	if (assetsPath == nullptr)
-	{
-		LOG("[ERROR] Resource Manager: Could not allocate Resource in Memory! Error: Given Path was nullptr.");
-		return false;
-	}
-
-	std::string errorString = "[ERROR] Resource Manager: Could not allocate Resource {" + std::string(assetsPath) + "} in Memory";
-
-	if (UID == 0)
-	{
-		LOG("%s! Error: Invalid UID.", errorString.c_str());
-		return false;
-	}
-	if (library.find(UID) == library.end())
-	{
-		LOG("%s! Error: Resource could not be found in Library.", errorString.c_str());
-		return false;
-	}
-
-	auto item = resources.find(UID);
-	if (item != resources.end())
-	{
-		return true;
-	}
-
-	char* buffer				= nullptr;
-	const char* libraryPath		= library.find(UID)->second.c_str();
-	uint read					= App->fileSystem->Load(libraryPath, &buffer);
-	if (read == 0)
-	{
-		LOG("%s! Error: File system could not read File [%s]", errorString.c_str(), libraryPath);
-		return false;
-	}
-
-	ResourceType type	= GetTypeFromLibraryExtension(libraryPath);
-	Resource* resource	= CreateResource(type, assetsPath, UID);
-	bool success		= false;
-	switch (type)
-	{
-	case ResourceType::MODEL:		{ success = Importer::Scenes::Load(buffer, (R_Model*)resource); }				break;
-	case ResourceType::MESH:		{ success = Importer::Meshes::Load(buffer, (R_Mesh*)resource); }				break;
-	case ResourceType::MATERIAL:	{ success = Importer::Materials::Load(buffer, (R_Material*)resource); }			break;
-	case ResourceType::TEXTURE:		{ success = Importer::Textures::Load(buffer, read, (R_Texture*)resource); }		break;
-	case ResourceType::FOLDER:		{ success = Importer::Folders::Load(buffer, (R_Folder*)resource); }				break;
-	case ResourceType::SCENE:		{ /*success = TODO: HAVE A FUNCTIONAL R_SCENE AND SAVE/LOAD METHODS*/ }			break;
-	case ResourceType::ANIMATION:	{ success = Importer::Animations::Load(buffer, (R_Animation*)resource); }		break;
-	case ResourceType::SHADER:		{ success = Importer::Shaders::Load(buffer, (R_Shader*)resource); }				break;
-	case ResourceType::PARTICLE_SYSTEM: {/*success = missing impoter*/}												break;
-	}
-
-	RELEASE_ARRAY(buffer);
-
-	if (success)
-	{
-		resources.emplace(resource->GetUID(), resource);
-		LOG("[STATUS] Resource Manager: Successfully Allocated Resource %s in Memory!", resource->GetAssetsFile());
-	}
-	else
-	{
-		DeleteResource(resource);																									// ATTENTION: This deletes from resources and library!.
-		LOG("%s! Error: Importer could not load the Resource Data from File [%s].", errorString.c_str(), libraryPath);
-	}
-
-	return success;
-}
-
-bool M_ResourceManager::DeallocateResource(uint32 UID)
-{
-	bool ret = true;
-	
-	if (UID == 0)
-	{
-		LOG("[ERROR] Resource Manager: Could not Deallocate Resource! Error: Given UID was 0");
-		return false;
-	}
-
-	RESOURCE_ITEM item = resources.find(UID);
-	if (item != resources.end())
-	{
-		item->second->CleanUp();
-		RELEASE(item->second);
-		resources.erase(UID);
-		return true;
-	}
-	else
-	{
-		LOG("[ERROR] Resource Manager: Could not Deallocate Resource %lu! Error: Resource was not allocated in memory.", UID);
-	}
-
-	return ret;
-}
-
-bool M_ResourceManager::DeallocateResource(Resource* resourceToDeallocate)
-{
-	if (resourceToDeallocate == nullptr)
-	{
-		LOG("[ERROR] Resource Manager: Could not deallocate Resource! Error: Given Resource* was nullptr.");
-		return false;
-	}
-
-	uint32 resourceUid = resourceToDeallocate->GetUID();
-
-	resourceToDeallocate->CleanUp();
-	RELEASE(resourceToDeallocate);
-
-	if (resources.find(resourceUid) != resources.end())
-	{
-		resources.erase(resourceUid);
-	}
-	else
-	{
-		//LOG("[WARNING] Resource Manager: Deallocated Resource was not stored in the Resources Map!");
-	}
-
-	return true;
-}
-
-R_Shader* M_ResourceManager::GetShader(const char* name)
-{
-
-	R_Shader* tempShader = nullptr;
-
-	std::string defaultPath = ASSETS_SHADERS_PATH + std::string(name) + ".shader"; 
-	tempShader = (R_Shader*)App->resourceManager->GetResourceFromLibrary(defaultPath.c_str());
-
-	if (tempShader == nullptr)
-	{
-		LOG("[ERROR] Could not get the Default Shader! Error: Default Shader could not be found in active resources.");
-		return nullptr;
-	}
-
-	return tempShader;
-}
-
-void M_ResourceManager::GetAllShaders(std::vector<R_Shader*>& shaders)
-{
-	R_Shader* tempShader = nullptr;
-	std::vector<std::string> shaderFiles;
-	App->fileSystem->GetAllFilesWithExtension(ASSETS_SHADERS_PATH, "shader", shaderFiles);
-	for (uint i = 0; i < shaderFiles.size(); i++)
-	{
-		//std::string defaultPath = ASSETS_SHADERS_PATH + std::string(shaderFiles[i]) + SHADERS_EXTENSION;
-		tempShader = (R_Shader*)App->resourceManager->GetResourceFromLibrary(shaderFiles[i].c_str());
-		if (tempShader == nullptr)
-		{
-			LOG("[ERROR] Could not get the %s Error: %s could not be found in active resources.", shaderFiles[i], shaderFiles[i]);
-		}
-		else
-		{
-			shaders.push_back(tempShader);
-		}
-	}
-}
-
-void M_ResourceManager::GetAllTextures(std::vector<R_Texture*>& textures)
-{
-	R_Texture* tempTex = nullptr;
-	std::vector<std::string> textureFiles;
-	App->fileSystem->GetAllFilesWithExtension(ASSETS_TEXTURES_PATH, "png", textureFiles);
-	App->fileSystem->GetAllFilesWithExtension(ASSETS_TEXTURES_PATH, "tga", textureFiles);
-	App->fileSystem->GetAllFilesWithExtension(ASSETS_TEXTURES_PATH, "dds", textureFiles);
-	for (uint i = 0; i < textureFiles.size(); i++)
-	{
-		tempTex = (R_Texture*)App->resourceManager->GetResourceFromLibrary(textureFiles[i].c_str());
-		if (tempTex == nullptr)
-		{
-			LOG("[ERROR] Could not get the %s Error: %s could not be found in active resources.", textureFiles[i], textureFiles[i]);
-		}
-		else
-		{
-			textures.push_back(tempTex);
-		}
-	}
-}
-
-void M_ResourceManager::GetResources(std::map<uint32, Resource*>& resources) const
-{
-	//TODO: this function call from editor resources causes memleak
-	resources = this->resources;
-}
-
-const std::map<uint32, Resource*>* M_ResourceManager::GetResources() const
-{
-	return &this->resources;
 }

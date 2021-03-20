@@ -1,8 +1,10 @@
 #include "M_Editor.h"
 #include "Time.h"
+#include "Color.h"
+
 #include "EngineApplication.h"
 #include "E_Toolbar.h"
-
+#include "Profiler.h"
 #include "MemoryManager.h"
 
 E_Toolbar::E_Toolbar() : EditorPanel("Toolbar")
@@ -19,21 +21,22 @@ bool E_Toolbar::Draw(ImGuiIO& io)
 {
 	bool ret = true;
 
+
 	ImGui::Begin("Toolbar");
+
+	TimeDisplay();
+
+	ImGui::SameLine();
+
+	TimeScaleSlider();
+
+	ImGui::SameLine((ImGui::GetWindowWidth() * 0.4f));
 
 	PlayAndStopButtons();
 
 	ImGui::SameLine();
 
 	PauseAndStepButtons();
-
-	ImGui::SameLine();
-
-	TimeScaleSlider();
-
-	ImGui::SameLine();
-
-	TimeDisplays();
 
 	ImGui::End();
 
@@ -51,43 +54,42 @@ bool E_Toolbar::CleanUp()
 
 void E_Toolbar::PlayAndStopButtons()
 {
-	if (!EngineApp->play)
+	if (EngineApp->gameState != GameState::PLAY)
 	{
 		if (ImGui::Button("Play"))
 		{
-			EngineApp->editor->SaveSceneThroughEditor("PlayAutosave");
-
+			EngineApp->gameState = GameState::PLAY;
 			Time::Game::Play();
 
-			EngineApp->play = true;
-			EngineApp->pause = false;
+			EngineApp->editor->SaveSceneThroughEditor("PlayAutosave");
 		}
 	}
 	else
 	{
 		if (ImGui::Button("Stop"))
 		{
-			EngineApp->editor->LoadFileThroughEditor("Assets/Scenes/PlayAutosave.json");
-
+			EngineApp->gameState = GameState::STOP;
 			Time::Game::Stop();
 
-			EngineApp->play = false;
-			EngineApp->pause = false;
+			EngineApp->editor->LoadFileThroughEditor("Assets/Scenes/PlayAutosave.json");
 		}
 	}
 }
 
 void E_Toolbar::PauseAndStepButtons()
 {
-	if (!EngineApp->pause)
+	if (EngineApp->gameState != GameState::PAUSE)
 	{
 		if (ImGui::Button("Pause"))
 		{
-			if (EngineApp->play)
+			if (EngineApp->gameState == GameState::PLAY)
 			{
+				EngineApp->gameState = GameState::PAUSE;
 				Time::Game::Pause();
-
-				EngineApp->pause = true;
+			}
+			else
+			{
+				LOG("[WARNING] Editor Toolbar: Cannot Pause if the Engine is not in Game Mode!");
 			}
 		}
 	}
@@ -95,9 +97,8 @@ void E_Toolbar::PauseAndStepButtons()
 	{
 		if (ImGui::Button("Resume"))
 		{
+			EngineApp->gameState = GameState::PLAY;
 			Time::Game::Play();
-
-			EngineApp->pause = false;
 		}
 	}
 
@@ -105,15 +106,23 @@ void E_Toolbar::PauseAndStepButtons()
 
 	if (ImGui::Button("Step"))
 	{
-		Time::Game::Step();
-
-		EngineApp->step = true;
+		if (EngineApp->gameState == GameState::PAUSE)
+		{
+			EngineApp->gameState = GameState::STEP;
+			Time::Game::Step();
+		}
+		else
+		{
+			LOG("[WARNING] Editor Toolbar: Cannot Step if the Game is not Paused!");
+		}
 	}
 }
 
 void E_Toolbar::TimeScaleSlider()
 {
 	ImGui::SetNextItemWidth(75.0f);
+
+	ImGui::SetCursorPos(ImVec2(ImGui::GetCursorPosX(), ImGui::GetWindowHeight() * 0.5f));									// ATTENTION: THIS AFFECTS THE POSITIONING OF OTHER ITEMS.
 
 	float timeScale = Time::Game::GetTimeScale();
 	if (ImGui::SliderFloat("##", &timeScale, 0.250f, 4.000f, "X %.3f", ImGuiSliderFlags_None))
@@ -122,15 +131,28 @@ void E_Toolbar::TimeScaleSlider()
 	}
 }
 
-void E_Toolbar::TimeDisplays()
+void E_Toolbar::TimeDisplay()
 {	
+	std::string realTimeString = "[NONE]";
+	std::string gameTimeString = "[NONE]";
+
+
+	GetTimeDisplayStrings(realTimeString, gameTimeString);
+
+	ImGui::SetCursorPos(ImVec2(ImGui::GetCursorPosX(), ImGui::GetWindowHeight() * 0.575f));									// ATTENTION: THIS AFFECTS THE POSITIONING OF OTHER ITEMS.
+
+	ImGui::Text("Real Time:"); ImGui::SameLine(); ImGui::TextColored(&Yellow, " %s", realTimeString.c_str());
+	ImGui::SameLine();
+	ImGui::Text("Game Time:"); ImGui::SameLine(); ImGui::TextColored(&Yellow, " %s", gameTimeString.c_str());
+}
+
+void E_Toolbar::GetTimeDisplayStrings(std::string& realTimeString, std::string& gameTimeString)
+{
 	//TODO: return string from dll memo leak
 	//can't call Time::Real::GetClock().GetTimeAsString() ???
 	Hourglass realTime = Time::Real::GetClock();
 	Hourglass gameTime = Time::Game::GetClock();
-	ImGui::Text("Real Time: "); ImGui::SameLine(); 
-	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%s", std::string(std::to_string(realTime.hours) + "h " + std::to_string(realTime.minutes) + "m " + std::to_string(realTime.seconds) + "s").c_str());
-	ImGui::SameLine();
-	ImGui::Text("Game Time: "); ImGui::SameLine(); 
-	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%s", std::string(std::to_string(gameTime.hours) + "h " + std::to_string(gameTime.minutes) + "m " + std::to_string(gameTime.seconds) + "s").c_str());
+	realTimeString = (std::to_string(realTime.hours) + "h " + std::to_string(realTime.minutes) + "m " + std::to_string(realTime.seconds) + "s");
+	gameTimeString = (std::to_string(gameTime.hours) + "h " + std::to_string(gameTime.minutes) + "m " + std::to_string(gameTime.seconds) + "s");
+
 }

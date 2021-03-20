@@ -17,9 +17,11 @@ LevelGenerator::~LevelGenerator()
 {
 }
 
+
 void LevelGenerator::GetRooms()
 {
-	App->fileSystem->GetAllFilesWithExtensionAndName(ASSETS_SCENES_PATH, "json", "Room", allRooms);
+	App->fileSystem->GetAllFilesWithFilter(ASSETS_SCENES_PATH, allRooms, "Room", "json");
+	//App->fileSystem->GetAllFilesWithExtensionAndName(ASSETS_SCENES_PATH, "json", "Room", allRooms);
 	roomsToAdd = allRooms.size();
 }
 
@@ -54,6 +56,30 @@ void LevelGenerator::GenerateRoom(int room)
 	}
 }
 
+void LevelGenerator::AddFixedRoom(std::string name, int position)
+{
+	std::string roomPath = ASSETS_SCENES_PATH + name + ".json";
+
+	if (App->fileSystem->Exists(roomPath.c_str()))
+	{
+		//std::string tempRoom;
+		if (levelRooms.size() <= position)
+		{
+			position = levelRooms.size() - 1;
+		}
+		for (int i = 0; i < levelRooms.size(); i++)
+		{
+			if (i == position)
+			{
+				//tempRoom = levelRooms[i];
+				levelRooms[i] = roomPath;
+			}
+			
+		}
+	}
+	
+}
+
 void LevelGenerator::HandleRoomGeneration()
 {
 	if (App->input->GetKey(SDL_SCANCODE_KP_6) == KeyState::KEY_DOWN)
@@ -79,6 +105,19 @@ void LevelGenerator::HandleRoomGeneration()
 		{
 			LOG("Beggining of the level reached.");
 		}
+	}
+}
+
+void LevelGenerator::NextRoom()
+{
+	if (roomNum < levelRooms.size() - 1)
+	{
+		roomNum++;
+		GenerateRoom(roomNum);
+	}
+	else
+	{
+		LOG("End of the level reached.");
 	}
 }
 

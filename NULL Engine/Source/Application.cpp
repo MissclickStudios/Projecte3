@@ -6,6 +6,7 @@
 #include "Time.h"
 #include "FrameData.h"
 #include "Hourglass.h"
+#include "Profiler.h"
 
 #include "Module.h"
 #include "M_Window.h"
@@ -29,32 +30,21 @@ Application::Application() :
 quit			(false),
 debug			(false), 
 hardwareInfo	(),
-window			(nullptr),
-input			(nullptr),
-scene			(nullptr),
-renderer		(nullptr),
-camera			(nullptr),
-fileSystem		(nullptr),
-resourceManager	(nullptr),
-audio			(nullptr),
-uiSystem		(nullptr),
-logger			(nullptr)
-
+window			(new M_Window()),
+input			(new M_Input()),
+camera			(new M_Camera3D()),
+renderer		(new M_Renderer3D()),
+scene			(new M_Scene()),
+fileSystem		(new M_FileSystem()),
+resourceManager	(new M_ResourceManager()),
+audio			(new M_Audio()),
+physics			(new M_Physics()),
+uiSystem		(new M_UISystem()),
+logger			(nullptr),
+gameState		(GameState::STOP)
 {
 	App = this;
 	//PERF_TIMER_START(perf_timer);
-	
-	// Modules -----------------------------------
-	window				= new M_Window();
-	input				= new M_Input();
-	camera				= new M_Camera3D();
-	renderer			= new M_Renderer3D();
-	scene				= new M_Scene();
-	fileSystem			= new M_FileSystem();
-	resourceManager		= new M_ResourceManager();
-	audio				= new M_Audio();
-	physics				= new M_Physics();
-	uiSystem 			= new M_UISystem();
 
 	// The order of calls is very important!
 	// Modules will Init() Start() and Update in this order
@@ -78,21 +68,15 @@ logger			(nullptr)
 	// -------------------------------------------*/
 
 	// Save/Load variables
-	wantToLoad			= false;
-	wantToSave			= false;
+	wantToLoad				= false;
+	wantToSave				= false;
 	userHasSaved			= false;
 
 	// Framerate variables
 	frameCap				= 0;
-	secondsSinceStartup	= 0.0f;
-	framesAreCapped		= framesAreCapped;
+	secondsSinceStartup		= 0.0f;
+	framesAreCapped			= framesAreCapped;
 	displayFramerateData	= false;
-
-	// Game Mode variables
-	play					= false;
-	pause					= false;
-	step					= false;
-	stop					= false;
 
 	//PERF_TIMER_PEEK(perf_timer);
 }
@@ -119,37 +103,20 @@ bool Application::Init()
 	bool ret = true;
 
 	char* buffer = nullptr;
-	uint size = fileSystem->Load("Engine/Configuration/configuration.JSON", &buffer);
-	if (size > 0)																			// Check if the configuration is empty and load the default configuration for the engine.
-	{
-		engineName			= TITLE;														// Change Later?
-		organization		= ORGANIZATION;
-		frameCap			= 60;
-		framesAreCapped	= true;
-	}
-	else
-	{
-		uint defaultSize = fileSystem->Load("Engine/Configuration/default_configuration.JSON", &buffer);
-		if (defaultSize <= 0)
-		{
-			LOG("[ERROR] Failed to load project settings.");
-			return false;
-		}
+	uint size = fileSystem->Load(CONFIGURATION_FILE_PATH, &buffer);
 
-		engineName			= TITLE;
-		organization		= ORGANIZATION;
-		frameCap			= 60;
-		framesAreCapped	= true;
-	}
-
+	engineName			= TITLE;														// Change Later?
+	organization		= ORGANIZATION;
+	frameCap			= 60;
+	framesAreCapped		= true;
+	
 	ParsonNode config(buffer);
-	ParsonNode node = config.GetNode("EditorState");
 
 	std::vector<Module*>::iterator item = modules.begin();
 
 	while (item != modules.end() && ret)
 	{
-		ret = (*item)->Init(node.GetNode((*item)->GetName()));		// Constructs and gives every module a handle for their own configuration node. M_Input -> "Input".
+		ret = (*item)->Init(config.GetNode((*item)->GetName()));		// Constructs and gives every module a handle for their own configuration node. M_Input -> "Input".
 		++item;
 	}
 	
@@ -204,6 +171,8 @@ bool Application::Start()												// IS IT NEEDED?
 // Call PreUpdate, Update and PostUpdate on all modules
 UpdateStatus Application::Update()
 {
+	OPTICK_CATEGORY("Application Update",Optick::Category::Update)
+
 	UpdateStatus ret = UpdateStatus::CONTINUE;
 	
 	if (quit)
@@ -217,12 +186,10 @@ UpdateStatus Application::Update()
 	{
 		ret = PreUpdate();
 	}
-	
 	if (ret == UpdateStatus::CONTINUE)
 	{
 		ret = DoUpdate();
 	}
-
 	if (ret == UpdateStatus::CONTINUE)
 	{
 		ret = PostUpdate();
@@ -236,6 +203,8 @@ UpdateStatus Application::Update()
 bool Application::CleanUp()
 {
 	bool ret = true;
+
+	SaveConfigurationNow();
 
 	std::vector<Module*>::reverse_iterator item = modules.rbegin();
 
@@ -257,12 +226,24 @@ bool Application::CleanUp()
 // ---------------------------------------------
 void Application::PrepareUpdate()
 {
+	static bool stepped = false;
+	
 	Time::Real::Update();
 
-	if ((play && !pause) || step)
+	if (stepped)																										// TMP. Dirty fix so Animations can be stepped. Clean Later.
+	{
+		gameState	= GameState::PAUSE;
+		stepped		= false;
+	}
+
+	if (gameState == GameState::PLAY || gameState == GameState::STEP)
 	{
 		Time::Game::Update();
-		step = false;
+
+		if (gameState == GameState::STEP)
+		{
+			stepped = true;
+		}
 	}
 }
 
@@ -292,12 +273,14 @@ UpdateStatus Application::PreUpdate()
 
 UpdateStatus Application::DoUpdate()
 {
+
 	UpdateStatus ret = UpdateStatus::CONTINUE;
 
 	std::vector<Module*>::iterator item = modules.begin();
-	
-	item = modules.begin();
 
+	OPTICK_CATEGORY("Modules update", Optick::Category::Update)
+
+	item = modules.begin();
 	while (item != modules.end() && ret == UpdateStatus::CONTINUE)
 	{
 		if ((*item)->IsActive())
@@ -318,12 +301,13 @@ UpdateStatus Application::DoUpdate()
 
 UpdateStatus Application::PostUpdate()
 {
+	OPTICK_CATEGORY("Application Post Update", Optick::Category::Update)
+	
 	UpdateStatus ret = UpdateStatus::CONTINUE;
 
 	std::vector<Module*>::iterator item = modules.begin();
 	
 	item = modules.begin();
-
 	while (item != modules.end() && ret == UpdateStatus::CONTINUE)
 	{
 		if ((*item)->IsActive())
@@ -344,17 +328,16 @@ UpdateStatus Application::PostUpdate()
 }
 
 void Application::FinishUpdate()
-{
+{	
 	if (wantToLoad)
 	{
-		LoadConfigurationNow(loadConfigFile.c_str());
 
 		wantToLoad = false;
 	}
 
 	if (wantToSave)
 	{
-		SaveConfigurationNow(saveConfigFile.c_str());
+		SaveConfigurationNow();
 
 		wantToSave = false;
 	}
@@ -379,33 +362,17 @@ void Application::FinishUpdate()
 void Application::SaveConfiguration(const char* file)
 {
 	wantToSave = true;
-	saveConfigFile = ("Engine/Configuration/configuration.json");
 }
 
 void Application::LoadConfiguration(const char* file)
 {
 	wantToLoad = true;
-
-	if (userHasSaved)
-	{
-		loadConfigFile = ("Configuration.json");
-	}
-	else
-	{
-		loadConfigFile = ("DefaultConfiguration.json");
-	}
 }
 
-void Application::SaveConfigurationNow(const char* file)
+void Application::SaveConfigurationNow()
 {
-	if (file == nullptr)
-	{
-		LOG("[ERROR] Application: Could not Save Engine Configuration! Error: Given File Path string was nullptr.");
-		return;
-	}
 	
 	ParsonNode config;
-	ParsonNode node = config.SetNode("EditorState");
 
 	for (uint i = 0; i < modules.size(); ++i)
 	{
@@ -413,10 +380,10 @@ void Application::SaveConfigurationNow(const char* file)
 	}
 
 	char* buffer = nullptr;
-	uint written = config.SerializeToFile(file, &buffer);
+	uint written = config.SerializeToFile(CONFIGURATION_FILE_PATH, &buffer);
 	if (written > 0)
 	{
-		LOG("[STATE] Application: Successfully Saved Engine Configuration! Path: %s", file);
+		LOG("[STATE] Application: Successfully Saved Engine Configuration! Path: %s");
 	}
 	else
 	{
@@ -424,16 +391,6 @@ void Application::SaveConfigurationNow(const char* file)
 	}
 
 	RELEASE_ARRAY(buffer);
-}
-
-void Application::LoadConfigurationNow(const char* file)
-{
-	for (uint i = 0; i < modules.size(); ++i)
-	{
-		//JSON_Object* obj = 
-
-		//modules[i]->LoadConfiguration(Configuration());
-	}
 }
 
 // --- APPLICATION & ENGINE STATE ---
@@ -552,6 +509,8 @@ HardwareInfo Application::GetHardwareInfo() const
 {
 	return hardwareInfo;
 }
+
+// --- GAME STATE METHODS
 
 /*if (display_framerate_data)
 {

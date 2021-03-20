@@ -8,7 +8,7 @@
 
 R_Material::R_Material() : Resource(ResourceType::MATERIAL)
 {
-	diffuseColor	= { 1.0f, 1.0f, 1.0f, 1.0f };
+	diffuseColor = Color(1.0f, 1.0f, 1.0f, 1.0f );
 }
 
 R_Material::~R_Material()

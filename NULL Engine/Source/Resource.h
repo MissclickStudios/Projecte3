@@ -24,6 +24,7 @@ enum class ResourceType
 	SCENE,
 	SHADER,
 	PARTICLE_SYSTEM,
+	PREFAB,
 	NONE
 };
 

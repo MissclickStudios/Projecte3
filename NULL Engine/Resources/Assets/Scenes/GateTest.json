@@ -1,0 +1,388 @@
+{
+    "Models In Scene": [
+        {
+            "GameObjectUID": 1034711532,
+            "ModelResourceUID": 1857086092,
+            "ModelAssetsPath": "Assets\/Models\/Primitives\/banana.fbx"
+        },
+        {
+            "GameObjectUID": 2030130104,
+            "ModelResourceUID": 1266705681,
+            "ModelAssetsPath": "Assets\/Models\/Primitives\/cube.fbx"
+        }
+    ],
+    "Game Objects": [
+        {
+            "UID": 169316801,
+            "ParentUID": 1340096843,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "DirectionalLight",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": true,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        -0.0017224099719896913,
+                        -0.0087310606613755226,
+                        -0.0026026563718914986,
+                        0.99995702505111694
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 4,
+                    "LightType": 1,
+                    "Diffuse": [
+                        1,
+                        1,
+                        1,
+                        1
+                    ],
+                    "Ambient": [
+                        0.60000002384185791,
+                        0.60000002384185791,
+                        0.60000002384185791,
+                        0.5
+                    ],
+                    "Specular": [
+                        0.60000002384185791,
+                        0.60000002384185791,
+                        0.60000002384185791,
+                        0.5
+                    ],
+                    "Direction": [
+                        -0.20000000298023224,
+                        -1,
+                        -0.30000001192092896
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 312630757,
+            "ParentUID": 1034711532,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Banana",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        -0.70710676908493042,
+                        0,
+                        0,
+                        0.70710676908493042
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 571654826,
+                    "Name": "Banana.nemesh",
+                    "Path": "Library\/Meshes\/571654826.nemesh",
+                    "File": "571654826.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 2013694742,
+                        "Color": [
+                            0.58799999952316284,
+                            0.58799999952316284,
+                            0.58799999952316284,
+                            1
+                        ],
+                        "Name": "Banana.nemat",
+                        "Path": "Library\/Materials\/2013694742.nemat",
+                        "File": "2013694742.nemat"
+                    },
+                    "Shader": {
+                        "UID": 177582419,
+                        "Name": "DefaultShader.shader",
+                        "Path": "Library\/Shaders\/177582419.neshader",
+                        "File": "177582419.neshader"
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 705657335,
+            "ParentUID": 1340096843,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "SceneCamera",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        5,
+                        25
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 5,
+                    "MinFOV": 1,
+                    "MaxFOV": 120,
+                    "Culling": false,
+                    "OrthogonalView": false,
+                    "HideFrustum": false
+                }
+            ]
+        },
+        {
+            "UID": 904259632,
+            "ParentUID": 2030130104,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Box001",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        -0.70710676908493042,
+                        0,
+                        0,
+                        0.7071068286895752
+                    ],
+                    "LocalScale": [
+                        1,
+                        0.99999994039535522,
+                        0.99999994039535522
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 1348672898,
+                    "Name": "Box001.nemesh",
+                    "Path": "Library\/Meshes\/1348672898.nemesh",
+                    "File": "1348672898.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 1528333877,
+                        "Color": [
+                            0.80000001192092896,
+                            0.80000001192092896,
+                            0.80000001192092896,
+                            1
+                        ],
+                        "Name": "Box001.nemat",
+                        "Path": "Library\/Materials\/1528333877.nemat",
+                        "File": "1528333877.nemat"
+                    },
+                    "Shader": {
+                        "UID": 177582419,
+                        "Name": "DefaultShader.shader",
+                        "Path": "Library\/Shaders\/177582419.neshader",
+                        "File": "177582419.neshader"
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 1034711532,
+            "ParentUID": 1340096843,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "banana.fbx",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": true,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 8,
+                    "Mass": 10,
+                    "Density": 1,
+                    "Linear Damping": 0,
+                    "Angular Damping": 0,
+                    "Use Gravity": false,
+                    "Is Kinematic": true,
+                    "Freeze Position X": false,
+                    "Freeze Position Y": false,
+                    "Freeze Position Z": false,
+                    "Freeze Rotation X": false,
+                    "Freeze Rotation Y": false,
+                    "Freeze Rotation Z": false,
+                    "Is Static": false
+                },
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 10,
+                    "Size Y": 10,
+                    "Size Z": 10,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
+                },
+                {
+                    "Type": 16,
+                    "Speed": 20,
+                    "Acceleration": 200,
+                    "Deceleration": 200,
+                    "Bullet Speed": 100,
+                    "Fire Rate": 0.25,
+                    "Ammo": 10,
+                    "Max Ammo": 10,
+                    "Automatic": true,
+                    "Dash Speed": 100,
+                    "Dash Time": 0.20000000298023224,
+                    "Dash Coldown": 1
+                }
+            ]
+        },
+        {
+            "UID": 1340096843,
+            "ParentUID": 654163213,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "MainScene",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": true,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 2030130104,
+            "ParentUID": 1340096843,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "cube.fbx",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": true,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {},
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 20,
+                    "Size Y": 20,
+                    "Size Z": 20,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
+                }
+            ]
+        }
+    ]
+} 

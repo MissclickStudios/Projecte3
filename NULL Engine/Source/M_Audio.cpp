@@ -22,6 +22,7 @@
 #include "M_FileSystem.h"
 #include "FileSystemDefinitions.h"
 #include "JSONParser.h"
+#include "Profiler.h"
 
 #include <utility>
 #include <iostream>
@@ -75,15 +76,17 @@ UpdateStatus M_Audio::Update(float dt)
 
 	//Depending on the engine state pause/play/resume/stop events
 
+
 	/*if (App->play)
+	if (App->gameState == GameState::PLAY || App->gameState == GameState::STEP)
 	{
 		ResumeAll();
 	}
-	if (App->pause)
+	if (App->gameState == GameState::PAUSE)
 	{
 		PauseAll();
 	}
-	if (!App->play)
+	if (App->gameState == GameState::STOP)
 	{
 		StopAll();
 	}*/
@@ -351,9 +354,9 @@ WwiseObject::~WwiseObject()
 
 void WwiseObject::SetPos(float3 pos, float3 front, float3 up)
 {
-	position = float3ToAkVector(pos);
-	orientationFront = float3ToAkVector(front);
-	orientationUp = float3ToAkVector(up);
+	position = float3ToAkVector(pos.Normalized());
+	orientationFront = float3ToAkVector(front.Normalized());
+	orientationUp = float3ToAkVector(up.Normalized());
 
 	AkSoundPosition soundPos;
 	soundPos.Set(position, orientationFront, orientationUp);

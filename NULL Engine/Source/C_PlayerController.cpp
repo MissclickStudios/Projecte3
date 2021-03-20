@@ -14,14 +14,18 @@
 #include "C_RigidBody.h"
 #include "C_Transform.h"
 #include "C_PlayerController.h"
+#include "C_SphereCollider.h"
 #include "C_Camera.h"
 #include "M_Camera3D.h"
 #include "M_Window.h"
 #include "M_Editor.h"
 #include "M_Audio.h"
 #include "C_AudioSource.h"
+#include "C_Material.h"
 
 #include "MathGeoLib/include/Geometry/Line.h"
+
+#define MAX_JOYSTICK_INPUT 32767
 
 
 C_PlayerController::C_PlayerController(GameObject* owner) : Component(owner, ComponentType::PLAYER_CONTROLLER)
@@ -29,7 +33,10 @@ C_PlayerController::C_PlayerController(GameObject* owner) : Component(owner, Com
 	if (!GetOwner()->GetComponent<C_RigidBody>())
 		GetOwner()->CreateComponent(ComponentType::RIGIDBODY);
 
-	stepTimer = new Timer();
+	fireRateTimer.Stop();
+	dashTime.Stop();
+	dashColdown.Stop();
+	stepTimer.Stop();
 }
 
 C_PlayerController::~C_PlayerController()
@@ -38,65 +45,14 @@ C_PlayerController::~C_PlayerController()
 
 bool C_PlayerController::Update()
 {
-	if (App->play && !App->pause)
-	{
-		C_RigidBody* rigidBody = GetOwner()->GetComponent<C_RigidBody>();
+	if (App->gameState != GameState::PLAY)
+		return true;
 
-		if (rigidBody)
-		{
-			if (useAcceleration)
-				MoveAcceleration(rigidBody);
-			else
-				MoveVelocity(rigidBody);
+	Movement();
+	Weapon();
+	HandleHp();
 
-			if (!cameraMode)
-			{
-				float2 mouse, center, direction;
-				mouse = MousePositionToWorldPosition();
-				center.x = GetOwner()->transform->GetWorldPosition().x;
-				center.y = GetOwner()->transform->GetWorldPosition().z;
-				mouse.y *= -1;
-				direction = mouse - center;
-				direction.Normalize();
-
-				float rad = direction.AimedAngle();
-				float3 bulletVel = { bulletSpeed * math::Cos(rad) , 0, bulletSpeed * math::Sin(rad) };
-
-				float angle = RadToDeg(-rad) + 90;
-				GetOwner()->transform->SetLocalEulerRotation(float3(0, angle, 0));
-
-				if (App->input->GetMouseButton(1) == KeyState::KEY_DOWN || App->input->GetGameControllerTrigger(1) == ButtonState::BUTTON_DOWN)
-				{
-					Resource* resource = App->resourceManager->GetResourceFromLibrary("Assets/Models/Primitives/sphere.fbx");
-					if (resource != nullptr)
-					{
-						GameObject* bullet = App->scene->GenerateGameObjectsFromModel((R_Model*)resource);
-
-						bullet->transform->SetWorldPosition(GetOwner()->transform->GetWorldPosition());
-						C_RigidBody* rigidBody = (C_RigidBody*)bullet->CreateComponent(ComponentType::RIGIDBODY);
-						rigidBody->FreezePositionY(true);
-						rigidBody->FreezeRotationX(true);
-						rigidBody->FreezeRotationY(true);
-						rigidBody->FreezeRotationZ(true);
-						rigidBody->SetLinearVelocity(bulletVel);
-						bullet->CreateComponent(ComponentType::SPHERE_COLLIDER);
-						bullet->CreateComponent(ComponentType::BULLET_BEHAVIOR);
-						bullet->CreateComponent(ComponentType::AUDIOSOURCE);
-						C_AudioSource* source = bullet->GetComponent<C_AudioSource>();
-						source->SetEvent("Mando_blaster_shot",App->audio->eventMap.at("Mando_blaster_shot"));
-						source->PlayFx(source->GetEvent().second);
-						source->SetVolume(0.5);
-					}
-				}
-			}
-		}
-		else
-			if (App->input->GetKey(SDL_SCANCODE_W) == KeyState::KEY_DOWN || 
-				App->input->GetKey(SDL_SCANCODE_S) == KeyState::KEY_DOWN ||
-				App->input->GetKey(SDL_SCANCODE_A) == KeyState::KEY_DOWN ||
-				App->input->GetKey(SDL_SCANCODE_D) == KeyState::KEY_DOWN)
-				LOG("Player controller error! No RigidBody found!");
-	}
+	
 
 	return true;
 }
@@ -114,11 +70,15 @@ bool C_PlayerController::SaveState(ParsonNode& root) const
 	root.SetNumber("Acceleration", (double)acceleration);
 	root.SetNumber("Deceleration", (double)deceleration);
 
-	root.SetBool("Use Acceleration", useAcceleration);
-
 	root.SetNumber("Bullet Speed", (double)bulletSpeed);
+	root.SetNumber("Fire Rate", (double)fireRate);
+	root.SetNumber("Ammo", (double)ammo);
+	root.SetNumber("Max Ammo", (double)maxAmmo);
+	root.SetBool("Automatic", automatic);
 
-	root.SetBool("Camera Mode", cameraMode);
+	root.SetNumber("Dash Speed", (double)dashSpeed);
+	root.SetNumber("Dash Time", (double)dashingTime);
+	root.SetNumber("Dash Coldown", (double)dashingColdown);
 
 	return true;
 }
@@ -129,13 +89,188 @@ bool C_PlayerController::LoadState(ParsonNode& root)
 	acceleration = (float)root.GetNumber("Acceleration");
 	deceleration = (float)root.GetNumber("Deceleration");
 
-	useAcceleration = root.GetBool("Use Acceleration");
-
 	bulletSpeed = (float)root.GetNumber("Bullet Speed");
+	fireRate = (float)root.GetNumber("Fire Rate");
+	ammo = (float)root.GetNumber("Ammo");
+	maxAmmo = (float)root.GetNumber("Max Ammo");
+	automatic = root.GetBool("Automatic");
 
-	cameraMode = root.GetBool("Camera Mode");
+	dashSpeed = (float)root.GetNumber("Dash Speed");
+	dashingTime = (float)root.GetNumber("Dash Time");
+	dashingColdown = (float)root.GetNumber("Dash Coldown");
 
 	return true;
+}
+
+void C_PlayerController::Movement()
+{
+	C_RigidBody* rigidBody = GetOwner()->GetComponent<C_RigidBody>();
+	if (!rigidBody || rigidBody->IsStatic())
+		return;
+
+	if (!dashTime.IsActive())
+	{
+		int movX = 0;
+		int movY = 0;
+		// Controller movement
+		GetMovementVectorAxis(movX, movY);
+		// Keyboard movement
+		if (movX + movY == 0)
+		{
+			if (App->input->GetKey(SDL_SCANCODE_W) == KeyState::KEY_REPEAT)
+				movY = -MAX_JOYSTICK_INPUT;
+			if (App->input->GetKey(SDL_SCANCODE_S) == KeyState::KEY_REPEAT)
+				movY = MAX_JOYSTICK_INPUT;
+			if (App->input->GetKey(SDL_SCANCODE_D) == KeyState::KEY_REPEAT)
+				movX = MAX_JOYSTICK_INPUT;
+			if (App->input->GetKey(SDL_SCANCODE_A) == KeyState::KEY_REPEAT)
+				movX = -MAX_JOYSTICK_INPUT;
+		}
+		Move(rigidBody, movX, movY);
+
+		if (dashColdown.IsActive())
+		{
+			if (dashColdown.ReadSec() >= dashingColdown)
+				dashColdown.Stop();
+		}
+		else if ((App->input->GetKey(SDL_SCANCODE_LSHIFT) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(1) == ButtonState::BUTTON_DOWN))
+			Dash(rigidBody, movX, movY);
+	}
+	else if (dashTime.ReadSec() >= dashingTime)
+		dashTime.Stop();
+}
+
+void C_PlayerController::Move(C_RigidBody* rigidBody, int axisX, int axisY)
+{
+	float3 direction = { (float)axisX, 0, (float)axisY };
+
+	if (axisX == 0 && axisY == 0) {}
+	else
+	{
+		direction.Normalize();
+		lastDirection = direction;
+		StepSound();
+	}
+
+	direction *= speed;
+	rigidBody->SetLinearVelocity(direction);
+}
+
+void C_PlayerController::Dash(C_RigidBody* rigidBody, int axisX, int axisY)
+{
+	rigidBody->SetLinearVelocity(lastDirection * dashSpeed);
+
+	dashColdown.Start();
+	dashTime.Start();
+}
+
+void C_PlayerController::Rotate()
+{
+	//float2 mouse, center, direction;
+	//mouse = MousePositionToWorldPosition();
+	//center.x = GetOwner()->transform->GetWorldPosition().x;
+	//center.y = GetOwner()->transform->GetWorldPosition().z;
+	//mouse.y *= -1;
+	//direction = mouse - center;
+	//direction.Normalize();
+	//
+	//float rad = direction.AimedAngle();
+	//
+	//
+	//float angle = RadToDeg(-rad) + 90;
+	//GetOwner()->transform->SetLocalEulerRotation(float3(0, angle, 0));
+}
+
+void C_PlayerController::Weapon()
+{
+	int aimX = 0;
+	int aimY = 0;
+	// Controller aim
+	GetAimVectorAxis(aimX, aimY);
+	// Mouse aim
+	// TODO
+
+	float3 direction = { (float)aimX, 0, (float)aimY };
+	if (aimX == 0 && aimY == 0) {}
+	else
+	{
+		direction.Normalize();
+		lastAim = direction;
+	}
+
+	if (GetOwner()->childs.size())
+	{
+		GameObject* mesh = GetOwner()->childs[0];
+		if (mesh)
+		{
+			float2 dir = { lastAim.x, -lastAim.z };
+			float rad = dir.AimedAngle();
+			mesh->transform->SetLocalRotation(float3( 0, rad ,0 ));
+		}
+	}
+
+	if (App->input->GetKey(SDL_SCANCODE_R) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(0) == ButtonState::BUTTON_DOWN)
+		Reload();
+	if (ammo > 0)
+	{
+		if (!automatic)
+		{
+			if (App->input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_DOWN || App->input->GetGameControllerTrigger(1) == ButtonState::BUTTON_DOWN)
+				SpawnBullet(lastAim);
+		}
+		else
+		{
+			if (App->input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_REPEAT || App->input->GetGameControllerTrigger(1) == ButtonState::BUTTON_REPEAT)
+			{
+				if (!fireRateTimer.IsActive())
+				{
+					SpawnBullet(lastAim);
+					fireRateTimer.Start();
+				}
+				else if (fireRateTimer.ReadSec() >= fireRate)
+				{
+					SpawnBullet(lastAim);
+					fireRateTimer.Stop();
+					fireRateTimer.Start();
+				}
+			}
+		}
+	}
+}
+
+void C_PlayerController::SpawnBullet(float3 direction)
+{
+	if (direction.IsZero())
+		++direction.z;
+
+	Resource* resource = App->resourceManager->GetResourceFromLibrary("Assets/Models/Primitives/sphere.fbx");
+	if (!resource)
+		return;
+
+	GameObject* bullet = App->scene->GenerateGameObjectsFromModel((R_Model*)resource);
+
+	float3 position = GetOwner()->transform->GetWorldPosition();
+	position.y += 4;
+
+	bullet->transform->SetWorldPosition(position);
+	C_RigidBody* rigidBody = (C_RigidBody*)bullet->CreateComponent(ComponentType::RIGIDBODY);
+	rigidBody->FreezePositionY(true);
+	rigidBody->FreezeRotationX(true);
+	rigidBody->FreezeRotationY(true);
+	rigidBody->FreezeRotationZ(true);
+	rigidBody->SetLinearVelocity(direction * bulletSpeed);
+	((C_SphereCollider*)bullet->CreateComponent(ComponentType::SPHERE_COLLIDER))->SetTrigger(true);
+	bullet->CreateComponent(ComponentType::BULLET_BEHAVIOR);
+
+	float3 scale = { 0.5, 0.5, 0.5 };
+	bullet->transform->SetLocalScale(scale);
+
+	--ammo;
+}
+
+void C_PlayerController::Reload()
+{
+	ammo = maxAmmo;
 }
 
 float2 C_PlayerController::MousePositionToWorldPosition(float mapPositionY)
@@ -159,129 +294,115 @@ float2 C_PlayerController::MousePositionToWorldPosition(float mapPositionY)
 	return position;
 }
 
-void C_PlayerController::MoveVelocity(C_RigidBody* rigidBody)
+void C_PlayerController::StepSound()
 {
-	float3 vel = float3::zero;
-
-	bool forward = false;
-	bool backwards = false;
-	bool right = false;
-	bool left = false;
-	if (App->input->GetKey(SDL_SCANCODE_W) == KeyState::KEY_REPEAT)
-		forward = true;
-	if (App->input->GetKey(SDL_SCANCODE_S) == KeyState::KEY_REPEAT)
-		backwards = true;
-	if (App->input->GetKey(SDL_SCANCODE_A) == KeyState::KEY_REPEAT)
-		right = true;
-	if (App->input->GetKey(SDL_SCANCODE_D) == KeyState::KEY_REPEAT)
-		left = true;
-
-	if (App->input->GetGameControllerAxis(1) == AxisState::POSITIVE_AXIS_REPEAT)
-		forward = true;
-	if (App->input->GetGameControllerAxis(1) == AxisState::NEGATIVE_AXIS_REPEAT)
-		backwards = true;
-	if (App->input->GetGameControllerAxis(0) == AxisState::POSITIVE_AXIS_REPEAT)
-		right = true;
-	if (App->input->GetGameControllerAxis(0) == AxisState::NEGATIVE_AXIS_REPEAT)
-		left = true;
-
-
-	if (forward)
-		vel.z += speed;
-	if (backwards)
-		vel.z -= speed;
-	if (right)
-		vel.x += speed;
-	if (left)
-		vel.x -= speed;
-
-	StepSound(forward, backwards, left, right);
+	if (!isStepPlaying)
+	{
+		isStepPlaying = true;
+		stepTimer.Start();
 	
-
-	rigidBody->SetLinearVelocity(vel);
+		aSource = GetOwner()->GetComponent<C_AudioSource>();
+		if (aSource != nullptr)
+		{
+			uint id = aSource->GetEventId();
+			aSource->PlayFx(id);
+		}
+	}
+	else
+		if (stepTimer.ReadSec() >= 0.80)
+			isStepPlaying = false;
 }
 
-void C_PlayerController::MoveAcceleration(C_RigidBody* rigidBody)
+void C_PlayerController::GetMovementVectorAxis(int& axisX, int& axisY)
 {
-	float3 vel = rigidBody->GetLinearVelocity();
-
-	bool forward = false;
-	bool backward = false;
-	bool right = false;
-	bool left = false;
-	if (App->input->GetKey(SDL_SCANCODE_W) == KeyState::KEY_REPEAT)
-		forward = true;
-	if (App->input->GetKey(SDL_SCANCODE_S) == KeyState::KEY_REPEAT)
-		backward = true;
-	if (App->input->GetKey(SDL_SCANCODE_D) == KeyState::KEY_REPEAT)
-		right = true;
-	if (App->input->GetKey(SDL_SCANCODE_A) == KeyState::KEY_REPEAT)
-		left = true;
-
-	if (forward)
-		rigidBody->AddForce(physx::PxVec3(0, 0, acceleration), physx::PxForceMode::eVELOCITY_CHANGE);
-	else if (!backward)
-		if (vel.z > 0)
-			rigidBody->AddForce(physx::PxVec3(0, 0, -deceleration), physx::PxForceMode::eVELOCITY_CHANGE);
-
-	if (backward)
-		rigidBody->AddForce(physx::PxVec3(0, 0, -acceleration), physx::PxForceMode::eVELOCITY_CHANGE);
-	else if (!forward)
-		if (vel.z < 0)
-			rigidBody->AddForce(physx::PxVec3(0, 0, deceleration), physx::PxForceMode::eVELOCITY_CHANGE);
-
-	if (left)
-		rigidBody->AddForce(physx::PxVec3(acceleration, 0, 0), physx::PxForceMode::eVELOCITY_CHANGE);
-	else if (!right)
-		if (vel.x > 0)
-			rigidBody->AddForce(physx::PxVec3(-deceleration, 0, 0), physx::PxForceMode::eVELOCITY_CHANGE);
-
-	if (right)
-		rigidBody->AddForce(physx::PxVec3(-acceleration, 0, 0), physx::PxForceMode::eVELOCITY_CHANGE);
-	else if (!left)
-		if (vel.x < 0)
-			rigidBody->AddForce(physx::PxVec3(deceleration, 0, 0), physx::PxForceMode::eVELOCITY_CHANGE);
-
-	bool changed = false;
-	for (int i = 0; i < 3; i++)
-		if (vel[i] > speed)
-		{
-			vel[i] = speed;
-			changed = true;
-		}
-		else if (vel[i] < -speed)
-		{
-			vel[i] = -speed;
-			changed = true;
-		}
-	if (changed)
-		rigidBody->SetLinearVelocity(vel);
-
-
-	StepSound(forward, backward, left, right);
+	axisX = App->input->GetGameControllerAxisValue(0);
+	axisY = App->input->GetGameControllerAxisValue(1);
 }
 
-void C_PlayerController::StepSound(bool a, bool b, bool c, bool d)
+void C_PlayerController::GetAimVectorAxis(int& axisX, int& axisY)
 {
-	if (a || b || c || d)
+	axisX = App->input->GetGameControllerAxisValue(2);
+	axisY = App->input->GetGameControllerAxisValue(3);
+}
+
+void C_PlayerController::HandleHp()
+{
+
+	std::vector<GameObject*>::iterator it = App->scene->GetGameObjects()->begin();
+
+	for (it; it != App->scene->GetGameObjects()->end(); ++it)
 	{
-		if (!isStepPlaying)
+		if (strstr((*it)->GetName(), "Heart") != nullptr)
 		{
-			isStepPlaying = true;
-			stepTimer->Start();
-
-			aSource = GetOwner()->GetComponent<C_AudioSource>();
-			if(aSource != nullptr)
-				aSource->PlayFx(aSource->GetEvent().second);
+			if (strstr((*it)->GetName(), "1") != nullptr)
+			{
+				hearts[0] = (*it);
+			}		
+			else if (strstr((*it)->GetName(), "2") != nullptr)
+			{
+				hearts[1] = (*it);
+			}
+			else if (strstr((*it)->GetName(), "3") != nullptr)
+			{
+				hearts[2] = (*it);
+			}
 		}
 	}
 
-	if (isStepPlaying && stepTimer->ReadSec() >= 0.80)
-	{
-		isStepPlaying = false;
-	}
-}
+	R_Texture* half = (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/HUD/HeartHalf.png");
+	R_Texture* full = (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/HUD/HeartFull.png");
+	R_Texture* empty = (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/HUD/HeartEmpty.png");
 
-void C_PlayerController::Rotate()
-{
+	if (App->input->GetKey(SDL_SCANCODE_K) == KeyState::KEY_DOWN && hearts != nullptr)
+	{
+		heart -= 0.5;
+
+		if (heart < 0)
+			heart = 0;
+
+		if (heart == 2.5)
+			hearts[(int)heart]->GetComponent<C_Material>()->SwapTexture(half);
+
+		else if (heart == 2)
+			hearts[(int)heart]->GetComponent<C_Material>()->SwapTexture(empty);
+
+		else if (heart == 1.5)
+			hearts[(int)heart]->GetComponent<C_Material>()->SwapTexture(half);
+
+		else if (heart == 1)
+			hearts[(int)heart]->GetComponent<C_Material>()->SwapTexture(empty);
+
+		else if (heart == 0.5)
+			hearts[(int)heart]->GetComponent<C_Material>()->SwapTexture(half);
+
+		else if (heart == 0)
+			hearts[(int)heart]->GetComponent<C_Material>()->SwapTexture(empty);
+	}
+
+	if (App->input->GetKey(SDL_SCANCODE_L) == KeyState::KEY_DOWN && hearts != nullptr)
+	{
+
+		if (heart == 2.5)
+			hearts[(int)heart]->GetComponent<C_Material>()->SwapTexture(full);
+
+		else if (heart == 2)
+			hearts[(int)heart]->GetComponent<C_Material>()->SwapTexture(half);
+
+		else if (heart == 1.5)
+			hearts[(int)heart]->GetComponent<C_Material>()->SwapTexture(full);
+
+		else if (heart == 1)
+			hearts[(int)heart]->GetComponent<C_Material>()->SwapTexture(half);
+
+		else if (heart == 0.5)
+			hearts[(int)heart]->GetComponent<C_Material>()->SwapTexture(full);
+
+		else if (heart == 0)
+			hearts[(int)heart]->GetComponent<C_Material>()->SwapTexture(half);
+
+		heart += 0.5;
+
+		if (heart > 3)
+			heart = 3;
+	}
 }

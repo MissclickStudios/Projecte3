@@ -13,9 +13,9 @@
 #include "Icons.h"
 
 #include "Module.h"
+
 #include "Light.h"
 
-struct Color;
 class ParsonNode;
 
 class R_Model;
@@ -48,12 +48,13 @@ enum class CuboidType
 	NONE,
 	AABB,
 	OBB,
-	FRUSTUM
+	FRUSTUM,
+	COLLIDER
 };
 
 struct MeshRenderer
 {
-	MeshRenderer(const float4x4& transform, C_Mesh* cMesh, C_Material* cMaterial);							// Will render the given mesh at the given position with the given mat & tex.
+	MeshRenderer(float4x4* transform, C_Mesh* cMesh, C_Material* cMaterial);								// Will render the given mesh at the given position with the given mat & tex.
 
 	void Render						();
 
@@ -68,11 +69,11 @@ struct MeshRenderer
 	void ApplyTextureAndMaterial	();
 	void ClearTextureAndMaterial	();
 
-	void ApplyShader();
-	uint32 SetDefaultShader(C_Material* cMaterial);
-	void ClearShader();
+	void ApplyShader				();
+	uint32 SetDefaultShader			(C_Material* cMaterial);
+	void ClearShader				();
 
-	float4x4	transform;
+	float4x4*	transform;
 	C_Mesh*		cMesh;
 	C_Material*	cMaterial;
 };
@@ -175,6 +176,7 @@ public:																											// --- RENDER GEOMETRY
 	void			RenderSkeletons				();
 	void			RenderUI					();
 	void			RenderParticles				();
+	void			RenderUIComponent			(GameObject* gameObject);
 
 	void			RenderFramebufferTexture	();
 	void			DeleteFromMeshRenderers		(C_Mesh* cMeshToDelete);
@@ -185,8 +187,12 @@ public:																											// --- RENDER GEOMETRY
 	void			AddPrimitive				(Primitive* primitive);
 	void			CreatePrimitiveExamples		();
 
+
 	void			AddParticle					(const float4x4& transform, R_Material* material, Color color, float distanceToCamera);
 	void			DrawParticle				(ParticleRenderer& renderParticle);
+
+	void			SetTo2DRenderSettings		(const bool& setTo);
+
 
 public:																											// --- GET/SET METHODS
 	Icons			GetEngineIcons				() const;
@@ -241,6 +247,8 @@ public:																											// --- DEBUG GET/SET METHODS
 	bool			GetRenderBoundingBoxes		() const;														// 
 	bool			GetRenderSkeletons			() const;														// 
 	bool			GetRenderPrimitiveExamples	() const;														// 
+	bool			GetRenderColliders() const;
+	bool			GetRenderCanvas() const;
 
 	void			SetWorldGridSize			(const uint& worldGridSize);
 
@@ -274,18 +282,21 @@ public:																											// --- DEBUG GET/SET METHODS
 	void			SetRenderBoundingBoxes		(const bool& setTo);											// 
 	void			SetRenderSkeletons			(const bool& setTo);
 	void			SetRenderPrimtiveExamples	(const bool& setTo);											// 
+	void			SetRenderColliders (const bool& setTo);
+	void			SetRenderCanvas(const bool& setTo);
 
 public:
 	void			AddPostSceneRenderModule(Module* module);
-	GameObject*		GenerateSceneLight();
+	GameObject*		GenerateSceneLight(Color diffuse, Color ambient, Color specular, LightType lightType);
 private:
 	void			GenScreenBuffer();
 
 public:
-	Light					lights[MAX_LIGHTS];																	// 
+	//Light					lights[MAX_LIGHTS];																	// 
+	
 	SDL_GLContext			context;																			// 
 	R_Shader*				defaultShader = nullptr;
-	
+	Skybox					defaultSkyBox;
 
 	std::vector<Primitive*>	primitives;
 
@@ -294,7 +305,7 @@ private:
 	std::vector<CuboidRenderer>		cuboidRenderers;
 	std::vector<SkeletonRenderer>	skeletonRenderers;
 
-	Skybox					defaultSkyBox;
+	
 	
 
 	Icons					engineIcons;
@@ -310,37 +321,39 @@ private:
 	bool					vsync;																				// Will keep track of whether or not the vsync is currently active.
 
 private:																										// --- DEBUG VARIABLES ---		// TODO: CREATE A "DEBUGSETTINGS" STRUCTURE
-	uint	worldGridSize;																		//
+	uint	worldGridSize;		
 
-	Color	worldGridColor;																		//
-	Color	wireframeColor;																		//
-	Color	vertexNormalsColor;																	//
-	Color	faceNormalsColor;																	//
+	Color	worldGridColor;		
+	Color	wireframeColor;		
+	Color	vertexNormalsColor;	
+	Color	faceNormalsColor;	
 	
-	Color	aabbColor;																			// 
-	Color	obbColor;																			// 
-	Color	frustumColor;																		// 
-	Color	rayColor;																			// 
-	Color	boneColor;																			// 
+	Color	aabbColor;			
+	Color	obbColor;			
+	Color	frustumColor;		
+	Color	rayColor;			
+	Color	boneColor;			
 	
 	float	worldGridLineWidth;
 	float	wireframeLineWidth;
 	float	vertexNormalsWidth;
 	float	faceNormalsWidth;
 
-	float	aabbEdgeWidth;																		// 
-	float	obbEdgeWidth;																		// 
-	float	frustumEdgeWidth;																	// 
-	float	rayWidth;																			// 
-	float	boneWidth;																			// 
+	float	aabbEdgeWidth;		
+	float	obbEdgeWidth;		
+	float	frustumEdgeWidth;	
+	float	rayWidth;			
+	float	boneWidth;			
 	
-	bool					renderWorldGrid;																	// 
-	bool					renderWorldAxis;																	// 
-	bool					renderWireframes;																	//
-	bool					renderVertexNormals;																// 
-	bool					renderFaceNormals;																	// 
-	bool					renderBoundingBoxes;																// 
-	bool					renderSkeletons;																	//
+	bool	renderWorldGrid;	
+	bool	renderWorldAxis;	
+	bool	renderWireframes;	
+	bool	renderVertexNormals;
+	bool	renderFaceNormals;	
+	bool	renderBoundingBoxes;
+	bool	renderSkeletons;	
+	bool	renderColliders = false;
+	bool	renderCanvas = false;
 
 	bool					renderPrimitiveExamples;															//
 

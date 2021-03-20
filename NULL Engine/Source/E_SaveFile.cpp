@@ -49,15 +49,7 @@ void E_SaveFile::DrawTextEditor()
 {
 	ImGui::Spacing();
 
-	if (ImGui::InputText("Scene Name:", (char*)sceneName.c_str(), 64, ImGuiInputTextFlags_EnterReturnsTrue))
-	{
-		EngineApp->scene->SaveScene(sceneName.c_str());
-
-		ImGui::CloseCurrentPopup();
-		readyToSave = false;
-		EngineApp->editor->showSaveFilePopup = false;
-
-	}
+	if (ImGui::InputText("Scene Name:", (char*)sceneName.c_str(), 64, ImGuiInputTextFlags_None)){}
 
 	ImGui::Spacing();
 	ImGui::TextColored(ImVec4(0.6, 0.6, 0.6, 1), "Press 'Enter' to save the scene.");
@@ -65,6 +57,15 @@ void E_SaveFile::DrawTextEditor()
 
 	if (ImGui::Button("Cancel"))
 	{
+		readyToSave = false;
+		EngineApp->editor->showSaveFilePopup = false;
+		ImGui::CloseCurrentPopup();
+	}
+	ImGui::SameLine();
+
+	if (ImGui::Button("Save"))
+	{
+		EngineApp->scene->SaveScene(sceneName.c_str());
 		readyToSave = false;
 		EngineApp->editor->showSaveFilePopup = false;
 		ImGui::CloseCurrentPopup();

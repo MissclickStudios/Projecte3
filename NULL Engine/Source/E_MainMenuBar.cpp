@@ -2,7 +2,7 @@
 #include "M_Renderer3D.h"
 #include "M_Editor.h"
 #include "M_Scene.h"
-
+#include "Profiler.h"
 #include "E_MainMenuBar.h"
 
 #include "MemoryManager.h"
@@ -30,6 +30,7 @@ bool E_MainMenuBar::Draw(ImGuiIO& io)
 	WindowMainMenuItem();
 	ViewMainMenuItem();
 	GameObjectsMainMenuItem();
+	CreateMainMenuItem();
 	HelpMainMenuItem();
 
 	if (EngineApp->editor->showCloseAppPopup)
@@ -62,16 +63,25 @@ bool E_MainMenuBar::FileMainMenuItem()
 		{
 			EngineApp->editor->showLoadFilePopup = true;
 		}
-
 		ImGui::Separator();
 
 		if (ImGui::MenuItem("Save", "Ctrl+S"))
 		{
+			EngineApp->scene->SaveScene();
+		}
+
+		ImGui::Separator();
+
+		if (ImGui::MenuItem("Save As"))
+		{
 			EngineApp->editor->showSaveFilePopup = true;
-			//EngineApp->scene->SaveScene();
 			
 			LOG("[SCENE] SAVED THE SCENE >:DDD");
 		}
+
+
+
+		
 		
 		ImGui::MenuItem("Save As...", "Ctrl+Shift+S", nullptr, false);
 
@@ -247,6 +257,32 @@ bool E_MainMenuBar::GameObjectsMainMenuItem()
 	}
 
 	return ret;
+}
+
+bool E_MainMenuBar::CreateMainMenuItem()
+{
+
+	if (ImGui::BeginMenu("Create"))
+	{
+
+		if (ImGui::MenuItem("Directional Light"))
+		{
+			App->renderer->GenerateSceneLight(Color(1.0f, 1.0f, 1.0f, 1.0f), Color(0.6, 0.6, 0.6, 0.5), Color(0.6, 0.6, 0.6, 0.5), LightType::DIRECTIONAL);
+		}
+
+		ImGui::Separator();
+
+		if (ImGui::MenuItem("Point Light"))
+		{
+			App->renderer->GenerateSceneLight(Color(1.0f, 1.0f, 1.0f, 1.0f), Color(0.6, 0.6, 0.6, 0.5), Color(0.6, 0.6, 0.6, 0.5), LightType::POINTLIGHT);
+		}
+
+
+		ImGui::EndMenu();
+	}
+
+	
+	return false;
 }
 
 bool E_MainMenuBar::HelpMainMenuItem()

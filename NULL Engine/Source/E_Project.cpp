@@ -51,7 +51,6 @@ bool E_Project::Draw(ImGuiIO& io)
 {
 	bool ret = true;
 
-	BROFILERCATEGORY("Project Panel", Profiler::Color::HoneyDew);
 
 	CheckFlags();
 
@@ -165,13 +164,27 @@ void E_Project::GenerateDockspace(ImGuiIO& io) const
 	}
 }
 
-void E_Project::DrawMenuBar() const
+void E_Project::DrawMenuBar()
 {
 	ImGui::BeginMenuBar();
 
 	if (ImGui::BeginMenu("Options"))
 	{
 		ImGui::MenuItem("Show In Explorer", nullptr, false, false);
+
+		if (ImGui::MenuItem("Refresh All Directories", nullptr, false))
+		{
+			App->resourceManager->RefreshProjectDirectories();
+			refreshRootDirectory		= true;
+			refreshDirectoryToDisplay	= true;
+		}
+
+		if (ImGui::MenuItem("Refresh Current Directory", nullptr, false))
+		{
+			App->resourceManager->RefreshProjectDirectory(directoryToDisplay);
+			refreshRootDirectory		= true;
+			refreshDirectoryToDisplay	= true;
+		}
 
 		ImGui::EndMenu();
 	}
@@ -330,7 +343,18 @@ void E_Project::DrawResourceIcons()
 		}
 
 		ImGui::SetCursorPos(originalPos + textOffset);
-		ImGui::Text(GetDisplayString(item->file, 8).c_str());
+
+		if (item->type == ResourceType::PREFAB)
+		{
+			std::string prefabName = "Prefab";
+			std::map<uint,std::string>::iterator a = EngineApp->resourceManager->prefabs.find(atoi(item->file.c_str()));
+			if (a != EngineApp->resourceManager->prefabs.end())
+				prefabName = a->second;
+
+			ImGui::Text(GetDisplayString(prefabName, 8).c_str());
+		}
+		else
+			ImGui::Text(GetDisplayString(item->file, 8).c_str());
 
 		nextItemPos = originalPos + itemOffset;
 		if (nextItemPos.x + itemOffset.x < ImGui::GetWindowWidth())
@@ -413,6 +437,7 @@ ImTextureID E_Project::GetIconTexID(const AssetDisplay& assetDisplay) const
 	case ResourceType::FOLDER:		{ texId = (ImTextureID)engineIcons.folderIcon->GetTextureID(); }		break;
 	case ResourceType::SCENE:		{ texId = (ImTextureID)engineIcons.modelIcon->GetTextureID(); }			break;
 	case ResourceType::ANIMATION:	{ texId = (ImTextureID)engineIcons.animationIcon->GetTextureID(); }		break;
+	case ResourceType::PREFAB: { texId = (ImTextureID)engineIcons.modelIcon->GetTextureID(); }		break;
 	}
 
 	return texId;

@@ -1,7 +1,7 @@
 #include "JSONParser.h"
 
 #include "Module.h"
-
+#include "Profiler.h"
 #include "MemoryManager.h"
 
 Module::Module(const char* name, bool isActive) : isActive(isActive)
