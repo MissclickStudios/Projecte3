@@ -191,7 +191,10 @@ void C_PlayerController::Weapon()
 	// TODO
 
 	float3 direction = { (float)aimX, 0, (float)aimY };
-	if (aimX == 0 && aimY == 0) {}
+	if (aimX == 0 && aimY == 0) 
+	{
+		lastAim = lastDirection;
+	}
 	else
 	{
 		direction.Normalize();
