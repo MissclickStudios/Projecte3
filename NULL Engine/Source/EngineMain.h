@@ -61,8 +61,13 @@ int main(int argc, char ** argv)
 			}
 			else
 			{
-				state = MainStatus::UPDATE;
 				LOG("-------------- Application Update --------------");
+				/*bool success = App->Start();
+				state = (success) ? MainStatus::UPDATE : MainStatus::EXIT;*/
+
+				//state = (App->Start()) ? MainStatus::UPDATE : MainStatus::EXIT;
+				
+				state = MainStatus::UPDATE;
 			}
 
 			break;

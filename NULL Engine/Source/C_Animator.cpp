@@ -241,13 +241,12 @@ bool C_Animator::StepAnimation()
 	
 	UpdateChannelTransforms();
 	UpdateMeshSkinning();
-	UpdateDisplayBones();
 
 	return true;
 }
 
 bool C_Animator::StepClips()
-{
+{	
 	bool currentExists	= CurrentClipExists();
 	bool blendingExists	= BlendingClipExists();
 
@@ -442,6 +441,8 @@ void C_Animator::UpdateMeshSkinning()
 
 void C_Animator::UpdateDisplayBones()
 {
+	OPTICK_CATEGORY("Update Display Bones", Optick::Category::Animation);
+	
 	displayBones.clear();
 
 	if (rootBone != nullptr)
