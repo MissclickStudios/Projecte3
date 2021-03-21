@@ -1058,7 +1058,9 @@ std::vector<GameObject*> M_Scene::GetPointLights()
 
 void M_Scene::NextRoom()
 {
+	
 	nextScene = true;
+	
 }
 
 void M_Scene::DeleteSelectedGameObject()
