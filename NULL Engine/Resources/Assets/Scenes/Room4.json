@@ -1,6 +1,16 @@
 {
     "Models In Scene": [
         {
+            "GameObjectUID": 801960469,
+            "ModelResourceUID": 180425932,
+            "ModelAssetsPath": "Assets\/Models\/Enemies\/SandTrooper@TPose(NOTRIGGED).fbx"
+        },
+        {
+            "GameObjectUID": 1501616319,
+            "ModelResourceUID": 975073716,
+            "ModelAssetsPath": "Assets\/Models\/Enemies\/Blurrg(NOTRIGGED).fbx"
+        },
+        {
             "GameObjectUID": 1508692608,
             "ModelResourceUID": 194439869,
             "ModelAssetsPath": "Assets\/Models\/Mando\/Final_Mando.fbx"
@@ -524,6 +534,74 @@
                         "W": 1.0926049947738647,
                         "H": 0.60150182247161865,
                         "IsInvisible": false
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 230841845,
+            "ParentUID": 1501616319,
+            "PrefabID": 70424931,
+            "IsPrefab": true,
+            "Name": "Blurrg001",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        -0.70710676908493042,
+                        0,
+                        0,
+                        0.70710676908493042
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 1819960244,
+                    "Name": "Blurrg001.nemesh",
+                    "Path": "Library\/Meshes\/1819960244.nemesh",
+                    "File": "1819960244.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 1622007230,
+                        "Color": [
+                            0.58823531866073608,
+                            0.58823531866073608,
+                            0.58823531866073608,
+                            1
+                        ],
+                        "Name": "Blurrg001.nemat",
+                        "Path": "Library\/Materials\/1622007230.nemat",
+                        "File": "1622007230.nemat"
+                    },
+                    "Texture": {
+                        "UID": 337782335,
+                        "Name": "Blurrg_Texture.png",
+                        "Path": "Library\/Textures\/337782335.netex",
+                        "File": "337782335.netex"
+                    },
+                    "Shader": {
+                        "UID": 1200642544,
+                        "Name": "DefaultShader.shader",
+                        "Path": "Library\/Shaders\/1200642544.neshader",
+                        "File": "1200642544.neshader"
                     }
                 }
             ]
@@ -1406,7 +1484,7 @@
         },
         {
             "UID": 888400124,
-            "ParentUID": 1347469699,
+            "ParentUID": 622340448,
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "MainScene",
@@ -2005,7 +2083,7 @@
         },
         {
             "UID": 1187132062,
-            "ParentUID": 888400124,
+            "ParentUID": 373673014,
             "PrefabID": 1384021613,
             "IsPrefab": true,
             "Name": "NextSceneTrigger",
@@ -2625,6 +2703,53 @@
             ]
         },
         {
+            "UID": 1501616319,
+            "ParentUID": 730319999,
+            "PrefabID": 70424931,
+            "IsPrefab": true,
+            "Name": "Blurrg(NOTRIGGED).fbx",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -31.854732513427734,
+                        1.4909586906433105,
+                        7.3220682144165039
+                    ],
+                    "LocalRotation": [
+                        0,
+                        -0.6890188455581665,
+                        0,
+                        0.72474342584609985
+                    ],
+                    "LocalScale": [
+                        0.028000004589557648,
+                        0.028000000864267349,
+                        0.028000004589557648
+                    ]
+                },
+                {},
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 2,
+                    "Size Y": 10,
+                    "Size Z": 2,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
+                },
+                {
+                    "Type": 18
+                }
+            ]
+        },
+        {
             "UID": 1508692608,
             "ParentUID": 888400124,
             "PrefabID": 1638586207,
@@ -2633,7 +2758,7 @@
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
-            "ShowBoundingBoxes": true,
+            "ShowBoundingBoxes": false,
             "Components": [
                 {
                     "Type": 1,
@@ -3705,10 +3830,10 @@
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "pCube127",
-            "IsActive": true,
+            "IsActive": false,
             "IsStatic": false,
             "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
+            "ShowBoundingBoxes": true,
             "Components": [
                 {
                     "Type": 1,
@@ -3945,7 +4070,7 @@
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "pCube128",
-            "IsActive": true,
+            "IsActive": false,
             "IsStatic": false,
             "IsSceneRoot": false,
             "ShowBoundingBoxes": false,
@@ -4140,6 +4265,185 @@
                     "Offset X": 0,
                     "Offset Y": 40,
                     "Offset Z": 20
+                }
+            ]
+        },
+        {
+            "UID": 730319999,
+            "ParentUID": 888400124,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Enemies",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 801960469,
+            "ParentUID": 730319999,
+            "PrefabID": 92973232,
+            "IsPrefab": true,
+            "Name": "SandTrooper@TPose(NOTRIGGED).fbx",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -18.764194488525391,
+                        1.3440449237823486,
+                        -11.386549949645996
+                    ],
+                    "LocalRotation": [
+                        0,
+                        -0.56387597322463989,
+                        0,
+                        0.82585948705673218
+                    ],
+                    "LocalScale": [
+                        0.069999992847442627,
+                        0.070000000298023224,
+                        0.069999992847442627
+                    ]
+                },
+                {},
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 2,
+                    "Size Y": 10,
+                    "Size Z": 2,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
+                },
+                {
+                    "Type": 18
+                }
+            ]
+        },
+        {
+            "UID": 862473896,
+            "ParentUID": 801960469,
+            "PrefabID": 92973232,
+            "IsPrefab": true,
+            "Name": "StormTrooper002",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        -0.70710676908493042,
+                        0,
+                        0,
+                        0.70710676908493042
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 504859649,
+                    "Name": "StormTrooper002.nemesh",
+                    "Path": "Library\/Meshes\/504859649.nemesh",
+                    "File": "504859649.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 968772580,
+                        "Color": [
+                            0.82352942228317261,
+                            0.82352942228317261,
+                            0.82352942228317261,
+                            1
+                        ],
+                        "Name": "StormTrooper002.nemat",
+                        "Path": "Library\/Materials\/968772580.nemat",
+                        "File": "968772580.nemat"
+                    },
+                    "Texture": {
+                        "UID": 896890851,
+                        "Name": "SandTrooper_Texture.png",
+                        "Path": "Library\/Textures\/896890851.netex",
+                        "File": "896890851.netex"
+                    },
+                    "Shader": {
+                        "UID": 1200642544,
+                        "Name": "DefaultShader.shader",
+                        "Path": "Library\/Shaders\/1200642544.neshader",
+                        "File": "1200642544.neshader"
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 373673014,
+            "ParentUID": 888400124,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Triggers",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
                 }
             ]
         }
