@@ -1,12 +1,44 @@
 {
     "Models In Scene": [
         {
-            "GameObjectUID": 1799599679,
-            "ModelResourceUID": 1227176987,
-            "ModelAssetsPath": "Assets\/Models\/Blockouts\/Level1_bInit.fbx"
+            "GameObjectUID": 1955829472,
+            "ModelResourceUID": 441301574,
+            "ModelAssetsPath": "Assets\/Models\/Blockouts\/Level1_bEnd.fbx"
         }
     ],
     "Game Objects": [
+        {
+            "UID": 29461999,
+            "ParentUID": 1589692813,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Obstacles",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
         {
             "UID": 29607006,
             "ParentUID": 496594015,
@@ -40,6 +72,68 @@
             ]
         },
         {
+            "UID": 34886794,
+            "ParentUID": 1955829472,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Box293",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        133.92913818359375,
+                        -0.44471359252929688,
+                        -164.18063354492188
+                    ],
+                    "LocalRotation": [
+                        1.3767879636361613e-07,
+                        0.7071068286895752,
+                        0.7071068286895752,
+                        -1.3767879636361613e-07
+                    ],
+                    "LocalScale": [
+                        1.4999997615814209,
+                        1.4999997615814209,
+                        1.4999998807907104
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 234391915,
+                    "Name": "Box291.nemesh",
+                    "Path": "Library\/Meshes\/234391915.nemesh",
+                    "File": "234391915.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 2018764309,
+                        "Color": [
+                            0.80000001192092896,
+                            0.80000001192092896,
+                            0.80000001192092896,
+                            1
+                        ],
+                        "Name": "Box291.nemat",
+                        "Path": "Library\/Materials\/2018764309.nemat",
+                        "File": "2018764309.nemat"
+                    },
+                    "Shader": {
+                        "UID": 382962109,
+                        "Name": "DefaultShader.shader",
+                        "Path": "Library\/Shaders\/382962109.neshader",
+                        "File": "382962109.neshader"
+                    }
+                }
+            ]
+        },
+        {
             "UID": 48723674,
             "ParentUID": 996171303,
             "PrefabID": 1638586207,
@@ -68,6 +162,68 @@
                         1,
                         1
                     ]
+                }
+            ]
+        },
+        {
+            "UID": 49480317,
+            "ParentUID": 1955829472,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Box294",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        156.90670776367188,
+                        -0.4447174072265625,
+                        142.64556884765625
+                    ],
+                    "LocalRotation": [
+                        -0.49999997019767761,
+                        0.49999997019767761,
+                        0.49999997019767761,
+                        0.49999997019767761
+                    ],
+                    "LocalScale": [
+                        1.5,
+                        1.5,
+                        1.5
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 234391915,
+                    "Name": "Box291.nemesh",
+                    "Path": "Library\/Meshes\/234391915.nemesh",
+                    "File": "234391915.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 2018764309,
+                        "Color": [
+                            0.80000001192092896,
+                            0.80000001192092896,
+                            0.80000001192092896,
+                            1
+                        ],
+                        "Name": "Box291.nemat",
+                        "Path": "Library\/Materials\/2018764309.nemat",
+                        "File": "2018764309.nemat"
+                    },
+                    "Shader": {
+                        "UID": 382962109,
+                        "Name": "DefaultShader.shader",
+                        "Path": "Library\/Shaders\/382962109.neshader",
+                        "File": "382962109.neshader"
+                    }
                 }
             ]
         },
@@ -117,9 +273,9 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        10.985941886901855,
-                        4.8940725326538086,
-                        69.818000793457031
+                        -0.91063559055328369,
+                        4,
+                        86.100379943847656
                     ],
                     "LocalRotation": [
                         0,
@@ -138,8 +294,8 @@
                     "Type": 9,
                     "Is Trigger": false,
                     "Show Collider": true,
-                    "Size X": 120,
-                    "Size Y": 6,
+                    "Size X": 160,
+                    "Size Y": 10,
                     "Size Z": 5,
                     "Center X": 0,
                     "Center Y": 0,
@@ -180,11 +336,11 @@
             ]
         },
         {
-            "UID": 102219153,
-            "ParentUID": 2126189301,
-            "PrefabID": 454241799,
+            "UID": 91447874,
+            "ParentUID": 29461999,
+            "PrefabID": 496002274,
             "IsPrefab": true,
-            "Name": "Obstacle1",
+            "Name": "Square_Obstacle3",
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
@@ -193,20 +349,20 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        56.921913146972656,
-                        4.4917178153991699,
-                        -48.896743774414063
+                        -72.533348083496094,
+                        5.5,
+                        -76.727851867675781
                     ],
                     "LocalRotation": [
                         0,
-                        -0.44864687323570251,
                         0,
-                        0.89370918273925781
+                        0,
+                        1
                     ],
                     "LocalScale": [
-                        0.99999994039535522,
                         1,
-                        0.99999994039535522
+                        1,
+                        1
                     ]
                 },
                 {},
@@ -214,9 +370,97 @@
                     "Type": 9,
                     "Is Trigger": false,
                     "Show Collider": true,
-                    "Size X": 24,
-                    "Size Y": 5,
-                    "Size Z": 20,
+                    "Size X": 22,
+                    "Size Y": 10,
+                    "Size Z": 22,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
+                }
+            ]
+        },
+        {
+            "UID": 130110666,
+            "ParentUID": 2065333054,
+            "PrefabID": 136915163,
+            "IsPrefab": true,
+            "Name": "Thick_Obstacle4",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -31.142902374267578,
+                        5.5,
+                        48.206741333007813
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {},
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 10,
+                    "Size Y": 10,
+                    "Size Z": 3,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
+                }
+            ]
+        },
+        {
+            "UID": 155190418,
+            "ParentUID": 1364469552,
+            "PrefabID": 136915163,
+            "IsPrefab": true,
+            "Name": "Thick_Obstacle5",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -41.755298614501953,
+                        5.5,
+                        -38.059944152832031
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {},
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 3,
+                    "Size Y": 10,
+                    "Size Z": 10,
                     "Center X": 0,
                     "Center Y": 0,
                     "Center Z": 0
@@ -420,6 +664,68 @@
             ]
         },
         {
+            "UID": 305380069,
+            "ParentUID": 1955829472,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Box301",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        100.87628173828125,
+                        -1.1828651428222656,
+                        -95.43505859375
+                    ],
+                    "LocalRotation": [
+                        -0.70710676908493042,
+                        0,
+                        0,
+                        0.70710676908493042
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 777678549,
+                    "Name": "Box301.nemesh",
+                    "Path": "Library\/Meshes\/777678549.nemesh",
+                    "File": "777678549.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 400551765,
+                        "Color": [
+                            0.80000001192092896,
+                            0.80000001192092896,
+                            0.80000001192092896,
+                            1
+                        ],
+                        "Name": "Box301.nemat",
+                        "Path": "Library\/Materials\/400551765.nemat",
+                        "File": "400551765.nemat"
+                    },
+                    "Shader": {
+                        "UID": 382962109,
+                        "Name": "DefaultShader.shader",
+                        "Path": "Library\/Shaders\/382962109.neshader",
+                        "File": "382962109.neshader"
+                    }
+                }
+            ]
+        },
+        {
             "UID": 347234258,
             "ParentUID": 2063070810,
             "PrefabID": 1638586207,
@@ -566,11 +872,11 @@
             ]
         },
         {
-            "UID": 439054399,
-            "ParentUID": 1799599679,
-            "PrefabID": 0,
-            "IsPrefab": false,
-            "Name": "Box097",
+            "UID": 414530992,
+            "ParentUID": 994964817,
+            "PrefabID": 136915163,
+            "IsPrefab": true,
+            "Name": "Thick_Obstacle5",
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
@@ -579,15 +885,15 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        66.670364379882813,
-                        -0.31676673889160156,
-                        2.4902269840240479
+                        47.051776885986328,
+                        5.5000019073486328,
+                        38.482803344726563
                     ],
                     "LocalRotation": [
-                        -0.70710676908493042,
                         0,
                         0,
-                        0.70710676908493042
+                        0,
+                        1
                     ],
                     "LocalScale": [
                         1,
@@ -595,35 +901,149 @@
                         1
                     ]
                 },
+                {},
                 {
-                    "Type": 2,
-                    "UID": 124081381,
-                    "Name": "Box097.nemesh",
-                    "Path": "Library\/Meshes\/124081381.nemesh",
-                    "File": "124081381.nemesh",
-                    "ShowWireframe": false,
-                    "ShowBoundingBox": false
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 3,
+                    "Size Y": 10,
+                    "Size Z": 11,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
+                }
+            ]
+        },
+        {
+            "UID": 417726069,
+            "ParentUID": 2065333054,
+            "PrefabID": 136915163,
+            "IsPrefab": true,
+            "Name": "Thick_Obstacle2",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -40.311656951904297,
+                        5.5,
+                        30.426494598388672
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
                 },
+                {},
                 {
-                    "Type": 3,
-                    "Material": {
-                        "UID": 1490598367,
-                        "Color": [
-                            0.064748205244541168,
-                            0.97647058963775635,
-                            0.99215686321258545,
-                            1
-                        ],
-                        "Name": "Box097.nemat",
-                        "Path": "Library\/Materials\/1490598367.nemat",
-                        "File": "1490598367.nemat"
-                    },
-                    "Shader": {
-                        "UID": 382962109,
-                        "Name": "DefaultShader.shader",
-                        "Path": "Library\/Shaders\/382962109.neshader",
-                        "File": "382962109.neshader"
-                    }
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 6,
+                    "Size Y": 10,
+                    "Size Z": 6,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
+                }
+            ]
+        },
+        {
+            "UID": 433457244,
+            "ParentUID": 1364469552,
+            "PrefabID": 136915163,
+            "IsPrefab": true,
+            "Name": "Thick_Obstacle",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -41.650352478027344,
+                        5.5,
+                        -47.325813293457031
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {},
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 10,
+                    "Size Y": 10,
+                    "Size Z": 10,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
+                }
+            ]
+        },
+        {
+            "UID": 452577603,
+            "ParentUID": 994964817,
+            "PrefabID": 136915163,
+            "IsPrefab": true,
+            "Name": "Thick_Obstacle3",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        29.27232551574707,
+                        5.5,
+                        48.290172576904297
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {},
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 6,
+                    "Size Y": 10,
+                    "Size Z": 6,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
                 }
             ]
         },
@@ -806,6 +1226,94 @@
             ]
         },
         {
+            "UID": 504987351,
+            "ParentUID": 2065333054,
+            "PrefabID": 136915163,
+            "IsPrefab": true,
+            "Name": "Thick_Obstacle",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -40.398998260498047,
+                        5.5,
+                        48.288787841796875
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {},
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 10,
+                    "Size Y": 10,
+                    "Size Z": 10,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
+                }
+            ]
+        },
+        {
+            "UID": 532541705,
+            "ParentUID": 29461999,
+            "PrefabID": 496002274,
+            "IsPrefab": true,
+            "Name": "Square_Obstacle2",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        71.619773864746094,
+                        5.5000019073486328,
+                        -74.379104614257813
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {},
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 22,
+                    "Size Y": 10,
+                    "Size Z": 22,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
+                }
+            ]
+        },
+        {
             "UID": 542559964,
             "ParentUID": 1356974848,
             "PrefabID": 1638586207,
@@ -838,6 +1346,94 @@
             ]
         },
         {
+            "UID": 556770628,
+            "ParentUID": 994964817,
+            "PrefabID": 136915163,
+            "IsPrefab": true,
+            "Name": "Thick_Obstacle4",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        37.270694732666016,
+                        5.5000019073486328,
+                        48.288444519042969
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {},
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 11,
+                    "Size Y": 10,
+                    "Size Z": 3,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
+                }
+            ]
+        },
+        {
+            "UID": 595000454,
+            "ParentUID": 1567616380,
+            "PrefabID": 136915163,
+            "IsPrefab": true,
+            "Name": "Thick_Obstacle3",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        50.480194091796875,
+                        5.4999942779541016,
+                        -29.779117584228516
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {},
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 6,
+                    "Size Y": 10,
+                    "Size Z": 6,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
+                }
+            ]
+        },
+        {
             "UID": 665807068,
             "ParentUID": 221800752,
             "PrefabID": 1638586207,
@@ -866,6 +1462,50 @@
                         1,
                         1
                     ]
+                }
+            ]
+        },
+        {
+            "UID": 705880618,
+            "ParentUID": 29461999,
+            "PrefabID": 496002274,
+            "IsPrefab": true,
+            "Name": "Square_Obstacle1",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -77.504570007324219,
+                        5.5,
+                        74.142074584960938
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {},
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 22,
+                    "Size Y": 10,
+                    "Size Z": 22,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
                 }
             ]
         },
@@ -980,6 +1620,68 @@
                         1,
                         1
                     ]
+                }
+            ]
+        },
+        {
+            "UID": 761635039,
+            "ParentUID": 1955829472,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Box240",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        167.352783203125,
+                        2.8497886657714844,
+                        -142.95967102050781
+                    ],
+                    "LocalRotation": [
+                        -0.5,
+                        0.5,
+                        0.5,
+                        0.50000011920928955
+                    ],
+                    "LocalScale": [
+                        0.99999988079071045,
+                        0.99999988079071045,
+                        0.99999988079071045
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 126838495,
+                    "Name": "Box240.nemesh",
+                    "Path": "Library\/Meshes\/126838495.nemesh",
+                    "File": "126838495.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 170103931,
+                        "Color": [
+                            0.34803920984268188,
+                            0.34803572297096252,
+                            0.34803572297096252,
+                            1
+                        ],
+                        "Name": "Box240.nemat",
+                        "Path": "Library\/Materials\/170103931.nemat",
+                        "File": "170103931.nemat"
+                    },
+                    "Shader": {
+                        "UID": 382962109,
+                        "Name": "DefaultShader.shader",
+                        "Path": "Library\/Shaders\/382962109.neshader",
+                        "File": "382962109.neshader"
+                    }
                 }
             ]
         },
@@ -1145,7 +1847,7 @@
         },
         {
             "UID": 888400124,
-            "ParentUID": 760058987,
+            "ParentUID": 2068940801,
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "MainScene",
@@ -1172,68 +1874,6 @@
                         1,
                         1
                     ]
-                }
-            ]
-        },
-        {
-            "UID": 923297925,
-            "ParentUID": 1799599679,
-            "PrefabID": 0,
-            "IsPrefab": false,
-            "Name": "Box096",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        -61.209541320800781,
-                        7.27362060546875,
-                        0.74513864517211914
-                    ],
-                    "LocalRotation": [
-                        -0.70011407136917114,
-                        0.099198341369628906,
-                        -0.099198341369628906,
-                        0.70011407136917114
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {
-                    "Type": 2,
-                    "UID": 296830774,
-                    "Name": "Box096.nemesh",
-                    "Path": "Library\/Meshes\/296830774.nemesh",
-                    "File": "296830774.nemesh",
-                    "ShowWireframe": false,
-                    "ShowBoundingBox": false
-                },
-                {
-                    "Type": 3,
-                    "Material": {
-                        "UID": 420181573,
-                        "Color": [
-                            0.68352937698364258,
-                            0.6698039174079895,
-                            0,
-                            1
-                        ],
-                        "Name": "Box096.nemat",
-                        "Path": "Library\/Materials\/420181573.nemat",
-                        "File": "420181573.nemat"
-                    },
-                    "Shader": {
-                        "UID": 382962109,
-                        "Name": "DefaultShader.shader",
-                        "Path": "Library\/Shaders\/382962109.neshader",
-                        "File": "382962109.neshader"
-                    }
                 }
             ]
         },
@@ -1361,50 +2001,6 @@
             ]
         },
         {
-            "UID": 962054904,
-            "ParentUID": 2126189301,
-            "PrefabID": 454241799,
-            "IsPrefab": true,
-            "Name": "Obstacle2",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        -57.589214324951172,
-                        4.4917178153991699,
-                        -50.200187683105469
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0.95398616790771484,
-                        0,
-                        0.29985058307647705
-                    ],
-                    "LocalScale": [
-                        1.0000002384185791,
-                        1,
-                        1.0000002384185791
-                    ]
-                },
-                {},
-                {
-                    "Type": 9,
-                    "Is Trigger": false,
-                    "Show Collider": true,
-                    "Size X": 24,
-                    "Size Y": 5,
-                    "Size Z": 25,
-                    "Center X": 0,
-                    "Center Y": 0,
-                    "Center Z": 0
-                }
-            ]
-        },
-        {
             "UID": 984279059,
             "ParentUID": 888400124,
             "PrefabID": 1638586207,
@@ -1418,9 +2014,9 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        0.087212324142456055,
-                        0.18565082550048828,
-                        -20.574314117431641
+                        -2.2354083061218262,
+                        0.47698348760604858,
+                        76.75115966796875
                     ],
                     "LocalRotation": [
                         0,
@@ -1504,6 +2100,38 @@
             ]
         },
         {
+            "UID": 994964817,
+            "ParentUID": 29461999,
+            "PrefabID": 136915163,
+            "IsPrefab": true,
+            "Name": "Ruins2",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        9.5367431640625e-06,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
             "UID": 996171303,
             "ParentUID": 281737718,
             "PrefabID": 1638586207,
@@ -1564,6 +2192,94 @@
                         2.5399999618530273,
                         2.5399999618530273
                     ]
+                }
+            ]
+        },
+        {
+            "UID": 1009756224,
+            "ParentUID": 29461999,
+            "PrefabID": 496002274,
+            "IsPrefab": true,
+            "Name": "Square_Obstacle4",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        70.965736389160156,
+                        5.5,
+                        76.146034240722656
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {},
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 22,
+                    "Size Y": 10,
+                    "Size Z": 22,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
+                }
+            ]
+        },
+        {
+            "UID": 1028608141,
+            "ParentUID": 994964817,
+            "PrefabID": 136915163,
+            "IsPrefab": true,
+            "Name": "Thick_Obstacle",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        47.251766204833984,
+                        5.5000019073486328,
+                        48.193035125732422
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {},
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 10,
+                    "Size Y": 10,
+                    "Size Z": 10,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
                 }
             ]
         },
@@ -1682,38 +2398,6 @@
             ]
         },
         {
-            "UID": 1155563077,
-            "ParentUID": 888400124,
-            "PrefabID": 0,
-            "IsPrefab": false,
-            "Name": "Triggers",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        0,
-                        0
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                }
-            ]
-        },
-        {
             "UID": 1212734261,
             "ParentUID": 1744036067,
             "PrefabID": 1749742898,
@@ -1727,9 +2411,9 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        67.477706909179688,
-                        4.5899453163146973,
-                        2.4834260940551758
+                        84.095352172851563,
+                        4.0000019073486328,
+                        0.084249980747699738
                     ],
                     "LocalRotation": [
                         0,
@@ -1738,9 +2422,9 @@
                         0.70710670948028564
                     ],
                     "LocalScale": [
+                        0.99999988079071045,
                         1,
-                        1,
-                        1
+                        0.99999988079071045
                     ]
                 },
                 {},
@@ -1749,73 +2433,11 @@
                     "Is Trigger": false,
                     "Show Collider": true,
                     "Size X": 160,
-                    "Size Y": 6,
+                    "Size Y": 10,
                     "Size Z": 5,
                     "Center X": 0,
                     "Center Y": 0,
                     "Center Z": 0
-                }
-            ]
-        },
-        {
-            "UID": 1221084624,
-            "ParentUID": 1799599679,
-            "PrefabID": 0,
-            "IsPrefab": false,
-            "Name": "Cylinder002",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        -55.441787719726563,
-                        33.201686859130859,
-                        -29.412628173828125
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0.70710676908493042,
-                        0,
-                        -0.70710676908493042
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {
-                    "Type": 2,
-                    "UID": 697473715,
-                    "Name": "Cylinder002.nemesh",
-                    "Path": "Library\/Meshes\/697473715.nemesh",
-                    "File": "697473715.nemesh",
-                    "ShowWireframe": false,
-                    "ShowBoundingBox": false
-                },
-                {
-                    "Type": 3,
-                    "Material": {
-                        "UID": 2064769698,
-                        "Color": [
-                            0.48313724994659424,
-                            0.14274509251117706,
-                            0.62588232755661011,
-                            1
-                        ],
-                        "Name": "Cylinder002.nemat",
-                        "Path": "Library\/Materials\/2064769698.nemat",
-                        "File": "2064769698.nemat"
-                    },
-                    "Shader": {
-                        "UID": 382962109,
-                        "Name": "DefaultShader.shader",
-                        "Path": "Library\/Shaders\/382962109.neshader",
-                        "File": "382962109.neshader"
-                    }
                 }
             ]
         },
@@ -1948,6 +2570,68 @@
             ]
         },
         {
+            "UID": 1308064783,
+            "ParentUID": 1955829472,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Box097",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -169.36642456054688,
+                        -2.0723056793212891,
+                        -4.5901908874511719
+                    ],
+                    "LocalRotation": [
+                        -0.70710676908493042,
+                        0,
+                        0,
+                        0.70710676908493042
+                    ],
+                    "LocalScale": [
+                        1,
+                        1.108881950378418,
+                        1
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 439238914,
+                    "Name": "Box097.nemesh",
+                    "Path": "Library\/Meshes\/439238914.nemesh",
+                    "File": "439238914.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 85298314,
+                        "Color": [
+                            0.064748205244541168,
+                            0.97647058963775635,
+                            0.99215686321258545,
+                            1
+                        ],
+                        "Name": "Box097.nemat",
+                        "Path": "Library\/Materials\/85298314.nemat",
+                        "File": "85298314.nemat"
+                    },
+                    "Shader": {
+                        "UID": 382962109,
+                        "Name": "DefaultShader.shader",
+                        "Path": "Library\/Shaders\/382962109.neshader",
+                        "File": "382962109.neshader"
+                    }
+                }
+            ]
+        },
+        {
             "UID": 1314187374,
             "ParentUID": 719369895,
             "PrefabID": 1638586207,
@@ -1988,14 +2672,14 @@
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
+            "ShowBoundingBoxes": true,
             "Components": [
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        0.087212324142456055,
-                        60.185649871826172,
-                        19.425685882568359
+                        -2.2354083061218262,
+                        60.476982116699219,
+                        116.75115966796875
                     ],
                     "LocalRotation": [
                         -0.44619807600975037,
@@ -2054,6 +2738,94 @@
                         0.99999994039535522,
                         1
                     ]
+                }
+            ]
+        },
+        {
+            "UID": 1346810787,
+            "ParentUID": 1364469552,
+            "PrefabID": 136915163,
+            "IsPrefab": true,
+            "Name": "Thick_Obstacle4",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -31.776224136352539,
+                        5.5,
+                        -47.293899536132813
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {},
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 11,
+                    "Size Y": 10,
+                    "Size Z": 3,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
+                }
+            ]
+        },
+        {
+            "UID": 1349153121,
+            "ParentUID": 1364469552,
+            "PrefabID": 136915163,
+            "IsPrefab": true,
+            "Name": "Thick_Obstacle3",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -23.779205322265625,
+                        5.5000019073486328,
+                        -47.337905883789063
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {},
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 6,
+                    "Size Y": 10,
+                    "Size Z": 6,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
                 }
             ]
         },
@@ -2122,11 +2894,11 @@
             ]
         },
         {
-            "UID": 1416800279,
-            "ParentUID": 1155563077,
-            "PrefabID": 1384021613,
+            "UID": 1364469552,
+            "ParentUID": 29461999,
+            "PrefabID": 136915163,
             "IsPrefab": true,
-            "Name": "NextSceneTrigger",
+            "Name": "Ruins3",
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
@@ -2135,98 +2907,21 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        2.0450363159179688,
-                        10.378395080566406,
-                        -64.970367431640625
+                        0,
+                        7.62939453125e-06,
+                        -5.7220458984375e-06
                     ],
                     "LocalRotation": [
-                        -6.1891483937870362e-08,
-                        0.70795571804046631,
-                        -6.174295208438707e-08,
-                        0.70625686645507813
-                    ],
-                    "LocalScale": [
-                        0.9999997615814209,
-                        1.0000001192092896,
-                        0.99999994039535522
-                    ]
-                },
-                {},
-                {
-                    "Type": 9,
-                    "Is Trigger": false,
-                    "Show Collider": true,
-                    "Size X": 10,
-                    "Size Y": 20,
-                    "Size Z": 25,
-                    "Center X": 0,
-                    "Center Y": 0,
-                    "Center Z": 0
-                },
-                {
-                    "Type": 20
-                }
-            ]
-        },
-        {
-            "UID": 1438318385,
-            "ParentUID": 1799599679,
-            "PrefabID": 0,
-            "IsPrefab": false,
-            "Name": "Box029",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": true,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        28.743865966796875,
-                        2.659027099609375,
-                        70.782966613769531
-                    ],
-                    "LocalRotation": [
-                        -0.70710676908493042,
                         0,
                         0,
-                        0.70710676908493042
+                        0,
+                        1
                     ],
                     "LocalScale": [
                         1,
                         1,
                         1
                     ]
-                },
-                {
-                    "Type": 2,
-                    "UID": 1822475,
-                    "Name": "Box029.nemesh",
-                    "Path": "Library\/Meshes\/1822475.nemesh",
-                    "File": "1822475.nemesh",
-                    "ShowWireframe": false,
-                    "ShowBoundingBox": false
-                },
-                {
-                    "Type": 3,
-                    "Material": {
-                        "UID": 180996802,
-                        "Color": [
-                            0.5,
-                            0.5,
-                            0.5,
-                            1
-                        ],
-                        "Name": "Box029.nemat",
-                        "Path": "Library\/Materials\/180996802.nemat",
-                        "File": "180996802.nemat"
-                    },
-                    "Shader": {
-                        "UID": 382962109,
-                        "Name": "DefaultShader.shader",
-                        "Path": "Library\/Shaders\/382962109.neshader",
-                        "File": "382962109.neshader"
-                    }
                 }
             ]
         },
@@ -2327,6 +3022,94 @@
             ]
         },
         {
+            "UID": 1516355198,
+            "ParentUID": 29461999,
+            "PrefabID": 454241799,
+            "IsPrefab": true,
+            "Name": "PilarAriza",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        2.2875161170959473,
+                        5.6588726043701172,
+                        -1.0522762537002563
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {},
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 25,
+                    "Size Y": 10,
+                    "Size Z": 25,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
+                }
+            ]
+        },
+        {
+            "UID": 1553718116,
+            "ParentUID": 1364469552,
+            "PrefabID": 136915163,
+            "IsPrefab": true,
+            "Name": "Thick_Obstacle2",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -41.8759765625,
+                        5.5,
+                        -30.666488647460938
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {},
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 6,
+                    "Size Y": 10,
+                    "Size Z": 6,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
+                }
+            ]
+        },
+        {
             "UID": 1557357956,
             "ParentUID": 827760208,
             "PrefabID": 1638586207,
@@ -2355,6 +3138,100 @@
                         1,
                         1
                     ]
+                }
+            ]
+        },
+        {
+            "UID": 1567616380,
+            "ParentUID": 29461999,
+            "PrefabID": 136915163,
+            "IsPrefab": true,
+            "Name": "Ruins4",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -2.2737362123312344e-13,
+                        7.62939453125e-06,
+                        1.9073484054388246e-06
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1580950593,
+            "ParentUID": 1955829472,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Box291",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -145.50718688964844,
+                        -0.4447174072265625,
+                        163.31669616699219
+                    ],
+                    "LocalRotation": [
+                        -0.70710670948028564,
+                        0,
+                        0,
+                        0.7071068286895752
+                    ],
+                    "LocalScale": [
+                        1.5,
+                        1.4999998807907104,
+                        1.4999998807907104
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 234391915,
+                    "Name": "Box291.nemesh",
+                    "Path": "Library\/Meshes\/234391915.nemesh",
+                    "File": "234391915.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 2018764309,
+                        "Color": [
+                            0.80000001192092896,
+                            0.80000001192092896,
+                            0.80000001192092896,
+                            1
+                        ],
+                        "Name": "Box291.nemat",
+                        "Path": "Library\/Materials\/2018764309.nemat",
+                        "File": "2018764309.nemat"
+                    },
+                    "Shader": {
+                        "UID": 382962109,
+                        "Name": "DefaultShader.shader",
+                        "Path": "Library\/Shaders\/382962109.neshader",
+                        "File": "382962109.neshader"
+                    }
                 }
             ]
         },
@@ -2391,6 +3268,38 @@
             ]
         },
         {
+            "UID": 1589692813,
+            "ParentUID": 888400124,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "EmptyGameObject",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0.7071068286895752,
+                        0,
+                        0.7071068286895752
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
             "UID": 1596323161,
             "ParentUID": 1744036067,
             "PrefabID": 1749742898,
@@ -2404,9 +3313,9 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        12.302928924560547,
-                        4.797086238861084,
-                        -67.277999877929688
+                        -0.040486510843038559,
+                        4,
+                        -86.502311706542969
                     ],
                     "LocalRotation": [
                         0,
@@ -2425,8 +3334,8 @@
                     "Type": 9,
                     "Is Trigger": false,
                     "Show Collider": true,
-                    "Size X": 140,
-                    "Size Y": 6,
+                    "Size X": 160,
+                    "Size Y": 10,
                     "Size Z": 5,
                     "Center X": 0,
                     "Center Y": 0,
@@ -2549,6 +3458,130 @@
             ]
         },
         {
+            "UID": 1634633380,
+            "ParentUID": 1955829472,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Box337",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        4.5762004852294922,
+                        -1.31707763671875,
+                        -2.0708179473876953
+                    ],
+                    "LocalRotation": [
+                        -0.7071068286895752,
+                        1.5408093204105633e-11,
+                        -1.5408093204105633e-11,
+                        0.7071068286895752
+                    ],
+                    "LocalScale": [
+                        0.99999940395355225,
+                        0.99999940395355225,
+                        0.99999994039535522
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 1062159862,
+                    "Name": "Box337.nemesh",
+                    "Path": "Library\/Meshes\/1062159862.nemesh",
+                    "File": "1062159862.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 32367857,
+                        "Color": [
+                            0.80000001192092896,
+                            0.80000001192092896,
+                            0.80000001192092896,
+                            1
+                        ],
+                        "Name": "Box337.nemat",
+                        "Path": "Library\/Materials\/32367857.nemat",
+                        "File": "32367857.nemat"
+                    },
+                    "Shader": {
+                        "UID": 382962109,
+                        "Name": "DefaultShader.shader",
+                        "Path": "Library\/Shaders\/382962109.neshader",
+                        "File": "382962109.neshader"
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 1637181799,
+            "ParentUID": 1955829472,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Box334",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -64.084320068359375,
+                        -6.0064010620117188,
+                        96.572074890136719
+                    ],
+                    "LocalRotation": [
+                        -0.49999997019767761,
+                        0.49999997019767761,
+                        0.49999997019767761,
+                        0.49999997019767761
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 244496360,
+                    "Name": "Box334.nemesh",
+                    "Path": "Library\/Meshes\/244496360.nemesh",
+                    "File": "244496360.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 1125693438,
+                        "Color": [
+                            0.80000001192092896,
+                            0.80000001192092896,
+                            0.80000001192092896,
+                            1
+                        ],
+                        "Name": "Box334.nemat",
+                        "Path": "Library\/Materials\/1125693438.nemat",
+                        "File": "1125693438.nemat"
+                    },
+                    "Shader": {
+                        "UID": 382962109,
+                        "Name": "DefaultShader.shader",
+                        "Path": "Library\/Shaders\/382962109.neshader",
+                        "File": "382962109.neshader"
+                    }
+                }
+            ]
+        },
+        {
             "UID": 1649437780,
             "ParentUID": 542559964,
             "PrefabID": 1638586207,
@@ -2581,6 +3614,50 @@
             ]
         },
         {
+            "UID": 1650988522,
+            "ParentUID": 1567616380,
+            "PrefabID": 136915163,
+            "IsPrefab": true,
+            "Name": "Thick_Obstacle",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        50.430046081542969,
+                        5.4999923706054688,
+                        -47.706966400146484
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {},
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 10,
+                    "Size Y": 10,
+                    "Size Z": 10,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
+                }
+            ]
+        },
+        {
             "UID": 1658336502,
             "ParentUID": 719369895,
             "PrefabID": 1638586207,
@@ -2609,6 +3686,50 @@
                         1,
                         1
                     ]
+                }
+            ]
+        },
+        {
+            "UID": 1671427108,
+            "ParentUID": 1567616380,
+            "PrefabID": 136915163,
+            "IsPrefab": true,
+            "Name": "Thick_Obstacle5",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        50.517040252685547,
+                        5.4999771118164063,
+                        -37.725399017333984
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {},
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 3,
+                    "Size Y": 10,
+                    "Size Z": 11,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
                 }
             ]
         },
@@ -2658,9 +3779,9 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        -38.525466918945313,
-                        4.1752047538757324,
-                        1.0594387054443359
+                        -84.840583801269531,
+                        4.0000019073486328,
+                        -2.1451666355133057
                     ],
                     "LocalRotation": [
                         0,
@@ -2669,9 +3790,9 @@
                         0.70710670948028564
                     ],
                     "LocalScale": [
-                        1.0000001192092896,
+                        0.99999982118606567,
                         1,
-                        1.0000001192092896
+                        0.99999982118606567
                     ]
                 },
                 {},
@@ -2679,7 +3800,7 @@
                     "Type": 9,
                     "Is Trigger": false,
                     "Show Collider": true,
-                    "Size X": 140,
+                    "Size X": 160,
                     "Size Y": 6,
                     "Size Z": 5,
                     "Center X": 0,
@@ -2771,6 +3892,68 @@
             ]
         },
         {
+            "UID": 1739274770,
+            "ParentUID": 1955829472,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Box318",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        94.295585632324219,
+                        -6.0064010620117188,
+                        79.884246826171875
+                    ],
+                    "LocalRotation": [
+                        -3.0908619663705394e-08,
+                        0.70710676908493042,
+                        0.70710676908493042,
+                        3.0908619663705394e-08
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 2035842428,
+                    "Name": "Box318.nemesh",
+                    "Path": "Library\/Meshes\/2035842428.nemesh",
+                    "File": "2035842428.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 1317494141,
+                        "Color": [
+                            0.80000001192092896,
+                            0.80000001192092896,
+                            0.80000001192092896,
+                            1
+                        ],
+                        "Name": "Box318.nemat",
+                        "Path": "Library\/Materials\/1317494141.nemat",
+                        "File": "1317494141.nemat"
+                    },
+                    "Shader": {
+                        "UID": 382962109,
+                        "Name": "DefaultShader.shader",
+                        "Path": "Library\/Shaders\/382962109.neshader",
+                        "File": "382962109.neshader"
+                    }
+                }
+            ]
+        },
+        {
             "UID": 1743182464,
             "ParentUID": 1985226854,
             "PrefabID": 1524961430,
@@ -2822,7 +4005,7 @@
         },
         {
             "UID": 1744036067,
-            "ParentUID": 888400124,
+            "ParentUID": 1589692813,
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "Walls",
@@ -2840,9 +4023,9 @@
                     ],
                     "LocalRotation": [
                         0,
-                        0.7071068286895752,
                         0,
-                        0.7071068286895752
+                        0,
+                        1
                     ],
                     "LocalScale": [
                         1,
@@ -3013,38 +4196,6 @@
             ]
         },
         {
-            "UID": 1799599679,
-            "ParentUID": 888400124,
-            "PrefabID": 0,
-            "IsPrefab": false,
-            "Name": "Level1_bInit.fbx",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        0,
-                        0
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0.7071068286895752,
-                        0,
-                        0.7071068286895752
-                    ],
-                    "LocalScale": [
-                        0.5,
-                        0.34999999403953552,
-                        0.5
-                    ]
-                }
-            ]
-        },
-        {
             "UID": 1809315957,
             "ParentUID": 398823540,
             "PrefabID": 1638586207,
@@ -3077,11 +4228,11 @@
             ]
         },
         {
-            "UID": 1891795093,
-            "ParentUID": 1799599679,
-            "PrefabID": 0,
-            "IsPrefab": false,
-            "Name": "Box093",
+            "UID": 1834069660,
+            "ParentUID": 1567616380,
+            "PrefabID": 136915163,
+            "IsPrefab": true,
+            "Name": "Thick_Obstacle2",
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
@@ -3090,15 +4241,15 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        -75.6502685546875,
-                        21.163055419921875,
-                        22.393779754638672
+                        33.623714447021484,
+                        5.4999923706054688,
+                        -47.720527648925781
                     ],
                     "LocalRotation": [
-                        -0.70710676908493042,
                         0,
                         0,
-                        0.70710676908493042
+                        0,
+                        1
                     ],
                     "LocalScale": [
                         1,
@@ -3106,35 +4257,105 @@
                         1
                     ]
                 },
+                {},
                 {
-                    "Type": 2,
-                    "UID": 1346615596,
-                    "Name": "Box093.nemesh",
-                    "Path": "Library\/Meshes\/1346615596.nemesh",
-                    "File": "1346615596.nemesh",
-                    "ShowWireframe": false,
-                    "ShowBoundingBox": false
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 6,
+                    "Size Y": 10,
+                    "Size Z": 6,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
+                }
+            ]
+        },
+        {
+            "UID": 1836278455,
+            "ParentUID": 994964817,
+            "PrefabID": 136915163,
+            "IsPrefab": true,
+            "Name": "Thick_Obstacle2",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        47.140548706054688,
+                        5.5,
+                        31.42671012878418
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
                 },
+                {},
                 {
-                    "Type": 3,
-                    "Material": {
-                        "UID": 30832037,
-                        "Color": [
-                            1,
-                            0.77254903316497803,
-                            0.50196081399917603,
-                            1
-                        ],
-                        "Name": "Box093.nemat",
-                        "Path": "Library\/Materials\/30832037.nemat",
-                        "File": "30832037.nemat"
-                    },
-                    "Shader": {
-                        "UID": 382962109,
-                        "Name": "DefaultShader.shader",
-                        "Path": "Library\/Shaders\/382962109.neshader",
-                        "File": "382962109.neshader"
-                    }
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 6,
+                    "Size Y": 10,
+                    "Size Z": 6,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
+                }
+            ]
+        },
+        {
+            "UID": 1893481987,
+            "ParentUID": 2065333054,
+            "PrefabID": 136915163,
+            "IsPrefab": true,
+            "Name": "Thick_Obstacle3",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -23.607513427734375,
+                        5.5,
+                        48.290164947509766
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {},
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 6,
+                    "Size Y": 10,
+                    "Size Z": 6,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
                 }
             ]
         },
@@ -3253,11 +4474,11 @@
             ]
         },
         {
-            "UID": 1949151279,
-            "ParentUID": 1799599679,
+            "UID": 1938059897,
+            "ParentUID": 1955829472,
             "PrefabID": 0,
             "IsPrefab": false,
-            "Name": "Box145",
+            "Name": "Box321",
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
@@ -3266,15 +4487,15 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        44.718887329101563,
-                        0,
-                        -50.898769378662109
+                        -83.323944091796875,
+                        -1.1828651428222656,
+                        -94.630653381347656
                     ],
                     "LocalRotation": [
-                        -0.0038829387631267309,
-                        0.70709609985351563,
-                        0.70709609985351563,
-                        0.0038829387631267309
+                        -0.49999997019767761,
+                        0.49999997019767761,
+                        0.49999997019767761,
+                        0.49999997019767761
                     ],
                     "LocalScale": [
                         1,
@@ -3284,26 +4505,26 @@
                 },
                 {
                     "Type": 2,
-                    "UID": 222057682,
-                    "Name": "Box145.nemesh",
-                    "Path": "Library\/Meshes\/222057682.nemesh",
-                    "File": "222057682.nemesh",
+                    "UID": 1123064380,
+                    "Name": "Box321.nemesh",
+                    "Path": "Library\/Meshes\/1123064380.nemesh",
+                    "File": "1123064380.nemesh",
                     "ShowWireframe": false,
                     "ShowBoundingBox": false
                 },
                 {
                     "Type": 3,
                     "Material": {
-                        "UID": 143103769,
+                        "UID": 1133096357,
                         "Color": [
                             0.80000001192092896,
                             0.80000001192092896,
                             0.80000001192092896,
                             1
                         ],
-                        "Name": "Box145.nemat",
-                        "Path": "Library\/Materials\/143103769.nemat",
-                        "File": "143103769.nemat"
+                        "Name": "Box321.nemat",
+                        "Path": "Library\/Materials\/1133096357.nemat",
+                        "File": "1133096357.nemat"
                     },
                     "Shader": {
                         "UID": 382962109,
@@ -3342,6 +4563,38 @@
                         1,
                         1,
                         1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1955829472,
+            "ParentUID": 1589692813,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Level1_bEnd.fbx",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        0.5,
+                        0.5,
+                        0.5
                     ]
                 }
             ]
@@ -3503,6 +4756,50 @@
             ]
         },
         {
+            "UID": 2009275562,
+            "ParentUID": 1567616380,
+            "PrefabID": 136915163,
+            "IsPrefab": true,
+            "Name": "Thick_Obstacle4",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        41.161182403564453,
+                        5.5,
+                        -47.777694702148438
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {},
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 10,
+                    "Size Y": 10,
+                    "Size Z": 3,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
+                }
+            ]
+        },
+        {
             "UID": 2011782141,
             "ParentUID": 461625288,
             "PrefabID": 1638586207,
@@ -3563,6 +4860,68 @@
                         0.99999988079071045,
                         0.99999994039535522
                     ]
+                }
+            ]
+        },
+        {
+            "UID": 2027711680,
+            "ParentUID": 1955829472,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Box292",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -160.08416748046875,
+                        -0.4447174072265625,
+                        -143.91813659667969
+                    ],
+                    "LocalRotation": [
+                        -0.49999997019767761,
+                        -0.49999997019767761,
+                        -0.49999997019767761,
+                        0.49999997019767761
+                    ],
+                    "LocalScale": [
+                        1.5,
+                        1.5,
+                        1.5
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 234391915,
+                    "Name": "Box291.nemesh",
+                    "Path": "Library\/Meshes\/234391915.nemesh",
+                    "File": "234391915.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 2018764309,
+                        "Color": [
+                            0.80000001192092896,
+                            0.80000001192092896,
+                            0.80000001192092896,
+                            1
+                        ],
+                        "Name": "Box291.nemat",
+                        "Path": "Library\/Materials\/2018764309.nemat",
+                        "File": "2018764309.nemat"
+                    },
+                    "Shader": {
+                        "UID": 382962109,
+                        "Name": "DefaultShader.shader",
+                        "Path": "Library\/Shaders\/382962109.neshader",
+                        "File": "382962109.neshader"
+                    }
                 }
             ]
         },
@@ -3713,6 +5072,82 @@
             ]
         },
         {
+            "UID": 2065333054,
+            "ParentUID": 29461999,
+            "PrefabID": 136915163,
+            "IsPrefab": true,
+            "Name": "Ruins1",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        7.62939453125e-06,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 2079780085,
+            "ParentUID": 2065333054,
+            "PrefabID": 136915163,
+            "IsPrefab": true,
+            "Name": "Thick_Obstacle5",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": true,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -40.274715423583984,
+                        5.4999980926513672,
+                        38.482803344726563
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {},
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 3,
+                    "Size Y": 10,
+                    "Size Z": 11,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
+                }
+            ]
+        },
+        {
             "UID": 2111041631,
             "ParentUID": 843615158,
             "PrefabID": 1638586207,
@@ -3740,38 +5175,6 @@
                         1,
                         0.99999994039535522,
                         0.99999994039535522
-                    ]
-                }
-            ]
-        },
-        {
-            "UID": 2126189301,
-            "ParentUID": 888400124,
-            "PrefabID": 0,
-            "IsPrefab": false,
-            "Name": "Obstacles",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        0,
-                        0
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
                     ]
                 }
             ]
