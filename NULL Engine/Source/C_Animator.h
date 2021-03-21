@@ -19,8 +19,10 @@ namespace math
 
 class ParsonNode;
 
-class GameObject;
 class R_Animation;
+
+class GameObject;
+class C_Transform;
 
 struct Channel;
 
@@ -146,7 +148,8 @@ private:																													// --- BONE/CHANNEL UPDATE METHODS
 	void			UpdateDisplayBones						();
 	void			GenerateBoneSegments					(const GameObject* bone);
 	
-	Transform		GetInterpolatedTransform				(double keyframe, const Channel& channel, const Transform& originalTransform) const;
+	//Transform		GetInterpolatedTransform				(double keyframe, const Channel& channel, const Transform& originalTransform) const;
+	Transform		GetInterpolatedTransform				(double keyframe, const Channel& channel, C_Transform* originalTransform) const;
 	const float3	GetInterpolatedPosition					(double keyframe, const Channel& channel) const;
 	const Quat		GetInterpolatedRotation					(double keyframe, const Channel& channel) const;
 	const float3	GetInterpolatedScale					(double keyframe, const Channel& channel) const;
