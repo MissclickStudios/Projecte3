@@ -6,27 +6,27 @@
 #include "M_Input.h"
 #include "M_Scene.h"
 #include "M_ResourceManager.h"
-
-#include "GameObject.h"
-#include "C_RigidBody.h"
-#include "C_Mesh.h"
-
-#include "C_RigidBody.h"
-#include "C_Transform.h"
-#include "C_PlayerController.h"
-#include "C_SphereCollider.h"
-#include "C_Camera.h"
 #include "M_Camera3D.h"
 #include "M_Window.h"
 #include "M_Editor.h"
 #include "M_Audio.h"
+
+#include "GameObject.h"
+
+#include "C_RigidBody.h"
+#include "C_Mesh.h"
+#include "C_RigidBody.h"
+#include "C_Transform.h"
+#include "C_PlayerController.h"
+#include "C_BoxCollider.h"
+#include "C_BulletBehavior.h"
+#include "C_Camera.h"
 #include "C_AudioSource.h"
 #include "C_Material.h"
 
 #include "MathGeoLib/include/Geometry/Line.h"
 
 #define MAX_JOYSTICK_INPUT 32767
-
 
 C_PlayerController::C_PlayerController(GameObject* owner) : Component(owner, ComponentType::PLAYER_CONTROLLER)
 {
@@ -48,18 +48,40 @@ bool C_PlayerController::Update()
 	if (App->gameState != GameState::PLAY)
 		return true;
 
+	if (!bulletStorage)
+	{
+		bulletStorage = App->scene->CreateGameObject("Bullets", App->scene->GetSceneRoot());
+		for (uint i = 0; i < BULLET_AMOUNT; ++i)
+			bullets[i] = CreateBullet(i);
+	}
+
 	Movement();
 	Weapon();
 	HandleHp();
-
-	
 
 	return true;
 }
 
 bool C_PlayerController::CleanUp()
 {
+	if (bulletStorage)
+	{
+		for (uint i = 0; i < BULLET_AMOUNT; ++i)
+		{
+			delete bullets[i];
+			bullets[i] = nullptr;
+		}
+	
+		App->scene->DeleteGameObject(bulletStorage);
+		bulletStorage = nullptr;
+	}
+
 	return true;
+}
+
+void SetNullptr(GameObject* object)
+{
+	object = nullptr;
 }
 
 bool C_PlayerController::SaveState(ParsonNode& root) const
@@ -219,7 +241,7 @@ void C_PlayerController::Weapon()
 		if (!automatic)
 		{
 			if (App->input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_DOWN || App->input->GetGameControllerTrigger(1) == ButtonState::BUTTON_DOWN)
-				SpawnBullet(lastAim);
+				FireBullet(lastAim);
 		}
 		else
 		{
@@ -227,12 +249,12 @@ void C_PlayerController::Weapon()
 			{
 				if (!fireRateTimer.IsActive())
 				{
-					SpawnBullet(lastAim);
+					FireBullet(lastAim);
 					fireRateTimer.Start();
 				}
 				else if (fireRateTimer.ReadSec() >= fireRate)
 				{
-					SpawnBullet(lastAim);
+					FireBullet(lastAim);
 					fireRateTimer.Stop();
 					fireRateTimer.Start();
 				}
@@ -241,37 +263,79 @@ void C_PlayerController::Weapon()
 	}
 }
 
-void C_PlayerController::SpawnBullet(float3 direction)
+Bullet* C_PlayerController::CreateBullet(uint index)
 {
-	if (direction.IsZero())
-		++direction.z;
-
 	Resource* resource = App->resourceManager->GetResourceFromLibrary("Assets/Models/Primitives/sphere.fbx");
+
+	GameObject* bullet;
 	if (!resource)
-		return;
+		bullet = App->scene->CreateGameObject("Bullets", bulletStorage);
+	else
+		bullet = App->scene->GenerateGameObjectsFromModel((R_Model*)resource, { 0.5, 0.5, 0.5 });
 
-	GameObject* bullet = App->scene->GenerateGameObjectsFromModel((R_Model*)resource);
+	char n[10];
+	sprintf_s(n, "%d", index);
+	std::string num = n;
+	std::string name("Bullet" + num);
 
-	float3 position = GetOwner()->transform->GetWorldPosition();
-	position.y += 4;
+	bullet->SetName(name.c_str());
+	bullet->SetParent(bulletStorage);
 
+	float3 position = float3::zero;
 	bullet->transform->SetWorldPosition(position);
+
 	C_RigidBody* rigidBody = (C_RigidBody*)bullet->CreateComponent(ComponentType::RIGIDBODY);
 	rigidBody->FreezePositionY(true);
 	rigidBody->FreezeRotationX(true);
 	rigidBody->FreezeRotationY(true);
 	rigidBody->FreezeRotationZ(true);
-	rigidBody->SetLinearVelocity(direction * bulletSpeed);
-	((C_SphereCollider*)bullet->CreateComponent(ComponentType::SPHERE_COLLIDER))->SetTrigger(true);
-	bullet->CreateComponent(ComponentType::BULLET_BEHAVIOR);
+	((C_BoxCollider*)bullet->CreateComponent(ComponentType::BOX_COLLIDER))->SetTrigger(true);
+	((C_BulletBehavior*)bullet->CreateComponent(ComponentType::BULLET_BEHAVIOR))->SetShooter(GetOwner(), index);
 
 	bullet->CreateComponent(ComponentType::AUDIOSOURCE);
 	C_AudioSource* source = bullet->GetComponent<C_AudioSource>();
 	source->SetEvent("Mando_blaster_shot", App->audio->eventMap.at("Mando_blaster_shot"));
-	source->PlayFx(source->GetEventId()); 
 
-	float3 scale = { 0.5, 0.5, 0.5 };
-	bullet->transform->SetLocalScale(scale);
+	for (uint i = 0; i < bullet->components.size(); ++i)
+		bullet->components[i]->SetIsActive(false);
+	bullet->SetIsActive(false);
+
+	return new Bullet(bullet);
+}
+
+void C_PlayerController::FireBullet(float3 direction)
+{
+	if (direction.IsZero())
+		++direction.z;
+
+	GameObject* bullet = nullptr;
+
+	for(uint i = 0; i < BULLET_AMOUNT; ++i)
+		if (!bullets[i]->inUse)
+		{
+			bullets[i]->inUse = true;
+			bullet = bullets[i]->object;
+			break;
+		}
+	if (!bullet)
+		return;
+
+	float3 position = GetOwner()->transform->GetWorldPosition();
+	position.y += 4;
+	bullet->transform->SetWorldPosition(position);
+
+	bullet->GetComponent<C_BulletBehavior>()->StartAutodestructTimer();
+
+	C_RigidBody* rigidBody = bullet->GetComponent<C_RigidBody>();
+	rigidBody->TransformMovesRigidBody(true);
+	rigidBody->SetLinearVelocity(direction * bulletSpeed);
+
+	C_AudioSource* source = bullet->GetComponent<C_AudioSource>();
+	source->PlayFx(source->GetEventId());
+
+	bullet->SetIsActive(true);
+	for (uint i = 0; i < bullet->components.size(); ++i)
+		bullet->components[i]->SetIsActive(true);
 
 	--ammo;
 }

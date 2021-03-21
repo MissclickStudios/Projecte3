@@ -7,9 +7,21 @@
 
 #include "MathGeoLib/include/Math/float3.h"
 
+#define BULLET_AMOUNT 10
+
 class C_AudioSource;
 class C_RigidBody;
 class GameObject;
+
+struct Bullet
+{
+	Bullet() : inUse(false), object(nullptr) {}
+	Bullet(GameObject* object) : inUse(false), object(object) {}
+	Bullet(bool inUse, GameObject* object) : inUse(inUse), object(object) {}
+
+	bool inUse;
+	GameObject* object;
+};
 
 class C_PlayerController : public Component
 {
@@ -54,6 +66,8 @@ public:
 	const float DashColdown() const { return dashingColdown; }
 	void SetDashColdown(float time) { dashingColdown = time; }
 
+	Bullet* bullets[BULLET_AMOUNT];
+
 private: 
 
 	void Movement();
@@ -62,7 +76,8 @@ private:
 	void Rotate();
 
 	void Weapon();
-	void SpawnBullet(float3 direction);
+	Bullet* CreateBullet(uint index);
+	void FireBullet(float3 direction);
 	void Reload();
 
 	void StepSound();
@@ -93,6 +108,8 @@ private:
 	bool automatic = true;
 
 	Timer fireRateTimer;
+
+	GameObject* bulletStorage = nullptr;
 
 	// Dash
 	float dashSpeed = 100.0f;

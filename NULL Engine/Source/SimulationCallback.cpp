@@ -65,8 +65,6 @@ void SimulationCallback::onTrigger(physx::PxTriggerPair* pairs, physx::PxU32 cou
 
 		if (gameObject1 != nullptr && gameObject2 != nullptr)
 		{
-			if (gameObject1->GetComponent<C_PlayerController>())
-				return;
 			if (gameObject2->GetComponent<C_PlayerController>())
 				return;
 			if ((pairs[i].status & physx::PxPairFlag::eNOTIFY_TOUCH_FOUND))
@@ -76,12 +74,6 @@ void SimulationCallback::onTrigger(physx::PxTriggerPair* pairs, physx::PxU32 cou
 					gameObject1->GetComponent<C_BulletBehavior>()->OnCollisionEnter();
 					if (gameObject2->GetComponent<C_PropBehavior>())
 						gameObject2->GetComponent<C_PropBehavior>()->OnCollisionEnter();
-				}
-				if (gameObject2->GetComponent<C_BulletBehavior>())
-				{
-					gameObject2->GetComponent<C_BulletBehavior>()->OnCollisionEnter();
-					if (gameObject1->GetComponent<C_PropBehavior>())
-						gameObject1->GetComponent<C_PropBehavior>()->OnCollisionEnter();
 				}
 			}
 			else if ((pairs[i].status & physx::PxPairFlag::eNOTIFY_TOUCH_LOST))
