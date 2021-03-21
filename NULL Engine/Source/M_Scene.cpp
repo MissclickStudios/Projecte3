@@ -82,6 +82,7 @@ bool M_Scene::Start()
 	
 	//level.AddFixedRoom("Shop", 16);                            
 	level.AddFixedRoom("Start", 1); 
+	level.AddFixedRoom("Boss", 15);
 	
 	level.GenerateRoom(0);
 
