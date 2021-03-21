@@ -36,5 +36,5 @@ bool C_PropBehavior::LoadState(ParsonNode& root)
 
 void C_PropBehavior::OnCollisionEnter()
 {
-	GetOwner()->to_delete = true;
+	GetOwner()->to_delete = true; //TODO Crashes
 }
