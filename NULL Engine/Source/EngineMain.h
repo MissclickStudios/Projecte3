@@ -74,7 +74,7 @@ int main(int argc, char ** argv)
 
 		case MainStatus::UPDATE:
 		{
-			UpdateStatus updateReturn = App->Update();							//Why App->Update???
+			UpdateStatus updateReturn = App->Update();							//Why App->Update???  Because it needs to be called in order to have updates each frame???
 
 			if (updateReturn == UpdateStatus::THROW_ERROR)
 			{
