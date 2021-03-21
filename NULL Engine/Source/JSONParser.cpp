@@ -564,7 +564,7 @@ void ParsonArray::SetColor(const Color& color)
 
 	(statusR == JSONFailure) ? LOG("[ERROR] JSON Parser: Could not append Red to %s Array!", name)		: ++size;			// If an operation was not successful then an ERROR is sent
 	(statusG == JSONFailure) ? LOG("[ERROR] JSON Parser: Could not append Green to %s Array!", name)	: ++size;			// to the console.
-	(statusB == JSONFailure) ? LOG("[ERROR] JSON Parser: Could not append Blue to %s Array!", name)	: ++size;			// On success the size variable will be updated.
+	(statusB == JSONFailure) ? LOG("[ERROR] JSON Parser: Could not append Blue to %s Array!", name)		: ++size;			// On success the size variable will be updated.
 	(statusA == JSONFailure) ? LOG("[ERROR] JSON Parser: Could not append Alpha to %s Array!", name)	: ++size;			// ---------------------------------------------------------
 }
 

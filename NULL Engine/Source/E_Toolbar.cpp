@@ -2,6 +2,7 @@
 #include "Time.h"
 #include "EngineApplication.h"
 #include "E_Toolbar.h"
+#include "M_ScriptManager.h"
 
 #include "MemoryManager.h"
 
@@ -61,6 +62,8 @@ void E_Toolbar::PlayAndStopButtons()
 
 			EngineApp->play = true;
 			EngineApp->pause = false;
+
+			EngineApp->scriptManager->InitScripts();
 		}
 	}
 	else
@@ -73,6 +76,8 @@ void E_Toolbar::PlayAndStopButtons()
 
 			EngineApp->play = false;
 			EngineApp->pause = false;
+
+			EngineApp->scriptManager->CleanUpScripts();
 		}
 	}
 }

@@ -11,6 +11,7 @@
 #include "I_Folders.h"
 #include "I_Animations.h"
 #include "I_Shaders.h"
+#include "I_Scripts.h"
 
 #include "Application.h"
 #include "FileSystemDefinitions.h"
@@ -25,6 +26,7 @@
 #include "R_Scene.h"
 #include "R_Animation.h"
 #include "R_Shader.h"
+#include "R_Script.h"
 
 #include "M_ResourceManager.h"
 
@@ -200,6 +202,7 @@ void M_ResourceManager::RefreshDirectory(const char* directory, std::vector<std:
 	std::vector<std::string> metaFiles;
 	std::map<std::string, std::string> filePairs;
 
+	//TODO: We are 2 discover files when we can do just 1 run
 	App->fileSystem->DiscoverAllFiles(directory, assetFiles, directories, DOTLESS_META_EXTENSION);				// Directories (folders) will be ignored for now.
 	App->fileSystem->GetAllFilesWithExtension(directory, DOTLESS_META_EXTENSION, metaFiles);
 	
@@ -619,6 +622,10 @@ bool M_ResourceManager::GetLibraryDirectoryAndExtensionFromType(const ResourceTy
 		directory = SHADERS_PATH;
 		extension = SHADERS_EXTENSION;
 		break;
+	case ResourceType::SCRIPT:
+		directory = SCRIPTS_PATH;
+		extension = SCRIPTS_EXTENSION;
+		break;
 	case ResourceType::NONE:
 		ret = false;
 		break;
@@ -800,8 +807,9 @@ uint32 M_ResourceManager::ImportFromAssets(const char* assetsPath)
 		case ResourceType::MESH:		{ success = Importer::ImportMesh(buffer, (R_Mesh*)resource); }				break;
 		case ResourceType::TEXTURE:		{ success = Importer::ImportTexture(buffer, read, (R_Texture*)resource); }	break;
 		case ResourceType::SCENE:		{ /*success = HAVE A FUNCTIONAL R_SCENE AND LOAD/SAVE METHODS*/}			break;
-		case ResourceType::SHADER:		{success = Importer::Shaders::Import(resource->GetAssetsPath(), (R_Shader*)resource); } break;}
-
+		case ResourceType::SHADER:		{success = Importer::Shaders::Import(resource->GetAssetsPath(), (R_Shader*)resource); } break; //TODO: GetAssetsPath??? pas the path directly (assetsPath) / wasted the load of the file
+		case ResourceType::SCRIPT:		{success = Importer::Scripts::Import(assetsPath, buffer, read, (R_Script*)resource); }		break;//TODO: Importer for scripts ???
+		}
 		RELEASE_ARRAY(buffer);
 
 		if (!success)
@@ -921,6 +929,7 @@ uint M_ResourceManager::SaveResourceToLibrary(Resource* resource)
 	case ResourceType::SCENE:		{ /*written = TODO: HAVE A FUNCTIONAL R_SCENE AND SAVE/LOAD METHODS*/ }		break;
 	case ResourceType::ANIMATION:	{ written = Importer::Animations::Save((R_Animation*)resource, &buffer); }	break;
 	case ResourceType::SHADER:		{ written = Importer::Shaders::Save((R_Shader*)resource, &buffer); }		break;
+	case ResourceType::SCRIPT:		{ written = Importer::Scripts::Save((R_Script*)resource, &buffer); }		break;
 	}
 
 	RELEASE_ARRAY(buffer);
@@ -997,6 +1006,10 @@ ResourceType M_ResourceManager::GetTypeFromAssetsExtension(const char* assetsPat
 	{
 		type = ResourceType::SHADER;
 	}
+	else if (extension == "h")
+	{
+		type = ResourceType::SCRIPT;
+	}
 	else if (extension == "[NONE]")
 	{
 		type = ResourceType::FOLDER;
@@ -1052,6 +1065,10 @@ ResourceType M_ResourceManager::GetTypeFromLibraryExtension(const char* libraryP
 	else if (extension == SHADERS_EXTENSION)
 	{
 		type = ResourceType::SHADER;
+	}
+	else if (extension == SCRIPTS_EXTENSION) {
+
+		type = ResourceType::SCRIPT;
 	}
 	else
 	{
@@ -1284,6 +1301,7 @@ bool M_ResourceManager::ResourceHasMetaType(Resource* resource) const
 			|| type == ResourceType::MODEL
 			|| type == ResourceType::TEXTURE
 			|| type == ResourceType::SHADER);
+	//TODO: Script resource doesn't use meta files
 }
 
 Resource* M_ResourceManager::GetResourceFromLibrary(const char* assetsPath)
@@ -1332,6 +1350,7 @@ Resource* M_ResourceManager::CreateResource(ResourceType type, const char* asset
 	case ResourceType::SCENE:		{ resource = new R_Scene(); }		break;
 	case ResourceType::ANIMATION:	{ resource = new R_Animation(); }	break;
 	case ResourceType::SHADER:		{ resource = new R_Shader(); }		break;
+	case ResourceType::SCRIPT:		{ resource = new R_Script(); }		break;
 	}
 
 	if (resource != nullptr)
@@ -1504,6 +1523,7 @@ bool M_ResourceManager::AllocateResource(uint32 UID, const char* assetsPath)
 	case ResourceType::SCENE:		{ /*success = TODO: HAVE A FUNCTIONAL R_SCENE AND SAVE/LOAD METHODS*/ }			break;
 	case ResourceType::ANIMATION:	{ success = Importer::Animations::Load(buffer, (R_Animation*)resource); }		break;
 	case ResourceType::SHADER:		{ success = Importer::Shaders::Load(buffer, (R_Shader*)resource); }				break;
+	case ResourceType::SCRIPT:		{ success = Importer::Scripts::Load(buffer, (R_Script*)resource); }				break;
 	}
 
 	RELEASE_ARRAY(buffer);

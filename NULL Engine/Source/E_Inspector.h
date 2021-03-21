@@ -20,6 +20,7 @@ class C_BoxCollider;
 class C_SphereCollider;
 class C_CapsuleCollider;
 class C_Canvas;
+class C_Script;
 class C_PlayerController;
 class C_BulletBehavior;
 class C_PropBehavior;
@@ -63,6 +64,7 @@ private:
 	void DrawCapsuleColliderComponent	(C_CapsuleCollider* cCollider);
 	void DrawCanvasComponent			(C_Canvas* cCanvas);
 	void DrawUIImage					(UI_Image* image);
+	void DrawScriptComponent			(C_Script* cScript);
 	void DrawPlayerControllerComponent	(C_PlayerController* controller);
 	void DrawBulletBehaviorComponent	(C_BulletBehavior* behavior);
 	void DrawPropBehaviorComponent		(C_PropBehavior* behavior);

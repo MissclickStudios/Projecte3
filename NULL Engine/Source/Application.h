@@ -21,6 +21,7 @@ class M_ResourceManager;
 class M_Audio;
 class M_Physics;
 class M_UISystem;
+class M_ScriptManager;
 
 class NULL_API Application
 {
@@ -78,6 +79,7 @@ public:
 	M_Audio*				audio;
 	M_Physics*				physics;
 	M_UISystem*				uiSystem;
+	M_ScriptManager*		scriptManager;
 
 	bool					play;
 	bool					pause;														// Will keep track of whether or not the applcation is currently paused.

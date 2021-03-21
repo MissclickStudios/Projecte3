@@ -18,6 +18,7 @@
 #include "M_Audio.h"
 #include "M_Physics.h"
 #include "M_UISystem.h"
+#include "M_ScriptManager.h"
 
 #include "Application.h"
 
@@ -38,6 +39,7 @@ fileSystem		(nullptr),
 resourceManager	(nullptr),
 audio			(nullptr),
 uiSystem		(nullptr),
+scriptManager			(nullptr),
 logger			(nullptr)
 
 {
@@ -55,6 +57,7 @@ logger			(nullptr)
 	audio				= new M_Audio();
 	physics				= new M_Physics();
 	uiSystem 			= new M_UISystem();
+	scriptManager				= new M_ScriptManager();
 
 	// The order of calls is very important!
 	// Modules will Init() Start() and Update in this order

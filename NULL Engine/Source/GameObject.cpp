@@ -22,6 +22,7 @@
 #include "C_Animation.h"
 #include "C_AudioSource.h"
 #include "C_AudioListener.h"
+#include "C_Script.h"
 #include "C_RigidBody.h"
 #include "C_BoxCollider.h"
 #include "C_SphereCollider.h"
@@ -196,6 +197,7 @@ bool GameObject::LoadState(ParsonNode& root)
 			case ComponentType::ANIMATION: { component = new C_Animation(this); }	break;
 			case ComponentType::AUDIOSOURCE: { component = new C_AudioSource(this); } break;
 			case ComponentType::AUDIOLISTENER: { component = new C_AudioListener(this); } break;
+			case ComponentType::SCRIPT:			{component = new C_Script(this); }			break;
 			case ComponentType::RIGIDBODY:			{ component = new C_RigidBody(this); }			break;
 			case ComponentType::BOX_COLLIDER:		{ component = new C_BoxCollider(this); }		break;
 			case ComponentType::SPHERE_COLLIDER:	{ component = new C_SphereCollider(this); }		break;

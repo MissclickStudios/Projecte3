@@ -36,6 +36,7 @@
 #include "C_BulletBehavior.h"
 #include "C_PropBehavior.h"
 #include "C_CameraBehavior.h"
+#include "C_Script.h"
 
 #include "R_Shader.h"
 #include "R_Texture.h"
@@ -198,6 +199,7 @@ void E_Inspector::DrawComponents(GameObject* selectedGameObject)
 		case ComponentType::SPHERE_COLLIDER:	{ DrawSphereColliderComponent((C_SphereCollider*)component); }		break;
 		case ComponentType::CAPSULE_COLLIDER:	{ DrawCapsuleColliderComponent((C_CapsuleCollider*)component); }	break;
 		case ComponentType::CANVAS:				{ DrawCanvasComponent((C_Canvas*)component); }						break;
+		case ComponentType::SCRIPT:				{ DrawScriptComponent((C_Script*)component); }						break;
 		case ComponentType::PLAYER_CONTROLLER:	{ DrawPlayerControllerComponent((C_PlayerController*)component); }	break;
 		case ComponentType::BULLET_BEHAVIOR:	{ DrawBulletBehaviorComponent((C_BulletBehavior*)component); }		break;
 		case ComponentType::PROP_BEHAVIOR:		{ DrawPropBehaviorComponent((C_PropBehavior*)component); }			break;
@@ -1353,6 +1355,19 @@ void E_Inspector::DrawUIImage(UI_Image* image)
 
 }
 
+void E_Inspector::DrawScriptComponent(C_Script* cScript)
+{
+	//TODO: inspector script component
+	// if (cScript.name != nullptr) pot ser un script null!!!
+	bool show = true;
+	if (ImGui::CollapsingHeader("ScriptName", &show, ImGuiTreeNodeFlags_DefaultOpen))
+	{
+
+	}
+
+	ImGui::Separator();
+}
+
 void E_Inspector::DrawPlayerControllerComponent(C_PlayerController* cController)
 {
 	bool show = true;
@@ -1479,7 +1494,7 @@ void E_Inspector::DrawCameraBehaviorComponent(C_CameraBehavior* cBehavior)
 void E_Inspector::AddComponentCombo(GameObject* selectedGameObject)
 {
 
-	ImGui::Combo("##", &componentType, "Add Component\0Transform\0Mesh\0Material\0Light\0Camera\0Animator\0Animation\0RigidBody\0Box Collider\0Sphere Collider\0Capsule Collider\0Particle System\0Canvas\0Audio Source\0Audio Listener\0Player Controller\0Bullet Behavior\0Prop Behavior\0Camera Behavior");
+	ImGui::Combo("##", &componentType, "Add Component\0Transform\0Mesh\0Material\0Light\0Camera\0Animator\0Animation\0RigidBody\0Box Collider\0Sphere Collider\0Capsule Collider\0Particle System\0Canvas\0Audio Source\0Audio Listener\0Script\0Player Controller\0Bullet Behavior\0Prop Behavior\0Camera Behavior\0");
 	ImGui::SameLine();
 
 	if ((ImGui::Button("ADD")))
