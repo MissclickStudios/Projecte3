@@ -12,9 +12,9 @@
         {
             "Type": 1,
             "LocalPosition": [
-                5.8428497314453125,
-                1.1966648101806641,
-                -4.8528738021850586
+                -4.3688955307006836,
+                1.1966654062271118,
+                41.912239074707031
             ],
             "LocalRotation": [
                 0,
@@ -43,6 +43,57 @@
                 "AnimationName": "Take 001",
                 "Name": "Take 001 Default"
             }
+        },
+        {
+            "Type": 8,
+            "Mass": 10,
+            "Density": 1,
+            "Linear Damping": 0,
+            "Angular Damping": 0,
+            "Use Gravity": true,
+            "Is Kinematic": true,
+            "Freeze Position X": false,
+            "Freeze Position Y": true,
+            "Freeze Position Z": false,
+            "Freeze Rotation X": true,
+            "Freeze Rotation Y": true,
+            "Freeze Rotation Z": true,
+            "Is Static": false
+        },
+        {
+            "Type": 16,
+            "Speed": 20,
+            "Acceleration": 200,
+            "Deceleration": 200,
+            "Bullet Speed": 100,
+            "Fire Rate": 0.25,
+            "Ammo": 10,
+            "Max Ammo": 10,
+            "Automatic": true,
+            "Dash Speed": 100,
+            "Dash Time": 0.20000000298023224,
+            "Dash Coldown": 1
+        },
+        {
+            "Type": 14,
+            "Playing Event": [
+                "Mando_footsteps_desert",
+                407837268
+            ]
+        },
+        {
+            "Type": 15
+        },
+        {
+            "Type": 9,
+            "Is Trigger": false,
+            "Show Collider": true,
+            "Size X": 2,
+            "Size Y": 10,
+            "Size Z": 2,
+            "Center X": 0,
+            "Center Y": 0,
+            "Center Z": 0
         }
     ],
     "Children": [
@@ -60,9 +111,9 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        -9.9325933456420898,
-                        -3.5762786865234375e-07,
-                        37.175117492675781
+                        0,
+                        -1.1920928955078125e-07,
+                        0
                     ],
                     "LocalRotation": [
                         0,
