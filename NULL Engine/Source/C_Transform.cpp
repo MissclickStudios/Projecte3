@@ -1,3 +1,5 @@
+#include "Profiler.h"
+
 #include "JSONParser.h"
 
 #include "Application.h"
@@ -12,10 +14,10 @@
 #include "MemoryManager.h"
 
 C_Transform::C_Transform(GameObject* owner) : Component(owner, ComponentType::TRANSFORM),
-localTransform(float4x4::identity),
-worldTransform(float4x4::identity)
-//syncLocalToGlobal(false),
-//updateWorldTransform(false)
+localTransform			(float4x4::identity),
+worldTransform			(float4x4::identity)
+//syncLocalToGlobal		(false),
+//updateWorldTransform	(false)
 {	
 	localTransform.Decompose(localPosition, localRotation, localScale);
 
@@ -231,9 +233,11 @@ void C_Transform::ImportTransform(const float3& position, const Quat& rotation, 
 
 void C_Transform::ImportTransform(const Transform& transform)
 {
-	localPosition = transform.position;
-	localRotation = transform.rotation;
-	localScale = transform.scale;
+	OPTICK_CATEGORY("Import Transform", Optick::Category::Animation);
+	
+	localPosition	= transform.position;
+	localRotation	= transform.rotation;
+	localScale		= transform.scale;
 
 	localEulerRotation = localRotation.ToEulerXYZ();
 

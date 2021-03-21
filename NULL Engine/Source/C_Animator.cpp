@@ -1,17 +1,16 @@
 #include "MathGeoLib/include/Geometry/LineSegment.h"
-
 #include "Profiler.h"
-#include "JSONParser.h"
 
+#include "FileSystemDefinitions.h"
+#include "JSONParser.h"
 #include "Time.h"
+#include "EasingFunctions.h"
 
 #include "Channel.h"
 #include "BoneLink.h"
 #include "AnimatorClip.h"
 
 #include "Application.h"
-#include "FileSystemDefinitions.h"
-
 #include "M_ResourceManager.h"
 
 #include "R_Mesh.h"
@@ -349,8 +348,9 @@ void C_Animator::ResetBones()
 	
 	for (auto bone = currentBones.cbegin(); bone != currentBones.cend(); ++bone)
 	{
-		const Transform& transform = Transform(bone->gameObject->GetComponent<C_Transform>()->GetLocalTransform());
-		const Transform& interpolatedTransform = GetInterpolatedTransform((double)currentClip->GetStart(), bone->channel, transform);
+		//const Transform& transform = Transform(bone->gameObject->GetComponent<C_Transform>()->GetLocalTransform());
+		//const Transform& interpolatedTransform = GetInterpolatedTransform((double)currentClip->GetStart(), bone->channel, transform);
+		const Transform& interpolatedTransform = GetInterpolatedTransform((double)currentClip->GetStart(), bone->channel, bone->gameObject->GetComponent<C_Transform>());
 
 		bone->gameObject->GetComponent<C_Transform>()->ImportTransform(interpolatedTransform);
 	}
@@ -389,11 +389,9 @@ void C_Animator::UpdateChannelTransforms()
 			continue;
 		}
 
-		const Transform& originalTransform = Transform(cTransform->GetLocalTransform());
-		
 		if (interpolate)
 		{
-			Transform& interpolatedTransform = GetInterpolatedTransform(currentClip->GetAnimationFrame(), bone.channel, originalTransform);
+			Transform& interpolatedTransform = GetInterpolatedTransform(currentClip->GetAnimationFrame(), bone.channel, cTransform);
 			
 			if (BlendingClipExists())
 			{
@@ -404,9 +402,9 @@ void C_Animator::UpdateChannelTransforms()
 		}
 		else
 		{
-			if (currentClip->inNewTick)
+			/*if (currentClip->inNewTick)
 			{
-				Transform& poseToPoseTransform = GetPoseToPoseTransform(currentClip->GetAnimationTick(), bone.channel, originalTransform);
+				Transform& poseToPoseTransform = GetPoseToPoseTransform(currentClip->GetAnimationTick(), bone.channel, cTransform);
 
 				if (BlendingClipExists())
 				{
@@ -414,7 +412,7 @@ void C_Animator::UpdateChannelTransforms()
 				}
 
 				cTransform->ImportTransform(poseToPoseTransform);
-			}
+			}*/
 		}
 	}
 }
@@ -480,17 +478,21 @@ void C_Animator::GenerateBoneSegments(const GameObject* bone)
 	}
 }
 
-Transform C_Animator::GetInterpolatedTransform(double keyframe, const Channel& channel, const Transform& originalTransform) const
+Transform C_Animator::GetInterpolatedTransform(double keyframe, const Channel& channel, C_Transform* originalTransform) const
 {	
-	const float3&	newPosition	= (channel.HasPositionKeyframes()) ? GetInterpolatedPosition(keyframe, channel) : originalTransform.position;
-	const Quat&		newRotation	= (channel.HasRotationKeyframes()) ? GetInterpolatedRotation(keyframe, channel) : originalTransform.rotation;
-	const float3&	newScale	= (channel.HasScaleKeyframes()) ? GetInterpolatedScale(keyframe, channel) : originalTransform.scale;
+	OPTICK_CATEGORY("Get Interpolated Transform", Optick::Category::Animation);
+
+	const float3&	newPosition	= (channel.HasPositionKeyframes()) ? GetInterpolatedPosition(keyframe, channel) : originalTransform->GetLocalPosition();
+	const Quat&		newRotation	= (channel.HasRotationKeyframes()) ? GetInterpolatedRotation(keyframe, channel) : originalTransform->GetLocalRotation();
+	const float3&	newScale	= (channel.HasScaleKeyframes()) ? GetInterpolatedScale(keyframe, channel) : originalTransform->GetLocalScale();
 
 	return Transform(newPosition, newRotation, newScale);
 }
 
 const float3 C_Animator::GetInterpolatedPosition(double keyframe, const Channel& channel) const
 {
+	OPTICK_CATEGORY("Get Interpolated Position", Optick::Category::Animation);
+	
 	PositionKeyframe prevKeyframe = channel.GetClosestPrevPositionKeyframe(keyframe);
 	PositionKeyframe nextKeyframe = channel.GetClosestNextPositionKeyframe(keyframe);
 
@@ -501,12 +503,16 @@ const float3 C_Animator::GetInterpolatedPosition(double keyframe, const Channel&
 	else
 	{
 		float rate = (float)((keyframe - prevKeyframe->first) / (nextKeyframe->first - prevKeyframe->first));
+
 		return (prevKeyframe->second.Lerp(nextKeyframe->second, rate));
+		//return (EasingFunctions::Lineal(prevKeyframe->second, nextKeyframe->second, rate));
 	}
 }
 
 const Quat C_Animator::GetInterpolatedRotation(double keyframe, const Channel& channel) const
 {
+	OPTICK_CATEGORY("Get Interpolated Rotation", Optick::Category::Animation);
+	
 	RotationKeyframe prevKeyframe = channel.GetClosestPrevRotationKeyframe(keyframe);
 	RotationKeyframe nextKeyframe = channel.GetClosestNextRotationKeyframe(keyframe);
 
@@ -523,6 +529,8 @@ const Quat C_Animator::GetInterpolatedRotation(double keyframe, const Channel& c
 
 const float3 C_Animator::GetInterpolatedScale(double keyframe, const Channel& channel) const
 {
+	OPTICK_CATEGORY("Get Interpolated Scale", Optick::Category::Animation);
+	
 	ScaleKeyframe prevKeyframe = channel.GetClosestPrevScaleKeyframe(keyframe);
 	ScaleKeyframe nextKeyframe = channel.GetClosestNextScaleKeyframe(keyframe);
 
@@ -924,10 +932,11 @@ bool C_Animator::StepToPrevKeyframe()
 
 	for (uint i = 0; i < currentBones.size(); ++i)
 	{
-		const Transform& transform				= Transform(currentBones[i].gameObject->GetComponent<C_Transform>()->GetLocalTransform());
-		const Transform& interpolatedTransform	= GetInterpolatedTransform((double)currentClip->GetClipTick(), currentBones[i].channel, transform);
+		//const Transform& transform				= Transform(currentBones[i].gameObject->GetComponent<C_Transform>()->GetLocalTransform());
+		//const Transform& interpolatedTransform	= GetInterpolatedTransform((double)currentClip->GetClipTick(), currentBones[i].channel, transform);
+		const Transform& lerpedTransform = GetInterpolatedTransform((double)currentClip->GetClipTick(), currentBones[i].channel, currentBones[i].gameObject->GetComponent<C_Transform>());
 
-		currentBones[i].gameObject->GetComponent<C_Transform>()->ImportTransform(interpolatedTransform);
+		currentBones[i].gameObject->GetComponent<C_Transform>()->ImportTransform(lerpedTransform);
 	}
 
 	UpdateDisplayBones();
@@ -952,10 +961,11 @@ bool C_Animator::StepToNextKeyframe()
 
 	for (uint i = 0; i < currentBones.size(); ++i)
 	{
-		const Transform& transform				= Transform(currentBones[i].gameObject->GetComponent<C_Transform>()->GetLocalTransform());
-		const Transform& interpolatedTransform	= GetInterpolatedTransform((double)currentClip->GetClipTick(), currentBones[i].channel, transform);
+		//const Transform& transform				= Transform(currentBones[i].gameObject->GetComponent<C_Transform>()->GetLocalTransform());
+		//const Transform& interpolatedTransform	= GetInterpolatedTransform((double)currentClip->GetClipTick(), currentBones[i].channel, transform);
+		const Transform& lerpedTransform = GetInterpolatedTransform((double)currentClip->GetClipTick(), currentBones[i].channel, currentBones[i].gameObject->GetComponent<C_Transform>());
 
-		currentBones[i].gameObject->GetComponent<C_Transform>()->ImportTransform(interpolatedTransform);
+		currentBones[i].gameObject->GetComponent<C_Transform>()->ImportTransform(lerpedTransform);
 	}
 
 	UpdateDisplayBones();
