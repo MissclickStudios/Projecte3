@@ -22,10 +22,18 @@ public:
 
 	void OnCollisionEnter();
 
+	void SetShooter(GameObject* shooter, uint index);
+
 	const float GetAutodestruct() const { return autodestruct; }
 	void SetAutodestruct(float time) { autodestruct = time; }
 
+	void StartAutodestructTimer() { autodestructTimer.Start(); }
+
 private:
+
+	bool hit = false;
+	GameObject* shooter = nullptr;
+	uint index = 0;
 
 	float autodestruct = 3.0f;
 	Timer autodestructTimer;
