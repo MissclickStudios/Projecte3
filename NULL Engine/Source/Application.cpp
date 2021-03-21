@@ -155,17 +155,20 @@ bool Application::Start()												// IS IT NEEDED?
 	// After all Init calls we call Start() in all modules
 	LOG("Application Start --------------");
 
-	bool ret = true;
+	bool success = true;
 
-	std::vector<Module*>::iterator item = modules.begin();
+	//std::vector<Module*>::iterator item = modules.begin();
+	//while (item != modules.end() && success)								// Move to start()?
+	//{
+	//	if ((*item)->IsActive())
+	//	{
+	//		success = (*item)->Start();
+	//	}
 
-	while (item != modules.end() && ret)
-	{
-		ret = (*item)->Start();
-		++item;
-	}
+	//	++item;
+	//}
 	
-	return ret;
+	return success;
 }
 
 // Call PreUpdate, Update and PostUpdate on all modules

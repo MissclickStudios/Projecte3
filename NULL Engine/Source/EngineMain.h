@@ -65,9 +65,9 @@ int main(int argc, char ** argv)
 				/*bool success = App->Start();
 				state = (success) ? MainStatus::UPDATE : MainStatus::EXIT;*/
 
-				//state = (App->Start()) ? MainStatus::UPDATE : MainStatus::EXIT;
+				state = (App->Start()) ? MainStatus::UPDATE : MainStatus::EXIT;
 				
-				state = MainStatus::UPDATE;
+				//state = MainStatus::UPDATE;
 			}
 
 			break;
