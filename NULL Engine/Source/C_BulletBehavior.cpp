@@ -4,12 +4,15 @@
 #include "M_Scene.h"
 
 #include "C_BulletBehavior.h"
+#include "C_PlayerController.h"
+#include "C_Mesh.h"
+#include "C_Transform.h"
 
 #include "GameObject.h"
 
 C_BulletBehavior::C_BulletBehavior(GameObject* owner) : Component(owner, ComponentType::BULLET_BEHAVIOR)
 {
-	//autodestructTimer.Start(); // Deleting yourself crashes the engine
+	autodestructTimer.Stop();
 }
 
 C_BulletBehavior::~C_BulletBehavior()
@@ -19,7 +22,20 @@ C_BulletBehavior::~C_BulletBehavior()
 bool C_BulletBehavior::Update()
 {
 	if (autodestructTimer.ReadSec() >= autodestruct)
-		GetOwner()->to_delete = true;
+		hit = true;
+
+	if (hit)
+	{
+		hit = false;
+
+		GetOwner()->transform->SetWorldPosition(float3::zero);
+		for (uint i = 0; i < GetOwner()->components.size(); ++i)
+			GetOwner()->components[i]->SetIsActive(false);
+		GetOwner()->SetIsActive(false);
+
+		shooter->GetComponent<C_PlayerController>()->bullets[index]->inUse = false;
+		autodestructTimer.Stop();
+	}
 
 	return true;
 }
@@ -47,5 +63,11 @@ bool C_BulletBehavior::LoadState(ParsonNode& root)
 
 void C_BulletBehavior::OnCollisionEnter()
 {
-	GetOwner()->to_delete = true;
+	hit = true;
+}
+
+void C_BulletBehavior::SetShooter(GameObject* shooter, uint index)
+{
+	this->shooter = shooter;
+	this->index = index;
 }
