@@ -46,15 +46,26 @@ void EmitterSpawn::Update(float dt, EmitterInstance* emitter)
 	}
 }
 
-//void ParticlePosition::Spawn(EmitterInstance* emitter, Particle* particle)
-//{
-//	particle->position = initialPosition1;
-//}
-//
-//void ParticlePosition::Update(float dt, EmitterInstance* emitter)
-//{
-//
-//}
+void ParticleMovement::Spawn(EmitterInstance* emitter, Particle* particle)
+{
+	float directionX = math::Lerp(initialDirection1.x, initialDirection2.x, randomGenerator.Float());
+	float directionY = math::Lerp(initialDirection1.y, initialDirection2.y, randomGenerator.Float());
+	float directionZ = math::Lerp(initialDirection1.z, initialDirection2.z, randomGenerator.Float());
+	particle->movementDirection = float3(directionX, directionY, directionZ);
+
+	particle->velocity = math::Lerp(initialIntensity1, initialIntensity2, randomGenerator.Float());
+}
+
+void ParticleMovement::Update(float dt, EmitterInstance* emitter)
+{
+	for (unsigned int i = 0; i < emitter->activeParticles; i++)
+	{
+		unsigned int particleIndex = emitter->particleIndices[i];
+		Particle* particle = &emitter->particles[particleIndex];
+
+		particle->position += particle->movementDirection * particle->velocity * dt;
+	}
+}
 
 void ParticleColor::Spawn(EmitterInstance* emitter, Particle* particle)
 {
