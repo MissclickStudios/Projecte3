@@ -7,21 +7,21 @@ namespace Parser
 {
 	enum class ParsingState : unsigned int
 	{
-		CONTINUE,
 		ERROR,
+		CONTINUE,
 		ENDFILE
 	};
 
 	bool CheckNullterminatedBuffer(char* buffer, int size);
 	bool LanguageSymbol(char symbol);
-	bool PreaviousSymbolIs(char* symbol); //Careful reading outside buffer boundaries
-	ParsingState HandlePossibleComment(char* cursor);
-	ParsingState GoStartSymbol(char* cursor, char* symbol);
-	ParsingState GoEndSymbol(char* cursor, char* symbol);
+	bool PreaviousSymbolIs(char*& symbol); //Careful reading outside buffer boundaries
+	ParsingState HandlePossibleComment(char*& cursor);
+	ParsingState GoStartSymbol(char*& cursor, char* symbol);
+	ParsingState GoEndSymbol(char*& cursor, char* symbol);
 	//Read the symbol and leave the cursor pointing to the next character after the readed symbol
-	ParsingState ReadNextSymbol(char* cursor, char* startSymbol, unsigned int& symbolSize);
+	ParsingState ReadNextSymbol(char*& cursor, char*& startSymbol, unsigned int& symbolSize);
 	//Leave the cursor on the start of the next symbol
-	ParsingState GoNextSymbol(char* cursor);
+	ParsingState GoNextSymbol(char*& cursor);
 }
 
 namespace Importer

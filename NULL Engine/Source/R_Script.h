@@ -23,11 +23,11 @@ public:
 
 	bool NeedReload() const;
 
-	bool CleanUp() override;
+	//bool CleanUp() override;
 
-private:
+/*private:
 
-	std::string GetDataStructure(const std::string& line, const std::string& api);
+	std::string GetDataStructure(const std::string& line, const std::string& api);*/
 
 public:
 	uint64 lastTimeMod = 0;

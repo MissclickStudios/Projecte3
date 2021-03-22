@@ -15,18 +15,21 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="framework.h">
+    <ClInclude Include="..\Assets\Scripts\FirstScript.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="pch.h">
+    <ClInclude Include="..\Assets\Scripts\SecondScript.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Helpers\ScriptMacros.h">
+      <Filter>Resource Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="dllmain.cpp">
+    <ClCompile Include="Scripts\Cpps\FirstScript.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="pch.cpp">
+    <ClCompile Include="Scripts\Cpps\SecondScript.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

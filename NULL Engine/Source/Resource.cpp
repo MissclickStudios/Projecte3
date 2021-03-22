@@ -181,6 +181,9 @@ void Resource::SetLibraryPathAndFile()
 		directory = SHADERS_PATH;
 		extension = SHADERS_EXTENSION;
 		break;
+	case ResourceType::SCRIPT:
+		directory = SCRIPTS_PATH;
+		extension = SCRIPTS_EXTENSION;
 	}
 	
 	libraryPath = directory + file + extension;

@@ -13,7 +13,7 @@ bool Importer::Scripts::Import(const char* assetsPath, char* buffer, uint size, 
 {
 	//Parse the header file to find the scripts in it
 	char* cursor = buffer;
-	char api[] = "SCRITPS_ENGINE_API";
+	char api[] = "SCRIPTS_API";
 	char scriptBaseClass[] = "Script";
 	Parser::ParsingState currentState;
 
@@ -224,7 +224,7 @@ bool Importer::Scripts::Load(const char* buffer, R_Script* rScript)
 
 bool Parser::CheckNullterminatedBuffer(char* buffer, int size)
 {
-	return buffer[size - 1] == '\0';
+	return buffer[size] == '\0';
 }
 
 bool Parser::LanguageSymbol(char symbol)
@@ -234,7 +234,7 @@ bool Parser::LanguageSymbol(char symbol)
 		|| symbol == '&' || symbol == '%' || symbol == '~' || symbol == '#' || symbol == '<' || symbol == '>' || symbol == '|' || symbol == '^');
 }
 
-Parser::ParsingState Parser::HandlePossibleComment(char* cursor)
+Parser::ParsingState Parser::HandlePossibleComment(char*& cursor)
 {
 	if (*cursor == '/')
 	{
@@ -264,7 +264,7 @@ Parser::ParsingState Parser::HandlePossibleComment(char* cursor)
 	return Parser::ParsingState::CONTINUE;
 }
 
-Parser::ParsingState Parser::GoStartSymbol(char* cursor, char* symbol)
+Parser::ParsingState Parser::GoStartSymbol(char*& cursor, char* symbol)
 {
 	cursor = strstr(cursor, symbol);
 	if (cursor == nullptr)
@@ -272,7 +272,7 @@ Parser::ParsingState Parser::GoStartSymbol(char* cursor, char* symbol)
 	return Parser::ParsingState::CONTINUE;
 }
 
-Parser::ParsingState Parser::GoEndSymbol(char* cursor, char* symbol)
+Parser::ParsingState Parser::GoEndSymbol(char*& cursor, char* symbol)
 {
 	cursor = strstr(cursor, symbol);
 	if (cursor == nullptr)
@@ -281,7 +281,7 @@ Parser::ParsingState Parser::GoEndSymbol(char* cursor, char* symbol)
 	return Parser::ParsingState::CONTINUE;
 }
 
-Parser::ParsingState Parser::ReadNextSymbol(char* cursor, char* startSymbol, unsigned int& symbolSize)
+Parser::ParsingState Parser::ReadNextSymbol(char*& cursor, char*& startSymbol, unsigned int& symbolSize)
 {
 	symbolSize = 0;
 
@@ -322,11 +322,12 @@ Parser::ParsingState Parser::ReadNextSymbol(char* cursor, char* startSymbol, uns
 			return Parser::ParsingState::CONTINUE;
 
 		++symbolSize;
+		++cursor;
 	}
 	return Parser::ParsingState::CONTINUE;
 }
 
-Parser::ParsingState Parser::GoNextSymbol(char* cursor)
+Parser::ParsingState Parser::GoNextSymbol(char*& cursor)
 {
 	while (*cursor == ' ' || *cursor == '\t' || *cursor == '\n')
 	{

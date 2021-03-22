@@ -47,7 +47,7 @@ bool C_Script::SaveState(ParsonNode& root) const
 	root.SetNumber("Type", (uint)GetType());
 	root.SetNumber("ResourceUID", resourceUID);
 	root.SetString("DataName", dataName.c_str());
-	if (inspectorVariables.empty())
+	/*if (inspectorVariables.empty())
 		root.SetBool("HasInspector", false);
 	else 
 	{
@@ -57,7 +57,7 @@ bool C_Script::SaveState(ParsonNode& root) const
 		{
 			//TODO: Save all the inspector variables on the C_Script
 		}
-	}
+	}*/
 	return true;
 }
 
@@ -69,15 +69,16 @@ bool C_Script::LoadState(ParsonNode& root)
 	if (App->resourceManager->AllocateResource(resourceUID, std::string(ASSETS_SCRIPTS_PATH + dataName).c_str())) {
 
 		R_Script* rScript = (R_Script*)App->resourceManager->RequestResource((uint32)root.GetNumber("UID"));
-		if (root.GetBool("HasInspector"))
+		/*if (root.GetBool("HasInspector"))
 		{
 			ParsonArray variablesToLoad = root.GetArray("InspectorVariables");
-			for (int i = 0; i < variablesToLoad.size; ++i)
+			//TODO: InspectorData
+			/*for (int i = 0; i < variablesToLoad.size; ++i)
 			{
 				//TODO: Load all the inspector variables on the C_Script
 				inspectorVariables.push_back();
-			}
-		}
+			}*/
+		//}
 	}
 	else 
 	{

@@ -69,8 +69,8 @@ UpdateStatus M_ScriptManager::PreUpdate(float dt)
 		uint64 lastMod = App->fileSystem->GetLastModTime(SCRIPTS_DLL_OUTPUT);
 		if ( lastMod != lastModDll)
 		{
-			lastModDll = lastMod;
-			HotReload();
+			/*lastModDll = lastMod;
+			HotReload();*/
 		}
 	}
 #endif
@@ -213,7 +213,7 @@ void M_ScriptManager::HotReload()
 		if (App->fileSystem->Remove(SCRIPTS_DLL_WORKING))
 		{
 			LOG("Successfully removed scriptsDLL");
-			ReloadAllScripts();
+			//ReloadAllScripts();
 
 			while (MoveFileA(SCRIPTS_DLL_OUTPUT, SCRIPTS_DLL_WORKING) == FALSE) {}
 		}
@@ -222,7 +222,7 @@ void M_ScriptManager::HotReload()
 
 void M_ScriptManager::SerializeAllScripts(ParsonArray& scriptsArray)
 {
-	std::vector<GameObject*>* objects = App->scene->GetGameObjects();
+	/*std::vector<GameObject*>* objects = App->scene->GetGameObjects();
 	for (std::vector<GameObject*>::const_iterator it = (*objects).cbegin(); it!= (*objects).cend(); ++it)
 	{
 		if (*it != nullptr)
@@ -241,15 +241,15 @@ void M_ScriptManager::SerializeAllScripts(ParsonArray& scriptsArray)
 						scriptNode.SetNumber("ResourceScriptUID", (*cScript)->resource->GetUID()); //TODO: check if resource not null??? TODO: Guardar nomes el id poder???
 						scriptNode.SetString("DataName", (*cScript)->GetDataName().c_str());
 						scriptNode.SetNumber("ComponentScriptID", (*cScript)->GetID());
-						if (inspectorVariables)
+						*//*if (inspectorVariables)
 						{
 							//TODO:Fer les inspector variables !!!!!!!
-						}
+						}*//*
 					}
 				}
 			}
 		}
-	}
+	}*/
 }
 
 void M_ScriptManager::DeSerializeAllScripts(ParsonArray& scriptsArray)

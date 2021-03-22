@@ -1300,7 +1300,8 @@ bool M_ResourceManager::ResourceHasMetaType(Resource* resource) const
 	return (type == ResourceType::FOLDER
 			|| type == ResourceType::MODEL
 			|| type == ResourceType::TEXTURE
-			|| type == ResourceType::SHADER);
+			|| type == ResourceType::SHADER
+			|| type == ResourceType::SCRIPT);
 	//TODO: Script resource doesn't use meta files
 }
 

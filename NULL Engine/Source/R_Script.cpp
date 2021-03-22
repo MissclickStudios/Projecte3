@@ -13,9 +13,12 @@ R_Script::~R_Script()
 
 bool R_Script::SaveMeta(ParsonNode& metaRoot) const
 {
-	//metaRoot.SetNumber("ResourceUID", (double)GetUID());
-	/*ParsonArray containedArray = metaRoot.SetArray("ContainedResources");
-	containedArray.SetNumber((double)GetUID());*/
+	//If not meta is not valid
+	ParsonArray contained_array = metaRoot.SetArray("ContainedResources");
+
+	ParsonNode settings = metaRoot.SetNode("ImportSettings");
+	//meshSettings.Save(settings); //TODO: Script Import settings
+
 	return true;
 }
 
@@ -27,9 +30,4 @@ bool R_Script::LoadMeta(const ParsonNode& metaRoot)
 bool R_Script::NeedReload() const
 {
 	return lastTimeMod != App->fileSystem->GetLastModTime(GetAssetsPath());
-}
-
-bool R_Script::CleanUp()
-{
-	return true;
 }
