@@ -78,7 +78,7 @@ bool C_PlayerController::Update()
 	case PlayerState::RUNNING:
 		if (currentClip != nullptr && clipName != "Running")
 		{
-			aAnimator->PlayClip("Running", 0);
+			aAnimator->PlayClip("Running4", 0);
 		}
 		break;
 	case PlayerState::DASHING:
