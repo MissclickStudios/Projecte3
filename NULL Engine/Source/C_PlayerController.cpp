@@ -271,7 +271,7 @@ Bullet* C_PlayerController::CreateBullet(uint index)
 	if (!resource)
 		bullet = App->scene->CreateGameObject("Bullets", bulletStorage);
 	else
-		bullet = App->scene->GenerateGameObjectsFromModel((R_Model*)resource, { 0.1, 0.1, 0.1 });
+		bullet = App->scene->GenerateGameObjectsFromModel((R_Model*)resource, { 0.5, 0.5, 0.5 });
 
 	char n[10];
 	sprintf_s(n, "%d", index);
