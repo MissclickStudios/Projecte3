@@ -1360,7 +1360,7 @@ void E_Inspector::DrawScriptComponent(C_Script* cScript)
 	//TODO: inspector script component
 	// if (cScript.name != nullptr) pot ser un script null!!!
 	bool show = true;
-	if (ImGui::CollapsingHeader("ScriptName", &show, ImGuiTreeNodeFlags_DefaultOpen))
+	if (ImGui::CollapsingHeader(cScript->GetDataName().c_str(), &show, ImGuiTreeNodeFlags_DefaultOpen))
 	{
 
 	}

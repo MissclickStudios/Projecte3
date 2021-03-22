@@ -20,6 +20,13 @@ M_ScriptManager::~M_ScriptManager()
 {
 }
 
+bool M_ScriptManager::Start()
+{
+	if (App->fileSystem->Exists(SCRIPTS_DLL_OUTPUT))
+		lastModDll = App->fileSystem->GetLastModTime(SCRIPTS_DLL_OUTPUT);
+	return true;
+}
+
 void M_ScriptManager::InitScripts()
 {
 	std::vector<Script*>::const_iterator it = currentScripts.cbegin();
@@ -71,6 +78,7 @@ UpdateStatus M_ScriptManager::PreUpdate(float dt)
 		{
 			/*lastModDll = lastMod;
 			HotReload();*/
+			while (MoveFileA(SCRIPTS_DLL_OUTPUT, SCRIPTS_DLL_WORKING) == FALSE) {}
 		}
 	}
 #endif

@@ -35,7 +35,7 @@ public:
 
 private:
 	//std::vector<InspactorData> inspectorData;
-	uint32 resourceUID = 0;
+	R_Script* resource;
 	void* scriptData = nullptr;
 	bool engineScript = false;
 	std::string dataName;

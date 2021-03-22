@@ -45,7 +45,7 @@ C_Script::~C_Script()
 bool C_Script::SaveState(ParsonNode& root) const
 {
 	root.SetNumber("Type", (uint)GetType());
-	root.SetNumber("ResourceUID", resourceUID);
+	root.SetNumber("ResourceUID", resource->GetUID());
 	root.SetString("DataName", dataName.c_str());
 	/*if (inspectorVariables.empty())
 		root.SetBool("HasInspector", false);
@@ -63,12 +63,18 @@ bool C_Script::SaveState(ParsonNode& root) const
 
 bool C_Script::LoadState(ParsonNode& root)
 {
-	resourceUID = root.GetNumber("ResourceUID");
 	dataName = root.GetString("DataName");
 
-	if (App->resourceManager->AllocateResource(resourceUID, std::string(ASSETS_SCRIPTS_PATH + dataName).c_str())) {
+	if (App->resourceManager->AllocateResource(root.GetNumber("ResourceUID"), std::string(ASSETS_SCRIPTS_PATH + dataName).c_str())) {
 
-		R_Script* rScript = (R_Script*)App->resourceManager->RequestResource((uint32)root.GetNumber("UID"));
+		resource = (R_Script*)App->resourceManager->RequestResource(root.GetNumber("ResourceUID"));
+		for (int i = 0; i < resource->dataStructures.size(); ++i) 
+		{
+			if (strcmp(dataName.data(), resource->dataStructures[i].first.data())) {
+				LoadData(dataName.data(), resource->dataStructures[i].second);
+				break;
+			}
+		}
 		/*if (root.GetBool("HasInspector"))
 		{
 			ParsonArray variablesToLoad = root.GetArray("InspectorVariables");
@@ -87,6 +93,7 @@ bool C_Script::LoadState(ParsonNode& root)
 	return true;
 }
 
+//TODO: Maybe put this function on the constructor of the component ?
 void C_Script::LoadData(const char* name, bool engineScript)
 {
 	this->engineScript = engineScript;

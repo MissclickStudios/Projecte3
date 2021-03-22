@@ -8,119 +8,6 @@
     ],
     "Game Objects": [
         {
-            "UID": 131367253,
-            "ParentUID": 1465640651,
-            "Name": "MainScene",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": true,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        0,
-                        0
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                }
-            ]
-        },
-        {
-            "UID": 324192121,
-            "ParentUID": 131367253,
-            "Name": "SceneCamera",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        5,
-                        25
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {
-                    "Type": 5,
-                    "MinFOV": 1,
-                    "MaxFOV": 120,
-                    "Culling": false,
-                    "OrthogonalView": false,
-                    "HideFrustum": false
-                }
-            ]
-        },
-        {
-            "UID": 184229423,
-            "ParentUID": 0,
-            "Name": "LightPoint",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        0,
-                        0
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {
-                    "Type": 4,
-                    "Diffuse": [
-                        1,
-                        1,
-                        1,
-                        1
-                    ],
-                    "Ambient": [
-                        0.25,
-                        0.25,
-                        0.25,
-                        1
-                    ]
-                }
-            ]
-        },
-        {
             "UID": 42831759,
             "ParentUID": 1603002262,
             "Name": "mixamorig:LeftLeg",
@@ -195,6 +82,36 @@
                         0.014534847810864449,
                         1.6573649644851685,
                         -1.1819288658898586e-08
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 131367253,
+            "ParentUID": 1884741539,
+            "Name": "MainScene",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": true,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
                     ],
                     "LocalRotation": [
                         0,
@@ -357,6 +274,44 @@
                         1,
                         1
                     ]
+                }
+            ]
+        },
+        {
+            "UID": 324192121,
+            "ParentUID": 131367253,
+            "Name": "SceneCamera",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": true,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        33.456634521484375,
+                        91.596199035644531
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 5,
+                    "MinFOV": 1,
+                    "MaxFOV": 120,
+                    "Culling": false,
+                    "OrthogonalView": false,
+                    "HideFrustum": false
                 }
             ]
         },
@@ -1672,10 +1627,10 @@
                         "File": "739392104.nemat"
                     },
                     "Shader": {
-                        "UID": 699736863,
+                        "UID": 1788614220,
                         "Name": "DefaultShader.shader",
-                        "Path": "Library\/Shaders\/699736863.neshader",
-                        "File": "699736863.neshader"
+                        "Path": "Library\/Shaders\/1788614220.neshader",
+                        "File": "1788614220.neshader"
                     }
                 }
             ]
@@ -2171,6 +2126,51 @@
                     "LocalScale": [
                         1,
                         1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1242071295,
+            "ParentUID": 0,
+            "Name": "LightPoint",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 4,
+                    "Diffuse": [
+                        1,
+                        1,
+                        1,
+                        1
+                    ],
+                    "Ambient": [
+                        0.25,
+                        0.25,
+                        0.25,
                         1
                     ]
                 }

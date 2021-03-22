@@ -7,6 +7,7 @@ public :
 	FirstScript();
 	~FirstScript();
 	void Update() override;
+	int firstVariable;
 };
 
 SCRIPTS_FUNCTION FirstScript* CreateFirstScript() {

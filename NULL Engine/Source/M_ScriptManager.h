@@ -19,7 +19,7 @@ public:
 	~M_ScriptManager();
 
 	//bool		Init(ParsonNode& root) override;
-	//bool		Start() override;
+	bool		Start() override;
 	void InitScripts();
 	UpdateStatus PreUpdate(float dt) override;
 	UpdateStatus Update(float dt) override;

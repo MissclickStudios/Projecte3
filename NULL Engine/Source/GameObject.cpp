@@ -694,10 +694,11 @@ Component* GameObject::CreateComponent(ComponentType type)
 	case ComponentType::SPHERE_COLLIDER:	{ component = new C_SphereCollider(this); }		break;
 	case ComponentType::CAPSULE_COLLIDER:	{ component = new C_CapsuleCollider(this); }	break;
 	case ComponentType::CANVAS:				{ component = new C_Canvas(this); }				break;
+	case ComponentType::SCRIPT:				{component = new C_Script(this); }				break;
 	case ComponentType::PLAYER_CONTROLLER:	{ component = new C_PlayerController(this); }	break;
-	case ComponentType::BULLET_BEHAVIOR: { component = new C_BulletBehavior(this); }	break;
-	case ComponentType::PROP_BEHAVIOR: { component = new C_PropBehavior(this); }	break;
-	case ComponentType::CAMERA_BEHAVIOR: { component = new C_CameraBehavior(this); }	break;
+	case ComponentType::BULLET_BEHAVIOR: { component = new C_BulletBehavior(this); }		break;
+	case ComponentType::PROP_BEHAVIOR: { component = new C_PropBehavior(this); }			break;
+	case ComponentType::CAMERA_BEHAVIOR: { component = new C_CameraBehavior(this); }		break;
 	}
 
 	if (component != nullptr)
