@@ -906,7 +906,7 @@ void M_Renderer3D::RenderSkeletons()
 
 void M_Renderer3D::AddParticle(const float4x4& transform, R_Material* material, Color color, float distanceToCamera)
 {
-	particles.insert(std::make_pair(distanceToCamera, ParticleRenderer(material, color, transform)));
+	particles.insert(std::make_pair((particles.size() +1), ParticleRenderer(material, color, transform)));
 }
 
 void M_Renderer3D::RenderParticles()

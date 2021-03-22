@@ -15,7 +15,7 @@ void EmitterBase::Spawn(EmitterInstance* emitter, Particle* particle)
 	particle->position = position;
 
 	//temporary
-	Quat rotation = go->GetComponent<C_Transform>()->GetWorldRotation();
+	Quat rotation = Quat::FromEulerXYZ(90, 0, 0);
 	particle->worldRotation = rotation;
 }
 
