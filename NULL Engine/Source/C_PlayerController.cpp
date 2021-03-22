@@ -64,25 +64,25 @@ bool C_PlayerController::Update()
 	case PlayerState::IDLE:
 		if (currentClip != nullptr && clipName != "Idle")
 		{
-			aAnimator->PlayClip("Idle", 8);
+			aAnimator->PlayClip("Idle", 0);
 		}
 		break;
 	case PlayerState::RUNNING:
 		if (currentClip != nullptr && clipName != "Running")
 		{
-			aAnimator->PlayClip("Running", 8);
+			aAnimator->PlayClip("Running", 0);
 		}
 		break;
 	case PlayerState::DASHING:
 		if (currentClip != nullptr && clipName != "Dashing")
 		{
-			aAnimator->PlayClip("Dashing", 8);
+			//aAnimator->PlayClip("Dashing", 0);
 		}
 		break;
 	case PlayerState::SHOOTING:
 		if (currentClip != nullptr && clipName != "Shooting")
 		{
-			aAnimator->PlayClip("Shooting", 8);
+			aAnimator->PlayClip("Shooting", 0);
 		}
 		break;
 	}
