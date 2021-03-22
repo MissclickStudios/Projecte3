@@ -414,7 +414,7 @@ void C_PlayerController::HandleAmmo(int ammo)
 
 	for (it; it != App->scene->GetGameObjects()->end(); ++it)
 	{
-		if (strstr((*it)->GetName(), "Ammo") != nullptr)
+		if (strstr((*it)->GetName(), "PrimaryWeapon") != nullptr)
 		{			
 			ammoUi = (*it);
 		}
