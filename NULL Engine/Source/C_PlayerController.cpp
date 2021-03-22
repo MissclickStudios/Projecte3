@@ -59,6 +59,9 @@ bool C_PlayerController::Update()
 	Weapon();
 	HandleHp();
 
+	HandleAmmo(ammo);
+
+
 	return true;
 }
 
@@ -155,7 +158,7 @@ void C_PlayerController::Movement()
 			if (dashColdown.ReadSec() >= dashingColdown)
 				dashColdown.Stop();
 		}
-		else if ((App->input->GetKey(SDL_SCANCODE_LSHIFT) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(1) == ButtonState::BUTTON_DOWN))
+		else if ((App->input->GetKey(SDL_SCANCODE_LSHIFT) == KeyState::KEY_DOWN || App->input->GetGameControllerTrigger(0) == ButtonState::BUTTON_DOWN))
 			Dash(rigidBody, movX, movY);
 	}
 	else if (dashTime.ReadSec() >= dashingTime)
@@ -234,7 +237,7 @@ void C_PlayerController::Weapon()
 		}
 	}
 
-	if (App->input->GetKey(SDL_SCANCODE_R) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(0) == ButtonState::BUTTON_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_R) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(2) == ButtonState::BUTTON_DOWN)
 		Reload();
 	if (ammo > 0)
 	{
@@ -265,7 +268,7 @@ void C_PlayerController::Weapon()
 
 Bullet* C_PlayerController::CreateBullet(uint index)
 {
-	Resource* resource = App->resourceManager->GetResourceFromLibrary("Assets/Models/Primitives/sphere.fbx");
+	Resource* resource = App->resourceManager->GetResourceFromLibrary("Assets/Models/Props/bullet.fbx");
 
 	GameObject* bullet;
 	if (!resource)
@@ -323,6 +326,12 @@ void C_PlayerController::FireBullet(float3 direction)
 	float3 position = GetOwner()->transform->GetWorldPosition();
 	position.y += 4;
 	bullet->transform->SetWorldPosition(position);
+
+
+	float2 dir = { lastAim.x, -lastAim.z };
+	float rad = dir.AimedAngle();
+	bullet->transform->SetLocalRotation(float3(0, rad, 0));
+
 
 	bullet->GetComponent<C_BulletBehavior>()->StartAutodestructTimer();
 
@@ -395,6 +404,46 @@ void C_PlayerController::GetAimVectorAxis(int& axisX, int& axisY)
 {
 	axisX = App->input->GetGameControllerAxisValue(2);
 	axisY = App->input->GetGameControllerAxisValue(3);
+}
+
+void C_PlayerController::HandleAmmo(int ammo)
+{
+	std::vector<GameObject*>::iterator it = App->scene->GetGameObjects()->begin();
+
+	for (it; it != App->scene->GetGameObjects()->end(); ++it)
+	{
+		if (strstr((*it)->GetName(), "Ammo") != nullptr)
+		{			
+			ammoUi = (*it);
+		}
+	}
+
+	R_Texture* ammo10 = (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/HUD/Numbers/Ammo10.png");
+	R_Texture* ammo9 = (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/HUD/Numbers/Ammo9.png");
+	R_Texture* ammo8 = (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/HUD/Numbers/Ammo8.png");
+	R_Texture* ammo7 = (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/HUD/Numbers/Ammo7.png");
+	R_Texture* ammo6 = (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/HUD/Numbers/Ammo6.png");
+	R_Texture* ammo5 = (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/HUD/Numbers/Ammo5.png");
+	R_Texture* ammo4 = (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/HUD/Numbers/Ammo4.png");
+	R_Texture* ammo3 = (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/HUD/Numbers/Ammo3.png");
+	R_Texture* ammo2 = (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/HUD/Numbers/Ammo2.png");
+	R_Texture* ammo1 = (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/HUD/Numbers/Ammo1.png");
+	R_Texture* ammo0 = (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/HUD/Numbers/Ammo0.png");
+
+	switch (ammo)
+	{
+	case 10: {ammoUi->GetComponent<C_Material>()->SwapTexture(ammo10); } break;
+	case 9: {ammoUi->GetComponent<C_Material>()->SwapTexture(ammo9); } break;
+	case 8: {ammoUi->GetComponent<C_Material>()->SwapTexture(ammo8); } break;
+	case 7: {ammoUi->GetComponent<C_Material>()->SwapTexture(ammo7); } break;
+	case 6: {ammoUi->GetComponent<C_Material>()->SwapTexture(ammo6); } break;
+	case 5: {ammoUi->GetComponent<C_Material>()->SwapTexture(ammo5); } break;
+	case 4: {ammoUi->GetComponent<C_Material>()->SwapTexture(ammo4); } break;
+	case 3: {ammoUi->GetComponent<C_Material>()->SwapTexture(ammo3); } break;
+	case 2: {ammoUi->GetComponent<C_Material>()->SwapTexture(ammo2); } break;
+	case 1: {ammoUi->GetComponent<C_Material>()->SwapTexture(ammo1); } break;
+	case 0: {ammoUi->GetComponent<C_Material>()->SwapTexture(ammo0); } break;
+	}
 }
 
 void C_PlayerController::HandleHp()
