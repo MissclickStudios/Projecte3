@@ -13,8 +13,8 @@
 
 #include "GameObject.h"
 
-#include "C_RigidBody.h"
 #include "C_Mesh.h"
+#include "C_Animator.h"
 #include "C_RigidBody.h"
 #include "C_Transform.h"
 #include "C_PlayerController.h"
@@ -47,6 +47,8 @@ bool C_PlayerController::Update()
 {
 	if (App->gameState != GameState::PLAY)
 		return true;
+
+	aAnimator = GetOwner()->GetComponent<C_Animator>();
 
 	if (!bulletStorage)
 	{

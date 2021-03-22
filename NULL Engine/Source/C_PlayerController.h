@@ -10,6 +10,7 @@
 #define BULLET_AMOUNT 10
 
 class C_AudioSource;
+class C_Animator;
 class C_RigidBody;
 class GameObject;
 
@@ -98,6 +99,7 @@ private:
 	bool isStepPlaying = false;
 	Timer stepTimer;
 	C_AudioSource*aSource = nullptr;
+	C_Animator* aAnimator = nullptr;
 
 	// Weapon
 	float bulletSpeed = 100.0f;
