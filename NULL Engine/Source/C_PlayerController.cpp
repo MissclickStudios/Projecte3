@@ -76,7 +76,7 @@ bool C_PlayerController::Update()
 		}
 		break;
 	case PlayerState::RUNNING:
-		if (currentClip != nullptr && clipName != "Running")
+		if (currentClip != nullptr && clipName != "Running4")
 		{
 			aAnimator->PlayClip("Running4", 0);
 		}
