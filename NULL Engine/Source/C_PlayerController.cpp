@@ -56,6 +56,37 @@ bool C_PlayerController::Update()
 		playAnim = true;
 	}
 
+	AnimatorClip* currentClip = aAnimator->GetCurrentClip();
+	std::string clipName = (currentClip != nullptr) ? currentClip->GetName() : "[NONE]";
+
+	switch (state)
+	{
+	case PlayerState::IDLE:
+		if (currentClip != nullptr && clipName != "Idle")
+		{
+			aAnimator->PlayClip("Idle", 8);
+		}
+		break;
+	case PlayerState::RUNNING:
+		if (currentClip != nullptr && clipName != "Running")
+		{
+			aAnimator->PlayClip("Running", 8);
+		}
+		break;
+	case PlayerState::DASHING:
+		if (currentClip != nullptr && clipName != "Dashing")
+		{
+			aAnimator->PlayClip("Dashing", 8);
+		}
+		break;
+	case PlayerState::SHOOTING:
+		if (currentClip != nullptr && clipName != "Shooting")
+		{
+			aAnimator->PlayClip("Shooting", 8);
+		}
+		break;
+	}
+
 	if (!bulletStorage)
 	{
 		bulletStorage = App->scene->CreateGameObject("Bullets", App->scene->GetSceneRoot());
@@ -142,7 +173,7 @@ void C_PlayerController::Movement()
 		return;
 
 	if (!dashTime.IsActive())
-	{
+	{	
 		int movX = 0;
 		int movY = 0;
 		// Controller movement
@@ -177,9 +208,11 @@ void C_PlayerController::Move(C_RigidBody* rigidBody, int axisX, int axisY)
 {
 	float3 direction = { (float)axisX, 0, (float)axisY };
 
-	if (axisX == 0 && axisY == 0) {}
+	if (axisX == 0 && axisY == 0) { state = PlayerState::IDLE; }
 	else
 	{
+		state = PlayerState::RUNNING;
+		
 		direction.Normalize();
 		lastDirection = direction;
 		StepSound();
@@ -191,6 +224,8 @@ void C_PlayerController::Move(C_RigidBody* rigidBody, int axisX, int axisY)
 
 void C_PlayerController::Dash(C_RigidBody* rigidBody, int axisX, int axisY)
 {
+	state = PlayerState::DASHING;
+	
 	rigidBody->SetLinearVelocity(lastDirection * dashSpeed);
 
 	dashColdown.Start();
@@ -248,11 +283,15 @@ void C_PlayerController::Weapon()
 	if (App->input->GetKey(SDL_SCANCODE_R) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(2) == ButtonState::BUTTON_DOWN)
 		Reload();
 	if (ammo > 0)
-	{
+	{	
 		if (!automatic)
 		{
 			if (App->input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_DOWN || App->input->GetGameControllerTrigger(1) == ButtonState::BUTTON_DOWN)
+			{
 				FireBullet(lastAim);
+			}
+
+			state = PlayerState::SHOOTING;
 		}
 		else
 		{
@@ -269,6 +308,8 @@ void C_PlayerController::Weapon()
 					fireRateTimer.Stop();
 					fireRateTimer.Start();
 				}
+
+				state = PlayerState::SHOOTING;
 			}
 		}
 	}
