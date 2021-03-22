@@ -155,7 +155,8 @@ bool C_Mesh::RefreshSkinning()
 
 void C_Mesh::AnimateMesh()
 {	
-	
+	OPTICK_CATEGORY("Animate Mesh", Optick::Category::AI);
+
 	if (rMesh == nullptr)
 	{
 		return;
@@ -203,7 +204,7 @@ void C_Mesh::AnimateMesh()
 			if (!rMesh->vertices.empty())
 			{
 				float3 vTransform = boneTransforms[boneID].TransformPos(float3(&rMesh->vertices[v * 3]));													// --- Trnsfrm the original vert.
-
+				
 				skinnedMesh->vertices[(v * 3)]		+= (vTransform.x * boneWeight);
 				skinnedMesh->vertices[(v * 3) + 1]	+= (vTransform.y * boneWeight); 
 				skinnedMesh->vertices[(v * 3) + 2]	+= (vTransform.z * boneWeight);
@@ -211,16 +212,16 @@ void C_Mesh::AnimateMesh()
 			if (!rMesh->normals.empty())
 			{
 				float3 vTransform = boneTransforms[boneID].TransformPos(float3(&rMesh->normals[v * 3]));
-
+				
 				skinnedMesh->normals[(v * 3)]		+= (vTransform.x * boneWeight);
 				skinnedMesh->normals[(v * 3) + 1]	+= (vTransform.y * boneWeight);
 				skinnedMesh->normals[(v * 3) + 2]	+= (vTransform.z * boneWeight);
+				
+				//vTransform = (float3(skinnedMesh->normals[(v * 3)], skinnedMesh->normals[(v * 3) + 1], skinnedMesh->normals[(v * 3) + 2]).Normalized());
 
-				vTransform = (float3(skinnedMesh->normals[(v * 3)], skinnedMesh->normals[(v * 3) + 1], skinnedMesh->normals[(v * 3) + 2]).Normalized());
-
-				skinnedMesh->normals[(v * 3)]		= vTransform.x;
-				skinnedMesh->normals[(v * 3) + 1]	= vTransform.y;
-				skinnedMesh->normals[(v * 3) + 2]	= vTransform.z;
+				//skinnedMesh->normals[(v * 3)]		= vTransform.x;
+				//skinnedMesh->normals[(v * 3) + 1]	= vTransform.y;
+				//skinnedMesh->normals[(v * 3) + 2]	= vTransform.z;
 			}
 		}
 	}
