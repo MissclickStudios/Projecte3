@@ -265,13 +265,13 @@ void C_PlayerController::Weapon()
 
 Bullet* C_PlayerController::CreateBullet(uint index)
 {
-	Resource* resource = App->resourceManager->GetResourceFromLibrary("Assets/Models/Primitives/sphere.fbx");
+	Resource* resource = App->resourceManager->GetResourceFromLibrary("Assets/Models/Props/bullet.fbx");
 
 	GameObject* bullet;
 	if (!resource)
 		bullet = App->scene->CreateGameObject("Bullets", bulletStorage);
 	else
-		bullet = App->scene->GenerateGameObjectsFromModel((R_Model*)resource, { 0.5, 0.5, 0.5 });
+		bullet = App->scene->GenerateGameObjectsFromModel((R_Model*)resource, { 0.1, 0.1, 0.1 });
 
 	char n[10];
 	sprintf_s(n, "%d", index);
@@ -323,6 +323,12 @@ void C_PlayerController::FireBullet(float3 direction)
 	float3 position = GetOwner()->transform->GetWorldPosition();
 	position.y += 4;
 	bullet->transform->SetWorldPosition(position);
+
+
+	float2 dir = { lastAim.x, -lastAim.z };
+	float rad = dir.AimedAngle();
+	bullet->transform->SetLocalRotation(float3(0, rad, 0));
+
 
 	bullet->GetComponent<C_BulletBehavior>()->StartAutodestructTimer();
 
