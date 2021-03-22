@@ -37,6 +37,7 @@ namespace Importer
 			void LoadScaleKeysData		(char** cursor, Channel& rChannel);													// 
 
 			void ValidateChannel		(Channel& rChannel);																// Detects and erases any discrepancies with the given channel.
+			void FuseChannels			(const Channel& newChannel, Channel& existingChannel);								// Fuses channels with the same name. New are fused into existing.
 		}
 	}
 }

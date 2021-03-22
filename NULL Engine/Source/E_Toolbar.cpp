@@ -122,7 +122,7 @@ void E_Toolbar::TimeScaleSlider()
 {
 	ImGui::SetNextItemWidth(75.0f);
 
-	ImGui::SetCursorPos(ImVec2(ImGui::GetCursorPosX(), ImGui::GetWindowHeight() * 0.5f));									// ATTENTION: THIS AFFECTS THE POSITIONING OF OTHER ITEMS.
+	//ImGui::SetCursorPos(ImVec2(ImGui::GetCursorPosX(), ImGui::GetWindowHeight() * 0.5f));									// ATTENTION: THIS AFFECTS THE POSITIONING OF OTHER ITEMS.
 
 	float timeScale = Time::Game::GetTimeScale();
 	if (ImGui::SliderFloat("##", &timeScale, 0.250f, 4.000f, "X %.3f", ImGuiSliderFlags_None))
@@ -139,7 +139,7 @@ void E_Toolbar::TimeDisplay()
 
 	GetTimeDisplayStrings(realTimeString, gameTimeString);
 
-	ImGui::SetCursorPos(ImVec2(ImGui::GetCursorPosX(), ImGui::GetWindowHeight() * 0.575f));									// ATTENTION: THIS AFFECTS THE POSITIONING OF OTHER ITEMS.
+	//ImGui::SetCursorPos(ImVec2(ImGui::GetCursorPosX(), ImGui::GetWindowHeight() * 0.575f));									// ATTENTION: THIS AFFECTS THE POSITIONING OF OTHER ITEMS.
 
 	ImGui::Text("Real Time:"); ImGui::SameLine(); ImGui::TextColored(&Yellow, " %s", realTimeString.c_str());
 	ImGui::SameLine();

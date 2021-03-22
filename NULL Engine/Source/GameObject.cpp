@@ -349,7 +349,7 @@ void GameObject::GetRenderers(std::vector<MeshRenderer>& meshRenderers, std::vec
 
 	if (cCamera != nullptr)
 	{
-		if (!cCamera->FrustumIsHidden())
+		if (!cCamera->FrustumIsHidden() && App->gameState != GameState::PLAY)
 		{
 			cuboidRenderers.push_back(CuboidRenderer(cCamera->GetFrustumVertices(), CuboidType::FRUSTUM));
 		}
@@ -363,7 +363,7 @@ void GameObject::GetRenderers(std::vector<MeshRenderer>& meshRenderers, std::vec
 		}
 	}
 
-	if (show_bounding_boxes || App->renderer->GetRenderBoundingBoxes())
+	if ((show_bounding_boxes || App->renderer->GetRenderBoundingBoxes()) && App->gameState != GameState::PLAY)
 	{
 		obb.GetCornerPoints(obb_vertices);
 		aabb.GetCornerPoints(aabb_vertices);

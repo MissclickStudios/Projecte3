@@ -14,6 +14,15 @@ C_PropBehavior::~C_PropBehavior()
 
 bool C_PropBehavior::Update()
 {
+	if (dead)
+	{
+		dead = false;
+
+		for (uint i = 0; i < GetOwner()->components.size(); ++i)
+			GetOwner()->components[i]->SetIsActive(false);
+		GetOwner()->SetIsActive(false);
+	}
+
 	return true;
 }
 
@@ -36,5 +45,5 @@ bool C_PropBehavior::LoadState(ParsonNode& root)
 
 void C_PropBehavior::OnCollisionEnter()
 {
-	GetOwner()->to_delete = true; //TODO Crashes
+	dead = true;
 }

@@ -35,6 +35,8 @@ void Importer::Animations::Import(const aiAnimation* assimpAnimation, R_Animatio
 	rAnimation->SetDuration(assimpAnimation->mDuration);
 	rAnimation->SetTicksPerSecond(assimpAnimation->mTicksPerSecond);
 
+	std::multimap<std::string, Channel> tmp;
+
 	for (uint i = 0; i < assimpAnimation->mNumChannels; ++i)
 	{		
 		aiNodeAnim* aiChannel	= assimpAnimation->mChannels[i];
@@ -46,8 +48,23 @@ void Importer::Animations::Import(const aiAnimation* assimpAnimation, R_Animatio
 
 		Utilities::ValidateChannel(rChannel);
 
-		rAnimation->channels.push_back(rChannel);
+		auto existingChannel = tmp.find(rChannel.name);											// There can exists multiple channels with the same name. Fuse them as done with Transforms.
+		if (existingChannel != tmp.end())
+		{
+			Utilities::FuseChannels(rChannel, existingChannel->second);
+		}
+		else
+		{
+			tmp.emplace(rChannel.name, rChannel);
+		}
 	}
+
+	for (auto channel = tmp.begin(); channel != tmp.end(); ++channel)
+	{
+		rAnimation->channels.push_back(channel->second);
+	}
+
+	tmp.clear();
 }
 
 void Importer::Animations::Utilities::GetPositionKeys(const aiNodeAnim* aiChannel, Channel& rChannel)
@@ -455,6 +472,46 @@ void Importer::Animations::Utilities::ValidateChannel(Channel& rChannel)
 		if (pos != rChannel.name.npos)
 		{
 			rChannel.name = rChannel.name.substr(0, pos - 1);
+		}
+	}
+}
+
+void Importer::Animations::Utilities::FuseChannels(const Channel& newChannel, Channel& existingChannel)
+{
+	if (newChannel.HasPositionKeyframes())
+	{
+		if (!existingChannel.HasPositionKeyframes())
+		{
+			existingChannel.positionKeyframes.clear();																// Erasing the [-1.0] item that identifies an invalid keyframe channel.
+		}
+		
+		for (auto pk = newChannel.positionKeyframes.begin(); pk != newChannel.positionKeyframes.end(); ++pk)
+		{
+			existingChannel.positionKeyframes[pk->first] = pk->second;
+		}
+	}
+	if (newChannel.HasRotationKeyframes())
+	{
+		if (!existingChannel.HasRotationKeyframes())
+		{
+			existingChannel.rotationKeyframes.clear();
+		}
+		
+		for (auto rk = newChannel.rotationKeyframes.begin(); rk != newChannel.rotationKeyframes.end(); ++rk)
+		{
+			existingChannel.rotationKeyframes[rk->first] = rk->second;
+		}
+	}
+	if (newChannel.HasScaleKeyframes())
+	{
+		if (!existingChannel.HasScaleKeyframes())
+		{
+			existingChannel.scaleKeyframes.clear();
+		}
+		
+		for (auto sk = newChannel.scaleKeyframes.begin(); sk != newChannel.scaleKeyframes.end(); ++sk)
+		{
+			existingChannel.scaleKeyframes[sk->first] = sk->second;
 		}
 	}
 }

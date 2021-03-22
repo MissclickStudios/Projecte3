@@ -122,9 +122,11 @@ private:																											// --- META FILE METHODS ---
 	ParsonNode		LoadMetaFile					(const char* assetsPath, char** buffer);						// Passing the buffer so it can be safely RELEASED after calling it.
 	
 	bool			HasMetaFile						(const char* assetsPath);
-	bool			MetaFileIsValid					(const char* assetsPath);
-	bool			MetaFileIsValid					(ParsonNode& metaRoot);
+	bool			MetaFileIsValid					(const char* assetsPath, bool checkLibrary = true);
+	bool			MetaFileIsValid					(ParsonNode& metaRoot, bool checkLibrary = true);
 	bool			ResourceHasMetaType				(Resource* resource) const;
+
+	bool			HasImportIgnoredExtension		(const char* assetsPath) const;
 
 private:
 	std::map<uint32, Resource*>		resources;																		// Resources currently in memory.
