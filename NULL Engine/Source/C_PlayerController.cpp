@@ -430,19 +430,22 @@ void C_PlayerController::HandleAmmo(int ammo)
 	R_Texture* ammo1 = (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/HUD/Numbers/Ammo1.png");
 	R_Texture* ammo0 = (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/HUD/Numbers/Ammo0.png");
 
-	switch (ammo)
+	if (ammoUi != nullptr)
 	{
-	case 10: {ammoUi->GetComponent<C_Material>()->SwapTexture(ammo10); } break;
-	case 9: {ammoUi->GetComponent<C_Material>()->SwapTexture(ammo9); } break;
-	case 8: {ammoUi->GetComponent<C_Material>()->SwapTexture(ammo8); } break;
-	case 7: {ammoUi->GetComponent<C_Material>()->SwapTexture(ammo7); } break;
-	case 6: {ammoUi->GetComponent<C_Material>()->SwapTexture(ammo6); } break;
-	case 5: {ammoUi->GetComponent<C_Material>()->SwapTexture(ammo5); } break;
-	case 4: {ammoUi->GetComponent<C_Material>()->SwapTexture(ammo4); } break;
-	case 3: {ammoUi->GetComponent<C_Material>()->SwapTexture(ammo3); } break;
-	case 2: {ammoUi->GetComponent<C_Material>()->SwapTexture(ammo2); } break;
-	case 1: {ammoUi->GetComponent<C_Material>()->SwapTexture(ammo1); } break;
-	case 0: {ammoUi->GetComponent<C_Material>()->SwapTexture(ammo0); } break;
+		switch (ammo)
+		{
+		default: {ammoUi->GetComponent<C_Material>()->SwapTexture(ammo10); } break;
+		case 9: {ammoUi->GetComponent<C_Material>()->SwapTexture(ammo9); } break;
+		case 8: {ammoUi->GetComponent<C_Material>()->SwapTexture(ammo8); } break;
+		case 7: {ammoUi->GetComponent<C_Material>()->SwapTexture(ammo7); } break;
+		case 6: {ammoUi->GetComponent<C_Material>()->SwapTexture(ammo6); } break;
+		case 5: {ammoUi->GetComponent<C_Material>()->SwapTexture(ammo5); } break;
+		case 4: {ammoUi->GetComponent<C_Material>()->SwapTexture(ammo4); } break;
+		case 3: {ammoUi->GetComponent<C_Material>()->SwapTexture(ammo3); } break;
+		case 2: {ammoUi->GetComponent<C_Material>()->SwapTexture(ammo2); } break;
+		case 1: {ammoUi->GetComponent<C_Material>()->SwapTexture(ammo1); } break;
+		case 0: {ammoUi->GetComponent<C_Material>()->SwapTexture(ammo0); } break;
+		}
 	}
 }
 
