@@ -25,7 +25,7 @@ public:
 	std::vector<ParticleModule*> modules;
 	R_Material* emitterMaterial;
 
-	int maxParticleCount = 5;
+	int maxParticleCount = 10;
 };
 
 #endif // !__EMITTER_H__

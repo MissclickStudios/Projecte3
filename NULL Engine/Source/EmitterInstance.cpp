@@ -108,3 +108,8 @@ void EmitterInstance::KillDeadParticles()
 	}
 }
 
+void EmitterInstance::KillAll()
+{
+	activeParticles = 0;
+}
+

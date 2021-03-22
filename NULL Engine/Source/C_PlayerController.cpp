@@ -40,8 +40,9 @@ C_PlayerController::C_PlayerController(GameObject* owner) : Component(owner, Com
 	dashTime.Stop();
 	dashColdown.Stop();
 	stepTimer.Stop();
-
+	
 	//memset(ammoTex, 0, 11 * sizeof(R_Texture*));
+	ammo = 10;
 }
 
 C_PlayerController::~C_PlayerController()
@@ -162,6 +163,8 @@ bool C_PlayerController::SaveState(ParsonNode& root) const
 	root.SetNumber("Dash Time", (double)dashingTime);
 	root.SetNumber("Dash Coldown", (double)dashingColdown);
 
+	
+
 	return true;
 }
 
@@ -180,6 +183,10 @@ bool C_PlayerController::LoadState(ParsonNode& root)
 	dashSpeed		= (float)root.GetNumber("Dash Speed");
 	dashingTime		= (float)root.GetNumber("Dash Time");
 	dashingColdown	= (float)root.GetNumber("Dash Coldown");
+
+	dashSpeed = 75.0f;
+	dashingTime = 0.15;
+	ammo = 10;
 
 	return true;
 }
@@ -365,6 +372,7 @@ Bullet* C_PlayerController::CreateBullet(uint index)
 	rigidBody->FreezeRotationZ(true);
 	((C_BoxCollider*)bullet->CreateComponent(ComponentType::BOX_COLLIDER))->SetTrigger(true);
 	((C_BulletBehavior*)bullet->CreateComponent(ComponentType::BULLET_BEHAVIOR))->SetShooter(GetOwner(), index);
+	bullet->CreateComponent(ComponentType::PARTICLE_SYSTEM);
 
 	bullet->CreateComponent(ComponentType::AUDIOSOURCE);
 	C_AudioSource* source = bullet->GetComponent<C_AudioSource>();

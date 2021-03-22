@@ -56,7 +56,7 @@ struct EmitterSpawn : ParticleModule
 	void Spawn(EmitterInstance* emitter, Particle* particle);
 	void Update(float dt, EmitterInstance* emitter);			//spawn ratio and timer management
 
-	float spawnRatio = 0.0f;
+	float spawnRatio = 0.05f;
 	float timer = 0.0f;
 };
 
@@ -67,7 +67,7 @@ struct ParticleMovement : ParticleModule
 	void Spawn(EmitterInstance* emitter, Particle* particle);	//random pos between initialPosition1 and 2
 	void Update(float dt, EmitterInstance* emitter);
 
-	float initialIntensity1 = .5f;									//stablishes the intensity of movement. It is added to directionOfMovement, resulting in float4 that describes the velocity of the particle
+	float initialIntensity1 = 1.f;									//stablishes the intensity of movement. It is added to directionOfMovement, resulting in float4 that describes the velocity of the particle
 	float initialIntensity2 = 3.0f;
 
 	float3 initialDirection1 = float3(1.0f, 1.0f, 1.0f);			//determines the direction of the movement computing 3 random values (between initialDirection1 and 2)
@@ -94,7 +94,7 @@ struct ParticleLifetime : ParticleModule
 	void Spawn(EmitterInstance* emitter, Particle* particle);
 	void Update(float dt, EmitterInstance* emitter);
 
-	float initialLifetime = 1.0f;
+	float initialLifetime = 0.2f;
 };
 
 #endif
