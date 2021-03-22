@@ -24,6 +24,14 @@ struct Bullet
 	GameObject* object;
 };
 
+enum class PlayerState
+{
+	IDLE,
+	RUNNING,
+	DASHING,
+	SHOOTING
+};
+
 class C_PlayerController : public Component
 {
 public:
@@ -68,6 +76,7 @@ public:
 	void SetDashColdown(float time) { dashingColdown = time; }
 
 	Bullet* bullets[BULLET_AMOUNT];
+	PlayerState state = PlayerState::IDLE;
 
 private: 
 
@@ -100,6 +109,7 @@ private:
 	Timer stepTimer;
 	C_AudioSource*aSource = nullptr;
 	C_Animator* aAnimator = nullptr;
+	bool playAnim = false;
 
 	// Weapon
 	float bulletSpeed = 100.0f;
