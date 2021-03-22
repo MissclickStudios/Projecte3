@@ -132,8 +132,13 @@ const aiNode* Importer::Scenes::Utilities::ImportTransform(const aiNode* assimpN
 
 	while (NodeIsDummyNode(*assimpNode))																	// All dummy nodes will contain the "_$AssimpFbx$_" string and only 1 child node.
 	{
-		assimpNode = assimpNode->mChildren[0];																// As dummies will only have one child, selecting the next one to process is easy.
+		/*if (strstr(assimpNode->mName.C_Str(), "_$AssimpFbx$_PreRotation") != nullptr)
+		{
+			break;
+		}*/
 		
+		assimpNode = assimpNode->mChildren[0];																// As dummies will only have one child, selecting the next one to process is easy.
+
 		assimpNode->mTransformation.Decompose(aiT.scale, aiT.rotation, aiT.position);						// --- Getting the Transform stored in the dummy node.
 
 		Transform dummy;																					// 

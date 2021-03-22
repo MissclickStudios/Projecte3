@@ -1461,6 +1461,9 @@ void E_Inspector::DrawPlayerControllerComponent(C_PlayerController* cController)
 
 			ImGui::Separator();
 
+			uint state = (uint)cController->state;
+			ImGui::Text("Player State:"); ImGui::SameLine(); ImGui::TextColored(Yellow.C_Array(), "{ %u }", state);
+
 			ImGui::TreePop();
 		}
 
