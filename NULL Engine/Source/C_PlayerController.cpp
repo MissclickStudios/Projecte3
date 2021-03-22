@@ -37,6 +37,8 @@ C_PlayerController::C_PlayerController(GameObject* owner) : Component(owner, Com
 	dashTime.Stop();
 	dashColdown.Stop();
 	stepTimer.Stop();
+
+	ammo = 10;
 }
 
 C_PlayerController::~C_PlayerController()
@@ -144,6 +146,8 @@ bool C_PlayerController::SaveState(ParsonNode& root) const
 	root.SetNumber("Dash Time", (double)dashingTime);
 	root.SetNumber("Dash Coldown", (double)dashingColdown);
 
+	
+
 	return true;
 }
 
@@ -162,6 +166,10 @@ bool C_PlayerController::LoadState(ParsonNode& root)
 	dashSpeed = (float)root.GetNumber("Dash Speed");
 	dashingTime = (float)root.GetNumber("Dash Time");
 	dashingColdown = (float)root.GetNumber("Dash Coldown");
+
+	dashSpeed = 75.0f;
+	dashingTime = 0.15;
+	ammo = 10;
 
 	return true;
 }
