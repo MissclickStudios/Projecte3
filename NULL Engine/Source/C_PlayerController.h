@@ -87,6 +87,7 @@ private:
 	void GetMovementVectorAxis(int &axisX, int &axisY);
 	void GetAimVectorAxis(int &axisX, int &axisY);
 
+	void HandleAmmo(int ammo);
 	void HandleHp();
 
 	// Character
@@ -124,6 +125,8 @@ private:
 
 	GameObject* hearts[3] = { nullptr, nullptr, nullptr };
 	float heart = 3;
+
+	GameObject* ammoUi = nullptr;
 };
 
 #endif // !__C_PLAYERCONTROLLER__
