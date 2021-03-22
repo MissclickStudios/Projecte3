@@ -10,6 +10,7 @@
 #define BULLET_AMOUNT 10
 
 class C_AudioSource;
+class C_Animator;
 class C_RigidBody;
 class GameObject;
 
@@ -87,6 +88,7 @@ private:
 	void GetMovementVectorAxis(int &axisX, int &axisY);
 	void GetAimVectorAxis(int &axisX, int &axisY);
 
+	void HandleAmmo(int ammo);
 	void HandleHp();
 
 	// Character
@@ -97,6 +99,7 @@ private:
 	bool isStepPlaying = false;
 	Timer stepTimer;
 	C_AudioSource*aSource = nullptr;
+	C_Animator* aAnimator = nullptr;
 
 	// Weapon
 	float bulletSpeed = 100.0f;
@@ -124,6 +127,8 @@ private:
 
 	GameObject* hearts[3] = { nullptr, nullptr, nullptr };
 	float heart = 3;
+
+	GameObject* ammoUi = nullptr;
 };
 
 #endif // !__C_PLAYERCONTROLLER__
