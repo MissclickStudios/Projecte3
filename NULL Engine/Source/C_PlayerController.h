@@ -129,6 +129,8 @@ private:
 	float heart = 3;
 
 	GameObject* ammoUi = nullptr;
+
+	bool playAnim = false;
 };
 
 #endif // !__C_PLAYERCONTROLLER__

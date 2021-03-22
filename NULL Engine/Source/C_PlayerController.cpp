@@ -48,7 +48,13 @@ bool C_PlayerController::Update()
 	if (App->gameState != GameState::PLAY)
 		return true;
 
-	aAnimator = GetOwner()->GetComponent<C_Animator>();
+	if (!playAnim)
+	{
+		aAnimator = GetOwner()->GetComponent<C_Animator>();
+
+		aAnimator->PlayClip("Idle", 0);
+		playAnim = true;
+	}
 
 	if (!bulletStorage)
 	{
