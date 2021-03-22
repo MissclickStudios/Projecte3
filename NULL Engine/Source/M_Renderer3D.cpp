@@ -916,6 +916,7 @@ void M_Renderer3D::RenderParticles()
 	{
 		DrawParticle(it->second);
 	}
+	particles.clear();
 }
 
 void M_Renderer3D::DrawParticle(ParticleRenderer& renderParticle)

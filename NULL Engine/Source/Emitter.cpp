@@ -16,6 +16,8 @@ void Emitter::SetAsDefault()
 {
 	AddModuleFromType(ParticleModule::EmitterBase);
 	AddModuleFromType(ParticleModule::EmitterSpawn);
+	AddModuleFromType(ParticleModule::ParticleLifetime);
+	AddModuleFromType(ParticleModule::ParticleColor);
 }
 
 bool Emitter::AddModuleFromType(ParticleModule::Type type)
@@ -35,6 +37,9 @@ bool Emitter::AddModuleFromType(ParticleModule::Type type)
 		case(ParticleModule::Type::ParticleColor):
 			modules.push_back(new ParticleColor);
 			break;	
+		case(ParticleModule::Type::ParticleLifetime):
+			modules.push_back(new ParticleLifetime);
+			break;
 		case(ParticleModule::Type::None):
 			return false;
 	}

@@ -53,7 +53,7 @@ struct EmitterSpawn : ParticleModule
 	void Spawn(EmitterInstance* emitter, Particle* particle);
 	void Update(float dt, EmitterInstance* emitter);			//spawn ratio and timer management
 
-	float spawnRatio = 0.0f;
+	float spawnRatio = 10.0f;
 	float timer = 0.0f;
 };
 
@@ -85,7 +85,7 @@ struct ParticleLifetime : ParticleModule
 	void Spawn(EmitterInstance* emitter, Particle* particle);
 	void Update(float dt, EmitterInstance* emitter);
 
-	float initialLifetime;
+	float initialLifetime = 5.0f;
 };
 
 #endif
