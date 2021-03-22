@@ -22,8 +22,8 @@
 #define FRAMES_ARE_CAPPED		true
 
 #define VERSION					"v0.5"
-#define TITLE					"NULL Engine"
-#define ORGANIZATION			"Angel Gonzalez // UPC - CITM - TTC"
+#define TITLE					"The Mandalorian: Sands of Arvala"
+#define ORGANIZATION			"Missclick Studios // UPC - CITM - TTC"
 
 #define DEFAULT_SCENE			"Assets/Models/street/Street environment_V01.FBX"
 #define DEFAULT_ANIMATION		"Assets/Models/Skeleton_Model/aniTest.fbx"
