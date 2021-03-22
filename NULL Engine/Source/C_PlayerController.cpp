@@ -137,6 +137,10 @@ bool C_PlayerController::CleanUp()
 		}
 	}
 
+	if (full != nullptr)	{ App->resourceManager->FreeResource(full->GetUID()); }
+	if (half != nullptr)	{ App->resourceManager->FreeResource(half->GetUID()); }
+	if (empty != nullptr)	{ App->resourceManager->FreeResource(empty->GetUID()); }
+
 	return true;
 }
 
@@ -499,58 +503,28 @@ void C_PlayerController::HandleAmmo(int ammo)
 		}
 	}
 
-	//if (!storedAmmoTex)
-	//{
-	//	std::string ammoTexPath = "Assets/Textures/HUD/Numbers/Ammo";
-	//	
-	//	for (uint i = 0; i < 11; ++i)
-	//	{
-	//		ammoTexPath += std::to_string(i) + ".png";
-	//		ammoTex[i]	= (R_Texture*)App->resourceManager->GetResourceFromLibrary(ammoTexPath.c_str());
-	//	}
+	if (!storedAmmoTex)
+	{
+		std::string ammoTexPath = "Assets/Textures/HUD/Numbers/Ammo";
+		
+		for (uint i = 0; i < 11; ++i)
+		{
+			std::string path	= ammoTexPath + std::to_string(i) + ".png";
+			ammoTex[i]			= (R_Texture*)App->resourceManager->GetResourceFromLibrary(path.c_str());
+		}
 
-	//	storedAmmoTex = true;
-	//}
-
-	//if (ammoUi != nullptr)
-	//{
-	//	C_Material* cMaterial = ammoUi->GetComponent<C_Material>();
-	//	if (cMaterial == nullptr)
-	//	{
-	//		return;
-	//	}
-
-	//	cMaterial->SwapTexture(ammoTex[ammo]);
-	//}
-
-	R_Texture* ammo10	= (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/HUD/Numbers/Ammo10.png");
-	R_Texture* ammo9	= (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/HUD/Numbers/Ammo9.png");
-	R_Texture* ammo8	= (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/HUD/Numbers/Ammo8.png");
-	R_Texture* ammo7	= (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/HUD/Numbers/Ammo7.png");
-	R_Texture* ammo6	= (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/HUD/Numbers/Ammo6.png");
-	R_Texture* ammo5	= (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/HUD/Numbers/Ammo5.png");
-	R_Texture* ammo4	= (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/HUD/Numbers/Ammo4.png");
-	R_Texture* ammo3	= (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/HUD/Numbers/Ammo3.png");
-	R_Texture* ammo2	= (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/HUD/Numbers/Ammo2.png");
-	R_Texture* ammo1	= (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/HUD/Numbers/Ammo1.png");
-	R_Texture* ammo0	= (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/HUD/Numbers/Ammo0.png");
+		storedAmmoTex = true;
+	}
 
 	if (ammoUi != nullptr)
 	{
-		switch (ammo)
+		C_Material* cMaterial = ammoUi->GetComponent<C_Material>();
+		if (cMaterial == nullptr)
 		{
-		default:	{ammoUi->GetComponent<C_Material>()->SwapTexture(ammo10); }	break;
-		case 9:		{ammoUi->GetComponent<C_Material>()->SwapTexture(ammo9); }	break;
-		case 8:		{ammoUi->GetComponent<C_Material>()->SwapTexture(ammo8); }	break;
-		case 7:		{ammoUi->GetComponent<C_Material>()->SwapTexture(ammo7); }	break;
-		case 6:		{ammoUi->GetComponent<C_Material>()->SwapTexture(ammo6); }	break;
-		case 5:		{ammoUi->GetComponent<C_Material>()->SwapTexture(ammo5); }	break;
-		case 4:		{ammoUi->GetComponent<C_Material>()->SwapTexture(ammo4); }	break;
-		case 3:		{ammoUi->GetComponent<C_Material>()->SwapTexture(ammo3); }	break;
-		case 2:		{ammoUi->GetComponent<C_Material>()->SwapTexture(ammo2); }	break;
-		case 1:		{ammoUi->GetComponent<C_Material>()->SwapTexture(ammo1); }	break;
-		case 0:		{ammoUi->GetComponent<C_Material>()->SwapTexture(ammo0); }	break;
+			return;
 		}
+
+		cMaterial->SwapTexture(ammoTex[ammo]);
 	}
 }
 
@@ -579,12 +553,12 @@ void C_PlayerController::HandleHp()
 		}
 	}
 
-	R_Texture* half = (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/HUD/HeartHalf.png");
-	R_Texture* full = (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/HUD/HeartFull.png");
-	R_Texture* empty = (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/HUD/HeartEmpty.png");
+	if (full == nullptr)	{ full = (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/HUD/HeartFull.png"); }
+	if (half == nullptr)	{ half = (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/HUD/HeartHalf.png"); }
+	if (empty == nullptr)	{ empty = (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/HUD/HeartEmpty.png"); }
 
 	if (App->input->GetKey(SDL_SCANCODE_K) == KeyState::KEY_DOWN && hearts != nullptr)
-	{
+	{	
 		heart -= 0.5;
 
 		if (heart < 0)

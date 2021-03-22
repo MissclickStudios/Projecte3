@@ -141,10 +141,15 @@ private:
 	Timer dashTime;// Duration of the dash
 	Timer dashColdown;
 
+	// Hearts
 	GameObject* hearts[3] = { nullptr, nullptr, nullptr };
 	float heart = 3;
 
 	GameObject* ammoUi = nullptr;
+
+	R_Texture* full		= nullptr;
+	R_Texture* half		= nullptr;
+	R_Texture* empty	= nullptr;
 };
 
 #endif // !__C_PLAYERCONTROLLER__
