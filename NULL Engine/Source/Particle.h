@@ -41,7 +41,10 @@ public:
 	float currentLifetime = 0;  
 
 	float rotation;
-	float4 velocity;
+
+	float3 movementDirection;
+	float velocity = 0.0f;
+
 	float size = 1.0f;
 	Color color;
 	float distanceToCamera;
