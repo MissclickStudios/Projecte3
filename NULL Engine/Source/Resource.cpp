@@ -16,7 +16,8 @@ references		(0),
 assetsPath		("[NONE]"), 
 assetsFile		("[NONE]"), 
 libraryPath		("[NONE]"), 
-libraryFile		("[NONE]")
+libraryFile		("[NONE]"),
+hasForcedUID	(false)
 {
 
 }
@@ -85,9 +86,8 @@ uint32 Resource::GetUID() const
 
 void Resource::ForceUID(const uint32& UID)
 {
-	uid = UID;											// TMP
-	
-	//uid = Random::LCG::GetRandomUint();
+	uid				= UID;
+	hasForcedUID	= true;									// TMP. Be careful, it will be applied to all cases, whether it is forced by the meta or willingly by the user.
 }
 
 uint Resource::GetReferences() const

@@ -233,7 +233,7 @@ uint M_ResourceManager::SaveResourceToLibrary(Resource* resource)
 		return 0;
 	}
 
-	if (ResourceHasMetaType(resource))
+	if (ResourceHasMetaType(resource) && !resource->hasForcedUID)
 	{
 		SaveMetaFile(resource);
 	}

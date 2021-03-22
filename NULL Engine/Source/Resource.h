@@ -64,6 +64,9 @@ public:
 	//ImporterSettings	GetImporterSettings	();
 	//void				SetImporterSettings	(ImporterSettings importer_settings);
 
+public:
+	bool hasForcedUID;
+
 private:
 	ResourceType		type;
 

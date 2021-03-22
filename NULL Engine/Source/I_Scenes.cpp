@@ -361,14 +361,6 @@ void Importer::Scenes::Utilities::CheckAndApplyForcedUID(Resource* resource)
 		return;
 	}
 
-	std::map<std::string, uint32> tmp;
-	for (auto item = Utilities::forcedUIDs.begin(); item != Utilities::forcedUIDs.end(); ++item)
-	{
-		tmp.emplace(item->first, item->second);
-	}
-
-	tmp.clear();
-
 	auto item = forcedUIDs.find(resource->GetAssetsFile());
 	if (item != forcedUIDs.end())
 	{
