@@ -155,7 +155,7 @@ void C_PlayerController::Movement()
 			if (dashColdown.ReadSec() >= dashingColdown)
 				dashColdown.Stop();
 		}
-		else if ((App->input->GetKey(SDL_SCANCODE_LSHIFT) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(1) == ButtonState::BUTTON_DOWN))
+		else if ((App->input->GetKey(SDL_SCANCODE_LSHIFT) == KeyState::KEY_DOWN || App->input->GetGameControllerTrigger(0) == ButtonState::BUTTON_DOWN))
 			Dash(rigidBody, movX, movY);
 	}
 	else if (dashTime.ReadSec() >= dashingTime)
@@ -234,7 +234,7 @@ void C_PlayerController::Weapon()
 		}
 	}
 
-	if (App->input->GetKey(SDL_SCANCODE_R) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(0) == ButtonState::BUTTON_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_R) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(2) == ButtonState::BUTTON_DOWN)
 		Reload();
 	if (ammo > 0)
 	{
