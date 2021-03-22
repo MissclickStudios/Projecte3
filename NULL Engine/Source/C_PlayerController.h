@@ -9,10 +9,13 @@
 
 #define BULLET_AMOUNT 10
 
+class R_Texture;
+
 class C_AudioSource;
 class C_Animator;
 class C_RigidBody;
 class GameObject;
+
 
 struct Bullet
 {
@@ -123,6 +126,9 @@ private:
 	Timer fireRateTimer;
 
 	GameObject* bulletStorage = nullptr;
+
+	R_Texture* ammoTex[11] = { 0 };
+	bool storedAmmoTex = false;
 
 	// Dash
 	float dashSpeed = 100.0f;

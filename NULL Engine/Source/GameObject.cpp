@@ -1,3 +1,5 @@
+#include "Profiler.h"
+
 #include "VariableTypedefs.h"
 #include "Macros.h"
 #include "Log.h"
@@ -320,7 +322,7 @@ float3* GameObject::GetAABBVertices() const
 }
 
 void GameObject::GetRenderers(std::vector<MeshRenderer>& meshRenderers, std::vector<CuboidRenderer>& cuboidRenderers, std::vector<SkeletonRenderer>& skeletonRenderers)
-{
+{	
 	/*if (to_delete || (parent != nullptr && parent->to_delete))			// TMP Quickfix. Deleted GameObjects could potentially generate Renderers. Fix the issue at the root later.
 	{
 		return;

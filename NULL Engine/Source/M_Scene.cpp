@@ -848,7 +848,7 @@ void M_Scene::SetCullingCamera(C_Camera* cullingCamera)
 }
 
 bool M_Scene::GameObjectIsInsideCullingCamera(GameObject* gameObject)
-{
+{	
 	if (cullingCamera == nullptr)
 	{
 		//LOG("[ERROR] Scene: There is currently no camera with culling activated!");

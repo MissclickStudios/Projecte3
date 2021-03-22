@@ -1,3 +1,4 @@
+#include "Profiler.h"
 #include "JSONParser.h"
 #include "Log.h"
 #include "Timer.h"
@@ -10,6 +11,8 @@
 #include "M_Window.h"
 #include "M_Editor.h"
 #include "M_Audio.h"
+
+#include "R_Texture.h"
 
 #include "GameObject.h"
 
@@ -37,6 +40,8 @@ C_PlayerController::C_PlayerController(GameObject* owner) : Component(owner, Com
 	dashTime.Stop();
 	dashColdown.Stop();
 	stepTimer.Stop();
+
+	//memset(ammoTex, 0, 11 * sizeof(R_Texture*));
 }
 
 C_PlayerController::~C_PlayerController()
@@ -45,6 +50,8 @@ C_PlayerController::~C_PlayerController()
 
 bool C_PlayerController::Update()
 {
+	OPTICK_CATEGORY("Player Controller Update", Optick::Category::Update);
+	
 	if (App->gameState != GameState::PLAY)
 		return true;
 
@@ -97,7 +104,7 @@ bool C_PlayerController::Update()
 	Movement();
 	Weapon();
 	HandleHp();
-
+	
 	HandleAmmo(ammo);
 
 
@@ -105,7 +112,7 @@ bool C_PlayerController::Update()
 }
 
 bool C_PlayerController::CleanUp()
-{
+{	
 	if (bulletStorage)
 	{
 		for (uint i = 0; i < BULLET_AMOUNT; ++i)
@@ -116,6 +123,17 @@ bool C_PlayerController::CleanUp()
 	
 		App->scene->DeleteGameObject(bulletStorage);
 		bulletStorage = nullptr;
+	}
+
+	if (storedAmmoTex)
+	{
+		for (uint i = 0; i < 11; ++i)
+		{
+			if (ammoTex[i] != 0)
+			{
+				App->resourceManager->FreeResource(ammoTex[i]->GetUID());
+			}
+		}
 	}
 
 	return true;
@@ -149,25 +167,27 @@ bool C_PlayerController::SaveState(ParsonNode& root) const
 
 bool C_PlayerController::LoadState(ParsonNode& root)
 {
-	speed = (float)root.GetNumber("Speed");
-	acceleration = (float)root.GetNumber("Acceleration");
-	deceleration = (float)root.GetNumber("Deceleration");
+	speed			= (float)root.GetNumber("Speed");
+	acceleration	= (float)root.GetNumber("Acceleration");
+	deceleration	= (float)root.GetNumber("Deceleration");
 
-	bulletSpeed = (float)root.GetNumber("Bullet Speed");
-	fireRate = (float)root.GetNumber("Fire Rate");
-	ammo = (float)root.GetNumber("Ammo");
-	maxAmmo = (float)root.GetNumber("Max Ammo");
-	automatic = root.GetBool("Automatic");
+	bulletSpeed		= (float)root.GetNumber("Bullet Speed");
+	fireRate		= (float)root.GetNumber("Fire Rate");
+	ammo			= (float)root.GetNumber("Ammo");
+	maxAmmo			= (float)root.GetNumber("Max Ammo");
+	automatic		= root.GetBool("Automatic");
 
-	dashSpeed = (float)root.GetNumber("Dash Speed");
-	dashingTime = (float)root.GetNumber("Dash Time");
-	dashingColdown = (float)root.GetNumber("Dash Coldown");
+	dashSpeed		= (float)root.GetNumber("Dash Speed");
+	dashingTime		= (float)root.GetNumber("Dash Time");
+	dashingColdown	= (float)root.GetNumber("Dash Coldown");
 
 	return true;
 }
 
 void C_PlayerController::Movement()
 {
+	OPTICK_CATEGORY("Player Controller Movement", Optick::Category::Update);
+	
 	C_RigidBody* rigidBody = GetOwner()->GetComponent<C_RigidBody>();
 	if (!rigidBody || rigidBody->IsStatic())
 		return;
@@ -251,6 +271,8 @@ void C_PlayerController::Rotate()
 
 void C_PlayerController::Weapon()
 {
+	OPTICK_CATEGORY("Player Controller Weapon", Optick::Category::Update);
+	
 	int aimX = 0;
 	int aimY = 0;
 	// Controller aim
@@ -457,6 +479,8 @@ void C_PlayerController::GetAimVectorAxis(int& axisX, int& axisY)
 
 void C_PlayerController::HandleAmmo(int ammo)
 {
+	OPTICK_CATEGORY("Player Controller Handle Ammo", Optick::Category::Update);
+	
 	std::vector<GameObject*>::iterator it = App->scene->GetGameObjects()->begin();
 
 	for (it; it != App->scene->GetGameObjects()->end(); ++it)
@@ -467,39 +491,64 @@ void C_PlayerController::HandleAmmo(int ammo)
 		}
 	}
 
-	R_Texture* ammo10 = (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/HUD/Numbers/Ammo10.png");
-	R_Texture* ammo9 = (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/HUD/Numbers/Ammo9.png");
-	R_Texture* ammo8 = (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/HUD/Numbers/Ammo8.png");
-	R_Texture* ammo7 = (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/HUD/Numbers/Ammo7.png");
-	R_Texture* ammo6 = (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/HUD/Numbers/Ammo6.png");
-	R_Texture* ammo5 = (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/HUD/Numbers/Ammo5.png");
-	R_Texture* ammo4 = (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/HUD/Numbers/Ammo4.png");
-	R_Texture* ammo3 = (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/HUD/Numbers/Ammo3.png");
-	R_Texture* ammo2 = (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/HUD/Numbers/Ammo2.png");
-	R_Texture* ammo1 = (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/HUD/Numbers/Ammo1.png");
-	R_Texture* ammo0 = (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/HUD/Numbers/Ammo0.png");
+	//if (!storedAmmoTex)
+	//{
+	//	std::string ammoTexPath = "Assets/Textures/HUD/Numbers/Ammo";
+	//	
+	//	for (uint i = 0; i < 11; ++i)
+	//	{
+	//		ammoTexPath += std::to_string(i) + ".png";
+	//		ammoTex[i]	= (R_Texture*)App->resourceManager->GetResourceFromLibrary(ammoTexPath.c_str());
+	//	}
+
+	//	storedAmmoTex = true;
+	//}
+
+	//if (ammoUi != nullptr)
+	//{
+	//	C_Material* cMaterial = ammoUi->GetComponent<C_Material>();
+	//	if (cMaterial == nullptr)
+	//	{
+	//		return;
+	//	}
+
+	//	cMaterial->SwapTexture(ammoTex[ammo]);
+	//}
+
+	R_Texture* ammo10	= (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/HUD/Numbers/Ammo10.png");
+	R_Texture* ammo9	= (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/HUD/Numbers/Ammo9.png");
+	R_Texture* ammo8	= (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/HUD/Numbers/Ammo8.png");
+	R_Texture* ammo7	= (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/HUD/Numbers/Ammo7.png");
+	R_Texture* ammo6	= (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/HUD/Numbers/Ammo6.png");
+	R_Texture* ammo5	= (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/HUD/Numbers/Ammo5.png");
+	R_Texture* ammo4	= (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/HUD/Numbers/Ammo4.png");
+	R_Texture* ammo3	= (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/HUD/Numbers/Ammo3.png");
+	R_Texture* ammo2	= (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/HUD/Numbers/Ammo2.png");
+	R_Texture* ammo1	= (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/HUD/Numbers/Ammo1.png");
+	R_Texture* ammo0	= (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/HUD/Numbers/Ammo0.png");
 
 	if (ammoUi != nullptr)
 	{
 		switch (ammo)
 		{
-		default: {ammoUi->GetComponent<C_Material>()->SwapTexture(ammo10); } break;
-		case 9: {ammoUi->GetComponent<C_Material>()->SwapTexture(ammo9); } break;
-		case 8: {ammoUi->GetComponent<C_Material>()->SwapTexture(ammo8); } break;
-		case 7: {ammoUi->GetComponent<C_Material>()->SwapTexture(ammo7); } break;
-		case 6: {ammoUi->GetComponent<C_Material>()->SwapTexture(ammo6); } break;
-		case 5: {ammoUi->GetComponent<C_Material>()->SwapTexture(ammo5); } break;
-		case 4: {ammoUi->GetComponent<C_Material>()->SwapTexture(ammo4); } break;
-		case 3: {ammoUi->GetComponent<C_Material>()->SwapTexture(ammo3); } break;
-		case 2: {ammoUi->GetComponent<C_Material>()->SwapTexture(ammo2); } break;
-		case 1: {ammoUi->GetComponent<C_Material>()->SwapTexture(ammo1); } break;
-		case 0: {ammoUi->GetComponent<C_Material>()->SwapTexture(ammo0); } break;
+		default:	{ammoUi->GetComponent<C_Material>()->SwapTexture(ammo10); }	break;
+		case 9:		{ammoUi->GetComponent<C_Material>()->SwapTexture(ammo9); }	break;
+		case 8:		{ammoUi->GetComponent<C_Material>()->SwapTexture(ammo8); }	break;
+		case 7:		{ammoUi->GetComponent<C_Material>()->SwapTexture(ammo7); }	break;
+		case 6:		{ammoUi->GetComponent<C_Material>()->SwapTexture(ammo6); }	break;
+		case 5:		{ammoUi->GetComponent<C_Material>()->SwapTexture(ammo5); }	break;
+		case 4:		{ammoUi->GetComponent<C_Material>()->SwapTexture(ammo4); }	break;
+		case 3:		{ammoUi->GetComponent<C_Material>()->SwapTexture(ammo3); }	break;
+		case 2:		{ammoUi->GetComponent<C_Material>()->SwapTexture(ammo2); }	break;
+		case 1:		{ammoUi->GetComponent<C_Material>()->SwapTexture(ammo1); }	break;
+		case 0:		{ammoUi->GetComponent<C_Material>()->SwapTexture(ammo0); }	break;
 		}
 	}
 }
 
 void C_PlayerController::HandleHp()
 {
+	OPTICK_CATEGORY("Player Controller Handle Hp", Optick::Category::Update);
 
 	std::vector<GameObject*>::iterator it = App->scene->GetGameObjects()->begin();
 
