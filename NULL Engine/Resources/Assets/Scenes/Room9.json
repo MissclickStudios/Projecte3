@@ -185,7 +185,7 @@
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "pCube264",
-            "IsActive": true,
+            "IsActive": false,
             "IsStatic": false,
             "IsSceneRoot": false,
             "ShowBoundingBoxes": false,
@@ -233,10 +233,10 @@
                         "File": "1427030406.nemat"
                     },
                     "Shader": {
-                        "UID": 1879981381,
+                        "UID": 847880949,
                         "Name": "DefaultShader.shader",
-                        "Path": "Library\/Shaders\/1879981381.neshader",
-                        "File": "1879981381.neshader"
+                        "Path": "Library\/Shaders\/847880949.neshader",
+                        "File": "847880949.neshader"
                     }
                 }
             ]
@@ -465,10 +465,10 @@
                         "File": "312897204.netex"
                     },
                     "Shader": {
-                        "UID": 1879981381,
+                        "UID": 847880949,
                         "Name": "DefaultShader.shader",
-                        "Path": "Library\/Shaders\/1879981381.neshader",
-                        "File": "1879981381.neshader"
+                        "Path": "Library\/Shaders\/847880949.neshader",
+                        "File": "847880949.neshader"
                     }
                 }
             ]
@@ -606,10 +606,10 @@
                         "File": "2113630031.nemat"
                     },
                     "Shader": {
-                        "UID": 1879981381,
+                        "UID": 847880949,
                         "Name": "DefaultShader.shader",
-                        "Path": "Library\/Shaders\/1879981381.neshader",
-                        "File": "1879981381.neshader"
+                        "Path": "Library\/Shaders\/847880949.neshader",
+                        "File": "847880949.neshader"
                     }
                 }
             ]
@@ -643,6 +643,154 @@
                         1,
                         1
                     ]
+                }
+            ]
+        },
+        {
+            "UID": 290517763,
+            "ParentUID": 1254937974,
+            "PrefabID": 1331719244,
+            "IsPrefab": true,
+            "Name": "Cylinder001",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -116.08900451660156,
+                        8.3110170364379883,
+                        -173.920166015625
+                    ],
+                    "LocalRotation": [
+                        -0.70710629224777222,
+                        -0.00085724133532494307,
+                        -0.00085724866949021816,
+                        0.70710623264312744
+                    ],
+                    "LocalScale": [
+                        0.42399999499320984,
+                        0.42399999499320984,
+                        0.42399999499320984
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 1441189807,
+                    "Name": "Cylinder001.nemesh",
+                    "Path": "Library\/Meshes\/1441189807.nemesh",
+                    "File": "1441189807.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 197114366,
+                        "Color": [
+                            0.58799999952316284,
+                            0.58799999952316284,
+                            0.58799999952316284,
+                            1
+                        ],
+                        "Name": "Cylinder001.nemat",
+                        "Path": "Library\/Materials\/197114366.nemat",
+                        "File": "197114366.nemat"
+                    },
+                    "Texture": {
+                        "UID": 1251108293,
+                        "Name": "moisture_vaporator.png",
+                        "Path": "Library\/Textures\/1251108293.netex",
+                        "File": "1251108293.netex"
+                    },
+                    "Shader": {
+                        "UID": 847880949,
+                        "Name": "DefaultShader.shader",
+                        "Path": "Library\/Shaders\/847880949.neshader",
+                        "File": "847880949.neshader"
+                    }
+                },
+                {},
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 3,
+                    "Size Y": 3,
+                    "Size Z": 15,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
+                }
+            ]
+        },
+        {
+            "UID": 291848169,
+            "ParentUID": 1909114761,
+            "PrefabID": 530376835,
+            "IsPrefab": true,
+            "Name": "Box001",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -2.8951606750488281,
+                        0,
+                        -18.972869873046875
+                    ],
+                    "LocalRotation": [
+                        -0.70710664987564087,
+                        5.2815423146057583e-08,
+                        0,
+                        0.70710688829421997
+                    ],
+                    "LocalScale": [
+                        7.9800224304199219,
+                        7.9799990653991699,
+                        7.9799990653991699
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 751198668,
+                    "Name": "Box001.nemesh",
+                    "Path": "Library\/Meshes\/751198668.nemesh",
+                    "File": "751198668.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 1533209437,
+                        "Color": [
+                            0.58823531866073608,
+                            0.58823531866073608,
+                            0.58823531866073608,
+                            1
+                        ],
+                        "Name": "Box001.nemat",
+                        "Path": "Library\/Materials\/1533209437.nemat",
+                        "File": "1533209437.nemat"
+                    },
+                    "Texture": {
+                        "UID": 878770956,
+                        "Name": "chest_arvala.png",
+                        "Path": "Library\/Textures\/878770956.netex",
+                        "File": "878770956.netex"
+                    },
+                    "Shader": {
+                        "UID": 847880949,
+                        "Name": "DefaultShader.shader",
+                        "Path": "Library\/Shaders\/847880949.neshader",
+                        "File": "847880949.neshader"
+                    }
                 }
             ]
         },
@@ -700,10 +848,10 @@
                         "File": "1578244986.nemat"
                     },
                     "Shader": {
-                        "UID": 1879981381,
+                        "UID": 847880949,
                         "Name": "DefaultShader.shader",
-                        "Path": "Library\/Shaders\/1879981381.neshader",
-                        "File": "1879981381.neshader"
+                        "Path": "Library\/Shaders\/847880949.neshader",
+                        "File": "847880949.neshader"
                     }
                 }
             ]
@@ -800,6 +948,38 @@
                         0.99999994039535522,
                         1,
                         1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 397539924,
+            "ParentUID": 1418589682,
+            "PrefabID": 1331719244,
+            "IsPrefab": true,
+            "Name": "moisture_vaporator2.FBX",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -6.8299970626831055,
+                        0.46681737899780273,
+                        -38.466236114501953
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        0.1600000262260437,
+                        0.1600000262260437,
+                        0.1600000262260437
                     ]
                 }
             ]
@@ -990,10 +1170,10 @@
                         "File": "896890851.netex"
                     },
                     "Shader": {
-                        "UID": 1879981381,
+                        "UID": 847880949,
                         "Name": "DefaultShader.shader",
-                        "Path": "Library\/Shaders\/1879981381.neshader",
-                        "File": "1879981381.neshader"
+                        "Path": "Library\/Shaders\/847880949.neshader",
+                        "File": "847880949.neshader"
                     }
                 }
             ]
@@ -1425,7 +1605,7 @@
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "pCube267",
-            "IsActive": true,
+            "IsActive": false,
             "IsStatic": false,
             "IsSceneRoot": false,
             "ShowBoundingBoxes": false,
@@ -1473,10 +1653,10 @@
                         "File": "1427030406.nemat"
                     },
                     "Shader": {
-                        "UID": 1879981381,
+                        "UID": 847880949,
                         "Name": "DefaultShader.shader",
-                        "Path": "Library\/Shaders\/1879981381.neshader",
-                        "File": "1879981381.neshader"
+                        "Path": "Library\/Shaders\/847880949.neshader",
+                        "File": "847880949.neshader"
                     }
                 }
             ]
@@ -1667,10 +1847,10 @@
                         "File": "896890851.netex"
                     },
                     "Shader": {
-                        "UID": 1879981381,
+                        "UID": 847880949,
                         "Name": "DefaultShader.shader",
-                        "Path": "Library\/Shaders\/1879981381.neshader",
-                        "File": "1879981381.neshader"
+                        "Path": "Library\/Shaders\/847880949.neshader",
+                        "File": "847880949.neshader"
                     }
                 }
             ]
@@ -1921,10 +2101,10 @@
                         "File": "58662871.nemat"
                     },
                     "Shader": {
-                        "UID": 1879981381,
+                        "UID": 847880949,
                         "Name": "DefaultShader.shader",
-                        "Path": "Library\/Shaders\/1879981381.neshader",
-                        "File": "1879981381.neshader"
+                        "Path": "Library\/Shaders\/847880949.neshader",
+                        "File": "847880949.neshader"
                     }
                 }
             ]
@@ -1954,9 +2134,9 @@
                         0.99928301572799683
                     ],
                     "LocalScale": [
-                        0.0279999990016222,
-                        0.028000000864267349,
-                        0.0279999990016222
+                        0.05000000074505806,
+                        0.05000000074505806,
+                        0.05000000074505806
                     ]
                 },
                 {},
@@ -2070,7 +2250,7 @@
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "pCube270",
-            "IsActive": true,
+            "IsActive": false,
             "IsStatic": false,
             "IsSceneRoot": false,
             "ShowBoundingBoxes": false,
@@ -2078,18 +2258,18 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        -4.3568673133850098,
+                        -4.356867790222168,
                         0.59055119752883911,
-                        0.98210734128952026
+                        0.98210853338241577
                     ],
                     "LocalRotation": [
                         0,
                         0,
                         0,
-                        0.99999994039535522
+                        1
                     ],
                     "LocalScale": [
-                        0.3937009871006012,
+                        0.15999999642372131,
                         0.78740197420120239,
                         0.3937009871006012
                     ]
@@ -2118,17 +2298,17 @@
                         "File": "1427030406.nemat"
                     },
                     "Shader": {
-                        "UID": 1879981381,
+                        "UID": 847880949,
                         "Name": "DefaultShader.shader",
-                        "Path": "Library\/Shaders\/1879981381.neshader",
-                        "File": "1879981381.neshader"
+                        "Path": "Library\/Shaders\/847880949.neshader",
+                        "File": "847880949.neshader"
                     }
                 }
             ]
         },
         {
             "UID": 888400124,
-            "ParentUID": 811048100,
+            "ParentUID": 1190859535,
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "MainScene",
@@ -2186,6 +2366,38 @@
                         1,
                         1,
                         1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 910363791,
+            "ParentUID": 888400124,
+            "PrefabID": 1331719244,
+            "IsPrefab": true,
+            "Name": "moisture_vaporator2.FBX",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -48.942604064941406,
+                        0,
+                        -16.985301971435547
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        0.1600000262260437,
+                        0.1600000262260437,
+                        0.1600000262260437
                     ]
                 }
             ]
@@ -2536,10 +2748,10 @@
                         "File": "337782335.netex"
                     },
                     "Shader": {
-                        "UID": 1879981381,
+                        "UID": 847880949,
                         "Name": "DefaultShader.shader",
-                        "Path": "Library\/Shaders\/1879981381.neshader",
-                        "File": "1879981381.neshader"
+                        "Path": "Library\/Shaders\/847880949.neshader",
+                        "File": "847880949.neshader"
                     }
                 }
             ]
@@ -2598,10 +2810,10 @@
                         "File": "2113630031.nemat"
                     },
                     "Shader": {
-                        "UID": 1879981381,
+                        "UID": 847880949,
                         "Name": "DefaultShader.shader",
-                        "Path": "Library\/Shaders\/1879981381.neshader",
-                        "File": "1879981381.neshader"
+                        "Path": "Library\/Shaders\/847880949.neshader",
+                        "File": "847880949.neshader"
                     }
                 }
             ]
@@ -2660,10 +2872,10 @@
                         "File": "2113630031.nemat"
                     },
                     "Shader": {
-                        "UID": 1879981381,
+                        "UID": 847880949,
                         "Name": "DefaultShader.shader",
-                        "Path": "Library\/Shaders\/1879981381.neshader",
-                        "File": "1879981381.neshader"
+                        "Path": "Library\/Shaders\/847880949.neshader",
+                        "File": "847880949.neshader"
                     }
                 }
             ]
@@ -2820,7 +3032,7 @@
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "pCube260",
-            "IsActive": true,
+            "IsActive": false,
             "IsStatic": false,
             "IsSceneRoot": false,
             "ShowBoundingBoxes": false,
@@ -2868,10 +3080,10 @@
                         "File": "154446870.nemat"
                     },
                     "Shader": {
-                        "UID": 1879981381,
+                        "UID": 847880949,
                         "Name": "DefaultShader.shader",
-                        "Path": "Library\/Shaders\/1879981381.neshader",
-                        "File": "1879981381.neshader"
+                        "Path": "Library\/Shaders\/847880949.neshader",
+                        "File": "847880949.neshader"
                     }
                 }
             ]
@@ -2948,6 +3160,38 @@
                         1,
                         1,
                         1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1254937974,
+            "ParentUID": 1418589682,
+            "PrefabID": 1331719244,
+            "IsPrefab": true,
+            "Name": "moisture_vaporator.FBX",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        49.073062896728516,
+                        0,
+                        20.725761413574219
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        0.1600000262260437,
+                        0.1600000262260437,
+                        0.1600000262260437
                     ]
                 }
             ]
@@ -3086,7 +3330,7 @@
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "pCube265",
-            "IsActive": true,
+            "IsActive": false,
             "IsStatic": false,
             "IsSceneRoot": false,
             "ShowBoundingBoxes": false,
@@ -3134,10 +3378,10 @@
                         "File": "1427030406.nemat"
                     },
                     "Shader": {
-                        "UID": 1879981381,
+                        "UID": 847880949,
                         "Name": "DefaultShader.shader",
-                        "Path": "Library\/Shaders\/1879981381.neshader",
-                        "File": "1879981381.neshader"
+                        "Path": "Library\/Shaders\/847880949.neshader",
+                        "File": "847880949.neshader"
                     }
                 }
             ]
@@ -3438,10 +3682,10 @@
                         "File": "2113630031.nemat"
                     },
                     "Shader": {
-                        "UID": 1879981381,
+                        "UID": 847880949,
                         "Name": "DefaultShader.shader",
-                        "Path": "Library\/Shaders\/1879981381.neshader",
-                        "File": "1879981381.neshader"
+                        "Path": "Library\/Shaders\/847880949.neshader",
+                        "File": "847880949.neshader"
                     }
                 }
             ]
@@ -3490,6 +3734,38 @@
                 },
                 {
                     "Type": 20
+                }
+            ]
+        },
+        {
+            "UID": 1418589682,
+            "ParentUID": 888400124,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Props",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
                 }
             ]
         },
@@ -3586,6 +3862,86 @@
                         0.99999994039535522,
                         0.99999994039535522
                     ]
+                }
+            ]
+        },
+        {
+            "UID": 1521833689,
+            "ParentUID": 397539924,
+            "PrefabID": 1331719244,
+            "IsPrefab": true,
+            "Name": "Cylinder001",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        23.6744384765625,
+                        5.7666206359863281,
+                        -1.991363525390625
+                    ],
+                    "LocalRotation": [
+                        -0.70710629224777222,
+                        -0.00085725128883495927,
+                        -0.0008572509977966547,
+                        0.70710623264312744
+                    ],
+                    "LocalScale": [
+                        0.42411011457443237,
+                        0.42411017417907715,
+                        0.42411008477210999
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 1441189807,
+                    "Name": "Cylinder001.nemesh",
+                    "Path": "Library\/Meshes\/1441189807.nemesh",
+                    "File": "1441189807.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 197114366,
+                        "Color": [
+                            0.58799999952316284,
+                            0.58799999952316284,
+                            0.58799999952316284,
+                            1
+                        ],
+                        "Name": "Cylinder001.nemat",
+                        "Path": "Library\/Materials\/197114366.nemat",
+                        "File": "197114366.nemat"
+                    },
+                    "Texture": {
+                        "UID": 1251108293,
+                        "Name": "moisture_vaporator.png",
+                        "Path": "Library\/Textures\/1251108293.netex",
+                        "File": "1251108293.netex"
+                    },
+                    "Shader": {
+                        "UID": 847880949,
+                        "Name": "DefaultShader.shader",
+                        "Path": "Library\/Shaders\/847880949.neshader",
+                        "File": "847880949.neshader"
+                    }
+                },
+                {},
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 3,
+                    "Size Y": 3,
+                    "Size Z": 15,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
                 }
             ]
         },
@@ -4008,6 +4364,86 @@
             ]
         },
         {
+            "UID": 1674120558,
+            "ParentUID": 910363791,
+            "PrefabID": 1331719244,
+            "IsPrefab": true,
+            "Name": "Cylinder001",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        9.7248449325561523,
+                        0
+                    ],
+                    "LocalRotation": [
+                        -0.70710629224777222,
+                        -0.00085725123062729836,
+                        -0.00085725105600431561,
+                        0.70710623264312744
+                    ],
+                    "LocalScale": [
+                        0.42411011457443237,
+                        0.42411017417907715,
+                        0.42411008477210999
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 1441189807,
+                    "Name": "Cylinder001.nemesh",
+                    "Path": "Library\/Meshes\/1441189807.nemesh",
+                    "File": "1441189807.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 197114366,
+                        "Color": [
+                            0.58799999952316284,
+                            0.58799999952316284,
+                            0.58799999952316284,
+                            1
+                        ],
+                        "Name": "Cylinder001.nemat",
+                        "Path": "Library\/Materials\/197114366.nemat",
+                        "File": "197114366.nemat"
+                    },
+                    "Texture": {
+                        "UID": 1251108293,
+                        "Name": "moisture_vaporator.png",
+                        "Path": "Library\/Textures\/1251108293.netex",
+                        "File": "1251108293.netex"
+                    },
+                    "Shader": {
+                        "UID": 847880949,
+                        "Name": "DefaultShader.shader",
+                        "Path": "Library\/Shaders\/847880949.neshader",
+                        "File": "847880949.neshader"
+                    }
+                },
+                {},
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 3,
+                    "Size Y": 3,
+                    "Size Z": 15,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
+                }
+            ]
+        },
+        {
             "UID": 1685243774,
             "ParentUID": 82783790,
             "PrefabID": 1638586207,
@@ -4140,9 +4576,9 @@
                         -0.015896409749984741
                     ],
                     "LocalScale": [
-                        0.028000004589557648,
-                        0.028000000864267349,
-                        0.028000004589557648
+                        0.05000000074505806,
+                        0.05000000074505806,
+                        0.05000000074505806
                     ]
                 },
                 {},
@@ -4159,6 +4595,50 @@
                 },
                 {
                     "Type": 18
+                }
+            ]
+        },
+        {
+            "UID": 1710497785,
+            "ParentUID": 449124402,
+            "PrefabID": 454241799,
+            "IsPrefab": true,
+            "Name": "Obstacle12",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        40.352462768554688,
+                        1.7482340335845947,
+                        -56.202651977539063
+                    ],
+                    "LocalRotation": [
+                        0,
+                        -0.0033333871979266405,
+                        0,
+                        0.99999445676803589
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {},
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 3,
+                    "Size Y": 5,
+                    "Size Z": 6,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
                 }
             ]
         },
@@ -4587,6 +5067,38 @@
             ]
         },
         {
+            "UID": 1909114761,
+            "ParentUID": 1418589682,
+            "PrefabID": 530376835,
+            "IsPrefab": true,
+            "Name": "chest_arvala.FBX",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        35.613807678222656,
+                        1.1515733003616333,
+                        -56.282413482666016
+                    ],
+                    "LocalRotation": [
+                        0,
+                        -0.012287663295865059,
+                        0,
+                        0.99992460012435913
+                    ],
+                    "LocalScale": [
+                        0.39869013428688049,
+                        0.39869043231010437,
+                        0.39869013428688049
+                    ]
+                }
+            ]
+        },
+        {
             "UID": 1913597822,
             "ParentUID": 1760810243,
             "PrefabID": 1638586207,
@@ -4728,10 +5240,10 @@
                         "File": "337782335.netex"
                     },
                     "Shader": {
-                        "UID": 1879981381,
+                        "UID": 847880949,
                         "Name": "DefaultShader.shader",
-                        "Path": "Library\/Shaders\/1879981381.neshader",
-                        "File": "1879981381.neshader"
+                        "Path": "Library\/Shaders\/847880949.neshader",
+                        "File": "847880949.neshader"
                     }
                 }
             ]
@@ -4854,10 +5366,10 @@
                         "File": "1132440193.nemat"
                     },
                     "Shader": {
-                        "UID": 1879981381,
+                        "UID": 847880949,
                         "Name": "DefaultShader.shader",
-                        "Path": "Library\/Shaders\/1879981381.neshader",
-                        "File": "1879981381.neshader"
+                        "Path": "Library\/Shaders\/847880949.neshader",
+                        "File": "847880949.neshader"
                     }
                 }
             ]
