@@ -30,6 +30,7 @@ To report a bug with an `issue`, the bug reporting template that will be shown a
 - **Gold:** June 7th to 16th 
 
 ## Internal Milestones
+
 There will be a 1h long internal QA session per sprint, every Saturday. Should there be no new build, the QA session would be either postponed for a day or cancelled.
 
 External QA sessions will be scheduled after a major milestone has been reached.
@@ -54,6 +55,7 @@ Whenever a team member finds a bug, it must be reported with a GitHub Issue and 
 ## QA sessions
 
 ### Weekly QA:
+
 
 - Every Saturday if it's not a week before before a Milestone the team will perform a QA test. This Weekly QA does not need the whole team testing it necessarily though it will be preferred. 
 
