@@ -6,6 +6,7 @@
 
 #include "Log.h"
 #include "ImportSettings.h"												// No need to centralize it, each resource will have their own settings.
+#include "Macros.h"
 
 class ParsonNode;
 
@@ -21,10 +22,13 @@ enum class ResourceType
 	FOLDER,
 	ANIMATION,
 	SCENE,
+	SHADER,
+	PARTICLE_SYSTEM,
+	PREFAB,
 	NONE
 };
 
-class Resource
+class NULL_API Resource
 {
 public:
 	Resource(ResourceType type);
@@ -59,6 +63,9 @@ public:
 
 	//ImporterSettings	GetImporterSettings	();
 	//void				SetImporterSettings	(ImporterSettings importer_settings);
+
+public:
+	bool hasForcedUID;
 
 private:
 	ResourceType		type;

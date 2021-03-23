@@ -39,7 +39,7 @@ struct MaterialData
 	std::string		textureAssetsPath;
 };
 
-class R_Material : public Resource
+class NULL_API R_Material : public Resource
 {
 public:
 	R_Material();
@@ -49,6 +49,8 @@ public:
 
 	bool SaveMeta(ParsonNode& metaRoot) const override;
 	bool LoadMeta(const ParsonNode& metaRoot) override;
+
+	void SetColor(Color color);
 
 public:
 	std::vector<MaterialData>	materials;									// In the end the amount of materials that will be used is "constant". It could be an array as mat[7] = { 0, 0,... };

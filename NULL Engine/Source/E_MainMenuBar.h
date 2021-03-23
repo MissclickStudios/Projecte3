@@ -18,6 +18,7 @@ private:
 	bool WindowMainMenuItem			();
 	bool ViewMainMenuItem			();
 	bool GameObjectsMainMenuItem	();
+	bool CreateMainMenuItem();
 	bool HelpMainMenuItem			();
 
 	bool CloseAppPopup				();

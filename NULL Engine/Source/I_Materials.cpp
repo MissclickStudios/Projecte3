@@ -11,6 +11,7 @@
 #include "Color.h"
 
 #include "Application.h"
+#include "FileSystemDefinitions.h"
 #include "M_FileSystem.h"
 #include "R_Material.h"
 #include "R_Texture.h"

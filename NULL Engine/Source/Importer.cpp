@@ -18,6 +18,8 @@
 
 #include "Importer.h"
 
+#include "MemoryManager.h"
+
 using namespace Importer;																						// Not a good thing to do but it will be employed only inside this .cpp file.
 
 void Importer::InitializeImporters()
@@ -51,6 +53,15 @@ bool Importer::ImportMesh(const char* buffer, R_Mesh* rMesh)
 
 bool Importer::ImportTexture(const char* buffer, uint size, R_Texture* rTexture)
 {
+	std::map<std::string, uint32> forcedUIDs;
+	App->resourceManager->GetForcedUIDsFromMeta(rTexture->GetAssetsPath(), forcedUIDs);
+
+	if (!forcedUIDs.empty())
+	{
+		rTexture->ForceUID(forcedUIDs.begin()->second);
+		rTexture->SetLibraryPathAndFile();
+	}
+	
 	bool success = Importer::Textures::Import(buffer, size, rTexture);
 
 	/*if (rTexture != nullptr && rTexture->GetTextureID() != 0)

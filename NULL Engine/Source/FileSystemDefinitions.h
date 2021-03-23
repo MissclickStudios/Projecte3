@@ -7,6 +7,10 @@
 #define ASSETS_MODELS_PATH		"Assets/Models/"
 #define ASSETS_SCENES_PATH		"Assets/Scenes/"
 #define ASSETS_TEXTURES_PATH	"Assets/Textures/"
+#define ASSETS_SOUNDBANKS_PATH	"Assets/SoundBanks/"
+#define ASSETS_SHADERS_PATH		"Assets/Shaders/"
+#define ASSETS_SKYBOX_PATH		"Assets/Textures/Skybox/"
+#define ASSETS_PREFABS_PATH		"Assets/Prefabs/"
 
 #define ENGINE_PATH				"Engine/"
 #define ENGINE_DIRECTORY		"Engine"
@@ -34,6 +38,9 @@
 #define MATERIALS_EXTENSION		".nemat"
 #define SCENES_EXTENSION		".nescene"
 #define TEXTURES_EXTENSION		".netex"
+#define SHADERS_EXTENSION		".neshader"
+
+#define PREFAB_EXTENSION		".prefab"
 
 #define META_EXTENSION			".meta"
 #define DOTLESS_META_EXTENSION	"meta"

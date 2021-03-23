@@ -13,6 +13,7 @@ struct aiAnimation;
 struct ModelNode;
 struct MaterialData;
 
+class Resource;
 class R_Model;
 
 typedef unsigned int uint;
@@ -35,15 +36,20 @@ namespace Importer
 			void			ImportMesh					(const char* nodeName, const aiMesh* assimpMesh, ModelNode& modelNode);
 			void			ImportMaterial				(const char* nodeName, const aiMaterial* assimpMaterial, R_Model* rModel, ModelNode& modelNode);
 			void			ImportTexture				(const std::vector<MaterialData>& materials, ModelNode& modelNode);
+			void			ImportShader				(const char* nodeName, R_Model* rModel, ModelNode& modelNode);
 
 			void			ImportAnimations			(const aiScene* assimpScene, R_Model* modelNode);
 
 			bool			NodeIsDummyNode				(const aiNode& assimpNode);
 
+			void			CheckAndApplyForcedUID		(Resource* resource);
+
 			static std::vector<aiMesh*>				aiMeshes;
 			static std::vector<aiMaterial*>			aiMaterials;
 			static std::map<uint, ModelNode>		loadedNodes;
 			static std::map<std::string, uint32>	loadedTextures;
+
+			static std::map<std::string, uint32>	forcedUIDs;								// First item is name of the model node and second the UID to force the resource to have.
 		}
 	}
 }

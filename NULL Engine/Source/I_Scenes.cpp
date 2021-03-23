@@ -14,6 +14,7 @@
 #include "Random.h"
 
 #include "Application.h"
+#include "FileSystemDefinitions.h"
 #include "M_FileSystem.h"
 #include "M_ResourceManager.h"
 
@@ -23,12 +24,13 @@
 #include "R_Material.h"																					// 
 #include "R_Texture.h"																					//
 #include "R_Animation.h"																				// --------------------------------------------------------------
+#include "R_Shader.h"
 
 #include "I_Meshes.h"
 #include "I_Materials.h"
 #include "I_Textures.h"
 #include "I_Animations.h"
-
+#include "I_Shaders.h"
 #include "I_Scenes.h"
 
 #include "MemoryManager.h"
@@ -79,6 +81,10 @@ void Importer::Scenes::Import(const char* buffer, uint size, R_Model* rModel)
 		}
 	}
 
+	App->resourceManager->GetForcedUIDsFromMeta(rModel->GetAssetsPath(), Utilities::forcedUIDs);				// Getting all the UIDs to force if imported asset already has a .meta file.
+
+	Utilities::CheckAndApplyForcedUID(rModel);																	// Checking if R_Model* has a UID to be forced. Cast rModel to Resource?
+
 	Utilities::ProcessNode(assimpScene, assimpScene->mRootNode, rModel, ModelNode());							// First Parent is empty. Later assigned to scene_root.
 
 	Utilities::ImportAnimations(assimpScene, rModel);
@@ -87,12 +93,14 @@ void Importer::Scenes::Import(const char* buffer, uint size, R_Model* rModel)
 	Utilities::aiMaterials.clear();
 	Utilities::loadedNodes.clear();
 	Utilities::loadedTextures.clear();
+
+	Utilities::forcedUIDs.clear();
 }
 
 void Importer::Scenes::Utilities::ProcessNode(const aiScene* assimpScene, const aiNode* assimpNode, R_Model* rModel, const ModelNode& parent)
 {
 	ModelNode modelNode	= ModelNode();
-	modelNode.uid			= Random::LCG::GetRandomUint();
+	modelNode.uid		= Random::LCG::GetRandomUint();
 	modelNode.parentUID	= parent.uid;
 
 	assimpNode = Utilities::ImportTransform(assimpNode, modelNode);
@@ -118,24 +126,29 @@ const aiNode* Importer::Scenes::Utilities::ImportTransform(const aiNode* assimpN
 
 	assimpNode->mTransformation.Decompose(aiT.scale, aiT.rotation, aiT.position);							// --- Getting the Transform stored in the node.
 
-	maT.position	= { aiT.position.x, aiT.position.y, aiT.position.z };								// 
-	maT.rotation	= { aiT.rotation.x, aiT.rotation.y, aiT.rotation.z, aiT.rotation.w };				// 
+	maT.position	= { aiT.position.x, aiT.position.y, aiT.position.z };									// 
+	maT.rotation	= { aiT.rotation.x, aiT.rotation.y, aiT.rotation.z, aiT.rotation.w };					// 
 	maT.scale		= { aiT.scale.x, aiT.scale.y, aiT.scale.z };											// ---------------------------------------------
 
-	while (NodeIsDummyNode(*assimpNode))																		// All dummy nodes will contain the "_$AssimpFbx$_" string and only one child node.
+	while (NodeIsDummyNode(*assimpNode))																	// All dummy nodes will contain the "_$AssimpFbx$_" string and only 1 child node.
 	{
-		assimpNode = assimpNode->mChildren[0];																	// As dummies will only have one child, selecting the next one to process is easy.
+		/*if (strstr(assimpNode->mName.C_Str(), "_$AssimpFbx$_PreRotation") != nullptr)
+		{
+			break;
+		}*/
+		
+		assimpNode = assimpNode->mChildren[0];																// As dummies will only have one child, selecting the next one to process is easy.
 
 		assimpNode->mTransformation.Decompose(aiT.scale, aiT.rotation, aiT.position);						// --- Getting the Transform stored in the dummy node.
 
 		Transform dummy;																					// 
-		dummy.position	= { aiT.position.x, aiT.position.y, aiT.position.z };							// 
-		dummy.rotation	= { aiT.rotation.x, aiT.rotation.y, aiT.rotation.z, aiT.rotation.w };			// 
+		dummy.position	= { aiT.position.x, aiT.position.y, aiT.position.z };								// 
+		dummy.rotation	= { aiT.rotation.x, aiT.rotation.y, aiT.rotation.z, aiT.rotation.w };				// 
 		dummy.scale		= { aiT.scale.x, aiT.scale.y, aiT.scale.z };										// ---------------------------------------------------
 
-		/*ma_t.position	= */maT.position.Add(dummy.position);												// --- Adding the dummy's Transform to the current one.
-		/*ma_t.rotation	= */maT.rotation.Mul(dummy.rotation);												// 
-		/*ma_t.scale	= */maT.scale.Mul(dummy.scale);													// ----------------------------------------------------
+		maT.position	+= dummy.position;																	// --- Adding the dummy's Transform to the current one.
+		maT.rotation	= maT.rotation * dummy.rotation;													// 
+		maT.scale		= { maT.scale.x * dummy.scale.x, maT.scale.y * dummy.scale.y, maT.scale.z * dummy.scale.z }; // ----------------------------------------------------
 	}
 	
 	model_node.transform	= maT;
@@ -164,8 +177,9 @@ void Importer::Scenes::Utilities::ImportMeshesAndMaterials(const aiScene* assimp
 		if (item != loadedNodes.end())
 		{
 			modelNode.meshUID		= item->second.meshUID;
-			modelNode.materialUID = item->second.materialUID;
+			modelNode.materialUID	= item->second.materialUID;
 			modelNode.textureUID	= item->second.textureUID;
+			modelNode.shaderUID		= item->second.shaderUID;
 			continue;
 		}
 		
@@ -187,7 +201,7 @@ void Importer::Scenes::Utilities::ImportMeshesAndMaterials(const aiScene* assimp
 	}
 }
 
-void Importer::Scenes::Utilities::ImportMesh(const char* nodeName, const aiMesh* assimpMesh, ModelNode& modelNode)
+void Importer::Scenes::Utilities::ImportMesh (const char* nodeName, const aiMesh* assimpMesh, ModelNode& modelNode)
 {
 	std::string assetsPath = ASSETS_MODELS_PATH + std::string(nodeName) + MESHES_EXTENSION;						// As meshes are contained in models, the assets path is kind of made-up.
 	R_Mesh* rMesh = (R_Mesh*)App->resourceManager->CreateResource(ResourceType::MESH, assetsPath.c_str());
@@ -199,6 +213,8 @@ void Importer::Scenes::Utilities::ImportMesh(const char* nodeName, const aiMesh*
 		return;
 	}
 	
+	CheckAndApplyForcedUID(rMesh);
+
 	modelNode.meshUID = rMesh->GetUID();
 	App->resourceManager->SaveResourceToLibrary(rMesh);
 	App->resourceManager->DeallocateResource(rMesh);
@@ -207,7 +223,7 @@ void Importer::Scenes::Utilities::ImportMesh(const char* nodeName, const aiMesh*
 void Importer::Scenes::Utilities::ImportMaterial(const char* nodeName, const aiMaterial* assimpMaterial, R_Model* rModel, ModelNode& modelNode)
 {
 	std::string matFullPath	= App->fileSystem->GetDirectory(rModel->GetAssetsPath()) + nodeName + MATERIALS_EXTENSION;
-	R_Material* rMaterial		= (R_Material*)App->resourceManager->CreateResource(ResourceType::MATERIAL, matFullPath.c_str());			// Only considering one texture per mesh.
+	R_Material* rMaterial	= (R_Material*)App->resourceManager->CreateResource(ResourceType::MATERIAL, matFullPath.c_str());			// Only considering one texture per mesh.
 
 	if (rMaterial == nullptr)
 	{
@@ -215,7 +231,9 @@ void Importer::Scenes::Utilities::ImportMaterial(const char* nodeName, const aiM
 	}
 	
 	Importer::Materials::Import(assimpMaterial, rMaterial);
-	
+
+	CheckAndApplyForcedUID(rMaterial);
+
 	modelNode.materialUID = rMaterial->GetUID();																								//
 
 	Utilities::ImportTexture(rMaterial->materials, modelNode);
@@ -228,7 +246,7 @@ void Importer::Scenes::Utilities::ImportTexture(const std::vector<MaterialData>&
 {
 	for (uint i = 0; i < materials.size(); ++i)
 	{
-		const char* texPath	= materials[i].textureAssetsPath.c_str();
+		const char* texPath		= materials[i].textureAssetsPath.c_str();
 		char* buffer			= nullptr;
 		uint read				= App->fileSystem->Load(texPath, &buffer);
 		if (buffer != nullptr && read > 0)
@@ -247,24 +265,26 @@ void Importer::Scenes::Utilities::ImportTexture(const std::vector<MaterialData>&
 			}
 			
 			R_Texture* rTexture = (R_Texture*)App->resourceManager->CreateResource(ResourceType::TEXTURE, texPath);
-			uint texId = Importer::Textures::Import(buffer, read, rTexture);											//
-
-			if (texId == 0)
+			
+			bool success = Importer::Textures::Import(buffer, read, rTexture);											//
+			if (success == 0)
 			{
-				App->resourceManager->DeleteResource(rTexture);
+				App->resourceManager->DeallocateResource(rTexture);
 				RELEASE_ARRAY(buffer);
 				continue;
 			}
 
+			CheckAndApplyForcedUID(rTexture);
+
 			if (materials[i].type == TextureType::DIFFUSE)																// For now only the diffuse texture will be used on models' meshes.
 			{
 				modelNode.textureUID	= rTexture->GetUID();
-				modelNode.textureName = rTexture->GetAssetsFile();
+				modelNode.textureName	= rTexture->GetAssetsFile();
 			}
 
 			loadedTextures.emplace(texPath, rTexture->GetUID());
 
-			App->resourceManager->SaveResourceToLibrary(rTexture);
+			App->resourceManager->SaveResourceToLibrary(rTexture);														// Generating custom file + meta and emplacing in library.
 			App->resourceManager->DeallocateResource(rTexture);
 
 			RELEASE_ARRAY(buffer);
@@ -274,6 +294,27 @@ void Importer::Scenes::Utilities::ImportTexture(const std::vector<MaterialData>&
 			LOG("[ERROR] Importer: Could not load texture from given path! Path: %s", texPath);
 		}
 	}
+}
+
+void Importer::Scenes::Utilities::ImportShader(const char* nodeName, R_Model* rModel, ModelNode& modelNode)
+{
+	std::string sFullPath = App->fileSystem->GetDirectory(rModel->GetAssetsPath()) + nodeName + SHADERS_EXTENSION;
+	R_Shader* rShader = (R_Shader*)App->resourceManager->CreateResource(ResourceType::SHADER, sFullPath.c_str());			// Only considering one texture per mesh.
+
+	if (rShader == nullptr)
+	{
+		LOG("[ERROR] Importer: Could not Import Shader! Error: Given R_Shader* was nullptr.");
+		return;
+	}
+
+	Importer::Shaders::Import(sFullPath.c_str(), rShader);
+
+	CheckAndApplyForcedUID(rShader);
+
+	modelNode.materialUID = rShader->GetUID();																								//
+
+	App->resourceManager->SaveResourceToLibrary(rShader);
+	App->resourceManager->DeallocateResource(rShader);
 }
 
 void Importer::Scenes::Utilities::ImportAnimations(const aiScene* assimpScene, R_Model* rModel)
@@ -291,11 +332,11 @@ void Importer::Scenes::Utilities::ImportAnimations(const aiScene* assimpScene, R
 
 	for (uint i = 0; i < assimpScene->mNumAnimations; ++i)
 	{
-		aiAnimation* assimpAnimation = assimpScene->mAnimations[i];
+		aiAnimation* assimpAnimation	= assimpScene->mAnimations[i];
 
-		std::string name			= assimpAnimation->mName.C_Str();
-		std::string assetsPath		= ASSETS_MODELS_PATH + name + ANIMATIONS_EXTENSION;
-		R_Animation* rAnimation	= (R_Animation*)App->resourceManager->CreateResource(ResourceType::ANIMATION, assetsPath.c_str());
+		std::string name				= assimpAnimation->mName.C_Str();
+		std::string assetsPath			= ASSETS_MODELS_PATH + name + ANIMATIONS_EXTENSION;
+		R_Animation* rAnimation			= (R_Animation*)App->resourceManager->CreateResource(ResourceType::ANIMATION, assetsPath.c_str());
 
 		if (rAnimation == nullptr)
 		{
@@ -303,6 +344,8 @@ void Importer::Scenes::Utilities::ImportAnimations(const aiScene* assimpScene, R
 		}
 
 		Importer::Animations::Import(assimpAnimation, rAnimation);
+
+		CheckAndApplyForcedUID(rAnimation);
 
 		rModel->animations.emplace(rAnimation->GetUID(), rAnimation->GetName());
 
@@ -313,7 +356,22 @@ void Importer::Scenes::Utilities::ImportAnimations(const aiScene* assimpScene, R
 
 bool Importer::Scenes::Utilities::NodeIsDummyNode(const aiNode& assimpNode)
 {
-	return (strstr(assimpNode.mName.C_Str(), "_$AssimpFbx$_") != nullptr && assimpNode.mNumChildren == 1);	// All dummy nodes will contain the "_$AssimpFbx$_" string and only one child node.
+	return (strstr(assimpNode.mName.C_Str(), "_$AssimpFbx$_") != nullptr && assimpNode.mNumChildren == 1);	// All dummy nodes contain the "_$AssimpFbx$_" string and only one child node.
+}
+
+void Importer::Scenes::Utilities::CheckAndApplyForcedUID(Resource* resource)
+{
+	if (resource == nullptr)
+	{
+		return;
+	}
+
+	auto item = forcedUIDs.find(resource->GetAssetsFile());
+	if (item != forcedUIDs.end())
+	{
+		resource->ForceUID(item->second);
+		resource->SetLibraryPathAndFile();
+	}
 }
 
 uint Importer::Scenes::Save(const R_Model* rModel, char** buffer)

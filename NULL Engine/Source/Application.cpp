@@ -1,86 +1,82 @@
-#include <functional>			//function pointers
+/*#include <functional>			//function pointers
 #include <algorithm>			//for_each()
-#include <memory>				//Smart pointers
+#include <memory>				//Smart pointers*/
 
 #include "JSONParser.h"
 #include "Time.h"
 #include "FrameData.h"
 #include "Hourglass.h"
+#include "Profiler.h"
 
 #include "Module.h"
 #include "M_Window.h"
 #include "M_Input.h"
 #include "M_Scene.h"
 #include "M_Renderer3D.h"
-#include "M_Editor.h"
 #include "M_Camera3D.h"
 #include "M_FileSystem.h"
 #include "M_ResourceManager.h"
+#include "M_Audio.h"
+#include "M_Physics.h"
+#include "M_UISystem.h"
 
 #include "Application.h"
 
 #include "MemoryManager.h"
 
+Application* App = nullptr;
+
 Application::Application() :
 quit			(false),
 debug			(false), 
 hardwareInfo	(),
-window			(nullptr),
-input			(nullptr),
-scene			(nullptr),
-editor			(nullptr),
-renderer		(nullptr),
-camera			(nullptr),
-fileSystem		(nullptr),
-resourceManager(nullptr)
+window			(new M_Window()),
+input			(new M_Input()),
+camera			(new M_Camera3D()),
+renderer		(new M_Renderer3D()),
+scene			(new M_Scene()),
+fileSystem		(new M_FileSystem()),
+resourceManager	(new M_ResourceManager()),
+audio			(new M_Audio()),
+physics			(new M_Physics()),
+uiSystem		(new M_UISystem()),
+logger			(nullptr),
+gameState		(GameState::STOP)
 {
+	App = this;
 	//PERF_TIMER_START(perf_timer);
-	
-	// Modules -----------------------------------
-	window				= new M_Window();
-	input				= new M_Input();
-	camera				= new M_Camera3D();
-	renderer			= new M_Renderer3D();
-	scene				= new M_Scene();
-	editor				= new M_Editor();
-	fileSystem			= new M_FileSystem();
-	resourceManager	= new M_ResourceManager();
 
 	// The order of calls is very important!
 	// Modules will Init() Start() and Update in this order
 	// They will CleanUp() in reverse order
 
-	// Main Modules
+	/*// Main Modules
 	AddModule(window);
 	AddModule(camera);
 	AddModule(input);
 	AddModule(fileSystem);
 	AddModule(resourceManager);
+	AddModule(audio);
+	AddModule(physics);
+	AddModule(uiSystem);
 
 	// Scenes
 	AddModule(scene);
-	AddModule(editor);
 
 	// Renderer last!
 	AddModule(renderer);
-	// -------------------------------------------
+	// -------------------------------------------*/
 
 	// Save/Load variables
-	wantToLoad			= false;
-	wantToSave			= false;
+	wantToLoad				= false;
+	wantToSave				= false;
 	userHasSaved			= false;
 
 	// Framerate variables
 	frameCap				= 0;
-	secondsSinceStartup	= 0.0f;
-	framesAreCapped		= framesAreCapped;
+	secondsSinceStartup		= 0.0f;
+	framesAreCapped			= framesAreCapped;
 	displayFramerateData	= false;
-
-	// Game Mode variables
-	play					= false;
-	pause					= false;
-	step					= false;
-	stop					= false;
 
 	//PERF_TIMER_PEEK(perf_timer);
 }
@@ -107,37 +103,20 @@ bool Application::Init()
 	bool ret = true;
 
 	char* buffer = nullptr;
-	uint size = fileSystem->Load("Engine/Configuration/configuration.JSON", &buffer);
-	if (size > 0)																			// Check if the configuration is empty and load the default configuration for the engine.
-	{
-		engineName			= TITLE;														// Change Later?
-		organization		= ORGANIZATION;
-		frameCap			= 60;
-		framesAreCapped	= true;
-	}
-	else
-	{
-		uint defaultSize = fileSystem->Load("Engine/Configuration/default_configuration.JSON", &buffer);
-		if (defaultSize <= 0)
-		{
-			LOG("[ERROR] Failed to load project settings.");
-			return false;
-		}
+	uint size = fileSystem->Load(CONFIGURATION_FILE_PATH, &buffer);
 
-		engineName			= TITLE;
-		organization		= ORGANIZATION;
-		frameCap			= 60;
-		framesAreCapped	= true;
-	}
-
+	engineName			= TITLE;														// Change Later?
+	organization		= ORGANIZATION;
+	frameCap			= 60;
+	framesAreCapped		= true;
+	
 	ParsonNode config(buffer);
-	ParsonNode node = config.GetNode("EditorState");
 
 	std::vector<Module*>::iterator item = modules.begin();
 
 	while (item != modules.end() && ret)
 	{
-		ret = (*item)->Init(node.GetNode((*item)->GetName()));		// Constructs and gives every module a handle for their own configuration node. M_Input -> "Input".
+		ret = (*item)->Init(config.GetNode((*item)->GetName()));		// Constructs and gives every module a handle for their own configuration node. M_Input -> "Input".
 		++item;
 	}
 	
@@ -176,22 +155,27 @@ bool Application::Start()												// IS IT NEEDED?
 	// After all Init calls we call Start() in all modules
 	LOG("Application Start --------------");
 
-	bool ret = true;
+	bool success = true;
 
-	std::vector<Module*>::iterator item = modules.begin();
+	//std::vector<Module*>::iterator item = modules.begin();
+	//while (item != modules.end() && success)								// Move to start()?
+	//{
+	//	if ((*item)->IsActive())
+	//	{
+	//		success = (*item)->Start();
+	//	}
 
-	while (item != modules.end() && ret)
-	{
-		ret = (*item)->Start();
-		++item;
-	}
+	//	++item;
+	//}
 	
-	return ret;
+	return success;
 }
 
 // Call PreUpdate, Update and PostUpdate on all modules
 UpdateStatus Application::Update()
 {
+	OPTICK_CATEGORY("Application Update",Optick::Category::Update)
+
 	UpdateStatus ret = UpdateStatus::CONTINUE;
 	
 	if (quit)
@@ -205,12 +189,10 @@ UpdateStatus Application::Update()
 	{
 		ret = PreUpdate();
 	}
-	
 	if (ret == UpdateStatus::CONTINUE)
 	{
 		ret = DoUpdate();
 	}
-
 	if (ret == UpdateStatus::CONTINUE)
 	{
 		ret = PostUpdate();
@@ -224,6 +206,8 @@ UpdateStatus Application::Update()
 bool Application::CleanUp()
 {
 	bool ret = true;
+
+	SaveConfigurationNow();
 
 	std::vector<Module*>::reverse_iterator item = modules.rbegin();
 
@@ -245,12 +229,24 @@ bool Application::CleanUp()
 // ---------------------------------------------
 void Application::PrepareUpdate()
 {
+	static bool stepped = false;
+	
 	Time::Real::Update();
 
-	if (play || step)
+	if (stepped)																										// TMP. Dirty fix so Animations can be stepped. Clean Later.
+	{
+		gameState	= GameState::PAUSE;
+		stepped		= false;
+	}
+
+	if (gameState == GameState::PLAY || gameState == GameState::STEP)
 	{
 		Time::Game::Update();
-		step = false;
+
+		if (gameState == GameState::STEP)
+		{
+			stepped = true;
+		}
 	}
 }
 
@@ -280,12 +276,14 @@ UpdateStatus Application::PreUpdate()
 
 UpdateStatus Application::DoUpdate()
 {
+
 	UpdateStatus ret = UpdateStatus::CONTINUE;
 
 	std::vector<Module*>::iterator item = modules.begin();
-	
-	item = modules.begin();
 
+	OPTICK_CATEGORY("Modules update", Optick::Category::Update)
+
+	item = modules.begin();
 	while (item != modules.end() && ret == UpdateStatus::CONTINUE)
 	{
 		if ((*item)->IsActive())
@@ -306,12 +304,13 @@ UpdateStatus Application::DoUpdate()
 
 UpdateStatus Application::PostUpdate()
 {
+	OPTICK_CATEGORY("Application Post Update", Optick::Category::Update)
+	
 	UpdateStatus ret = UpdateStatus::CONTINUE;
 
 	std::vector<Module*>::iterator item = modules.begin();
 	
 	item = modules.begin();
-
 	while (item != modules.end() && ret == UpdateStatus::CONTINUE)
 	{
 		if ((*item)->IsActive())
@@ -332,17 +331,16 @@ UpdateStatus Application::PostUpdate()
 }
 
 void Application::FinishUpdate()
-{
+{	
 	if (wantToLoad)
 	{
-		LoadConfigurationNow(loadConfigFile.c_str());
 
 		wantToLoad = false;
 	}
 
 	if (wantToSave)
 	{
-		SaveConfigurationNow(saveConfigFile.c_str());
+		SaveConfigurationNow();
 
 		wantToSave = false;
 	}
@@ -360,9 +358,6 @@ void Application::FinishUpdate()
 	{
 		App->window->SetTitle(engineName.c_str());
 	}
-
-	// Editor: Configuration Frame Data Histograms
-	UpdateFrameData(Time::Real::GetFramesLastSecond(), Time::Real::GetMsLastFrame());
 }
 // ---------------------------------------------
 
@@ -370,33 +365,17 @@ void Application::FinishUpdate()
 void Application::SaveConfiguration(const char* file)
 {
 	wantToSave = true;
-	saveConfigFile = ("Engine/Configuration/configuration.json");
 }
 
 void Application::LoadConfiguration(const char* file)
 {
 	wantToLoad = true;
-
-	if (userHasSaved)
-	{
-		loadConfigFile = ("Configuration.json");
-	}
-	else
-	{
-		loadConfigFile = ("DefaultConfiguration.json");
-	}
 }
 
-void Application::SaveConfigurationNow(const char* file)
+void Application::SaveConfigurationNow()
 {
-	if (file == nullptr)
-	{
-		LOG("[ERROR] Application: Could not Save Engine Configuration! Error: Given File Path string was nullptr.");
-		return;
-	}
 	
 	ParsonNode config;
-	ParsonNode node = config.SetNode("EditorState");
 
 	for (uint i = 0; i < modules.size(); ++i)
 	{
@@ -404,10 +383,10 @@ void Application::SaveConfigurationNow(const char* file)
 	}
 
 	char* buffer = nullptr;
-	uint written = config.SerializeToFile(file, &buffer);
+	uint written = config.SerializeToFile(CONFIGURATION_FILE_PATH, &buffer);
 	if (written > 0)
 	{
-		LOG("[STATE] Application: Successfully Saved Engine Configuration! Path: %s", file);
+		LOG("[STATE] Application: Successfully Saved Engine Configuration! Path: %s");
 	}
 	else
 	{
@@ -415,16 +394,6 @@ void Application::SaveConfigurationNow(const char* file)
 	}
 
 	RELEASE_ARRAY(buffer);
-}
-
-void Application::LoadConfigurationNow(const char* file)
-{
-	for (uint i = 0; i < modules.size(); ++i)
-	{
-		//JSON_Object* obj = 
-
-		//modules[i]->LoadConfiguration(Configuration());
-	}
 }
 
 // --- APPLICATION & ENGINE STATE ---
@@ -474,7 +443,7 @@ void Application::SetFrameCap(uint newCap)
 // --- EDITOR METHODS ---
 void Application::AddEditorLog(const char* log)
 {
-	if (!quit && editor != nullptr)													// Second condition is not really necessary. It's more of a reminder to keep it in mind.
+	if (!quit && logger != nullptr)													// Second condition is not really necessary. It's more of a reminder to keep it in mind.
 	{
 		//std::string full_log = App->fileSystem->NormalizePath(log);				// Switching all "\\" for "/". They need to be changed due to "\" being a Windows-specific thing.
 
@@ -485,18 +454,13 @@ void Application::AddEditorLog(const char* log)
 
 		std::string shortLog = fullLog.substr(logStart, logEnd);				// Returns the string that is within the given positions.
 
-		editor->AddConsoleLog(shortLog.c_str());									// Priorized readability over reducing to AddConsoleLog(full_log.substr(log_start, log_end)).
+		logger->AddConsoleLog(shortLog.c_str());									// Priorized readability over reducing to AddConsoleLog(full_log.substr(log_start, log_end)).
 	}
 }
 
 void Application::RequestBrowser(const char* link)
 {
 	ShellExecuteA(NULL, "open", link, NULL, "", 0);
-}
-
-void Application::UpdateFrameData(int frames, int ms)
-{
-	editor->UpdateFrameData(frames, ms);
 }
 
 
@@ -548,6 +512,8 @@ HardwareInfo Application::GetHardwareInfo() const
 {
 	return hardwareInfo;
 }
+
+// --- GAME STATE METHODS
 
 /*if (display_framerate_data)
 {

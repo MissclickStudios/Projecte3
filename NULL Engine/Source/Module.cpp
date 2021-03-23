@@ -1,6 +1,8 @@
 #include "JSONParser.h"
 
 #include "Module.h"
+#include "Profiler.h"
+#include "MemoryManager.h"
 
 Module::Module(const char* name, bool isActive) : isActive(isActive)
 {
@@ -45,6 +47,18 @@ bool Module::CleanUp()
 bool Module::LoadConfiguration(ParsonNode& file)
 {
 	return true;
+}
+
+void Module::ProcessInput(SDL_Event& event)
+{
+}
+
+void Module::PostSceneRendering()
+{
+}
+
+void Module::AddConsoleLog(const char* log)
+{
 }
 
 bool Module::SaveConfiguration(ParsonNode& file) const

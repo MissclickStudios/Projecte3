@@ -1,3 +1,5 @@
+#include "Profiler.h"
+
 #include "VariableTypedefs.h"
 #include "Macros.h"
 #include "Log.h"
@@ -7,6 +9,8 @@
 
 #include "Application.h"
 #include "M_Renderer3D.h"																				// TMP. Move the Renderers generation elsewhere.
+
+#include "M_Camera3D.h"																					//TEMP. putting the cam if game time
 
 #include "R_Mesh.h"
 
@@ -18,6 +22,25 @@
 #include "C_Camera.h"
 #include "C_Animator.h"
 #include "C_Animation.h"
+#include "C_AudioSource.h"
+#include "C_AudioListener.h"
+#include "C_RigidBody.h"
+#include "C_BoxCollider.h"
+#include "C_SphereCollider.h"
+#include "C_CapsuleCollider.h"
+#include "C_PlayerController.h"
+#include "C_BulletBehavior.h"
+#include "C_PropBehavior.h"
+#include "C_CameraBehavior.h"
+#include "C_GateBehavior.h"
+
+#include "C_ParticleSystem.h"
+
+#include "C_Canvas.h"
+
+#include "C_UI_Image.h"
+#include "C_UI_Text.h"
+
 
 #include "GameObject.h"
 
@@ -42,8 +65,8 @@ show_bounding_boxes	(false)
 	obb.SetNegativeInfinity();
 	aabb.SetNegativeInfinity();
 
-	obb_vertices = new float3[8];																	// Bounding boxes will always have 8 vertices as they are Cuboids.
-	aabb_vertices = new float3[8];																	// Bounding boxes will always have 8 vertices as they are Cuboids.
+	obb_vertices	= new float3[8];																		// Bounding boxes will always have 8 vertices as they are Cuboids.
+	aabb_vertices	= new float3[8];																		// Bounding boxes will always have 8 vertices as they are Cuboids.
 }
 
 GameObject::GameObject(std::string name, bool isActive, bool isStatic) :
@@ -57,8 +80,7 @@ transform			(nullptr),
 is_master_root		(false),
 is_scene_root		(false),
 is_bone				(false),
-to_delete			(false),
-show_bounding_boxes	(false)
+to_delete			(false)
 {
 	if (name.empty())
 	{
@@ -117,6 +139,9 @@ bool GameObject::SaveState(ParsonNode& root) const
 	uint parentUID = (parent != nullptr) ? parent->uid : 0;
 	root.SetNumber("ParentUID", parentUID);
 
+	root.SetNumber("PrefabID", prefabID);
+	root.SetBool("IsPrefab", isPrefab);
+
 	root.SetString("Name", name.c_str());
 	root.SetBool("IsActive", isActive);
 	root.SetBool("IsStatic", isStatic);
@@ -137,14 +162,19 @@ bool GameObject::SaveState(ParsonNode& root) const
 bool GameObject::LoadState(ParsonNode& root)
 {
 	bool ret = true;
+
+
 	
 	ForceUID((uint)root.GetNumber("UID"));
 	parent_uid = (uint)root.GetNumber("ParentUID");
 
-	name = root.GetString("Name");
-	isActive = root.GetBool("IsActive");
-	isStatic = root.GetBool("IsStatic");
-	is_scene_root = root.GetBool("IsSceneRoot");
+	prefabID = (uint)root.GetNumber("PrefabID");
+	isPrefab = root.GetBool("IsPrefab");
+
+	name				= root.GetString("Name");
+	isActive			= root.GetBool("IsActive");
+	isStatic			= root.GetBool("IsStatic");
+	is_scene_root		= root.GetBool("IsSceneRoot");
 	show_bounding_boxes = root.GetBool("ShowBoundingBoxes");
 
 	// Recalculate AABB and OBB
@@ -158,7 +188,7 @@ bool GameObject::LoadState(ParsonNode& root)
 		if (!componentNode.NodeIsValid())
 			continue;
 		
-		ComponentType type	= (ComponentType)componentNode.GetNumber("Type");
+		ComponentType type	= (ComponentType)((int)componentNode.GetNumber("Type"));
 
 		if (type == ComponentType::TRANSFORM)
 		{
@@ -171,17 +201,37 @@ bool GameObject::LoadState(ParsonNode& root)
 
 			switch (type)
 			{
-			//case COMPONENT_TYPE::TRANSFORM: { component = new C_Transform(this); }	break;
-			case ComponentType::MESH:		{ component = new C_Mesh(this); }		break;
-			case ComponentType::MATERIAL:	{ component = new C_Material(this); }	break;
-			case ComponentType::LIGHT:		{ component = new C_Light(this); }		break;
-			case ComponentType::CAMERA:	{ component = new C_Camera(this); }		break;
-			case ComponentType::ANIMATOR:	{ component = new C_Animator(this); }	break;
-			case ComponentType::ANIMATION: { component = new C_Animation(this); }	break;
+			//case COMPONENT_TYPE::TRANSFORM:		{ component = new C_Transform(this); }			break;
+			case ComponentType::MESH:				{ component = new C_Mesh(this); }				break;
+			case ComponentType::MATERIAL:			{ component = new C_Material(this); }			break;
+			case ComponentType::LIGHT:				{ component = new C_Light(this); }				break;
+			case ComponentType::CAMERA:				{ component = new C_Camera(this); } 			break;
+			case ComponentType::ANIMATOR:			{ component = new C_Animator(this); }			break;
+			case ComponentType::ANIMATION:			{ component = new C_Animation(this); }			break;
+			case ComponentType::AUDIOSOURCE:		{ component = new C_AudioSource(this); }		break;
+			case ComponentType::AUDIOLISTENER:		{ component = new C_AudioListener(this); }		break;
+			case ComponentType::RIGIDBODY:			{ component = new C_RigidBody(this); }			break;
+			case ComponentType::BOX_COLLIDER:		{ component = new C_BoxCollider(this); }		break;
+			case ComponentType::SPHERE_COLLIDER:	{ component = new C_SphereCollider(this); }		break;
+			case ComponentType::CAPSULE_COLLIDER:	{ component = new C_CapsuleCollider(this); }	break;
+			case ComponentType::PLAYER_CONTROLLER:	{ component = new C_PlayerController(this); }	break;
+			case ComponentType::BULLET_BEHAVIOR:	{ component = new C_BulletBehavior(this); }		break;
+			case ComponentType::PROP_BEHAVIOR:		{ component = new C_PropBehavior(this); }		break;
+			case ComponentType::CAMERA_BEHAVIOR:	{ component = new C_CameraBehavior(this); }		break;
+			case ComponentType::GATE_BEHAVIOR:		{ component = new C_GateBehavior(this); }		break;
+			case ComponentType::PARTICLE_SYSTEM:	{ component = new C_ParticleSystem(this); }		break;
+			case ComponentType::CANVAS:				{ component = new C_Canvas(this); }				break;
+			case ComponentType::UI_IMAGE:			{ component = new C_UI_Image(this); }			break;
+			case ComponentType::UI_TEXT:			{ component = new C_UI_Text(this); }			break;
 			}
 
 			if (component != nullptr)
 			{
+				if ((component->GetType() == ComponentType::CAMERA) && (App->gameState == GameState::PLAY)) //TODO fix this hardcode
+				{
+					App->camera->SetCurrentCamera((C_Camera*)component);
+				}
+
 				component->LoadState(componentNode);
 				components.push_back(component);
 			}
@@ -203,18 +253,31 @@ void GameObject::FreeComponents()
 		RELEASE(components[i]);
 	}
 
-	components.clear();
+	if(!components.empty()) components.clear();
 }
 
 void GameObject::FreeChilds()
 {
 	if (parent != nullptr)
 	{
-		parent->DeleteChild(this);											// Deleting this GameObject from the childs list of its parent.
+		parent->DeleteChild(this);												// Deleting this GameObject from the childs list of its parent.
 	}
 
-	for (uint i = 0; i < childs.size(); ++i)
+	/*if (parent != nullptr)													// Dirty fix to avoid innecessary calls to GetAllChilds().
 	{
+		std::vector<GameObject*> childsToDelete;
+		GetAllChilds(childsToDelete);
+		for (uint i = 0; i < childsToDelete.size(); ++i)
+		{
+			childsToDelete[i]->parent = nullptr;
+			childsToDelete[i]->to_delete = true;
+		}
+
+		childsToDelete.clear();
+	}*/
+
+	for (uint i = 0; i < childs.size(); ++i)
+	{	
 		if (childs[i] != nullptr)
 		{
 			childs[i]->parent = nullptr;
@@ -259,12 +322,18 @@ float3* GameObject::GetAABBVertices() const
 }
 
 void GameObject::GetRenderers(std::vector<MeshRenderer>& meshRenderers, std::vector<CuboidRenderer>& cuboidRenderers, std::vector<SkeletonRenderer>& skeletonRenderers)
-{
+{	
+	/*if (to_delete || (parent != nullptr && parent->to_delete))			// TMP Quickfix. Deleted GameObjects could potentially generate Renderers. Fix the issue at the root later.
+	{
+		return;
+	}*/
+	
 	std::vector<C_Mesh*> cMeshes;
 	GetComponents<C_Mesh>(cMeshes);
 
-	C_Material* cMaterial = GetComponent<C_Material>();
-	C_Camera* cCamera = GetComponent<C_Camera>();
+	C_Transform* cTransform = GetComponent<C_Transform>();
+	C_Material* cMaterial	= GetComponent<C_Material>();
+	C_Camera* cCamera		= GetComponent<C_Camera>();
 	C_Animator* cAnimation	= GetComponent<C_Animator>();
 
 	for (uint i = 0; i < cMeshes.size(); ++i)
@@ -272,8 +341,8 @@ void GameObject::GetRenderers(std::vector<MeshRenderer>& meshRenderers, std::vec
 		if (cMeshes[i] != nullptr)
 		{
 			if (cMeshes[i]->IsActive() && cMeshes[i]->GetMesh() != nullptr)
-			{
-				meshRenderers.push_back(MeshRenderer(GetComponent<C_Transform>()->GetWorldTransform(), cMeshes[i], cMaterial));
+			{				
+				meshRenderers.push_back(MeshRenderer(cTransform->GetWorldTransformPtr(), cMeshes[i], cMaterial));
 			}
 		}
 	}
@@ -282,7 +351,7 @@ void GameObject::GetRenderers(std::vector<MeshRenderer>& meshRenderers, std::vec
 
 	if (cCamera != nullptr)
 	{
-		if (!cCamera->FrustumIsHidden())
+		if (!cCamera->FrustumIsHidden() && App->gameState != GameState::PLAY)
 		{
 			cuboidRenderers.push_back(CuboidRenderer(cCamera->GetFrustumVertices(), CuboidType::FRUSTUM));
 		}
@@ -296,13 +365,22 @@ void GameObject::GetRenderers(std::vector<MeshRenderer>& meshRenderers, std::vec
 		}
 	}
 
-	if (show_bounding_boxes || App->renderer->GetRenderBoundingBoxes())
+	if ((show_bounding_boxes || App->renderer->GetRenderBoundingBoxes()) && App->gameState != GameState::PLAY)
 	{
 		obb.GetCornerPoints(obb_vertices);
 		aabb.GetCornerPoints(aabb_vertices);
 
 		cuboidRenderers.push_back(CuboidRenderer(obb_vertices, CuboidType::OBB));
 		cuboidRenderers.push_back(CuboidRenderer(aabb_vertices, CuboidType::AABB));
+	}
+
+	if (App->renderer->GetRenderColliders())
+	{
+		C_BoxCollider* collider = GetComponent<C_BoxCollider>();
+		if (collider && collider->ToShowCollider())
+		{
+			cuboidRenderers.push_back(CuboidRenderer(collider->GetCornerPoints(), CuboidType::COLLIDER));
+		}
 	}
 }
 
@@ -338,6 +416,7 @@ bool GameObject::SetParent(GameObject* newParent)
 	}
 
 	success = newParent->AddChild(this);
+
 	if (success)
 	{
 		parent = newParent;
@@ -452,7 +531,7 @@ void GameObject::GetAllChilds(std::vector<GameObject*>& childs)
 {
 	if (this->childs.empty())
 	{
-		LOG("[WARNING] Game Object: GameObject { %s } did not have any childs!");
+		//LOG("[WARNING] Game Object: GameObject { %s } did not have any childs!", this->GetName());
 		return;
 	}
 	
@@ -467,7 +546,7 @@ void GameObject::GetAllChilds(std::map<std::string, GameObject*>& childs)
 {
 	if (this->childs.empty())
 	{
-		LOG("[WARNING] Game Object: GameObject { %s } did not have any childs!", this->GetName());
+		//LOG("[WARNING] Game Object: GameObject { %s } did not have any childs!", this->GetName());
 		return;
 	}
 
@@ -527,6 +606,18 @@ GameObject* GameObject::FindChild(const char* childName)
 	}
 
 	return nullptr;
+}
+
+void GameObject::SetAsPrefab(uint _prefabID)
+{
+	//set the childs to the prefab uid and the bool
+	prefabID = _prefabID;
+	isPrefab = true;
+
+	for(auto child = childs.begin() ; child != childs.end();child++)
+	{
+		(*child)->SetAsPrefab(_prefabID);
+	}
 }
 
 // --- GAME OBJECT GETTERS AND SETTERS ---
@@ -620,16 +711,46 @@ Component* GameObject::CreateComponent(ComponentType type)
 		LOG("[ERROR] Material Component could not be added to %s! Error: No duplicates allowed!", name.c_str());
 		return nullptr;
 	}
+	if (type == ComponentType::RIGIDBODY && GetComponent<C_RigidBody>() != nullptr)
+	{
+		LOG("[ERROR] RigidBody Component could not be added to %s! Error: No duplicates allowed!", name.c_str());
+		return nullptr;
+	}
+	if (type == ComponentType::PLAYER_CONTROLLER && GetComponent<C_PlayerController>() != nullptr)
+	{
+		LOG("[ERROR] Player Controller Component could not be added to %s! Error: No duplicates allowed!", name.c_str());
+		return nullptr;
+	}
+	if (type == ComponentType::UI_IMAGE && GetComponent<C_UI_Image>() != nullptr)
+	{
+		LOG("[ERROR] Player Controller Component could not be added to %s! Error: No duplicates allowed!", name.c_str());
+		return nullptr;
+	}
 
 	switch(type)
 	{
-	case ComponentType::TRANSFORM:	{ component = new C_Transform(this); }	break;
-	case ComponentType::MESH:		{ component = new C_Mesh(this); }		break;
-	case ComponentType::MATERIAL:	{ component = new C_Material(this); }	break;
-	case ComponentType::LIGHT:		{ component = new C_Light(this); }		break;
-	case ComponentType::CAMERA:	{ component = new C_Camera(this); }		break;
-	case ComponentType::ANIMATOR:	{ component = new C_Animator(this); }	break;
-	case ComponentType::ANIMATION: { component = new C_Animation(this); }	break;
+	case ComponentType::TRANSFORM:			{ component = new C_Transform(this); }			break;
+	case ComponentType::MESH:				{ component = new C_Mesh(this); }				break;
+	case ComponentType::MATERIAL:			{ component = new C_Material(this); }			break;
+	case ComponentType::LIGHT:				{ component = new C_Light(this); }				break;
+	case ComponentType::CAMERA:				{ component = new C_Camera(this); }				break;
+	case ComponentType::ANIMATOR:			{ component = new C_Animator(this); }			break;
+	case ComponentType::ANIMATION:			{ component = new C_Animation(this); }			break;
+	case ComponentType::AUDIOSOURCE:		{ component = new C_AudioSource(this); }		break;
+	case ComponentType::AUDIOLISTENER:		{ component = new C_AudioListener(this); }		break;
+	case ComponentType::RIGIDBODY:			{ component = new C_RigidBody(this); }			break;
+	case ComponentType::BOX_COLLIDER:		{ component = new C_BoxCollider(this); }		break;
+	case ComponentType::SPHERE_COLLIDER:	{ component = new C_SphereCollider(this); }		break;
+	case ComponentType::CAPSULE_COLLIDER:	{ component = new C_CapsuleCollider(this); }	break;
+	case ComponentType::PARTICLE_SYSTEM: { component = new C_ParticleSystem(this); }	break;
+	case ComponentType::CANVAS:				{ component = new C_Canvas(this); }				break;
+	case ComponentType::UI_IMAGE:			{ component = new C_UI_Image(this); }			break;
+	case ComponentType::UI_TEXT:			{ component = new C_UI_Text(this); }			break;
+	case ComponentType::PLAYER_CONTROLLER:	{ component = new C_PlayerController(this); }	break;
+	case ComponentType::BULLET_BEHAVIOR:	{ component = new C_BulletBehavior(this); }		break;
+	case ComponentType::PROP_BEHAVIOR:		{ component = new C_PropBehavior(this); }		break;
+	case ComponentType::CAMERA_BEHAVIOR:	{ component = new C_CameraBehavior(this); }		break;
+	case ComponentType::GATE_BEHAVIOR:		{ component = new C_GateBehavior(this); }		break;
 	}
 
 	if (component != nullptr)
@@ -687,6 +808,7 @@ bool GameObject::GetAllComponents(std::vector<Component*>& components) const
 	return components.empty() ? false : true;
 }
 
+// ---
 uint32 GameObject::GetUID() const
 {
 	return uid;

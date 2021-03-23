@@ -4,6 +4,8 @@
 
 #include "Icons.h"
 
+#include "MemoryManager.h"
+
 Icons::Icons() : 
 animationIcon	(nullptr),
 fileIcon		(nullptr),

@@ -1,12 +1,15 @@
 #include <vector>
 #include <algorithm>
 
+#include "Profiler.h"
+
 #include "VariableTypedefs.h"
 #include "Macros.h"
 
 #include "PathNode.h"
 
-#include "Application.h"
+#include "EngineApplication.h"
+#include "FileSystemDefinitions.h"
 #include "M_Window.h"
 #include "M_FileSystem.h"
 #include "M_ResourceManager.h"
@@ -27,7 +30,8 @@ refreshRootDirectory		(true),
 refreshDirectoryToDisplay	(false),
 refreshWindowSize			(true),
 iconsAreLoaded				(false),
-draggedResource				(nullptr)
+draggedResource				(nullptr),
+draggedAsset				("[NONE]")
 {
 	directoryToDisplay = new char[MAX_DIRECTORY_SIZE];
 	sprintf_s(directoryToDisplay, MAX_DIRECTORY_SIZE, "%s", ASSETS_PATH);
@@ -35,7 +39,7 @@ draggedResource				(nullptr)
 	iconSize		= ImVec2(64.0f, 64.0f);
 	iconOffset		= ImVec2(20.0f, 0.0f);
 	textOffset		= ImVec2(iconOffset.x, iconSize.y);
-	winSize		= ImVec2(0.0f, 0.0f);
+	winSize			= ImVec2(0.0f, 0.0f);
 }
 
 E_Project::~E_Project()
@@ -46,6 +50,7 @@ E_Project::~E_Project()
 bool E_Project::Draw(ImGuiIO& io)
 {
 	bool ret = true;
+
 
 	CheckFlags();
 
@@ -68,22 +73,22 @@ bool E_Project::CleanUp()
 
 	rootDirectory.children.clear();
 	draggedResource = nullptr;
-	ClearResourcesToDisplay();
+	ClearAssetsToDisplay();
 
 	return ret;
 }
 
-// --- E_PRROJECT METHODS ---
-Resource* E_Project::GetDraggedResource()
+// --- E_PROJECT METHODS ---
+const char* E_Project::GetDraggedAsset() const
 {
-	return draggedResource;
+	return draggedAsset.c_str();
 }
 
 void E_Project::CheckFlags()
 {
 	if (!iconsAreLoaded)
 	{
-		App->editor->GetEngineIconsThroughEditor(engineIcons);
+		EngineApp->editor->GetEngineIconsThroughEditor(engineIcons);
 		iconsAreLoaded = true;
 	}
 	
@@ -98,7 +103,7 @@ void E_Project::CheckFlags()
 		std::vector<std::string> extensionsToFilter;
 		extensionsToFilter.push_back("meta");
 
-		rootDirectory = App->fileSystem->GetAllFiles(ASSETS_DIRECTORY, nullptr, &extensionsToFilter);
+		rootDirectory = EngineApp->fileSystem->GetAllFiles(ASSETS_DIRECTORY, nullptr, &extensionsToFilter);
 
 		extensionsToFilter.clear();
 
@@ -113,7 +118,7 @@ void E_Project::CheckFlags()
 			return;
 		}
 		
-		ClearResourcesToDisplay();
+		ClearAssetsToDisplay();
 
 		bool success = rootDirectory.FindChild(directoryToDisplay, displayDirectory);
 		if (!success)
@@ -125,11 +130,19 @@ void E_Project::CheckFlags()
 
 		for (uint i = 0; i < displayDirectory.children.size(); ++i)
 		{
-			Resource* resource = App->resourceManager->GetResourceFromMetaFile(displayDirectory.children[i].path.c_str());
-
-			if (resource != nullptr)
+			const char* path		= displayDirectory.children[i].path.c_str();
+			std::string file		= EngineApp->fileSystem->GetFileAndExtension(path);
+			ResourceType type		= EngineApp->resourceManager->GetTypeFromAssetsExtension(path);
+			
+			R_Texture* assetTexture = nullptr;
+			if (type == ResourceType::TEXTURE)
 			{
-				resourcesToDisplay.push_back(resource);
+				assetTexture = (R_Texture*)EngineApp->resourceManager->GetResourceFromLibrary(path);
+			}
+			
+			if (type != ResourceType::NONE) //TODO check this
+			{
+				assetsToDisplay.push_back({ path, file, type, assetTexture });
 			}
 		}
 
@@ -139,7 +152,7 @@ void E_Project::CheckFlags()
 
 void E_Project::OnResize()
 {
-	winSize = ImVec2((float)App->window->GetWidth(), (float)App->window->GetHeight());
+	winSize = ImVec2((float)EngineApp->window->GetWidth(), (float)EngineApp->window->GetHeight());
 }
 
 void E_Project::GenerateDockspace(ImGuiIO& io) const
@@ -151,13 +164,27 @@ void E_Project::GenerateDockspace(ImGuiIO& io) const
 	}
 }
 
-void E_Project::DrawMenuBar() const
+void E_Project::DrawMenuBar()
 {
 	ImGui::BeginMenuBar();
 
 	if (ImGui::BeginMenu("Options"))
 	{
 		ImGui::MenuItem("Show In Explorer", nullptr, false, false);
+
+		if (ImGui::MenuItem("Refresh All Directories", nullptr, false))
+		{
+			App->resourceManager->RefreshProjectDirectories();
+			refreshRootDirectory		= true;
+			refreshDirectoryToDisplay	= true;
+		}
+
+		if (ImGui::MenuItem("Refresh Current Directory", nullptr, false))
+		{
+			App->resourceManager->RefreshProjectDirectory(directoryToDisplay);
+			refreshRootDirectory		= true;
+			refreshDirectoryToDisplay	= true;
+		}
 
 		ImGui::EndMenu();
 	}
@@ -167,7 +194,8 @@ void E_Project::DrawMenuBar() const
 
 void E_Project::DrawAssetsTree()
 {
-	ImGui::Begin("AssetsTree", false);
+	bool retraso = false;
+	ImGui::Begin("AssetsTree", &retraso);
 
 	if (ImGui::TreeNodeEx(ASSETS_PATH, ImGuiTreeNodeFlags_DefaultOpen))
 	{
@@ -181,7 +209,8 @@ void E_Project::DrawAssetsTree()
 
 void E_Project::DrawFolderExplorer()
 {
-	ImGui::Begin("FolderExplorer", false);
+	bool retraso = false;
+	ImGui::Begin("FolderExplorer", &retraso);
 
 	ImGui::Text(directoryToDisplay);
 
@@ -200,12 +229,12 @@ void E_Project::DrawDirectoriesTree(const char* rootDirectory, const char* exten
 	std::vector<std::string> files;
 	std::string rootDir = rootDirectory;
 	
-	App->fileSystem->DiscoverFiles(rootDir.c_str(), files, directories, extensionToFilter);
+	EngineApp->fileSystem->DiscoverFiles(rootDir.c_str(), files, directories, extensionToFilter);
 
 	for (uint i = 0; i < directories.size(); ++i)
 	{
 		std::string path	= rootDir + directories[i] + ("/");
-		treeNodeFlags		= (!App->fileSystem->ContainsDirectory(path.c_str())) ? ImGuiTreeNodeFlags_Leaf : ImGuiTreeNodeFlags_None;
+		treeNodeFlags		= (!EngineApp->fileSystem->ContainsDirectory(path.c_str())) ? ImGuiTreeNodeFlags_Leaf : ImGuiTreeNodeFlags_None;
 
 		if (ImGui::TreeNodeEx(path.c_str(), treeNodeFlags, "%s/", directories[i].c_str()))
 		{
@@ -235,14 +264,14 @@ void E_Project::DrawDirectoriesTree(const PathNode& rootNode)
 	{
 		PathNode pathNode = rootNode.children[i];
 
-		if (/*path_node.is_file*/ !App->fileSystem->IsDirectory(pathNode.path.c_str()))
+		if (/*path_node.is_file*/ !EngineApp->fileSystem->IsDirectory(pathNode.path.c_str()))
 		{
 			continue;
 		}
 
 		path			= pathNode.path;
 		directory		= pathNode.local_path;
-		treeNodeFlags = (pathNode.isLastDirectory) ? ImGuiTreeNodeFlags_Leaf : ImGuiTreeNodeFlags_None;
+		treeNodeFlags	= (pathNode.isLastDirectory) ? ImGuiTreeNodeFlags_Leaf : ImGuiTreeNodeFlags_None;
 		if (ImGui::TreeNodeEx(path.c_str(), treeNodeFlags, "%s/", directory.c_str()))
 		{
 			if (ImGui::IsItemClicked())
@@ -272,28 +301,35 @@ void E_Project::DrawResourceIcons()
 	ImVec4 bgColor		= ImVec4(0.0f, 0.0f, 0.0f, 0.0f);
 	ImVec4 tintColor	= ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
 
-	ImVec2 originalPos		= ImVec2(0.0f, 0.0f);
-	ImTextureID texId		= 0;
-	ImVec2 itemOffset		= ImVec2(iconSize.x + iconOffset.x, 0.0f);
+	ImVec2 originalPos	= ImVec2(0.0f, 0.0f);
+	ImTextureID texID	= 0;
+	ImVec2 itemOffset	= ImVec2(iconSize.x + iconOffset.x, 0.0f);
 	ImVec2 nextItemPos	= ImVec2(0.0f, 0.0f);
 
-	GoToPreviousDirectoryButton();
+	DrawGoToPreviousDirectoryButton();
 
-	for (uint i = 0; i < resourcesToDisplay.size(); ++i)
-	{	
+	for (auto item = assetsToDisplay.begin(); item != assetsToDisplay.end(); ++item)
+	{
 		originalPos = ImGui::GetCursorPos();
-		
-		texId = GetIconTexID(resourcesToDisplay[i]);
 		ImGui::SetCursorPos(originalPos + iconOffset);
-		//ImGui::ImageButtonEx(i + 1, tex_id, icon_size, uv_0, uv_1, padding, bg_color, tint_color);
-		ImGui::Image(texId, iconSize, uv0, uv1, tintColor, bgColor);
 
-		if (resourcesToDisplay[i]->GetType() == ResourceType::FOLDER)
+		texID = GetIconTexID((*item));
+
+		if (texID == 0)
+		{
+			continue;
+		}
+		else
+		{
+			ImGui::Image(texID, iconSize, uv0, uv1, tintColor, bgColor);
+		}
+
+		if (item->type == ResourceType::FOLDER)
 		{
 			if (ImGui::IsItemClicked())
 			{
-				std::string path = resourcesToDisplay[i]->GetAssetsPath();
-				if (strcmp(directoryToDisplay , path.c_str()) != 0)
+				std::string path = item->path;
+				if (strcmp(directoryToDisplay, path.c_str()) != 0)
 				{
 					sprintf_s(directoryToDisplay, MAX_DIRECTORY_SIZE, "%s", path.c_str());
 					refreshDirectoryToDisplay = true;
@@ -303,11 +339,22 @@ void E_Project::DrawResourceIcons()
 		}
 		else
 		{
-			ResourceDragAndDropEvent(resourcesToDisplay[i], texId);
+			AssetDragAndDropEvent(item->path, texID);
 		}
 
 		ImGui::SetCursorPos(originalPos + textOffset);
-		ImGui::Text(GetDisplayString(resourcesToDisplay[i]->GetAssetsFile(), 8).c_str());
+
+		if (item->type == ResourceType::PREFAB)
+		{
+			std::string prefabName = "Prefab";
+			std::map<uint,std::string>::iterator a = EngineApp->resourceManager->prefabs.find(atoi(item->file.c_str()));
+			if (a != EngineApp->resourceManager->prefabs.end())
+				prefabName = a->second;
+
+			ImGui::Text(GetDisplayString(prefabName, 8).c_str());
+		}
+		else
+			ImGui::Text(GetDisplayString(item->file, 8).c_str());
 
 		nextItemPos = originalPos + itemOffset;
 		if (nextItemPos.x + itemOffset.x < ImGui::GetWindowWidth())
@@ -317,14 +364,14 @@ void E_Project::DrawResourceIcons()
 	}
 }
 
-void E_Project::GoToPreviousDirectoryButton()
+void E_Project::DrawGoToPreviousDirectoryButton()
 {
 	ImVec2 uv0			= ImVec2(0.0f, 1.0f);
 	ImVec2 uv1			= ImVec2(1.0f, 0.0f);
 	ImVec4 bgColor		= ImVec4(0.0f, 0.0f, 0.0f, 0.0f);
 	ImVec4 tintColor	= ImVec4(1.0f, 1.0f, 1.0f, 0.5f);
 	
-	ImVec2 originalPos = ImGui::GetCursorPos();
+	ImVec2 originalPos	= ImGui::GetCursorPos();
 	ImVec2 itemOffset	= ImVec2(iconSize.x + iconOffset.x, 0.0f);
 	
 	ImGui::SetCursorPos(originalPos + iconOffset);
@@ -350,60 +397,61 @@ void E_Project::GoToPreviousDirectoryButton()
 	}
 }
 
-void E_Project::ResourceDragAndDropEvent(Resource* resource, ImTextureID textureId)
+void E_Project::AssetDragAndDropEvent(const char* assetPath, ImTextureID textureID)
 {
-	if (resource == nullptr)
+	if (assetPath == nullptr)
 	{
-		LOG("[ERROR] Editor Project Panel: Could not check for Resource Drag&Drop Event! Error: Given Resource* was nullptr.");
+		LOG("[ERROR] Editor Project Panel: Could not check for Resource Drag&Drop Event! Error: Given assetsPath* was nullptr.");
 		return;
 	}
 
 	if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID))
-	{	
-		ImGui::SetDragDropPayload("DRAGGED_RESOURCE", resource, sizeof(Resource));
-	
-		ImGui::Text("Dragging %s", resource->GetAssetsFile());
-		ImGui::Image(textureId, iconSize);
+	{
+		ImGui::SetDragDropPayload("DRAGGED_ASSET", assetPath, sizeof(Resource));
 
-		draggedResource = resource;
+		ImGui::Text("Dragging %s", assetPath);
+		ImGui::Image(textureID, iconSize);
+
+		draggedAsset = assetPath;
 
 		ImGui::EndDragDropSource();
 	}
-
-	/*if (ImGui::BeginDragDropTarget())
-	{
-		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DRAGGED_RESOURCE"))
-		{
-			LOG("[WARNING] MAYBE PUT THIS AS A LISTENER IN VIEWPORT???");
-		}
-
-		ImGui::EndDragDropTarget();
-	}*/
 }
 
-ImTextureID E_Project::GetIconTexID(Resource* resource) const
+ImTextureID E_Project::GetIconTexID(const AssetDisplay& assetDisplay) const
 {
 	ImTextureID texId = 0;
 
-	if (resource == nullptr)
+	if (assetDisplay.type == ResourceType::NONE)
 	{
 		LOG("[ERROR] Editor Project Panel: Could not get Icon Texture ID! Error: Given Resource* was nullptr.");
 		return 0;
 	}
 
-	ResourceType type = resource->GetType();
-	switch (type)
+	switch (assetDisplay.type)
 	{
-	case ResourceType::MODEL:		{ texId = (ImTextureID)engineIcons.modelIcon->GetTextureID(); }		break;
-	case ResourceType::MESH:		{ texId = (ImTextureID)engineIcons.fileIcon->GetTextureID(); }		break;
-	case ResourceType::MATERIAL:	{ texId = (ImTextureID)engineIcons.materialIcon->GetTextureID(); }	break;
-	case ResourceType::TEXTURE:	{ texId = (ImTextureID)(((R_Texture*)resource)->GetTextureID()); }	break;
-	case ResourceType::FOLDER:		{ texId = (ImTextureID)engineIcons.folderIcon->GetTextureID(); }	break;
-	case ResourceType::SCENE:		{ texId = (ImTextureID)engineIcons.modelIcon->GetTextureID(); }		break;
-	case ResourceType::ANIMATION:	{ texId = (ImTextureID)engineIcons.animationIcon->GetTextureID(); }	break;
+	case ResourceType::MODEL:		{ texId = (ImTextureID)engineIcons.modelIcon->GetTextureID(); }			break;
+	case ResourceType::MESH:		{ texId = (ImTextureID)engineIcons.fileIcon->GetTextureID(); }			break;
+	case ResourceType::MATERIAL:	{ texId = (ImTextureID)engineIcons.materialIcon->GetTextureID(); }		break;
+	case ResourceType::TEXTURE:		{ texId = (ImTextureID)GetOGLTextureID(assetDisplay.assetTexture); }	break;
+	case ResourceType::FOLDER:		{ texId = (ImTextureID)engineIcons.folderIcon->GetTextureID(); }		break;
+	case ResourceType::SCENE:		{ texId = (ImTextureID)engineIcons.modelIcon->GetTextureID(); }			break;
+	case ResourceType::ANIMATION:	{ texId = (ImTextureID)engineIcons.animationIcon->GetTextureID(); }		break;
+	case ResourceType::PREFAB: { texId = (ImTextureID)engineIcons.modelIcon->GetTextureID(); }		break;
 	}
 
 	return texId;
+}
+
+uint E_Project::GetOGLTextureID(R_Texture* assetTexture) const
+{	
+	if (assetTexture == nullptr)
+	{
+		LOG("[ERROR] Editor Project Panel: Could not get OGL Texture ID! Error: Given R_Texture* was nullptr.");
+		return 0;
+	}
+
+	return assetTexture->GetTextureID();
 }
 
 std::string E_Project::GetDisplayString(std::string originalString, uint maxLength) const
@@ -425,12 +473,17 @@ std::string E_Project::GetDisplayString(std::string originalString, uint maxLeng
 	return displayString;
 }
 
-void E_Project::ClearResourcesToDisplay()
+void E_Project::ClearAssetsToDisplay()
 {
-	for (uint i = 0; i < resourcesToDisplay.size(); ++i)
+	for (auto item = assetsToDisplay.begin(); item != assetsToDisplay.end(); ++item)
 	{
-		App->resourceManager->FreeResource(resourcesToDisplay[i]->GetUID());
+		if (item->type == ResourceType::TEXTURE && item->assetTexture != nullptr) //TODO check this
+		{
+			EngineApp->resourceManager->FreeResource(item->assetTexture->GetUID());
+		}
+
+		//EngineApp->resourceManager->FreeResource(resourcesToDisplay[i]->GetUID());
 	}
-	
-	resourcesToDisplay.clear();
+
+	assetsToDisplay.clear();
 }

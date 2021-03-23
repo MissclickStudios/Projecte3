@@ -2,28 +2,33 @@
 #define __M_RENDERER_3D_H__
 
 #include <vector>
+#include <map>
 
 #include "MathGeoTransform.h"
 #include "MathGeoLib/include/Geometry/LineSegment.h"
 #include "MathGeoLib/include/Geometry/Triangle.h"
 
+#include "SkyBox.h"
+
 #include "Icons.h"
 
 #include "Module.h"
+
 #include "Light.h"
 
-struct Color;
 class ParsonNode;
 
 class R_Model;
 class R_Mesh;
 class R_Material;
 class R_Texture;
+class R_Shader;
 
 class C_Mesh;	
 class C_Material;
 
 class Primitive;
+class GameObject;
 
 typedef unsigned int GLenum;
 
@@ -43,12 +48,13 @@ enum class CuboidType
 	NONE,
 	AABB,
 	OBB,
-	FRUSTUM
+	FRUSTUM,
+	COLLIDER
 };
 
 struct MeshRenderer
 {
-	MeshRenderer(const float4x4& transform, C_Mesh* cMesh, C_Material* cMaterial);							// Will render the given mesh at the given position with the given mat & tex.
+	MeshRenderer(float4x4* transform, C_Mesh* cMesh, C_Material* cMaterial);								// Will render the given mesh at the given position with the given mat & tex.
 
 	void Render						();
 
@@ -63,7 +69,11 @@ struct MeshRenderer
 	void ApplyTextureAndMaterial	();
 	void ClearTextureAndMaterial	();
 
-	float4x4	transform;
+	void ApplyShader				();
+	uint32 SetDefaultShader			(C_Material* cMaterial);
+	void ClearShader				();
+
+	float4x4*	transform;
 	C_Mesh*		cMesh;
 	C_Material*	cMaterial;
 };
@@ -80,8 +90,8 @@ struct CuboidRenderer																							// Will render the wireframe of any 
 
 	const float3*	vertices;
 	CuboidType		type;
-	const Color		color;
-	const float		edgeWidth;
+	Color		color;
+	float		edgeWidth;
 };
 
 struct RayRenderer
@@ -103,14 +113,23 @@ struct SkeletonRenderer
 
 	void Render();
 
-	const std::vector<LineSegment>	bones;
-	const Color						color;
-	const float						boneWidth;
+	std::vector<LineSegment>	bones;
+	Color						color;
+	float						boneWidth;
+};
+
+struct ParticleRenderer
+{
+	ParticleRenderer(R_Material* mat, Color color, const float4x4 transform);
+
+	R_Material* mat;
+	Color color;
+	float4x4 transform;
 };
 
 #define MAX_LIGHTS 8
 
-class M_Renderer3D : public Module
+class NULL_API M_Renderer3D : public Module
 {
 public:
 	M_Renderer3D(bool isActive = true);
@@ -144,7 +163,7 @@ public:
 	void			RenderScene					();
 
 public:																											// --- RENDER GEOMETRY
-	void			GenerateBuffers				(const R_Mesh* rMesh);
+	//void			GenerateBuffers				(const R_Mesh* rMesh);
 		
 	void			DrawWorldGrid				(const int& size);
 	void			DrawWorldAxis				();
@@ -155,6 +174,11 @@ public:																											// --- RENDER GEOMETRY
 	void			RenderCuboids				();
 	void			RenderRays					();
 	void			RenderSkeletons				();
+	void			RenderUI					();
+	void			RenderParticles				();
+	void			RenderUIComponent			(GameObject* gameObject);
+
+	void			RenderFramebufferTexture	();
 	void			DeleteFromMeshRenderers		(C_Mesh* cMeshToDelete);
 	void			DeleteFromMeshRenderers		(R_Mesh* rMeshToDelete);
 	void			DeleteFromCuboids			(float3* cuboidToDelete);
@@ -162,6 +186,12 @@ public:																											// --- RENDER GEOMETRY
 
 	void			AddPrimitive				(Primitive* primitive);
 	void			CreatePrimitiveExamples		();
+
+
+	void			AddParticle					(const float4x4& transform, R_Material* material, Color color, float distanceToCamera);
+	void			DrawParticle				(ParticleRenderer& renderParticle);
+
+	void			SetTo2DRenderSettings		(const bool& setTo);
 
 
 public:																											// --- GET/SET METHODS
@@ -217,6 +247,8 @@ public:																											// --- DEBUG GET/SET METHODS
 	bool			GetRenderBoundingBoxes		() const;														// 
 	bool			GetRenderSkeletons			() const;														// 
 	bool			GetRenderPrimitiveExamples	() const;														// 
+	bool			GetRenderColliders() const;
+	bool			GetRenderCanvas() const;
 
 	void			SetWorldGridSize			(const uint& worldGridSize);
 
@@ -250,10 +282,21 @@ public:																											// --- DEBUG GET/SET METHODS
 	void			SetRenderBoundingBoxes		(const bool& setTo);											// 
 	void			SetRenderSkeletons			(const bool& setTo);
 	void			SetRenderPrimtiveExamples	(const bool& setTo);											// 
+	void			SetRenderColliders (const bool& setTo);
+	void			SetRenderCanvas(const bool& setTo);
 
 public:
-	Light					lights[MAX_LIGHTS];																	// 
+	void			AddPostSceneRenderModule(Module* module);
+	GameObject*		GenerateSceneLight(Color diffuse, Color ambient, Color specular, LightType lightType);
+private:
+	void			GenScreenBuffer();
+
+public:
+	//Light					lights[MAX_LIGHTS];																	// 
+	
 	SDL_GLContext			context;																			// 
+	R_Shader*				defaultShader = nullptr;
+	Skybox					defaultSkyBox;
 
 	std::vector<Primitive*>	primitives;
 
@@ -261,7 +304,10 @@ private:
 	std::vector<MeshRenderer>		meshRenderers;
 	std::vector<CuboidRenderer>		cuboidRenderers;
 	std::vector<SkeletonRenderer>	skeletonRenderers;
+
 	
+	
+
 	Icons					engineIcons;
 
 	uint					sceneFramebuffer;
@@ -270,43 +316,50 @@ private:
 	uint					depthBufferTexture;
 	uint					gameFramebuffer;
 	uint					debugTextureId;
+	uint					quadScreenVAO;
 
 	bool					vsync;																				// Will keep track of whether or not the vsync is currently active.
 
 private:																										// --- DEBUG VARIABLES ---		// TODO: CREATE A "DEBUGSETTINGS" STRUCTURE
-	uint					worldGridSize;																		//
+	uint	worldGridSize;		
 
-	Color					worldGridColor;																		//
-	Color					wireframeColor;																		//
-	Color					vertexNormalsColor;																	//
-	Color					faceNormalsColor;																	//
+	Color	worldGridColor;		
+	Color	wireframeColor;		
+	Color	vertexNormalsColor;	
+	Color	faceNormalsColor;	
 	
-	Color					aabbColor;																			// 
-	Color					obbColor;																			// 
-	Color					frustumColor;																		// 
-	Color					rayColor;																			// 
-	Color					boneColor;																			// 
+	Color	aabbColor;			
+	Color	obbColor;			
+	Color	frustumColor;		
+	Color	rayColor;			
+	Color	boneColor;			
 	
-	float					worldGridLineWidth;
-	float					wireframeLineWidth;
-	float					vertexNormalsWidth;
-	float					faceNormalsWidth;
+	float	worldGridLineWidth;
+	float	wireframeLineWidth;
+	float	vertexNormalsWidth;
+	float	faceNormalsWidth;
 
-	float					aabbEdgeWidth;																		// 
-	float					obbEdgeWidth;																		// 
-	float					frustumEdgeWidth;																	// 
-	float					rayWidth;																			// 
-	float					boneWidth;																			// 
+	float	aabbEdgeWidth;		
+	float	obbEdgeWidth;		
+	float	frustumEdgeWidth;	
+	float	rayWidth;			
+	float	boneWidth;			
 	
-	bool					renderWorldGrid;																	// 
-	bool					renderWorldAxis;																	// 
-	bool					renderWireframes;																	//
-	bool					renderWertexNormals;																// 
-	bool					renderFaceNormals;																	// 
-	bool					renderBoundingBoxes;																// 
-	bool					renderSkeletons;																	//
+	bool	renderWorldGrid;	
+	bool	renderWorldAxis;	
+	bool	renderWireframes;	
+	bool	renderVertexNormals;
+	bool	renderFaceNormals;	
+	bool	renderBoundingBoxes;
+	bool	renderSkeletons;	
+	bool	renderColliders = false;
+	bool	renderCanvas = false;
 
 	bool					renderPrimitiveExamples;															//
+
+	std::vector<Module*>	PostSceneRenderModules;
+
+	std::map<float, ParticleRenderer> particles;												//map of the particles to render. It is ordered depending on the (float)distance to camera. Allows propper rendering
 };
 
 #endif // !__M_RENDERER_3D_H__

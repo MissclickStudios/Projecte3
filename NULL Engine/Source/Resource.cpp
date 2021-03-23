@@ -7,6 +7,8 @@
 
 #include "Resource.h"
 
+#include "MemoryManager.h"
+
 Resource::Resource(ResourceType type) : 
 type			(type),
 uid				(Random::LCG::GetRandomUint()),
@@ -14,7 +16,8 @@ references		(0),
 assetsPath		("[NONE]"), 
 assetsFile		("[NONE]"), 
 libraryPath		("[NONE]"), 
-libraryFile		("[NONE]")
+libraryFile		("[NONE]"),
+hasForcedUID	(false)
 {
 
 }
@@ -65,9 +68,12 @@ const char* Resource::GetTypeAsString() const
 {
 	switch (type)
 	{
+	case ResourceType::MODEL:		{ return "MODEL"; }		break;
 	case ResourceType::MESH:		{ return "MESH"; }		break;
 	case ResourceType::MATERIAL:	{ return "MATERIAL"; }	break;
-	case ResourceType::TEXTURE:	{ return "TEXTURE"; }	break;
+	case ResourceType::TEXTURE:		{ return "TEXTURE"; }	break;
+	case ResourceType::ANIMATION:	{ return "ANIMATION"; }	break;
+	case ResourceType::SHADER:		{ return "SHADER"; }	break;
 	}
 
 	return "NONE";
@@ -80,9 +86,8 @@ uint32 Resource::GetUID() const
 
 void Resource::ForceUID(const uint32& UID)
 {
-	uid = UID;											// TMP
-	
-	//uid = Random::LCG::GetRandomUint();
+	uid				= UID;
+	hasForcedUID	= true;									// TMP. Be careful, it will be applied to all cases, whether it is forced by the meta or willingly by the user.
 }
 
 uint Resource::GetReferences() const
@@ -173,6 +178,11 @@ void Resource::SetLibraryPathAndFile()
 	case ResourceType::SCENE:
 		directory = SCENES_PATH;
 		extension = SCENES_EXTENSION;
+		break;
+
+	case ResourceType::SHADER:
+		directory = SHADERS_PATH;
+		extension = SHADERS_EXTENSION;
 		break;
 	}
 	

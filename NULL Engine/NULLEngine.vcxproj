@@ -1,0 +1,424 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Build|Win32">
+      <Configuration>Build</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Build|x64">
+      <Configuration>Build</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{0bce2648-3c0a-4fc4-adb0-8df28bc4cb44}</ProjectGuid>
+    <RootNamespace>NULLEngine</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Build|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Build|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Build|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Build|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>.\Build\EngineExe\$(Configuration)\</OutDir>
+    <IntDir>.\Intermediate\EngineExe\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>.\Build\EngineExe\$(Configuration)\</OutDir>
+    <IntDir>.\Intermediate\EngineExe\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Build|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>.\Build\EngineExe\$(Configuration)\</OutDir>
+    <IntDir>.\Intermediate\EngineExe\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Build|x64'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(ProjectDir)\Source\Dependencies;$(ProjectDir)Source\Dependencies\Wwise\include</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(ProjectDir)\Source\Dependencies;$(ProjectDir)Source\Dependencies\Wwise\include</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Build|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(ProjectDir)\Source\Dependencies;$(ProjectDir)Source\Dependencies\Wwise\include</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Build|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="Source\CurveEditor.cpp" />
+    <ClCompile Include="Source\Dependencies\ImGuizmo\include\ImGuizmo.cpp" />
+    <ClCompile Include="Source\Dependencies\ImGui\include\imgui.cpp" />
+    <ClCompile Include="Source\Dependencies\ImGui\include\imgui_demo.cpp" />
+    <ClCompile Include="Source\Dependencies\ImGui\include\imgui_draw.cpp" />
+    <ClCompile Include="Source\Dependencies\ImGui\include\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="Source\Dependencies\ImGui\include\imgui_impl_sdl.cpp" />
+    <ClCompile Include="Source\Dependencies\ImGui\include\imgui_widgets.cpp" />
+    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Algorithm\GJK.cpp" />
+    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Algorithm\GJK2D.cpp" />
+    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Algorithm\Random\LCG.cpp" />
+    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Algorithm\SAT.cpp" />
+    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Geometry\AABB.cpp" />
+    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Geometry\Capsule.cpp" />
+    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Geometry\Circle.cpp" />
+    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Geometry\Circle2D.cpp" />
+    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Geometry\Frustum.cpp" />
+    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Geometry\Line.cpp" />
+    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Geometry\LineSegment.cpp" />
+    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Geometry\LineSegment2D.cpp" />
+    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Geometry\OBB.cpp" />
+    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Geometry\PBVolume.cpp" />
+    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Geometry\Plane.cpp" />
+    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Geometry\Polygon.cpp" />
+    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Geometry\Polyhedron.cpp" />
+    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Geometry\Ray.cpp" />
+    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Geometry\Sphere.cpp" />
+    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Geometry\Triangle.cpp" />
+    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Geometry\Triangle2D.cpp" />
+    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Geometry\TriangleMesh.cpp" />
+    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Math\BitOps.cpp" />
+    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Math\Callstack.cpp" />
+    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Math\float2.cpp" />
+    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Math\float3.cpp" />
+    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Math\float3x3.cpp" />
+    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Math\float3x4.cpp" />
+    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Math\float4.cpp" />
+    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Math\float4d.cpp" />
+    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Math\float4x4.cpp" />
+    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Math\grisu3.c" />
+    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Math\grisu3_cpp.cpp" />
+    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Math\MathFunc.cpp" />
+    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Math\MathLog.cpp" />
+    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Math\MathOps.cpp" />
+    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Math\MiniFloat.cpp" />
+    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Math\Polynomial.cpp" />
+    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Math\Quat.cpp" />
+    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Math\SSEMath.cpp" />
+    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Math\TransformOps.cpp" />
+    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Time\Clock.cpp" />
+    <ClCompile Include="Source\Dependencies\mmgr\include\mmgr.cpp" />
+    <ClCompile Include="Source\Dependencies\parson\include\parson.c" />
+    <ClCompile Include="Source\EditorPanel.cpp" />
+    <ClCompile Include="Source\EngineApplication.cpp" />
+    <ClCompile Include="Source\E_About.cpp" />
+    <ClCompile Include="Source\E_Configuration.cpp" />
+    <ClCompile Include="Source\E_Console.cpp" />
+    <ClCompile Include="Source\E_Hierarchy.cpp" />
+    <ClCompile Include="Source\E_ImGuiDemo.cpp" />
+    <ClCompile Include="Source\E_Inspector.cpp" />
+    <ClCompile Include="Source\E_LoadFile.cpp" />
+    <ClCompile Include="Source\E_MainMenuBar.cpp" />
+    <ClCompile Include="Source\E_Project.cpp" />
+    <ClCompile Include="Source\E_Resources.cpp" />
+    <ClCompile Include="Source\E_SaveFile.cpp" />
+    <ClCompile Include="Source\E_Timeline.cpp" />
+    <ClCompile Include="Source\E_Toolbar.cpp" />
+    <ClCompile Include="Source\E_Viewport.cpp" />
+    <ClCompile Include="Source\M_Editor.cpp" />
+    <ClCompile Include="Source\TextEditor.cpp" />
+    <ClCompile Include="Source\ThemeGenerator.cpp" />
+    <ClCompile Include="Source\Timeline.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Source\CurveEditor.h" />
+    <ClInclude Include="Source\Dependencies\ImGuizmo\include\ImGuizmo.h" />
+    <ClInclude Include="Source\Dependencies\ImGui\include\imconfig.h" />
+    <ClInclude Include="Source\Dependencies\ImGui\include\imgui.h" />
+    <ClInclude Include="Source\Dependencies\ImGui\include\imgui_impl_opengl3.h" />
+    <ClInclude Include="Source\Dependencies\ImGui\include\imgui_impl_sdl.h" />
+    <ClInclude Include="Source\Dependencies\ImGui\include\imgui_internal.h" />
+    <ClInclude Include="Source\Dependencies\ImGui\include\imstb_rectpack.h" />
+    <ClInclude Include="Source\Dependencies\ImGui\include\imstb_textedit.h" />
+    <ClInclude Include="Source\Dependencies\ImGui\include\imstb_truetype.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Algorithm\GJK.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Algorithm\GJK2D.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Algorithm\Random\LCG.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Algorithm\SAT.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Geometry\AABB.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Geometry\AABB2D.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Geometry\Capsule.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Geometry\Circle.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Geometry\Circle2D.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Geometry\Frustum.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Geometry\GeometryAll.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Geometry\GeomType.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Geometry\HitInfo.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Geometry\KDTree.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Geometry\Line.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Geometry\LineSegment.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Geometry\LineSegment2D.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Geometry\OBB.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Geometry\OBB2D.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Geometry\PBVolume.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Geometry\Plane.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Geometry\Polygon.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Geometry\Polygon2DRef.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Geometry\Polyhedron.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Geometry\QuadTree.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Geometry\Ray.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Geometry\Sphere.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Geometry\Triangle.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Geometry\Triangle2D.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Geometry\TriangleMesh.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\MathBuildConfig.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\MathGeoLib.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\MathGeoLibFwd.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\assume.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\BitFuncs.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\BitOps.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\Callstack.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\FixedPoint.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\float2.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\float3.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\float3x3.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\float3x4.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\float4.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\float4d.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\float4x4.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\float4x4_neon.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\float4x4_sse.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\float4_neon.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\float4_sse.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\FloatCmp.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\grisu3.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\InclWindows.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\Interpolate.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\MathAll.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\MathConstants.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\MathFunc.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\MathLog.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\MathNamespace.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\MathTypes.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\MatrixProxy.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\MiniFloat.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\MultiLineMacro.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\myassert.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\Polynomial.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\Quat.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\quat_simd.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\Rect.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\Reinterpret.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\simd.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\SSEMath.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\sse_mathfun.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\Swap.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\TransformOps.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\vec2d.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Time\Clock.h" />
+    <ClInclude Include="Source\Dependencies\mmgr\include\mmgr.h" />
+    <ClInclude Include="Source\Dependencies\mmgr\include\nommgr.h" />
+    <ClInclude Include="Source\Dependencies\parson\include\parson.h" />
+    <ClInclude Include="Source\EditorPanel.h" />
+    <ClInclude Include="Source\EngineApplication.h" />
+    <ClInclude Include="Source\E_About.h" />
+    <ClInclude Include="Source\E_Configuration.h" />
+    <ClInclude Include="Source\E_Console.h" />
+    <ClInclude Include="Source\E_Hierarchy.h" />
+    <ClInclude Include="Source\E_ImGuiDemo.h" />
+    <ClInclude Include="Source\E_Inspector.h" />
+    <ClInclude Include="Source\E_LoadFile.h" />
+    <ClInclude Include="Source\E_MainMenuBar.h" />
+    <ClInclude Include="Source\E_Project.h" />
+    <ClInclude Include="Source\E_Resources.h" />
+    <ClInclude Include="Source\E_SaveFile.h" />
+    <ClInclude Include="Source\E_Timeline.h" />
+    <ClInclude Include="Source\E_Toolbar.h" />
+    <ClInclude Include="Source\E_Viewport.h" />
+    <ClInclude Include="Source\ImGuiCustom.h" />
+    <ClInclude Include="Source\M_Editor.h" />
+    <ClInclude Include="Source\TextEditor.h" />
+    <ClInclude Include="Source\ThemeGenerator.h" />
+    <ClInclude Include="Source\Timeline.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="EngineCore.vcxproj">
+      <Project>{746cc4c3-787f-4b0e-aa66-e388fe3ff4f6}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

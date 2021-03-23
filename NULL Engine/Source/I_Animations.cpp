@@ -35,17 +35,36 @@ void Importer::Animations::Import(const aiAnimation* assimpAnimation, R_Animatio
 	rAnimation->SetDuration(assimpAnimation->mDuration);
 	rAnimation->SetTicksPerSecond(assimpAnimation->mTicksPerSecond);
 
+	std::multimap<std::string, Channel> tmp;
+
 	for (uint i = 0; i < assimpAnimation->mNumChannels; ++i)
-	{
+	{		
 		aiNodeAnim* aiChannel	= assimpAnimation->mChannels[i];
+
 		Channel rChannel		= Channel(aiChannel->mNodeName.C_Str());
-		
 		Utilities::GetPositionKeys(aiChannel, rChannel);
 		Utilities::GetRotationKeys(aiChannel, rChannel);
 		Utilities::GetScaleKeys(aiChannel, rChannel);
 
-		rAnimation->channels.push_back(rChannel);
+		Utilities::ValidateChannel(rChannel);
+
+		auto existingChannel = tmp.find(rChannel.name);											// There can exists multiple channels with the same name. Fuse them as done with Transforms.
+		if (existingChannel != tmp.end())
+		{
+			Utilities::FuseChannels(rChannel, existingChannel->second);
+		}
+		else
+		{
+			tmp.emplace(rChannel.name, rChannel);
+		}
 	}
+
+	for (auto channel = tmp.begin(); channel != tmp.end(); ++channel)
+	{
+		rAnimation->channels.push_back(channel->second);
+	}
+
+	tmp.clear();
 }
 
 void Importer::Animations::Utilities::GetPositionKeys(const aiNodeAnim* aiChannel, Channel& rChannel)
@@ -139,7 +158,6 @@ uint Importer::Animations::Save(const R_Animation* rAnimation, char** buffer)
 	for (uint i = 0; i < rAnimation->channels.size(); ++i)
 	{
 		Channel rChannel = rAnimation->channels[i];
-
 		Utilities::StoreChannelName(rChannel, &cursor);
 		Utilities::StorePositionKeysData(rChannel, &cursor);
 		Utilities::StoreRotationKeysData(rChannel, &cursor);
@@ -203,11 +221,12 @@ bool Importer::Animations::Load(const char* buffer, R_Animation* rAnimation)
 	rAnimation->channels.resize((uint)headerData[3]);
 	for (uint i = 0; i < rAnimation->channels.size(); ++i)
 	{
+
 		std::string channelName = "";
 		Utilities::LoadChannelName(&cursor, channelName);
 
 		Channel rChannel = Channel(channelName.c_str());
-		
+
 		Utilities::LoadPositionKeysData(&cursor, rChannel);
 		Utilities::LoadRotationKeysData(&cursor, rChannel);
 		Utilities::LoadScaleKeysData(&cursor, rChannel);
@@ -235,6 +254,7 @@ uint Importer::Animations::Utilities::GetChannelsDataSize(const R_Animation* rAn
 		const Channel& rChannel = rAnimation->channels[i];
 		uint channelSize = 0;
 
+		channelSize += sizeof(uint); //Channel Type
 		channelSize += sizeof(uint) * 4;																					// Length of the name and sizes of the keys maps.
 		channelSize += (strlen(rChannel.name.c_str()) * sizeof(char));
 		channelSize += rChannel.positionKeyframes.size() * vecKeySize;
@@ -249,7 +269,7 @@ uint Importer::Animations::Utilities::GetChannelsDataSize(const R_Animation* rAn
 
 void Importer::Animations::Utilities::StoreChannelName(const Channel& rChannel, char** cursor)
 {
-	uint bytes			= 0;
+	uint bytes		= 0;
 	uint nameLength	= rChannel.name.length();
 
 	bytes = sizeof(uint);
@@ -327,7 +347,7 @@ void Importer::Animations::Utilities::StoreScaleKeysData(const Channel& rChannel
 
 void Importer::Animations::Utilities::LoadChannelName(char** cursor, std::string& channelName)
 {
-	uint bytes			= 0;
+	uint bytes		= 0;
 	uint nameLength	= 0;
 
 	bytes = sizeof(uint);
@@ -335,7 +355,7 @@ void Importer::Animations::Utilities::LoadChannelName(char** cursor, std::string
 	*cursor += bytes;
 	
 	channelName.resize(nameLength);
-	bytes	= nameLength * sizeof(char);
+	bytes = nameLength * sizeof(char);
 	memcpy(&channelName[0], *cursor, bytes);
 	*cursor += bytes;
 }
@@ -368,7 +388,7 @@ void Importer::Animations::Utilities::LoadPositionKeysData(char** cursor, Channe
 
 void Importer::Animations::Utilities::LoadRotationKeysData(char** cursor, Channel& rChannel)
 {
-	uint bytes		= 0;
+	uint bytes	= 0;
 	uint rkSize	= 0;
 
 	bytes = sizeof(uint);
@@ -394,7 +414,7 @@ void Importer::Animations::Utilities::LoadRotationKeysData(char** cursor, Channe
 
 void Importer::Animations::Utilities::LoadScaleKeysData(char** cursor, Channel& rChannel)
 {
-	uint bytes		= 0;
+	uint bytes	= 0;
 	uint skSize	= 0;
 
 	bytes = sizeof(uint);
@@ -402,7 +422,7 @@ void Importer::Animations::Utilities::LoadScaleKeysData(char** cursor, Channel& 
 	*cursor += bytes;
 
 	uint timeBytes		= sizeof(double);
-	uint scaleBytes	= (sizeof(float) * 3);
+	uint scaleBytes		= (sizeof(float) * 3);
 	for (uint i = 0; i < skSize; ++i)
 	{
 		double time		= 0.0;
@@ -415,5 +435,83 @@ void Importer::Animations::Utilities::LoadScaleKeysData(char** cursor, Channel& 
 		*cursor += scaleBytes;
 
 		rChannel.scaleKeyframes.emplace(time, scale);
+	}
+}
+
+void Importer::Animations::Utilities::ValidateChannel(Channel& rChannel)
+{
+	if (strstr(rChannel.name.c_str(), "_$AssimpFbx$_") != nullptr)
+	{
+		if (strstr(rChannel.name.c_str(), "_$AssimpFbx$_Translation") != nullptr)
+		{
+			rChannel.rotationKeyframes.clear();
+			rChannel.rotationKeyframes.emplace(-1.0, Quat::identity);
+			
+			rChannel.scaleKeyframes.clear();
+			rChannel.scaleKeyframes.emplace(-1.0, float3::zero);
+
+		}
+		else if (strstr(rChannel.name.c_str(), "_$AssimpFbx$_Rotation") != nullptr) 
+		{ 
+			rChannel.positionKeyframes.clear();
+			rChannel.positionKeyframes.emplace(-1.0, float3::zero);
+			
+			rChannel.scaleKeyframes.clear();
+			rChannel.scaleKeyframes.emplace(-1.0, float3::zero);
+		}
+		else if (strstr(rChannel.name.c_str(), "_$AssimpFbx$_Scaling") != nullptr)
+		{
+			rChannel.positionKeyframes.clear();
+			rChannel.positionKeyframes.emplace(-1.0, float3::zero);
+			
+			rChannel.rotationKeyframes.clear();
+			rChannel.rotationKeyframes.emplace(-1.0, Quat::identity);
+		}
+		
+		uint pos = rChannel.name.find_first_of("$");
+		if (pos != rChannel.name.npos)
+		{
+			rChannel.name = rChannel.name.substr(0, pos - 1);
+		}
+	}
+}
+
+void Importer::Animations::Utilities::FuseChannels(const Channel& newChannel, Channel& existingChannel)
+{
+	if (newChannel.HasPositionKeyframes())
+	{
+		if (!existingChannel.HasPositionKeyframes())
+		{
+			existingChannel.positionKeyframes.clear();																// Erasing the [-1.0] item that identifies an invalid keyframe channel.
+		}
+		
+		for (auto pk = newChannel.positionKeyframes.begin(); pk != newChannel.positionKeyframes.end(); ++pk)
+		{
+			existingChannel.positionKeyframes[pk->first] = pk->second;
+		}
+	}
+	if (newChannel.HasRotationKeyframes())
+	{
+		if (!existingChannel.HasRotationKeyframes())
+		{
+			existingChannel.rotationKeyframes.clear();
+		}
+		
+		for (auto rk = newChannel.rotationKeyframes.begin(); rk != newChannel.rotationKeyframes.end(); ++rk)
+		{
+			existingChannel.rotationKeyframes[rk->first] = rk->second;
+		}
+	}
+	if (newChannel.HasScaleKeyframes())
+	{
+		if (!existingChannel.HasScaleKeyframes())
+		{
+			existingChannel.scaleKeyframes.clear();
+		}
+		
+		for (auto sk = newChannel.scaleKeyframes.begin(); sk != newChannel.scaleKeyframes.end(); ++sk)
+		{
+			existingChannel.scaleKeyframes[sk->first] = sk->second;
+		}
 	}
 }

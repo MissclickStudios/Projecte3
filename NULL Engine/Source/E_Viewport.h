@@ -28,6 +28,7 @@ private:
 	void	DrawGame							();
 	
 	void	AdaptTextureToWindowSize			();
+	void	AdaptTextureToGameWindowSize		();
 	void	DrawSceneTexture					();
 
 	void	ResourceDragAndDropTargetListener	();

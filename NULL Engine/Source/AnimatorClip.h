@@ -2,13 +2,14 @@
 #define __ANIMATOR_CLIP_H__
 
 #include <string>
+#include "Macros.h"
 
 class ParsonNode;
 class R_Animation;
 
 typedef unsigned int uint;
 
-class AnimatorClip
+class NULL_API AnimatorClip
 {
 public:
 	AnimatorClip();
@@ -17,8 +18,8 @@ public:
 	bool StepClip	(const float& dt);
 	void ClearClip	();
 
-	bool SaveState(ParsonNode& root) const;
-	bool LoadState(const ParsonNode& root);
+	bool SaveState	(ParsonNode& root) const;
+	bool LoadState	(const ParsonNode& root);
 
 public:																																// --- CLIP DEBUG METHODS
 	void				StepClipToPrevKeyframe		();
@@ -37,6 +38,8 @@ public:																																// --- CLIP TIME DATA GET/SET METHODS
 
 public:																																// --- GENERAL CLIP DATA GET METHODS
 	const R_Animation*	GetAnimation				() const;
+	void				SetAnimation				(R_Animation* rAnimation);
+
 	const char*			GetAnimationName			() const;
 	float				GetAnimationTicksPerSecond	() const;
 	float				GetAnimationDuration		() const;

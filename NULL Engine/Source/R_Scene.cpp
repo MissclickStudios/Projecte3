@@ -2,6 +2,8 @@
 
 #include "R_Scene.h"
 
+#include "MemoryManager.h"
+
 R_Scene::R_Scene() : Resource(ResourceType::SCENE)
 {
 

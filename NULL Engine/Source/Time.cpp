@@ -5,6 +5,8 @@
 
 #include "Time.h"
 
+#include "MemoryManager.h"
+
 using namespace Time::Real::Utilities;																	// Not the cleanest but prefer to avoid having to write these
 using namespace Time::Game::Utilities;																	// strings every time i need a Utilities variable.
 
@@ -144,7 +146,7 @@ void Time::Game::Pause()
 
 void Time::Game::Step(uint numSteps)
 {
-
+	
 }
 
 void Time::Game::Stop()

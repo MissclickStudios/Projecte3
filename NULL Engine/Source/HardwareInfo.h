@@ -2,10 +2,11 @@
 #define __HARDWARE_INFO_H__
 
 #include <vector>
+#include "Macros.h"
 
 typedef unsigned int uint;
 
-struct CPU
+struct NULL_API CPU
 {
 	int		cpuCount;							// Number of available CPU cores. SDL_GetCPUCount() returns the number of available CPU cores.
 	int		cacheSize;							// Size of the CPU's L1 cache line. SDL_GetCPUCacheLineSize() is useful to determine multi-threaded structure padding or SIMD prefetch sizes.
@@ -24,7 +25,7 @@ struct CPU
 	bool	hasAVX2;							// True if the CPU has AVX2 features. Expansion of AVX. Expands most vector integer SSE and AVX instructions to 256 bits, adds vector shifts...
 };
 
-struct GPU
+struct NULL_API GPU
 {
 	uint	vendor;								// Vendor number of the GPU card.
 	uint	deviceId;							// Device id number of the GPU card.
@@ -36,12 +37,12 @@ struct GPU
 	float	vramReserved;						// Current VRAM reserved in Mb.
 };
 
-struct SDLInfo
+struct NULL_API SDLInfo
 {
 	char SDLVersion[25];						// String containing the version or release number of the SDL version that is being used.
 };
 
-struct OpenGLInfo
+struct NULL_API OpenGLInfo
 {
 	char* modelName;							// String containing the name of the company responsible for this GL implementation. Remains unchanged release to release.
 	char* rendererName;							// String containing the name of the renderer. Typically specific to a particular configuration of a hardware platform. Remains " ".
@@ -52,13 +53,13 @@ struct OpenGLInfo
 	std::vector<char*> extensions;
 };
 
-struct DevILInfo
+struct NULL_API DevILInfo
 {
 	char* vendor;
 	char* version;
 };
 
-struct HardwareInfo
+struct NULL_API HardwareInfo
 {
 	HardwareInfo();								// Will initialize all Hardware variables. Preventive measure to avoid variables being used elsewhere while uninitialized.
 	

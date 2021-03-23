@@ -7,14 +7,12 @@ This document will explain in detail the Quality Assurance (QA) process which wi
 
 # Tools used
 - **GitHub Issue:** For bug reporting
-- **Google Forms:** For guiding the QA session (especially the external)
 
 To report a bug with an `issue`, the bug reporting template that will be shown at the **Bug Reporting** section must be followed. 
 
 
 # Milestones
 ## External Milestones
-Every two weeks we will have a new milestone (some of which are parts of the 5 general ones)
 - **Concept Discovery:** February 23th
 
 - **Vertical Slice 1:**  March 9th
@@ -32,9 +30,10 @@ Every two weeks we will have a new milestone (some of which are parts of the 5 g
 - **Gold:** June 7th to 16th 
 
 ## Internal Milestones
-Since milestones define sprints and they have a duration of 2 weeks, we will have a QA session at the middle of each sprint to identify any issues needed to be fixed for the delivery and to make sure the sprint is on the right track and direction. They will be 1h long internal QA sessions per sprint, every Monday. Should there be no new build, the QA session would be either postponed for a day or cancelled.
 
-External QA sessions will be scheduled after a major milestone has been reached. They will follow a google form that will guide the session.
+There will be a 1h long internal QA session per sprint, every Saturday. Should there be no new build, the QA session would be either postponed for a day or cancelled.
+
+External QA sessions will be scheduled after a major milestone has been reached.
 
 # Workflow Graphics
 - Playtest workflow
@@ -57,7 +56,8 @@ Whenever a team member finds a bug, it must be reported with a GitHub Issue and 
 
 ### Weekly QA:
 
-- Every Monday if it's not a week before before a Milestone the team will perform a QA test. This Weekly QA does not need the whole team testing it necessarily though it will be preferred. 
+
+- Every Saturday if it's not a week before before a Milestone the team will perform a QA test. This Weekly QA does not need the whole team testing it necessarily though it will be preferred. 
 
 - In this test the team will try to push the boundaries of the game to try and find as many bugs as possible to be fixed, then each one will be submitted to GitHub Issues. This test will take about 30 minutes or so depending on the time available to the team.
 
@@ -83,7 +83,7 @@ This playtest will follow the following steps:
 
 - Do you play videogames? If so, how often? In which platform?
 
-- Do you know what a Rogue-Lite game is? If so, have you ever played one?
+- Do you know what an RTS is? If so, have you ever played one?
 
 2. Playtest:
 

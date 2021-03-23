@@ -1,6 +1,10 @@
 #include "Application.h"
 
 #include "Log.h"
+#include <windows.h>
+#include <stdio.h>
+
+#include "MemoryManager.h"
 
 void log(const char file[], int line, const char* format, ...)
 {

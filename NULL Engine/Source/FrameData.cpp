@@ -1,6 +1,8 @@
 #include "Log.h"
 
 #include "FrameData.h"
+#include "MemoryManager.h"
+
 
 FrameData::FrameData()
 {

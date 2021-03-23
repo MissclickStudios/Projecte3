@@ -3,6 +3,7 @@
 
 #include "MathGeoLib/include/Algorithm/Random/LCG.h"
 #include "VariableTypedefs.h"
+#include "Macros.h"
 
 namespace Random
 {
@@ -10,18 +11,18 @@ namespace Random
 	{	
 		static math::LCG lcgRand;
 
-		uint32	GetRandomUint();												// 
-		uint32	GetBoundedRandomUint(uint32 min = 0, uint32 max = 4294967295);	// 
-		float	GetBoundedRandomFloat(float min, float max);					// 
+		uint32	NULL_API GetRandomUint();												// 
+		uint32	NULL_API GetBoundedRandomUint(uint32 min = 0, uint32 max = 4294967295);	// 
+		float	NULL_API GetBoundedRandomFloat(float min, float max);					// 
 	}
 
 	namespace PCG																// RNG library. Great Performance (Real random factor...)
 	{
-		void	InitPCG();
+		void	NULL_API InitPCG();
 		
-		uint32	GetRandomUint();												// 
-		uint32	GetBoundedRandomUint(uint32 max = 4294967295);					// 
-		float	GetBoundedRandomFloat(float max);								// 
+		uint32	NULL_API GetRandomUint();												// 
+		uint32	NULL_API GetBoundedRandomUint(uint32 max = 4294967295);					// 
+		float	NULL_API GetBoundedRandomFloat(float max);								// 
 	}
 }
 

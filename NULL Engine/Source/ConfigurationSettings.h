@@ -1,6 +1,9 @@
 #ifndef __CONFIGURATION_SETTINGS_H__
 #define __CONFIGURATION_SETTINGS_H__
 
+#define DEFAULT_CONFIGURATION_PATH "Engine/Configuration/default_configuration.JSON"
+#define CONFIGURATION_FILE_PATH "Engine/Configuration/configuration.JSON"
+
 // Configuration ------------------------------------ 1280x720
 #define SCREEN_WIDTH			1280
 #define SCREEN_HEIGHT			720
@@ -15,12 +18,12 @@
 #define WIN_RESIZABLE			true
 #define WIN_BORDERLESS			false
 #define WIN_FULLSCREEN_DESKTOP	false
-#define VSYNC					false
+#define VSYNC					true
 #define FRAMES_ARE_CAPPED		true
 
 #define VERSION					"v0.5"
-#define TITLE					"NULL Engine"
-#define ORGANIZATION			"Angel Gonzalez // UPC - CITM - TTC"
+#define TITLE					"The Mandalorian: Sands of Arvala"
+#define ORGANIZATION			"Missclick Studios // UPC - CITM - TTC"
 
 #define DEFAULT_SCENE			"Assets/Models/street/Street environment_V01.FBX"
 #define DEFAULT_ANIMATION		"Assets/Models/Skeleton_Model/aniTest.fbx"

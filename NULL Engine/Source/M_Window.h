@@ -5,7 +5,7 @@
 
 class ParsonNode;
 
-class M_Window : public Module
+class NULL_API M_Window : public Module
 {
 public:
 	M_Window(bool isActive = true);
@@ -47,6 +47,8 @@ public:
 	void		SetResizable			(bool setTo);							// 
 	void		SetBorderless			(bool setTo);							// 
 	void		SetFullscreenDesktop	(bool setTo);							// 
+
+	void		RecalculateWindowSize	();
 
 private:
 	SDL_Window*		window;														// The window we'll be rendering to

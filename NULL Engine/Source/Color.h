@@ -1,7 +1,14 @@
 #ifndef __COLOR_H__
 #define __COLOR_H__
 
-struct Color
+#include "Macros.h"
+
+namespace math
+{
+	class float4;
+}
+
+struct NULL_API Color
 {
 	float r, g, b, a;
 	
@@ -21,7 +28,8 @@ struct Color
 
 	// --- OPERATORS
 	float*	operator &();													// Returns a float* of the vector.
-	
+	 float* operator &() const;													// Returns a float* of the vector.
+
 	Color	operator +(const Color& color);									// col.r = r + color.r, ... .	The values are expected to be within Range: 0.0f ~ 1.0f.
 	Color	operator -(const Color& color);									// col.r = r - color.r, ... .	The values are expected to be within Range: 0.0f ~ 1.0f.
 	Color	operator *(float scalar);										// col.r = r * color.r, ... .	Remember that the value of the vector has to remain in Range: 0.0f ~ 1.0f after the ops.
@@ -33,18 +41,19 @@ struct Color
 	Color	operator /=(float scalar);										// r /= color.t. ... .			Remember that the value of the vector has to remain in Range: 0.0f ~ 1.0f after the ops.
 
 	Color	operator =(const Color& color);									// this = color; Necessary?
+	Color	operator =(const math::float4& color);									// this = color; Necessary?
 	bool	operator ==(const Color& color);								// if (this.r == color.r && ... && this.a == this.a), then return true.
 };
 
-extern Color Red;
-extern Color Green;
-extern Color Blue;
-extern Color Cyan;
-extern Color Magenta;
-extern Color Yellow;
-extern Color Orange;
-extern Color Pink;
-extern Color Black;
-extern Color White;
+extern NULL_API Color Red;
+extern NULL_API Color Green;
+extern NULL_API Color Blue;
+extern NULL_API Color Cyan;
+extern NULL_API Color Magenta;
+extern NULL_API Color Yellow;
+extern NULL_API Color Orange;
+extern NULL_API Color Pink;
+extern NULL_API Color Black;
+extern NULL_API Color White;
 
 #endif // !__COLOR_H__

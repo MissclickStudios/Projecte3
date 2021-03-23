@@ -9,6 +9,8 @@
 
 #include "PerfectTimer.h"
 
+#include "MemoryManager.h"
+
 uint64 PerfectTimer::frequency = 0;
 
 // ---------------------------------------------

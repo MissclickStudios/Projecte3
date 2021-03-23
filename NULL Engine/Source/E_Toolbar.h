@@ -9,17 +9,15 @@ public:
 	E_Toolbar();
 	~E_Toolbar();
 
-	bool Draw(ImGuiIO& io) override;
-	bool CleanUp() override;
+	bool Draw		(ImGuiIO& io) override;
+	bool CleanUp	() override;
 
 private:
-	void PlayAndStopButtons();
-	void PauseAndStepButtons();
-	void TimeScaleSlider();
-	void TimeDisplays();
-
-private:
-	bool playedOnce;
+	void PlayAndStopButtons		();
+	void PauseAndStepButtons	();
+	void TimeScaleSlider		();
+	void TimeDisplay			();
+	void GetTimeDisplayStrings	(std::string& realTimeString, std::string& gameTimeString);
 };
 
 #endif // !__E_TOOLBAR_H__

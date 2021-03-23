@@ -5,6 +5,9 @@
 
 #include "E_Timeline.h"
 
+#include "MemoryManager.h"
+#include "Profiler.h"
+
 E_Timeline::E_Timeline() : EditorPanel("Timeline")
 {
 	currentTime = 0.0f;
@@ -18,6 +21,7 @@ E_Timeline::~E_Timeline()
 bool E_Timeline::Draw(ImGuiIO& io)
 {
 	bool ret = true;
+
 
 	static float values[2]	= { 1.0f, 15.0f };
 	float values2[2]		= { 15.0f, 30.0f };
