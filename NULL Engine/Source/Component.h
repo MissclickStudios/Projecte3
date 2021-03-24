@@ -26,7 +26,6 @@ enum class ComponentType
 	CANVAS,
 	AUDIOSOURCE,
 	AUDIOLISTENER,
-	SCRIPT,
 	// Behaviors
 	PLAYER_CONTROLLER,
 	BULLET_BEHAVIOR,
@@ -35,7 +34,8 @@ enum class ComponentType
 	GATE_BEHAVIOR,
 	//UI
 	UI_IMAGE,
-	UI_TEXT
+	UI_TEXT,
+	SCRIPT
 };
 
 class NULL_API Component
