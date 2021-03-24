@@ -2,6 +2,8 @@
 #include "Log.h"
 #include "C_Transform.h"
 #include "MathGeoLib/include/Math/float3.h"
+#include "Application.h"
+#include "M_Input.h"
 
 FirstScript::FirstScript() : Script()
 {
@@ -29,9 +31,18 @@ void FirstScript::PreUpdate()
 void FirstScript::Update()
 {
 	LOG("Update: First variable = %d", firstVariable);
-	float3 pos = transform->GetLocalPosition();
-	pos.x += 1;
-	transform->SetLocalPosition(pos);
+	if (App->input->GetKey(SDL_SCANCODE_A) == KeyState::KEY_REPEAT) 
+	{
+		float3 pos = transform->GetLocalPosition();
+		pos.x += 1;
+		transform->SetLocalPosition(pos);
+	}
+	if (App->input->GetKey(SDL_SCANCODE_D) == KeyState::KEY_REPEAT)
+	{
+		float3 pos = transform->GetLocalPosition();
+		pos.x -= 1;
+		transform->SetLocalPosition(pos);
+	}
 }
 
 void FirstScript::PostUpdate()
