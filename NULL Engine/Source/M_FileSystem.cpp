@@ -91,7 +91,7 @@ bool M_FileSystem::AddPath(const char* pathOrZip)
 
 	if (result == PhysfsResult::FAILURE)
 	{
-		LOG("[ERROR] File System: Could not add a path or zip! Error: %s\n", PHYSFS_getLastError());	// Method that returns the string of the last error message issued by PhysFS.
+		LOG("[ERROR] File System: Could not add a path or zip! Error: %s\n", PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));	// Method that returns the string of the last error message issued by PhysFS.
 	}
 	else
 	{
