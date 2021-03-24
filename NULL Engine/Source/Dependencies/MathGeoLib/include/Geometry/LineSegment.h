@@ -20,10 +20,17 @@
 #include "../MathGeoLibFwd.h"
 #include "../Math/float3.h"
 
+//Import/export engine core define
+#ifdef NULL_BUILD_DLL
+#define NULL_API __declspec(dllexport)
+#else
+#define NULL_API __declspec(dllimport)
+#endif
+
 MATH_BEGIN_NAMESPACE
 
 /// A line segment in 3D space is a finite line with a start and end point.
-class LineSegment
+class NULL_API LineSegment
 {
 public:
 	/// The starting point of this line segment.

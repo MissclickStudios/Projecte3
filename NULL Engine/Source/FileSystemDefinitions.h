@@ -11,12 +11,16 @@
 #define ASSETS_SHADERS_PATH		"Assets/Shaders/"
 #define ASSETS_SKYBOX_PATH		"Assets/Textures/Skybox/"
 #define ASSETS_PREFABS_PATH		"Assets/Prefabs/"
+#define ASSETS_PREBAFS_PATH		"Assets/Prefabs/"
+#define ASSETS_SCRIPTS_PATH		"Assets/Scripts/"
 
 #define ENGINE_PATH				"Engine/"
 #define ENGINE_DIRECTORY		"Engine"
 #define CONFIGURATION_PATH		"Engine/Configuration/"
 #define DEFAULTS_PATH			"Engine/Defaults/"
 #define ICONS_PATH				"Engine/Icons/"
+#define SCRIPTS_DLL_OUTPUT		"EngineScripts/Output/EngineScripts.dll"
+#define SCRIPTS_DLL_WORKING		"EngineScripts.dll"
 
 #define LIBRARY_PATH			"Library/"
 #define ANIMATIONS_PATH			"Library/Animations/"
@@ -29,6 +33,7 @@
 #define SCENES_PATH				"Library/Scenes/"
 #define SHADERS_PATH			"Library/Shaders/"
 #define TEXTURES_PATH			"Library/Textures/"
+#define	SCRIPTS_PATH			"Library/Scripts/"
 
 // File Extensions ----------------------------------
 #define ANIMATIONS_EXTENSION	".neanimat"
@@ -39,6 +44,7 @@
 #define SCENES_EXTENSION		".nescene"
 #define TEXTURES_EXTENSION		".netex"
 #define SHADERS_EXTENSION		".neshader"
+#define SCRIPTS_EXTENSION		".nescript"
 
 #define PREFAB_EXTENSION		".prefab"
 

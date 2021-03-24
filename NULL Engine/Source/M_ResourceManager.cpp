@@ -13,6 +13,7 @@
 #include "I_Folders.h"
 #include "I_Animations.h"
 #include "I_Shaders.h"
+#include "I_Scripts.h"
 
 #include "Application.h"
 #include "FileSystemDefinitions.h"
@@ -28,6 +29,7 @@
 #include "R_Scene.h"
 #include "R_Animation.h"
 #include "R_Shader.h"
+#include "R_Script.h"
 
 #include "M_ResourceManager.h"
 
@@ -159,6 +161,21 @@ uint32 M_ResourceManager::ImportFile(const char* assetsPath)
 	{
 		return 0;
 	}
+	
+	std::vector<std::string> directories;
+	std::vector<std::string> assetFiles;
+	std::vector<std::string> metaFiles;
+	std::map<std::string, std::string> filePairs;
+
+	//TODO: We are 2 discover files when we can do just 1 run
+	App->fileSystem->DiscoverAllFiles(directory, assetFiles, directories, DOTLESS_META_EXTENSION);				// Directories (folders) will be ignored for now.
+	App->fileSystem->GetAllFilesWithExtension(directory, DOTLESS_META_EXTENSION, metaFiles);
+	
+	FindFilesToImport(assetFiles, metaFiles, filePairs, filesToImport);											// Always call in this order!
+	FindFilesToUpdate(filePairs, filesToUpdate);																// At the very least FindFilesToImport() has to be the first to be called
+	FindFilesToDelete(metaFiles, filePairs, filesToDelete);														// as it is the one to fill file_pairs with asset and meta files!
+
+	LoadValidFilesIntoLibrary(filePairs);																		// Will emplace all valid files' UID & library path into the library map.
 
 	assetsPath			= GetValidPath(assetsPath);
 	bool metaIsValid	= MetaFileIsValid(assetsPath);
@@ -223,6 +240,7 @@ uint M_ResourceManager::SaveResourceToLibrary(Resource* resource)
 	case ResourceType::SCENE:		{ /*written = TODO: HAVE A FUNCTIONAL R_SCENE AND SAVE/LOAD METHODS*/ }		break;
 	case ResourceType::ANIMATION:	{ written = Importer::Animations::Save((R_Animation*)resource, &buffer); }	break;
 	case ResourceType::SHADER:		{ written = Importer::Shaders::Save((R_Shader*)resource, &buffer); }		break;
+	case ResourceType::SCRIPT:		{ written = Importer::Scripts::Save((R_Script*)resource, &buffer); }		break;
 	}
 
 	RELEASE_ARRAY(buffer);
@@ -393,6 +411,10 @@ ResourceType M_ResourceManager::GetTypeFromAssetsExtension(const char* assetsPat
 	{
 		type = ResourceType::PREFAB;
 	}
+	else if (extension == "h")
+	{
+		type = ResourceType::SCRIPT;
+	}
 	else
 	{
 		LOG("[ERROR] Resource Manager: Could not import from the given Assets Path! Error: File extension { %s } is not supported!", extension.c_str());
@@ -478,6 +500,7 @@ Resource* M_ResourceManager::CreateResource(ResourceType type, const char* asset
 	case ResourceType::SCENE:		{ resource = new R_Scene(); }		break;
 	case ResourceType::ANIMATION:	{ resource = new R_Animation(); }	break;
 	case ResourceType::SHADER:		{ resource = new R_Shader(); }		break;
+	case ResourceType::SCRIPT:		{ resource = new R_Script(); }		break;
 	}
 
 	if (resource != nullptr)
@@ -566,6 +589,7 @@ bool M_ResourceManager::AllocateResource(uint32 UID, const char* assetsPath)
 	case ResourceType::SCENE:		{ /*success = TODO: HAVE A FUNCTIONAL R_SCENE AND SAVE/LOAD METHODS*/ }			break;
 	case ResourceType::ANIMATION:	{ success = Importer::Animations::Load(buffer, (R_Animation*)resource); }		break;
 	case ResourceType::SHADER:		{ success = Importer::Shaders::Load(buffer, (R_Shader*)resource); }				break;
+	case ResourceType::SCRIPT:		{ success = Importer::Script::Load(buffer, (R_Script*)resource); }				break;
 	}
 
 	RELEASE_ARRAY(buffer);
@@ -873,6 +897,7 @@ void M_ResourceManager::RefreshDirectoryFiles(const char* directory)
 		//DeleteFromAssets(files_to_delete[i].c_str());
 		DeleteFromLibrary(filesToDelete[i].c_str());
 	}
+
 	for (uint i = 0; i < filesToUpdate.size(); ++i)
 	{
 		DeleteFromLibrary(filesToUpdate[i].c_str());
@@ -922,7 +947,7 @@ void M_ResourceManager::FindFilesToImport(const std::vector<std::string>& assetF
 	{
 		metaTmp.emplace(metaFiles[i], i);
 	}
-	
+
 	std::string metaFile = "[NONE]";
 	std::map<std::string, uint>::iterator item;
 	for (uint i = 0; i < assetFiles.size(); ++i)																// Assets files whose meta file is missing will be imported.
@@ -1263,6 +1288,10 @@ bool M_ResourceManager::GetLibraryDirectoryAndExtensionFromType(const ResourceTy
 		directory = SHADERS_PATH;
 		extension = SHADERS_EXTENSION;
 		break;
+	case ResourceType::SCRIPT:
+		directory = SCRIPTS_PATH;
+		extension = SCRIPTS_EXTENSION;
+		break;
 	case ResourceType::NONE:
 		ret = false;
 		break;
@@ -1317,7 +1346,6 @@ bool M_ResourceManager::GetLibraryPairsFromMeta(const char* assetsPath, std::map
 	{
 		LOG("%s! Error: Mismatched amount of Resource UIDs and Library Paths.", errorString.c_str());
 	}
-
 	for (uint i = 0; i < resourceUids.size(); ++i)
 	{
 		pairs.emplace(resourceUids[i], libraryPaths[i]);
@@ -1410,6 +1438,7 @@ uint32 M_ResourceManager::ImportFromAssets(const char* assetsPath)
 		case ResourceType::TEXTURE:		{ success = Importer::ImportTexture(buffer, read, (R_Texture*)resource); }					break;
 		case ResourceType::SCENE:		{ /*success = HAVE A FUNCTIONAL R_SCENE AND LOAD/SAVE METHODS*/}							break;
 		case ResourceType::SHADER:		{ success = Importer::Shaders::Import(resource->GetAssetsPath(), (R_Shader*)resource); }	break;
+		case ResourceType::SCRIPT:      {success = Importer::Scripts::Import(assetsPath, buffer, read, (R_Script*)resource); }        break;
 		}
 
 		RELEASE_ARRAY(buffer);
@@ -1590,7 +1619,6 @@ bool M_ResourceManager::HasMetaFile(const char* assetsPath)
 		LOG("[ERROR] Resource Manager: Could not check whether or not the given path had an associated Meta File! Error: Given Assets Path was nullptr.");
 		return false;
 	}
-
 	std::string metaPath = assetsPath + std::string(META_EXTENSION);
 
 	return App->fileSystem->Exists(metaPath.c_str());
@@ -1738,7 +1766,8 @@ bool M_ResourceManager::ResourceHasMetaType(Resource* resource) const
 	return (type == ResourceType::FOLDER
 			|| type == ResourceType::MODEL
 			|| type == ResourceType::TEXTURE
-			|| type == ResourceType::SHADER);
+			|| type == ResourceType::SHADER
+			|| type == ResourceType::SCRIPT);
 }
 
 bool M_ResourceManager::HasImportIgnoredExtension(const char* assetsPath) const
@@ -1746,4 +1775,27 @@ bool M_ResourceManager::HasImportIgnoredExtension(const char* assetsPath) const
 	std::string ext = App->fileSystem->GetFileExtension(assetsPath);
 
 	return (ext == "ini" || ext == "json" || ext == "JSON" || ext == "txt" || ext == "ttf" || ext == "bnk" || ext == "prefab");
+}
+
+void M_ResourceManager::GetAllScripts(std::map<std::string, std::string>& scripts)
+{
+	R_Script* tempScript = nullptr;
+	std::vector<std::string> scriptFiles;
+	App->fileSystem->GetAllFilesWithExtension(ASSETS_SCRIPTS_PATH, "h", scriptFiles);
+	for (uint i = 0; i < scriptFiles.size(); i++)
+	{
+		//std::string defaultPath = ASSETS_SHADERS_PATH + std::string(shaderFiles[i]) + SHADERS_EXTENSION;
+		tempScript = (R_Script*)App->resourceManager->GetResourceFromLibrary(scriptFiles[i].c_str());
+		if (tempScript == nullptr)
+		{
+			LOG("[ERROR] Could not get the %s Error: %s could not be found in active resources.", scriptFiles[i], scriptFiles[i]);
+		}
+		else
+		{
+			for (int z = 0; z < tempScript->dataStructures.size(); ++z)
+				scripts.emplace(tempScript->dataStructures[z].first, scriptFiles[i]);
+			
+			App->resourceManager->FreeResource(tempScript->GetUID());
+		}
+	}
 }

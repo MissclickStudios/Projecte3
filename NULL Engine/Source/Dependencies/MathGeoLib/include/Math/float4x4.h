@@ -27,6 +27,13 @@
 #include "../MathGeoLibFwd.h"
 #include "MatrixProxy.h"
 
+//Import/export engine core define
+#ifdef NULL_BUILD_DLL
+#define NULL_API __declspec(dllexport)
+#else
+#define NULL_API __declspec(dllimport)
+#endif
+
 MATH_BEGIN_NAMESPACE
 
 /// A 4-by-4 matrix for affine transformations and perspective projections of 3D geometry.
@@ -58,7 +65,7 @@ MATH_BEGIN_NAMESPACE
 	There the elements for a single column of the matrix hold successive memory addresses.
 	This is exactly opposite from the standard C++ multidimensional arrays, since if you have e.g.
 	int v[10][10], then v[0][9] comes in memory right before v[1][0]. ( [0][0], [0][1], [0][2], ... [1][0], [1][1], ...) */
-class ALIGN_MAT float4x4
+class ALIGN_MAT NULL_API float4x4
 {
 public:
 	/// Specifies the height of this matrix.

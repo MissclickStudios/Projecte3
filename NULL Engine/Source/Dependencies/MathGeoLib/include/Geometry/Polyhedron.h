@@ -25,10 +25,17 @@
 #include <string>
 #endif
 
+//Import/export engine core define
+#ifdef NULL_BUILD_DLL
+#define NULL_API __declspec(dllexport)
+#else
+#define NULL_API __declspec(dllimport)
+#endif
+
 MATH_BEGIN_NAMESPACE
 
 /// Represents a three-dimensional closed geometric solid defined by flat polygonal faces.
-class Polyhedron
+class NULL_API Polyhedron
 {
 public:
 	/// Stores a list of indices of a single face of a Polyhedron.

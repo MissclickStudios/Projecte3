@@ -24,6 +24,7 @@
 #include "C_Animation.h"
 #include "C_AudioSource.h"
 #include "C_AudioListener.h"
+#include "C_Script.h"
 #include "C_RigidBody.h"
 #include "C_BoxCollider.h"
 #include "C_SphereCollider.h"
@@ -210,6 +211,7 @@ bool GameObject::LoadState(ParsonNode& root)
 			case ComponentType::ANIMATION:			{ component = new C_Animation(this); }			break;
 			case ComponentType::AUDIOSOURCE:		{ component = new C_AudioSource(this); }		break;
 			case ComponentType::AUDIOLISTENER:		{ component = new C_AudioListener(this); }		break;
+			case ComponentType::SCRIPT:				{ component = new C_Script(this); }				break;
 			case ComponentType::RIGIDBODY:			{ component = new C_RigidBody(this); }			break;
 			case ComponentType::BOX_COLLIDER:		{ component = new C_BoxCollider(this); }		break;
 			case ComponentType::SPHERE_COLLIDER:	{ component = new C_SphereCollider(this); }		break;
@@ -727,6 +729,22 @@ Component* GameObject::CreateComponent(ComponentType type)
 		return nullptr;
 	}
 
+#ifndef GAMEBUILD
+	//TODO: Maybe this is avoidable
+	std::vector<C_Script*>scripts;
+	if (type == ComponentType::SCRIPT && GetComponents<C_Script>(scripts)) 
+	{
+		for(int i = 0; i<scripts.size();++i)
+		{
+			if (!(scripts[i]->resource != nullptr)) 
+			{
+				LOG("[ERROR] Script Component could not be added to %s! Error: Empty Script to fill already exists!", name.c_str());
+				return nullptr;
+			}
+		}
+	}
+#endif
+
 	switch(type)
 	{
 	case ComponentType::TRANSFORM:			{ component = new C_Transform(this); }			break;
@@ -742,10 +760,11 @@ Component* GameObject::CreateComponent(ComponentType type)
 	case ComponentType::BOX_COLLIDER:		{ component = new C_BoxCollider(this); }		break;
 	case ComponentType::SPHERE_COLLIDER:	{ component = new C_SphereCollider(this); }		break;
 	case ComponentType::CAPSULE_COLLIDER:	{ component = new C_CapsuleCollider(this); }	break;
-	case ComponentType::PARTICLE_SYSTEM: { component = new C_ParticleSystem(this); }	break;
+	case ComponentType::PARTICLE_SYSTEM: 	{ component = new C_ParticleSystem(this); }		break;
 	case ComponentType::CANVAS:				{ component = new C_Canvas(this); }				break;
 	case ComponentType::UI_IMAGE:			{ component = new C_UI_Image(this); }			break;
 	case ComponentType::UI_TEXT:			{ component = new C_UI_Text(this); }			break;
+	case ComponentType::SCRIPT:				{component = new C_Script(this); }				break;
 	case ComponentType::PLAYER_CONTROLLER:	{ component = new C_PlayerController(this); }	break;
 	case ComponentType::BULLET_BEHAVIOR:	{ component = new C_BulletBehavior(this); }		break;
 	case ComponentType::PROP_BEHAVIOR:		{ component = new C_PropBehavior(this); }		break;

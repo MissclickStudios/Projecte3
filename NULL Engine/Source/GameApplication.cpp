@@ -11,6 +11,7 @@
 #include "M_Audio.h"
 #include "M_Physics.h"
 #include "M_UISystem.h"
+#include "M_ScriptManager.h"
 #include "M_GameManager.h"
 
 #include "EngineMain.h"
@@ -38,6 +39,7 @@ GameApplication::GameApplication()
 	AddModule(resourceManager);
 
 	// Scenes
+	AddModule(scriptManager);
 	AddModule(manager);
 	AddModule(audio);
 	AddModule(physics);

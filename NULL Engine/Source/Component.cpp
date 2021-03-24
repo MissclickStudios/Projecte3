@@ -57,6 +57,7 @@ const char* Component::GetNameFromType() const
 	case ComponentType::ANIMATION: { return "Animation"; }		break;
 	case ComponentType::AUDIOSOURCE: {return "Audio Source";} break;
 	case ComponentType::AUDIOLISTENER: {return "Audio Listener"; } break;
+	case ComponentType::SCRIPT:			{return "Script"; } break;
 	case ComponentType::RIGIDBODY:		  { return "RigidBody"; }			break;
 	case ComponentType::BOX_COLLIDER:	  { return "Box Collider"; }		break;
 	case ComponentType::SPHERE_COLLIDER:  { return "Sphere  Collider"; }	break;

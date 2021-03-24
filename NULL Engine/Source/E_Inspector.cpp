@@ -16,6 +16,7 @@
 #include "M_ResourceManager.h"
 #include "M_UISystem.h"
 #include "M_Scene.h"
+#include "M_ScriptManager.h"
 
 #include "GameObject.h"
 #include "Component.h"
@@ -42,9 +43,11 @@
 #include "C_UI_Image.h"
 #include "C_UI_Text.h"
 
+#include "C_Script.h"
 
 #include "R_Shader.h"
 #include "R_Texture.h"
+#include "R_Script.h"
 #include "I_Shaders.h"
 
 
@@ -223,6 +226,7 @@ void E_Inspector::DrawComponents(GameObject* selectedGameObject)
 		case ComponentType::CANVAS:				{ DrawCanvasComponent((C_Canvas*)component); }						break;
 		case ComponentType::UI_IMAGE:			{ DrawUIImageComponent((C_UI_Image*)component); }					break;
 		case ComponentType::UI_TEXT:			{ DrawUITextComponent((C_UI_Text*)component); }						break;
+		case ComponentType::SCRIPT:				{ DrawScriptComponent((C_Script*)component); }						break;
 		case ComponentType::PLAYER_CONTROLLER:	{ DrawPlayerControllerComponent((C_PlayerController*)component); }	break;
 		case ComponentType::BULLET_BEHAVIOR:	{ DrawBulletBehaviorComponent((C_BulletBehavior*)component); }		break;
 		case ComponentType::PROP_BEHAVIOR:		{ DrawPropBehaviorComponent((C_PropBehavior*)component); }			break;
@@ -1443,6 +1447,60 @@ void E_Inspector::DrawUITextComponent(C_UI_Text* text)
 
 }
 
+void E_Inspector::DrawScriptComponent(C_Script* cScript)
+{
+
+	bool show = true;
+	//REDO THIS -> s'ha de fer amb el resource !!!
+	//Inspector if we don't have any script
+	if (!cScript->HasData() && !(cScript->resource != nullptr))
+	{
+		if (ImGui::CollapsingHeader("Script", &show, ImGuiTreeNodeFlags_DefaultOpen))
+		{
+			const std::map<std::string, std::string> scripts = EngineApp->scriptManager->GetAviableScripts();
+			std::string select = (*scripts.begin()).first;
+			if (ImGui::BeginCombo("##Select Script", "SelectScript", ImGuiComboFlags_PopupAlignLeft))
+			{
+				for (std::map<std::string, std::string>::const_iterator it = scripts.cbegin(); it != scripts.cend(); ++it)
+				{
+					bool selectedScript = (select == (*it).first.c_str());
+					if (ImGui::Selectable((*it).first.c_str(), selectedScript)) 
+					{
+						cScript->resource = (R_Script*)App->resourceManager->GetResourceFromLibrary((*it).second.c_str());
+						for (int i = 0; i < cScript->resource->dataStructures.size(); ++i) {
+							if ((*it).first == cScript->resource->dataStructures[i].first)
+							{
+								cScript->LoadData((*it).first.c_str(), cScript->resource->dataStructures[i].second);
+								break;
+							}
+						}
+					}
+
+				}
+				ImGui::EndCombo();
+			}
+		}
+		if (!show)
+			cScript->GetOwner()->DeleteComponent(cScript);
+
+		ImGui::Separator();
+		return;
+	}
+
+	if (ImGui::CollapsingHeader(cScript->GetDataName().c_str(), &show, ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		//TODO: Show inspector variables
+		ImGui::Text("Name %s", cScript->GetDataName().c_str());
+	}
+	if (!show)
+	{
+		componentToDelete = cScript;
+		showDeleteComponentPopup = true;
+	}
+	ImGui::Separator();
+
+}
+
 void E_Inspector::DrawPlayerControllerComponent(C_PlayerController* cController)
 {
 	bool show = true;
@@ -1619,7 +1677,8 @@ void E_Inspector::DrawGateBehaviorComponent(C_GateBehavior* cBehavior)
 
 void E_Inspector::AddComponentCombo(GameObject* selectedGameObject)
 {
-	ImGui::Combo("##", &componentType, "Add Component\0Transform\0Mesh\0Material\0Light\0Camera\0Animator\0Animation\0RigidBody\0Box Collider\0Sphere Collider\0Capsule Collider\0Particle System\0Canvas\0Audio Source\0Audio Listener\0Player Controller\0Bullet Behavior\0Prop Behavior\0Camera Behavior\0Gate Behavior\0UI Image\0UI Text");
+	ImGui::Combo("##", &componentType, "Add Component\0Transform\0Mesh\0Material\0Light\0Camera\0Animator\0Animation\0RigidBody\0Box Collider\0Sphere Collider\0Capsule Collider\0Particle System\0Canvas\0Audio Source\0Audio Listener\0Script\0Player Controller\0Bullet Behavior\0Prop Behavior\0Camera Behavior\0Gate Behavior\0UI Image\0UI Text");
+
 	ImGui::SameLine();
 
 	if ((ImGui::Button("ADD")))

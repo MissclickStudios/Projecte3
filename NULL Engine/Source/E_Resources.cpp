@@ -36,6 +36,7 @@ bool E_Resources::Draw(ImGuiIO& io)
 	uint textures	= 0;
 	uint animations = 0;
 	uint shaders	= 0;
+	uint scripts	= 0;
 
 	std::multimap<uint, Resource*> sorted;
 
@@ -55,6 +56,7 @@ bool E_Resources::Draw(ImGuiIO& io)
 		case ResourceType::TEXTURE:		{ ++textures; }		break;
 		case ResourceType::ANIMATION:	{ ++animations; }	break;
 		case ResourceType::SHADER:		{ ++shaders; }		break;
+		case ResourceType::SCRIPT:		{ ++scripts; }		break;
 		}
 
 		sorted.emplace((uint)item->second->GetType(), item->second);
@@ -82,6 +84,7 @@ bool E_Resources::Draw(ImGuiIO& io)
 	ImGui::Text("Num Textures:");	ImGui::SameLine();	ImGui::TextColored(&Yellow, "  %u",		textures);
 	ImGui::Text("Num Animations:");	ImGui::SameLine();	ImGui::TextColored(&Yellow, "%u",		animations);
 	ImGui::Text("Num Shaders:");	ImGui::SameLine();	ImGui::TextColored(&Yellow, "   %u",	shaders);
+	ImGui::Text("Num Scripts:");	ImGui::SameLine();	ImGui::TextColored(&Yellow), "	%u",	scripts);
 	
 	ImGui::End();
 	

@@ -5,6 +5,7 @@
 #include "EngineApplication.h"
 #include "E_Toolbar.h"
 #include "Profiler.h"
+#include "M_ScriptManager.h"
 #include "MemoryManager.h"
 
 E_Toolbar::E_Toolbar() : EditorPanel("Toolbar")
@@ -61,7 +62,12 @@ void E_Toolbar::PlayAndStopButtons()
 			EngineApp->gameState = GameState::PLAY;
 			Time::Game::Play();
 
+			EngineApp->scriptManager->InitScripts();
+
 			EngineApp->editor->SaveSceneThroughEditor("PlayAutosave");
+			EngineApp->play = true;
+			EngineApp->pause = false;
+
 		}
 	}
 	else
@@ -71,7 +77,12 @@ void E_Toolbar::PlayAndStopButtons()
 			EngineApp->gameState = GameState::STOP;
 			Time::Game::Stop();
 
+			EngineApp->scriptManager->CleanUpScripts();
+
 			EngineApp->editor->LoadFileThroughEditor("Assets/Scenes/PlayAutosave.json");
+			EngineApp->play = false;
+			EngineApp->pause = false;
+
 		}
 	}
 }

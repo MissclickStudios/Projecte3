@@ -25,6 +25,7 @@ enum class ResourceType
 	SHADER,
 	PARTICLE_SYSTEM,
 	PREFAB,
+	SCRIPT,
 	NONE
 };
 

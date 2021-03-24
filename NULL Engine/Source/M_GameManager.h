@@ -10,7 +10,8 @@ public:
 	M_GameManager(bool isActive = true);
 	~M_GameManager();
 
-	bool			Init(ParsonNode& config) override;
+	bool Init(ParsonNode& config) override;
+	bool Start()override;
 	/*UpdateStatus	PreUpdate(float dt) override;
 	UpdateStatus	Update(float dt) override;
 	UpdateStatus	PostUpdate(float dt) override;
