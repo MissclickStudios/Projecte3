@@ -1,13 +1,18 @@
 #pragma once
-#include "..\..\..\Source\Script.h"
-#include "..\..\EngineScripts\Helpers\ScriptMacros.h"
+#include "Script.h"
+#include "ScriptMacros.h"
 
 class SCRIPTS_API FirstScript : public Script {
 public :
 	FirstScript();
 	~FirstScript();
+	void Awake() override;
+	void Start() override;
+	void PreUpdate()override;
 	void Update() override;
-	int firstVariable;
+	void PostUpdate()override;
+	void CleanUp()override;
+	int firstVariable = 4;
 };
 
 SCRIPTS_FUNCTION FirstScript* CreateFirstScript() {

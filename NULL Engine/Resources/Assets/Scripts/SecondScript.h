@@ -1,6 +1,6 @@
 #pragma once
 //#include "..\..\..\Source\Script.h"
-#include "..\..\EngineScripts\Helpers\ScriptMacros.h"
+#include "ScriptMacros.h"
 
 class SCRIPTS_API SecondScript {
 

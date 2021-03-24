@@ -90,8 +90,6 @@ UpdateStatus M_ScriptManager::PreUpdate(float dt)
 			HotReload();*/
 			aviableScripts.clear();
 			App->resourceManager->GetAllScripts(aviableScripts);
-			//std::sort(aviableScripts.begin(), aviableScripts.end(), std::less<std::string>());
-			while (MoveFileA(SCRIPTS_DLL_OUTPUT, SCRIPTS_DLL_WORKING) == FALSE) {}
 		}
 	}
 #endif
