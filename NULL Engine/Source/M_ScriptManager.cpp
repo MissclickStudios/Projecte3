@@ -31,7 +31,7 @@ bool M_ScriptManager::Start()
 		while (MoveFileA(SCRIPTS_DLL_OUTPUT, SCRIPTS_DLL_WORKING) == FALSE) {}
 	}
 	dllHandle = LoadLibrary(SCRIPTS_DLL_WORKING);
-#ifndef GAMEBUILD //Si buildejem per engine en build mode problemes !!!! No es carregaran els scripts i no podrem posarlos
+#ifndef GAMEBUILD
 	App->resourceManager->GetAllScripts(aviableScripts);
 #endif
 	return true;
@@ -206,6 +206,7 @@ HINSTANCE M_ScriptManager::GetDllHandle() const
 	return dllHandle;
 }
 
+#ifndef GAMEBUILD
 void M_ScriptManager::HotReload()
 {
 	ParsonNode root = ParsonNode();
@@ -238,6 +239,7 @@ void M_ScriptManager::HotReload()
 		}
 	}
 }
+#endif
 
 void M_ScriptManager::SerializeAllScripts(ParsonArray& scriptsArray)
 {
