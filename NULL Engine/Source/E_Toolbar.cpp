@@ -65,8 +65,6 @@ void E_Toolbar::PlayAndStopButtons()
 			EngineApp->scriptManager->InitScripts();
 
 			EngineApp->editor->SaveSceneThroughEditor("PlayAutosave");
-			EngineApp->play = true;
-			EngineApp->pause = false;
 
 		}
 	}
@@ -80,8 +78,6 @@ void E_Toolbar::PlayAndStopButtons()
 			EngineApp->scriptManager->CleanUpScripts();
 
 			EngineApp->editor->LoadFileThroughEditor("Assets/Scenes/PlayAutosave.json");
-			EngineApp->play = false;
-			EngineApp->pause = false;
 
 		}
 	}

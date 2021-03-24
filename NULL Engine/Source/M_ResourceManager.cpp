@@ -168,12 +168,12 @@ uint32 M_ResourceManager::ImportFile(const char* assetsPath)
 	std::map<std::string, std::string> filePairs;
 
 	//TODO: We are 2 discover files when we can do just 1 run
-	App->fileSystem->DiscoverAllFiles(directory, assetFiles, directories, DOTLESS_META_EXTENSION);				// Directories (folders) will be ignored for now.
-	App->fileSystem->GetAllFilesWithExtension(directory, DOTLESS_META_EXTENSION, metaFiles);
-	
-	FindFilesToImport(assetFiles, metaFiles, filePairs, filesToImport);											// Always call in this order!
-	FindFilesToUpdate(filePairs, filesToUpdate);																// At the very least FindFilesToImport() has to be the first to be called
-	FindFilesToDelete(metaFiles, filePairs, filesToDelete);														// as it is the one to fill file_pairs with asset and meta files!
+	//App->fileSystem->DiscoverAllFiles(assetsPath, assetFiles, directories, DOTLESS_META_EXTENSION);				// Directories (folders) will be ignored for now.
+	//App->fileSystem->GetAllFilesWithExtension(assetsPath, DOTLESS_META_EXTENSION, metaFiles);
+	//
+	//FindFilesToImport(assetFiles, metaFiles, filePairs, filesToImport);											// Always call in this order!
+	//FindFilesToUpdate(filePairs, filesToUpdate);																// At the very least FindFilesToImport() has to be the first to be called
+	//FindFilesToDelete(metaFiles, filePairs, filesToDelete);														// as it is the one to fill file_pairs with asset and meta files!
 
 	LoadValidFilesIntoLibrary(filePairs);																		// Will emplace all valid files' UID & library path into the library map.
 
@@ -589,7 +589,7 @@ bool M_ResourceManager::AllocateResource(uint32 UID, const char* assetsPath)
 	case ResourceType::SCENE:		{ /*success = TODO: HAVE A FUNCTIONAL R_SCENE AND SAVE/LOAD METHODS*/ }			break;
 	case ResourceType::ANIMATION:	{ success = Importer::Animations::Load(buffer, (R_Animation*)resource); }		break;
 	case ResourceType::SHADER:		{ success = Importer::Shaders::Load(buffer, (R_Shader*)resource); }				break;
-	case ResourceType::SCRIPT:		{ success = Importer::Script::Load(buffer, (R_Script*)resource); }				break;
+	case ResourceType::SCRIPT:		{ success = Importer::Scripts::Load(buffer, (R_Script*)resource); }				break;
 	}
 
 	RELEASE_ARRAY(buffer);
@@ -1538,6 +1538,10 @@ ResourceType M_ResourceManager::GetTypeFromLibraryExtension(const char* libraryP
 	{
 		type = ResourceType::SHADER;
 	}
+	else if (extension == SCRIPTS_EXTENSION)
+	{
+		type = ResourceType::SCRIPT;
+	}
 	else
 	{
 		type = ResourceType::NONE;
@@ -1781,14 +1785,14 @@ void M_ResourceManager::GetAllScripts(std::map<std::string, std::string>& script
 {
 	R_Script* tempScript = nullptr;
 	std::vector<std::string> scriptFiles;
-	App->fileSystem->GetAllFilesWithExtension(ASSETS_SCRIPTS_PATH, "h", scriptFiles);
+	App->fileSystem->GetAllFilesWithFilter(ASSETS_SCRIPTS_PATH, scriptFiles,nullptr,"h");
 	for (uint i = 0; i < scriptFiles.size(); i++)
 	{
 		//std::string defaultPath = ASSETS_SHADERS_PATH + std::string(shaderFiles[i]) + SHADERS_EXTENSION;
 		tempScript = (R_Script*)App->resourceManager->GetResourceFromLibrary(scriptFiles[i].c_str());
 		if (tempScript == nullptr)
 		{
-			LOG("[ERROR] Could not get the %s Error: %s could not be found in active resources.", scriptFiles[i], scriptFiles[i]);
+			LOG("[ERROR] Could not get the %s Error: %s could not be found in active resources.", scriptFiles[i].c_str(), scriptFiles[i].c_str());
 		}
 		else
 		{

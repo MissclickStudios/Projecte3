@@ -1458,7 +1458,11 @@ void E_Inspector::DrawScriptComponent(C_Script* cScript)
 		if (ImGui::CollapsingHeader("Script", &show, ImGuiTreeNodeFlags_DefaultOpen))
 		{
 			const std::map<std::string, std::string> scripts = EngineApp->scriptManager->GetAviableScripts();
-			std::string select = (*scripts.begin()).first;
+			
+			std::string select;
+			if(scripts.size() != 0)
+				select = (*scripts.begin()).first;
+
 			if (ImGui::BeginCombo("##Select Script", "SelectScript", ImGuiComboFlags_PopupAlignLeft))
 			{
 				for (std::map<std::string, std::string>::const_iterator it = scripts.cbegin(); it != scripts.cend(); ++it)

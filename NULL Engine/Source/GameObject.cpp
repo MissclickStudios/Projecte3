@@ -191,6 +191,9 @@ bool GameObject::LoadState(ParsonNode& root)
 		
 		ComponentType type	= (ComponentType)((int)componentNode.GetNumber("Type"));
 
+		if (type < (ComponentType)0)
+			continue;
+
 		if (type == ComponentType::TRANSFORM)
 		{
 			GetComponent<C_Transform>()->LoadState(componentNode);

@@ -94,7 +94,7 @@ UpdateStatus M_ScriptManager::PreUpdate(float dt)
 	}
 #endif
 
-	if (App->play && !App->pause)
+	if (App->gameState == GameState::PLAY)
 	{
 		for (std::vector<Script*>::const_iterator it = currentScripts.cbegin(); it != currentScripts.cend(); ++it)
 		{
@@ -119,7 +119,7 @@ UpdateStatus M_ScriptManager::PreUpdate(float dt)
 
 UpdateStatus M_ScriptManager::Update(float dt)
 {
-	if (App->play && !App->pause)
+	if (App->gameState == GameState::PLAY)
 	{
 		for (std::vector<Script*>::const_iterator it = currentScripts.cbegin(); it != currentScripts.cend(); ++it)
 		{
@@ -144,7 +144,7 @@ UpdateStatus M_ScriptManager::Update(float dt)
 
 UpdateStatus M_ScriptManager::PostUpdate(float dt)
 {
-	if (App->play && !App->pause)
+	if (App->gameState == GameState::PLAY)
 	{
 		for (std::vector<Script*>::const_iterator it = currentScripts.cbegin(); it != currentScripts.cend(); ++it) 
 		{
