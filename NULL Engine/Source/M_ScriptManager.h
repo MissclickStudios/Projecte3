@@ -31,7 +31,7 @@ public:
 	void AddCurrentEngineScript(Script* script);
 	HINSTANCE GetDllHandle() const;
 
-#ifndef GAMEBUILD 
+#ifndef GAMEBUILD //TODO: Aixo s'ha de fer en un modul del NULL ENGINE!!!
 public:
 	const std::map<std::string, std::string>& GetAviableScripts() const { return aviableScripts; }
 private:

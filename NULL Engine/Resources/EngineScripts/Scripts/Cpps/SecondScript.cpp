@@ -1,6 +1,5 @@
 #pragma once
-#include "..\..\..\Assets\Scripts\SecondScript.h"
-//#include "..\..\..\..\Source\Log.h"
+#include "SecondScript.h"
 
 SecondScript::SecondScript()
 {
