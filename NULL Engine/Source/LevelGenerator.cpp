@@ -21,7 +21,6 @@ LevelGenerator::~LevelGenerator()
 void LevelGenerator::GetRooms()
 {
 	App->fileSystem->GetAllFilesWithFilter(ASSETS_SCENES_PATH, allRooms, "Room", "json");
-	//App->fileSystem->GetAllFilesWithExtensionAndName(ASSETS_SCENES_PATH, "json", "Room", allRooms);
 	roomsToAdd = allRooms.size();
 }
 
@@ -58,21 +57,41 @@ void LevelGenerator::GenerateRoom(int room)
 
 void LevelGenerator::AddFixedRoom(std::string name, int position)
 {
+	int newPosition = position - 1;
 	std::string roomPath = ASSETS_SCENES_PATH + name + ".json";
-
+	
+	
 	if (App->fileSystem->Exists(roomPath.c_str()))
 	{
-		//std::string tempRoom;
-		if (levelRooms.size() <= position)
+		std::string tempRoom;
+		std::string tempRoom2;
+		levelRooms.resize(levelRooms.size() + 1);
+
+		if (levelRooms.size() <= newPosition)
 		{
-			position = levelRooms.size() - 1;
+			newPosition = levelRooms.size();
 		}
-		for (int i = 0; i < levelRooms.size(); i++)
+		for (int i = 0; i <= levelRooms.size(); i++)
 		{
-			if (i == position)
+			if (i == newPosition)
+			{ 
+				if (i == levelRooms.size())
+				{
+					levelRooms[i - 1] = roomPath;
+				}
+				else 
+				{
+					tempRoom = levelRooms[i + 1];
+					levelRooms[i + 1] = levelRooms[i];
+					levelRooms[i] = roomPath;
+				}
+			}
+			else if( i > newPosition && i < levelRooms.size())
 			{
-				//tempRoom = levelRooms[i];
-				levelRooms[i] = roomPath;
+				tempRoom2 = levelRooms[i];
+				levelRooms[i] = tempRoom;
+				if(i + 1 != levelRooms.size()) tempRoom = levelRooms[i + 1];
+				tempRoom = tempRoom2;
 			}
 			
 		}

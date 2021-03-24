@@ -2,6 +2,8 @@
 #define __PARTICLE_MODULE_H__
 
 #include "MathGeoLib/include/Math/float3.h"
+#include "MathGeoLib/include/Math/float4.h"
+#include "MathGeoLib/include/Algorithm/Random/LCG.h"
 #include "Macros.h"
 #include "Color.h"
 
@@ -16,12 +18,12 @@ struct NULL_API ParticleModule
 		EmitterBase,		//Origin of the emitter
 		EmitterSpawn,		//Spawn Rate and timer
 		EmitterArea,
-		ParticlePosition,
+		ParticleMovement,
 		ParticleRotation,
 		ParticleSize,
 		ParticleColor,
 		ParticleLifetime,
-		ParticleVelocity,
+		
 		Unknown
 	} type;
 
@@ -30,6 +32,7 @@ struct NULL_API ParticleModule
 	virtual void Spawn(EmitterInstance* emitter, Particle* particle) = 0;
 	virtual void Update(float dt, EmitterInstance* emitter) = 0;
 
+	LCG randomGenerator;
 	//virtual void Save / Load
 
 };
@@ -53,20 +56,26 @@ struct EmitterSpawn : ParticleModule
 	void Spawn(EmitterInstance* emitter, Particle* particle);
 	void Update(float dt, EmitterInstance* emitter);			//spawn ratio and timer management
 
-	float spawnRatio = 0.0f;
+	float spawnRatio = 0.05f;
 	float timer = 0.0f;
 };
 
-//struct ParticlePosition : ParticleModule
-//{
-//	ParticlePosition() : ParticleModule(Type::ParticlePosition) {};
-//
-//	void Spawn(EmitterInstance* emitter, Particle* particle);	//random pos between initialPosition1 and 2
-//	void Update(float dt, EmitterInstance* emitter);
-//
-//	float3 initialPosition1 = float3::zero;
-//	float3 initialPosition2 = float3::zero;
-//};
+struct ParticleMovement : ParticleModule
+{
+	ParticleMovement() : ParticleModule(Type::ParticleMovement) {};
+
+	void Spawn(EmitterInstance* emitter, Particle* particle);	//random pos between initialPosition1 and 2
+	void Update(float dt, EmitterInstance* emitter);
+
+	float initialIntensity1 = 1.f;									//stablishes the intensity of movement. It is added to directionOfMovement, resulting in float4 that describes the velocity of the particle
+	float initialIntensity2 = 3.0f;
+
+	float3 initialDirection1 = float3(1.0f, 1.0f, 1.0f);			//determines the direction of the movement computing 3 random values (between initialDirection1 and 2)
+	float3 initialDirection2 = float3(-1.0f, -1.0f, -1.0f);
+
+	float3 initialPosition1 = float3::zero;
+	float3 initialPosition2 = float3::zero;
+};
 
 struct ParticleColor : ParticleModule
 {
@@ -85,7 +94,7 @@ struct ParticleLifetime : ParticleModule
 	void Spawn(EmitterInstance* emitter, Particle* particle);
 	void Update(float dt, EmitterInstance* emitter);
 
-	float initialLifetime;
+	float initialLifetime = 0.2f;
 };
 
 #endif

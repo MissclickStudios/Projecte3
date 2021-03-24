@@ -233,7 +233,7 @@ uint M_ResourceManager::SaveResourceToLibrary(Resource* resource)
 		return 0;
 	}
 
-	if (ResourceHasMetaType(resource))
+	if (ResourceHasMetaType(resource) && !resource->hasForcedUID)
 	{
 		SaveMetaFile(resource);
 	}
@@ -925,8 +925,13 @@ void M_ResourceManager::FindFilesToImport(const std::vector<std::string>& assetF
 	
 	std::string metaFile = "[NONE]";
 	std::map<std::string, uint>::iterator item;
-	for (uint i = 0; i < assetFiles.size(); ++i)																	// Assets files whose meta file is missing will be imported.
+	for (uint i = 0; i < assetFiles.size(); ++i)																// Assets files whose meta file is missing will be imported.
 	{
+		if (HasImportIgnoredExtension(assetFiles[i].c_str()))													// TMP. Maybe prefabs will have a meta and a custom file format later on.
+		{
+			continue;
+		}
+		
 		metaFile	= assetFiles[i] + META_EXTENSION;
 		item		= metaTmp.find(metaFile);
 
@@ -934,9 +939,9 @@ void M_ResourceManager::FindFilesToImport(const std::vector<std::string>& assetF
 		{
 			filePairs.emplace(assetFiles[i], item->first);
 
-			if (!MetaFileIsValid(assetFiles[i].c_str()))															// In case the pair exists but the meta file is outdated.
+			if (!MetaFileIsValid(assetFiles[i].c_str(), false))													// In case the pair exists but the meta file is outdated.
 			{
-				filesToImport.push_back(assetFiles[i]);																// SHARING SCENES: STEP 1
+				filesToImport.push_back(assetFiles[i]);															// SHARING SCENES: STEP 1
 			} 
 		}
 		else
@@ -955,12 +960,14 @@ void M_ResourceManager::FindFilesToUpdate(const std::map<std::string, std::strin
 	std::map<std::string, std::string>::const_iterator item;
 	for (item = filePairs.begin(); item != filePairs.end(); ++item)
 	{
-		assetModTime	= App->fileSystem->GetLastModTime(item->first.c_str());						// Files with different modification time than their meta files
-		metaModTime	= GetAssetFileModTimeFromMeta(item->first.c_str());								// will need to be updated (Delete prev + Import new).
+		assetModTime	= App->fileSystem->GetLastModTime(item->first.c_str());							// Files with different modification time than their meta files
+		metaModTime		= GetAssetFileModTimeFromMeta(item->first.c_str());								// will need to be updated (Delete prev + Import new).
 
 		if (assetModTime != metaModTime)
 		{
-			filesToUpdate.push_back(item->first);
+			LOG("[WARNING] Resource Manager: File Modification Time discrepancy! File: { %s } ModTimes: [%llu] :: [%llu]", item->first.c_str(), assetModTime, metaModTime);
+			
+			//filesToUpdate.push_back(item->first);														// REVISE THIS LATER. MAYBE THE PROBLEM IS A DEPRECATED METHOD IN PHYSFS?.
 		}
 	}
 }
@@ -1334,9 +1341,9 @@ uint64 M_ResourceManager::GetAssetFileModTimeFromMeta(const char* assetsPath)
 
 	std::string errorString = "[ERROR] Resoruce Manager: Could not get Asset File Mod Time from { " + std::string(assetsPath) + " }'s Meta File";
 
-	char* buffer					= nullptr;
+	char* buffer				= nullptr;
 	ParsonNode metaRoot			= LoadMetaFile(assetsPath, &buffer);
-	ParsonArray containedArray		= metaRoot.GetArray("ContainedResources");
+	ParsonArray containedArray	= metaRoot.GetArray("ContainedResources");
 	RELEASE_ARRAY(buffer);
 
 	if (!metaRoot.NodeIsValid())
@@ -1589,10 +1596,8 @@ bool M_ResourceManager::HasMetaFile(const char* assetsPath)
 	return App->fileSystem->Exists(metaPath.c_str());
 }
 
-bool M_ResourceManager::MetaFileIsValid(const char* assetsPath)
+bool M_ResourceManager::MetaFileIsValid(const char* assetsPath, bool checkLibrary)
 {
-	bool ret = true;
-
 	if (assetsPath == nullptr)
 	{
 		LOG("[ERROR] Resource Manager: Could not validate Meta File! Error: Given Assets Path was nullptr.");
@@ -1631,7 +1636,7 @@ bool M_ResourceManager::MetaFileIsValid(const char* assetsPath)
 		LOG("%s! Error: Resource Custom File could not be found in Library.", errorString.c_str());
 		return false;
 	}
-	if (library.find(resourceUid) == library.end())
+	if (checkLibrary && (library.find(resourceUid) == library.end()))
 	{
 		LOG("%s! Error: Resource UID could not be found in Library.", errorString.c_str());
 		return false;
@@ -1650,17 +1655,17 @@ bool M_ResourceManager::MetaFileIsValid(const char* assetsPath)
 			LOG("%s! Error: Contained Resource Custom File could not be found in Library.", errorString.c_str());
 			return false;
 		}
-		if (library.find(containedUid) == library.end())
+		if (checkLibrary && (library.find(containedUid) == library.end()))
 		{
 			LOG("%s! Error: Contained Resource UID could not be found in Library.", errorString.c_str());
 			return false;
 		}
 	}
 
-	return ret;
+	return true;
 }
 
-bool M_ResourceManager::MetaFileIsValid(ParsonNode& metaRoot)
+bool M_ResourceManager::MetaFileIsValid(ParsonNode& metaRoot, bool checkLibrary)
 {
 	bool ret = true;
 
@@ -1679,13 +1684,13 @@ bool M_ResourceManager::MetaFileIsValid(ParsonNode& metaRoot)
 	}
 
 	std::string libraryPath		= metaRoot.GetString("LibraryPath");
-	uint32 resourceUid				= (uint32)metaRoot.GetNumber("UID");
+	uint32 resourceUid			= (uint32)metaRoot.GetNumber("UID");
 	if (!App->fileSystem->Exists(libraryPath.c_str()))
 	{
 		LOG("%s! Error: Resource Custom File could not be found in Library.", errorString.c_str());
 		return false;
 	}
-	if (library.find(resourceUid) == library.end())
+	if (checkLibrary && (library.find(resourceUid) == library.end()))
 	{
 		LOG("%s! Error: Resource UID could not be found in Library.", errorString.c_str());
 		return false;
@@ -1710,7 +1715,7 @@ bool M_ResourceManager::MetaFileIsValid(ParsonNode& metaRoot)
 			LOG("%s! Error: Contained Resource Custom File could not be found in Library.", errorString.c_str());
 			return false;
 		}
-		if (library.find(containedUid) == library.end())
+		if (checkLibrary && (library.find(containedUid) == library.end()))
 		{
 			LOG("%s! Error: Contained Resource UID could not be found in Library.", errorString.c_str());
 			return false;
@@ -1734,4 +1739,11 @@ bool M_ResourceManager::ResourceHasMetaType(Resource* resource) const
 			|| type == ResourceType::MODEL
 			|| type == ResourceType::TEXTURE
 			|| type == ResourceType::SHADER);
+}
+
+bool M_ResourceManager::HasImportIgnoredExtension(const char* assetsPath) const
+{
+	std::string ext = App->fileSystem->GetFileExtension(assetsPath);
+
+	return (ext == "ini" || ext == "json" || ext == "JSON" || ext == "txt" || ext == "ttf" || ext == "bnk" || ext == "prefab");
 }

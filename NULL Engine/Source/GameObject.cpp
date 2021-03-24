@@ -1,3 +1,5 @@
+#include "Profiler.h"
+
 #include "VariableTypedefs.h"
 #include "Macros.h"
 #include "Log.h"
@@ -35,6 +37,7 @@
 #include "C_ParticleSystem.h"
 
 #include "C_Canvas.h"
+
 #include "C_UI_Image.h"
 #include "C_UI_Text.h"
 
@@ -216,6 +219,7 @@ bool GameObject::LoadState(ParsonNode& root)
 			case ComponentType::PROP_BEHAVIOR:		{ component = new C_PropBehavior(this); }		break;
 			case ComponentType::CAMERA_BEHAVIOR:	{ component = new C_CameraBehavior(this); }		break;
 			case ComponentType::GATE_BEHAVIOR:		{ component = new C_GateBehavior(this); }		break;
+			case ComponentType::PARTICLE_SYSTEM:	{ component = new C_ParticleSystem(this); }		break;
 			case ComponentType::CANVAS:				{ component = new C_Canvas(this); }				break;
 			case ComponentType::UI_IMAGE:			{ component = new C_UI_Image(this); }			break;
 			case ComponentType::UI_TEXT:			{ component = new C_UI_Text(this); }			break;
@@ -318,7 +322,7 @@ float3* GameObject::GetAABBVertices() const
 }
 
 void GameObject::GetRenderers(std::vector<MeshRenderer>& meshRenderers, std::vector<CuboidRenderer>& cuboidRenderers, std::vector<SkeletonRenderer>& skeletonRenderers)
-{
+{	
 	/*if (to_delete || (parent != nullptr && parent->to_delete))			// TMP Quickfix. Deleted GameObjects could potentially generate Renderers. Fix the issue at the root later.
 	{
 		return;
@@ -347,7 +351,7 @@ void GameObject::GetRenderers(std::vector<MeshRenderer>& meshRenderers, std::vec
 
 	if (cCamera != nullptr)
 	{
-		if (!cCamera->FrustumIsHidden())
+		if (!cCamera->FrustumIsHidden() && App->gameState != GameState::PLAY)
 		{
 			cuboidRenderers.push_back(CuboidRenderer(cCamera->GetFrustumVertices(), CuboidType::FRUSTUM));
 		}
@@ -361,7 +365,7 @@ void GameObject::GetRenderers(std::vector<MeshRenderer>& meshRenderers, std::vec
 		}
 	}
 
-	if (show_bounding_boxes || App->renderer->GetRenderBoundingBoxes())
+	if ((show_bounding_boxes || App->renderer->GetRenderBoundingBoxes()) && App->gameState != GameState::PLAY)
 	{
 		obb.GetCornerPoints(obb_vertices);
 		aabb.GetCornerPoints(aabb_vertices);
@@ -738,6 +742,7 @@ Component* GameObject::CreateComponent(ComponentType type)
 	case ComponentType::BOX_COLLIDER:		{ component = new C_BoxCollider(this); }		break;
 	case ComponentType::SPHERE_COLLIDER:	{ component = new C_SphereCollider(this); }		break;
 	case ComponentType::CAPSULE_COLLIDER:	{ component = new C_CapsuleCollider(this); }	break;
+	case ComponentType::PARTICLE_SYSTEM: { component = new C_ParticleSystem(this); }	break;
 	case ComponentType::CANVAS:				{ component = new C_Canvas(this); }				break;
 	case ComponentType::UI_IMAGE:			{ component = new C_UI_Image(this); }			break;
 	case ComponentType::UI_TEXT:			{ component = new C_UI_Text(this); }			break;
@@ -746,7 +751,6 @@ Component* GameObject::CreateComponent(ComponentType type)
 	case ComponentType::PROP_BEHAVIOR:		{ component = new C_PropBehavior(this); }		break;
 	case ComponentType::CAMERA_BEHAVIOR:	{ component = new C_CameraBehavior(this); }		break;
 	case ComponentType::GATE_BEHAVIOR:		{ component = new C_GateBehavior(this); }		break;
-	case ComponentType::PARTICLE_SYSTEM: { component = new C_ParticleSystem(this); }	break;
 	}
 
 	if (component != nullptr)

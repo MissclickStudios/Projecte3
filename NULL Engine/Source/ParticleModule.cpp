@@ -15,7 +15,7 @@ void EmitterBase::Spawn(EmitterInstance* emitter, Particle* particle)
 	particle->position = position;
 
 	//temporary
-	Quat rotation = go->GetComponent<C_Transform>()->GetWorldRotation();
+	Quat rotation = Quat::FromEulerXYZ(90, 0, 0);
 	particle->worldRotation = rotation;
 }
 
@@ -46,15 +46,26 @@ void EmitterSpawn::Update(float dt, EmitterInstance* emitter)
 	}
 }
 
-//void ParticlePosition::Spawn(EmitterInstance* emitter, Particle* particle)
-//{
-//	particle->position = initialPosition1;
-//}
-//
-//void ParticlePosition::Update(float dt, EmitterInstance* emitter)
-//{
-//
-//}
+void ParticleMovement::Spawn(EmitterInstance* emitter, Particle* particle)
+{
+	float directionX = math::Lerp(initialDirection1.x, initialDirection2.x, randomGenerator.Float());
+	float directionY = math::Lerp(initialDirection1.y, initialDirection2.y, randomGenerator.Float());
+	float directionZ = math::Lerp(initialDirection1.z, initialDirection2.z, randomGenerator.Float());
+	particle->movementDirection = float3(directionX, directionY, directionZ);
+
+	particle->velocity = math::Lerp(initialIntensity1, initialIntensity2, randomGenerator.Float());
+}
+
+void ParticleMovement::Update(float dt, EmitterInstance* emitter)
+{
+	for (unsigned int i = 0; i < emitter->activeParticles; i++)
+	{
+		unsigned int particleIndex = emitter->particleIndices[i];
+		Particle* particle = &emitter->particles[particleIndex];
+
+		particle->position += particle->movementDirection * particle->velocity * dt;
+	}
+}
 
 void ParticleColor::Spawn(EmitterInstance* emitter, Particle* particle)
 {
@@ -63,14 +74,27 @@ void ParticleColor::Spawn(EmitterInstance* emitter, Particle* particle)
 
 void ParticleColor::Update(float dt, EmitterInstance* emitter)
 {
-	//color over lifetime maybe??
-	//should i add it here or in a new ParticleModule
+	//particles color over lifetime
+	/*for (unsigned int i = 0; i < emitter->activeParticles; ++i)
+	{
+		unsigned int particleIndex = emitter->particleIndices[i];
+		Particle* particle = &emitter->particles[particleIndex];
+
+		if (particle->currentLifetime <= 0.25f)
+			particle->color = Color(1.0f, 0.0f, 0.0f, 1.0f);
+
+		else if (particle->currentLifetime > 0.25f && particle->currentLifetime <= 0.75)
+			particle->color = Color(1.0f, 0.6f, 0.0f, 1.0f);
+
+		else
+			particle->color = Color(0.6f, 0.5f, 0.5f, 1.0f);
+	}*/
 }
 
 void ParticleLifetime::Spawn(EmitterInstance* emitter, Particle* particle)
 {
 	particle->maxLifetime = initialLifetime;
-	particle->relativeLifetime = 0.0f;
+	particle->currentLifetime = 0.0f;
 }
 
 void ParticleLifetime::Update(float dt, EmitterInstance* emitter)
@@ -80,7 +104,9 @@ void ParticleLifetime::Update(float dt, EmitterInstance* emitter)
 		unsigned int particleIndex = emitter->particleIndices[i];
 		Particle* particle = &emitter->particles[particleIndex];
 		
-		particle->relativeLifetime += (1 / particle->maxLifetime) * dt;
-		//when the relative lifetime equals or excedes 1.0f, the particle is killed by the emitter instance with KillDeadParticles
+		particle->currentLifetime += dt;
+
+		//particle->currentLifetime += (1 / particle->maxLifetime) * dt;
+		//when the relative lifetime equals or excedes 1.0f, the particle is killed by the emitter instance with KillDeadParticles()
 	}
 }

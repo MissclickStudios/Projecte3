@@ -67,7 +67,7 @@ void EmitterInstance::ResetEmitter()
 
 void EmitterInstance::UpdateModules(float dt)
 {
-	for (int i = 0; i < emitter->modules.size(); ++i)
+	for (int i = 0; i < emitter->modules.size(); i++)
 	{
 		emitter->modules[i]->Update(dt, this);
 	}
@@ -82,7 +82,7 @@ void EmitterInstance::DrawParticles()
 		Particle* particle = &particles[particleIndex];
 
 		float4x4 transform = float4x4::FromTRS(particle->position, particle->worldRotation, float3(particle->size)).Transposed();
-		App->renderer->AddParticle(transform, emitter->emitterMaterial, particle->color, particle->distanceToCamera);
+		App->renderer->AddParticle(transform, emitter->emitterMaterial, particle->color, particleIndex);
 	}
 }
 
@@ -90,14 +90,14 @@ void EmitterInstance::KillDeadParticles()
 {
 	//loop through every active particles to see if they are still active. In case one is inactive,
 	//swap the new dead particle with the last particle alive and subtract 1 to activeParticles.
-	for (int i = activeParticles - 1; i >= 0; --i)
+	for (int i = (activeParticles - 1); i >= 0; --i)
 	{
 		unsigned int particleIndex = particleIndices[i];
 		Particle* particle = &particles[particleIndex];
 
-		if (particle->relativeLifetime >= 1.0f)
+		if (particle->currentLifetime >= particle->maxLifetime)
 		{
-			if (i =! activeParticles - 1) //if the last active particle is not active, skip the unnecesary changes
+			if (i != (activeParticles - 1)) //if the last active particle is not active, skip the unnecesary changes
 			{
 				particleIndices[i] = particleIndices[activeParticles - 1];
 				particleIndices[activeParticles - 1] = particleIndex;
@@ -106,5 +106,10 @@ void EmitterInstance::KillDeadParticles()
 			--activeParticles;
 		}
 	}
+}
+
+void EmitterInstance::KillAll()
+{
+	activeParticles = 0;
 }
 

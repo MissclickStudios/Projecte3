@@ -280,28 +280,28 @@ bool M_Renderer3D::InitDebugVariables()
 {
 	bool ret = true;
 	
-	worldGridSize				= WORLD_GRID_SIZE;
+	worldGridSize			= WORLD_GRID_SIZE;
 	
-	worldGridColor				= White;
-	wireframeColor				= Yellow;
-	vertexNormalsColor			= Yellow;													// TODO: Use other color?
-	faceNormalsColor			= Magenta;
-	aabbColor					= Green;
-	obbColor					= Orange;
-	frustumColor				= Red;
-	rayColor					= Cyan;
-	boneColor					= Pink;
+	worldGridColor			= White;
+	wireframeColor			= Yellow;
+	vertexNormalsColor		= Yellow;													// TODO: Use other color?
+	faceNormalsColor		= Magenta;
+	aabbColor				= Green;
+	obbColor				= Orange;
+	frustumColor			= Red;
+	rayColor				= Cyan;
+	boneColor				= Pink;
 
-	worldGridLineWidth			= STANDARD_LINE_WIDTH;
-	wireframeLineWidth			= STANDARD_LINE_WIDTH;
-	vertexNormalsWidth			= BASE_LINE_WIDTH;
-	faceNormalsWidth			= BASE_LINE_WIDTH;
+	worldGridLineWidth		= STANDARD_LINE_WIDTH;
+	wireframeLineWidth		= STANDARD_LINE_WIDTH;
+	vertexNormalsWidth		= BASE_LINE_WIDTH;
+	faceNormalsWidth		= BASE_LINE_WIDTH;
 
-	aabbEdgeWidth				= BASE_LINE_WIDTH;
-	obbEdgeWidth				= BASE_LINE_WIDTH;
-	frustumEdgeWidth			= BASE_LINE_WIDTH;
-	rayWidth					= BASE_LINE_WIDTH;
-	boneWidth					= BASE_LINE_WIDTH;
+	aabbEdgeWidth			= BASE_LINE_WIDTH;
+	obbEdgeWidth			= BASE_LINE_WIDTH;
+	frustumEdgeWidth		= BASE_LINE_WIDTH;
+	rayWidth				= BASE_LINE_WIDTH;
+	boneWidth				= BASE_LINE_WIDTH;
 
 	renderWorldGrid			= true;	
 	renderWorldAxis			= true;
@@ -327,7 +327,7 @@ bool M_Renderer3D::InitOpenGL()
 		ret = false;
 	}
 
-	ret = InitGlew();																					// Initializing Glew.
+	ret = InitGlew();																										// Initializing Glew.
 
 	if (ret == true)
 	{
@@ -548,7 +548,7 @@ void M_Renderer3D::InitFramebuffers()
 
 void M_Renderer3D::LoadDebugTexture()
 {
-	GLubyte checkerImage[CHECKERS_HEIGHT][CHECKERS_WIDTH][4];						// HEIGHT columns, WIDTH rows and 4 variables per checker (for RGBA purposes).
+	GLubyte checkerImage[CHECKERS_HEIGHT][CHECKERS_WIDTH][4];							// HEIGHT columns, WIDTH rows and 4 variables per checker (for RGBA purposes).
 
 	for (int i = 0; i < CHECKERS_HEIGHT; ++i)											// There will be CHECKERS_WIDTH rows per column.
 	{
@@ -556,16 +556,16 @@ void M_Renderer3D::LoadDebugTexture()
 		{
 			int color = ((((i & 0x8) == 0) ^ ((j & 0x8) == 0))) * 255;					// Getting the checker's color (white or black) according to the iteration indices and bitwise ops.
 
-			checkerImage[i][j][0] = (GLubyte)color;									// R
-			checkerImage[i][j][1] = (GLubyte)color;									// G
-			checkerImage[i][j][2] = (GLubyte)color;									// B
+			checkerImage[i][j][0] = (GLubyte)color;										// R
+			checkerImage[i][j][1] = (GLubyte)color;										// G
+			checkerImage[i][j][2] = (GLubyte)color;										// B
 			checkerImage[i][j][3] = (GLubyte)255;										// A
 		}
 	}
 
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);												// Sets the pixel storage modes. GL_UNPACK_ALIGNMENT specifies the alignment requirements for the
 	// --->																				// start of each pixel row in memory. 1 means that the alignment requirements will be byte-alignment.
-	glGenTextures(1, &debugTextureId);												// Generate texture names. Returns n names in the given buffer. GL_INVALID_VALUE if n is negative.
+	glGenTextures(1, &debugTextureId);													// Generate texture names. Returns n names in the given buffer. GL_INVALID_VALUE if n is negative.
 	glBindTexture(GL_TEXTURE_2D, debugTextureId);										// Bind a named texture to a texturing target. Binds the buffer with the given target (GL_TEXTURE_2D).
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);						// Set texture parameters. WRAP_S: Set the wrap parameters for tex. coord. S.. GL_REPEAT is the default.
@@ -642,16 +642,12 @@ void M_Renderer3D::RenderScene()
 	glClear(GL_DEPTH_BUFFER_BIT);
 	glClear(GL_COLOR_BUFFER_BIT);
 
-
-	
-
 	if (renderWorldGrid)
 		DrawWorldGrid(worldGridSize);
 
 	if (renderWorldAxis)
 		DrawWorldAxis();
 
- 
 	RenderMeshes();
 	RenderCuboids();
   
@@ -856,7 +852,7 @@ void M_Renderer3D::AddRenderersBatch(const std::vector<MeshRenderer>& meshRender
 }
 
 void M_Renderer3D::RenderMeshes()
-{
+{	
 	for (uint i = 0; i < meshRenderers.size(); ++i)
 	{
 		meshRenderers[i].Render();
@@ -906,7 +902,7 @@ void M_Renderer3D::RenderSkeletons()
 
 void M_Renderer3D::AddParticle(const float4x4& transform, R_Material* material, Color color, float distanceToCamera)
 {
-	particles.insert(std::make_pair(distanceToCamera, ParticleRenderer(material, color, transform)));
+	particles.insert(std::make_pair((particles.size() +1), ParticleRenderer(material, color, transform)));
 }
 
 void M_Renderer3D::RenderParticles()
@@ -916,6 +912,7 @@ void M_Renderer3D::RenderParticles()
 	{
 		DrawParticle(it->second);
 	}
+	particles.clear();
 }
 
 void M_Renderer3D::DrawParticle(ParticleRenderer& renderParticle)

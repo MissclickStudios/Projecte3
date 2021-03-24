@@ -80,8 +80,9 @@ bool M_Scene::Start()
 	level.GetRooms();
 	level.GenerateLevel();
 	
-	//level.AddFixedRoom("Shop", 12);
-	//level.AddFixedRoom("Boss", 20); 
+	//level.AddFixedRoom("Shop", 16);                            
+	level.AddFixedRoom("Start", 1); 
+	level.AddFixedRoom("Boss", 15);
 	
 	level.GenerateRoom(0);
 
@@ -423,6 +424,8 @@ void M_Scene::LoadPrefabIntoScene(ParsonNode* a)
 
 	ParsonArray childArray = a->GetArray("Children");
 
+	gameObject->ForceUID(Random::LCG::GetRandomUint());
+
 	for (int i = 0; i < childArray.size; i++)
 	{
 		App->scene->LoadPrefabObject(gameObject, &childArray.GetNode(i));
@@ -438,6 +441,8 @@ void M_Scene::LoadPrefabObject(GameObject* _gameObject, ParsonNode* node)
 	gameObject->SetParent(_gameObject);
 
 	gameObjects.push_back(gameObject);
+
+	gameObject->ForceUID(Random::LCG::GetRandomUint());
 
 	ParsonArray childArray = node->GetArray("Children");
 	for (int i = 0; i < childArray.size; i++)
@@ -843,7 +848,7 @@ void M_Scene::SetCullingCamera(C_Camera* cullingCamera)
 }
 
 bool M_Scene::GameObjectIsInsideCullingCamera(GameObject* gameObject)
-{
+{	
 	if (cullingCamera == nullptr)
 	{
 		//LOG("[ERROR] Scene: There is currently no camera with culling activated!");
@@ -1054,7 +1059,9 @@ std::vector<GameObject*> M_Scene::GetPointLights()
 
 void M_Scene::NextRoom()
 {
+	
 	nextScene = true;
+	
 }
 
 void M_Scene::DeleteSelectedGameObject()

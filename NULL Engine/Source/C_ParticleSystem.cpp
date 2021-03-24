@@ -1,3 +1,5 @@
+#include "JSONParser.h"
+
 #include "C_ParticleSystem.h"
 #include "R_ParticleSystem.h"
 #include "M_ResourceManager.h"
@@ -14,10 +16,21 @@ C_ParticleSystem::C_ParticleSystem(GameObject* owner) : Component(owner, Compone
 C_ParticleSystem::~C_ParticleSystem()
 {
 	delete defaultEmitter;
-	for(int i = 0; i < emitterInstances.size(); i++)
-	{
-		delete emitterInstances[i];
-	}
+	emitterInstances.clear();
+}
+
+bool C_ParticleSystem::SaveState(ParsonNode& root) const
+{
+	root.SetNumber("Type", (double)GetType());
+
+	return false;
+}
+
+bool C_ParticleSystem::LoadState(ParsonNode& root)
+{
+
+
+	return false;
 }
 
 bool C_ParticleSystem::Update()
@@ -46,7 +59,6 @@ bool C_ParticleSystem::SetAsDefaultComponent()
 
 		ret = true;
 	}
-
 	return ret;
 }
 
@@ -63,6 +75,5 @@ void C_ParticleSystem::Reset()
 	{
 		emitterInstances[i]->ResetEmitter();
 	}
-
 }
 

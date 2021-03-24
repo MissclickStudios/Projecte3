@@ -19,6 +19,10 @@ public:
 	static inline ComponentType GetType() { return ComponentType::PROP_BEHAVIOR; }			// This is needed to be able to use templates for functions such as GetComponent<>();
 
 	void OnCollisionEnter();
+
+private:
+
+	bool dead = false;
 };
 
 #endif

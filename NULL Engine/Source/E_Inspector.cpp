@@ -38,6 +38,7 @@
 #include "C_CameraBehavior.h"
 #include "C_GateBehavior.h"
 #include "C_Canvas.h"
+#include "C_ParticleSystem.h"
 #include "C_UI_Image.h"
 #include "C_UI_Text.h"
 
@@ -218,6 +219,7 @@ void E_Inspector::DrawComponents(GameObject* selectedGameObject)
 		case ComponentType::BOX_COLLIDER:		{ DrawBoxColliderComponent((C_BoxCollider*)component); }			break;
 		case ComponentType::SPHERE_COLLIDER:	{ DrawSphereColliderComponent((C_SphereCollider*)component); }		break;
 		case ComponentType::CAPSULE_COLLIDER:	{ DrawCapsuleColliderComponent((C_CapsuleCollider*)component); }	break;
+		case ComponentType::PARTICLE_SYSTEM:	{ DrawParticleSystemComponent((C_ParticleSystem*)component); }		break;
 		case ComponentType::CANVAS:				{ DrawCanvasComponent((C_Canvas*)component); }						break;
 		case ComponentType::UI_IMAGE:			{ DrawUIImageComponent((C_UI_Image*)component); }					break;
 		case ComponentType::UI_TEXT:			{ DrawUITextComponent((C_UI_Text*)component); }						break;
@@ -1358,6 +1360,22 @@ void E_Inspector::DrawCapsuleColliderComponent(C_CapsuleCollider* cCollider)
 	}
 }
 
+void E_Inspector::DrawParticleSystemComponent(C_ParticleSystem* cParticleSystem)
+{
+	bool show = true;
+	if (ImGui::CollapsingHeader("Particle System", &show, ImGuiTreeNodeFlags_DefaultOpen))
+	{
+
+		if (!show)
+		{
+			componentToDelete = cParticleSystem;
+			showDeleteComponentPopup = true;
+		}
+
+		ImGui::Separator();
+	}
+}
+
 void E_Inspector::DrawUIImageComponent(C_UI_Image* image)
 {
 	static bool show = true;
@@ -1442,6 +1460,9 @@ void E_Inspector::DrawPlayerControllerComponent(C_PlayerController* cController)
 				cController->SetSpeed(speed);
 
 			ImGui::Separator();
+
+			uint state = (uint)cController->state;
+			ImGui::Text("Player State:"); ImGui::SameLine(); ImGui::TextColored(Yellow.C_Array(), "{ %u }", state);
 
 			ImGui::TreePop();
 		}

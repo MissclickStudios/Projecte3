@@ -111,7 +111,9 @@ private:
 
 	LevelGenerator					level;
 
+public:
 	bool nextScene = false;
+
 };
 
 #endif // !__M_SCENE_H__

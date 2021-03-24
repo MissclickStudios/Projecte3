@@ -38,10 +38,13 @@ public:
 	Quat worldRotation;
 
 	float maxLifetime;
-	float relativeLifetime = 0;  //Lifetime in range [0, 1]
+	float currentLifetime = 0;  
 
 	float rotation;
-	float4 velocity;
+
+	float3 movementDirection;
+	float velocity = 0.0f;
+
 	float size = 1.0f;
 	Color color;
 	float distanceToCamera;

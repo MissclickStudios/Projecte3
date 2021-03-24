@@ -61,15 +61,20 @@ int main(int argc, char ** argv)
 			}
 			else
 			{
-				state = MainStatus::UPDATE;
 				LOG("-------------- Application Update --------------");
+				/*bool success = App->Start();
+				state = (success) ? MainStatus::UPDATE : MainStatus::EXIT;*/
+
+				state = (App->Start()) ? MainStatus::UPDATE : MainStatus::EXIT;
+				
+				//state = MainStatus::UPDATE;
 			}
 
 			break;
 
 		case MainStatus::UPDATE:
 		{
-			UpdateStatus updateReturn = App->Update();							//Why App->Update???
+			UpdateStatus updateReturn = App->Update();							//Why App->Update???  Because it needs to be called in order to have updates each frame???
 
 			if (updateReturn == UpdateStatus::THROW_ERROR)
 			{
