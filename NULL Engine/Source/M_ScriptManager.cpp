@@ -8,6 +8,7 @@
 #include "JSONParser.h"
 #include "M_Scene.h"
 #include "GameObject.h"
+#include "M_ResourceManager.h"
 #include "R_Script.h"
 
 #include "MemoryManager.h"
@@ -22,8 +23,17 @@ M_ScriptManager::~M_ScriptManager()
 
 bool M_ScriptManager::Start()
 {
-	if (App->fileSystem->Exists(SCRIPTS_DLL_OUTPUT))
+	//TODO: Poder aixo no es necessita en el game
+	if (App->fileSystem->Exists(SCRIPTS_DLL_OUTPUT)) 
+	{
+		App->fileSystem->Remove(SCRIPTS_DLL_WORKING);
 		lastModDll = App->fileSystem->GetLastModTime(SCRIPTS_DLL_OUTPUT);
+		while (MoveFileA(SCRIPTS_DLL_OUTPUT, SCRIPTS_DLL_WORKING) == FALSE) {}
+	}
+	dllHandle = LoadLibrary(SCRIPTS_DLL_WORKING);
+#ifndef GAMEBUILD //Si buildejem per engine en build mode problemes !!!! No es carregaran els scripts i no podrem posarlos
+	App->resourceManager->GetAllScripts(aviableScripts);
+#endif
 	return true;
 }
 
@@ -78,6 +88,9 @@ UpdateStatus M_ScriptManager::PreUpdate(float dt)
 		{
 			/*lastModDll = lastMod;
 			HotReload();*/
+			aviableScripts.clear();
+			App->resourceManager->GetAllScripts(aviableScripts);
+			//std::sort(aviableScripts.begin(), aviableScripts.end(), std::less<std::string>());
 			while (MoveFileA(SCRIPTS_DLL_OUTPUT, SCRIPTS_DLL_WORKING) == FALSE) {}
 		}
 	}
@@ -185,7 +198,7 @@ bool M_ScriptManager::CleanUp()
 	return true;
 }
 
-void M_ScriptManager::AddCurrentScript(Script* script)
+void M_ScriptManager::AddCurrentEngineScript(Script* script)
 {
 	currentScripts.push_back(script);
 }

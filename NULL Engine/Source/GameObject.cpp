@@ -677,6 +677,21 @@ Component* GameObject::CreateComponent(ComponentType type)
 		LOG("[ERROR] Player Controller Component could not be added to %s! Error: No duplicates allowed!", name.c_str());
 		return nullptr;
 	}
+#ifndef GAMEBUILD
+	//TODO: Maybe this is avoidable
+	std::vector<C_Script*>scripts;
+	if (type == ComponentType::SCRIPT && GetComponents<C_Script>(scripts)) 
+	{
+		for(int i = 0; i<scripts.size();++i)
+		{
+			if (!(scripts[i]->resource != nullptr)) 
+			{
+				LOG("[ERROR] Script Component could not be added to %s! Error: Empty Script to fill already exists!", name.c_str());
+				return nullptr;
+			}
+		}
+	}
+#endif
 
 	switch(type)
 	{

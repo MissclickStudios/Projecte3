@@ -12,7 +12,7 @@
 
 #include "MemoryManager.h"
 
-C_Script::C_Script(GameObject* owner): Component(owner,ComponentType::SCRIPT)
+C_Script::C_Script(GameObject* owner): Component(owner,ComponentType::SCRIPT), resource(nullptr)
 {
 }
 
@@ -31,21 +31,36 @@ C_Script::~C_Script()
 					break;
 				}
 			}
-			if (script != nullptr)
+			if (script != nullptr) 
+			{
 				delete script;
+				scriptData = nullptr;
+			}
 		}
 		else
 		{
-			void (*Deleter)(void*) = (void (*)(void*))GetProcAddress(App->scriptManager->GetDllHandle(), std::string("Destroy" + dataName).data());
+			void (*Deleter)(void*) = (void (*)(void*))GetProcAddress(App->scriptManager->GetDllHandle(), std::string("Delete" + dataName).data());
 			Deleter(scriptData);
+			scriptData = nullptr;
 		}
 	}
+}
+
+bool C_Script::CleanUp()
+{
+	if (resource != nullptr)
+	{
+		App->resourceManager->FreeResource(resource->GetUID());
+		resource = nullptr;
+	}
+	return true;
 }
 
 bool C_Script::SaveState(ParsonNode& root) const
 {
 	root.SetNumber("Type", (uint)GetType());
 	root.SetNumber("ResourceUID", resource->GetUID());
+	root.SetString("AssetsPath", resource->GetAssetsPath());
 	root.SetString("DataName", dataName.c_str());
 	/*if (inspectorVariables.empty())
 		root.SetBool("HasInspector", false);
@@ -65,12 +80,14 @@ bool C_Script::LoadState(ParsonNode& root)
 {
 	dataName = root.GetString("DataName");
 
-	if (App->resourceManager->AllocateResource(root.GetNumber("ResourceUID"), std::string(ASSETS_SCRIPTS_PATH + dataName).c_str())) {
+	if (App->resourceManager->AllocateResource(root.GetNumber("ResourceUID"), root.GetString("AssetsPath"))) 
+	{
 
 		resource = (R_Script*)App->resourceManager->RequestResource(root.GetNumber("ResourceUID"));
 		for (int i = 0; i < resource->dataStructures.size(); ++i) 
 		{
-			if (strcmp(dataName.data(), resource->dataStructures[i].first.data())) {
+			if (dataName.data() == resource->dataStructures[i].first) 
+			{
 				LoadData(dataName.data(), resource->dataStructures[i].second);
 				break;
 			}
@@ -181,4 +198,9 @@ void C_Script::OnEnable()
 		((Script*)scriptData)->OnEnable();
 #endif // !GAMEBUILD
 	}
+}
+
+bool C_Script::HasData() const
+{
+	return scriptData != nullptr;
 }

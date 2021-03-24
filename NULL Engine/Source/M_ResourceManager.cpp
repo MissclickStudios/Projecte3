@@ -1631,6 +1631,29 @@ void M_ResourceManager::GetAllShaders(std::vector<R_Shader*>& shaders)
 	}
 }
 
+void M_ResourceManager::GetAllScripts(std::map<std::string, std::string>& scripts)
+{
+	R_Script* tempScript = nullptr;
+	std::vector<std::string> scriptFiles;
+	App->fileSystem->GetAllFilesWithExtension(ASSETS_SCRIPTS_PATH, "h", scriptFiles);
+	for (uint i = 0; i < scriptFiles.size(); i++)
+	{
+		//std::string defaultPath = ASSETS_SHADERS_PATH + std::string(shaderFiles[i]) + SHADERS_EXTENSION;
+		tempScript = (R_Script*)App->resourceManager->GetResourceFromLibrary(scriptFiles[i].c_str());
+		if (tempScript == nullptr)
+		{
+			LOG("[ERROR] Could not get the %s Error: %s could not be found in active resources.", scriptFiles[i], scriptFiles[i]);
+		}
+		else
+		{
+			for (int z = 0; z < tempScript->dataStructures.size(); ++z)
+				scripts.emplace(tempScript->dataStructures[z].first, scriptFiles[i]);
+			
+			App->resourceManager->FreeResource(tempScript->GetUID());
+		}
+	}
+}
+
 void M_ResourceManager::GetAllTextures(std::vector<R_Texture*>& textures)
 {
 	R_Texture* tempTex = nullptr;

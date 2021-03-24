@@ -131,6 +131,7 @@ public:																									// --- COMPONENT GETTERS AND SETTERS
 		case ComponentType::BULLET_BEHAVIOR: { return "Bullet Behavior"; }	break;
 		case ComponentType::PROP_BEHAVIOR: { return "Prop Behavior"; }	break;
 		case ComponentType::CAMERA_BEHAVIOR: { return "Camera Behavior"; }	break;
+		case ComponentType::SCRIPT: { return "Script"; } break;
 		}
 
 		return "NONE";

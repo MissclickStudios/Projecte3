@@ -4,6 +4,7 @@
 #include "EditorPanel.h"
 #include "TextEditor.h"
 #include <vector>
+
 class GameObject;
 class Component;
 class C_Transform;

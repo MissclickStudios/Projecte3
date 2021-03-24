@@ -16,6 +16,7 @@
 #include "M_ResourceManager.h"
 #include "M_UISystem.h"
 #include "M_Scene.h"
+#include "M_ScriptManager.h"
 
 #include "GameObject.h"
 #include "Component.h"
@@ -40,6 +41,7 @@
 
 #include "R_Shader.h"
 #include "R_Texture.h"
+#include "R_Script.h"
 #include "I_Shaders.h"
 
 #include "C_Canvas.h"
@@ -1357,14 +1359,54 @@ void E_Inspector::DrawUIImage(UI_Image* image)
 
 void E_Inspector::DrawScriptComponent(C_Script* cScript)
 {
-	//TODO: inspector script component
-	// if (cScript.name != nullptr) pot ser un script null!!!
-	bool show = true;
-	if (ImGui::CollapsingHeader(cScript->GetDataName().c_str(), &show, ImGuiTreeNodeFlags_DefaultOpen))
-	{
 
+	bool show = true;
+	//REDO THIS -> s'ha de fer amb el resource !!!
+	//Inspector if we don't have any script
+	if (!cScript->HasData() && !(cScript->resource != nullptr))
+	{
+		if (ImGui::CollapsingHeader("Script", &show, ImGuiTreeNodeFlags_DefaultOpen))
+		{
+			const std::map<std::string, std::string> scripts = EngineApp->scriptManager->GetAviableScripts();
+			std::string select = (*scripts.begin()).first;
+			if (ImGui::BeginCombo("##Select Script", "SelectScript", ImGuiComboFlags_PopupAlignLeft))
+			{
+				for (std::map<std::string, std::string>::const_iterator it = scripts.cbegin(); it != scripts.cend(); ++it)
+				{
+					bool selectedScript = (select == (*it).first.c_str());
+					if (ImGui::Selectable((*it).first.c_str(), selectedScript)) 
+					{
+						cScript->resource = (R_Script*)App->resourceManager->GetResourceFromLibrary((*it).second.c_str());
+						for (int i = 0; i < cScript->resource->dataStructures.size(); ++i) {
+							if ((*it).first == cScript->resource->dataStructures[i].first)
+							{
+								cScript->LoadData((*it).first.c_str(), cScript->resource->dataStructures[i].second);
+								break;
+							}
+						}
+					}
+
+				}
+				ImGui::EndCombo();
+			}
+		}
+		if (!show)
+			cScript->GetOwner()->DeleteComponent(cScript);
+
+		ImGui::Separator();
+		return;
 	}
 
+	if (ImGui::CollapsingHeader(cScript->GetDataName().c_str(), &show, ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		//TODO: Show inspector variables
+		ImGui::Text("Name %s", cScript->GetDataName().c_str());
+	}
+	if (!show)
+	{
+		componentToDelete = cScript;
+		showDeleteComponentPopup = true;
+	}
 	ImGui::Separator();
 }
 

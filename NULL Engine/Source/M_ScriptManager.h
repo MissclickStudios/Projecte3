@@ -2,6 +2,7 @@
 #define __SCRIPTS_H__
 
 #include <vector>
+#include <map>
 #include <Windows.h>
 #include "Module.h"
 
@@ -19,7 +20,7 @@ public:
 	~M_ScriptManager();
 
 	//bool		Init(ParsonNode& root) override;
-	bool		Start() override;
+	bool Start() override;
 	void InitScripts();
 	UpdateStatus PreUpdate(float dt) override;
 	UpdateStatus Update(float dt) override;
@@ -27,16 +28,25 @@ public:
 	void CleanUpScripts();
 	bool CleanUp() override;
 
-	void AddCurrentScript(Script* script);
+	void AddCurrentEngineScript(Script* script);
 	HINSTANCE GetDllHandle() const;
 
+#ifndef GAMEBUILD 
+public:
+	const std::map<std::string, std::string>& GetAviableScripts() const { return aviableScripts; }
 private:
+
 	void HotReload();
+	std::map<std::string, std::string> aviableScripts;
+#endif
+private://TODO: Treure el que no es necessiti en el game
 	void SerializeAllScripts(ParsonArray& scriptsArray);
 	void DeSerializeAllScripts(ParsonArray& scriptsArray);
 
 public:
 	C_Script* actualScriptLoading;
+	//TODO: Maybe not needed on gameplay
+	//To know if we have reloaded scripts this frame
 
 private:
 	HINSTANCE dllHandle;

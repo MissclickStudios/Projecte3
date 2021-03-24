@@ -5,6 +5,7 @@
 #include "FileSystemDefinitions.h"
 #include "Log.h"
 #include "R_Script.h"
+//#include "M_ScriptManager.h"
 #include <string.h>
 
 #include "MemoryManager.h"
@@ -208,8 +209,7 @@ bool Importer::Scripts::Load(const char* buffer, R_Script* rScript)
 		for (int i = 0; i < scriptsArray.size; ++i)
 		{
 			ParsonNode scriptData = scriptsArray.GetNode(i);
-			rScript->dataStructures[i].first = scriptData.GetString("Name");
-			rScript->dataStructures[i].second = scriptData.GetBool("EngineScript");
+			rScript->dataStructures.push_back({ scriptData.GetString("Name") ,scriptData.GetBool("EngineScript") });
 		}
 	}
 	else

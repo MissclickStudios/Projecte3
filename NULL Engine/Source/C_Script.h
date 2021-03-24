@@ -16,7 +16,7 @@ public:
 	virtual ~C_Script();
 
 	//bool Update() override;
-	//bool CleanUp() override;
+	bool CleanUp() override;
 
 	bool SaveState(ParsonNode& root) const override;
 	bool LoadState(ParsonNode& root) override;
@@ -31,11 +31,13 @@ public:
 	void OnDisable(); 
 	void OnEnable();
 
-	static inline ComponentType GetType() { return ComponentType::SCRIPT; }			// This is needed to be able to use templates for functions such as GetComponent<>();
+	bool HasData() const;
 
+	static inline ComponentType GetType() { return ComponentType::SCRIPT; }			// This is needed to be able to use templates for functions such as GetComponent<>();
+	
+	R_Script* resource = nullptr;
 private:
 	//std::vector<InspactorData> inspectorData;
-	R_Script* resource;
 	void* scriptData = nullptr;
 	bool engineScript = false;
 	std::string dataName;
