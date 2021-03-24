@@ -1,5 +1,7 @@
 #include "FirstScript.h"
 #include "Log.h"
+#include "C_Transform.h"
+#include "MathGeoLib/include/Math/float3.h"
 
 FirstScript::FirstScript() : Script()
 {
@@ -27,6 +29,9 @@ void FirstScript::PreUpdate()
 void FirstScript::Update()
 {
 	LOG("Update: First variable = %d", firstVariable);
+	float3 pos = transform->GetLocalPosition();
+	pos.x += 1;
+	transform->SetLocalPosition(pos);
 }
 
 void FirstScript::PostUpdate()
