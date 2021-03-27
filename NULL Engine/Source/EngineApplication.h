@@ -17,7 +17,6 @@ public:
 
 public:
 	class M_Editor* editor;
-
 };
 
 extern EngineApplication* EngineApp;

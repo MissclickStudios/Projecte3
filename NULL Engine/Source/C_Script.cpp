@@ -1,5 +1,5 @@
+#include <Windows.h>
 #include "Application.h"
-#include "M_ScriptManager.h"
 #include "GameObject.h"
 #include "Script.h"
 #include "C_Script.h"
@@ -8,6 +8,7 @@
 #include "Log.h"
 #include "JSONParser.h"
 #include "M_ResourceManager.h"
+#include "M_ScriptManager.h"
 #include "FileSystemDefinitions.h"
 
 #include "MemoryManager.h"
@@ -119,6 +120,7 @@ void C_Script::LoadData(const char* name, bool engineScript)
 	{
 		dataName = name;
 		App->scriptManager->actualScriptLoading = this;
+		//TODO: Remove tots els ifndef del C_Script !!!!! (fer calls al script manager)
 #ifndef GAMEBUILD
 		try 
 		{
@@ -163,6 +165,18 @@ std::string C_Script::GetVariableName(const char* ptrName)
 	}
 	return variable_name;
 }
+
+/*void C_Script::SetIsActive(bool setTo)
+{
+	if (setTo != isActive) 
+	{
+		isActive = setTo;
+		if (isActive)
+			OnEnable();
+		else
+			OnDisable();
+	}
+}*/
 
 void C_Script::OnDisable()
 {

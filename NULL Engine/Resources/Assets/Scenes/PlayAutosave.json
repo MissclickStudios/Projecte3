@@ -54,11 +54,6 @@
             "GameObjectUID": 1799599679,
             "ModelResourceUID": 1227176987,
             "ModelAssetsPath": "Assets\/Models\/Blockouts\/Level1_bInit.fbx"
-        },
-        {
-            "GameObjectUID": 2124242199,
-            "ModelResourceUID": 1429064422,
-            "ModelAssetsPath": "Assets\/Models\/Mando\/MandoAnimated (1).fbx"
         }
     ],
     "Game Objects": [
@@ -71,7 +66,7 @@
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
+            "ShowBoundingBoxes": true,
             "Components": [
                 {
                     "Type": 1,
@@ -103,6 +98,12 @@
                     "Center X": 0,
                     "Center Y": 0,
                     "Center Z": 0
+                },
+                {
+                    "Type": 23,
+                    "ResourceUID": 1239486259,
+                    "AssetsPath": "Assets\/Scripts\/\/FirstScript.h",
+                    "DataName": "FirstScript"
                 }
             ]
         },
@@ -135,6 +136,56 @@
                         1.0000002384185791,
                         1
                     ]
+                }
+            ]
+        },
+        {
+            "UID": 86800064,
+            "ParentUID": 777106468,
+            "PrefabID": 1524961430,
+            "IsPrefab": true,
+            "Name": "Mando",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 21,
+                    "Image": {
+                        "X": -0.44999998807907104,
+                        "Y": 0.20000000298023224,
+                        "W": 0.16500000655651093,
+                        "H": 0.16500000655651093
+                    }
+                },
+                {
+                    "Type": 3,
+                    "Texture": {
+                        "UID": 76209445,
+                        "Name": "PlayerIcon.png",
+                        "Path": "Library\/Textures\/76209445.netex",
+                        "File": "76209445.netex"
+                    }
                 }
             ]
         },
@@ -535,6 +586,56 @@
             ]
         },
         {
+            "UID": 311770822,
+            "ParentUID": 777106468,
+            "PrefabID": 1524961430,
+            "IsPrefab": true,
+            "Name": "Heart1",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 21,
+                    "Image": {
+                        "X": -0.40999999642372131,
+                        "Y": 0.25,
+                        "W": 0.045000001788139343,
+                        "H": 0.045000001788139343
+                    }
+                },
+                {
+                    "Type": 3,
+                    "Texture": {
+                        "UID": 1024641721,
+                        "Name": "HeartFull.png",
+                        "Path": "Library\/Textures\/1024641721.netex",
+                        "File": "1024641721.netex"
+                    }
+                }
+            ]
+        },
+        {
             "UID": 318055108,
             "ParentUID": 719811500,
             "PrefabID": 1680017757,
@@ -618,12 +719,6 @@
                         "Name": "Cylinder001.nemat",
                         "Path": "Library\/Materials\/2038824806.nemat",
                         "File": "2038824806.nemat"
-                    },
-                    "Shader": {
-                        "UID": 111267670,
-                        "Name": "DefaultShader.shader",
-                        "Path": "Library\/Shaders\/111267670.neshader",
-                        "File": "111267670.neshader"
                     }
                 }
             ]
@@ -810,10 +905,10 @@
                         "File": "1490598367.nemat"
                     },
                     "Shader": {
-                        "UID": 111267670,
+                        "UID": 1641592281,
                         "Name": "DefaultShader.shader",
-                        "Path": "Library\/Shaders\/111267670.neshader",
-                        "File": "111267670.neshader"
+                        "Path": "Library\/Shaders\/1641592281.neshader",
+                        "File": "1641592281.neshader"
                     }
                 }
             ]
@@ -1241,6 +1336,48 @@
             ]
         },
         {
+            "UID": 777106468,
+            "ParentUID": 1505022888,
+            "PrefabID": 1524961430,
+            "IsPrefab": true,
+            "Name": "Canvas",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 13,
+                    "Canvas": {
+                        "X": 0,
+                        "Y": 0,
+                        "W": 1.0926049947738647,
+                        "H": 0.5787392258644104,
+                        "IsInvisible": false
+                    }
+                }
+            ]
+        },
+        {
             "UID": 786122501,
             "ParentUID": 745327322,
             "PrefabID": 1680017757,
@@ -1269,6 +1406,56 @@
                         1,
                         1
                     ]
+                }
+            ]
+        },
+        {
+            "UID": 786616718,
+            "ParentUID": 777106468,
+            "PrefabID": 1524961430,
+            "IsPrefab": true,
+            "Name": "SideKick",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 21,
+                    "Image": {
+                        "X": -0.48500001430511475,
+                        "Y": 0.15000000596046448,
+                        "W": 0.079999998211860657,
+                        "H": 0.079999998211860657
+                    }
+                },
+                {
+                    "Type": 3,
+                    "Texture": {
+                        "UID": 1031424878,
+                        "Name": "SidekickButton2.png",
+                        "Path": "Library\/Textures\/1031424878.netex",
+                        "File": "1031424878.netex"
+                    }
                 }
             ]
         },
@@ -1338,7 +1525,7 @@
         },
         {
             "UID": 888400124,
-            "ParentUID": 599949741,
+            "ParentUID": 1197356507,
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "MainScene",
@@ -1550,10 +1737,60 @@
                         "File": "420181573.nemat"
                     },
                     "Shader": {
-                        "UID": 111267670,
+                        "UID": 1641592281,
                         "Name": "DefaultShader.shader",
-                        "Path": "Library\/Shaders\/111267670.neshader",
-                        "File": "111267670.neshader"
+                        "Path": "Library\/Shaders\/1641592281.neshader",
+                        "File": "1641592281.neshader"
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 924588771,
+            "ParentUID": 777106468,
+            "PrefabID": 1524961430,
+            "IsPrefab": true,
+            "Name": "Heart2",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 21,
+                    "Image": {
+                        "X": -0.36500000953674316,
+                        "Y": 0.25,
+                        "W": 0.045000001788139343,
+                        "H": 0.045000001788139343
+                    }
+                },
+                {
+                    "Type": 3,
+                    "Texture": {
+                        "UID": 1024641721,
+                        "Name": "HeartFull.png",
+                        "Path": "Library\/Textures\/1024641721.netex",
+                        "File": "1024641721.netex"
                     }
                 }
             ]
@@ -1886,6 +2123,106 @@
             ]
         },
         {
+            "UID": 1046519113,
+            "ParentUID": 777106468,
+            "PrefabID": 1524961430,
+            "IsPrefab": true,
+            "Name": "Minimap",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 21,
+                    "Image": {
+                        "X": 0.40000000596046448,
+                        "Y": 0.14000000059604645,
+                        "W": 0.27500000596046448,
+                        "H": 0.27500000596046448
+                    }
+                },
+                {
+                    "Type": 3,
+                    "Texture": {
+                        "UID": 1046552748,
+                        "Name": "MiniMap.png",
+                        "Path": "Library\/Textures\/1046552748.netex",
+                        "File": "1046552748.netex"
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 1058187330,
+            "ParentUID": 777106468,
+            "PrefabID": 1524961430,
+            "IsPrefab": true,
+            "Name": "Credits",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 21,
+                    "Image": {
+                        "X": -0.36700001358985901,
+                        "Y": 0.1550000011920929,
+                        "W": 0.15000000596046448,
+                        "H": 0.15000000596046448
+                    }
+                },
+                {
+                    "Type": 3,
+                    "Texture": {
+                        "UID": 48777715,
+                        "Name": "Credits.png",
+                        "Path": "Library\/Textures\/48777715.netex",
+                        "File": "48777715.netex"
+                    }
+                }
+            ]
+        },
+        {
             "UID": 1063290708,
             "ParentUID": 2071619375,
             "PrefabID": 1680017757,
@@ -2142,6 +2479,56 @@
             ]
         },
         {
+            "UID": 1210461349,
+            "ParentUID": 777106468,
+            "PrefabID": 1524961430,
+            "IsPrefab": true,
+            "Name": "SecodaryWeapon",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 21,
+                    "Image": {
+                        "X": 0.44699999690055847,
+                        "Y": -0.17000000178813934,
+                        "W": 0.18000000715255737,
+                        "H": 0.18000000715255737
+                    }
+                },
+                {
+                    "Type": 3,
+                    "Texture": {
+                        "UID": 1130462783,
+                        "Name": "SecondaryWeapon1.png",
+                        "Path": "Library\/Textures\/1130462783.netex",
+                        "File": "1130462783.netex"
+                    }
+                }
+            ]
+        },
+        {
             "UID": 1212734261,
             "ParentUID": 1744036067,
             "PrefabID": 1749742898,
@@ -2239,10 +2626,60 @@
                         "File": "2064769698.nemat"
                     },
                     "Shader": {
-                        "UID": 111267670,
+                        "UID": 1641592281,
                         "Name": "DefaultShader.shader",
-                        "Path": "Library\/Shaders\/111267670.neshader",
-                        "File": "111267670.neshader"
+                        "Path": "Library\/Shaders\/1641592281.neshader",
+                        "File": "1641592281.neshader"
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 1298529069,
+            "ParentUID": 777106468,
+            "PrefabID": 1524961430,
+            "IsPrefab": true,
+            "Name": "Dash",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 21,
+                    "Image": {
+                        "X": -0.41999998688697815,
+                        "Y": -0.18000000715255737,
+                        "W": 0.14499999582767487,
+                        "H": 0.14499999582767487
+                    }
+                },
+                {
+                    "Type": 3,
+                    "Texture": {
+                        "UID": 781650108,
+                        "Name": "DashButton.png",
+                        "Path": "Library\/Textures\/781650108.netex",
+                        "File": "781650108.netex"
                     }
                 }
             ]
@@ -2412,10 +2849,10 @@
                         "File": "180996802.nemat"
                     },
                     "Shader": {
-                        "UID": 111267670,
+                        "UID": 1641592281,
                         "Name": "DefaultShader.shader",
-                        "Path": "Library\/Shaders\/111267670.neshader",
-                        "File": "111267670.neshader"
+                        "Path": "Library\/Shaders\/1641592281.neshader",
+                        "File": "1641592281.neshader"
                     }
                 }
             ]
@@ -2481,6 +2918,56 @@
                         0.99999994039535522,
                         1
                     ]
+                }
+            ]
+        },
+        {
+            "UID": 1474897797,
+            "ParentUID": 777106468,
+            "PrefabID": 1524961430,
+            "IsPrefab": true,
+            "Name": "Heart3",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 21,
+                    "Image": {
+                        "X": -0.31999999284744263,
+                        "Y": 0.25,
+                        "W": 0.045000001788139343,
+                        "H": 0.045000001788139343
+                    }
+                },
+                {
+                    "Type": 3,
+                    "Texture": {
+                        "UID": 1024641721,
+                        "Name": "HeartFull.png",
+                        "Path": "Library\/Textures\/1024641721.netex",
+                        "File": "1024641721.netex"
+                    }
                 }
             ]
         },
@@ -2613,6 +3100,52 @@
             ]
         },
         {
+            "UID": 1505022888,
+            "ParentUID": 888400124,
+            "PrefabID": 1524961430,
+            "IsPrefab": true,
+            "Name": "MainCamera",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": true,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        2.5488600730895996,
+                        61.301094055175781,
+                        69.56207275390625
+                    ],
+                    "LocalRotation": [
+                        -0.44619807600975037,
+                        0,
+                        0,
+                        0.89493423700332642
+                    ],
+                    "LocalScale": [
+                        1,
+                        0.99999982118606567,
+                        0.99999982118606567
+                    ]
+                },
+                {
+                    "Type": 5,
+                    "MinFOV": 1,
+                    "MaxFOV": 120,
+                    "Culling": false,
+                    "OrthogonalView": false,
+                    "HideFrustum": true
+                },
+                {
+                    "Type": 19,
+                    "Offset X": 0,
+                    "Offset Y": 60,
+                    "Offset Z": 40
+                }
+            ]
+        },
+        {
             "UID": 1551483475,
             "ParentUID": 965065009,
             "PrefabID": 1680017757,
@@ -2643,39 +3176,12 @@
                     ]
                 },
                 {
-                    "Type": 2,
-                    "UID": 1698536169,
-                    "Name": "MandoUVS(1material)002.nemesh",
-                    "Path": "Library\/Meshes\/1698536169.nemesh",
-                    "File": "1698536169.nemesh",
-                    "ShowWireframe": false,
-                    "ShowBoundingBox": false
-                },
-                {
                     "Type": 3,
-                    "Material": {
-                        "UID": 452116247,
-                        "Color": [
-                            0.49411764740943909,
-                            0.50196081399917603,
-                            0.55294120311737061,
-                            1
-                        ],
-                        "Name": "MandoUVS(1material)002.nemat",
-                        "Path": "Library\/Materials\/452116247.nemat",
-                        "File": "452116247.nemat"
-                    },
                     "Texture": {
                         "UID": 312897204,
                         "Name": "Mando_Texture.png",
                         "Path": "Library\/Textures\/312897204.netex",
                         "File": "312897204.netex"
-                    },
-                    "Shader": {
-                        "UID": 111267670,
-                        "Name": "DefaultShader.shader",
-                        "Path": "Library\/Shaders\/111267670.neshader",
-                        "File": "111267670.neshader"
                     }
                 }
             ]
@@ -3366,10 +3872,60 @@
                         "File": "30832037.nemat"
                     },
                     "Shader": {
-                        "UID": 111267670,
+                        "UID": 1641592281,
                         "Name": "DefaultShader.shader",
-                        "Path": "Library\/Shaders\/111267670.neshader",
-                        "File": "111267670.neshader"
+                        "Path": "Library\/Shaders\/1641592281.neshader",
+                        "File": "1641592281.neshader"
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 1918287872,
+            "ParentUID": 777106468,
+            "PrefabID": 1524961430,
+            "IsPrefab": true,
+            "Name": "PrimaryWeapon",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 21,
+                    "Image": {
+                        "X": 0.36000001430511475,
+                        "Y": -0.039999999105930328,
+                        "W": 0.34999999403953552,
+                        "H": 0.34999999403953552
+                    }
+                },
+                {
+                    "Type": 3,
+                    "Texture": {
+                        "UID": 126066019,
+                        "Name": "Ammo10.png",
+                        "Path": "Library\/Textures\/126066019.netex",
+                        "File": "126066019.netex"
                     }
                 }
             ]
@@ -3428,10 +3984,10 @@
                         "File": "143103769.nemat"
                     },
                     "Shader": {
-                        "UID": 111267670,
+                        "UID": 1641592281,
                         "Name": "DefaultShader.shader",
-                        "Path": "Library\/Shaders\/111267670.neshader",
-                        "File": "111267670.neshader"
+                        "Path": "Library\/Shaders\/1641592281.neshader",
+                        "File": "1641592281.neshader"
                     }
                 }
             ]
@@ -3756,47 +4312,9 @@
                 },
                 {
                     "Type": 6,
-                    "Animations": [
-                        {
-                            "UID": 251628015,
-                            "Name": "Shooting.neanimat",
-                            "Path": "Library\/Animations\/251628015.neanimat",
-                            "File": "251628015.neanimat"
-                        },
-                        {
-                            "UID": 1037425046,
-                            "Name": "Running.neanimat",
-                            "Path": "Library\/Animations\/1037425046.neanimat",
-                            "File": "1037425046.neanimat"
-                        },
-                        {
-                            "UID": 1117418308,
-                            "Name": "Idle.neanimat",
-                            "Path": "Library\/Animations\/1117418308.neanimat",
-                            "File": "1117418308.neanimat"
-                        },
-                        {
-                            "UID": 1332726344,
-                            "Name": "Armature|Armature.001|mixamo.com|Layer0.001.neanimat",
-                            "Path": "Library\/Animations\/1332726344.neanimat",
-                            "File": "1332726344.neanimat"
-                        },
-                        {
-                            "UID": 1562343342,
-                            "Name": "Armature|Armature|mixamo.com|Layer0.neanimat",
-                            "Path": "Library\/Animations\/1562343342.neanimat",
-                            "File": "1562343342.neanimat"
-                        },
-                        {
-                            "UID": 1569923736,
-                            "Name": "Armature|Armature.001|mixamo.com|Layer0.neanimat",
-                            "Path": "Library\/Animations\/1569923736.neanimat",
-                            "File": "1569923736.neanimat"
-                        }
-                    ],
+                    "Animations": [],
                     "Clips": [
                         {
-                            "AnimationUID": 1037425046,
                             "Name": "Running2",
                             "Start": 0,
                             "End": 34,
@@ -3805,16 +4323,6 @@
                             "Loop": true
                         },
                         {
-                            "AnimationUID": 251628015,
-                            "Name": "Shooting",
-                            "Start": 0,
-                            "End": 34,
-                            "Duration": 34,
-                            "DurationInSeconds": 0.56666666269302368,
-                            "Loop": true
-                        },
-                        {
-                            "AnimationUID": 1037425046,
                             "Name": "Running4",
                             "Start": 0,
                             "End": 40,
@@ -3823,7 +4331,14 @@
                             "Loop": true
                         },
                         {
-                            "AnimationUID": 1117418308,
+                            "Name": "Shooting",
+                            "Start": 0,
+                            "End": 34,
+                            "Duration": 34,
+                            "DurationInSeconds": 0.56666666269302368,
+                            "Loop": true
+                        },
+                        {
                             "Name": "Idle",
                             "Start": 0,
                             "End": 117,
@@ -3832,7 +4347,6 @@
                             "Loop": true
                         },
                         {
-                            "AnimationUID": 1037425046,
                             "Name": "Running",
                             "Start": 0,
                             "End": 117,
@@ -3841,7 +4355,6 @@
                             "Loop": true
                         },
                         {
-                            "AnimationUID": 1037425046,
                             "Name": "Running3",
                             "Start": 0,
                             "End": 38,
@@ -3849,11 +4362,7 @@
                             "DurationInSeconds": 0.63333332538604736,
                             "Loop": true
                         }
-                    ],
-                    "CurrentClip": {
-                        "AnimationName": "Shooting",
-                        "Name": "Shooting Default"
-                    }
+                    ]
                 },
                 {
                     "Type": 8,
@@ -3937,594 +4446,6 @@
                         1,
                         1
                     ]
-                }
-            ]
-        },
-        {
-            "UID": 1505022888,
-            "ParentUID": 888400124,
-            "PrefabID": 1524961430,
-            "IsPrefab": true,
-            "Name": "MainCamera",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": true,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        2.5488600730895996,
-                        61.301094055175781,
-                        69.56207275390625
-                    ],
-                    "LocalRotation": [
-                        -0.44619807600975037,
-                        0,
-                        0,
-                        0.89493423700332642
-                    ],
-                    "LocalScale": [
-                        1,
-                        0.99999982118606567,
-                        0.99999982118606567
-                    ]
-                },
-                {
-                    "Type": 5,
-                    "MinFOV": 1,
-                    "MaxFOV": 120,
-                    "Culling": false,
-                    "OrthogonalView": false,
-                    "HideFrustum": true
-                },
-                {
-                    "Type": 19,
-                    "Offset X": 0,
-                    "Offset Y": 60,
-                    "Offset Z": 40
-                }
-            ]
-        },
-        {
-            "UID": 777106468,
-            "ParentUID": 1505022888,
-            "PrefabID": 1524961430,
-            "IsPrefab": true,
-            "Name": "Canvas",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        0,
-                        0
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {
-                    "Type": 13,
-                    "Canvas": {
-                        "X": 0,
-                        "Y": 0,
-                        "W": 1.0926049947738647,
-                        "H": 0.5787392258644104,
-                        "IsInvisible": false
-                    }
-                }
-            ]
-        },
-        {
-            "UID": 311770822,
-            "ParentUID": 777106468,
-            "PrefabID": 1524961430,
-            "IsPrefab": true,
-            "Name": "Heart1",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        0,
-                        0
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {
-                    "Type": 21,
-                    "Image": {
-                        "X": -0.40999999642372131,
-                        "Y": 0.25,
-                        "W": 0.045000001788139343,
-                        "H": 0.045000001788139343
-                    }
-                },
-                {
-                    "Type": 3,
-                    "Texture": {
-                        "UID": 1024641721,
-                        "Name": "HeartFull.png",
-                        "Path": "Library\/Textures\/1024641721.netex",
-                        "File": "1024641721.netex"
-                    }
-                }
-            ]
-        },
-        {
-            "UID": 1918287872,
-            "ParentUID": 777106468,
-            "PrefabID": 1524961430,
-            "IsPrefab": true,
-            "Name": "PrimaryWeapon",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        0,
-                        0
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {
-                    "Type": 21,
-                    "Image": {
-                        "X": 0.36000001430511475,
-                        "Y": -0.039999999105930328,
-                        "W": 0.34999999403953552,
-                        "H": 0.34999999403953552
-                    }
-                },
-                {
-                    "Type": 3,
-                    "Texture": {
-                        "UID": 126066019,
-                        "Name": "Ammo10.png",
-                        "Path": "Library\/Textures\/126066019.netex",
-                        "File": "126066019.netex"
-                    }
-                }
-            ]
-        },
-        {
-            "UID": 1298529069,
-            "ParentUID": 777106468,
-            "PrefabID": 1524961430,
-            "IsPrefab": true,
-            "Name": "Dash",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        0,
-                        0
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {
-                    "Type": 21,
-                    "Image": {
-                        "X": -0.41999998688697815,
-                        "Y": -0.18000000715255737,
-                        "W": 0.14499999582767487,
-                        "H": 0.14499999582767487
-                    }
-                },
-                {
-                    "Type": 3,
-                    "Texture": {
-                        "UID": 781650108,
-                        "Name": "DashButton.png",
-                        "Path": "Library\/Textures\/781650108.netex",
-                        "File": "781650108.netex"
-                    }
-                }
-            ]
-        },
-        {
-            "UID": 786616718,
-            "ParentUID": 777106468,
-            "PrefabID": 1524961430,
-            "IsPrefab": true,
-            "Name": "SideKick",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        0,
-                        0
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {
-                    "Type": 21,
-                    "Image": {
-                        "X": -0.48500001430511475,
-                        "Y": 0.15000000596046448,
-                        "W": 0.079999998211860657,
-                        "H": 0.079999998211860657
-                    }
-                },
-                {
-                    "Type": 3,
-                    "Texture": {
-                        "UID": 1031424878,
-                        "Name": "SidekickButton2.png",
-                        "Path": "Library\/Textures\/1031424878.netex",
-                        "File": "1031424878.netex"
-                    }
-                }
-            ]
-        },
-        {
-            "UID": 1058187330,
-            "ParentUID": 777106468,
-            "PrefabID": 1524961430,
-            "IsPrefab": true,
-            "Name": "Credits",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        0,
-                        0
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {
-                    "Type": 21,
-                    "Image": {
-                        "X": -0.36700001358985901,
-                        "Y": 0.1550000011920929,
-                        "W": 0.15000000596046448,
-                        "H": 0.15000000596046448
-                    }
-                },
-                {
-                    "Type": 3,
-                    "Texture": {
-                        "UID": 48777715,
-                        "Name": "Credits.png",
-                        "Path": "Library\/Textures\/48777715.netex",
-                        "File": "48777715.netex"
-                    }
-                }
-            ]
-        },
-        {
-            "UID": 924588771,
-            "ParentUID": 777106468,
-            "PrefabID": 1524961430,
-            "IsPrefab": true,
-            "Name": "Heart2",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        0,
-                        0
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {
-                    "Type": 21,
-                    "Image": {
-                        "X": -0.36500000953674316,
-                        "Y": 0.25,
-                        "W": 0.045000001788139343,
-                        "H": 0.045000001788139343
-                    }
-                },
-                {
-                    "Type": 3,
-                    "Texture": {
-                        "UID": 1024641721,
-                        "Name": "HeartFull.png",
-                        "Path": "Library\/Textures\/1024641721.netex",
-                        "File": "1024641721.netex"
-                    }
-                }
-            ]
-        },
-        {
-            "UID": 86800064,
-            "ParentUID": 777106468,
-            "PrefabID": 1524961430,
-            "IsPrefab": true,
-            "Name": "Mando",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        0,
-                        0
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {
-                    "Type": 21,
-                    "Image": {
-                        "X": -0.44999998807907104,
-                        "Y": 0.20000000298023224,
-                        "W": 0.16500000655651093,
-                        "H": 0.16500000655651093
-                    }
-                },
-                {
-                    "Type": 3,
-                    "Texture": {
-                        "UID": 76209445,
-                        "Name": "PlayerIcon.png",
-                        "Path": "Library\/Textures\/76209445.netex",
-                        "File": "76209445.netex"
-                    }
-                }
-            ]
-        },
-        {
-            "UID": 1474897797,
-            "ParentUID": 777106468,
-            "PrefabID": 1524961430,
-            "IsPrefab": true,
-            "Name": "Heart3",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        0,
-                        0
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {
-                    "Type": 21,
-                    "Image": {
-                        "X": -0.31999999284744263,
-                        "Y": 0.25,
-                        "W": 0.045000001788139343,
-                        "H": 0.045000001788139343
-                    }
-                },
-                {
-                    "Type": 3,
-                    "Texture": {
-                        "UID": 1024641721,
-                        "Name": "HeartFull.png",
-                        "Path": "Library\/Textures\/1024641721.netex",
-                        "File": "1024641721.netex"
-                    }
-                }
-            ]
-        },
-        {
-            "UID": 1210461349,
-            "ParentUID": 777106468,
-            "PrefabID": 1524961430,
-            "IsPrefab": true,
-            "Name": "SecodaryWeapon",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        0,
-                        0
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {
-                    "Type": 21,
-                    "Image": {
-                        "X": 0.44699999690055847,
-                        "Y": -0.17000000178813934,
-                        "W": 0.18000000715255737,
-                        "H": 0.18000000715255737
-                    }
-                },
-                {
-                    "Type": 3,
-                    "Texture": {
-                        "UID": 1130462783,
-                        "Name": "SecondaryWeapon1.png",
-                        "Path": "Library\/Textures\/1130462783.netex",
-                        "File": "1130462783.netex"
-                    }
-                }
-            ]
-        },
-        {
-            "UID": 1046519113,
-            "ParentUID": 777106468,
-            "PrefabID": 1524961430,
-            "IsPrefab": true,
-            "Name": "Minimap",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        0,
-                        0
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {
-                    "Type": 21,
-                    "Image": {
-                        "X": 0.40000000596046448,
-                        "Y": 0.14000000059604645,
-                        "W": 0.27500000596046448,
-                        "H": 0.27500000596046448
-                    }
-                },
-                {
-                    "Type": 3,
-                    "Texture": {
-                        "UID": 1046552748,
-                        "Name": "MiniMap.png",
-                        "Path": "Library\/Textures\/1046552748.netex",
-                        "File": "1046552748.netex"
-                    }
                 }
             ]
         }

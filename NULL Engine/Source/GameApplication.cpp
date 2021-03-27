@@ -30,6 +30,7 @@ GameApplication::GameApplication()
 	GameApp = this;
 
 	manager = new M_GameManager();
+	scriptManager = new M_ScriptManager();
 
 	// Main Modules
 	AddModule(window);

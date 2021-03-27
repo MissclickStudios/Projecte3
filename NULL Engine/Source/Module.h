@@ -33,9 +33,12 @@ public:
 	virtual bool			SaveConfiguration	(ParsonNode& root) const;			// Will save the current configuration of the calling module in a JSON file.
 	virtual bool			LoadConfiguration	(ParsonNode& root);					// Will load the configuration of the calling module from a JSON file.
 
-	virtual void			ProcessInput(SDL_Event& event);							//
-	virtual void			PostSceneRendering();
-	virtual void			AddConsoleLog(const char* log);										//Quick solution to have an engine Logger outside the core Dll
+	//Support for eventual modules (different in engine and game builds) -------------------------------------------------------------------------------------------
+
+	virtual void			ProcessInput(SDL_Event& event);							//Quick solution to let the engine editor get input for ImGui to process it
+	virtual void			PostSceneRendering();									//Quick solution to let the engine editor render ImGui after the render of the scene
+	virtual void			AddConsoleLog(const char* log);							//Quick solution to have an engine Logger outside the core Dll (just needed in engine executable)
+
 public:
 	bool					IsActive			() const;
 	bool					SetModuleState		(bool isActive);					// Will modify the state of the module. Will call Start() or CleanUp().
