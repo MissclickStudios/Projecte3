@@ -543,7 +543,6 @@ bool M_ResourceManager::AllocateResource(uint32 UID, const char* assetsPath)
 	if (library.find(UID) == library.end())
 	{
 		LOG("%s! Error: Resource could not be found in Library.", errorString.c_str());
-		LOG("%lu uid , %s assets path", UID, assetsPath);
 		return false;
 	}
 
