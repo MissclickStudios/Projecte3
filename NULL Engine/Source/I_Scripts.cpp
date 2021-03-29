@@ -1,17 +1,28 @@
+#include <string.h>
+#include <map>
+
 #include "Application.h"
 #include "M_FileSystem.h"
 #include "I_Scripts.h"
 #include "JSONParser.h"
 #include "FileSystemDefinitions.h"
+#include "M_ResourceManager.h"
 #include "Log.h"
 #include "R_Script.h"
 //#include "M_ScriptManager.h"
-#include <string.h>
 
 #include "MemoryManager.h"
 
 bool Importer::Scripts::Import(const char* assetsPath, char* buffer, uint size, R_Script* rScript)
 {
+	std::map<std::string, uint32> forcedUIDs;
+	App->resourceManager->GetForcedUIDsFromMeta(rScript->GetAssetsPath(), forcedUIDs);
+
+	if (!forcedUIDs.empty())
+	{
+		rScript->ForceUID(forcedUIDs.begin()->second);
+		rScript->SetLibraryPathAndFile();
+	}
 	//Parse the header file to find the scripts in it
 	char* cursor = buffer;
 	char api[] = "SCRIPTS_API";

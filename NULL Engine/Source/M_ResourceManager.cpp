@@ -162,7 +162,7 @@ uint32 M_ResourceManager::ImportFile(const char* assetsPath)
 		return 0;
 	}
 	
-	std::vector<std::string> directories;
+	/*std::vector<std::string> directories;
 	std::vector<std::string> assetFiles;
 	std::vector<std::string> metaFiles;
 	std::map<std::string, std::string> filePairs;
@@ -175,7 +175,7 @@ uint32 M_ResourceManager::ImportFile(const char* assetsPath)
 	//FindFilesToUpdate(filePairs, filesToUpdate);																// At the very least FindFilesToImport() has to be the first to be called
 	//FindFilesToDelete(metaFiles, filePairs, filesToDelete);														// as it is the one to fill file_pairs with asset and meta files!
 
-	LoadValidFilesIntoLibrary(filePairs);																		// Will emplace all valid files' UID & library path into the library map.
+	LoadValidFilesIntoLibrary(filePairs);																		// Will emplace all valid files' UID & library path into the library map.*/
 
 	assetsPath			= GetValidPath(assetsPath);
 	bool metaIsValid	= MetaFileIsValid(assetsPath);
@@ -558,6 +558,7 @@ bool M_ResourceManager::AllocateResource(uint32 UID, const char* assetsPath)
 	if (library.find(UID) == library.end())
 	{
 		LOG("%s! Error: Resource could not be found in Library.", errorString.c_str());
+		LOG("%lu uid , %s assets path", UID, assetsPath);
 		return false;
 	}
 
