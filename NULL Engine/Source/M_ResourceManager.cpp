@@ -251,7 +251,7 @@ uint M_ResourceManager::SaveResourceToLibrary(Resource* resource)
 		return 0;
 	}
 
-	if (ResourceHasMetaType(resource) && !resource->hasForcedUID)
+	if (ResourceHasMetaType(resource) )//&& !resource->hasForcedUID)
 	{
 		SaveMetaFile(resource);
 	}
@@ -992,7 +992,7 @@ void M_ResourceManager::FindFilesToUpdate(const std::map<std::string, std::strin
 		{
 			LOG("[WARNING] Resource Manager: File Modification Time discrepancy! File: { %s } ModTimes: [%llu] :: [%llu]", item->first.c_str(), assetModTime, metaModTime);
 			
-			//filesToUpdate.push_back(item->first);														// REVISE THIS LATER. MAYBE THE PROBLEM IS A DEPRECATED METHOD IN PHYSFS?.
+			filesToUpdate.push_back(item->first);														// REVISE THIS LATER. MAYBE THE PROBLEM IS A DEPRECATED METHOD IN PHYSFS?.
 		}
 	}
 }
