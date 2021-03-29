@@ -1,4 +1,4 @@
-#include "Application.h"
+#include "EngineApplication.h"
 #include "Script.h"
 #include "M_EngineScriptManager.h"
 #include "C_Script.h"
@@ -78,10 +78,8 @@ UpdateStatus M_EngineScriptManager::PreUpdate(float dt)
 		uint64 lastMod = App->fileSystem->GetLastModTime(SCRIPTS_DLL_OUTPUT);
 		if ( lastMod != lastModDll)
 		{
-			/*lastModDll = lastMod;
-			HotReload();*/
-			aviableScripts.clear();
-			App->resourceManager->GetAllScripts(aviableScripts);
+			lastModDll = lastMod;
+			HotReload();
 		}
 	}
 
@@ -175,9 +173,6 @@ bool M_EngineScriptManager::CleanUp()
 void M_EngineScriptManager::HotReload()
 {
 	ParsonNode root = ParsonNode();
-	/*char* buffer = nullptr;
-	root.SerializeToFile("Library/ScriptsTemp.temp",&buffer);
-	RELEASE_ARRAY(buffer);*/
 	if (currentScripts.empty())
 	{
 		root.SetBool("HaveScripts", false);
@@ -187,9 +182,9 @@ void M_EngineScriptManager::HotReload()
 		ParsonArray scriptsArray = root.SetArray("CurrentScripts");
 		SerializeAllScripts(scriptsArray);
 	}
-	char* buffer = nullptr;
+	/*char* buffer = nullptr;
 	root.SerializeToFile("Library/ScriptsTemp.temp", &buffer);
-	RELEASE_ARRAY(buffer);
+	RELEASE_ARRAY(buffer);*/
 
 	currentScripts.clear();
 	if (FreeLibrary(dllHandle))
@@ -198,17 +193,32 @@ void M_EngineScriptManager::HotReload()
 		if (App->fileSystem->Remove(SCRIPTS_DLL_WORKING))
 		{
 			LOG("Successfully removed scriptsDLL");
-			//ReloadAllScripts();
+			EngineApp->resourceManager->ReloadAllScripts();
 
 			while (MoveFileA(SCRIPTS_DLL_OUTPUT, SCRIPTS_DLL_WORKING) == FALSE) {}
+			LOG("New dll correctly moved!");
+			dllHandle = LoadLibrary(SCRIPTS_DLL_WORKING);
+			if (dllHandle != nullptr) 
+			{
+				LOG("Successfully loaded new scripts dll");
+				if (root.GetBool("HaveScripts")) 
+				{
+					DeSerializeAllScripts(root.GetArray("CurrentScripts"));
+					root.Release();
+					aviableScripts.clear();
+					EngineApp->resourceManager->GetAllScripts(aviableScripts);
+					if (EngineApp->gameState == GameState::PLAY)
+						InitScripts();
+				}
+			}
 		}
 	}
 }
 
 void M_EngineScriptManager::SerializeAllScripts(ParsonArray& scriptsArray)
 {
-	/*std::vector<GameObject*>* objects = App->scene->GetGameObjects();
-	for (std::vector<GameObject*>::const_iterator it = (*objects).cbegin(); it!= (*objects).cend(); ++it)
+	std::vector<GameObject*>* objects = App->scene->GetGameObjects();
+	for (std::vector<GameObject*>::iterator it = (*objects).begin(); it!= (*objects).end(); ++it)
 	{
 		if (*it != nullptr)
 		{
@@ -224,22 +234,57 @@ void M_EngineScriptManager::SerializeAllScripts(ParsonArray& scriptsArray)
 						ParsonNode scriptNode = scriptsArray.SetNode((*cScript)->GetDataName().c_str());
 						scriptNode.SetNumber("GameObjectUID", (*it)->GetUID());
 						scriptNode.SetNumber("ResourceScriptUID", (*cScript)->resource->GetUID()); //TODO: check if resource not null??? TODO: Guardar nomes el id poder???
+						scriptNode.SetString("ResourceAssetsPath", (*cScript)->resource->GetAssetsPath());
 						scriptNode.SetString("DataName", (*cScript)->GetDataName().c_str());
+						//TODO: Do i need to reset the component id???? IF yes how do I do it???
 						scriptNode.SetNumber("ComponentScriptID", (*cScript)->GetID());
-						*//*if (inspectorVariables)
+						/*if (inspectorVariables)
 						{
 							//TODO:Fer les inspector variables !!!!!!!
-						}*//*
+						}*/
+						(*it)->DeleteComponent((*cScript)); //Is it necessari to remove it and add it again later?
 					}
 				}
 			}
 		}
-	}*/
+	}
 }
 
-void M_EngineScriptManager::DeSerializeAllScripts(ParsonArray& scriptsArray)
+void M_EngineScriptManager::DeSerializeAllScripts(const ParsonArray& scriptsArray)
 {
-
+	for (int i = 0; i < scriptsArray.size; ++i)
+	{
+		ParsonNode scriptNode = scriptsArray.GetNode(i);
+		GameObject* scriptGO = EngineApp->scene->GetGameObjectByUID((uint32)scriptNode.GetNumber("GameObjectUID"));
+		if (scriptGO == nullptr)
+			continue;
+		C_Script* cScript = (C_Script*)scriptGO->CreateComponent(ComponentType::SCRIPT);
+		uint32 resourceUID = (uint32)scriptNode.GetNumber("ResourceScriptUID");
+		if (!EngineApp->resourceManager->AllocateResource(resourceUID, scriptNode.GetString("ResourceAssetsPath")))
+		{
+			LOG("[WARNING] The resource for script %s from header file %s doesn't exist so the script has not been loaded", scriptNode.GetString("DataName"), scriptNode.GetString("ResourceAssetsPath"));
+			scriptGO->DeleteComponent(cScript);
+			continue;
+		}
+		cScript->resource = (R_Script*)EngineApp->resourceManager->RequestResource(resourceUID);
+		const char* name = scriptNode.GetString("DataName");
+		bool found = false;
+		for (int i = 0; i < cScript->resource->dataStructures.size(); ++i)
+		{
+			if (!strcmp(name,cScript->resource->dataStructures[i].first.c_str()))
+			{
+				cScript->LoadData(name, cScript->resource->dataStructures[i].second);
+				found = true;
+				break;
+			}
+		}
+		if (!found) 
+		{
+			LOG("[WARNING] The resource for script %s from header file %s exists but doesn't contain this script so it has not been loaded", scriptNode.GetString("DataName"), scriptNode.GetString("ResourceAssetsPath"));
+			scriptGO->DeleteComponent(cScript);
+			continue;
+		}
+	}
 }
 
 /*void M_EngineScriptManager::SerializeChildrenScripts(GameObject* go, ParsonArray& scriptsArray)

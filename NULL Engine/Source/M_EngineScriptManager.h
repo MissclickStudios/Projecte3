@@ -33,7 +33,7 @@ public:
 private:
 	void HotReload();
 	void SerializeAllScripts(ParsonArray& scriptsArray);
-	void DeSerializeAllScripts(ParsonArray& scriptsArray);
+	void DeSerializeAllScripts(const ParsonArray& scriptsArray);
 
 
 private:

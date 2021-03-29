@@ -1803,3 +1803,8 @@ void M_ResourceManager::GetAllScripts(std::map<std::string, std::string>& script
 		}
 	}
 }
+
+void M_ResourceManager::ReloadAllScripts()
+{
+	RefreshDirectoryFiles(ASSETS_SCRIPTS_PATH);
+}
