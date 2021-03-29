@@ -37,6 +37,7 @@
 #include "C_Canvas.h"
 #include "C_UI_Image.h"
 #include "C_UI_Text.h"
+#include "C_UI_Button.h"
 
 #include "M_Renderer3D.h"
 
@@ -778,6 +779,15 @@ void M_Renderer3D::RenderUIComponent(GameObject* gameObject)
 				text->Draw3D();
 		}
 
+		C_UI_Button* button = (*it)->GetComponent<C_UI_Button>();
+		if (button != nullptr)
+		{
+			if (App->camera->currentCamera != App->camera->masterCamera->GetComponent<C_Camera>())
+				button->Draw2D();
+
+			else
+				button->Draw3D();
+		}
 
 		for (std::vector<GameObject*>::iterator childIt = (*it)->childs.begin(); childIt != (*it)->childs.end(); childIt++)
 		{

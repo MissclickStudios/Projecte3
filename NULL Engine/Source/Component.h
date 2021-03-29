@@ -34,7 +34,8 @@ enum class ComponentType
 	GATE_BEHAVIOR,
 	//UI
 	UI_IMAGE,
-	UI_TEXT
+	UI_TEXT,
+	UI_BUTTON
 };
 
 class NULL_API Component

@@ -9,11 +9,7 @@ class ParsonNode;
 typedef unsigned int uint;
 
 class GameObject;
-
-namespace freetype
-{
-
-}
+class C_UI_Button;
 
 class NULL_API M_UISystem : public Module
 {
@@ -31,6 +27,8 @@ public:
 	bool LoadConfiguration(ParsonNode& root) override;
 	bool SaveConfiguration(ParsonNode& root) const override;
 
+	bool CheckButtonStates(); // Returns false if no buttons are hovered/pressed
+
 public:
 
 	FT_Library  library;
@@ -38,6 +36,11 @@ public:
 	FT_UInt		glyphIndex;
 	FT_ULong	charcode;
 	FT_Int32	loadFlags = FT_LOAD_DEFAULT;
+
+	std::vector<GameObject*> activeButtons;
+	C_UI_Button* hoveredButton = nullptr;
+
+	bool isPressed = false;
 
 private:
 	

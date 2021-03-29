@@ -3,6 +3,7 @@
 
 #include "M_Scene.h"
 #include "M_Camera3D.h"
+#include "M_Input.h"
 
 #include "GameObject.h"
 
@@ -10,6 +11,7 @@
 #include "C_Camera.h"
 #include "C_Transform.h"
 #include "C_UI_Text.h"
+#include "C_UI_Button.h"
 
 #include "M_UISystem.h"
 
@@ -88,6 +90,8 @@ UpdateStatus M_UISystem::PreUpdate(float dt)
 
 UpdateStatus M_UISystem::Update(float dt)
 {
+	CheckButtonStates();
+
 	return UpdateStatus::CONTINUE;
 }
 
@@ -112,6 +116,80 @@ bool M_UISystem::LoadConfiguration(ParsonNode& root)
 bool M_UISystem::SaveConfiguration(ParsonNode& root) const
 {
 	bool ret = true;
+
+	return ret;
+}
+
+bool M_UISystem::CheckButtonStates()
+{
+	bool ret = false;
+
+	bool prev = false;
+	bool next = false;
+
+
+	if (App->input->GetKey(SDL_SCANCODE_G) == KeyState::KEY_UP)
+	{
+		hoveredButton->SetState(UIButtonState::HOVERED);
+		isPressed = false;
+	}
+
+	else if (App->input->GetKey(SDL_SCANCODE_G) == KeyState::KEY_DOWN || App->input->GetKey(SDL_SCANCODE_G) == KeyState::KEY_REPEAT)
+	{
+		hoveredButton->SetState(UIButtonState::PRESSED);
+		isPressed = true;
+	}
+
+	if (activeButtons.size() > 1)
+	{
+		if (App->input->GetKey(SDL_SCANCODE_T) == KeyState::KEY_DOWN && !isPressed)
+		{
+			for (std::vector<GameObject*>::reverse_iterator buttonIt = activeButtons.rbegin(); buttonIt != activeButtons.rend(); buttonIt++)
+			{
+				C_UI_Button* button = (*buttonIt)->GetComponent<C_UI_Button>();
+				if ((*buttonIt)->IsActive() && button != nullptr)
+				{
+					if (button->GetState() == UIButtonState::HOVERED)
+					{
+						button->SetState(UIButtonState::IDLE);
+						prev = true;
+					}
+					else if (prev)
+					{
+						button->SetState(UIButtonState::HOVERED);
+						hoveredButton = button;
+						prev = false;
+					}
+				}
+			}
+			if (prev)
+				hoveredButton->SetState(UIButtonState::HOVERED);
+		}
+
+		if (App->input->GetKey(SDL_SCANCODE_B) == KeyState::KEY_DOWN && !isPressed)
+		{
+			for (std::vector<GameObject*>::iterator buttonIt = activeButtons.begin(); buttonIt != activeButtons.end(); buttonIt++)
+			{
+				C_UI_Button* button = (*buttonIt)->GetComponent<C_UI_Button>();
+				if ((*buttonIt)->IsActive() && button != nullptr)
+				{
+					if (button->GetState() == UIButtonState::HOVERED)
+					{
+						button->SetState(UIButtonState::IDLE);
+						next = true;
+					}
+					else if (next)
+					{
+						button->SetState(UIButtonState::HOVERED);
+						hoveredButton = button;
+						next = false;
+					}
+				}
+			}
+			if(next)
+				hoveredButton->SetState(UIButtonState::HOVERED);
+		}
+	}
 
 	return ret;
 }
