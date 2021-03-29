@@ -305,17 +305,17 @@ Parser::ParsingState Parser::ReadNextSymbol(char*& cursor, char*& startSymbol, u
 		++cursor;
 	}
 
+	Parser::ParsingState stateAfterComment = HandlePossibleComment(cursor);
+	if (stateAfterComment == Parser::ParsingState::ENDFILE)
+		return Parser::ParsingState::ENDFILE;
+	if (stateAfterComment == Parser::ParsingState::ERROR)
+		return Parser::ParsingState::ERROR;
+
 	startSymbol = cursor;
 	while (*cursor != ' ' && *cursor != '\t' && *cursor != '\n')
 	{
 		if (cursor == '\0')
 			return Parser::ParsingState::ENDFILE;
-
-		Parser::ParsingState stateAfterComment = HandlePossibleComment(cursor);
-		if (stateAfterComment == Parser::ParsingState::ENDFILE)
-			return Parser::ParsingState::ENDFILE;
-		if (stateAfterComment == Parser::ParsingState::ERROR)
-			return Parser::ParsingState::ERROR;
 		if (*cursor == '#')
 			return Parser::ParsingState::ERROR;
 		if (LanguageSymbol(*cursor))
@@ -329,6 +329,12 @@ Parser::ParsingState Parser::ReadNextSymbol(char*& cursor, char*& startSymbol, u
 
 Parser::ParsingState Parser::GoNextSymbol(char*& cursor)
 {
+	Parser::ParsingState stateAfterComment = HandlePossibleComment(cursor);
+	if (stateAfterComment == Parser::ParsingState::ENDFILE)
+		return Parser::ParsingState::ENDFILE;
+	if (stateAfterComment == Parser::ParsingState::ERROR)
+		return Parser::ParsingState::ERROR;
+
 	while (*cursor == ' ' || *cursor == '\t' || *cursor == '\n')
 	{
 		if (cursor == '\0')
