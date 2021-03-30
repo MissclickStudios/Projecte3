@@ -85,6 +85,8 @@ bool M_UISystem::Init(ParsonNode& config)
 // Called every draw update
 UpdateStatus M_UISystem::PreUpdate(float dt)
 {
+	UpdateActiveButtons();
+
 	return UpdateStatus::CONTINUE;
 }
 
@@ -127,7 +129,6 @@ bool M_UISystem::CheckButtonStates()
 	bool prev = false;
 	bool next = false;
 
-
 	if (App->input->GetKey(SDL_SCANCODE_G) == KeyState::KEY_UP)
 	{
 		hoveredButton->SetState(UIButtonState::HOVERED);
@@ -144,20 +145,19 @@ bool M_UISystem::CheckButtonStates()
 	{
 		if (App->input->GetKey(SDL_SCANCODE_T) == KeyState::KEY_DOWN && !isPressed)
 		{
-			for (std::vector<GameObject*>::reverse_iterator buttonIt = activeButtons.rbegin(); buttonIt != activeButtons.rend(); buttonIt++)
+			for (std::vector<C_UI_Button*>::reverse_iterator buttonIt = activeButtons.rbegin(); buttonIt != activeButtons.rend(); buttonIt++)
 			{
-				C_UI_Button* button = (*buttonIt)->GetComponent<C_UI_Button>();
-				if ((*buttonIt)->IsActive() && button != nullptr)
+				if ((*buttonIt)->IsActive())
 				{
-					if (button->GetState() == UIButtonState::HOVERED)
+					if ((*buttonIt)->GetState() == UIButtonState::HOVERED)
 					{
-						button->SetState(UIButtonState::IDLE);
+						(*buttonIt)->SetState(UIButtonState::IDLE);
 						prev = true;
 					}
 					else if (prev)
 					{
-						button->SetState(UIButtonState::HOVERED);
-						hoveredButton = button;
+						(*buttonIt)->SetState(UIButtonState::HOVERED);
+						hoveredButton = (*buttonIt);
 						prev = false;
 					}
 				}
@@ -168,20 +168,19 @@ bool M_UISystem::CheckButtonStates()
 
 		if (App->input->GetKey(SDL_SCANCODE_B) == KeyState::KEY_DOWN && !isPressed)
 		{
-			for (std::vector<GameObject*>::iterator buttonIt = activeButtons.begin(); buttonIt != activeButtons.end(); buttonIt++)
+			for (std::vector<C_UI_Button*>::iterator buttonIt = activeButtons.begin(); buttonIt != activeButtons.end(); buttonIt++)
 			{
-				C_UI_Button* button = (*buttonIt)->GetComponent<C_UI_Button>();
-				if ((*buttonIt)->IsActive() && button != nullptr)
+				if ((*buttonIt)->IsActive())
 				{
-					if (button->GetState() == UIButtonState::HOVERED)
+					if ((*buttonIt)->GetState() == UIButtonState::HOVERED)
 					{
-						button->SetState(UIButtonState::IDLE);
+						(*buttonIt)->SetState(UIButtonState::IDLE);
 						next = true;
 					}
 					else if (next)
 					{
-						button->SetState(UIButtonState::HOVERED);
-						hoveredButton = button;
+						(*buttonIt)->SetState(UIButtonState::HOVERED);
+						hoveredButton = (*buttonIt);
 						next = false;
 					}
 				}
@@ -192,4 +191,36 @@ bool M_UISystem::CheckButtonStates()
 	}
 
 	return ret;
+}
+
+void M_UISystem::UpdateActiveButtons()
+{
+	if (activeButtons.size() < 2)
+		return;
+
+	// Create a new list and empty the other one into this one
+	std::vector<C_UI_Button*> newButtonsList;
+
+	while (!activeButtons.empty())
+	{
+		float y = -999;
+		for (std::vector<C_UI_Button*>::iterator buttonIt = activeButtons.begin(); buttonIt != activeButtons.end(); buttonIt++)
+		{
+			if ((*buttonIt)->GetRect().y > y)
+			{
+				y = (*buttonIt)->GetRect().y;
+				buttonIterator = (*buttonIt);
+			}
+		}
+		for (std::vector<C_UI_Button*>::iterator buttonIt2 = activeButtons.begin(); buttonIt2 != activeButtons.end(); buttonIt2++)
+		{
+			if ((*buttonIt2) == buttonIterator)
+			{
+				newButtonsList.push_back(*buttonIt2);
+				activeButtons.erase(buttonIt2);
+				break;
+			}
+		}
+	}
+	activeButtons = newButtonsList;
 }

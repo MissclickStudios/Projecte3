@@ -27,7 +27,7 @@ C_UI_Button::C_UI_Button(GameObject* owner, Rect2D rect) : Component(owner, Comp
 		state = UIButtonState::HOVERED;
 		App->uiSystem->hoveredButton = this;
 	}
-	App->uiSystem->activeButtons.push_back(owner);
+	App->uiSystem->activeButtons.push_back(this);
 
 	owner->CreateComponent(ComponentType::MATERIAL);// Temp: this is just so buttons have colors when created
 }

@@ -29,6 +29,8 @@ public:
 
 	bool CheckButtonStates(); // Returns false if no buttons are hovered/pressed
 
+	void UpdateActiveButtons();
+
 public:
 
 	FT_Library  library;
@@ -37,13 +39,13 @@ public:
 	FT_ULong	charcode;
 	FT_Int32	loadFlags = FT_LOAD_DEFAULT;
 
-	std::vector<GameObject*> activeButtons;
+	std::vector<C_UI_Button*> activeButtons;
 	C_UI_Button* hoveredButton = nullptr;
 
 	bool isPressed = false;
 
 private:
-	
+	C_UI_Button* buttonIterator = nullptr;
 };
 
 #endif // !__M_UISYSTEM_H__
