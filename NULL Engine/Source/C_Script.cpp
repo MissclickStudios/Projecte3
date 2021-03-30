@@ -83,16 +83,19 @@ bool C_Script::LoadState(ParsonNode& root)
 
 	if (App->resourceManager->AllocateResource(root.GetNumber("ResourceUID"), root.GetString("AssetsPath"))) 
 	{
-
+		bool found = false;
 		resource = (R_Script*)App->resourceManager->RequestResource(root.GetNumber("ResourceUID"));
 		for (int i = 0; i < resource->dataStructures.size(); ++i) 
 		{
 			if (dataName.data() == resource->dataStructures[i].first) 
 			{
 				LoadData(dataName.data(), resource->dataStructures[i].second);
+				found = true;
 				break;
 			}
 		}
+		if (!found)
+			return false;
 		/*if (root.GetBool("HasInspector"))
 		{
 			ParsonArray variablesToLoad = root.GetArray("InspectorVariables");
@@ -106,7 +109,7 @@ bool C_Script::LoadState(ParsonNode& root)
 	}
 	else 
 	{
-		delete this;
+		return false;
 	}
 	return true;
 }
