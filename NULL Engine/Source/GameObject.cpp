@@ -235,8 +235,13 @@ bool GameObject::LoadState(ParsonNode& root)
 				if ((component->GetType() == ComponentType::CAMERA) && (App->gameState == GameState::PLAY)) //TODO fix this hardcode
 					App->camera->SetCurrentCamera((C_Camera*)component);
 
-				component->LoadState(componentNode);
-				components.push_back(component);
+				if (component->LoadState(componentNode))
+					components.push_back(component);
+				else 
+				{
+					component->CleanUp();
+					delete component;
+				}
 			}
 		}
 	}
