@@ -24,6 +24,8 @@ public:
 	void ResetEmitter();
 
 private:	
+public:
+
 	void UpdateModules(float dt);
 	void KillDeadParticles();
 	void KillAll();

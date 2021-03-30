@@ -20,6 +20,8 @@ public:
 	void SetAsDefault();
 	bool AddModuleFromType(ParticleModule::Type type);
 
+	void SetMaterial();
+
 public:
 	std::string name = "Particle Emitter";
 	std::vector<ParticleModule*> modules;
