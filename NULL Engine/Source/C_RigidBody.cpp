@@ -81,10 +81,10 @@ bool C_RigidBody::CleanUp()
 
 bool C_RigidBody::SaveState(ParsonNode& root) const
 {
+	root.SetNumber("Type", (uint)GetType());												// NOTE: Even if there is no info to store, at least the type has to be saved.
+	
 	if (!dynamicBody)
 		return false;
-
-	root.SetNumber("Type", (uint)GetType());
 
 	root.SetNumber("Mass", (double)mass);
 	root.SetNumber("Density", (double)density);

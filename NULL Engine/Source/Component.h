@@ -11,31 +11,37 @@ typedef unsigned __int32 uint32;
 enum class ComponentType
 {
 	NONE,
-	TRANSFORM,
-	MESH,
-	MATERIAL,
-	LIGHT,
-	CAMERA,
-	ANIMATOR,
-	ANIMATION,
-	RIGIDBODY,
-	BOX_COLLIDER,
-	SPHERE_COLLIDER,
-	CAPSULE_COLLIDER,
-	PARTICLE_SYSTEM,
+	TRANSFORM,												// --- BASICS
+	MESH,													// 
+	MATERIAL,												// 
+	LIGHT,													// 
+	CAMERA,													// ----------
+
+	ANIMATOR,												// --- ANIMATION
+	ANIMATION,												// -------------
+
+	RIGIDBODY,												// --- PHYSICS
+	BOX_COLLIDER,											//
+	SPHERE_COLLIDER,										// 
+	CAPSULE_COLLIDER,										// -----------
+
+	PARTICLE_SYSTEM,										// --- PARTICLE SYSTEM
+
 	CANVAS,
-	AUDIOSOURCE,
-	AUDIOLISTENER,
-	// Behaviors
-	PLAYER_CONTROLLER,
-	BULLET_BEHAVIOR,
-	PROP_BEHAVIOR,
-	CAMERA_BEHAVIOR,
-	GATE_BEHAVIOR,
-	//UI
-	UI_IMAGE,
-	UI_TEXT,
-	SCRIPT
+
+	AUDIOSOURCE,											// --- AUDIO
+	AUDIOLISTENER,											// ---------
+
+	PLAYER_CONTROLLER,										// --- BEHAVIOURS
+	BULLET_BEHAVIOR,										// 
+	PROP_BEHAVIOR,											// 
+	CAMERA_BEHAVIOR,										// 
+	GATE_BEHAVIOR,											// --------------
+
+	UI_IMAGE,												// --- UI
+	UI_TEXT,												// ------
+
+	SCRIPT													// --- SCRIPTING
 };
 
 class NULL_API Component
