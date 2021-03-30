@@ -27,7 +27,7 @@ bool R_Script::LoadMeta(const ParsonNode& metaRoot)
 	return true;
 }
 
-bool R_Script::NeedReload() const
+/*bool R_Script::NeedReload() const
 {
 	return lastTimeMod != App->fileSystem->GetLastModTime(GetAssetsPath());
-}
+}*/

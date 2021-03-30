@@ -5,30 +5,30 @@
 #include "Application.h"
 #include "M_Input.h"
 
-FirstScript::FirstScript() : Script()
+ola::ola() : Script()
 {
 }
 
-FirstScript::~FirstScript()
+ola::~ola()
 {
 }
 
-void FirstScript::Awake()
+void ola::Awake()
 {
 	LOG("Awake");
 }
 
-void FirstScript::Start()
+void ola::Start()
 {
 	LOG("Start");
 }
 
-void FirstScript::PreUpdate()
+void ola::PreUpdate()
 {
 	LOG("PreUpdate");
 }
 
-void FirstScript::Update()
+void ola::Update()
 {
 	LOG("Update: First variable = %d", firstVariable);
 	if (App->input->GetKey(SDL_SCANCODE_A) == KeyState::KEY_REPEAT) 
@@ -45,12 +45,12 @@ void FirstScript::Update()
 	}
 }
 
-void FirstScript::PostUpdate()
+void ola::PostUpdate()
 {
 	LOG("PostUpdate");
 }
 
-void FirstScript::CleanUp()
+void ola::CleanUp()
 {
 	LOG("CleanUp");
 }

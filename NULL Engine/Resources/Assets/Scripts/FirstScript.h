@@ -1,21 +1,22 @@
 #pragma once
 #include "Script.h"
 #include "ScriptMacros.h"
+#include "Log.h"
 
-class SCRIPTS_API FirstScript : public Script {
+class SCRIPTS_API ola : public Script {
 public :
-	FirstScript();
-	~FirstScript();
+	ola();
+	~ola();
 	void Awake() override;
 	void Start() override;
 	void PreUpdate()override;
 	void Update() override;
 	void PostUpdate()override;
 	void CleanUp()override;
-	int firstVariable = 4;
+	int firstVariable = 6;
 };
 
-SCRIPTS_FUNCTION FirstScript* CreateFirstScript() {
-	FirstScript* script = new FirstScript();
+SCRIPTS_FUNCTION ola* Createola() {
+	ola* script = new ola();
 	return script;
 }

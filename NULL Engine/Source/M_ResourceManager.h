@@ -67,7 +67,8 @@ public:																								// --- RESOURCE MANAGER API ---
 	void			GetAllShaders					(std::vector<R_Shader*>& shaders);				//Retrieve all the shaders in the library
 
 	void		GetAllScripts(std::map<std::string, std::string>& scripts);
-
+	void		ReloadAllScripts();																	//Called when hot reloading the scripts
+	
 	void			GetAllTextures					(std::vector<R_Texture*>& textures);			//Retrieve all the shaders in the library
 
 	// --- PREFAB METHODS

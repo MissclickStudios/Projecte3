@@ -16,7 +16,7 @@
 #include "M_ResourceManager.h"
 #include "M_UISystem.h"
 #include "M_Scene.h"
-#include "M_ScriptManager.h"
+#include "M_EngineScriptManager.h"
 
 #include "GameObject.h"
 #include "Component.h"
@@ -50,6 +50,7 @@
 #include "R_Script.h"
 #include "I_Shaders.h"
 
+#include "Emitter.h"
 
 #include "E_Inspector.h"
 
@@ -1214,7 +1215,6 @@ void E_Inspector::DrawCanvasComponent(C_Canvas* cCanvas)
 					size.y = 0;
 					
 				
-					
 				cCanvas->SetSize(size);
 
 				if (pivot.x < cCanvas->GetPosition().x - cCanvas->GetSize().x / 2)
@@ -1367,17 +1367,73 @@ void E_Inspector::DrawCapsuleColliderComponent(C_CapsuleCollider* cCollider)
 void E_Inspector::DrawParticleSystemComponent(C_ParticleSystem* cParticleSystem)
 {
 	bool show = true;
-	if (ImGui::CollapsingHeader("Particle System", &show, ImGuiTreeNodeFlags_DefaultOpen))
-	{
+	//if (cParticleSystem->resource != nullptr)
+	//{
+		if (ImGui::CollapsingHeader("Particle System", &show, ImGuiTreeNodeFlags_DefaultOpen))
+		{
+			for (int i = 0; i < cParticleSystem->emitterInstances.size(); i++) //loop emitters
+			{
+				Emitter* emitter = cParticleSystem->emitterInstances[i]->emitter;
+				for (int i = 0; i < emitter->modules.size(); i++) //loop modules
+				{
+					ParticleModule* Module = emitter->modules[i];
 
+					switch (Module->type)
+					{
+					case (ParticleModule::Type::EmitterBase):
+					{
+					
+					}						
+					break;
+					case (ParticleModule::Type::EmitterSpawn):
+					{
+					
+					}
+					break;
+					case(ParticleModule::Type::ParticleColor):
+					{
+
+					}
+					break;
+					case(ParticleModule::Type::ParticleLifetime):
+					{
+
+					}
+					break;
+					case(ParticleModule::Type::ParticleMovement):
+					{
+
+					}
+					break;
+					case(ParticleModule::Type::None):
+					{	
+
+					}
+
+					}
+				}
+
+				if (ImGui::CollapsingHeader("Default Emitter", &show, ImGuiTreeNodeFlags_DefaultOpen))
+				{
+					bool preview = cParticleSystem->previewEnabled;
+					if (ImGui::Checkbox("Preview", &preview))
+					{
+						cParticleSystem->EnginePreview(preview);
+					}
+				}
+
+				ImGui::Separator();
+			}		
+		}
+	//else
+	//{
+		//assign a resource to the component
+	//}
 		if (!show)
 		{
 			componentToDelete = cParticleSystem;
 			showDeleteComponentPopup = true;
 		}
-
-		ImGui::Separator();
-	}
 }
 
 void E_Inspector::DrawUIImageComponent(C_UI_Image* image)
@@ -1457,7 +1513,7 @@ void E_Inspector::DrawScriptComponent(C_Script* cScript)
 	{
 		if (ImGui::CollapsingHeader("Script", &show, ImGuiTreeNodeFlags_DefaultOpen))
 		{
-			const std::map<std::string, std::string> scripts = EngineApp->scriptManager->GetAviableScripts();
+			const std::map<std::string, std::string> scripts = ((M_EngineScriptManager*)EngineApp->scriptManager)->GetAviableScripts();
 			
 			std::string select;
 			if(scripts.size() != 0)
@@ -1491,7 +1547,7 @@ void E_Inspector::DrawScriptComponent(C_Script* cScript)
 		return;
 	}
 
-	if (ImGui::CollapsingHeader(cScript->GetDataName().c_str(), &show, ImGuiTreeNodeFlags_DefaultOpen))
+	if (ImGui::CollapsingHeader((cScript->GetDataName() + " (Script)").c_str(), &show, ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		//TODO: Show inspector variables
 		ImGui::Text("Name %s", cScript->GetDataName().c_str());
