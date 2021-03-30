@@ -26,6 +26,16 @@ private:
 private:
 	std::vector<char*> logs;
 
+	char* searchStr;
+
+	bool printErrorLogs;
+	bool printWarningLogs;
+	bool printStatusLogs;
+	bool printFileSystemLogs;
+	bool printImporterLogs;
+	bool printSceneLogs;
+	bool printNonTaggedLogs;
+
 	bool scrollToBottom;
 	bool showConsole;
 };

@@ -262,15 +262,15 @@ void M_Editor::EditorShortcuts()
 
 void M_Editor::CheckShowHideFlags()
 {	
-	showConfiguration	?	configuration->Enable()	: configuration->Disable();				// Engine Configuration
-	showHierarchy		?	hierarchy->Enable()		: hierarchy->Disable();					// Hierarchy
-	showInspector		?	inspector->Enable()		: inspector->Disable();					// Inspector
-	showConsole			?	console->Enable()		: console->Disable();					// Console
-	showProject			?	project->Enable()		: project->Disable();					// Project
-	showImguiDemo		?	imguiDemo->Enable()		: imguiDemo->Disable();					// ImGui Demo
-	showAboutPopup		?	about->Enable()			: about->Disable();						// About Popup
-	showLoadFilePopup	?	loadFile->Enable()		: loadFile->Disable();					// Load File
-	showSaveFilePopup	?	saveFile->Enable()		: saveFile->Disable();					// Load File
+	(showConfiguration)	?	configuration->Enable()	: configuration->Disable();					// Engine Configuration
+	(showHierarchy)		?	hierarchy->Enable()		: hierarchy->Disable();						// Hierarchy
+	(showInspector)		?	inspector->Enable()		: inspector->Disable();						// Inspector
+	(showConsole)		?	console->Enable()		: console->Disable();						// Console
+	(showProject)		?	project->Enable()		: project->Disable();						// Project
+	(showImguiDemo)		?	imguiDemo->Enable()		: imguiDemo->Disable();						// ImGui Demo
+	(showAboutPopup)	?	about->Enable()			: about->Disable();							// About Popup
+	(showLoadFilePopup)	?	loadFile->Enable()		: loadFile->Disable();						// Load File
+	(showSaveFilePopup)	?	saveFile->Enable()		: saveFile->Disable();						// Load File
 }
 
 bool M_Editor::EditorIsBeingHovered() const
@@ -312,7 +312,7 @@ bool M_Editor::InitializeImGui() const
 		style.Colors[ImGuiCol_WindowBg].w = 1.0f;												// Setting the windows Alpha to 255, making them completely opaque.
 	}																							// -----------------------------------------------
 
-	ImGui_ImplSDL2_InitForOpenGL(EngineApp->window->GetWindow(), EngineApp->renderer->context);				// Setting up Platform/Renderer bindings
+	ImGui_ImplSDL2_InitForOpenGL(EngineApp->window->GetWindow(), EngineApp->renderer->context);	// Setting up Platform/Renderer bindings
 	ImGui_ImplOpenGL3_Init(0);																	// -------------------------------------
 
 	glClearColor(clearColor.x, clearColor.y, clearColor.z, clearColor.w);

@@ -1,24 +1,38 @@
-#include "Macros.h"
+#include "Profiler.h"
+
+#include "Log.h"
+
+#include "Color.h"
 
 #include "EngineApplication.h"
 #include "M_Window.h"
 #include "M_Editor.h"
 
 #include "E_Console.h"
-#include "Profiler.h"
+
 #include "MemoryManager.h"
 
-#define MAX_CONSOLE_LOG_SIZE 1000
+#define MAX_CONSOLE_LOG_SIZE	1000
+#define MAX_SEARCH_STR_SIZE		128	
 
-E_Console::E_Console() : EditorPanel("Console")
+E_Console::E_Console() : EditorPanel("Console"),
+scrollToBottom		(true),
+showConsole			(IsActive()),
+printErrorLogs		(true),
+printWarningLogs	(true),
+printStatusLogs		(true),
+printFileSystemLogs	(true),
+printImporterLogs	(true),
+printSceneLogs		(true),
+printNonTaggedLogs	(true)
 {
-	scrollToBottom = true;
-	showConsole = IsActive();
+	searchStr		= new char[MAX_SEARCH_STR_SIZE];
+	searchStr[0]	= '\0';
 }
 
 E_Console::~E_Console()
 {
-
+	RELEASE_ARRAY(searchStr);
 }
 
 bool E_Console::Draw(ImGuiIO& io)
@@ -41,7 +55,6 @@ bool E_Console::Draw(ImGuiIO& io)
 
 bool E_Console::CleanUp()
 {
-
 	ClearLog();
 
 	return true;
@@ -52,7 +65,7 @@ void E_Console::AddLog(const char* log)
 	if (logs.size() + 1 > MAX_CONSOLE_LOG_SIZE)
 	{
 		ClearLog();
-		//LOG("[WARNING] Console: Cleared Input Log: Exceeded maximum input log size!");
+		//LOG("[STATUS] Console Editor Panel: Cleared Console Logs! Event: Exceeded maximum console log size");
 	}
 	
 	//--------------------------------------------------------------------TODO:Console memo leak solved--------------------------------------------------------------------------------
@@ -78,69 +91,92 @@ void E_Console::ClearLog()
 
 void E_Console::ConsoleMenuBar()
 {
-	ImGui::BeginMenuBar();														// Opens a menu bar on the console window so different elements can be added.
+	ImGui::BeginMenuBar();
 
-	if (ImGui::BeginMenu("Options"))											// Constructs a menu "tab" on the menu bar. Menu items can be added to the "tab".
+	if (ImGui::BeginMenu("Options"))
 	{
-		if (ImGui::MenuItem("Clear Console"))									// Constructs a menu item inside the previously opened menu "tab".
+		if (ImGui::BeginMenu("Log Filters"))
 		{
-			ClearLog();
+			ImGui::MenuItem("Error", nullptr, &printErrorLogs);
+			ImGui::MenuItem("Warning", nullptr, &printWarningLogs);
+			ImGui::MenuItem("Status", nullptr, &printStatusLogs);
+			ImGui::MenuItem("File System", nullptr, &printFileSystemLogs);
+			ImGui::MenuItem("Importer", nullptr, &printImporterLogs);
+			ImGui::MenuItem("Scene", nullptr, &printSceneLogs);
+			ImGui::MenuItem("Nontagged", nullptr, &printNonTaggedLogs);
+
+			ImGui::EndMenu();
 		}
 
-		if (ImGui::MenuItem("Close Console"))
-		{
-			Disable();
-		}
+		if (ImGui::MenuItem("Clear Console"))	{ ClearLog(); }
+		if (ImGui::MenuItem("Close Console"))	{ Disable(); }
 
-		ImGui::EndMenu();														// Closes the "Options" menu "tab".
+		ImGui::EndMenu();
 	}
 
-	ImGui::EndMenuBar();														// Closes the previously opened menu bar.
+	ImGui::EndMenuBar();
 }
 
 void E_Console::ConsoleOutput()
 {
+	ImGui::InputTextEx("Search", nullptr, searchStr, MAX_SEARCH_STR_SIZE, ImVec2(300.0f, 0.0f), ImGuiInputTextFlags_EnterReturnsTrue);
+	
+	ImGui::BeginChild("Console Output", ImVec2(0.0f, 0.0f), true, ImGuiWindowFlags_HorizontalScrollbar);
+
 	ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 6));
 
+	ImVec4 textColour = White.C_Array();
 	for (uint i = 0; i < logs.size(); ++i)
 	{
-		ImVec4 textColour = { 1.0f, 1.0f, 1.0f, 1.0f };
-
+		if (strstr(logs[i], searchStr) == nullptr)
+		{
+			continue;
+		}
+		
 		if (strstr(logs[i], "[ERROR]") != nullptr)								// strstr() will look for a specific substring in the given string. Returns nullptr if the substr is not found.
 		{
-			textColour = { 1.0f, 0.33f, 0.33f, 1.0f };							// [ERROR] logs will be red.
+			if (!printErrorLogs)		{ continue; }							// If the Filter Tag is set not to be printed, then continue to the next iteration of the loop.
+			textColour = { 1.0f, 0.33f, 0.33f, 1.0f };							// [ERROR] logs will be Red.
 		}
 		else if (strstr(logs[i], "[WARNING]") != nullptr)
 		{
-			textColour = { 1.0f, 1.0f, 0.33f, 1.0f };							// [WARNING] logs will be yellow.
+			if (!printWarningLogs)		{ continue; }
+			textColour = { 1.0f, 1.0f, 0.33f, 1.0f };							// [WARNING] logs will be Yellow.
 		}
 		else if (strstr(logs[i], "[STATUS]") != nullptr)
 		{
-			textColour = { 1.0f, 0.33f, 1.0f, 1.0f };
+			if (!printStatusLogs)		{ continue; }
+			textColour = { 1.0f, 0.33f, 1.0f, 1.0f };							// [STATUS] logs will be Purple.
 		}
 		else if (strstr(logs[i], "[FILE_SYSTEM]") != nullptr)
 		{
-			textColour = { 0.33f, 0.33f, 1.0f, 1.0f };
+			if (!printFileSystemLogs)	{ continue; }
+			textColour = { 0.33f, 0.33f, 1.0f, 1.0f };							// [FILE_SYSTEM] logs will be Blue.
 		}
 		else if (strstr(logs[i], "[IMPORTER]") != nullptr)
 		{
-			textColour = { 0.33f, 1.0f, 1.0f, 1.0f };
+			if (!printImporterLogs)		{ continue; }
+			textColour = { 0.33f, 1.0f, 1.0f, 1.0f };							// [IMPORTER] logs will be Cyan.
 		}
 		else if (strstr(logs[i], "[SCENE]") != nullptr)
 		{
-			textColour = { 0.33f, 1.0f, 0.33f, 1.0f };
+			if (!printSceneLogs)		{ continue; }
+			textColour = { 0.33f, 1.0f, 0.33f, 1.0f };							// [SCENE] logs will be Green.
 		}
 		else
 		{
-			textColour = { 1.0f, 1.0f, 1.0f, 1.0f };
+			if (!printNonTaggedLogs)	{ continue; }
+			textColour = White.C_Array();										// Nontagged logs will be White.
 		}
 
 		ImGui::PushStyleColor(ImGuiCol_Text, textColour);
-		ImGui::TextUnformatted(logs[i]);										// Raw text without formatting. Fast, without memory copies and no buffer size limits. For long chunks of txt.
+		ImGui::TextUnformatted(logs[i]);									// Raw text without formatting. Fast, without memory copies and no buffer size limits. For long chunks of txt.
 		ImGui::PopStyleColor();
 	}
 
 	ImGui::PopStyleVar();
+
+	ImGui::EndChild();
 }
 
 void E_Console::ConsoleScrollToBottom()
