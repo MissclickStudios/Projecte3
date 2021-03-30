@@ -85,10 +85,11 @@ bool M_Scene::Start()
 	level.AddFixedRoom("Start", 1); 
 	level.AddFixedRoom("Boss", 15);
 	
-	//if(App->gameState == GameState::PLAY)
+	if(App->gameState == GameState::PLAY)
 		level.GenerateRoom(0);
 
-	//LoadScene(currentScene.c_str());
+	std::string s = ASSETS_SCENES_PATH + currentScene + JSON_EXTENSION;
+	LoadScene(s.c_str());
 
 	//LoadScene("Assets/Scenes/UITestScene.json");
 	//SaveScene("SceneAutosave");																			// Autosave just right after loading the scene.
@@ -290,14 +291,11 @@ bool M_Scene::LoadScene(const char* path)
 {
 	bool ret = true;
 
-	currentScene = path;
+	std::string sceneName;
 
-	std::string sceneName = path;
-	uint a = sceneName.find("/");
-	if ( a != std::string::npos)
-	{
-		currentScene = sceneName.substr(a);
-	}
+	App->fileSystem->SplitFilePath(path, nullptr, &sceneName);
+
+	currentScene = sceneName;
 
 	App->camera->SetMasterCameraAsCurrentCamera();
 
