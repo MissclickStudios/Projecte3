@@ -15,6 +15,7 @@
 
 bool Importer::Scripts::Import(const char* assetsPath, char* buffer, uint size, R_Script* rScript)
 {
+	//Needed to force the resource UID
 	std::map<std::string, uint32> forcedUIDs;
 	App->resourceManager->GetForcedUIDsFromMeta(rScript->GetAssetsPath(), forcedUIDs);
 
@@ -23,6 +24,7 @@ bool Importer::Scripts::Import(const char* assetsPath, char* buffer, uint size, 
 		rScript->ForceUID(forcedUIDs.begin()->second);
 		rScript->SetLibraryPathAndFile();
 	}
+
 	//Parse the header file to find the scripts in it
 	char* cursor = buffer;
 	char api[] = "SCRIPTS_API";
@@ -89,15 +91,15 @@ bool Importer::Scripts::Import(const char* assetsPath, char* buffer, uint size, 
 				LOG("[ERROR] Not imported scripts from file %s because it won't compile: check %s class/struct declaration/definition after \":\" ", assetsPath, scriptName.c_str());
 				return false;
 			}
-			if (std::string(cursor, 6) != "public")
+			if (strncmp("public", cursor, 6))
 			{
-				if (std::string(cursor, 9) == "protected")
+				if (!strncmp("protected", cursor, 9))
 				{
 					cursor += 9;
 					LOG("[WARNING] Script %s with protected inheritance type in file %s not allowed", scriptName.c_str(), assetsPath);
 					break;
 				}
-				if (std::string(cursor, 7) == "private")
+				if (!strncmp("private", cursor, 7))
 				{
 					cursor += 7;
 					LOG("[WARNING] Script %s with private inheritance type in file %s not allowed", scriptName.c_str(), assetsPath);
@@ -155,8 +157,6 @@ bool Importer::Scripts::Import(const char* assetsPath, char* buffer, uint size, 
 	if (rScript->dataStructures.empty()) 
 		LOG("[WARNING] No scripts found on file %s", assetsPath);
 
-	//TODO: Need to save the last modification????
-	rScript->lastTimeMod = App->fileSystem->GetLastModTime(assetsPath);
 	return true;
 }
 
@@ -212,7 +212,7 @@ bool Importer::Scripts::Load(const char* buffer, R_Script* rScript)
 		LOG("%s! Error: Given buffer to load Script was nullptr.");
 		return false;
 	}
-	rScript->lastTimeMod = App->fileSystem->GetLastModTime(rScript->GetAssetsPath());
+	//rScript->lastTimeMod = App->fileSystem->GetLastModTime(rScript->GetAssetsPath());
 	ParsonNode rootNode = ParsonNode(buffer);
 	if (rootNode.GetBool("HasData"))
 	{

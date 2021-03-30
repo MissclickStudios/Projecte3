@@ -20,16 +20,3 @@ SCRIPTS_FUNCTION ola* Createola() {
 	ola* script = new ola();
 	return script;
 }
-
-class SCRIPTS_API f : public Script {
-public:
-	f() {}
-	~f() {}
-	void Update() override { LOG("f"); LOG("el meta !!!!!!!!!! f"); }
-	int firstVariable = 6;
-};
-
-SCRIPTS_FUNCTION f* Createf() {
-	f* script = new f();
-	return script;
-}

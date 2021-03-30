@@ -1491,7 +1491,7 @@ void E_Inspector::DrawScriptComponent(C_Script* cScript)
 		return;
 	}
 
-	if (ImGui::CollapsingHeader(cScript->GetDataName().c_str(), &show, ImGuiTreeNodeFlags_DefaultOpen))
+	if (ImGui::CollapsingHeader((cScript->GetDataName() + " (Script)").c_str(), &show, ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		//TODO: Show inspector variables
 		ImGui::Text("Name %s", cScript->GetDataName().c_str());
