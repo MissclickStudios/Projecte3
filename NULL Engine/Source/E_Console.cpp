@@ -46,7 +46,6 @@ bool E_Console::Draw(ImGuiIO& io)
 
 	ConsoleMenuBar();													// Constructs the menu bar of the Console panel. It has an Options menu that allows to Clear or Close the console.
 	ConsoleOutput();													// Prints all the logs in the console and formats them according to their type ([ERROR], [WARNING]...)
-	ConsoleScrollToBottom();											// If a new log has been added, the console will be automatically scrolled to the bottommost position.
 
 	ImGui::End();
 
@@ -175,7 +174,7 @@ void E_Console::ConsoleOutput()
 	}
 
 	ImGui::PopStyleVar();
-
+	ConsoleScrollToBottom();
 	ImGui::EndChild();
 }
 
@@ -183,7 +182,7 @@ void E_Console::ConsoleScrollToBottom()
 {
 	if (scrollToBottom)
 	{
-		ImGui::SetScrollHereY(1.0f);											// Sets the scroll position to the given one. From 0.0f to 1.0f (From above first item to below last item).
+		ImGui::SetScrollHere(1.f);											// Sets the scroll position to the given one. From 0.0f to 1.0f (From above first item to below last item).
 
 		scrollToBottom = false;
 	}
