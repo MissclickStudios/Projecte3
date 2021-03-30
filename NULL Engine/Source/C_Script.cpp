@@ -83,16 +83,19 @@ bool C_Script::LoadState(ParsonNode& root)
 
 	if (App->resourceManager->AllocateResource(root.GetNumber("ResourceUID"), root.GetString("AssetsPath"))) 
 	{
-
+		bool found = false;
 		resource = (R_Script*)App->resourceManager->RequestResource(root.GetNumber("ResourceUID"));
 		for (int i = 0; i < resource->dataStructures.size(); ++i) 
 		{
 			if (dataName.data() == resource->dataStructures[i].first) 
 			{
 				LoadData(dataName.data(), resource->dataStructures[i].second);
+				found = true;
 				break;
 			}
 		}
+		if (!found)
+			return false;
 		/*if (root.GetBool("HasInspector"))
 		{
 			ParsonArray variablesToLoad = root.GetArray("InspectorVariables");
@@ -106,7 +109,7 @@ bool C_Script::LoadState(ParsonNode& root)
 	}
 	else 
 	{
-		delete this;
+		return false;
 	}
 	return true;
 }
@@ -210,6 +213,114 @@ void C_Script::OnEnable()
 		}
 #else
 		((Script*)scriptData)->OnEnable();
+#endif // !GAMEBUILD
+	}
+}
+
+void C_Script::OnCollisionEnter()
+{
+	if (engineScript && scriptData != nullptr) {
+#ifndef GAMEBUILD
+		try {
+			Script* script = (Script*)scriptData;
+			script->OnCollisionEnter();
+		}
+		catch (...)
+		{
+			LOG("CODE ERROR IN THE ONDISABLE OF THE SCRIPT: %s", dataName.data());
+		}
+#else
+		((Script*)scriptData)->OnCollisionEnter();
+#endif // !GAMEBUILD
+	}
+}
+
+void C_Script::OnCollisionRepeat()
+{
+	if (engineScript && scriptData != nullptr) {
+#ifndef GAMEBUILD
+		try {
+			Script* script = (Script*)scriptData;
+			script->OnCollisionRepeat();
+		}
+		catch (...)
+		{
+			LOG("CODE ERROR IN THE ONDISABLE OF THE SCRIPT: %s", dataName.data());
+		}
+#else
+		((Script*)scriptData)->OnCollisionRepeat();
+#endif // !GAMEBUILD
+	}
+}
+
+void C_Script::OnCollisionExit()
+{
+	if (engineScript && scriptData != nullptr) {
+#ifndef GAMEBUILD
+		try {
+			Script* script = (Script*)scriptData;
+			script->OnCollisionExit();
+		}
+		catch (...)
+		{
+			LOG("CODE ERROR IN THE ONDISABLE OF THE SCRIPT: %s", dataName.data());
+		}
+#else
+		((Script*)scriptData)->OnCollisionExit();
+#endif // !GAMEBUILD
+	}
+}
+
+void C_Script::OnTriggerEnter()
+{
+	if (engineScript && scriptData != nullptr) {
+#ifndef GAMEBUILD
+		try {
+			Script* script = (Script*)scriptData;
+			script->OnTriggerEnter();
+		}
+		catch (...)
+		{
+			LOG("CODE ERROR IN THE ONDISABLE OF THE SCRIPT: %s", dataName.data());
+		}
+#else
+		((Script*)scriptData)->OnTriggerEnter();
+#endif // !GAMEBUILD
+	}
+}
+
+void C_Script::OnTriggerRepeat()
+{
+	if (engineScript && scriptData != nullptr) {
+#ifndef GAMEBUILD
+		try {
+			Script* script = (Script*)scriptData;
+			script->OnTriggerRepeat();
+		}
+		catch (...)
+		{
+			LOG("CODE ERROR IN THE ONDISABLE OF THE SCRIPT: %s", dataName.data());
+		}
+#else
+		((Script*)scriptData)->OnTriggerRepeat();
+#endif // !GAMEBUILD
+	}
+}
+
+void C_Script::OnTriggerExit()
+{
+	if (engineScript && scriptData != nullptr) {
+#ifndef GAMEBUILD
+		try {
+			Script* script = (Script*)scriptData;
+			script->OnTriggerExit();
+		}
+		catch (...)
+		{
+			LOG("CODE ERROR IN THE ONDISABLE OF THE SCRIPT: %s", dataName.data());
+		}
+#else
+		((Script*)scriptData)->OnTriggerExit();
 #endif // !GAMEBUILD
 	}
 }
