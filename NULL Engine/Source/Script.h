@@ -34,6 +34,13 @@ public:
 	bool IsScriptEnabled() const;
 	void SetScriptEnable(const bool& enable);
 
+	virtual void OnCollisionEnter() {}
+	virtual void OnCollisionRepeat() {}
+	virtual void OnCollisionExit() {}
+	virtual void OnTriggerEnter() {}
+	virtual void OnTriggerRepeat() {}
+	virtual void OnTriggerExit() {}
+
 public:
 	GameObject* gameObject = nullptr;
 	C_Transform* transform = nullptr;

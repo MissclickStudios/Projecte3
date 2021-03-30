@@ -31,6 +31,14 @@ public:
 	void OnDisable(); 
 	void OnEnable();
 
+	//Physics callbacks
+	void OnCollisionEnter();
+	void OnCollisionRepeat();
+	void OnCollisionExit();
+	void OnTriggerEnter();
+	void OnTriggerRepeat();
+	void OnTriggerExit();
+
 	bool HasData() const;
 
 	static inline ComponentType GetType() { return ComponentType::SCRIPT; }			// This is needed to be able to use templates for functions such as GetComponent<>();
