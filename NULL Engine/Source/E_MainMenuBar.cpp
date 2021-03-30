@@ -67,7 +67,7 @@ bool E_MainMenuBar::FileMainMenuItem()
 
 		if (ImGui::MenuItem("Save", "Ctrl+S"))
 		{
-			EngineApp->scene->SaveScene();
+			EngineApp->scene->SaveScene(App->scene->GetCurrentScene());
 		}
 
 		ImGui::Separator();
