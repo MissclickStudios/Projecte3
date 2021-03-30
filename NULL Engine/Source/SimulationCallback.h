@@ -3,6 +3,8 @@
 
 #include "PhysX_3.4/Include/PxPhysicsAPI.h"
 
+class GameObject;
+
 class SimulationCallback : public physx::PxSimulationEventCallback
 {
 public:

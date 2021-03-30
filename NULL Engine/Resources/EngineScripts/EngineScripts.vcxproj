@@ -238,12 +238,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\Assets\Scripts\Bullet.h" />
+    <ClInclude Include="..\Assets\Scripts\CameraMovement.h" />
     <ClInclude Include="..\Assets\Scripts\FirstScript.h" />
+    <ClInclude Include="..\Assets\Scripts\Gate.h" />
+    <ClInclude Include="..\Assets\Scripts\Prop.h" />
     <ClInclude Include="..\Assets\Scripts\SecondScript.h" />
     <ClInclude Include="Scripts\Headers\ScriptMacros.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Scripts\Cpps\Bullet.cpp" />
+    <ClCompile Include="Scripts\Cpps\CameraMovement.cpp" />
     <ClCompile Include="Scripts\Cpps\FirstScript.cpp" />
+    <ClCompile Include="Scripts\Cpps\Gate.cpp" />
+    <ClCompile Include="Scripts\Cpps\Prop.cpp" />
     <ClCompile Include="Scripts\Cpps\SecondScript.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
