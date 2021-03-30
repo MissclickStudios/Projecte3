@@ -44,7 +44,7 @@ public:
 
 public:																														// --- GAME OBJECTS METHODS ---
 	bool			SaveScene							(const char* sceneName = nullptr) const;							// If no name is given the scene_root node's name will be used.
-	bool			LoadScene							(const char* path);													// 
+	bool			LoadScene							(const char* path);													// For now asks for full path
 
 	void			LoadResourceIntoScene				(Resource* resource);
 
@@ -67,6 +67,7 @@ public:																														// --- MASTER ROOT & SCENE ROOT METHODS ---
 	void			DeleteMasterRoot					();																	// 
 	GameObject*		GetMasterRoot						() const;															// 
 
+	const char*		GetCurrentScene()const;
 	void			CreateSceneRoot						(const char* sceneName);											//
 	GameObject*		GetSceneRoot						() const;															//
 	void			SetSceneRoot						(GameObject* gameObject);											//
@@ -77,6 +78,7 @@ public:																														// --- MASTER ROOT & SCENE ROOT METHODS ---
 	void			SetCullingCamera					(C_Camera* cullingCamera);
 	bool			GameObjectIsInsideCullingCamera		(GameObject* gameObject);
 	GameObject*		GetGameObjectByUID					(uint32 uid);
+	GameObject*		GetGameObjectByName(const char* name);
 public:																														// --- SELECTED GAME OBJECT METHODS ---
 	GameObject*		GetSelectedGameObject				() const;															// 
 	void			SetSelectedGameObject				(GameObject* gameObject);											// 
@@ -110,6 +112,8 @@ private:
 	std::vector<Primitive*>			primitives;
 
 	LevelGenerator					level;
+
+	std::string currentScene;
 
 public:
 	bool nextScene = false;

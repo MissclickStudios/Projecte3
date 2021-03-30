@@ -58,6 +58,7 @@ M_Scene::~M_Scene()
 
 bool M_Scene::Init(ParsonNode& config)
 {
+	currentScene = config.GetString("currentScene");
 	return true;
 }
 
@@ -84,7 +85,10 @@ bool M_Scene::Start()
 	level.AddFixedRoom("Start", 1); 
 	level.AddFixedRoom("Boss", 15);
 	
-	level.GenerateRoom(0);
+	//if(App->gameState == GameState::PLAY)
+		level.GenerateRoom(0);
+
+	//LoadScene(currentScene.c_str());
 
 	//LoadScene("Assets/Scenes/UITestScene.json");
 	//SaveScene("SceneAutosave");																			// Autosave just right after loading the scene.
@@ -205,7 +209,7 @@ bool M_Scene::SaveConfiguration(ParsonNode& root) const
 {
 	bool ret = true;
 
-	//SaveScene();
+	root.SetString("currentScene", currentScene.c_str());
 
 	return ret;
 }
@@ -285,6 +289,15 @@ bool M_Scene::SaveScene(const char* sceneName) const
 bool M_Scene::LoadScene(const char* path)
 {
 	bool ret = true;
+
+	currentScene = path;
+
+	std::string sceneName = path;
+	uint a = sceneName.find("/");
+	if ( a != std::string::npos)
+	{
+		currentScene = sceneName.substr(a);
+	}
 
 	App->camera->SetMasterCameraAsCurrentCamera();
 
@@ -782,6 +795,11 @@ GameObject* M_Scene::GetMasterRoot() const
 	return masterRoot;
 }
 
+const char* M_Scene::GetCurrentScene() const
+{
+	return currentScene.c_str();
+}
+
 void M_Scene::CreateSceneRoot(const char* sceneName)
 {
 	if (masterRoot == nullptr)
@@ -868,6 +886,18 @@ GameObject* M_Scene::GetGameObjectByUID(uint32 uid)
 			return (*cit);
 	}
 	return nullptr;
+}
+
+GameObject* M_Scene::GetGameObjectByName(const char* name)
+{
+	for (std::vector<GameObject*>::const_iterator cit = gameObjects.cbegin(); cit != gameObjects.cend(); ++cit)
+	{
+		if (strcmp((*cit)->GetName(),name) == 0)
+			return (*cit);
+	}
+
+	return nullptr;
+
 }
 
 GameObject* M_Scene::GetSelectedGameObject() const
