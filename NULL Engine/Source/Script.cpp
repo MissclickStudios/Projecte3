@@ -9,11 +9,12 @@ void Script::SetScriptEnable(const bool& enable)
 {
 	if (enable != *enabled) {
 		*enabled = enable;
-		if (enable) {
+
+		if (enable) 
 			OnEnable();
-		}
-		else {
+
+		else
 			OnDisable();
-		}
+		
 	}
 }

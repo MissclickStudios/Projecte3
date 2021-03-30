@@ -5,6 +5,7 @@
 #include "Dependencies/MathGeoLib/include/Math/float2.h"
 #include "Dependencies/MathGeoLib/include/Math/float3.h"
 #include "Dependencies/MathGeoLib/include/Math/float4.h"
+#include "Macros.h"
 
 class ParsonArray;																		// To avoid having to forward-declare this, put Configuration_Array before Configuration. 
 
@@ -19,7 +20,7 @@ namespace math
 
 typedef unsigned int uint;
 
-class ParsonNode
+class NULL_API ParsonNode
 {
 public:
 	ParsonNode();
@@ -64,7 +65,7 @@ private:
 	JSON_Object*rootNode;																
 };
 
-class ParsonArray
+class NULL_API ParsonArray
 {
 public:
 	ParsonArray();

@@ -161,21 +161,6 @@ uint32 M_ResourceManager::ImportFile(const char* assetsPath)
 	{
 		return 0;
 	}
-	
-	std::vector<std::string> directories;
-	std::vector<std::string> assetFiles;
-	std::vector<std::string> metaFiles;
-	std::map<std::string, std::string> filePairs;
-
-	//TODO: We are 2 discover files when we can do just 1 run
-	//App->fileSystem->DiscoverAllFiles(assetsPath, assetFiles, directories, DOTLESS_META_EXTENSION);				// Directories (folders) will be ignored for now.
-	//App->fileSystem->GetAllFilesWithExtension(assetsPath, DOTLESS_META_EXTENSION, metaFiles);
-	//
-	//FindFilesToImport(assetFiles, metaFiles, filePairs, filesToImport);											// Always call in this order!
-	//FindFilesToUpdate(filePairs, filesToUpdate);																// At the very least FindFilesToImport() has to be the first to be called
-	//FindFilesToDelete(metaFiles, filePairs, filesToDelete);														// as it is the one to fill file_pairs with asset and meta files!
-
-	LoadValidFilesIntoLibrary(filePairs);																		// Will emplace all valid files' UID & library path into the library map.
 
 	assetsPath			= GetValidPath(assetsPath);
 	bool metaIsValid	= MetaFileIsValid(assetsPath);
@@ -251,7 +236,7 @@ uint M_ResourceManager::SaveResourceToLibrary(Resource* resource)
 		return 0;
 	}
 
-	if (ResourceHasMetaType(resource) && !resource->hasForcedUID)
+	if (ResourceHasMetaType(resource) )//&& !resource->hasForcedUID)
 	{
 		SaveMetaFile(resource);
 	}
@@ -992,7 +977,7 @@ void M_ResourceManager::FindFilesToUpdate(const std::map<std::string, std::strin
 		{
 			LOG("[WARNING] Resource Manager: File Modification Time discrepancy! File: { %s } ModTimes: [%llu] :: [%llu]", item->first.c_str(), assetModTime, metaModTime);
 			
-			//filesToUpdate.push_back(item->first);														// REVISE THIS LATER. MAYBE THE PROBLEM IS A DEPRECATED METHOD IN PHYSFS?.
+			filesToUpdate.push_back(item->first);														// REVISE THIS LATER. MAYBE THE PROBLEM IS A DEPRECATED METHOD IN PHYSFS?.
 		}
 	}
 }
@@ -1802,4 +1787,9 @@ void M_ResourceManager::GetAllScripts(std::map<std::string, std::string>& script
 			App->resourceManager->FreeResource(tempScript->GetUID());
 		}
 	}
+}
+
+void M_ResourceManager::ReloadAllScripts()
+{
+	RefreshDirectoryFiles(ASSETS_SCRIPTS_PATH);
 }

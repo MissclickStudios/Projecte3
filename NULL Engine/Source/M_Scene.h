@@ -76,7 +76,7 @@ public:																														// --- MASTER ROOT & SCENE ROOT METHODS ---
 	C_Camera*		GetCullingCamera					() const;
 	void			SetCullingCamera					(C_Camera* cullingCamera);
 	bool			GameObjectIsInsideCullingCamera		(GameObject* gameObject);
-
+	GameObject*		GetGameObjectByUID					(uint32 uid);
 public:																														// --- SELECTED GAME OBJECT METHODS ---
 	GameObject*		GetSelectedGameObject				() const;															// 
 	void			SetSelectedGameObject				(GameObject* gameObject);											// 

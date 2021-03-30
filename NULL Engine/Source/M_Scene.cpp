@@ -860,6 +860,16 @@ bool M_Scene::GameObjectIsInsideCullingCamera(GameObject* gameObject)
 	return intersects;
 }
 
+GameObject* M_Scene::GetGameObjectByUID(uint32 uid)
+{
+	for (std::vector<GameObject*>::const_iterator cit = gameObjects.cbegin(); cit != gameObjects.cend(); ++cit)
+	{
+		if ((*cit)->GetUID() == uid)
+			return (*cit);
+	}
+	return nullptr;
+}
+
 GameObject* M_Scene::GetSelectedGameObject() const
 {
 	return selectedGameObject;

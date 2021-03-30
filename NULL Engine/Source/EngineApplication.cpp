@@ -11,7 +11,7 @@
 #include "M_Audio.h"
 #include "M_Physics.h"
 #include "M_UISystem.h"
-#include "M_ScriptManager.h"
+#include "M_EngineScriptManager.h"
 #include "M_Editor.h"
 
 #include "EngineMain.h"
@@ -30,6 +30,7 @@ EngineApplication::EngineApplication()
 	EngineApp = this;
 
 	editor = new M_Editor();
+	scriptManager = new M_EngineScriptManager();
 
 	// Main Modules
 	AddModule(window);

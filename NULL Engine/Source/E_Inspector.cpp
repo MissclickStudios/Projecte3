@@ -16,7 +16,7 @@
 #include "M_ResourceManager.h"
 #include "M_UISystem.h"
 #include "M_Scene.h"
-#include "M_ScriptManager.h"
+#include "M_EngineScriptManager.h"
 
 #include "GameObject.h"
 #include "Component.h"
@@ -1513,7 +1513,7 @@ void E_Inspector::DrawScriptComponent(C_Script* cScript)
 	{
 		if (ImGui::CollapsingHeader("Script", &show, ImGuiTreeNodeFlags_DefaultOpen))
 		{
-			const std::map<std::string, std::string> scripts = EngineApp->scriptManager->GetAviableScripts();
+			const std::map<std::string, std::string> scripts = ((M_EngineScriptManager*)EngineApp->scriptManager)->GetAviableScripts();
 			
 			std::string select;
 			if(scripts.size() != 0)
@@ -1547,7 +1547,7 @@ void E_Inspector::DrawScriptComponent(C_Script* cScript)
 		return;
 	}
 
-	if (ImGui::CollapsingHeader(cScript->GetDataName().c_str(), &show, ImGuiTreeNodeFlags_DefaultOpen))
+	if (ImGui::CollapsingHeader((cScript->GetDataName() + " (Script)").c_str(), &show, ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		//TODO: Show inspector variables
 		ImGui::Text("Name %s", cScript->GetDataName().c_str());

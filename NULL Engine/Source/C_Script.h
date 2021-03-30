@@ -27,7 +27,8 @@ public:
 	//To get the name of the variable for the inspector when finished with the macro expansion
 	static std::string GetVariableName(const char* ptrName);
 
-	//Used mainly on the inspector
+	//Used mainly on the inspector or called by a script
+	//void SetIsActive(bool setTo)override; //-> TODO: Here it might make calls to OnEnable and OnDisable beeing on engine mode???!!! Comented for now
 	void OnDisable(); 
 	void OnEnable();
 
@@ -40,7 +41,7 @@ private:
 	//std::vector<InspactorData> inspectorData;
 	void* scriptData = nullptr;
 	bool engineScript = false;
-	std::string dataName;
+	std::string dataName; 
 };
 
 #endif // !__C_SCRIPT_H__
