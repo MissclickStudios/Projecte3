@@ -29,7 +29,7 @@ C_UI_Button::C_UI_Button(GameObject* owner, Rect2D rect) : Component(owner, Comp
 	}
 	App->uiSystem->activeButtons.push_back(owner);
 
-	owner->CreateComponent(ComponentType::MATERIAL);
+	owner->CreateComponent(ComponentType::MATERIAL);// Temp: this is just so buttons have colors when created
 }
 
 C_UI_Button::~C_UI_Button()
@@ -135,12 +135,42 @@ bool C_UI_Button::SaveState(ParsonNode& root) const
 {
 	bool ret = true;
 
+	root.SetNumber("Type", (uint)GetType());
+
+	ParsonNode button = root.SetNode("Button");
+
+	button.SetNumber("X", GetRect().x);
+	button.SetNumber("Y", GetRect().y);
+	button.SetNumber("W", GetRect().w);
+	button.SetNumber("H", GetRect().h);
+
+	if (state == UIButtonState::HOVERED || state == UIButtonState::PRESSED)
+		button.SetBool("IsHovered", true);
+	else
+		button.SetBool("IsHovered", false);
+
 	return ret;
 }
 
 bool C_UI_Button::LoadState(ParsonNode& root)
 {
 	bool ret = true;
+
+	ParsonNode button = root.GetNode("Button");
+
+	Rect2D r;
+
+	r.x = button.GetNumber("X");
+	r.y = button.GetNumber("Y");
+	r.w = button.GetNumber("W");
+	r.h = button.GetNumber("H");
+
+	SetRect(r);
+
+	if (button.GetBool("IsHovered"))
+		state = UIButtonState::HOVERED;
+	else
+		state = UIButtonState::IDLE;
 
 	return ret;
 }
