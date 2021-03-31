@@ -41,8 +41,8 @@ public:
 	Quat		GetQuat(const char* name);
 	const char*	GetString(const char* name) const;						
 	bool		GetBool	(const char* name) const;						
-	ParsonArray	GetArray(const char* name) const;						
-	ParsonNode	GetNode	(const char* name) const;						
+	ParsonArray	GetArray(const char* name, bool logErrors = true) const;						
+	ParsonNode	GetNode	(const char* name, bool logErrors = true) const;						
 
 	void		SetInteger(const char* name, int number);
 	void		SetNumber(const char* name, double number);	

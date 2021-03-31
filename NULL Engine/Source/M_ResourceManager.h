@@ -47,6 +47,7 @@ public:																								// --- RESOURCE MANAGER API ---
 
 	// --- META FILE METHODS
 	ResourceType	GetTypeFromAssetsExtension		(const char* assetsPath);						// Returns the type of the resource related with the given Asset.
+	uint32			GetForcedUIDFromMeta			(const char* assetsPath);
 	bool			GetForcedUIDsFromMeta			(const char* assetsPath, std::map<std::string, uint32>& forcedUIDs);			// TMP. See if it can be done another way.
 																																	// Gets the UIDs stored in a .meta and assets path.
 	// --- RESOURCE METHODS
@@ -60,26 +61,24 @@ public:																								// --- RESOURCE MANAGER API ---
 	bool			DeleteResource					(uint32 UID);									// Completely erases a resource, both from memory and from the library.
 	bool			DeleteResource					(Resource* resourceToDelete);					// Same as the above but directly passing the resource as the argument.
 	
-	void			GetResources					(std::map<uint32, Resource*>& resources) const;	// Returns a map filled with all the resources currently loaded onto memory.
-	const std::map<uint32, Resource*>* GetResources	() const;
+	const std::map<uint32, Resource*>* GetResources	() const;										// Returns a pointer to the resources map.
 
 	R_Shader*		GetShader						(const char* name);								//Look for a shader in the library and load and return it
 	void			GetAllShaders					(std::vector<R_Shader*>& shaders);				//Retrieve all the shaders in the library
 
-	void		GetAllScripts(std::map<std::string, std::string>& scripts);
-	void		ReloadAllScripts();																	//Called when hot reloading the scripts
-	
 	void			GetAllTextures					(std::vector<R_Texture*>& textures);			//Retrieve all the shaders in the library
+	
+	void			GetAllScripts					(std::map<std::string, std::string>& scripts);
+	void			ReloadAllScripts				();												//Called when hot reloading the scripts
+	
 
 	// --- PREFAB METHODS
-	void CreatePrefab(GameObject* gameObject);
+	void			CreatePrefab					(GameObject* gameObject);
+	void			UpdatePrefab					(GameObject* gameObject);
 
-	void UpdatePrefab(GameObject* gameObject);
-
-	void SavePrefab(GameObject* gameObject, uint _prefabId);
-	void LoadPrefab(uint _prefabId);
-
-	void SavePrefabObject(GameObject* gameObject, ParsonNode* node);
+	void			SavePrefab						(GameObject* gameObject, uint _prefabId);
+	void			SavePrefabObject				(GameObject* gameObject, ParsonNode* node);
+	void			LoadPrefab						(uint _prefabId);
 	
 private:																															// --- ASSETS MONITORING METHODS ---
 	void			RefreshDirectoryFiles			(const char* directory);
@@ -107,18 +106,15 @@ private:																															// --- ASSETS MONITORING METHODS ---
 	bool			LoadMetaLibraryPairsIntoLibrary				(const char* assetsPath);
 	bool			GetLibraryPairsFromMeta						(const char* assetsPath, std::map<uint32, std::string>& pairs);
 
-	uint64			GetAssetFileModTimeFromMeta		(const char* assetsPath);
-
-	void FindPrefabs(); //Finds all prefabs in Assets/Prefabs
+	uint64			GetAssetFileModTimeFromMeta					(const char* assetsPath);
+	
+	void			FindPrefabs						();																//Finds all prefabs in Assets/Prefabs
 
 private:																											// --- IMPORT FILE METHODS ---
 	uint32			ImportFromAssets				(const char* assetsPath);										// 
 
 	const char*		GetValidPath					(const char* assetsPath);										// 
 	ResourceType	GetTypeFromLibraryExtension		(const char* libraryPath);										// 
-
-	void			SetResourceAssetsPathAndFile	(const char* assetsPath, Resource* resource);					// 
-	void			SetResourceLibraryPathAndFile	(Resource* resource);											// 
 
 private:																											// --- META FILE METHODS ---
 	bool			SaveMetaFile					(Resource* resource) const;										//

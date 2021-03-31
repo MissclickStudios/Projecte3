@@ -53,13 +53,10 @@ bool Importer::ImportMesh(const char* buffer, R_Mesh* rMesh)
 
 bool Importer::ImportTexture(const char* buffer, uint size, R_Texture* rTexture)
 {
-	std::map<std::string, uint32> forcedUIDs;
-	App->resourceManager->GetForcedUIDsFromMeta(rTexture->GetAssetsPath(), forcedUIDs);
-
-	if (!forcedUIDs.empty())
+	uint32 forcedUID = App->resourceManager->GetForcedUIDFromMeta(rTexture->GetAssetsPath());
+	if (forcedUID != 0)
 	{
-		rTexture->ForceUID(forcedUIDs.begin()->second);
-		rTexture->SetLibraryPathAndFile();
+		rTexture->ForceUID(forcedUID);
 	}
 	
 	bool success = Importer::Textures::Import(buffer, size, rTexture);

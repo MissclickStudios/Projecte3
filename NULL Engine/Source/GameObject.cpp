@@ -236,7 +236,9 @@ bool GameObject::LoadState(ParsonNode& root)
 					App->camera->SetCurrentCamera((C_Camera*)component);
 
 				if (component->LoadState(componentNode))
+				{
 					components.push_back(component);
+				}
 				else 
 				{
 					component->CleanUp();

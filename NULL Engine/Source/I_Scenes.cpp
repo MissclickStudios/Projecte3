@@ -370,7 +370,6 @@ void Importer::Scenes::Utilities::CheckAndApplyForcedUID(Resource* resource)
 	if (item != forcedUIDs.end())
 	{
 		resource->ForceUID(item->second);
-		resource->SetLibraryPathAndFile();
 	}
 }
 

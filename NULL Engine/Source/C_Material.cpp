@@ -106,13 +106,13 @@ bool C_Material::LoadState(ParsonNode& root)
 {
 	bool ret = true;
 
-	rMaterial = nullptr;
-	rTexture = nullptr;
-	rShader = nullptr;
+	rMaterial	= nullptr;
+	rTexture	= nullptr;
+	rShader		= nullptr;
 
-	ParsonNode materialNode	= root.GetNode("Material");
-	ParsonNode textureNode = root.GetNode("Texture");
-	ParsonNode shaderNode = root.GetNode("Shader");
+	ParsonNode materialNode	= root.GetNode("Material", false);
+	ParsonNode textureNode	= root.GetNode("Texture", false);
+	ParsonNode shaderNode	= root.GetNode("Shader", false);
 	
 	if (materialNode.NodeIsValid())
 	{
@@ -124,8 +124,12 @@ bool C_Material::LoadState(ParsonNode& root)
 
 		if (rMaterial == nullptr)
 		{
-			LOG("[ERROR] Loading Scene: Could not find Material %s with UID: %u! Try reimporting the model.", materialNode.GetString("File"), (uint32)materialNode.GetNumber("UID"));
+			LOG("[ERROR] Loading Scene: Could not find Material { %s } with UID: %u! Try reimporting the model.", materialNode.GetString("File"), (uint32)materialNode.GetNumber("UID"));
 		}
+	}
+	else
+	{
+		LOG("[WARNING] Loading Scene: Could not find any Material for { %s }! Check whether or not this is intended.", this->GetOwner()->GetName());
 	}
 
 	if (textureNode.NodeIsValid())
@@ -137,12 +141,12 @@ bool C_Material::LoadState(ParsonNode& root)
 
 		if (rTexture == nullptr)
 		{
-			LOG("[ERROR] Loading Scene: Could not find Texture %s with UID: %u! Try reimporting the model.", textureNode.GetString("File"), (uint32)textureNode.GetNumber("UID"));
+			LOG("[ERROR] Loading Scene: Could not find Texture { %s } with UID: %u! Try reimporting the model.", textureNode.GetString("File"), (uint32)textureNode.GetNumber("UID"));
 		}
 	}
 	else
 	{
-		LOG("[WARNING] Loading Scene: Could not find any Texture for %s! Check whether or not this is intended.", this->GetOwner()->GetName());
+		LOG("[WARNING] Loading Scene: Could not find any Texture for { %s }! Check whether or not this is intended.", this->GetOwner()->GetName());
 	}
 
 	if (shaderNode.NodeIsValid())
@@ -154,8 +158,12 @@ bool C_Material::LoadState(ParsonNode& root)
 
 		if (rShader == nullptr)
 		{
-			LOG("[ERROR] Loading Scene: Could not find Texture %s with UID: %u! Try reimporting the model.", shaderNode.GetString("File"), (uint32)shaderNode.GetNumber("UID"));
+			LOG("[ERROR] Loading Scene: Could not find Shader { %s } with UID: %u! Try reimporting the model.", shaderNode.GetString("File"), (uint32)shaderNode.GetNumber("UID"));
 		}
+	}
+	else
+	{
+		LOG("[WARNING] Loading Scene: Could not find any Shader for { %s }! Check whether or not this is intended.", this->GetOwner()->GetName());
 	}
 
 	return ret;

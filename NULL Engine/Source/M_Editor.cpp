@@ -506,13 +506,6 @@ void M_Editor::LoadResourceIntoSceneThroughEditor()
 	
 }
 
-void M_Editor::GetResourcesThroughEditor(std::map<uint32, Resource*>& resources) const
-{
-	//resources = EngineApp->resourceManager->GetResources();
-	//TODO: this function call from editor resources causes memleak
-	EngineApp->resourceManager->GetResources(resources);
-}
-
 const std::map<uint32, Resource*>* M_Editor::GetResourcesThroughEditor() const
 {
 	return EngineApp->resourceManager->GetResources();

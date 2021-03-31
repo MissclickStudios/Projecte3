@@ -203,7 +203,7 @@ bool ParsonNode::GetBool(const char* name) const
 	return false;
 }
 
-ParsonArray ParsonNode::GetArray(const char* name) const
+ParsonArray ParsonNode::GetArray(const char* name, bool logErrors) const
 {
 	if (NodeHasValueOfType(name, JSONArray))
 	{
@@ -211,15 +211,16 @@ ParsonArray ParsonNode::GetArray(const char* name) const
 	}
 	else
 	{
-		LOG("[ERROR] JSON Parser: %s did not have a JSON_Array variable!", name);
+		if (logErrors)
+			LOG("[ERROR] JSON Parser: %s did not have a JSON_Array variable!", name);
 	}
 
 	return ParsonArray();																		// If an empty config array is returned then check that json_array == nullptr and size == 0.
 }
 
-ParsonNode ParsonNode::GetNode(const char* name) const
+ParsonNode ParsonNode::GetNode(const char* name, bool logErrors) const
 {
-	if (!NodeHasValueOfType(name, JSONObject))
+	if (!NodeHasValueOfType(name, JSONObject) && logErrors)
 	{
 		LOG("[ERROR] JSON Parser: %s did not have a JSON_Object variable!", name);				// Just for display purposes.
 	}
