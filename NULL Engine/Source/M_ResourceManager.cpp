@@ -1474,6 +1474,22 @@ uint32 M_ResourceManager::ImportFromAssets(const char* assetsPath)
 	return resourceUid;
 }
 
+void M_ResourceManager::DragAndDrop(const char* path)
+{
+	//Check if file is valid with extension
+	std::string pathS, file,extension;
+	App->fileSystem->SplitFilePath(path, &pathS, &file,&extension);
+
+	std::string newPath = "Assets/";
+
+	std::string fullFile = newPath + file + "." + extension;
+
+	App->fileSystem->DuplicateFile(path, fullFile.c_str());
+
+	//Import
+	App->resourceManager->ImportFile(fullFile.c_str());
+}
+
 const char* M_ResourceManager::GetValidPath(const char* assetsPath)
 {
 	if (assetsPath == nullptr)

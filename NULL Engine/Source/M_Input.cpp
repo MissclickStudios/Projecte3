@@ -201,7 +201,8 @@ UpdateStatus M_Input::PreUpdate(float dt)
 		case SDL_DROPFILE:
 			if (event.drop.file != nullptr)
 			{
-				App->resourceManager->ImportFile(event.drop.file);
+				//App->resourceManager->ImportFile(event.drop.file);
+				App->resourceManager->DragAndDrop(event.drop.file);
 				//Importer::ImportFile(event.drop.file);
 			}
 			else
