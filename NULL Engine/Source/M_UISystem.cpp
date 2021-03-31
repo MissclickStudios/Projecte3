@@ -126,24 +126,22 @@ bool M_UISystem::CheckButtonStates()
 {
 	bool ret = false;
 
-	bool prev = false;
-	bool next = false;
-
-	if (App->input->GetKey(SDL_SCANCODE_G) == KeyState::KEY_UP)
+	if (App->input->GetKey(SDL_SCANCODE_G) == KeyState::KEY_DOWN || App->input->GetKey(SDL_SCANCODE_G) == KeyState::KEY_REPEAT)
 	{
-		hoveredButton->SetState(UIButtonState::HOVERED);
-		isPressed = false;
+		hoveredButton->OnPressed();
 	}
 
-	else if (App->input->GetKey(SDL_SCANCODE_G) == KeyState::KEY_DOWN || App->input->GetKey(SDL_SCANCODE_G) == KeyState::KEY_REPEAT)
+	else if (App->input->GetKey(SDL_SCANCODE_G) == KeyState::KEY_UP)
 	{
-		hoveredButton->SetState(UIButtonState::PRESSED);
-		isPressed = true;
+		hoveredButton->OnReleased(); /*(?)*/
 	}
 
 	if (activeButtons.size() > 1)
 	{
-		if (App->input->GetKey(SDL_SCANCODE_T) == KeyState::KEY_DOWN && !isPressed)
+		bool prev = false;
+		bool next = false;
+
+		if (App->input->GetKey(SDL_SCANCODE_T) == KeyState::KEY_DOWN && !hoveredButton->IsPressed())
 		{
 			for (std::vector<C_UI_Button*>::reverse_iterator buttonIt = activeButtons.rbegin(); buttonIt != activeButtons.rend(); buttonIt++)
 			{
@@ -166,7 +164,7 @@ bool M_UISystem::CheckButtonStates()
 				hoveredButton->SetState(UIButtonState::HOVERED);
 		}
 
-		if (App->input->GetKey(SDL_SCANCODE_B) == KeyState::KEY_DOWN && !isPressed)
+		if (App->input->GetKey(SDL_SCANCODE_B) == KeyState::KEY_DOWN && !hoveredButton->IsPressed())
 		{
 			for (std::vector<C_UI_Button*>::iterator buttonIt = activeButtons.begin(); buttonIt != activeButtons.end(); buttonIt++)
 			{

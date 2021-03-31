@@ -1203,7 +1203,7 @@ void E_Inspector::DrawCanvasComponent(C_Canvas* cCanvas)
 			float2 size = { cCanvas->GetRect().w, cCanvas->GetRect().h };
 			float2 pivot = { cCanvas->pivot.x, cCanvas->pivot.y };
 
-			if (ImGui::DragFloat2("Rect", (float*)&size, 0.05f, 0.0f, 0.0f, "%.3f", NULL))
+			if (ImGui::DragFloat2("Rect", (float*)&size, 0.005f, 0.0f, 0.0f, "%.3f", NULL))
 			{
 				if (size.x < 0)
 					size.x = 0;
@@ -1232,7 +1232,7 @@ void E_Inspector::DrawCanvasComponent(C_Canvas* cCanvas)
 			}
 
 			// --- PIVOT ---
-			if (ImGui::DragFloat2("Pivot", (float*)&pivot, 0.05f, 0.0f, 0.0f, "%.3f", NULL))
+			if (ImGui::DragFloat2("Pivot", (float*)&pivot, 0.005f, 0.0f, 0.0f, "%.3f", NULL))
 			{
 
 				if (pivot.x < cCanvas->GetPosition().x - cCanvas->GetSize().x / 2)
@@ -1393,7 +1393,7 @@ void E_Inspector::DrawUIImageComponent(C_UI_Image* image)
 
 		C_Canvas* canvas = image->GetOwner()->parent->GetComponent<C_Canvas>();
 
-		if (ImGui::DragFloat2("Image Size", (float*)&size, 0.05f, 0.0f, 0.0f, "%.3f", NULL))
+		if (ImGui::DragFloat2("Image Size", (float*)&size, 0.005f, 0.0f, 0.0f, "%.3f", NULL))
 		{
 			if (size.x < 0)
 				size.x = 0;
@@ -1404,7 +1404,7 @@ void E_Inspector::DrawUIImageComponent(C_UI_Image* image)
 			image->SetH(size.y);
 		}
 
-		if (ImGui::DragFloat2("Image Pos", (float*)&pos, 0.05f, 0.0f, 0.0f, "%.3f", NULL))
+		if (ImGui::DragFloat2("Image Pos", (float*)&pos, 0.005f, 0.0f, 0.0f, "%.3f", NULL))
 		{
 			if (pos.x - size.x / 2 < canvas->GetPosition().x - canvas->GetSize().x / 2)
 				pos.x = canvas->GetPosition().x - canvas->GetSize().x / 2 + size.x / 2;
@@ -1460,7 +1460,7 @@ void E_Inspector::DrawUIButtonComponent(C_UI_Button* button)
 
 		C_Canvas* canvas = button->GetOwner()->parent->GetComponent<C_Canvas>();
 
-		if (ImGui::DragFloat2("Button Size", (float*)&size, 0.05f, 0.0f, 0.0f, "%.3f", NULL))
+		if (ImGui::DragFloat2("Button Size", (float*)&size, 0.005f, 0.0f, 0.0f, "%.3f", NULL))
 		{
 			if (size.x < 0)
 				size.x = 0;
@@ -1471,7 +1471,7 @@ void E_Inspector::DrawUIButtonComponent(C_UI_Button* button)
 			button->SetH(size.y);
 		}
 
-		if (ImGui::DragFloat2("Button Pos", (float*)&pos, 0.05f, 0.0f, 0.0f, "%.3f", NULL))
+		if (ImGui::DragFloat2("Button Pos", (float*)&pos, 0.005f, 0.0f, 0.0f, "%.3f", NULL))
 		{
 			if (pos.x - size.x / 2 < canvas->GetPosition().x - canvas->GetSize().x / 2)
 				pos.x = canvas->GetPosition().x - canvas->GetSize().x / 2 + size.x / 2;

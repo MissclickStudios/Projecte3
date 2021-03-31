@@ -29,7 +29,7 @@ C_UI_Button::C_UI_Button(GameObject* owner, Rect2D rect) : Component(owner, Comp
 	}
 	App->uiSystem->activeButtons.push_back(this);
 
-	owner->CreateComponent(ComponentType::MATERIAL);// Temp: this is just so buttons have colors when created
+	//owner->CreateComponent(ComponentType::MATERIAL);// Temp: this is just so buttons have colors when created
 }
 
 C_UI_Button::~C_UI_Button()
@@ -130,6 +130,17 @@ void C_UI_Button::Draw3D()
 
 }
 
+void C_UI_Button::OnPressed()
+{
+	SetState(UIButtonState::PRESSED);
+	SetIsPressed(true);
+}
+
+void C_UI_Button::OnReleased()
+{
+	SetState(UIButtonState::HOVERED);
+	SetIsPressed(false);
+}
 
 bool C_UI_Button::SaveState(ParsonNode& root) const
 {
@@ -186,6 +197,10 @@ UIButtonState C_UI_Button::GetState() const
 	return state;
 }
 
+bool C_UI_Button::IsPressed() const
+{
+	return isPressed;
+}
 
 
 void C_UI_Button::SetRect(const Rect2D& rect)
@@ -196,6 +211,11 @@ void C_UI_Button::SetRect(const Rect2D& rect)
 void C_UI_Button::SetState(const UIButtonState& setTo)
 {
 	state = setTo;
+}
+
+void C_UI_Button::SetIsPressed(const bool& setTo)
+{
+	isPressed = setTo;
 }
 
 void C_UI_Button::SetX(const float x)

@@ -42,8 +42,6 @@ public:
 	std::vector<C_UI_Button*> activeButtons;
 	C_UI_Button* hoveredButton = nullptr;
 
-	bool isPressed = false;
-
 private:
 	C_UI_Button* buttonIterator = nullptr;
 };

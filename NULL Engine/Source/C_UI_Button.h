@@ -31,13 +31,18 @@ public:
 	void Draw2D();
 	void Draw3D();
 
+	void OnPressed();
+	void OnReleased();
+
 public:
 
 	Rect2D GetRect() const;
 	UIButtonState GetState() const;
+	bool IsPressed() const;
 
 	void SetRect(const Rect2D& rect);
 	void SetState(const UIButtonState& setTo);
+	void SetIsPressed(const bool& setTo);
 	void SetX(const float x);
 	void SetY(const float y);
 	void SetW(const float w);
@@ -47,6 +52,9 @@ private:
 
 	UIButtonState state = UIButtonState::IDLE;
 	Rect2D rect = { 0,0,0.3,0.05 };
+
+	bool isPressed = false;
+
 };
 
 #endif // !__C_UI_BUTTON_H__
