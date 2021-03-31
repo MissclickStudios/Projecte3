@@ -697,6 +697,7 @@ void E_Inspector::DrawCameraComponent(C_Camera* cCamera)
 
 void E_Inspector::DrawAnimatorComponent(C_Animator* cAnimator)								// TODO: Segment this Method in Multiple Smaller Methods.
 {
+	OPTICK_CATEGORY("Aniamtor Inspector", Optick::Category::Animation);
 	bool show = true;
 	if (ImGui::CollapsingHeader("Animator", &show, ImGuiTreeNodeFlags_DefaultOpen))
 	{

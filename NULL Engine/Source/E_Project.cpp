@@ -272,7 +272,7 @@ void E_Project::DrawDirectoriesTree(const PathNode& rootNode)
 		path			= pathNode.path;
 		directory		= pathNode.local_path;
 		treeNodeFlags	= (pathNode.isLastDirectory) ? ImGuiTreeNodeFlags_Leaf : ImGuiTreeNodeFlags_None;
-		if (ImGui::TreeNodeEx(path.c_str(), treeNodeFlags, "%s/", directory.c_str()))
+		if (ImGui::TreeNodeEx(path.c_str(), treeNodeFlags, "%s", directory.c_str()))
 		{
 			if (ImGui::IsItemClicked())
 			{

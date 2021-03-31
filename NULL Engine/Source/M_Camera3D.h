@@ -81,7 +81,7 @@ public:
 	float			movementSpeed;													// 
 	float			rotationSpeed;													// 
 	float			zoomSpeed;														// 
-
+	float			panSpeed = 7;
 public:
 	bool			drawLastRaycast;
 	LineSegment		lastRaycast;
