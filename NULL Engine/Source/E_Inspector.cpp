@@ -176,7 +176,7 @@ void E_Inspector::DrawGameObjectInfo(GameObject* selectedGameObject)
 	{
 		if (ImGui::Button("Create Prefab"))
 		{
-			
+		
 			App->resourceManager->CreatePrefab(selectedGameObject);
 			//App->resourceManager->RefreshProjectDirectories(); //Should only refresh prefabs
 		}
@@ -1374,45 +1374,6 @@ void E_Inspector::DrawParticleSystemComponent(C_ParticleSystem* cParticleSystem)
 			for (int i = 0; i < cParticleSystem->emitterInstances.size(); i++) //loop emitters
 			{
 				Emitter* emitter = cParticleSystem->emitterInstances[i]->emitter;
-				for (int i = 0; i < emitter->modules.size(); i++) //loop modules
-				{
-					ParticleModule* Module = emitter->modules[i];
-
-					switch (Module->type)
-					{
-					case (ParticleModule::Type::EmitterBase):
-					{
-					
-					}						
-					break;
-					case (ParticleModule::Type::EmitterSpawn):
-					{
-					
-					}
-					break;
-					case(ParticleModule::Type::ParticleColor):
-					{
-
-					}
-					break;
-					case(ParticleModule::Type::ParticleLifetime):
-					{
-
-					}
-					break;
-					case(ParticleModule::Type::ParticleMovement):
-					{
-
-					}
-					break;
-					case(ParticleModule::Type::None):
-					{	
-
-					}
-
-					}
-				}
-
 				if (ImGui::CollapsingHeader("Default Emitter", &show, ImGuiTreeNodeFlags_DefaultOpen))
 				{
 					bool preview = cParticleSystem->previewEnabled;
@@ -1420,6 +1381,97 @@ void E_Inspector::DrawParticleSystemComponent(C_ParticleSystem* cParticleSystem)
 					{
 						cParticleSystem->EnginePreview(preview);
 					}
+
+					for (int i = 0; i < emitter->modules.size(); i++) //loop modules
+					{
+						ParticleModule* module = emitter->modules[i];
+						switch (module->type)
+						{
+						case (ParticleModule::Type::EmitterBase):
+						{
+							if (ImGui::CollapsingHeader("Emitter Base", &show, ImGuiTreeNodeFlags_DefaultOpen))
+							{
+								EmitterBase* _module = (EmitterBase*)module;
+
+								float3 originPos = _module->origin;
+								float c[3] = { originPos.x, originPos.y, originPos.z };
+								if (ImGui::InputFloat3("OriginPosition", c, 4, ImGuiInputTextFlags_EnterReturnsTrue))
+									_module->origin = float3(c[0], c[1], c[2]);
+							}
+						}
+						break;
+						case (ParticleModule::Type::EmitterSpawn):
+						{
+							if (ImGui::CollapsingHeader("Emitter Spawn", &show, ImGuiTreeNodeFlags_DefaultOpen))
+							{
+								EmitterSpawn* _module = (EmitterSpawn*)module;
+
+								float ratio = _module->spawnRatio;
+								if (ImGui::InputFloat("SpawnRatio", &ratio, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
+									_module->spawnRatio = ratio;
+							}
+						}
+						break;
+
+						case(ParticleModule::Type::ParticleColor):
+						{
+							if (ImGui::CollapsingHeader("Particle Color", &show, ImGuiTreeNodeFlags_DefaultOpen))
+							{
+								ParticleColor* _module = (ParticleColor*)module;
+
+								float c[4] = { _module->initialColor.r, _module->initialColor.g, _module->initialColor.b, _module->initialColor.a };
+								if (ImGui::InputFloat4("InitialColor", c, 4, ImGuiInputTextFlags_EnterReturnsTrue))
+									_module->initialColor = Color(c[0], c[1], c[2], c[3]);
+							}
+						}
+						break;
+						case(ParticleModule::Type::ParticleLifetime):
+						{
+							if (ImGui::CollapsingHeader("Particle Lifetime", &show, ImGuiTreeNodeFlags_DefaultOpen))
+							{
+								ParticleLifetime* _module = (ParticleLifetime*)module;
+
+								float originLifetime = _module->initialLifetime;
+								if (ImGui::InputFloat("InitialLifetime", &originLifetime, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
+									_module->initialLifetime = originLifetime;
+							}
+						}
+						break;
+						case(ParticleModule::Type::ParticleMovement):
+						{
+							if (ImGui::CollapsingHeader("Particle Movement", &show, ImGuiTreeNodeFlags_DefaultOpen))
+							{
+								ParticleMovement* _module = (ParticleMovement*)module;
+
+								float intensity1 = _module->initialIntensity1;
+								if (ImGui::InputFloat("InitialIntensity_A", &intensity1, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
+									_module->initialIntensity1 = intensity1;
+
+								float intensity2 = _module->initialIntensity2;
+								if (ImGui::InputFloat("InitialIntensity_B", &intensity2, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
+									_module->initialIntensity2 = intensity2;
+
+								float3 direction1 = _module->initialDirection1;
+								float c[3] = { direction1.x, direction1.y, direction1.z };
+								if (ImGui::InputFloat3("InitialDirection_A", c, 4, ImGuiInputTextFlags_EnterReturnsTrue))
+									_module->initialDirection1 = float3(c[0], c[1], c[2]);
+
+								float3 direction2 = _module->initialDirection2;
+								float c2[3] = { direction2.x, direction2.y, direction2.z };
+								if (ImGui::InputFloat3("InitialDirection_B", c2, 4, ImGuiInputTextFlags_EnterReturnsTrue))
+									_module->initialDirection2 = float3(c2[0], c2[1], c2[2]);
+							}
+						}
+						break;
+						case(ParticleModule::Type::None):
+						{
+
+						}
+						}
+
+					}
+
+
 				}
 
 				ImGui::Separator();
