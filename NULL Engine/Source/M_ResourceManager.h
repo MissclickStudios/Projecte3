@@ -42,6 +42,8 @@ public:																								// --- RESOURCE MANAGER API ---
 	uint32			LoadFromLibrary					(const char* assetsPath);						// Loads a resource registered in the Library onto memory. Returns the resource's UID.
 	Resource*		GetResourceFromLibrary			(const char* assetsPath);						// Same as LoadFromLibrary() but it returns the resource instead of its UID.
 
+	void			DragAndDrop(const char* path);
+
 	void			RefreshProjectDirectories		();												// 
 	void			RefreshProjectDirectory			(const char* directoryToRefresh);				// 
 
@@ -109,10 +111,11 @@ private:																															// --- ASSETS MONITORING METHODS ---
 	uint64			GetAssetFileModTimeFromMeta					(const char* assetsPath);
 	
 	void			FindPrefabs						();																//Finds all prefabs in Assets/Prefabs
-
+	
 private:																											// --- IMPORT FILE METHODS ---
 	uint32			ImportFromAssets				(const char* assetsPath);										// 
 
+	
 	const char*		GetValidPath					(const char* assetsPath);										// 
 	ResourceType	GetTypeFromLibraryExtension		(const char* libraryPath);										// 
 
