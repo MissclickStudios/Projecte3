@@ -59,11 +59,23 @@ physx::PxFilterFlags customFilterShader(
 	physx::PxFilterObjectAttributes attributes1, physx::PxFilterData filterData1,
 	physx::PxPairFlags& pairFlags, const void* constantBlock, physx::PxU32 constantBlockSize)
 {
-	pairFlags = physx::PxPairFlag::eCONTACT_DEFAULT;
-	pairFlags |= physx::PxPairFlag::eNOTIFY_CONTACT_POINTS;
-	pairFlags |= physx::PxPairFlag::eNOTIFY_TOUCH_FOUND;
-	pairFlags |= physx::PxPairFlag::eNOTIFY_TOUCH_PERSISTS;
-	pairFlags |= physx::PxPairFlag::eNOTIFY_TOUCH_LOST;
+	bool contact = false;
+	int filter0 = App->physics->GetFilterID((std::string*)filterData0.word0);
+	int filter1 = App->physics->GetFilterID((std::string*)filterData1.word0);
+
+	if (filter0 == -1 || filter1 == -1)
+		contact = true;
+	else if (App->physics->GetInteractions()[filter0][filter1])
+		contact = true;
+
+	if (contact)
+	{
+		pairFlags = physx::PxPairFlag::eCONTACT_DEFAULT;
+		pairFlags |= physx::PxPairFlag::eNOTIFY_CONTACT_POINTS;
+		pairFlags |= physx::PxPairFlag::eNOTIFY_TOUCH_FOUND;
+		pairFlags |= physx::PxPairFlag::eNOTIFY_TOUCH_PERSISTS;
+		pairFlags |= physx::PxPairFlag::eNOTIFY_TOUCH_LOST;
+	}
 
 	return physx::PxFilterFlag::eDEFAULT;
 }
@@ -252,4 +264,12 @@ void M_Physics::DeleteActor(physx::PxActor* actor)
 
 	scene->removeActor(*actor);
 	actors.erase((physx::PxRigidActor*)actor);
+}
+
+const int M_Physics::GetFilterID(const std::string* const filter)
+{
+	for (uint i = 0; i < filters.size(); ++i)
+		if (filters[i] == *filter)
+			return i;
+	return -1;
 }

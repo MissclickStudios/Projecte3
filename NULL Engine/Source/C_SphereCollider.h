@@ -33,6 +33,8 @@ public:
 	const float		Radius() const { return radius; }
 	void			SetRadius(float r) { radius = r; ToUpdate(ColliderUpdateType::SHAPE); }
 
+	void UpdateFilter() { ToUpdate(ColliderUpdateType::STATE); }
+
 private:
 
 	void CreateCollider();

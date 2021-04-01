@@ -4,10 +4,12 @@
 #include "Log.h"
 #include "M_Physics.h"
 
-#include "C_RigidBody.h"
-
 #include "GameObject.h"
 #include "C_Transform.h"
+#include "C_RigidBody.h"
+#include "C_BoxCollider.h"
+#include "C_SphereCollider.h"
+#include "C_CapsuleCollider.h"
 
 #include "MathGeoLib/include/Math/Quat.h"
 
@@ -165,6 +167,27 @@ void C_RigidBody::StopInertia()
 	linearVel = { lVel.x, lVel.y, lVel.z };
 	physx::PxVec3 aVel = dynamicBody->getAngularVelocity();
 	angularVel = { aVel.x, aVel.y, aVel.z };
+}
+
+void C_RigidBody::ChangeFilter(const std::string& const filter)
+{
+	this->filter = filter;
+
+	for (uint i = 0; i < GetOwner()->components.size(); ++i)
+	{
+		switch (GetOwner()->components[i]->GetType())
+		{
+		case ComponentType::BOX_COLLIDER:
+			((C_BoxCollider*)GetOwner()->components[i])->UpdateFilter();
+			break;
+		case ComponentType::SPHERE_COLLIDER:
+			((C_SphereCollider*)GetOwner()->components[i])->UpdateFilter();
+			break;
+		case ComponentType::CAPSULE_COLLIDER:
+			((C_CapsuleCollider*)GetOwner()->components[i])->UpdateFilter();
+			break;
+		}
+	}
 }
 
 void C_RigidBody::MakeStatic()

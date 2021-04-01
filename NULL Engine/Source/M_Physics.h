@@ -43,6 +43,9 @@ public:
 	physx::PxMaterial* material = nullptr;
 	std::map<physx::PxRigidActor*, GameObject*> actors;
 
+	const int GetFilterID(const std::string* const filter);
+	const bool** const GetInteractions() const { return filterInteractions; }
+
 	bool simulating = false;
 
 private:
