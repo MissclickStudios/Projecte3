@@ -148,7 +148,6 @@ private:																													// --- BONE/CHANNEL UPDATE METHODS
 	void			UpdateDisplayBones						();
 	void			GenerateBoneSegments					(const GameObject* bone);
 	
-	//Transform		GetInterpolatedTransform				(double keyframe, const Channel& channel, const Transform& originalTransform) const;
 	Transform		GetInterpolatedTransform				(double keyframe, const Channel& channel, C_Transform* originalTransform) const;
 	const float3	GetInterpolatedPosition					(double keyframe, const Channel& channel) const;
 	const Quat		GetInterpolatedRotation					(double keyframe, const Channel& channel) const;
@@ -156,10 +155,10 @@ private:																													// --- BONE/CHANNEL UPDATE METHODS
 
 	Transform		GetPoseToPoseTransform					(uint tick, const Channel& channel, const Transform& originalTransform) const;
 
-	Transform		GetBlendedTransform						(double blendingKeyframe, const Channel& blendingChannel, const Transform& originalTransform) const;
-	const float3	GetBlendedPosition						(double blendingKeyframe, const Channel& blendingChannel, const float3& originalPosition) const;
-	const Quat		GetBlendedRotation						(double blendingKeyframe, const Channel& blendingChannel, const Quat& originalRotation) const;
-	const float3	GetBlendedScale							(double blendingKeyframe, const Channel& blendingChannel, const float3& originalScale) const;
+	Transform		GetBlendedTransform						(double bKeyframe, const Channel& bChannel, const Transform& originalTransform) const;
+	const float3	GetBlendedPosition						(double bKeyframe, const Channel& bChannel, float bRate, const float3& originalPosition) const;
+	const Quat		GetBlendedRotation						(double bKeyframe, const Channel& bChannel, float bRate, const Quat& originalRotation) const;
+	const float3	GetBlendedScale							(double bKeyframe, const Channel& bChannel, float bRate, const float3& originalScale) const;
 
 private:
 	std::vector<R_Animation*>						animations;											// Animation Resources. Contain bone information (transforms...).

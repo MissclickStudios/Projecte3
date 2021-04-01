@@ -72,13 +72,13 @@ bool C_PlayerController::Update()
 	case PlayerState::IDLE:
 		if (currentClip != nullptr && clipName != "Idle")
 		{
-			aAnimator->PlayClip("Idle", 0);
+			aAnimator->PlayClip("Idle", 5);
 		}
 		break;
 	case PlayerState::RUNNING:
 		if (currentClip != nullptr && clipName != "Running4")
 		{
-			aAnimator->PlayClip("Running4", 0);
+			aAnimator->PlayClip("Running4", 5);
 		}
 		break;
 	case PlayerState::DASHING:
@@ -197,8 +197,6 @@ bool C_PlayerController::LoadState(ParsonNode& root)
 
 void C_PlayerController::Movement()
 {
-	OPTICK_CATEGORY("Player Controller Movement", Optick::Category::Update);
-	
 	C_RigidBody* rigidBody = GetOwner()->GetComponent<C_RigidBody>();
 	if (!rigidBody || rigidBody->IsStatic())
 		return;
@@ -282,8 +280,6 @@ void C_PlayerController::Rotate()
 
 void C_PlayerController::Weapon()
 {
-	OPTICK_CATEGORY("Player Controller Weapon", Optick::Category::Update);
-	
 	int aimX = 0;
 	int aimY = 0;
 	// Controller aim
@@ -491,8 +487,6 @@ void C_PlayerController::GetAimVectorAxis(int& axisX, int& axisY)
 
 void C_PlayerController::HandleAmmo(int ammo)
 {
-	OPTICK_CATEGORY("Player Controller Handle Ammo", Optick::Category::Update);
-	
 	std::vector<GameObject*>::iterator it = App->scene->GetGameObjects()->begin();
 
 	for (it; it != App->scene->GetGameObjects()->end(); ++it)
@@ -530,8 +524,6 @@ void C_PlayerController::HandleAmmo(int ammo)
 
 void C_PlayerController::HandleHp()
 {
-	OPTICK_CATEGORY("Player Controller Handle Hp", Optick::Category::Update);
-
 	std::vector<GameObject*>::iterator it = App->scene->GetGameObjects()->begin();
 
 	for (it; it != App->scene->GetGameObjects()->end(); ++it)

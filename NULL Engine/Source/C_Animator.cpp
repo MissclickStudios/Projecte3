@@ -33,7 +33,7 @@ currentClip		(nullptr),
 blendingClip	(nullptr),
 rootBone		(nullptr), 
 animatorState	(AnimatorState::STOP)
-{
+{	
 	blendFrames		= 0;
 
 	playbackSpeed	= 1.0f;
@@ -246,6 +246,8 @@ bool C_Animator::StepAnimation()
 
 bool C_Animator::StepClips()
 {	
+	OPTICK_CATEGORY("Step Clips", Optick::Category::Animation);
+	
 	bool currentExists	= CurrentClipExists();
 	bool blendingExists	= BlendingClipExists();
 
@@ -327,6 +329,8 @@ bool C_Animator::ValidateCurrentClip()
 
 void C_Animator::SwitchBlendingToCurrent()
 {
+	OPTICK_CATEGORY("Switch Blending To Current", Optick::Category::Animation);
+	
 	if (currentClip != nullptr)
 	{
 		currentClip->playing = false;
@@ -491,8 +495,6 @@ Transform C_Animator::GetInterpolatedTransform(double keyframe, const Channel& c
 
 const float3 C_Animator::GetInterpolatedPosition(double keyframe, const Channel& channel) const
 {
-	OPTICK_CATEGORY("Get Interpolated Position", Optick::Category::Animation);
-	
 	PositionKeyframe prevKeyframe = channel.GetClosestPrevPositionKeyframe(keyframe);
 	PositionKeyframe nextKeyframe = channel.GetClosestNextPositionKeyframe(keyframe);
 
@@ -500,19 +502,15 @@ const float3 C_Animator::GetInterpolatedPosition(double keyframe, const Channel&
 	{
 		return prevKeyframe->second;
 	}
-	else
-	{
-		float rate = (float)((keyframe - prevKeyframe->first) / (nextKeyframe->first - prevKeyframe->first));
 
-		return (prevKeyframe->second.Lerp(nextKeyframe->second, rate));
-		//return (EasingFunctions::Lineal(prevKeyframe->second, nextKeyframe->second, rate));
-	}
+	float rate	= (float)((keyframe - prevKeyframe->first) / (nextKeyframe->first - prevKeyframe->first));
+	rate		= (rate > 1.0f) ? 1.0f : rate;																		// Safety Measure just in case rate is higher than 1.0f (100%).
+
+	return (prevKeyframe->second.Lerp(nextKeyframe->second, rate));
 }
 
 const Quat C_Animator::GetInterpolatedRotation(double keyframe, const Channel& channel) const
 {
-	OPTICK_CATEGORY("Get Interpolated Rotation", Optick::Category::Animation);
-	
 	RotationKeyframe prevKeyframe = channel.GetClosestPrevRotationKeyframe(keyframe);
 	RotationKeyframe nextKeyframe = channel.GetClosestNextRotationKeyframe(keyframe);
 
@@ -520,17 +518,15 @@ const Quat C_Animator::GetInterpolatedRotation(double keyframe, const Channel& c
 	{
 		return prevKeyframe->second;
 	}
-	else
-	{
-		float rate = (float)((keyframe - prevKeyframe->first) / (nextKeyframe->first - prevKeyframe->first));
-		return (prevKeyframe->second.Slerp(nextKeyframe->second, rate));
-	}
+
+	float rate	= (float)((keyframe - prevKeyframe->first) / (nextKeyframe->first - prevKeyframe->first));
+	rate		= (rate > 1.0f) ? 1.0f : rate;
+
+	return (prevKeyframe->second.Slerp(nextKeyframe->second, rate));
 }
 
 const float3 C_Animator::GetInterpolatedScale(double keyframe, const Channel& channel) const
 {
-	OPTICK_CATEGORY("Get Interpolated Scale", Optick::Category::Animation);
-	
 	ScaleKeyframe prevKeyframe = channel.GetClosestPrevScaleKeyframe(keyframe);
 	ScaleKeyframe nextKeyframe = channel.GetClosestNextScaleKeyframe(keyframe);
 
@@ -538,15 +534,17 @@ const float3 C_Animator::GetInterpolatedScale(double keyframe, const Channel& ch
 	{
 		return prevKeyframe->second;
 	}
-	else
-	{
-		float rate = (float)((keyframe - prevKeyframe->first) / (nextKeyframe->first - prevKeyframe->first));
-		return (prevKeyframe->second.Lerp(nextKeyframe->second, rate));
-	}
+
+	float rate	= (float)((keyframe - prevKeyframe->first) / (nextKeyframe->first - prevKeyframe->first));
+	rate		= (rate > 1.0f) ? 1.0f : rate;
+
+	return (prevKeyframe->second.Lerp(nextKeyframe->second, rate));
 }
 
 Transform C_Animator::GetPoseToPoseTransform(uint tick, const Channel& channel, const Transform& originalTransform) const
 {
+	if (!channel.HasPositionKeyframes() && !channel.HasRotationKeyframes() && !channel.HasScaleKeyframes()) { return originalTransform; }
+
 	const float3&	position	= (channel.HasPositionKeyframes()) ? channel.GetPositionKeyframe(tick)->second : originalTransform.position;
 	const Quat&		rotation	= (channel.HasRotationKeyframes()) ? channel.GetRotationKeyframe(tick)->second : originalTransform.rotation;
 	const float3&	scale		= (channel.HasScaleKeyframes()) ? channel.GetScaleKeyframe(tick)->second : originalTransform.scale;
@@ -554,37 +552,35 @@ Transform C_Animator::GetPoseToPoseTransform(uint tick, const Channel& channel, 
 	return Transform(position, rotation, scale);
 }
 
-Transform C_Animator::GetBlendedTransform(double blendedKeyframe, const Channel& blendedChannel, const Transform& originalTransform) const
+Transform C_Animator::GetBlendedTransform(double bKeyframe, const Channel& bChannel, const Transform& originalTransform) const
 {
-	const float3&	position	= (blendedChannel.HasPositionKeyframes()) ? GetBlendedPosition(blendedKeyframe, blendedChannel, originalTransform.position) : originalTransform.position;
-	const Quat&		rotation	= (blendedChannel.HasRotationKeyframes()) ? GetBlendedRotation(blendedKeyframe, blendedChannel, originalTransform.rotation) : originalTransform.rotation;
-	const float3&	scale		= (blendedChannel.HasScaleKeyframes()) ? GetBlendedScale(blendedKeyframe, blendedChannel, originalTransform.scale) : originalTransform.scale;
+	OPTICK_CATEGORY("Get Blended Transform", Optick::Category::Animation);
+	
+	if (!bChannel.HasPositionKeyframes() && !bChannel.HasRotationKeyframes() && !bChannel.HasScaleKeyframes())	{ return originalTransform; }
+
+	float bRate = (float)((bKeyframe - blendingClip->GetStart()) / blendFrames);
+	bRate		= (bRate > 1.0f) ? 1.0f : bRate;
+
+	const float3&	position	= (bChannel.HasPositionKeyframes()) ? GetBlendedPosition(bKeyframe, bChannel, bRate, originalTransform.position) : originalTransform.position;
+	const Quat&		rotation	= (bChannel.HasRotationKeyframes()) ? GetBlendedRotation(bKeyframe, bChannel, bRate, originalTransform.rotation) : originalTransform.rotation;
+	const float3&	scale		= (bChannel.HasScaleKeyframes()) ? GetBlendedScale(bKeyframe, bChannel, bRate, originalTransform.scale) : originalTransform.scale;
 
 	return Transform(position, rotation, scale);
 }
 
-const float3 C_Animator::GetBlendedPosition(double blendingKeyframe, const Channel& blendingChannel, const float3& originalPosition) const
+const float3 C_Animator::GetBlendedPosition(double bKeyframe, const Channel& bChannel, float bRate, const float3& originalPosition) const
 {
-	float3 position	= GetInterpolatedPosition(blendingKeyframe, blendingChannel);
-	float blendRate	= (float)((blendingKeyframe - blendingClip->GetStart()) / blendFrames);
-	
-	return originalPosition.Lerp(position, blendRate);
+	return (originalPosition.Lerp((GetInterpolatedPosition(bKeyframe, bChannel)), bRate));		// We get the interpolated value of the keyframe-channel and then lerp origin to value.
 }
 
-const Quat C_Animator::GetBlendedRotation(double blendingKeyframe, const Channel& blendingChannel, const Quat& originalRotation) const
+const Quat C_Animator::GetBlendedRotation(double bKeyframe, const Channel& bChannel, float bRate, const Quat& originalRotation) const
 {
-	Quat rotation	= GetInterpolatedRotation(blendingKeyframe, blendingChannel);
-	float blendRate	= (float)((blendingKeyframe - blendingClip->GetStart()) / blendFrames);
-
-	return originalRotation.Slerp(rotation, blendRate);
+	return (originalRotation.Slerp((GetInterpolatedRotation(bKeyframe, bChannel)), bRate));
 }
 
-const float3 C_Animator::GetBlendedScale(double blendingKeyframe, const Channel& blendingChannel, const float3& originalScale) const
+const float3 C_Animator::GetBlendedScale(double bKeyframe, const Channel& bChannel, float bRate, const float3& originalScale) const
 {
-	float3 scale	= GetInterpolatedScale(blendingKeyframe, blendingChannel);
-	float blendRate	= (float)((blendingKeyframe - blendingClip->GetStart()) / blendFrames);
-
-	return originalScale.Lerp(scale, blendRate);
+	return (originalScale.Lerp((GetInterpolatedScale(bKeyframe, bChannel)), bRate));
 }
 
 void C_Animator::FindRootBone()
@@ -993,6 +989,8 @@ AnimatorClip* C_Animator::GetBlendingClip() const
 
 void C_Animator::SetCurrentClip(AnimatorClip* clip)
 {
+	OPTICK_CATEGORY("Set Current Clip", Optick::Category::Animation);
+
 	std::string errorString = "[ERROR] Animator Component: Could not Set Current Clip to { " + std::string(this->GetOwner()->GetName()) + " }'s Animator Component";
 	
 	if (clip == nullptr)
@@ -1028,6 +1026,8 @@ void C_Animator::SetCurrentClip(AnimatorClip* clip)
 
 void C_Animator::SetBlendingClip(AnimatorClip* clip, uint blendFrames)
 {
+	OPTICK_CATEGORY("Set Blending Clip", Optick::Category::Animation);
+	
 	std::string errorString = "[ERROR] Animator Component: Could not Set Blending Clip in { " + std::string(this->GetOwner()->GetName()) + " }'s Animator Component";
 
 	if (clip == nullptr)
@@ -1112,12 +1112,16 @@ bool C_Animator::BlendingClipExists() const
 
 void C_Animator::ClearCurrentClip()
 {
+	OPTICK_CATEGORY("Clear Current Clip", Optick::Category::Animation);
+	
 	currentClip = nullptr;
 	currentBones.clear();
 }
 
 void C_Animator::ClearBlendingClip()
 {
+	OPTICK_CATEGORY("Clear Blending Clip", Optick::Category::Animation);
+	
 	blendingClip = nullptr;
 	blendFrames = 0;
 	blendingBones.clear();

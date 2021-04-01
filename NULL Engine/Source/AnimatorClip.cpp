@@ -65,7 +65,7 @@ bool AnimatorClip::StepClip(const float& dt)
 }
 
 void AnimatorClip::ClearClip()
-{
+{	
 	time	= 0.0f;
 	frame	= 0.0f;
 	tick	= 0;
