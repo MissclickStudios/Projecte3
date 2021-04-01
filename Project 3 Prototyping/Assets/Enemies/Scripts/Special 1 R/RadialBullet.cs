@@ -40,9 +40,10 @@ public class RadialBullet : MonoBehaviour
         float angleStep = 360f / _numberOfProjectiles;
         float angle = 0f;
 
-        for (int i = 0; i <= _numberOfProjectiles -1; i++)
+        for (int i = 1; i <= _numberOfProjectiles *2; i++)
         {
             // Direction Calculation
+
             float projectileDirXPosition = startPoint.x + Mathf.Sin((angle * Mathf.PI) / 180) * radius;
             float projectileDirYPosition = startPoint.y + Mathf.Cos((angle * Mathf.PI) / 180) * radius;
 

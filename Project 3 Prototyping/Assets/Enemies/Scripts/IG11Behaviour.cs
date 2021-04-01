@@ -4,17 +4,23 @@ using UnityEngine;
 
 public class IG11Behaviour : MonoBehaviour
 {
+    private bool trigerredAttack;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        trigerredAttack = false;
     }
 
     // Update is called once per frame
     void Update()
     {
         Chasing();
-        standardAttackNR();
+        if(trigerredAttack == true)
+        {
+            standardAttackNR();
+        }
+        
     }
 
     //---------------------------------------------------------------------------------
@@ -22,13 +28,25 @@ public class IG11Behaviour : MonoBehaviour
     public Transform chasingTarget;
     public float chasingSpeed = 1.0f;
     public float chasingTriggerDistance = 5.0f;
+
+    
     void Chasing()
     {
         transform.LookAt(chasingTarget.position);
 
-        if ((transform.position - chasingTarget.position).magnitude > chasingTriggerDistance)
+        if ((transform.position - chasingTarget.position).magnitude > chasingTriggerDistance )
         {
+            //Vector3.MoveTowards(transform.position, chasingTarget.position, chasingSpeed);
+
             transform.Translate(0.0f, 0.0f, chasingSpeed * Time.deltaTime);
+            
+        }
+        else if ((transform.position - chasingTarget.position).magnitude < chasingTriggerDistance && trigerredAttack == false)
+        {
+            //Vector3.MoveTowards(transform.position, chasingTarget.position, chasingSpeed);
+
+            trigerredAttack = true;
+
         }
     }
     //---------------------------------------------------------------------------------
@@ -41,13 +59,13 @@ public class IG11Behaviour : MonoBehaviour
     public Transform sAttack1LeftArm;
     public float sAttack1BulletSpeed = 100;
 
-    private float dt;
+    private float sAttack1DT;
     
     void standardAttackNR()
     {
-        dt += Time.deltaTime;
+        sAttack1DT += Time.deltaTime;
 
-        if (dt >= 1f)
+        if (sAttack1DT >= 0.5f)
         {
             GameObject myBulletPrefab = Instantiate(sAttack1Bullet, sAttack1RightArm.position, Quaternion.identity) as GameObject;
             Rigidbody myBulletPrefabRigidBody = myBulletPrefab.GetComponent<Rigidbody>();
@@ -57,7 +75,8 @@ public class IG11Behaviour : MonoBehaviour
             Rigidbody myBulletPrefabRigidBody2 = myBulletPrefab2.GetComponent<Rigidbody>();
             myBulletPrefabRigidBody2.AddForce(transform.forward * sAttack1BulletSpeed);
 
-            dt = 0;
+            sAttack1DT = 0;
+            trigerredAttack = false;
         }
     }
     //---------------------------------------------------------------------------------

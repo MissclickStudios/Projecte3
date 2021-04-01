@@ -362,6 +362,10 @@ PrefabInstance:
       propertyPath: m_LocalPosition.x
       value: -3.5921574
       objectReference: {fileID: 0}
+    - target: {fileID: 5426510, guid: 7737647c22c1fc64a88d5cd030c352ce, type: 3}
+      propertyPath: m_Constraints
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7737647c22c1fc64a88d5cd030c352ce, type: 3}
 --- !u!1 &1008433896
@@ -590,8 +594,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b074da42661a771489e5032b1df55932, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  numberOfProjectiles: 25
-  projectileSpeed: 10
+  numberOfProjectiles: 20
+  projectileSpeed: 15
   ProjectilePrefab: {fileID: 7330326984651472972, guid: 6b3f174fb5566e448a44a337d06a8fa4, type: 3}
   BossMovement: {fileID: 1065322324}
 --- !u!95 &1065322330
@@ -627,7 +631,7 @@ Rigidbody:
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 36
   m_CollisionDetection: 0
 --- !u!114 &1065322334
 MonoBehaviour:
@@ -642,8 +646,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   chasingTarget: {fileID: 1238239499}
-  chasingSpeed: 2
-  chasingTriggerDistance: 5
+  chasingSpeed: 3
+  chasingTriggerDistance: 10
   sAttack1Bullet: {fileID: 7330326984651472972, guid: 6b3f174fb5566e448a44a337d06a8fa4, type: 3}
   sAttack1Target: {fileID: 1238239499}
   sAttack1RightArm: {fileID: 1008433897}
