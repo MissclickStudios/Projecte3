@@ -153,7 +153,7 @@ private:																													// --- BONE/CHANNEL UPDATE METHODS
 	const Quat		GetInterpolatedRotation					(double keyframe, const Channel& channel) const;
 	const float3	GetInterpolatedScale					(double keyframe, const Channel& channel) const;
 
-	Transform		GetPoseToPoseTransform					(uint tick, const Channel& channel, const Transform& originalTransform) const;
+	Transform		GetPoseToPoseTransform					(uint tick, const Channel& channel, C_Transform* originalTransform) const;
 
 	Transform		GetBlendedTransform						(double bKeyframe, const Channel& bChannel, const Transform& originalTransform) const;
 	const float3	GetBlendedPosition						(double bKeyframe, const Channel& bChannel, float bRate, const float3& originalPosition) const;
@@ -167,8 +167,8 @@ private:
 	std::vector<C_Mesh*>							animatedMeshes;										// TMP. Until a better implementation is found;
 
 	std::vector<GameObject*>						bones;												//
-	std::vector<BoneLink>							currentBones;										// Multiple animations will have the same bones.
-	std::vector<BoneLink>							blendingBones;										//
+	std::vector<BoneLink>*							currentBones;										// Multiple animations will have the same bones.
+	std::vector<BoneLink>*							blendingBones;										//
 	std::vector<LineSegment>						displayBones;										// Line Segments between GO bones. For debug purposes.
 
 	std::unordered_map<std::string, AnimatorClip>	clips;												// Segments of animations. "Idle", "Walk", "Attack"...
