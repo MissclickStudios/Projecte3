@@ -9,7 +9,7 @@
 #include "M_ResourceManager.h"
 #include "Log.h"
 #include "R_Script.h"
-#include "PerfectTimer.h"
+//#include "PerfectTimer.h"
 //#include "M_ScriptManager.h"
 
 #include "MemoryManager.h"
