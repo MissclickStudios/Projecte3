@@ -1,16 +1,27 @@
-#include "Application.h"
-#include "FileSystemDefinitions.h"
-#include "I_Shaders.h"
-#include "R_Shader.h"
-#include "M_FileSystem.h"
-#include "OpenGL.h"
 #include "JSONParser.h"
+#include "OpenGL.h"
+
+#include "FileSystemDefinitions.h"
+
+#include "Application.h"
+#include "M_FileSystem.h"
+#include "M_ResourceManager.h"
+
+#include "R_Shader.h"
+
+#include "I_Shaders.h"
 
 #include "MemoryManager.h"
 
 
 bool Importer::Shaders::Import(const char* fullPath, R_Shader* shader)
 {
+	uint32 forcedUID = App->resourceManager->GetForcedUIDFromMeta(shader->GetAssetsPath());
+	if (forcedUID != 0)
+	{
+		shader->ForceUID(forcedUID);
+	}
+	
 	bool ret = true;
 	std::string path;
 	std::string name;
@@ -72,8 +83,8 @@ bool Importer::Shaders::Import(const char* fullPath, R_Shader* shader)
 	{
 		LOG("ERROR, Vertex shader: %d or Fragment shader: %d are not correctly compiled.", shader->vertexID, shader->fragmentID);
 	}
+	
 	return ret;
-
 }
 
 int Importer::Shaders::ImportVertex(std::string shaderFile, R_Shader* shader)

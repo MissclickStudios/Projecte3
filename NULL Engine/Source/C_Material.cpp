@@ -83,10 +83,10 @@ bool C_Material::SaveState(ParsonNode& root) const
 	{
 		ParsonNode texture = root.SetNode("Texture");
 
-		texture.SetNumber("UID", rTexture->GetUID());
-		texture.SetString("Name", rTexture->GetAssetsFile());
-		texture.SetString("Path", rTexture->GetLibraryPath());
-		texture.SetString("File", rTexture->GetLibraryFile());
+		texture.SetString("AssetsPath", rTexture->GetAssetsPath());
+		texture.SetString("AssetsName", rTexture->GetAssetsFile());
+		texture.SetString("LibaryPath", rTexture->GetLibraryPath());
+		texture.SetString("LibraryFile", rTexture->GetLibraryFile());
 	}
 
 	// --- R_SHADER ---
@@ -94,10 +94,10 @@ bool C_Material::SaveState(ParsonNode& root) const
 	{
 		ParsonNode shader = root.SetNode("Shader");
 
-		shader.SetNumber("UID", rShader->GetUID());
-		shader.SetString("Name", rShader->GetAssetsFile());
-		shader.SetString("Path", rShader->GetLibraryPath());
-		shader.SetString("File", rShader->GetLibraryFile());
+		shader.SetString("AssetsPath", rShader->GetAssetsPath());
+		shader.SetString("AssetsName", rShader->GetAssetsFile());
+		shader.SetString("LibaryPath", rShader->GetLibraryPath());
+		shader.SetString("LibraryFile", rShader->GetLibraryFile());
 	}
 	return ret;
 }
@@ -116,10 +116,10 @@ bool C_Material::LoadState(ParsonNode& root)
 	
 	if (materialNode.NodeIsValid())
 	{
-		std::string material_assets_path = ASSETS_MODELS_PATH + std::string(materialNode.GetString("Name"));
-		App->resourceManager->AllocateResource((uint32)materialNode.GetNumber("UID"), material_assets_path.c_str());
-
-		rMaterial = (R_Material*)App->resourceManager->RequestResource((uint32)materialNode.GetNumber("UID"));
+		std::string material_assets_path	= ASSETS_MODELS_PATH + std::string(materialNode.GetString("Name"));
+		uint32 materialUID					= App->resourceManager->AllocateResource((uint32)materialNode.GetNumber("UID"), material_assets_path.c_str());
+		rMaterial							= (R_Material*)App->resourceManager->RequestResource((uint32)materialNode.GetNumber("UID"));
+		
 		SetMaterialColour((Color&)materialNode.GetFloat4("Color"));
 
 		if (rMaterial == nullptr)
@@ -134,14 +134,11 @@ bool C_Material::LoadState(ParsonNode& root)
 
 	if (textureNode.NodeIsValid())
 	{
-		std::string texture_assets_path	= ASSETS_TEXTURES_PATH + std::string(textureNode.GetString("Name"));
-		App->resourceManager->AllocateResource((uint32)textureNode.GetNumber("UID"), texture_assets_path.c_str());
-
-		rTexture = (R_Texture*)App->resourceManager->RequestResource((uint32)textureNode.GetNumber("UID"));
+		rTexture = (R_Texture*)App->resourceManager->GetResourceFromLibrary(textureNode.GetString("AssetsPath"));
 
 		if (rTexture == nullptr)
 		{
-			LOG("[ERROR] Loading Scene: Could not find Texture { %s } with UID: %u! Try reimporting the model.", textureNode.GetString("File"), (uint32)textureNode.GetNumber("UID"));
+			LOG("[ERROR] Loading Scene: Could not find Texture { %s } with UID: %u! Try reimporting the model.", textureNode.GetString("LibraryFile"), (uint32)textureNode.GetNumber("UID"));
 		}
 	}
 	else
@@ -151,14 +148,11 @@ bool C_Material::LoadState(ParsonNode& root)
 
 	if (shaderNode.NodeIsValid())
 	{
-		std::string shader_assets_path = ASSETS_SHADERS_PATH + std::string(shaderNode.GetString("Name"));
-		App->resourceManager->AllocateResource((uint32)shaderNode.GetNumber("UID"), shader_assets_path.c_str());
-
-		rShader = (R_Shader*)App->resourceManager->RequestResource((uint32)shaderNode.GetNumber("UID"));
+		rShader = (R_Shader*)App->resourceManager->GetResourceFromLibrary(shaderNode.GetString("AssetsPath"));
 
 		if (rShader == nullptr)
 		{
-			LOG("[ERROR] Loading Scene: Could not find Shader { %s } with UID: %u! Try reimporting the model.", shaderNode.GetString("File"), (uint32)shaderNode.GetNumber("UID"));
+			LOG("[ERROR] Loading Scene: Could not find Shader { %s } with UID: %u! Try reimporting the model.", shaderNode.GetString("LibraryFile"), (uint32)shaderNode.GetNumber("UID"));
 		}
 	}
 	else

@@ -1571,6 +1571,11 @@ void E_Inspector::DrawPlayerControllerComponent(C_PlayerController* cController)
 		if (ImGui::Checkbox("Controller Is Active", &isActive))
 			cController->SetIsActive(isActive);
 
+		ImGui::SameLine(ImGui::GetWindowWidth() * 0.69f);
+
+		uint state = (uint)cController->state;
+		ImGui::Text("State:"); ImGui::SameLine(); ImGui::TextColored(&Yellow, "{ %u }", state);
+
 		ImGui::Separator();
 		if (ImGui::TreeNodeEx("Character"))
 		{

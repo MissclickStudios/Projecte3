@@ -64,20 +64,27 @@ bool C_PlayerController::Update()
 		playAnim = true;
 	}
 
-	AnimatorClip* currentClip = aAnimator->GetCurrentClip();
-	std::string clipName = (currentClip != nullptr) ? currentClip->GetName() : "[NONE]";
+	if (App->input->GetKey(SDL_SCANCODE_Y) == KeyState::KEY_DOWN)	{ aAnimator->PlayClip("Running4", 0.2f); }
+	if (App->input->GetKey(SDL_SCANCODE_Y) == KeyState::KEY_UP)		{ aAnimator->PlayClip("Idle", 0.2f); }
+	if (App->input->GetKey(SDL_SCANCODE_U) == KeyState::KEY_DOWN)	{ aAnimator->PlayClip("Shooting", 0.2f); }
+
+	AnimatorClip* currentClip	= aAnimator->GetCurrentClip();
+	std::string clipName		= (currentClip != nullptr) ? currentClip->GetName() : "[NONE]";
 
 	switch (state)
 	{
 	case PlayerState::IDLE:
 		if (currentClip != nullptr && clipName != "Idle")
 		{
+			LOG("PLAYING { IDLE }");
 			aAnimator->PlayClip("Idle", 0.2f);
 		}
 		break;
 	case PlayerState::RUNNING:
 		if (currentClip != nullptr && clipName != "Running4")
 		{
+			LOG("PLAYING { RUNNING }");
+			LOG("PLAYING [%s]::[%s]", currentClip->GetName(), clipName.c_str());
 			aAnimator->PlayClip("Running4", 0.2f);
 		}
 		break;
@@ -90,7 +97,8 @@ bool C_PlayerController::Update()
 	case PlayerState::SHOOTING:
 		if (currentClip != nullptr && clipName != "Shooting")
 		{
-			aAnimator->PlayClip("Shooting", 0.0f);
+			LOG("PLAYING { SHOOTING }");
+			aAnimator->PlayClip("Shooting", 0.2f);
 		}
 		break;
 	}
@@ -219,6 +227,7 @@ void C_PlayerController::Movement()
 			if (App->input->GetKey(SDL_SCANCODE_A) == KeyState::KEY_REPEAT)
 				movX = -MAX_JOYSTICK_INPUT;
 		}
+		
 		Move(rigidBody, movX, movY);
 
 		if (dashColdown.IsActive())

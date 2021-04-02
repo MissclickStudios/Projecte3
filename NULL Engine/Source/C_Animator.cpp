@@ -276,9 +276,13 @@ bool C_Animator::StepClips()
 		if (!success)
 		{
 			if (BlendingClipExists())
-			{
-				blendingClip->StepClip(stepValue);																		// ATTENTION HERE
-				SwitchBlendingToCurrent();
+			{	
+				if ((blendingClip->GetAnimationFrame() - blendingClip->GetStart() / blendFrames) >= 1.0f)
+				{
+					blendingClip->StepClip(stepValue);																		// ATTENTION HERE
+					SwitchBlendingToCurrent();
+				}
+
 				return true;
 			}
 			else
@@ -411,8 +415,6 @@ void C_Animator::UpdateChannelTransforms()
 					LOG("[ERROR] Animator Component: Could not Get Blended Transform! Error: Blending Bones was nullptr.");
 					break;
 				}
-
-				//LOG("BLENDING FRAME [%.3f]::[%d]", blendingClip->GetAnimationFrame(), blendFrames);
 
 				interpolatedTransform = GetBlendedTransform(blendingClip->GetAnimationFrame(), blendingBones->at(i).channel, interpolatedTransform);
 			}
@@ -573,7 +575,7 @@ Transform C_Animator::GetBlendedTransform(double bKeyframe, const Channel& bChan
 {
 	OPTICK_CATEGORY("Get Blended Transform", Optick::Category::Animation);
 	
-	if (!bChannel.HasPositionKeyframes() && !bChannel.HasRotationKeyframes() && !bChannel.HasScaleKeyframes())	{ return originalTransform; }
+	if (!bChannel.HasPositionKeyframes() && !bChannel.HasRotationKeyframes() && !bChannel.HasScaleKeyframes()) { return originalTransform; }
 
 	float bRate = (float)((bKeyframe - blendingClip->GetStart()) / blendFrames);
 	bRate		= (bRate > 1.0f) ? 1.0f : bRate;
@@ -883,6 +885,8 @@ void C_Animator::PlayClip(const std::string& clipName, float blendTime)
 		return;
 	}
 
+	blendFrames = blendTime * item->second.GetAnimationTicksPerSecond();
+
 	if (currentClip == nullptr || blendFrames == 0 || blendFrames > item->second.GetDuration())
 	{
 		Stop();
@@ -890,8 +894,7 @@ void C_Animator::PlayClip(const std::string& clipName, float blendTime)
 	}
 	else
 	{
-		//blendFrames = blendTime * item->second.GetAnimationTicksPerSecond();
-		SetBlendingClip(&item->second, (uint)(blendTime * item->second.GetAnimationTicksPerSecond()));
+		SetBlendingClip(&item->second, blendFrames);
 	}
 
 	Play();
@@ -1107,6 +1110,8 @@ void C_Animator::SetBlendingClip(AnimatorClip* clip, uint blendFrames)
 		return;
 	}
 	
+	LOG("BLENDING TO [%s]::[%u]", clip->GetName(), blendFrames);
+
 	blendingClip		= clip;
 	blendingBones		= &bones->second;
 	this->blendFrames	= blendFrames;
