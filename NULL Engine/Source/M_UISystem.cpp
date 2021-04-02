@@ -12,6 +12,7 @@
 #include "C_Transform.h"
 #include "C_UI_Text.h"
 #include "C_UI_Button.h"
+#include "C_UI_Image.h"
 
 #include "M_UISystem.h"
 
@@ -79,20 +80,29 @@ bool M_UISystem::Init(ParsonNode& config)
 		LOG("An error ocurred loading the glyph");
 	}
 	
+	
+
 	return ret;
 }
 
 // Called every draw update
 UpdateStatus M_UISystem::PreUpdate(float dt)
 {
-	UpdateActiveButtons();
+	if (isMainMenu && !isHoverDecorationAdded && !activeButtons.empty())
+	{
+		InitHoveredDecorations();
+	}
 
 	return UpdateStatus::CONTINUE;
 }
 
 UpdateStatus M_UISystem::Update(float dt)
 {
+	UpdateActiveButtons();
 	CheckButtonStates();
+	
+	if (hoveredDecorationL != nullptr && hoveredDecorationR != nullptr)
+		UpdateHoveredDecorations();
 
 	return UpdateStatus::CONTINUE;
 }
@@ -221,4 +231,34 @@ void M_UISystem::UpdateActiveButtons()
 		}
 	}
 	activeButtons = newButtonsList;
+}
+
+void M_UISystem::InitHoveredDecorations()
+{
+	GameObject* canvas = hoveredButton->GetOwner()->parent;
+	GameObject* newGOL = nullptr;
+	GameObject* newGOR = nullptr;
+
+	newGOL = App->scene->CreateGameObject("Hovered Decoration L", canvas);
+	hoveredDecorationL = (C_UI_Image*)newGOL->CreateComponent(ComponentType::UI_IMAGE);
+	newGOL->CreateComponent(ComponentType::MATERIAL);
+	Rect2D rectL = { (hoveredButton->GetRect().x - hoveredButton->GetRect().w / 2 - 0.02), hoveredButton->GetRect().y, 0.01,0.01 };
+	hoveredDecorationL->SetRect(rectL);
+
+	newGOR = App->scene->CreateGameObject("Hovered Decoration R", canvas);
+	hoveredDecorationR = (C_UI_Image*)newGOR->CreateComponent(ComponentType::UI_IMAGE);
+	newGOR->CreateComponent(ComponentType::MATERIAL);
+	Rect2D rectR = { hoveredButton->GetRect().x + 0.01 + hoveredButton->GetRect().w / 2, hoveredButton->GetRect().y, 0.01,0.01 };
+	hoveredDecorationR->SetRect(rectR);
+
+	isHoverDecorationAdded = true;
+}
+
+void M_UISystem::UpdateHoveredDecorations()
+{
+	hoveredDecorationL->SetX(hoveredButton->GetRect().x - hoveredButton->GetRect().w / 2 - 0.02);
+	hoveredDecorationR->SetX(hoveredButton->GetRect().x + 0.01 + hoveredButton->GetRect().w / 2);
+
+	hoveredDecorationL->SetY(hoveredButton->GetRect().y);
+	hoveredDecorationR->SetY(hoveredButton->GetRect().y);
 }
