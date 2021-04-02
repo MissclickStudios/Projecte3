@@ -1,5 +1,6 @@
 #include "EngineApplication.h"
 #include "M_Editor.h"
+#include "M_Scene.h"
 
 #include "GameObject.h"
 
@@ -28,7 +29,10 @@ bool E_Hierarchy::Draw(ImGuiIO& io)
 
 	SetIsHovered();
 
-	PrintGameObjectsOnHierarchy();
+	if (ImGui::CollapsingHeader(EngineApp->scene->GetCurrentScene()))
+	{
+		PrintGameObjectsOnHierarchy();
+	}
 
 	ImGui::End();
 
