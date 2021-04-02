@@ -246,8 +246,6 @@ bool C_Animator::StepAnimation()
 
 bool C_Animator::StepClips()
 {	
-	OPTICK_CATEGORY("Step Clips", Optick::Category::Animation);
-	
 	bool currentExists	= CurrentClipExists();
 	bool blendingExists	= BlendingClipExists();
 
@@ -263,7 +261,7 @@ bool C_Animator::StepClips()
 
 	if (BlendingClipExists())
 	{
-		if (blendingClip->GetAnimationFrame() > (float)(blendingClip->GetStart() + blendFrames))
+		if (blendingClip->GetAnimationFrame() > (float)(blendingClip->GetStart() + blendFrames))						// ATTENTION HERE.
 		{
 			SwitchBlendingToCurrent();
 		}
@@ -279,7 +277,7 @@ bool C_Animator::StepClips()
 		{
 			if (BlendingClipExists())
 			{
-				blendingClip->StepClip(stepValue);
+				blendingClip->StepClip(stepValue);																		// ATTENTION HERE
 				SwitchBlendingToCurrent();
 				return true;
 			}
@@ -329,8 +327,6 @@ bool C_Animator::ValidateCurrentClip()
 
 void C_Animator::SwitchBlendingToCurrent()
 {
-	OPTICK_CATEGORY("Switch Blending To Current", Optick::Category::Animation);
-	
 	if (currentClip != nullptr)
 	{
 		currentClip->playing = false;
@@ -416,6 +412,8 @@ void C_Animator::UpdateChannelTransforms()
 					break;
 				}
 
+				//LOG("BLENDING FRAME [%.3f]::[%d]", blendingClip->GetAnimationFrame(), blendFrames);
+
 				interpolatedTransform = GetBlendedTransform(blendingClip->GetAnimationFrame(), blendingBones->at(i).channel, interpolatedTransform);
 			}
 
@@ -466,8 +464,6 @@ void C_Animator::UpdateMeshSkinning()
 
 void C_Animator::UpdateDisplayBones()
 {
-	OPTICK_CATEGORY("Update Display Bones", Optick::Category::Animation);
-	
 	displayBones.clear();
 
 	if (rootBone != nullptr)
@@ -856,7 +852,7 @@ void C_Animator::PlayClip(const std::string& clipName, uint blendFrames)
 		LOG("[ERROR] Animator Component: Could not Play Clip! Error: Could not find any clip with the given name!");
 		return;
 	}
-	if (currentClip != nullptr && currentClip->GetName() == clipName)
+	if (currentClip != nullptr && currentClip->GetName() == clipName)													// This makes it so the user is unable to play the same clip twice.
 	{
 		return;
 	}
@@ -869,6 +865,33 @@ void C_Animator::PlayClip(const std::string& clipName, uint blendFrames)
 	else
 	{
 		SetBlendingClip(&item->second, blendFrames);
+	}
+
+	Play();
+}
+
+void C_Animator::PlayClip(const std::string& clipName, float blendTime)
+{
+	auto item = clips.find(clipName);
+	if (item == clips.end())
+	{
+		LOG("[ERROR] Animator Component: Could not Play Clip! Error: Could not find any clip with the given name!");
+		return;
+	}
+	if (currentClip != nullptr && currentClip->GetName() == clipName)													// This makes it so the user is unable to play the same clip twice.
+	{
+		return;
+	}
+
+	if (currentClip == nullptr || blendFrames == 0 || blendFrames > item->second.GetDuration())
+	{
+		Stop();
+		SetCurrentClip(&item->second);
+	}
+	else
+	{
+		//blendFrames = blendTime * item->second.GetAnimationTicksPerSecond();
+		SetBlendingClip(&item->second, (uint)(blendTime * item->second.GetAnimationTicksPerSecond()));
 	}
 
 	Play();
@@ -1024,8 +1047,6 @@ AnimatorClip* C_Animator::GetBlendingClip() const
 
 void C_Animator::SetCurrentClip(AnimatorClip* clip)
 {
-	OPTICK_CATEGORY("Set Current Clip", Optick::Category::Animation);
-
 	std::string errorString = "[ERROR] Animator Component: Could not Set Current Clip to { " + std::string(this->GetOwner()->GetName()) + " }'s Animator Component";
 	
 	if (clip == nullptr)
@@ -1061,8 +1082,6 @@ void C_Animator::SetCurrentClip(AnimatorClip* clip)
 
 void C_Animator::SetBlendingClip(AnimatorClip* clip, uint blendFrames)
 {
-	OPTICK_CATEGORY("Set Blending Clip", Optick::Category::Animation);
-	
 	std::string errorString = "[ERROR] Animator Component: Could not Set Blending Clip in { " + std::string(this->GetOwner()->GetName()) + " }'s Animator Component";
 
 	if (clip == nullptr)
@@ -1088,9 +1107,9 @@ void C_Animator::SetBlendingClip(AnimatorClip* clip, uint blendFrames)
 		return;
 	}
 	
-	blendingClip = clip;
-	blendingBones = &bones->second;
-	this->blendFrames = blendFrames;
+	blendingClip		= clip;
+	blendingBones		= &bones->second;
+	this->blendFrames	= blendFrames;
 
 	blendingClip->ClearClip();																					// Resetting the clip just in case.
 }
@@ -1147,16 +1166,12 @@ bool C_Animator::BlendingClipExists() const
 
 void C_Animator::ClearCurrentClip()
 {
-	OPTICK_CATEGORY("Clear Current Clip", Optick::Category::Animation);
-	
 	currentClip		= nullptr;
 	currentBones	= nullptr;
 }
 
 void C_Animator::ClearBlendingClip()
 {
-	OPTICK_CATEGORY("Clear Blending Clip", Optick::Category::Animation);
-	
 	blendingClip	= nullptr;
 	blendingBones	= nullptr;
 	blendFrames		= 0;

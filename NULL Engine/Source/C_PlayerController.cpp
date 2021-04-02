@@ -60,7 +60,7 @@ bool C_PlayerController::Update()
 	{
 		aAnimator = GetOwner()->GetComponent<C_Animator>();
 
-		aAnimator->PlayClip("Idle", 0);
+		aAnimator->PlayClip("Idle", (uint)0);
 		playAnim = true;
 	}
 
@@ -72,13 +72,13 @@ bool C_PlayerController::Update()
 	case PlayerState::IDLE:
 		if (currentClip != nullptr && clipName != "Idle")
 		{
-			aAnimator->PlayClip("Idle", 5);
+			aAnimator->PlayClip("Idle", 0.2f);
 		}
 		break;
 	case PlayerState::RUNNING:
 		if (currentClip != nullptr && clipName != "Running4")
 		{
-			aAnimator->PlayClip("Running4", 5);
+			aAnimator->PlayClip("Running4", 0.2f);
 		}
 		break;
 	case PlayerState::DASHING:
@@ -90,7 +90,7 @@ bool C_PlayerController::Update()
 	case PlayerState::SHOOTING:
 		if (currentClip != nullptr && clipName != "Shooting")
 		{
-			aAnimator->PlayClip("Shooting", 0);
+			aAnimator->PlayClip("Shooting", 0.0f);
 		}
 		break;
 	}

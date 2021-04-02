@@ -67,6 +67,7 @@ public:
 	void			AddAnimation							(R_Animation* rAnimation);
 	bool			AddClip									(const AnimatorClip& clip);
 	void			PlayClip								(const std::string& clipName, uint blendFrames);
+	void			PlayClip								(const std::string& clipName, float blendTime);
 	
 	bool			Play									();
 	bool			Pause									();
