@@ -1141,11 +1141,11 @@ void M_Scene::HandleCopyGO() //TODO Cntrl + c / Cntrl + v
 
 	if (App->input->GetKey(SDL_SCANCODE_LCTRL) == KeyState::KEY_REPEAT && App->input->GetKey(SDL_SCANCODE_V) == KeyState::KEY_DOWN)
 	{
-		if (selectedGameObject != nullptr && copiedGO != nullptr)
-		{
-			//AddGameObjectToScene(copiedGO);
-			//LOG("Pasted Game Object with Name: %s", copiedGO->GetName());
-		}
+		//if (selectedGameObject != nullptr && copiedGO != nullptr)
+		//{
+		//	//AddGameObjectToScene(copiedGO);
+		//	//LOG("Pasted Game Object with Name: %s", copiedGO->GetName());
+		//}
 	}
 
 }
