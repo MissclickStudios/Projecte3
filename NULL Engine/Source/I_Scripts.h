@@ -16,8 +16,8 @@ namespace Parser
 	bool LanguageSymbol(char symbol);
 	void ReadPreaviousSymbol(char* cursor, char*& startSymbol, unsigned int& symbolSize); //Careful reading outside buffer boundaries or reading from a comment and interpreting it as a symbol!!!
 	ParsingState HandlePossibleComment(char*& cursor);
-	ParsingState GoStartSymbol(char*& cursor, char* symbol);
-	ParsingState GoEndSymbol(char*& cursor, char* symbol);
+	ParsingState GoStartSymbol(char*& cursor, char* symbol, unsigned int symbolSize);
+	ParsingState GoEndSymbol(char*& cursor, char* symbol, unsigned int symbolSize);
 	//Read the symbol and leave the cursor pointing to the next character after the readed symbol
 	ParsingState ReadNextSymbol(char*& cursor, char*& startSymbol, unsigned int& symbolSize);
 	//Leave the cursor on the start of the next symbol

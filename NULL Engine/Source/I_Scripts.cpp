@@ -9,12 +9,16 @@
 #include "M_ResourceManager.h"
 #include "Log.h"
 #include "R_Script.h"
+#include "PerfectTimer.h"
 //#include "M_ScriptManager.h"
 
 #include "MemoryManager.h"
 
 bool Importer::Scripts::Import(const char* assetsPath, char* buffer, uint size, R_Script* rScript)
 {
+	//PROFILE FUNCTION TIME
+	//PerfectTimer importTime = PerfectTimer();
+
 	//Needed to force the resource UID
 	std::map<std::string, uint32> forcedUIDs;
 	App->resourceManager->GetForcedUIDsFromMeta(rScript->GetAssetsPath(), forcedUIDs);
@@ -28,6 +32,7 @@ bool Importer::Scripts::Import(const char* assetsPath, char* buffer, uint size, 
 	//Parse the header file to find the scripts in it
 	char* cursor = buffer;
 	char api[] = "SCRIPTS_API";
+	unsigned int apiSize = strlen(api);
 	char scriptBaseClass[] = "Script";
 	Parser::ParsingState currentState;
 
@@ -38,7 +43,7 @@ bool Importer::Scripts::Import(const char* assetsPath, char* buffer, uint size, 
 	}
 
 	//TODO: Go to class/struct first and then checking if it is exportable
-	while (Parser::GoStartSymbol(cursor, api) == Parser::ParsingState::CONTINUE) //Will not work correctly if we find SCRIPTS_API inside a coment
+	while (Parser::GoStartSymbol(cursor, api, apiSize) == Parser::ParsingState::CONTINUE)
 	{
 		char* classStructString = nullptr;
 		unsigned int classStructSize;
@@ -49,7 +54,7 @@ bool Importer::Scripts::Import(const char* assetsPath, char* buffer, uint size, 
 			LOG("[ERROR] Not imported scripts from file %s because found %s macro that doesn't have class/struct infront", api);
 			return false;
 		}
-		Parser::GoEndSymbol(cursor, api);
+		Parser::GoEndSymbol(cursor, api, apiSize);
 
 		char* scriptFirstCharacter = nullptr;
 		unsigned int nameSize;
@@ -74,7 +79,7 @@ bool Importer::Scripts::Import(const char* assetsPath, char* buffer, uint size, 
 		{
 			++cursor;
 			//Found engine script
-			//Check if a Create Function exists for that script
+			//Check if a Create Function exists for that script (The function we find like these can be commented)
 			if (strstr(buffer, std::string("Create" + scriptName).c_str()) == nullptr)
 			{
 				LOG("[WARNING] Can't use script %s in file %s because it doesn't have a Create%s() function", scriptName.c_str(), assetsPath, scriptName.c_str());
@@ -83,7 +88,7 @@ bool Importer::Scripts::Import(const char* assetsPath, char* buffer, uint size, 
 			if (strstr(buffer, std::string("Delete" + scriptName).c_str()) == nullptr)
 			{
 				LOG("[WARNING] Can't use script %s in file %s because it doesn't have a Delete%s() function", scriptName.c_str(), assetsPath, scriptName.c_str());
-				break;;
+				break;
 			}
 			LOG("[STATUS] New script %s from file %s added successfully", scriptName.c_str(), assetsPath);
 			rScript->dataStructures.push_back({ scriptName, false });
@@ -164,6 +169,10 @@ bool Importer::Scripts::Import(const char* assetsPath, char* buffer, uint size, 
 	if (rScript->dataStructures.empty()) 
 		LOG("[WARNING] No scripts found on file %s", assetsPath);
 
+	//PROFILE FUNCTION TIME
+	/*float time = importTime.ReadMs();
+	LOG("SCRIPTPROFILE: Scripts from file %s took %f ms to import", assetsPath, time);*/
+	
 	return true;
 }
 
@@ -302,21 +311,46 @@ Parser::ParsingState Parser::HandlePossibleComment(char*& cursor)
 	return Parser::ParsingState::CONTINUE;
 }
 
-Parser::ParsingState Parser::GoStartSymbol(char*& cursor, char* symbol)
+Parser::ParsingState Parser::GoStartSymbol(char*& cursor, char* symbol, unsigned int symbolSize)
 {
-	cursor = strstr(cursor, symbol);
-	if (cursor == nullptr)
-		return Parser::ParsingState::ENDFILE;
-	return Parser::ParsingState::CONTINUE;
+	while (1) 
+	{
+		Parser::ParsingState stateAfterComment = HandlePossibleComment(cursor);
+		if (stateAfterComment == Parser::ParsingState::ENDFILE)
+			return Parser::ParsingState::ENDFILE;
+		if (stateAfterComment == Parser::ParsingState::ERROR)
+			return Parser::ParsingState::ERROR;
+		if (*cursor == '\0')
+			return Parser::ParsingState::ENDFILE;
+		if (*cursor == *symbol)
+			if (!strncmp(cursor, symbol, symbolSize))
+				return Parser::ParsingState::CONTINUE;
+		
+		++cursor;
+	}
+	
 }
 
-Parser::ParsingState Parser::GoEndSymbol(char*& cursor, char* symbol)
+Parser::ParsingState Parser::GoEndSymbol(char*& cursor, char* symbol, unsigned int symbolSize)
 {
-	cursor = strstr(cursor, symbol);
-	if (cursor == nullptr)
-		return Parser::ParsingState::ENDFILE;
-	cursor += strlen(symbol);
-	return Parser::ParsingState::CONTINUE;
+	while (1)
+	{
+		Parser::ParsingState stateAfterComment = HandlePossibleComment(cursor);
+		if (stateAfterComment == Parser::ParsingState::ENDFILE)
+			return Parser::ParsingState::ENDFILE;
+		if (stateAfterComment == Parser::ParsingState::ERROR)
+			return Parser::ParsingState::ERROR;
+		if (*cursor == '\0')
+			return Parser::ParsingState::ENDFILE;
+		if (*cursor == *symbol)
+			if (!strncmp(cursor, symbol, symbolSize)) 
+			{
+				cursor += symbolSize;
+				return Parser::ParsingState::CONTINUE;
+			}
+
+		++cursor;
+	}
 }
 
 Parser::ParsingState Parser::ReadNextSymbol(char*& cursor, char*& startSymbol, unsigned int& symbolSize)
