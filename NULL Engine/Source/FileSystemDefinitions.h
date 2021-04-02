@@ -29,7 +29,6 @@
 #define SCENES_PATH				"Library/Scenes/"
 #define SHADERS_PATH			"Library/Shaders/"
 #define TEXTURES_PATH			"Library/Textures/"
-#define ANIMATIONS2D_PATH		"Library/Animations2D/"
 
 // File Extensions ----------------------------------
 #define ANIMATIONS_EXTENSION	".neanimat"
@@ -40,7 +39,6 @@
 #define SCENES_EXTENSION		".nescene"
 #define TEXTURES_EXTENSION		".netex"
 #define SHADERS_EXTENSION		".neshader"
-#define ANIMATIONS2D_EXTENSION ".neanimat2d"
 
 #define PREFAB_EXTENSION		".prefab"
 
