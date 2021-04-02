@@ -16,7 +16,7 @@ class NULL_API C_UI_Button : public Component
 {
 public:
 
-	C_UI_Button(GameObject* owner, Rect2D rect = { 0,0,50,50 });
+	C_UI_Button(GameObject* owner, Rect2D rect = { 0,0,0.3,0.05 });
 
 	~C_UI_Button();
 
