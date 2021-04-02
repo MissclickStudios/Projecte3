@@ -157,7 +157,8 @@ void Importer::Shaders::GetShaderUniforms(R_Shader* shader)
 		uniform.name = name;
 		if (uniform.name != "inColor" && uniform.name != "time" && uniform.name != "modelMatrix" && uniform.name != "viewMatrix" && uniform.name != "projectionMatrix" && uniform.name != "cameraPosition" &&
 			uniform.name != "lightPos" && uniform.name != "dirLight.diffuse"  && uniform.name != "dirLight.ambient" && uniform.name != "dirLight.specular" && uniform.name != "dirLight.direction" && uniform.name != "viewPos"
-			&& !uniform.name.find("diffuse") && !uniform.name.find("ambient") && !uniform.name.find("specular") && !uniform.name.find("position") && !uniform.name.find("constant") && !uniform.name.find("linear") && !uniform.name.find("quadratic"))
+			&& !uniform.name.find("diffuse") && !uniform.name.find("ambient") && !uniform.name.find("specular") && !uniform.name.find("position") && !uniform.name.find("constant") && !uniform.name.find("linear") && !uniform.name.find("quadratic")
+			&& !uniform.name.find("finalBonesMatrices") && !uniform.name.find("activeAnimation"))
 
 			/*!= "pointLight.diffuse" && uniform.name != "pointLight.ambient" && uniform.name != "pointLight.specular" && uniform.name != "pointLight.position" && uniform.name != "pointLight.constant"
 			&& uniform.name != "pointLight.linear" && uniform.name != "pointLight.quadratic"*/

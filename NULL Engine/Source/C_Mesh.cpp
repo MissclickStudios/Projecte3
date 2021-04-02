@@ -57,6 +57,7 @@ bool C_Mesh::CleanUp()
 	}
 
 	boneMapping.clear();
+	boneTransforms.clear();
 
 	return ret;
 }
@@ -115,6 +116,11 @@ void C_Mesh::GetBoneMapping(std::map<std::string, GameObject*>& boneMapping)
 	boneMapping = this->boneMapping;
 }
 
+void C_Mesh::GetBoneTranforms(std::vector<float4x4>& boneTransforms)
+{
+	boneTransforms = this->boneTransforms;
+}
+
 bool C_Mesh::RefreshSkinning()
 {	
 	if (rMesh == nullptr || !this->isActive)
@@ -167,7 +173,6 @@ void C_Mesh::AnimateMesh()
 	}
 
 	GameObject* currentBone = nullptr;
-	std::vector<float4x4> boneTransforms;
 	boneTransforms.resize(rMesh->boneOffsets.size());
 	for (auto bone = rMesh->boneMapping.begin(); bone != rMesh->boneMapping.end(); ++bone)
 	{
@@ -186,6 +191,9 @@ void C_Mesh::AnimateMesh()
 		
 		boneTransforms[bone->second] = delta;																												// -------------------------
 	}
+
+	skinnedMesh->boneIDs = rMesh->boneIDs;
+	skinnedMesh->boneWeights = rMesh->boneWeights;
 
 
 	uint verticesSize = (rMesh->vertices.size() / 3);

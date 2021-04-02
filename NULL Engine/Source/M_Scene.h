@@ -45,6 +45,8 @@ public:
 public:																														// --- GAME OBJECTS METHODS ---
 	bool			SaveScene							(const char* sceneName = nullptr) const;							// If no name is given the scene_root node's name will be used.
 	bool			LoadScene							(const char* path);													// For now asks for full path
+	
+	bool			SaveSceneAs							(const char* sceneName = nullptr);							// To be called from editor
 
 	void			LoadResourceIntoScene				(Resource* resource);
 
@@ -55,7 +57,12 @@ public:																														// --- GAME OBJECTS METHODS ---
 	
 	GameObject*		CreateGameObject					(const char* name = nullptr, GameObject* parent = nullptr);			// 
 	void			DeleteGameObject					(GameObject* gameObject, uint index = -1);							// 
-	
+
+	void			AddGameObjectToScene(GameObject* gameObject,GameObject* parent = nullptr); //will integrate the game object into scene as well as its children
+	void			AddGameObjectChildrenToScene(GameObject* gameObject); //Recursive call to add the chidlren
+
+	//void			CopyGameObject(GameObject* gameObject); //TODO copy game Object
+
 	GameObject*		GenerateGameObjectsFromModel		(const R_Model* rModel, const float3& scale = float3::zero);		//
 	bool			ApplyTextureToSelectedGameObject	(const uint32& textureUid);											//
 
@@ -98,6 +105,8 @@ public:
 
 	void NextRoom();
 
+	void HandleCopyGO();
+
 private:
 	std::vector<GameObject*>		gameObjects;																			// 
 	std::multimap<uint32, std::pair<uint32, std::string>> models;															// Models currently loaded on scene and their correspondent GO.
@@ -106,6 +115,8 @@ private:
 	GameObject*						sceneRoot;																				// Root of the current scene.
 	GameObject*						animationRoot;																			// TMP Just for the 3rd Assignment Delivery
 	GameObject*						selectedGameObject;																		// Represents the game object that's currently being selected.
+
+	//GameObject* copiedGO = nullptr;
 
 	C_Camera*						cullingCamera;																			// Culling Camera
 

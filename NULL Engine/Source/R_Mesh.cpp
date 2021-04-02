@@ -40,6 +40,8 @@ bool R_Mesh::CleanUp()
 	glDeleteBuffers(1, (GLuint*)&NBO);
 	glDeleteBuffers(1, (GLuint*)&TBO);
 	glDeleteBuffers(1, (GLuint*)&IBO);
+	glDeleteBuffers(1, (GLuint*)&BBO);
+	glDeleteBuffers(1, (GLuint*)&WBO);
 
 	// --- Clear vectors
 	vertices.clear();
@@ -174,6 +176,25 @@ void R_Mesh::LoadSkinningBuffers(bool initStatic)
 		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, (3 * sizeof(float)), (void*)0);
 		glEnableVertexAttribArray(2);
 	}
+	if (!boneIDs.empty())
+	{
+		glGenBuffers(1, (GLuint*)&BBO);
+		glBindBuffer(GL_ARRAY_BUFFER, (GLuint)BBO);
+		glBufferData(GL_ARRAY_BUFFER, (boneIDs.size() * sizeof(int)), &boneIDs[0], GL_DYNAMIC_DRAW);
+
+		glVertexAttribPointer(3, 4, GL_INT, GL_FALSE, (4 * sizeof(int)), (void*)0);
+		glEnableVertexAttribArray(3);
+	}
+	if (!boneWeights.empty())
+	{
+		glGenBuffers(1, (GLuint*)&WBO);
+		glBindBuffer(GL_ARRAY_BUFFER, (GLuint)WBO);
+		glBufferData(GL_ARRAY_BUFFER, (boneWeights.size() * sizeof(float)), &boneWeights[0], GL_DYNAMIC_DRAW);
+
+		glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, (4 * sizeof(float)), (void*)0);
+		glEnableVertexAttribArray(4);
+	}
+
 
 	glBindVertexArray(0);
 }

@@ -1550,9 +1550,16 @@ void MeshRenderer::Render()
 	ApplyTextureAndMaterial();																								// Apply resource texture or default texture, mesh color...
 	ApplyShader();																											// 
 
-	(cMesh->GetSkinnedMesh() == nullptr) ? glBindVertexArray(rMesh->VAO) : glBindVertexArray(cMesh->GetSkinnedMesh()->VAO);	// 
-
-	glDrawElements(GL_TRIANGLES, rMesh->indices.size(), GL_UNSIGNED_INT, nullptr);											// 
+	if (cMesh->GetSkinnedMesh() == nullptr)
+	{
+		glBindVertexArray(rMesh->VAO);
+		glDrawElements(GL_TRIANGLES, rMesh->indices.size(), GL_UNSIGNED_INT, nullptr);
+	}
+	else
+	{
+		glBindVertexArray(cMesh->GetSkinnedMesh()->VAO);
+		glDrawElements(GL_TRIANGLES, cMesh->GetSkinnedMesh()->indices.size(), GL_UNSIGNED_INT, nullptr);
+	}
 	
 	glBindVertexArray(0);																									//
 
@@ -1788,6 +1795,25 @@ void MeshRenderer::ApplyShader()
 			
 			cMaterial->GetShader()->SetUniform1i("skybox", 11);
 
+
+			//ANimations
+			std::vector<float4x4> boneTransforms;
+
+			cMesh->GetBoneTranforms(boneTransforms);
+
+			bool check = cMesh->GetSkinnedMesh() != nullptr;
+
+			cMaterial->GetShader()->SetUniform1i("activeAnimation", (check));
+
+			if (!boneTransforms.empty())
+			{
+				for (uint i = 0; i < boneTransforms.size(); i++)
+				{
+					cMaterial->GetShader()->SetUniformMatrix4("finalBonesMatrices[" + std::to_string(i) + "]", boneTransforms[i].Transposed().ptr());
+				}
+			}
+
+
 			// Light 
 			std::vector<GameObject*> dirLights = App->scene->GetDirLights();
 			std::vector<GameObject*> pointLights = App->scene->GetPointLights();
@@ -1809,29 +1835,14 @@ void MeshRenderer::ApplyShader()
 			{
 				for (uint i = 0; i < pointLights.size(); i++)
 				{
-					std::string pointLightName = "pointLight";
-					pointLightName += "[" + std::to_string(i) + "]";
-
 					cMaterial->GetShader()->SetUniform1i("numPointLights", pointLights.size());
-					cMaterial->GetShader()->SetUniformVec4f(pointLightName += ".diffuse", (GLfloat*)&pointLights[i]->GetComponent<C_Light>()->GetPointLight()->diffuse);
-					pointLightName = "pointLight";
-					pointLightName += "[" + std::to_string(i) + "]";
-					cMaterial->GetShader()->SetUniformVec4f(pointLightName += ".ambient", (GLfloat*)&pointLights[i]->GetComponent<C_Light>()->GetPointLight()->ambient);
-					pointLightName = "pointLight";
-					pointLightName += "[" + std::to_string(i) + "]";
-					cMaterial->GetShader()->SetUniformVec4f(pointLightName += ".specular", (GLfloat*)&pointLights[i]->GetComponent<C_Light>()->GetPointLight()->specular);
-					pointLightName = "pointLight";
-					pointLightName += "[" + std::to_string(i) + "]";
-					cMaterial->GetShader()->SetUniform1f(pointLightName += ".constant", pointLights[i]->GetComponent<C_Light>()->GetPointLight()->GetConstant());
-					pointLightName = "pointLight";
-					pointLightName += "[" + std::to_string(i) + "]";
-					cMaterial->GetShader()->SetUniform1f(pointLightName += ".linear", pointLights[i]->GetComponent<C_Light>()->GetPointLight()->GetLinear());
-					pointLightName = "pointLight";
-					pointLightName += "[" + std::to_string(i) + "]";
-					cMaterial->GetShader()->SetUniform1f(pointLightName += ".quadratic", pointLights[i]->GetComponent<C_Light>()->GetPointLight()->GetQuadratic());
-					pointLightName = "pointLight";
-					pointLightName += "[" + std::to_string(i) + "]";
-					cMaterial->GetShader()->SetUniformVec3f(pointLightName += ".position", (GLfloat*)&pointLights[i]->transform->GetWorldPosition());
+					cMaterial->GetShader()->SetUniformVec4f("pointLight[" + std::to_string(i) + "]" + ".diffuse", (GLfloat*)&pointLights[i]->GetComponent<C_Light>()->GetPointLight()->diffuse);
+					cMaterial->GetShader()->SetUniformVec4f("pointLight[" + std::to_string(i) + "]" + ".ambient", (GLfloat*)&pointLights[i]->GetComponent<C_Light>()->GetPointLight()->ambient);
+					cMaterial->GetShader()->SetUniformVec4f("pointLight[" + std::to_string(i) + "]" + ".specular", (GLfloat*)&pointLights[i]->GetComponent<C_Light>()->GetPointLight()->specular);
+					cMaterial->GetShader()->SetUniform1f("pointLight[" + std::to_string(i) + "]" + ".constant", pointLights[i]->GetComponent<C_Light>()->GetPointLight()->GetConstant());
+					cMaterial->GetShader()->SetUniform1f("pointLight[" + std::to_string(i) + "]" + ".linear", pointLights[i]->GetComponent<C_Light>()->GetPointLight()->GetLinear());
+					cMaterial->GetShader()->SetUniform1f("pointLight[" + std::to_string(i) + "]" + ".quadratic", pointLights[i]->GetComponent<C_Light>()->GetPointLight()->GetQuadratic());
+					cMaterial->GetShader()->SetUniformVec3f("pointLight[" + std::to_string(i) + "]" + ".position", (GLfloat*)&pointLights[i]->transform->GetWorldPosition());
 				}
 			}
 
