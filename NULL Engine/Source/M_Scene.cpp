@@ -295,7 +295,8 @@ bool M_Scene::LoadScene(const char* path)
 
 	App->fileSystem->SplitFilePath(path, nullptr, &sceneName);
 
-	currentScene = sceneName;
+	if(sceneName != "PlayAutosave")
+		currentScene = sceneName;
 
 	App->camera->SetMasterCameraAsCurrentCamera();
 
