@@ -101,6 +101,8 @@ bool M_Scene::Start()
 UpdateStatus M_Scene::Update(float dt)
 {
 	OPTICK_CATEGORY("Scene Update", Optick::Category::Update);
+
+	HandleCopyGO();
 	
 	std::vector<MeshRenderer>		meshRenderers;
 	std::vector<CuboidRenderer>		cuboidRenderers;
@@ -407,6 +409,14 @@ bool M_Scene::LoadScene(const char* path)
 	return ret;
 }
 
+bool M_Scene::SaveSceneAs(const char* sceneName) 
+{
+	currentScene = sceneName;
+	SaveScene(sceneName);
+
+	return true;
+}
+
 void M_Scene::LoadResourceIntoScene(Resource* resource)
 {
 	if (resource == nullptr)
@@ -549,6 +559,21 @@ void M_Scene::DeleteGameObject(GameObject* gameObject, uint index)
 	}
 
 	LOG("[ERROR] Could not find game object %s in game_objects vector!", gameObject->GetName());
+}
+
+void M_Scene::AddGameObjectToScene(GameObject* gameObject, GameObject* parent)
+{
+	parent != nullptr ? gameObject->SetParent(sceneRoot) : gameObject->SetParent(parent);
+	
+	AddGameObjectChildrenToScene(gameObject);
+}
+
+void M_Scene::AddGameObjectChildrenToScene(GameObject* gameObject)
+{
+	gameObjects.push_back(gameObject);
+
+	for (auto child = gameObject->childs.begin(); child != gameObject->childs.end(); ++child)
+		AddGameObjectChildrenToScene(*child);
 }
 
 GameObject* M_Scene::GenerateGameObjectsFromModel(const R_Model* rModel, const float3& scale)
@@ -1101,6 +1126,28 @@ void M_Scene::NextRoom()
 	
 	nextScene = true;
 	
+}
+
+void M_Scene::HandleCopyGO() //TODO Cntrl + c / Cntrl + v
+{
+	if (App->input->GetKey(SDL_SCANCODE_LCTRL) == KeyState::KEY_REPEAT && App->input->GetKey(SDL_SCANCODE_C) == KeyState::KEY_DOWN)
+	{
+		if (selectedGameObject != nullptr)
+		{
+			//copiedGO = selectedGameObject;
+			//LOG("Copied Game Object with Name: %s", copiedGO->GetName());
+		}
+	}
+
+	if (App->input->GetKey(SDL_SCANCODE_LCTRL) == KeyState::KEY_REPEAT && App->input->GetKey(SDL_SCANCODE_V) == KeyState::KEY_DOWN)
+	{
+		if (selectedGameObject != nullptr && copiedGO != nullptr)
+		{
+			//AddGameObjectToScene(copiedGO);
+			//LOG("Pasted Game Object with Name: %s", copiedGO->GetName());
+		}
+	}
+
 }
 
 void M_Scene::DeleteSelectedGameObject()
