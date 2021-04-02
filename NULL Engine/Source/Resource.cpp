@@ -74,6 +74,7 @@ const char* Resource::GetTypeAsString() const
 	case ResourceType::TEXTURE:		{ return "TEXTURE"; }	break;
 	case ResourceType::ANIMATION:	{ return "ANIMATION"; }	break;
 	case ResourceType::SHADER:		{ return "SHADER"; }	break;
+	case ResourceType::ANIMATION2D: { return "ANIMATION2D";}break;
 	}
 
 	return "NONE";
@@ -183,6 +184,11 @@ void Resource::SetLibraryPathAndFile()
 	case ResourceType::SHADER:
 		directory = SHADERS_PATH;
 		extension = SHADERS_EXTENSION;
+		break;
+
+	case ResourceType::ANIMATION2D:
+		directory = ANIMATIONS2D_PATH;
+		extension = ANIMATIONS2D_EXTENSION;
 		break;
 	}
 	
