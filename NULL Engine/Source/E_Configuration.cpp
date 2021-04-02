@@ -9,6 +9,7 @@
 #include "M_Camera3D.h"
 #include "M_Input.h"
 #include "M_FileSystem.h"
+#include "M_Physics.h"
 #include "HardwareInfo.h"
 
 #include "GameObject.h"
@@ -401,7 +402,16 @@ bool E_Configuration::PhysicsMenu()
 {
 	bool ret = true;
 
-	// NOTHING FOR NOW
+	// NOTHING FOR NOW, NOT ANYMORE BABY WEEEEEEEEEE BACK IN BLACK
+
+	if (ImGui::CollapsingHeader("Physics... more like im PHYnna push some SICk commits, GOOOOOOOTEEEEEEEEM"))
+	{
+		float gravity = App->physics->Gravity();
+		if (ImGui::InputFloat("Gravity", &gravity, 0, 0, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue))
+			App->physics->SetGravity(gravity);
+
+		//SHIT BOUTA GET REAL, TODO
+	}
 
 	return ret;
 }

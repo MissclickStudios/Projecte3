@@ -266,10 +266,46 @@ void M_Physics::DeleteActor(physx::PxActor* actor)
 	actors.erase((physx::PxRigidActor*)actor);
 }
 
+void M_Physics::SetGravity(float value)
+{
+	gravity = value;
+	scene->setGravity(physx::PxVec3(0.0f, -gravity, 0.0f));
+}
+
+const std::string* const M_Physics::GetFilter(int id) const
+{
+	--id;
+
+	if (id < 0)
+		return &defaultFilter;
+	else if (id >= filters.size())
+		return nullptr;
+
+	return &filters[id];
+}
+
 const int M_Physics::GetFilterID(const std::string* const filter)
 {
 	for (uint i = 0; i < filters.size(); ++i)
 		if (filters[i] == *filter)
 			return i;
 	return -1;
+}
+
+void M_Physics::CreateFilter(const std::string& filter)
+{
+	for (uint i = 0; i < filters.size(); ++i)
+		if (filters[i] == filter)
+		{
+			LOG("[ERROR] The filter [%s] already exists", filter.c_str());
+			return;
+		}
+	filters.push_back(filter);
+}
+
+void M_Physics::DeleteFilter(const std::string& filter)
+{
+	for (std::vector<std::string>::iterator itr = filters.begin(); itr != filters.end(); ++itr)
+		if (*itr == filter)
+			filters.erase(itr);
 }
