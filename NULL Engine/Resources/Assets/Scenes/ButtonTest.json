@@ -354,16 +354,22 @@
                     ]
                 },
                 {
-                    "Type": 3
-                },
-                {
                     "Type": 23,
                     "Button": {
                         "X": 0,
-                        "Y": 0,
-                        "W": 0.30000001192092896,
-                        "H": 0.05000000074505806,
+                        "Y": 0.054999999701976776,
+                        "W": 0.28499999642372131,
+                        "H": 0.26499998569488525,
                         "IsHovered": true
+                    }
+                },
+                {
+                    "Type": 3,
+                    "Texture": {
+                        "UID": 1134605238,
+                        "Name": "NewGameButton2.png",
+                        "Path": "Library\/Textures\/1134605238.netex",
+                        "File": "1134605238.netex"
                     }
                 }
             ]
@@ -409,7 +415,7 @@
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
-            "ShowBoundingBoxes": true,
+            "ShowBoundingBoxes": false,
             "Components": [
                 {
                     "Type": 1,
@@ -431,15 +437,21 @@
                     ]
                 },
                 {
-                    "Type": 3
+                    "Type": 3,
+                    "Texture": {
+                        "UID": 203442176,
+                        "Name": "ContinueButton2.png",
+                        "Path": "Library\/Textures\/203442176.netex",
+                        "File": "203442176.netex"
+                    }
                 },
                 {
                     "Type": 23,
                     "Button": {
                         "X": 0,
-                        "Y": -0.10000000149011612,
-                        "W": 0.30000001192092896,
-                        "H": 0.05000000074505806,
+                        "Y": -0.014999999664723873,
+                        "W": 0.28499999642372131,
+                        "H": 0.26499998569488525,
                         "IsHovered": false
                     }
                 }
@@ -1428,7 +1440,7 @@
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
-            "ShowBoundingBoxes": true,
+            "ShowBoundingBoxes": false,
             "Components": [
                 {
                     "Type": 1,
@@ -1609,7 +1621,7 @@
         },
         {
             "UID": 888400124,
-            "ParentUID": 478633112,
+            "ParentUID": 1236371178,
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "MainScene",
@@ -3260,15 +3272,21 @@
                     ]
                 },
                 {
-                    "Type": 3
+                    "Type": 3,
+                    "Texture": {
+                        "UID": 1460287197,
+                        "Name": "SettingsButton2.png",
+                        "Path": "Library\/Textures\/1460287197.netex",
+                        "File": "1460287197.netex"
+                    }
                 },
                 {
                     "Type": 23,
                     "Button": {
                         "X": 0,
-                        "Y": 0.10000000149011612,
-                        "W": 0.30000001192092896,
-                        "H": 0.05000000074505806,
+                        "Y": -0.085000000894069672,
+                        "W": 0.28499999642372131,
+                        "H": 0.26499998569488525,
                         "IsHovered": false
                     }
                 }
@@ -4452,19 +4470,19 @@
                             "Loop": true
                         },
                         {
-                            "Name": "Running4",
-                            "Start": 0,
-                            "End": 40,
-                            "Duration": 40,
-                            "DurationInSeconds": 0.66666668653488159,
-                            "Loop": true
-                        },
-                        {
                             "Name": "Shooting",
                             "Start": 0,
                             "End": 34,
                             "Duration": 34,
                             "DurationInSeconds": 0.56666666269302368,
+                            "Loop": true
+                        },
+                        {
+                            "Name": "Running4",
+                            "Start": 0,
+                            "End": 40,
+                            "Duration": 40,
+                            "DurationInSeconds": 0.66666668653488159,
                             "Loop": true
                         },
                         {
@@ -4575,6 +4593,57 @@
                         1,
                         1
                     ]
+                }
+            ]
+        },
+        {
+            "UID": 140109161,
+            "ParentUID": 777106468,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "UI Button",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 23,
+                    "Button": {
+                        "X": 0,
+                        "Y": -0.1554415225982666,
+                        "W": 0.28499999642372131,
+                        "H": 0.26499998569488525,
+                        "IsHovered": false
+                    }
+                },
+                {
+                    "Type": 3,
+                    "Texture": {
+                        "UID": 1193083331,
+                        "Name": "ExitButton2.png",
+                        "Path": "Library\/Textures\/1193083331.netex",
+                        "File": "1193083331.netex"
+                    }
                 }
             ]
         }
