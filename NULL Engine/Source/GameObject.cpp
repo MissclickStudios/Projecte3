@@ -730,7 +730,7 @@ Component* GameObject::CreateComponent(ComponentType type)
 		return nullptr;
 	}
 
-#ifndef GAMEBUILD
+#ifndef GAMEBUILD //TODO: Es pot posar + de 1 component script igual ???
 	//TODO: Maybe this is avoidable !!!!!!!!
 	/*std::vector<C_Script*>scripts;
 	if (type == ComponentType::SCRIPT && GetComponents<C_Script>(scripts)) 
@@ -765,7 +765,7 @@ Component* GameObject::CreateComponent(ComponentType type)
 	case ComponentType::CANVAS:				{ component = new C_Canvas(this); }				break;
 	case ComponentType::UI_IMAGE:			{ component = new C_UI_Image(this); }			break;
 	case ComponentType::UI_TEXT:			{ component = new C_UI_Text(this); }			break;
-	case ComponentType::SCRIPT:				{component = new C_Script(this); }				break;
+	case ComponentType::SCRIPT:				{ component = new C_Script(this); }				break;
 	case ComponentType::PLAYER_CONTROLLER:	{ component = new C_PlayerController(this); }	break;
 	case ComponentType::BULLET_BEHAVIOR:	{ component = new C_BulletBehavior(this); }		break;
 	case ComponentType::PROP_BEHAVIOR:		{ component = new C_PropBehavior(this); }		break;

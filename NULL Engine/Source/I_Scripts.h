@@ -14,7 +14,7 @@ namespace Parser
 
 	bool CheckNullterminatedBuffer(char* buffer, int size);
 	bool LanguageSymbol(char symbol);
-	bool PreaviousSymbolIs(char*& symbol); //Careful reading outside buffer boundaries
+	void ReadPreaviousSymbol(char* cursor, char*& startSymbol, unsigned int& symbolSize); //Careful reading outside buffer boundaries or reading from a comment and interpreting it as a symbol!!!
 	ParsingState HandlePossibleComment(char*& cursor);
 	ParsingState GoStartSymbol(char*& cursor, char* symbol);
 	ParsingState GoEndSymbol(char*& cursor, char* symbol);
@@ -26,11 +26,11 @@ namespace Parser
 
 namespace Importer
 {
-	namespace Scripts																	// Importing, saving and loading aiMaterials with Assimp.
+	namespace Scripts																	
 	{
-		bool Import(const char* assetsPath, char* buffer, uint size, R_Script* rScript);			//Processes an aiMaterial into a ready-to-use R_Material. ERROR = nullptr.
-		uint Save(const R_Script* rScript, char** buffer);						// Processes R_Material data into a ready-to-save buffer. Returns buffer size (0 = ERROR).
-		bool Load(const char* buffer, R_Script* rMaterial);						// Processes buffer data into a ready-to-use R_Material. Returns nullptr on error.
+		bool Import(const char* assetsPath, char* buffer, uint size, R_Script* rScript);
+		uint Save(const R_Script* rScript, char** buffer);						
+		bool Load(const char* buffer, R_Script* rMaterial);						
 	}
 }
 
