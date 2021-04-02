@@ -1,8 +1,8 @@
 #ifndef __MEMORY_MANAGER_H__
 #define __MEMORY_MANAGER_H__
 
-#ifndef GAMEBUILD
+#ifndef NOMEMOMANAGER
 #include "mmgr/include/mmgr.h"
-#endif // !GAMEBUILD
+#endif // !NOMEMOMANAGER
 
 #endif // !__MEMORY_MANAGER_H__

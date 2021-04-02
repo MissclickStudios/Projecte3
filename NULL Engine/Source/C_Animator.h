@@ -67,6 +67,7 @@ public:
 	void			AddAnimation							(R_Animation* rAnimation);
 	bool			AddClip									(const AnimatorClip& clip);
 	void			PlayClip								(const std::string& clipName, uint blendFrames);
+	void			PlayClip								(const std::string& clipName, float blendTime);
 	
 	bool			Play									();
 	bool			Pause									();
@@ -148,18 +149,17 @@ private:																													// --- BONE/CHANNEL UPDATE METHODS
 	void			UpdateDisplayBones						();
 	void			GenerateBoneSegments					(const GameObject* bone);
 	
-	//Transform		GetInterpolatedTransform				(double keyframe, const Channel& channel, const Transform& originalTransform) const;
 	Transform		GetInterpolatedTransform				(double keyframe, const Channel& channel, C_Transform* originalTransform) const;
 	const float3	GetInterpolatedPosition					(double keyframe, const Channel& channel) const;
 	const Quat		GetInterpolatedRotation					(double keyframe, const Channel& channel) const;
 	const float3	GetInterpolatedScale					(double keyframe, const Channel& channel) const;
 
-	Transform		GetPoseToPoseTransform					(uint tick, const Channel& channel, const Transform& originalTransform) const;
+	Transform		GetPoseToPoseTransform					(uint tick, const Channel& channel, C_Transform* originalTransform) const;
 
-	Transform		GetBlendedTransform						(double blendingKeyframe, const Channel& blendingChannel, const Transform& originalTransform) const;
-	const float3	GetBlendedPosition						(double blendingKeyframe, const Channel& blendingChannel, const float3& originalPosition) const;
-	const Quat		GetBlendedRotation						(double blendingKeyframe, const Channel& blendingChannel, const Quat& originalRotation) const;
-	const float3	GetBlendedScale							(double blendingKeyframe, const Channel& blendingChannel, const float3& originalScale) const;
+	Transform		GetBlendedTransform						(double bKeyframe, const Channel& bChannel, const Transform& originalTransform) const;
+	const float3	GetBlendedPosition						(double bKeyframe, const Channel& bChannel, float bRate, const float3& originalPosition) const;
+	const Quat		GetBlendedRotation						(double bKeyframe, const Channel& bChannel, float bRate, const Quat& originalRotation) const;
+	const float3	GetBlendedScale							(double bKeyframe, const Channel& bChannel, float bRate, const float3& originalScale) const;
 
 private:
 	std::vector<R_Animation*>						animations;											// Animation Resources. Contain bone information (transforms...).
@@ -168,8 +168,8 @@ private:
 	std::vector<C_Mesh*>							animatedMeshes;										// TMP. Until a better implementation is found;
 
 	std::vector<GameObject*>						bones;												//
-	std::vector<BoneLink>							currentBones;										// Multiple animations will have the same bones.
-	std::vector<BoneLink>							blendingBones;										//
+	std::vector<BoneLink>*							currentBones;										// Multiple animations will have the same bones.
+	std::vector<BoneLink>*							blendingBones;										//
 	std::vector<LineSegment>						displayBones;										// Line Segments between GO bones. For debug purposes.
 
 	std::unordered_map<std::string, AnimatorClip>	clips;												// Segments of animations. "Idle", "Walk", "Attack"...

@@ -9,9 +9,9 @@
 
 #pragma comment( lib, "Source/Dependencies/SDL/libx86/SDL2.lib" )
 #pragma comment( lib, "Source/Dependencies/SDL/libx86/SDL2main.lib" )
-#ifndef GAMEBUILD
+#ifndef NOPROFILER
 #pragma comment( lib, "Source/Dependencies/Optik/OptickCore.lib" ) //TODO: if build configuration not link this
-#endif // !GAMEBUILD
+#endif // !NOPROFILER
 
 
 
