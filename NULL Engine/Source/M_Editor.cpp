@@ -33,6 +33,7 @@
 #include "E_About.h"
 #include "E_LoadFile.h"
 #include "E_SaveFile.h"
+#include "E_WantToSaveScene.h"
 
 #include "M_Editor.h"
 
@@ -63,7 +64,8 @@ timeline		(new E_Timeline()),
 imguiDemo		(new E_ImGuiDemo()),
 about			(new E_About()),
 loadFile		(new E_LoadFile()),
-saveFile		(new E_SaveFile())
+saveFile		(new E_SaveFile()),
+wantToSaveScene (new E_WantToSaveScene())
 {
 	AddEditorPanel(mainMenuBar);
 	AddEditorPanel(toolbar);
@@ -79,6 +81,7 @@ saveFile		(new E_SaveFile())
 	AddEditorPanel(about);
 	AddEditorPanel(loadFile);
 	AddEditorPanel(saveFile);
+	AddEditorPanel(wantToSaveScene);
 
 	showConfiguration	= true;
 	showHierarchy		= true;
@@ -90,6 +93,7 @@ saveFile		(new E_SaveFile())
 	showCloseAppPopup	= false;
 	showLoadFilePopup	= false;
 	showSaveFilePopup	= false;
+	showWantToSaveScenePopup = false;
 }
 
 M_Editor::~M_Editor()
@@ -209,11 +213,12 @@ void M_Editor::EditorShortcuts()
 {
 	if (EngineApp->input->GetKey(SDL_SCANCODE_ESCAPE) == KeyState::KEY_DOWN)
 	{
-		if (showAboutPopup || showLoadFilePopup || showSaveFilePopup)
+		if (showAboutPopup || showLoadFilePopup || showSaveFilePopup || showWantToSaveScenePopup)
 		{
 			showAboutPopup		= false;
 			showLoadFilePopup	= false;
 			showSaveFilePopup	= false;
+			showWantToSaveScenePopup = false;
 		}
 		else
 		{
@@ -221,7 +226,7 @@ void M_Editor::EditorShortcuts()
 		}
 	}
 
-	if (EngineApp->input->GetKey(SDL_SCANCODE_LCTRL) == KeyState::KEY_REPEAT)
+	if (EngineApp->input->GetKey(SDL_SCANCODE_LCTRL) == KeyState::KEY_REPEAT && EngineApp->gameState != GameState::PLAY)
 	{
 		if (EngineApp->input->GetKey(SDL_SCANCODE_1) == KeyState::KEY_DOWN)
 		{
@@ -271,6 +276,7 @@ void M_Editor::CheckShowHideFlags()
 	(showAboutPopup)	?	about->Enable()			: about->Disable();							// About Popup
 	(showLoadFilePopup)	?	loadFile->Enable()		: loadFile->Disable();						// Load File
 	(showSaveFilePopup)	?	saveFile->Enable()		: saveFile->Disable();						// Load File
+	(showWantToSaveScenePopup) ? wantToSaveScene->Enable() : wantToSaveScene->Disable();
 }
 
 bool M_Editor::EditorIsBeingHovered() const
@@ -675,4 +681,11 @@ void M_Editor::PostSceneRendering()
 
 		SDL_GL_MakeCurrent(backupCurrentWindow, backupCurrentContext);
 	}
+}
+
+void M_Editor::OpenWantToSaveScenePopup(WantToSaveType type)
+{
+	showWantToSaveScenePopup = true;
+
+	wantToSaveScene->type = type;
 }

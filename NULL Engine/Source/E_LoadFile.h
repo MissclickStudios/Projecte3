@@ -12,6 +12,7 @@ public:
 	bool Draw		(ImGuiIO& io);
 	bool CleanUp	();
 
+	void LoadFile();
 private:
 	void DrawFileBrowser		();																		// Will diplay a child window with all the directories and files inside "Assets/"
 	void DrawFileSelector		();																		// Will display an input box with the selected_file in it and a Confirm & Cancel btns.

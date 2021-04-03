@@ -9,6 +9,7 @@
 #include "M_Editor.h"
 
 #include "E_LoadFile.h"
+#include "E_WantToSaveScene.h"
 
 #include "MemoryManager.h"
 
@@ -44,11 +45,9 @@ bool E_LoadFile::Draw(ImGuiIO& io)
 
 	if (readyToLoad)
 	{
-		readyToLoad						= false;
-		EngineApp->editor->showLoadFilePopup	= false;
-		
-		EngineApp->editor->LoadFileThroughEditor(selectedFile);
-		selectedFile[0] = '\0';
+		EngineApp->editor->OpenWantToSaveScenePopup(WantToSaveType::OPEN_SCENE);
+		readyToLoad = false;
+		EngineApp->editor->showLoadFilePopup = false;
 	}
 
 	return ret;
@@ -150,4 +149,12 @@ void E_LoadFile::DrawDirectoriesTree(const char* rootDirectory, const char* exte
 
 	directories.clear();
 	files.clear();
+}
+
+void E_LoadFile::LoadFile()
+{
+	
+
+	EngineApp->editor->LoadFileThroughEditor(selectedFile);
+	selectedFile[0] = '\0';
 }

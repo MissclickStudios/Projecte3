@@ -5,6 +5,8 @@
 #include "Profiler.h"
 #include "E_MainMenuBar.h"
 
+#include "E_WantToSaveScene.h"
+
 #include "MemoryManager.h"
 
 E_MainMenuBar::E_MainMenuBar() : EditorPanel("MainMenuBar")
@@ -57,7 +59,12 @@ bool E_MainMenuBar::FileMainMenuItem()
 	
 	if (ImGui::BeginMenu("File"))
 	{
-		ImGui::MenuItem("New Scene", "Ctrl+N", nullptr, false);
+		if (ImGui::MenuItem("New Scene", "Ctrl+N"))
+		{
+			//should ask if want to save current scene before going to new scene
+
+			EngineApp->editor->OpenWantToSaveScenePopup(WantToSaveType::NEW_SCENE);
+		}
 		
 		if (ImGui::MenuItem("Open Scene", "Ctrl+O"))
 		{

@@ -2,6 +2,11 @@
 
 #include "MemoryManager.h"
 
+EditorPanel::EditorPanel()
+{
+
+}
+
 EditorPanel::EditorPanel(const char* name, bool isActive) : 
 name		(name), 
 isActive	(isActive), 

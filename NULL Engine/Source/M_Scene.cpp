@@ -409,10 +409,28 @@ bool M_Scene::LoadScene(const char* path)
 	return ret;
 }
 
-bool M_Scene::SaveSceneAs(const char* sceneName) 
+void M_Scene::SaveCurrentScene()
+{
+	SaveScene(currentScene.c_str());
+}
+
+bool M_Scene::SaveSceneAs(const char* sceneName)
 {
 	currentScene = sceneName;
 	SaveScene(sceneName);
+
+	return true;
+}
+
+bool M_Scene::NewScene()
+{
+
+	App->renderer->ClearRenderers();
+	CleanUp();
+
+	App->renderer->defaultSkyBox.SetUpSkyBoxBuffers();
+
+	currentScene = "New Scene";
 
 	return true;
 }
