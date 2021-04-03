@@ -47,7 +47,7 @@
 
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */	
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */	
-#pragma comment (lib, "Source/Dependencies/Assimp/libx86/Release/assimp-vc142-mt.lib")	
+#pragma comment (lib, "Source/Dependencies/Assimp/assimp-vc142-mt.lib")	
 #pragma comment (lib, "Source/Dependencies/glew/libx86/glew32.lib")
 
 #define WORLD_GRID_SIZE		64

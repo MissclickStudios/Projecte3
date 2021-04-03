@@ -35,7 +35,7 @@
 
 #include "MemoryManager.h"
 
-#pragma comment (lib, "Source/Dependencies/Assimp/libx86/Release/assimp-vc142-mt.lib")
+#pragma comment (lib, "Source/Dependencies/Assimp/assimp-vc142-mt.lib")
 
 using namespace Importer::Scenes;																		// Not a good thing to do but it will be employed sparsely and only inside this .cpp
 

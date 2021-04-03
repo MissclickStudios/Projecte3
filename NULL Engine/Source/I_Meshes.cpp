@@ -22,7 +22,7 @@
 
 #include "MemoryManager.h"
 
-#pragma comment (lib, "Source/Dependencies/Assimp/libx86/Release/assimp-vc142-mt.lib")
+#pragma comment (lib, "Source/Dependencies/Assimp/assimp-vc142-mt.lib")
 
 #define HEADER_SIZE 5																				// Amount of items in the Header Data Array. (Save & Load)
 
