@@ -104,6 +104,8 @@ bool C_RigidBody::SaveState(ParsonNode& root) const
 
 	root.SetBool("Is Static", isStatic);
 
+	root.SetString("Filter", filter.c_str());
+
 	return true;
 }
 
@@ -126,6 +128,9 @@ bool C_RigidBody::LoadState(ParsonNode& root)
 	isStatic = root.GetBool("Is Static");
 	if (isStatic)
 		MakeStatic();
+
+	filter = root.GetString("Filter");
+	ChangeFilter(filter);
 
 	ApplyPhysicsChanges();
 

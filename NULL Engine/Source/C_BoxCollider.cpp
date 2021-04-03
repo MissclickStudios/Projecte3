@@ -164,9 +164,8 @@ void C_BoxCollider::CreateCollider()
 	physx::PxFilterData filterData;
 	filterData.word0 = (int)GetOwner()->GetComponent<C_RigidBody>()->GetFilter();
 
-	const std::string* str = (const std::string*)filterData.word0;
-
 	shape->setSimulationFilterData(filterData);
+	shape->setFlag(physx::PxShapeFlag::eSCENE_QUERY_SHAPE, true);
 	shape->setQueryFilterData(filterData);
 
 	GetOwner()->GetComponent<C_RigidBody>()->GetRigidBody()->attachShape(*shape);

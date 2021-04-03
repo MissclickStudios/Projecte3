@@ -47,7 +47,7 @@ public:
 	void SetGravity(float value);
 
 	const std::vector<std::string>* const GetFilters() { return &filters; }
-	bool** const GetInteractions() const { return filterInteractions; }
+	bool** GetInteractions() { return filterInteractions; }
 
 	const std::string* const GetFilter(int id) const;
 	const int GetFilterID(const std::string* const filter);
