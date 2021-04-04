@@ -206,6 +206,36 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 25.895, y: 0, z: 0}
+--- !u!1 &511980435
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 511980436}
+  m_Layer: 0
+  m_Name: Location Cone Attack
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &511980436
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 511980435}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.46, z: 11}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &923697386
 GameObject:
   m_ObjectHideFlags: 0
@@ -478,7 +508,6 @@ GameObject:
   - component: {fileID: 1065322324}
   - component: {fileID: 1065322329}
   - component: {fileID: 1065322334}
-  - component: {fileID: 1065322330}
   - component: {fileID: 1065322332}
   m_Layer: 0
   m_Name: Boss
@@ -574,7 +603,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1065322323}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.46, z: 0}
+  m_LocalPosition: {x: 5.49, y: 1.46, z: -3.02}
   m_LocalScale: {x: 1, y: 2, z: 1}
   m_Children:
   - {fileID: 1410051889}
@@ -594,29 +623,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b074da42661a771489e5032b1df55932, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  numberOfProjectiles: 20
+  numberOfProjectiles: 40
   projectileSpeed: 15
   ProjectilePrefab: {fileID: 7330326984651472972, guid: 6b3f174fb5566e448a44a337d06a8fa4, type: 3}
   BossMovement: {fileID: 1065322324}
---- !u!95 &1065322330
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1065322323}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 420b00a1033473849b58d3a1f8128493, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!54 &1065322332
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -653,6 +663,13 @@ MonoBehaviour:
   sAttack1RightArm: {fileID: 1008433897}
   sAttack1LeftArm: {fileID: 1410051889}
   sAttack1BulletSpeed: 500
+  Target: {fileID: 511980436}
+  Boss: {fileID: 1065322328}
+  Speed: 10
+  moveSpeed: 10
+  SA1numProjectiles: 40
+  SA1projectileSpeed: 50
+  SA1projectile: {fileID: 7330326984651472972, guid: 6b3f174fb5566e448a44a337d06a8fa4, type: 3}
 --- !u!1 &1132967022
 GameObject:
   m_ObjectHideFlags: 0
