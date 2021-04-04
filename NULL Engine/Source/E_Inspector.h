@@ -82,7 +82,7 @@ private:
 	void AddComponentCombo				(GameObject* selectedGameObject);					// 
 	void DeleteComponentPopup			(GameObject* selectedGameObject);					// 
 	void AddUIComponent					(GameObject* selectedGameObject, ComponentType type);
-
+	
 	void TextEditorWindow();
 	void CallTextEditor(C_Material* cMaterial);
 

@@ -12,7 +12,7 @@ E_Hierarchy::E_Hierarchy() : EditorPanel("Hierarchy"),
 draggedGameObject			(nullptr), 
 openHierarchyToolsPopup	(false)
 {
-	defaultFlags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth;
+	defaultFlags = ImGuiTreeNodeFlags_SpanAvailWidth;
 }
 
 E_Hierarchy::~E_Hierarchy()

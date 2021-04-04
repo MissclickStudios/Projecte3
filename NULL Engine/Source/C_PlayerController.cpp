@@ -71,7 +71,7 @@ bool C_PlayerController::Update()
 	AnimatorClip* currentClip	= aAnimator->GetCurrentClip();
 	std::string clipName		= (currentClip != nullptr) ? currentClip->GetName() : "[NONE]";
 
-	switch (state)
+	/*switch (state)
 	{
 	case PlayerState::IDLE:
 		if (currentClip != nullptr && clipName != "Idle")
@@ -101,7 +101,7 @@ bool C_PlayerController::Update()
 			aAnimator->PlayClip("Shooting", 0.2f);
 		}
 		break;
-	}
+	}*/
 
 	if (!bulletStorage)
 	{

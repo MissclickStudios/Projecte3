@@ -580,9 +580,9 @@ Transform C_Animator::GetBlendedTransform(double bKeyframe, const Channel& bChan
 	float bRate = (float)((bKeyframe - blendingClip->GetStart()) / blendFrames);
 	bRate		= (bRate > 1.0f) ? 1.0f : bRate;
 
-	const float3&	position	= (bChannel.HasPositionKeyframes()) ? GetBlendedPosition(bKeyframe, bChannel, bRate, originalTransform.position) : originalTransform.position;
-	const Quat&		rotation	= (bChannel.HasRotationKeyframes()) ? GetBlendedRotation(bKeyframe, bChannel, bRate, originalTransform.rotation) : originalTransform.rotation;
-	const float3&	scale		= (bChannel.HasScaleKeyframes()) ? GetBlendedScale(bKeyframe, bChannel, bRate, originalTransform.scale) : originalTransform.scale;
+	const float3&	position	= (bChannel.HasPositionKeyframes()) ? originalTransform.position.Lerp((GetInterpolatedPosition(bKeyframe, bChannel)), bRate) : originalTransform.position;
+	const Quat&		rotation	= (bChannel.HasRotationKeyframes()) ? originalTransform.rotation.Slerp((GetInterpolatedRotation(bKeyframe, bChannel)), bRate) : originalTransform.rotation;
+	const float3&	scale		= (bChannel.HasScaleKeyframes()) ? originalTransform.scale.Lerp((GetInterpolatedScale(bKeyframe, bChannel)), bRate) : originalTransform.scale;
 
 	return Transform(position, rotation, scale);
 }

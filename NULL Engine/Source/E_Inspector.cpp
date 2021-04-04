@@ -901,18 +901,9 @@ void E_Inspector::DrawAnimatorComponent(C_Animator* cAnimator)								// TODO: S
 					for (uint i = 0; i < clipNames.size(); ++i)
 					{	
 						if (ImGui::TreeNodeEx(clipNames[i].c_str(), ImGuiTreeNodeFlags_Bullet))
-						{
+						{	
 							ImGui::TreePop();
 						}
-
-						/*if (ImGui::IsItemHovered())
-						{
-							ImGui::OpenPopup("ClipPopUp");
-							if (ImGui::BeginPopup("Clip Info"))
-							{
-								ImGui::EndPopup();
-							}
-						}*/
 					}
 
 					ImGui::EndTabItem();
