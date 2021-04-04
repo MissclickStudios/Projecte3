@@ -32,6 +32,7 @@ class C_Canvas;
 class C_ParticleSystem;
 class C_UI_Image;
 class C_UI_Text;
+class C_2DAnimator;
 
 class Resource;
 class R_Shader;
@@ -79,6 +80,7 @@ private:
 	void DrawPropBehaviorComponent		(C_PropBehavior* behavior);
 	void DrawCameraBehaviorComponent	(C_CameraBehavior* behavior); 
 	void DrawGateBehaviorComponent		(C_GateBehavior* behavior);
+	void DrawAnimator2DComponent		(C_2DAnimator* cAnimator);
 
 	void AddComponentCombo				(GameObject* selectedGameObject);					// 
 	void DeleteComponentPopup			(GameObject* selectedGameObject);					// 

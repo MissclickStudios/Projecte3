@@ -43,6 +43,7 @@
 #include "C_UI_Image.h"
 #include "C_UI_Text.h"
 #include "C_Script.h"
+#include "C_2DAnimator.h"
 
 #include "R_Texture.h"
 #include "R_Animation.h"
@@ -234,6 +235,7 @@ void E_Inspector::DrawComponents(GameObject* selectedGameObject)
 		case ComponentType::PROP_BEHAVIOR:		{ DrawPropBehaviorComponent((C_PropBehavior*)component); }			break;
 		case ComponentType::CAMERA_BEHAVIOR:	{ DrawCameraBehaviorComponent((C_CameraBehavior*)component); }		break;
 		case ComponentType::GATE_BEHAVIOR:		{ DrawGateBehaviorComponent((C_GateBehavior*)component); }			break;
+		case ComponentType::ANIMATOR2D:			{ DrawAnimator2DComponent((C_2DAnimator*)component); }				break;
 		}
 		if (type == ComponentType::NONE)
 		{
@@ -1775,6 +1777,28 @@ void E_Inspector::DrawGateBehaviorComponent(C_GateBehavior* cBehavior)
 		if (!show)
 		{
 			componentToDelete = cBehavior;
+			showDeleteComponentPopup = true;
+		}
+
+		ImGui::Separator();
+	}
+	return;
+}
+
+void E_Inspector::DrawAnimator2DComponent(C_2DAnimator* cAnimator)
+{
+	bool show = true;
+	if (ImGui::CollapsingHeader("Gate Bahavior", &show, ImGuiTreeNodeFlags_Leaf))
+	{
+		bool isActive = cAnimator->IsActive();
+		if (ImGui::Checkbox("Gate Is Active", &isActive))
+			cAnimator->SetIsActive(isActive);
+
+		ImGui::Separator();
+
+		if (!show)
+		{
+			componentToDelete = cAnimator;
 			showDeleteComponentPopup = true;
 		}
 
