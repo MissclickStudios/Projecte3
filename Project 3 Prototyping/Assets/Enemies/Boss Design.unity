@@ -507,6 +507,9 @@ GameObject:
   - component: {fileID: 1065322325}
   - component: {fileID: 1065322324}
   - component: {fileID: 1065322329}
+  - component: {fileID: 1065322331}
+  - component: {fileID: 1065322330}
+  - component: {fileID: 1065322333}
   - component: {fileID: 1065322334}
   - component: {fileID: 1065322332}
   m_Layer: 0
@@ -523,7 +526,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1065322323}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 945b75a4ef2a834429614c561a7f57a5, type: 3}
   m_Name: 
@@ -603,7 +606,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1065322323}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5.49, y: 1.46, z: -3.02}
+  m_LocalPosition: {x: 0, y: 1.46, z: 0}
   m_LocalScale: {x: 1, y: 2, z: 1}
   m_Children:
   - {fileID: 1410051889}
@@ -618,15 +621,42 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1065322323}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b074da42661a771489e5032b1df55932, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  numberOfProjectiles: 40
+  numberOfProjectiles: 8
   projectileSpeed: 15
   ProjectilePrefab: {fileID: 7330326984651472972, guid: 6b3f174fb5566e448a44a337d06a8fa4, type: 3}
   BossMovement: {fileID: 1065322324}
+--- !u!114 &1065322330
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1065322323}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad784cdf7dd3f4f49b061752ca783a0f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ProjectilePrefab: {fileID: 7330326984651472972, guid: 6b3f174fb5566e448a44a337d06a8fa4, type: 3}
+  projectileSpeed: 30
+--- !u!114 &1065322331
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1065322323}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 548c21ffa616e914e90a10caf69da218, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveSpeed: 2
 --- !u!54 &1065322332
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -643,6 +673,21 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 36
   m_CollisionDetection: 0
+--- !u!114 &1065322333
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1065322323}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 894895539663b624b936cf6a0fe84f1f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  projectileSpeed: 30
+  ProjectilePrefab: {fileID: 7330326984651472972, guid: 6b3f174fb5566e448a44a337d06a8fa4, type: 3}
+  angle: 0
 --- !u!114 &1065322334
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -650,7 +695,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1065322323}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1483061ad7a508c47b7631cebadb9a13, type: 3}
   m_Name: 
