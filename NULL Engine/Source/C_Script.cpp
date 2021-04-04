@@ -80,6 +80,8 @@ bool C_Script::SaveState(ParsonNode& root) const
 			{
 			case InspectorScriptData::DataType::INT:
 				variable.SetInteger("int", *(int*)inspectorVariables[i].ptr); break;
+			case InspectorScriptData::BOOL:
+				variable.SetBool("bool", *(bool*)inspectorVariables[i].ptr); break;
 			}
 		}
 	}
@@ -114,6 +116,8 @@ bool C_Script::LoadState(ParsonNode& root)
 				{
 				case InspectorScriptData::DataType::INT:
 					*(int*)inspectorVariables[i].ptr = variable.GetInteger("int"); break;
+				case InspectorScriptData::BOOL:
+					*(bool*)inspectorVariables[i].ptr = variable.GetBool("bool"); break;
 				}
 			}
 		}
@@ -281,6 +285,22 @@ void C_Script::InspectorSliderInt(int* variablePtr, const char* ptrName, const i
 		InspectorScriptData inspector(variableName, InspectorScriptData::DataType::INT, variablePtr, InspectorScriptData::ShowMode::SLIDER_INT);
 		inspector.minSlider = minValue;
 		inspector.maxSlider = maxValue;
+		script->inspectorVariables.push_back(inspector);
+	}
+}
+
+void C_Script::InspectorBool(bool* variablePtr, const char* ptrName)
+{
+	const char* name = typeid(*variablePtr).name();
+	if (strcmp(name, "bool"))
+		return;
+
+	std::string variableName = GetVariableName(ptrName);
+
+	C_Script* script = App->scriptManager->actualScriptLoading;
+	if (script != nullptr)
+	{
+		InspectorScriptData inspector(variableName, InspectorScriptData::DataType::BOOL, variablePtr, InspectorScriptData::ShowMode::CHECKBOX);
 		script->inspectorVariables.push_back(inspector);
 	}
 }

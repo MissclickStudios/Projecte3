@@ -1570,6 +1570,8 @@ void E_Inspector::DrawScriptComponent(C_Script* cScript)
 					ImGui::SliderInt((*variable).variableName.data(), (int*)(*variable).ptr, (*variable).minSlider, (*variable).maxSlider); break;
 				}
 				break;
+			case InspectorScriptData::DataType::BOOL:
+				ImGui::Checkbox((*variable).variableName.data(), (bool*)(*variable).ptr);
 			}
 			ImGui::Spacing();
 			ImGui::Separator();

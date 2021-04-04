@@ -254,6 +254,8 @@ void M_EngineScriptManager::SerializeAllScripts(ParsonArray& scriptsArray)
 								{
 								case InspectorScriptData::DataType::INT:
 									variable.SetInteger("int", *(int*)scriptVariables[i].ptr); break;
+								case InspectorScriptData::DataType::BOOL:
+									variable.SetInteger("bool", *(bool*)scriptVariables[i].ptr); break;
 								}
 							}
 						}
@@ -307,6 +309,8 @@ void M_EngineScriptManager::DeSerializeAllScripts(const ParsonArray& scriptsArra
 								{
 								case InspectorScriptData::DataType::INT:
 									*(int*)(*item).ptr = variable.GetInteger("int"); break;
+								case InspectorScriptData::DataType::BOOL:
+									*(bool*)(*item).ptr = variable.GetBool("bool"); break;
 								}
 							}
 						}

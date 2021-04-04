@@ -17,6 +17,7 @@ public :
 	int inputInt = 1;
 	int dragableInt = 2;
 	int sliderInt = 3;
+	bool checkBoxBool = false;
 };
 
 SCRIPTS_FUNCTION ola* Createola() {
@@ -25,5 +26,6 @@ SCRIPTS_FUNCTION ola* Createola() {
 	INSPECTOR_INPUT_INT(script->inputInt);
 	INSPECTOR_DRAGABLE_INT(script->dragableInt);
 	INSPECTOR_SLIDER_INT(script->sliderInt, 0, 100);
+	INSPECTOR_CHECKBOX_BOOL(script->checkBoxBool);
 	return script;
 }
