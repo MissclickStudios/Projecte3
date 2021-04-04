@@ -26,7 +26,7 @@ playing				(false)
 
 }
 
-AnimatorClip::AnimatorClip(const R_Animation* animation, const std::string& name, const uint& start, const uint& end, const bool& loop) : 
+AnimatorClip::AnimatorClip(const R_Animation* animation, const std::string& name, uint start, uint end, bool loop) : 
 animation	(animation), 
 name		(name), 
 start		(start), 
@@ -106,7 +106,24 @@ bool AnimatorClip::LoadState(const ParsonNode& root)
 	return ret;
 }
 
-// --- CLIP DEBUG METHODS
+// --- CLIP UTILITY/DEBUG METHODS
+void AnimatorClip::EditClip(const R_Animation* newAnimation, const std::string& newName, uint newStart, uint newEnd, bool newLoop)
+{
+	animation	= newAnimation;
+	name		= newName;
+	start		= newStart;
+	end			= newEnd;
+	loop		= newLoop;
+
+	duration = (end - start);
+	durationInSeconds = (animation != nullptr) ? (duration / animation->GetTicksPerSecond()) : 0.0f;
+}
+
+bool AnimatorClip::ClipIsValid() const
+{
+	return (animation == nullptr || name == "[NONE]");
+}
+
 void AnimatorClip::StepClipToPrevKeyframe()
 {
 	tick = (tick != start) ? --tick : end;

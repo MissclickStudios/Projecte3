@@ -30,6 +30,7 @@ public:
 	void		SetDuration			(const double& duration);
 	void		SetTicksPerSecond	(const double& ticksPerSecond);
 
+
 public:
 	std::vector<Channel>	channels;
 

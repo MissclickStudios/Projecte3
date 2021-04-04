@@ -66,6 +66,12 @@ public:
 public:
 	void			AddAnimation							(R_Animation* rAnimation);
 	bool			AddClip									(const AnimatorClip& clip);
+	bool			EditClip								(const std::string& originalClipName, const R_Animation* rAnimation, const std::string& name, uint start, uint end, bool loop);
+	bool			DeleteClip								(const std::string& clipName);
+	
+	AnimatorClip	GetClip									(const char* clipName) const;									// Rets invalid clip if not found. Check with clip->ClipIsValid().
+	AnimatorClip*	GetClipAsPtr							(const char* clipName);											// Returns nullptr if clip is not found.
+
 	void			PlayClip								(const std::string& clipName, uint blendFrames);
 	void			PlayClip								(const std::string& clipName, float blendTime);
 	
@@ -80,20 +86,20 @@ public:																														// --- DEBUG METHODS
 	bool			RefreshBoneDisplay						();
 
 public:																														// --- CURRENT/BLENDING ANIMATION METHODS
-	AnimatorClip*	GetCurrentClip							() const;
-	AnimatorClip*	GetBlendingClip							() const;
+	AnimatorClip*	GetCurrentClip							() const;														// 
+	AnimatorClip*	GetBlendingClip							() const;														// 
 
-	void			SetCurrentClip							(AnimatorClip* clip);
-	void			SetBlendingClip							(AnimatorClip* clip, uint blendFrames);
+	void			SetCurrentClip							(AnimatorClip* clip);											// 
+	void			SetBlendingClip							(AnimatorClip* clip, uint blendFrames);							// 
 
-	void			SetCurrentClipByIndex					(uint index);
-	void			SetBlendingClipByIndex					(uint index, uint blendFrames);
+	void			SetCurrentClipByIndex					(uint index);													// 
+	void			SetBlendingClipByIndex					(uint index, uint blendFrames);									// 
 
-	bool			CurrentClipExists						() const;
-	bool			BlendingClipExists						() const;
+	bool			CurrentClipExists						() const;														// 
+	bool			BlendingClipExists						() const;														// 
 
-	void			ClearCurrentClip						();
-	void			ClearBlendingClip						();
+	void			ClearCurrentClip						();																// 
+	void			ClearBlendingClip						();																// 
 
 public:																														// --- GET/SET METHODS
 	std::vector<LineSegment> GetDisplayBones				() const;

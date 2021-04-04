@@ -753,9 +753,9 @@ void C_Animator::GenerateDefaultClips()
 
 	for (auto animation = animations.begin(); animation < animations.end(); ++animation)
 	{
-		std::string defaultName		= (*animation)->GetName() + std::string(" Default");
-		AnimatorClip& defaultClip	= AnimatorClip((*animation), defaultName, 0, (uint)(*animation)->GetDuration(), false);
-		
+		std::string defaultName = (*animation)->GetName() + std::string(" Default");
+		AnimatorClip& defaultClip = AnimatorClip((*animation), defaultName, 0, (uint)(*animation)->GetDuration(), false);
+
 		clips.emplace(defaultClip.GetName(), defaultClip);
 
 		if (currentClip == nullptr)
@@ -835,7 +835,7 @@ bool C_Animator::AddClip(const AnimatorClip& clip)
 		LOG("[ERROR] Animator Component: Could not Add Clip { %s }! Error: A clip with the same name already exists.", clip.GetName());
 		return false;
 	}
-	
+
 	clips.emplace(clip.GetName(), clip);
 
 	if (currentClip == nullptr)
@@ -844,6 +844,34 @@ bool C_Animator::AddClip(const AnimatorClip& clip)
 	}
 
 	return true;
+}
+
+bool C_Animator::EditClip(const std::string& originalClipName, const R_Animation* rAnimation, const std::string& name, uint start, uint end, bool loop)
+{	
+	auto originalClip = clips.find(originalClipName);
+	if (originalClip == clips.end())
+	{
+		return false;
+	}
+
+	originalClip->second.EditClip(rAnimation, name, start, end, loop);
+	AddClip(originalClip->second);
+
+	DeleteClip(originalClipName);
+}
+
+bool C_Animator::DeleteClip(const std::string& clipName)
+{
+	if (currentClip != nullptr && std::string(currentClip->GetName()) == clipName)
+	{
+		ClearCurrentClip();
+	}
+	if (blendingClip != nullptr && std::string(currentClip->GetName()) == clipName)
+	{
+		ClearBlendingClip();
+	}
+	
+	return (clips.erase(clipName) == 1);																				// std::unordered_map::erase returns the amount of elements erased.
 }
 
 void C_Animator::PlayClip(const std::string& clipName, uint blendFrames)
@@ -1038,6 +1066,18 @@ bool C_Animator::RefreshBoneDisplay()
 }
 
 // --- CURRENT/BLENDING ANIMATION METHODS
+AnimatorClip C_Animator::GetClip(const char* clipName) const
+{
+	auto clip = clips.find(clipName);
+	return (clip != clips.end()) ? clip->second : AnimatorClip(nullptr, "[NONE]", 0, 0, false);
+}
+
+AnimatorClip* C_Animator::GetClipAsPtr(const char* clipName)
+{
+	auto clip = clips.find(clipName);
+	return (clip != clips.end()) ? &clip->second : nullptr;
+}
+
 AnimatorClip* C_Animator::GetCurrentClip() const
 {
 	return currentClip;

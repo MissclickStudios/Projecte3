@@ -1,9 +1,10 @@
 #ifndef __E_INSPECTOR_H__
 #define __E_INSPECTOR_H__
 
+#include <vector>
+
 #include "EditorPanel.h"
 #include "TextEditor.h"
-#include <vector>
 
 class GameObject;
 class Component;

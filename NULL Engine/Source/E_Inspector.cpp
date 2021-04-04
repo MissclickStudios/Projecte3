@@ -42,12 +42,13 @@
 #include "C_ParticleSystem.h"
 #include "C_UI_Image.h"
 #include "C_UI_Text.h"
-
 #include "C_Script.h"
 
-#include "R_Shader.h"
 #include "R_Texture.h"
+#include "R_Animation.h"
+#include "R_Shader.h"
 #include "R_Script.h"
+
 #include "I_Shaders.h"
 
 #include "Emitter.h"
@@ -898,13 +899,63 @@ void E_Inspector::DrawAnimatorComponent(C_Animator* cAnimator)								// TODO: S
 
 					ImGui::TextColored(Cyan.C_Array(), "Existing Clips");
 
+					ImGui::BeginChild("Existing Clips Child", ImVec2(0.0f, 269.0f), true, ImGuiWindowFlags_HorizontalScrollbar);
+					
 					for (uint i = 0; i < clipNames.size(); ++i)
 					{	
-						if (ImGui::TreeNodeEx(clipNames[i].c_str(), ImGuiTreeNodeFlags_Bullet))
-						{	
+						if (ImGui::TreeNodeEx(clipNames[i].c_str(), ImGuiTreeNodeFlags_SpanAvailWidth))
+						{
+							ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
+							ImGui::BeginChild("Clip Manager Child", ImVec2(0.0f, 170.0f), true, ImGuiWindowFlags_NoScrollbar);
+							
+							ImGui::TextColored(Cyan.C_Array(), "Edit Clip");
+
+							AnimatorClip* clipToEdit = cAnimator->GetClipAsPtr(clipNames[i].c_str());
+							if (clipToEdit == nullptr)
+							{
+								break;
+							}
+
+							static int editedAnimationIndex = /*clipToEdit->GetAnimation*/ 0;
+							static char editedName[128] = "Edited Name";
+
+							ImGui::Combo("Edit Animation", &editedAnimationIndex, animationNames.c_str());
+
+							R_Animation* editedAnimation	= cAnimator->GetAnimationByIndex(editedAnimationIndex);
+							int editedMin					= 0;
+							int editedMax					= (editedAnimation != nullptr) ? newClipMax : 0;
+							static int editedStart			= (int)clipToEdit->GetStart();
+							static int editedEnd			= (int)clipToEdit->GetEnd();
+							static bool editedLoop			= clipToEdit->IsLooped();
+
+							ImGui::InputText("Edit Name", editedName, IM_ARRAYSIZE(editedName), inputTxtFlags);
+							ImGui::SliderInt("Edit Start", &editedStart, editedMin, editedMax);
+							ImGui::SliderInt("Edit End", &editedEnd, editedMin, editedMax);
+							ImGui::Checkbox("Loop Clip", &editedLoop);
+
+							if (editedStart > editedEnd) { editedEnd = editedStart; };
+
+							if (ImGui::Button("Save"))		
+							{ 
+								cAnimator->EditClip(clipToEdit->GetName(), editedAnimation, editedName, editedStart, editedEnd, editedLoop); 
+							}
+							
+							ImGui::SameLine();
+							
+							if (ImGui::Button("Delete"))	
+							{ 
+								cAnimator->DeleteClip(clipToEdit->GetName()); 
+								clipToEdit = nullptr;
+							}
+							
+							ImGui::EndChild();
+							ImGui::PopStyleVar();
+
 							ImGui::TreePop();
 						}
 					}
+
+					ImGui::EndChild();
 
 					ImGui::EndTabItem();
 				}

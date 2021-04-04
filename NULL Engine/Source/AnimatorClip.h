@@ -13,7 +13,7 @@ class NULL_API AnimatorClip
 {
 public:
 	AnimatorClip();
-	AnimatorClip(const R_Animation* animation, const std::string& name, const uint& start, const uint& end, const bool& loop);
+	AnimatorClip(const R_Animation* animation, const std::string& name, uint start, uint end, bool loop);
 
 	bool StepClip	(const float& dt);
 	void ClearClip	();
@@ -21,7 +21,10 @@ public:
 	bool SaveState	(ParsonNode& root) const;
 	bool LoadState	(const ParsonNode& root);
 
-public:																																// --- CLIP DEBUG METHODS
+public:																																// --- CLIP UTILITY/DEBUG METHODS
+	void				EditClip					(const R_Animation* newAnimation, const std::string& newName, uint newStart, uint newEnd, bool newLoop);
+	bool				ClipIsValid					() const;
+	
 	void				StepClipToPrevKeyframe		();
 	void				StepClipToNextKeyframe		();
 
