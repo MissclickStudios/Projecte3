@@ -70,6 +70,7 @@ const char* Component::GetNameFromType() const
 	case ComponentType::PROP_BEHAVIOR:		{ return "Prop Behavior"; }		break;
 	case ComponentType::CAMERA_BEHAVIOR:	{ return "Camera Behavior"; }	break;
 	case ComponentType::GATE_BEHAVIOR:		{ return "Gate Behavior"; }		break;
+	case ComponentType::ANIMATOR2D:			{ return "Animatior 2D"; }		break;
 	}
 
 	return "NONE";

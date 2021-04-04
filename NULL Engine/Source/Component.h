@@ -41,7 +41,9 @@ enum class ComponentType
 	UI_IMAGE,												// --- UI
 	UI_TEXT,												// ------
 
-	SCRIPT													// --- SCRIPTING
+	SCRIPT,													// --- SCRIPTING
+
+	ANIMATOR2D												// --- ANIMATIONS2D
 };
 
 class NULL_API Component
