@@ -13,10 +13,11 @@ public :
 	void Update() override;
 	void PostUpdate()override;
 	void CleanUp()override;
-	int firstVariable = 6;
+	int firstVariable = 1;
 };
 
 SCRIPTS_FUNCTION ola* Createola() {
 	ola* script = new ola();
+	INSPECTOR_INPUT_INT(script->firstVariable);
 	return script;
 }

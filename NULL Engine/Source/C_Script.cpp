@@ -1,4 +1,5 @@
 #include <Windows.h>
+#include <typeinfo>
 #include "Application.h"
 #include "GameObject.h"
 #include "Script.h"
@@ -63,7 +64,7 @@ bool C_Script::SaveState(ParsonNode& root) const
 	root.SetNumber("ResourceUID", resource->GetUID());
 	root.SetString("AssetsPath", resource->GetAssetsPath());
 	root.SetString("DataName", dataName.c_str());
-	/*if (inspectorVariables.empty())
+	if (inspectorVariables.empty())
 		root.SetBool("HasInspector", false);
 	else 
 	{
@@ -71,9 +72,16 @@ bool C_Script::SaveState(ParsonNode& root) const
 		ParsonArray variablesToSave = root.SetArray("InspectorVariables");
 		for (int i = 0; i < inspectorVariables.size(); ++i)
 		{
-			//TODO: Save all the inspector variables on the C_Script
+			ParsonNode variable = variablesToSave.SetNode(inspectorVariables[i].variableName.c_str());
+			variable.SetInteger("Type", (int)inspectorVariables[i].variableType);
+			variable.SetString("Name", inspectorVariables[i].variableName.c_str());
+			switch (inspectorVariables[i].variableType) 
+			{
+			case InspectorScriptData::DataType::INT:
+				variable.SetInteger("int", *(int*)inspectorVariables[i].ptr); break;
+			}
 		}
-	}*/
+	}
 	return true;
 }
 
@@ -93,16 +101,21 @@ bool C_Script::LoadState(ParsonNode& root)
 				break;
 			}
 		}
-		/*if (root.GetBool("HasInspector"))
+		if (root.GetBool("HasInspector"))
 		{
 			ParsonArray variablesToLoad = root.GetArray("InspectorVariables");
-			//TODO: InspectorData
-			/*for (int i = 0; i < variablesToLoad.size; ++i)
+			for (int i = 0; i < variablesToLoad.size; ++i)
 			{
-				//TODO: Load all the inspector variables on the C_Script
-				inspectorVariables.push_back();
-			}*/
-		//}
+				ParsonNode variable = variablesToLoad.GetNode(i);
+				inspectorVariables[i].variableType = (InspectorScriptData::DataType)variable.GetInteger("Type");
+				inspectorVariables[i].variableName = variable.GetString("Name");
+				switch (inspectorVariables[i].variableType)
+				{
+				case InspectorScriptData::DataType::INT:
+					*(int*)inspectorVariables[i].ptr = variable.GetInteger("int"); break;
+				}
+			}
+		}
 	}
 	else 
 	{
@@ -154,6 +167,11 @@ const std::string& C_Script::GetDataName() const
 	return dataName;
 }
 
+const std::vector<InspectorScriptData>& C_Script::GetInspectorVariables() const
+{
+	return inspectorVariables;
+}
+
 std::string C_Script::GetVariableName(const char* ptrName)
 {
 	std::string ptr_strg(ptrName);
@@ -166,17 +184,20 @@ std::string C_Script::GetVariableName(const char* ptrName)
 	return variable_name;
 }
 
-/*void C_Script::SetIsActive(bool setTo)
+void C_Script::SetIsActive(bool setTo)
 {
 	if (setTo != isActive) 
 	{
-		isActive = setTo;
-		if (isActive)
-			OnEnable();
-		else
-			OnDisable();
+		if (App->gameState == GameState::PLAY) 
+		{
+			isActive = setTo;
+			if (isActive)
+				OnEnable();
+			else
+				OnDisable();
+		}
 	}
-}*/
+}
 
 void C_Script::OnDisable()
 {
@@ -217,4 +238,18 @@ void C_Script::OnEnable()
 bool C_Script::HasData() const
 {
 	return scriptData != nullptr;
+}
+
+void C_Script::InspectorInputInt(int* variablePtr, const char* ptrName)
+{
+	const char* name = typeid(*variablePtr).name();
+	if (strcmp(name, "int"))
+		return;
+
+	std::string variableName = GetVariableName(ptrName);
+
+	C_Script* script = App->scriptManager->actualScriptLoading;
+	if (script != nullptr) {
+		script->inspectorVariables.push_back(InspectorScriptData(variableName, InspectorScriptData::DataType::INT, variablePtr, InspectorScriptData::INPUT_INT));
+	}
 }
