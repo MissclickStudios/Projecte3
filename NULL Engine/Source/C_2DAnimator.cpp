@@ -10,7 +10,10 @@ C_2DAnimator::~C_2DAnimator()
 
 bool C_2DAnimator::Update()
 {
-	return false;
+	for (auto animationd = animation.cbegin(); animationd != animation.cend(); ++animationd)
+	{
+	}
+	return true;
 }
 
 bool C_2DAnimator::CleanUp()

@@ -2,15 +2,15 @@
 #define __C_2DANIMATOR__
 
 #include "Component.h"
+#include <vector>
 
 class GameObject;
-class WwiseObject;
+class R_Texture;
 
 class NULL_API C_2DAnimator : public Component
 {
 public:
 	C_2DAnimator(GameObject* owner);
-	//C_AudioListener(float3 reference);							//Creates and audio listener for the master camera
 	~C_2DAnimator();
 
 	bool Update() override;
@@ -22,8 +22,9 @@ public:
 	static inline ComponentType GetType() { return ComponentType::AUDIOLISTENER; }
 
 private:
+	std::vector<R_Texture*>		animation;
+	int							AnimationCount;
 
-	WwiseObject* wwiseObject = nullptr;;
 };
 
 #endif // __C_2DANIMATOR__
