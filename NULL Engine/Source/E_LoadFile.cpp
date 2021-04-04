@@ -62,15 +62,20 @@ bool E_LoadFile::CleanUp()
 	return ret;
 }
 
+void E_LoadFile::OnOpenPopup()
+{
+	UpdateDirectoryTree(ASSETS_SCENES_PATH);
+}
+
 // --- E_LOADFILE METHODS ---
 void E_LoadFile::DrawFileBrowser()
 {
 	ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
 	ImGui::BeginChild("Asset Files", ImVec2(0, 300), true);
 
-	if (ImGui::TreeNodeEx(ASSETS_PATH, ImGuiTreeNodeFlags_DefaultOpen))
+	if (ImGui::TreeNodeEx(ASSETS_SCENES_PATH, ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		DrawDirectoriesTree(ASSETS_PATH, DOTLESS_META_EXTENSION);
+		DrawDirectoriesTree(ASSETS_SCENES_PATH, DOTLESS_META_EXTENSION);
 		ImGui::TreePop();
 	}
 
@@ -107,33 +112,14 @@ void E_LoadFile::DrawFileSelector()
 
 void E_LoadFile::DrawDirectoriesTree(const char* rootDirectory, const char* extensionToFilter)
 {
-	std::vector<std::string> directories;
-	std::vector<std::string> files;
 
-	std::string rootDir = rootDirectory;
-
-	EngineApp->fileSystem->DiscoverFiles(rootDir.c_str(), files, directories, extensionToFilter);
-
-	for (uint i = 0; i < directories.size(); ++i)
+	for (uint i = 0; i < sceneFiles.size(); ++i)
 	{
-		std::string path = rootDir + directories[i] + "/";														// Ex: root_dir + directories[i] = "Assets/Models/"
-		
-		if (ImGui::TreeNodeEx(path.c_str(), 0, "%s/", directories[i].c_str()))
-		{
-			DrawDirectoriesTree(path.c_str(), extensionToFilter);
-			ImGui::TreePop();
-		}
-	}
-
-	std::sort(files.begin(), files.end());
-
-	for (uint i = 0; i < files.size(); ++i)
-	{	
-		if (ImGui::TreeNodeEx(files[i].c_str(), ImGuiTreeNodeFlags_Leaf))
+		if (ImGui::TreeNodeEx(sceneFiles[i].c_str(), ImGuiTreeNodeFlags_Leaf))
 		{
 			if (ImGui::IsItemClicked())
 			{
-				sprintf_s(selectedFile, MAX_FILE_SIZE, "%s%s", rootDir.c_str(), files[i].c_str());
+				sprintf_s(selectedFile, MAX_FILE_SIZE, "%s%s", rootDirectory, sceneFiles[i].c_str());
 
 				if (ImGui::IsMouseDoubleClicked(0))
 				{
@@ -146,15 +132,21 @@ void E_LoadFile::DrawDirectoriesTree(const char* rootDirectory, const char* exte
 			ImGui::TreePop();
 		}
 	}
+}
 
-	directories.clear();
-	files.clear();
+void E_LoadFile::UpdateDirectoryTree(const char* rootDirectory)
+{
+	std::string rootDir = rootDirectory;
+
+	EngineApp->fileSystem->DiscoverFiles(rootDir.c_str(), sceneFiles, directories);
+
+	std::sort(sceneFiles.begin(), sceneFiles.end());
 }
 
 void E_LoadFile::LoadFile()
 {
-	
-
 	EngineApp->editor->LoadFileThroughEditor(selectedFile);
 	selectedFile[0] = '\0';
 }
+
+

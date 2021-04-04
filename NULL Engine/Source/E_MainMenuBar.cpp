@@ -6,6 +6,7 @@
 #include "E_MainMenuBar.h"
 
 #include "E_WantToSaveScene.h"
+#include "E_LoadFile.h"
 
 #include "MemoryManager.h"
 
@@ -69,6 +70,7 @@ bool E_MainMenuBar::FileMainMenuItem()
 		if (ImGui::MenuItem("Open Scene", "Ctrl+O"))
 		{
 			EngineApp->editor->showLoadFilePopup = true;
+			EngineApp->editor->loadFile->OnOpenPopup();
 		}
 		ImGui::Separator();
 
