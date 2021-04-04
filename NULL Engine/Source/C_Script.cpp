@@ -82,6 +82,8 @@ bool C_Script::SaveState(ParsonNode& root) const
 				variable.SetInteger("int", *(int*)inspectorVariables[i].ptr); break;
 			case InspectorScriptData::BOOL:
 				variable.SetBool("bool", *(bool*)inspectorVariables[i].ptr); break;
+			case InspectorScriptData::FLOAT:
+				variable.SetNumber("float", *(float*)inspectorVariables[i].ptr); break;
 			}
 		}
 	}
@@ -118,6 +120,8 @@ bool C_Script::LoadState(ParsonNode& root)
 					*(int*)inspectorVariables[i].ptr = variable.GetInteger("int"); break;
 				case InspectorScriptData::BOOL:
 					*(bool*)inspectorVariables[i].ptr = variable.GetBool("bool"); break;
+				case InspectorScriptData::DataType::FLOAT:
+					*(float*)inspectorVariables[i].ptr = variable.GetNumber("float"); break;
 				}
 			}
 		}
@@ -301,6 +305,50 @@ void C_Script::InspectorBool(bool* variablePtr, const char* ptrName)
 	if (script != nullptr)
 	{
 		InspectorScriptData inspector(variableName, InspectorScriptData::DataType::BOOL, variablePtr, InspectorScriptData::ShowMode::CHECKBOX);
+		script->inspectorVariables.push_back(inspector);
+	}
+}
+
+void C_Script::InspectorInputFloat(float* variablePtr, const char* ptrName)
+{
+	const char* name = typeid(*variablePtr).name();
+	if (strcmp(name, "float"))
+		return;
+
+	std::string variableName = GetVariableName(ptrName);
+
+	C_Script* script = App->scriptManager->actualScriptLoading;
+	if (script != nullptr)
+		script->inspectorVariables.push_back(InspectorScriptData(variableName, InspectorScriptData::DataType::FLOAT, variablePtr, InspectorScriptData::ShowMode::INPUT_FLOAT));
+}
+
+void C_Script::InspectorDragableFloat(float* variablePtr, const char* ptrName)
+{
+	const char* name = typeid(*variablePtr).name();
+	if (strcmp(name, "float"))
+		return;
+
+	std::string variableName = GetVariableName(ptrName);
+
+	C_Script* script = App->scriptManager->actualScriptLoading;
+	if (script != nullptr)
+		script->inspectorVariables.push_back(InspectorScriptData(variableName, InspectorScriptData::DataType::FLOAT, variablePtr, InspectorScriptData::ShowMode::DRAGABLE_FLOAT));
+}
+
+void C_Script::InspectorSliderFloat(float* variablePtr, const char* ptrName, const int& minValue, const int& maxValue)
+{
+	const char* name = typeid(*variablePtr).name();
+	if (strcmp(name, "float"))
+		return;
+
+	std::string variableName = GetVariableName(ptrName);
+
+	C_Script* script = App->scriptManager->actualScriptLoading;
+	if (script != nullptr)
+	{
+		InspectorScriptData inspector(variableName, InspectorScriptData::DataType::FLOAT, variablePtr, InspectorScriptData::ShowMode::SLIDER_FLOAT);
+		inspector.minSlider = minValue;
+		inspector.maxSlider = maxValue;
 		script->inspectorVariables.push_back(inspector);
 	}
 }

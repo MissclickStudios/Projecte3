@@ -11,11 +11,11 @@ class R_Script;
 
 struct NULL_API InspectorScriptData {
 	enum DataType {
-		INT, // DONE
+		INT,
 		BOOL,
+		FLOAT,
 		/*INT2,
 		INT3,
-		FLOAT, // DONE
 		FLOAT2,
 		FLOAT3,
 		STRING,
@@ -28,10 +28,10 @@ struct NULL_API InspectorScriptData {
 		INPUT_INT,
 		DRAGABLE_INT,
 		SLIDER_INT,
-		CHECKBOX
-		/*INPUT_FLOAT,
+		CHECKBOX,
+		INPUT_FLOAT,
 		DRAGABLE_FLOAT,
-		SLIDER_FLOAT*/
+		SLIDER_FLOAT
 	};
 
 	InspectorScriptData(const std::string& variableName, const DataType& variableType, void* ptr, const ShowMode& mode) {
@@ -85,6 +85,10 @@ public:
 	static void InspectorSliderInt(int* variablePtr, const char* ptrName, const int& minValue, const int& maxValue);
 
 	static void InspectorBool(bool* variablePtr, const char* ptrName);
+
+	static void InspectorInputFloat(float* variablePtr, const char* ptrName);
+	static void InspectorDragableFloat(float* variablePtr, const char* ptrName);
+	static void InspectorSliderFloat(float* variablePtr, const char* ptrName, const int& minValue, const int& maxValue);
 	
 	R_Script* resource = nullptr;
 private:

@@ -1572,6 +1572,18 @@ void E_Inspector::DrawScriptComponent(C_Script* cScript)
 				break;
 			case InspectorScriptData::DataType::BOOL:
 				ImGui::Checkbox((*variable).variableName.data(), (bool*)(*variable).ptr);
+				break;
+			case InspectorScriptData::DataType::FLOAT:
+				switch ((*variable).showAs)
+				{
+				case InspectorScriptData::ShowMode::INPUT_FLOAT:
+					ImGui::InputFloat((*variable).variableName.data(), (float*)(*variable).ptr); break;
+				case InspectorScriptData::ShowMode::DRAGABLE_FLOAT:
+					ImGui::DragFloat((*variable).variableName.data(), (float*)(*variable).ptr); break;
+				case InspectorScriptData::ShowMode::SLIDER_FLOAT:
+					ImGui::SliderFloat((*variable).variableName.data(), (float*)(*variable).ptr, (*variable).minSlider, (*variable).maxSlider); break;
+				}
+				break;
 			}
 			ImGui::Spacing();
 			ImGui::Separator();
