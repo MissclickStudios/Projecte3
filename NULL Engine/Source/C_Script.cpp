@@ -1,3 +1,4 @@
+#include "C_Script.h"
 #include <Windows.h>
 #include <typeinfo>
 #include "Application.h"
@@ -249,7 +250,37 @@ void C_Script::InspectorInputInt(int* variablePtr, const char* ptrName)
 	std::string variableName = GetVariableName(ptrName);
 
 	C_Script* script = App->scriptManager->actualScriptLoading;
-	if (script != nullptr) {
-		script->inspectorVariables.push_back(InspectorScriptData(variableName, InspectorScriptData::DataType::INT, variablePtr, InspectorScriptData::INPUT_INT));
+	if (script != nullptr)
+		script->inspectorVariables.push_back(InspectorScriptData(variableName, InspectorScriptData::DataType::INT, variablePtr, InspectorScriptData::ShowMode::INPUT_INT));
+}
+
+void C_Script::InspectorDragableInt(int* variablePtr, const char* ptrName)
+{
+	const char* name = typeid(*variablePtr).name();
+	if (strcmp(name, "int"))
+		return;
+
+	std::string variableName = GetVariableName(ptrName);
+
+	C_Script* script = App->scriptManager->actualScriptLoading;
+	if (script != nullptr)
+		script->inspectorVariables.push_back(InspectorScriptData(variableName, InspectorScriptData::DataType::INT, variablePtr, InspectorScriptData::ShowMode::DRAGABLE_INT));
+}
+
+void C_Script::InspectorSliderInt(int* variablePtr, const char* ptrName, const int& minValue, const int& maxValue)
+{
+	const char* name = typeid(*variablePtr).name();
+	if (strcmp(name, "int"))
+		return;
+
+	std::string variableName = GetVariableName(ptrName);
+
+	C_Script* script = App->scriptManager->actualScriptLoading;
+	if (script != nullptr) 
+	{
+		InspectorScriptData inspector(variableName, InspectorScriptData::DataType::INT, variablePtr, InspectorScriptData::ShowMode::SLIDER_INT);
+		inspector.minSlider = minValue;
+		inspector.maxSlider = maxValue;
+		script->inspectorVariables.push_back(inspector);
 	}
 }

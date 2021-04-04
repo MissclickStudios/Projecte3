@@ -1552,14 +1552,28 @@ void E_Inspector::DrawScriptComponent(C_Script* cScript)
 		//TODO: Show inspector variables
 		ImGui::Text("Name %s", cScript->GetDataName().c_str());
 		ImGui::Spacing();
+		ImGui::Separator();
+		ImGui::Spacing();
 		std::vector<InspectorScriptData> inspectorVariables = cScript->GetInspectorVariables();
 		for (std::vector<InspectorScriptData>::const_iterator variable = inspectorVariables.cbegin(); variable != inspectorVariables.cend(); ++variable)
 		{
 			switch ((*variable).variableType) 
 			{
 			case InspectorScriptData::DataType::INT:
-				ImGui::InputInt((*variable).variableName.data(), (int*)(*variable).ptr); break;
+				switch ((*variable).showAs) 
+				{
+				case InspectorScriptData::ShowMode::INPUT_INT:
+					ImGui::InputInt((*variable).variableName.data(), (int*)(*variable).ptr); break;
+				case InspectorScriptData::ShowMode::DRAGABLE_INT:
+					ImGui::DragInt((*variable).variableName.data(), (int*)(*variable).ptr); break;
+				case InspectorScriptData::ShowMode::SLIDER_INT:
+					ImGui::SliderInt((*variable).variableName.data(), (int*)(*variable).ptr, (*variable).minSlider, (*variable).maxSlider); break;
+				}
+				break;
 			}
+			ImGui::Spacing();
+			ImGui::Separator();
+			ImGui::Spacing();
 		}
 	}
 	if (!show)

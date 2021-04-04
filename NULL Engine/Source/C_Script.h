@@ -10,7 +10,6 @@ class GameObject;
 class R_Script;
 
 struct NULL_API InspectorScriptData {
-	friend class ComponentScript;
 	enum DataType {
 		INT, // DONE
 		/*INT2,
@@ -27,9 +26,9 @@ struct NULL_API InspectorScriptData {
 	enum ShowMode {
 		NONE,
 		INPUT_INT,
-		/*DRAGABLE_INT,
+		DRAGABLE_INT,
 		SLIDER_INT,
-		INPUT_FLOAT,
+		/*INPUT_FLOAT,
 		DRAGABLE_FLOAT,
 		SLIDER_FLOAT,
 		CHECKBOX,*/
@@ -47,11 +46,9 @@ struct NULL_API InspectorScriptData {
 	ShowMode showAs;
 	void* ptr = nullptr;
 
-	/*GameObject** obj = nullptr;
-private:
-	//ugly
-	float min_slider = 0;
-	float max_slider = 0;*/
+	//GameObject** obj = nullptr;
+	float minSlider = 0;
+	float maxSlider = 0;
 };
 
 class NULL_API C_Script : public Component
@@ -84,6 +81,8 @@ public:
 	static std::string GetVariableName(const char* ptrName);
 
 	static void InspectorInputInt(int* variablePtr, const char* ptrName);
+	static void InspectorDragableInt(int* variablePtr, const char* ptrName);
+	static void InspectorSliderInt(int* variablePtr, const char* ptrName, const int& minValue, const int& maxValue);
 	
 	R_Script* resource = nullptr;
 private:

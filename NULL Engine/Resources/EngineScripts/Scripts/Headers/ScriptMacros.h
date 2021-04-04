@@ -10,3 +10,5 @@
 #define SCRIPTS_FUNCTION extern "C" SCRIPTS_API
 
 #define INSPECTOR_INPUT_INT(INT_) C_Script::InspectorInputInt(&INT_, #INT_)
+#define INSPECTOR_DRAGABLE_INT(INT_) C_Script::InspectorDragableInt(&INT_, #INT_)
+#define INSPECTOR_SLIDER_INT(INT_, MIN_, MAX_) C_Script::InspectorSliderInt(&INT_, #INT_, MIN_, MAX_)
