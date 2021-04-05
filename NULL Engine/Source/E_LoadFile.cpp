@@ -136,6 +136,8 @@ void E_LoadFile::DrawDirectoriesTree(const char* rootDirectory, const char* exte
 
 void E_LoadFile::UpdateDirectoryTree(const char* rootDirectory)
 {
+	sceneFiles.clear();
+
 	std::string rootDir = rootDirectory;
 
 	EngineApp->fileSystem->DiscoverFiles(rootDir.c_str(), sceneFiles, directories);

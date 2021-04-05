@@ -1767,6 +1767,7 @@ void E_Inspector::DisplayAnimatorControls(C_Animator* cAnimator)
 	const char* currentClipName			= currentClip->GetName();
 	uint currentClipStart				= currentClip->GetStart();
 	uint currentClipEnd					= currentClip->GetEnd();
+	float currentClipSpeed				= currentClip->GetSpeed();
 	float currentClipDuration			= currentClip->GetDuration();
 	bool currentClipLoop				= currentClip->IsLooped();
 	
@@ -1814,6 +1815,7 @@ void E_Inspector::DisplayAnimatorControls(C_Animator* cAnimator)
 	ImGui::Text("Frame:");				ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "            %.3f",	clipFrame);
 	ImGui::Text("Tick:");				ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "		     %u",		clipTicks);
 	ImGui::Text("Range:");				ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "            %u - %u", currentClipStart, currentClipEnd);
+	ImGui::Text("Speed:");				ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "            x%.3f",	currentClipSpeed);
 	ImGui::Text("Duration:");			ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "         %.3f",		currentClipDuration);
 	ImGui::Text("Loop:");				ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "             %s",		(currentClipLoop) ? "True" : "False");
 
@@ -1831,7 +1833,50 @@ void E_Inspector::DisplayClipManager(C_Animator* cAnimator)
 {
 	ImGui::Separator();
 	ImGui::Separator();
+
+	std::vector<std::string> clipNames = cAnimator->GetClipNamesAsVector();
+
+	// --- ANIMATOR CLIP MANAGER
+	if (ImGui::BeginTabBar("ClipManagerTabBar", ImGuiTabBarFlags_None))
+	{
+		if (ImGui::BeginTabItem("Clip Creator"))
+		{
+			ClipCreatorWindow(cAnimator);
+
+			ImGui::EndTabItem();
+		}
+
+		if (ImGui::BeginTabItem("Clip Editor"))
+		{
+			ClipEditorWindow(cAnimator);
+
+			ImGui::EndTabItem();
+		}
+
+		ImGui::EndTabBar();
+	}
 	
+	ImGui::Separator();
+	ImGui::Separator();
+	
+	// -- EXISTING CLIPS
+	ImGui::TextColored(Cyan.C_Array(), "Existing Clips");
+	
+	ImGui::BeginChild("Existing Clips Child", ImVec2(0.0f, 269.0f), true, ImGuiWindowFlags_HorizontalScrollbar);
+	
+	for (uint i = 0; i < clipNames.size(); ++i)
+	{	
+		if (ImGui::TreeNodeEx(clipNames[i].c_str(), ImGuiTreeNodeFlags_Bullet))
+		{
+			ImGui::TreePop();
+		}
+	}
+	
+	ImGui::EndChild();
+}
+
+void E_Inspector::ClipCreatorWindow(C_Animator* cAnimator)
+{
 	// --- NEW CLIP VARIABLES
 	static int selectedAnimation		= 0;
 	std::string animationNames			= cAnimator->GetAnimationNamesAsString();
@@ -1843,14 +1888,11 @@ void E_Inspector::DisplayClipManager(C_Animator* cAnimator)
 	static int newClipEnd				= (int)cAnimator->GetAnimationByIndex(selectedAnimation)->GetDuration();
 	int newClipMin						= 0;
 	int newClipMax						= (int)cAnimator->GetAnimationByIndex(selectedAnimation)->GetDuration();
+	static float newClipSpeed			= 1.0f;
 	static bool loop					= false;
-	
-	// --- EXISTING CLIPS VARIABLES
-	std::vector<std::string> clipNames = cAnimator->GetClipNamesAsVector();
-	
-	// --- ANIMATOR CLIP MANAGER
+
 	ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
-	ImGui::BeginChild("Clip Manager Child", ImVec2(0.0f, 170.0f), true);
+	ImGui::BeginChild("Clip Manager Child", ImVec2(0.0f, 190.0f), true);
 	
 	// -- CLIP CREATOR
 	ImGui::TextColored(Cyan.C_Array(), "Create Clip");
@@ -1863,6 +1905,7 @@ void E_Inspector::DisplayClipManager(C_Animator* cAnimator)
 	ImGui::InputText("Clip Name", newClipName, IM_ARRAYSIZE(newClipName), inputTxtFlags);
 	ImGui::SliderInt("Clip Start", &newClipStart, newClipMin, newClipMax);
 	ImGui::SliderInt("Clip End", &newClipEnd, newClipMin, newClipMax);
+	ImGui::SliderFloat("Clip Speed", &newClipSpeed, 0.1f, 10.0f, "X %.3f", 0);
 	ImGui::Checkbox("Loop Clip", &loop);
 	
 	if (newClipEnd > newClipMax)	{ newClipEnd = newClipMax; }
@@ -1873,13 +1916,13 @@ void E_Inspector::DisplayClipManager(C_Animator* cAnimator)
 	{ 
 		if (EngineApp->gameState != GameState::PLAY)
 		{
-			bool success = cAnimator->AddClip(AnimatorClip(cAnimator->GetAnimationByIndex((uint)selectedAnimation), newClipName, newClipStart, newClipEnd, loop));
+			bool success = cAnimator->AddClip(AnimatorClip(cAnimator->GetAnimationByIndex((uint)selectedAnimation), newClipName, newClipStart, newClipEnd, newClipSpeed, loop));
 			
 			if (success)
 			{
 				strcpy_s(newClipName, 128, "Enter Clip Name");																// --- Re-setting the New Clip Parameters
 				newClipStart	= 0;																						// 
-				newClipEnd		= (int)cAnimator->GetAnimationByIndex(selectedAnimation);									// 
+				newClipEnd		= (int)cAnimator->GetAnimationByIndex(selectedAnimation)->GetDuration();					// 
 				loop			= false;																					// --------------------------------------
 			}
 			else
@@ -1898,69 +1941,82 @@ void E_Inspector::DisplayClipManager(C_Animator* cAnimator)
 	
 	ImGui::EndChild();
 	ImGui::PopStyleVar();
-	
-	ImGui::Separator();
-	ImGui::Separator();
-	
-	// -- EXISTING CLIPS
-	ImGui::TextColored(Cyan.C_Array(), "Existing Clips");
-	
-	ImGui::BeginChild("Existing Clips Child", ImVec2(0.0f, 269.0f), true, ImGuiWindowFlags_HorizontalScrollbar);
-	
-	for (uint i = 0; i < clipNames.size(); ++i)
-	{	
-		if (ImGui::TreeNodeEx(clipNames[i].c_str(), ImGuiTreeNodeFlags_SpanAvailWidth))
-		{
-			ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
-			ImGui::BeginChild("Clip Manager Child", ImVec2(0.0f, 170.0f), true, ImGuiWindowFlags_NoScrollbar);
-			
-			ImGui::TextColored(Cyan.C_Array(), "Edit Clip");
-	
-			AnimatorClip* clipToEdit = cAnimator->GetClipAsPtr(clipNames[i].c_str());
-			if (clipToEdit == nullptr)
-			{
-				break;
-			}
-	
-			static int editedAnimationIndex = cAnimator->GetIndexByAnimation(clipToEdit->GetAnimation());
-			editedAnimationIndex			= (editedAnimationIndex != -1) ? editedAnimationIndex : 0;					// In case the returned index is invalid.
-			static char editedName[128]		= "Edited Name";
-	
-			ImGui::Combo("Edit Animation", &editedAnimationIndex, animationNames.c_str());
-	
-			R_Animation* editedAnimation	= cAnimator->GetAnimationByIndex(editedAnimationIndex);
-			int editedMin					= 0;
-			int editedMax					= (editedAnimation != nullptr) ? editedAnimation->GetDuration() : 0;
-			static int editedStart			= (int)clipToEdit->GetStart();
-			static int editedEnd			= (int)clipToEdit->GetEnd();
-			static bool editedLoop			= clipToEdit->IsLooped();
-	
-			ImGui::InputText("Edit Name", editedName, IM_ARRAYSIZE(editedName), inputTxtFlags);
-			ImGui::SliderInt("Edit Start", &editedStart, editedMin, editedMax);
-			ImGui::SliderInt("Edit End", &editedEnd, editedMin, editedMax);
-			ImGui::Checkbox("Loop Clip", &editedLoop);
-	
-			if (editedEnd > editedMax)		{ editedEnd = editedMax; }
-			if (editedStart > editedEnd)	{ editedEnd = editedStart; }
-	
-			ImGui::PushStyleColor(ImGuiCol_Button, { 0.0f, 1.0f, 0.0f, 0.5f });
-			if (ImGui::Button("Save"))		{ cAnimator->EditClip(clipToEdit->GetName(), editedAnimation, editedName, editedStart, editedEnd, editedLoop); }
-			ImGui::PopStyleColor();
+}
 
-			ImGui::SameLine(ImGui::GetWindowWidth() * 0.80f);
-			
-			ImGui::PushStyleColor(ImGuiCol_Button, LightRed.C_Array());
-			if (ImGui::Button("Delete"))	{ cAnimator->DeleteClip(clipToEdit->GetName()); clipToEdit = nullptr; }
-			ImGui::PopStyleColor();
-			
-			ImGui::EndChild();
-			ImGui::PopStyleVar();
+void E_Inspector::ClipEditorWindow(C_Animator* cAnimator)
+{
+	std::string animationNames			= cAnimator->GetAnimationNamesAsString();
+	std::string clipNamesString			= cAnimator->GetClipNamesAsString();
+	std::vector<std::string> clipNames	= cAnimator->GetClipNamesAsVector();
+	ImGuiInputTextFlags inputTxtFlags	= ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_AutoSelectAll;
 	
-			ImGui::TreePop();
+	static int selectedClip = 0;
+	bool newSelected = false;
+	if (ImGui::Combo("Clips", &selectedClip, clipNamesString.c_str()))	{ newSelected = true; }
+
+	ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
+	ImGui::BeginChild("Clip Manager Child", ImVec2(0.0f, 190.0f), true, ImGuiWindowFlags_NoScrollbar);
+
+	ImGui::TextColored(Cyan.C_Array(), "Edit Clip");
+
+	AnimatorClip* clipToEdit = cAnimator->GetClipAsPtr(clipNames[selectedClip].c_str());
+	if (clipToEdit == nullptr)
+	{
+		//break;
+	}
+
+	static int editedAnimationIndex = cAnimator->GetIndexByAnimation(clipToEdit->GetAnimation());
+	editedAnimationIndex			= (editedAnimationIndex != -1) ? editedAnimationIndex : 0;					// In case the returned index is invalid.
+	static char editedName[128]		= "Edited Clip Name";
+
+	ImGui::Combo("Edit Animation", &editedAnimationIndex, animationNames.c_str());
+
+	R_Animation* editedAnimation	= cAnimator->GetAnimationByIndex(editedAnimationIndex);
+	int editedMin					= 0;
+	int editedMax					= (editedAnimation != nullptr) ? editedAnimation->GetDuration() : 0;
+	static int editedStart			= (int)clipToEdit->GetStart();
+	static int editedEnd			= (int)clipToEdit->GetEnd();
+	static float editedSpeed		= clipToEdit->GetSpeed();
+	static bool editedLoop			= clipToEdit->IsLooped();
+
+	if (newSelected)				{ editedLoop = clipToEdit->IsLooped(); }
+
+	ImGui::InputText("Edit Name", editedName, IM_ARRAYSIZE(editedName), inputTxtFlags);
+	ImGui::SliderInt("Edit Start", &editedStart, editedMin, editedMax);
+	ImGui::SliderInt("Edit End", &editedEnd, editedMin, editedMax);
+	ImGui::SliderFloat("Edit Speed", &editedSpeed, 0.1f, 10.0f, "X %.3f", 0);
+	ImGui::Checkbox("Loop Clip", &editedLoop);
+
+	if (editedEnd > editedMax)		{ editedEnd = editedMax; }
+	if (editedStart > editedEnd)	{ editedEnd = editedStart; }
+
+	ImGui::PushStyleColor(ImGuiCol_Button, { 0.0f, 1.0f, 0.0f, 0.5f });
+	if (ImGui::Button("Save"))		
+	{ 
+		bool success = cAnimator->EditClip(clipToEdit->GetName(), editedAnimation, editedName, editedStart, editedEnd, editedSpeed, editedLoop); 
+		if (success)
+		{
+			strcpy_s(editedName, 128, "Edited Clip Name");																							// --- Re-setting the Edit Clip Parameters
+			editedStart		= 0;																													// 
+			editedEnd		= (editedAnimation != nullptr) ? (uint)editedAnimation->GetDuration() : 0;												//
+			editedSpeed		= 1.0f;																													//
+			editedLoop		= false;																												// --------------------------------------
+		}
+		else
+		{
+			LOG("[ERROR] Animator Editor Panel: Could not Create Clip! Error: C_Animator* EditClip() failed.");
 		}
 	}
-	
+	ImGui::PopStyleColor();
+
+	ImGui::SameLine(ImGui::GetWindowWidth() * 0.80f);
+
+	ImGui::PushStyleColor(ImGuiCol_Button, LightRed.C_Array());
+	if (ImGui::Button("Delete"))	{ cAnimator->DeleteClip(clipToEdit->GetName()); clipToEdit = nullptr; }
+	ImGui::PopStyleColor();
+
 	ImGui::EndChild();
+	ImGui::PopStyleVar();
 }
 
 void E_Inspector::TextEditorWindow()
@@ -1989,16 +2045,16 @@ void E_Inspector::TextEditorWindow()
 
 				Importer::Shaders::Import(shaderToRecompile->GetAssetsPath(), shaderToRecompile);
 
-				showSaveEditorPopup = false;
-				showTextEditorWindow = true;
+				showSaveEditorPopup		= false;
+				showTextEditorWindow	= true;
 
 				ImGui::CloseCurrentPopup();
 			}
 			ImGui::SameLine();
 			if (ImGui::Button("Don't Save"))
 			{
-				showSaveEditorPopup = false;
-				showTextEditorWindow = true;
+				showSaveEditorPopup		= false;
+				showTextEditorWindow	= true;
 
 				ImGui::CloseCurrentPopup();
 			}

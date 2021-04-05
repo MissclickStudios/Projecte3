@@ -13,7 +13,8 @@ AnimatorClip::AnimatorClip() :
 animation			(nullptr), 
 name				("[NONE]"), 
 start				(0), 
-end					(0), 
+end					(0),
+speed				(1.0f),
 duration			(0.0f),
 durationInSeconds	(0.0f),
 loop				(false),
@@ -26,11 +27,12 @@ playing				(false)
 
 }
 
-AnimatorClip::AnimatorClip(const R_Animation* animation, const std::string& name, uint start, uint end, bool loop) : 
+AnimatorClip::AnimatorClip(const R_Animation* animation, const std::string& name, uint start, uint end, float speed, bool loop) : 
 animation	(animation), 
 name		(name), 
 start		(start), 
 end			(end),
+speed		(speed),
 loop		(loop),
 time		(0.0f),
 frame		(0.0f),
@@ -50,7 +52,7 @@ bool AnimatorClip::StepClip(const float& dt)
 	uint prevTick = tick;
 
 	time	+= dt;
-	frame	= time * animation->GetTicksPerSecond();
+	frame	= time * animation->GetTicksPerSecond() * speed;
 	tick	= (uint)frame;																		// Casting to uint has the same effect as calling floor() but without the performance loss.
 
 	inNewTick = (tick != prevTick);
@@ -73,50 +75,48 @@ void AnimatorClip::ClearClip()
 
 bool AnimatorClip::SaveState(ParsonNode& root) const
 {
-	bool ret = true;
-
 	if (animation != nullptr)
 		root.SetNumber("AnimationUID", (double)animation->GetUID());
 
 	root.SetString("Name", name.c_str());
 	root.SetNumber("Start", (double)start);
 	root.SetNumber("End", (double)end);
+	root.SetNumber("Speed", (double)speed);
 	root.SetNumber("Duration", (double)duration);
 	root.SetNumber("DurationInSeconds", (double)durationInSeconds);
-
 	root.SetBool("Loop", loop);
 
-	return ret;
+	return true;
 }
 
 bool AnimatorClip::LoadState(const ParsonNode& root)
 {
-	bool ret = true;
-	
 	animation			= (R_Animation*)App->resourceManager->RequestResource((uint32)root.GetNumber("AnimationUID"));		// TMP FIX. Read the one already in C_Animator later.
 
 	name				= root.GetString("Name");
 	start				= (uint)root.GetNumber("Start");
 	end					= (uint)root.GetNumber("End");
+	speed				= (float)root.GetNumber("Speed");
 	duration			= (float)root.GetNumber("Duration");
 	durationInSeconds	= (float)root.GetNumber("DurationInSeconds");
 
 	loop				= root.GetBool("Loop");
 	
-	return ret;
+	return true;
 }
 
 // --- CLIP UTILITY/DEBUG METHODS
-void AnimatorClip::EditClip(const R_Animation* newAnimation, const std::string& newName, uint newStart, uint newEnd, bool newLoop)
+void AnimatorClip::EditClip(const R_Animation* newAnimation, const std::string& newName, uint newStart, uint newEnd, float newSpeed, bool newLoop)
 {
 	animation	= newAnimation;
 	name		= newName;
 	start		= newStart;
 	end			= newEnd;
+	speed		= newSpeed;
 	loop		= newLoop;
 
-	duration = (end - start);
-	durationInSeconds = (animation != nullptr) ? (duration / animation->GetTicksPerSecond()) : 0.0f;
+	duration			= (end - start);
+	durationInSeconds	= (animation != nullptr) ? (duration / animation->GetTicksPerSecond()) : 0.0f;
 }
 
 bool AnimatorClip::ClipIsValid() const
@@ -176,7 +176,7 @@ const R_Animation* AnimatorClip::GetAnimation() const
 	return animation;
 }
 
-void AnimatorClip::SetAnimation(R_Animation* rAnimation)
+void AnimatorClip::SetAnimation(const R_Animation* rAnimation)
 {
 	animation = rAnimation;
 }
@@ -219,4 +219,14 @@ float AnimatorClip::GetDuration() const
 float AnimatorClip::GetDurationInSeconds() const
 {
 	return durationInSeconds;
+}
+
+float AnimatorClip::GetSpeed() const
+{
+	return speed;
+}
+
+void AnimatorClip::SetSpeed(float newSpeed)
+{
+	speed = newSpeed;
 }

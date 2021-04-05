@@ -95,6 +95,8 @@ private:																										// --- DRAW COMPONENT UTILITY METHODS ---
 	// ANIMATOR COMPONENT	--------
 	void DisplayAnimatorControls		(C_Animator* cAnimator);
 	void DisplayClipManager				(C_Animator* cAnimator);
+	void ClipCreatorWindow				(C_Animator* cAnimator);
+	void ClipEditorWindow				(C_Animator* cAnimator);
 
 	// SHADER COMPONENT		--------
 	void TextEditorWindow				();

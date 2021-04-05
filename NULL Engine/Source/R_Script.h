@@ -13,7 +13,7 @@ public:
 	virtual ~R_Script();
 
 	bool SaveMeta(ParsonNode& metaRoot) const override;		//Per guardar les dependencies a altres resources
-	bool LoadMeta(const ParsonNode& metaRoot) override;		//De Moment Np utilitzat
+	bool LoadMeta(const ParsonNode& metaRoot) override;		//De Moment no utilitzat (no hi ha import settings)
 
 public:
 	std::vector<std::pair<std::string, bool>> dataStructures;

@@ -66,7 +66,7 @@ public:
 public:
 	void			AddAnimation							(R_Animation* rAnimation);
 	bool			AddClip									(const AnimatorClip& clip);
-	bool			EditClip								(const std::string& originalClipName, const R_Animation* rAnimation, const std::string& name, uint start, uint end, bool loop);
+	bool			EditClip								(const std::string& originalClipName, const R_Animation* rAnimation, const std::string& name, uint start, uint end, float speed, bool loop);
 	bool			DeleteClip								(const std::string& clipName);
 	
 	AnimatorClip	GetClip									(const char* clipName) const;									// Rets invalid clip if not found. Check with clip->ClipIsValid().
