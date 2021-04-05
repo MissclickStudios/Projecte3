@@ -24,6 +24,14 @@ void Emitter::SetAsDefault()
 bool Emitter::AddModuleFromType(ParticleModule::Type type)
 {
 	//switch (type) and in each case a type of particlemodule to add to the emitter.
+	for (int i = 0; i < modules.size(); i++)
+	{
+		if (modules[i]->type == type)
+		{
+			return false;
+		}
+	}
+
 	switch (type)
 	{
 		case (ParticleModule::Type::EmitterBase):
@@ -34,7 +42,7 @@ bool Emitter::AddModuleFromType(ParticleModule::Type type)
 			break;
 		//case(ParticleModule::Type::ParticlePosition):
 		//	modules.push_back(new ParticlePosition);
-		//	break;8
+		//	break;
 		case(ParticleModule::Type::ParticleColor):
 			modules.push_back(new ParticleColor);
 			break;	
@@ -49,4 +57,18 @@ bool Emitter::AddModuleFromType(ParticleModule::Type type)
 	}
 	return true;
 
+}
+
+bool Emitter::DeleteModuleFromType(ParticleModule::Type type)
+{
+	//switch (type) and in each case a type of particlemodule to add to the emitter.
+	for (int i = 0; i < modules.size(); i++)
+	{
+		if (modules[i]->type == type)
+		{
+			modules.erase(modules.begin() + i);
+			modules.shrink_to_fit();
+		}
+	}
+	return true;
 }

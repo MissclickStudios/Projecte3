@@ -15,14 +15,14 @@ struct NULL_API ParticleModule
 	enum Type
 	{
 		None,
+		ParticleMovement,
+		ParticleColor,
+		ParticleLifetime,
+		ParticleRotation,
+		ParticleSize,
 		EmitterBase,		//Origin of the emitter
 		EmitterSpawn,		//Spawn Rate and timer
 		EmitterArea,
-		ParticleMovement,
-		ParticleRotation,
-		ParticleSize,
-		ParticleColor,
-		ParticleLifetime,
 		
 		Unknown
 	} type;
@@ -34,7 +34,6 @@ struct NULL_API ParticleModule
 
 	LCG randomGenerator;
 	//virtual void Save / Load
-
 };
 
 struct EmitterBase : ParticleModule
@@ -75,6 +74,9 @@ struct ParticleMovement : ParticleModule
 
 	float3 initialPosition1 = float3::zero;
 	float3 initialPosition2 = float3::zero;
+
+	bool hideMovement = false;
+	bool eraseMovement = false;
 };
 
 struct ParticleColor : ParticleModule
@@ -85,6 +87,9 @@ struct ParticleColor : ParticleModule
 	void Update(float dt, EmitterInstance* emitter);
 
 	Color initialColor = Color(1.0f, 1.0f, 1.0f, 1.0f); //black by default
+
+	bool hideColor = false;
+	bool eraseColor = false;
 };
 
 struct ParticleLifetime : ParticleModule
@@ -95,6 +100,9 @@ struct ParticleLifetime : ParticleModule
 	void Update(float dt, EmitterInstance* emitter);
 
 	float initialLifetime = 0.2f;
+
+	bool hideLifetime = false;
+	bool eraseLifetime = false;
 };
 
 #endif
