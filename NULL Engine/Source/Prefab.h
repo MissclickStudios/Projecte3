@@ -1,10 +1,11 @@
 #ifndef __PREFAB_H__
 #define __PREFAB_H__
 
+#include "Macros.h"
 #include <string>
 typedef unsigned int uint;
 
-struct Prefab
+struct NULL_API Prefab
 {
 	Prefab();
 	Prefab(uint uid, const char* name,int updateTime);

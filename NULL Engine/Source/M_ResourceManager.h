@@ -5,10 +5,11 @@
 #include <string>
 
 #include "Module.h"
+#include "Prefab.h"
 
 class ParsonNode;
 class Resource;
-struct Prefab;
+//struct Prefab;
 
 enum class ResourceType;
 class R_Shader;

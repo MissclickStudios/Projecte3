@@ -1,7 +1,9 @@
 #include <vector>
 #include <algorithm>
+#include <utility>
 
 #include "Profiler.h"
+//#include "Prefab.h"
 
 #include "VariableTypedefs.h"
 #include "Macros.h"
@@ -359,12 +361,12 @@ void E_Project::DrawResourceIcons()
 
 		if (item->type == ResourceType::PREFAB)
 		{
-			std::string prefabName = "Prefab";
-			std::map<uint,std::string>::iterator a = EngineApp->resourceManager->prefabs.find(atoi(item->file.c_str()));
+			/*std::string prefabName = "Prefab";
+			std::map<uint,Prefab>::iterator a = EngineApp->resourceManager->prefabs.find(atoi(item->file.c_str()));
 			if (a != EngineApp->resourceManager->prefabs.end())
-				prefabName = a->second;
+				prefabName = a->second.name;
 
-			ImGui::Text(GetDisplayString(prefabName, 8).c_str());
+			ImGui::Text(GetDisplayString(prefabName, 8).c_str());*/
 		}
 		else
 			ImGui::Text(GetDisplayString(item->file, 8).c_str());

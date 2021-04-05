@@ -20,10 +20,8 @@ bool Importer::Scripts::Import(const char* assetsPath, char* buffer, uint size, 
 	//PerfectTimer importTime = PerfectTimer();
 
 	//Needed to force the resource UID
-	std::map<std::string, uint32> forcedUIDs;
-	App->resourceManager->GetForcedUIDsFromMeta(rScript->GetAssetsPath(), forcedUIDs);
-
-	if (!forcedUIDs.empty())
+	uint32 forcedUID = App->resourceManager->GetForcedUIDFromMeta(rScript->GetAssetsPath());
+	if (forcedUID != 0)
 	{
 		rScript->ForceUID(forcedUID);
 	}
