@@ -135,32 +135,32 @@ void E_Console::ConsoleOutput()
 		if (strstr(logs[i], "[ERROR]") != nullptr)								// strstr() will look for a specific substring in the given string. Returns nullptr if the substr is not found.
 		{
 			if (!printErrorLogs)		{ continue; }							// If the Filter Tag is set not to be printed, then continue to the next iteration of the loop.
-			textColour = SoftRed.C_Array();										// [ERROR] logs will be Red.
+			textColour = LightRed.C_Array();										// [ERROR] logs will be Red.
 		}
 		else if (strstr(logs[i], "[WARNING]") != nullptr)
 		{
 			if (!printWarningLogs)		{ continue; }
-			textColour = SoftYellow.C_Array();									// [WARNING] logs will be Yellow.
+			textColour = LightYellow.C_Array();									// [WARNING] logs will be Yellow.
 		}
 		else if (strstr(logs[i], "[STATUS]") != nullptr)
 		{
 			if (!printStatusLogs)		{ continue; }
-			textColour = SoftMagenta.C_Array();									// [STATUS] logs will be Magenta.
+			textColour = LightMagenta.C_Array();									// [STATUS] logs will be Magenta.
 		}
 		else if (strstr(logs[i], "[FILE_SYSTEM]") != nullptr)
 		{
 			if (!printFileSystemLogs)	{ continue; }
-			textColour = SoftBlue.C_Array();									// [FILE_SYSTEM] logs will be Blue.
+			textColour = LightBlue.C_Array();									// [FILE_SYSTEM] logs will be Blue.
 		}
 		else if (strstr(logs[i], "[IMPORTER]") != nullptr)
 		{
 			if (!printImporterLogs)		{ continue; }
-			textColour = SoftCyan.C_Array();									// [IMPORTER] logs will be Cyan.
+			textColour = LightCyan.C_Array();									// [IMPORTER] logs will be Cyan.
 		}
 		else if (strstr(logs[i], "[SCENE]") != nullptr)
 		{
 			if (!printSceneLogs)		{ continue; }
-			textColour = SoftGreen.C_Array();									// [SCENE] logs will be Green.
+			textColour = LightGreen.C_Array();									// [SCENE] logs will be Green.
 		}
 		else
 		{

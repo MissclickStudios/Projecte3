@@ -922,7 +922,10 @@ void C_Animator::PlayClip(const std::string& clipName, float blendTime)
 	}
 	else
 	{
-		SetBlendingClip(&item->second, blendFrames);
+		if (blendingClip == nullptr || blendingClip->GetName() != clipName)
+		{
+			SetBlendingClip(&item->second, blendFrames);
+		}
 	}
 
 	Play();

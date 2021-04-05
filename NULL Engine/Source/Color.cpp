@@ -230,9 +230,9 @@ Color Purple		= Color(1.0f, 0.3f, 1.0f);
 Color Black			= Color(0.0f, 0.0f, 0.0f);
 Color White			= Color(1.0f, 1.0f, 1.0f);
 
-Color SoftRed		= Color(1.0f, 0.33f, 0.33f);
-Color SoftGreen		= Color(0.33f, 1.0f, 0.33f);
-Color SoftBlue		= Color(0.33f, 0.33f, 1.0f);
-Color SoftCyan		= Color(0.33f, 1.0f, 1.0f);
-Color SoftMagenta	= Color(1.0f, 0.33f, 1.0f);
-Color SoftYellow	= Color(1.0f, 1.0f, 0.33f);
+Color LightRed		= Color(1.0f, 0.33f, 0.33f);
+Color LightGreen	= Color(0.33f, 1.0f, 0.33f);
+Color LightBlue		= Color(0.33f, 0.33f, 1.0f);
+Color LightCyan		= Color(0.33f, 1.0f, 1.0f);
+Color LightMagenta	= Color(1.0f, 0.33f, 1.0f);
+Color LightYellow	= Color(1.0f, 1.0f, 0.33f);

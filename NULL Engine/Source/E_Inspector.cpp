@@ -1949,7 +1949,7 @@ void E_Inspector::DisplayClipManager(C_Animator* cAnimator)
 
 			ImGui::SameLine(ImGui::GetWindowWidth() * 0.80f);
 			
-			ImGui::PushStyleColor(ImGuiCol_Button, SoftRed.C_Array());
+			ImGui::PushStyleColor(ImGuiCol_Button, LightRed.C_Array());
 			if (ImGui::Button("Delete"))	{ cAnimator->DeleteClip(clipToEdit->GetName()); clipToEdit = nullptr; }
 			ImGui::PopStyleColor();
 			
