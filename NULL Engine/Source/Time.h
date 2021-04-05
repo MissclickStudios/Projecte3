@@ -15,7 +15,7 @@ namespace Time
 {
 	void Sleep(uint ms);
 
-	int GetLocalTime(); //In Unix
+	int GetUnixTime(); //In Unix
 	
 	namespace Real
 	{

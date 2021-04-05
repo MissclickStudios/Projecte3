@@ -17,7 +17,8 @@ void Time::Sleep(uint ms)
 	SDL_Delay(ms);
 }
 
-int Time::GetLocalTime()
+// Unix time
+int Time::GetUnixTime()
 {
 	return time(NULL);
 }

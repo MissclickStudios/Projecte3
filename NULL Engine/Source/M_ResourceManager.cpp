@@ -23,6 +23,8 @@
 #include "M_FileSystem.h"
 #include "M_Scene.h"
 
+#include "C_Transform.h"
+
 #include "Resource.h"
 #include "R_Mesh.h"
 #include "R_Material.h"
@@ -845,13 +847,29 @@ void M_ResourceManager::CreatePrefab(GameObject* gameObject)
 	gameObject->SetAsPrefab(id);
 
 	SavePrefab(gameObject, id);
+
+	prefabs.emplace(id, Prefab(id, gameObject->GetName(), Time::GetUnixTime()));
 }
 
 void M_ResourceManager::UpdatePrefab(GameObject* gameObject)
 {
-	gameObject->SetAsPrefab(gameObject->prefabID);
+	GameObject* tmp = gameObject;
+	GameObject* parent = gameObject->parent;
 
-	SavePrefab(gameObject, gameObject->prefabID);
+	while (parent != nullptr && parent->prefabID == gameObject->prefabID) //Find parent
+	{
+		tmp = parent;
+		parent = tmp->parent;
+	}
+
+	uint id = gameObject->prefabID;
+	tmp->SetAsPrefab(id);
+	SavePrefab(tmp, id);
+
+	std::map<uint32,Prefab>::iterator prefab = prefabs.find(id);
+	
+	if(prefab != prefabs.end())
+		prefab->second.updateTime = Time::GetUnixTime();
 }
 
 void M_ResourceManager::SavePrefab(GameObject* gameObject, uint _prefabId)
@@ -893,7 +911,8 @@ void M_ResourceManager::LoadPrefab(uint _prefabId, GameObject* parent, GameObjec
 
 	if(rootObject != nullptr) //we use the transform from the root object to keep it in the same place it was in the scene
 	{
-		rootObjectLoaded->ReplaceComponent((Component*)rootObject->transform);
+		//rootObjectLoaded->ReplaceComponent((Component*)rootObject->transform);
+		rootObjectLoaded->transform->SetLocalTransform(rootObject->transform->GetLocalTransform());
 	}
 }
 

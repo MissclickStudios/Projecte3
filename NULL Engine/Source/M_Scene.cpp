@@ -386,23 +386,31 @@ bool M_Scene::LoadScene(const char* path)
 		std::map<uint32, GameObject*>::iterator item;
 		for (item = tmp.begin(); item != tmp.end(); ++item)
 		{
+			uint parentUid = item->second->GetParentUID();
+			if (parentUid == 0)
+				continue;
+
 			if (item->second->isPrefab)
 			{
 				std::map<uint32, Prefab>::iterator prefab = prefabs.find(item->second->prefabID);
 				if (prefab != prefabs.end())
 				{
-
+					if (prefab->second.updateTime > modTime) //If prefab is older then load prefab/ignore non parent 
+					{
+						std::map<uint32,GameObject*>::iterator prefabParent = tmp.find(item->second->GetParentUID());
+						if (prefabParent != tmp.end())
+						{
+							if (prefabParent->second->prefabID == prefab->second.uid) //If parent is the same prefab then ignore object
+								continue;
+							else //Then it's parent, so load prefab
+							{
+								App->resourceManager->LoadPrefab(prefab->second.uid, prefabParent->second, item->second);
+								continue;
+							}
+						}
+					}
 				}
-
-				//if is parent  && modTime of prefab is later than scene then load prefab
-
-				// else if modTime of prefab is earlier than scene then load normally
 			}
-
-
-			uint parentUid = item->second->GetParentUID();
-			if (parentUid == 0)
-				continue;
 
 			std::map<uint32, GameObject*>::iterator parent = tmp.find(parentUid);
 			if (parent != tmp.end())
