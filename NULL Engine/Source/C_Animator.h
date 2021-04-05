@@ -110,6 +110,7 @@ public:																														// --- GET/SET METHODS
 	std::string		GetClipNamesAsString					() const;
 	std::string		GetAnimationNamesAsString				() const;
 	R_Animation*	GetAnimationByIndex						(uint index) const;
+	int				GetIndexByAnimation						(const R_Animation* rAnimation) const;
 
 	float			GetPlaybackSpeed						() const;
 	bool			GetInterpolate							() const;

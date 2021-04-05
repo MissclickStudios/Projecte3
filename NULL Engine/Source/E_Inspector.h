@@ -52,7 +52,7 @@ public:
 	bool Draw		(ImGuiIO& io) override;
 	bool CleanUp	() override;
 
-private:
+private:																										// --- DRAW COMPONENT METHODS ---
 	void DrawGameObjectInfo				(GameObject* selectedGameObject);
 	void DrawComponents					(GameObject* selectedGameObject);
 
@@ -80,16 +80,25 @@ private:
 	void DrawCameraBehaviorComponent	(C_CameraBehavior* behavior); 
 	void DrawGateBehaviorComponent		(C_GateBehavior* behavior);
 
-	void AddComponentCombo				(GameObject* selectedGameObject);					// 
-	void DeleteComponentPopup			(GameObject* selectedGameObject);					// 
+private:																										// --- DRAW COMPONENT UTILITY METHODS ---
+	void AddComponentCombo				(GameObject* selectedGameObject);										// 
+	void DeleteComponentPopup			(GameObject* selectedGameObject);										// 
 	void AddUIComponent					(GameObject* selectedGameObject, ComponentType type);
-	
-	void TextEditorWindow();
-	void CallTextEditor(C_Material* cMaterial);
 
-	// ------- DRAW COMPONENT METHODS -------
-	void DisplayTextureData				(C_Material* cMaterial);							// Will display the texture's width, height, depth...
-	void TextureDisplay					(C_Material* cMaterial);							// Will display the texture as an image through Dear ImGui.
+	// COMPONENT BASICS		--------
+	void DrawBasicSettings				(Component* component, bool isActive, const char* state = nullptr);
+
+	// MATERIAL COMPONENT	--------
+	void DisplayTextureData				(C_Material* cMaterial);												// Will display the texture's width, height, depth...
+	void TextureDisplay					(C_Material* cMaterial);												// Will display the texture as an image through Dear ImGui.
+
+	// ANIMATOR COMPONENT	--------
+	void DisplayAnimatorControls		(C_Animator* cAnimator);
+	void DisplayClipManager				(C_Animator* cAnimator);
+
+	// SHADER COMPONENT		--------
+	void TextEditorWindow				();
+	void CallTextEditor					(C_Material* cMaterial);
 
 private:
 	void DrawImportSettings				(Resource* selectedResource);

@@ -209,10 +209,23 @@ void E_Project::DrawAssetsTree()
 
 void E_Project::DrawFolderExplorer()
 {
-	bool retraso = false;
-	ImGui::Begin("FolderExplorer", &retraso);
+	ImGui::Begin("FolderExplorer", (bool*)0);
 
 	ImGui::Text(directoryToDisplay);
+	ImGui::SameLine(ImGui::GetWindowWidth() * 0.3f);
+	if (ImGui::Button("Refresh Current Directory"))
+	{ 
+		App->resourceManager->RefreshProjectDirectory(directoryToDisplay);
+		refreshRootDirectory		= true;
+		refreshDirectoryToDisplay	= true;
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("Refresh All Directories"))
+	{ 
+		App->resourceManager->RefreshProjectDirectories(); 
+		refreshRootDirectory		= true;
+		refreshDirectoryToDisplay	= true;
+	}
 
 	ImGui::Separator();
 
@@ -437,7 +450,7 @@ ImTextureID E_Project::GetIconTexID(const AssetDisplay& assetDisplay) const
 	case ResourceType::FOLDER:		{ texId = (ImTextureID)engineIcons.folderIcon->GetTextureID(); }		break;
 	case ResourceType::SCENE:		{ texId = (ImTextureID)engineIcons.modelIcon->GetTextureID(); }			break;
 	case ResourceType::ANIMATION:	{ texId = (ImTextureID)engineIcons.animationIcon->GetTextureID(); }		break;
-	case ResourceType::PREFAB: { texId = (ImTextureID)engineIcons.modelIcon->GetTextureID(); }		break;
+	case ResourceType::PREFAB:		{ texId = (ImTextureID)engineIcons.modelIcon->GetTextureID(); }			break;
 	}
 
 	return texId;

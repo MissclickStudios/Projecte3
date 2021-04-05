@@ -922,7 +922,10 @@ void C_Animator::PlayClip(const std::string& clipName, float blendTime)
 	}
 	else
 	{
-		SetBlendingClip(&item->second, blendFrames);
+		if (blendingClip == nullptr || blendingClip->GetName() != clipName)
+		{
+			SetBlendingClip(&item->second, blendFrames);
+		}
 	}
 
 	Play();
@@ -1288,6 +1291,25 @@ R_Animation* C_Animator::GetAnimationByIndex(uint index) const
 	}
 
 	return animations[index];
+}
+
+int C_Animator::GetIndexByAnimation(const R_Animation* rAnimation) const
+{
+	if (rAnimation == nullptr)
+	{
+		LOG("[ERROR] Animator Component: Could not Get Index by Animation! Error: Given R_Animation* was nullptr.");
+		return -1;
+	}
+
+	for (uint i = 0; i < animations.size(); ++i)
+	{
+		if ((animations[i]->GetDuration() == rAnimation->GetDuration()) && (animations[i]->GetName() == std::string(rAnimation->GetName())))			// TMP. Check is too rudimentary.
+		{
+			return i;
+		}
+	}
+
+	return -1;
 }
 
 float C_Animator::GetPlaybackSpeed() const

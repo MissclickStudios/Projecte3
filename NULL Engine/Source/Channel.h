@@ -6,6 +6,8 @@
 #include "MathGeoLib/include/Math/float3.h"
 #include "MathGeoLib/include/Math/Quat.h"
 
+#include "Macros.h"
+
 typedef std::map<double, float3>::const_iterator	PositionKeyframe;												// Typedefs declared in order to improve code readability,
 typedef std::map<double, Quat>::const_iterator		RotationKeyframe;												// PositionKeyframe and ScaleKeyframe are technically the same.
 typedef std::map<double, float3>::const_iterator	ScaleKeyframe;													// However, they have been separated for differentiation.
