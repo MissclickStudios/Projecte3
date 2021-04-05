@@ -250,12 +250,6 @@ bool M_Scene::SaveScene(const char* sceneName) const
 		(*item)->SaveState(arrayNode);
 	}
 
-	/*for (uint i = 0; i < gameObjects.size(); ++i)
-	{
-		ParsonNode array_node = objectArray.SetNode(gameObjects[i]->GetName());
-		gameObjects[i]->SaveState(array_node);
-	}*/
-
 	char* buffer		= nullptr;
 	std::string name	= (sceneName != nullptr) ? sceneName : sceneRoot->GetName();
 	std::string path	= ASSETS_SCENES_PATH + name + JSON_EXTENSION;
@@ -390,7 +384,7 @@ bool M_Scene::LoadScene(const char* path)
 			if (parentUid == 0)
 				continue;
 
-			if (item->second->isPrefab)
+			if (item->second->isPrefab && item->second->prefabID != 0)
 			{
 				std::map<uint32, Prefab>::iterator prefab = prefabs.find(item->second->prefabID);
 				if (prefab != prefabs.end())
@@ -416,9 +410,10 @@ bool M_Scene::LoadScene(const char* path)
 			if (parent != tmp.end())
 			{
 				item->second->SetParent(parent->second);
-				item->second->GetComponent<C_Transform>()->Translate(float3::zero);						// Dirty way to refresh the transforms after the import is done. TMP Un-hardcode later.
-				gameObjects.push_back(item->second);
 			}
+
+			item->second->GetComponent<C_Transform>()->Translate(float3::zero);						// Dirty way to refresh the transforms after the import is done. TMP Un-hardcode later.
+			gameObjects.push_back(item->second);
 		}
 		tmp.clear();
 		App->renderer->ClearRenderers();
@@ -449,7 +444,6 @@ bool M_Scene::SaveSceneAs(const char* sceneName)
 
 bool M_Scene::NewScene()
 {
-
 	App->renderer->ClearRenderers();
 	CleanUp();
 
