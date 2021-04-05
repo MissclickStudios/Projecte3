@@ -160,6 +160,7 @@ UpdateStatus M_Scene::Update(float dt)
 
 UpdateStatus M_Scene::PostUpdate(float dt)
 {	
+	
 	if (nextScene)
 	{
 		level.NextRoom();
@@ -310,6 +311,8 @@ bool M_Scene::LoadScene(const char* path)
 		return false;
 	}
 
+	int modTime = App->fileSystem->GetLastModTime(path);
+
 	if (buffer != nullptr)
 	{
 		App->renderer->ClearRenderers();
@@ -343,6 +346,7 @@ bool M_Scene::LoadScene(const char* path)
 
 		for (uint i = 0; i < objectsArray.size; ++i)																			// Getting all the GameObjects in the ParsonArray
 		{
+
 			ParsonNode objectNode = objectsArray.GetNode(i);
 			if (!objectNode.NodeIsValid())
 			{
@@ -376,24 +380,37 @@ bool M_Scene::LoadScene(const char* path)
 			tmp.emplace(gameObject->GetUID(), gameObject);
 		}
 
+		std::map<uint, Prefab> prefabs = App->resourceManager->prefabs;
+
 		// Re-Parenting
 		std::map<uint32, GameObject*>::iterator item;
 		for (item = tmp.begin(); item != tmp.end(); ++item)
 		{
+			if (item->second->isPrefab)
+			{
+				std::map<uint32, Prefab>::iterator prefab = prefabs.find(item->second->prefabID);
+				if (prefab != prefabs.end())
+				{
+
+				}
+
+				//if is parent  && modTime of prefab is later than scene then load prefab
+
+				// else if modTime of prefab is earlier than scene then load normally
+			}
+
+
 			uint parentUid = item->second->GetParentUID();
 			if (parentUid == 0)
-			{
 				continue;
-			}
 
 			std::map<uint32, GameObject*>::iterator parent = tmp.find(parentUid);
 			if (parent != tmp.end())
 			{
 				item->second->SetParent(parent->second);
+				item->second->GetComponent<C_Transform>()->Translate(float3::zero);						// Dirty way to refresh the transforms after the import is done. TMP Un-hardcode later.
+				gameObjects.push_back(item->second);
 			}
-
-			item->second->GetComponent<C_Transform>()->Translate(float3::zero);						// Dirty way to refresh the transforms after the import is done. TMP Un-hardcode later.
-			gameObjects.push_back(item->second);
 		}
 		tmp.clear();
 		App->renderer->ClearRenderers();
@@ -452,13 +469,13 @@ void M_Scene::LoadResourceIntoScene(Resource* resource)
 	}
 }
 
-void M_Scene::LoadPrefabIntoScene(ParsonNode* a)
+GameObject* M_Scene::LoadPrefabIntoScene(ParsonNode* a, GameObject* parent)
 {
 	GameObject* gameObject = new GameObject();
 
 	gameObject->LoadState(*a);
 
-	gameObject->SetParent(App->scene->GetSceneRoot());
+	parent != nullptr ? gameObject->SetParent(parent) : gameObject->SetParent(App->scene->GetSceneRoot());
 
 	gameObjects.push_back(gameObject);
 
@@ -470,6 +487,8 @@ void M_Scene::LoadPrefabIntoScene(ParsonNode* a)
 	{
 		App->scene->LoadPrefabObject(gameObject, &childArray.GetNode(i));
 	}
+
+	return gameObject;
 }
 
 void M_Scene::LoadPrefabObject(GameObject* _gameObject, ParsonNode* node)

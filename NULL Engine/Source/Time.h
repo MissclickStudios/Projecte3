@@ -14,6 +14,8 @@ typedef unsigned __int64	uint64;
 namespace Time
 {
 	void Sleep(uint ms);
+
+	int GetLocalTime(); //In Unix
 	
 	namespace Real
 	{
@@ -40,7 +42,7 @@ namespace Time
 			//static	Timer			startup_timer;
 			static	Timer			frameTimer;
 			static	PerfectTimer	perfTimer;
-			static	Hourglass		clock;
+			static	Hourglass		_clock;
 			static	FrameData		frameData;
 		}
 	}

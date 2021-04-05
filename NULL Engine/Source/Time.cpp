@@ -5,6 +5,8 @@
 
 #include "Time.h"
 
+#include <time.h>
+
 #include "MemoryManager.h"
 
 using namespace Time::Real::Utilities;																	// Not the cleanest but prefer to avoid having to write these
@@ -13,6 +15,11 @@ using namespace Time::Game::Utilities;																	// strings every time i n
 void Time::Sleep(uint ms)
 {
 	SDL_Delay(ms);
+}
+
+int Time::GetLocalTime()
+{
+	return time(NULL);
 }
 
 // --- REAL CLOCK METHODS ---
@@ -26,7 +33,7 @@ void Time::Real::Update()
 {
 	uint ms = frameTimer.Read();
 
-	clock.Update(ms);
+	_clock.Update(ms);
 	frameData.Update(ms);
 
 	frameTimer.Start();
@@ -69,7 +76,7 @@ float Time::Real::PeekPerfTimer()
 
 Hourglass Time::Real::GetClock()
 {
-	return clock;
+	return _clock;
 }
 
 FrameData Time::Real::GetFrameData()

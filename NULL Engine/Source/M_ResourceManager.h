@@ -8,6 +8,7 @@
 
 class ParsonNode;
 class Resource;
+struct Prefab;
 
 enum class ResourceType;
 class R_Shader;
@@ -80,7 +81,7 @@ public:																								// --- RESOURCE MANAGER API ---
 
 	void			SavePrefab						(GameObject* gameObject, uint _prefabId);
 	void			SavePrefabObject				(GameObject* gameObject, ParsonNode* node);
-	void			LoadPrefab						(uint _prefabId);
+	void			LoadPrefab						(uint _prefabId, GameObject* parent, GameObject* rootObject = nullptr); //If the root object is not nullptr its transform component will be used
 	
 private:																															// --- ASSETS MONITORING METHODS ---
 	void			RefreshDirectoryFiles			(const char* directory);
@@ -138,7 +139,7 @@ private:
 	float							fileRefreshRate;																// 
 
 public:
-	std::map<uint32, std::string> prefabs;
+	std::map<uint32, Prefab> prefabs;
 };
 
 #endif // !__M_RESOURCE_MANAGER_H__

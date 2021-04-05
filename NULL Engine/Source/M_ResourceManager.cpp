@@ -4,6 +4,9 @@
 #include "Time.h"
 #include "Random.h"
 #include "GameObject.h"
+#include "Prefab.h"
+
+#include <time.h>
 
 #include "Importer.h"
 #include "I_Scenes.h"
@@ -877,7 +880,7 @@ void M_ResourceManager::SavePrefabObject(GameObject* gameObject, ParsonNode* nod
 	}
 }
 
-void M_ResourceManager::LoadPrefab(uint _prefabId)
+void M_ResourceManager::LoadPrefab(uint _prefabId, GameObject* parent, GameObject* rootObject)
 {
 	char* buffer = nullptr;
 	std::string fileName = ASSETS_PREFABS_PATH + std::to_string(_prefabId) + PREFAB_EXTENSION;
@@ -886,9 +889,12 @@ void M_ResourceManager::LoadPrefab(uint _prefabId)
 	ParsonNode prefabRoot(buffer);
 	RELEASE_ARRAY(buffer);
 
-	App->scene->LoadPrefabIntoScene(&prefabRoot);
+	GameObject* rootObjectLoaded = App->scene->LoadPrefabIntoScene(&prefabRoot,parent);
 
-	
+	if(rootObject != nullptr) //we use the transform from the root object to keep it in the same place it was in the scene
+	{
+		rootObjectLoaded->ReplaceComponent((Component*)rootObject->transform);
+	}
 }
 
 // --- ASSETS MONITORING METHODS ---
@@ -1408,6 +1414,7 @@ void M_ResourceManager::FindPrefabs()
 	
 	char* buffer = nullptr;
 	std::string fileName;
+	int modTime = 0;
 	for (auto file = files.begin(); file != files.end(); file++)
 	{
 		fileName = ASSETS_PREFABS_PATH + (*file);
@@ -1418,8 +1425,10 @@ void M_ResourceManager::FindPrefabs()
 
 		std::string id;
 		App->fileSystem->SplitFilePath((*file).c_str(), nullptr, &id);
+
+		modTime = App->fileSystem->GetLastModTime(fileName.c_str());
 		
-		prefabs.emplace(atoi((*file).c_str()), prefab.GetString("Name"));												// atoi()? Will there be any problems if you just emplace(a, b)?
+		prefabs.emplace(atoi((*file).c_str()), Prefab(atoi((*file).c_str()),prefab.GetString("Name"),modTime));												// atoi()? Will there be any problems if you just emplace(a, b)?
 	}
 }
 

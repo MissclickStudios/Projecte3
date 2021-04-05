@@ -496,7 +496,7 @@ void M_Editor::LoadResourceIntoSceneThroughEditor()
 		{
 			std::string prefabId;
 			EngineApp->fileSystem->SplitFilePath(draggedAssetPath, nullptr, &prefabId, nullptr);
-			EngineApp->resourceManager->LoadPrefab(std::stoi(prefabId));
+			EngineApp->resourceManager->LoadPrefab(std::stoi(prefabId),EngineApp->scene->GetSceneRoot());
 		}
 
 		Resource* draggedResource = EngineApp->resourceManager->GetResourceFromLibrary(draggedAssetPath);
