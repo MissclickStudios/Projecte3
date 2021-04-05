@@ -8,7 +8,7 @@
 #define NULL_API __declspec(dllimport)
 #endif
 
-#ifndef GAMEBUILD
+#ifndef GAMEBUILD //TODO: When this gets included on the scripts project the macro never gets expanded
 #include <string>
 #endif // !GAMEBUILD
 

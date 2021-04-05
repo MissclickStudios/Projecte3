@@ -735,7 +735,7 @@ Component* GameObject::CreateComponent(ComponentType type)
 		return nullptr;
 	}
 
-#ifndef GAMEBUILD
+#ifndef GAMEBUILD //TODO: Es pot posar + de 1 component script igual ???
 	//TODO: Maybe this is avoidable !!!!!!!!
 	/*std::vector<C_Script*>scripts;
 	if (type == ComponentType::SCRIPT && GetComponents<C_Script>(scripts)) 
