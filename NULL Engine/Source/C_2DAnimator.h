@@ -7,6 +7,8 @@
 class GameObject;
 class R_Texture;
 
+typedef unsigned __int32 uint;
+
 class NULL_API C_2DAnimator : public Component
 {
 public:
@@ -19,12 +21,22 @@ public:
 	bool SaveState(ParsonNode& root) const override;
 	bool LoadState(ParsonNode& root) override;
 
+	uint GetIdFromAnimation();
+
 	static inline ComponentType GetType() { return ComponentType::AUDIOLISTENER; }
 
 private:
-	std::vector<R_Texture*>		animation;
-	int							AnimationCount;
+	uint GetTextureIdFromVector(int index);
 
+private:
+
+	std::vector<R_Texture*>		animation;
+	int							animationCounter;
+	int							animationFrames;
+	float						animationStepTime;
+
+	bool						animationLoop;
+	bool						animationPlating;
 };
 
 #endif // __C_2DANIMATOR__
