@@ -68,10 +68,10 @@ bool C_PlayerController::Update()
 	if (App->input->GetKey(SDL_SCANCODE_Y) == KeyState::KEY_UP)		{ aAnimator->PlayClip("Idle", 0.2f); }
 	if (App->input->GetKey(SDL_SCANCODE_U) == KeyState::KEY_DOWN)	{ aAnimator->PlayClip("Shooting", 0.2f); }
 
-	AnimatorClip* currentClip	= aAnimator->GetCurrentClip();
+	/*AnimatorClip* currentClip	= aAnimator->GetCurrentClip();
 	std::string clipName		= (currentClip != nullptr) ? currentClip->GetName() : "[NONE]";
 
-	/*switch (state)
+	switch (state)
 	{
 	case PlayerState::IDLE:
 		if (currentClip != nullptr && clipName != "Idle")

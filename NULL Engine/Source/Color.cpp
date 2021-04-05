@@ -218,13 +218,21 @@ bool Color::operator ==(const Color& color)
 	return (r == color.r && g == color.g && b == color.b && a == color.a);
 }
 
-Color Red		= Color(1.0f, 0.0f, 0.0f);
-Color Green		= Color(0.0f, 1.0f, 0.0f);
-Color Blue		= Color(0.0f, 0.0f, 1.0f);
-Color Cyan		= Color(0.0f, 1.0f, 1.0f);
-Color Magenta	= Color(1.0f, 0.0f, 1.0f);
-Color Yellow	= Color(1.0f, 1.0f, 0.0f);
-Color Orange	= Color(1.0f, 0.3f, 0.0f);
-Color Pink		= Color(1.0f, 0.7f, 0.7f);
-Color Black		= Color(0.0f, 0.0f, 0.0f);
-Color White		= Color(1.0f, 1.0f, 1.0f);
+Color Red			= Color(1.0f, 0.0f, 0.0f);
+Color Green			= Color(0.0f, 1.0f, 0.0f);
+Color Blue			= Color(0.0f, 0.0f, 1.0f);
+Color Cyan			= Color(0.0f, 1.0f, 1.0f);
+Color Magenta		= Color(1.0f, 0.0f, 1.0f);
+Color Yellow		= Color(1.0f, 1.0f, 0.0f);
+Color Orange		= Color(1.0f, 0.3f, 0.0f);
+Color Pink			= Color(1.0f, 0.7f, 0.7f);
+Color Purple		= Color(1.0f, 0.3f, 1.0f);
+Color Black			= Color(0.0f, 0.0f, 0.0f);
+Color White			= Color(1.0f, 1.0f, 1.0f);
+
+Color SoftRed		= Color(1.0f, 0.33f, 0.33f);
+Color SoftGreen		= Color(0.33f, 1.0f, 0.33f);
+Color SoftBlue		= Color(0.33f, 0.33f, 1.0f);
+Color SoftCyan		= Color(0.33f, 1.0f, 1.0f);
+Color SoftMagenta	= Color(1.0f, 0.33f, 1.0f);
+Color SoftYellow	= Color(1.0f, 1.0f, 0.33f);

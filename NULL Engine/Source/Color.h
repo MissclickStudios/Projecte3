@@ -53,7 +53,15 @@ extern NULL_API Color Magenta;
 extern NULL_API Color Yellow;
 extern NULL_API Color Orange;
 extern NULL_API Color Pink;
+extern NULL_API Color Purple;
 extern NULL_API Color Black;
 extern NULL_API Color White;
+
+extern NULL_API Color SoftRed;
+extern NULL_API Color SoftGreen;
+extern NULL_API Color SoftBlue;
+extern NULL_API Color SoftCyan;
+extern NULL_API Color SoftMagenta;
+extern NULL_API Color SoftYellow;
 
 #endif // !__COLOR_H__
