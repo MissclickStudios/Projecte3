@@ -453,6 +453,8 @@ bool M_Scene::NewScene()
 	App->renderer->ClearRenderers();
 	CleanUp();
 
+	CreateSceneRoot("MainScene");
+
 	App->renderer->defaultSkyBox.SetUpSkyBoxBuffers();
 
 	currentScene = "New Scene";
