@@ -2,6 +2,7 @@
 #define __C_2DANIMATOR__
 
 #include "Component.h"
+#include "Timer.h"
 #include <vector>
 
 class GameObject;
@@ -21,6 +22,10 @@ public:
 	bool SaveState(ParsonNode& root) const override;
 	bool LoadState(ParsonNode& root) override;
 
+	//Plays the animation
+	void PlayAnimation(bool loop);
+
+	//Gets the current id texture of the animation frame
 	uint GetIdFromAnimation();
 
 	static inline ComponentType GetType() { return ComponentType::AUDIOLISTENER; }
@@ -33,10 +38,15 @@ private:
 	std::vector<R_Texture*>		animation;
 	int							animationCounter;
 	int							animationFrames;
-	float						animationStepTime;
+	uint						animationStepTime;
+
+	Timer						animationTimer;
 
 	bool						animationLoop;
-	bool						animationPlating;
+	bool						animationPlaying;
+	bool						playAnimation;
+
+	uint						currentFrameIdTexture;
 };
 
 #endif // __C_2DANIMATOR__
