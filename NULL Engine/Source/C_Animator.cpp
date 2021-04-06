@@ -377,7 +377,7 @@ bool C_Animator::GenerateDefaultClip(const R_Animation* rAnimation, AnimatorClip
 	}
 	
 	std::string defaultName	= rAnimation->GetName() + std::string(" Default");
-	defaultClip				= AnimatorClip(rAnimation, defaultName, 0, (uint)rAnimation->GetDuration(), false);
+	defaultClip				= AnimatorClip(rAnimation, defaultName, 0, (uint)rAnimation->GetDuration(), 1.0f, false);
 
 	return true;
 }
@@ -754,7 +754,7 @@ void C_Animator::GenerateDefaultClips()
 	for (auto animation = animations.begin(); animation < animations.end(); ++animation)
 	{
 		std::string defaultName = (*animation)->GetName() + std::string(" Default");
-		AnimatorClip& defaultClip = AnimatorClip((*animation), defaultName, 0, (uint)(*animation)->GetDuration(), false);
+		AnimatorClip& defaultClip = AnimatorClip((*animation), defaultName, 0, (uint)(*animation)->GetDuration(), 1.0f, false);
 
 		clips.emplace(defaultClip.GetName(), defaultClip);
 
@@ -846,18 +846,19 @@ bool C_Animator::AddClip(const AnimatorClip& clip)
 	return true;
 }
 
-bool C_Animator::EditClip(const std::string& originalClipName, const R_Animation* rAnimation, const std::string& name, uint start, uint end, bool loop)
+bool C_Animator::EditClip(const std::string& originalClipName, const R_Animation* rAnimation, const std::string& name, uint start, uint end, float speed, bool loop)
 {	
 	auto originalClip = clips.find(originalClipName);
 	if (originalClip == clips.end())
 	{
 		return false;
 	}
-
-	originalClip->second.EditClip(rAnimation, name, start, end, loop);
-	AddClip(originalClip->second);
-
+	
 	DeleteClip(originalClipName);
+	
+	bool success = AddClip(AnimatorClip(rAnimation, name, start, end, speed, loop));
+
+	return success;
 }
 
 bool C_Animator::DeleteClip(const std::string& clipName)
@@ -1072,7 +1073,7 @@ bool C_Animator::RefreshBoneDisplay()
 AnimatorClip C_Animator::GetClip(const char* clipName) const
 {
 	auto clip = clips.find(clipName);
-	return (clip != clips.end()) ? clip->second : AnimatorClip(nullptr, "[NONE]", 0, 0, false);
+	return (clip != clips.end()) ? clip->second : AnimatorClip(nullptr, "[NONE]", 0, 0, 1.0f, false);
 }
 
 AnimatorClip* C_Animator::GetClipAsPtr(const char* clipName)
