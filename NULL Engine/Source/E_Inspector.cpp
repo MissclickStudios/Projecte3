@@ -1788,10 +1788,10 @@ void E_Inspector::DrawGateBehaviorComponent(C_GateBehavior* cBehavior)
 void E_Inspector::DrawAnimator2DComponent(C_2DAnimator* cAnimator)
 {
 	bool show = true;
-	if (ImGui::CollapsingHeader("Gate Bahavior", &show, ImGuiTreeNodeFlags_Leaf))
+	if (ImGui::CollapsingHeader("Animator 2D", &show, ImGuiTreeNodeFlags_Leaf))
 	{
 		bool isActive = cAnimator->IsActive();
-		if (ImGui::Checkbox("Gate Is Active", &isActive))
+		if (ImGui::Checkbox("Animator is active", &isActive))
 			cAnimator->SetIsActive(isActive);
 
 		ImGui::Separator();
@@ -1802,14 +1802,14 @@ void E_Inspector::DrawAnimator2DComponent(C_2DAnimator* cAnimator)
 			showDeleteComponentPopup = true;
 		}
 
-		ImGui::Separator();
 	}
 	return;
 }
 
 void E_Inspector::AddComponentCombo(GameObject* selectedGameObject)
 {
-	ImGui::Combo("##", &componentType, "Add Component\0Transform\0Mesh\0Material\0Light\0Camera\0Animator\0Animation\0RigidBody\0Box Collider\0Sphere Collider\0Capsule Collider\0Particle System\0Canvas\0Audio Source\0Audio Listener\0Player Controller\0Bullet Behavior\0Prop Behavior\0Camera Behavior\0Gate Behavior\0UI Image\0UI Text\0Script");
+	ImGui::Combo("##", &componentType, "Add Component\0Transform\0Mesh\0Material\0Light\0Camera\0Animator\0Animation\0RigidBody\0Box Collider\0Sphere Collider\0Capsule Collider\0Particle System\0Canvas\0Audio Source\0Audio Listener\0Player Controller\0Bullet Behavior\0Prop Behavior\0Camera Behavior\0Gate Behavior\0UI Image\0UI Text\0Script\0Animator 2D");
+
 
 	ImGui::SameLine();
 
