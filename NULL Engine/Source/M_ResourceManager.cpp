@@ -898,7 +898,7 @@ void M_ResourceManager::SavePrefabObject(GameObject* gameObject, ParsonNode* nod
 	}
 }
 
-void M_ResourceManager::LoadPrefab(uint _prefabId, GameObject* parent, GameObject* rootObject)
+GameObject* M_ResourceManager::LoadPrefab(uint _prefabId, GameObject* parent, GameObject* rootObject)
 {
 	char* buffer = nullptr;
 	std::string fileName = ASSETS_PREFABS_PATH + std::to_string(_prefabId) + PREFAB_EXTENSION;
@@ -914,6 +914,8 @@ void M_ResourceManager::LoadPrefab(uint _prefabId, GameObject* parent, GameObjec
 		//rootObjectLoaded->ReplaceComponent((Component*)rootObject->transform);
 		rootObjectLoaded->transform->SetLocalTransform(rootObject->transform->GetLocalTransform());
 	}
+
+	return rootObjectLoaded;
 }
 
 // --- ASSETS MONITORING METHODS ---
