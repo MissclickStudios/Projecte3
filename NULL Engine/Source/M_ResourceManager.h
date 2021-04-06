@@ -83,6 +83,9 @@ public:																								// --- RESOURCE MANAGER API ---
 	void			SavePrefab						(GameObject* gameObject, uint _prefabId);
 	void			SavePrefabObject				(GameObject* gameObject, ParsonNode* node);
 	GameObject*		LoadPrefab						(uint _prefabId, GameObject* parent, GameObject* rootObject = nullptr); //If the root object is not nullptr its transform component will be used
+
+	Prefab*			GetPrefabByName(const char* prefabName);
+	uint			GetPrefabUIDByName(const char* prefabName);
 	
 private:																															// --- ASSETS MONITORING METHODS ---
 	void			RefreshDirectoryFiles			(const char* directory);

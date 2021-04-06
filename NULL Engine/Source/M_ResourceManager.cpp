@@ -918,6 +918,22 @@ GameObject* M_ResourceManager::LoadPrefab(uint _prefabId, GameObject* parent, Ga
 	return rootObjectLoaded;
 }
 
+Prefab* M_ResourceManager::GetPrefabByName(const char* prefabName)
+{
+	for (auto prefab = prefabs.begin(); prefab != prefabs.end(); ++prefab)
+		if (strcmp(prefab->second.name.c_str(), prefabName) == 0)
+			return &prefab->second;
+	return nullptr;
+}
+
+uint M_ResourceManager::GetPrefabUIDByName(const char* prefabName)
+{
+	for (auto prefab = prefabs.begin(); prefab != prefabs.end(); ++prefab)
+		if (strcmp(prefab->second.name.c_str(), prefabName) == 0)
+			return prefab->second.uid;
+	return 0;
+}
+
 // --- ASSETS MONITORING METHODS ---
 void M_ResourceManager::RefreshDirectoryFiles(const char* directory)
 {
