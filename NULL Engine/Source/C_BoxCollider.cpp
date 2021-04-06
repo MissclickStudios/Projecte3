@@ -38,6 +38,12 @@ bool C_BoxCollider::Update()
 		{
 			shape->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE, !isTrigger);
 			shape->setFlag(physx::PxShapeFlag::eTRIGGER_SHAPE, isTrigger);
+
+			physx::PxFilterData filterData;
+			filterData.word0 = (int)GetOwner()->GetComponent<C_RigidBody>()->GetFilter();
+
+			shape->setSimulationFilterData(filterData);
+			shape->setQueryFilterData(filterData);
 		}
 		if (toUpdate == ColliderUpdateType::SHAPE || toUpdate == ColliderUpdateType::ALL)
 		{
@@ -154,6 +160,13 @@ void C_BoxCollider::CreateCollider()
 	
 	shape->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE, !isTrigger);
 	shape->setFlag(physx::PxShapeFlag::eTRIGGER_SHAPE, isTrigger);
+
+	physx::PxFilterData filterData;
+	filterData.word0 = (int)GetOwner()->GetComponent<C_RigidBody>()->GetFilter();
+
+	shape->setSimulationFilterData(filterData);
+	shape->setFlag(physx::PxShapeFlag::eSCENE_QUERY_SHAPE, true);
+	shape->setQueryFilterData(filterData);
 
 	GetOwner()->GetComponent<C_RigidBody>()->GetRigidBody()->attachShape(*shape);
 

@@ -35,6 +35,8 @@ public:
 	const float		Height() const { return height; }
 	void			SetHeight(float h) { height = h; ToUpdate(ColliderUpdateType::SHAPE); }
 
+	void UpdateFilter() { ToUpdate(ColliderUpdateType::STATE); }
+
 private:
 
 	void CreateCollider();
