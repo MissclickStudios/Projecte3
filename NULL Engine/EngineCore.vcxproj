@@ -36,6 +36,7 @@
     <ClCompile Include="Source\DirectionalLight.cpp" />
     <ClCompile Include="Source\I_Scripts.cpp" />
     <ClCompile Include="Source\M_ScriptManager.cpp" />
+    <ClCompile Include="Source\Prefab.cpp" />
     <ClCompile Include="Source\Script.cpp" />
     <ClCompile Include="Source\LevelGenerator.cpp" />
     <ClCompile Include="Source\M_Audio.cpp" />
@@ -180,6 +181,9 @@
     <ClInclude Include="Source\C_UI_Text.h" />
     <ClInclude Include="Source\C_GateBehavior.h" />
     <ClInclude Include="Source\C_Script.h" />
+    <ClInclude Include="Source\Dependencies\Assimp\include\assimp\cimport.h" />
+    <ClInclude Include="Source\Dependencies\Assimp\include\assimp\postprocess.h" />
+    <ClInclude Include="Source\Dependencies\Assimp\include\assimp\scene.h" />
     <ClInclude Include="Source\Dependencies\mmgr\include\mmgr.h" />
     <ClInclude Include="Source\Dependencies\mmgr\include\nommgr.h" />
     <ClInclude Include="Source\C_PlayerController.h" />
@@ -255,6 +259,7 @@
     <ClCompile Include="Source\EngineMain.h" />
     <ClInclude Include="Source\I_Scripts.h" />
     <ClInclude Include="Source\M_ScriptManager.h" />
+    <ClInclude Include="Source\Prefab.h" />
     <ClInclude Include="Source\Script.h" />
     <ClInclude Include="Source\Hourglass.h" />
     <ClInclude Include="Source\Color.h" />
@@ -265,9 +270,6 @@
     <ClInclude Include="Source\C_Material.h" />
     <ClInclude Include="Source\C_Mesh.h" />
     <ClInclude Include="Source\C_Transform.h" />
-    <ClInclude Include="Source\Dependencies\Assimp\include\cimport.h" />
-    <ClInclude Include="Source\Dependencies\Assimp\include\postprocess.h" />
-    <ClInclude Include="Source\Dependencies\Assimp\include\scene.h" />
     <ClInclude Include="Source\Dependencies\Brofiler\include\Brofiler.h" />
     <ClInclude Include="Source\Dependencies\DevIL\include\config.h" />
     <ClInclude Include="Source\Dependencies\DevIL\include\devil_internal_exports.h" />
@@ -505,7 +507,7 @@
       <SDLCheck>false</SDLCheck>
       <ExceptionHandling>false</ExceptionHandling>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <AdditionalIncludeDirectories>$(ProjectDir)\Source\Dependencies;$(ProjectDir)Source\Dependencies\Wwise\include;$(ProjectDir)Source\Dependencies\Wwise\samples\SoundEngine\Win32;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)\Source\Dependencies;$(ProjectDir)Source\Dependencies\Wwise\include;$(ProjectDir)Source\Dependencies\Wwise\samples\SoundEngine\Win32;$(ProjectDir)Source\Dependencies\Assimp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NULL_BUILD_DLL;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -528,7 +530,7 @@
       <SDLCheck>false</SDLCheck>
       <ExceptionHandling>false</ExceptionHandling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <AdditionalIncludeDirectories>$(ProjectDir)\Source\Dependencies;$(ProjectDir)Source\Dependencies\Wwise\include;$(ProjectDir)Source\Dependencies\Wwise\samples\SoundEngine\Win32;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)\Source\Dependencies;$(ProjectDir)Source\Dependencies\Wwise\include;$(ProjectDir)Source\Dependencies\Wwise\samples\SoundEngine\Win32;$(ProjectDir)Source\Dependencies\Assimp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NULL_BUILD_DLL;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -553,7 +555,7 @@
       <SDLCheck>false</SDLCheck>
       <ExceptionHandling>false</ExceptionHandling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <AdditionalIncludeDirectories>$(ProjectDir)\Source\Dependencies;$(ProjectDir)Source\Dependencies\Wwise\include;$(ProjectDir)Source\Dependencies\Wwise\samples\SoundEngine\Win32;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)\Source\Dependencies;$(ProjectDir)Source\Dependencies\Wwise\include;$(ProjectDir)Source\Dependencies\Wwise\samples\SoundEngine\Win32;$(ProjectDir)Source\Dependencies\Assimp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NOPROFILER;NOMEMOMANAGER;GAMEBUILD;WIN32;NULL_BUILD_DLL;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>

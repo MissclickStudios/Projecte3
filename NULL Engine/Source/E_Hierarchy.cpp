@@ -12,7 +12,7 @@ E_Hierarchy::E_Hierarchy() : EditorPanel("Hierarchy"),
 draggedGameObject			(nullptr), 
 openHierarchyToolsPopup	(false)
 {
-	defaultFlags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth;
+	defaultFlags = ImGuiTreeNodeFlags_SpanAvailWidth;
 }
 
 E_Hierarchy::~E_Hierarchy()
@@ -103,13 +103,13 @@ void E_Hierarchy::ProcessGameObject(GameObject* gameObject)
 		{
 			if (ImGui::IsItemClicked(ImGuiMouseButton_Left))								// IsItemClicked() checks if the TreeNode item was clicked.
 			{																				// Arguments:
-				EngineApp->editor->SetSelectedGameObjectThroughEditor(gameObject);				// 0 = Left Click
+				EngineApp->editor->SetSelectedGameObjectThroughEditor(gameObject);			// 0 = Left Click
 			}																				// 1 = Right Click
 
 			if (ImGui::IsItemClicked(ImGuiMouseButton_Right))								// 
 			{																				// 
-				EngineApp->editor->SetSelectedGameObjectThroughEditor(gameObject);				// 
-				openHierarchyToolsPopup = true;											// 
+				EngineApp->editor->SetSelectedGameObjectThroughEditor(gameObject);			// 
+				openHierarchyToolsPopup = true;												// 
 			}																				// -----------------------------------------------------------------------------------------------
 
 			if (ImGui::BeginDragDropSource())												// First, it is checked whether or not this node is part of a currently starting drag&drop operation.

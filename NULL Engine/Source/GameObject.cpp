@@ -164,8 +164,6 @@ bool GameObject::LoadState(ParsonNode& root)
 {
 	bool ret = true;
 
-
-	
 	ForceUID((uint)root.GetNumber("UID"));
 	parent_uid = (uint)root.GetNumber("ParentUID");
 
@@ -737,7 +735,7 @@ Component* GameObject::CreateComponent(ComponentType type)
 		return nullptr;
 	}
 
-#ifndef GAMEBUILD
+#ifndef GAMEBUILD //TODO: Es pot posar + de 1 component script igual ???
 	//TODO: Maybe this is avoidable !!!!!!!!
 	/*std::vector<C_Script*>scripts;
 	if (type == ComponentType::SCRIPT && GetComponents<C_Script>(scripts)) 
@@ -818,6 +816,21 @@ bool GameObject::DeleteComponent(Component* componentToDelete)
 	LOG("[STATUS] Deleted Component %s of Game Object %s", componentName.c_str(), name.c_str());
 
 	return false;
+}
+
+void GameObject::ReplaceComponent(Component* newComponent)
+{
+	for (auto comp = components.begin(); comp != components.end(); comp++)
+	{
+		if (newComponent->GetType() == (*comp)->GetType())
+		{
+			DeleteComponent((*comp));
+
+			Component* a = (C_Transform*)CreateComponent(newComponent->GetType());
+
+			*a = *(C_Transform*)newComponent;
+		}
+	}
 }
 
 const std::vector<Component*>& GameObject::GetAllComponents() const

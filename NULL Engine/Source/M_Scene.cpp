@@ -160,6 +160,7 @@ UpdateStatus M_Scene::Update(float dt)
 
 UpdateStatus M_Scene::PostUpdate(float dt)
 {	
+	
 	if (nextScene)
 	{
 		level.NextRoom();
@@ -249,12 +250,6 @@ bool M_Scene::SaveScene(const char* sceneName) const
 		(*item)->SaveState(arrayNode);
 	}
 
-	/*for (uint i = 0; i < gameObjects.size(); ++i)
-	{
-		ParsonNode array_node = objectArray.SetNode(gameObjects[i]->GetName());
-		gameObjects[i]->SaveState(array_node);
-	}*/
-
 	char* buffer		= nullptr;
 	std::string name	= (sceneName != nullptr) ? sceneName : sceneRoot->GetName();
 	std::string path	= ASSETS_SCENES_PATH + name + JSON_EXTENSION;
@@ -310,6 +305,8 @@ bool M_Scene::LoadScene(const char* path)
 		return false;
 	}
 
+	int modTime = App->fileSystem->GetLastModTime(path);
+
 	if (buffer != nullptr)
 	{
 		App->renderer->ClearRenderers();
@@ -343,6 +340,7 @@ bool M_Scene::LoadScene(const char* path)
 
 		for (uint i = 0; i < objectsArray.size; ++i)																			// Getting all the GameObjects in the ParsonArray
 		{
+
 			ParsonNode objectNode = objectsArray.GetNode(i);
 			if (!objectNode.NodeIsValid())
 			{
@@ -376,14 +374,36 @@ bool M_Scene::LoadScene(const char* path)
 			tmp.emplace(gameObject->GetUID(), gameObject);
 		}
 
+		std::map<uint, Prefab> prefabs = App->resourceManager->prefabs;
+
 		// Re-Parenting
 		std::map<uint32, GameObject*>::iterator item;
 		for (item = tmp.begin(); item != tmp.end(); ++item)
 		{
 			uint parentUid = item->second->GetParentUID();
 			if (parentUid == 0)
-			{
 				continue;
+
+			if (item->second->isPrefab && item->second->prefabID != 0)
+			{
+				std::map<uint32, Prefab>::iterator prefab = prefabs.find(item->second->prefabID);
+				if (prefab != prefabs.end())
+				{
+					if (prefab->second.updateTime > modTime) //If prefab is older then load prefab/ignore non parent 
+					{
+						std::map<uint32,GameObject*>::iterator prefabParent = tmp.find(item->second->GetParentUID());
+						if (prefabParent != tmp.end())
+						{
+							if (prefabParent->second->prefabID == prefab->second.uid) //If parent is the same prefab then ignore object
+								continue;
+							else //Then it's parent, so load prefab
+							{
+								App->resourceManager->LoadPrefab(prefab->second.uid, prefabParent->second, item->second);
+								continue;
+							}
+						}
+					}
+				}
 			}
 
 			std::map<uint32, GameObject*>::iterator parent = tmp.find(parentUid);
@@ -409,10 +429,29 @@ bool M_Scene::LoadScene(const char* path)
 	return ret;
 }
 
-bool M_Scene::SaveSceneAs(const char* sceneName) 
+void M_Scene::SaveCurrentScene()
+{
+	SaveScene(currentScene.c_str());
+}
+
+bool M_Scene::SaveSceneAs(const char* sceneName)
 {
 	currentScene = sceneName;
 	SaveScene(sceneName);
+
+	return true;
+}
+
+bool M_Scene::NewScene()
+{
+	App->renderer->ClearRenderers();
+	CleanUp();
+
+	CreateSceneRoot("MainScene");
+
+	App->renderer->defaultSkyBox.SetUpSkyBoxBuffers();
+
+	currentScene = "New Scene";
 
 	return true;
 }
@@ -434,13 +473,13 @@ void M_Scene::LoadResourceIntoScene(Resource* resource)
 	}
 }
 
-void M_Scene::LoadPrefabIntoScene(ParsonNode* a)
+GameObject* M_Scene::LoadPrefabIntoScene(ParsonNode* a, GameObject* parent)
 {
 	GameObject* gameObject = new GameObject();
 
 	gameObject->LoadState(*a);
 
-	gameObject->SetParent(App->scene->GetSceneRoot());
+	parent != nullptr ? gameObject->SetParent(parent) : gameObject->SetParent(App->scene->GetSceneRoot());
 
 	gameObjects.push_back(gameObject);
 
@@ -452,6 +491,8 @@ void M_Scene::LoadPrefabIntoScene(ParsonNode* a)
 	{
 		App->scene->LoadPrefabObject(gameObject, &childArray.GetNode(i));
 	}
+
+	return gameObject;
 }
 
 void M_Scene::LoadPrefabObject(GameObject* _gameObject, ParsonNode* node)

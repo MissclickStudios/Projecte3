@@ -10,6 +10,8 @@
 
 #include "R_Model.h"
 #include "R_Texture.h"
+#include "R_Shader.h"
+#include "R_Script.h"
 
 #include "I_Scenes.h"
 #include "I_Meshes.h"
@@ -75,4 +77,14 @@ bool Importer::ImportTexture(const char* buffer, uint size, R_Texture* rTexture)
 	}*/
 
 	return success;
+}
+
+bool Importer::ImportShader(const char* buffer, R_Shader* rShader)
+{
+	return true;
+}
+
+bool Importer::ImportScript(const char* buffer, R_Script* rScript)
+{
+	return true;
 }

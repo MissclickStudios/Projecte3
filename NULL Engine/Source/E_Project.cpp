@@ -1,7 +1,9 @@
 #include <vector>
 #include <algorithm>
+#include <utility>
 
 #include "Profiler.h"
+//#include "Prefab.h"
 
 #include "VariableTypedefs.h"
 #include "Macros.h"
@@ -209,10 +211,23 @@ void E_Project::DrawAssetsTree()
 
 void E_Project::DrawFolderExplorer()
 {
-	bool retraso = false;
-	ImGui::Begin("FolderExplorer", &retraso);
+	ImGui::Begin("FolderExplorer", (bool*)0);
 
 	ImGui::Text(directoryToDisplay);
+	ImGui::SameLine(ImGui::GetWindowWidth() * 0.3f);
+	if (ImGui::Button("Refresh Current Directory"))
+	{ 
+		App->resourceManager->RefreshProjectDirectory(directoryToDisplay);
+		refreshRootDirectory		= true;
+		refreshDirectoryToDisplay	= true;
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("Refresh All Directories"))
+	{ 
+		App->resourceManager->RefreshProjectDirectories(); 
+		refreshRootDirectory		= true;
+		refreshDirectoryToDisplay	= true;
+	}
 
 	ImGui::Separator();
 
@@ -347,9 +362,9 @@ void E_Project::DrawResourceIcons()
 		if (item->type == ResourceType::PREFAB)
 		{
 			std::string prefabName = "Prefab";
-			std::map<uint,std::string>::iterator a = EngineApp->resourceManager->prefabs.find(atoi(item->file.c_str()));
+			std::map<uint,Prefab>::iterator a = EngineApp->resourceManager->prefabs.find(atoi(item->file.c_str()));
 			if (a != EngineApp->resourceManager->prefabs.end())
-				prefabName = a->second;
+				prefabName = a->second.name;
 
 			ImGui::Text(GetDisplayString(prefabName, 8).c_str());
 		}
@@ -437,7 +452,7 @@ ImTextureID E_Project::GetIconTexID(const AssetDisplay& assetDisplay) const
 	case ResourceType::FOLDER:		{ texId = (ImTextureID)engineIcons.folderIcon->GetTextureID(); }		break;
 	case ResourceType::SCENE:		{ texId = (ImTextureID)engineIcons.modelIcon->GetTextureID(); }			break;
 	case ResourceType::ANIMATION:	{ texId = (ImTextureID)engineIcons.animationIcon->GetTextureID(); }		break;
-	case ResourceType::PREFAB: { texId = (ImTextureID)engineIcons.modelIcon->GetTextureID(); }		break;
+	case ResourceType::PREFAB:		{ texId = (ImTextureID)engineIcons.modelIcon->GetTextureID(); }			break;
 	}
 
 	return texId;

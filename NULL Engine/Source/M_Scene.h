@@ -46,11 +46,13 @@ public:																														// --- GAME OBJECTS METHODS ---
 	bool			SaveScene							(const char* sceneName = nullptr) const;							// If no name is given the scene_root node's name will be used.
 	bool			LoadScene							(const char* path);													// For now asks for full path
 	
+	void			SaveCurrentScene();
 	bool			SaveSceneAs							(const char* sceneName = nullptr);							// To be called from editor
+	bool			NewScene();							// Opens a new scene
 
 	void			LoadResourceIntoScene				(Resource* resource);
 
-	void LoadPrefabIntoScene(ParsonNode* a);
+	GameObject* LoadPrefabIntoScene(ParsonNode* a,GameObject* parent);
 	void LoadPrefabObject(GameObject* gameObject,ParsonNode* node);
 
 	std::vector<GameObject*>* GetGameObjects			();

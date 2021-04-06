@@ -238,10 +238,29 @@ void M_EngineScriptManager::SerializeAllScripts(ParsonArray& scriptsArray)
 						scriptNode.SetString("DataName", (*cScript)->GetDataName().c_str());
 						//TODO: Do i need to reset the component id???? IF yes how do I do it???
 						scriptNode.SetNumber("ComponentScriptID", (*cScript)->GetID());
-						/*if (inspectorVariables)
+						const std::vector<InspectorScriptData> scriptVariables = (*cScript)->GetInspectorVariables();
+						if (scriptVariables.empty())
+							scriptNode.SetBool("HasInspector", false);
+						else
 						{
-							//TODO:Fer les inspector variables !!!!!!!
-						}*/
+							scriptNode.SetBool("HasInspector", true);
+							ParsonArray variablesToSave = scriptNode.SetArray("InspectorVariables");
+							for (int i = 0; i < scriptVariables.size(); ++i)
+							{
+								ParsonNode variable = variablesToSave.SetNode(scriptVariables[i].variableName.c_str());
+								variable.SetInteger("Type", (int)scriptVariables[i].variableType);
+								variable.SetString("Name", scriptVariables[i].variableName.c_str());
+								switch (scriptVariables[i].variableType)
+								{
+								case InspectorScriptData::DataType::INT:
+									variable.SetInteger("int", *(int*)scriptVariables[i].ptr); break;
+								case InspectorScriptData::DataType::BOOL:
+									variable.SetInteger("bool", *(bool*)scriptVariables[i].ptr); break;
+								case InspectorScriptData::DataType::FLOAT:
+									variable.SetInteger("float", *(float*)scriptVariables[i].ptr); break;
+								}
+							}
+						}
 						(*it)->DeleteComponent((*cScript)); //Is it necessari to remove it and add it again later?
 					}
 				}
@@ -259,6 +278,7 @@ void M_EngineScriptManager::DeSerializeAllScripts(const ParsonArray& scriptsArra
 		if (scriptGO == nullptr)
 			continue;
 		C_Script* cScript = (C_Script*)scriptGO->CreateComponent(ComponentType::SCRIPT);
+		//cScript->id = ...;
 		uint32 resourceUID = (uint32)scriptNode.GetNumber("ResourceScriptUID");
 		if (!EngineApp->resourceManager->AllocateResource(resourceUID, scriptNode.GetString("ResourceAssetsPath")))
 		{
@@ -274,6 +294,32 @@ void M_EngineScriptManager::DeSerializeAllScripts(const ParsonArray& scriptsArra
 			if (!strcmp(name,cScript->resource->dataStructures[i].first.c_str()))
 			{
 				cScript->LoadData(name, cScript->resource->dataStructures[i].second);
+				if (scriptNode.GetBool("HasInspector")) 
+				{
+					ParsonArray variablesToLoad = scriptNode.GetArray("InspectorVariables");
+					for (int i = 0; i < variablesToLoad.size; ++i)
+					{
+						ParsonNode variable = variablesToLoad.GetNode(i);
+						std::string variableName = variable.GetString("Name");
+						InspectorScriptData::DataType type = (InspectorScriptData::DataType)variable.GetInteger("Type");
+						std::vector<InspectorScriptData>::iterator item =cScript->inspectorVariables.begin();
+						for(item;item != cScript->inspectorVariables.end();++item)
+						{
+							if ((*item).variableName == variableName) 
+							{
+								switch (type)
+								{
+								case InspectorScriptData::DataType::INT:
+									*(int*)(*item).ptr = variable.GetInteger("int"); break;
+								case InspectorScriptData::DataType::BOOL:
+									*(bool*)(*item).ptr = variable.GetBool("bool"); break;
+								case InspectorScriptData::DataType::FLOAT:
+									*(float*)(*item).ptr = (float)variable.GetNumber("float"); break;
+								}
+							}
+						}
+					}
+				}
 				found = true;
 				break;
 			}

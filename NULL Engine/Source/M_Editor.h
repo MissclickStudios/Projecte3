@@ -31,6 +31,9 @@ class E_ImGuiDemo;
 class E_About;
 class E_LoadFile;
 class E_SaveFile;
+class E_WantToSaveScene;
+
+enum class WantToSaveType;
 
 typedef unsigned __int32 uint32;
 
@@ -128,6 +131,9 @@ private:
 	void PostSceneRendering() override;															//Render ImGui
 
 public:
+	void OpenWantToSaveScenePopup(WantToSaveType type);
+
+public:
 	std::vector<EditorPanel*>	editorPanels;													// Will store all the editor modules. Will be iterated for drawing all the panels.
 
 	E_MainMenuBar*				mainMenuBar;
@@ -144,6 +150,7 @@ public:
 	E_About*					about;
 	E_LoadFile*					loadFile;
 	E_SaveFile*					saveFile;
+	E_WantToSaveScene*			wantToSaveScene;
 
 	ImVec4						clearColor;														// Will be used to set the clear color of the rendering environment.
 
@@ -153,10 +160,12 @@ public:
 	bool						showConsole;													// Enable/Disable the Console window.
 	bool						showProject;													// Enable/Disable the Project window.
 	bool						showImguiDemo;													// Enable/Disable the ImGui Demo window.
+
 	bool						showAboutPopup;													// Enable/Disable the About window popup.
 	bool						showLoadFilePopup;												// Enable/Disable the Load File popup.
 	bool						showSaveFilePopup;
 	bool						showCloseAppPopup;												// Enable/Disable the Close App popup.
+	bool						showWantToSaveScenePopup;
 };
 
 #endif // !__M_EDITOR_H__

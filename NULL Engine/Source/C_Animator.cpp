@@ -276,9 +276,13 @@ bool C_Animator::StepClips()
 		if (!success)
 		{
 			if (BlendingClipExists())
-			{
-				blendingClip->StepClip(stepValue);																		// ATTENTION HERE
-				SwitchBlendingToCurrent();
+			{	
+				if ((blendingClip->GetAnimationFrame() - blendingClip->GetStart() / blendFrames) >= 1.0f)
+				{
+					blendingClip->StepClip(stepValue);																		// ATTENTION HERE
+					SwitchBlendingToCurrent();
+				}
+
 				return true;
 			}
 			else
@@ -373,7 +377,7 @@ bool C_Animator::GenerateDefaultClip(const R_Animation* rAnimation, AnimatorClip
 	}
 	
 	std::string defaultName	= rAnimation->GetName() + std::string(" Default");
-	defaultClip				= AnimatorClip(rAnimation, defaultName, 0, (uint)rAnimation->GetDuration(), false);
+	defaultClip				= AnimatorClip(rAnimation, defaultName, 0, (uint)rAnimation->GetDuration(), 1.0f, false);
 
 	return true;
 }
@@ -411,8 +415,6 @@ void C_Animator::UpdateChannelTransforms()
 					LOG("[ERROR] Animator Component: Could not Get Blended Transform! Error: Blending Bones was nullptr.");
 					break;
 				}
-
-				//LOG("BLENDING FRAME [%.3f]::[%d]", blendingClip->GetAnimationFrame(), blendFrames);
 
 				interpolatedTransform = GetBlendedTransform(blendingClip->GetAnimationFrame(), blendingBones->at(i).channel, interpolatedTransform);
 			}
@@ -573,14 +575,14 @@ Transform C_Animator::GetBlendedTransform(double bKeyframe, const Channel& bChan
 {
 	OPTICK_CATEGORY("Get Blended Transform", Optick::Category::Animation);
 	
-	if (!bChannel.HasPositionKeyframes() && !bChannel.HasRotationKeyframes() && !bChannel.HasScaleKeyframes())	{ return originalTransform; }
+	if (!bChannel.HasPositionKeyframes() && !bChannel.HasRotationKeyframes() && !bChannel.HasScaleKeyframes()) { return originalTransform; }
 
 	float bRate = (float)((bKeyframe - blendingClip->GetStart()) / blendFrames);
 	bRate		= (bRate > 1.0f) ? 1.0f : bRate;
 
-	const float3&	position	= (bChannel.HasPositionKeyframes()) ? GetBlendedPosition(bKeyframe, bChannel, bRate, originalTransform.position) : originalTransform.position;
-	const Quat&		rotation	= (bChannel.HasRotationKeyframes()) ? GetBlendedRotation(bKeyframe, bChannel, bRate, originalTransform.rotation) : originalTransform.rotation;
-	const float3&	scale		= (bChannel.HasScaleKeyframes()) ? GetBlendedScale(bKeyframe, bChannel, bRate, originalTransform.scale) : originalTransform.scale;
+	const float3&	position	= (bChannel.HasPositionKeyframes()) ? originalTransform.position.Lerp((GetInterpolatedPosition(bKeyframe, bChannel)), bRate) : originalTransform.position;
+	const Quat&		rotation	= (bChannel.HasRotationKeyframes()) ? originalTransform.rotation.Slerp((GetInterpolatedRotation(bKeyframe, bChannel)), bRate) : originalTransform.rotation;
+	const float3&	scale		= (bChannel.HasScaleKeyframes()) ? originalTransform.scale.Lerp((GetInterpolatedScale(bKeyframe, bChannel)), bRate) : originalTransform.scale;
 
 	return Transform(position, rotation, scale);
 }
@@ -751,9 +753,9 @@ void C_Animator::GenerateDefaultClips()
 
 	for (auto animation = animations.begin(); animation < animations.end(); ++animation)
 	{
-		std::string defaultName		= (*animation)->GetName() + std::string(" Default");
-		AnimatorClip& defaultClip	= AnimatorClip((*animation), defaultName, 0, (uint)(*animation)->GetDuration(), false);
-		
+		std::string defaultName = (*animation)->GetName() + std::string(" Default");
+		AnimatorClip& defaultClip = AnimatorClip((*animation), defaultName, 0, (uint)(*animation)->GetDuration(), 1.0f, false);
+
 		clips.emplace(defaultClip.GetName(), defaultClip);
 
 		if (currentClip == nullptr)
@@ -833,7 +835,7 @@ bool C_Animator::AddClip(const AnimatorClip& clip)
 		LOG("[ERROR] Animator Component: Could not Add Clip { %s }! Error: A clip with the same name already exists.", clip.GetName());
 		return false;
 	}
-	
+
 	clips.emplace(clip.GetName(), clip);
 
 	if (currentClip == nullptr)
@@ -842,6 +844,35 @@ bool C_Animator::AddClip(const AnimatorClip& clip)
 	}
 
 	return true;
+}
+
+bool C_Animator::EditClip(const std::string& originalClipName, const R_Animation* rAnimation, const std::string& name, uint start, uint end, float speed, bool loop)
+{	
+	auto originalClip = clips.find(originalClipName);
+	if (originalClip == clips.end())
+	{
+		return false;
+	}
+	
+	DeleteClip(originalClipName);
+	
+	bool success = AddClip(AnimatorClip(rAnimation, name, start, end, speed, loop));
+
+	return success;
+}
+
+bool C_Animator::DeleteClip(const std::string& clipName)
+{
+	if (currentClip != nullptr && std::string(currentClip->GetName()) == clipName)
+	{
+		ClearCurrentClip();
+	}
+	if (blendingClip != nullptr && std::string(currentClip->GetName()) == clipName)
+	{
+		ClearBlendingClip();
+	}
+	
+	return (clips.erase(clipName) == 1);																				// std::unordered_map::erase returns the amount of elements erased.
 }
 
 void C_Animator::PlayClip(const std::string& clipName, uint blendFrames)
@@ -883,6 +914,8 @@ void C_Animator::PlayClip(const std::string& clipName, float blendTime)
 		return;
 	}
 
+	blendFrames = blendTime * item->second.GetAnimationTicksPerSecond();
+
 	if (currentClip == nullptr || blendFrames == 0 || blendFrames > item->second.GetDuration())
 	{
 		Stop();
@@ -890,8 +923,10 @@ void C_Animator::PlayClip(const std::string& clipName, float blendTime)
 	}
 	else
 	{
-		//blendFrames = blendTime * item->second.GetAnimationTicksPerSecond();
-		SetBlendingClip(&item->second, (uint)(blendTime * item->second.GetAnimationTicksPerSecond()));
+		if (blendingClip == nullptr || blendingClip->GetName() != clipName)
+		{
+			SetBlendingClip(&item->second, blendFrames);
+		}
 	}
 
 	Play();
@@ -1035,6 +1070,18 @@ bool C_Animator::RefreshBoneDisplay()
 }
 
 // --- CURRENT/BLENDING ANIMATION METHODS
+AnimatorClip C_Animator::GetClip(const char* clipName) const
+{
+	auto clip = clips.find(clipName);
+	return (clip != clips.end()) ? clip->second : AnimatorClip(nullptr, "[NONE]", 0, 0, 1.0f, false);
+}
+
+AnimatorClip* C_Animator::GetClipAsPtr(const char* clipName)
+{
+	auto clip = clips.find(clipName);
+	return (clip != clips.end()) ? &clip->second : nullptr;
+}
+
 AnimatorClip* C_Animator::GetCurrentClip() const
 {
 	return currentClip;
@@ -1107,6 +1154,8 @@ void C_Animator::SetBlendingClip(AnimatorClip* clip, uint blendFrames)
 		return;
 	}
 	
+	LOG("BLENDING TO [%s]::[%u]", clip->GetName(), blendFrames);
+
 	blendingClip		= clip;
 	blendingBones		= &bones->second;
 	this->blendFrames	= blendFrames;
@@ -1243,6 +1292,25 @@ R_Animation* C_Animator::GetAnimationByIndex(uint index) const
 	}
 
 	return animations[index];
+}
+
+int C_Animator::GetIndexByAnimation(const R_Animation* rAnimation) const
+{
+	if (rAnimation == nullptr)
+	{
+		LOG("[ERROR] Animator Component: Could not Get Index by Animation! Error: Given R_Animation* was nullptr.");
+		return -1;
+	}
+
+	for (uint i = 0; i < animations.size(); ++i)
+	{
+		if ((animations[i]->GetDuration() == rAnimation->GetDuration()) && (animations[i]->GetName() == std::string(rAnimation->GetName())))			// TMP. Check is too rudimentary.
+		{
+			return i;
+		}
+	}
+
+	return -1;
 }
 
 float C_Animator::GetPlaybackSpeed() const
