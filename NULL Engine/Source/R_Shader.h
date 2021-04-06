@@ -50,7 +50,7 @@ public:
 	bool SaveMeta(ParsonNode& metaRoot) const override;
 	bool LoadMeta(const ParsonNode& metaRoot) override;
 
-	void		SetUniformMatrix4(std::string name, GLfloat* value);
+	void		SetUniformMatrix4(std::string name, GLfloat* value, int size = 1);
 
 	void		SetUniformVec2f(std::string name, GLfloat* value);
 	void		SetUniformVec3f(std::string name, GLfloat* value);
