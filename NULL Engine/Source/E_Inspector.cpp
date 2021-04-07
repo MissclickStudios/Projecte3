@@ -1416,6 +1416,13 @@ void E_Inspector::DrawScriptComponent(C_Script* cScript)
 				}
 				break;
 			case InspectorScriptData::DataType::PREFAB:
+				if (ImGui::Button("X")) 
+				{
+					(*(Prefab*)(*variable).ptr).name.clear();
+					(*(Prefab*)(*variable).ptr).uid = 0;
+					(*(Prefab*)(*variable).ptr).updateTime = 0;
+				}
+				ImGui::SameLine();
 				ImGui::Button((((Prefab*)(*variable).ptr)->name.empty()) ? "Prefab: NULL" : std::string("Prefab: " + ((Prefab*)(*variable).ptr)->name).data(), { ImGui::GetWindowWidth() * 0.55F , 0});
 				if (ImGui::BeginDragDropTarget()) 
 				{
@@ -1424,9 +1431,9 @@ void E_Inspector::DrawScriptComponent(C_Script* cScript)
 						if (App->fileSystem->GetFileExtension(*(const char**)payload->Data) == "prefab") 
 						{
 							std::string uidString;
-							App->fileSystem->SplitFilePath((const char*)payload->Data, nullptr, &uidString, nullptr);
+							App->fileSystem->SplitFilePath(*(const char**)payload->Data, nullptr, &uidString, nullptr);
 							unsigned int prefabUid = std::atoi(uidString.c_str());
-
+							*(Prefab*)(*variable).ptr = EngineApp->resourceManager->prefabs[prefabUid];
 						}
 
 					}

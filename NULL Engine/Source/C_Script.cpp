@@ -13,6 +13,7 @@
 #include "M_ResourceManager.h"
 #include "M_ScriptManager.h"
 #include "FileSystemDefinitions.h"
+#include "Prefab.h"
 
 #include "MemoryManager.h"
 
@@ -85,6 +86,8 @@ bool C_Script::SaveState(ParsonNode& root) const
 				variable.SetBool("bool", *(bool*)inspectorVariables[i].ptr); break;
 			case InspectorScriptData::FLOAT:
 				variable.SetNumber("float", *(float*)inspectorVariables[i].ptr); break;
+			case InspectorScriptData::PREFAB:
+				variable.SetInteger("prefab", (*(Prefab*)inspectorVariables[i].ptr).uid); break;
 			}
 		}
 	}
@@ -128,6 +131,8 @@ bool C_Script::LoadState(ParsonNode& root)
 					*(bool*)inspectorVariables[i].ptr = variable.GetBool("bool"); break;
 				case InspectorScriptData::DataType::FLOAT:
 					*(float*)inspectorVariables[i].ptr = variable.GetNumber("float"); break;
+				case InspectorScriptData::DataType::PREFAB:
+					*(Prefab*)inspectorVariables[i].ptr = App->resourceManager->prefabs[(unsigned int)variable.GetInteger("prefab")]; break;
 				}
 			}
 		}
