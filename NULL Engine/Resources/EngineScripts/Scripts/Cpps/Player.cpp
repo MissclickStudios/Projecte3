@@ -41,6 +41,14 @@ enum class PlayerState
 
 Player::Player() : Script(), state(PlayerState::IDLE)
 {
+}
+
+Player::~Player()
+{
+}
+
+void Player::Awake()
+{
 	if (!gameObject->GetComponent<C_RigidBody>())
 		gameObject->CreateComponent(ComponentType::RIGIDBODY);
 
@@ -51,10 +59,6 @@ Player::Player() : Script(), state(PlayerState::IDLE)
 
 	//memset(ammoTex, 0, 11 * sizeof(R_Texture*));
 	ammo = 10;
-}
-
-Player::~Player()
-{
 }
 
 void Player::Update()
