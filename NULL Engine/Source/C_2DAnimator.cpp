@@ -41,8 +41,9 @@ bool C_2DAnimator::Update()
 			animationTimer.Stop();
 			animationTimer.Start();
 		}
-
+	
 	//Set the texture id of the current animation frame
+	if(animation.size() > 0)
 	currentFrameIdTexture = GetTextureIdFromVector(animationCounter);
 
 	if (animationCounter == animation.size())
