@@ -34,6 +34,9 @@ public:
 	void SetAnimationStepTime(int time);
 	int GetAnimationStepTime();
 
+	const char* GetName();
+	void ChangeName(char* name);
+
 	void GetAnimationSprites(const char* name);
 
 	static inline ComponentType GetType() { return ComponentType::ANIMATOR2D; }  
@@ -56,6 +59,8 @@ private:
 	bool						playAnimation;
 
 	uint						currentFrameIdTexture;
+
+	std::string					name;
 };
 
 #endif // __C_2DANIMATOR__

@@ -14,12 +14,13 @@ C_2DAnimator::C_2DAnimator(GameObject* owner) : Component(owner, ComponentType::
 	animationTimer.Stop();
 	animationCounter = 0;
 	animationFrames = 0;
-	animationStepTime = 50;
+	animationStepTime = 30;
 
 	animationLoop = false;
 	animationPlaying = false;
 	playAnimation = false;
 
+	name = "ChangeWeapon";
 	GetAnimationSprites("ChangeWeapon");
 }
 
@@ -108,8 +109,19 @@ int C_2DAnimator::GetAnimationStepTime()
 	return animationStepTime;
 }
 
+const char* C_2DAnimator::GetName()
+{
+	return name.c_str();
+}
+
+void C_2DAnimator::ChangeName(char* name)
+{
+	this->name = name;
+}
+
 void C_2DAnimator::GetAnimationSprites(const char* name)
 {
+	animation.clear();
 	App->resourceManager->GetAllTextures(animation, name);
 }
 
