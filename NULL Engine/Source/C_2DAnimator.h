@@ -36,7 +36,7 @@ public:
 
 	void GetAnimationSprites(const char* name);
 
-	static inline ComponentType GetType() { return ComponentType::AUDIOLISTENER; }  //AUDIOLISTENER?? :)
+	static inline ComponentType GetType() { return ComponentType::ANIMATOR2D; }  
 
 private:
 	uint GetTextureIdFromVector(int index);
