@@ -1423,6 +1423,9 @@ void E_Inspector::DrawScriptComponent(C_Script* cScript)
 					{
 						if (App->fileSystem->GetFileExtension((const char*)payload->Data) == "prefab") 
 						{
+							std::string uidString;
+							App->fileSystem->SplitFilePath((const char*)payload->Data, nullptr, &uidString, nullptr);
+							unsigned int prefabUid = std::atoi(uidString.c_str());
 
 						}
 

@@ -64,10 +64,10 @@ void Player::Update()
 
 	if (!playAnim)
 	{
-		/*aAnimator = gameObject->GetComponent<C_Animator>();
+		aAnimator = gameObject->GetComponent<C_Animator>();
 
-		aAnimator->PlayClip("Idle", 0);
-		playAnim = true;*/
+		//aAnimator->PlayClip("Idle", 0);
+		playAnim = true;
 	}
 
 	AnimatorClip* currentClip = aAnimator->GetCurrentClip();
