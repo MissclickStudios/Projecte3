@@ -2045,6 +2045,12 @@ void E_Inspector::ClipEditorWindow(C_Animator* cAnimator)
 
 	if (newSelected)				
 	{ 
+		editedAnimationIndex = cAnimator->GetIndexByAnimation(clipToEdit->GetAnimation());
+		editedAnimationIndex = (editedAnimationIndex != -1) ? editedAnimationIndex : 0;
+
+		editedAnimation = cAnimator->GetAnimationByIndex(editedAnimationIndex);
+		editedMax		= (editedAnimation != nullptr) ? editedAnimation->GetDuration() : 0;
+
 		strcpy(editedName, clipToEdit->GetName());
 		editedStart		= (int)clipToEdit->GetStart();
 		editedEnd		= (int)clipToEdit->GetEnd();
