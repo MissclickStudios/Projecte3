@@ -17,6 +17,7 @@
 #include "M_UISystem.h"
 #include "M_Scene.h"
 #include "M_EngineScriptManager.h"
+#include "M_Physics.h"
 
 #include "GameObject.h"
 #include "Component.h"
@@ -818,7 +819,6 @@ void E_Inspector::DrawAudioSourceComponent(C_AudioSource* cAudioSource)
     ImGui::Separator();
 }
 
-
 void E_Inspector::DrawRigidBodyComponent(C_RigidBody* cRigidBody)
 {
 	bool show = true;
@@ -830,20 +830,24 @@ void E_Inspector::DrawRigidBodyComponent(C_RigidBody* cRigidBody)
 			bool isActive = cRigidBody->IsActive();
 			if (ImGui::Checkbox("RigidBody Is Active", &isActive))
 				cRigidBody->SetIsActive(isActive);
-	
+
 			ImGui::SameLine();
-	
+
 			if (ImGui::Button("Make Dynamic"))
 				cRigidBody->MakeDynamic();
-	
+
 			ImGui::Separator();
-	
+
+			RigidBodyFilterCombo(cRigidBody);
+
+			ImGui::Separator();
+
 			if (!show)
 			{
 				componentToDelete = cRigidBody;
 				showDeleteComponentPopup = true;
 			}
-	
+
 			ImGui::Separator();
 		}
 		return;
@@ -861,6 +865,10 @@ void E_Inspector::DrawRigidBodyComponent(C_RigidBody* cRigidBody)
 
 			if (ImGui::Button("Make Static"))
 				cRigidBody->MakeStatic();
+
+			ImGui::Separator();
+
+			RigidBodyFilterCombo(cRigidBody);
 
 			ImGui::Separator();
 
@@ -942,6 +950,23 @@ void E_Inspector::DrawRigidBodyComponent(C_RigidBody* cRigidBody)
 		}
 
 		ImGui::Separator();
+	}
+}
+
+void E_Inspector::RigidBodyFilterCombo(C_RigidBody* cRigidBody)
+{
+	if (ImGui::BeginCombo("Filter", (*cRigidBody->GetFilter()).c_str()))
+	{
+		const std::vector<std::string>* const filters = App->physics->GetFilters();
+
+		if (ImGui::Selectable("default"))
+			cRigidBody->ChangeFilter("default");
+
+		for (uint i = 0; i < filters->size(); i++)
+			if (ImGui::Selectable((*filters)[i].c_str()))
+				cRigidBody->ChangeFilter((*filters)[i].c_str());
+
+		ImGui::EndCombo();
 	}
 }
 

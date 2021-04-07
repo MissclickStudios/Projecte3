@@ -66,6 +66,7 @@ private:																										// --- DRAW COMPONENT METHODS ---
 	void DrawAudioSourceComponent		(C_AudioSource* cAudioSource);
 	void DrawAudioListenerComponent		(C_AudioListener* cAudioListener);
 	void DrawRigidBodyComponent			(C_RigidBody* cRigidBody);
+	void RigidBodyFilterCombo			(C_RigidBody* cRigidBody);
 	void DrawBoxColliderComponent		(C_BoxCollider* cCollider);
 	void DrawSphereColliderComponent	(C_SphereCollider* cCollider);
 	void DrawCapsuleColliderComponent	(C_CapsuleCollider* cCollider);
