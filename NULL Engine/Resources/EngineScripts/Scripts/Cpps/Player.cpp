@@ -41,6 +41,14 @@ enum class PlayerState
 
 Player::Player() : Script(), state(PlayerState::IDLE)
 {
+}
+
+Player::~Player()
+{
+}
+
+void Player::Awake()
+{
 	if (!gameObject->GetComponent<C_RigidBody>())
 		gameObject->CreateComponent(ComponentType::RIGIDBODY);
 
@@ -53,10 +61,6 @@ Player::Player() : Script(), state(PlayerState::IDLE)
 	ammo = 10;
 }
 
-Player::~Player()
-{
-}
-
 void Player::Update()
 {
 	if (App->gameState != GameState::PLAY)
@@ -64,10 +68,10 @@ void Player::Update()
 
 	if (!playAnim)
 	{
-		/*aAnimator = gameObject->GetComponent<C_Animator>();
+		aAnimator = gameObject->GetComponent<C_Animator>();
 
-		aAnimator->PlayClip("Idle", 0);
-		playAnim = true;*/
+		//aAnimator->PlayClip("Idle", 0);
+		playAnim = true;
 	}
 
 	AnimatorClip* currentClip = aAnimator->GetCurrentClip();

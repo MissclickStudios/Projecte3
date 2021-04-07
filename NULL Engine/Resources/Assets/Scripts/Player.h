@@ -34,6 +34,7 @@ public:
 	Player();
 	~Player();
 
+	void Awake() override;
 	void Update() override;
 	void CleanUp()override;
 
