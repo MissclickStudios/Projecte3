@@ -88,6 +88,12 @@ bool C_Script::SaveState(ParsonNode& root) const
 				variable.SetNumber("float", *(float*)inspectorVariables[i].ptr); break;
 			case InspectorScriptData::PREFAB:
 				variable.SetInteger("prefab", (*(Prefab*)inspectorVariables[i].ptr).uid); break;
+			case InspectorScriptData::GAMEOBJECT:
+				if (inspectorVariables[i].obj != nullptr)
+					variable.SetInteger("gameobject", (*inspectorVariables[i].obj)->GetUID());
+				else
+					variable.SetInteger("gameobject", 0);
+				break;
 			}
 		}
 	}
@@ -133,6 +139,11 @@ bool C_Script::LoadState(ParsonNode& root)
 					*(float*)inspectorVariables[i].ptr = variable.GetNumber("float"); break;
 				case InspectorScriptData::DataType::PREFAB:
 					*(Prefab*)inspectorVariables[i].ptr = App->resourceManager->prefabs[(unsigned int)variable.GetInteger("prefab")]; break;
+				/*case InspectorScriptData::DataType::GAMEOBJECT: //TODO: FINISH THIS !!!!
+					uint32 id = variable.GetInteger("gameobject");
+					if (id != 0)
+						;
+					break;*/
 				}
 			}
 		}
@@ -482,11 +493,26 @@ void C_Script::InspectorPrefab(Prefab* variablePtr, const char* ptrName)
 		std::string variableName = GetVariableName(ptrName);
 
 		C_Script* script = App->scriptManager->actualScriptLoading;
-		if (script != nullptr) {
+		if (script != nullptr) 
 			script->inspectorVariables.push_back(InspectorScriptData(variableName, InspectorScriptData::DataType::PREFAB, (void*)variablePtr, InspectorScriptData::NONE));
-		}
+
 	}
 	else {
 		LOG("Inspector type Prefab variable must not be a non-NULL Prefab pointer!!");
 	}
+}
+
+void C_Script::InspectorGameObject(GameObject** variablePtr, const char* ptrName)
+{
+
+	std::string variableName = GetVariableName(ptrName);
+
+	C_Script* script = App->scriptManager->actualScriptLoading;
+	if (script != nullptr)
+	{
+		InspectorScriptData variable(variableName, InspectorScriptData::DataType::GAMEOBJECT, nullptr, InspectorScriptData::NONE);
+		variable.obj = variablePtr;
+		script->inspectorVariables.push_back(variable);
+	}
+
 }

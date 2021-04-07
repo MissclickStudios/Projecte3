@@ -16,6 +16,7 @@ struct NULL_API InspectorScriptData {
 		BOOL,
 		FLOAT,
 		PREFAB,
+		GAMEOBJECT
 		/*INT2,
 		INT3,
 		FLOAT2,
@@ -48,7 +49,7 @@ struct NULL_API InspectorScriptData {
 	ShowMode showAs;
 	void* ptr = nullptr;
 
-	//GameObject** obj = nullptr;
+	GameObject** obj = nullptr;
 	float minSlider = 0;
 	float maxSlider = 0;
 };
@@ -101,6 +102,8 @@ public:
 	static void InspectorSliderFloat(float* variablePtr, const char* ptrName, const int& minValue, const int& maxValue);
 
 	static void InspectorPrefab(Prefab* variablePtr, const char* ptrName);
+
+	static void InspectorGameObject(GameObject** variablePtr, const char* ptrName);
 	
 	R_Script* resource = nullptr;
 private:

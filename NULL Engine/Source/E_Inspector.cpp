@@ -1416,7 +1416,8 @@ void E_Inspector::DrawScriptComponent(C_Script* cScript)
 				}
 				break;
 			case InspectorScriptData::DataType::PREFAB:
-				if (ImGui::Button("X")) 
+				if (ImGui::Button(("Remove " + (*variable).variableName).c_str())) //TODO: BUG X BUTTONS !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!AAAAAAAAAAAAAAAAAAAA
+					//TODO: ENSENYAR NOM DE LA VARIABLE!!!!!!!! AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 				{
 					(*(Prefab*)(*variable).ptr).name.clear();
 					(*(Prefab*)(*variable).ptr).uid = 0;
@@ -1436,6 +1437,25 @@ void E_Inspector::DrawScriptComponent(C_Script* cScript)
 							*(Prefab*)(*variable).ptr = EngineApp->resourceManager->prefabs[prefabUid];
 						}
 
+					}
+					ImGui::EndDragDropTarget();
+				}
+				break;
+			case InspectorScriptData::DataType::GAMEOBJECT:
+				if (ImGui::Button(("Remove " + (*variable).variableName).c_str()))
+					if ((*variable).obj != nullptr)
+						*(*variable).obj = nullptr;
+				
+				ImGui::SameLine();
+				ImGui::Button(((*variable).obj != nullptr && *(*variable).obj != nullptr) ? std::string("GameObject: "  + std::string((*(*variable).obj)->GetName())).data() : "GameObject: NULL", { ImGui::GetWindowWidth() * 0.55F , 0 });
+				if (ImGui::BeginDragDropTarget())
+				{
+					if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DRAGGED_NODE"))
+					{
+						//GameObject** ptr = (GameObject**)payload->Data;
+						GameObject* obj = *(GameObject**)payload->Data;
+						if (obj != nullptr) 
+							*(*variable).obj = obj;
 					}
 					ImGui::EndDragDropTarget();
 				}

@@ -20,3 +20,5 @@
 #define INSPECTOR_SLIDER_FLOAT(FLOAT_, MIN_, MAX_) C_Script::InspectorSliderFloat(&FLOAT_, #FLOAT_, MIN_, MAX_)
 
 #define INSPECTOR_PREFAB(PREFAB_) C_Script::InspectorPrefab(&PREFAB_, #PREFAB_)
+
+#define INSPECTOR_GAMEOBJECT(GAMEOBJECT_) C_Script::InspectorGameObject(&GAMEOBJECT_, #GAMEOBJECT_)
