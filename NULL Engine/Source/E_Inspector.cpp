@@ -17,6 +17,7 @@
 #include "M_UISystem.h"
 #include "M_Scene.h"
 #include "M_EngineScriptManager.h"
+#include "M_Physics.h"
 
 #include "GameObject.h"
 #include "Component.h"
@@ -837,6 +838,10 @@ void E_Inspector::DrawRigidBodyComponent(C_RigidBody* cRigidBody)
 				cRigidBody->MakeDynamic();
 	
 			ImGui::Separator();
+
+			RigidBodyFilterCombo(cRigidBody);
+
+			ImGui::Separator();
 	
 			if (!show)
 			{
@@ -861,6 +866,10 @@ void E_Inspector::DrawRigidBodyComponent(C_RigidBody* cRigidBody)
 
 			if (ImGui::Button("Make Static"))
 				cRigidBody->MakeStatic();
+
+			ImGui::Separator();
+
+			RigidBodyFilterCombo(cRigidBody);
 
 			ImGui::Separator();
 
@@ -942,6 +951,23 @@ void E_Inspector::DrawRigidBodyComponent(C_RigidBody* cRigidBody)
 		}
 
 		ImGui::Separator();
+	}
+}
+
+void E_Inspector::RigidBodyFilterCombo(C_RigidBody* cRigidBody)
+{
+	if (ImGui::BeginCombo("Filter", (*cRigidBody->GetFilter()).c_str()))
+	{
+		const std::vector<std::string>* const filters = App->physics->GetFilters();
+
+		if (ImGui::Selectable("default"))
+			cRigidBody->ChangeFilter("default");
+
+		for (uint i = 0; i < filters->size(); i++)
+			if (ImGui::Selectable((*filters)[i].c_str()))
+				cRigidBody->ChangeFilter((*filters)[i].c_str());
+
+		ImGui::EndCombo();
 	}
 }
 
@@ -1989,7 +2015,7 @@ void E_Inspector::ClipEditorWindow(C_Animator* cAnimator)
 	ImGuiInputTextFlags inputTxtFlags	= ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_AutoSelectAll;
 	
 	static int selectedClip = 0;
-	bool newSelected = false;
+	static bool newSelected = true;
 	if (ImGui::Combo("Clips", &selectedClip, clipNamesString.c_str()))	{ newSelected = true; }
 
 	ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
@@ -2017,7 +2043,16 @@ void E_Inspector::ClipEditorWindow(C_Animator* cAnimator)
 	static float editedSpeed		= clipToEdit->GetSpeed();
 	static bool editedLoop			= clipToEdit->IsLooped();
 
-	if (newSelected)				{ editedLoop = clipToEdit->IsLooped(); }
+	if (newSelected)				
+	{ 
+		strcpy(editedName, clipToEdit->GetName());
+		editedStart		= (int)clipToEdit->GetStart();
+		editedEnd		= (int)clipToEdit->GetEnd();
+		editedSpeed		= clipToEdit->GetSpeed();
+		editedLoop		= clipToEdit->IsLooped();
+
+		newSelected = false;
+	}
 
 	ImGui::InputText("Edit Name", editedName, IM_ARRAYSIZE(editedName), inputTxtFlags);
 	ImGui::SliderInt("Edit Start", &editedStart, editedMin, editedMax);

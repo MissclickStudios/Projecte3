@@ -1787,8 +1787,6 @@ void MeshRenderer::ApplyShader()
 
 			cMaterial->GetShader()->SetUniformMatrix4("projectionMatrix", App->camera->GetCurrentCamera()->GetOGLProjectionMatrix());
 
-			//cMaterial->GetShader()->SetUniform1f("time", Time::Game::GetTimeSinceStart());
-
 			cMaterial->GetShader()->SetUniformVec3f("cameraPosition", (GLfloat*)&App->camera->GetCurrentCamera()->GetFrustum().Pos());
 			
  			//Skybox
@@ -1800,19 +1798,15 @@ void MeshRenderer::ApplyShader()
 			std::vector<float4x4> boneTransforms;
 
 			cMesh->GetBoneTranforms(boneTransforms);
-
+			
 			bool check = cMesh->GetSkinnedMesh() != nullptr;
 
 			cMaterial->GetShader()->SetUniform1i("activeAnimation", (check));
 
 			if (!boneTransforms.empty())
-			{
-				for (uint i = 0; i < boneTransforms.size(); i++)
-				{
-					cMaterial->GetShader()->SetUniformMatrix4("finalBonesMatrices[" + std::to_string(i) + "]", boneTransforms[i].Transposed().ptr());
-				}
+			{				
+				cMaterial->GetShader()->SetUniformMatrix4("finalBonesMatrices", (GLfloat*)&boneTransforms[0], boneTransforms.size());
 			}
-
 
 			// Light 
 			std::vector<GameObject*> dirLights = App->scene->GetDirLights();

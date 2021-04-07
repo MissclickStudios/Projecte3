@@ -42,6 +42,12 @@ M_Physics::M_Physics(bool isActive) : Module("physics", isActive)
 
 M_Physics::~M_Physics()
 {
+	if (filterInteractions)
+	{
+		for (uint i = 0; i < filters.size() + 1; ++i)
+			delete[] filterInteractions[i];
+		delete[] filterInteractions;
+	}
 }
 
 bool M_Physics::Init(ParsonNode& root)
@@ -59,11 +65,23 @@ physx::PxFilterFlags customFilterShader(
 	physx::PxFilterObjectAttributes attributes1, physx::PxFilterData filterData1,
 	physx::PxPairFlags& pairFlags, const void* constantBlock, physx::PxU32 constantBlockSize)
 {
-	pairFlags = physx::PxPairFlag::eCONTACT_DEFAULT;
-	pairFlags |= physx::PxPairFlag::eNOTIFY_CONTACT_POINTS;
-	pairFlags |= physx::PxPairFlag::eNOTIFY_TOUCH_FOUND;
-	pairFlags |= physx::PxPairFlag::eNOTIFY_TOUCH_PERSISTS;
-	pairFlags |= physx::PxPairFlag::eNOTIFY_TOUCH_LOST;
+	bool contact = false;
+	int filter0 = App->physics->GetFilterID((std::string*)filterData0.word0);
+	int filter1 = App->physics->GetFilterID((std::string*)filterData1.word0);
+
+	if (filter0 == -1 || filter1 == -1)
+		contact = true;
+	else if (App->physics->GetInteractions()[filter0][filter1])
+		contact = true;
+
+	if (contact)
+	{
+		pairFlags = physx::PxPairFlag::eCONTACT_DEFAULT;
+		pairFlags |= physx::PxPairFlag::eNOTIFY_CONTACT_POINTS;
+		pairFlags |= physx::PxPairFlag::eNOTIFY_TOUCH_FOUND;
+		pairFlags |= physx::PxPairFlag::eNOTIFY_TOUCH_PERSISTS;
+		pairFlags |= physx::PxPairFlag::eNOTIFY_TOUCH_LOST;
+	}
 
 	return physx::PxFilterFlag::eDEFAULT;
 }
@@ -205,7 +223,7 @@ bool M_Physics::LoadConfiguration(ParsonNode& root)
 		filterInteractions[x][y] = interactionsArray.GetBool(i);
 
 		++x;
-		if (x >= interactionsArray.size)
+		if (x >= filters.size())
 		{
 			x = 0;
 			++y;
@@ -231,7 +249,7 @@ bool M_Physics::SaveConfiguration(ParsonNode& root) const
 	ParsonArray interactionsArray = root.SetArray("Interactions");
 	for (uint y = 0; y < size; ++y)
 		for (uint x = 0; x < size; ++x)
-			filtersArray.SetBool(filterInteractions[x][y]);
+			interactionsArray.SetBool(filterInteractions[x][y]);
 
 	return true;
 }
@@ -252,4 +270,117 @@ void M_Physics::DeleteActor(physx::PxActor* actor)
 
 	scene->removeActor(*actor);
 	actors.erase((physx::PxRigidActor*)actor);
+}
+
+void M_Physics::SetGravity(float value)
+{
+	gravity = value;
+	scene->setGravity(physx::PxVec3(0.0f, -gravity, 0.0f));
+}
+
+const std::string* const M_Physics::GetFilter(int id) const
+{
+	--id;
+
+	if (id < 0)
+		return &defaultFilter;
+	else if (id >= filters.size())
+		return nullptr;
+
+	return &filters[id];
+}
+
+const int M_Physics::GetFilterID(const std::string* const filter)
+{
+	if (!filter)
+		return -1;
+	for (uint i = 0; i < filters.size(); ++i)
+		if (filters[i] == *filter)
+			return i;
+	return -1;
+}
+
+void M_Physics::CreateFilter(const std::string& filter)
+{
+	for (uint i = 0; i < filters.size(); ++i)
+		if (filters[i] == filter)
+		{
+			LOG("[ERROR] The filter [%s] already exists", filter.c_str());
+			return;
+		}
+
+	filters.push_back(filter);
+
+	// Create new filter interactions
+	bool** newFilterInteractions = new bool* [filters.size()];
+	for (uint i = 0; i < filters.size(); ++i)
+		newFilterInteractions[i] = new bool[filters.size()];
+
+	// Copy all old filter interactions
+	for (uint y = 0; y < filters.size(); ++y)
+		for (uint x = 0; x < filters.size(); ++x) 
+			if (x == filters.size() - 1 || y == filters.size() - 1)			// Exclude all the value related to the new filter (cant be copied, they didnt exist)
+				newFilterInteractions[x][y] = true;							// Set new filter values to true
+			else
+				newFilterInteractions[x][y] = filterInteractions[x][y];
+				
+	// Free old interactions
+	for (uint i = 0; i < filters.size() - 1; ++i)
+		delete[] filterInteractions[i];
+	delete[] filterInteractions;
+
+	filterInteractions = newFilterInteractions;
+}
+
+void M_Physics::DeleteFilter(const std::string& filter)
+{
+	uint deletedID = 0;
+	bool toBreak = false;
+	for (std::vector<std::string>::iterator itr = filters.begin(); itr != filters.end(); ++itr)
+	{
+		if (*itr == filter)
+		{
+			filters.erase(itr);
+			toBreak = true;
+		}
+		if (toBreak)
+			break;
+		++deletedID;
+	}
+	if (!toBreak)
+	{
+		LOG("[ERROR] Can't delete inexistent filter DUMBASS");
+		return;
+	}
+
+	// Create new filter interactions
+	bool** newFilterInteractions = new bool* [filters.size()];
+	for (uint i = 0; i < filters.size(); ++i)
+		newFilterInteractions[i] = new bool[filters.size()];
+
+	// Copy all old filter interactions
+	uint newX = 0;
+	uint newY = 0;
+	for (uint y = 0; y < filters.size() + 1; ++y)
+	{
+		if (y == deletedID)
+			continue;
+		for (uint x = 0; x < filters.size() + 1; ++x)
+		{
+			if (x == deletedID)
+				continue;
+
+			newFilterInteractions[newX][newY] = filterInteractions[x][y];
+			++newX;
+		}
+		newX = 0;
+		++newY;
+	}
+
+	// Free old interactions
+	for (uint i = 0; i < filters.size() + 1; ++i)
+		delete[] filterInteractions[i];
+	delete[] filterInteractions;
+
+	filterInteractions = newFilterInteractions;
 }
