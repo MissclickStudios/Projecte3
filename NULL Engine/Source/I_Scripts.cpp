@@ -165,7 +165,10 @@ bool Importer::Scripts::Import(const char* assetsPath, char* buffer, uint size, 
 	}
 
 	if (rScript->dataStructures.empty()) 
+	{
 		LOG("[WARNING] No scripts found on file %s", assetsPath);
+		return false;
+	}
 
 	//PROFILE FUNCTION TIME
 	/*float time = importTime.ReadMs();
@@ -302,8 +305,9 @@ Parser::ParsingState Parser::HandlePossibleComment(char*& cursor)
 			return Parser::ParsingState::CONTINUE;
 		case '\0':
 			return Parser::ParsingState::ERROR;
-		default://TODO: /(OPERATOR MAY BE VALID)  example a /-3; But if we are parsing a header file we normally don't perform division operations
-			return Parser::ParsingState::ERROR;
+		default://TODO: /(OPERATOR MAY BE VALID)  example a /-3; But if we are parsing a header file we normally don't perform division operations 
+			//TODO: bug include paths
+			return Parser::ParsingState::CONTINUE;
 		}
 	}
 	return Parser::ParsingState::CONTINUE;

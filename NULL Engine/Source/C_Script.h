@@ -110,6 +110,7 @@ private:
 	std::string dataName;
 
 	friend class M_EngineScriptManager;
+	friend class Player;
 };
 
 #endif // !__C_SCRIPT_H__
