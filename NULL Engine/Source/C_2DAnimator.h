@@ -25,8 +25,14 @@ public:
 	//Plays the animation
 	void PlayAnimation(bool loop);
 
+	//Adds a texture to animation vector
+	void AddTexture(R_Texture* tex);
+
 	//Gets the current id texture of the animation frame
 	uint GetIdFromAnimation();
+
+	void SetAnimationStepTime(int time);
+	int GetAnimationStepTime();
 
 	static inline ComponentType GetType() { return ComponentType::AUDIOLISTENER; }
 

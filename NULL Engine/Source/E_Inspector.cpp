@@ -1794,6 +1794,10 @@ void E_Inspector::DrawAnimator2DComponent(C_2DAnimator* cAnimator)
 		if (ImGui::Checkbox("Animator is active", &isActive))
 			cAnimator->SetIsActive(isActive);
 
+		int k = cAnimator->GetAnimationStepTime();
+		if (ImGui::InputInt("Step time",&k));
+			cAnimator->SetAnimationStepTime(k);
+
 		ImGui::Separator();
 
 		if (!show)
@@ -1801,6 +1805,7 @@ void E_Inspector::DrawAnimator2DComponent(C_2DAnimator* cAnimator)
 			componentToDelete = cAnimator;
 			showDeleteComponentPopup = true;
 		}
+
 
 	}
 	return;

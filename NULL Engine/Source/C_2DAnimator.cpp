@@ -8,7 +8,7 @@ C_2DAnimator::C_2DAnimator(GameObject* owner) : Component(owner, ComponentType::
 	animationTimer.Stop();
 	animationCounter = 0;
 	animationFrames = 0;
-	animationStepTime = 0;
+	animationStepTime = 1000;
 
 	animationLoop = false;
 	animationPlaying = false;
@@ -35,13 +35,17 @@ bool C_2DAnimator::Update()
 
 	//Animation loop
 	if (animationPlaying) 
-		if (animationStepTime <= animationTimer.Read() && animationCounter <= animationFrames)
+		if (animationStepTime <= animationTimer.Read() && animationCounter <= animation.size())
+		{
 			animationCounter++;
+			animationTimer.Stop();
+			animationTimer.Start();
+		}
 
 	//Set the texture id of the current animation frame
 	currentFrameIdTexture = GetTextureIdFromVector(animationCounter);
 
-	if (animationCounter == animationFrames)
+	if (animationCounter == animation.size())
 	{
 		if (!animationLoop)
 		{
@@ -80,10 +84,25 @@ uint C_2DAnimator::GetIdFromAnimation()
 	return currentFrameIdTexture;
 }
 
+void C_2DAnimator::SetAnimationStepTime(int time)
+{
+	animationStepTime = time;
+}
+
+int C_2DAnimator::GetAnimationStepTime()
+{
+	return animationStepTime;
+}
+
 void C_2DAnimator::PlayAnimation(bool loop)
 {
 	playAnimation = true;
 	animationLoop = loop;
+}
+
+void C_2DAnimator::AddTexture(R_Texture* tex)
+{
+	animation.push_back(tex);
 }
 
 uint C_2DAnimator::GetTextureIdFromVector(int index)
