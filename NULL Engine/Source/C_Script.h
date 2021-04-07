@@ -100,7 +100,7 @@ public:
 	static void InspectorDragableFloat(float* variablePtr, const char* ptrName);
 	static void InspectorSliderFloat(float* variablePtr, const char* ptrName, const int& minValue, const int& maxValue);
 
-	static void InspectorShowPrefab(Prefab* variablePtr, const char* ptrName);
+	static void InspectorPrefab(Prefab* variablePtr, const char* ptrName);
 	
 	R_Script* resource = nullptr;
 private:

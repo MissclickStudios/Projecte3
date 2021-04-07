@@ -1421,7 +1421,7 @@ void E_Inspector::DrawScriptComponent(C_Script* cScript)
 				{
 					if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DRAGGED_ASSET"))
 					{
-						if (App->fileSystem->GetFileExtension((const char*)payload->Data) == "prefab") 
+						if (App->fileSystem->GetFileExtension(*(const char**)payload->Data) == "prefab") 
 						{
 							std::string uidString;
 							App->fileSystem->SplitFilePath((const char*)payload->Data, nullptr, &uidString, nullptr);

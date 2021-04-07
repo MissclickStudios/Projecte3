@@ -327,16 +327,16 @@ Projectile* Player::CreateProjectile(uint index)
 	rigidBody->ChangeFilter("bullet");
 	bullet->CreateComponent(ComponentType::BOX_COLLIDER);
 
-	C_Script* script = (C_Script*)bullet->CreateComponent(ComponentType::SCRIPT);
-	script->resource = (R_Script*)App->resourceManager->GetResourceFromLibrary("Assets/Scripts//Bullet.h");
-	for (int i = 0; i < script->resource->dataStructures.size(); ++i) {
-		if (script->resource->dataStructures[i].first == "Bullet")
-		{
-			script->LoadData("Bullet", script->resource->dataStructures[i].second);
-			((Bullet*)script->scriptData)->SetShooter(this, index);
-			break;
-		}
-	}
+	//C_Script* script = (C_Script*)bullet->CreateComponent(ComponentType::SCRIPT);
+	//script->resource = (R_Script*)App->resourceManager->GetResourceFromLibrary("Assets/Scripts//Bullet.h");
+	//for (int i = 0; i < script->resource->dataStructures.size(); ++i) {
+	//	if (script->resource->dataStructures[i].first == "Bullet")
+	//	{
+	//		script->LoadData("Bullet", script->resource->dataStructures[i].second);
+	//		((Bullet*)script->scriptData)->SetShooter(this, index);
+	//		break;
+	//	}
+	//}
 
 	bullet->CreateComponent(ComponentType::PARTICLE_SYSTEM);
 

@@ -3,6 +3,8 @@
 #include "ScriptMacros.h"
 #include "Log.h"
 
+#include "Prefab.h"
+
 class SCRIPTS_API FirstScript : public Script {
 public :
 	FirstScript();
@@ -21,6 +23,7 @@ public :
 	float inputFloat = 1.1f;
 	float dragFloat = 2.2f;
 	float sliderFloat = 3.3f;
+	Prefab tryPrefab;
 };
 
 SCRIPTS_FUNCTION FirstScript* CreateFirstScript() {
@@ -33,5 +36,6 @@ SCRIPTS_FUNCTION FirstScript* CreateFirstScript() {
 	INSPECTOR_INPUT_FLOAT(script->inputFloat);
 	INSPECTOR_DRAGABLE_FLOAT(script->dragFloat);
 	INSPECTOR_SLIDER_FLOAT(script->sliderFloat,0.0,5.5f);
+	INSPECTOR_PREFAB(script->tryPrefab);
 	return script;
 }

@@ -488,7 +488,7 @@ void M_Editor::GetEngineIconsThroughEditor(Icons& engineIcons)
 
 void M_Editor::LoadResourceIntoSceneThroughEditor(const ImGuiPayload& payload)
 {
-	const char* draggedAssetPath = (const char*)payload.Data;
+	const char* draggedAssetPath = *(const char**)payload.Data;
 	if (App->fileSystem->GetFileExtension(draggedAssetPath) == "prefab")
 	{
 		std::string prefabId;

@@ -414,7 +414,7 @@ void E_Project::AssetDragAndDropEvent(const char* assetPath, ImTextureID texture
 
 	if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID))
 	{
-		ImGui::SetDragDropPayload("DRAGGED_ASSET", assetPath, sizeof(Resource),ImGuiCond_Once);
+		ImGui::SetDragDropPayload("DRAGGED_ASSET", &assetPath, sizeof(const char*),ImGuiCond_Once);
 
 		ImGui::Text("Dragging %s", assetPath);
 		ImGui::Image(textureID, iconSize);

@@ -467,11 +467,11 @@ void C_Script::InspectorSliderFloat(float* variablePtr, const char* ptrName, con
 	}
 }
 
-void C_Script::InspectorShowPrefab(Prefab* variablePtr, const char* ptrName)
+void C_Script::InspectorPrefab(Prefab* variablePtr, const char* ptrName)
 {
 	if (variablePtr != nullptr) {
 		const char* name = typeid(*variablePtr).name();
-		if (strcmp(name, "class Prefab"))
+		if (strcmp(name, "struct Prefab"))
 			return;
 
 		std::string variableName = GetVariableName(ptrName);
