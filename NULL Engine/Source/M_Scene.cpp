@@ -514,6 +514,28 @@ void M_Scene::LoadPrefabObject(GameObject* _gameObject, ParsonNode* node)
 	}
 }
 
+GameObject* M_Scene::InstantiatePrefab(uint prefabID, GameObject* parent, float3 position, Quat rotation)
+{
+	char* buffer = nullptr;
+	std::string fileName = ASSETS_PREFABS_PATH + std::to_string(prefabID) + PREFAB_EXTENSION;
+	uint f = App->fileSystem->Load(fileName.c_str(), &buffer);
+	if (f == 0)
+	{
+		LOG("Could not load prefab with ID: %d into scene", prefabID);
+		return nullptr;
+	}
+
+	ParsonNode prefabRoot(buffer);
+	RELEASE_ARRAY(buffer);
+
+	GameObject* rootObjectLoaded = App->scene->LoadPrefabIntoScene(&prefabRoot, parent);
+
+	rootObjectLoaded->transform->SetLocalPosition(position);
+	rootObjectLoaded->transform->SetLocalRotation(rotation);
+
+	return rootObjectLoaded;
+}
+
 GameObject* M_Scene::CreateGameObject(const char* name, GameObject* parent)
 {	
 	if (gameObjects.empty())

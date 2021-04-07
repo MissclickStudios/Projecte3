@@ -33,27 +33,29 @@ public:
 	M_Scene(bool isActive = true);
 	~M_Scene();
 
-	bool			Init				(ParsonNode& config) override;
-	bool			Start				() override;
-	UpdateStatus	Update				(float dt) override;
-	UpdateStatus	PostUpdate			(float dt) override;
-	bool			CleanUp				() override;
+	bool			Init(ParsonNode& config) override;
+	bool			Start() override;
+	UpdateStatus	Update(float dt) override;
+	UpdateStatus	PostUpdate(float dt) override;
+	bool			CleanUp() override;
 
-	bool			SaveConfiguration	(ParsonNode& root) const override;
-	bool			LoadConfiguration	(ParsonNode& root) override;
+	bool			SaveConfiguration(ParsonNode& root) const override;
+	bool			LoadConfiguration(ParsonNode& root) override;
 
 public:																														// --- GAME OBJECTS METHODS ---
-	bool			SaveScene							(const char* sceneName = nullptr) const;							// If no name is given the scene_root node's name will be used.
-	bool			LoadScene							(const char* path);													// For now asks for full path
-	
+	bool			SaveScene(const char* sceneName = nullptr) const;							// If no name is given the scene_root node's name will be used.
+	bool			LoadScene(const char* path);													// For now asks for full path
+
 	void			SaveCurrentScene();
-	bool			SaveSceneAs							(const char* sceneName = nullptr);							// To be called from editor
+	bool			SaveSceneAs(const char* sceneName = nullptr);							// To be called from editor
 	bool			NewScene();							// Opens a new scene
 
-	void			LoadResourceIntoScene				(Resource* resource);
+	void			LoadResourceIntoScene(Resource* resource);
 
-	GameObject* LoadPrefabIntoScene(ParsonNode* a,GameObject* parent);
-	void LoadPrefabObject(GameObject* gameObject,ParsonNode* node);
+	GameObject* LoadPrefabIntoScene(ParsonNode* a, GameObject* parent);
+	void LoadPrefabObject(GameObject* gameObject, ParsonNode* node);
+
+	GameObject* InstantiatePrefab(uint prefabID,GameObject* parent,float3 position,Quat rotation);
 
 	std::vector<GameObject*>* GetGameObjects			();
 	

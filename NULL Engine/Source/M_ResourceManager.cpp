@@ -902,7 +902,12 @@ GameObject* M_ResourceManager::LoadPrefab(uint _prefabId, GameObject* parent, Ga
 {
 	char* buffer = nullptr;
 	std::string fileName = ASSETS_PREFABS_PATH + std::to_string(_prefabId) + PREFAB_EXTENSION;
-	App->fileSystem->Load(fileName.c_str(), &buffer);
+	uint f = App->fileSystem->Load(fileName.c_str(), &buffer);
+	if (f == 0)
+	{
+		LOG("Could not load prefab with ID: %d into scene", _prefabId);
+		return nullptr;
+	}
 
 	ParsonNode prefabRoot(buffer);
 	RELEASE_ARRAY(buffer);
@@ -911,11 +916,30 @@ GameObject* M_ResourceManager::LoadPrefab(uint _prefabId, GameObject* parent, Ga
 
 	if(rootObject != nullptr) //we use the transform from the root object to keep it in the same place it was in the scene
 	{
-		//rootObjectLoaded->ReplaceComponent((Component*)rootObject->transform);
 		rootObjectLoaded->transform->SetLocalTransform(rootObject->transform->GetLocalTransform());
 	}
 
 	return rootObjectLoaded;
+}
+
+Prefab* M_ResourceManager::GetPrefab(uint uid)
+{
+	std::map<uint, Prefab>::iterator prefab = prefabs.find(uid);
+	if (prefab != prefabs.end())
+	{
+		return &prefab->second;
+	}
+	return nullptr;
+}
+
+const char* M_ResourceManager::GetPrefabName(uint uid)
+{
+	std::map<uint, Prefab>::iterator prefab = prefabs.find(uid);
+	if (prefab != prefabs.end())
+	{
+		return prefab->second.name.c_str();
+	}
+	return nullptr;
 }
 
 Prefab* M_ResourceManager::GetPrefabByName(const char* prefabName)
