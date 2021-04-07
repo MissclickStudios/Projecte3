@@ -359,7 +359,7 @@ Parser::ParsingState Parser::ReadNextSymbol(char*& cursor, char*& startSymbol, u
 {
 	symbolSize = 0;
 
-	while (*cursor == ' ' || *cursor == '\t' || *cursor == '\n' || *cursor == '/' || *cursor == 'r')
+	while (*cursor == ' ' || *cursor == '\t' || *cursor == '\n' || *cursor == '/' || *cursor == '\r')
 	{
 		Parser::ParsingState stateAfterComment = HandlePossibleComment(cursor);
 		if (stateAfterComment == Parser::ParsingState::ENDFILE)
