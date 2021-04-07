@@ -236,6 +236,36 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &527754795
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 527754796}
+  m_Layer: 0
+  m_Name: Center Attack
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &527754796
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 527754795}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.46, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &923697386
 GameObject:
   m_ObjectHideFlags: 0
@@ -526,13 +556,13 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1065322323}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 945b75a4ef2a834429614c561a7f57a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   rotateSpeed: 500
-  circleSpeed: 5
+  circleSpeed: 3
   circleWidth: 0
   circleLength: 0
   ready_for_360: 0
@@ -621,7 +651,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1065322323}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b074da42661a771489e5032b1df55932, type: 3}
   m_Name: 
@@ -643,7 +673,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ProjectilePrefab: {fileID: 7330326984651472972, guid: 6b3f174fb5566e448a44a337d06a8fa4, type: 3}
-  projectileSpeed: 30
+  projectileSpeed: 10
 --- !u!114 &1065322331
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -695,7 +725,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1065322323}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1483061ad7a508c47b7631cebadb9a13, type: 3}
   m_Name: 
@@ -715,6 +745,15 @@ MonoBehaviour:
   SA1numProjectiles: 40
   SA1projectileSpeed: 50
   SA1projectile: {fileID: 7330326984651472972, guid: 6b3f174fb5566e448a44a337d06a8fa4, type: 3}
+  spiralTarget: {fileID: 527754796}
+  spiralBoss: {fileID: 1065322328}
+  spiralSpeed: 10
+  rotateSpeed: 500
+  circleSpeed: 5
+  circleWidth: 0
+  circleLength: 0
+  SA2ProjectilePrefab: {fileID: 7330326984651472972, guid: 6b3f174fb5566e448a44a337d06a8fa4, type: 3}
+  SA2projectileSpeed: 10
 --- !u!1 &1132967022
 GameObject:
   m_ObjectHideFlags: 0

@@ -29,7 +29,7 @@ public class BossMovementSpecial1 : MonoBehaviour
     void Update()
     {
 
-       
+
         //// LEFT TO RIGHT
         //if (transform.position.x > 12f)
         //{
@@ -50,17 +50,17 @@ public class BossMovementSpecial1 : MonoBehaviour
         //    transform.position = new Vector3(transform.position.x - moveSpeed * Time.deltaTime, transform.position.y, transform.position.z);
         //}
 
-            //MOVE ON CIRCLES
-            //timeCounter += Time.deltaTime*circleSpeed;
+        //MOVE ON CIRCLES
+        timeCounter += Time.deltaTime * circleSpeed;
 
-            //float x = Mathf.Sin (timeCounter)+circleWidth;
-            //float y = 1.46f;
-            //float z = Mathf.Cos(timeCounter) + circleLength; ;
+        float x = Mathf.Sin(timeCounter) + circleWidth;
+        float y = 1.46f;
+        float z = Mathf.Cos(timeCounter) + circleLength; ;
 
-            //transform.position = new Vector3(x, y, z);
+        transform.position = new Vector3(x, y, z);
 
-            //ROTATE ON Y AXIS
-            transform.Rotate(Vector3.up * rotateSpeed * Time.deltaTime);
+        //ROTATE ON Y AXIS
+        transform.Rotate(Vector3.up * rotateSpeed * Time.deltaTime);
         }
     
        

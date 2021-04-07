@@ -19,7 +19,7 @@ public class SpiralBullet : MonoBehaviour
     {
         dt += Time.deltaTime;
 
-        if (dt >= 0.01f)
+        if (dt >= 0.1f)
         {
             startPoint = transform.position;
             Spiral();
