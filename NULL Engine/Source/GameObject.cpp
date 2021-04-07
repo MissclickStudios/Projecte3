@@ -519,7 +519,7 @@ bool GameObject::DeleteChild(GameObject* child)
 	
 	for (uint i = 0; i < childs.size(); ++i)
 	{
-		if (childs[i] == child)
+		if (childs[i]->GetUID() == child->GetUID())
 		{
 			childs.erase(childs.begin() + i);
 			ret = true;

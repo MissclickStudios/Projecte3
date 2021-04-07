@@ -8,12 +8,14 @@
 class ParsonNode;
 class GameObject;
 class R_Script;
+class Prefab;
 
 struct NULL_API InspectorScriptData {
 	enum DataType {
 		INT,
 		BOOL,
 		FLOAT,
+		PREFAB,
 		/*INT2,
 		INT3,
 		FLOAT2,
@@ -97,6 +99,8 @@ public:
 	static void InspectorInputFloat(float* variablePtr, const char* ptrName);
 	static void InspectorDragableFloat(float* variablePtr, const char* ptrName);
 	static void InspectorSliderFloat(float* variablePtr, const char* ptrName, const int& minValue, const int& maxValue);
+
+	static void InspectorShowPrefab(Prefab* variablePtr, const char* ptrName);
 	
 	R_Script* resource = nullptr;
 private:

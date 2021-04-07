@@ -486,30 +486,21 @@ void M_Editor::GetEngineIconsThroughEditor(Icons& engineIcons)
 	engineIcons = EngineApp->renderer->GetEngineIcons();
 }
 
-void M_Editor::LoadResourceIntoSceneThroughEditor()
+void M_Editor::LoadResourceIntoSceneThroughEditor(const ImGuiPayload& payload)
 {
-	
-	const char* draggedAssetPath = project->GetDraggedAsset();
-	if (draggedAssetPath != nullptr)
+	const char* draggedAssetPath = (const char*)payload.Data;
+	if (App->fileSystem->GetFileExtension(draggedAssetPath) == "prefab")
 	{
-		if (App->fileSystem->GetFileExtension(draggedAssetPath) == "prefab")
-		{
-			std::string prefabId;
-			EngineApp->fileSystem->SplitFilePath(draggedAssetPath, nullptr, &prefabId, nullptr);
-			EngineApp->resourceManager->LoadPrefab(std::stoi(prefabId),EngineApp->scene->GetSceneRoot());
-		}
-
-		Resource* draggedResource = EngineApp->resourceManager->GetResourceFromLibrary(draggedAssetPath);
-		if (draggedResource != nullptr)
-		{
-			EngineApp->scene->LoadResourceIntoScene(draggedResource);
-		}
+		std::string prefabId;
+		EngineApp->fileSystem->SplitFilePath(draggedAssetPath, nullptr, &prefabId, nullptr);
+		EngineApp->resourceManager->LoadPrefab(std::stoi(prefabId), EngineApp->scene->GetSceneRoot());
 	}
 	else
 	{
-		LOG("[ERROR] DRAGGED PATH WAS NULLPTR!!!");
+		Resource* draggedResource = EngineApp->resourceManager->GetResourceFromLibrary(draggedAssetPath);
+		if (draggedResource != nullptr)
+			EngineApp->scene->LoadResourceIntoScene(draggedResource);
 	}
-	
 }
 
 const std::map<uint32, Resource*>* M_Editor::GetResourcesThroughEditor() const

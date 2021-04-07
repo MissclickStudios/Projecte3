@@ -9,6 +9,7 @@
 #include "C_Transform.h"
 #include "Log.h"
 #include "JSONParser.h"
+#include "Prefab.h"
 #include "M_ResourceManager.h"
 #include "M_ScriptManager.h"
 #include "FileSystemDefinitions.h"
@@ -463,5 +464,24 @@ void C_Script::InspectorSliderFloat(float* variablePtr, const char* ptrName, con
 		inspector.minSlider = minValue;
 		inspector.maxSlider = maxValue;
 		script->inspectorVariables.push_back(inspector);
+	}
+}
+
+void C_Script::InspectorShowPrefab(Prefab* variablePtr, const char* ptrName)
+{
+	if (variablePtr != nullptr) {
+		const char* name = typeid(*variablePtr).name();
+		if (strcmp(name, "class Prefab"))
+			return;
+
+		std::string variableName = GetVariableName(ptrName);
+
+		C_Script* script = App->scriptManager->actualScriptLoading;
+		if (script != nullptr) {
+			script->inspectorVariables.push_back(InspectorScriptData(variableName, InspectorScriptData::DataType::PREFAB, (void*)variablePtr, InspectorScriptData::NONE));
+		}
+	}
+	else {
+		LOG("Inspector type Prefab variable must not be a non-NULL Prefab pointer!!");
 	}
 }

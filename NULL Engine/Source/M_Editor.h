@@ -37,6 +37,8 @@ enum class WantToSaveType;
 
 typedef unsigned __int32 uint32;
 
+struct ImGuiPayload;
+
 enum class ImguiStyle
 {
 	CLASSIC,
@@ -114,7 +116,7 @@ public:																							// --- Panel/Window Methods. Acts as an interface 
 	bool			HoveringGuizmo						() const;								// Viewport: 
 
 	void			GetEngineIconsThroughEditor			(Icons& engineIcons);					// Project:
-	void			LoadResourceIntoSceneThroughEditor	();										// Project: As of now Drag&Drop Source is in Project and Target in Viewport. TODO FIX LATER
+	void			LoadResourceIntoSceneThroughEditor	(const ImGuiPayload& payload);							// Project: As of now Drag&Drop Source is in Project and Target in Viewport. TODO FIX LATER
 
 	const std::map<uint32, Resource*>* GetResourcesThroughEditor () const;	// Resources: 
 

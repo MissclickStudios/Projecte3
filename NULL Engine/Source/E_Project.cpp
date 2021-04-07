@@ -31,9 +31,7 @@ directoryToDisplay			(nullptr),
 refreshRootDirectory		(true),
 refreshDirectoryToDisplay	(false),
 refreshWindowSize			(true),
-iconsAreLoaded				(false),
-draggedResource				(nullptr),
-draggedAsset				("[NONE]")
+iconsAreLoaded				(false)
 {
 	directoryToDisplay = new char[MAX_DIRECTORY_SIZE];
 	sprintf_s(directoryToDisplay, MAX_DIRECTORY_SIZE, "%s", ASSETS_PATH);
@@ -74,18 +72,12 @@ bool E_Project::CleanUp()
 	bool ret = true;
 
 	rootDirectory.children.clear();
-	draggedResource = nullptr;
 	ClearAssetsToDisplay();
 
 	return ret;
 }
 
 // --- E_PROJECT METHODS ---
-const char* E_Project::GetDraggedAsset() const
-{
-	return draggedAsset.c_str();
-}
-
 void E_Project::CheckFlags()
 {
 	if (!iconsAreLoaded)
@@ -422,12 +414,10 @@ void E_Project::AssetDragAndDropEvent(const char* assetPath, ImTextureID texture
 
 	if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID))
 	{
-		ImGui::SetDragDropPayload("DRAGGED_ASSET", assetPath, sizeof(Resource));
+		ImGui::SetDragDropPayload("DRAGGED_ASSET", assetPath, sizeof(Resource),ImGuiCond_Once);
 
 		ImGui::Text("Dragging %s", assetPath);
 		ImGui::Image(textureID, iconSize);
-
-		draggedAsset = assetPath;
 
 		ImGui::EndDragDropSource();
 	}
