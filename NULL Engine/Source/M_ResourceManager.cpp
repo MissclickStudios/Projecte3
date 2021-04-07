@@ -769,7 +769,7 @@ void M_ResourceManager::GetAllShaders(std::vector<R_Shader*>& shaders)
 	shdrFiles.clear();
 }
 
-void M_ResourceManager::GetAllTextures(std::vector<R_Texture*>& textures)
+void M_ResourceManager::GetAllTextures(std::vector<R_Texture*>& textures, const char* name)
 {
 	std::vector<std::string> texFiles;
 	std::vector<std::string> nameFilters;
@@ -777,6 +777,7 @@ void M_ResourceManager::GetAllTextures(std::vector<R_Texture*>& textures)
 	extFilters.push_back("png");
 	extFilters.push_back("tga");
 	extFilters.push_back("dds");
+	if (name != nullptr)  nameFilters.push_back(name);
 	
 	App->fileSystem->GetAllFilesWithFilters(ASSETS_TEXTURES_PATH, texFiles, nameFilters, extFilters);
 	if (texFiles.empty())

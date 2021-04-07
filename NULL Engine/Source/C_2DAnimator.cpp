@@ -3,6 +3,10 @@
 #include "C_2DAnimator.h"
 #include "R_Texture.h"
 
+#include "M_FileSystem.h"
+#include "M_ResourceManager.h"
+#include "FileSystemDefinitions.h"
+
 C_2DAnimator::C_2DAnimator(GameObject* owner) : Component(owner, ComponentType::ANIMATOR2D)
 {
 	animationTimer.Stop();
@@ -13,6 +17,8 @@ C_2DAnimator::C_2DAnimator(GameObject* owner) : Component(owner, ComponentType::
 	animationLoop = false;
 	animationPlaying = false;
 	playAnimation = false;
+
+	GetAnimationSprites("ChangeWeapon");
 }
 
 C_2DAnimator::~C_2DAnimator()
@@ -93,6 +99,11 @@ void C_2DAnimator::SetAnimationStepTime(int time)
 int C_2DAnimator::GetAnimationStepTime()
 {
 	return animationStepTime;
+}
+
+void C_2DAnimator::GetAnimationSprites(const char* name)
+{
+	App->resourceManager->GetAllTextures(animation, name);
 }
 
 void C_2DAnimator::PlayAnimation(bool loop)

@@ -34,7 +34,9 @@ public:
 	void SetAnimationStepTime(int time);
 	int GetAnimationStepTime();
 
-	static inline ComponentType GetType() { return ComponentType::AUDIOLISTENER; }
+	void GetAnimationSprites(const char* name);
+
+	static inline ComponentType GetType() { return ComponentType::AUDIOLISTENER; }  //AUDIOLISTENER?? :)
 
 private:
 	uint GetTextureIdFromVector(int index);
@@ -42,6 +44,7 @@ private:
 private:
 
 	std::vector<R_Texture*>		animation;
+	
 	int							animationCounter;
 	int							animationFrames;
 	uint						animationStepTime;
