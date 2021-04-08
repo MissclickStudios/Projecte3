@@ -1450,11 +1450,12 @@ void E_Inspector::DrawScriptComponent(C_Script* cScript)
 						void* obj = payload->Data;
 						if (obj != nullptr) 
 						{
-							memcpy(&((*variable).ptr), &obj, sizeof(void*));
+							//memcpy(&((*variable).ptr), &obj, sizeof(void*));
+							(*variable).ptr = obj;
+							//(*variable).ptr = (GameObject***)&obj;
 							std::string nameee = (*(GameObject**)(*variable).ptr)->GetName();
-							(*variable).ptr;
+							//(*variable).ptr = obj;
 						}
-						(*variable).ptr;
 					}
 					ImGui::EndDragDropTarget();
 				}
