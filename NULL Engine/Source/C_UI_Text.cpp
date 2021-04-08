@@ -24,9 +24,8 @@
 
 #include "JSONParser.h"
 
-#include "Dependencies/FreeType/include/freetype/freetype.h"
 #include "Dependencies/FreeType/include/ft2build.h"
-//#include FT_FREETYPE_H
+#include "Dependencies/FreeType/include/freetype/freetype.h"
 
 #pragma comment (lib, "Source/Dependencies/FreeType/libx86/freetype.lib")
 
@@ -166,8 +165,21 @@ void C_UI_Text::RenderText(std::string text, float x, float y, float scale, floa
 
 	glUseProgram(rShader->shaderProgramID);
 	
+	//float4x4 projection = float4x4::OrthographicProjectionXY();
+	//float4x4 projection = float4x4::OrthographicProjection(App->camera->GetCurrentCamera()->GetFrustum().NearPlane());
+	//float4x4 projection = float4x4::OpenGLOrthoProjRH(App->camera->GetCurrentCamera()->GetNearPlaneDistance(), App->camera->GetCurrentCamera()->GetFarPlaneDistance(), App->window->GetWidth(), App->window->GetHeight());
+	//float4x4 projection = App->camera->GetCurrentCamera()->GetFrustum().ProjectionMatrix().Transposed();
+
+	//float4x4 projection = float4x4::FromTRS(float3(x, y, 0), Quat::FromEulerXYZ(0, 0, 0), float3(scale, scale, scale)).Transposed();
+	C_Canvas* canvas = GetOwner()->parent->GetComponent<C_Canvas>();
+	float4x4 projection = canvas->GetOwner()->transform->GetWorldTransform().Transposed();
+
+	rShader->SetUniformVec3f("textColor", (GLfloat*)&color);
+	rShader->SetUniformMatrix4("projection", projection.ptr());
+
 	glActiveTexture(GL_TEXTURE0);
 	glBindVertexArray(VAO);
+
 
 	std::string::const_iterator c;
 	for (c = text.begin(); c != text.end(); c++)
@@ -175,20 +187,6 @@ void C_UI_Text::RenderText(std::string text, float x, float y, float scale, floa
 		Character ch = Characters[*c];
 
 		glBindTexture(GL_TEXTURE_2D, ch.textureID);
-
-		//float4x4 projection = float4x4::OrthographicProjectionXY();
-		float4x4 projection = float4x4::FromTRS(float3(x, y, 0), Quat::FromEulerXYZ(0, 0, 0), float3(scale, scale, scale)).Transposed();
-		//float4x4 projection = float4x4::OrthographicProjection(App->camera->GetCurrentCamera()->GetFrustum().NearPlane());
-		//float4x4 projection = float4x4::OpenGLOrthoProjRH(App->camera->GetCurrentCamera()->GetNearPlaneDistance(), App->camera->GetCurrentCamera()->GetFarPlaneDistance(), App->window->GetWidth(), App->window->GetHeight());
-		//float4x4 projection = App->camera->GetCurrentCamera()->GetFrustum().ProjectionMatrix().Transposed();
-		
-		/*C_Canvas* canvas = GetOwner()->parent->GetComponent<C_Canvas>();
-		float4x4 projection = canvas->GetOwner()->transform->GetWorldTransform().Transposed();*/
-
-
-
-		rShader->SetUniformVec3f("textColor", (GLfloat*)&color);
-		rShader->SetUniformMatrix4("projection", projection.ptr());
 
 		float xpos = x + ch.Bearing.x * scale;
 		float ypos = y - (ch.Size.y - ch.Bearing.y) * scale;

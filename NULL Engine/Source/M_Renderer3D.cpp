@@ -772,11 +772,8 @@ void M_Renderer3D::RenderUIComponent(GameObject* gameObject)
 		C_UI_Text* text = (*it)->GetComponent<C_UI_Text>();
 		if (text != nullptr)
 		{
-			text->RenderText("AAAAAAAAAAAAAHHHHHHHHHHH", 0.01f, 0.01f, 0.01f, float3(0.1f, 0.9f, 0.1f));
-
-
-			/*if (App->camera->currentCamera != App->camera->masterCamera->GetComponent<C_Camera>())
-				text->RenderText("AAAAAAAAAAAAAHHHHHHHHHHH", 0.01f, 0.01f, 0.01f, float3(0.7f, 0.1f, 0.1f));*/
+			if (App->camera->currentCamera != App->camera->masterCamera->GetComponent<C_Camera>())
+				text->RenderText("AAAAAAAAAAAAAHHHHHHHHHHH", App->window->GetWidth()/2, App->window->GetHeight() / 2, 1000.0f, float3(0.7f, 0.1f, 0.1f));
 				
 				
 				/*	text->Draw2D();
