@@ -300,32 +300,17 @@ void Player::Weapon()
 
 Projectile* Player::CreateProjectile(uint index)
 {
-	Resource* resource = App->resourceManager->GetResourceFromLibrary("Assets/Models/Props/bullet.fbx");
+	GameObject* bullet = nullptr;
+	//App->resourceManager->LoadPrefab(bullet.uid, bulletStorage);
+	//char n[10];
+	//sprintf_s(n, "%d", index);
+	//std::string num = n;
+	//std::string name("Bullet" + num);
+	//
+	//bullet->SetName(name.c_str());
 
-	GameObject* bullet;
-	if (!resource)
-		bullet = App->scene->CreateGameObject("Bullets", bulletStorage);
-	else
-		bullet = App->scene->GenerateGameObjectsFromModel((R_Model*)resource, { 0.5, 0.5, 0.5 });
-
-	char n[10];
-	sprintf_s(n, "%d", index);
-	std::string num = n;
-	std::string name("Bullet" + num);
-
-	bullet->SetName(name.c_str());
-	bullet->SetParent(bulletStorage);
-
-	float3 position = float3::zero;
-	bullet->transform->SetWorldPosition(position);
-
-	C_RigidBody* rigidBody = (C_RigidBody*)bullet->CreateComponent(ComponentType::RIGIDBODY);
-	rigidBody->FreezePositionY(true);
-	rigidBody->FreezeRotationX(true);
-	rigidBody->FreezeRotationY(true);
-	rigidBody->FreezeRotationZ(true);
-	rigidBody->ChangeFilter("bullet");
-	bullet->CreateComponent(ComponentType::BOX_COLLIDER);
+	//float3 position = float3::zero;
+	//bullet->transform->SetWorldPosition(position);
 
 	//C_Script* script = (C_Script*)bullet->CreateComponent(ComponentType::SCRIPT);
 	//script->resource = (R_Script*)App->resourceManager->GetResourceFromLibrary("Assets/Scripts//Bullet.h");
@@ -338,15 +323,10 @@ Projectile* Player::CreateProjectile(uint index)
 	//	}
 	//}
 
-	bullet->CreateComponent(ComponentType::PARTICLE_SYSTEM);
 
-	bullet->CreateComponent(ComponentType::AUDIOSOURCE);
-	C_AudioSource* source = bullet->GetComponent<C_AudioSource>();
-	source->SetEvent("Mando_blaster_shot", App->audio->eventMap.at("Mando_blaster_shot"));
-
-	for (uint i = 0; i < bullet->components.size(); ++i)
-		bullet->components[i]->SetIsActive(false);
-	bullet->SetIsActive(false);
+	//for (uint i = 0; i < bullet->components.size(); ++i)
+	//	bullet->components[i]->SetIsActive(false);
+	//bullet->SetIsActive(false);
 
 	return new Projectile(bullet);
 }

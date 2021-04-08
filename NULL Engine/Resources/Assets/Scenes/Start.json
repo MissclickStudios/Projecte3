@@ -1469,7 +1469,7 @@
         },
         {
             "UID": 888400124,
-            "ParentUID": 99615772,
+            "ParentUID": 1439835138,
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "MainScene",
@@ -2531,7 +2531,7 @@
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
+            "ShowBoundingBoxes": true,
             "Components": [
                 {
                     "Type": 1,
@@ -2631,7 +2631,74 @@
                     "ResourceUID": 645819728,
                     "AssetsPath": "Assets\/Scripts\/\/Player.h",
                     "DataName": "Player",
-                    "HasInspector": false
+                    "HasInspector": true,
+                    "InspectorVariables": [
+                        {
+                            "Type": 2,
+                            "Name": "speed",
+                            "float": 20
+                        },
+                        {
+                            "Type": 2,
+                            "Name": "acceleration",
+                            "float": 200
+                        },
+                        {
+                            "Type": 2,
+                            "Name": "deceleration",
+                            "float": 200
+                        },
+                        {
+                            "Type": 2,
+                            "Name": "bulletSpeed",
+                            "float": 100
+                        },
+                        {
+                            "Type": 2,
+                            "Name": "fireRate",
+                            "float": 0.25
+                        },
+                        {
+                            "Type": 0,
+                            "Name": "ammo",
+                            "int": 10
+                        },
+                        {
+                            "Type": 0,
+                            "Name": "maxAmmo",
+                            "int": 10
+                        },
+                        {
+                            "Type": 1,
+                            "Name": "automatic",
+                            "bool": true
+                        },
+                        {
+                            "Type": 3,
+                            "Name": "bullet",
+                            "prefab": 528499712
+                        },
+                        {
+                            "Type": 2,
+                            "Name": "dashSpeed",
+                            "float": 100
+                        },
+                        {
+                            "Type": 2,
+                            "Name": "dashingTime",
+                            "float": 0.20000000298023224
+                        },
+                        {
+                            "Type": 2,
+                            "Name": "dashingColdown",
+                            "float": 1
+                        },
+                        {
+                            "Type": 2,
+                            "Name": "health",
+                            "float": 3
+                        }
+                    ]
                 }
             ]
         },
@@ -2756,7 +2823,7 @@
                     "Freeze Rotation Y": false,
                     "Freeze Rotation Z": false,
                     "Is Static": false,
-                    "Filter": "NOT FOUND"
+                    "Filter": " gate"
                 },
                 {
                     "Type": 9,
@@ -2770,7 +2837,11 @@
                     "Center Z": 0
                 },
                 {
-                    "Type": 20
+                    "Type": 23,
+                    "ResourceUID": 1710105955,
+                    "AssetsPath": "Assets\/Scripts\/\/Gate.h",
+                    "DataName": "Gate",
+                    "HasInspector": false
                 }
             ]
         },
