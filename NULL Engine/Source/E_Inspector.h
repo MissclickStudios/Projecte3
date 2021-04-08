@@ -123,6 +123,7 @@ private:
 	int			componentType;
 
 	int			mapToDisplay;
+	int			moduleType;
 
 	Component*	componentToDelete;
 
