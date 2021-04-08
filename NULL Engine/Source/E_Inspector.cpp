@@ -45,6 +45,7 @@
 #include "C_UI_Text.h"
 #include "C_UI_Button.h"
 #include "C_Script.h"
+#include "C_2DAnimator.h"
 
 #include "R_Shader.h"
 #include "R_Texture.h"
@@ -238,6 +239,7 @@ void E_Inspector::DrawComponents(GameObject* selectedGameObject)
 		case ComponentType::PROP_BEHAVIOR:		{ DrawPropBehaviorComponent((C_PropBehavior*)component); }			break;
 		case ComponentType::CAMERA_BEHAVIOR:	{ DrawCameraBehaviorComponent((C_CameraBehavior*)component); }		break;
 		case ComponentType::GATE_BEHAVIOR:		{ DrawGateBehaviorComponent((C_GateBehavior*)component); }			break;
+		case ComponentType::ANIMATOR2D:			{ DrawAnimator2DComponent((C_2DAnimator*)component); }				break;
 		}
 		if (type == ComponentType::NONE)
 		{
@@ -1706,10 +1708,44 @@ void E_Inspector::DrawGateBehaviorComponent(C_GateBehavior* cBehavior)
 	return;
 }
 
-// --- DRAW COMPONENT UTILITY METHODS
+void E_Inspector::DrawAnimator2DComponent(C_2DAnimator* cAnimator)
+{
+	bool show = true;
+	if (ImGui::CollapsingHeader("Animator 2D", &show, ImGuiTreeNodeFlags_Leaf))
+	{
+		bool isActive = cAnimator->IsActive();
+		if (ImGui::Checkbox("Animator is active", &isActive))
+			cAnimator->SetIsActive(isActive);
+
+		int k = cAnimator->GetAnimationStepTime();
+		if (ImGui::InputInt("Step time",&k));
+			cAnimator->SetAnimationStepTime(k);
+
+		ImGui::Separator();
+
+		if (!show)
+		{
+			componentToDelete = cAnimator;
+			showDeleteComponentPopup = true;
+		}
+
+
+		static char buffer[64];
+		strcpy_s(buffer, cAnimator->GetName());
+		if (ImGui::InputText("Animation Name", buffer, IM_ARRAYSIZE(buffer), ImGuiInputTextFlags_EnterReturnsTrue))
+		{
+			cAnimator->ChangeName(buffer);
+			cAnimator->GetAnimationSprites(buffer);
+		}
+
+	}
+	return;
+}
+
 void E_Inspector::AddComponentCombo(GameObject* selectedGameObject)
 {
-	ImGui::Combo("##", &componentType, "Add Component\0Transform\0Mesh\0Material\0Light\0Camera\0Animator\0Animation\0RigidBody\0Box Collider\0Sphere Collider\0Capsule Collider\0Particle System\0Canvas\0Audio Source\0Audio Listener\0Player Controller\0Bullet Behavior\0Prop Behavior\0Camera Behavior\0Gate Behavior\0UI Image\0UI Text\0UI Button\0Script");
+	ImGui::Combo("##", &componentType, "Add Component\0Transform\0Mesh\0Material\0Light\0Camera\0Animator\0Animation\0RigidBody\0Box Collider\0Sphere Collider\0Capsule Collider\0Particle System\0Canvas\0Audio Source\0Audio Listener\0Player Controller\0Bullet Behavior\0Prop Behavior\0Camera Behavior\0Gate Behavior\0UI Image\0UI Text\0UI Button\0Script\0Animator 2D");
+
 	ImGui::SameLine();
 
 	if ((ImGui::Button("ADD")))

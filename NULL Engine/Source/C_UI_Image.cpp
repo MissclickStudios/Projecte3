@@ -11,6 +11,7 @@
 #include "C_Canvas.h"
 #include "C_Transform.h"
 #include "C_Camera.h"
+#include "C_2DAnimator.h"
 
 #include "E_Viewport.h"
 
@@ -61,7 +62,7 @@ bool C_UI_Image::CleanUp()
 
 void C_UI_Image::Draw2D()
 {
-	if (GetOwner()->GetComponent<C_Material>() == nullptr) return;
+	if (GetOwner()->GetComponent<C_Material>() == nullptr && GetOwner()->GetComponent<C_2DAnimator>() == nullptr) return;
 
 	C_Canvas* canvas = GetOwner()->parent->GetComponent<C_Canvas>();
 	if (canvas == nullptr) return;
@@ -70,8 +71,14 @@ void C_UI_Image::Draw2D()
 	glMultMatrixf((GLfloat*)&GetOwner()->parent->GetComponent<C_Transform>()->GetWorldTransform().Transposed());
 
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-	
-	uint32 id = GetOwner()->GetComponent<C_Material>()->GetTextureID();
+
+	uint32 id;
+
+	if (GetOwner()->GetComponent<C_2DAnimator>() != nullptr)
+		id = GetOwner()->GetComponent<C_2DAnimator>()->GetIdFromAnimation();
+	else
+		id = GetOwner()->GetComponent<C_Material>()->GetTextureID();
+
 	glBindTexture(GL_TEXTURE_2D, id);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
@@ -91,7 +98,7 @@ void C_UI_Image::Draw2D()
 
 void C_UI_Image::Draw3D()
 {
-	if (GetOwner()->GetComponent<C_Material>() == nullptr) return;
+	if (GetOwner()->GetComponent<C_Material>() == nullptr && GetOwner()->GetComponent<C_2DAnimator>() == nullptr) return;
 	
 	glPushMatrix();
 	glMultMatrixf((GLfloat*)&GetOwner()->GetComponent<C_Transform>()->GetWorldTransform().Transposed());
@@ -100,7 +107,13 @@ void C_UI_Image::Draw3D()
 
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
-	uint32 id = GetOwner()->GetComponent<C_Material>()->GetTextureID();
+	uint32 id;
+
+	if (GetOwner()->GetComponent<C_2DAnimator>() != nullptr)
+		id = GetOwner()->GetComponent<C_2DAnimator>()->GetIdFromAnimation();
+	else
+		id = GetOwner()->GetComponent<C_Material>()->GetTextureID();
+
 	glBindTexture(GL_TEXTURE_2D, id); // Not sure
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);

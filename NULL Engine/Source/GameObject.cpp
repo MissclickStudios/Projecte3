@@ -43,6 +43,7 @@
 #include "C_UI_Text.h"
 #include "C_UI_Button.h"
 
+#include "C_2DAnimator.h"
 
 #include "GameObject.h"
 
@@ -228,6 +229,7 @@ bool GameObject::LoadState(ParsonNode& root)
 			case ComponentType::UI_IMAGE:			{ component = new C_UI_Image(this); }			break;
 			case ComponentType::UI_TEXT:			{ component = new C_UI_Text(this); }			break;
 			case ComponentType::UI_BUTTON:			{ component = new C_UI_Button(this); }			break;
+			case ComponentType::ANIMATOR2D:			{ component = new C_2DAnimator(this); }			break;
 			}
 
 			if (component != nullptr)
@@ -779,6 +781,7 @@ Component* GameObject::CreateComponent(ComponentType type)
 	case ComponentType::PROP_BEHAVIOR:		{ component = new C_PropBehavior(this); }		break;
 	case ComponentType::CAMERA_BEHAVIOR:	{ component = new C_CameraBehavior(this); }		break;
 	case ComponentType::GATE_BEHAVIOR:		{ component = new C_GateBehavior(this); }		break;
+	case ComponentType::ANIMATOR2D:			{ component = new C_2DAnimator(this); }			break;
 	}
 
 	if (component != nullptr)
