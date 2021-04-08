@@ -79,28 +79,28 @@ public class IG11Behaviour : MonoBehaviour
             }
         }
 
-        //if (readyToSpiralAttack == true)
-        //{
- 
-        //    spiralAttackNRMov();
+        if (readyToSpiralAttack == true)
+        {
 
-        //    spiralAttackFireRate += Time.deltaTime;
-        //    spiralAttackDuration -= Time.deltaTime;
+            spiralAttackNRMov();
 
-        //    if (spiralAttackFireRate >= 0.05f)
-        //    {
-        //        startPoint = transform.position;
-        //        spiralAttackNR();
-        //        spiralAttackFireRate = 0;
-        //    }
-        //    if (spiralAttackDuration < 0.0f)
-        //    {
-        //        readyToSpiralAttack = false;
-        //        spiralAttackDuration = 5.0f;
-        //        selectedSpecial = false;
-        //        sAttack1Duration = 10.0f;
-        //    }
-        //}
+            spiralAttackFireRate += Time.deltaTime;
+            spiralAttackDuration -= Time.deltaTime;
+
+            if (spiralAttackFireRate >= 0.05f)
+            {
+                startPoint = transform.position;
+                spiralAttackNR();
+                spiralAttackFireRate = 0;
+            }
+            if (spiralAttackDuration < 0.0f)
+            {
+                readyToSpiralAttack = false;
+                spiralAttackDuration = 5.0f;
+                selectedSpecial = false;
+                sAttack1Duration = 10.0f;
+            }
+        }
 
     }
 
