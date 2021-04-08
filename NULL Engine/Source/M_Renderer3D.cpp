@@ -676,6 +676,7 @@ void M_Renderer3D::RenderScene()
 	RenderUI();
 
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+	
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
@@ -771,11 +772,17 @@ void M_Renderer3D::RenderUIComponent(GameObject* gameObject)
 		C_UI_Text* text = (*it)->GetComponent<C_UI_Text>();
 		if (text != nullptr)
 		{
-			if (App->camera->currentCamera != App->camera->masterCamera->GetComponent<C_Camera>())
-				text->Draw2D();
+			text->RenderText("AAAAAAAAAAAAAHHHHHHHHHHH", 0.01f, 0.01f, 0.01f, float3(0.1f, 0.9f, 0.1f));
+
+
+			/*if (App->camera->currentCamera != App->camera->masterCamera->GetComponent<C_Camera>())
+				text->RenderText("AAAAAAAAAAAAAHHHHHHHHHHH", 0.01f, 0.01f, 0.01f, float3(0.7f, 0.1f, 0.1f));*/
+				
+				
+				/*	text->Draw2D();
 
 			else
-				text->Draw3D();
+				text->Draw3D();*/
 		}
 
 
