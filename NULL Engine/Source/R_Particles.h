@@ -4,17 +4,19 @@
 #include "Resource.h"
 #include "Emitter.h"
 
-class R_ParticleSystem : public Resource
+class R_Particles : public Resource
 {
 public:
-	R_ParticleSystem();
-	~R_ParticleSystem();
+	R_Particles();
+	~R_Particles();
 
-	//default emitter creation
-	void AddDefaultEmitter();
+	bool CleanUp() override;
 
 	bool SaveMeta(ParsonNode& metaRoot) const override;
 	bool LoadMeta(const ParsonNode& metaRoot) override;
+
+public:
+	void AddDefaultEmitter();																			//default emitter creation
 
 public:
 	std::vector<Emitter> emitters;

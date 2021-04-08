@@ -1,26 +1,33 @@
-#include "R_ParticleSystem.h"
+#include "R_Particles.h"
 #include "ParticleModule.h"
 #include "MemoryManager.h"
 
-R_ParticleSystem::R_ParticleSystem() : Resource(ResourceType::PARTICLE_SYSTEM)
+R_Particles::R_Particles() : Resource(ResourceType::PARTICLES)
 {
+
 }
 
-R_ParticleSystem::~R_ParticleSystem()
+R_Particles::~R_Particles()
 {
+
 }
 
-bool R_ParticleSystem::SaveMeta(ParsonNode& metaRoot) const
+bool R_Particles::CleanUp()
 {
-	return false;
+	return true;
 }
 
-bool R_ParticleSystem::LoadMeta(const ParsonNode& metaRoot)
+bool R_Particles::SaveMeta(ParsonNode& metaRoot) const
 {
-	return false;
+	return true;
 }
 
-void R_ParticleSystem::AddDefaultEmitter()
+bool R_Particles::LoadMeta(const ParsonNode& metaRoot)
+{
+	return true;
+}
+
+void R_Particles::AddDefaultEmitter()
 {
 	emitters.clear();
 	emitters.reserve(4);

@@ -13,7 +13,7 @@ class ParsonNode;
 typedef unsigned int		uint;
 typedef unsigned __int32	uint32;
 
-enum class ResourceType
+enum class ResourceType													// IMPORTANT: Do not change the order of the Types! This will create a conflict with the saved files.
 {
 	MODEL,
 	MESH,
@@ -23,7 +23,7 @@ enum class ResourceType
 	ANIMATION,
 	SCENE,
 	SHADER,
-	PARTICLE_SYSTEM,
+	PARTICLES,
 	PREFAB,
 	SCRIPT,
 	NAVMESH,

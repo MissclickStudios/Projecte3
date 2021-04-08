@@ -492,8 +492,7 @@ void M_Editor::GetEngineIconsThroughEditor(Icons& engineIcons)
 }
 
 void M_Editor::LoadResourceIntoSceneThroughEditor()
-{
-	
+{	
 	const char* draggedAssetPath = project->GetDraggedAsset();
 	if (draggedAssetPath != nullptr)
 	{

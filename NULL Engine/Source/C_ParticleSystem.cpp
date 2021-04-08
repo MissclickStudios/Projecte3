@@ -1,7 +1,7 @@
 #include "JSONParser.h"
 
 #include "C_ParticleSystem.h"
-#include "R_ParticleSystem.h"
+#include "R_Particles.h"
 #include "M_ResourceManager.h"
 #include "Time.h"
 

@@ -16,7 +16,9 @@
 #include "I_Folders.h"
 #include "I_Animations.h"
 #include "I_Shaders.h"
+#include "I_Particles.h"
 #include "I_Scripts.h"
+#include "I_Navigation.h"
 
 #include "Application.h"
 #include "FileSystemDefinitions.h"
@@ -34,7 +36,9 @@
 #include "R_Scene.h"
 #include "R_Animation.h"
 #include "R_Shader.h"
+#include "R_Particles.h"
 #include "R_Script.h"
+#include "R_NavMesh.h"
 
 #include "M_ResourceManager.h"
 
@@ -372,9 +376,8 @@ ResourceType M_ResourceManager::GetTypeFromAssetsExtension(const char* assetsPat
 		return ResourceType::NONE;
 	}
 	
-	ResourceType type = ResourceType::NONE;
-
-	std::string extension = App->fileSystem->GetFileExtension(assetsPath);
+	ResourceType type		= ResourceType::NONE;
+	std::string extension	= App->fileSystem->GetFileExtension(assetsPath);
 
 	if (extension == "fbx" || extension == "FBX" || extension == "obj" || extension == "OBJ")
 	{
@@ -392,17 +395,25 @@ ResourceType M_ResourceManager::GetTypeFromAssetsExtension(const char* assetsPat
 	{
 		type = ResourceType::SHADER;
 	}
-	else if (extension == "[NONE]")
-	{
-		type = ResourceType::FOLDER;
-	}
 	else if (extension == "prefab")
 	{
 		type = ResourceType::PREFAB;
 	}
+	else if (extension == "particles")
+	{
+		type = ResourceType::PARTICLES;
+	}
 	else if (extension == "h")
 	{
 		type = ResourceType::SCRIPT;
+	}
+	else if (extension == "navmesh")
+	{
+		type = ResourceType::NAVMESH;
+	}
+	else if (extension == "[NONE]")
+	{
+		type = ResourceType::FOLDER;
 	}
 	else
 	{
@@ -510,15 +521,17 @@ Resource* M_ResourceManager::CreateResource(ResourceType type, const char* asset
 
 	switch (type)
 	{
-	case ResourceType::MESH:		{ resource = new R_Mesh(); }		break;
-	case ResourceType::MATERIAL:	{ resource = new R_Material(); }	break;
-	case ResourceType::TEXTURE:		{ resource = new R_Texture(); }		break;
-	case ResourceType::MODEL:		{ resource = new R_Model(); }		break;
-	case ResourceType::FOLDER:		{ resource = new R_Folder(); }		break;
-	case ResourceType::SCENE:		{ resource = new R_Scene(); }		break;
-	case ResourceType::ANIMATION:	{ resource = new R_Animation(); }	break;
-	case ResourceType::SHADER:		{ resource = new R_Shader(); }		break;
-	case ResourceType::SCRIPT:		{ resource = new R_Script(); }		break;
+	case ResourceType::MESH:			{ resource = new R_Mesh(); }			break;
+	case ResourceType::MATERIAL:		{ resource = new R_Material(); }		break;
+	case ResourceType::TEXTURE:			{ resource = new R_Texture(); }			break;
+	case ResourceType::MODEL:			{ resource = new R_Model(); }			break;
+	case ResourceType::FOLDER:			{ resource = new R_Folder(); }			break;
+	case ResourceType::SCENE:			{ resource = new R_Scene(); }			break;
+	case ResourceType::ANIMATION:		{ resource = new R_Animation(); }		break;
+	case ResourceType::SHADER:			{ resource = new R_Shader(); }			break;
+	case ResourceType::PARTICLES:		{ resource = new R_Particles(); }		break;
+	case ResourceType::SCRIPT:			{ resource = new R_Script(); }			break;
+	case ResourceType::NAVMESH:			{ resource = new R_NavMesh(); }			break;
 	}
 
 	if (resource != nullptr)
@@ -602,7 +615,9 @@ bool M_ResourceManager::AllocateResource(uint32 UID, const char* assetsPath)
 	case ResourceType::SCENE:		{ /*success = TODO: HAVE A FUNCTIONAL R_SCENE AND SAVE/LOAD METHODS*/ }			break;
 	case ResourceType::ANIMATION:	{ success = Importer::Animations::Load(buffer, (R_Animation*)resource); }		break;
 	case ResourceType::SHADER:		{ success = Importer::Shaders::Load(buffer, (R_Shader*)resource); }				break;
+	case ResourceType::PARTICLES:	{ success = Importer::Particles::Load(buffer, (R_Particles*)resource); }		break;
 	case ResourceType::SCRIPT:		{ success = Importer::Scripts::Load(buffer, (R_Script*)resource); }				break;
+	case ResourceType::NAVMESH:		{ success = Importer::Navigation::Load(buffer, (R_NavMesh*)resource); }			break;
 	}
 
 	RELEASE_ARRAY(buffer);
@@ -1341,45 +1356,18 @@ bool M_ResourceManager::GetLibraryDirectoryAndExtensionFromType(const ResourceTy
 {	
 	switch (type)
 	{
-	case ResourceType::MODEL:
-		directory = MODELS_PATH;
-		extension = MODELS_EXTENSION;
-		break;
-	case ResourceType::MESH:
-		directory = MESHES_PATH;
-		extension = MESHES_EXTENSION;
-		break;
-	case ResourceType::MATERIAL:
-		directory = MATERIALS_PATH;
-		extension = MATERIALS_EXTENSION;
-		break;
-	case ResourceType::TEXTURE:
-		directory = TEXTURES_PATH;
-		extension = TEXTURES_EXTENSION;
-		break;
-	case ResourceType::FOLDER:
-		directory = FOLDERS_PATH;
-		extension = FOLDERS_EXTENSION;
-		break;
-	case ResourceType::SCENE:
-		directory = SCENES_PATH;
-		extension = SCENES_EXTENSION;
-		break;
-	case ResourceType::ANIMATION:
-		directory = ANIMATIONS_PATH;
-		extension = ANIMATIONS_EXTENSION;
-		break;
-	case ResourceType::SHADER:
-		directory = SHADERS_PATH;
-		extension = SHADERS_EXTENSION;
-		break;
-	case ResourceType::SCRIPT:
-		directory = SCRIPTS_PATH;
-		extension = SCRIPTS_EXTENSION;
-		break;
-	case ResourceType::NONE:
-		return false;
-		break;
+	case ResourceType::MODEL:		{ directory = MODELS_PATH;		extension = MODELS_EXTENSION; }			break;
+	case ResourceType::MESH:		{ directory = MESHES_PATH;		extension = MESHES_EXTENSION; }			break;
+	case ResourceType::MATERIAL:	{ directory = MATERIALS_PATH;	extension = MATERIALS_EXTENSION; }		break;
+	case ResourceType::TEXTURE:		{ directory = TEXTURES_PATH;	extension = TEXTURES_EXTENSION; }		break;
+	case ResourceType::FOLDER:		{ directory = FOLDERS_PATH;		extension = FOLDERS_EXTENSION; }		break;
+	case ResourceType::SCENE:		{ directory = SCENES_PATH;		extension = SCENES_EXTENSION; }			break;
+	case ResourceType::ANIMATION:	{ directory = ANIMATIONS_PATH;	extension = ANIMATIONS_EXTENSION; }		break;
+	case ResourceType::SHADER:		{ directory = SHADERS_PATH;		extension = SHADERS_EXTENSION; }		break;
+	case ResourceType::PARTICLES:	{ directory = PARTICLES_PATH;	extension = PARTICLES_EXTENSION; }		break;
+	case ResourceType::SCRIPT:		{ directory = SCRIPTS_PATH;		extension = SCRIPTS_EXTENSION; }		break;
+	case ResourceType::NAVMESH:		{ directory = NAVIGATION_PATH;	extension = NAVMESH_EXTENSION; }		break;
+	case ResourceType::NONE:		{ return false; }														break;
 	}
 
 	return true;
@@ -1508,8 +1496,8 @@ uint32 M_ResourceManager::ImportFromAssets(const char* assetsPath)
 	uint read = App->fileSystem->Load(assetsPath, &buffer);
 	if (read > 0)
 	{
-		ResourceType type = GetTypeFromAssetsExtension(assetsPath);
-		Resource* resource = CreateResource(type, assetsPath);
+		ResourceType type	= GetTypeFromAssetsExtension(assetsPath);
+		Resource* resource	= CreateResource(type, assetsPath);
 
 		bool success = false;
 		switch (type)
@@ -1517,9 +1505,11 @@ uint32 M_ResourceManager::ImportFromAssets(const char* assetsPath)
 		case ResourceType::MODEL:		{ success = Importer::ImportScene(buffer, read, (R_Model*)resource); }						break;
 		case ResourceType::MESH:		{ success = Importer::ImportMesh(buffer, (R_Mesh*)resource); }								break;
 		case ResourceType::TEXTURE:		{ success = Importer::ImportTexture(buffer, read, (R_Texture*)resource); }					break;
-		case ResourceType::SCENE:		{ /*success = HAVE A FUNCTIONAL R_SCENE AND LOAD/SAVE METHODS*/}							break;
+		case ResourceType::SCENE:		{ /*success = HAVE A FUNCTIONAL R_SCENE AND LOAD/SAVE METHODS*/ }							break;
 		case ResourceType::SHADER:		{ success = Importer::Shaders::Import(resource->GetAssetsPath(), (R_Shader*)resource); }	break;
+		case ResourceType::PARTICLES:	{ success = Importer::ImportParticles(buffer, (R_Particles*)resource); }					break;
 		case ResourceType::SCRIPT:      { success = Importer::Scripts::Import(assetsPath, buffer, read, (R_Script*)resource); }		break;
+		case ResourceType::NAVMESH:		{ success = Importer::ImportNavMesh(buffer, (R_NavMesh*)resource); }						break;
 		}
 
 		RELEASE_ARRAY(buffer);
@@ -1603,46 +1593,18 @@ ResourceType M_ResourceManager::GetTypeFromLibraryExtension(const char* libraryP
 	std::string extension	= App->fileSystem->GetFileExtension(libraryPath);
 	extension				= "." + extension;
 
-	if (extension == MODELS_EXTENSION)
-	{
-		type = ResourceType::MODEL;
-	}
-	else if (extension == MESHES_EXTENSION)
-	{
-		type = ResourceType::MESH;
-	}
-	else if (extension == MATERIALS_EXTENSION)
-	{
-		type = ResourceType::MATERIAL;
-	}
-	else if (extension == TEXTURES_EXTENSION)
-	{
-		type = ResourceType::TEXTURE;
-	}
-	else if (extension == FOLDERS_EXTENSION)
-	{
-		type = ResourceType::FOLDER;
-	}
-	else if (extension == SCENES_EXTENSION)
-	{
-		type = ResourceType::SCENE;
-	}
-	else if (extension == ANIMATIONS_EXTENSION)
-	{
-		type = ResourceType::ANIMATION;
-	}
-	else if (extension == SHADERS_EXTENSION)
-	{
-		type = ResourceType::SHADER;
-	}
-	else if (extension == SCRIPTS_EXTENSION)
-	{
-		type = ResourceType::SCRIPT;
-	}
-	else
-	{
-		type = ResourceType::NONE;
-	}
+	if (extension == MODELS_EXTENSION)				{ type = ResourceType::MODEL; }
+	else if (extension == MESHES_EXTENSION)			{ type = ResourceType::MESH; }
+	else if (extension == MATERIALS_EXTENSION)		{ type = ResourceType::MATERIAL; }
+	else if (extension == TEXTURES_EXTENSION)		{ type = ResourceType::TEXTURE; }
+	else if (extension == FOLDERS_EXTENSION)		{ type = ResourceType::FOLDER; }
+	else if (extension == SCENES_EXTENSION)			{ type = ResourceType::SCENE; }
+	else if (extension == ANIMATIONS_EXTENSION)		{ type = ResourceType::ANIMATION; }
+	else if (extension == SHADERS_EXTENSION)		{ type = ResourceType::SHADER; }
+	else if (extension == PARTICLES_EXTENSION)		{ type = ResourceType::PARTICLES; }
+	else if (extension == SCRIPTS_EXTENSION)		{ type = ResourceType::SCRIPT; }
+	else if (extension == NAVMESH_EXTENSION)		{ type = ResourceType::NAVMESH; }
+	else											{ type = ResourceType::NONE; }
 
 	return type;
 }
@@ -1850,13 +1812,18 @@ bool M_ResourceManager::ResourceHasMetaType(Resource* resource) const
 		return false;
 	}
 	
-	ResourceType type = resource->GetType();
-	
-	return (type == ResourceType::FOLDER
-			|| type == ResourceType::MODEL
-			|| type == ResourceType::TEXTURE
-			|| type == ResourceType::SHADER
-			|| type == ResourceType::SCRIPT);
+	switch (resource->GetType())
+	{
+		case ResourceType::FOLDER:		{ return true; }	break;
+		case ResourceType::MODEL:		{ return true; }	break;
+		case ResourceType::TEXTURE:		{ return true; }	break;
+		case ResourceType::SHADER:		{ return true; }	break;
+		case ResourceType::PARTICLES:	{ return true; }	break;
+		case ResourceType::SCRIPT:		{ return true; }	break;
+		case ResourceType::NAVMESH:		{ return true; }	break;
+	}
+
+	return false;
 }
 
 bool M_ResourceManager::HasImportIgnoredExtension(const char* assetsPath) const
