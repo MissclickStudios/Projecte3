@@ -57,7 +57,12 @@ void Player::Awake()
 	dashColdown.Stop();
 	stepTimer.Stop();
 
-	//memset(ammoTex, 0, 11 * sizeof(R_Texture*));
+	//if (!bulletStorage)
+	//{
+	//	bulletStorage = App->scene->CreateGameObject("Bullets", App->scene->GetSceneRoot());
+	//	for (uint i = 0; i < BULLET_AMOUNT; ++i)
+	//		bullets[i] = CreateProjectile(i);
+	//}
 	ammo = 10;
 }
 
@@ -66,6 +71,47 @@ void Player::Update()
 	if (App->gameState != GameState::PLAY)
 		return;
 
+	Animations();
+
+	Movement();
+	Weapon();
+	HandleHp();
+
+	HandleAmmo(ammo);
+}
+
+void Player::CleanUp()
+{
+	if (bulletStorage)
+	{
+		for (uint i = 0; i < BULLET_AMOUNT; ++i)
+		{
+			delete bullets[i];
+			bullets[i] = nullptr;
+		}
+
+		App->scene->DeleteGameObject(bulletStorage);
+		bulletStorage = nullptr;
+	}
+
+	if (storedAmmoTex)
+	{
+		for (uint i = 0; i < 11; ++i)
+		{
+			if (ammoTex[i] != 0)
+			{
+				App->resourceManager->FreeResource(ammoTex[i]->GetUID());
+			}
+		}
+	}
+
+	if (full != nullptr) { App->resourceManager->FreeResource(full->GetUID()); }
+	if (half != nullptr) { App->resourceManager->FreeResource(half->GetUID()); }
+	if (empty != nullptr) { App->resourceManager->FreeResource(empty->GetUID()); }
+}
+
+void Player::Animations()
+{
 	if (!playAnim)
 	{
 		aAnimator = gameObject->GetComponent<C_Animator>();
@@ -104,49 +150,6 @@ void Player::Update()
 		}
 		break;
 	}
-
-	if (!bulletStorage)
-	{
-		bulletStorage = App->scene->CreateGameObject("Bullets", App->scene->GetSceneRoot());
-		for (uint i = 0; i < BULLET_AMOUNT; ++i)
-			bullets[i] = CreateProjectile(i);
-	}
-
-	Movement();
-	Weapon();
-	HandleHp();
-
-	HandleAmmo(ammo);
-}
-
-void Player::CleanUp()
-{
-	if (bulletStorage)
-	{
-		for (uint i = 0; i < BULLET_AMOUNT; ++i)
-		{
-			delete bullets[i];
-			bullets[i] = nullptr;
-		}
-
-		App->scene->DeleteGameObject(bulletStorage);
-		bulletStorage = nullptr;
-	}
-
-	if (storedAmmoTex)
-	{
-		for (uint i = 0; i < 11; ++i)
-		{
-			if (ammoTex[i] != 0)
-			{
-				App->resourceManager->FreeResource(ammoTex[i]->GetUID());
-			}
-		}
-	}
-
-	if (full != nullptr) { App->resourceManager->FreeResource(full->GetUID()); }
-	if (half != nullptr) { App->resourceManager->FreeResource(half->GetUID()); }
-	if (empty != nullptr) { App->resourceManager->FreeResource(empty->GetUID()); }
 }
 
 void Player::Movement()
@@ -213,23 +216,6 @@ void Player::Dash(C_RigidBody* rigidBody, int axisX, int axisY)
 
 	dashColdown.Start();
 	dashTime.Start();
-}
-
-void Player::Rotate()
-{
-	//float2 mouse, center, direction;
-	//mouse = MousePositionToWorldPosition();
-	//center.x = GetOwner()->transform->GetWorldPosition().x;
-	//center.y = GetOwner()->transform->GetWorldPosition().z;
-	//mouse.y *= -1;
-	//direction = mouse - center;
-	//direction.Normalize();
-	//
-	//float rad = direction.AimedAngle();
-	//
-	//
-	//float angle = RadToDeg(-rad) + 90;
-	//GetOwner()->transform->SetLocalEulerRotation(float3(0, angle, 0));
 }
 
 void Player::Weapon()
@@ -300,39 +286,32 @@ void Player::Weapon()
 
 Projectile* Player::CreateProjectile(uint index)
 {
-	GameObject* bullet = nullptr;
-	//App->resourceManager->LoadPrefab(bullet.uid, bulletStorage);
-	//char n[10];
-	//sprintf_s(n, "%d", index);
-	//std::string num = n;
-	//std::string name("Bullet" + num);
-	//
-	//bullet->SetName(name.c_str());
+	GameObject* bullet = App->resourceManager->LoadPrefab(this->bullet.uid, bulletStorage);
 
-	//float3 position = float3::zero;
-	//bullet->transform->SetWorldPosition(position);
+	char n[10];
+	sprintf_s(n, "%d", index);
+	std::string num = n;
+	std::string name("Bullet" + num);
+	
+	bullet->SetName(name.c_str());
 
-	//C_Script* script = (C_Script*)bullet->CreateComponent(ComponentType::SCRIPT);
-	//script->resource = (R_Script*)App->resourceManager->GetResourceFromLibrary("Assets/Scripts//Bullet.h");
-	//for (int i = 0; i < script->resource->dataStructures.size(); ++i) {
-	//	if (script->resource->dataStructures[i].first == "Bullet")
-	//	{
-	//		script->LoadData("Bullet", script->resource->dataStructures[i].second);
-	//		((Bullet*)script->scriptData)->SetShooter(this, index);
-	//		break;
-	//	}
-	//}
+	float3 position = float3::zero;
+	bullet->transform->SetWorldPosition(position);
 
+	((Bullet*)bullet->GetComponent<C_Script>()->GetScriptData())->SetShooter(this, index);
 
-	//for (uint i = 0; i < bullet->components.size(); ++i)
-	//	bullet->components[i]->SetIsActive(false);
-	//bullet->SetIsActive(false);
+	for (uint i = 0; i < bullet->components.size(); ++i)
+		bullet->components[i]->SetIsActive(false);
+	bullet->SetIsActive(false);
 
 	return new Projectile(bullet);
 }
 
 void Player::FireBullet(float3 direction)
 {
+	if (!bulletStorage)
+		return;
+
 	if (direction.IsZero())
 		++direction.z;
 
@@ -541,8 +520,8 @@ void Player::HandleHp()
 
 		health += 0.5;
 
-		if (health > 3)
-			health = 3;
+		if (health > maxHealth)
+			health = maxHealth;
 	}
 }
 
@@ -552,8 +531,6 @@ Player* CreatePlayer()
 
 	// Character
 	INSPECTOR_DRAGABLE_FLOAT(script->speed);
-	INSPECTOR_DRAGABLE_FLOAT(script->acceleration);
-	INSPECTOR_DRAGABLE_FLOAT(script->deceleration);
 
 	// Weapon
 	INSPECTOR_DRAGABLE_FLOAT(script->bulletSpeed);
@@ -573,6 +550,7 @@ Player* CreatePlayer()
 
 	// Health
 	INSPECTOR_DRAGABLE_FLOAT(script->health);
+	INSPECTOR_DRAGABLE_FLOAT(script->maxHealth);
 
 	return script;
 }

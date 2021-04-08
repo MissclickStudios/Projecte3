@@ -44,8 +44,6 @@ public:
 
 	// Character
 	float speed = 20.0f;
-	float deceleration = 200.0f;
-	float acceleration = 200.0f;
 
 	// Weapon
 	float bulletSpeed = 100.0f;
@@ -64,9 +62,12 @@ public:
 	float dashingColdown = 1.0f;
 
 	// Health
-	float health = 3;
+	float health = 3.0f;
+	float maxHealth = 3.0f;
 
 private:
+
+	void Animations();
 
 	void Movement();
 	void Move(C_RigidBody* rigidBody, int axisX, int axisY);

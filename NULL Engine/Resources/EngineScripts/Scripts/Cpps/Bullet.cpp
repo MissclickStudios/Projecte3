@@ -3,7 +3,6 @@
 
 #include "GameObject.h"
 #include "C_Transform.h"
-//#include "C_PlayerController.h"
 
 #include "Bullet.h"
 #include "Player.h"
@@ -45,7 +44,7 @@ void Bullet::OnEnable()
 	StartAutodestructTimer();
 }
 
-void Bullet::OnCollisionEnter()
+void Bullet::OnCollisionEnter(GameObject* object)
 {
 	hit = true;
 }
@@ -60,5 +59,9 @@ void Bullet::SetShooter(Player* shooter, uint index)
 Bullet* CreateBullet() 
 {
 	Bullet* script = new Bullet();
+
+	INSPECTOR_DRAGABLE_FLOAT(script->damage);
+	INSPECTOR_DRAGABLE_FLOAT(script->autodestruct);
+
 	return script;
 }

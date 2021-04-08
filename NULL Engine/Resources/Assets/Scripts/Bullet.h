@@ -19,10 +19,14 @@ public:
 
 	void OnEnable() override;
 
-	void OnCollisionEnter() override;
+	void OnCollisionEnter(GameObject* object) override;
 
 	void SetShooter(Player* shooter, uint index);
 	void StartAutodestructTimer() { autodestructTimer.Start(); }
+
+	float damage = 1.0f;
+
+	float autodestruct = 3.0f;
 
 private:
 
@@ -30,7 +34,6 @@ private:
 	Player* shooter = nullptr;
 	uint index = 0;
 
-	float autodestruct = 3.0f;
 	Timer autodestructTimer;
 };
 

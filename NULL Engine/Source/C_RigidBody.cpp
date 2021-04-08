@@ -89,8 +89,11 @@ bool C_RigidBody::CleanUp()
 
 bool C_RigidBody::SaveState(ParsonNode& root) const
 {
-	root.SetNumber("Type", (uint)GetType());												// NOTE: Even if there is no info to store, at least the type has to be saved.
+	root.SetNumber("Type", (uint)GetType());
 	
+	root.SetBool("Is Static", isStatic);
+	root.SetString("Filter", filter.c_str());
+
 	if (!dynamicBody)
 		return false;
 
@@ -108,35 +111,32 @@ bool C_RigidBody::SaveState(ParsonNode& root) const
 	root.SetBool("Freeze Rotation Y", freezeRotationY);
 	root.SetBool("Freeze Rotation Z", freezeRotationZ);
 
-	root.SetBool("Is Static", isStatic);
-
-	root.SetString("Filter", filter.c_str());
-
 	return true;
 }
 
 bool C_RigidBody::LoadState(ParsonNode& root)
 {
-	mass = (float)root.GetNumber("Mass");
-	density = (float)root.GetNumber("Density");
-	linearDamping = (float)root.GetNumber("Linear Damping");
-	angularDamping = (float)root.GetNumber("Angular Damping");
-
-	useGravity = root.GetBool("Use Gravity");
-	isKinematic = root.GetBool("Is Kinematic");
-	freezePositionX = root.GetBool("Freeze Position X");
-	freezePositionY = root.GetBool("Freeze Position Y");
-	freezePositionZ = root.GetBool("Freeze Position Z");
-	freezeRotationX = root.GetBool("Freeze Rotation X");
-	freezeRotationY = root.GetBool("Freeze Rotation Y");
-	freezeRotationZ = root.GetBool("Freeze Rotation Z");
-
 	isStatic = root.GetBool("Is Static");
 	if (isStatic)
 		MakeStatic();
+	else
+	{
+		mass = (float)root.GetNumber("Mass");
+		density = (float)root.GetNumber("Density");
+		linearDamping = (float)root.GetNumber("Linear Damping");
+		angularDamping = (float)root.GetNumber("Angular Damping");
+
+		useGravity = root.GetBool("Use Gravity");
+		isKinematic = root.GetBool("Is Kinematic");
+		freezePositionX = root.GetBool("Freeze Position X");
+		freezePositionY = root.GetBool("Freeze Position Y");
+		freezePositionZ = root.GetBool("Freeze Position Z");
+		freezeRotationX = root.GetBool("Freeze Rotation X");
+		freezeRotationY = root.GetBool("Freeze Rotation Y");
+		freezeRotationZ = root.GetBool("Freeze Rotation Z");
+	}
 
 	filter = root.GetString("Filter");
-	
 	// Used because when loading the rigidbody is created before the colliders so whe have to wait a till the update to update their filters
 	toChangeFilter = true;				
 
