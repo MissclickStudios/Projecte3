@@ -5,6 +5,7 @@
 #include "M_Camera3D.h"
 #include "M_Editor.h"
 #include "M_Scene.h"
+#include "M_UISystem.h"
 
 #include "C_Material.h"
 #include "C_Canvas.h"
@@ -133,6 +134,16 @@ bool C_UI_Image::SaveState(ParsonNode& root) const
 	image.SetNumber("W", GetRect().w);
 	image.SetNumber("H", GetRect().h);
 
+	if (strcmp(GetOwner()->GetName(), "Hovered Decoration L") == 0)
+		image.SetBool("IsHDL", true);
+	else
+		image.SetBool("IsHDL", false);
+
+	if (strcmp(GetOwner()->GetName(), "Hovered Decoration R") == 0)
+		image.SetBool("IsHDR", true);
+	else
+		image.SetBool("IsHDR", false);
+
 	return ret;
 }
 
@@ -151,6 +162,17 @@ bool C_UI_Image::LoadState(ParsonNode& root)
 
 	SetRect(r);
 
+	if (image.GetBool("IsHDL"))
+	{
+		App->uiSystem->hoveredDecorationL = this;
+		App->uiSystem->isHoverDecorationAdded = true;
+	}
+
+	if (image.GetBool("IsHDR"))
+	{
+		App->uiSystem->hoveredDecorationR = this;
+		App->uiSystem->isHoverDecorationAdded = true;
+	}
 	return ret;
 }
 

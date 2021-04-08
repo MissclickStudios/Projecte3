@@ -28,8 +28,6 @@ C_UI_Button::C_UI_Button(GameObject* owner, Rect2D rect) : Component(owner, Comp
 		App->uiSystem->hoveredButton = this;
 	}
 	App->uiSystem->activeButtons.push_back(this);
-
-	//owner->CreateComponent(ComponentType::MATERIAL);// Temp: this is just so buttons have colors when created
 }
 
 C_UI_Button::~C_UI_Button()
@@ -75,11 +73,11 @@ void C_UI_Button::Draw2D()
 	glMultMatrixf((GLfloat*)&GetOwner()->parent->GetComponent<C_Transform>()->GetWorldTransform().Transposed());
 
 	if (state == UIButtonState::HOVERED)
-		glColor4f(1.0f, 0.0f, 1.0f, 1.0f);
-	else if(state==UIButtonState::PRESSED)
-		glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
-	else
 		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+	else if(state==UIButtonState::PRESSED)
+		glColor4f(1.0f, 0.4f, 0.0f, 1.0f);
+	else
+		glColor4f(1.0f, 1.0f, 0.0f, 1.0f);
 	
 	uint32 id = GetOwner()->GetComponent<C_Material>()->GetTextureID();
 	glBindTexture(GL_TEXTURE_2D, id);
@@ -179,7 +177,10 @@ bool C_UI_Button::LoadState(ParsonNode& root)
 	SetRect(r);
 
 	if (button.GetBool("IsHovered"))
+	{
 		state = UIButtonState::HOVERED;
+		App->uiSystem->hoveredButton = this;
+	}
 	else
 		state = UIButtonState::IDLE;
 

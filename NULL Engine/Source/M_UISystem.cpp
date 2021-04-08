@@ -235,6 +235,9 @@ void M_UISystem::UpdateActiveButtons()
 
 void M_UISystem::InitHoveredDecorations()
 {
+	if (hoveredDecorationL != nullptr || hoveredDecorationR != nullptr)
+		return;
+
 	GameObject* canvas = hoveredButton->GetOwner()->parent;
 	GameObject* newGOL = nullptr;
 	GameObject* newGOR = nullptr;
@@ -242,13 +245,13 @@ void M_UISystem::InitHoveredDecorations()
 	newGOL = App->scene->CreateGameObject("Hovered Decoration L", canvas);
 	hoveredDecorationL = (C_UI_Image*)newGOL->CreateComponent(ComponentType::UI_IMAGE);
 	newGOL->CreateComponent(ComponentType::MATERIAL);
-	Rect2D rectL = { (hoveredButton->GetRect().x - hoveredButton->GetRect().w / 2 - 0.02), hoveredButton->GetRect().y, 0.01,0.01 };
+	Rect2D rectL = { (hoveredButton->GetRect().x - hoveredButton->GetRect().w / 2 - 0.04), hoveredButton->GetRect().y, 0.02,0.02 };
 	hoveredDecorationL->SetRect(rectL);
 
 	newGOR = App->scene->CreateGameObject("Hovered Decoration R", canvas);
 	hoveredDecorationR = (C_UI_Image*)newGOR->CreateComponent(ComponentType::UI_IMAGE);
 	newGOR->CreateComponent(ComponentType::MATERIAL);
-	Rect2D rectR = { hoveredButton->GetRect().x + 0.01 + hoveredButton->GetRect().w / 2, hoveredButton->GetRect().y, 0.01,0.01 };
+	Rect2D rectR = { hoveredButton->GetRect().x + 0.02 + hoveredButton->GetRect().w / 2, hoveredButton->GetRect().y, 0.02,0.02 };
 	hoveredDecorationR->SetRect(rectR);
 
 	isHoverDecorationAdded = true;
