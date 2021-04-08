@@ -99,7 +99,7 @@ UpdateStatus M_UISystem::PreUpdate(float dt)
 UpdateStatus M_UISystem::Update(float dt)
 {
 	UpdateActiveButtons();
-	CheckButtonStates();
+	//CheckButtonStates();
 	
 	if (hoveredDecorationL != nullptr && hoveredDecorationR != nullptr)
 		UpdateHoveredDecorations();
