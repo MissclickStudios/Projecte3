@@ -266,13 +266,13 @@ void C_Script::OnEnable()
 	}
 }
 
-void C_Script::OnCollisionEnter(GameObject* object)
+void C_Script::OnCollisionEnter()
 {
 	if (engineScript && scriptData != nullptr) {
 #ifndef GAMEBUILD
 		try {
 			Script* script = (Script*)scriptData;
-			script->OnCollisionEnter(object);
+			script->OnCollisionEnter();
 		}
 		catch (...)
 		{
@@ -284,13 +284,13 @@ void C_Script::OnCollisionEnter(GameObject* object)
 	}
 }
 
-void C_Script::OnCollisionRepeat(GameObject* object)
+void C_Script::OnCollisionRepeat()
 {
 	if (engineScript && scriptData != nullptr) {
 #ifndef GAMEBUILD
 		try {
 			Script* script = (Script*)scriptData;
-			script->OnCollisionRepeat(object);
+			script->OnCollisionRepeat();
 		}
 		catch (...)
 		{
@@ -302,13 +302,13 @@ void C_Script::OnCollisionRepeat(GameObject* object)
 	}
 }
 
-void C_Script::OnCollisionExit(GameObject* object)
+void C_Script::OnCollisionExit()
 {
 	if (engineScript && scriptData != nullptr) {
 #ifndef GAMEBUILD
 		try {
 			Script* script = (Script*)scriptData;
-			script->OnCollisionExit(object);
+			script->OnCollisionExit();
 		}
 		catch (...)
 		{
@@ -320,13 +320,13 @@ void C_Script::OnCollisionExit(GameObject* object)
 	}
 }
 
-void C_Script::OnTriggerEnter(GameObject* object)
+void C_Script::OnTriggerEnter()
 {
 	if (engineScript && scriptData != nullptr) {
 #ifndef GAMEBUILD
 		try {
 			Script* script = (Script*)scriptData;
-			script->OnTriggerEnter(object);
+			script->OnTriggerEnter();
 		}
 		catch (...)
 		{
@@ -338,13 +338,13 @@ void C_Script::OnTriggerEnter(GameObject* object)
 	}
 }
 
-void C_Script::OnTriggerRepeat(GameObject* object)
+void C_Script::OnTriggerRepeat()
 {
 	if (engineScript && scriptData != nullptr) {
 #ifndef GAMEBUILD
 		try {
 			Script* script = (Script*)scriptData;
-			script->OnTriggerRepeat(object);
+			script->OnTriggerRepeat();
 		}
 		catch (...)
 		{
@@ -356,13 +356,13 @@ void C_Script::OnTriggerRepeat(GameObject* object)
 	}
 }
 
-void C_Script::OnTriggerExit(GameObject* object)
+void C_Script::OnTriggerExit()
 {
 	if (engineScript && scriptData != nullptr) {
 #ifndef GAMEBUILD
 		try {
 			Script* script = (Script*)scriptData;
-			script->OnTriggerExit(object);
+			script->OnTriggerExit();
 		}
 		catch (...)
 		{

@@ -26,19 +26,19 @@ void SimulationCallback::onContact(const physx::PxContactPairHeader& pairHeader,
 			for (uint i = 0; i < gameObject1->components.size(); ++i)
 				if (gameObject1->components[i]->GetType() == ComponentType::SCRIPT)
 					if (cPair.events & physx::PxPairFlag::eNOTIFY_TOUCH_FOUND)
-						((C_Script*)gameObject1->components[i])->OnCollisionEnter(gameObject2);
+						((C_Script*)gameObject1->components[i])->OnCollisionEnter();
 					else if (cPair.events & physx::PxPairFlag::eNOTIFY_TOUCH_PERSISTS)
-						((C_Script*)gameObject1->components[i])->OnCollisionRepeat(gameObject2);
+						((C_Script*)gameObject1->components[i])->OnCollisionRepeat();
 					else if (cPair.events & physx::PxPairFlag::eNOTIFY_TOUCH_LOST)
-						((C_Script*)gameObject1->components[i])->OnCollisionExit(gameObject2);
+						((C_Script*)gameObject1->components[i])->OnCollisionExit();
 			for (uint i = 0; i < gameObject2->components.size(); ++i)
 				if (gameObject2->components[i]->GetType() == ComponentType::SCRIPT)
 					if (cPair.events & physx::PxPairFlag::eNOTIFY_TOUCH_FOUND)
-						((C_Script*)gameObject2->components[i])->OnCollisionEnter(gameObject1);
+						((C_Script*)gameObject2->components[i])->OnCollisionEnter();
 					else if (cPair.events & physx::PxPairFlag::eNOTIFY_TOUCH_PERSISTS)
-						((C_Script*)gameObject2->components[i])->OnCollisionRepeat(gameObject1);
+						((C_Script*)gameObject2->components[i])->OnCollisionRepeat();
 					else if (cPair.events & physx::PxPairFlag::eNOTIFY_TOUCH_LOST)
-						((C_Script*)gameObject2->components[i])->OnCollisionExit(gameObject1);
+						((C_Script*)gameObject2->components[i])->OnCollisionExit();
 		}
 	}
 }
@@ -57,19 +57,19 @@ void SimulationCallback::onTrigger(physx::PxTriggerPair* pairs, physx::PxU32 cou
 			for (uint i = 0; i < gameObject1->components.size(); ++i)
 				if (gameObject1->components[i]->GetType() == ComponentType::SCRIPT)
 					if ((pairs[i].status & physx::PxPairFlag::eNOTIFY_TOUCH_FOUND))
-						((C_Script*)gameObject1->components[i])->OnTriggerEnter(gameObject2);
+						((C_Script*)gameObject1->components[i])->OnTriggerEnter();
 					else if ((pairs[i].status & physx::PxPairFlag::eNOTIFY_TOUCH_PERSISTS))
-						((C_Script*)gameObject1->components[i])->OnTriggerRepeat(gameObject2);
+						((C_Script*)gameObject1->components[i])->OnTriggerRepeat();
 					else if ((pairs[i].status & physx::PxPairFlag::eNOTIFY_TOUCH_LOST))
-						((C_Script*)gameObject1->components[i])->OnTriggerExit(gameObject2);
+						((C_Script*)gameObject1->components[i])->OnTriggerExit();
 			for (uint i = 0; i < gameObject2->components.size(); ++i)
 				if (gameObject2->components[i]->GetType() == ComponentType::SCRIPT)
 					if ((pairs[i].status & physx::PxPairFlag::eNOTIFY_TOUCH_FOUND))
-						((C_Script*)gameObject2->components[i])->OnTriggerEnter(gameObject1);
+						((C_Script*)gameObject2->components[i])->OnTriggerEnter();
 					else if ((pairs[i].status & physx::PxPairFlag::eNOTIFY_TOUCH_PERSISTS))
-						((C_Script*)gameObject2->components[i])->OnTriggerRepeat(gameObject1);
+						((C_Script*)gameObject2->components[i])->OnTriggerRepeat();
 					else if ((pairs[i].status & physx::PxPairFlag::eNOTIFY_TOUCH_LOST))
-						((C_Script*)gameObject2->components[i])->OnTriggerExit(gameObject1);
+						((C_Script*)gameObject2->components[i])->OnTriggerExit();
 		}
 	}
 }

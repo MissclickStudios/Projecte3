@@ -29,7 +29,7 @@ void Prop::CleanUp()
 {
 }
 
-void Prop::OnCollisionEnter(GameObject* object)
+void Prop::OnCollisionEnter()
 {
 	dead = true;
 }

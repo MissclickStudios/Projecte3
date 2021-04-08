@@ -45,7 +45,7 @@ void Bullet::OnEnable()
 	StartAutodestructTimer();
 }
 
-void Bullet::OnCollisionEnter(GameObject* object)
+void Bullet::OnCollisionEnter()
 {
 	hit = true;
 }

@@ -46,7 +46,6 @@ bool C_RigidBody::Update()
 
 	if (toChangeFilter)
 	{
-		// Used because when loading the rigidbody is created before the colliders so whe have to wait a till the update to update their filters		
 		toChangeFilter = false;
 		ChangeFilter(filter);
 	}
@@ -137,6 +136,9 @@ bool C_RigidBody::LoadState(ParsonNode& root)
 		MakeStatic();
 
 	filter = root.GetString("Filter");
+	
+	// Used because when loading the rigidbody is created before the colliders so whe have to wait a till the update to update their filters
+	toChangeFilter = true;				
 
 	ApplyPhysicsChanges();
 
