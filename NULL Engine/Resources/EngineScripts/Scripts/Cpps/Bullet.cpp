@@ -3,8 +3,10 @@
 
 #include "GameObject.h"
 #include "C_Transform.h"
+//#include "C_PlayerController.h"
 
 #include "Bullet.h"
+#include "Player.h"
 
 Bullet::Bullet() : Script()
 {
@@ -29,8 +31,7 @@ void Bullet::Update()
 			gameObject->components[i]->SetIsActive(false);
 		gameObject->SetIsActive(false);
 
-		//TODO
-		//shooter->GetComponent<PlayerController>()->bullets[index]->inUse = false; 
+		shooter->bullets[index]->inUse = false;
 		autodestructTimer.Stop();
 	}
 }
@@ -39,13 +40,25 @@ void Bullet::CleanUp()
 {
 }
 
+void Bullet::OnEnable()
+{
+	StartAutodestructTimer();
+}
+
 void Bullet::OnCollisionEnter()
 {
 	hit = true;
 }
 
-void Bullet::SetShooter(GameObject* shooter, uint index)
+void Bullet::SetShooter(Player* shooter, uint index)
 {
 	this->shooter = shooter;
 	this->index = index;
+}
+
+
+Bullet* CreateBullet() 
+{
+	Bullet* script = new Bullet();
+	return script;
 }

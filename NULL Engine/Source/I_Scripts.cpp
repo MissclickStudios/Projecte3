@@ -40,9 +40,9 @@ bool Importer::Scripts::Import(const char* assetsPath, char* buffer, uint size, 
 	}
 
 	//TODO: Go to class/struct first and then checking if it is exportable
-	while (Parser::GoStartSymbol(cursor, api, apiSize) == Parser::ParsingState::CONTINUE)
+	while (Parser::GoEndSymbol(cursor, api, apiSize) == Parser::ParsingState::CONTINUE)
 	{
-		char* classStructString = nullptr;
+		/*char* classStructString = nullptr;
 		unsigned int classStructSize;
 		//TODO: Will not work if the 1st symbol of the file is SCRIPTS_API / Will not work if ther is a comment between SCRIPTS_API and class/struct keyword
 		Parser::ReadPreaviousSymbol(cursor, classStructString, classStructSize);
@@ -50,8 +50,8 @@ bool Importer::Scripts::Import(const char* assetsPath, char* buffer, uint size, 
 		{
 			LOG("[ERROR] Not imported scripts from file %s because found %s macro that doesn't have class/struct infront", api);
 			return false;
-		}
-		Parser::GoEndSymbol(cursor, api, apiSize);
+		}*/
+		//Parser::GoEndSymbol(cursor, api, apiSize);
 
 		char* scriptFirstCharacter = nullptr;
 		unsigned int nameSize;
@@ -140,6 +140,7 @@ bool Importer::Scripts::Import(const char* assetsPath, char* buffer, uint size, 
 				return false;
 			}
 			//Check if a Create Function exists for that script
+			std::string name("Create" + scriptName);
 			if (strstr(buffer, std::string("Create" + scriptName).c_str()) == nullptr)
 			{
 				LOG("[WARNING] Can't use script %s in file %s because it doesn't have a Create%s() function", scriptName.c_str(), assetsPath, scriptName.c_str());
@@ -164,7 +165,10 @@ bool Importer::Scripts::Import(const char* assetsPath, char* buffer, uint size, 
 	}
 
 	if (rScript->dataStructures.empty()) 
+	{
 		LOG("[WARNING] No scripts found on file %s", assetsPath);
+		return false;
+	}
 
 	//PROFILE FUNCTION TIME
 	/*float time = importTime.ReadMs();
@@ -263,12 +267,12 @@ bool Parser::LanguageSymbol(char symbol)
 void Parser::ReadPreaviousSymbol(char* cursor, char*& startSymbol, unsigned int& symbolSize)
 {
 	--cursor;
-	while (*cursor == ' ' || *cursor == '\t' || *cursor == '\n')
+	while (*cursor == ' ' || *cursor == '\t' || *cursor == '\n' || *cursor == '\r')
 	{
 		--cursor;
 	}
 	symbolSize = 0;
-	while (*cursor != ' ' && *cursor != '\t' && *cursor != '\n')
+	while (*cursor != ' ' && *cursor != '\t' && *cursor != '\n' || *cursor != '\r')
 	{
 		++symbolSize;
 		--cursor;
@@ -301,8 +305,9 @@ Parser::ParsingState Parser::HandlePossibleComment(char*& cursor)
 			return Parser::ParsingState::CONTINUE;
 		case '\0':
 			return Parser::ParsingState::ERROR;
-		default://TODO: /(OPERATOR MAY BE VALID)  example a /-3; But if we are parsing a header file we normally don't perform division operations
-			return Parser::ParsingState::ERROR;
+		default://TODO: /(OPERATOR MAY BE VALID)  example a /-3; But if we are parsing a header file we normally don't perform division operations 
+			//TODO: bug include paths
+			return Parser::ParsingState::CONTINUE;
 		}
 	}
 	return Parser::ParsingState::CONTINUE;
@@ -354,7 +359,7 @@ Parser::ParsingState Parser::ReadNextSymbol(char*& cursor, char*& startSymbol, u
 {
 	symbolSize = 0;
 
-	while (*cursor == ' ' || *cursor == '\t' || *cursor == '\n' || *cursor == '/')
+	while (*cursor == ' ' || *cursor == '\t' || *cursor == '\n' || *cursor == '/' || *cursor == '\r')
 	{
 		Parser::ParsingState stateAfterComment = HandlePossibleComment(cursor);
 		if (stateAfterComment == Parser::ParsingState::ENDFILE)
@@ -389,7 +394,7 @@ Parser::ParsingState Parser::ReadNextSymbol(char*& cursor, char*& startSymbol, u
 
 Parser::ParsingState Parser::GoNextSymbol(char*& cursor)
 {
-	while (*cursor == ' ' || *cursor == '\t' || *cursor == '\n' || *cursor == '/')
+	while (*cursor == ' ' || *cursor == '\t' || *cursor == '\n' || *cursor == '/' || *cursor == '\r')
 	{
 		Parser::ParsingState stateAfterComment = HandlePossibleComment(cursor);
 		if (stateAfterComment == Parser::ParsingState::ENDFILE)

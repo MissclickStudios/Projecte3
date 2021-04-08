@@ -8,7 +8,6 @@
 
 #include "EditorPanel.h"
 
-class Resource;
 class R_Texture;
 enum class ResourceType;
 
@@ -34,9 +33,6 @@ public:
 
 	bool Draw		(ImGuiIO& io) override;
 	bool CleanUp	() override;
-
-public:
-	const char*		GetDraggedAsset					() const;
 
 private:
 	void			CheckFlags						();
@@ -83,9 +79,6 @@ private:																									// --- ENGINE ICONS VARS
 	ImVec2					iconOffset;
 	ImVec2					textOffset;
 	ImVec2					winSize;
-
-	Resource*				draggedResource;
-	std::string				draggedAsset;
 };
 
 #endif // !__E_PROJECT_H__

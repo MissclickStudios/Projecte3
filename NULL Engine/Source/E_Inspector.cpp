@@ -819,7 +819,6 @@ void E_Inspector::DrawAudioSourceComponent(C_AudioSource* cAudioSource)
     ImGui::Separator();
 }
 
-
 void E_Inspector::DrawRigidBodyComponent(C_RigidBody* cRigidBody)
 {
 	bool show = true;
@@ -831,24 +830,24 @@ void E_Inspector::DrawRigidBodyComponent(C_RigidBody* cRigidBody)
 			bool isActive = cRigidBody->IsActive();
 			if (ImGui::Checkbox("RigidBody Is Active", &isActive))
 				cRigidBody->SetIsActive(isActive);
-	
+
 			ImGui::SameLine();
-	
+
 			if (ImGui::Button("Make Dynamic"))
 				cRigidBody->MakeDynamic();
-	
+
 			ImGui::Separator();
 
 			RigidBodyFilterCombo(cRigidBody);
 
 			ImGui::Separator();
-	
+			
 			if (!show)
 			{
 				componentToDelete = cRigidBody;
 				showDeleteComponentPopup = true;
 			}
-	
+
 			ImGui::Separator();
 		}
 		return;
@@ -1382,12 +1381,12 @@ void E_Inspector::DrawScriptComponent(C_Script* cScript)
 	if (ImGui::CollapsingHeader((cScript->GetDataName() + " (Script)").c_str(), &show, ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		//TODO: Show inspector variables
-		ImGui::Text("Name %s", cScript->GetDataName().c_str());
+		ImGui::Text("Name: %s", cScript->GetDataName().c_str());
 		ImGui::Spacing();
 		ImGui::Separator();
 		ImGui::Spacing();
 		std::vector<InspectorScriptData> inspectorVariables = cScript->GetInspectorVariables();
-		for (std::vector<InspectorScriptData>::const_iterator variable = inspectorVariables.cbegin(); variable != inspectorVariables.cend(); ++variable)
+		for (std::vector<InspectorScriptData>::iterator variable = inspectorVariables.begin(); variable != inspectorVariables.end(); ++variable)
 		{
 			switch ((*variable).variableType) 
 			{
@@ -1416,6 +1415,55 @@ void E_Inspector::DrawScriptComponent(C_Script* cScript)
 					ImGui::SliderFloat((*variable).variableName.data(), (float*)(*variable).ptr, (*variable).minSlider, (*variable).maxSlider); break;
 				}
 				break;
+			case InspectorScriptData::DataType::PREFAB:
+				ImGui::Button((((Prefab*)(*variable).ptr)->name.empty()) ? "Prefab: NULL" : std::string("Prefab: " + ((Prefab*)(*variable).ptr)->name).data(), { ImGui::GetWindowWidth() * 0.55F , 0});
+				if (ImGui::BeginDragDropTarget()) 
+				{
+					if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DRAGGED_ASSET"))
+					{
+						if (App->fileSystem->GetFileExtension(*(const char**)payload->Data) == "prefab") 
+						{
+							std::string uidString;
+							App->fileSystem->SplitFilePath(*(const char**)payload->Data, nullptr, &uidString, nullptr);
+							unsigned int prefabUid = std::atoi(uidString.c_str());
+							*(Prefab*)(*variable).ptr = EngineApp->resourceManager->prefabs[prefabUid];
+						}
+
+					}
+					ImGui::EndDragDropTarget();
+				}
+				ImGui::SameLine();
+				if (ImGui::Button(("Remove " + (*variable).variableName).c_str())) //Maybe variables with the same name of different scripts on the same gameobject collide for imgui...
+				{
+					(*(Prefab*)(*variable).ptr).name.clear();
+					(*(Prefab*)(*variable).ptr).uid = 0;
+					(*(Prefab*)(*variable).ptr).updateTime = 0;
+				}
+				break;
+			case InspectorScriptData::DataType::GAMEOBJECT:
+				ImGui::Button(((*variable).ptr != nullptr && *(GameObject**)(*variable).ptr != nullptr) ? std::string("GameObject: "  + std::string((*(GameObject**)(*variable).ptr)->GetName())).data() : "GameObject: NULL", { ImGui::GetWindowWidth() * 0.55F , 0 });
+				if (ImGui::BeginDragDropTarget())
+				{
+					if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DRAGGED_NODE"))
+					{
+						//GameObject** ptr = (GameObject**)payload->Data;
+						void* obj = payload->Data;
+						if (obj != nullptr) 
+						{
+							//memcpy(&((*variable).ptr), &obj, sizeof(void*));
+							(*variable).ptr = obj;
+							//(*variable).ptr = (GameObject***)&obj;
+							std::string nameee = (*(GameObject**)(*variable).ptr)->GetName();
+							//(*variable).ptr = obj;
+						}
+					}
+					ImGui::EndDragDropTarget();
+				}
+				//ImGui::SameLine();
+				//if (ImGui::Button(("Remove " + (*variable).variableName).c_str()))
+					//if ((*variable).ptr != nullptr)
+					//	*(GameObject***)(*variable).ptr = nullptr;
+				//break;
 			}
 			ImGui::Spacing();
 			ImGui::Separator();

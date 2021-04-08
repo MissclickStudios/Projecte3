@@ -4,6 +4,7 @@
 #include "MathGeoLib/include/Math/float3.h"
 #include "Application.h"
 #include "M_Input.h"
+#include "GameObject.h"
 
 FirstScript::FirstScript() : Script()
 {
