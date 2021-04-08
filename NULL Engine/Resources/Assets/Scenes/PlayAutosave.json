@@ -66,7 +66,7 @@
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
-            "ShowBoundingBoxes": true,
+            "ShowBoundingBoxes": false,
             "Components": [
                 {
                     "Type": 1,
@@ -114,70 +114,6 @@
                     "Center X": 0,
                     "Center Y": 0,
                     "Center Z": 0
-                },
-                {
-                    "Type": 23,
-                    "ResourceUID": 325257863,
-                    "AssetsPath": "Assets\/Scripts\/\/FirstScript.h",
-                    "DataName": "FirstScript",
-                    "HasInspector": true,
-                    "InspectorVariables": [
-                        {
-                            "Type": 0,
-                            "Name": "firstVariable",
-                            "int": 1
-                        },
-                        {
-                            "Type": 0,
-                            "Name": "inputInt",
-                            "int": 1
-                        },
-                        {
-                            "Type": 0,
-                            "Name": "dragableInt",
-                            "int": 2
-                        },
-                        {
-                            "Type": 0,
-                            "Name": "sliderInt",
-                            "int": 3
-                        },
-                        {
-                            "Type": 1,
-                            "Name": "checkBoxBool",
-                            "bool": false
-                        },
-                        {
-                            "Type": 2,
-                            "Name": "inputFloat",
-                            "float": 1.1000000238418579
-                        },
-                        {
-                            "Type": 2,
-                            "Name": "dragFloat",
-                            "float": 2.2000000476837158
-                        },
-                        {
-                            "Type": 2,
-                            "Name": "sliderFloat",
-                            "float": 3.2999999523162842
-                        },
-                        {
-                            "Type": 3,
-                            "Name": "tryPrefab",
-                            "prefab": 0
-                        },
-                        {
-                            "Type": 3,
-                            "Name": "prefab2",
-                            "prefab": 0
-                        },
-                        {
-                            "Type": 4,
-                            "Name": "object",
-                            "gameobject": 69495388
-                        }
-                    ]
                 }
             ]
         },
@@ -217,7 +153,9 @@
                         "X": -0.44999998807907104,
                         "Y": 0.20000000298023224,
                         "W": 0.16500000655651093,
-                        "H": 0.16500000655651093
+                        "H": 0.16500000655651093,
+                        "IsHDL": false,
+                        "IsHDR": false
                     }
                 },
                 {
@@ -641,7 +579,9 @@
                         "X": -0.40999999642372131,
                         "Y": 0.25,
                         "W": 0.045000001788139343,
-                        "H": 0.045000001788139343
+                        "H": 0.045000001788139343,
+                        "IsHDL": false,
+                        "IsHDR": false
                     }
                 },
                 {
@@ -1333,7 +1273,9 @@
                         "X": -0.48500001430511475,
                         "Y": 0.15000000596046448,
                         "W": 0.079999998211860657,
-                        "H": 0.079999998211860657
+                        "H": 0.079999998211860657,
+                        "IsHDL": false,
+                        "IsHDR": false
                     }
                 },
                 {
@@ -1533,7 +1475,7 @@
         },
         {
             "UID": 888400124,
-            "ParentUID": 478603029,
+            "ParentUID": 1940957376,
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "MainScene",
@@ -1757,7 +1699,9 @@
                         "X": -0.36500000953674316,
                         "Y": 0.25,
                         "W": 0.045000001788139343,
-                        "H": 0.045000001788139343
+                        "H": 0.045000001788139343,
+                        "IsHDL": false,
+                        "IsHDR": false
                     }
                 },
                 {
@@ -2112,7 +2056,9 @@
                         "X": 0.40000000596046448,
                         "Y": 0.14000000059604645,
                         "W": 0.27500000596046448,
-                        "H": 0.27500000596046448
+                        "H": 0.27500000596046448,
+                        "IsHDL": false,
+                        "IsHDR": false
                     }
                 },
                 {
@@ -2156,7 +2102,9 @@
                         "X": -0.36700001358985901,
                         "Y": 0.1550000011920929,
                         "W": 0.15000000596046448,
-                        "H": 0.15000000596046448
+                        "H": 0.15000000596046448,
+                        "IsHDL": false,
+                        "IsHDR": false
                     }
                 },
                 {
@@ -2328,7 +2276,9 @@
                         "X": 0.44699999690055847,
                         "Y": -0.17000000178813934,
                         "W": 0.18000000715255737,
-                        "H": 0.18000000715255737
+                        "H": 0.18000000715255737,
+                        "IsHDL": false,
+                        "IsHDR": false
                     }
                 },
                 {
@@ -2692,77 +2642,13 @@
                 },
                 {
                     "Type": 23,
-                    "ResourceUID": 645819728,
-                    "AssetsPath": "Assets\/Scripts\/\/Player.h",
-                    "DataName": "Player",
-                    "HasInspector": true,
-                    "InspectorVariables": [
-                        {
-                            "Type": 2,
-                            "Name": "speed",
-                            "float": 20
-                        },
-                        {
-                            "Type": 2,
-                            "Name": "acceleration",
-                            "float": 200
-                        },
-                        {
-                            "Type": 2,
-                            "Name": "deceleration",
-                            "float": 200
-                        },
-                        {
-                            "Type": 2,
-                            "Name": "bulletSpeed",
-                            "float": 100
-                        },
-                        {
-                            "Type": 2,
-                            "Name": "fireRate",
-                            "float": 0.25
-                        },
-                        {
-                            "Type": 0,
-                            "Name": "ammo",
-                            "int": 10
-                        },
-                        {
-                            "Type": 0,
-                            "Name": "maxAmmo",
-                            "int": 10
-                        },
-                        {
-                            "Type": 1,
-                            "Name": "automatic",
-                            "bool": true
-                        },
-                        {
-                            "Type": 3,
-                            "Name": "bullet",
-                            "prefab": 528499712
-                        },
-                        {
-                            "Type": 2,
-                            "Name": "dashSpeed",
-                            "float": 100
-                        },
-                        {
-                            "Type": 2,
-                            "Name": "dashingTime",
-                            "float": 0.20000000298023224
-                        },
-                        {
-                            "Type": 2,
-                            "Name": "dashingColdown",
-                            "float": 1
-                        },
-                        {
-                            "Type": 2,
-                            "Name": "health",
-                            "float": 3
-                        }
-                    ]
+                    "Button": {
+                        "X": -1,
+                        "Y": -1,
+                        "W": -1,
+                        "H": -1,
+                        "IsHovered": false
+                    }
                 }
             ]
         },
@@ -2802,7 +2688,9 @@
                         "X": -0.41999998688697815,
                         "Y": -0.18000000715255737,
                         "W": 0.14499999582767487,
-                        "H": 0.14499999582767487
+                        "H": 0.14499999582767487,
+                        "IsHDL": false,
+                        "IsHDR": false
                     }
                 },
                 {
@@ -2902,10 +2790,13 @@
                 },
                 {
                     "Type": 23,
-                    "ResourceUID": 1710105955,
-                    "AssetsPath": "Assets\/Scripts\/\/Gate.h",
-                    "DataName": "Gate",
-                    "HasInspector": false
+                    "Button": {
+                        "X": -1,
+                        "Y": -1,
+                        "W": -1,
+                        "H": -1,
+                        "IsHovered": false
+                    }
                 }
             ]
         },
@@ -3071,7 +2962,9 @@
                         "X": -0.31999999284744263,
                         "Y": 0.25,
                         "W": 0.045000001788139343,
-                        "H": 0.045000001788139343
+                        "H": 0.045000001788139343,
+                        "IsHDL": false,
+                        "IsHDR": false
                     }
                 },
                 {
@@ -3534,6 +3427,52 @@
             ]
         },
         {
+            "UID": 1701828043,
+            "ParentUID": 888400124,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Hovered Decoration R",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": true,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 21,
+                    "Image": {
+                        "X": -2.9975958020266394e+18,
+                        "Y": -1.9983971555381084e+18,
+                        "W": 0.019999999552965164,
+                        "H": 0.019999999552965164,
+                        "IsHDL": false,
+                        "IsHDR": true
+                    }
+                },
+                {
+                    "Type": 3
+                }
+            ]
+        },
+        {
             "UID": 1734446529,
             "ParentUID": 961936944,
             "PrefabID": 0,
@@ -3626,6 +3565,52 @@
                         1,
                         0.99999994039535522
                     ]
+                }
+            ]
+        },
+        {
+            "UID": 1764370480,
+            "ParentUID": 888400124,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Hovered Decoration L",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": true,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 21,
+                    "Image": {
+                        "X": -9.9919857776905421e+17,
+                        "Y": -1.9983971555381084e+18,
+                        "W": 0.019999999552965164,
+                        "H": 0.019999999552965164,
+                        "IsHDL": true,
+                        "IsHDR": false
+                    }
+                },
+                {
+                    "Type": 3
                 }
             ]
         },
@@ -3951,7 +3936,9 @@
                         "X": 0.36000001430511475,
                         "Y": -0.039999999105930328,
                         "W": 0.34999999403953552,
-                        "H": 0.34999999403953552
+                        "H": 0.34999999403953552,
+                        "IsHDL": false,
+                        "IsHDR": false
                     }
                 },
                 {

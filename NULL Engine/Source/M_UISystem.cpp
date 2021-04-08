@@ -209,7 +209,7 @@ void M_UISystem::UpdateActiveButtons()
 	// Create a new list and empty the other one into this one
 	std::vector<C_UI_Button*> newButtonsList;
 
-	while (!activeButtons.empty())
+	/*while (!activeButtons.empty())
 	{
 		float y = -999;
 		for (std::vector<C_UI_Button*>::iterator buttonIt = activeButtons.begin(); buttonIt != activeButtons.end(); buttonIt++)
@@ -230,7 +230,7 @@ void M_UISystem::UpdateActiveButtons()
 			}
 		}
 	}
-	activeButtons = newButtonsList;
+	activeButtons = newButtonsList;*/
 }
 
 void M_UISystem::InitHoveredDecorations()
