@@ -60,27 +60,37 @@ bool M_Physics::Init(ParsonNode& root)
 	return true;
 }
 
+enum class ContactType
+{
+	NOTIFY,
+	DEFAULT,
+	IGNORE
+};
+
 physx::PxFilterFlags customFilterShader(
 	physx::PxFilterObjectAttributes attributes0, physx::PxFilterData filterData0,
 	physx::PxFilterObjectAttributes attributes1, physx::PxFilterData filterData1,
 	physx::PxPairFlags& pairFlags, const void* constantBlock, physx::PxU32 constantBlockSize)
 {
-	bool contact = false;
+	ContactType contact = ContactType::IGNORE;
 	int filter0 = App->physics->GetFilterID((std::string*)filterData0.word0);
 	int filter1 = App->physics->GetFilterID((std::string*)filterData1.word0);
 
 	if (filter0 == -1 || filter1 == -1)
-		contact = true;
+		contact = ContactType::DEFAULT;
 	else if (App->physics->GetInteractions()[filter0][filter1])
-		contact = true;
+		contact = ContactType::NOTIFY;
 
-	if (contact)
+	if (contact == ContactType::NOTIFY || contact == ContactType::DEFAULT)
 	{
 		pairFlags = physx::PxPairFlag::eCONTACT_DEFAULT;
-		pairFlags |= physx::PxPairFlag::eNOTIFY_CONTACT_POINTS;
-		pairFlags |= physx::PxPairFlag::eNOTIFY_TOUCH_FOUND;
-		pairFlags |= physx::PxPairFlag::eNOTIFY_TOUCH_PERSISTS;
-		pairFlags |= physx::PxPairFlag::eNOTIFY_TOUCH_LOST;
+		if (contact == ContactType::NOTIFY)
+		{
+			pairFlags |= physx::PxPairFlag::eNOTIFY_CONTACT_POINTS;
+			pairFlags |= physx::PxPairFlag::eNOTIFY_TOUCH_FOUND;
+			pairFlags |= physx::PxPairFlag::eNOTIFY_TOUCH_PERSISTS;
+			pairFlags |= physx::PxPairFlag::eNOTIFY_TOUCH_LOST;
+		}
 	}
 
 	return physx::PxFilterFlag::eDEFAULT;

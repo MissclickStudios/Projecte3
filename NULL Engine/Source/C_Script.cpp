@@ -266,13 +266,13 @@ void C_Script::OnEnable()
 	}
 }
 
-void C_Script::OnCollisionEnter()
+void C_Script::OnCollisionEnter(GameObject* object)
 {
 	if (engineScript && scriptData != nullptr) {
 #ifndef GAMEBUILD
 		try {
 			Script* script = (Script*)scriptData;
-			script->OnCollisionEnter();
+			script->OnCollisionEnter(object);
 		}
 		catch (...)
 		{
@@ -284,13 +284,13 @@ void C_Script::OnCollisionEnter()
 	}
 }
 
-void C_Script::OnCollisionRepeat()
+void C_Script::OnCollisionRepeat(GameObject* object)
 {
 	if (engineScript && scriptData != nullptr) {
 #ifndef GAMEBUILD
 		try {
 			Script* script = (Script*)scriptData;
-			script->OnCollisionRepeat();
+			script->OnCollisionRepeat(object);
 		}
 		catch (...)
 		{
@@ -302,13 +302,13 @@ void C_Script::OnCollisionRepeat()
 	}
 }
 
-void C_Script::OnCollisionExit()
+void C_Script::OnCollisionExit(GameObject* object)
 {
 	if (engineScript && scriptData != nullptr) {
 #ifndef GAMEBUILD
 		try {
 			Script* script = (Script*)scriptData;
-			script->OnCollisionExit();
+			script->OnCollisionExit(object);
 		}
 		catch (...)
 		{
@@ -320,13 +320,13 @@ void C_Script::OnCollisionExit()
 	}
 }
 
-void C_Script::OnTriggerEnter()
+void C_Script::OnTriggerEnter(GameObject* object)
 {
 	if (engineScript && scriptData != nullptr) {
 #ifndef GAMEBUILD
 		try {
 			Script* script = (Script*)scriptData;
-			script->OnTriggerEnter();
+			script->OnTriggerEnter(object);
 		}
 		catch (...)
 		{
@@ -338,13 +338,13 @@ void C_Script::OnTriggerEnter()
 	}
 }
 
-void C_Script::OnTriggerRepeat()
+void C_Script::OnTriggerRepeat(GameObject* object)
 {
 	if (engineScript && scriptData != nullptr) {
 #ifndef GAMEBUILD
 		try {
 			Script* script = (Script*)scriptData;
-			script->OnTriggerRepeat();
+			script->OnTriggerRepeat(object);
 		}
 		catch (...)
 		{
@@ -356,13 +356,13 @@ void C_Script::OnTriggerRepeat()
 	}
 }
 
-void C_Script::OnTriggerExit()
+void C_Script::OnTriggerExit(GameObject* object)
 {
 	if (engineScript && scriptData != nullptr) {
 #ifndef GAMEBUILD
 		try {
 			Script* script = (Script*)scriptData;
-			script->OnTriggerExit();
+			script->OnTriggerExit(object);
 		}
 		catch (...)
 		{

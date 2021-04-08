@@ -75,12 +75,12 @@ public:
 	void OnEnable();
 
 	//Physics callbacks
-	void OnCollisionEnter();
-	void OnCollisionRepeat();
-	void OnCollisionExit();
-	void OnTriggerEnter();
-	void OnTriggerRepeat();
-	void OnTriggerExit();
+	void OnCollisionEnter(GameObject* object);
+	void OnCollisionRepeat(GameObject* object);
+	void OnCollisionExit(GameObject* object);
+	void OnTriggerEnter(GameObject* object);
+	void OnTriggerRepeat(GameObject* object);
+	void OnTriggerExit(GameObject* object);
 
 	bool HasData() const;
 
