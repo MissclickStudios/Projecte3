@@ -514,60 +514,85 @@ void Player::HandleHp()
 
 	if (App->input->GetKey(SDL_SCANCODE_K) == KeyState::KEY_DOWN && hearts != nullptr)
 	{
-		heart -= 0.5;
+		health -= 0.5;
 
-		if (heart < 0)
-			heart = 0;
+		if (health < 0)
+			health = 0;
 
-		if (heart == 2.5)
-			hearts[(int)heart]->GetComponent<C_Material>()->SwapTexture(half);
+		if (health == 2.5)
+			hearts[(int)health]->GetComponent<C_Material>()->SwapTexture(half);
 
-		else if (heart == 2)
-			hearts[(int)heart]->GetComponent<C_Material>()->SwapTexture(empty);
+		else if (health == 2)
+			hearts[(int)health]->GetComponent<C_Material>()->SwapTexture(empty);
 
-		else if (heart == 1.5)
-			hearts[(int)heart]->GetComponent<C_Material>()->SwapTexture(half);
+		else if (health == 1.5)
+			hearts[(int)health]->GetComponent<C_Material>()->SwapTexture(half);
 
-		else if (heart == 1)
-			hearts[(int)heart]->GetComponent<C_Material>()->SwapTexture(empty);
+		else if (health == 1)
+			hearts[(int)health]->GetComponent<C_Material>()->SwapTexture(empty);
 
-		else if (heart == 0.5)
-			hearts[(int)heart]->GetComponent<C_Material>()->SwapTexture(half);
+		else if (health == 0.5)
+			hearts[(int)health]->GetComponent<C_Material>()->SwapTexture(half);
 
-		else if (heart == 0)
-			hearts[(int)heart]->GetComponent<C_Material>()->SwapTexture(empty);
+		else if (health == 0)
+			hearts[(int)health]->GetComponent<C_Material>()->SwapTexture(empty);
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_L) == KeyState::KEY_DOWN && hearts != nullptr)
 	{
 
-		if (heart == 2.5)
-			hearts[(int)heart]->GetComponent<C_Material>()->SwapTexture(full);
+		if (health == 2.5)
+			hearts[(int)health]->GetComponent<C_Material>()->SwapTexture(full);
 
-		else if (heart == 2)
-			hearts[(int)heart]->GetComponent<C_Material>()->SwapTexture(half);
+		else if (health == 2)
+			hearts[(int)health]->GetComponent<C_Material>()->SwapTexture(half);
 
-		else if (heart == 1.5)
-			hearts[(int)heart]->GetComponent<C_Material>()->SwapTexture(full);
+		else if (health == 1.5)
+			hearts[(int)health]->GetComponent<C_Material>()->SwapTexture(full);
 
-		else if (heart == 1)
-			hearts[(int)heart]->GetComponent<C_Material>()->SwapTexture(half);
+		else if (health == 1)
+			hearts[(int)health]->GetComponent<C_Material>()->SwapTexture(half);
 
-		else if (heart == 0.5)
-			hearts[(int)heart]->GetComponent<C_Material>()->SwapTexture(full);
+		else if (health == 0.5)
+			hearts[(int)health]->GetComponent<C_Material>()->SwapTexture(full);
 
-		else if (heart == 0)
-			hearts[(int)heart]->GetComponent<C_Material>()->SwapTexture(half);
+		else if (health == 0)
+			hearts[(int)health]->GetComponent<C_Material>()->SwapTexture(half);
 
-		heart += 0.5;
+		health += 0.5;
 
-		if (heart > 3)
-			heart = 3;
+		if (health > 3)
+			health = 3;
 	}
 }
 
-Player* CreatePlayer() 
+Player* CreatePlayer()
 {
 	Player* script = new Player();
+
+	// Character
+	INSPECTOR_DRAGABLE_FLOAT(script->speed);
+	INSPECTOR_DRAGABLE_FLOAT(script->acceleration);
+	INSPECTOR_DRAGABLE_FLOAT(script->deceleration);
+
+	// Weapon
+	INSPECTOR_DRAGABLE_FLOAT(script->bulletSpeed);
+	INSPECTOR_DRAGABLE_FLOAT(script->fireRate);
+
+	INSPECTOR_DRAGABLE_INT(script->ammo);
+	INSPECTOR_DRAGABLE_INT(script->maxAmmo);
+
+	INSPECTOR_CHECKBOX_BOOL(script->automatic);
+
+	INSPECTOR_PREFAB(script->bullet);
+
+	// Dash
+	INSPECTOR_DRAGABLE_FLOAT(script->dashSpeed);
+	INSPECTOR_DRAGABLE_FLOAT(script->dashingTime);
+	INSPECTOR_DRAGABLE_FLOAT(script->dashingColdown);
+
+	// Health
+	INSPECTOR_DRAGABLE_FLOAT(script->health);
+
 	return script;
 }

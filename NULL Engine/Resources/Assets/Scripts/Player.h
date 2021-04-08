@@ -4,6 +4,7 @@
 #include "Log.h"
 
 #include "Timer.h"
+#include "Prefab.h"
 
 #include "MathGeoLib/include/Math/float3.h"
 
@@ -41,6 +42,30 @@ public:
 	Projectile* bullets[BULLET_AMOUNT];
 	PlayerState state;
 
+	// Character
+	float speed = 20.0f;
+	float deceleration = 200.0f;
+	float acceleration = 200.0f;
+
+	// Weapon
+	float bulletSpeed = 100.0f;
+	float fireRate = 0.25f;
+
+	int ammo = 10;
+	int maxAmmo = 10;
+
+	bool automatic = true;
+
+	Prefab bullet;
+
+	// Dash
+	float dashSpeed = 100.0f;
+	float dashingTime = 0.2f;
+	float dashingColdown = 1.0f;
+
+	// Health
+	float health = 3;
+
 private:
 
 	void Movement();
@@ -63,11 +88,10 @@ private:
 	void HandleAmmo(int ammo);
 	void HandleHp();
 
-	// Character
-	float speed = 20.0f;
-	float deceleration = 200.0f;
-	float acceleration = 200.0f;
+	float3 lastDirection = float3::zero;
+	float3 lastAim = float3::zero;
 
+	// Character
 	bool isStepPlaying = false;
 	Timer stepTimer;
 	C_AudioSource* aSource = nullptr;
@@ -75,14 +99,6 @@ private:
 	bool playAnim = false;
 
 	// Weapon
-	float bulletSpeed = 100.0f;
-	float fireRate = 0.25f;
-
-	int ammo = 10;
-	int maxAmmo = 10;
-
-	bool automatic = true;
-
 	Timer fireRateTimer;
 
 	GameObject* bulletStorage = nullptr;
@@ -90,22 +106,14 @@ private:
 	R_Texture* ammoTex[11] = { 0 };
 	bool storedAmmoTex = false;
 
+	GameObject* ammoUi = nullptr;
+
 	// Dash
-	float dashSpeed = 100.0f;
-	float dashingTime = 0.2f;
-	float dashingColdown = 1.0f;
-
-	float3 lastDirection = float3::zero;
-	float3 lastAim = float3::zero;
-
 	Timer dashTime;// Duration of the dash
 	Timer dashColdown;
 
-	// Hearts
+	// Health
 	GameObject* hearts[3] = { nullptr, nullptr, nullptr };
-	float heart = 3;
-
-	GameObject* ammoUi = nullptr;
 
 	R_Texture* full = nullptr;
 	R_Texture* half = nullptr;
