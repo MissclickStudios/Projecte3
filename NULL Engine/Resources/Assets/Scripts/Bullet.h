@@ -19,7 +19,7 @@ public:
 
 	void OnEnable() override;
 
-	void OnCollisionEnter() override;
+	void OnCollisionEnter(GameObject* object) override;
 
 	void SetShooter(Player* shooter, uint index);
 	void StartAutodestructTimer() { autodestructTimer.Start(); }
