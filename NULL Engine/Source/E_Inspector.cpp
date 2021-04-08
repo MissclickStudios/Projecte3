@@ -43,8 +43,11 @@
 #include "C_ParticleSystem.h"
 #include "C_UI_Image.h"
 #include "C_UI_Text.h"
+#include "C_UI_Button.h"
 #include "C_Script.h"
+#include "C_2DAnimator.h"
 
+#include "R_Shader.h"
 #include "R_Texture.h"
 #include "R_Animation.h"
 #include "R_Shader.h"
@@ -178,7 +181,7 @@ void E_Inspector::DrawGameObjectInfo(GameObject* selectedGameObject)
 	{
 		if (ImGui::Button("Create Prefab"))
 		{
-			
+		
 			App->resourceManager->CreatePrefab(selectedGameObject);
 			//App->resourceManager->RefreshProjectDirectories(); //Should only refresh prefabs
 		}
@@ -230,11 +233,13 @@ void E_Inspector::DrawComponents(GameObject* selectedGameObject)
 		case ComponentType::UI_IMAGE:			{ DrawUIImageComponent((C_UI_Image*)component); }					break;
 		case ComponentType::UI_TEXT:			{ DrawUITextComponent((C_UI_Text*)component); }						break;
 		case ComponentType::SCRIPT:				{ DrawScriptComponent((C_Script*)component); }						break;
+		case ComponentType::UI_BUTTON:			{ DrawUIButtonComponent((C_UI_Button*)component); }					break;
 		case ComponentType::PLAYER_CONTROLLER:	{ DrawPlayerControllerComponent((C_PlayerController*)component); }	break;
 		case ComponentType::BULLET_BEHAVIOR:	{ DrawBulletBehaviorComponent((C_BulletBehavior*)component); }		break;
 		case ComponentType::PROP_BEHAVIOR:		{ DrawPropBehaviorComponent((C_PropBehavior*)component); }			break;
 		case ComponentType::CAMERA_BEHAVIOR:	{ DrawCameraBehaviorComponent((C_CameraBehavior*)component); }		break;
 		case ComponentType::GATE_BEHAVIOR:		{ DrawGateBehaviorComponent((C_GateBehavior*)component); }			break;
+		case ComponentType::ANIMATOR2D:			{ DrawAnimator2DComponent((C_2DAnimator*)component); }				break;
 		}
 		if (type == ComponentType::NONE)
 		{
@@ -819,7 +824,6 @@ void E_Inspector::DrawAudioSourceComponent(C_AudioSource* cAudioSource)
     ImGui::Separator();
 }
 
-
 void E_Inspector::DrawRigidBodyComponent(C_RigidBody* cRigidBody)
 {
 	bool show = true;
@@ -831,24 +835,24 @@ void E_Inspector::DrawRigidBodyComponent(C_RigidBody* cRigidBody)
 			bool isActive = cRigidBody->IsActive();
 			if (ImGui::Checkbox("RigidBody Is Active", &isActive))
 				cRigidBody->SetIsActive(isActive);
-	
+
 			ImGui::SameLine();
-	
+
 			if (ImGui::Button("Make Dynamic"))
 				cRigidBody->MakeDynamic();
-	
+
 			ImGui::Separator();
 
 			RigidBodyFilterCombo(cRigidBody);
 
 			ImGui::Separator();
-	
+			
 			if (!show)
 			{
 				componentToDelete = cRigidBody;
 				showDeleteComponentPopup = true;
 			}
-	
+
 			ImGui::Separator();
 		}
 		return;
@@ -1039,7 +1043,7 @@ void E_Inspector::DrawCanvasComponent(C_Canvas* cCanvas)
 			float2 size = { cCanvas->GetRect().w, cCanvas->GetRect().h };
 			float2 pivot = { cCanvas->pivot.x, cCanvas->pivot.y };
 
-			if (ImGui::DragFloat2("Rect", (float*)&size, 0.05f, 0.0f, 0.0f, "%.3f", NULL))
+			if (ImGui::DragFloat2("Rect", (float*)&size, 0.005f, 0.0f, 0.0f, "%.3f", NULL))
 			{
 				if (size.x < 0)
 					size.x = 0;
@@ -1067,7 +1071,7 @@ void E_Inspector::DrawCanvasComponent(C_Canvas* cCanvas)
 			}
 
 			// --- PIVOT ---
-			if (ImGui::DragFloat2("Pivot", (float*)&pivot, 0.05f, 0.0f, 0.0f, "%.3f", NULL))
+			if (ImGui::DragFloat2("Pivot", (float*)&pivot, 0.005f, 0.0f, 0.0f, "%.3f", NULL))
 			{
 
 				if (pivot.x < cCanvas->GetPosition().x - cCanvas->GetSize().x / 2)
@@ -1198,53 +1202,15 @@ void E_Inspector::DrawCapsuleColliderComponent(C_CapsuleCollider* cCollider)
 
 void E_Inspector::DrawParticleSystemComponent(C_ParticleSystem* cParticleSystem)
 {
-	bool show = true;
 	//if (cParticleSystem->resource != nullptr)
 	//{
+		bool show = true;
 		if (ImGui::CollapsingHeader("Particle System", &show, ImGuiTreeNodeFlags_DefaultOpen))
 		{
 			for (int i = 0; i < cParticleSystem->emitterInstances.size(); i++) //loop emitters
 			{
 				Emitter* emitter = cParticleSystem->emitterInstances[i]->emitter;
-				for (int i = 0; i < emitter->modules.size(); i++) //loop modules
-				{
-					ParticleModule* Module = emitter->modules[i];
-
-					switch (Module->type)
-					{
-					case (ParticleModule::Type::EmitterBase):
-					{
-					
-					}						
-					break;
-					case (ParticleModule::Type::EmitterSpawn):
-					{
-					
-					}
-					break;
-					case(ParticleModule::Type::ParticleColor):
-					{
-
-					}
-					break;
-					case(ParticleModule::Type::ParticleLifetime):
-					{
-
-					}
-					break;
-					case(ParticleModule::Type::ParticleMovement):
-					{
-
-					}
-					break;
-					case(ParticleModule::Type::None):
-					{	
-
-					}
-
-					}
-				}
-
+				
 				if (ImGui::CollapsingHeader("Default Emitter", &show, ImGuiTreeNodeFlags_DefaultOpen))
 				{
 					bool preview = cParticleSystem->previewEnabled;
@@ -1252,6 +1218,145 @@ void E_Inspector::DrawParticleSystemComponent(C_ParticleSystem* cParticleSystem)
 					{
 						cParticleSystem->EnginePreview(preview);
 					}
+
+					ImGui::Combo("###", &moduleType, "Add Module\0ParticleMovement\0ParticleColor\0ParticleLifetime");
+
+					ImGui::SameLine();
+
+					if ((ImGui::Button("ADD")))
+					{
+						if (moduleType != (int)ParticleModule::Type::None)
+						{
+							emitter->AddModuleFromType((ParticleModule::Type)moduleType);
+						}
+					}
+
+					ImGui::Separator();
+
+					for (int i = 0; i < emitter->modules.size(); i++) //loop modules
+					{
+						ParticleModule* module = emitter->modules[i];
+						switch (module->type)
+						{
+						case (ParticleModule::Type::EmitterBase):
+						{
+							if (ImGui::CollapsingHeader("Emitter Base", &show, ImGuiTreeNodeFlags_DefaultOpen))
+							{
+								EmitterBase* _module = (EmitterBase*)module;
+
+								float3 originPos = _module->origin;
+								float c[3] = { originPos.x, originPos.y, originPos.z };
+								if (ImGui::InputFloat3("OriginPosition", c, 4, ImGuiInputTextFlags_EnterReturnsTrue))
+									_module->origin = float3(c[0], c[1], c[2]);
+							}
+						}
+						break;
+						case (ParticleModule::Type::EmitterSpawn):
+						{
+							if (ImGui::CollapsingHeader("Emitter Spawn", &show, ImGuiTreeNodeFlags_DefaultOpen))
+							{
+								EmitterSpawn* _module = (EmitterSpawn*)module;
+
+								float ratio = _module->spawnRatio;
+								if (ImGui::InputFloat("SpawnRatio", &ratio, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
+									_module->spawnRatio = ratio;
+							}
+						}
+						break;
+						case(ParticleModule::Type::ParticleMovement):
+						{
+							if (ImGui::CollapsingHeader("Particle Movement", &show, ImGuiTreeNodeFlags_DefaultOpen))
+							{
+								ParticleMovement* _module = (ParticleMovement*)module;
+
+								float intensity1 = _module->initialIntensity1;
+								if (ImGui::InputFloat("InitialIntensity_A", &intensity1, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
+									_module->initialIntensity1 = intensity1;
+
+								float intensity2 = _module->initialIntensity2;
+								if (ImGui::InputFloat("InitialIntensity_B", &intensity2, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
+									_module->initialIntensity2 = intensity2;
+
+								float3 direction1 = _module->initialDirection1;
+								float c[3] = { direction1.x, direction1.y, direction1.z };
+								if (ImGui::InputFloat3("InitialDirection_A", c, 4, ImGuiInputTextFlags_EnterReturnsTrue))
+									_module->initialDirection1 = float3(c[0], c[1], c[2]);
+
+								float3 direction2 = _module->initialDirection2;
+								float c2[3] = { direction2.x, direction2.y, direction2.z };
+								if (ImGui::InputFloat3("InitialDirection_B", c2, 4, ImGuiInputTextFlags_EnterReturnsTrue))
+									_module->initialDirection2 = float3(c2[0], c2[1], c2[2]);
+
+								bool hide = _module->hideMovement;
+								if (ImGui::Checkbox("Hide Movement", &hide))
+								{
+									_module->hideMovement = hide;
+								}
+
+								bool deleteModule = _module->eraseMovement;
+								if (ImGui::Checkbox("Delete Movement", &deleteModule))
+								{
+									_module->eraseMovement = deleteModule;
+								}
+							}
+						}
+						break;
+						case(ParticleModule::Type::ParticleColor):
+						{
+							if (ImGui::CollapsingHeader("Particle Color", &show, ImGuiTreeNodeFlags_DefaultOpen))
+							{
+								ParticleColor* _module = (ParticleColor*)module;
+
+								float c[4] = { _module->initialColor.r, _module->initialColor.g, _module->initialColor.b, _module->initialColor.a };
+								if (ImGui::InputFloat4("InitialColor", c, 4, ImGuiInputTextFlags_EnterReturnsTrue))
+									_module->initialColor = Color(c[0], c[1], c[2], c[3]);
+
+								bool hide = _module->hideColor;
+								if (ImGui::Checkbox("Hide Color", &hide))
+								{
+									_module->hideColor = hide;
+								}
+
+								bool deleteModule = _module->eraseColor;
+								if (ImGui::Checkbox("Delete Color", &deleteModule))
+								{
+									_module->eraseColor = deleteModule;
+								}
+							}
+						}
+						break;
+						case(ParticleModule::Type::ParticleLifetime):
+						{
+							if (ImGui::CollapsingHeader("Particle Lifetime", &show, ImGuiTreeNodeFlags_DefaultOpen))
+							{
+								ParticleLifetime* _module = (ParticleLifetime*)module;
+
+								float originLifetime = _module->initialLifetime;
+								if (ImGui::InputFloat("InitialLifetime", &originLifetime, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
+									_module->initialLifetime = originLifetime;
+
+								bool hide = _module->hideLifetime;
+								if (ImGui::Checkbox("Hide Lifetime", &hide))
+								{
+									_module->hideLifetime = hide;
+								}
+
+								bool deleteModule = _module->eraseLifetime;
+								if (ImGui::Checkbox("Delete Lifetime", &deleteModule))
+								{
+									_module->eraseLifetime = deleteModule;
+								}
+							}
+						}
+						break;
+						case(ParticleModule::Type::None):
+						{
+
+						}							
+						}
+					}
+
+
 				}
 
 				ImGui::Separator();
@@ -1284,7 +1389,7 @@ void E_Inspector::DrawUIImageComponent(C_UI_Image* image)
 
 		C_Canvas* canvas = image->GetOwner()->parent->GetComponent<C_Canvas>();
 
-		if (ImGui::DragFloat2("Image Size", (float*)&size, 0.05f, 0.0f, 0.0f, "%.3f", NULL))
+		if (ImGui::DragFloat2("Image Size", (float*)&size, 0.005f, 0.0f, 0.0f, "%.3f", NULL))
 		{
 			if (size.x < 0)
 				size.x = 0;
@@ -1295,7 +1400,7 @@ void E_Inspector::DrawUIImageComponent(C_UI_Image* image)
 			image->SetH(size.y);
 		}
 
-		if (ImGui::DragFloat2("Image Pos", (float*)&pos, 0.05f, 0.0f, 0.0f, "%.3f", NULL))
+		if (ImGui::DragFloat2("Image Pos", (float*)&pos, 0.005f, 0.0f, 0.0f, "%.3f", NULL))
 		{
 			if (pos.x - size.x / 2 < canvas->GetPosition().x - canvas->GetSize().x / 2)
 				pos.x = canvas->GetPosition().x - canvas->GetSize().x / 2 + size.x / 2;
@@ -1382,12 +1487,12 @@ void E_Inspector::DrawScriptComponent(C_Script* cScript)
 	if (ImGui::CollapsingHeader((cScript->GetDataName() + " (Script)").c_str(), &show, ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		//TODO: Show inspector variables
-		ImGui::Text("Name %s", cScript->GetDataName().c_str());
+		ImGui::Text("Name: %s", cScript->GetDataName().c_str());
 		ImGui::Spacing();
 		ImGui::Separator();
 		ImGui::Spacing();
 		std::vector<InspectorScriptData> inspectorVariables = cScript->GetInspectorVariables();
-		for (std::vector<InspectorScriptData>::const_iterator variable = inspectorVariables.cbegin(); variable != inspectorVariables.cend(); ++variable)
+		for (std::vector<InspectorScriptData>::iterator variable = inspectorVariables.begin(); variable != inspectorVariables.end(); ++variable)
 		{
 			switch ((*variable).variableType) 
 			{
@@ -1416,6 +1521,50 @@ void E_Inspector::DrawScriptComponent(C_Script* cScript)
 					ImGui::SliderFloat((*variable).variableName.data(), (float*)(*variable).ptr, (*variable).minSlider, (*variable).maxSlider); break;
 				}
 				break;
+			case InspectorScriptData::DataType::PREFAB:
+				ImGui::Button((((Prefab*)(*variable).ptr)->name.empty()) ? "Prefab: NULL" : std::string("Prefab: " + ((Prefab*)(*variable).ptr)->name).data(), { ImGui::GetWindowWidth() * 0.55F , 0});
+				if (ImGui::BeginDragDropTarget()) 
+				{
+					if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DRAGGED_ASSET"))
+					{
+						if (App->fileSystem->GetFileExtension(*(const char**)payload->Data) == "prefab") 
+						{
+							std::string uidString;
+							App->fileSystem->SplitFilePath(*(const char**)payload->Data, nullptr, &uidString, nullptr);
+							unsigned int prefabUid = std::atoi(uidString.c_str());
+							*(Prefab*)(*variable).ptr = EngineApp->resourceManager->prefabs[prefabUid];
+						}
+
+					}
+					ImGui::EndDragDropTarget();
+				}
+				ImGui::SameLine();
+				if (ImGui::Button(("Remove " + (*variable).variableName).c_str())) //Maybe variables with the same name of different scripts on the same gameobject collide for imgui...
+				{
+					(*(Prefab*)(*variable).ptr).name.clear();
+					(*(Prefab*)(*variable).ptr).uid = 0;
+					(*(Prefab*)(*variable).ptr).updateTime = 0;
+				}
+				break;
+			case InspectorScriptData::DataType::GAMEOBJECT:
+				ImGui::Button(((*variable).obj != nullptr && *(*variable).obj != nullptr) ? std::string("GameObject: "  + std::string((*(*variable).obj)->GetName())).data() : "GameObject: NULL", { ImGui::GetWindowWidth() * 0.55F , 0 });
+				if (ImGui::BeginDragDropTarget())
+				{
+					if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DRAGGED_NODE"))
+					{
+						GameObject* ptr = *(GameObject**)payload->Data;
+						if (ptr != nullptr) 
+						{
+							*(*variable).obj = ptr;
+						}
+					}
+					ImGui::EndDragDropTarget();
+				}
+				ImGui::SameLine();
+				if (ImGui::Button(("Remove " + (*variable).variableName).c_str()))
+					if ((*variable).obj != nullptr)
+						*(*variable).obj = nullptr;
+				break;
 			}
 			ImGui::Spacing();
 			ImGui::Separator();
@@ -1429,6 +1578,56 @@ void E_Inspector::DrawScriptComponent(C_Script* cScript)
 	}
 	ImGui::Separator();
 
+}
+
+void E_Inspector::DrawUIButtonComponent(C_UI_Button* button)
+{
+	static bool show = true;
+	if (ImGui::CollapsingHeader("Button", &show, ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		bool isActive = button->IsActive();
+		if (ImGui::Checkbox("Button Is Active", &isActive)) { button->SetIsActive(isActive); }
+
+		ImGui::Separator();
+
+		// --- RECT ---
+		float2 pos = { button->GetRect().x, button->GetRect().y };
+		float2 size = { button->GetRect().w, button->GetRect().h };
+
+		C_Canvas* canvas = button->GetOwner()->parent->GetComponent<C_Canvas>();
+
+		if (ImGui::DragFloat2("Button Size", (float*)&size, 0.005f, 0.0f, 0.0f, "%.3f", NULL))
+		{
+			if (size.x < 0)
+				size.x = 0;
+			if (size.y < 0)
+				size.y = 0;
+
+			button->SetW(size.x);
+			button->SetH(size.y);
+		}
+
+		if (ImGui::DragFloat2("Button Pos", (float*)&pos, 0.005f, 0.0f, 0.0f, "%.3f", NULL))
+		{
+			if (pos.x - size.x / 2 < canvas->GetPosition().x - canvas->GetSize().x / 2)
+				pos.x = canvas->GetPosition().x - canvas->GetSize().x / 2 + size.x / 2;
+
+			if (pos.x + size.x / 2 > canvas->GetPosition().x + canvas->GetSize().x / 2)
+				pos.x = canvas->GetPosition().x + canvas->GetSize().x / 2 - size.x / 2;
+
+
+			if (pos.y - size.y / 2 < canvas->GetPosition().y - canvas->GetSize().y / 2)
+				pos.y = canvas->GetPosition().y - canvas->GetSize().y / 2 + size.y / 2;
+
+			if (pos.y + size.y / 2 > canvas->GetPosition().y + canvas->GetSize().y / 2)
+				pos.y = canvas->GetPosition().y + canvas->GetSize().y / 2 - size.y / 2;
+
+			button->SetX(pos.x);
+			button->SetY(pos.y);
+		}
+	}
+
+	ImGui::Separator();
 }
 
 void E_Inspector::DrawPlayerControllerComponent(C_PlayerController* cController)
@@ -1610,10 +1809,43 @@ void E_Inspector::DrawGateBehaviorComponent(C_GateBehavior* cBehavior)
 	return;
 }
 
-// --- DRAW COMPONENT UTILITY METHODS
+void E_Inspector::DrawAnimator2DComponent(C_2DAnimator* cAnimator)
+{
+	bool show = true;
+	if (ImGui::CollapsingHeader("Animator 2D", &show, ImGuiTreeNodeFlags_Leaf))
+	{
+		bool isActive = cAnimator->IsActive();
+		if (ImGui::Checkbox("Animator is active", &isActive))
+			cAnimator->SetIsActive(isActive);
+
+		int k = cAnimator->GetAnimationStepTime();
+		if (ImGui::InputInt("Step time",&k));
+			cAnimator->SetAnimationStepTime(k);
+
+		ImGui::Separator();
+
+		if (!show)
+		{
+			componentToDelete = cAnimator;
+			showDeleteComponentPopup = true;
+		}
+
+
+		static char buffer[64];
+		strcpy_s(buffer, cAnimator->GetName());
+		if (ImGui::InputText("Animation Name", buffer, IM_ARRAYSIZE(buffer), ImGuiInputTextFlags_EnterReturnsTrue))
+		{
+			cAnimator->ChangeName(buffer);
+			cAnimator->GetAnimationSprites(buffer);
+		}
+
+	}
+	return;
+}
+
 void E_Inspector::AddComponentCombo(GameObject* selectedGameObject)
 {
-	ImGui::Combo("##", &componentType, "Add Component\0Transform\0Mesh\0Material\0Light\0Camera\0Animator\0Animation\0RigidBody\0Box Collider\0Sphere Collider\0Capsule Collider\0Particle System\0Canvas\0Audio Source\0Audio Listener\0Player Controller\0Bullet Behavior\0Prop Behavior\0Camera Behavior\0Gate Behavior\0UI Image\0UI Text\0Script");
+	ImGui::Combo("##", &componentType, "Add Component\0Transform\0Mesh\0Material\0Light\0Camera\0Animator\0Animation\0RigidBody\0Box Collider\0Sphere Collider\0Capsule Collider\0Particle System\0Canvas\0Audio Source\0Audio Listener\0Player Controller\0Bullet Behavior\0Prop Behavior\0Camera Behavior\0Gate Behavior\0UI Image\0UI Text\0UI Button\0Script\0Animator 2D");
 
 	ImGui::SameLine();
 
@@ -1623,8 +1855,10 @@ void E_Inspector::AddComponentCombo(GameObject* selectedGameObject)
 		{
 			if (componentType == (int)ComponentType::UI_IMAGE)
 				AddUIComponent(selectedGameObject, ComponentType::UI_IMAGE);
-			else if(componentType == (int)ComponentType::UI_TEXT)
+			else if (componentType == (int)ComponentType::UI_TEXT)
 				AddUIComponent(selectedGameObject, ComponentType::UI_TEXT);
+			else if (componentType == (int)ComponentType::UI_BUTTON)
+				AddUIComponent(selectedGameObject, ComponentType::UI_BUTTON);
 
 			else
 				selectedGameObject->CreateComponent((ComponentType)componentType);
@@ -1683,6 +1917,32 @@ void E_Inspector::AddUIComponent(GameObject* selectedGameObject, ComponentType t
 
 			GameObject* newText = App->scene->CreateGameObject("UI Text", selectedGameObject);
 			newText->CreateComponent(ComponentType::UI_TEXT);
+		}
+	}
+
+	else if (type == ComponentType::UI_BUTTON)
+	{
+		// Option 1: selectedGameObject has a canvas
+		if (selectedGameObject->GetComponent<C_Canvas>() != nullptr)
+		{
+			GameObject* newGO;
+			newGO = App->scene->CreateGameObject("UI Button", selectedGameObject);
+			newGO->CreateComponent(ComponentType::UI_BUTTON);
+		}
+		// Option 2: selectedGameObject's parent has a canvas
+		else if (selectedGameObject->parent->GetComponent<C_Canvas>() != nullptr)
+		{
+			selectedGameObject->SetName("UI Button");
+			selectedGameObject->CreateComponent(ComponentType::UI_BUTTON);
+		}
+		// Option 3: need to crete a canvas
+		else
+		{
+			selectedGameObject->SetName("Canvas");
+			selectedGameObject->CreateComponent(ComponentType::CANVAS);
+
+			GameObject* newText = App->scene->CreateGameObject("UI Button", selectedGameObject);
+			newText->CreateComponent(ComponentType::UI_BUTTON);
 		}
 	}
 }

@@ -9,7 +9,6 @@
 #include "MemoryManager.h"
 
 E_Hierarchy::E_Hierarchy() : EditorPanel("Hierarchy"), 
-draggedGameObject			(nullptr), 
 openHierarchyToolsPopup	(false)
 {
 	defaultFlags = ImGuiTreeNodeFlags_SpanAvailWidth;
@@ -114,9 +113,8 @@ void E_Hierarchy::ProcessGameObject(GameObject* gameObject)
 
 			if (ImGui::BeginDragDropSource())												// First, it is checked whether or not this node is part of a currently starting drag&drop operation.
 			{
-				ImGui::SetDragDropPayload("DRAGGED_NODE", gameObject, sizeof(GameObject));	// Here the payload is being constructed. It can be later identified through the given string.
-				ImGui::Text("Dragging %s", gameObject->GetName());							// This specific text, as it is within the DragDropSource, will accompany the dragged node.
-				draggedGameObject = gameObject;											// The dragged game object needs to be saved to be later re-integrated into the hierarchy.
+				ImGui::SetDragDropPayload("DRAGGED_NODE", &gameObject, sizeof(GameObject*),ImGuiCond_Once);	// Here the payload is being constructed. It can be later identified through the given string.
+				ImGui::Text("Dragging %s", gameObject->GetName());							// This specific text, as it is within the DragDropSource, will accompany the dragged node.	
 
 				ImGui::EndDragDropSource();
 			}
@@ -126,9 +124,8 @@ void E_Hierarchy::ProcessGameObject(GameObject* gameObject)
 				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DRAGGED_NODE"))	// First, the payload that is being dropped needs to be checked to make sure its the correct one.
 				{
 					//game_object->AddChild(dragged_game_object);								// (GameObject*)payload->Data would also work. However, it easily breaks, at least in my case.
-
-					draggedGameObject->SetParent(gameObject);
-					draggedGameObject = nullptr;
+					GameObject** ptr = (GameObject**)payload->Data;
+					(*ptr)->SetParent(gameObject);
 				}
 
 				ImGui::EndDragDropTarget();

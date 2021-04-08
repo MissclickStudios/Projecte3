@@ -10,6 +10,7 @@
 #include "GameObject.h"
 #include "M_ResourceManager.h"
 #include "R_Script.h"
+#include "Prefab.h"
 
 #include "MemoryManager.h"
 
@@ -258,6 +259,14 @@ void M_EngineScriptManager::SerializeAllScripts(ParsonArray& scriptsArray)
 									variable.SetInteger("bool", *(bool*)scriptVariables[i].ptr); break;
 								case InspectorScriptData::DataType::FLOAT:
 									variable.SetInteger("float", *(float*)scriptVariables[i].ptr); break;
+								case InspectorScriptData::DataType::PREFAB:
+									variable.SetInteger("prefab", (*(Prefab*)scriptVariables[i].ptr).uid); break;
+								case InspectorScriptData::DataType::GAMEOBJECT:
+									if (scriptVariables[i].obj != nullptr)
+										variable.SetInteger("gameobject", (*scriptVariables[i].obj)->GetUID());
+									else
+										variable.SetInteger("gameobject", 0);
+									break;
 								}
 							}
 						}
@@ -315,6 +324,8 @@ void M_EngineScriptManager::DeSerializeAllScripts(const ParsonArray& scriptsArra
 									*(bool*)(*item).ptr = variable.GetBool("bool"); break;
 								case InspectorScriptData::DataType::FLOAT:
 									*(float*)(*item).ptr = (float)variable.GetNumber("float"); break;
+								case InspectorScriptData::DataType::PREFAB:
+									*(Prefab*)(*item).ptr = EngineApp->resourceManager->prefabs[(unsigned int)variable.GetNumber("prefab")]; break;
 								}
 							}
 						}

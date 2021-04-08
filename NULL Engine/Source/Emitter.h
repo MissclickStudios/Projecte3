@@ -1,4 +1,4 @@
-#ifndef __EMITTER_H__
+#ifndef __EMITTER_H__<
 #define __EMITTER_H__
 
 #include <vector>
@@ -7,18 +7,19 @@
 
 class R_Material;
 
-class Emitter
+class NULL_API Emitter
 {
 public:
 	Emitter();
 
-	//Loop through all modules, loop through particles, update them
+	//Loop through all modules, loop through particles, update them     
 	void Update(float dt);
 
 	//Save and load?
 
 	void SetAsDefault();
 	bool AddModuleFromType(ParticleModule::Type type);
+	bool DeleteModuleFromType(ParticleModule::Type type);
 
 	void SetMaterial();
 

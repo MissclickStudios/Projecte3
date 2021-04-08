@@ -1,5 +1,6 @@
 #include "ParticleModule.h"
 #include "C_ParticleSystem.h"
+#include "Emitter.h"
 #include "EmitterInstance.h"
 #include "C_Transform.h"
 #include "GameObject.h"
@@ -27,8 +28,9 @@ void EmitterBase::Update(float dt, EmitterInstance* emitter)
 		unsigned int particleIndex = emitter->particleIndices[i];
 		Particle* particle = &emitter->particles[particleIndex];
 
-		//update world rotation and distance to camera.
+		//update distance to camera.
 	}
+	
 }
 
 void EmitterSpawn::Spawn(EmitterInstance* emitter, Particle* particle)
@@ -38,7 +40,7 @@ void EmitterSpawn::Spawn(EmitterInstance* emitter, Particle* particle)
 
 void EmitterSpawn::Update(float dt, EmitterInstance* emitter)
 {
-	timer += dt; 
+	timer += dt;
 	if (timer >= spawnRatio)
 	{
 		timer = 0;
@@ -58,12 +60,20 @@ void ParticleMovement::Spawn(EmitterInstance* emitter, Particle* particle)
 
 void ParticleMovement::Update(float dt, EmitterInstance* emitter)
 {
-	for (unsigned int i = 0; i < emitter->activeParticles; i++)
+	if (hideMovement == false)
 	{
-		unsigned int particleIndex = emitter->particleIndices[i];
-		Particle* particle = &emitter->particles[particleIndex];
+		for (unsigned int i = 0; i < emitter->activeParticles; i++)
+		{
+			unsigned int particleIndex = emitter->particleIndices[i];
+			Particle* particle = &emitter->particles[particleIndex];
 
-		particle->position += particle->movementDirection * particle->velocity * dt;
+			particle->position += particle->movementDirection * particle->velocity * dt;
+		
+		}
+	}
+	if (eraseMovement == true)
+	{
+		emitter->emitter->DeleteModuleFromType(ParticleModule::Type::ParticleMovement);
 	}
 }
 
@@ -89,6 +99,10 @@ void ParticleColor::Update(float dt, EmitterInstance* emitter)
 		else
 			particle->color = Color(0.6f, 0.5f, 0.5f, 1.0f);
 	}*/
+	if (eraseColor == true)
+	{
+		emitter->emitter->DeleteModuleFromType(ParticleModule::Type::ParticleColor);
+	}
 }
 
 void ParticleLifetime::Spawn(EmitterInstance* emitter, Particle* particle)
@@ -99,14 +113,43 @@ void ParticleLifetime::Spawn(EmitterInstance* emitter, Particle* particle)
 
 void ParticleLifetime::Update(float dt, EmitterInstance* emitter)
 {
-	for (unsigned int i = 0; i < emitter->activeParticles; i++)
-	{ 
-		unsigned int particleIndex = emitter->particleIndices[i];
-		Particle* particle = &emitter->particles[particleIndex];
-		
-		particle->currentLifetime += dt;
+	if (hideLifetime == false) 
+	{
+		for (unsigned int i = 0; i < emitter->activeParticles; i++)
+		{
+			unsigned int particleIndex = emitter->particleIndices[i];
+			Particle* particle = &emitter->particles[particleIndex];
 
-		//particle->currentLifetime += (1 / particle->maxLifetime) * dt;
-		//when the relative lifetime equals or excedes 1.0f, the particle is killed by the emitter instance with KillDeadParticles()
+			particle->currentLifetime += dt;
+
+			//particle->currentLifetime += (1 / particle->maxLifetime) * dt;
+			//when the relative lifetime equals or excedes 1.0f, the particle is killed by the emitter instance with KillDeadParticles()
+		}
+	}
+	if (eraseLifetime == true)
+	{
+		emitter->emitter->DeleteModuleFromType(ParticleModule::Type::ParticleLifetime);
 	}
 }
+
+void ParticleBillboarding::Spawn(EmitterInstance* emitter, Particle* particle)
+{
+
+}
+
+void ParticleBillboarding::Update(float dt, EmitterInstance* emitter)
+{
+	for (unsigned int i = 0; i < emitter->activeParticles; ++i)
+	{
+		unsigned int particleIndex = emitter->particleIndices[i];
+		Particle* particle = &emitter->particles[particleIndex];
+
+		//particle->worldRotation = GetAlignmentRotation(particle->position, )
+	}
+}
+
+Quat ParticleBillboarding::GetAlignmentRotation(const float3& position, const float4x4& cameraTransform)
+{
+	return Quat(0, 0, 0, 0);	
+}
+

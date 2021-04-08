@@ -130,7 +130,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(ProjectDir)Scripts\Headers\;$(ProjectDir)..\Assets\Scripts\;$(ProjectDir)..\..\Source\;$(ProjectDir)..\..\Source\Dependencies\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Scripts\Headers\;$(ProjectDir)..\Assets\Scripts\;$(ProjectDir)..\..\Source\;$(ProjectDir)..\..\Source\Dependencies\;$(ProjectDir)..\..\Source\Dependencies\Wwise\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -151,7 +151,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(ProjectDir)Scripts\Headers\;$(ProjectDir)..\Assets\Scripts\;$(ProjectDir)..\..\Source\;$(ProjectDir)..\..\Source\Dependencies\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Scripts\Headers\;$(ProjectDir)..\Assets\Scripts\;$(ProjectDir)..\..\Source\;$(ProjectDir)..\..\Source\Dependencies\;$(ProjectDir)..\..\Source\Dependencies\Wwise\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -174,7 +174,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(ProjectDir)Scripts\Headers\;$(ProjectDir)..\Assets\Scripts\;$(ProjectDir)..\..\Source\;$(ProjectDir)..\..\Source\Dependencies\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Scripts\Headers\;$(ProjectDir)..\Assets\Scripts\;$(ProjectDir)..\..\Source\;$(ProjectDir)..\..\Source\Dependencies\;$(ProjectDir)..\..\Source\Dependencies\Wwise\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -245,6 +245,7 @@
     <ClInclude Include="..\Assets\Scripts\CameraMovement.h" />
     <ClInclude Include="..\Assets\Scripts\FirstScript.h" />
     <ClInclude Include="..\Assets\Scripts\Gate.h" />
+    <ClInclude Include="..\Assets\Scripts\Player.h" />
     <ClInclude Include="..\Assets\Scripts\Prop.h" />
     <ClInclude Include="..\Assets\Scripts\SecondScript.h" />
     <ClInclude Include="Scripts\Headers\ScriptMacros.h" />
@@ -254,6 +255,7 @@
     <ClCompile Include="Scripts\Cpps\CameraMovement.cpp" />
     <ClCompile Include="Scripts\Cpps\FirstScript.cpp" />
     <ClCompile Include="Scripts\Cpps\Gate.cpp" />
+    <ClCompile Include="Scripts\Cpps\Player.cpp" />
     <ClCompile Include="Scripts\Cpps\Prop.cpp" />
     <ClCompile Include="Scripts\Cpps\SecondScript.cpp" />
   </ItemGroup>

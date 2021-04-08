@@ -222,9 +222,7 @@ void E_Viewport::ResourceDragAndDropTargetListener()
 	if (ImGui::BeginDragDropTarget())
 	{
 		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DRAGGED_ASSET"))
-		{
-			EngineApp->editor->LoadResourceIntoSceneThroughEditor();
-		}
+			EngineApp->editor->LoadResourceIntoSceneThroughEditor(*payload);
 
 		ImGui::EndDragDropTarget();
 	}

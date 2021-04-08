@@ -14,12 +14,10 @@ Gate::~Gate()
 
 void Gate::Update()
 {
-	LOG("Update");
 }
 
 void Gate::CleanUp()
 {
-	LOG("CleanUp");
 }
 
 void Gate::OnCollisionEnter()

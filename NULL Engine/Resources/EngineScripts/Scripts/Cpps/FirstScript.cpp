@@ -4,6 +4,7 @@
 #include "MathGeoLib/include/Math/float3.h"
 #include "Application.h"
 #include "M_Input.h"
+#include "GameObject.h"
 
 FirstScript::FirstScript() : Script()
 {
@@ -43,6 +44,8 @@ void FirstScript::Update()
 		pos.x -= 1;
 		transform->SetLocalPosition(pos);
 	}
+	if (object != nullptr)
+		LOG("Name %s", object->GetName());
 }
 
 void FirstScript::PostUpdate()

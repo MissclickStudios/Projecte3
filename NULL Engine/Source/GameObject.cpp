@@ -41,7 +41,9 @@
 
 #include "C_UI_Image.h"
 #include "C_UI_Text.h"
+#include "C_UI_Button.h"
 
+#include "C_2DAnimator.h"
 
 #include "GameObject.h"
 
@@ -226,6 +228,8 @@ bool GameObject::LoadState(ParsonNode& root)
 			case ComponentType::CANVAS:				{ component = new C_Canvas(this); }				break;
 			case ComponentType::UI_IMAGE:			{ component = new C_UI_Image(this); }			break;
 			case ComponentType::UI_TEXT:			{ component = new C_UI_Text(this); }			break;
+			case ComponentType::UI_BUTTON:			{ component = new C_UI_Button(this); }			break;
+			case ComponentType::ANIMATOR2D:			{ component = new C_2DAnimator(this); }			break;
 			}
 
 			if (component != nullptr)
@@ -771,11 +775,13 @@ Component* GameObject::CreateComponent(ComponentType type)
 	case ComponentType::UI_IMAGE:			{ component = new C_UI_Image(this); }			break;
 	case ComponentType::UI_TEXT:			{ component = new C_UI_Text(this); }			break;
 	case ComponentType::SCRIPT:				{ component = new C_Script(this); }				break;
+	case ComponentType::UI_BUTTON:			{ component = new C_UI_Button(this); }			break;
 	case ComponentType::PLAYER_CONTROLLER:	{ component = new C_PlayerController(this); }	break;
 	case ComponentType::BULLET_BEHAVIOR:	{ component = new C_BulletBehavior(this); }		break;
 	case ComponentType::PROP_BEHAVIOR:		{ component = new C_PropBehavior(this); }		break;
 	case ComponentType::CAMERA_BEHAVIOR:	{ component = new C_CameraBehavior(this); }		break;
 	case ComponentType::GATE_BEHAVIOR:		{ component = new C_GateBehavior(this); }		break;
+	case ComponentType::ANIMATOR2D:			{ component = new C_2DAnimator(this); }			break;
 	}
 
 	if (component != nullptr)

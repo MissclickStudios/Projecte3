@@ -14,6 +14,7 @@
 #define ASSETS_SOUNDBANKS_PATH	"Assets/SoundBanks/"
 #define ASSETS_TEXTURES_PATH	"Assets/Textures/"
 #define ASSETS_SKYBOX_PATH		"Assets/Textures/Skybox/"
+#define ASSETS_ANIMATION2D_PATH "Assets/Animations2D/"
 
 #define ENGINE_PATH				"Engine/"
 #define ENGINE_DIRECTORY		"Engine"
@@ -36,6 +37,7 @@
 #define TEXTURES_PATH			"Library/Textures/"
 #define	SCRIPTS_PATH			"Library/Scripts/"
 #define NAVIGATION_PATH			"Library/Navigation/"
+#define	ANIMATIONS2D_PATH		"Library/Animations2D/"
 
 // File Extensions ----------------------------------
 #define ANIMATIONS_EXTENSION	".neanimat"
@@ -49,10 +51,10 @@
 #define SCRIPTS_EXTENSION		".nescript"
 #define SHADERS_EXTENSION		".neshader"
 #define TEXTURES_EXTENSION		".netex"
-
 #define SCRIPT_AST_EXTENSION	".script"
 #define PARTICLES_AST_EXTENSION	".particles"
 #define NAVMESH_AST_EXTENSION	".navmesh"
+#define ANIMATIONS2D_EXTENSION	".neanimat2d"
 
 #define PREFAB_EXTENSION		".prefab"
 
