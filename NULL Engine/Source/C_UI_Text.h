@@ -8,18 +8,16 @@
 
 #include "Component.h"
 
-namespace freetype {
+class R_Shader;
 
-	struct font_data {
-		float h;
-		GLuint* textures;
-		GLuint list_base;
-		void init(const char* fname, unsigned int h);
-		void clean();
-	};
-	void print(const font_data& ft_font, float x, float y, const char* fmt, ...);
+struct Character {
+	uint textureID;  // ID handle of the glyph texture
+	float2   Size;       // Size of glyph
+	float2   Bearing;    // Offset from baseline to left/top of glyph
+	uint Advance;    // Offset to advance to next glyph
+};
 
-}
+
 
 
 class NULL_API C_UI_Text : public Component
@@ -38,11 +36,15 @@ public:
 
 	static inline ComponentType GetType() { return ComponentType::UI_TEXT; }
 
-	void Draw2D();
-	void Draw2DCharacter(FT_Face id, float x, float y);
-	void Draw3D();
+	void LoadBuffers();
+
+	//void Draw2D();
+	//void Draw2DCharacter(FT_Face id, float x, float y);
+	//void Draw3D();
 
 	void RenderText(std::string text, float x, float y, float scale, float3 color);
+
+	void GenerateTextureID();
 
 public:
 
@@ -63,6 +65,17 @@ private:
 	unsigned char image[640][480];
 
 	FT_UInt  glyphIndex;
+
+	FT_Face face;
+
+	FT_Library ft;
+
+	std::map<char, Character> Characters;
+
+	R_Shader* rShader;
+
+	uint VAO;
+	uint VBO;
 
 };
 
