@@ -49,7 +49,7 @@ struct NULL_API InspectorScriptData {
 	ShowMode showAs;
 	void* ptr = nullptr;
 
-	//GameObject** obj = nullptr;
+	GameObject** obj = nullptr;
 	float minSlider = 0;
 	float maxSlider = 0;
 };

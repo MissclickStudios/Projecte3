@@ -261,6 +261,12 @@ void M_EngineScriptManager::SerializeAllScripts(ParsonArray& scriptsArray)
 									variable.SetInteger("float", *(float*)scriptVariables[i].ptr); break;
 								case InspectorScriptData::DataType::PREFAB:
 									variable.SetInteger("prefab", (*(Prefab*)scriptVariables[i].ptr).uid); break;
+								case InspectorScriptData::DataType::GAMEOBJECT:
+									if (scriptVariables[i].obj != nullptr)
+										variable.SetInteger("gameobject", (*scriptVariables[i].obj)->GetUID());
+									else
+										variable.SetInteger("gameobject", 0);
+									break;
 								}
 							}
 						}

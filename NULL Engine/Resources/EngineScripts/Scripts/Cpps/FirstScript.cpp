@@ -44,6 +44,8 @@ void FirstScript::Update()
 		pos.x -= 1;
 		transform->SetLocalPosition(pos);
 	}
+	if (object != nullptr)
+		LOG("Name %s", object->GetName());
 }
 
 void FirstScript::PostUpdate()

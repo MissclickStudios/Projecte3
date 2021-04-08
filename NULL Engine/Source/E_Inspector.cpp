@@ -1441,29 +1441,24 @@ void E_Inspector::DrawScriptComponent(C_Script* cScript)
 				}
 				break;
 			case InspectorScriptData::DataType::GAMEOBJECT:
-				ImGui::Button(((*variable).ptr != nullptr && *(GameObject**)(*variable).ptr != nullptr) ? std::string("GameObject: "  + std::string((*(GameObject**)(*variable).ptr)->GetName())).data() : "GameObject: NULL", { ImGui::GetWindowWidth() * 0.55F , 0 });
+				ImGui::Button(((*variable).obj != nullptr && *(*variable).obj != nullptr) ? std::string("GameObject: "  + std::string((*(*variable).obj)->GetName())).data() : "GameObject: NULL", { ImGui::GetWindowWidth() * 0.55F , 0 });
 				if (ImGui::BeginDragDropTarget())
 				{
 					if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DRAGGED_NODE"))
 					{
-						//GameObject** ptr = (GameObject**)payload->Data;
-						void* obj = payload->Data;
-						if (obj != nullptr) 
+						GameObject* ptr = *(GameObject**)payload->Data;
+						if (ptr != nullptr) 
 						{
-							//memcpy(&((*variable).ptr), &obj, sizeof(void*));
-							(*variable).ptr = obj;
-							//(*variable).ptr = (GameObject***)&obj;
-							std::string nameee = (*(GameObject**)(*variable).ptr)->GetName();
-							//(*variable).ptr = obj;
+							*(*variable).obj = ptr;
 						}
 					}
 					ImGui::EndDragDropTarget();
 				}
-				//ImGui::SameLine();
-				//if (ImGui::Button(("Remove " + (*variable).variableName).c_str()))
-					//if ((*variable).ptr != nullptr)
-					//	*(GameObject***)(*variable).ptr = nullptr;
-				//break;
+				ImGui::SameLine();
+				if (ImGui::Button(("Remove " + (*variable).variableName).c_str()))
+					if ((*variable).obj != nullptr)
+						*(*variable).obj = nullptr;
+				break;
 			}
 			ImGui::Spacing();
 			ImGui::Separator();

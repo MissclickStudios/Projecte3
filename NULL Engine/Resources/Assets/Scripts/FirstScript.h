@@ -27,7 +27,7 @@ public :
 	float sliderFloat = 3.3f;
 	Prefab tryPrefab;
 	Prefab prefab2;
-	GameObject** object = nullptr;
+	GameObject* object = nullptr;
 };
 
 SCRIPTS_FUNCTION FirstScript* CreateFirstScript() {
@@ -42,6 +42,6 @@ SCRIPTS_FUNCTION FirstScript* CreateFirstScript() {
 	INSPECTOR_SLIDER_FLOAT(script->sliderFloat,0.0,5.5f);
 	INSPECTOR_PREFAB(script->tryPrefab);
 	INSPECTOR_PREFAB(script->prefab2);
-	//INSPECTOR_GAMEOBJECT(script->object); //TODO: Crash when playing !!!!! (error in the getuid() from the pointer on the c_script savestate())
+	INSPECTOR_GAMEOBJECT(script->object);
 	return script;
 }
