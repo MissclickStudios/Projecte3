@@ -1,1505 +1,446 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Dependencies">
-      <UniqueIdentifier>{8ff307dd-7d8a-439f-810f-ce188766b944}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Dependencies\glew">
-      <UniqueIdentifier>{4063d199-7b5c-43c4-95ac-f206f62335a2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Dependencies\MathGeoLib">
-      <UniqueIdentifier>{b7b29b1b-19ab-4057-8431-e740907618b9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Dependencies\parson">
-      <UniqueIdentifier>{291f8e74-890d-48b6-aefd-69e00471d087}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Dependencies\PhysFS">
-      <UniqueIdentifier>{5cc0d5d5-b067-4d25-862c-e0dd34bc6fa5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Dependencies\Assimp">
-      <UniqueIdentifier>{6aa303e1-6694-4757-8209-ffed78b5ee7b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Dependencies\DevIL">
-      <UniqueIdentifier>{b9a2a167-7134-4d0d-a130-8e15faad988f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Dependencies\gpudetect">
-      <UniqueIdentifier>{d8ad7825-f611-407a-ae9f-e791c73d49a4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Dependencies\Brofiler">
-      <UniqueIdentifier>{0503ae36-a6bc-4563-90f6-9b89e0532490}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Dependencies\PCG">
-      <UniqueIdentifier>{43edea25-ddcc-47b7-9fa4-8c73b17b6e6c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Dependencies\MathGeoLib\Algorithm">
-      <UniqueIdentifier>{b9fdb457-18bc-4340-9fa4-eb8a9ec817df}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Dependencies\MathGeoLib\Geometry">
-      <UniqueIdentifier>{438654fb-34fb-4833-9c7c-cec506011c9c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Dependencies\MathGeoLib\Math">
-      <UniqueIdentifier>{4c7515f7-483c-491a-aaa5-b99c421f5eef}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Dependencies\MathGeoLib\Time">
-      <UniqueIdentifier>{45381160-ce4c-449a-864a-2ff15c65a5ba}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Dependencies\MathGeoLib\Algorithm\Random">
-      <UniqueIdentifier>{c57f4dec-e08a-400e-9ed7-7e1d496c723d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source">
-      <UniqueIdentifier>{847d135d-9520-4f5b-aeac-e70c9571d346}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Dependencies\Wwise">
-      <UniqueIdentifier>{2d5e7567-39c3-40fa-a3da-1b2f8c633cd6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Dependencies\FreeType">
-      <UniqueIdentifier>{08e3945a-3181-41f1-84b6-7bdcb659c99d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Dependencies\mmgr">
-      <UniqueIdentifier>{163b4e95-82bd-494a-ab19-d1a2fb05c39b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\0_Core">
-      <UniqueIdentifier>{bd7cff50-eca0-4035-917c-d1a964a1cbad}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\1_Modules">
-      <UniqueIdentifier>{089a5297-550b-4568-a2fc-b7d6cde40b2a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\2_Resources">
-      <UniqueIdentifier>{3fc70017-e1cf-4939-9e07-c815a6a86cb3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\3_Importers">
-      <UniqueIdentifier>{41994cb1-bb1d-4cb8-851d-cd929e1d1ca6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\4_GameObjects">
-      <UniqueIdentifier>{89d9c265-e7ec-4b81-b8e3-1466b0cf3102}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\4_GameObjects\Components">
-      <UniqueIdentifier>{c68e88bb-471c-4d14-bd73-268ca1a3fc4f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\4_GameObjects\Primitives">
-      <UniqueIdentifier>{cee3d9d8-82ce-44fb-9b7d-440b0f93cc4a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\4_GameObjects\Light">
-      <UniqueIdentifier>{a98d25d7-2c83-45fa-a41c-8e3fc94ae71c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\5_Containers">
-      <UniqueIdentifier>{1e102abd-c9e5-43e3-80d1-7bdfd5aae25a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\5_Containers\SystemInfo">
-      <UniqueIdentifier>{4b4fd0f3-b79d-482e-b786-26360cceb682}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\5_Containers\Color">
-      <UniqueIdentifier>{035f876d-323b-42ef-a97f-8702ac5a3b15}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\5_Containers\FileSystem">
-      <UniqueIdentifier>{e638518c-d6dd-48d1-a4c4-68f23131e7e2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\5_Containers\ImportSettings">
-      <UniqueIdentifier>{57aa68b1-2384-413d-8b44-b82b932557b8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\5_Containers\ImportSettings\Settings">
-      <UniqueIdentifier>{f5c81a1d-712c-465d-b0e1-38d2895750db}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\5_Containers\Icons">
-      <UniqueIdentifier>{cbf7300c-306a-40d9-a473-8f4ce3303b95}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\5_Containers\Renderer3D">
-      <UniqueIdentifier>{3f6114a8-c940-4e3d-bb3a-e84527f322d0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\5_Containers\Animator">
-      <UniqueIdentifier>{656967a7-41cb-4465-b88d-3ec673d9c499}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\5_Containers\Animation">
-      <UniqueIdentifier>{29e2c196-174d-4b25-be5b-98a268ce9867}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\6_Tools">
-      <UniqueIdentifier>{880511d6-016b-4f4c-9c9a-c2b51f422055}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\6_Tools\Random">
-      <UniqueIdentifier>{65defa9a-373d-47ef-ac1d-b0544ee05aa3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\6_Tools\Globals">
-      <UniqueIdentifier>{e674a538-3294-4ce9-b3a9-b3680c5722e6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\6_Tools\Parsers">
-      <UniqueIdentifier>{3aaf0e0f-c001-4818-9168-7d1beb976c6c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\6_Tools\Includes">
-      <UniqueIdentifier>{27351bd9-d935-41ef-a866-e00cc8cdf476}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\6_Tools\Time">
-      <UniqueIdentifier>{8383af2d-812c-46ce-988c-4cfcc424cdba}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\6_Tools\Time\TimeContainers">
-      <UniqueIdentifier>{f5fec8cd-efb1-4ea1-aca0-246d5d53cb37}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\6_Tools\LevelGenerator">
-      <UniqueIdentifier>{6e9fa7bc-d2bd-40ef-957c-8561f5b0ae53}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\6_Tools\SkyBox">
-      <UniqueIdentifier>{77f57b8d-5f02-4867-abd7-0eeace15c191}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\5_Containers\GUI">
-      <UniqueIdentifier>{ef08625d-d694-4c74-90a3-37381b3f5125}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\5_Containers\GUI\UIElements">
-      <UniqueIdentifier>{464192ad-b421-4ad7-bf0b-2fe555cbafa8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\5_Containers\Particles">
-      <UniqueIdentifier>{eaa8229a-dd51-44ba-b35e-d24c6e5fa7b2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\5_Containers\Physics">
-      <UniqueIdentifier>{ce9a542f-7964-4e81-b664-d8a917d2ac2d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Dependencies\Optik">
-      <UniqueIdentifier>{80104e48-5b56-47cf-ade1-1a8d4090c2ac}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\4_GameObjects\Components\Behaviors">
-      <UniqueIdentifier>{143fbc63-acff-4389-8f27-99d31261ff53}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\6_Tools\OwnMath">
-      <UniqueIdentifier>{48ef6251-637d-41d1-8b00-92e68a7b8051}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\6_Tools\OwnMath\EasingFunctions">
-      <UniqueIdentifier>{bc7276d6-a8c7-4348-97df-10e1e70c6715}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\6_Tools\OwnMath\Matrices">
-      <UniqueIdentifier>{dedf2148-ddb9-464e-b0ab-4bfcf125e528}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\7_ScriptHelpers">
-      <UniqueIdentifier>{fb6d5c5c-096e-4589-9af6-cdad85c4188b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\5_Containers\Prefab">
-      <UniqueIdentifier>{210a67e9-402b-4623-bf00-eab2afcde184}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\4_GameObjects\Components\UIComponents">
-      <UniqueIdentifier>{6e9dd57d-f7bc-4d4e-a0af-070588aa2b12}</UniqueIdentifier>
-    </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="Source\Application.cpp">
-      <Filter>Source\0_Core</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Light.cpp">
-      <Filter>Source\4_GameObjects\Light</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\M_Input.cpp">
-      <Filter>Source\1_Modules</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\M_Renderer3D.cpp">
-      <Filter>Source\1_Modules</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\M_Window.cpp">
-      <Filter>Source\1_Modules</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Module.cpp">
-      <Filter>Source\1_Modules</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\M_FileSystem.cpp">
-      <Filter>Source\1_Modules</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\M_Camera3D.cpp">
-      <Filter>Source\1_Modules</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\I_Meshes.cpp">
-      <Filter>Source\3_Importers</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Resource.cpp">
-      <Filter>Source\2_Resources</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Primitive.cpp">
-      <Filter>Source\4_GameObjects\Primitives</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\I_Materials.cpp">
-      <Filter>Source\3_Importers</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\C_Mesh.cpp">
-      <Filter>Source\4_GameObjects\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\C_Transform.cpp">
-      <Filter>Source\4_GameObjects\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Component.cpp">
-      <Filter>Source\4_GameObjects\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\GameObject.cpp">
-      <Filter>Source\4_GameObjects</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\R_Model.cpp">
-      <Filter>Source\2_Resources</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\R_Material.cpp">
-      <Filter>Source\2_Resources</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\R_Mesh.cpp">
-      <Filter>Source\2_Resources</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\C_Light.cpp">
-      <Filter>Source\4_GameObjects\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\C_Material.cpp">
-      <Filter>Source\4_GameObjects\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\M_Scene.cpp">
-      <Filter>Source\1_Modules</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\C_Camera.cpp">
-      <Filter>Source\4_GameObjects\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Dependencies\gpudetect\include\DeviceId.cpp">
-      <Filter>Dependencies\gpudetect</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Dependencies\parson\include\parson.c">
-      <Filter>Dependencies\parson</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Dependencies\PCG\include\pcg_basic.c">
-      <Filter>Dependencies\PCG</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Time.cpp">
-      <Filter>Source\6_Tools\Time</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\HardwareInfo.cpp">
-      <Filter>Source\5_Containers\SystemInfo</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\I_Scenes.cpp">
-      <Filter>Source\3_Importers</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\R_Texture.cpp">
-      <Filter>Source\2_Resources</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\I_Textures.cpp">
-      <Filter>Source\3_Importers</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Random.cpp">
-      <Filter>Source\6_Tools\Random</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Importer.cpp">
-      <Filter>Source\3_Importers</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Algorithm\GJK.cpp">
-      <Filter>Dependencies\MathGeoLib\Algorithm</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Algorithm\GJK2D.cpp">
-      <Filter>Dependencies\MathGeoLib\Algorithm</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Algorithm\SAT.cpp">
-      <Filter>Dependencies\MathGeoLib\Algorithm</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Algorithm\Random\LCG.cpp">
-      <Filter>Dependencies\MathGeoLib\Algorithm\Random</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Geometry\AABB.cpp">
-      <Filter>Dependencies\MathGeoLib\Geometry</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Geometry\Capsule.cpp">
-      <Filter>Dependencies\MathGeoLib\Geometry</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Geometry\Circle.cpp">
-      <Filter>Dependencies\MathGeoLib\Geometry</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Geometry\Circle2D.cpp">
-      <Filter>Dependencies\MathGeoLib\Geometry</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Geometry\Frustum.cpp">
-      <Filter>Dependencies\MathGeoLib\Geometry</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Geometry\Line.cpp">
-      <Filter>Dependencies\MathGeoLib\Geometry</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Geometry\LineSegment.cpp">
-      <Filter>Dependencies\MathGeoLib\Geometry</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Geometry\LineSegment2D.cpp">
-      <Filter>Dependencies\MathGeoLib\Geometry</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Geometry\OBB.cpp">
-      <Filter>Dependencies\MathGeoLib\Geometry</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Geometry\PBVolume.cpp">
-      <Filter>Dependencies\MathGeoLib\Geometry</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Geometry\Plane.cpp">
-      <Filter>Dependencies\MathGeoLib\Geometry</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Geometry\Polygon.cpp">
-      <Filter>Dependencies\MathGeoLib\Geometry</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Geometry\Polyhedron.cpp">
-      <Filter>Dependencies\MathGeoLib\Geometry</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Geometry\Ray.cpp">
-      <Filter>Dependencies\MathGeoLib\Geometry</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Geometry\Sphere.cpp">
-      <Filter>Dependencies\MathGeoLib\Geometry</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Geometry\Triangle.cpp">
-      <Filter>Dependencies\MathGeoLib\Geometry</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Geometry\Triangle2D.cpp">
-      <Filter>Dependencies\MathGeoLib\Geometry</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Geometry\TriangleMesh.cpp">
-      <Filter>Dependencies\MathGeoLib\Geometry</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Math\BitOps.cpp">
-      <Filter>Dependencies\MathGeoLib\Math</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Math\Callstack.cpp">
-      <Filter>Dependencies\MathGeoLib\Math</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Math\float2.cpp">
-      <Filter>Dependencies\MathGeoLib\Math</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Math\float3.cpp">
-      <Filter>Dependencies\MathGeoLib\Math</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Math\float3x3.cpp">
-      <Filter>Dependencies\MathGeoLib\Math</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Math\float3x4.cpp">
-      <Filter>Dependencies\MathGeoLib\Math</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Math\float4.cpp">
-      <Filter>Dependencies\MathGeoLib\Math</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Math\float4d.cpp">
-      <Filter>Dependencies\MathGeoLib\Math</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Math\float4x4.cpp">
-      <Filter>Dependencies\MathGeoLib\Math</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Math\grisu3.c">
-      <Filter>Dependencies\MathGeoLib\Math</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Math\grisu3_cpp.cpp">
-      <Filter>Dependencies\MathGeoLib\Math</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Math\MathFunc.cpp">
-      <Filter>Dependencies\MathGeoLib\Math</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Math\MathLog.cpp">
-      <Filter>Dependencies\MathGeoLib\Math</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Math\MathOps.cpp">
-      <Filter>Dependencies\MathGeoLib\Math</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Math\MiniFloat.cpp">
-      <Filter>Dependencies\MathGeoLib\Math</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Math\Polynomial.cpp">
-      <Filter>Dependencies\MathGeoLib\Math</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Math\Quat.cpp">
-      <Filter>Dependencies\MathGeoLib\Math</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Math\SSEMath.cpp">
-      <Filter>Dependencies\MathGeoLib\Math</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Math\TransformOps.cpp">
-      <Filter>Dependencies\MathGeoLib\Math</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Time\Clock.cpp">
-      <Filter>Dependencies\MathGeoLib\Time</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Log.cpp">
-      <Filter>Source\6_Tools\Globals</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Color.cpp">
-      <Filter>Source\5_Containers\Color</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\PathNode.cpp">
-      <Filter>Source\5_Containers\FileSystem</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ImportSettings.cpp">
-      <Filter>Source\5_Containers\ImportSettings</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\JSONParser.cpp">
-      <Filter>Source\6_Tools\Parsers</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\SystemInfo.cpp">
-      <Filter>Source\5_Containers\SystemInfo</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\SoftwareInfo.cpp">
-      <Filter>Source\5_Containers\SystemInfo</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\M_ResourceManager.cpp">
-      <Filter>Source\1_Modules</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\FrameData.cpp">
-      <Filter>Source\6_Tools\Time\TimeContainers</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Timer.cpp">
-      <Filter>Source\6_Tools\Time\TimeContainers</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\PerfectTimer.cpp">
-      <Filter>Source\6_Tools\Time\TimeContainers</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Hourglass.cpp">
-      <Filter>Source\6_Tools\Time\TimeContainers</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\R_Folder.cpp">
-      <Filter>Source\2_Resources</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\R_Animation.cpp">
-      <Filter>Source\2_Resources</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\R_Scene.cpp">
-      <Filter>Source\2_Resources</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\MeshSettings.cpp">
-      <Filter>Source\5_Containers\ImportSettings\Settings</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\MaterialSettings.cpp">
-      <Filter>Source\5_Containers\ImportSettings\Settings</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\TextureSettings.cpp">
-      <Filter>Source\5_Containers\ImportSettings\Settings</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\AnimationSettings.cpp">
-      <Filter>Source\5_Containers\ImportSettings\Settings</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ModelSettings.cpp">
-      <Filter>Source\5_Containers\ImportSettings\Settings</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\I_Folders.cpp">
-      <Filter>Source\3_Importers</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\I_Animations.cpp">
-      <Filter>Source\3_Importers</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Icons.cpp">
-      <Filter>Source\5_Containers\Icons</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Channel.cpp">
-      <Filter>Source\5_Containers\Animator</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\EasingFunctions.cpp">
-      <Filter>Source\6_Tools\OwnMath\EasingFunctions</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\C_Animator.cpp">
-      <Filter>Source\4_GameObjects\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\C_Animation.cpp">
-      <Filter>Source\4_GameObjects\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\AnimatorClip.cpp">
-      <Filter>Source\5_Containers\Animator</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Dependencies\Wwise\samples\SoundEngine\Common\AkDefaultLowLevelIODispatcher.cpp">
-      <Filter>Dependencies\Wwise</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Dependencies\Wwise\samples\SoundEngine\Common\AkFileLocationBase.cpp">
-      <Filter>Dependencies\Wwise</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Dependencies\Wwise\samples\SoundEngine\Common\AkFilePackage.cpp">
-      <Filter>Dependencies\Wwise</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Dependencies\Wwise\samples\SoundEngine\Common\AkFilePackageLUT.cpp">
-      <Filter>Dependencies\Wwise</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Dependencies\Wwise\samples\SoundEngine\Common\AkMultipleFileLocation.cpp">
-      <Filter>Dependencies\Wwise</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Dependencies\Wwise\samples\SoundEngine\Win32\AkDefaultIOHookBlocking.cpp">
-      <Filter>Dependencies\Wwise</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Dependencies\mmgr\include\mmgr.cpp">
-      <Filter>Dependencies\mmgr</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\LevelGenerator.cpp">
-      <Filter>Source\6_Tools\LevelGenerator</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\I_Shaders.cpp">
-      <Filter>Source\3_Importers</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\SkyBox.cpp">
-      <Filter>Source\6_Tools\SkyBox</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\R_Shader.cpp">
-      <Filter>Source\2_Resources</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\M_Audio.cpp">
-      <Filter>Source\1_Modules</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\M_Physics.cpp">
-      <Filter>Source\1_Modules</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\M_UISystem.cpp">
-      <Filter>Source\1_Modules</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\C_AudioListener.cpp">
-      <Filter>Source\4_GameObjects\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\C_AudioSource.cpp">
-      <Filter>Source\4_GameObjects\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\C_BoxCollider.cpp">
-      <Filter>Source\4_GameObjects\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\C_Canvas.cpp">
-      <Filter>Source\4_GameObjects\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\C_CapsuleCollider.cpp">
-      <Filter>Source\4_GameObjects\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\C_ParticleSystem.cpp">
-      <Filter>Source\4_GameObjects\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\C_RigidBody.cpp">
-      <Filter>Source\4_GameObjects\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\C_SphereCollider.cpp">
-      <Filter>Source\4_GameObjects\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ParticleModule.cpp">
-      <Filter>Source\1_Modules</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\SimulationCallback.cpp">
-      <Filter>Source\5_Containers\Physics</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\EngineMain.h">
-      <Filter>Source\0_Core</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Emitter.cpp">
-      <Filter>Source\5_Containers\Particles</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\EmitterInstance.cpp">
-      <Filter>Source\5_Containers\Particles</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Particle.cpp">
-      <Filter>Source\5_Containers\Particles</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\R_Particles.cpp">
-      <Filter>Source\2_Resources</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\DirectionalLight.cpp">
-      <Filter>Source\4_GameObjects\Light</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\PointLight.cpp">
-      <Filter>Source\4_GameObjects\Light</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\C_PlayerController.cpp">
-      <Filter>Source\4_GameObjects\Components\Behaviors</Filter>
-    </ClCompile>
+    <ClCompile Include="Source\AnimationSettings.cpp" />
+    <ClCompile Include="Source\AnimatorClip.cpp" />
+    <ClCompile Include="Source\Application.cpp" />
+    <ClCompile Include="Source\C_2DAnimator.cpp" />
+    <ClCompile Include="Source\C_AudioListener.cpp" />
+    <ClCompile Include="Source\C_AudioSource.cpp" />
     <ClCompile Include="Source\C_BulletBehavior.cpp" />
-      <Filter>Source\4_GameObjects\Components\Behaviors</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\C_CameraBehavior.cpp">
-      <Filter>Source\4_GameObjects\Components\Behaviors</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\C_PropBehavior.cpp">
-      <Filter>Source\4_GameObjects\Components\Behaviors</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\C_BulletBehavior.cpp">
-      <Filter>Source\4_GameObjects\Components\Behaviors</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\C_CameraBehavior.cpp">
-      <Filter>Source\4_GameObjects\Components\Behaviors</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\C_PropBehavior.cpp">
-      <Filter>Source\4_GameObjects\Components\Behaviors</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\C_PlayerController.cpp">
-      <Filter>Source\4_GameObjects\Components\Behaviors</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\C_GateBehavior.cpp">
-      <Filter>Source\4_GameObjects\Components\Behaviors</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\R_Script.cpp">
-      <Filter>Source\2_Resources</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\C_Script.cpp">
-      <Filter>Source\4_GameObjects\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Script.cpp">
-      <Filter>Source\7_ScriptHelpers</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\I_Scripts.cpp">
-      <Filter>Source\3_Importers</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\M_ScriptManager.cpp">
-      <Filter>Source\1_Modules</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Prefab.cpp">
-      <Filter>Source\5_Containers\Prefab</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\R_NavMesh.cpp">
-      <Filter>Source\2_Resources</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\I_Particles.cpp">
-      <Filter>Source\3_Importers</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\I_Navigation.cpp">
-      <Filter>Source\3_Importers</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\C_UI_Image.cpp">
-      <Filter>Source\4_GameObjects\Components\UIComponents</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\C_UI_Text.cpp">
-      <Filter>Source\4_GameObjects\Components\UIComponents</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\C_UI_Button.cpp">
-      <Filter>Source\4_GameObjects\Components\UIComponents</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\R_2DAnimation.cpp">
-      <Filter>Source\2_Resources</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\C_2DAnimator.cpp">
-      <Filter>Source\4_GameObjects\Components</Filter>
-    </ClCompile>
+    <ClCompile Include="Source\C_CameraBehavior.cpp" />
+    <ClCompile Include="Source\C_UI_Button.cpp" />
+    <ClCompile Include="Source\C_UI_Text.cpp" />
+    <ClCompile Include="Source\C_GateBehavior.cpp" />
+    <ClCompile Include="Source\C_Script.cpp" />
+    <ClCompile Include="Source\Dependencies\mmgr\include\mmgr.cpp" />
+    <ClCompile Include="Source\C_PlayerController.cpp" />
+    <ClCompile Include="Source\Dependencies\Wwise\samples\SoundEngine\Common\AkDefaultLowLevelIODispatcher.cpp" />
+    <ClCompile Include="Source\Dependencies\Wwise\samples\SoundEngine\Common\AkFileLocationBase.cpp" />
+    <ClCompile Include="Source\Dependencies\Wwise\samples\SoundEngine\Common\AkFilePackage.cpp" />
+    <ClCompile Include="Source\Dependencies\Wwise\samples\SoundEngine\Common\AkFilePackageLUT.cpp" />
+    <ClCompile Include="Source\Dependencies\Wwise\samples\SoundEngine\Common\AkMultipleFileLocation.cpp" />
+    <ClCompile Include="Source\Dependencies\Wwise\samples\SoundEngine\Win32\AkDefaultIOHookBlocking.cpp" />
+    <ClCompile Include="Source\DirectionalLight.cpp" />
+    <ClCompile Include="Source\I_Navigation.cpp" />
+    <ClCompile Include="Source\I_Particles.cpp" />
+    <ClCompile Include="Source\I_Scripts.cpp" />
+    <ClCompile Include="Source\M_ScriptManager.cpp" />
+    <ClCompile Include="Source\Prefab.cpp" />
+    <ClCompile Include="Source\R_NavMesh.cpp" />
+    <ClCompile Include="Source\R_2DAnimation.cpp" />
+    <ClCompile Include="Source\Script.cpp" />
+    <ClCompile Include="Source\LevelGenerator.cpp" />
+    <ClCompile Include="Source\M_Audio.cpp" />
+    <ClCompile Include="Source\Channel.cpp" />
+    <ClCompile Include="Source\C_Animation.cpp" />
+    <ClCompile Include="Source\C_Animator.cpp" />
+    <ClCompile Include="Source\C_BoxCollider.cpp" />
+    <ClCompile Include="Source\C_CapsuleCollider.cpp" />
+    <ClCompile Include="Source\C_RigidBody.cpp" />
+    <ClCompile Include="Source\C_SphereCollider.cpp" />
+    <ClCompile Include="Source\C_ParticleSystem.cpp" />
+    <ClCompile Include="Source\C_Canvas.cpp" />
+    <ClCompile Include="Source\EasingFunctions.cpp" />
+    <ClCompile Include="Source\Emitter.cpp" />
+    <ClCompile Include="Source\EmitterInstance.cpp" />
+    <ClCompile Include="Source\Hourglass.cpp" />
+    <ClCompile Include="Source\Color.cpp" />
+    <ClCompile Include="Source\Component.cpp" />
+    <ClCompile Include="Source\C_Camera.cpp" />
+    <ClCompile Include="Source\C_Light.cpp" />
+    <ClCompile Include="Source\C_Material.cpp" />
+    <ClCompile Include="Source\C_Mesh.cpp" />
+    <ClCompile Include="Source\C_Transform.cpp" />
+    <ClCompile Include="Source\Dependencies\gpudetect\include\DeviceId.cpp" />
+    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Algorithm\GJK.cpp" />
+    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Algorithm\GJK2D.cpp" />
+    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Algorithm\Random\LCG.cpp" />
+    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Algorithm\SAT.cpp" />
+    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Geometry\AABB.cpp" />
+    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Geometry\Capsule.cpp" />
+    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Geometry\Circle.cpp" />
+    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Geometry\Circle2D.cpp" />
+    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Geometry\Frustum.cpp" />
+    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Geometry\Line.cpp" />
+    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Geometry\LineSegment.cpp" />
+    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Geometry\LineSegment2D.cpp" />
+    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Geometry\OBB.cpp" />
+    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Geometry\PBVolume.cpp" />
+    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Geometry\Plane.cpp" />
+    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Geometry\Polygon.cpp" />
+    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Geometry\Polyhedron.cpp" />
+    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Geometry\Ray.cpp" />
+    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Geometry\Sphere.cpp" />
+    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Geometry\Triangle.cpp" />
+    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Geometry\Triangle2D.cpp" />
+    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Geometry\TriangleMesh.cpp" />
+    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Math\BitOps.cpp" />
+    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Math\Callstack.cpp" />
+    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Math\float2.cpp" />
+    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Math\float3.cpp" />
+    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Math\float3x3.cpp" />
+    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Math\float3x4.cpp" />
+    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Math\float4.cpp" />
+    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Math\float4d.cpp" />
+    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Math\float4x4.cpp" />
+    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Math\grisu3.c" />
+    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Math\grisu3_cpp.cpp" />
+    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Math\MathFunc.cpp" />
+    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Math\MathLog.cpp" />
+    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Math\MathOps.cpp" />
+    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Math\MiniFloat.cpp" />
+    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Math\Polynomial.cpp" />
+    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Math\Quat.cpp" />
+    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Math\SSEMath.cpp" />
+    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Math\TransformOps.cpp" />
+    <ClCompile Include="Source\Dependencies\MathGeoLib\include\Time\Clock.cpp" />
+    <ClCompile Include="Source\Dependencies\parson\include\parson.c" />
+    <ClCompile Include="Source\Dependencies\PCG\include\pcg_basic.c" />
+    <ClCompile Include="Source\FrameData.cpp" />
+    <ClCompile Include="Source\GameObject.cpp" />
+    <ClCompile Include="Source\HardwareInfo.cpp" />
+    <ClCompile Include="Source\Icons.cpp" />
+    <ClCompile Include="Source\Importer.cpp" />
+    <ClCompile Include="Source\ImportSettings.cpp" />
+    <ClCompile Include="Source\I_Animations.cpp" />
+    <ClCompile Include="Source\I_Folders.cpp" />
+    <ClCompile Include="Source\I_Materials.cpp" />
+    <ClCompile Include="Source\I_Meshes.cpp" />
+    <ClCompile Include="Source\I_Scenes.cpp" />
+    <ClCompile Include="Source\I_Shaders.cpp" />
+    <ClCompile Include="Source\I_Textures.cpp" />
+    <ClCompile Include="Source\JSONParser.cpp" />
+    <ClCompile Include="Source\Log.cpp" />
+    <ClCompile Include="Source\MaterialSettings.cpp" />
+    <ClCompile Include="Source\MeshSettings.cpp" />
+    <ClCompile Include="Source\ModelSettings.cpp" />
+    <ClCompile Include="Source\Light.cpp" />
+    <ClCompile Include="Source\Module.cpp" />
+    <ClCompile Include="Source\M_Camera3D.cpp" />
+    <ClCompile Include="Source\M_Input.cpp" />
+    <ClCompile Include="Source\M_Physics.cpp" />
+    <ClCompile Include="Source\M_Renderer3D.cpp" />
+    <ClCompile Include="Source\M_ResourceManager.cpp" />
+    <ClCompile Include="Source\M_Scene.cpp" />
+    <ClCompile Include="Source\M_UISystem.cpp" />
+    <ClCompile Include="Source\M_Window.cpp" />
+    <ClCompile Include="Source\M_FileSystem.cpp" />
+    <ClCompile Include="Source\Particle.cpp" />
+    <ClCompile Include="Source\PathNode.cpp" />
+    <ClCompile Include="Source\C_PropBehavior.cpp" />
+    <ClCompile Include="Source\PointLight.cpp" />
+    <ClCompile Include="Source\Random.cpp" />
+    <ClCompile Include="Source\R_Animation.cpp" />
+    <ClCompile Include="Source\R_Folder.cpp" />
+    <ClCompile Include="Source\R_Particles.cpp" />
+    <ClCompile Include="Source\R_Scene.cpp" />
+    <ClCompile Include="Source\R_Script.cpp" />
+    <ClCompile Include="Source\R_Shader.cpp" />
+    <ClCompile Include="Source\R_Texture.cpp" />
+    <ClCompile Include="Source\SimulationCallback.cpp" />
+    <ClCompile Include="Source\SkyBox.cpp" />
+    <ClCompile Include="Source\SoftwareInfo.cpp" />
+    <ClCompile Include="Source\ParticleModule.cpp" />
+    <ClCompile Include="Source\SystemInfo.cpp" />
+    <ClCompile Include="Source\TextureSettings.cpp" />
+    <ClCompile Include="Source\Time.cpp" />
+    <ClCompile Include="Source\PerfectTimer.cpp" />
+    <ClCompile Include="Source\Primitive.cpp" />
+    <ClCompile Include="Source\Resource.cpp" />
+    <ClCompile Include="Source\R_Material.cpp" />
+    <ClCompile Include="Source\R_Mesh.cpp" />
+    <ClCompile Include="Source\R_Model.cpp" />
+    <ClCompile Include="Source\Timer.cpp" />
+    <ClCompile Include="Source\C_UI_Image.cpp" />
+    <ClCompile Include="Source\EngineMain.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\Application.h">
-      <Filter>Source\0_Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Globals.h">
-      <Filter>Source\0_Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Light.h">
-      <Filter>Source\4_GameObjects\Light</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\glew\include\eglew.h">
-      <Filter>Dependencies\glew</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\glew\include\glew.h">
-      <Filter>Dependencies\glew</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\glew\include\glxew.h">
-      <Filter>Dependencies\glew</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\glew\include\wglew.h">
-      <Filter>Dependencies\glew</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\PhysFS\include\physfs.h">
-      <Filter>Dependencies\PhysFS</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\M_Input.h">
-      <Filter>Source\1_Modules</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\M_Renderer3D.h">
-      <Filter>Source\1_Modules</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\M_Window.h">
-      <Filter>Source\1_Modules</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Module.h">
-      <Filter>Source\1_Modules</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\M_FileSystem.h">
-      <Filter>Source\1_Modules</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\M_Camera3D.h">
-      <Filter>Source\1_Modules</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\I_Meshes.h">
-      <Filter>Source\3_Importers</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Resource.h">
-      <Filter>Source\2_Resources</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\DevIL\include\config.h">
-      <Filter>Dependencies\DevIL</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\DevIL\include\devil_internal_exports.h">
-      <Filter>Dependencies\DevIL</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\DevIL\include\il.h">
-      <Filter>Dependencies\DevIL</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\DevIL\include\il_wrap.h">
-      <Filter>Dependencies\DevIL</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\DevIL\include\ilu.h">
-      <Filter>Dependencies\DevIL</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\DevIL\include\ilu_region.h">
-      <Filter>Dependencies\DevIL</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\DevIL\include\ilut.h">
-      <Filter>Dependencies\DevIL</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\DevIL\include\ilut_config.h">
-      <Filter>Dependencies\DevIL</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Primitive.h">
-      <Filter>Source\4_GameObjects\Primitives</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\I_Materials.h">
-      <Filter>Source\3_Importers</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\C_Mesh.h">
-      <Filter>Source\4_GameObjects\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\C_Transform.h">
-      <Filter>Source\4_GameObjects\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Component.h">
-      <Filter>Source\4_GameObjects\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\GameObject.h">
-      <Filter>Source\4_GameObjects</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\Brofiler\include\Brofiler.h">
-      <Filter>Dependencies\Brofiler</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\R_Material.h">
-      <Filter>Source\2_Resources</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\R_Mesh.h">
-      <Filter>Source\2_Resources</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\R_Model.h">
-      <Filter>Source\2_Resources</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\C_Light.h">
-      <Filter>Source\4_GameObjects\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\C_Material.h">
-      <Filter>Source\4_GameObjects\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\M_Scene.h">
-      <Filter>Source\1_Modules</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\C_Camera.h">
-      <Filter>Source\4_GameObjects\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\gpudetect\include\DeviceId.h">
-      <Filter>Dependencies\gpudetect</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\gpudetect\include\dxgi1_4.h">
-      <Filter>Dependencies\gpudetect</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\parson\include\parson.h">
-      <Filter>Dependencies\parson</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\PCG\include\pcg_basic.h">
-      <Filter>Dependencies\PCG</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Assimp.h">
-      <Filter>Source\6_Tools\Includes</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\DevIL.h">
-      <Filter>Source\6_Tools\Includes</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ImGui.h">
-      <Filter>Source\6_Tools\Includes</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\OpenGL.h">
-      <Filter>Source\6_Tools\Includes</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Time.h">
-      <Filter>Source\6_Tools\Time</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\MemoryManager.h">
-      <Filter>Source\6_Tools\Includes</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Profiler.h">
-      <Filter>Source\6_Tools\Includes</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\HardwareInfo.h">
-      <Filter>Source\5_Containers\SystemInfo</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\I_Scenes.h">
-      <Filter>Source\3_Importers</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\R_Texture.h">
-      <Filter>Source\2_Resources</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\I_Textures.h">
-      <Filter>Source\3_Importers</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Random.h">
-      <Filter>Source\6_Tools\Random</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Importer.h">
-      <Filter>Source\3_Importers</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\MathGeoLib\include\MathBuildConfig.h">
-      <Filter>Dependencies\MathGeoLib</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\MathGeoLib\include\MathGeoLib.h">
-      <Filter>Dependencies\MathGeoLib</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\MathGeoLib\include\MathGeoLibFwd.h">
-      <Filter>Dependencies\MathGeoLib</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Algorithm\GJK.h">
-      <Filter>Dependencies\MathGeoLib\Algorithm</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Algorithm\GJK2D.h">
-      <Filter>Dependencies\MathGeoLib\Algorithm</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Algorithm\SAT.h">
-      <Filter>Dependencies\MathGeoLib\Algorithm</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Algorithm\Random\LCG.h">
-      <Filter>Dependencies\MathGeoLib\Algorithm\Random</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Geometry\AABB.h">
-      <Filter>Dependencies\MathGeoLib\Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Geometry\AABB2D.h">
-      <Filter>Dependencies\MathGeoLib\Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Geometry\Capsule.h">
-      <Filter>Dependencies\MathGeoLib\Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Geometry\Circle.h">
-      <Filter>Dependencies\MathGeoLib\Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Geometry\Circle2D.h">
-      <Filter>Dependencies\MathGeoLib\Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Geometry\Frustum.h">
-      <Filter>Dependencies\MathGeoLib\Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Geometry\GeometryAll.h">
-      <Filter>Dependencies\MathGeoLib\Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Geometry\GeomType.h">
-      <Filter>Dependencies\MathGeoLib\Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Geometry\HitInfo.h">
-      <Filter>Dependencies\MathGeoLib\Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Geometry\KDTree.h">
-      <Filter>Dependencies\MathGeoLib\Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Geometry\Line.h">
-      <Filter>Dependencies\MathGeoLib\Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Geometry\LineSegment.h">
-      <Filter>Dependencies\MathGeoLib\Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Geometry\LineSegment2D.h">
-      <Filter>Dependencies\MathGeoLib\Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Geometry\OBB.h">
-      <Filter>Dependencies\MathGeoLib\Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Geometry\OBB2D.h">
-      <Filter>Dependencies\MathGeoLib\Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Geometry\PBVolume.h">
-      <Filter>Dependencies\MathGeoLib\Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Geometry\Plane.h">
-      <Filter>Dependencies\MathGeoLib\Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Geometry\Polygon.h">
-      <Filter>Dependencies\MathGeoLib\Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Geometry\Polygon2DRef.h">
-      <Filter>Dependencies\MathGeoLib\Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Geometry\Polyhedron.h">
-      <Filter>Dependencies\MathGeoLib\Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Geometry\QuadTree.h">
-      <Filter>Dependencies\MathGeoLib\Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Geometry\Ray.h">
-      <Filter>Dependencies\MathGeoLib\Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Geometry\Sphere.h">
-      <Filter>Dependencies\MathGeoLib\Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Geometry\Triangle.h">
-      <Filter>Dependencies\MathGeoLib\Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Geometry\Triangle2D.h">
-      <Filter>Dependencies\MathGeoLib\Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Geometry\TriangleMesh.h">
-      <Filter>Dependencies\MathGeoLib\Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\assume.h">
-      <Filter>Dependencies\MathGeoLib\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\BitFuncs.h">
-      <Filter>Dependencies\MathGeoLib\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\BitOps.h">
-      <Filter>Dependencies\MathGeoLib\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\Callstack.h">
-      <Filter>Dependencies\MathGeoLib\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\FixedPoint.h">
-      <Filter>Dependencies\MathGeoLib\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\float2.h">
-      <Filter>Dependencies\MathGeoLib\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\float3.h">
-      <Filter>Dependencies\MathGeoLib\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\float3x3.h">
-      <Filter>Dependencies\MathGeoLib\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\float3x4.h">
-      <Filter>Dependencies\MathGeoLib\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\float4.h">
-      <Filter>Dependencies\MathGeoLib\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\float4_neon.h">
-      <Filter>Dependencies\MathGeoLib\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\float4_sse.h">
-      <Filter>Dependencies\MathGeoLib\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\float4d.h">
-      <Filter>Dependencies\MathGeoLib\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\float4x4.h">
-      <Filter>Dependencies\MathGeoLib\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\float4x4_neon.h">
-      <Filter>Dependencies\MathGeoLib\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\float4x4_sse.h">
-      <Filter>Dependencies\MathGeoLib\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\FloatCmp.h">
-      <Filter>Dependencies\MathGeoLib\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\grisu3.h">
-      <Filter>Dependencies\MathGeoLib\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\InclWindows.h">
-      <Filter>Dependencies\MathGeoLib\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\Interpolate.h">
-      <Filter>Dependencies\MathGeoLib\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\MathAll.h">
-      <Filter>Dependencies\MathGeoLib\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\MathConstants.h">
-      <Filter>Dependencies\MathGeoLib\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\MathFunc.h">
-      <Filter>Dependencies\MathGeoLib\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\MathLog.h">
-      <Filter>Dependencies\MathGeoLib\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\MathNamespace.h">
-      <Filter>Dependencies\MathGeoLib\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\MathTypes.h">
-      <Filter>Dependencies\MathGeoLib\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\MatrixProxy.h">
-      <Filter>Dependencies\MathGeoLib\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\MiniFloat.h">
-      <Filter>Dependencies\MathGeoLib\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\MultiLineMacro.h">
-      <Filter>Dependencies\MathGeoLib\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\myassert.h">
-      <Filter>Dependencies\MathGeoLib\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\Polynomial.h">
-      <Filter>Dependencies\MathGeoLib\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\Quat.h">
-      <Filter>Dependencies\MathGeoLib\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\quat_simd.h">
-      <Filter>Dependencies\MathGeoLib\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\Rect.h">
-      <Filter>Dependencies\MathGeoLib\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\Reinterpret.h">
-      <Filter>Dependencies\MathGeoLib\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\simd.h">
-      <Filter>Dependencies\MathGeoLib\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\sse_mathfun.h">
-      <Filter>Dependencies\MathGeoLib\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\SSEMath.h">
-      <Filter>Dependencies\MathGeoLib\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\Swap.h">
-      <Filter>Dependencies\MathGeoLib\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\TransformOps.h">
-      <Filter>Dependencies\MathGeoLib\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\vec2d.h">
-      <Filter>Dependencies\MathGeoLib\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Time\Clock.h">
-      <Filter>Dependencies\MathGeoLib\Time</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Log.h">
-      <Filter>Source\6_Tools\Globals</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Color.h">
-      <Filter>Source\5_Containers\Color</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\PathNode.h">
-      <Filter>Source\5_Containers\FileSystem</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Macros.h">
-      <Filter>Source\6_Tools\Globals</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\VariableDefinitions.h">
-      <Filter>Source\6_Tools\Globals</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ConfigurationSettings.h">
-      <Filter>Source\6_Tools\Globals</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\FileSystemDefinitions.h">
-      <Filter>Source\6_Tools\Globals</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\MathGeoTransform.h">
-      <Filter>Source\6_Tools\Includes</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\MathGeoBoundingBox.h">
-      <Filter>Source\6_Tools\Includes</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\MathGeoFrustum.h">
-      <Filter>Source\6_Tools\Includes</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\UpdateStatus.h">
-      <Filter>Source\6_Tools\Globals</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ImportSettings.h">
-      <Filter>Source\5_Containers\ImportSettings</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\JSONParser.h">
-      <Filter>Source\6_Tools\Parsers</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\VariableTypedefs.h">
-      <Filter>Source\6_Tools\Globals</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\SystemInfo.h">
-      <Filter>Source\5_Containers\SystemInfo</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\SoftwareInfo.h">
-      <Filter>Source\5_Containers\SystemInfo</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\M_ResourceManager.h">
-      <Filter>Source\1_Modules</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\FrameData.h">
-      <Filter>Source\6_Tools\Time\TimeContainers</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Timer.h">
-      <Filter>Source\6_Tools\Time\TimeContainers</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\PerfectTimer.h">
-      <Filter>Source\6_Tools\Time\TimeContainers</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Hourglass.h">
-      <Filter>Source\6_Tools\Time\TimeContainers</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\R_Folder.h">
-      <Filter>Source\2_Resources</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\R_Animation.h">
-      <Filter>Source\2_Resources</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\R_Scene.h">
-      <Filter>Source\2_Resources</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\MeshSettings.h">
-      <Filter>Source\5_Containers\ImportSettings\Settings</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\MaterialSettings.h">
-      <Filter>Source\5_Containers\ImportSettings\Settings</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\TextureSettings.h">
-      <Filter>Source\5_Containers\ImportSettings\Settings</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\AnimationSettings.h">
-      <Filter>Source\5_Containers\ImportSettings\Settings</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ModelSettings.h">
-      <Filter>Source\5_Containers\ImportSettings\Settings</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\I_Folders.h">
-      <Filter>Source\3_Importers</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\I_Animations.h">
-      <Filter>Source\3_Importers</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Icons.h">
-      <Filter>Source\5_Containers\Icons</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Channel.h">
-      <Filter>Source\5_Containers\Animator</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\EasingFunctions.h">
-      <Filter>Source\6_Tools\OwnMath\EasingFunctions</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Keyframe.h">
-      <Filter>Source\5_Containers\Animator</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\AnimatorClip.h">
-      <Filter>Source\5_Containers\Animator</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\C_Animator.h">
-      <Filter>Source\4_GameObjects\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\C_Animation.h">
-      <Filter>Source\4_GameObjects\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\AnimationClip.h">
-      <Filter>Source\5_Containers\Animation</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Bone.h">
-      <Filter>Source\5_Containers\Animator</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\Wwise\samples\SoundEngine\Common\AkDefaultLowLevelIODispatcher.h">
-      <Filter>Dependencies\Wwise</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\Wwise\samples\SoundEngine\Common\AkFileLocationBase.h">
-      <Filter>Dependencies\Wwise</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\Wwise\samples\SoundEngine\Common\AkFilePackage.h">
-      <Filter>Dependencies\Wwise</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\Wwise\samples\SoundEngine\Common\AkFilePackageLowLevelIO.h">
-      <Filter>Dependencies\Wwise</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\Wwise\samples\SoundEngine\Common\AkFilePackageLUT.h">
-      <Filter>Dependencies\Wwise</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\Wwise\samples\SoundEngine\Common\AkMultipleFileLocation.h">
-      <Filter>Dependencies\Wwise</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\Wwise\samples\SoundEngine\Win32\AkDefaultIOHookBlocking.h">
-      <Filter>Dependencies\Wwise</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\Wwise\samples\SoundEngine\Win32\AkFileHelpers.h">
-      <Filter>Dependencies\Wwise</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\tttags.h">
-      <Filter>Dependencies\FreeType</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\freetype.h">
-      <Filter>Dependencies\FreeType</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\FreeType\include\ft2build.h">
-      <Filter>Dependencies\FreeType</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\ftadvanc.h">
-      <Filter>Dependencies\FreeType</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\ftbbox.h">
-      <Filter>Dependencies\FreeType</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\ftbdf.h">
-      <Filter>Dependencies\FreeType</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\ftbitmap.h">
-      <Filter>Dependencies\FreeType</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\ftbzip2.h">
-      <Filter>Dependencies\FreeType</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\ftcache.h">
-      <Filter>Dependencies\FreeType</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\ftchapters.h">
-      <Filter>Dependencies\FreeType</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\ftcid.h">
-      <Filter>Dependencies\FreeType</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\config\ftconfig.h">
-      <Filter>Dependencies\FreeType</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\ftdriver.h">
-      <Filter>Dependencies\FreeType</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\fterrdef.h">
-      <Filter>Dependencies\FreeType</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\fterrors.h">
-      <Filter>Dependencies\FreeType</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\ftfntfmt.h">
-      <Filter>Dependencies\FreeType</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\ftgasp.h">
-      <Filter>Dependencies\FreeType</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\ftglyph.h">
-      <Filter>Dependencies\FreeType</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\ftgxval.h">
-      <Filter>Dependencies\FreeType</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\ftgzip.h">
-      <Filter>Dependencies\FreeType</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\config\ftheader.h">
-      <Filter>Dependencies\FreeType</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\ftimage.h">
-      <Filter>Dependencies\FreeType</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\ftincrem.h">
-      <Filter>Dependencies\FreeType</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\ftlcdfil.h">
-      <Filter>Dependencies\FreeType</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\ftlist.h">
-      <Filter>Dependencies\FreeType</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\ftlzw.h">
-      <Filter>Dependencies\FreeType</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\ftmac.h">
-      <Filter>Dependencies\FreeType</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\ftmm.h">
-      <Filter>Dependencies\FreeType</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\ftmodapi.h">
-      <Filter>Dependencies\FreeType</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\ftmoderr.h">
-      <Filter>Dependencies\FreeType</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\config\ftmodule.h">
-      <Filter>Dependencies\FreeType</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\config\ftoption.h">
-      <Filter>Dependencies\FreeType</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\ftotval.h">
-      <Filter>Dependencies\FreeType</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\ftoutln.h">
-      <Filter>Dependencies\FreeType</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\ftparams.h">
-      <Filter>Dependencies\FreeType</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\ftpfr.h">
-      <Filter>Dependencies\FreeType</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\ftrender.h">
-      <Filter>Dependencies\FreeType</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\ftsizes.h">
-      <Filter>Dependencies\FreeType</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\ftsnames.h">
-      <Filter>Dependencies\FreeType</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\config\ftstdlib.h">
-      <Filter>Dependencies\FreeType</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\ftstroke.h">
-      <Filter>Dependencies\FreeType</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\ftsynth.h">
-      <Filter>Dependencies\FreeType</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\ftsystem.h">
-      <Filter>Dependencies\FreeType</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\fttrigon.h">
-      <Filter>Dependencies\FreeType</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\fttypes.h">
-      <Filter>Dependencies\FreeType</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\ftwinfnt.h">
-      <Filter>Dependencies\FreeType</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\t1tables.h">
-      <Filter>Dependencies\FreeType</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\ttnameid.h">
-      <Filter>Dependencies\FreeType</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\tttables.h">
-      <Filter>Dependencies\FreeType</Filter>
-    </ClInclude>
+    <ClInclude Include="Source\AnimationClip.h" />
+    <ClInclude Include="Source\AnimationSettings.h" />
+    <ClInclude Include="Source\BoneLink.h" />
+    <ClInclude Include="Source\AnimatorClip.h" />
+    <ClInclude Include="Source\Application.h" />
+    <ClInclude Include="Source\Assimp.h" />
+    <ClInclude Include="Source\Bone.h" />
+    <ClInclude Include="Source\Channel.h" />
     <ClInclude Include="Source\Collider.h" />
-    <ClInclude Include="Source\Emitter.h" />
-    <ClInclude Include="Source\EmitterInstance.h" />
-    <ClInclude Include="Source\Particle.h" />
-    <ClInclude Include="Source\ParticleModule.h" />
-    <ClInclude Include="Source\SimulationCallback.h" />
-    <ClInclude Include="Source\Dependencies\mmgr\include\mmgr.h">
-      <Filter>Dependencies\mmgr</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\mmgr\include\nommgr.h">
-      <Filter>Dependencies\mmgr</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\LevelGenerator.h">
-      <Filter>Source\6_Tools\LevelGenerator</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\I_Shaders.h">
-      <Filter>Source\3_Importers</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\SkyBox.h">
-      <Filter>Source\6_Tools\SkyBox</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\R_Shader.h">
-      <Filter>Source\2_Resources</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\M_Audio.h">
-      <Filter>Source\1_Modules</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\M_Physics.h">
-      <Filter>Source\1_Modules</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\M_UISystem.h">
-      <Filter>Source\1_Modules</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\C_SphereCollider.h">
-      <Filter>Source\4_GameObjects\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\C_AudioListener.h">
-      <Filter>Source\4_GameObjects\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\C_AudioSource.h">
-      <Filter>Source\4_GameObjects\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\C_BoxCollider.h">
-      <Filter>Source\4_GameObjects\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\C_Canvas.h">
-      <Filter>Source\4_GameObjects\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\C_CapsuleCollider.h">
-      <Filter>Source\4_GameObjects\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\C_ParticleSystem.h">
-      <Filter>Source\4_GameObjects\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\C_RigidBody.h">
-      <Filter>Source\4_GameObjects\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ParticleModule.h">
-      <Filter>Source\1_Modules</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\SimulationCallback.h">
-      <Filter>Source\5_Containers\Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Collider.h">
-      <Filter>Source\5_Containers\Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Emitter.h">
-      <Filter>Source\5_Containers\Particles</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\EmitterInstance.h">
-      <Filter>Source\5_Containers\Particles</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Particle.h">
-      <Filter>Source\5_Containers\Particles</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\R_Particles.h">
-      <Filter>Source\2_Resources</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\DirectionalLight.h">
-      <Filter>Source\4_GameObjects\Light</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\PointLight.h">
-      <Filter>Source\4_GameObjects\Light</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\Optik\include\optick.config.h">
-      <Filter>Dependencies\Optik</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\Optik\include\optick.h">
-      <Filter>Dependencies\Optik</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\BoneLink.h">
-      <Filter>Source\5_Containers\Animator</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\C_PlayerController.h">
-      <Filter>Source\4_GameObjects\Components\Behaviors</Filter>
-    </ClInclude>
+    <ClInclude Include="Source\C_2DAnimator.h" />
+    <ClInclude Include="Source\C_Animation.h" />
+    <ClInclude Include="Source\C_Animator.h" />
+    <ClInclude Include="Source\C_AudioListener.h" />
+    <ClInclude Include="Source\C_AudioSource.h" />
     <ClInclude Include="Source\C_BulletBehavior.h" />
     <ClInclude Include="Source\C_CameraBehavior.h" />
+    <ClInclude Include="Source\C_UI_Button.h" />
+    <ClInclude Include="Source\C_UI_Text.h" />
+    <ClInclude Include="Source\C_GateBehavior.h" />
+    <ClInclude Include="Source\C_Script.h" />
+    <ClInclude Include="Source\Dependencies\Assimp\include\assimp\cimport.h" />
+    <ClInclude Include="Source\Dependencies\Assimp\include\assimp\postprocess.h" />
+    <ClInclude Include="Source\Dependencies\Assimp\include\assimp\scene.h" />
+    <ClInclude Include="Source\Dependencies\mmgr\include\mmgr.h" />
+    <ClInclude Include="Source\Dependencies\mmgr\include\nommgr.h" />
+    <ClInclude Include="Source\C_PlayerController.h" />
+    <ClInclude Include="Source\Dependencies\Optik\include\optick.config.h" />
+    <ClInclude Include="Source\Dependencies\Optik\include\optick.h" />
+    <ClInclude Include="Source\Dependencies\Wwise\samples\SoundEngine\Common\AkDefaultLowLevelIODispatcher.h" />
+    <ClInclude Include="Source\Dependencies\Wwise\samples\SoundEngine\Common\AkFileLocationBase.h" />
+    <ClInclude Include="Source\Dependencies\Wwise\samples\SoundEngine\Common\AkFilePackage.h" />
+    <ClInclude Include="Source\Dependencies\Wwise\samples\SoundEngine\Common\AkFilePackageLowLevelIO.h" />
+    <ClInclude Include="Source\Dependencies\Wwise\samples\SoundEngine\Common\AkFilePackageLUT.h" />
+    <ClInclude Include="Source\Dependencies\Wwise\samples\SoundEngine\Common\AkMultipleFileLocation.h" />
+    <ClInclude Include="Source\Dependencies\Wwise\samples\SoundEngine\Win32\AkDefaultIOHookBlocking.h" />
+    <ClInclude Include="Source\Dependencies\Wwise\samples\SoundEngine\Win32\AkFileHelpers.h" />
+    <ClInclude Include="Source\C_BoxCollider.h" />
+    <ClInclude Include="Source\C_CapsuleCollider.h" />
+    <ClInclude Include="Source\C_RigidBody.h" />
+    <ClInclude Include="Source\C_SphereCollider.h" />
+    <ClInclude Include="Source\C_ParticleSystem.h" />
+    <ClInclude Include="Source\C_Canvas.h" />
+    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\config\ftconfig.h" />
+    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\config\ftheader.h" />
+    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\config\ftmodule.h" />
+    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\config\ftoption.h" />
+    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\config\ftstdlib.h" />
+    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\freetype.h" />
+    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\ftadvanc.h" />
+    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\ftbbox.h" />
+    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\ftbdf.h" />
+    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\ftbitmap.h" />
+    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\ftbzip2.h" />
+    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\ftcache.h" />
+    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\ftchapters.h" />
+    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\ftcid.h" />
+    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\ftdriver.h" />
+    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\fterrdef.h" />
+    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\fterrors.h" />
+    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\ftfntfmt.h" />
+    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\ftgasp.h" />
+    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\ftglyph.h" />
+    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\ftgxval.h" />
+    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\ftgzip.h" />
+    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\ftimage.h" />
+    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\ftincrem.h" />
+    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\ftlcdfil.h" />
+    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\ftlist.h" />
+    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\ftlzw.h" />
+    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\ftmac.h" />
+    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\ftmm.h" />
+    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\ftmodapi.h" />
+    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\ftmoderr.h" />
+    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\ftotval.h" />
+    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\ftoutln.h" />
+    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\ftparams.h" />
+    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\ftpfr.h" />
+    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\ftrender.h" />
+    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\ftsizes.h" />
+    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\ftsnames.h" />
+    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\ftstroke.h" />
+    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\ftsynth.h" />
+    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\ftsystem.h" />
+    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\fttrigon.h" />
+    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\fttypes.h" />
+    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\ftwinfnt.h" />
+    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\t1tables.h" />
+    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\ttnameid.h" />
+    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\tttables.h" />
+    <ClInclude Include="Source\Dependencies\FreeType\include\freetype\tttags.h" />
+    <ClInclude Include="Source\Dependencies\FreeType\include\ft2build.h" />
+    <ClInclude Include="Source\DirectionalLight.h" />
+    <ClInclude Include="Source\EasingFunctions.h" />
+    <ClInclude Include="Source\Emitter.h" />
+    <ClInclude Include="Source\EmitterInstance.h" />
+    <ClInclude Include="Source\I_Navigation.h" />
+    <ClInclude Include="Source\I_Particles.h" />
+    <ClInclude Include="Source\I_Scripts.h" />
+    <ClInclude Include="Source\M_ScriptManager.h" />
+    <ClInclude Include="Source\Prefab.h" />
+    <ClInclude Include="Source\R_NavMesh.h" />
+    <ClInclude Include="Source\R_2DAnimation.h" />
+    <ClInclude Include="Source\Script.h" />
+    <ClInclude Include="Source\Hourglass.h" />
+    <ClInclude Include="Source\Color.h" />
+    <ClInclude Include="Source\Component.h" />
+    <ClInclude Include="Source\ConfigurationSettings.h" />
+    <ClInclude Include="Source\C_Camera.h" />
+    <ClInclude Include="Source\C_Light.h" />
+    <ClInclude Include="Source\C_Material.h" />
+    <ClInclude Include="Source\C_Mesh.h" />
+    <ClInclude Include="Source\C_Transform.h" />
+    <ClInclude Include="Source\Dependencies\Brofiler\include\Brofiler.h" />
+    <ClInclude Include="Source\Dependencies\DevIL\include\config.h" />
+    <ClInclude Include="Source\Dependencies\DevIL\include\devil_internal_exports.h" />
+    <ClInclude Include="Source\Dependencies\DevIL\include\il.h" />
+    <ClInclude Include="Source\Dependencies\DevIL\include\ilu.h" />
+    <ClInclude Include="Source\Dependencies\DevIL\include\ilut.h" />
+    <ClInclude Include="Source\Dependencies\DevIL\include\ilut_config.h" />
+    <ClInclude Include="Source\Dependencies\DevIL\include\ilu_region.h" />
+    <ClInclude Include="Source\Dependencies\DevIL\include\il_wrap.h" />
+    <ClInclude Include="Source\Dependencies\glew\include\eglew.h" />
+    <ClInclude Include="Source\Dependencies\glew\include\glew.h" />
+    <ClInclude Include="Source\Dependencies\glew\include\glxew.h" />
+    <ClInclude Include="Source\Dependencies\glew\include\wglew.h" />
+    <ClInclude Include="Source\Dependencies\gpudetect\include\DeviceId.h" />
+    <ClInclude Include="Source\Dependencies\gpudetect\include\dxgi1_4.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Algorithm\GJK.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Algorithm\GJK2D.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Algorithm\Random\LCG.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Algorithm\SAT.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Geometry\AABB.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Geometry\AABB2D.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Geometry\Capsule.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Geometry\Circle.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Geometry\Circle2D.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Geometry\Frustum.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Geometry\GeometryAll.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Geometry\GeomType.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Geometry\HitInfo.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Geometry\KDTree.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Geometry\Line.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Geometry\LineSegment.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Geometry\LineSegment2D.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Geometry\OBB.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Geometry\OBB2D.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Geometry\PBVolume.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Geometry\Plane.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Geometry\Polygon.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Geometry\Polygon2DRef.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Geometry\Polyhedron.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Geometry\QuadTree.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Geometry\Ray.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Geometry\Sphere.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Geometry\Triangle.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Geometry\Triangle2D.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Geometry\TriangleMesh.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\MathBuildConfig.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\MathGeoLib.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\MathGeoLibFwd.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\assume.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\BitFuncs.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\BitOps.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\Callstack.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\FixedPoint.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\float2.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\float3.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\float3x3.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\float3x4.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\float4.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\float4d.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\float4x4.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\float4x4_neon.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\float4x4_sse.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\float4_neon.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\float4_sse.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\FloatCmp.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\grisu3.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\InclWindows.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\Interpolate.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\MathAll.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\MathConstants.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\MathFunc.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\MathLog.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\MathNamespace.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\MathTypes.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\MatrixProxy.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\MiniFloat.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\MultiLineMacro.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\myassert.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\Polynomial.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\Quat.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\quat_simd.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\Rect.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\Reinterpret.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\simd.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\SSEMath.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\sse_mathfun.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\Swap.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\TransformOps.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Math\vec2d.h" />
+    <ClInclude Include="Source\Dependencies\MathGeoLib\include\Time\Clock.h" />
+    <ClInclude Include="Source\Dependencies\parson\include\parson.h" />
+    <ClInclude Include="Source\Dependencies\PCG\include\pcg_basic.h" />
+    <ClInclude Include="Source\Dependencies\PhysFS\include\physfs.h" />
+    <ClInclude Include="Source\DevIL.h" />
+    <ClInclude Include="Source\FileSystemDefinitions.h" />
+    <ClInclude Include="Source\FrameData.h" />
+    <ClInclude Include="Source\GameObject.h" />
+    <ClInclude Include="Source\HardwareInfo.h" />
+    <ClInclude Include="Source\Icons.h" />
+    <ClInclude Include="Source\Importer.h" />
+    <ClInclude Include="Source\ImportSettings.h" />
+    <ClInclude Include="Source\I_Animations.h" />
+    <ClInclude Include="Source\I_Folders.h" />
+    <ClInclude Include="Source\I_Materials.h" />
+    <ClInclude Include="Source\I_Meshes.h" />
+    <ClInclude Include="Source\I_Scenes.h" />
+    <ClInclude Include="Source\I_Shaders.h" />
+    <ClInclude Include="Source\I_Textures.h" />
+    <ClInclude Include="Source\JSONParser.h" />
+    <ClInclude Include="Source\Keyframe.h" />
+    <ClInclude Include="Source\LevelGenerator.h" />
+    <ClInclude Include="Source\Log.h" />
+    <ClInclude Include="Source\Macros.h" />
+    <ClInclude Include="Source\MaterialSettings.h" />
+    <ClInclude Include="Source\MathGeoBoundingBox.h" />
+    <ClInclude Include="Source\MathGeoFrustum.h" />
+    <ClInclude Include="Source\MathGeoTransform.h" />
+    <ClInclude Include="Source\MemoryManager.h" />
+    <ClInclude Include="Source\MeshSettings.h" />
+    <ClInclude Include="Source\ModelSettings.h" />
+    <ClInclude Include="Source\M_Audio.h" />
+    <ClInclude Include="Source\Globals.h" />
+    <ClInclude Include="Source\ImGui.h" />
+    <ClInclude Include="Source\Light.h" />
+    <ClInclude Include="Source\Module.h" />
+    <ClInclude Include="Source\M_Camera3D.h" />
+    <ClInclude Include="Source\M_Input.h" />
+    <ClInclude Include="Source\M_Physics.h" />
+    <ClInclude Include="Source\M_Renderer3D.h" />
+    <ClInclude Include="Source\M_ResourceManager.h" />
+    <ClInclude Include="Source\M_Scene.h" />
+    <ClInclude Include="Source\M_UISystem.h" />
+    <ClInclude Include="Source\M_Window.h" />
+    <ClInclude Include="Source\M_FileSystem.h" />
+    <ClInclude Include="Source\OpenGL.h" />
+    <ClInclude Include="Source\Particle.h" />
+    <ClInclude Include="Source\ParticleModule.h" />
+    <ClInclude Include="Source\PathNode.h" />
+    <ClInclude Include="Source\PointLight.h" />
+    <ClInclude Include="Source\Profiler.h" />
     <ClInclude Include="Source\C_PropBehavior.h" />
-    <ClInclude Include="Source\C_BulletBehavior.h">
-      <Filter>Source\4_GameObjects\Components\Behaviors</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\C_CameraBehavior.h">
-      <Filter>Source\4_GameObjects\Components\Behaviors</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\C_PropBehavior.h">
-      <Filter>Source\4_GameObjects\Components\Behaviors</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\C_PlayerController.h">
-      <Filter>Source\4_GameObjects\Components\Behaviors</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\C_GateBehavior.h">
-      <Filter>Source\4_GameObjects\Components\Behaviors</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\R_Script.h">
-      <Filter>Source\2_Resources</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\C_Script.h">
-      <Filter>Source\4_GameObjects\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Script.h">
-      <Filter>Source\7_ScriptHelpers</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\I_Scripts.h">
-      <Filter>Source\3_Importers</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\M_ScriptManager.h">
-      <Filter>Source\1_Modules</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\Assimp\include\assimp\cimport.h">
-      <Filter>Dependencies\Assimp</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\Assimp\include\assimp\postprocess.h">
-      <Filter>Dependencies\Assimp</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\Assimp\include\assimp\scene.h">
-      <Filter>Dependencies\Assimp</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Prefab.h">
-      <Filter>Source\5_Containers\Prefab</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\R_NavMesh.h">
-      <Filter>Source\2_Resources</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\I_Particles.h">
-      <Filter>Source\3_Importers</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\I_Navigation.h">
-      <Filter>Source\3_Importers</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\C_UI_Text.h">
-      <Filter>Source\4_GameObjects\Components\UIComponents</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\C_UI_Image.h">
-      <Filter>Source\4_GameObjects\Components\UIComponents</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\C_UI_Button.h">
-      <Filter>Source\4_GameObjects\Components\UIComponents</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\R_2DAnimation.h">
-      <Filter>Source\2_Resources</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\C_2DAnimator.h">
-      <Filter>Source\4_GameObjects\Components</Filter>
-    </ClInclude>
+    <ClInclude Include="Source\Random.h" />
+    <ClInclude Include="Source\R_Animation.h" />
+    <ClInclude Include="Source\R_Folder.h" />
+    <ClInclude Include="Source\R_Particles.h" />
+    <ClInclude Include="Source\R_Scene.h" />
+    <ClInclude Include="Source\R_Script.h" />
+    <ClInclude Include="Source\R_Shader.h" />
+    <ClInclude Include="Source\R_Texture.h" />
+    <ClInclude Include="Source\SimulationCallback.h" />
+    <ClInclude Include="Source\SkyBox.h" />
+    <ClInclude Include="Source\SoftwareInfo.h" />
+    <ClInclude Include="Source\SystemInfo.h" />
+    <ClInclude Include="Source\TextureSettings.h" />
+    <ClInclude Include="Source\Time.h" />
+    <ClInclude Include="Source\PerfectTimer.h" />
+    <ClInclude Include="Source\Primitive.h" />
+    <ClInclude Include="Source\Resource.h" />
+    <ClInclude Include="Source\R_Material.h" />
+    <ClInclude Include="Source\R_Mesh.h" />
+    <ClInclude Include="Source\R_Model.h" />
+    <ClInclude Include="Source\Timer.h" />
+    <ClInclude Include="Source\C_UI_Image.h" />
+    <ClInclude Include="Source\UpdateStatus.h" />
+    <ClInclude Include="Source\VariableDefinitions.h" />
+    <ClInclude Include="Source\VariableTypedefs.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Source\Dependencies\Wwise\samples\SoundEngine\Common\AkFilePackageLowLevelIO.inl">
-      <Filter>Dependencies\Wwise</Filter>
-    </None>
+    <None Include="Source\Dependencies\Wwise\samples\SoundEngine\Common\AkFilePackageLowLevelIO.inl" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="NewFilter1">
+      <UniqueIdentifier>{31d3ab14-f511-40b3-b250-2dbcaefd515c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>
