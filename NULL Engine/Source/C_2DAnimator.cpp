@@ -1,3 +1,5 @@
+#include "JSONParser.h"
+
 #include "Application.h"
 
 #include "C_2DAnimator.h"
@@ -12,12 +14,13 @@ C_2DAnimator::C_2DAnimator(GameObject* owner) : Component(owner, ComponentType::
 	animationTimer.Stop();
 	animationCounter = 0;
 	animationFrames = 0;
-	animationStepTime = 1000;
+	animationStepTime = 30;
 
 	animationLoop = false;
 	animationPlaying = false;
 	playAnimation = false;
 
+	name = "ChangeWeapon";
 	GetAnimationSprites("ChangeWeapon");
 }
 
@@ -41,7 +44,7 @@ bool C_2DAnimator::Update()
 
 	//Animation loop
 	if (animationPlaying) 
-		if (animationStepTime <= animationTimer.Read() && animationCounter <= animation.size())
+		if (animationStepTime <= animationTimer.Read() && animationCounter < animation.size() - 1)
 		{
 			animationCounter++;
 			animationTimer.Stop();
@@ -49,22 +52,25 @@ bool C_2DAnimator::Update()
 		}
 	
 	//Set the texture id of the current animation frame
-	if(animation.size() > 0)
-	currentFrameIdTexture = GetTextureIdFromVector(animationCounter);
+	if (animation.size() > 0)
+		currentFrameIdTexture = GetTextureIdFromVector(animationCounter);
 
-	if (animationCounter == animation.size())
+	if (animationCounter == animation.size() - 1)
 	{
 		if (!animationLoop)
 		{
 			animationPlaying = false;
 			animationCounter = 0;
 			playAnimation = false;
+			animationTimer.Stop();
 		}
 		else 
 		{
 			animationPlaying = true;
 			animationCounter = 0;
 			playAnimation = false;
+			animationTimer.Stop();
+			animationTimer.Start();
 		}
 	}
 
@@ -78,6 +84,8 @@ bool C_2DAnimator::CleanUp()
 
 bool C_2DAnimator::SaveState(ParsonNode& root) const
 {
+	root.SetNumber("Type", (uint)GetType());
+
 	return true;
 }
 
@@ -101,8 +109,19 @@ int C_2DAnimator::GetAnimationStepTime()
 	return animationStepTime;
 }
 
+const char* C_2DAnimator::GetName()
+{
+	return name.c_str();
+}
+
+void C_2DAnimator::ChangeName(char* name)
+{
+	this->name = name;
+}
+
 void C_2DAnimator::GetAnimationSprites(const char* name)
 {
+	animation.clear();
 	App->resourceManager->GetAllTextures(animation, name);
 }
 
