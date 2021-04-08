@@ -101,28 +101,15 @@ void LevelGenerator::AddFixedRoom(std::string name, int position)
 
 void LevelGenerator::HandleRoomGeneration()
 {
-	if (App->input->GetKey(SDL_SCANCODE_KP_6) == KeyState::KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_LCTRL) == KeyState::KEY_REPEAT)
 	{
-		if (roomNum < levelRooms.size()-1)
+		if (App->input->GetKey(SDL_SCANCODE_KP_6) == KeyState::KEY_DOWN)
 		{
-			roomNum++;
-			GenerateRoom(roomNum);
+			(roomNum < levelRooms.size() - 1) ? GenerateRoom((++roomNum)) : LOG("[SCENE] Level Generator: End of the Level Reached!");
 		}
-		else
+		if (App->input->GetKey(SDL_SCANCODE_KP_4) == KeyState::KEY_DOWN)
 		{
-			LOG("End of the level reached.");
-		}
-	}
-	if (App->input->GetKey(SDL_SCANCODE_KP_4) == KeyState::KEY_DOWN)
-	{
-		if (roomNum > 0)
-		{
-			roomNum--;
-			GenerateRoom(roomNum);
-		}
-		else
-		{
-			LOG("Beggining of the level reached.");
+			(roomNum > 0) ? GenerateRoom((--roomNum)) : LOG("[SCENE] Level Generator: Beginning of the Level Reached!");
 		}
 	}
 }

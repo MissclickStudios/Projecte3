@@ -594,45 +594,44 @@ void M_Renderer3D::FreeBuffers()
 
 void M_Renderer3D::RendererShortcuts()
 {
-	if (App->input->GetKey(SDL_SCANCODE_F1) == KeyState::KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_LCTRL) == KeyState::KEY_REPEAT)
 	{
-		renderWorldGrid = !renderWorldGrid;
-	}
-
-	if (App->input->GetKey(SDL_SCANCODE_F2) == KeyState::KEY_DOWN)
-	{
-		renderWorldAxis = !renderWorldAxis;
-	}
-	
-	if (App->input->GetKey(SDL_SCANCODE_F3) == KeyState::KEY_DOWN)
-	{
-		SetRenderWireframes(!renderWireframes);
-	}
-
-	if (App->input->GetKey(SDL_SCANCODE_F7) == KeyState::KEY_DOWN)
-	{
-		SetGLFlag(GL_TEXTURE_2D, !GetGLFlag(GL_TEXTURE_2D));
-	}
-
-	if (App->input->GetKey(SDL_SCANCODE_F8) == KeyState::KEY_DOWN)
-	{
-		SetGLFlag(GL_COLOR_MATERIAL, !GetGLFlag(GL_COLOR_MATERIAL));
-	}
-
-	if (App->input->GetKey(SDL_SCANCODE_KP_PLUS) == KeyState::KEY_DOWN)
-	{
-		if (App->camera->GetCurrentCamera() != nullptr)
+		if (App->input->GetKey(SDL_SCANCODE_F1) == KeyState::KEY_DOWN)
 		{
-			float currentFov = App->camera->GetCurrentCamera()->GetVerticalFOV();
-			App->camera->GetCurrentCamera()->SetVerticalFOV(currentFov + 5.0f);
+			renderWorldGrid = !renderWorldGrid;
 		}
-	}
-	if (App->input->GetKey(SDL_SCANCODE_KP_MINUS) == KeyState::KEY_DOWN)
-	{
-		if (App->camera->GetCurrentCamera() != nullptr)
+		if (App->input->GetKey(SDL_SCANCODE_F2) == KeyState::KEY_DOWN)
 		{
-			float current_fov = App->camera->GetCurrentCamera()->GetVerticalFOV();
-			App->camera->GetCurrentCamera()->SetVerticalFOV(current_fov - 5.0f);
+			renderWorldAxis = !renderWorldAxis;
+		}
+		if (App->input->GetKey(SDL_SCANCODE_F3) == KeyState::KEY_DOWN)
+		{
+			SetRenderWireframes(!renderWireframes);
+		}
+		if (App->input->GetKey(SDL_SCANCODE_F7) == KeyState::KEY_DOWN)
+		{
+			SetGLFlag(GL_TEXTURE_2D, !GetGLFlag(GL_TEXTURE_2D));
+		}
+		if (App->input->GetKey(SDL_SCANCODE_F8) == KeyState::KEY_DOWN)
+		{
+			SetGLFlag(GL_COLOR_MATERIAL, !GetGLFlag(GL_COLOR_MATERIAL));
+		}
+
+		if (App->input->GetKey(SDL_SCANCODE_KP_PLUS) == KeyState::KEY_DOWN)
+		{
+			if (App->camera->GetCurrentCamera() != nullptr)
+			{
+				float currentFov = App->camera->GetCurrentCamera()->GetVerticalFOV();
+				App->camera->GetCurrentCamera()->SetVerticalFOV(currentFov + 5.0f);
+			}
+		}
+		if (App->input->GetKey(SDL_SCANCODE_KP_MINUS) == KeyState::KEY_DOWN)
+		{
+			if (App->camera->GetCurrentCamera() != nullptr)
+			{
+				float current_fov = App->camera->GetCurrentCamera()->GetVerticalFOV();
+				App->camera->GetCurrentCamera()->SetVerticalFOV(current_fov - 5.0f);
+			}
 		}
 	}
 }
