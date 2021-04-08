@@ -300,32 +300,17 @@ void Player::Weapon()
 
 Projectile* Player::CreateProjectile(uint index)
 {
-	Resource* resource = App->resourceManager->GetResourceFromLibrary("Assets/Models/Props/bullet.fbx");
+	GameObject* bullet = nullptr;
+	//App->resourceManager->LoadPrefab(bullet.uid, bulletStorage);
+	//char n[10];
+	//sprintf_s(n, "%d", index);
+	//std::string num = n;
+	//std::string name("Bullet" + num);
+	//
+	//bullet->SetName(name.c_str());
 
-	GameObject* bullet;
-	if (!resource)
-		bullet = App->scene->CreateGameObject("Bullets", bulletStorage);
-	else
-		bullet = App->scene->GenerateGameObjectsFromModel((R_Model*)resource, { 0.5, 0.5, 0.5 });
-
-	char n[10];
-	sprintf_s(n, "%d", index);
-	std::string num = n;
-	std::string name("Bullet" + num);
-
-	bullet->SetName(name.c_str());
-	bullet->SetParent(bulletStorage);
-
-	float3 position = float3::zero;
-	bullet->transform->SetWorldPosition(position);
-
-	C_RigidBody* rigidBody = (C_RigidBody*)bullet->CreateComponent(ComponentType::RIGIDBODY);
-	rigidBody->FreezePositionY(true);
-	rigidBody->FreezeRotationX(true);
-	rigidBody->FreezeRotationY(true);
-	rigidBody->FreezeRotationZ(true);
-	rigidBody->ChangeFilter("bullet");
-	bullet->CreateComponent(ComponentType::BOX_COLLIDER);
+	//float3 position = float3::zero;
+	//bullet->transform->SetWorldPosition(position);
 
 	//C_Script* script = (C_Script*)bullet->CreateComponent(ComponentType::SCRIPT);
 	//script->resource = (R_Script*)App->resourceManager->GetResourceFromLibrary("Assets/Scripts//Bullet.h");
@@ -338,15 +323,10 @@ Projectile* Player::CreateProjectile(uint index)
 	//	}
 	//}
 
-	bullet->CreateComponent(ComponentType::PARTICLE_SYSTEM);
 
-	bullet->CreateComponent(ComponentType::AUDIOSOURCE);
-	C_AudioSource* source = bullet->GetComponent<C_AudioSource>();
-	source->SetEvent("Mando_blaster_shot", App->audio->eventMap.at("Mando_blaster_shot"));
-
-	for (uint i = 0; i < bullet->components.size(); ++i)
-		bullet->components[i]->SetIsActive(false);
-	bullet->SetIsActive(false);
+	//for (uint i = 0; i < bullet->components.size(); ++i)
+	//	bullet->components[i]->SetIsActive(false);
+	//bullet->SetIsActive(false);
 
 	return new Projectile(bullet);
 }
@@ -514,60 +494,85 @@ void Player::HandleHp()
 
 	if (App->input->GetKey(SDL_SCANCODE_K) == KeyState::KEY_DOWN && hearts != nullptr)
 	{
-		heart -= 0.5;
+		health -= 0.5;
 
-		if (heart < 0)
-			heart = 0;
+		if (health < 0)
+			health = 0;
 
-		if (heart == 2.5)
-			hearts[(int)heart]->GetComponent<C_Material>()->SwapTexture(half);
+		if (health == 2.5)
+			hearts[(int)health]->GetComponent<C_Material>()->SwapTexture(half);
 
-		else if (heart == 2)
-			hearts[(int)heart]->GetComponent<C_Material>()->SwapTexture(empty);
+		else if (health == 2)
+			hearts[(int)health]->GetComponent<C_Material>()->SwapTexture(empty);
 
-		else if (heart == 1.5)
-			hearts[(int)heart]->GetComponent<C_Material>()->SwapTexture(half);
+		else if (health == 1.5)
+			hearts[(int)health]->GetComponent<C_Material>()->SwapTexture(half);
 
-		else if (heart == 1)
-			hearts[(int)heart]->GetComponent<C_Material>()->SwapTexture(empty);
+		else if (health == 1)
+			hearts[(int)health]->GetComponent<C_Material>()->SwapTexture(empty);
 
-		else if (heart == 0.5)
-			hearts[(int)heart]->GetComponent<C_Material>()->SwapTexture(half);
+		else if (health == 0.5)
+			hearts[(int)health]->GetComponent<C_Material>()->SwapTexture(half);
 
-		else if (heart == 0)
-			hearts[(int)heart]->GetComponent<C_Material>()->SwapTexture(empty);
+		else if (health == 0)
+			hearts[(int)health]->GetComponent<C_Material>()->SwapTexture(empty);
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_L) == KeyState::KEY_DOWN && hearts != nullptr)
 	{
 
-		if (heart == 2.5)
-			hearts[(int)heart]->GetComponent<C_Material>()->SwapTexture(full);
+		if (health == 2.5)
+			hearts[(int)health]->GetComponent<C_Material>()->SwapTexture(full);
 
-		else if (heart == 2)
-			hearts[(int)heart]->GetComponent<C_Material>()->SwapTexture(half);
+		else if (health == 2)
+			hearts[(int)health]->GetComponent<C_Material>()->SwapTexture(half);
 
-		else if (heart == 1.5)
-			hearts[(int)heart]->GetComponent<C_Material>()->SwapTexture(full);
+		else if (health == 1.5)
+			hearts[(int)health]->GetComponent<C_Material>()->SwapTexture(full);
 
-		else if (heart == 1)
-			hearts[(int)heart]->GetComponent<C_Material>()->SwapTexture(half);
+		else if (health == 1)
+			hearts[(int)health]->GetComponent<C_Material>()->SwapTexture(half);
 
-		else if (heart == 0.5)
-			hearts[(int)heart]->GetComponent<C_Material>()->SwapTexture(full);
+		else if (health == 0.5)
+			hearts[(int)health]->GetComponent<C_Material>()->SwapTexture(full);
 
-		else if (heart == 0)
-			hearts[(int)heart]->GetComponent<C_Material>()->SwapTexture(half);
+		else if (health == 0)
+			hearts[(int)health]->GetComponent<C_Material>()->SwapTexture(half);
 
-		heart += 0.5;
+		health += 0.5;
 
-		if (heart > 3)
-			heart = 3;
+		if (health > 3)
+			health = 3;
 	}
 }
 
-Player* CreatePlayer() 
+Player* CreatePlayer()
 {
 	Player* script = new Player();
+
+	// Character
+	INSPECTOR_DRAGABLE_FLOAT(script->speed);
+	INSPECTOR_DRAGABLE_FLOAT(script->acceleration);
+	INSPECTOR_DRAGABLE_FLOAT(script->deceleration);
+
+	// Weapon
+	INSPECTOR_DRAGABLE_FLOAT(script->bulletSpeed);
+	INSPECTOR_DRAGABLE_FLOAT(script->fireRate);
+
+	INSPECTOR_DRAGABLE_INT(script->ammo);
+	INSPECTOR_DRAGABLE_INT(script->maxAmmo);
+
+	INSPECTOR_CHECKBOX_BOOL(script->automatic);
+
+	INSPECTOR_PREFAB(script->bullet);
+
+	// Dash
+	INSPECTOR_DRAGABLE_FLOAT(script->dashSpeed);
+	INSPECTOR_DRAGABLE_FLOAT(script->dashingTime);
+	INSPECTOR_DRAGABLE_FLOAT(script->dashingColdown);
+
+	// Health
+	INSPECTOR_DRAGABLE_FLOAT(script->health);
+
 	return script;
 }

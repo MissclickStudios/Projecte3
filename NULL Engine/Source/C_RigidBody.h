@@ -101,6 +101,7 @@ private:
 	bool freezeRotationY = false;
 	bool freezeRotationZ = false;
 
+	bool toChangeFilter = false;
 	std::string filter = "default";
 };
 
