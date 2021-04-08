@@ -131,3 +131,25 @@ void ParticleLifetime::Update(float dt, EmitterInstance* emitter)
 		emitter->emitter->DeleteModuleFromType(ParticleModule::Type::ParticleLifetime);
 	}
 }
+
+void ParticleBillboarding::Spawn(EmitterInstance* emitter, Particle* particle)
+{
+
+}
+
+void ParticleBillboarding::Update(float dt, EmitterInstance* emitter)
+{
+	for (unsigned int i = 0; i < emitter->activeParticles; ++i)
+	{
+		unsigned int particleIndex = emitter->particleIndices[i];
+		Particle* particle = &emitter->particles[particleIndex];
+
+		//particle->worldRotation = GetAlignmentRotation(particle->position, )
+	}
+}
+
+Quat ParticleBillboarding::GetAlignmentRotation(const float3& position, const float4x4& cameraTransform)
+{
+	return Quat(0, 0, 0, 0);	
+}
+

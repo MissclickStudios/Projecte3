@@ -20,6 +20,7 @@ struct NULL_API ParticleModule
 		ParticleLifetime,
 		ParticleRotation,
 		ParticleSize,
+		ParticleBillboarding,
 		EmitterBase,		//Origin of the emitter
 		EmitterSpawn,		//Spawn Rate and timer
 		EmitterArea,
@@ -103,6 +104,19 @@ struct ParticleLifetime : ParticleModule
 
 	bool hideLifetime = false;
 	bool eraseLifetime = false;
+};
+
+struct ParticleBillboarding : ParticleModule
+{
+	ParticleBillboarding() : ParticleModule(Type::ParticleBillboarding) {};
+
+	void Spawn(EmitterInstance* emitter, Particle* particle);
+	void Update(float dt, EmitterInstance* emitter);
+
+	Quat GetAlignmentRotation(const float3& position, const float4x4& cameraTransform);
+
+	bool hideBillboarding = false;
+	bool eraseBillboarding = false;
 };
 
 #endif

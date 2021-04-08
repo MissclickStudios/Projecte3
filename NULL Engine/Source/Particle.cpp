@@ -26,33 +26,33 @@ void Particle::Update(float dt)
 
 }
 
-void Particle::ScreenAligned(C_Camera* currentCamera)
-{
-	//particleMesh->SetRotation(currentCamera->GetMatrixRotation());
-	//currentCamera->GetOGLViewMatrix().RotatePart();
-}
+//void Particle::ScreenAligned(C_Camera* currentCamera)
+//{
+//	//particleMesh->SetRotation(currentCamera->GetMatrixRotation());
+//	//currentCamera->GetOGLViewMatrix().RotatePart();
+//}
 
-void Particle::WorldAligned(C_Camera* currentCamera)
-{
-}
-
-void Particle::AxisAligned(C_Camera* currentCamera)
-{
-}
-
-void Particle::ApplyBillboarding(Billboarding type)
-{
-	switch (type) {
-	case Billboarding::AXIS_ALIGNED:
-		AxisAligned(App->camera->GetCurrentCamera());
-	break;
-	case Billboarding::SCREEN_ALIGNED:
-		ScreenAligned(App->camera->GetCurrentCamera());
-	break;
-	case Billboarding::WORLD_ALIGNED:
-		WorldAligned(App->camera->GetCurrentCamera());
-	break;
-	case Billboarding::NONE:
-	break;
-	}
-}
+//void Particle::WorldAligned(C_Camera* currentCamera)
+//{
+//}
+//
+//void Particle::AxisAligned(C_Camera* currentCamera)
+//{
+//}
+//
+//void Particle::ApplyBillboarding(Billboarding type)
+//{
+//	switch (type) {
+//	case Billboarding::AXIS_ALIGNED:
+//		AxisAligned(App->camera->GetCurrentCamera());
+//	break;
+//	case Billboarding::SCREEN_ALIGNED:
+//		ScreenAligned(App->camera->GetCurrentCamera());
+//	break;
+//	case Billboarding::WORLD_ALIGNED:
+//		WorldAligned(App->camera->GetCurrentCamera());
+//	break;
+//	case Billboarding::NONE:
+//	break;
+//	}
+//}
