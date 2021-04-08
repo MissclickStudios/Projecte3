@@ -1386,7 +1386,7 @@ void E_Inspector::DrawScriptComponent(C_Script* cScript)
 		ImGui::Separator();
 		ImGui::Spacing();
 		std::vector<InspectorScriptData> inspectorVariables = cScript->GetInspectorVariables();
-		for (std::vector<InspectorScriptData>::const_iterator variable = inspectorVariables.cbegin(); variable != inspectorVariables.cend(); ++variable)
+		for (std::vector<InspectorScriptData>::iterator variable = inspectorVariables.begin(); variable != inspectorVariables.end(); ++variable)
 		{
 			switch ((*variable).variableType) 
 			{
@@ -1416,14 +1416,6 @@ void E_Inspector::DrawScriptComponent(C_Script* cScript)
 				}
 				break;
 			case InspectorScriptData::DataType::PREFAB:
-				if (ImGui::Button(("Remove " + (*variable).variableName).c_str())) //TODO: BUG X BUTTONS !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!AAAAAAAAAAAAAAAAAAAA
-					//TODO: ENSENYAR NOM DE LA VARIABLE!!!!!!!! AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-				{
-					(*(Prefab*)(*variable).ptr).name.clear();
-					(*(Prefab*)(*variable).ptr).uid = 0;
-					(*(Prefab*)(*variable).ptr).updateTime = 0;
-				}
-				ImGui::SameLine();
 				ImGui::Button((((Prefab*)(*variable).ptr)->name.empty()) ? "Prefab: NULL" : std::string("Prefab: " + ((Prefab*)(*variable).ptr)->name).data(), { ImGui::GetWindowWidth() * 0.55F , 0});
 				if (ImGui::BeginDragDropTarget()) 
 				{
@@ -1440,26 +1432,37 @@ void E_Inspector::DrawScriptComponent(C_Script* cScript)
 					}
 					ImGui::EndDragDropTarget();
 				}
+				ImGui::SameLine();
+				if (ImGui::Button(("Remove " + (*variable).variableName).c_str())) //Maybe variables with the same name of different scripts on the same gameobject collide for imgui...
+				{
+					(*(Prefab*)(*variable).ptr).name.clear();
+					(*(Prefab*)(*variable).ptr).uid = 0;
+					(*(Prefab*)(*variable).ptr).updateTime = 0;
+				}
 				break;
 			case InspectorScriptData::DataType::GAMEOBJECT:
-				if (ImGui::Button(("Remove " + (*variable).variableName).c_str()))
-					if ((*variable).obj != nullptr)
-						*(*variable).obj = nullptr;
-				
-				ImGui::SameLine();
-				ImGui::Button(((*variable).obj != nullptr && *(*variable).obj != nullptr) ? std::string("GameObject: "  + std::string((*(*variable).obj)->GetName())).data() : "GameObject: NULL", { ImGui::GetWindowWidth() * 0.55F , 0 });
+				ImGui::Button(((*variable).ptr != nullptr && *(GameObject**)(*variable).ptr != nullptr) ? std::string("GameObject: "  + std::string((*(GameObject**)(*variable).ptr)->GetName())).data() : "GameObject: NULL", { ImGui::GetWindowWidth() * 0.55F , 0 });
 				if (ImGui::BeginDragDropTarget())
 				{
 					if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DRAGGED_NODE"))
 					{
 						//GameObject** ptr = (GameObject**)payload->Data;
-						GameObject* obj = *(GameObject**)payload->Data;
+						void* obj = payload->Data;
 						if (obj != nullptr) 
-							*(*variable).obj = obj;
+						{
+							memcpy(&((*variable).ptr), &obj, sizeof(void*));
+							std::string nameee = (*(GameObject**)(*variable).ptr)->GetName();
+							(*variable).ptr;
+						}
+						(*variable).ptr;
 					}
 					ImGui::EndDragDropTarget();
 				}
-				break;
+				//ImGui::SameLine();
+				//if (ImGui::Button(("Remove " + (*variable).variableName).c_str()))
+					//if ((*variable).ptr != nullptr)
+					//	*(GameObject***)(*variable).ptr = nullptr;
+				//break;
 			}
 			ImGui::Spacing();
 			ImGui::Separator();
