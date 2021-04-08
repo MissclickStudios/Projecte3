@@ -27,6 +27,7 @@ class E_Project;
 class E_Viewport;
 class E_Resources;
 class E_Timeline;
+class E_Navigation;
 class E_ImGuiDemo;
 class E_About;
 class E_LoadFile;
@@ -92,7 +93,7 @@ public:																							// --- Panel/Window Methods. Acts as an interface 
 	void			UpdateFrameData						(int frames, int ms);					// Configuration: Passing the received frame data to the configuration editor module.
 	void			AddInputLog							(uint key, uint state);					// Configuration: Receives an input key and a state and passes a log to the config editor mod.
 
-	void			AddConsoleLog						(const char* log) override;						// Console: Passing the received console log to the console editor module.
+	void			AddConsoleLog						(const char* log) override;				// Console: Passing the received console log to the console editor module.
 
 	GameObject*		GetSceneRootThroughEditor			() const;								// Hierarchy & inspector: Will return the current root GameObjcect.
 	void			SetSceneRootThroughEditor			(GameObject* gameObject);				// Hierarchy & inspector: Will set the scene's root GameObject with the passed one.
@@ -146,6 +147,7 @@ public:
 	E_Viewport*					viewport;
 	E_Resources*				resources;
 	E_Timeline*					timeline;
+	E_Navigation*				navigation;
 	E_ImGuiDemo*				imguiDemo;
 	E_About*					about;
 	E_LoadFile*					loadFile;
@@ -159,6 +161,7 @@ public:
 	bool						showInspector;													// Enable/Disable the Inspector window.
 	bool						showConsole;													// Enable/Disable the Console window.
 	bool						showProject;													// Enable/Disable the Project window.
+	bool						showNavigation;													// Enable/Disable the Navigation window.
 	bool						showImguiDemo;													// Enable/Disable the ImGui Demo window.
 
 	bool						showAboutPopup;													// Enable/Disable the About window popup.

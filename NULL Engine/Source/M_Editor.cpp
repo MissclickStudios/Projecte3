@@ -29,6 +29,7 @@
 #include "E_Viewport.h"
 #include "E_Resources.h"
 #include "E_Timeline.h"
+#include "E_Navigation.h"
 #include "E_ImGuiDemo.h"
 #include "E_About.h"
 #include "E_LoadFile.h"
@@ -61,6 +62,7 @@ project			(new E_Project()),
 viewport		(new E_Viewport()),
 resources		(new E_Resources()),
 timeline		(new E_Timeline()),
+navigation		(new E_Navigation()),
 imguiDemo		(new E_ImGuiDemo()),
 about			(new E_About()),
 loadFile		(new E_LoadFile()),
@@ -74,6 +76,7 @@ wantToSaveScene (new E_WantToSaveScene())
 	AddEditorPanel(resources);
 	AddEditorPanel(inspector);
 	AddEditorPanel(timeline);
+	AddEditorPanel(navigation);
 	AddEditorPanel(project);
 	AddEditorPanel(console);
 	AddEditorPanel(viewport);
@@ -83,17 +86,18 @@ wantToSaveScene (new E_WantToSaveScene())
 	AddEditorPanel(saveFile);
 	AddEditorPanel(wantToSaveScene);
 
-	showConfiguration	= true;
-	showHierarchy		= true;
-	showInspector		= true;
-	showConsole			= true;
-	showProject			= true;
-	showImguiDemo		= false;
-	showAboutPopup		= false;
-	showCloseAppPopup	= false;
-	showLoadFilePopup	= false;
-	showSaveFilePopup	= false;
-	showWantToSaveScenePopup = false;
+	showConfiguration			= true;
+	showHierarchy				= true;
+	showInspector				= true;
+	showConsole					= true;
+	showProject					= true;
+	showNavigation				= true;
+	showImguiDemo				= false;
+	showAboutPopup				= false;
+	showCloseAppPopup			= false;
+	showLoadFilePopup			= false;
+	showSaveFilePopup			= false;
+	showWantToSaveScenePopup	= false;
 }
 
 M_Editor::~M_Editor()
@@ -215,10 +219,10 @@ void M_Editor::EditorShortcuts()
 	{
 		if (showAboutPopup || showLoadFilePopup || showSaveFilePopup || showWantToSaveScenePopup)
 		{
-			showAboutPopup		= false;
-			showLoadFilePopup	= false;
-			showSaveFilePopup	= false;
-			showWantToSaveScenePopup = false;
+			showAboutPopup				= false;
+			showLoadFilePopup			= false;
+			showSaveFilePopup			= false;
+			showWantToSaveScenePopup	= false;
 		}
 		else
 		{
@@ -267,16 +271,17 @@ void M_Editor::EditorShortcuts()
 
 void M_Editor::CheckShowHideFlags()
 {	
-	(showConfiguration)	?	configuration->Enable()	: configuration->Disable();					// Engine Configuration
-	(showHierarchy)		?	hierarchy->Enable()		: hierarchy->Disable();						// Hierarchy
-	(showInspector)		?	inspector->Enable()		: inspector->Disable();						// Inspector
-	(showConsole)		?	console->Enable()		: console->Disable();						// Console
-	(showProject)		?	project->Enable()		: project->Disable();						// Project
-	(showImguiDemo)		?	imguiDemo->Enable()		: imguiDemo->Disable();						// ImGui Demo
-	(showAboutPopup)	?	about->Enable()			: about->Disable();							// About Popup
-	(showLoadFilePopup)	?	loadFile->Enable()		: loadFile->Disable();						// Load File
-	(showSaveFilePopup)	?	saveFile->Enable()		: saveFile->Disable();						// Load File
-	(showWantToSaveScenePopup) ? wantToSaveScene->Enable() : wantToSaveScene->Disable();
+	(showConfiguration)			?	configuration->Enable()		: configuration->Disable();					// Engine Configuration
+	(showHierarchy)				?	hierarchy->Enable()			: hierarchy->Disable();						// Hierarchy
+	(showInspector)				?	inspector->Enable()			: inspector->Disable();						// Inspector
+	(showConsole)				?	console->Enable()			: console->Disable();						// Console
+	(showProject)				?	project->Enable()			: project->Disable();						// Project
+	(showNavigation)			?	navigation->Enable()		: navigation->Disable();					// Navigation
+	(showImguiDemo)				?	imguiDemo->Enable()			: imguiDemo->Disable();						// ImGui Demo
+	(showAboutPopup)			?	about->Enable()				: about->Disable();							// About Popup
+	(showLoadFilePopup)			?	loadFile->Enable()			: loadFile->Disable();						// Load File
+	(showSaveFilePopup)			?	saveFile->Enable()			: saveFile->Disable();						// Save File
+	(showWantToSaveScenePopup)	?	wantToSaveScene->Enable()	: wantToSaveScene->Disable();				// Save Scene
 }
 
 bool M_Editor::EditorIsBeingHovered() const

@@ -26,6 +26,7 @@ enum class ResourceType
 	PARTICLE_SYSTEM,
 	PREFAB,
 	SCRIPT,
+	NAVMESH,
 	NONE
 };
 
