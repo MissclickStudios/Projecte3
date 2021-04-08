@@ -10,7 +10,7 @@ public:
 	void Update() override;
 	void CleanUp()override;
 
-	void OnCollisionEnter(GameObject* object);
+	void OnCollisionEnter();
 };
 
 SCRIPTS_FUNCTION Gate* CreateGate() {

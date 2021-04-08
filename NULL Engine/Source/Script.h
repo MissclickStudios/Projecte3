@@ -34,12 +34,12 @@ public:
 	bool IsScriptEnabled() const;
 	void SetScriptEnable(const bool& enable);
 
-	virtual void OnCollisionEnter(GameObject* object) {}
-	virtual void OnCollisionRepeat(GameObject* object) {}
-	virtual void OnCollisionExit(GameObject* object) {}
-	virtual void OnTriggerEnter(GameObject* object) {}
-	virtual void OnTriggerRepeat(GameObject* object) {}
-	virtual void OnTriggerExit(GameObject* object) {}
+	virtual void OnCollisionEnter() {}
+	virtual void OnCollisionRepeat() {}
+	virtual void OnCollisionExit() {}
+	virtual void OnTriggerEnter() {}
+	virtual void OnTriggerRepeat() {}
+	virtual void OnTriggerExit() {}
 
 public:
 	GameObject* gameObject = nullptr;

@@ -20,7 +20,7 @@ void Gate::CleanUp()
 {
 }
 
-void Gate::OnCollisionEnter(GameObject* object)
+void Gate::OnCollisionEnter()
 {
 	if (!App->scene->nextScene)
 		App->scene->NextRoom();
