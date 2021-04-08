@@ -12,9 +12,7 @@
 #include "C_Transform.h"
 #include "C_Camera.h"
 
-#include "E_Viewport.h"
-
-#include "C_UI_Image.h"
+#include "C_UI_Button.h"
 
 #include "OpenGL.h"
 
@@ -22,17 +20,22 @@
 
 #include "JSONParser.h"
 
-C_UI_Image::C_UI_Image(GameObject* owner, Rect2D rect) : Component(owner, ComponentType::UI_IMAGE)
+C_UI_Button::C_UI_Button(GameObject* owner, Rect2D rect) : Component(owner, ComponentType::UI_BUTTON)
 {
-	
+	if (App->uiSystem->activeButtons.empty())
+	{
+		state = UIButtonState::HOVERED;
+		App->uiSystem->hoveredButton = this;
+	}
+	App->uiSystem->activeButtons.push_back(this);
 }
 
-C_UI_Image::~C_UI_Image()
+C_UI_Button::~C_UI_Button()
 {
 
 }
 
-bool C_UI_Image::Update()
+bool C_UI_Button::Update()
 {
 	bool ret = true;
 
@@ -52,14 +55,14 @@ bool C_UI_Image::Update()
 	return ret;
 }
 
-bool C_UI_Image::CleanUp()
+bool C_UI_Button::CleanUp()
 {
 	bool ret = true;
 
 	return ret;
 }
 
-void C_UI_Image::Draw2D()
+void C_UI_Button::Draw2D()
 {
 	if (GetOwner()->GetComponent<C_Material>() == nullptr) return;
 
@@ -69,7 +72,12 @@ void C_UI_Image::Draw2D()
 	glPushMatrix();
 	glMultMatrixf((GLfloat*)&GetOwner()->parent->GetComponent<C_Transform>()->GetWorldTransform().Transposed());
 
-	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+	if (state == UIButtonState::HOVERED)
+		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+	else if(state==UIButtonState::PRESSED)
+		glColor4f(1.0f, 0.4f, 0.0f, 1.0f);
+	else
+		glColor4f(1.0f, 1.0f, 0.0f, 1.0f);
 	
 	uint32 id = GetOwner()->GetComponent<C_Material>()->GetTextureID();
 	glBindTexture(GL_TEXTURE_2D, id);
@@ -89,7 +97,7 @@ void C_UI_Image::Draw2D()
 
 }
 
-void C_UI_Image::Draw3D()
+void C_UI_Button::Draw3D()
 {
 	if (GetOwner()->GetComponent<C_Material>() == nullptr) return;
 	
@@ -101,7 +109,7 @@ void C_UI_Image::Draw3D()
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
 	uint32 id = GetOwner()->GetComponent<C_Material>()->GetTextureID();
-	glBindTexture(GL_TEXTURE_2D, id); // Not sure
+	glBindTexture(GL_TEXTURE_2D, id); 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
 
@@ -120,92 +128,113 @@ void C_UI_Image::Draw3D()
 
 }
 
+void C_UI_Button::OnPressed()
+{
+	SetState(UIButtonState::PRESSED);
+	SetIsPressed(true);
+}
 
-bool C_UI_Image::SaveState(ParsonNode& root) const
+void C_UI_Button::OnReleased()
+{
+	SetState(UIButtonState::HOVERED);
+	SetIsPressed(false);
+}
+
+bool C_UI_Button::SaveState(ParsonNode& root) const
 {
 	bool ret = true;
 
 	root.SetNumber("Type", (uint)GetType());
 
-	ParsonNode image = root.SetNode("Image");
+	ParsonNode button = root.SetNode("Button");
 
-	image.SetNumber("X", GetRect().x);
-	image.SetNumber("Y", GetRect().y);
-	image.SetNumber("W", GetRect().w);
-	image.SetNumber("H", GetRect().h);
+	button.SetNumber("X", GetRect().x);
+	button.SetNumber("Y", GetRect().y);
+	button.SetNumber("W", GetRect().w);
+	button.SetNumber("H", GetRect().h);
 
-	if (strcmp(GetOwner()->GetName(), "Hovered Decoration L") == 0)
-		image.SetBool("IsHDL", true);
+	if (state == UIButtonState::HOVERED || state == UIButtonState::PRESSED)
+		button.SetBool("IsHovered", true);
 	else
-		image.SetBool("IsHDL", false);
-
-	if (strcmp(GetOwner()->GetName(), "Hovered Decoration R") == 0)
-		image.SetBool("IsHDR", true);
-	else
-		image.SetBool("IsHDR", false);
+		button.SetBool("IsHovered", false);
 
 	return ret;
 }
 
-bool C_UI_Image::LoadState(ParsonNode& root)
+bool C_UI_Button::LoadState(ParsonNode& root)
 {
 	bool ret = true;
 
-	ParsonNode image = root.GetNode("Image");
+	ParsonNode button = root.GetNode("Button");
 
 	Rect2D r;
 
-	r.x = image.GetNumber("X");
-	r.y = image.GetNumber("Y");
-	r.w = image.GetNumber("W");
-	r.h = image.GetNumber("H");
+	r.x = button.GetNumber("X");
+	r.y = button.GetNumber("Y");
+	r.w = button.GetNumber("W");
+	r.h = button.GetNumber("H");
 
 	SetRect(r);
 
-	if (image.GetBool("IsHDL"))
+	if (button.GetBool("IsHovered"))
 	{
-		App->uiSystem->hoveredDecorationL = this;
-		App->uiSystem->isHoverDecorationAdded = true;
+		state = UIButtonState::HOVERED;
+		App->uiSystem->hoveredButton = this;
 	}
+	else
+		state = UIButtonState::IDLE;
 
-	if (image.GetBool("IsHDR"))
-	{
-		App->uiSystem->hoveredDecorationR = this;
-		App->uiSystem->isHoverDecorationAdded = true;
-	}
 	return ret;
 }
 
 
-Rect2D C_UI_Image::GetRect() const
+Rect2D C_UI_Button::GetRect() const
 {
 	return rect;
 }
 
+UIButtonState C_UI_Button::GetState() const
+{
+	return state;
+}
+
+bool C_UI_Button::IsPressed() const
+{
+	return isPressed;
+}
 
 
-
-void C_UI_Image::SetRect(const Rect2D& rect)
+void C_UI_Button::SetRect(const Rect2D& rect)
 {
 	this->rect = rect;
 }
 
-void C_UI_Image::SetX(const float x)
+void C_UI_Button::SetState(const UIButtonState& setTo)
+{
+	state = setTo;
+}
+
+void C_UI_Button::SetIsPressed(const bool& setTo)
+{
+	isPressed = setTo;
+}
+
+void C_UI_Button::SetX(const float x)
 {
 	this->rect.x = x;
 }
 
-void C_UI_Image::SetY(const float y)
+void C_UI_Button::SetY(const float y)
 {
 	this->rect.y = y;
 }
 
-void C_UI_Image::SetW(const float w)
+void C_UI_Button::SetW(const float w)
 {
 	this->rect.w = w;
 }
 
-void C_UI_Image::SetH(const float h)
+void C_UI_Button::SetH(const float h)
 {
 	this->rect.h = h;
 }

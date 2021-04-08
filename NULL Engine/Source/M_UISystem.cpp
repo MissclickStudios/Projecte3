@@ -3,6 +3,7 @@
 
 #include "M_Scene.h"
 #include "M_Camera3D.h"
+#include "M_Input.h"
 
 #include "GameObject.h"
 
@@ -10,6 +11,8 @@
 #include "C_Camera.h"
 #include "C_Transform.h"
 #include "C_UI_Text.h"
+#include "C_UI_Button.h"
+#include "C_UI_Image.h"
 
 #include "M_UISystem.h"
 
@@ -77,17 +80,30 @@ bool M_UISystem::Init(ParsonNode& config)
 		LOG("An error ocurred loading the glyph");
 	}
 	
+	
+
 	return ret;
 }
 
 // Called every draw update
 UpdateStatus M_UISystem::PreUpdate(float dt)
 {
+	if (isMainMenu && !isHoverDecorationAdded && !activeButtons.empty())
+	{
+		InitHoveredDecorations();
+	}
+
 	return UpdateStatus::CONTINUE;
 }
 
 UpdateStatus M_UISystem::Update(float dt)
 {
+	UpdateActiveButtons();
+	CheckButtonStates();
+	
+	if (hoveredDecorationL != nullptr && hoveredDecorationR != nullptr)
+		UpdateHoveredDecorations();
+
 	return UpdateStatus::CONTINUE;
 }
 
@@ -114,4 +130,138 @@ bool M_UISystem::SaveConfiguration(ParsonNode& root) const
 	bool ret = true;
 
 	return ret;
+}
+
+bool M_UISystem::CheckButtonStates()
+{
+	bool ret = false;
+
+	if (App->input->GetKey(SDL_SCANCODE_G) == KeyState::KEY_DOWN || App->input->GetKey(SDL_SCANCODE_G) == KeyState::KEY_REPEAT)
+	{
+		hoveredButton->OnPressed();
+	}
+
+	else if (App->input->GetKey(SDL_SCANCODE_G) == KeyState::KEY_UP)
+	{
+		hoveredButton->OnReleased(); /*(?)*/
+	}
+
+	if (activeButtons.size() > 1)
+	{
+		bool prev = false;
+		bool next = false;
+
+		if (App->input->GetKey(SDL_SCANCODE_T) == KeyState::KEY_DOWN && !hoveredButton->IsPressed())
+		{
+			for (std::vector<C_UI_Button*>::reverse_iterator buttonIt = activeButtons.rbegin(); buttonIt != activeButtons.rend(); buttonIt++)
+			{
+				if ((*buttonIt)->IsActive())
+				{
+					if ((*buttonIt)->GetState() == UIButtonState::HOVERED)
+					{
+						(*buttonIt)->SetState(UIButtonState::IDLE);
+						prev = true;
+					}
+					else if (prev)
+					{
+						(*buttonIt)->SetState(UIButtonState::HOVERED);
+						hoveredButton = (*buttonIt);
+						prev = false;
+					}
+				}
+			}
+			if (prev)
+				hoveredButton->SetState(UIButtonState::HOVERED);
+		}
+
+		if (App->input->GetKey(SDL_SCANCODE_B) == KeyState::KEY_DOWN && !hoveredButton->IsPressed())
+		{
+			for (std::vector<C_UI_Button*>::iterator buttonIt = activeButtons.begin(); buttonIt != activeButtons.end(); buttonIt++)
+			{
+				if ((*buttonIt)->IsActive())
+				{
+					if ((*buttonIt)->GetState() == UIButtonState::HOVERED)
+					{
+						(*buttonIt)->SetState(UIButtonState::IDLE);
+						next = true;
+					}
+					else if (next)
+					{
+						(*buttonIt)->SetState(UIButtonState::HOVERED);
+						hoveredButton = (*buttonIt);
+						next = false;
+					}
+				}
+			}
+			if(next)
+				hoveredButton->SetState(UIButtonState::HOVERED);
+		}
+	}
+
+	return ret;
+}
+
+void M_UISystem::UpdateActiveButtons()
+{
+	if (activeButtons.size() < 2)
+		return;
+
+	// Create a new list and empty the other one into this one
+	std::vector<C_UI_Button*> newButtonsList;
+
+	while (!activeButtons.empty())
+	{
+		float y = -999;
+		for (std::vector<C_UI_Button*>::iterator buttonIt = activeButtons.begin(); buttonIt != activeButtons.end(); buttonIt++)
+		{
+			if ((*buttonIt)->GetRect().y > y)
+			{
+				y = (*buttonIt)->GetRect().y;
+				buttonIterator = (*buttonIt);
+			}
+		}
+		for (std::vector<C_UI_Button*>::iterator buttonIt2 = activeButtons.begin(); buttonIt2 != activeButtons.end(); buttonIt2++)
+		{
+			if ((*buttonIt2) == buttonIterator)
+			{
+				newButtonsList.push_back(*buttonIt2);
+				activeButtons.erase(buttonIt2);
+				break;
+			}
+		}
+	}
+	activeButtons = newButtonsList;
+}
+
+void M_UISystem::InitHoveredDecorations()
+{
+	if (hoveredDecorationL != nullptr || hoveredDecorationR != nullptr)
+		return;
+
+	GameObject* canvas = hoveredButton->GetOwner()->parent;
+	GameObject* newGOL = nullptr;
+	GameObject* newGOR = nullptr;
+
+	newGOL = App->scene->CreateGameObject("Hovered Decoration L", canvas);
+	hoveredDecorationL = (C_UI_Image*)newGOL->CreateComponent(ComponentType::UI_IMAGE);
+	newGOL->CreateComponent(ComponentType::MATERIAL);
+	Rect2D rectL = { (hoveredButton->GetRect().x - hoveredButton->GetRect().w / 2 - 0.04), hoveredButton->GetRect().y, 0.02,0.02 };
+	hoveredDecorationL->SetRect(rectL);
+
+	newGOR = App->scene->CreateGameObject("Hovered Decoration R", canvas);
+	hoveredDecorationR = (C_UI_Image*)newGOR->CreateComponent(ComponentType::UI_IMAGE);
+	newGOR->CreateComponent(ComponentType::MATERIAL);
+	Rect2D rectR = { hoveredButton->GetRect().x + 0.02 + hoveredButton->GetRect().w / 2, hoveredButton->GetRect().y, 0.02,0.02 };
+	hoveredDecorationR->SetRect(rectR);
+
+	isHoverDecorationAdded = true;
+}
+
+void M_UISystem::UpdateHoveredDecorations()
+{
+	hoveredDecorationL->SetX(hoveredButton->GetRect().x - hoveredButton->GetRect().w / 2 - 0.02);
+	hoveredDecorationR->SetX(hoveredButton->GetRect().x + 0.01 + hoveredButton->GetRect().w / 2);
+
+	hoveredDecorationL->SetY(hoveredButton->GetRect().y);
+	hoveredDecorationR->SetY(hoveredButton->GetRect().y);
 }

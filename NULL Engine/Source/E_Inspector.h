@@ -32,6 +32,7 @@ class C_Canvas;
 class C_ParticleSystem;
 class C_UI_Image;
 class C_UI_Text;
+class C_UI_Button;
 
 class Resource;
 class R_Shader;
@@ -75,6 +76,7 @@ private:																										// --- DRAW COMPONENT METHODS ---
 	void DrawUIImageComponent			(C_UI_Image* image);
 	void DrawUITextComponent			(C_UI_Text* text);
 	void DrawScriptComponent			(C_Script* cScript);
+	void DrawUIButtonComponent			(C_UI_Button* button);
 	void DrawPlayerControllerComponent	(C_PlayerController* controller);
 	void DrawBulletBehaviorComponent	(C_BulletBehavior* behavior);
 	void DrawPropBehaviorComponent		(C_PropBehavior* behavior);

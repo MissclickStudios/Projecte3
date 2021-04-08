@@ -43,8 +43,10 @@
 #include "C_ParticleSystem.h"
 #include "C_UI_Image.h"
 #include "C_UI_Text.h"
+#include "C_UI_Button.h"
 #include "C_Script.h"
 
+#include "R_Shader.h"
 #include "R_Texture.h"
 #include "R_Animation.h"
 #include "R_Shader.h"
@@ -230,6 +232,7 @@ void E_Inspector::DrawComponents(GameObject* selectedGameObject)
 		case ComponentType::UI_IMAGE:			{ DrawUIImageComponent((C_UI_Image*)component); }					break;
 		case ComponentType::UI_TEXT:			{ DrawUITextComponent((C_UI_Text*)component); }						break;
 		case ComponentType::SCRIPT:				{ DrawScriptComponent((C_Script*)component); }						break;
+		case ComponentType::UI_BUTTON:			{ DrawUIButtonComponent((C_UI_Button*)component); }					break;
 		case ComponentType::PLAYER_CONTROLLER:	{ DrawPlayerControllerComponent((C_PlayerController*)component); }	break;
 		case ComponentType::BULLET_BEHAVIOR:	{ DrawBulletBehaviorComponent((C_BulletBehavior*)component); }		break;
 		case ComponentType::PROP_BEHAVIOR:		{ DrawPropBehaviorComponent((C_PropBehavior*)component); }			break;
@@ -1038,7 +1041,7 @@ void E_Inspector::DrawCanvasComponent(C_Canvas* cCanvas)
 			float2 size = { cCanvas->GetRect().w, cCanvas->GetRect().h };
 			float2 pivot = { cCanvas->pivot.x, cCanvas->pivot.y };
 
-			if (ImGui::DragFloat2("Rect", (float*)&size, 0.05f, 0.0f, 0.0f, "%.3f", NULL))
+			if (ImGui::DragFloat2("Rect", (float*)&size, 0.005f, 0.0f, 0.0f, "%.3f", NULL))
 			{
 				if (size.x < 0)
 					size.x = 0;
@@ -1066,7 +1069,7 @@ void E_Inspector::DrawCanvasComponent(C_Canvas* cCanvas)
 			}
 
 			// --- PIVOT ---
-			if (ImGui::DragFloat2("Pivot", (float*)&pivot, 0.05f, 0.0f, 0.0f, "%.3f", NULL))
+			if (ImGui::DragFloat2("Pivot", (float*)&pivot, 0.005f, 0.0f, 0.0f, "%.3f", NULL))
 			{
 
 				if (pivot.x < cCanvas->GetPosition().x - cCanvas->GetSize().x / 2)
@@ -1283,7 +1286,7 @@ void E_Inspector::DrawUIImageComponent(C_UI_Image* image)
 
 		C_Canvas* canvas = image->GetOwner()->parent->GetComponent<C_Canvas>();
 
-		if (ImGui::DragFloat2("Image Size", (float*)&size, 0.05f, 0.0f, 0.0f, "%.3f", NULL))
+		if (ImGui::DragFloat2("Image Size", (float*)&size, 0.005f, 0.0f, 0.0f, "%.3f", NULL))
 		{
 			if (size.x < 0)
 				size.x = 0;
@@ -1294,7 +1297,7 @@ void E_Inspector::DrawUIImageComponent(C_UI_Image* image)
 			image->SetH(size.y);
 		}
 
-		if (ImGui::DragFloat2("Image Pos", (float*)&pos, 0.05f, 0.0f, 0.0f, "%.3f", NULL))
+		if (ImGui::DragFloat2("Image Pos", (float*)&pos, 0.005f, 0.0f, 0.0f, "%.3f", NULL))
 		{
 			if (pos.x - size.x / 2 < canvas->GetPosition().x - canvas->GetSize().x / 2)
 				pos.x = canvas->GetPosition().x - canvas->GetSize().x / 2 + size.x / 2;
@@ -1472,6 +1475,56 @@ void E_Inspector::DrawScriptComponent(C_Script* cScript)
 	}
 	ImGui::Separator();
 
+}
+
+void E_Inspector::DrawUIButtonComponent(C_UI_Button* button)
+{
+	static bool show = true;
+	if (ImGui::CollapsingHeader("Button", &show, ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		bool isActive = button->IsActive();
+		if (ImGui::Checkbox("Button Is Active", &isActive)) { button->SetIsActive(isActive); }
+
+		ImGui::Separator();
+
+		// --- RECT ---
+		float2 pos = { button->GetRect().x, button->GetRect().y };
+		float2 size = { button->GetRect().w, button->GetRect().h };
+
+		C_Canvas* canvas = button->GetOwner()->parent->GetComponent<C_Canvas>();
+
+		if (ImGui::DragFloat2("Button Size", (float*)&size, 0.005f, 0.0f, 0.0f, "%.3f", NULL))
+		{
+			if (size.x < 0)
+				size.x = 0;
+			if (size.y < 0)
+				size.y = 0;
+
+			button->SetW(size.x);
+			button->SetH(size.y);
+		}
+
+		if (ImGui::DragFloat2("Button Pos", (float*)&pos, 0.005f, 0.0f, 0.0f, "%.3f", NULL))
+		{
+			if (pos.x - size.x / 2 < canvas->GetPosition().x - canvas->GetSize().x / 2)
+				pos.x = canvas->GetPosition().x - canvas->GetSize().x / 2 + size.x / 2;
+
+			if (pos.x + size.x / 2 > canvas->GetPosition().x + canvas->GetSize().x / 2)
+				pos.x = canvas->GetPosition().x + canvas->GetSize().x / 2 - size.x / 2;
+
+
+			if (pos.y - size.y / 2 < canvas->GetPosition().y - canvas->GetSize().y / 2)
+				pos.y = canvas->GetPosition().y - canvas->GetSize().y / 2 + size.y / 2;
+
+			if (pos.y + size.y / 2 > canvas->GetPosition().y + canvas->GetSize().y / 2)
+				pos.y = canvas->GetPosition().y + canvas->GetSize().y / 2 - size.y / 2;
+
+			button->SetX(pos.x);
+			button->SetY(pos.y);
+		}
+	}
+
+	ImGui::Separator();
 }
 
 void E_Inspector::DrawPlayerControllerComponent(C_PlayerController* cController)
@@ -1656,8 +1709,7 @@ void E_Inspector::DrawGateBehaviorComponent(C_GateBehavior* cBehavior)
 // --- DRAW COMPONENT UTILITY METHODS
 void E_Inspector::AddComponentCombo(GameObject* selectedGameObject)
 {
-	ImGui::Combo("##", &componentType, "Add Component\0Transform\0Mesh\0Material\0Light\0Camera\0Animator\0Animation\0RigidBody\0Box Collider\0Sphere Collider\0Capsule Collider\0Particle System\0Canvas\0Audio Source\0Audio Listener\0Player Controller\0Bullet Behavior\0Prop Behavior\0Camera Behavior\0Gate Behavior\0UI Image\0UI Text\0Script");
-
+	ImGui::Combo("##", &componentType, "Add Component\0Transform\0Mesh\0Material\0Light\0Camera\0Animator\0Animation\0RigidBody\0Box Collider\0Sphere Collider\0Capsule Collider\0Particle System\0Canvas\0Audio Source\0Audio Listener\0Player Controller\0Bullet Behavior\0Prop Behavior\0Camera Behavior\0Gate Behavior\0UI Image\0UI Text\0UI Button\0Script");
 	ImGui::SameLine();
 
 	if ((ImGui::Button("ADD")))
@@ -1666,8 +1718,10 @@ void E_Inspector::AddComponentCombo(GameObject* selectedGameObject)
 		{
 			if (componentType == (int)ComponentType::UI_IMAGE)
 				AddUIComponent(selectedGameObject, ComponentType::UI_IMAGE);
-			else if(componentType == (int)ComponentType::UI_TEXT)
+			else if (componentType == (int)ComponentType::UI_TEXT)
 				AddUIComponent(selectedGameObject, ComponentType::UI_TEXT);
+			else if (componentType == (int)ComponentType::UI_BUTTON)
+				AddUIComponent(selectedGameObject, ComponentType::UI_BUTTON);
 
 			else
 				selectedGameObject->CreateComponent((ComponentType)componentType);
@@ -1726,6 +1780,32 @@ void E_Inspector::AddUIComponent(GameObject* selectedGameObject, ComponentType t
 
 			GameObject* newText = App->scene->CreateGameObject("UI Text", selectedGameObject);
 			newText->CreateComponent(ComponentType::UI_TEXT);
+		}
+	}
+
+	else if (type == ComponentType::UI_BUTTON)
+	{
+		// Option 1: selectedGameObject has a canvas
+		if (selectedGameObject->GetComponent<C_Canvas>() != nullptr)
+		{
+			GameObject* newGO;
+			newGO = App->scene->CreateGameObject("UI Button", selectedGameObject);
+			newGO->CreateComponent(ComponentType::UI_BUTTON);
+		}
+		// Option 2: selectedGameObject's parent has a canvas
+		else if (selectedGameObject->parent->GetComponent<C_Canvas>() != nullptr)
+		{
+			selectedGameObject->SetName("UI Button");
+			selectedGameObject->CreateComponent(ComponentType::UI_BUTTON);
+		}
+		// Option 3: need to crete a canvas
+		else
+		{
+			selectedGameObject->SetName("Canvas");
+			selectedGameObject->CreateComponent(ComponentType::CANVAS);
+
+			GameObject* newText = App->scene->CreateGameObject("UI Button", selectedGameObject);
+			newText->CreateComponent(ComponentType::UI_BUTTON);
 		}
 	}
 }
