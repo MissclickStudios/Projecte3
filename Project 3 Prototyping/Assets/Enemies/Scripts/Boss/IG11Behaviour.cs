@@ -8,6 +8,8 @@ public class IG11Behaviour : MonoBehaviour
 
     private bool selectedSpecial;
 
+    private bool lookat;
+
     private bool readyToConeAttack;
     private bool readyToSpiralAttack;
 
@@ -25,6 +27,7 @@ public class IG11Behaviour : MonoBehaviour
         trigerredAttack = false;
 
         moveRight = true;
+        lookat = true;
 
         readyToConeAttack = false;
         readyToSpiralAttack = false;
@@ -44,7 +47,9 @@ public class IG11Behaviour : MonoBehaviour
             }
             if (sAttack1Duration < 0.0f)
             {
-                if(selectedSpecial == false)
+                lookat = false;
+
+                if (selectedSpecial == false)
                 {
                     coneAttackNRPrep();
                 }
@@ -76,6 +81,7 @@ public class IG11Behaviour : MonoBehaviour
                 coneAttackDuration = 5.0f;
                 selectedSpecial = true;
                 sAttack1Duration = 10.0f;
+                lookat = true;
             }
         }
 
@@ -99,6 +105,7 @@ public class IG11Behaviour : MonoBehaviour
                 spiralAttackDuration = 5.0f;
                 selectedSpecial = false;
                 sAttack1Duration = 10.0f;
+                lookat = true;
             }
         }
 
@@ -112,7 +119,10 @@ public class IG11Behaviour : MonoBehaviour
 
     void Chasing()
     {
-        transform.LookAt(chasingTarget.position);
+        if (lookat == true)
+        {
+            transform.LookAt(chasingTarget.position);
+        }
 
         if ((transform.position - chasingTarget.position).magnitude > chasingTriggerDistance )
         {

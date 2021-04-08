@@ -8,6 +8,8 @@ public class IG11BehaviourRaged : MonoBehaviour
 
     private bool selectedSpecialRaged;
 
+    private bool lookat;
+
     private bool readyTo360Attack;
     private bool readyToDoubleSpiralAttack;
 
@@ -24,7 +26,7 @@ public class IG11BehaviourRaged : MonoBehaviour
     {
         trigerredAttackRaged = false;
 
-        moveRight = true;
+        lookat = true;
 
         readyTo360Attack = false;
         readyToDoubleSpiralAttack = false;
@@ -44,21 +46,23 @@ public class IG11BehaviourRaged : MonoBehaviour
             }
             if (sAttack2Duration < 0.0f)
             {
+                lookat = false;
+
                 if (selectedSpecialRaged == false)
                 {
-                    coneAttackNRPrep();
+                    _360AttackNRPrep();
                 }
 
                 else if (selectedSpecialRaged == true)
                 {
-                    spiralAttackNRPrep();
+                    doubleSpiralAttackNRPrep();
                 }
             }
         }
 
         if (readyTo360Attack == true)
         {
-            coneAttackNRMov();
+            _360AttackNRMov();
 
             _360AttackFireRate += Time.deltaTime;
             _360AttackDuration -= Time.deltaTime;
@@ -66,7 +70,7 @@ public class IG11BehaviourRaged : MonoBehaviour
             if (_360AttackFireRate >= 0.5f)
             {
                 startPoint = transform.position;
-                coneAttackNR(SA1numProjectiles);
+                _360AttackNR(SA1numProjectiles);
                 _360AttackFireRate = 0;
             }
             if (_360AttackDuration < 0.0f)
@@ -75,13 +79,14 @@ public class IG11BehaviourRaged : MonoBehaviour
                 _360AttackDuration = 5.0f;
                 selectedSpecialRaged = true;
                 sAttack2Duration = 10.0f;
+                lookat = true;
             }
         }
 
         if (readyToDoubleSpiralAttack == true)
         {
 
-            spiralAttackNRMov();
+            doubleSpiralAttackNRMov();
 
             doubleSpiralAttackFireRate += Time.deltaTime;
             doubleSpiralAttackDuration -= Time.deltaTime;
@@ -89,7 +94,7 @@ public class IG11BehaviourRaged : MonoBehaviour
             if (doubleSpiralAttackFireRate >= 0.05f)
             {
                 startPoint = transform.position;
-                spiralAttackNR();
+                doubleSpiralAttackNR();
                 doubleSpiralAttackFireRate = 0;
             }
             if (doubleSpiralAttackDuration < 0.0f)
@@ -98,6 +103,7 @@ public class IG11BehaviourRaged : MonoBehaviour
                 doubleSpiralAttackDuration = 5.0f;
                 selectedSpecialRaged = false;
                 sAttack2Duration = 10.0f;
+                lookat = true;
             }
         }
 
@@ -111,8 +117,11 @@ public class IG11BehaviourRaged : MonoBehaviour
 
     void Chasing()
     {
-        transform.LookAt(chasingTarget.position);
-
+        if(lookat == true)
+        {
+            transform.LookAt(chasingTarget.position);
+        }
+        
         if ((transform.position - chasingTarget.position).magnitude > chasingTriggerDistance)
         {
 
@@ -167,7 +176,7 @@ public class IG11BehaviourRaged : MonoBehaviour
     public Transform Boss;
     public float Speed = 1.0f;
 
-    void coneAttackNRPrep()
+    void _360AttackNRPrep()
     {
         Boss.transform.position = Vector3.MoveTowards(Boss.transform.position, Target.transform.position, Speed * Time.deltaTime);
 
@@ -183,8 +192,7 @@ public class IG11BehaviourRaged : MonoBehaviour
 
     [Header("Movement 360 Attack Raged Settings")]
     public float moveSpeed = 1.0f;
-    private bool moveRight;
-    void coneAttackNRMov()
+    void _360AttackNRMov()
     {
         //ROTATE ON Y AXIS
         transform.Rotate(Vector3.up * rotateSpeed * Time.deltaTime);
@@ -200,7 +208,7 @@ public class IG11BehaviourRaged : MonoBehaviour
     private Vector3 startPoint;
     private const float radius = 1F;
 
-    void coneAttackNR(int _SA1numProjectiles)
+    void _360AttackNR(int _SA1numProjectiles)
     {
         float angleStep = 360f / _SA1numProjectiles;
         float angle = 0f;
@@ -229,7 +237,7 @@ public class IG11BehaviourRaged : MonoBehaviour
     public Transform spiralBoss;
     public float spiralSpeed = 1.0f;
 
-    void spiralAttackNRPrep()
+    void doubleSpiralAttackNRPrep()
     {
         spiralBoss.transform.position = Vector3.MoveTowards(spiralBoss.transform.position, spiralTarget.transform.position, spiralSpeed * Time.deltaTime);
 
@@ -250,7 +258,7 @@ public class IG11BehaviourRaged : MonoBehaviour
     public float circleSpeed = 5;
     public float circleWidth = 4;
     public float circleLength = 8;
-    void spiralAttackNRMov()
+    void doubleSpiralAttackNRMov()
     {
         //MOVE ON CIRCLES
         timeCounter += Time.deltaTime * circleSpeed;
@@ -273,7 +281,7 @@ public class IG11BehaviourRaged : MonoBehaviour
 
     private float angle = 0f;
 
-    void spiralAttackNR()
+    void doubleSpiralAttackNR()
     {
         for (int i = 0; i <= 1; i++)
         {
