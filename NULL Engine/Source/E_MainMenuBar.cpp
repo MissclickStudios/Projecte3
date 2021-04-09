@@ -23,6 +23,7 @@ E_MainMenuBar::~E_MainMenuBar()
 bool E_MainMenuBar::Draw(ImGuiIO& io)
 {
 	bool ret = true;
+	OPTICK_CATEGORY("E_MainMenuBar Draw", Optick::Category::Editor)
 
 	ImGui::BeginMainMenuBar();
 

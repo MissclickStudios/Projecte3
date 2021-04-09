@@ -1,4 +1,5 @@
 #include "Application.h"
+#include "Profiler.h"
 #include "Script.h"
 #include "M_ScriptManager.h"
 #include "C_Script.h"
@@ -49,6 +50,7 @@ void M_ScriptManager::InitScripts()
 
 UpdateStatus M_ScriptManager::PreUpdate(float dt)
 {
+	OPTICK_CATEGORY("M_ScriptManager PreUpdate", Optick::Category::Module)
 	//if (App->gameState == GameState::PLAY)
 	//{
 	for (int i = 0; i < currentScripts.size(); ++i)
@@ -62,6 +64,7 @@ UpdateStatus M_ScriptManager::PreUpdate(float dt)
 
 UpdateStatus M_ScriptManager::Update(float dt)
 {
+	OPTICK_CATEGORY("M_ScriptManager Update", Optick::Category::Module)
 	//if (App->gameState == GameState::PLAY)
 	//{
 	for (int i = 0; i < currentScripts.size(); ++i)
@@ -75,6 +78,7 @@ UpdateStatus M_ScriptManager::Update(float dt)
 
 UpdateStatus M_ScriptManager::PostUpdate(float dt)
 {
+	OPTICK_CATEGORY("M_ScriptManager PostUpdate", Optick::Category::Module)
 	//if (App->gameState == GameState::PLAY)
 	//{
 	for (int i = 0; i < currentScripts.size(); ++i)

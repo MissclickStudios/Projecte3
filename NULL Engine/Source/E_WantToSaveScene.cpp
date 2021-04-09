@@ -1,4 +1,5 @@
 #include "EngineApplication.h"
+#include "Profiler.h"
 #include "M_Editor.h"
 #include "M_Scene.h"
 #include "EditorPanel.h"
@@ -17,6 +18,8 @@ E_WantToSaveScene::~E_WantToSaveScene()
 
 bool E_WantToSaveScene::Draw(ImGuiIO& io)
 {
+	OPTICK_CATEGORY("E_WantToSaveScene Draw", Optick::Category::Editor)
+
 	ImGui::SetNextWindowPos(ImGui::GetMainViewport()->GetCenter(), ImGuiCond_Appearing, ImVec2(0.5, 0.5));
 	ImGui::SetNextWindowSize(ImVec2(250.0f, 150.0f));
 
