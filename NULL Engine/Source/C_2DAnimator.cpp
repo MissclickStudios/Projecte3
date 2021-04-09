@@ -86,11 +86,22 @@ bool C_2DAnimator::SaveState(ParsonNode& root) const
 {
 	root.SetNumber("Type", (uint)GetType());
 
+	root.SetNumber("Animation Step Time", (uint)animationStepTime);
+	root.SetBool("Animation Loop", animationLoop);
+
+	root.SetString("Name", name.c_str());
+
 	return true;
 }
 
 bool C_2DAnimator::LoadState(ParsonNode& root)
 {
+	animationStepTime = (uint)root.GetNumber("Animation Step Time");
+	animationLoop = root.GetBool("Animation Loop");
+
+	name = root.GetString("Name");
+	GetAnimationSprites(name.c_str());
+
 	return true;
 }
 
