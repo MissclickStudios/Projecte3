@@ -7,21 +7,18 @@
 #include "C_Transform.h"
 #include "C_RigidBody.h"
 
-#include "Blurrg.h"
+#include "SandTrooper.h"
 #include "Player.h"
 
-Blurrg::Blurrg()
-{
-	dashTime.Stop();
-	dashColdown.Stop();
-	dashCharge.Stop();
-}
-
-Blurrg::~Blurrg()
+SandTrooper::SandTrooper()
 {
 }
 
-void Blurrg::Update()
+SandTrooper::~SandTrooper()
+{
+}
+
+void SandTrooper::Update()
 {
 	if (health <= 0.0f)
 	{
@@ -57,62 +54,28 @@ void Blurrg::Update()
 	if (!rigidBody || rigidBody->IsStatic())
 		return;
 
-	if (dashCharge.IsActive())
+	direction = LookingAt();
+
+	if (distance < detectionRange)
 	{
-		// Dash
-		if (dashCharge.ReadSec() >= dashingCharge)
-		{
-			dashCharge.Stop();
-			dashColdown.Start();
-			dashTime.Start();
-
-			rigidBody->SetLinearVelocity(direction * dashSpeed);
-		}
+		
 	}
-	else if (!dashTime.IsActive())
-	{
-		direction = LookingAt();
-
-		if (distance < detectionRange)
-		{
-			// Move
-			direction *= speed;
-			rigidBody->SetLinearVelocity(direction);
-
-			if (dashColdown.IsActive())
-			{
-				if (dashColdown.ReadSec() >= dashingColdown)
-					dashColdown.Stop();
-			}
-			else if (distance < dashRange)
-			{
-				rigidBody->SetLinearVelocity(float3::zero);
-				dashCharge.Start();				// Start Charging Dash
-			}
-		}
-	}
-	else if (dashTime.ReadSec() >= dashingTime)
-		dashTime.Stop();
 }
 
-void Blurrg::CleanUp()
+void SandTrooper::CleanUp()
 {
 }
 
-void Blurrg::OnCollisionEnter(GameObject* object)
+void SandTrooper::OnCollisionEnter(GameObject* object)
 {
 	if (object == player)
 	{
-		float hitDamage = damage;
-		if (dashTime.IsActive())
-			hitDamage = dashDamage;
-
 		Player* script = (Player*)object->GetComponent<C_Script>()->GetScriptData();
-		script->TakeDamage(hitDamage);
+		script->TakeDamage(damage);
 	}
 }
 
-void Blurrg::TakeDamage(float damage)
+void SandTrooper::TakeDamage(float damage)
 {
 	health -= damage;
 	if (health < 0.0f)
@@ -120,7 +83,7 @@ void Blurrg::TakeDamage(float damage)
 }
 
 // Return normalized vector 3 of the direction the player is at
-float3 Blurrg::LookingAt()
+float3 SandTrooper::LookingAt()
 {
 	float2 playerPosition, position, lookVector;
 	playerPosition.x = player->transform->GetWorldPosition().x;
@@ -134,7 +97,7 @@ float3 Blurrg::LookingAt()
 	if (lookVector.x == 0 && lookVector.y == 0) {}
 	else
 		lookVector.Normalize();
-	float rad = lookVector.AimedAngle() ;
+	float rad = lookVector.AimedAngle();
 
 	GameObject* mesh = gameObject->childs[0];
 	if (mesh)
@@ -146,9 +109,9 @@ float3 Blurrg::LookingAt()
 	return { lookVector.x, 0, lookVector.y };
 }
 
-Blurrg* CreateBlurrg()
+SandTrooper* CreateSandTrooper()
 {
-	Blurrg* script = new Blurrg();
+	SandTrooper* script = new SandTrooper();
 
 	// Movement
 	INSPECTOR_DRAGABLE_FLOAT(script->speed);
@@ -157,21 +120,12 @@ Blurrg* CreateBlurrg()
 
 	//INSPECTOR_GAMEOBJECT(script->player);
 
-	// Dash
-	INSPECTOR_DRAGABLE_FLOAT(script->dashSpeed);
-	INSPECTOR_DRAGABLE_FLOAT(script->dashingTime);
-	INSPECTOR_DRAGABLE_FLOAT(script->dashingCharge);
-	INSPECTOR_DRAGABLE_FLOAT(script->dashingColdown);
-
-	INSPECTOR_DRAGABLE_FLOAT(script->dashRange);
-
 	// Health
 	INSPECTOR_DRAGABLE_FLOAT(script->health);
 	INSPECTOR_DRAGABLE_FLOAT(script->maxHealth);
 
 	// Attack
 	INSPECTOR_DRAGABLE_FLOAT(script->damage);
-	INSPECTOR_DRAGABLE_FLOAT(script->dashDamage);
 
 	return script;
 }

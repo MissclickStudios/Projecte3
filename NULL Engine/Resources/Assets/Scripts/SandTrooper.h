@@ -8,12 +8,12 @@
 
 class GameObject;
 
-class SCRIPTS_API Blurrg : public Script
+class SCRIPTS_API SandTrooper : public Script
 {
 public:
 
-	Blurrg();
-	~Blurrg();
+	SandTrooper();
+	~SandTrooper();
 
 	void Update() override;
 	void CleanUp()override;
@@ -29,21 +29,12 @@ public:
 
 	GameObject* player = nullptr;
 
-	// Dash
-	float dashSpeed = 20.0f;
-	float dashingTime = 0.4f;
-	float dashingCharge = 1.0f;
-	float dashingColdown = 3.0f;
-
-	float dashRange = 20.0f;
-
 	// Health
 	float health = 4.0f;
 	float maxHealth = 4.0f;
 
 	// Attack
 	float damage = 0.5f;
-	float dashDamage = 1.0f;
 
 private:
 
@@ -53,12 +44,7 @@ private:
 	float distance = 10000.0f;	// Distance from the player
 
 	float3 direction = float3::zero;
-
-	// Dash
-	Timer dashTime; // Duration of the dash
-	Timer dashColdown;
-	Timer dashCharge;
 };
 
 
-SCRIPTS_FUNCTION Blurrg* CreateBlurrg();
+SCRIPTS_FUNCTION SandTrooper* CreateSandTrooper();
