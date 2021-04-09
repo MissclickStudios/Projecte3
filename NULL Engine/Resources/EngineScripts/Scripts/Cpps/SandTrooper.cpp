@@ -10,7 +10,7 @@
 #include "SandTrooper.h"
 #include "Player.h"
 
-SandTrooper::SandTrooper()
+SandTrooper::SandTrooper() : Script()
 {
 }
 
