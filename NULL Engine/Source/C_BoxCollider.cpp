@@ -134,6 +134,23 @@ float3* C_BoxCollider::GetCornerPoints() const
 	return boxColliderVertices;
 }
 
+void C_BoxCollider::UpdateFilter()
+{
+	//GetOwner()->GetComponent<C_RigidBody>()->GetRigidBody()->detachShape(*shape);
+	//
+	//shape->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE, !isTrigger);
+	//shape->setFlag(physx::PxShapeFlag::eTRIGGER_SHAPE, isTrigger);
+	//
+	//physx::PxFilterData filterData;
+	//filterData.word0 = (int)GetOwner()->GetComponent<C_RigidBody>()->GetFilter();
+	//
+	//shape->setSimulationFilterData(filterData);
+	//shape->setQueryFilterData(filterData);
+	//
+	//GetOwner()->GetComponent<C_RigidBody>()->GetRigidBody()->attachShape(*shape);
+	ToUpdate(ColliderUpdateType::STATE);
+}
+
 void C_BoxCollider::CreateCollider()
 {
 	if (shape)

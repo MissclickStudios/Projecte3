@@ -36,7 +36,7 @@ public:
 	bool			ToShowCollider() const { return showBoxCollider; }
 	void			SetShowCollider(bool enable) { showBoxCollider = enable; }
 
-	void UpdateFilter() { ToUpdate(ColliderUpdateType::STATE); }
+	void UpdateFilter();
 
 private:
 

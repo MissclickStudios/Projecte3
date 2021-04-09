@@ -72,7 +72,6 @@ private:
 	void Movement();
 	void Move(C_RigidBody* rigidBody, int axisX, int axisY);
 	void Dash(C_RigidBody* rigidBody, int axisX, int axisY);
-	void Rotate();
 
 	void Weapon();
 	Projectile* CreateProjectile(uint index);

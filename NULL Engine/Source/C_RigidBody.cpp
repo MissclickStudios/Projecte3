@@ -161,6 +161,7 @@ void C_RigidBody::SetIsActive(bool setTo)
 	if(body)
 		if (isActive)
 		{
+			toChangeFilter = true;
 			TransformMovesRigidBody(false);
 			App->physics->AddActor(body, GetOwner());
 		}
@@ -206,6 +207,7 @@ void C_RigidBody::ChangeFilter(const std::string& const filter)
 void C_RigidBody::MakeStatic()
 {
 	isStatic = true;
+	toChangeFilter = true;
 	
 	if (dynamicBody)
 	{
@@ -242,6 +244,7 @@ void C_RigidBody::MakeStatic()
 void C_RigidBody::MakeDynamic()
 {
 	isStatic = false;
+	toChangeFilter = true;
 
 	if (staticBody)
 	{

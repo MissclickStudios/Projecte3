@@ -69,13 +69,13 @@ void Player::Update()
 			bullets[i] = CreateProjectile(i);
 	}
 
-	Animations();
+	//Animations();
 
 	Movement();
 	Weapon();
-	HandleHp();
 
-	HandleAmmo(ammo);
+	//HandleHp();
+	//HandleAmmo(ammo);
 }
 
 void Player::CleanUp()
@@ -114,7 +114,7 @@ void Player::Animations()
 	{
 		aAnimator = gameObject->GetComponent<C_Animator>();
 
-		//aAnimator->PlayClip("Idle", 0);
+		aAnimator->PlayClip("Idle", 0u);
 		playAnim = true;
 	}
 
@@ -126,25 +126,25 @@ void Player::Animations()
 	case PlayerState::IDLE:
 		if (currentClip != nullptr && clipName != "Idle")
 		{
-			//aAnimator->PlayClip("Idle", 0);
+			aAnimator->PlayClip("Idle", 0u);
 		}
 		break;
 	case PlayerState::RUNNING:
 		if (currentClip != nullptr && clipName != "Running4")
 		{
-			//aAnimator->PlayClip("Running4", 0);
+			aAnimator->PlayClip("Running4", 0u);
 		}
 		break;
 	case PlayerState::DASHING:
 		if (currentClip != nullptr && clipName != "Dashing")
 		{
-			//aAnimator->PlayClip("Dashing", 0);
+			aAnimator->PlayClip("Dashing", 0u);
 		}
 		break;
 	case PlayerState::SHOOTING:
 		if (currentClip != nullptr && clipName != "Shooting")
 		{
-			//aAnimator->PlayClip("Shooting", 0);
+			aAnimator->PlayClip("Shooting", 0u);
 		}
 		break;
 	}
@@ -243,7 +243,7 @@ void Player::Weapon()
 		{
 			float2 dir = { lastAim.x, -lastAim.z };
 			float rad = dir.AimedAngle();
-			mesh->transform->SetLocalRotation(float3(0, rad, 0));
+			mesh->transform->SetLocalRotation(float3(DegToRad(-90), 0, rad));
 		}
 	}
 
@@ -285,6 +285,7 @@ void Player::Weapon()
 Projectile* Player::CreateProjectile(uint index)
 {
 	GameObject* bullet = App->resourceManager->LoadPrefab(this->bullet.uid, bulletStorage);
+	bullet->GetComponent<C_BoxCollider>()->Update();
 
 	char n[10];
 	sprintf_s(n, "%d", index);
@@ -329,10 +330,9 @@ void Player::FireBullet(float3 direction)
 	position.y += 4;
 	bullet->transform->SetWorldPosition(position);
 
-
 	float2 dir = { lastAim.x, -lastAim.z };
 	float rad = dir.AimedAngle();
-	bullet->transform->SetLocalRotation(float3(0, rad, 0));
+	bullet->transform->SetLocalRotation(float3(0, rad + DegToRad(90), 0));
 
 	C_RigidBody* rigidBody = bullet->GetComponent<C_RigidBody>();
 	rigidBody->TransformMovesRigidBody(true);

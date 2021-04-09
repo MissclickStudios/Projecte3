@@ -28,7 +28,7 @@ bool E_Hierarchy::Draw(ImGuiIO& io)
 
 	SetIsHovered();
 
-	if (ImGui::CollapsingHeader(EngineApp->scene->GetCurrentScene()))
+	if (ImGui::CollapsingHeader(EngineApp->scene->GetCurrentScene(), ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		PrintGameObjectsOnHierarchy();
 	}
