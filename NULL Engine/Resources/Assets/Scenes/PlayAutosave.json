@@ -662,6 +662,68 @@
             ]
         },
         {
+            "UID": 366401431,
+            "ParentUID": 545892936,
+            "PrefabID": 70424931,
+            "IsPrefab": true,
+            "Name": "Blurrg001",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        -0.70710676908493042,
+                        0,
+                        0,
+                        0.70710676908493042
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 1819960244,
+                    "Name": "Blurrg001.nemesh",
+                    "Path": "Library\/Meshes\/1819960244.nemesh",
+                    "File": "1819960244.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 1622007230,
+                        "Color": [
+                            0.58823531866073608,
+                            0.58823531866073608,
+                            0.58823531866073608,
+                            1
+                        ],
+                        "Name": "Blurrg001.nemat",
+                        "Path": "Library\/Materials\/1622007230.nemat",
+                        "File": "1622007230.nemat"
+                    },
+                    "Shader": {
+                        "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
+                        "AssetsName": "DefaultShader.shader",
+                        "LibaryPath": "Library\/Shaders\/1458192069.neshader",
+                        "LibraryFile": "1458192069.neshader"
+                    }
+                }
+            ]
+        },
+        {
             "UID": 412919592,
             "ParentUID": 1656308331,
             "PrefabID": 0,
@@ -994,64 +1056,116 @@
             ]
         },
         {
-            "UID": 563669757,
-            "ParentUID": 1139257244,
+            "UID": 545892936,
+            "ParentUID": 888400124,
             "PrefabID": 70424931,
             "IsPrefab": true,
-            "Name": "Blurrg001",
+            "Name": "Blurrg1",
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
+            "ShowBoundingBoxes": true,
             "Components": [
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        0,
-                        0,
-                        0
+                        34.843070983886719,
+                        1.4909594058990479,
+                        -47.10064697265625
                     ],
                     "LocalRotation": [
-                        -0.70710676908493042,
                         0,
+                        0.99833238124847412,
                         0,
-                        0.70710676908493042
+                        0.05772801861166954
                     ],
                     "LocalScale": [
-                        1,
-                        1,
-                        1
+                        0.05000002309679985,
+                        0.05000000074505806,
+                        0.05000002309679985
                     ]
                 },
                 {
-                    "Type": 2,
-                    "UID": 1819960244,
-                    "Name": "Blurrg001.nemesh",
-                    "Path": "Library\/Meshes\/1819960244.nemesh",
-                    "File": "1819960244.nemesh",
-                    "ShowWireframe": false,
-                    "ShowBoundingBox": false
+                    "Type": 8,
+                    "Is Static": false,
+                    "Filter": " enemy",
+                    "Mass": 100,
+                    "Density": 10,
+                    "Linear Damping": 0,
+                    "Angular Damping": 0,
+                    "Use Gravity": false,
+                    "Is Kinematic": true,
+                    "Freeze Position X": false,
+                    "Freeze Position Y": true,
+                    "Freeze Position Z": false,
+                    "Freeze Rotation X": true,
+                    "Freeze Rotation Y": true,
+                    "Freeze Rotation Z": true
                 },
                 {
-                    "Type": 3,
-                    "Material": {
-                        "UID": 1622007230,
-                        "Color": [
-                            0.58823531866073608,
-                            0.58823531866073608,
-                            0.58823531866073608,
-                            1
-                        ],
-                        "Name": "Blurrg001.nemat",
-                        "Path": "Library\/Materials\/1622007230.nemat",
-                        "File": "1622007230.nemat"
-                    },
-                    "Shader": {
-                        "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
-                        "AssetsName": "DefaultShader.shader",
-                        "LibaryPath": "Library\/Shaders\/1458192069.neshader",
-                        "LibraryFile": "1458192069.neshader"
-                    }
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 5,
+                    "Size Y": 10,
+                    "Size Z": 5,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
+                },
+                {
+                    "Type": 24,
+                    "ResourceUID": 682930301,
+                    "AssetsPath": "Assets\/Scripts\/\/Blurrg.h",
+                    "DataName": "Blurrg",
+                    "HasInspector": true,
+                    "InspectorVariables": [
+                        {
+                            "Type": 2,
+                            "Name": "speed",
+                            "float": 15
+                        },
+                        {
+                            "Type": 2,
+                            "Name": "detectionRange",
+                            "float": 100
+                        },
+                        {
+                            "Type": 2,
+                            "Name": "dashSpeed",
+                            "float": 8
+                        },
+                        {
+                            "Type": 2,
+                            "Name": "dashingTime",
+                            "float": 0.5
+                        },
+                        {
+                            "Type": 2,
+                            "Name": "dashingCharge",
+                            "float": 0.60000002384185791
+                        },
+                        {
+                            "Type": 2,
+                            "Name": "dashingColdown",
+                            "float": 3
+                        },
+                        {
+                            "Type": 2,
+                            "Name": "dashRange",
+                            "float": 40
+                        },
+                        {
+                            "Type": 2,
+                            "Name": "health",
+                            "float": 4
+                        },
+                        {
+                            "Type": 2,
+                            "Name": "maxHealth",
+                            "float": 4
+                        }
+                    ]
                 }
             ]
         },
@@ -1559,7 +1673,7 @@
         },
         {
             "UID": 888400124,
-            "ParentUID": 1757104979,
+            "ParentUID": 1649583009,
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "MainScene",
@@ -2290,120 +2404,6 @@
                         0.99999994039535522,
                         0.99999994039535522,
                         0.99999994039535522
-                    ]
-                }
-            ]
-        },
-        {
-            "UID": 1139257244,
-            "ParentUID": 888400124,
-            "PrefabID": 70424931,
-            "IsPrefab": true,
-            "Name": "Blurrg1",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": true,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        34.843070983886719,
-                        1.4909594058990479,
-                        -47.10064697265625
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0.99833238124847412,
-                        0,
-                        0.057728037238121033
-                    ],
-                    "LocalScale": [
-                        0.050000011920928955,
-                        0.05000000074505806,
-                        0.050000011920928955
-                    ]
-                },
-                {
-                    "Type": 8,
-                    "Is Static": false,
-                    "Filter": " enemy",
-                    "Mass": 100,
-                    "Density": 10,
-                    "Linear Damping": 0,
-                    "Angular Damping": 0,
-                    "Use Gravity": false,
-                    "Is Kinematic": true,
-                    "Freeze Position X": false,
-                    "Freeze Position Y": true,
-                    "Freeze Position Z": false,
-                    "Freeze Rotation X": true,
-                    "Freeze Rotation Y": true,
-                    "Freeze Rotation Z": true
-                },
-                {
-                    "Type": 9,
-                    "Is Trigger": false,
-                    "Show Collider": true,
-                    "Size X": 5,
-                    "Size Y": 10,
-                    "Size Z": 5,
-                    "Center X": 0,
-                    "Center Y": 0,
-                    "Center Z": 0
-                },
-                {
-                    "Type": 24,
-                    "ResourceUID": 682930301,
-                    "AssetsPath": "Assets\/Scripts\/\/Blurrg.h",
-                    "DataName": "Blurrg",
-                    "HasInspector": true,
-                    "InspectorVariables": [
-                        {
-                            "Type": 2,
-                            "Name": "speed",
-                            "float": 15
-                        },
-                        {
-                            "Type": 2,
-                            "Name": "detectionRange",
-                            "float": 100
-                        },
-                        {
-                            "Type": 2,
-                            "Name": "dashSpeed",
-                            "float": 8
-                        },
-                        {
-                            "Type": 2,
-                            "Name": "dashingTime",
-                            "float": 0.5
-                        },
-                        {
-                            "Type": 2,
-                            "Name": "dashingCharge",
-                            "float": 0.60000002384185791
-                        },
-                        {
-                            "Type": 2,
-                            "Name": "dashingColdown",
-                            "float": 3
-                        },
-                        {
-                            "Type": 2,
-                            "Name": "dashRange",
-                            "float": 40
-                        },
-                        {
-                            "Type": 2,
-                            "Name": "health",
-                            "float": 4
-                        },
-                        {
-                            "Type": 2,
-                            "Name": "maxHealth",
-                            "float": 4
-                        }
                     ]
                 }
             ]

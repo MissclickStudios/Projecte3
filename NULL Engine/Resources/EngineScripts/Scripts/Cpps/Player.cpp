@@ -57,19 +57,17 @@ void Player::Awake()
 	dashColdown.Stop();
 	stepTimer.Stop();
 
-	//if (!bulletStorage)
-	//{
-	//	bulletStorage = App->scene->CreateGameObject("Bullets", App->scene->GetSceneRoot());
-	//	for (uint i = 0; i < BULLET_AMOUNT; ++i)
-	//		bullets[i] = CreateProjectile(i);
-	//}
 	ammo = 10;
 }
 
 void Player::Update()
 {
-	if (App->gameState != GameState::PLAY)
-		return;
+	if (!bulletStorage)
+	{
+		bulletStorage = App->scene->CreateGameObject("Bullets", App->scene->GetSceneRoot());
+		for (uint i = 0; i < BULLET_AMOUNT; ++i)
+			bullets[i] = CreateProjectile(i);
+	}
 
 	Animations();
 
@@ -90,7 +88,7 @@ void Player::CleanUp()
 			bullets[i] = nullptr;
 		}
 
-		App->scene->DeleteGameObject(bulletStorage);
+		bulletStorage->to_delete = true;
 		bulletStorage = nullptr;
 	}
 

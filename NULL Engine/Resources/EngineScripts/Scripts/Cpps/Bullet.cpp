@@ -30,7 +30,8 @@ void Bullet::Update()
 			gameObject->components[i]->SetIsActive(false);
 		gameObject->SetIsActive(false);
 
-		shooter->bullets[index]->inUse = false;
+		if (shooter)
+			shooter->bullets[index]->inUse = false;
 		autodestructTimer.Stop();
 	}
 }
