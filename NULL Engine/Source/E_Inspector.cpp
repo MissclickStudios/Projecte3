@@ -46,7 +46,7 @@
 #include "C_UI_Button.h"
 #include "C_Script.h"
 #include "C_2DAnimator.h"
-#include "C_NavMesh.h"
+#include "C_NavMeshAgent.h"
 
 #include "R_Shader.h"
 #include "R_Texture.h"
@@ -241,7 +241,7 @@ void E_Inspector::DrawComponents(GameObject* selectedGameObject)
 		case ComponentType::CAMERA_BEHAVIOR:	{ DrawCameraBehaviorComponent((C_CameraBehavior*)component); }		break;
 		case ComponentType::GATE_BEHAVIOR:		{ DrawGateBehaviorComponent((C_GateBehavior*)component); }			break;
 		case ComponentType::ANIMATOR2D:			{ DrawAnimator2DComponent((C_2DAnimator*)component); }				break;
-		case ComponentType::NAVMESH:			{ DrawNavMeshComponent((C_NavMesh*)component); }					break;
+		case ComponentType::NAVMESH_AGENT:		{ DrawNavMeshAgentComponent((C_NavMeshAgent*)component); }			break;
 		}
 		if (type == ComponentType::NONE)
 		{
@@ -1227,9 +1227,9 @@ void E_Inspector::DrawParticleSystemComponent(C_Particles* cParticleSystem)
 
 					if ((ImGui::Button("ADD")))
 					{
-						if (moduleType != (int)M_ParticleSystem::Type::None)
+						if (moduleType != (int)ParticleModule::Type::None)
 						{
-							emitter->AddModuleFromType((M_ParticleSystem::Type)moduleType);
+							emitter->AddModuleFromType((ParticleModule::Type)moduleType);
 						}
 					}
 
@@ -1237,10 +1237,10 @@ void E_Inspector::DrawParticleSystemComponent(C_Particles* cParticleSystem)
 
 					for (int i = 0; i < emitter->modules.size(); i++) //loop modules
 					{
-						M_ParticleSystem* module = emitter->modules[i];
+						ParticleModule* module = emitter->modules[i];
 						switch (module->type)
 						{
-						case (M_ParticleSystem::Type::EmitterBase):
+						case (ParticleModule::Type::EmitterBase):
 						{
 							if (ImGui::CollapsingHeader("Emitter Base", &show, ImGuiTreeNodeFlags_DefaultOpen))
 							{
@@ -1253,7 +1253,7 @@ void E_Inspector::DrawParticleSystemComponent(C_Particles* cParticleSystem)
 							}
 						}
 						break;
-						case (M_ParticleSystem::Type::EmitterSpawn):
+						case (ParticleModule::Type::EmitterSpawn):
 						{
 							if (ImGui::CollapsingHeader("Emitter Spawn", &show, ImGuiTreeNodeFlags_DefaultOpen))
 							{
@@ -1265,7 +1265,7 @@ void E_Inspector::DrawParticleSystemComponent(C_Particles* cParticleSystem)
 							}
 						}
 						break;
-						case(M_ParticleSystem::Type::ParticleMovement):
+						case(ParticleModule::Type::ParticleMovement):
 						{
 							if (ImGui::CollapsingHeader("Particle Movement", &show, ImGuiTreeNodeFlags_DefaultOpen))
 							{
@@ -1303,7 +1303,7 @@ void E_Inspector::DrawParticleSystemComponent(C_Particles* cParticleSystem)
 							}
 						}
 						break;
-						case(M_ParticleSystem::Type::ParticleColor):
+						case(ParticleModule::Type::ParticleColor):
 						{
 							if (ImGui::CollapsingHeader("Particle Color", &show, ImGuiTreeNodeFlags_DefaultOpen))
 							{
@@ -1327,7 +1327,7 @@ void E_Inspector::DrawParticleSystemComponent(C_Particles* cParticleSystem)
 							}
 						}
 						break;
-						case(M_ParticleSystem::Type::ParticleLifetime):
+						case(ParticleModule::Type::ParticleLifetime):
 						{
 							if (ImGui::CollapsingHeader("Particle Lifetime", &show, ImGuiTreeNodeFlags_DefaultOpen))
 							{
@@ -1351,7 +1351,7 @@ void E_Inspector::DrawParticleSystemComponent(C_Particles* cParticleSystem)
 							}
 						}
 						break;
-						case(M_ParticleSystem::Type::None):
+						case(ParticleModule::Type::None):
 						{
 
 						}							
@@ -1845,12 +1845,12 @@ void E_Inspector::DrawAnimator2DComponent(C_2DAnimator* cAnimator)
 	return;
 }
 
-void E_Inspector::DrawNavMeshComponent(C_NavMesh* cNavMesh)
+void E_Inspector::DrawNavMeshAgentComponent(C_NavMeshAgent* cNavMeshAgent)
 {
 	bool show = true;
-	if (ImGui::CollapsingHeader("NavMesh", &show, ImGuiTreeNodeFlags_None))
+	if (ImGui::CollapsingHeader("NavMesh Agent", &show, ImGuiTreeNodeFlags_None))
 	{
-		DrawBasicSettings((Component*)cNavMesh);
+		DrawBasicSettings((Component*)cNavMeshAgent);
 
 		ImGui::Separator();
 
@@ -1858,7 +1858,7 @@ void E_Inspector::DrawNavMeshComponent(C_NavMesh* cNavMesh)
 
 		if (!show)
 		{
-			componentToDelete = cNavMesh;
+			componentToDelete = cNavMeshAgent;
 			showDeleteComponentPopup = true;
 		}
 	}
@@ -1869,7 +1869,7 @@ void E_Inspector::DrawNavMeshComponent(C_NavMesh* cNavMesh)
 // --- DRAW COMPONENT UTILITY METHODS ---
 void E_Inspector::AddComponentCombo(GameObject* selectedGameObject)
 {
-	ImGui::Combo("##", &componentType, "Add Component\0Transform\0Mesh\0Material\0Light\0Camera\0Animator\0Animation\0RigidBody\0Box Collider\0Sphere Collider\0Capsule Collider\0Particle System\0Canvas\0Audio Source\0Audio Listener\0Player Controller\0Bullet Behavior\0Prop Behavior\0Camera Behavior\0Gate Behavior\0UI Image\0UI Text\0UI Button\0Script\0Animator 2D\0NavMesh");
+	ImGui::Combo("##", &componentType, "Add Component\0Transform\0Mesh\0Material\0Light\0Camera\0Animator\0Animation\0RigidBody\0Box Collider\0Sphere Collider\0Capsule Collider\0Particle System\0Canvas\0Audio Source\0Audio Listener\0Player Controller\0Bullet Behavior\0Prop Behavior\0Camera Behavior\0Gate Behavior\0UI Image\0UI Text\0UI Button\0Script\0Animator 2D\0NavMesh Agent");
 
 	ImGui::SameLine();
 
@@ -2044,7 +2044,7 @@ void E_Inspector::DrawBasicSettings(Component* component, const char* state)
 	case ComponentType::UI_BUTTON: 			{ label = "UI Button is active"; }			break;
 	case ComponentType::SCRIPT:				{ label = "Script is active"; }				break;
 	case ComponentType::ANIMATOR2D:			{ label = "Animator 2D is active"; }		break;
-	case ComponentType::NAVMESH:			{ label = "NavMesh is active"; }			break;
+	case ComponentType::NAVMESH_AGENT:		{ label = "NavMesh Agent is active"; }		break;
 	case ComponentType::PLAYER_CONTROLLER:	{ label = "Player Controller is active"; }	break;
 	case ComponentType::BULLET_BEHAVIOR:	{ label = "Bullet Behavior is active"; }	break;
 	case ComponentType::PROP_BEHAVIOR:		{ label = "Prop Behavior is active"; }		break;

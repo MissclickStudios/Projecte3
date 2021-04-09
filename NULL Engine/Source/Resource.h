@@ -26,7 +26,7 @@ enum class ResourceType													// IMPORTANT: Do not change the order of the
 	PARTICLES,
 	PREFAB,
 	SCRIPT,
-	NAVMESH,
+	NAVMESH_AGENT,
 	NONE
 };
 

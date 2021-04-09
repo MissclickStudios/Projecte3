@@ -233,7 +233,7 @@ uint M_ResourceManager::SaveResourceToLibrary(Resource* resource)
 	case ResourceType::SHADER:		{ written = Importer::Shaders::Save((R_Shader*)resource, &buffer); }		break;
 	case ResourceType::PARTICLES:	{ written = Importer::Particles::Save((R_Particles*)resource, &buffer); }	break;
 	case ResourceType::SCRIPT:		{ written = Importer::Scripts::Save((R_Script*)resource, &buffer); }		break;
-	case ResourceType::NAVMESH:		{ written = Importer::Navigation::Save((R_NavMesh*)resource, &buffer); }	break;
+	case ResourceType::NAVMESH_AGENT:		{ written = Importer::Navigation::Save((R_NavMesh*)resource, &buffer); }	break;
 	}
 
 	RELEASE_ARRAY(buffer);
@@ -411,7 +411,7 @@ ResourceType M_ResourceManager::GetTypeFromAssetsExtension(const char* assetsPat
 	}
 	else if (extension == "navmesh")
 	{
-		type = ResourceType::NAVMESH;
+		type = ResourceType::NAVMESH_AGENT;
 	}
 	else if (extension == "[NONE]")
 	{
@@ -533,7 +533,7 @@ Resource* M_ResourceManager::CreateResource(ResourceType type, const char* asset
 	case ResourceType::SHADER:			{ resource = new R_Shader(); }			break;
 	case ResourceType::PARTICLES:		{ resource = new R_Particles(); }		break;
 	case ResourceType::SCRIPT:			{ resource = new R_Script(); }			break;
-	case ResourceType::NAVMESH:			{ resource = new R_NavMesh(); }			break;
+	case ResourceType::NAVMESH_AGENT:			{ resource = new R_NavMesh(); }			break;
 	}
 
 	if (resource != nullptr)
@@ -619,7 +619,7 @@ bool M_ResourceManager::AllocateResource(uint32 UID, const char* assetsPath)
 	case ResourceType::SHADER:		{ success = Importer::Shaders::Load(buffer, (R_Shader*)resource); }				break;
 	case ResourceType::PARTICLES:	{ success = Importer::Particles::Load(buffer, (R_Particles*)resource); }		break;
 	case ResourceType::SCRIPT:		{ success = Importer::Scripts::Load(buffer, (R_Script*)resource); }				break;
-	case ResourceType::NAVMESH:		{ success = Importer::Navigation::Load(buffer, (R_NavMesh*)resource); }			break;
+	case ResourceType::NAVMESH_AGENT:		{ success = Importer::Navigation::Load(buffer, (R_NavMesh*)resource); }			break;
 	}
 
 	RELEASE_ARRAY(buffer);
@@ -1369,7 +1369,7 @@ bool M_ResourceManager::GetLibraryDirectoryAndExtensionFromType(const ResourceTy
 	case ResourceType::SHADER:		{ directory = SHADERS_PATH;		extension = SHADERS_EXTENSION; }		break;
 	case ResourceType::PARTICLES:	{ directory = PARTICLES_PATH;	extension = PARTICLES_EXTENSION; }		break;
 	case ResourceType::SCRIPT:		{ directory = SCRIPTS_PATH;		extension = SCRIPTS_EXTENSION; }		break;
-	case ResourceType::NAVMESH:		{ directory = NAVIGATION_PATH;	extension = NAVMESH_EXTENSION; }		break;
+	case ResourceType::NAVMESH_AGENT:		{ directory = NAVIGATION_PATH;	extension = NAVMESH_EXTENSION; }		break;
 	case ResourceType::NONE:		{ return false; }														break;
 	}
 
@@ -1512,7 +1512,7 @@ uint32 M_ResourceManager::ImportFromAssets(const char* assetsPath)
 		case ResourceType::SHADER:		{ success = Importer::Shaders::Import(resource->GetAssetsPath(), (R_Shader*)resource); }	break;
 		case ResourceType::PARTICLES:	{ success = Importer::ImportParticles(buffer, (R_Particles*)resource); }					break;
 		case ResourceType::SCRIPT:      { success = Importer::Scripts::Import(assetsPath, buffer, read, (R_Script*)resource); }		break;
-		case ResourceType::NAVMESH:		{ success = Importer::ImportNavMesh(buffer, (R_NavMesh*)resource); }						break;
+		case ResourceType::NAVMESH_AGENT:		{ success = Importer::ImportNavMesh(buffer, (R_NavMesh*)resource); }						break;
 		}
 
 		RELEASE_ARRAY(buffer);
@@ -1606,7 +1606,7 @@ ResourceType M_ResourceManager::GetTypeFromLibraryExtension(const char* libraryP
 	else if (extension == SHADERS_EXTENSION)		{ type = ResourceType::SHADER; }
 	else if (extension == PARTICLES_EXTENSION)		{ type = ResourceType::PARTICLES; }
 	else if (extension == SCRIPTS_EXTENSION)		{ type = ResourceType::SCRIPT; }
-	else if (extension == NAVMESH_EXTENSION)		{ type = ResourceType::NAVMESH; }
+	else if (extension == NAVMESH_EXTENSION)		{ type = ResourceType::NAVMESH_AGENT; }
 	else											{ type = ResourceType::NONE; }
 
 	return type;
@@ -1823,7 +1823,7 @@ bool M_ResourceManager::ResourceHasMetaType(Resource* resource) const
 		case ResourceType::SHADER:		{ return true; }	break;
 		case ResourceType::PARTICLES:	{ return true; }	break;
 		case ResourceType::SCRIPT:		{ return true; }	break;
-		case ResourceType::NAVMESH:		{ return true; }	break;
+		case ResourceType::NAVMESH_AGENT:		{ return true; }	break;
 	}
 
 	return false;

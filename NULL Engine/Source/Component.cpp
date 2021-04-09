@@ -73,7 +73,7 @@ const char* Component::GetNameFromType() const
 	case ComponentType::UI_BUTTON: 			{ return "UI Button"; }			break;
 	case ComponentType::SCRIPT:				{ return "Script"; }			break;
 	case ComponentType::ANIMATOR2D:			{ return "Animator 2D"; }		break;
-	case ComponentType::NAVMESH:			{ return "NavMesh"; }			break;
+	case ComponentType::NAVMESH_AGENT:			{ return "NavMesh"; }			break;
 	case ComponentType::PLAYER_CONTROLLER:	{ return "Player Controller"; }	break;
 	case ComponentType::BULLET_BEHAVIOR:	{ return "Bullet Behavior"; }	break;
 	case ComponentType::PROP_BEHAVIOR:		{ return "Prop Behavior"; }		break;

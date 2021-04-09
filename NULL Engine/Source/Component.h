@@ -46,7 +46,7 @@ enum class ComponentType
 
 	ANIMATOR2D,												// --- ANIMATIONS2D
 
-	NAVMESH													// --- NAVIGATION
+	NAVMESH_AGENT											// --- NAVIGATION
 };
 
 class NULL_API Component

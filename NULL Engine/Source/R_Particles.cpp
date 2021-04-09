@@ -1,6 +1,6 @@
 #include "JSONParser.h"
 
-#include "M_ParticleSystem.h"
+#include "ParticleModule.h"
 
 #include "R_Particles.h"
 

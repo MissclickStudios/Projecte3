@@ -34,7 +34,7 @@ class C_UI_Image;
 class C_UI_Text;
 class C_UI_Button;
 class C_2DAnimator;
-class C_NavMesh;
+class C_NavMeshAgent;
 
 class Resource;
 class R_Shader;
@@ -85,7 +85,7 @@ private:																										// --- DRAW COMPONENT METHODS ---
 	void DrawCameraBehaviorComponent	(C_CameraBehavior* behavior); 
 	void DrawGateBehaviorComponent		(C_GateBehavior* behavior);
 	void DrawAnimator2DComponent		(C_2DAnimator* cAnimator);
-	void DrawNavMeshComponent			(C_NavMesh* cNavMesh);
+	void DrawNavMeshAgentComponent		(C_NavMeshAgent* cNavMeshAgent);
 
 private:																										// --- DRAW COMPONENT UTILITY METHODS ---
 	void AddComponentCombo				(GameObject* selectedGameObject);										// 

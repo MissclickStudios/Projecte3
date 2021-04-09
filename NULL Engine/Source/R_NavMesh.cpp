@@ -2,7 +2,7 @@
 
 #include "R_NavMesh.h"
 
-R_NavMesh::R_NavMesh() : Resource(ResourceType::NAVMESH)
+R_NavMesh::R_NavMesh() : Resource(ResourceType::NAVMESH_AGENT)
 {
 
 }
