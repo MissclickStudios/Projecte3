@@ -1,46 +1,65 @@
 #include "Application.h"
 #include "Log.h"
-#include "Player.h"
-#include "GameObject.h"
-#include "Bullet.h"
-
-#include "C_Transform.h"
 
 #include "M_Scene.h"
 
-#include "SandTrooper.h"
+#include "GameObject.h"
+#include "C_Transform.h"
+#include "C_RigidBody.h"
 
-enum class SandTrooperState
-{
-	IDLE,
-	RUNNING,
-	SHOOTING,
-	RELOADING,
-	NONE
-};
+#include "SandTrooper.h"
+#include "Player.h"
 
 SandTrooper::SandTrooper() : Script()
 {
-	state = SandTrooperState::IDLE;
 }
 
 SandTrooper::~SandTrooper()
 {
 }
 
-void SandTrooper::Start()
-{
-	//playerTransform = App->scene->GetGameObjectByName("")
-
-
-	bulletStorage = App->scene->CreateGameObject("Bullets", App->scene->GetSceneRoot());
-	for (uint i = 0; i < BULLET_AMOUNT; ++i)
-		bullets[i] = CreateProjectile(i);
-
-}
-
 void SandTrooper::Update()
 {
+	if (health <= 0.0f)
+	{
+		for (uint i = 0; i < gameObject->components.size(); ++i)
+			gameObject->components[i]->SetIsActive(false);
+		gameObject->SetIsActive(false);
+
+		return;
+	}
+
+	if (!player)
+	{
+		std::vector<GameObject*>* objects = App->scene->GetGameObjects();
+		for (uint i = 0; i < objects->size(); ++i)
+		{
+			GameObject* object = (*objects)[i];
+			for (uint n = 0; n < object->components.size(); ++n)
+			{
+				Component* comp = object->components[n];
+				if (comp->GetType() == ComponentType::SCRIPT)
+				{
+					C_Script* script = (C_Script*)comp;
+					if (script->GetDataName() == "Player")
+						player = object;
+				}
+			}
+		}
+		if (!player)
+			return;
+	}
+
+	C_RigidBody* rigidBody = gameObject->GetComponent<C_RigidBody>();
+	if (!rigidBody || rigidBody->IsStatic())
+		return;
+
+	direction = LookingAt();
+
+	if (distance < detectionRange)
+	{
+		
+	}
 }
 
 void SandTrooper::CleanUp()
@@ -49,28 +68,64 @@ void SandTrooper::CleanUp()
 
 void SandTrooper::OnCollisionEnter(GameObject* object)
 {
-
+	if (object == player)
+	{
+		Player* script = (Player*)object->GetComponent<C_Script>()->GetScriptData();
+		script->TakeDamage(damage);
+	}
 }
 
-Projectile* SandTrooper::CreateProjectile(uint index)
+void SandTrooper::TakeDamage(float damage)
 {
-	GameObject* bullet = App->scene->InstantiatePrefab(this->bullet.uid, bulletStorage,float3::zero,gameObject->transform->GetLocalRotation());
+	health -= damage;
+	if (health < 0.0f)
+		health = 0.0f;
+}
 
-	char n[10];
-	sprintf_s(n, "%d", index);
-	std::string num = n;
-	std::string name("SandStormBullet" + num);
+// Return normalized vector 3 of the direction the player is at
+float3 SandTrooper::LookingAt()
+{
+	float2 playerPosition, position, lookVector;
+	playerPosition.x = player->transform->GetWorldPosition().x;
+	playerPosition.y = player->transform->GetWorldPosition().z;
+	position.x = gameObject->transform->GetWorldPosition().x;
+	position.y = gameObject->transform->GetWorldPosition().z;
 
-	bullet->SetName(name.c_str());
+	lookVector = playerPosition - position;
 
-	float3 position = float3::zero;
-	bullet->transform->SetWorldPosition(position);
+	distance = lookVector.Length();
+	if (lookVector.x == 0 && lookVector.y == 0) {}
+	else
+		lookVector.Normalize();
+	float rad = lookVector.AimedAngle();
 
-	//((Bullet*)bullet->GetComponent<C_Script>()->GetScriptData())->SetShooter(this, index); //Fix this
+	GameObject* mesh = gameObject->childs[0];
+	if (mesh)
+	{
+		float rad = -lookVector.AimedAngle() + DegToRad(90);
+		mesh->transform->SetLocalRotation(float3(DegToRad(-90), 0, rad));
+	}
 
-	for (uint i = 0; i < bullet->components.size(); ++i)
-		bullet->components[i]->SetIsActive(false);
-	bullet->SetIsActive(false);
+	return { lookVector.x, 0, lookVector.y };
+}
 
-	return new Projectile(bullet);
+SandTrooper* CreateSandTrooper()
+{
+	SandTrooper* script = new SandTrooper();
+
+	// Movement
+	INSPECTOR_DRAGABLE_FLOAT(script->speed);
+
+	INSPECTOR_DRAGABLE_FLOAT(script->detectionRange);
+
+	//INSPECTOR_GAMEOBJECT(script->player);
+
+	// Health
+	INSPECTOR_DRAGABLE_FLOAT(script->health);
+	INSPECTOR_DRAGABLE_FLOAT(script->maxHealth);
+
+	// Attack
+	INSPECTOR_DRAGABLE_FLOAT(script->damage);
+
+	return script;
 }

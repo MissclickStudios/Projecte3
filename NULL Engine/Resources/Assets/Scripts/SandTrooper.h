@@ -2,53 +2,49 @@
 #include "Script.h"
 #include "ScriptMacros.h"
 
-#include "Prefab.h"
+#include "Timer.h"
 
-#define BULLET_AMOUNT_SAND_TROOPER 5
+#include "MathGeoLib/include/Math/float3.h"
 
-enum class SandTrooperState;
-struct Projectile;
+class GameObject;
 
-//struct ProjectileSandTrooper
-//{
-//	ProjectileSandTrooper() : inUse(false), object(nullptr) {}
-//	ProjectileSandTrooper(GameObject* object) : inUse(false), object(object) {}
-//	ProjectileSandTrooper(bool inUse, GameObject* object) : inUse(inUse), object(object) {}
-//
-//	bool inUse;
-//	GameObject* object;
-//};
-
-class SCRIPTS_API SandTrooper : public Script {
+class SCRIPTS_API SandTrooper : public Script
+{
 public:
+
 	SandTrooper();
 	~SandTrooper();
 
-	void Start() override;
 	void Update() override;
-	void CleanUp() override;
+	void CleanUp()override;
 
 	void OnCollisionEnter(GameObject* object) override;
 
-	Projectile* CreateProjectile(uint index);
+	void TakeDamage(float damage);
+
+	// Movement
+	float speed = 10.0f;
+
+	float detectionRange = 40.0f;
+
+	GameObject* player = nullptr;
+
+	// Health
+	float health = 4.0f;
+	float maxHealth = 4.0f;
+
+	// Attack
+	float damage = 0.5f;
 
 private:
 
-	bool dead = false;
+	float3 LookingAt();
 
-	Prefab bullet;
+	// Movement
+	float distance = 10000.0f;	// Distance from the player
 
-	SandTrooperState state;
-
-	C_Transform* playerTransform = nullptr;
-
-	//Bullets
-	GameObject* bulletStorage = nullptr;
-	Projectile* bullets[BULLET_AMOUNT_SAND_TROOPER];
-	
+	float3 direction = float3::zero;
 };
 
-SCRIPTS_FUNCTION SandTrooper* CreateSandTrooper() {
-	SandTrooper* script = new SandTrooper();
-	return script;
-}
+
+SCRIPTS_FUNCTION SandTrooper* CreateSandTrooper();

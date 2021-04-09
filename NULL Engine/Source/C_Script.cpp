@@ -13,6 +13,7 @@
 #include "M_ResourceManager.h"
 #include "M_ScriptManager.h"
 #include "FileSystemDefinitions.h"
+#include "M_Scene.h"
 #include "Prefab.h"
 
 #include "MemoryManager.h"
@@ -89,7 +90,7 @@ bool C_Script::SaveState(ParsonNode& root) const
 			case InspectorScriptData::PREFAB:
 				variable.SetInteger("prefab", (*(Prefab*)inspectorVariables[i].ptr).uid); break;
 			case InspectorScriptData::GAMEOBJECT:
-				if (inspectorVariables[i].obj != nullptr)
+				if (inspectorVariables[i].obj != nullptr && *inspectorVariables[i].obj != nullptr)
 					variable.SetInteger("gameobject", (*inspectorVariables[i].obj)->GetUID());
 				else
 					variable.SetInteger("gameobject", 0);
@@ -140,9 +141,9 @@ bool C_Script::LoadState(ParsonNode& root)
 				case InspectorScriptData::DataType::PREFAB:
 					*(Prefab*)inspectorVariables[i].ptr = App->resourceManager->prefabs[(unsigned int)variable.GetInteger("prefab")]; break;
 				case InspectorScriptData::DataType::GAMEOBJECT: //TODO: FINISH THIS !!!!
-					/*uint32 id = variable.GetInteger("gameobject");
+					uint32 id = variable.GetInteger("gameobject");
 					if (id != 0)
-						;*/
+						App->scene->ResolveScriptGoPointer(id, inspectorVariables[i].obj);
 					break;
 				}
 			}

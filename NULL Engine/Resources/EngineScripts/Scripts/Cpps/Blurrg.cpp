@@ -103,8 +103,12 @@ void Blurrg::OnCollisionEnter(GameObject* object)
 {
 	if (object == player)
 	{
+		float hitDamage = damage;
+		if (dashTime.IsActive())
+			hitDamage = dashDamage;
+
 		Player* script = (Player*)object->GetComponent<C_Script>()->GetScriptData();
-		script->TakeDamage(0.5f);
+		script->TakeDamage(hitDamage);
 	}
 }
 
@@ -164,6 +168,10 @@ Blurrg* CreateBlurrg()
 	// Health
 	INSPECTOR_DRAGABLE_FLOAT(script->health);
 	INSPECTOR_DRAGABLE_FLOAT(script->maxHealth);
+
+	// Attack
+	INSPECTOR_DRAGABLE_FLOAT(script->damage);
+	INSPECTOR_DRAGABLE_FLOAT(script->dashDamage);
 
 	return script;
 }

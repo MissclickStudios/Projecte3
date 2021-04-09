@@ -259,7 +259,7 @@ void M_EngineScriptManager::SerializeAllScripts(ParsonArray& scriptsArray)
 								case InspectorScriptData::DataType::PREFAB:
 									variable.SetInteger("prefab", (*(Prefab*)scriptVariables[i].ptr).uid); break;
 								case InspectorScriptData::DataType::GAMEOBJECT:
-									if (scriptVariables[i].obj != nullptr)
+									if (scriptVariables[i].obj != nullptr && *scriptVariables[i].obj != nullptr)
 										variable.SetInteger("gameobject", (*scriptVariables[i].obj)->GetUID());
 									else
 										variable.SetInteger("gameobject", 0);
@@ -323,6 +323,11 @@ void M_EngineScriptManager::DeSerializeAllScripts(const ParsonArray& scriptsArra
 									*(float*)(*item).ptr = (float)variable.GetNumber("float"); break;
 								case InspectorScriptData::DataType::PREFAB:
 									*(Prefab*)(*item).ptr = EngineApp->resourceManager->prefabs[(unsigned int)variable.GetNumber("prefab")]; break;
+								case InspectorScriptData::DataType::GAMEOBJECT:
+									uint32 id = variable.GetInteger("gameobject");
+									if (id != 0)
+										*(*item).obj = EngineApp->scene->GetGameObjectByUID(id);
+									break;
 								}
 							}
 						}
@@ -340,30 +345,3 @@ void M_EngineScriptManager::DeSerializeAllScripts(const ParsonArray& scriptsArra
 		}
 	}
 }
-
-/*void M_EngineScriptManager::SerializeChildrenScripts(GameObject* go, ParsonArray& scriptsArray)
-{
-	if (go->HasChilds()) 
-	{
-		std::vector<GameObject*>::const_iterator it = go->childs.cbegin();
-		for (it; it != go->childs.cend(); ++it) 
-		{
-			if (*it != nullptr) 
-			{
-				std::vector<C_Script*> scripts;
-				(*it)->GetComponents<C_Script>(scripts);
-				if (!scripts.empty())
-				{
-					std::vector<C_Script*>::const_iterator script = scripts.cbegin();
-					for (script; script != scripts.cend(); ++script)
-					{
-						if (*script != nullptr)
-						{
-
-						}
-					}
-				}
-			}
-		}
-	}
-}*/

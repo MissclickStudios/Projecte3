@@ -41,6 +41,10 @@ public:
 	float health = 4.0f;
 	float maxHealth = 4.0f;
 
+	// Attack
+	float damage = 0.5f;
+	float dashDamage = 1.0f;
+
 private:
 
 	float3 LookingAt();
