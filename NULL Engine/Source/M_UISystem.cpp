@@ -136,65 +136,69 @@ bool M_UISystem::CheckButtonStates()
 {
 	bool ret = false;
 
-	if (App->input->GetKey(SDL_SCANCODE_G) == KeyState::KEY_DOWN || App->input->GetKey(SDL_SCANCODE_G) == KeyState::KEY_REPEAT)
+	if (hoveredButton != nullptr)
 	{
-		hoveredButton->OnPressed();
-	}
-
-	else if (App->input->GetKey(SDL_SCANCODE_G) == KeyState::KEY_UP)
-	{
-		hoveredButton->OnReleased(); /*(?)*/
-	}
-
-	if (activeButtons.size() > 1)
-	{
-		bool prev = false;
-		bool next = false;
-
-		if (App->input->GetKey(SDL_SCANCODE_T) == KeyState::KEY_DOWN && !hoveredButton->IsPressed())
+		if (App->input->GetKey(SDL_SCANCODE_G) == KeyState::KEY_DOWN || App->input->GetKey(SDL_SCANCODE_G) == KeyState::KEY_REPEAT)
 		{
-			for (std::vector<C_UI_Button*>::reverse_iterator buttonIt = activeButtons.rbegin(); buttonIt != activeButtons.rend(); buttonIt++)
-			{
-				if ((*buttonIt)->IsActive())
-				{
-					if ((*buttonIt)->GetState() == UIButtonState::HOVERED)
-					{
-						(*buttonIt)->SetState(UIButtonState::IDLE);
-						prev = true;
-					}
-					else if (prev)
-					{
-						(*buttonIt)->SetState(UIButtonState::HOVERED);
-						hoveredButton = (*buttonIt);
-						prev = false;
-					}
-				}
-			}
-			if (prev)
-				hoveredButton->SetState(UIButtonState::HOVERED);
+			hoveredButton->OnPressed();
 		}
 
-		if (App->input->GetKey(SDL_SCANCODE_B) == KeyState::KEY_DOWN && !hoveredButton->IsPressed())
+		else if (App->input->GetKey(SDL_SCANCODE_G) == KeyState::KEY_UP)
 		{
-			for (std::vector<C_UI_Button*>::iterator buttonIt = activeButtons.begin(); buttonIt != activeButtons.end(); buttonIt++)
+			hoveredButton->OnReleased(); /*(?)*/
+		}
+	
+
+		if (activeButtons.size() > 1)
+		{
+			bool prev = false;
+			bool next = false;
+
+			if (App->input->GetKey(SDL_SCANCODE_T) == KeyState::KEY_DOWN && !hoveredButton->IsPressed())
 			{
-				if ((*buttonIt)->IsActive())
+				for (std::vector<C_UI_Button*>::reverse_iterator buttonIt = activeButtons.rbegin(); buttonIt != activeButtons.rend(); buttonIt++)
 				{
-					if ((*buttonIt)->GetState() == UIButtonState::HOVERED)
+					if ((*buttonIt)->IsActive())
 					{
-						(*buttonIt)->SetState(UIButtonState::IDLE);
-						next = true;
-					}
-					else if (next)
-					{
-						(*buttonIt)->SetState(UIButtonState::HOVERED);
-						hoveredButton = (*buttonIt);
-						next = false;
+						if ((*buttonIt)->GetState() == UIButtonState::HOVERED)
+						{
+							(*buttonIt)->SetState(UIButtonState::IDLE);
+							prev = true;
+						}
+						else if (prev)
+						{
+							(*buttonIt)->SetState(UIButtonState::HOVERED);
+							hoveredButton = (*buttonIt);
+							prev = false;
+						}
 					}
 				}
+				if (prev)
+					hoveredButton->SetState(UIButtonState::HOVERED);
 			}
-			if(next)
-				hoveredButton->SetState(UIButtonState::HOVERED);
+
+			if (App->input->GetKey(SDL_SCANCODE_B) == KeyState::KEY_DOWN && !hoveredButton->IsPressed())
+			{
+				for (std::vector<C_UI_Button*>::iterator buttonIt = activeButtons.begin(); buttonIt != activeButtons.end(); buttonIt++)
+				{
+					if ((*buttonIt)->IsActive())
+					{
+						if ((*buttonIt)->GetState() == UIButtonState::HOVERED)
+						{
+							(*buttonIt)->SetState(UIButtonState::IDLE);
+							next = true;
+						}
+						else if (next)
+						{
+							(*buttonIt)->SetState(UIButtonState::HOVERED);
+							hoveredButton = (*buttonIt);
+							next = false;
+						}
+					}
+				}
+				if(next)
+					hoveredButton->SetState(UIButtonState::HOVERED);
+			}
 		}
 	}
 
