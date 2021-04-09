@@ -1549,6 +1549,14 @@ void E_Inspector::DrawScriptComponent(C_Script* cScript)
 					ImGui::SliderFloat3((*variable).variableName.data(), ((float3*)(*variable).ptr)->ptr(), (*variable).minSlider, (*variable).maxSlider); break;
 				}
 				break;
+			case InspectorScriptData::DataType::STRING: 
+			{
+				char buffer[128];
+				strcpy_s(buffer, ((std::string*)(*variable).ptr)->c_str());
+				if (ImGui::InputText((*variable).variableName.data(), buffer, IM_ARRAYSIZE(buffer)))
+					*(std::string*)(*variable).ptr = buffer;
+				break;
+			}
 			case InspectorScriptData::DataType::PREFAB:
 				ImGui::Button((((Prefab*)(*variable).ptr)->name.empty()) ? "Prefab: NULL" : std::string("Prefab: " + ((Prefab*)(*variable).ptr)->name).data(), { ImGui::GetWindowWidth() * 0.55F , 0});
 				if (ImGui::BeginDragDropTarget()) 

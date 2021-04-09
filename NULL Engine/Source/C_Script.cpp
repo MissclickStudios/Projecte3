@@ -92,6 +92,8 @@ bool C_Script::SaveState(ParsonNode& root) const
 				variable.SetNumber("float3y", (*(float3*)inspectorVariables[i].ptr).y);
 				variable.SetNumber("float3z", (*(float3*)inspectorVariables[i].ptr).z);
 				break;
+			case InspectorScriptData::STRING:
+				variable.SetString("string", (*(std::string*)inspectorVariables[i].ptr).c_str()); break;
 			case InspectorScriptData::PREFAB:
 				variable.SetInteger("prefab", (*(Prefab*)inspectorVariables[i].ptr).uid); break;
 			case InspectorScriptData::GAMEOBJECT:
@@ -147,6 +149,8 @@ bool C_Script::LoadState(ParsonNode& root)
 					(*(float3*)inspectorVariables[i].ptr).x = variable.GetNumber("float3x"); break;
 					(*(float3*)inspectorVariables[i].ptr).y = variable.GetNumber("float3y"); break;
 					(*(float3*)inspectorVariables[i].ptr).z = variable.GetNumber("float3z"); break;
+				case InspectorScriptData::STRING:
+					*(std::string*)inspectorVariables[i].ptr = variable.GetString("string"); break;
 				case InspectorScriptData::DataType::PREFAB:
 					*(Prefab*)inspectorVariables[i].ptr = App->resourceManager->prefabs[(unsigned int)variable.GetInteger("prefab")]; break;
 				case InspectorScriptData::DataType::GAMEOBJECT: //TODO: FINISH THIS !!!!
@@ -389,8 +393,10 @@ bool C_Script::HasData() const
 	return scriptData != nullptr;
 }
 
+//------------------------INSPECTOR VARIABLES------------------------------------------
 void C_Script::InspectorInputInt(int* variablePtr, const char* ptrName)
 {
+	//TODO: Check kind a useless?!
 	const char* name = typeid(*variablePtr).name();
 	if (strcmp(name, "int"))
 		return;
@@ -535,6 +541,15 @@ void C_Script::InspectorSliderFloat3(float3* variablePtr, const char* ptrName, c
 		inspector.maxSlider = maxValue;
 		script->inspectorVariables.push_back(inspector);
 	}
+}
+
+void C_Script::InspectorString(std::string* variablePtr, const char* ptrName)
+{
+	std::string variableName = GetVariableName(ptrName);
+
+	C_Script* script = App->scriptManager->actualScriptLoading;
+	if (script != nullptr)
+		script->inspectorVariables.push_back(InspectorScriptData(variableName, InspectorScriptData::DataType::STRING, variablePtr, InspectorScriptData::ShowMode::NONE));
 }
 
 void C_Script::InspectorPrefab(Prefab* variablePtr, const char* ptrName)

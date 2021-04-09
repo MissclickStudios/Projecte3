@@ -18,6 +18,7 @@ struct NULL_API InspectorScriptData {
 		FLOAT,
 		FLOAT3,
 		PREFAB,
+		STRING,
 		GAMEOBJECT
 		/*INT2,
 		INT3,
@@ -107,6 +108,8 @@ public:
 	static void InspectorInputFloat3(float3* variablePtr, const char* ptrName);
 	static void InspectorDragableFloat3(float3* variablePtr, const char* ptrName);
 	static void InspectorSliderFloat3(float3* variablePtr, const char* ptrName, const int& minValue, const int& maxValue);
+
+	static void InspectorString(std::string* variablePtr, const char* ptrName);
 
 	static void InspectorPrefab(Prefab* variablePtr, const char* ptrName);
 

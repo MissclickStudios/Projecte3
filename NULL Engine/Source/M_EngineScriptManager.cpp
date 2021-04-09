@@ -256,6 +256,13 @@ void M_EngineScriptManager::SerializeAllScripts(ParsonArray& scriptsArray)
 									variable.SetInteger("bool", *(bool*)scriptVariables[i].ptr); break;
 								case InspectorScriptData::DataType::FLOAT:
 									variable.SetInteger("float", *(float*)scriptVariables[i].ptr); break;
+								case InspectorScriptData::FLOAT3:
+									variable.SetNumber("float3x", (*(float3*)scriptVariables[i].ptr).x);
+									variable.SetNumber("float3y", (*(float3*)scriptVariables[i].ptr).y);
+									variable.SetNumber("float3z", (*(float3*)scriptVariables[i].ptr).z);
+									break;
+								case InspectorScriptData::STRING:
+									variable.SetString("string", (*(std::string*)scriptVariables[i].ptr).c_str()); break;
 								case InspectorScriptData::DataType::PREFAB:
 									variable.SetInteger("prefab", (*(Prefab*)scriptVariables[i].ptr).uid); break;
 								case InspectorScriptData::DataType::GAMEOBJECT:
@@ -321,6 +328,12 @@ void M_EngineScriptManager::DeSerializeAllScripts(const ParsonArray& scriptsArra
 									*(bool*)(*item).ptr = variable.GetBool("bool"); break;
 								case InspectorScriptData::DataType::FLOAT:
 									*(float*)(*item).ptr = (float)variable.GetNumber("float"); break;
+								case InspectorScriptData::FLOAT3:
+									(*(float3*)(*item).ptr).x = variable.GetNumber("float3x"); break;
+									(*(float3*)(*item).ptr).y = variable.GetNumber("float3y"); break;
+									(*(float3*)(*item).ptr).z = variable.GetNumber("float3z"); break;
+								case InspectorScriptData::STRING:
+									*(std::string*)(*item).ptr = variable.GetString("string"); break;
 								case InspectorScriptData::DataType::PREFAB:
 									*(Prefab*)(*item).ptr = EngineApp->resourceManager->prefabs[(unsigned int)variable.GetNumber("prefab")]; break;
 								case InspectorScriptData::DataType::GAMEOBJECT:
