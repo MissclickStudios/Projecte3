@@ -30,6 +30,8 @@ C_BoxCollider::~C_BoxCollider()
 
 bool C_BoxCollider::Update()
 {
+	fil = (std::string*)shape->getSimulationFilterData().word0;
+
 	if (toUpdate != ColliderUpdateType::NONE)
 	{
 		GetOwner()->GetComponent<C_RigidBody>()->GetRigidBody()->detachShape(*shape);
@@ -40,7 +42,8 @@ bool C_BoxCollider::Update()
 			shape->setFlag(physx::PxShapeFlag::eTRIGGER_SHAPE, isTrigger);
 
 			physx::PxFilterData filterData;
-			filterData.word0 = (int)GetOwner()->GetComponent<C_RigidBody>()->GetFilter();
+			const std::string* filter = GetOwner()->GetComponent<C_RigidBody>()->GetFilter();
+			filterData.word0 = (int)filter;
 
 			shape->setSimulationFilterData(filterData);
 			shape->setQueryFilterData(filterData);
@@ -136,18 +139,6 @@ float3* C_BoxCollider::GetCornerPoints() const
 
 void C_BoxCollider::UpdateFilter()
 {
-	//GetOwner()->GetComponent<C_RigidBody>()->GetRigidBody()->detachShape(*shape);
-	//
-	//shape->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE, !isTrigger);
-	//shape->setFlag(physx::PxShapeFlag::eTRIGGER_SHAPE, isTrigger);
-	//
-	//physx::PxFilterData filterData;
-	//filterData.word0 = (int)GetOwner()->GetComponent<C_RigidBody>()->GetFilter();
-	//
-	//shape->setSimulationFilterData(filterData);
-	//shape->setQueryFilterData(filterData);
-	//
-	//GetOwner()->GetComponent<C_RigidBody>()->GetRigidBody()->attachShape(*shape);
 	ToUpdate(ColliderUpdateType::STATE);
 }
 

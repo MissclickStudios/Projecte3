@@ -9,6 +9,7 @@
 #include "M_Window.h"
 #include "M_Editor.h"
 #include "M_Audio.h"
+#include "M_Physics.h"
 
 #include "R_Texture.h"
 
@@ -197,10 +198,31 @@ void Player::Movement()
 				dashColdown.Stop();
 		}
 		else if ((App->input->GetKey(SDL_SCANCODE_LSHIFT) == KeyState::KEY_DOWN || App->input->GetGameControllerTrigger(0) == ButtonState::BUTTON_DOWN))
-			Dash(rigidBody, movX, movY);
+		{
+			// 0 -> player filter
+			// 4 -> enemy bullet filter
+			App->physics->GetInteractions()[0][4] = false;
+			App->physics->GetInteractions()[4][0] = false;
+
+			state = PlayerState::DASHING;
+			dashColdown.Start();
+			dashTime.Start();
+		}
 	}
-	else if (dashTime.ReadSec() >= dashingTime)
-		dashTime.Stop();
+	else
+	{
+		rigidBody->SetLinearVelocity(lastDirection * dashSpeed);
+
+		if (dashTime.ReadSec() >= dashingTime)
+		{
+			// 0 -> player filter
+			// 4 -> enemy bullet filter
+			App->physics->GetInteractions()[0][4] = true;
+			App->physics->GetInteractions()[4][0] = true;
+
+			dashTime.Stop();
+		}
+	}
 }
 
 void Player::Move(C_RigidBody* rigidBody, int axisX, int axisY)

@@ -38,6 +38,8 @@ public:
 
 	void UpdateFilter();
 
+	std::string* GetFil() { return fil; };
+
 private:
 
 	void CreateCollider();
@@ -53,6 +55,8 @@ private:
 
 	float3* boxColliderVertices;
 	bool showBoxCollider = false;
+
+	std::string* fil = nullptr;
 };
 
 #endif // !__C_BOXCOLLIDERCOMPONENT_H__

@@ -37,6 +37,9 @@ public:
 
 	float dashRange = 20.0f;
 
+	float dashRest = 2.0f;
+	float restSpeed = 5.0f;
+
 	// Health
 	float health = 4.0f;
 	float maxHealth = 4.0f;
@@ -58,6 +61,8 @@ private:
 	Timer dashTime; // Duration of the dash
 	Timer dashColdown;
 	Timer dashCharge;
+
+	Timer restTimer;
 };
 
 
