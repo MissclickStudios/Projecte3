@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include "Component.h"
+#include "MathGeoLib/include/Math/float3.h"
 
 class ParsonNode;
 class GameObject;
@@ -15,7 +16,9 @@ struct NULL_API InspectorScriptData {
 		INT,
 		BOOL,
 		FLOAT,
+		FLOAT3,
 		PREFAB,
+		STRING,
 		GAMEOBJECT
 		/*INT2,
 		INT3,
@@ -101,6 +104,12 @@ public:
 	static void InspectorInputFloat(float* variablePtr, const char* ptrName);
 	static void InspectorDragableFloat(float* variablePtr, const char* ptrName);
 	static void InspectorSliderFloat(float* variablePtr, const char* ptrName, const int& minValue, const int& maxValue);
+
+	static void InspectorInputFloat3(float3* variablePtr, const char* ptrName);
+	static void InspectorDragableFloat3(float3* variablePtr, const char* ptrName);
+	static void InspectorSliderFloat3(float3* variablePtr, const char* ptrName, const int& minValue, const int& maxValue);
+
+	static void InspectorString(std::string* variablePtr, const char* ptrName);
 
 	static void InspectorPrefab(Prefab* variablePtr, const char* ptrName);
 

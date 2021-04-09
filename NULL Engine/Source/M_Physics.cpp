@@ -171,6 +171,8 @@ bool M_Physics::Start()
 
 UpdateStatus M_Physics::Update(float dt)
 {
+	OPTICK_CATEGORY("M_Physics Update", Optick::Category::Module)
+
 	if (App->gameState == GameState::PLAY)
 		simulating = true;
 	else

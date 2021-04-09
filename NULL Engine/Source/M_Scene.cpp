@@ -100,7 +100,7 @@ bool M_Scene::Start()
 // Update
 UpdateStatus M_Scene::Update(float dt)
 {
-	OPTICK_CATEGORY("Scene Update", Optick::Category::Update);
+	OPTICK_CATEGORY("M_Scene Update", Optick::Category::Module)
 
 	HandleCopyGO();
 	
@@ -160,7 +160,8 @@ UpdateStatus M_Scene::Update(float dt)
 
 UpdateStatus M_Scene::PostUpdate(float dt)
 {	
-	
+	OPTICK_CATEGORY("M_Scene PostUpdate", Optick::Category::Module)
+
 	if (nextScene)
 	{
 		level.NextRoom();
@@ -417,6 +418,18 @@ bool M_Scene::LoadScene(const char* path)
 		}
 		tmp.clear();
 		App->renderer->ClearRenderers();
+	}
+
+	//Resolve script go pointers reassigning
+	if (!toAdd.empty()) {
+		std::vector< std::pair<uint32, GameObject**>>::const_iterator item = toAdd.cbegin();
+		for (; item != toAdd.cend(); ++item) {
+			GameObject* found = GetGameObjectByUID((*item).first);
+			if (found != nullptr) {
+				*(*item).second = found;
+			}
+		}
+		toAdd.clear();
 	}
 
 	//FIX THIS
@@ -1211,6 +1224,11 @@ void M_Scene::HandleCopyGO() //TODO Cntrl + c / Cntrl + v
 		//}
 	}
 
+}
+
+void M_Scene::ResolveScriptGoPointer(const uint32 uid, GameObject** object)
+{
+	toAdd.push_back({uid, object});
 }
 
 void M_Scene::DeleteSelectedGameObject()

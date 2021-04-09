@@ -7,6 +7,9 @@
 #include "Bullet.h"
 #include "Player.h"
 #include "Blurrg.h"
+#include "SandTrooper.h"
+
+#include "Weapon.h"
 
 Bullet::Bullet() : Script()
 {
@@ -31,8 +34,13 @@ void Bullet::Update()
 			gameObject->components[i]->SetIsActive(false);
 		gameObject->SetIsActive(false);
 
-		if (shooter)
-			shooter->bullets[index]->inUse = false;
+		if (target == "enemies")
+			((Player*)shooter->GetScript("Player"))->weapon->DisableProjectile(index);
+		else if (target == "player")
+		{
+			//((SandTrooper*)shooter->GetScript("SandTrooper"))->weapon->DisableProjectile(index);
+		}
+
 		autodestructTimer.Stop();
 	}
 }
@@ -50,22 +58,35 @@ void Bullet::OnCollisionEnter(GameObject* object)
 {
 	hit = true;
 
-	for (uint n = 0; n < object->components.size(); ++n)
+	if (target == "enemies")
 	{
-		Component* comp = object->components[n];
-		if (comp->GetType() == ComponentType::SCRIPT)
+		void* script = object->GetScript("Blurrg");
+		if (script)
+			((Blurrg*)script)->TakeDamage(damage);
+		else
 		{
-			C_Script* script = (C_Script*)comp;
-			if (script->GetDataName() == "Blurrg")
-				((Blurrg*)script->GetScriptData())->TakeDamage(damage);
+			script = object->GetScript("SandTrooper");
+			if (script)
+				((SandTrooper*)script)->TakeDamage(damage);
 		}
+	}
+	else if (target == "player")
+	{
+		void* script = object->GetScript("Player");
+		if (script)
+			((Player*)script)->TakeDamage(damage);
 	}
 }
 
-void Bullet::SetShooter(Player* shooter, uint index)
+void Bullet::SetShooter(GameObject* shooter, uint index)
 {
 	this->shooter = shooter;
 	this->index = index;
+
+	if (shooter->GetScript("Player"))
+		target = "enemies";
+	else if (shooter->GetScript("SandTrooper"))
+		target = "player";
 }
 
 

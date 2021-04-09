@@ -17,16 +17,10 @@ class C_Animator;
 class C_RigidBody;
 class GameObject;
 
-struct Projectile
-{
-	Projectile() : inUse(false), object(nullptr) {}
-	Projectile(GameObject* object) : inUse(false), object(object) {}
-	Projectile(bool inUse, GameObject* object) : inUse(inUse), object(object) {}
-
-	bool inUse;
-	GameObject* object;
-};
 enum class PlayerState;
+
+class Weapon;
+struct Projectile;
 
 class SCRIPTS_API Player : public Script
 {
@@ -41,22 +35,20 @@ public:
 
 	void TakeDamage(float damage);
 
-	Projectile* bullets[BULLET_AMOUNT];
 	PlayerState state;
 
 	// Character
 	float speed = 20.0f;
 
 	// Weapon
-	float bulletSpeed = 100.0f;
-	float fireRate = 0.25f;
+	float projectileSpeed;
+	float fireRate;
+	int ammo;
+	int maxAmmo;
+	bool automatic;
 
-	int ammo = 10;
-	int maxAmmo = 10;
-
-	bool automatic = true;
-
-	Prefab bullet;
+	Weapon* weapon;
+	Prefab projectilePrefab;
 
 	// Dash
 	float dashSpeed = 100.0f;
@@ -76,10 +68,7 @@ private:
 	void Move(C_RigidBody* rigidBody, int axisX, int axisY);
 	void Dash(C_RigidBody* rigidBody, int axisX, int axisY);
 
-	void Weapon();
-	Projectile* CreateProjectile(uint index);
-	void FireBullet(float3 direction);
-	void Reload();
+	void Shooting();
 
 	void StepSound();
 
@@ -102,10 +91,6 @@ private:
 	bool playAnim = false;
 
 	// Weapon
-	Timer fireRateTimer;
-
-	GameObject* bulletStorage = nullptr;
-
 	R_Texture* ammoTex[11] = { 0 };
 	bool storedAmmoTex = false;
 

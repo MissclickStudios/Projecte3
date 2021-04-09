@@ -22,7 +22,7 @@ E_Hierarchy::~E_Hierarchy()
 bool E_Hierarchy::Draw(ImGuiIO& io)
 {
 	bool ret = true;
-
+	OPTICK_CATEGORY("E_Hierarchy Draw", Optick::Category::Editor)
 
 	ImGui::Begin("Hierarchy");
 

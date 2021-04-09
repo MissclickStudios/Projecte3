@@ -46,7 +46,7 @@ E_Configuration::~E_Configuration()
 bool E_Configuration::Draw(ImGuiIO& io)
 {
 	bool ret = true;
-
+	OPTICK_CATEGORY("E_Configuration Draw", Optick::Category::Editor)
 
 	ImGui::Begin(GetName(), nullptr, ImGuiWindowFlags_MenuBar);
 

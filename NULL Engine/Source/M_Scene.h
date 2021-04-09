@@ -2,6 +2,7 @@
 #define __M_SCENE_H__
 
 #include <map>
+#include <utility>
 
 #include "MathGeoLib/include/Geometry/LineSegment.h"
 #include "MathGeoLib/include/Geometry/Triangle.h"
@@ -111,6 +112,8 @@ public:
 
 	void HandleCopyGO();
 
+	void ResolveScriptGoPointer(const uint32 uid, GameObject** object);
+
 private:
 	std::vector<GameObject*>		gameObjects;																			// 
 	std::multimap<uint32, std::pair<uint32, std::string>> models;															// Models currently loaded on scene and their correspondent GO.
@@ -129,6 +132,8 @@ private:
 	LevelGenerator					level;
 
 	std::string currentScene;
+
+	std::vector<std::pair<uint32, GameObject**>> toAdd;
 
 public:
 	bool nextScene = false;

@@ -1,5 +1,4 @@
 #pragma once
-//#include "..\..\..\Source\Script.h"
 #include "ScriptMacros.h"
 
 class SCRIPTS_API SecondScript {
@@ -7,6 +6,7 @@ class SCRIPTS_API SecondScript {
 public:
 	SecondScript();
 	~SecondScript();
+	int DoSmth();
 	int i = 3;
 };
 

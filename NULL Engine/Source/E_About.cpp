@@ -3,6 +3,7 @@
 // Will always be inactive and will be drawn by E_Toolbar
 // -------------------------------------------------------
 
+#include "Profiler.h"
 #include "EngineApplication.h"
 #include "M_Editor.h"
 
@@ -23,6 +24,7 @@ E_About::~E_About()
 bool E_About::Draw(ImGuiIO& io)
 {
 	bool ret = true;
+	OPTICK_CATEGORY("E_About Draw", Optick::Category::Editor)
 
 	ImGui::OpenPopup("About");
 

@@ -13,6 +13,7 @@
 #include "M_ResourceManager.h"
 #include "M_ScriptManager.h"
 #include "FileSystemDefinitions.h"
+#include "M_Scene.h"
 #include "Prefab.h"
 
 #include "MemoryManager.h"
@@ -86,10 +87,17 @@ bool C_Script::SaveState(ParsonNode& root) const
 				variable.SetBool("bool", *(bool*)inspectorVariables[i].ptr); break;
 			case InspectorScriptData::FLOAT:
 				variable.SetNumber("float", *(float*)inspectorVariables[i].ptr); break;
+			case InspectorScriptData::FLOAT3:
+				variable.SetNumber("float3x", (*(float3*)inspectorVariables[i].ptr).x);
+				variable.SetNumber("float3y", (*(float3*)inspectorVariables[i].ptr).y);
+				variable.SetNumber("float3z", (*(float3*)inspectorVariables[i].ptr).z);
+				break;
+			case InspectorScriptData::STRING:
+				variable.SetString("string", (*(std::string*)inspectorVariables[i].ptr).c_str()); break;
 			case InspectorScriptData::PREFAB:
 				variable.SetInteger("prefab", (*(Prefab*)inspectorVariables[i].ptr).uid); break;
 			case InspectorScriptData::GAMEOBJECT:
-				if (inspectorVariables[i].obj != nullptr)
+				if (inspectorVariables[i].obj != nullptr && *inspectorVariables[i].obj != nullptr)
 					variable.SetInteger("gameobject", (*inspectorVariables[i].obj)->GetUID());
 				else
 					variable.SetInteger("gameobject", 0);
@@ -137,12 +145,18 @@ bool C_Script::LoadState(ParsonNode& root)
 					*(bool*)inspectorVariables[i].ptr = variable.GetBool("bool"); break;
 				case InspectorScriptData::DataType::FLOAT:
 					*(float*)inspectorVariables[i].ptr = variable.GetNumber("float"); break;
+				case InspectorScriptData::FLOAT3:
+					(*(float3*)inspectorVariables[i].ptr).x = variable.GetNumber("float3x"); break;
+					(*(float3*)inspectorVariables[i].ptr).y = variable.GetNumber("float3y"); break;
+					(*(float3*)inspectorVariables[i].ptr).z = variable.GetNumber("float3z"); break;
+				case InspectorScriptData::STRING:
+					*(std::string*)inspectorVariables[i].ptr = variable.GetString("string"); break;
 				case InspectorScriptData::DataType::PREFAB:
 					*(Prefab*)inspectorVariables[i].ptr = App->resourceManager->prefabs[(unsigned int)variable.GetInteger("prefab")]; break;
 				case InspectorScriptData::DataType::GAMEOBJECT: //TODO: FINISH THIS !!!!
-					/*uint32 id = variable.GetInteger("gameobject");
+					uint32 id = variable.GetInteger("gameobject");
 					if (id != 0)
-						;*/
+						App->scene->ResolveScriptGoPointer(id, inspectorVariables[i].obj);
 					break;
 				}
 			}
@@ -379,8 +393,10 @@ bool C_Script::HasData() const
 	return scriptData != nullptr;
 }
 
+//------------------------INSPECTOR VARIABLES------------------------------------------
 void C_Script::InspectorInputInt(int* variablePtr, const char* ptrName)
 {
+	//TODO: Check kind a useless?!
 	const char* name = typeid(*variablePtr).name();
 	if (strcmp(name, "int"))
 		return;
@@ -481,6 +497,59 @@ void C_Script::InspectorSliderFloat(float* variablePtr, const char* ptrName, con
 		inspector.maxSlider = maxValue;
 		script->inspectorVariables.push_back(inspector);
 	}
+}
+
+void C_Script::InspectorInputFloat3(float3* variablePtr, const char* ptrName)
+{
+	const char* name = typeid(*variablePtr).name();
+	if (strcmp(name, "class math::float3"))
+		return;
+
+	std::string variableName = GetVariableName(ptrName);
+
+	C_Script* script = App->scriptManager->actualScriptLoading;
+	if (script != nullptr)
+		script->inspectorVariables.push_back(InspectorScriptData(variableName, InspectorScriptData::DataType::FLOAT3, variablePtr, InspectorScriptData::ShowMode::INPUT_FLOAT));
+}
+
+void C_Script::InspectorDragableFloat3(float3* variablePtr, const char* ptrName)
+{
+	const char* name = typeid(*variablePtr).name();
+	if (strcmp(name, "class math::float3"))
+		return;
+
+	std::string variableName = GetVariableName(ptrName);
+
+	C_Script* script = App->scriptManager->actualScriptLoading;
+	if (script != nullptr)
+		script->inspectorVariables.push_back(InspectorScriptData(variableName, InspectorScriptData::DataType::FLOAT3, variablePtr, InspectorScriptData::ShowMode::DRAGABLE_FLOAT));
+}
+
+void C_Script::InspectorSliderFloat3(float3* variablePtr, const char* ptrName, const int& minValue, const int& maxValue)
+{
+	const char* name = typeid(*variablePtr).name();
+	if (strcmp(name, "class math::float3"))
+		return;
+
+	std::string variableName = GetVariableName(ptrName);
+
+	C_Script* script = App->scriptManager->actualScriptLoading;
+	if (script != nullptr)
+	{
+		InspectorScriptData inspector(variableName, InspectorScriptData::DataType::FLOAT3, variablePtr, InspectorScriptData::ShowMode::SLIDER_FLOAT);
+		inspector.minSlider = minValue;
+		inspector.maxSlider = maxValue;
+		script->inspectorVariables.push_back(inspector);
+	}
+}
+
+void C_Script::InspectorString(std::string* variablePtr, const char* ptrName)
+{
+	std::string variableName = GetVariableName(ptrName);
+
+	C_Script* script = App->scriptManager->actualScriptLoading;
+	if (script != nullptr)
+		script->inspectorVariables.push_back(InspectorScriptData(variableName, InspectorScriptData::DataType::STRING, variablePtr, InspectorScriptData::ShowMode::NONE));
 }
 
 void C_Script::InspectorPrefab(Prefab* variablePtr, const char* ptrName)

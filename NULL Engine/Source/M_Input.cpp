@@ -86,6 +86,9 @@ bool M_Input::Init(ParsonNode& config)
 // Called every draw update
 UpdateStatus M_Input::PreUpdate(float dt)
 {
+	OPTICK_CATEGORY("M_Input PreUpdate", Optick::Category::Module)
+
+	OPTICK_CATEGORY("M_Input PreUpdate: Mouse", Optick::Category::Input)
 	SDL_PumpEvents();
 
 	const Uint8* keys = SDL_GetKeyboardState(NULL);
@@ -115,6 +118,8 @@ UpdateStatus M_Input::PreUpdate(float dt)
 			}
 		}
 	}
+
+	OPTICK_CATEGORY("M_Input PreUpdate: Mouse", Optick::Category::Input)
 
 	Uint32 buttons = SDL_GetMouseState(&mouseX, &mouseY);
 
@@ -150,6 +155,7 @@ UpdateStatus M_Input::PreUpdate(float dt)
 
 	mouseMotionX = mouseMotionY = 0;
 
+	OPTICK_CATEGORY("M_Input PreUpdate: Events", Optick::Category::Input)
 	bool quit = false;
 	SDL_Event event;
 	while (SDL_PollEvent(&event))
@@ -231,6 +237,8 @@ UpdateStatus M_Input::PreUpdate(float dt)
 			}
 		}
 	}
+
+	OPTICK_CATEGORY("M_Input PreUpdate: Controller", Optick::Category::Input)
 
 	if (SDL_GameControllerGetAttached(gameController.id))														// Returns true if the given game controller is open and currently connected.
 	{

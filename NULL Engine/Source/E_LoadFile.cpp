@@ -2,6 +2,7 @@
 #include <algorithm>
 
 #include "Macros.h"
+#include "Profiler.h"
 
 #include "EngineApplication.h"
 #include "FileSystemDefinitions.h"
@@ -31,6 +32,7 @@ E_LoadFile::~E_LoadFile()
 bool E_LoadFile::Draw(ImGuiIO& io)
 {
 	bool ret = true;
+	OPTICK_CATEGORY("E_LoadFile Draw", Optick::Category::Editor)
 	
 	ImGui::OpenPopup("Load File");
 

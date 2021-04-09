@@ -58,6 +58,7 @@
 #include "Emitter.h"
 
 #include "E_Inspector.h"
+#include "MathGeoLib/include/Math/float3.h"
 
 #include <fstream>
 
@@ -87,26 +88,42 @@ E_Inspector::~E_Inspector()
 bool E_Inspector::Draw(ImGuiIO& io)
 {
 	bool ret = true;
-
+	OPTICK_CATEGORY("E_Inspector Draw", Optick::Category::Editor)
 
 	ImGui::Begin("Inspector");
 
 	SetIsHovered();
-	
-	GameObject* selected = EngineApp->editor->GetSelectedGameObjectThroughEditor();
 
-	if (selected != nullptr && !selected->is_master_root && !selected->is_scene_root)
+	// --- IS LOCKED ---
+	ImGui::Checkbox("Is Locked", &lockGameObject);
+	
+	if (!lockGameObject)
+	{
+		GameObject* selected = EngineApp->editor->GetSelectedGameObjectThroughEditor();
+
+		if(selected != nullptr)
+			shownGameObject = selected;
+	}
+	else
+	{
+		if(shownGameObject != nullptr)
+			if (shownGameObject->to_delete)
+				lockGameObject = false;
+	}
+	
+
+	if (shownGameObject != nullptr && !shownGameObject->is_master_root && !shownGameObject->is_scene_root)
 	{	
-		DrawGameObjectInfo(selected);
-		DrawComponents(selected);
+		DrawGameObjectInfo(shownGameObject);
+		DrawComponents(shownGameObject);
 		TextEditorWindow();
 		ImGui::Separator();
 
-		AddComponentCombo(selected);
+		AddComponentCombo(shownGameObject);
 
 		if (showDeleteComponentPopup)
 		{
-			DeleteComponentPopup(selected);
+			DeleteComponentPopup(shownGameObject);
 		}
 	}
 
@@ -160,7 +177,7 @@ void E_Inspector::DrawGameObjectInfo(GameObject* selectedGameObject)
 	{
 		selectedGameObject->SetIsStatic(isStatic);
 	}
-
+	
 	// --- TAG ---
 	ImGui::SetNextItemWidth(ImGui::GetWindowWidth() * 0.33f);
 	static char tagCombo[64] = { "Untagged\0Work\0In\0Progress" };
@@ -1521,6 +1538,25 @@ void E_Inspector::DrawScriptComponent(C_Script* cScript)
 					ImGui::SliderFloat((*variable).variableName.data(), (float*)(*variable).ptr, (*variable).minSlider, (*variable).maxSlider); break;
 				}
 				break;
+			case InspectorScriptData::DataType::FLOAT3:
+				switch ((*variable).showAs)
+				{
+				case InspectorScriptData::ShowMode::INPUT_FLOAT:
+					ImGui::InputFloat3((*variable).variableName.data(), ((float3*)(*variable).ptr)->ptr()); break;
+				case InspectorScriptData::ShowMode::DRAGABLE_FLOAT:
+					ImGui::DragFloat3((*variable).variableName.data(), ((float3*)(*variable).ptr)->ptr()); break;
+				case InspectorScriptData::ShowMode::SLIDER_FLOAT:
+					ImGui::SliderFloat3((*variable).variableName.data(), ((float3*)(*variable).ptr)->ptr(), (*variable).minSlider, (*variable).maxSlider); break;
+				}
+				break;
+			case InspectorScriptData::DataType::STRING: 
+			{
+				char buffer[128];
+				strcpy_s(buffer, ((std::string*)(*variable).ptr)->c_str());
+				if (ImGui::InputText((*variable).variableName.data(), buffer, IM_ARRAYSIZE(buffer)))
+					*(std::string*)(*variable).ptr = buffer;
+				break;
+			}
 			case InspectorScriptData::DataType::PREFAB:
 				ImGui::Button((((Prefab*)(*variable).ptr)->name.empty()) ? "Prefab: NULL" : std::string("Prefab: " + ((Prefab*)(*variable).ptr)->name).data(), { ImGui::GetWindowWidth() * 0.55F , 0});
 				if (ImGui::BeginDragDropTarget()) 

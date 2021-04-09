@@ -21,7 +21,7 @@ E_Timeline::~E_Timeline()
 bool E_Timeline::Draw(ImGuiIO& io)
 {
 	bool ret = true;
-
+	OPTICK_CATEGORY("E_Timeline Draw", Optick::Category::Editor)
 
 	static float values[2]	= { 1.0f, 15.0f };
 	float values2[2]		= { 15.0f, 30.0f };

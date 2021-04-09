@@ -27,6 +27,7 @@
 #include "R_Script.h"
 #include "Bullet.h"
 
+#include "Weapon.h"
 #include "MathGeoLib/include/Geometry/Line.h"
 
 #define MAX_JOYSTICK_INPUT 32767
@@ -52,13 +53,10 @@ void Player::Awake()
 	if (!gameObject->GetComponent<C_RigidBody>())
 		gameObject->CreateComponent(ComponentType::RIGIDBODY);
 
-	fireRateTimer.Stop();
 	dashTime.Stop();
 	dashColdown.Stop();
 	stepTimer.Stop();
 	invulnerabilityTimer.Stop();
-
-	ammo = 10;
 }
 
 void Player::Update()
@@ -69,15 +67,14 @@ void Player::Update()
 		return;
 	}
 
-	if (!bulletStorage)
-	{
-		bulletStorage = App->scene->CreateGameObject("Bullets", App->scene->GetSceneRoot());
-		for (uint i = 0; i < BULLET_AMOUNT; ++i)
-			bullets[i] = CreateProjectile(i);
-	}
+	if (!weapon)
+		weapon = new Weapon(gameObject, projectilePrefab, 10u, maxAmmo, projectileSpeed, fireRate, automatic);
+	weapon->Update();
 
 	Movement();
-	Weapon();
+
+	ammo = weapon->ammo;
+	Shooting();
 
 	if (App->input->GetKey(SDL_SCANCODE_K) == KeyState::KEY_DOWN && hearts != nullptr)
 		health -= 0.5f;
@@ -91,17 +88,8 @@ void Player::Update()
 
 void Player::CleanUp()
 {
-	if (bulletStorage)
-	{
-		for (uint i = 0; i < BULLET_AMOUNT; ++i)
-		{
-			delete bullets[i];
-			bullets[i] = nullptr;
-		}
-
-		bulletStorage->to_delete = true;
-		bulletStorage = nullptr;
-	}
+	delete weapon; // Destructor calls CleanUp
+	weapon = nullptr;
 
 	if (storedAmmoTex)
 	{
@@ -243,7 +231,7 @@ void Player::Dash(C_RigidBody* rigidBody, int axisX, int axisY)
 	dashTime.Start();
 }
 
-void Player::Weapon()
+void Player::Shooting()
 {
 	int aimX = 0;
 	int aimY = 0;
@@ -274,110 +262,8 @@ void Player::Weapon()
 		}
 	}
 
-	if (App->input->GetKey(SDL_SCANCODE_R) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(2) == ButtonState::BUTTON_DOWN)
-		Reload();
-	if (ammo > 0)
-	{
-		if (!automatic)
-		{
-			if (App->input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_DOWN || App->input->GetGameControllerTrigger(1) == ButtonState::BUTTON_DOWN)
-			{
-				FireBullet(lastAim);
-			}
-
-			state = PlayerState::SHOOTING;
-		}
-		else
-		{
-			if (App->input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_REPEAT || App->input->GetGameControllerTrigger(1) == ButtonState::BUTTON_REPEAT)
-			{
-				if (!fireRateTimer.IsActive())
-				{
-					FireBullet(lastAim);
-					fireRateTimer.Start();
-				}
-				else if (fireRateTimer.ReadSec() >= fireRate)
-				{
-					FireBullet(lastAim);
-					fireRateTimer.Stop();
-					fireRateTimer.Start();
-				}
-
-				state = PlayerState::SHOOTING;
-			}
-		}
-	}
-}
-
-Projectile* Player::CreateProjectile(uint index)
-{
-	GameObject* bullet = App->resourceManager->LoadPrefab(this->bullet.uid, bulletStorage);
-	bullet->GetComponent<C_BoxCollider>()->Update();
-
-	char n[10];
-	sprintf_s(n, "%d", index);
-	std::string num = n;
-	std::string name("Bullet" + num);
-	
-	bullet->SetName(name.c_str());
-
-	float3 position = float3::zero;
-	bullet->transform->SetWorldPosition(position);
-
-	((Bullet*)bullet->GetComponent<C_Script>()->GetScriptData())->SetShooter(this, index);
-
-	for (uint i = 0; i < bullet->components.size(); ++i)
-		bullet->components[i]->SetIsActive(false);
-	bullet->SetIsActive(false);
-
-	return new Projectile(bullet);
-}
-
-void Player::FireBullet(float3 direction)
-{
-	if (!bulletStorage)
-		return;
-
-	if (direction.IsZero())
-		++direction.z;
-
-	GameObject* bullet = nullptr;
-
-	for (uint i = 0; i < BULLET_AMOUNT; ++i)
-		if (!bullets[i]->inUse)
-		{
-			bullets[i]->inUse = true;
-			bullet = bullets[i]->object;
-			break;
-		}
-	if (!bullet)
-		return;
-
-	float3 position = gameObject->transform->GetWorldPosition();
-	position.y += 4;
-	bullet->transform->SetWorldPosition(position);
-
-	float2 dir = { lastAim.x, -lastAim.z };
-	float rad = dir.AimedAngle();
-	bullet->transform->SetLocalRotation(float3(0, rad + DegToRad(90), 0));
-
-	C_RigidBody* rigidBody = bullet->GetComponent<C_RigidBody>();
-	rigidBody->TransformMovesRigidBody(true);
-	rigidBody->SetLinearVelocity(direction * bulletSpeed);
-
-	C_AudioSource* source = bullet->GetComponent<C_AudioSource>();
-	source->PlayFx(source->GetEventId());
-
-	bullet->SetIsActive(true);
-	for (uint i = 0; i < bullet->components.size(); ++i)
-		bullet->components[i]->SetIsActive(true);
-
-	--ammo;
-}
-
-void Player::Reload()
-{
-	ammo = maxAmmo;
+	if (weapon->Shoot(lastAim))
+		state = PlayerState::SHOOTING;
 }
 
 float2 Player::MousePositionToWorldPosition(float mapPositionY)
@@ -558,7 +444,7 @@ Player* CreatePlayer()
 	INSPECTOR_DRAGABLE_FLOAT(script->speed);
 
 	// Weapon
-	INSPECTOR_DRAGABLE_FLOAT(script->bulletSpeed);
+	INSPECTOR_DRAGABLE_FLOAT(script->projectileSpeed);
 	INSPECTOR_DRAGABLE_FLOAT(script->fireRate);
 
 	INSPECTOR_DRAGABLE_INT(script->ammo);
@@ -566,7 +452,7 @@ Player* CreatePlayer()
 
 	INSPECTOR_CHECKBOX_BOOL(script->automatic);
 
-	INSPECTOR_PREFAB(script->bullet);
+	INSPECTOR_PREFAB(script->projectilePrefab);
 
 	// Dash
 	INSPECTOR_DRAGABLE_FLOAT(script->dashSpeed);
