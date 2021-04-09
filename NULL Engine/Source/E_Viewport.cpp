@@ -38,7 +38,7 @@ E_Viewport::~E_Viewport()
 bool E_Viewport::Draw(ImGuiIO& io)
 {
 	bool ret = true;
-
+	OPTICK_CATEGORY("E_Viewport Draw", Optick::Category::Editor)
 	
 	wantTextInput = io.WantTextInput;																	// Later Generalize as a M_Editor Variable/Method.
 	

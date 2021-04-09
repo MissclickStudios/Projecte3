@@ -100,7 +100,7 @@ bool M_Scene::Start()
 // Update
 UpdateStatus M_Scene::Update(float dt)
 {
-	OPTICK_CATEGORY("Scene Update", Optick::Category::Update);
+	OPTICK_CATEGORY("M_Scene Update", Optick::Category::Module)
 
 	HandleCopyGO();
 	
@@ -160,7 +160,8 @@ UpdateStatus M_Scene::Update(float dt)
 
 UpdateStatus M_Scene::PostUpdate(float dt)
 {	
-	
+	OPTICK_CATEGORY("M_Scene PostUpdate", Optick::Category::Module)
+
 	if (nextScene)
 	{
 		level.NextRoom();

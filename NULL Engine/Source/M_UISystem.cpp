@@ -1,5 +1,6 @@
 #include "Application.h"
 #include "Log.h"
+#include "Profiler.h"
 
 #include "M_Scene.h"
 #include "M_Camera3D.h"
@@ -98,6 +99,7 @@ UpdateStatus M_UISystem::PreUpdate(float dt)
 
 UpdateStatus M_UISystem::Update(float dt)
 {
+	OPTICK_CATEGORY("M_UISystem Update", Optick::Category::Module)
 	UpdateActiveButtons();
 	CheckButtonStates();
 	

@@ -21,7 +21,7 @@ E_Toolbar::~E_Toolbar()
 bool E_Toolbar::Draw(ImGuiIO& io)
 {
 	bool ret = true;
-
+	OPTICK_CATEGORY("E_Toolbar Draw", Optick::Category::Editor)
 
 	ImGui::Begin("Toolbar");
 

@@ -87,7 +87,7 @@ E_Inspector::~E_Inspector()
 bool E_Inspector::Draw(ImGuiIO& io)
 {
 	bool ret = true;
-
+	OPTICK_CATEGORY("E_Inspector Draw", Optick::Category::Editor)
 
 	ImGui::Begin("Inspector");
 
