@@ -21,8 +21,6 @@
 #include "R_Texture.h"
 #include "R_Scene.h"
 
-#include "Primitive.h"
-
 #include "GameObject.h"
 #include "Component.h"
 #include "C_Transform.h"
@@ -31,6 +29,8 @@
 #include "C_Camera.h"
 #include "C_Animator.h"
 #include "C_Light.h"
+
+#include "Primitive.h"
 
 #include "M_Scene.h"
 
@@ -109,7 +109,6 @@ UpdateStatus M_Scene::Update(float dt)
 	std::vector<SkeletonRenderer>	skeletonRenderers;
 
 	// --- Sort GameObjects by Z-Buffer value
-
 	for (uint i = 0; i < gameObjects.size(); ++i)
 	{
 		if (gameObjects[i]->to_delete)
@@ -711,7 +710,7 @@ GameObject* M_Scene::GenerateGameObjectsFromModel(const R_Model* rModel, const f
 			CreateAnimationComponentFromModel(rModel, parentRoot);							// Must be done last as the parent hierarchy needs to be in place.
 		}
 
-		//parentRoot = nullptr; //I David Rami purposelly and for a reason comented this
+		//parentRoot = nullptr; //I, David Rami, purposefully commented this for a reason.
 	}
 
 	tmp.clear();

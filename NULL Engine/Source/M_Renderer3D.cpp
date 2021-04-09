@@ -27,6 +27,7 @@
 #include "R_Shader.h"
 
 #include "I_Textures.h"													
+#include "I_Shaders.h"							//TODO: erase
 
 #include "GameObject.h"	
 #include "C_Transform.h"
@@ -39,9 +40,10 @@
 #include "C_UI_Text.h"
 #include "C_UI_Button.h"
 
-#include "M_Renderer3D.h"
+#include "Renderer.h"
+#include "RE_Circle.h"
 
-#include "I_Shaders.h"							//TODO: erase
+#include "M_Renderer3D.h"
 
 #include "MemoryManager.h"
 
@@ -101,9 +103,9 @@ bool M_Renderer3D::Init(ParsonNode& configuration)
 	renderVertexNormals = configuration.GetBool("renderVertexNormals");
 	renderFaceNormals	= configuration.GetBool("renderFaceNormals");
 	renderBoundingBoxes = configuration.GetBool("renderBoundingBoxes");
-	renderSkeletons = configuration.GetBool("renderSkeletons");
-	renderColliders = configuration.GetBool("renderColliders");
-	renderCanvas = configuration.GetBool("renderCanvas");
+	renderSkeletons		= configuration.GetBool("renderSkeletons");
+	renderColliders		= configuration.GetBool("renderColliders");
+	renderCanvas		= configuration.GetBool("renderCanvas");
 
 	worldGridColor		= configuration.GetFloat4("worldGridColor");
 	wireframeColor		= configuration.GetFloat4("wireframeColor");
@@ -648,6 +650,11 @@ void M_Renderer3D::RenderScene()
 	if (renderWorldAxis)
 		DrawWorldAxis();
 
+	// TMP
+	/*static float4x4 dbTrnsfrm		= float4x4::FromTRS(float3(0.0f, 10.0f, 0.0f), Quat::FromEulerXYZ(90.0f * DEGTORAD, 0.0f, 0.0f), float3::one);
+	static RE_Circle debugCircle	= RE_Circle(dbTrnsfrm, float3(0.0f, 10.0f, 0.0f), 5.0f, 20, 2.0f);
+	debugCircle.Render();*/
+	
 	RenderMeshes();
 	RenderCuboids();
   

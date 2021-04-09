@@ -10,7 +10,7 @@
 class Particle;
 class EmitterInstance;
 
-struct NULL_API ParticleModule														// This should be a class that inherits from the Module class. Idea: Separate the PS modules.
+struct NULL_API ParticleModule
 {
 	enum Type
 	{
