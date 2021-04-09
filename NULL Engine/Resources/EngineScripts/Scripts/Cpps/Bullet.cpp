@@ -6,6 +6,7 @@
 
 #include "Bullet.h"
 #include "Player.h"
+#include "Blurrg.h"
 
 Bullet::Bullet() : Script()
 {
@@ -48,6 +49,17 @@ void Bullet::OnEnable()
 void Bullet::OnCollisionEnter(GameObject* object)
 {
 	hit = true;
+
+	for (uint n = 0; n < object->components.size(); ++n)
+	{
+		Component* comp = object->components[n];
+		if (comp->GetType() == ComponentType::SCRIPT)
+		{
+			C_Script* script = (C_Script*)comp;
+			if (script->GetDataName() == "Blurrg")
+				((Blurrg*)script->GetScriptData())->TakeDamage(damage);
+		}
+	}
 }
 
 void Bullet::SetShooter(Player* shooter, uint index)

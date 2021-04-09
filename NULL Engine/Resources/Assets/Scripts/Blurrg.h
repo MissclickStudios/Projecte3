@@ -20,6 +20,8 @@ public:
 
 	void OnCollisionEnter(GameObject* object) override;
 
+	void TakeDamage(float damage);
+
 	// Movement
 	float speed = 10.0f;
 
@@ -39,6 +41,10 @@ public:
 	float health = 4.0f;
 	float maxHealth = 4.0f;
 
+	// Attack
+	float damage = 0.5f;
+	float dashDamage = 1.0f;
+
 private:
 
 	float3 LookingAt();
@@ -55,28 +61,4 @@ private:
 };
 
 
-SCRIPTS_FUNCTION Blurrg* CreateBlurrg()
-{
-	Blurrg* script = new Blurrg();
-
-	// Movement
-	INSPECTOR_DRAGABLE_FLOAT(script->speed);
-
-	INSPECTOR_DRAGABLE_FLOAT(script->detectionRange);
-
-	//INSPECTOR_GAMEOBJECT(script->player);
-
-	// Dash
-	INSPECTOR_DRAGABLE_FLOAT(script->dashSpeed);
-	INSPECTOR_DRAGABLE_FLOAT(script->dashingTime);
-	INSPECTOR_DRAGABLE_FLOAT(script->dashingCharge);
-	INSPECTOR_DRAGABLE_FLOAT(script->dashingColdown);
-
-	INSPECTOR_DRAGABLE_FLOAT(script->dashRange);
-
-	// Health
-	INSPECTOR_DRAGABLE_FLOAT(script->health);
-	INSPECTOR_DRAGABLE_FLOAT(script->maxHealth);
-
-	return script;
-}
+SCRIPTS_FUNCTION Blurrg* CreateBlurrg();

@@ -76,6 +76,13 @@ physx::PxFilterFlags customFilterShader(
 	int filter0 = App->physics->GetFilterID((std::string*)filterData0.word0);
 	int filter1 = App->physics->GetFilterID((std::string*)filterData1.word0);
 
+	// TEMPORARY
+	// TODO: ADD A SYSTEM TO ALLOW FILTERS TO DETECT COLLISIONS WITH DEFAULTS
+	bool allowDefaultCollisions = false;
+	if (filter0 == 1 || filter1 == 1)
+		allowDefaultCollisions = true;
+	// ---
+
 	if (filter0 == -1 || filter1 == -1)
 		contact = ContactType::DEFAULT;
 	else if (App->physics->GetInteractions()[filter0][filter1])
@@ -84,7 +91,7 @@ physx::PxFilterFlags customFilterShader(
 	if (contact != ContactType::IGNORE)
 	{
 		pairFlags = physx::PxPairFlag::eCONTACT_DEFAULT;
-		if (contact == ContactType::NOTIFY)
+		if (contact == ContactType::NOTIFY || allowDefaultCollisions)
 		{
 			pairFlags |= physx::PxPairFlag::eNOTIFY_CONTACT_POINTS;
 			pairFlags |= physx::PxPairFlag::eNOTIFY_TOUCH_FOUND;

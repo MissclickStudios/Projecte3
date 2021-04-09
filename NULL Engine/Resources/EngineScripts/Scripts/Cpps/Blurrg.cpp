@@ -23,6 +23,15 @@ Blurrg::~Blurrg()
 
 void Blurrg::Update()
 {
+	if (health <= 0.0f)
+	{
+		for (uint i = 0; i < gameObject->components.size(); ++i)
+			gameObject->components[i]->SetIsActive(false);
+		gameObject->SetIsActive(false);
+
+		return;
+	}
+
 	if (!player)
 	{
 		std::vector<GameObject*>* objects = App->scene->GetGameObjects();
@@ -40,6 +49,8 @@ void Blurrg::Update()
 				}
 			}
 		}
+		if (!player)
+			return;
 	}
 
 	C_RigidBody* rigidBody = gameObject->GetComponent<C_RigidBody>();
@@ -92,9 +103,20 @@ void Blurrg::OnCollisionEnter(GameObject* object)
 {
 	if (object == player)
 	{
+		float hitDamage = damage;
+		if (dashTime.IsActive())
+			hitDamage = dashDamage;
+
 		Player* script = (Player*)object->GetComponent<C_Script>()->GetScriptData();
-		//script->DealDamage(0.5f);
+		script->TakeDamage(hitDamage);
 	}
+}
+
+void Blurrg::TakeDamage(float damage)
+{
+	health -= damage;
+	if (health < 0.0f)
+		health = 0.0f;
 }
 
 // Return normalized vector 3 of the direction the player is at
@@ -122,4 +144,34 @@ float3 Blurrg::LookingAt()
 	}
 
 	return { lookVector.x, 0, lookVector.y };
+}
+
+Blurrg* CreateBlurrg()
+{
+	Blurrg* script = new Blurrg();
+
+	// Movement
+	INSPECTOR_DRAGABLE_FLOAT(script->speed);
+
+	INSPECTOR_DRAGABLE_FLOAT(script->detectionRange);
+
+	//INSPECTOR_GAMEOBJECT(script->player);
+
+	// Dash
+	INSPECTOR_DRAGABLE_FLOAT(script->dashSpeed);
+	INSPECTOR_DRAGABLE_FLOAT(script->dashingTime);
+	INSPECTOR_DRAGABLE_FLOAT(script->dashingCharge);
+	INSPECTOR_DRAGABLE_FLOAT(script->dashingColdown);
+
+	INSPECTOR_DRAGABLE_FLOAT(script->dashRange);
+
+	// Health
+	INSPECTOR_DRAGABLE_FLOAT(script->health);
+	INSPECTOR_DRAGABLE_FLOAT(script->maxHealth);
+
+	// Attack
+	INSPECTOR_DRAGABLE_FLOAT(script->damage);
+	INSPECTOR_DRAGABLE_FLOAT(script->dashDamage);
+
+	return script;
 }
