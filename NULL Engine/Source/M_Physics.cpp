@@ -83,7 +83,6 @@ physx::PxFilterFlags customFilterShader(
 		allowDefaultCollisions = true;
 	// ---
 
-
 	if (filter0 == -1 || filter1 == -1)
 		contact = ContactType::DEFAULT;
 	else if (App->physics->GetInteractions()[filter0][filter1])

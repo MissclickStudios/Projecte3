@@ -39,6 +39,8 @@ public:
 	void Update() override;
 	void CleanUp()override;
 
+	void TakeDamage(float damage);
+
 	Projectile* bullets[BULLET_AMOUNT];
 	PlayerState state;
 
@@ -64,6 +66,7 @@ public:
 	// Health
 	float health = 3.0f;
 	float maxHealth = 3.0f;
+	float invulnerability = 1.0f;
 
 private:
 
@@ -113,6 +116,7 @@ private:
 	Timer dashColdown;
 
 	// Health
+	Timer invulnerabilityTimer;
 	GameObject* hearts[3] = { nullptr, nullptr, nullptr };
 
 	R_Texture* full = nullptr;

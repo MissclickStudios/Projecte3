@@ -56,12 +56,19 @@ void Player::Awake()
 	dashTime.Stop();
 	dashColdown.Stop();
 	stepTimer.Stop();
+	invulnerabilityTimer.Stop();
 
 	ammo = 10;
 }
 
 void Player::Update()
 {
+	if (health <= 0.0f)
+	{
+		// HOW ABOUT U FKN DIE
+		return;
+	}
+
 	if (!bulletStorage)
 	{
 		bulletStorage = App->scene->CreateGameObject("Bullets", App->scene->GetSceneRoot());
@@ -69,11 +76,15 @@ void Player::Update()
 			bullets[i] = CreateProjectile(i);
 	}
 
-	//Animations();
-
 	Movement();
 	Weapon();
 
+	if (App->input->GetKey(SDL_SCANCODE_K) == KeyState::KEY_DOWN && hearts != nullptr)
+		health -= 0.5f;
+	if (App->input->GetKey(SDL_SCANCODE_L) == KeyState::KEY_DOWN && hearts != nullptr)
+		health += 0.5f;
+
+	//Animations();
 	//HandleHp();
 	//HandleAmmo(ammo);
 }
@@ -106,6 +117,22 @@ void Player::CleanUp()
 	if (full != nullptr) { App->resourceManager->FreeResource(full->GetUID()); }
 	if (half != nullptr) { App->resourceManager->FreeResource(half->GetUID()); }
 	if (empty != nullptr) { App->resourceManager->FreeResource(empty->GetUID()); }
+}
+
+void Player::TakeDamage(float damage)
+{
+	if (!invulnerabilityTimer.IsActive())
+	{
+		health -= damage;
+		if (health < 0.0f)
+			health = 0.0f;
+		invulnerabilityTimer.Start();
+	}
+	else
+	{
+		if (invulnerabilityTimer.ReadSec() >= invulnerability)
+			invulnerabilityTimer.Stop();
+	}
 }
 
 void Player::Animations()
@@ -549,6 +576,7 @@ Player* CreatePlayer()
 	// Health
 	INSPECTOR_DRAGABLE_FLOAT(script->health);
 	INSPECTOR_DRAGABLE_FLOAT(script->maxHealth);
+	INSPECTOR_DRAGABLE_FLOAT(script->invulnerability);
 
 	return script;
 }
