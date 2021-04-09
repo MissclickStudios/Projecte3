@@ -30,7 +30,7 @@
 #include "C_SphereCollider.h"
 #include "C_CapsuleCollider.h"
 #include "C_Particles.h"
-#include "C_NavMesh.h"
+#include "C_NavMeshAgent.h"
 #include "C_PlayerController.h"
 #include "C_BulletBehavior.h"
 #include "C_PropBehavior.h"
@@ -243,7 +243,7 @@ bool GameObject::LoadState(ParsonNode& root)
 			case ComponentType::UI_TEXT:			{ component = new C_UI_Text(this); }			break;
 			case ComponentType::UI_BUTTON:			{ component = new C_UI_Button(this); }			break;
 			case ComponentType::ANIMATOR2D:			{ component = new C_2DAnimator(this); }			break;
-			case ComponentType::NAVMESH:			{ component = new C_NavMesh(this); }			break;
+			case ComponentType::NAVMESH_AGENT:		{ component = new C_NavMeshAgent(this); }		break;
 			}
 
 			if (component != nullptr)
@@ -796,7 +796,7 @@ Component* GameObject::CreateComponent(ComponentType type)
 	case ComponentType::CAMERA_BEHAVIOR:	{ component = new C_CameraBehavior(this); }		break;
 	case ComponentType::GATE_BEHAVIOR:		{ component = new C_GateBehavior(this); }		break;
 	case ComponentType::ANIMATOR2D:			{ component = new C_2DAnimator(this); }			break;
-	case ComponentType::NAVMESH:			{ component = new C_NavMesh(this); }			break;
+	case ComponentType::NAVMESH_AGENT:		{ component = new C_NavMeshAgent(this); }		break;
 	}
 
 	if (component != nullptr)

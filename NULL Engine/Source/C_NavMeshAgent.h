@@ -8,11 +8,11 @@ class GameObject;
 
 class R_NavMesh;
 
-class C_NavMesh : public Component
+class C_NavMeshAgent : public Component
 {
 public:
-	C_NavMesh(GameObject* owner);
-	~C_NavMesh();
+	C_NavMeshAgent(GameObject* owner);
+	~C_NavMeshAgent();
 
 	bool Start		() override;
 	bool Update		() override;

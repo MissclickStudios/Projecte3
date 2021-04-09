@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include "M_ParticleSystem.h"
+#include "ParticleModule.h"
 #include "Particle.h"
 
 class R_Material;
@@ -19,14 +19,14 @@ public:
 	//Save and load?
 
 	void SetAsDefault();
-	bool AddModuleFromType(M_ParticleSystem::Type type);
-	bool DeleteModuleFromType(M_ParticleSystem::Type type);
+	bool AddModuleFromType(ParticleModule::Type type);
+	bool DeleteModuleFromType(ParticleModule::Type type);
 
 	void SetMaterial();
 
 public:
 	std::string name = "Particle Emitter";
-	std::vector<M_ParticleSystem*> modules;
+	std::vector<ParticleModule*> modules;
 	R_Material* emitterMaterial;
 
 	int maxParticleCount = 10;

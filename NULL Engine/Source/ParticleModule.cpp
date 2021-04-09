@@ -5,7 +5,7 @@
 #include "Emitter.h"
 #include "EmitterInstance.h"
 
-#include "M_ParticleSystem.h"
+#include "ParticleModule.h"
 
 #include "MemoryManager.h"
 
@@ -75,7 +75,7 @@ void ParticleMovement::Update(float dt, EmitterInstance* emitter)
 	}
 	if (eraseMovement == true)
 	{
-		emitter->emitter->DeleteModuleFromType(M_ParticleSystem::Type::ParticleMovement);
+		emitter->emitter->DeleteModuleFromType(ParticleModule::Type::ParticleMovement);
 	}
 }
 
@@ -103,7 +103,7 @@ void ParticleColor::Update(float dt, EmitterInstance* emitter)
 	}*/
 	if (eraseColor == true)
 	{
-		emitter->emitter->DeleteModuleFromType(M_ParticleSystem::Type::ParticleColor);
+		emitter->emitter->DeleteModuleFromType(ParticleModule::Type::ParticleColor);
 	}
 }
 
@@ -130,7 +130,7 @@ void ParticleLifetime::Update(float dt, EmitterInstance* emitter)
 	}
 	if (eraseLifetime == true)
 	{
-		emitter->emitter->DeleteModuleFromType(M_ParticleSystem::Type::ParticleLifetime);
+		emitter->emitter->DeleteModuleFromType(ParticleModule::Type::ParticleLifetime);
 	}
 }
 

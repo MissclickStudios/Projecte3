@@ -10,7 +10,7 @@
 class Particle;
 class EmitterInstance;
 
-struct NULL_API M_ParticleSystem														// This should be a class that inherits from the Module class. Idea: Separate the PS modules.
+struct NULL_API ParticleModule														// This should be a class that inherits from the Module class. Idea: Separate the PS modules.
 {
 	enum Type
 	{
@@ -28,7 +28,7 @@ struct NULL_API M_ParticleSystem														// This should be a class that inh
 		Unknown
 	} type;
 
-	M_ParticleSystem(Type type) : type(type) {};
+	ParticleModule(Type type) : type(type) {};
 
 	virtual void Spawn(EmitterInstance* emitter, Particle* particle) = 0;
 	virtual void Update(float dt, EmitterInstance* emitter) = 0;
@@ -37,11 +37,11 @@ struct NULL_API M_ParticleSystem														// This should be a class that inh
 	//virtual void Save / Load
 };
 
-struct EmitterBase : M_ParticleSystem
+struct EmitterBase : ParticleModule
 {
 	//camera alignment
 
-	EmitterBase() : M_ParticleSystem(Type::EmitterBase) {};
+	EmitterBase() : ParticleModule(Type::EmitterBase) {};
 
 	void Spawn(EmitterInstance* emitter, Particle* particle);	//Loop active particles and update them
 	void Update(float dt, EmitterInstance* emitter);
@@ -49,9 +49,9 @@ struct EmitterBase : M_ParticleSystem
 	float3 origin = float3::zero;
 };
 
-struct EmitterSpawn : M_ParticleSystem
+struct EmitterSpawn : ParticleModule
 {
-	EmitterSpawn() : M_ParticleSystem(Type::EmitterSpawn) {};
+	EmitterSpawn() : ParticleModule(Type::EmitterSpawn) {};
 
 	void Spawn(EmitterInstance* emitter, Particle* particle);
 	void Update(float dt, EmitterInstance* emitter);			//spawn ratio and timer management
@@ -60,9 +60,9 @@ struct EmitterSpawn : M_ParticleSystem
 	float timer = 0.0f;
 };
 
-struct ParticleMovement : M_ParticleSystem
+struct ParticleMovement : ParticleModule
 {
-	ParticleMovement() : M_ParticleSystem(Type::ParticleMovement) {};
+	ParticleMovement() : ParticleModule(Type::ParticleMovement) {};
 
 	void Spawn(EmitterInstance* emitter, Particle* particle);	//random pos between initialPosition1 and 2
 	void Update(float dt, EmitterInstance* emitter);
@@ -80,9 +80,9 @@ struct ParticleMovement : M_ParticleSystem
 	bool eraseMovement = false;
 };
 
-struct ParticleColor : M_ParticleSystem
+struct ParticleColor : ParticleModule
 {
-	ParticleColor() : M_ParticleSystem(Type::ParticleColor) {};
+	ParticleColor() : ParticleModule(Type::ParticleColor) {};
 
 	void Spawn(EmitterInstance* emitter, Particle* particle);
 	void Update(float dt, EmitterInstance* emitter);
@@ -93,9 +93,9 @@ struct ParticleColor : M_ParticleSystem
 	bool eraseColor = false;
 };
 
-struct ParticleLifetime : M_ParticleSystem
+struct ParticleLifetime : ParticleModule
 {
-	ParticleLifetime() : M_ParticleSystem(Type::ParticleLifetime) {};
+	ParticleLifetime() : ParticleModule(Type::ParticleLifetime) {};
 
 	void Spawn(EmitterInstance* emitter, Particle* particle);
 	void Update(float dt, EmitterInstance* emitter);
@@ -106,9 +106,9 @@ struct ParticleLifetime : M_ParticleSystem
 	bool eraseLifetime = false;
 };
 
-struct ParticleBillboarding : M_ParticleSystem
+struct ParticleBillboarding : ParticleModule
 {
-	ParticleBillboarding() : M_ParticleSystem(Type::ParticleBillboarding) {};
+	ParticleBillboarding() : ParticleModule(Type::ParticleBillboarding) {};
 
 	void Spawn(EmitterInstance* emitter, Particle* particle);
 	void Update(float dt, EmitterInstance* emitter);

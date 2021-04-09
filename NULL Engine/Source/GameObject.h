@@ -136,7 +136,7 @@ public:																									// --- COMPONENT GETTERS AND SETTERS
 		case ComponentType::GATE_BEHAVIOR:		{ return "Gate Behavior"; }		break;
 		case ComponentType::SCRIPT: 			{ return "Script"; } 			break;
 		case ComponentType::ANIMATOR2D:			{ return "Animator2D"; } 		break;
-		case ComponentType::NAVMESH:			{ return "NavMesh"; }			break;
+		case ComponentType::NAVMESH_AGENT:		{ return "NavMesh Agent"; }		break;
 		}
 
 		return "NONE";
