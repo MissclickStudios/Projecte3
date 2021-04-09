@@ -29,11 +29,12 @@ class C_PropBehavior;
 class C_CameraBehavior;
 class C_GateBehavior;
 class C_Canvas;
-class C_ParticleSystem;
+class C_Particles;
 class C_UI_Image;
 class C_UI_Text;
 class C_UI_Button;
 class C_2DAnimator;
+class C_NavMesh;
 
 class Resource;
 class R_Shader;
@@ -72,7 +73,7 @@ private:																										// --- DRAW COMPONENT METHODS ---
 	void DrawBoxColliderComponent		(C_BoxCollider* cCollider);
 	void DrawSphereColliderComponent	(C_SphereCollider* cCollider);
 	void DrawCapsuleColliderComponent	(C_CapsuleCollider* cCollider);
-	void DrawParticleSystemComponent	(C_ParticleSystem* cCanvas);
+	void DrawParticleSystemComponent	(C_Particles* cCanvas);
 	void DrawCanvasComponent			(C_Canvas* cCanvas);
 	void DrawUIImageComponent			(C_UI_Image* image);
 	void DrawUITextComponent			(C_UI_Text* text);
@@ -84,6 +85,7 @@ private:																										// --- DRAW COMPONENT METHODS ---
 	void DrawCameraBehaviorComponent	(C_CameraBehavior* behavior); 
 	void DrawGateBehaviorComponent		(C_GateBehavior* behavior);
 	void DrawAnimator2DComponent		(C_2DAnimator* cAnimator);
+	void DrawNavMeshComponent			(C_NavMesh* cNavMesh);
 
 private:																										// --- DRAW COMPONENT UTILITY METHODS ---
 	void AddComponentCombo				(GameObject* selectedGameObject);										// 
@@ -91,7 +93,7 @@ private:																										// --- DRAW COMPONENT UTILITY METHODS ---
 	void AddUIComponent					(GameObject* selectedGameObject, ComponentType type);
 
 	// COMPONENT BASICS		--------
-	void DrawBasicSettings				(Component* component, bool isActive, const char* state = nullptr);
+	void DrawBasicSettings				(Component* component, const char* state = nullptr);
 
 	// MATERIAL COMPONENT	--------
 	void DisplayTextureData				(C_Material* cMaterial);												// Will display the texture's width, height, depth...

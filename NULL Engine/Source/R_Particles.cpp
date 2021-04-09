@@ -1,5 +1,9 @@
+#include "JSONParser.h"
+
+#include "M_ParticleSystem.h"
+
 #include "R_Particles.h"
-#include "ParticleModule.h"
+
 #include "MemoryManager.h"
 
 R_Particles::R_Particles() : Resource(ResourceType::PARTICLES)
@@ -19,6 +23,10 @@ bool R_Particles::CleanUp()
 
 bool R_Particles::SaveMeta(ParsonNode& metaRoot) const
 {
+	ParsonArray contained_array = metaRoot.SetArray("ContainedResources");
+	
+	// REMEMBER TO GENERATE AN ASSET FILE FOR THIS
+
 	return true;
 }
 

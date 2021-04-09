@@ -11,8 +11,8 @@ public:
 
 	bool CleanUp() override;
 
-	bool SaveMeta(ParsonNode& root) const override;
-	bool LoadMeta(const ParsonNode& root) override;
+	bool SaveMeta(ParsonNode& metaRoot) const override;
+	bool LoadMeta(const ParsonNode& metaRoot) override;
 
 public:
 

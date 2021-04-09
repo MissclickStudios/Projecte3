@@ -1,9 +1,11 @@
-#include "ParticleModule.h"
-#include "C_ParticleSystem.h"
+#include "GameObject.h"
+#include "C_Transform.h"
+#include "C_Particles.h"
+
 #include "Emitter.h"
 #include "EmitterInstance.h"
-#include "C_Transform.h"
-#include "GameObject.h"
+
+#include "M_ParticleSystem.h"
 
 #include "MemoryManager.h"
 
@@ -73,7 +75,7 @@ void ParticleMovement::Update(float dt, EmitterInstance* emitter)
 	}
 	if (eraseMovement == true)
 	{
-		emitter->emitter->DeleteModuleFromType(ParticleModule::Type::ParticleMovement);
+		emitter->emitter->DeleteModuleFromType(M_ParticleSystem::Type::ParticleMovement);
 	}
 }
 
@@ -101,7 +103,7 @@ void ParticleColor::Update(float dt, EmitterInstance* emitter)
 	}*/
 	if (eraseColor == true)
 	{
-		emitter->emitter->DeleteModuleFromType(ParticleModule::Type::ParticleColor);
+		emitter->emitter->DeleteModuleFromType(M_ParticleSystem::Type::ParticleColor);
 	}
 }
 
@@ -128,7 +130,7 @@ void ParticleLifetime::Update(float dt, EmitterInstance* emitter)
 	}
 	if (eraseLifetime == true)
 	{
-		emitter->emitter->DeleteModuleFromType(ParticleModule::Type::ParticleLifetime);
+		emitter->emitter->DeleteModuleFromType(M_ParticleSystem::Type::ParticleLifetime);
 	}
 }
 

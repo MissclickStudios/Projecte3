@@ -6,7 +6,7 @@
 
 #include <vector>
 
-class C_ParticleSystem;
+class C_Particles;
 class Emitter;
 
 class EmitterInstance
@@ -16,7 +16,7 @@ public:
 	~EmitterInstance();
 
 	//if emitter equals null, a default emitter is added
-	void Init(Emitter* emitter, C_ParticleSystem* component);		
+	void Init(Emitter* emitter, C_Particles* component);		
 	void Update(float dt);
 	void DrawParticles();
 
@@ -38,7 +38,7 @@ public:
 	float emitterTime = 0.0f;
 
 	Emitter* emitter;
-	C_ParticleSystem* component;
+	C_Particles* component;
 };
 
 #endif //!__EMITTER_INSTANCE_H__

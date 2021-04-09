@@ -231,7 +231,9 @@ uint M_ResourceManager::SaveResourceToLibrary(Resource* resource)
 	case ResourceType::SCENE:		{ /*written = TODO: HAVE A FUNCTIONAL R_SCENE AND SAVE/LOAD METHODS*/ }		break;
 	case ResourceType::ANIMATION:	{ written = Importer::Animations::Save((R_Animation*)resource, &buffer); }	break;
 	case ResourceType::SHADER:		{ written = Importer::Shaders::Save((R_Shader*)resource, &buffer); }		break;
+	case ResourceType::PARTICLES:	{ written = Importer::Particles::Save((R_Particles*)resource, &buffer); }	break;
 	case ResourceType::SCRIPT:		{ written = Importer::Scripts::Save((R_Script*)resource, &buffer); }		break;
+	case ResourceType::NAVMESH:		{ written = Importer::Navigation::Save((R_NavMesh*)resource, &buffer); }	break;
 	}
 
 	RELEASE_ARRAY(buffer);

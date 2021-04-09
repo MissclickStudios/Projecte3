@@ -354,7 +354,7 @@ Bullet* C_PlayerController::CreateBullet(uint index)
 	rigidBody->FreezeRotationZ(true);
 	((C_BoxCollider*)bullet->CreateComponent(ComponentType::BOX_COLLIDER))->SetTrigger(true);
 	((C_BulletBehavior*)bullet->CreateComponent(ComponentType::BULLET_BEHAVIOR))->SetShooter(GetOwner(), index);
-	bullet->CreateComponent(ComponentType::PARTICLE_SYSTEM);
+	bullet->CreateComponent(ComponentType::PARTICLES);
 
 	bullet->CreateComponent(ComponentType::AUDIOSOURCE);
 	C_AudioSource* source = bullet->GetComponent<C_AudioSource>();

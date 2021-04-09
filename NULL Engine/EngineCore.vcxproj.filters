@@ -175,6 +175,18 @@
     <Filter Include="Source\4_GameObjects\Components\UIComponents">
       <UniqueIdentifier>{6e9dd57d-f7bc-4d4e-a0af-070588aa2b12}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\5_Containers\ParticleSystem">
+      <UniqueIdentifier>{98497639-e216-434b-9050-7fda5195236c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\4_GameObjects\Components\Navigator">
+      <UniqueIdentifier>{12ac887a-da28-404e-a162-74dddd2d87fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\4_GameObjects\Components\Physics">
+      <UniqueIdentifier>{9acfc05c-86d4-4d9d-a405-94ae6c995535}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\4_GameObjects\Components\Audio">
+      <UniqueIdentifier>{38d26ccc-3fcb-4b59-8b18-f661356f52ef}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Application.cpp">
@@ -543,7 +555,7 @@
     <ClCompile Include="Source\C_CapsuleCollider.cpp">
       <Filter>Source\4_GameObjects\Components</Filter>
     </ClCompile>
-    <ClCompile Include="Source\C_ParticleSystem.cpp">
+    <ClCompile Include="Source\C_Particles.cpp">
       <Filter>Source\4_GameObjects\Components</Filter>
     </ClCompile>
     <ClCompile Include="Source\C_RigidBody.cpp">
@@ -552,7 +564,7 @@
     <ClCompile Include="Source\C_SphereCollider.cpp">
       <Filter>Source\4_GameObjects\Components</Filter>
     </ClCompile>
-    <ClCompile Include="Source\ParticleModule.cpp">
+    <ClCompile Include="Source\M_ParticleSystem.cpp">
       <Filter>Source\1_Modules</Filter>
     </ClCompile>
     <ClCompile Include="Source\SimulationCallback.cpp">
@@ -638,6 +650,9 @@
     </ClCompile>
     <ClCompile Include="Source\C_2DAnimator.cpp">
       <Filter>Source\4_GameObjects\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\C_NavMesh.cpp">
+      <Filter>Source\4_GameObjects\Components\Navigator</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1367,13 +1382,13 @@
     <ClInclude Include="Source\C_CapsuleCollider.h">
       <Filter>Source\4_GameObjects\Components</Filter>
     </ClInclude>
-    <ClInclude Include="Source\C_ParticleSystem.h">
+    <ClInclude Include="Source\C_Particles.h">
       <Filter>Source\4_GameObjects\Components</Filter>
     </ClInclude>
     <ClInclude Include="Source\C_RigidBody.h">
       <Filter>Source\4_GameObjects\Components</Filter>
     </ClInclude>
-    <ClInclude Include="Source\ParticleModule.h">
+    <ClInclude Include="Source\M_ParticleSystem.h">
       <Filter>Source\1_Modules</Filter>
     </ClInclude>
     <ClInclude Include="Source\SimulationCallback.h">
@@ -1477,6 +1492,9 @@
     </ClInclude>
     <ClInclude Include="Source\C_2DAnimator.h">
       <Filter>Source\4_GameObjects\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\C_NavMesh.h">
+      <Filter>Source\4_GameObjects\Components\Navigator</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

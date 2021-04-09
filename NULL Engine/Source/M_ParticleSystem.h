@@ -1,5 +1,5 @@
-#ifndef __PARTICLE_MODULE_H__
-#define __PARTICLE_MODULE_H__
+#ifndef __M_PARTICLE_SYSTEM_H__
+#define __M_PARTICLE_SYSTEM_H__
 
 #include "MathGeoLib/include/Math/float3.h"
 #include "MathGeoLib/include/Math/float4.h"
@@ -10,7 +10,7 @@
 class Particle;
 class EmitterInstance;
 
-struct NULL_API ParticleModule
+struct NULL_API M_ParticleSystem														// This should be a class that inherits from the Module class. Idea: Separate the PS modules.
 {
 	enum Type
 	{
@@ -28,7 +28,7 @@ struct NULL_API ParticleModule
 		Unknown
 	} type;
 
-	ParticleModule(Type type) : type(type) {};
+	M_ParticleSystem(Type type) : type(type) {};
 
 	virtual void Spawn(EmitterInstance* emitter, Particle* particle) = 0;
 	virtual void Update(float dt, EmitterInstance* emitter) = 0;
@@ -37,11 +37,11 @@ struct NULL_API ParticleModule
 	//virtual void Save / Load
 };
 
-struct EmitterBase : ParticleModule
+struct EmitterBase : M_ParticleSystem
 {
 	//camera alignment
 
-	EmitterBase() : ParticleModule(Type::EmitterBase) {};
+	EmitterBase() : M_ParticleSystem(Type::EmitterBase) {};
 
 	void Spawn(EmitterInstance* emitter, Particle* particle);	//Loop active particles and update them
 	void Update(float dt, EmitterInstance* emitter);
@@ -49,9 +49,9 @@ struct EmitterBase : ParticleModule
 	float3 origin = float3::zero;
 };
 
-struct EmitterSpawn : ParticleModule
+struct EmitterSpawn : M_ParticleSystem
 {
-	EmitterSpawn() : ParticleModule(Type::EmitterSpawn) {};
+	EmitterSpawn() : M_ParticleSystem(Type::EmitterSpawn) {};
 
 	void Spawn(EmitterInstance* emitter, Particle* particle);
 	void Update(float dt, EmitterInstance* emitter);			//spawn ratio and timer management
@@ -60,9 +60,9 @@ struct EmitterSpawn : ParticleModule
 	float timer = 0.0f;
 };
 
-struct ParticleMovement : ParticleModule
+struct ParticleMovement : M_ParticleSystem
 {
-	ParticleMovement() : ParticleModule(Type::ParticleMovement) {};
+	ParticleMovement() : M_ParticleSystem(Type::ParticleMovement) {};
 
 	void Spawn(EmitterInstance* emitter, Particle* particle);	//random pos between initialPosition1 and 2
 	void Update(float dt, EmitterInstance* emitter);
@@ -80,9 +80,9 @@ struct ParticleMovement : ParticleModule
 	bool eraseMovement = false;
 };
 
-struct ParticleColor : ParticleModule
+struct ParticleColor : M_ParticleSystem
 {
-	ParticleColor() : ParticleModule(Type::ParticleColor) {};
+	ParticleColor() : M_ParticleSystem(Type::ParticleColor) {};
 
 	void Spawn(EmitterInstance* emitter, Particle* particle);
 	void Update(float dt, EmitterInstance* emitter);
@@ -93,9 +93,9 @@ struct ParticleColor : ParticleModule
 	bool eraseColor = false;
 };
 
-struct ParticleLifetime : ParticleModule
+struct ParticleLifetime : M_ParticleSystem
 {
-	ParticleLifetime() : ParticleModule(Type::ParticleLifetime) {};
+	ParticleLifetime() : M_ParticleSystem(Type::ParticleLifetime) {};
 
 	void Spawn(EmitterInstance* emitter, Particle* particle);
 	void Update(float dt, EmitterInstance* emitter);
@@ -106,9 +106,9 @@ struct ParticleLifetime : ParticleModule
 	bool eraseLifetime = false;
 };
 
-struct ParticleBillboarding : ParticleModule
+struct ParticleBillboarding : M_ParticleSystem
 {
-	ParticleBillboarding() : ParticleModule(Type::ParticleBillboarding) {};
+	ParticleBillboarding() : M_ParticleSystem(Type::ParticleBillboarding) {};
 
 	void Spawn(EmitterInstance* emitter, Particle* particle);
 	void Update(float dt, EmitterInstance* emitter);

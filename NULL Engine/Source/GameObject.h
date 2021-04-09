@@ -31,6 +31,7 @@ public:
 	GameObject(std::string name , bool isActive = true, bool isStatic = false);
 	~GameObject();
 
+	bool			Start				();
 	bool			Update				();
 	bool			CleanUp				();
 
@@ -135,6 +136,7 @@ public:																									// --- COMPONENT GETTERS AND SETTERS
 		case ComponentType::GATE_BEHAVIOR:		{ return "Gate Behavior"; }		break;
 		case ComponentType::SCRIPT: 			{ return "Script"; } 			break;
 		case ComponentType::ANIMATOR2D:			{ return "Animator2D"; } 		break;
+		case ComponentType::NAVMESH:			{ return "NavMesh"; }			break;
 		}
 
 		return "NONE";

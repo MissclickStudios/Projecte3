@@ -29,13 +29,13 @@
 #include "C_BoxCollider.h"
 #include "C_SphereCollider.h"
 #include "C_CapsuleCollider.h"
+#include "C_Particles.h"
+#include "C_NavMesh.h"
 #include "C_PlayerController.h"
 #include "C_BulletBehavior.h"
 #include "C_PropBehavior.h"
 #include "C_CameraBehavior.h"
 #include "C_GateBehavior.h"
-
-#include "C_ParticleSystem.h"
 
 #include "C_Canvas.h"
 
@@ -103,6 +103,19 @@ GameObject::~GameObject()
 {
 	RELEASE_ARRAY(obb_vertices);
 	RELEASE_ARRAY(aabb_vertices);
+}
+
+bool GameObject::Start()
+{
+	for (auto component = components.cbegin(); component != components.end(); ++component)
+	{
+		if ((*component)->IsActive())
+		{
+			(*component)->Start();
+		}
+	}
+	
+	return true;
 }
 
 bool GameObject::Update()
@@ -224,12 +237,13 @@ bool GameObject::LoadState(ParsonNode& root)
 			case ComponentType::PROP_BEHAVIOR:		{ component = new C_PropBehavior(this); }		break;
 			case ComponentType::CAMERA_BEHAVIOR:	{ component = new C_CameraBehavior(this); }		break;
 			case ComponentType::GATE_BEHAVIOR:		{ component = new C_GateBehavior(this); }		break;
-			case ComponentType::PARTICLE_SYSTEM:	{ component = new C_ParticleSystem(this); }		break;
+			case ComponentType::PARTICLES:			{ component = new C_Particles(this); }			break;
 			case ComponentType::CANVAS:				{ component = new C_Canvas(this); }				break;
 			case ComponentType::UI_IMAGE:			{ component = new C_UI_Image(this); }			break;
 			case ComponentType::UI_TEXT:			{ component = new C_UI_Text(this); }			break;
 			case ComponentType::UI_BUTTON:			{ component = new C_UI_Button(this); }			break;
 			case ComponentType::ANIMATOR2D:			{ component = new C_2DAnimator(this); }			break;
+			case ComponentType::NAVMESH:			{ component = new C_NavMesh(this); }			break;
 			}
 
 			if (component != nullptr)
@@ -770,7 +784,7 @@ Component* GameObject::CreateComponent(ComponentType type)
 	case ComponentType::BOX_COLLIDER:		{ component = new C_BoxCollider(this); }		break;
 	case ComponentType::SPHERE_COLLIDER:	{ component = new C_SphereCollider(this); }		break;
 	case ComponentType::CAPSULE_COLLIDER:	{ component = new C_CapsuleCollider(this); }	break;
-	case ComponentType::PARTICLE_SYSTEM: 	{ component = new C_ParticleSystem(this); }		break;
+	case ComponentType::PARTICLES: 			{ component = new C_Particles(this); }			break;
 	case ComponentType::CANVAS:				{ component = new C_Canvas(this); }				break;
 	case ComponentType::UI_IMAGE:			{ component = new C_UI_Image(this); }			break;
 	case ComponentType::UI_TEXT:			{ component = new C_UI_Text(this); }			break;
@@ -782,6 +796,7 @@ Component* GameObject::CreateComponent(ComponentType type)
 	case ComponentType::CAMERA_BEHAVIOR:	{ component = new C_CameraBehavior(this); }		break;
 	case ComponentType::GATE_BEHAVIOR:		{ component = new C_GateBehavior(this); }		break;
 	case ComponentType::ANIMATOR2D:			{ component = new C_2DAnimator(this); }			break;
+	case ComponentType::NAVMESH:			{ component = new C_NavMesh(this); }			break;
 	}
 
 	if (component != nullptr)

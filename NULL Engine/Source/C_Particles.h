@@ -1,16 +1,16 @@
-#ifndef __C_PARTICLE_SYSTEM_H__
-#define __C_PARTICLE_SYSTEM_H__
+#ifndef __C_PARTICLES_H__
+#define __C_PARTICLES_H__
 
 #include "Component.h"
 #include "EmitterInstance.h"
 
 class R_Particles;
 
-class NULL_API C_ParticleSystem : public Component
+class NULL_API C_Particles : public Component
 {
 public:
-	C_ParticleSystem(GameObject* owner);
-	~C_ParticleSystem();
+	C_Particles(GameObject* owner);
+	~C_Particles();
 
 	bool SaveState(ParsonNode& root) const override;
 	bool LoadState(ParsonNode& root) override;
@@ -33,4 +33,4 @@ public:
 	bool previewEnabled = false;
 };
 
-#endif //!__C_PARTICLE_SYSTEM_H__
+#endif //!__C_PARTICLES_H__

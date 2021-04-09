@@ -14,14 +14,14 @@ void Emitter::Update(float dt)
 
 void Emitter::SetAsDefault()
 {
-	AddModuleFromType(ParticleModule::EmitterBase);
-	AddModuleFromType(ParticleModule::EmitterSpawn);
-	AddModuleFromType(ParticleModule::ParticleLifetime);
-	AddModuleFromType(ParticleModule::ParticleColor);
-	AddModuleFromType(ParticleModule::ParticleMovement);
+	AddModuleFromType(M_ParticleSystem::EmitterBase);
+	AddModuleFromType(M_ParticleSystem::EmitterSpawn);
+	AddModuleFromType(M_ParticleSystem::ParticleLifetime);
+	AddModuleFromType(M_ParticleSystem::ParticleColor);
+	AddModuleFromType(M_ParticleSystem::ParticleMovement);
 }
 
-bool Emitter::AddModuleFromType(ParticleModule::Type type)
+bool Emitter::AddModuleFromType(M_ParticleSystem::Type type)
 {
 	//switch (type) and in each case a type of particlemodule to add to the emitter.
 	for (int i = 0; i < modules.size(); i++)
@@ -34,32 +34,32 @@ bool Emitter::AddModuleFromType(ParticleModule::Type type)
 
 	switch (type)
 	{
-		case (ParticleModule::Type::EmitterBase):
+		case (M_ParticleSystem::Type::EmitterBase):
 			modules.push_back(new EmitterBase); 
 			break;
-		case (ParticleModule::Type::EmitterSpawn):
+		case (M_ParticleSystem::Type::EmitterSpawn):
 			modules.push_back(new EmitterSpawn);
 			break;
 		//case(ParticleModule::Type::ParticlePosition):
 		//	modules.push_back(new ParticlePosition);
 		//	break;
-		case(ParticleModule::Type::ParticleColor):
+		case(M_ParticleSystem::Type::ParticleColor):
 			modules.push_back(new ParticleColor);
 			break;	
-		case(ParticleModule::Type::ParticleLifetime):
+		case(M_ParticleSystem::Type::ParticleLifetime):
 			modules.push_back(new ParticleLifetime);
 			break;
-		case(ParticleModule::Type::ParticleMovement):
+		case(M_ParticleSystem::Type::ParticleMovement):
 			modules.push_back(new ParticleMovement);
 			break;
-		case(ParticleModule::Type::None):
+		case(M_ParticleSystem::Type::None):
 			return false;
 	}
 	return true;
 
 }
 
-bool Emitter::DeleteModuleFromType(ParticleModule::Type type)
+bool Emitter::DeleteModuleFromType(M_ParticleSystem::Type type)
 {
 	//switch (type) and in each case a type of particlemodule to add to the emitter.
 	for (int i = 0; i < modules.size(); i++)

@@ -40,12 +40,13 @@
 #include "C_CameraBehavior.h"
 #include "C_GateBehavior.h"
 #include "C_Canvas.h"
-#include "C_ParticleSystem.h"
+#include "C_Particles.h"
 #include "C_UI_Image.h"
 #include "C_UI_Text.h"
 #include "C_UI_Button.h"
 #include "C_Script.h"
 #include "C_2DAnimator.h"
+#include "C_NavMesh.h"
 
 #include "R_Shader.h"
 #include "R_Texture.h"
@@ -228,7 +229,7 @@ void E_Inspector::DrawComponents(GameObject* selectedGameObject)
 		case ComponentType::BOX_COLLIDER:		{ DrawBoxColliderComponent((C_BoxCollider*)component); }			break;
 		case ComponentType::SPHERE_COLLIDER:	{ DrawSphereColliderComponent((C_SphereCollider*)component); }		break;
 		case ComponentType::CAPSULE_COLLIDER:	{ DrawCapsuleColliderComponent((C_CapsuleCollider*)component); }	break;
-		case ComponentType::PARTICLE_SYSTEM:	{ DrawParticleSystemComponent((C_ParticleSystem*)component); }		break;
+		case ComponentType::PARTICLES:			{ DrawParticleSystemComponent((C_Particles*)component); }			break;
 		case ComponentType::CANVAS:				{ DrawCanvasComponent((C_Canvas*)component); }						break;
 		case ComponentType::UI_IMAGE:			{ DrawUIImageComponent((C_UI_Image*)component); }					break;
 		case ComponentType::UI_TEXT:			{ DrawUITextComponent((C_UI_Text*)component); }						break;
@@ -240,6 +241,7 @@ void E_Inspector::DrawComponents(GameObject* selectedGameObject)
 		case ComponentType::CAMERA_BEHAVIOR:	{ DrawCameraBehaviorComponent((C_CameraBehavior*)component); }		break;
 		case ComponentType::GATE_BEHAVIOR:		{ DrawGateBehaviorComponent((C_GateBehavior*)component); }			break;
 		case ComponentType::ANIMATOR2D:			{ DrawAnimator2DComponent((C_2DAnimator*)component); }				break;
+		case ComponentType::NAVMESH:			{ DrawNavMeshComponent((C_NavMesh*)component); }					break;
 		}
 		if (type == ComponentType::NONE)
 		{
@@ -710,7 +712,7 @@ void E_Inspector::DrawAnimatorComponent(C_Animator* cAnimator)								// TODO: S
 	{
 		if (cAnimator != nullptr)
 		{
-			DrawBasicSettings((Component*)cAnimator, cAnimator->IsActive(), cAnimator->GetAnimatorStateAsString().c_str());
+			DrawBasicSettings((Component*)cAnimator, cAnimator->GetAnimatorStateAsString().c_str());
 
 			// --- DISPLAY
 			if (ImGui::BeginTabBar("AnimatorTabBar", ImGuiTabBarFlags_None))
@@ -1200,7 +1202,7 @@ void E_Inspector::DrawCapsuleColliderComponent(C_CapsuleCollider* cCollider)
 	}
 }
 
-void E_Inspector::DrawParticleSystemComponent(C_ParticleSystem* cParticleSystem)
+void E_Inspector::DrawParticleSystemComponent(C_Particles* cParticleSystem)
 {
 	//if (cParticleSystem->resource != nullptr)
 	//{
@@ -1225,9 +1227,9 @@ void E_Inspector::DrawParticleSystemComponent(C_ParticleSystem* cParticleSystem)
 
 					if ((ImGui::Button("ADD")))
 					{
-						if (moduleType != (int)ParticleModule::Type::None)
+						if (moduleType != (int)M_ParticleSystem::Type::None)
 						{
-							emitter->AddModuleFromType((ParticleModule::Type)moduleType);
+							emitter->AddModuleFromType((M_ParticleSystem::Type)moduleType);
 						}
 					}
 
@@ -1235,10 +1237,10 @@ void E_Inspector::DrawParticleSystemComponent(C_ParticleSystem* cParticleSystem)
 
 					for (int i = 0; i < emitter->modules.size(); i++) //loop modules
 					{
-						ParticleModule* module = emitter->modules[i];
+						M_ParticleSystem* module = emitter->modules[i];
 						switch (module->type)
 						{
-						case (ParticleModule::Type::EmitterBase):
+						case (M_ParticleSystem::Type::EmitterBase):
 						{
 							if (ImGui::CollapsingHeader("Emitter Base", &show, ImGuiTreeNodeFlags_DefaultOpen))
 							{
@@ -1251,7 +1253,7 @@ void E_Inspector::DrawParticleSystemComponent(C_ParticleSystem* cParticleSystem)
 							}
 						}
 						break;
-						case (ParticleModule::Type::EmitterSpawn):
+						case (M_ParticleSystem::Type::EmitterSpawn):
 						{
 							if (ImGui::CollapsingHeader("Emitter Spawn", &show, ImGuiTreeNodeFlags_DefaultOpen))
 							{
@@ -1263,7 +1265,7 @@ void E_Inspector::DrawParticleSystemComponent(C_ParticleSystem* cParticleSystem)
 							}
 						}
 						break;
-						case(ParticleModule::Type::ParticleMovement):
+						case(M_ParticleSystem::Type::ParticleMovement):
 						{
 							if (ImGui::CollapsingHeader("Particle Movement", &show, ImGuiTreeNodeFlags_DefaultOpen))
 							{
@@ -1301,7 +1303,7 @@ void E_Inspector::DrawParticleSystemComponent(C_ParticleSystem* cParticleSystem)
 							}
 						}
 						break;
-						case(ParticleModule::Type::ParticleColor):
+						case(M_ParticleSystem::Type::ParticleColor):
 						{
 							if (ImGui::CollapsingHeader("Particle Color", &show, ImGuiTreeNodeFlags_DefaultOpen))
 							{
@@ -1325,7 +1327,7 @@ void E_Inspector::DrawParticleSystemComponent(C_ParticleSystem* cParticleSystem)
 							}
 						}
 						break;
-						case(ParticleModule::Type::ParticleLifetime):
+						case(M_ParticleSystem::Type::ParticleLifetime):
 						{
 							if (ImGui::CollapsingHeader("Particle Lifetime", &show, ImGuiTreeNodeFlags_DefaultOpen))
 							{
@@ -1349,7 +1351,7 @@ void E_Inspector::DrawParticleSystemComponent(C_ParticleSystem* cParticleSystem)
 							}
 						}
 						break;
-						case(ParticleModule::Type::None):
+						case(M_ParticleSystem::Type::None):
 						{
 
 						}							
@@ -1815,7 +1817,7 @@ void E_Inspector::DrawAnimator2DComponent(C_2DAnimator* cAnimator)
 	if (ImGui::CollapsingHeader("Animator 2D", &show, ImGuiTreeNodeFlags_Leaf))
 	{
 		bool isActive = cAnimator->IsActive();
-		if (ImGui::Checkbox("Animator is active", &isActive))
+		if (ImGui::Checkbox("Animator 2D is active", &isActive))
 			cAnimator->SetIsActive(isActive);
 
 		int k = cAnimator->GetAnimationStepTime();
@@ -1843,9 +1845,31 @@ void E_Inspector::DrawAnimator2DComponent(C_2DAnimator* cAnimator)
 	return;
 }
 
+void E_Inspector::DrawNavMeshComponent(C_NavMesh* cNavMesh)
+{
+	bool show = true;
+	if (ImGui::CollapsingHeader("NavMesh", &show, ImGuiTreeNodeFlags_None))
+	{
+		DrawBasicSettings((Component*)cNavMesh);
+
+		ImGui::Separator();
+
+		ImGui::Text("WORK IN PROGRESS");
+
+		if (!show)
+		{
+			componentToDelete = cNavMesh;
+			showDeleteComponentPopup = true;
+		}
+	}
+	
+	return;
+}
+
+// --- DRAW COMPONENT UTILITY METHODS ---
 void E_Inspector::AddComponentCombo(GameObject* selectedGameObject)
 {
-	ImGui::Combo("##", &componentType, "Add Component\0Transform\0Mesh\0Material\0Light\0Camera\0Animator\0Animation\0RigidBody\0Box Collider\0Sphere Collider\0Capsule Collider\0Particle System\0Canvas\0Audio Source\0Audio Listener\0Player Controller\0Bullet Behavior\0Prop Behavior\0Camera Behavior\0Gate Behavior\0UI Image\0UI Text\0UI Button\0Script\0Animator 2D");
+	ImGui::Combo("##", &componentType, "Add Component\0Transform\0Mesh\0Material\0Light\0Camera\0Animator\0Animation\0RigidBody\0Box Collider\0Sphere Collider\0Capsule Collider\0Particle System\0Canvas\0Audio Source\0Audio Listener\0Player Controller\0Bullet Behavior\0Prop Behavior\0Camera Behavior\0Gate Behavior\0UI Image\0UI Text\0UI Button\0Script\0Animator 2D\0NavMesh");
 
 	ImGui::SameLine();
 
@@ -1994,9 +2018,42 @@ void E_Inspector::DeleteComponentPopup(GameObject* selectedGameObject)
 	}
 }
 
-void E_Inspector::DrawBasicSettings(Component* component, bool isActive, const char* state)
+void E_Inspector::DrawBasicSettings(Component* component, const char* state)
 {
-	if (ImGui::Checkbox("Is Active", &isActive)) { component->SetIsActive(isActive); }
+	std::string label = "";
+	switch (component->GetType())																			// Later give the label a unique ID with "...##UID".
+	{
+	case ComponentType::NONE:				{ label = "[NONE] is active"; }				break;
+	case ComponentType::TRANSFORM:			{ label = "Transform is active"; }			break;
+	case ComponentType::MESH:				{ label = "Mesh is active"; }				break;
+	case ComponentType::MATERIAL:			{ label = "Material is active"; }			break;
+	case ComponentType::LIGHT:				{ label = "Light is active"; }				break;
+	case ComponentType::CAMERA:				{ label = "Camera is active"; }				break;
+	case ComponentType::ANIMATOR:			{ label = "Animator is active"; }			break;
+	case ComponentType::ANIMATION:			{ label = "Animation is active"; }			break;
+	case ComponentType::RIGIDBODY:			{ label = "RigidBody is active"; }			break;
+	case ComponentType::BOX_COLLIDER:		{ label = "Box Collider is active"; }		break;
+	case ComponentType::SPHERE_COLLIDER:	{ label = "Sphere Collider is active"; }	break;
+	case ComponentType::CAPSULE_COLLIDER:	{ label = "Capsule Collider is active"; }	break;
+	case ComponentType::PARTICLES:			{ label = "Particles is active"; }			break;
+	case ComponentType::CANVAS:				{ label = "Canvas is active"; }				break;
+	case ComponentType::AUDIOSOURCE:		{ label = "Audio Source is active";}		break;
+	case ComponentType::AUDIOLISTENER:		{ label = "Audio Listener is active"; }		break;
+	case ComponentType::UI_IMAGE:			{ label = "UI Image is active"; }			break;
+	case ComponentType::UI_TEXT:			{ label = "UI Text is active"; }			break;
+	case ComponentType::UI_BUTTON: 			{ label = "UI Button is active"; }			break;
+	case ComponentType::SCRIPT:				{ label = "Script is active"; }				break;
+	case ComponentType::ANIMATOR2D:			{ label = "Animator 2D is active"; }		break;
+	case ComponentType::NAVMESH:			{ label = "NavMesh is active"; }			break;
+	case ComponentType::PLAYER_CONTROLLER:	{ label = "Player Controller is active"; }	break;
+	case ComponentType::BULLET_BEHAVIOR:	{ label = "Bullet Behavior is active"; }	break;
+	case ComponentType::PROP_BEHAVIOR:		{ label = "Prop Behavior is active"; }		break;
+	case ComponentType::CAMERA_BEHAVIOR:	{ label = "Camera Behavior is active"; }	break;
+	case ComponentType::GATE_BEHAVIOR:		{ label = "Gate Behavior is active"; }		break;
+	}
+	
+	bool isActive = component->IsActive();
+	if (ImGui::Checkbox(label.c_str(), &isActive)) { component->SetIsActive(isActive); }
 
 	if (state != nullptr)
 	{
