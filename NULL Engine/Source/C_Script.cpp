@@ -121,7 +121,7 @@ bool C_Script::LoadState(ParsonNode& root)
 		if (!found)
 			return false;
 
-		if (root.GetBool("HasInspector"))
+		if (!inspectorVariables.empty() && root.GetBool("HasInspector"))
 		{
 			ParsonArray variablesToLoad = root.GetArray("InspectorVariables");
 			for (int i = 0; i < variablesToLoad.size; ++i)
@@ -139,11 +139,11 @@ bool C_Script::LoadState(ParsonNode& root)
 					*(float*)inspectorVariables[i].ptr = variable.GetNumber("float"); break;
 				case InspectorScriptData::DataType::PREFAB:
 					*(Prefab*)inspectorVariables[i].ptr = App->resourceManager->prefabs[(unsigned int)variable.GetInteger("prefab")]; break;
-				/*case InspectorScriptData::DataType::GAMEOBJECT: //TODO: FINISH THIS !!!!
-					uint32 id = variable.GetInteger("gameobject");
+				case InspectorScriptData::DataType::GAMEOBJECT: //TODO: FINISH THIS !!!!
+					/*uint32 id = variable.GetInteger("gameobject");
 					if (id != 0)
-						;
-					break;*/
+						;*/
+					break;
 				}
 			}
 		}
