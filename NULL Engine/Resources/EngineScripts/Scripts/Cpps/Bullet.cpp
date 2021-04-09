@@ -38,7 +38,7 @@ void Bullet::Update()
 			((Player*)shooter->GetScript("Player"))->weapon->DisableProjectile(index);
 		else if (target == "player")
 		{
-			//((SandTrooper*)shooter->GetScript("SandTrooper"))->weapon->DisableProjectile(index);
+			((SandTrooper*)shooter->GetScript("SandTrooper"))->weapon->DisableProjectile(index);
 		}
 
 		autodestructTimer.Stop();

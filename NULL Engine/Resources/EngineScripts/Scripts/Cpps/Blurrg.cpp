@@ -36,19 +36,9 @@ void Blurrg::Update()
 	{
 		std::vector<GameObject*>* objects = App->scene->GetGameObjects();
 		for (uint i = 0; i < objects->size(); ++i)
-		{
-			GameObject* object = (*objects)[i];
-			for (uint n = 0; n < object->components.size(); ++n)
-			{
-				Component* comp = object->components[n];
-				if (comp->GetType() == ComponentType::SCRIPT)
-				{
-					C_Script* script = (C_Script*)comp;
-					if (script->GetDataName() == "Player")
-						player = object;
-				}
-			}
-		}
+			if ((*objects)[i]->GetScript("Player"))
+				player = (*objects)[i];
+
 		if (!player)
 			return;
 	}
@@ -136,11 +126,14 @@ float3 Blurrg::LookingAt()
 		lookVector.Normalize();
 	float rad = lookVector.AimedAngle() ;
 
-	GameObject* mesh = gameObject->childs[0];
-	if (mesh)
+	if (gameObject->childs.size())
 	{
-		float rad = -lookVector.AimedAngle() + DegToRad(90);
-		mesh->transform->SetLocalRotation(float3(DegToRad(-90), 0, rad));
+		GameObject* mesh = gameObject->childs[0];
+		if (mesh)
+		{
+			float rad = -lookVector.AimedAngle() + DegToRad(90);
+			mesh->transform->SetLocalRotation(float3(DegToRad(-90), 0, rad));
+		}
 	}
 
 	return { lookVector.x, 0, lookVector.y };

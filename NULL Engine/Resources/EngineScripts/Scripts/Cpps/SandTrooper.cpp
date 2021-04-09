@@ -10,8 +10,11 @@
 #include "SandTrooper.h"
 #include "Player.h"
 
+#include "Weapon.h"
+
 SandTrooper::SandTrooper() : Script()
 {
+	reloadTimer.Stop();
 }
 
 SandTrooper::~SandTrooper()
@@ -33,22 +36,16 @@ void SandTrooper::Update()
 	{
 		std::vector<GameObject*>* objects = App->scene->GetGameObjects();
 		for (uint i = 0; i < objects->size(); ++i)
-		{
-			GameObject* object = (*objects)[i];
-			for (uint n = 0; n < object->components.size(); ++n)
-			{
-				Component* comp = object->components[n];
-				if (comp->GetType() == ComponentType::SCRIPT)
-				{
-					C_Script* script = (C_Script*)comp;
-					if (script->GetDataName() == "Player")
-						player = object;
-				}
-			}
-		}
+			if((*objects)[i]->GetScript("Player"))
+				player = (*objects)[i];
+
 		if (!player)
 			return;
 	}
+
+	if (!weapon)
+		weapon = new Weapon(gameObject, projectilePrefab, 3u, maxAmmo, projectileSpeed, fireRate, automatic);
+	weapon->Update();
 
 	C_RigidBody* rigidBody = gameObject->GetComponent<C_RigidBody>();
 	if (!rigidBody || rigidBody->IsStatic())
@@ -56,9 +53,18 @@ void SandTrooper::Update()
 
 	direction = LookingAt();
 
-	if (distance < detectionRange)
+	ammo = weapon->ammo;
+	if (!reloadTimer.IsActive())
 	{
-		
+		if (ammo <= 0)
+			reloadTimer.Start();
+		if (distance < detectionRange)
+			weapon->SandTrooperShoot(direction);
+	}
+	else if (reloadTimer.ReadSec() >= reloadTime)
+	{
+		weapon->Reload();
+		reloadTimer.Stop();
 	}
 }
 
@@ -99,11 +105,14 @@ float3 SandTrooper::LookingAt()
 		lookVector.Normalize();
 	float rad = lookVector.AimedAngle();
 
-	GameObject* mesh = gameObject->childs[0];
-	if (mesh)
+	if (gameObject->childs.size())
 	{
-		float rad = -lookVector.AimedAngle() + DegToRad(90);
-		mesh->transform->SetLocalRotation(float3(DegToRad(-90), 0, rad));
+		GameObject* mesh = gameObject->childs[0];
+		if (mesh)
+		{
+			float rad = -lookVector.AimedAngle() + DegToRad(135);
+			mesh->transform->SetLocalRotation(float3(DegToRad(-90), 0, rad));
+		}
 	}
 
 	return { lookVector.x, 0, lookVector.y };
@@ -115,10 +124,20 @@ SandTrooper* CreateSandTrooper()
 
 	// Movement
 	INSPECTOR_DRAGABLE_FLOAT(script->speed);
-
 	INSPECTOR_DRAGABLE_FLOAT(script->detectionRange);
-
 	//INSPECTOR_GAMEOBJECT(script->player);
+
+	// Weapon
+	INSPECTOR_DRAGABLE_FLOAT(script->projectileSpeed);
+	INSPECTOR_DRAGABLE_FLOAT(script->fireRate);
+
+	INSPECTOR_DRAGABLE_INT(script->ammo);
+	INSPECTOR_DRAGABLE_INT(script->maxAmmo);
+	INSPECTOR_DRAGABLE_FLOAT(script->reloadTime);
+
+	INSPECTOR_CHECKBOX_BOOL(script->automatic);
+
+	INSPECTOR_PREFAB(script->projectilePrefab);
 
 	// Health
 	INSPECTOR_DRAGABLE_FLOAT(script->health);

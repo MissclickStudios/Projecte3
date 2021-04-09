@@ -79,7 +79,7 @@ physx::PxFilterFlags customFilterShader(
 	// TEMPORARY
 	// TODO: ADD A SYSTEM TO ALLOW FILTERS TO DETECT COLLISIONS WITH DEFAULTS
 	bool allowDefaultCollisions = false;
-	if (filter0 == 1 || filter1 == 1)
+	if (filter0 == 1 || filter1 == 1 || filter0 == 4 || filter1 == 4)
 		allowDefaultCollisions = true;
 	// ---
 

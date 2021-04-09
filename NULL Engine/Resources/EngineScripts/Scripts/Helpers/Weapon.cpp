@@ -176,6 +176,38 @@ void Weapon::DisableProjectile(uint index)
 	projectiles[index]->inUse = false;
 }
 
+bool Weapon::SandTrooperShoot(float3 direction)
+{
+	if (ammo > 0)
+	{
+		if (!automatic)
+		{
+			FireProjectile(direction);
+
+			return true;
+		}
+		else
+		{
+			if (!fireRateTimer.IsActive())
+			{
+				FireProjectile(direction);
+				fireRateTimer.Start();
+
+				return true;
+			}
+			else if (fireRateTimer.ReadSec() >= fireRate)
+			{
+				FireProjectile(direction);
+				fireRateTimer.Stop();
+				fireRateTimer.Start();
+
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
 void Weapon::DeleteProjectiles()
 {
 	for (uint i = 0; i < projectilesNum; ++i)

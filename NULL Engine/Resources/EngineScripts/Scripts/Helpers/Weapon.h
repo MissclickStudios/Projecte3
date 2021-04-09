@@ -17,8 +17,11 @@ public:
 	void CleanUp();
 
 	bool Shoot(float3 direction);
+	void Reload();
 
 	void DisableProjectile(uint index);
+
+	bool SandTrooperShoot(float3 direction);
 
 	float projectileSpeed = 100.0f;
 	float fireRate = 0.25f;
@@ -38,7 +41,6 @@ private:
 
 	Projectile* CreateProjectile(uint index);
 	void FireProjectile(float3 direction);
-	void Reload();
 
 	void DeleteProjectiles();
 	void DeleteProjectileStorage();

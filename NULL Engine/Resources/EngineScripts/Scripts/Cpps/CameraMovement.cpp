@@ -22,19 +22,11 @@ void CameraMovement::Update()
 	{
 		std::vector<GameObject*>* objects = App->scene->GetGameObjects();
 		for (uint i = 0; i < objects->size(); ++i)
-		{
-			GameObject* object = (*objects)[i];
-			for (uint n = 0; n < object->components.size(); ++n)
-			{
-				Component* comp = object->components[n];
-				if (comp->GetType() == ComponentType::SCRIPT)
-				{
-					C_Script* script = (C_Script*)comp;
-					if (script->GetDataName() == "Player")
-						player = object;
-				}
-			}
-		}
+			if ((*objects)[i]->GetScript("Player"))
+				player = (*objects)[i];
+
+		if (!player)
+			return;
 	}
 
 	float3 position = player->transform->GetWorldPosition();
