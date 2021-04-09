@@ -35,68 +35,71 @@ bool M_ScriptManager::Start()
 
 void M_ScriptManager::InitScripts()
 {
-	std::vector<Script*>::const_iterator it = currentScripts.cbegin();
-	for (it; it != currentScripts.cend(); ++it)
+	for (int i = 0; i < currentScripts.size(); ++i)
 	{
-		if (*it != nullptr && (*it)->IsScriptEnabled())
-			(*it)->Awake();
+		if (currentScripts[i] != nullptr && currentScripts[i]->IsScriptEnabled())
+			currentScripts[i]->Awake();
 	}
-
-	it = currentScripts.cbegin();
-	for (it; it != currentScripts.cend(); ++it)
+	for (int i = 0; i < currentScripts.size(); ++i)
 	{
-		if (*it != nullptr && (*it)->IsScriptEnabled())
-			(*it)->Start();
+		if (currentScripts[i] != nullptr && currentScripts[i]->IsScriptEnabled())
+			currentScripts[i]->Start();
 	}
 }
 
 UpdateStatus M_ScriptManager::PreUpdate(float dt)
 {
-	if (App->gameState == GameState::PLAY)
+	//if (App->gameState == GameState::PLAY)
+	//{
+	for (int i = 0; i < currentScripts.size(); ++i)
 	{
-		for (std::vector<Script*>::const_iterator it = currentScripts.cbegin(); it != currentScripts.cend(); ++it)
-		{
-			if (*it != nullptr && (*it)->IsScriptEnabled())
-				(*it)->PreUpdate();
-		}
+		if (currentScripts[i] != nullptr && currentScripts[i]->IsScriptEnabled())
+			currentScripts[i]->PreUpdate();
 	}
+	//}
 	return UpdateStatus::CONTINUE;
 }
 
 UpdateStatus M_ScriptManager::Update(float dt)
 {
-	if (App->gameState == GameState::PLAY)
+	//if (App->gameState == GameState::PLAY)
+	//{
+	for (int i = 0; i < currentScripts.size(); ++i)
 	{
-		for (std::vector<Script*>::const_iterator it = currentScripts.cbegin(); it != currentScripts.cend(); ++it)
-		{
-			if (*it != nullptr && (*it)->IsScriptEnabled())
-				(*it)->Update();
-		}
-	}
+		if (currentScripts[i] != nullptr && currentScripts[i]->IsScriptEnabled())
+			currentScripts[i]->Update();
+	}	
+	//}
 	return UpdateStatus::CONTINUE;
 }
 
 UpdateStatus M_ScriptManager::PostUpdate(float dt)
 {
-	if (App->gameState == GameState::PLAY)
+	//if (App->gameState == GameState::PLAY)
+	//{
+	for (int i = 0; i < currentScripts.size(); ++i)
 	{
-		for (std::vector<Script*>::const_iterator it = currentScripts.cbegin(); it != currentScripts.cend(); ++it)
-		{
-			if (*it != nullptr && (*it)->IsScriptEnabled())
-				(*it)->PostUpdate();
-		}
+		if (currentScripts[i] != nullptr && currentScripts[i]->IsScriptEnabled())
+			currentScripts[i]->PostUpdate();
 	}
+	//}
 	return UpdateStatus::CONTINUE;
 }
 
 void M_ScriptManager::CleanUpScripts()
 {
-	std::vector<Script*>::const_iterator it = currentScripts.cbegin();
+	//TODO: Maybe cleanUp removes scripts !!!
+	for (int i = 0; i < currentScripts.size(); ++i)
+	{
+		if (currentScripts[i] != nullptr && currentScripts[i]->IsScriptEnabled())
+			currentScripts[i]->CleanUp();
+	}
+	/*std::vector<Script*>::const_iterator it = currentScripts.cbegin();
 	for (it; it != currentScripts.cend(); ++it)
 	{
 		if (*it != nullptr)
 			(*it)->CleanUp();
-	}
+	}*/
 }
 
 bool M_ScriptManager::CleanUp()

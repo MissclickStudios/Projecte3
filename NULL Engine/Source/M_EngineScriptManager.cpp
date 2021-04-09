@@ -40,33 +40,31 @@ bool M_EngineScriptManager::Start()
 
 void M_EngineScriptManager::InitScripts()
 {
-	std::vector<Script*>::const_iterator it = currentScripts.cbegin();
-	for (it; it != currentScripts.cend(); ++it)
+	for (int i = 0; i < currentScripts.size(); ++i)
 	{
-		if (*it != nullptr && (*it)->IsScriptEnabled())
+		if (currentScripts[i] != nullptr && currentScripts[i]->IsScriptEnabled())
 		{
 			try {
-				(*it)->Awake();
+				currentScripts[i]->Awake();
 			}
 			catch (...)
 			{
 				//TODO: Stop the game when error found on script???
-				LOG("CODE ERROR IN THE AWAKE OF THE SCRIPT: %s", (*it)->dataName);
+				LOG("CODE ERROR IN THE AWAKE OF THE SCRIPT: %s", currentScripts[i]->dataName);
 			}
 		}
 	}
 
-	it = currentScripts.cbegin();
-	for (it; it != currentScripts.cend(); ++it)
+	for (int i = 0; i < currentScripts.size(); ++i)
 	{
-		if (*it != nullptr && (*it)->IsScriptEnabled())
+		if (currentScripts[i] != nullptr && currentScripts[i]->IsScriptEnabled())
 		{
 			try {
-				(*it)->Start();
+				currentScripts[i]->Start();
 			}
 			catch (...)
 			{
-				LOG("CODE ERROR IN THE START OF THE SCRIPT: %s", (*it)->dataName);
+				LOG("CODE ERROR IN THE START OF THE SCRIPT: %s", currentScripts[i]->dataName);
 			}
 		}
 	}
@@ -86,16 +84,16 @@ UpdateStatus M_EngineScriptManager::PreUpdate(float dt)
 
 	if (App->gameState == GameState::PLAY)
 	{
-		for (std::vector<Script*>::const_iterator it = currentScripts.cbegin(); it != currentScripts.cend(); ++it)
+		for (int i = 0; i < currentScripts.size(); ++i)
 		{
-			if (*it != nullptr && (*it)->IsScriptEnabled())
+			if (currentScripts[i] != nullptr && currentScripts[i]->IsScriptEnabled())
 			{
 				try {
-					(*it)->PreUpdate();
+					currentScripts[i]->PreUpdate();
 				}
 				catch (...)
 				{
-					LOG("CODE ERROR IN THE PREUPDATE OF THE SCRIPT: %s", (*it)->dataName);
+					LOG("CODE ERROR IN THE PREUPDATE OF THE SCRIPT: %s", currentScripts[i]->dataName);
 				}
 			}
 		}
@@ -107,16 +105,16 @@ UpdateStatus M_EngineScriptManager::Update(float dt)
 {
 	if (App->gameState == GameState::PLAY)
 	{
-		for (std::vector<Script*>::const_iterator it = currentScripts.cbegin(); it != currentScripts.cend(); ++it)
+		for (int i = 0; i < currentScripts.size(); ++i)
 		{
-			if (*it != nullptr && (*it)->IsScriptEnabled())
+			if (currentScripts[i] != nullptr && currentScripts[i]->IsScriptEnabled())
 			{
 				try {
-					(*it)->Update();
+					currentScripts[i]->Update();
 				}
 				catch (...)
 				{
-					LOG("CODE ERROR IN THE UPDATE OF THE SCRIPT: %s", (*it)->dataName);
+					LOG("CODE ERROR IN THE UPDATE OF THE SCRIPT: %s", currentScripts[i]->dataName);
 				}
 			}
 		}
@@ -128,16 +126,16 @@ UpdateStatus M_EngineScriptManager::PostUpdate(float dt)
 {
 	if (App->gameState == GameState::PLAY)
 	{
-		for (std::vector<Script*>::const_iterator it = currentScripts.cbegin(); it != currentScripts.cend(); ++it) 
+		for (int i = 0; i < currentScripts.size(); ++i) 
 		{
-			if(*it != nullptr && (*it)->IsScriptEnabled())
+			if(currentScripts[i] != nullptr && currentScripts[i]->IsScriptEnabled())
 			{
 				try {
-					(*it)->PostUpdate();
+					currentScripts[i]->PostUpdate();
 				}
 				catch (...)
 				{
-					LOG("CODE ERROR IN THE POSTUPDATE OF THE SCRIPT: %s", (*it)->dataName);
+					LOG("CODE ERROR IN THE POSTUPDATE OF THE SCRIPT: %s", currentScripts[i]->dataName);
 				}
 			}
 		}
@@ -147,17 +145,16 @@ UpdateStatus M_EngineScriptManager::PostUpdate(float dt)
 
 void M_EngineScriptManager::CleanUpScripts()
 {
-	std::vector<Script*>::const_iterator it = currentScripts.cbegin();
-	for (it; it != currentScripts.cend(); ++it)
+	for (int i = 0; i < currentScripts.size(); ++i)
 	{
-		if (*it != nullptr)
+		if (currentScripts[i] != nullptr)
 		{
 			try {
-				(*it)->CleanUp();
+				currentScripts[i]->CleanUp();
 			}
 			catch (...)
 			{
-				LOG("CODE ERROR IN THE CLEANUP OF THE SCRIPT: %s", (*it)->dataName);
+				LOG("CODE ERROR IN THE CLEANUP OF THE SCRIPT: %s", currentScripts[i]->dataName);
 			}
 		}
 	}
