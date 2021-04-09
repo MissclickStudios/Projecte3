@@ -188,11 +188,11 @@ void C_UI_Text::RenderText(std::string text, float x, float y, float scale, floa
 
 		glBindTexture(GL_TEXTURE_2D, ch.textureID);
 
-		float xpos = x + ch.Bearing.x * scale;
-		float ypos = y - (ch.Size.y - ch.Bearing.y) * scale;
+		float xpos = x + ch.bearing.x * scale;
+		float ypos = y - (ch.size.y - ch.bearing.y) * scale;
 
-		float w = ch.Size.x * scale;
-		float h = ch.Size.y * scale;
+		float w = ch.size.x * scale;
+		float h = ch.size.y * scale;
 
 		float vertices[6][4] = {
 			{ xpos,     ypos + h,   0.0f, 0.0f },
@@ -213,7 +213,7 @@ void C_UI_Text::RenderText(std::string text, float x, float y, float scale, floa
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 
-		x += (ch.Advance >> 6) * scale; 
+		x += (ch.advance >> 6) * scale; 
 	}
 
 
