@@ -18,7 +18,6 @@ public:
 
 public:
 	class M_GameManager* manager;
-	class M_ScriptManager* scriptManager;
 
 };
 
