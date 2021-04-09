@@ -419,6 +419,18 @@ bool M_Scene::LoadScene(const char* path)
 		App->renderer->ClearRenderers();
 	}
 
+	//Resolve script go pointers reassigning
+	if (!toAdd.empty()) {
+		std::vector< std::pair<uint32, GameObject**>>::const_iterator item = toAdd.cbegin();
+		for (; item != toAdd.cend(); ++item) {
+			GameObject* found = GetGameObjectByUID((*item).first);
+			if (found != nullptr) {
+				*(*item).second = found;
+			}
+		}
+		toAdd.clear();
+	}
+
 	//FIX THIS
 	App->renderer->defaultSkyBox.SetUpSkyBoxBuffers();
 
@@ -1211,6 +1223,11 @@ void M_Scene::HandleCopyGO() //TODO Cntrl + c / Cntrl + v
 		//}
 	}
 
+}
+
+void M_Scene::ResolveScriptGoPointer(const uint32 uid, GameObject** object)
+{
+	toAdd.push_back({uid, object});
 }
 
 void M_Scene::DeleteSelectedGameObject()
