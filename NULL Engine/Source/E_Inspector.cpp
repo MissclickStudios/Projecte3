@@ -92,21 +92,37 @@ bool E_Inspector::Draw(ImGuiIO& io)
 	ImGui::Begin("Inspector");
 
 	SetIsHovered();
-	
-	GameObject* selected = EngineApp->editor->GetSelectedGameObjectThroughEditor();
 
-	if (selected != nullptr && !selected->is_master_root && !selected->is_scene_root)
+	// --- IS LOCKED ---
+	ImGui::Checkbox("Is Locked", &lockGameObject);
+	
+	if (!lockGameObject)
+	{
+		GameObject* selected = EngineApp->editor->GetSelectedGameObjectThroughEditor();
+
+		if(selected != nullptr)
+			shownGameObject = selected;
+	}
+	else
+	{
+		if(shownGameObject != nullptr)
+			if (shownGameObject->to_delete)
+				lockGameObject = false;
+	}
+	
+
+	if (shownGameObject != nullptr && !shownGameObject->is_master_root && !shownGameObject->is_scene_root)
 	{	
-		DrawGameObjectInfo(selected);
-		DrawComponents(selected);
+		DrawGameObjectInfo(shownGameObject);
+		DrawComponents(shownGameObject);
 		TextEditorWindow();
 		ImGui::Separator();
 
-		AddComponentCombo(selected);
+		AddComponentCombo(shownGameObject);
 
 		if (showDeleteComponentPopup)
 		{
-			DeleteComponentPopup(selected);
+			DeleteComponentPopup(shownGameObject);
 		}
 	}
 
@@ -160,7 +176,7 @@ void E_Inspector::DrawGameObjectInfo(GameObject* selectedGameObject)
 	{
 		selectedGameObject->SetIsStatic(isStatic);
 	}
-
+	
 	// --- TAG ---
 	ImGui::SetNextItemWidth(ImGui::GetWindowWidth() * 0.33f);
 	static char tagCombo[64] = { "Untagged\0Work\0In\0Progress" };
