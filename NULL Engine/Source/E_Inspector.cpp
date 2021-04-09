@@ -58,6 +58,7 @@
 #include "Emitter.h"
 
 #include "E_Inspector.h"
+#include "MathGeoLib/include/Math/float3.h"
 
 #include <fstream>
 
@@ -1519,6 +1520,17 @@ void E_Inspector::DrawScriptComponent(C_Script* cScript)
 					ImGui::DragFloat((*variable).variableName.data(), (float*)(*variable).ptr); break;
 				case InspectorScriptData::ShowMode::SLIDER_FLOAT:
 					ImGui::SliderFloat((*variable).variableName.data(), (float*)(*variable).ptr, (*variable).minSlider, (*variable).maxSlider); break;
+				}
+				break;
+			case InspectorScriptData::DataType::FLOAT3:
+				switch ((*variable).showAs)
+				{
+				case InspectorScriptData::ShowMode::INPUT_FLOAT:
+					ImGui::InputFloat3((*variable).variableName.data(), ((float3*)(*variable).ptr)->ptr()); break;
+				case InspectorScriptData::ShowMode::DRAGABLE_FLOAT:
+					ImGui::DragFloat3((*variable).variableName.data(), ((float3*)(*variable).ptr)->ptr()); break;
+				case InspectorScriptData::ShowMode::SLIDER_FLOAT:
+					ImGui::SliderFloat3((*variable).variableName.data(), ((float3*)(*variable).ptr)->ptr(), (*variable).minSlider, (*variable).maxSlider); break;
 				}
 				break;
 			case InspectorScriptData::DataType::PREFAB:
