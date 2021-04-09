@@ -56,12 +56,19 @@ void Player::Awake()
 	dashTime.Stop();
 	dashColdown.Stop();
 	stepTimer.Stop();
+	invulnerabilityTimer.Stop();
 
 	ammo = 10;
 }
 
 void Player::Update()
 {
+	if (health <= 0.0f)
+	{
+		// HOW ABOUT U FKN DIE
+		return;
+	}
+
 	if (!bulletStorage)
 	{
 		bulletStorage = App->scene->CreateGameObject("Bullets", App->scene->GetSceneRoot());
@@ -69,13 +76,17 @@ void Player::Update()
 			bullets[i] = CreateProjectile(i);
 	}
 
-	Animations();
-
 	Movement();
 	Weapon();
-	HandleHp();
 
-	HandleAmmo(ammo);
+	if (App->input->GetKey(SDL_SCANCODE_K) == KeyState::KEY_DOWN && hearts != nullptr)
+		health -= 0.5f;
+	if (App->input->GetKey(SDL_SCANCODE_L) == KeyState::KEY_DOWN && hearts != nullptr)
+		health += 0.5f;
+
+	//Animations();
+	//HandleHp();
+	//HandleAmmo(ammo);
 }
 
 void Player::CleanUp()
@@ -108,13 +119,29 @@ void Player::CleanUp()
 	if (empty != nullptr) { App->resourceManager->FreeResource(empty->GetUID()); }
 }
 
+void Player::TakeDamage(float damage)
+{
+	if (!invulnerabilityTimer.IsActive())
+	{
+		health -= damage;
+		if (health < 0.0f)
+			health = 0.0f;
+		invulnerabilityTimer.Start();
+	}
+	else
+	{
+		if (invulnerabilityTimer.ReadSec() >= invulnerability)
+			invulnerabilityTimer.Stop();
+	}
+}
+
 void Player::Animations()
 {
 	if (!playAnim)
 	{
 		aAnimator = gameObject->GetComponent<C_Animator>();
 
-		//aAnimator->PlayClip("Idle", 0);
+		aAnimator->PlayClip("Idle", 0u);
 		playAnim = true;
 	}
 
@@ -126,25 +153,25 @@ void Player::Animations()
 	case PlayerState::IDLE:
 		if (currentClip != nullptr && clipName != "Idle")
 		{
-			//aAnimator->PlayClip("Idle", 0);
+			aAnimator->PlayClip("Idle", 0u);
 		}
 		break;
 	case PlayerState::RUNNING:
 		if (currentClip != nullptr && clipName != "Running4")
 		{
-			//aAnimator->PlayClip("Running4", 0);
+			aAnimator->PlayClip("Running4", 0u);
 		}
 		break;
 	case PlayerState::DASHING:
 		if (currentClip != nullptr && clipName != "Dashing")
 		{
-			//aAnimator->PlayClip("Dashing", 0);
+			aAnimator->PlayClip("Dashing", 0u);
 		}
 		break;
 	case PlayerState::SHOOTING:
 		if (currentClip != nullptr && clipName != "Shooting")
 		{
-			//aAnimator->PlayClip("Shooting", 0);
+			aAnimator->PlayClip("Shooting", 0u);
 		}
 		break;
 	}
@@ -243,7 +270,7 @@ void Player::Weapon()
 		{
 			float2 dir = { lastAim.x, -lastAim.z };
 			float rad = dir.AimedAngle();
-			mesh->transform->SetLocalRotation(float3(0, rad, 0));
+			mesh->transform->SetLocalRotation(float3(DegToRad(-90), 0, rad));
 		}
 	}
 
@@ -285,6 +312,7 @@ void Player::Weapon()
 Projectile* Player::CreateProjectile(uint index)
 {
 	GameObject* bullet = App->resourceManager->LoadPrefab(this->bullet.uid, bulletStorage);
+	bullet->GetComponent<C_BoxCollider>()->Update();
 
 	char n[10];
 	sprintf_s(n, "%d", index);
@@ -329,10 +357,9 @@ void Player::FireBullet(float3 direction)
 	position.y += 4;
 	bullet->transform->SetWorldPosition(position);
 
-
 	float2 dir = { lastAim.x, -lastAim.z };
 	float rad = dir.AimedAngle();
-	bullet->transform->SetLocalRotation(float3(0, rad, 0));
+	bullet->transform->SetLocalRotation(float3(0, rad + DegToRad(90), 0));
 
 	C_RigidBody* rigidBody = bullet->GetComponent<C_RigidBody>();
 	rigidBody->TransformMovesRigidBody(true);
@@ -549,6 +576,7 @@ Player* CreatePlayer()
 	// Health
 	INSPECTOR_DRAGABLE_FLOAT(script->health);
 	INSPECTOR_DRAGABLE_FLOAT(script->maxHealth);
+	INSPECTOR_DRAGABLE_FLOAT(script->invulnerability);
 
 	return script;
 }
