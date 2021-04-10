@@ -2,6 +2,7 @@
 #define __M_UISYSTEM_H__
 
 #include "Module.h"
+#include "C_Canvas.h"
 
 #include "Dependencies/FreeType/include/freetype/freetype.h"
 
@@ -33,6 +34,7 @@ public:
 	void UpdateActiveButtons();
 	void InitHoveredDecorations();
 	void UpdateHoveredDecorations();
+	void DeleteActiveButton(C_UI_Button* button);
 
 public:
 

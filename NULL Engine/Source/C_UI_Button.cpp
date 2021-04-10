@@ -8,7 +8,6 @@
 #include "M_UISystem.h"
 
 #include "C_Material.h"
-#include "C_Canvas.h"
 #include "C_Transform.h"
 #include "C_Camera.h"
 
@@ -22,6 +21,7 @@
 
 C_UI_Button::C_UI_Button(GameObject* owner, Rect2D rect) : Component(owner, ComponentType::UI_BUTTON)
 {
+	state = UIButtonState::IDLE;
 	if (App->uiSystem->activeButtons.empty())
 	{
 		state = UIButtonState::HOVERED;
