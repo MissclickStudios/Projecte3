@@ -149,7 +149,7 @@ public class BlurrgAbility : MonoBehaviour
     {
         if(start)
         {
-            print("start");
+            
             target.transform.position = ally.transform.position;
             start = false;
         }
@@ -160,7 +160,7 @@ public class BlurrgAbility : MonoBehaviour
         {
             currentTimer = 0f;
             start = true;
-            print("sajhfdi");
+           
         }
         
         if(Vector3.Distance(transform.position, ally.transform.position) <= 1.3f)
