@@ -1,7 +1,9 @@
 #include <vector>
 #include <algorithm>
+#include <utility>
 
 #include "Profiler.h"
+//#include "Prefab.h"
 
 #include "VariableTypedefs.h"
 #include "Macros.h"
@@ -29,9 +31,7 @@ directoryToDisplay			(nullptr),
 refreshRootDirectory		(true),
 refreshDirectoryToDisplay	(false),
 refreshWindowSize			(true),
-iconsAreLoaded				(false),
-draggedResource				(nullptr),
-draggedAsset				("[NONE]")
+iconsAreLoaded				(false)
 {
 	directoryToDisplay = new char[MAX_DIRECTORY_SIZE];
 	sprintf_s(directoryToDisplay, MAX_DIRECTORY_SIZE, "%s", ASSETS_PATH);
@@ -72,18 +72,12 @@ bool E_Project::CleanUp()
 	bool ret = true;
 
 	rootDirectory.children.clear();
-	draggedResource = nullptr;
 	ClearAssetsToDisplay();
 
 	return ret;
 }
 
 // --- E_PROJECT METHODS ---
-const char* E_Project::GetDraggedAsset() const
-{
-	return draggedAsset.c_str();
-}
-
 void E_Project::CheckFlags()
 {
 	if (!iconsAreLoaded)
@@ -209,10 +203,23 @@ void E_Project::DrawAssetsTree()
 
 void E_Project::DrawFolderExplorer()
 {
-	bool retraso = false;
-	ImGui::Begin("FolderExplorer", &retraso);
+	ImGui::Begin("FolderExplorer", (bool*)0);
 
 	ImGui::Text(directoryToDisplay);
+	ImGui::SameLine(ImGui::GetWindowWidth() * 0.3f);
+	if (ImGui::Button("Refresh Current Directory"))
+	{ 
+		App->resourceManager->RefreshProjectDirectory(directoryToDisplay);
+		refreshRootDirectory		= true;
+		refreshDirectoryToDisplay	= true;
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("Refresh All Directories"))
+	{ 
+		App->resourceManager->RefreshProjectDirectories(); 
+		refreshRootDirectory		= true;
+		refreshDirectoryToDisplay	= true;
+	}
 
 	ImGui::Separator();
 
@@ -272,7 +279,7 @@ void E_Project::DrawDirectoriesTree(const PathNode& rootNode)
 		path			= pathNode.path;
 		directory		= pathNode.local_path;
 		treeNodeFlags	= (pathNode.isLastDirectory) ? ImGuiTreeNodeFlags_Leaf : ImGuiTreeNodeFlags_None;
-		if (ImGui::TreeNodeEx(path.c_str(), treeNodeFlags, "%s/", directory.c_str()))
+		if (ImGui::TreeNodeEx(path.c_str(), treeNodeFlags, "%s", directory.c_str()))
 		{
 			if (ImGui::IsItemClicked())
 			{
@@ -347,9 +354,9 @@ void E_Project::DrawResourceIcons()
 		if (item->type == ResourceType::PREFAB)
 		{
 			std::string prefabName = "Prefab";
-			std::map<uint,std::string>::iterator a = EngineApp->resourceManager->prefabs.find(atoi(item->file.c_str()));
+			std::map<uint,Prefab>::iterator a = EngineApp->resourceManager->prefabs.find(atoi(item->file.c_str()));
 			if (a != EngineApp->resourceManager->prefabs.end())
-				prefabName = a->second;
+				prefabName = a->second.name;
 
 			ImGui::Text(GetDisplayString(prefabName, 8).c_str());
 		}
@@ -407,12 +414,10 @@ void E_Project::AssetDragAndDropEvent(const char* assetPath, ImTextureID texture
 
 	if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID))
 	{
-		ImGui::SetDragDropPayload("DRAGGED_ASSET", assetPath, sizeof(Resource));
+		ImGui::SetDragDropPayload("DRAGGED_ASSET", &assetPath, sizeof(const char*),ImGuiCond_Once);
 
 		ImGui::Text("Dragging %s", assetPath);
 		ImGui::Image(textureID, iconSize);
-
-		draggedAsset = assetPath;
 
 		ImGui::EndDragDropSource();
 	}
@@ -437,7 +442,7 @@ ImTextureID E_Project::GetIconTexID(const AssetDisplay& assetDisplay) const
 	case ResourceType::FOLDER:		{ texId = (ImTextureID)engineIcons.folderIcon->GetTextureID(); }		break;
 	case ResourceType::SCENE:		{ texId = (ImTextureID)engineIcons.modelIcon->GetTextureID(); }			break;
 	case ResourceType::ANIMATION:	{ texId = (ImTextureID)engineIcons.animationIcon->GetTextureID(); }		break;
-	case ResourceType::PREFAB: { texId = (ImTextureID)engineIcons.modelIcon->GetTextureID(); }		break;
+	case ResourceType::PREFAB:		{ texId = (ImTextureID)engineIcons.modelIcon->GetTextureID(); }			break;
 	}
 
 	return texId;

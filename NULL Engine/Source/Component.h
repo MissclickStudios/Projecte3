@@ -40,8 +40,11 @@ enum class ComponentType
 
 	UI_IMAGE,												// --- UI
 	UI_TEXT,												// ------
+	UI_BUTTON,
 
-	SCRIPT													// --- SCRIPTING
+	SCRIPT,													// --- SCRIPTING
+
+	ANIMATOR2D												// --- ANIMATIONS2D
 };
 
 class NULL_API Component
@@ -59,6 +62,7 @@ public:
 	virtual inline ComponentType GetType() const { return type; }						// This is needed to be able to use templeates for functions such as GetComponent<>();
 
 public:
+
 	const char* GetNameFromType() const;												// Will return a string with the name of the component. Depends on COMPONENT_TYPE.
 	
 	uint32 GetID() const;																// Will return the component's ID.

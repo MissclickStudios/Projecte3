@@ -41,7 +41,9 @@
 
 #include "C_UI_Image.h"
 #include "C_UI_Text.h"
+#include "C_UI_Button.h"
 
+#include "C_2DAnimator.h"
 
 #include "GameObject.h"
 
@@ -164,8 +166,6 @@ bool GameObject::LoadState(ParsonNode& root)
 {
 	bool ret = true;
 
-
-	
 	ForceUID((uint)root.GetNumber("UID"));
 	parent_uid = (uint)root.GetNumber("ParentUID");
 
@@ -228,17 +228,24 @@ bool GameObject::LoadState(ParsonNode& root)
 			case ComponentType::CANVAS:				{ component = new C_Canvas(this); }				break;
 			case ComponentType::UI_IMAGE:			{ component = new C_UI_Image(this); }			break;
 			case ComponentType::UI_TEXT:			{ component = new C_UI_Text(this); }			break;
+			case ComponentType::UI_BUTTON:			{ component = new C_UI_Button(this); }			break;
+			case ComponentType::ANIMATOR2D:			{ component = new C_2DAnimator(this); }			break;
 			}
 
 			if (component != nullptr)
 			{
 				if ((component->GetType() == ComponentType::CAMERA) && (App->gameState == GameState::PLAY)) //TODO fix this hardcode
-				{
 					App->camera->SetCurrentCamera((C_Camera*)component);
-				}
 
-				component->LoadState(componentNode);
-				components.push_back(component);
+				if (component->LoadState(componentNode))
+				{
+					components.push_back(component);
+				}
+				else 
+				{
+					component->CleanUp();
+					delete component;
+				}
 			}
 		}
 	}
@@ -732,9 +739,9 @@ Component* GameObject::CreateComponent(ComponentType type)
 		return nullptr;
 	}
 
-#ifndef GAMEBUILD
-	//TODO: Maybe this is avoidable
-	std::vector<C_Script*>scripts;
+#ifndef GAMEBUILD //TODO: Es pot posar + de 1 component script igual ???
+	//TODO: Maybe this is avoidable !!!!!!!!
+	/*std::vector<C_Script*>scripts;
 	if (type == ComponentType::SCRIPT && GetComponents<C_Script>(scripts)) 
 	{
 		for(int i = 0; i<scripts.size();++i)
@@ -745,7 +752,7 @@ Component* GameObject::CreateComponent(ComponentType type)
 				return nullptr;
 			}
 		}
-	}
+	}*/
 #endif
 
 	switch(type)
@@ -767,12 +774,14 @@ Component* GameObject::CreateComponent(ComponentType type)
 	case ComponentType::CANVAS:				{ component = new C_Canvas(this); }				break;
 	case ComponentType::UI_IMAGE:			{ component = new C_UI_Image(this); }			break;
 	case ComponentType::UI_TEXT:			{ component = new C_UI_Text(this); }			break;
-	case ComponentType::SCRIPT:				{component = new C_Script(this); }				break;
+	case ComponentType::SCRIPT:				{ component = new C_Script(this); }				break;
+	case ComponentType::UI_BUTTON:			{ component = new C_UI_Button(this); }			break;
 	case ComponentType::PLAYER_CONTROLLER:	{ component = new C_PlayerController(this); }	break;
 	case ComponentType::BULLET_BEHAVIOR:	{ component = new C_BulletBehavior(this); }		break;
 	case ComponentType::PROP_BEHAVIOR:		{ component = new C_PropBehavior(this); }		break;
 	case ComponentType::CAMERA_BEHAVIOR:	{ component = new C_CameraBehavior(this); }		break;
 	case ComponentType::GATE_BEHAVIOR:		{ component = new C_GateBehavior(this); }		break;
+	case ComponentType::ANIMATOR2D:			{ component = new C_2DAnimator(this); }			break;
 	}
 
 	if (component != nullptr)
@@ -813,6 +822,21 @@ bool GameObject::DeleteComponent(Component* componentToDelete)
 	LOG("[STATUS] Deleted Component %s of Game Object %s", componentName.c_str(), name.c_str());
 
 	return false;
+}
+
+void GameObject::ReplaceComponent(Component* newComponent)
+{
+	for (auto comp = components.begin(); comp != components.end(); comp++)
+	{
+		if (newComponent->GetType() == (*comp)->GetType())
+		{
+			DeleteComponent((*comp));
+
+			Component* a = (C_Transform*)CreateComponent(newComponent->GetType());
+
+			*a = *(C_Transform*)newComponent;
+		}
+	}
 }
 
 const std::vector<Component*>& GameObject::GetAllComponents() const

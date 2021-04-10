@@ -26,7 +26,6 @@ private:
 
 private:
 	ImGuiTreeNodeFlags	defaultFlags;												// Will define the base configuration of the tree nodes.
-	GameObject*			draggedGameObject;										// Used for the dragging and dropping of game objects withing the hierarchy.
 
 	bool				openHierarchyToolsPopup;									// Will keep track of whether or not the hierarchy tools popup needs to be shown.
 };

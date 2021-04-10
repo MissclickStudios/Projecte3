@@ -5,12 +5,13 @@
 #include <map>
 
 #include "Resource.h"
+#include "Channel.h"
 #include "AnimationSettings.h"
 
 class ParsonNode;
 struct Channel;
 
-class R_Animation : public Resource
+class NULL_API R_Animation : public Resource
 {
 public:
 	R_Animation();
@@ -29,6 +30,7 @@ public:
 	void		SetName				(const char* name);
 	void		SetDuration			(const double& duration);
 	void		SetTicksPerSecond	(const double& ticksPerSecond);
+
 
 public:
 	std::vector<Channel>	channels;

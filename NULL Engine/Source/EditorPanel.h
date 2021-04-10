@@ -10,6 +10,7 @@
 class EditorPanel
 {
 public:
+	EditorPanel();
 	EditorPanel(const char* name, bool isActive = true);
 	virtual ~EditorPanel();
 

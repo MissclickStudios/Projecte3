@@ -82,7 +82,7 @@ public:																									// --- GAME OBJECT GETTERS AND SETTERS
 public:																									// --- COMPONENT GETTERS AND SETTERS
 	Component*		CreateComponent						(ComponentType type);							// Creates a component of the given type and adds it to the components vector.
 	bool			DeleteComponent						(Component* componentToDelete);					// Deletes the given component from the Components vector. Returs False on ERROR.
-	
+	void			ReplaceComponent					(Component* newComponent);
 
 	const std::vector<Component*>&	GetAllComponents	() const;										// 
 	bool							GetAllComponents	(std::vector<Component*>& components) const;	// 
@@ -134,6 +134,7 @@ public:																									// --- COMPONENT GETTERS AND SETTERS
 		case ComponentType::CAMERA_BEHAVIOR:	{ return "Camera Behavior"; }	break;
 		case ComponentType::GATE_BEHAVIOR:		{ return "Gate Behavior"; }		break;
 		case ComponentType::SCRIPT: 			{ return "Script"; } 			break;
+		case ComponentType::ANIMATOR2D:			{ return "Animator2D"; } 		break;
 		}
 
 		return "NONE";

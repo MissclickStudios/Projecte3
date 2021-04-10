@@ -1,16 +1,27 @@
-#include "Application.h"
-#include "FileSystemDefinitions.h"
-#include "I_Shaders.h"
-#include "R_Shader.h"
-#include "M_FileSystem.h"
-#include "OpenGL.h"
 #include "JSONParser.h"
+#include "OpenGL.h"
+
+#include "FileSystemDefinitions.h"
+
+#include "Application.h"
+#include "M_FileSystem.h"
+#include "M_ResourceManager.h"
+
+#include "R_Shader.h"
+
+#include "I_Shaders.h"
 
 #include "MemoryManager.h"
 
 
 bool Importer::Shaders::Import(const char* fullPath, R_Shader* shader)
 {
+	uint32 forcedUID = App->resourceManager->GetForcedUIDFromMeta(shader->GetAssetsPath());
+	if (forcedUID != 0)
+	{
+		shader->ForceUID(forcedUID);
+	}
+	
 	bool ret = true;
 	std::string path;
 	std::string name;
@@ -72,8 +83,8 @@ bool Importer::Shaders::Import(const char* fullPath, R_Shader* shader)
 	{
 		LOG("ERROR, Vertex shader: %d or Fragment shader: %d are not correctly compiled.", shader->vertexID, shader->fragmentID);
 	}
+	
 	return ret;
-
 }
 
 int Importer::Shaders::ImportVertex(std::string shaderFile, R_Shader* shader)
@@ -146,7 +157,8 @@ void Importer::Shaders::GetShaderUniforms(R_Shader* shader)
 		uniform.name = name;
 		if (uniform.name != "inColor" && uniform.name != "time" && uniform.name != "modelMatrix" && uniform.name != "viewMatrix" && uniform.name != "projectionMatrix" && uniform.name != "cameraPosition" &&
 			uniform.name != "lightPos" && uniform.name != "dirLight.diffuse"  && uniform.name != "dirLight.ambient" && uniform.name != "dirLight.specular" && uniform.name != "dirLight.direction" && uniform.name != "viewPos"
-			&& !uniform.name.find("diffuse") && !uniform.name.find("ambient") && !uniform.name.find("specular") && !uniform.name.find("position") && !uniform.name.find("constant") && !uniform.name.find("linear") && !uniform.name.find("quadratic"))
+			&& !uniform.name.find("diffuse") && !uniform.name.find("ambient") && !uniform.name.find("specular") && !uniform.name.find("position") && !uniform.name.find("constant") && !uniform.name.find("linear") && !uniform.name.find("quadratic")
+			&& !uniform.name.find("finalBonesMatrices") && !uniform.name.find("activeAnimation"))
 
 			/*!= "pointLight.diffuse" && uniform.name != "pointLight.ambient" && uniform.name != "pointLight.specular" && uniform.name != "pointLight.position" && uniform.name != "pointLight.constant"
 			&& uniform.name != "pointLight.linear" && uniform.name != "pointLight.quadratic"*/

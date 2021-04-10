@@ -33,10 +33,10 @@ bool R_Shader::LoadMeta(const ParsonNode& metaRoot)
 	return ret;
 }
 
-void R_Shader::SetUniformMatrix4(std::string name, GLfloat* value)
+void R_Shader::SetUniformMatrix4(std::string name, GLfloat* value, int size)
 {
-	int uinformLoc = glGetUniformLocation(shaderProgramID, name.c_str());
-	glUniformMatrix4fv(uinformLoc, 1, GL_FALSE, value);
+	uint uinformLoc = glGetUniformLocation(shaderProgramID, name.c_str());
+	glUniformMatrix4fv(uinformLoc, size, GL_FALSE, value);
 }
 
 void R_Shader::SetUniformVec2f(std::string name, GLfloat* value)

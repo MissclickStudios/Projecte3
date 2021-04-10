@@ -126,7 +126,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;_DEBUG;_CONSOLE</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(ProjectDir)\Source\Dependencies;$(ProjectDir)Source\Dependencies\Wwise\include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -146,7 +146,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;NDEBUG;_CONSOLE</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(ProjectDir)\Source\Dependencies;$(ProjectDir)Source\Dependencies\Wwise\include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
@@ -168,7 +168,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NOPROFILER;NOMEMOMANAGER;WIN32;_CRT_SECURE_NO_WARNINGS;NDEBUG;_CONSOLE</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(ProjectDir)\Source\Dependencies;$(ProjectDir)Source\Dependencies\Wwise\include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
@@ -249,13 +249,16 @@
     <ClCompile Include="Source\E_Inspector.cpp" />
     <ClCompile Include="Source\E_LoadFile.cpp" />
     <ClCompile Include="Source\E_MainMenuBar.cpp" />
+    <ClCompile Include="Source\E_Navigation.cpp" />
     <ClCompile Include="Source\E_Project.cpp" />
     <ClCompile Include="Source\E_Resources.cpp" />
     <ClCompile Include="Source\E_SaveFile.cpp" />
     <ClCompile Include="Source\E_Timeline.cpp" />
     <ClCompile Include="Source\E_Toolbar.cpp" />
     <ClCompile Include="Source\E_Viewport.cpp" />
+    <ClCompile Include="Source\E_WantToSaveScene.cpp" />
     <ClCompile Include="Source\M_Editor.cpp" />
+    <ClCompile Include="Source\M_EngineScriptManager.cpp" />
     <ClCompile Include="Source\TextEditor.cpp" />
     <ClCompile Include="Source\ThemeGenerator.cpp" />
     <ClCompile Include="Source\Timeline.cpp" />
@@ -284,14 +287,17 @@
     <ClInclude Include="Source\E_Inspector.h" />
     <ClInclude Include="Source\E_LoadFile.h" />
     <ClInclude Include="Source\E_MainMenuBar.h" />
+    <ClInclude Include="Source\E_Navigation.h" />
     <ClInclude Include="Source\E_Project.h" />
     <ClInclude Include="Source\E_Resources.h" />
     <ClInclude Include="Source\E_SaveFile.h" />
     <ClInclude Include="Source\E_Timeline.h" />
     <ClInclude Include="Source\E_Toolbar.h" />
     <ClInclude Include="Source\E_Viewport.h" />
+    <ClInclude Include="Source\E_WantToSaveScene.h" />
     <ClInclude Include="Source\ImGuiCustom.h" />
     <ClInclude Include="Source\M_Editor.h" />
+    <ClInclude Include="Source\M_EngineScriptManager.h" />
     <ClInclude Include="Source\TextEditor.h" />
     <ClInclude Include="Source\ThemeGenerator.h" />
     <ClInclude Include="Source\Timeline.h" />

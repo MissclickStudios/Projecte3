@@ -19,7 +19,6 @@
 #include "M_Audio.h"
 #include "M_Physics.h"
 #include "M_UISystem.h"
-#include "M_ScriptManager.h"
 
 #include "Application.h"
 
@@ -41,7 +40,7 @@ resourceManager	(new M_ResourceManager()),
 audio			(new M_Audio()),
 physics			(new M_Physics()),
 uiSystem		(new M_UISystem()),
-scriptManager	(new M_ScriptManager()),
+scriptManager	(nullptr), //Very important -> fill the scriptManager on the user side application (Game or Engine) It is left null here to be allocated as a simple script manager or as an extended EngineScriptManager
 logger			(nullptr),
 gameState		(GameState::STOP)
 {

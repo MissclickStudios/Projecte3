@@ -85,6 +85,8 @@ void Resource::ForceUID(const uint32& UID)
 {
 	uid				= UID;
 	hasForcedUID	= true;									// TMP. Be careful, it will be applied to all cases, whether it is forced by the meta or willingly by the user.
+
+	SetLibraryPathAndFile();
 }
 
 uint Resource::GetReferences() const
@@ -95,6 +97,12 @@ uint Resource::GetReferences() const
 void Resource::SetReferences(const uint& references)
 {
 	this->references = references;
+}
+
+void Resource::ModifyReferences(int modification)
+{	
+	int modifiedRefs = references + modification;
+	references = (modifiedRefs < 0) ? 0 : modifiedRefs;
 }
 
 const char* Resource::GetAssetsPath() const
@@ -121,7 +129,7 @@ void Resource::SetAssetsPath(const char* assetsPath)
 
 void Resource::SetAssetsFile(const char* assetsFile)
 {
-	this->assetsFile	= assetsFile;
+	this->assetsFile = assetsFile;
 }
 
 void Resource::SetLibraryPath(const char* libraryPath)
@@ -132,6 +140,12 @@ void Resource::SetLibraryPath(const char* libraryPath)
 void Resource::SetLibraryFile(const char* libraryFile)
 {
 	this->libraryFile = libraryFile;
+}
+
+void Resource::SetAssetsPathAndFile(const char* assetsPath, const char* assetsFile)
+{
+	this->assetsPath = assetsPath;
+	this->assetsFile = assetsFile;
 }
 
 void Resource::SetLibraryPathAndFile()

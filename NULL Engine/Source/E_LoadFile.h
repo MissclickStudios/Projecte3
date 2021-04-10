@@ -12,16 +12,22 @@ public:
 	bool Draw		(ImGuiIO& io);
 	bool CleanUp	();
 
+	void OnOpenPopup();
+
+	void LoadFile();
 private:
 	void DrawFileBrowser		();																		// Will diplay a child window with all the directories and files inside "Assets/"
 	void DrawFileSelector		();																		// Will display an input box with the selected_file in it and a Confirm & Cancel btns.
 	
 	void DrawDirectoriesTree	(const char* rootDirectory, const char* extensionToFilter);			// Will display all the directories and files inside the root directory.
+	void UpdateDirectoryTree	(const char* rootDirectory);
 
 private:
 	char*	selectedFile;																				// String that contains the path of the currently selected file.
 	bool	readyToLoad;																				// Will keep track of whether or not scene_file is ready to be sent to Load().
 
+	std::vector<std::string> sceneFiles;
+	std::vector<std::string> directories;
 };
 
 #endif // !__E_LOAD_FILE_H__

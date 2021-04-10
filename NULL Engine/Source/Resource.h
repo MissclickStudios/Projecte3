@@ -26,6 +26,7 @@ enum class ResourceType
 	PARTICLE_SYSTEM,
 	PREFAB,
 	SCRIPT,
+	NAVMESH,
 	NONE
 };
 
@@ -41,26 +42,29 @@ public:
 	virtual bool LoadMeta(const ParsonNode& metaRoot);
 
 public:
-	ResourceType		GetType					() const;
-	const char*			GetTypeAsString			() const;
+	ResourceType		GetType					() const;											// 
+	const char*			GetTypeAsString			() const;											// 
 	
-	uint32				GetUID					() const;
-	void				ForceUID				(const uint32& UID);
-	uint				GetReferences			() const;
-	void				SetReferences			(const uint& references);
+	uint32				GetUID					() const;											// 
+	void				ForceUID				(const uint32& UID);								// 
+	
+	uint				GetReferences			() const;											// 
+	void				SetReferences			(const uint& references);							// 
+	void				ModifyReferences		(int modification);									//
 
 public:
-	const char*			GetAssetsPath			() const;								// 
-	const char*			GetAssetsFile			() const;								// 
-	const char*			GetLibraryPath			() const;								// 
-	const char*			GetLibraryFile			() const;								// 
+	const char*			GetAssetsPath			() const;											// 
+	const char*			GetAssetsFile			() const;											// 
+	const char*			GetLibraryPath			() const;											// 
+	const char*			GetLibraryFile			() const;											// 
 
-	void				SetAssetsPath			(const char* assetsPath);				// 
-	void				SetAssetsFile			(const char* assetsFile);				// 
-	void				SetLibraryPath			(const char* libraryPath);				// 
-	void				SetLibraryFile			(const char* libraryFile);				// 
+	void				SetAssetsPath			(const char* assetsPath);							// 
+	void				SetAssetsFile			(const char* assetsFile);							// 
+	void				SetLibraryPath			(const char* libraryPath);							// 
+	void				SetLibraryFile			(const char* libraryFile);							// 
 
-	void				SetLibraryPathAndFile	();
+	void				SetAssetsPathAndFile	(const char* assetsPath, const char* assetsFile);	// 
+	void				SetLibraryPathAndFile	();													// 
 
 	//ImporterSettings	GetImporterSettings	();
 	//void				SetImporterSettings	(ImporterSettings importer_settings);

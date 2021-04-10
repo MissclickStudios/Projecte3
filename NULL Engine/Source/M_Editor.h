@@ -27,12 +27,18 @@ class E_Project;
 class E_Viewport;
 class E_Resources;
 class E_Timeline;
+class E_Navigation;
 class E_ImGuiDemo;
 class E_About;
 class E_LoadFile;
 class E_SaveFile;
+class E_WantToSaveScene;
+
+enum class WantToSaveType;
 
 typedef unsigned __int32 uint32;
+
+struct ImGuiPayload;
 
 enum class ImguiStyle
 {
@@ -89,7 +95,7 @@ public:																							// --- Panel/Window Methods. Acts as an interface 
 	void			UpdateFrameData						(int frames, int ms);					// Configuration: Passing the received frame data to the configuration editor module.
 	void			AddInputLog							(uint key, uint state);					// Configuration: Receives an input key and a state and passes a log to the config editor mod.
 
-	void			AddConsoleLog						(const char* log) override;						// Console: Passing the received console log to the console editor module.
+	void			AddConsoleLog						(const char* log) override;				// Console: Passing the received console log to the console editor module.
 
 	GameObject*		GetSceneRootThroughEditor			() const;								// Hierarchy & inspector: Will return the current root GameObjcect.
 	void			SetSceneRootThroughEditor			(GameObject* gameObject);				// Hierarchy & inspector: Will set the scene's root GameObject with the passed one.
@@ -111,9 +117,8 @@ public:																							// --- Panel/Window Methods. Acts as an interface 
 	bool			HoveringGuizmo						() const;								// Viewport: 
 
 	void			GetEngineIconsThroughEditor			(Icons& engineIcons);					// Project:
-	void			LoadResourceIntoSceneThroughEditor	();										// Project: As of now Drag&Drop Source is in Project and Target in Viewport. TODO FIX LATER
+	void			LoadResourceIntoSceneThroughEditor	(const ImGuiPayload& payload);							// Project: As of now Drag&Drop Source is in Project and Target in Viewport. TODO FIX LATER
 
-	void			GetResourcesThroughEditor			(std::map<uint32, Resource*>& resources) const;	// Resources:
 	const std::map<uint32, Resource*>* GetResourcesThroughEditor () const;	// Resources: 
 
 	void			SaveSceneThroughEditor				(const char* sceneName);
@@ -129,6 +134,9 @@ private:
 	void PostSceneRendering() override;															//Render ImGui
 
 public:
+	void OpenWantToSaveScenePopup(WantToSaveType type);
+
+public:
 	std::vector<EditorPanel*>	editorPanels;													// Will store all the editor modules. Will be iterated for drawing all the panels.
 
 	E_MainMenuBar*				mainMenuBar;
@@ -141,10 +149,12 @@ public:
 	E_Viewport*					viewport;
 	E_Resources*				resources;
 	E_Timeline*					timeline;
+	E_Navigation*				navigation;
 	E_ImGuiDemo*				imguiDemo;
 	E_About*					about;
 	E_LoadFile*					loadFile;
 	E_SaveFile*					saveFile;
+	E_WantToSaveScene*			wantToSaveScene;
 
 	ImVec4						clearColor;														// Will be used to set the clear color of the rendering environment.
 
@@ -153,11 +163,14 @@ public:
 	bool						showInspector;													// Enable/Disable the Inspector window.
 	bool						showConsole;													// Enable/Disable the Console window.
 	bool						showProject;													// Enable/Disable the Project window.
+	bool						showNavigation;													// Enable/Disable the Navigation window.
 	bool						showImguiDemo;													// Enable/Disable the ImGui Demo window.
+
 	bool						showAboutPopup;													// Enable/Disable the About window popup.
 	bool						showLoadFilePopup;												// Enable/Disable the Load File popup.
 	bool						showSaveFilePopup;
 	bool						showCloseAppPopup;												// Enable/Disable the Close App popup.
+	bool						showWantToSaveScenePopup;
 };
 
 #endif // !__M_EDITOR_H__

@@ -8,7 +8,7 @@
 #define NULL_API __declspec(dllimport)
 #endif
 
-#ifndef GAMEBUILD
+#ifndef GAMEBUILD //TODO: When this gets included on the scripts project the macro never gets expanded
 #include <string>
 #endif // !GAMEBUILD
 
@@ -33,6 +33,13 @@ public:
 	virtual void OnEnable() {}
 	bool IsScriptEnabled() const;
 	void SetScriptEnable(const bool& enable);
+
+	virtual void OnCollisionEnter() {}
+	virtual void OnCollisionRepeat() {}
+	virtual void OnCollisionExit() {}
+	virtual void OnTriggerEnter() {}
+	virtual void OnTriggerRepeat() {}
+	virtual void OnTriggerExit() {}
 
 public:
 	GameObject* gameObject = nullptr;

@@ -1,9 +1,10 @@
 #ifndef __E_INSPECTOR_H__
 #define __E_INSPECTOR_H__
 
+#include <vector>
+
 #include "EditorPanel.h"
 #include "TextEditor.h"
-#include <vector>
 
 class GameObject;
 class Component;
@@ -31,6 +32,8 @@ class C_Canvas;
 class C_ParticleSystem;
 class C_UI_Image;
 class C_UI_Text;
+class C_UI_Button;
+class C_2DAnimator;
 
 class Resource;
 class R_Shader;
@@ -51,7 +54,7 @@ public:
 	bool Draw		(ImGuiIO& io) override;
 	bool CleanUp	() override;
 
-private:
+private:																										// --- DRAW COMPONENT METHODS ---
 	void DrawGameObjectInfo				(GameObject* selectedGameObject);
 	void DrawComponents					(GameObject* selectedGameObject);
 
@@ -65,6 +68,7 @@ private:
 	void DrawAudioSourceComponent		(C_AudioSource* cAudioSource);
 	void DrawAudioListenerComponent		(C_AudioListener* cAudioListener);
 	void DrawRigidBodyComponent			(C_RigidBody* cRigidBody);
+	void RigidBodyFilterCombo			(C_RigidBody* cRigidBody);
 	void DrawBoxColliderComponent		(C_BoxCollider* cCollider);
 	void DrawSphereColliderComponent	(C_SphereCollider* cCollider);
 	void DrawCapsuleColliderComponent	(C_CapsuleCollider* cCollider);
@@ -73,22 +77,35 @@ private:
 	void DrawUIImageComponent			(C_UI_Image* image);
 	void DrawUITextComponent			(C_UI_Text* text);
 	void DrawScriptComponent			(C_Script* cScript);
+	void DrawUIButtonComponent			(C_UI_Button* button);
 	void DrawPlayerControllerComponent	(C_PlayerController* controller);
 	void DrawBulletBehaviorComponent	(C_BulletBehavior* behavior);
 	void DrawPropBehaviorComponent		(C_PropBehavior* behavior);
 	void DrawCameraBehaviorComponent	(C_CameraBehavior* behavior); 
 	void DrawGateBehaviorComponent		(C_GateBehavior* behavior);
+	void DrawAnimator2DComponent		(C_2DAnimator* cAnimator);
 
-	void AddComponentCombo				(GameObject* selectedGameObject);					// 
-	void DeleteComponentPopup			(GameObject* selectedGameObject);					// 
+private:																										// --- DRAW COMPONENT UTILITY METHODS ---
+	void AddComponentCombo				(GameObject* selectedGameObject);										// 
+	void DeleteComponentPopup			(GameObject* selectedGameObject);										// 
 	void AddUIComponent					(GameObject* selectedGameObject, ComponentType type);
 
-	void TextEditorWindow();
-	void CallTextEditor(C_Material* cMaterial);
+	// COMPONENT BASICS		--------
+	void DrawBasicSettings				(Component* component, bool isActive, const char* state = nullptr);
 
-	// ------- DRAW COMPONENT METHODS -------
-	void DisplayTextureData				(C_Material* cMaterial);							// Will display the texture's width, height, depth...
-	void TextureDisplay					(C_Material* cMaterial);							// Will display the texture as an image through Dear ImGui.
+	// MATERIAL COMPONENT	--------
+	void DisplayTextureData				(C_Material* cMaterial);												// Will display the texture's width, height, depth...
+	void TextureDisplay					(C_Material* cMaterial);												// Will display the texture as an image through Dear ImGui.
+
+	// ANIMATOR COMPONENT	--------
+	void DisplayAnimatorControls		(C_Animator* cAnimator);
+	void DisplayClipManager				(C_Animator* cAnimator);
+	void ClipCreatorWindow				(C_Animator* cAnimator);
+	void ClipEditorWindow				(C_Animator* cAnimator);
+
+	// SHADER COMPONENT		--------
+	void TextEditorWindow				();
+	void CallTextEditor					(C_Material* cMaterial);
 
 private:
 	void DrawImportSettings				(Resource* selectedResource);

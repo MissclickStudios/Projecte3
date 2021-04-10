@@ -65,7 +65,7 @@ void E_SaveFile::DrawTextEditor()
 
 	if (ImGui::Button("Save"))
 	{
-		EngineApp->scene->SaveScene(sceneName.c_str());
+		EngineApp->scene->SaveSceneAs(sceneName.c_str());
 		readyToSave = false;
 		EngineApp->editor->showSaveFilePopup = false;
 		ImGui::CloseCurrentPopup();

@@ -37,6 +37,7 @@
 #include "C_Canvas.h"
 #include "C_UI_Image.h"
 #include "C_UI_Text.h"
+#include "C_UI_Button.h"
 
 #include "M_Renderer3D.h"
 
@@ -47,7 +48,7 @@
 
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */	
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */	
-#pragma comment (lib, "Source/Dependencies/Assimp/libx86/assimp.lib")	
+#pragma comment (lib, "Source/Dependencies/Assimp/assimp-vc142-mt.lib")	
 #pragma comment (lib, "Source/Dependencies/glew/libx86/glew32.lib")
 
 #define WORLD_GRID_SIZE		64
@@ -778,6 +779,15 @@ void M_Renderer3D::RenderUIComponent(GameObject* gameObject)
 				text->Draw3D();
 		}
 
+		C_UI_Button* button = (*it)->GetComponent<C_UI_Button>();
+		if (button != nullptr)
+		{
+			if (App->camera->currentCamera != App->camera->masterCamera->GetComponent<C_Camera>())
+				button->Draw2D();
+
+			else
+				button->Draw3D();
+		}
 
 		for (std::vector<GameObject*>::iterator childIt = (*it)->childs.begin(); childIt != (*it)->childs.end(); childIt++)
 		{
@@ -1550,9 +1560,16 @@ void MeshRenderer::Render()
 	ApplyTextureAndMaterial();																								// Apply resource texture or default texture, mesh color...
 	ApplyShader();																											// 
 
-	(cMesh->GetSkinnedMesh() == nullptr) ? glBindVertexArray(rMesh->VAO) : glBindVertexArray(cMesh->GetSkinnedMesh()->VAO);	// 
-
-	glDrawElements(GL_TRIANGLES, rMesh->indices.size(), GL_UNSIGNED_INT, nullptr);											// 
+	if (cMesh->GetSkinnedMesh() == nullptr)
+	{
+		glBindVertexArray(rMesh->VAO);
+		glDrawElements(GL_TRIANGLES, rMesh->indices.size(), GL_UNSIGNED_INT, nullptr);
+	}
+	else
+	{
+		glBindVertexArray(cMesh->GetSkinnedMesh()->VAO);
+		glDrawElements(GL_TRIANGLES, cMesh->GetSkinnedMesh()->indices.size(), GL_UNSIGNED_INT, nullptr);
+	}
 	
 	glBindVertexArray(0);																									//
 
@@ -1780,13 +1797,26 @@ void MeshRenderer::ApplyShader()
 
 			cMaterial->GetShader()->SetUniformMatrix4("projectionMatrix", App->camera->GetCurrentCamera()->GetOGLProjectionMatrix());
 
-			//cMaterial->GetShader()->SetUniform1f("time", Time::Game::GetTimeSinceStart());
-
 			cMaterial->GetShader()->SetUniformVec3f("cameraPosition", (GLfloat*)&App->camera->GetCurrentCamera()->GetFrustum().Pos());
 			
  			//Skybox
 			
 			cMaterial->GetShader()->SetUniform1i("skybox", 11);
+
+
+			//ANimations
+			std::vector<float4x4> boneTransforms;
+
+			cMesh->GetBoneTranforms(boneTransforms);
+			
+			bool check = cMesh->GetSkinnedMesh() != nullptr;
+
+			cMaterial->GetShader()->SetUniform1i("activeAnimation", (check));
+
+			if (!boneTransforms.empty())
+			{				
+				cMaterial->GetShader()->SetUniformMatrix4("finalBonesMatrices", (GLfloat*)&boneTransforms[0], boneTransforms.size());
+			}
 
 			// Light 
 			std::vector<GameObject*> dirLights = App->scene->GetDirLights();
@@ -1809,29 +1839,14 @@ void MeshRenderer::ApplyShader()
 			{
 				for (uint i = 0; i < pointLights.size(); i++)
 				{
-					std::string pointLightName = "pointLight";
-					pointLightName += "[" + std::to_string(i) + "]";
-
 					cMaterial->GetShader()->SetUniform1i("numPointLights", pointLights.size());
-					cMaterial->GetShader()->SetUniformVec4f(pointLightName += ".diffuse", (GLfloat*)&pointLights[i]->GetComponent<C_Light>()->GetPointLight()->diffuse);
-					pointLightName = "pointLight";
-					pointLightName += "[" + std::to_string(i) + "]";
-					cMaterial->GetShader()->SetUniformVec4f(pointLightName += ".ambient", (GLfloat*)&pointLights[i]->GetComponent<C_Light>()->GetPointLight()->ambient);
-					pointLightName = "pointLight";
-					pointLightName += "[" + std::to_string(i) + "]";
-					cMaterial->GetShader()->SetUniformVec4f(pointLightName += ".specular", (GLfloat*)&pointLights[i]->GetComponent<C_Light>()->GetPointLight()->specular);
-					pointLightName = "pointLight";
-					pointLightName += "[" + std::to_string(i) + "]";
-					cMaterial->GetShader()->SetUniform1f(pointLightName += ".constant", pointLights[i]->GetComponent<C_Light>()->GetPointLight()->GetConstant());
-					pointLightName = "pointLight";
-					pointLightName += "[" + std::to_string(i) + "]";
-					cMaterial->GetShader()->SetUniform1f(pointLightName += ".linear", pointLights[i]->GetComponent<C_Light>()->GetPointLight()->GetLinear());
-					pointLightName = "pointLight";
-					pointLightName += "[" + std::to_string(i) + "]";
-					cMaterial->GetShader()->SetUniform1f(pointLightName += ".quadratic", pointLights[i]->GetComponent<C_Light>()->GetPointLight()->GetQuadratic());
-					pointLightName = "pointLight";
-					pointLightName += "[" + std::to_string(i) + "]";
-					cMaterial->GetShader()->SetUniformVec3f(pointLightName += ".position", (GLfloat*)&pointLights[i]->transform->GetWorldPosition());
+					cMaterial->GetShader()->SetUniformVec4f("pointLight[" + std::to_string(i) + "]" + ".diffuse", (GLfloat*)&pointLights[i]->GetComponent<C_Light>()->GetPointLight()->diffuse);
+					cMaterial->GetShader()->SetUniformVec4f("pointLight[" + std::to_string(i) + "]" + ".ambient", (GLfloat*)&pointLights[i]->GetComponent<C_Light>()->GetPointLight()->ambient);
+					cMaterial->GetShader()->SetUniformVec4f("pointLight[" + std::to_string(i) + "]" + ".specular", (GLfloat*)&pointLights[i]->GetComponent<C_Light>()->GetPointLight()->specular);
+					cMaterial->GetShader()->SetUniform1f("pointLight[" + std::to_string(i) + "]" + ".constant", pointLights[i]->GetComponent<C_Light>()->GetPointLight()->GetConstant());
+					cMaterial->GetShader()->SetUniform1f("pointLight[" + std::to_string(i) + "]" + ".linear", pointLights[i]->GetComponent<C_Light>()->GetPointLight()->GetLinear());
+					cMaterial->GetShader()->SetUniform1f("pointLight[" + std::to_string(i) + "]" + ".quadratic", pointLights[i]->GetComponent<C_Light>()->GetPointLight()->GetQuadratic());
+					cMaterial->GetShader()->SetUniformVec3f("pointLight[" + std::to_string(i) + "]" + ".position", (GLfloat*)&pointLights[i]->transform->GetWorldPosition());
 				}
 			}
 

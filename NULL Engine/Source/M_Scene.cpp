@@ -58,6 +58,7 @@ M_Scene::~M_Scene()
 
 bool M_Scene::Init(ParsonNode& config)
 {
+	currentScene = config.GetString("currentScene");
 	return true;
 }
 
@@ -84,7 +85,11 @@ bool M_Scene::Start()
 	level.AddFixedRoom("Start", 1); 
 	level.AddFixedRoom("Boss", 15);
 	
-	level.GenerateRoom(0);
+	if(App->gameState == GameState::PLAY)
+		level.GenerateRoom(0);
+
+	std::string s = ASSETS_SCENES_PATH + currentScene + JSON_EXTENSION;
+	LoadScene(s.c_str());
 
 	//LoadScene("Assets/Scenes/UITestScene.json");
 	//SaveScene("SceneAutosave");																			// Autosave just right after loading the scene.
@@ -96,6 +101,8 @@ bool M_Scene::Start()
 UpdateStatus M_Scene::Update(float dt)
 {
 	OPTICK_CATEGORY("Scene Update", Optick::Category::Update);
+
+	HandleCopyGO();
 	
 	std::vector<MeshRenderer>		meshRenderers;
 	std::vector<CuboidRenderer>		cuboidRenderers;
@@ -153,6 +160,7 @@ UpdateStatus M_Scene::Update(float dt)
 
 UpdateStatus M_Scene::PostUpdate(float dt)
 {	
+	
 	if (nextScene)
 	{
 		level.NextRoom();
@@ -205,7 +213,7 @@ bool M_Scene::SaveConfiguration(ParsonNode& root) const
 {
 	bool ret = true;
 
-	//SaveScene();
+	root.SetString("currentScene", currentScene.c_str());
 
 	return ret;
 }
@@ -241,12 +249,6 @@ bool M_Scene::SaveScene(const char* sceneName) const
 		ParsonNode arrayNode = objectArray.SetNode((*item)->GetName());
 		(*item)->SaveState(arrayNode);
 	}
-
-	/*for (uint i = 0; i < gameObjects.size(); ++i)
-	{
-		ParsonNode array_node = objectArray.SetNode(gameObjects[i]->GetName());
-		gameObjects[i]->SaveState(array_node);
-	}*/
 
 	char* buffer		= nullptr;
 	std::string name	= (sceneName != nullptr) ? sceneName : sceneRoot->GetName();
@@ -286,6 +288,13 @@ bool M_Scene::LoadScene(const char* path)
 {
 	bool ret = true;
 
+	std::string sceneName;
+
+	App->fileSystem->SplitFilePath(path, nullptr, &sceneName);
+
+	if(sceneName != "PlayAutosave")
+		currentScene = sceneName;
+
 	App->camera->SetMasterCameraAsCurrentCamera();
 
 	char* buffer = nullptr;
@@ -295,6 +304,8 @@ bool M_Scene::LoadScene(const char* path)
 		LOG("[ERROR] Scene Loading: Could not load %s from Assets! Error: File system could not read the file!", path);
 		return false;
 	}
+
+	int modTime = App->fileSystem->GetLastModTime(path);
 
 	if (buffer != nullptr)
 	{
@@ -329,6 +340,7 @@ bool M_Scene::LoadScene(const char* path)
 
 		for (uint i = 0; i < objectsArray.size; ++i)																			// Getting all the GameObjects in the ParsonArray
 		{
+
 			ParsonNode objectNode = objectsArray.GetNode(i);
 			if (!objectNode.NodeIsValid())
 			{
@@ -362,14 +374,36 @@ bool M_Scene::LoadScene(const char* path)
 			tmp.emplace(gameObject->GetUID(), gameObject);
 		}
 
+		std::map<uint, Prefab> prefabs = App->resourceManager->prefabs;
+
 		// Re-Parenting
 		std::map<uint32, GameObject*>::iterator item;
 		for (item = tmp.begin(); item != tmp.end(); ++item)
 		{
 			uint parentUid = item->second->GetParentUID();
 			if (parentUid == 0)
-			{
 				continue;
+
+			if (item->second->isPrefab && item->second->prefabID != 0)
+			{
+				std::map<uint32, Prefab>::iterator prefab = prefabs.find(item->second->prefabID);
+				if (prefab != prefabs.end())
+				{
+					if (prefab->second.updateTime > modTime) //If prefab is older then load prefab/ignore non parent 
+					{
+						std::map<uint32,GameObject*>::iterator prefabParent = tmp.find(item->second->GetParentUID());
+						if (prefabParent != tmp.end())
+						{
+							if (prefabParent->second->prefabID == prefab->second.uid) //If parent is the same prefab then ignore object
+								continue;
+							else //Then it's parent, so load prefab
+							{
+								App->resourceManager->LoadPrefab(prefab->second.uid, prefabParent->second, item->second);
+								continue;
+							}
+						}
+					}
+				}
 			}
 
 			std::map<uint32, GameObject*>::iterator parent = tmp.find(parentUid);
@@ -395,6 +429,33 @@ bool M_Scene::LoadScene(const char* path)
 	return ret;
 }
 
+void M_Scene::SaveCurrentScene()
+{
+	SaveScene(currentScene.c_str());
+}
+
+bool M_Scene::SaveSceneAs(const char* sceneName)
+{
+	currentScene = sceneName;
+	SaveScene(sceneName);
+
+	return true;
+}
+
+bool M_Scene::NewScene()
+{
+	App->renderer->ClearRenderers();
+	CleanUp();
+
+	CreateSceneRoot("MainScene");
+
+	App->renderer->defaultSkyBox.SetUpSkyBoxBuffers();
+
+	currentScene = "New Scene";
+
+	return true;
+}
+
 void M_Scene::LoadResourceIntoScene(Resource* resource)
 {
 	if (resource == nullptr)
@@ -412,13 +473,13 @@ void M_Scene::LoadResourceIntoScene(Resource* resource)
 	}
 }
 
-void M_Scene::LoadPrefabIntoScene(ParsonNode* a)
+GameObject* M_Scene::LoadPrefabIntoScene(ParsonNode* a, GameObject* parent)
 {
 	GameObject* gameObject = new GameObject();
 
 	gameObject->LoadState(*a);
 
-	gameObject->SetParent(App->scene->GetSceneRoot());
+	parent != nullptr ? gameObject->SetParent(parent) : gameObject->SetParent(App->scene->GetSceneRoot());
 
 	gameObjects.push_back(gameObject);
 
@@ -430,6 +491,8 @@ void M_Scene::LoadPrefabIntoScene(ParsonNode* a)
 	{
 		App->scene->LoadPrefabObject(gameObject, &childArray.GetNode(i));
 	}
+
+	return gameObject;
 }
 
 void M_Scene::LoadPrefabObject(GameObject* _gameObject, ParsonNode* node)
@@ -449,6 +512,28 @@ void M_Scene::LoadPrefabObject(GameObject* _gameObject, ParsonNode* node)
 	{
 		LoadPrefabObject(gameObject, &childArray.GetNode(i));
 	}
+}
+
+GameObject* M_Scene::InstantiatePrefab(uint prefabID, GameObject* parent, float3 position, Quat rotation)
+{
+	char* buffer = nullptr;
+	std::string fileName = ASSETS_PREFABS_PATH + std::to_string(prefabID) + PREFAB_EXTENSION;
+	uint f = App->fileSystem->Load(fileName.c_str(), &buffer);
+	if (f == 0)
+	{
+		LOG("Could not load prefab with ID: %d into scene", prefabID);
+		return nullptr;
+	}
+
+	ParsonNode prefabRoot(buffer);
+	RELEASE_ARRAY(buffer);
+
+	GameObject* rootObjectLoaded = App->scene->LoadPrefabIntoScene(&prefabRoot, parent);
+
+	rootObjectLoaded->transform->SetLocalPosition(position);
+	rootObjectLoaded->transform->SetLocalRotation(rotation);
+
+	return rootObjectLoaded;
 }
 
 GameObject* M_Scene::CreateGameObject(const char* name, GameObject* parent)
@@ -537,6 +622,21 @@ void M_Scene::DeleteGameObject(GameObject* gameObject, uint index)
 	}
 
 	LOG("[ERROR] Could not find game object %s in game_objects vector!", gameObject->GetName());
+}
+
+void M_Scene::AddGameObjectToScene(GameObject* gameObject, GameObject* parent)
+{
+	parent != nullptr ? gameObject->SetParent(sceneRoot) : gameObject->SetParent(parent);
+	
+	AddGameObjectChildrenToScene(gameObject);
+}
+
+void M_Scene::AddGameObjectChildrenToScene(GameObject* gameObject)
+{
+	gameObjects.push_back(gameObject);
+
+	for (auto child = gameObject->childs.begin(); child != gameObject->childs.end(); ++child)
+		AddGameObjectChildrenToScene(*child);
 }
 
 GameObject* M_Scene::GenerateGameObjectsFromModel(const R_Model* rModel, const float3& scale)
@@ -782,6 +882,11 @@ GameObject* M_Scene::GetMasterRoot() const
 	return masterRoot;
 }
 
+const char* M_Scene::GetCurrentScene() const
+{
+	return currentScene.c_str();
+}
+
 void M_Scene::CreateSceneRoot(const char* sceneName)
 {
 	if (masterRoot == nullptr)
@@ -858,6 +963,28 @@ bool M_Scene::GameObjectIsInsideCullingCamera(GameObject* gameObject)
 	bool intersects = cullingCamera->FrustumIntersectsAABB(gameObject->GetAABB());
 
 	return intersects;
+}
+
+GameObject* M_Scene::GetGameObjectByUID(uint32 uid)
+{
+	for (std::vector<GameObject*>::const_iterator cit = gameObjects.cbegin(); cit != gameObjects.cend(); ++cit)
+	{
+		if ((*cit)->GetUID() == uid)
+			return (*cit);
+	}
+	return nullptr;
+}
+
+GameObject* M_Scene::GetGameObjectByName(const char* name)
+{
+	for (std::vector<GameObject*>::const_iterator cit = gameObjects.cbegin(); cit != gameObjects.cend(); ++cit)
+	{
+		if (strcmp((*cit)->GetName(),name) == 0)
+			return (*cit);
+	}
+
+	return nullptr;
+
 }
 
 GameObject* M_Scene::GetSelectedGameObject() const
@@ -1062,6 +1189,28 @@ void M_Scene::NextRoom()
 	
 	nextScene = true;
 	
+}
+
+void M_Scene::HandleCopyGO() //TODO Cntrl + c / Cntrl + v
+{
+	if (App->input->GetKey(SDL_SCANCODE_LCTRL) == KeyState::KEY_REPEAT && App->input->GetKey(SDL_SCANCODE_C) == KeyState::KEY_DOWN)
+	{
+		if (selectedGameObject != nullptr)
+		{
+			//copiedGO = selectedGameObject;
+			//LOG("Copied Game Object with Name: %s", copiedGO->GetName());
+		}
+	}
+
+	if (App->input->GetKey(SDL_SCANCODE_LCTRL) == KeyState::KEY_REPEAT && App->input->GetKey(SDL_SCANCODE_V) == KeyState::KEY_DOWN)
+	{
+		//if (selectedGameObject != nullptr && copiedGO != nullptr)
+		//{
+		//	//AddGameObjectToScene(copiedGO);
+		//	//LOG("Pasted Game Object with Name: %s", copiedGO->GetName());
+		//}
+	}
+
 }
 
 void M_Scene::DeleteSelectedGameObject()

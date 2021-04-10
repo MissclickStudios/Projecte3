@@ -336,66 +336,45 @@ void M_Camera3D::CastRay(const float2& castPoint)
 
 void M_Camera3D::FreeLookAround()
 {
-	/*Frustum frustum = current_camera->GetFrustum();
-	float2 mouse_motion = App->editor->GetScreenMouseMotionThroughEditor();
-	float sensitivity = rotation_speed * App->GetDt();
+	int dx = -App->input->GetMouseXMotion();
+	int dy = -App->input->GetMouseYMotion();
 
-	float3 X = float3::zero;
-	float3 Y = float3::zero;
-	float3 Z = float3::zero;
+	float sensitivity = 0.003f;
+	//looking = false;
 
-	float3 new_Z = frustum.Pos() - reference;
+	
 
-	if (mouse_motion.x != 0.0f)
+	// x motion make the camera rotate in Y absolute axis (0,1,0) (not local)
+	if (dx != 0.f)
 	{
-		X = Quat(frustum.Up(), -mouse_motion.x * sensitivity).ToEulerXYZ();
+		//Quat q = Quat::RotateY(dx * sensitivity);
+		//currentCamera.frustum.SetFront(q.Mul(currentCamera->frustum.Front()).Normalized());
+		//currentCamera->frustum.SetUp(q.Mul(currentCamera->frustum.Up()).Normalized());
+
+		//masterCamera->transform->Rotate(q);
 	}
 
-	if (mouse_motion.y != 0.0f)
+	// y motion makes the camera rotate in X local axis, with tops
+	if (dy != 0.f)
 	{
-		Y = Quat(frustum.WorldRight(), -mouse_motion.y * sensitivity).ToEulerXYZ();
-	}
+		float4x4 prevTransform = masterCamera->transform->GetLocalTransform();
 
-	Z = X.Cross(Y);
+		Quat q = Quat::RotateX(dy * sensitivity);
 
-	float3x3 rotation_matrix = float3x3(X, Y, Z);
+		//float3 newUp;
 
-	current_camera->Rotate(rotation_matrix);*/
-
-	// Free Look
-	/*int dx = -App->input->GetMouseXMotion();							// Motion value registered by the mouse in the X axis. Negated so the camera behaves like it should.
-	int dy = -App->input->GetMouseYMotion();							// Motion value registered by the mouse in the Y axis. Negated so the camera behaves like it should.
-
-	float sensitivity = rotation_speed * App->GetDt();					// Factor that will be applied to dx before constructing the angle with which to rotate the vectors.
-
-	if (dx != 0)														// ---
-	{
-		float delta_X = (float)dx * sensitivity;						// The value of the angle that we will rotate the camera by is very, very small, as it will be applied each frame.
-
-		X = rotate(X, delta_X, vec3(0.0f, 1.0f, 0.0f));					// All vectors of the camera (X = Right, Y = Up, Z = Forward), will be rotated by the value of the angle (delta_X)
-		Y = rotate(Y, delta_X, vec3(0.0f, 1.0f, 0.0f));					// The axis of rotation will be Y (yaw), not to confuse with the Y vector, which belongs to the camera.
-		Z = rotate(Z, delta_X, vec3(0.0f, 1.0f, 0.0f));					// Keep in mind that X(Right) will always remain axis aligned.
-	}
-
-	if (dy != 0)														// Same as above but only affecting the Y and Z vectors, as X will act as the pivot of the rotation.
-	{
-		float delta_Y = (float)dy * sensitivity;
-
-		Y = rotate(Y, delta_Y, X);										// As stated above, X(Right) will be used as the X axis (pitch) as, even if it is rotated, it will always be perfectly
-		Z = rotate(Z, delta_Y, X);										// axis aligned in space, at least for this case.
-
-		if (Y.y < 0.0f)													// If the y component of the Y(Up) vector is negative.
+		/*if (newUp.y > 0.0f)
 		{
-			Z = vec3(0.0f, Z.y > 0.0f ? 1.0f : -1.0f, 0.0f);			// The y component of Z(Forward) will be recalculated.
-			Y = cross(Z, X);											// A new Y(Up) vector orthogonal to both Z(Forward) and X(Right) (cross product) will be calculated.
-		}
-	}*/
+			masterCamera->transform->Rotate(q);
+		}*/
+
+	}
 }
 
 void M_Camera3D::Orbit(const float2& orbitPoint)								// Almost identical to FreeLookAround(), but instead of only modifying XYZ, the position of the camera is also modified.
 {
 	Frustum frustum = currentCamera->GetFrustum();
-	float sensitivity = GetRotationSpeed() * Time::Real::GetDT();
+	float sensitivity = rotationSpeed * Time::Real::GetDT();
 
 	float3 newZ = frustum.Pos() - GetReference();
 
@@ -411,9 +390,9 @@ void M_Camera3D::Orbit(const float2& orbitPoint)								// Almost identical to F
 		newZ = newY.Transform(newZ);
 	}
 
-	float3 newPosition = newZ + GetReference();
+	float3 newPosition = newZ + reference;
 
-	PointAt(newPosition, GetReference(), true);
+	PointAt(newPosition, reference, true);
 }
 
 void M_Camera3D::PanCamera(const float2& panPoint)
@@ -426,12 +405,12 @@ void M_Camera3D::PanCamera(const float2& panPoint)
 
 	if (panPoint.x != 0)
 	{
-		newX = -panPoint.x * frustum.WorldRight() * Time::Real::GetDT();
+		newX = -panPoint.x * frustum.WorldRight() * panSpeed * Time::Real::GetDT();
 	}
 
 	if (panPoint.y != 0)
 	{
-		newY = panPoint.y * frustum.Up() * Time::Real::GetDT();
+		newY = panPoint.y * frustum.Up() * panSpeed * Time::Real::GetDT();
 	}
 
 	newPosition = newX + newY;

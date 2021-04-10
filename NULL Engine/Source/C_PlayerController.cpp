@@ -60,39 +60,20 @@ bool C_PlayerController::Update()
 	{
 		aAnimator = GetOwner()->GetComponent<C_Animator>();
 
-		aAnimator->PlayClip("Idle", 0);
+		aAnimator->PlayClip("Idle", (uint)0);
 		playAnim = true;
 	}
-
-	AnimatorClip* currentClip = aAnimator->GetCurrentClip();
-	std::string clipName = (currentClip != nullptr) ? currentClip->GetName() : "[NONE]";
+	
+	/*if (App->input->GetKey(SDL_SCANCODE_Y) == KeyState::KEY_DOWN)	{ aAnimator->PlayClip("Running4", 0.2f); }
+	if (App->input->GetKey(SDL_SCANCODE_Y) == KeyState::KEY_UP)		{ aAnimator->PlayClip("Idle", 0.2f); }
+	if (App->input->GetKey(SDL_SCANCODE_U) == KeyState::KEY_DOWN)	{ aAnimator->PlayClip("Shooting", 0.2f); }*/
 
 	switch (state)
 	{
-	case PlayerState::IDLE:
-		if (currentClip != nullptr && clipName != "Idle")
-		{
-			aAnimator->PlayClip("Idle", 0);
-		}
-		break;
-	case PlayerState::RUNNING:
-		if (currentClip != nullptr && clipName != "Running4")
-		{
-			aAnimator->PlayClip("Running4", 0);
-		}
-		break;
-	case PlayerState::DASHING:
-		if (currentClip != nullptr && clipName != "Dashing")
-		{
-			//aAnimator->PlayClip("Dashing", 0);
-		}
-		break;
-	case PlayerState::SHOOTING:
-		if (currentClip != nullptr && clipName != "Shooting")
-		{
-			aAnimator->PlayClip("Shooting", 0);
-		}
-		break;
+	case PlayerState::IDLE:		{ aAnimator->PlayClip("Idle", 0.2f); }		break;
+	case PlayerState::RUNNING:	{ aAnimator->PlayClip("Running4", 0.2f); }	break;
+	case PlayerState::DASHING:	{ /*aAnimator->PlayClip("Dashing", 0);*/ }	break;
+	case PlayerState::SHOOTING: { aAnimator->PlayClip("Shooting", 0.2f); }	break;
 	}
 
 	if (!bulletStorage)
@@ -197,8 +178,6 @@ bool C_PlayerController::LoadState(ParsonNode& root)
 
 void C_PlayerController::Movement()
 {
-	OPTICK_CATEGORY("Player Controller Movement", Optick::Category::Update);
-	
 	C_RigidBody* rigidBody = GetOwner()->GetComponent<C_RigidBody>();
 	if (!rigidBody || rigidBody->IsStatic())
 		return;
@@ -221,6 +200,7 @@ void C_PlayerController::Movement()
 			if (App->input->GetKey(SDL_SCANCODE_A) == KeyState::KEY_REPEAT)
 				movX = -MAX_JOYSTICK_INPUT;
 		}
+		
 		Move(rigidBody, movX, movY);
 
 		if (dashColdown.IsActive())
@@ -282,8 +262,6 @@ void C_PlayerController::Rotate()
 
 void C_PlayerController::Weapon()
 {
-	OPTICK_CATEGORY("Player Controller Weapon", Optick::Category::Update);
-	
 	int aimX = 0;
 	int aimY = 0;
 	// Controller aim
@@ -491,8 +469,6 @@ void C_PlayerController::GetAimVectorAxis(int& axisX, int& axisY)
 
 void C_PlayerController::HandleAmmo(int ammo)
 {
-	OPTICK_CATEGORY("Player Controller Handle Ammo", Optick::Category::Update);
-	
 	std::vector<GameObject*>::iterator it = App->scene->GetGameObjects()->begin();
 
 	for (it; it != App->scene->GetGameObjects()->end(); ++it)
@@ -530,8 +506,6 @@ void C_PlayerController::HandleAmmo(int ammo)
 
 void C_PlayerController::HandleHp()
 {
-	OPTICK_CATEGORY("Player Controller Handle Hp", Optick::Category::Update);
-
 	std::vector<GameObject*>::iterator it = App->scene->GetGameObjects()->begin();
 
 	for (it; it != App->scene->GetGameObjects()->end(); ++it)

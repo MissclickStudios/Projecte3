@@ -46,7 +46,6 @@ bool E_Console::Draw(ImGuiIO& io)
 
 	ConsoleMenuBar();													// Constructs the menu bar of the Console panel. It has an Options menu that allows to Clear or Close the console.
 	ConsoleOutput();													// Prints all the logs in the console and formats them according to their type ([ERROR], [WARNING]...)
-	ConsoleScrollToBottom();											// If a new log has been added, the console will be automatically scrolled to the bottommost position.
 
 	ImGui::End();
 
@@ -136,32 +135,32 @@ void E_Console::ConsoleOutput()
 		if (strstr(logs[i], "[ERROR]") != nullptr)								// strstr() will look for a specific substring in the given string. Returns nullptr if the substr is not found.
 		{
 			if (!printErrorLogs)		{ continue; }							// If the Filter Tag is set not to be printed, then continue to the next iteration of the loop.
-			textColour = { 1.0f, 0.33f, 0.33f, 1.0f };							// [ERROR] logs will be Red.
+			textColour = LightRed.C_Array();										// [ERROR] logs will be Red.
 		}
 		else if (strstr(logs[i], "[WARNING]") != nullptr)
 		{
 			if (!printWarningLogs)		{ continue; }
-			textColour = { 1.0f, 1.0f, 0.33f, 1.0f };							// [WARNING] logs will be Yellow.
+			textColour = LightYellow.C_Array();									// [WARNING] logs will be Yellow.
 		}
 		else if (strstr(logs[i], "[STATUS]") != nullptr)
 		{
 			if (!printStatusLogs)		{ continue; }
-			textColour = { 1.0f, 0.33f, 1.0f, 1.0f };							// [STATUS] logs will be Purple.
+			textColour = LightMagenta.C_Array();									// [STATUS] logs will be Magenta.
 		}
 		else if (strstr(logs[i], "[FILE_SYSTEM]") != nullptr)
 		{
 			if (!printFileSystemLogs)	{ continue; }
-			textColour = { 0.33f, 0.33f, 1.0f, 1.0f };							// [FILE_SYSTEM] logs will be Blue.
+			textColour = LightBlue.C_Array();									// [FILE_SYSTEM] logs will be Blue.
 		}
 		else if (strstr(logs[i], "[IMPORTER]") != nullptr)
 		{
 			if (!printImporterLogs)		{ continue; }
-			textColour = { 0.33f, 1.0f, 1.0f, 1.0f };							// [IMPORTER] logs will be Cyan.
+			textColour = LightCyan.C_Array();									// [IMPORTER] logs will be Cyan.
 		}
 		else if (strstr(logs[i], "[SCENE]") != nullptr)
 		{
 			if (!printSceneLogs)		{ continue; }
-			textColour = { 0.33f, 1.0f, 0.33f, 1.0f };							// [SCENE] logs will be Green.
+			textColour = LightGreen.C_Array();									// [SCENE] logs will be Green.
 		}
 		else
 		{
@@ -175,7 +174,7 @@ void E_Console::ConsoleOutput()
 	}
 
 	ImGui::PopStyleVar();
-
+	ConsoleScrollToBottom();
 	ImGui::EndChild();
 }
 
@@ -183,7 +182,7 @@ void E_Console::ConsoleScrollToBottom()
 {
 	if (scrollToBottom)
 	{
-		ImGui::SetScrollHereY(1.0f);											// Sets the scroll position to the given one. From 0.0f to 1.0f (From above first item to below last item).
+		ImGui::SetScrollHere(1.f);											// Sets the scroll position to the given one. From 0.0f to 1.0f (From above first item to below last item).
 
 		scrollToBottom = false;
 	}
