@@ -96,7 +96,10 @@ void E_Hierarchy::ProcessGameObject(GameObject* gameObject)
 	if (gameObject->isPrefab)
 		name += " (Prefab)";
 
-	if (ImGui::TreeNodeEx(name.c_str(), nodeFlags))
+	std::string treeNodeName = name.c_str();
+	treeNodeName += "##" + std::to_string(gameObject->GetUID());
+
+	if (ImGui::TreeNodeEx(treeNodeName.c_str(), nodeFlags))
 	{
 		if (!NodeIsRootObject(gameObject))													// If the game_object being processed is the root object, do not allow any interaction.
 		{
