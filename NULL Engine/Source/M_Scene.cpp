@@ -33,6 +33,7 @@
 #include "C_Light.h"
 
 #include "M_Scene.h"
+#include "M_ScriptManager.h"
 
 #include "MemoryManager.h"
 
@@ -428,6 +429,8 @@ bool M_Scene::LoadScene(const char* path)
 			if (found != nullptr) {
 				*(*item).second = found;
 			}
+			else
+				LOG("ScriptGameObject: Game Object with UID %d not found to resolve script pointer", (*item).first);
 		}
 		toAdd.clear();
 	}
@@ -438,6 +441,8 @@ bool M_Scene::LoadScene(const char* path)
 	LOG("Successfully Loaded Scene: %s", path);
 
 	//if (!CheckSceneLight()) AddSceneLight(App->renderer->GenerateSceneLight(Color(1.0f, 1.0f, 1.0f, 1.0f), Color(0.6, 0.6, 0.6, 0.5), Color(0.6, 0.6, 0.6, 0.5), LightType::DIRECTIONAL));
+	if (App->gameState == GameState::PLAY)
+		App->scriptManager->InitScripts();
 
 	return ret;
 }
