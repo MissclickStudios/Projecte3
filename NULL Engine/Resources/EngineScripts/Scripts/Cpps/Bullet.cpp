@@ -68,12 +68,24 @@ void Bullet::OnCollisionEnter(GameObject* object)
 	{
 		void* script = object->GetScript("Blurrg");
 		if (script)
+		{
+			if(freeze)
+				((Blurrg*)script)->Freeze(0.3f, 4.0f);
+			if (strong)
+				((Blurrg*)script)->Weaken(2.0f, 0.1f);
 			((Blurrg*)script)->TakeDamage(damage);
+		}
 		else
 		{
 			script = object->GetScript("SandTrooper");
 			if (script)
+			{
+				if (freeze)
+					((SandTrooper*)script)->Freeze(0.3f, 4.0f);
+				if (strong)
+					((SandTrooper*)script)->Weaken(2.0f, 0.1f);
 				((SandTrooper*)script)->TakeDamage(damage);
+			}
 		}
 	}
 	else if (target == "player")
@@ -102,6 +114,9 @@ Bullet* CreateBullet()
 
 	INSPECTOR_DRAGABLE_FLOAT(script->damage);
 	INSPECTOR_DRAGABLE_FLOAT(script->autodestruct);
+
+	INSPECTOR_CHECKBOX_BOOL(script->freeze);
+	INSPECTOR_CHECKBOX_BOOL(script->strong);
 
 	return script;
 }

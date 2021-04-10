@@ -7,6 +7,7 @@
 #include "C_Transform.h"
 #include "C_RigidBody.h"
 #include "C_Mesh.h"
+#include "C_Material.h"
 
 #include "Blurrg.h"
 #include "Player.h"
@@ -17,10 +18,19 @@ Blurrg::Blurrg()
 	dashColdown.Stop();
 	dashCharge.Stop();
 	restTimer.Stop();
+
+	freezeTimer.Stop();
 }
 
 Blurrg::~Blurrg()
 {
+}
+
+void Blurrg::Awake()
+{
+	for (uint i = 0; i < gameObject->childs.size(); ++i)
+		if (gameObject->childs[i]->GetComponent<C_Mesh>())
+			mesh = gameObject->childs[i];
 }
 
 void Blurrg::Update()
@@ -49,18 +59,53 @@ void Blurrg::Update()
 	if (!rigidBody || rigidBody->IsStatic())
 		return;
 
+	attackModifier = 1;
+	defenseModifier = 1;
+	Color color = Color(150.0f / 255.0f, 150.0f / 255.0f, 150.0f / 255.0f);
+	if (freezeTimer.IsActive())
+	{
+		if (freezeTimer.ReadSec() >= freezeDuration)
+		{
+			freezeTimer.Stop();
+		}
+		else
+		{
+			speedModifier = 0.3f;
+			color = Color(20.0f / 255.0f, 220.0f / 255.0f, 255.0f / 255.0f);
+		}
+	}
+	else
+		speedModifier = 1;
+
+	if (weakTimer.IsActive())
+	{
+		if (weakTimer.ReadSec() >= weakDuration)
+		{
+			weakTimer.Stop();
+		}
+		else
+		{
+			color = Color(250.0f / 255.0f, 20.0f / 255.0f, 10.0f / 255.0f);
+		}
+	}
+	else
+		defenseModifier = 1;
+
+	C_Material* material = mesh->GetComponent<C_Material>();
+	material->SetMaterialColour(color);
+
 	if (!restTimer.IsActive())
 	{
 		if (dashCharge.IsActive())
 		{
 			// Dash
-			if (dashCharge.ReadSec() >= dashingCharge)
+			if (dashCharge.ReadSec() >= dashingCharge / speedModifier)
 			{
 				dashCharge.Stop();
 				dashColdown.Start();
 				dashTime.Start();
 
-				rigidBody->SetLinearVelocity(direction * dashSpeed);
+				rigidBody->SetLinearVelocity(direction * dashSpeed * speedModifier);
 			}
 		}
 		else if (!dashTime.IsActive())
@@ -70,7 +115,7 @@ void Blurrg::Update()
 			if (distance < detectionRange)
 			{
 				// Move
-				direction *= speed;
+				direction *= speed * speedModifier;
 				rigidBody->SetLinearVelocity(direction);
 
 				if (dashColdown.IsActive())
@@ -85,30 +130,26 @@ void Blurrg::Update()
 				}
 			}
 		}
-		else if (dashTime.ReadSec() >= dashingTime)
+		else if (dashTime.ReadSec() >= dashingTime / speedModifier)
 		{
 			dashTime.Stop();
 			restTimer.Start();
-			rigidBody->SetLinearVelocity(direction * restSpeed);
+			rigidBody->SetLinearVelocity(direction * restSpeed * speedModifier);
 		}
 	}
 	else
 	{
-		if (restTimer.ReadSec() >= dashRest)
+		if (restTimer.ReadSec() >= dashRest / speedModifier)
 			restTimer.Stop();
 
 		float2 currentDir(direction.x, direction.z);
 		float currentRad = currentDir.AimedAngle();
-		currentRad += 0.05;
+		currentRad += 0.05 * speedModifier;
 		direction.x = cos(currentRad);
 		direction.z = sin(currentRad);
 
-		if (gameObject->childs.size())
-		{
-			GameObject* mesh = gameObject->childs[0];
-			if (mesh)
-				mesh->transform->SetLocalRotation(float3(DegToRad(-90), 0, currentRad));
-		}
+		if (mesh)
+			mesh->transform->SetLocalRotation(float3(DegToRad(-90), 0, currentRad));
 	}
 }
 
@@ -125,15 +166,29 @@ void Blurrg::OnCollisionEnter(GameObject* object)
 			hitDamage = dashDamage;
 
 		Player* script = (Player*)object->GetComponent<C_Script>()->GetScriptData();
-		script->TakeDamage(hitDamage);
+		script->TakeDamage(hitDamage * attackModifier);
 	}
 }
 
 void Blurrg::TakeDamage(float damage)
 {
-	health -= damage;
+	health -= damage * defenseModifier;
 	if (health < 0.0f)
 		health = 0.0f;
+}
+
+void Blurrg::Freeze(float amount, float duration)
+{
+	speedModifier = amount;
+	freezeDuration = duration;
+	freezeTimer.Start();
+}
+
+void Blurrg::Weaken(float amount, float duration)
+{
+	defenseModifier = amount;
+	weakDuration = duration;
+	weakTimer.Start();
 }
 
 // Return normalized vector 3 of the direction the player is at
@@ -159,6 +214,12 @@ float3 Blurrg::LookingAt()
 			float rad = -lookVector.AimedAngle() + DegToRad(90);
 			gameObject->childs[i]->transform->SetLocalRotation(float3(DegToRad(-90), 0, rad));
 		}
+
+	if (mesh)
+	{
+		float rad = -lookVector.AimedAngle() + DegToRad(90);
+		mesh->transform->SetLocalRotation(float3(DegToRad(-90), 0, rad));
+	}
 
 	return { lookVector.x, 0, lookVector.y };
 }

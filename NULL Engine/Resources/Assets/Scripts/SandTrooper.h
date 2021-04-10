@@ -24,6 +24,8 @@ public:
 	void OnCollisionEnter(GameObject* object) override;
 
 	void TakeDamage(float damage);
+	void Freeze(float amount, float duration);
+	void Weaken(float amount, float duration);
 
 	// Movement
 	float speed = 10.0f;
@@ -60,6 +62,18 @@ private:
 	float3 direction = float3::zero;
 
 	Timer reloadTimer;
+
+	// States
+	float speedModifier = 1;
+	float attackModifier = 1;
+	float defenseModifier = 1;
+
+	float freezeDuration = 0.0f;
+	Timer freezeTimer;
+	float weakDuration = 0.0f;
+	Timer weakTimer;
+
+	GameObject* mesh = nullptr;
 };
 
 

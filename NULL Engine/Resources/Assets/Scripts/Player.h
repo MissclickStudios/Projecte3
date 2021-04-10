@@ -34,6 +34,8 @@ public:
 	void CleanUp()override;
 
 	void TakeDamage(float damage);
+	void BlasterStrongShots();
+	void SniperFreezingShots();
 
 	PlayerState state;
 
@@ -63,6 +65,8 @@ public:
 
 	bool blasterAutomatic = true;
 
+	bool strongShots = false;
+
 	Weapon* blaster = nullptr;
 	Prefab blasterBullet;
 
@@ -75,6 +79,8 @@ public:
 	float sniperReloadTime = 5.0f;
 
 	bool sniperAutomatic = false;
+
+	bool freezingShots = false;
 
 	Weapon* sniper = nullptr;
 	Prefab sniperBullet;

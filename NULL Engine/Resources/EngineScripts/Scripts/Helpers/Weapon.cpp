@@ -174,7 +174,7 @@ void Weapon::DisableProjectile(uint index)
 	projectiles[index]->inUse = false;
 }
 
-bool Weapon::SandTrooperShoot(float3 direction)
+bool Weapon::SandTrooperShoot(float3 direction, float modifier)
 {
 	if (ammo > 0)
 	{
@@ -193,7 +193,7 @@ bool Weapon::SandTrooperShoot(float3 direction)
 
 				return true;
 			}
-			else if (fireRateTimer.ReadSec() >= fireRate)
+			else if (fireRateTimer.ReadSec() >= fireRate / modifier)
 			{
 				FireProjectile(direction);
 				fireRateTimer.Stop();

@@ -71,6 +71,8 @@ void Player::Update()
 		return;
 	}
 
+	Movement();
+
 	if (!blaster)
 		blaster = new Weapon(gameObject, blasterBullet, 10u, blasterMaxAmmo, blasterSpeed, blasterRate, blasterAutomatic);
 	blaster->Update();
@@ -78,7 +80,10 @@ void Player::Update()
 		sniper = new Weapon(gameObject, sniperBullet, 2u, sniperMaxAmmo, sniperSpeed, sniperRate, sniperAutomatic);
 	sniper->Update();
 
-	Movement();
+	if (strongShots)
+		BlasterStrongShots();
+	if (freezingShots)
+		SniperFreezingShots();
 
 	blasterAmmo = blaster->ammo;
 	sniperAmmo = sniper->ammo;
@@ -129,6 +134,20 @@ void Player::TakeDamage(float damage)
 		if (invulnerabilityTimer.ReadSec() >= invulnerability)
 			invulnerabilityTimer.Stop();
 	}
+}
+
+void Player::BlasterStrongShots()
+{
+	strongShots = false;
+	for (uint i = 0; i < blaster->projectilesNum; ++i)
+		((Bullet*)blaster->projectiles[i]->object->GetScript("Bullet"))->strong = true;
+}
+
+void Player::SniperFreezingShots()
+{
+	freezingShots = false;
+	for (uint i = 0; i < sniper->projectilesNum; ++i)
+		((Bullet*)sniper->projectiles[i]->object->GetScript("Bullet"))->freeze = true;
 }
 
 void Player::Animations()
@@ -568,6 +587,7 @@ Player* CreatePlayer()
 	INSPECTOR_DRAGABLE_FLOAT(script->blasterReloadTime);
 
 	INSPECTOR_CHECKBOX_BOOL(script->blasterAutomatic);
+	INSPECTOR_CHECKBOX_BOOL(script->strongShots);
 
 	// Sniper
 	INSPECTOR_PREFAB(script->sniperBullet);
@@ -580,6 +600,7 @@ Player* CreatePlayer()
 	INSPECTOR_DRAGABLE_FLOAT(script->sniperReloadTime);
 
 	INSPECTOR_CHECKBOX_BOOL(script->sniperAutomatic);
+	INSPECTOR_CHECKBOX_BOOL(script->freezingShots);
 
 	return script;
 }

@@ -27,6 +27,10 @@ public:
 
 	float autodestruct = 3.0f;
 
+	// Effects
+	bool freeze = false;
+	bool strong = false;
+
 private:
 
 	std::string target;

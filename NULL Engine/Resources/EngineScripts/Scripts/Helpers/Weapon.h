@@ -21,7 +21,7 @@ public:
 
 	void DisableProjectile(uint index);
 
-	bool SandTrooperShoot(float3 direction);
+	bool SandTrooperShoot(float3 direction, float modifier);
 
 	float projectileSpeed = 100.0f;
 	float fireRate = 0.25f;
