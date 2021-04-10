@@ -38,7 +38,10 @@ enum class PlayerState
 	IDLE,
 	RUNNING,
 	DASHING,
-	SHOOTING
+	SHOOTING_BLASTER,
+	SHOOTING_SNIPER,
+	RELOADING_BLASTER,
+	RELOADING_SNIPER
 };
 
 Player::Player() : Script(), state(PlayerState::IDLE)
@@ -161,10 +164,28 @@ void Player::Animations()
 			aAnimator->PlayClip("Dashing", 0u);
 		}
 		break;
-	case PlayerState::SHOOTING:
+	case PlayerState::SHOOTING_BLASTER:
 		if (currentClip != nullptr && clipName != "Shooting")
 		{
 			aAnimator->PlayClip("Shooting", 0u);
+		}
+		break;
+	case PlayerState::SHOOTING_SNIPER:
+		if (currentClip != nullptr && clipName != "Shooting")
+		{
+			aAnimator->PlayClip("Shooting", 0u);
+		}
+		break;
+	case PlayerState::RELOADING_BLASTER:
+		if (currentClip != nullptr && clipName != "Shooting")
+		{
+			//aAnimator->PlayClip("Reloading", 0u);
+		}
+		break;
+	case PlayerState::RELOADING_SNIPER:
+		if (currentClip != nullptr && clipName != "Shooting")
+		{
+			//aAnimator->PlayClip("Reloading", 0u);
 		}
 		break;
 	}
@@ -310,12 +331,17 @@ void Player::Shooting()
 				|| blasterAmmo <= 0)
 				blasterReloadTimer.Start();
 			else
-				shooting = blaster->Shoot(lastAim);
+				if (blaster->Shoot(lastAim))
+					state = PlayerState::SHOOTING_BLASTER;
 		}
-		else if (blasterReloadTimer.ReadSec() >= blasterReloadTime)
+		else
 		{
-			blaster->Reload();
-			blasterReloadTimer.Stop();
+			state = PlayerState::RELOADING_BLASTER;
+			if (blasterReloadTimer.ReadSec() >= blasterReloadTime)
+			{
+				blaster->Reload();
+				blasterReloadTimer.Stop();
+			}
 		}
 	}
 	else
@@ -326,17 +352,19 @@ void Player::Shooting()
 				|| sniperAmmo <= 0)
 				sniperReloadTimer.Start();
 			else
-				shooting = sniper->Shoot(lastAim);
+				if(sniper->Shoot(lastAim))
+					state = PlayerState::SHOOTING_SNIPER;
 		}
-		else if (sniperReloadTimer.ReadSec() >= sniperReloadTime)
+		else
 		{
-			sniper->Reload();
-			sniperReloadTimer.Stop();
+			state = PlayerState::RELOADING_SNIPER;
+			if (sniperReloadTimer.ReadSec() >= sniperReloadTime)
+			{
+				sniper->Reload();
+				sniperReloadTimer.Stop();
+			}
 		}
 	}
-
-	if(shooting)
-		state = PlayerState::SHOOTING;
 }
 
 float2 Player::MousePositionToWorldPosition(float mapPositionY)
