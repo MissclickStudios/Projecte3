@@ -318,7 +318,7 @@ void M_EngineScriptManager::DeSerializeAllScripts(const ParsonArray& scriptsArra
 						std::vector<InspectorScriptData>::iterator item =cScript->inspectorVariables.begin();
 						for(item;item != cScript->inspectorVariables.end();++item)
 						{
-							if ((*item).variableName == variableName) 
+							if (type == (*item).variableType && (*item).variableName == variableName)
 							{
 								switch (type)
 								{

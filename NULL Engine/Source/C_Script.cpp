@@ -132,32 +132,35 @@ bool C_Script::LoadState(ParsonNode& root)
 		if (!inspectorVariables.empty() && root.GetBool("HasInspector"))
 		{
 			ParsonArray variablesToLoad = root.GetArray("InspectorVariables");
-			for (int i = 0; i < variablesToLoad.size; ++i)
-			{
-				ParsonNode variable = variablesToLoad.GetNode(i);
-				inspectorVariables[i].variableType = (InspectorScriptData::DataType)variable.GetInteger("Type");
-				inspectorVariables[i].variableName = variable.GetString("Name");
-				switch (inspectorVariables[i].variableType)
+			for (int i = 0; i < inspectorVariables.size(); ++i) {
+				for (int j = 0; j < variablesToLoad.size; ++j)
 				{
-				case InspectorScriptData::DataType::INT:
-					*(int*)inspectorVariables[i].ptr = variable.GetInteger("int"); break;
-				case InspectorScriptData::BOOL:
-					*(bool*)inspectorVariables[i].ptr = variable.GetBool("bool"); break;
-				case InspectorScriptData::DataType::FLOAT:
-					*(float*)inspectorVariables[i].ptr = variable.GetNumber("float"); break;
-				case InspectorScriptData::FLOAT3:
-					(*(float3*)inspectorVariables[i].ptr).x = variable.GetNumber("float3x"); break;
-					(*(float3*)inspectorVariables[i].ptr).y = variable.GetNumber("float3y"); break;
-					(*(float3*)inspectorVariables[i].ptr).z = variable.GetNumber("float3z"); break;
-				case InspectorScriptData::STRING:
-					*(std::string*)inspectorVariables[i].ptr = variable.GetString("string"); break;
-				case InspectorScriptData::DataType::PREFAB:
-					*(Prefab*)inspectorVariables[i].ptr = App->resourceManager->prefabs[(unsigned int)variable.GetInteger("prefab")]; break;
-				case InspectorScriptData::DataType::GAMEOBJECT: //TODO: FINISH THIS !!!!
-					uint32 id = variable.GetInteger("gameobject");
-					if (id != 0)
-						App->scene->ResolveScriptGoPointer(id, inspectorVariables[i].obj);
-					break;
+					ParsonNode variable = variablesToLoad.GetNode(j);
+					if (inspectorVariables[i].variableType == (InspectorScriptData::DataType)variable.GetInteger("Type") && !strcmp(inspectorVariables[i].variableName.c_str(), variable.GetString("Name")))
+					{
+						switch (inspectorVariables[i].variableType)
+						{
+						case InspectorScriptData::DataType::INT:
+							*(int*)inspectorVariables[i].ptr = variable.GetInteger("int"); break;
+						case InspectorScriptData::BOOL:
+							*(bool*)inspectorVariables[i].ptr = variable.GetBool("bool"); break;
+						case InspectorScriptData::DataType::FLOAT:
+							*(float*)inspectorVariables[i].ptr = variable.GetNumber("float"); break;
+						case InspectorScriptData::FLOAT3:
+							(*(float3*)inspectorVariables[i].ptr).x = variable.GetNumber("float3x"); break;
+							(*(float3*)inspectorVariables[i].ptr).y = variable.GetNumber("float3y"); break;
+							(*(float3*)inspectorVariables[i].ptr).z = variable.GetNumber("float3z"); break;
+						case InspectorScriptData::STRING:
+							*(std::string*)inspectorVariables[i].ptr = variable.GetString("string"); break;
+						case InspectorScriptData::DataType::PREFAB:
+							*(Prefab*)inspectorVariables[i].ptr = App->resourceManager->prefabs[(unsigned int)variable.GetInteger("prefab")]; break;
+						case InspectorScriptData::DataType::GAMEOBJECT: //TODO: FINISH THIS !!!!
+							uint32 id = variable.GetInteger("gameobject");
+							if (id != 0)
+								App->scene->ResolveScriptGoPointer(id, inspectorVariables[i].obj);
+							break;
+						}
+					}
 				}
 			}
 		}

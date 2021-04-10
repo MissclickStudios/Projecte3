@@ -428,6 +428,8 @@ bool M_Scene::LoadScene(const char* path)
 			if (found != nullptr) {
 				*(*item).second = found;
 			}
+			else
+				LOG("ScriptGameObject: Game Object with UID %d not found to resolve script pointer", (*item).first);
 		}
 		toAdd.clear();
 	}

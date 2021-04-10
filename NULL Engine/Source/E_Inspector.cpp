@@ -1011,6 +1011,10 @@ void E_Inspector::DrawBoxColliderComponent(C_BoxCollider* cCollider)
 
 			ImGui::Separator();
 
+			std::string* a = cCollider->GetFil();
+			if(a)
+				ImGui::Text(a->c_str());
+
 			bool isTrigger = cCollider->IsTrigger();
 			if (ImGui::Checkbox("Is Trigger##1", &isTrigger))
 				cCollider->SetTrigger(isTrigger);

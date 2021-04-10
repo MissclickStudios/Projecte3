@@ -15,6 +15,7 @@ Blurrg::Blurrg()
 	dashTime.Stop();
 	dashColdown.Stop();
 	dashCharge.Stop();
+	restTimer.Stop();
 }
 
 Blurrg::~Blurrg()
@@ -47,42 +48,67 @@ void Blurrg::Update()
 	if (!rigidBody || rigidBody->IsStatic())
 		return;
 
-	if (dashCharge.IsActive())
+	if (!restTimer.IsActive())
 	{
-		// Dash
-		if (dashCharge.ReadSec() >= dashingCharge)
+		if (dashCharge.IsActive())
 		{
-			dashCharge.Stop();
-			dashColdown.Start();
-			dashTime.Start();
-
-			rigidBody->SetLinearVelocity(direction * dashSpeed);
-		}
-	}
-	else if (!dashTime.IsActive())
-	{
-		direction = LookingAt();
-
-		if (distance < detectionRange)
-		{
-			// Move
-			direction *= speed;
-			rigidBody->SetLinearVelocity(direction);
-
-			if (dashColdown.IsActive())
+			// Dash
+			if (dashCharge.ReadSec() >= dashingCharge)
 			{
-				if (dashColdown.ReadSec() >= dashingColdown)
-					dashColdown.Stop();
-			}
-			else if (distance < dashRange)
-			{
-				rigidBody->SetLinearVelocity(float3::zero);
-				dashCharge.Start();				// Start Charging Dash
+				dashCharge.Stop();
+				dashColdown.Start();
+				dashTime.Start();
+
+				rigidBody->SetLinearVelocity(direction * dashSpeed);
 			}
 		}
+		else if (!dashTime.IsActive())
+		{
+			direction = LookingAt();
+
+			if (distance < detectionRange)
+			{
+				// Move
+				direction *= speed;
+				rigidBody->SetLinearVelocity(direction);
+
+				if (dashColdown.IsActive())
+				{
+					if (dashColdown.ReadSec() >= dashingColdown)
+						dashColdown.Stop();
+				}
+				else if (distance < dashRange)
+				{
+					rigidBody->SetLinearVelocity(float3::zero);
+					dashCharge.Start();				// Start Charging Dash
+				}
+			}
+		}
+		else if (dashTime.ReadSec() >= dashingTime)
+		{
+			dashTime.Stop();
+			restTimer.Start();
+			rigidBody->SetLinearVelocity(direction * restSpeed);
+		}
 	}
-	else if (dashTime.ReadSec() >= dashingTime)
-		dashTime.Stop();
+	else
+	{
+		if (restTimer.ReadSec() >= dashRest)
+			restTimer.Stop();
+
+		float2 currentDir(direction.x, direction.z);
+		float currentRad = currentDir.AimedAngle();
+		currentRad += 0.05;
+		direction.x = cos(currentRad);
+		direction.z = sin(currentRad);
+
+		if (gameObject->childs.size())
+		{
+			GameObject* mesh = gameObject->childs[0];
+			if (mesh)
+				mesh->transform->SetLocalRotation(float3(DegToRad(-90), 0, currentRad));
+		}
+	}
 }
 
 void Blurrg::CleanUp()
@@ -157,6 +183,9 @@ Blurrg* CreateBlurrg()
 	INSPECTOR_DRAGABLE_FLOAT(script->dashingColdown);
 
 	INSPECTOR_DRAGABLE_FLOAT(script->dashRange);
+
+	INSPECTOR_DRAGABLE_FLOAT(script->dashRest);
+	INSPECTOR_DRAGABLE_FLOAT(script->restSpeed);
 
 	// Health
 	INSPECTOR_DRAGABLE_FLOAT(script->health);
