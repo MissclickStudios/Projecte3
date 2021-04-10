@@ -535,7 +535,7 @@ GameObject:
   - component: {fileID: 1065322327}
   - component: {fileID: 1065322326}
   - component: {fileID: 1065322325}
-  - component: {fileID: 1065322330}
+  - component: {fileID: 1065322334}
   - component: {fileID: 1065322332}
   m_Layer: 0
   m_Name: Boss
@@ -623,43 +623,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1065322330
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1065322323}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 243a6ebb61e79b949bd7c39a0358a646, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  chasingTarget: {fileID: 1238239499}
-  chasingSpeed: 3
-  chasingTriggerDistance: 10
-  sAttack1Bullet: {fileID: 7330326984651472972, guid: 6b3f174fb5566e448a44a337d06a8fa4, type: 3}
-  sAttack1Target: {fileID: 1238239499}
-  sAttack1RightArm: {fileID: 1008433897}
-  sAttack1LeftArm: {fileID: 1410051889}
-  sAttack1Head: {fileID: 1979450334}
-  sAttack1BulletSpeed: 500
-  Target: {fileID: 527754796}
-  Boss: {fileID: 1065322328}
-  Speed: 10
-  moveSpeed: 10
-  SA1numProjectiles: 30
-  SA1projectileSpeed: 3
-  SA1projectile: {fileID: 7330326984651472972, guid: 6b3f174fb5566e448a44a337d06a8fa4, type: 3}
-  spiralTarget: {fileID: 527754796}
-  spiralBoss: {fileID: 1065322328}
-  spiralSpeed: 10
-  rotateSpeed: 500
-  circleSpeed: 5
-  circleWidth: 0
-  circleLength: 0
-  SA2ProjectilePrefab: {fileID: 7330326984651472972, guid: 6b3f174fb5566e448a44a337d06a8fa4, type: 3}
-  SA2projectileSpeed: 10
 --- !u!54 &1065322332
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -676,6 +639,42 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 36
   m_CollisionDetection: 0
+--- !u!114 &1065322334
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1065322323}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1483061ad7a508c47b7631cebadb9a13, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  chasingTarget: {fileID: 1238239499}
+  chasingSpeed: 3
+  chasingTriggerDistance: 10
+  sAttack1Bullet: {fileID: 7330326984651472972, guid: 6b3f174fb5566e448a44a337d06a8fa4, type: 3}
+  sAttack1Target: {fileID: 1238239499}
+  sAttack1RightArm: {fileID: 1008433897}
+  sAttack1LeftArm: {fileID: 1410051889}
+  sAttack1BulletSpeed: 500
+  Target: {fileID: 511980436}
+  Boss: {fileID: 1065322328}
+  Speed: 10
+  moveSpeed: 10
+  SA1numProjectiles: 40
+  SA1projectileSpeed: 60
+  SA1projectile: {fileID: 7330326984651472972, guid: 6b3f174fb5566e448a44a337d06a8fa4, type: 3}
+  spiralTarget: {fileID: 527754796}
+  spiralBoss: {fileID: 1065322328}
+  spiralSpeed: 10
+  rotateSpeed: 500
+  circleSpeed: 5
+  circleWidth: 0
+  circleLength: 0
+  SA2ProjectilePrefab: {fileID: 7330326984651472972, guid: 6b3f174fb5566e448a44a337d06a8fa4, type: 3}
+  SA2projectileSpeed: 10
 --- !u!1 &1132967022
 GameObject:
   m_ObjectHideFlags: 0
