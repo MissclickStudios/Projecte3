@@ -41,6 +41,7 @@ public:
 
 	// Character
 	float speed = 20.0f;
+	int coins = 0;
 
 	// Dash
 	float dashSpeed = 100.0f;

@@ -32,6 +32,7 @@ public:
 
 	float detectionRange = 40.0f;
 
+	Prefab coin;
 	GameObject* player = nullptr;
 
 	// Weapon

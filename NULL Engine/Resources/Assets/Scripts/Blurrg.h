@@ -2,6 +2,7 @@
 #include "Script.h"
 #include "ScriptMacros.h"
 
+#include "Prefab.h"
 #include "Timer.h"
 
 #include "MathGeoLib/include/Math/float3.h"
@@ -30,6 +31,7 @@ public:
 
 	float detectionRange = 40.0f;
 
+	Prefab coin;
 	GameObject* player = nullptr;
 
 	// Dash

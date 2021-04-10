@@ -20,7 +20,6 @@ public:
 SCRIPTS_FUNCTION CameraMovement* CreateCameraMovement() {
 	CameraMovement* script = new CameraMovement();
 
-	INSPECTOR_GAMEOBJECT(script->player);
 	INSPECTOR_DRAGABLE_FLOAT3(script->offset);
 
 	return script;

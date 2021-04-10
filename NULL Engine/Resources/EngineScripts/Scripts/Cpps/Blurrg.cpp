@@ -2,10 +2,12 @@
 #include "Log.h"
 
 #include "M_Scene.h"
+#include "M_ResourceManager.h"
 
 #include "GameObject.h"
 #include "C_Transform.h"
 #include "C_RigidBody.h"
+#include "C_BoxCollider.h"
 #include "C_Mesh.h"
 #include "C_Material.h"
 
@@ -40,6 +42,12 @@ void Blurrg::Update()
 		for (uint i = 0; i < gameObject->components.size(); ++i)
 			gameObject->components[i]->SetIsActive(false);
 		gameObject->SetIsActive(false);
+
+		GameObject* coinGo = App->resourceManager->LoadPrefab(coin.uid, App->scene->GetSceneRoot());
+		coinGo->GetComponent<C_BoxCollider>()->Update();
+		float3 position = gameObject->transform->GetWorldPosition();
+		position.y += 2;
+		coinGo->transform->SetWorldPosition(position);
 
 		return;
 	}
@@ -91,8 +99,11 @@ void Blurrg::Update()
 	else
 		defenseModifier = 1;
 
-	C_Material* material = mesh->GetComponent<C_Material>();
-	material->SetMaterialColour(color);
+	if (mesh)
+	{
+		C_Material* material = mesh->GetComponent<C_Material>();
+		material->SetMaterialColour(color);
+	}
 
 	if (!restTimer.IsActive())
 	{
@@ -231,7 +242,7 @@ Blurrg* CreateBlurrg()
 	// Movement
 	INSPECTOR_DRAGABLE_FLOAT(script->speed);
 	INSPECTOR_DRAGABLE_FLOAT(script->detectionRange);
-	INSPECTOR_GAMEOBJECT(script->player);
+	INSPECTOR_PREFAB(script->coin);
 
 	// Dash
 	INSPECTOR_DRAGABLE_FLOAT(script->dashSpeed);

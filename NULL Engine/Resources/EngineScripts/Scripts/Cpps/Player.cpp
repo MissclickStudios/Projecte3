@@ -562,6 +562,7 @@ Player* CreatePlayer()
 
 	// Character
 	INSPECTOR_DRAGABLE_FLOAT(script->speed);
+	INSPECTOR_DRAGABLE_INT(script->coins);
 
 	// Dash
 	INSPECTOR_DRAGABLE_FLOAT(script->dashSpeed);
