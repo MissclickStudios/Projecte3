@@ -13,15 +13,15 @@ C_2DAnimator::C_2DAnimator(GameObject* owner) : Component(owner, ComponentType::
 {
 	animationTimer.Stop();
 	animationCounter = 0;
-	animationFrames = 0;
 	animationStepTime = 30;
 
 	animationLoop = false;
 	animationPlaying = false;
 	playAnimation = false;
 
-	name = "ChangeWeapon";
-	GetAnimationSprites("ChangeWeapon");
+	playFromTheStartOnLoop = false;
+
+	name = "";
 }
 
 C_2DAnimator::~C_2DAnimator()
@@ -32,6 +32,13 @@ bool C_2DAnimator::Update()
 {
 	if (App->gameState != GameState::PLAY)
 		return true;
+
+
+	if (playFromTheStartOnLoop) 
+	{
+		PlayAnimation(true);
+		playFromTheStartOnLoop = false;
+	}
 
 	//Start a new animation
 	if (playAnimation) 
@@ -88,6 +95,7 @@ bool C_2DAnimator::SaveState(ParsonNode& root) const
 
 	root.SetNumber("Animation Step Time", (uint)animationStepTime);
 	root.SetBool("Animation Loop", animationLoop);
+	root.SetBool("Animation Set On Loop From Start", playFromTheStartOnLoop);
 
 	root.SetString("Name", name.c_str());
 
@@ -98,6 +106,7 @@ bool C_2DAnimator::LoadState(ParsonNode& root)
 {
 	animationStepTime = (uint)root.GetNumber("Animation Step Time");
 	animationLoop = root.GetBool("Animation Loop");
+	playFromTheStartOnLoop = root.GetBool("Animation Set On Loop From Start");
 
 	name = root.GetString("Name");
 	GetAnimationSprites(name.c_str());
@@ -120,12 +129,27 @@ int C_2DAnimator::GetAnimationStepTime()
 	return animationStepTime;
 }
 
+bool C_2DAnimator::IsAnimationPlaying()
+{
+	return animationPlaying;
+}
+
+void C_2DAnimator::SetAnimationPlayFromStart(bool x)
+{
+	playFromTheStartOnLoop = x;
+}
+
+bool C_2DAnimator::GetAnimationPlayFromStart()
+{
+	return playFromTheStartOnLoop;
+}
+
 const char* C_2DAnimator::GetName()
 {
 	return name.c_str();
 }
 
-void C_2DAnimator::ChangeName(char* name)
+void C_2DAnimator::ChangeName(const char* name)
 {
 	this->name = name;
 }
@@ -133,6 +157,7 @@ void C_2DAnimator::ChangeName(char* name)
 void C_2DAnimator::GetAnimationSprites(const char* name)
 {
 	animation.clear();
+	ChangeName(name);
 	App->resourceManager->GetAllTextures(animation, name);
 }
 
@@ -140,6 +165,10 @@ void C_2DAnimator::PlayAnimation(bool loop)
 {
 	playAnimation = true;
 	animationLoop = loop;
+}
+
+void C_2DAnimator::StopAnimation()
+{
 }
 
 void C_2DAnimator::AddTexture(R_Texture* tex)

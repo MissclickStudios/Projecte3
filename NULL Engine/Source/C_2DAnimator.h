@@ -25,6 +25,9 @@ public:
 	//Plays the animation
 	void PlayAnimation(bool loop);
 
+	//Stops current animation
+	void StopAnimation();
+
 	//Adds a texture to animation vector
 	void AddTexture(R_Texture* tex);
 
@@ -34,8 +37,13 @@ public:
 	void SetAnimationStepTime(int time);
 	int GetAnimationStepTime();
 
+	bool IsAnimationPlaying();
+
+	void SetAnimationPlayFromStart(bool x);
+	bool GetAnimationPlayFromStart();
+	
 	const char* GetName();
-	void ChangeName(char* name);
+	void ChangeName(const char* name);
 
 	void GetAnimationSprites(const char* name);
 
@@ -49,7 +57,6 @@ private:
 	std::vector<R_Texture*>		animation;
 	
 	int							animationCounter;
-	int							animationFrames;
 	uint						animationStepTime;
 
 	Timer						animationTimer;
@@ -57,6 +64,8 @@ private:
 	bool						animationLoop;
 	bool						animationPlaying;
 	bool						playAnimation;
+
+	bool						playFromTheStartOnLoop;
 
 	uint						currentFrameIdTexture;
 
