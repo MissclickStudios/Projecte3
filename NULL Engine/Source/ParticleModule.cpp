@@ -1,9 +1,12 @@
 #include "ParticleModule.h"
-#include "C_ParticleSystem.h"
+
+#include "GameObject.h"
 #include "Emitter.h"
 #include "EmitterInstance.h"
+#include "C_ParticleSystem.h"
 #include "C_Transform.h"
-#include "GameObject.h"
+#include "M_Camera3D.h"
+#include "Application.h"
 
 #include "MemoryManager.h"
 
@@ -16,7 +19,7 @@ void EmitterBase::Spawn(EmitterInstance* emitter, Particle* particle)
 	particle->position = position;
 
 	//temporary
-	Quat rotation = Quat::FromEulerXYZ(90, 0, 0);
+	Quat rotation = go->GetComponent<C_Transform>()->GetWorldRotation();
 	particle->worldRotation = rotation;
 }
 
@@ -134,7 +137,7 @@ void ParticleLifetime::Update(float dt, EmitterInstance* emitter)
 
 void ParticleBillboarding::Spawn(EmitterInstance* emitter, Particle* particle)
 {
-
+	particle->worldRotation = GetAlignmentRotation(particle->position, App->camera->GetCurrentCamera()->GetFrustum().WorldMatrix());
 }
 
 void ParticleBillboarding::Update(float dt, EmitterInstance* emitter)
@@ -144,12 +147,37 @@ void ParticleBillboarding::Update(float dt, EmitterInstance* emitter)
 		unsigned int particleIndex = emitter->particleIndices[i];
 		Particle* particle = &emitter->particles[particleIndex];
 
-		//particle->worldRotation = GetAlignmentRotation(particle->position, )
+		particle->worldRotation = GetAlignmentRotation(particle->position, App->camera->GetCurrentCamera()->GetFrustum().WorldMatrix());
 	}
 }
 
 Quat ParticleBillboarding::GetAlignmentRotation(const float3& position, const float4x4& cameraTransform)
 {
-	return Quat(0, 0, 0, 0);	
+	float3 N, U, R;
+	float3 direction = float3(cameraTransform.TranslatePart() - position).Normalized();
+	switch (type)
+	{
+	case(BillboardingType::ScreenAligned):
+	{
+		N = cameraTransform.WorldZ().Normalized().Neg();	// N is the inverse of the camera +Z
+		U = cameraTransform.WorldY().Normalized();			// U is the up vector from the camera (already perpendicular to N)
+		R = U.Cross(N).Normalized();						// R is the cross product between  U and N
+	}
+	break;
+	case(BillboardingType::WorldAligned):
+	{
+					// N is the normalized vector between the camera and gameobject position
+					// U is the up vector form the camera, only used to calculate R
+					// R is the cross product between U and N
+					// _U is the cross product between N and R
+	}
+	break;
+	case(BillboardingType::AxisAligned):
+	{
+					// We constrain one axis and rotate the rest towards the camera
+	}
+	}
+	
+	return Quat(float3x3(R, U, N));
 }
 

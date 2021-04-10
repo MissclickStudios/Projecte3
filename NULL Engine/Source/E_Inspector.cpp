@@ -1383,7 +1383,7 @@ void E_Inspector::DrawParticleSystemComponent(C_ParticleSystem* cParticleSystem)
 						cParticleSystem->EnginePreview(preview);
 					}
 
-					ImGui::Combo("###", &moduleType, "Add Module\0ParticleMovement\0ParticleColor\0ParticleLifetime");
+					ImGui::Combo("###", &moduleType, "Add Module\0ParticleMovement\0ParticleColor\0ParticleLifetime\0ParticleRotation\0ParticleSize\0ParticleBillboarding");
 
 					ImGui::SameLine();
 
@@ -1490,6 +1490,30 @@ void E_Inspector::DrawParticleSystemComponent(C_ParticleSystem* cParticleSystem)
 						}
 						break;
 						case(ParticleModule::Type::ParticleLifetime):
+						{
+							if (ImGui::CollapsingHeader("Particle Lifetime", &show, ImGuiTreeNodeFlags_DefaultOpen))
+							{
+								ParticleLifetime* _module = (ParticleLifetime*)module;
+
+								float originLifetime = _module->initialLifetime;
+								if (ImGui::InputFloat("InitialLifetime", &originLifetime, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
+									_module->initialLifetime = originLifetime;
+
+								bool hide = _module->hideLifetime;
+								if (ImGui::Checkbox("Hide Lifetime", &hide))
+								{
+									_module->hideLifetime = hide;
+								}
+
+								bool deleteModule = _module->eraseLifetime;
+								if (ImGui::Checkbox("Delete Lifetime", &deleteModule))
+								{
+									_module->eraseLifetime = deleteModule;
+								}
+							}
+						}
+						break;
+						case(ParticleModule::Type::ParticleBillboarding):
 						{
 							if (ImGui::CollapsingHeader("Particle Lifetime", &show, ImGuiTreeNodeFlags_DefaultOpen))
 							{
