@@ -59,6 +59,8 @@ bool C_UI_Button::CleanUp()
 {
 	bool ret = true;
 
+	App->uiSystem->DeleteActiveButton(this);
+	
 	return ret;
 }
 
@@ -178,8 +180,10 @@ bool C_UI_Button::LoadState(ParsonNode& root)
 
 	if (button.GetBool("IsHovered"))
 	{
-		state = UIButtonState::HOVERED;
+		if (App->uiSystem->hoveredButton != nullptr)
+			App->uiSystem->hoveredButton->SetState(UIButtonState::IDLE);
 		App->uiSystem->hoveredButton = this;
+		state = UIButtonState::HOVERED;
 	}
 	else
 		state = UIButtonState::IDLE;

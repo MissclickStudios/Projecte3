@@ -100,7 +100,7 @@ UpdateStatus M_UISystem::Update(float dt)
 {
 	UpdateActiveButtons();
 	CheckButtonStates();
-	
+
 	if (hoveredDecorationL != nullptr && hoveredDecorationR != nullptr)
 		UpdateHoveredDecorations();
 
@@ -115,6 +115,11 @@ UpdateStatus M_UISystem::PostUpdate(float dt)
 // Called before quitting
 bool M_UISystem::CleanUp()
 {
+	for (std::vector<C_UI_Button*>::iterator it = activeButtons.begin(); it != activeButtons.end(); it++)
+	{
+		//RELEASE(*it);
+	}
+	activeButtons.clear();
 	return true;
 }
 
