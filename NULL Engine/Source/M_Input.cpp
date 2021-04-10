@@ -88,7 +88,7 @@ UpdateStatus M_Input::PreUpdate(float dt)
 {
 	OPTICK_CATEGORY("M_Input PreUpdate", Optick::Category::Module)
 
-	OPTICK_CATEGORY("M_Input PreUpdate: Mouse", Optick::Category::Input)
+	OPTICK_CATEGORY("M_Input PreUpdate: Keyboard", Optick::Category::Input)
 	SDL_PumpEvents();
 
 	const Uint8* keys = SDL_GetKeyboardState(NULL);
