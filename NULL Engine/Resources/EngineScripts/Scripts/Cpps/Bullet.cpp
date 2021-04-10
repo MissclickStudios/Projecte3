@@ -35,7 +35,13 @@ void Bullet::Update()
 		gameObject->SetIsActive(false);
 
 		if (target == "enemies")
-			((Player*)shooter->GetScript("Player"))->weapon->DisableProjectile(index);
+		{
+			Player* player = (Player*)shooter->GetScript("Player");
+			if(player->weaponUsed == 1)
+				player->blaster->DisableProjectile(index);
+			else
+				player->sniper->DisableProjectile(index);
+		}
 		else if (target == "player")
 		{
 			((SandTrooper*)shooter->GetScript("SandTrooper"))->weapon->DisableProjectile(index);

@@ -36,7 +36,6 @@ C_RigidBody::C_RigidBody(GameObject* owner) : Component(owner, ComponentType::RI
 
 C_RigidBody::~C_RigidBody()
 {
-
 }
 
 bool C_RigidBody::Update()

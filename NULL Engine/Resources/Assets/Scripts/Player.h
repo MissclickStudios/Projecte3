@@ -40,16 +40,6 @@ public:
 	// Character
 	float speed = 20.0f;
 
-	// Weapon
-	float projectileSpeed;
-	float fireRate;
-	int ammo;
-	int maxAmmo;
-	bool automatic;
-
-	Weapon* weapon;
-	Prefab projectilePrefab;
-
 	// Dash
 	float dashSpeed = 100.0f;
 	float dashingTime = 0.2f;
@@ -59,6 +49,35 @@ public:
 	float health = 3.0f;
 	float maxHealth = 3.0f;
 	float invulnerability = 1.0f;
+
+	// Weapons
+	int weaponUsed = 1;
+
+	// Blaster
+	float blasterSpeed = 100.0f;
+	float blasterRate = 0.25f;
+
+	int blasterAmmo = 10;
+	int blasterMaxAmmo = 10;
+	float blasterReloadTime = 3.0f;
+
+	bool blasterAutomatic = true;
+
+	Weapon* blaster = nullptr;
+	Prefab blasterBullet;
+
+	// Sniper
+	float sniperSpeed = 200.0f;
+	float sniperRate = 0.0f;
+
+	int sniperAmmo = 1;
+	int sniperMaxAmmo = 1;
+	float sniperReloadTime = 5.0f;
+
+	bool sniperAutomatic = false;
+
+	Weapon* sniper = nullptr;
+	Prefab sniperBullet;
 
 private:
 
@@ -90,7 +109,10 @@ private:
 	C_Animator* aAnimator = nullptr;
 	bool playAnim = false;
 
-	// Weapon
+	// Weapons
+	Timer blasterReloadTimer;
+	Timer sniperReloadTimer;
+
 	R_Texture* ammoTex[11] = { 0 };
 	bool storedAmmoTex = false;
 

@@ -6,6 +6,7 @@
 #include "GameObject.h"
 #include "C_Transform.h"
 #include "C_RigidBody.h"
+#include "C_Mesh.h"
 
 #include "SandTrooper.h"
 #include "Player.h"
@@ -21,6 +22,17 @@ SandTrooper::~SandTrooper()
 {
 }
 
+void SandTrooper::Awake()
+{
+	if (!player)
+	{
+		std::vector<GameObject*>* objects = App->scene->GetGameObjects();
+		for (uint i = 0; i < objects->size(); ++i)
+			if((*objects)[i]->GetScript("Player"))
+				player = (*objects)[i];
+	}
+}
+
 void SandTrooper::Update()
 {
 	if (health <= 0.0f)
@@ -33,15 +45,7 @@ void SandTrooper::Update()
 	}
 
 	if (!player)
-	{
-		std::vector<GameObject*>* objects = App->scene->GetGameObjects();
-		for (uint i = 0; i < objects->size(); ++i)
-			if((*objects)[i]->GetScript("Player"))
-				player = (*objects)[i];
-
-		if (!player)
-			return;
-	}
+		return;
 
 	if (!weapon)
 		weapon = new Weapon(gameObject, projectilePrefab, 3u, maxAmmo, projectileSpeed, fireRate, automatic);
@@ -105,15 +109,12 @@ float3 SandTrooper::LookingAt()
 		lookVector.Normalize();
 	float rad = lookVector.AimedAngle();
 
-	if (gameObject->childs.size())
-	{
-		GameObject* mesh = gameObject->childs[0];
-		if (mesh)
+	for (uint i = 0; i < gameObject->childs.size(); ++i)
+		if (gameObject->childs[i]->GetComponent<C_Mesh>())
 		{
 			float rad = -lookVector.AimedAngle() + DegToRad(135);
-			mesh->transform->SetLocalRotation(float3(DegToRad(-90), 0, rad));
+			gameObject->childs[i]->transform->SetLocalRotation(float3(DegToRad(-90), 0, rad));
 		}
-	}
 
 	return { lookVector.x, 0, lookVector.y };
 }
@@ -125,7 +126,7 @@ SandTrooper* CreateSandTrooper()
 	// Movement
 	INSPECTOR_DRAGABLE_FLOAT(script->speed);
 	INSPECTOR_DRAGABLE_FLOAT(script->detectionRange);
-	//INSPECTOR_GAMEOBJECT(script->player);
+	INSPECTOR_GAMEOBJECT(script->player);
 
 	// Weapon
 	INSPECTOR_DRAGABLE_FLOAT(script->projectileSpeed);

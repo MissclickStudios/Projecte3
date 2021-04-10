@@ -68,13 +68,17 @@ void Player::Update()
 		return;
 	}
 
-	if (!weapon)
-		weapon = new Weapon(gameObject, projectilePrefab, 10u, maxAmmo, projectileSpeed, fireRate, automatic);
-	weapon->Update();
+	if (!blaster)
+		blaster = new Weapon(gameObject, blasterBullet, 10u, blasterMaxAmmo, blasterSpeed, blasterRate, blasterAutomatic);
+	blaster->Update();
+	if (!sniper)
+		sniper = new Weapon(gameObject, sniperBullet, 2u, sniperMaxAmmo, sniperSpeed, sniperRate, sniperAutomatic);
+	sniper->Update();
 
 	Movement();
 
-	ammo = weapon->ammo;
+	blasterAmmo = blaster->ammo;
+	sniperAmmo = sniper->ammo;
 	Shooting();
 
 	if (App->input->GetKey(SDL_SCANCODE_K) == KeyState::KEY_DOWN && hearts != nullptr)
@@ -89,8 +93,8 @@ void Player::Update()
 
 void Player::CleanUp()
 {
-	delete weapon; // Destructor calls CleanUp
-	weapon = nullptr;
+	delete blaster; // Destructor calls CleanUp
+	blaster = nullptr;
 
 	if (storedAmmoTex)
 	{
@@ -259,8 +263,18 @@ void Player::Shooting()
 	int aimY = 0;
 	// Controller aim
 	GetAimVectorAxis(aimX, aimY);
-	// Mouse aim
-	// TODO
+	// Keyboard movement
+	if (aimX + aimY == 0)
+	{
+		if (App->input->GetKey(SDL_SCANCODE_UP) == KeyState::KEY_REPEAT)
+			aimY = -MAX_JOYSTICK_INPUT;
+		if (App->input->GetKey(SDL_SCANCODE_DOWN) == KeyState::KEY_REPEAT)
+			aimY = MAX_JOYSTICK_INPUT;
+		if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KeyState::KEY_REPEAT)
+			aimX = MAX_JOYSTICK_INPUT;
+		if (App->input->GetKey(SDL_SCANCODE_LEFT) == KeyState::KEY_REPEAT)
+			aimX = -MAX_JOYSTICK_INPUT;
+	}
 
 	float3 direction = { (float)aimX, 0, (float)aimY };
 	if (aimX == 0 && aimY == 0)
@@ -273,18 +287,55 @@ void Player::Shooting()
 		lastAim = direction;
 	}
 
-	if (gameObject->childs.size())
-	{
-		GameObject* mesh = gameObject->childs[0];
-		if (mesh)
+	for (uint i = 0; i < gameObject->childs.size(); ++i)
+		if (gameObject->childs[i]->GetComponent<C_Mesh>())
 		{
 			float2 dir = { lastAim.x, -lastAim.z };
 			float rad = dir.AimedAngle();
-			mesh->transform->SetLocalRotation(float3(DegToRad(-90), 0, rad));
+			gameObject->childs[i]->transform->SetLocalRotation(float3(DegToRad(-90), 0, rad));
+		}
+
+	if (App->input->GetKey(SDL_SCANCODE_F) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(1) == ButtonState::BUTTON_DOWN)
+		if (weaponUsed == 1)
+			weaponUsed = 2;
+		else
+			weaponUsed = 1;
+
+	bool shooting = false;
+	if (weaponUsed == 1)
+	{
+		if (!blasterReloadTimer.IsActive())
+		{
+			if ((App->input->GetKey(SDL_SCANCODE_R) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(2) == ButtonState::BUTTON_DOWN)
+				|| blasterAmmo <= 0)
+				blasterReloadTimer.Start();
+			else
+				shooting = blaster->Shoot(lastAim);
+		}
+		else if (blasterReloadTimer.ReadSec() >= blasterReloadTime)
+		{
+			blaster->Reload();
+			blasterReloadTimer.Stop();
+		}
+	}
+	else
+	{
+		if (!sniperReloadTimer.IsActive())
+		{
+			if ((App->input->GetKey(SDL_SCANCODE_R) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(2) == ButtonState::BUTTON_DOWN)
+				|| sniperAmmo <= 0)
+				sniperReloadTimer.Start();
+			else
+				shooting = sniper->Shoot(lastAim);
+		}
+		else if (sniperReloadTimer.ReadSec() >= sniperReloadTime)
+		{
+			sniper->Reload();
+			sniperReloadTimer.Stop();
 		}
 	}
 
-	if (weapon->Shoot(lastAim))
+	if(shooting)
 		state = PlayerState::SHOOTING;
 }
 
@@ -465,17 +516,6 @@ Player* CreatePlayer()
 	// Character
 	INSPECTOR_DRAGABLE_FLOAT(script->speed);
 
-	// Weapon
-	INSPECTOR_DRAGABLE_FLOAT(script->projectileSpeed);
-	INSPECTOR_DRAGABLE_FLOAT(script->fireRate);
-
-	INSPECTOR_DRAGABLE_INT(script->ammo);
-	INSPECTOR_DRAGABLE_INT(script->maxAmmo);
-
-	INSPECTOR_CHECKBOX_BOOL(script->automatic);
-
-	INSPECTOR_PREFAB(script->projectilePrefab);
-
 	// Dash
 	INSPECTOR_DRAGABLE_FLOAT(script->dashSpeed);
 	INSPECTOR_DRAGABLE_FLOAT(script->dashingTime);
@@ -485,6 +525,33 @@ Player* CreatePlayer()
 	INSPECTOR_DRAGABLE_FLOAT(script->health);
 	INSPECTOR_DRAGABLE_FLOAT(script->maxHealth);
 	INSPECTOR_DRAGABLE_FLOAT(script->invulnerability);
+
+	// Weapons
+	INSPECTOR_SLIDER_INT(script->weaponUsed, 1, 2);
+
+	// Blaster
+	INSPECTOR_PREFAB(script->blasterBullet);
+
+	INSPECTOR_DRAGABLE_FLOAT(script->blasterSpeed);
+	INSPECTOR_DRAGABLE_FLOAT(script->blasterRate);
+
+	INSPECTOR_DRAGABLE_INT(script->blasterAmmo);
+	INSPECTOR_DRAGABLE_INT(script->blasterMaxAmmo);
+	INSPECTOR_DRAGABLE_FLOAT(script->blasterReloadTime);
+
+	INSPECTOR_CHECKBOX_BOOL(script->blasterAutomatic);
+
+	// Sniper
+	INSPECTOR_PREFAB(script->sniperBullet);
+
+	INSPECTOR_DRAGABLE_FLOAT(script->sniperSpeed);
+	INSPECTOR_DRAGABLE_FLOAT(script->sniperRate);
+
+	INSPECTOR_DRAGABLE_INT(script->sniperAmmo);
+	INSPECTOR_DRAGABLE_INT(script->sniperMaxAmmo);
+	INSPECTOR_DRAGABLE_FLOAT(script->sniperReloadTime);
+
+	INSPECTOR_CHECKBOX_BOOL(script->sniperAutomatic);
 
 	return script;
 }

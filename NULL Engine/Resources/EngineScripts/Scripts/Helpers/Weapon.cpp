@@ -60,8 +60,6 @@ void Weapon::CleanUp()
 
 bool Weapon::Shoot(float3 direction)
 {
-	if (App->input->GetKey(SDL_SCANCODE_R) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(2) == ButtonState::BUTTON_DOWN)
-		Reload();
 	if (ammo > 0)
 	{
 		if (!automatic)

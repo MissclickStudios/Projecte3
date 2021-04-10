@@ -6,6 +6,7 @@
 #include "GameObject.h"
 #include "C_Transform.h"
 #include "C_RigidBody.h"
+#include "C_Mesh.h"
 
 #include "Blurrg.h"
 #include "Player.h"
@@ -152,15 +153,12 @@ float3 Blurrg::LookingAt()
 		lookVector.Normalize();
 	float rad = lookVector.AimedAngle() ;
 
-	if (gameObject->childs.size())
-	{
-		GameObject* mesh = gameObject->childs[0];
-		if (mesh)
+	for (uint i = 0; i < gameObject->childs.size(); ++i)
+		if (gameObject->childs[i]->GetComponent<C_Mesh>())
 		{
 			float rad = -lookVector.AimedAngle() + DegToRad(90);
-			mesh->transform->SetLocalRotation(float3(DegToRad(-90), 0, rad));
+			gameObject->childs[i]->transform->SetLocalRotation(float3(DegToRad(-90), 0, rad));
 		}
-	}
 
 	return { lookVector.x, 0, lookVector.y };
 }
@@ -171,10 +169,8 @@ Blurrg* CreateBlurrg()
 
 	// Movement
 	INSPECTOR_DRAGABLE_FLOAT(script->speed);
-
 	INSPECTOR_DRAGABLE_FLOAT(script->detectionRange);
-
-	//INSPECTOR_GAMEOBJECT(script->player);
+	INSPECTOR_GAMEOBJECT(script->player);
 
 	// Dash
 	INSPECTOR_DRAGABLE_FLOAT(script->dashSpeed);
