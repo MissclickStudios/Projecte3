@@ -8,11 +8,14 @@ public class TurretBehaviour : MonoBehaviour
     private float FireRate;
 
     private float Attack1Duration = 5.0f;
+    private float reloadDuration = 2.0f;
+    private bool reloading;
 
     // Start is called before the first frame update
     void Start()
     {
         trigerredAttack = false;
+        reloading = false;
     }
 
     // Update is called once per frame
@@ -22,24 +25,39 @@ public class TurretBehaviour : MonoBehaviour
 
         Aim();
        
-        if (trigerredAttack == true)
+        if(reloading != true)
         {
-            Shoot();
-        }
+            if (trigerredAttack == true)
+            {
+                Shoot();
+            }
 
-        if (Attack1Duration < 0.0f)
+            if (Attack1Duration < 0.0f)
+            {
+                reloadDuration = 2.0f;
+
+                reloading = true;
+            }
+        }
+        
+        if(reloading == true)
         {
-            Attack1Duration = 5.0f;
-            Debug.Log("CTM");
-        }
+            reloadDuration -= Time.deltaTime;
 
+            if (reloadDuration < 0.0f)
+            {
+                Attack1Duration = 5.0f;
+                reloading = false;
+            }
+        }
+        
         
     }
 
     //--------------------------------------------------------------------------------
     [Header("Aiming Settings")]
     public Transform aimingTarget;
-    public float TriggerDistance = 12.0f;
+    public float TriggerDistance = 8.0f;
     void Aim()
     {
         transform.LookAt(aimingTarget.transform);
