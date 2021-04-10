@@ -74,7 +74,7 @@ void C_UI_Image::Draw2D()
 
 	uint32 id;
 
-	if (GetOwner()->GetComponent<C_2DAnimator>() != nullptr)
+	if (GetOwner()->GetComponent<C_2DAnimator>() != nullptr && GetOwner()->GetComponent<C_2DAnimator>()->IsAnimationPlaying())
 		id = GetOwner()->GetComponent<C_2DAnimator>()->GetIdFromAnimation();
 	else
 		id = GetOwner()->GetComponent<C_Material>()->GetTextureID();
@@ -109,7 +109,7 @@ void C_UI_Image::Draw3D()
 
 	uint32 id;
 
-	if (GetOwner()->GetComponent<C_2DAnimator>() != nullptr)
+	if (GetOwner()->GetComponent<C_2DAnimator>() != nullptr && GetOwner()->GetComponent<C_2DAnimator>()->IsAnimationPlaying())
 		id = GetOwner()->GetComponent<C_2DAnimator>()->GetIdFromAnimation();
 	else
 		id = GetOwner()->GetComponent<C_Material>()->GetTextureID();
