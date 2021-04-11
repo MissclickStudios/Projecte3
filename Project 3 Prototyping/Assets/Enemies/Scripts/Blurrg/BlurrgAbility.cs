@@ -42,6 +42,7 @@ public class BlurrgAbility : MonoBehaviour
     public GameObject target;
     bool up = true;
     bool start = true;
+    public Material MaterialCharge;
 
    
     // Start is called before the first frame update
@@ -132,17 +133,11 @@ public class BlurrgAbility : MonoBehaviour
     }
     void charge()
     {
-        if (up)
-        {
-          
-            transform.Translate(0f, 1f, 0f);
-            up = false;
-        }
-        else
-        {
-            transform.Translate(0f, -1f, 0f);
-            up = true;
-        }
+        //this.GetComponent<MeshRenderer>().Material = MaterialCharge;
+      
+            transform.Rotate(Time.deltaTime, 1, 0);
+        
+   
         
     }
     void tackle()
@@ -153,7 +148,7 @@ public class BlurrgAbility : MonoBehaviour
             target.transform.position = ally.transform.position;
             start = false;
         }
-        tackleSpeed = Time.deltaTime * movementSpeed * 5;
+        tackleSpeed = Time.deltaTime * movementSpeed * 10;
         transform.position = Vector3.MoveTowards(transform.position, target.transform.position, tackleSpeed);
         
         if(Vector3.Distance(transform.position, target.transform.position)<=0.45f)

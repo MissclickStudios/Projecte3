@@ -212,7 +212,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 377559356}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.41, y: 1.4, z: 7.54}
+  m_LocalPosition: {x: 0.41, y: -1.1, z: 7.54}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -685,7 +685,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1752103469}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.8, y: 1.4, z: -6.3}
+  m_LocalPosition: {x: -3.8, y: -1.21, z: -6.3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -725,17 +725,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9518b93e1f76f24e9212090a1befe38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startMarker: {fileID: 1752103473}
-  endMarker: {fileID: 377559360}
-  minX: -2
-  maxX: 2
-  minY: -0.1
-  maxY: 0.1
-  minZ: -2
-  maxZ: 2
-  movementSpeed: 1
-  newPositionWaitTime: 0.5
-  speed: 1
 --- !u!65 &1758981115
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -839,6 +828,7 @@ MonoBehaviour:
   distance: 10
   maxTimer: 3
   target: {fileID: 1067742049}
+  MaterialCharge: {fileID: 0}
 --- !u!54 &1758981120
 Rigidbody:
   m_ObjectHideFlags: 0
