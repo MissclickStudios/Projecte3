@@ -110,6 +110,7 @@ bool M_ScriptManager::CleanUp()
 {
 	//TODO: clean up dels scripts
 	CleanUpScripts();
+	currentScripts.clear();
 	return true;
 }
 

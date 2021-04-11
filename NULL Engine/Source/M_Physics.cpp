@@ -44,7 +44,7 @@ M_Physics::~M_Physics()
 {
 	if (filterInteractions)
 	{
-		for (uint i = 0; i < filters.size() + 1; ++i)
+		for (uint i = 0; i < filters.size(); ++i)
 			delete[] filterInteractions[i];
 		delete[] filterInteractions;
 	}
