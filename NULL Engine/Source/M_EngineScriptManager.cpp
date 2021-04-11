@@ -202,7 +202,7 @@ void M_EngineScriptManager::HotReload()
 				if (root.GetBool("HaveScripts")) 
 				{
 					DeSerializeAllScripts(root.GetArray("CurrentScripts"));
-					root.Release();
+					//root.Release();
 					aviableScripts.clear();
 					EngineApp->resourceManager->GetAllScripts(aviableScripts);
 					if (EngineApp->gameState == GameState::PLAY)
