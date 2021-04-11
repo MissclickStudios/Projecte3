@@ -36,12 +36,11 @@
 #include "C_CapsuleCollider.h"
 #include "C_PlayerController.h"
 #include "C_BulletBehavior.h"
-//#include "C_ParticleSystem.h"
+#include "C_ParticleSystem.h"
 #include "C_PropBehavior.h"
 #include "C_CameraBehavior.h"
 #include "C_GateBehavior.h"
 #include "C_Canvas.h"
-#include "C_Particles.h"
 #include "C_UI_Image.h"
 #include "C_UI_Text.h"
 #include "C_UI_Button.h"
@@ -54,6 +53,7 @@
 #include "R_Animation.h"
 #include "R_Shader.h"
 #include "R_Script.h"
+#include "R_ParticleSystem.h"
 
 #include "I_Shaders.h"
 
@@ -1218,13 +1218,35 @@ void E_Inspector::DrawParticleSystemComponent(C_ParticleSystem* cParticleSystem)
 			//TODO PARTICLE SYSTEM
 			if(ImGui::Button("New Particle System"))
 			{
-				//cParticleSystem. //TODO doesn't appear NewParticleSystem() wtf
+				cParticleSystem->NewParticleSystem(); //TODO doesn't appear NewParticleSystem() wtf
 			}
 
+			ImGui::SameLine();
+
 			// save system
+			if (ImGui::Button("Save Particle System"))
+			{
+				cParticleSystem->SaveParticleSystem(); //TODO doesn't appear NewParticleSystem() wtf
+			}
 
 			//combo showing all resources Already exists App->resourceManager->GetAllParticleSystems()
+			if (ImGui::BeginCombo("##Particle Systems", cParticleSystem->resource->name.c_str()))
+			{
+				std::vector<R_ParticleSystem*> particleSystems;
+				App->resourceManager->GetAllParticleSystems(particleSystems);
 
+				for (auto it = particleSystems.begin(); it != particleSystems.end(); ++it)
+				{
+					bool isSelected = (cParticleSystem->resource == (*it));
+					if (ImGui::Selectable((*it)->name.c_str(), isSelected)) 
+					{
+						cParticleSystem->SetParticleSystem((*it));
+					}
+					if (isSelected)
+						ImGui::SetItemDefaultFocus();
+				}
+				ImGui::EndCombo();
+			}
 
 
 			for (int i = 0; i < cParticleSystem->emitterInstances.size(); i++) //loop emitters

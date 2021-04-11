@@ -21,6 +21,8 @@ uint Importer::Particles::Save(R_ParticleSystem* rParticles, char** buffer) //Us
 
 	ParsonNode particleSystemNode;
 
+	particleSystemNode.SetString("name", rParticles->name.c_str());
+
 	ParsonArray particleSystemArray = particleSystemNode.SetArray("Emitters");
 
 	for (std::vector<Emitter>::iterator emit = rParticles->emitters.begin(); emit != rParticles->emitters.end(); ++emit)
@@ -30,9 +32,8 @@ uint Importer::Particles::Save(R_ParticleSystem* rParticles, char** buffer) //Us
 	}
 
 	std::string assetsPath = ASSETS_PARTICLESYSTEMS_PATH + std::to_string(rParticles->GetUID()) + PARTICLESYSTEMS_AST_EXTENSION;
-	particleSystemNode.SerializeToFile(assetsPath.c_str(),buffer);
+	int size = particleSystemNode.SerializeToFile(assetsPath.c_str(),buffer);
 
-	int size = 0;
 	// --- SAVING THE BUFFER ---
 
 	std::string path = PARTICLESYSTEMS_PATH + std::to_string(rParticles->GetUID()) + PARTICLESYSTEMS_EXTENSION;
@@ -40,11 +41,11 @@ uint Importer::Particles::Save(R_ParticleSystem* rParticles, char** buffer) //Us
 
 	if (written > 0)
 	{
-		LOG("[STATUS] Animations Importer: Successfully Saved Animation { %s } to Library! Path: %s", rParticles->GetAssetsFile(), path.c_str());
+		LOG("[STATUS] ParticleSystem Importer: Successfully Saved ParticleSystem { %s } to Library! Path: %s", rParticles->GetAssetsFile(), path.c_str());
 	}
 	else
 	{
-		LOG("[ERROR] Animations Importer: Could not Save Animation { %s } to Library! Error: File System could not Write File.", rParticles->GetAssetsFile());
+		LOG("[ERROR] ParticleSystem Importer: Could not Save ParticleSystem { %s } to Library! Error: File System could not Write File.", rParticles->GetAssetsFile());
 	}
 
 	return written;

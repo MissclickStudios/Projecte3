@@ -20,6 +20,7 @@ public:
 
 public:
 	std::vector<Emitter> emitters;
+	std::string name;
 };
 
 #endif //!__R_PARTICLE_SYSTEM_H__

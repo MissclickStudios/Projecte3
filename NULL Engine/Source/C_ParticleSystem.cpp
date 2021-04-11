@@ -78,7 +78,8 @@ void C_ParticleSystem::RefreshEmitters()
 void C_ParticleSystem::NewParticleSystem()
 {
 	resource = new R_ParticleSystem();
-
+	resource->AddDefaultEmitter();
+	RefreshEmitters();
 }
 
 void C_ParticleSystem::SaveParticleSystem()
@@ -91,17 +92,10 @@ bool C_ParticleSystem::SetAsDefaultComponent()
 {
 	bool ret = false;
 
-	Reset();
-	emitterInstances.clear();
+	NewParticleSystem();
 
-	if (defaultEmitter != nullptr)
-	{
-		EmitterInstance* emitter = new EmitterInstance(defaultEmitter, this);
+	RefreshEmitters();
 
-		emitterInstances.push_back(emitter);
-
-		ret = true;
-	}
 	return ret;
 }
 
