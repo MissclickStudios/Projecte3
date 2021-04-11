@@ -27,7 +27,7 @@ SandTrooper::~SandTrooper()
 
 void SandTrooper::Awake()
 {
-	if (player != nullptr)
+	if (player == nullptr)
 	{
 		std::map<uint32,GameObject*>* objects = App->scene->GetGameObjects();
 		for (auto o = objects->begin(); o != objects->end(); ++o)
@@ -57,7 +57,7 @@ void SandTrooper::Update()
 		return;
 	}
 
-	if (!player)
+	if (player == nullptr)
 		return;
 
 	if (!weapon)

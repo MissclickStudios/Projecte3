@@ -52,42 +52,42 @@ C_PlayerController::~C_PlayerController()
 bool C_PlayerController::Update()
 {
 	OPTICK_CATEGORY("Player Controller Update", Optick::Category::Update);
-	
-	if (App->gameState != GameState::PLAY)
-		return true;
+	//
+	//if (App->gameState != GameState::PLAY)
+	//	return true;
 
-	if (!playAnim)
-	{
-		aAnimator = GetOwner()->GetComponent<C_Animator>();
+	//if (!playAnim)
+	//{
+	//	aAnimator = GetOwner()->GetComponent<C_Animator>();
 
-		aAnimator->PlayClip("Idle", (uint)0);
-		playAnim = true;
-	}
-	
-	/*if (App->input->GetKey(SDL_SCANCODE_Y) == KeyState::KEY_DOWN)	{ aAnimator->PlayClip("Running4", 0.2f); }
-	if (App->input->GetKey(SDL_SCANCODE_Y) == KeyState::KEY_UP)		{ aAnimator->PlayClip("Idle", 0.2f); }
-	if (App->input->GetKey(SDL_SCANCODE_U) == KeyState::KEY_DOWN)	{ aAnimator->PlayClip("Shooting", 0.2f); }*/
+	//	aAnimator->PlayClip("Idle", (uint)0);
+	//	playAnim = true;
+	//}
+	//
+	///*if (App->input->GetKey(SDL_SCANCODE_Y) == KeyState::KEY_DOWN)	{ aAnimator->PlayClip("Running4", 0.2f); }
+	//if (App->input->GetKey(SDL_SCANCODE_Y) == KeyState::KEY_UP)		{ aAnimator->PlayClip("Idle", 0.2f); }
+	//if (App->input->GetKey(SDL_SCANCODE_U) == KeyState::KEY_DOWN)	{ aAnimator->PlayClip("Shooting", 0.2f); }*/
 
-	switch (state)
-	{
-	case PlayerState::IDLE:		{ aAnimator->PlayClip("Idle", 0.2f); }		break;
-	case PlayerState::RUNNING:	{ aAnimator->PlayClip("Running4", 0.2f); }	break;
-	case PlayerState::DASHING:	{ /*aAnimator->PlayClip("Dashing", 0);*/ }	break;
-	case PlayerState::SHOOTING: { aAnimator->PlayClip("Shooting", 0.2f); }	break;
-	}
+	//switch (state)
+	//{
+	//case PlayerState::IDLE:		{ aAnimator->PlayClip("Idle", 0.2f); }		break;
+	//case PlayerState::RUNNING:	{ aAnimator->PlayClip("Running4", 0.2f); }	break;
+	//case PlayerState::DASHING:	{ /*aAnimator->PlayClip("Dashing", 0);*/ }	break;
+	//case PlayerState::SHOOTING: { aAnimator->PlayClip("Shooting", 0.2f); }	break;
+	//}
 
-	if (!bulletStorage)
-	{
-		bulletStorage = App->scene->CreateGameObject("Bullets", App->scene->GetSceneRoot());
-		for (uint i = 0; i < BULLET_AMOUNT; ++i)
-			bullets[i] = CreateBullet(i);
-	}
+	//if (!bulletStorage)
+	//{
+	//	bulletStorage = App->scene->CreateGameObject("Bullets", App->scene->GetSceneRoot());
+	//	for (uint i = 0; i < BULLET_AMOUNT; ++i)
+	//		bullets[i] = CreateBullet(i);
+	//}
 
-	Movement();
-	Weapon();
-	HandleHp();
-	
-	HandleAmmo(ammo);
+	//Movement();
+	//Weapon();
+	//HandleHp();
+	//
+	//HandleAmmo(ammo);
 
 
 	return true;
@@ -95,7 +95,7 @@ bool C_PlayerController::Update()
 
 bool C_PlayerController::CleanUp()
 {	
-	if (bulletStorage)
+	/*if (bulletStorage)
 	{
 		for (uint i = 0; i < BULLET_AMOUNT; ++i)
 		{
@@ -120,7 +120,7 @@ bool C_PlayerController::CleanUp()
 
 	if (full != nullptr)	{ App->resourceManager->FreeResource(full->GetUID()); }
 	if (half != nullptr)	{ App->resourceManager->FreeResource(half->GetUID()); }
-	if (empty != nullptr)	{ App->resourceManager->FreeResource(empty->GetUID()); }
+	if (empty != nullptr)	{ App->resourceManager->FreeResource(empty->GetUID()); }*/
 
 	return true;
 }

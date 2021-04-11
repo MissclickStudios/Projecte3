@@ -52,14 +52,14 @@ void Blurrg::Update()
 		return;
 	}
 
-	if (!player)
+	if (player == nullptr)
 	{
 		std::map<uint32,GameObject*>* objects = App->scene->GetGameObjects();
 		for (auto o = objects->begin(); o != objects->end(); ++o)
 			if (o->second->GetScript("Player"))
 				player = o->second;
 
-		if (!player)
+		if (player == nullptr)
 			return;
 	}
 

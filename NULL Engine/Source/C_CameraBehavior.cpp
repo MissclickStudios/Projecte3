@@ -21,24 +21,24 @@ C_CameraBehavior::~C_CameraBehavior()
 
 bool C_CameraBehavior::Update()
 {
-	if (!player)
-	{
-		std::map<uint32, GameObject*>* gameObjects = App->scene->GetGameObjects();
-		for (auto object = gameObjects->cbegin(); object != gameObjects->cend(); ++object)
-		{
-			if (object->second->GetComponent<C_PlayerController>() != nullptr)
-			{
-				player = object->second;
-				break;
-			}
-		}
-	}
-	else
-	{
-		float3 position = player->transform->GetWorldPosition();
-		position += offset;
-		GetOwner()->transform->SetWorldPosition(position);
-	}
+	//if (!player)
+	//{
+	//	std::map<uint32, GameObject*>* gameObjects = App->scene->GetGameObjects();
+	//	for (auto object = gameObjects->cbegin(); object != gameObjects->cend(); ++object)
+	//	{
+	//		if (object->second->GetComponent<C_PlayerController>() != nullptr)
+	//		{
+	//			player = object->second;
+	//			break;
+	//		}
+	//	}
+	//}
+	//else
+	//{
+	//	float3 position = player->transform->GetWorldPosition();
+	//	position += offset;
+	//	GetOwner()->transform->SetWorldPosition(position);
+	//}
 
 	return true;
 }

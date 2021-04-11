@@ -109,7 +109,14 @@ bool E_Inspector::Draw(ImGuiIO& io)
 	{
 		if(shownGameObject != nullptr)
 			if (shownGameObject->toDelete)
+			{
 				lockGameObject = false;
+
+				GameObject* selected = EngineApp->editor->GetSelectedGameObjectThroughEditor();
+
+				if (selected != nullptr)
+					shownGameObject = selected;
+			}
 	}
 	
 

@@ -21,7 +21,7 @@ C_BulletBehavior::~C_BulletBehavior()
 
 bool C_BulletBehavior::Update()
 {
-	if (autodestructTimer.ReadSec() >= autodestruct)
+	/*if (autodestructTimer.ReadSec() >= autodestruct)
 		hit = true;
 
 	if (hit)
@@ -35,7 +35,7 @@ bool C_BulletBehavior::Update()
 
 		shooter->GetComponent<C_PlayerController>()->bullets[index]->inUse = false;
 		autodestructTimer.Stop();
-	}
+	}*/
 
 	return true;
 }
