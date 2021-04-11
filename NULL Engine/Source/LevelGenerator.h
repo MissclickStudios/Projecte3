@@ -20,21 +20,25 @@ public:
 	void		GenerateLevel();
 	
 	//Spawn the room designated by the integer passed
-	void		GenerateRoom(int room);
+	void		GoNextRoom();
+
+	void		GoPreviousRoom();
+
+	void		InitiateLevel(int level);
 
 	//Add an special room with a name and position, if the position exceeds the level size it places on last position
-	void		AddFixedRoom(std::string name, int position); 
+	void		AddFixedRoom(std::string name, int level,int position); 
 
 	//Handle how and when to load the following or previous room/scene
 	void		HandleRoomGeneration();
-
-	void NextRoom();
 
 	void		CleanUp();
 
 public:
 	std::vector<std::string>			allRooms;
-	std::vector<std::string>			levelRooms;
+	std::vector<std::string>			level1;
+	std::vector<std::string>			level2;
+	int			currentLevel;
 	float		roomsToAdd;
 	int			roomNum;
 
