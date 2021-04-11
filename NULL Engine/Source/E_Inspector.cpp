@@ -1248,6 +1248,14 @@ void E_Inspector::DrawParticleSystemComponent(C_ParticleSystem* cParticleSystem)
 				ImGui::EndCombo();
 			}
 
+			// --- Particle System NAME ---
+			ImGui::SetNextItemWidth(ImGui::GetWindowWidth() * 0.33f);
+			static char buffer[64];
+			strcpy_s(buffer, cParticleSystem->resource->name.c_str());
+			if (ImGui::InputText("PS Name", buffer, IM_ARRAYSIZE(buffer), ImGuiInputTextFlags_EnterReturnsTrue))
+			{
+				cParticleSystem->resource->name = buffer;
+			}
 
 			for (int i = 0; i < cParticleSystem->emitterInstances.size(); i++) //loop emitters
 			{

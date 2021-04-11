@@ -126,7 +126,7 @@ struct ParticleLifetime : ParticleModule
 
 struct ParticleBillboarding : ParticleModule
 {
-	enum BillboardingType
+	enum class BillboardingType
 	{
 		ScreenAligned,
 		WorldAligned,
@@ -147,7 +147,7 @@ struct ParticleBillboarding : ParticleModule
 
 	Quat GetAlignmentRotation(const float3& position, const float4x4& cameraTransform);
 
-	BillboardingType billboardingType = ScreenAligned;
+	BillboardingType billboardingType = BillboardingType::ScreenAligned;
 	bool hideBillboarding = false;
 	bool eraseBillboarding = false;
 };

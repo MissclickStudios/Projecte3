@@ -32,11 +32,11 @@ private:
 	void ClearEmitters();
 
 public:
-	Emitter* defaultEmitter;
-	std::vector<EmitterInstance*> emitterInstances;
-	R_ParticleSystem* resource = nullptr;
+	Emitter* defaultEmitter; //don't save
+	std::vector<EmitterInstance*> emitterInstances; //don't save/load
+	R_ParticleSystem* resource = nullptr; // save/load
 
-	bool previewEnabled = false;
+	bool previewEnabled = false; // save/load
 };
 
 #endif //!__C_PARTICLES_H__

@@ -25,13 +25,13 @@ C_ParticleSystem::~C_ParticleSystem()
 bool C_ParticleSystem::SaveState(ParsonNode& root) const
 {
 	root.SetNumber("Type", (double)GetType());
-
+	//TODO
 	return false;
 }
 
 bool C_ParticleSystem::LoadState(ParsonNode& root)
 {
-
+	//TODO
 
 	return false;
 }

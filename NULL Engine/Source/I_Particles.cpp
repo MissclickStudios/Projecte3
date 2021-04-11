@@ -28,7 +28,7 @@ uint Importer::Particles::Save(R_ParticleSystem* rParticles, char** buffer) //Us
 	for (std::vector<Emitter>::iterator emit = rParticles->emitters.begin(); emit != rParticles->emitters.end(); ++emit)
 	{
 		ParsonNode emitterNode = particleSystemArray.SetNode("emitter");
-		emit->Load(emitterNode);
+		emit->Save(emitterNode);
 	}
 
 	std::string assetsPath = ASSETS_PARTICLESYSTEMS_PATH + std::to_string(rParticles->GetUID()) + PARTICLESYSTEMS_AST_EXTENSION;
@@ -53,5 +53,9 @@ uint Importer::Particles::Save(R_ParticleSystem* rParticles, char** buffer) //Us
 
 bool Importer::Particles::Load(const char* buffer, R_ParticleSystem* rParticles)
 {
+
+
+
+
 	return true;
 }

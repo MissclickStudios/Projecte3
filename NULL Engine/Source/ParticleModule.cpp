@@ -89,16 +89,28 @@ void ParticleMovement::Save(ParsonNode& node)
 	node.SetFloat3("initialDirection1",initialDirection1);
 	node.SetFloat3("initialDirection2", initialDirection2);
 
-	/*float3 initialPosition1 = float3::zero;
-	float3 initialPosition2 = float3::zero;
+	node.SetFloat3("initialPosition1",initialPosition1);
+	node.SetFloat3("initialPosition2", initialPosition2);
 
-	bool hideMovement = false;
-	bool eraseMovement = false;*/
+	node.SetBool("hideMovement", hideMovement);
+	node.SetBool("eraseMovement", eraseMovement);
 }
 
 void ParticleMovement::Load(ParsonNode& node)
 {
+	node.SetInteger("Type", (int)type);
 
+	initialIntensity1 = node.GetNumber("initialIntensity1");
+	initialIntensity2 = node.GetNumber("initialIntensity2");
+
+	initialDirection1 = node.GetFloat3("initialDirection1");
+	initialDirection2 = node.GetFloat3("initialDirection2");
+
+	initialPosition1 = node.GetFloat3("initialPosition1");
+	initialPosition2 = node.GetFloat3("initialPosition2");
+
+	hideMovement = node.GetBool("hideMovement");
+	eraseMovement = node.GetBool("eraseMovement");
 }
 
 void ParticleMovement::Spawn(EmitterInstance* emitter, Particle* particle)
@@ -133,11 +145,19 @@ void ParticleMovement::Update(float dt, EmitterInstance* emitter)
 void ParticleColor::Save(ParsonNode& node)
 {
 	node.SetInteger("Type", (int)type);//TODO PARTICLE SYSTEM
+
+	node.SetColor("initialColor",initialColor);
+
+	node.SetBool("hideColor",hideColor);
+	node.SetBool("eraseColor", eraseColor);
 }
 
 void ParticleColor::Load(ParsonNode& node)
 {
-	//TODO PARTICLE SYSTEM
+	initialColor = node.GetColor("initialColor");
+
+	hideColor = node.GetBool("hideColor");
+	eraseColor = node.GetBool("eraseColor");
 }
 
 void ParticleColor::Spawn(EmitterInstance* emitter, Particle* particle)
@@ -171,11 +191,19 @@ void ParticleColor::Update(float dt, EmitterInstance* emitter)
 void ParticleLifetime::Save(ParsonNode& node)
 {
 	node.SetInteger("Type", (int)type);//TODO PARTICLE SYSTEM
+
+	node.SetNumber("initialLifetime", initialLifetime);
+
+	node.SetBool("hideLifetime", hideLifetime);
+	node.SetBool("eraseLifetime", eraseLifetime);
 }
 
 void ParticleLifetime::Load(ParsonNode& node)
 {
-	//TODO PARTICLE SYSTEM
+	initialLifetime = node.GetNumber("initialLifetime");
+
+	hideLifetime = node.GetBool("hideLifetime");
+	eraseLifetime = node.GetBool("eraseLifetime");
 }
 
 void ParticleLifetime::Spawn(EmitterInstance* emitter, Particle* particle)
@@ -208,11 +236,19 @@ void ParticleLifetime::Update(float dt, EmitterInstance* emitter)
 void ParticleBillboarding::Save(ParsonNode& node)
 {
 	node.SetInteger("Type", (int)type);
+
+	node.SetInteger("billboardingType",(int)billboardingType);
+
+	node.SetBool("hideBillboarding", hideBillboarding);
+	node.SetBool("eraseBillboarding", eraseBillboarding);
 }
 
 void ParticleBillboarding::Load(ParsonNode& node)
 {
+	billboardingType = (BillboardingType)node.GetInteger("billboardingType");
 
+	hideBillboarding = node.GetBool("hideBillboarding");
+	eraseBillboarding = node.GetBool("eraseBillboarding");
 }
 
 void ParticleBillboarding::Spawn(EmitterInstance* emitter, Particle* particle)
