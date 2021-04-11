@@ -8,6 +8,11 @@
 
 #include "Component.h"
 
+struct FT_FaceRec_;
+typedef FT_FaceRec_* FT_Face;
+struct FT_LibraryRec_;
+typedef FT_LibraryRec_* FT_Library;
+
 class R_Shader;
 
 struct Character {
@@ -64,7 +69,7 @@ private:
 
 	unsigned char image[640][480];
 
-	FT_UInt  glyphIndex;
+	//FT_UInt  glyphIndex;
 
 	FT_Face face;
 

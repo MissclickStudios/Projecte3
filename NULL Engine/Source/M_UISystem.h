@@ -3,17 +3,11 @@
 
 #include "Module.h"
 
-#include "Dependencies/FreeType/include/freetype/freetype.h"
 
 class ParsonNode;
 typedef unsigned int uint;
 
 class GameObject;
-
-namespace freetype
-{
-
-}
 
 class NULL_API M_UISystem : public Module
 {
@@ -33,11 +27,11 @@ public:
 
 public:
 
-	FT_Library  library;
-	FT_Face     standardFace;
-	FT_UInt		glyphIndex;
-	FT_ULong	charcode;
-	FT_Int32	loadFlags = FT_LOAD_DEFAULT;
+	//FT_Library  library;
+	//FT_Face     standardFace;
+	//FT_UInt		glyphIndex;
+	//FT_ULong	charcode;
+	//FT_Int32	loadFlags = FT_LOAD_DEFAULT;
 
 private:
 	

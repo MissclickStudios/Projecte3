@@ -27,7 +27,7 @@
 #include "Dependencies/FreeType/include/ft2build.h"
 #include "Dependencies/FreeType/include/freetype/freetype.h"
 
-#pragma comment (lib, "Source/Dependencies/FreeType/libx86/freetype.lib")
+#pragma comment (lib, "Source/Dependencies/FreeType/win32/freetype.lib")
 
 C_UI_Text::C_UI_Text(GameObject* owner, Rect2D rect) : Component(owner, ComponentType::UI_TEXT),
 VAO(0),
@@ -167,15 +167,15 @@ void C_UI_Text::RenderText(std::string text, float x, float y, float scale, floa
 	
 	//float4x4 projection = float4x4::OrthographicProjectionXY();
 	//float4x4 projection = float4x4::OrthographicProjection(App->camera->GetCurrentCamera()->GetFrustum().NearPlane());
-	//float4x4 projection = float4x4::OpenGLOrthoProjRH(App->camera->GetCurrentCamera()->GetNearPlaneDistance(), App->camera->GetCurrentCamera()->GetFarPlaneDistance(), App->window->GetWidth(), App->window->GetHeight());
+	//float4x4 projection = float4x4::OpenGLOrthoProjRH(App->camera->GetCurrentCamera()->GetNearPlaneDistance(), App->camera->GetCurrentCamera()->GetFarPlaneDistance(), GetRect().w, GetRect().h);
+	
 	//float4x4 projection = App->camera->GetCurrentCamera()->GetFrustum().ProjectionMatrix().Transposed();
 
-	//float4x4 projection = float4x4::FromTRS(float3(x, y, 0), Quat::FromEulerXYZ(0, 0, 0), float3(scale, scale, scale)).Transposed();
 	C_Canvas* canvas = GetOwner()->parent->GetComponent<C_Canvas>();
-	float4x4 projection = canvas->GetOwner()->transform->GetWorldTransform().Transposed();
+	/*	float4x4 projection = canvas->GetOwner()->transform->GetWorldTransform().Transposed();*/
 
-	rShader->SetUniformVec3f("textColor", (GLfloat*)&color);
-	rShader->SetUniformMatrix4("projection", projection.ptr());
+	x = canvas->GetPosition().x + GetRect().x - GetRect().w / 2;
+	y = canvas->GetPosition().y + GetRect().y - GetRect().h / 2;
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindVertexArray(VAO);
@@ -188,8 +188,15 @@ void C_UI_Text::RenderText(std::string text, float x, float y, float scale, floa
 
 		glBindTexture(GL_TEXTURE_2D, ch.textureID);
 
-		float xpos = x + ch.Bearing.x * scale;
-		float ypos = y - (ch.Size.y - ch.Bearing.y) * scale;
+		float4x4 projection = float4x4::FromTRS(float3(x, y, 0), Quat::FromEulerXYZ(0, 0, 0), float3(scale, scale, 1)).Transposed();
+		
+
+		rShader->SetUniformVec3f("textColor", (GLfloat*)&color);
+		rShader->SetUniformMatrix4("projection", projection.ptr());
+
+
+		float xpos = (x + ch.Bearing.x) * scale;
+		float ypos = (y - (ch.Size.y - ch.Bearing.y)) * scale;
 
 		float w = ch.Size.x * scale;
 		float h = ch.Size.y * scale;
@@ -208,14 +215,12 @@ void C_UI_Text::RenderText(std::string text, float x, float y, float scale, floa
 		glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
 
 		glDrawArrays(GL_TRIANGLES, 0, 6);
-		
-		
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 
-		x += (ch.Advance >> 6) * scale; 
+		x += (ch.Advance >> 6) * scale;
 	}
 
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	glDisable(GL_BLEND);
 	glDisable(GL_CULL_FACE);
@@ -239,11 +244,11 @@ void C_UI_Text::GenerateTextureID()
 	
 	FT_Set_Pixel_Sizes(face, 0, 48);
 
-	if (FT_Load_Char(face, 'X', FT_LOAD_RENDER))
+	/*if (FT_Load_Char(face, 'X', FT_LOAD_RENDER))
 	{
 		LOG("ERROR::FREETYTPE: Failed to load Glyph");
 		return ;
-	}
+	}*/
 	
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1); // disable byte-alignment restriction
 

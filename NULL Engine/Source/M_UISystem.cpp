@@ -15,7 +15,6 @@
 
 #include "MemoryManager.h"
 
-#pragma comment( lib, "Source/Dependencies/FreeType/libx86/freetype.lib" )
 
 M_UISystem::M_UISystem(bool isActive) : Module("UISystem", isActive)
 {
@@ -33,26 +32,26 @@ bool M_UISystem::Init(ParsonNode& config)
 {
 	bool ret = true;
 
-	// Initilaizing FreeType
-	bool error = FT_Init_FreeType(&library);
-	if (error)
-	{
-		LOG("An error ocurred initializing FreeType Library");
-	}
+	//// Initilaizing FreeType
+	//bool error = FT_Init_FreeType(&library);
+	//if (error)
+	//{
+	//	LOG("An error ocurred initializing FreeType Library");
+	//}
 
-	// Creating a face from the .ttf file
-	error = FT_New_Face(library, "Assets/Fonts/arial.ttf",	0, &standardFace);
-	if (error == FT_Err_Unknown_File_Format)
-	{
-		LOG("The file format for font is not supported");
-	}
-	else if (error)
-	{
-		LOG("An error ocurred creating the face");
-	}
+	//// Creating a face from the .ttf file
+	//error = FT_New_Face(library, "Assets/Fonts/arial.ttf",	0, &standardFace);
+	//if (error == FT_Err_Unknown_File_Format)
+	//{
+	//	LOG("The file format for font is not supported");
+	//}
+	//else if (error)
+	//{
+	//	LOG("An error ocurred creating the face");
+	//}
 
-	float w = App->camera->GetCurrentCamera()->GetFrustum().NearPlaneWidth();
-	float h = App->camera->GetCurrentCamera()->GetFrustum().NearPlaneHeight();
+	/*float w = App->camera->GetCurrentCamera()->GetFrustum().NearPlaneWidth();
+	float h = App->camera->GetCurrentCamera()->GetFrustum().NearPlaneHeight();*/
 
 	//error = FT_Set_Char_Size(
 	//	standardFace,	/* handle to face object           */
@@ -61,21 +60,21 @@ bool M_UISystem::Init(ParsonNode& config)
 	//	300,			/* horizontal device resolution    */
 	//	300);			/* vertical device resolution      */
 	// Setting default size for the face
-	error = FT_Set_Pixel_Sizes(standardFace, 0, 16);
-	if (error)
-	{
-		LOG("An error ocurred on trying to resize the font face");
-	}
+	//error = FT_Set_Pixel_Sizes(standardFace, 0, 16);
+	//if (error)
+	//{
+	//	LOG("An error ocurred on trying to resize the font face");
+	//}
 
-	// Getting the glyph index
-	glyphIndex = FT_Get_Char_Index(standardFace, charcode);
-	
-	// Loading the glyph image
-	error = FT_Load_Glyph(standardFace, glyphIndex, FT_LOAD_DEFAULT);
-	if (error)
-	{
-		LOG("An error ocurred loading the glyph");
-	}
+	//// Getting the glyph index
+	//glyphIndex = FT_Get_Char_Index(standardFace, charcode);
+	//
+	//// Loading the glyph image
+	//error = FT_Load_Glyph(standardFace, glyphIndex, FT_LOAD_DEFAULT);
+	//if (error)
+	//{
+	//	LOG("An error ocurred loading the glyph");
+	//}
 	
 	return ret;
 }
