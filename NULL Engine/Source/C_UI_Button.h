@@ -7,6 +7,7 @@
 
 enum class UIButtonState
 {
+	NONE = 0,
 	IDLE,
 	HOVERED,
 	PRESSED
@@ -50,7 +51,7 @@ public:
 
 private:
 
-	UIButtonState state = UIButtonState::IDLE;
+	UIButtonState state = UIButtonState::NONE;
 	Rect2D rect = { 0,0,0.3,0.05 };
 
 	bool isPressed = false;

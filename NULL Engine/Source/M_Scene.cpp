@@ -14,6 +14,7 @@
 #include "M_FileSystem.h"
 #include "M_Editor.h"
 #include "M_ResourceManager.h"
+#include "M_UISystem.h"
 
 #include "Resource.h"
 #include "R_Model.h"
@@ -31,6 +32,7 @@
 #include "C_Camera.h"
 #include "C_Animator.h"
 #include "C_Light.h"
+#include "C_UI_Button.h"
 
 #include "M_Scene.h"
 #include "M_ScriptManager.h"
@@ -594,6 +596,10 @@ void M_Scene::DeleteGameObject(GameObject* gameObject, uint index)
 	if (gameObject == animationRoot)
 	{
 		animationRoot = nullptr;
+	}
+	if (gameObject->GetComponent<C_UI_Button>() != nullptr)
+	{
+		App->uiSystem->DeleteActiveButton(gameObject->GetComponent<C_UI_Button>());
 	}
 	
 	auto item = models.find(gameObject->GetUID());

@@ -1862,6 +1862,18 @@ void E_Inspector::DrawAnimator2DComponent(C_2DAnimator* cAnimator)
 		if (ImGui::InputInt("Step time",&k));
 			cAnimator->SetAnimationStepTime(k);
 
+		static char buffer[64];
+		strcpy_s(buffer, cAnimator->GetName());
+		if (ImGui::InputText("Animation Name", buffer, IM_ARRAYSIZE(buffer), ImGuiInputTextFlags_EnterReturnsTrue))
+		{
+			cAnimator->ChangeName(buffer);
+			cAnimator->GetAnimationSprites(buffer);
+		}
+
+		bool animationOnLoopFromStart = cAnimator->GetAnimationPlayFromStart();
+		if (ImGui::Checkbox("Set animation on loop from start:", &animationOnLoopFromStart))
+			cAnimator->SetAnimationPlayFromStart(animationOnLoopFromStart);
+
 		ImGui::Separator();
 
 		if (!show)
@@ -1871,13 +1883,7 @@ void E_Inspector::DrawAnimator2DComponent(C_2DAnimator* cAnimator)
 		}
 
 
-		static char buffer[64];
-		strcpy_s(buffer, cAnimator->GetName());
-		if (ImGui::InputText("Animation Name", buffer, IM_ARRAYSIZE(buffer), ImGuiInputTextFlags_EnterReturnsTrue))
-		{
-			cAnimator->ChangeName(buffer);
-			cAnimator->GetAnimationSprites(buffer);
-		}
+
 
 	}
 	return;

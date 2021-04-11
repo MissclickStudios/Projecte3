@@ -89,7 +89,7 @@ bool M_UISystem::Init(ParsonNode& config)
 // Called every draw update
 UpdateStatus M_UISystem::PreUpdate(float dt)
 {
-	if (isMainMenu && !isHoverDecorationAdded && !activeButtons.empty())
+	if (isMainMenu && !activeButtons.empty())
 	{
 		InitHoveredDecorations();
 	}
@@ -102,7 +102,7 @@ UpdateStatus M_UISystem::Update(float dt)
 	OPTICK_CATEGORY("M_UISystem Update", Optick::Category::Module)
 	UpdateActiveButtons();
 	CheckButtonStates();
-	
+
 	if (hoveredDecorationL != nullptr && hoveredDecorationR != nullptr)
 		UpdateHoveredDecorations();
 
@@ -117,6 +117,11 @@ UpdateStatus M_UISystem::PostUpdate(float dt)
 // Called before quitting
 bool M_UISystem::CleanUp()
 {
+	for (std::vector<C_UI_Button*>::iterator it = activeButtons.begin(); it != activeButtons.end(); it++)
+	{
+		//RELEASE(*it);
+	}
+	activeButtons.clear();
 	return true;
 }
 
@@ -210,8 +215,7 @@ void M_UISystem::UpdateActiveButtons()
 
 	// Create a new list and empty the other one into this one
 	std::vector<C_UI_Button*> newButtonsList;
-
-	/*while (!activeButtons.empty())
+	while (!activeButtons.empty())
 	{
 		float y = -999;
 		for (std::vector<C_UI_Button*>::iterator buttonIt = activeButtons.begin(); buttonIt != activeButtons.end(); buttonIt++)
@@ -232,7 +236,7 @@ void M_UISystem::UpdateActiveButtons()
 			}
 		}
 	}
-	activeButtons = newButtonsList;*/
+	activeButtons = newButtonsList;
 }
 
 void M_UISystem::InitHoveredDecorations()
@@ -266,4 +270,16 @@ void M_UISystem::UpdateHoveredDecorations()
 
 	hoveredDecorationL->SetY(hoveredButton->GetRect().y);
 	hoveredDecorationR->SetY(hoveredButton->GetRect().y);
+}
+
+void M_UISystem::DeleteActiveButton(C_UI_Button* button)
+{
+	for (std::vector<C_UI_Button*>::const_iterator it = activeButtons.begin(); it != activeButtons.end(); it++)
+	{
+		if ((*it) == button)
+		{
+			activeButtons.erase(it);
+			return;
+		}
+	}
 }
