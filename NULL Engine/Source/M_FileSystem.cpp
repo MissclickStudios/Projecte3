@@ -113,7 +113,7 @@ void M_FileSystem::CreateLibraryDirectories()
 	CreateDir(ASSETS_PATH);
 	CreateDir(ASSETS_MODELS_PATH);
 	CreateDir(ASSETS_NAVIGATION_PATH);
-	CreateDir(ASSETS_PARTICLES_PATH);
+	CreateDir(ASSETS_PARTICLESYSTEMS_PATH);
 	CreateDir(ASSETS_PREFABS_PATH);
 	CreateDir(ASSETS_SCENES_PATH);
 	CreateDir(ASSETS_SCRIPTS_PATH);
@@ -127,7 +127,7 @@ void M_FileSystem::CreateLibraryDirectories()
 	CreateDir(MESHES_PATH);
 	CreateDir(MODELS_PATH);
 	CreateDir(NAVIGATION_PATH);
-	CreateDir(PARTICLES_PATH);
+	CreateDir(PARTICLESYSTEMS_PATH);
 	CreateDir(SCENES_PATH);
 	CreateDir(SCRIPTS_PATH);
 	CreateDir(SHADERS_PATH);

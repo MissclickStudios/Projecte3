@@ -120,9 +120,9 @@ struct SkeletonRenderer
 
 struct ParticleRenderer
 {
-	ParticleRenderer(R_Material* mat, Color color, const float4x4 transform);
+	ParticleRenderer(R_Texture* mat, Color color, const float4x4 transform);
 
-	R_Material* mat;
+	R_Texture* mat;
 	Color color;
 	float4x4 transform;
 };
@@ -188,7 +188,7 @@ public:																											// --- RENDER GEOMETRY
 	void			CreatePrimitiveExamples		();
 
 
-	void			AddParticle					(const float4x4& transform, R_Material* material, Color color, float distanceToCamera);
+	void			AddParticle					(const float4x4& transform, R_Texture* material, Color color, float distanceToCamera);
 	void			DrawParticle				(ParticleRenderer& renderParticle);
 
 	void			SetTo2DRenderSettings		(const bool& setTo);

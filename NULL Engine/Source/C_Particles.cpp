@@ -4,39 +4,39 @@
 
 #include "M_ResourceManager.h"
 
-#include "R_Particles.h"
+#include "R_ParticleSystem.h"
 
-#include "C_Particles.h"
+#include "C_ParticleSystem.h"
 
 #include "MemoryManager.h"
 
-C_Particles::C_Particles(GameObject* owner) : Component(owner, ComponentType::PARTICLES)
+C_ParticleSystem::C_ParticleSystem(GameObject* owner) : Component(owner, ComponentType::PARTICLES)
 {
 	AddDefaultEmitter();
 	SetAsDefaultComponent();
 }
 
-C_Particles::~C_Particles()
+C_ParticleSystem::~C_ParticleSystem()
 {
 	delete defaultEmitter;
 	emitterInstances.clear();
 }
 
-bool C_Particles::SaveState(ParsonNode& root) const
+bool C_ParticleSystem::SaveState(ParsonNode& root) const
 {
 	root.SetNumber("Type", (double)GetType());
 
 	return false;
 }
 
-bool C_Particles::LoadState(ParsonNode& root)
+bool C_ParticleSystem::LoadState(ParsonNode& root)
 {
 
 
 	return false;
 }
 
-bool C_Particles::Update()
+bool C_ParticleSystem::Update()
 {
 
 	if (previewEnabled == true && Time::Game::GetDT() == 0)
@@ -57,7 +57,7 @@ bool C_Particles::Update()
 	return true;
 }
 
-bool C_Particles::SetAsDefaultComponent()
+bool C_ParticleSystem::SetAsDefaultComponent()
 {
 	bool ret = false;
 
@@ -76,13 +76,13 @@ bool C_Particles::SetAsDefaultComponent()
 	return ret;
 }
 
-void C_Particles::AddDefaultEmitter()
+void C_ParticleSystem::AddDefaultEmitter()
 {
 	defaultEmitter = new Emitter();
 	defaultEmitter->SetAsDefault();
 }
 
-void C_Particles::EnginePreview(bool previewEnabled)
+void C_ParticleSystem::EnginePreview(bool previewEnabled)
 {
 	if (this->previewEnabled == previewEnabled)	//if the state of the particle system is different than the requested, clear all and switch mode.
 	{
@@ -93,7 +93,7 @@ void C_Particles::EnginePreview(bool previewEnabled)
 	this->previewEnabled = previewEnabled;
 }
 
-void C_Particles::ClearEmitters()
+void C_ParticleSystem::ClearEmitters()
 {
 	for(int i = 0; i < emitterInstances.size(); i++)
 	{
@@ -101,7 +101,7 @@ void C_Particles::ClearEmitters()
 	}
 }
 
-void C_Particles::Reset()
+void C_ParticleSystem::Reset()
 {
 	//loop all emitterInstances and trigger reset() method
 	for (unsigned int i = 0; i < emitterInstances.size(); i++)

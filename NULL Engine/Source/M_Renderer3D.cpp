@@ -916,7 +916,7 @@ void M_Renderer3D::RenderSkeletons()
 	glEnable(GL_LIGHTING);
 }
 
-void M_Renderer3D::AddParticle(const float4x4& transform, R_Material* material, Color color, float distanceToCamera)
+void M_Renderer3D::AddParticle(const float4x4& transform, R_Texture* material, Color color, float distanceToCamera)
 {
 	particles.insert(std::make_pair((particles.size() +1), ParticleRenderer(material, color, transform)));
 }
@@ -2072,7 +2072,7 @@ void SkeletonRenderer::Render()
 }
 
 // -- PARTICLE RENDERER METHODS
-ParticleRenderer::ParticleRenderer(R_Material* mat, Color color, const float4x4 transform) : 
+ParticleRenderer::ParticleRenderer(R_Texture* mat, Color color, const float4x4 transform) : 
 mat(mat),
 color(color),
 transform(transform)

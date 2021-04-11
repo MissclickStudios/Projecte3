@@ -82,14 +82,17 @@ bool M_Scene::Start()
 	level.GenerateLevel();
 	
 	//level.AddFixedRoom("Shop", 16);                            
-	level.AddFixedRoom("Start", 1); 
-	level.AddFixedRoom("Boss", 15);
+	/*level.AddFixedRoom("Start",1 ,1); 
+	level.AddFixedRoom("Boss",1 ,15);*/
 	
 	if(App->gameState == GameState::PLAY)
-		level.GenerateRoom(0);
+		level.InitiateLevel(1);
 
-	std::string s = ASSETS_SCENES_PATH + currentScene + JSON_EXTENSION;
-	LoadScene(s.c_str());
+	level.InitiateLevel(1);
+
+
+	/*std::string s = ASSETS_SCENES_PATH + currentScene + JSON_EXTENSION;
+	LoadScene(s.c_str());*/
 
 	//LoadScene("Assets/Scenes/UITestScene.json");
 	//SaveScene("SceneAutosave");																			// Autosave just right after loading the scene.
@@ -169,7 +172,7 @@ UpdateStatus M_Scene::PostUpdate(float dt)
 {	
 	if (nextScene)
 	{
-		level.NextRoom();
+		level.GoNextRoom();
 		nextScene = false;
 	}
 

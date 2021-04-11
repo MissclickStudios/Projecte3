@@ -68,7 +68,7 @@ bool Importer::ImportShader(const char* buffer, R_Shader* rShader)
 	return (success && rShader != nullptr);
 }
 
-bool Importer::ImportParticles(const char* buffer, R_Particles* rParticles)
+bool Importer::ImportParticles(const char* buffer, R_ParticleSystem* rParticles)
 {
 	FindAndForceUID((Resource*)rParticles);
 	

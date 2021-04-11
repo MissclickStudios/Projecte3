@@ -29,7 +29,7 @@ class C_PropBehavior;
 class C_CameraBehavior;
 class C_GateBehavior;
 class C_Canvas;
-class C_Particles;
+class C_ParticleSystem;
 class C_UI_Image;
 class C_UI_Text;
 class C_UI_Button;
@@ -73,7 +73,7 @@ private:																										// --- DRAW COMPONENT METHODS ---
 	void DrawBoxColliderComponent		(C_BoxCollider* cCollider);
 	void DrawSphereColliderComponent	(C_SphereCollider* cCollider);
 	void DrawCapsuleColliderComponent	(C_CapsuleCollider* cCollider);
-	void DrawParticleSystemComponent	(C_Particles* cCanvas);
+	void DrawParticleSystemComponent	(C_ParticleSystem* cCanvas);
 	void DrawCanvasComponent			(C_Canvas* cCanvas);
 	void DrawUIImageComponent			(C_UI_Image* image);
 	void DrawUITextComponent			(C_UI_Text* text);
@@ -125,6 +125,7 @@ private:
 	int			componentType;
 
 	int			mapToDisplay;
+	int			billboardingType;
 	int			moduleType;
 
 	Component*	componentToDelete;

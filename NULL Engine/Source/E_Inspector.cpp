@@ -234,7 +234,7 @@ void E_Inspector::DrawComponents(GameObject* selectedGameObject)
 		case ComponentType::BOX_COLLIDER:		{ DrawBoxColliderComponent((C_BoxCollider*)component); }			break;
 		case ComponentType::SPHERE_COLLIDER:	{ DrawSphereColliderComponent((C_SphereCollider*)component); }		break;
 		case ComponentType::CAPSULE_COLLIDER:	{ DrawCapsuleColliderComponent((C_CapsuleCollider*)component); }	break;
-		case ComponentType::PARTICLES:			{ DrawParticleSystemComponent((C_Particles*)component); }			break;
+		case ComponentType::PARTICLES:			{ DrawParticleSystemComponent((C_ParticleSystem*)component); }			break;
 		case ComponentType::CANVAS:				{ DrawCanvasComponent((C_Canvas*)component); }						break;
 		case ComponentType::UI_IMAGE:			{ DrawUIImageComponent((C_UI_Image*)component); }					break;
 		case ComponentType::UI_TEXT:			{ DrawUITextComponent((C_UI_Text*)component); }						break;
@@ -1207,7 +1207,7 @@ void E_Inspector::DrawCapsuleColliderComponent(C_CapsuleCollider* cCollider)
 	}
 }
 
-void E_Inspector::DrawParticleSystemComponent(C_Particles* cParticleSystem)
+void E_Inspector::DrawParticleSystemComponent(C_ParticleSystem* cParticleSystem)
 {
 	//if (cParticleSystem->resource != nullptr)
 	//{
@@ -1226,7 +1226,7 @@ void E_Inspector::DrawParticleSystemComponent(C_Particles* cParticleSystem)
 						cParticleSystem->EnginePreview(preview);
 					}
 
-					ImGui::Combo("###", &moduleType, "Add Module\0ParticleMovement\0ParticleColor\0ParticleLifetime");
+					ImGui::Combo("###", &moduleType, "Add Module\0ParticleMovement\0ParticleColor\0ParticleLifetime\0ParticleRotation\0ParticleSize\0ParticleBillboarding");
 
 					ImGui::SameLine();
 
@@ -1352,6 +1352,35 @@ void E_Inspector::DrawParticleSystemComponent(C_Particles* cParticleSystem)
 								if (ImGui::Checkbox("Delete Lifetime", &deleteModule))
 								{
 									_module->eraseLifetime = deleteModule;
+								}
+							}
+						}
+						break;
+						case(ParticleModule::Type::ParticleBillboarding):
+						{
+							if (ImGui::CollapsingHeader("Particle Billboarding", &show, ImGuiTreeNodeFlags_DefaultOpen))
+							{
+								ParticleBillboarding* _module = (ParticleBillboarding*)module;
+
+								ImGui::Combo("Billboarding##", &billboardingType, "Screen Aligned\0World Aligned\0X-Axis Aligned\0Y-Axis Aligned\0Z-Axis Aligned");
+
+								ImGui::SameLine();
+
+								if ((ImGui::Button("SELECT")))
+								{
+									_module->billboardingType = (ParticleBillboarding::BillboardingType)billboardingType;
+								}
+
+								bool hideModule = _module->hideBillboarding;
+								if (ImGui::Checkbox("Hide Billboarding", &hideModule))
+								{
+									_module->hideBillboarding = hideModule;
+								}
+
+								bool deleteModule = _module->eraseBillboarding;
+								if (ImGui::Checkbox("Delete Billboarding", &deleteModule))
+								{
+									_module->eraseBillboarding = deleteModule;
 								}
 							}
 						}

@@ -246,7 +246,7 @@ bool GameObject::LoadState(ParsonNode& root)
 			case ComponentType::PROP_BEHAVIOR:		{ component = new C_PropBehavior(this); }		break;
 			case ComponentType::CAMERA_BEHAVIOR:	{ component = new C_CameraBehavior(this); }		break;
 			case ComponentType::GATE_BEHAVIOR:		{ component = new C_GateBehavior(this); }		break;
-			case ComponentType::PARTICLES:			{ component = new C_Particles(this); }			break;
+			case ComponentType::PARTICLES:			{ component = new C_ParticleSystem(this); }		break;
 			case ComponentType::CANVAS:				{ component = new C_Canvas(this); }				break;
 			case ComponentType::UI_IMAGE:			{ component = new C_UI_Image(this); }			break;
 			case ComponentType::UI_TEXT:			{ component = new C_UI_Text(this); }			break;
@@ -795,7 +795,7 @@ Component* GameObject::CreateComponent(ComponentType type)
 	case ComponentType::BOX_COLLIDER:		{ component = new C_BoxCollider(this); }		break;
 	case ComponentType::SPHERE_COLLIDER:	{ component = new C_SphereCollider(this); }		break;
 	case ComponentType::CAPSULE_COLLIDER:	{ component = new C_CapsuleCollider(this); }	break;
-	case ComponentType::PARTICLES: 			{ component = new C_Particles(this); }			break;
+	case ComponentType::PARTICLES: 			{ component = new C_ParticleSystem(this); }			break;
 	case ComponentType::CANVAS:				{ component = new C_Canvas(this); }				break;
 	case ComponentType::UI_IMAGE:			{ component = new C_UI_Image(this); }			break;
 	case ComponentType::UI_TEXT:			{ component = new C_UI_Text(this); }			break;

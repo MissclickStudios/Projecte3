@@ -4,13 +4,13 @@
 #include "Component.h"
 #include "EmitterInstance.h"
 
-class R_Particles;
+class R_ParticleSystem;
 
-class NULL_API C_Particles : public Component
+class NULL_API C_ParticleSystem : public Component
 {
 public:
-	C_Particles(GameObject* owner);
-	~C_Particles();
+	C_ParticleSystem(GameObject* owner);
+	~C_ParticleSystem();
 
 	bool SaveState(ParsonNode& root) const override;
 	bool LoadState(ParsonNode& root) override;
@@ -28,7 +28,7 @@ private:
 public:
 	Emitter* defaultEmitter;
 	std::vector<EmitterInstance*> emitterInstances;
-	R_Particles* resource = nullptr;
+	R_ParticleSystem* resource = nullptr;
 
 	bool previewEnabled = false;
 };
