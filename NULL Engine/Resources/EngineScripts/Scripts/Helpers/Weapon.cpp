@@ -67,9 +67,8 @@ bool Weapon::Shoot(float3 direction)
 			if (App->input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_DOWN || App->input->GetGameControllerTrigger(1) == ButtonState::BUTTON_DOWN)
 			{
 				FireProjectile(direction);
+				return true;
 			}
-
-			return true;
 		}
 		else
 		{
