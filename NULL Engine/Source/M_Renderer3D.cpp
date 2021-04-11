@@ -739,12 +739,12 @@ void M_Renderer3D::RenderUI()
 	SetTo2DRenderSettings(true);
 
 	C_Canvas* canvas = nullptr;
-	for (std::vector<GameObject*>::iterator uiIt = App->scene->GetGameObjects()->begin(); uiIt != App->scene->GetGameObjects()->end(); uiIt++)
-	{
-		canvas = (*uiIt)->GetComponent<C_Canvas>();
+	for (auto uiIt = App->scene->GetGameObjects()->cbegin(); uiIt != App->scene->GetGameObjects()->cend(); ++uiIt)
+	{	
+		canvas = uiIt->second->GetComponent<C_Canvas>();
 		if (canvas != nullptr)
 		{
-			RenderUIComponent(*uiIt);
+			RenderUIComponent(uiIt->second);
 
 			if (!canvas->IsInvisible())
 			{
@@ -1470,14 +1470,21 @@ GameObject* M_Renderer3D::GenerateSceneLight(Color diffuse, Color ambient, Color
 	std::string name;
 	switch (lightType)
 	{
-	case LightType::DIRECTIONAL: name = "DirectionalLight";  break;
-	case LightType::POINTLIGHT: name = "PointLight";  break;
-	case LightType::SPOTLIGHT: name = "SpotLight"; break;
-	case LightType::NONE: break;
+	case LightType::DIRECTIONAL:	{ name = "DirectionalLight"; }	break;
+	case LightType::POINTLIGHT:		{ name = "PointLight"; }		break;
+	case LightType::SPOTLIGHT:		{ name = "SpotLight"; }			break;
+	case LightType::NONE:			{ name = ""; }					break;
 	}
-	
-	if (!App->scene->GetAllLights().empty()) 
-		name += std::to_string(App->scene->GetPointLights().size());
+
+	if (App->scene->SceneHasLights())
+	{
+		std::vector<GameObject*> pointLights;																		// ATTENTION: Only checking point lights? Shouldn't it be all lights?
+		App->scene->GetPointLights(pointLights);
+
+		name += std::to_string(pointLights.size());
+
+		pointLights.clear();
+	}
 
 	light = App->scene->CreateGameObject(name.c_str(), App->scene->GetSceneRoot());
 
@@ -1825,8 +1832,10 @@ void MeshRenderer::ApplyShader()
 			}
 
 			// Light 
-			std::vector<GameObject*> dirLights = App->scene->GetDirLights();
-			std::vector<GameObject*> pointLights = App->scene->GetPointLights();
+			std::vector<GameObject*> dirLights;
+			std::vector<GameObject*> pointLights; 
+			App->scene->GetDirLights(dirLights);
+			App->scene->GetPointLights(pointLights);
 
 			if (!dirLights.empty())
 			{
@@ -1856,7 +1865,11 @@ void MeshRenderer::ApplyShader()
 				}
 			}
 
-			if(cMaterial->GetShader()) Importer::Shaders::SetShaderUniforms(cMaterial->GetShader());
+			if(cMaterial->GetShader()) 
+				Importer::Shaders::SetShaderUniforms(cMaterial->GetShader());
+
+			dirLights.clear();
+			pointLights.clear();
 		}
 	}
 }

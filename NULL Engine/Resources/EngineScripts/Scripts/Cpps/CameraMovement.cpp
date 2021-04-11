@@ -1,6 +1,8 @@
+#include "VariableTypedefs.h"
+#include "Log.h"
+
 #include "Application.h"
 #include "M_Scene.h"
-#include "Log.h"
 
 #include "GameObject.h"
 #include "C_Transform.h"
@@ -19,7 +21,7 @@ void CameraMovement::Update()
 {
 	if (!player)
 	{
-		std::vector<GameObject*>* objects = App->scene->GetGameObjects();
+		std::map<uint32, GameObject*>* objects = App->scene->GetGameObjects();
 		//TODO
 		//for (int i = 0; i < objects->size(); ++i)
 		//	if ((*objects)[i]->GetComponent<C_PlayerController>())

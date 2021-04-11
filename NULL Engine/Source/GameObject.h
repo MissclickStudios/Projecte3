@@ -172,6 +172,9 @@ public:
 	bool maintainThroughScenes;											// Will determine whether or not the GO will be deleted when changing scenes.
 	bool toDelete;														// Will determine whether or not the GO should be deleted. See M_Scene's DeleteGameObject().
 
+	bool changedName;													// Will keep track whether or not the GO was given a new name. TMP until a better solution is found.
+	std::string prevName;												// Will keep track of the previous name of the GO. TMP until a better solution is found.
+
 	OBB	 obb;
 	AABB aabb;
 
