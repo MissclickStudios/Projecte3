@@ -110,7 +110,7 @@ void Blurrg::Update()
 		if (dashCharge.IsActive())
 		{
 			// Dash
-			if (dashCharge.ReadSec() >= dashingCharge / speedModifier)
+			if (dashCharge.ReadSec() >= dashingCharge)
 			{
 				dashCharge.Stop();
 				dashColdown.Start();

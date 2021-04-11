@@ -29,6 +29,9 @@
 #include "Bullet.h"
 
 #include "Weapon.h"
+
+#include "Time.h"
+
 #include "MathGeoLib/include/Geometry/Line.h"
 
 #define MAX_JOYSTICK_INPUT 32767
@@ -47,6 +50,9 @@ enum class PlayerState
 
 Player::Player() : Script(), state(PlayerState::IDLE)
 {
+	blasterReloadTimer.Stop();
+	sniperReloadTimer.Stop();
+	shootAnimTimer.Stop();
 }
 
 Player::~Player()
@@ -57,6 +63,21 @@ void Player::Awake()
 {
 	if (!gameObject->GetComponent<C_RigidBody>())
 		gameObject->CreateComponent(ComponentType::RIGIDBODY);
+
+	std::vector<GameObject*>* objects = App->scene->GetGameObjects();
+	for (uint i = 0; i < objects->size(); ++i)
+	{
+		std::string name = (*objects)[i]->GetName();
+		LOG("%s", name.c_str());
+		if (name == "Blaster")
+			blasterModel = (*objects)[i];
+		else if (name == "Sniper")
+			sniperModel = (*objects)[i];
+	}
+	if (blasterModel)
+		blasterModel->SetIsActive(true);
+	if (sniperModel)
+		sniperModel->SetIsActive(false);
 
 	dashTime.Stop();
 	dashColdown.Stop();
@@ -169,19 +190,25 @@ void Player::Animations()
 	AnimatorClip* currentClip = aAnimator->GetCurrentClip();
 	std::string clipName = (currentClip != nullptr) ? currentClip->GetName() : "[NONE]";
 
+	if (shootAnimTimer.IsActive())
+	{
+		if (shootAnimTimer.ReadSec() >= currentClip->GetDurationInSeconds())
+		{
+			shootAnimTimer.Stop();
+		}
+		else
+			return;
+	}
+
 	switch (state)
 	{
 	case PlayerState::IDLE:
-		if (currentClip != nullptr && clipName != idle)
-		{
-			aAnimator->PlayClip(idle, 0u);
-		}
+		if (currentClip && clipName != idle)
+			aAnimator->PlayClip(idle, 0.2f);
 		break;
 	case PlayerState::RUNNING:
-		if (currentClip != nullptr && clipName != walk)
-		{
-			aAnimator->PlayClip(walk, 0u);
-		}
+		if (currentClip && clipName != walk)
+			aAnimator->PlayClip(walk, 0.2f);
 		break;
 	//case PlayerState::DASHING:
 	//	if (currentClip != nullptr && clipName != dash)
@@ -190,29 +217,40 @@ void Player::Animations()
 	//	}
 	//	break;
 	case PlayerState::SHOOTING_BLASTER:
-		if (currentClip != nullptr && clipName != shootBlaster)
+		if (currentClip && clipName != shootBlaster)
 		{
-			aAnimator->PlayClip(shootBlaster, 0u);
+			aAnimator->PlayClip(shootBlaster, 0.1f);
+			shootAnimTimer.Start();
 		}
 		break;
-	//case PlayerState::SHOOTING_SNIPER:
-	//	if (currentClip != nullptr && clipName != shootSniper)
-	//	{
-	//		aAnimator->PlayClip(shootSniper, 0u);
-	//	}
-	//	break;
-	//case PlayerState::RELOADING_BLASTER:
+	case PlayerState::SHOOTING_SNIPER:
+		if (currentClip && clipName != shootBlaster)
+		{
+			aAnimator->PlayClip(shootBlaster, 0.1f);
+			shootAnimTimer.Start();
+		}
+		//if (currentClip != nullptr && clipName != shootSniper)
+		//{
+		//	aAnimator->PlayClip(shootSniper, 0u);
+		//  shootAnimTimer.Start();
+		//}
+		break;
+	case PlayerState::RELOADING_BLASTER:
 	//	if (currentClip != nullptr && clipName != "Shooting")
 	//	{
 	//		//aAnimator->PlayClip("Reloading", 0u);
 	//	}
-	//	break;
-	//case PlayerState::RELOADING_SNIPER:
+		if (currentClip && clipName != idle)
+			aAnimator->PlayClip(idle, 0.2f);
+		break;
+	case PlayerState::RELOADING_SNIPER:
 	//	if (currentClip != nullptr && clipName != "Shooting")
 	//	{
 	//		//aAnimator->PlayClip("Reloading", 0u);
 	//	}
-	//	break;
+		if (currentClip && clipName != idle)
+			aAnimator->PlayClip(idle, 0.2f);
+		break;
 	//case PlayerState::DEAD:
 	//	if (currentClip != nullptr && clipName != die)
 	//	{
@@ -343,19 +381,27 @@ void Player::Shooting()
 	{
 		float2 dir = { lastAim.x, -lastAim.z };
 		float rad = dir.AimedAngle();
-		if (gameObject->childs[i]->GetComponent<C_Mesh>()) // FUCK MESHES ALL MY HOMIES HATE MESHES
-		{
-			//gameObject->childs[i]->transform->SetLocalRotation(float3(DegToRad(-90), 0, rad));
-		}
-		else
+		if (!gameObject->childs[i]->GetComponent<C_Mesh>()) // FUCK MESHES ALL MY HOMIES HATE MESHES
 			gameObject->childs[i]->transform->SetLocalRotation(float3(0, rad + DegToRad(90), 0));
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_F) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(1) == ButtonState::BUTTON_DOWN)
 		if (weaponUsed == 1)
+		{
 			weaponUsed = 2;
+			if (blasterModel)
+				blasterModel->SetIsActive(false);
+			if (sniperModel)
+				sniperModel->SetIsActive(true);
+		}
 		else
+		{
 			weaponUsed = 1;
+			if (blasterModel)
+				blasterModel->SetIsActive(true);
+			if (sniperModel)
+				sniperModel->SetIsActive(false);
+		}
 
 	bool shooting = false;
 	if (weaponUsed == 1)

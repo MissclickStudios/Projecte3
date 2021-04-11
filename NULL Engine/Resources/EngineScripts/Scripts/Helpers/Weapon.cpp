@@ -138,10 +138,14 @@ void Weapon::FireProjectile(float3 direction)
 		return;
 
 	float3 position = shooter->transform->GetWorldPosition();
-	position.y += 4;
+	float2 dir = { direction.x, -direction.z };
+	float2 invdir = { -direction.z, direction.x };
+
+	position.x += invdir.x * 1.4;
+	position.y += 6.5;
+	position.z += invdir.y * 1.4;
 	projectile->transform->SetWorldPosition(position);
 
-	float2 dir = { direction.x, -direction.z };
 	float rad = dir.AimedAngle();
 	projectile->transform->SetLocalRotation(float3(0, rad + DegToRad(90), 0));
 

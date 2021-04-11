@@ -126,6 +126,10 @@ private:
 	// Weapons
 	Timer blasterReloadTimer;
 	Timer sniperReloadTimer;
+	Timer shootAnimTimer;
+
+	GameObject* blasterModel = nullptr;
+	GameObject* sniperModel = nullptr;
 
 	R_Texture* ammoTex[11] = { 0 };
 	bool storedAmmoTex = false;
