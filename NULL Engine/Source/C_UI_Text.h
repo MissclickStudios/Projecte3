@@ -15,22 +15,18 @@ typedef FT_LibraryRec_* FT_Library;
 
 class R_Shader;
 
-struct Character {
-	uint textureID;  // ID handle of the glyph texture
-	float2   Size;       // Size of glyph
-	float2   Bearing;    // Offset from baseline to left/top of glyph
-	uint Advance;    // Offset to advance to next glyph
+struct Character 
+{
+	uint	textureID;		// ID handle of the glyph texture
+	float2	size;			// Size of glyph
+	float2	bearing;		// Offset from baseline to left/top of glyph
+	uint	advance;		// Offset to advance to next glyph
 };
-
-
-
 
 class NULL_API C_UI_Text : public Component
 {
 public:
-
 	C_UI_Text(GameObject* owner, Rect2D rect = { 0,0,50,50 });
-
 	~C_UI_Text();
 
 	bool Update() override;
@@ -41,6 +37,7 @@ public:
 
 	static inline ComponentType GetType() { return ComponentType::UI_TEXT; }
 
+public:
 	void LoadBuffers();
 
 	//void Draw2D();
@@ -52,7 +49,6 @@ public:
 	void GenerateTextureID();
 
 public:
-
 	Rect2D GetRect() const;
 
 	void SetRect(const Rect2D& rect);
