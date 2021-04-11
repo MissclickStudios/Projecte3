@@ -6,7 +6,7 @@
 
 #include "R_Material.h"
 
-#include "R_Particles.h"
+#include "R_ParticleSystem.h"
 
 #include "MemoryManager.h"
 

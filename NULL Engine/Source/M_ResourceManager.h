@@ -14,6 +14,7 @@ class Resource;
 enum class ResourceType;
 class R_Shader;
 class R_Texture;
+class R_ParticleSystem;
 
 class GameObject;
 

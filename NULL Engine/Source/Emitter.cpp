@@ -72,12 +72,12 @@ void Emitter::Load(ParsonNode& node)
 
 void Emitter::SetAsDefault()
 {
-	AddModuleFromType(ParticleModule::EmitterBase);
-	AddModuleFromType(ParticleModule::EmitterSpawn);
-	AddModuleFromType(ParticleModule::ParticleLifetime);
-	AddModuleFromType(ParticleModule::ParticleColor);
-	AddModuleFromType(ParticleModule::ParticleMovement);
-	AddModuleFromType(ParticleModule::ParticleBillboarding);
+	AddModuleFromType(ParticleModule::Type::EmitterBase);
+	AddModuleFromType(ParticleModule::Type::EmitterSpawn);
+	AddModuleFromType(ParticleModule::Type::ParticleLifetime);
+	AddModuleFromType(ParticleModule::Type::ParticleColor);
+	AddModuleFromType(ParticleModule::Type::ParticleMovement);
+	AddModuleFromType(ParticleModule::Type::ParticleBillboarding);
 }
 
 bool Emitter::AddModuleFromType(ParticleModule::Type type)

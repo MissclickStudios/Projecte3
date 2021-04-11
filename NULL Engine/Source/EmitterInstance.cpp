@@ -17,7 +17,7 @@ EmitterInstance::~EmitterInstance()
 	
 }
 
-void EmitterInstance::Init(Emitter* emitter, C_Particles* component)
+void EmitterInstance::Init(Emitter* emitter, C_ParticleSystem* component)
 {
 	this->emitter = emitter;
 	this->component = component;

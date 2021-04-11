@@ -36,7 +36,7 @@
 #include "R_Scene.h"
 #include "R_Animation.h"
 #include "R_Shader.h"
-#include "R_Particles.h"
+#include "R_ParticleSystem.h"
 #include "R_Script.h"
 #include "R_NavMesh.h"
 

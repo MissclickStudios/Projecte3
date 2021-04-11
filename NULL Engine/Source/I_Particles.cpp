@@ -1,4 +1,4 @@
-#include "R_Particles.h"
+#include "R_ParticleSystem.h"
 
 #include "I_Particles.h"
 
