@@ -10,6 +10,21 @@ EmitterInstance::EmitterInstance()
 {
 }
 
+EmitterInstance::EmitterInstance(Emitter* emitter, C_ParticleSystem* component)
+{
+	this->emitter = emitter;
+	this->component = component;
+
+	particles.resize(emitter->maxParticleCount);
+
+	particleIndices = new unsigned int[emitter->maxParticleCount];
+
+	for (uint i = 0; i < emitter->maxParticleCount; ++i)
+	{
+		particleIndices[i] = i;
+	}
+}
+
 EmitterInstance::~EmitterInstance()
 {
 	delete emitter;

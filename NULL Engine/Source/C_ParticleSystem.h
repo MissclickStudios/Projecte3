@@ -1,5 +1,5 @@
-#ifndef __C_PARTICLES_H__
-#define __C_PARTICLES_H__
+#ifndef __C_PARTICLESYSTEM_H__
+#define __C_PARTICLESYSTEM_H__
 
 #include "Component.h"
 #include "EmitterInstance.h"
@@ -17,6 +17,12 @@ public:
 
 	bool Update();
 	void Reset();
+
+	void SetParticleSystem(R_ParticleSystem* newParticleSystem);
+	void RefreshEmitters();
+
+	void NewParticleSystem();
+	void SaveParticleSystem();
 
 	bool SetAsDefaultComponent();		//Reset the component, add an emitterInstance to the list and assign it the default emitter
 	void AddDefaultEmitter();			//Create a default emitter

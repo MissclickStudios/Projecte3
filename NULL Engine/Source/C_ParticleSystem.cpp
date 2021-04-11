@@ -1,14 +1,14 @@
 #include "JSONParser.h"
 
+#include "I_Particles.h"
 #include "Time.h"
 
-#include "M_ResourceManager.h"
+//#include "M_ResourceManager.h"
 
 #include "R_ParticleSystem.h"
 
-#include "C_Particles.h"
-
 #include "MemoryManager.h"
+#include "C_ParticleSystem.h"
 
 C_ParticleSystem::C_ParticleSystem(GameObject* owner) : Component(owner, ComponentType::PARTICLES)
 {
@@ -57,6 +57,36 @@ bool C_ParticleSystem::Update()
 	return true;
 }
 
+void C_ParticleSystem::SetParticleSystem(R_ParticleSystem* newParticleSystem)
+{
+	resource = newParticleSystem;
+	RefreshEmitters();
+}
+
+void C_ParticleSystem::RefreshEmitters()
+{
+	Reset();
+	emitterInstances.clear();
+
+	for (auto emit = resource->emitters.begin(); emit != resource->emitters.end(); ++emit)
+	{
+		EmitterInstance* emitter = new EmitterInstance(&(*emit),this);
+		emitterInstances.push_back(emitter);
+	}
+}
+
+void C_ParticleSystem::NewParticleSystem()
+{
+	resource = new R_ParticleSystem();
+
+}
+
+void C_ParticleSystem::SaveParticleSystem()
+{
+	char* buffer = nullptr;
+	Importer::Particles::Save(resource,&buffer);
+}
+
 bool C_ParticleSystem::SetAsDefaultComponent()
 {
 	bool ret = false;
@@ -66,10 +96,9 @@ bool C_ParticleSystem::SetAsDefaultComponent()
 
 	if (defaultEmitter != nullptr)
 	{
-		EmitterInstance* emitter = new EmitterInstance();
+		EmitterInstance* emitter = new EmitterInstance(defaultEmitter, this);
 
 		emitterInstances.push_back(emitter);
-		emitterInstances.back()->Init(defaultEmitter, this);
 
 		ret = true;
 	}
@@ -109,4 +138,6 @@ void C_ParticleSystem::Reset()
 		emitterInstances[i]->ResetEmitter();
 	}
 }
+
+
 

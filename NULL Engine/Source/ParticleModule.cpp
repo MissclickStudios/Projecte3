@@ -1,11 +1,11 @@
 #include "JSONParser.h"
-
+#include "C_ParticleSystem.h"
 #include "ParticleModule.h"
 
 #include "GameObject.h"
 #include "Emitter.h"
 #include "EmitterInstance.h"
-#include "C_ParticleSystem.h"
+
 #include "C_Transform.h"
 #include "M_Camera3D.h"
 #include "Application.h"
@@ -80,6 +80,7 @@ void EmitterSpawn::Update(float dt, EmitterInstance* emitter)
 
 void ParticleMovement::Save(ParsonNode& node)
 {
+	//TODO PARTICLE SYSTEM
 	node.SetInteger("Type", (int)type);
 
 	node.SetNumber("initialIntensity1",initialIntensity1);
@@ -88,11 +89,11 @@ void ParticleMovement::Save(ParsonNode& node)
 	node.SetFloat3("initialDirection1",initialDirection1);
 	node.SetFloat3("initialDirection2", initialDirection2);
 
-	float3 initialPosition1 = float3::zero;
+	/*float3 initialPosition1 = float3::zero;
 	float3 initialPosition2 = float3::zero;
 
 	bool hideMovement = false;
-	bool eraseMovement = false;
+	bool eraseMovement = false;*/
 }
 
 void ParticleMovement::Load(ParsonNode& node)
@@ -131,12 +132,12 @@ void ParticleMovement::Update(float dt, EmitterInstance* emitter)
 
 void ParticleColor::Save(ParsonNode& node)
 {
-	node.SetInteger("Type", (int)type);
+	node.SetInteger("Type", (int)type);//TODO PARTICLE SYSTEM
 }
 
 void ParticleColor::Load(ParsonNode& node)
 {
-
+	//TODO PARTICLE SYSTEM
 }
 
 void ParticleColor::Spawn(EmitterInstance* emitter, Particle* particle)
@@ -169,12 +170,12 @@ void ParticleColor::Update(float dt, EmitterInstance* emitter)
 
 void ParticleLifetime::Save(ParsonNode& node)
 {
-	node.SetInteger("Type", (int)type);
+	node.SetInteger("Type", (int)type);//TODO PARTICLE SYSTEM
 }
 
 void ParticleLifetime::Load(ParsonNode& node)
 {
-
+	//TODO PARTICLE SYSTEM
 }
 
 void ParticleLifetime::Spawn(EmitterInstance* emitter, Particle* particle)

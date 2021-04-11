@@ -793,6 +793,20 @@ void M_ResourceManager::GetAllShaders(std::vector<R_Shader*>& shaders)
 
 void M_ResourceManager::GetAllParticleSystems(std::vector<R_ParticleSystem*>& shaders)
 {
+	std::vector<std::string> particleSystemFiles;
+	App->fileSystem->GetAllFilesWithFilter(ASSETS_PARTICLESYSTEMS_PATH, particleSystemFiles, nullptr, "shader");
+	if (particleSystemFiles.empty())
+		return;
+
+	R_ParticleSystem* tmpParticleSystem = nullptr;
+	for (uint i = 0; i < particleSystemFiles.size(); i++)
+	{
+		tmpParticleSystem = (R_ParticleSystem*)App->resourceManager->GetResourceFromLibrary(particleSystemFiles[i].c_str());
+		(tmpParticleSystem != nullptr) ? shaders.push_back(tmpParticleSystem) : LOG("[ERROR] Could not get Shader! Error: ParticleSystem { %s } could not be found in active resources.", particleSystemFiles[i], particleSystemFiles[i]);
+	}
+
+	tmpParticleSystem = nullptr;
+	particleSystemFiles.clear();
 }
 
 void M_ResourceManager::GetAllTextures(std::vector<R_Texture*>& textures, const char* name)
@@ -1371,7 +1385,7 @@ bool M_ResourceManager::GetLibraryDirectoryAndExtensionFromType(const ResourceTy
 	case ResourceType::SCENE:		{ directory = SCENES_PATH;		extension = SCENES_EXTENSION; }			break;
 	case ResourceType::ANIMATION:	{ directory = ANIMATIONS_PATH;	extension = ANIMATIONS_EXTENSION; }		break;
 	case ResourceType::SHADER:		{ directory = SHADERS_PATH;		extension = SHADERS_EXTENSION; }		break;
-	case ResourceType::PARTICLES:	{ directory = PARTICLESYSTEMS_PATH;	extension = PARTICLES_EXTENSION; }		break;
+	case ResourceType::PARTICLES:	{ directory = PARTICLESYSTEMS_PATH;	extension = PARTICLESYSTEMS_EXTENSION; }		break;
 	case ResourceType::SCRIPT:		{ directory = SCRIPTS_PATH;		extension = SCRIPTS_EXTENSION; }		break;
 	case ResourceType::NAVMESH_AGENT:		{ directory = NAVIGATION_PATH;	extension = NAVMESH_EXTENSION; }		break;
 	case ResourceType::NONE:		{ return false; }														break;
@@ -1608,7 +1622,7 @@ ResourceType M_ResourceManager::GetTypeFromLibraryExtension(const char* libraryP
 	else if (extension == SCENES_EXTENSION)			{ type = ResourceType::SCENE; }
 	else if (extension == ANIMATIONS_EXTENSION)		{ type = ResourceType::ANIMATION; }
 	else if (extension == SHADERS_EXTENSION)		{ type = ResourceType::SHADER; }
-	else if (extension == PARTICLES_EXTENSION)		{ type = ResourceType::PARTICLES; }
+	else if (extension == PARTICLESYSTEMS_EXTENSION)		{ type = ResourceType::PARTICLES; }
 	else if (extension == SCRIPTS_EXTENSION)		{ type = ResourceType::SCRIPT; }
 	else if (extension == NAVMESH_EXTENSION)		{ type = ResourceType::NAVMESH_AGENT; }
 	else											{ type = ResourceType::NONE; }

@@ -41,7 +41,7 @@ void Emitter::Load(ParsonNode& node)
 	uint textureUID = node.GetInteger("textureUID");
 	if (App->resourceManager->AllocateResource(textureUID))
 	{
-		emitterTexture = (R_Texture*)App->resourceManager->RequestResource(textureUID);
+		emitterTexture = (R_Texture*)App->resourceManager->RequestResource(textureUID); //TODO PARTICLE SYSTEM
 	}
 
 	maxParticleCount = node.GetInteger("maxParticleCount");

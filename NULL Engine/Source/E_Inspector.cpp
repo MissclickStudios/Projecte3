@@ -36,6 +36,7 @@
 #include "C_CapsuleCollider.h"
 #include "C_PlayerController.h"
 #include "C_BulletBehavior.h"
+//#include "C_ParticleSystem.h"
 #include "C_PropBehavior.h"
 #include "C_CameraBehavior.h"
 #include "C_GateBehavior.h"
@@ -1214,6 +1215,18 @@ void E_Inspector::DrawParticleSystemComponent(C_ParticleSystem* cParticleSystem)
 		bool show = true;
 		if (ImGui::CollapsingHeader("Particle System", &show, ImGuiTreeNodeFlags_DefaultOpen))
 		{
+			//TODO PARTICLE SYSTEM
+			if(ImGui::Button("New Particle System"))
+			{
+				//cParticleSystem. //TODO doesn't appear NewParticleSystem() wtf
+			}
+
+			// save system
+
+			//combo showing all resources Already exists App->resourceManager->GetAllParticleSystems()
+
+
+
 			for (int i = 0; i < cParticleSystem->emitterInstances.size(); i++) //loop emitters
 			{
 				Emitter* emitter = cParticleSystem->emitterInstances[i]->emitter;
