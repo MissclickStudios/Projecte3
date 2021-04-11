@@ -17,16 +17,10 @@ class C_Animator;
 class C_RigidBody;
 class GameObject;
 
-struct Projectile
-{
-	Projectile() : inUse(false), object(nullptr) {}
-	Projectile(GameObject* object) : inUse(false), object(object) {}
-	Projectile(bool inUse, GameObject* object) : inUse(inUse), object(object) {}
-
-	bool inUse;
-	GameObject* object;
-};
 enum class PlayerState;
+
+class Weapon;
+struct Projectile;
 
 class SCRIPTS_API Player : public Script
 {
@@ -39,24 +33,15 @@ public:
 	void Update() override;
 	void CleanUp()override;
 
-	Projectile* bullets[BULLET_AMOUNT];
+	void TakeDamage(float damage);
+	void BlasterStrongShots();
+	void SniperFreezingShots();
+
 	PlayerState state;
 
 	// Character
 	float speed = 20.0f;
-	float deceleration = 200.0f;
-	float acceleration = 200.0f;
-
-	// Weapon
-	float bulletSpeed = 100.0f;
-	float fireRate = 0.25f;
-
-	int ammo = 10;
-	int maxAmmo = 10;
-
-	bool automatic = true;
-
-	Prefab bullet;
+	int coins = 0;
 
 	// Dash
 	float dashSpeed = 100.0f;
@@ -64,19 +49,59 @@ public:
 	float dashingColdown = 1.0f;
 
 	// Health
-	float health = 3;
+	float health = 3.0f;
+	float maxHealth = 3.0f;
+	float invulnerability = 1.0f;
+
+	// Weapons
+	int weaponUsed = 1;
+
+	// Blaster
+	float blasterSpeed = 100.0f;
+	float blasterRate = 0.25f;
+
+	int blasterAmmo = 10;
+	int blasterMaxAmmo = 10;
+	float blasterReloadTime = 3.0f;
+
+	bool blasterAutomatic = true;
+
+	bool strongShots = false;
+
+	Weapon* blaster = nullptr;
+	Prefab blasterBullet;
+
+	// Sniper
+	float sniperSpeed = 200.0f;
+	float sniperRate = 0.0f;
+
+	int sniperAmmo = 1;
+	int sniperMaxAmmo = 1;
+	float sniperReloadTime = 5.0f;
+
+	bool sniperAutomatic = false;
+
+	bool freezingShots = false;
+
+	Weapon* sniper = nullptr;
+	Prefab sniperBullet;
+
+	std::string idle = "idle";
+	std::string walk = "walk";
+	std::string dash = "dash";
+	std::string shootBlaster = "shoot blaster";
+	std::string shootSniper = "shoot sniper";
+	std::string die = "die";
 
 private:
+
+	void Animations();
 
 	void Movement();
 	void Move(C_RigidBody* rigidBody, int axisX, int axisY);
 	void Dash(C_RigidBody* rigidBody, int axisX, int axisY);
-	void Rotate();
 
-	void Weapon();
-	Projectile* CreateProjectile(uint index);
-	void FireBullet(float3 direction);
-	void Reload();
+	void Shooting();
 
 	void StepSound();
 
@@ -98,10 +123,13 @@ private:
 	C_Animator* aAnimator = nullptr;
 	bool playAnim = false;
 
-	// Weapon
-	Timer fireRateTimer;
+	// Weapons
+	Timer blasterReloadTimer;
+	Timer sniperReloadTimer;
+	Timer shootAnimTimer;
 
-	GameObject* bulletStorage = nullptr;
+	GameObject* blasterModel = nullptr;
+	GameObject* sniperModel = nullptr;
 
 	R_Texture* ammoTex[11] = { 0 };
 	bool storedAmmoTex = false;
@@ -113,6 +141,7 @@ private:
 	Timer dashColdown;
 
 	// Health
+	Timer invulnerabilityTimer;
 	GameObject* hearts[3] = { nullptr, nullptr, nullptr };
 
 	R_Texture* full = nullptr;

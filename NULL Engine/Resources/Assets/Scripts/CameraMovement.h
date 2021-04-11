@@ -12,13 +12,15 @@ public:
 	void Update() override;
 	void CleanUp()override;
 
-private:
+	GameObject* player = nullptr;
 
 	float3 offset = float3::zero;
-	GameObject* player = nullptr;
 };
 
 SCRIPTS_FUNCTION CameraMovement* CreateCameraMovement() {
 	CameraMovement* script = new CameraMovement();
+
+	INSPECTOR_DRAGABLE_FLOAT3(script->offset);
+
 	return script;
 }

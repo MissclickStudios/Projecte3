@@ -8,9 +8,9 @@ public:
 	~Prop();
 
 	void Update() override;
-	void CleanUp()override;
+	void CleanUp() override;
 
-	void OnCollisionEnter();
+	void OnCollisionEnter(GameObject* object) override;
 
 private:
 

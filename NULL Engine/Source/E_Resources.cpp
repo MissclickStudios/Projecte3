@@ -27,6 +27,7 @@ E_Resources::~E_Resources()
 
 bool E_Resources::Draw(ImGuiIO& io)
 {
+	OPTICK_CATEGORY("E_Resources Draw", Optick::Category::Editor)
 
 	ImGui::Begin("References");
 	

@@ -50,7 +50,7 @@ E_Project::~E_Project()
 bool E_Project::Draw(ImGuiIO& io)
 {
 	bool ret = true;
-
+	OPTICK_CATEGORY("E_Project Draw", Optick::Category::Editor)
 
 	CheckFlags();
 

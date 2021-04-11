@@ -36,7 +36,9 @@ public:
 	bool			ToShowCollider() const { return showBoxCollider; }
 	void			SetShowCollider(bool enable) { showBoxCollider = enable; }
 
-	void UpdateFilter() { ToUpdate(ColliderUpdateType::STATE); }
+	void UpdateFilter();
+
+	std::string* GetFil() { return fil; };
 
 private:
 
@@ -53,6 +55,8 @@ private:
 
 	float3* boxColliderVertices;
 	bool showBoxCollider = false;
+
+	std::string* fil = nullptr;
 };
 
 #endif // !__C_BOXCOLLIDERCOMPONENT_H__

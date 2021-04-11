@@ -157,6 +157,7 @@ public:																									// --- COMPONENT GETTERS AND SETTERS
 		return  (componentsWithType.empty()) ? false : true;
 	}
 
+	void* GetScript(std::string scriptName);
 
 public:
 	std::vector<Component*>	components;

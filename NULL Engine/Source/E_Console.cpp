@@ -37,6 +37,7 @@ E_Console::~E_Console()
 
 bool E_Console::Draw(ImGuiIO& io)
 {
+	OPTICK_CATEGORY("E_Console Draw",Optick::Category::Editor)
 	bool ret = true;
 
 

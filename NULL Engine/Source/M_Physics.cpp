@@ -60,27 +60,44 @@ bool M_Physics::Init(ParsonNode& root)
 	return true;
 }
 
+enum class ContactType
+{
+	NOTIFY,
+	IGNORE,
+	DEFAULT
+};
+
 physx::PxFilterFlags customFilterShader(
 	physx::PxFilterObjectAttributes attributes0, physx::PxFilterData filterData0,
 	physx::PxFilterObjectAttributes attributes1, physx::PxFilterData filterData1,
 	physx::PxPairFlags& pairFlags, const void* constantBlock, physx::PxU32 constantBlockSize)
 {
-	bool contact = false;
+	ContactType contact = ContactType::IGNORE;
 	int filter0 = App->physics->GetFilterID((std::string*)filterData0.word0);
 	int filter1 = App->physics->GetFilterID((std::string*)filterData1.word0);
 
-	if (filter0 == -1 || filter1 == -1)
-		contact = true;
-	else if (App->physics->GetInteractions()[filter0][filter1])
-		contact = true;
+	// TEMPORARY
+	// TODO: ADD A SYSTEM TO ALLOW FILTERS TO DETECT COLLISIONS WITH DEFAULTS
+	bool allowDefaultCollisions = false;
+	if (filter0 == 1 || filter1 == 1 || filter0 == 4 || filter1 == 4)
+		allowDefaultCollisions = true;
+	// ---
 
-	if (contact)
+	if (filter0 == -1 || filter1 == -1)
+		contact = ContactType::DEFAULT;
+	else if (App->physics->GetInteractions()[filter0][filter1])
+		contact = ContactType::NOTIFY;
+
+	if (contact != ContactType::IGNORE)
 	{
 		pairFlags = physx::PxPairFlag::eCONTACT_DEFAULT;
-		pairFlags |= physx::PxPairFlag::eNOTIFY_CONTACT_POINTS;
-		pairFlags |= physx::PxPairFlag::eNOTIFY_TOUCH_FOUND;
-		pairFlags |= physx::PxPairFlag::eNOTIFY_TOUCH_PERSISTS;
-		pairFlags |= physx::PxPairFlag::eNOTIFY_TOUCH_LOST;
+		if (contact == ContactType::NOTIFY || allowDefaultCollisions)
+		{
+			pairFlags |= physx::PxPairFlag::eNOTIFY_CONTACT_POINTS;
+			pairFlags |= physx::PxPairFlag::eNOTIFY_TOUCH_FOUND;
+			pairFlags |= physx::PxPairFlag::eNOTIFY_TOUCH_PERSISTS;
+			pairFlags |= physx::PxPairFlag::eNOTIFY_TOUCH_LOST;
+		}
 	}
 
 	return physx::PxFilterFlag::eDEFAULT;
@@ -154,6 +171,8 @@ bool M_Physics::Start()
 
 UpdateStatus M_Physics::Update(float dt)
 {
+	OPTICK_CATEGORY("M_Physics Update", Optick::Category::Module)
+
 	if (App->gameState == GameState::PLAY)
 		simulating = true;
 	else

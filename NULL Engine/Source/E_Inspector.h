@@ -130,6 +130,9 @@ private:
 
 	Component*	componentToDelete;
 
+	GameObject* shownGameObject = nullptr;
+	bool lockGameObject = false;
+
 	//Shader inspector utilities
 
 	std::vector<R_Shader*>	allShaders;

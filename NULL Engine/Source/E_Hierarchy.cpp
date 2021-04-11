@@ -22,13 +22,13 @@ E_Hierarchy::~E_Hierarchy()
 bool E_Hierarchy::Draw(ImGuiIO& io)
 {
 	bool ret = true;
-
+	OPTICK_CATEGORY("E_Hierarchy Draw", Optick::Category::Editor)
 
 	ImGui::Begin("Hierarchy");
 
 	SetIsHovered();
 
-	if (ImGui::CollapsingHeader(EngineApp->scene->GetCurrentScene()))
+	if (ImGui::CollapsingHeader(EngineApp->scene->GetCurrentScene(), ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		PrintGameObjectsOnHierarchy();
 	}
@@ -96,7 +96,10 @@ void E_Hierarchy::ProcessGameObject(GameObject* gameObject)
 	if (gameObject->isPrefab)
 		name += " (Prefab)";
 
-	if (ImGui::TreeNodeEx(name.c_str(), nodeFlags))
+	std::string treeNodeName = name.c_str();
+	treeNodeName += "##" + std::to_string(gameObject->GetUID());
+
+	if (ImGui::TreeNodeEx(treeNodeName.c_str(), nodeFlags))
 	{
 		if (!NodeIsRootObject(gameObject))													// If the game_object being processed is the root object, do not allow any interaction.
 		{

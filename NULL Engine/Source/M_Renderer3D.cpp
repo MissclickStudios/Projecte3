@@ -151,7 +151,8 @@ bool M_Renderer3D::Start()
 // PreUpdate: clear buffer
 UpdateStatus M_Renderer3D::PreUpdate(float dt)
 {	
-	
+	OPTICK_CATEGORY("M_Renderer3D PreUpdate", Optick::Category::Module)
+
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
 
@@ -190,7 +191,7 @@ UpdateStatus M_Renderer3D::PreUpdate(float dt)
 // PostUpdate present buffer to screen
 UpdateStatus M_Renderer3D::PostUpdate(float dt)
 {	
-	OPTICK_CATEGORY("Renderer Post Update", Optick::Category::Update);
+	OPTICK_CATEGORY("M_Renderer3D PostUpdate", Optick::Category::Module);
 
 	RenderScene();
 
@@ -640,6 +641,8 @@ void M_Renderer3D::RendererShortcuts()
 
 void M_Renderer3D::RenderScene()
 {	
+	OPTICK_CATEGORY("Render Scene", Optick::Category::Rendering)
+
 	glBindFramebuffer(GL_FRAMEBUFFER, sceneFramebuffer);
 	glClear(GL_DEPTH_BUFFER_BIT);
 	glClear(GL_COLOR_BUFFER_BIT);
@@ -736,6 +739,7 @@ void M_Renderer3D::SetTo2DRenderSettings(const bool& setTo)
 
 void M_Renderer3D::RenderUI()
 {
+	OPTICK_CATEGORY("RenderUI", Optick::Category::Rendering)
 	SetTo2DRenderSettings(true);
 
 	C_Canvas* canvas = nullptr;

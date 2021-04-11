@@ -19,6 +19,12 @@
 #define INSPECTOR_DRAGABLE_FLOAT(FLOAT_) C_Script::InspectorDragableFloat(&FLOAT_, #FLOAT_)
 #define INSPECTOR_SLIDER_FLOAT(FLOAT_, MIN_, MAX_) C_Script::InspectorSliderFloat(&FLOAT_, #FLOAT_, MIN_, MAX_)
 
+#define INSPECTOR_INPUT_FLOAT3(FLOAT3_) C_Script::InspectorInputFloat3(&FLOAT3_, #FLOAT3_)
+#define INSPECTOR_DRAGABLE_FLOAT3(FLOAT3_) C_Script::InspectorDragableFloat3(&FLOAT3_, #FLOAT3_)
+#define INSPECTOR_SLIDER_FLOAT3(FLOAT3_, MIN_, MAX_) C_Script::InspectorSliderFloat3(&FLOAT3_, #FLOAT3_, MIN_, MAX_)
+
+#define INSPECTOR_STRING(STRING_) C_Script::InspectorString(&STRING_, #STRING_)
+
 #define INSPECTOR_PREFAB(PREFAB_) C_Script::InspectorPrefab(&PREFAB_, #PREFAB_)
 
 #define INSPECTOR_GAMEOBJECT(GAMEOBJECT_) C_Script::InspectorGameObject(&GAMEOBJECT_, #GAMEOBJECT_)

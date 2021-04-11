@@ -46,7 +46,7 @@ E_Configuration::~E_Configuration()
 bool E_Configuration::Draw(ImGuiIO& io)
 {
 	bool ret = true;
-
+	OPTICK_CATEGORY("E_Configuration Draw", Optick::Category::Editor)
 
 	ImGui::Begin(GetName(), nullptr, ImGuiWindowFlags_MenuBar);
 
@@ -431,20 +431,26 @@ bool E_Configuration::PhysicsMenu()
 
 		ImGui::Separator();
 
-		bool** interactions = App->physics->GetInteractions();
-		for (uint y = 0; y < filters->size(); ++y)
+		if (ImGui::TreeNodeEx("Interactions"))
 		{
-			ImGui::Text((*filters)[y].c_str());
-			for (uint x = 0; x < filters->size(); ++x)
+			bool** interactions = App->physics->GetInteractions();
+			for (uint y = 0; y < filters->size(); ++y)
 			{
-				ImGui::SameLine();
+				for (uint x = 0; x < filters->size(); ++x)
+				{
+					if (x != 0)
+						ImGui::SameLine();
 
-				bool interaction = interactions[x][y];
-				char checkID[64];
-				sprintf_s(checkID, 64, "##%do%d", x, y);
-				if (ImGui::Checkbox(checkID, &interaction))
-					interactions[x][y] = interaction;
+					bool interaction = interactions[x][y];
+					char checkID[64];
+					sprintf_s(checkID, 64, "##%do%d", x, y);
+					if (ImGui::Checkbox(checkID, &interaction))
+						interactions[x][y] = interaction;
+				}
+				ImGui::SameLine();
+				ImGui::Text((*filters)[y].c_str());
 			}
+			ImGui::TreePop();
 		}
 	}
 

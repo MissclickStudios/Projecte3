@@ -40,33 +40,31 @@ bool M_EngineScriptManager::Start()
 
 void M_EngineScriptManager::InitScripts()
 {
-	std::vector<Script*>::const_iterator it = currentScripts.cbegin();
-	for (it; it != currentScripts.cend(); ++it)
+	for (int i = 0; i < currentScripts.size(); ++i)
 	{
-		if (*it != nullptr && (*it)->IsScriptEnabled())
+		if (currentScripts[i] != nullptr && currentScripts[i]->IsScriptEnabled())
 		{
 			try {
-				(*it)->Awake();
+				currentScripts[i]->Awake();
 			}
 			catch (...)
 			{
 				//TODO: Stop the game when error found on script???
-				LOG("CODE ERROR IN THE AWAKE OF THE SCRIPT: %s", (*it)->dataName);
+				LOG("CODE ERROR IN THE AWAKE OF THE SCRIPT: %s", currentScripts[i]->dataName);
 			}
 		}
 	}
 
-	it = currentScripts.cbegin();
-	for (it; it != currentScripts.cend(); ++it)
+	for (int i = 0; i < currentScripts.size(); ++i)
 	{
-		if (*it != nullptr && (*it)->IsScriptEnabled())
+		if (currentScripts[i] != nullptr && currentScripts[i]->IsScriptEnabled())
 		{
 			try {
-				(*it)->Start();
+				currentScripts[i]->Start();
 			}
 			catch (...)
 			{
-				LOG("CODE ERROR IN THE START OF THE SCRIPT: %s", (*it)->dataName);
+				LOG("CODE ERROR IN THE START OF THE SCRIPT: %s", currentScripts[i]->dataName);
 			}
 		}
 	}
@@ -86,16 +84,16 @@ UpdateStatus M_EngineScriptManager::PreUpdate(float dt)
 
 	if (App->gameState == GameState::PLAY)
 	{
-		for (std::vector<Script*>::const_iterator it = currentScripts.cbegin(); it != currentScripts.cend(); ++it)
+		for (int i = 0; i < currentScripts.size(); ++i)
 		{
-			if (*it != nullptr && (*it)->IsScriptEnabled())
+			if (currentScripts[i] != nullptr && currentScripts[i]->IsScriptEnabled())
 			{
 				try {
-					(*it)->PreUpdate();
+					currentScripts[i]->PreUpdate();
 				}
 				catch (...)
 				{
-					LOG("CODE ERROR IN THE PREUPDATE OF THE SCRIPT: %s", (*it)->dataName);
+					LOG("CODE ERROR IN THE PREUPDATE OF THE SCRIPT: %s", currentScripts[i]->dataName);
 				}
 			}
 		}
@@ -107,16 +105,16 @@ UpdateStatus M_EngineScriptManager::Update(float dt)
 {
 	if (App->gameState == GameState::PLAY)
 	{
-		for (std::vector<Script*>::const_iterator it = currentScripts.cbegin(); it != currentScripts.cend(); ++it)
+		for (int i = 0; i < currentScripts.size(); ++i)
 		{
-			if (*it != nullptr && (*it)->IsScriptEnabled())
+			if (currentScripts[i] != nullptr && currentScripts[i]->IsScriptEnabled())
 			{
 				try {
-					(*it)->Update();
+					currentScripts[i]->Update();
 				}
 				catch (...)
 				{
-					LOG("CODE ERROR IN THE UPDATE OF THE SCRIPT: %s", (*it)->dataName);
+					LOG("CODE ERROR IN THE UPDATE OF THE SCRIPT: %s", currentScripts[i]->dataName);
 				}
 			}
 		}
@@ -128,16 +126,16 @@ UpdateStatus M_EngineScriptManager::PostUpdate(float dt)
 {
 	if (App->gameState == GameState::PLAY)
 	{
-		for (std::vector<Script*>::const_iterator it = currentScripts.cbegin(); it != currentScripts.cend(); ++it) 
+		for (int i = 0; i < currentScripts.size(); ++i) 
 		{
-			if(*it != nullptr && (*it)->IsScriptEnabled())
+			if(currentScripts[i] != nullptr && currentScripts[i]->IsScriptEnabled())
 			{
 				try {
-					(*it)->PostUpdate();
+					currentScripts[i]->PostUpdate();
 				}
 				catch (...)
 				{
-					LOG("CODE ERROR IN THE POSTUPDATE OF THE SCRIPT: %s", (*it)->dataName);
+					LOG("CODE ERROR IN THE POSTUPDATE OF THE SCRIPT: %s", currentScripts[i]->dataName);
 				}
 			}
 		}
@@ -147,17 +145,16 @@ UpdateStatus M_EngineScriptManager::PostUpdate(float dt)
 
 void M_EngineScriptManager::CleanUpScripts()
 {
-	std::vector<Script*>::const_iterator it = currentScripts.cbegin();
-	for (it; it != currentScripts.cend(); ++it)
+	for (int i = 0; i < currentScripts.size(); ++i)
 	{
-		if (*it != nullptr)
+		if (currentScripts[i] != nullptr)
 		{
 			try {
-				(*it)->CleanUp();
+				currentScripts[i]->CleanUp();
 			}
 			catch (...)
 			{
-				LOG("CODE ERROR IN THE CLEANUP OF THE SCRIPT: %s", (*it)->dataName);
+				LOG("CODE ERROR IN THE CLEANUP OF THE SCRIPT: %s", currentScripts[i]->dataName);
 			}
 		}
 	}
@@ -205,7 +202,7 @@ void M_EngineScriptManager::HotReload()
 				if (root.GetBool("HaveScripts")) 
 				{
 					DeSerializeAllScripts(root.GetArray("CurrentScripts"));
-					root.Release();
+					//root.Release();
 					aviableScripts.clear();
 					EngineApp->resourceManager->GetAllScripts(aviableScripts);
 					if (EngineApp->gameState == GameState::PLAY)
@@ -256,13 +253,20 @@ void M_EngineScriptManager::SerializeAllScripts(ParsonArray& scriptsArray)
 								case InspectorScriptData::DataType::INT:
 									variable.SetInteger("int", *(int*)scriptVariables[i].ptr); break;
 								case InspectorScriptData::DataType::BOOL:
-									variable.SetInteger("bool", *(bool*)scriptVariables[i].ptr); break;
+									variable.SetBool("bool", *(bool*)scriptVariables[i].ptr); break;
 								case InspectorScriptData::DataType::FLOAT:
-									variable.SetInteger("float", *(float*)scriptVariables[i].ptr); break;
+									variable.SetNumber("float", *(float*)scriptVariables[i].ptr); break;
+								case InspectorScriptData::FLOAT3:
+									variable.SetNumber("float3x", (*(float3*)scriptVariables[i].ptr).x);
+									variable.SetNumber("float3y", (*(float3*)scriptVariables[i].ptr).y);
+									variable.SetNumber("float3z", (*(float3*)scriptVariables[i].ptr).z);
+									break;
+								case InspectorScriptData::STRING:
+									variable.SetString("string", (*(std::string*)scriptVariables[i].ptr).c_str()); break;
 								case InspectorScriptData::DataType::PREFAB:
 									variable.SetInteger("prefab", (*(Prefab*)scriptVariables[i].ptr).uid); break;
 								case InspectorScriptData::DataType::GAMEOBJECT:
-									if (scriptVariables[i].obj != nullptr)
+									if (scriptVariables[i].obj != nullptr && *scriptVariables[i].obj != nullptr)
 										variable.SetInteger("gameobject", (*scriptVariables[i].obj)->GetUID());
 									else
 										variable.SetInteger("gameobject", 0);
@@ -314,7 +318,7 @@ void M_EngineScriptManager::DeSerializeAllScripts(const ParsonArray& scriptsArra
 						std::vector<InspectorScriptData>::iterator item =cScript->inspectorVariables.begin();
 						for(item;item != cScript->inspectorVariables.end();++item)
 						{
-							if ((*item).variableName == variableName) 
+							if (type == (*item).variableType && (*item).variableName == variableName)
 							{
 								switch (type)
 								{
@@ -324,8 +328,19 @@ void M_EngineScriptManager::DeSerializeAllScripts(const ParsonArray& scriptsArra
 									*(bool*)(*item).ptr = variable.GetBool("bool"); break;
 								case InspectorScriptData::DataType::FLOAT:
 									*(float*)(*item).ptr = (float)variable.GetNumber("float"); break;
+								case InspectorScriptData::FLOAT3:
+									(*(float3*)(*item).ptr).x = variable.GetNumber("float3x"); break;
+									(*(float3*)(*item).ptr).y = variable.GetNumber("float3y"); break;
+									(*(float3*)(*item).ptr).z = variable.GetNumber("float3z"); break;
+								case InspectorScriptData::STRING:
+									*(std::string*)(*item).ptr = variable.GetString("string"); break;
 								case InspectorScriptData::DataType::PREFAB:
 									*(Prefab*)(*item).ptr = EngineApp->resourceManager->prefabs[(unsigned int)variable.GetNumber("prefab")]; break;
+								case InspectorScriptData::DataType::GAMEOBJECT:
+									uint32 id = variable.GetInteger("gameobject");
+									if (id != 0)
+										*(*item).obj = EngineApp->scene->GetGameObjectByUID(id);
+									break;
 								}
 							}
 						}
@@ -343,30 +358,3 @@ void M_EngineScriptManager::DeSerializeAllScripts(const ParsonArray& scriptsArra
 		}
 	}
 }
-
-/*void M_EngineScriptManager::SerializeChildrenScripts(GameObject* go, ParsonArray& scriptsArray)
-{
-	if (go->HasChilds()) 
-	{
-		std::vector<GameObject*>::const_iterator it = go->childs.cbegin();
-		for (it; it != go->childs.cend(); ++it) 
-		{
-			if (*it != nullptr) 
-			{
-				std::vector<C_Script*> scripts;
-				(*it)->GetComponents<C_Script>(scripts);
-				if (!scripts.empty())
-				{
-					std::vector<C_Script*>::const_iterator script = scripts.cbegin();
-					for (script; script != scripts.cend(); ++script)
-					{
-						if (*script != nullptr)
-						{
-
-						}
-					}
-				}
-			}
-		}
-	}
-}*/

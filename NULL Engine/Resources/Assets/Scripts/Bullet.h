@@ -5,7 +5,6 @@
 #include "Timer.h"
 
 class GameObject;
-class Player;
 
 class SCRIPTS_API Bullet : public Script 
 {
@@ -19,18 +18,27 @@ public:
 
 	void OnEnable() override;
 
-	void OnCollisionEnter() override;
+	void OnCollisionEnter(GameObject* object) override;
 
-	void SetShooter(Player* shooter, uint index);
+	void SetShooter(GameObject* shooter, uint index);
 	void StartAutodestructTimer() { autodestructTimer.Start(); }
+
+	float damage = 1.0f;
+
+	float autodestruct = 3.0f;
+
+	// Effects
+	bool freeze = false;
+	bool strong = false;
 
 private:
 
+	std::string target;
+
 	bool hit = false;
-	Player* shooter = nullptr;
+	GameObject* shooter = nullptr;
 	uint index = 0;
 
-	float autodestruct = 3.0f;
 	Timer autodestructTimer;
 };
 

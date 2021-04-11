@@ -76,6 +76,8 @@ bool M_ResourceManager::Start()
 
 UpdateStatus M_ResourceManager::PreUpdate(float dt)
 {
+	OPTICK_CATEGORY("M_ResourceManager PreUpdate", Optick::Category::Module);
+
 	UpdateStatus status = UpdateStatus::CONTINUE;
 
 	fileRefreshTimer += Time::Real::GetDT();

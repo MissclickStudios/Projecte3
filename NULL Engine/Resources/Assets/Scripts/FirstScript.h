@@ -1,7 +1,9 @@
 #pragma once
+#include <string>
 #include "Script.h"
 #include "ScriptMacros.h"
-#include "Log.h"
+
+#include "MathGeoLib/include/Math/float3.h"
 
 #include "Prefab.h"
 
@@ -25,6 +27,8 @@ public :
 	float inputFloat = 1.1f;
 	float dragFloat = 2.2f;
 	float sliderFloat = 3.3f;
+	float3 tripleFloat = { 1.1f,2.2f,3.3f };
+	std::string string;
 	Prefab tryPrefab;
 	Prefab prefab2;
 	GameObject* object = nullptr;
@@ -39,6 +43,8 @@ SCRIPTS_FUNCTION FirstScript* CreateFirstScript() {
 	INSPECTOR_CHECKBOX_BOOL(script->checkBoxBool);
 	INSPECTOR_INPUT_FLOAT(script->inputFloat);
 	INSPECTOR_DRAGABLE_FLOAT(script->dragFloat);
+	INSPECTOR_DRAGABLE_FLOAT3(script->tripleFloat);
+	INSPECTOR_STRING(script->string);
 	INSPECTOR_SLIDER_FLOAT(script->sliderFloat,0.0,5.5f);
 	INSPECTOR_PREFAB(script->tryPrefab);
 	INSPECTOR_PREFAB(script->prefab2);

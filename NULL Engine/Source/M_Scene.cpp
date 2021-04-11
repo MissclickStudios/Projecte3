@@ -14,6 +14,7 @@
 #include "M_FileSystem.h"
 #include "M_Editor.h"
 #include "M_ResourceManager.h"
+#include "M_UISystem.h"
 
 #include "Resource.h"
 #include "R_Model.h"
@@ -29,10 +30,12 @@
 #include "C_Camera.h"
 #include "C_Animator.h"
 #include "C_Light.h"
+#include "C_UI_Button.h"
 
 #include "Primitive.h"
 
 #include "M_Scene.h"
+#include "M_ScriptManager.h"
 
 #include "MemoryManager.h"
 
@@ -103,7 +106,7 @@ bool M_Scene::Start()
 // Update
 UpdateStatus M_Scene::Update(float dt)
 {
-	OPTICK_CATEGORY("Scene Update", Optick::Category::Update);
+	OPTICK_CATEGORY("M_Scene Update", Optick::Category::Module)
 
 	HandleCopyGO();
 	
@@ -162,7 +165,8 @@ UpdateStatus M_Scene::Update(float dt)
 
 UpdateStatus M_Scene::PostUpdate(float dt)
 {	
-	
+	OPTICK_CATEGORY("M_Scene PostUpdate", Optick::Category::Module)
+
 	if (nextScene)
 	{
 		level.GoNextRoom();
@@ -431,12 +435,28 @@ bool M_Scene::LoadScene(const char* path)
 		App->renderer->ClearRenderers();
 	}
 
+	//Resolve script go pointers reassigning
+	if (!toAdd.empty()) {
+		std::vector< std::pair<uint32, GameObject**>>::const_iterator item = toAdd.cbegin();
+		for (; item != toAdd.cend(); ++item) {
+			GameObject* found = GetGameObjectByUID((*item).first);
+			if (found != nullptr) {
+				*(*item).second = found;
+			}
+			else
+				LOG("ScriptGameObject: Game Object with UID %d not found to resolve script pointer", (*item).first);
+		}
+		toAdd.clear();
+	}
+
 	//FIX THIS
 	App->renderer->defaultSkyBox.SetUpSkyBoxBuffers();
 
 	LOG("Successfully Loaded Scene: %s", path);
 
 	//if (!CheckSceneLight()) AddSceneLight(App->renderer->GenerateSceneLight(Color(1.0f, 1.0f, 1.0f, 1.0f), Color(0.6, 0.6, 0.6, 0.5), Color(0.6, 0.6, 0.6, 0.5), LightType::DIRECTIONAL));
+	if (App->gameState == GameState::PLAY)
+		App->scriptManager->InitScripts();
 
 	return ret;
 }
@@ -688,6 +708,10 @@ void M_Scene::DeleteGameObject(GameObject* gameObject, uint index)
 	if (gameObject == animationRoot)
 	{
 		animationRoot = nullptr;
+	}
+	if (gameObject->GetComponent<C_UI_Button>() != nullptr)
+	{
+		App->uiSystem->DeleteActiveButton(gameObject->GetComponent<C_UI_Button>());
 	}
 	
 	auto item = models.find(gameObject->GetUID());
@@ -1323,6 +1347,11 @@ void M_Scene::HandleCopyGO() //TODO Cntrl + c / Cntrl + v
 		//}
 	}
 
+}
+
+void M_Scene::ResolveScriptGoPointer(const uint32 uid, GameObject** object)
+{
+	toAdd.push_back({uid, object});
 }
 
 void M_Scene::DeleteSelectedGameObject()

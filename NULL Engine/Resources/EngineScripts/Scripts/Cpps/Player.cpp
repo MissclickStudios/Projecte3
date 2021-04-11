@@ -9,6 +9,7 @@
 #include "M_Window.h"
 #include "M_Editor.h"
 #include "M_Audio.h"
+#include "M_Physics.h"
 
 #include "R_Texture.h"
 
@@ -27,6 +28,10 @@
 #include "R_Script.h"
 #include "Bullet.h"
 
+#include "Weapon.h"
+
+#include "Time.h"
+
 #include "MathGeoLib/include/Geometry/Line.h"
 
 #define MAX_JOYSTICK_INPUT 32767
@@ -36,11 +41,18 @@ enum class PlayerState
 	IDLE,
 	RUNNING,
 	DASHING,
-	SHOOTING
+	SHOOTING_BLASTER,
+	SHOOTING_SNIPER,
+	RELOADING_BLASTER,
+	RELOADING_SNIPER,
+	DEAD
 };
 
 Player::Player() : Script(), state(PlayerState::IDLE)
 {
+	blasterReloadTimer.Stop();
+	sniperReloadTimer.Stop();
+	shootAnimTimer.Stop();
 }
 
 Player::~Player()
@@ -52,86 +64,72 @@ void Player::Awake()
 	if (!gameObject->GetComponent<C_RigidBody>())
 		gameObject->CreateComponent(ComponentType::RIGIDBODY);
 
-	fireRateTimer.Stop();
+	std::vector<GameObject*>* objects = App->scene->GetGameObjects();
+	for (uint i = 0; i < objects->size(); ++i)
+	{
+		std::string name = (*objects)[i]->GetName();
+		LOG("%s", name.c_str());
+		if (name == "Blaster")
+			blasterModel = (*objects)[i];
+		else if (name == "Sniper")
+			sniperModel = (*objects)[i];
+	}
+	if (blasterModel)
+		blasterModel->SetIsActive(true);
+	if (sniperModel)
+		sniperModel->SetIsActive(false);
+
 	dashTime.Stop();
 	dashColdown.Stop();
 	stepTimer.Stop();
-
-	//memset(ammoTex, 0, 11 * sizeof(R_Texture*));
-	ammo = 10;
+	invulnerabilityTimer.Stop();
 }
 
 void Player::Update()
 {
-	if (App->gameState != GameState::PLAY)
+	Animations();
+	if (health <= 0.0f)
+	{
+		state = PlayerState::DEAD;
+		C_RigidBody* rigidBody = gameObject->GetComponent<C_RigidBody>();
+		if (!rigidBody || rigidBody->IsStatic())
+			return;
+		rigidBody->SetLinearVelocity(float3::zero);
+
 		return;
-
-	if (!playAnim)
-	{
-		aAnimator = gameObject->GetComponent<C_Animator>();
-
-		//aAnimator->PlayClip("Idle", 0);
-		playAnim = true;
-	}
-
-	AnimatorClip* currentClip = aAnimator->GetCurrentClip();
-	std::string clipName = (currentClip != nullptr) ? currentClip->GetName() : "[NONE]";
-
-	switch (state)
-	{
-	case PlayerState::IDLE:
-		if (currentClip != nullptr && clipName != "Idle")
-		{
-			//aAnimator->PlayClip("Idle", 0);
-		}
-		break;
-	case PlayerState::RUNNING:
-		if (currentClip != nullptr && clipName != "Running4")
-		{
-			//aAnimator->PlayClip("Running4", 0);
-		}
-		break;
-	case PlayerState::DASHING:
-		if (currentClip != nullptr && clipName != "Dashing")
-		{
-			//aAnimator->PlayClip("Dashing", 0);
-		}
-		break;
-	case PlayerState::SHOOTING:
-		if (currentClip != nullptr && clipName != "Shooting")
-		{
-			//aAnimator->PlayClip("Shooting", 0);
-		}
-		break;
-	}
-
-	if (!bulletStorage)
-	{
-		bulletStorage = App->scene->CreateGameObject("Bullets", App->scene->GetSceneRoot());
-		for (uint i = 0; i < BULLET_AMOUNT; ++i)
-			bullets[i] = CreateProjectile(i);
 	}
 
 	Movement();
-	Weapon();
-	HandleHp();
 
-	HandleAmmo(ammo);
+	if (!blaster)
+		blaster = new Weapon(gameObject, blasterBullet, 10u, blasterMaxAmmo, blasterSpeed, blasterRate, blasterAutomatic);
+	blaster->Update();
+	if (!sniper)
+		sniper = new Weapon(gameObject, sniperBullet, 2u, sniperMaxAmmo, sniperSpeed, sniperRate, sniperAutomatic);
+	sniper->Update();
+
+	if (strongShots)
+		BlasterStrongShots();
+	if (freezingShots)
+		SniperFreezingShots();
+
+	blasterAmmo = blaster->ammo;
+	sniperAmmo = sniper->ammo;
+	Shooting();
+
+	if (App->input->GetKey(SDL_SCANCODE_K) == KeyState::KEY_DOWN && hearts != nullptr)
+		health -= 0.5f;
+	if (App->input->GetKey(SDL_SCANCODE_L) == KeyState::KEY_DOWN && hearts != nullptr)
+		health += 0.5f;
+
+	//HandleHp();
+	//HandleAmmo(ammo);
 }
 
 void Player::CleanUp()
 {
-	if (bulletStorage)
-	{
-		for (uint i = 0; i < BULLET_AMOUNT; ++i)
-		{
-			delete bullets[i];
-			bullets[i] = nullptr;
-		}
-
-		App->scene->DeleteGameObject(bulletStorage);
-		bulletStorage = nullptr;
-	}
+	delete blaster; // Destructor calls CleanUp
+	blaster = nullptr;
 
 	if (storedAmmoTex)
 	{
@@ -147,6 +145,119 @@ void Player::CleanUp()
 	if (full != nullptr) { App->resourceManager->FreeResource(full->GetUID()); }
 	if (half != nullptr) { App->resourceManager->FreeResource(half->GetUID()); }
 	if (empty != nullptr) { App->resourceManager->FreeResource(empty->GetUID()); }
+}
+
+void Player::TakeDamage(float damage)
+{
+	if (!invulnerabilityTimer.IsActive())
+	{
+		health -= damage;
+		if (health < 0.0f)
+			health = 0.0f;
+		invulnerabilityTimer.Start();
+	}
+	else
+	{
+		if (invulnerabilityTimer.ReadSec() >= invulnerability)
+			invulnerabilityTimer.Stop();
+	}
+}
+
+void Player::BlasterStrongShots()
+{
+	strongShots = false;
+	for (uint i = 0; i < blaster->projectilesNum; ++i)
+		((Bullet*)blaster->projectiles[i]->object->GetScript("Bullet"))->strong = true;
+}
+
+void Player::SniperFreezingShots()
+{
+	freezingShots = false;
+	for (uint i = 0; i < sniper->projectilesNum; ++i)
+		((Bullet*)sniper->projectiles[i]->object->GetScript("Bullet"))->freeze = true;
+}
+
+void Player::Animations()
+{
+	if (!playAnim)
+	{
+		aAnimator = gameObject->GetComponent<C_Animator>();
+
+		aAnimator->PlayClip("Idle", 0u);
+		playAnim = true;
+	}
+
+	AnimatorClip* currentClip = aAnimator->GetCurrentClip();
+	std::string clipName = (currentClip != nullptr) ? currentClip->GetName() : "[NONE]";
+
+	if (shootAnimTimer.IsActive())
+	{
+		if (shootAnimTimer.ReadSec() >= currentClip->GetDurationInSeconds())
+		{
+			shootAnimTimer.Stop();
+		}
+		else
+			return;
+	}
+
+	switch (state)
+	{
+	case PlayerState::IDLE:
+		if (currentClip && clipName != idle)
+			aAnimator->PlayClip(idle, 0.2f);
+		break;
+	case PlayerState::RUNNING:
+		if (currentClip && clipName != walk)
+			aAnimator->PlayClip(walk, 0.2f);
+		break;
+	//case PlayerState::DASHING:
+	//	if (currentClip != nullptr && clipName != dash)
+	//	{
+	//		aAnimator->PlayClip(dash, 0u);
+	//	}
+	//	break;
+	case PlayerState::SHOOTING_BLASTER:
+		if (currentClip && clipName != shootBlaster)
+		{
+			aAnimator->PlayClip(shootBlaster, 0.1f);
+			shootAnimTimer.Start();
+		}
+		break;
+	case PlayerState::SHOOTING_SNIPER:
+		if (currentClip && clipName != shootBlaster)
+		{
+			aAnimator->PlayClip(shootBlaster, 0.1f);
+			shootAnimTimer.Start();
+		}
+		//if (currentClip != nullptr && clipName != shootSniper)
+		//{
+		//	aAnimator->PlayClip(shootSniper, 0u);
+		//  shootAnimTimer.Start();
+		//}
+		break;
+	case PlayerState::RELOADING_BLASTER:
+	//	if (currentClip != nullptr && clipName != "Shooting")
+	//	{
+	//		//aAnimator->PlayClip("Reloading", 0u);
+	//	}
+		if (currentClip && clipName != idle)
+			aAnimator->PlayClip(idle, 0.2f);
+		break;
+	case PlayerState::RELOADING_SNIPER:
+	//	if (currentClip != nullptr && clipName != "Shooting")
+	//	{
+	//		//aAnimator->PlayClip("Reloading", 0u);
+	//	}
+		if (currentClip && clipName != idle)
+			aAnimator->PlayClip(idle, 0.2f);
+		break;
+	//case PlayerState::DEAD:
+	//	if (currentClip != nullptr && clipName != die)
+	//	{
+	//		aAnimator->PlayClip(die, 0u);
+	//	}
+	//	break;
+	}
 }
 
 void Player::Movement()
@@ -181,10 +292,31 @@ void Player::Movement()
 				dashColdown.Stop();
 		}
 		else if ((App->input->GetKey(SDL_SCANCODE_LSHIFT) == KeyState::KEY_DOWN || App->input->GetGameControllerTrigger(0) == ButtonState::BUTTON_DOWN))
-			Dash(rigidBody, movX, movY);
+		{
+			// 0 -> player filter
+			// 4 -> enemy bullet filter
+			App->physics->GetInteractions()[0][4] = false;
+			App->physics->GetInteractions()[4][0] = false;
+
+			state = PlayerState::DASHING;
+			dashColdown.Start();
+			dashTime.Start();
+		}
 	}
-	else if (dashTime.ReadSec() >= dashingTime)
-		dashTime.Stop();
+	else
+	{
+		rigidBody->SetLinearVelocity(lastDirection * dashSpeed);
+
+		if (dashTime.ReadSec() >= dashingTime)
+		{
+			// 0 -> player filter
+			// 4 -> enemy bullet filter
+			App->physics->GetInteractions()[0][4] = true;
+			App->physics->GetInteractions()[4][0] = true;
+
+			dashTime.Stop();
+		}
+	}
 }
 
 void Player::Move(C_RigidBody* rigidBody, int axisX, int axisY)
@@ -215,31 +347,24 @@ void Player::Dash(C_RigidBody* rigidBody, int axisX, int axisY)
 	dashTime.Start();
 }
 
-void Player::Rotate()
-{
-	//float2 mouse, center, direction;
-	//mouse = MousePositionToWorldPosition();
-	//center.x = GetOwner()->transform->GetWorldPosition().x;
-	//center.y = GetOwner()->transform->GetWorldPosition().z;
-	//mouse.y *= -1;
-	//direction = mouse - center;
-	//direction.Normalize();
-	//
-	//float rad = direction.AimedAngle();
-	//
-	//
-	//float angle = RadToDeg(-rad) + 90;
-	//GetOwner()->transform->SetLocalEulerRotation(float3(0, angle, 0));
-}
-
-void Player::Weapon()
+void Player::Shooting()
 {
 	int aimX = 0;
 	int aimY = 0;
 	// Controller aim
 	GetAimVectorAxis(aimX, aimY);
-	// Mouse aim
-	// TODO
+	// Keyboard movement
+	if (aimX + aimY == 0)
+	{
+		if (App->input->GetKey(SDL_SCANCODE_UP) == KeyState::KEY_REPEAT)
+			aimY = -MAX_JOYSTICK_INPUT;
+		if (App->input->GetKey(SDL_SCANCODE_DOWN) == KeyState::KEY_REPEAT)
+			aimY = MAX_JOYSTICK_INPUT;
+		if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KeyState::KEY_REPEAT)
+			aimX = MAX_JOYSTICK_INPUT;
+		if (App->input->GetKey(SDL_SCANCODE_LEFT) == KeyState::KEY_REPEAT)
+			aimX = -MAX_JOYSTICK_INPUT;
+	}
 
 	float3 direction = { (float)aimX, 0, (float)aimY };
 	if (aimX == 0 && aimY == 0)
@@ -252,128 +377,75 @@ void Player::Weapon()
 		lastAim = direction;
 	}
 
-	if (gameObject->childs.size())
+	for (uint i = 0; i < gameObject->childs.size(); ++i)
 	{
-		GameObject* mesh = gameObject->childs[0];
-		if (mesh)
-		{
-			float2 dir = { lastAim.x, -lastAim.z };
-			float rad = dir.AimedAngle();
-			mesh->transform->SetLocalRotation(float3(0, rad, 0));
-		}
+		float2 dir = { lastAim.x, -lastAim.z };
+		float rad = dir.AimedAngle();
+		if (!gameObject->childs[i]->GetComponent<C_Mesh>()) // FUCK MESHES ALL MY HOMIES HATE MESHES
+			gameObject->childs[i]->transform->SetLocalRotation(float3(0, rad + DegToRad(90), 0));
 	}
 
-	if (App->input->GetKey(SDL_SCANCODE_R) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(2) == ButtonState::BUTTON_DOWN)
-		Reload();
-	if (ammo > 0)
-	{
-		if (!automatic)
+	if (App->input->GetKey(SDL_SCANCODE_F) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(1) == ButtonState::BUTTON_DOWN)
+		if (weaponUsed == 1)
 		{
-			if (App->input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_DOWN || App->input->GetGameControllerTrigger(1) == ButtonState::BUTTON_DOWN)
-			{
-				FireBullet(lastAim);
-			}
-
-			state = PlayerState::SHOOTING;
+			weaponUsed = 2;
+			if (blasterModel)
+				blasterModel->SetIsActive(false);
+			if (sniperModel)
+				sniperModel->SetIsActive(true);
 		}
 		else
 		{
-			if (App->input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_REPEAT || App->input->GetGameControllerTrigger(1) == ButtonState::BUTTON_REPEAT)
-			{
-				if (!fireRateTimer.IsActive())
-				{
-					FireBullet(lastAim);
-					fireRateTimer.Start();
-				}
-				else if (fireRateTimer.ReadSec() >= fireRate)
-				{
-					FireBullet(lastAim);
-					fireRateTimer.Stop();
-					fireRateTimer.Start();
-				}
+			weaponUsed = 1;
+			if (blasterModel)
+				blasterModel->SetIsActive(true);
+			if (sniperModel)
+				sniperModel->SetIsActive(false);
+		}
 
-				state = PlayerState::SHOOTING;
+	bool shooting = false;
+	if (weaponUsed == 1)
+	{
+		if (!blasterReloadTimer.IsActive())
+		{
+			if ((App->input->GetKey(SDL_SCANCODE_R) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(2) == ButtonState::BUTTON_DOWN)
+				|| blasterAmmo <= 0)
+				blasterReloadTimer.Start();
+			else
+				if (blaster->Shoot(lastAim))
+					state = PlayerState::SHOOTING_BLASTER;
+		}
+		else
+		{
+			state = PlayerState::RELOADING_BLASTER;
+			if (blasterReloadTimer.ReadSec() >= blasterReloadTime)
+			{
+				blaster->Reload();
+				blasterReloadTimer.Stop();
 			}
 		}
 	}
-}
-
-Projectile* Player::CreateProjectile(uint index)
-{
-	GameObject* bullet = nullptr;
-	//App->resourceManager->LoadPrefab(bullet.uid, bulletStorage);
-	//char n[10];
-	//sprintf_s(n, "%d", index);
-	//std::string num = n;
-	//std::string name("Bullet" + num);
-	//
-	//bullet->SetName(name.c_str());
-
-	//float3 position = float3::zero;
-	//bullet->transform->SetWorldPosition(position);
-
-	//C_Script* script = (C_Script*)bullet->CreateComponent(ComponentType::SCRIPT);
-	//script->resource = (R_Script*)App->resourceManager->GetResourceFromLibrary("Assets/Scripts//Bullet.h");
-	//for (int i = 0; i < script->resource->dataStructures.size(); ++i) {
-	//	if (script->resource->dataStructures[i].first == "Bullet")
-	//	{
-	//		script->LoadData("Bullet", script->resource->dataStructures[i].second);
-	//		((Bullet*)script->scriptData)->SetShooter(this, index);
-	//		break;
-	//	}
-	//}
-
-
-	//for (uint i = 0; i < bullet->components.size(); ++i)
-	//	bullet->components[i]->SetIsActive(false);
-	//bullet->SetIsActive(false);
-
-	return new Projectile(bullet);
-}
-
-void Player::FireBullet(float3 direction)
-{
-	if (direction.IsZero())
-		++direction.z;
-
-	GameObject* bullet = nullptr;
-
-	for (uint i = 0; i < BULLET_AMOUNT; ++i)
-		if (!bullets[i]->inUse)
+	else
+	{
+		if (!sniperReloadTimer.IsActive())
 		{
-			bullets[i]->inUse = true;
-			bullet = bullets[i]->object;
-			break;
+			if ((App->input->GetKey(SDL_SCANCODE_R) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(2) == ButtonState::BUTTON_DOWN)
+				|| sniperAmmo <= 0)
+				sniperReloadTimer.Start();
+			else
+				if(sniper->Shoot(lastAim))
+					state = PlayerState::SHOOTING_SNIPER;
 		}
-	if (!bullet)
-		return;
-
-	float3 position = gameObject->transform->GetWorldPosition();
-	position.y += 4;
-	bullet->transform->SetWorldPosition(position);
-
-
-	float2 dir = { lastAim.x, -lastAim.z };
-	float rad = dir.AimedAngle();
-	bullet->transform->SetLocalRotation(float3(0, rad, 0));
-
-	C_RigidBody* rigidBody = bullet->GetComponent<C_RigidBody>();
-	rigidBody->TransformMovesRigidBody(true);
-	rigidBody->SetLinearVelocity(direction * bulletSpeed);
-
-	C_AudioSource* source = bullet->GetComponent<C_AudioSource>();
-	source->PlayFx(source->GetEventId());
-
-	bullet->SetIsActive(true);
-	for (uint i = 0; i < bullet->components.size(); ++i)
-		bullet->components[i]->SetIsActive(true);
-
-	--ammo;
-}
-
-void Player::Reload()
-{
-	ammo = maxAmmo;
+		else
+		{
+			state = PlayerState::RELOADING_SNIPER;
+			if (sniperReloadTimer.ReadSec() >= sniperReloadTime)
+			{
+				sniper->Reload();
+				sniperReloadTimer.Stop();
+			}
+		}
+	}
 }
 
 float2 Player::MousePositionToWorldPosition(float mapPositionY)
@@ -541,8 +613,8 @@ void Player::HandleHp()
 
 		health += 0.5;
 
-		if (health > 3)
-			health = 3;
+		if (health > maxHealth)
+			health = maxHealth;
 	}
 }
 
@@ -552,19 +624,7 @@ Player* CreatePlayer()
 
 	// Character
 	INSPECTOR_DRAGABLE_FLOAT(script->speed);
-	INSPECTOR_DRAGABLE_FLOAT(script->acceleration);
-	INSPECTOR_DRAGABLE_FLOAT(script->deceleration);
-
-	// Weapon
-	INSPECTOR_DRAGABLE_FLOAT(script->bulletSpeed);
-	INSPECTOR_DRAGABLE_FLOAT(script->fireRate);
-
-	INSPECTOR_DRAGABLE_INT(script->ammo);
-	INSPECTOR_DRAGABLE_INT(script->maxAmmo);
-
-	INSPECTOR_CHECKBOX_BOOL(script->automatic);
-
-	INSPECTOR_PREFAB(script->bullet);
+	INSPECTOR_DRAGABLE_INT(script->coins);
 
 	// Dash
 	INSPECTOR_DRAGABLE_FLOAT(script->dashSpeed);
@@ -573,6 +633,45 @@ Player* CreatePlayer()
 
 	// Health
 	INSPECTOR_DRAGABLE_FLOAT(script->health);
+	INSPECTOR_DRAGABLE_FLOAT(script->maxHealth);
+	INSPECTOR_DRAGABLE_FLOAT(script->invulnerability);
+
+	// Weapons
+	INSPECTOR_SLIDER_INT(script->weaponUsed, 1, 2);
+
+	// Blaster
+	INSPECTOR_PREFAB(script->blasterBullet);
+
+	INSPECTOR_DRAGABLE_FLOAT(script->blasterSpeed);
+	INSPECTOR_DRAGABLE_FLOAT(script->blasterRate);
+
+	INSPECTOR_DRAGABLE_INT(script->blasterAmmo);
+	INSPECTOR_DRAGABLE_INT(script->blasterMaxAmmo);
+	INSPECTOR_DRAGABLE_FLOAT(script->blasterReloadTime);
+
+	INSPECTOR_CHECKBOX_BOOL(script->blasterAutomatic);
+	INSPECTOR_CHECKBOX_BOOL(script->strongShots);
+
+	// Sniper
+	INSPECTOR_PREFAB(script->sniperBullet);
+
+	INSPECTOR_DRAGABLE_FLOAT(script->sniperSpeed);
+	INSPECTOR_DRAGABLE_FLOAT(script->sniperRate);
+
+	INSPECTOR_DRAGABLE_INT(script->sniperAmmo);
+	INSPECTOR_DRAGABLE_INT(script->sniperMaxAmmo);
+	INSPECTOR_DRAGABLE_FLOAT(script->sniperReloadTime);
+
+	INSPECTOR_CHECKBOX_BOOL(script->sniperAutomatic);
+	INSPECTOR_CHECKBOX_BOOL(script->freezingShots);
+
+	// Animations
+	INSPECTOR_STRING(script->idle);
+	INSPECTOR_STRING(script->walk);
+	INSPECTOR_STRING(script->dash);
+	INSPECTOR_STRING(script->shootBlaster);
+	INSPECTOR_STRING(script->shootSniper);
+	INSPECTOR_STRING(script->die);
 
 	return script;
 }

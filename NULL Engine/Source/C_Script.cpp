@@ -13,6 +13,7 @@
 #include "M_ResourceManager.h"
 #include "M_ScriptManager.h"
 #include "FileSystemDefinitions.h"
+#include "M_Scene.h"
 #include "Prefab.h"
 
 #include "MemoryManager.h"
@@ -86,10 +87,17 @@ bool C_Script::SaveState(ParsonNode& root) const
 				variable.SetBool("bool", *(bool*)inspectorVariables[i].ptr); break;
 			case InspectorScriptData::FLOAT:
 				variable.SetNumber("float", *(float*)inspectorVariables[i].ptr); break;
+			case InspectorScriptData::FLOAT3:
+				variable.SetNumber("float3x", (*(float3*)inspectorVariables[i].ptr).x);
+				variable.SetNumber("float3y", (*(float3*)inspectorVariables[i].ptr).y);
+				variable.SetNumber("float3z", (*(float3*)inspectorVariables[i].ptr).z);
+				break;
+			case InspectorScriptData::STRING:
+				variable.SetString("string", (*(std::string*)inspectorVariables[i].ptr).c_str()); break;
 			case InspectorScriptData::PREFAB:
 				variable.SetInteger("prefab", (*(Prefab*)inspectorVariables[i].ptr).uid); break;
 			case InspectorScriptData::GAMEOBJECT:
-				if (inspectorVariables[i].obj != nullptr)
+				if (inspectorVariables[i].obj != nullptr && *inspectorVariables[i].obj != nullptr)
 					variable.SetInteger("gameobject", (*inspectorVariables[i].obj)->GetUID());
 				else
 					variable.SetInteger("gameobject", 0);
@@ -121,29 +129,38 @@ bool C_Script::LoadState(ParsonNode& root)
 		if (!found)
 			return false;
 
-		if (root.GetBool("HasInspector"))
+		if (!inspectorVariables.empty() && root.GetBool("HasInspector"))
 		{
 			ParsonArray variablesToLoad = root.GetArray("InspectorVariables");
-			for (int i = 0; i < variablesToLoad.size; ++i)
-			{
-				ParsonNode variable = variablesToLoad.GetNode(i);
-				inspectorVariables[i].variableType = (InspectorScriptData::DataType)variable.GetInteger("Type");
-				inspectorVariables[i].variableName = variable.GetString("Name");
-				switch (inspectorVariables[i].variableType)
+			for (int i = 0; i < inspectorVariables.size(); ++i) {
+				for (int j = 0; j < variablesToLoad.size; ++j)
 				{
-				case InspectorScriptData::DataType::INT:
-					*(int*)inspectorVariables[i].ptr = variable.GetInteger("int"); break;
-				case InspectorScriptData::BOOL:
-					*(bool*)inspectorVariables[i].ptr = variable.GetBool("bool"); break;
-				case InspectorScriptData::DataType::FLOAT:
-					*(float*)inspectorVariables[i].ptr = variable.GetNumber("float"); break;
-				case InspectorScriptData::DataType::PREFAB:
-					*(Prefab*)inspectorVariables[i].ptr = App->resourceManager->prefabs[(unsigned int)variable.GetInteger("prefab")]; break;
-				/*case InspectorScriptData::DataType::GAMEOBJECT: //TODO: FINISH THIS !!!!
-					uint32 id = variable.GetInteger("gameobject");
-					if (id != 0)
-						;
-					break;*/
+					ParsonNode variable = variablesToLoad.GetNode(j);
+					if (inspectorVariables[i].variableType == (InspectorScriptData::DataType)variable.GetInteger("Type") && !strcmp(inspectorVariables[i].variableName.c_str(), variable.GetString("Name")))
+					{
+						switch (inspectorVariables[i].variableType)
+						{
+						case InspectorScriptData::DataType::INT:
+							*(int*)inspectorVariables[i].ptr = variable.GetInteger("int"); break;
+						case InspectorScriptData::BOOL:
+							*(bool*)inspectorVariables[i].ptr = variable.GetBool("bool"); break;
+						case InspectorScriptData::DataType::FLOAT:
+							*(float*)inspectorVariables[i].ptr = variable.GetNumber("float"); break;
+						case InspectorScriptData::FLOAT3:
+							(*(float3*)inspectorVariables[i].ptr).x = variable.GetNumber("float3x"); break;
+							(*(float3*)inspectorVariables[i].ptr).y = variable.GetNumber("float3y"); break;
+							(*(float3*)inspectorVariables[i].ptr).z = variable.GetNumber("float3z"); break;
+						case InspectorScriptData::STRING:
+							*(std::string*)inspectorVariables[i].ptr = variable.GetString("string"); break;
+						case InspectorScriptData::DataType::PREFAB:
+							*(Prefab*)inspectorVariables[i].ptr = App->resourceManager->prefabs[(unsigned int)variable.GetInteger("prefab")]; break;
+						case InspectorScriptData::DataType::GAMEOBJECT: //TODO: FINISH THIS !!!!
+							uint32 id = variable.GetInteger("gameobject");
+							if (id != 0)
+								App->scene->ResolveScriptGoPointer(id, inspectorVariables[i].obj);
+							break;
+						}
+					}
 				}
 			}
 		}
@@ -266,110 +283,110 @@ void C_Script::OnEnable()
 	}
 }
 
-void C_Script::OnCollisionEnter()
+void C_Script::OnCollisionEnter(GameObject* object)
 {
 	if (engineScript && scriptData != nullptr) {
 #ifndef GAMEBUILD
 		try {
 			Script* script = (Script*)scriptData;
-			script->OnCollisionEnter();
+			script->OnCollisionEnter(object);
 		}
 		catch (...)
 		{
 			LOG("CODE ERROR IN THE ONDISABLE OF THE SCRIPT: %s", dataName.data());
 		}
 #else
-		((Script*)scriptData)->OnCollisionEnter();
+		((Script*)scriptData)->OnCollisionEnter(object);
 #endif // !GAMEBUILD
 	}
 }
 
-void C_Script::OnCollisionRepeat()
+void C_Script::OnCollisionRepeat(GameObject* object)
 {
 	if (engineScript && scriptData != nullptr) {
 #ifndef GAMEBUILD
 		try {
 			Script* script = (Script*)scriptData;
-			script->OnCollisionRepeat();
+			script->OnCollisionRepeat(object);
 		}
 		catch (...)
 		{
 			LOG("CODE ERROR IN THE ONDISABLE OF THE SCRIPT: %s", dataName.data());
 		}
 #else
-		((Script*)scriptData)->OnCollisionRepeat();
+		((Script*)scriptData)->OnCollisionRepeat(object);
 #endif // !GAMEBUILD
 	}
 }
 
-void C_Script::OnCollisionExit()
+void C_Script::OnCollisionExit(GameObject* object)
 {
 	if (engineScript && scriptData != nullptr) {
 #ifndef GAMEBUILD
 		try {
 			Script* script = (Script*)scriptData;
-			script->OnCollisionExit();
+			script->OnCollisionExit(object);
 		}
 		catch (...)
 		{
 			LOG("CODE ERROR IN THE ONDISABLE OF THE SCRIPT: %s", dataName.data());
 		}
 #else
-		((Script*)scriptData)->OnCollisionExit();
+		((Script*)scriptData)->OnCollisionExit(object);
 #endif // !GAMEBUILD
 	}
 }
 
-void C_Script::OnTriggerEnter()
+void C_Script::OnTriggerEnter(GameObject* object)
 {
 	if (engineScript && scriptData != nullptr) {
 #ifndef GAMEBUILD
 		try {
 			Script* script = (Script*)scriptData;
-			script->OnTriggerEnter();
+			script->OnTriggerEnter(object);
 		}
 		catch (...)
 		{
 			LOG("CODE ERROR IN THE ONDISABLE OF THE SCRIPT: %s", dataName.data());
 		}
 #else
-		((Script*)scriptData)->OnTriggerEnter();
+		((Script*)scriptData)->OnTriggerEnter(object);
 #endif // !GAMEBUILD
 	}
 }
 
-void C_Script::OnTriggerRepeat()
+void C_Script::OnTriggerRepeat(GameObject* object)
 {
 	if (engineScript && scriptData != nullptr) {
 #ifndef GAMEBUILD
 		try {
 			Script* script = (Script*)scriptData;
-			script->OnTriggerRepeat();
+			script->OnTriggerRepeat(object);
 		}
 		catch (...)
 		{
 			LOG("CODE ERROR IN THE ONDISABLE OF THE SCRIPT: %s", dataName.data());
 		}
 #else
-		((Script*)scriptData)->OnTriggerRepeat();
+		((Script*)scriptData)->OnTriggerRepeat(object);
 #endif // !GAMEBUILD
 	}
 }
 
-void C_Script::OnTriggerExit()
+void C_Script::OnTriggerExit(GameObject* object)
 {
 	if (engineScript && scriptData != nullptr) {
 #ifndef GAMEBUILD
 		try {
 			Script* script = (Script*)scriptData;
-			script->OnTriggerExit();
+			script->OnTriggerExit(object);
 		}
 		catch (...)
 		{
 			LOG("CODE ERROR IN THE ONDISABLE OF THE SCRIPT: %s", dataName.data());
 		}
 #else
-		((Script*)scriptData)->OnTriggerExit();
+		((Script*)scriptData)->OnTriggerExit(object);
 #endif // !GAMEBUILD
 	}
 }
@@ -379,8 +396,10 @@ bool C_Script::HasData() const
 	return scriptData != nullptr;
 }
 
+//------------------------INSPECTOR VARIABLES------------------------------------------
 void C_Script::InspectorInputInt(int* variablePtr, const char* ptrName)
 {
+	//TODO: Check kind a useless?!
 	const char* name = typeid(*variablePtr).name();
 	if (strcmp(name, "int"))
 		return;
@@ -481,6 +500,59 @@ void C_Script::InspectorSliderFloat(float* variablePtr, const char* ptrName, con
 		inspector.maxSlider = maxValue;
 		script->inspectorVariables.push_back(inspector);
 	}
+}
+
+void C_Script::InspectorInputFloat3(float3* variablePtr, const char* ptrName)
+{
+	const char* name = typeid(*variablePtr).name();
+	if (strcmp(name, "class math::float3"))
+		return;
+
+	std::string variableName = GetVariableName(ptrName);
+
+	C_Script* script = App->scriptManager->actualScriptLoading;
+	if (script != nullptr)
+		script->inspectorVariables.push_back(InspectorScriptData(variableName, InspectorScriptData::DataType::FLOAT3, variablePtr, InspectorScriptData::ShowMode::INPUT_FLOAT));
+}
+
+void C_Script::InspectorDragableFloat3(float3* variablePtr, const char* ptrName)
+{
+	const char* name = typeid(*variablePtr).name();
+	if (strcmp(name, "class math::float3"))
+		return;
+
+	std::string variableName = GetVariableName(ptrName);
+
+	C_Script* script = App->scriptManager->actualScriptLoading;
+	if (script != nullptr)
+		script->inspectorVariables.push_back(InspectorScriptData(variableName, InspectorScriptData::DataType::FLOAT3, variablePtr, InspectorScriptData::ShowMode::DRAGABLE_FLOAT));
+}
+
+void C_Script::InspectorSliderFloat3(float3* variablePtr, const char* ptrName, const int& minValue, const int& maxValue)
+{
+	const char* name = typeid(*variablePtr).name();
+	if (strcmp(name, "class math::float3"))
+		return;
+
+	std::string variableName = GetVariableName(ptrName);
+
+	C_Script* script = App->scriptManager->actualScriptLoading;
+	if (script != nullptr)
+	{
+		InspectorScriptData inspector(variableName, InspectorScriptData::DataType::FLOAT3, variablePtr, InspectorScriptData::ShowMode::SLIDER_FLOAT);
+		inspector.minSlider = minValue;
+		inspector.maxSlider = maxValue;
+		script->inspectorVariables.push_back(inspector);
+	}
+}
+
+void C_Script::InspectorString(std::string* variablePtr, const char* ptrName)
+{
+	std::string variableName = GetVariableName(ptrName);
+
+	C_Script* script = App->scriptManager->actualScriptLoading;
+	if (script != nullptr)
+		script->inspectorVariables.push_back(InspectorScriptData(variableName, InspectorScriptData::DataType::STRING, variablePtr, InspectorScriptData::ShowMode::NONE));
 }
 
 void C_Script::InspectorPrefab(Prefab* variablePtr, const char* ptrName)
