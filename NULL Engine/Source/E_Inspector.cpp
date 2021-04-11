@@ -1351,24 +1351,29 @@ void E_Inspector::DrawParticleSystemComponent(C_ParticleSystem* cParticleSystem)
 						break;
 						case(ParticleModule::Type::ParticleBillboarding):
 						{
-							if (ImGui::CollapsingHeader("Particle Lifetime", &show, ImGuiTreeNodeFlags_DefaultOpen))
+							if (ImGui::CollapsingHeader("Particle Billboarding", &show, ImGuiTreeNodeFlags_DefaultOpen))
 							{
-								ParticleLifetime* _module = (ParticleLifetime*)module;
+								ParticleBillboarding* _module = (ParticleBillboarding*)module;
 
-								float originLifetime = _module->initialLifetime;
-								if (ImGui::InputFloat("InitialLifetime", &originLifetime, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
-									_module->initialLifetime = originLifetime;
+								ImGui::Combo("Billboarding##", &billboardingType, "Screen Aligned\0World Aligned\0X-Axis Aligned\0Y-Axis Aligned\0Z-Axis Aligned");
 
-								bool hide = _module->hideLifetime;
-								if (ImGui::Checkbox("Hide Lifetime", &hide))
+								ImGui::SameLine();
+
+								if ((ImGui::Button("SELECT")))
 								{
-									_module->hideLifetime = hide;
+									_module->billboardingType = (ParticleBillboarding::BillboardingType)billboardingType;
 								}
 
-								bool deleteModule = _module->eraseLifetime;
-								if (ImGui::Checkbox("Delete Lifetime", &deleteModule))
+								bool hideModule = _module->hideBillboarding;
+								if (ImGui::Checkbox("Hide Billboarding", &hideModule))
 								{
-									_module->eraseLifetime = deleteModule;
+									_module->hideBillboarding = hideModule;
+								}
+
+								bool deleteModule = _module->eraseBillboarding;
+								if (ImGui::Checkbox("Delete Billboarding", &deleteModule))
+								{
+									_module->eraseBillboarding = deleteModule;
 								}
 							}
 						}

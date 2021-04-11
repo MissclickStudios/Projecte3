@@ -112,7 +112,11 @@ struct ParticleBillboarding : ParticleModule
 	{
 		ScreenAligned,
 		WorldAligned,
-		AxisAligned
+		XAxisAligned,
+		YAxisAligned,
+		ZAxisAligned,
+
+		None,
 	};
 
 	ParticleBillboarding() : ParticleModule(Type::ParticleBillboarding) {};
@@ -122,7 +126,7 @@ struct ParticleBillboarding : ParticleModule
 
 	Quat GetAlignmentRotation(const float3& position, const float4x4& cameraTransform);
 
-	BillboardingType type = ScreenAligned;
+	BillboardingType billboardingType = ScreenAligned;
 	bool hideBillboarding = false;
 	bool eraseBillboarding = false;
 };
