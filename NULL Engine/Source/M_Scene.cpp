@@ -130,6 +130,7 @@ UpdateStatus M_Scene::Update(float dt)
 		if (gameObject->changedName)
 		{
 			RefreshGameObjectInNamesMap(gameObject);
+			gameObject->changedName = false;
 		}
 
 		if (gameObject->IsActive())
