@@ -12,7 +12,7 @@ class EmitterInstance;
 
 struct NULL_API ParticleModule
 {
-	enum Type
+	enum class Type
 	{
 		None,
 		ParticleMovement,
@@ -30,6 +30,9 @@ struct NULL_API ParticleModule
 
 	ParticleModule(Type type) : type(type) {};
 
+	virtual void Save(ParsonNode& node) = 0;
+	virtual void Load(ParsonNode& node) = 0;
+
 	virtual void Spawn(EmitterInstance* emitter, Particle* particle) = 0;
 	virtual void Update(float dt, EmitterInstance* emitter) = 0;
 
@@ -43,6 +46,9 @@ struct EmitterBase : ParticleModule
 
 	EmitterBase() : ParticleModule(Type::EmitterBase) {};
 
+	void Save(ParsonNode& node) override;
+	void Load(ParsonNode& node) override;
+
 	void Spawn(EmitterInstance* emitter, Particle* particle);	//Loop active particles and update them
 	void Update(float dt, EmitterInstance* emitter);
 
@@ -52,6 +58,9 @@ struct EmitterBase : ParticleModule
 struct EmitterSpawn : ParticleModule
 {
 	EmitterSpawn() : ParticleModule(Type::EmitterSpawn) {};
+	
+	void Save(ParsonNode& node) override;
+	void Load(ParsonNode& node) override;
 
 	void Spawn(EmitterInstance* emitter, Particle* particle);
 	void Update(float dt, EmitterInstance* emitter);			//spawn ratio and timer management
@@ -63,6 +72,9 @@ struct EmitterSpawn : ParticleModule
 struct ParticleMovement : ParticleModule
 {
 	ParticleMovement() : ParticleModule(Type::ParticleMovement) {};
+
+	void Save(ParsonNode& node) override;
+	void Load(ParsonNode& node) override;
 
 	void Spawn(EmitterInstance* emitter, Particle* particle);	//random pos between initialPosition1 and 2
 	void Update(float dt, EmitterInstance* emitter);
@@ -84,6 +96,9 @@ struct ParticleColor : ParticleModule
 {
 	ParticleColor() : ParticleModule(Type::ParticleColor) {};
 
+	void Save(ParsonNode& node) override;
+	void Load(ParsonNode& node) override;
+
 	void Spawn(EmitterInstance* emitter, Particle* particle);
 	void Update(float dt, EmitterInstance* emitter);
 
@@ -97,6 +112,9 @@ struct ParticleLifetime : ParticleModule
 {
 	ParticleLifetime() : ParticleModule(Type::ParticleLifetime) {};
 
+	void Save(ParsonNode& node) override;
+	void Load(ParsonNode& node) override;
+
 	void Spawn(EmitterInstance* emitter, Particle* particle);
 	void Update(float dt, EmitterInstance* emitter);
 
@@ -109,6 +127,9 @@ struct ParticleLifetime : ParticleModule
 struct ParticleBillboarding : ParticleModule
 {
 	ParticleBillboarding() : ParticleModule(Type::ParticleBillboarding) {};
+
+	void Save(ParsonNode& node) override;
+	void Load(ParsonNode& node) override;
 
 	void Spawn(EmitterInstance* emitter, Particle* particle);
 	void Update(float dt, EmitterInstance* emitter);

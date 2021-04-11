@@ -1,4 +1,5 @@
 #include "GameObject.h"
+#include "JSONParser.h"
 #include "C_Transform.h"
 #include "C_Particles.h"
 
@@ -8,6 +9,17 @@
 #include "ParticleModule.h"
 
 #include "MemoryManager.h"
+
+void EmitterBase::Save(ParsonNode& node)
+{
+	node.SetInteger("Type",(int)type);
+	node.SetFloat3("origin", origin);
+}
+
+void EmitterBase::Load(ParsonNode& node)
+{
+	origin = node.GetFloat3("origin");
+}
 
 void EmitterBase::Spawn(EmitterInstance* emitter, Particle* particle)
 {
@@ -35,6 +47,20 @@ void EmitterBase::Update(float dt, EmitterInstance* emitter)
 	
 }
 
+void EmitterSpawn::Save(ParsonNode& node)
+{
+	node.SetInteger("Type", (int)type);
+
+	node.SetNumber("spawnRatio", spawnRatio);
+	node.SetNumber("timer", timer);
+}
+
+void EmitterSpawn::Load(ParsonNode& node)
+{
+	spawnRatio = node.GetNumber("spawnRatio");
+	timer = node.GetNumber("timer");
+}
+
 void EmitterSpawn::Spawn(EmitterInstance* emitter, Particle* particle)
 {
 
@@ -48,6 +74,28 @@ void EmitterSpawn::Update(float dt, EmitterInstance* emitter)
 		timer = 0;
 		emitter->SpawnParticle(); //SpawnParticle() will then call the Spawn() method in every particle module
 	}
+}
+
+void ParticleMovement::Save(ParsonNode& node)
+{
+	node.SetInteger("Type", (int)type);
+
+	node.SetNumber("initialIntensity1",initialIntensity1);
+	node.SetNumber("initialIntensity2", initialIntensity2);
+
+	node.SetFloat3("initialDirection1",initialDirection1);
+	node.SetFloat3("initialDirection2", initialDirection2);
+
+	float3 initialPosition1 = float3::zero;
+	float3 initialPosition2 = float3::zero;
+
+	bool hideMovement = false;
+	bool eraseMovement = false;
+}
+
+void ParticleMovement::Load(ParsonNode& node)
+{
+
 }
 
 void ParticleMovement::Spawn(EmitterInstance* emitter, Particle* particle)
@@ -79,6 +127,16 @@ void ParticleMovement::Update(float dt, EmitterInstance* emitter)
 	}
 }
 
+void ParticleColor::Save(ParsonNode& node)
+{
+	node.SetInteger("Type", (int)type);
+}
+
+void ParticleColor::Load(ParsonNode& node)
+{
+
+}
+
 void ParticleColor::Spawn(EmitterInstance* emitter, Particle* particle)
 {
 	particle->color = initialColor;
@@ -107,6 +165,16 @@ void ParticleColor::Update(float dt, EmitterInstance* emitter)
 	}
 }
 
+void ParticleLifetime::Save(ParsonNode& node)
+{
+	node.SetInteger("Type", (int)type);
+}
+
+void ParticleLifetime::Load(ParsonNode& node)
+{
+
+}
+
 void ParticleLifetime::Spawn(EmitterInstance* emitter, Particle* particle)
 {
 	particle->maxLifetime = initialLifetime;
@@ -132,6 +200,16 @@ void ParticleLifetime::Update(float dt, EmitterInstance* emitter)
 	{
 		emitter->emitter->DeleteModuleFromType(ParticleModule::Type::ParticleLifetime);
 	}
+}
+
+void ParticleBillboarding::Save(ParsonNode& node)
+{
+	node.SetInteger("Type", (int)type);
+}
+
+void ParticleBillboarding::Load(ParsonNode& node)
+{
+
 }
 
 void ParticleBillboarding::Spawn(EmitterInstance* emitter, Particle* particle)

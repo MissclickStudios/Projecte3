@@ -231,7 +231,7 @@ uint M_ResourceManager::SaveResourceToLibrary(Resource* resource)
 	case ResourceType::SCENE:		{ /*written = TODO: HAVE A FUNCTIONAL R_SCENE AND SAVE/LOAD METHODS*/ }		break;
 	case ResourceType::ANIMATION:	{ written = Importer::Animations::Save((R_Animation*)resource, &buffer); }	break;
 	case ResourceType::SHADER:		{ written = Importer::Shaders::Save((R_Shader*)resource, &buffer); }		break;
-	case ResourceType::PARTICLES:	{ written = Importer::Particles::Save((R_Particles*)resource, &buffer); }	break;
+	case ResourceType::PARTICLES:	{ written = Importer::Particles::Save((R_ParticleSystem*)resource, &buffer); }	break;
 	case ResourceType::SCRIPT:		{ written = Importer::Scripts::Save((R_Script*)resource, &buffer); }		break;
 	case ResourceType::NAVMESH_AGENT:		{ written = Importer::Navigation::Save((R_NavMesh*)resource, &buffer); }	break;
 	}
@@ -531,7 +531,7 @@ Resource* M_ResourceManager::CreateResource(ResourceType type, const char* asset
 	case ResourceType::SCENE:			{ resource = new R_Scene(); }			break;
 	case ResourceType::ANIMATION:		{ resource = new R_Animation(); }		break;
 	case ResourceType::SHADER:			{ resource = new R_Shader(); }			break;
-	case ResourceType::PARTICLES:		{ resource = new R_Particles(); }		break;
+	case ResourceType::PARTICLES:		{ resource = new R_ParticleSystem(); }		break;
 	case ResourceType::SCRIPT:			{ resource = new R_Script(); }			break;
 	case ResourceType::NAVMESH_AGENT:			{ resource = new R_NavMesh(); }			break;
 	}
@@ -617,7 +617,7 @@ bool M_ResourceManager::AllocateResource(uint32 UID, const char* assetsPath)
 	case ResourceType::SCENE:		{ /*success = TODO: HAVE A FUNCTIONAL R_SCENE AND SAVE/LOAD METHODS*/ }			break;
 	case ResourceType::ANIMATION:	{ success = Importer::Animations::Load(buffer, (R_Animation*)resource); }		break;
 	case ResourceType::SHADER:		{ success = Importer::Shaders::Load(buffer, (R_Shader*)resource); }				break;
-	case ResourceType::PARTICLES:	{ success = Importer::Particles::Load(buffer, (R_Particles*)resource); }		break;
+	case ResourceType::PARTICLES:	{ success = Importer::Particles::Load(buffer, (R_ParticleSystem*)resource); }		break;
 	case ResourceType::SCRIPT:		{ success = Importer::Scripts::Load(buffer, (R_Script*)resource); }				break;
 	case ResourceType::NAVMESH_AGENT:		{ success = Importer::Navigation::Load(buffer, (R_NavMesh*)resource); }			break;
 	}
@@ -789,6 +789,10 @@ void M_ResourceManager::GetAllShaders(std::vector<R_Shader*>& shaders)
 
 	tmpShader = nullptr;
 	shdrFiles.clear();
+}
+
+void M_ResourceManager::GetAllParticleSystems(std::vector<R_ParticleSystem*>& shaders)
+{
 }
 
 void M_ResourceManager::GetAllTextures(std::vector<R_Texture*>& textures, const char* name)
@@ -1367,7 +1371,7 @@ bool M_ResourceManager::GetLibraryDirectoryAndExtensionFromType(const ResourceTy
 	case ResourceType::SCENE:		{ directory = SCENES_PATH;		extension = SCENES_EXTENSION; }			break;
 	case ResourceType::ANIMATION:	{ directory = ANIMATIONS_PATH;	extension = ANIMATIONS_EXTENSION; }		break;
 	case ResourceType::SHADER:		{ directory = SHADERS_PATH;		extension = SHADERS_EXTENSION; }		break;
-	case ResourceType::PARTICLES:	{ directory = PARTICLES_PATH;	extension = PARTICLES_EXTENSION; }		break;
+	case ResourceType::PARTICLES:	{ directory = PARTICLESYSTEMS_PATH;	extension = PARTICLES_EXTENSION; }		break;
 	case ResourceType::SCRIPT:		{ directory = SCRIPTS_PATH;		extension = SCRIPTS_EXTENSION; }		break;
 	case ResourceType::NAVMESH_AGENT:		{ directory = NAVIGATION_PATH;	extension = NAVMESH_EXTENSION; }		break;
 	case ResourceType::NONE:		{ return false; }														break;
@@ -1510,7 +1514,7 @@ uint32 M_ResourceManager::ImportFromAssets(const char* assetsPath)
 		case ResourceType::TEXTURE:		{ success = Importer::ImportTexture(buffer, read, (R_Texture*)resource); }					break;
 		case ResourceType::SCENE:		{ /*success = HAVE A FUNCTIONAL R_SCENE AND LOAD/SAVE METHODS*/ }							break;
 		case ResourceType::SHADER:		{ success = Importer::Shaders::Import(resource->GetAssetsPath(), (R_Shader*)resource); }	break;
-		case ResourceType::PARTICLES:	{ success = Importer::ImportParticles(buffer, (R_Particles*)resource); }					break;
+		case ResourceType::PARTICLES:	{ success = Importer::ImportParticles(buffer, (R_ParticleSystem*)resource); }					break;
 		case ResourceType::SCRIPT:      { success = Importer::Scripts::Import(assetsPath, buffer, read, (R_Script*)resource); }		break;
 		case ResourceType::NAVMESH_AGENT:		{ success = Importer::ImportNavMesh(buffer, (R_NavMesh*)resource); }						break;
 		}

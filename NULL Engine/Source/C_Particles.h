@@ -4,7 +4,7 @@
 #include "Component.h"
 #include "EmitterInstance.h"
 
-class R_Particles;
+class R_ParticleSystem;
 
 class NULL_API C_Particles : public Component
 {
@@ -28,7 +28,7 @@ private:
 public:
 	Emitter* defaultEmitter;
 	std::vector<EmitterInstance*> emitterInstances;
-	R_Particles* resource = nullptr;
+	R_ParticleSystem* resource = nullptr;
 
 	bool previewEnabled = false;
 };

@@ -1,41 +1,61 @@
 #include "JSONParser.h"
 
+#include "FileSystemDefinitions.h"
+
 #include "ParticleModule.h"
+
+#include "R_Material.h"
 
 #include "R_Particles.h"
 
 #include "MemoryManager.h"
 
-R_Particles::R_Particles() : Resource(ResourceType::PARTICLES)
+R_ParticleSystem::R_ParticleSystem() : Resource(ResourceType::PARTICLES)
 {
 
 }
 
-R_Particles::~R_Particles()
+R_ParticleSystem::~R_ParticleSystem()
 {
 
 }
 
-bool R_Particles::CleanUp()
+bool R_ParticleSystem::CleanUp()
 {
 	return true;
 }
 
-bool R_Particles::SaveMeta(ParsonNode& metaRoot) const
+bool R_ParticleSystem::SaveMeta(ParsonNode& metaRoot) const
 {
 	ParsonArray contained_array = metaRoot.SetArray("ContainedResources");
 	
 	// REMEMBER TO GENERATE AN ASSET FILE FOR THIS
 
+	for (auto emit = emitters.begin(); emit != emitters.end(); emit++)
+	{
+		/*if (emit->emitterTexture->GetUID() != 0)
+		{
+			std::string material_name = emit->emitterTexture->GetUID() + MATERIALS_EXTENSION;
+			std::string material_path = MATERIALS_PATH + std::to_string(emit->emitterTexture->GetUID()) + MATERIALS_EXTENSION;
+
+			ParsonNode material_node = contained_array.SetNode(material_name.c_str());
+
+			material_node.SetNumber("UID", emit->emitterTexture->GetUID());
+			material_node.SetNumber("Type", (uint)ResourceType::MATERIAL);
+			material_node.SetString("Name", material_name.c_str());
+			material_node.SetString("LibraryPath", material_path.c_str());
+		}*/
+	}
+
 	return true;
 }
 
-bool R_Particles::LoadMeta(const ParsonNode& metaRoot)
+bool R_ParticleSystem::LoadMeta(const ParsonNode& metaRoot)
 {
 	return true;
 }
 
-void R_Particles::AddDefaultEmitter()
+void R_ParticleSystem::AddDefaultEmitter()
 {
 	emitters.clear();
 	emitters.reserve(4);

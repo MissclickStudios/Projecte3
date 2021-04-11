@@ -4,11 +4,11 @@
 #include "Resource.h"
 #include "Emitter.h"
 
-class R_Particles : public Resource
+class R_ParticleSystem : public Resource
 {
 public:
-	R_Particles();
-	~R_Particles();
+	R_ParticleSystem();
+	~R_ParticleSystem();
 
 	bool CleanUp() override;
 

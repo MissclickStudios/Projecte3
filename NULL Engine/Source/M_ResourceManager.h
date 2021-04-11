@@ -69,6 +69,7 @@ public:																								// --- RESOURCE MANAGER API ---
 
 	R_Shader*		GetShader						(const char* name);								//Look for a shader in the library and load and return it
 	void			GetAllShaders					(std::vector<R_Shader*>& shaders);				//Retrieve all the shaders in the library
+	void			GetAllParticleSystems			(std::vector<R_ParticleSystem*>& shaders);				//Retrieve all the particlesystems in the library
 
 	void			GetAllTextures					(std::vector<R_Texture*>& textures, const char* name = nullptr);			//Retrieve all the shaders in the library
 

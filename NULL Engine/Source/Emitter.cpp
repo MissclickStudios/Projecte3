@@ -1,3 +1,11 @@
+#include "JSONParser.h"
+#include "Application.h"
+#include "M_ResourceManager.h"
+
+#include "ParticleModule.h"
+
+#include "R_Texture.h"
+
 #include "Emitter.h"
 
 #include "MemoryManager.h"
@@ -12,13 +20,63 @@ void Emitter::Update(float dt)
 	//---
 }
 
+void Emitter::Save(ParsonNode& node)
+{
+	node.SetString("name", name.c_str());
+	node.SetInteger("textureUID", emitterTexture->GetUID());
+	node.SetInteger("maxParticleCount", maxParticleCount);
+
+	ParsonArray modulesArray = node.SetArray("modules");
+
+	for (auto mod = modules.begin(); mod != modules.end(); ++mod)
+	{
+		(*mod)->Save(modulesArray.SetNode("module"));
+	}
+}
+
+void Emitter::Load(ParsonNode& node)
+{
+	node.SetString("name", name.c_str());
+	
+	uint textureUID = node.GetInteger("textureUID");
+	if (App->resourceManager->AllocateResource(textureUID))
+	{
+		emitterTexture = (R_Texture*)App->resourceManager->RequestResource(textureUID);
+	}
+
+	maxParticleCount = node.GetInteger("maxParticleCount");
+
+	ParsonArray modulesArray = node.GetArray("modules");
+
+	for (uint i = 0 ; i < modulesArray.size ; ++i)
+	{
+		//(*mod)->Save(modulesArray.SetNode("module"));
+		ParsonNode mod = modulesArray.GetNode(i);
+
+		ParticleModule* particleModule = nullptr;
+
+		switch ((ParticleModule::Type)mod.GetInteger("Type"))
+		{
+			case ParticleModule::Type::EmitterBase: particleModule = new EmitterBase(); break;
+			case ParticleModule::Type::EmitterSpawn: particleModule = new EmitterSpawn(); break;
+			case ParticleModule::Type::ParticleLifetime: particleModule = new ParticleLifetime(); break;
+			case ParticleModule::Type::ParticleColor: particleModule = new ParticleColor(); break;
+			case ParticleModule::Type::ParticleMovement: particleModule = new ParticleMovement(); break;
+		}
+
+		particleModule->Load(mod);
+
+		modules.push_back(particleModule);
+	}
+}
+
 void Emitter::SetAsDefault()
 {
-	AddModuleFromType(ParticleModule::EmitterBase);
-	AddModuleFromType(ParticleModule::EmitterSpawn);
-	AddModuleFromType(ParticleModule::ParticleLifetime);
-	AddModuleFromType(ParticleModule::ParticleColor);
-	AddModuleFromType(ParticleModule::ParticleMovement);
+	AddModuleFromType(ParticleModule::Type::EmitterBase);
+	AddModuleFromType(ParticleModule::Type::EmitterSpawn);
+	AddModuleFromType(ParticleModule::Type::ParticleLifetime);
+	AddModuleFromType(ParticleModule::Type::ParticleColor);
+	AddModuleFromType(ParticleModule::Type::ParticleMovement);
 }
 
 bool Emitter::AddModuleFromType(ParticleModule::Type type)
