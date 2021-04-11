@@ -344,7 +344,9 @@ void Player::Shooting()
 		float2 dir = { lastAim.x, -lastAim.z };
 		float rad = dir.AimedAngle();
 		if (gameObject->childs[i]->GetComponent<C_Mesh>()) // FUCK MESHES ALL MY HOMIES HATE MESHES
-			gameObject->childs[i]->transform->SetLocalRotation(float3(DegToRad(-90), 0, rad));
+		{
+			//gameObject->childs[i]->transform->SetLocalRotation(float3(DegToRad(-90), 0, rad));
+		}
 		else
 			gameObject->childs[i]->transform->SetLocalRotation(float3(0, rad + DegToRad(90), 0));
 	}
