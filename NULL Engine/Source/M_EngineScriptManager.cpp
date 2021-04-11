@@ -253,9 +253,9 @@ void M_EngineScriptManager::SerializeAllScripts(ParsonArray& scriptsArray)
 								case InspectorScriptData::DataType::INT:
 									variable.SetInteger("int", *(int*)scriptVariables[i].ptr); break;
 								case InspectorScriptData::DataType::BOOL:
-									variable.SetInteger("bool", *(bool*)scriptVariables[i].ptr); break;
+									variable.SetBool("bool", *(bool*)scriptVariables[i].ptr); break;
 								case InspectorScriptData::DataType::FLOAT:
-									variable.SetInteger("float", *(float*)scriptVariables[i].ptr); break;
+									variable.SetNumber("float", *(float*)scriptVariables[i].ptr); break;
 								case InspectorScriptData::FLOAT3:
 									variable.SetNumber("float3x", (*(float3*)scriptVariables[i].ptr).x);
 									variable.SetNumber("float3y", (*(float3*)scriptVariables[i].ptr).y);
