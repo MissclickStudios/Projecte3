@@ -174,8 +174,14 @@ void C_UI_Text::RenderText(std::string text, float x, float y, float scale, floa
 	C_Canvas* canvas = GetOwner()->parent->GetComponent<C_Canvas>();
 	/*	float4x4 projection = canvas->GetOwner()->transform->GetWorldTransform().Transposed();*/
 
-	x = canvas->GetPosition().x + GetRect().x - GetRect().w / 2;
-	y = canvas->GetPosition().y + GetRect().y - GetRect().h / 2;
+	x = canvas->GetPosition().x ;
+	y = canvas->GetPosition().y ;
+
+	float4x4 projection = float4x4::FromTRS(float3(x, y, 0), Quat::FromEulerXYZ(0, 0, 0), float3(scale, scale, 1)).Transposed();
+
+
+	rShader->SetUniformVec3f("textColor", (GLfloat*)&color);
+	rShader->SetUniformMatrix4("projection", projection.ptr());
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindVertexArray(VAO);
@@ -188,15 +194,11 @@ void C_UI_Text::RenderText(std::string text, float x, float y, float scale, floa
 
 		glBindTexture(GL_TEXTURE_2D, ch.textureID);
 
-		float4x4 projection = float4x4::FromTRS(float3(x, y, 0), Quat::FromEulerXYZ(0, 0, 0), float3(scale, scale, 1)).Transposed();
 		
 
-		rShader->SetUniformVec3f("textColor", (GLfloat*)&color);
-		rShader->SetUniformMatrix4("projection", projection.ptr());
 
-
-		float xpos = (x + ch.Bearing.x) * scale;
-		float ypos = (y - (ch.Size.y - ch.Bearing.y)) * scale;
+		float xpos = (x + ch.bearing.x) * scale;
+		float ypos = (y - (ch.size.y - ch.bearing.y)) * scale;
 
 		float w = ch.size.x * scale;
 		float h = ch.size.y * scale;
@@ -217,7 +219,7 @@ void C_UI_Text::RenderText(std::string text, float x, float y, float scale, floa
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 
 
-		x += (ch.Advance >> 6) * scale;
+		x += (ch.advance >> 6) * scale;
 	}
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);

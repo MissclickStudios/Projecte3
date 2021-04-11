@@ -1494,6 +1494,7 @@ void E_Inspector::DrawUIImageComponent(C_UI_Image* image)
 		// --- RECT ---
 		float2 pos = { image->GetRect().x, image->GetRect().y };
 		float2 size = { image->GetRect().w, image->GetRect().h };
+		float offset = 0.1;
 
 		C_Canvas* canvas = image->GetOwner()->parent->GetComponent<C_Canvas>();
 
@@ -1510,7 +1511,7 @@ void E_Inspector::DrawUIImageComponent(C_UI_Image* image)
 
 		if (ImGui::DragFloat2("Image Pos", (float*)&pos, 0.05f, 0.0f, 0.0f, "%.3f", NULL))
 		{
-			if (pos.x - size.x / 2 < canvas->GetPosition().x - canvas->GetSize().x / 2)
+			/*if (pos.x - size.x / 2 < canvas->GetPosition().x - canvas->GetSize().x / 2)
 				pos.x = canvas->GetPosition().x - canvas->GetSize().x / 2 + size.x / 2;
 
 			if (pos.x + size.x / 2 > canvas->GetPosition().x + canvas->GetSize().x / 2)
@@ -1521,7 +1522,20 @@ void E_Inspector::DrawUIImageComponent(C_UI_Image* image)
 				pos.y = canvas->GetPosition().y - canvas->GetSize().y / 2 + size.y / 2;
 
 			if (pos.y + size.y / 2 > canvas->GetPosition().y + canvas->GetSize().y / 2)
-				pos.y = canvas->GetPosition().y + canvas->GetSize().y / 2 - size.y / 2;
+				pos.y = canvas->GetPosition().y + canvas->GetSize().y / 2 - size.y / 2;*/
+
+			if (pos.x  > canvas->GetPosition().x + canvas->GetSize().x - offset)
+				pos.x =  canvas->GetPosition().x + canvas->GetSize().x - offset;
+
+			else if (pos.x - size.x < canvas->GetPosition().x - canvas->GetSize().x + offset)
+				pos.x = canvas->GetPosition().x - canvas->GetSize().x + size.x + offset;
+
+			else if (pos.y - size.y > canvas->GetPosition().y + canvas->GetSize().y - offset)
+				pos.y = canvas->GetPosition().y + canvas->GetSize().y + size.y - offset;
+
+			else if (pos.y  < canvas->GetPosition().y - canvas->GetSize().y + offset)
+				pos.y = canvas->GetPosition().y - canvas->GetSize().y  + offset;
+
 
 			image->SetX(pos.x);
 			image->SetY(pos.y);
