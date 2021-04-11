@@ -165,6 +165,7 @@ bool M_EngineScriptManager::CleanUp()
 	//TODO: clean up dels scripts
 	CleanUpScripts();
 	aviableScripts.clear();
+	currentScripts.clear();
 	return true;
 }
 
