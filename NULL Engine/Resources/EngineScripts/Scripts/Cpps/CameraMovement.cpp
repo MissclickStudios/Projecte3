@@ -1,5 +1,9 @@
-#include "Application.h"
+#include "VariableTypedefs.h"
 #include "Log.h"
+
+#include "Application.h"
+
+#include "M_Scene.h"
 
 #include "M_Scene.h"
 
@@ -20,15 +24,15 @@ void CameraMovement::Update()
 {
 	if (!player)
 	{
-		std::vector<GameObject*>* objects = App->scene->GetGameObjects();
-		for (uint i = 0; i < objects->size(); ++i)
-			if ((*objects)[i]->GetScript("Player"))
-				player = (*objects)[i];
+		std::map<uint32, GameObject*>* objects = App->scene->GetGameObjects();
+		for (auto i = objects->begin(); i != objects->end(); ++i)
+			if (i->second->GetScript("Player"))
+				player = i->second;
 
 		if (!player)
 			return;
 	}
-
+	
 	float3 position = player->transform->GetWorldPosition();
 	position += offset;
 	gameObject->transform->SetWorldPosition(position);

@@ -62,6 +62,8 @@ isSceneRoot				(false),
 isBone					(false),
 maintainThroughScenes	(false),
 toDelete				(false),
+changedName				(false),
+prevName				("[NONE]"),
 show_bounding_boxes		(false)
 {
 	transform = (C_Transform*)CreateComponent(ComponentType::TRANSFORM);
@@ -85,7 +87,10 @@ isMasterRoot			(false),
 isSceneRoot				(false),
 isBone					(false),
 maintainThroughScenes	(false),
-toDelete				(false)
+toDelete				(false),
+changedName				(false),
+prevName				("[NONE]"),
+show_bounding_boxes		(false)
 {
 	if (name.empty())
 	{
@@ -673,7 +678,9 @@ void GameObject::ForceUID(const uint32& UID)
 
 void GameObject::SetName(const char* newName)
 {
-	name = newName;
+	prevName	= name;
+	name		= newName;
+	changedName	= true;
 }
 
 void GameObject::SetIsActive(const bool& setTo)

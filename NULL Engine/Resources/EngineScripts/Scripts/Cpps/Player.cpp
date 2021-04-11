@@ -1,4 +1,6 @@
 #include "Player.h"
+
+#include "VariableTypedefs.h"
 #include "Log.h"
 
 #include "Application.h"
@@ -502,13 +504,13 @@ void Player::GetAimVectorAxis(int& axisX, int& axisY)
 
 void Player::HandleAmmo(int ammo)
 {
-	std::vector<GameObject*>::iterator it = App->scene->GetGameObjects()->begin();
+	std::map<uint32, GameObject*>::const_iterator it = App->scene->GetGameObjects()->cbegin();
 
-	for (it; it != App->scene->GetGameObjects()->end(); ++it)
+	for (it; it != App->scene->GetGameObjects()->cend(); ++it)
 	{
-		if (strstr((*it)->GetName(), "PrimaryWeapon") != nullptr)
+		if (strstr(it->second->GetName(), "PrimaryWeapon") != nullptr)
 		{
-			ammoUi = (*it);
+			ammoUi = it->second;
 		}
 	}
 
@@ -539,30 +541,30 @@ void Player::HandleAmmo(int ammo)
 
 void Player::HandleHp()
 {
-	std::vector<GameObject*>::iterator it = App->scene->GetGameObjects()->begin();
+	std::map<uint32, GameObject*>::const_iterator it = App->scene->GetGameObjects()->cbegin();
 
-	for (it; it != App->scene->GetGameObjects()->end(); ++it)
+	for (it; it != App->scene->GetGameObjects()->cend(); ++it)
 	{
-		if (strstr((*it)->GetName(), "Heart") != nullptr)
+		if (strstr(it->second->GetName(), "Heart") != nullptr)
 		{
-			if (strstr((*it)->GetName(), "1") != nullptr)
+			if (strstr(it->second->GetName(), "1") != nullptr)
 			{
-				hearts[0] = (*it);
+				hearts[0] = it->second;
 			}
-			else if (strstr((*it)->GetName(), "2") != nullptr)
+			else if (strstr(it->second->GetName(), "2") != nullptr)
 			{
-				hearts[1] = (*it);
+				hearts[1] = it->second;
 			}
-			else if (strstr((*it)->GetName(), "3") != nullptr)
+			else if (strstr(it->second->GetName(), "3") != nullptr)
 			{
-				hearts[2] = (*it);
+				hearts[2] = it->second;
 			}
 		}
 	}
 
-	if (full == nullptr) { full = (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/HUD/HeartFull.png"); }
-	if (half == nullptr) { half = (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/HUD/HeartHalf.png"); }
-	if (empty == nullptr) { empty = (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/HUD/HeartEmpty.png"); }
+	if (full == nullptr)	{ full = (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/HUD/HeartFull.png"); }
+	if (half == nullptr)	{ half = (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/HUD/HeartHalf.png"); }
+	if (empty == nullptr)	{ empty = (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/HUD/HeartEmpty.png"); }
 
 	if (App->input->GetKey(SDL_SCANCODE_K) == KeyState::KEY_DOWN && hearts != nullptr)
 	{

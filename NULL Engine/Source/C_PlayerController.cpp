@@ -469,13 +469,13 @@ void C_PlayerController::GetAimVectorAxis(int& axisX, int& axisY)
 
 void C_PlayerController::HandleAmmo(int ammo)
 {
-	std::vector<GameObject*>::iterator it = App->scene->GetGameObjects()->begin();
-
-	for (it; it != App->scene->GetGameObjects()->end(); ++it)
+	std::map<uint32, GameObject*>* gameObjects = App->scene->GetGameObjects();
+	for (auto object = gameObjects->cbegin(); object != gameObjects->cend(); ++object)
 	{
-		if (strstr((*it)->GetName(), "PrimaryWeapon") != nullptr)
-		{			
-			ammoUi = (*it);
+		if (strstr(object->second->GetName(), "PrimaryWeapon") != nullptr)
+		{
+			ammoUi = object->second;
+			break;
 		}
 	}
 
@@ -506,23 +506,24 @@ void C_PlayerController::HandleAmmo(int ammo)
 
 void C_PlayerController::HandleHp()
 {
-	std::vector<GameObject*>::iterator it = App->scene->GetGameObjects()->begin();
-
-	for (it; it != App->scene->GetGameObjects()->end(); ++it)
+	std::map<uint32, GameObject*>* gameObjects = App->scene->GetGameObjects();
+	for (auto object = gameObjects->cbegin(); object != gameObjects->cend(); ++object)
 	{
-		if (strstr((*it)->GetName(), "Heart") != nullptr)
+		const char* goName = object->second->GetName();
+		
+		if (strstr(goName, "Heart") != nullptr)
 		{
-			if (strstr((*it)->GetName(), "1") != nullptr)
+			if (strstr(goName, "1") != nullptr)
 			{
-				hearts[0] = (*it);
-			}		
-			else if (strstr((*it)->GetName(), "2") != nullptr)
-			{
-				hearts[1] = (*it);
+				hearts[0] = object->second;
 			}
-			else if (strstr((*it)->GetName(), "3") != nullptr)
+			else if (strstr(goName, "2") != nullptr)
 			{
-				hearts[2] = (*it);
+				hearts[1] = object->second;
+			}
+			else if (strstr(goName, "3") != nullptr)
+			{
+				hearts[2] = object->second;
 			}
 		}
 	}
