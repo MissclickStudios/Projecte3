@@ -1548,6 +1548,7 @@ void E_Inspector::DrawUIImageComponent(C_UI_Image* image)
 
 void E_Inspector::DrawUITextComponent(C_UI_Text* text)
 {
+
 	static bool show = true;
 	if (ImGui::CollapsingHeader("Text", &show, ImGuiTreeNodeFlags_DefaultOpen))
 	{
@@ -1556,8 +1557,64 @@ void E_Inspector::DrawUITextComponent(C_UI_Text* text)
 
 		ImGui::Separator();
 
-		ImGui::Text(text->text.c_str());
+
+		static char buffer[64];
+		strcpy_s(buffer, text->GetText());
+		if (ImGui::InputText("TextInput", buffer, IM_ARRAYSIZE(buffer), ImGuiInputTextFlags_EnterReturnsTrue))
+		{
+			text->SetText(buffer);
+		}
+
+		ImGui::SameLine(); HelpMarker("Press ENTER to Rename");
+
+
+		ImGui::Separator();
+
+		// --- RECT ---
+		float2 pos = { text->GetRect().x, text->GetRect().y };
+		float2 size = { text->GetRect().w, text->GetRect().h };
+		Color newColor = text->GetColor();
+		float offset = 0.1;
+
+		C_Canvas* canvas = text->GetOwner()->parent->GetComponent<C_Canvas>();
+
+		if (ImGui::DragFloat2("Text Size", (float*)&size, 0.05f, 0.0f, 0.0f, "%.3f", NULL))
+		{
+			if (size.x < 0)
+				size.x = 0;
+			if (size.y < 0)
+				size.y = 0;
+
+			text->SetW(size.x);
+			text->SetH(size.y);
+		}
+
+		if (ImGui::DragFloat2("Text Pos", (float*)&pos, 0.05f, 0.0f, 0.0f, "%.3f", NULL))
+		{
+
+			if (pos.x > canvas->GetPosition().x + canvas->GetSize().x - offset)
+				pos.x = canvas->GetPosition().x + canvas->GetSize().x - offset;
+
+			else if (pos.x - size.x < canvas->GetPosition().x - canvas->GetSize().x + offset)
+				pos.x = canvas->GetPosition().x - canvas->GetSize().x + size.x + offset;
+
+			else if (pos.y - size.y > canvas->GetPosition().y + canvas->GetSize().y - offset)
+				pos.y = canvas->GetPosition().y + canvas->GetSize().y + size.y - offset;
+
+			else if (pos.y < canvas->GetPosition().y - canvas->GetSize().y + offset)
+				pos.y = canvas->GetPosition().y - canvas->GetSize().y + offset;
+
+
+			text->SetX(pos.x);
+			text->SetY(pos.y);
+		}
+
+		if (ImGui::DragFloat4("Color", (float*)&newColor, 0.05f, 0.0f, 0.0f, "%.3f", NULL))
+		{
+			text->SetColor(newColor);
+		}
 	}
+
 	ImGui::Separator();
 
 }

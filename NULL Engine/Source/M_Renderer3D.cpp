@@ -671,9 +671,10 @@ void M_Renderer3D::RenderScene()
 		primitives[i]->RenderByIndices();
 	}
 	
-	defaultSkyBox.RenderSkybox();
 
 	RenderUI();
+	
+	//defaultSkyBox.RenderSkybox();
 
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 	
@@ -773,15 +774,8 @@ void M_Renderer3D::RenderUIComponent(GameObject* gameObject)
 		if (text != nullptr)
 		{
 			if (App->camera->currentCamera != App->camera->masterCamera->GetComponent<C_Camera>())
-				text->RenderText("AAAAAAAAAAAAAHHHHHHHHHHH", text->GetRect().x, text->GetRect().y, 1.0f, float3(0.7f, 0.1f, 0.1f));
-				
-				
-				/*	text->Draw2D();
-
-			else
-				text->Draw3D();*/
+				text->RenderText();
 		}
-
 
 		for (std::vector<GameObject*>::iterator childIt = (*it)->childs.begin(); childIt != (*it)->childs.end(); childIt++)
 		{

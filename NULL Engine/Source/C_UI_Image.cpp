@@ -29,6 +29,12 @@ C_UI_Image::C_UI_Image(GameObject* owner, Rect2D rect) : Component(owner, Compon
 {
 	rShader = App->resourceManager->GetShader("UIShader");
 	LoadBuffers();
+	
+	SetW(2);
+	SetH(2);
+
+	SetX(0);
+	SetY(0);
 }
 
 C_UI_Image::~C_UI_Image()
@@ -77,39 +83,6 @@ void C_UI_Image::LoadBuffers()
 
 void C_UI_Image::Draw2D()
 {
-	//if (GetOwner()->GetComponent<C_Material>() == nullptr && GetOwner()->GetComponent<C_2DAnimator>() == nullptr) return;
-
-	//C_Canvas* canvas = GetOwner()->parent->GetComponent<C_Canvas>();
-	//if (canvas == nullptr) return;
-
-	//glPushMatrix();
-	//glMultMatrixf((GLfloat*)&GetOwner()->parent->GetComponent<C_Transform>()->GetWorldTransform().Transposed());
-
-	//glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-
-	//uint32 id;
-
-	//if (GetOwner()->GetComponent<C_2DAnimator>() != nullptr)
-	//	id = GetOwner()->GetComponent<C_2DAnimator>()->GetIdFromAnimation();
-	//else
-	//	id = GetOwner()->GetComponent<C_Material>()->GetTextureID();
-
-	//glBindTexture(GL_TEXTURE_2D, id);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-
-	//glBegin(GL_QUADS);
-	//glTexCoord2f(0, 0); glVertex2f(canvas->GetPosition().x + GetRect().x - GetRect().w / 2, canvas->GetPosition().y + GetRect().y - GetRect().h / 2);
-	//glTexCoord2f(1, 0); glVertex2f(canvas->GetPosition().x + GetRect().x + GetRect().w / 2, canvas->GetPosition().y + GetRect().y - GetRect().h / 2);
-	//glTexCoord2f(1, 1); glVertex2f(canvas->GetPosition().x + GetRect().x + GetRect().w / 2, canvas->GetPosition().y + GetRect().y + GetRect().h / 2);
-	//glTexCoord2f(0, 1); glVertex2f(canvas->GetPosition().x + GetRect().x - GetRect().w / 2, canvas->GetPosition().y + GetRect().y + GetRect().h / 2);
-	//glEnd();
-
-	//glPopMatrix();
-
-	//glBindTexture(GL_TEXTURE_2D, 0);
-
-
 	if (GetOwner()->GetComponent<C_Material>() == nullptr && GetOwner()->GetComponent<C_2DAnimator>() == nullptr) return;
 
 	C_Canvas* canvas = GetOwner()->parent->GetComponent<C_Canvas>();

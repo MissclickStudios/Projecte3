@@ -20,6 +20,7 @@
 #include "C_UI_Text.h"
 
 
+
 #include "MemoryManager.h"
 
 #include "JSONParser.h"
@@ -31,12 +32,18 @@
 
 C_UI_Text::C_UI_Text(GameObject* owner, Rect2D rect) : Component(owner, ComponentType::UI_TEXT),
 VAO(0),
-VBO(0)
+VBO(0),
+color(1,1,1,1)
 {
 	text = "Some Text";
 	rShader = App->resourceManager->GetShader("FontShader");
 	GenerateTextureID();
 	LoadBuffers();
+
+	SetW(0.001);
+	SetH(0.002);
+	SetX(0);
+	SetY(0);
 }
 
 C_UI_Text::~C_UI_Text()
@@ -53,15 +60,7 @@ bool C_UI_Text::Update()
 
 	C_Canvas* canvas = GetOwner()->parent->GetComponent<C_Canvas>();
 	if (canvas == nullptr)
-		return ret;
-
-	if (GetRect().w > canvas->GetRect().w)
-		SetW(canvas->GetRect().w);
-
-	if (GetRect().h > canvas->GetRect().h)
-		SetH(canvas->GetRect().h);
-
-	
+		return ret;	
 
 	return ret;
 }
@@ -93,12 +92,15 @@ bool C_UI_Text::SaveState(ParsonNode& root) const
 
 	root.SetNumber("Type", (uint)GetType());
 
-	ParsonNode text = root.SetNode("Text");
+	ParsonNode textNode = root.SetNode("Text");
 
-	text.SetNumber("X", GetRect().x);
-	text.SetNumber("Y", GetRect().y);
-	text.SetNumber("W", GetRect().w);
-	text.SetNumber("H", GetRect().h);
+	textNode.SetString("Text", text.c_str());
+	float4 newColor = { color.r, color.g, color.b, color.a };
+	textNode.SetFloat4("Color", newColor);
+	textNode.SetNumber("X", GetRect().x);
+	textNode.SetNumber("Y", GetRect().y);
+	textNode.SetNumber("W", GetRect().w);
+	textNode.SetNumber("H", GetRect().h);
 
 	return ret;
 }
@@ -107,15 +109,15 @@ bool C_UI_Text::LoadState(ParsonNode& root)
 {
 	bool ret = true;
 
-	ParsonNode text = root.GetNode("Text");
-
+	ParsonNode textNode = root.GetNode("Text");
+	text = textNode.GetString("Text");
+	float4 newColor = (textNode.GetFloat4("Color"));
+	color = Color(newColor.x, newColor.y, newColor.z, newColor.w);
 	Rect2D r;
-
-	r.x = text.GetNumber("X");
-	r.y = text.GetNumber("Y");
-	r.w = text.GetNumber("W");
-	r.h = text.GetNumber("H");
-
+	r.x = textNode.GetNumber("X");
+	r.y = textNode.GetNumber("Y");
+	r.w = textNode.GetNumber("W");
+	r.h = textNode.GetNumber("H");
 	SetRect(r);
 
 	return ret;
@@ -124,6 +126,22 @@ bool C_UI_Text::LoadState(ParsonNode& root)
 Rect2D C_UI_Text::GetRect() const
 {
 	return rect;
+}
+Color C_UI_Text::GetColor() const
+{
+	return color;
+}
+const char* C_UI_Text::GetText() const
+{
+	return text.c_str();
+}
+void C_UI_Text::SetText(const char* text)
+{
+	this->text = text;
+}
+void C_UI_Text::SetColor(Color color)
+{
+	this->color = color;
 }
 void C_UI_Text::SetRect(const Rect2D& rect)
 {
@@ -151,37 +169,24 @@ void C_UI_Text::SetH(const float h)
 }
 
 
-void C_UI_Text::RenderText(std::string text, float x, float y, float scale, float3 color)
+void C_UI_Text::RenderText( )
 {
-	/*glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT);*/
-	
-	
 	glEnable(GL_CULL_FACE);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-
-
 	glUseProgram(rShader->shaderProgramID);
-	
-	//float4x4 projection = float4x4::OrthographicProjectionXY();
-	//float4x4 projection = float4x4::OrthographicProjection(App->camera->GetCurrentCamera()->GetFrustum().NearPlane());
-	//float4x4 projection = float4x4::OpenGLOrthoProjRH(App->camera->GetCurrentCamera()->GetNearPlaneDistance(), App->camera->GetCurrentCamera()->GetFarPlaneDistance(), GetRect().w, GetRect().h);
-	
-	//float4x4 projection = App->camera->GetCurrentCamera()->GetFrustum().ProjectionMatrix().Transposed();
 
 	C_Canvas* canvas = GetOwner()->parent->GetComponent<C_Canvas>();
-	/*	float4x4 projection = canvas->GetOwner()->transform->GetWorldTransform().Transposed();*/
 
-	x = canvas->GetPosition().x ;
-	y = canvas->GetPosition().y ;
+	float x = canvas->GetPosition().x + GetRect().x;
+	float y = canvas->GetPosition().y + GetRect().y;
 
-	float4x4 projection = float4x4::FromTRS(float3(x, y, 0), Quat::FromEulerXYZ(0, 0, 0), float3(scale, scale, 1)).Transposed();
+	float4x4 projectionMatrix = float4x4::FromTRS(float3(x, y, 0), Quat::FromEulerXYZ(0, 0, 0), float3(GetRect().w, GetRect().h, 1)).Transposed();
 
 
-	rShader->SetUniformVec3f("textColor", (GLfloat*)&color);
-	rShader->SetUniformMatrix4("projection", projection.ptr());
+	rShader->SetUniformVec4f("textColor", (GLfloat*)&color);
+	rShader->SetUniformMatrix4("projection", projectionMatrix.ptr());
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindVertexArray(VAO);
@@ -194,14 +199,11 @@ void C_UI_Text::RenderText(std::string text, float x, float y, float scale, floa
 
 		glBindTexture(GL_TEXTURE_2D, ch.textureID);
 
-		
+		float xpos = (x + ch.bearing.x) ;
+		float ypos = (y - (ch.size.y - ch.bearing.y)) ;
 
-
-		float xpos = (x + ch.bearing.x) * scale;
-		float ypos = (y - (ch.size.y - ch.bearing.y)) * scale;
-
-		float w = ch.size.x * scale;
-		float h = ch.size.y * scale;
+		float w = ch.size.x ;
+		float h = ch.size.y ;
 
 		float vertices[6][4] = {
 			{ xpos,     ypos + h,   0.0f, 0.0f },
@@ -219,7 +221,7 @@ void C_UI_Text::RenderText(std::string text, float x, float y, float scale, floa
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 
 
-		x += (ch.advance >> 6) * scale;
+		x += (ch.advance >> 6) ;
 	}
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -246,13 +248,13 @@ void C_UI_Text::GenerateTextureID()
 	
 	FT_Set_Pixel_Sizes(face, 0, 48);
 
-	/*if (FT_Load_Char(face, 'X', FT_LOAD_RENDER))
+	if (FT_Load_Char(face, 'X', FT_LOAD_RENDER))
 	{
 		LOG("ERROR::FREETYTPE: Failed to load Glyph");
 		return ;
-	}*/
+	}
 	
-	glPixelStorei(GL_UNPACK_ALIGNMENT, 1); // disable byte-alignment restriction
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
 	for (unsigned char c = 0; c < 128; c++)
 	{
@@ -282,7 +284,7 @@ void C_UI_Text::GenerateTextureID()
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		// now store character for later use
+
 		Character character = {
 			texture,
 			float2(face->glyph->bitmap.width, face->glyph->bitmap.rows),

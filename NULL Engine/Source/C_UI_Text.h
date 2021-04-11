@@ -5,7 +5,7 @@
 
 #include "M_UISystem.h"
 #include "OpenGL.h"
-
+#include "Color.h"
 #include "Component.h"
 
 struct FT_FaceRec_;
@@ -17,10 +17,10 @@ class R_Shader;
 
 struct Character 
 {
-	uint	textureID;		// ID handle of the glyph texture
-	float2	size;			// Size of glyph
-	float2	bearing;		// Offset from baseline to left/top of glyph
-	uint	advance;		// Offset to advance to next glyph
+	uint	textureID;
+	float2	size;		
+	float2	bearing;
+	uint	advance;	
 };
 
 class NULL_API C_UI_Text : public Component
@@ -44,28 +44,34 @@ public:
 	//void Draw2DCharacter(FT_Face id, float x, float y);
 	//void Draw3D();
 
-	void RenderText(std::string text, float x, float y, float scale, float3 color);
+	void RenderText();
 
 	void GenerateTextureID();
 
 public:
 	Rect2D GetRect() const;
+	Color GetColor() const;
+	const char* GetText() const;
 
+	void SetText(const char* text);
+	void SetColor(Color color);
 	void SetRect(const Rect2D& rect);
 	void SetX(const float x);
 	void SetY(const float y);
 	void SetW(const float w);
 	void SetH(const float h);
 
-	std::string text; // temp here
+	
 
 private:
 
 	Rect2D rect = { 0,0,50,50 };
 
+	std::string text; 
+
 	unsigned char image[640][480];
 
-	//FT_UInt  glyphIndex;
+	Color color;
 
 	FT_Face face;
 
