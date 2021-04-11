@@ -804,7 +804,7 @@ void E_Inspector::DrawAnimationComponent(C_Animation* cAnimation)
 void E_Inspector::DrawAudioSourceComponent(C_AudioSource* cAudioSource)
 {
 	bool show = true;
-	if (ImGui::CollapsingHeader("Audio Source", &show, ImGuiTreeNodeFlags_DefaultOpen))
+	if (ImGui::CollapsingHeader(("Audio Source " + cAudioSource->GetEventName()).c_str(), &show, ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		if (cAudioSource != nullptr)
 		{
@@ -815,7 +815,7 @@ void E_Inspector::DrawAudioSourceComponent(C_AudioSource* cAudioSource)
 			ImGui::Text("Event playing %s", currentEventName.c_str());
 			ImGui::Text("Event id %u", currentEvent);
 
-			if (ImGui::BeginCombo("##Audio", currentEventName.c_str()))
+			if (ImGui::BeginCombo(("##Audio " + cAudioSource->GetEventName()).c_str(), currentEventName.c_str()))
 			{
 				for (auto it = App->audio->eventMap.cbegin(); it != App->audio->eventMap.cend(); ++it)
 				{
@@ -832,16 +832,16 @@ void E_Inspector::DrawAudioSourceComponent(C_AudioSource* cAudioSource)
 			}
 
 			static float volume = cAudioSource->GetVolume();
-			if (ImGui::DragFloat("Volume", &volume, 0.01f, 0.01f, 1.0f))
+			if (ImGui::DragFloat(("Volume " + cAudioSource->GetEventName()).c_str(), &volume, 0.01f, 0.01f, 1.0f))
 			{
 				cAudioSource->SetVolume(volume);
 			}
 
-			if ((ImGui::Button("Play")))
+			if ((ImGui::Button(("Play " + cAudioSource->GetEventName()).c_str())))
 			{
 				cAudioSource->PlayFx(currentEvent);
 			}
-			if ((ImGui::Button("Stop")))
+			if ((ImGui::Button(("Stop " + cAudioSource->GetEventName()).c_str())))
 			{
 				cAudioSource->StopFx(currentEvent);
 			}
