@@ -96,7 +96,7 @@ bool E_Inspector::Draw(ImGuiIO& io)
 	
 	GameObject* selected = EngineApp->editor->GetSelectedGameObjectThroughEditor();
 
-	if (selected != nullptr && !selected->is_master_root && !selected->is_scene_root)
+	if (selected != nullptr && !selected->isMasterRoot && !selected->isSceneRoot)
 	{	
 		DrawGameObjectInfo(selected);
 		DrawComponents(selected);
@@ -177,7 +177,7 @@ void E_Inspector::DrawGameObjectInfo(GameObject* selectedGameObject)
 	ImGui::Combo("Layer", &currentLayer, layerCombo);
 
 	ImGui::Separator();
-
+	
 	if (!selectedGameObject->isPrefab)	// --- PREFAB ---
 	{
 		if (ImGui::Button("Create Prefab"))
@@ -192,6 +192,11 @@ void E_Inspector::DrawGameObjectInfo(GameObject* selectedGameObject)
 		if (ImGui::Button("Update Prefab"))
 			App->resourceManager->UpdatePrefab(selectedGameObject);
 	}
+
+	ImGui::SameLine(ImGui::GetWindowWidth() * 0.51f);
+
+	bool maintain = selectedGameObject->maintainThroughScenes;
+	if (ImGui::Checkbox("Maintain Through Scenes", &maintain)) { selectedGameObject->maintainThroughScenes = maintain; }
 
 	ImGui::Separator();
 }

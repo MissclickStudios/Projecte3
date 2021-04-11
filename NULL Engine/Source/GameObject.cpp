@@ -50,18 +50,19 @@
 #include "MemoryManager.h"
 
 GameObject::GameObject() :
-uid					(Random::LCG::GetRandomUint()),
-parent_uid			(0),
-name				("GameObject"),
-isActive			(true),
-isStatic			(false),
-parent				(nullptr),
-transform			(nullptr),
-is_master_root		(false),
-is_scene_root		(false),
-is_bone				(false),
-to_delete			(false),
-show_bounding_boxes	(false)
+uid						(Random::LCG::GetRandomUint()),
+parent_uid				(0),
+name					("GameObject"),
+isActive				(true),
+isStatic				(false),
+parent					(nullptr),
+transform				(nullptr),
+isMasterRoot			(false),
+isSceneRoot				(false),
+isBone					(false),
+maintainThroughScenes	(false),
+toDelete				(false),
+show_bounding_boxes		(false)
 {
 	transform = (C_Transform*)CreateComponent(ComponentType::TRANSFORM);
 
@@ -73,17 +74,18 @@ show_bounding_boxes	(false)
 }
 
 GameObject::GameObject(std::string name, bool isActive, bool isStatic) :
-uid					(Random::LCG::GetRandomUint()),
-parent_uid			(0),
-name				(name),
-isActive			(isActive),
-isStatic			(isStatic),
-parent				(nullptr),
-transform			(nullptr),
-is_master_root		(false),
-is_scene_root		(false),
-is_bone				(false),
-to_delete			(false)
+uid						(Random::LCG::GetRandomUint()),
+parent_uid				(0),
+name					(name),
+isActive				(isActive),
+isStatic				(isStatic),
+parent					(nullptr),
+transform				(nullptr),
+isMasterRoot			(false),
+isSceneRoot				(false),
+isBone					(false),
+maintainThroughScenes	(false),
+toDelete				(false)
 {
 	if (name.empty())
 	{
@@ -161,7 +163,8 @@ bool GameObject::SaveState(ParsonNode& root) const
 	root.SetString("Name", name.c_str());
 	root.SetBool("IsActive", isActive);
 	root.SetBool("IsStatic", isStatic);
-	root.SetBool("IsSceneRoot", is_scene_root);
+	root.SetBool("IsSceneRoot", isSceneRoot);
+	root.SetBool("MaintainThroughScenes", maintainThroughScenes);
 	root.SetBool("ShowBoundingBoxes", show_bounding_boxes);
 
 	ParsonArray componentArray = root.SetArray("Components");
@@ -185,11 +188,12 @@ bool GameObject::LoadState(ParsonNode& root)
 	prefabID = (uint)root.GetNumber("PrefabID");
 	isPrefab = root.GetBool("IsPrefab");
 
-	name				= root.GetString("Name");
-	isActive			= root.GetBool("IsActive");
-	isStatic			= root.GetBool("IsStatic");
-	is_scene_root		= root.GetBool("IsSceneRoot");
-	show_bounding_boxes = root.GetBool("ShowBoundingBoxes");
+	name					= root.GetString("Name");
+	isActive				= root.GetBool("IsActive");
+	isStatic				= root.GetBool("IsStatic");
+	isSceneRoot				= root.GetBool("IsSceneRoot");
+	maintainThroughScenes	= root.GetBool("MaintainThroughScenes");
+	show_bounding_boxes		= root.GetBool("ShowBoundingBoxes");
 
 	// Recalculate AABB and OBB
 
@@ -307,7 +311,7 @@ void GameObject::FreeChilds()
 		if (childs[i] != nullptr)
 		{
 			childs[i]->parent = nullptr;
-			childs[i]->to_delete = true;									// Will set the children of the GameObject being deleted to be deleted too in M_Scene's game_objects vector.
+			childs[i]->toDelete = true;									// Will set the children of the GameObject being deleted to be deleted too in M_Scene's game_objects vector.
 			//childs[i]->CleanUp();											// Recursively cleaning up the the childs.
 		}
 	}
@@ -464,19 +468,19 @@ bool GameObject::AddChild(GameObject* child)
 {
 	bool ret = true;
 	
-	if (child->is_master_root)
+	if (child->isMasterRoot)
 	{
 		LOG("[ERROR] Game Objects: AddChild() operation failed! Error: %s is the master root object!", child->name.c_str());
 		return false;
 	}
 	
-	if (!is_master_root && child->is_scene_root)
+	if (!isMasterRoot && child->isSceneRoot)
 	{
 		LOG("[ERROR] Game Objects: AddChild() operation failed! Error: %s is current scene root object!", child->name.c_str());
 		return false;
 	}
 	
-	if (!is_master_root && !is_scene_root)
+	if (!isMasterRoot && !isSceneRoot)
 	{
 		if (NewChildIsOwnParent(child))
 		{
@@ -509,7 +513,7 @@ bool GameObject::NewChildIsOwnParent(GameObject* child)
 
 	GameObject* parentItem = this->parent;									// Will set the parent of this object as the starting point of the search.
 	
-	while (parentItem != nullptr && !parentItem->is_scene_root)			// Iterate back up to the root object, as it is the parent of everything in the scene. (First check is TMP)
+	while (parentItem != nullptr && !parentItem->isSceneRoot)			// Iterate back up to the root object, as it is the parent of everything in the scene. (First check is TMP)
 	{
 		if (parentItem == child)											// Child is the parent of one of the parent objects of this object (the one which called AddChild())
 		{

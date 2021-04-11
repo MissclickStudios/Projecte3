@@ -791,7 +791,7 @@ void C_Animator::CrossCheckBonesWithMeshBoneMapping()
 			auto result = mapping.find((*bone)->GetName());
 			if (result != mapping.end())
 			{
-				(*bone)->is_bone = true;
+				(*bone)->isBone = true;
 			}
 		}
 	}

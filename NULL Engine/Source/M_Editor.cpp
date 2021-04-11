@@ -483,7 +483,7 @@ bool M_Editor::SelectedIsSceneRoot() const
 
 bool M_Editor::SelectedIsAnimationBone() const
 {
-	return EngineApp->scene->GetSelectedGameObject()->is_bone;
+	return EngineApp->scene->GetSelectedGameObject()->isBone;
 }
 
 void M_Editor::GetEngineIconsThroughEditor(Icons& engineIcons)

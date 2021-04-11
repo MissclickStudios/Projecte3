@@ -42,12 +42,13 @@ public:
 	bool			SaveConfiguration(ParsonNode& root) const override;
 	bool			LoadConfiguration(ParsonNode& root) override;
 
-public:																														// --- GAME OBJECTS METHODS ---
-	bool			SaveScene(const char* sceneName = nullptr) const;							// If no name is given the scene_root node's name will be used.
-	bool			LoadScene(const char* path);													// For now asks for full path
+public:																									// --- GAME OBJECTS METHODS ---
+	bool			SaveScene(const char* sceneName = nullptr) const;									// If no name is given the scene_root node's name will be used.
+	bool			LoadScene(const char* path);														// For now asks for full path
+	bool			CleanUpCurrentScene(std::vector<GameObject*>& parentMaintained);
 
 	void			SaveCurrentScene();
-	bool			SaveSceneAs(const char* sceneName = nullptr);							// To be called from editor
+	bool			SaveSceneAs(const char* sceneName = nullptr);										// To be called from editor
 	bool			NewScene();							// Opens a new scene
 
 	void			LoadResourceIntoScene(Resource* resource);
