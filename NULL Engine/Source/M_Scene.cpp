@@ -316,10 +316,10 @@ bool M_Scene::LoadScene(const char* path)
 	if (buffer != nullptr)
 	{
 		App->renderer->ClearRenderers();
-		//CleanUp();
+		CleanUp();
 
 		std::vector<GameObject*> parentMaintained;
-		CleanUpCurrentScene(parentMaintained);
+		//CleanUpCurrentScene(parentMaintained);
 
 		ParsonNode newRoot			= ParsonNode(buffer);
 		ParsonArray modelsArray		= newRoot.GetArray("Models In Scene");

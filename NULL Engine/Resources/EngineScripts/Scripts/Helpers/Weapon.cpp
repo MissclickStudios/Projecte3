@@ -223,6 +223,6 @@ void Weapon::DeleteProjectiles()
 
 void Weapon::DeleteProjectileStorage()
 {
-	projectileStorage->to_delete = true;
+	projectileStorage->toDelete = true;
 	projectileStorage = nullptr;
 }

@@ -54,10 +54,10 @@ void Blurrg::Update()
 
 	if (!player)
 	{
-		std::vector<GameObject*>* objects = App->scene->GetGameObjects();
-		for (uint i = 0; i < objects->size(); ++i)
-			if ((*objects)[i]->GetScript("Player"))
-				player = (*objects)[i];
+		std::map<uint32,GameObject*>* objects = App->scene->GetGameObjects();
+		for (auto o = objects->begin(); o != objects->end(); ++o)
+			if (o->second->GetScript("Player"))
+				player = o->second;
 
 		if (!player)
 			return;

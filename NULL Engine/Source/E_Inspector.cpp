@@ -108,12 +108,12 @@ bool E_Inspector::Draw(ImGuiIO& io)
 	else
 	{
 		if(shownGameObject != nullptr)
-			if (shownGameObject->to_delete)
+			if (shownGameObject->toDelete)
 				lockGameObject = false;
 	}
 	
 
-	if (shownGameObject != nullptr && !shownGameObject->is_master_root && !shownGameObject->is_scene_root)
+	if (shownGameObject != nullptr && !shownGameObject->isMasterRoot && !shownGameObject->isSceneRoot)
 	{	
 		DrawGameObjectInfo(shownGameObject);
 		DrawComponents(shownGameObject);

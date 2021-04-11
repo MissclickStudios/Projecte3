@@ -66,15 +66,15 @@ void Player::Awake()
 	if (!gameObject->GetComponent<C_RigidBody>())
 		gameObject->CreateComponent(ComponentType::RIGIDBODY);
 
-	std::vector<GameObject*>* objects = App->scene->GetGameObjects();
-	for (uint i = 0; i < objects->size(); ++i)
+	std::map<uint32, GameObject*>* objects = App->scene->GetGameObjects();
+	for (auto o = objects->begin(); o != objects->end(); ++o)
 	{
-		std::string name = (*objects)[i]->GetName();
+		std::string name = o->second->GetName();
 		LOG("%s", name.c_str());
 		if (name == "Blaster")
-			blasterModel = (*objects)[i];
+			blasterModel = o->second;
 		else if (name == "Sniper")
-			sniperModel = (*objects)[i];
+			sniperModel = o->second;
 	}
 	if (blasterModel)
 		blasterModel->SetIsActive(true);

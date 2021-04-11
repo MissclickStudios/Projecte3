@@ -27,12 +27,12 @@ SandTrooper::~SandTrooper()
 
 void SandTrooper::Awake()
 {
-	if (!player)
+	if (player != nullptr)
 	{
-		std::vector<GameObject*>* objects = App->scene->GetGameObjects();
-		for (uint i = 0; i < objects->size(); ++i)
-			if((*objects)[i]->GetScript("Player"))
-				player = (*objects)[i];
+		std::map<uint32,GameObject*>* objects = App->scene->GetGameObjects();
+		for (auto o = objects->begin(); o != objects->end(); ++o)
+			if(o->second->GetScript("Player"))
+				player = o->second;
 	}
 
 	for (uint i = 0; i < gameObject->childs.size(); ++i)
