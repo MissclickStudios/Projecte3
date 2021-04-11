@@ -21,9 +21,9 @@ struct NULL_API ParticleModule
 		ParticleRotation,
 		ParticleSize,
 		ParticleBillboarding,
-		EmitterBase,		//Origin of the emitter
-		EmitterSpawn,		//Spawn Rate and timer
 		EmitterArea,
+		EmitterBase,			//Origin of the emitter
+		EmitterSpawn,			//Spawn Rate and timer
 		
 		Unknown
 	} type;
@@ -126,6 +126,17 @@ struct ParticleLifetime : ParticleModule
 
 struct ParticleBillboarding : ParticleModule
 {
+	enum BillboardingType
+	{
+		ScreenAligned,
+		WorldAligned,
+		XAxisAligned,
+		YAxisAligned,
+		ZAxisAligned,
+
+		None,
+	};
+
 	ParticleBillboarding() : ParticleModule(Type::ParticleBillboarding) {};
 
 	void Save(ParsonNode& node) override;
@@ -136,6 +147,7 @@ struct ParticleBillboarding : ParticleModule
 
 	Quat GetAlignmentRotation(const float3& position, const float4x4& cameraTransform);
 
+	BillboardingType billboardingType = ScreenAligned;
 	bool hideBillboarding = false;
 	bool eraseBillboarding = false;
 };

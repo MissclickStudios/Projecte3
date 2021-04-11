@@ -1226,7 +1226,7 @@ void E_Inspector::DrawParticleSystemComponent(C_Particles* cParticleSystem)
 						cParticleSystem->EnginePreview(preview);
 					}
 
-					ImGui::Combo("###", &moduleType, "Add Module\0ParticleMovement\0ParticleColor\0ParticleLifetime");
+					ImGui::Combo("###", &moduleType, "Add Module\0ParticleMovement\0ParticleColor\0ParticleLifetime\0ParticleRotation\0ParticleSize\0ParticleBillboarding");
 
 					ImGui::SameLine();
 
@@ -1352,6 +1352,35 @@ void E_Inspector::DrawParticleSystemComponent(C_Particles* cParticleSystem)
 								if (ImGui::Checkbox("Delete Lifetime", &deleteModule))
 								{
 									_module->eraseLifetime = deleteModule;
+								}
+							}
+						}
+						break;
+						case(ParticleModule::Type::ParticleBillboarding):
+						{
+							if (ImGui::CollapsingHeader("Particle Billboarding", &show, ImGuiTreeNodeFlags_DefaultOpen))
+							{
+								ParticleBillboarding* _module = (ParticleBillboarding*)module;
+
+								ImGui::Combo("Billboarding##", &billboardingType, "Screen Aligned\0World Aligned\0X-Axis Aligned\0Y-Axis Aligned\0Z-Axis Aligned");
+
+								ImGui::SameLine();
+
+								if ((ImGui::Button("SELECT")))
+								{
+									_module->billboardingType = (ParticleBillboarding::BillboardingType)billboardingType;
+								}
+
+								bool hideModule = _module->hideBillboarding;
+								if (ImGui::Checkbox("Hide Billboarding", &hideModule))
+								{
+									_module->hideBillboarding = hideModule;
+								}
+
+								bool deleteModule = _module->eraseBillboarding;
+								if (ImGui::Checkbox("Delete Billboarding", &deleteModule))
+								{
+									_module->eraseBillboarding = deleteModule;
 								}
 							}
 						}
