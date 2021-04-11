@@ -163,13 +163,14 @@ public:
 	std::vector<GameObject*> childs;
 
 	GameObject* parent;
-	C_Transform* transform;													// Don't know what to do with this. Maybe like Unity? Or have it like the rest of comps?
+	C_Transform* transform;												// Don't know what to do with this. Maybe like Unity? Or have it like the rest of comps?
 
 
-	bool is_master_root;												//
-	bool is_scene_root;												// Will be set to true if this GameObject is M_Scene's scene root object.
-	bool is_bone;
-	bool to_delete;													// Will determine whether or not the GO should be deleted. See M_Scene's DeleteGameObject().
+	bool isMasterRoot;													//
+	bool isSceneRoot;													// Will be set to true if this GameObject is M_Scene's scene root object.
+	bool isBone;														// 
+	bool maintainThroughScenes;											// Will determine whether or not the GO will be deleted when changing scenes.
+	bool toDelete;														// Will determine whether or not the GO should be deleted. See M_Scene's DeleteGameObject().
 
 	OBB	 obb;
 	AABB aabb;

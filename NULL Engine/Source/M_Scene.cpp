@@ -111,7 +111,7 @@ UpdateStatus M_Scene::Update(float dt)
 	// --- Sort GameObjects by Z-Buffer value
 	for (uint i = 0; i < gameObjects.size(); ++i)
 	{
-		if (gameObjects[i]->to_delete)
+		if (gameObjects[i]->toDelete)
 		{
 			DeleteGameObject(gameObjects[i], i);
 			continue;
@@ -311,6 +311,9 @@ bool M_Scene::LoadScene(const char* path)
 		App->renderer->ClearRenderers();
 		CleanUp();
 
+		std::vector<GameObject*> parentMaintained;
+		//CleanUpCurrentScene(parentMaintained);
+
 		ParsonNode newRoot			= ParsonNode(buffer);
 		ParsonArray modelsArray		= newRoot.GetArray("Models In Scene");
 		ParsonArray objectsArray	= newRoot.GetArray("Game Objects");
@@ -350,10 +353,17 @@ bool M_Scene::LoadScene(const char* path)
 
 			gameObject->LoadState(objectNode);
 
-			if (gameObject->is_scene_root)
+			if (gameObject->isSceneRoot)
 			{
 				sceneRoot = gameObject;
 				sceneRoot->SetParent(masterRoot);
+
+				for (uint i = 0; i < parentMaintained.size(); ++i)
+				{
+					parentMaintained[i]->SetParent(sceneRoot);
+				}
+
+				parentMaintained.clear();
 			}
 
 			if (gameObject->GetComponent<C_Animator>() != nullptr)
@@ -426,6 +436,106 @@ bool M_Scene::LoadScene(const char* path)
 	//if (!CheckSceneLight()) AddSceneLight(App->renderer->GenerateSceneLight(Color(1.0f, 1.0f, 1.0f, 1.0f), Color(0.6, 0.6, 0.6, 0.5), Color(0.6, 0.6, 0.6, 0.5), LightType::DIRECTIONAL));
 
 	return ret;
+}
+
+bool M_Scene::CleanUpCurrentScene(std::vector<GameObject*>& parentMaintained)				// ATTENTION: Look for a way to erase an item in a loop and keep iterating without problems.
+{
+	LOG("Unloading Intro scene");
+	
+	//App->renderer->ClearRenderers();
+
+	App->renderer->defaultSkyBox.CleanUp();
+
+	//std::map<uint32, GameObject*> maintainedObjects;												// Will store the UIDs of the objects that will not be deleted between scenes.
+	//for (uint i = 0; i < gameObjects.size(); ++i)
+	//{
+	//	if (gameObjects[i]->maintainThroughScenes)
+	//	{
+	//		if (gameObjects[i]->parent == sceneRoot)
+	//		{
+	//			gameObjects[i]->parent = nullptr;
+	//			parentMaintained.push_back(gameObjects[i]);
+	//		}
+
+	//		maintainedObjects.emplace(gameObjects[i]->GetUID(), gameObjects[i]);
+	//	}
+
+	//	gameObjects[i]->CleanUp();
+	//	RELEASE(gameObjects[i]);
+	//	//gameObjects.erase(gameObjects.begin() + i);
+	//}
+
+	//std::map<uint32, std::pair<uint32, std::string>> maintainedModels;
+	//for (auto item = models.cbegin(); item != models.cend(); ++item)
+	//{	
+	//	if (maintainedObjects.find(item->first) != maintainedObjects.end())
+	//	{
+	//		maintainedModels.emplace(item->first, item->second);
+	//	}
+
+	//	App->resourceManager->FreeResource(item->second.first);
+	//}
+
+	//gameObjects.clear();
+	//models.clear();
+
+	//for (auto object = maintainedObjects.cbegin(); object != maintainedObjects.cend(); ++object)
+	//{
+	//	gameObjects.push_back(object->second);
+	//}
+
+	//for (auto model = maintainedModels.cbegin(); model != maintainedModels.cend(); ++model)
+	//{
+	//	models.emplace(model->first, model->second);
+	//}
+
+	std::map<uint32, uint> goIndices;
+	std::vector<uint32> modelUIDs;
+	uint i = 0; 
+	for (auto object = gameObjects.begin(); object != gameObjects.end(); ++object)
+	{
+		if (!(*object)->maintainThroughScenes)
+		{
+			goIndices.emplace((*object)->GetUID(), i);
+			(*object)->CleanUp();
+			RELEASE((*object));
+		}
+
+		++i;
+	}
+	for (auto model = models.begin(); model != models.end(); ++model)
+	{
+		if (goIndices.find(model->first) != goIndices.end())
+		{
+			App->resourceManager->FreeResource(model->second.first);
+			modelUIDs.push_back(model->first);
+		}
+	}
+
+	for (auto item = goIndices.begin(); item != goIndices.end(); ++item)
+	{
+ 		/*gameObjects[item->second]->CleanUp();
+		RELEASE(gameObjects[item->second]);*/
+		
+		gameObjects.erase(gameObjects.begin() + item->second);
+	}
+	for (uint i = 0; i < modelUIDs.size(); ++i)
+	{
+		//App->resourceManager->FreeResource(modelUIDs[i]);
+		models.erase(modelUIDs[i]);
+	}
+
+	goIndices.clear();
+	modelUIDs.clear();
+
+	sceneRoot			= nullptr;
+	animationRoot		= nullptr;
+	cullingCamera		= nullptr;
+	selectedGameObject	= nullptr;
+
+	primitives.clear();
+	
+	return false;
 }
 
 void M_Scene::SaveCurrentScene()
@@ -864,7 +974,7 @@ bool M_Scene::ApplyTextureToSelectedGameObject(const uint32& uid)
 void M_Scene::CreateMasterRoot()
 {
 	masterRoot = new GameObject("MasterRoot");
-	masterRoot->is_master_root = true;
+	masterRoot->isMasterRoot = true;
 }
 
 void M_Scene::DeleteMasterRoot()
@@ -895,7 +1005,7 @@ void M_Scene::CreateSceneRoot(const char* sceneName)
 	
 	sceneRoot = new GameObject(sceneName);
 
-	sceneRoot->is_scene_root = true;
+	sceneRoot->isSceneRoot = true;
 
 	sceneRoot->SetParent(masterRoot);
 	
