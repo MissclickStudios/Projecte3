@@ -2,6 +2,8 @@
 #include "Script.h"
 #include "ScriptMacros.h"
 
+#include "Timer.h"
+
 #include "MathGeoLib/include/Math/float2.h"
 
 class GameObject;
@@ -21,11 +23,15 @@ public:
 
 	int value = 50;
 
+	float spinVelocity = 0.1f;
+
 private:
 
 	bool used = false;
 
 	float2 direction = float2::zero;
+
+	Timer spinTimer;
 
 	GameObject* mesh = nullptr;
 };
@@ -34,6 +40,8 @@ SCRIPTS_FUNCTION Coin* CreateCoin() {
 	Coin* script = new Coin();
 
 	INSPECTOR_DRAGABLE_INT(script->value);
+
+	INSPECTOR_DRAGABLE_FLOAT(script->spinVelocity);
 
 	return script;
 }

@@ -9,6 +9,7 @@
 
 Coin::Coin()
 {
+	spinTimer.Stop();
 }
 
 Coin::~Coin()
@@ -26,16 +27,22 @@ void Coin::Update()
 			if (gameObject->childs[i]->GetComponent<C_Mesh>())
 				mesh = gameObject->childs[i];
 
-	if (mesh)
+	if (!spinTimer.IsActive())
 	{
-		float2 currentDir(direction.x, direction.y);
-		float currentRad = currentDir.AimedAngle();
-		currentRad += 0.05;
-		direction.x = cos(currentRad);
-		direction.y = sin(currentRad);
+		spinTimer.Start();
+		if (mesh)
+		{
+			float2 currentDir(direction.x, direction.y);
+			float currentRad = currentDir.AimedAngle();
+			currentRad += 0.05;
+			direction.x = cos(currentRad);
+			direction.y = sin(currentRad);
 
-		mesh->transform->SetLocalRotation(float3(DegToRad(-90), 0, currentRad));
+			mesh->transform->SetLocalRotation(float3(DegToRad(-90), 0, currentRad));
+		}
 	}
+	else if (spinTimer.ReadSec() >= spinVelocity)
+		spinTimer.Stop();
 
 	if (used)
 	{

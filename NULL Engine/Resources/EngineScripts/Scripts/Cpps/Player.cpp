@@ -41,7 +41,8 @@ enum class PlayerState
 	SHOOTING_BLASTER,
 	SHOOTING_SNIPER,
 	RELOADING_BLASTER,
-	RELOADING_SNIPER
+	RELOADING_SNIPER,
+	DEAD
 };
 
 Player::Player() : Script(), state(PlayerState::IDLE)
@@ -65,9 +66,15 @@ void Player::Awake()
 
 void Player::Update()
 {
+	Animations();
 	if (health <= 0.0f)
 	{
-		// HOW ABOUT U FKN DIE
+		state = PlayerState::DEAD;
+		C_RigidBody* rigidBody = gameObject->GetComponent<C_RigidBody>();
+		if (!rigidBody || rigidBody->IsStatic())
+			return;
+		rigidBody->SetLinearVelocity(float3::zero);
+
 		return;
 	}
 
@@ -94,7 +101,6 @@ void Player::Update()
 	if (App->input->GetKey(SDL_SCANCODE_L) == KeyState::KEY_DOWN && hearts != nullptr)
 		health += 0.5f;
 
-	//Animations();
 	//HandleHp();
 	//HandleAmmo(ammo);
 }
@@ -166,47 +172,53 @@ void Player::Animations()
 	switch (state)
 	{
 	case PlayerState::IDLE:
-		if (currentClip != nullptr && clipName != "Idle")
+		if (currentClip != nullptr && clipName != idle)
 		{
-			aAnimator->PlayClip("Idle", 0u);
+			aAnimator->PlayClip(idle, 0u);
 		}
 		break;
 	case PlayerState::RUNNING:
-		if (currentClip != nullptr && clipName != "Running4")
+		if (currentClip != nullptr && clipName != walk)
 		{
-			aAnimator->PlayClip("Running4", 0u);
+			aAnimator->PlayClip(walk, 0u);
 		}
 		break;
-	case PlayerState::DASHING:
-		if (currentClip != nullptr && clipName != "Dashing")
-		{
-			aAnimator->PlayClip("Dashing", 0u);
-		}
-		break;
+	//case PlayerState::DASHING:
+	//	if (currentClip != nullptr && clipName != dash)
+	//	{
+	//		aAnimator->PlayClip(dash, 0u);
+	//	}
+	//	break;
 	case PlayerState::SHOOTING_BLASTER:
-		if (currentClip != nullptr && clipName != "Shooting")
+		if (currentClip != nullptr && clipName != shootBlaster)
 		{
-			aAnimator->PlayClip("Shooting", 0u);
+			aAnimator->PlayClip(shootBlaster, 0u);
 		}
 		break;
-	case PlayerState::SHOOTING_SNIPER:
-		if (currentClip != nullptr && clipName != "Shooting")
-		{
-			aAnimator->PlayClip("Shooting", 0u);
-		}
-		break;
-	case PlayerState::RELOADING_BLASTER:
-		if (currentClip != nullptr && clipName != "Shooting")
-		{
-			//aAnimator->PlayClip("Reloading", 0u);
-		}
-		break;
-	case PlayerState::RELOADING_SNIPER:
-		if (currentClip != nullptr && clipName != "Shooting")
-		{
-			//aAnimator->PlayClip("Reloading", 0u);
-		}
-		break;
+	//case PlayerState::SHOOTING_SNIPER:
+	//	if (currentClip != nullptr && clipName != shootSniper)
+	//	{
+	//		aAnimator->PlayClip(shootSniper, 0u);
+	//	}
+	//	break;
+	//case PlayerState::RELOADING_BLASTER:
+	//	if (currentClip != nullptr && clipName != "Shooting")
+	//	{
+	//		//aAnimator->PlayClip("Reloading", 0u);
+	//	}
+	//	break;
+	//case PlayerState::RELOADING_SNIPER:
+	//	if (currentClip != nullptr && clipName != "Shooting")
+	//	{
+	//		//aAnimator->PlayClip("Reloading", 0u);
+	//	}
+	//	break;
+	//case PlayerState::DEAD:
+	//	if (currentClip != nullptr && clipName != die)
+	//	{
+	//		aAnimator->PlayClip(die, 0u);
+	//	}
+	//	break;
 	}
 }
 
@@ -328,12 +340,14 @@ void Player::Shooting()
 	}
 
 	for (uint i = 0; i < gameObject->childs.size(); ++i)
-		if (gameObject->childs[i]->GetComponent<C_Mesh>())
-		{
-			float2 dir = { lastAim.x, -lastAim.z };
-			float rad = dir.AimedAngle();
+	{
+		float2 dir = { lastAim.x, -lastAim.z };
+		float rad = dir.AimedAngle();
+		if (gameObject->childs[i]->GetComponent<C_Mesh>()) // FUCK MESHES ALL MY HOMIES HATE MESHES
 			gameObject->childs[i]->transform->SetLocalRotation(float3(DegToRad(-90), 0, rad));
-		}
+		else
+			gameObject->childs[i]->transform->SetLocalRotation(float3(0, rad + DegToRad(90), 0));
+	}
 
 	if (App->input->GetKey(SDL_SCANCODE_F) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(1) == ButtonState::BUTTON_DOWN)
 		if (weaponUsed == 1)
@@ -602,6 +616,14 @@ Player* CreatePlayer()
 
 	INSPECTOR_CHECKBOX_BOOL(script->sniperAutomatic);
 	INSPECTOR_CHECKBOX_BOOL(script->freezingShots);
+
+	// Animations
+	INSPECTOR_STRING(script->idle);
+	INSPECTOR_STRING(script->walk);
+	INSPECTOR_STRING(script->dash);
+	INSPECTOR_STRING(script->shootBlaster);
+	INSPECTOR_STRING(script->shootSniper);
+	INSPECTOR_STRING(script->die);
 
 	return script;
 }

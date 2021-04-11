@@ -86,6 +86,13 @@ public:
 	Weapon* sniper = nullptr;
 	Prefab sniperBullet;
 
+	std::string idle = "idle";
+	std::string walk = "walk";
+	std::string dash = "dash";
+	std::string shootBlaster = "shoot blaster";
+	std::string shootSniper = "shoot sniper";
+	std::string die = "die";
+
 private:
 
 	void Animations();

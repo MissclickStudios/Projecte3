@@ -567,7 +567,7 @@
         },
         {
             "UID": 1355352305,
-            "ParentUID": 661352665,
+            "ParentUID": 91670057,
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "MainScene",
@@ -849,6 +849,264 @@
                         0.10000000149011612,
                         0.10000000149011612
                     ]
+                }
+            ]
+        },
+        {
+            "UID": 1473308324,
+            "ParentUID": 1355352305,
+            "PrefabID": 1984048245,
+            "IsPrefab": true,
+            "Name": "FreezingShots",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -5.6056184768676758,
+                        6.7951750755310059,
+                        12.016916275024414
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        5,
+                        5,
+                        5
+                    ]
+                },
+                {
+                    "Type": 8,
+                    "Is Static": true,
+                    "Filter": " gate"
+                },
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 5,
+                    "Size Y": 5,
+                    "Size Z": 5,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
+                },
+                {
+                    "Type": 24,
+                    "ResourceUID": 1952527470,
+                    "AssetsPath": "Assets\/Scripts\/\/WeaponPerk.h",
+                    "DataName": "WeaponPerk",
+                    "HasInspector": true,
+                    "InspectorVariables": [
+                        {
+                            "Type": 0,
+                            "Name": "cost",
+                            "int": 200
+                        },
+                        {
+                            "Type": 0,
+                            "Name": "effect",
+                            "int": 2
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1029812800,
+            "ParentUID": 1473308324,
+            "PrefabID": 1984048245,
+            "IsPrefab": true,
+            "Name": "Pyramid001",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        -0.5,
+                        0
+                    ],
+                    "LocalRotation": [
+                        -0.7071068286895752,
+                        0,
+                        0,
+                        0.70710670948028564
+                    ],
+                    "LocalScale": [
+                        1,
+                        1.0000001192092896,
+                        1.0000001192092896
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 2012575082,
+                    "Name": "Pyramid001.nemesh",
+                    "Path": "Library\/Meshes\/2012575082.nemesh",
+                    "File": "2012575082.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 624268113,
+                        "Color": [
+                            0.096309110522270203,
+                            0.77555549144744873,
+                            0.81862747669219971,
+                            1
+                        ],
+                        "Name": "Pyramid001.nemat",
+                        "Path": "Library\/Materials\/624268113.nemat",
+                        "File": "624268113.nemat"
+                    },
+                    "Shader": {
+                        "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
+                        "AssetsName": "DefaultShader.shader",
+                        "LibaryPath": "Library\/Shaders\/1458192069.neshader",
+                        "LibraryFile": "1458192069.neshader"
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 1235634089,
+            "ParentUID": 1355352305,
+            "PrefabID": 1647846723,
+            "IsPrefab": true,
+            "Name": "StrongShots",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        7.9969692230224609,
+                        7.1208415031433105,
+                        12.201135635375977
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        5,
+                        5,
+                        5
+                    ]
+                },
+                {
+                    "Type": 8,
+                    "Is Static": true,
+                    "Filter": " gate"
+                },
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 5,
+                    "Size Y": 5,
+                    "Size Z": 5,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
+                },
+                {
+                    "Type": 24,
+                    "ResourceUID": 1952527470,
+                    "AssetsPath": "Assets\/Scripts\/\/WeaponPerk.h",
+                    "DataName": "WeaponPerk",
+                    "HasInspector": true,
+                    "InspectorVariables": [
+                        {
+                            "Type": 0,
+                            "Name": "cost",
+                            "int": 200
+                        },
+                        {
+                            "Type": 0,
+                            "Name": "effect",
+                            "int": 1
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1420935210,
+            "ParentUID": 1235634089,
+            "PrefabID": 1647846723,
+            "IsPrefab": true,
+            "Name": "cube",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        -0.5
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 1348672898,
+                    "Name": "Box001.nemesh",
+                    "Path": "Library\/Meshes\/1348672898.nemesh",
+                    "File": "1348672898.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 1528333877,
+                        "Color": [
+                            1,
+                            0.22549021244049072,
+                            0.22549021244049072,
+                            1
+                        ],
+                        "Name": "Box001.nemat",
+                        "Path": "Library\/Materials\/1528333877.nemat",
+                        "File": "1528333877.nemat"
+                    },
+                    "Shader": {
+                        "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
+                        "AssetsName": "DefaultShader.shader",
+                        "LibaryPath": "Library\/Shaders\/1458192069.neshader",
+                        "LibraryFile": "1458192069.neshader"
+                    }
                 }
             ]
         }
