@@ -1534,9 +1534,9 @@ void M_Renderer3D::GenScreenBuffer()
 		-1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
 		1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
 		-1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
-		-1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
 		1.0f,  -1.0f, 0.0f, 1.0f, 0.0f,
-		1.0f, 1.0f, 0.0f, 1.0f, 1.0f
+		1.0f, 1.0f, 0.0f, 1.0f, 1.0f,
+		-1.0f,  1.0f, 0.0f, 0.0f, 1.0f
 	};
 
 	GLuint quad_vertexbuffer;
