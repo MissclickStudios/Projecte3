@@ -316,8 +316,13 @@ void GameObject::FreeChilds()
 		if (childs[i] != nullptr)
 		{
 			childs[i]->parent = nullptr;
-			childs[i]->toDelete = true;									// Will set the children of the GameObject being deleted to be deleted too in M_Scene's game_objects vector.
-			//childs[i]->CleanUp();											// Recursively cleaning up the the childs.
+			childs[i]->toDelete = true;											// Will set the children of the GameObject being deleted to be deleted too in M_Scene's game_objects vector.
+
+			/*if (!childs[i]->maintainThroughScenes)								// Dirty fix on issue generated at CleanUpCurrentScene() in M_Scene().
+			{
+				childs[i]->toDelete = true;										// Will set the children of the GameObject being deleted to be deleted too in M_Scene's game_objects vector.
+				//childs[i]->CleanUp();											// Recursively cleaning up the the childs.
+			}*/
 		}
 	}
 
@@ -643,6 +648,17 @@ GameObject* GameObject::FindChild(const char* childName)
 	return nullptr;
 }
 
+void GameObject::GetAllParents(std::vector<GameObject*>& parents)
+{
+	if (parent->isSceneRoot)
+	{
+		return;
+	}
+	
+	parents.push_back(parent);
+	parent->GetAllParents(parents);
+}
+
 void GameObject::SetAsPrefab(uint _prefabID)
 {
 	//set the childs to the prefab uid and the bool
@@ -683,21 +699,21 @@ void GameObject::SetName(const char* newName)
 	changedName	= true;
 }
 
-void GameObject::SetIsActive(const bool& setTo)
+void GameObject::SetIsActive(const bool setTo)
 {
 	isActive = setTo;
 
 	SetChildsIsActive(setTo, this);
 }
 
-void GameObject::SetIsStatic(const bool& setTo)
+void GameObject::SetIsStatic(const bool setTo)
 {
 	isStatic = setTo;
 
 	SetChildsIsStatic(setTo, this);
 }
 
-void GameObject::SetChildsIsActive(const bool& setTo, GameObject* parent)
+void GameObject::SetChildsIsActive(const bool setTo, GameObject* parent)
 {
 	if (parent != nullptr)
 	{
@@ -710,7 +726,7 @@ void GameObject::SetChildsIsActive(const bool& setTo, GameObject* parent)
 	}
 }
 
-void GameObject::SetChildsIsStatic(const bool& setTo, GameObject* parent)
+void GameObject::SetChildsIsStatic(const bool setTo, GameObject* parent)
 {
 	if (parent != nullptr)
 	{
@@ -720,6 +736,31 @@ void GameObject::SetChildsIsStatic(const bool& setTo, GameObject* parent)
 
 			SetChildsIsStatic(setTo, parent->childs[i]);
 		}
+	}
+}
+
+bool GameObject::GetMaintainThroughScenes() const
+{
+	return maintainThroughScenes;
+}
+
+void GameObject::SetMaintainThroughScenes(const bool setTo)
+{
+	maintainThroughScenes = setTo;
+
+	std::vector<GameObject*> childs;
+	std::vector<GameObject*> parents;
+
+	GetAllChilds(childs);
+	GetAllParents(parents);
+
+	for (auto child = childs.cbegin(); child != childs.cend(); ++child)
+	{
+		(*child)->maintainThroughScenes = setTo;
+	}
+	for (auto parent = parents.cbegin(); parent != parents.cend(); ++parent)
+	{
+		(*parent)->maintainThroughScenes = setTo;
 	}
 }
 

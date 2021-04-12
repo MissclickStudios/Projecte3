@@ -219,8 +219,8 @@ void E_Inspector::DrawGameObjectInfo(GameObject* selectedGameObject)
 
 	ImGui::SameLine(ImGui::GetWindowWidth() * 0.51f);
 
-	bool maintain = selectedGameObject->maintainThroughScenes;
-	if (ImGui::Checkbox("Maintain Through Scenes", &maintain)) { selectedGameObject->maintainThroughScenes = maintain; }
+	bool maintain = selectedGameObject->GetMaintainThroughScenes();
+	if (ImGui::Checkbox("Maintain Through Scenes", &maintain)) { selectedGameObject->SetMaintainThroughScenes(maintain); }
 
 	ImGui::Separator();
 }

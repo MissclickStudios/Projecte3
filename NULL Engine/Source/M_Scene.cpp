@@ -206,6 +206,7 @@ bool M_Scene::CleanUp()
 	}
 
 	gameObjects.clear();
+	goNamesMap.clear();
 	models.clear();
 
 	sceneRoot				= nullptr;
@@ -317,10 +318,10 @@ bool M_Scene::LoadScene(const char* path)
 	if (buffer != nullptr)
 	{
 		App->renderer->ClearRenderers();
-		CleanUp();
+		//CleanUp();
 
 		std::vector<GameObject*> parentMaintained;
-		//CleanUpCurrentScene(parentMaintained);
+		CleanUpCurrentScene(parentMaintained);
 
 		ParsonNode newRoot			= ParsonNode(buffer);
 		ParsonArray modelsArray		= newRoot.GetArray("Models In Scene");
@@ -437,6 +438,22 @@ bool M_Scene::LoadScene(const char* path)
 		App->renderer->ClearRenderers();
 	}
 
+	std::map<uint32, GameObject*> toDelete;
+	for (auto object = gameObjects.cbegin(); object != gameObjects.cend(); ++object)				// For some reason UI related elements have their UID changed as they are generated.
+	{																								// This is a dirty fix to avoid having problems with that. Find root of the problem later.
+		if (object->first != object->second->GetUID())
+		{
+			toDelete.emplace(object->first, object->second);
+		}
+	}
+	for (auto object = toDelete.cbegin(); object != toDelete.cend(); ++object)
+	{
+		AddGameObjectToMaps(object->second);
+		gameObjects.erase(object->first);
+	}
+
+	toDelete.clear();
+
 	//Resolve script go pointers reassigning
 	if (!toAdd.empty()) {
 		std::vector< std::pair<uint32, GameObject**>>::const_iterator item = toAdd.cbegin();
@@ -463,53 +480,45 @@ bool M_Scene::LoadScene(const char* path)
 	return ret;
 }
 
-bool M_Scene::CleanUpCurrentScene(std::vector<GameObject*>& parentMaintained)				// ATTENTION: Look for a way to erase an item in a loop and keep iterating without problems.
+bool M_Scene::CleanUpCurrentScene(std::vector<GameObject*>& parentMaintained)						// ATTENTION: Look for a way to erase an item in a loop and keep iter. without problems.
 {
-	LOG("Unloading Intro scene");
-	
-	//App->renderer->ClearRenderers();
+	LOG("Unloading { %s } Scene", currentScene.c_str());
 
 	App->renderer->defaultSkyBox.CleanUp();
 
-	for (auto object = gameObjects.begin(); object != gameObjects.end(); ++object)
+	for (auto object = gameObjects.begin(); object != gameObjects.end(); ++object)					// ATTENTION: There are a total of 6 loops when only 2 should be needed. Revise later.
 	{
-
+		if (object->second->GetMaintainThroughScenes() && object->second->parent == sceneRoot)
+		{
+			parentMaintained.push_back(object->second);												// If not done first all parent pointers get corrupted or set to NULL.
+		}
 	}
 
 	std::map<uint32, std::string> goToDelete;
 	std::vector<uint32> modelsToDelete;
+	std::vector<GameObject*> why;
 	for (auto object = gameObjects.begin(); object != gameObjects.end(); ++object)
 	{
-		if (!object->second->maintainThroughScenes)
+		if (!object->second->GetMaintainThroughScenes())
 		{
-			goToDelete.emplace(object->second->GetUID(), object->second->GetName());
+			goToDelete.emplace(object->second->GetUID(), object->second->GetName());				// Getting the GameObjects that should be deleted.
 
 			object->second->CleanUp();
 			RELEASE(object->second);
-
-			//if (object != gameObjects.begin())	{ --object; }
-			
-			/*(object != gameObjects.begin()) ? --object : object = gameObjects.end();
-			gameObjects.erase(name);
-			if(object == gameObjects.end())	{ object = gameObjects.begin(); }*/
 		}
 	}
+
 	for (auto model = models.begin(); model != models.end(); ++model)
 	{
 		if (goToDelete.find(model->first) != goToDelete.end())
 		{
-			App->resourceManager->FreeResource(model->second.first);
-			
-			//if (model != models.begin())	{ --model; }
-			//models.erase(goUID);
-			//if (model == models.end())	{ model = models.begin(); }
-
+			App->resourceManager->FreeResource(model->second.first);								// Getting the models that should be deleted.
 			modelsToDelete.push_back(model->first);
 		}
 	}
 
 	for (auto object = goToDelete.begin(); object != goToDelete.end(); ++object)
-	{
+	{	
 		(gameObjects.find(object->first) != gameObjects.end())	? gameObjects.erase(object->first) : LOG("[ERROR] Scene: Could not Delete { %s }! Error: GO amiss", object->second.c_str());
 		(goNamesMap.find(object->second) != goNamesMap.end())	? goNamesMap.erase(object->second) : LOG("[ERROR] Scene: Could not Delete { %s }! Error: Name amiss", object->second.c_str());
 	}
@@ -518,9 +527,9 @@ bool M_Scene::CleanUpCurrentScene(std::vector<GameObject*>& parentMaintained)			
 		(models.find((*model)) != models.end()) ? models.erase((*model)) : LOG("[ERROR] Scene: Could not Delete Model { %lu }! Error: Model could not be found in map", (*model));
 	}
 
-	for (auto object = gameObjects.begin(); object != gameObjects.end(); ++object)
+	for (auto object = gameObjects.cbegin(); object != gameObjects.cend(); ++object)				// Making sure that the remaining GOs (maintain) are not set to delete.
 	{
-		object->second->toDelete = false;
+		(object->second != nullptr) ? object->second->toDelete = false : LOG("[ERROR] Scene: GameObject remaining after Current Scene CleanUp was nullptr!");
 	}
 
 	sceneRoot			= nullptr;
