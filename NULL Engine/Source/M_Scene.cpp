@@ -33,6 +33,8 @@
 #include "C_UI_Button.h"
 #include "C_AudioSource.h"
 #include "C_AudioListener.h"
+#include "C_UI_Text.h"
+
 
 #include "Primitive.h"
 
@@ -40,7 +42,6 @@
 #include "M_ScriptManager.h"
 
 #include "MemoryManager.h"
-
 
 M_Scene::M_Scene(bool isActive) : Module("SceneManager", isActive),
 masterRoot				(nullptr),
@@ -86,7 +87,7 @@ bool M_Scene::Start()
 	level.GetRooms();
 	level.GenerateLevel();
 	
-	level.AddFixedRoom("HUB", 1, 1);
+	//level.AddFixedRoom("HUB", 1, 1);
 
 	/*level.AddFixedRoom("Start",1 ,1); 
 	level.AddFixedRoom("Boss",1 ,15);*/
@@ -95,8 +96,10 @@ bool M_Scene::Start()
 
 	if(App->gameState == GameState::PLAY)
 		App->scene->LoadScene("Assets/Scenes/MainMenu.json");
+	else 
+		App->scene->LoadScene("Assets/Scenes/MainMenu.json");
 
-	App->scene->LoadScene("Assets/Scenes/MainMenu.json");
+
 
 
 	/*std::string s = ASSETS_SCENES_PATH + currentScene + JSON_EXTENSION;
@@ -173,6 +176,13 @@ UpdateStatus M_Scene::Update(float dt)
 
 	// --- Room Generation
 	level.HandleRoomGeneration();
+
+	//--
+	
+	
+	ShowFPS();
+
+
 
 	return UpdateStatus::CONTINUE;
 }
@@ -1373,9 +1383,25 @@ void M_Scene::ResolveScriptGoPointer(const uint32 uid, GameObject** object)
 	toAdd.push_back({uid, object});
 }
 
-LevelGenerator M_Scene::GetLevelGenerator()
+void M_Scene::ShowFPS()
 {
-	return level;
+	/*if (!showFps)
+	{
+		showFps = new GameObject("FPS Count");
+		showFps->CreateComponent(ComponentType::CANVAS);
+		showFps->CreateComponent(ComponentType::UI_TEXT);
+		gameObjects.push_back(showFps);
+	}
+	else
+	{
+		C_UI_Text* fpsCount = (showFps)->GetComponent<C_UI_Text>();
+		fpsCount->SetText((char*)App->window->GetRefreshRate());
+	}*/
+}
+
+LevelGenerator* M_Scene::GetLevelGenerator()
+{
+	return &level;
 }
 
 void M_Scene::DeleteSelectedGameObject()
