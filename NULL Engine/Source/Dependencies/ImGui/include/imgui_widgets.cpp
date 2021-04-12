@@ -4304,6 +4304,7 @@ bool ImGui::InputTextEx(const char* label, const char* hint, char* buf, int buf_
             }
 
             // Will copy result string if modified
+
             if (!is_readonly && strcmp(state->TextA.Data, buf) != 0)
             {
                 apply_new_text = state->TextA.Data;

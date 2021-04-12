@@ -160,7 +160,7 @@ void LevelGenerator::AddFixedRoom(std::string name, int level, int position)
 		std::string tempRoom;
 		std::string tempRoom2;
 		
-		if(currentLevel == 1)
+		if(level == 1)
 		{
 			level1.resize(level1.size() + 1);
 
@@ -194,7 +194,7 @@ void LevelGenerator::AddFixedRoom(std::string name, int level, int position)
 			}
 		}
 
-		else if (currentLevel == 2)
+		else if (level == 2)
 		{
 			level2.resize(level2.size() + 1);
 
