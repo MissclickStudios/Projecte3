@@ -119,6 +119,8 @@ public:																														// --- SCENE LIGHT METHODS
 
 	void ResolveScriptGoPointer(const uint32 uid, GameObject** object);
 
+	LevelGenerator GetLevelGenerator();
+
 private:
 	std::vector<GameObject*> gameObjects;
 	std::multimap<uint32, std::pair<uint32, std::string>> models;															// Models currently loaded on scene and their correspondent GO.

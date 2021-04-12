@@ -14,16 +14,16 @@ const float texCoordsBuffer[] = {
 -1, 1,
 };
 
-const float vertices[] = {
-	// pos      // tex
-	0.0f, 1.0f, 0.0f, 1.0f,
-	1.0f, 0.0f, 1.0f, 0.0f,
-	0.0f, 0.0f, 0.0f, 0.0f,
-
-	0.0f, 1.0f, 0.0f, 1.0f,
-	1.0f, 1.0f, 1.0f, 1.0f,
-	1.0f, 0.0f, 1.0f, 0.0f
-};
+//const float vertices[] = {
+//	// pos      // tex
+//	0.0f, 1.0f, 0.0f, 1.0f,
+//	1.0f, 0.0f, 1.0f, 0.0f,
+//	0.0f, 0.0f, 0.0f, 0.0f,
+//
+//	0.0f, 1.0f, 0.0f, 1.0f,
+//	1.0f, 1.0f, 1.0f, 1.0f,
+//	1.0f, 0.0f, 1.0f, 0.0f
+//};
 
 class NULL_API C_UI_Image : public Component
 {
@@ -58,12 +58,10 @@ public:
 
 private:
 
-	Rect2D rect = { 0,0,50,50 };
+	Rect2D rect = { 0,0,2,2 };
 
 	uint VAO;
 	uint VBO;
-	
-
 
 	R_Shader* rShader;
 };

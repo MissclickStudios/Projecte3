@@ -9,7 +9,6 @@
 #include "M_ResourceManager.h"
 #include "M_Camera3D.h"
 #include "M_Window.h"
-//#include "M_Editor.h"
 #include "M_Audio.h"
 #include "M_Physics.h"
 
@@ -97,6 +96,7 @@ void Player::Update()
 		if (!rigidBody || rigidBody->IsStatic())
 			return;
 		rigidBody->SetLinearVelocity(float3::zero);
+		App->scene->GetLevelGenerator().InitiateLevel(1);
 
 		return;
 	}
@@ -477,7 +477,7 @@ void Player::StepSound()
 	{
 		isStepPlaying = true;
 		stepTimer.Start();
-	
+		
 		aSource = gameObject->GetComponent<C_AudioSource>();
 		if (aSource != nullptr)
 		{
