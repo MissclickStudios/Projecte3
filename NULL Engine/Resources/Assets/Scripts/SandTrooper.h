@@ -7,6 +7,7 @@
 
 #include "MathGeoLib/include/Math/float3.h"
 
+class C_AudioSource;
 class GameObject;
 class Weapon;
 
@@ -54,8 +55,13 @@ public:
 	float damage = 0.5f;
 
 private:
+	void IdleSound();
 
 	float3 LookingAt();
+
+	C_AudioSource* idle = nullptr;
+	C_AudioSource* reload = nullptr;
+	C_AudioSource* death = nullptr;
 
 	// Movement
 	float distance = 10000.0f;	// Distance from the player
@@ -63,6 +69,9 @@ private:
 	float3 direction = float3::zero;
 
 	Timer reloadTimer;
+
+	bool isIdlePlaying = false;
+	Timer idleTimer;
 
 	// States
 	float speedModifier = 1;
