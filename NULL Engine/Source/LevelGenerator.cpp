@@ -240,9 +240,10 @@ void LevelGenerator::HandleRoomGeneration()
 		{
 			if(currentLevel == 1)
 			{
+
 				(roomNum < level1.size() - 1) ? GoNextRoom() : LOG("[SCENE] Level Generator: End of the Level Reached!");
 
-				(roomNum == level2.size() - 1) ? InitiateLevel(2) : LOG("[SCENE] Level Generator: Begin Level 2 ");
+				(roomNum == level1.size()) ? InitiateLevel(2) : LOG("[SCENE] Level Generator: Begin Level 2 ");
 			}
 			else if (currentLevel == 2)
 			{
@@ -255,7 +256,6 @@ void LevelGenerator::HandleRoomGeneration()
 			if(currentLevel == 1)
 			{
 				(roomNum > 0) ? GoPreviousRoom() : LOG("[SCENE] Level Generator: Begin of the Level Reached!");
-
 				
 			}
 			else if (currentLevel == 2)
