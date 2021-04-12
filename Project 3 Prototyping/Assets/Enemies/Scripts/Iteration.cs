@@ -44,5 +44,10 @@ public class Iteration : MonoBehaviour
             SceneManager.LoadScene(("Boss Design Raged"));
         }
 
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Application.Quit();
+        }
+
     }
 }
