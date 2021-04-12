@@ -84,14 +84,17 @@ bool M_Scene::Start()
 	level.GetRooms();
 	level.GenerateLevel();
 	
-	//level.AddFixedRoom("Shop", 16);                            
+	level.AddFixedRoom("HUB", 1, 1);
+
 	/*level.AddFixedRoom("Start",1 ,1); 
 	level.AddFixedRoom("Boss",1 ,15);*/
 	
-	if(App->gameState == GameState::PLAY)
-		level.InitiateLevel(1);
+	
 
-	level.InitiateLevel(1);
+	if(App->gameState == GameState::PLAY)
+		App->scene->LoadScene("Assets/Scenes/MainMenu.json");
+
+	App->scene->LoadScene("Assets/Scenes/MainMenu.json");
 
 
 	/*std::string s = ASSETS_SCENES_PATH + currentScene + JSON_EXTENSION;
