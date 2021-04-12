@@ -178,9 +178,6 @@ public:
 	bool			isBone;																				// Will be set to true if this GameObject is an 3D Animation bone.
 	bool			toDelete;																			// Will determine if this GO should be deleted. See M_Scene's DeleteGameObject().
 
-	bool			changedName;																		// Will keep track whether or not the GO was given a new name. TMP until better sol.
-	std::string		prevName;																			// Will keep track of the previous name of the GO. TMP until a better solution.
-
 	OBB				obb;																				// Object Bounding Box that represents the cuboidal space that this GO occupies.
 	AABB			aabb;																				// Axis Aligned Bounding Box. Same as the above but is not affected by rotations.
 

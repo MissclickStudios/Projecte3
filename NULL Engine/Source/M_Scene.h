@@ -50,7 +50,7 @@ public:																									// --- GAME OBJECTS METHODS ---
 
 	void			SaveCurrentScene();
 	bool			SaveSceneAs(const char* sceneName = nullptr);										// To be called from editor
-	bool			NewScene();							// Opens a new scene
+	bool			NewScene();																			// Opens a new scene
 
 	void			LoadResourceIntoScene(Resource* resource);
 
@@ -60,13 +60,12 @@ public:																									// --- GAME OBJECTS METHODS ---
 	GameObject*		InstantiatePrefab(uint prefabID,GameObject* parent,float3 position,Quat rotation);
 
 
-	std::map<uint32, GameObject*>*	GetGameObjects		();
+	std::vector<GameObject*>*	GetGameObjects			();
 	
 	GameObject*		CreateGameObject					(const char* name = nullptr, GameObject* parent = nullptr);			// 
-	void			DeleteGameObject					(GameObject* gameObject);											// 
+	void			DeleteGameObject					(GameObject* gameObject, int index = -1);							// 
 
-	void			AddGameObjectToMaps					(GameObject* gameObject);											//
-	void			RefreshGameObjectInNamesMap			(GameObject* gameObject);											// 
+	void			AddGameObjectToVector				(GameObject* gameObject);											//
 
 	void			AddGameObjectToScene				(GameObject* gameObject,GameObject* parent = nullptr);				// Will integrate the game object into scene as well as its childs
 	void			AddGameObjectChildrenToScene		(GameObject* gameObject);											// Recursive call to add the chidlren
@@ -121,8 +120,7 @@ public:																														// --- SCENE LIGHT METHODS
 	void ResolveScriptGoPointer(const uint32 uid, GameObject** object);
 
 private:
-	std::map<uint32, GameObject*> gameObjects;
-	std::map<std::string, uint32> goNamesMap;
+	std::vector<GameObject*> gameObjects;
 	std::multimap<uint32, std::pair<uint32, std::string>> models;															// Models currently loaded on scene and their correspondent GO.
 																															// <goUID, <rUID, rAssetName>>
 

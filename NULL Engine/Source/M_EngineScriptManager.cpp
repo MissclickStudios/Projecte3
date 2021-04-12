@@ -216,13 +216,13 @@ void M_EngineScriptManager::HotReload()
 
 void M_EngineScriptManager::SerializeAllScripts(ParsonArray& scriptsArray)
 {
-	std::map<uint32, GameObject*>* objects = App->scene->GetGameObjects();
-	for (auto it = (*objects).cbegin(); it!= (*objects).cend(); ++it)
+	std::vector<GameObject*>* gameObjects = App->scene->GetGameObjects();
+	for (auto it = (*gameObjects).cbegin(); it!= (*gameObjects).cend(); ++it)
 	{
-		if (it->second != nullptr)
+		if ((*it) != nullptr)
 		{
 			std::vector<C_Script*> scripts;
-			it->second->GetComponents<C_Script>(scripts);
+			(*it)->GetComponents<C_Script>(scripts);
 			if (!scripts.empty())
 			{
 				std::vector<C_Script*>::const_iterator cScript = scripts.cbegin();
@@ -231,7 +231,7 @@ void M_EngineScriptManager::SerializeAllScripts(ParsonArray& scriptsArray)
 					if (*cScript != nullptr)
 					{
 						ParsonNode scriptNode = scriptsArray.SetNode((*cScript)->GetDataName().c_str());
-						scriptNode.SetNumber("GameObjectUID", it->second->GetUID());
+						scriptNode.SetNumber("GameObjectUID", (*it)->GetUID());
 						scriptNode.SetNumber("ResourceScriptUID", (*cScript)->resource->GetUID()); //TODO: check if resource not null??? TODO: Guardar nomes el id poder???
 						scriptNode.SetString("ResourceAssetsPath", (*cScript)->resource->GetAssetsPath());
 						scriptNode.SetString("DataName", (*cScript)->GetDataName().c_str());
@@ -275,7 +275,7 @@ void M_EngineScriptManager::SerializeAllScripts(ParsonArray& scriptsArray)
 								}
 							}
 						}
-						it->second->DeleteComponent((*cScript)); //Is it necessari to remove it and add it again later?
+						(*it)->DeleteComponent((*cScript)); //Is it necessari to remove it and add it again later?
 					}
 				}
 			}
