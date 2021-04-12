@@ -745,10 +745,10 @@ void M_Renderer3D::RenderUI()
 	C_Canvas* canvas = nullptr;
 	for (auto uiIt = App->scene->GetGameObjects()->cbegin(); uiIt != App->scene->GetGameObjects()->cend(); ++uiIt)
 	{	
-		canvas = uiIt->second->GetComponent<C_Canvas>();
+		canvas = (*uiIt)->GetComponent<C_Canvas>();
 		if (canvas != nullptr)
 		{
-			RenderUIComponent(uiIt->second);
+			RenderUIComponent((*uiIt));
 
 			if (!canvas->IsInvisible())
 			{
