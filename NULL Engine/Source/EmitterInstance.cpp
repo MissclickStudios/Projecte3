@@ -10,25 +10,11 @@ EmitterInstance::EmitterInstance()
 {
 }
 
-EmitterInstance::EmitterInstance(Emitter* emitter, C_ParticleSystem* component)
-{
-	this->emitter = emitter;
-	this->component = component;
-
-	particles.resize(emitter->maxParticleCount);
-
-	particleIndices = new unsigned int[emitter->maxParticleCount];
-
-	for (uint i = 0; i < emitter->maxParticleCount; ++i)
-	{
-		particleIndices[i] = i;
-	}
-}
-
 EmitterInstance::~EmitterInstance()
 {
 	delete emitter;
-	delete[] particleIndices;	
+	delete[] particleIndices;
+	
 }
 
 void EmitterInstance::Init(Emitter* emitter, C_ParticleSystem* component)
@@ -59,7 +45,7 @@ void EmitterInstance::SpawnParticle()
 	//call the emitter reference to use the modules to spawn a particle. 
 	//then add 1 to active particles.
 
-	if (activeParticles == particles.size() || stopSpawn == true)
+	if (activeParticles == particles.size())
 		return;
 
 	unsigned int particleIndex = particleIndices[activeParticles];
@@ -96,7 +82,7 @@ void EmitterInstance::DrawParticles()
 		Particle* particle = &particles[particleIndex];
 
 		float4x4 transform = float4x4::FromTRS(particle->position, particle->worldRotation, float3(particle->size)).Transposed();
-		App->renderer->AddParticle(transform, emitter->emitterTexture, particle->color, particle->distanceToCamera);
+		App->renderer->AddParticle(transform, emitter->emitterTexture, particle->color, particleIndex);
 	}
 }
 

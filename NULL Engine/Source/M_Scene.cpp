@@ -87,14 +87,7 @@ bool M_Scene::Start()
 	level.GetRooms();
 	level.GenerateLevel();
 	
-	level.AddFixedRoom("InitialL1", 1, 1);
-	level.AddFixedRoom("InitialL2", 2, 1);
-
-	level.AddFixedRoom("BossL1", 1, 10);
-	level.AddFixedRoom("BossL2", 2, 10);
-
-	level.AddFixedRoom("ShopL1", 1, 4);
-	level.AddFixedRoom("ShopL2", 2, 4);
+	//level.AddFixedRoom("HUB", 1, 1);
 
 	/*level.AddFixedRoom("Start",1 ,1); 
 	level.AddFixedRoom("Boss",1 ,15);*/
@@ -105,7 +98,6 @@ bool M_Scene::Start()
 		App->scene->LoadScene("Assets/Scenes/MainMenu.json");
 	else 
 		App->scene->LoadScene("Assets/Scenes/MainMenu.json");
-
 
 
 

@@ -10,7 +10,7 @@ namespace Importer
 	namespace Particles
 	{
 		bool Import	(const char* buffer, R_ParticleSystem* rParticles);
-		uint Save	(R_ParticleSystem* rParticles, char** buffer);
+		uint Save	(const R_ParticleSystem* rParticles, char** buffer);
 		bool Load	(const char* buffer, R_ParticleSystem* rParticles);
 
 		namespace Utilities

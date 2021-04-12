@@ -39,16 +39,12 @@ class C_NavMeshAgent;
 class Resource;
 class R_Shader;
 class R_Texture;
-
-class Emitter;
-
 class ModelSettings;
 class MeshSettings;
 class MaterialSettings;
 class TextureSettings;
 class AnimationSettings;
 
-struct ParticleModule;
 
 class E_Inspector : public EditorPanel
 {
@@ -112,21 +108,6 @@ private:																										// --- DRAW COMPONENT UTILITY METHODS ---
 	// SHADER COMPONENT		--------
 	void TextEditorWindow				();
 	void CallTextEditor					(C_Material* cMaterial);
-
-	// PARTICLE SYSTEM COMPONENT ---
-	void DisplayParticleSystemControls	(C_ParticleSystem* cParticleSystem);
-	void DisplayEmitterInstances		(C_ParticleSystem* cParticleSystem);
-
-	void DisplayParticleModules			(Emitter* emitter);
-	void DisplayEmitterBase				(ParticleModule* pModule);
-	void DisplayEmitterSpawn			(ParticleModule* pModule);
-	void DisplayEmitterArea				(ParticleModule* pModule);
-	void DisplayParticleMovement		(ParticleModule* pModule);
-	void DisplayParticleColor			(ParticleModule* pModule);
-	void DisplayParticleLifetime		(ParticleModule* pModule);
-	void DisplayParticleRotation		(ParticleModule* pModule);
-	void DisplayParticleSize			(ParticleModule* pModule);
-	void DisplayParticleBillboarding	(ParticleModule* pModule);
 
 private:
 	void DrawImportSettings				(Resource* selectedResource);

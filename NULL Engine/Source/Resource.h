@@ -23,7 +23,7 @@ enum class ResourceType													// IMPORTANT: Do not change the order of the
 	ANIMATION,
 	SCENE,
 	SHADER,
-	PARTICLE_SYSTEM,
+	PARTICLES,
 	PREFAB,
 	SCRIPT,
 	NAVMESH_AGENT,

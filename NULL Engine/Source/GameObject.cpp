@@ -29,7 +29,7 @@
 #include "C_BoxCollider.h"
 #include "C_SphereCollider.h"
 #include "C_CapsuleCollider.h"
-#include "C_ParticleSystem.h"
+#include "C_Particles.h"
 #include "C_NavMeshAgent.h"
 #include "C_PlayerController.h"
 #include "C_BulletBehavior.h"
