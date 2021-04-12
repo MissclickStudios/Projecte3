@@ -23,11 +23,11 @@ public:
 	void SetParticleSystem(R_ParticleSystem* newParticleSystem);
 	void RefreshEmitters();
 
-	void NewParticleSystem();
+	void AddParticleSystem(const char* name);
 	void SaveParticleSystem();
 
-	bool SetAsDefaultComponent();		//Reset the component, add an emitterInstance to the list and assign it the default emitter
-	void AddDefaultEmitter();			//Create a default emitter
+	bool SetAsDefaultComponent();					//Reset the component, add an emitterInstance to the list and assign it the default emitter
+	void AddDefaultEmitter();						//Create a default emitter
 
 	void EnginePreview(bool previewEnabled);
 

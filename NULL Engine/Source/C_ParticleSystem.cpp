@@ -1,14 +1,17 @@
 #include "JSONParser.h"
 
-#include "I_Particles.h"
 #include "Time.h"
 
-//#include "M_ResourceManager.h"
+#include "Application.h"
+#include "M_ResourceManager.h"
 
 #include "R_ParticleSystem.h"
 
-#include "MemoryManager.h"
+#include "I_Particles.h"
+
 #include "C_ParticleSystem.h"
+
+#include "MemoryManager.h"
 
 C_ParticleSystem::C_ParticleSystem(GameObject* owner) : Component(owner, ComponentType::PARTICLES)
 {
@@ -75,24 +78,29 @@ void C_ParticleSystem::RefreshEmitters()
 	}
 }
 
-void C_ParticleSystem::NewParticleSystem()
+void C_ParticleSystem::AddParticleSystem(const char* name)
 {
-	resource = new R_ParticleSystem();
+	//resource = new R_ParticleSystem();
+	std::string assetsPath = ASSETS_PARTICLESYSTEMS_PATH + std::string(name) + PARTICLESYSTEMS_AST_EXTENSION;
+	resource = (R_ParticleSystem*)App->resourceManager->CreateResource(ResourceType::PARTICLE_SYSTEM, assetsPath.c_str());
+
 	resource->AddDefaultEmitter();
 	RefreshEmitters();
 }
 
 void C_ParticleSystem::SaveParticleSystem()
 {
-	char* buffer = nullptr;
-	Importer::Particles::Save(resource,&buffer);
+	App->resourceManager->SaveResourceToLibrary(resource);
+	
+	//char* buffer = nullptr;
+	//Importer::Particles::Save(resource,&buffer);
 }
 
 bool C_ParticleSystem::SetAsDefaultComponent()
 {
 	bool ret = false;
 
-	NewParticleSystem();
+	AddParticleSystem("Default Particle System");
 
 	RefreshEmitters();
 

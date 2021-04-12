@@ -27,9 +27,10 @@ public:
 	void SetMaterial();
 
 public:
-	std::string name = "Particle Emitter";
 	std::vector<ParticleModule*> modules;
-	R_Texture* emitterTexture;
+	
+	std::string name = "Particle Emitter";
+	R_Texture* emitterTexture = nullptr;
 
 	int maxParticleCount = 10;
 };

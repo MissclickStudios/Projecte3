@@ -23,7 +23,10 @@ void Emitter::Update(float dt)
 void Emitter::Save(ParsonNode& node)
 {
 	node.SetString("name", name.c_str());
-	node.SetInteger("textureUID", emitterTexture->GetUID());
+
+	uint32 textureUID = (emitterTexture != nullptr) ? emitterTexture->GetUID() : 0;
+	node.SetInteger("textureUID", textureUID);
+
 	node.SetInteger("maxParticleCount", maxParticleCount);
 
 	ParsonArray modulesArray = node.SetArray("modules");
