@@ -477,7 +477,7 @@ void Player::StepSound()
 	{
 		isStepPlaying = true;
 		stepTimer.Start();
-	
+		
 		aSource = gameObject->GetComponent<C_AudioSource>();
 		if (aSource != nullptr)
 		{
