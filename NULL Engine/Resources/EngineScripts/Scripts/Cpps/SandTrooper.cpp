@@ -10,6 +10,7 @@
 #include "C_BoxCollider.h"
 #include "C_Mesh.h"
 #include "C_Material.h"
+#include "C_AudioSource.h"
 
 #include "SandTrooper.h"
 #include "Player.h"
@@ -19,6 +20,7 @@
 SandTrooper::SandTrooper() : Script()
 {
 	reloadTimer.Stop();
+	idleTimer.Stop();
 }
 
 SandTrooper::~SandTrooper()
@@ -34,7 +36,23 @@ void SandTrooper::Awake()
 			if((*object)->GetScript("Player"))
 				player = (*object);
 	}
+	std::vector<Component*> components;
+	gameObject->GetAllComponents(components);
+	for (auto comp = components.begin(); comp != components.end(); ++comp)
+	{
+		if ((*comp)->GetType() == ComponentType::AUDIOSOURCE)
+		{
+			C_AudioSource* source = (C_AudioSource*)(*comp);
+			std::string name = source->GetEventName();
 
+			if (name == "sandtormtrooper_idle")
+				idle = source;
+			else if (name == "weapon_reload_01")
+				reload = source;
+			else if (name == "sandstormtrooper_death")
+				death = source;
+		}
+	}
 	for (uint i = 0; i < gameObject->childs.size(); ++i)
 		if (gameObject->childs[i]->GetComponent<C_Mesh>())
 			mesh = gameObject->childs[i];
@@ -44,6 +62,12 @@ void SandTrooper::Update()
 {
 	if (health <= 0.0f)
 	{
+		if (death)
+		{
+			death->SetVolume(1.0f);
+			death->PlayFx(death->GetEventId());
+		}
+
 		for (uint i = 0; i < gameObject->components.size(); ++i)
 			gameObject->components[i]->SetIsActive(false);
 		gameObject->SetIsActive(false);
@@ -112,7 +136,16 @@ void SandTrooper::Update()
 	if (!reloadTimer.IsActive())
 	{
 		if (ammo <= 0)
+		{
 			reloadTimer.Start();
+
+			if (reload)
+			{
+				reload->SetVolume(0.3f);
+				reload->PlayFx(reload->GetEventId());
+			}
+			
+		}
 		if (distance < detectionRange)
 			weapon->SandTrooperShoot(direction, speedModifier);
 	}
@@ -121,6 +154,8 @@ void SandTrooper::Update()
 		weapon->Reload();
 		reloadTimer.Stop();
 	}
+
+	IdleSound();
 }
 
 void SandTrooper::CleanUp()
@@ -138,6 +173,12 @@ void SandTrooper::OnCollisionEnter(GameObject* object)
 
 void SandTrooper::TakeDamage(float damage)
 {
+	if (death)
+	{
+		death->SetVolume(0.5f);
+		death->PlayFx(death->GetEventId());
+	}
+
 	health -= damage * defenseModifier;
 	if (health < 0.0f)
 		health = 0.0f;
@@ -181,6 +222,21 @@ float3 SandTrooper::LookingAt()
 	}
 
 	return { lookVector.x, 0, lookVector.y };
+}
+
+void SandTrooper::IdleSound()
+{
+	if (!isIdlePlaying)
+	{
+		isIdlePlaying = true;
+		idleTimer.Start();
+
+		if (idle)
+			idle->PlayFx(idle->GetEventId());
+	}
+	else
+		if (idleTimer.ReadSec() >= 6.0f)
+			isIdlePlaying = false;
 }
 
 SandTrooper* CreateSandTrooper()

@@ -2041,7 +2041,7 @@
         },
         {
             "UID": 888400124,
-            "ParentUID": 1236859858,
+            "ParentUID": 704431557,
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "MainScene",
@@ -4863,6 +4863,231 @@
                         1,
                         1
                     ]
+                }
+            ]
+        },
+        {
+            "UID": 1410842156,
+            "ParentUID": 888400124,
+            "PrefabID": 92973232,
+            "IsPrefab": true,
+            "Name": "SandTrooper",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": true,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -27.035850524902344,
+                        1.3440449237823486,
+                        -43.860069274902344
+                    ],
+                    "LocalRotation": [
+                        0,
+                        -0.84527480602264404,
+                        0,
+                        0.5343317985534668
+                    ],
+                    "LocalScale": [
+                        0.14000006020069122,
+                        0.14000000059604645,
+                        0.14000006020069122
+                    ]
+                },
+                {
+                    "Type": 8,
+                    "Is Static": false,
+                    "Filter": " enemy",
+                    "Mass": 10,
+                    "Density": 1,
+                    "Linear Damping": 0,
+                    "Angular Damping": 0,
+                    "Use Gravity": false,
+                    "Is Kinematic": false,
+                    "Freeze Position X": false,
+                    "Freeze Position Y": true,
+                    "Freeze Position Z": false,
+                    "Freeze Rotation X": true,
+                    "Freeze Rotation Y": true,
+                    "Freeze Rotation Z": true
+                },
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 4,
+                    "Size Y": 20,
+                    "Size Z": 4,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
+                },
+                {
+                    "Type": 24,
+                    "ResourceUID": 1422011547,
+                    "AssetsPath": "Assets\/Scripts\/\/SandTrooper.h",
+                    "DataName": "SandTrooper",
+                    "HasInspector": true,
+                    "InspectorVariables": [
+                        {
+                            "Type": 2,
+                            "Name": "speed",
+                            "float": 10
+                        },
+                        {
+                            "Type": 2,
+                            "Name": "detectionRange",
+                            "float": 40
+                        },
+                        {
+                            "Type": 4,
+                            "Name": "coin",
+                            "prefab": 1677092424
+                        },
+                        {
+                            "Type": 2,
+                            "Name": "projectileSpeed",
+                            "float": 100
+                        },
+                        {
+                            "Type": 2,
+                            "Name": "fireRate",
+                            "float": 1
+                        },
+                        {
+                            "Type": 0,
+                            "Name": "ammo",
+                            "int": 3
+                        },
+                        {
+                            "Type": 0,
+                            "Name": "maxAmmo",
+                            "int": 3
+                        },
+                        {
+                            "Type": 2,
+                            "Name": "reloadTime",
+                            "float": 3
+                        },
+                        {
+                            "Type": 1,
+                            "Name": "automatic",
+                            "bool": true
+                        },
+                        {
+                            "Type": 4,
+                            "Name": "projectilePrefab",
+                            "prefab": 408902335
+                        },
+                        {
+                            "Type": 2,
+                            "Name": "health",
+                            "float": 2
+                        },
+                        {
+                            "Type": 2,
+                            "Name": "maxHealth",
+                            "float": 2
+                        },
+                        {
+                            "Type": 2,
+                            "Name": "damage",
+                            "float": 0
+                        }
+                    ]
+                },
+                {
+                    "Type": 14,
+                    "Playing Event": [
+                        "sandstormtrooper_death",
+                        128850408
+                    ]
+                },
+                {
+                    "Type": 14,
+                    "Playing Event": [
+                        "weapon_reload_01",
+                        2239462155
+                    ]
+                },
+                {
+                    "Type": 14,
+                    "Playing Event": [
+                        "sandtormtrooper_idle",
+                        3137018241
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 707131870,
+            "ParentUID": 1410842156,
+            "PrefabID": 92973232,
+            "IsPrefab": true,
+            "Name": "StormTrooper002",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        -0.70571690797805786,
+                        0.044313810765743256,
+                        0.044313810765743256,
+                        0.70571690797805786
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 504859649,
+                    "Name": "StormTrooper002.nemesh",
+                    "Path": "Library\/Meshes\/504859649.nemesh",
+                    "File": "504859649.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 968772580,
+                        "Color": [
+                            0.58823531866073608,
+                            0.58823531866073608,
+                            0.58823531866073608,
+                            1
+                        ],
+                        "Name": "StormTrooper002.nemat",
+                        "Path": "Library\/Materials\/968772580.nemat",
+                        "File": "968772580.nemat"
+                    },
+                    "Texture": {
+                        "AssetsPath": "Assets\/Textures\/Enemies\/Storm Trooper\/SandTrooper_Texture.png",
+                        "AssetsName": "SandTrooper_Texture.png",
+                        "LibaryPath": "Library\/Textures\/896890851.netex",
+                        "LibraryFile": "896890851.netex"
+                    },
+                    "Shader": {
+                        "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
+                        "AssetsName": "DefaultShader.shader",
+                        "LibaryPath": "Library\/Shaders\/1458192069.neshader",
+                        "LibraryFile": "1458192069.neshader"
+                    }
                 }
             ]
         }
