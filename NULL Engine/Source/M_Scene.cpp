@@ -1360,6 +1360,11 @@ void M_Scene::ResolveScriptGoPointer(const uint32 uid, GameObject** object)
 	toAdd.push_back({uid, object});
 }
 
+LevelGenerator M_Scene::GetLevelGenerator()
+{
+	return level;
+}
+
 void M_Scene::DeleteSelectedGameObject()
 {
 	if (selectedGameObject != nullptr)

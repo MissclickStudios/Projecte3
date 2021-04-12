@@ -1,5 +1,4 @@
 #include "MainMenuManager.h"
-#include "..\..\..\Assets\Scripts\MainMenuManager.h"
 
 MainMenuManager::MainMenuManager() : Script()
 {
