@@ -2467,8 +2467,17 @@ void E_Inspector::DisplayEmitterInstances(C_ParticleSystem* cParticleSystem)
 		Emitter* emitter = cParticleSystem->emitterInstances[i]->emitter;
 
 		bool show = true;
-		if (ImGui::CollapsingHeader("Default Emitter", &show, ImGuiTreeNodeFlags_DefaultOpen))
+		if (ImGui::CollapsingHeader(cParticleSystem->emitterInstances[i]->emitter->name.c_str(), &show, ImGuiTreeNodeFlags_DefaultOpen))
 		{
+			ImGui::SetNextItemWidth(ImGui::GetWindowWidth() * 0.33f);
+			static char buffer[64];
+			strcpy_s(buffer, cParticleSystem->emitterInstances[i]->emitter->name.c_str());
+			std::string inputTextName = "Emitter Name ##" + std::to_string(i);
+			if (ImGui::InputText(inputTextName.c_str(), buffer, IM_ARRAYSIZE(buffer), ImGuiInputTextFlags_EnterReturnsTrue))
+			{
+				cParticleSystem->emitterInstances[i]->emitter->name = buffer;
+			}
+
 			bool preview = cParticleSystem->previewEnabled;
 			if (ImGui::Checkbox("Preview", &preview))
 			{
