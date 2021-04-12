@@ -12,6 +12,7 @@ roomsToAdd (0),
 roomNum	(0),
 currentLevel(0)
 {
+
 }
 
 LevelGenerator::~LevelGenerator()
