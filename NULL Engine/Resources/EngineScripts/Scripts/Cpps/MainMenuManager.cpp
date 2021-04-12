@@ -15,7 +15,7 @@ MainMenuManager::~MainMenuManager()
 
 void MainMenuManager::Start()
 {
-	playButton = App->scene->GetGameObjectByName("")->GetComponent<C_UI_Button>();
+	playButton = (C_UI_Button*)App->scene->GetGameObjectByName("")->GetComponent<C_UI_Button>();
 }
 
 void MainMenuManager::Update()
