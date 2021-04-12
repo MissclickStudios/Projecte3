@@ -22,17 +22,19 @@ CameraMovement::~CameraMovement()
 
 void CameraMovement::Update()
 {
-	if (!player)
+	if (player == nullptr)
 	{
 		std::vector<GameObject*>* gameObjects = App->scene->GetGameObjects();
 		for (auto object = gameObjects->begin(); object != gameObjects->end(); ++object)
 			if ((*object)->GetScript("Player"))
 				player = (*object);
 
-		if (!player)
-			return;
+		
 	}
-	
+
+	if (player == nullptr)
+		return;
+
 	float3 position = player->transform->GetWorldPosition();
 	position += offset;
 	gameObject->transform->SetWorldPosition(position);
