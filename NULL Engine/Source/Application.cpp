@@ -332,7 +332,7 @@ UpdateStatus Application::PostUpdate()
 }
 
 void Application::FinishUpdate()
-{	
+{
 	if (wantToLoad)
 	{
 
@@ -375,7 +375,6 @@ void Application::LoadConfiguration(const char* file)
 
 void Application::SaveConfigurationNow()
 {
-	
 	ParsonNode config;
 
 	for (uint i = 0; i < modules.size(); ++i)

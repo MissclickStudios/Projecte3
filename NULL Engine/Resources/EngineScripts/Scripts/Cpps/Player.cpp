@@ -1,3 +1,5 @@
+#include "JSONParser.h"
+
 #include "Player.h"
 
 #include "VariableTypedefs.h"
@@ -11,6 +13,7 @@
 #include "M_Window.h"
 #include "M_Audio.h"
 #include "M_Physics.h"
+#include "M_FileSystem.h"
 
 #include "R_Texture.h"
 
@@ -37,6 +40,7 @@
 #include "MathGeoLib/include/Geometry/Line.h"
 
 #define MAX_JOYSTICK_INPUT 32767
+#define MANDO_FILE "EngineScripts/Mando.json"
 
 enum class PlayerState
 {
@@ -63,6 +67,23 @@ Player::~Player()
 
 void Player::Awake()
 {
+	char* buffer = nullptr;
+	uint size = App->fileSystem->Load(MANDO_FILE, &buffer);
+	if (buffer)
+	{
+		ParsonNode config(buffer);
+	
+		weaponUsed = config.GetInteger("Weapon used");
+		coins = config.GetInteger("Coins");
+		strongShots = config.GetBool("Strong shots");
+		freezingShots = config.GetBool("Freezing shots");
+		blasterAmmo = config.GetInteger("Blaster ammo");
+		sniperAmmo = config.GetInteger("Sniper ammo");
+		health = (float)config.GetNumber("Health");
+
+		load = true;
+	}
+
 	if (!gameObject->GetComponent<C_RigidBody>())
 		gameObject->CreateComponent(ComponentType::RIGIDBODY);
 
@@ -92,6 +113,13 @@ void Player::Awake()
 		}
 	}
 
+	if (!blaster)
+		blaster = new Weapon(gameObject, blasterBullet, 10u, blasterMaxAmmo, blasterSpeed, blasterRate, blasterAutomatic);
+	if (!sniper)
+		sniper = new Weapon(gameObject, sniperBullet, 2u, sniperMaxAmmo, sniperSpeed, sniperRate, sniperAutomatic);
+
+
+
 	std::vector<GameObject*>* gameObjects = App->scene->GetGameObjects();
 	for (auto object = gameObjects->begin(); object != gameObjects->end(); ++object)
 	{
@@ -101,10 +129,21 @@ void Player::Awake()
 		else if (name == "Sniper")
 			sniperModel = (*object);
 	}
-	if (blasterModel)
-		blasterModel->SetIsActive(true);
-	if (sniperModel)
-		sniperModel->SetIsActive(false);
+
+	if (weaponUsed == 1)
+	{
+		if (blasterModel)
+			blasterModel->SetIsActive(true);
+		if (sniperModel)
+			sniperModel->SetIsActive(false);
+	}
+	else
+	{
+		if (blasterModel)
+			blasterModel->SetIsActive(false);
+		if (sniperModel)
+			sniperModel->SetIsActive(true);
+	}
 
 	dashTime.Stop();
 	dashColdown.Stop();
@@ -121,6 +160,14 @@ void Player::Update()
 		{
 			state = PlayerState::DEAD;
 
+			weaponUsed = 1;
+			coins = 0;
+			strongShots = false;
+			freezingShots = false;
+			health = maxHealth;
+			blasterAmmo = blasterMaxAmmo;
+			sniperAmmo = sniperMaxAmmo;
+
 			if (death)
 				death->PlayFx(death->GetEventId());
 
@@ -135,17 +182,19 @@ void Player::Update()
 
 	Movement();
 
-	if (!blaster)
-		blaster = new Weapon(gameObject, blasterBullet, 10u, blasterMaxAmmo, blasterSpeed, blasterRate, blasterAutomatic);
 	blaster->Update();
-	if (!sniper)
-		sniper = new Weapon(gameObject, sniperBullet, 2u, sniperMaxAmmo, sniperSpeed, sniperRate, sniperAutomatic);
 	sniper->Update();
+	if (load)
+	{
+		load = false;
+		if (strongShots)
+			BlasterStrongShots();
+		if (freezingShots)
+			SniperFreezingShots();
 
-	if (strongShots)
-		BlasterStrongShots();
-	if (freezingShots)
-		SniperFreezingShots();
+		blaster->ammo = blasterAmmo;
+		sniper->ammo = sniperAmmo;
+	}
 
 	blasterAmmo = blaster->ammo;
 	sniperAmmo = sniper->ammo;
@@ -162,6 +211,18 @@ void Player::Update()
 
 void Player::CleanUp()
 {
+	ParsonNode config;
+	config.SetInteger("Weapon used", weaponUsed);
+	config.SetInteger("Coins", coins);
+	config.SetInteger("Blaster ammo", blasterAmmo);
+	config.SetInteger("Sniper ammo", sniperAmmo);
+	config.SetNumber("Health", (double)health);
+	config.SetBool("Strong shots", strongShots);
+	config.SetBool("Freezing shots", freezingShots);
+
+	char* buffer = nullptr;
+	config.SerializeToFile(MANDO_FILE, &buffer);
+
 	delete blaster; // Destructor calls CleanUp
 	blaster = nullptr;
 
@@ -202,16 +263,16 @@ void Player::TakeDamage(float damage)
 
 void Player::BlasterStrongShots()
 {
-	strongShots = false;
-	for (uint i = 0; i < blaster->projectilesNum; ++i)
-		((Bullet*)blaster->projectiles[i]->object->GetScript("Bullet"))->strong = true;
+	if (blaster)
+		for (uint i = 0; i < blaster->projectilesNum; ++i)
+			((Bullet*)blaster->projectiles[i]->object->GetScript("Bullet"))->strong = true;
 }
 
 void Player::SniperFreezingShots()
 {
-	freezingShots = false;
-	for (uint i = 0; i < sniper->projectilesNum; ++i)
-		((Bullet*)sniper->projectiles[i]->object->GetScript("Bullet"))->freeze = true;
+	if (sniper)
+		for (uint i = 0; i < sniper->projectilesNum; ++i)
+			((Bullet*)sniper->projectiles[i]->object->GetScript("Bullet"))->freeze = true;
 }
 
 void Player::Animations()
