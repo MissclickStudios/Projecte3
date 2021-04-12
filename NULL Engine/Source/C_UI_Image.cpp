@@ -32,12 +32,6 @@ C_UI_Image::C_UI_Image(GameObject* owner, Rect2D rect) : Component(owner, Compon
 {
 	rShader = App->resourceManager->GetShader("UIShader");
 	LoadBuffers();
-	
-	SetW(2);
-	SetH(2);
-
-	SetX(0);
-	SetY(0);
 }
 
 C_UI_Image::~C_UI_Image()
