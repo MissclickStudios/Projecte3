@@ -65,11 +65,36 @@ void Player::Awake()
 	if (!gameObject->GetComponent<C_RigidBody>())
 		gameObject->CreateComponent(ComponentType::RIGIDBODY);
 
+	std::vector<Component*> components;
+	gameObject->GetAllComponents(components);
+	for (auto comp = components.begin(); comp != components.end(); ++comp)
+	{
+		if ((*comp)->GetType() == ComponentType::AUDIOSOURCE)
+		{
+			C_AudioSource* source = (C_AudioSource*)(*comp);
+			std::string name = source->GetEventName();
+
+			if (name == "mando_damaged")
+				damaged = source;
+			else if (name == "mando_dash")
+				dashSource = source;
+			else if (name == "mando_walking")
+				step = source;
+			else if (name == "mando_death")
+				death = source;
+			else if (name == "weapon_reload_01")
+				reloadBlaster = source;
+			else if (name == "weapon_reload_02")
+				reloadSniper = source;
+			else if (name == "weapon_change")
+				weaponChange = source;
+		}
+	}
+
 	std::vector<GameObject*>* gameObjects = App->scene->GetGameObjects();
 	for (auto object = gameObjects->begin(); object != gameObjects->end(); ++object)
 	{
 		std::string name = (*object)->GetName();
-		LOG("%s", name.c_str());
 		if (name == "Blaster")
 			blasterModel = (*object);
 		else if (name == "Sniper")
@@ -91,13 +116,19 @@ void Player::Update()
 	Animations();
 	if (health <= 0.0f)
 	{
-		state = PlayerState::DEAD;
-		C_RigidBody* rigidBody = gameObject->GetComponent<C_RigidBody>();
-		if (!rigidBody || rigidBody->IsStatic())
-			return;
-		rigidBody->SetLinearVelocity(float3::zero);
-		App->scene->GetLevelGenerator().InitiateLevel(1);
+		if (state != PlayerState::DEAD)
+		{
+			state = PlayerState::DEAD;
 
+			if (death)
+				death->PlayFx(death->GetEventId());
+
+			C_RigidBody* rigidBody = gameObject->GetComponent<C_RigidBody>();
+			if (!rigidBody || rigidBody->IsStatic())
+				rigidBody->SetIsActive(false);
+
+			App->scene->GetLevelGenerator().InitiateLevel(1);
+		}
 		return;
 	}
 
@@ -153,6 +184,9 @@ void Player::TakeDamage(float damage)
 {
 	if (!invulnerabilityTimer.IsActive())
 	{
+		if (damaged)
+			damaged->PlayFx(damaged->GetEventId());
+
 		health -= damage;
 		if (health < 0.0f)
 			health = 0.0f;
@@ -243,7 +277,9 @@ void Player::Animations()
 	//		//aAnimator->PlayClip("Reloading", 0u);
 	//	}
 		if (currentClip && clipName != idle)
+		{
 			aAnimator->PlayClip(idle, 0.2f);
+		}
 		break;
 	case PlayerState::RELOADING_SNIPER:
 	//	if (currentClip != nullptr && clipName != "Shooting")
@@ -251,7 +287,9 @@ void Player::Animations()
 	//		//aAnimator->PlayClip("Reloading", 0u);
 	//	}
 		if (currentClip && clipName != idle)
+		{
 			aAnimator->PlayClip(idle, 0.2f);
+		}
 		break;
 	//case PlayerState::DEAD:
 	//	if (currentClip != nullptr && clipName != die)
@@ -300,6 +338,8 @@ void Player::Movement()
 			App->physics->GetInteractions()[0][4] = false;
 			App->physics->GetInteractions()[4][0] = false;
 
+			if (dashSource)
+				dashSource->PlayFx(dashSource->GetEventId());
 			state = PlayerState::DASHING;
 			dashColdown.Start();
 			dashTime.Start();
@@ -395,6 +435,9 @@ void Player::Shooting()
 				blasterModel->SetIsActive(false);
 			if (sniperModel)
 				sniperModel->SetIsActive(true);
+
+			if (weaponChange)
+				weaponChange->PlayFx(weaponChange->GetEventId());
 		}
 		else
 		{
@@ -403,6 +446,9 @@ void Player::Shooting()
 				blasterModel->SetIsActive(true);
 			if (sniperModel)
 				sniperModel->SetIsActive(false);
+
+			if (weaponChange)
+				weaponChange->PlayFx(weaponChange->GetEventId());
 		}
 
 	bool shooting = false;
@@ -412,7 +458,11 @@ void Player::Shooting()
 		{
 			if ((App->input->GetKey(SDL_SCANCODE_R) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(2) == ButtonState::BUTTON_DOWN)
 				|| blasterAmmo <= 0)
+			{
 				blasterReloadTimer.Start();
+				if (reloadBlaster)
+					reloadBlaster->PlayFx(reloadBlaster->GetEventId());
+			}
 			else
 				if (blaster->Shoot(lastAim))
 					state = PlayerState::SHOOTING_BLASTER;
@@ -433,7 +483,11 @@ void Player::Shooting()
 		{
 			if ((App->input->GetKey(SDL_SCANCODE_R) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(2) == ButtonState::BUTTON_DOWN)
 				|| sniperAmmo <= 0)
+			{
 				sniperReloadTimer.Start();
+				if (reloadSniper)
+					reloadSniper->PlayFx(reloadSniper->GetEventId());
+			}
 			else
 				if(sniper->Shoot(lastAim))
 					state = PlayerState::SHOOTING_SNIPER;
@@ -478,15 +532,11 @@ void Player::StepSound()
 		isStepPlaying = true;
 		stepTimer.Start();
 		
-		aSource = gameObject->GetComponent<C_AudioSource>();
-		if (aSource != nullptr)
-		{
-			uint id = aSource->GetEventId();
-			aSource->PlayFx(id);
-		}
+		if (step)
+			step->PlayFx(step->GetEventId());
 	}
 	else
-		if (stepTimer.ReadSec() >= 0.80)
+		if (stepTimer.ReadSec() >= 0.4f)
 			isStepPlaying = false;
 }
 
