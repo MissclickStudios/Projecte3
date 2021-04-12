@@ -2524,7 +2524,7 @@ void E_Inspector::DisplayEmitterInstances(C_ParticleSystem* cParticleSystem)
 					bool isSelected = (current == (*it));
 					if (ImGui::Selectable((*it)->GetAssetsFile(), isSelected))
 					{
-						emitter->emitterTexture = (*it);
+						emitter->SetTexture((*it));
 					}
 					if (isSelected)
 						ImGui::SetItemDefaultFocus();

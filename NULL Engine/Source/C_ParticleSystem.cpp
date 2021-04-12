@@ -33,6 +33,7 @@ bool C_ParticleSystem::SaveState(ParsonNode& root) const
 	root.SetNumber("Type", (double)GetType());
 
 	root.SetInteger("particleSystemUID",resource->GetUID());
+	root.SetString("particleSystemAssetsPath", resource->GetAssetsPath());
 
 	root.SetBool("stopSpawn", stopSpawn);
 	root.SetBool("tempDelete", tempDelete);
@@ -45,10 +46,9 @@ bool C_ParticleSystem::SaveState(ParsonNode& root) const
 bool C_ParticleSystem::LoadState(ParsonNode& root)
 {
 	uint resourceUID = root.GetInteger("particleSystemUID");
-	if (App->resourceManager->AllocateResource(resourceUID))
-	{
-		resource = (R_ParticleSystem*)App->resourceManager->RequestResource(resourceUID);
-	}
+
+	std::string path = root.GetString("particleSystemAssetsPath");
+	resource = (R_ParticleSystem*)App->resourceManager->GetResourceFromLibrary(path.c_str());
 
 	stopSpawn = root.GetBool("stopSpawn");
 	tempDelete = root.GetBool("tempDelete");

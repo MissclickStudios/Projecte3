@@ -926,7 +926,8 @@ void M_Renderer3D::RenderParticles()
 	std::map<float, ParticleRenderer>::reverse_iterator it;				//Render from far to close to the camera
 	for (it = particles.rbegin(); it != particles.rend(); ++it)			
 	{
-		DrawParticle(it->second);
+		//DrawParticle(it->second);
+		it->second.Render();
 	}
 	particles.clear();
 }
@@ -2065,4 +2066,37 @@ color(color),
 transform(transform)
 {
 
+}
+
+void ParticleRenderer::Render()
+{
+
+	glPushMatrix();
+	glMultMatrixf((GLfloat*)&transform);
+
+	glEnable(GL_BLEND);
+
+	glColor4f(0.0f, 0.0f, 0.0f, 1.0f);
+
+	glBindTexture(GL_TEXTURE_2D, mat->GetTextureID());
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+
+	int x =0;
+	int y = 0;
+	int w = 5;
+	int h = 5;
+
+	glBegin(GL_QUADS);
+	glTexCoord2f(0, 0); glVertex2f(x -w / 2, y - h / 2);
+	glTexCoord2f(1, 0); glVertex2f(x +w / 2, y - h / 2);
+	glTexCoord2f(1, 1); glVertex2f(x +w / 2, y + h / 2);
+	glTexCoord2f(0, 1); glVertex2f(x -w / 2, y + h / 2);
+	glEnd();
+
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	glDisable(GL_BLEND);
+
+	glPopMatrix();
 }

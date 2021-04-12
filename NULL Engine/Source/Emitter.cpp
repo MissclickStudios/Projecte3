@@ -29,6 +29,7 @@ void Emitter::Save(ParsonNode& node)
 
 	uint32 textureUID = (emitterTexture != nullptr) ? emitterTexture->GetUID() : 0;
 	node.SetInteger("textureUID", textureUID);
+	node.SetString("texturePath", emitterTexture->GetAssetsPath());
 
 	node.SetInteger("maxParticleCount", maxParticleCount);
 
@@ -44,11 +45,8 @@ void Emitter::Load(ParsonNode& node)
 {
 	node.SetString("name", name.c_str());
 	
-	uint textureUID = node.GetInteger("textureUID");
-	if (App->resourceManager->AllocateResource(textureUID))
-	{
-		emitterTexture = (R_Texture*)App->resourceManager->RequestResource(textureUID); //TODO PARTICLE SYSTEM
-	}
+	std::string path = node.GetString("texturePath");
+	emitterTexture = (R_Texture*)App->resourceManager->GetResourceFromLibrary(path.c_str());
 
 	maxParticleCount = node.GetInteger("maxParticleCount");
 
@@ -139,4 +137,24 @@ bool Emitter::DeleteModuleFromType(ParticleModule::Type type)
 		}
 	}
 	return true;
+}
+
+void Emitter::SetTexture(R_Texture* newTexture)
+{
+	if (newTexture != nullptr)
+	{
+		R_Texture* a = (R_Texture*)App->resourceManager->GetResourceFromLibrary(newTexture->GetAssetsPath());
+
+		if (a != nullptr)
+		{
+			App->resourceManager->FreeResource(emitterTexture->GetUID());
+			emitterTexture = a;
+			
+		}
+		else
+		{
+			LOG("COuld not find Texture %s for emitter", newTexture->GetAssetsFile());
+		}
+
+	}
 }

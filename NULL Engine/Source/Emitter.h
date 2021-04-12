@@ -24,7 +24,7 @@ public:
 	bool AddModuleFromType(ParticleModule::Type type);
 	bool DeleteModuleFromType(ParticleModule::Type type);
 
-	void SetMaterial();
+	void SetTexture(R_Texture* newTexture);
 
 public:
 	std::vector<ParticleModule*> modules;
