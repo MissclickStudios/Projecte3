@@ -2456,6 +2456,10 @@ void E_Inspector::DisplayParticleSystemControls(C_ParticleSystem* cParticleSyste
 	strcpy_s(buffer, cParticleSystem->resource->name.c_str());
 	if (ImGui::InputText("PS Name", buffer, IM_ARRAYSIZE(buffer), ImGuiInputTextFlags_EnterReturnsTrue))
 	{
+		std::string path = ASSETS_PARTICLESYSTEMS_PATH;
+		path += buffer;
+		path += PARTICLESYSTEMS_AST_EXTENSION;
+		cParticleSystem->resource->SetAssetsPathAndFile(path.c_str(), buffer);
 		cParticleSystem->resource->name = buffer;
 	}
 }

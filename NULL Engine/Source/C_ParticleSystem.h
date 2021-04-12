@@ -24,7 +24,7 @@ public:
 	void RefreshEmitters();
 
 	void AddParticleSystem(const char* name);
-	void SaveParticleSystem();
+	void SaveParticleSystem() const;
 
 	bool SetAsDefaultComponent();					//Reset the component, add an emitterInstance to the list and assign it the default emitter
 	void AddDefaultEmitter();						//Create a default emitter

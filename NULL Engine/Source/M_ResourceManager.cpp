@@ -794,7 +794,7 @@ void M_ResourceManager::GetAllShaders(std::vector<R_Shader*>& shaders)
 void M_ResourceManager::GetAllParticleSystems(std::vector<R_ParticleSystem*>& shaders)
 {
 	std::vector<std::string> particleSystemFiles;
-	App->fileSystem->GetAllFilesWithFilter(ASSETS_PARTICLESYSTEMS_PATH, particleSystemFiles, nullptr, "shader");
+	App->fileSystem->GetAllFilesWithFilter(ASSETS_PARTICLESYSTEMS_PATH, particleSystemFiles, nullptr,"particles");
 	if (particleSystemFiles.empty())
 		return;
 

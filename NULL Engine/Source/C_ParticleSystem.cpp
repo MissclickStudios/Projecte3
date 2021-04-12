@@ -28,16 +28,34 @@ C_ParticleSystem::~C_ParticleSystem()
 
 bool C_ParticleSystem::SaveState(ParsonNode& root) const
 {
+	SaveParticleSystem();
+
 	root.SetNumber("Type", (double)GetType());
-	//TODO
-	return false;
+
+	root.SetInteger("particleSystemUID",resource->GetUID());
+
+	root.SetBool("stopSpawn", stopSpawn);
+	root.SetBool("tempDelete", tempDelete);
+	root.SetBool("previewEnabled", previewEnabled);
+	root.SetBool("stopAndDeleteCheck", stopAndDeleteCheck);
+
+	return true;
 }
 
 bool C_ParticleSystem::LoadState(ParsonNode& root)
 {
-	//TODO
+	uint resourceUID = root.GetInteger("particleSystemUID");
+	if (App->resourceManager->AllocateResource(resourceUID))
+	{
+		resource = (R_ParticleSystem*)App->resourceManager->RequestResource(resourceUID);
+	}
 
-	return false;
+	stopSpawn = root.GetBool("stopSpawn");
+	tempDelete = root.GetBool("tempDelete");
+	previewEnabled = root.GetBool("previewEnabled");
+	stopAndDeleteCheck = root.GetBool("stopAndDeleteCheck");
+
+	return true;
 }
 
 bool C_ParticleSystem::Update()
@@ -94,7 +112,7 @@ void C_ParticleSystem::AddParticleSystem(const char* name)
 
 }
 
-void C_ParticleSystem::SaveParticleSystem()
+void C_ParticleSystem::SaveParticleSystem() const
 {
 	App->resourceManager->SaveResourceToLibrary(resource);
 	

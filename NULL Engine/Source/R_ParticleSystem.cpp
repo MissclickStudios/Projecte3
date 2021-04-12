@@ -28,24 +28,7 @@ bool R_ParticleSystem::CleanUp()
 bool R_ParticleSystem::SaveMeta(ParsonNode& metaRoot) const
 {
 	ParsonArray contained_array = metaRoot.SetArray("ContainedResources");
-	
-	// REMEMBER TO GENERATE AN ASSET FILE FOR THIS
 
-	for (auto emit = emitters.begin(); emit != emitters.end(); emit++)
-	{
-		/*if (emit->emitterTexture->GetUID() != 0)
-		{
-			std::string material_name = emit->emitterTexture->GetUID() + MATERIALS_EXTENSION;
-			std::string material_path = MATERIALS_PATH + std::to_string(emit->emitterTexture->GetUID()) + MATERIALS_EXTENSION;
-
-			ParsonNode material_node = contained_array.SetNode(material_name.c_str());
-
-			material_node.SetNumber("UID", emit->emitterTexture->GetUID());
-			material_node.SetNumber("Type", (uint)ResourceType::MATERIAL);
-			material_node.SetString("Name", material_name.c_str());
-			material_node.SetString("LibraryPath", material_path.c_str());
-		}*/
-	}
 
 	return true;
 }
