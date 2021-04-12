@@ -12,6 +12,9 @@
 
 Emitter::Emitter()
 {
+	std::vector<R_Texture*> textures;
+	App->resourceManager->GetAllTextures(textures);
+	emitterTexture = (*textures.begin()); //TODO find a default emitter texture
 }
 
 void Emitter::Update(float dt)

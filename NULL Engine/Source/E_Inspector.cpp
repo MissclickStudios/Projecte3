@@ -2473,17 +2473,39 @@ void E_Inspector::DisplayEmitterInstances(C_ParticleSystem* cParticleSystem)
 		{
 			ImGui::SetNextItemWidth(ImGui::GetWindowWidth() * 0.33f);
 			static char buffer[64];
-			strcpy_s(buffer, cParticleSystem->emitterInstances[i]->emitter->name.c_str());
+			strcpy_s(buffer, emitter->name.c_str());
 			std::string inputTextName = "Emitter Name ##" + std::to_string(i);
 			if (ImGui::InputText(inputTextName.c_str(), buffer, IM_ARRAYSIZE(buffer), ImGuiInputTextFlags_EnterReturnsTrue))
 			{
-				cParticleSystem->emitterInstances[i]->emitter->name = buffer;
+				emitter->name = buffer;
 			}
+
+			ImGui::SameLine();
 
 			bool preview = cParticleSystem->previewEnabled;
 			if (ImGui::Checkbox("Preview", &preview))
 			{
 				cParticleSystem->EnginePreview(preview);
+			}
+
+			R_Texture* current = emitter->emitterTexture;
+			//combo showing all resources Already exists App->resourceManager->GetAllParticleSystems()
+			if (ImGui::BeginCombo("##Particle Texture", emitter->emitterTexture->GetAssetsFile()))
+			{
+				std::vector<R_Texture*> textures;
+				App->resourceManager->GetAllTextures(textures); //GetAll Text
+
+				for (auto it = textures.begin(); it != textures.end(); ++it)
+				{
+					bool isSelected = (current == (*it));
+					if (ImGui::Selectable((*it)->GetAssetsFile(), isSelected))
+					{
+						emitter->emitterTexture = (*it);
+					}
+					if (isSelected)
+						ImGui::SetItemDefaultFocus();
+				}
+				ImGui::EndCombo();
 			}
 
 			ImGui::Combo("###", &moduleType, "Add Module\0ParticleMovement\0ParticleColor\0ParticleLifetime\0ParticleRotation\0ParticleSize\0ParticleBillboarding");
