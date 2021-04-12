@@ -1,6 +1,6 @@
 #include "Application.h"
 #include "M_Scene.h"
-#include "C_UI_Button.h"
+//#include "C_UI_Button.h"
 
 #include "GameObject.h"
 #include "MainMenuManager.h"
@@ -15,13 +15,13 @@ MainMenuManager::~MainMenuManager()
 
 void MainMenuManager::Start()
 {
-	playButton = App->scene->GetGameObjectByName("")->GetComponent<C_UI_Button>();
+	//playButton = App->scene->GetGameObjectByName("")->GetComponent<C_UI_Button>();
 }
 
 void MainMenuManager::Update()
 {
-	if (playButton->IsPressed())
-	{
-		//App->scene->GetLevel()->InitiateLevel(1);
-	}
+	//if (playButton->IsPressed())
+	//{
+	//	//App->scene->GetLevel()->InitiateLevel(1);
+	//}
 }
