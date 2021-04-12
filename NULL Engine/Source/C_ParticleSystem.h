@@ -12,10 +12,12 @@ public:
 	C_ParticleSystem(GameObject* owner);
 	~C_ParticleSystem();
 
+	bool Update() override;
+	
 	bool SaveState(ParsonNode& root) const override;
 	bool LoadState(ParsonNode& root) override;
 
-	bool Update();
+public:
 	void Reset();
 
 	void SetParticleSystem(R_ParticleSystem* newParticleSystem);
@@ -28,15 +30,17 @@ public:
 	void AddDefaultEmitter();			//Create a default emitter
 
 	void EnginePreview(bool previewEnabled);
+
 private:
 	void ClearEmitters();
 
 public:
-	Emitter* defaultEmitter; //don't save
-	std::vector<EmitterInstance*> emitterInstances; //don't save/load
-	R_ParticleSystem* resource = nullptr; // save/load
+	std::vector<EmitterInstance*> emitterInstances; // don't save/load
+	Emitter* defaultEmitter;						// don't save
+	
+	R_ParticleSystem* resource = nullptr;			// save/load
 
-	bool previewEnabled = false; // save/load
+	bool previewEnabled = false;					// save/load
 };
 
 #endif //!__C_PARTICLES_H__

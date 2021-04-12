@@ -14,18 +14,18 @@ struct NULL_API ParticleModule
 {
 	enum class Type
 	{
-		None,
-		ParticleMovement,
-		ParticleColor,
-		ParticleLifetime,
-		ParticleRotation,
-		ParticleSize,
-		ParticleBillboarding,
-		EmitterArea,
-		EmitterBase,			//Origin of the emitter
-		EmitterSpawn,			//Spawn Rate and timer
+		NONE,
+		PARTICLE_MOVEMENT,
+		PARTICLE_COLOR,
+		PARTICLE_LIFETIME,
+		PARTICLE_ROTATION,
+		PARTICLE_SIZE,
+		PARTICLE_BILLBOARDING,
+		EMITTER_BASE,			//Origin of the emitter
+		EMITTER_AREA,
+		EMITTER_SPAWN,			//Spawn Rate and timer
 		
-		Unknown
+		UNKNOWN
 	} type;
 
 	ParticleModule(Type type) : type(type) {};
@@ -44,7 +44,7 @@ struct EmitterBase : ParticleModule
 {
 	//camera alignment
 
-	EmitterBase() : ParticleModule(Type::EmitterBase) {};
+	EmitterBase() : ParticleModule(Type::EMITTER_BASE) {};
 
 	void Save(ParsonNode& node) override;
 	void Load(ParsonNode& node) override;
@@ -57,7 +57,7 @@ struct EmitterBase : ParticleModule
 
 struct EmitterSpawn : ParticleModule
 {
-	EmitterSpawn() : ParticleModule(Type::EmitterSpawn) {};
+	EmitterSpawn() : ParticleModule(Type::EMITTER_SPAWN) {};
 	
 	void Save(ParsonNode& node) override;
 	void Load(ParsonNode& node) override;
@@ -71,7 +71,7 @@ struct EmitterSpawn : ParticleModule
 
 struct ParticleMovement : ParticleModule
 {
-	ParticleMovement() : ParticleModule(Type::ParticleMovement) {};
+	ParticleMovement() : ParticleModule(Type::PARTICLE_MOVEMENT) {};
 
 	void Save(ParsonNode& node) override;
 	void Load(ParsonNode& node) override;
@@ -94,7 +94,7 @@ struct ParticleMovement : ParticleModule
 
 struct ParticleColor : ParticleModule
 {
-	ParticleColor() : ParticleModule(Type::ParticleColor) {};
+	ParticleColor() : ParticleModule(Type::PARTICLE_COLOR) {};
 
 	void Save(ParsonNode& node) override;
 	void Load(ParsonNode& node) override;
@@ -110,7 +110,7 @@ struct ParticleColor : ParticleModule
 
 struct ParticleLifetime : ParticleModule
 {
-	ParticleLifetime() : ParticleModule(Type::ParticleLifetime) {};
+	ParticleLifetime() : ParticleModule(Type::PARTICLE_LIFETIME) {};
 
 	void Save(ParsonNode& node) override;
 	void Load(ParsonNode& node) override;
@@ -137,7 +137,7 @@ struct ParticleBillboarding : ParticleModule
 		None,
 	};
 
-	ParticleBillboarding() : ParticleModule(Type::ParticleBillboarding) {};
+	ParticleBillboarding() : ParticleModule(Type::PARTICLE_BILLBOARDING) {};
 
 	void Save(ParsonNode& node) override;
 	void Load(ParsonNode& node) override;

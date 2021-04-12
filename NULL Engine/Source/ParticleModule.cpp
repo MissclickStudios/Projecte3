@@ -138,7 +138,7 @@ void ParticleMovement::Update(float dt, EmitterInstance* emitter)
 	}
 	if (eraseMovement == true)
 	{
-		emitter->emitter->DeleteModuleFromType(ParticleModule::Type::ParticleMovement);
+		emitter->emitter->DeleteModuleFromType(ParticleModule::Type::PARTICLE_MOVEMENT);
 	}
 }
 
@@ -184,7 +184,7 @@ void ParticleColor::Update(float dt, EmitterInstance* emitter)
 	}*/
 	if (eraseColor == true)
 	{
-		emitter->emitter->DeleteModuleFromType(ParticleModule::Type::ParticleColor);
+		emitter->emitter->DeleteModuleFromType(ParticleModule::Type::PARTICLE_COLOR);
 	}
 }
 
@@ -229,7 +229,7 @@ void ParticleLifetime::Update(float dt, EmitterInstance* emitter)
 	}
 	if (eraseLifetime == true)
 	{
-		emitter->emitter->DeleteModuleFromType(ParticleModule::Type::ParticleLifetime);
+		emitter->emitter->DeleteModuleFromType(ParticleModule::Type::PARTICLE_LIFETIME);
 	}
 }
 
@@ -271,7 +271,7 @@ void ParticleBillboarding::Update(float dt, EmitterInstance* emitter)
 	 
 	if (eraseBillboarding == true)
 	{
-		emitter->emitter->DeleteModuleFromType(ParticleModule::Type::ParticleBillboarding);
+		emitter->emitter->DeleteModuleFromType(ParticleModule::Type::PARTICLE_BILLBOARDING);
 	}
 }
 
