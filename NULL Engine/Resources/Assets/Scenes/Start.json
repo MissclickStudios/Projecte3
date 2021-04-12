@@ -1240,7 +1240,7 @@
         },
         {
             "UID": 888400124,
-            "ParentUID": 1202886593,
+            "ParentUID": 1704439646,
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "MainScene",
@@ -1314,7 +1314,7 @@
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": true,
+            "ShowBoundingBoxes": false,
             "Components": [
                 {
                     "Type": 1,
@@ -1612,6 +1612,48 @@
                             "Name": "die",
                             "string": "die"
                         }
+                    ]
+                },
+                {
+                    "Type": 14,
+                    "Playing Event": [
+                        "mando_damaged",
+                        2518076300
+                    ]
+                },
+                {
+                    "Type": 14,
+                    "Playing Event": [
+                        "mando_dash",
+                        1534355823
+                    ]
+                },
+                {
+                    "Type": 14,
+                    "Playing Event": [
+                        "mando_walking",
+                        3331669632
+                    ]
+                },
+                {
+                    "Type": 14,
+                    "Playing Event": [
+                        "mando_death",
+                        469170087
+                    ]
+                },
+                {
+                    "Type": 14,
+                    "Playing Event": [
+                        "mando_recharging",
+                        937453293
+                    ]
+                },
+                {
+                    "Type": 14,
+                    "Playing Event": [
+                        "weapon_reload_01",
+                        2239462155
                     ]
                 }
             ]
@@ -4241,6 +4283,579 @@
                         1.0000001192092896,
                         1
                     ]
+                }
+            ]
+        },
+        {
+            "UID": 2051110063,
+            "ParentUID": 888400124,
+            "PrefabID": 1524961430,
+            "IsPrefab": true,
+            "Name": "MainCamera",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        1.7927045822143555,
+                        61.301094055175781,
+                        51.677436828613281
+                    ],
+                    "LocalRotation": [
+                        -0.44619807600975037,
+                        0,
+                        0,
+                        0.89493423700332642
+                    ],
+                    "LocalScale": [
+                        1,
+                        0.99999982118606567,
+                        0.99999982118606567
+                    ]
+                },
+                {
+                    "Type": 5,
+                    "MinFOV": 1,
+                    "MaxFOV": 120,
+                    "Culling": false,
+                    "OrthogonalView": false,
+                    "HideFrustum": true
+                },
+                {
+                    "Type": 24,
+                    "ResourceUID": 796678199,
+                    "AssetsPath": "Assets\/Scripts\/\/CameraMovement.h",
+                    "DataName": "CameraMovement",
+                    "HasInspector": true,
+                    "InspectorVariables": [
+                        {
+                            "Type": 3,
+                            "Name": "offset",
+                            "float3x": 0,
+                            "float3y": 70,
+                            "float3z": 50
+                        }
+                    ]
+                },
+                {
+                    "Type": 15
+                }
+            ]
+        },
+        {
+            "UID": 75414400,
+            "ParentUID": 2051110063,
+            "PrefabID": 1524961430,
+            "IsPrefab": true,
+            "Name": "Canvas",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 13,
+                    "Canvas": {
+                        "X": 0,
+                        "Y": 0,
+                        "W": 1.0926049947738647,
+                        "H": 0.5787392258644104,
+                        "IsInvisible": false
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 515722014,
+            "ParentUID": 75414400,
+            "PrefabID": 1524961430,
+            "IsPrefab": true,
+            "Name": "Mando",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 21,
+                    "Image": {
+                        "X": -0.44999998807907104,
+                        "Y": 0.20000000298023224,
+                        "W": 0.16500000655651093,
+                        "H": 0.16500000655651093,
+                        "IsHDL": false,
+                        "IsHDR": false
+                    }
+                },
+                {
+                    "Type": 3
+                }
+            ]
+        },
+        {
+            "UID": 223947468,
+            "ParentUID": 75414400,
+            "PrefabID": 1524961430,
+            "IsPrefab": true,
+            "Name": "Minimap",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 21,
+                    "Image": {
+                        "X": 0.40000000596046448,
+                        "Y": 0.14000000059604645,
+                        "W": 0.27500000596046448,
+                        "H": 0.27500000596046448,
+                        "IsHDL": false,
+                        "IsHDR": false
+                    }
+                },
+                {
+                    "Type": 3
+                }
+            ]
+        },
+        {
+            "UID": 4566558,
+            "ParentUID": 75414400,
+            "PrefabID": 1524961430,
+            "IsPrefab": true,
+            "Name": "Dash",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 21,
+                    "Image": {
+                        "X": -0.41999998688697815,
+                        "Y": -0.18000000715255737,
+                        "W": 0.14499999582767487,
+                        "H": 0.14499999582767487,
+                        "IsHDL": false,
+                        "IsHDR": false
+                    }
+                },
+                {
+                    "Type": 3
+                }
+            ]
+        },
+        {
+            "UID": 321818170,
+            "ParentUID": 75414400,
+            "PrefabID": 1524961430,
+            "IsPrefab": true,
+            "Name": "Credits",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 21,
+                    "Image": {
+                        "X": -0.36700001358985901,
+                        "Y": 0.1550000011920929,
+                        "W": 0.15000000596046448,
+                        "H": 0.15000000596046448,
+                        "IsHDL": false,
+                        "IsHDR": false
+                    }
+                },
+                {
+                    "Type": 3
+                }
+            ]
+        },
+        {
+            "UID": 525573586,
+            "ParentUID": 75414400,
+            "PrefabID": 1524961430,
+            "IsPrefab": true,
+            "Name": "Heart1",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 21,
+                    "Image": {
+                        "X": -0.40999999642372131,
+                        "Y": 0.25,
+                        "W": 0.045000001788139343,
+                        "H": 0.045000001788139343,
+                        "IsHDL": false,
+                        "IsHDR": false
+                    }
+                },
+                {
+                    "Type": 3
+                }
+            ]
+        },
+        {
+            "UID": 119749147,
+            "ParentUID": 75414400,
+            "PrefabID": 1524961430,
+            "IsPrefab": true,
+            "Name": "PrimaryWeapon",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 21,
+                    "Image": {
+                        "X": 0.36000001430511475,
+                        "Y": -0.039999999105930328,
+                        "W": 0.34999999403953552,
+                        "H": 0.34999999403953552,
+                        "IsHDL": false,
+                        "IsHDR": false
+                    }
+                },
+                {
+                    "Type": 3
+                }
+            ]
+        },
+        {
+            "UID": 1995017401,
+            "ParentUID": 75414400,
+            "PrefabID": 1524961430,
+            "IsPrefab": true,
+            "Name": "Heart3",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 21,
+                    "Image": {
+                        "X": -0.31999999284744263,
+                        "Y": 0.25,
+                        "W": 0.045000001788139343,
+                        "H": 0.045000001788139343,
+                        "IsHDL": false,
+                        "IsHDR": false
+                    }
+                },
+                {
+                    "Type": 3
+                }
+            ]
+        },
+        {
+            "UID": 687109456,
+            "ParentUID": 75414400,
+            "PrefabID": 1524961430,
+            "IsPrefab": true,
+            "Name": "Heart2",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 21,
+                    "Image": {
+                        "X": -0.36500000953674316,
+                        "Y": 0.25,
+                        "W": 0.045000001788139343,
+                        "H": 0.045000001788139343,
+                        "IsHDL": false,
+                        "IsHDR": false
+                    }
+                },
+                {
+                    "Type": 3
+                }
+            ]
+        },
+        {
+            "UID": 1231027348,
+            "ParentUID": 75414400,
+            "PrefabID": 1524961430,
+            "IsPrefab": true,
+            "Name": "SideKick",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 21,
+                    "Image": {
+                        "X": -0.48500001430511475,
+                        "Y": 0.15000000596046448,
+                        "W": 0.079999998211860657,
+                        "H": 0.079999998211860657,
+                        "IsHDL": false,
+                        "IsHDR": false
+                    }
+                },
+                {
+                    "Type": 3
+                }
+            ]
+        },
+        {
+            "UID": 938374506,
+            "ParentUID": 75414400,
+            "PrefabID": 1524961430,
+            "IsPrefab": true,
+            "Name": "SecodaryWeapon",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 21,
+                    "Image": {
+                        "X": 0.44699999690055847,
+                        "Y": -0.17000000178813934,
+                        "W": 0.18000000715255737,
+                        "H": 0.18000000715255737,
+                        "IsHDL": false,
+                        "IsHDR": false
+                    }
+                },
+                {
+                    "Type": 3
                 }
             ]
         }
