@@ -921,12 +921,13 @@ bool GameObject::GetAllComponents(std::vector<Component*>& components) const
 	return components.empty() ? false : true;
 }
 
-void* GameObject::GetScript(std::string scriptName)
+void* GameObject::GetScript(const char*scriptName)
 {
-	for (uint i = 0; i < components.size(); ++i)
-		if (components[i]->GetType() == ComponentType::SCRIPT)
+	for (uint i = 0; i < components.size(); ++i) 
+		if (components[i]->GetType() == ComponentType::SCRIPT) 
 			if (scriptName == ((C_Script*)components[i])->GetDataName())
 				return ((C_Script*)components[i])->GetScriptData();
+			
 	return nullptr;
 }
 

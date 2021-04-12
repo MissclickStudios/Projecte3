@@ -69,6 +69,10 @@ loadFile		(new E_LoadFile()),
 saveFile		(new E_SaveFile()),
 wantToSaveScene (new E_WantToSaveScene())
 {
+	//16 = num of editor panels to pushback
+	//if you create or remove 1 editor panel change the 16 accordingly
+	editorPanels.reserve(16);
+
 	AddEditorPanel(mainMenuBar);
 	AddEditorPanel(toolbar);
 	AddEditorPanel(configuration);

@@ -92,7 +92,7 @@ public:																									// --- COMPONENT GETTERS AND SETTERS
 	const std::vector<Component*>&	GetAllComponents	() const;										// 
 	bool							GetAllComponents	(std::vector<Component*>& components) const;	// 
 
-	void*			GetScript							(std::string scriptName);						//
+	void*			GetScript							(const char* scriptName);						//
 
 	template<typename T>																				// --- GET COMPONENT TEMPLATED METHOD
 	T* GetComponent() const																				// 
