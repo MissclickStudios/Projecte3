@@ -3,6 +3,7 @@
 #include "ScriptMacros.h"
 
 class GameObject;
+class C_UI_Button;
 
 class SCRIPTS_API MainMenuManager : public Script {
 public:
@@ -14,6 +15,8 @@ public:
 	void Update() override;
 	//void PostUpdate()override;
 	//void CleanUp()override;
+private:
+	C_UI_Button* playButton;
 };
 
 SCRIPTS_FUNCTION MainMenuManager* CreateMainMenuManager() {

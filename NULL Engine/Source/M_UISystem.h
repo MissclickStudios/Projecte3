@@ -4,7 +4,6 @@
 #include "Module.h"
 #include "C_Canvas.h"
 
-#include "Dependencies/FreeType/include/freetype/freetype.h"
 
 class ParsonNode;
 typedef unsigned int uint;
@@ -38,11 +37,11 @@ public:
 
 public:
 
-	FT_Library  library;
-	FT_Face     standardFace;
-	FT_UInt		glyphIndex;
-	FT_ULong	charcode;
-	FT_Int32	loadFlags = FT_LOAD_DEFAULT;
+	//FT_Library  library;
+	//FT_Face     standardFace;
+	//FT_UInt		glyphIndex;
+	//FT_ULong	charcode;
+	//FT_Int32	loadFlags = FT_LOAD_DEFAULT;
 
 	std::vector<C_UI_Button*> activeButtons;
 	C_UI_Button* hoveredButton = nullptr;

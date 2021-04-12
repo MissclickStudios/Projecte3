@@ -24,10 +24,10 @@ void CameraMovement::Update()
 {
 	if (!player)
 	{
-		std::map<uint32, GameObject*>* objects = App->scene->GetGameObjects();
-		for (auto i = objects->begin(); i != objects->end(); ++i)
-			if (i->second->GetScript("Player"))
-				player = i->second;
+		std::vector<GameObject*>* gameObjects = App->scene->GetGameObjects();
+		for (auto object = gameObjects->begin(); object != gameObjects->end(); ++object)
+			if ((*object)->GetScript("Player"))
+				player = (*object);
 
 		if (!player)
 			return;

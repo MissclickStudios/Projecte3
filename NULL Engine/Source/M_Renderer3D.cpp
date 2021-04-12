@@ -684,8 +684,10 @@ void M_Renderer3D::RenderScene()
 	defaultSkyBox.RenderSkybox();
 
 	RenderUI();
+	
 
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+	
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
@@ -745,10 +747,10 @@ void M_Renderer3D::RenderUI()
 	C_Canvas* canvas = nullptr;
 	for (auto uiIt = App->scene->GetGameObjects()->cbegin(); uiIt != App->scene->GetGameObjects()->cend(); ++uiIt)
 	{	
-		canvas = uiIt->second->GetComponent<C_Canvas>();
+		canvas = (*uiIt)->GetComponent<C_Canvas>();
 		if (canvas != nullptr)
 		{
-			RenderUIComponent(uiIt->second);
+			RenderUIComponent((*uiIt));
 
 			if (!canvas->IsInvisible())
 			{
@@ -783,10 +785,7 @@ void M_Renderer3D::RenderUIComponent(GameObject* gameObject)
 		if (text != nullptr)
 		{
 			if (App->camera->currentCamera != App->camera->masterCamera->GetComponent<C_Camera>())
-				text->Draw2D();
-
-			else
-				text->Draw3D();
+				text->RenderText();
 		}
 
 		C_UI_Button* button = (*it)->GetComponent<C_UI_Button>();

@@ -84,14 +84,17 @@ bool M_Scene::Start()
 	level.GetRooms();
 	level.GenerateLevel();
 	
-	//level.AddFixedRoom("Shop", 16);                            
+	level.AddFixedRoom("HUB", 1, 1);
+
 	/*level.AddFixedRoom("Start",1 ,1); 
 	level.AddFixedRoom("Boss",1 ,15);*/
 	
-	if(App->gameState == GameState::PLAY)
-		level.InitiateLevel(1);
+	
 
-	level.InitiateLevel(1);
+	if(App->gameState == GameState::PLAY)
+		App->scene->LoadScene("Assets/Scenes/MainMenu.json");
+
+	App->scene->LoadScene("Assets/Scenes/MainMenu.json");
 
 
 	/*std::string s = ASSETS_SCENES_PATH + currentScene + JSON_EXTENSION;
@@ -115,22 +118,14 @@ UpdateStatus M_Scene::Update(float dt)
 	std::vector<SkeletonRenderer>	skeletonRenderers;
 
 	// --- Sort GameObjects by Z-Buffer value
-	for (auto item = gameObjects.begin(); item != gameObjects.end(); ++item)
+	for (uint i = 0; i < gameObjects.size(); ++i)
 	{
-		GameObject* gameObject = item->second;																			// Creating a local var: Less optimized but more readable.
+		GameObject* gameObject = gameObjects[i];																			// Creating a local var: Less optimized but more readable.
 		
 		if (gameObject->toDelete)
 		{
-			(item != gameObjects.begin()) ? --item : item = gameObjects.end();											// Setting it to prev as std::map::erase will set it to end otherwise.
-			DeleteGameObject(gameObject);																				// Doing this on item = gameObjects.begin() will be problematic.
-			if (item == gameObjects.end()) { item = gameObjects.begin(); } 												// TMP: Find a better solution.
-			
+			DeleteGameObject(gameObject, i);																				// Doing this on item = gameObjects.begin() will be problematic.
 			continue;
-		}
-		if (gameObject->changedName)
-		{
-			RefreshGameObjectInNamesMap(gameObject);
-			gameObject->changedName = false;
 		}
 
 		if (gameObject->IsActive())
@@ -196,17 +191,15 @@ bool M_Scene::CleanUp()
 
 	for (auto object = gameObjects.begin(); object != gameObjects.end(); ++object)
 	{
-		object->second->CleanUp();
-		RELEASE(object->second);
+		(*object)->CleanUp();
+		RELEASE((*object));
 	}
-
 	for (auto item = models.begin(); item != models.end(); ++item)
 	{
 		App->resourceManager->FreeResource(item->second.first);
 	}
 
 	gameObjects.clear();
-	goNamesMap.clear();
 	models.clear();
 
 	sceneRoot				= nullptr;
@@ -254,8 +247,8 @@ bool M_Scene::SaveScene(const char* sceneName) const
 	ParsonArray objectsArray	= rootNode.SetArray("Game Objects");
 	for (auto object = gameObjects.begin(); object != gameObjects.end(); ++object)
 	{
-		ParsonNode arrayNode = objectsArray.SetNode(object->second->GetName());
-		object->second->SaveState(arrayNode);
+		ParsonNode arrayNode = objectsArray.SetNode((*object)->GetName());
+		(*object)->SaveState(arrayNode);
 	}
 
 	char* buffer		= nullptr;
@@ -318,10 +311,10 @@ bool M_Scene::LoadScene(const char* path)
 	if (buffer != nullptr)
 	{
 		App->renderer->ClearRenderers();
-		//CleanUp();
+		CleanUp();
 
-		std::vector<GameObject*> parentMaintained;
-		CleanUpCurrentScene(parentMaintained);
+		//std::vector<GameObject*> parentMaintained;
+		//CleanUpCurrentScene(parentMaintained);
 
 		ParsonNode newRoot			= ParsonNode(buffer);
 		ParsonArray modelsArray		= newRoot.GetArray("Models In Scene");
@@ -367,12 +360,12 @@ bool M_Scene::LoadScene(const char* path)
 				sceneRoot = gameObject;
 				sceneRoot->SetParent(masterRoot);
 
-				for (uint i = 0; i < parentMaintained.size(); ++i)
+				/*for (uint i = 0; i < parentMaintained.size(); ++i)
 				{
 					parentMaintained[i]->SetParent(sceneRoot);
 				}
 
-				parentMaintained.clear();
+				parentMaintained.clear();*/
 			}
 
 			if (gameObject->GetComponent<C_Animator>() != nullptr)
@@ -431,28 +424,12 @@ bool M_Scene::LoadScene(const char* path)
 			}
 
 			item->second->GetComponent<C_Transform>()->Translate(float3::zero);						// Dirty way to refresh the transforms after the import is done. TMP Un-hardcode later.
-			AddGameObjectToMaps(item->second);
+			AddGameObjectToVector(item->second);
 		}
 		
 		tmp.clear();
 		App->renderer->ClearRenderers();
 	}
-
-	std::map<uint32, GameObject*> toDelete;
-	for (auto object = gameObjects.cbegin(); object != gameObjects.cend(); ++object)				// For some reason UI related elements have their UID changed as they are generated.
-	{																								// This is a dirty fix to avoid having problems with that. Find root of the problem later.
-		if (object->first != object->second->GetUID())
-		{
-			toDelete.emplace(object->first, object->second);
-		}
-	}
-	for (auto object = toDelete.cbegin(); object != toDelete.cend(); ++object)
-	{
-		AddGameObjectToMaps(object->second);
-		gameObjects.erase(object->first);
-	}
-
-	toDelete.clear();
 
 	//Resolve script go pointers reassigning
 	if (!toAdd.empty()) {
@@ -488,9 +465,9 @@ bool M_Scene::CleanUpCurrentScene(std::vector<GameObject*>& parentMaintained)			
 
 	for (auto object = gameObjects.begin(); object != gameObjects.end(); ++object)					// ATTENTION: There are a total of 6 loops when only 2 should be needed. Revise later.
 	{
-		if (object->second->GetMaintainThroughScenes() && object->second->parent == sceneRoot)
+		if ((*object)->GetMaintainThroughScenes() && (*object)->parent == sceneRoot)
 		{
-			parentMaintained.push_back(object->second);												// If not done first all parent pointers get corrupted or set to NULL.
+			parentMaintained.push_back((*object));												// If not done first all parent pointers get corrupted or set to NULL.
 		}
 	}
 
@@ -499,12 +476,12 @@ bool M_Scene::CleanUpCurrentScene(std::vector<GameObject*>& parentMaintained)			
 	std::vector<GameObject*> why;
 	for (auto object = gameObjects.begin(); object != gameObjects.end(); ++object)
 	{
-		if (!object->second->GetMaintainThroughScenes())
+		if (!(*object)->GetMaintainThroughScenes())
 		{
-			goToDelete.emplace(object->second->GetUID(), object->second->GetName());				// Getting the GameObjects that should be deleted.
+			goToDelete.emplace((*object)->GetUID(), (*object)->GetName());				// Getting the GameObjects that should be deleted.
 
-			object->second->CleanUp();
-			RELEASE(object->second);
+			(*object)->CleanUp();
+			RELEASE((*object));
 		}
 	}
 
@@ -519,8 +496,8 @@ bool M_Scene::CleanUpCurrentScene(std::vector<GameObject*>& parentMaintained)			
 
 	for (auto object = goToDelete.begin(); object != goToDelete.end(); ++object)
 	{	
-		(gameObjects.find(object->first) != gameObjects.end())	? gameObjects.erase(object->first) : LOG("[ERROR] Scene: Could not Delete { %s }! Error: GO amiss", object->second.c_str());
-		(goNamesMap.find(object->second) != goNamesMap.end())	? goNamesMap.erase(object->second) : LOG("[ERROR] Scene: Could not Delete { %s }! Error: Name amiss", object->second.c_str());
+		/*(gameObjects.find(object->first) != gameObjects.end())	? gameObjects.erase(object->first) : LOG("[ERROR] Scene: Could not Delete { %s }! Error: GO amiss", object->second.c_str());
+		(goNamesMap.find(object->second) != goNamesMap.end())	? goNamesMap.erase(object->second) : LOG("[ERROR] Scene: Could not Delete { %s }! Error: Name amiss", object->second.c_str());*/
 	}
 	for (auto model = modelsToDelete.begin(); model != modelsToDelete.end(); ++model)
 	{
@@ -529,7 +506,7 @@ bool M_Scene::CleanUpCurrentScene(std::vector<GameObject*>& parentMaintained)			
 
 	for (auto object = gameObjects.cbegin(); object != gameObjects.cend(); ++object)				// Making sure that the remaining GOs (maintain) are not set to delete.
 	{
-		(object->second != nullptr) ? object->second->toDelete = false : LOG("[ERROR] Scene: GameObject remaining after Current Scene CleanUp was nullptr!");
+		//(object->second != nullptr) ? object->second->toDelete = false : LOG("[ERROR] Scene: GameObject remaining after Current Scene CleanUp was nullptr!");
 	}
 
 	sceneRoot			= nullptr;
@@ -592,7 +569,7 @@ GameObject* M_Scene::LoadPrefabIntoScene(ParsonNode* a, GameObject* parent)
 
 	parent != nullptr ? gameObject->SetParent(parent) : gameObject->SetParent(App->scene->GetSceneRoot());
 
-	AddGameObjectToMaps(gameObject);
+	AddGameObjectToVector(gameObject);
 
 	ParsonArray childArray = a->GetArray("Children");
 
@@ -614,7 +591,7 @@ void M_Scene::LoadPrefabObject(GameObject* _gameObject, ParsonNode* node)
 
 	(_gameObject != nullptr) ? gameObject->SetParent(_gameObject) : gameObject->SetParent(sceneRoot);
 	
-	AddGameObjectToMaps(gameObject);
+	AddGameObjectToVector(gameObject);
 
 	gameObject->ForceUID(Random::LCG::GetRandomUint());
 
@@ -664,13 +641,13 @@ GameObject* M_Scene::CreateGameObject(const char* name, GameObject* parent)
 	{
 		(parent != nullptr) ? gameObject->SetParent(parent) : gameObject->SetParent(sceneRoot);					// Just in case.
 
-		AddGameObjectToMaps(gameObject);
+		AddGameObjectToVector(gameObject);
 	}
 
 	return gameObject;
 }
 
-void M_Scene::DeleteGameObject(GameObject* gameObject)
+void M_Scene::DeleteGameObject(GameObject* gameObject,  int index)
 {
 	if (gameObject == nullptr)
 	{
@@ -710,20 +687,32 @@ void M_Scene::DeleteGameObject(GameObject* gameObject)
 		cMeshes.clear();
 	}
 
-	if (!gameObjects.empty())
+	if (!gameObjects.empty())													// Extra check just to make sure that at least one GameObject remains in the Scene.
 	{
-		uint32 goUID		= gameObject->GetUID();
-		std::string name	= gameObject->GetName();
-		
-		gameObject->CleanUp();
+		gameObject->CleanUp();													// As it has not been Cleaned Up by its parent, the GameObject needs to call its CleanUp();
+		uint32 goUID = gameObject->GetUID();
+
+		if (index != -1)														// If an index was given.
+		{
+			gameObjects.erase(gameObjects.begin() + index);						// Delete game object at index.
+		}
+		else
+		{
+			for (uint i = 0; i < gameObjects.size(); ++i)						// If no index was given.
+			{
+				if (gameObjects[i] == gameObject)								// Iterate game_objects until a match is found.
+				{
+					gameObjects.erase(gameObjects.begin() + i);					// Delete the game_object at the current loop index.
+					break;
+				}
+			}
+		}
+
 		RELEASE(gameObject);
-		
-		(gameObjects.find(goUID) != gameObjects.end())	? gameObjects.erase(goUID)	: LOG("[ERROR] Scene: Could not delete { %s }! Error: Could not be found in GO Map.", name.c_str());
-		(goNamesMap.find(name) != goNamesMap.end())		? goNamesMap.erase(name)	: LOG("[ERROR] Scene: Could nto delete { %s }! Error: Could not be found in Names Map.", name.c_str());
-	}
+	}		
 }
 
-void M_Scene::AddGameObjectToMaps(GameObject* gameObject)
+void M_Scene::AddGameObjectToVector(GameObject* gameObject)
 {
 	if (gameObject == nullptr)
 	{
@@ -731,28 +720,7 @@ void M_Scene::AddGameObjectToMaps(GameObject* gameObject)
 		return;
 	}
 
-	gameObjects.emplace(gameObject->GetUID(), gameObject);
-	goNamesMap.emplace(gameObject->GetName(), gameObject->GetUID());
-}
-
-void M_Scene::RefreshGameObjectInNamesMap(GameObject* gameObject)
-{
-	if (gameObject == nullptr)
-	{
-		LOG("[ERROR] Scene: Could not refresh GameObject in Names Map! Error: GameObject* was nullptr.");
-		return;
-	}
-	if (goNamesMap.find(gameObject->prevName) != goNamesMap.end())
-	{
-		goNamesMap.erase(gameObject->prevName);
-		gameObject->prevName = "[NONE]";																		// Re-setting it to avoid conflicts with other GameObjects' names.
-	}
-	if (goNamesMap.find(gameObject->GetName()) != goNamesMap.end())
-	{
-		goNamesMap.erase(gameObject->GetName());																// This implies that each GameObject's name is unique.
-	}
-
-	goNamesMap.emplace(gameObject->GetName(), gameObject->GetUID());
+	gameObjects.push_back(gameObject);
 }
 
 void M_Scene::AddGameObjectToScene(GameObject* gameObject, GameObject* parent)
@@ -776,7 +744,7 @@ void M_Scene::AddGameObjectChildrenToScene(GameObject* gameObject)
 		return;
 	}
 	
-	AddGameObjectToMaps(gameObject);
+	AddGameObjectToVector(gameObject);
 
 	for (auto child = gameObject->childs.begin(); child != gameObject->childs.end(); ++child)
 	{
@@ -841,7 +809,7 @@ GameObject* M_Scene::GenerateGameObjectsFromModel(const R_Model* rModel, const f
 		}
 
 		item->second->GetComponent<C_Transform>()->Translate(float3::zero);						// Dirty way to refresh the transforms after the import is done. TMP Un-hardcode later.
-		AddGameObjectToMaps(item->second);
+		AddGameObjectToVector(item->second);
 	}
 
 	if (parentRoot != nullptr)
@@ -962,7 +930,7 @@ void M_Scene::CreateAnimationComponentFromModel(const R_Model* rModel, GameObjec
 	}
 }
 
-std::map<uint32, GameObject*>* M_Scene::GetGameObjects()
+std::vector<GameObject*>* M_Scene::GetGameObjects()
 {
 	return &gameObjects;
 }
@@ -1048,7 +1016,7 @@ void M_Scene::CreateSceneRoot(const char* sceneName)
 	//scene_root->parent = master_root;
 	//master_root->AddChild(scene_root);
 
-	AddGameObjectToMaps(sceneRoot);
+	AddGameObjectToVector(sceneRoot);
 }
 
 GameObject* M_Scene::GetSceneRoot() const
@@ -1118,10 +1086,12 @@ GameObject* M_Scene::GetGameObjectByUID(uint32 UID)
 		return nullptr;
 	}
 	
-	auto object = gameObjects.find(UID);
-	if (object != gameObjects.end())
+	for (auto object = gameObjects.cbegin(); object != gameObjects.cend(); ++object)
 	{
-		return object->second;
+		if ((*object)->GetUID() == UID)
+		{
+			return (*object);
+		}
 	}
 	
 	return nullptr;
@@ -1135,10 +1105,12 @@ GameObject* M_Scene::GetGameObjectByName(const char* name)
 		return nullptr;
 	}
 	
-	auto goUID = goNamesMap.find(name);																// Finding the GameObject's UID through the Names Map.
-	if (goUID != goNamesMap.end())
+	for (auto object = gameObjects.cbegin(); object != gameObjects.cend(); ++object)
 	{
-		return GetGameObjectByUID(goUID->second);													// Finding the GameObject's pointer through the gameObjects Map.
+		if (strcmp((*object)->GetName(), name) == 0)
+		{
+			return (*object);
+		}
 	}
 
 	return nullptr;
@@ -1247,8 +1219,8 @@ void M_Scene::GetRaycastHits(const LineSegment& ray, std::map<float, GameObject*
 {
 	for (auto object = gameObjects.cbegin(); object != gameObjects.cend(); ++object)
 	{
-		float3 position = object->second->GetComponent<C_Transform>()->GetWorldPosition();
-		hits.emplace(ray.Distance(position), object->second);
+		float3 position = (*object)->GetComponent<C_Transform>()->GetWorldPosition();
+		hits.emplace(ray.Distance(position), (*object));
 	}
 }
 
@@ -1282,7 +1254,7 @@ void M_Scene::AddSceneLight(GameObject* light)
 		return;
 	}
 	
-	AddGameObjectToMaps(light);
+	AddGameObjectToVector(light);
 }
 
 bool M_Scene::CheckSceneLight()
@@ -1292,7 +1264,7 @@ bool M_Scene::CheckSceneLight()
 	
 	for (auto object = gameObjects.cbegin(); object != gameObjects.cend(); ++object)
 	{
-		if (object->second->GetComponent<C_Light>() != nullptr)
+		if ((*object)->GetComponent<C_Light>() != nullptr)
 			return true;
 	}
 	
@@ -1306,7 +1278,7 @@ bool M_Scene::SceneHasLights()
 
 	for (auto object = gameObjects.cbegin(); object != gameObjects.cend(); ++object)
 	{
-		if (object->second->GetComponent<C_Light>() != nullptr)
+		if ((*object)->GetComponent<C_Light>() != nullptr)
 			return true;
 	}
 	
@@ -1320,8 +1292,8 @@ void M_Scene::GetAllLights(std::vector<GameObject*>& allLights)
 	
 	for (auto object = gameObjects.cbegin(); object != gameObjects.cend(); ++object)
 	{
-		if (object->second->GetComponent<C_Light>() != nullptr)
-			allLights.push_back(object->second);
+		if ((*object)->GetComponent<C_Light>() != nullptr)
+			allLights.push_back((*object));
 	}
 }
 
@@ -1332,11 +1304,11 @@ void M_Scene::GetDirLights(std::vector<GameObject*>& dirLights)
 	
 	for (auto object = gameObjects.cbegin(); object != gameObjects.cend(); ++object)
 	{
-		C_Light* light = object->second->GetComponent<C_Light>();
+		C_Light* light = (*object)->GetComponent<C_Light>();
 		if (light != nullptr)
 		{
 			if (light->GetLightType() == LightType::DIRECTIONAL)
-				dirLights.push_back(object->second);
+				dirLights.push_back((*object));
 		}
 	}
 }
@@ -1348,11 +1320,11 @@ void M_Scene::GetPointLights(std::vector<GameObject*>& pointLights)
 
 	for (auto object = gameObjects.cbegin(); object != gameObjects.cend(); ++object)
 	{
-		C_Light* light = object->second->GetComponent<C_Light>();
+		C_Light* light = (*object)->GetComponent<C_Light>();
 		if (light != nullptr)
 		{
 			if (light->GetLightType() == LightType::POINTLIGHT)
-				pointLights.push_back(object->second);
+				pointLights.push_back((*object));
 		}
 	}
 }
@@ -1389,6 +1361,11 @@ void M_Scene::HandleCopyGO() //TODO Cntrl + c / Cntrl + v
 void M_Scene::ResolveScriptGoPointer(const uint32 uid, GameObject** object)
 {
 	toAdd.push_back({uid, object});
+}
+
+LevelGenerator M_Scene::GetLevelGenerator()
+{
+	return level;
 }
 
 void M_Scene::DeleteSelectedGameObject()

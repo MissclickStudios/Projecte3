@@ -9,7 +9,6 @@
 #include "M_ResourceManager.h"
 #include "M_Camera3D.h"
 #include "M_Window.h"
-//#include "M_Editor.h"
 #include "M_Audio.h"
 #include "M_Physics.h"
 
@@ -66,15 +65,15 @@ void Player::Awake()
 	if (!gameObject->GetComponent<C_RigidBody>())
 		gameObject->CreateComponent(ComponentType::RIGIDBODY);
 
-	std::map<uint32, GameObject*>* objects = App->scene->GetGameObjects();
-	for (auto o = objects->begin(); o != objects->end(); ++o)
+	std::vector<GameObject*>* gameObjects = App->scene->GetGameObjects();
+	for (auto object = gameObjects->begin(); object != gameObjects->end(); ++object)
 	{
-		std::string name = o->second->GetName();
+		std::string name = (*object)->GetName();
 		LOG("%s", name.c_str());
 		if (name == "Blaster")
-			blasterModel = o->second;
+			blasterModel = (*object);
 		else if (name == "Sniper")
-			sniperModel = o->second;
+			sniperModel = (*object);
 	}
 	if (blasterModel)
 		blasterModel->SetIsActive(true);
@@ -97,6 +96,7 @@ void Player::Update()
 		if (!rigidBody || rigidBody->IsStatic())
 			return;
 		rigidBody->SetLinearVelocity(float3::zero);
+		App->scene->GetLevelGenerator().InitiateLevel(1);
 
 		return;
 	}
@@ -504,13 +504,13 @@ void Player::GetAimVectorAxis(int& axisX, int& axisY)
 
 void Player::HandleAmmo(int ammo)
 {
-	std::map<uint32, GameObject*>::const_iterator it = App->scene->GetGameObjects()->cbegin();
+	std::vector<GameObject*>::const_iterator it = App->scene->GetGameObjects()->cbegin();
 
 	for (it; it != App->scene->GetGameObjects()->cend(); ++it)
 	{
-		if (strstr(it->second->GetName(), "PrimaryWeapon") != nullptr)
+		if (strstr((*it)->GetName(), "PrimaryWeapon") != nullptr)
 		{
-			ammoUi = it->second;
+			ammoUi = (*it);
 		}
 	}
 
@@ -541,23 +541,23 @@ void Player::HandleAmmo(int ammo)
 
 void Player::HandleHp()
 {
-	std::map<uint32, GameObject*>::const_iterator it = App->scene->GetGameObjects()->cbegin();
+	std::vector<GameObject*>::const_iterator it = App->scene->GetGameObjects()->cbegin();
 
 	for (it; it != App->scene->GetGameObjects()->cend(); ++it)
 	{
-		if (strstr(it->second->GetName(), "Heart") != nullptr)
+		if (strstr((*it)->GetName(), "Heart") != nullptr)
 		{
-			if (strstr(it->second->GetName(), "1") != nullptr)
+			if (strstr((*it)->GetName(), "1") != nullptr)
 			{
-				hearts[0] = it->second;
+				hearts[0] = (*it);
 			}
-			else if (strstr(it->second->GetName(), "2") != nullptr)
+			else if (strstr((*it)->GetName(), "2") != nullptr)
 			{
-				hearts[1] = it->second;
+				hearts[1] = (*it);
 			}
-			else if (strstr(it->second->GetName(), "3") != nullptr)
+			else if (strstr((*it)->GetName(), "3") != nullptr)
 			{
-				hearts[2] = it->second;
+				hearts[2] = (*it);
 			}
 		}
 	}

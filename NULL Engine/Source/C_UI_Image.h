@@ -5,6 +5,26 @@
 
 #include "Component.h"
 
+const float texCoordsBuffer[] = {
+-1, -1,
+1, -1,
+-1, 1,
+1, -1,
+1, 1,
+-1, 1,
+};
+
+const float vertices[] = {
+	// pos      // tex
+	0.0f, 1.0f, 0.0f, 1.0f,
+	1.0f, 0.0f, 1.0f, 0.0f,
+	0.0f, 0.0f, 0.0f, 0.0f,
+
+	0.0f, 1.0f, 0.0f, 1.0f,
+	1.0f, 1.0f, 1.0f, 1.0f,
+	1.0f, 0.0f, 1.0f, 0.0f
+};
+
 class NULL_API C_UI_Image : public Component
 {
 public:
@@ -20,6 +40,8 @@ public:
 	bool LoadState(ParsonNode& root) override;
 
 	static inline ComponentType GetType() { return ComponentType::UI_IMAGE; }
+
+	void LoadBuffers();
 
 	void Draw2D();
 	void Draw3D();
@@ -37,6 +59,13 @@ public:
 private:
 
 	Rect2D rect = { 0,0,50,50 };
+
+	uint VAO;
+	uint VBO;
+	
+
+
+	R_Shader* rShader;
 };
 
 #endif // !__C_UI_IMAGE_H__

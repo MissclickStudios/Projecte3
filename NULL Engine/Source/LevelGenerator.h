@@ -6,7 +6,7 @@
 #include <string>
 class R_Scene;
 
-class LevelGenerator
+class NULL_API LevelGenerator
 {
 public:
 
