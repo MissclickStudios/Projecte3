@@ -36,12 +36,11 @@
 #include "C_CapsuleCollider.h"
 #include "C_PlayerController.h"
 #include "C_BulletBehavior.h"
-//#include "C_ParticleSystem.h"
+#include "C_ParticleSystem.h"
 #include "C_PropBehavior.h"
 #include "C_CameraBehavior.h"
 #include "C_GateBehavior.h"
 #include "C_Canvas.h"
-#include "C_Particles.h"
 #include "C_UI_Image.h"
 #include "C_UI_Text.h"
 #include "C_UI_Button.h"
@@ -1237,6 +1236,28 @@ void E_Inspector::DrawParticleSystemComponent(C_ParticleSystem* cParticleSystem)
 					if (ImGui::Checkbox("Preview", &preview))
 					{
 						cParticleSystem->EnginePreview(preview);
+					}
+
+					bool stop = cParticleSystem->stopSpawn;
+					if (ImGui::Checkbox("Stop Spawn", &stop))
+					{
+						cParticleSystem->stopSpawn = stop;
+						if (stop == true)
+						{
+							cParticleSystem->StopSpawn();
+						}
+						else
+						{
+							cParticleSystem->ResumeSpawn();
+						}
+						
+					}
+
+					bool stopDelete = cParticleSystem->tempDelete;
+					if (ImGui::Checkbox("Stop And Delete", &stopDelete))
+					{
+						cParticleSystem->tempDelete = stopDelete;
+						cParticleSystem->StopAndDelete();
 					}
 
 					ImGui::Combo("###", &moduleType, "Add Module\0ParticleMovement\0ParticleColor\0ParticleLifetime\0ParticleRotation\0ParticleSize\0ParticleBillboarding");

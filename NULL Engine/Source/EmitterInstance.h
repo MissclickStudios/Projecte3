@@ -40,6 +40,8 @@ public:
 
 	Emitter* emitter = nullptr;
 	C_ParticleSystem* component = nullptr;
+
+	bool stopSpawn = false;
 };
 
 #endif //!__EMITTER_INSTANCE_H__

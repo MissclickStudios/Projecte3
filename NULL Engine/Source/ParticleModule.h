@@ -67,6 +67,8 @@ struct EmitterSpawn : ParticleModule
 
 	float spawnRatio = 0.05f;
 	float timer = 0.0f;
+
+	bool hideSpawn = false;
 };
 
 struct ParticleMovement : ParticleModule

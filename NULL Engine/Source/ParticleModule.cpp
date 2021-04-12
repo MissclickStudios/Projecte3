@@ -31,7 +31,6 @@ void EmitterBase::Spawn(EmitterInstance* emitter, Particle* particle)
 	position += origin;
 	particle->position = position;
 
-	//temporary
 	Quat rotation = go->GetComponent<C_Transform>()->GetWorldRotation();
 	particle->worldRotation = rotation;
 }
@@ -70,11 +69,15 @@ void EmitterSpawn::Spawn(EmitterInstance* emitter, Particle* particle)
 
 void EmitterSpawn::Update(float dt, EmitterInstance* emitter)
 {
-	timer += dt;
-	if (timer >= spawnRatio)
+	if (hideSpawn == false)
 	{
-		timer = 0;
-		emitter->SpawnParticle(); //SpawnParticle() will then call the Spawn() method in every particle module
+		timer += dt;
+		if (timer >= spawnRatio)
+		{
+			timer = 0;
+			emitter->
+				SpawnParticle(); //SpawnParticle() will then call the Spawn() method in every particle module
+		}
 	}
 }
 
@@ -194,9 +197,6 @@ void ParticleLifetime::Update(float dt, EmitterInstance* emitter)
 			Particle* particle = &emitter->particles[particleIndex];
 
 			particle->currentLifetime += dt;
-
-			//particle->currentLifetime += (1 / particle->maxLifetime) * dt;
-			//when the relative lifetime equals or excedes 1.0f, the particle is killed by the emitter instance with KillDeadParticles()
 		}
 	}
 	if (eraseLifetime == true)

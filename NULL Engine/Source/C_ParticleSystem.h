@@ -28,15 +28,27 @@ public:
 	void AddDefaultEmitter();			//Create a default emitter
 
 	void EnginePreview(bool previewEnabled);
+
+	void StopSpawn();
+	void ResumeSpawn();
+
+	void StopAndDelete();
+
 private:
 	void ClearEmitters();
+	void InternalStopAndDelete();
 
 public:
 	Emitter* defaultEmitter;
 	std::vector<EmitterInstance*> emitterInstances;
 	R_ParticleSystem* resource = nullptr;
 
+	bool stopSpawn = false;
 	bool previewEnabled = false;
+	bool tempDelete = false;
+
+private:
+	bool stopAndDeleteCheck = false;
 };
 
 #endif //!__C_PARTICLES_H__

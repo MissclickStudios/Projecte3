@@ -28,8 +28,7 @@ EmitterInstance::EmitterInstance(Emitter* emitter, C_ParticleSystem* component)
 EmitterInstance::~EmitterInstance()
 {
 	delete emitter;
-	delete[] particleIndices;
-	
+	delete[] particleIndices;	
 }
 
 void EmitterInstance::Init(Emitter* emitter, C_ParticleSystem* component)
@@ -60,7 +59,7 @@ void EmitterInstance::SpawnParticle()
 	//call the emitter reference to use the modules to spawn a particle. 
 	//then add 1 to active particles.
 
-	if (activeParticles == particles.size())
+	if (activeParticles == particles.size() || stopSpawn == true)
 		return;
 
 	unsigned int particleIndex = particleIndices[activeParticles];

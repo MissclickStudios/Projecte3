@@ -2,6 +2,7 @@
 
 #include "I_Particles.h"
 #include "Time.h"
+#include "GameObject.h"
 
 //#include "M_ResourceManager.h"
 
@@ -32,13 +33,11 @@ bool C_ParticleSystem::SaveState(ParsonNode& root) const
 bool C_ParticleSystem::LoadState(ParsonNode& root)
 {
 
-
 	return false;
 }
 
 bool C_ParticleSystem::Update()
 {
-
 	if (previewEnabled == true && Time::Game::GetDT() == 0)
 	{
 		for (unsigned int i = 0; i < emitterInstances.size(); ++i)
@@ -52,6 +51,11 @@ bool C_ParticleSystem::Update()
 		{
 			emitterInstances[i]->Update(Time::Game::GetDT());
 		}
+	}
+
+	if (stopAndDeleteCheck == true)
+	{
+		InternalStopAndDelete();
 	}
 
 	return true;
@@ -78,7 +82,6 @@ void C_ParticleSystem::RefreshEmitters()
 void C_ParticleSystem::NewParticleSystem()
 {
 	resource = new R_ParticleSystem();
-
 }
 
 void C_ParticleSystem::SaveParticleSystem()
@@ -120,6 +123,47 @@ void C_ParticleSystem::EnginePreview(bool previewEnabled)
 
 	ClearEmitters();
 	this->previewEnabled = previewEnabled;
+}
+
+void C_ParticleSystem::StopSpawn()
+{
+	for (int i = 0; i < emitterInstances.size(); i++)
+	{
+		emitterInstances[i]->stopSpawn = true;
+	}
+}
+
+void C_ParticleSystem::ResumeSpawn()
+{
+	for (int i = 0; i < emitterInstances.size(); i++)
+	{
+		emitterInstances[i]->stopSpawn = false;
+	}
+}
+
+void C_ParticleSystem::StopAndDelete()
+{
+	stopAndDeleteCheck = true;
+	StopSpawn();
+}
+
+void C_ParticleSystem::InternalStopAndDelete()
+{
+	bool stopFinished = true;
+	for (int i = 0; i < emitterInstances.size(); i++)
+	{
+		if (emitterInstances[i]->activeParticles > 0)
+		{
+			stopFinished = false;	//if all particles have died, just check next component
+			break;
+		}
+	}
+
+	if (stopFinished == true)
+	{
+		GameObject* owner = this->GetOwner();
+		owner->DeleteComponent(this);
+	}
 }
 
 void C_ParticleSystem::ClearEmitters()
