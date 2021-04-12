@@ -198,6 +198,11 @@ void Resource::SetLibraryPathAndFile()
 	case ResourceType::SCRIPT:
 		directory = SCRIPTS_PATH;
 		extension = SCRIPTS_EXTENSION;
+		break;
+	case ResourceType::PARTICLE_SYSTEM:
+		directory = PARTICLESYSTEMS_PATH;
+		extension = PARTICLESYSTEMS_EXTENSION;
+		break;
 	}
 	
 	libraryPath = directory + file + extension;
