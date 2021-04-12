@@ -330,9 +330,10 @@ void M_EngineScriptManager::DeSerializeAllScripts(const ParsonArray& scriptsArra
 								case InspectorScriptData::DataType::FLOAT:
 									*(float*)(*item).ptr = (float)variable.GetNumber("float"); break;
 								case InspectorScriptData::FLOAT3:
-									(*(float3*)(*item).ptr).x = variable.GetNumber("float3x"); break;
-									(*(float3*)(*item).ptr).y = variable.GetNumber("float3y"); break;
-									(*(float3*)(*item).ptr).z = variable.GetNumber("float3z"); break;
+									(*(float3*)(*item).ptr).x = variable.GetNumber("float3x");
+									(*(float3*)(*item).ptr).y = variable.GetNumber("float3y");
+									(*(float3*)(*item).ptr).z = variable.GetNumber("float3z");
+									break;
 								case InspectorScriptData::STRING:
 									*(std::string*)(*item).ptr = variable.GetString("string"); break;
 								case InspectorScriptData::DataType::PREFAB:

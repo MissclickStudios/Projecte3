@@ -147,9 +147,10 @@ bool C_Script::LoadState(ParsonNode& root)
 						case InspectorScriptData::DataType::FLOAT:
 							*(float*)inspectorVariables[i].ptr = variable.GetNumber("float"); break;
 						case InspectorScriptData::FLOAT3:
-							(*(float3*)inspectorVariables[i].ptr).x = variable.GetNumber("float3x"); break;
-							(*(float3*)inspectorVariables[i].ptr).y = variable.GetNumber("float3y"); break;
-							(*(float3*)inspectorVariables[i].ptr).z = variable.GetNumber("float3z"); break;
+							(*(float3*)inspectorVariables[i].ptr).x = variable.GetNumber("float3x");
+							(*(float3*)inspectorVariables[i].ptr).y = variable.GetNumber("float3y");
+							(*(float3*)inspectorVariables[i].ptr).z = variable.GetNumber("float3z");
+							break;
 						case InspectorScriptData::STRING:
 							*(std::string*)inspectorVariables[i].ptr = variable.GetString("string"); break;
 						case InspectorScriptData::DataType::PREFAB:
