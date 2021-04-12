@@ -29,6 +29,7 @@
 #include "R_Script.h"
 #include "Bullet.h"
 
+#include "LevelGenerator.h"
 #include "Weapon.h"
 
 #include "Time.h"
@@ -127,7 +128,7 @@ void Player::Update()
 			if (!rigidBody || rigidBody->IsStatic())
 				rigidBody->SetIsActive(false);
 
-			App->scene->GetLevelGenerator().InitiateLevel(1);
+			App->scene->GetLevelGenerator()->InitiateLevel(1);
 		}
 		return;
 	}

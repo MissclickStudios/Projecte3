@@ -22,7 +22,6 @@ class R_Model;
 class R_Texture;
 class GameObject;
 class C_Camera;
-//class LevelGenerator;
 
 struct ModelNode;
 
@@ -119,7 +118,9 @@ public:																														// --- SCENE LIGHT METHODS
 
 	void ResolveScriptGoPointer(const uint32 uid, GameObject** object);
 
-	LevelGenerator GetLevelGenerator();
+	void ShowFPS();
+
+	LevelGenerator* GetLevelGenerator();
 	
 private:
 	std::vector<GameObject*> gameObjects;
@@ -130,7 +131,7 @@ private:
 	GameObject*						sceneRoot;																				// Root of the current scene.
 	GameObject*						animationRoot;																			// TMP Just for the 3rd Assignment Delivery
 	GameObject*						selectedGameObject;																		// Represents the game object that's currently being selected.
-
+	GameObject* showFps;
 	//GameObject* copiedGO = nullptr;
 
 	C_Camera*						cullingCamera;																			// Culling Camera
