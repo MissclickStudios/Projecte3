@@ -65,7 +65,7 @@ public:
 
 private:
 
-	Rect2D rect = { 0,0,50,50 };
+	Rect2D rect = { 0,0,0.001,0.001 };
 
 	std::string text; 
 

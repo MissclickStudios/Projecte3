@@ -143,12 +143,12 @@ bool M_UISystem::CheckButtonStates()
 
 	if (hoveredButton != nullptr)
 	{
-		if (App->input->GetKey(SDL_SCANCODE_G) == KeyState::KEY_DOWN || App->input->GetKey(SDL_SCANCODE_G) == KeyState::KEY_REPEAT)
+		if (App->input->GetKey(SDL_SCANCODE_RETURN) == KeyState::KEY_DOWN || App->input->GetKey(SDL_SCANCODE_RETURN) == KeyState::KEY_REPEAT || App->input->GetGameControllerButton(0) == ButtonState::BUTTON_DOWN || App->input->GetGameControllerButton(0) == ButtonState::BUTTON_REPEAT)
 		{
 			hoveredButton->OnPressed();
 		}
 
-		else if (App->input->GetKey(SDL_SCANCODE_G) == KeyState::KEY_UP)
+		else if (App->input->GetKey(SDL_SCANCODE_RETURN) == KeyState::KEY_UP || App->input->GetGameControllerButton(0) == ButtonState::BUTTON_UP)
 		{
 			hoveredButton->OnReleased(); /*(?)*/
 		}
@@ -159,7 +159,7 @@ bool M_UISystem::CheckButtonStates()
 			bool prev = false;
 			bool next = false;
 
-			if (App->input->GetKey(SDL_SCANCODE_T) == KeyState::KEY_DOWN && !hoveredButton->IsPressed())
+			if ((App->input->GetKey(SDL_SCANCODE_UP) == KeyState::KEY_DOWN || App->input->GetGameControllerAxis(0) == AxisState::POSITIVE_AXIS_DOWN)&& !hoveredButton->IsPressed())
 			{
 				for (std::vector<C_UI_Button*>::reverse_iterator buttonIt = activeButtons.rbegin(); buttonIt != activeButtons.rend(); buttonIt++)
 				{
@@ -182,7 +182,7 @@ bool M_UISystem::CheckButtonStates()
 					hoveredButton->SetState(UIButtonState::HOVERED);
 			}
 
-			if (App->input->GetKey(SDL_SCANCODE_B) == KeyState::KEY_DOWN && !hoveredButton->IsPressed())
+			if ((App->input->GetKey(SDL_SCANCODE_DOWN) == KeyState::KEY_DOWN || App->input->GetGameControllerAxis(0) == AxisState::NEGATIVE_AXIS_DOWN) && !hoveredButton->IsPressed())
 			{
 				for (std::vector<C_UI_Button*>::iterator buttonIt = activeButtons.begin(); buttonIt != activeButtons.end(); buttonIt++)
 				{

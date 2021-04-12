@@ -33,17 +33,13 @@
 C_UI_Text::C_UI_Text(GameObject* owner, Rect2D rect) : Component(owner, ComponentType::UI_TEXT),
 VAO(0),
 VBO(0),
-color(1,1,1,1)
+color(0,0,0,1)
 {
 	text = "Some Text";
 	rShader = App->resourceManager->GetShader("FontShader");
 	GenerateTextureID();
 	LoadBuffers();
 
-	SetW(0.001);
-	SetH(0.002);
-	SetX(0);
-	SetY(0);
 }
 
 C_UI_Text::~C_UI_Text()
@@ -240,7 +236,7 @@ void C_UI_Text::GenerateTextureID()
 		LOG("ERROR::FREETYPE: Could not init FreeType Library");
 		return;
 	}
-	if (FT_New_Face(ft, "Assets/Fonts/arial.ttf", 0, &face))
+	if (FT_New_Face(ft, "Assets/Fonts/starWars.otf", 0, &face))
 	{
 		LOG("ERROR::FREETYPE: Failed to load font");
 		return;
