@@ -175,6 +175,18 @@ Quat ParsonNode::GetQuat(const const char* name)
 	return quat;
 }
 
+Color ParsonNode::GetColor(const char* name)
+{
+	JSON_Array* tempArray = json_object_get_array(rootNode, name);
+	Color color;
+	color.r = json_array_get_number(tempArray, 0);
+	color.g = json_array_get_number(tempArray, 1);
+	color.b = json_array_get_number(tempArray, 2);
+	color.a = json_array_get_number(tempArray, 3);
+
+	return color;
+}
+
 const char* ParsonNode::GetString(const char* name) const
 {
 	if (NodeHasValueOfType(name, JSONString))
@@ -289,6 +301,23 @@ void ParsonNode::SetFloat4(const const char* name, const float4 float4)
 	json_array_append_number(tempArray, float4.y);
 	json_array_append_number(tempArray, float4.z);
 	json_array_append_number(tempArray, float4.w);
+}
+
+void ParsonNode::SetColor(const char* name, const Color color)
+{
+	JSON_Array* tempArray = json_object_get_array(rootNode, name);
+	if (tempArray == nullptr) {
+		JSON_Value* val = json_value_init_array();
+		tempArray = json_value_get_array(val);
+		json_object_dotset_value(rootNode, name, val);
+	}
+	else {
+		json_array_clear(tempArray);
+	}
+	json_array_append_number(tempArray, color.r);
+	json_array_append_number(tempArray, color.g);
+	json_array_append_number(tempArray, color.b);
+	json_array_append_number(tempArray, color.a);
 }
 
 void ParsonNode::SetQuat(const const char* name, const Quat quat)

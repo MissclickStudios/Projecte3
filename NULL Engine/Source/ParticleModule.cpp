@@ -1,11 +1,11 @@
 #include "JSONParser.h"
-
+#include "C_ParticleSystem.h"
 #include "ParticleModule.h"
 
 #include "GameObject.h"
 #include "Emitter.h"
 #include "EmitterInstance.h"
-#include "C_ParticleSystem.h"
+
 #include "C_Transform.h"
 #include "M_Camera3D.h"
 #include "Application.h"
@@ -31,7 +31,6 @@ void EmitterBase::Spawn(EmitterInstance* emitter, Particle* particle)
 	position += origin;
 	particle->position = position;
 
-	//temporary
 	Quat rotation = go->GetComponent<C_Transform>()->GetWorldRotation();
 	particle->worldRotation = rotation;
 }
@@ -44,7 +43,7 @@ void EmitterBase::Update(float dt, EmitterInstance* emitter)
 		unsigned int particleIndex = emitter->particleIndices[i];
 		Particle* particle = &emitter->particles[particleIndex];
 
-		//update distance to camera.
+		particle->distanceToCamera = float3(App->camera->GetCurrentCamera()->GetFrustum().WorldMatrix().TranslatePart() - particle->position).LengthSq();
 	}
 	
 }
@@ -70,16 +69,21 @@ void EmitterSpawn::Spawn(EmitterInstance* emitter, Particle* particle)
 
 void EmitterSpawn::Update(float dt, EmitterInstance* emitter)
 {
-	timer += dt;
-	if (timer >= spawnRatio)
+	if (hideSpawn == false)
 	{
-		timer = 0;
-		emitter->SpawnParticle(); //SpawnParticle() will then call the Spawn() method in every particle module
+		timer += dt;
+		if (timer >= spawnRatio)
+		{
+			timer = 0;
+			emitter->
+				SpawnParticle(); //SpawnParticle() will then call the Spawn() method in every particle module
+		}
 	}
 }
 
 void ParticleMovement::Save(ParsonNode& node)
 {
+	//TODO PARTICLE SYSTEM
 	node.SetInteger("Type", (int)type);
 
 	node.SetNumber("initialIntensity1",initialIntensity1);
@@ -88,16 +92,28 @@ void ParticleMovement::Save(ParsonNode& node)
 	node.SetFloat3("initialDirection1",initialDirection1);
 	node.SetFloat3("initialDirection2", initialDirection2);
 
-	float3 initialPosition1 = float3::zero;
-	float3 initialPosition2 = float3::zero;
+	node.SetFloat3("initialPosition1",initialPosition1);
+	node.SetFloat3("initialPosition2", initialPosition2);
 
-	bool hideMovement = false;
-	bool eraseMovement = false;
+	node.SetBool("hideMovement", hideMovement);
+	node.SetBool("eraseMovement", eraseMovement);
 }
 
 void ParticleMovement::Load(ParsonNode& node)
 {
+	node.SetInteger("Type", (int)type);
 
+	initialIntensity1 = node.GetNumber("initialIntensity1");
+	initialIntensity2 = node.GetNumber("initialIntensity2");
+
+	initialDirection1 = node.GetFloat3("initialDirection1");
+	initialDirection2 = node.GetFloat3("initialDirection2");
+
+	initialPosition1 = node.GetFloat3("initialPosition1");
+	initialPosition2 = node.GetFloat3("initialPosition2");
+
+	hideMovement = node.GetBool("hideMovement");
+	eraseMovement = node.GetBool("eraseMovement");
 }
 
 void ParticleMovement::Spawn(EmitterInstance* emitter, Particle* particle)
@@ -125,18 +141,26 @@ void ParticleMovement::Update(float dt, EmitterInstance* emitter)
 	}
 	if (eraseMovement == true)
 	{
-		emitter->emitter->DeleteModuleFromType(ParticleModule::Type::ParticleMovement);
+		emitter->emitter->DeleteModuleFromType(ParticleModule::Type::PARTICLE_MOVEMENT);
 	}
 }
 
 void ParticleColor::Save(ParsonNode& node)
 {
-	node.SetInteger("Type", (int)type);
+	node.SetInteger("Type", (int)type);//TODO PARTICLE SYSTEM
+
+	node.SetColor("initialColor",initialColor);
+
+	node.SetBool("hideColor",hideColor);
+	node.SetBool("eraseColor", eraseColor);
 }
 
 void ParticleColor::Load(ParsonNode& node)
 {
+	initialColor = node.GetColor("initialColor");
 
+	hideColor = node.GetBool("hideColor");
+	eraseColor = node.GetBool("eraseColor");
 }
 
 void ParticleColor::Spawn(EmitterInstance* emitter, Particle* particle)
@@ -163,18 +187,26 @@ void ParticleColor::Update(float dt, EmitterInstance* emitter)
 	}*/
 	if (eraseColor == true)
 	{
-		emitter->emitter->DeleteModuleFromType(ParticleModule::Type::ParticleColor);
+		emitter->emitter->DeleteModuleFromType(ParticleModule::Type::PARTICLE_COLOR);
 	}
 }
 
 void ParticleLifetime::Save(ParsonNode& node)
 {
-	node.SetInteger("Type", (int)type);
+	node.SetInteger("Type", (int)type);//TODO PARTICLE SYSTEM
+
+	node.SetNumber("initialLifetime", initialLifetime);
+
+	node.SetBool("hideLifetime", hideLifetime);
+	node.SetBool("eraseLifetime", eraseLifetime);
 }
 
 void ParticleLifetime::Load(ParsonNode& node)
 {
+	initialLifetime = node.GetNumber("initialLifetime");
 
+	hideLifetime = node.GetBool("hideLifetime");
+	eraseLifetime = node.GetBool("eraseLifetime");
 }
 
 void ParticleLifetime::Spawn(EmitterInstance* emitter, Particle* particle)
@@ -193,25 +225,30 @@ void ParticleLifetime::Update(float dt, EmitterInstance* emitter)
 			Particle* particle = &emitter->particles[particleIndex];
 
 			particle->currentLifetime += dt;
-
-			//particle->currentLifetime += (1 / particle->maxLifetime) * dt;
-			//when the relative lifetime equals or excedes 1.0f, the particle is killed by the emitter instance with KillDeadParticles()
 		}
 	}
 	if (eraseLifetime == true)
 	{
-		emitter->emitter->DeleteModuleFromType(ParticleModule::Type::ParticleLifetime);
+		emitter->emitter->DeleteModuleFromType(ParticleModule::Type::PARTICLE_LIFETIME);
 	}
 }
 
 void ParticleBillboarding::Save(ParsonNode& node)
 {
 	node.SetInteger("Type", (int)type);
+
+	node.SetInteger("billboardingType",(int)billboardingType);
+
+	node.SetBool("hideBillboarding", hideBillboarding);
+	node.SetBool("eraseBillboarding", eraseBillboarding);
 }
 
 void ParticleBillboarding::Load(ParsonNode& node)
 {
+	billboardingType = (BillboardingType)node.GetInteger("billboardingType");
 
+	hideBillboarding = node.GetBool("hideBillboarding");
+	eraseBillboarding = node.GetBool("eraseBillboarding");
 }
 
 void ParticleBillboarding::Spawn(EmitterInstance* emitter, Particle* particle)
@@ -234,7 +271,7 @@ void ParticleBillboarding::Update(float dt, EmitterInstance* emitter)
 	 
 	if (eraseBillboarding == true)
 	{
-		emitter->emitter->DeleteModuleFromType(ParticleModule::Type::ParticleBillboarding);
+		emitter->emitter->DeleteModuleFromType(ParticleModule::Type::PARTICLE_BILLBOARDING);
 	}
 }
 
