@@ -1,6 +1,7 @@
 #include "Application.h"
 #include "M_Scene.h"
-//#include "C_UI_Button.h"
+#include "C_Canvas.h"
+#include "C_UI_Button.h"
 
 #include "GameObject.h"
 #include "MainMenuManager.h"
@@ -21,8 +22,12 @@ void MainMenuManager::Start()
 
 void MainMenuManager::Update()
 {
-	//if (playButton->IsPressed())
-	//{
-	//	//App->scene->GetLevel()->InitiateLevel(1);
-	//}
+	if (playButton != nullptr)
+	{
+		if (playButton->IsPressed())
+		{
+			App->scene->GetLevelGenerator().InitiateLevel(1);
+		}
+	}
+	
 }

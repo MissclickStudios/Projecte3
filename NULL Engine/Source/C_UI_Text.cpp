@@ -236,7 +236,7 @@ void C_UI_Text::GenerateTextureID()
 		LOG("ERROR::FREETYPE: Could not init FreeType Library");
 		return;
 	}
-	if (FT_New_Face(ft, "Assets/Fonts/starWars.otf", 0, &face))
+	if (FT_New_Face(ft, "Assets/Fonts/zekton_rg.ttf", 0, &face))
 	{
 		LOG("ERROR::FREETYPE: Failed to load font");
 		return;
