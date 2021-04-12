@@ -154,6 +154,8 @@ private:
 	R_Texture* full = nullptr;
 	R_Texture* half = nullptr;
 	R_Texture* empty = nullptr;
+
+	bool load = true;
 };
 
 SCRIPTS_FUNCTION Player* CreatePlayer();
