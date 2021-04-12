@@ -671,10 +671,10 @@ void M_Renderer3D::RenderScene()
 		primitives[i]->RenderByIndices();
 	}
 	
+	defaultSkyBox.RenderSkybox();
 
 	RenderUI();
 	
-	//defaultSkyBox.RenderSkybox();
 
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 	

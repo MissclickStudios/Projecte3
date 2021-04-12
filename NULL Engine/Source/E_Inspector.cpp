@@ -1592,7 +1592,7 @@ void E_Inspector::DrawUITextComponent(C_UI_Text* text)
 		if (ImGui::DragFloat2("Text Pos", (float*)&pos, 0.05f, 0.0f, 0.0f, "%.3f", NULL))
 		{
 
-			if (pos.x > canvas->GetPosition().x + canvas->GetSize().x - offset)
+			if (pos.x > canvas->GetPosition().x + canvas->GetSize().x - offset )
 				pos.x = canvas->GetPosition().x + canvas->GetSize().x - offset;
 
 			else if (pos.x - size.x < canvas->GetPosition().x - canvas->GetSize().x + offset)
