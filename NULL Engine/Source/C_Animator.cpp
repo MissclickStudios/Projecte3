@@ -492,6 +492,9 @@ void C_Animator::GenerateBoneSegments(const GameObject* bone)
 
 	for (uint i = 0; i < bone->childs.size(); ++i)
 	{
+		if (!bone->childs[i]->isBone)
+			continue;
+
 		LineSegment displayBone = { float3::zero, float3::zero };
 
 		displayBone.a = boneTransform->GetWorldPosition();

@@ -9,7 +9,7 @@
 #include "M_ResourceManager.h"
 #include "M_Camera3D.h"
 #include "M_Window.h"
-#include "M_Editor.h"
+//#include "M_Editor.h"
 #include "M_Audio.h"
 #include "M_Physics.h"
 
