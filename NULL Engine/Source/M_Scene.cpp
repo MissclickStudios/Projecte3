@@ -31,6 +31,8 @@
 #include "C_Animator.h"
 #include "C_Light.h"
 #include "C_UI_Button.h"
+#include "C_AudioSource.h"
+#include "C_AudioListener.h"
 
 #include "Primitive.h"
 
@@ -103,6 +105,14 @@ bool M_Scene::Start()
 	//LoadScene("Assets/Scenes/UITestScene.json");
 	//SaveScene("SceneAutosave");																			// Autosave just right after loading the scene.
 
+	C_AudioListener* listener = new C_AudioListener(masterRoot);
+
+	music = new C_AudioSource(masterRoot);
+
+	music->SetEvent("background", 3650723969);
+
+	music->PlayFx(music->GetEventId());
+
 	return ret;
 }
 
@@ -112,7 +122,7 @@ UpdateStatus M_Scene::Update(float dt)
 	OPTICK_CATEGORY("M_Scene Update", Optick::Category::Module)
 
 	HandleCopyGO();
-	
+
 	std::vector<MeshRenderer>		meshRenderers;
 	std::vector<CuboidRenderer>		cuboidRenderers;
 	std::vector<SkeletonRenderer>	skeletonRenderers;

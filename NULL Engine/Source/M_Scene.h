@@ -14,6 +14,7 @@ namespace math
 	class float3;
 }
 
+class C_AudioSource;
 class ParsonNode;
 class Primitive;
 class Resource;
@@ -134,6 +135,8 @@ private:
 	//GameObject* copiedGO = nullptr;
 
 	C_Camera*						cullingCamera;																			// Culling Camera
+
+	C_AudioSource*					music = nullptr;
 
 	LevelGenerator					level;
 
