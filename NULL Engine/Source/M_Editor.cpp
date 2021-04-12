@@ -74,11 +74,11 @@ wantToSaveScene (new E_WantToSaveScene())
 	AddEditorPanel(configuration);
 	AddEditorPanel(hierarchy);
 	AddEditorPanel(resources);
-	AddEditorPanel(inspector);
 	AddEditorPanel(timeline);
 	AddEditorPanel(navigation);
-	AddEditorPanel(project);
+	AddEditorPanel(inspector);
 	AddEditorPanel(console);
+	AddEditorPanel(project);
 	AddEditorPanel(viewport);
 	AddEditorPanel(imguiDemo);
 	AddEditorPanel(about);

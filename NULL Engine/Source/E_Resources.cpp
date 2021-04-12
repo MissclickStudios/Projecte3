@@ -85,7 +85,7 @@ bool E_Resources::Draw(ImGuiIO& io)
 	ImGui::Text("Num Textures:");	ImGui::SameLine();	ImGui::TextColored(&Yellow, "  %u",		textures);
 	ImGui::Text("Num Animations:");	ImGui::SameLine();	ImGui::TextColored(&Yellow, "%u",		animations);
 	ImGui::Text("Num Shaders:");	ImGui::SameLine();	ImGui::TextColored(&Yellow, "   %u",	shaders);
-	ImGui::Text("Num Scripts:");	ImGui::SameLine();	ImGui::TextColored(&Yellow, "	%u",	scripts);
+	ImGui::Text("Num Scripts:");	ImGui::SameLine();	ImGui::TextColored(&Yellow, "   %u",	scripts);
 	
 	ImGui::End();
 	
