@@ -34,6 +34,9 @@ void Skybox::SetUpSkyBoxBuffers()
 	glGenBuffers(1, (GLuint*)&(skyboxId));
 	glBindBuffer(GL_ARRAY_BUFFER, skyboxId);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 36 * 3, skyboxVertices, GL_STATIC_DRAW);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, (GLvoid*)0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 void Skybox::CreateSkybox()
@@ -81,8 +84,8 @@ void Skybox::CreateSkybox()
 void Skybox::RenderSkybox()
 {
 
-	glDepthMask(GL_FALSE);
-	glCullFace(GL_FRONT);
+	/*glDepthMask(GL_FALSE);
+	glCullFace(GL_FRONT);*/
 	glDepthFunc(GL_LEQUAL);
 	
 	if (skyboxProgramId == 0)
@@ -110,24 +113,23 @@ void Skybox::RenderSkybox()
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, skyboxTexId);
 
-	glEnableClientState(GL_VERTEX_ARRAY);
 	glBindBuffer(GL_ARRAY_BUFFER, skyboxId);
-	glVertexPointer(3, GL_FLOAT, 0, NULL);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
 
 	glDrawArrays(GL_TRIANGLES, 0, 36);
-	glDisableClientState(GL_VERTEX_ARRAY);
 
-	glDepthMask(GL_TRUE);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
 	glDepthFunc(GL_LESS);
-
-	glActiveTexture(GL_TEXTURE0);
 	glUseProgram(0);
 
-	
 }
 
 void Skybox::CleanUp()
 {
 	glDeleteVertexArrays(1, &skyboxId);
 	glDeleteBuffers(1, &skyboxId);
+	//glDeleteTextures(1, &skyboxTexId);
 }
