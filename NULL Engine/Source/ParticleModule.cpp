@@ -43,7 +43,7 @@ void EmitterBase::Update(float dt, EmitterInstance* emitter)
 		unsigned int particleIndex = emitter->particleIndices[i];
 		Particle* particle = &emitter->particles[particleIndex];
 
-		//update distance to camera.
+		particle->distanceToCamera = float3(App->camera->GetCurrentCamera()->GetFrustum().WorldMatrix().TranslatePart() - particle->position).LengthSq();
 	}
 	
 }
