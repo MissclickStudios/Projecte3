@@ -2417,10 +2417,12 @@ void E_Inspector::CallTextEditor(C_Material* cMaterial)
 
 void E_Inspector::DisplayParticleSystemControls(C_ParticleSystem* cParticleSystem)
 {
+	static char buffer[64];
+	
 	//TODO PARTICLE SYSTEM
 	if (ImGui::Button("New Particle System"))
 	{
-		cParticleSystem->NewParticleSystem(); //TODO doesn't appear NewParticleSystem() wtf
+		cParticleSystem->AddParticleSystem(buffer); //TODO doesn't appear NewParticleSystem() wtf
 	}
 
 	ImGui::SameLine();
@@ -2452,7 +2454,7 @@ void E_Inspector::DisplayParticleSystemControls(C_ParticleSystem* cParticleSyste
 
 	// --- Particle System NAME ---
 	ImGui::SetNextItemWidth(ImGui::GetWindowWidth() * 0.33f);
-	static char buffer[64];
+	//static char buffer[64];
 	strcpy_s(buffer, cParticleSystem->resource->name.c_str());
 	if (ImGui::InputText("PS Name", buffer, IM_ARRAYSIZE(buffer), ImGuiInputTextFlags_EnterReturnsTrue))
 	{

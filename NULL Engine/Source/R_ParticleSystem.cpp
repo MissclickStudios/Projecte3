@@ -10,7 +10,7 @@
 
 #include "MemoryManager.h"
 
-R_ParticleSystem::R_ParticleSystem() : Resource(ResourceType::PARTICLES)
+R_ParticleSystem::R_ParticleSystem() : Resource(ResourceType::PARTICLE_SYSTEM)
 {
 
 }
