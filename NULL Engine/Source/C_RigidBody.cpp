@@ -43,11 +43,11 @@ bool C_RigidBody::Update()
 	if (!App->physics->simulating)
 		return true;
 
-	if (toChangeFilter)
-	{
-		toChangeFilter = false;
+	//if (toChangeFilter)
+	//{
+	//	toChangeFilter = false;
 		ChangeFilter(filter);
-	}
+	//}
 
 	if (!isStatic)
 	{
@@ -55,6 +55,7 @@ bool C_RigidBody::Update()
 		{
 			RigidBodyMovesTransform();
 
+			
 			if (toUpdate)
 				ApplyPhysicsChanges();
 
@@ -304,6 +305,7 @@ void C_RigidBody::ApplyPhysicsChanges()
 		dynamicBody->wakeUp();
 	}
 
+	toChangeFilter = true;
 	toUpdate = false;
 }
 

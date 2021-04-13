@@ -452,7 +452,8 @@ bool M_Scene::LoadScene(const char* path)
 			}
 
 			item->second->GetComponent<C_Transform>()->Translate(float3::zero);						// Dirty way to refresh the transforms after the import is done. TMP Un-hardcode later.
-			AddGameObjectToVector(item->second);
+			//AddGameObjectToVector(item->second);
+			gameObjects.push_back(item->second);
 		}
 		
 		tmp.clear();
