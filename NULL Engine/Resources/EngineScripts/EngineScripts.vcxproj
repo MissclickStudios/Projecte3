@@ -241,38 +241,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\Assets\Scripts\Blurrg.h" />
-    <ClInclude Include="..\Assets\Scripts\Bullet.h" />
-    <ClInclude Include="..\Assets\Scripts\CameraMovement.h" />
-    <ClInclude Include="..\Assets\Scripts\Coin.h" />
-    <ClInclude Include="..\Assets\Scripts\FirstScript.h" />
-    <ClInclude Include="..\Assets\Scripts\GameManager.h" />
-    <ClInclude Include="..\Assets\Scripts\Gate.h" />
-    <ClInclude Include="..\Assets\Scripts\MainMenuManager.h" />
-    <ClInclude Include="..\Assets\Scripts\Player.h" />
-    <ClInclude Include="..\Assets\Scripts\Prop.h" />
-    <ClInclude Include="..\Assets\Scripts\SandTrooper.h" />
-    <ClInclude Include="..\Assets\Scripts\SecondScript.h" />
-    <ClInclude Include="..\Assets\Scripts\WeaponPerk.h" />
+    <ClInclude Include="..\Assets\Scripts\Entity.h" />
     <ClInclude Include="Scripts\Headers\ScriptMacros.h" />
-    <ClInclude Include="Scripts\Helpers\Projectile.h" />
-    <ClInclude Include="Scripts\Helpers\Weapon.h" />
+    <ClInclude Include="Scripts\Helpers\EntityEnums.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Scripts\Cpps\Blurrg.cpp" />
-    <ClCompile Include="Scripts\Cpps\Bullet.cpp" />
-    <ClCompile Include="Scripts\Cpps\CameraMovement.cpp" />
-    <ClCompile Include="Scripts\Cpps\Coin.cpp" />
-    <ClCompile Include="Scripts\Cpps\FirstScript.cpp" />
-    <ClCompile Include="Scripts\Cpps\GameManager.cpp" />
-    <ClCompile Include="Scripts\Cpps\Gate.cpp" />
-    <ClCompile Include="Scripts\Cpps\MainMenuManager.cpp" />
-    <ClCompile Include="Scripts\Cpps\Player.cpp" />
-    <ClCompile Include="Scripts\Cpps\Prop.cpp" />
-    <ClCompile Include="Scripts\Cpps\SandTrooper.cpp" />
-    <ClCompile Include="Scripts\Cpps\SecondScript.cpp" />
-    <ClCompile Include="Scripts\Cpps\WeaponPerk.cpp" />
-    <ClCompile Include="Scripts\Helpers\Weapon.cpp" />
+    <ClCompile Include="Scripts\Cpps\Entity.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
