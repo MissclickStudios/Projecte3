@@ -8,20 +8,26 @@
 #include "Prefab.h"
 
 class GameObject;
+class C_UI_Text;
 
 class SCRIPTS_API GameManager : public Script {
 public:
-	GameManager();
-	~GameManager();
-	/*void Awake() override;
-	void Start() override;
-	void PreUpdate()override;
-	void Update() override;
-	void PostUpdate()override;
-	void CleanUp()override;*/
+    GameManager();
+    ~GameManager();
+    //void Awake() override;
+    void Start() override;
+    //void PreUpdate()override;
+    void Update() override;
+    //void PostUpdate()override;
+    //void CleanUp()override;
+
+    std::string fpsText = "Enter a GO name";
+
+    C_UI_Text* fpsCount;
 };
 
 SCRIPTS_FUNCTION GameManager* CreateGameManager() {
-	GameManager* script = new GameManager();
-	return script;
+    GameManager* script = new GameManager();
+    INSPECTOR_STRING(script->fpsText);
+    return script;
 }

@@ -122,6 +122,8 @@ struct ParticleRenderer
 {
 	ParticleRenderer(R_Texture* mat, Color color, const float4x4 transform);
 
+	void Render();
+
 	R_Texture* mat;
 	Color color;
 	float4x4 transform;
