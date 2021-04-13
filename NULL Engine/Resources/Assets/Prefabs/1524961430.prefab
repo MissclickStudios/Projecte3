@@ -1,9 +1,9 @@
 {
-    "UID": 729720796,
+    "UID": 2051110063,
     "ParentUID": 888400124,
     "PrefabID": 1524961430,
     "IsPrefab": true,
-    "Name": "GameCameraVS2",
+    "Name": "MainCamera",
     "IsActive": true,
     "IsStatic": false,
     "IsSceneRoot": false,
@@ -13,20 +13,20 @@
         {
             "Type": 1,
             "LocalPosition": [
-                -2.6892490386962891,
-                93.011032104492188,
-                113.77838134765625
+                1.7927045822143555,
+                61.301094055175781,
+                51.677436828613281
             ],
             "LocalRotation": [
-                -0.44619780778884888,
+                -0.44619807600975037,
                 0,
                 0,
-                0.89493435621261597
+                0.89493423700332642
             ],
             "LocalScale": [
                 1,
-                1.0000003576278687,
-                1.0000003576278687
+                0.99999982118606567,
+                0.99999982118606567
             ]
         },
         {
@@ -51,16 +51,16 @@
                     "Type": 3,
                     "Name": "offset",
                     "float3x": 0,
-                    "float3y": 90,
-                    "float3z": 60
+                    "float3y": 70,
+                    "float3z": 50
                 }
             ]
         }
     ],
     "Children": [
         {
-            "UID": 1413404400,
-            "ParentUID": 729720796,
+            "UID": 75414400,
+            "ParentUID": 2051110063,
             "PrefabID": 1524961430,
             "IsPrefab": true,
             "Name": "Canvas",
@@ -102,62 +102,8 @@
             ],
             "Children": [
                 {
-                    "UID": 30035791,
-                    "ParentUID": 1413404400,
-                    "PrefabID": 1524961430,
-                    "IsPrefab": true,
-                    "Name": "Heart2",
-                    "IsActive": true,
-                    "IsStatic": false,
-                    "IsSceneRoot": false,
-                    "MaintainThroughScenes": false,
-                    "ShowBoundingBoxes": false,
-                    "Components": [
-                        {
-                            "Type": 1,
-                            "LocalPosition": [
-                                0,
-                                0,
-                                0
-                            ],
-                            "LocalRotation": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ],
-                            "LocalScale": [
-                                1,
-                                1,
-                                1
-                            ]
-                        },
-                        {
-                            "Type": 21,
-                            "Image": {
-                                "X": -0.51999998092651367,
-                                "Y": 0.93500000238418579,
-                                "W": 0.125,
-                                "H": 0.20000000298023224,
-                                "IsHDL": false,
-                                "IsHDR": false
-                            }
-                        },
-                        {
-                            "Type": 3,
-                            "Texture": {
-                                "AssetsPath": "Assets\/Textures\/UI\/HUD\/HeartFull.png",
-                                "AssetsName": "HeartFull.png",
-                                "LibaryPath": "Library\/Textures\/1024641721.netex",
-                                "LibraryFile": "1024641721.netex"
-                            }
-                        }
-                    ],
-                    "Children": []
-                },
-                {
-                    "UID": 451431172,
-                    "ParentUID": 1413404400,
+                    "UID": 4566558,
+                    "ParentUID": 75414400,
                     "PrefabID": 1524961430,
                     "IsPrefab": true,
                     "Name": "Dash",
@@ -189,299 +135,23 @@
                         {
                             "Type": 21,
                             "Image": {
-                                "X": -0.72299998998641968,
-                                "Y": -0.460999995470047,
-                                "W": 0.25,
-                                "H": 0.5,
+                                "X": -0.41999998688697815,
+                                "Y": -0.18000000715255737,
+                                "W": 0.14499999582767487,
+                                "H": 0.14499999582767487,
                                 "IsHDL": false,
                                 "IsHDR": false
                             }
                         },
                         {
-                            "Type": 3,
-                            "Texture": {
-                                "AssetsPath": "Assets\/Textures\/UI\/HUD\/DashButton.png",
-                                "AssetsName": "DashButton.png",
-                                "LibaryPath": "Library\/Textures\/781650108.netex",
-                                "LibraryFile": "781650108.netex"
-                            }
+                            "Type": 3
                         }
                     ],
                     "Children": []
                 },
                 {
-                    "UID": 1092383713,
-                    "ParentUID": 1413404400,
-                    "PrefabID": 1524961430,
-                    "IsPrefab": true,
-                    "Name": "Credits",
-                    "IsActive": true,
-                    "IsStatic": false,
-                    "IsSceneRoot": false,
-                    "MaintainThroughScenes": false,
-                    "ShowBoundingBoxes": false,
-                    "Components": [
-                        {
-                            "Type": 1,
-                            "LocalPosition": [
-                                0,
-                                0,
-                                0
-                            ],
-                            "LocalRotation": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ],
-                            "LocalScale": [
-                                1,
-                                1,
-                                1
-                            ]
-                        },
-                        {
-                            "Type": 21,
-                            "Image": {
-                                "X": -0.32199999690055847,
-                                "Y": 0.73299998044967651,
-                                "W": 0.42500001192092896,
-                                "H": 0.47999998927116394,
-                                "IsHDL": false,
-                                "IsHDR": false
-                            }
-                        },
-                        {
-                            "Type": 3,
-                            "Texture": {
-                                "AssetsPath": "Assets\/Textures\/UI\/HUD\/Credits.png",
-                                "AssetsName": "Credits.png",
-                                "LibaryPath": "Library\/Textures\/48777715.netex",
-                                "LibraryFile": "48777715.netex"
-                            }
-                        }
-                    ],
-                    "Children": []
-                },
-                {
-                    "UID": 1152327450,
-                    "ParentUID": 1413404400,
-                    "PrefabID": 1524961430,
-                    "IsPrefab": true,
-                    "Name": "Minimap",
-                    "IsActive": true,
-                    "IsStatic": false,
-                    "IsSceneRoot": false,
-                    "MaintainThroughScenes": false,
-                    "ShowBoundingBoxes": false,
-                    "Components": [
-                        {
-                            "Type": 1,
-                            "LocalPosition": [
-                                0,
-                                0,
-                                0
-                            ],
-                            "LocalRotation": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ],
-                            "LocalScale": [
-                                1,
-                                1,
-                                1
-                            ]
-                        },
-                        {
-                            "Type": 21,
-                            "Image": {
-                                "X": 0.99260497093200684,
-                                "Y": 0.97399997711181641,
-                                "W": 0.40000000596046448,
-                                "H": 0.60000002384185791,
-                                "IsHDL": false,
-                                "IsHDR": false
-                            }
-                        },
-                        {
-                            "Type": 3,
-                            "Texture": {
-                                "AssetsPath": "Assets\/Textures\/UI\/HUD\/MiniMap.png",
-                                "AssetsName": "MiniMap.png",
-                                "LibaryPath": "Library\/Textures\/1046552748.netex",
-                                "LibraryFile": "1046552748.netex"
-                            }
-                        }
-                    ],
-                    "Children": []
-                },
-                {
-                    "UID": 1304343513,
-                    "ParentUID": 1413404400,
-                    "PrefabID": 1524961430,
-                    "IsPrefab": true,
-                    "Name": "SecodaryWeapon",
-                    "IsActive": true,
-                    "IsStatic": false,
-                    "IsSceneRoot": false,
-                    "MaintainThroughScenes": false,
-                    "ShowBoundingBoxes": false,
-                    "Components": [
-                        {
-                            "Type": 1,
-                            "LocalPosition": [
-                                0,
-                                0,
-                                0
-                            ],
-                            "LocalRotation": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ],
-                            "LocalScale": [
-                                1,
-                                1,
-                                1
-                            ]
-                        },
-                        {
-                            "Type": 21,
-                            "Image": {
-                                "X": 0.83700001239776611,
-                                "Y": -0.10499999672174454,
-                                "W": 0.5,
-                                "H": 0.75,
-                                "IsHDL": false,
-                                "IsHDR": false
-                            }
-                        },
-                        {
-                            "Type": 3,
-                            "Texture": {
-                                "AssetsPath": "Assets\/Textures\/UI\/HUD\/SecondaryWeapon1.png",
-                                "AssetsName": "SecondaryWeapon1.png",
-                                "LibaryPath": "Library\/Textures\/1130462783.netex",
-                                "LibraryFile": "1130462783.netex"
-                            }
-                        }
-                    ],
-                    "Children": []
-                },
-                {
-                    "UID": 1443351903,
-                    "ParentUID": 1413404400,
-                    "PrefabID": 1524961430,
-                    "IsPrefab": true,
-                    "Name": "Heart1",
-                    "IsActive": true,
-                    "IsStatic": false,
-                    "IsSceneRoot": false,
-                    "MaintainThroughScenes": false,
-                    "ShowBoundingBoxes": false,
-                    "Components": [
-                        {
-                            "Type": 1,
-                            "LocalPosition": [
-                                0,
-                                0,
-                                0
-                            ],
-                            "LocalRotation": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ],
-                            "LocalScale": [
-                                1,
-                                1,
-                                1
-                            ]
-                        },
-                        {
-                            "Type": 21,
-                            "Image": {
-                                "X": -0.65499997138977051,
-                                "Y": 0.93999999761581421,
-                                "W": 0.125,
-                                "H": 0.20000000298023224,
-                                "IsHDL": false,
-                                "IsHDR": false
-                            }
-                        },
-                        {
-                            "Type": 3,
-                            "Texture": {
-                                "AssetsPath": "Assets\/Textures\/UI\/HUD\/HeartFull.png",
-                                "AssetsName": "HeartFull.png",
-                                "LibaryPath": "Library\/Textures\/1024641721.netex",
-                                "LibraryFile": "1024641721.netex"
-                            }
-                        }
-                    ],
-                    "Children": []
-                },
-                {
-                    "UID": 1914603678,
-                    "ParentUID": 1413404400,
-                    "PrefabID": 1524961430,
-                    "IsPrefab": true,
-                    "Name": "Heart3",
-                    "IsActive": true,
-                    "IsStatic": false,
-                    "IsSceneRoot": false,
-                    "MaintainThroughScenes": false,
-                    "ShowBoundingBoxes": false,
-                    "Components": [
-                        {
-                            "Type": 1,
-                            "LocalPosition": [
-                                0,
-                                0,
-                                0
-                            ],
-                            "LocalRotation": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ],
-                            "LocalScale": [
-                                1,
-                                1,
-                                1
-                            ]
-                        },
-                        {
-                            "Type": 21,
-                            "Image": {
-                                "X": -0.37999999523162842,
-                                "Y": 0.93500000238418579,
-                                "W": 0.125,
-                                "H": 0.20000000298023224,
-                                "IsHDL": false,
-                                "IsHDR": false
-                            }
-                        },
-                        {
-                            "Type": 3,
-                            "Texture": {
-                                "AssetsPath": "Assets\/Textures\/UI\/HUD\/HeartFull.png",
-                                "AssetsName": "HeartFull.png",
-                                "LibaryPath": "Library\/Textures\/1024641721.netex",
-                                "LibraryFile": "1024641721.netex"
-                            }
-                        }
-                    ],
-                    "Children": []
-                },
-                {
-                    "UID": 2129877835,
-                    "ParentUID": 1413404400,
+                    "UID": 119749147,
+                    "ParentUID": 75414400,
                     "PrefabID": 1524961430,
                     "IsPrefab": true,
                     "Name": "PrimaryWeapon",
@@ -513,22 +183,400 @@
                         {
                             "Type": 21,
                             "Image": {
-                                "X": 0.98799997568130493,
-                                "Y": 0.82599997520446777,
-                                "W": 1,
-                                "H": 1.5,
+                                "X": 0.36000001430511475,
+                                "Y": -0.039999999105930328,
+                                "W": 0.34999999403953552,
+                                "H": 0.34999999403953552,
                                 "IsHDL": false,
                                 "IsHDR": false
                             }
                         },
                         {
-                            "Type": 3,
-                            "Texture": {
-                                "AssetsPath": "Assets\/Textures\/UI\/HUD\/SelectedWeapon.png",
-                                "AssetsName": "SelectedWeapon.png",
-                                "LibaryPath": "Library\/Textures\/60971379.netex",
-                                "LibraryFile": "60971379.netex"
+                            "Type": 3
+                        }
+                    ],
+                    "Children": []
+                },
+                {
+                    "UID": 223947468,
+                    "ParentUID": 75414400,
+                    "PrefabID": 1524961430,
+                    "IsPrefab": true,
+                    "Name": "Minimap",
+                    "IsActive": true,
+                    "IsStatic": false,
+                    "IsSceneRoot": false,
+                    "MaintainThroughScenes": false,
+                    "ShowBoundingBoxes": false,
+                    "Components": [
+                        {
+                            "Type": 1,
+                            "LocalPosition": [
+                                0,
+                                0,
+                                0
+                            ],
+                            "LocalRotation": [
+                                0,
+                                0,
+                                0,
+                                1
+                            ],
+                            "LocalScale": [
+                                1,
+                                1,
+                                1
+                            ]
+                        },
+                        {
+                            "Type": 21,
+                            "Image": {
+                                "X": 0.40000000596046448,
+                                "Y": 0.14000000059604645,
+                                "W": 0.27500000596046448,
+                                "H": 0.27500000596046448,
+                                "IsHDL": false,
+                                "IsHDR": false
                             }
+                        },
+                        {
+                            "Type": 3
+                        }
+                    ],
+                    "Children": []
+                },
+                {
+                    "UID": 321818170,
+                    "ParentUID": 75414400,
+                    "PrefabID": 1524961430,
+                    "IsPrefab": true,
+                    "Name": "Credits",
+                    "IsActive": true,
+                    "IsStatic": false,
+                    "IsSceneRoot": false,
+                    "MaintainThroughScenes": false,
+                    "ShowBoundingBoxes": false,
+                    "Components": [
+                        {
+                            "Type": 1,
+                            "LocalPosition": [
+                                0,
+                                0,
+                                0
+                            ],
+                            "LocalRotation": [
+                                0,
+                                0,
+                                0,
+                                1
+                            ],
+                            "LocalScale": [
+                                1,
+                                1,
+                                1
+                            ]
+                        },
+                        {
+                            "Type": 21,
+                            "Image": {
+                                "X": -0.36700001358985901,
+                                "Y": 0.1550000011920929,
+                                "W": 0.15000000596046448,
+                                "H": 0.15000000596046448,
+                                "IsHDL": false,
+                                "IsHDR": false
+                            }
+                        },
+                        {
+                            "Type": 3
+                        }
+                    ],
+                    "Children": []
+                },
+                {
+                    "UID": 515722014,
+                    "ParentUID": 75414400,
+                    "PrefabID": 1524961430,
+                    "IsPrefab": true,
+                    "Name": "Mando",
+                    "IsActive": true,
+                    "IsStatic": false,
+                    "IsSceneRoot": false,
+                    "MaintainThroughScenes": false,
+                    "ShowBoundingBoxes": false,
+                    "Components": [
+                        {
+                            "Type": 1,
+                            "LocalPosition": [
+                                0,
+                                0,
+                                0
+                            ],
+                            "LocalRotation": [
+                                0,
+                                0,
+                                0,
+                                1
+                            ],
+                            "LocalScale": [
+                                1,
+                                1,
+                                1
+                            ]
+                        },
+                        {
+                            "Type": 21,
+                            "Image": {
+                                "X": -0.44999998807907104,
+                                "Y": 0.20000000298023224,
+                                "W": 0.16500000655651093,
+                                "H": 0.16500000655651093,
+                                "IsHDL": false,
+                                "IsHDR": false
+                            }
+                        },
+                        {
+                            "Type": 3
+                        }
+                    ],
+                    "Children": []
+                },
+                {
+                    "UID": 525573586,
+                    "ParentUID": 75414400,
+                    "PrefabID": 1524961430,
+                    "IsPrefab": true,
+                    "Name": "Heart1",
+                    "IsActive": true,
+                    "IsStatic": false,
+                    "IsSceneRoot": false,
+                    "MaintainThroughScenes": false,
+                    "ShowBoundingBoxes": false,
+                    "Components": [
+                        {
+                            "Type": 1,
+                            "LocalPosition": [
+                                0,
+                                0,
+                                0
+                            ],
+                            "LocalRotation": [
+                                0,
+                                0,
+                                0,
+                                1
+                            ],
+                            "LocalScale": [
+                                1,
+                                1,
+                                1
+                            ]
+                        },
+                        {
+                            "Type": 21,
+                            "Image": {
+                                "X": -0.40999999642372131,
+                                "Y": 0.25,
+                                "W": 0.045000001788139343,
+                                "H": 0.045000001788139343,
+                                "IsHDL": false,
+                                "IsHDR": false
+                            }
+                        },
+                        {
+                            "Type": 3
+                        }
+                    ],
+                    "Children": []
+                },
+                {
+                    "UID": 687109456,
+                    "ParentUID": 75414400,
+                    "PrefabID": 1524961430,
+                    "IsPrefab": true,
+                    "Name": "Heart2",
+                    "IsActive": true,
+                    "IsStatic": false,
+                    "IsSceneRoot": false,
+                    "MaintainThroughScenes": false,
+                    "ShowBoundingBoxes": false,
+                    "Components": [
+                        {
+                            "Type": 1,
+                            "LocalPosition": [
+                                0,
+                                0,
+                                0
+                            ],
+                            "LocalRotation": [
+                                0,
+                                0,
+                                0,
+                                1
+                            ],
+                            "LocalScale": [
+                                1,
+                                1,
+                                1
+                            ]
+                        },
+                        {
+                            "Type": 21,
+                            "Image": {
+                                "X": -0.36500000953674316,
+                                "Y": 0.25,
+                                "W": 0.045000001788139343,
+                                "H": 0.045000001788139343,
+                                "IsHDL": false,
+                                "IsHDR": false
+                            }
+                        },
+                        {
+                            "Type": 3
+                        }
+                    ],
+                    "Children": []
+                },
+                {
+                    "UID": 938374506,
+                    "ParentUID": 75414400,
+                    "PrefabID": 1524961430,
+                    "IsPrefab": true,
+                    "Name": "SecodaryWeapon",
+                    "IsActive": true,
+                    "IsStatic": false,
+                    "IsSceneRoot": false,
+                    "MaintainThroughScenes": false,
+                    "ShowBoundingBoxes": false,
+                    "Components": [
+                        {
+                            "Type": 1,
+                            "LocalPosition": [
+                                0,
+                                0,
+                                0
+                            ],
+                            "LocalRotation": [
+                                0,
+                                0,
+                                0,
+                                1
+                            ],
+                            "LocalScale": [
+                                1,
+                                1,
+                                1
+                            ]
+                        },
+                        {
+                            "Type": 21,
+                            "Image": {
+                                "X": 0.44699999690055847,
+                                "Y": -0.17000000178813934,
+                                "W": 0.18000000715255737,
+                                "H": 0.18000000715255737,
+                                "IsHDL": false,
+                                "IsHDR": false
+                            }
+                        },
+                        {
+                            "Type": 3
+                        }
+                    ],
+                    "Children": []
+                },
+                {
+                    "UID": 1231027348,
+                    "ParentUID": 75414400,
+                    "PrefabID": 1524961430,
+                    "IsPrefab": true,
+                    "Name": "SideKick",
+                    "IsActive": true,
+                    "IsStatic": false,
+                    "IsSceneRoot": false,
+                    "MaintainThroughScenes": false,
+                    "ShowBoundingBoxes": false,
+                    "Components": [
+                        {
+                            "Type": 1,
+                            "LocalPosition": [
+                                0,
+                                0,
+                                0
+                            ],
+                            "LocalRotation": [
+                                0,
+                                0,
+                                0,
+                                1
+                            ],
+                            "LocalScale": [
+                                1,
+                                1,
+                                1
+                            ]
+                        },
+                        {
+                            "Type": 21,
+                            "Image": {
+                                "X": -0.48500001430511475,
+                                "Y": 0.15000000596046448,
+                                "W": 0.079999998211860657,
+                                "H": 0.079999998211860657,
+                                "IsHDL": false,
+                                "IsHDR": false
+                            }
+                        },
+                        {
+                            "Type": 3
+                        }
+                    ],
+                    "Children": []
+                },
+                {
+                    "UID": 1995017401,
+                    "ParentUID": 75414400,
+                    "PrefabID": 1524961430,
+                    "IsPrefab": true,
+                    "Name": "Heart3",
+                    "IsActive": true,
+                    "IsStatic": false,
+                    "IsSceneRoot": false,
+                    "MaintainThroughScenes": false,
+                    "ShowBoundingBoxes": false,
+                    "Components": [
+                        {
+                            "Type": 1,
+                            "LocalPosition": [
+                                0,
+                                0,
+                                0
+                            ],
+                            "LocalRotation": [
+                                0,
+                                0,
+                                0,
+                                1
+                            ],
+                            "LocalScale": [
+                                1,
+                                1,
+                                1
+                            ]
+                        },
+                        {
+                            "Type": 21,
+                            "Image": {
+                                "X": -0.31999999284744263,
+                                "Y": 0.25,
+                                "W": 0.045000001788139343,
+                                "H": 0.045000001788139343,
+                                "IsHDL": false,
+                                "IsHDR": false
+                            }
+                        },
+                        {
+                            "Type": 3
                         }
                     ],
                     "Children": []

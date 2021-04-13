@@ -267,11 +267,11 @@ void M_UISystem::InitHoveredDecorations()
 
 void M_UISystem::UpdateHoveredDecorations()
 {
-	hoveredDecorationL->SetX(hoveredButton->GetRect().x - hoveredButton->GetRect().w / 2 - 0.02);
-	hoveredDecorationR->SetX(hoveredButton->GetRect().x + 0.01 + hoveredButton->GetRect().w / 2);
+	hoveredDecorationL->SetX(hoveredButton->GetRect().x - hoveredButton->GetRect().w / 2 - 0.1);
+	hoveredDecorationR->SetX(hoveredButton->GetRect().x + hoveredButton->GetRect().w / 2 + 0.15);
 
-	hoveredDecorationL->SetY(hoveredButton->GetRect().y);
-	hoveredDecorationR->SetY(hoveredButton->GetRect().y);
+	hoveredDecorationL->SetY((hoveredButton->GetRect().y + 0.01) * 3.5);
+	hoveredDecorationR->SetY((hoveredButton->GetRect().y + 0.01) * 3.5);
 }
 
 void M_UISystem::DeleteActiveButton(C_UI_Button* button)

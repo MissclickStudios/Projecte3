@@ -12,9 +12,6 @@
 
 Emitter::Emitter()
 {
-	std::vector<R_Texture*> textures;
-	App->resourceManager->GetAllTextures(textures);
-	emitterTexture = (*textures.begin()); //TODO find a default emitter texture
 }
 
 void Emitter::Update(float dt)
@@ -26,11 +23,7 @@ void Emitter::Update(float dt)
 void Emitter::Save(ParsonNode& node)
 {
 	node.SetString("name", name.c_str());
-
-	uint32 textureUID = (emitterTexture != nullptr) ? emitterTexture->GetUID() : 0;
-	node.SetInteger("textureUID", textureUID);
-	node.SetString("texturePath", emitterTexture->GetAssetsPath());
-
+	node.SetInteger("textureUID", emitterTexture->GetUID());
 	node.SetInteger("maxParticleCount", maxParticleCount);
 
 	ParsonArray modulesArray = node.SetArray("modules");
@@ -45,8 +38,11 @@ void Emitter::Load(ParsonNode& node)
 {
 	node.SetString("name", name.c_str());
 	
-	std::string path = node.GetString("texturePath");
-	emitterTexture = (R_Texture*)App->resourceManager->GetResourceFromLibrary(path.c_str());
+	uint textureUID = node.GetInteger("textureUID");
+	if (App->resourceManager->AllocateResource(textureUID))
+	{
+		emitterTexture = (R_Texture*)App->resourceManager->RequestResource(textureUID);
+	}
 
 	maxParticleCount = node.GetInteger("maxParticleCount");
 
@@ -61,11 +57,11 @@ void Emitter::Load(ParsonNode& node)
 
 		switch ((ParticleModule::Type)mod.GetInteger("Type"))
 		{
-			case ParticleModule::Type::EMITTER_BASE: particleModule = new EmitterBase(); break;
-			case ParticleModule::Type::EMITTER_SPAWN: particleModule = new EmitterSpawn(); break;
-			case ParticleModule::Type::PARTICLE_LIFETIME: particleModule = new ParticleLifetime(); break;
-			case ParticleModule::Type::PARTICLE_COLOR: particleModule = new ParticleColor(); break;
-			case ParticleModule::Type::PARTICLE_MOVEMENT: particleModule = new ParticleMovement(); break;
+			case ParticleModule::Type::EmitterBase: particleModule = new EmitterBase(); break;
+			case ParticleModule::Type::EmitterSpawn: particleModule = new EmitterSpawn(); break;
+			case ParticleModule::Type::ParticleLifetime: particleModule = new ParticleLifetime(); break;
+			case ParticleModule::Type::ParticleColor: particleModule = new ParticleColor(); break;
+			case ParticleModule::Type::ParticleMovement: particleModule = new ParticleMovement(); break;
 		}
 
 		particleModule->Load(mod);
@@ -76,12 +72,12 @@ void Emitter::Load(ParsonNode& node)
 
 void Emitter::SetAsDefault()
 {
-	AddModuleFromType(ParticleModule::Type::EMITTER_BASE);
-	AddModuleFromType(ParticleModule::Type::EMITTER_SPAWN);
-	AddModuleFromType(ParticleModule::Type::PARTICLE_LIFETIME);
-	AddModuleFromType(ParticleModule::Type::PARTICLE_COLOR);
-	AddModuleFromType(ParticleModule::Type::PARTICLE_MOVEMENT);
-	AddModuleFromType(ParticleModule::Type::PARTICLE_BILLBOARDING);
+	AddModuleFromType(ParticleModule::Type::EmitterBase);
+	AddModuleFromType(ParticleModule::Type::EmitterSpawn);
+	AddModuleFromType(ParticleModule::Type::ParticleLifetime);
+	AddModuleFromType(ParticleModule::Type::ParticleColor);
+	AddModuleFromType(ParticleModule::Type::ParticleMovement);
+	AddModuleFromType(ParticleModule::Type::ParticleBillboarding);
 }
 
 bool Emitter::AddModuleFromType(ParticleModule::Type type)
@@ -97,28 +93,28 @@ bool Emitter::AddModuleFromType(ParticleModule::Type type)
 
 	switch (type)
 	{
-		case (ParticleModule::Type::EMITTER_BASE):
+		case (ParticleModule::Type::EmitterBase):
 			modules.push_back(new EmitterBase); 
 			break;
-		case (ParticleModule::Type::EMITTER_SPAWN):
+		case (ParticleModule::Type::EmitterSpawn):
 			modules.push_back(new EmitterSpawn);
 			break;
 		//case(ParticleModule::Type::ParticlePosition):
 		//	modules.push_back(new ParticlePosition);
 		//	break;
-		case(ParticleModule::Type::PARTICLE_COLOR):
+		case(ParticleModule::Type::ParticleColor):
 			modules.push_back(new ParticleColor);
 			break;	
-		case(ParticleModule::Type::PARTICLE_LIFETIME):
+		case(ParticleModule::Type::ParticleLifetime):
 			modules.push_back(new ParticleLifetime);
 			break;
-		case(ParticleModule::Type::PARTICLE_MOVEMENT):
+		case(ParticleModule::Type::ParticleMovement):
 			modules.push_back(new ParticleMovement);
 			break;
-		case(ParticleModule::Type::PARTICLE_BILLBOARDING):
+		case(ParticleModule::Type::ParticleBillboarding):
 			modules.push_back(new ParticleBillboarding);
 			break;
-		case(ParticleModule::Type::NONE):
+		case(ParticleModule::Type::None):
 			return false;
 	}
 	return true;
@@ -137,24 +133,4 @@ bool Emitter::DeleteModuleFromType(ParticleModule::Type type)
 		}
 	}
 	return true;
-}
-
-void Emitter::SetTexture(R_Texture* newTexture)
-{
-	if (newTexture != nullptr)
-	{
-		R_Texture* a = (R_Texture*)App->resourceManager->GetResourceFromLibrary(newTexture->GetAssetsPath());
-
-		if (a != nullptr)
-		{
-			App->resourceManager->FreeResource(emitterTexture->GetUID());
-			emitterTexture = a;
-			
-		}
-		else
-		{
-			LOG("COuld not find Texture %s for emitter", newTexture->GetAssetsFile());
-		}
-
-	}
 }

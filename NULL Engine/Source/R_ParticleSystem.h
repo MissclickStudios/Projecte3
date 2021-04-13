@@ -20,7 +20,6 @@ public:
 
 public:
 	std::vector<Emitter> emitters;
-	std::string name = "Default Name";
 };
 
 #endif //!__R_PARTICLE_SYSTEM_H__

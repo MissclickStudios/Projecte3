@@ -14,18 +14,18 @@ struct NULL_API ParticleModule
 {
 	enum class Type
 	{
-		NONE,
-		PARTICLE_MOVEMENT,
-		PARTICLE_COLOR,
-		PARTICLE_LIFETIME,
-		PARTICLE_ROTATION,
-		PARTICLE_SIZE,
-		PARTICLE_BILLBOARDING,
-		EMITTER_BASE,			//Origin of the emitter
-		EMITTER_AREA,
-		EMITTER_SPAWN,			//Spawn Rate and timer
+		None,
+		ParticleMovement,
+		ParticleColor,
+		ParticleLifetime,
+		ParticleRotation,
+		ParticleSize,
+		ParticleBillboarding,
+		EmitterArea,
+		EmitterBase,			//Origin of the emitter
+		EmitterSpawn,			//Spawn Rate and timer
 		
-		UNKNOWN
+		Unknown
 	} type;
 
 	ParticleModule(Type type) : type(type) {};
@@ -44,7 +44,7 @@ struct EmitterBase : ParticleModule
 {
 	//camera alignment
 
-	EmitterBase() : ParticleModule(Type::EMITTER_BASE) {};
+	EmitterBase() : ParticleModule(Type::EmitterBase) {};
 
 	void Save(ParsonNode& node) override;
 	void Load(ParsonNode& node) override;
@@ -57,7 +57,7 @@ struct EmitterBase : ParticleModule
 
 struct EmitterSpawn : ParticleModule
 {
-	EmitterSpawn() : ParticleModule(Type::EMITTER_SPAWN) {};
+	EmitterSpawn() : ParticleModule(Type::EmitterSpawn) {};
 	
 	void Save(ParsonNode& node) override;
 	void Load(ParsonNode& node) override;
@@ -67,13 +67,11 @@ struct EmitterSpawn : ParticleModule
 
 	float spawnRatio = 0.05f;
 	float timer = 0.0f;
-
-	bool hideSpawn = false;
 };
 
 struct ParticleMovement : ParticleModule
 {
-	ParticleMovement() : ParticleModule(Type::PARTICLE_MOVEMENT) {};
+	ParticleMovement() : ParticleModule(Type::ParticleMovement) {};
 
 	void Save(ParsonNode& node) override;
 	void Load(ParsonNode& node) override;
@@ -96,7 +94,7 @@ struct ParticleMovement : ParticleModule
 
 struct ParticleColor : ParticleModule
 {
-	ParticleColor() : ParticleModule(Type::PARTICLE_COLOR) {};
+	ParticleColor() : ParticleModule(Type::ParticleColor) {};
 
 	void Save(ParsonNode& node) override;
 	void Load(ParsonNode& node) override;
@@ -112,7 +110,7 @@ struct ParticleColor : ParticleModule
 
 struct ParticleLifetime : ParticleModule
 {
-	ParticleLifetime() : ParticleModule(Type::PARTICLE_LIFETIME) {};
+	ParticleLifetime() : ParticleModule(Type::ParticleLifetime) {};
 
 	void Save(ParsonNode& node) override;
 	void Load(ParsonNode& node) override;
@@ -128,7 +126,7 @@ struct ParticleLifetime : ParticleModule
 
 struct ParticleBillboarding : ParticleModule
 {
-	enum class BillboardingType
+	enum BillboardingType
 	{
 		ScreenAligned,
 		WorldAligned,
@@ -139,7 +137,7 @@ struct ParticleBillboarding : ParticleModule
 		None,
 	};
 
-	ParticleBillboarding() : ParticleModule(Type::PARTICLE_BILLBOARDING) {};
+	ParticleBillboarding() : ParticleModule(Type::ParticleBillboarding) {};
 
 	void Save(ParsonNode& node) override;
 	void Load(ParsonNode& node) override;
@@ -149,7 +147,7 @@ struct ParticleBillboarding : ParticleModule
 
 	Quat GetAlignmentRotation(const float3& position, const float4x4& cameraTransform);
 
-	BillboardingType billboardingType = BillboardingType::ScreenAligned;
+	BillboardingType billboardingType = ScreenAligned;
 	bool hideBillboarding = false;
 	bool eraseBillboarding = false;
 };

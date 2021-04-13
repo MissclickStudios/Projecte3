@@ -24,13 +24,12 @@ public:
 	bool AddModuleFromType(ParticleModule::Type type);
 	bool DeleteModuleFromType(ParticleModule::Type type);
 
-	void SetTexture(R_Texture* newTexture);
+	void SetMaterial();
 
 public:
-	std::vector<ParticleModule*> modules;
-	
 	std::string name = "Particle Emitter";
-	R_Texture* emitterTexture = nullptr;
+	std::vector<ParticleModule*> modules;
+	R_Texture* emitterTexture;
 
 	int maxParticleCount = 10;
 };
