@@ -116,13 +116,13 @@ bool M_Scene::Start()
 	//LoadScene("Assets/Scenes/UITestScene.json");
 	//SaveScene("SceneAutosave");																			// Autosave just right after loading the scene.
 
-	C_AudioListener* listener = new C_AudioListener(masterRoot);
+	/*C_AudioListener* listener = new C_AudioListener(masterRoot);
 
 	music = new C_AudioSource(masterRoot);
 
 	music->SetEvent("background", 3650723969);
 
-	music->PlayFx(music->GetEventId());
+	music->PlayFx(music->GetEventId());*/
 
 	return ret;
 }
