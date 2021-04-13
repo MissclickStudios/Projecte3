@@ -75,14 +75,16 @@ void Player::Awake()
 	
 		weaponUsed = config.GetInteger("Weapon used");
 		coins = config.GetInteger("Coins");
-		strongShots = config.GetBool("Strong shots");
-		freezingShots = config.GetBool("Freezing shots");
+		strongShots = true; //config.GetBool("Strong shots");
+		freezingShots = true; //config.GetBool("Freezing shots");
 		blasterAmmo = config.GetInteger("Blaster ammo");
 		sniperAmmo = config.GetInteger("Sniper ammo");
-		health = (float)config.GetNumber("Health");
+		health = maxHealth; //(float)config.GetNumber("Health");
 
 		load = true;
 	}
+
+	RELEASE_ARRAY(buffer);
 
 	if (!gameObject->GetComponent<C_RigidBody>())
 		gameObject->CreateComponent(ComponentType::RIGIDBODY);

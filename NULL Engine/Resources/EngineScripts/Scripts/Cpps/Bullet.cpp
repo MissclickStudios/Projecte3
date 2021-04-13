@@ -73,7 +73,7 @@ void Bullet::OnCollisionEnter(GameObject* object)
 				((Blurrg*)script)->Freeze(0.3f, 4.0f);
 			if (strong)
 				((Blurrg*)script)->Weaken(2.0f, 0.1f);
-			((Blurrg*)script)->TakeDamage(damage);
+			((Blurrg*)script)->TakeDamage(damage/2);
 		}
 		else
 		{
@@ -84,7 +84,7 @@ void Bullet::OnCollisionEnter(GameObject* object)
 					((SandTrooper*)script)->Freeze(0.3f, 4.0f);
 				if (strong)
 					((SandTrooper*)script)->Weaken(2.0f, 0.1f);
-				((SandTrooper*)script)->TakeDamage(damage);
+				((SandTrooper*)script)->TakeDamage(damage/2);
 			}
 		}
 	}

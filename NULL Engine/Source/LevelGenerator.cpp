@@ -71,9 +71,11 @@ void LevelGenerator::GoNextRoom()
 				roomNum++;
 				App->scene->LoadScene(level1[roomNum].c_str());
 			}
-			else
+			else if (roomNum == level1.size() - 1)
 			{
-				LOG("End of the level reached.");
+				LOG("[SCENE] Level Generator: End of the Game Reached!");
+
+				InitiateLevel(2);
 			}
 		}
 	}
@@ -86,9 +88,11 @@ void LevelGenerator::GoNextRoom()
 				roomNum++;
 				App->scene->LoadScene(level2[roomNum].c_str());
 			}
-			else
+			else if (roomNum == level2.size() - 1)
 			{
-				LOG("End of the level reached.");
+				LOG("[SCENE] Level Generator: End of the Game Reached!");
+
+				InitiateLevel(1);
 			}
 		}
 	}
@@ -238,7 +242,7 @@ void LevelGenerator::HandleRoomGeneration()
 	{
 		if (App->input->GetKey(SDL_SCANCODE_KP_6) == KeyState::KEY_DOWN)
 		{
-			if(currentLevel == 1)
+			/*if(currentLevel == 1)
 			{
 
 				(roomNum < level1.size() - 1) ? GoNextRoom() : LOG("[SCENE] Level Generator: End of the Level Reached!");
@@ -248,7 +252,9 @@ void LevelGenerator::HandleRoomGeneration()
 			else if (currentLevel == 2)
 			{
 				(roomNum < level2.size() - 1) ? GoNextRoom() : LOG("[SCENE] Level Generator: End of the Game Reached!");
-			}
+			}*/
+
+			GoNextRoom();
 			
 		}
 		if (App->input->GetKey(SDL_SCANCODE_KP_4) == KeyState::KEY_DOWN)
