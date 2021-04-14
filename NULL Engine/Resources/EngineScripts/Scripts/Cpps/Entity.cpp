@@ -1,11 +1,20 @@
 #include "Entity.h"
 
+#include "GameObject.h"
+
 Entity::Entity() : Script()
 {
+	deathTimer.Stop();
 }
 
 Entity::~Entity()
 {
+	// Free possible residual or unfinished effects
+	while (effects.size())
+	{
+		delete *effects.begin();
+		effects.erase(effects.begin());
+	}
 }
 
 void Entity::PreUpdate()
@@ -39,6 +48,13 @@ void Entity::PreUpdate()
 
 void Entity::PostUpdate()
 {
+}
+
+void Entity::Deactivate()
+{
+	for (uint i = 0; i < gameObject->components.size(); ++i)
+		gameObject->components[i]->SetIsActive(false);
+	gameObject->SetIsActive(false);
 }
 
 void Entity::AddEffect(EffectType type, float duration)

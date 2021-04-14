@@ -8,6 +8,8 @@
 
 #define DEFAULT_MODIFIER 1.0f
 
+class C_Animator;
+
 class Entity : public Script
 {
 public:
@@ -22,6 +24,8 @@ public:
 	void PostUpdate();
 
 	virtual void CleanUp() = 0;
+
+	void Deactivate();
 
 	// Interactions
 	virtual void TakeDamage(float damage) = 0;
@@ -58,6 +62,14 @@ public:
 	// Basic Animations
 	std::string idleAnimation = "Idle";
 	std::string deathAnimation = "Death";
+
+protected:
+
+	// Animations
+	C_Animator* animator = nullptr;
+		// Death
+	float deathDuration = 0.0f; // Time between the entity dies and it gets removed
+	Timer deathTimer;
 
 private:
 
