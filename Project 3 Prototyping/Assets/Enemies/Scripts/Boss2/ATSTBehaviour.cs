@@ -36,6 +36,8 @@ public class ATSTBehaviour : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Debug.Log(pointAttackDuration);
+
         sAttack1Duration -= Time.deltaTime;
         if(chasing == true)
         {
@@ -68,8 +70,12 @@ public class ATSTBehaviour : MonoBehaviour
 
             if (pointAttackDuration < 0.0f)
             {
+
                 readyPointAttack = false;
-                pointAttackDuration = 5.0f;
+                
+                waveAttackDuration = 10.0f;
+                sAttack1Duration = 10.0f;
+
                 waveAttackPrep();
             }
         }
@@ -161,7 +167,7 @@ public class ATSTBehaviour : MonoBehaviour
 
     void pointAttackPrep()
     {
-        Boss.transform.position = Vector3.MoveTowards(Boss.transform.position, Target.transform.position, Speed * Time.deltaTime);
+        Boss.transform.position = Target.transform.position;
 
         if (Boss.transform.position == Target.transform.position)
         {
@@ -240,7 +246,7 @@ public class ATSTBehaviour : MonoBehaviour
 
     void waveAttackPrep()
     {
-        Boss.transform.position = Vector3.MoveTowards(waveBoss.transform.position, waveTarget.transform.position, waveSpeed * Time.deltaTime);
+        waveBoss.transform.position = waveTarget.transform.position; /*Vector3.MoveTowards(waveBoss.transform.position, waveTarget.transform.position, waveSpeed * Time.deltaTime);*/
 
         if (waveBoss.transform.position == waveTarget.transform.position)
         {
