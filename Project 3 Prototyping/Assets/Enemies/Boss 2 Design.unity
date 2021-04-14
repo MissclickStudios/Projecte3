@@ -801,7 +801,7 @@ Transform:
   - {fileID: 372144656}
   - {fileID: 5913700}
   m_Father: {fileID: 1815626071}
-  m_RootOrder: 3
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 180, y: 0, z: 0}
 --- !u!1 &923697386
 GameObject:
@@ -1250,10 +1250,10 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1199812181}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.15166667, y: -0.12666671, z: 0.5979998}
-  m_LocalScale: {x: 0.125, y: 0.06666667, z: 0.5}
+  m_LocalPosition: {x: -3.3879418, y: -1.9803116, z: 6.6851273}
+  m_LocalScale: {x: 0.25, y: 0.20000002, z: 1}
   m_Children: []
-  m_Father: {fileID: 1815626071}
+  m_Father: {fileID: 2073758595}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &1199812183
@@ -1445,11 +1445,11 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1759899726}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.14833331, y: -0.12666671, z: 0.5979998}
-  m_LocalScale: {x: 0.125, y: 0.06666667, z: 0.5}
+  m_LocalPosition: {x: -2.787942, y: -1.9803116, z: 6.6851273}
+  m_LocalScale: {x: 0.25, y: 0.20000003, z: 1}
   m_Children: []
-  m_Father: {fileID: 1815626071}
-  m_RootOrder: 2
+  m_Father: {fileID: 2073758595}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &1759899728
 BoxCollider:
@@ -1702,10 +1702,9 @@ Transform:
   m_LocalPosition: {x: -0.12754941, y: 1.5318072, z: 0.35985518}
   m_LocalScale: {x: 2, y: 3, z: 2}
   m_Children:
-  - {fileID: 1199812182}
   - {fileID: 2110761528}
-  - {fileID: 1759899727}
   - {fileID: 728368602}
+  - {fileID: 2073758595}
   m_Father: {fileID: 2048686842}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1751,10 +1750,19 @@ MonoBehaviour:
   Target: {fileID: 421623049}
   Boss: {fileID: 1815626071}
   Speed: 10
-  moveSpeed: 1
-  SA1numProjectiles: 40
+  moveSpeed: 3
+  SA1numProjectiles: 20
   SA1projectileSpeed: 100
   SA1projectile: {fileID: 7330326984651472972, guid: 6b3f174fb5566e448a44a337d06a8fa4, type: 3}
+  shootSource: {fileID: 1759899727}
+  waveTarget: {fileID: 421623049}
+  waveBoss: {fileID: 1815626071}
+  waveSpeed: 10
+  waveMoveSpeed: 3
+  waveNumProjectiles: 80
+  waveProjectileSpeed: 50
+  waveProjectile: {fileID: 7330326984651472972, guid: 6b3f174fb5566e448a44a337d06a8fa4, type: 3}
+  waveShootSource: {fileID: 1199812182}
 --- !u!1 &2048686841
 GameObject:
   m_ObjectHideFlags: 0
@@ -1786,6 +1794,38 @@ Transform:
   - {fileID: 952225436}
   m_Father: {fileID: 0}
   m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2073758594
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2073758595}
+  m_Layer: 0
+  m_Name: Ms-4both
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2073758595
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2073758594}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 1.5423043, y: 0.53343713, z: -2.7445638}
+  m_LocalScale: {x: 0.5, y: 0.33333334, z: 0.5}
+  m_Children:
+  - {fileID: 1199812182}
+  - {fileID: 1759899727}
+  m_Father: {fileID: 1815626071}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2101198694
 GameObject:
@@ -1913,7 +1953,7 @@ Transform:
   m_LocalScale: {x: 0.25, y: 0.13333334, z: 0.75}
   m_Children: []
   m_Father: {fileID: 1815626071}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!135 &2110761529
 SphereCollider:

@@ -4,13 +4,18 @@ using UnityEngine;
 
 public class ATSTBehaviour : MonoBehaviour
 {
-
     private bool trigerredAttack;
 
+    private bool readyPointAttack;
     private bool readyWaveAttack;
+
+    private bool chasing;
 
     private float sAttack1FireRate;
     private float sAttack1Duration = 10.0f;
+
+    private float pointAttackFireRate;
+    private float pointAttackDuration = 10.0f;
 
     private float waveAttackFireRate;
     private float waveAttackDuration = 10.0f;
@@ -19,6 +24,12 @@ public class ATSTBehaviour : MonoBehaviour
     {
         trigerredAttack = false;
 
+        moveRight = true;
+        waveMoveRight = true;
+
+        chasing = true;
+
+        readyPointAttack = false;
         readyWaveAttack = false;
     }
 
@@ -26,8 +37,10 @@ public class ATSTBehaviour : MonoBehaviour
     void Update()
     {
         sAttack1Duration -= Time.deltaTime;
-
-        Chasing();
+        if(chasing == true)
+        {
+            Chasing();
+        }
 
         if (trigerredAttack == true)
         {
@@ -35,8 +48,30 @@ public class ATSTBehaviour : MonoBehaviour
         }
         if (sAttack1Duration < 0.0f)
         {
+            chasing = false;
+            pointAttackPrep();
+        }
 
-            waveAttackPrep();
+        if(readyPointAttack == true)
+        {
+            pointAttackMov();
+
+            pointAttackFireRate += Time.deltaTime;
+            pointAttackDuration -= Time.deltaTime;
+
+            if (pointAttackFireRate >= 0.15f)
+            {
+                startPoint = shootSource.transform.position;
+                pointAttack(SA1numProjectiles);
+                pointAttackFireRate = 0;
+            }
+
+            if (pointAttackDuration < 0.0f)
+            {
+                readyPointAttack = false;
+                pointAttackDuration = 5.0f;
+                waveAttackPrep();
+            }
         }
 
         if(readyWaveAttack == true)
@@ -46,10 +81,10 @@ public class ATSTBehaviour : MonoBehaviour
             waveAttackFireRate += Time.deltaTime;
             waveAttackDuration -= Time.deltaTime;
 
-            if (waveAttackFireRate >= 1.0f)
+            if (waveAttackFireRate >= 0.5f)
             {
-                startPoint = transform.position;
-                waveAttackNR(SA1numProjectiles);
+                startPoint = waveShootSource.transform.position;
+                waveAttack(waveNumProjectiles);
                 waveAttackFireRate = 0;
             }
 
@@ -57,6 +92,7 @@ public class ATSTBehaviour : MonoBehaviour
             {
                 readyWaveAttack = false;
                 waveAttackDuration = 5.0f;
+                //next attack
             }
         }
 
@@ -123,23 +159,22 @@ public class ATSTBehaviour : MonoBehaviour
     public Transform Boss;
     public float Speed = 1.0f;
 
-    void waveAttackPrep()
+    void pointAttackPrep()
     {
         Boss.transform.position = Vector3.MoveTowards(Boss.transform.position, Target.transform.position, Speed * Time.deltaTime);
 
         if (Boss.transform.position == Target.transform.position)
         {
-            readyWaveAttack = true;
+            readyPointAttack = true;
         }
     }
-
     //---------------------------------------------------------------------------------
 
     //---------------------------------------------------------------------------------
-    [Header("Wave Move Settings")]
+    [Header("Point Move Settings")]
     public float moveSpeed = 1.0f;
     private bool moveRight;
-    void waveAttackMov()
+    void pointAttackMov()
     {
         // LEFT TO RIGHT
         if (transform.position.x > 12f)
@@ -164,23 +199,25 @@ public class ATSTBehaviour : MonoBehaviour
     //---------------------------------------------------------------------------------
 
     //---------------------------------------------------------------------------------
-    [Header("Wave Attack Settings")]
+    [Header("Point Attack Settings")]
     public int SA1numProjectiles;
     public float SA1projectileSpeed;
     public GameObject SA1projectile;
+    public Transform shootSource;
 
     private Vector3 startPoint;
     private const float radius = 1F;
 
-    void waveAttackNR(int _SA1numProjectiles)
+    void pointAttack(int _SA1numProjectiles)
     {
-        float startAngle = 160, endAngle = 200;
+        float startAngle = 160f, endAngle = 200f;
         float angleStep = (endAngle - startAngle) / _SA1numProjectiles;
         float angle = startAngle;
 
         for (int i = 1; i <= _SA1numProjectiles + 1; i++)
         {
             // Direction Calculation
+
             float projectileDirXPosition = startPoint.x + Mathf.Sin((angle * Mathf.PI) / 180) * radius;
             float projectileDirYPosition = startPoint.y + Mathf.Cos((angle * Mathf.PI) / 180) * radius;
 
@@ -192,7 +229,88 @@ public class ATSTBehaviour : MonoBehaviour
 
             angle += angleStep;
         }
+    }
+    //---------------------------------------------------------------------------------
 
+    //---------------------------------------------------------------------------------
+    [Header("Preparing Wave Attack Settings")]
+    public Transform waveTarget;
+    public Transform waveBoss;
+    public float waveSpeed = 1.0f;
+
+    void waveAttackPrep()
+    {
+        Boss.transform.position = Vector3.MoveTowards(waveBoss.transform.position, waveTarget.transform.position, waveSpeed * Time.deltaTime);
+
+        if (waveBoss.transform.position == waveTarget.transform.position)
+        {
+            readyWaveAttack = true;
+        }
+    }
+    //---------------------------------------------------------------------------------
+
+
+    //---------------------------------------------------------------------------------
+    [Header("Wave Move Settings")]
+    public float waveMoveSpeed = 1.0f;
+    private bool waveMoveRight;
+    void waveAttackMov()
+    {
+        // LEFT TO RIGHT
+        if (transform.position.x > 12f)
+        {
+            waveMoveRight = false;
+        }
+
+        else if (transform.position.x < -12f)
+        {
+            waveMoveRight = true;
+        }
+
+        if (waveMoveRight)
+        {
+            transform.position = new Vector3(transform.position.x + waveMoveSpeed * Time.deltaTime, transform.position.y, transform.position.z);
+        }
+        else
+        {
+            transform.position = new Vector3(transform.position.x - waveMoveSpeed * Time.deltaTime, transform.position.y, transform.position.z);
+        }
+    }
+    //---------------------------------------------------------------------------------
+
+    //---------------------------------------------------------------------------------
+    [Header("Wave Attack Settings")]
+    public int waveNumProjectiles;
+    public float waveProjectileSpeed;
+    public GameObject waveProjectile;
+    public Transform waveShootSource;
+
+    private const float waveRadius = 1F;
+
+    void waveAttack(int _waveNumProjectiles)
+    {
+        float startAngle = 140f, endAngle = 180f;
+        float angleStep = (endAngle - startAngle) / _waveNumProjectiles;
+        float angle = startAngle;
+
+        for (int i = 1; i <= _waveNumProjectiles + 1; i++)
+        {
+            // Direction Calculation
+
+            float projectileDirXPosition = startPoint.x + Mathf.Sin((angle * Mathf.PI) / 180) * waveRadius;
+            float projectileDirYPosition = startPoint.y + Mathf.Cos((angle * Mathf.PI) / 180) * waveRadius;
+
+            Vector3 projectileVector = new Vector3(projectileDirXPosition, projectileDirYPosition, 0);
+            Vector3 projectileMoveDirection = (projectileVector - startPoint).normalized * waveProjectileSpeed;
+
+            GameObject tmpObj = Instantiate(waveProjectile, startPoint, Quaternion.identity);
+            tmpObj.GetComponent<Rigidbody>().velocity = new Vector3(projectileMoveDirection.x, 0, projectileMoveDirection.y);
+
+            angle += angleStep;
+        }
     }
     //---------------------------------------------------------------------------------
 }
+
+
+
