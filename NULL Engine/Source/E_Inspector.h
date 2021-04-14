@@ -128,6 +128,8 @@ private:																										// --- DRAW COMPONENT UTILITY METHODS ---
 	void DisplayParticleSize			(ParticleModule* pModule);
 	void DisplayParticleBillboarding	(ParticleModule* pModule);
 
+	void ScriptSelectCombo(C_Script*& cScript, const char* previewValue, bool swapForCurrent);
+
 private:
 	void DrawImportSettings				(Resource* selectedResource);
 
