@@ -925,6 +925,17 @@ void* GameObject::GetScript(const char*scriptName)
 	return nullptr;
 }
 
+void* GameObject::GetEntityScript(const char* entityName)
+{
+	if(entityName == "Player")
+		return GetScript("Player");
+	if (entityName == "Blurrg")
+		return GetScript("Blurrg");
+	if (entityName == "SandTrooper")
+		return GetScript("SandTrooper");
+	return nullptr;
+}
+
 // ---
 uint32 GameObject::GetUID() const
 {

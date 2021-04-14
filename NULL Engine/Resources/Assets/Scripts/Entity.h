@@ -2,29 +2,33 @@
 #include "Script.h"
 #include "ScriptMacros.h"
 
-#include "EntityEnums.h"
+#include "EntityHelpers.h"
 
 #include <string>
 
 #define DEFAULT_MODIFIER 1.0f
 
-class SCRIPTS_API Entity : public Script 
+class Entity : public Script 
 {
 public:
 
 	Entity();
 	virtual ~Entity();
 
-	virtual void Awake();
+	virtual void Start() = 0;
 
 	void PreUpdate();
-	virtual void Update();
+	virtual void Update() = 0;
 	void PostUpdate();
 
-	virtual void CleanUp();
+	virtual void CleanUp() = 0;
+
+	// Interactions
+	virtual void TakeDamage(float damage) = 0;
+	void AddEffect(EffectType type, float duration);
 
 	// Effect Functions
-	virtual void Frozen();
+	virtual void Frozen() = 0;
 
 	// Type
 	EntityType type = EntityType::ENTITY;
@@ -46,25 +50,19 @@ public:
 	float defenseModifier = DEFAULT_MODIFIER;
 
 	// Processed Stats
-	float Speed() { return speed * speedModifier; }
-	float AttackSpeed() { return attackSpeed * attackSpeedModifier; }
-	float Damage() { return damage * damageModifier; }
-	float Defense() { return defense * defenseModifier; }
+	 const float Speed() const { return speed * speedModifier; }
+	 const float AttackSpeed() const { return attackSpeed * attackSpeedModifier; }
+	 const float Damage() const { return damage * damageModifier; }
+	 const float Defense() const { return defense * defenseModifier; }
 
 	// Basic Animations
-	std::string idle = "Idle";
-	std::string death = "Death";
+	std::string idleAnimation = "Idle";
+	std::string deathAnimation = "Death";
 
 private:
 
-	std::vector<Effect> effects;
+	// Effects
+	std::vector<Effect*> effects;
 };
-
-SCRIPTS_FUNCTION Entity* CreateEntity() 
-{
-	Entity* script = new Entity();
-	
-	return script;
-}
 
 typedef unsigned int uint;

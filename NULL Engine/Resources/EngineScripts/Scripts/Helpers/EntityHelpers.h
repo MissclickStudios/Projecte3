@@ -7,8 +7,4 @@ enum class EntityType
 	BLURG
 };
 
-enum class Effect
-{
-	NONE,
-	FROZEN
-};
+#include "Effect.h"

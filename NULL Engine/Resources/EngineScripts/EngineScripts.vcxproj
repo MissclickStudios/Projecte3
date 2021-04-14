@@ -242,11 +242,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\Assets\Scripts\Entity.h" />
+    <ClInclude Include="..\Assets\Scripts\Player.h" />
     <ClInclude Include="Scripts\Headers\ScriptMacros.h" />
-    <ClInclude Include="Scripts\Helpers\EntityEnums.h" />
+    <ClInclude Include="Scripts\Helpers\Effect.h" />
+    <ClInclude Include="Scripts\Helpers\EntityHelpers.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Scripts\Cpps\Entity.cpp" />
+    <ClCompile Include="Scripts\Cpps\Player.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

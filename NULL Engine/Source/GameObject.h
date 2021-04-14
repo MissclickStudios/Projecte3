@@ -93,6 +93,7 @@ public:																									// --- COMPONENT GETTERS AND SETTERS
 	bool							GetAllComponents	(std::vector<Component*>& components) const;	// 
 
 	void*			GetScript							(const char* scriptName);						//
+	void*			GetEntityScript						(const char* entityName);						//
 
 	template<typename T>																				// --- GET COMPONENT TEMPLATED METHOD
 	T* GetComponent() const																				// 

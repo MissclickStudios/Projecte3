@@ -8,7 +8,7 @@ Entity::~Entity()
 {
 }
 
-void Entity::Awake()
+void Entity::Start()
 {
 }
 
@@ -22,12 +22,23 @@ void Entity::PreUpdate()
 
 	// Loop through the Effects and call the respective functions
 	for (uint i = 0; i < effects.size(); ++i)
-		switch (effects[i])
+	{
+		if (effects[i]->IsActive()) // Check if the effect duration is ongoing
 		{
-		case Effect::FROZEN:
-			Frozen();
-			break;
+			switch (effects[i]->Type()) // Call the corresponding function
+			{
+			case EffectType::FROZEN:
+				Frozen();
+				break;
+			}
 		}
+		else // Delete the effect if it ran out
+		{
+			delete effects[i];
+			effects.erase(effects.begin() + i);
+			--i;
+		}
+	}
 }
 
 void Entity::Update()
@@ -40,6 +51,11 @@ void Entity::PostUpdate()
 
 void Entity::CleanUp()
 {
+}
+
+void Entity::AddEffect(EffectType type, float duration)
+{
+	effects.emplace_back(new Effect(type, duration)); // I use emplace instead of push to avoid unnecessary copies
 }
 
 void Entity::Frozen()
