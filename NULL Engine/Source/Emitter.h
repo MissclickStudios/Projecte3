@@ -2,28 +2,35 @@
 #define __EMITTER_H__
 
 #include <vector>
-#include "Particle.h"
+
 #include "ParticleModule.h"
 
-class R_Material;
+class R_Texture;
+class ParsonNode;
 
-class Emitter
+class NULL_API Emitter
 {
 public:
 	Emitter();
 
-	//Loop through all modules, loop through particles, update them
+	//Loop through all modules, loop through particles, update them     
 	void Update(float dt);
 
 	//Save and load?
+	void Save(ParsonNode& node);
+	void Load(ParsonNode& node);
 
 	void SetAsDefault();
 	bool AddModuleFromType(ParticleModule::Type type);
+	bool DeleteModuleFromType(ParticleModule::Type type);
+
+	void SetTexture(R_Texture* newTexture);
 
 public:
-	std::string name = "Particle Emitter";
 	std::vector<ParticleModule*> modules;
-	R_Material* emitterMaterial;
+	
+	std::string name = "Particle Emitter";
+	R_Texture* emitterTexture = nullptr;
 
 	int maxParticleCount = 10;
 };

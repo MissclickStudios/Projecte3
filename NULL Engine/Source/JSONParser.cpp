@@ -175,6 +175,18 @@ Quat ParsonNode::GetQuat(const const char* name)
 	return quat;
 }
 
+Color ParsonNode::GetColor(const char* name)
+{
+	JSON_Array* tempArray = json_object_get_array(rootNode, name);
+	Color color;
+	color.r = json_array_get_number(tempArray, 0);
+	color.g = json_array_get_number(tempArray, 1);
+	color.b = json_array_get_number(tempArray, 2);
+	color.a = json_array_get_number(tempArray, 3);
+
+	return color;
+}
+
 const char* ParsonNode::GetString(const char* name) const
 {
 	if (NodeHasValueOfType(name, JSONString))
@@ -203,7 +215,7 @@ bool ParsonNode::GetBool(const char* name) const
 	return false;
 }
 
-ParsonArray ParsonNode::GetArray(const char* name) const
+ParsonArray ParsonNode::GetArray(const char* name, bool logErrors) const
 {
 	if (NodeHasValueOfType(name, JSONArray))
 	{
@@ -211,15 +223,16 @@ ParsonArray ParsonNode::GetArray(const char* name) const
 	}
 	else
 	{
-		LOG("[ERROR] JSON Parser: %s did not have a JSON_Array variable!", name);
+		if (logErrors)
+			LOG("[ERROR] JSON Parser: %s did not have a JSON_Array variable!", name);
 	}
 
 	return ParsonArray();																		// If an empty config array is returned then check that json_array == nullptr and size == 0.
 }
 
-ParsonNode ParsonNode::GetNode(const char* name) const
+ParsonNode ParsonNode::GetNode(const char* name, bool logErrors) const
 {
-	if (!NodeHasValueOfType(name, JSONObject))
+	if (!NodeHasValueOfType(name, JSONObject) && logErrors)
 	{
 		LOG("[ERROR] JSON Parser: %s did not have a JSON_Object variable!", name);				// Just for display purposes.
 	}
@@ -288,6 +301,23 @@ void ParsonNode::SetFloat4(const const char* name, const float4 float4)
 	json_array_append_number(tempArray, float4.y);
 	json_array_append_number(tempArray, float4.z);
 	json_array_append_number(tempArray, float4.w);
+}
+
+void ParsonNode::SetColor(const char* name, const Color color)
+{
+	JSON_Array* tempArray = json_object_get_array(rootNode, name);
+	if (tempArray == nullptr) {
+		JSON_Value* val = json_value_init_array();
+		tempArray = json_value_get_array(val);
+		json_object_dotset_value(rootNode, name, val);
+	}
+	else {
+		json_array_clear(tempArray);
+	}
+	json_array_append_number(tempArray, color.r);
+	json_array_append_number(tempArray, color.g);
+	json_array_append_number(tempArray, color.b);
+	json_array_append_number(tempArray, color.a);
 }
 
 void ParsonNode::SetQuat(const const char* name, const Quat quat)
@@ -564,7 +594,7 @@ void ParsonArray::SetColor(const Color& color)
 
 	(statusR == JSONFailure) ? LOG("[ERROR] JSON Parser: Could not append Red to %s Array!", name)		: ++size;			// If an operation was not successful then an ERROR is sent
 	(statusG == JSONFailure) ? LOG("[ERROR] JSON Parser: Could not append Green to %s Array!", name)	: ++size;			// to the console.
-	(statusB == JSONFailure) ? LOG("[ERROR] JSON Parser: Could not append Blue to %s Array!", name)	: ++size;			// On success the size variable will be updated.
+	(statusB == JSONFailure) ? LOG("[ERROR] JSON Parser: Could not append Blue to %s Array!", name)		: ++size;			// On success the size variable will be updated.
 	(statusA == JSONFailure) ? LOG("[ERROR] JSON Parser: Could not append Alpha to %s Array!", name)	: ++size;			// ---------------------------------------------------------
 }
 

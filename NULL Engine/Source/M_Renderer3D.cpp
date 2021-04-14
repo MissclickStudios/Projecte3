@@ -27,6 +27,7 @@
 #include "R_Shader.h"
 
 #include "I_Textures.h"													
+#include "I_Shaders.h"							//TODO: erase
 
 #include "GameObject.h"	
 #include "C_Transform.h"
@@ -37,17 +38,19 @@
 #include "C_Canvas.h"
 #include "C_UI_Image.h"
 #include "C_UI_Text.h"
+#include "C_UI_Button.h"
+
+#include "Renderer.h"
+#include "RE_Circle.h"
 
 #include "M_Renderer3D.h"
-
-#include "I_Shaders.h"							//TODO: erase
 
 #include "MemoryManager.h"
 
 
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */	
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */	
-#pragma comment (lib, "Source/Dependencies/Assimp/libx86/assimp.lib")	
+#pragma comment (lib, "Source/Dependencies/Assimp/assimp-vc142-mt.lib")	
 #pragma comment (lib, "Source/Dependencies/glew/libx86/glew32.lib")
 
 #define WORLD_GRID_SIZE		64
@@ -100,9 +103,9 @@ bool M_Renderer3D::Init(ParsonNode& configuration)
 	renderVertexNormals = configuration.GetBool("renderVertexNormals");
 	renderFaceNormals	= configuration.GetBool("renderFaceNormals");
 	renderBoundingBoxes = configuration.GetBool("renderBoundingBoxes");
-	renderSkeletons = configuration.GetBool("renderSkeletons");
-	renderColliders = configuration.GetBool("renderColliders");
-	renderCanvas = configuration.GetBool("renderCanvas");
+	renderSkeletons		= configuration.GetBool("renderSkeletons");
+	renderColliders		= configuration.GetBool("renderColliders");
+	renderCanvas		= configuration.GetBool("renderCanvas");
 
 	worldGridColor		= configuration.GetFloat4("worldGridColor");
 	wireframeColor		= configuration.GetFloat4("wireframeColor");
@@ -148,7 +151,8 @@ bool M_Renderer3D::Start()
 // PreUpdate: clear buffer
 UpdateStatus M_Renderer3D::PreUpdate(float dt)
 {	
-	
+	OPTICK_CATEGORY("M_Renderer3D PreUpdate", Optick::Category::Module)
+
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
 
@@ -187,7 +191,7 @@ UpdateStatus M_Renderer3D::PreUpdate(float dt)
 // PostUpdate present buffer to screen
 UpdateStatus M_Renderer3D::PostUpdate(float dt)
 {	
-	OPTICK_CATEGORY("Renderer Post Update", Optick::Category::Update);
+	OPTICK_CATEGORY("M_Renderer3D PostUpdate", Optick::Category::Module);
 
 	RenderScene();
 
@@ -593,51 +597,52 @@ void M_Renderer3D::FreeBuffers()
 
 void M_Renderer3D::RendererShortcuts()
 {
-	if (App->input->GetKey(SDL_SCANCODE_F1) == KeyState::KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_LCTRL) == KeyState::KEY_REPEAT)
 	{
-		renderWorldGrid = !renderWorldGrid;
-	}
-
-	if (App->input->GetKey(SDL_SCANCODE_F2) == KeyState::KEY_DOWN)
-	{
-		renderWorldAxis = !renderWorldAxis;
-	}
-	
-	if (App->input->GetKey(SDL_SCANCODE_F3) == KeyState::KEY_DOWN)
-	{
-		SetRenderWireframes(!renderWireframes);
-	}
-
-	if (App->input->GetKey(SDL_SCANCODE_F7) == KeyState::KEY_DOWN)
-	{
-		SetGLFlag(GL_TEXTURE_2D, !GetGLFlag(GL_TEXTURE_2D));
-	}
-
-	if (App->input->GetKey(SDL_SCANCODE_F8) == KeyState::KEY_DOWN)
-	{
-		SetGLFlag(GL_COLOR_MATERIAL, !GetGLFlag(GL_COLOR_MATERIAL));
-	}
-
-	if (App->input->GetKey(SDL_SCANCODE_KP_PLUS) == KeyState::KEY_DOWN)
-	{
-		if (App->camera->GetCurrentCamera() != nullptr)
+		if (App->input->GetKey(SDL_SCANCODE_F1) == KeyState::KEY_DOWN)
 		{
-			float currentFov = App->camera->GetCurrentCamera()->GetVerticalFOV();
-			App->camera->GetCurrentCamera()->SetVerticalFOV(currentFov + 5.0f);
+			renderWorldGrid = !renderWorldGrid;
 		}
-	}
-	if (App->input->GetKey(SDL_SCANCODE_KP_MINUS) == KeyState::KEY_DOWN)
-	{
-		if (App->camera->GetCurrentCamera() != nullptr)
+		if (App->input->GetKey(SDL_SCANCODE_F2) == KeyState::KEY_DOWN)
 		{
-			float current_fov = App->camera->GetCurrentCamera()->GetVerticalFOV();
-			App->camera->GetCurrentCamera()->SetVerticalFOV(current_fov - 5.0f);
+			renderWorldAxis = !renderWorldAxis;
+		}
+		if (App->input->GetKey(SDL_SCANCODE_F3) == KeyState::KEY_DOWN)
+		{
+			SetRenderWireframes(!renderWireframes);
+		}
+		if (App->input->GetKey(SDL_SCANCODE_F7) == KeyState::KEY_DOWN)
+		{
+			SetGLFlag(GL_TEXTURE_2D, !GetGLFlag(GL_TEXTURE_2D));
+		}
+		if (App->input->GetKey(SDL_SCANCODE_F8) == KeyState::KEY_DOWN)
+		{
+			SetGLFlag(GL_COLOR_MATERIAL, !GetGLFlag(GL_COLOR_MATERIAL));
+		}
+
+		if (App->input->GetKey(SDL_SCANCODE_KP_PLUS) == KeyState::KEY_DOWN)
+		{
+			if (App->camera->GetCurrentCamera() != nullptr)
+			{
+				float currentFov = App->camera->GetCurrentCamera()->GetVerticalFOV();
+				App->camera->GetCurrentCamera()->SetVerticalFOV(currentFov + 5.0f);
+			}
+		}
+		if (App->input->GetKey(SDL_SCANCODE_KP_MINUS) == KeyState::KEY_DOWN)
+		{
+			if (App->camera->GetCurrentCamera() != nullptr)
+			{
+				float current_fov = App->camera->GetCurrentCamera()->GetVerticalFOV();
+				App->camera->GetCurrentCamera()->SetVerticalFOV(current_fov - 5.0f);
+			}
 		}
 	}
 }
 
 void M_Renderer3D::RenderScene()
 {	
+	OPTICK_CATEGORY("Render Scene", Optick::Category::Rendering)
+
 	glBindFramebuffer(GL_FRAMEBUFFER, sceneFramebuffer);
 	glClear(GL_DEPTH_BUFFER_BIT);
 	glClear(GL_COLOR_BUFFER_BIT);
@@ -648,6 +653,11 @@ void M_Renderer3D::RenderScene()
 	if (renderWorldAxis)
 		DrawWorldAxis();
 
+	// TMP
+	/*static float4x4 dbTrnsfrm		= float4x4::FromTRS(float3(0.0f, 10.0f, 0.0f), Quat::FromEulerXYZ(90.0f * DEGTORAD, 0.0f, 0.0f), float3::one);
+	static RE_Circle debugCircle	= RE_Circle(dbTrnsfrm, float3(0.0f, 10.0f, 0.0f), 5.0f, 20, 2.0f);
+	debugCircle.Render();*/
+	
 	RenderMeshes();
 	RenderCuboids();
   
@@ -674,8 +684,10 @@ void M_Renderer3D::RenderScene()
 	defaultSkyBox.RenderSkybox();
 
 	RenderUI();
+	
 
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+	
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
@@ -729,15 +741,16 @@ void M_Renderer3D::SetTo2DRenderSettings(const bool& setTo)
 
 void M_Renderer3D::RenderUI()
 {
+	OPTICK_CATEGORY("RenderUI", Optick::Category::Rendering)
 	SetTo2DRenderSettings(true);
 
 	C_Canvas* canvas = nullptr;
-	for (std::vector<GameObject*>::iterator uiIt = App->scene->GetGameObjects()->begin(); uiIt != App->scene->GetGameObjects()->end(); uiIt++)
-	{
+	for (auto uiIt = App->scene->GetGameObjects()->cbegin(); uiIt != App->scene->GetGameObjects()->cend(); ++uiIt)
+	{	
 		canvas = (*uiIt)->GetComponent<C_Canvas>();
 		if (canvas != nullptr)
 		{
-			RenderUIComponent(*uiIt);
+			RenderUIComponent((*uiIt));
 
 			if (!canvas->IsInvisible())
 			{
@@ -772,12 +785,18 @@ void M_Renderer3D::RenderUIComponent(GameObject* gameObject)
 		if (text != nullptr)
 		{
 			if (App->camera->currentCamera != App->camera->masterCamera->GetComponent<C_Camera>())
-				text->Draw2D();
-
-			else
-				text->Draw3D();
+				text->RenderText();
 		}
 
+		C_UI_Button* button = (*it)->GetComponent<C_UI_Button>();
+		if (button != nullptr)
+		{
+			if (App->camera->currentCamera != App->camera->masterCamera->GetComponent<C_Camera>())
+				button->Draw2D();
+
+			else
+				button->Draw3D();
+		}
 
 		for (std::vector<GameObject*>::iterator childIt = (*it)->childs.begin(); childIt != (*it)->childs.end(); childIt++)
 		{
@@ -900,9 +919,9 @@ void M_Renderer3D::RenderSkeletons()
 	glEnable(GL_LIGHTING);
 }
 
-void M_Renderer3D::AddParticle(const float4x4& transform, R_Material* material, Color color, float distanceToCamera)
+void M_Renderer3D::AddParticle(const float4x4& transform, R_Texture* material, Color color, float distanceToCamera)
 {
-	particles.insert(std::make_pair((particles.size() +1), ParticleRenderer(material, color, transform)));
+	particles.insert(std::make_pair(distanceToCamera, ParticleRenderer(material, color, transform)));
 }
 
 void M_Renderer3D::RenderParticles()
@@ -910,7 +929,8 @@ void M_Renderer3D::RenderParticles()
 	std::map<float, ParticleRenderer>::reverse_iterator it;				//Render from far to close to the camera
 	for (it = particles.rbegin(); it != particles.rend(); ++it)			
 	{
-		DrawParticle(it->second);
+		//DrawParticle(it->second);
+		it->second.Render();
 	}
 	particles.clear();
 }
@@ -932,7 +952,7 @@ void M_Renderer3D::DrawParticle(ParticleRenderer& renderParticle)
 	//	}
 	//}
 
-	glColor4f(renderParticle.color.r, renderParticle.color.g, renderParticle.color.b, renderParticle.color.a);
+	glColor4f(0.0f, 1.0f, 1.0f, 1.0f);
 
 	//Drawing to tris in direct mode
 	glBegin(GL_TRIANGLES);
@@ -1454,14 +1474,21 @@ GameObject* M_Renderer3D::GenerateSceneLight(Color diffuse, Color ambient, Color
 	std::string name;
 	switch (lightType)
 	{
-	case LightType::DIRECTIONAL: name = "DirectionalLight";  break;
-	case LightType::POINTLIGHT: name = "PointLight";  break;
-	case LightType::SPOTLIGHT: name = "SpotLight"; break;
-	case LightType::NONE: break;
+	case LightType::DIRECTIONAL:	{ name = "DirectionalLight"; }	break;
+	case LightType::POINTLIGHT:		{ name = "PointLight"; }		break;
+	case LightType::SPOTLIGHT:		{ name = "SpotLight"; }			break;
+	case LightType::NONE:			{ name = ""; }					break;
 	}
-	
-	if (!App->scene->GetAllLights().empty()) 
-		name += std::to_string(App->scene->GetPointLights().size());
+
+	if (App->scene->SceneHasLights())
+	{
+		std::vector<GameObject*> pointLights;																		// ATTENTION: Only checking point lights? Shouldn't it be all lights?
+		App->scene->GetPointLights(pointLights);
+
+		name += std::to_string(pointLights.size());
+
+		pointLights.clear();
+	}
 
 	light = App->scene->CreateGameObject(name.c_str(), App->scene->GetSceneRoot());
 
@@ -1508,9 +1535,9 @@ void M_Renderer3D::GenScreenBuffer()
 		-1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
 		1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
 		-1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
-		-1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
 		1.0f,  -1.0f, 0.0f, 1.0f, 0.0f,
-		1.0f, 1.0f, 0.0f, 1.0f, 1.0f
+		1.0f, 1.0f, 0.0f, 1.0f, 1.0f,
+		-1.0f,  1.0f, 0.0f, 0.0f, 1.0f
 	};
 
 	GLuint quad_vertexbuffer;
@@ -1550,9 +1577,16 @@ void MeshRenderer::Render()
 	ApplyTextureAndMaterial();																								// Apply resource texture or default texture, mesh color...
 	ApplyShader();																											// 
 
-	(cMesh->GetSkinnedMesh() == nullptr) ? glBindVertexArray(rMesh->VAO) : glBindVertexArray(cMesh->GetSkinnedMesh()->VAO);	// 
-
-	glDrawElements(GL_TRIANGLES, rMesh->indices.size(), GL_UNSIGNED_INT, nullptr);											// 
+	if (cMesh->GetSkinnedMesh() == nullptr)
+	{
+		glBindVertexArray(rMesh->VAO);
+		glDrawElements(GL_TRIANGLES, rMesh->indices.size(), GL_UNSIGNED_INT, nullptr);
+	}
+	else
+	{
+		glBindVertexArray(cMesh->GetSkinnedMesh()->VAO);
+		glDrawElements(GL_TRIANGLES, cMesh->GetSkinnedMesh()->indices.size(), GL_UNSIGNED_INT, nullptr);
+	}
 	
 	glBindVertexArray(0);																									//
 
@@ -1780,17 +1814,32 @@ void MeshRenderer::ApplyShader()
 
 			cMaterial->GetShader()->SetUniformMatrix4("projectionMatrix", App->camera->GetCurrentCamera()->GetOGLProjectionMatrix());
 
-			//cMaterial->GetShader()->SetUniform1f("time", Time::Game::GetTimeSinceStart());
-
 			cMaterial->GetShader()->SetUniformVec3f("cameraPosition", (GLfloat*)&App->camera->GetCurrentCamera()->GetFrustum().Pos());
 			
  			//Skybox
 			
 			cMaterial->GetShader()->SetUniform1i("skybox", 11);
 
+
+			//ANimations
+			std::vector<float4x4> boneTransforms;
+
+			cMesh->GetBoneTranforms(boneTransforms);
+			
+			bool check = cMesh->GetSkinnedMesh() != nullptr;
+
+			cMaterial->GetShader()->SetUniform1i("activeAnimation", (check));
+
+			if (!boneTransforms.empty())
+			{				
+				cMaterial->GetShader()->SetUniformMatrix4("finalBonesMatrices", (GLfloat*)&boneTransforms[0], boneTransforms.size());
+			}
+
 			// Light 
-			std::vector<GameObject*> dirLights = App->scene->GetDirLights();
-			std::vector<GameObject*> pointLights = App->scene->GetPointLights();
+			std::vector<GameObject*> dirLights;
+			std::vector<GameObject*> pointLights; 
+			App->scene->GetDirLights(dirLights);
+			App->scene->GetPointLights(pointLights);
 
 			if (!dirLights.empty())
 			{
@@ -1809,33 +1858,22 @@ void MeshRenderer::ApplyShader()
 			{
 				for (uint i = 0; i < pointLights.size(); i++)
 				{
-					std::string pointLightName = "pointLight";
-					pointLightName += "[" + std::to_string(i) + "]";
-
 					cMaterial->GetShader()->SetUniform1i("numPointLights", pointLights.size());
-					cMaterial->GetShader()->SetUniformVec4f(pointLightName += ".diffuse", (GLfloat*)&pointLights[i]->GetComponent<C_Light>()->GetPointLight()->diffuse);
-					pointLightName = "pointLight";
-					pointLightName += "[" + std::to_string(i) + "]";
-					cMaterial->GetShader()->SetUniformVec4f(pointLightName += ".ambient", (GLfloat*)&pointLights[i]->GetComponent<C_Light>()->GetPointLight()->ambient);
-					pointLightName = "pointLight";
-					pointLightName += "[" + std::to_string(i) + "]";
-					cMaterial->GetShader()->SetUniformVec4f(pointLightName += ".specular", (GLfloat*)&pointLights[i]->GetComponent<C_Light>()->GetPointLight()->specular);
-					pointLightName = "pointLight";
-					pointLightName += "[" + std::to_string(i) + "]";
-					cMaterial->GetShader()->SetUniform1f(pointLightName += ".constant", pointLights[i]->GetComponent<C_Light>()->GetPointLight()->GetConstant());
-					pointLightName = "pointLight";
-					pointLightName += "[" + std::to_string(i) + "]";
-					cMaterial->GetShader()->SetUniform1f(pointLightName += ".linear", pointLights[i]->GetComponent<C_Light>()->GetPointLight()->GetLinear());
-					pointLightName = "pointLight";
-					pointLightName += "[" + std::to_string(i) + "]";
-					cMaterial->GetShader()->SetUniform1f(pointLightName += ".quadratic", pointLights[i]->GetComponent<C_Light>()->GetPointLight()->GetQuadratic());
-					pointLightName = "pointLight";
-					pointLightName += "[" + std::to_string(i) + "]";
-					cMaterial->GetShader()->SetUniformVec3f(pointLightName += ".position", (GLfloat*)&pointLights[i]->transform->GetWorldPosition());
+					cMaterial->GetShader()->SetUniformVec4f("pointLight[" + std::to_string(i) + "]" + ".diffuse", (GLfloat*)&pointLights[i]->GetComponent<C_Light>()->GetPointLight()->diffuse);
+					cMaterial->GetShader()->SetUniformVec4f("pointLight[" + std::to_string(i) + "]" + ".ambient", (GLfloat*)&pointLights[i]->GetComponent<C_Light>()->GetPointLight()->ambient);
+					cMaterial->GetShader()->SetUniformVec4f("pointLight[" + std::to_string(i) + "]" + ".specular", (GLfloat*)&pointLights[i]->GetComponent<C_Light>()->GetPointLight()->specular);
+					cMaterial->GetShader()->SetUniform1f("pointLight[" + std::to_string(i) + "]" + ".constant", pointLights[i]->GetComponent<C_Light>()->GetPointLight()->GetConstant());
+					cMaterial->GetShader()->SetUniform1f("pointLight[" + std::to_string(i) + "]" + ".linear", pointLights[i]->GetComponent<C_Light>()->GetPointLight()->GetLinear());
+					cMaterial->GetShader()->SetUniform1f("pointLight[" + std::to_string(i) + "]" + ".quadratic", pointLights[i]->GetComponent<C_Light>()->GetPointLight()->GetQuadratic());
+					cMaterial->GetShader()->SetUniformVec3f("pointLight[" + std::to_string(i) + "]" + ".position", (GLfloat*)&pointLights[i]->transform->GetWorldPosition());
 				}
 			}
 
-			if(cMaterial->GetShader()) Importer::Shaders::SetShaderUniforms(cMaterial->GetShader());
+			if(cMaterial->GetShader()) 
+				Importer::Shaders::SetShaderUniforms(cMaterial->GetShader());
+
+			dirLights.clear();
+			pointLights.clear();
 		}
 	}
 }
@@ -2038,10 +2076,43 @@ void SkeletonRenderer::Render()
 }
 
 // -- PARTICLE RENDERER METHODS
-ParticleRenderer::ParticleRenderer(R_Material* mat, Color color, const float4x4 transform) : 
+ParticleRenderer::ParticleRenderer(R_Texture* mat, Color color, const float4x4 transform) : 
 mat(mat),
 color(color),
 transform(transform)
 {
 
+}
+
+void ParticleRenderer::Render()
+{
+
+	glPushMatrix();
+	glMultMatrixf((GLfloat*)&transform);
+
+	glEnable(GL_BLEND);
+
+	glColor4f(0.0f, 0.0f, 0.0f, 1.0f);
+
+	glBindTexture(GL_TEXTURE_2D, mat->GetTextureID());
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+
+	int x =0;
+	int y = 0;
+	int w = 5;
+	int h = 5;
+
+	glBegin(GL_QUADS);
+	glTexCoord2f(0, 0); glVertex2f(x -w / 2, y - h / 2);
+	glTexCoord2f(1, 0); glVertex2f(x +w / 2, y - h / 2);
+	glTexCoord2f(1, 1); glVertex2f(x +w / 2, y + h / 2);
+	glTexCoord2f(0, 1); glVertex2f(x -w / 2, y + h / 2);
+	glEnd();
+
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	glDisable(GL_BLEND);
+
+	glPopMatrix();
 }

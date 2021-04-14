@@ -72,6 +72,7 @@ bool M_Audio::Start()
 
 UpdateStatus M_Audio::Update(float dt)
 {
+	OPTICK_CATEGORY("M_Audio Update", Optick::Category::Module)
 	AK::SoundEngine::RenderAudio();
 
 	//Depending on the engine state pause/play/resume/stop events

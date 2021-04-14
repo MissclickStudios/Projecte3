@@ -10,11 +10,15 @@
 
 #include "R_Model.h"
 #include "R_Texture.h"
+#include "R_Shader.h"
+#include "R_Script.h"
 
 #include "I_Scenes.h"
 #include "I_Meshes.h"
 #include "I_Materials.h"
 #include "I_Textures.h"
+#include "I_Shaders.h"
+//#include "I_Scripts.h"
 
 #include "Importer.h"
 
@@ -36,12 +40,7 @@ bool Importer::ImportScene(const char* buffer, uint size, R_Model* rModel)
 {
 	Importer::Scenes::Import(buffer, size, rModel);
 
-	if (rModel == nullptr)
-	{
-		return false;
-	}
-
-	return true;
+	return (rModel != nullptr);
 }
 
 bool Importer::ImportMesh(const char* buffer, R_Mesh* rMesh)
@@ -53,29 +52,60 @@ bool Importer::ImportMesh(const char* buffer, R_Mesh* rMesh)
 
 bool Importer::ImportTexture(const char* buffer, uint size, R_Texture* rTexture)
 {
-	std::map<std::string, uint32> forcedUIDs;
-	App->resourceManager->GetForcedUIDsFromMeta(rTexture->GetAssetsPath(), forcedUIDs);
-
-	if (!forcedUIDs.empty())
-	{
-		rTexture->ForceUID(forcedUIDs.begin()->second);
-		rTexture->SetLibraryPathAndFile();
-	}
+	FindAndForceUID((Resource*)rTexture);
 	
 	bool success = Importer::Textures::Import(buffer, size, rTexture);
 
-	/*if (rTexture != nullptr && rTexture->GetTextureID() != 0)
-	{
-		//App->scene->ApplyNewTextureToSelectedGameObject(rTexture->GetUID());					// Put on hold until the project panel is functional and in place.
-	}
-	else
-	{
-		return false;
-		
-		LOG("[ERROR] Importer: Could not import the dropped texture!");
-		RELEASE(rTexture);
-		return 0;
-	}*/
+	return (success && rTexture != nullptr);
+}
 
-	return success;
+bool Importer::ImportShader(const char* buffer, R_Shader* rShader)
+{
+	FindAndForceUID((Resource*)rShader);
+	
+	bool success = Importer::Shaders::Import(buffer, rShader);
+
+	return (success && rShader != nullptr);
+}
+
+bool Importer::ImportParticles(const char* buffer, R_ParticleSystem* rParticles)
+{
+	FindAndForceUID((Resource*)rParticles);
+	
+	/*bool success = Importer::Particles::Import(buffer, rParticles);*/
+
+	return /*(success && rParticles != nullptr)*/ true;
+}
+
+bool Importer::ImportScript(const char* buffer, R_Script* rScript)
+{
+	FindAndForceUID((Resource*)rScript);
+
+	//bool success = Importer::Scripts::Import(rScript->GetAssetsPath(), buffer, );
+	
+	return /*(success && rScript != nullptr)*/ true;
+}
+
+bool Importer::ImportNavMesh(const char* buffer, R_NavMesh* rNavMesh)
+{
+	FindAndForceUID((Resource*)rNavMesh);
+
+	/*bool success = Importer::Navigation::Import(buffer, rNavMesh);*/
+
+	return /*(success && rNavMesh != nullptr)*/ true;
+}
+
+void Importer::FindAndForceUID(Resource* resource)
+{
+	if (resource == nullptr)
+	{
+		LOG("[ERROR] Importer: Could not Find and Force UID! Error: Given Resource* was nullptr");
+		return;
+	}
+
+	uint32 forcedUID = App->resourceManager->GetForcedUIDFromMeta(resource->GetAssetsPath());
+	if (forcedUID != 0)
+	{
+		resource->ForceUID(forcedUID);
+	}
 }

@@ -16,6 +16,8 @@
 #include "M_ResourceManager.h"
 #include "M_UISystem.h"
 #include "M_Scene.h"
+#include "M_EngineScriptManager.h"
+#include "M_Physics.h"
 
 #include "GameObject.h"
 #include "Component.h"
@@ -34,21 +36,31 @@
 #include "C_CapsuleCollider.h"
 #include "C_PlayerController.h"
 #include "C_BulletBehavior.h"
+#include "C_ParticleSystem.h"
 #include "C_PropBehavior.h"
 #include "C_CameraBehavior.h"
 #include "C_GateBehavior.h"
 #include "C_Canvas.h"
-#include "C_ParticleSystem.h"
 #include "C_UI_Image.h"
 #include "C_UI_Text.h"
-
+#include "C_UI_Button.h"
+#include "C_Script.h"
+#include "C_2DAnimator.h"
+#include "C_NavMeshAgent.h"
 
 #include "R_Shader.h"
 #include "R_Texture.h"
+#include "R_Animation.h"
+#include "R_Shader.h"
+#include "R_Script.h"
+#include "R_ParticleSystem.h"
+
 #include "I_Shaders.h"
 
+#include "Emitter.h"
 
 #include "E_Inspector.h"
+#include "MathGeoLib/include/Math/float3.h"
 
 #include <fstream>
 
@@ -78,26 +90,49 @@ E_Inspector::~E_Inspector()
 bool E_Inspector::Draw(ImGuiIO& io)
 {
 	bool ret = true;
-
+	OPTICK_CATEGORY("E_Inspector Draw", Optick::Category::Editor)
 
 	ImGui::Begin("Inspector");
 
 	SetIsHovered();
-	
-	GameObject* selected = EngineApp->editor->GetSelectedGameObjectThroughEditor();
 
-	if (selected != nullptr && !selected->is_master_root && !selected->is_scene_root)
+	// --- IS LOCKED ---
+	ImGui::Checkbox("Is Locked", &lockGameObject);
+	
+	if (!lockGameObject)
+	{
+		GameObject* selected = EngineApp->editor->GetSelectedGameObjectThroughEditor();
+
+		if(selected != nullptr)
+			shownGameObject = selected;
+	}
+	else
+	{
+		if(shownGameObject != nullptr)
+			if (shownGameObject->toDelete)
+			{
+				lockGameObject = false;
+
+				GameObject* selected = EngineApp->editor->GetSelectedGameObjectThroughEditor();
+
+				if (selected != nullptr)
+					shownGameObject = selected;
+			}
+	}
+	
+
+	if (shownGameObject != nullptr && !shownGameObject->isMasterRoot && !shownGameObject->isSceneRoot)
 	{	
-		DrawGameObjectInfo(selected);
-		DrawComponents(selected);
+		DrawGameObjectInfo(shownGameObject);
+		DrawComponents(shownGameObject);
 		TextEditorWindow();
 		ImGui::Separator();
 
-		AddComponentCombo(selected);
+		AddComponentCombo(shownGameObject);
 
 		if (showDeleteComponentPopup)
 		{
-			DeleteComponentPopup(selected);
+			DeleteComponentPopup(shownGameObject);
 		}
 	}
 
@@ -151,7 +186,7 @@ void E_Inspector::DrawGameObjectInfo(GameObject* selectedGameObject)
 	{
 		selectedGameObject->SetIsStatic(isStatic);
 	}
-
+	
 	// --- TAG ---
 	ImGui::SetNextItemWidth(ImGui::GetWindowWidth() * 0.33f);
 	static char tagCombo[64] = { "Untagged\0Work\0In\0Progress" };
@@ -167,12 +202,12 @@ void E_Inspector::DrawGameObjectInfo(GameObject* selectedGameObject)
 	ImGui::Combo("Layer", &currentLayer, layerCombo);
 
 	ImGui::Separator();
-
+	
 	if (!selectedGameObject->isPrefab)	// --- PREFAB ---
 	{
 		if (ImGui::Button("Create Prefab"))
 		{
-			
+		
 			App->resourceManager->CreatePrefab(selectedGameObject);
 			//App->resourceManager->RefreshProjectDirectories(); //Should only refresh prefabs
 		}
@@ -182,6 +217,11 @@ void E_Inspector::DrawGameObjectInfo(GameObject* selectedGameObject)
 		if (ImGui::Button("Update Prefab"))
 			App->resourceManager->UpdatePrefab(selectedGameObject);
 	}
+
+	ImGui::SameLine(ImGui::GetWindowWidth() * 0.51f);
+
+	bool maintain = selectedGameObject->GetMaintainThroughScenes();
+	if (ImGui::Checkbox("Maintain Through Scenes", &maintain)) { selectedGameObject->SetMaintainThroughScenes(maintain); }
 
 	ImGui::Separator();
 }
@@ -219,15 +259,19 @@ void E_Inspector::DrawComponents(GameObject* selectedGameObject)
 		case ComponentType::BOX_COLLIDER:		{ DrawBoxColliderComponent((C_BoxCollider*)component); }			break;
 		case ComponentType::SPHERE_COLLIDER:	{ DrawSphereColliderComponent((C_SphereCollider*)component); }		break;
 		case ComponentType::CAPSULE_COLLIDER:	{ DrawCapsuleColliderComponent((C_CapsuleCollider*)component); }	break;
-		case ComponentType::PARTICLE_SYSTEM:	{ DrawParticleSystemComponent((C_ParticleSystem*)component); }		break;
+		case ComponentType::PARTICLES:			{ DrawParticleSystemComponent((C_ParticleSystem*)component); }			break;
 		case ComponentType::CANVAS:				{ DrawCanvasComponent((C_Canvas*)component); }						break;
 		case ComponentType::UI_IMAGE:			{ DrawUIImageComponent((C_UI_Image*)component); }					break;
 		case ComponentType::UI_TEXT:			{ DrawUITextComponent((C_UI_Text*)component); }						break;
+		case ComponentType::SCRIPT:				{ DrawScriptComponent((C_Script*)component); }						break;
+		case ComponentType::UI_BUTTON:			{ DrawUIButtonComponent((C_UI_Button*)component); }					break;
 		case ComponentType::PLAYER_CONTROLLER:	{ DrawPlayerControllerComponent((C_PlayerController*)component); }	break;
 		case ComponentType::BULLET_BEHAVIOR:	{ DrawBulletBehaviorComponent((C_BulletBehavior*)component); }		break;
 		case ComponentType::PROP_BEHAVIOR:		{ DrawPropBehaviorComponent((C_PropBehavior*)component); }			break;
 		case ComponentType::CAMERA_BEHAVIOR:	{ DrawCameraBehaviorComponent((C_CameraBehavior*)component); }		break;
 		case ComponentType::GATE_BEHAVIOR:		{ DrawGateBehaviorComponent((C_GateBehavior*)component); }			break;
+		case ComponentType::ANIMATOR2D:			{ DrawAnimator2DComponent((C_2DAnimator*)component); }				break;
+		case ComponentType::NAVMESH_AGENT:		{ DrawNavMeshAgentComponent((C_NavMeshAgent*)component); }			break;
 		}
 		if (type == ComponentType::NONE)
 		{
@@ -692,222 +736,27 @@ void E_Inspector::DrawCameraComponent(C_Camera* cCamera)
 
 void E_Inspector::DrawAnimatorComponent(C_Animator* cAnimator)								// TODO: Segment this Method in Multiple Smaller Methods.
 {
+	OPTICK_CATEGORY("Animator Inspector", Optick::Category::Animation);
 	bool show = true;
 	if (ImGui::CollapsingHeader("Animator", &show, ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		if (cAnimator != nullptr)
 		{
-			bool animationIsActive	= cAnimator->IsActive();
-			if (ImGui::Checkbox("Is Active", &animationIsActive))	{ cAnimator->SetIsActive(animationIsActive); }
-			
-			ImGui::SameLine(ImGui::GetWindowWidth() * 0.69f);
-
-			std::string animatorStateString = cAnimator->GetAnimatorStateAsString();
-			ImGui::Text("State:"); ImGui::SameLine(); ImGui::TextColored(&Yellow, "{ %s }", animatorStateString.c_str());
-
-			ImGui::Separator();
-
-			// --- ANIMATOR VARIABLES
-			static int selectedClip				= 0;
-			std::string clipNamesString			= cAnimator->GetClipNamesAsString();
-
-			float speed							= cAnimator->GetPlaybackSpeed();
-			float minSpeed						= 0.1f;
-			float maxSpeed						= 10.0f;
-			
-			bool interpolate					= cAnimator->GetInterpolate();
-			bool loopAnimation					= cAnimator->GetLoopAnimation();
-			bool playOnStart					= cAnimator->GetPlayOnStart();
-			bool cameraCulling					= cAnimator->GetCameraCulling();
-			bool showBones						= cAnimator->GetShowBones();
-
-			// -- CURRENT CLIP VARIABLES
-			AnimatorClip* currentClip			= cAnimator->GetCurrentClip();
-
-			if (currentClip == nullptr)
-			{
-				AnimatorClip Clip = AnimatorClip();
-				currentClip = &Clip;
-			}
-
-			const char* animationName			= currentClip->GetAnimationName();
-			float animationTicksPerSecond		= currentClip->GetAnimationTicksPerSecond();
-			float animationDuration				= currentClip->GetAnimationDuration();
-
-			const char* currentClipName			= currentClip->GetName();
-			uint currentClipStart				= currentClip->GetStart();
-			uint currentClipEnd					= currentClip->GetEnd();
-			float currentClipDuration			= currentClip->GetDuration();
-			bool currentClipLoop				= currentClip->IsLooped();
-
-			float clipCime						= currentClip->GetClipTime();
-			float clipFrame						= currentClip->GetClipFrame();
-			uint clipTicks						= currentClip->GetClipTick();
-
-			// --- NEW CLIP VARIABLES
-			static int selectedAnimation		= 0;
-			std::string animationNames			= cAnimator->GetAnimationNamesAsString();
-
-			static char newClipName[128]		= "Enter Clip Name";
-			ImGuiInputTextFlags inputTxtFlags	= ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_AutoSelectAll;
-
-			static int newClipStart				= 0;
-			static int newClipEnd				= (int)animationDuration;
-			int newClipMin						= 0;
-			int newClipMax						= (int)animationDuration;
-			static bool loop					= false;
-
-			static bool success					= false;																			// --- TODO: Transform into non-static variables later.
-			static bool textTimerRunning		= false;																			//
-			static float textTimer				= 0.0f;																				//
-			static float textDuration			= 2.5f;																				// ----------------------------------------------------
-			
-			// --- EXISTING CLIPS VARIABLES
-			std::vector<std::string> clipNames = cAnimator->GetClipNamesAsVector();
+			DrawBasicSettings((Component*)cAnimator, cAnimator->GetAnimatorStateAsString().c_str());
 
 			// --- DISPLAY
 			if (ImGui::BeginTabBar("AnimatorTabBar", ImGuiTabBarFlags_None))
 			{
 				if (ImGui::BeginTabItem("Settings & Controls"))
 				{
-					// --- ANIMATOR SETTINGS
-					ImGui::TextColored(Cyan.C_Array(), "Animation Settings");
-
-					if (ImGui::Combo("Select Clip", &selectedClip, clipNamesString.c_str()))
-					{
-						char selected_name = clipNamesString[selectedClip];
-						cAnimator->SetCurrentClipByIndex((uint)selectedClip);
-					}
-
-					if (ImGui::Button("Play"))	{ cAnimator->Play(); }	ImGui::SameLine();
-					if (ImGui::Button("Pause"))	{ cAnimator->Pause(); }	ImGui::SameLine();
-					if (ImGui::Button("Step"))	{ cAnimator->Step(); }	ImGui::SameLine();
-					if (ImGui::Button("Stop"))	{ cAnimator->Stop(); }
-
-					if (ImGui::SliderFloat("Playback Speed", &speed, minSpeed, maxSpeed, "X %.3f", 0)) { cAnimator->SetPlaybackSpeed(speed); }
-
-					if (ImGui::Checkbox("Interpolate", &interpolate))		{ cAnimator->SetInterpolate(interpolate); }
-					if (ImGui::Checkbox("Loop Animation", &loopAnimation))	{ cAnimator->SetLoopAnimation(loopAnimation); }
-					if (ImGui::Checkbox("Play On Start", &playOnStart))		{ cAnimator->SetPlayOnStart(playOnStart); }
-					if (ImGui::Checkbox("Camera Culling", &cameraCulling))	{ cAnimator->SetCameraCulling(cameraCulling); }
-					if (ImGui::Checkbox("Show Bones", &showBones))			{ cAnimator->SetShowBones(showBones); }
-
-					ImGui::Separator();
-
-					// --- ANIMATOR STATS
-					ImGui::TextColored(Cyan.C_Array(), "Animation Stats");
-
-					ImGui::Text("Name:");				ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "             %s",		animationName);
-					ImGui::Text("Ticks Per Second:");	ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), " %.3f",				animationTicksPerSecond);
-					ImGui::Text("Duration:");			ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "         %.3f",		animationDuration);
-
-					ImGui::Separator();
-
-					ImGui::TextColored(Cyan.C_Array(), "Clip Stats");
-
-					ImGui::Text("Name:");				ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "             %s",		currentClipName);
-					ImGui::Text("Time:");				ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "             %.3f",	clipCime);
-					ImGui::Text("Frame:");				ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "            %.3f",	clipFrame);
-					ImGui::Text("Tick:");				ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "		     %u",		clipTicks);
-					ImGui::Text("Range:");				ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "            %u - %u", currentClipStart, currentClipEnd);
-					ImGui::Text("Duration:");			ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "         %.3f",		currentClipDuration);
-					ImGui::Text("Loop:");				ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "             %s",		(currentClipLoop) ? "True" : "False");
-
-					ImGui::Separator();
-
-					// --- ANIMATOR DEBUG CONTROLS
-					ImGui::TextColored(Cyan.C_Array(), "Debug Controls");
-
-					if (ImGui::Button("Previous Keyframe"))		{ cAnimator->StepToPrevKeyframe(); }	ImGui::SameLine(150.0f);
-					if (ImGui::Button("Next Keyframe"))			{ cAnimator->StepToNextKeyframe(); }
-					if (ImGui::Button("Refresh Bone Display"))	{ cAnimator->RefreshBoneDisplay(); }
+					DisplayAnimatorControls(cAnimator);
 
 					ImGui::EndTabItem();
 				}
 				
 				if (ImGui::BeginTabItem("Clip Manager"))
 				{
-					ImGui::Separator();
-					ImGui::Separator();
-					
-					ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
-					ImGui::BeginChild("Clip Manager Child", ImVec2(0.0f, 170.0f), true);
-
-					ImGui::TextColored(Cyan.C_Array(), "Create Clip");
-
-					ImGui::Combo("Select Animation", &selectedAnimation, animationNames.c_str());
-					ImGui::InputText("Clip Name", newClipName, IM_ARRAYSIZE(newClipName), inputTxtFlags);
-					ImGui::SliderInt("Clip Start", &newClipStart, newClipMin, newClipMax);
-					ImGui::SliderInt("Clip End", &newClipEnd, newClipMin, newClipMax);
-					ImGui::Checkbox("Loop Clip", &loop);
-
-					if (newClipStart > newClipEnd) { newClipEnd = newClipStart; };
-
-					if (ImGui::Button("Create")) 
-					{ 
-						if (EngineApp->gameState != GameState::PLAY)
-						{
-							success = cAnimator->AddClip(AnimatorClip(cAnimator->GetAnimationByIndex((uint)selectedAnimation), newClipName, newClipStart, newClipEnd, loop));
-							textTimerRunning = true;
-						}
-						else
-						{
-							ImGui::SameLine();
-							ImGui::TextColored(Red.C_Array(), "Cannot Create Clips While in Game Mode!");
-						}
-					}
-
-					if (textTimerRunning)
-					{	
-						ImGui::SameLine();
-						
-						if (success)
-						{
-							static std::string new_clip_name_str = newClipName;
-							ImGui::TextColored(Green.C_Array(), "Successfully Created Clip { %s }", new_clip_name_str.c_str());
-
-							strcpy_s(newClipName, 128, "Enter Clip Name");																// --- Re-setting the New Clip Parameters
-							newClipStart	= 0;																						// 
-							newClipEnd		= (int)animationDuration;																	// 
-							loop			= false;																					// --------------------------------------
-						}
-						else
-						{
-							ImGui::TextColored(Red.C_Array(), "A clip with the same name already exists!");
-						}
-
-						textTimer += Time::Real::GetDT();
-						if (textTimer > textDuration)
-						{
-							textTimerRunning = false;
-							textTimer = 0.0f;
-						}
-					}
-
-					ImGui::EndChild();
-					ImGui::PopStyleVar();
-
-					ImGui::Separator();
-					ImGui::Separator();
-
-					ImGui::TextColored(Cyan.C_Array(), "Existing Clips");
-
-					for (uint i = 0; i < clipNames.size(); ++i)
-					{	
-						if (ImGui::TreeNodeEx(clipNames[i].c_str(), ImGuiTreeNodeFlags_Bullet))
-						{
-							ImGui::TreePop();
-						}
-
-						/*if (ImGui::IsItemHovered())
-						{
-							ImGui::OpenPopup("ClipPopUp");
-							if (ImGui::BeginPopup("Clip Info"))
-							{
-								ImGui::EndPopup();
-							}
-						}*/
-					}
+					DisplayClipManager(cAnimator);
 
 					ImGui::EndTabItem();
 				}
@@ -956,7 +805,7 @@ void E_Inspector::DrawAnimationComponent(C_Animation* cAnimation)
 void E_Inspector::DrawAudioSourceComponent(C_AudioSource* cAudioSource)
 {
 	bool show = true;
-	if (ImGui::CollapsingHeader("Audio Source", &show, ImGuiTreeNodeFlags_DefaultOpen))
+	if (ImGui::CollapsingHeader(("Audio Source " + cAudioSource->GetEventName()).c_str(), &show, ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		if (cAudioSource != nullptr)
 		{
@@ -967,7 +816,7 @@ void E_Inspector::DrawAudioSourceComponent(C_AudioSource* cAudioSource)
 			ImGui::Text("Event playing %s", currentEventName.c_str());
 			ImGui::Text("Event id %u", currentEvent);
 
-			if (ImGui::BeginCombo("##Audio", currentEventName.c_str()))
+			if (ImGui::BeginCombo(("##Audio " + cAudioSource->GetEventName()).c_str(), currentEventName.c_str()))
 			{
 				for (auto it = App->audio->eventMap.cbegin(); it != App->audio->eventMap.cend(); ++it)
 				{
@@ -984,16 +833,16 @@ void E_Inspector::DrawAudioSourceComponent(C_AudioSource* cAudioSource)
 			}
 
 			static float volume = cAudioSource->GetVolume();
-			if (ImGui::DragFloat("Volume", &volume, 0.01f, 0.01f, 1.0f))
+			if (ImGui::DragFloat(("Volume " + cAudioSource->GetEventName()).c_str(), &volume, 0.01f, 0.01f, 1.0f))
 			{
 				cAudioSource->SetVolume(volume);
 			}
 
-			if ((ImGui::Button("Play")))
+			if ((ImGui::Button(("Play " + cAudioSource->GetEventName()).c_str())))
 			{
 				cAudioSource->PlayFx(currentEvent);
 			}
-			if ((ImGui::Button("Stop")))
+			if ((ImGui::Button(("Stop " + cAudioSource->GetEventName()).c_str())))
 			{
 				cAudioSource->StopFx(currentEvent);
 			}
@@ -1007,7 +856,6 @@ void E_Inspector::DrawAudioSourceComponent(C_AudioSource* cAudioSource)
     ImGui::Separator();
 }
 
-
 void E_Inspector::DrawRigidBodyComponent(C_RigidBody* cRigidBody)
 {
 	bool show = true;
@@ -1019,20 +867,24 @@ void E_Inspector::DrawRigidBodyComponent(C_RigidBody* cRigidBody)
 			bool isActive = cRigidBody->IsActive();
 			if (ImGui::Checkbox("RigidBody Is Active", &isActive))
 				cRigidBody->SetIsActive(isActive);
-	
+
 			ImGui::SameLine();
-	
+
 			if (ImGui::Button("Make Dynamic"))
 				cRigidBody->MakeDynamic();
-	
+
 			ImGui::Separator();
-	
+
+			RigidBodyFilterCombo(cRigidBody);
+
+			ImGui::Separator();
+			
 			if (!show)
 			{
 				componentToDelete = cRigidBody;
 				showDeleteComponentPopup = true;
 			}
-	
+
 			ImGui::Separator();
 		}
 		return;
@@ -1050,6 +902,10 @@ void E_Inspector::DrawRigidBodyComponent(C_RigidBody* cRigidBody)
 
 			if (ImGui::Button("Make Static"))
 				cRigidBody->MakeStatic();
+
+			ImGui::Separator();
+
+			RigidBodyFilterCombo(cRigidBody);
 
 			ImGui::Separator();
 
@@ -1134,6 +990,23 @@ void E_Inspector::DrawRigidBodyComponent(C_RigidBody* cRigidBody)
 	}
 }
 
+void E_Inspector::RigidBodyFilterCombo(C_RigidBody* cRigidBody)
+{
+	if (ImGui::BeginCombo("Filter", (*cRigidBody->GetFilter()).c_str()))
+	{
+		const std::vector<std::string>* const filters = App->physics->GetFilters();
+
+		if (ImGui::Selectable("default"))
+			cRigidBody->ChangeFilter("default");
+
+		for (uint i = 0; i < filters->size(); i++)
+			if (ImGui::Selectable((*filters)[i].c_str()))
+				cRigidBody->ChangeFilter((*filters)[i].c_str());
+
+		ImGui::EndCombo();
+	}
+}
+
 void E_Inspector::DrawBoxColliderComponent(C_BoxCollider* cCollider)
 {
 	bool show = true;
@@ -1152,6 +1025,10 @@ void E_Inspector::DrawBoxColliderComponent(C_BoxCollider* cCollider)
 				cCollider->SetShowCollider(showCollider);
 
 			ImGui::Separator();
+
+			std::string* a = cCollider->GetFil();
+			if(a)
+				ImGui::Text(a->c_str());
 
 			bool isTrigger = cCollider->IsTrigger();
 			if (ImGui::Checkbox("Is Trigger##1", &isTrigger))
@@ -1202,7 +1079,7 @@ void E_Inspector::DrawCanvasComponent(C_Canvas* cCanvas)
 			float2 size = { cCanvas->GetRect().w, cCanvas->GetRect().h };
 			float2 pivot = { cCanvas->pivot.x, cCanvas->pivot.y };
 
-			if (ImGui::DragFloat2("Rect", (float*)&size, 0.05f, 0.0f, 0.0f, "%.3f", NULL))
+			if (ImGui::DragFloat2("Rect", (float*)&size, 0.005f, 0.0f, 0.0f, "%.3f", NULL))
 			{
 				if (size.x < 0)
 					size.x = 0;
@@ -1210,7 +1087,6 @@ void E_Inspector::DrawCanvasComponent(C_Canvas* cCanvas)
 					size.y = 0;
 					
 				
-					
 				cCanvas->SetSize(size);
 
 				if (pivot.x < cCanvas->GetPosition().x - cCanvas->GetSize().x / 2)
@@ -1231,7 +1107,7 @@ void E_Inspector::DrawCanvasComponent(C_Canvas* cCanvas)
 			}
 
 			// --- PIVOT ---
-			if (ImGui::DragFloat2("Pivot", (float*)&pivot, 0.05f, 0.0f, 0.0f, "%.3f", NULL))
+			if (ImGui::DragFloat2("Pivot", (float*)&pivot, 0.005f, 0.0f, 0.0f, "%.3f", NULL))
 			{
 
 				if (pivot.x < cCanvas->GetPosition().x - cCanvas->GetSize().x / 2)
@@ -1362,17 +1238,25 @@ void E_Inspector::DrawCapsuleColliderComponent(C_CapsuleCollider* cCollider)
 
 void E_Inspector::DrawParticleSystemComponent(C_ParticleSystem* cParticleSystem)
 {
-	bool show = true;
-	if (ImGui::CollapsingHeader("Particle System", &show, ImGuiTreeNodeFlags_DefaultOpen))
+	bool a = true;
+	if (a /*cParticleSystem->resource != nullptr*/)
 	{
+		bool show = true;
+		if (ImGui::CollapsingHeader("Particle System", &show, ImGuiTreeNodeFlags_DefaultOpen))
+		{
+			DisplayParticleSystemControls(cParticleSystem);
+			DisplayEmitterInstances(cParticleSystem);
+		}
 
 		if (!show)
 		{
 			componentToDelete = cParticleSystem;
 			showDeleteComponentPopup = true;
 		}
-
-		ImGui::Separator();
+	}
+	else
+	{
+		//assign a resource to the component
 	}
 }
 
@@ -1389,10 +1273,11 @@ void E_Inspector::DrawUIImageComponent(C_UI_Image* image)
 		// --- RECT ---
 		float2 pos = { image->GetRect().x, image->GetRect().y };
 		float2 size = { image->GetRect().w, image->GetRect().h };
+		float offset = 0.1;
 
 		C_Canvas* canvas = image->GetOwner()->parent->GetComponent<C_Canvas>();
 
-		if (ImGui::DragFloat2("Image Size", (float*)&size, 0.05f, 0.0f, 0.0f, "%.3f", NULL))
+		if (ImGui::DragFloat2("Image Size", (float*)&size, 0.005f, 0.0f, 0.0f, "%.3f", NULL))
 		{
 			if (size.x < 0)
 				size.x = 0;
@@ -1403,7 +1288,303 @@ void E_Inspector::DrawUIImageComponent(C_UI_Image* image)
 			image->SetH(size.y);
 		}
 
-		if (ImGui::DragFloat2("Image Pos", (float*)&pos, 0.05f, 0.0f, 0.0f, "%.3f", NULL))
+		if (ImGui::DragFloat2("Image Pos", (float*)&pos, 0.005f, 0.0f, 0.0f, "%.3f", NULL))
+		{
+			/*if (pos.x - size.x / 2 < canvas->GetPosition().x - canvas->GetSize().x / 2)
+				pos.x = canvas->GetPosition().x - canvas->GetSize().x / 2 + size.x / 2;
+
+			if (pos.x + size.x / 2 > canvas->GetPosition().x + canvas->GetSize().x / 2)
+				pos.x = canvas->GetPosition().x + canvas->GetSize().x / 2 - size.x / 2;
+
+
+			if (pos.y - size.y / 2 < canvas->GetPosition().y - canvas->GetSize().y / 2)
+				pos.y = canvas->GetPosition().y - canvas->GetSize().y / 2 + size.y / 2;
+
+			if (pos.y + size.y / 2 > canvas->GetPosition().y + canvas->GetSize().y / 2)
+				pos.y = canvas->GetPosition().y + canvas->GetSize().y / 2 - size.y / 2;*/
+
+			if (pos.x  > canvas->GetPosition().x + canvas->GetSize().x - offset)
+				pos.x =  canvas->GetPosition().x + canvas->GetSize().x - offset;
+
+			else if (pos.x - size.x < canvas->GetPosition().x - canvas->GetSize().x + offset)
+				pos.x = canvas->GetPosition().x - canvas->GetSize().x + size.x + offset;
+
+			else if (pos.y - size.y > canvas->GetPosition().y + canvas->GetSize().y - offset)
+				pos.y = canvas->GetPosition().y + canvas->GetSize().y + size.y - offset;
+
+			else if (pos.y  < canvas->GetPosition().y - canvas->GetSize().y + offset)
+				pos.y = canvas->GetPosition().y - canvas->GetSize().y  + offset;
+
+
+			image->SetX(pos.x);
+			image->SetY(pos.y);
+		}
+	}
+
+	ImGui::Separator();
+
+}
+
+void E_Inspector::DrawUITextComponent(C_UI_Text* text)
+{
+
+	static bool show = true;
+	if (ImGui::CollapsingHeader("Text", &show, ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		bool isActive = text->IsActive();
+		if (ImGui::Checkbox("Text Is Active", &isActive)) { text->SetIsActive(isActive); }
+
+		ImGui::Separator();
+
+
+		/*static char buffer[64];
+		strcpy_s(buffer, text->GetText());
+		if (ImGui::InputText("TextInput", buffer, IM_ARRAYSIZE(buffer), ImGuiInputTextFlags_EnterReturnsTrue))
+		{
+			text->SetText(buffer);
+		}
+
+		ImGui::SameLine(); HelpMarker("Press ENTER to Rename");*/
+
+
+		ImGui::Separator();
+
+		// --- RECT ---
+		float2 pos = { text->GetRect().x, text->GetRect().y };
+		float2 size = { text->GetRect().w * 1000, text->GetRect().h * 1000};
+		Color newColor = text->GetColor();
+		float offset = 0.1;
+
+		C_Canvas* canvas = text->GetOwner()->parent->GetComponent<C_Canvas>();
+
+		if (ImGui::DragFloat2("Text Size", (float*)&size, 0.05f, 0.0f, 0.0f, "%.3f", NULL))
+		{
+			if (size.x < 0)
+				size.x = 0;
+			if (size.y < 0)
+				size.y = 0;
+
+			text->SetW(size.x /1000);
+			text->SetH(size.y /1000);
+		}
+
+		if (ImGui::DragFloat2("Text Pos", (float*)&pos, 0.05f, 0.0f, 0.0f, "%.3f", NULL))
+		{
+
+	/*		if (pos.x > canvas->GetPosition().x + canvas->GetSize().x - offset )
+				pos.x = canvas->GetPosition().x + canvas->GetSize().x - offset;
+
+			else if (pos.x - size.x < canvas->GetPosition().x - canvas->GetSize().x + offset)
+				pos.x = canvas->GetPosition().x - canvas->GetSize().x + size.x + offset;
+
+			else if (pos.y - size.y > canvas->GetPosition().y + canvas->GetSize().y - offset)
+				pos.y = canvas->GetPosition().y + canvas->GetSize().y + size.y - offset;
+
+			else if (pos.y < canvas->GetPosition().y - canvas->GetSize().y + offset)
+				pos.y = canvas->GetPosition().y - canvas->GetSize().y + offset;*/
+
+
+			text->SetX(pos.x);
+			text->SetY(pos.y);
+		}
+
+		if (ImGui::DragFloat4("Color", (float*)&newColor, 0.05f, 0.0f, 0.0f, "%.3f", NULL))
+		{
+			text->SetColor(newColor);
+		}
+	}
+
+	ImGui::Separator();
+
+}
+
+void E_Inspector::DrawScriptComponent(C_Script* cScript)
+{
+
+	bool show = true;
+	//REDO THIS -> s'ha de fer amb el resource !!!
+	//Inspector if we don't have any script
+	if (!cScript->HasData() && !(cScript->resource != nullptr))
+	{
+		if (ImGui::CollapsingHeader("Script", &show, ImGuiTreeNodeFlags_DefaultOpen))
+		{
+			const std::map<std::string, std::string> scripts = ((M_EngineScriptManager*)EngineApp->scriptManager)->GetAviableScripts();
+			
+			std::string select;
+			if(scripts.size() != 0)
+				select = (*scripts.begin()).first;
+
+			if (ImGui::BeginCombo("##Select Script", "SelectScript", ImGuiComboFlags_PopupAlignLeft))
+			{
+				for (std::map<std::string, std::string>::const_iterator it = scripts.cbegin(); it != scripts.cend(); ++it)
+				{
+					bool selectedScript = (select == (*it).first.c_str());
+					if (ImGui::Selectable((*it).first.c_str(), selectedScript)) 
+					{
+						cScript->resource = (R_Script*)App->resourceManager->GetResourceFromLibrary((*it).second.c_str());
+						for (int i = 0; i < cScript->resource->dataStructures.size(); ++i) {
+							if ((*it).first == cScript->resource->dataStructures[i].first)
+							{
+								cScript->LoadData((*it).first.c_str(), cScript->resource->dataStructures[i].second);
+								break;
+							}
+						}
+					}
+
+				}
+				ImGui::EndCombo();
+			}
+		}
+		if (!show)
+			cScript->GetOwner()->DeleteComponent(cScript);
+
+		ImGui::Separator();
+		return;
+	}
+
+	if (ImGui::CollapsingHeader((cScript->GetDataName() + " (Script)").c_str(), &show, ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		//TODO: Show inspector variables
+		ImGui::Text("Name: %s", cScript->GetDataName().c_str());
+		ImGui::Spacing();
+		ImGui::Separator();
+		ImGui::Spacing();
+		std::vector<InspectorScriptData> inspectorVariables = cScript->GetInspectorVariables();
+		for (std::vector<InspectorScriptData>::iterator variable = inspectorVariables.begin(); variable != inspectorVariables.end(); ++variable)
+		{
+			switch ((*variable).variableType) 
+			{
+			case InspectorScriptData::DataType::INT:
+				switch ((*variable).showAs) 
+				{
+				case InspectorScriptData::ShowMode::INPUT_INT:
+					ImGui::InputInt((*variable).variableName.data(), (int*)(*variable).ptr); break;
+				case InspectorScriptData::ShowMode::DRAGABLE_INT:
+					ImGui::DragInt((*variable).variableName.data(), (int*)(*variable).ptr); break;
+				case InspectorScriptData::ShowMode::SLIDER_INT:
+					ImGui::SliderInt((*variable).variableName.data(), (int*)(*variable).ptr, (*variable).minSlider, (*variable).maxSlider); break;
+				}
+				break;
+			case InspectorScriptData::DataType::BOOL:
+				ImGui::Checkbox((*variable).variableName.data(), (bool*)(*variable).ptr);
+				break;
+			case InspectorScriptData::DataType::FLOAT:
+				switch ((*variable).showAs)
+				{
+				case InspectorScriptData::ShowMode::INPUT_FLOAT:
+					ImGui::InputFloat((*variable).variableName.data(), (float*)(*variable).ptr); break;
+				case InspectorScriptData::ShowMode::DRAGABLE_FLOAT:
+					ImGui::DragFloat((*variable).variableName.data(), (float*)(*variable).ptr); break;
+				case InspectorScriptData::ShowMode::SLIDER_FLOAT:
+					ImGui::SliderFloat((*variable).variableName.data(), (float*)(*variable).ptr, (*variable).minSlider, (*variable).maxSlider); break;
+				}
+				break;
+			case InspectorScriptData::DataType::FLOAT3:
+				switch ((*variable).showAs)
+				{
+				case InspectorScriptData::ShowMode::INPUT_FLOAT:
+					ImGui::InputFloat3((*variable).variableName.data(), ((float3*)(*variable).ptr)->ptr()); break;
+				case InspectorScriptData::ShowMode::DRAGABLE_FLOAT:
+					ImGui::DragFloat3((*variable).variableName.data(), ((float3*)(*variable).ptr)->ptr()); break;
+				case InspectorScriptData::ShowMode::SLIDER_FLOAT:
+					ImGui::SliderFloat3((*variable).variableName.data(), ((float3*)(*variable).ptr)->ptr(), (*variable).minSlider, (*variable).maxSlider); break;
+				}
+				break;
+			case InspectorScriptData::DataType::STRING: 
+			{
+				char buffer[128];
+				strcpy_s(buffer, ((std::string*)(*variable).ptr)->c_str());
+				if (ImGui::InputText((*variable).variableName.data(), buffer, IM_ARRAYSIZE(buffer)))
+					*(std::string*)(*variable).ptr = buffer;
+				break;
+			}
+			case InspectorScriptData::DataType::PREFAB:
+				ImGui::Button((((Prefab*)(*variable).ptr)->name.empty()) ? "Prefab: NULL" : std::string("Prefab: " + ((Prefab*)(*variable).ptr)->name).data(), { ImGui::GetWindowWidth() * 0.55F , 0});
+				if (ImGui::BeginDragDropTarget()) 
+				{
+					if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DRAGGED_ASSET"))
+					{
+						if (App->fileSystem->GetFileExtension(*(const char**)payload->Data) == "prefab") 
+						{
+							std::string uidString;
+							App->fileSystem->SplitFilePath(*(const char**)payload->Data, nullptr, &uidString, nullptr);
+							unsigned int prefabUid = std::atoi(uidString.c_str());
+							*(Prefab*)(*variable).ptr = EngineApp->resourceManager->prefabs[prefabUid];
+						}
+
+					}
+					ImGui::EndDragDropTarget();
+				}
+				ImGui::SameLine();
+				if (ImGui::Button(("Remove " + (*variable).variableName).c_str())) //Maybe variables with the same name of different scripts on the same gameobject collide for imgui...
+				{
+					(*(Prefab*)(*variable).ptr).name.clear();
+					(*(Prefab*)(*variable).ptr).uid = 0;
+					(*(Prefab*)(*variable).ptr).updateTime = 0;
+				}
+				break;
+			case InspectorScriptData::DataType::GAMEOBJECT:
+				ImGui::Button(((*variable).obj != nullptr && *(*variable).obj != nullptr) ? std::string("GameObject: "  + std::string((*(*variable).obj)->GetName())).data() : "GameObject: NULL", { ImGui::GetWindowWidth() * 0.55F , 0 });
+				if (ImGui::BeginDragDropTarget())
+				{
+					if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DRAGGED_NODE"))
+					{
+						GameObject* ptr = *(GameObject**)payload->Data;
+						if (ptr != nullptr) 
+						{
+							*(*variable).obj = ptr;
+						}
+					}
+					ImGui::EndDragDropTarget();
+				}
+				ImGui::SameLine();
+				if (ImGui::Button(("Remove " + (*variable).variableName).c_str()))
+					if ((*variable).obj != nullptr)
+						*(*variable).obj = nullptr;
+				break;
+			}
+			ImGui::Spacing();
+			ImGui::Separator();
+			ImGui::Spacing();
+		}
+	}
+	if (!show)
+	{
+		componentToDelete = cScript;
+		showDeleteComponentPopup = true;
+	}
+	ImGui::Separator();
+
+}
+
+void E_Inspector::DrawUIButtonComponent(C_UI_Button* button)
+{
+	static bool show = true;
+	if (ImGui::CollapsingHeader("Button", &show, ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		bool isActive = button->IsActive();
+		if (ImGui::Checkbox("Button Is Active", &isActive)) { button->SetIsActive(isActive); }
+
+		ImGui::Separator();
+
+		// --- RECT ---
+		float2 pos = { button->GetRect().x, button->GetRect().y };
+		float2 size = { button->GetRect().w, button->GetRect().h };
+
+		C_Canvas* canvas = button->GetOwner()->parent->GetComponent<C_Canvas>();
+
+		if (ImGui::DragFloat2("Button Size", (float*)&size, 0.005f, 0.0f, 0.0f, "%.3f", NULL))
+		{
+			if (size.x < 0)
+				size.x = 0;
+			if (size.y < 0)
+				size.y = 0;
+
+			button->SetW(size.x);
+			button->SetH(size.y);
+		}
+
+		if (ImGui::DragFloat2("Button Pos", (float*)&pos, 0.005f, 0.0f, 0.0f, "%.3f", NULL))
 		{
 			if (pos.x - size.x / 2 < canvas->GetPosition().x - canvas->GetSize().x / 2)
 				pos.x = canvas->GetPosition().x - canvas->GetSize().x / 2 + size.x / 2;
@@ -1418,29 +1599,12 @@ void E_Inspector::DrawUIImageComponent(C_UI_Image* image)
 			if (pos.y + size.y / 2 > canvas->GetPosition().y + canvas->GetSize().y / 2)
 				pos.y = canvas->GetPosition().y + canvas->GetSize().y / 2 - size.y / 2;
 
-			image->SetX(pos.x);
-			image->SetY(pos.y);
+			button->SetX(pos.x);
+			button->SetY(pos.y);
 		}
 	}
 
 	ImGui::Separator();
-
-}
-
-void E_Inspector::DrawUITextComponent(C_UI_Text* text)
-{
-	static bool show = true;
-	if (ImGui::CollapsingHeader("Text", &show, ImGuiTreeNodeFlags_DefaultOpen))
-	{
-		bool isActive = text->IsActive();
-		if (ImGui::Checkbox("Text Is Active", &isActive)) { text->SetIsActive(isActive); }
-
-		ImGui::Separator();
-
-		ImGui::Text(text->text.c_str());
-	}
-	ImGui::Separator();
-
 }
 
 void E_Inspector::DrawPlayerControllerComponent(C_PlayerController* cController)
@@ -1451,6 +1615,11 @@ void E_Inspector::DrawPlayerControllerComponent(C_PlayerController* cController)
 		bool isActive = cController->IsActive();
 		if (ImGui::Checkbox("Controller Is Active", &isActive))
 			cController->SetIsActive(isActive);
+
+		ImGui::SameLine(ImGui::GetWindowWidth() * 0.69f);
+
+		uint state = (uint)cController->state;
+		ImGui::Text("State:"); ImGui::SameLine(); ImGui::TextColored(&Yellow, "{ %u }", state);
 
 		ImGui::Separator();
 		if (ImGui::TreeNodeEx("Character"))
@@ -1617,9 +1786,72 @@ void E_Inspector::DrawGateBehaviorComponent(C_GateBehavior* cBehavior)
 	return;
 }
 
+void E_Inspector::DrawAnimator2DComponent(C_2DAnimator* cAnimator)
+{
+	bool show = true;
+	if (ImGui::CollapsingHeader("Animator 2D", &show, ImGuiTreeNodeFlags_Leaf))
+	{
+		bool isActive = cAnimator->IsActive();
+		if (ImGui::Checkbox("Animator 2D is active", &isActive))
+			cAnimator->SetIsActive(isActive);
+
+		int k = cAnimator->GetAnimationStepTime();
+		if (ImGui::InputInt("Step time",&k));
+			cAnimator->SetAnimationStepTime(k);
+
+		static char buffer[64];
+		strcpy_s(buffer, cAnimator->GetName());
+		if (ImGui::InputText("Animation Name", buffer, IM_ARRAYSIZE(buffer), ImGuiInputTextFlags_EnterReturnsTrue))
+		{
+			cAnimator->ChangeName(buffer);
+			cAnimator->GetAnimationSprites(buffer);
+		}
+
+		bool animationOnLoopFromStart = cAnimator->GetAnimationPlayFromStart();
+		if (ImGui::Checkbox("Set animation on loop from start:", &animationOnLoopFromStart))
+			cAnimator->SetAnimationPlayFromStart(animationOnLoopFromStart);
+
+		ImGui::Separator();
+
+		if (!show)
+		{
+			componentToDelete = cAnimator;
+			showDeleteComponentPopup = true;
+		}
+
+
+
+
+	}
+	return;
+}
+
+void E_Inspector::DrawNavMeshAgentComponent(C_NavMeshAgent* cNavMeshAgent)
+{
+	bool show = true;
+	if (ImGui::CollapsingHeader("NavMesh Agent", &show, ImGuiTreeNodeFlags_None))
+	{
+		DrawBasicSettings((Component*)cNavMeshAgent);
+
+		ImGui::Separator();
+
+		ImGui::Text("WORK IN PROGRESS");
+
+		if (!show)
+		{
+			componentToDelete = cNavMeshAgent;
+			showDeleteComponentPopup = true;
+		}
+	}
+	
+	return;
+}
+
+// --- DRAW COMPONENT UTILITY METHODS ---
 void E_Inspector::AddComponentCombo(GameObject* selectedGameObject)
 {
-	ImGui::Combo("##", &componentType, "Add Component\0Transform\0Mesh\0Material\0Light\0Camera\0Animator\0Animation\0RigidBody\0Box Collider\0Sphere Collider\0Capsule Collider\0Particle System\0Canvas\0Audio Source\0Audio Listener\0Player Controller\0Bullet Behavior\0Prop Behavior\0Camera Behavior\0Gate Behavior\0UI Image\0UI Text");
+	ImGui::Combo("##", &componentType, "Add Component\0Transform\0Mesh\0Material\0Light\0Camera\0Animator\0Animation\0RigidBody\0Box Collider\0Sphere Collider\0Capsule Collider\0Particle System\0Canvas\0Audio Source\0Audio Listener\0Player Controller\0Bullet Behavior\0Prop Behavior\0Camera Behavior\0Gate Behavior\0UI Image\0UI Text\0UI Button\0Script\0Animator 2D\0NavMesh Agent");
+
 	ImGui::SameLine();
 
 	if ((ImGui::Button("ADD")))
@@ -1628,8 +1860,10 @@ void E_Inspector::AddComponentCombo(GameObject* selectedGameObject)
 		{
 			if (componentType == (int)ComponentType::UI_IMAGE)
 				AddUIComponent(selectedGameObject, ComponentType::UI_IMAGE);
-			else if(componentType == (int)ComponentType::UI_TEXT)
+			else if (componentType == (int)ComponentType::UI_TEXT)
 				AddUIComponent(selectedGameObject, ComponentType::UI_TEXT);
+			else if (componentType == (int)ComponentType::UI_BUTTON)
+				AddUIComponent(selectedGameObject, ComponentType::UI_BUTTON);
 
 			else
 				selectedGameObject->CreateComponent((ComponentType)componentType);
@@ -1690,6 +1924,32 @@ void E_Inspector::AddUIComponent(GameObject* selectedGameObject, ComponentType t
 			newText->CreateComponent(ComponentType::UI_TEXT);
 		}
 	}
+
+	else if (type == ComponentType::UI_BUTTON)
+	{
+		// Option 1: selectedGameObject has a canvas
+		if (selectedGameObject->GetComponent<C_Canvas>() != nullptr)
+		{
+			GameObject* newGO;
+			newGO = App->scene->CreateGameObject("UI Button", selectedGameObject);
+			newGO->CreateComponent(ComponentType::UI_BUTTON);
+		}
+		// Option 2: selectedGameObject's parent has a canvas
+		else if (selectedGameObject->parent->GetComponent<C_Canvas>() != nullptr)
+		{
+			selectedGameObject->SetName("UI Button");
+			selectedGameObject->CreateComponent(ComponentType::UI_BUTTON);
+		}
+		// Option 3: need to crete a canvas
+		else
+		{
+			selectedGameObject->SetName("Canvas");
+			selectedGameObject->CreateComponent(ComponentType::CANVAS);
+
+			GameObject* newText = App->scene->CreateGameObject("UI Button", selectedGameObject);
+			newText->CreateComponent(ComponentType::UI_BUTTON);
+		}
+	}
 }
 
 void E_Inspector::DeleteComponentPopup(GameObject* selectedGameObject)
@@ -1737,6 +1997,52 @@ void E_Inspector::DeleteComponentPopup(GameObject* selectedGameObject)
 
 		ImGui::EndPopup();
 	}
+}
+
+void E_Inspector::DrawBasicSettings(Component* component, const char* state)
+{
+	std::string label = "";
+	switch (component->GetType())																			// Later give the label a unique ID with "...##UID".
+	{
+	case ComponentType::NONE:				{ label = "[NONE] is active"; }				break;
+	case ComponentType::TRANSFORM:			{ label = "Transform is active"; }			break;
+	case ComponentType::MESH:				{ label = "Mesh is active"; }				break;
+	case ComponentType::MATERIAL:			{ label = "Material is active"; }			break;
+	case ComponentType::LIGHT:				{ label = "Light is active"; }				break;
+	case ComponentType::CAMERA:				{ label = "Camera is active"; }				break;
+	case ComponentType::ANIMATOR:			{ label = "Animator is active"; }			break;
+	case ComponentType::ANIMATION:			{ label = "Animation is active"; }			break;
+	case ComponentType::RIGIDBODY:			{ label = "RigidBody is active"; }			break;
+	case ComponentType::BOX_COLLIDER:		{ label = "Box Collider is active"; }		break;
+	case ComponentType::SPHERE_COLLIDER:	{ label = "Sphere Collider is active"; }	break;
+	case ComponentType::CAPSULE_COLLIDER:	{ label = "Capsule Collider is active"; }	break;
+	case ComponentType::PARTICLES:			{ label = "Particles is active"; }			break;
+	case ComponentType::CANVAS:				{ label = "Canvas is active"; }				break;
+	case ComponentType::AUDIOSOURCE:		{ label = "Audio Source is active";}		break;
+	case ComponentType::AUDIOLISTENER:		{ label = "Audio Listener is active"; }		break;
+	case ComponentType::UI_IMAGE:			{ label = "UI Image is active"; }			break;
+	case ComponentType::UI_TEXT:			{ label = "UI Text is active"; }			break;
+	case ComponentType::UI_BUTTON: 			{ label = "UI Button is active"; }			break;
+	case ComponentType::SCRIPT:				{ label = "Script is active"; }				break;
+	case ComponentType::ANIMATOR2D:			{ label = "Animator 2D is active"; }		break;
+	case ComponentType::NAVMESH_AGENT:		{ label = "NavMesh Agent is active"; }		break;
+	case ComponentType::PLAYER_CONTROLLER:	{ label = "Player Controller is active"; }	break;
+	case ComponentType::BULLET_BEHAVIOR:	{ label = "Bullet Behavior is active"; }	break;
+	case ComponentType::PROP_BEHAVIOR:		{ label = "Prop Behavior is active"; }		break;
+	case ComponentType::CAMERA_BEHAVIOR:	{ label = "Camera Behavior is active"; }	break;
+	case ComponentType::GATE_BEHAVIOR:		{ label = "Gate Behavior is active"; }		break;
+	}
+	
+	bool isActive = component->IsActive();
+	if (ImGui::Checkbox(label.c_str(), &isActive)) { component->SetIsActive(isActive); }
+
+	if (state != nullptr)
+	{
+		ImGui::SameLine(ImGui::GetWindowWidth() * 0.69f); 
+		ImGui::Text("State:"); ImGui::SameLine(); ImGui::TextColored(&Yellow, "{ %s }", state);
+	}
+
+	ImGui::Separator();
 }
 
 void E_Inspector::DisplayTextureData(C_Material* cMaterial)
@@ -1791,6 +2097,305 @@ void E_Inspector::TextureDisplay(C_Material* cMaterial)
 	}
 }
 
+void E_Inspector::DisplayAnimatorControls(C_Animator* cAnimator)
+{
+	// --- ANIMATOR VARIABLES
+	static int selectedClip				= 0;
+	std::string clipNamesString			= cAnimator->GetClipNamesAsString();
+	
+	float speed							= cAnimator->GetPlaybackSpeed();
+	float minSpeed						= 0.1f;
+	float maxSpeed						= 10.0f;
+	
+	bool interpolate					= cAnimator->GetInterpolate();
+	bool loopAnimation					= cAnimator->GetLoopAnimation();
+	bool playOnStart					= cAnimator->GetPlayOnStart();
+	bool cameraCulling					= cAnimator->GetCameraCulling();
+	bool showBones						= cAnimator->GetShowBones();
+	
+	// -- CURRENT CLIP VARIABLES
+	AnimatorClip* currentClip			= cAnimator->GetCurrentClip();
+	
+	if (currentClip == nullptr)
+	{
+		AnimatorClip Clip = AnimatorClip();
+		currentClip = &Clip;
+	}
+	
+	const char* animationName			= currentClip->GetAnimationName();
+	float animationTicksPerSecond		= currentClip->GetAnimationTicksPerSecond();
+	float animationDuration				= currentClip->GetAnimationDuration();
+	
+	const char* currentClipName			= currentClip->GetName();
+	uint currentClipStart				= currentClip->GetStart();
+	uint currentClipEnd					= currentClip->GetEnd();
+	float currentClipSpeed				= currentClip->GetSpeed();
+	float currentClipDuration			= currentClip->GetDuration();
+	bool currentClipLoop				= currentClip->IsLooped();
+	
+	float clipCime						= currentClip->GetClipTime();
+	float clipFrame						= currentClip->GetClipFrame();
+	uint clipTicks						= currentClip->GetClipTick();
+	
+	// --- ANIMATOR SETTINGS
+	ImGui::TextColored(Cyan.C_Array(), "Animation Settings");
+
+	if (ImGui::Combo("Select Clip", &selectedClip, clipNamesString.c_str()))
+	{
+		char selected_name = clipNamesString[selectedClip];
+		cAnimator->SetCurrentClipByIndex((uint)selectedClip);
+	}
+
+	if (ImGui::Button("Play"))	{ cAnimator->Play(); }	ImGui::SameLine();
+	if (ImGui::Button("Pause"))	{ cAnimator->Pause(); }	ImGui::SameLine();
+	if (ImGui::Button("Step"))	{ cAnimator->Step(); }	ImGui::SameLine();
+	if (ImGui::Button("Stop"))	{ cAnimator->Stop(); }
+
+	if (ImGui::SliderFloat("Playback Speed", &speed, minSpeed, maxSpeed, "X %.3f", 0)) { cAnimator->SetPlaybackSpeed(speed); }
+
+	if (ImGui::Checkbox("Interpolate", &interpolate))		{ cAnimator->SetInterpolate(interpolate); }
+	if (ImGui::Checkbox("Loop Animation", &loopAnimation))	{ cAnimator->SetLoopAnimation(loopAnimation); }
+	if (ImGui::Checkbox("Play On Start", &playOnStart))		{ cAnimator->SetPlayOnStart(playOnStart); }
+	if (ImGui::Checkbox("Camera Culling", &cameraCulling))	{ cAnimator->SetCameraCulling(cameraCulling); }
+	if (ImGui::Checkbox("Show Bones", &showBones))			{ cAnimator->SetShowBones(showBones); }
+
+	ImGui::Separator();
+
+	// --- ANIMATOR STATS
+	ImGui::TextColored(Cyan.C_Array(), "Animation Stats");
+
+	ImGui::Text("Name:");				ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "             %s",		animationName);
+	ImGui::Text("Ticks Per Second:");	ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), " %.3f",				animationTicksPerSecond);
+	ImGui::Text("Duration:");			ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "         %.3f",		animationDuration);
+
+	ImGui::Separator();
+
+	ImGui::TextColored(Cyan.C_Array(), "Clip Stats");
+
+	ImGui::Text("Name:");				ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "             %s",		currentClipName);
+	ImGui::Text("Time:");				ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "             %.3f",	clipCime);
+	ImGui::Text("Frame:");				ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "            %.3f",	clipFrame);
+	ImGui::Text("Tick:");				ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "		     %u",		clipTicks);
+	ImGui::Text("Range:");				ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "            %u - %u", currentClipStart, currentClipEnd);
+	ImGui::Text("Speed:");				ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "            x%.3f",	currentClipSpeed);
+	ImGui::Text("Duration:");			ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "         %.3f",		currentClipDuration);
+	ImGui::Text("Loop:");				ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "             %s",		(currentClipLoop) ? "True" : "False");
+
+	ImGui::Separator();
+
+	// --- ANIMATOR DEBUG CONTROLS
+	ImGui::TextColored(Cyan.C_Array(), "Debug Controls");
+
+	if (ImGui::Button("Previous Keyframe"))		{ cAnimator->StepToPrevKeyframe(); }	ImGui::SameLine(150.0f);
+	if (ImGui::Button("Next Keyframe"))			{ cAnimator->StepToNextKeyframe(); }
+	if (ImGui::Button("Refresh Bone Display"))	{ cAnimator->RefreshBoneDisplay(); }
+}
+
+void E_Inspector::DisplayClipManager(C_Animator* cAnimator)
+{
+	ImGui::Separator();
+	ImGui::Separator();
+
+	std::vector<std::string> clipNames = cAnimator->GetClipNamesAsVector();
+
+	// --- ANIMATOR CLIP MANAGER
+	if (ImGui::BeginTabBar("ClipManagerTabBar", ImGuiTabBarFlags_None))
+	{
+		if (ImGui::BeginTabItem("Clip Creator"))
+		{
+			ClipCreatorWindow(cAnimator);
+
+			ImGui::EndTabItem();
+		}
+
+		if (ImGui::BeginTabItem("Clip Editor"))
+		{
+			ClipEditorWindow(cAnimator);
+
+			ImGui::EndTabItem();
+		}
+
+		ImGui::EndTabBar();
+	}
+	
+	ImGui::Separator();
+	ImGui::Separator();
+	
+	// -- EXISTING CLIPS
+	ImGui::TextColored(Cyan.C_Array(), "Existing Clips");
+	
+	ImGui::BeginChild("Existing Clips Child", ImVec2(0.0f, 269.0f), true, ImGuiWindowFlags_HorizontalScrollbar);
+	
+	for (uint i = 0; i < clipNames.size(); ++i)
+	{	
+		if (ImGui::TreeNodeEx(clipNames[i].c_str(), ImGuiTreeNodeFlags_Bullet))
+		{
+			ImGui::TreePop();
+		}
+	}
+	
+	ImGui::EndChild();
+}
+
+void E_Inspector::ClipCreatorWindow(C_Animator* cAnimator)
+{
+	// --- NEW CLIP VARIABLES
+	static int selectedAnimation		= 0;
+	std::string animationNames			= cAnimator->GetAnimationNamesAsString();
+
+	static char newClipName[128]		= "Enter Clip Name";
+	ImGuiInputTextFlags inputTxtFlags	= ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_AutoSelectAll;
+
+	static int newClipStart				= 0;
+	static int newClipEnd				= (int)cAnimator->GetAnimationByIndex(selectedAnimation)->GetDuration();
+	int newClipMin						= 0;
+	int newClipMax						= (int)cAnimator->GetAnimationByIndex(selectedAnimation)->GetDuration();
+	static float newClipSpeed			= 1.0f;
+	static bool loop					= false;
+
+	ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
+	ImGui::BeginChild("Clip Manager Child", ImVec2(0.0f, 190.0f), true);
+	
+	// -- CLIP CREATOR
+	ImGui::TextColored(Cyan.C_Array(), "Create Clip");
+	
+	ImGui::Combo("Select Animation", &selectedAnimation, animationNames.c_str());
+	
+	R_Animation* newClipAnimation	= cAnimator->GetAnimationByIndex(selectedAnimation);
+	newClipMax						= (newClipAnimation != nullptr) ? (int)newClipAnimation->GetDuration() : 0;
+	
+	ImGui::InputText("Clip Name", newClipName, IM_ARRAYSIZE(newClipName), inputTxtFlags);
+	ImGui::SliderInt("Clip Start", &newClipStart, newClipMin, newClipMax);
+	ImGui::SliderInt("Clip End", &newClipEnd, newClipMin, newClipMax);
+	ImGui::SliderFloat("Clip Speed", &newClipSpeed, 0.1f, 10.0f, "X %.3f", 0);
+	ImGui::Checkbox("Loop Clip", &loop);
+	
+	if (newClipEnd > newClipMax)	{ newClipEnd = newClipMax; }
+	if (newClipStart > newClipEnd)	{ newClipEnd = newClipStart; };
+	
+	ImGui::PushStyleColor(ImGuiCol_Button, { 0.0f, 1.0f, 0.0f, 0.5f });
+	if (ImGui::Button("Create")) 
+	{ 
+		if (EngineApp->gameState != GameState::PLAY)
+		{
+			bool success = cAnimator->AddClip(AnimatorClip(cAnimator->GetAnimationByIndex((uint)selectedAnimation), newClipName, newClipStart, newClipEnd, newClipSpeed, loop));
+			
+			if (success)
+			{
+				strcpy_s(newClipName, 128, "Enter Clip Name");																// --- Re-setting the New Clip Parameters
+				newClipStart	= 0;																						// 
+				newClipEnd		= (int)cAnimator->GetAnimationByIndex(selectedAnimation)->GetDuration();					// 
+				loop			= false;																					// --------------------------------------
+			}
+			else
+			{
+				LOG("[ERROR] Animator Editor Panel: Could not Create Clip! Error: C_Animator* AddClip() failed.");
+			}
+		}
+		else
+		{
+			ImGui::SameLine();
+			ImGui::TextColored(Red.C_Array(), "Cannot Create Clips While in Game Mode!");
+		}
+	}
+
+	ImGui::PopStyleColor();
+	
+	ImGui::EndChild();
+	ImGui::PopStyleVar();
+}
+
+void E_Inspector::ClipEditorWindow(C_Animator* cAnimator)
+{
+	std::string animationNames			= cAnimator->GetAnimationNamesAsString();
+	std::string clipNamesString			= cAnimator->GetClipNamesAsString();
+	std::vector<std::string> clipNames	= cAnimator->GetClipNamesAsVector();
+	ImGuiInputTextFlags inputTxtFlags	= ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_AutoSelectAll;
+	
+	static int selectedClip = 0;
+	static bool newSelected = true;
+	if (ImGui::Combo("Clips", &selectedClip, clipNamesString.c_str()))	{ newSelected = true; }
+
+	ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
+	ImGui::BeginChild("Clip Manager Child", ImVec2(0.0f, 190.0f), true, ImGuiWindowFlags_NoScrollbar);
+
+	ImGui::TextColored(Cyan.C_Array(), "Edit Clip");
+
+	AnimatorClip* clipToEdit = cAnimator->GetClipAsPtr(clipNames[selectedClip].c_str());
+	if (clipToEdit == nullptr)
+	{
+		//break;
+	}
+
+	static int editedAnimationIndex = cAnimator->GetIndexByAnimation(clipToEdit->GetAnimation());
+	editedAnimationIndex			= (editedAnimationIndex != -1) ? editedAnimationIndex : 0;					// In case the returned index is invalid.
+	static char editedName[128]		= "Edited Clip Name";
+
+	ImGui::Combo("Edit Animation", &editedAnimationIndex, animationNames.c_str());
+
+	R_Animation* editedAnimation	= cAnimator->GetAnimationByIndex(editedAnimationIndex);
+	int editedMin					= 0;
+	int editedMax					= (editedAnimation != nullptr) ? editedAnimation->GetDuration() : 0;
+	static int editedStart			= (int)clipToEdit->GetStart();
+	static int editedEnd			= (int)clipToEdit->GetEnd();
+	static float editedSpeed		= clipToEdit->GetSpeed();
+	static bool editedLoop			= clipToEdit->IsLooped();
+
+	if (newSelected)				
+	{ 
+		editedAnimationIndex = cAnimator->GetIndexByAnimation(clipToEdit->GetAnimation());
+		editedAnimationIndex = (editedAnimationIndex != -1) ? editedAnimationIndex : 0;
+
+		editedAnimation = cAnimator->GetAnimationByIndex(editedAnimationIndex);
+		editedMax		= (editedAnimation != nullptr) ? editedAnimation->GetDuration() : 0;
+
+		strcpy(editedName, clipToEdit->GetName());
+		editedStart		= (int)clipToEdit->GetStart();
+		editedEnd		= (int)clipToEdit->GetEnd();
+		editedSpeed		= clipToEdit->GetSpeed();
+		editedLoop		= clipToEdit->IsLooped();
+
+		newSelected = false;
+	}
+
+	ImGui::InputText("Edit Name", editedName, IM_ARRAYSIZE(editedName), inputTxtFlags);
+	ImGui::SliderInt("Edit Start", &editedStart, editedMin, editedMax);
+	ImGui::SliderInt("Edit End", &editedEnd, editedMin, editedMax);
+	ImGui::SliderFloat("Edit Speed", &editedSpeed, 0.1f, 10.0f, "X %.3f", 0);
+	ImGui::Checkbox("Loop Clip", &editedLoop);
+
+	if (editedEnd > editedMax)		{ editedEnd = editedMax; }
+	if (editedStart > editedEnd)	{ editedEnd = editedStart; }
+
+	ImGui::PushStyleColor(ImGuiCol_Button, { 0.0f, 1.0f, 0.0f, 0.5f });
+	if (ImGui::Button("Save"))		
+	{ 
+		bool success = cAnimator->EditClip(clipToEdit->GetName(), editedAnimation, editedName, editedStart, editedEnd, editedSpeed, editedLoop); 
+		if (success)
+		{
+			strcpy_s(editedName, 128, "Edited Clip Name");																							// --- Re-setting the Edit Clip Parameters
+			editedStart		= 0;																													// 
+			editedEnd		= (editedAnimation != nullptr) ? (uint)editedAnimation->GetDuration() : 0;												//
+			editedSpeed		= 1.0f;																													//
+			editedLoop		= false;																												// --------------------------------------
+		}
+		else
+		{
+			LOG("[ERROR] Animator Editor Panel: Could not Create Clip! Error: C_Animator* EditClip() failed.");
+		}
+	}
+	ImGui::PopStyleColor();
+
+	ImGui::SameLine(ImGui::GetWindowWidth() * 0.80f);
+
+	ImGui::PushStyleColor(ImGuiCol_Button, LightRed.C_Array());
+	if (ImGui::Button("Delete"))	{ cAnimator->DeleteClip(clipToEdit->GetName()); clipToEdit = nullptr; }
+	ImGui::PopStyleColor();
+
+	ImGui::EndChild();
+	ImGui::PopStyleVar();
+}
+
 void E_Inspector::TextEditorWindow()
 {
 
@@ -1817,16 +2422,16 @@ void E_Inspector::TextEditorWindow()
 
 				Importer::Shaders::Import(shaderToRecompile->GetAssetsPath(), shaderToRecompile);
 
-				showSaveEditorPopup = false;
-				showTextEditorWindow = true;
+				showSaveEditorPopup		= false;
+				showTextEditorWindow	= true;
 
 				ImGui::CloseCurrentPopup();
 			}
 			ImGui::SameLine();
 			if (ImGui::Button("Don't Save"))
 			{
-				showSaveEditorPopup = false;
-				showTextEditorWindow = true;
+				showSaveEditorPopup		= false;
+				showTextEditorWindow	= true;
 
 				ImGui::CloseCurrentPopup();
 			}
@@ -1930,4 +2535,331 @@ void E_Inspector::CallTextEditor(C_Material* cMaterial)
 	showTextEditorWindow = true;
 
 	shaderToRecompile = cMaterial->GetShader();
+}
+
+void E_Inspector::DisplayParticleSystemControls(C_ParticleSystem* cParticleSystem)
+{
+	static char buffer[64];
+	
+	//TODO PARTICLE SYSTEM
+	if (ImGui::Button("New Particle System"))
+	{
+		cParticleSystem->AddParticleSystem(buffer); //TODO doesn't appear NewParticleSystem() wtf
+	}
+
+	ImGui::SameLine();
+
+	// save system
+	if (ImGui::Button("Save Particle System"))
+	{
+		cParticleSystem->SaveParticleSystem(); //TODO doesn't appear NewParticleSystem() wtf
+	}
+
+	//combo showing all resources Already exists App->resourceManager->GetAllParticleSystems()
+	if (ImGui::BeginCombo("##Particle Systems", cParticleSystem->resource->name.c_str()))
+	{
+		std::vector<R_ParticleSystem*> particleSystems;
+		App->resourceManager->GetAllParticleSystems(particleSystems);
+
+		for (auto it = particleSystems.begin(); it != particleSystems.end(); ++it)
+		{
+			bool isSelected = (cParticleSystem->resource == (*it));
+			if (ImGui::Selectable((*it)->name.c_str(), isSelected))
+			{
+				cParticleSystem->SetParticleSystem((*it));
+			}
+			if (isSelected)
+				ImGui::SetItemDefaultFocus();
+		}
+		ImGui::EndCombo();
+	}
+
+	// --- Particle System NAME ---
+	ImGui::SetNextItemWidth(ImGui::GetWindowWidth() * 0.33f);
+	//static char buffer[64];
+	strcpy_s(buffer, cParticleSystem->resource->name.c_str());
+	if (ImGui::InputText("PS Name", buffer, IM_ARRAYSIZE(buffer), ImGuiInputTextFlags_EnterReturnsTrue))
+	{
+		std::string path = ASSETS_PARTICLESYSTEMS_PATH;
+		path += buffer;
+		path += PARTICLESYSTEMS_AST_EXTENSION;
+		cParticleSystem->resource->SetAssetsPathAndFile(path.c_str(), buffer);
+		cParticleSystem->resource->name = buffer;
+	}
+}
+
+void E_Inspector::DisplayEmitterInstances(C_ParticleSystem* cParticleSystem)
+{
+	for (uint i = 0; i < cParticleSystem->emitterInstances.size(); i++) //loop emitters
+	{
+		Emitter* emitter = cParticleSystem->emitterInstances[i]->emitter;
+
+		bool show = true;
+		if (ImGui::CollapsingHeader(cParticleSystem->emitterInstances[i]->emitter->name.c_str(), &show, ImGuiTreeNodeFlags_DefaultOpen))
+		{
+			ImGui::SetNextItemWidth(ImGui::GetWindowWidth() * 0.33f);
+			static char buffer[64];
+			strcpy_s(buffer, emitter->name.c_str());
+			std::string inputTextName = "Emitter Name ##" + std::to_string(i);
+			if (ImGui::InputText(inputTextName.c_str(), buffer, IM_ARRAYSIZE(buffer), ImGuiInputTextFlags_EnterReturnsTrue))
+			{
+				emitter->name = buffer;
+			}
+
+			ImGui::SameLine();
+
+			bool preview = cParticleSystem->previewEnabled;
+			if (ImGui::Checkbox("Preview", &preview))
+			{
+				cParticleSystem->EnginePreview(preview);
+			}
+
+			bool stop = cParticleSystem->stopSpawn;
+			if (ImGui::Checkbox("Stop Spawn", &stop))
+			{
+				cParticleSystem->stopSpawn = stop;
+				if (stop == true)
+				{
+					cParticleSystem->StopSpawn();
+				}
+				else
+				{
+					cParticleSystem->ResumeSpawn();
+				}
+
+			}
+
+			bool stopDelete = cParticleSystem->tempDelete;
+			if (ImGui::Checkbox("Stop And Delete", &stopDelete))
+			{
+				cParticleSystem->tempDelete = stopDelete;
+				cParticleSystem->StopAndDelete();
+			}
+
+			R_Texture* current = emitter->emitterTexture;
+			//combo showing all resources Already exists App->resourceManager->GetAllParticleSystems()
+			if (ImGui::BeginCombo("##Particle Texture", emitter->emitterTexture->GetAssetsFile()))
+			{
+				std::vector<R_Texture*> textures;
+				App->resourceManager->GetAllTextures(textures); //GetAll Text
+
+				for (auto it = textures.begin(); it != textures.end(); ++it)
+				{
+					bool isSelected = (current == (*it));
+					if (ImGui::Selectable((*it)->GetAssetsFile(), isSelected))
+					{
+						emitter->SetTexture((*it));
+					}
+					if (isSelected)
+						ImGui::SetItemDefaultFocus();
+				}
+				ImGui::EndCombo();
+			}
+
+			ImGui::Combo("###", &moduleType, "Add Module\0ParticleMovement\0ParticleColor\0ParticleLifetime\0ParticleRotation\0ParticleSize\0ParticleBillboarding");
+
+			ImGui::SameLine();
+
+			if ((ImGui::Button("ADD")))
+			{
+				if (moduleType != (int)ParticleModule::Type::NONE)
+				{
+					emitter->AddModuleFromType((ParticleModule::Type)moduleType);
+				}
+			}
+
+			ImGui::Separator();
+
+			DisplayParticleModules(emitter);
+		}
+
+		ImGui::Separator();
+	}
+}
+
+void E_Inspector::DisplayParticleModules(Emitter* emitter)
+{
+	ImGui::TextColored(Cyan.C_Array(), "Particle Modules:");
+
+	ImGui::BeginChild("Particle Modules Child", ImVec2(0.0f, 269.0f), true, ImGuiWindowFlags_HorizontalScrollbar);
+
+	for (auto pModule = emitter->modules.cbegin(); pModule != emitter->modules.cend(); ++pModule)
+	{
+		if ((*pModule) == nullptr)
+			continue;
+		
+		switch ((*pModule)->type)
+		{
+		case ParticleModule::Type::EMITTER_BASE:			{ DisplayEmitterBase((*pModule)); }				break;
+		case ParticleModule::Type::EMITTER_SPAWN:			{ DisplayEmitterSpawn((*pModule)); }			break;
+		case ParticleModule::Type::EMITTER_AREA:			{ /*DisplayEmitterArea((*pModule));*/ }			break;
+		case ParticleModule::Type::PARTICLE_MOVEMENT:		{ DisplayParticleMovement((*pModule)); }		break;
+		case ParticleModule::Type::PARTICLE_COLOR:			{ DisplayParticleColor((*pModule)); }			break;
+		case ParticleModule::Type::PARTICLE_LIFETIME:		{ DisplayParticleLifetime((*pModule)); }		break;
+		case ParticleModule::Type::PARTICLE_ROTATION:		{ DisplayParticleRotation((*pModule)); }		break;
+		case ParticleModule::Type::PARTICLE_SIZE:			{ DisplayParticleSize((*pModule)); }			break;
+		case ParticleModule::Type::PARTICLE_BILLBOARDING:	{ DisplayParticleBillboarding((*pModule)); }	break;
+		case ParticleModule::Type::NONE:					{  }											break;
+		}
+	}
+
+	ImGui::EndChild();
+}
+
+void E_Inspector::DisplayEmitterBase(ParticleModule* pModule)
+{	
+	/*bool show = true;
+	if (ImGui::CollapsingHeader("Emitter Base", &show, ImGuiTreeNodeFlags_DefaultOpen))*/
+	if (ImGui::TreeNodeEx("Emitter Base"/*, ImGuiTreeNodeFlags_DefaultOpen*/))
+	{
+		EmitterBase* emitterBase = (EmitterBase*)pModule;
+
+		float3 originPos = emitterBase->origin;
+		if (ImGui::InputFloat3("OriginPosition", (float*)&originPos, 4, ImGuiInputTextFlags_EnterReturnsTrue)) { emitterBase->origin = originPos; }
+
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.0f, 0.0f, 0.0f, 0.25f));
+		if (ImGui::Button("Delete")) { /*Have access to Owner Emitter through Particle Module*/ }
+		ImGui::PopStyleColor();
+
+		ImGui::TreePop();
+	}
+}
+
+void E_Inspector::DisplayEmitterSpawn(ParticleModule* pModule)
+{
+	/*bool show = true;
+	if (ImGui::CollapsingHeader("Emitter Spawn", &show, ImGuiTreeNodeFlags_DefaultOpen))*/
+	if (ImGui::TreeNodeEx("Emitter Spawn"/*, ImGuiTreeNodeFlags_DefaultOpen*/))
+	{
+		EmitterSpawn* emitterSpawn = (EmitterSpawn*)pModule;
+
+		float ratio = emitterSpawn->spawnRatio;
+		if (ImGui::InputFloat("SpawnRatio", &ratio, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue)) { emitterSpawn->spawnRatio = ratio; }
+
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.0f, 0.0f, 0.0f, 0.25f));
+		if (ImGui::Button("Delete")) { /*Have access to Owner Emitter through Particle Module*/ }
+		ImGui::PopStyleColor();
+
+		ImGui::TreePop();
+	}
+}
+
+void E_Inspector::DisplayEmitterArea(ParticleModule* pModule)
+{
+
+}
+
+void E_Inspector::DisplayParticleMovement(ParticleModule* pModule)
+{
+	/*bool show = true;
+	if (ImGui::CollapsingHeader("Particle Movement", &show, ImGuiTreeNodeFlags_DefaultOpen))*/
+	if (ImGui::TreeNodeEx("ParticleMovement"/*, ImGuiTreeNodeFlags_DefaultOpen*/))
+	{
+		ParticleMovement* particleMovement = (ParticleMovement*)pModule;
+
+		float intensity1	= particleMovement->initialIntensity1;
+		float intensity2	= particleMovement->initialIntensity2;
+		float3 direction1	= particleMovement->initialDirection1;
+		float3 direction2	= particleMovement->initialDirection2;
+		
+		bool hide			= particleMovement->hideMovement;
+		bool deleteModule	= particleMovement->eraseMovement;
+		
+		if (ImGui::InputFloat("InitialIntensity_A", &intensity1, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))	{ particleMovement->initialIntensity1 = intensity1; }
+		if (ImGui::InputFloat("InitialIntensity_B", &intensity2, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))	{ particleMovement->initialIntensity2 = intensity2; }
+		if (ImGui::InputFloat3("InitialDirection_A", (float*)&direction1, 4, ImGuiInputTextFlags_EnterReturnsTrue)) { particleMovement->initialDirection1 = direction1; }
+		if (ImGui::InputFloat3("InitialDirection_B", (float*)&direction2, 4, ImGuiInputTextFlags_EnterReturnsTrue)) { particleMovement->initialDirection2 = direction2; }
+		
+		if (ImGui::Checkbox("Hide Movement", &hide))			{ particleMovement->hideMovement = hide; }
+		if (ImGui::Checkbox("Delete Movement", &deleteModule))	{ particleMovement->eraseMovement = deleteModule; }
+
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.0f, 0.0f, 0.0f, 0.25f));
+		if (ImGui::Button("Delete")) { /*Have access to Owner Emitter through Particle Module*/ }
+		ImGui::PopStyleColor();
+
+		ImGui::TreePop();
+	}
+}
+
+void E_Inspector::DisplayParticleColor(ParticleModule* pModule)
+{
+	/*bool show = true;
+	if (ImGui::CollapsingHeader("Particle Color", &show, ImGuiTreeNodeFlags_DefaultOpen))*/
+	if (ImGui::TreeNodeEx("Particle Color"/*, ImGuiTreeNodeFlags_DefaultOpen*/))
+	{
+		ParticleColor* particleColor = (ParticleColor*)pModule;
+		
+		Color color			= particleColor->initialColor;
+		if (ImGui::InputFloat4("InitialColor", color.C_Array(), 4, ImGuiInputTextFlags_EnterReturnsTrue)) { particleColor->initialColor = color; }
+		
+		bool hide			= particleColor->hideColor;
+		bool deleteModule	= particleColor->eraseColor;
+		if (ImGui::Checkbox("Hide Color", &hide))			{ particleColor->hideColor = hide; }
+		if (ImGui::Checkbox("Delete Color", &deleteModule))	{ particleColor->eraseColor = deleteModule; }
+
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.0f, 0.0f, 0.0f, 0.25f));
+		if (ImGui::Button("Delete")) { /*Have access to Owner Emitter through Particle Module*/ }
+		ImGui::PopStyleColor();
+
+		ImGui::TreePop();
+	}
+}
+
+void E_Inspector::DisplayParticleLifetime(ParticleModule* pModule)
+{
+	/*bool show = true;
+	if (ImGui::CollapsingHeader("Particle Lifetime", &show, ImGuiTreeNodeFlags_DefaultOpen))*/
+	if (ImGui::TreeNodeEx("Particle Lifetime"/*, ImGuiTreeNodeFlags_DefaultOpen*/))
+	{
+		ParticleLifetime* particleLifetime = (ParticleLifetime*)pModule;
+
+		float originLifetime = particleLifetime->initialLifetime;
+		if (ImGui::InputFloat("InitialLifetime", &originLifetime, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue)) { particleLifetime->initialLifetime = originLifetime; }
+		
+		bool hide			= particleLifetime->hideLifetime;
+		bool deleteModule	= particleLifetime->eraseLifetime;
+		if (ImGui::Checkbox("Hide Lifetime", &hide))			{ particleLifetime->hideLifetime = hide; }
+		if (ImGui::Checkbox("Delete Lifetime", &deleteModule))	{ particleLifetime->eraseLifetime = deleteModule; }
+
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.0f, 0.0f, 0.0f, 0.25f));
+		if (ImGui::Button("Delete")) { /*Have access to Owner Emitter through Particle Module*/ }
+		ImGui::PopStyleColor();
+
+		ImGui::TreePop();
+	}
+}
+
+void E_Inspector::DisplayParticleRotation(ParticleModule* pModule)
+{
+
+}
+
+void E_Inspector::DisplayParticleSize(ParticleModule* pModule)
+{
+
+}
+
+void E_Inspector::DisplayParticleBillboarding(ParticleModule* pModule)
+{
+	/*bool show = true;
+	if (ImGui::CollapsingHeader("Particle Billboarding", &show, ImGuiTreeNodeFlags_DefaultOpen))*/
+	if (ImGui::TreeNodeEx("Particle Billboarding", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		ParticleBillboarding* particleBillboarding = (ParticleBillboarding*)pModule;
+
+		ImGui::Combo("Billboarding##", &billboardingType, "Screen Aligned\0World Aligned\0X-Axis Aligned\0Y-Axis Aligned\0Z-Axis Aligned");
+		ImGui::SameLine();
+		if ((ImGui::Button("SELECT"))) { particleBillboarding->billboardingType = (ParticleBillboarding::BillboardingType)billboardingType; }
+
+		bool hideModule		= particleBillboarding->hideBillboarding;
+		bool deleteModule	= particleBillboarding->eraseBillboarding;
+		if (ImGui::Checkbox("Hide Billboarding", &hideModule))		{ particleBillboarding->hideBillboarding = hideModule; }
+		if (ImGui::Checkbox("Delete Billboarding", &deleteModule))	{ particleBillboarding->eraseBillboarding = deleteModule; }
+
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.0f, 0.0f, 0.0f, 0.25f));
+		if (ImGui::Button("Delete")) { /*Have access to Owner Emitter through Particle Module*/ }
+		ImGui::PopStyleColor();
+
+		ImGui::TreePop();
+	}
 }

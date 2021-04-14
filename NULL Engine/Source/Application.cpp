@@ -40,6 +40,7 @@ resourceManager	(new M_ResourceManager()),
 audio			(new M_Audio()),
 physics			(new M_Physics()),
 uiSystem		(new M_UISystem()),
+scriptManager	(nullptr), //Very important -> fill the scriptManager on the user side application (Game or Engine) It is left null here to be allocated as a simple script manager or as an extended EngineScriptManager
 logger			(nullptr),
 gameState		(GameState::STOP)
 {
@@ -331,7 +332,7 @@ UpdateStatus Application::PostUpdate()
 }
 
 void Application::FinishUpdate()
-{	
+{
 	if (wantToLoad)
 	{
 
@@ -374,7 +375,6 @@ void Application::LoadConfiguration(const char* file)
 
 void Application::SaveConfigurationNow()
 {
-	
 	ParsonNode config;
 
 	for (uint i = 0; i < modules.size(); ++i)

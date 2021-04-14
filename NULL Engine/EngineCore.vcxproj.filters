@@ -166,6 +166,27 @@
     <Filter Include="Source\6_Tools\OwnMath\Matrices">
       <UniqueIdentifier>{dedf2148-ddb9-464e-b0ab-4bfcf125e528}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\7_ScriptHelpers">
+      <UniqueIdentifier>{fb6d5c5c-096e-4589-9af6-cdad85c4188b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\5_Containers\Prefab">
+      <UniqueIdentifier>{210a67e9-402b-4623-bf00-eab2afcde184}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\4_GameObjects\Components\UIComponents">
+      <UniqueIdentifier>{6e9dd57d-f7bc-4d4e-a0af-070588aa2b12}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\5_Containers\ParticleSystem">
+      <UniqueIdentifier>{98497639-e216-434b-9050-7fda5195236c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\4_GameObjects\Components\Navigator">
+      <UniqueIdentifier>{12ac887a-da28-404e-a162-74dddd2d87fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\4_GameObjects\Components\Physics">
+      <UniqueIdentifier>{9acfc05c-86d4-4d9d-a405-94ae6c995535}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\4_GameObjects\Components\Audio">
+      <UniqueIdentifier>{38d26ccc-3fcb-4b59-8b18-f661356f52ef}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Application.cpp">
@@ -534,9 +555,6 @@
     <ClCompile Include="Source\C_CapsuleCollider.cpp">
       <Filter>Source\4_GameObjects\Components</Filter>
     </ClCompile>
-    <ClCompile Include="Source\C_ParticleSystem.cpp">
-      <Filter>Source\4_GameObjects\Components</Filter>
-    </ClCompile>
     <ClCompile Include="Source\C_RigidBody.cpp">
       <Filter>Source\4_GameObjects\Components</Filter>
     </ClCompile>
@@ -561,9 +579,6 @@
     <ClCompile Include="Source\Particle.cpp">
       <Filter>Source\5_Containers\Particles</Filter>
     </ClCompile>
-    <ClCompile Include="Source\R_ParticleSystem.cpp">
-      <Filter>Source\2_Resources</Filter>
-    </ClCompile>
     <ClCompile Include="Source\DirectionalLight.cpp">
       <Filter>Source\4_GameObjects\Light</Filter>
     </ClCompile>
@@ -572,15 +587,6 @@
     </ClCompile>
     <ClCompile Include="Source\C_PlayerController.cpp">
       <Filter>Source\4_GameObjects\Components\Behaviors</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\C_BulletBehavior.cpp" />
-    <ClCompile Include="Source\C_CameraBehavior.cpp" />
-    <ClCompile Include="Source\C_PropBehavior.cpp" />
-    <ClCompile Include="Source\C_UI_Image.cpp">
-      <Filter>Source\4_GameObjects\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\C_UI_Text.cpp">
-      <Filter>Source\4_GameObjects\Components</Filter>
     </ClCompile>
     <ClCompile Include="Source\C_BulletBehavior.cpp">
       <Filter>Source\4_GameObjects\Components\Behaviors</Filter>
@@ -596,6 +602,63 @@
     </ClCompile>
     <ClCompile Include="Source\C_GateBehavior.cpp">
       <Filter>Source\4_GameObjects\Components\Behaviors</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\R_Script.cpp">
+      <Filter>Source\2_Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\C_Script.cpp">
+      <Filter>Source\4_GameObjects\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Script.cpp">
+      <Filter>Source\7_ScriptHelpers</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\I_Scripts.cpp">
+      <Filter>Source\3_Importers</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\M_ScriptManager.cpp">
+      <Filter>Source\1_Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Prefab.cpp">
+      <Filter>Source\5_Containers\Prefab</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\R_NavMesh.cpp">
+      <Filter>Source\2_Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\I_Particles.cpp">
+      <Filter>Source\3_Importers</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\I_Navigation.cpp">
+      <Filter>Source\3_Importers</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\C_UI_Image.cpp">
+      <Filter>Source\4_GameObjects\Components\UIComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\C_UI_Text.cpp">
+      <Filter>Source\4_GameObjects\Components\UIComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\C_UI_Button.cpp">
+      <Filter>Source\4_GameObjects\Components\UIComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\R_2DAnimation.cpp">
+      <Filter>Source\2_Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\C_2DAnimator.cpp">
+      <Filter>Source\4_GameObjects\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\C_NavMeshAgent.cpp">
+      <Filter>Source\4_GameObjects\Components\Navigator</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Renderer.cpp">
+      <Filter>Source\5_Containers\Renderer3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\RE_Circle.cpp">
+      <Filter>Source\5_Containers\Renderer3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\R_ParticleSystem.cpp">
+      <Filter>Source\2_Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\C_ParticleSystem.cpp">
+      <Filter>Source\4_GameObjects\Components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -670,15 +733,6 @@
     </ClInclude>
     <ClInclude Include="Source\Dependencies\DevIL\include\ilut_config.h">
       <Filter>Dependencies\DevIL</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\Assimp\include\cimport.h">
-      <Filter>Dependencies\Assimp</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\Assimp\include\postprocess.h">
-      <Filter>Dependencies\Assimp</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Dependencies\Assimp\include\scene.h">
-      <Filter>Dependencies\Assimp</Filter>
     </ClInclude>
     <ClInclude Include="Source\Primitive.h">
       <Filter>Source\4_GameObjects\Primitives</Filter>
@@ -1289,12 +1343,6 @@
     <ClInclude Include="Source\Dependencies\FreeType\include\freetype\tttables.h">
       <Filter>Dependencies\FreeType</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Collider.h" />
-    <ClInclude Include="Source\Emitter.h" />
-    <ClInclude Include="Source\EmitterInstance.h" />
-    <ClInclude Include="Source\Particle.h" />
-    <ClInclude Include="Source\ParticleModule.h" />
-    <ClInclude Include="Source\SimulationCallback.h" />
     <ClInclude Include="Source\Dependencies\mmgr\include\mmgr.h">
       <Filter>Dependencies\mmgr</Filter>
     </ClInclude>
@@ -1340,9 +1388,6 @@
     <ClInclude Include="Source\C_CapsuleCollider.h">
       <Filter>Source\4_GameObjects\Components</Filter>
     </ClInclude>
-    <ClInclude Include="Source\C_ParticleSystem.h">
-      <Filter>Source\4_GameObjects\Components</Filter>
-    </ClInclude>
     <ClInclude Include="Source\C_RigidBody.h">
       <Filter>Source\4_GameObjects\Components</Filter>
     </ClInclude>
@@ -1364,9 +1409,6 @@
     <ClInclude Include="Source\Particle.h">
       <Filter>Source\5_Containers\Particles</Filter>
     </ClInclude>
-    <ClInclude Include="Source\R_ParticleSystem.h">
-      <Filter>Source\2_Resources</Filter>
-    </ClInclude>
     <ClInclude Include="Source\DirectionalLight.h">
       <Filter>Source\4_GameObjects\Light</Filter>
     </ClInclude>
@@ -1385,15 +1427,6 @@
     <ClInclude Include="Source\C_PlayerController.h">
       <Filter>Source\4_GameObjects\Components\Behaviors</Filter>
     </ClInclude>
-    <ClInclude Include="Source\C_BulletBehavior.h" />
-    <ClInclude Include="Source\C_CameraBehavior.h" />
-    <ClInclude Include="Source\C_PropBehavior.h" />
-    <ClInclude Include="Source\C_UI_Text.h">
-      <Filter>Source\4_GameObjects\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\C_UI_Image.h">
-      <Filter>Source\4_GameObjects\Components</Filter>
-    </ClInclude>
     <ClInclude Include="Source\C_BulletBehavior.h">
       <Filter>Source\4_GameObjects\Components\Behaviors</Filter>
     </ClInclude>
@@ -1408,6 +1441,72 @@
     </ClInclude>
     <ClInclude Include="Source\C_GateBehavior.h">
       <Filter>Source\4_GameObjects\Components\Behaviors</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\R_Script.h">
+      <Filter>Source\2_Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\C_Script.h">
+      <Filter>Source\4_GameObjects\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Script.h">
+      <Filter>Source\7_ScriptHelpers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\I_Scripts.h">
+      <Filter>Source\3_Importers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\M_ScriptManager.h">
+      <Filter>Source\1_Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Dependencies\Assimp\include\assimp\cimport.h">
+      <Filter>Dependencies\Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Dependencies\Assimp\include\assimp\postprocess.h">
+      <Filter>Dependencies\Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Dependencies\Assimp\include\assimp\scene.h">
+      <Filter>Dependencies\Assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Prefab.h">
+      <Filter>Source\5_Containers\Prefab</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\R_NavMesh.h">
+      <Filter>Source\2_Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\I_Particles.h">
+      <Filter>Source\3_Importers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\I_Navigation.h">
+      <Filter>Source\3_Importers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\C_UI_Text.h">
+      <Filter>Source\4_GameObjects\Components\UIComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\C_UI_Image.h">
+      <Filter>Source\4_GameObjects\Components\UIComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\C_UI_Button.h">
+      <Filter>Source\4_GameObjects\Components\UIComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\R_2DAnimation.h">
+      <Filter>Source\2_Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\C_2DAnimator.h">
+      <Filter>Source\4_GameObjects\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\C_NavMeshAgent.h">
+      <Filter>Source\4_GameObjects\Components\Navigator</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Renderer.h">
+      <Filter>Source\5_Containers\Renderer3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\RE_Circle.h">
+      <Filter>Source\5_Containers\Renderer3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\R_ParticleSystem.h">
+      <Filter>Source\2_Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\C_ParticleSystem.h">
+      <Filter>Source\4_GameObjects\Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

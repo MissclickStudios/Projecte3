@@ -1,3 +1,4 @@
+#include "Profiler.h"
 #include "E_SaveFile.h"
 
 #include "EngineApplication.h"
@@ -19,6 +20,8 @@ E_SaveFile::~E_SaveFile()
 
 bool E_SaveFile::Draw(ImGuiIO& io)
 {
+	OPTICK_CATEGORY("E_SaveFile Draw", Optick::Category::Editor)
+
 	ImGui::SetNextWindowPos(ImGui::GetMainViewport()->GetCenter(), ImGuiCond_Appearing, ImVec2(0.5, 0.5));
 	ImGui::SetNextWindowSize(ImVec2(250.0f, 150.0f));
 	
@@ -65,7 +68,7 @@ void E_SaveFile::DrawTextEditor()
 
 	if (ImGui::Button("Save"))
 	{
-		EngineApp->scene->SaveScene(sceneName.c_str());
+		EngineApp->scene->SaveSceneAs(sceneName.c_str());
 		readyToSave = false;
 		EngineApp->editor->showSaveFilePopup = false;
 		ImGui::CloseCurrentPopup();

@@ -26,10 +26,17 @@
 #endif
 #include "../MathGeoLibFwd.h"
 
+//Import/export engine core define
+#ifdef NULL_BUILD_DLL
+#define NULL_API __declspec(dllexport)
+#else
+#define NULL_API __declspec(dllimport)
+#endif
+
 MATH_BEGIN_NAMESPACE
 
 /// Represents a rotation or an orientation of a 3D object.
-class ALIGN16 Quat
+class ALIGN16 NULL_API Quat
 {
 public:
 

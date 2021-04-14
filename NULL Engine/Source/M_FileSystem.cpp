@@ -91,7 +91,7 @@ bool M_FileSystem::AddPath(const char* pathOrZip)
 
 	if (result == PhysfsResult::FAILURE)
 	{
-		LOG("[ERROR] File System: Could not add a path or zip! Error: %s\n", PHYSFS_getLastError());	// Method that returns the string of the last error message issued by PhysFS.
+		LOG("[ERROR] File System: Could not add a path or zip! Error: %s\n", PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));	// Method that returns the string of the last error message issued by PhysFS.
 	}
 	else
 	{
@@ -103,18 +103,21 @@ bool M_FileSystem::AddPath(const char* pathOrZip)
 
 bool M_FileSystem::Exists(const char* file) const
 {
-	PhysfsResult result = (PhysfsResult)PHYSFS_exists(file);											// Checks whether or not a file is in the search path. Returns 0 upon FAILURE.
+	// Checks whether or not a file is in the search path. Returns 0 upon FAILURE.
 
-	return (result == PhysfsResult::SUCCESS);
+	return PHYSFS_exists(file);
 }
 
 void M_FileSystem::CreateLibraryDirectories()
 {
 	CreateDir(ASSETS_PATH);
 	CreateDir(ASSETS_MODELS_PATH);
-	CreateDir(ASSETS_SCENES_PATH);
-	CreateDir(ASSETS_TEXTURES_PATH);
+	CreateDir(ASSETS_NAVIGATION_PATH);
+	CreateDir(ASSETS_PARTICLESYSTEMS_PATH);
 	CreateDir(ASSETS_PREFABS_PATH);
+	CreateDir(ASSETS_SCENES_PATH);
+	CreateDir(ASSETS_SCRIPTS_PATH);
+	CreateDir(ASSETS_TEXTURES_PATH);
 
 	CreateDir(LIBRARY_PATH);
 	CreateDir(ANIMATIONS_PATH);
@@ -123,11 +126,12 @@ void M_FileSystem::CreateLibraryDirectories()
 	CreateDir(MATERIALS_PATH);
 	CreateDir(MESHES_PATH);
 	CreateDir(MODELS_PATH);
-	CreateDir(PARTICLES_PATH);
+	CreateDir(NAVIGATION_PATH);
+	CreateDir(PARTICLESYSTEMS_PATH);
 	CreateDir(SCENES_PATH);
+	CreateDir(SCRIPTS_PATH);
 	CreateDir(SHADERS_PATH);
 	CreateDir(TEXTURES_PATH);
-	
 }
 
 bool M_FileSystem::CreateDir(const char* directory)
@@ -694,12 +698,12 @@ uint M_FileSystem::Load(const char* file, char** buffer) const
 		{
 			*buffer = new char[size + 1];
 
-			uint amountRead = (uint)PHYSFS_read(fsFile, *buffer, 1, size);				// Method that returns the amount of objects read and stores the data in the given buffer.
+			uint amountRead = (uint)PHYSFS_readBytes(fsFile, *buffer, size);				// Method that returns the amount of objects read and stores the data in the given buffer.
 			//uint amount_read = (uint)PHYSFS_readBytes(fs_file, *buffer, 1, size);			// PHYSFS_read has been deprecated, now PHYSF_readBytes is the new method to read from a file.
 
 			if (amountRead != size)
 			{
-				LOG("[ERROR] File System: Could not read from File %s! Error: %s\n", file, PHYSFS_getLastError());
+				LOG("[ERROR] File System: Could not read from File %s! Error: %s\n", file, PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
 				RELEASE_ARRAY(buffer);
 			}
 			else
@@ -712,12 +716,12 @@ uint M_FileSystem::Load(const char* file, char** buffer) const
 
 		if (PHYSFS_close(fsFile) == (int)PhysfsResult::FAILURE)							// Method that closes a given file previously opened by PhysFS.
 		{
-			LOG(" [ERROR] File System: Could not close File %s! Error: %s\n", file, PHYSFS_getLastError());
+			LOG(" [ERROR] File System: Could not close File %s! Error: %s\n", file, PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
 		}
 	}
 	else
 	{
-		LOG("[ERROR] File System: Could not open File %s! Error: %s\n", file, PHYSFS_getLastError());
+		LOG("[ERROR] File System: Could not open File %s! Error: %s\n", file, PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
 	}
 
 	return ret;
@@ -743,12 +747,12 @@ uint M_FileSystem::Save(const char* file, const void* buffer, uint size, bool ap
 
 	if (fsFile != nullptr)
 	{
-		uint written = (uint)PHYSFS_write(fsFile, buffer, 1, size);						// Method that writes data from a PHYSFS_File to the given buffer. Returns the n of bytes written.
+		uint written = (uint)PHYSFS_writeBytes(fsFile, buffer, size);						// Method that writes data from a PHYSFS_File to the given buffer. Returns the n of bytes written.
 		//uint written = (uint)PHYSFS_writeBytes(fs_file, buffer, size);					// PHYSFS_write() has been deprecated. Now PHYSFS_writeBytes() is the standard.
 
 		if (written != size)																// Checks whether or not all the data has been written.
 		{
-			LOG("[ERROR] File System: Could not write to File %s! Error: %s", file, PHYSFS_getLastError());
+			LOG("[ERROR] File System: Could not write to File %s! Error: %s", file, PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
 		}
 		else
 		{
@@ -771,12 +775,12 @@ uint M_FileSystem::Save(const char* file, const void* buffer, uint size, bool ap
 		PhysfsResult result = (PhysfsResult)PHYSFS_close(fsFile);						// Method that closes a PhysFS file handle. Returns 1 on success.
 		if (result == PhysfsResult::FAILURE)
 		{
-			LOG("[ERROR] File System: Could not close File %s! Error: %s", file, PHYSFS_getLastError());
+			LOG("[ERROR] File System: Could not close File %s! Error: %s", file, PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
 		}
 	}
 	else
 	{
-		LOG("[ERROR] File System: Could not open File %s! Error: %s", file, PHYSFS_getLastError());
+		LOG("[ERROR] File System: Could not open File %s! Error: %s", file, PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
 	}
 
 	return ret;
@@ -835,7 +839,7 @@ bool M_FileSystem::Remove(const char* file)
 	}
 	if (!Exists(file))
 	{
-		LOG("[ERROR] File System: Could not delete File [%s]! Error: %s\n", file, PHYSFS_getLastError());
+		LOG("[ERROR] File System: Could not delete File [%s]! Error: %s\n", file, PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
 		return false;
 	}
 
@@ -860,22 +864,20 @@ bool M_FileSystem::Remove(const char* file)
 	}
 	else
 	{
-		LOG("[ERROR] File System: Could not delete File [%s]! Error: %s\n", file, PHYSFS_getLastError());
+		LOG("[ERROR] File System: Could not delete File [%s]! Error: %s\n", file, PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
 	}
 	
 	return ret;
 }
 
+// Method that returns the last mod time of the given file. Returns -1 if it cannot be determined.
 uint64 M_FileSystem::GetLastModTime(const char* fileName) const
 {
-	PHYSFS_sint64 lastModTime = PHYSFS_getLastModTime(fileName);							// Method that returns the last mod time of the given file. Returns -1 if it cannot be determined.
+	PHYSFS_Stat stat;
+	if (!PHYSFS_stat(fileName, &stat))
+		LOG("[ERROR] File System: Could not determine last modified time of File [%s]! Error: %s\n", fileName, PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
 
-	if (lastModTime == -1)
-	{
-		LOG("[ERROR] File System: Could not determine last modified time of File [%s]! Error: %s\n", fileName, PHYSFS_getLastError());
-	}
-	
-	return (uint)lastModTime;
+	return stat.modtime;
 }
 
 std::string M_FileSystem::GetUniqueName(const char* path, const char* name) const

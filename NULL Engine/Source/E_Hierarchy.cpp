@@ -1,5 +1,6 @@
 #include "EngineApplication.h"
 #include "M_Editor.h"
+#include "M_Scene.h"
 
 #include "GameObject.h"
 
@@ -8,10 +9,9 @@
 #include "MemoryManager.h"
 
 E_Hierarchy::E_Hierarchy() : EditorPanel("Hierarchy"), 
-draggedGameObject			(nullptr), 
 openHierarchyToolsPopup	(false)
 {
-	defaultFlags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth;
+	defaultFlags = ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_OpenOnDoubleClick | ImGuiTreeNodeFlags_OpenOnArrow;
 }
 
 E_Hierarchy::~E_Hierarchy()
@@ -22,13 +22,16 @@ E_Hierarchy::~E_Hierarchy()
 bool E_Hierarchy::Draw(ImGuiIO& io)
 {
 	bool ret = true;
-
+	OPTICK_CATEGORY("E_Hierarchy Draw", Optick::Category::Editor)
 
 	ImGui::Begin("Hierarchy");
 
 	SetIsHovered();
 
-	PrintGameObjectsOnHierarchy();
+	if (ImGui::CollapsingHeader(EngineApp->scene->GetCurrentScene(), ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		PrintGameObjectsOnHierarchy();
+	}
 
 	ImGui::End();
 
@@ -93,26 +96,28 @@ void E_Hierarchy::ProcessGameObject(GameObject* gameObject)
 	if (gameObject->isPrefab)
 		name += " (Prefab)";
 
-	if (ImGui::TreeNodeEx(name.c_str(), nodeFlags))
+	std::string treeNodeName = name.c_str();
+	treeNodeName += "##" + std::to_string(gameObject->GetUID());
+
+	if (ImGui::TreeNodeEx(treeNodeName.c_str(), nodeFlags))
 	{
 		if (!NodeIsRootObject(gameObject))													// If the game_object being processed is the root object, do not allow any interaction.
 		{
 			if (ImGui::IsItemClicked(ImGuiMouseButton_Left))								// IsItemClicked() checks if the TreeNode item was clicked.
 			{																				// Arguments:
-				EngineApp->editor->SetSelectedGameObjectThroughEditor(gameObject);				// 0 = Left Click
+				EngineApp->editor->SetSelectedGameObjectThroughEditor(gameObject);			// 0 = Left Click
 			}																				// 1 = Right Click
 
 			if (ImGui::IsItemClicked(ImGuiMouseButton_Right))								// 
 			{																				// 
-				EngineApp->editor->SetSelectedGameObjectThroughEditor(gameObject);				// 
-				openHierarchyToolsPopup = true;											// 
+				EngineApp->editor->SetSelectedGameObjectThroughEditor(gameObject);			// 
+				openHierarchyToolsPopup = true;												// 
 			}																				// -----------------------------------------------------------------------------------------------
 
 			if (ImGui::BeginDragDropSource())												// First, it is checked whether or not this node is part of a currently starting drag&drop operation.
 			{
-				ImGui::SetDragDropPayload("DRAGGED_NODE", gameObject, sizeof(GameObject));	// Here the payload is being constructed. It can be later identified through the given string.
-				ImGui::Text("Dragging %s", gameObject->GetName());							// This specific text, as it is within the DragDropSource, will accompany the dragged node.
-				draggedGameObject = gameObject;											// The dragged game object needs to be saved to be later re-integrated into the hierarchy.
+				ImGui::SetDragDropPayload("DRAGGED_NODE", &gameObject, sizeof(GameObject*),ImGuiCond_Once);	// Here the payload is being constructed. It can be later identified through the given string.
+				ImGui::Text("Dragging %s", gameObject->GetName());							// This specific text, as it is within the DragDropSource, will accompany the dragged node.	
 
 				ImGui::EndDragDropSource();
 			}
@@ -122,9 +127,8 @@ void E_Hierarchy::ProcessGameObject(GameObject* gameObject)
 				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DRAGGED_NODE"))	// First, the payload that is being dropped needs to be checked to make sure its the correct one.
 				{
 					//game_object->AddChild(dragged_game_object);								// (GameObject*)payload->Data would also work. However, it easily breaks, at least in my case.
-
-					draggedGameObject->SetParent(gameObject);
-					draggedGameObject = nullptr;
+					GameObject** ptr = (GameObject**)payload->Data;
+					(*ptr)->SetParent(gameObject);
 				}
 
 				ImGui::EndDragDropTarget();

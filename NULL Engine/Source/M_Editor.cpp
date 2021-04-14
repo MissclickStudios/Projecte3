@@ -29,10 +29,12 @@
 #include "E_Viewport.h"
 #include "E_Resources.h"
 #include "E_Timeline.h"
+#include "E_Navigation.h"
 #include "E_ImGuiDemo.h"
 #include "E_About.h"
 #include "E_LoadFile.h"
 #include "E_SaveFile.h"
+#include "E_WantToSaveScene.h"
 
 #include "M_Editor.h"
 
@@ -60,36 +62,46 @@ project			(new E_Project()),
 viewport		(new E_Viewport()),
 resources		(new E_Resources()),
 timeline		(new E_Timeline()),
+navigation		(new E_Navigation()),
 imguiDemo		(new E_ImGuiDemo()),
 about			(new E_About()),
 loadFile		(new E_LoadFile()),
-saveFile		(new E_SaveFile())
+saveFile		(new E_SaveFile()),
+wantToSaveScene (new E_WantToSaveScene())
 {
+	//16 = num of editor panels to pushback
+	//if you create or remove 1 editor panel change the 16 accordingly
+	editorPanels.reserve(16);
+
 	AddEditorPanel(mainMenuBar);
 	AddEditorPanel(toolbar);
 	AddEditorPanel(configuration);
 	AddEditorPanel(hierarchy);
 	AddEditorPanel(resources);
-	AddEditorPanel(inspector);
 	AddEditorPanel(timeline);
-	AddEditorPanel(project);
+	AddEditorPanel(navigation);
+	AddEditorPanel(inspector);
 	AddEditorPanel(console);
+	AddEditorPanel(project);
 	AddEditorPanel(viewport);
 	AddEditorPanel(imguiDemo);
 	AddEditorPanel(about);
 	AddEditorPanel(loadFile);
 	AddEditorPanel(saveFile);
+	AddEditorPanel(wantToSaveScene);
 
-	showConfiguration	= true;
-	showHierarchy		= true;
-	showInspector		= true;
-	showConsole			= true;
-	showProject			= true;
-	showImguiDemo		= false;
-	showAboutPopup		= false;
-	showCloseAppPopup	= false;
-	showLoadFilePopup	= false;
-	showSaveFilePopup	= false;
+	showConfiguration			= true;
+	showHierarchy				= true;
+	showInspector				= true;
+	showConsole					= true;
+	showProject					= true;
+	showNavigation				= true;
+	showImguiDemo				= false;
+	showAboutPopup				= false;
+	showCloseAppPopup			= false;
+	showLoadFilePopup			= false;
+	showSaveFilePopup			= false;
+	showWantToSaveScenePopup	= false;
 }
 
 M_Editor::~M_Editor()
@@ -209,11 +221,12 @@ void M_Editor::EditorShortcuts()
 {
 	if (EngineApp->input->GetKey(SDL_SCANCODE_ESCAPE) == KeyState::KEY_DOWN)
 	{
-		if (showAboutPopup || showLoadFilePopup || showSaveFilePopup)
+		if (showAboutPopup || showLoadFilePopup || showSaveFilePopup || showWantToSaveScenePopup)
 		{
-			showAboutPopup		= false;
-			showLoadFilePopup	= false;
-			showSaveFilePopup	= false;
+			showAboutPopup				= false;
+			showLoadFilePopup			= false;
+			showSaveFilePopup			= false;
+			showWantToSaveScenePopup	= false;
 		}
 		else
 		{
@@ -221,7 +234,7 @@ void M_Editor::EditorShortcuts()
 		}
 	}
 
-	if (EngineApp->input->GetKey(SDL_SCANCODE_LCTRL) == KeyState::KEY_REPEAT)
+	if (EngineApp->input->GetKey(SDL_SCANCODE_LCTRL) == KeyState::KEY_REPEAT && EngineApp->gameState != GameState::PLAY)
 	{
 		if (EngineApp->input->GetKey(SDL_SCANCODE_1) == KeyState::KEY_DOWN)
 		{
@@ -262,15 +275,17 @@ void M_Editor::EditorShortcuts()
 
 void M_Editor::CheckShowHideFlags()
 {	
-	showConfiguration	?	configuration->Enable()	: configuration->Disable();				// Engine Configuration
-	showHierarchy		?	hierarchy->Enable()		: hierarchy->Disable();					// Hierarchy
-	showInspector		?	inspector->Enable()		: inspector->Disable();					// Inspector
-	showConsole			?	console->Enable()		: console->Disable();					// Console
-	showProject			?	project->Enable()		: project->Disable();					// Project
-	showImguiDemo		?	imguiDemo->Enable()		: imguiDemo->Disable();					// ImGui Demo
-	showAboutPopup		?	about->Enable()			: about->Disable();						// About Popup
-	showLoadFilePopup	?	loadFile->Enable()		: loadFile->Disable();					// Load File
-	showSaveFilePopup	?	saveFile->Enable()		: saveFile->Disable();					// Load File
+	(showConfiguration)			?	configuration->Enable()		: configuration->Disable();					// Engine Configuration
+	(showHierarchy)				?	hierarchy->Enable()			: hierarchy->Disable();						// Hierarchy
+	(showInspector)				?	inspector->Enable()			: inspector->Disable();						// Inspector
+	(showConsole)				?	console->Enable()			: console->Disable();						// Console
+	(showProject)				?	project->Enable()			: project->Disable();						// Project
+	(showNavigation)			?	navigation->Enable()		: navigation->Disable();					// Navigation
+	(showImguiDemo)				?	imguiDemo->Enable()			: imguiDemo->Disable();						// ImGui Demo
+	(showAboutPopup)			?	about->Enable()				: about->Disable();							// About Popup
+	(showLoadFilePopup)			?	loadFile->Enable()			: loadFile->Disable();						// Load File
+	(showSaveFilePopup)			?	saveFile->Enable()			: saveFile->Disable();						// Save File
+	(showWantToSaveScenePopup)	?	wantToSaveScene->Enable()	: wantToSaveScene->Disable();				// Save Scene
 }
 
 bool M_Editor::EditorIsBeingHovered() const
@@ -312,7 +327,7 @@ bool M_Editor::InitializeImGui() const
 		style.Colors[ImGuiCol_WindowBg].w = 1.0f;												// Setting the windows Alpha to 255, making them completely opaque.
 	}																							// -----------------------------------------------
 
-	ImGui_ImplSDL2_InitForOpenGL(EngineApp->window->GetWindow(), EngineApp->renderer->context);				// Setting up Platform/Renderer bindings
+	ImGui_ImplSDL2_InitForOpenGL(EngineApp->window->GetWindow(), EngineApp->renderer->context);	// Setting up Platform/Renderer bindings
 	ImGui_ImplOpenGL3_Init(0);																	// -------------------------------------
 
 	glClearColor(clearColor.x, clearColor.y, clearColor.z, clearColor.w);
@@ -472,7 +487,7 @@ bool M_Editor::SelectedIsSceneRoot() const
 
 bool M_Editor::SelectedIsAnimationBone() const
 {
-	return EngineApp->scene->GetSelectedGameObject()->is_bone;
+	return EngineApp->scene->GetSelectedGameObject()->isBone;
 }
 
 void M_Editor::GetEngineIconsThroughEditor(Icons& engineIcons)
@@ -480,37 +495,21 @@ void M_Editor::GetEngineIconsThroughEditor(Icons& engineIcons)
 	engineIcons = EngineApp->renderer->GetEngineIcons();
 }
 
-void M_Editor::LoadResourceIntoSceneThroughEditor()
+void M_Editor::LoadResourceIntoSceneThroughEditor(const ImGuiPayload& payload)
 {
-	
-	const char* draggedAssetPath = project->GetDraggedAsset();
-	if (draggedAssetPath != nullptr)
+	const char* draggedAssetPath = *(const char**)payload.Data;
+	if (App->fileSystem->GetFileExtension(draggedAssetPath) == "prefab")
 	{
-		if (App->fileSystem->GetFileExtension(draggedAssetPath) == "prefab")
-		{
-			std::string prefabId;
-			EngineApp->fileSystem->SplitFilePath(draggedAssetPath, nullptr, &prefabId, nullptr);
-			EngineApp->resourceManager->LoadPrefab(std::stoi(prefabId));
-		}
-
-		Resource* draggedResource = EngineApp->resourceManager->GetResourceFromLibrary(draggedAssetPath);
-		if (draggedResource != nullptr)
-		{
-			EngineApp->scene->LoadResourceIntoScene(draggedResource);
-		}
+		std::string prefabId;
+		EngineApp->fileSystem->SplitFilePath(draggedAssetPath, nullptr, &prefabId, nullptr);
+		EngineApp->resourceManager->LoadPrefab(std::stoi(prefabId), EngineApp->scene->GetSceneRoot());
 	}
 	else
 	{
-		LOG("[ERROR] DRAGGED PATH WAS NULLPTR!!!");
+		Resource* draggedResource = EngineApp->resourceManager->GetResourceFromLibrary(draggedAssetPath);
+		if (draggedResource != nullptr)
+			EngineApp->scene->LoadResourceIntoScene(draggedResource);
 	}
-	
-}
-
-void M_Editor::GetResourcesThroughEditor(std::map<uint32, Resource*>& resources) const
-{
-	//resources = EngineApp->resourceManager->GetResources();
-	//TODO: this function call from editor resources causes memleak
-	EngineApp->resourceManager->GetResources(resources);
 }
 
 const std::map<uint32, Resource*>* M_Editor::GetResourcesThroughEditor() const
@@ -682,4 +681,11 @@ void M_Editor::PostSceneRendering()
 
 		SDL_GL_MakeCurrent(backupCurrentWindow, backupCurrentContext);
 	}
+}
+
+void M_Editor::OpenWantToSaveScenePopup(WantToSaveType type)
+{
+	showWantToSaveScenePopup = true;
+
+	wantToSaveScene->type = type;
 }

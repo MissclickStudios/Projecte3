@@ -4,10 +4,12 @@
 #include "Log.h"
 #include "M_Physics.h"
 
-#include "C_RigidBody.h"
-
 #include "GameObject.h"
 #include "C_Transform.h"
+#include "C_RigidBody.h"
+#include "C_BoxCollider.h"
+#include "C_SphereCollider.h"
+#include "C_CapsuleCollider.h"
 
 #include "MathGeoLib/include/Math/Quat.h"
 
@@ -34,7 +36,6 @@ C_RigidBody::C_RigidBody(GameObject* owner) : Component(owner, ComponentType::RI
 
 C_RigidBody::~C_RigidBody()
 {
-
 }
 
 bool C_RigidBody::Update()
@@ -42,12 +43,19 @@ bool C_RigidBody::Update()
 	if (!App->physics->simulating)
 		return true;
 
+	//if (toChangeFilter)
+	//{
+	//	toChangeFilter = false;
+		ChangeFilter(filter);
+	//}
+
 	if (!isStatic)
 	{
 		if (dynamicBody)
 		{
 			RigidBodyMovesTransform();
 
+			
 			if (toUpdate)
 				ApplyPhysicsChanges();
 
@@ -81,10 +89,13 @@ bool C_RigidBody::CleanUp()
 
 bool C_RigidBody::SaveState(ParsonNode& root) const
 {
+	root.SetNumber("Type", (uint)GetType());
+	
+	root.SetBool("Is Static", isStatic);
+	root.SetString("Filter", filter.c_str());
+
 	if (!dynamicBody)
 		return false;
-
-	root.SetNumber("Type", (uint)GetType());
 
 	root.SetNumber("Mass", (double)mass);
 	root.SetNumber("Density", (double)density);
@@ -100,30 +111,34 @@ bool C_RigidBody::SaveState(ParsonNode& root) const
 	root.SetBool("Freeze Rotation Y", freezeRotationY);
 	root.SetBool("Freeze Rotation Z", freezeRotationZ);
 
-	root.SetBool("Is Static", isStatic);
-
 	return true;
 }
 
 bool C_RigidBody::LoadState(ParsonNode& root)
 {
-	mass = (float)root.GetNumber("Mass");
-	density = (float)root.GetNumber("Density");
-	linearDamping = (float)root.GetNumber("Linear Damping");
-	angularDamping = (float)root.GetNumber("Angular Damping");
-
-	useGravity = root.GetBool("Use Gravity");
-	isKinematic = root.GetBool("Is Kinematic");
-	freezePositionX = root.GetBool("Freeze Position X");
-	freezePositionY = root.GetBool("Freeze Position Y");
-	freezePositionZ = root.GetBool("Freeze Position Z");
-	freezeRotationX = root.GetBool("Freeze Rotation X");
-	freezeRotationY = root.GetBool("Freeze Rotation Y");
-	freezeRotationZ = root.GetBool("Freeze Rotation Z");
-
 	isStatic = root.GetBool("Is Static");
 	if (isStatic)
 		MakeStatic();
+	else
+	{
+		mass = (float)root.GetNumber("Mass");
+		density = (float)root.GetNumber("Density");
+		linearDamping = (float)root.GetNumber("Linear Damping");
+		angularDamping = (float)root.GetNumber("Angular Damping");
+
+		useGravity = root.GetBool("Use Gravity");
+		isKinematic = root.GetBool("Is Kinematic");
+		freezePositionX = root.GetBool("Freeze Position X");
+		freezePositionY = root.GetBool("Freeze Position Y");
+		freezePositionZ = root.GetBool("Freeze Position Z");
+		freezeRotationX = root.GetBool("Freeze Rotation X");
+		freezeRotationY = root.GetBool("Freeze Rotation Y");
+		freezeRotationZ = root.GetBool("Freeze Rotation Z");
+	}
+
+	filter = root.GetString("Filter");
+	// Used because when loading the rigidbody is created before the colliders so whe have to wait a till the update to update their filters
+	toChangeFilter = true;				
 
 	ApplyPhysicsChanges();
 
@@ -146,6 +161,7 @@ void C_RigidBody::SetIsActive(bool setTo)
 	if(body)
 		if (isActive)
 		{
+			toChangeFilter = true;
 			TransformMovesRigidBody(false);
 			App->physics->AddActor(body, GetOwner());
 		}
@@ -167,9 +183,31 @@ void C_RigidBody::StopInertia()
 	angularVel = { aVel.x, aVel.y, aVel.z };
 }
 
+void C_RigidBody::ChangeFilter(const std::string& const filter)
+{
+	this->filter = filter;
+
+	for (uint i = 0; i < GetOwner()->components.size(); ++i)
+	{
+		switch (GetOwner()->components[i]->GetType())
+		{
+		case ComponentType::BOX_COLLIDER:
+			((C_BoxCollider*)GetOwner()->components[i])->UpdateFilter();
+			break;
+		case ComponentType::SPHERE_COLLIDER:
+			((C_SphereCollider*)GetOwner()->components[i])->UpdateFilter();
+			break;
+		case ComponentType::CAPSULE_COLLIDER:
+			((C_CapsuleCollider*)GetOwner()->components[i])->UpdateFilter();
+			break;
+		}
+	}
+}
+
 void C_RigidBody::MakeStatic()
 {
 	isStatic = true;
+	toChangeFilter = true;
 	
 	if (dynamicBody)
 	{
@@ -206,6 +244,7 @@ void C_RigidBody::MakeStatic()
 void C_RigidBody::MakeDynamic()
 {
 	isStatic = false;
+	toChangeFilter = true;
 
 	if (staticBody)
 	{
@@ -266,6 +305,7 @@ void C_RigidBody::ApplyPhysicsChanges()
 		dynamicBody->wakeUp();
 	}
 
+	toChangeFilter = true;
 	toUpdate = false;
 }
 

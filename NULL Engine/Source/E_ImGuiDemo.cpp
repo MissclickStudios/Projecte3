@@ -25,7 +25,7 @@ E_ImGuiDemo::~E_ImGuiDemo()
 bool E_ImGuiDemo::Draw(ImGuiIO& io)
 {
 	bool ret = true;
-
+	OPTICK_CATEGORY("E_Demo Draw", Optick::Category::Editor)
 
 	// Showing ImGui's predetermined demo window
 	if (showDemoWindow)

@@ -25,6 +25,13 @@
 #include "../Math/float4.h"
 #endif
 
+//Import/export engine core define
+#ifdef NULL_BUILD_DLL
+#define NULL_API __declspec(dllexport)
+#else
+#define NULL_API __declspec(dllimport)
+#endif
+
 MATH_BEGIN_NAMESPACE
 /// A 3D axis-aligned bounding box.
 /** This data structure can be used to represent coarse bounds of objects, in situations where detailed triangle-level
@@ -36,7 +43,7 @@ MATH_BEGIN_NAMESPACE
 	be arbitrarily oriented in the space with respect to each other.
 
 	If you need to represent a box in 3D space with arbitrary orientation, see the class OBB. */
-class ALIGN16 AABB
+class ALIGN16 NULL_API AABB
 {
 public:
 

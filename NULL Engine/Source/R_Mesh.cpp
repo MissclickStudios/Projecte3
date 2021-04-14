@@ -40,6 +40,8 @@ bool R_Mesh::CleanUp()
 	glDeleteBuffers(1, (GLuint*)&NBO);
 	glDeleteBuffers(1, (GLuint*)&TBO);
 	glDeleteBuffers(1, (GLuint*)&IBO);
+	glDeleteBuffers(1, (GLuint*)&BBO);
+	glDeleteBuffers(1, (GLuint*)&WBO);
 
 	// --- Clear vectors
 	vertices.clear();
@@ -160,12 +162,29 @@ void R_Mesh::LoadSkinningBuffers(bool initStatic)
 
 	if (!vertices.empty())
 	{
-		glBindBuffer(GL_ARRAY_BUFFER, (GLuint)VBO);
-		glBufferData(GL_ARRAY_BUFFER, (vertices.size() * sizeof(float)), &vertices[0], GL_DYNAMIC_DRAW);			// GL_DYNAMIC_DRAW or GL_STREAM_DRAW? WHAT ENTAILS MANY TIMES OF USAGE?
-		
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, (3 * sizeof(float)), (void*)0);
+		glGenBuffers(1, (GLuint*)&VBO);																			// Generates the Vertex Buffer Object
+		glBindBuffer(GL_ARRAY_BUFFER, VBO);																		// Binds VBO with the GL_ARRAY_BUFFER binding point (target)
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertices.size(), &vertices[0], GL_DYNAMIC_DRAW);			// Inits the data stored inside VBO and specifies how it will be accessed.
+	}
+
+	if (!indices.empty())
+	{
+		glGenBuffers(1, (GLuint*)&IBO);																			// Generates the Index Buffer Object
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);																// Binds IBO with the GL_ARRAY_BUFFER binding point (target)
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * indices.size(), &indices[0], GL_DYNAMIC_DRAW);		// Inits the data stored inside IBO and specifies how it will be accessed.
+
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 		glEnableVertexAttribArray(0);
 	}
+	if (!texCoords.empty())
+	{
+		glBindBuffer(GL_ARRAY_BUFFER, (GLuint)TBO);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * texCoords.size(), &texCoords[0], GL_DYNAMIC_DRAW);
+
+		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
+		glEnableVertexAttribArray(1);
+	}
+
 	if (!normals.empty())
 	{
 		glBindBuffer(GL_ARRAY_BUFFER, (GLuint)NBO);
@@ -174,8 +193,27 @@ void R_Mesh::LoadSkinningBuffers(bool initStatic)
 		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, (3 * sizeof(float)), (void*)0);
 		glEnableVertexAttribArray(2);
 	}
+	if (!boneIDs.empty())
+	{
+		glGenBuffers(1, (GLuint*)&BBO);
+		glBindBuffer(GL_ARRAY_BUFFER, (GLuint)BBO);
+		glBufferData(GL_ARRAY_BUFFER, (boneIDs.size() * sizeof(uint)), &boneIDs[0], GL_DYNAMIC_DRAW);
+
+		glVertexAttribPointer(3, 4, GL_INT, GL_FALSE, (4 * sizeof(uint)), (void*)0);
+		glEnableVertexAttribArray(3);
+	}
+	if (!boneWeights.empty())
+	{
+		glGenBuffers(1, (GLuint*)&WBO);
+		glBindBuffer(GL_ARRAY_BUFFER, (GLuint)WBO);
+		glBufferData(GL_ARRAY_BUFFER, (boneWeights.size() * sizeof(float)), &boneWeights[0], GL_DYNAMIC_DRAW);
+
+		glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, (4 * sizeof(float)), (void*)0);
+		glEnableVertexAttribArray(4);
+	}
 
 	glBindVertexArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 AABB R_Mesh::GetAABB() const

@@ -4,6 +4,7 @@
 #include "Application.h"
 
 class M_GameManager;
+class M_ScriptManager;
 
 class GameApplication : public /*EngineNamespace::*/Application {
 

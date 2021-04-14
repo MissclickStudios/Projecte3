@@ -10,14 +10,17 @@ public:
 	R_ParticleSystem();
 	~R_ParticleSystem();
 
-	//default emitter creation
-	void AddDefaultEmitter();
+	bool CleanUp() override;
 
 	bool SaveMeta(ParsonNode& metaRoot) const override;
 	bool LoadMeta(const ParsonNode& metaRoot) override;
 
 public:
+	void AddDefaultEmitter();																			//default emitter creation
+
+public:
 	std::vector<Emitter> emitters;
+	std::string name = "Default Name";
 };
 
 #endif //!__R_PARTICLE_SYSTEM_H__

@@ -54,6 +54,8 @@ public:
 	uint NBO = 0;												// Normals Buffer Object.	-->		Will store all the buffer data of the normals of the mesh.
 	uint TBO = 0;												// Tex Coord Buffer Object. -->		Will store all the buffer data of the tex coords of the mesh.
 	uint IBO = 0;												// Index Buffer Object.		--> 	Will store all the buffer data of the indices of the mesh.
+	uint BBO = 0;
+	uint WBO = 0;
 
 	bool drawVertexNormals;
 	bool drawFaceNormals;

@@ -24,41 +24,45 @@
 #include "C_Animation.h"
 #include "C_AudioSource.h"
 #include "C_AudioListener.h"
+#include "C_Script.h"
 #include "C_RigidBody.h"
 #include "C_BoxCollider.h"
 #include "C_SphereCollider.h"
 #include "C_CapsuleCollider.h"
+#include "C_ParticleSystem.h"
+#include "C_NavMeshAgent.h"
 #include "C_PlayerController.h"
 #include "C_BulletBehavior.h"
 #include "C_PropBehavior.h"
 #include "C_CameraBehavior.h"
 #include "C_GateBehavior.h"
 
-#include "C_ParticleSystem.h"
-
 #include "C_Canvas.h"
 
 #include "C_UI_Image.h"
 #include "C_UI_Text.h"
+#include "C_UI_Button.h"
 
+#include "C_2DAnimator.h"
 
 #include "GameObject.h"
 
 #include "MemoryManager.h"
 
 GameObject::GameObject() :
-uid					(Random::LCG::GetRandomUint()),
-parent_uid			(0),
-name				("GameObject"),
-isActive			(true),
-isStatic			(false),
-parent				(nullptr),
-transform			(nullptr),
-is_master_root		(false),
-is_scene_root		(false),
-is_bone				(false),
-to_delete			(false),
-show_bounding_boxes	(false)
+uid						(Random::LCG::GetRandomUint()),
+parent_uid				(0),
+name					("GameObject"),
+isActive				(true),
+isStatic				(false),
+parent					(nullptr),
+transform				(nullptr),
+isMasterRoot			(false),
+isSceneRoot				(false),
+isBone					(false),
+maintainThroughScenes	(false),
+toDelete				(false),
+show_bounding_boxes		(false)
 {
 	transform = (C_Transform*)CreateComponent(ComponentType::TRANSFORM);
 
@@ -70,17 +74,19 @@ show_bounding_boxes	(false)
 }
 
 GameObject::GameObject(std::string name, bool isActive, bool isStatic) :
-uid					(Random::LCG::GetRandomUint()),
-parent_uid			(0),
-name				(name),
-isActive			(isActive),
-isStatic			(isStatic),
-parent				(nullptr),
-transform			(nullptr),
-is_master_root		(false),
-is_scene_root		(false),
-is_bone				(false),
-to_delete			(false)
+uid						(Random::LCG::GetRandomUint()),
+parent_uid				(0),
+name					(name),
+isActive				(isActive),
+isStatic				(isStatic),
+parent					(nullptr),
+transform				(nullptr),
+isMasterRoot			(false),
+isSceneRoot				(false),
+isBone					(false),
+maintainThroughScenes	(false),
+toDelete				(false),
+show_bounding_boxes		(false)
 {
 	if (name.empty())
 	{
@@ -100,6 +106,19 @@ GameObject::~GameObject()
 {
 	RELEASE_ARRAY(obb_vertices);
 	RELEASE_ARRAY(aabb_vertices);
+}
+
+bool GameObject::Start()
+{
+	for (auto component = components.cbegin(); component != components.end(); ++component)
+	{
+		if ((*component)->IsActive())
+		{
+			(*component)->Start();
+		}
+	}
+	
+	return true;
 }
 
 bool GameObject::Update()
@@ -145,7 +164,8 @@ bool GameObject::SaveState(ParsonNode& root) const
 	root.SetString("Name", name.c_str());
 	root.SetBool("IsActive", isActive);
 	root.SetBool("IsStatic", isStatic);
-	root.SetBool("IsSceneRoot", is_scene_root);
+	root.SetBool("IsSceneRoot", isSceneRoot);
+	root.SetBool("MaintainThroughScenes", maintainThroughScenes);
 	root.SetBool("ShowBoundingBoxes", show_bounding_boxes);
 
 	ParsonArray componentArray = root.SetArray("Components");
@@ -163,19 +183,18 @@ bool GameObject::LoadState(ParsonNode& root)
 {
 	bool ret = true;
 
-
-	
 	ForceUID((uint)root.GetNumber("UID"));
 	parent_uid = (uint)root.GetNumber("ParentUID");
 
 	prefabID = (uint)root.GetNumber("PrefabID");
 	isPrefab = root.GetBool("IsPrefab");
 
-	name				= root.GetString("Name");
-	isActive			= root.GetBool("IsActive");
-	isStatic			= root.GetBool("IsStatic");
-	is_scene_root		= root.GetBool("IsSceneRoot");
-	show_bounding_boxes = root.GetBool("ShowBoundingBoxes");
+	name					= root.GetString("Name");
+	isActive				= root.GetBool("IsActive");
+	isStatic				= root.GetBool("IsStatic");
+	isSceneRoot				= root.GetBool("IsSceneRoot");
+	maintainThroughScenes	= root.GetBool("MaintainThroughScenes");
+	show_bounding_boxes		= root.GetBool("ShowBoundingBoxes");
 
 	// Recalculate AABB and OBB
 
@@ -189,6 +208,9 @@ bool GameObject::LoadState(ParsonNode& root)
 			continue;
 		
 		ComponentType type	= (ComponentType)((int)componentNode.GetNumber("Type"));
+
+		if (type < (ComponentType)0)
+			continue;
 
 		if (type == ComponentType::TRANSFORM)
 		{
@@ -210,6 +232,7 @@ bool GameObject::LoadState(ParsonNode& root)
 			case ComponentType::ANIMATION:			{ component = new C_Animation(this); }			break;
 			case ComponentType::AUDIOSOURCE:		{ component = new C_AudioSource(this); }		break;
 			case ComponentType::AUDIOLISTENER:		{ component = new C_AudioListener(this); }		break;
+			case ComponentType::SCRIPT:				{ component = new C_Script(this); }				break;
 			case ComponentType::RIGIDBODY:			{ component = new C_RigidBody(this); }			break;
 			case ComponentType::BOX_COLLIDER:		{ component = new C_BoxCollider(this); }		break;
 			case ComponentType::SPHERE_COLLIDER:	{ component = new C_SphereCollider(this); }		break;
@@ -219,21 +242,29 @@ bool GameObject::LoadState(ParsonNode& root)
 			case ComponentType::PROP_BEHAVIOR:		{ component = new C_PropBehavior(this); }		break;
 			case ComponentType::CAMERA_BEHAVIOR:	{ component = new C_CameraBehavior(this); }		break;
 			case ComponentType::GATE_BEHAVIOR:		{ component = new C_GateBehavior(this); }		break;
-			case ComponentType::PARTICLE_SYSTEM:	{ component = new C_ParticleSystem(this); }		break;
+			case ComponentType::PARTICLES:			{ component = new C_ParticleSystem(this); }		break;
 			case ComponentType::CANVAS:				{ component = new C_Canvas(this); }				break;
 			case ComponentType::UI_IMAGE:			{ component = new C_UI_Image(this); }			break;
 			case ComponentType::UI_TEXT:			{ component = new C_UI_Text(this); }			break;
+			case ComponentType::UI_BUTTON:			{ component = new C_UI_Button(this); }			break;
+			case ComponentType::ANIMATOR2D:			{ component = new C_2DAnimator(this); }			break;
+			case ComponentType::NAVMESH_AGENT:		{ component = new C_NavMeshAgent(this); }		break;
 			}
 
 			if (component != nullptr)
 			{
 				if ((component->GetType() == ComponentType::CAMERA) && (App->gameState == GameState::PLAY)) //TODO fix this hardcode
-				{
 					App->camera->SetCurrentCamera((C_Camera*)component);
-				}
 
-				component->LoadState(componentNode);
-				components.push_back(component);
+				if (component->LoadState(componentNode))
+				{
+					components.push_back(component);
+				}
+				else 
+				{
+					component->CleanUp();
+					delete component;
+				}
 			}
 		}
 	}
@@ -281,8 +312,13 @@ void GameObject::FreeChilds()
 		if (childs[i] != nullptr)
 		{
 			childs[i]->parent = nullptr;
-			childs[i]->to_delete = true;									// Will set the children of the GameObject being deleted to be deleted too in M_Scene's game_objects vector.
-			//childs[i]->CleanUp();											// Recursively cleaning up the the childs.
+			childs[i]->toDelete = true;											// Will set the children of the GameObject being deleted to be deleted too in M_Scene's game_objects vector.
+
+			/*if (!childs[i]->maintainThroughScenes)								// Dirty fix on issue generated at CleanUpCurrentScene() in M_Scene().
+			{
+				childs[i]->toDelete = true;										// Will set the children of the GameObject being deleted to be deleted too in M_Scene's game_objects vector.
+				//childs[i]->CleanUp();											// Recursively cleaning up the the childs.
+			}*/
 		}
 	}
 
@@ -438,19 +474,19 @@ bool GameObject::AddChild(GameObject* child)
 {
 	bool ret = true;
 	
-	if (child->is_master_root)
+	if (child->isMasterRoot)
 	{
 		LOG("[ERROR] Game Objects: AddChild() operation failed! Error: %s is the master root object!", child->name.c_str());
 		return false;
 	}
 	
-	if (!is_master_root && child->is_scene_root)
+	if (!isMasterRoot && child->isSceneRoot)
 	{
 		LOG("[ERROR] Game Objects: AddChild() operation failed! Error: %s is current scene root object!", child->name.c_str());
 		return false;
 	}
 	
-	if (!is_master_root && !is_scene_root)
+	if (!isMasterRoot && !isSceneRoot)
 	{
 		if (NewChildIsOwnParent(child))
 		{
@@ -483,7 +519,7 @@ bool GameObject::NewChildIsOwnParent(GameObject* child)
 
 	GameObject* parentItem = this->parent;									// Will set the parent of this object as the starting point of the search.
 	
-	while (parentItem != nullptr && !parentItem->is_scene_root)			// Iterate back up to the root object, as it is the parent of everything in the scene. (First check is TMP)
+	while (parentItem != nullptr && !parentItem->isSceneRoot)			// Iterate back up to the root object, as it is the parent of everything in the scene. (First check is TMP)
 	{
 		if (parentItem == child)											// Child is the parent of one of the parent objects of this object (the one which called AddChild())
 		{
@@ -608,6 +644,17 @@ GameObject* GameObject::FindChild(const char* childName)
 	return nullptr;
 }
 
+void GameObject::GetAllParents(std::vector<GameObject*>& parents)
+{
+	if (parent->isSceneRoot)
+	{
+		return;
+	}
+	
+	parents.push_back(parent);
+	parent->GetAllParents(parents);
+}
+
 void GameObject::SetAsPrefab(uint _prefabID)
 {
 	//set the childs to the prefab uid and the bool
@@ -646,21 +693,21 @@ void GameObject::SetName(const char* newName)
 	name = newName;
 }
 
-void GameObject::SetIsActive(const bool& setTo)
+void GameObject::SetIsActive(const bool setTo)
 {
 	isActive = setTo;
 
 	SetChildsIsActive(setTo, this);
 }
 
-void GameObject::SetIsStatic(const bool& setTo)
+void GameObject::SetIsStatic(const bool setTo)
 {
 	isStatic = setTo;
 
 	SetChildsIsStatic(setTo, this);
 }
 
-void GameObject::SetChildsIsActive(const bool& setTo, GameObject* parent)
+void GameObject::SetChildsIsActive(const bool setTo, GameObject* parent)
 {
 	if (parent != nullptr)
 	{
@@ -673,7 +720,7 @@ void GameObject::SetChildsIsActive(const bool& setTo, GameObject* parent)
 	}
 }
 
-void GameObject::SetChildsIsStatic(const bool& setTo, GameObject* parent)
+void GameObject::SetChildsIsStatic(const bool setTo, GameObject* parent)
 {
 	if (parent != nullptr)
 	{
@@ -683,6 +730,31 @@ void GameObject::SetChildsIsStatic(const bool& setTo, GameObject* parent)
 
 			SetChildsIsStatic(setTo, parent->childs[i]);
 		}
+	}
+}
+
+bool GameObject::GetMaintainThroughScenes() const
+{
+	return maintainThroughScenes;
+}
+
+void GameObject::SetMaintainThroughScenes(const bool setTo)
+{
+	maintainThroughScenes = setTo;
+
+	std::vector<GameObject*> childs;
+	std::vector<GameObject*> parents;
+
+	GetAllChilds(childs);
+	GetAllParents(parents);
+
+	for (auto child = childs.cbegin(); child != childs.cend(); ++child)
+	{
+		(*child)->maintainThroughScenes = setTo;
+	}
+	for (auto parent = parents.cbegin(); parent != parents.cend(); ++parent)
+	{
+		(*parent)->maintainThroughScenes = setTo;
 	}
 }
 
@@ -727,6 +799,22 @@ Component* GameObject::CreateComponent(ComponentType type)
 		return nullptr;
 	}
 
+#ifndef GAMEBUILD //TODO: Es pot posar + de 1 component script igual ???
+	//TODO: Maybe this is avoidable !!!!!!!!
+	/*std::vector<C_Script*>scripts;
+	if (type == ComponentType::SCRIPT && GetComponents<C_Script>(scripts)) 
+	{
+		for(int i = 0; i<scripts.size();++i)
+		{
+			if (!(scripts[i]->resource != nullptr)) 
+			{
+				LOG("[ERROR] Script Component could not be added to %s! Error: Empty Script to fill already exists!", name.c_str());
+				return nullptr;
+			}
+		}
+	}*/
+#endif
+
 	switch(type)
 	{
 	case ComponentType::TRANSFORM:			{ component = new C_Transform(this); }			break;
@@ -742,15 +830,19 @@ Component* GameObject::CreateComponent(ComponentType type)
 	case ComponentType::BOX_COLLIDER:		{ component = new C_BoxCollider(this); }		break;
 	case ComponentType::SPHERE_COLLIDER:	{ component = new C_SphereCollider(this); }		break;
 	case ComponentType::CAPSULE_COLLIDER:	{ component = new C_CapsuleCollider(this); }	break;
-	case ComponentType::PARTICLE_SYSTEM: { component = new C_ParticleSystem(this); }	break;
+	case ComponentType::PARTICLES: 			{ component = new C_ParticleSystem(this); }			break;
 	case ComponentType::CANVAS:				{ component = new C_Canvas(this); }				break;
 	case ComponentType::UI_IMAGE:			{ component = new C_UI_Image(this); }			break;
 	case ComponentType::UI_TEXT:			{ component = new C_UI_Text(this); }			break;
+	case ComponentType::SCRIPT:				{ component = new C_Script(this); }				break;
+	case ComponentType::UI_BUTTON:			{ component = new C_UI_Button(this); }			break;
 	case ComponentType::PLAYER_CONTROLLER:	{ component = new C_PlayerController(this); }	break;
 	case ComponentType::BULLET_BEHAVIOR:	{ component = new C_BulletBehavior(this); }		break;
 	case ComponentType::PROP_BEHAVIOR:		{ component = new C_PropBehavior(this); }		break;
 	case ComponentType::CAMERA_BEHAVIOR:	{ component = new C_CameraBehavior(this); }		break;
 	case ComponentType::GATE_BEHAVIOR:		{ component = new C_GateBehavior(this); }		break;
+	case ComponentType::ANIMATOR2D:			{ component = new C_2DAnimator(this); }			break;
+	case ComponentType::NAVMESH_AGENT:		{ component = new C_NavMeshAgent(this); }		break;
 	}
 
 	if (component != nullptr)
@@ -793,6 +885,21 @@ bool GameObject::DeleteComponent(Component* componentToDelete)
 	return false;
 }
 
+void GameObject::ReplaceComponent(Component* newComponent)
+{
+	for (auto comp = components.begin(); comp != components.end(); comp++)
+	{
+		if (newComponent->GetType() == (*comp)->GetType())
+		{
+			DeleteComponent((*comp));
+
+			Component* a = (C_Transform*)CreateComponent(newComponent->GetType());
+
+			*a = *(C_Transform*)newComponent;
+		}
+	}
+}
+
 const std::vector<Component*>& GameObject::GetAllComponents() const
 {
 	return components;
@@ -806,6 +913,16 @@ bool GameObject::GetAllComponents(std::vector<Component*>& components) const
 	}
 
 	return components.empty() ? false : true;
+}
+
+void* GameObject::GetScript(const char*scriptName)
+{
+	for (uint i = 0; i < components.size(); ++i) 
+		if (components[i]->GetType() == ComponentType::SCRIPT) 
+			if (scriptName == ((C_Script*)components[i])->GetDataName())
+				return ((C_Script*)components[i])->GetScriptData();
+			
+	return nullptr;
 }
 
 // ---

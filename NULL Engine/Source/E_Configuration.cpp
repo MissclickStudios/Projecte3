@@ -9,6 +9,7 @@
 #include "M_Camera3D.h"
 #include "M_Input.h"
 #include "M_FileSystem.h"
+#include "M_Physics.h"
 #include "HardwareInfo.h"
 
 #include "GameObject.h"
@@ -45,7 +46,7 @@ E_Configuration::~E_Configuration()
 bool E_Configuration::Draw(ImGuiIO& io)
 {
 	bool ret = true;
-
+	OPTICK_CATEGORY("E_Configuration Draw", Optick::Category::Editor)
 
 	ImGui::Begin(GetName(), nullptr, ImGuiWindowFlags_MenuBar);
 
@@ -401,7 +402,57 @@ bool E_Configuration::PhysicsMenu()
 {
 	bool ret = true;
 
-	// NOTHING FOR NOW
+	// NOTHING FOR NOW, NOT ANYMORE BABY WEEEEEEEEEE BACK IN BLACK
+
+	if (ImGui::CollapsingHeader("Physics... more like how about you PHYnnes ur way into some hoes, GOOOOOOOTEEEEEEEEM"))
+	{
+		float gravity = App->physics->Gravity();
+		if (ImGui::InputFloat("Gravity", &gravity, 0, 0, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue))
+			App->physics->SetGravity(gravity);
+
+		ImGui::Separator();
+
+		ImGui::Text("Filters:");
+		const std::vector<std::string>* const filters = App->physics->GetFilters();
+		for (uint i = 0; i < filters->size(); ++i)
+		{
+			ImGui::Text((*filters)[i].c_str());
+			ImGui::SameLine();
+			char deleteButton[64];
+			sprintf_s(deleteButton, 64, "delete##%d", i);
+			if(ImGui::Button(deleteButton))
+				App->physics->DeleteFilter((*filters)[i]);
+		}
+
+		char filterBuffer[64];
+		strcpy_s(filterBuffer, " ");
+		if (ImGui::InputText("Create Filter", filterBuffer, IM_ARRAYSIZE(filterBuffer), ImGuiInputTextFlags_EnterReturnsTrue))
+			App->physics->CreateFilter(filterBuffer);
+
+		ImGui::Separator();
+
+		if (ImGui::TreeNodeEx("Interactions"))
+		{
+			bool** interactions = App->physics->GetInteractions();
+			for (uint y = 0; y < filters->size(); ++y)
+			{
+				for (uint x = 0; x < filters->size(); ++x)
+				{
+					if (x != 0)
+						ImGui::SameLine();
+
+					bool interaction = interactions[x][y];
+					char checkID[64];
+					sprintf_s(checkID, 64, "##%do%d", x, y);
+					if (ImGui::Checkbox(checkID, &interaction))
+						interactions[x][y] = interaction;
+				}
+				ImGui::SameLine();
+				ImGui::Text((*filters)[y].c_str());
+			}
+			ImGui::TreePop();
+		}
+	}
 
 	return ret;
 }

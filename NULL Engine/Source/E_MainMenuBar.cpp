@@ -5,6 +5,9 @@
 #include "Profiler.h"
 #include "E_MainMenuBar.h"
 
+#include "E_WantToSaveScene.h"
+#include "E_LoadFile.h"
+
 #include "MemoryManager.h"
 
 E_MainMenuBar::E_MainMenuBar() : EditorPanel("MainMenuBar")
@@ -20,6 +23,7 @@ E_MainMenuBar::~E_MainMenuBar()
 bool E_MainMenuBar::Draw(ImGuiIO& io)
 {
 	bool ret = true;
+	OPTICK_CATEGORY("E_MainMenuBar Draw", Optick::Category::Editor)
 
 	ImGui::BeginMainMenuBar();
 
@@ -57,17 +61,23 @@ bool E_MainMenuBar::FileMainMenuItem()
 	
 	if (ImGui::BeginMenu("File"))
 	{
-		ImGui::MenuItem("New Scene", "Ctrl+N", nullptr, false);
+		if (ImGui::MenuItem("New Scene", "Ctrl+N"))
+		{
+			//should ask if want to save current scene before going to new scene
+
+			EngineApp->editor->OpenWantToSaveScenePopup(WantToSaveType::NEW_SCENE);
+		}
 		
 		if (ImGui::MenuItem("Open Scene", "Ctrl+O"))
 		{
 			EngineApp->editor->showLoadFilePopup = true;
+			EngineApp->editor->loadFile->OnOpenPopup();
 		}
 		ImGui::Separator();
 
 		if (ImGui::MenuItem("Save", "Ctrl+S"))
 		{
-			EngineApp->scene->SaveScene();
+			EngineApp->scene->SaveScene(App->scene->GetCurrentScene());
 		}
 
 		ImGui::Separator();

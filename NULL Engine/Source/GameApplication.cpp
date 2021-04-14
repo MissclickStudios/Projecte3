@@ -11,6 +11,7 @@
 #include "M_Audio.h"
 #include "M_Physics.h"
 #include "M_UISystem.h"
+#include "M_ScriptManager.h"
 #include "M_GameManager.h"
 
 #include "EngineMain.h"
@@ -29,6 +30,11 @@ GameApplication::GameApplication()
 	GameApp = this;
 
 	manager = new M_GameManager();
+	scriptManager = new M_ScriptManager();
+
+	//12 = num of modules to pushback
+	//if you create or remove 1 module change the 12 accordingly
+	modules.reserve(12);
 
 	// Main Modules
 	AddModule(window);
@@ -38,6 +44,7 @@ GameApplication::GameApplication()
 	AddModule(resourceManager);
 
 	// Scenes
+	AddModule(scriptManager);
 	AddModule(manager);
 	AddModule(audio);
 	AddModule(physics);

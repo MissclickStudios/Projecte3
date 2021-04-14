@@ -5,6 +5,7 @@
 #include "Dependencies/MathGeoLib/include/Math/float2.h"
 #include "Dependencies/MathGeoLib/include/Math/float3.h"
 #include "Dependencies/MathGeoLib/include/Math/float4.h"
+#include "Macros.h"
 
 class ParsonArray;																		// To avoid having to forward-declare this, put Configuration_Array before Configuration. 
 
@@ -19,7 +20,7 @@ namespace math
 
 typedef unsigned int uint;
 
-class ParsonNode
+class NULL_API ParsonNode
 {
 public:
 	ParsonNode();
@@ -38,16 +39,18 @@ public:
 	float3		GetFloat3(const char* name);
 	float4		GetFloat4(const char* name);
 	Quat		GetQuat(const char* name);
+	Color		GetColor(const char* name);
 	const char*	GetString(const char* name) const;						
 	bool		GetBool	(const char* name) const;						
-	ParsonArray	GetArray(const char* name) const;						
-	ParsonNode	GetNode	(const char* name) const;						
+	ParsonArray	GetArray(const char* name, bool logErrors = true) const;						
+	ParsonNode	GetNode	(const char* name, bool logErrors = true) const;						
 
 	void		SetInteger(const char* name, int number);
 	void		SetNumber(const char* name, double number);	
 	void		SetFloat2(const char* name, const float2 float2);
 	void		SetFloat3(const char* name, const float3 float3);
 	void		SetFloat4(const char* name, const float4 float4);
+	void		SetColor(const char* name, const Color float4);
 	void		SetQuat(const char* name, const Quat quat);
 	void		SetString(const char* name, const char* string);		
 	void		SetBool	(const char* name, bool value);					
@@ -64,7 +67,7 @@ private:
 	JSON_Object*rootNode;																
 };
 
-class ParsonArray
+class NULL_API ParsonArray
 {
 public:
 	ParsonArray();

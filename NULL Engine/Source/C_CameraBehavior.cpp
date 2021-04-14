@@ -1,5 +1,7 @@
 #include "JSONParser.h"
 
+#include "VariableTypedefs.h"
+
 #include "Application.h"
 #include "M_Scene.h"
 
@@ -19,22 +21,24 @@ C_CameraBehavior::~C_CameraBehavior()
 
 bool C_CameraBehavior::Update()
 {
-	if (!player)
-	{
-		std::vector<GameObject*>* objects = App->scene->GetGameObjects();
-		for (int i = 0; i < objects->size(); ++i)
-			if ((*objects)[i]->GetComponent<C_PlayerController>())
-			{
-				player = (*objects)[i];
-				break;
-			}
-	}
-	else
-	{
-		float3 position = player->transform->GetWorldPosition();
-		position += offset;
-		GetOwner()->transform->SetWorldPosition(position);
-	}
+	//if (!player)
+	//{
+	//	std::map<uint32, GameObject*>* gameObjects = App->scene->GetGameObjects();
+	//	for (auto object = gameObjects->cbegin(); object != gameObjects->cend(); ++object)
+	//	{
+	//		if (object->second->GetComponent<C_PlayerController>() != nullptr)
+	//		{
+	//			player = object->second;
+	//			break;
+	//		}
+	//	}
+	//}
+	//else
+	//{
+	//	float3 position = player->transform->GetWorldPosition();
+	//	position += offset;
+	//	GetOwner()->transform->SetWorldPosition(position);
+	//}
 
 	return true;
 }

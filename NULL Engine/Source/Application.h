@@ -21,6 +21,7 @@ class M_ResourceManager;
 class M_Audio;
 class M_Physics;
 class M_UISystem;
+class M_ScriptManager;
 
 enum class GameState
 {
@@ -85,6 +86,7 @@ public:
 	M_Audio*				audio;
 	M_Physics*				physics;
 	M_UISystem*				uiSystem;
+	M_ScriptManager*		scriptManager;
 
 	GameState				gameState;
 
@@ -100,9 +102,10 @@ public:
 	bool					framesAreCapped;										// Will keep track of whether or not the frames are currently capped.
 	bool					displayFramerateData;									// Will keep track of whether or not to display the framerate data on the window's title.		
 
-private:
+protected:
 	std::vector<Module*>	modules;												// Vector that will contain all the modules. Will be iterated to go through each state of each module.
 
+private:
 	std::string				engineName;												// Window title string. In this case the name of the Game Engine.
 	std::string				organization;											// String that will store the name of the organization behind the development of this application.
 

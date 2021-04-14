@@ -11,6 +11,7 @@
 #include "M_Audio.h"
 #include "M_Physics.h"
 #include "M_UISystem.h"
+#include "M_EngineScriptManager.h"
 #include "M_Editor.h"
 
 #include "EngineMain.h"
@@ -29,6 +30,11 @@ EngineApplication::EngineApplication()
 	EngineApp = this;
 
 	editor = new M_Editor();
+	scriptManager = new M_EngineScriptManager();
+
+	//12 = num of modules to pushback
+	//if you create or remove 1 module change the 12 accordingly
+	modules.reserve(12);
 
 	// Main Modules
 	AddModule(window);
@@ -38,6 +44,7 @@ EngineApplication::EngineApplication()
 	AddModule(resourceManager);
 
 	// Scenes
+	AddModule(scriptManager);
 	AddModule(editor);
 	AddModule(audio);
 	AddModule(physics);

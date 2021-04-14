@@ -37,7 +37,8 @@ public:																																// --- RESOURCE MESH METHODS
 public:																																// --- MESH SKINNING METHODS
 	R_Mesh*		GetSkinnedMesh			() const;
 	void		GetBoneMapping			(std::map<std::string, GameObject*>& boneMapping);
-	
+	void		GetBoneTranforms		(std::vector<float4x4>& boneTransforms);
+
 	bool		RefreshSkinning			();																							// 
 	void		AnimateMesh				();																							// 
 

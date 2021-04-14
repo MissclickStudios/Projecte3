@@ -1,3 +1,4 @@
+#ifndef NOMEMOMANAGER
 // ---------------------------------------------------------------------------------------------------------------------------------
 //                                                      
 //                                                      
@@ -178,7 +179,7 @@ static	const	unsigned int	paddingSize            = 4;
 
 #ifdef	WIN32
 	#ifdef	_DEBUG
-	#define	m_assert(x) if ((x) == false) //__asm { int 3 }
+	#define	m_assert(x) if ((x) == false) //__asm { int 3 } //TODO MMGR ASSERT 
 	#else
 	#define	m_assert(x) {}
 	#endif
@@ -1754,3 +1755,5 @@ sMStats	m_getMemoryStatistics()
 // ---------------------------------------------------------------------------------------------------------------------------------
 // mmgr.cpp - End of file
 // ---------------------------------------------------------------------------------------------------------------------------------
+
+#endif // !NOMEMOMANAGER
