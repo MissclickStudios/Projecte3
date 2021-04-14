@@ -1,14 +1,14 @@
 #pragma once
 #include "Script.h"
-#include "ScriptMacros.h"
 
 #include "EntityHelpers.h"
 
 #include <string>
+#include <vector>
 
 #define DEFAULT_MODIFIER 1.0f
 
-class Entity : public Script 
+class Entity : public Script
 {
 public:
 

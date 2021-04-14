@@ -8,10 +8,6 @@ Entity::~Entity()
 {
 }
 
-void Entity::Start()
-{
-}
-
 void Entity::PreUpdate()
 {
 	// Set modifiers back to the default state
@@ -41,23 +37,11 @@ void Entity::PreUpdate()
 	}
 }
 
-void Entity::Update()
-{
-}
-
 void Entity::PostUpdate()
-{
-}
-
-void Entity::CleanUp()
 {
 }
 
 void Entity::AddEffect(EffectType type, float duration)
 {
 	effects.emplace_back(new Effect(type, duration)); // I use emplace instead of push to avoid unnecessary copies
-}
-
-void Entity::Frozen()
-{
 }

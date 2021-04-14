@@ -1,11 +1,13 @@
 #pragma once
+#include "ScriptMacros.h"
+
 #include "Entity.h"
 
 #include "Timer.h"
 
 #include "MathGeoLib/include/Math/float2.h"
 
-class SCRIPTS_API Player :public Entity
+class SCRIPTS_API Player : public Entity
 {
 public:
 
@@ -45,6 +47,5 @@ private:
 SCRIPTS_FUNCTION Player* CreatePlayer()
 {
 	Player* script = new Player();
-
 	return script;
 }
