@@ -7,7 +7,7 @@
 
 #include "MathGeoLib/include/Math/float2.h"
 
-class SCRIPTS_API Player : public Entity
+class SCRIPTS_API Player : public Entity ALLOWED_INHERITANCE
 {
 public:
 

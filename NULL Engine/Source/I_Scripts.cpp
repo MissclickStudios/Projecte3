@@ -31,6 +31,7 @@ bool Importer::Scripts::Import(const char* assetsPath, char* buffer, uint size, 
 	char api[] = "SCRIPTS_API";
 	unsigned int apiSize = strlen(api);
 	char scriptBaseClass[] = "Script";
+	char allowedInheritance[] = "ALLOWED_INHERITANCE";
 	Parser::ParsingState currentState;
 
 	if (!Parser::CheckNullterminatedBuffer(buffer, size))
@@ -125,14 +126,24 @@ bool Importer::Scripts::Import(const char* assetsPath, char* buffer, uint size, 
 				LOG("[ERROR] Not imported scripts from file %s because it won't compile: check %s class/struct after \"public\" specification ", assetsPath, scriptName.c_str());
 				return false;
 			}
+			//TODO: this bool ...
+			bool foundInheritance = false;
 			unsigned int baseClassLength = strlen(scriptBaseClass);
 			if (std::string(cursor, baseClassLength) != scriptBaseClass)
 			{
 				cursor += baseClassLength;
-				LOG("[WARNING] Found class/struct %s in file %s marked to export that doesn't inherit from script class", scriptName.c_str(), assetsPath);
-				break;
+				char* nextSymbolStart = nullptr;
+				unsigned int simbolSize = 0;
+				Parser::ReadNextSymbol(cursor,nextSymbolStart,simbolSize);
+				if (!strncmp(allowedInheritance, nextSymbolStart, simbolSize)) 
+				{
+					LOG("[WARNING] Found class/struct %s in file %s marked to export that doesn't inherit from script class", scriptName.c_str(), assetsPath);
+					break;
+				}
+				foundInheritance = true;
 			}
-			cursor += baseClassLength;
+			if(!foundInheritance)
+				cursor += baseClassLength;
 			currentState = Parser::GoNextSymbol(cursor);
 			if (currentState != Parser::ParsingState::CONTINUE || *cursor != '{' )
 			{
