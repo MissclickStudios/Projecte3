@@ -406,7 +406,7 @@ GameObject:
   m_Component:
   - component: {fileID: 390993920}
   m_Layer: 0
-  m_Name: Wave Attack 2
+  m_Name: Point Attack
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -455,6 +455,36 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &447703458
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 447703459}
+  m_Layer: 0
+  m_Name: Missile Attack
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &447703459
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 447703458}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 7.161101, y: 3.2, z: -0.2}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &511980435
 GameObject:
@@ -1793,6 +1823,8 @@ MonoBehaviour:
   waveProjectileSpeed: 50
   waveProjectile: {fileID: 7330326984651472972, guid: 6b3f174fb5566e448a44a337d06a8fa4, type: 3}
   waveShootSource: {fileID: 1199812182}
+  grenadeTarget: {fileID: 447703459}
+  grenadeBoss: {fileID: 1815626071}
 --- !u!1 &2048686841
 GameObject:
   m_ObjectHideFlags: 0

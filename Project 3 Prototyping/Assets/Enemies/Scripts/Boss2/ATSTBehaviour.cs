@@ -36,10 +36,9 @@ public class ATSTBehaviour : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(pointAttackDuration);
 
         sAttack1Duration -= Time.deltaTime;
-        if(chasing == true)
+        if (chasing == true)
         {
             Chasing();
         }
@@ -54,7 +53,7 @@ public class ATSTBehaviour : MonoBehaviour
             pointAttackPrep();
         }
 
-        if(readyPointAttack == true)
+        if (readyPointAttack == true)
         {
             pointAttackMov();
 
@@ -72,7 +71,7 @@ public class ATSTBehaviour : MonoBehaviour
             {
 
                 readyPointAttack = false;
-                
+
                 waveAttackDuration = 10.0f;
                 sAttack1Duration = 10.0f;
 
@@ -80,7 +79,7 @@ public class ATSTBehaviour : MonoBehaviour
             }
         }
 
-        if(readyWaveAttack == true)
+        if (readyWaveAttack == true)
         {
             waveAttackMov();
 
@@ -246,7 +245,7 @@ public class ATSTBehaviour : MonoBehaviour
 
     void waveAttackPrep()
     {
-        waveBoss.transform.position = waveTarget.transform.position; /*Vector3.MoveTowards(waveBoss.transform.position, waveTarget.transform.position, waveSpeed * Time.deltaTime);*/
+        waveBoss.transform.position = waveTarget.transform.position; 
 
         if (waveBoss.transform.position == waveTarget.transform.position)
         {
@@ -316,6 +315,26 @@ public class ATSTBehaviour : MonoBehaviour
         }
     }
     //---------------------------------------------------------------------------------
+
+    //---------------------------------------------------------------------------------
+    [Header("Preparing Grenade Attack Settings")]
+    public Transform grenadeTarget;
+    public Transform grenadeBoss;
+
+    void grenadeAttackPrep()
+    {
+        grenadeBoss.transform.position = grenadeTarget.transform.position;
+
+        if (grenadeBoss.transform.position == grenadeTarget.transform.position)
+        {
+            readyWaveAttack = true;
+        }
+    }
+    //---------------------------------------------------------------------------------
+
+    //---------------------------------------------------------------------------------
+    
+
 }
 
 
