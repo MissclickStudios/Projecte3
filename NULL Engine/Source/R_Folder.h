@@ -18,6 +18,8 @@ public:
 	bool SaveMeta(ParsonNode& metaRoot) const override;
 	bool LoadMeta(const ParsonNode& metaRoot) override;
 
+	static inline ResourceType GetType() { return ResourceType::FOLDER; }
+
 public:
 	std::vector<uint32> GetContainedResources() const;
 

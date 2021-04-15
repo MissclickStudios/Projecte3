@@ -235,7 +235,7 @@ uint M_ResourceManager::SaveResourceToLibrary(Resource* resource)
 	case ResourceType::SHADER:			{ written = Importer::Shaders::Save((R_Shader*)resource, &buffer); }			break;
 	case ResourceType::PARTICLE_SYSTEM:	{ written = Importer::Particles::Save((R_ParticleSystem*)resource, &buffer); }	break;
 	case ResourceType::SCRIPT:			{ written = Importer::Scripts::Save((R_Script*)resource, &buffer); }			break;
-	case ResourceType::NAVMESH_AGENT:	{ written = Importer::Navigation::Save((R_NavMesh*)resource, &buffer); }		break;
+	case ResourceType::NAVMESH:	{ written = Importer::Navigation::Save((R_NavMesh*)resource, &buffer); }		break;
 	}
 
 	RELEASE_ARRAY(buffer);
@@ -413,7 +413,7 @@ ResourceType M_ResourceManager::GetTypeFromAssetsExtension(const char* assetsPat
 	}
 	else if (extension == "navmesh")
 	{
-		type = ResourceType::NAVMESH_AGENT;
+		type = ResourceType::NAVMESH;
 	}
 	else if (extension == "[NONE]")
 	{
@@ -522,7 +522,6 @@ bool M_ResourceManager::GetForcedUIDsFromMeta(const char* assetsPath, std::map<s
 Resource* M_ResourceManager::CreateResource(ResourceType type, const char* assetsPath, uint32 forcedUID)
 {
 	Resource* resource = nullptr;
-
 	switch (type)
 	{
 	case ResourceType::MESH:			{ resource = new R_Mesh(); }			break;
@@ -535,7 +534,8 @@ Resource* M_ResourceManager::CreateResource(ResourceType type, const char* asset
 	case ResourceType::SHADER:			{ resource = new R_Shader(); }			break;
 	case ResourceType::PARTICLE_SYSTEM:	{ resource = new R_ParticleSystem(); }	break;
 	case ResourceType::SCRIPT:			{ resource = new R_Script(); }			break;
-	case ResourceType::NAVMESH_AGENT:	{ resource = new R_NavMesh(); }			break;
+	case ResourceType::NAVMESH:			{ resource = new R_NavMesh(); }			break;
+	case ResourceType::NONE:			{ /*resource = nullptr;*/ }				break;											// In case NONE is a trigger and a method needs to be called.
 	}
 
 	if (resource != nullptr)
@@ -621,7 +621,8 @@ bool M_ResourceManager::AllocateResource(uint32 UID, const char* assetsPath)
 	case ResourceType::SHADER:			{ success = Importer::Shaders::Load(buffer, (R_Shader*)resource); }				break;
 	case ResourceType::PARTICLE_SYSTEM:	{ success = Importer::Particles::Load(buffer, (R_ParticleSystem*)resource); }	break;
 	case ResourceType::SCRIPT:			{ success = Importer::Scripts::Load(buffer, (R_Script*)resource); }				break;
-	case ResourceType::NAVMESH_AGENT:	{ success = Importer::Navigation::Load(buffer, (R_NavMesh*)resource); }			break;
+	case ResourceType::NAVMESH:			{ success = Importer::Navigation::Load(buffer, (R_NavMesh*)resource); }			break;
+	case ResourceType::NONE:			{ /*success = false;*/ }														break;	// In case NONE is a trigger and a method needs to be called.
 	}
 
 	RELEASE_ARRAY(buffer);
@@ -745,6 +746,27 @@ bool M_ResourceManager::DeleteResource(Resource* resourceToDelete)
 	//(library.find(resourceUID) != library.end()) ? library.erase(resourceUID) : LOG("[WARNING] ResourceManager: Deleted Resources was not stored in library map!");		// TMP. Revise
 	
 	(resources.find(resourceUID) != resources.end()) ? resources.erase(resourceUID) : LOG("[WARNING] Resource Manager: Deleted Resource was not stored in resources map!");
+
+	return true;
+}
+
+bool M_ResourceManager::RefreshResourceAssets(ResourceType type)
+{
+	/*if (!IsMetaType(type))
+		return;*/
+	
+	switch (type)
+	{
+	case ResourceType::MODEL:			{ RefreshDirectoryFiles(ASSETS_MODELS_PATH); }			break;
+	case ResourceType::TEXTURE:			{ RefreshDirectoryFiles(ASSETS_TEXTURES_PATH); }		break;
+	case ResourceType::FOLDER:			{ /*RefreshDirectoryFiles(ASSETS_FOLDERS_PATH);*/ }		break;
+	case ResourceType::SCENE:			{ /*RefreshDirectoryFiles(ASSETS_SCENES_PATH);*/ }		break;
+	case ResourceType::SHADER:			{ RefreshDirectoryFiles(ASSETS_SHADERS_PATH); }			break;
+	case ResourceType::PARTICLE_SYSTEM:	{ RefreshDirectoryFiles(ASSETS_PARTICLESYSTEMS_PATH); }	break;
+	case ResourceType::SCRIPT:			{ RefreshDirectoryFiles(ASSETS_SCRIPTS_PATH); }			break;
+	case ResourceType::NAVMESH:			{ RefreshDirectoryFiles(ASSETS_NAVIGATION_PATH); }		break;
+	case ResourceType::NONE:			{ RefreshDirectoryFiles(ASSETS_PATH); }					break;
+	}
 
 	return true;
 }
@@ -1479,7 +1501,7 @@ bool M_ResourceManager::GetLibraryDirectoryAndExtensionFromType(const ResourceTy
 	case ResourceType::SHADER:			{ directory = SHADERS_PATH;			extension = SHADERS_EXTENSION; }			break;
 	case ResourceType::PARTICLE_SYSTEM:	{ directory = PARTICLESYSTEMS_PATH;	extension = PARTICLESYSTEMS_EXTENSION; }	break;
 	case ResourceType::SCRIPT:			{ directory = SCRIPTS_PATH;			extension = SCRIPTS_EXTENSION; }			break;
-	case ResourceType::NAVMESH_AGENT:	{ directory = NAVIGATION_PATH;		extension = NAVMESH_EXTENSION; }			break;
+	case ResourceType::NAVMESH:			{ directory = NAVIGATION_PATH;		extension = NAVMESH_EXTENSION; }			break;
 	case ResourceType::NONE:			{ return false; }																break;
 	}
 
@@ -1622,7 +1644,7 @@ uint32 M_ResourceManager::ImportFromAssets(const char* assetsPath)
 		case ResourceType::SHADER:			{ success = Importer::Shaders::Import(resource->GetAssetsPath(), (R_Shader*)resource); }	break;
 		case ResourceType::PARTICLE_SYSTEM:	{ success = Importer::ImportParticles(buffer, (R_ParticleSystem*)resource); }				break;
 		case ResourceType::SCRIPT:			{ success = Importer::Scripts::Import(assetsPath, buffer, read, (R_Script*)resource); }		break;
-		case ResourceType::NAVMESH_AGENT:	{ success = Importer::ImportNavMesh(buffer, (R_NavMesh*)resource); }						break;
+		case ResourceType::NAVMESH:	{ success = Importer::ImportNavMesh(buffer, (R_NavMesh*)resource); }						break;
 		}
 
 		RELEASE_ARRAY(buffer);
@@ -1716,7 +1738,7 @@ ResourceType M_ResourceManager::GetTypeFromLibraryExtension(const char* libraryP
 	else if (extension == SHADERS_EXTENSION)			{ type = ResourceType::SHADER; }
 	else if (extension == PARTICLESYSTEMS_EXTENSION)	{ type = ResourceType::PARTICLE_SYSTEM; }
 	else if (extension == SCRIPTS_EXTENSION)			{ type = ResourceType::SCRIPT; }
-	else if (extension == NAVMESH_EXTENSION)			{ type = ResourceType::NAVMESH_AGENT; }
+	else if (extension == NAVMESH_EXTENSION)			{ type = ResourceType::NAVMESH; }
 	else												{ type = ResourceType::NONE; }
 
 	return type;
@@ -1927,13 +1949,13 @@ bool M_ResourceManager::ResourceHasMetaType(Resource* resource) const
 	
 	switch (resource->GetType())
 	{
-		case ResourceType::FOLDER:		{ return true; }	break;
-		case ResourceType::MODEL:		{ return true; }	break;
-		case ResourceType::TEXTURE:		{ return true; }	break;
-		case ResourceType::SHADER:		{ return true; }	break;
+		case ResourceType::FOLDER:			{ return true; }	break;
+		case ResourceType::MODEL:			{ return true; }	break;
+		case ResourceType::TEXTURE:			{ return true; }	break;
+		case ResourceType::SHADER:			{ return true; }	break;
 		case ResourceType::PARTICLE_SYSTEM:	{ return true; }	break;
-		case ResourceType::SCRIPT:		{ return true; }	break;
-		case ResourceType::NAVMESH_AGENT:		{ return true; }	break;
+		case ResourceType::SCRIPT:			{ return true; }	break;
+		case ResourceType::NAVMESH:			{ return true; }	break;
 	}
 
 	return false;

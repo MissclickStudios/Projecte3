@@ -15,6 +15,8 @@ public:
 	bool SaveMeta(ParsonNode& metaRoot) const override;		//Per guardar les dependencies a altres resources
 	bool LoadMeta(const ParsonNode& metaRoot) override;		//De Moment no utilitzat (no hi ha import settings)
 
+	static inline ResourceType GetType() { return ResourceType::SCRIPT; }
+
 public:
 	std::vector<std::pair<std::string, bool>> dataStructures;
 };
