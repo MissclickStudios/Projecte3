@@ -22,7 +22,7 @@ public:
 	void Reset();
 
 	void SetParticleSystem(R_ParticleSystem* newParticleSystem);
-	void RefreshEmitters();
+	void RefreshEmitterInstances();
 
 	void AddParticleSystem(const char* name);
 	void SaveParticleSystem() const;
@@ -43,7 +43,6 @@ private:
 
 public:
 	std::vector<EmitterInstance*> emitterInstances; // don't save/load
-	Emitter* defaultEmitter;						// don't save
 	
 	R_ParticleSystem* resource = nullptr;			// save/load
 

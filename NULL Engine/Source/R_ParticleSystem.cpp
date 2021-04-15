@@ -1,4 +1,5 @@
 #include "JSONParser.h"
+#include "Profiler.h"
 
 #include "FileSystemDefinitions.h"
 
@@ -41,8 +42,8 @@ bool R_ParticleSystem::LoadMeta(const ParsonNode& metaRoot)
 
 void R_ParticleSystem::AddDefaultEmitter()
 {
+	OPTICK_CATEGORY("C_Particle AddDefaultEmitter()", Optick::Category::Debug)
 	emitters.clear();
-	emitters.reserve(4);
 	emitters.push_back(Emitter());
 
 	emitters.back().modules.push_back(new EmitterBase);

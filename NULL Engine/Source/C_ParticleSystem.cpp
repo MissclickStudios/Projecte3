@@ -1,4 +1,5 @@
 #include "JSONParser.h"
+#include "Profiler.h"
 
 #include "MC_Time.h"
 #include "Emitter.h"
@@ -17,13 +18,12 @@
 
 C_ParticleSystem::C_ParticleSystem(GameObject* owner) : Component(owner, ComponentType::PARTICLES)
 {
-	AddDefaultEmitter();
+	OPTICK_CATEGORY("C_Particle COnstructor", Optick::Category::Debug)
 	SetAsDefaultComponent();
 }
 
 C_ParticleSystem::~C_ParticleSystem()
 {
-	delete defaultEmitter;
 	emitterInstances.clear();
 }
 
@@ -104,11 +104,12 @@ void C_ParticleSystem::SetParticleSystem(R_ParticleSystem* newParticleSystem)
 {
 	CleanUp();
 	resource = newParticleSystem;
-	RefreshEmitters();
+	RefreshEmitterInstances();
 }
 
-void C_ParticleSystem::RefreshEmitters()
+void C_ParticleSystem::RefreshEmitterInstances()
 {
+	OPTICK_CATEGORY("C_Particle RefreshEmitterInstances()", Optick::Category::Debug)
 	Reset();
 	emitterInstances.clear();
 
@@ -121,13 +122,13 @@ void C_ParticleSystem::RefreshEmitters()
 
 void C_ParticleSystem::AddParticleSystem(const char* name)
 {
+	OPTICK_CATEGORY("C_Particle AddParticleSystem()", Optick::Category::Debug)
 	//resource = new R_ParticleSystem();
 	std::string assetsPath = ASSETS_PARTICLESYSTEMS_PATH + std::string(name) + PARTICLESYSTEMS_AST_EXTENSION;
 	resource = (R_ParticleSystem*)App->resourceManager->CreateResource(ResourceType::PARTICLE_SYSTEM, assetsPath.c_str());
 
 	resource->AddDefaultEmitter();
-	RefreshEmitters();
-
+	RefreshEmitterInstances();
 }
 
 void C_ParticleSystem::SaveParticleSystem() const
@@ -141,18 +142,16 @@ void C_ParticleSystem::SaveParticleSystem() const
 bool C_ParticleSystem::SetAsDefaultComponent()
 {
 	bool ret = false;
-
+	OPTICK_CATEGORY("C_Particle SetAsDefaultComponent()", Optick::Category::Debug)
 	AddParticleSystem("Default Particle System");
 
-	RefreshEmitters();
+	RefreshEmitterInstances();
 
 	return ret;
 }
 
 void C_ParticleSystem::AddDefaultEmitter()
 {
-	defaultEmitter = new Emitter();
-	defaultEmitter->SetAsDefault();
 }
 
 void C_ParticleSystem::EnginePreview(bool previewEnabled)

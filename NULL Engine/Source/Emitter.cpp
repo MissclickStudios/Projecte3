@@ -12,9 +12,9 @@
 
 Emitter::Emitter()
 {
-	std::vector<R_Texture*> textures;
-	App->resourceManager->GetAllTextures(textures);
-	emitterTexture = (*textures.begin()); //TODO find a default emitter texture
+	//std::vector<R_Texture*> textures;
+	//App->resourceManager->GetAllTextures(textures);
+	//emitterTexture = (*textures.begin()); //TODO find a default emitter texture
 }
 
 void Emitter::Update(float dt)
@@ -160,7 +160,6 @@ void Emitter::SetTexture(R_Texture* newTexture)
 		{
 			App->resourceManager->FreeResource(emitterTexture->GetUID());
 			emitterTexture = a;
-			
 		}
 		else
 		{

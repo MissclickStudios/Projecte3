@@ -2673,7 +2673,7 @@ void E_Inspector::DisplayEmitterInstances(C_ParticleSystem* cParticleSystem)
 
 			R_Texture* current = emitter->emitterTexture;
 			//combo showing all resources Already exists App->resourceManager->GetAllParticleSystems()
-			if (ImGui::BeginCombo("##Particle Texture", emitter->emitterTexture->GetAssetsFile()))
+			if (ImGui::BeginCombo("##Particle Texture", current == nullptr ? "No Texture" : current->GetAssetsFile()))
 			{
 				std::vector<R_Texture*> textures;
 				App->resourceManager->GetAllTextures(textures); //GetAll Text
