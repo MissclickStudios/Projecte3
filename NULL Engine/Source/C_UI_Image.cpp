@@ -30,7 +30,6 @@
 
 C_UI_Image::C_UI_Image(GameObject* owner, Rect2D rect) : Component(owner, ComponentType::UI_IMAGE)
 {
-	rShader = App->resourceManager->GetShader("UIShader");
 	LoadBuffers();
 }
 
@@ -85,7 +84,12 @@ void C_UI_Image::Draw2D()
 	C_Canvas* canvas = GetOwner()->parent->GetComponent<C_Canvas>();
 	if (canvas == nullptr) return;
 
-	glUseProgram(rShader->shaderProgramID);
+	glEnable(GL_BLEND);
+
+	if(!GetOwner()->GetComponent<C_Material>()->GetShader())
+		GetOwner()->GetComponent<C_Material>()->SetShader(App->resourceManager->GetShader("UIShader"));
+
+	glUseProgram(GetOwner()->GetComponent<C_Material>()->GetShader()->shaderProgramID);
 
 	float x = canvas->GetPosition().x + GetRect().x;
 	float y = canvas->GetPosition().y + GetRect().y;
@@ -95,29 +99,23 @@ void C_UI_Image::Draw2D()
 	uint32 textureID;
 
 
-	// if (GetOwner()->GetComponent<C_2DAnimator>() != nullptr && GetOwner()->GetComponent<C_2DAnimator>()->IsAnimationPlaying())
-	// 	id = GetOwner()->GetComponent<C_2DAnimator>()->GetIdFromAnimation();
-
-	if (GetOwner()->GetComponent<C_2DAnimator>() != nullptr)
-		textureID = GetOwner()->GetComponent<C_2DAnimator>()->GetIdFromAnimation();
-
+	 if (GetOwner()->GetComponent<C_2DAnimator>() != nullptr && GetOwner()->GetComponent<C_2DAnimator>()->IsAnimationPlaying())
+		 textureID = GetOwner()->GetComponent<C_2DAnimator>()->GetIdFromAnimation();
 	else
 		textureID = GetOwner()->GetComponent<C_Material>()->GetTextureID();
 
 	glBindTexture(GL_TEXTURE_2D, textureID);
 
-	rShader->SetUniformMatrix4("projection", projectionMatrix.ptr());
+	GetOwner()->GetComponent<C_Material>()->GetShader()->SetUniformMatrix4("projection", projectionMatrix.ptr());
 
 	glBindBuffer(GL_ARRAY_BUFFER, VAO);
-
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, (GLvoid*)0);
 
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 
 
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glDisable(GL_BLEND);
 
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	glBindTexture(GL_TEXTURE_2D, 0);
 
