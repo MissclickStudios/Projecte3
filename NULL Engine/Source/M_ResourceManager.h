@@ -7,6 +7,7 @@
 #include "Module.h"
 
 #include "ResourceBase.h"
+#include "Resource.h"
 
 #include "Prefab.h"
 
@@ -21,7 +22,7 @@ class GameObject;
 
 //struct Prefab;
 
-enum class ResourceType;
+//enum class ResourceType;
 
 typedef unsigned int		uint;
 typedef unsigned __int32	uint32;
@@ -71,7 +72,55 @@ public:																								// --- RESOURCE MANAGER API ---
 	bool			DeleteResource					(uint32 UID);									// Completely erases a resource, both from memory and from the library.
 	bool			DeleteResource					(Resource* resourceToDelete);					// Same as the above but directly passing the resource as the argument.
 	
+	bool			RefreshResourceAssets			(ResourceType type);
+
 	const std::map<uint32, Resource*>* GetResourcesMap	() const;									// Returns a pointer to the resources map.
+
+	template <typename T>
+	T* GetResource(uint32 UID)
+	{
+		return (UID != 0) ? (T*)RequestResource(UID) : nullptr;										// Check for return type mismatch?
+	}
+	
+	template <typename T>
+	T* GetResource(const char* assetsPath)
+	{
+		if (assetsPath == nullptr)
+			return nullptr;
+
+		uint32 UID = LoadFromLibrary(assetsPath);
+		if (UID != 0)
+		{
+			return (T*)RequestResource(UID);
+		}
+
+		return nullptr;
+	}
+
+	template <typename T>
+	bool GetResources(std::vector<T*>& resourcesWithType) const
+	{
+		if (resources.empty())
+			return false;
+
+		for (auto resource = resources.cbegin(); resource != resources.cend(); ++resource)
+		{
+			if (resource->second->GetType() == T::GetType())
+			{
+				resourcesWithType.push_back((T*)resource->second);										// Request here? Leave it to the user? bool argument?
+			}
+		}
+		
+		return !resourcesWithType.empty();
+	}
+
+	template <typename T>
+	bool GetResourcesFromLibrary(std::vector<T*>& resourcesWithType)
+	{
+		
+		
+		return !resourcesWithType.empty();
+	}
 
 	R_Shader*		GetShader						(const char* name);															// Look for a shader in the library and load and return it
 	void			GetAllShaders					(std::vector<R_Shader*>& shaders);											// Retrieve all the shaders in the library

@@ -21,6 +21,7 @@
 #include "R_Mesh.h"
 #include "R_Texture.h"
 #include "R_Scene.h"
+#include "R_Shader.h"
 
 #include "GameObject.h"
 #include "Component.h"
