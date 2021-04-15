@@ -1,13 +1,12 @@
 #pragma once
 #include "ScriptMacros.h"
 
-#include "Entity.h"
-
 #include "Timer.h"
 
-#include "MathGeoLib/include/Math/float2.h"
+#include "Entity.h"
+#include "AimStates.h"
 
-class C_RigidBody;
+#include "MathGeoLib/include/Math/float2.h"
 
 enum class PlayerMoveState
 {
@@ -19,18 +18,6 @@ enum class PlayerMoveState
 	DEAD
 };
 
-enum class PlayerAimState
-{
-	IDLE,
-	ON_GUARD, // must use french accent
-	SHOOT_IN,
-	SHOOT,
-	RELOAD_IN,
-	RELOAD,
-	CHANGE_IN,
-	CHANGE
-};
-
 class SCRIPTS_API Player : public Entity ALLOWED_INHERITANCE
 {
 public:
@@ -38,7 +25,7 @@ public:
 	Player();
 	virtual ~Player();
 
-	void Start();
+	void SetUp();
 	void Update();
 	void CleanUp();
 
@@ -54,14 +41,14 @@ public:
 	float dashCooldown = 0.0f;
 
 	// Animations
-	std::string runAnimation = "Run";
-	std::string dashAnimation = "Dash";
-	std::string shootAnimation = "Shoot";
+	AnimationInfo runAnimation = { "Run" };
+	AnimationInfo dashAnimation = { "Dash" };
+	AnimationInfo shootAnimation = { "Shoot" };
 
 private:
 	Timer POOPOOTIMER; // for testing porpouses, mom found the poop sock :skull:
 	PlayerMoveState moveState = PlayerMoveState::IDLE;
-	PlayerAimState aimState = PlayerAimState::IDLE;
+	AimState aimState = AimState::IDLE;
 
 	// Logic
 	void ManageMovement();
@@ -80,19 +67,10 @@ private:
 	float2 moveDirection = float2::zero;
 	float2 aimDirection = float2::zero;
 
-	C_RigidBody* rigidBody = nullptr;
-
 	// Dash
 	void Dash();
 	Timer dashTimer;
 	Timer dashCooldownTimer;
-
-	// Animations
-	std::string* currentAnimation = nullptr;
 };
 
-SCRIPTS_FUNCTION Player* CreatePlayer()
-{
-	Player* script = new Player();
-	return script;
-}
+SCRIPTS_FUNCTION Player* CreatePlayer();

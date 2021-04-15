@@ -16,6 +16,9 @@
     <Filter Include="Resource Files\Helpers">
       <UniqueIdentifier>{d4ef07aa-fbf4-4688-b038-6bc8239b8903}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Tests">
+      <UniqueIdentifier>{94057388-5fda-4ab1-afdb-ecdeab4837fb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Scripts\Headers\ScriptMacros.h">
@@ -33,12 +36,33 @@
     <ClInclude Include="Scripts\Helpers\Effect.h">
       <Filter>Resource Files\Helpers</Filter>
     </ClInclude>
+    <ClInclude Include="Scripts\Helpers\AimStates.h">
+      <Filter>Resource Files\Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Assets\Scripts\Blurrg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Assets\Scripts\SandTrooper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Assets\Scripts\a.h">
+      <Filter>Header Files\Tests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Assets\Scripts\LongParentTest.h">
+      <Filter>Header Files\Tests</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Scripts\Cpps\Entity.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Scripts\Cpps\Player.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Scripts\Cpps\Blurrg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Scripts\Cpps\SandTrooper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -12,6 +12,60 @@
 
 #define MAX_INPUT 32767
 
+Player* CreatePlayer()
+{
+	Player* script = new Player();
+
+	// Entity ---
+	// Health
+	INSPECTOR_DRAGABLE_FLOAT(script->health);
+	INSPECTOR_DRAGABLE_FLOAT(script->maxHealth);
+
+	// Basic Stats
+	INSPECTOR_DRAGABLE_FLOAT(script->speed);
+	INSPECTOR_DRAGABLE_FLOAT(script->attackSpeed);
+	INSPECTOR_DRAGABLE_FLOAT(script->damage);
+	INSPECTOR_DRAGABLE_FLOAT(script->defense);
+
+	// Modifiers
+	INSPECTOR_DRAGABLE_FLOAT(script->speedModifier);
+	INSPECTOR_DRAGABLE_FLOAT(script->attackSpeedModifier);
+	INSPECTOR_DRAGABLE_FLOAT(script->damageModifier);
+	INSPECTOR_DRAGABLE_FLOAT(script->defenseModifier);
+
+	// Death
+	INSPECTOR_DRAGABLE_FLOAT(script->deathDuration);
+
+	// Player ---
+	// Dash
+	INSPECTOR_DRAGABLE_FLOAT(script->dashSpeed);
+	INSPECTOR_DRAGABLE_FLOAT(script->dashDuration);
+	INSPECTOR_DRAGABLE_FLOAT(script->dashCooldown);
+
+	// Animations ---
+	// Movement
+	INSPECTOR_STRING(script->idleAnimation.name);
+	INSPECTOR_DRAGABLE_FLOAT(script->idleAnimation.blendTime);
+	INSPECTOR_STRING(script->runAnimation.name);
+	INSPECTOR_DRAGABLE_FLOAT(script->runAnimation.blendTime);
+	INSPECTOR_STRING(script->dashAnimation.name);
+	INSPECTOR_DRAGABLE_FLOAT(script->dashAnimation.blendTime);
+	INSPECTOR_STRING(script->deathAnimation.name);
+	INSPECTOR_DRAGABLE_FLOAT(script->deathAnimation.blendTime);
+
+	// Aim
+	INSPECTOR_STRING(script->shootAnimation.name);
+	INSPECTOR_DRAGABLE_FLOAT(script->shootAnimation.blendTime);
+	//INSPECTOR_STRING(script->reloadAnimation.name);
+	//INSPECTOR_DRAGABLE_FLOAT(script->reloadAnimation.blendTime);
+	//INSPECTOR_STRING(script->changeAnimation.name);
+	//INSPECTOR_DRAGABLE_FLOAT(script->changeAnimation.blendTime);
+	//INSPECTOR_STRING(script->onGuardAnimation.name);
+	//INSPECTOR_DRAGABLE_FLOAT(script->onGuardAnimation.blendTime);
+
+	return script;
+}
+
 Player::Player() : Entity()
 {
 	POOPOOTIMER.Stop(); // hehe xd
@@ -23,39 +77,14 @@ Player::~Player()
 {
 }
 
-void Player::Start()
+void Player::SetUp()
 {
-	rigidBody = gameObject->GetComponent<C_RigidBody>();
-	if (rigidBody && rigidBody->IsStatic())
-		rigidBody = nullptr;
-
-	animator = gameObject->GetComponent<C_Animator>();
-	currentAnimation = &idleAnimation;
-
-	speed = 20.0f;
-
-	dashSpeed = 80.0f;
-	dashDuration = 0.2f;
-	dashCooldown = 0.5f;
 }
 
 void Player::Update()
 {
 	ManageMovement();
 	ManageAim();
-
-	if (animator && currentAnimation)
-	{
-		AnimatorClip* clip = animator->GetCurrentClip();
-		if (clip)
-		{
-			std::string clipName = clip->GetName();
-			if (clipName != *currentAnimation)	// If the animtion changed play the wanted clip
-				animator->PlayClip(*currentAnimation, 0.2f);
-		}
-		else
-			animator->PlayClip(*currentAnimation, 0.2f); // If there is no clip playing play the current animation
-	}
 }
 
 void Player::CleanUp()
@@ -124,43 +153,43 @@ void Player::ManageMovement()
 
 void Player::ManageAim()
 {
-	if (aimState == PlayerAimState::IDLE || aimState == PlayerAimState::ON_GUARD)
+	if (aimState == AimState::IDLE || aimState == AimState::ON_GUARD)
 	{
 		GatherAimInputs();
 	}
 
 	switch (aimState)
 	{
-	case PlayerAimState::IDLE:
+	case AimState::IDLE:
 		break;
-	case PlayerAimState::ON_GUARD:
-		aimState = PlayerAimState::IDLE;
+	case AimState::ON_GUARD:
+		aimState = AimState::IDLE;
 		break;
-	case PlayerAimState::SHOOT_IN:
+	case AimState::SHOOT_IN:
 		currentAnimation = &shootAnimation;
 		POOPOOTIMER.Start();
-		aimState = PlayerAimState::SHOOT;
+		aimState = AimState::SHOOT;
 		break;
-	case PlayerAimState::SHOOT:
+	case AimState::SHOOT:
 		currentAnimation = &shootAnimation; // temporary till torso gets an independent animator
 		if (POOPOOTIMER.ReadSec() >= 0.6f)
 		{
-			aimState = PlayerAimState::ON_GUARD;
+			aimState = AimState::ON_GUARD;
 			POOPOOTIMER.Stop();
 			currentAnimation = nullptr;
 		}
 		break;
-	case PlayerAimState::RELOAD_IN:
-		aimState = PlayerAimState::RELOAD;
+	case AimState::RELOAD_IN:
+		aimState = AimState::RELOAD;
 		break;
-	case PlayerAimState::RELOAD:
-		aimState = PlayerAimState::ON_GUARD;
+	case AimState::RELOAD:
+		aimState = AimState::ON_GUARD;
 		break;
-	case PlayerAimState::CHANGE_IN:
-		aimState = PlayerAimState::CHANGE;
+	case AimState::CHANGE_IN:
+		aimState = AimState::CHANGE;
 		break;
-	case PlayerAimState::CHANGE:
-		aimState = PlayerAimState::ON_GUARD;
+	case AimState::CHANGE:
+		aimState = AimState::ON_GUARD;
 		break;
 	}
 }
@@ -228,23 +257,23 @@ void Player::GatherAimInputs()
 
 	if (App->input->GetKey(SDL_SCANCODE_F) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(1) == ButtonState::BUTTON_DOWN)
 	{
-		aimState = PlayerAimState::CHANGE_IN;
+		aimState = AimState::CHANGE_IN;
 		return;
 	}
 
 	if ((App->input->GetKey(SDL_SCANCODE_R) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(2) == ButtonState::BUTTON_DOWN))
 	{
-		aimState = PlayerAimState::RELOAD_IN;
+		aimState = AimState::RELOAD_IN;
 		return;
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_REPEAT || App->input->GetGameControllerTrigger(1) == ButtonState::BUTTON_REPEAT)
 	{
-		aimState = PlayerAimState::SHOOT_IN;
+		aimState = AimState::SHOOT_IN;
 		return;
 	}
 
-	aimState = PlayerAimState::IDLE;
+	aimState = AimState::IDLE;
 }
 
 void Player::Movement()

@@ -1,6 +1,8 @@
 #include "Entity.h"
 
 #include "GameObject.h"
+#include "C_RigidBody.h"
+#include "C_Animator.h"
 
 Entity::Entity() : Script()
 {
@@ -15,6 +17,18 @@ Entity::~Entity()
 		delete *effects.begin();
 		effects.erase(effects.begin());
 	}
+}
+
+void Entity::Start()
+{
+	rigidBody = gameObject->GetComponent<C_RigidBody>();
+	if (rigidBody && rigidBody->IsStatic())
+		rigidBody = nullptr;
+
+	animator = gameObject->GetComponent<C_Animator>();
+	currentAnimation = &idleAnimation;
+
+	SetUp();
 }
 
 void Entity::PreUpdate()
@@ -48,6 +62,18 @@ void Entity::PreUpdate()
 
 void Entity::PostUpdate()
 {
+	if (animator && currentAnimation)
+	{
+		AnimatorClip* clip = animator->GetCurrentClip();
+		if (clip)
+		{
+			std::string clipName = clip->GetName();
+			if (clipName != currentAnimation->name)	// If the animtion changed play the wanted clip
+				animator->PlayClip(currentAnimation->name, currentAnimation->blendTime);
+		}
+		else
+			animator->PlayClip(currentAnimation->name, currentAnimation->blendTime); // If there is no clip playing play the current animation
+	}
 }
 
 void Entity::Deactivate()
