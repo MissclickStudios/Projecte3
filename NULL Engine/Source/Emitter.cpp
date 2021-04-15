@@ -23,6 +23,17 @@ void Emitter::Update(float dt)
 	//---
 }
 
+void Emitter::CleanUp()
+{
+	for (auto mod = modules.begin(); mod != modules.end(); ++mod)
+	{
+		delete (*mod);
+	}
+
+	modules.clear();
+	App->resourceManager->FreeResource(emitterTexture->GetUID());
+}
+
 void Emitter::Save(ParsonNode& node)
 {
 	node.SetString("name", name.c_str());

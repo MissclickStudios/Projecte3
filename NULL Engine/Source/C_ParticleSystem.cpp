@@ -1,6 +1,7 @@
 #include "JSONParser.h"
 
 #include "MC_Time.h"
+#include "Emitter.h"
 #include "GameObject.h"
 
 #include "Application.h"
@@ -83,8 +84,25 @@ bool C_ParticleSystem::Update()
 	return true;
 }
 
+bool C_ParticleSystem::CleanUp()
+{
+	App->resourceManager->FreeResource(resource->GetUID());
+	resource = nullptr;
+
+	//Clean Emitter Instances
+	for (auto emitter = emitterInstances.begin(); emitter != emitterInstances.end(); ++emitter)
+	{
+		delete (*emitter);
+	}
+
+	emitterInstances.end();
+
+	return false;
+}
+
 void C_ParticleSystem::SetParticleSystem(R_ParticleSystem* newParticleSystem)
 {
+	CleanUp();
 	resource = newParticleSystem;
 	RefreshEmitters();
 }
