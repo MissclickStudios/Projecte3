@@ -5,12 +5,16 @@
 
 #include "GameObject.h"
 #include "C_RigidBody.h"
+
 #include "C_Animator.h"
+
+#include "Log.h"
 
 #define MAX_INPUT 32767
 
 Player::Player() : Entity()
 {
+	POOPOOTIMER.Stop(); // hehe xd
 	dashTimer.Stop();
 	dashCooldownTimer.Stop();
 }
@@ -26,6 +30,7 @@ void Player::Start()
 		rigidBody = nullptr;
 
 	animator = gameObject->GetComponent<C_Animator>();
+	currentAnimation = &idleAnimation;
 
 	speed = 20.0f;
 
@@ -36,62 +41,20 @@ void Player::Start()
 
 void Player::Update()
 {
-	if (moveState != PlayerMoveState::DEAD)
-	{
-		if (moveState != PlayerMoveState::DASH)
-			GatherMoveInputs();
-		GatherAimInputs();
+	ManageMovement();
+	ManageAim();
 
-		if (health <= 0.0f)
-			moveState == PlayerMoveState::DEAD_IN;
-	}
-
-	if (rigidBody)
-		switch (moveState)
-		{
-		case PlayerMoveState::IDLE: 
-			rigidBody->SetLinearVelocity(float3::zero);
-			currentAnimation = &idleAnimation;
-			break;
-		case PlayerMoveState::RUN:
-			Movement();
-			currentAnimation = &runAnimation;
-			break;
-		case PlayerMoveState::DASH_IN:
-			Dash();
-			dashTimer.Start();
-			moveState = PlayerMoveState::DASH;
-			currentAnimation = &dashAnimation;
-			break;
-		case PlayerMoveState::DASH:
-			if (dashTimer.ReadSec() >= dashDuration)
-			{
-				dashTimer.Stop();
-				dashCooldownTimer.Start();
-
-				moveState = PlayerMoveState::IDLE;
-			}
-			break;
-		case PlayerMoveState::DEAD_IN:
-			rigidBody->SetIsActive(false);
-			moveState = PlayerMoveState::DEAD;
-			deathTimer.Start();
-			currentAnimation = &deathAnimation;
-			break;
-		case PlayerMoveState::DEAD:
-			if (deathTimer.ReadSec() >= deathDuration)
-			{
-				// DYING THINGS
-			}
-			break;
-		}
-
-	if (animator)
+	if (animator && currentAnimation)
 	{
 		AnimatorClip* clip = animator->GetCurrentClip();
-		std::string clipName = "[NONE]"; 
 		if (clip)
-			clipName = clip->GetName();
+		{
+			std::string clipName = clip->GetName();
+			if (clipName != *currentAnimation)	// If the animtion changed play the wanted clip
+				animator->PlayClip(*currentAnimation, 0.2f);
+		}
+		else
+			animator->PlayClip(*currentAnimation, 0.2f); // If there is no clip playing play the current animation
 	}
 }
 
@@ -105,6 +68,101 @@ void Player::TakeDamage(float damage)
 
 void Player::Frozen()
 {
+}
+
+void Player::ManageMovement()
+{
+	if (moveState != PlayerMoveState::DEAD)
+	{
+		if (moveState != PlayerMoveState::DASH)
+			GatherMoveInputs();
+
+		if (health <= 0.0f)
+			moveState == PlayerMoveState::DEAD_IN;
+	}
+
+	if (rigidBody)
+		switch (moveState)
+		{
+		case PlayerMoveState::IDLE:
+			rigidBody->SetLinearVelocity(float3::zero);
+			currentAnimation = &idleAnimation;
+			break;
+		case PlayerMoveState::RUN:
+			Movement();
+			currentAnimation = &runAnimation;
+			break;
+		case PlayerMoveState::DASH_IN: // The first frame after dashing
+			Dash();
+			dashTimer.Start();
+			moveState = PlayerMoveState::DASH;
+			currentAnimation = &dashAnimation;
+			break;
+		case PlayerMoveState::DASH:
+			if (dashTimer.ReadSec() >= dashDuration) // When the dash duration ends start the cooldown and reset the move state
+			{
+				dashTimer.Stop();
+				dashCooldownTimer.Start();
+
+				moveState = PlayerMoveState::IDLE;
+			}
+			break;
+		case PlayerMoveState::DEAD_IN: // The first frame after dying
+			rigidBody->SetIsActive(false); // Disable the rigidbody to avoid more interactions with other entities
+			moveState = PlayerMoveState::DEAD;
+			deathTimer.Start();
+			currentAnimation = &deathAnimation;
+			break;
+		case PlayerMoveState::DEAD:
+			if (deathTimer.ReadSec() >= deathDuration)
+			{
+				// DYING THINGS
+			}
+			break;
+		}
+}
+
+void Player::ManageAim()
+{
+	if (aimState == PlayerAimState::IDLE || aimState == PlayerAimState::ON_GUARD)
+	{
+		GatherAimInputs();
+	}
+
+	switch (aimState)
+	{
+	case PlayerAimState::IDLE:
+		break;
+	case PlayerAimState::ON_GUARD:
+		aimState = PlayerAimState::IDLE;
+		break;
+	case PlayerAimState::SHOOT_IN:
+		currentAnimation = &shootAnimation;
+		POOPOOTIMER.Start();
+		aimState = PlayerAimState::SHOOT;
+		break;
+	case PlayerAimState::SHOOT:
+		currentAnimation = &shootAnimation; // temporary till torso gets an independent animator
+		if (POOPOOTIMER.ReadSec() >= 0.6f)
+		{
+			aimState = PlayerAimState::ON_GUARD;
+			POOPOOTIMER.Stop();
+			currentAnimation = nullptr;
+		}
+		break;
+	case PlayerAimState::RELOAD_IN:
+		aimState = PlayerAimState::RELOAD;
+		break;
+	case PlayerAimState::RELOAD:
+		aimState = PlayerAimState::ON_GUARD;
+		break;
+	case PlayerAimState::CHANGE_IN:
+		aimState = PlayerAimState::CHANGE;
+		break;
+	case PlayerAimState::CHANGE:
+		aimState = PlayerAimState::ON_GUARD;
+		break;
+	}
 }
 
 void Player::GatherMoveInputs()
@@ -167,6 +225,24 @@ void Player::GatherAimInputs()
 			aimX = -MAX_INPUT;
 	}
 	aimInput = { (float)aimX, (float)aimY };
+
+	if (App->input->GetKey(SDL_SCANCODE_F) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(1) == ButtonState::BUTTON_DOWN)
+	{
+		aimState = PlayerAimState::CHANGE_IN;
+		return;
+	}
+
+	if ((App->input->GetKey(SDL_SCANCODE_R) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(2) == ButtonState::BUTTON_DOWN))
+	{
+		aimState = PlayerAimState::RELOAD_IN;
+		return;
+	}
+
+	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_REPEAT || App->input->GetGameControllerTrigger(1) == ButtonState::BUTTON_REPEAT)
+	{
+		aimState = PlayerAimState::SHOOT_IN;
+		return;
+	}
 
 	aimState = PlayerAimState::IDLE;
 }

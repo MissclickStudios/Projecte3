@@ -22,8 +22,12 @@ enum class PlayerMoveState
 enum class PlayerAimState
 {
 	IDLE,
+	ON_GUARD, // must use french accent
+	SHOOT_IN,
 	SHOOT,
+	RELOAD_IN,
 	RELOAD,
+	CHANGE_IN,
 	CHANGE
 };
 
@@ -55,9 +59,13 @@ public:
 	std::string shootAnimation = "Shoot";
 
 private:
-
+	Timer POOPOOTIMER; // for testing porpouses, mom found the poop sock :skull:
 	PlayerMoveState moveState = PlayerMoveState::IDLE;
 	PlayerAimState aimState = PlayerAimState::IDLE;
+
+	// Logic
+	void ManageMovement();
+	void ManageAim();
 
 	// Inputs & State Selection
 	void GatherMoveInputs();
