@@ -1,7 +1,7 @@
 #include "VariableTypedefs.h"
 #include "JSONParser.h"
 #include "Profiler.h"
-#include "Time.h"
+#include "MC_Time.h"
 #include "Random.h"
 #include "GameObject.h"
 //#include "Prefab.h"
@@ -80,7 +80,7 @@ UpdateStatus M_ResourceManager::PreUpdate(float dt)
 
 	UpdateStatus status = UpdateStatus::CONTINUE;
 
-	fileRefreshTimer += Time::Real::GetDT();
+	fileRefreshTimer += MC_Time::Real::GetDT();
 
 	if (fileRefreshTimer > fileRefreshRate)
 	{
@@ -886,7 +886,7 @@ void M_ResourceManager::CreatePrefab(GameObject* gameObject)
 
 	SavePrefab(gameObject, id);
 
-	prefabs.emplace(id, Prefab(id, gameObject->GetName(), Time::GetUnixTime()));
+	prefabs.emplace(id, Prefab(id, gameObject->GetName(), MC_Time::GetUnixTime()));
 }
 
 void M_ResourceManager::UpdatePrefab(GameObject* gameObject)
@@ -907,7 +907,7 @@ void M_ResourceManager::UpdatePrefab(GameObject* gameObject)
 	std::map<uint32,Prefab>::iterator prefab = prefabs.find(id);
 	
 	if(prefab != prefabs.end())
-		prefab->second.updateTime = Time::GetUnixTime();
+		prefab->second.updateTime = MC_Time::GetUnixTime();
 }
 
 void M_ResourceManager::SavePrefab(GameObject* gameObject, uint _prefabId)

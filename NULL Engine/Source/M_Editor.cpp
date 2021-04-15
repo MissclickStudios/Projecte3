@@ -3,6 +3,9 @@
 #include "ImGui.h"
 #include "ImGui/include/imgui_internal.h"
 
+#include "MC_Time.h"
+#include "Log.h"
+
 #include "Icons.h"
 
 #include "EngineApplication.h"															// ATTENTION: Globals.h already included in Module.h
@@ -17,6 +20,7 @@
 #include "Importer.h"
 
 #include "GameObject.h"
+#include "C_Transform.h"
 
 #include "EditorPanel.h"
 #include "E_MainMenuBar.h"
@@ -37,12 +41,6 @@
 #include "E_WantToSaveScene.h"
 
 #include "M_Editor.h"
-
-#include "MemoryManager.h"
-#include "Time.h"
-
-#include "C_Transform.h"
-#include "Log.h"
 
 #include "MemoryManager.h"
 
@@ -182,7 +180,7 @@ UpdateStatus M_Editor::PostUpdate(float dt)
 	}
 	
 	// Editor: Configuration Frame Data Histograms
-	UpdateFrameData(Time::Real::GetFramesLastSecond(), Time::Real::GetMsLastFrame());
+	UpdateFrameData(MC_Time::Real::GetFramesLastSecond(), MC_Time::Real::GetMsLastFrame());
 	
 	return ret;
 }

@@ -5,7 +5,7 @@
 #include "C_Canvas.h"
 #include "C_UI_Text.h"
 #include "GameObject.h"
-#include "Time.h"
+#include "MC_Time.h"
 
 GameManager::GameManager(): Script()
 {
@@ -22,5 +22,5 @@ void GameManager::Start()
 
 void GameManager::Update()
 {
-	fpsCount->SetText(std::to_string(Time::Real::GetFramesLastSecond()).c_str());
+	fpsCount->SetText(std::to_string(MC_Time::Real::GetFramesLastSecond()).c_str());
 }
