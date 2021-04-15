@@ -6,7 +6,7 @@
 #include "Color.h"
 #include "AnimatorClip.h"
 
-#include "Time.h"
+#include "MC_Time.h"
 
 #include "EngineApplication.h"
 #include "M_Renderer3D.h"
@@ -1397,6 +1397,61 @@ void E_Inspector::DrawUITextComponent(C_UI_Text* text)
 	ImGui::Separator();
 
 }
+void E_Inspector::ScriptSelectCombo(C_Script*& cScript, const char* previewValue, bool swapForCurrent) 
+{
+	const std::map<std::string, std::string> scripts = ((M_EngineScriptManager*)EngineApp->scriptManager)->GetAviableScripts();
+
+	std::string select;
+	if (scripts.size() != 0)
+		select = (*scripts.begin()).first;
+	std::string label = "##"; label += previewValue + cScript->GetDataName();
+	if (ImGui::BeginCombo(label.c_str(), previewValue, ImGuiComboFlags_PopupAlignLeft))
+	{
+		//TODO: Forced and slow (improve)
+		std::vector<C_Script*>goCurrentScripts;
+		GameObject* owner = cScript->GetOwner();
+		owner->GetComponents<C_Script>(goCurrentScripts);
+		bool skip = false;
+		for (std::map<std::string, std::string>::const_iterator it = scripts.cbegin(); it != scripts.cend(); ++it)
+		{
+			for (std::vector< C_Script*>::const_iterator cit = goCurrentScripts.cbegin(); cit != goCurrentScripts.cend(); ++cit)
+			{
+				if ((*it).first == (*cit)->GetDataName())
+				{
+					skip = true;
+					break;
+				}
+
+			}
+			if (skip) 
+			{
+				skip = false;
+				continue;
+			}
+
+			bool selectedScript = (select == (*it).first.c_str());
+			if (ImGui::Selectable((*it).first.c_str(), selectedScript))
+			{
+				if (swapForCurrent) 
+				{
+					owner->DeleteComponent(cScript);
+					cScript = (C_Script*)owner->CreateComponent(ComponentType::SCRIPT);
+				}
+
+				cScript->resource = (R_Script*)App->resourceManager->GetResourceFromLibrary((*it).second.c_str());
+				for (int i = 0; i < cScript->resource->dataStructures.size(); ++i) {
+					if ((*it).first == cScript->resource->dataStructures[i].first)
+					{
+						cScript->LoadData((*it).first.c_str(), cScript->resource->dataStructures[i].second);
+						break;
+					}
+				}
+			}
+
+		}
+		ImGui::EndCombo();
+	}
+}
 
 void E_Inspector::DrawScriptComponent(C_Script* cScript)
 {
@@ -1408,32 +1463,7 @@ void E_Inspector::DrawScriptComponent(C_Script* cScript)
 	{
 		if (ImGui::CollapsingHeader("Script", &show, ImGuiTreeNodeFlags_DefaultOpen))
 		{
-			const std::map<std::string, std::string> scripts = ((M_EngineScriptManager*)EngineApp->scriptManager)->GetAviableScripts();
-			
-			std::string select;
-			if(scripts.size() != 0)
-				select = (*scripts.begin()).first;
-
-			if (ImGui::BeginCombo("##Select Script", "SelectScript", ImGuiComboFlags_PopupAlignLeft))
-			{
-				for (std::map<std::string, std::string>::const_iterator it = scripts.cbegin(); it != scripts.cend(); ++it)
-				{
-					bool selectedScript = (select == (*it).first.c_str());
-					if (ImGui::Selectable((*it).first.c_str(), selectedScript)) 
-					{
-						cScript->resource = (R_Script*)App->resourceManager->GetResourceFromLibrary((*it).second.c_str());
-						for (int i = 0; i < cScript->resource->dataStructures.size(); ++i) {
-							if ((*it).first == cScript->resource->dataStructures[i].first)
-							{
-								cScript->LoadData((*it).first.c_str(), cScript->resource->dataStructures[i].second);
-								break;
-							}
-						}
-					}
-
-				}
-				ImGui::EndCombo();
-			}
+			ScriptSelectCombo(cScript, "Select Script",false);
 		}
 		if (!show)
 			cScript->GetOwner()->DeleteComponent(cScript);
@@ -1445,12 +1475,14 @@ void E_Inspector::DrawScriptComponent(C_Script* cScript)
 	if (ImGui::CollapsingHeader((cScript->GetDataName() + " (Script)").c_str(), &show, ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		//TODO: Show inspector variables
-		ImGui::Text("Name: %s", cScript->GetDataName().c_str());
+		ImGui::Text("Current Script: %s", cScript->GetDataName().c_str()); ImGui::SameLine(); 
+		ScriptSelectCombo(cScript, "Change Script", true);
 		ImGui::Spacing();
 		ImGui::Separator();
 		ImGui::Spacing();
 		std::vector<InspectorScriptData> inspectorVariables = cScript->GetInspectorVariables();
-		for (std::vector<InspectorScriptData>::iterator variable = inspectorVariables.begin(); variable != inspectorVariables.end(); ++variable)
+		unsigned int numVariables = inspectorVariables.size();
+		for (std::vector<InspectorScriptData>::iterator variable = inspectorVariables.begin(); variable != inspectorVariables.end(); ++variable,--numVariables)
 		{
 			switch ((*variable).variableType) 
 			{
@@ -1543,9 +1575,12 @@ void E_Inspector::DrawScriptComponent(C_Script* cScript)
 						*(*variable).obj = nullptr;
 				break;
 			}
-			ImGui::Spacing();
-			ImGui::Separator();
-			ImGui::Spacing();
+			if (numVariables > 1) 
+			{
+				ImGui::Spacing();
+				ImGui::Separator();
+				ImGui::Spacing();
+			}
 		}
 	}
 	if (!show)

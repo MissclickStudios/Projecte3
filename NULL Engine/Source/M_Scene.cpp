@@ -103,15 +103,11 @@ bool M_Scene::Start()
 
 	if(App->gameState == GameState::PLAY)
 		App->scene->LoadScene("Assets/Scenes/MainMenu.json");
-	else 
-		App->scene->LoadScene("Assets/Scenes/MainMenu.json");
-
-
-
-
-
-	/*std::string s = ASSETS_SCENES_PATH + currentScene + JSON_EXTENSION;
-	LoadScene(s.c_str());*/
+	else
+	{
+		std::string s = ASSETS_SCENES_PATH + currentScene + JSON_EXTENSION;
+		LoadScene(s.c_str());
+	}
 
 	//LoadScene("Assets/Scenes/UITestScene.json");
 	//SaveScene("SceneAutosave");																			// Autosave just right after loading the scene.

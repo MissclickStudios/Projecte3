@@ -1,6 +1,6 @@
 #include "JSONParser.h"
 
-#include "Time.h"
+#include "MC_Time.h"
 #include "GameObject.h"
 
 #include "Application.h"
@@ -60,18 +60,18 @@ bool C_ParticleSystem::LoadState(ParsonNode& root)
 
 bool C_ParticleSystem::Update()
 {
-	if (previewEnabled == true && Time::Game::GetDT() == 0)
+	if (previewEnabled == true && MC_Time::Game::GetDT() == 0)
 	{
 		for (unsigned int i = 0; i < emitterInstances.size(); ++i)
 		{
-			emitterInstances[i]->Update(Time::Real::GetDT());
+			emitterInstances[i]->Update(MC_Time::Real::GetDT());
 		}
 	}
 	else
 	{
 		for (unsigned int i = 0; i < emitterInstances.size(); ++i)
 		{
-			emitterInstances[i]->Update(Time::Game::GetDT());
+			emitterInstances[i]->Update(MC_Time::Game::GetDT());
 		}
 	}
 

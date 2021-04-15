@@ -1,6 +1,6 @@
 #include "glew/include/glew.h"						// Maybe remove later so dependencies are kept to the minimum?
 
-#include "Time.h"
+#include "MC_Time.h"
 #include "Color.h"
 #include "Profiler.h"
 #include "EngineApplication.h"
@@ -322,8 +322,8 @@ bool E_Configuration::TimeManagementMenu()
 	{
 		ImGui::TextColored(ImVec4(0.0f, 1.0f, 1.0f, 1.0f), "Real Time Clock:");
 		
-		Hourglass clock			= Time::Real::GetClock();
-		FrameData frameData		= Time::Real::GetFrameData();
+		Hourglass clock			= MC_Time::Real::GetClock();
+		FrameData frameData		= MC_Time::Real::GetFrameData();
 
 		ImGui::Text("Time Since Start:");	ImGui::SameLine(); ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "   %s", std::string(std::to_string(clock.hours) + "h " + std::to_string(clock.minutes) + "m " + std::to_string(clock.seconds) + "s").c_str()); //TODO: can't return an std::string across dll without memo leack
 		ImGui::Text("Frame Count:");		ImGui::SameLine(); ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "        %llu",	frameData.frameCount);
@@ -337,8 +337,8 @@ bool E_Configuration::TimeManagementMenu()
 
 		ImGui::TextColored(ImVec4(0.0f, 1.0f, 1.0f, 1.0f), "Game Time Clock:");
 
-		Hourglass gameClock		= Time::Game::GetClock();
-		FrameData gameFrameData	= Time::Game::GetFrameData();
+		Hourglass gameClock		= MC_Time::Game::GetClock();
+		FrameData gameFrameData	= MC_Time::Game::GetFrameData();
 
 		ImGui::Text("Time Since Start:");	ImGui::SameLine(); ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "   %s", std::string(std::to_string(gameClock.hours) + "h " + std::to_string(gameClock.minutes) + "m " + std::to_string(gameClock.seconds) + "s").c_str()); //TODO: can't return an std::string across dll without memo leack
 		ImGui::Text("Frame Count:");		ImGui::SameLine(); ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "        %llu",	gameFrameData.frameCount);

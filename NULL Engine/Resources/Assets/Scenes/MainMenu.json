@@ -38,7 +38,7 @@
                         "X": 0,
                         "Y": 0,
                         "W": 1.0926049947738647,
-                        "H": 0.5787392258644104,
+                        "H": 0.56977641582489014,
                         "IsInvisible": false
                     }
                 }
@@ -78,10 +78,10 @@
                 {
                     "Type": 21,
                     "Image": {
-                        "X": 0.17500001192092896,
-                        "Y": -0.0099999997764825821,
-                        "W": 0.019999999552965164,
-                        "H": 0.019999999552965164,
+                        "X": 0.31000000238418579,
+                        "Y": 7.8231093825209541e-10,
+                        "W": 0.05000000074505806,
+                        "H": 0.10000000149011612,
                         "IsHDL": false,
                         "IsHDR": true
                     }
@@ -98,11 +98,11 @@
             ]
         },
         {
-            "UID": 854847855,
+            "UID": 667061132,
             "ParentUID": 520337368,
             "PrefabID": 0,
             "IsPrefab": false,
-            "Name": "Hovered Decoration L",
+            "Name": "Continue",
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
@@ -129,12 +129,64 @@
                     ]
                 },
                 {
+                    "Type": 23,
+                    "Button": {
+                        "X": 0,
+                        "Y": -0.075000002980232239,
+                        "W": 0.31999999284744263,
+                        "H": 0.079999998211860657,
+                        "IsHovered": false
+                    }
+                },
+                {
+                    "Type": 3,
+                    "Texture": {
+                        "AssetsPath": "Assets\/Textures\/UI\/MainMenu\/ContinueButton1.png",
+                        "AssetsName": "ContinueButton1.png",
+                        "LibaryPath": "Library\/Textures\/1043491886.netex",
+                        "LibraryFile": "1043491886.netex"
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 854847855,
+            "ParentUID": 520337368,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Hovered Decoration L",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": true,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
                     "Type": 21,
                     "Image": {
-                        "X": -0.18500000238418579,
-                        "Y": -0.0099999997764825821,
-                        "W": 0.019999999552965164,
-                        "H": 0.019999999552965164,
+                        "X": -0.25999999046325684,
+                        "Y": 7.8231093825209541e-10,
+                        "W": 0.05000000074505806,
+                        "H": 0.10000000149011612,
                         "IsHDL": true,
                         "IsHDR": false
                     }
@@ -185,9 +237,9 @@
                     "Type": 23,
                     "Button": {
                         "X": 0,
-                        "Y": -0.075000002980232239,
-                        "W": 0.30000001192092896,
-                        "H": 0.30000001192092896,
+                        "Y": -0.14000000059604645,
+                        "W": 0.31999999284744263,
+                        "H": 0.079999998211860657,
                         "IsHovered": false
                     }
                 },
@@ -196,8 +248,8 @@
                     "Texture": {
                         "AssetsPath": "Assets\/Textures\/UI\/MainMenu\/SettingsButton1.png",
                         "AssetsName": "SettingsButton1.png",
-                        "LibaryPath": "Library\/Textures\/930046277.netex",
-                        "LibraryFile": "930046277.netex"
+                        "LibaryPath": "Library\/Textures\/1773975367.netex",
+                        "LibraryFile": "1773975367.netex"
                     }
                 }
             ]
@@ -208,58 +260,6 @@
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "Exit",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        0,
-                        0
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {
-                    "Type": 23,
-                    "Button": {
-                        "X": 0,
-                        "Y": -0.13936960697174072,
-                        "W": 0.30000001192092896,
-                        "H": 0.30000001192092896,
-                        "IsHovered": false
-                    }
-                },
-                {
-                    "Type": 3,
-                    "Texture": {
-                        "AssetsPath": "Assets\/Textures\/UI\/MainMenu\/ExitButton1.png",
-                        "AssetsName": "ExitButton1.png",
-                        "LibaryPath": "Library\/Textures\/1152757586.netex",
-                        "LibraryFile": "1152757586.netex"
-                    }
-                }
-            ]
-        },
-        {
-            "UID": 920236665,
-            "ParentUID": 520337368,
-            "PrefabID": 0,
-            "IsPrefab": false,
-            "Name": "New Game",
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
@@ -289,9 +289,61 @@
                     "Type": 23,
                     "Button": {
                         "X": 0,
+                        "Y": -0.20499999821186066,
+                        "W": 0.31999999284744263,
+                        "H": 0.079999998211860657,
+                        "IsHovered": false
+                    }
+                },
+                {
+                    "Type": 3,
+                    "Texture": {
+                        "AssetsPath": "Assets\/Textures\/UI\/MainMenu\/ExitButton1.png",
+                        "AssetsName": "ExitButton1.png",
+                        "LibaryPath": "Library\/Textures\/1724300843.netex",
+                        "LibraryFile": "1724300843.netex"
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 920236665,
+            "ParentUID": 520337368,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "New Game",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 23,
+                    "Button": {
+                        "X": 0,
                         "Y": -0.0099999997764825821,
-                        "W": 0.33000001311302185,
-                        "H": 0.30000001192092896,
+                        "W": 0.31999999284744263,
+                        "H": 0.079999998211860657,
                         "IsHovered": true
                     }
                 },
@@ -300,15 +352,62 @@
                     "Texture": {
                         "AssetsPath": "Assets\/Textures\/UI\/MainMenu\/NewGameButton1.png",
                         "AssetsName": "NewGameButton1.png",
-                        "LibaryPath": "Library\/Textures\/1591201239.netex",
-                        "LibraryFile": "1591201239.netex"
+                        "LibaryPath": "Library\/Textures\/1065639556.netex",
+                        "LibraryFile": "1065639556.netex"
                     }
                 }
             ]
         },
         {
+            "UID": 1450927800,
+            "ParentUID": 1474137658,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "MainMenu Manager",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": true,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 24,
+                    "ResourceUID": 1900768331,
+                    "AssetsPath": "Assets\/Scripts\/\/MainMenuManager.h",
+                    "DataName": "MainMenuManager",
+                    "HasInspector": true,
+                    "InspectorVariables": [
+                        {
+                            "Type": 5,
+                            "Name": "buttonName",
+                            "string": "New Game"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
             "UID": 1474137658,
-            "ParentUID": 1309763635,
+            "ParentUID": 1551649418,
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "MainScene",
@@ -490,53 +589,6 @@
                     "Culling": false,
                     "OrthogonalView": false,
                     "HideFrustum": true
-                }
-            ]
-        },
-        {
-            "UID": 1450927800,
-            "ParentUID": 1474137658,
-            "PrefabID": 0,
-            "IsPrefab": false,
-            "Name": "MainMenu Manager",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": true,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        0,
-                        0
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {
-                    "Type": 24,
-                    "ResourceUID": 1900768331,
-                    "AssetsPath": "Assets\/Scripts\/\/MainMenuManager.h",
-                    "DataName": "MainMenuManager",
-                    "HasInspector": true,
-                    "InspectorVariables": [
-                        {
-                            "Type": 5,
-                            "Name": "buttonName",
-                            "string": "New Game"
-                        }
-                    ]
                 }
             ]
         }
