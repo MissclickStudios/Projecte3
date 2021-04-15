@@ -68,14 +68,14 @@ public:																								// --- RESOURCE MANAGER API ---
 	
 	const std::map<uint32, Resource*>* GetResources	() const;										// Returns a pointer to the resources map.
 
-	R_Shader*		GetShader						(const char* name);								//Look for a shader in the library and load and return it
-	void			GetAllShaders					(std::vector<R_Shader*>& shaders);				//Retrieve all the shaders in the library
-	void			GetAllParticleSystems			(std::vector<R_ParticleSystem*>& shaders);				//Retrieve all the particlesystems in the library
+	R_Shader*		GetShader						(const char* name);															// Look for a shader in the library and load and return it
+	void			GetAllShaders					(std::vector<R_Shader*>& shaders);											// Retrieve all the shaders in the library
+	void			GetAllParticleSystems			(std::vector<R_ParticleSystem*>& shaders);									// Retrieve all the particlesystems in the library
 
-	void			GetAllTextures					(std::vector<R_Texture*>& textures, const char* name = nullptr);			//Retrieve all the shaders in the library
+	void			GetAllTextures					(std::vector<R_Texture*>& textures, const char* name = nullptr);			// Retrieve all the shaders in the library
 
-	void			GetAllScripts					(std::map<std::string, std::string>& scripts);
-	void			ReloadAllScripts				();												//Called when hot reloading the scripts
+	void			GetAllScripts					(std::map<std::string, std::string>& scripts);								// 
+	void			ReloadAllScripts				();																			// Called when hot reloading the scripts
 	
 
 	// --- PREFAB METHODS
@@ -84,14 +84,14 @@ public:																								// --- RESOURCE MANAGER API ---
 
 	void			SavePrefab						(GameObject* gameObject, uint _prefabId);
 	void			SavePrefabObject				(GameObject* gameObject, ParsonNode* node);
-	GameObject*		LoadPrefab						(uint _prefabId, GameObject* parent, GameObject* rootObject = nullptr); //If the root object is not nullptr its transform component will be used
+	GameObject*		LoadPrefab						(uint _prefabId, GameObject* parent, GameObject* rootObject = nullptr);		// If the root object isn't NULL its Trfrm Comp. will be used.
 
 	Prefab*			GetPrefab(uint uid);
 	const char*		GetPrefabName(uint uid);
 	Prefab*			GetPrefabByName(const char* prefabName);
 	uint			GetPrefabUIDByName(const char* prefabName);
 	
-private:																															// --- ASSETS MONITORING METHODS ---
+private:																														// --- ASSETS MONITORING METHODS ---
 	void			RefreshDirectoryFiles			(const char* directory);
 	void			RefreshDirectory				(const char* directory, std::vector<std::string>& filesToImport, 
 														std::vector<std::string>& filesToUpdate, std::vector<std::string>& filesToDelete);
