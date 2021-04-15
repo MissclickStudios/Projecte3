@@ -193,7 +193,7 @@ uint32 M_ResourceManager::ImportFile(const char* assetsPath)
 	{
 		LOG("[WARNING] Resource Manager: The File to Import was already in the Library!");
 
-		std::map<uint32, std::string> libraryItems;
+		std::map<uint32, ResourceBase> libraryItems;
 		GetLibraryPairsFromMeta(assetsPath, libraryItems);
 
 		for (auto item = libraryItems.begin(); item != libraryItems.end(); ++item)
@@ -251,7 +251,7 @@ uint M_ResourceManager::SaveResourceToLibrary(Resource* resource)
 		SaveMetaFile(resource);
 	}
 
-	library.emplace(resource->GetUID(), resource->GetLibraryPath());
+	library.emplace(resource->GetUID(), ResourceBase(resource->GetLibraryPath(), resource->GetType()));
 
 	return written;
 }
@@ -598,7 +598,7 @@ bool M_ResourceManager::AllocateResource(uint32 UID, const char* assetsPath)
 	}
 
 	char* buffer				= nullptr;
-	const char* libraryPath		= library.find(UID)->second.c_str();
+	const char* libraryPath		= library.find(UID)->second.libraryPath.c_str();
 	uint read					= App->fileSystem->Load(libraryPath, &buffer);
 	if (read == 0)
 	{
@@ -749,7 +749,7 @@ bool M_ResourceManager::DeleteResource(Resource* resourceToDelete)
 	return true;
 }
 
-const std::map<uint32, Resource*>* M_ResourceManager::GetResources() const
+const std::map<uint32, Resource*>* M_ResourceManager::GetResourcesMap() const
 {
 	return &this->resources;
 }
@@ -1283,8 +1283,6 @@ bool M_ResourceManager::GetResourceUIDsFromMeta(const char* assetsPath, std::vec
 
 bool M_ResourceManager::GetLibraryFilePathsFromMeta(const char* assetsPath, std::vector<std::string>& filePaths)
 {
-	bool ret = true;
-	
 	if (assetsPath == nullptr)
 	{
 		LOG("[ERROR] Resource Manager: Could not get Library File Paths from Meta File! Error: Given Assets Path was nullptr.");
@@ -1301,6 +1299,7 @@ bool M_ResourceManager::GetLibraryFilePathsFromMeta(const char* assetsPath, std:
 	if (!metaRoot.NodeIsValid())
 	{
 		LOG("%s! Error: Given Assets Path had no associated .meta file.", errorString.c_str());
+		return false;
 	}
 	if (!containedArray.ArrayIsValid())
 	{
@@ -1372,7 +1371,98 @@ bool M_ResourceManager::GetLibraryFilePathsFromMeta(const char* assetsPath, std:
 		filePaths.push_back(containedPath);
 	}
 
-	return ret;
+	return true;
+}
+
+bool M_ResourceManager::GetResourceBasesFromMeta(const char* assetsPath, std::vector<ResourceBase>& resourceBases)
+{
+	if (assetsPath == nullptr)
+	{
+		LOG("[ERROR] Resource Manager: Could not get Library File Paths from Meta File! Error: Given Assets Path was nullptr.");
+		return false;
+	}
+	
+	std::string errorString = "[ERROR] Resoruce Manager: Could not get Library File Paths from { " + std::string(assetsPath) + " }'s Meta File";
+
+	char* buffer				= nullptr;
+	ParsonNode metaRoot			= LoadMetaFile(assetsPath, &buffer);
+	ParsonArray containedArray	= metaRoot.GetArray("ContainedResources");
+	RELEASE_ARRAY(buffer);
+
+	if (!metaRoot.NodeIsValid())
+	{
+		LOG("%s! Error: Given Assets Path had no associated .meta file.", errorString.c_str());
+		return false;
+	}
+	if (!containedArray.ArrayIsValid())
+	{
+		LOG("%s! Error: ContainedResources array in Meta File was not valid.", errorString.c_str());
+		return false;
+	}
+
+	std::string directory = "[NONE]";
+	std::string extension = "[NONE]";
+
+	// --- MAIN RESOURCE
+	uint32 resourceUid		= (uint32)metaRoot.GetNumber("UID");
+	ResourceType type		= (ResourceType)((int)metaRoot.GetNumber("Type"));
+	bool success			= GetLibraryDirectoryAndExtensionFromType(type, directory, extension);
+	if (!success)
+	{
+		LOG("%s! Error: Could not get the Library Directory and Extension from Resource Type.", errorString.c_str());
+		return false;
+	}
+	if (resourceUid == 0)
+	{
+		LOG("%s! Error: Main Resource UID was 0.", errorString.c_str());
+		return false;
+	}
+	if (directory == "[NONE]" || extension == "[NONE]")
+	{
+		LOG("%s! Error: Main Resource Library Directory or Extension strings were not valid.", errorString.c_str());
+		return false;
+	}
+
+	std::string libraryPath = directory + std::to_string(resourceUid) + extension;
+	resourceBases.push_back(ResourceBase(libraryPath, type));
+
+	// --- CONTAINED RESOURCES
+	ParsonNode containedNode	= ParsonNode();
+	uint32 containedUid			= 0;
+	ResourceType containedType	= ResourceType::NONE;
+	std::string containedPath	= "[NONE]";
+	for (uint i = 0; i < containedArray.size; ++i)
+	{
+		containedNode = containedArray.GetNode(i);
+		if (!containedNode.NodeIsValid())
+		{
+			continue;
+		}
+
+		directory = "[NONE]";
+		extension = "[NONE]";
+
+		containedUid	= (uint32)containedNode.GetNumber("UID");
+		containedType	= (ResourceType)((int)containedNode.GetNumber("Type"));
+		success			= GetLibraryDirectoryAndExtensionFromType(containedType, directory, extension);
+		if (!success)
+		{
+			continue;
+		}
+		if (containedUid == 0)
+		{
+			continue;
+		}
+		if (directory == "[NONE]" || extension == "[NONE]")
+		{
+			continue;
+		}
+
+		containedPath = directory + std::to_string(containedUid) + extension;
+		resourceBases.push_back(ResourceBase(containedPath, containedType));
+	}
+	
+	return true;
 }
 
 bool M_ResourceManager::GetLibraryDirectoryAndExtensionFromType(const ResourceType& type, std::string& directory, std::string& extension)
@@ -1404,7 +1494,7 @@ bool M_ResourceManager::LoadMetaLibraryPairsIntoLibrary(const char* assetsPath)
 		return false;
 	}
 
-	std::map<uint32, std::string> libraryPairs;
+	std::map<uint32, ResourceBase> libraryPairs;
 	GetLibraryPairsFromMeta(assetsPath, libraryPairs);
 	if (libraryPairs.empty())
 		return true;
@@ -1419,7 +1509,7 @@ bool M_ResourceManager::LoadMetaLibraryPairsIntoLibrary(const char* assetsPath)
 	return true;
 }
 
-bool M_ResourceManager::GetLibraryPairsFromMeta(const char* assetsPath, std::map<uint32, std::string>& pairs)
+bool M_ResourceManager::GetLibraryPairsFromMeta(const char* assetsPath, std::map<uint32, ResourceBase>& pairs)
 {
 	if (assetsPath == nullptr)
 	{
@@ -1430,22 +1520,22 @@ bool M_ResourceManager::GetLibraryPairsFromMeta(const char* assetsPath, std::map
 	std::string errorString = "[ERROR] Resource Manager: Could not get Libarary Pairs from { " + std::string(assetsPath) + " }'s associated Meta File";
 
 	std::vector<uint32> resourceUids;
-	std::vector<std::string> libraryPaths;
+	std::vector<ResourceBase> resourceBases;
 
 	GetResourceUIDsFromMeta(assetsPath, resourceUids);
-	GetLibraryFilePathsFromMeta(assetsPath, libraryPaths);
+	GetResourceBasesFromMeta(assetsPath, resourceBases);
 
-	if (resourceUids.size() != libraryPaths.size())
+	if (resourceUids.size() != resourceBases.size())
 	{
 		LOG("%s! Error: Mismatched amount of Resource UIDs and Library Paths.", errorString.c_str());
 	}
 	for (uint i = 0; i < resourceUids.size(); ++i)
 	{
-		pairs.emplace(resourceUids[i], libraryPaths[i]);
+		pairs.emplace(resourceUids[i], resourceBases[i]);
 	}
 
 	resourceUids.clear();
-	libraryPaths.clear();
+	resourceBases.clear();
 
 	return true;
 }

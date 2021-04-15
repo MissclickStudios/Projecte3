@@ -184,6 +184,9 @@
     <Filter Include="Source\5_Containers\Primitives">
       <UniqueIdentifier>{cee3d9d8-82ce-44fb-9b7d-440b0f93cc4a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\2_Resources\ResourceTypes">
+      <UniqueIdentifier>{1f0579d1-1ca5-4926-bc23-ff9b666f00d5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Application.cpp">
@@ -234,15 +237,6 @@
     <ClCompile Include="Source\GameObject.cpp">
       <Filter>Source\4_GameObjects</Filter>
     </ClCompile>
-    <ClCompile Include="Source\R_Model.cpp">
-      <Filter>Source\2_Resources</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\R_Material.cpp">
-      <Filter>Source\2_Resources</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\R_Mesh.cpp">
-      <Filter>Source\2_Resources</Filter>
-    </ClCompile>
     <ClCompile Include="Source\C_Light.cpp">
       <Filter>Source\4_GameObjects\Components</Filter>
     </ClCompile>
@@ -272,9 +266,6 @@
     </ClCompile>
     <ClCompile Include="Source\I_Scenes.cpp">
       <Filter>Source\3_Importers</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\R_Texture.cpp">
-      <Filter>Source\2_Resources</Filter>
     </ClCompile>
     <ClCompile Include="Source\I_Textures.cpp">
       <Filter>Source\3_Importers</Filter>
@@ -447,15 +438,6 @@
     <ClCompile Include="Source\Hourglass.cpp">
       <Filter>Source\6_Tools\Time\TimeContainers</Filter>
     </ClCompile>
-    <ClCompile Include="Source\R_Folder.cpp">
-      <Filter>Source\2_Resources</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\R_Animation.cpp">
-      <Filter>Source\2_Resources</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\R_Scene.cpp">
-      <Filter>Source\2_Resources</Filter>
-    </ClCompile>
     <ClCompile Include="Source\MeshSettings.cpp">
       <Filter>Source\5_Containers\ImportSettings\Settings</Filter>
     </ClCompile>
@@ -519,9 +501,6 @@
     <ClCompile Include="Source\SkyBox.cpp">
       <Filter>Source\6_Tools\SkyBox</Filter>
     </ClCompile>
-    <ClCompile Include="Source\R_Shader.cpp">
-      <Filter>Source\2_Resources</Filter>
-    </ClCompile>
     <ClCompile Include="Source\M_Audio.cpp">
       <Filter>Source\1_Modules</Filter>
     </ClCompile>
@@ -564,9 +543,6 @@
     <ClCompile Include="Source\C_GateBehavior.cpp">
       <Filter>Source\4_GameObjects\Components\Behaviors</Filter>
     </ClCompile>
-    <ClCompile Include="Source\R_Script.cpp">
-      <Filter>Source\2_Resources</Filter>
-    </ClCompile>
     <ClCompile Include="Source\C_Script.cpp">
       <Filter>Source\4_GameObjects\Components</Filter>
     </ClCompile>
@@ -581,9 +557,6 @@
     </ClCompile>
     <ClCompile Include="Source\Prefab.cpp">
       <Filter>Source\5_Containers\Prefab</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\R_NavMesh.cpp">
-      <Filter>Source\2_Resources</Filter>
     </ClCompile>
     <ClCompile Include="Source\I_Particles.cpp">
       <Filter>Source\3_Importers</Filter>
@@ -600,9 +573,6 @@
     <ClCompile Include="Source\C_UI_Button.cpp">
       <Filter>Source\4_GameObjects\Components\UI</Filter>
     </ClCompile>
-    <ClCompile Include="Source\R_2DAnimation.cpp">
-      <Filter>Source\2_Resources</Filter>
-    </ClCompile>
     <ClCompile Include="Source\C_NavMeshAgent.cpp">
       <Filter>Source\4_GameObjects\Components\Navigator</Filter>
     </ClCompile>
@@ -611,9 +581,6 @@
     </ClCompile>
     <ClCompile Include="Source\RE_Circle.cpp">
       <Filter>Source\5_Containers\Renderer3D</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\R_ParticleSystem.cpp">
-      <Filter>Source\2_Resources</Filter>
     </ClCompile>
     <ClCompile Include="Source\C_ParticleSystem.cpp">
       <Filter>Source\4_GameObjects\Components</Filter>
@@ -656,6 +623,45 @@
     </ClCompile>
     <ClCompile Include="Source\Particle.cpp">
       <Filter>Source\5_Containers\ParticleSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\R_2DAnimation.cpp">
+      <Filter>Source\2_Resources\ResourceTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\R_Animation.cpp">
+      <Filter>Source\2_Resources\ResourceTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\R_Folder.cpp">
+      <Filter>Source\2_Resources\ResourceTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\R_Material.cpp">
+      <Filter>Source\2_Resources\ResourceTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\R_Mesh.cpp">
+      <Filter>Source\2_Resources\ResourceTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\R_Model.cpp">
+      <Filter>Source\2_Resources\ResourceTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\R_NavMesh.cpp">
+      <Filter>Source\2_Resources\ResourceTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\R_ParticleSystem.cpp">
+      <Filter>Source\2_Resources\ResourceTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\R_Scene.cpp">
+      <Filter>Source\2_Resources\ResourceTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\R_Script.cpp">
+      <Filter>Source\2_Resources\ResourceTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\R_Shader.cpp">
+      <Filter>Source\2_Resources\ResourceTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\R_Texture.cpp">
+      <Filter>Source\2_Resources\ResourceTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ResourceBase.cpp">
+      <Filter>Source\2_Resources</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -752,15 +758,6 @@
     <ClInclude Include="Source\Dependencies\Brofiler\include\Brofiler.h">
       <Filter>Dependencies\Brofiler</Filter>
     </ClInclude>
-    <ClInclude Include="Source\R_Material.h">
-      <Filter>Source\2_Resources</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\R_Mesh.h">
-      <Filter>Source\2_Resources</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\R_Model.h">
-      <Filter>Source\2_Resources</Filter>
-    </ClInclude>
     <ClInclude Include="Source\C_Light.h">
       <Filter>Source\4_GameObjects\Components</Filter>
     </ClInclude>
@@ -808,9 +805,6 @@
     </ClInclude>
     <ClInclude Include="Source\I_Scenes.h">
       <Filter>Source\3_Importers</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\R_Texture.h">
-      <Filter>Source\2_Resources</Filter>
     </ClInclude>
     <ClInclude Include="Source\I_Textures.h">
       <Filter>Source\3_Importers</Filter>
@@ -1109,15 +1103,6 @@
     <ClInclude Include="Source\Hourglass.h">
       <Filter>Source\6_Tools\Time\TimeContainers</Filter>
     </ClInclude>
-    <ClInclude Include="Source\R_Folder.h">
-      <Filter>Source\2_Resources</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\R_Animation.h">
-      <Filter>Source\2_Resources</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\R_Scene.h">
-      <Filter>Source\2_Resources</Filter>
-    </ClInclude>
     <ClInclude Include="Source\MeshSettings.h">
       <Filter>Source\5_Containers\ImportSettings\Settings</Filter>
     </ClInclude>
@@ -1346,9 +1331,6 @@
     <ClInclude Include="Source\SkyBox.h">
       <Filter>Source\6_Tools\SkyBox</Filter>
     </ClInclude>
-    <ClInclude Include="Source\R_Shader.h">
-      <Filter>Source\2_Resources</Filter>
-    </ClInclude>
     <ClInclude Include="Source\M_Audio.h">
       <Filter>Source\1_Modules</Filter>
     </ClInclude>
@@ -1400,9 +1382,6 @@
     <ClInclude Include="Source\C_GateBehavior.h">
       <Filter>Source\4_GameObjects\Components\Behaviors</Filter>
     </ClInclude>
-    <ClInclude Include="Source\R_Script.h">
-      <Filter>Source\2_Resources</Filter>
-    </ClInclude>
     <ClInclude Include="Source\C_Script.h">
       <Filter>Source\4_GameObjects\Components</Filter>
     </ClInclude>
@@ -1427,9 +1406,6 @@
     <ClInclude Include="Source\Prefab.h">
       <Filter>Source\5_Containers\Prefab</Filter>
     </ClInclude>
-    <ClInclude Include="Source\R_NavMesh.h">
-      <Filter>Source\2_Resources</Filter>
-    </ClInclude>
     <ClInclude Include="Source\I_Particles.h">
       <Filter>Source\3_Importers</Filter>
     </ClInclude>
@@ -1445,9 +1421,6 @@
     <ClInclude Include="Source\C_UI_Button.h">
       <Filter>Source\4_GameObjects\Components\UI</Filter>
     </ClInclude>
-    <ClInclude Include="Source\R_2DAnimation.h">
-      <Filter>Source\2_Resources</Filter>
-    </ClInclude>
     <ClInclude Include="Source\C_NavMeshAgent.h">
       <Filter>Source\4_GameObjects\Components\Navigator</Filter>
     </ClInclude>
@@ -1456,9 +1429,6 @@
     </ClInclude>
     <ClInclude Include="Source\RE_Circle.h">
       <Filter>Source\5_Containers\Renderer3D</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\R_ParticleSystem.h">
-      <Filter>Source\2_Resources</Filter>
     </ClInclude>
     <ClInclude Include="Source\C_ParticleSystem.h">
       <Filter>Source\4_GameObjects\Components</Filter>
@@ -1504,6 +1474,45 @@
     </ClInclude>
     <ClInclude Include="Source\EmitterInstance.h">
       <Filter>Source\5_Containers\ParticleSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\R_2DAnimation.h">
+      <Filter>Source\2_Resources\ResourceTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\R_Animation.h">
+      <Filter>Source\2_Resources\ResourceTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\R_Folder.h">
+      <Filter>Source\2_Resources\ResourceTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\R_Material.h">
+      <Filter>Source\2_Resources\ResourceTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\R_Mesh.h">
+      <Filter>Source\2_Resources\ResourceTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\R_Model.h">
+      <Filter>Source\2_Resources\ResourceTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\R_NavMesh.h">
+      <Filter>Source\2_Resources\ResourceTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\R_ParticleSystem.h">
+      <Filter>Source\2_Resources\ResourceTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\R_Scene.h">
+      <Filter>Source\2_Resources\ResourceTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\R_Script.h">
+      <Filter>Source\2_Resources\ResourceTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\R_Shader.h">
+      <Filter>Source\2_Resources\ResourceTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\R_Texture.h">
+      <Filter>Source\2_Resources\ResourceTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ResourceBase.h">
+      <Filter>Source\2_Resources</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
