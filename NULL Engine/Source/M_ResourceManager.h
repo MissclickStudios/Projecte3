@@ -5,18 +5,23 @@
 #include <string>
 
 #include "Module.h"
+
+#include "ResourceBase.h"
+
 #include "Prefab.h"
 
 class ParsonNode;
-class Resource;
-//struct Prefab;
 
-enum class ResourceType;
+class Resource;
 class R_Shader;
 class R_Texture;
 class R_ParticleSystem;
 
 class GameObject;
+
+//struct Prefab;
+
+enum class ResourceType;
 
 typedef unsigned int		uint;
 typedef unsigned __int32	uint32;
@@ -66,7 +71,7 @@ public:																								// --- RESOURCE MANAGER API ---
 	bool			DeleteResource					(uint32 UID);									// Completely erases a resource, both from memory and from the library.
 	bool			DeleteResource					(Resource* resourceToDelete);					// Same as the above but directly passing the resource as the argument.
 	
-	const std::map<uint32, Resource*>* GetResources	() const;										// Returns a pointer to the resources map.
+	const std::map<uint32, Resource*>* GetResourcesMap	() const;									// Returns a pointer to the resources map.
 
 	R_Shader*		GetShader						(const char* name);															// Look for a shader in the library and load and return it
 	void			GetAllShaders					(std::vector<R_Shader*>& shaders);											// Retrieve all the shaders in the library
@@ -112,10 +117,11 @@ private:																														// --- ASSETS MONITORING METHODS ---
 	bool			GetResourceUIDsFromMeta						(const char* assetsPath, std::vector<uint32>& resourceUids);
 	//bool			GetForcedUIDsFromMeta						(const char* assetsPath, std::map<std::string, uint32>& forcedUIDs);
 	bool			GetLibraryFilePathsFromMeta					(const char* assetsPath, std::vector<std::string>& filePaths);
+	bool			GetResourceBasesFromMeta					(const char* assetsPath, std::vector<ResourceBase>& resourceBases);
 	bool			GetLibraryDirectoryAndExtensionFromType		(const ResourceType& type, std::string& directory, std::string& extension);
 	
 	bool			LoadMetaLibraryPairsIntoLibrary				(const char* assetsPath);
-	bool			GetLibraryPairsFromMeta						(const char* assetsPath, std::map<uint32, std::string>& pairs);
+	bool			GetLibraryPairsFromMeta						(const char* assetsPath, std::map<uint32, ResourceBase>& pairs);
 
 	uint64			GetAssetFileModTimeFromMeta					(const char* assetsPath);
 	
@@ -141,7 +147,7 @@ private:																											// --- META FILE METHODS ---
 
 private:
 	std::map<uint32, Resource*>		resources;																		// Resources currently in memory.
-	std::map<uint32, std::string>	library;																		// UID and Library Path string of all loaded resources.
+	std::map<uint32, ResourceBase>	library;																		// UID and Library Path string of all loaded resources.
 
 	float							fileRefreshTimer;																// 
 	float							fileRefreshRate;																// 

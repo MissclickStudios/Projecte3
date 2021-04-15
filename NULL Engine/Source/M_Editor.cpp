@@ -512,7 +512,7 @@ void M_Editor::LoadResourceIntoSceneThroughEditor(const ImGuiPayload& payload)
 
 const std::map<uint32, Resource*>* M_Editor::GetResourcesThroughEditor() const
 {
-	return EngineApp->resourceManager->GetResources();
+	return EngineApp->resourceManager->GetResourcesMap();
 }
 
 void M_Editor::SaveSceneThroughEditor(const char* sceneName)
