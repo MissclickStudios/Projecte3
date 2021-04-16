@@ -22,11 +22,40 @@ void MainMenuManager::Start()
 
 void MainMenuManager::Update()
 {
+
+	//Start Play Button
 	if (playButton != nullptr)
 	{
 		if (playButton->IsPressed())
 		{
 			App->scene->GetLevelGenerator()->InitiateLevel(1);
+		}
+	}
+
+	//Continue Button
+	if (continueButton != nullptr)
+	{
+		if (continueButton->IsPressed())
+		{
+			//App->scene->GetLevelGenerator()->InitiateLevel(1);
+		}
+	}
+
+	//Start Play Button
+	if (optionsButton != nullptr)
+	{
+		if (optionsButton->IsPressed())
+		{
+			//App->scene->GetLevelGenerator()->InitiateLevel(1);
+		}
+	}
+
+	//Start Play Button
+	if (exitButton != nullptr)
+	{
+		if (exitButton->IsPressed())
+		{
+			SDL_Quit();
 		}
 	}
 	
