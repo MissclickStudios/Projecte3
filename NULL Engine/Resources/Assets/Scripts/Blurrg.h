@@ -7,8 +7,6 @@
 
 #include "MathGeoLib/include/Math/float2.h"
 
-class GameObject;
-
 enum class BlurrgState
 {
 	WANDER,
@@ -30,15 +28,11 @@ public:
 	Blurrg();
 	virtual ~Blurrg();
 
-	void SetUp();
-	void Update();
-	void CleanUp();
+	void SetUp() override;
+	void Update() override;
+	void CleanUp() override;
 
-	// Interactions
-	void TakeDamage(float damage);
-
-	// Effects
-	void Frozen();
+	void OnCollision(GameObject* object) override;
 
 	// Wander
 	float wanderRadius = 0.0f;
@@ -47,7 +41,7 @@ public:
 	float chaseDistance = 0.0f;
 	float chaseSpeedModifier = DEFAULT_MODIFIER;
 	float ChaseSpeed() { return Speed() * chaseSpeedModifier; }
-	GameObject* player;
+	GameObject* player = nullptr;
 
 	// Charge
 	float chargeDistance = 0.0f;
@@ -61,6 +55,7 @@ public:
 	float DashDuration() { return dashDuration / speedModifier; }
 	float dashCooldown = 0.0f;
 	float DashCooldown() { return dashCooldown / cooldownModifier; }
+	float dashDeccelerationRatio = 2.0f;
 
 	// Rest
 	float restDuration = 0.0f;
@@ -74,6 +69,7 @@ public:
 
 private:
 
+	void DistanceToPlayer();
 	void LookAtPlayer();
 
 	BlurrgState state = BlurrgState::WANDER;

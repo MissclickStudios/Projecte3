@@ -3,6 +3,7 @@
 #include "GameObject.h"
 #include "C_RigidBody.h"
 #include "C_Animator.h"
+#include "..\Helpers\Entity.h"
 
 Entity::Entity() : Script()
 {
@@ -36,10 +37,12 @@ void Entity::Start()
 void Entity::PreUpdate()
 {
 	// Set modifiers back to the default state
+	maxHealthModifier = 0.0f;
 	speedModifier = DEFAULT_MODIFIER;
 	attackSpeedModifier = DEFAULT_MODIFIER;
 	damageModifier = DEFAULT_MODIFIER;
 	defenseModifier = DEFAULT_MODIFIER;
+	cooldownModifier = DEFAULT_MODIFIER;
 
 	// Loop through the Effects and call the respective functions
 	for (uint i = 0; i < effects.size(); ++i)
@@ -79,11 +82,29 @@ void Entity::PostUpdate()
 	}
 }
 
+void Entity::OnCollision(GameObject* object)
+{
+}
+
 void Entity::Deactivate()
 {
 	for (uint i = 0; i < gameObject->components.size(); ++i)
 		gameObject->components[i]->SetIsActive(false);
 	gameObject->SetIsActive(false);
+}
+
+void Entity::TakeDamage(float damage)
+{
+	health -= damage / Defense();
+	if (health < 0.0f)
+		health = 0.0f;
+}
+
+void Entity::Heal(float amount)
+{
+	health += amount;
+	if (health > MaxHealth())
+		health = MaxHealth();
 }
 
 void Entity::AddEffect(EffectType type, float duration)
@@ -94,4 +115,10 @@ void Entity::AddEffect(EffectType type, float duration)
 		return;
 	effects.emplace_back(new Effect(type, duration)); // I use emplace instead of push to avoid unnecessary copies
 	++effectCounters[(uint)type]; // Add one to the counter of this effect
+}
+
+void Entity::Frozen()
+{
+	speedModifier /= 2.5;
+	attackSpeedModifier /= 2.5;
 }

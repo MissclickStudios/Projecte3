@@ -1,0 +1,232 @@
+#include "SandTrooper.h"
+
+#include "GameObject.h"
+#include "C_Transform.h"
+#include "C_RigidBody.h"
+
+SCRIPTS_FUNCTION Trooper* CreateTrooper()
+{
+	Trooper* script = new Trooper();
+
+	// Entity ---
+	// Health
+	INSPECTOR_DRAGABLE_FLOAT(script->health);
+	INSPECTOR_DRAGABLE_FLOAT(script->maxHealth);
+
+	// Basic Stats
+	INSPECTOR_DRAGABLE_FLOAT(script->speed);
+	INSPECTOR_DRAGABLE_FLOAT(script->attackSpeed);
+	INSPECTOR_DRAGABLE_FLOAT(script->damage);
+	INSPECTOR_DRAGABLE_FLOAT(script->defense);
+
+	// Modifiers
+	INSPECTOR_DRAGABLE_FLOAT(script->maxHealthModifier);
+	INSPECTOR_DRAGABLE_FLOAT(script->speedModifier);
+	INSPECTOR_DRAGABLE_FLOAT(script->attackSpeedModifier);
+	INSPECTOR_DRAGABLE_FLOAT(script->damageModifier);
+	INSPECTOR_DRAGABLE_FLOAT(script->defenseModifier);
+	INSPECTOR_DRAGABLE_FLOAT(script->cooldownModifier);
+
+	// Death
+	INSPECTOR_DRAGABLE_FLOAT(script->deathDuration);
+
+	// Trooper ---
+	// Movement
+	INSPECTOR_GAMEOBJECT(script->player);
+
+	// Chase
+	INSPECTOR_DRAGABLE_FLOAT(script->chaseDistance);
+	INSPECTOR_DRAGABLE_FLOAT(script->chaseSpeedModifier);
+
+	// Flee
+	INSPECTOR_DRAGABLE_FLOAT(script->fleeDistance);
+
+	// Attack
+	INSPECTOR_DRAGABLE_FLOAT(script->attackDistance);
+
+	return script;
+}
+
+
+Trooper::Trooper()
+{
+	POOPOOTIMER.Stop();
+}
+
+Trooper::~Trooper()
+{
+}
+
+void Trooper::SetUp()
+{
+}
+
+void Trooper::Update()
+{
+	ManageMovement();
+	if (moveState != TrooperState::DEAD)
+		ManageAim();
+}
+
+void Trooper::CleanUp()
+{
+}
+
+void Trooper::OnCollision(GameObject* object)
+{
+}
+
+void Trooper::DistanceToPlayer()
+{
+	float2 playerPosition, position;
+	playerPosition.x = player->transform->GetWorldPosition().x;
+	playerPosition.y = player->transform->GetWorldPosition().z;
+	position.x = gameObject->transform->GetWorldPosition().x;
+	position.y = gameObject->transform->GetWorldPosition().z;
+	aimDirection = playerPosition - position;
+
+	distance = aimDirection.Length();
+	// TODO: Separate aim and movement once the pathfinding is implemented
+	moveDirection = aimDirection;
+
+	if (!moveDirection.IsZero())
+		moveDirection.Normalize();
+}
+
+void Trooper::LookAtPlayer()
+{
+	float rad = aimDirection.AimedAngle();
+
+	// TODO: Rotate the Blurrg to face the player (waiting for the rigged mesh)
+}
+
+void Trooper::ManageMovement()
+{
+	if (moveState != TrooperState::DEAD)
+	{
+		if (health <= 0.0f)
+			moveState = TrooperState::DEAD_IN;
+		else
+		{
+			DistanceToPlayer();
+			if (moveState != TrooperState::PATROL)
+				LookAtPlayer();
+		}
+	}
+
+	switch (moveState)
+	{
+	case TrooperState::IDLE:
+		rigidBody->SetLinearVelocity(float3::zero);
+		//if (aimState == AimState::SHOOT) // Comented till the shooting system is in place
+		//	break;
+		if (distance > chaseDistance)
+		{
+			moveState = TrooperState::PATROL;
+			break;
+		}
+		if (distance > attackDistance)
+		{
+			moveState = TrooperState::CHASE;
+			break;
+		}
+		if (distance < fleeDistance)
+		{
+			moveState = TrooperState::FLEE;
+			break;
+		}
+		break;
+	case TrooperState::PATROL:
+		currentAnimation = &walkAnimation;
+		if (distance < chaseDistance)
+		{
+			moveState = TrooperState::CHASE;
+			break;
+		}
+		Patrol();
+		break;
+	case TrooperState::CHASE:
+		currentAnimation = &runAnimation;
+		if (distance < attackDistance)
+		{
+			moveState = TrooperState::IDLE;
+			break;
+		}
+		Chase();
+		break;
+	case TrooperState::FLEE:
+		currentAnimation = &fleeAnimation;
+		if (distance > fleeDistance)
+		{
+			moveState = TrooperState::IDLE;
+			break;
+		}
+		Flee();
+		break;
+	case TrooperState::DEAD_IN:
+		currentAnimation = &deathAnimation;
+		deathTimer.Start();
+		moveState = TrooperState::DEAD;
+
+	case TrooperState::DEAD:
+		Deactivate();
+		break;
+	}
+}
+
+void Trooper::ManageAim()
+{
+	switch (aimState)
+	{
+	case AimState::IDLE:
+		if (distance < attackDistance)
+			aimState = AimState::SHOOT_IN;
+		break;
+	case AimState::ON_GUARD:
+		aimState = AimState::IDLE;
+		break;
+	case AimState::SHOOT_IN:
+		currentAnimation = &shootAnimation;
+		POOPOOTIMER.Start();
+		aimState = AimState::SHOOT;
+
+	case AimState::SHOOT:
+		currentAnimation = &shootAnimation; // temporary till torso gets an independent animator
+		if (POOPOOTIMER.ReadSec() >= 0.6f)
+		{
+			aimState = AimState::ON_GUARD;
+			POOPOOTIMER.Stop();
+			currentAnimation = nullptr;
+		}
+		break;
+	case AimState::RELOAD_IN:
+		aimState = AimState::RELOAD;
+
+	case AimState::RELOAD:
+		aimState = AimState::ON_GUARD;
+		break;
+	case AimState::CHANGE_IN:
+		aimState = AimState::CHANGE;
+
+	case AimState::CHANGE:
+		aimState = AimState::ON_GUARD;
+		break;
+	}
+}
+
+void Trooper::Patrol()
+{
+	rigidBody->SetLinearVelocity(float3::zero);
+}
+
+void Trooper::Chase()
+{
+	float3 direction = { moveDirection.x, 0.0f, moveDirection.y };
+	rigidBody->SetLinearVelocity(direction * ChaseSpeed());
+}
+
+void Trooper::Flee()
+{
+	float3 direction = { -moveDirection.x, 0.0f, -moveDirection.y };
+	rigidBody->SetLinearVelocity(direction * ChaseSpeed());
+}

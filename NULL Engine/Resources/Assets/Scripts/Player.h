@@ -29,17 +29,11 @@ public:
 	void Update();
 	void CleanUp();
 
-	// Interactions
-	void TakeDamage(float damage);
-
-	// Effects
-	void Frozen();
-
 	// Dash
 	float dashSpeed = 0.0f;
 	float DashSpeed() { return dashSpeed * speedModifier; }
 	float dashDuration = 0.0f;
-	float DashDuration() { return dashSpeed / speedModifier; }
+	float DashDuration() { return dashDuration / speedModifier; }
 	float dashCooldown = 0.0f;
 	float DashCooldown() { return dashCooldown / cooldownModifier; }
 
@@ -49,7 +43,7 @@ public:
 	AnimationInfo shootAnimation = { "Shoot" };
 	AnimationInfo reloadAnimation = { "Reload" };
 	AnimationInfo changeAnimation = { "Change" };
-	AnimationInfo onGuardAnimation = { "onGuard" };
+	AnimationInfo onGuardAnimation = { "OnGuard" };
 
 private:
 	Timer POOPOOTIMER; // for testing porpouses, mom found the poop sock :skull:

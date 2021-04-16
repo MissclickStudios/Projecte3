@@ -44,26 +44,26 @@ Player* CreatePlayer()
 	INSPECTOR_DRAGABLE_FLOAT(script->dashDuration);
 	INSPECTOR_DRAGABLE_FLOAT(script->dashCooldown);
 
-	// Animations ---
-	// Movement
-	INSPECTOR_STRING(script->idleAnimation.name);
-	INSPECTOR_DRAGABLE_FLOAT(script->idleAnimation.blendTime);
-	INSPECTOR_STRING(script->runAnimation.name);
-	INSPECTOR_DRAGABLE_FLOAT(script->runAnimation.blendTime);
-	INSPECTOR_STRING(script->dashAnimation.name);
-	INSPECTOR_DRAGABLE_FLOAT(script->dashAnimation.blendTime);
-	INSPECTOR_STRING(script->deathAnimation.name);
-	INSPECTOR_DRAGABLE_FLOAT(script->deathAnimation.blendTime);
-
-	// Aim
-	INSPECTOR_STRING(script->shootAnimation.name);
-	INSPECTOR_DRAGABLE_FLOAT(script->shootAnimation.blendTime);
-	INSPECTOR_STRING(script->reloadAnimation.name);
-	INSPECTOR_DRAGABLE_FLOAT(script->reloadAnimation.blendTime);
-	INSPECTOR_STRING(script->changeAnimation.name);
-	INSPECTOR_DRAGABLE_FLOAT(script->changeAnimation.blendTime);
-	INSPECTOR_STRING(script->onGuardAnimation.name);
-	INSPECTOR_DRAGABLE_FLOAT(script->onGuardAnimation.blendTime);
+	//// Animations ---
+	//// Movement
+	//INSPECTOR_STRING(script->idleAnimation.name);
+	//INSPECTOR_DRAGABLE_FLOAT(script->idleAnimation.blendTime);
+	//INSPECTOR_STRING(script->runAnimation.name);
+	//INSPECTOR_DRAGABLE_FLOAT(script->runAnimation.blendTime);
+	//INSPECTOR_STRING(script->dashAnimation.name);
+	//INSPECTOR_DRAGABLE_FLOAT(script->dashAnimation.blendTime);
+	//INSPECTOR_STRING(script->deathAnimation.name);
+	//INSPECTOR_DRAGABLE_FLOAT(script->deathAnimation.blendTime);
+	//
+	//// Aim
+	//INSPECTOR_STRING(script->shootAnimation.name);
+	//INSPECTOR_DRAGABLE_FLOAT(script->shootAnimation.blendTime);
+	//INSPECTOR_STRING(script->reloadAnimation.name);
+	//INSPECTOR_DRAGABLE_FLOAT(script->reloadAnimation.blendTime);
+	//INSPECTOR_STRING(script->changeAnimation.name);
+	//INSPECTOR_DRAGABLE_FLOAT(script->changeAnimation.blendTime);
+	//INSPECTOR_STRING(script->onGuardAnimation.name);
+	//INSPECTOR_DRAGABLE_FLOAT(script->onGuardAnimation.blendTime);
 
 	return script;
 }
@@ -94,23 +94,15 @@ void Player::CleanUp()
 {
 }
 
-void Player::TakeDamage(float damage)
-{
-}
-
-void Player::Frozen()
-{
-}
-
 void Player::ManageMovement()
 {
 	if (moveState != PlayerState::DEAD)
 	{
-		if (moveState != PlayerState::DASH)
-			GatherMoveInputs();
-
 		if (health <= 0.0f)
-			moveState == PlayerState::DEAD_IN;
+			moveState = PlayerState::DEAD_IN;
+		else
+			if (moveState != PlayerState::DASH)
+				GatherMoveInputs();
 	}
 
 	if (rigidBody)

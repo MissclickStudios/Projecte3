@@ -16,14 +16,19 @@ class Effect
 {
 public:
 
-	Effect(EffectType type, float duration) : duration(duration)
+	Effect(EffectType type, float duration, bool permanent = false) : duration(duration), permanent(permanent)
 	{
 		if (type != EffectType::EFFECTS_NUM) // This avoids the game crashig if someone requests a EFFECTS_NUM effect by accident
 			this->type = type;
+
+		if (permanent)
+			timer.Stop();
 	}
 
 	const bool IsActive() const
 	{ 
+		if (permanent)
+			return true;
 		if (timer.ReadSec() >= duration) 
 			return false; 
 		return true; 
@@ -34,6 +39,7 @@ public:
 private:
 
 	EffectType type = EffectType::NONE;
+	bool permanent = false;
 	float duration = 0.0f;
 	Timer timer;
 };

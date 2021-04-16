@@ -10,6 +10,7 @@
 
 typedef unsigned int uint;
 
+class GameObject;
 class C_RigidBody;
 class C_Animator;
 
@@ -28,22 +29,25 @@ public:
 	void PostUpdate();
 	
 	virtual void CleanUp() = 0;
+
+	virtual void OnCollision(GameObject* object);
 	
 	void Deactivate();
 	
 	// Interactions
-	virtual void TakeDamage(float damage) = 0;
+	virtual void TakeDamage(float damage);
+	virtual void Heal(float amount);
 	void AddEffect(EffectType type, float duration);
 	
 	// Effect Functions
-	virtual void Frozen() = 0;
+	virtual void Frozen();
 	
 	// Type
 	EntityType type = EntityType::ENTITY;
 	
 	// Health
-	float health = 0.0f;
-	float maxHealth = 0.0f;
+	float health = 1.0f;
+	float maxHealth = 1.0f;
 	float MaxHealth() { maxHealth + maxHealthModifier; }
 	
 	// Basic Stats

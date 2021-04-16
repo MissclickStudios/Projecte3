@@ -47,22 +47,23 @@ Blurrg* CreateBlurrg()
 	INSPECTOR_DRAGABLE_FLOAT(script->dashSpeed);
 	INSPECTOR_DRAGABLE_FLOAT(script->dashDuration);
 	INSPECTOR_DRAGABLE_FLOAT(script->dashCooldown);
+	INSPECTOR_DRAGABLE_FLOAT(script->dashDeccelerationRatio);
 
 	// Rest
 	INSPECTOR_DRAGABLE_FLOAT(script->restDuration);
 
-	// Animations ---
-	// Movement
-	INSPECTOR_STRING(script->walkAnimation.name);
-	INSPECTOR_DRAGABLE_FLOAT(script->walkAnimation.blendTime);
-	INSPECTOR_STRING(script->chargeAnimation.name);
-	INSPECTOR_DRAGABLE_FLOAT(script->chargeAnimation.blendTime);
-	INSPECTOR_STRING(script->dashAnimation.name);
-	INSPECTOR_DRAGABLE_FLOAT(script->dashAnimation.blendTime);
-	INSPECTOR_STRING(script->restAnimation.name);
-	INSPECTOR_DRAGABLE_FLOAT(script->restAnimation.blendTime);
-	INSPECTOR_STRING(script->deathAnimation.name);
-	INSPECTOR_DRAGABLE_FLOAT(script->deathAnimation.blendTime);
+	//// Animations ---
+	//// Movement
+	//INSPECTOR_STRING(script->walkAnimation.name);
+	//INSPECTOR_DRAGABLE_FLOAT(script->walkAnimation.blendTime);
+	//INSPECTOR_STRING(script->chargeAnimation.name);
+	//INSPECTOR_DRAGABLE_FLOAT(script->chargeAnimation.blendTime);
+	//INSPECTOR_STRING(script->dashAnimation.name);
+	//INSPECTOR_DRAGABLE_FLOAT(script->dashAnimation.blendTime);
+	//INSPECTOR_STRING(script->restAnimation.name);
+	//INSPECTOR_DRAGABLE_FLOAT(script->restAnimation.blendTime);
+	//INSPECTOR_STRING(script->deathAnimation.name);
+	//INSPECTOR_DRAGABLE_FLOAT(script->deathAnimation.blendTime);
 
 	return script;
 }
@@ -85,8 +86,18 @@ void Blurrg::SetUp()
 
 void Blurrg::Update()
 {
-	if (state == BlurrgState::CHASE && player)
-		LookAtPlayer();
+	if (state != BlurrgState::DEAD)
+	{
+		if (health <= 0.0f)
+			state = BlurrgState::DEAD_IN;
+		else
+			if ((state == BlurrgState::WANDER || state == BlurrgState::CHASE) && player)
+			{
+				DistanceToPlayer();
+				if (state == BlurrgState::CHASE)
+					LookAtPlayer();
+			}
+	}
 
 	if (rigidBody)
 		switch (state)
@@ -106,7 +117,7 @@ void Blurrg::Update()
 				state = BlurrgState::WANDER;
 				break;
 			}
-			else if (distance < chargeDistance && dashCooldownTimer.ReadSec() >= DashCooldown())
+			else if (distance < chargeDistance && (dashCooldownTimer.ReadSec() >= DashCooldown() || !dashCooldownTimer.IsActive()))
 			{
 				state = BlurrgState::CHARGE_IN;
 				break;
@@ -116,6 +127,7 @@ void Blurrg::Update()
 			break;
 		case BlurrgState::CHARGE_IN:
 			currentAnimation = &chargeAnimation;
+			rigidBody->SetLinearVelocity(float3::zero);
 			chargeTimer.Start();
 			state = BlurrgState::CHARGE;
 
@@ -128,7 +140,7 @@ void Blurrg::Update()
 			break;
 		case BlurrgState::DASH_IN:
 			currentAnimation = &dashAnimation;
-			chargeTimer.Start();
+			dashTimer.Start();
 			state = BlurrgState::DASH;
 
 		case BlurrgState::DASH:
@@ -137,11 +149,12 @@ void Blurrg::Update()
 			{
 				dashTimer.Stop();
 				dashCooldownTimer.Start();
-				state = BlurrgState::REST;
+				state = BlurrgState::REST_IN;
 			}
 			break;
 		case BlurrgState::REST_IN:
 			currentAnimation = &restAnimation;
+			rigidBody->SetLinearVelocity(float3::zero);
 			restTimer.Start();
 			state = BlurrgState::REST;
 
@@ -167,18 +180,11 @@ void Blurrg::CleanUp()
 {
 }
 
-void Blurrg::TakeDamage(float damage)
-{
-	health -= damage / Defense();
-	if (health < 0.0f)
-		health = 0.0f;
-}
-
-void Blurrg::Frozen()
+void Blurrg::OnCollision(GameObject* object)
 {
 }
 
-void Blurrg::LookAtPlayer()
+void Blurrg::DistanceToPlayer()
 {
 	float2 playerPosition, position;
 	playerPosition.x = player->transform->GetWorldPosition().x;
@@ -191,8 +197,13 @@ void Blurrg::LookAtPlayer()
 
 	if (!moveDirection.IsZero())
 		moveDirection.Normalize();
+}
 
+void Blurrg::LookAtPlayer()
+{
 	float rad = moveDirection.AimedAngle();
+
+	// TODO: Rotate the Blurrg to face the player (waiting for the rigged mesh)
 }
 
 void Blurrg::Wander()
@@ -208,7 +219,8 @@ void Blurrg::Chase()
 
 void Blurrg::Dash()
 {
-	float decceleration = (dashTimer.ReadSec() / DashDuration()) * 1.5f;
+	float secondsToStop = DashDuration() - dashTimer.ReadSec(); // Don't want to explain this by text
+	float decceleration = (secondsToStop / DashDuration()) * dashDeccelerationRatio; // if u have any doubts or questions ask me -> @David Rami
 	if (decceleration > 1.0f)
 		decceleration = 1.0f;
 
