@@ -965,30 +965,17 @@ std::string M_FileSystem::GetFileAndExtension(const char* path)
 {
 	std::string fullPath	= path;
 	std::string file		= "";
-	std::string extension	= "";															// Just for safety check purposes.
 
-	fullPath = NormalizePath(fullPath.c_str());											// Will swap all '\\' for '/'.														
-
-	size_t fileStart		= fullPath.find_last_of("/");									// Gets the position of the last '/' of the string. Returns npos if none was found.
-	size_t extensionStart	= fullPath.find_last_of(".");									// Gets the position of the last '.' of the string. Returns npos if none was found.
-
+	fullPath			= NormalizePath(fullPath.c_str());										// Will swap all '\\' for '/'.														
+	size_t fileStart	= fullPath.find_last_of("/");											// Gets the position of the last '/' of the string. Returns npos if none was found.
+	
 	if (fileStart != std::string::npos)
 	{
-		file = fullPath.substr(fileStart + 1, fullPath.size());							// Will get the string past the last slash
+		file = fullPath.substr(fileStart + 1, fullPath.size());									// Will get the string past the last slash
 	}
 	else
 	{
 		LOG("[WARNING] File System: Path %s does not have any file!", path);
-	}
-
-	if (extensionStart != std::string::npos)
-	{
-		extension = fullPath.substr(extensionStart + 1, fullPath.size());				// Will get the string past the last dot of the path string. Ex: File.ext --> ext
-
-		if (extension == "")
-		{
-			LOG("[WARNING] File System: Path %s does not have any file extension!", path);
-		}
 	}
 
 	return file;
@@ -997,8 +984,8 @@ std::string M_FileSystem::GetFileAndExtension(const char* path)
 std::string M_FileSystem::GetLastDirectoryAndFile(const char* path)
 {
 	std::string fullPath	= NormalizePath(path);
-	std::string dirPath	= "";
-	std::string lastDir	= "";
+	std::string dirPath		= "";
+	std::string lastDir		= "";
 	std::string file		= "";
 
 	SplitFilePath(path, &dirPath, &file, nullptr);
