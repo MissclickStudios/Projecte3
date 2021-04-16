@@ -3,18 +3,27 @@
 
 #include <string>
 
+class Resource;
+
 enum class ResourceType;
+
+typedef unsigned __int32 uint32;
 
 class ResourceBase														// Later make Resource inherit from this.
 {
 public:
-	ResourceBase(std::string libraryPath, ResourceType type);
+	ResourceBase(uint32 UID, const std::string& assetsPath, const std::string& libraryPath, const ResourceType& type);
+	ResourceBase(const Resource* resource);
 	~ResourceBase();
 
 	bool CleanUp();
 
 public:
+	uint32 UID;
+
+	std::string assetsPath;
 	std::string libraryPath;
+	
 	ResourceType type;
 
 private:

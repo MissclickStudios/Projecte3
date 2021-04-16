@@ -251,7 +251,7 @@ uint M_ResourceManager::SaveResourceToLibrary(Resource* resource)
 		SaveMetaFile(resource);
 	}
 
-	library.emplace(resource->GetUID(), ResourceBase(resource->GetLibraryPath(), resource->GetType()));
+	library.emplace(resource->GetUID(), ResourceBase(resource));
 
 	return written;
 }
@@ -1426,33 +1426,26 @@ bool M_ResourceManager::GetResourceBasesFromMeta(const char* assetsPath, std::ve
 	std::string extension = "[NONE]";
 
 	// --- MAIN RESOURCE
-	uint32 resourceUid		= (uint32)metaRoot.GetNumber("UID");
-	ResourceType type		= (ResourceType)((int)metaRoot.GetNumber("Type"));
-	bool success			= GetLibraryDirectoryAndExtensionFromType(type, directory, extension);
-	if (!success)
-	{
-		LOG("%s! Error: Could not get the Library Directory and Extension from Resource Type.", errorString.c_str());
-		return false;
-	}
-	if (resourceUid == 0)
+	uint32 UID					= (uint32)metaRoot.GetNumber("UID");
+	ResourceType type			= (ResourceType)((int)metaRoot.GetNumber("Type"));
+	std::string rAssetsPath		= metaRoot.GetString("Name");
+	std::string rLibraryPath	= metaRoot.GetString("LibraryPath");
+	bool success				= GetAssetsDirectoryAndExtensionFromType(type, directory, extension);
+	if (UID == 0)
 	{
 		LOG("%s! Error: Main Resource UID was 0.", errorString.c_str());
 		return false;
 	}
-	if (directory == "[NONE]" || extension == "[NONE]")
-	{
-		LOG("%s! Error: Main Resource Library Directory or Extension strings were not valid.", errorString.c_str());
-		return false;
-	}
 
-	std::string libraryPath = directory + std::to_string(resourceUid) + extension;
-	resourceBases.push_back(ResourceBase(libraryPath, type));
+	rAssetsPath = directory + rAssetsPath;
+	resourceBases.push_back(ResourceBase(UID, rAssetsPath, rLibraryPath, type));
 
 	// --- CONTAINED RESOURCES
-	ParsonNode containedNode	= ParsonNode();
-	uint32 containedUid			= 0;
-	ResourceType containedType	= ResourceType::NONE;
-	std::string containedPath	= "[NONE]";
+	ParsonNode containedNode			= ParsonNode();
+	uint32 containedUID					= 0;
+	ResourceType containedType			= ResourceType::NONE;
+	std::string containedAssetsPath		= "[NONE]";
+	std::string containedLibraryPath	= "[NONE]";
 	for (uint i = 0; i < containedArray.size; ++i)
 	{
 		containedNode = containedArray.GetNode(i);
@@ -1464,24 +1457,43 @@ bool M_ResourceManager::GetResourceBasesFromMeta(const char* assetsPath, std::ve
 		directory = "[NONE]";
 		extension = "[NONE]";
 
-		containedUid	= (uint32)containedNode.GetNumber("UID");
-		containedType	= (ResourceType)((int)containedNode.GetNumber("Type"));
-		success			= GetLibraryDirectoryAndExtensionFromType(containedType, directory, extension);
+		containedUID			= (uint32)containedNode.GetNumber("UID");
+		containedType			= (ResourceType)((int)containedNode.GetNumber("Type"));
+		containedAssetsPath		= containedNode.GetString("Name");
+		containedLibraryPath	= containedNode.GetString("LibraryPath");
+		success					= GetAssetsDirectoryAndExtensionFromType(containedType, directory, extension);
 		if (!success)
 		{
 			continue;
 		}
-		if (containedUid == 0)
-		{
-			continue;
-		}
-		if (directory == "[NONE]" || extension == "[NONE]")
+		if (containedUID == 0)
 		{
 			continue;
 		}
 
-		containedPath = directory + std::to_string(containedUid) + extension;
-		resourceBases.push_back(ResourceBase(containedPath, containedType));
+		containedAssetsPath = directory + containedAssetsPath;
+		resourceBases.push_back(ResourceBase(containedUID, containedAssetsPath, containedLibraryPath, containedType));
+	}
+	
+	return true;
+}
+
+bool M_ResourceManager::GetAssetsDirectoryAndExtensionFromType(const ResourceType& type, std::string& directory, std::string& extension)				// Extensions are a WIP.
+{
+	switch (type)
+	{
+	case ResourceType::MODEL:			{ directory = ASSETS_MODELS_PATH;			/*extension = MODELS_EXTENSION;*/ }				break;
+	case ResourceType::MESH:			{ directory = ASSETS_MODELS_PATH;			/*extension = MESHES_EXTENSION;*/ }				break;
+	case ResourceType::MATERIAL:		{ directory = ASSETS_MODELS_PATH;			/*extension = MATERIALS_EXTENSION;*/ }			break;
+	case ResourceType::TEXTURE:			{ directory = ASSETS_TEXTURES_PATH;			/*extension = TEXTURES_EXTENSION;*/ }			break;
+	case ResourceType::FOLDER:			{ /*directory = ASSETS_FOLDERS_PATH;			extension = FOLDERS_EXTENSION;*/ }			break;
+	case ResourceType::SCENE:			{ directory = ASSETS_SCENES_PATH;			/*extension = SCENES_EXTENSION;*/ }				break;
+	case ResourceType::ANIMATION:		{ directory = ASSETS_MODELS_PATH;			/*extension = ANIMATIONS_EXTENSION;*/ }			break;
+	case ResourceType::SHADER:			{ directory = ASSETS_SHADERS_PATH;			/*extension = SHADERS_EXTENSION;*/ }			break;
+	case ResourceType::PARTICLE_SYSTEM:	{ directory = ASSETS_PARTICLESYSTEMS_PATH;	/*extension = PARTICLESYSTEMS_EXTENSION;*/ }	break;
+	case ResourceType::SCRIPT:			{ directory = ASSETS_SCRIPTS_PATH;			/*extension = SCRIPTS_EXTENSION;*/ }			break;
+	case ResourceType::NAVMESH:			{ directory = ASSETS_NAVIGATION_PATH;		/*extension = NAVMESH_EXTENSION;*/ }			break;
+	case ResourceType::NONE:			{ return false; }																			break;
 	}
 	
 	return true;
