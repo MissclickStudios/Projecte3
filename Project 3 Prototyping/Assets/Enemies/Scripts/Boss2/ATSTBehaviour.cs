@@ -8,6 +8,7 @@ public class ATSTBehaviour : MonoBehaviour
 
     private bool readyPointAttack;
     private bool readyWaveAttack;
+    private bool readyGranadeAttack;
 
     private bool chasing;
 
@@ -31,6 +32,7 @@ public class ATSTBehaviour : MonoBehaviour
 
         readyPointAttack = false;
         readyWaveAttack = false;
+
     }
 
     // Update is called once per frame
@@ -55,15 +57,15 @@ public class ATSTBehaviour : MonoBehaviour
 
         if (readyPointAttack == true)
         {
-            pointAttackMov();
+            //pointAttackMov();
 
             pointAttackFireRate += Time.deltaTime;
             pointAttackDuration -= Time.deltaTime;
 
-            if (pointAttackFireRate >= 0.15f)
+            if (pointAttackFireRate >= 0.1f)
             {
                 startPoint = shootSource.transform.position;
-                pointAttack(SA1numProjectiles);
+                pointAttack();
                 pointAttackFireRate = 0;
             }
 
@@ -86,7 +88,7 @@ public class ATSTBehaviour : MonoBehaviour
             waveAttackFireRate += Time.deltaTime;
             waveAttackDuration -= Time.deltaTime;
 
-            if (waveAttackFireRate >= 0.5f)
+            if (waveAttackFireRate >= 0.6f)
             {
                 startPoint = waveShootSource.transform.position;
                 waveAttack(waveNumProjectiles);
@@ -96,10 +98,19 @@ public class ATSTBehaviour : MonoBehaviour
             if (waveAttackDuration < 0.0f)
             {
                 readyWaveAttack = false;
-                waveAttackDuration = 5.0f;
-                //next attack
+
+                pointAttackDuration = 10.0f;
+
+                grenadeAttackPrep();
             }
         }
+
+        if (readyGranadeAttack == true)
+        {
+
+        }
+
+
 
     }
 
@@ -205,35 +216,25 @@ public class ATSTBehaviour : MonoBehaviour
 
     //---------------------------------------------------------------------------------
     [Header("Point Attack Settings")]
-    public int SA1numProjectiles;
-    public float SA1projectileSpeed;
-    public GameObject SA1projectile;
+    public GameObject pointAttack1Bullet;
     public Transform shootSource;
+    public Transform pointAttack1RightArm;
+    public Transform pointAttack1LeftArm;
+    public float pointAttack1BulletSpeed = 100;
 
-    private Vector3 startPoint;
-    private const float radius = 1F;
-
-    void pointAttack(int _SA1numProjectiles)
+    void pointAttack()
     {
-        float startAngle = 160f, endAngle = 200f;
-        float angleStep = (endAngle - startAngle) / _SA1numProjectiles;
-        float angle = startAngle;
+        rotatoryPiece.transform.LookAt(chasingTarget.position);
 
-        for (int i = 1; i <= _SA1numProjectiles + 1; i++)
-        {
-            // Direction Calculation
+        GameObject myBulletPrefab = Instantiate(pointAttack1Bullet, pointAttack1RightArm.position, Quaternion.identity) as GameObject;
+        Rigidbody myBulletPrefabRigidBody = myBulletPrefab.GetComponent<Rigidbody>();
+        myBulletPrefabRigidBody.AddForce(transform.forward * pointAttack1BulletSpeed);
 
-            float projectileDirXPosition = startPoint.x + Mathf.Sin((angle * Mathf.PI) / 180) * radius;
-            float projectileDirYPosition = startPoint.y + Mathf.Cos((angle * Mathf.PI) / 180) * radius;
+        GameObject myBulletPrefab2 = Instantiate(pointAttack1Bullet, pointAttack1LeftArm.position, Quaternion.identity) as GameObject;
+        Rigidbody myBulletPrefabRigidBody2 = myBulletPrefab2.GetComponent<Rigidbody>();
+        myBulletPrefabRigidBody2.AddForce(transform.forward * pointAttack1BulletSpeed);
 
-            Vector3 projectileVector = new Vector3(projectileDirXPosition, projectileDirYPosition, 0);
-            Vector3 projectileMoveDirection = (projectileVector - startPoint).normalized * SA1projectileSpeed;
-
-            GameObject tmpObj = Instantiate(SA1projectile, startPoint, Quaternion.identity);
-            tmpObj.GetComponent<Rigidbody>().velocity = new Vector3(projectileMoveDirection.x, 0, projectileMoveDirection.y);
-
-            angle += angleStep;
-        }
+        sAttack1FireRate = 0;
     }
     //---------------------------------------------------------------------------------
 
@@ -241,7 +242,6 @@ public class ATSTBehaviour : MonoBehaviour
     [Header("Preparing Wave Attack Settings")]
     public Transform waveTarget;
     public Transform waveBoss;
-    public float waveSpeed = 1.0f;
 
     void waveAttackPrep()
     {
@@ -291,10 +291,11 @@ public class ATSTBehaviour : MonoBehaviour
     public Transform waveShootSource;
 
     private const float waveRadius = 1F;
+    private Vector3 startPoint;
 
     void waveAttack(int _waveNumProjectiles)
     {
-        float startAngle = 140f, endAngle = 180f;
+        float startAngle = 200f, endAngle = 170f;
         float angleStep = (endAngle - startAngle) / _waveNumProjectiles;
         float angle = startAngle;
 
@@ -327,14 +328,14 @@ public class ATSTBehaviour : MonoBehaviour
 
         if (grenadeBoss.transform.position == grenadeTarget.transform.position)
         {
-            readyWaveAttack = true;
+            readyGranadeAttack = true;
         }
     }
     //---------------------------------------------------------------------------------
 
     //---------------------------------------------------------------------------------
-    
 
+    
 }
 
 
