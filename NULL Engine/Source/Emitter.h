@@ -7,6 +7,7 @@
 
 class R_Texture;
 class ParsonNode;
+class ResourceBase;
 
 class NULL_API Emitter
 {
@@ -26,7 +27,7 @@ public:
 	bool DeleteModuleFromType(ParticleModule::Type type);
 
 	void SetTexture(R_Texture* newTexture);
-
+	void SetTexture(ResourceBase newTexture);
 public:
 	std::vector<ParticleModule*> modules;
 	

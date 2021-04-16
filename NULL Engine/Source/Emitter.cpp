@@ -1,5 +1,7 @@
 #include "JSONParser.h"
 #include "Application.h"
+
+#include "ResourceBase.h"
 #include "M_ResourceManager.h"
 
 #include "ParticleModule.h"
@@ -12,9 +14,9 @@
 
 Emitter::Emitter()
 {
-	//std::vector<R_Texture*> textures;
-	//App->resourceManager->GetAllTextures(textures);
-	//emitterTexture = (*textures.begin()); //TODO find a default emitter texture
+	std::vector<ResourceBase> textures;
+	App->resourceManager->GetResourceBases<R_Texture>(textures);
+	emitterTexture = (R_Texture*)App->resourceManager->GetResourceFromLibrary(textures.begin()->assetsPath.c_str());
 }
 
 void Emitter::Update(float dt)
@@ -167,4 +169,22 @@ void Emitter::SetTexture(R_Texture* newTexture)
 		}
 
 	}
+}
+
+void Emitter::SetTexture(ResourceBase newTexture)
+{
+	
+	R_Texture* a = (R_Texture*)App->resourceManager->GetResourceFromLibrary(newTexture.assetsPath.c_str());
+
+	if (a != nullptr)
+	{
+		App->resourceManager->FreeResource(emitterTexture->GetUID());
+		emitterTexture = a;
+	}
+	else
+	{
+		LOG("COuld not find Texture %s for emitter", newTexture.assetsPath.c_str());
+	}
+
+	
 }
