@@ -25,6 +25,8 @@ void Entity::Start()
 	if (rigidBody && rigidBody->IsStatic())
 		rigidBody = nullptr;
 
+	memset(effectCounters, 0, (uint)EffectType::EFFECTS_NUM); // Set all the counters to zero
+
 	animator = gameObject->GetComponent<C_Animator>();
 	currentAnimation = &idleAnimation;
 
@@ -56,6 +58,7 @@ void Entity::PreUpdate()
 			delete effects[i];
 			effects.erase(effects.begin() + i);
 			--i;
+			--effectCounters[(uint)effects[i]->Type()]; // Substract one to the counter of this effect
 		}
 	}
 }
@@ -85,5 +88,10 @@ void Entity::Deactivate()
 
 void Entity::AddEffect(EffectType type, float duration)
 {
+	// TODO: System to add a max stack to each effect so that more than one can exist at once
+
+	if (effectCounters[(uint)type]) // Check that this effect is not already on the entity
+		return;
 	effects.emplace_back(new Effect(type, duration)); // I use emplace instead of push to avoid unnecessary copies
+	++effectCounters[(uint)type]; // Add one to the counter of this effect
 }

@@ -46,19 +46,25 @@ public:
 	// Chase
 	float chaseDistance = 0.0f;
 	float chaseSpeedModifier = DEFAULT_MODIFIER;
+	float ChaseSpeed() { return Speed() * chaseSpeedModifier; }
 	GameObject* player;
 
 	// Charge
 	float chargeDistance = 0.0f;
 	float chargeDuration = 0.0f;
+	float ChargeDuration() { return chargeDuration / attackSpeedModifier; }
 
 	// Dash
 	float dashSpeed = 0.0f;
+	float DashSpeed() { return dashSpeed * speedModifier; }
 	float dashDuration = 0.0f;
+	float DashDuration() { return dashDuration / speedModifier; }
 	float dashCooldown = 0.0f;
+	float DashCooldown() { return dashCooldown / cooldownModifier; }
 
 	// Rest
 	float restDuration = 0.0f;
+	float RestDuration() { return restDuration / attackSpeedModifier; }
 
 	// Animations
 	AnimationInfo walkAnimation = { "Walk" };

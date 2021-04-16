@@ -8,7 +8,7 @@
 
 #include "MathGeoLib/include/Math/float2.h"
 
-enum class PlayerMoveState
+enum class PlayerState
 {
 	IDLE,
 	RUN,
@@ -37,17 +37,23 @@ public:
 
 	// Dash
 	float dashSpeed = 0.0f;
+	float DashSpeed() { return dashSpeed * speedModifier; }
 	float dashDuration = 0.0f;
+	float DashDuration() { return dashSpeed / speedModifier; }
 	float dashCooldown = 0.0f;
+	float DashCooldown() { return dashCooldown / cooldownModifier; }
 
 	// Animations
 	AnimationInfo runAnimation = { "Run" };
 	AnimationInfo dashAnimation = { "Dash" };
 	AnimationInfo shootAnimation = { "Shoot" };
+	AnimationInfo reloadAnimation = { "Reload" };
+	AnimationInfo changeAnimation = { "Change" };
+	AnimationInfo onGuardAnimation = { "onGuard" };
 
 private:
 	Timer POOPOOTIMER; // for testing porpouses, mom found the poop sock :skull:
-	PlayerMoveState moveState = PlayerMoveState::IDLE;
+	PlayerState moveState = PlayerState::IDLE;
 	AimState aimState = AimState::IDLE;
 
 	// Logic

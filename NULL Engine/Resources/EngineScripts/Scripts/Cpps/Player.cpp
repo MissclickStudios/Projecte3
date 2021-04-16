@@ -28,10 +28,12 @@ Player* CreatePlayer()
 	INSPECTOR_DRAGABLE_FLOAT(script->defense);
 
 	// Modifiers
+	INSPECTOR_DRAGABLE_FLOAT(script->maxHealthModifier);
 	INSPECTOR_DRAGABLE_FLOAT(script->speedModifier);
 	INSPECTOR_DRAGABLE_FLOAT(script->attackSpeedModifier);
 	INSPECTOR_DRAGABLE_FLOAT(script->damageModifier);
 	INSPECTOR_DRAGABLE_FLOAT(script->defenseModifier);
+	INSPECTOR_DRAGABLE_FLOAT(script->cooldownModifier);
 
 	// Death
 	INSPECTOR_DRAGABLE_FLOAT(script->deathDuration);
@@ -56,12 +58,12 @@ Player* CreatePlayer()
 	// Aim
 	INSPECTOR_STRING(script->shootAnimation.name);
 	INSPECTOR_DRAGABLE_FLOAT(script->shootAnimation.blendTime);
-	//INSPECTOR_STRING(script->reloadAnimation.name);
-	//INSPECTOR_DRAGABLE_FLOAT(script->reloadAnimation.blendTime);
-	//INSPECTOR_STRING(script->changeAnimation.name);
-	//INSPECTOR_DRAGABLE_FLOAT(script->changeAnimation.blendTime);
-	//INSPECTOR_STRING(script->onGuardAnimation.name);
-	//INSPECTOR_DRAGABLE_FLOAT(script->onGuardAnimation.blendTime);
+	INSPECTOR_STRING(script->reloadAnimation.name);
+	INSPECTOR_DRAGABLE_FLOAT(script->reloadAnimation.blendTime);
+	INSPECTOR_STRING(script->changeAnimation.name);
+	INSPECTOR_DRAGABLE_FLOAT(script->changeAnimation.blendTime);
+	INSPECTOR_STRING(script->onGuardAnimation.name);
+	INSPECTOR_DRAGABLE_FLOAT(script->onGuardAnimation.blendTime);
 
 	return script;
 }
@@ -84,7 +86,8 @@ void Player::SetUp()
 void Player::Update()
 {
 	ManageMovement();
-	ManageAim();
+	if (moveState != PlayerState::DEAD)
+		ManageAim();
 }
 
 void Player::CleanUp()
@@ -101,48 +104,48 @@ void Player::Frozen()
 
 void Player::ManageMovement()
 {
-	if (moveState != PlayerMoveState::DEAD)
+	if (moveState != PlayerState::DEAD)
 	{
-		if (moveState != PlayerMoveState::DASH)
+		if (moveState != PlayerState::DASH)
 			GatherMoveInputs();
 
 		if (health <= 0.0f)
-			moveState == PlayerMoveState::DEAD_IN;
+			moveState == PlayerState::DEAD_IN;
 	}
 
 	if (rigidBody)
 		switch (moveState)
 		{
-		case PlayerMoveState::IDLE:
-			rigidBody->SetLinearVelocity(float3::zero);
+		case PlayerState::IDLE:
 			currentAnimation = &idleAnimation;
+			rigidBody->SetLinearVelocity(float3::zero);
 			break;
-		case PlayerMoveState::RUN:
-			Movement();
+		case PlayerState::RUN:
 			currentAnimation = &runAnimation;
+			Movement();
 			break;
-		case PlayerMoveState::DASH_IN: // The first frame after dashing
+		case PlayerState::DASH_IN:
+			currentAnimation = &dashAnimation;
 			Dash();
 			dashTimer.Start();
-			moveState = PlayerMoveState::DASH;
-			currentAnimation = &dashAnimation;
-			break;
-		case PlayerMoveState::DASH:
-			if (dashTimer.ReadSec() >= dashDuration) // When the dash duration ends start the cooldown and reset the move state
+			moveState = PlayerState::DASH;
+
+		case PlayerState::DASH:
+			if (dashTimer.ReadSec() >= DashDuration()) // When the dash duration ends start the cooldown and reset the move state
 			{
 				dashTimer.Stop();
 				dashCooldownTimer.Start();
 
-				moveState = PlayerMoveState::IDLE;
+				moveState = PlayerState::IDLE;
 			}
 			break;
-		case PlayerMoveState::DEAD_IN: // The first frame after dying
-			rigidBody->SetIsActive(false); // Disable the rigidbody to avoid more interactions with other entities
-			moveState = PlayerMoveState::DEAD;
-			deathTimer.Start();
+		case PlayerState::DEAD_IN:
 			currentAnimation = &deathAnimation;
-			break;
-		case PlayerMoveState::DEAD:
+			rigidBody->SetIsActive(false); // Disable the rigidbody to avoid more interactions with other entities
+			deathTimer.Start();
+			moveState = PlayerState::DEAD;
+
+		case PlayerState::DEAD:
 			if (deathTimer.ReadSec() >= deathDuration)
 			{
 				// DYING THINGS
@@ -169,7 +172,7 @@ void Player::ManageAim()
 		currentAnimation = &shootAnimation;
 		POOPOOTIMER.Start();
 		aimState = AimState::SHOOT;
-		break;
+
 	case AimState::SHOOT:
 		currentAnimation = &shootAnimation; // temporary till torso gets an independent animator
 		if (POOPOOTIMER.ReadSec() >= 0.6f)
@@ -181,13 +184,13 @@ void Player::ManageAim()
 		break;
 	case AimState::RELOAD_IN:
 		aimState = AimState::RELOAD;
-		break;
+
 	case AimState::RELOAD:
 		aimState = AimState::ON_GUARD;
 		break;
 	case AimState::CHANGE_IN:
 		aimState = AimState::CHANGE;
-		break;
+
 	case AimState::CHANGE:
 		aimState = AimState::ON_GUARD;
 		break;
@@ -197,21 +200,20 @@ void Player::ManageAim()
 void Player::GatherMoveInputs()
 {
 	// Controller movement
-	int movX = App->input->GetGameControllerAxisValue(0);
-	int movY = App->input->GetGameControllerAxisValue(1);
+	moveInput.x = (float)App->input->GetGameControllerAxisValue(0);
+	moveInput.y = (float)App->input->GetGameControllerAxisValue(1);
 	// Keyboard movement
-	if (movX == 0 && movY == 0)	// If there was no controller input
+	if (moveInput.IsZero())	// If there was no controller input
 	{
 		if (App->input->GetKey(SDL_SCANCODE_W) == KeyState::KEY_REPEAT)
-			movY = -MAX_INPUT;
+			moveInput.y = -MAX_INPUT;
 		if (App->input->GetKey(SDL_SCANCODE_S) == KeyState::KEY_REPEAT)
-			movY = MAX_INPUT;
+			moveInput.y = MAX_INPUT;
 		if (App->input->GetKey(SDL_SCANCODE_D) == KeyState::KEY_REPEAT)
-			movX = MAX_INPUT;
+			moveInput.x = MAX_INPUT;
 		if (App->input->GetKey(SDL_SCANCODE_A) == KeyState::KEY_REPEAT)
-			movX = -MAX_INPUT;
+			moveInput.x = -MAX_INPUT;
 	}
-	moveInput = { (float)movX, (float)movY };
 
 	if (!dashCooldownTimer.IsActive())
 	{
@@ -219,41 +221,40 @@ void Player::GatherMoveInputs()
 			|| App->input->GetGameControllerTrigger(0) == ButtonState::BUTTON_DOWN))
 		{
 			if (!dashTimer.IsActive())
-				moveState = PlayerMoveState::DASH_IN;
+				moveState = PlayerState::DASH_IN;
 
 			return;
 		}
 	}
-	else if (dashCooldownTimer.ReadSec() >= dashCooldown)
+	else if (dashCooldownTimer.ReadSec() >= DashCooldown())
 		dashCooldownTimer.Stop();
 
-	if (!moveInput.IsZero()) // Set the player in a running state if it's not dashing
+	if (!moveInput.IsZero())
 	{
-		moveState = PlayerMoveState::RUN;
+		moveState = PlayerState::RUN;
 		return;
 	}
 
-	moveState = PlayerMoveState::IDLE;
+	moveState = PlayerState::IDLE;
 }
 
 void Player::GatherAimInputs()
 {
 	// Controller aim
-	int aimX = App->input->GetGameControllerAxisValue(2);
-	int aimY = App->input->GetGameControllerAxisValue(3);
+	aimInput.x = (float)App->input->GetGameControllerAxisValue(2);
+	aimInput.y = (float)App->input->GetGameControllerAxisValue(3);
 	// Keyboard aim
-	if (aimX == 0 && aimY == 0)	// If there was no controller input
+	if (aimInput.IsZero())	// If there was no controller input
 	{
 		if (App->input->GetKey(SDL_SCANCODE_UP) == KeyState::KEY_REPEAT)
-			aimY = -MAX_INPUT;
+			aimInput.y = -MAX_INPUT;
 		if (App->input->GetKey(SDL_SCANCODE_DOWN) == KeyState::KEY_REPEAT)
-			aimY = MAX_INPUT;
+			aimInput.y = MAX_INPUT;
 		if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KeyState::KEY_REPEAT)
-			aimX = MAX_INPUT;
+			aimInput.x = MAX_INPUT;
 		if (App->input->GetKey(SDL_SCANCODE_LEFT) == KeyState::KEY_REPEAT)
-			aimX = -MAX_INPUT;
+			aimInput.x = -MAX_INPUT;
 	}
-	aimInput = { (float)aimX, (float)aimY };
 
 	if (App->input->GetKey(SDL_SCANCODE_F) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(1) == ButtonState::BUTTON_DOWN)
 	{
@@ -291,5 +292,5 @@ void Player::Dash()
 	float3 direction = { moveDirection.x, 0, moveDirection.y };
 	direction.Normalize();
 
-	rigidBody->SetLinearVelocity(direction * dashSpeed);
+	rigidBody->SetLinearVelocity(direction * DashSpeed());
 }
