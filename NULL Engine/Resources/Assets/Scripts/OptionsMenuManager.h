@@ -18,6 +18,11 @@ public:
 	std::string buttonName = "Back";
 private:
 	C_UI_Button* backButton;
+
+	void SetVsync(bool active);
+	void SetFrameCap(int frameCap);
+	void SetFullScreen(bool active);
+	void SetVolume(int volume);
 };
 
 SCRIPTS_FUNCTION OptionsMenuManager* CreateOptionsMenuManager() {

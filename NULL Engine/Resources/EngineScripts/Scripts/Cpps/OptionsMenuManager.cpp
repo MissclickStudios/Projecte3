@@ -5,6 +5,9 @@
 #include "LevelGenerator.h"
 #include "GameObject.h"
 #include "OptionsMenuManager.h"
+#include "M_Window.h"
+#include "M_Audio.h"
+#include "M_Renderer3D.h"
 
 OptionsMenuManager::OptionsMenuManager() : Script()
 {
@@ -29,5 +32,25 @@ void OptionsMenuManager::Update()
 
 		}
 	}
+
+}
+
+void OptionsMenuManager::SetVsync(bool active)
+{
+	App->renderer->SetVsync(active);
+}
+
+void OptionsMenuManager::SetFrameCap(int frameCap)
+{
+	App->SetFrameCap(frameCap);
+}
+
+void OptionsMenuManager::SetFullScreen(bool active)
+{
+	App->window->SetFullscreen(active);
+}
+
+void OptionsMenuManager::SetVolume(int volume)
+{
 
 }
