@@ -14,7 +14,6 @@ class NULL_API ResourceBase														// Later make Resource inherit from thi
 {
 public:
 	ResourceBase(uint32 UID, const std::string& assetsPath, const std::string& libraryPath, const ResourceType& type);
-	ResourceBase(uint32 UID, const std::string& assetsPath, const std::string& assetsFile, const std::string& libraryPath, const std::string& libraryFile, const ResourceType& type);
 	ResourceBase(const Resource* resource);
 	~ResourceBase();
 
@@ -24,9 +23,7 @@ public:
 	uint32 UID;
 
 	std::string assetsPath;
-	std::string assetsFile;
 	std::string libraryPath;
-	std::string libraryFile;
 	
 	ResourceType type;
 

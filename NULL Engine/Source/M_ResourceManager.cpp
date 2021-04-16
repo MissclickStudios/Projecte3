@@ -1441,9 +1441,14 @@ bool M_ResourceManager::GetResourceBasesFromMeta(const char* assetsPath, std::ve
 	resourceBases.push_back(ResourceBase(UID, rAssetsPath, rLibraryPath, type));
 
 	// --- CONTAINED RESOURCES
+	ParsonNode containedNode			= ParsonNode();
+	uint32 containedUID					= 0;
+	ResourceType containedType			= ResourceType::NONE;
+	std::string containedAssetsPath		= "[NONE]";
+	std::string containedLibraryPath	= "[NONE]";
 	for (uint i = 0; i < containedArray.size; ++i)
 	{
-		ParsonNode containedNode = containedArray.GetNode(i);
+		containedNode = containedArray.GetNode(i);
 		if (!containedNode.NodeIsValid())
 		{
 			continue;
@@ -1452,19 +1457,22 @@ bool M_ResourceManager::GetResourceBasesFromMeta(const char* assetsPath, std::ve
 		directory = "[NONE]";
 		extension = "[NONE]";
 
-		uint32 containedUID					= (uint32)containedNode.GetNumber("UID");
-		ResourceType containedType			= (ResourceType)((int)containedNode.GetNumber("Type"));
-		std::string containedAssetsPath		= containedNode.GetString("AssetsPath");
-		std::string containedAssetsFile		= containedNode.GetString("AssetsFile");
-		std::string containedLibraryPath	= containedNode.GetString("LibraryPath");
-		std::string containedLibraryFile	= containedNode.GetString("LibraryFile");
+		containedUID			= (uint32)containedNode.GetNumber("UID");
+		containedType			= (ResourceType)((int)containedNode.GetNumber("Type"));
+		containedAssetsPath		= containedNode.GetString("Name");
+		containedLibraryPath	= containedNode.GetString("LibraryPath");
+		success					= GetAssetsDirectoryAndExtensionFromType(containedType, directory, extension);
+		if (!success)
+		{
+			continue;
+		}
 		if (containedUID == 0)
 		{
 			continue;
 		}
 
 		containedAssetsPath = directory + containedAssetsPath;
-		resourceBases.push_back(ResourceBase(containedUID, containedAssetsFile, containedAssetsPath, containedLibraryFile, containedLibraryPath, containedType));
+		resourceBases.push_back(ResourceBase(containedUID, containedAssetsPath, containedLibraryPath, containedType));
 	}
 	
 	return true;
@@ -1760,12 +1768,9 @@ bool M_ResourceManager::SaveMetaFile(Resource* resource) const
 	ParsonNode metaRoot = ParsonNode();
 	metaRoot.SetNumber("UID", resource->GetUID());																											// --- GENERAL RESOURCE META DATA
 	metaRoot.SetNumber("Type", (uint)resource->GetType());																									// 
-	
-	metaRoot.SetString("Name", resource->GetAssetsFile());																							// 
-	metaRoot.SetString("LibraryFile", resource->GetLibraryFile());
-	metaRoot.SetString("AssetsPath", resource->GetAssetsPath());
+	metaRoot.SetString("Name", resource->GetAssetsFile());																									// 
+	// ASSETS PATH?
 	metaRoot.SetString("LibraryPath", resource->GetLibraryPath());																							// 
-	
 	metaRoot.SetNumber("ModificationTime", (double)App->fileSystem->GetLastModTime(resource->GetAssetsPath()));												// ------------------------------
 
 	resource->SaveMeta(metaRoot);																															// --- RESOURCE-SPECIFIC META DATA

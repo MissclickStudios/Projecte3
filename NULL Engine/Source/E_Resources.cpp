@@ -66,18 +66,6 @@ bool E_Resources::Draw(ImGuiIO& io)
 	std::multimap<uint, Resource*>::iterator rItem;
 	for (rItem = sorted.begin(); rItem != sorted.end(); ++rItem)
 	{
-		//ImGui::PushStyleColor(ImGuiCol_Text, Cyan.C_Array());
-		/*if (ImGui::TreeNodeEx(rItem->second->GetAssetsFile(), ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_OpenOnDoubleClick | ImGuiTreeNodeFlags_OpenOnArrow))
-		{
-			ImGui::TextColored(&Cyan, "%s", rItem->second->GetAssetsFile());
-
-			ImGui::Text("UID:");		ImGui::SameLine();	ImGui::TextColored(&Yellow, "       %lu", rItem->second->GetUID());
-			ImGui::Text("Type:");		ImGui::SameLine();	ImGui::TextColored(&Yellow, "      %s", rItem->second->GetTypeAsString());
-			ImGui::Text("References:");	ImGui::SameLine();	ImGui::TextColored(&Yellow, "%u", rItem->second->GetReferences());
-			
-			ImGui::TreePop();
-		}*/
-		
 		ImGui::TextColored(&Cyan, "%s", rItem->second->GetAssetsFile());
 
 		ImGui::Text("UID:");		ImGui::SameLine();	ImGui::TextColored(&Yellow, "       %lu",	rItem->second->GetUID());
