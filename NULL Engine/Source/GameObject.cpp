@@ -799,22 +799,6 @@ Component* GameObject::CreateComponent(ComponentType type)
 		return nullptr;
 	}
 
-#ifndef GAMEBUILD //TODO: Es pot posar + de 1 component script igual ???
-	//TODO: Maybe this is avoidable !!!!!!!!
-	/*std::vector<C_Script*>scripts;
-	if (type == ComponentType::SCRIPT && GetComponents<C_Script>(scripts)) 
-	{
-		for(int i = 0; i<scripts.size();++i)
-		{
-			if (!(scripts[i]->resource != nullptr)) 
-			{
-				LOG("[ERROR] Script Component could not be added to %s! Error: Empty Script to fill already exists!", name.c_str());
-				return nullptr;
-			}
-		}
-	}*/
-#endif
-
 	switch(type)
 	{
 	case ComponentType::TRANSFORM:			{ component = new C_Transform(this); }			break;

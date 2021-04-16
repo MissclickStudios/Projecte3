@@ -35,7 +35,7 @@
 #include "LevelGenerator.h"
 #include "Weapon.h"
 
-#include "Time.h"
+#include "MC_Time.h"
 
 #include "MathGeoLib/include/Geometry/Line.h"
 

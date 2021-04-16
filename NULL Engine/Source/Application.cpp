@@ -3,7 +3,7 @@
 #include <memory>				//Smart pointers*/
 
 #include "JSONParser.h"
-#include "Time.h"
+#include "MC_Time.h"
 #include "FrameData.h"
 #include "Hourglass.h"
 #include "Profiler.h"
@@ -142,8 +142,8 @@ bool Application::Init()
 		++item;
 	}
 
-	Time::Real::InitRealClock();
-	Time::Game::SetTimeScale(1.0f);
+	MC_Time::Real::InitRealClock();
+	MC_Time::Game::SetTimeScale(1.0f);
 
 	//PERF_TIMER_PEEK(perf_timer);
 
@@ -232,7 +232,7 @@ void Application::PrepareUpdate()
 {
 	static bool stepped = false;
 	
-	Time::Real::Update();
+	MC_Time::Real::Update();
 
 	if (stepped)																										// TMP. Dirty fix so Animations can be stepped. Clean Later.
 	{
@@ -242,7 +242,7 @@ void Application::PrepareUpdate()
 
 	if (gameState == GameState::PLAY || gameState == GameState::STEP)
 	{
-		Time::Game::Update();
+		MC_Time::Game::Update();
 
 		if (gameState == GameState::STEP)
 		{
@@ -261,7 +261,7 @@ UpdateStatus Application::PreUpdate()
 	{
 		if ((*item)->IsActive())
 		{
-			ret = (*item)->PreUpdate(Time::Game::GetDT());
+			ret = (*item)->PreUpdate(MC_Time::Game::GetDT());
 		}
 
 		++item;
@@ -289,7 +289,7 @@ UpdateStatus Application::DoUpdate()
 	{
 		if ((*item)->IsActive())
 		{
-			ret = (*item)->Update(Time::Game::GetDT());
+			ret = (*item)->Update(MC_Time::Game::GetDT());
 		}
 
 		++item;
@@ -317,7 +317,7 @@ UpdateStatus Application::PostUpdate()
 		if ((*item)->IsActive())
 		{
 			//ret = (*item)->PostUpdate(dt);
-			ret = (*item)->PostUpdate(Time::Game::GetDT());
+			ret = (*item)->PostUpdate(MC_Time::Game::GetDT());
 		}
 		
 		++item;
@@ -348,7 +348,7 @@ void Application::FinishUpdate()
 
 	if (framesAreCapped)
 	{
-		Time::Real::DelayUntilFrameCap(frameCap);
+		MC_Time::Real::DelayUntilFrameCap(frameCap);
 	}
 
 	if (displayFramerateData)
