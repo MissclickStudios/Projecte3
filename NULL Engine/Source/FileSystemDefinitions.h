@@ -41,6 +41,7 @@
 
 // File Extensions ----------------------------------
 #define ANIMATIONS_EXTENSION			".neanimat"
+#define ANIMATIONS2D_EXTENSION			".neanimat2d"
 #define FOLDERS_EXTENSION				".nefolder"
 #define MATERIALS_EXTENSION				".nemat"
 #define MESHES_EXTENSION				".nemesh"
@@ -51,10 +52,10 @@
 #define SCRIPTS_EXTENSION				".nescript"
 #define SHADERS_EXTENSION				".neshader"
 #define TEXTURES_EXTENSION				".netex"
+
 #define SCRIPT_AST_EXTENSION			".script"
 #define PARTICLESYSTEMS_AST_EXTENSION	".particles"
 #define NAVMESH_AST_EXTENSION			".navmesh"
-#define ANIMATIONS2D_EXTENSION			".neanimat2d"
 
 #define PREFAB_EXTENSION				".prefab"
 

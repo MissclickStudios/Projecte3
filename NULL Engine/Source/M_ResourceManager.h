@@ -98,7 +98,7 @@ public:																								// --- RESOURCE MANAGER API ---
 	}
 
 	template <typename T>
-	bool GetResources(std::vector<T*>& resourcesWithType) const
+	bool GetResources(std::vector<T*>& resourcesWithType) const											// Remember to free the resources after finishing working with the vector.
 	{
 		if (resources.empty())
 			return false;
@@ -108,6 +108,7 @@ public:																								// --- RESOURCE MANAGER API ---
 			if (resource->second->GetType() == T::GetType())
 			{
 				resourcesWithType.push_back((T*)resource->second);										// Request here? Leave it to the user? bool argument?
+				++(*resourcesWithType)->references;
 			}
 		}
 		
@@ -117,9 +118,40 @@ public:																								// --- RESOURCE MANAGER API ---
 	template <typename T>
 	bool GetResourcesFromLibrary(std::vector<T*>& resourcesWithType)
 	{
-		
+		if (library.empty())
+			return false;
+
+		for (auto libItem = library.cbegin(); libItem != library.cend(); ++libItem)
+		{
+			if (libItem->second.type == T::GetType())
+			{
+				if (AllocateResource(libItem->second.UID, libItem->second.assetsPath.c_str()))
+				{
+					T* resource = (T*)RequestResource(libItem->second.UID);
+					if (resource != nullptr)
+					{
+						resourcesWithType.push_back(resource);
+					}
+				}
+			}
+		}
 		
 		return !resourcesWithType.empty();
+	}
+
+	template <typename T>
+	bool GetResourceBases(std::vector<ResourceBase>& resourceBases)
+	{
+		if (library.empty())
+			return false;
+
+		for (auto libItem = library.cbegin(); libItem != library.cend(); ++libItem)
+		{
+			if (libItem->second.type == T::GetType())
+			{
+				resourceBases.push_back(libItem->second);
+			}
+		}
 	}
 
 	R_Shader*		GetShader						(const char* name);															// Look for a shader in the library and load and return it
@@ -167,6 +199,7 @@ private:																														// --- ASSETS MONITORING METHODS ---
 	//bool			GetForcedUIDsFromMeta						(const char* assetsPath, std::map<std::string, uint32>& forcedUIDs);
 	bool			GetLibraryFilePathsFromMeta					(const char* assetsPath, std::vector<std::string>& filePaths);
 	bool			GetResourceBasesFromMeta					(const char* assetsPath, std::vector<ResourceBase>& resourceBases);
+	bool			GetAssetsDirectoryAndExtensionFromType		(const ResourceType& type, std::string& directory, std::string& extension);
 	bool			GetLibraryDirectoryAndExtensionFromType		(const ResourceType& type, std::string& directory, std::string& extension);
 	
 	bool			LoadMetaLibraryPairsIntoLibrary				(const char* assetsPath);
