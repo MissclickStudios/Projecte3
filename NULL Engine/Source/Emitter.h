@@ -26,6 +26,8 @@ public:
 	bool AddModuleFromType(ParticleModule::Type type);
 	bool DeleteModuleFromType(ParticleModule::Type type);
 
+	void SetParticleCount(int particleCount);
+
 	void SetTexture(R_Texture* newTexture);
 	void SetTexture(ResourceBase newTexture);
 public:

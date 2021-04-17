@@ -152,6 +152,11 @@ bool Emitter::DeleteModuleFromType(ParticleModule::Type type)
 	return true;
 }
 
+void Emitter::SetParticleCount(int particleCount)
+{
+	particleCount = maxParticleCount;
+}
+
 void Emitter::SetTexture(R_Texture* newTexture)
 {
 	if (newTexture != nullptr)

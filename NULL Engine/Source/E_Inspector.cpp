@@ -2625,6 +2625,12 @@ void E_Inspector::DisplayParticleSystemControls(C_ParticleSystem* cParticleSyste
 
 void E_Inspector::DisplayEmitterInstances(C_ParticleSystem* cParticleSystem)
 {
+	if ((ImGui::Button("Add Emitter")))
+	{
+		cParticleSystem->resource->AddDefaultEmitter();
+		cParticleSystem->RefreshEmitterInstances();
+	}
+
 	for (uint i = 0; i < cParticleSystem->emitterInstances.size(); i++) //loop emitters
 	{
 		Emitter* emitter = cParticleSystem->emitterInstances[i]->emitter;
@@ -2668,8 +2674,11 @@ void E_Inspector::DisplayEmitterInstances(C_ParticleSystem* cParticleSystem)
 			if (ImGui::Checkbox("Stop And Delete", &stopDelete))
 			{
 				cParticleSystem->tempDelete = stopDelete;
-				cParticleSystem->StopAndDelete();
+				cParticleSystem->StopAndDelete(); 
 			}
+
+			int particleNumber = emitter->maxParticleCount;
+			if (ImGui::InputInt("Number of Particles", &particleNumber, 1, 10, ImGuiInputTextFlags_EnterReturnsTrue)) { emitter->maxParticleCount = particleNumber; }
 
 			R_Texture* current = emitter->emitterTexture;
 			//combo showing all resources Already exists App->resourceManager->GetAllParticleSystems()
