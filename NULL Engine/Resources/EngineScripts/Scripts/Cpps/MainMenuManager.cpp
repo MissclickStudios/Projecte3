@@ -4,47 +4,61 @@
 #include "C_UI_Button.h"
 #include "LevelGenerator.h"
 #include "GameObject.h"
-#include "MainMenuManager.h"
+#include "PauseMenuManager.h"
 
-MainMenuManager::MainMenuManager() : Script()
+PauseMenuManager::PauseMenuManager() : Script()
 {
 }
 
-MainMenuManager::~MainMenuManager()
+PauseMenuManager::~PauseMenuManager()
 {
 }
 
-void MainMenuManager::Start()
+void PauseMenuManager::Start()
 {
-	playButton = (C_UI_Button*)App->scene->GetGameObjectByName(buttonName.c_str())->GetComponent<C_UI_Button>();
-
+	/*
+	continueButton = (C_UI_Button*)App->scene->GetGameObjectByName(buttonName.c_str())->GetComponent<C_UI_Button>();
+	optionsButton = (C_UI_Button*)App->scene->GetGameObjectByName(buttonName1.c_str())->GetComponent<C_UI_Button>();
+	abandonRunButton = (C_UI_Button*)App->scene->GetGameObjectByName(buttonName2.c_str())->GetComponent<C_UI_Button>();
+	mainMenuButton = (C_UI_Button*)App->scene->GetGameObjectByName(buttonName3.c_str())->GetComponent<C_UI_Button>();
+	exitButton = (C_UI_Button*)App->scene->GetGameObjectByName(buttonName4.c_str())->GetComponent<C_UI_Button>();
+	*/
 }
 
-void MainMenuManager::Update()
+void PauseMenuManager::Update()
 {
-
-	//Start Play Button
-	if (playButton != nullptr)
-	{
-		if (playButton->IsPressed())
-		{
-			App->scene->GetLevelGenerator()->InitiateLevel(1);
-		}
-	}
 
 	//Continue Button
 	if (continueButton != nullptr)
 	{
 		if (continueButton->IsPressed())
 		{
+
+		}
+	}
+
+	//Main Menu Button
+	if (mainMenuButton != nullptr)
+	{
+		if (mainMenuButton->IsPressed())
+		{
 			//App->scene->GetLevelGenerator()->InitiateLevel(1);
 		}
 	}
 
-	//Start Play Button
+	//Options Play Button
 	if (optionsButton != nullptr)
 	{
 		if (optionsButton->IsPressed())
+		{
+			//App->scene->GetLevelGenerator()->InitiateLevel(1);
+		}
+	}
+
+	//Abandon Run Button
+	if (abandonRunButton != nullptr)
+	{
+		if (abandonRunButton->IsPressed())
 		{
 			//App->scene->GetLevelGenerator()->InitiateLevel(1);
 		}
