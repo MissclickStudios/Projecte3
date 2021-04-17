@@ -22,6 +22,7 @@ class M_Audio;
 class M_Physics;
 class M_UISystem;
 class M_ScriptManager;
+class M_Detour;
 
 enum class GameState
 {
@@ -87,6 +88,7 @@ public:
 	M_Physics*				physics;
 	M_UISystem*				uiSystem;
 	M_ScriptManager*		scriptManager;
+	M_Detour*				detour;
 
 	GameState				gameState;
 

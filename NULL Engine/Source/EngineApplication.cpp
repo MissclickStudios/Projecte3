@@ -13,6 +13,7 @@
 #include "M_UISystem.h"
 #include "M_EngineScriptManager.h"
 #include "M_Editor.h"
+#include "M_Detour.h"
 
 #include "EngineMain.h"
 
@@ -32,9 +33,9 @@ EngineApplication::EngineApplication()
 	editor = new M_Editor();
 	scriptManager = new M_EngineScriptManager();
 
-	//12 = num of modules to pushback
-	//if you create or remove 1 module change the 12 accordingly
-	modules.reserve(12);
+	//13 = num of modules to pushback
+	//if you create or remove 1 module change the 13 accordingly
+	modules.reserve(13);
 
 	// Main Modules
 	AddModule(window);
@@ -49,6 +50,7 @@ EngineApplication::EngineApplication()
 	AddModule(audio);
 	AddModule(physics);
 	AddModule(uiSystem);
+	AddModule(detour);
 	AddModule(scene);
 
 	// Renderer last!
