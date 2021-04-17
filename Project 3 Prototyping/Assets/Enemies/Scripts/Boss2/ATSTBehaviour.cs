@@ -109,9 +109,6 @@ public class ATSTBehaviour : MonoBehaviour
         {
 
         }
-
-
-
     }
 
     //---------------------------------------------------------------------------------
@@ -144,7 +141,6 @@ public class ATSTBehaviour : MonoBehaviour
     //-------------------------------------------------------------------------------
     [Header("Standard Attack Settings")]
     public GameObject sAttack1Bullet;
-    public Transform sAttack1Target;
     public Transform sAttack1RightArm;
     public Transform sAttack1LeftArm;
     public float rpm = 0.5f;
@@ -333,9 +329,6 @@ public class ATSTBehaviour : MonoBehaviour
     }
     //---------------------------------------------------------------------------------
 
-    //---------------------------------------------------------------------------------
-
-    
 }
 
 

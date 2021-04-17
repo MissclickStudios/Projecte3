@@ -4,58 +4,122 @@ using UnityEngine;
 
 public class Missile : MonoBehaviour
 {
-    [Header("Chasing Settings")]
-    public Transform Target;
-    public float firingAngle = 45.0f;
-    public float gravity = 9.8f;
+    // launch variables
+    [SerializeField] private Transform TargetObjectTF;
+    [Range(1.0f, 6.0f)] public float TargetRadius;
+    [Range(20.0f, 75.0f)] public float LaunchAngle;
 
-    public Transform Projectile;
-    private Transform myTransform;
+    // state
+    private bool bTargetReady;
 
-    void Awake()
-    {
-        myTransform = transform;
-    }
+    // cache
+    private Rigidbody rigid;
+    private Vector3 initialPosition;
+    private Quaternion initialRotation;
 
+    // Use this for initialization
     void Start()
     {
-        StartCoroutine(SimulateProjectile());
+        rigid = GetComponent<Rigidbody>();
+        bTargetReady = true;
+        initialPosition = transform.position;
+        initialRotation = transform.rotation;
+        startPoint = transform.position;
     }
 
-
-    IEnumerator SimulateProjectile()
+    // launches the object towards the TargetObject with a given LaunchAngle
+    void Launch() 
     {
-        // Short delay added before Projectile is thrown
-        yield return new WaitForSeconds(1.5f);
+        Vector3 projectileXZPos = new Vector3(transform.position.x, 0.0f, transform.position.z);
+        Vector3 targetXZPos = new Vector3(TargetObjectTF.position.x, 0.0f, TargetObjectTF.position.z);
 
-        // Move projectile to the position of throwing object + add some offset if needed.
-        Projectile.position = myTransform.position + new Vector3(0, 0.0f, 0);
+        // rotate the object to face the target
+        transform.LookAt(targetXZPos);
 
-        // Calculate distance to target
-        float target_Distance = Vector3.Distance(Projectile.position, Target.position);
+        // shorthands for the formula
+        float R = Vector3.Distance(projectileXZPos, targetXZPos);
+        float G = Physics.gravity.y;
+        float tanAlpha = Mathf.Tan(LaunchAngle * Mathf.Deg2Rad);
+        float H = TargetObjectTF.position.y - transform.position.y;
 
-        // Calculate the velocity needed to throw the object to the target at specified angle.
-        float projectile_Velocity = target_Distance / (Mathf.Sin(2 * firingAngle * Mathf.Deg2Rad) / gravity);
+        // calculate the local space components of the velocity 
+        // required to land the projectile on the target object 
+        float Vz = Mathf.Sqrt(G * R * R / (2.0f * (H - R * tanAlpha)));
+        float Vy = tanAlpha * Vz;
 
-        // Extract the X  Y componenent of the velocity
-        float Vx = Mathf.Sqrt(projectile_Velocity) * Mathf.Cos(firingAngle * Mathf.Deg2Rad);
-        float Vy = Mathf.Sqrt(projectile_Velocity) * Mathf.Sin(firingAngle * Mathf.Deg2Rad);
+        // create the velocity vector in local space and get it in global space
+        Vector3 localVelocity = new Vector3(0f, Vy, Vz);
+        Vector3 globalVelocity = transform.TransformDirection(localVelocity);
 
-        // Calculate flight time.
-        float flightDuration = target_Distance / Vx;
+        // launch the object by setting its initial velocity and flipping its state
+        rigid.velocity = globalVelocity;
+        bTargetReady = false;
+    }
 
-        // Rotate projectile to face the target.
-        Projectile.rotation = Quaternion.LookRotation(Target.position - Projectile.position);
+    // Sets a random target around the object based on the TargetRadius
+    void SetNewTarget() { bTargetReady = true; }
 
-        float elapse_time = 0;
+    // resets the projectile to its initial position
+    void ResetToInitialState()
+    {
+        rigid.velocity = Vector3.zero;
+        this.transform.SetPositionAndRotation(initialPosition, initialRotation);
+        bTargetReady = false;
+    }
 
-        while (elapse_time < flightDuration)
+    // Update is called once per frame
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
         {
-            Projectile.Translate(0, (Vy - (gravity * elapse_time)) * Time.deltaTime, Vx * Time.deltaTime);
-
-            elapse_time += Time.deltaTime;
-
-            yield return null;
+            if (bTargetReady)
+            {
+                Launch();
+            }
+            else
+            {
+                ResetToInitialState();
+                SetNewTarget();
+            }
         }
+
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            ResetToInitialState();
+        }
+    }
+    public int SA1numProjectiles;
+    public float SA1projectileSpeed;
+    public GameObject SA1projectile;
+
+    private Vector3 startPoint;
+    private const float radius = 1F;
+
+    void OnCollisionEnter()
+    {
+        float angleStep = 360f / 10;
+        float angle = 0f;
+
+        for (int i = 1; i <= 10 * 2; i++)
+        {
+            // Direction Calculation
+
+            float projectileDirXPosition = startPoint.x + Mathf.Sin((angle * Mathf.PI) / 180) * radius;
+            float projectileDirYPosition = startPoint.y + Mathf.Cos((angle * Mathf.PI) / 180) * radius;
+
+            Vector3 projectileVector = new Vector3(projectileDirXPosition, projectileDirYPosition, 0);
+            Vector3 projectileMoveDirection = (projectileVector - startPoint).normalized * SA1projectileSpeed;
+
+            GameObject tmpObj = Instantiate(SA1projectile, startPoint, Quaternion.identity);
+            tmpObj.GetComponent<Rigidbody>().velocity = new Vector3(projectileMoveDirection.x, 0, projectileMoveDirection.y);
+
+            angle += angleStep;
+
+        }
+    }
+
+    void OnCollisionExit()
+    {
+       
     }
 }
