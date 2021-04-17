@@ -1681,6 +1681,7 @@ GameObject:
   - component: {fileID: 1815626069}
   - component: {fileID: 1815626068}
   - component: {fileID: 1815626073}
+  - component: {fileID: 1815626074}
   - component: {fileID: 1815626072}
   m_Layer: 0
   m_Name: Boss
@@ -1791,7 +1792,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1815626067}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c624ec4c485350540a8cc5ab1368f3ba, type: 3}
   m_Name: 
@@ -1825,6 +1826,22 @@ MonoBehaviour:
   waveShootSource: {fileID: 1199812182}
   grenadeTarget: {fileID: 447703459}
   grenadeBoss: {fileID: 1815626071}
+--- !u!114 &1815626074
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1815626067}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b60f10adea291a4a8108da5d0c3c9c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Target: {fileID: 1238239499}
+  firingAngle: 45
+  gravity: 9.8
+  Projectile: {fileID: 7351996364226733572, guid: 6b3f174fb5566e448a44a337d06a8fa4, type: 3}
 --- !u!1 &2048686841
 GameObject:
   m_ObjectHideFlags: 0
