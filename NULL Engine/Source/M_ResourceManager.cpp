@@ -1422,46 +1422,40 @@ bool M_ResourceManager::GetResourceBasesFromMeta(const char* assetsPath, std::ve
 		return false;
 	}
 
-	std::string directory = "[NONE]";
-	std::string extension = "[NONE]";
-
 	// --- MAIN RESOURCE
 	uint32 UID					= (uint32)metaRoot.GetNumber("UID");
 	ResourceType type			= (ResourceType)((int)metaRoot.GetNumber("Type"));
-	std::string rAssetsPath		= metaRoot.GetString("Name");
+	std::string rAssetsPath		= metaRoot.GetString("AssetsPath");
+	std::string rAssetsFile		= metaRoot.GetString("Name");
 	std::string rLibraryPath	= metaRoot.GetString("LibraryPath");
-	bool success				= GetAssetsDirectoryAndExtensionFromType(type, directory, extension);
+	std::string rLibraryFile	= metaRoot.GetString("LibraryFile");
 	if (UID == 0)
 	{
 		LOG("%s! Error: Main Resource UID was 0.", errorString.c_str());
 		return false;
 	}
 
-	rAssetsPath = directory + rAssetsPath;
-	resourceBases.push_back(ResourceBase(UID, rAssetsPath, rLibraryPath, type));
+	resourceBases.push_back(ResourceBase(UID, rAssetsPath, rAssetsFile, rLibraryPath, rLibraryFile, type));
 
 	// --- CONTAINED RESOURCES
-	ParsonNode containedNode			= ParsonNode();
-	uint32 containedUID					= 0;
-	ResourceType containedType			= ResourceType::NONE;
-	std::string containedAssetsPath		= "[NONE]";
-	std::string containedLibraryPath	= "[NONE]";
 	for (uint i = 0; i < containedArray.size; ++i)
 	{
-		containedNode = containedArray.GetNode(i);
+		ParsonNode containedNode = containedArray.GetNode(i);
 		if (!containedNode.NodeIsValid())
 		{
 			continue;
 		}
 
-		directory = "[NONE]";
-		extension = "[NONE]";
+		std::string directory = "[NONE]";
+		std::string extension = "[NONE]";
 
-		containedUID			= (uint32)containedNode.GetNumber("UID");
-		containedType			= (ResourceType)((int)containedNode.GetNumber("Type"));
-		containedAssetsPath		= containedNode.GetString("Name");
-		containedLibraryPath	= containedNode.GetString("LibraryPath");
-		success					= GetAssetsDirectoryAndExtensionFromType(containedType, directory, extension);
+		uint32 containedUID					= (uint32)containedNode.GetNumber("UID");
+		ResourceType containedType			= (ResourceType)((int)containedNode.GetNumber("Type"));
+		std::string containedAssetsPath		= "[NONE]";
+		std::string containedAssetsFile		= containedNode.GetString("Name");
+		std::string containedLibraryPath	= containedNode.GetString("LibraryPath");
+		std::string containedLibraryFile	= "[NONE]";
+		bool success						= GetAssetsDirectoryAndExtensionFromType(containedType, directory, extension);
 		if (!success)
 		{
 			continue;
@@ -1471,8 +1465,9 @@ bool M_ResourceManager::GetResourceBasesFromMeta(const char* assetsPath, std::ve
 			continue;
 		}
 
-		containedAssetsPath = directory + containedAssetsPath;
-		resourceBases.push_back(ResourceBase(containedUID, containedAssetsPath, containedLibraryPath, containedType));
+		containedAssetsPath		= directory + containedAssetsFile;
+		containedLibraryFile	= App->fileSystem->GetFileAndExtension(containedLibraryPath.c_str());
+		resourceBases.push_back(ResourceBase(containedUID, containedAssetsPath, containedAssetsFile, containedLibraryPath, containedLibraryFile, containedType));	// WIP until revision.
 	}
 	
 	return true;
@@ -1768,9 +1763,12 @@ bool M_ResourceManager::SaveMetaFile(Resource* resource) const
 	ParsonNode metaRoot = ParsonNode();
 	metaRoot.SetNumber("UID", resource->GetUID());																											// --- GENERAL RESOURCE META DATA
 	metaRoot.SetNumber("Type", (uint)resource->GetType());																									// 
+	
 	metaRoot.SetString("Name", resource->GetAssetsFile());																									// 
-	// ASSETS PATH?
+	metaRoot.SetString("AssetsPath", resource->GetAssetsPath());
+	metaRoot.SetString("LibraryFile", resource->GetLibraryFile());
 	metaRoot.SetString("LibraryPath", resource->GetLibraryPath());																							// 
+
 	metaRoot.SetNumber("ModificationTime", (double)App->fileSystem->GetLastModTime(resource->GetAssetsPath()));												// ------------------------------
 
 	resource->SaveMeta(metaRoot);																															// --- RESOURCE-SPECIFIC META DATA

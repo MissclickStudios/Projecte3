@@ -2682,14 +2682,14 @@ void E_Inspector::DisplayEmitterInstances(C_ParticleSystem* cParticleSystem)
 
 			R_Texture* current = emitter->emitterTexture;
 			//combo showing all resources Already exists App->resourceManager->GetAllParticleSystems()
-			if (ImGui::BeginCombo("##Particle Texture", current == nullptr ? "No Texture" : current->GetAssetsFile()))
+			if (ImGui::BeginCombo("##Particle Texture", emitter->emitterTexture == nullptr ? "No Texture" : emitter->emitterTexture->GetAssetsFile()))
 			{
 				std::vector<ResourceBase> textures;
 				App->resourceManager->GetResourceBases<R_Texture>(textures);
 
 				for (auto it = textures.begin(); it != textures.end(); ++it)
 				{
-					bool isSelected = (strcmp(current->GetAssetsPath(), (*it).assetsPath.c_str()) == 0);
+					bool isSelected = (strcmp(emitter->emitterTexture->GetAssetsPath(), (*it).assetsPath.c_str()) == 0);
 
 					if (ImGui::Selectable((*it).assetsPath.c_str(), isSelected))
 					{
