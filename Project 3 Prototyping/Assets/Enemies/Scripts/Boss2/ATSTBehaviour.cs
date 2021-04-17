@@ -364,6 +364,7 @@ public class ATSTBehaviour : MonoBehaviour
     public GameObject grenadePrefab;
     public Transform parabolicSource;
     public Transform grenadeAttack1Arm;
+    private GameObject myBulletPrefab;
     public float grenadeBulletSpeed = 100;
 
     // launch variables
@@ -394,7 +395,7 @@ public class ATSTBehaviour : MonoBehaviour
         Vector3 localVelocity = new Vector3(0f, Vy, Vz);
         Vector3 globalVelocity = transform.TransformDirection(localVelocity);
 
-        GameObject myBulletPrefab = Instantiate(grenadePrefab, grenadeAttack1Arm.position, Quaternion.identity) as GameObject;
+        myBulletPrefab = Instantiate(grenadePrefab, grenadeAttack1Arm.position, Quaternion.identity) as GameObject;
         Rigidbody myBulletPrefabRigidBody = myBulletPrefab.GetComponent<Rigidbody>();
 
         // launch the object by setting its initial velocity and flipping its state
@@ -410,7 +411,7 @@ public class ATSTBehaviour : MonoBehaviour
     public GameObject _360Projectile;
 
     private const float radius = 1F;
-    void _360AttackGrenade()
+    public void _360AttackGrenade()
     {
         float angleStep = 360f / grenadeNumProjectiles;
         float angle = 0f;
@@ -435,6 +436,7 @@ public class ATSTBehaviour : MonoBehaviour
         }
     }
     //---------------------------------------------------------------------------------
+
 }
 
 
