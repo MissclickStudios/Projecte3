@@ -14,6 +14,14 @@ class GameObject;
 class C_RigidBody;
 class C_Animator;
 
+enum class EntityType
+{
+	ENTITY,
+	PLAYER,
+	BLURRG,
+	TROOPER
+};
+
 class Entity : public Script
 {
 public:
@@ -37,7 +45,7 @@ public:
 	// Interactions
 	virtual void TakeDamage(float damage);
 	virtual void Heal(float amount);
-	void AddEffect(EffectType type, float duration);
+	void AddEffect(EffectType type, float duration, bool permanent = false);
 	
 	// Effect Functions
 	virtual void Frozen();
@@ -75,6 +83,9 @@ public:
 	AnimationInfo idleAnimation = { "Idle" };
 	AnimationInfo deathAnimation = { "Death" };
 
+	// Inspector
+	void InspectorCalls();
+
 protected:
 
 	// Movement
@@ -93,27 +104,3 @@ private:
 	std::vector<Effect*> effects;
 	uint effectCounters[(uint)EffectType::EFFECTS_NUM];
 };
-
-//Entity Inspector varialbles
-//// Health
-//INSPECTOR_DRAGABLE_FLOAT(script->health);
-//INSPECTOR_DRAGABLE_FLOAT(script->maxHealth);
-//
-//// Basic Stats
-//INSPECTOR_DRAGABLE_FLOAT(script->speed);
-//INSPECTOR_DRAGABLE_FLOAT(script->attackSpeed);
-//INSPECTOR_DRAGABLE_FLOAT(script->damage);
-//INSPECTOR_DRAGABLE_FLOAT(script->defense);
-//
-//// Modifiers
-//INSPECTOR_DRAGABLE_FLOAT(script->maxHealthModifier);
-//INSPECTOR_DRAGABLE_FLOAT(script->speedModifier);
-//INSPECTOR_DRAGABLE_FLOAT(script->attackSpeedModifier);
-//INSPECTOR_DRAGABLE_FLOAT(script->damageModifier);
-//INSPECTOR_DRAGABLE_FLOAT(script->defenseModifier);
-//INSPECTOR_DRAGABLE_FLOAT(script->cooldownModifier);
-//
-//// Death
-//INSPECTOR_DRAGABLE_FLOAT(script->deathDuration);
-//
-//

@@ -9,7 +9,6 @@
 #include "C_Animator.h"
 
 #include "Log.h"
-#include "..\..\..\Assets\Scripts\Player.h"
 
 #define MAX_INPUT 32767
 
@@ -18,26 +17,7 @@ Player* CreatePlayer()
 	Player* script = new Player();
 
 	// Entity ---
-	// Health
-	INSPECTOR_DRAGABLE_FLOAT(script->health);
-	INSPECTOR_DRAGABLE_FLOAT(script->maxHealth);
-
-	// Basic Stats
-	INSPECTOR_DRAGABLE_FLOAT(script->speed);
-	INSPECTOR_DRAGABLE_FLOAT(script->attackSpeed);
-	INSPECTOR_DRAGABLE_FLOAT(script->damage);
-	INSPECTOR_DRAGABLE_FLOAT(script->defense);
-
-	// Modifiers
-	INSPECTOR_DRAGABLE_FLOAT(script->maxHealthModifier);
-	INSPECTOR_DRAGABLE_FLOAT(script->speedModifier);
-	INSPECTOR_DRAGABLE_FLOAT(script->attackSpeedModifier);
-	INSPECTOR_DRAGABLE_FLOAT(script->damageModifier);
-	INSPECTOR_DRAGABLE_FLOAT(script->defenseModifier);
-	INSPECTOR_DRAGABLE_FLOAT(script->cooldownModifier);
-
-	// Death
-	INSPECTOR_DRAGABLE_FLOAT(script->deathDuration);
+	script->InspectorCalls();
 
 	// Player ---
 	// Dash
@@ -74,6 +54,8 @@ Player* CreatePlayer()
 
 Player::Player() : Entity()
 {
+	type = EntityType::PLAYER;
+
 	POOPOOTIMER.Stop(); // hehe xd
 	dashTimer.Stop();
 	dashCooldownTimer.Stop();
@@ -158,7 +140,7 @@ void Player::ManageMovement()
 		case PlayerState::DEAD:
 			if (deathTimer.ReadSec() >= deathDuration)
 			{
-				// DYING THINGS
+				// DIE ALREADY !
 			}
 			break;
 		}

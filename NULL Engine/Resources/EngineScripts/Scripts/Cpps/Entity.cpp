@@ -3,7 +3,8 @@
 #include "GameObject.h"
 #include "C_RigidBody.h"
 #include "C_Animator.h"
-#include "..\Helpers\Entity.h"
+
+#include "ScriptMacros.h"
 
 Entity::Entity() : Script()
 {
@@ -107,13 +108,13 @@ void Entity::Heal(float amount)
 		health = MaxHealth();
 }
 
-void Entity::AddEffect(EffectType type, float duration)
+void Entity::AddEffect(EffectType type, float duration, bool permanent)
 {
 	// TODO: System to add a max stack to each effect so that more than one can exist at once
 
 	if (effectCounters[(uint)type]) // Check that this effect is not already on the entity
 		return;
-	effects.emplace_back(new Effect(type, duration)); // I use emplace instead of push to avoid unnecessary copies
+	effects.emplace_back(new Effect(type, duration, permanent)); // I use emplace instead of push to avoid unnecessary copies
 	++effectCounters[(uint)type]; // Add one to the counter of this effect
 }
 
@@ -121,4 +122,28 @@ void Entity::Frozen()
 {
 	speedModifier /= 2.5;
 	attackSpeedModifier /= 2.5;
+}
+
+void Entity::InspectorCalls()
+{
+	// Health
+	INSPECTOR_DRAGABLE_FLOAT(health);
+	INSPECTOR_DRAGABLE_FLOAT(maxHealth);
+
+	// Basic Stats
+	INSPECTOR_DRAGABLE_FLOAT(speed);
+	INSPECTOR_DRAGABLE_FLOAT(attackSpeed);
+	INSPECTOR_DRAGABLE_FLOAT(damage);
+	INSPECTOR_DRAGABLE_FLOAT(defense);
+
+	// Modifiers
+	INSPECTOR_DRAGABLE_FLOAT(maxHealthModifier);
+	INSPECTOR_DRAGABLE_FLOAT(speedModifier);
+	INSPECTOR_DRAGABLE_FLOAT(attackSpeedModifier);
+	INSPECTOR_DRAGABLE_FLOAT(damageModifier);
+	INSPECTOR_DRAGABLE_FLOAT(defenseModifier);
+	INSPECTOR_DRAGABLE_FLOAT(cooldownModifier);
+
+	// Death
+	INSPECTOR_DRAGABLE_FLOAT(deathDuration);
 }

@@ -11,26 +11,7 @@ Blurrg* CreateBlurrg()
 	Blurrg* script = new Blurrg();
 
 	// Entity ---
-	// Health
-	INSPECTOR_DRAGABLE_FLOAT(script->health);
-	INSPECTOR_DRAGABLE_FLOAT(script->maxHealth);
-
-	// Basic Stats
-	INSPECTOR_DRAGABLE_FLOAT(script->speed);
-	INSPECTOR_DRAGABLE_FLOAT(script->attackSpeed);
-	INSPECTOR_DRAGABLE_FLOAT(script->damage);
-	INSPECTOR_DRAGABLE_FLOAT(script->defense);
-
-	// Modifiers
-	INSPECTOR_DRAGABLE_FLOAT(script->maxHealthModifier);
-	INSPECTOR_DRAGABLE_FLOAT(script->speedModifier);
-	INSPECTOR_DRAGABLE_FLOAT(script->attackSpeedModifier);
-	INSPECTOR_DRAGABLE_FLOAT(script->damageModifier);
-	INSPECTOR_DRAGABLE_FLOAT(script->defenseModifier);
-	INSPECTOR_DRAGABLE_FLOAT(script->cooldownModifier);
-
-	// Death
-	INSPECTOR_DRAGABLE_FLOAT(script->deathDuration);
+	script->InspectorCalls();
 
 	// Blurrg ---
 	// Wander
@@ -73,6 +54,7 @@ Blurrg* CreateBlurrg()
 
 Blurrg::Blurrg()
 {
+	type = EntityType::BLURRG;
 	chargeTimer.Stop();
 	dashTimer.Stop();
 	dashCooldownTimer.Stop();
@@ -174,7 +156,8 @@ void Blurrg::Update()
 			state = BlurrgState::DEAD;
 
 		case BlurrgState::DEAD:
-			Deactivate();
+			if (deathTimer.ReadSec() >= deathDuration)
+				Deactivate();
 			break;
 		}
 }
