@@ -32,7 +32,7 @@ public:
 	void Update() override;
 	void CleanUp() override;
 
-	void OnCollision(GameObject* object) override;
+	void OnCollisionEnter(GameObject* object) override;
 
 	// Wander
 	float wanderRadius = 0.0f;
@@ -49,6 +49,8 @@ public:
 	float ChargeDuration() { return chargeDuration / attackSpeedModifier; }
 
 	// Dash
+	float dashDamageModifier = DEFAULT_MODIFIER;
+	float DashDamage() { return Damage() * dashDamageModifier; }
 	float dashSpeed = 0.0f;
 	float DashSpeed() { return dashSpeed * speedModifier; }
 	float dashDuration = 0.0f;

@@ -30,7 +30,7 @@ public:
 	
 	virtual void CleanUp() = 0;
 
-	virtual void OnCollision(GameObject* object);
+	virtual void OnCollisionEnter(GameObject* object) override;
 	
 	void Deactivate();
 	
@@ -48,7 +48,7 @@ public:
 	// Health
 	float health = 1.0f;
 	float maxHealth = 1.0f;
-	float MaxHealth() { maxHealth + maxHealthModifier; }
+	float MaxHealth() { return maxHealth + maxHealthModifier; }
 	
 	// Basic Stats
 	float speed = 0.0f;
@@ -57,7 +57,7 @@ public:
 	const float AttackSpeed() const { return attackSpeed * attackSpeedModifier; }
 	float damage = 0.0f;
 	const float Damage() const { return damage * damageModifier; }
-	float defense = 0.0f;
+	float defense = 1.0f;
 	const float Defense() const { return defense * defenseModifier; }
 	
 	// Modifiers

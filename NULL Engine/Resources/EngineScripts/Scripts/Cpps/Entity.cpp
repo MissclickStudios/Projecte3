@@ -82,7 +82,7 @@ void Entity::PostUpdate()
 	}
 }
 
-void Entity::OnCollision(GameObject* object)
+void Entity::OnCollisionEnter(GameObject* object)
 {
 }
 

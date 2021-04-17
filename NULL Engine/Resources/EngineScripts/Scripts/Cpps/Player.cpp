@@ -9,6 +9,7 @@
 #include "C_Animator.h"
 
 #include "Log.h"
+#include "..\..\..\Assets\Scripts\Player.h"
 
 #define MAX_INPUT 32767
 
@@ -44,6 +45,9 @@ Player* CreatePlayer()
 	INSPECTOR_DRAGABLE_FLOAT(script->dashDuration);
 	INSPECTOR_DRAGABLE_FLOAT(script->dashCooldown);
 
+	// Invencibility frames
+	INSPECTOR_DRAGABLE_FLOAT(script->invencibilityDuration);
+
 	//// Animations ---
 	//// Movement
 	//INSPECTOR_STRING(script->idleAnimation.name);
@@ -73,6 +77,7 @@ Player::Player() : Entity()
 	POOPOOTIMER.Stop(); // hehe xd
 	dashTimer.Stop();
 	dashCooldownTimer.Stop();
+	invencibilityTimer.Stop();
 }
 
 Player::~Player()
@@ -92,6 +97,19 @@ void Player::Update()
 
 void Player::CleanUp()
 {
+}
+
+void Player::TakeDamage(float damage)
+{
+	if (invencibilityTimer.ReadSec() >= invencibilityDuration)
+		invencibilityTimer.Stop();
+	if (!invencibilityTimer.IsActive())
+	{
+		health -= damage / Defense();
+		if (health < 0.0f)
+			health = 0.0f;
+		invencibilityTimer.Start();
+	}
 }
 
 void Player::ManageMovement()

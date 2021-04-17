@@ -4,6 +4,8 @@
 #include "C_Transform.h"
 #include "C_RigidBody.h"
 
+#include "Player.h"
+
 Blurrg* CreateBlurrg()
 {
 	Blurrg* script = new Blurrg();
@@ -44,6 +46,7 @@ Blurrg* CreateBlurrg()
 	INSPECTOR_DRAGABLE_FLOAT(script->chargeDuration);
 
 	// Dash
+	INSPECTOR_DRAGABLE_FLOAT(script->dashDamageModifier);
 	INSPECTOR_DRAGABLE_FLOAT(script->dashSpeed);
 	INSPECTOR_DRAGABLE_FLOAT(script->dashDuration);
 	INSPECTOR_DRAGABLE_FLOAT(script->dashCooldown);
@@ -180,8 +183,21 @@ void Blurrg::CleanUp()
 {
 }
 
-void Blurrg::OnCollision(GameObject* object)
+void Blurrg::OnCollisionEnter(GameObject* object)
 {
+	Player* playerScript = (Player*)object->GetScript("Player");
+	if (playerScript)
+	{
+		switch (state)
+		{
+		case BlurrgState::DASH:
+			playerScript->TakeDamage(DashDamage());
+			break;
+		default:
+			playerScript->TakeDamage(Damage());
+			break;
+		}
+	}
 }
 
 void Blurrg::DistanceToPlayer()

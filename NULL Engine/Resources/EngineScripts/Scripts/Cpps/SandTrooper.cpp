@@ -4,6 +4,8 @@
 #include "C_Transform.h"
 #include "C_RigidBody.h"
 
+#include "Player.h"
+
 SCRIPTS_FUNCTION Trooper* CreateTrooper()
 {
 	Trooper* script = new Trooper();
@@ -72,8 +74,11 @@ void Trooper::CleanUp()
 {
 }
 
-void Trooper::OnCollision(GameObject* object)
+void Trooper::OnCollisionEnter(GameObject* object)
 {
+	Player* playerScript = (Player*)object->GetScript("Player");
+	if (playerScript)
+		playerScript->TakeDamage(Damage());
 }
 
 void Trooper::DistanceToPlayer()

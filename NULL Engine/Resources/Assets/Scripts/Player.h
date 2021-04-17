@@ -29,6 +29,9 @@ public:
 	void Update();
 	void CleanUp();
 
+	// Interactions
+	void TakeDamage(float damage) override;
+
 	// Dash
 	float dashSpeed = 0.0f;
 	float DashSpeed() { return dashSpeed * speedModifier; }
@@ -36,6 +39,9 @@ public:
 	float DashDuration() { return dashDuration / speedModifier; }
 	float dashCooldown = 0.0f;
 	float DashCooldown() { return dashCooldown / cooldownModifier; }
+
+	// Invencibility frames
+	float invencibilityDuration = 0.0f;
 
 	// Animations
 	AnimationInfo runAnimation = { "Run" };
@@ -71,6 +77,9 @@ private:
 	void Dash();
 	Timer dashTimer;
 	Timer dashCooldownTimer;
+
+	// Invencibility frames
+	Timer invencibilityTimer;
 };
 
 SCRIPTS_FUNCTION Player* CreatePlayer();

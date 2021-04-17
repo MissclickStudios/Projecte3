@@ -1269,7 +1269,7 @@
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "Blurrg",
-            "IsActive": false,
+            "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
@@ -1299,7 +1299,7 @@
                     "Is Static": false,
                     "Filter": " enemy",
                     "Mass": 450,
-                    "Density": 1,
+                    "Density": 10,
                     "Linear Damping": 0,
                     "Angular Damping": 0,
                     "Use Gravity": false,
@@ -1423,6 +1423,11 @@
                             "Type": 2,
                             "Name": "chargeDuration",
                             "float": 1
+                        },
+                        {
+                            "Type": 2,
+                            "Name": "dashDamageModifier",
+                            "float": 2
                         },
                         {
                             "Type": 2,
@@ -2157,12 +2162,12 @@
                         {
                             "Type": 2,
                             "Name": "health",
-                            "float": 1
+                            "float": 3
                         },
                         {
                             "Type": 2,
                             "Name": "maxHealth",
-                            "float": 1
+                            "float": 3
                         },
                         {
                             "Type": 2,
@@ -2172,12 +2177,12 @@
                         {
                             "Type": 2,
                             "Name": "attackSpeed",
-                            "float": 20
+                            "float": 0
                         },
                         {
                             "Type": 2,
                             "Name": "damage",
-                            "float": 1
+                            "float": 0
                         },
                         {
                             "Type": 2,
@@ -2232,6 +2237,11 @@
                         {
                             "Type": 2,
                             "Name": "dashCooldown",
+                            "float": 1
+                        },
+                        {
+                            "Type": 2,
+                            "Name": "invencibilityDuration",
                             "float": 1
                         }
                     ]
@@ -3627,7 +3637,7 @@
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "BlurrgMesh",
-            "IsActive": false,
+            "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
@@ -4148,7 +4158,7 @@
         },
         {
             "UID": 1793793900,
-            "ParentUID": 273150742,
+            "ParentUID": 2047484544,
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "MainScene",

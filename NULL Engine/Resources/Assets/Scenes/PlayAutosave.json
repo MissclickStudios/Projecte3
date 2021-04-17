@@ -66,7 +66,7 @@
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "StormTrooperMesh",
-            "IsActive": true,
+            "IsActive": false,
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
@@ -162,7 +162,7 @@
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "mixamorig:Spine2",
-            "IsActive": true,
+            "IsActive": false,
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
@@ -261,7 +261,7 @@
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "mixamorig:Spine",
-            "IsActive": true,
+            "IsActive": false,
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
@@ -294,7 +294,7 @@
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "mixamorig:RightHand",
-            "IsActive": true,
+            "IsActive": false,
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
@@ -459,7 +459,7 @@
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "mixamorig:LeftHandThumb4",
-            "IsActive": true,
+            "IsActive": false,
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
@@ -492,7 +492,7 @@
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "mixamorig:LeftFoot",
-            "IsActive": true,
+            "IsActive": false,
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
@@ -627,7 +627,7 @@
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "mixamorig:LeftHandThumb1",
-            "IsActive": true,
+            "IsActive": false,
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
@@ -660,7 +660,7 @@
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "mixamorig:RightHandThumb1",
-            "IsActive": true,
+            "IsActive": false,
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
@@ -693,7 +693,7 @@
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "mixamorig:RightHandThumb3",
-            "IsActive": true,
+            "IsActive": false,
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
@@ -825,11 +825,11 @@
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "SandTrooper",
-            "IsActive": true,
+            "IsActive": false,
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": true,
+            "ShowBoundingBoxes": false,
             "Components": [
                 {
                     "Type": 1,
@@ -901,11 +901,7 @@
                             "DurationInSeconds": 3.6333334445953369,
                             "Loop": false
                         }
-                    ],
-                    "CurrentClip": {
-                        "AnimationName": "Take 001",
-                        "Name": "Take 001 Default"
-                    }
+                    ]
                 },
                 {
                     "Type": 8,
@@ -1108,7 +1104,7 @@
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "mixamorig:RightForeArm",
-            "IsActive": true,
+            "IsActive": false,
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
@@ -1141,7 +1137,7 @@
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "mixamorig:LeftHandIndex3",
-            "IsActive": true,
+            "IsActive": false,
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
@@ -1174,7 +1170,7 @@
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "mixamorig:RightToe_End",
-            "IsActive": true,
+            "IsActive": false,
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
@@ -1273,11 +1269,11 @@
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "Blurrg",
-            "IsActive": false,
+            "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
+            "ShowBoundingBoxes": true,
             "Components": [
                 {
                     "Type": 1,
@@ -1303,7 +1299,7 @@
                     "Is Static": false,
                     "Filter": " enemy",
                     "Mass": 450,
-                    "Density": 1,
+                    "Density": 100,
                     "Linear Damping": 0,
                     "Angular Damping": 0,
                     "Use Gravity": false,
@@ -1336,12 +1332,12 @@
                         {
                             "Type": 2,
                             "Name": "health",
-                            "float": 1
+                            "float": 4
                         },
                         {
                             "Type": 2,
                             "Name": "maxHealth",
-                            "float": 1
+                            "float": 4
                         },
                         {
                             "Type": 2,
@@ -1356,7 +1352,7 @@
                         {
                             "Type": 2,
                             "Name": "damage",
-                            "float": 0
+                            "float": 0.5
                         },
                         {
                             "Type": 2,
@@ -1427,6 +1423,11 @@
                             "Type": 2,
                             "Name": "chargeDuration",
                             "float": 1
+                        },
+                        {
+                            "Type": 2,
+                            "Name": "dashDamageModifier",
+                            "float": 2
                         },
                         {
                             "Type": 2,
@@ -1559,7 +1560,7 @@
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "mixamorig:RightShoulder",
-            "IsActive": true,
+            "IsActive": false,
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
@@ -1592,7 +1593,7 @@
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "mixamorig:LeftToe_End",
-            "IsActive": true,
+            "IsActive": false,
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
@@ -1625,7 +1626,7 @@
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "mixamorig:RightFoot",
-            "IsActive": true,
+            "IsActive": false,
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
@@ -1691,7 +1692,7 @@
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "mixamorig:LeftHand",
-            "IsActive": true,
+            "IsActive": false,
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
@@ -1889,7 +1890,7 @@
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "mixamorig:HeadTop_End",
-            "IsActive": true,
+            "IsActive": false,
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
@@ -1955,7 +1956,7 @@
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "mixamorig:LeftToeBase",
-            "IsActive": true,
+            "IsActive": false,
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
@@ -2025,7 +2026,7 @@
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
+            "ShowBoundingBoxes": true,
             "Components": [
                 {
                     "Type": 1,
@@ -2069,16 +2070,6 @@
                         },
                         {
                             "AnimationUID": 1548254464,
-                            "Name": "Shoot",
-                            "Start": 152,
-                            "End": 183,
-                            "Speed": 1,
-                            "Duration": 31,
-                            "DurationInSeconds": 1.0333333015441895,
-                            "Loop": true
-                        },
-                        {
-                            "AnimationUID": 1548254464,
                             "Name": "Shoot Big Gun",
                             "Start": 80,
                             "End": 93,
@@ -2089,13 +2080,13 @@
                         },
                         {
                             "AnimationUID": 1548254464,
-                            "Name": "Death",
-                            "Start": 186,
-                            "End": 317,
+                            "Name": "Shoot",
+                            "Start": 152,
+                            "End": 183,
                             "Speed": 1,
-                            "Duration": 131,
-                            "DurationInSeconds": 4.3666667938232422,
-                            "Loop": false
+                            "Duration": 31,
+                            "DurationInSeconds": 1.0333333015441895,
+                            "Loop": true
                         },
                         {
                             "AnimationUID": 1548254464,
@@ -2105,6 +2096,16 @@
                             "Speed": 1,
                             "Duration": 9,
                             "DurationInSeconds": 0.30000001192092896,
+                            "Loop": false
+                        },
+                        {
+                            "AnimationUID": 1548254464,
+                            "Name": "Death",
+                            "Start": 186,
+                            "End": 317,
+                            "Speed": 1,
+                            "Duration": 131,
+                            "DurationInSeconds": 4.3666667938232422,
                             "Loop": false
                         },
                         {
@@ -2161,12 +2162,12 @@
                         {
                             "Type": 2,
                             "Name": "health",
-                            "float": 1
+                            "float": 3
                         },
                         {
                             "Type": 2,
                             "Name": "maxHealth",
-                            "float": 1
+                            "float": 3
                         },
                         {
                             "Type": 2,
@@ -2176,12 +2177,12 @@
                         {
                             "Type": 2,
                             "Name": "attackSpeed",
-                            "float": 20
+                            "float": 0
                         },
                         {
                             "Type": 2,
                             "Name": "damage",
-                            "float": 1
+                            "float": 0
                         },
                         {
                             "Type": 2,
@@ -2237,6 +2238,11 @@
                             "Type": 2,
                             "Name": "dashCooldown",
                             "float": 1
+                        },
+                        {
+                            "Type": 2,
+                            "Name": "invencibilityDuration",
+                            "float": 1
                         }
                     ]
                 }
@@ -2248,7 +2254,7 @@
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "mixamorig:LeftHandThumb2",
-            "IsActive": true,
+            "IsActive": false,
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
@@ -2281,7 +2287,7 @@
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "mixamorig:RightHandIndex2",
-            "IsActive": true,
+            "IsActive": false,
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
@@ -2446,7 +2452,7 @@
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "mixamorig:RightHandThumb2",
-            "IsActive": true,
+            "IsActive": false,
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
@@ -2479,7 +2485,7 @@
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "mixamorig:LeftHandIndex4",
-            "IsActive": true,
+            "IsActive": false,
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
@@ -2512,7 +2518,7 @@
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "mixamorig:RightHandIndex3",
-            "IsActive": true,
+            "IsActive": false,
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
@@ -2677,7 +2683,7 @@
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "mixamorig:RightArm",
-            "IsActive": true,
+            "IsActive": false,
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
@@ -2842,7 +2848,7 @@
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "mixamorig:LeftHandIndex2",
-            "IsActive": true,
+            "IsActive": false,
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
@@ -2974,7 +2980,7 @@
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "mixamorig:Spine1",
-            "IsActive": true,
+            "IsActive": false,
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
@@ -3202,7 +3208,7 @@
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "mixamorig:LeftLeg",
-            "IsActive": true,
+            "IsActive": false,
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
@@ -3367,7 +3373,7 @@
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "mixamorig:RightHandIndex4",
-            "IsActive": true,
+            "IsActive": false,
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
@@ -3400,7 +3406,7 @@
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "mixamorig:RightLeg",
-            "IsActive": true,
+            "IsActive": false,
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
@@ -3433,7 +3439,7 @@
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "mixamorig:RightHandIndex1",
-            "IsActive": true,
+            "IsActive": false,
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
@@ -3466,7 +3472,7 @@
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "Skeleton",
-            "IsActive": true,
+            "IsActive": false,
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
@@ -3499,7 +3505,7 @@
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "mixamorig:LeftForeArm",
-            "IsActive": true,
+            "IsActive": false,
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
@@ -3598,7 +3604,7 @@
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "mixamorig:Neck",
-            "IsActive": true,
+            "IsActive": false,
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
@@ -3631,7 +3637,7 @@
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "BlurrgMesh",
-            "IsActive": false,
+            "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
@@ -3694,7 +3700,7 @@
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "mixamorig:LeftUpLeg",
-            "IsActive": true,
+            "IsActive": false,
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
@@ -3793,7 +3799,7 @@
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "mixamorig:RightUpLeg",
-            "IsActive": true,
+            "IsActive": false,
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
@@ -3925,7 +3931,7 @@
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "mixamorig:RightToeBase",
-            "IsActive": true,
+            "IsActive": false,
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
@@ -4090,7 +4096,7 @@
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "mixamorig:RightHandThumb4",
-            "IsActive": true,
+            "IsActive": false,
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
@@ -4152,7 +4158,7 @@
         },
         {
             "UID": 1793793900,
-            "ParentUID": 1848027956,
+            "ParentUID": 2047484544,
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "MainScene",
@@ -4288,7 +4294,7 @@
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "mixamorig:LeftHandIndex1",
-            "IsActive": true,
+            "IsActive": false,
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
@@ -4321,7 +4327,7 @@
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "mixamorig:LeftShoulder",
-            "IsActive": true,
+            "IsActive": false,
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
@@ -4453,7 +4459,7 @@
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "mixamorig:Head",
-            "IsActive": true,
+            "IsActive": false,
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
@@ -4645,7 +4651,7 @@
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "mixamorig:LeftArm",
-            "IsActive": true,
+            "IsActive": false,
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
@@ -4744,7 +4750,7 @@
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "mixamorig:LeftHandThumb3",
-            "IsActive": true,
+            "IsActive": false,
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
@@ -4840,7 +4846,7 @@
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "mixamorig:Hips",
-            "IsActive": true,
+            "IsActive": false,
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,

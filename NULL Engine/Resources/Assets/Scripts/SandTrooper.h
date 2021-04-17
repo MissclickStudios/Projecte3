@@ -29,7 +29,7 @@ public:
 	void Update() override;
 	void CleanUp() override;
 
-	void OnCollision(GameObject* object) override;
+	void OnCollisionEnter(GameObject* object) override;
 
 	// Movement
 	GameObject* player = nullptr;
