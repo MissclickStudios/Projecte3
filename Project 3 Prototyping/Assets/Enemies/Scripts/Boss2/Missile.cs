@@ -15,6 +15,7 @@ public class Missile : MonoBehaviour
     // cache
     private Rigidbody rigid;
     private Vector3 initialPosition;
+    public Transform grenadeLauncher;
     private Quaternion initialRotation;
 
     // Use this for initialization
@@ -22,8 +23,9 @@ public class Missile : MonoBehaviour
     {
         rigid = GetComponent<Rigidbody>();
         bTargetReady = true;
-        initialPosition = transform.position;
+        initialPosition = grenadeLauncher.transform.position;
         initialRotation = transform.rotation;
+
         startPoint = transform.position;
     }
 
@@ -56,17 +58,6 @@ public class Missile : MonoBehaviour
         bTargetReady = false;
     }
 
-    // Sets a random target around the object based on the TargetRadius
-    void SetNewTarget() { bTargetReady = true; }
-
-    // resets the projectile to its initial position
-    void ResetToInitialState()
-    {
-        rigid.velocity = Vector3.zero;
-        this.transform.SetPositionAndRotation(initialPosition, initialRotation);
-        bTargetReady = false;
-    }
-
     // Update is called once per frame
     void Update()
     {
@@ -76,17 +67,8 @@ public class Missile : MonoBehaviour
             {
                 Launch();
             }
-            else
-            {
-                ResetToInitialState();
-                SetNewTarget();
-            }
         }
 
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            ResetToInitialState();
-        }
     }
     public int SA1numProjectiles;
     public float SA1projectileSpeed;
@@ -97,10 +79,12 @@ public class Missile : MonoBehaviour
 
     void OnCollisionEnter()
     {
-        float angleStep = 360f / 10;
+        float angleStep = 360f / SA1numProjectiles;
         float angle = 0f;
 
-        for (int i = 1; i <= 10 * 2; i++)
+        startPoint = transform.position;
+
+        for (int i = 1; i <= SA1numProjectiles * 2; i++)
         {
             // Direction Calculation
 

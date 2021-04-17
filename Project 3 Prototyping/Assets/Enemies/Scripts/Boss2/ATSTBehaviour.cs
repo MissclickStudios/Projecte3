@@ -21,6 +21,13 @@ public class ATSTBehaviour : MonoBehaviour
     private float waveAttackFireRate;
     private float waveAttackDuration = 10.0f;
 
+    private float grenadeAttackFireRate;
+    private float grenadeAttackDuration = 10.0f;
+
+    public float kickTriggerDistance = 4.0f;
+
+    public Transform player;
+
     void Start()
     {
         trigerredAttack = false;
@@ -39,9 +46,9 @@ public class ATSTBehaviour : MonoBehaviour
     void Update()
     {
 
-        sAttack1Duration -= Time.deltaTime;
         if (chasing == true)
         {
+            sAttack1Duration -= Time.deltaTime;
             Chasing();
         }
 
@@ -99,6 +106,7 @@ public class ATSTBehaviour : MonoBehaviour
             {
                 readyWaveAttack = false;
 
+                grenadeAttackDuration = 10.0f;
                 pointAttackDuration = 10.0f;
 
                 grenadeAttackPrep();
@@ -107,7 +115,30 @@ public class ATSTBehaviour : MonoBehaviour
 
         if (readyGranadeAttack == true)
         {
+            grenadeAttackFireRate += Time.deltaTime;
+            grenadeAttackDuration -= Time.deltaTime;
 
+            if (grenadeAttackFireRate >= 2.5f)
+            {
+                startPoint = parabolicSource.transform.position;
+                instantiateGrenadeAttack();
+                grenadeAttackFireRate = 0;
+
+            }
+
+            if (grenadeAttackDuration < 0.0f)
+            {
+                readyGranadeAttack = false;
+                chasing = true;
+
+                waveAttackDuration = 10.0f;
+                sAttack1Duration = 10.0f;
+            }
+        }
+
+        if ((transform.position - chasingTarget.position).magnitude < kickTriggerDistance)
+        {
+            player.GetComponent<Rigidbody>().AddForce(Vector3.back * 10000.0f);
         }
     }
 
@@ -120,7 +151,6 @@ public class ATSTBehaviour : MonoBehaviour
     public float chasingTriggerDistance = 5.0f;
     void Chasing()
     {
-
         rotatoryPiece.transform.LookAt(chasingTarget.position);
 
         if ((transform.position - chasingTarget.position).magnitude > chasingTriggerDistance)
@@ -329,6 +359,82 @@ public class ATSTBehaviour : MonoBehaviour
     }
     //---------------------------------------------------------------------------------
 
+    //---------------------------------------------------------------------------------
+    [Header("Instantiating Grenade Attack Settings")]
+    public GameObject grenadePrefab;
+    public Transform parabolicSource;
+    public Transform grenadeAttack1Arm;
+    public float grenadeBulletSpeed = 100;
+
+    // launch variables
+    [SerializeField] private Transform TargetObjectTF;
+    [Range(1.0f, 6.0f)] public float TargetRadius;
+    [Range(20.0f, 75.0f)] public float LaunchAngle;
+    
+    void instantiateGrenadeAttack()
+    {
+        Vector3 projectileXZPos = new Vector3(transform.position.x, 0.0f, transform.position.z);
+        Vector3 targetXZPos = new Vector3(TargetObjectTF.position.x, 0.0f, TargetObjectTF.position.z);
+
+        // rotate the object to face the target
+        transform.LookAt(targetXZPos);
+
+        // shorthands for the formula
+        float R = Vector3.Distance(projectileXZPos, targetXZPos);
+        float G = Physics.gravity.y;
+        float tanAlpha = Mathf.Tan(LaunchAngle * Mathf.Deg2Rad);
+        float H = TargetObjectTF.position.y - transform.position.y;
+
+        // calculate the local space components of the velocity 
+        // required to land the projectile on the target object 
+        float Vz = Mathf.Sqrt(G * R * R / (2.0f * (H - R * tanAlpha)));
+        float Vy = tanAlpha * Vz;
+
+        // create the velocity vector in local space and get it in global space
+        Vector3 localVelocity = new Vector3(0f, Vy, Vz);
+        Vector3 globalVelocity = transform.TransformDirection(localVelocity);
+
+        GameObject myBulletPrefab = Instantiate(grenadePrefab, grenadeAttack1Arm.position, Quaternion.identity) as GameObject;
+        Rigidbody myBulletPrefabRigidBody = myBulletPrefab.GetComponent<Rigidbody>();
+
+        // launch the object by setting its initial velocity and flipping its state
+        myBulletPrefabRigidBody.velocity = globalVelocity;
+
+    }
+    //---------------------------------------------------------------------------------
+
+    //---------------------------------------------------------------------------------
+    [Header("360 Grenade Attack Settings")]
+    public int grenadeNumProjectiles;
+    public float grenadeProjectileSpeed;
+    public GameObject _360Projectile;
+
+    private const float radius = 1F;
+    void _360AttackGrenade()
+    {
+        float angleStep = 360f / grenadeNumProjectiles;
+        float angle = 0f;
+
+        startPoint = transform.position;
+
+        for (int i = 1; i <= grenadeNumProjectiles * 2; i++)
+        {
+            // Direction Calculation
+
+            float projectileDirXPosition = startPoint.x + Mathf.Sin((angle * Mathf.PI) / 180) * radius;
+            float projectileDirYPosition = startPoint.y + Mathf.Cos((angle * Mathf.PI) / 180) * radius;
+
+            Vector3 projectileVector = new Vector3(projectileDirXPosition, projectileDirYPosition, 0);
+            Vector3 projectileMoveDirection = (projectileVector - startPoint).normalized * grenadeProjectileSpeed;
+
+            GameObject tmpObj = Instantiate(_360Projectile, startPoint, Quaternion.identity);
+            tmpObj.GetComponent<Rigidbody>().velocity = new Vector3(projectileMoveDirection.x, 0, projectileMoveDirection.y);
+
+            angle += angleStep;
+
+        }
+    }
+    //---------------------------------------------------------------------------------
 }
 
 
