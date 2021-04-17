@@ -112,9 +112,9 @@ bool C_Material::LoadState(ParsonNode& root)
 	ParsonNode textureNode	= root.GetNode("Texture", false);
 	ParsonNode shaderNode	= root.GetNode("Shader", false);
 
-	(materialNode.NodeIsValid())	? LoadMaterial(materialNode)	: LOG("[WARNING] Loading Scene: Could not find any Material for { %s }! Check if intended", this->GetOwner()->GetName());
-	(textureNode.NodeIsValid())		? LoadTexture(textureNode)		: LOG("[WARNING] Loading Scene: Could not find any Texture for { %s }! Check if intended", this->GetOwner()->GetName());
-	(shaderNode.NodeIsValid())		? LoadShader(shaderNode)		: LOG("[WARNING] Loading Scene: Could not find any Shader for { %s }! Check if intended", this->GetOwner()->GetName());
+	(materialNode.NodeIsValid())	? LoadMaterial(materialNode)	: LOG("[WARNING] Loading Scene: Could not find any Material for { %s }! Check if intended.", this->GetOwner()->GetName());
+	(textureNode.NodeIsValid())		? LoadTexture(textureNode)		: LOG("[WARNING] Loading Scene: Could not find any Texture for { %s }! Check if intended.", this->GetOwner()->GetName());
+	(shaderNode.NodeIsValid())		? LoadShader(shaderNode)		: LOG("[WARNING] Loading Scene: Could not find any Shader for { %s }! Check if intended.", this->GetOwner()->GetName());
 
 	return true;
 }
