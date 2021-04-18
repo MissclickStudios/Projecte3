@@ -27,10 +27,13 @@ void Bullet::OnCollisionEnter(GameObject* object)
 {
 	hit = true;
 
-//	Entity* entity = (Entity*)object->GetScript("Entity");
-//	entity->TakeDamage(onhitDamage);
-//	for (uint i = 0; i < onHitEffects.size(); ++i)
-//		entity->AddEffect(onHitEffects[i].type, onHitEffects[i].duration, onHitEffects[i].permanent);
+	Entity* entity = (Entity*)GetCollideableScript(object, ObjectType::ENTITY);
+	if (!entity)
+		return;
+
+	entity->TakeDamage(onHitdamage);
+	for (uint i = 0; i < onHitEffects.size(); ++i)
+		entity->AddEffect(onHitEffects[i].Type(), onHitEffects[i].Duration(), onHitEffects[i].Permanent());
 }
 
 void Bullet::SetShooter(Weapon* shooter, int index)

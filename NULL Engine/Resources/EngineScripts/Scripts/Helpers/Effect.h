@@ -44,6 +44,8 @@ public:
 	}
 
 	const EffectType Type() const { return type; }
+	const float Duration() const { return duration; }
+	const bool Permanent() const { return permanent; }
 
 private:
 

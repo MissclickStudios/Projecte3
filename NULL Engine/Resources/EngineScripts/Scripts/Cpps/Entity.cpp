@@ -6,7 +6,7 @@
 
 #include "ScriptMacros.h"
 
-Entity::Entity() : Script()
+Entity::Entity()
 {
 	deathTimer.Stop();
 }

@@ -4,6 +4,7 @@
 #include "Prefab.h"
 #include "Timer.h"
 
+#include "Perk.h"
 #include "Effect.h"
 
 #include "MathGeoLib/include/Math/float2.h"
@@ -37,10 +38,10 @@ public:
 	Weapon();
 	virtual ~Weapon();
 
-	void Start();
+	void Start() override;
 	virtual void SetUp() = 0;
-	void Update();
-	void CleanUp();
+	void Update() override;
+	void CleanUp() override;
 
 	void Activate();
 	void Deactivate();
@@ -49,8 +50,19 @@ public:
 	virtual ShootState Shoot(float2 direction);
 	virtual ShootState ShootLogic() = 0;
 	virtual bool Reload();
+
+	// Bullet
 	void ProjectileCollisionReport(int index);
-	virtual std::vector<Effect> GetOnHitEffects();
+
+	// Perks
+	void RefreshPerks(); // Resets the modifiers and applies all the current perks
+	void AddPerk(Perk perk);
+
+	virtual void DamageUp();
+	virtual void MaxAmmoUp();
+	virtual void FireRateUp();
+	virtual void FastReload();
+	virtual void FreezeBullets();
 
 	// Type
 	WeaponType type = WeaponType::WEAPON;
@@ -71,12 +83,19 @@ public:
 	GameObject* hand = nullptr;
 	// Reload
 	float reloadTime = 0.0f;
+	float ReloadTime() { return reloadTime / reloadTimeModifier; }
 
 	// Modifiers
 	float damageModifier = DEFAULT_MODIFIER;
 	float projectileSpeedModifier = DEFAULT_MODIFIER;
 	float fireRateModifier = DEFAULT_MODIFIER;
-	int maxAmmoModifier = DEFAULT_MODIFIER;
+	float reloadTimeModifier = DEFAULT_MODIFIER;
+	int maxAmmoModifier = 0.0f;
+	int PPSModifier = 0.0f;
+
+	// Perks - most condecorated league player in the west btw, no cringe intended
+	std::vector<Perk> perks;
+	std::vector<Effect> onHitEffects;
 
 	// Prefabs
 	Prefab weaponModel;

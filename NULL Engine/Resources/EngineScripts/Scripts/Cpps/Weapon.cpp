@@ -36,6 +36,7 @@ Weapon::~Weapon()
 void Weapon::Start()
 {
 	CreateProjectiles();
+	RefreshPerks();
 }
 
 void Weapon::Update()
@@ -105,9 +106,72 @@ void Weapon::ProjectileCollisionReport(int index)
 		projectiles[index]->object->components[i]->SetIsActive(false);
 }
 
-std::vector<Effect> Weapon::GetOnHitEffects()
+void Weapon::RefreshPerks()
 {
-	return std::vector<Effect>();
+	// Reset modifiers and on hit effects to avoid overwritting
+	damageModifier = DEFAULT_MODIFIER;
+	projectileSpeedModifier = DEFAULT_MODIFIER;
+	fireRateModifier = DEFAULT_MODIFIER;
+	reloadTimeModifier = DEFAULT_MODIFIER;
+	maxAmmoModifier = 0.0f;
+	PPSModifier = 0.0f;
+	onHitEffects.clear();
+
+	// Apply each perk
+	for (uint i = 0; i < perks.size(); ++i)
+		switch (perks[i])
+		{
+		case Perk::DAMAGE_UP:
+			DamageUp();
+			break;
+		case Perk::MAXAMMO_UP:
+			MaxAmmoUp();
+			break;
+		case Perk::FIRERATE_UP:
+			FireRateUp();
+			break;
+		case Perk::FAST_RELOAD:
+			FastReload();
+			break;
+		case Perk::FREEZE_BULLETS:
+			FreezeBullets();
+			break;
+		}
+}
+
+void Weapon::AddPerk(Perk perk)
+{
+	perks.push_back(perk);
+	RefreshPerks();
+}
+
+void Weapon::DamageUp()
+{
+	damageModifier += 1.0f;
+}
+
+void Weapon::MaxAmmoUp()
+{
+	maxAmmoModifier += 10;
+}
+
+void Weapon::FireRateUp()
+{
+	fireRateModifier -= 0.2f;
+	if (fireRateModifier < 0.1f)
+		fireRateModifier = 0.1f;
+}
+
+void Weapon::FastReload()
+{
+	reloadTime -= 0.2f;
+	if (reloadTime < 0.1f)
+		reloadTime = 0.1f;
+}
+
+void Weapon::FreezeBullets()
+{
+	onHitEffects.emplace_back(Effect(EffectType::FROZEN, 4.0f, false));
 }
 
 void Weapon::CreateProjectiles()
@@ -198,7 +262,7 @@ void Weapon::FireProjectile(float2 direction)
 		rigidBody->SetLinearVelocity(aimDirection * ProjectileSpeed());
 	}
 
-	projectile->bulletScript->SetOnHitData(Damage(), GetOnHitEffects());
+	projectile->bulletScript->SetOnHitData(Damage(), onHitEffects);
 
 	//C_AudioSource* source = projectile->object->GetComponent<C_AudioSource>();
 	//if (source)
