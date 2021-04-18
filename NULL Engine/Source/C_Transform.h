@@ -25,7 +25,7 @@ public:																				// --- C_TRANSFORM METHODS ---
 	void		SyncLocalToWorld		();											// Recalcuates the local transform to sync it to worldTransform.	Ex: new world --> SyncLocalToWorld();
 	
 	float4x4	GetLocalTransform		() const;									// Returns the local transform's 4x4 matrix. 
-	float4x4	GetWorldTransform		() const;									// Returns the world transform's 4x4 matrix.
+	float4x4	GetWorldTransform		();											// Returns the world transform's 4x4 matrix.
 	float4x4*	GetWorldTransformPtr	();											// Needed for renderers. The transform will be updated even if it is already in a renderer.
 
 	void		SetLocalTransform		(const float4x4& localTransform);			// Sets the local transform's 4x4 matrix with the one passed as argument.
@@ -40,10 +40,10 @@ public:																				// --- GET/SET LOCAL AND WORLD POSITION, ROTATION AND
 	float3		GetLocalEulerRotation	() const;									// Returns the rotation quaternion of the local transform in Euler Angles.
 	float3		GetLocalScale			() const;									// Returns the scale vector of the local transform.
 
-	float3		GetWorldPosition		() const;									// Returns the position vector of the world transform
-	Quat		GetWorldRotation		() const;									// Returns the rotation quaternion of the world transform. In Radiants.
-	float3		GetWorldEulerRotation	() const;									// Returns the rotation quaternion of the world transform in Euler Angles. In Radians.
-	float3		GetWorldScale			() const;									// Returns the scale vector of the world transform
+	float3		GetWorldPosition		();											// Returns the position vector of the world transform
+	Quat		GetWorldRotation		();											// Returns the rotation quaternion of the world transform. In Radiants.
+	float3		GetWorldEulerRotation	();											// Returns the rotation quaternion of the world transform in Euler Angles. In Radians.
+	float3		GetWorldScale			();											// Returns the scale vector of the world transform
 
 	void		SetLocalPosition		(const float3& newPosition);				// Sets localPosition to the given vector.			Ex: localPosition	= new_position;
 	void		SetLocalRotation		(const Quat& newRotation);					// Sets localRotation to the given quaternion.		Ex: localRotation	= new_rotation;
@@ -83,7 +83,12 @@ private:
 	Quat		localRotation;														// Rotation quaternion of the local transform.
 	float3		localScale;															// Scale vector of the local transform.
 
+	float3		worldPosition;														// Position vector of the world transform.
+	Quat		worldRotation;														// Rotation quaternion of the world transform.
+	float3		worldScale;															// Scale vector of the world transform.
+
 	float3		localEulerRotation;													// Rotation vector in euler angles that will be used for display purposes. In Radians
+	float3		worldEulerRotation;													// Rotation vector in euler angles that will be used for display purposes. In Radians
 };
 
 #endif // !_C_TRANSFORM_H__
