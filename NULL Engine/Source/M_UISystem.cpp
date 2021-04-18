@@ -2,10 +2,13 @@
 #include "Log.h"
 #include "Profiler.h"
 
+#include "M_ResourceManager.h"
 #include "M_Scene.h"
 #include "M_Camera3D.h"
 
 #include "GameObject.h"
+
+#include "R_Texture.h"
 
 #include "C_Canvas.h"
 #include "C_Camera.h"
@@ -85,6 +88,12 @@ bool M_UISystem::Init(ParsonNode& config)
 	return ret;
 }
 
+bool M_UISystem::Start()
+{
+	buttonHoverDecor = (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/UI/MainMenu/ButtonPart1.png");
+	return true;
+}
+
 // Called every draw update
 UpdateStatus M_UISystem::PreUpdate(float dt)
 {
@@ -129,6 +138,9 @@ bool M_UISystem::CleanUp()
 		(*canvasIt)->activeButtons.clear();
 	}
 	canvasList.clear();
+
+
+	App->resourceManager->FreeResource(buttonHoverDecor->GetUID());
 
 	return true;
 }

@@ -11,6 +11,7 @@ typedef unsigned int uint;
 class GameObject;
 class C_UI_Button;
 class C_UI_Image;
+class R_Texture;
 
 class NULL_API M_UISystem : public Module
 {
@@ -20,6 +21,7 @@ public:
 	~M_UISystem();
 
 	bool Init(ParsonNode& config) override;
+	bool Start() override;
 	UpdateStatus PreUpdate(float dt) override;
 	UpdateStatus Update(float dt) override;
 	UpdateStatus PostUpdate(float dt) override;
@@ -43,6 +45,9 @@ public:
 	//FT_UInt		glyphIndex;
 	//FT_ULong	charcode;
 	//FT_Int32	loadFlags = FT_LOAD_DEFAULT;
+
+
+	R_Texture* buttonHoverDecor = nullptr;
 
 	std::vector<C_Canvas*> canvasList;
 
