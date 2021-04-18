@@ -2626,7 +2626,7 @@ void E_Inspector::DisplayParticleSystemControls(C_ParticleSystem* cParticleSyste
 
 void E_Inspector::DisplayEmitterInstances(C_ParticleSystem* cParticleSystem)
 {
-	static char buffer[64];
+	static char buffer[32];
 	if (ImGui::InputText("Name a new emitter", buffer, IM_ARRAYSIZE(buffer), ImGuiInputTextFlags_EnterReturnsTrue))
 	{
 		cParticleSystem->resource->AddNewEmitter(buffer);
@@ -2651,14 +2651,13 @@ void E_Inspector::DisplayEmitterInstances(C_ParticleSystem* cParticleSystem)
 
 			ImGui::SameLine();
 
-			inputTextName = emitter->name + " Preview";
 			bool preview = cParticleSystem->previewEnabled;
-			if (ImGui::Checkbox(inputTextName.c_str(), &preview))
+			if (ImGui::Checkbox("preview", &preview))
 			{
 				cParticleSystem->EnginePreview(preview);
 			}
 
-			inputTextName = emitter->name + " Stop";
+			inputTextName = "Stop - " + emitter->name;
 			bool stop = cParticleSystem->stopSpawn;
 			if (ImGui::Checkbox(inputTextName.c_str(), &stop))
 			{
@@ -2674,7 +2673,7 @@ void E_Inspector::DisplayEmitterInstances(C_ParticleSystem* cParticleSystem)
 
 			}
 
-			inputTextName = emitter->name + " Stop and Delete";
+			inputTextName = "Stop and Delete - " + emitter->name;
 			bool stopDelete = cParticleSystem->tempDelete;
 			if (ImGui::Checkbox(inputTextName.c_str(), &stopDelete))
 			{
@@ -2682,7 +2681,7 @@ void E_Inspector::DisplayEmitterInstances(C_ParticleSystem* cParticleSystem)
 				cParticleSystem->StopAndDelete(); 
 			}
 
-			inputTextName = emitter->name + " Particle Number";
+			inputTextName = "Particle Number - " + emitter->name;
 			int particleNumber = emitter->maxParticleCount;
 			if (ImGui::InputInt(inputTextName.c_str(), &particleNumber, 1, 10, ImGuiInputTextFlags_EnterReturnsTrue))
 			{ 
@@ -2692,7 +2691,7 @@ void E_Inspector::DisplayEmitterInstances(C_ParticleSystem* cParticleSystem)
 
 			R_Texture* current = emitter->emitterTexture;
 			//combo showing all resources Already exists App->resourceManager->GetAllParticleSystems()
-			inputTextName = emitter->name + " Particle Texture";
+			inputTextName = "Particle Texture - " + emitter->name;
 			if (ImGui::BeginCombo(inputTextName.c_str(), emitter->emitterTexture == nullptr ? "No Texture" : emitter->emitterTexture->GetAssetsFile()))
 			{
 				std::vector<ResourceBase> textures;
@@ -2715,12 +2714,11 @@ void E_Inspector::DisplayEmitterInstances(C_ParticleSystem* cParticleSystem)
 				ImGui::EndCombo();
 			}
 
-			inputTextName = emitter->name + " Add Module";
+			inputTextName = "Add Module - " + emitter->name;
 			ImGui::Combo(inputTextName.c_str(), &moduleType, "Add Module\0ParticleMovement\0ParticleColor\0ParticleLifetime\0ParticleRotation\0ParticleSize\0ParticleBillboarding");
 
-			ImGui::SameLine();
-
-			if ((ImGui::Button("ADD")))
+			inputTextName = "Add Module to " + emitter->name;
+			if ((ImGui::Button(inputTextName.c_str())))
 			{
 				if (moduleType != (int)ParticleModule::Type::NONE)
 				{
@@ -2733,7 +2731,7 @@ void E_Inspector::DisplayEmitterInstances(C_ParticleSystem* cParticleSystem)
 			DisplayParticleModules(emitter);
 		}
 
-		ImGui::Separator();
+		ImGui::Separator(); 
 	}
 }
 
@@ -2741,7 +2739,8 @@ void E_Inspector::DisplayParticleModules(Emitter* emitter)
 {
 	ImGui::TextColored(Cyan.C_Array(), "Particle Modules:");
 
-	ImGui::BeginChild("Particle Modules Child", ImVec2(0.0f, 269.0f), true, ImGuiWindowFlags_HorizontalScrollbar);
+	std::string inputTextName = emitter->name + " Modules";
+	ImGui::BeginChild(inputTextName.c_str(), ImVec2(0.0f, 269.0f), true, ImGuiWindowFlags_HorizontalScrollbar);
 
 	for (auto pModule = emitter->modules.cbegin(); pModule != emitter->modules.cend(); ++pModule)
 	{
