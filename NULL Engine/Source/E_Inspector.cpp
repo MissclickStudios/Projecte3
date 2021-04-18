@@ -2625,9 +2625,10 @@ void E_Inspector::DisplayParticleSystemControls(C_ParticleSystem* cParticleSyste
 
 void E_Inspector::DisplayEmitterInstances(C_ParticleSystem* cParticleSystem)
 {
-	if ((ImGui::Button("Add Emitter")))
+	static char buffer[64];
+	if (ImGui::InputText("Name a new emitter", buffer, IM_ARRAYSIZE(buffer), ImGuiInputTextFlags_EnterReturnsTrue))
 	{
-		cParticleSystem->resource->AddDefaultEmitter();
+		cParticleSystem->resource->AddNewEmitter(buffer);
 		cParticleSystem->RefreshEmitterInstances();
 	}
 
@@ -2649,14 +2650,16 @@ void E_Inspector::DisplayEmitterInstances(C_ParticleSystem* cParticleSystem)
 
 			ImGui::SameLine();
 
+			inputTextName = emitter->name + " Preview";
 			bool preview = cParticleSystem->previewEnabled;
-			if (ImGui::Checkbox("Preview", &preview))
+			if (ImGui::Checkbox(inputTextName.c_str(), &preview))
 			{
 				cParticleSystem->EnginePreview(preview);
 			}
 
+			inputTextName = emitter->name + " Stop";
 			bool stop = cParticleSystem->stopSpawn;
-			if (ImGui::Checkbox("Stop Spawn", &stop))
+			if (ImGui::Checkbox(inputTextName.c_str(), &stop))
 			{
 				cParticleSystem->stopSpawn = stop;
 				if (stop == true)
@@ -2670,19 +2673,26 @@ void E_Inspector::DisplayEmitterInstances(C_ParticleSystem* cParticleSystem)
 
 			}
 
+			inputTextName = emitter->name + " Stop and Delete";
 			bool stopDelete = cParticleSystem->tempDelete;
-			if (ImGui::Checkbox("Stop And Delete", &stopDelete))
+			if (ImGui::Checkbox(inputTextName.c_str(), &stopDelete))
 			{
 				cParticleSystem->tempDelete = stopDelete;
 				cParticleSystem->StopAndDelete(); 
 			}
 
+			inputTextName = emitter->name + " Particle Number";
 			int particleNumber = emitter->maxParticleCount;
-			if (ImGui::InputInt("Number of Particles", &particleNumber, 1, 10, ImGuiInputTextFlags_EnterReturnsTrue)) { emitter->maxParticleCount = particleNumber; }
+			if (ImGui::InputInt(inputTextName.c_str(), &particleNumber, 1, 10, ImGuiInputTextFlags_EnterReturnsTrue))
+			{ 
+				emitter->SetParticleCount(particleNumber); 
+				cParticleSystem->RefreshEmitterInstances();
+			}
 
 			R_Texture* current = emitter->emitterTexture;
 			//combo showing all resources Already exists App->resourceManager->GetAllParticleSystems()
-			if (ImGui::BeginCombo("##Particle Texture", emitter->emitterTexture == nullptr ? "No Texture" : emitter->emitterTexture->GetAssetsFile()))
+			inputTextName = emitter->name + " Particle Texture";
+			if (ImGui::BeginCombo(inputTextName.c_str(), emitter->emitterTexture == nullptr ? "No Texture" : emitter->emitterTexture->GetAssetsFile()))
 			{
 				std::vector<ResourceBase> textures;
 				App->resourceManager->GetResourceBases<R_Texture>(textures);
@@ -2701,7 +2711,8 @@ void E_Inspector::DisplayEmitterInstances(C_ParticleSystem* cParticleSystem)
 				ImGui::EndCombo();
 			}
 
-			ImGui::Combo("###", &moduleType, "Add Module\0ParticleMovement\0ParticleColor\0ParticleLifetime\0ParticleRotation\0ParticleSize\0ParticleBillboarding");
+			inputTextName = emitter->name + " Add Module";
+			ImGui::Combo(inputTextName.c_str(), &moduleType, "Add Module\0ParticleMovement\0ParticleColor\0ParticleLifetime\0ParticleRotation\0ParticleSize\0ParticleBillboarding");
 
 			ImGui::SameLine();
 

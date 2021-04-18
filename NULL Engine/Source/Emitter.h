@@ -13,6 +13,7 @@ class NULL_API Emitter
 {
 public:
 	Emitter();
+	Emitter(const char* name);
 
 	//Loop through all modules, loop through particles, update them     
 	void Update(float dt);
@@ -30,6 +31,7 @@ public:
 
 	void SetTexture(R_Texture* newTexture);
 	void SetTexture(ResourceBase newTexture);
+
 public:
 	std::vector<ParticleModule*> modules;
 	

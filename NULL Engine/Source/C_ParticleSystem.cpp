@@ -110,7 +110,12 @@ void C_ParticleSystem::SetParticleSystem(R_ParticleSystem* newParticleSystem)
 void C_ParticleSystem::RefreshEmitterInstances()
 {
 	OPTICK_CATEGORY("C_Particle RefreshEmitterInstances()", Optick::Category::Debug)
-	Reset();
+
+	for (auto emitter = emitterInstances.begin(); emitter != emitterInstances.end(); ++emitter)
+	{
+		RELEASE (*emitter);
+	}
+
 	emitterInstances.clear();
 
 	for (auto emit = resource->emitters.begin(); emit != resource->emitters.end(); ++emit)
@@ -127,7 +132,7 @@ void C_ParticleSystem::AddParticleSystem(const char* name)
 	std::string assetsPath = ASSETS_PARTICLESYSTEMS_PATH + std::string(name) + PARTICLESYSTEMS_AST_EXTENSION;
 	resource = (R_ParticleSystem*)App->resourceManager->CreateResource(ResourceType::PARTICLE_SYSTEM, assetsPath.c_str());
 
-	resource->AddDefaultEmitter();
+	resource->AddNewEmitter();
 	RefreshEmitterInstances();
 }
 
@@ -145,12 +150,12 @@ bool C_ParticleSystem::SetAsDefaultComponent()
 	OPTICK_CATEGORY("C_Particle SetAsDefaultComponent()", Optick::Category::Debug)
 	AddParticleSystem("Default Particle System");
 
-	RefreshEmitterInstances();
+	//RefreshEmitterInstances(); (it is already done inside AddParticleSystem())
 
 	return ret;
 }
 
-void C_ParticleSystem::AddDefaultEmitter()
+void C_ParticleSystem::AddNewEmitter()
 {
 }
 

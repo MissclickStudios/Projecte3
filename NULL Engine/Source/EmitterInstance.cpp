@@ -14,6 +14,8 @@ EmitterInstance::EmitterInstance(Emitter* emitter, C_ParticleSystem* component)
 {
 	this->emitter = emitter;
 	this->component = component;
+	emitterTime = 0.0f;
+	activeParticles = 0;
 
 	particles.resize(emitter->maxParticleCount);
 
@@ -27,7 +29,6 @@ EmitterInstance::EmitterInstance(Emitter* emitter, C_ParticleSystem* component)
 
 EmitterInstance::~EmitterInstance()
 {
-	delete emitter;
 	delete[] particleIndices;	
 }
 

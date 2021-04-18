@@ -19,6 +19,14 @@ Emitter::Emitter()
 	emitterTexture = (R_Texture*)App->resourceManager->GetResourceFromLibrary(textures.begin()->assetsPath.c_str());
 }
 
+Emitter::Emitter(const char* name)
+{
+	std::vector<ResourceBase> textures;
+	App->resourceManager->GetResourceBases<R_Texture>(textures);
+	emitterTexture = (R_Texture*)App->resourceManager->GetResourceFromLibrary(textures.begin()->assetsPath.c_str());
+	this->name = name;
+}
+
 void Emitter::Update(float dt)
 {
 
@@ -154,7 +162,7 @@ bool Emitter::DeleteModuleFromType(ParticleModule::Type type)
 
 void Emitter::SetParticleCount(int particleCount)
 {
-	particleCount = maxParticleCount;
+	maxParticleCount = particleCount;
 }
 
 void Emitter::SetTexture(R_Texture* newTexture)
