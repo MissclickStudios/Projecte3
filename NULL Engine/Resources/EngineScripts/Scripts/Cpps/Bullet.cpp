@@ -6,8 +6,9 @@
 #include "Weapon.h"
 #include "Entity.h"
 
-Bullet::Bullet() 
+Bullet::Bullet() : Object()
 {
+	baseType = ObjectType::BULLET;
 }
 
 Bullet::~Bullet()
@@ -27,7 +28,7 @@ void Bullet::OnCollisionEnter(GameObject* object)
 {
 	hit = true;
 
-	Entity* entity = (Entity*)GetCollideableScript(object, ObjectType::ENTITY);
+	Entity* entity = (Entity*)GetObjectScript(object, ObjectType::ENTITY);
 	if (!entity)
 		return;
 

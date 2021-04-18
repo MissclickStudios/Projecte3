@@ -6,8 +6,9 @@
 
 #include "ScriptMacros.h"
 
-Entity::Entity()
+Entity::Entity() : Object()
 {
+	baseType = ObjectType::ENTITY;
 	deathTimer.Stop();
 }
 

@@ -7,15 +7,16 @@ enum class ObjectType
 {
 	NONE,
 	ENTITY,
+	WEAPON,
 	BULLET,
 	COLLECTABLE
 };
 
-class CollideableObject : public Script
+class Object : public Script
 {
 public:
-	CollideableObject() {}
-	virtual ~CollideableObject() {}
+	Object() {}
+	virtual ~Object() {}
 
 	virtual void Awake() override {}
 	virtual void Start() override {}
@@ -39,4 +40,4 @@ public:
 	ObjectType baseType = ObjectType::NONE;
 };
 
-CollideableObject* GetCollideableScript(GameObject* gameObject, ObjectType baseType);
+Object* GetObjectScript(GameObject* gameObject, ObjectType baseType);

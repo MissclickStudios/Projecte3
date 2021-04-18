@@ -6,6 +6,8 @@
 #include "Entity.h"
 #include "AimStates.h"
 
+#include "Blaster.h"
+
 #include "MathGeoLib/include/Math/float2.h"
 
 enum class PlayerState
@@ -51,8 +53,14 @@ public:
 	AnimationInfo changeAnimation = { "Change" };
 	AnimationInfo onGuardAnimation = { "OnGuard" };
 
+	// Weapons
+	float changeTime = 0.0f;
+	float ChangeTime() { return changeTime / attackSpeedModifier; }
+	Prefab blaster;
+	Prefab equipedGun;
+
 private:
-	Timer POOPOOTIMER; // for testing porpouses, mom found the poop sock :skull:
+
 	PlayerState moveState = PlayerState::IDLE;
 	AimState aimState = AimState::IDLE;
 
@@ -71,6 +79,10 @@ private:
 	void Movement();
 
 	float2 moveDirection = float2::zero;
+
+	// Aim
+	void Aim();
+
 	float2 aimDirection = float2::zero;
 
 	// Dash
@@ -80,6 +92,15 @@ private:
 
 	// Invencibility frames
 	Timer invencibilityTimer;
+
+	// Weapons
+	Timer changeTimer;
+
+	GameObject* blasterGameObject = nullptr;
+	GameObject* equipedGunGameObject = nullptr;
+	Weapon* blasterWeapon = nullptr;
+	Weapon* equipedGunWeapon = nullptr;
+	Weapon* currentWeapon = nullptr;
 };
 
 SCRIPTS_FUNCTION Player* CreatePlayer();

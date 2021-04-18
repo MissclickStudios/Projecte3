@@ -901,11 +901,7 @@
                             "DurationInSeconds": 3.6333334445953369,
                             "Loop": false
                         }
-                    ],
-                    "CurrentClip": {
-                        "AnimationName": "Take 001",
-                        "Name": "Take 001 Default"
-                    }
+                    ]
                 },
                 {
                     "Type": 8,
@@ -2030,13 +2026,13 @@
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
+            "ShowBoundingBoxes": true,
             "Components": [
                 {
                     "Type": 1,
                     "LocalPosition": [
                         0,
-                        0,
+                        -1.0728836059570313e-06,
                         0
                     ],
                     "LocalRotation": [
@@ -2247,6 +2243,21 @@
                             "Type": 2,
                             "Name": "invencibilityDuration",
                             "float": 1
+                        },
+                        {
+                            "Type": 2,
+                            "Name": "changeTime",
+                            "float": 0.30000001192092896
+                        },
+                        {
+                            "Type": 4,
+                            "Name": "blaster",
+                            "prefab": 1075179390
+                        },
+                        {
+                            "Type": 4,
+                            "Name": "equipedGun",
+                            "prefab": 1075179390
                         }
                     ]
                 }
@@ -4162,7 +4173,7 @@
         },
         {
             "UID": 1793793900,
-            "ParentUID": 1053734351,
+            "ParentUID": 823619267,
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "MainScene",

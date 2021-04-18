@@ -1,5 +1,5 @@
 #pragma once
-#include "CollideableObject.h"
+#include "Object.h"
 #include "ScriptMacros.h"
 
 #include "Effect.h"
@@ -8,7 +8,7 @@
 
 class Weapon;
 
-class SCRIPTS_API Bullet : public CollideableObject ALLOWED_INHERITANCE
+class SCRIPTS_API Bullet : public Object ALLOWED_INHERITANCE
 {
 public:
 

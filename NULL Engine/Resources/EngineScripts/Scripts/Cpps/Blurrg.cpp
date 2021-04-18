@@ -71,7 +71,7 @@ Blurrg* CreateBlurrg()
 	return script;
 }
 
-Blurrg::Blurrg()
+Blurrg::Blurrg() : Entity()
 {
 	type = EntityType::BLURRG;
 	chargeTimer.Stop();

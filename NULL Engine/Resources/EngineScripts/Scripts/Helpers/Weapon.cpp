@@ -23,8 +23,10 @@ struct Projectile
 	bool inUse;
 };
 
-Weapon::Weapon()
+Weapon::Weapon() : Object()
 {
+	baseType = ObjectType::WEAPON;
+
 	fireRateTimer.Stop();
 	reloadTimer.Stop();
 }
@@ -179,7 +181,7 @@ void Weapon::CreateProjectiles()
 	DeleteProjectiles();
 
 	projectiles = new Projectile * [projectileNum];
-	projectileHolder = App->scene->CreateGameObject("Bullets", App->scene->GetSceneRoot());
+	projectileHolder = App->scene->CreateGameObject("Bullets", gameObject);
 
 	for (uint i = 0; i < projectileNum; ++i)
 	{

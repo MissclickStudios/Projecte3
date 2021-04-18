@@ -2,6 +2,8 @@
 
 #include "Application.h"
 #include "M_Input.h"
+#include "M_ResourceManager.h"
+#include "M_Scene.h"
 
 #include "GameObject.h"
 #include "C_RigidBody.h"
@@ -47,6 +49,12 @@ Player* CreatePlayer()
 	// Invencibility frames
 	INSPECTOR_DRAGABLE_FLOAT(script->invencibilityDuration);
 
+	// Weapons
+	INSPECTOR_DRAGABLE_FLOAT(script->changeTime);
+
+	INSPECTOR_PREFAB(script->blaster);
+	INSPECTOR_PREFAB(script->equipedGun);
+
 	//// Animations ---
 	//// Movement
 	//INSPECTOR_STRING(script->idleAnimation.name);
@@ -75,10 +83,10 @@ Player::Player() : Entity()
 {
 	type = EntityType::PLAYER;
 
-	POOPOOTIMER.Stop(); // hehe xd
 	dashTimer.Stop();
 	dashCooldownTimer.Stop();
 	invencibilityTimer.Stop();
+	changeTimer.Stop();
 }
 
 Player::~Player()
@@ -87,10 +95,21 @@ Player::~Player()
 
 void Player::SetUp()
 {
+	// Create Weapons and save the Weapon script pointer
+	blasterGameObject = App->resourceManager->LoadPrefab(blaster.uid, App->scene->GetSceneRoot());
+	equipedGunGameObject = App->resourceManager->LoadPrefab(equipedGun.uid, App->scene->GetSceneRoot());
 }
 
 void Player::Update()
 {
+	if (!currentWeapon)
+	{
+		blasterWeapon = (Weapon*)GetObjectScript(blasterGameObject, ObjectType::WEAPON);
+		equipedGunWeapon = (Weapon*)GetObjectScript(equipedGunGameObject, ObjectType::WEAPON);
+
+		currentWeapon = blasterWeapon;
+	}
+
 	ManageMovement();
 	if (moveState != PlayerState::DEAD)
 		ManageAim();
@@ -168,9 +187,8 @@ void Player::ManageMovement()
 void Player::ManageAim()
 {
 	if (aimState == AimState::IDLE || aimState == AimState::ON_GUARD)
-	{
 		GatherAimInputs();
-	}
+	Aim();
 
 	switch (aimState)
 	{
@@ -181,29 +199,48 @@ void Player::ManageAim()
 		break;
 	case AimState::SHOOT_IN:
 		currentAnimation = &shootAnimation;
-		POOPOOTIMER.Start();
 		aimState = AimState::SHOOT;
 
 	case AimState::SHOOT:
 		currentAnimation = &shootAnimation; // temporary till torso gets an independent animator
-		if (POOPOOTIMER.ReadSec() >= 0.6f)
+		switch (currentWeapon->Shoot(aimDirection))
 		{
+		case ShootState::NO_FULLAUTO:
 			aimState = AimState::ON_GUARD;
-			POOPOOTIMER.Stop();
 			currentAnimation = nullptr;
+			break;
+		case ShootState::WAINTING_FOR_NEXT:
+			aimState = AimState::ON_GUARD;
+			break;
+		case ShootState::FIRED_PROJECTILE:
+			aimState = AimState::ON_GUARD;
+			currentAnimation = nullptr;
+			break;
+		case ShootState::NO_AMMO:
+			aimState = AimState::RELOAD_IN;
+			break;
 		}
 		break;
 	case AimState::RELOAD_IN:
 		aimState = AimState::RELOAD;
 
 	case AimState::RELOAD:
-		aimState = AimState::ON_GUARD;
+		if (currentWeapon->Reload())
+			aimState = AimState::ON_GUARD;
 		break;
 	case AimState::CHANGE_IN:
+		changeTimer.Start();
 		aimState = AimState::CHANGE;
 
 	case AimState::CHANGE:
-		aimState = AimState::ON_GUARD;
+		if (changeTimer.ReadSec() >= ChangeTime())
+		{
+			if (blasterWeapon == currentWeapon)
+				currentWeapon = equipedGunWeapon;
+			else
+				currentWeapon = blasterWeapon;
+			aimState = AimState::ON_GUARD;
+		}
 		break;
 	}
 }
@@ -296,6 +333,14 @@ void Player::Movement()
 
 	direction *= Speed(); // Apply the processed speed value to the unitari direction vector
 	rigidBody->SetLinearVelocity(direction);
+}
+
+void Player::Aim()
+{
+	if (aimInput.IsZero())
+		aimDirection = moveDirection; // TEMPORARY
+	else
+		aimDirection = aimInput;
 }
 
 void Player::Dash()

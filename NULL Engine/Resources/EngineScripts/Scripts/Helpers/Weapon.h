@@ -1,5 +1,5 @@
 #pragma once
-#include "Script.h"
+#include "Object.h"
 
 #include "Prefab.h"
 #include "Timer.h"
@@ -31,7 +31,7 @@ enum class ShootState
 	NO_AMMO
 };
 
-class  Weapon : public Script
+class  Weapon : public Object
 {
 public:
 
@@ -48,7 +48,6 @@ public:
 
 	// Usability
 	virtual ShootState Shoot(float2 direction);
-	virtual ShootState ShootLogic() = 0;
 	virtual bool Reload();
 
 	// Bullet
@@ -106,6 +105,8 @@ public:
 	bool updateProjectiles = false;
 
 protected:
+
+	virtual ShootState ShootLogic() = 0;
 
 	void CreateProjectiles();
 	void DeleteProjectiles();

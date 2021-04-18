@@ -1,5 +1,5 @@
 #pragma once
-#include "CollideableObject.h"
+#include "Object.h"
 
 #include "EntityHelpers.h"
 
@@ -22,7 +22,7 @@ enum class EntityType
 	TROOPER
 };
 
-class Entity : public CollideableObject
+class Entity : public Object
 {
 public:
 

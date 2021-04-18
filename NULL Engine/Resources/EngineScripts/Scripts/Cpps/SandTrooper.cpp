@@ -50,7 +50,7 @@ SCRIPTS_FUNCTION Trooper* CreateTrooper()
 }
 
 
-Trooper::Trooper()
+Trooper::Trooper() : Entity()
 {
 	type = EntityType::TROOPER;
 
