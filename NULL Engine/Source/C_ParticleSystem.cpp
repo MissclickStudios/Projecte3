@@ -107,6 +107,22 @@ void C_ParticleSystem::SetParticleSystem(R_ParticleSystem* newParticleSystem)
 	RefreshEmitterInstances();
 }
 
+void C_ParticleSystem::SetParticleSystem(ResourceBase newParticleSystem)
+{
+	R_ParticleSystem* a = (R_ParticleSystem*)App->resourceManager->GetResourceFromLibrary(newParticleSystem.assetsPath.c_str());
+
+	if (a != nullptr)
+	{
+		CleanUp();
+		resource = a;
+		RefreshEmitterInstances();
+	}
+	else
+	{
+		LOG("COuld not find Texture %s for emitter", newParticleSystem.assetsPath.c_str());
+	}
+}
+
 void C_ParticleSystem::RefreshEmitterInstances()
 {
 	OPTICK_CATEGORY("C_Particle RefreshEmitterInstances()", Optick::Category::Debug)
