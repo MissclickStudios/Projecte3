@@ -9,8 +9,8 @@
 #include "MathGeoLib/include/Math/float3.h"
 
 class ParsonNode;
-class GameObject;
-class UIElement;
+class C_UI_Button;
+class C_UI_Image;
 
 struct NULL_API Rect2D
 {
@@ -34,6 +34,11 @@ public:
 	void Draw2D();
 	void Draw3D();
 
+	bool CheckButtonStates(); // Returns false if no buttons are hovered/pressed
+
+	
+	void UpdateActiveButtons();
+
 public:
 
 	float2 GetPosition() const;
@@ -46,10 +51,15 @@ public:
 	void SetRect(const Rect2D& rect);
 	void SetIsInvisible(const bool setTo);
 
-	//Temp. here
-	float2 pivot = { 0,0 };
+public:
+
+	std::vector<C_UI_Button*> activeButtons;
+
+	C_UI_Button* selectedButton = nullptr;
+	C_UI_Button* hoveredButton = nullptr;
 
 private:
+	C_UI_Button* buttonIterator = nullptr;
 
 	Rect2D rect = { 0,0,50,50 };
 	bool isInvisible; // This is not the same as active, this just prevents drawing

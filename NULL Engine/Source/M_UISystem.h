@@ -28,12 +28,13 @@ public:
 	bool LoadConfiguration(ParsonNode& root) override;
 	bool SaveConfiguration(ParsonNode& root) const override;
 
-	bool CheckButtonStates(); // Returns false if no buttons are hovered/pressed
+	void UpdateInputCanvas();	
+	void DeleteCanvas(C_Canvas* canvas);
+	void DeleteActiveButton(C_UI_Button* button);
 
-	void UpdateActiveButtons();
 	void InitHoveredDecorations();
 	void UpdateHoveredDecorations();
-	void DeleteActiveButton(C_UI_Button* button);
+	void AddNewCanvas(C_Canvas* canvas);
 
 public:
 
@@ -43,16 +44,16 @@ public:
 	//FT_ULong	charcode;
 	//FT_Int32	loadFlags = FT_LOAD_DEFAULT;
 
-	std::vector<C_UI_Button*> activeButtons;
-	C_UI_Button* hoveredButton = nullptr;
+	std::vector<C_Canvas*> canvasList;
 
-	bool isMainMenu = true;
+	C_Canvas* inputCanvas = nullptr;
+
 	bool isHoverDecorationAdded = false;
+
 	C_UI_Image* hoveredDecorationL = nullptr;
 	C_UI_Image* hoveredDecorationR = nullptr;
 
 private:
-	C_UI_Button* buttonIterator = nullptr;
 };
 
 #endif // !__M_UISYSTEM_H__

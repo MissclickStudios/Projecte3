@@ -748,7 +748,7 @@ void M_Renderer3D::RenderUI()
 	for (auto uiIt = App->scene->GetGameObjects()->cbegin(); uiIt != App->scene->GetGameObjects()->cend(); ++uiIt)
 	{	
 		canvas = (*uiIt)->GetComponent<C_Canvas>();
-		if (canvas != nullptr)
+		if (canvas != nullptr && canvas->IsActive())
 		{
 			RenderUIComponent((*uiIt));
 

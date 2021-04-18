@@ -1077,7 +1077,6 @@ void E_Inspector::DrawCanvasComponent(C_Canvas* cCanvas)
 
 			// --- RECT ---
 			float2 size = { cCanvas->GetRect().w, cCanvas->GetRect().h };
-			float2 pivot = { cCanvas->pivot.x, cCanvas->pivot.y };
 
 			if (ImGui::DragFloat2("Rect", (float*)&size, 0.005f, 0.0f, 0.0f, "%.3f", NULL))
 			{
@@ -1088,48 +1087,7 @@ void E_Inspector::DrawCanvasComponent(C_Canvas* cCanvas)
 					
 				
 				cCanvas->SetSize(size);
-
-				if (pivot.x < cCanvas->GetPosition().x - cCanvas->GetSize().x / 2)
-					pivot.x = cCanvas->GetPosition().x - cCanvas->GetSize().x / 2;
-
-				if (pivot.x > cCanvas->GetPosition().x + cCanvas->GetSize().x / 2)
-					pivot.x = cCanvas->GetPosition().x + cCanvas->GetSize().x / 2;
-
-
-				if (pivot.y < cCanvas->GetPosition().y - cCanvas->GetSize().y / 2)
-					pivot.y = cCanvas->GetPosition().y - cCanvas->GetSize().y / 2;
-
-				if (pivot.y > cCanvas->GetPosition().y + cCanvas->GetSize().y / 2)
-					pivot.y = cCanvas->GetPosition().y + cCanvas->GetSize().y / 2;
-
-				cCanvas->pivot.x = pivot.x;
-				cCanvas->pivot.y = pivot.y;
 			}
-
-			// --- PIVOT ---
-			if (ImGui::DragFloat2("Pivot", (float*)&pivot, 0.005f, 0.0f, 0.0f, "%.3f", NULL))
-			{
-
-				if (pivot.x < cCanvas->GetPosition().x - cCanvas->GetSize().x / 2)
-					pivot.x = cCanvas->GetPosition().x - cCanvas->GetSize().x / 2;
-
-				if (pivot.x > cCanvas->GetPosition().x + cCanvas->GetSize().x / 2)
-					pivot.x = cCanvas->GetPosition().x + cCanvas->GetSize().x / 2;
-
-
-				if (pivot.y < cCanvas->GetPosition().y - cCanvas->GetSize().y / 2)
-					pivot.y = cCanvas->GetPosition().y - cCanvas->GetSize().y / 2;
-
-				if (pivot.y > cCanvas->GetPosition().y + cCanvas->GetSize().y / 2)
-					pivot.y = cCanvas->GetPosition().y + cCanvas->GetSize().y / 2;
-
-				cCanvas->pivot.x = pivot.x;
-				cCanvas->pivot.y = pivot.y;
-			}
-
-			if (ImGui::Button("Reset Pivot"))
-				cCanvas->pivot = cCanvas->GetPosition();
-
 		}
 
 		if (!show)
