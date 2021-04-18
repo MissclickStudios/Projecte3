@@ -83,9 +83,6 @@ public:
 	AnimationInfo idleAnimation = { "Idle" };
 	AnimationInfo deathAnimation = { "Death" };
 
-	// Inspector
-	void InspectorCalls();
-
 protected:
 
 	// Movement

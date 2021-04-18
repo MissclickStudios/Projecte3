@@ -105,9 +105,6 @@ public:
 	int projectileNum = 0;
 	bool updateProjectiles = false;
 
-	// Inspector
-	void InspectorCalls();
-
 protected:
 
 	void CreateProjectiles();

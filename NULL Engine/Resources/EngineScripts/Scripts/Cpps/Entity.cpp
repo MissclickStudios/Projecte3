@@ -124,26 +124,24 @@ void Entity::Frozen()
 	attackSpeedModifier /= 2.5;
 }
 
-void Entity::InspectorCalls()
-{
-	// Health
-	INSPECTOR_DRAGABLE_FLOAT(health);
-	INSPECTOR_DRAGABLE_FLOAT(maxHealth);
+//	// Health
+//	INSPECTOR_DRAGABLE_FLOAT(health);
+//	INSPECTOR_DRAGABLE_FLOAT(maxHealth);
+//
+//	// Basic Stats
+//	INSPECTOR_DRAGABLE_FLOAT(speed);
+//	INSPECTOR_DRAGABLE_FLOAT(attackSpeed);
+//	INSPECTOR_DRAGABLE_FLOAT(damage);
+//	INSPECTOR_DRAGABLE_FLOAT(defense);
+//
+//	// Modifiers
+//	INSPECTOR_DRAGABLE_FLOAT(maxHealthModifier);
+//	INSPECTOR_DRAGABLE_FLOAT(speedModifier);
+//	INSPECTOR_DRAGABLE_FLOAT(attackSpeedModifier);
+//	INSPECTOR_DRAGABLE_FLOAT(damageModifier);
+//	INSPECTOR_DRAGABLE_FLOAT(defenseModifier);
+//	INSPECTOR_DRAGABLE_FLOAT(cooldownModifier);
+//
+//	// Death
+//	INSPECTOR_DRAGABLE_FLOAT(deathDuration);
 
-	// Basic Stats
-	INSPECTOR_DRAGABLE_FLOAT(speed);
-	INSPECTOR_DRAGABLE_FLOAT(attackSpeed);
-	INSPECTOR_DRAGABLE_FLOAT(damage);
-	INSPECTOR_DRAGABLE_FLOAT(defense);
-
-	// Modifiers
-	INSPECTOR_DRAGABLE_FLOAT(maxHealthModifier);
-	INSPECTOR_DRAGABLE_FLOAT(speedModifier);
-	INSPECTOR_DRAGABLE_FLOAT(attackSpeedModifier);
-	INSPECTOR_DRAGABLE_FLOAT(damageModifier);
-	INSPECTOR_DRAGABLE_FLOAT(defenseModifier);
-	INSPECTOR_DRAGABLE_FLOAT(cooldownModifier);
-
-	// Death
-	INSPECTOR_DRAGABLE_FLOAT(deathDuration);
-}

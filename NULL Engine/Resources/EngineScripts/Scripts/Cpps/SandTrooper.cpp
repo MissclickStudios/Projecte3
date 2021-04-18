@@ -11,7 +11,26 @@ SCRIPTS_FUNCTION Trooper* CreateTrooper()
 	Trooper* script = new Trooper();
 
 	// Entity ---
-	script->InspectorCalls();
+	// Health
+	INSPECTOR_DRAGABLE_FLOAT(script->health);
+	INSPECTOR_DRAGABLE_FLOAT(script->maxHealth);
+
+	// Basic Stats
+	INSPECTOR_DRAGABLE_FLOAT(script->speed);
+	INSPECTOR_DRAGABLE_FLOAT(script->attackSpeed);
+	INSPECTOR_DRAGABLE_FLOAT(script->damage);
+	INSPECTOR_DRAGABLE_FLOAT(script->defense);
+
+	// Modifiers
+	INSPECTOR_DRAGABLE_FLOAT(script->maxHealthModifier);
+	INSPECTOR_DRAGABLE_FLOAT(script->speedModifier);
+	INSPECTOR_DRAGABLE_FLOAT(script->attackSpeedModifier);
+	INSPECTOR_DRAGABLE_FLOAT(script->damageModifier);
+	INSPECTOR_DRAGABLE_FLOAT(script->defenseModifier);
+	INSPECTOR_DRAGABLE_FLOAT(script->cooldownModifier);
+
+	// Death
+	INSPECTOR_DRAGABLE_FLOAT(script->deathDuration);
 
 	// Trooper ---
 	// Movement

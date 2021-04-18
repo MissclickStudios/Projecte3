@@ -273,32 +273,31 @@ void Weapon::FireProjectile(float2 direction)
 		projectile->object->components[i]->SetIsActive(true);
 }
 
-void Weapon::InspectorCalls()
-{
-	// Stats
-	// Shoot
-	INSPECTOR_DRAGABLE_FLOAT(damage);
-	INSPECTOR_DRAGABLE_FLOAT(projectileSpeed);
-	INSPECTOR_DRAGABLE_FLOAT(fireRate);
-	INSPECTOR_DRAGABLE_INT(ammo);
-	INSPECTOR_DRAGABLE_INT(maxAmmo);
-	INSPECTOR_DRAGABLE_INT(projectilesPerShot);
-
-	INSPECTOR_GAMEOBJECT(hand);
-	// Reload
-	INSPECTOR_DRAGABLE_FLOAT(reloadTime);
-
-	// Modifiers
-	INSPECTOR_DRAGABLE_FLOAT(damageModifier);
-	INSPECTOR_DRAGABLE_FLOAT(projectileSpeedModifier);
-	INSPECTOR_DRAGABLE_FLOAT(fireRateModifier);
-	INSPECTOR_DRAGABLE_INT(maxAmmoModifier);
-
-	// Prefabs
-	INSPECTOR_PREFAB(weaponModel);
-	INSPECTOR_PREFAB(projectilePrefab);
-
-	// Projectiles
-	INSPECTOR_DRAGABLE_INT(projectileNum);
-	INSPECTOR_CHECKBOX_BOOL(updateProjectiles);
-}
+//	// Stats
+//	// Shoot
+//	INSPECTOR_DRAGABLE_FLOAT(damage);
+//	INSPECTOR_DRAGABLE_FLOAT(projectileSpeed);
+//	INSPECTOR_DRAGABLE_FLOAT(fireRate);
+//	INSPECTOR_DRAGABLE_INT(ammo);
+//	INSPECTOR_DRAGABLE_INT(maxAmmo);
+//	INSPECTOR_DRAGABLE_INT(projectilesPerShot);
+//
+//	INSPECTOR_GAMEOBJECT(hand);
+//	// Reload
+//	INSPECTOR_DRAGABLE_FLOAT(reloadTime);
+//
+//	// Modifiers
+//	INSPECTOR_DRAGABLE_FLOAT(damageModifier);
+//	INSPECTOR_DRAGABLE_FLOAT(projectileSpeedModifier);
+//	INSPECTOR_DRAGABLE_FLOAT(fireRateModifier);
+//	INSPECTOR_DRAGABLE_FLOAT(reloadTimeModifier);
+//	INSPECTOR_DRAGABLE_INT(maxAmmoModifier);
+//	INSPECTOR_DRAGABLE_INT(PPSModifier);
+//
+//	// Prefabs
+//	INSPECTOR_PREFAB(weaponModel);
+//	INSPECTOR_PREFAB(projectilePrefab);
+//
+//	// Projectiles
+//	INSPECTOR_DRAGABLE_INT(projectileNum);
+//	INSPECTOR_CHECKBOX_BOOL(updateProjectiles);

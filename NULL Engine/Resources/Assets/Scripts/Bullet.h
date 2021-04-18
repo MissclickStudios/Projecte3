@@ -8,7 +8,7 @@
 
 class Weapon;
 
-class SCRIPTS_API Bullet : public CollideableObject
+class SCRIPTS_API Bullet : public CollideableObject ALLOWED_INHERITANCE
 {
 public:
 
