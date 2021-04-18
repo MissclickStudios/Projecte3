@@ -5,6 +5,7 @@
 #include "EmitterInstance.h"
 
 class R_ParticleSystem;
+class ResourceBase;
 
 class NULL_API C_ParticleSystem : public Component
 {
@@ -22,6 +23,8 @@ public:
 	void Reset();
 
 	void SetParticleSystem(R_ParticleSystem* newParticleSystem);
+	void SetParticleSystem(ResourceBase newParticleSystem);
+
 	void RefreshEmitterInstances();
 
 	void AddParticleSystem(const char* name);

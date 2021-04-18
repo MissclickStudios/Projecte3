@@ -2593,13 +2593,14 @@ void E_Inspector::DisplayParticleSystemControls(C_ParticleSystem* cParticleSyste
 	//combo showing all resources Already exists App->resourceManager->GetAllParticleSystems()
 	if (ImGui::BeginCombo("##Particle Systems", cParticleSystem->resource->name.c_str()))
 	{
-		std::vector<R_ParticleSystem*> particleSystems;
-		App->resourceManager->GetAllParticleSystems(particleSystems);
+		std::vector<ResourceBase> particleSystems;
+		App->resourceManager->GetResourceBases<R_ParticleSystem>(particleSystems);
 
 		for (auto it = particleSystems.begin(); it != particleSystems.end(); ++it)
 		{
-			bool isSelected = (cParticleSystem->resource == (*it));
-			if (ImGui::Selectable((*it)->name.c_str(), isSelected))
+			bool isSelected = (strcmp(cParticleSystem->resource->GetAssetsPath(),(*it).assetsPath.c_str()) == 0);
+
+			if (ImGui::Selectable((*it).assetsPath.c_str(), isSelected))
 			{
 				cParticleSystem->SetParticleSystem((*it));
 			}
@@ -2680,7 +2681,10 @@ void E_Inspector::DisplayEmitterInstances(C_ParticleSystem* cParticleSystem)
 
 				for (auto it = textures.begin(); it != textures.end(); ++it)
 				{
-					bool isSelected = (strcmp(emitter->emitterTexture->GetAssetsPath(), (*it).assetsPath.c_str()) == 0);
+					bool isSelected = true;
+
+					if(emitter->emitterTexture != nullptr)
+						isSelected = (strcmp(emitter->emitterTexture->GetAssetsPath(), (*it).assetsPath.c_str()) == 0);
 
 					if (ImGui::Selectable((*it).assetsPath.c_str(), isSelected))
 					{
