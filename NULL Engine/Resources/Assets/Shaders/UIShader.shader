@@ -9,7 +9,8 @@ uniform mat4 projection;
 void main()
 {
     gl_Position = projection * vec4(UIpos, 0.0, 1.0); 
-    TexCoords = vec2((UIpos.x + 1.0) ,(UIpos.y + 1.0) );
+    TexCoords = vec2((UIpos.x + 1.0) / 2,
+                    (UIpos.y + 1.0) /2);
 }  
 
 #endif
@@ -30,3 +31,5 @@ void main()
 }
 
 #endif
+
+

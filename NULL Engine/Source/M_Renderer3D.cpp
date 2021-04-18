@@ -1,12 +1,12 @@
+#include "JSONParser.h"
 #include "Profiler.h"													
 #include "OpenGL.h"														
-#include "Time.h"
-#include "JSONParser.h"
+
+#include "MC_Time.h"
 
 #include "Macros.h"														
 #include "Log.h"														
-
-														
+												
 #include "Icons.h"														
 #include "Primitive.h"
 #include "Light.h"
@@ -1810,9 +1810,9 @@ void MeshRenderer::ApplyShader()
 
 			cMaterial->GetShader()->SetUniformMatrix4("modelMatrix", transform->Transposed().ptr());
 
-			cMaterial->GetShader()->SetUniformMatrix4("viewMatrix", App->camera->GetCurrentCamera()->GetOGLViewMatrix());
+			cMaterial->GetShader()->SetUniformMatrix4("viewMatrix", App->camera->GetCurrentCamera()->GetViewMatrixTransposed().ptr());
 
-			cMaterial->GetShader()->SetUniformMatrix4("projectionMatrix", App->camera->GetCurrentCamera()->GetOGLProjectionMatrix());
+			cMaterial->GetShader()->SetUniformMatrix4("projectionMatrix", App->camera->GetCurrentCamera()->GetProjectionMatrixTransposed().ptr());
 
 			cMaterial->GetShader()->SetUniformVec3f("cameraPosition", (GLfloat*)&App->camera->GetCurrentCamera()->GetFrustum().Pos());
 			
@@ -2079,15 +2079,29 @@ void SkeletonRenderer::Render()
 ParticleRenderer::ParticleRenderer(R_Texture* mat, Color color, const float4x4 transform) : 
 mat(mat),
 color(color),
-transform(transform)
+transform(transform),
+VAO(0),
+shader(nullptr)
 {
+	shader = App->resourceManager->GetShader("ParticleShader");
+}
 
+void ParticleRenderer::LoadBuffers()
+{
+	glGenBuffers(1, &VAO);
+	glBindBuffer(GL_ARRAY_BUFFER, VAO);
+
+	glBufferData(GL_ARRAY_BUFFER, sizeof(ParticlesCoords), ParticlesCoords, GL_STATIC_DRAW);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, (GLvoid*)0);
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 void ParticleRenderer::Render()
 {
 
-	glPushMatrix();
+	/*glPushMatrix();
 	glMultMatrixf((GLfloat*)&transform);
 
 	glEnable(GL_BLEND);
@@ -2114,5 +2128,34 @@ void ParticleRenderer::Render()
 
 	glDisable(GL_BLEND);
 
-	glPopMatrix();
+	glPopMatrix();*/
+
+	glEnable(GL_BLEND); 
+
+	glBlendEquation(GL_FUNC_ADD);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	glUseProgram(shader->shaderProgramID);
+
+	glBindTexture(GL_TEXTURE_2D, mat->GetTextureID());
+
+	shader->SetUniformMatrix4("modelMatrix", transform.ptr());
+
+	shader->SetUniformMatrix4("viewMatrix", App->camera->GetCurrentCamera()->GetViewMatrixTransposed().ptr());
+
+	shader->SetUniformMatrix4("projectionMatrix", App->camera->GetCurrentCamera()->GetProjectionMatrixTransposed().ptr());
+
+	shader->SetUniformVec4f("color", (GLfloat*)&color);
+
+	glBindBuffer(GL_ARRAY_BUFFER, VAO);
+
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	glUseProgram(0);
+
+	glDisable(GL_BLEND);
 }

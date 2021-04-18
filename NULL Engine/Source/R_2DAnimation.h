@@ -20,6 +20,8 @@ public:
 	bool SaveMeta(ParsonNode& metaRoot) const override;
 	bool LoadMeta(const ParsonNode& metaRoot) override;
 
+	//static inline ResourceType GetType() { return ResourceType::2D_ANIMATION; }
+
 public:
 
 	const char* GetName() const;

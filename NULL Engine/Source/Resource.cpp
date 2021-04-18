@@ -72,7 +72,7 @@ const char* Resource::GetTypeAsString() const
 	case ResourceType::SHADER:			{ return "SHADER"; }			break;
 	case ResourceType::PARTICLE_SYSTEM: { return "PARTICLE_SYSTEM"; }	break;
 	case ResourceType::SCRIPT:			{ return "SCRIPT"; }			break;
-	case ResourceType::NAVMESH_AGENT:	{ return "NAVMESH_AGENT"; }		break;
+	case ResourceType::NAVMESH:			{ return "NAVMESH"; }			break;
 	}
 
 	return "NONE";
@@ -168,7 +168,7 @@ void Resource::SetLibraryPathAndFile()
 	case ResourceType::SHADER:			{ directory = SHADERS_PATH;			extension = SHADERS_EXTENSION; }			break;
 	case ResourceType::PARTICLE_SYSTEM: { directory = PARTICLESYSTEMS_PATH;	extension = PARTICLESYSTEMS_EXTENSION; }	break;
 	case ResourceType::SCRIPT:			{ directory = SCRIPTS_PATH;			extension = SCRIPTS_EXTENSION; }			break;
-	case ResourceType::NAVMESH_AGENT:	{ directory = NAVIGATION_PATH; 		extension = NAVMESH_EXTENSION; }			break;
+	case ResourceType::NAVMESH:	{ directory = NAVIGATION_PATH; 		extension = NAVMESH_EXTENSION; }			break;
 	}
 	
 	libraryPath = directory + file + extension;

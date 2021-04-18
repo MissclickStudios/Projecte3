@@ -1,5 +1,6 @@
-#include "Time.h"
 #include "JSONParser.h"
+
+#include "MC_Time.h"
 
 #include "Application.h"
 #include "Log.h"
@@ -374,7 +375,7 @@ void M_Camera3D::FreeLookAround()
 void M_Camera3D::Orbit(const float2& orbitPoint)								// Almost identical to FreeLookAround(), but instead of only modifying XYZ, the position of the camera is also modified.
 {
 	Frustum frustum = currentCamera->GetFrustum();
-	float sensitivity = rotationSpeed * Time::Real::GetDT();
+	float sensitivity = rotationSpeed * MC_Time::Real::GetDT();
 
 	float3 newZ = frustum.Pos() - GetReference();
 
@@ -405,12 +406,12 @@ void M_Camera3D::PanCamera(const float2& panPoint)
 
 	if (panPoint.x != 0)
 	{
-		newX = -panPoint.x * frustum.WorldRight() * panSpeed * Time::Real::GetDT();
+		newX = -panPoint.x * frustum.WorldRight() * panSpeed * MC_Time::Real::GetDT();
 	}
 
 	if (panPoint.y != 0)
 	{
-		newY = panPoint.y * frustum.Up() * panSpeed * Time::Real::GetDT();
+		newY = panPoint.y * frustum.Up() * panSpeed * MC_Time::Real::GetDT();
 	}
 
 	newPosition = newX + newY;
@@ -421,7 +422,7 @@ void M_Camera3D::PanCamera(const float2& panPoint)
 void M_Camera3D::Zoom()
 {
 	Frustum frustum = currentCamera->GetFrustum();
-	float3 newZ = frustum.Front() * (float)App->input->GetMouseZ() * zoomSpeed * Time::Real::GetDT();
+	float3 newZ = frustum.Front() * (float)App->input->GetMouseZ() * zoomSpeed * MC_Time::Real::GetDT();
 
 	Move(newZ);
 }
@@ -431,11 +432,11 @@ void M_Camera3D::WASDMovement()
 {
 	float3 newPosition = float3::zero;
 	Frustum frustum = currentCamera->GetFrustum();
-	float movSpeed = movementSpeed * Time::Real::GetDT();
+	float movSpeed = movementSpeed * MC_Time::Real::GetDT();
 
 	if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KeyState::KEY_REPEAT)								// --- CAMERA MOVEMEMENT BOOST
 	{																									// 
-		movSpeed = movementSpeed * 2 * Time::Real::GetDT();											// 
+		movSpeed = movementSpeed * 2 * MC_Time::Real::GetDT();											// 
 	}																									// ---------------------------
 
 

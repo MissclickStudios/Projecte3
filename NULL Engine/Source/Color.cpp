@@ -1,5 +1,9 @@
-#include "Color.h"
 #include "MathGeoLib/include/Math/float4.h"
+
+#include "Macros.h"
+
+#include "Color.h"
+
 #include "MemoryManager.h"
 
 Color::Color() : r(0.0f), g(0.0f), b(0.0f), a(1.0f)
@@ -10,6 +14,26 @@ Color::Color() : r(0.0f), g(0.0f), b(0.0f), a(1.0f)
 Color::Color(float r, float g, float b, float a) : r(r), g(g), b(b), a(a)
 {
 
+}
+
+Color::Color(float* color)
+{
+	/*if (ARRAY_SIZE(&color) != 4)												// ATTENTION: Arrays with size != 4 could be passed as arguments, which would crash the engine.
+	{
+		r = g = b = a = 1.0f;
+	}*/
+
+	if (color == nullptr)
+	{
+		r = g = b = a = 1.0f;
+	}
+	else
+	{
+		r = color[0];
+		g = color[1];
+		b = color[2];
+		a = color[3];
+	}
 }
 
 // --- GET/SET METHODS

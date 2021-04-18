@@ -1,6 +1,7 @@
 #include "JSONParser.h"
 
-#include "Time.h"
+#include "MC_Time.h"
+#include "Emitter.h"
 #include "GameObject.h"
 
 #include "Application.h"
@@ -60,18 +61,18 @@ bool C_ParticleSystem::LoadState(ParsonNode& root)
 
 bool C_ParticleSystem::Update()
 {
-	if (previewEnabled == true && Time::Game::GetDT() == 0)
+	if (previewEnabled == true && MC_Time::Game::GetDT() == 0)
 	{
 		for (unsigned int i = 0; i < emitterInstances.size(); ++i)
 		{
-			emitterInstances[i]->Update(Time::Real::GetDT());
+			emitterInstances[i]->Update(MC_Time::Real::GetDT());
 		}
 	}
 	else
 	{
 		for (unsigned int i = 0; i < emitterInstances.size(); ++i)
 		{
-			emitterInstances[i]->Update(Time::Game::GetDT());
+			emitterInstances[i]->Update(MC_Time::Game::GetDT());
 		}
 	}
 
@@ -83,8 +84,25 @@ bool C_ParticleSystem::Update()
 	return true;
 }
 
+bool C_ParticleSystem::CleanUp()
+{
+	App->resourceManager->FreeResource(resource->GetUID());
+	resource = nullptr;
+
+	//Clean Emitter Instances
+	for (auto emitter = emitterInstances.begin(); emitter != emitterInstances.end(); ++emitter)
+	{
+		delete (*emitter);
+	}
+
+	emitterInstances.end();
+
+	return false;
+}
+
 void C_ParticleSystem::SetParticleSystem(R_ParticleSystem* newParticleSystem)
 {
+	CleanUp();
 	resource = newParticleSystem;
 	RefreshEmitters();
 }

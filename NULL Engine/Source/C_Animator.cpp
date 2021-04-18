@@ -3,7 +3,7 @@
 
 #include "FileSystemDefinitions.h"
 #include "JSONParser.h"
-#include "Time.h"
+#include "MC_Time.h"
 #include "EasingFunctions.h"
 
 #include "Channel.h"
@@ -267,7 +267,7 @@ bool C_Animator::StepClips()
 		}
 	}
 	
-	float dt		= (App->gameState == GameState::PLAY) ? Time::Game::GetDT() : Time::Real::GetDT();					// In case a clip preview is needed outside Game Mode.
+	float dt		= (App->gameState == GameState::PLAY) ? MC_Time::Game::GetDT() : MC_Time::Real::GetDT();					// In case a clip preview is needed outside Game Mode.
 	float stepValue	= dt * playbackSpeed;
 
 	if (CurrentClipExists())

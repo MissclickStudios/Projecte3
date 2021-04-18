@@ -43,13 +43,15 @@ struct Uniform
 class NULL_API R_Shader : public Resource
 {
 public:
-
 	R_Shader();
 	~R_Shader();
 
 	bool SaveMeta(ParsonNode& metaRoot) const override;
 	bool LoadMeta(const ParsonNode& metaRoot) override;
 
+	static inline ResourceType GetType() { return ResourceType::SHADER; }
+
+public:
 	void		SetUniformMatrix4(std::string name, GLfloat* value, int size = 1);
 
 	void		SetUniformVec2f(std::string name, GLfloat* value);
@@ -63,10 +65,7 @@ public:
 	void		SetUniform1f(std::string name, GLfloat value);
 	void		SetUniform1i(std::string name, GLint value);
 
-
-
 public:
-
 	uint32		shaderProgramID = 0;
 	uint32		vertexID = 0;
 	uint32		fragmentID = 0;

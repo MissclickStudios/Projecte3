@@ -13,6 +13,7 @@ public:
 	~C_ParticleSystem();
 
 	bool Update() override;
+	bool CleanUp() override;
 	
 	bool SaveState(ParsonNode& root) const override;
 	bool LoadState(ParsonNode& root) override;

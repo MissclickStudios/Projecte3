@@ -40,7 +40,7 @@ tick		(0),
 inNewTick	(false),
 playing		(false)
 {
-	duration				= (float)(end - start);
+	duration				= ((float)(end - start)) / speed;
 	durationInSeconds		= (animation != nullptr) ? (duration / animation->GetTicksPerSecond()) : 0.0f;
 }
 
@@ -115,7 +115,7 @@ void AnimatorClip::EditClip(const R_Animation* newAnimation, const std::string& 
 	speed		= newSpeed;
 	loop		= newLoop;
 
-	duration			= (end - start);
+	duration			= ((float)(end - start)) / speed;
 	durationInSeconds	= (animation != nullptr) ? (duration / animation->GetTicksPerSecond()) : 0.0f;
 }
 
@@ -229,4 +229,7 @@ float AnimatorClip::GetSpeed() const
 void AnimatorClip::SetSpeed(float newSpeed)
 {
 	speed = newSpeed;
+
+	duration			= ((float)(end - start)) / speed;
+	durationInSeconds	= (animation != nullptr) ? (duration / animation->GetTicksPerSecond()) : 0.0f;
 }

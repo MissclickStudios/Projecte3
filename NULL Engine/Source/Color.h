@@ -14,6 +14,7 @@ struct NULL_API Color
 	
 	Color();
 	Color(float r, float g, float b, float a = 1.0f);
+	Color(float* color);
 
 	// --- GET/SET
 	Color	Get				();												// Will Return the Color vector in Range: 0.0f ~ 1.0f. Will be checked and mod. to be within the limits before return.

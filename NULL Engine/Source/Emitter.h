@@ -15,6 +15,7 @@ public:
 
 	//Loop through all modules, loop through particles, update them     
 	void Update(float dt);
+	void CleanUp();
 
 	//Save and load?
 	void Save(ParsonNode& node);

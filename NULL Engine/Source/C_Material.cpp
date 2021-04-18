@@ -104,8 +104,6 @@ bool C_Material::SaveState(ParsonNode& root) const
 
 bool C_Material::LoadState(ParsonNode& root)
 {
-	bool ret = true;
-
 	rMaterial	= nullptr;
 	rTexture	= nullptr;
 	rShader		= nullptr;
@@ -113,57 +111,52 @@ bool C_Material::LoadState(ParsonNode& root)
 	ParsonNode materialNode	= root.GetNode("Material", false);
 	ParsonNode textureNode	= root.GetNode("Texture", false);
 	ParsonNode shaderNode	= root.GetNode("Shader", false);
-	
-	if (materialNode.NodeIsValid())
-	{
-		std::string material_assets_path	= ASSETS_MODELS_PATH + std::string(materialNode.GetString("Name"));
-		uint32 materialUID					= App->resourceManager->AllocateResource((uint32)materialNode.GetNumber("UID"), material_assets_path.c_str());
-		rMaterial							= (R_Material*)App->resourceManager->RequestResource((uint32)materialNode.GetNumber("UID"));
-		
-		SetMaterialColour((Color&)materialNode.GetFloat4("Color"));
 
-		if (rMaterial == nullptr)
-		{
-			LOG("[ERROR] Loading Scene: Could not find Material { %s } with UID: %u! Try reimporting the model.", materialNode.GetString("File"), (uint32)materialNode.GetNumber("UID"));
-		}
-	}
-	else
-	{
-		LOG("[WARNING] Loading Scene: Could not find any Material for { %s }! Check whether or not this is intended.", this->GetOwner()->GetName());
-	}
+	(materialNode.NodeIsValid())	? LoadMaterial(materialNode)	: LOG("[WARNING] Loading Scene: Could not find any Material for { %s }! Check if intended.", this->GetOwner()->GetName());
+	(textureNode.NodeIsValid())		? LoadTexture(textureNode)		: LOG("[WARNING] Loading Scene: Could not find any Texture for { %s }! Check if intended.", this->GetOwner()->GetName());
+	(shaderNode.NodeIsValid())		? LoadShader(shaderNode)		: LOG("[WARNING] Loading Scene: Could not find any Shader for { %s }! Check if intended.", this->GetOwner()->GetName());
 
-	if (textureNode.NodeIsValid())
-	{
-		rTexture = (R_Texture*)App->resourceManager->GetResourceFromLibrary(textureNode.GetString("AssetsPath"));
-
-		if (rTexture == nullptr)
-		{
-			LOG("[ERROR] Loading Scene: Could not find Texture { %s } with UID: %u! Try reimporting the model.", textureNode.GetString("LibraryFile"), (uint32)textureNode.GetNumber("UID"));
-		}
-	}
-	else
-	{
-		LOG("[WARNING] Loading Scene: Could not find any Texture for { %s }! Check whether or not this is intended.", this->GetOwner()->GetName());
-	}
-
-	if (shaderNode.NodeIsValid())
-	{
-		rShader = (R_Shader*)App->resourceManager->GetResourceFromLibrary(shaderNode.GetString("AssetsPath"));
-
-		if (rShader == nullptr)
-		{
-			LOG("[ERROR] Loading Scene: Could not find Shader { %s } with UID: %u! Try reimporting the model.", shaderNode.GetString("LibraryFile"), (uint32)shaderNode.GetNumber("UID"));
-		}
-	}
-	else
-	{
-		LOG("[WARNING] Loading Scene: Could not find any Shader for { %s }! Check whether or not this is intended.", this->GetOwner()->GetName());
-	}
-
-	return ret;
+	return true;
 }
 
 // --- C_MATERIAL METHODS ---
+void C_Material::LoadMaterial(ParsonNode& materialNode)
+{
+	std::string matAssetsPath	= ASSETS_MODELS_PATH + std::string(materialNode.GetString("Name"));
+	bool success				= App->resourceManager->AllocateResource((uint32)materialNode.GetNumber("UID"), matAssetsPath.c_str());
+	if (success)
+	{
+		rMaterial = (R_Material*)App->resourceManager->RequestResource((uint32)materialNode.GetNumber("UID"));
+		SetMaterialColour(materialNode.GetFloat4("Color").ptr());
+	}
+
+	if (rMaterial == nullptr)
+	{
+		LOG("[ERROR] Loading Scene: Could not find Material { %s } with UID: %u! Try reimporting the model.", materialNode.GetString("File"), (uint32)materialNode.GetNumber("UID"));
+	}
+}
+
+void C_Material::LoadTexture(const ParsonNode& textureNode)
+{
+	rTexture = (R_Texture*)App->resourceManager->GetResourceFromLibrary(textureNode.GetString("AssetsPath"));
+
+	if (rTexture == nullptr)
+	{
+		LOG("[ERROR] Loading Scene: Could not find Texture { %s } with UID: %u! Try reimporting the model.", textureNode.GetString("LibraryFile"), (uint32)textureNode.GetNumber("UID"));
+	}
+}
+
+void C_Material::LoadShader(const ParsonNode& shaderNode)
+{
+	rShader = (R_Shader*)App->resourceManager->GetResourceFromLibrary(shaderNode.GetString("AssetsPath"));
+
+	if (rShader == nullptr)
+	{
+		LOG("[ERROR] Loading Scene: Could not find Shader { %s } with UID: %u! Try reimporting the model.", shaderNode.GetString("LibraryFile"), (uint32)shaderNode.GetNumber("UID"));
+	}
+}
+
+// --- C_MATERIAL GET/SET METHODS ---
 R_Material* C_Material::GetMaterial() const
 {
 	return rMaterial;
