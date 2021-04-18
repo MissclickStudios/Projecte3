@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ATSTBehaviour : MonoBehaviour
+public class ATST : MonoBehaviour
 {
     private bool trigerredAttack;
 
@@ -271,7 +271,7 @@ public class ATSTBehaviour : MonoBehaviour
 
     void waveAttackPrep()
     {
-        waveBoss.transform.position = waveTarget.transform.position; 
+        waveBoss.transform.position = waveTarget.transform.position;
 
         if (waveBoss.transform.position == waveTarget.transform.position)
         {
@@ -371,7 +371,7 @@ public class ATSTBehaviour : MonoBehaviour
     [SerializeField] private Transform TargetObjectTF;
     [Range(1.0f, 6.0f)] public float TargetRadius;
     [Range(20.0f, 75.0f)] public float LaunchAngle;
-    
+
     void instantiateGrenadeAttack()
     {
         Vector3 projectileXZPos = new Vector3(transform.position.x, 0.0f, transform.position.z);
@@ -436,8 +436,5 @@ public class ATSTBehaviour : MonoBehaviour
         }
     }
     //---------------------------------------------------------------------------------
-
 }
-
-
 

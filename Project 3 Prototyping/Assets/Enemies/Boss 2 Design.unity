@@ -1709,8 +1709,8 @@ GameObject:
   - component: {fileID: 1815626070}
   - component: {fileID: 1815626069}
   - component: {fileID: 1815626068}
-  - component: {fileID: 1815626073}
   - component: {fileID: 1815626072}
+  - component: {fileID: 1815626073}
   m_Layer: 0
   m_Name: Boss
   m_TagString: Untagged
@@ -1822,14 +1822,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 1815626067}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c624ec4c485350540a8cc5ab1368f3ba, type: 3}
+  m_Script: {fileID: 11500000, guid: d5c299760ef22eb46b5d0c98bf4c0a63, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  kickTriggerDistance: 3
+  kickTriggerDistance: 4
   player: {fileID: 1238239499}
   chasingTarget: {fileID: 562374389}
   rotatoryPiece: {fileID: 1815626071}
-  legs: {fileID: 2048686842}
+  legs: {fileID: 952225436}
   chasingSpeed: 2
   chasingTriggerDistance: 10
   sAttack1Bullet: {fileID: 7330326984651472972, guid: ead7de1329784184081485b7d24b12c6, type: 3}
@@ -1837,23 +1837,22 @@ MonoBehaviour:
   sAttack1LeftArm: {fileID: 1759899727}
   rpm: 1.5
   sAttack1BulletSpeed: 900
-  Target: {fileID: 421623049}
+  Target: {fileID: 390993920}
   Boss: {fileID: 1815626071}
   Speed: 10
   moveSpeed: 3
-  pointAttack1Bullet: {fileID: 7330326984651472972, guid: 6b3f174fb5566e448a44a337d06a8fa4, type: 3}
+  pointAttack1Bullet: {fileID: 7330326984651472972, guid: ead7de1329784184081485b7d24b12c6, type: 3}
   shootSource: {fileID: 1759899727}
   pointAttack1RightArm: {fileID: 1199812182}
   pointAttack1LeftArm: {fileID: 1759899727}
   pointAttack1BulletSpeed: 600
-  waveTarget: {fileID: 390993920}
+  waveTarget: {fileID: 421623049}
   waveBoss: {fileID: 1815626071}
   waveMoveSpeed: 3
   waveNumProjectiles: 10
   waveProjectileSpeed: 100
-  waveProjectile: {fileID: 7330326984651472972, guid: 6b3f174fb5566e448a44a337d06a8fa4, type: 3}
+  waveProjectile: {fileID: 7330326984651472972, guid: ead7de1329784184081485b7d24b12c6, type: 3}
   waveShootSource: {fileID: 1199812182}
-  startPoint: {x: 0, y: 0, z: 0}
   grenadeTarget: {fileID: 447703459}
   grenadeBoss: {fileID: 1815626071}
   grenadePrefab: {fileID: 1754321578485337759, guid: 9fcfce71da0e3da48a8499c36b022d78, type: 3}
@@ -1861,11 +1860,11 @@ MonoBehaviour:
   grenadeAttack1Arm: {fileID: 2110761528}
   grenadeBulletSpeed: 100
   TargetObjectTF: {fileID: 1238239499}
-  TargetRadius: 4.1
-  LaunchAngle: 56.5
+  TargetRadius: 4
+  LaunchAngle: 56
   grenadeNumProjectiles: 50
   grenadeProjectileSpeed: 40
-  _360Projectile: {fileID: 7330326984651472972, guid: 6b3f174fb5566e448a44a337d06a8fa4, type: 3}
+  _360Projectile: {fileID: 7330326984651472972, guid: ead7de1329784184081485b7d24b12c6, type: 3}
 --- !u!1 &2048686841
 GameObject:
   m_ObjectHideFlags: 0

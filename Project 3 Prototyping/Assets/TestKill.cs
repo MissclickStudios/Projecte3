@@ -5,12 +5,12 @@ using UnityEngine;
 public class TestKill : MonoBehaviour
 {
 
-    ATSTBehaviour refScript;
+    ATST refScript;
    
     // Start is called before the first frame update
     void Start()
     {
-        refScript = GetComponent<ATSTBehaviour>();
+        refScript = GetComponent<ATST>();
     }
 
     // Update is called once per frame
