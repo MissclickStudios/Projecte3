@@ -3,34 +3,34 @@
 #include "VariableTypedefs.h"
 #include "Log.h"
 
-#include "Time.h"
+#include "MC_Time.h"
 
 #include <time.h>
 
 #include "MemoryManager.h"
 
-using namespace Time::Real::Utilities;																	// Not the cleanest but prefer to avoid having to write these
-using namespace Time::Game::Utilities;																	// strings every time i need a Utilities variable.
+using namespace MC_Time::Real::Utilities;																	// Not the cleanest but prefer to avoid having to write these
+using namespace MC_Time::Game::Utilities;																	// strings every time i need a Utilities variable.
 
-void Time::Sleep(uint ms)
+void MC_Time::Sleep(uint ms)
 {
 	SDL_Delay(ms);
 }
 
 // Unix time
-int Time::GetUnixTime()
+int MC_Time::GetUnixTime()
 {
 	return time(NULL);
 }
 
 // --- REAL CLOCK METHODS ---
-void Time::Real::InitRealClock()
+void MC_Time::Real::InitRealClock()
 {
 	//startup_timer.Start();
 	frameTimer.Start();
 }
 
-void Time::Real::Update()
+void MC_Time::Real::Update()
 {
 	uint ms = frameTimer.Read();
 
@@ -40,7 +40,7 @@ void Time::Real::Update()
 	frameTimer.Start();
 }
 
-void Time::Real::DelayUntilFrameCap(uint frameCap)
+void MC_Time::Real::DelayUntilFrameCap(uint frameCap)
 {
 	if (frameCap == 0)														// If frame_cap = 0, then no delay will be applied.
 	{
@@ -60,63 +60,63 @@ void Time::Real::DelayUntilFrameCap(uint frameCap)
 	}
 }
 
-void Time::Real::StartPerfTimer()
+void MC_Time::Real::StartPerfTimer()
 {
 	perfTimer.Start();
 }
 
-void Time::Real::StopPerfTimer()
+void MC_Time::Real::StopPerfTimer()
 {
 	perfTimer.Stop();
 }
 
-float Time::Real::PeekPerfTimer()
+float MC_Time::Real::PeekPerfTimer()
 {
 	return perfTimer.ReadMs();
 }
 
-Hourglass Time::Real::GetClock()
+Hourglass MC_Time::Real::GetClock()
 {
 	return _clock;
 }
 
-FrameData Time::Real::GetFrameData()
+FrameData MC_Time::Real::GetFrameData()
 {
 	return frameData;
 }
 
-uint64 Time::Real::GetFrameCount()
+uint64 MC_Time::Real::GetFrameCount()
 {
 	return frameData.frameCount;
 }
 
-float Time::Real::GetTimeSinceStart()
+float MC_Time::Real::GetTimeSinceStart()
 {
 	return frameData.timeSinceStart;
 }
 
-uint32 Time::Real::GetFramesLastSecond()
+uint32 MC_Time::Real::GetFramesLastSecond()
 {
 	return frameData.framesLastSecond;
 }
 
-float Time::Real::GetAverageFPS()
+float MC_Time::Real::GetAverageFPS()
 {
 	return frameData.avgFps;
 }
 
-uint32 Time::Real::GetMsLastFrame()
+uint32 MC_Time::Real::GetMsLastFrame()
 {
 	return frameData.msLastFrame;
 }
 
-float Time::Real::GetDT()
+float MC_Time::Real::GetDT()
 {
 	return frameData.dt;
 }
 
 // --- GAME CLOCK METHODS ---
-void Time::Game::Update()
+void MC_Time::Game::Update()
 {
 	uint ms = (uint)((float)gameFrameTimer.Read() * timeScale);
 
@@ -126,12 +126,12 @@ void Time::Game::Update()
 	gameFrameTimer.Start();
 }
 
-float Time::Game::GetTimeScale()
+float MC_Time::Game::GetTimeScale()
 {
 	return timeScale;
 }
 
-void Time::Game::SetTimeScale(float newTimeScale)
+void MC_Time::Game::SetTimeScale(float newTimeScale)
 {
 	if (newTimeScale < 0.25f || newTimeScale > 4.0f)
 	{
@@ -142,64 +142,64 @@ void Time::Game::SetTimeScale(float newTimeScale)
 	timeScale = newTimeScale;
 }
 
-void Time::Game::Play()
+void MC_Time::Game::Play()
 {
 	gameFrameTimer.Start();
 }
 
-void Time::Game::Pause()
+void MC_Time::Game::Pause()
 {
 	gameFrameTimer.Stop();
 }
 
-void Time::Game::Step(uint numSteps)
+void MC_Time::Game::Step(uint numSteps)
 {
 	
 }
 
-void Time::Game::Stop()
+void MC_Time::Game::Stop()
 {
 	gameFrameTimer.Stop();
 	gameClock.ResetClock();
 	gameFrameData.ResetData();
 }
 
-Hourglass Time::Game::GetClock()
+Hourglass MC_Time::Game::GetClock()
 {
 	return gameClock;
 }
 
-FrameData Time::Game::GetFrameData()
+FrameData MC_Time::Game::GetFrameData()
 {
 	return gameFrameData;
 }
 
-uint64 Time::Game::GetFrameCount()
+uint64 MC_Time::Game::GetFrameCount()
 {
 	return gameFrameData.frameCount;
 }
 
-float Time::Game::GetTimeSinceStart()
+float MC_Time::Game::GetTimeSinceStart()
 {
 	return gameFrameData.timeSinceStart;
 }
 
-uint32 Time::Game::GetFramesLastSecond()
+uint32 MC_Time::Game::GetFramesLastSecond()
 {
 	return gameFrameData.framesLastSecond;
 }
 
-float Time::Game::GetAverageFPS()
+float MC_Time::Game::GetAverageFPS()
 {
 	return gameFrameData.avgFps;
 }
 
-uint32 Time::Game::GetMsLastFrame()
+uint32 MC_Time::Game::GetMsLastFrame()
 {
 	return gameFrameData.msLastFrame;
 }
 
-float Time::Game::GetDT()
+float MC_Time::Game::GetDT()
 {
 	return gameFrameData.dt;
 }

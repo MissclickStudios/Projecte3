@@ -162,7 +162,7 @@ public:																									// --- COMPONENT GETTERS AND SETTERS
 			}																							//
 		}																								//
 																										//
-		return  (componentsWithType.empty()) ? false : true;											// 
+		return !componentsWithType.empty();																// 
 	}																									// -----------------------------------
 
 public:

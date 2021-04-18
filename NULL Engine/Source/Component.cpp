@@ -9,10 +9,10 @@
 #include "MemoryManager.h"
 
 Component::Component(GameObject* owner, ComponentType type, bool isActive) :
-id(Random::LCG::GetRandomUint()),
-type(type),
-owner(owner),
-isActive(isActive)
+id			(Random::LCG::GetRandomUint()),
+type		(type),
+owner		(owner),
+isActive	(isActive)
 {
 
 }

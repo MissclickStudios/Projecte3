@@ -188,7 +188,7 @@ bool ModelNode::Load(const ParsonNode& root)
 	ParsonArray scale			= transformNode.GetArray("LocalScale");
 
 	position.GetFloat3(0, transform.position);
-	rotation.GetFloat4(0, transform.rotation);
+	rotation.GetQuat(0, transform.rotation);
 	scale.GetFloat3(0, transform.scale);
 
 	meshUID			= (uint32)root.GetNumber("MeshUID");

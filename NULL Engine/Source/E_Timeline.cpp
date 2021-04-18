@@ -1,7 +1,7 @@
 #include "VariableTypedefs.h"
 
 #include "Random.h"
-#include "Time.h"
+#include "MC_Time.h"
 
 #include "E_Timeline.h"
 
@@ -60,7 +60,7 @@ bool E_Timeline::Draw(ImGuiIO& io)
 	
 	ImGui::End();
 
-	currentTime += Time::Game::GetDT() * 24;																		// Time * Ticks Per Second
+	currentTime += MC_Time::Game::GetDT() * 24;																		// Time * Ticks Per Second
 
 	if (currentTime > 120.0f)
 	{
