@@ -69,8 +69,10 @@ private:
 	//void		SyncLocalToWorld		();											// Recalcuates the local transform to sync it to worldTransform.	Ex: new world --> SyncLocalToWorld();
 
 public:
-	bool syncLocalToGlobal;															// Will be set to true if a parameter of the localTransform has been modified and it has not been applied.
 	bool updateWorld;																// Will be set to true if localTransform has been modified and worldTransform has been not synced to it.
+	bool syncLocal;																	// 
+	
+	bool syncLocalToGlobal;															// Will be set to true if a parameter of the localTransform has been modified and it has not been applied.
 	bool localIsDirty;																// Using Dirty flags + localTransform: Would be used to prevent the lclTrfm from being used while dirty.
 
 private:
