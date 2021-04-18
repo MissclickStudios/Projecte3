@@ -235,8 +235,8 @@ void M_UISystem::UpdateHoveredDecorations()
 {
 	if (inputCanvas != nullptr)
 	{
-		hoveredDecorationL->GetOwner()->SetParent(inputCanvas->GetOwner());
-		hoveredDecorationR->GetOwner()->SetParent(inputCanvas->GetOwner());
+		hoveredDecorationL->GetOwner()->parent = inputCanvas->GetOwner();
+		hoveredDecorationR->GetOwner()->parent = inputCanvas->GetOwner();
 
 		if (inputCanvas->selectedButton != nullptr)
 		{
