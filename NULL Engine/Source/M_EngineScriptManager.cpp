@@ -32,6 +32,15 @@ bool M_EngineScriptManager::Start()
 		while (MoveFileA(SCRIPTS_DLL_OUTPUT, SCRIPTS_DLL_WORKING) == FALSE) {}
 	}
 	dllHandle = LoadLibrary(SCRIPTS_DLL_WORKING);
+	if (dllHandle != nullptr)
+	{
+		StringVecPushBackString = (void(*)(void*, const std::string&))GetProcAddress(dllHandle, "StringVectorPushBackString");
+		StringVecPushBackChar = (void(*)(void*, const char*))GetProcAddress(dllHandle, "StringVectorPushBackChar");
+		StringVecEmplaceBackString = (void(*)(void*, const std::string&))GetProcAddress(dllHandle, "StringVectorEmplaceBackString");
+		StringVecEmplaceBackChar = (void(*)(void*, const char*))GetProcAddress(dllHandle, "StringVectorEmplaceBackChar");
+		StringVecReserve = (void(*)(void*, int))GetProcAddress(dllHandle, "StringVectorReserve");
+		StringVecErase = (void(*)(void*, int))GetProcAddress(dllHandle, "StringVectorErase");
+	}
 
 	App->resourceManager->GetAllScripts(aviableScripts);
 
@@ -356,12 +365,14 @@ void M_EngineScriptManager::DeSerializeAllScripts(const ParsonArray& scriptsArra
 								}
 								case InspectorScriptData::VECTORSTRING:
 								{
-									std::vector<std::string>& inspectorStringVector = *(std::vector<std::string>*)(*item).ptr;
+									//std::vector<std::string>& inspectorStringVector = *(std::vector<std::string>*)(*item).ptr;
 									ParsonArray parsonStringArray = variable.GetArray("vectorstring");
-									inspectorStringVector.reserve(parsonStringArray.size);
-									for (int i = 0; i < parsonStringArray.size; ++i)
+									//inspectorStringVector.reserve(parsonStringArray.size);
+									App->scriptManager->StringVecReserve((*item).ptr, parsonStringArray.size);
+									for (int j = 0; j < parsonStringArray.size; ++j)
 									{
-										inspectorStringVector.emplace_back(parsonStringArray.GetString(i));
+										//inspectorStringVector.emplace_back(parsonStringArray.GetString(i));
+										EngineApp->scriptManager->StringVecEmplaceBackString((*item).ptr, parsonStringArray.GetString(j));
 									}
 									break;
 								}

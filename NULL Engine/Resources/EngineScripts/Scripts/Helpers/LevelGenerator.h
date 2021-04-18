@@ -13,9 +13,6 @@ public:
 	LevelGenerator();
 	~LevelGenerator();
 
-	//Get all the scenes saved in the assets folder with the string "Room" in the name
-	void		GetRooms();
-
 	//Builds the level randomly with all the scenes save with the string "Room" in the name
 	void		GenerateLevel();
 
@@ -35,11 +32,9 @@ public:
 	void		CleanUp();
 
 public:
-	std::vector<std::string>			allRooms;
 	std::vector<std::string>			level1;
 	std::vector<std::string>			level2;
 	int			currentLevel;
-	int			roomsToAdd;
 	int			roomNum;
 
 };

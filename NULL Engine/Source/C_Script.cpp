@@ -173,14 +173,14 @@ bool C_Script::LoadState(ParsonNode& root)
 						}
 						case InspectorScriptData::VECTORSTRING:
 						{
+							//std::vector<std::string>& inspectorStringVector = *(std::vector<std::string>*)(*item).ptr;
 							ParsonArray parsonStringArray = variable.GetArray("vectorstring");
-							if (parsonStringArray.ArrayIsValid()) {
-								std::vector<std::string>& inspectorStringVector = (*(std::vector<std::string>*)inspectorVariables[i].ptr);
-								inspectorStringVector.reserve(parsonStringArray.size);
-								for (int i = 0; i < parsonStringArray.size; ++i)
-								{	
-									inspectorStringVector.emplace_back(parsonStringArray.GetString(i));
-								}
+							//inspectorStringVector.reserve(parsonStringArray.size);
+							App->scriptManager->StringVecReserve(inspectorVariables[i].ptr, parsonStringArray.size);
+							for (int k = 0; k < parsonStringArray.size; ++k)
+							{
+								//inspectorStringVector.emplace_back(parsonStringArray.GetString(i));
+								App->scriptManager->StringVecEmplaceBackString(inspectorVariables[i].ptr, parsonStringArray.GetString(k));
 							}
 							break;
 						}

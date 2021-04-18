@@ -1,3 +1,4 @@
+#include <algorithm>
 #include "Application.h"
 #include "LevelGenerator.h"
 #include "Random.h"
@@ -6,10 +7,8 @@
 #include "M_FileSystem.h"
 #include "M_Input.h"
 #include "M_Scene.h"
-#include "StringLeaks.h"
 
 LevelGenerator::LevelGenerator() :
-	roomsToAdd(0),
 	roomNum(0),
 	currentLevel(0)
 {
@@ -18,47 +17,14 @@ LevelGenerator::LevelGenerator() :
 
 LevelGenerator::~LevelGenerator()
 {
-	CoreStrings::ClearStringVector(allRooms);
 	level1.clear();
 	level2.clear();
-
-}
-
-
-void LevelGenerator::GetRooms()
-{
-	App->fileSystem->GetAllFilesWithFilter(ASSETS_SCENES_PATH, allRooms, "Room", "json");
-	roomsToAdd = allRooms.size();
 }
 
 void LevelGenerator::GenerateLevel()
 {
-	float randomNum;
-	if (!allRooms.empty())
-	{
-		while (roomsToAdd > 0)
-		{
-			randomNum = Random::LCG::GetBoundedRandomUint(0, allRooms.size() - 1);
-
-			if (allRooms[randomNum].find("Level1") != std::string::npos)
-			{
-				level1.push_back(allRooms[randomNum]);
-				allRooms[randomNum].erase();
-				roomsToAdd--;
-			}
-			else if (allRooms[randomNum].find("Level2") != std::string::npos)
-			{
-				level2.push_back(allRooms[randomNum]);
-				allRooms[randomNum].erase();
-				roomsToAdd--;
-			}
-		}
-	}
-	else
-	{
-		LOG("No rooms found to generate the level.");
-	}
-
+	std::random_shuffle(level1.begin(), level1.end());
+	std::random_shuffle(level2.begin(), level2.end());
 }
 
 void LevelGenerator::GoNextRoom()

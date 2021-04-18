@@ -68,6 +68,7 @@ Player::~Player()
 void Player::Awake()
 {
 	char* buffer = nullptr;
+	//TODO IMPORTANT!!!!: Big memory leak !!!
 	uint size = App->fileSystem->Load(MANDO_FILE, &buffer);
 	if (buffer)
 	{
@@ -83,7 +84,7 @@ void Player::Awake()
 
 		load = true;
 	}
-
+	//TODO IMPORTANT!!!!: Big memory leak !!!
 	RELEASE_ARRAY(buffer);
 
 	if (!gameObject->GetComponent<C_RigidBody>())

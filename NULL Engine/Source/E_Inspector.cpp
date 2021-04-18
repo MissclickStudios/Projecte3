@@ -1614,15 +1614,15 @@ void E_Inspector::DrawScriptComponent(C_Script* cScript)
 						ImGui::SameLine(); 
 						if (ImGui::Button(("Remove " + index).c_str()))
 						{
-							stringVector.erase(stringVector.begin() + i);
+							EngineApp->scriptManager->StringVecErase((*variable).ptr, i);
 							--i;
 						}
 					}
 					ImGui::Text("Add new string to vector");
 					char buffer[128];
 					strcpy_s(buffer, "");
-					if (ImGui::InputText("New Element", buffer, IM_ARRAYSIZE(buffer), ImGuiInputTextFlags_EnterReturnsTrue))
-						stringVector.push_back(buffer);
+					if (ImGui::InputText("New Element", buffer, IM_ARRAYSIZE(buffer), ImGuiInputTextFlags_EnterReturnsTrue)) 
+						EngineApp->scriptManager->StringVecPushBackString((*variable).ptr, buffer);
 					
 					ImGui::TreePop();
 				}

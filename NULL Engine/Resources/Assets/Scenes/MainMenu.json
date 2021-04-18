@@ -371,125 +371,6 @@
             ]
         },
         {
-            "UID": 1062843215,
-            "ParentUID": 1474137658,
-            "PrefabID": 0,
-            "IsPrefab": false,
-            "Name": "Vector",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": true,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        0,
-                        0
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {
-                    "Type": 24,
-                    "ResourceUID": 325257863,
-                    "AssetsPath": "Assets\/Scripts\/\/FirstScript.h",
-                    "DataName": "FirstScript",
-                    "HasInspector": true,
-                    "InspectorVariables": [
-                        {
-                            "Type": 0,
-                            "Name": "firstVariable",
-                            "int": 1
-                        },
-                        {
-                            "Type": 0,
-                            "Name": "inputInt",
-                            "int": 1
-                        },
-                        {
-                            "Type": 0,
-                            "Name": "dragableInt",
-                            "int": 2
-                        },
-                        {
-                            "Type": 0,
-                            "Name": "sliderInt",
-                            "int": 3
-                        },
-                        {
-                            "Type": 1,
-                            "Name": "checkBoxBool",
-                            "bool": false
-                        },
-                        {
-                            "Type": 2,
-                            "Name": "inputFloat",
-                            "float": 1.1000000238418579
-                        },
-                        {
-                            "Type": 2,
-                            "Name": "dragFloat",
-                            "float": 2.2000000476837158
-                        },
-                        {
-                            "Type": 3,
-                            "Name": "tripleFloat",
-                            "float3x": 1.1000000238418579,
-                            "float3y": 2.2000000476837158,
-                            "float3z": 3.2999999523162842
-                        },
-                        {
-                            "Type": 5,
-                            "Name": "string",
-                            "string": ""
-                        },
-                        {
-                            "Type": 2,
-                            "Name": "sliderFloat",
-                            "float": 3.2999999523162842
-                        },
-                        {
-                            "Type": 4,
-                            "Name": "tryPrefab",
-                            "prefab": 0
-                        },
-                        {
-                            "Type": 4,
-                            "Name": "prefab2",
-                            "prefab": 0
-                        },
-                        {
-                            "Type": 6,
-                            "Name": "object",
-                            "gameobject": 0
-                        },
-                        {
-                            "Type": 7,
-                            "Name": "stringVec",
-                            "vectorstring": [
-                                "a",
-                                "b",
-                                "c",
-                                "d"
-                            ]
-                        }
-                    ]
-                }
-            ]
-        },
-        {
             "UID": 1450927800,
             "ParentUID": 1474137658,
             "PrefabID": 0,
@@ -543,7 +424,7 @@
         },
         {
             "UID": 1474137658,
-            "ParentUID": 1591857706,
+            "ParentUID": 583251704,
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "MainScene",
@@ -750,7 +631,7 @@
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
+            "ShowBoundingBoxes": true,
             "Components": [
                 {
                     "Type": 1,
@@ -776,7 +657,35 @@
                     "ResourceUID": 1796064373,
                     "AssetsPath": "Assets\/Scripts\/\/GameManager.h",
                     "DataName": "GameManager",
-                    "HasInspector": false
+                    "HasInspector": true,
+                    "InspectorVariables": [
+                        {
+                            "Type": 7,
+                            "Name": "level1",
+                            "vectorstring": [
+                                "Level1_Room1.json",
+                                "Level1_Room2.json",
+                                "Level1_Room3.json",
+                                "Level1_Room6.json",
+                                "Level1_Room8.json",
+                                "Level1_Room9.json",
+                                "Level1_Room10.json"
+                            ]
+                        },
+                        {
+                            "Type": 7,
+                            "Name": "level2",
+                            "vectorstring": [
+                                "Level2_Room1.json",
+                                "Level2_Room3.json",
+                                "Level2_Room4.json",
+                                "Level2_Room5.json",
+                                "Level2_Room6.json",
+                                "Level2_Room7.json",
+                                "Level2_Room2.json"
+                            ]
+                        }
+                    ]
                 }
             ]
         }
