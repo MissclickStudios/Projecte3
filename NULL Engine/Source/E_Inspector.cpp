@@ -1579,6 +1579,7 @@ void E_Inspector::DrawScriptComponent(C_Script* cScript)
 			{
 				if (ImGui::TreeNodeEx((*variable).variableName.c_str()))
 				{
+					//int draggedIndex = -1;
 					std::vector<std::string>& stringVector = (*(std::vector<std::string>*)(*variable).ptr);
 					for (int i = 0; i < stringVector.size(); ++i) 
 					{
@@ -1587,6 +1588,29 @@ void E_Inspector::DrawScriptComponent(C_Script* cScript)
 						std::string index = std::to_string(i);
 						if (ImGui::InputText(((*variable).variableName + " " + index).c_str(), buffer, IM_ARRAYSIZE(buffer)))
 							stringVector[i] = buffer;
+						//-----------------------------------DRAG DROP----------------------------------------------------
+						if (ImGui::BeginDragDropSource())
+						{
+							//draggedIndex = i;
+							ImGui::SetDragDropPayload("STRING_VECTOR_NODE", /*&draggedIndex*/&i, sizeof(int), ImGuiCond_Once);
+							ImGui::Text("Dragging %s", stringVector[i].c_str());
+
+							ImGui::EndDragDropSource();
+						}
+
+						if (ImGui::BeginDragDropTarget())												
+						{
+							if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("STRING_VECTOR_NODE"))
+							{
+								std::string tmp = stringVector[i];
+								stringVector[i] = stringVector[*(int*)payload->Data];
+								stringVector[*(int*)payload->Data] = tmp;
+								ImGui::FocusWindow(NULL);
+							}
+
+							ImGui::EndDragDropTarget();
+						}
+						//-----------------------------------DRAG DROP----------------------------------------------------
 						ImGui::SameLine(); 
 						if (ImGui::Button(("Remove " + index).c_str()))
 						{
