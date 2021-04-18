@@ -15,7 +15,8 @@
 
 C_Transform::C_Transform(GameObject* owner) : Component(owner, ComponentType::TRANSFORM),
 localTransform			(float4x4::identity),
-worldTransform			(float4x4::identity)
+worldTransform			(float4x4::identity),
+updateWorld				(false)
 //syncLocalToGlobal		(false),
 //updateWorldTransform	(false)
 {	
@@ -31,8 +32,6 @@ C_Transform::~C_Transform()
 
 bool C_Transform::Update()
 {
-	bool ret = true;
-
 	/*if (updateWorldTransform)
 	{
 		UpdateWorldTransform();
@@ -43,23 +42,25 @@ bool C_Transform::Update()
 		SyncLocalToWorld();
 	}*/
 
-	return ret;
+	return true;
 }
 
 bool C_Transform::CleanUp()
 {
-	bool ret = true;
 
-	return ret;
+
+	return true;
 }
 
 bool C_Transform::SaveState(ParsonNode& root) const
 {
-	bool ret = true;
-
 	root.SetNumber("Type", (uint)GetType());
 
-	ParsonArray position = root.SetArray("LocalPosition");
+	root.SetFloat3("LocalPosition", localPosition);
+	root.SetFloat4("LocalRotation", localRotation.CastToFloat4());
+	root.SetFloat3("LocalScale", localScale);
+
+	/*ParsonArray position = root.SetArray("LocalPosition");
 
 	position.SetNumber(localPosition.x);
 	position.SetNumber(localPosition.y);
@@ -76,15 +77,13 @@ bool C_Transform::SaveState(ParsonNode& root) const
 
 	scale.SetNumber(localScale.x);
 	scale.SetNumber(localScale.y);
-	scale.SetNumber(localScale.z);
+	scale.SetNumber(localScale.z);*/
 
-	return ret;
+	return true;
 }
 
 bool C_Transform::LoadState(ParsonNode& root)
 {
-	bool ret = true;
-
 	ParsonArray position = root.GetArray("LocalPosition");
 
 	localPosition.x = (float)position.GetNumber(0);
@@ -106,7 +105,7 @@ bool C_Transform::LoadState(ParsonNode& root)
 
 	UpdateLocalTransform();
 
-	return ret;
+	return true;
 }
 
 // ------ C_TRANSFORM METHODS ------
@@ -289,6 +288,7 @@ float3 C_Transform::GetWorldEulerRotation() const
 {
 	float3 p, s;
 	Quat rotation;
+
 	worldTransform.Decompose(p, rotation, s);
 
 	return rotation.ToEulerXYZ() * RADTODEG;
@@ -298,6 +298,7 @@ float3 C_Transform::GetWorldScale() const
 {
 	float3 p, s;
 	Quat rotation;
+
 	worldTransform.Decompose(p, rotation, s);
 
 	return s;
