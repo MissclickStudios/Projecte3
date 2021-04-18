@@ -38,7 +38,7 @@
                         "X": 0,
                         "Y": 0,
                         "W": 1.0926049947738647,
-                        "H": 0.56977641582489014,
+                        "H": 0.54020994901657104,
                         "IsInvisible": false
                     }
                 }
@@ -79,7 +79,7 @@
                     "Type": 21,
                     "Image": {
                         "X": 0.31000000238418579,
-                        "Y": -0.010499998927116394,
+                        "Y": 0.0035000008065253496,
                         "W": 0.05000000074505806,
                         "H": 0.10000000149011612,
                         "IsHDL": false,
@@ -93,6 +93,12 @@
                         "AssetsName": "ButtonPart1.png",
                         "LibaryPath": "Library\/Textures\/1948734010.netex",
                         "LibraryFile": "1948734010.netex"
+                    },
+                    "Shader": {
+                        "AssetsPath": "Assets\/Shaders\/UIShader.shader",
+                        "AssetsName": "UIShader.shader",
+                        "LibaryPath": "Library\/Shaders\/1025410539.neshader",
+                        "LibraryFile": "1025410539.neshader"
                     }
                 }
             ]
@@ -198,6 +204,12 @@
                         "AssetsName": "ButtonPart1.png",
                         "LibaryPath": "Library\/Textures\/1948734010.netex",
                         "LibraryFile": "1948734010.netex"
+                    },
+                    "Shader": {
+                        "AssetsPath": "Assets\/Shaders\/UIShader.shader",
+                        "AssetsName": "UIShader.shader",
+                        "LibaryPath": "Library\/Shaders\/1025410539.neshader",
+                        "LibraryFile": "1025410539.neshader"
                     }
                 }
             ]
@@ -368,7 +380,7 @@
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": true,
+            "ShowBoundingBoxes": false,
             "Components": [
                 {
                     "Type": 1,
@@ -397,9 +409,14 @@
                     "HasInspector": true,
                     "InspectorVariables": [
                         {
-                            "Type": 5,
-                            "Name": "buttonName",
-                            "string": "New Game"
+                            "Type": 6,
+                            "Name": "newGameButton",
+                            "gameobject": 920236665
+                        },
+                        {
+                            "Type": 6,
+                            "Name": "gameManager",
+                            "gameobject": 2082473722
                         }
                     ]
                 }
@@ -407,7 +424,7 @@
         },
         {
             "UID": 1474137658,
-            "ParentUID": 1502183716,
+            "ParentUID": 1794931389,
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "MainScene",
@@ -487,6 +504,12 @@
                         "AssetsName": "GameLogo2.png",
                         "LibaryPath": "Library\/Textures\/1155057581.netex",
                         "LibraryFile": "1155057581.netex"
+                    },
+                    "Shader": {
+                        "AssetsPath": "Assets\/Shaders\/UIShader.shader",
+                        "AssetsName": "UIShader.shader",
+                        "LibaryPath": "Library\/Shaders\/1025410539.neshader",
+                        "LibraryFile": "1025410539.neshader"
                     }
                 },
                 {
@@ -547,6 +570,12 @@
                         "AssetsName": "GameLogo1.png",
                         "LibaryPath": "Library\/Textures\/377039222.netex",
                         "LibraryFile": "377039222.netex"
+                    },
+                    "Shader": {
+                        "AssetsPath": "Assets\/Shaders\/UIShader.shader",
+                        "AssetsName": "UIShader.shader",
+                        "LibaryPath": "Library\/Shaders\/1025410539.neshader",
+                        "LibraryFile": "1025410539.neshader"
                     }
                 }
             ]
@@ -589,6 +618,163 @@
                     "Culling": false,
                     "OrthogonalView": false,
                     "HideFrustum": true
+                }
+            ]
+        },
+        {
+            "UID": 2082473722,
+            "ParentUID": 1474137658,
+            "PrefabID": 316805506,
+            "IsPrefab": true,
+            "Name": "GameManager",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 24,
+                    "ResourceUID": 1796064373,
+                    "AssetsPath": "Assets\/Scripts\/\/GameManager.h",
+                    "DataName": "GameManager",
+                    "HasInspector": false
+                }
+            ]
+        },
+        {
+            "UID": 1785338216,
+            "ParentUID": 1474137658,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "EmptyGameObject",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": true,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 24,
+                    "ResourceUID": 325257863,
+                    "AssetsPath": "Assets\/Scripts\/\/FirstScript.h",
+                    "DataName": "FirstScript",
+                    "HasInspector": true,
+                    "InspectorVariables": [
+                        {
+                            "Type": 0,
+                            "Name": "firstVariable",
+                            "int": 1
+                        },
+                        {
+                            "Type": 0,
+                            "Name": "inputInt",
+                            "int": 1
+                        },
+                        {
+                            "Type": 0,
+                            "Name": "dragableInt",
+                            "int": 2
+                        },
+                        {
+                            "Type": 0,
+                            "Name": "sliderInt",
+                            "int": 3
+                        },
+                        {
+                            "Type": 1,
+                            "Name": "checkBoxBool",
+                            "bool": false
+                        },
+                        {
+                            "Type": 2,
+                            "Name": "inputFloat",
+                            "float": 1.1000000238418579
+                        },
+                        {
+                            "Type": 2,
+                            "Name": "dragFloat",
+                            "float": 2.2000000476837158
+                        },
+                        {
+                            "Type": 3,
+                            "Name": "tripleFloat",
+                            "float3x": 1.1000000238418579,
+                            "float3y": 2.2000000476837158,
+                            "float3z": 3.2999999523162842
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "string",
+                            "string": ""
+                        },
+                        {
+                            "Type": 2,
+                            "Name": "sliderFloat",
+                            "float": 3.2999999523162842
+                        },
+                        {
+                            "Type": 4,
+                            "Name": "tryPrefab",
+                            "prefab": 0
+                        },
+                        {
+                            "Type": 4,
+                            "Name": "prefab2",
+                            "prefab": 0
+                        },
+                        {
+                            "Type": 6,
+                            "Name": "object",
+                            "gameobject": 0
+                        },
+                        {
+                            "Type": 7,
+                            "Name": "stringVec",
+                            "vectorstring": [
+                                "ola",
+                                "com"
+                            ]
+                        }
+                    ]
                 }
             ]
         }

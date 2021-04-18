@@ -83,22 +83,6 @@ bool M_Scene::Start()
 	}
 
 	CreateSceneCamera("SceneCamera");
-
-	level.GetRooms();
-	level.GenerateLevel();
-	
-	level.AddFixedRoom("InitialL1", 1, 1);
-	level.AddFixedRoom("InitialL2", 2, 1);
-
-	level.AddFixedRoom("BossL1", 1, 10);
-	level.AddFixedRoom("BossL2", 2, 10);
-
-	level.AddFixedRoom("ShopL1", 1, 4);
-	level.AddFixedRoom("ShopL2", 2, 4);
-
-	/*level.AddFixedRoom("Start",1 ,1); 
-	level.AddFixedRoom("Boss",1 ,15);*/
-	
 	
 
 	if(App->gameState == GameState::PLAY)
@@ -177,12 +161,6 @@ UpdateStatus M_Scene::Update(float dt)
 			}
 		}
 	}
-
-	// --- Room Generation
-	level.HandleRoomGeneration();
-
-	//--
-	
 	
 	ShowFPS();
 
@@ -197,7 +175,7 @@ UpdateStatus M_Scene::PostUpdate(float dt)
 
 	if (nextScene)
 	{
-		level.GoNextRoom();
+		LoadScene(nextSceneName.c_str());
 		nextScene = false;
 	}
 
@@ -1404,9 +1382,10 @@ void M_Scene::ShowFPS()
 	}*/
 }
 
-LevelGenerator* M_Scene::GetLevelGenerator()
+void M_Scene::ScriptChangeScene(const std::string& sceneName)
 {
-	return &level;
+	nextScene = true;
+	nextSceneName = sceneName;
 }
 
 void M_Scene::DeleteSelectedGameObject()

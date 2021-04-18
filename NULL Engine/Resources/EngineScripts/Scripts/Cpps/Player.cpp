@@ -177,7 +177,8 @@ void Player::Update()
 			if (!rigidBody || rigidBody->IsStatic())
 				rigidBody->SetIsActive(false);
 
-			App->scene->GetLevelGenerator()->InitiateLevel(1);
+			//TODO: Player death
+			//App->scene->GetLevelGenerator()->InitiateLevel(1);
 		}
 		return;
 	}

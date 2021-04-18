@@ -1564,7 +1564,8 @@ void E_Inspector::DrawScriptComponent(C_Script* cScript)
 						GameObject* ptr = *(GameObject**)payload->Data;
 						if (ptr != nullptr) 
 						{
-							*(*variable).obj = ptr;
+							*(*variable).obj = App->scene->GetGameObjectByUID(ptr->GetUID());
+							//*(*variable).obj = ptr;
 						}
 					}
 					ImGui::EndDragDropTarget();
@@ -1574,6 +1575,35 @@ void E_Inspector::DrawScriptComponent(C_Script* cScript)
 					if ((*variable).obj != nullptr)
 						*(*variable).obj = nullptr;
 				break;
+			case InspectorScriptData::DataType::VECTORSTRING:
+			{
+				if (ImGui::TreeNodeEx((*variable).variableName.c_str()))
+				{
+					std::vector<std::string>& stringVector = (*(std::vector<std::string>*)(*variable).ptr);
+					for (int i = 0; i < stringVector.size(); ++i) 
+					{
+						char buffer[128];
+						strcpy_s(buffer, stringVector[i].c_str());
+						std::string index = std::to_string(i);
+						if (ImGui::InputText(((*variable).variableName + " " + index).c_str(), buffer, IM_ARRAYSIZE(buffer)))
+							stringVector[i] = buffer;
+						ImGui::SameLine(); 
+						if (ImGui::Button(("Remove " + index).c_str()))
+						{
+							stringVector.erase(stringVector.begin() + i);
+							--i;
+						}
+					}
+					ImGui::Text("Add new string to vector");
+					char buffer[128];
+					strcpy_s(buffer, "");
+					if (ImGui::InputText("New Element", buffer, IM_ARRAYSIZE(buffer), ImGuiInputTextFlags_EnterReturnsTrue))
+						stringVector.push_back(buffer);
+					
+					ImGui::TreePop();
+				}
+				break;
+			}
 			}
 			if (numVariables > 1) 
 			{

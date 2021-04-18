@@ -1,11 +1,4 @@
 #include "GameManager.h"
-#include "Application.h"
-#include "M_Window.h"
-#include "M_Scene.h"
-#include "C_Canvas.h"
-#include "C_UI_Text.h"
-#include "GameObject.h"
-#include "MC_Time.h"
 
 GameManager::GameManager(): Script()
 {
@@ -15,12 +8,38 @@ GameManager::~GameManager()
 {
 }
 
-void GameManager::Start()
+void GameManager::Awake()
 {
-	fpsCount = (C_UI_Text*)App->scene->GetGameObjectByName(fpsText.c_str())->GetComponent<C_UI_Text>();
+	/*level.AddFixedRoom("Start",1 ,1);
+	level.AddFixedRoom("Boss",1 ,15);*/
+
+	//Load de la primera scene?
 }
 
 void GameManager::Update()
 {
-	fpsCount->SetText(std::to_string(MC_Time::Real::GetFramesLastSecond()).c_str());
+	// --- Room Generation
+	level.HandleRoomGeneration();
+	//S'ha de fer alguna manera de avisar l'scene que volem canviar de scene pero no fer-ho imediatament ??? -> si
+	//--
+}
+
+void GameManager::GenerateNewRun()
+{
+	level.GetRooms(); //Vector d'strings al inspector???
+	level.GenerateLevel(); //Nomes quan li donem a new game desde el main menu
+
+	level.AddFixedRoom("InitialL1", 1, 1); //vector de fixed rooms??
+	level.AddFixedRoom("InitialL2", 2, 1);
+
+	level.AddFixedRoom("BossL1", 1, 10);
+	level.AddFixedRoom("BossL2", 2, 10);
+
+	level.AddFixedRoom("ShopL1", 1, 4);
+	level.AddFixedRoom("ShopL2", 2, 4);
+}
+
+GameManager* CreateGameManager() {
+	GameManager* script = new GameManager();
+	return script;
 }
