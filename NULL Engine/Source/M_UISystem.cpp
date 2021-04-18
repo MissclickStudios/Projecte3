@@ -139,6 +139,7 @@ bool M_UISystem::CleanUp()
 	}
 	canvasList.clear();
 
+	inputCanvas = nullptr;
 
 	App->resourceManager->FreeResource(buttonHoverDecor->GetUID());
 
@@ -161,7 +162,7 @@ bool M_UISystem::SaveConfiguration(ParsonNode& root) const
 
 void M_UISystem::UpdateInputCanvas()
 {
-	if (canvasList.size() < 2)
+	if (canvasList.size() < 2 && !canvasList.empty())
 	{
 		inputCanvas = (*canvasList.begin());
 		return;
