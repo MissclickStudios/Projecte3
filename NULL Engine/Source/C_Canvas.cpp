@@ -256,6 +256,11 @@ bool C_Canvas::CheckButtonStates()
 			}
 		}
 	}
+	else if (activeButtons.size() > 1)
+	{
+		selectedButton = (*activeButtons.begin());
+		selectedButton->SetState(UIButtonState::HOVERED);
+	}
 
 	return ret;
 }

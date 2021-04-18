@@ -185,10 +185,10 @@ void M_UISystem::DeleteCanvas(C_Canvas* canvas)
 		if ((*it) == canvas)
 		{
 			canvasList.erase(it);
+			UpdateInputCanvas();
 			return;
 		}
 	}
-	UpdateInputCanvas();
 }
 
 void M_UISystem::DeleteActiveButton(C_UI_Button* button)
