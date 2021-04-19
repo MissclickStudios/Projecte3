@@ -103,6 +103,7 @@ bool M_Camera3D::SaveConfiguration(ParsonNode& configuration) const
 // -----------------------------------------------------------------
 UpdateStatus M_Camera3D::Update(float dt)
 {
+	masterCamera->GetComponent<C_Transform>()->GetWorldTransform();
 
 	return UpdateStatus::CONTINUE;
 }

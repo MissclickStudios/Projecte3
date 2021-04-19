@@ -157,6 +157,8 @@ UpdateStatus M_Scene::Update(float dt)
 		}
 	}
 
+	RefreshSceneTransforms();																			// For now we need to make a second pass to make sure that all GOs trfm are updated.
+
 	App->renderer->AddRenderersBatch(meshRenderers, cuboidRenderers, skeletonRenderers);
 	
 	meshRenderers.clear();
@@ -181,13 +183,9 @@ UpdateStatus M_Scene::Update(float dt)
 
 	// --- Room Generation
 	level.HandleRoomGeneration();
-
 	//--
 	
-	
 	ShowFPS();
-
-
 
 	return UpdateStatus::CONTINUE;
 }
@@ -568,6 +566,11 @@ bool M_Scene::NewScene()
 	currentScene = "New Scene";
 
 	return true;
+}
+
+void M_Scene::RefreshSceneTransforms()
+{
+	sceneRoot->GetComponent<C_Transform>()->RefreshTransformsChain();
 }
 
 void M_Scene::LoadResourceIntoScene(Resource* resource)

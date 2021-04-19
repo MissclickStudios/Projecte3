@@ -93,6 +93,8 @@ struct MeshRenderer
 	C_Transform*	transform;
 	C_Mesh*			cMesh;
 	C_Material*		cMaterial;
+
+	float			distanceToCamera;
 };
 
 struct CuboidRenderer																							// Will render the wireframe of any given geometric form with 8 vertices.

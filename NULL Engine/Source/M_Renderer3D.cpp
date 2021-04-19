@@ -1567,6 +1567,13 @@ void MeshRenderer::Render()
 {
 	R_Mesh* rMesh = cMesh->GetMesh();
 	
+	std::string name = transform->GetOwner()->GetName();
+
+	if (strcmp(transform->GetOwner()->GetName(), "Blaster") == 0)
+	{
+		LOG("BRUH");
+	}
+
 	if (rMesh == nullptr)
 	{
 		LOG("[ERROR] Renderer 3D: Could not render Mesh! Error: R_Mesh* was nullptr.");

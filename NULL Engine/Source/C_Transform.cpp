@@ -210,6 +210,22 @@ void C_Transform::SetChildsAsDirty()
 	}
 }
 
+void C_Transform::RefreshTransformsChain()
+{
+	if (updateWorld)
+		UpdateWorldTransform();
+
+	GameObject* owner = GetOwner();
+
+	if (owner->childs.empty())
+		return;
+
+	for (uint i = 0; i < owner->childs.size(); ++i)
+	{
+		owner->childs[i]->GetComponent<C_Transform>()->RefreshTransformsChain();
+	}
+}
+
 // --- POSITION, ROTATION AND SCALE METHODS
 // -- GET METHODS
 float3 C_Transform::GetLocalPosition() const
