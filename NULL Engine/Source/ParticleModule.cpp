@@ -322,6 +322,6 @@ Quat ParticleBillboarding::GetAlignmentRotation(const float3& position, const fl
 	}
 	float3x3 result = float3x3(R, U, N);
 
-	return result.Inverted().ToQuat();
+	 return Quat(float3x3(R, U, N));
 }
 

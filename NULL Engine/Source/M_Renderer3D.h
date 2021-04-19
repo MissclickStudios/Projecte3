@@ -59,20 +59,11 @@ const float ParticlesCoords[] = {
 1,0,
 };
 
-//const float texCoordsBuffer[] = {
-//0, 0,
-//1, 0,
-//0, 1,
-//1, 0,
-//1, 1,
-//0, 1,
-//};
-
 struct MeshRenderer
 {
 	MeshRenderer(float4x4* transform, C_Mesh* cMesh, C_Material* cMaterial);								// Will render the given mesh at the given position with the given mat & tex.
 
-	void Render						();
+	void Render						(bool outline);
 
 	void RenderVertexNormals		(const R_Mesh* rMesh);
 	void RenderFaceNormals			(const R_Mesh* rMesh);
@@ -84,6 +75,8 @@ struct MeshRenderer
 	
 	void ApplyTextureAndMaterial	();
 	void ClearTextureAndMaterial	();
+
+	void RenderOutline(R_Mesh* rMesh);
 
 	void ApplyShader				();
 	uint32 SetDefaultShader			(C_Material* cMaterial);
@@ -326,8 +319,6 @@ private:
 	std::vector<MeshRenderer>		meshRenderers;
 	std::vector<CuboidRenderer>		cuboidRenderers;
 	std::vector<SkeletonRenderer>	skeletonRenderers;
-
-	
 	
 
 	Icons					engineIcons;

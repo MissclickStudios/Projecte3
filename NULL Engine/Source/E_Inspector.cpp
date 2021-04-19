@@ -259,7 +259,7 @@ void E_Inspector::DrawComponents(GameObject* selectedGameObject)
 		case ComponentType::BOX_COLLIDER:		{ DrawBoxColliderComponent((C_BoxCollider*)component); }			break;
 		case ComponentType::SPHERE_COLLIDER:	{ DrawSphereColliderComponent((C_SphereCollider*)component); }		break;
 		case ComponentType::CAPSULE_COLLIDER:	{ DrawCapsuleColliderComponent((C_CapsuleCollider*)component); }	break;
-		case ComponentType::PARTICLES:			{ DrawParticleSystemComponent((C_ParticleSystem*)component); }			break;
+		case ComponentType::PARTICLES:			{ DrawParticleSystemComponent((C_ParticleSystem*)component); }		break;
 		case ComponentType::CANVAS:				{ DrawCanvasComponent((C_Canvas*)component); }						break;
 		case ComponentType::UI_IMAGE:			{ DrawUIImageComponent((C_UI_Image*)component); }					break;
 		case ComponentType::UI_TEXT:			{ DrawUITextComponent((C_UI_Text*)component); }						break;
@@ -398,6 +398,15 @@ void E_Inspector::DrawMeshComponent(C_Mesh* cMesh)
 			if (ImGui::Checkbox("Show Bounding Box", &showBoundingBox))		{ cMesh->SetShowBoundingBox(showBoundingBox); }
 			if (ImGui::Checkbox("Draw Vertex Normals", &drawVertNormals))		{ cMesh->SetDrawVertexNormals(drawVertNormals); }
 			if (ImGui::Checkbox("Draw Face Normals", &drawFaceNormals))		{ cMesh->SetDrawFaceNormals(drawFaceNormals); }
+
+			ImGui::Separator();
+
+			// --- OUTLINE MODE ---
+			ImGui::TextColored(Cyan.C_Array(), "Outline Mesh:");
+
+			bool outlineMesh = cMesh->GetOutlineMesh();
+
+			if (ImGui::Checkbox("Outline Mesh", &outlineMesh)) { cMesh->SetOutlineMesh(outlineMesh); }
 		}
 		else
 		{

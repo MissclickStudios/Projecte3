@@ -207,7 +207,7 @@ void C_Material::SwapTexture(R_Texture* rTexture)
 
 void C_Material::SetShader(R_Shader* rShader)
 {
-	this->rShader = rShader;
+ 	this->rShader = rShader;
 }
 
 Color C_Material::GetMaterialColour()

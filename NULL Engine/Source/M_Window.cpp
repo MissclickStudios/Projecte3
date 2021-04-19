@@ -56,6 +56,9 @@ bool M_Window::Init(ParsonNode& config)
 		isFullscreenDesktop = config.GetBool("isFullscreenDesktop");
 
 		Uint32 flags	= SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN;
+		//Use Stencil Buffer
+
+		//SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 1);
 
 		//Use OpenGL 2.1
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);

@@ -47,6 +47,7 @@
 
 #include "MemoryManager.h"
 
+#include "MathGeoLib/include/Math/float4x4.h"
 
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */	
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */	
@@ -153,7 +154,7 @@ UpdateStatus M_Renderer3D::PreUpdate(float dt)
 {	
 	OPTICK_CATEGORY("M_Renderer3D PreUpdate", Optick::Category::Module)
 
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 	glLoadIdentity();
 
 	glMatrixMode(GL_MODELVIEW);
@@ -421,6 +422,12 @@ bool M_Renderer3D::InitOpenGL()
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 		glEnable(GL_LIGHTING);
+
+		//Outline Settings
+		//glDepthFunc(GL_LESS);
+		glEnable(GL_STENCIL_TEST);
+		glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
+		glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 	}
 
 	return ret;
@@ -533,14 +540,14 @@ void M_Renderer3D::InitFramebuffers()
 	glBindTexture(GL_TEXTURE_2D, 0);
 
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, sceneRenderTexture, 0);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthBufferTexture, 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, depthBufferTexture, 0);
 
 	// --- DEPTH & STENCIL BUFFERS ---
 	glGenRenderbuffers(1, (GLuint*)&depthBuffer);
 	glBindRenderbuffer(GL_RENDERBUFFER, depthBuffer);
 	
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, App->window->GetWidth(), App->window->GetHeight());
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthBuffer);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, App->window->GetWidth(), App->window->GetHeight());
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, depthBuffer);
 	glBindRenderbuffer(GL_RENDERBUFFER, 0);
 
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
@@ -646,6 +653,9 @@ void M_Renderer3D::RenderScene()
 	glBindFramebuffer(GL_FRAMEBUFFER, sceneFramebuffer);
 	glClear(GL_DEPTH_BUFFER_BIT);
 	glClear(GL_COLOR_BUFFER_BIT);
+	glClear(GL_STENCIL_BUFFER_BIT);
+
+	defaultSkyBox.RenderSkybox();
 
 	if (renderWorldGrid)
 		DrawWorldGrid(worldGridSize);
@@ -681,7 +691,7 @@ void M_Renderer3D::RenderScene()
 		primitives[i]->RenderByIndices();
 	}
 	
-	defaultSkyBox.RenderSkybox();
+	
 
 	RenderUI();
 	
@@ -858,7 +868,7 @@ void M_Renderer3D::AddRenderersBatch(const std::vector<MeshRenderer>& meshRender
 	{
 		this->meshRenderers.push_back(meshRenderers[i]);
 	}
-
+	
 	for (uint i = 0; i < cuboidRenderers.size(); ++i)
 	{
 		this->cuboidRenderers.push_back(cuboidRenderers[i]);
@@ -874,7 +884,11 @@ void M_Renderer3D::RenderMeshes()
 {	
 	for (uint i = 0; i < meshRenderers.size(); ++i)
 	{
-		meshRenderers[i].Render();
+		bool temp = meshRenderers[i].cMesh->GetOutlineMesh();
+		if(temp)
+			meshRenderers[i].Render(temp);
+		else
+			meshRenderers[i].Render(temp);
 	}
 
 	meshRenderers.clear();
@@ -1563,7 +1577,7 @@ cMaterial	(cMaterial)
 
 }
 
-void MeshRenderer::Render()
+void MeshRenderer::Render(bool outline)
 {
 	R_Mesh* rMesh = cMesh->GetMesh();
 	
@@ -1571,6 +1585,26 @@ void MeshRenderer::Render()
 	{
 		LOG("[ERROR] Renderer 3D: Could not render Mesh! Error: R_Mesh* was nullptr.");
 		return;
+	}
+
+	if (outline)
+	{
+		glEnable(GL_STENCIL_TEST);
+		glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+
+		glClear(GL_STENCIL_BUFFER_BIT);
+
+		glStencilFunc(GL_ALWAYS, 1, 0xFF);
+		glStencilMask(0xFF);
+	}
+	else
+	{
+		glEnable(GL_STENCIL_TEST);
+		glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+
+		glClear(GL_STENCIL_BUFFER_BIT);
+		
+		glStencilMask(0x00);
 	}
 
 	ApplyDebugParameters();																									// Enable Wireframe Mode for this specific mesh, etc.
@@ -1587,14 +1621,23 @@ void MeshRenderer::Render()
 		glBindVertexArray(cMesh->GetSkinnedMesh()->VAO);
 		glDrawElements(GL_TRIANGLES, cMesh->GetSkinnedMesh()->indices.size(), GL_UNSIGNED_INT, nullptr);
 	}
-	
+
+	if (outline)
+	{
+		RenderOutline(rMesh);
+
+		
+	}
+	ClearShader();	
+
 	glBindVertexArray(0);																									//
 
 	glBindTexture(GL_TEXTURE_2D, 0);																						// ---------------------
 	
-	ClearShader();																											// Clear the specifications applied in ApplyShader().
 	ClearTextureAndMaterial();																								// Clear the specifications applied in ApplyTextureAndMaterial().
 	ClearDebugParameters();																									// Clear the specifications applied in ApplyDebugParameters().
+
+	
 
 	// --- DEBUG DRAW ---
 	if (rMesh->drawVertexNormals || App->renderer->GetRenderVertexNormals())
@@ -1606,6 +1649,55 @@ void MeshRenderer::Render()
 	{
 		RenderFaceNormals(rMesh);
 	}
+}
+
+void MeshRenderer::RenderOutline(R_Mesh* rMesh)
+{
+
+	glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
+	glStencilMask(0x00);
+
+	uint32 shaderProgram = 0;
+	if (cMaterial != nullptr)
+	{
+		R_Shader* tempShader;
+		tempShader = App->resourceManager->GetShader("OutlineShader");
+
+		tempShader ? shaderProgram = tempShader->shaderProgramID : shaderProgram;
+
+		glUseProgram(shaderProgram);
+
+		if (shaderProgram != 0)
+		{
+
+			tempShader->SetUniformVec4f("outlineColor", (GLfloat*)&Color(1, 0, 0, 1));
+
+			tempShader->SetUniformMatrix4("modelMatrix", transform->Transposed().ptr());
+
+			tempShader->SetUniformMatrix4("viewMatrix", App->camera->GetCurrentCamera()->GetViewMatrixTransposed().ptr());
+
+			tempShader->SetUniformMatrix4("projectionMatrix", App->camera->GetCurrentCamera()->GetProjectionMatrixTransposed().ptr());
+
+		}
+	}
+
+	if (cMesh->GetSkinnedMesh() == nullptr)
+	{
+		glBindVertexArray(rMesh->VAO);
+		glDrawElements(GL_TRIANGLES, rMesh->indices.size(), GL_UNSIGNED_INT, nullptr);
+	}
+	else
+	{
+		glBindVertexArray(cMesh->GetSkinnedMesh()->VAO);
+		glDrawElements(GL_TRIANGLES, cMesh->GetSkinnedMesh()->indices.size(), GL_UNSIGNED_INT, nullptr);
+	}
+
+
+	glStencilMask(0xFF);
+	glStencilFunc(GL_ALWAYS, 1, 0xFF);
+	glEnable(GL_DEPTH_TEST);
+	glDisable(GL_STENCIL_TEST);
+
 }
 
 void MeshRenderer::RenderVertexNormals(const R_Mesh* rMesh)
@@ -2101,39 +2193,8 @@ void ParticleRenderer::LoadBuffers()
 void ParticleRenderer::Render()
 {
 
-	/*glPushMatrix();
-	glMultMatrixf((GLfloat*)&transform);
-
 	glEnable(GL_BLEND);
-
-	glColor4f(0.0f, 0.0f, 0.0f, 1.0f);
-
-	glBindTexture(GL_TEXTURE_2D, mat->GetTextureID());
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-
-	int x =0;
-	int y = 0;
-	int w = 5;
-	int h = 5;
-
-	glBegin(GL_QUADS);
-	glTexCoord2f(0, 0); glVertex2f(x -w / 2, y - h / 2);
-	glTexCoord2f(1, 0); glVertex2f(x +w / 2, y - h / 2);
-	glTexCoord2f(1, 1); glVertex2f(x +w / 2, y + h / 2);
-	glTexCoord2f(0, 1); glVertex2f(x -w / 2, y + h / 2);
-	glEnd();
-
-	glBindTexture(GL_TEXTURE_2D, 0);
-
-	glDisable(GL_BLEND);
-
-	glPopMatrix();*/
-
-	glEnable(GL_BLEND); 
-
-	glBlendEquation(GL_FUNC_ADD);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glEnable(GL_ALPHA_TEST);
 
 	glUseProgram(shader->shaderProgramID);
 
@@ -2158,4 +2219,5 @@ void ParticleRenderer::Render()
 	glUseProgram(0);
 
 	glDisable(GL_BLEND);
+	glDisable(GL_ALPHA_TEST);
 }

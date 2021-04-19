@@ -98,6 +98,10 @@ uniform PointLight pointLight[MAX_LIGHTPOINTS];
 uniform vec3 viewPos; 
 float specularStrength = 0.5;
 
+uniform vec4 outlineColor = vec4(0,0,0,1);
+uniform float litOutlineThickness = 0.1;
+uniform float unlitOutlineThickness = 0.4;
+
 in vec4 objectColor;
 in vec2 TexCoord;
 in vec3 modelNormal;
@@ -129,6 +133,15 @@ void main()
 
    color = outputColor * texColor;
 
+
+    // if (dot(viewDir, norm) 
+    //     < mix(unlitOutlineThickness, litOutlineThickness, 
+    //     max(0.0, dot(norm, dirLight.direction))))
+    //  {
+    //     color = objectColor * outlineColor; 
+        
+    //  }
+
 }
 
 vec4 CalculateDirectional(DirLight light, vec3 normal, vec3 viewDir, float specularStrength, vec4 objectColor)
@@ -155,11 +168,11 @@ vec4 CalculateDirectional(DirLight light, vec3 normal, vec3 viewDir, float specu
 
     float intensity = 0.8 * diff + 0.2 * spec;
 
- 	if (intensity > 0.8) {
- 		intensity = 1.1;
+ 	if (intensity > 0.6) {
+ 		intensity = 0.7;
  	}
  	else if (intensity > 0.4) {
- 		intensity = 0.7;
+ 		intensity = 0.5;
  	}
  	else {
  		intensity = 0.5;

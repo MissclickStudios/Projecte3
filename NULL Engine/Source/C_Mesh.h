@@ -54,11 +54,13 @@ public:																																// --- C_MESH DEBUG METHODS
 	bool		GetDrawFaceNormals		() const;
 	bool		GetShowWireframe		() const;
 	bool		GetShowBoundingBox		() const;
+	bool		GetOutlineMesh			() const;
 	
 	void		SetDrawVertexNormals	(bool setTo);
 	void		SetDrawFaceNormals		(bool setTo);
 	void		SetShowWireframe		(bool setTo);
 	void		SetShowBoundingBox		(bool setTo);
+	void		SetOutlineMesh			(bool setTo);
 
 private:
 	R_Mesh*		rMesh;
@@ -73,6 +75,7 @@ private:
 private:																															// --- COMPONENT MESH DEBUG VARIABLES
 	bool	showWireframe;
 	bool	showBoundingBox;
+	bool	outlineMesh;
 };
 
 #endif // !__C_MESH_H__

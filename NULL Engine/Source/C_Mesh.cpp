@@ -24,7 +24,8 @@ skinnedMesh		(nullptr),
 rootBone		(nullptr),
 cAnimatorOwner	(nullptr),
 showWireframe	(false),
-showBoundingBox	(false)
+showBoundingBox	(false),
+outlineMesh		(false)
 {
 }
 
@@ -313,6 +314,11 @@ bool C_Mesh::GetShowBoundingBox() const
 	return showBoundingBox;
 }
 
+bool C_Mesh::GetOutlineMesh() const
+{
+	return outlineMesh;
+}
+
 void C_Mesh::SetDrawVertexNormals(bool setTo)
 {
 	if (rMesh != nullptr)
@@ -338,4 +344,9 @@ void C_Mesh::SetShowBoundingBox(bool setTo)
 {
 	showBoundingBox = setTo;
 	this->GetOwner()->show_bounding_boxes = setTo;
+}
+
+void C_Mesh::SetOutlineMesh(bool setTo)
+{
+	this->outlineMesh = setTo;
 }
