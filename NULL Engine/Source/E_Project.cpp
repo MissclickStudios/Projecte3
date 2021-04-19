@@ -24,17 +24,18 @@
 
 #include "MemoryManager.h"
 
-#define MAX_DIRECTORY_SIZE	500
+#define MAX_DIRECTORY_SIZE		500
+#define MAX_DISPLAY_NAME_STR	8
 
 E_Project::E_Project() : EditorPanel("Project"),
 directoryToDisplay			(nullptr),
 refreshRootDirectory		(true),
-refreshDirectoryToDisplay	(false),
+refreshDirectoryToDisplay	(true),
 refreshWindowSize			(true),
 iconsAreLoaded				(false)
 {
 	directoryToDisplay = new char[MAX_DIRECTORY_SIZE];
-	sprintf_s(directoryToDisplay, MAX_DIRECTORY_SIZE, "%s", ASSETS_PATH);
+	sprintf_s(directoryToDisplay, MAX_DIRECTORY_SIZE, "%s", "Assets");
 
 	iconSize		= ImVec2(64.0f, 64.0f);
 	iconOffset		= ImVec2(20.0f, 0.0f);
@@ -114,12 +115,19 @@ void E_Project::CheckFlags()
 		
 		ClearAssetsToDisplay();
 
-		bool success = rootDirectory.FindChild(directoryToDisplay, displayDirectory);
-		if (!success)
+		if (strcmp(directoryToDisplay, rootDirectory.path.c_str()) == 0)
 		{
-			LOG("[ERROR] Editor Project Panel: Could not Refresh Directory to Display! Error: Could not get { %s }'s PathNode.", directoryToDisplay);
-			refreshDirectoryToDisplay = false;
-			return;
+			displayDirectory = rootDirectory;
+		}
+		else
+		{
+			bool success = rootDirectory.FindChild(directoryToDisplay, displayDirectory);
+			if (!success)
+			{
+				LOG("[ERROR] Editor Project Panel: Could not Refresh Directory to Display! Error: Could not get { %s }'s PathNode.", directoryToDisplay);
+				refreshDirectoryToDisplay = false;
+				return;
+			}
 		}
 
 		for (uint i = 0; i < displayDirectory.children.size(); ++i)
@@ -134,10 +142,7 @@ void E_Project::CheckFlags()
 				assetTexture = (R_Texture*)EngineApp->resourceManager->GetResourceFromLibrary(path);
 			}
 			
-			if (type != ResourceType::NONE) //TODO check this
-			{
-				assetsToDisplay.push_back({ path, file, type, assetTexture });
-			}
+			assetsToDisplay.push_back({ path, file, type, assetTexture });
 		}
 
 		refreshDirectoryToDisplay = false;
@@ -188,13 +193,23 @@ void E_Project::DrawMenuBar()
 
 void E_Project::DrawAssetsTree()
 {
-	bool retraso = false;
-	ImGui::Begin("AssetsTree", &retraso);
+	OPTICK_CATEGORY("E_Project DrawAssetsTree", Optick::Category::Editor)
+	
+	ImGui::Begin("AssetsTree");
 
 	if (ImGui::TreeNodeEx(ASSETS_PATH, ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		//DrawDirectoriesTree(ASSETS_PATH, DOTLESS_META_EXTENSION);
+		if (ImGui::IsItemClicked())
+		{
+			if (strcmp(directoryToDisplay, ASSETS_PATH) != 0)
+			{
+				sprintf_s(directoryToDisplay, MAX_DIRECTORY_SIZE, "%s", ASSETS_PATH);
+				refreshDirectoryToDisplay = true;
+			}
+		}
+
 		DrawDirectoriesTree(rootDirectory);
+
 		ImGui::TreePop();
 	}
 
@@ -358,10 +373,10 @@ void E_Project::DrawResourceIcons()
 			if (a != EngineApp->resourceManager->prefabs.end())
 				prefabName = a->second.name;
 
-			ImGui::Text(GetDisplayString(prefabName, 8).c_str());
+			ImGui::Text(GetDisplayString(prefabName, MAX_DISPLAY_NAME_STR).c_str());
 		}
 		else
-			ImGui::Text(GetDisplayString(item->file, 8).c_str());
+			ImGui::Text(GetDisplayString(item->file, MAX_DISPLAY_NAME_STR).c_str());
 
 		nextItemPos = originalPos + itemOffset;
 		if (nextItemPos.x + itemOffset.x < ImGui::GetWindowWidth())
@@ -425,27 +440,26 @@ void E_Project::AssetDragAndDropEvent(const char* assetPath, ImTextureID texture
 
 ImTextureID E_Project::GetIconTexID(const AssetDisplay& assetDisplay) const
 {
-	ImTextureID texId = 0;
-
-	if (assetDisplay.type == ResourceType::NONE)
-	{
-		LOG("[ERROR] Editor Project Panel: Could not get Icon Texture ID! Error: Given Resource* was nullptr.");
-		return 0;
-	}
+	ImTextureID texID = 0;
 
 	switch (assetDisplay.type)
 	{
-	case ResourceType::MODEL:		{ texId = (ImTextureID)engineIcons.modelIcon->GetTextureID(); }			break;
-	case ResourceType::MESH:		{ texId = (ImTextureID)engineIcons.fileIcon->GetTextureID(); }			break;
-	case ResourceType::MATERIAL:	{ texId = (ImTextureID)engineIcons.materialIcon->GetTextureID(); }		break;
-	case ResourceType::TEXTURE:		{ texId = (ImTextureID)GetOGLTextureID(assetDisplay.assetTexture); }	break;
-	case ResourceType::FOLDER:		{ texId = (ImTextureID)engineIcons.folderIcon->GetTextureID(); }		break;
-	case ResourceType::SCENE:		{ texId = (ImTextureID)engineIcons.modelIcon->GetTextureID(); }			break;
-	case ResourceType::ANIMATION:	{ texId = (ImTextureID)engineIcons.animationIcon->GetTextureID(); }		break;
-	case ResourceType::PREFAB:		{ texId = (ImTextureID)engineIcons.modelIcon->GetTextureID(); }			break;
+	case ResourceType::MODEL:			{ texID = (ImTextureID)engineIcons.modelIcon->GetTextureID(); }			break;
+	case ResourceType::MESH:			{ texID = (ImTextureID)engineIcons.fileIcon->GetTextureID(); }			break;
+	case ResourceType::MATERIAL:		{ texID = (ImTextureID)engineIcons.materialIcon->GetTextureID(); }		break;
+	case ResourceType::TEXTURE:			{ texID = (ImTextureID)GetOGLTextureID(assetDisplay.assetTexture); }	break;
+	case ResourceType::FOLDER:			{ texID = (ImTextureID)engineIcons.folderIcon->GetTextureID(); }		break;
+	case ResourceType::ANIMATION:		{ texID = (ImTextureID)engineIcons.animationIcon->GetTextureID(); }		break;
+	case ResourceType::SCENE:			{ texID = (ImTextureID)engineIcons.modelIcon->GetTextureID(); }			break;
+	case ResourceType::SHADER:			{ texID = (ImTextureID)engineIcons.fileIcon->GetTextureID();}			break;					// Find Own Unique Icon.
+	case ResourceType::PARTICLE_SYSTEM: { texID = (ImTextureID)engineIcons.modelIcon->GetTextureID();}			break;					// Find Own Unique Icon.
+	case ResourceType::PREFAB:			{ texID = (ImTextureID)engineIcons.modelIcon->GetTextureID(); }			break;					// Find Own Unique Icon.
+	case ResourceType::SCRIPT:			{ texID = (ImTextureID)engineIcons.fileIcon->GetTextureID(); }			break;					// Find Own Unique Icon.
+	case ResourceType::NAVMESH:			{ texID = (ImTextureID)engineIcons.modelIcon->GetTextureID(); }			break;					// Find Own Unique Icon.
+	case ResourceType::NONE:			{ texID = (ImTextureID)engineIcons.fileIcon->GetTextureID(); }			break;					// Find Own Unique Icon.
 	}
 
-	return texId;
+	return texID;
 }
 
 uint E_Project::GetOGLTextureID(R_Texture* assetTexture) const
