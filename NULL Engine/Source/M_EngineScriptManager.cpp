@@ -32,6 +32,15 @@ bool M_EngineScriptManager::Start()
 		while (MoveFileA(SCRIPTS_DLL_OUTPUT, SCRIPTS_DLL_WORKING) == FALSE) {}
 	}
 	dllHandle = LoadLibrary(SCRIPTS_DLL_WORKING);
+	if (dllHandle != nullptr)
+	{
+		StringVecPushBackString = (void(*)(void*, const std::string&))GetProcAddress(dllHandle, "StringVectorPushBackString");
+		StringVecPushBackChar = (void(*)(void*, const char*))GetProcAddress(dllHandle, "StringVectorPushBackChar");
+		StringVecEmplaceBackString = (void(*)(void*, const std::string&))GetProcAddress(dllHandle, "StringVectorEmplaceBackString");
+		StringVecEmplaceBackChar = (void(*)(void*, const char*))GetProcAddress(dllHandle, "StringVectorEmplaceBackChar");
+		StringVecReserve = (void(*)(void*, int))GetProcAddress(dllHandle, "StringVectorReserve");
+		StringVecErase = (void(*)(void*, int))GetProcAddress(dllHandle, "StringVectorErase");
+	}
 
 	App->resourceManager->GetAllScripts(aviableScripts);
 
@@ -165,6 +174,7 @@ bool M_EngineScriptManager::CleanUp()
 	//TODO: clean up dels scripts
 	CleanUpScripts();
 	aviableScripts.clear();
+	currentScripts.clear();
 	return true;
 }
 
@@ -215,10 +225,10 @@ void M_EngineScriptManager::HotReload()
 
 void M_EngineScriptManager::SerializeAllScripts(ParsonArray& scriptsArray)
 {
-	std::vector<GameObject*>* objects = App->scene->GetGameObjects();
-	for (std::vector<GameObject*>::iterator it = (*objects).begin(); it!= (*objects).end(); ++it)
+	std::vector<GameObject*>* gameObjects = App->scene->GetGameObjects();
+	for (auto it = (*gameObjects).cbegin(); it!= (*gameObjects).cend(); ++it)
 	{
-		if (*it != nullptr)
+		if ((*it) != nullptr)
 		{
 			std::vector<C_Script*> scripts;
 			(*it)->GetComponents<C_Script>(scripts);
@@ -271,6 +281,15 @@ void M_EngineScriptManager::SerializeAllScripts(ParsonArray& scriptsArray)
 									else
 										variable.SetInteger("gameobject", 0);
 									break;
+								case InspectorScriptData::VECTORSTRING:
+								{
+									ParsonArray parsonStringArray = variable.SetArray("vectorstring");
+									for (std::vector<std::string>::const_iterator cit = (*(std::vector<std::string>*)scriptVariables[i].ptr).cbegin(); cit != (*(std::vector<std::string>*)scriptVariables[i].ptr).cend(); ++cit)
+									{
+										parsonStringArray.SetString((*cit).c_str());
+									}
+									break;
+								}
 								}
 							}
 						}
@@ -329,18 +348,34 @@ void M_EngineScriptManager::DeSerializeAllScripts(const ParsonArray& scriptsArra
 								case InspectorScriptData::DataType::FLOAT:
 									*(float*)(*item).ptr = (float)variable.GetNumber("float"); break;
 								case InspectorScriptData::FLOAT3:
-									(*(float3*)(*item).ptr).x = variable.GetNumber("float3x"); break;
-									(*(float3*)(*item).ptr).y = variable.GetNumber("float3y"); break;
-									(*(float3*)(*item).ptr).z = variable.GetNumber("float3z"); break;
+									(*(float3*)(*item).ptr).x = variable.GetNumber("float3x");
+									(*(float3*)(*item).ptr).y = variable.GetNumber("float3y");
+									(*(float3*)(*item).ptr).z = variable.GetNumber("float3z");
+									break;
 								case InspectorScriptData::STRING:
 									*(std::string*)(*item).ptr = variable.GetString("string"); break;
 								case InspectorScriptData::DataType::PREFAB:
 									*(Prefab*)(*item).ptr = EngineApp->resourceManager->prefabs[(unsigned int)variable.GetNumber("prefab")]; break;
-								case InspectorScriptData::DataType::GAMEOBJECT:
+								case InspectorScriptData::DataType::GAMEOBJECT: 
+								{
 									uint32 id = variable.GetInteger("gameobject");
 									if (id != 0)
 										*(*item).obj = EngineApp->scene->GetGameObjectByUID(id);
+									break; 
+								}
+								case InspectorScriptData::VECTORSTRING:
+								{
+									//std::vector<std::string>& inspectorStringVector = *(std::vector<std::string>*)(*item).ptr;
+									ParsonArray parsonStringArray = variable.GetArray("vectorstring");
+									//inspectorStringVector.reserve(parsonStringArray.size);
+									App->scriptManager->StringVecReserve((*item).ptr, parsonStringArray.size);
+									for (int j = 0; j < parsonStringArray.size; ++j)
+									{
+										//inspectorStringVector.emplace_back(parsonStringArray.GetString(i));
+										EngineApp->scriptManager->StringVecEmplaceBackString((*item).ptr, parsonStringArray.GetString(j));
+									}
 									break;
+								}
 								}
 							}
 						}

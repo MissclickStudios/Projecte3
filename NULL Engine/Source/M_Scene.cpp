@@ -16,13 +16,12 @@
 #include "M_ResourceManager.h"
 #include "M_UISystem.h"
 
+#include "ResourceBase.h"
 #include "Resource.h"
 #include "R_Model.h"
 #include "R_Mesh.h"
 #include "R_Texture.h"
 #include "R_Scene.h"
-
-#include "Primitive.h"
 
 #include "GameObject.h"
 #include "Component.h"
@@ -33,12 +32,17 @@
 #include "C_Animator.h"
 #include "C_Light.h"
 #include "C_UI_Button.h"
+#include "C_AudioSource.h"
+#include "C_AudioListener.h"
+#include "C_UI_Text.h"
+
+
+#include "Primitive.h"
 
 #include "M_Scene.h"
 #include "M_ScriptManager.h"
 
 #include "MemoryManager.h"
-
 
 M_Scene::M_Scene(bool isActive) : Module("SceneManager", isActive),
 masterRoot				(nullptr),
@@ -80,22 +84,27 @@ bool M_Scene::Start()
 	}
 
 	CreateSceneCamera("SceneCamera");
+	
 
-	level.GetRooms();
-	level.GenerateLevel();
-	
-	//level.AddFixedRoom("Shop", 16);                            
-	level.AddFixedRoom("Start", 1); 
-	level.AddFixedRoom("Boss", 15);
-	
 	if(App->gameState == GameState::PLAY)
-		level.GenerateRoom(0);
-
-	std::string s = ASSETS_SCENES_PATH + currentScene + JSON_EXTENSION;
-	LoadScene(s.c_str());
+		LoadScene("Assets/Scenes/MainMenu.json");
+	else
+	{
+		std::string s = ASSETS_SCENES_PATH + currentScene + JSON_EXTENSION;
+		LoadScene(s.c_str());
+		//LoadScene("Assets/Scenes/MainMenu.json");
+	}
 
 	//LoadScene("Assets/Scenes/UITestScene.json");
 	//SaveScene("SceneAutosave");																			// Autosave just right after loading the scene.
+
+	/*C_AudioListener* listener = new C_AudioListener(masterRoot);
+
+	music = new C_AudioSource(masterRoot);
+
+	music->SetEvent("background", 3650723969);
+
+	music->PlayFx(music->GetEventId());*/
 
 	return ret;
 }
@@ -106,57 +115,58 @@ UpdateStatus M_Scene::Update(float dt)
 	OPTICK_CATEGORY("M_Scene Update", Optick::Category::Module)
 
 	HandleCopyGO();
-	
+
 	std::vector<MeshRenderer>		meshRenderers;
 	std::vector<CuboidRenderer>		cuboidRenderers;
 	std::vector<SkeletonRenderer>	skeletonRenderers;
 
 	// --- Sort GameObjects by Z-Buffer value
-
 	for (uint i = 0; i < gameObjects.size(); ++i)
 	{
-		if (gameObjects[i]->to_delete)
+		GameObject* gameObject = gameObjects[i];																			// Creating a local var: Less optimized but more readable.
+		
+		if (gameObject->toDelete)
 		{
-			DeleteGameObject(gameObjects[i], i);
+			DeleteGameObject(gameObject, i);																				// Doing this on item = gameObjects.begin() will be problematic.
 			continue;
 		}
 
-		if (gameObjects[i]->IsActive())
+		if (gameObject->IsActive())
 		{
-			gameObjects[i]->Update();
+			gameObject->Update();
 
-			if (GameObjectIsInsideCullingCamera(gameObjects[i]) || gameObjects[i] == cullingCamera->GetOwner())
+			if (GameObjectIsInsideCullingCamera(gameObject) || gameObject == cullingCamera->GetOwner())	// Check for cullingCamera == nullptr is made at GameObjectIsInsideCullingCamera().
 			{
-				gameObjects[i]->GetRenderers(meshRenderers, cuboidRenderers, skeletonRenderers);
+				gameObject->GetRenderers(meshRenderers, cuboidRenderers, skeletonRenderers);
 			}
 		}
 	}
 
-	// --- Send Batches to Renderer
 	App->renderer->AddRenderersBatch(meshRenderers, cuboidRenderers, skeletonRenderers);
-
+	
 	meshRenderers.clear();
 	cuboidRenderers.clear();
+	skeletonRenderers.clear();
 	
-	// --- Primitives
-	for (uint n = 0; n < primitives.size(); n++)
+	// --- M_SCENE SHORTCUTS
+	if (App->input->GetKey(SDL_SCANCODE_LCTRL) == KeyState::KEY_REPEAT)
 	{
-		primitives[n]->Update();
+		if (App->gameState != GameState::PLAY)
+		{
+			if (App->input->GetKey(SDL_SCANCODE_F5) == KeyState::KEY_DOWN)
+			{
+				App->SaveConfiguration("Resources/Engine/Configuration/configuration.JSON");
+			}
+			if (App->input->GetKey(SDL_SCANCODE_F6) == KeyState::KEY_DOWN)
+			{
+				App->LoadConfiguration("Resources/Engine/Configuration/configuration.JSON");
+			}
+		}
 	}
+	
+	ShowFPS();
 
-	if (App->input->GetKey(SDL_SCANCODE_F5) == KeyState::KEY_DOWN && App->gameState != GameState::PLAY)
-	{
-		App->SaveConfiguration("Resources/Engine/Configuration/configuration.JSON");
-	}
 
-	if (App->input->GetKey(SDL_SCANCODE_F6) == KeyState::KEY_DOWN && App->gameState != GameState::PLAY)
-	{
-		App->LoadConfiguration("Resources/Engine/Configuration/configuration.JSON");
-	}
-
-	// --- Room Generation
-
-	level.HandleRoomGeneration();
 
 	return UpdateStatus::CONTINUE;
 }
@@ -167,13 +177,8 @@ UpdateStatus M_Scene::PostUpdate(float dt)
 
 	if (nextScene)
 	{
-		level.NextRoom();
+		LoadScene(nextSceneName.c_str());
 		nextScene = false;
-	}
-
-	for (uint n = 0; n < primitives.size(); n++)
-	{
-		primitives[n]->Render();
 	}
 
 	return UpdateStatus::CONTINUE;
@@ -188,13 +193,11 @@ bool M_Scene::CleanUp()
 
 	App->renderer->defaultSkyBox.CleanUp();
 
-	for (uint i = 0; i < gameObjects.size(); ++i)
+	for (auto object = gameObjects.begin(); object != gameObjects.end(); ++object)
 	{
-		gameObjects[i]->CleanUp();
-		//gameObjects.erase(gameObjects.begin() + i);
-		RELEASE(gameObjects[i]);
+		(*object)->CleanUp();
+		RELEASE((*object));
 	}
-
 	for (auto item = models.begin(); item != models.end(); ++item)
 	{
 		App->resourceManager->FreeResource(item->second.first);
@@ -207,8 +210,6 @@ bool M_Scene::CleanUp()
 	animationRoot			= nullptr;
 	cullingCamera			= nullptr;
 	selectedGameObject		= nullptr;
-
-	primitives.clear();
 
 	return true;
 }
@@ -247,11 +248,11 @@ bool M_Scene::SaveScene(const char* sceneName) const
 		modelNode.SetString("ModelAssetsPath", item->second.second.c_str());
 	}
 
-	ParsonArray objectArray	= rootNode.SetArray("Game Objects");
-	for (auto item = gameObjects.begin(); item != gameObjects.end(); ++item)
+	ParsonArray objectsArray	= rootNode.SetArray("Game Objects");
+	for (auto object = gameObjects.begin(); object != gameObjects.end(); ++object)
 	{
-		ParsonNode arrayNode = objectArray.SetNode((*item)->GetName());
-		(*item)->SaveState(arrayNode);
+		ParsonNode arrayNode = objectsArray.SetNode((*object)->GetName());
+		(*object)->SaveState(arrayNode);
 	}
 
 	char* buffer		= nullptr;
@@ -316,6 +317,9 @@ bool M_Scene::LoadScene(const char* path)
 		App->renderer->ClearRenderers();
 		CleanUp();
 
+		//std::vector<GameObject*> parentMaintained;
+		//CleanUpCurrentScene(parentMaintained);
+
 		ParsonNode newRoot			= ParsonNode(buffer);
 		ParsonArray modelsArray		= newRoot.GetArray("Models In Scene");
 		ParsonArray objectsArray	= newRoot.GetArray("Game Objects");
@@ -355,10 +359,17 @@ bool M_Scene::LoadScene(const char* path)
 
 			gameObject->LoadState(objectNode);
 
-			if (gameObject->is_scene_root)
+			if (gameObject->isSceneRoot)
 			{
 				sceneRoot = gameObject;
 				sceneRoot->SetParent(masterRoot);
+
+				/*for (uint i = 0; i < parentMaintained.size(); ++i)
+				{
+					parentMaintained[i]->SetParent(sceneRoot);
+				}
+
+				parentMaintained.clear();*/
 			}
 
 			if (gameObject->GetComponent<C_Animator>() != nullptr)
@@ -417,8 +428,10 @@ bool M_Scene::LoadScene(const char* path)
 			}
 
 			item->second->GetComponent<C_Transform>()->Translate(float3::zero);						// Dirty way to refresh the transforms after the import is done. TMP Un-hardcode later.
+			//AddGameObjectToVector(item->second);
 			gameObjects.push_back(item->second);
 		}
+		
 		tmp.clear();
 		App->renderer->ClearRenderers();
 	}
@@ -447,6 +460,66 @@ bool M_Scene::LoadScene(const char* path)
 		App->scriptManager->InitScripts();
 
 	return ret;
+}
+
+bool M_Scene::CleanUpCurrentScene(std::vector<GameObject*>& parentMaintained)						// ATTENTION: Look for a way to erase an item in a loop and keep iter. without problems.
+{
+	LOG("Unloading { %s } Scene", currentScene.c_str());
+
+	App->renderer->defaultSkyBox.CleanUp();
+
+	for (auto object = gameObjects.begin(); object != gameObjects.end(); ++object)					// ATTENTION: There are a total of 6 loops when only 2 should be needed. Revise later.
+	{
+		if ((*object)->GetMaintainThroughScenes() && (*object)->parent == sceneRoot)
+		{
+			parentMaintained.push_back((*object));												// If not done first all parent pointers get corrupted or set to NULL.
+		}
+	}
+
+	std::map<uint32, std::string> goToDelete;
+	std::vector<uint32> modelsToDelete;
+	std::vector<GameObject*> why;
+	for (auto object = gameObjects.begin(); object != gameObjects.end(); ++object)
+	{
+		if (!(*object)->GetMaintainThroughScenes())
+		{
+			goToDelete.emplace((*object)->GetUID(), (*object)->GetName());				// Getting the GameObjects that should be deleted.
+
+			(*object)->CleanUp();
+			RELEASE((*object));
+		}
+	}
+
+	for (auto model = models.begin(); model != models.end(); ++model)
+	{
+		if (goToDelete.find(model->first) != goToDelete.end())
+		{
+			App->resourceManager->FreeResource(model->second.first);								// Getting the models that should be deleted.
+			modelsToDelete.push_back(model->first);
+		}
+	}
+
+	for (auto object = goToDelete.begin(); object != goToDelete.end(); ++object)
+	{	
+		/*(gameObjects.find(object->first) != gameObjects.end())	? gameObjects.erase(object->first) : LOG("[ERROR] Scene: Could not Delete { %s }! Error: GO amiss", object->second.c_str());
+		(goNamesMap.find(object->second) != goNamesMap.end())	? goNamesMap.erase(object->second) : LOG("[ERROR] Scene: Could not Delete { %s }! Error: Name amiss", object->second.c_str());*/
+	}
+	for (auto model = modelsToDelete.begin(); model != modelsToDelete.end(); ++model)
+	{
+		(models.find((*model)) != models.end()) ? models.erase((*model)) : LOG("[ERROR] Scene: Could not Delete Model { %lu }! Error: Model could not be found in map", (*model));
+	}
+
+	for (auto object = gameObjects.cbegin(); object != gameObjects.cend(); ++object)				// Making sure that the remaining GOs (maintain) are not set to delete.
+	{
+		//(object->second != nullptr) ? object->second->toDelete = false : LOG("[ERROR] Scene: GameObject remaining after Current Scene CleanUp was nullptr!");
+	}
+
+	sceneRoot			= nullptr;
+	animationRoot		= nullptr;
+	cullingCamera		= nullptr;
+	selectedGameObject	= nullptr;
+	
+	return false;
 }
 
 void M_Scene::SaveCurrentScene()
@@ -501,7 +574,7 @@ GameObject* M_Scene::LoadPrefabIntoScene(ParsonNode* a, GameObject* parent)
 
 	parent != nullptr ? gameObject->SetParent(parent) : gameObject->SetParent(App->scene->GetSceneRoot());
 
-	gameObjects.push_back(gameObject);
+	AddGameObjectToVector(gameObject);
 
 	ParsonArray childArray = a->GetArray("Children");
 
@@ -521,9 +594,9 @@ void M_Scene::LoadPrefabObject(GameObject* _gameObject, ParsonNode* node)
 
 	gameObject->LoadState(*node);
 
-	gameObject->SetParent(_gameObject);
-
-	gameObjects.push_back(gameObject);
+	(_gameObject != nullptr) ? gameObject->SetParent(_gameObject) : gameObject->SetParent(sceneRoot);
+	
+	AddGameObjectToVector(gameObject);
 
 	gameObject->ForceUID(Random::LCG::GetRandomUint());
 
@@ -563,25 +636,23 @@ GameObject* M_Scene::CreateGameObject(const char* name, GameObject* parent)
 		CreateSceneRoot(name);
 		return sceneRoot;
 	}
-	
+
+	if (name == nullptr)
+		strcpy((char*)name, "ObjectWithoutName");
+
 	GameObject* gameObject = new GameObject(name);
 
 	if (gameObject != nullptr)
 	{
-		if (parent != nullptr)
-		{
-			gameObject->SetParent(parent);
-			
-			// parent->AddChild(game_object);
-		}
+		(parent != nullptr) ? gameObject->SetParent(parent) : gameObject->SetParent(sceneRoot);					// Just in case.
 
-		gameObjects.push_back(gameObject);
+		AddGameObjectToVector(gameObject);
 	}
 
 	return gameObject;
 }
 
-void M_Scene::DeleteGameObject(GameObject* gameObject, uint index)
+void M_Scene::DeleteGameObject(GameObject* gameObject,  int index)
 {
 	if (gameObject == nullptr)
 	{
@@ -610,12 +681,12 @@ void M_Scene::DeleteGameObject(GameObject* gameObject, uint index)
 	}
 	
 	std::vector<C_Mesh*> cMeshes;
-	bool found_meshes = gameObject->GetComponents<C_Mesh>(cMeshes);
-	if (found_meshes)
+	bool foundMeshes = gameObject->GetComponents<C_Mesh>(cMeshes);
+	if (foundMeshes)
 	{
 		for (uint i = 0; i < cMeshes.size(); ++i)
 		{
-			App->renderer->DeleteFromMeshRenderers(cMeshes[i]);
+			App->renderer->DeleteFromMeshRenderers(cMeshes[i]);					// ATTENTION: Really slow! Revise Renderers later.
 		}
 
 		cMeshes.clear();
@@ -624,32 +695,47 @@ void M_Scene::DeleteGameObject(GameObject* gameObject, uint index)
 	if (!gameObjects.empty())													// Extra check just to make sure that at least one GameObject remains in the Scene.
 	{
 		gameObject->CleanUp();													// As it has not been Cleaned Up by its parent, the GameObject needs to call its CleanUp();
-		
+		uint32 goUID = gameObject->GetUID();
+
 		if (index != -1)														// If an index was given.
 		{
-			gameObjects.erase(gameObjects.begin() + index);					// Delete game object at index.
+			gameObjects.erase(gameObjects.begin() + index);						// Delete game object at index.
 		}
 		else
 		{
-			for (uint i = 0; i < gameObjects.size(); ++i)					// If no index was given.
+			for (uint i = 0; i < gameObjects.size(); ++i)						// If no index was given.
 			{
-				if (gameObjects[i] == gameObject)							// Iterate game_objects until a match is found.
+				if (gameObjects[i] == gameObject)								// Iterate game_objects until a match is found.
 				{
-					gameObjects.erase(gameObjects.begin() + i);				// Delete the game_object at the current loop index.
+					gameObjects.erase(gameObjects.begin() + i);					// Delete the game_object at the current loop index.
 					break;
 				}
 			}
 		}
 
 		RELEASE(gameObject);
+	}		
+}
+
+void M_Scene::AddGameObjectToVector(GameObject* gameObject)
+{
+	if (gameObject == nullptr)
+	{
+		LOG("[ERROR] Scene: Could not Add Game Object to Maps! Error: Given GameObject* was nullptr.");
 		return;
 	}
 
-	LOG("[ERROR] Could not find game object %s in game_objects vector!", gameObject->GetName());
+	gameObjects.push_back(gameObject);
 }
 
 void M_Scene::AddGameObjectToScene(GameObject* gameObject, GameObject* parent)
 {
+	if (gameObject == nullptr)
+	{
+		LOG("[ERROR] Scene: Could not Add Game Object to Scene! Error: Given GameObject* was nullptr.");
+		return;
+	}
+	
 	parent != nullptr ? gameObject->SetParent(sceneRoot) : gameObject->SetParent(parent);
 	
 	AddGameObjectChildrenToScene(gameObject);
@@ -657,10 +743,18 @@ void M_Scene::AddGameObjectToScene(GameObject* gameObject, GameObject* parent)
 
 void M_Scene::AddGameObjectChildrenToScene(GameObject* gameObject)
 {
-	gameObjects.push_back(gameObject);
+	if (gameObject == nullptr)
+	{
+		LOG("[ERROR] Scene: Could not Add Game Object's Children to Scene! Error: Given GameObject* was nullptr.");
+		return;
+	}
+	
+	AddGameObjectToVector(gameObject);
 
 	for (auto child = gameObject->childs.begin(); child != gameObject->childs.end(); ++child)
+	{
 		AddGameObjectChildrenToScene(*child);
+	}
 }
 
 GameObject* M_Scene::GenerateGameObjectsFromModel(const R_Model* rModel, const float3& scale)
@@ -720,7 +814,7 @@ GameObject* M_Scene::GenerateGameObjectsFromModel(const R_Model* rModel, const f
 		}
 
 		item->second->GetComponent<C_Transform>()->Translate(float3::zero);						// Dirty way to refresh the transforms after the import is done. TMP Un-hardcode later.
-		gameObjects.push_back(item->second);
+		AddGameObjectToVector(item->second);
 	}
 
 	if (parentRoot != nullptr)
@@ -735,7 +829,7 @@ GameObject* M_Scene::GenerateGameObjectsFromModel(const R_Model* rModel, const f
 			CreateAnimationComponentFromModel(rModel, parentRoot);							// Must be done last as the parent hierarchy needs to be in place.
 		}
 
-		//parentRoot = nullptr; //I David Rami purposelly and for a reason comented this
+		//parentRoot = nullptr; //I, David Rami, purposefully commented this for a reason.
 	}
 
 	tmp.clear();
@@ -889,7 +983,7 @@ bool M_Scene::ApplyTextureToSelectedGameObject(const uint32& uid)
 void M_Scene::CreateMasterRoot()
 {
 	masterRoot = new GameObject("MasterRoot");
-	masterRoot->is_master_root = true;
+	masterRoot->isMasterRoot = true;
 }
 
 void M_Scene::DeleteMasterRoot()
@@ -920,14 +1014,14 @@ void M_Scene::CreateSceneRoot(const char* sceneName)
 	
 	sceneRoot = new GameObject(sceneName);
 
-	sceneRoot->is_scene_root = true;
+	sceneRoot->isSceneRoot = true;
 
 	sceneRoot->SetParent(masterRoot);
 	
 	//scene_root->parent = master_root;
 	//master_root->AddChild(scene_root);
 
-	gameObjects.push_back(sceneRoot);
+	AddGameObjectToVector(sceneRoot);
 }
 
 GameObject* M_Scene::GetSceneRoot() const
@@ -989,26 +1083,42 @@ bool M_Scene::GameObjectIsInsideCullingCamera(GameObject* gameObject)
 	return intersects;
 }
 
-GameObject* M_Scene::GetGameObjectByUID(uint32 uid)
+GameObject* M_Scene::GetGameObjectByUID(uint32 UID)
 {
-	for (std::vector<GameObject*>::const_iterator cit = gameObjects.cbegin(); cit != gameObjects.cend(); ++cit)
+	if (UID == 0)
 	{
-		if ((*cit)->GetUID() == uid)
-			return (*cit);
+		LOG("[ERROR] Scene: Could not Get GameObject by UID! Error: Given UID was 0.");
+		return nullptr;
 	}
+	
+	for (auto object = gameObjects.cbegin(); object != gameObjects.cend(); ++object)
+	{
+		if ((*object)->GetUID() == UID)
+		{
+			return (*object);
+		}
+	}
+	
 	return nullptr;
 }
 
 GameObject* M_Scene::GetGameObjectByName(const char* name)
 {
-	for (std::vector<GameObject*>::const_iterator cit = gameObjects.cbegin(); cit != gameObjects.cend(); ++cit)
+	if (name == nullptr)
 	{
-		if (strcmp((*cit)->GetName(),name) == 0)
-			return (*cit);
+		LOG("[ERROR] Scene: Could not Get GameObject by Name! Error: Given string was nullptr.");
+		return nullptr;
+	}
+	
+	for (auto object = gameObjects.cbegin(); object != gameObjects.cend(); ++object)
+	{
+		if (strcmp((*object)->GetName(), name) == 0)
+		{
+			return (*object);
+		}
 	}
 
 	return nullptr;
-
 }
 
 GameObject* M_Scene::GetSelectedGameObject() const
@@ -1112,13 +1222,10 @@ void M_Scene::SelectGameObjectThroughRaycast(const LineSegment& ray)
 
 void M_Scene::GetRaycastHits(const LineSegment& ray, std::map<float, GameObject*>& hits)
 {
-	for (uint i = 0; i < gameObjects.size(); ++i)
+	for (auto object = gameObjects.cbegin(); object != gameObjects.cend(); ++object)
 	{
-		if (ray.Intersects(gameObjects[i]->GetAABB()))
-		{
-			float3 position = gameObjects[i]->GetComponent<C_Transform>()->GetWorldPosition();
-			hits.emplace(ray.Distance(position), gameObjects[i]);
-		}
+		float3 position = (*object)->GetComponent<C_Transform>()->GetWorldPosition();
+		hits.emplace(ray.Distance(position), (*object));
 	}
 }
 
@@ -1143,69 +1250,88 @@ void M_Scene::GetFaces(const std::vector<float>& vertices, std::vector<Triangle>
 	verts.clear();
 }
 
+// --- SCENE LIGHT METHODS
+void M_Scene::AddSceneLight(GameObject* light)
+{
+	if (light == nullptr)
+	{
+		LOG("[ERROR] Scene: Could not add Light to Scene! Error: Given GameObject* was nullptr.");
+		return;
+	}
+	
+	AddGameObjectToVector(light);
+}
+
 bool M_Scene::CheckSceneLight()
 {
-	for (int i = 0; i < gameObjects.size(); i++)
+	if (gameObjects.empty())
+		return false;
+	
+	for (auto object = gameObjects.cbegin(); object != gameObjects.cend(); ++object)
 	{
-		if (gameObjects[i]->GetComponent<C_Light>())
-		{
+		if ((*object)->GetComponent<C_Light>() != nullptr)
 			return true;
-		}
 	}
 	
 	return false;
 }
 
-std::vector<GameObject*> M_Scene::GetAllLights()
+bool M_Scene::SceneHasLights()
 {
-	std::vector<GameObject*> allLights;
-	for (uint i = 0; i < gameObjects.size(); i++)
+	if (gameObjects.empty())
+		return false;
+
+	for (auto object = gameObjects.cbegin(); object != gameObjects.cend(); ++object)
 	{
-		if (gameObjects[i]->GetComponent<C_Light>())
-		{
-			allLights.push_back(gameObjects[i]);
-		}
-		
+		if ((*object)->GetComponent<C_Light>() != nullptr)
+			return true;
 	}
-	return allLights;
+	
+	return false;
 }
 
-void M_Scene::AddSceneLight(GameObject* light)
+void M_Scene::GetAllLights(std::vector<GameObject*>& allLights)
 {
-	gameObjects.push_back(light);
+	if (gameObjects.empty())
+		return;
+	
+	for (auto object = gameObjects.cbegin(); object != gameObjects.cend(); ++object)
+	{
+		if ((*object)->GetComponent<C_Light>() != nullptr)
+			allLights.push_back((*object));
+	}
 }
 
-std::vector<GameObject*> M_Scene::GetDirLights()
+void M_Scene::GetDirLights(std::vector<GameObject*>& dirLights)
 {
-	std::vector<GameObject*> dirLights;
-	for (uint i = 0; i < gameObjects.size(); i++)
+	if (gameObjects.empty())
+		return;
+	
+	for (auto object = gameObjects.cbegin(); object != gameObjects.cend(); ++object)
 	{
-		if (gameObjects[i]->GetComponent<C_Light>())
+		C_Light* light = (*object)->GetComponent<C_Light>();
+		if (light != nullptr)
 		{
-			if (gameObjects[i]->GetComponent<C_Light>()->GetLightType() == LightType::DIRECTIONAL)
-			{
-				dirLights.push_back(gameObjects[i]);
-			}
+			if (light->GetLightType() == LightType::DIRECTIONAL)
+				dirLights.push_back((*object));
 		}
-		
 	}
-	return dirLights;
 }
 
-std::vector<GameObject*> M_Scene::GetPointLights()
+void M_Scene::GetPointLights(std::vector<GameObject*>& pointLights)
 {
-	std::vector<GameObject*> pointLights;
-	for (uint i = 0; i < gameObjects.size(); i++)
+	if (gameObjects.empty())
+		return;
+
+	for (auto object = gameObjects.cbegin(); object != gameObjects.cend(); ++object)
 	{
-		if (gameObjects[i]->GetComponent<C_Light>())
+		C_Light* light = (*object)->GetComponent<C_Light>();
+		if (light != nullptr)
 		{
-			if (gameObjects[i]->GetComponent<C_Light>()->GetLightType() == LightType::POINTLIGHT)
-			{
-				pointLights.push_back(gameObjects[i]);
-			}
+			if (light->GetLightType() == LightType::POINTLIGHT)
+				pointLights.push_back((*object));
 		}
 	}
-	return pointLights;
 }
 
 void M_Scene::NextRoom()
@@ -1240,6 +1366,28 @@ void M_Scene::HandleCopyGO() //TODO Cntrl + c / Cntrl + v
 void M_Scene::ResolveScriptGoPointer(const uint32 uid, GameObject** object)
 {
 	toAdd.push_back({uid, object});
+}
+
+void M_Scene::ShowFPS()
+{
+	/*if (!showFps)
+	{
+		showFps = new GameObject("FPS Count");
+		showFps->CreateComponent(ComponentType::CANVAS);
+		showFps->CreateComponent(ComponentType::UI_TEXT);
+		gameObjects.push_back(showFps);
+	}
+	else
+	{
+		C_UI_Text* fpsCount = (showFps)->GetComponent<C_UI_Text>();
+		fpsCount->SetText((char*)App->window->GetRefreshRate());
+	}*/
+}
+
+void M_Scene::ScriptChangeScene(const std::string& sceneName)
+{
+	nextScene = true;
+	nextSceneName = sceneName;
 }
 
 void M_Scene::DeleteSelectedGameObject()

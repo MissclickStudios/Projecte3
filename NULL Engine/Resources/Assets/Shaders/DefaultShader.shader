@@ -142,7 +142,7 @@ vec4 CalculateDirectional(DirLight light, vec3 normal, vec3 viewDir, float specu
    
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
     
-    vec4 resultSpecular = specularStrength * spec * light.specular; 
+    vec4 resultSpecular = specularStrength  * light.specular; 
     
     //Diffuse  
    
@@ -150,9 +150,25 @@ vec4 CalculateDirectional(DirLight light, vec3 normal, vec3 viewDir, float specu
    
    vec4 resultDiffuse = diff * light.diffuse;
    
-   //Resulting Color and Texture
-   
-   vec4 resultColor = (light.ambient + resultDiffuse + resultSpecular) * objectColor;
+
+    //Cel Shading 
+
+    float intensity = 0.8 * diff + 0.2 * spec;
+
+ 	if (intensity > 0.8) {
+ 		intensity = 1.1;
+ 	}
+ 	else if (intensity > 0.4) {
+ 		intensity = 0.7;
+ 	}
+ 	else {
+ 		intensity = 0.5;
+    }
+
+    //Resulting Color and Texture
+
+    vec4 resultColor = (light.ambient + light.diffuse + resultSpecular) * intensity * objectColor;
+
    
    return (resultColor);
 }
@@ -178,12 +194,36 @@ vec4 CalculatePointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewD
   			     light.quadratic * (distance * distance));    
 
 
-    vec4 resultColor = (light.ambient + resultDiffuse + resultSpecular) * objectColor;
+     //Cel Shading 
+
+    float intensity = 0.7 * diff + 0.6 * spec;
+
+ 	if (intensity > 0.9) {
+ 		intensity = 1.1;
+ 	}
+ 	else if (intensity > 0.5) {
+ 		intensity = 0.7;
+ 	}
+ 	else {
+ 		intensity = 0.5;
+    }
+
+    //Resulting Color and Texture
+
+    vec4 resultColor = (light.ambient + resultDiffuse + resultSpecular) * intensity * objectColor;
+
    
    return (resultColor * attenuation);
 }
 
 #endif
+
+
+
+
+
+
+
 
 
 

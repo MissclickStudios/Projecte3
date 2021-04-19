@@ -11,7 +11,7 @@
 E_Hierarchy::E_Hierarchy() : EditorPanel("Hierarchy"), 
 openHierarchyToolsPopup	(false)
 {
-	defaultFlags = ImGuiTreeNodeFlags_SpanAvailWidth;
+	defaultFlags = ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_OpenOnDoubleClick | ImGuiTreeNodeFlags_OpenOnArrow;
 }
 
 E_Hierarchy::~E_Hierarchy()

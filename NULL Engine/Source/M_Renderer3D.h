@@ -52,6 +52,22 @@ enum class CuboidType
 	COLLIDER
 };
 
+const float ParticlesCoords[] = {
+1, 1,
+1, 0,
+0, 0,
+1,0,
+};
+
+//const float texCoordsBuffer[] = {
+//0, 0,
+//1, 0,
+//0, 1,
+//1, 0,
+//1, 1,
+//0, 1,
+//};
+
 struct MeshRenderer
 {
 	MeshRenderer(float4x4* transform, C_Mesh* cMesh, C_Material* cMaterial);								// Will render the given mesh at the given position with the given mat & tex.
@@ -120,9 +136,15 @@ struct SkeletonRenderer
 
 struct ParticleRenderer
 {
-	ParticleRenderer(R_Material* mat, Color color, const float4x4 transform);
+	ParticleRenderer(R_Texture* mat, Color color, const float4x4 transform);
 
-	R_Material* mat;
+	void LoadBuffers();
+	void Render();
+
+	uint VAO;
+
+	R_Texture* mat;
+	R_Shader* shader;
 	Color color;
 	float4x4 transform;
 };
@@ -188,7 +210,7 @@ public:																											// --- RENDER GEOMETRY
 	void			CreatePrimitiveExamples		();
 
 
-	void			AddParticle					(const float4x4& transform, R_Material* material, Color color, float distanceToCamera);
+	void			AddParticle					(const float4x4& transform, R_Texture* material, Color color, float distanceToCamera);
 	void			DrawParticle				(ParticleRenderer& renderParticle);
 
 	void			SetTo2DRenderSettings		(const bool& setTo);

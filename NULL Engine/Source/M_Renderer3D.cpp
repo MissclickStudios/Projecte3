@@ -1,12 +1,12 @@
+#include "JSONParser.h"
 #include "Profiler.h"													
 #include "OpenGL.h"														
-#include "Time.h"
-#include "JSONParser.h"
+
+#include "MC_Time.h"
 
 #include "Macros.h"														
 #include "Log.h"														
-
-														
+												
 #include "Icons.h"														
 #include "Primitive.h"
 #include "Light.h"
@@ -27,6 +27,7 @@
 #include "R_Shader.h"
 
 #include "I_Textures.h"													
+#include "I_Shaders.h"							//TODO: erase
 
 #include "GameObject.h"	
 #include "C_Transform.h"
@@ -39,9 +40,10 @@
 #include "C_UI_Text.h"
 #include "C_UI_Button.h"
 
-#include "M_Renderer3D.h"
+#include "Renderer.h"
+#include "RE_Circle.h"
 
-#include "I_Shaders.h"							//TODO: erase
+#include "M_Renderer3D.h"
 
 #include "MemoryManager.h"
 
@@ -101,32 +103,32 @@ bool M_Renderer3D::Init(ParsonNode& configuration)
 	renderVertexNormals = configuration.GetBool("renderVertexNormals");
 	renderFaceNormals	= configuration.GetBool("renderFaceNormals");
 	renderBoundingBoxes = configuration.GetBool("renderBoundingBoxes");
-	renderSkeletons = configuration.GetBool("renderSkeletons");
-	renderColliders = configuration.GetBool("renderColliders");
-	renderCanvas = configuration.GetBool("renderCanvas");
+	renderSkeletons		= configuration.GetBool("renderSkeletons");
+	renderColliders		= configuration.GetBool("renderColliders");
+	renderCanvas		= configuration.GetBool("renderCanvas");
 
-	worldGridColor		= configuration.GetFloat4("worldGridColor");
-	wireframeColor		= configuration.GetFloat4("wireframeColor");
-	vertexNormalsColor	= configuration.GetFloat4("vertexNormalsColor");
-	faceNormalsColor	= configuration.GetFloat4("faceNormalsColor");
+	worldGridColor		= configuration.GetColor("worldGridColor");
+	wireframeColor		= configuration.GetColor("wireframeColor");
+	vertexNormalsColor	= configuration.GetColor("vertexNormalsColor");
+	faceNormalsColor	= configuration.GetColor("faceNormalsColor");
 
-	aabbColor			= configuration.GetFloat4("aabbColor");
-	obbColor			= configuration.GetFloat4("obbColor");
-	frustumColor		= configuration.GetFloat4("frustumColor");
-	rayColor			= configuration.GetFloat4("rayColor");
-	boneColor			= configuration.GetFloat4("boneColor");
+	aabbColor			= configuration.GetColor("aabbColor");
+	obbColor			= configuration.GetColor("obbColor");
+	frustumColor		= configuration.GetColor("frustumColor");
+	rayColor			= configuration.GetColor("rayColor");
+	boneColor			= configuration.GetColor("boneColor");
 
 	if (App->gameState == GameState::PLAY)
 	{
-		renderWorldGrid = false;
-		renderWorldAxis = false;
-		renderWireframes = false;
+		renderWorldGrid		= false;
+		renderWorldAxis		= false;
+		renderWireframes	= false;
 		renderVertexNormals = false;
-		renderFaceNormals = false;
+		renderFaceNormals	= false;
 		renderBoundingBoxes = false;
-		renderSkeletons = false;
-		renderColliders = false;
-		renderCanvas = false;
+		renderSkeletons		= false;
+		renderColliders		= false;
+		renderCanvas		= false;
 	}
 
 	return ret;
@@ -595,45 +597,44 @@ void M_Renderer3D::FreeBuffers()
 
 void M_Renderer3D::RendererShortcuts()
 {
-	if (App->input->GetKey(SDL_SCANCODE_F1) == KeyState::KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_LCTRL) == KeyState::KEY_REPEAT)
 	{
-		renderWorldGrid = !renderWorldGrid;
-	}
-
-	if (App->input->GetKey(SDL_SCANCODE_F2) == KeyState::KEY_DOWN)
-	{
-		renderWorldAxis = !renderWorldAxis;
-	}
-	
-	if (App->input->GetKey(SDL_SCANCODE_F3) == KeyState::KEY_DOWN)
-	{
-		SetRenderWireframes(!renderWireframes);
-	}
-
-	if (App->input->GetKey(SDL_SCANCODE_F7) == KeyState::KEY_DOWN)
-	{
-		SetGLFlag(GL_TEXTURE_2D, !GetGLFlag(GL_TEXTURE_2D));
-	}
-
-	if (App->input->GetKey(SDL_SCANCODE_F8) == KeyState::KEY_DOWN)
-	{
-		SetGLFlag(GL_COLOR_MATERIAL, !GetGLFlag(GL_COLOR_MATERIAL));
-	}
-
-	if (App->input->GetKey(SDL_SCANCODE_KP_PLUS) == KeyState::KEY_DOWN)
-	{
-		if (App->camera->GetCurrentCamera() != nullptr)
+		if (App->input->GetKey(SDL_SCANCODE_F1) == KeyState::KEY_DOWN)
 		{
-			float currentFov = App->camera->GetCurrentCamera()->GetVerticalFOV();
-			App->camera->GetCurrentCamera()->SetVerticalFOV(currentFov + 5.0f);
+			renderWorldGrid = !renderWorldGrid;
 		}
-	}
-	if (App->input->GetKey(SDL_SCANCODE_KP_MINUS) == KeyState::KEY_DOWN)
-	{
-		if (App->camera->GetCurrentCamera() != nullptr)
+		if (App->input->GetKey(SDL_SCANCODE_F2) == KeyState::KEY_DOWN)
 		{
-			float current_fov = App->camera->GetCurrentCamera()->GetVerticalFOV();
-			App->camera->GetCurrentCamera()->SetVerticalFOV(current_fov - 5.0f);
+			renderWorldAxis = !renderWorldAxis;
+		}
+		if (App->input->GetKey(SDL_SCANCODE_F3) == KeyState::KEY_DOWN)
+		{
+			SetRenderWireframes(!renderWireframes);
+		}
+		if (App->input->GetKey(SDL_SCANCODE_F7) == KeyState::KEY_DOWN)
+		{
+			SetGLFlag(GL_TEXTURE_2D, !GetGLFlag(GL_TEXTURE_2D));
+		}
+		if (App->input->GetKey(SDL_SCANCODE_F8) == KeyState::KEY_DOWN)
+		{
+			SetGLFlag(GL_COLOR_MATERIAL, !GetGLFlag(GL_COLOR_MATERIAL));
+		}
+
+		if (App->input->GetKey(SDL_SCANCODE_KP_PLUS) == KeyState::KEY_DOWN)
+		{
+			if (App->camera->GetCurrentCamera() != nullptr)
+			{
+				float currentFov = App->camera->GetCurrentCamera()->GetVerticalFOV();
+				App->camera->GetCurrentCamera()->SetVerticalFOV(currentFov + 5.0f);
+			}
+		}
+		if (App->input->GetKey(SDL_SCANCODE_KP_MINUS) == KeyState::KEY_DOWN)
+		{
+			if (App->camera->GetCurrentCamera() != nullptr)
+			{
+				float current_fov = App->camera->GetCurrentCamera()->GetVerticalFOV();
+				App->camera->GetCurrentCamera()->SetVerticalFOV(current_fov - 5.0f);
+			}
 		}
 	}
 }
@@ -652,6 +653,11 @@ void M_Renderer3D::RenderScene()
 	if (renderWorldAxis)
 		DrawWorldAxis();
 
+	// TMP
+	/*static float4x4 dbTrnsfrm		= float4x4::FromTRS(float3(0.0f, 10.0f, 0.0f), Quat::FromEulerXYZ(90.0f * DEGTORAD, 0.0f, 0.0f), float3::one);
+	static RE_Circle debugCircle	= RE_Circle(dbTrnsfrm, float3(0.0f, 10.0f, 0.0f), 5.0f, 20, 2.0f);
+	debugCircle.Render();*/
+	
 	RenderMeshes();
 	RenderCuboids();
   
@@ -678,8 +684,10 @@ void M_Renderer3D::RenderScene()
 	defaultSkyBox.RenderSkybox();
 
 	RenderUI();
+	
 
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+	
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
@@ -737,12 +745,12 @@ void M_Renderer3D::RenderUI()
 	SetTo2DRenderSettings(true);
 
 	C_Canvas* canvas = nullptr;
-	for (std::vector<GameObject*>::iterator uiIt = App->scene->GetGameObjects()->begin(); uiIt != App->scene->GetGameObjects()->end(); uiIt++)
-	{
+	for (auto uiIt = App->scene->GetGameObjects()->cbegin(); uiIt != App->scene->GetGameObjects()->cend(); ++uiIt)
+	{	
 		canvas = (*uiIt)->GetComponent<C_Canvas>();
 		if (canvas != nullptr)
 		{
-			RenderUIComponent(*uiIt);
+			RenderUIComponent((*uiIt));
 
 			if (!canvas->IsInvisible())
 			{
@@ -777,10 +785,7 @@ void M_Renderer3D::RenderUIComponent(GameObject* gameObject)
 		if (text != nullptr)
 		{
 			if (App->camera->currentCamera != App->camera->masterCamera->GetComponent<C_Camera>())
-				text->Draw2D();
-
-			else
-				text->Draw3D();
+				text->RenderText();
 		}
 
 		C_UI_Button* button = (*it)->GetComponent<C_UI_Button>();
@@ -914,9 +919,9 @@ void M_Renderer3D::RenderSkeletons()
 	glEnable(GL_LIGHTING);
 }
 
-void M_Renderer3D::AddParticle(const float4x4& transform, R_Material* material, Color color, float distanceToCamera)
+void M_Renderer3D::AddParticle(const float4x4& transform, R_Texture* material, Color color, float distanceToCamera)
 {
-	particles.insert(std::make_pair((particles.size() +1), ParticleRenderer(material, color, transform)));
+	particles.insert(std::make_pair(distanceToCamera, ParticleRenderer(material, color, transform)));
 }
 
 void M_Renderer3D::RenderParticles()
@@ -924,7 +929,8 @@ void M_Renderer3D::RenderParticles()
 	std::map<float, ParticleRenderer>::reverse_iterator it;				//Render from far to close to the camera
 	for (it = particles.rbegin(); it != particles.rend(); ++it)			
 	{
-		DrawParticle(it->second);
+		//DrawParticle(it->second);
+		it->second.Render();
 	}
 	particles.clear();
 }
@@ -1468,14 +1474,21 @@ GameObject* M_Renderer3D::GenerateSceneLight(Color diffuse, Color ambient, Color
 	std::string name;
 	switch (lightType)
 	{
-	case LightType::DIRECTIONAL: name = "DirectionalLight";  break;
-	case LightType::POINTLIGHT: name = "PointLight";  break;
-	case LightType::SPOTLIGHT: name = "SpotLight"; break;
-	case LightType::NONE: break;
+	case LightType::DIRECTIONAL:	{ name = "DirectionalLight"; }	break;
+	case LightType::POINTLIGHT:		{ name = "PointLight"; }		break;
+	case LightType::SPOTLIGHT:		{ name = "SpotLight"; }			break;
+	case LightType::NONE:			{ name = ""; }					break;
 	}
-	
-	if (!App->scene->GetAllLights().empty()) 
-		name += std::to_string(App->scene->GetPointLights().size());
+
+	if (App->scene->SceneHasLights())
+	{
+		std::vector<GameObject*> pointLights;																		// ATTENTION: Only checking point lights? Shouldn't it be all lights?
+		App->scene->GetPointLights(pointLights);
+
+		name += std::to_string(pointLights.size());
+
+		pointLights.clear();
+	}
 
 	light = App->scene->CreateGameObject(name.c_str(), App->scene->GetSceneRoot());
 
@@ -1522,9 +1535,9 @@ void M_Renderer3D::GenScreenBuffer()
 		-1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
 		1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
 		-1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
-		-1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
 		1.0f,  -1.0f, 0.0f, 1.0f, 0.0f,
-		1.0f, 1.0f, 0.0f, 1.0f, 1.0f
+		1.0f, 1.0f, 0.0f, 1.0f, 1.0f,
+		-1.0f,  1.0f, 0.0f, 0.0f, 1.0f
 	};
 
 	GLuint quad_vertexbuffer;
@@ -1797,9 +1810,9 @@ void MeshRenderer::ApplyShader()
 
 			cMaterial->GetShader()->SetUniformMatrix4("modelMatrix", transform->Transposed().ptr());
 
-			cMaterial->GetShader()->SetUniformMatrix4("viewMatrix", App->camera->GetCurrentCamera()->GetOGLViewMatrix());
+			cMaterial->GetShader()->SetUniformMatrix4("viewMatrix", App->camera->GetCurrentCamera()->GetViewMatrixTransposed().ptr());
 
-			cMaterial->GetShader()->SetUniformMatrix4("projectionMatrix", App->camera->GetCurrentCamera()->GetOGLProjectionMatrix());
+			cMaterial->GetShader()->SetUniformMatrix4("projectionMatrix", App->camera->GetCurrentCamera()->GetProjectionMatrixTransposed().ptr());
 
 			cMaterial->GetShader()->SetUniformVec3f("cameraPosition", (GLfloat*)&App->camera->GetCurrentCamera()->GetFrustum().Pos());
 			
@@ -1823,8 +1836,10 @@ void MeshRenderer::ApplyShader()
 			}
 
 			// Light 
-			std::vector<GameObject*> dirLights = App->scene->GetDirLights();
-			std::vector<GameObject*> pointLights = App->scene->GetPointLights();
+			std::vector<GameObject*> dirLights;
+			std::vector<GameObject*> pointLights; 
+			App->scene->GetDirLights(dirLights);
+			App->scene->GetPointLights(pointLights);
 
 			if (!dirLights.empty())
 			{
@@ -1854,7 +1869,11 @@ void MeshRenderer::ApplyShader()
 				}
 			}
 
-			if(cMaterial->GetShader()) Importer::Shaders::SetShaderUniforms(cMaterial->GetShader());
+			if(cMaterial->GetShader()) 
+				Importer::Shaders::SetShaderUniforms(cMaterial->GetShader());
+
+			dirLights.clear();
+			pointLights.clear();
 		}
 	}
 }
@@ -2057,10 +2076,86 @@ void SkeletonRenderer::Render()
 }
 
 // -- PARTICLE RENDERER METHODS
-ParticleRenderer::ParticleRenderer(R_Material* mat, Color color, const float4x4 transform) : 
+ParticleRenderer::ParticleRenderer(R_Texture* mat, Color color, const float4x4 transform) : 
 mat(mat),
 color(color),
-transform(transform)
+transform(transform),
+VAO(0),
+shader(nullptr)
+{
+	shader = App->resourceManager->GetShader("ParticleShader");
+}
+
+void ParticleRenderer::LoadBuffers()
+{
+	glGenBuffers(1, &VAO);
+	glBindBuffer(GL_ARRAY_BUFFER, VAO);
+
+	glBufferData(GL_ARRAY_BUFFER, sizeof(ParticlesCoords), ParticlesCoords, GL_STATIC_DRAW);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, (GLvoid*)0);
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
+void ParticleRenderer::Render()
 {
 
+	/*glPushMatrix();
+	glMultMatrixf((GLfloat*)&transform);
+
+	glEnable(GL_BLEND);
+
+	glColor4f(0.0f, 0.0f, 0.0f, 1.0f);
+
+	glBindTexture(GL_TEXTURE_2D, mat->GetTextureID());
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+
+	int x =0;
+	int y = 0;
+	int w = 5;
+	int h = 5;
+
+	glBegin(GL_QUADS);
+	glTexCoord2f(0, 0); glVertex2f(x -w / 2, y - h / 2);
+	glTexCoord2f(1, 0); glVertex2f(x +w / 2, y - h / 2);
+	glTexCoord2f(1, 1); glVertex2f(x +w / 2, y + h / 2);
+	glTexCoord2f(0, 1); glVertex2f(x -w / 2, y + h / 2);
+	glEnd();
+
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	glDisable(GL_BLEND);
+
+	glPopMatrix();*/
+
+	glEnable(GL_BLEND); 
+
+	glBlendEquation(GL_FUNC_ADD);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	glUseProgram(shader->shaderProgramID);
+
+	glBindTexture(GL_TEXTURE_2D, mat->GetTextureID());
+
+	shader->SetUniformMatrix4("modelMatrix", transform.ptr());
+
+	shader->SetUniformMatrix4("viewMatrix", App->camera->GetCurrentCamera()->GetViewMatrixTransposed().ptr());
+
+	shader->SetUniformMatrix4("projectionMatrix", App->camera->GetCurrentCamera()->GetProjectionMatrixTransposed().ptr());
+
+	shader->SetUniformVec4f("color", (GLfloat*)&color);
+
+	glBindBuffer(GL_ARRAY_BUFFER, VAO);
+
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	glUseProgram(0);
+
+	glDisable(GL_BLEND);
 }

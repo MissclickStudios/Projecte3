@@ -64,13 +64,15 @@ const char* Resource::GetTypeAsString() const
 {
 	switch (type)
 	{
-	case ResourceType::MODEL:		{ return "MODEL"; }		break;
-	case ResourceType::MESH:		{ return "MESH"; }		break;
-	case ResourceType::MATERIAL:	{ return "MATERIAL"; }	break;
-	case ResourceType::TEXTURE:		{ return "TEXTURE"; }	break;
-	case ResourceType::ANIMATION:	{ return "ANIMATION"; }	break;
-	case ResourceType::SHADER:		{ return "SHADER"; }	break;
-	case ResourceType::SCRIPT:		{ return "SCRIPT"; }	break;
+	case ResourceType::MODEL:			{ return "MODEL"; }				break;
+	case ResourceType::MESH:			{ return "MESH"; }				break;
+	case ResourceType::MATERIAL:		{ return "MATERIAL"; }			break;
+	case ResourceType::TEXTURE:			{ return "TEXTURE"; }			break;
+	case ResourceType::ANIMATION:		{ return "ANIMATION"; }			break;
+	case ResourceType::SHADER:			{ return "SHADER"; }			break;
+	case ResourceType::PARTICLE_SYSTEM: { return "PARTICLE_SYSTEM"; }	break;
+	case ResourceType::SCRIPT:			{ return "SCRIPT"; }			break;
+	case ResourceType::NAVMESH:			{ return "NAVMESH"; }			break;
 	}
 
 	return "NONE";
@@ -156,48 +158,17 @@ void Resource::SetLibraryPathAndFile()
 	
 	switch (type)
 	{
-	case ResourceType::ANIMATION:
-		directory = ANIMATIONS_PATH;
-		extension = ANIMATIONS_EXTENSION;
-		break;
-
-	case ResourceType::FOLDER:
-		directory = FOLDERS_PATH;
-		extension =	FOLDERS_EXTENSION;
-		break;
-
-	case ResourceType::MODEL:
-		directory = MODELS_PATH;
-		extension = MODELS_EXTENSION;
-		break;
-
-	case ResourceType::MESH:
-		directory = MESHES_PATH;
-		extension = MESHES_EXTENSION;
-		break;
-
-	case ResourceType::MATERIAL:
-		directory = MATERIALS_PATH;
-		extension = MATERIALS_EXTENSION;
-		break;
-
-	case ResourceType::TEXTURE:
-		directory = TEXTURES_PATH;
-		extension = TEXTURES_EXTENSION;
-		break;
-
-	case ResourceType::SCENE:
-		directory = SCENES_PATH;
-		extension = SCENES_EXTENSION;
-		break;
-
-	case ResourceType::SHADER:
-		directory = SHADERS_PATH;
-		extension = SHADERS_EXTENSION;
-		break;
-	case ResourceType::SCRIPT:
-		directory = SCRIPTS_PATH;
-		extension = SCRIPTS_EXTENSION;
+	case ResourceType::ANIMATION:		{ directory = ANIMATIONS_PATH;		extension = ANIMATIONS_EXTENSION; }			break;
+	case ResourceType::FOLDER:			{ directory = FOLDERS_PATH;			extension = FOLDERS_EXTENSION; }			break;
+	case ResourceType::MODEL:			{ directory = MODELS_PATH;			extension = MODELS_EXTENSION; }				break;
+	case ResourceType::MESH:			{ directory = MESHES_PATH;			extension = MESHES_EXTENSION; }				break;
+	case ResourceType::MATERIAL:		{ directory = MATERIALS_PATH;		extension = MATERIALS_EXTENSION; }			break;
+	case ResourceType::TEXTURE:			{ directory = TEXTURES_PATH;		extension = TEXTURES_EXTENSION; }			break;
+	case ResourceType::SCENE:			{ directory = SCENES_PATH;			extension = SCENES_EXTENSION; }				break;
+	case ResourceType::SHADER:			{ directory = SHADERS_PATH;			extension = SHADERS_EXTENSION; }			break;
+	case ResourceType::PARTICLE_SYSTEM: { directory = PARTICLESYSTEMS_PATH;	extension = PARTICLESYSTEMS_EXTENSION; }	break;
+	case ResourceType::SCRIPT:			{ directory = SCRIPTS_PATH;			extension = SCRIPTS_EXTENSION; }			break;
+	case ResourceType::NAVMESH:	{ directory = NAVIGATION_PATH; 		extension = NAVMESH_EXTENSION; }			break;
 	}
 	
 	libraryPath = directory + file + extension;

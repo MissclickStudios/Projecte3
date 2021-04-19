@@ -151,6 +151,16 @@ float* C_Camera::GetOGLViewMatrix()
 	return (float*)viewMatrix.v;
 }
 
+
+float* C_Camera::GetOGLProjectionMatrix()
+{
+	static float4x4 projectionMatrix;
+
+	projectionMatrix = frustum.ProjectionMatrix().Transposed();
+	
+	return (float*)projectionMatrix.v;
+}
+
 math::float4x4 C_Camera::GetViewMatrixTransposed() const
 {
 	math::float4x4 matrix = frustum.ViewMatrix();
@@ -160,17 +170,7 @@ math::float4x4 C_Camera::GetViewMatrixTransposed() const
 math::float4x4 C_Camera::GetProjectionMatrixTransposed() const
 {
 	math::float4x4 matrix = frustum.ProjectionMatrix();
-	matrix.Transpose();
-	return matrix;
-}
-
-float* C_Camera::GetOGLProjectionMatrix()
-{
-	static float4x4 projectionMatrix;
-
-	projectionMatrix = frustum.ProjectionMatrix().Transposed();
-	
-	return (float*)projectionMatrix.v;
+	return matrix.Transposed();
 }
 
 void C_Camera::PointAt(const float3& position, const float3& target)

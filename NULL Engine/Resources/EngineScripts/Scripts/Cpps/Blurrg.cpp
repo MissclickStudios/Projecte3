@@ -10,6 +10,7 @@
 #include "C_BoxCollider.h"
 #include "C_Mesh.h"
 #include "C_Material.h"
+#include "C_AudioSource.h"
 
 #include "Blurrg.h"
 #include "Player.h"
@@ -20,6 +21,7 @@ Blurrg::Blurrg()
 	dashColdown.Stop();
 	dashCharge.Stop();
 	restTimer.Stop();
+	stepTimer.Stop();
 
 	freezeTimer.Stop();
 }
@@ -30,6 +32,26 @@ Blurrg::~Blurrg()
 
 void Blurrg::Awake()
 {
+	std::vector<Component*> components;
+	gameObject->GetAllComponents(components);
+	for (auto comp = components.begin(); comp != components.end(); ++comp)
+	{
+		if ((*comp)->GetType() == ComponentType::AUDIOSOURCE)
+		{
+			C_AudioSource* source = (C_AudioSource*)(*comp);
+			std::string name = source->GetEventName();
+
+			if (name == "blurrg_walking")
+				step = source;
+			else if (name == "blurrg_growl")
+				charge = source;
+			else if (name == "blurrg_hit")
+				damaged = source;
+			else if (name == "blurrg_death")
+				death = source;
+		}
+	}
+
 	for (uint i = 0; i < gameObject->childs.size(); ++i)
 		if (gameObject->childs[i]->GetComponent<C_Mesh>())
 			mesh = gameObject->childs[i];
@@ -39,6 +61,9 @@ void Blurrg::Update()
 {
 	if (health <= 0.0f)
 	{
+		if (death)
+			death->PlayFx(death->GetEventId());
+
 		for (uint i = 0; i < gameObject->components.size(); ++i)
 			gameObject->components[i]->SetIsActive(false);
 		gameObject->SetIsActive(false);
@@ -52,14 +77,14 @@ void Blurrg::Update()
 		return;
 	}
 
-	if (!player)
+	if (player == nullptr)
 	{
-		std::vector<GameObject*>* objects = App->scene->GetGameObjects();
-		for (uint i = 0; i < objects->size(); ++i)
-			if ((*objects)[i]->GetScript("Player"))
-				player = (*objects)[i];
+		std::vector<GameObject*>* gameObjects = App->scene->GetGameObjects();
+		for (auto object = gameObjects->begin(); object != gameObjects->end(); ++object)
+			if ((*object)->GetScript("Player"))
+				player = (*object);
 
-		if (!player)
+		if (player == nullptr)
 			return;
 	}
 
@@ -128,6 +153,7 @@ void Blurrg::Update()
 				// Move
 				direction *= speed * speedModifier;
 				rigidBody->SetLinearVelocity(direction);
+				StepSound();
 
 				if (dashColdown.IsActive())
 				{
@@ -138,6 +164,8 @@ void Blurrg::Update()
 				{
 					rigidBody->SetLinearVelocity(float3::zero);
 					dashCharge.Start();				// Start Charging Dash
+					if (charge)
+						charge->PlayFx(charge->GetEventId());
 				}
 			}
 		}
@@ -183,6 +211,9 @@ void Blurrg::OnCollisionEnter(GameObject* object)
 
 void Blurrg::TakeDamage(float damage)
 {
+	if (damaged)
+		damaged->PlayFx(damaged->GetEventId());
+
 	health -= damage * defenseModifier;
 	if (health < 0.0f)
 		health = 0.0f;
@@ -233,6 +264,21 @@ float3 Blurrg::LookingAt()
 	}
 
 	return { lookVector.x, 0, lookVector.y };
+}
+
+void Blurrg::StepSound()
+{
+	if (!isStepPlaying)
+	{
+		isStepPlaying = true;
+		stepTimer.Start();
+
+		if (step)
+			step->PlayFx(step->GetEventId());
+	}
+	else
+		if (stepTimer.ReadSec() >= 0.4f)
+			isStepPlaying = false;
 }
 
 Blurrg* CreateBlurrg()

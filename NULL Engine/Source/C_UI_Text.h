@@ -5,29 +5,28 @@
 
 #include "M_UISystem.h"
 #include "OpenGL.h"
-
+#include "Color.h"
 #include "Component.h"
 
-namespace freetype {
+struct FT_FaceRec_;
+typedef FT_FaceRec_* FT_Face;
+struct FT_LibraryRec_;
+typedef FT_LibraryRec_* FT_Library;
 
-	struct font_data {
-		float h;
-		GLuint* textures;
-		GLuint list_base;
-		void init(const char* fname, unsigned int h);
-		void clean();
-	};
-	void print(const font_data& ft_font, float x, float y, const char* fmt, ...);
+class R_Shader;
 
-}
-
+struct Character 
+{
+	uint	textureID;
+	float2	size;		
+	float2	bearing;
+	uint	advance;	
+};
 
 class NULL_API C_UI_Text : public Component
 {
 public:
-
 	C_UI_Text(GameObject* owner, Rect2D rect = { 0,0,50,50 });
-
 	~C_UI_Text();
 
 	bool Update() override;
@@ -38,31 +37,52 @@ public:
 
 	static inline ComponentType GetType() { return ComponentType::UI_TEXT; }
 
-	void Draw2D();
-	void Draw2DCharacter(FT_Face id, float x, float y);
-	void Draw3D();
+public:
+	void LoadBuffers();
 
-	void RenderText(std::string text, float x, float y, float scale, float3 color);
+	//void Draw2D();
+	//void Draw2DCharacter(FT_Face id, float x, float y);
+	//void Draw3D();
+
+	void RenderText();
+
+	void GenerateTextureID();
 
 public:
-
 	Rect2D GetRect() const;
+	Color GetColor() const;
+	const char* GetText() const;
 
+	void SetText(const char* text);
+	void SetColor(Color color);
 	void SetRect(const Rect2D& rect);
 	void SetX(const float x);
 	void SetY(const float y);
 	void SetW(const float w);
 	void SetH(const float h);
 
-	std::string text; // temp here
+	
 
 private:
 
-	Rect2D rect = { 0,0,50,50 };
+	Rect2D rect = { 0,0,0.001,0.001 };
+
+	std::string text; 
 
 	unsigned char image[640][480];
 
-	FT_UInt  glyphIndex;
+	Color color;
+
+	FT_Face face;
+
+	FT_Library ft;
+
+	std::map<char, Character> Characters;
+
+	R_Shader* rShader;
+
+	uint VAO;
+	uint VBO;
 
 };
 

@@ -65,11 +65,11 @@ bool C_Mesh::CleanUp()
 bool C_Mesh::SaveState(ParsonNode& root) const
 {
 	bool ret = true;
+		
+	root.SetNumber("Type", (double)GetType());
 
 	if (rMesh != nullptr)
 	{
-		root.SetNumber("Type", (double)GetType());
-
 		root.SetNumber("UID", rMesh->GetUID());
 		root.SetString("Name", rMesh->GetAssetsFile());
 		root.SetString("Path", rMesh->GetLibraryPath());

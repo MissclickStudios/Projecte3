@@ -119,7 +119,14 @@ private:
 	// Character
 	bool isStepPlaying = false;
 	Timer stepTimer;
-	C_AudioSource* aSource = nullptr;
+	C_AudioSource* step = nullptr;
+	C_AudioSource* dashSource = nullptr;
+	C_AudioSource* damaged = nullptr;
+	C_AudioSource* death = nullptr;
+	C_AudioSource* reloadBlaster = nullptr;
+	C_AudioSource* reloadSniper = nullptr;
+	C_AudioSource* weaponChange = nullptr;
+
 	C_Animator* aAnimator = nullptr;
 	bool playAnim = false;
 
@@ -147,6 +154,8 @@ private:
 	R_Texture* full = nullptr;
 	R_Texture* half = nullptr;
 	R_Texture* empty = nullptr;
+
+	bool load = true;
 };
 
 SCRIPTS_FUNCTION Player* CreatePlayer();

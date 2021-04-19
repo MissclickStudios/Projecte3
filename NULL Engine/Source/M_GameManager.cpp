@@ -2,7 +2,7 @@
 #include "M_GameManager.h"
 #include "M_Renderer3D.h"
 #include "M_ScriptManager.h"
-#include "Time.h"
+#include "MC_Time.h"
 
 M_GameManager::M_GameManager(bool isActive) : Module("GameManager", isActive)
 {
@@ -23,7 +23,7 @@ bool M_GameManager::Init(ParsonNode& config)
 
 bool M_GameManager::Start()
 {
-	Time::Game::Play();
+	MC_Time::Game::Play();
 	GameApp->gameState = GameState::PLAY;
 	GameApp->renderer->SetRenderWorldGrid(false);
 	GameApp->renderer->SetRenderWorldAxis(false);

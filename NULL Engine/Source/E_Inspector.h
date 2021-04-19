@@ -34,16 +34,21 @@ class C_UI_Image;
 class C_UI_Text;
 class C_UI_Button;
 class C_2DAnimator;
+class C_NavMeshAgent;
 
 class Resource;
 class R_Shader;
 class R_Texture;
+
+class Emitter;
+
 class ModelSettings;
 class MeshSettings;
 class MaterialSettings;
 class TextureSettings;
 class AnimationSettings;
 
+struct ParticleModule;
 
 class E_Inspector : public EditorPanel
 {
@@ -84,6 +89,7 @@ private:																										// --- DRAW COMPONENT METHODS ---
 	void DrawCameraBehaviorComponent	(C_CameraBehavior* behavior); 
 	void DrawGateBehaviorComponent		(C_GateBehavior* behavior);
 	void DrawAnimator2DComponent		(C_2DAnimator* cAnimator);
+	void DrawNavMeshAgentComponent		(C_NavMeshAgent* cNavMeshAgent);
 
 private:																										// --- DRAW COMPONENT UTILITY METHODS ---
 	void AddComponentCombo				(GameObject* selectedGameObject);										// 
@@ -91,7 +97,7 @@ private:																										// --- DRAW COMPONENT UTILITY METHODS ---
 	void AddUIComponent					(GameObject* selectedGameObject, ComponentType type);
 
 	// COMPONENT BASICS		--------
-	void DrawBasicSettings				(Component* component, bool isActive, const char* state = nullptr);
+	void DrawBasicSettings				(Component* component, const char* state = nullptr);
 
 	// MATERIAL COMPONENT	--------
 	void DisplayTextureData				(C_Material* cMaterial);												// Will display the texture's width, height, depth...
@@ -106,6 +112,23 @@ private:																										// --- DRAW COMPONENT UTILITY METHODS ---
 	// SHADER COMPONENT		--------
 	void TextEditorWindow				();
 	void CallTextEditor					(C_Material* cMaterial);
+
+	// PARTICLE SYSTEM COMPONENT ---
+	void DisplayParticleSystemControls	(C_ParticleSystem* cParticleSystem);
+	void DisplayEmitterInstances		(C_ParticleSystem* cParticleSystem);
+
+	void DisplayParticleModules			(Emitter* emitter);
+	void DisplayEmitterBase				(ParticleModule* pModule);
+	void DisplayEmitterSpawn			(ParticleModule* pModule);
+	void DisplayEmitterArea				(ParticleModule* pModule);
+	void DisplayParticleMovement		(ParticleModule* pModule);
+	void DisplayParticleColor			(ParticleModule* pModule);
+	void DisplayParticleLifetime		(ParticleModule* pModule);
+	void DisplayParticleRotation		(ParticleModule* pModule);
+	void DisplayParticleSize			(ParticleModule* pModule);
+	void DisplayParticleBillboarding	(ParticleModule* pModule);
+
+	void ScriptSelectCombo(C_Script*& cScript, const char* previewValue, bool swapForCurrent);
 
 private:
 	void DrawImportSettings				(Resource* selectedResource);
@@ -123,6 +146,7 @@ private:
 	int			componentType;
 
 	int			mapToDisplay;
+	int			billboardingType;
 	int			moduleType;
 
 	Component*	componentToDelete;

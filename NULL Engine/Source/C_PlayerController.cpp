@@ -52,42 +52,42 @@ C_PlayerController::~C_PlayerController()
 bool C_PlayerController::Update()
 {
 	OPTICK_CATEGORY("Player Controller Update", Optick::Category::Update);
-	
-	if (App->gameState != GameState::PLAY)
-		return true;
+	//
+	//if (App->gameState != GameState::PLAY)
+	//	return true;
 
-	if (!playAnim)
-	{
-		aAnimator = GetOwner()->GetComponent<C_Animator>();
+	//if (!playAnim)
+	//{
+	//	aAnimator = GetOwner()->GetComponent<C_Animator>();
 
-		aAnimator->PlayClip("Idle", (uint)0);
-		playAnim = true;
-	}
-	
-	/*if (App->input->GetKey(SDL_SCANCODE_Y) == KeyState::KEY_DOWN)	{ aAnimator->PlayClip("Running4", 0.2f); }
-	if (App->input->GetKey(SDL_SCANCODE_Y) == KeyState::KEY_UP)		{ aAnimator->PlayClip("Idle", 0.2f); }
-	if (App->input->GetKey(SDL_SCANCODE_U) == KeyState::KEY_DOWN)	{ aAnimator->PlayClip("Shooting", 0.2f); }*/
+	//	aAnimator->PlayClip("Idle", (uint)0);
+	//	playAnim = true;
+	//}
+	//
+	///*if (App->input->GetKey(SDL_SCANCODE_Y) == KeyState::KEY_DOWN)	{ aAnimator->PlayClip("Running4", 0.2f); }
+	//if (App->input->GetKey(SDL_SCANCODE_Y) == KeyState::KEY_UP)		{ aAnimator->PlayClip("Idle", 0.2f); }
+	//if (App->input->GetKey(SDL_SCANCODE_U) == KeyState::KEY_DOWN)	{ aAnimator->PlayClip("Shooting", 0.2f); }*/
 
-	switch (state)
-	{
-	case PlayerState::IDLE:		{ aAnimator->PlayClip("Idle", 0.2f); }		break;
-	case PlayerState::RUNNING:	{ aAnimator->PlayClip("Running4", 0.2f); }	break;
-	case PlayerState::DASHING:	{ /*aAnimator->PlayClip("Dashing", 0);*/ }	break;
-	case PlayerState::SHOOTING: { aAnimator->PlayClip("Shooting", 0.2f); }	break;
-	}
+	//switch (state)
+	//{
+	//case PlayerState::IDLE:		{ aAnimator->PlayClip("Idle", 0.2f); }		break;
+	//case PlayerState::RUNNING:	{ aAnimator->PlayClip("Running4", 0.2f); }	break;
+	//case PlayerState::DASHING:	{ /*aAnimator->PlayClip("Dashing", 0);*/ }	break;
+	//case PlayerState::SHOOTING: { aAnimator->PlayClip("Shooting", 0.2f); }	break;
+	//}
 
-	if (!bulletStorage)
-	{
-		bulletStorage = App->scene->CreateGameObject("Bullets", App->scene->GetSceneRoot());
-		for (uint i = 0; i < BULLET_AMOUNT; ++i)
-			bullets[i] = CreateBullet(i);
-	}
+	//if (!bulletStorage)
+	//{
+	//	bulletStorage = App->scene->CreateGameObject("Bullets", App->scene->GetSceneRoot());
+	//	for (uint i = 0; i < BULLET_AMOUNT; ++i)
+	//		bullets[i] = CreateBullet(i);
+	//}
 
-	Movement();
-	Weapon();
-	HandleHp();
-	
-	HandleAmmo(ammo);
+	//Movement();
+	//Weapon();
+	//HandleHp();
+	//
+	//HandleAmmo(ammo);
 
 
 	return true;
@@ -95,7 +95,7 @@ bool C_PlayerController::Update()
 
 bool C_PlayerController::CleanUp()
 {	
-	if (bulletStorage)
+	/*if (bulletStorage)
 	{
 		for (uint i = 0; i < BULLET_AMOUNT; ++i)
 		{
@@ -120,7 +120,7 @@ bool C_PlayerController::CleanUp()
 
 	if (full != nullptr)	{ App->resourceManager->FreeResource(full->GetUID()); }
 	if (half != nullptr)	{ App->resourceManager->FreeResource(half->GetUID()); }
-	if (empty != nullptr)	{ App->resourceManager->FreeResource(empty->GetUID()); }
+	if (empty != nullptr)	{ App->resourceManager->FreeResource(empty->GetUID()); }*/
 
 	return true;
 }
@@ -354,7 +354,7 @@ Bullet* C_PlayerController::CreateBullet(uint index)
 	rigidBody->FreezeRotationZ(true);
 	((C_BoxCollider*)bullet->CreateComponent(ComponentType::BOX_COLLIDER))->SetTrigger(true);
 	((C_BulletBehavior*)bullet->CreateComponent(ComponentType::BULLET_BEHAVIOR))->SetShooter(GetOwner(), index);
-	bullet->CreateComponent(ComponentType::PARTICLE_SYSTEM);
+	bullet->CreateComponent(ComponentType::PARTICLES);
 
 	bullet->CreateComponent(ComponentType::AUDIOSOURCE);
 	C_AudioSource* source = bullet->GetComponent<C_AudioSource>();
@@ -469,13 +469,13 @@ void C_PlayerController::GetAimVectorAxis(int& axisX, int& axisY)
 
 void C_PlayerController::HandleAmmo(int ammo)
 {
-	std::vector<GameObject*>::iterator it = App->scene->GetGameObjects()->begin();
-
-	for (it; it != App->scene->GetGameObjects()->end(); ++it)
+	std::vector<GameObject*>* gameObjects = App->scene->GetGameObjects();
+	for (auto object = gameObjects->cbegin(); object != gameObjects->cend(); ++object)
 	{
-		if (strstr((*it)->GetName(), "PrimaryWeapon") != nullptr)
-		{			
-			ammoUi = (*it);
+		if (strstr((*object)->GetName(), "PrimaryWeapon") != nullptr)
+		{
+			ammoUi = (*object);
+			break;
 		}
 	}
 
@@ -506,23 +506,24 @@ void C_PlayerController::HandleAmmo(int ammo)
 
 void C_PlayerController::HandleHp()
 {
-	std::vector<GameObject*>::iterator it = App->scene->GetGameObjects()->begin();
-
-	for (it; it != App->scene->GetGameObjects()->end(); ++it)
+	std::vector<GameObject*>* gameObjects = App->scene->GetGameObjects();
+	for (auto object = gameObjects->cbegin(); object != gameObjects->cend(); ++object)
 	{
-		if (strstr((*it)->GetName(), "Heart") != nullptr)
+		const char* goName = (*object)->GetName();
+		
+		if (strstr(goName, "Heart") != nullptr)
 		{
-			if (strstr((*it)->GetName(), "1") != nullptr)
+			if (strstr(goName, "1") != nullptr)
 			{
-				hearts[0] = (*it);
-			}		
-			else if (strstr((*it)->GetName(), "2") != nullptr)
-			{
-				hearts[1] = (*it);
+				hearts[0] = (*object);
 			}
-			else if (strstr((*it)->GetName(), "3") != nullptr)
+			else if (strstr(goName, "2") != nullptr)
 			{
-				hearts[2] = (*it);
+				hearts[1] = (*object);
+			}
+			else if (strstr(goName, "3") != nullptr)
+			{
+				hearts[2] = (*object);
 			}
 		}
 	}

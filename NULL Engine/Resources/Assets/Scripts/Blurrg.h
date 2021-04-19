@@ -7,6 +7,7 @@
 
 #include "MathGeoLib/include/Math/float3.h"
 
+class C_AudioSource;
 class GameObject;
 
 class SCRIPTS_API Blurrg : public Script
@@ -55,12 +56,23 @@ public:
 
 private:
 
+
+	void StepSound();
+
 	float3 LookingAt();
+
+	C_AudioSource* step = nullptr;
+	C_AudioSource* charge = nullptr;
+	C_AudioSource* damaged = nullptr;
+	C_AudioSource* death = nullptr;
 
 	// Movement
 	float distance = 10000.0f;	// Distance from the player
 
 	float3 direction = float3::zero;
+
+	bool isStepPlaying = false;
+	Timer stepTimer;
 
 	// Dash
 	Timer dashTime; // Duration of the dash

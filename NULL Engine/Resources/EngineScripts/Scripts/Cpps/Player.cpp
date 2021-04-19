@@ -1,4 +1,8 @@
+#include "JSONParser.h"
+
 #include "Player.h"
+
+#include "VariableTypedefs.h"
 #include "Log.h"
 
 #include "Application.h"
@@ -7,9 +11,9 @@
 #include "M_ResourceManager.h"
 #include "M_Camera3D.h"
 #include "M_Window.h"
-#include "M_Editor.h"
 #include "M_Audio.h"
 #include "M_Physics.h"
+#include "M_FileSystem.h"
 
 #include "R_Texture.h"
 
@@ -28,13 +32,17 @@
 #include "R_Script.h"
 #include "Bullet.h"
 
+#include "LevelGenerator.h"
 #include "Weapon.h"
 
-#include "Time.h"
+#include "MC_Time.h"
 
 #include "MathGeoLib/include/Geometry/Line.h"
 
+#include "CoreDllHelpers.h"
+
 #define MAX_JOYSTICK_INPUT 32767
+#define MANDO_FILE "EngineScripts/Mando.json"
 
 enum class PlayerState
 {
@@ -61,23 +69,83 @@ Player::~Player()
 
 void Player::Awake()
 {
+	char* buffer = nullptr;
+	uint size = App->fileSystem->Load(MANDO_FILE, &buffer);
+	if (buffer)
+	{
+		ParsonNode config(buffer);
+
+		weaponUsed = config.GetInteger("Weapon used");
+		coins = config.GetInteger("Coins");
+		strongShots = true; //config.GetBool("Strong shots");
+		freezingShots = true; //config.GetBool("Freezing shots");
+		blasterAmmo = config.GetInteger("Blaster ammo");
+		sniperAmmo = config.GetInteger("Sniper ammo");
+		health = maxHealth; //(float)config.GetNumber("Health");
+
+		load = true;
+	}
+	CoreCrossDllHelpers::CoreReleaseBuffer(&buffer);
+	
 	if (!gameObject->GetComponent<C_RigidBody>())
 		gameObject->CreateComponent(ComponentType::RIGIDBODY);
 
-	std::vector<GameObject*>* objects = App->scene->GetGameObjects();
-	for (uint i = 0; i < objects->size(); ++i)
+	std::vector<Component*> components = gameObject->GetAllComponents();
+	for (auto comp = components.begin(); comp != components.end(); ++comp)
 	{
-		std::string name = (*objects)[i]->GetName();
-		LOG("%s", name.c_str());
-		if (name == "Blaster")
-			blasterModel = (*objects)[i];
-		else if (name == "Sniper")
-			sniperModel = (*objects)[i];
+		if ((*comp)->GetType() == ComponentType::AUDIOSOURCE)
+		{
+			C_AudioSource* source = (C_AudioSource*)(*comp);
+			std::string name = source->GetEventName();
+
+			if (name == "mando_damaged")
+				damaged = source;
+			else if (name == "mando_dash")
+				dashSource = source;
+			else if (name == "mando_walking")
+				step = source;
+			else if (name == "mando_death")
+				death = source;
+			else if (name == "weapon_reload_01")
+				reloadBlaster = source;
+			else if (name == "weapon_reload_02")
+				reloadSniper = source;
+			else if (name == "weapon_change")
+				weaponChange = source;
+		}
 	}
-	if (blasterModel)
-		blasterModel->SetIsActive(true);
-	if (sniperModel)
-		sniperModel->SetIsActive(false);
+
+	if (!blaster)
+		blaster = new Weapon(gameObject, blasterBullet, 10u, blasterMaxAmmo, blasterSpeed, blasterRate, blasterAutomatic);
+	if (!sniper)
+		sniper = new Weapon(gameObject, sniperBullet, 2u, sniperMaxAmmo, sniperSpeed, sniperRate, sniperAutomatic);
+
+
+
+	std::vector<GameObject*>* gameObjects = App->scene->GetGameObjects();
+	for (auto object = gameObjects->begin(); object != gameObjects->end(); ++object)
+	{
+		std::string name = (*object)->GetName();
+		if (name == "Blaster")
+			blasterModel = (*object);
+		else if (name == "Sniper")
+			sniperModel = (*object);
+	}
+
+	if (weaponUsed == 1)
+	{
+		if (blasterModel)
+			blasterModel->SetIsActive(true);
+		if (sniperModel)
+			sniperModel->SetIsActive(false);
+	}
+	else
+	{
+		if (blasterModel)
+			blasterModel->SetIsActive(false);
+		if (sniperModel)
+			sniperModel->SetIsActive(true);
+	}
 
 	dashTime.Stop();
 	dashColdown.Stop();
@@ -90,28 +158,46 @@ void Player::Update()
 	Animations();
 	if (health <= 0.0f)
 	{
-		state = PlayerState::DEAD;
-		C_RigidBody* rigidBody = gameObject->GetComponent<C_RigidBody>();
-		if (!rigidBody || rigidBody->IsStatic())
-			return;
-		rigidBody->SetLinearVelocity(float3::zero);
+		if (state != PlayerState::DEAD)
+		{
+			state = PlayerState::DEAD;
 
+			weaponUsed = 1;
+			coins = 0;
+			strongShots = false;
+			freezingShots = false;
+			health = maxHealth;
+			blasterAmmo = blasterMaxAmmo;
+			sniperAmmo = sniperMaxAmmo;
+
+			if (death)
+				death->PlayFx(death->GetEventId());
+
+			C_RigidBody* rigidBody = gameObject->GetComponent<C_RigidBody>();
+			if (!rigidBody || rigidBody->IsStatic())
+				rigidBody->SetIsActive(false);
+
+			//TODO: Player death
+			//App->scene->GetLevelGenerator()->InitiateLevel(1);
+		}
 		return;
 	}
 
 	Movement();
 
-	if (!blaster)
-		blaster = new Weapon(gameObject, blasterBullet, 10u, blasterMaxAmmo, blasterSpeed, blasterRate, blasterAutomatic);
 	blaster->Update();
-	if (!sniper)
-		sniper = new Weapon(gameObject, sniperBullet, 2u, sniperMaxAmmo, sniperSpeed, sniperRate, sniperAutomatic);
 	sniper->Update();
+	if (load)
+	{
+		load = false;
+		if (strongShots)
+			BlasterStrongShots();
+		if (freezingShots)
+			SniperFreezingShots();
 
-	if (strongShots)
-		BlasterStrongShots();
-	if (freezingShots)
-		SniperFreezingShots();
+		blaster->ammo = blasterAmmo;
+		sniper->ammo = sniperAmmo;
+	}
 
 	blasterAmmo = blaster->ammo;
 	sniperAmmo = sniper->ammo;
@@ -128,6 +214,18 @@ void Player::Update()
 
 void Player::CleanUp()
 {
+	ParsonNode config;
+	config.SetInteger("Weapon used", weaponUsed);
+	config.SetInteger("Coins", coins);
+	config.SetInteger("Blaster ammo", blasterAmmo);
+	config.SetInteger("Sniper ammo", sniperAmmo);
+	config.SetNumber("Health", (double)health);
+	config.SetBool("Strong shots", strongShots);
+	config.SetBool("Freezing shots", freezingShots);
+
+	char* buffer = nullptr;
+	config.SerializeToFile(MANDO_FILE, &buffer);
+
 	delete blaster; // Destructor calls CleanUp
 	blaster = nullptr;
 
@@ -151,6 +249,9 @@ void Player::TakeDamage(float damage)
 {
 	if (!invulnerabilityTimer.IsActive())
 	{
+		if (damaged)
+			damaged->PlayFx(damaged->GetEventId());
+
 		health -= damage;
 		if (health < 0.0f)
 			health = 0.0f;
@@ -165,16 +266,16 @@ void Player::TakeDamage(float damage)
 
 void Player::BlasterStrongShots()
 {
-	strongShots = false;
-	for (uint i = 0; i < blaster->projectilesNum; ++i)
-		((Bullet*)blaster->projectiles[i]->object->GetScript("Bullet"))->strong = true;
+	if (blaster)
+		for (uint i = 0; i < blaster->projectilesNum; ++i)
+			((Bullet*)blaster->projectiles[i]->object->GetScript("Bullet"))->strong = true;
 }
 
 void Player::SniperFreezingShots()
 {
-	freezingShots = false;
-	for (uint i = 0; i < sniper->projectilesNum; ++i)
-		((Bullet*)sniper->projectiles[i]->object->GetScript("Bullet"))->freeze = true;
+	if (sniper)
+		for (uint i = 0; i < sniper->projectilesNum; ++i)
+			((Bullet*)sniper->projectiles[i]->object->GetScript("Bullet"))->freeze = true;
 }
 
 void Player::Animations()
@@ -241,7 +342,9 @@ void Player::Animations()
 	//		//aAnimator->PlayClip("Reloading", 0u);
 	//	}
 		if (currentClip && clipName != idle)
+		{
 			aAnimator->PlayClip(idle, 0.2f);
+		}
 		break;
 	case PlayerState::RELOADING_SNIPER:
 	//	if (currentClip != nullptr && clipName != "Shooting")
@@ -249,7 +352,9 @@ void Player::Animations()
 	//		//aAnimator->PlayClip("Reloading", 0u);
 	//	}
 		if (currentClip && clipName != idle)
+		{
 			aAnimator->PlayClip(idle, 0.2f);
+		}
 		break;
 	//case PlayerState::DEAD:
 	//	if (currentClip != nullptr && clipName != die)
@@ -298,6 +403,8 @@ void Player::Movement()
 			App->physics->GetInteractions()[0][4] = false;
 			App->physics->GetInteractions()[4][0] = false;
 
+			if (dashSource)
+				dashSource->PlayFx(dashSource->GetEventId());
 			state = PlayerState::DASHING;
 			dashColdown.Start();
 			dashTime.Start();
@@ -393,6 +500,9 @@ void Player::Shooting()
 				blasterModel->SetIsActive(false);
 			if (sniperModel)
 				sniperModel->SetIsActive(true);
+
+			if (weaponChange)
+				weaponChange->PlayFx(weaponChange->GetEventId());
 		}
 		else
 		{
@@ -401,6 +511,9 @@ void Player::Shooting()
 				blasterModel->SetIsActive(true);
 			if (sniperModel)
 				sniperModel->SetIsActive(false);
+
+			if (weaponChange)
+				weaponChange->PlayFx(weaponChange->GetEventId());
 		}
 
 	bool shooting = false;
@@ -410,7 +523,11 @@ void Player::Shooting()
 		{
 			if ((App->input->GetKey(SDL_SCANCODE_R) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(2) == ButtonState::BUTTON_DOWN)
 				|| blasterAmmo <= 0)
+			{
 				blasterReloadTimer.Start();
+				if (reloadBlaster)
+					reloadBlaster->PlayFx(reloadBlaster->GetEventId());
+			}
 			else
 				if (blaster->Shoot(lastAim))
 					state = PlayerState::SHOOTING_BLASTER;
@@ -431,7 +548,11 @@ void Player::Shooting()
 		{
 			if ((App->input->GetKey(SDL_SCANCODE_R) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(2) == ButtonState::BUTTON_DOWN)
 				|| sniperAmmo <= 0)
+			{
 				sniperReloadTimer.Start();
+				if (reloadSniper)
+					reloadSniper->PlayFx(reloadSniper->GetEventId());
+			}
 			else
 				if(sniper->Shoot(lastAim))
 					state = PlayerState::SHOOTING_SNIPER;
@@ -475,16 +596,12 @@ void Player::StepSound()
 	{
 		isStepPlaying = true;
 		stepTimer.Start();
-	
-		aSource = gameObject->GetComponent<C_AudioSource>();
-		if (aSource != nullptr)
-		{
-			uint id = aSource->GetEventId();
-			aSource->PlayFx(id);
-		}
+		
+		if (step)
+			step->PlayFx(step->GetEventId());
 	}
 	else
-		if (stepTimer.ReadSec() >= 0.80)
+		if (stepTimer.ReadSec() >= 0.4f)
 			isStepPlaying = false;
 }
 
@@ -502,9 +619,9 @@ void Player::GetAimVectorAxis(int& axisX, int& axisY)
 
 void Player::HandleAmmo(int ammo)
 {
-	std::vector<GameObject*>::iterator it = App->scene->GetGameObjects()->begin();
+	std::vector<GameObject*>::const_iterator it = App->scene->GetGameObjects()->cbegin();
 
-	for (it; it != App->scene->GetGameObjects()->end(); ++it)
+	for (it; it != App->scene->GetGameObjects()->cend(); ++it)
 	{
 		if (strstr((*it)->GetName(), "PrimaryWeapon") != nullptr)
 		{
@@ -539,9 +656,9 @@ void Player::HandleAmmo(int ammo)
 
 void Player::HandleHp()
 {
-	std::vector<GameObject*>::iterator it = App->scene->GetGameObjects()->begin();
+	std::vector<GameObject*>::const_iterator it = App->scene->GetGameObjects()->cbegin();
 
-	for (it; it != App->scene->GetGameObjects()->end(); ++it)
+	for (it; it != App->scene->GetGameObjects()->cend(); ++it)
 	{
 		if (strstr((*it)->GetName(), "Heart") != nullptr)
 		{
@@ -560,9 +677,9 @@ void Player::HandleHp()
 		}
 	}
 
-	if (full == nullptr) { full = (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/HUD/HeartFull.png"); }
-	if (half == nullptr) { half = (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/HUD/HeartHalf.png"); }
-	if (empty == nullptr) { empty = (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/HUD/HeartEmpty.png"); }
+	if (full == nullptr)	{ full = (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/UI/HUD/HeartFull.png"); }
+	if (half == nullptr)	{ half = (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/UI/HUD/HeartHalf.png"); }
+	if (empty == nullptr)	{ empty = (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/UI/HUD/HeartEmpty.png"); }
 
 	if (App->input->GetKey(SDL_SCANCODE_K) == KeyState::KEY_DOWN && hearts != nullptr)
 	{

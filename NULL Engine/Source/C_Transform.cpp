@@ -14,8 +14,10 @@
 #include "MemoryManager.h"
 
 C_Transform::C_Transform(GameObject* owner) : Component(owner, ComponentType::TRANSFORM),
-localTransform			(float4x4::identity),
-worldTransform			(float4x4::identity)
+localTransform	(float4x4::identity),
+worldTransform	(float4x4::identity),
+updateWorld		(false),
+syncLocal		(false)
 //syncLocalToGlobal		(false),
 //updateWorldTransform	(false)
 {	
@@ -31,82 +33,42 @@ C_Transform::~C_Transform()
 
 bool C_Transform::Update()
 {
-	bool ret = true;
-
-	/*if (updateWorldTransform)
-	{
+	if (updateWorld)
 		UpdateWorldTransform();
-	}*/
 
-	/*if (syncLocalToGlobal)
-	{
+	if (syncLocal)
 		SyncLocalToWorld();
-	}*/
 
-	return ret;
+	return true;
 }
 
 bool C_Transform::CleanUp()
 {
-	bool ret = true;
 
-	return ret;
+
+	return true;
 }
 
 bool C_Transform::SaveState(ParsonNode& root) const
 {
-	bool ret = true;
-
 	root.SetNumber("Type", (uint)GetType());
 
-	ParsonArray position = root.SetArray("LocalPosition");
+	root.SetFloat3("LocalPosition", localPosition);
+	root.SetFloat4("LocalRotation", localRotation.CastToFloat4());
+	root.SetFloat3("LocalScale", localScale);
 
-	position.SetNumber(localPosition.x);
-	position.SetNumber(localPosition.y);
-	position.SetNumber(localPosition.z);
-
-	ParsonArray rotation = root.SetArray("LocalRotation");
-
-	rotation.SetNumber(localRotation.x);
-	rotation.SetNumber(localRotation.y);
-	rotation.SetNumber(localRotation.z);
-	rotation.SetNumber(localRotation.w);
-
-	ParsonArray scale = root.SetArray("LocalScale");
-
-	scale.SetNumber(localScale.x);
-	scale.SetNumber(localScale.y);
-	scale.SetNumber(localScale.z);
-
-	return ret;
+	return true;
 }
 
 bool C_Transform::LoadState(ParsonNode& root)
 {
-	bool ret = true;
-
-	ParsonArray position = root.GetArray("LocalPosition");
-
-	localPosition.x = (float)position.GetNumber(0);
-	localPosition.y = (float)position.GetNumber(1);
-	localPosition.z = (float)position.GetNumber(2);
-
-	ParsonArray rotation = root.GetArray("LocalRotation");
-
-	localRotation.x = (float)rotation.GetNumber(0);
-	localRotation.y = (float)rotation.GetNumber(1);
-	localRotation.z = (float)rotation.GetNumber(2);
-	localRotation.w = (float)rotation.GetNumber(3);
-
-	ParsonArray scale = root.GetArray("LocalScale");
-
-	localScale.x = (float)scale.GetNumber(0);
-	localScale.y = (float)scale.GetNumber(1);
-	localScale.z = (float)scale.GetNumber(2);
+	localPosition	= root.GetFloat3("LocalPosition");
+	localRotation	= root.GetQuat("LocalRotation");
+	localScale		= root.GetFloat3("LocalScale");
 
 	UpdateLocalTransform();
 
-	return ret;
+	return true;
 }
 
 // ------ C_TRANSFORM METHODS ------
@@ -289,6 +251,7 @@ float3 C_Transform::GetWorldEulerRotation() const
 {
 	float3 p, s;
 	Quat rotation;
+
 	worldTransform.Decompose(p, rotation, s);
 
 	return rotation.ToEulerXYZ() * RADTODEG;
@@ -298,6 +261,7 @@ float3 C_Transform::GetWorldScale() const
 {
 	float3 p, s;
 	Quat rotation;
+
 	worldTransform.Decompose(p, rotation, s);
 
 	return s;

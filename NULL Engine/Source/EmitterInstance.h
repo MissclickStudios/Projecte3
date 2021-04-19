@@ -13,6 +13,7 @@ class EmitterInstance
 {
 public:
 	EmitterInstance();
+	EmitterInstance(Emitter* emitter, C_ParticleSystem* component);
 	~EmitterInstance();
 
 	//if emitter equals null, a default emitter is added
@@ -33,12 +34,14 @@ public:
 public:
 	unsigned int activeParticles = 0;
 	std::vector<Particle> particles;
-	unsigned int* particleIndices;
+	unsigned int* particleIndices = nullptr;
 	
 	float emitterTime = 0.0f;
 
-	Emitter* emitter;
-	C_ParticleSystem* component;
+	Emitter* emitter = nullptr;
+	C_ParticleSystem* component = nullptr;
+
+	bool stopSpawn = false;
 };
 
 #endif //!__EMITTER_INSTANCE_H__

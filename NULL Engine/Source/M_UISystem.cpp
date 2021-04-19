@@ -19,7 +19,6 @@
 
 #include "MemoryManager.h"
 
-#pragma comment( lib, "Source/Dependencies/FreeType/libx86/freetype.lib" )
 
 M_UISystem::M_UISystem(bool isActive) : Module("UISystem", isActive)
 {
@@ -37,26 +36,26 @@ bool M_UISystem::Init(ParsonNode& config)
 {
 	bool ret = true;
 
-	// Initilaizing FreeType
-	bool error = FT_Init_FreeType(&library);
-	if (error)
-	{
-		LOG("An error ocurred initializing FreeType Library");
-	}
+	//// Initilaizing FreeType
+	//bool error = FT_Init_FreeType(&library);
+	//if (error)
+	//{
+	//	LOG("An error ocurred initializing FreeType Library");
+	//}
 
-	// Creating a face from the .ttf file
-	error = FT_New_Face(library, "Assets/Fonts/arial.ttf",	0, &standardFace);
-	if (error == FT_Err_Unknown_File_Format)
-	{
-		LOG("The file format for font is not supported");
-	}
-	else if (error)
-	{
-		LOG("An error ocurred creating the face");
-	}
+	//// Creating a face from the .ttf file
+	//error = FT_New_Face(library, "Assets/Fonts/arial.ttf",	0, &standardFace);
+	//if (error == FT_Err_Unknown_File_Format)
+	//{
+	//	LOG("The file format for font is not supported");
+	//}
+	//else if (error)
+	//{
+	//	LOG("An error ocurred creating the face");
+	//}
 
-	float w = App->camera->GetCurrentCamera()->GetFrustum().NearPlaneWidth();
-	float h = App->camera->GetCurrentCamera()->GetFrustum().NearPlaneHeight();
+	/*float w = App->camera->GetCurrentCamera()->GetFrustum().NearPlaneWidth();
+	float h = App->camera->GetCurrentCamera()->GetFrustum().NearPlaneHeight();*/
 
 	//error = FT_Set_Char_Size(
 	//	standardFace,	/* handle to face object           */
@@ -65,21 +64,21 @@ bool M_UISystem::Init(ParsonNode& config)
 	//	300,			/* horizontal device resolution    */
 	//	300);			/* vertical device resolution      */
 	// Setting default size for the face
-	error = FT_Set_Pixel_Sizes(standardFace, 0, 16);
-	if (error)
-	{
-		LOG("An error ocurred on trying to resize the font face");
-	}
+	//error = FT_Set_Pixel_Sizes(standardFace, 0, 16);
+	//if (error)
+	//{
+	//	LOG("An error ocurred on trying to resize the font face");
+	//}
 
-	// Getting the glyph index
-	glyphIndex = FT_Get_Char_Index(standardFace, charcode);
-	
-	// Loading the glyph image
-	error = FT_Load_Glyph(standardFace, glyphIndex, FT_LOAD_DEFAULT);
-	if (error)
-	{
-		LOG("An error ocurred loading the glyph");
-	}
+	//// Getting the glyph index
+	//glyphIndex = FT_Get_Char_Index(standardFace, charcode);
+	//
+	//// Loading the glyph image
+	//error = FT_Load_Glyph(standardFace, glyphIndex, FT_LOAD_DEFAULT);
+	//if (error)
+	//{
+	//	LOG("An error ocurred loading the glyph");
+	//}
 	
 	
 
@@ -102,7 +101,6 @@ UpdateStatus M_UISystem::Update(float dt)
 	OPTICK_CATEGORY("M_UISystem Update", Optick::Category::Module)
 	UpdateActiveButtons();
 	CheckButtonStates();
-
 	if (hoveredDecorationL != nullptr && hoveredDecorationR != nullptr)
 		UpdateHoveredDecorations();
 
@@ -143,65 +141,69 @@ bool M_UISystem::CheckButtonStates()
 {
 	bool ret = false;
 
-	if (App->input->GetKey(SDL_SCANCODE_G) == KeyState::KEY_DOWN || App->input->GetKey(SDL_SCANCODE_G) == KeyState::KEY_REPEAT)
+	if (hoveredButton != nullptr)
 	{
-		hoveredButton->OnPressed();
-	}
-
-	else if (App->input->GetKey(SDL_SCANCODE_G) == KeyState::KEY_UP)
-	{
-		hoveredButton->OnReleased(); /*(?)*/
-	}
-
-	if (activeButtons.size() > 1)
-	{
-		bool prev = false;
-		bool next = false;
-
-		if (App->input->GetKey(SDL_SCANCODE_T) == KeyState::KEY_DOWN && !hoveredButton->IsPressed())
+		if (App->input->GetKey(SDL_SCANCODE_RETURN) == KeyState::KEY_DOWN || App->input->GetKey(SDL_SCANCODE_RETURN) == KeyState::KEY_REPEAT || App->input->GetGameControllerButton(0) == ButtonState::BUTTON_DOWN || App->input->GetGameControllerButton(0) == ButtonState::BUTTON_REPEAT)
 		{
-			for (std::vector<C_UI_Button*>::reverse_iterator buttonIt = activeButtons.rbegin(); buttonIt != activeButtons.rend(); buttonIt++)
-			{
-				if ((*buttonIt)->IsActive())
-				{
-					if ((*buttonIt)->GetState() == UIButtonState::HOVERED)
-					{
-						(*buttonIt)->SetState(UIButtonState::IDLE);
-						prev = true;
-					}
-					else if (prev)
-					{
-						(*buttonIt)->SetState(UIButtonState::HOVERED);
-						hoveredButton = (*buttonIt);
-						prev = false;
-					}
-				}
-			}
-			if (prev)
-				hoveredButton->SetState(UIButtonState::HOVERED);
+			hoveredButton->OnPressed();
 		}
 
-		if (App->input->GetKey(SDL_SCANCODE_B) == KeyState::KEY_DOWN && !hoveredButton->IsPressed())
+		else if (App->input->GetKey(SDL_SCANCODE_RETURN) == KeyState::KEY_UP || App->input->GetGameControllerButton(0) == ButtonState::BUTTON_UP)
 		{
-			for (std::vector<C_UI_Button*>::iterator buttonIt = activeButtons.begin(); buttonIt != activeButtons.end(); buttonIt++)
+			hoveredButton->OnReleased(); /*(?)*/
+		}
+	
+
+		if (activeButtons.size() > 1)
+		{
+			bool prev = false;
+			bool next = false;
+
+			if ((App->input->GetKey(SDL_SCANCODE_UP) == KeyState::KEY_DOWN || App->input->GetGameControllerAxis(0) == AxisState::POSITIVE_AXIS_DOWN)&& !hoveredButton->IsPressed())
 			{
-				if ((*buttonIt)->IsActive())
+				for (std::vector<C_UI_Button*>::reverse_iterator buttonIt = activeButtons.rbegin(); buttonIt != activeButtons.rend(); buttonIt++)
 				{
-					if ((*buttonIt)->GetState() == UIButtonState::HOVERED)
+					if ((*buttonIt)->IsActive())
 					{
-						(*buttonIt)->SetState(UIButtonState::IDLE);
-						next = true;
-					}
-					else if (next)
-					{
-						(*buttonIt)->SetState(UIButtonState::HOVERED);
-						hoveredButton = (*buttonIt);
-						next = false;
+						if ((*buttonIt)->GetState() == UIButtonState::HOVERED)
+						{
+							(*buttonIt)->SetState(UIButtonState::IDLE);
+							prev = true;
+						}
+						else if (prev)
+						{
+							(*buttonIt)->SetState(UIButtonState::HOVERED);
+							hoveredButton = (*buttonIt);
+							prev = false;
+						}
 					}
 				}
+				if (prev)
+					hoveredButton->SetState(UIButtonState::HOVERED);
 			}
-			if(next)
-				hoveredButton->SetState(UIButtonState::HOVERED);
+
+			if ((App->input->GetKey(SDL_SCANCODE_DOWN) == KeyState::KEY_DOWN || App->input->GetGameControllerAxis(0) == AxisState::NEGATIVE_AXIS_DOWN) && !hoveredButton->IsPressed())
+			{
+				for (std::vector<C_UI_Button*>::iterator buttonIt = activeButtons.begin(); buttonIt != activeButtons.end(); buttonIt++)
+				{
+					if ((*buttonIt)->IsActive())
+					{
+						if ((*buttonIt)->GetState() == UIButtonState::HOVERED)
+						{
+							(*buttonIt)->SetState(UIButtonState::IDLE);
+							next = true;
+						}
+						else if (next)
+						{
+							(*buttonIt)->SetState(UIButtonState::HOVERED);
+							hoveredButton = (*buttonIt);
+							next = false;
+						}
+					}
+				}
+				if(next)
+					hoveredButton->SetState(UIButtonState::HOVERED);
+			}
 		}
 	}
 
@@ -265,11 +267,11 @@ void M_UISystem::InitHoveredDecorations()
 
 void M_UISystem::UpdateHoveredDecorations()
 {
-	hoveredDecorationL->SetX(hoveredButton->GetRect().x - hoveredButton->GetRect().w / 2 - 0.02);
-	hoveredDecorationR->SetX(hoveredButton->GetRect().x + 0.01 + hoveredButton->GetRect().w / 2);
+	hoveredDecorationL->SetX(hoveredButton->GetRect().x - hoveredButton->GetRect().w / 2 - 0.1);
+	hoveredDecorationR->SetX(hoveredButton->GetRect().x + hoveredButton->GetRect().w / 2 + 0.15);
 
-	hoveredDecorationL->SetY(hoveredButton->GetRect().y);
-	hoveredDecorationR->SetY(hoveredButton->GetRect().y);
+	hoveredDecorationL->SetY((hoveredButton->GetRect().y + 0.011) * 3.5);
+	hoveredDecorationR->SetY((hoveredButton->GetRect().y + 0.011) * 3.5);
 }
 
 void M_UISystem::DeleteActiveButton(C_UI_Button* button)

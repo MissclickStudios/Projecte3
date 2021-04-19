@@ -1,8 +1,10 @@
 #pragma once
+#include <string>
 #include "Script.h"
 #include "ScriptMacros.h"
 
 class GameObject;
+class C_UI_Button;
 
 class SCRIPTS_API MainMenuManager : public Script {
 public:
@@ -14,9 +16,15 @@ public:
 	void Update() override;
 	//void PostUpdate()override;
 	//void CleanUp()override;
+	GameObject* newGameButton = nullptr;
+	GameObject* gameManager = nullptr;
+private:
+	C_UI_Button* playButton;
 };
 
 SCRIPTS_FUNCTION MainMenuManager* CreateMainMenuManager() {
 	MainMenuManager* script = new MainMenuManager();
+	INSPECTOR_GAMEOBJECT(script->newGameButton);
+	INSPECTOR_GAMEOBJECT(script->gameManager);
 	return script;
 }

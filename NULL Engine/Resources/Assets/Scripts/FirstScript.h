@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <vector>
 #include "Script.h"
 #include "ScriptMacros.h"
 
@@ -32,6 +33,7 @@ public :
 	Prefab tryPrefab;
 	Prefab prefab2;
 	GameObject* object = nullptr;
+	std::vector<std::string> stringVec;
 };
 
 SCRIPTS_FUNCTION FirstScript* CreateFirstScript() {
@@ -49,5 +51,6 @@ SCRIPTS_FUNCTION FirstScript* CreateFirstScript() {
 	INSPECTOR_PREFAB(script->tryPrefab);
 	INSPECTOR_PREFAB(script->prefab2);
 	INSPECTOR_GAMEOBJECT(script->object);
+	INSPECTOR_VECTOR_STRING(script->stringVec);
 	return script;
 }

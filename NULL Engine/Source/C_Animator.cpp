@@ -3,7 +3,7 @@
 
 #include "FileSystemDefinitions.h"
 #include "JSONParser.h"
-#include "Time.h"
+#include "MC_Time.h"
 #include "EasingFunctions.h"
 
 #include "Channel.h"
@@ -267,7 +267,7 @@ bool C_Animator::StepClips()
 		}
 	}
 	
-	float dt		= (App->gameState == GameState::PLAY) ? Time::Game::GetDT() : Time::Real::GetDT();					// In case a clip preview is needed outside Game Mode.
+	float dt		= (App->gameState == GameState::PLAY) ? MC_Time::Game::GetDT() : MC_Time::Real::GetDT();					// In case a clip preview is needed outside Game Mode.
 	float stepValue	= dt * playbackSpeed;
 
 	if (CurrentClipExists())
@@ -492,6 +492,9 @@ void C_Animator::GenerateBoneSegments(const GameObject* bone)
 
 	for (uint i = 0; i < bone->childs.size(); ++i)
 	{
+		if (!bone->childs[i]->isBone)
+			continue;
+
 		LineSegment displayBone = { float3::zero, float3::zero };
 
 		displayBone.a = boneTransform->GetWorldPosition();
@@ -791,7 +794,7 @@ void C_Animator::CrossCheckBonesWithMeshBoneMapping()
 			auto result = mapping.find((*bone)->GetName());
 			if (result != mapping.end())
 			{
-				(*bone)->is_bone = true;
+				(*bone)->isBone = true;
 			}
 		}
 	}

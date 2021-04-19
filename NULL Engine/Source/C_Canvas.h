@@ -12,7 +12,7 @@ class ParsonNode;
 class GameObject;
 class UIElement;
 
-struct Rect2D
+struct NULL_API Rect2D
 {
 	float x, y, w, h;
 };

@@ -5,6 +5,15 @@
 
 #include "Component.h"
 
+
+const float texCoordsBuffer[] = {
+1, 1,
+1, 0,
+0, 0,
+1,0,
+};
+
+
 class NULL_API C_UI_Image : public Component
 {
 public:
@@ -21,6 +30,8 @@ public:
 
 	static inline ComponentType GetType() { return ComponentType::UI_IMAGE; }
 
+	void LoadBuffers();
+
 	void Draw2D();
 	void Draw3D();
 
@@ -36,7 +47,12 @@ public:
 
 private:
 
-	Rect2D rect = { 0,0,50,50 };
+	Rect2D rect = { 0,0,1,1 };
+
+	uint VAO;
+	uint VBO;
+
+	R_Shader* rShader;
 };
 
 #endif // !__C_UI_IMAGE_H__

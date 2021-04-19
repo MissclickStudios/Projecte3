@@ -32,6 +32,10 @@ GameApplication::GameApplication()
 	manager = new M_GameManager();
 	scriptManager = new M_ScriptManager();
 
+	//12 = num of modules to pushback
+	//if you create or remove 1 module change the 12 accordingly
+	modules.reserve(12);
+
 	// Main Modules
 	AddModule(window);
 	AddModule(camera);
