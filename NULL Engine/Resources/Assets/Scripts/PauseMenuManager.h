@@ -28,7 +28,7 @@ private:
 	C_UI_Button* exitButton;
 };
 
-SCRIPTS_FUNCTION PauseMenuManager* CreateMainMenuManager() {
+SCRIPTS_FUNCTION PauseMenuManager* CreatePauseMenuManager() {
 	PauseMenuManager* script = new PauseMenuManager();
 	INSPECTOR_STRING(script->buttonName);
 	INSPECTOR_STRING(script->buttonName1);
