@@ -17,6 +17,7 @@ void GameManager::Awake()
 	level.AddFixedRoom("Boss",1 ,15);*/
 
 	//Load de la primera scene?
+	//Check files exist (Maybe in another place)
 	for (int i = 0; i < level.level1.size(); ++i) 
 	{
 		if (!App->fileSystem->Exists((ASSETS_SCENES_PATH + level.level1[i]).c_str())) 

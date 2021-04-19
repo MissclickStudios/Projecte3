@@ -62,9 +62,9 @@ void E_Toolbar::PlayAndStopButtons()
 			EngineApp->gameState = GameState::PLAY;
 			MC_Time::Game::Play();
 
-			EngineApp->scriptManager->InitScripts();
-
 			EngineApp->editor->SaveSceneThroughEditor("PlayAutosave");
+
+			EngineApp->scriptManager->InitScripts();
 
 		}
 	}

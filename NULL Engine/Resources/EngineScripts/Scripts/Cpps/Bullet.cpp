@@ -27,7 +27,7 @@ void Bullet::Update()
 	if (hit)
 	{
 		hit = false;
-		shooter->ProjectileCollisionReport(index);
+		//shooter->ProjectileCollisionReport(index);
 	}
 }
 
