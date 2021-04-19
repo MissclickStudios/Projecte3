@@ -12,7 +12,7 @@
 
 #include "MemoryManager.h"
 
-#define MAX_CONSOLE_LOG_SIZE	1000
+#define MAX_CONSOLE_LOG_SIZE	2000
 #define MAX_SEARCH_STR_SIZE		128	
 
 E_Console::E_Console() : EditorPanel("Console"),

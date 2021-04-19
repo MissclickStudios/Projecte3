@@ -26,7 +26,7 @@ enum class ResourceType													// IMPORTANT: Do not change the order of the
 	PARTICLE_SYSTEM,
 	PREFAB,
 	SCRIPT,
-	NAVMESH_AGENT,
+	NAVMESH,
 	NONE
 };
 
@@ -40,6 +40,8 @@ public:
 
 	virtual bool SaveMeta(ParsonNode& metaRoot) const;
 	virtual bool LoadMeta(const ParsonNode& metaRoot);
+
+	virtual inline ResourceType GetType() { return type; }
 
 public:
 	ResourceType		GetType					() const;											// 

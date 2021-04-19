@@ -109,26 +109,16 @@ bool ParsonNode::Release()
 	return true;
 }
 
+// --- PARSON NODE METHODS ---
+// --- GETTERS AND SETTERS
 int ParsonNode::GetInteger(const const char* name)
 {
 	return json_object_get_number(rootNode, name);
 }
 
-// --- PARSON NODE METHODS ---
-// --- GETTERS AND SETTERS
 double ParsonNode::GetNumber(const char* name) const
 {	
-	if (NodeHasValueOfType(name, JSONNumber))													// First whether or not the value in the child node is of the correct type is checked.
-	{
-		return json_object_get_number(rootNode, name);											// If the type matches the function's return type, then the value is read from the .json file.
-	}
-	else
-	{
-		const char* nodeName = json_object_get_name(rootNode, 0);
-		LOG("[ERROR] JSON Parser: Node %s's %s did not have a Number variable!", nodeName, name);
-	}
-
-	return JSONError;
+	return (NodeHasValueOfType(name, JSONNumber)) ? json_object_get_number(rootNode, name) : INVALID_PARSON_NUMBER;
 }
 
 float2 ParsonNode::GetFloat2(const const char* name)
@@ -189,148 +179,130 @@ Color ParsonNode::GetColor(const char* name)
 
 const char* ParsonNode::GetString(const char* name) const
 {
-	if (NodeHasValueOfType(name, JSONString))
-	{
-		return json_object_get_string(rootNode, name);
-	}
-	else
-	{
-		LOG("[ERROR] JSON Parser: %s did not have a String variable!", name);
-	}
-
-	return "NOT FOUND";
+	return (NodeHasValueOfType(name, JSONString)) ? json_object_get_string(rootNode, name) : "[NOT FOUND]";
 }
 
 bool ParsonNode::GetBool(const char* name) const
 {
-	if (NodeHasValueOfType(name, JSONBoolean))
-	{
-		return (bool)json_object_get_boolean(rootNode, name);
-	}
-	else
-	{
-		LOG("[ERROR] JSON Parser: %s did not have a Bool variable!", name);
-	}
-
-	return false;
+	return (NodeHasValueOfType(name, JSONBoolean)) ? (bool)json_object_get_boolean(rootNode, name) : false;
 }
 
-ParsonArray ParsonNode::GetArray(const char* name, bool logErrors) const
+ParsonArray ParsonNode::GetArray(const char* name, bool logErrors) const						// If an invalid ParsonArray is returned, check with ParsonArray::ArrayIsValid().
 {
-	if (NodeHasValueOfType(name, JSONArray))
-	{
-		return ParsonArray(json_object_get_array(rootNode, name));
-	}
-	else
-	{
-		if (logErrors)
-			LOG("[ERROR] JSON Parser: %s did not have a JSON_Array variable!", name);
-	}
-
-	return ParsonArray();																		// If an empty config array is returned then check that json_array == nullptr and size == 0.
+	return (NodeHasValueOfType(name, JSONArray, logErrors)) ? ParsonArray(json_object_get_array(rootNode, name)) : ParsonArray();
 }
 
-ParsonNode ParsonNode::GetNode(const char* name, bool logErrors) const
+ParsonNode ParsonNode::GetNode(const char* name, bool logErrors) const							// Returns invalid node upon failure. Remember to check with NodeIsValid()!
 {
-	if (!NodeHasValueOfType(name, JSONObject) && logErrors)
-	{
-		LOG("[ERROR] JSON Parser: %s did not have a JSON_Object variable!", name);				// Just for display purposes.
-	}
-	
-	return ParsonNode(json_object_get_object(rootNode, name));									// json_object_get_object() returns NULL if no JSON_Object can be found. Remember to check!
+	return (NodeHasValueOfType(name, JSONObject, logErrors)) ? ParsonNode(json_object_get_object(rootNode, name)) : ParsonNode((JSON_Object*)nullptr);
 }
 
-void ParsonNode::SetInteger(const char* name, int number)
+void ParsonNode::SetInteger(const char* name, int number)										// JSONSuccess is just a placeholder to be able to use the ternary operator.
 {
-	json_object_set_number(rootNode, name, number);
+	(json_object_set_number(rootNode, name, number) != JSONFailure) ? JSONSuccess : LOG("[ERROR] JSON Parser: Could not set { %s } with the given Integer!", name);
 }
 
-void ParsonNode::SetNumber(const char* name, double number)
+void ParsonNode::SetNumber(const char* name, double number)										// JSONSuccess is just a placeholder to be able to use the ternary operator.
 {
-	JSON_Status status = json_object_set_number(rootNode, name, number);
-
-	if (status == JSONFailure)
-	{
-		LOG("[ERROR] JSON Parser: Could not set %s with the given Number!", name);
-	}
+	(json_object_set_number(rootNode, name, number) != JSONFailure) ? JSONSuccess : LOG("[ERROR] JSON Parser: Could not set { %s } with the given Number!", name);
 }
 
-void ParsonNode::SetFloat2(const const char* name, const float2 float2)
+void ParsonNode::SetFloat2(const char* name, const float2& float2)
 {
 	JSON_Array* tempArray = json_object_get_array(rootNode, name);
-	if (tempArray == nullptr) {
+	if (tempArray == nullptr)
+	{
 		JSON_Value* val = json_value_init_array();
-		tempArray = json_value_get_array(val);
+		tempArray		= json_value_get_array(val);
+
 		json_object_dotset_value(rootNode, name, val);
 	}
-	else {
+	else 
+	{
 		json_array_clear(tempArray);
 	}
+
 	json_array_append_number(tempArray, float2.x);
 	json_array_append_number(tempArray, float2.y);
 }
 
-void ParsonNode::SetFloat3(const const char* name, const float3 float3)
+void ParsonNode::SetFloat3(const char* name, const float3& float3)
 {
 	JSON_Array* tempArray = json_object_get_array(rootNode, name);
-	if (tempArray == nullptr) {
+	if (tempArray == nullptr)
+	{
 		JSON_Value* val = json_value_init_array();
-		tempArray = json_value_get_array(val);
+		tempArray		= json_value_get_array(val);
+
 		json_object_dotset_value(rootNode, name, val);
 	}
-	else {
+	else 
+	{
 		json_array_clear(tempArray);
 	}
+
 	json_array_append_number(tempArray, float3.x);
 	json_array_append_number(tempArray, float3.y);
 	json_array_append_number(tempArray, float3.z);
 }
 
-void ParsonNode::SetFloat4(const const char* name, const float4 float4)
+void ParsonNode::SetFloat4(const char* name, const float4& float4)
 {
 	JSON_Array* tempArray = json_object_get_array(rootNode, name);
-	if (tempArray == nullptr) {
+	if (tempArray == nullptr)
+	{
 		JSON_Value* val = json_value_init_array();
-		tempArray = json_value_get_array(val);
+		tempArray		= json_value_get_array(val);
+
 		json_object_dotset_value(rootNode, name, val);
 	}
-	else {
+	else
+	{
 		json_array_clear(tempArray);
 	}
+
 	json_array_append_number(tempArray, float4.x);
 	json_array_append_number(tempArray, float4.y);
 	json_array_append_number(tempArray, float4.z);
 	json_array_append_number(tempArray, float4.w);
 }
 
-void ParsonNode::SetColor(const char* name, const Color color)
+void ParsonNode::SetColor(const char* name, const Color& color)
 {
 	JSON_Array* tempArray = json_object_get_array(rootNode, name);
-	if (tempArray == nullptr) {
+	if (tempArray == nullptr)
+	{
 		JSON_Value* val = json_value_init_array();
-		tempArray = json_value_get_array(val);
+		tempArray		= json_value_get_array(val);
+
 		json_object_dotset_value(rootNode, name, val);
 	}
-	else {
+	else
+	{
 		json_array_clear(tempArray);
 	}
+
 	json_array_append_number(tempArray, color.r);
 	json_array_append_number(tempArray, color.g);
 	json_array_append_number(tempArray, color.b);
 	json_array_append_number(tempArray, color.a);
 }
 
-void ParsonNode::SetQuat(const const char* name, const Quat quat)
+void ParsonNode::SetQuat(const char* name, const Quat& quat)
 {
 	JSON_Array* tempArray = json_object_get_array(rootNode, name);
-	if (tempArray == nullptr) {
+	if (tempArray == nullptr)
+	{
 		JSON_Value* val = json_value_init_array();
-		tempArray = json_value_get_array(val);
+		tempArray		= json_value_get_array(val);
+
 		json_object_dotset_value(rootNode, name, val);
 	}
-	else {
+	else
+	{
 		json_array_clear(tempArray);
 	}
+
 	json_array_append_number(tempArray, quat.x);
 	json_array_append_number(tempArray, quat.y);
 	json_array_append_number(tempArray, quat.z);
@@ -343,7 +315,7 @@ void ParsonNode::SetString(const char* name, const char* string)
 
 	if (status == JSONFailure)
 	{
-		LOG("[ERROR] JSON Parser: Could not set %s with the given String!", name);
+		LOG("[ERROR] JSON Parser: Could not set { %s } with the given String!", name);
 	}
 }
 
@@ -353,32 +325,56 @@ void ParsonNode::SetBool(const char* name, bool value)
 
 	if (status == JSONFailure)
 	{
-		LOG("[ERROR] JSON Parser: Could not set %s with the given Bool!", name);
+		LOG("[ERROR] JSON Parser: Could not set { %s } with the given Bool!", name);
 	}
 }
 
 ParsonArray ParsonNode::SetArray(const char* name)
 {
-	JSON_Status status = json_object_set_value(rootNode, name, json_value_init_array());		// Adding the array to the .json file.
-
+	JSON_Status status = json_object_set_value(rootNode, name, json_value_init_array());									// Adding the array to the .json file.
 	if (status == JSONFailure)
 	{
-		LOG("[ERROR] JSON Parser: Could not set %s with an JSON_Array!", name);
+		LOG("[ERROR] JSON Parser: Could not set { %s } with a JSON_Array!", name);
 	}
 	
-	return ParsonArray(json_object_get_array(rootNode, name), name);							// Constructing and returning a handle to the created array.
-}																								// json_object_get_array() will return NULL if the JSON_Array could not be created.
+	return ParsonArray(json_object_get_array(rootNode, name), name);														// Constructing and returning a handle to the created array.
+}																															// json_object_get_array() will return NULL upon failure.
 
 ParsonNode ParsonNode::SetNode(const char* name)
 {
-	json_object_set_value(rootNode, name, json_value_init_object());							// Adding the node to the .json file.
+	json_object_set_value(rootNode, name, json_value_init_object());														// Adding the node to the .json file.
 
-	return ParsonNode(json_object_get_object(rootNode, name));									// Constructing and returning a handle to the created node.
+	return ParsonNode(json_object_get_object(rootNode, name));																// Constructing and returning a handle to the created node.
 }
 
-bool ParsonNode::NodeHasValueOfType(const char* name, JSON_Value_Type value_type) const
+bool ParsonNode::NodeHasValueOfType(const char* name, JSON_Value_Type valueType, bool logErrors) const
 {
-	return json_object_has_value_of_type(rootNode, name, value_type);
+	if (name == nullptr)
+	{
+		LOG("[ERROR] JSON Parser: Could not check the Node's Value Type! Error: Given name string was nullptr.");
+		return false;
+	}
+	
+	if (!json_object_has_value_of_type(rootNode, name, valueType))
+	{
+		if (logErrors)
+		{
+			switch (valueType)
+			{
+			case JSONNull:		{ LOG("[ERROR] JSON Parser: Node { %s } did not have a Null variable!", name); }	break;
+			case JSONString:	{ LOG("[ERROR] JSON Parser: Node { %s } did not have a String variable!", name); }	break;
+			case JSONNumber:	{ LOG("[ERROR] JSON Parser: Node { %s } did not have a Number variable!", name); }	break;
+			case JSONObject:	{ LOG("[ERROR] JSON Parser: Node { %s } did not have an Object variable!", name); }	break;
+			case JSONArray:		{ LOG("[ERROR] JSON Parser: Node { %s } did not have an Array variable!", name); }	break;
+			case JSONBoolean:	{ LOG("[ERROR] JSON Parser: Node { %s } did not have a Boolean variable!", name); }	break;
+			case JSONError:		{ LOG("[ERROR] JSON Parser: Node { %s } did not have an Error variable!", name); }	break;
+			}
+		}
+
+		return false;
+	}
+	
+	return true;
 }
 
 bool ParsonNode::NodeIsValid()
@@ -421,7 +417,7 @@ name		(name)
 	if (jsonArray != nullptr)
 	{
 		this->jsonArray	= jsonArray;
-		size				= json_array_get_count(jsonArray);
+		size			= json_array_get_count(jsonArray);
 	}
 	else
 	{
@@ -429,206 +425,153 @@ name		(name)
 	}
 }
 
-double ParsonArray::GetNumber(const uint& index) const
+double ParsonArray::GetNumber(uint index) const
 {
-	if (HasValueOfTypeAtIndex(index, JSONNumber))
+	if (index >= size)
 	{
-		return json_array_get_number(jsonArray, index);
-	}
-	else
-	{
-		LOG("[ERROR] JSON Parser: Array Index %u did not have a Number variable!", index);
-	}
-
-	return JSONError;
-}
-
-const char* ParsonArray::GetString(const uint& index) const
-{
-	if (HasValueOfTypeAtIndex(index, JSONString))
-	{
-		return json_array_get_string(jsonArray, index);
-	}
-	else
-	{
-		LOG("[ERROR] JSON Parser: Array Index %u did not have a String variable!", index);
+		LOG("[ERROR] JSON Parser: Could not Get Number at Index [%u] of Array { %s }! Error: { index >= size }.", index, name);
+		return INVALID_PARSON_NUMBER;
 	}
 	
-	return "NOT FOUND";
+	return (HasValueOfTypeAtIndex(index, JSONNumber)) ? json_array_get_number(jsonArray, index) : INVALID_PARSON_NUMBER;
 }
 
-bool ParsonArray::GetBool(const uint& index) const
+const char* ParsonArray::GetString(uint index) const
 {
-	if (HasValueOfTypeAtIndex(index, JSONBoolean))
+	if (index >= size)
 	{
-		return json_array_get_boolean(jsonArray, index);
+		LOG("[ERROR] JSON Parser: Could not Get String at Index [%u] of Array { %s }! Error: { index >= size }.", index, name);
+		return "[NOT FOUND]";
 	}
-	else
-	{
-		LOG("[ERROR] JSON Parser: Array Index %u did not have a Bool variable!", index);
-	}
-
-	return false;
+	
+	return (HasValueOfTypeAtIndex(index, JSONString)) ? json_array_get_string(jsonArray, index) : "[NOT FOUND]";
 }
 
-void ParsonArray::GetColor(const uint& index, Color& color) const
+bool ParsonArray::GetBool(uint index) const
 {
-	bool validRed		= HasValueOfTypeAtIndex(index, JSONNumber);															// Safety check
-	bool validGreen	= HasValueOfTypeAtIndex(index + 1, JSONNumber);															// Safety check
-	bool validBlue		= HasValueOfTypeAtIndex(index + 2, JSONNumber);														// Safety check
-	bool validAlpha	= HasValueOfTypeAtIndex(index + 3, JSONNumber);															// Safety check
-
-	if (validRed && validGreen && validBlue && validAlpha)
+	if (index >= size)
 	{
-		color.r = (float)json_array_get_number(jsonArray, index);															// Getting r from the array.
-		color.g = (float)json_array_get_number(jsonArray, index + 1);														// Getting g from the array.
-		color.b = (float)json_array_get_number(jsonArray, index + 2);														// Getting b from the array.
-		color.a = (float)json_array_get_number(jsonArray, index + 3);														// Getting a from the array.
+		LOG("[ERROR] JSON Parser: Could not Get Bool at Index [%u] of Array { %s }! Error: { index >= size }.", index, name);
+		return false;
 	}
+	
+	return (HasValueOfTypeAtIndex(index, JSONBoolean)) ? json_array_get_boolean(jsonArray, index) : false;
 }
 
-void ParsonArray::GetFloat3(const uint& index, float3& vec3) const
+void ParsonArray::GetColor(uint index, Color& color) const																	// The "+ 0" in color.r is unnecessary but aesthetic. 
 {
-	bool validX = HasValueOfTypeAtIndex(index, JSONNumber);																	// Safety check
-	bool validY = HasValueOfTypeAtIndex(index + 1, JSONNumber);																// Safety check
-	bool validZ = HasValueOfTypeAtIndex(index + 2, JSONNumber);																// Safety check
-
-	if (validX && validY && validZ)
+	if (index >= size)
 	{
-		vec3.x = (float)json_array_get_number(jsonArray, index);															// Getting x from the array.
-		vec3.y = (float)json_array_get_number(jsonArray, index + 1);														// Getting y from the array.
-		vec3.z = (float)json_array_get_number(jsonArray, index + 2);														// Getting z from the array.
+		LOG("[ERROR] JSON Parser: Could not Get Color at Index [%u] of Array { %s }! Error: { index >= size }.", index, name);
+		return;
 	}
+	
+	color.r = (HasValueOfTypeAtIndex(index + 0, JSONNumber)) ? (float)json_array_get_number(jsonArray, index + 0) : 1.0f;	// Safety check + Getting r from the array.
+	color.g = (HasValueOfTypeAtIndex(index + 1, JSONNumber)) ? (float)json_array_get_number(jsonArray, index + 1) : 1.0f;	// Safety check + Getting g from the array.
+	color.b = (HasValueOfTypeAtIndex(index + 2, JSONNumber)) ? (float)json_array_get_number(jsonArray, index + 2) : 1.0f;	// Safety check + Getting b from the array.
+	color.a = (HasValueOfTypeAtIndex(index + 3, JSONNumber)) ? (float)json_array_get_number(jsonArray, index + 3) : 1.0f;	// Safety check + Getting a from the array.
 }
 
-void ParsonArray::GetFloat4(const uint& index, float4& vec4) const
+void ParsonArray::GetFloat3(uint index, float3& vec3) const																	// The "+ 0" in vec3.x is unnecessary but aesthetic. 
 {
-	bool validX = HasValueOfTypeAtIndex(index, JSONNumber);																	// Safety check
-	bool validY = HasValueOfTypeAtIndex(index + 1, JSONNumber);																// Safety check
-	bool validZ = HasValueOfTypeAtIndex(index + 2, JSONNumber);																// Safety check
-	bool validW = HasValueOfTypeAtIndex(index + 3, JSONNumber);																// Safety check
-
-	if (validX && validY && validZ && validW)
+	if (index >= size)
 	{
-		vec4.x = (float)json_array_get_number(jsonArray, index);															// Getting x from the array.
-		vec4.y = (float)json_array_get_number(jsonArray, index + 1);														// Getting y from the array.
-		vec4.z = (float)json_array_get_number(jsonArray, index + 2);														// Getting z from the array.
-		vec4.w = (float)json_array_get_number(jsonArray, index + 3);														// Getting w from the array.
+		LOG("[ERROR] JSON Parser: Could not Get Float3 at Index [%u] of Array { %s }! Error: { index >= size }.", index, name);
+		return;
 	}
+	
+	vec3.x = (HasValueOfTypeAtIndex(index + 0, JSONNumber)) ? (float)json_array_get_number(jsonArray, index + 0) : 0.0f;	// Safety check + Getting x from the array.
+	vec3.y = (HasValueOfTypeAtIndex(index + 1, JSONNumber)) ? (float)json_array_get_number(jsonArray, index + 1) : 0.0f;	// Safety check + Getting y from the array.
+	vec3.z = (HasValueOfTypeAtIndex(index + 2, JSONNumber)) ? (float)json_array_get_number(jsonArray, index + 2) : 0.0f;	// Safety check + Getting z from the array.
 }
 
-void ParsonArray::GetFloat4(const uint& index, Quat& vec4) const
+void ParsonArray::GetFloat4(uint index, float4& vec4) const																	// The "+ 0" in vec4.x is unnecessary but aesthetic. 
 {
-	bool validX = HasValueOfTypeAtIndex(index, JSONNumber);																	// Safety check
-	bool validY = HasValueOfTypeAtIndex(index + 1, JSONNumber);																// Safety check
-	bool validZ = HasValueOfTypeAtIndex(index + 2, JSONNumber);																// Safety check
-	bool validW = HasValueOfTypeAtIndex(index + 3, JSONNumber);																// Safety check
-
-	if (validX && validY && validZ && validW)
+	if (index >= size)
 	{
-		vec4.x = (float)json_array_get_number(jsonArray, index);															// Getting x from the array.
-		vec4.y = (float)json_array_get_number(jsonArray, index + 1);														// Getting y from the array.
-		vec4.z = (float)json_array_get_number(jsonArray, index + 2);														// Getting z from the array.
-		vec4.w = (float)json_array_get_number(jsonArray, index + 3);														// Getting w from the array.
+		LOG("[ERROR] JSON Parser: Could not Get Float4 at Index [%u] of Array { %s }! Error: { index >= size }.", index, name);
+		return;
 	}
+	
+	vec4.x = (HasValueOfTypeAtIndex(index + 0, JSONNumber)) ? (float)json_array_get_number(jsonArray, index + 0) : 0.0f;	// Safety check + Getting x from the array.
+	vec4.y = (HasValueOfTypeAtIndex(index + 1, JSONNumber)) ? (float)json_array_get_number(jsonArray, index + 1) : 0.0f;	// Safety check + Getting y from the array.
+	vec4.z = (HasValueOfTypeAtIndex(index + 2, JSONNumber)) ? (float)json_array_get_number(jsonArray, index + 2) : 0.0f;	// Safety check + Getting z from the array.
+	vec4.w = (HasValueOfTypeAtIndex(index + 3, JSONNumber)) ? (float)json_array_get_number(jsonArray, index + 3) : 0.0f;	// Safety check + Getting w from the array.
 }
 
-ParsonNode ParsonArray::GetNode(const uint& index) const
+void ParsonArray::GetQuat(uint index, Quat& quat) const																		// The "+ 0" in quat.x is unnecessary but aesthetic. 
 {
-	if (!HasValueOfTypeAtIndex(index, JSONObject))
+	if (index >= size)
 	{
-		LOG("[ERROR] JSON Parser: Could not get the Node at %u index in the %s Array!", name);
+		LOG("[ERROR] JSON Parser: Could not Get Quat at Index [%u] of Array { %s }! Error: { index >= size }.", index, name);
+		return;
 	}
-
-	return json_array_get_object(jsonArray, index);
+	
+	quat.x = (HasValueOfTypeAtIndex(index + 0, JSONNumber)) ? (float)json_array_get_number(jsonArray, index + 0) : 0.0f;	// Safety check + Getting x from the array.
+	quat.y = (HasValueOfTypeAtIndex(index + 1, JSONNumber)) ? (float)json_array_get_number(jsonArray, index + 1) : 0.0f;	// Safety check + Getting y from the array.
+	quat.z = (HasValueOfTypeAtIndex(index + 2, JSONNumber)) ? (float)json_array_get_number(jsonArray, index + 2) : 0.0f;	// Safety check + Getting z from the array.
+	quat.w = (HasValueOfTypeAtIndex(index + 3, JSONNumber)) ? (float)json_array_get_number(jsonArray, index + 3) : 0.0f;	// Safety check + Getting w from the array.
 }
 
-void ParsonArray::SetNumber(const double& number)
+ParsonNode ParsonArray::GetNode(uint index) const
 {
-	JSON_Status status = json_array_append_number(jsonArray, number);
+	if (index >= size)
+	{
+		LOG("[ERROR] JSON Parser: Could not Get Node at Index [%u] of Array { %s }! Error: { index >= size }.", index, name);
+		return json_array_get_object(NULL, 0);
+	}
+	
+	return (HasValueOfTypeAtIndex(index, JSONObject)) ? json_array_get_object(jsonArray, index) : json_array_get_object(NULL, 0);
+}
 
-	if (status == JSONFailure)
-	{
-		LOG("[ERROR] JSON Parser: Could not append Number to %s Array!", name);
-	}
-	else
-	{
-		++size;
-	}
+void ParsonArray::SetNumber(double number)
+{
+	(json_array_append_number(jsonArray, number) != JSONFailure) ? ++size : LOG("[ERROR] JSON Parser: Could not append Number to { %s } Array!", name);
 }
 
 void ParsonArray::SetString(const char* string)
 {
-	JSON_Status status = json_array_append_string(jsonArray, string);
-
-	if (status == JSONFailure)
-	{
-		LOG("[ERROR] JSON Parser: Could not append String to %s Array!", name);
-	}
-	else
-	{
-		++size;
-	}
+	(json_array_append_string(jsonArray, string) != JSONFailure) ? ++size : LOG("[ERROR] JSON Parser: Could not append String to { %s } Array!", name);
 }
 
-void ParsonArray::SetBool(const bool& value)
+void ParsonArray::SetBool(bool value)
 {
-	JSON_Status status = json_array_append_boolean(jsonArray, value);
-
-	if (status == JSONFailure)
-	{
-		LOG("[ERROR] JSON Parser: Could not append Boolean to %s Array!", name);
-	}
-	else
-	{
-		++size;
-	}
+	(json_array_append_boolean(jsonArray, value) != JSONFailure) ? ++size : LOG("[ERROR] JSON Parser: Could not append Boolean to { %s } Array!", name);
 }
 
 void ParsonArray::SetColor(const Color& color)
 {
-	JSON_Status statusR = json_array_append_number(jsonArray, color.r);													// Adding the RGBA variables to the JSON_Array.
-	JSON_Status statusG = json_array_append_number(jsonArray, color.g);													// JSON_Status will be used to check whether or
-	JSON_Status statusB = json_array_append_number(jsonArray, color.b);													// not the operation was a success.
-	JSON_Status statusA = json_array_append_number(jsonArray, color.a);													// --------------------------------------------
-
-	(statusR == JSONFailure) ? LOG("[ERROR] JSON Parser: Could not append Red to %s Array!", name)		: ++size;			// If an operation was not successful then an ERROR is sent
-	(statusG == JSONFailure) ? LOG("[ERROR] JSON Parser: Could not append Green to %s Array!", name)	: ++size;			// to the console.
-	(statusB == JSONFailure) ? LOG("[ERROR] JSON Parser: Could not append Blue to %s Array!", name)		: ++size;			// On success the size variable will be updated.
-	(statusA == JSONFailure) ? LOG("[ERROR] JSON Parser: Could not append Alpha to %s Array!", name)	: ++size;			// ---------------------------------------------------------
+	(json_array_append_number(jsonArray, (double)color.r) != JSONFailure) ? ++size : LOG("[ERROR] JSON Parser: Could not append R to { %s } Array!", name);
+	(json_array_append_number(jsonArray, (double)color.g) != JSONFailure) ? ++size : LOG("[ERROR] JSON Parser: Could not append G to { %s } Array!", name);
+	(json_array_append_number(jsonArray, (double)color.b) != JSONFailure) ? ++size : LOG("[ERROR] JSON Parser: Could not append B to { %s } Array!", name);
+	(json_array_append_number(jsonArray, (double)color.a) != JSONFailure) ? ++size : LOG("[ERROR] JSON Parser: Could not append A to { %s } Array!", name);
 }
 
 void ParsonArray::SetFloat3(const math::float3& vec3)
 {
-	JSON_Status statusX = json_array_append_number(jsonArray, vec3.x);													// Adding the XYZ variables to the JSON_Array.
-	JSON_Status statusY = json_array_append_number(jsonArray, vec3.y);													//
-	JSON_Status statusZ = json_array_append_number(jsonArray, vec3.z);													// -------------------------------------------
-
-	(statusX == JSONFailure) ? LOG("[ERROR] JSON Parser: Could not append X to %s Array!", name) : ++size;					// If an operation was not successful then an ERROR is sent
-	(statusY == JSONFailure) ? LOG("[ERROR] JSON Parser: Could not append Y to %s Array!", name) : ++size;					// to the console. On success the size var. will be updated.
-	(statusZ == JSONFailure) ? LOG("[ERROR] JSON Parser: Could not append Z to %s Array!", name) : ++size;					// ---------------------------------------------------------
+	(json_array_append_number(jsonArray, (double)vec3.x) != JSONFailure) ? ++size : LOG("[ERROR] JSON Parser: Could not append X to { %s } Array!", name);
+	(json_array_append_number(jsonArray, (double)vec3.y) != JSONFailure) ? ++size : LOG("[ERROR] JSON Parser: Could not append Y to { %s } Array!", name);
+	(json_array_append_number(jsonArray, (double)vec3.z) != JSONFailure) ? ++size : LOG("[ERROR] JSON Parser: Could not append Z to { %s } Array!", name);
 }
 
 void ParsonArray::SetFloat4(const math::float4& vec4)
 {
-	JSON_Status statusX = json_array_append_number(jsonArray, vec4.x);													// Adding the XYZW variables to the JSON_Array.
-	JSON_Status statusY = json_array_append_number(jsonArray, vec4.y);													//
-	JSON_Status statusZ = json_array_append_number(jsonArray, vec4.z);													//
-	JSON_Status statusW = json_array_append_number(jsonArray, vec4.w);													// --------------------------------------------
-
-	(statusX == JSONFailure) ? LOG("[ERROR] JSON Parser: Could not append X to %s Array!", name) : ++size;					// If an operation was not successful then an ERROR is sent
-	(statusY == JSONFailure) ? LOG("[ERROR] JSON Parser: Could not append Y to %s Array!", name) : ++size;					// to the console.
-	(statusZ == JSONFailure) ? LOG("[ERROR] JSON Parser: Could not append Z to %s Array!", name) : ++size;					// On success the size variable will be updated.
-	(statusW == JSONFailure) ? LOG("[ERROR] JSON Parser: Could not append W to %s Array!", name) : ++size;					// --------------------------------------------------------
+	(json_array_append_number(jsonArray, (double)vec4.x) != JSONFailure) ? ++size : LOG("[ERROR] JSON Parser: Could not append X to { %s } Array!", name);
+	(json_array_append_number(jsonArray, (double)vec4.y) != JSONFailure) ? ++size : LOG("[ERROR] JSON Parser: Could not append Y to { %s } Array!", name);
+	(json_array_append_number(jsonArray, (double)vec4.z) != JSONFailure) ? ++size : LOG("[ERROR] JSON Parser: Could not append Z to { %s } Array!", name);
+	(json_array_append_number(jsonArray, (double)vec4.w) != JSONFailure) ? ++size : LOG("[ERROR] JSON Parser: Could not append W to { %s } Array!", name);
 }
 
 ParsonNode ParsonArray::SetNode(const char* name)
 {	
-	JSON_Status status = json_array_append_value(jsonArray, json_value_init_object());
+	(json_array_append_value(jsonArray, json_value_init_object()) != JSONFailure) ? ++size : LOG("[ERROR] JSON Parser: Could not append Node to { %s } Array!", this->name);
 
-	(status == JSONFailure) ? LOG("[ERROR] JSON Parser: Could not append Node to %s Array!", name) : ++size;
+	return ParsonNode(json_array_get_object(jsonArray, size - 1));											// As the object was just appended, it will be located at the end.
+}
 
-	return ParsonNode(json_array_get_object(jsonArray, size - 1));															// As the object was just appended, it will be located at the end.
+bool ParsonArray::ArrayIsValid() const
+{
+	return (jsonArray != NULL);
 }
 
 uint ParsonArray::GetSize() const
@@ -636,22 +579,46 @@ uint ParsonArray::GetSize() const
 	return size;
 }
 
-JSON_Value_Type ParsonArray::GetTypeAtIndex(const uint& index) const
+bool ParsonArray::IndexIsWithinRange(uint index)
 {
+	return (index >= size);
+}
+
+JSON_Value_Type ParsonArray::GetTypeAtIndex(uint index) const
+{	
+	if (index >= size)
+	{
+		LOG("[ERROR] JSON Parser: Could not Get Type of Index [%u] of Array { %s }! Error: { index >= size }.", index, name);
+		return JSONError;
+	}
+	
 	return json_value_get_type(json_array_get_value(jsonArray, index));
 }
 
-bool ParsonArray::HasValueOfTypeAtIndex(const uint& index, JSON_Value_Type value_type) const
+bool ParsonArray::HasValueOfTypeAtIndex(uint index, JSON_Value_Type valueType) const
 {
-	if (GetTypeAtIndex(index) == value_type)
+	if (index >= size)
 	{
-		return true;
+		LOG("[ERROR] JSON Parser: Could not get Value Type of Index [%u] at Array { %s }! Error: { index >= size }.", index, name);
+		return false;
 	}
 	
-	return false;
-}
+	JSON_Value_Type indexValueType = GetTypeAtIndex(index);
+	if (indexValueType != valueType)
+	{
+		switch (valueType)
+		{
+		case JSONNull:		{ LOG("[ERROR] JSON Parser: Index [%u] at Array { %s } did not have a Null variable!", index, name); }		break;
+		case JSONString:	{ LOG("[ERROR] JSON Parser: Index [%u] at Array { %s } did not have a String variable!", index, name); }	break;
+		case JSONNumber:	{ LOG("[ERROR] JSON Parser: Index [%u] at Array { %s } did not have a Number variable!", index, name); }	break;
+		case JSONObject:	{ LOG("[ERROR] JSON Parser: Index [%u] at Array { %s } did not have an Object variable!", index, name); }	break;
+		case JSONArray:		{ LOG("[ERROR] JSON Parser: Index [%u] at Array { %s } did not have an Array variable!", index, name); }	break;
+		case JSONBoolean:	{ LOG("[ERROR] JSON Parser: Index [%u] at Array { %s } did not have a Boolean variable!", index, name); }	break;
+		case JSONError:		{ LOG("[ERROR] JSON Parser: Index [%u] at Array { %s } did not have an Error variable!", index, name); }	break;
+		}
 
-bool ParsonArray::ArrayIsValid() const
-{
-	return (jsonArray != NULL);
+		return false;
+	}
+	
+	return true;
 }

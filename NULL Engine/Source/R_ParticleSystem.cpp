@@ -22,6 +22,7 @@ R_ParticleSystem::~R_ParticleSystem()
 
 bool R_ParticleSystem::CleanUp()
 {
+
 	return true;
 }
 

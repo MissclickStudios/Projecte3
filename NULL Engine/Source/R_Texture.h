@@ -44,6 +44,8 @@ public:
 	bool SaveMeta(ParsonNode& metaRoot) const override;
 	bool LoadMeta(const ParsonNode& metaRoot) override;
 
+	static inline ResourceType GetType() { return ResourceType::TEXTURE; }
+
 public:
 	Texture			GetTextureData			() const;
 	void			SetTextureData			(uint id, uint width, uint height, uint depth, uint bpp, uint bytes, TextureFormat format, bool compressed = true);

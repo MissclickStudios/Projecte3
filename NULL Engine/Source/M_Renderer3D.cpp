@@ -108,28 +108,28 @@ bool M_Renderer3D::Init(ParsonNode& configuration)
 	renderColliders		= configuration.GetBool("renderColliders");
 	renderCanvas		= configuration.GetBool("renderCanvas");
 
-	worldGridColor		= configuration.GetFloat4("worldGridColor");
-	wireframeColor		= configuration.GetFloat4("wireframeColor");
-	vertexNormalsColor	= configuration.GetFloat4("vertexNormalsColor");
-	faceNormalsColor	= configuration.GetFloat4("faceNormalsColor");
+	worldGridColor		= configuration.GetColor("worldGridColor");
+	wireframeColor		= configuration.GetColor("wireframeColor");
+	vertexNormalsColor	= configuration.GetColor("vertexNormalsColor");
+	faceNormalsColor	= configuration.GetColor("faceNormalsColor");
 
-	aabbColor			= configuration.GetFloat4("aabbColor");
-	obbColor			= configuration.GetFloat4("obbColor");
-	frustumColor		= configuration.GetFloat4("frustumColor");
-	rayColor			= configuration.GetFloat4("rayColor");
-	boneColor			= configuration.GetFloat4("boneColor");
+	aabbColor			= configuration.GetColor("aabbColor");
+	obbColor			= configuration.GetColor("obbColor");
+	frustumColor		= configuration.GetColor("frustumColor");
+	rayColor			= configuration.GetColor("rayColor");
+	boneColor			= configuration.GetColor("boneColor");
 
 	if (App->gameState == GameState::PLAY)
 	{
-		renderWorldGrid = false;
-		renderWorldAxis = false;
-		renderWireframes = false;
+		renderWorldGrid		= false;
+		renderWorldAxis		= false;
+		renderWireframes	= false;
 		renderVertexNormals = false;
-		renderFaceNormals = false;
+		renderFaceNormals	= false;
 		renderBoundingBoxes = false;
-		renderSkeletons = false;
-		renderColliders = false;
-		renderCanvas = false;
+		renderSkeletons		= false;
+		renderColliders		= false;
+		renderCanvas		= false;
 	}
 
 	return ret;
