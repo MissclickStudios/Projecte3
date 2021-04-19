@@ -6,7 +6,7 @@
 #include "GameObject.h"
 #include "PauseMenuManager.h"
 
-PauseMenuManager::PauseMenuManager()
+PauseMenuManager::PauseMenuManager() : Script()
 {
 }
 
