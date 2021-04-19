@@ -407,6 +407,17 @@ void E_Inspector::DrawMeshComponent(C_Mesh* cMesh)
 			bool outlineMesh = cMesh->GetOutlineMesh();
 
 			if (ImGui::Checkbox("Outline Mesh", &outlineMesh)) { cMesh->SetOutlineMesh(outlineMesh); }
+
+			float outlineThickness = cMesh->GetOutlineThickness();
+
+			if(ImGui::SliderFloat("Outline Thickness", &outlineThickness, 0 , 4)) { cMesh->SetOutlineThickness(outlineThickness); }
+
+			Color color = cMesh->GetOutlineColor();
+
+			if (ImGui::ColorEdit4("Outline Color", (float*)&color, ImGuiColorEditFlags_None))
+			{
+				cMesh->SetOutlineColor(color);
+			}
 		}
 		else
 		{

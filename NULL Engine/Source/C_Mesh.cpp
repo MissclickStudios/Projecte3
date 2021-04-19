@@ -16,6 +16,7 @@
 
 #include "MemoryManager.h"
 
+
 #define INVALID_BONE_ID 4294967295
 
 C_Mesh::C_Mesh(GameObject* owner) : Component(owner, ComponentType::MESH),
@@ -25,7 +26,9 @@ rootBone		(nullptr),
 cAnimatorOwner	(nullptr),
 showWireframe	(false),
 showBoundingBox	(false),
-outlineMesh		(false)
+outlineMesh		(false),
+outlineColor	(Color(0,0,0,1)),
+outlineThickness(1)
 {
 }
 
@@ -349,4 +352,24 @@ void C_Mesh::SetShowBoundingBox(bool setTo)
 void C_Mesh::SetOutlineMesh(bool setTo)
 {
 	this->outlineMesh = setTo;
+}
+
+Color C_Mesh::GetOutlineColor() const
+{
+	return this->outlineColor;
+}
+
+void C_Mesh::SetOutlineColor(Color color)
+{
+	this->outlineColor = color;
+}
+
+float C_Mesh::GetOutlineThickness() const
+{
+	return outlineThickness;
+}
+
+void C_Mesh::SetOutlineThickness(float outline)
+{
+	this->outlineThickness = outline;
 }

@@ -1587,23 +1587,18 @@ void MeshRenderer::Render(bool outline)
 		return;
 	}
 
+	glEnable(GL_STENCIL_TEST);
+	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+
+	glClear(GL_STENCIL_BUFFER_BIT);
+
 	if (outline)
 	{
-		glEnable(GL_STENCIL_TEST);
-		glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
-
-		glClear(GL_STENCIL_BUFFER_BIT);
-
 		glStencilFunc(GL_ALWAYS, 1, 0xFF);
 		glStencilMask(0xFF);
 	}
 	else
 	{
-		glEnable(GL_STENCIL_TEST);
-		glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
-
-		glClear(GL_STENCIL_BUFFER_BIT);
-		
 		glStencilMask(0x00);
 	}
 
@@ -1622,12 +1617,8 @@ void MeshRenderer::Render(bool outline)
 		glDrawElements(GL_TRIANGLES, cMesh->GetSkinnedMesh()->indices.size(), GL_UNSIGNED_INT, nullptr);
 	}
 
-	if (outline)
-	{
-		RenderOutline(rMesh);
+	if (outline) RenderOutline(rMesh);	
 
-		
-	}
 	ClearShader();	
 
 	glBindVertexArray(0);																									//
@@ -1669,8 +1660,9 @@ void MeshRenderer::RenderOutline(R_Mesh* rMesh)
 
 		if (shaderProgram != 0)
 		{
+			tempShader->SetUniform1f("outlineThickness", cMesh->GetOutlineThickness());
 
-			tempShader->SetUniformVec4f("outlineColor", (GLfloat*)&Color(1, 0, 0, 1));
+			tempShader->SetUniformVec4f("outlineColor", (GLfloat*)&cMesh->GetOutlineColor());
 
 			tempShader->SetUniformMatrix4("modelMatrix", transform->Transposed().ptr());
 

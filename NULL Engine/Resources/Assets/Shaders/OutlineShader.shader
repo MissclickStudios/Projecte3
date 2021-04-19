@@ -8,9 +8,11 @@ uniform mat4 modelMatrix;
 uniform mat4 viewMatrix; 
 uniform mat4 projectionMatrix; 
 
+uniform float outlineThickness;
+
 void main()
 { 
-    gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(position + normal * 1, 1.0f); 
+    gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(position + normal * outlineThickness, 1.0f); 
 }
 #endif
 
