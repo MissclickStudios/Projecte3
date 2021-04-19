@@ -113,8 +113,52 @@ InputGeom::InputGeom() :
 
 InputGeom::~InputGeom()
 {
-	delete m_chunkyMesh;
-	delete m_mesh;
+	if (m_chunkyMesh != nullptr)
+	{
+		delete m_chunkyMesh;
+		m_chunkyMesh = nullptr;
+	}
+	if (m_mesh != nullptr)
+	{
+		delete m_mesh;
+		m_mesh = nullptr;
+	}
+}
+
+bool InputGeom::CreateMesh(R_Mesh* mesh, float4x4 meshTranform)
+{
+	if (m_chunkyMesh)
+	{
+		delete m_chunkyMesh;
+		m_chunkyMesh = nullptr;
+	}
+	++m_offMeshConCount;
+	++m_volumeCount;
+
+	m_mesh = mesh;
+
+	CombineMesh(mesh, meshTranform);
+	
+	rcCalcBounds(m_mesh->vertices.data(), m_mesh->vertices.size() /3, m_meshBMin, m_meshBMax);
+
+	m_chunkyMesh = new rcChunkyTriMesh();
+	if (!m_chunkyMesh)
+	{
+		LOG("buildTiledNavigation: Out of memory 'm_chunkyMesh'.");
+		return false;
+	}
+	if (!rcCreateChunkyTriMesh(m_mesh->vertices.data(), (int*)m_mesh->indices.data(), m_mesh->indices.size()/3, 256, m_chunkyMesh))
+	{
+		LOG("buildTiledNavigation: Failed to build chunky mesh.");
+		return false;
+	}
+
+	return true;
+}
+
+void InputGeom::CombineMesh(R_Mesh* mesh, float4x4 meshTransform)
+{
+
 }
 
 static bool isectSegAABB(const float* sp, const float* sq,

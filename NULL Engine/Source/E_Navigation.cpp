@@ -1,6 +1,9 @@
 #include "Profiler.h"
 #include "E_Navigation.h"
 
+#include "Application.h"
+#include "M_Detour.h"
+
 E_Navigation::E_Navigation() : EditorPanel("Navigation")
 {
 
@@ -17,7 +20,10 @@ bool E_Navigation::Draw(ImGuiIO& io)
 
 	ImGui::Begin(GetName());
 
-
+	if (ImGui::Button("Bake"))
+	{
+		App->detour->BakeNavMesh();
+	}
 
 	ImGui::End();
 

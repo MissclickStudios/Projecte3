@@ -20,6 +20,7 @@
 #include "M_ResourceManager.h"											
 #include "M_Editor.h"													
 #include "M_Scene.h"
+#include "M_Detour.h"
 
 #include "R_Mesh.h"														
 #include "R_Material.h"													
@@ -217,6 +218,8 @@ UpdateStatus M_Renderer3D::PostUpdate(float dt)
 	}
 
 	SDL_GL_SwapWindow(App->window->GetWindow());
+
+	App->detour->DrawNavMesh();
 
 	return UpdateStatus::CONTINUE;
 }

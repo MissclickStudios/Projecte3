@@ -91,8 +91,6 @@ protected:
 
 	BuildSettings build_settings;
 
-	rcContext* m_ctx;
-
 	unsigned char* buildTileMesh(const int tx, const int ty, const float* bmin, const float* bmax, int& dataSize);
 
 	void cleanup();
@@ -103,7 +101,7 @@ protected:
 public:
 
 	void handleSettings();
-	//virtual void handleDebugMode();
+	//void handleDebugMode();
 	void handleRender();
 	void handleMeshChanged(class InputGeom* geom);
 	bool handleBuild();

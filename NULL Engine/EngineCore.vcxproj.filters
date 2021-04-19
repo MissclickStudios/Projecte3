@@ -205,6 +205,9 @@
     <Filter Include="Dependencies\RecastNavigation\Recast">
       <UniqueIdentifier>{2f102990-2e78-408b-93a5-d1080a068541}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\6_Tools\NavMesh">
+      <UniqueIdentifier>{645c4925-39a7-4ddf-9dfa-9991cf9c03ff}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Application.cpp">
@@ -770,6 +773,15 @@
     </ClCompile>
     <ClCompile Include="Source\Dependencies\RecastNavigation\Recast\Source\RecastRegion.cpp">
       <Filter>Dependencies\RecastNavigation\Recast</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Dependencies\RecastNavigation\ChunkyTriMesh.cpp">
+      <Filter>Source\6_Tools\NavMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Dependencies\RecastNavigation\InputGeom.cpp">
+      <Filter>Source\6_Tools\NavMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\NavMeshManager.cpp">
+      <Filter>Source\6_Tools\NavMesh</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1693,6 +1705,15 @@
     </ClInclude>
     <ClInclude Include="Source\M_Detour.h">
       <Filter>Source\1_Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Dependencies\RecastNavigation\ChunkyTriMesh.h">
+      <Filter>Source\6_Tools\NavMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Dependencies\RecastNavigation\InputGeom.h">
+      <Filter>Source\6_Tools\NavMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\NavMeshManager.h">
+      <Filter>Source\6_Tools\NavMesh</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

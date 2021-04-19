@@ -20,6 +20,7 @@
 #define INPUTGEOM_H
 
 #include "ChunkyTriMesh.h"
+#include "MathGeoLib/include/Math/float4x4.h"
 
 class R_Mesh;
 
@@ -96,11 +97,13 @@ class InputGeom
 	ConvexVolume m_volumes[MAX_VOLUMES];
 	int m_volumeCount;
 	///@}
-	
 public:
 	InputGeom();
 	~InputGeom();
-	
+
+	bool CreateMesh(R_Mesh* mesh, float4x4 meshTransform);
+	void CombineMesh(R_Mesh* mesh, float4x4 meshTransform);
+
 	/// Method to return static mesh data.
 	const R_Mesh* getMesh() const { return m_mesh; }
 	const float* getMeshBoundsMin() const { return m_meshBMin; }
