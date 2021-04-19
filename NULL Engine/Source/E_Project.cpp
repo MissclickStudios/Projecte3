@@ -35,7 +35,7 @@ refreshWindowSize			(true),
 iconsAreLoaded				(false)
 {
 	directoryToDisplay = new char[MAX_DIRECTORY_SIZE];
-	sprintf_s(directoryToDisplay, MAX_DIRECTORY_SIZE, "%s", "Assets");
+	sprintf_s(directoryToDisplay, MAX_DIRECTORY_SIZE, "%s", "Assets/");
 
 	iconSize		= ImVec2(64.0f, 64.0f);
 	iconOffset		= ImVec2(20.0f, 0.0f);
@@ -50,7 +50,6 @@ E_Project::~E_Project()
 
 bool E_Project::Draw(ImGuiIO& io)
 {
-	bool ret = true;
 	OPTICK_CATEGORY("E_Project Draw", Optick::Category::Editor)
 
 	CheckFlags();
@@ -65,17 +64,15 @@ bool E_Project::Draw(ImGuiIO& io)
 
 	ImGui::End();
 
-	return ret;
+	return true;
 }
 
 bool E_Project::CleanUp()
 {
-	bool ret = true;
-
 	rootDirectory.children.clear();
 	ClearAssetsToDisplay();
 
-	return ret;
+	return true;
 }
 
 // --- E_PROJECT METHODS ---
@@ -115,7 +112,7 @@ void E_Project::CheckFlags()
 		
 		ClearAssetsToDisplay();
 
-		if (strcmp(directoryToDisplay, rootDirectory.path.c_str()) == 0)
+		if (DirectoryToDisplayIsRootDirectory())
 		{
 			displayDirectory = rootDirectory;
 		}
@@ -277,30 +274,23 @@ void E_Project::DrawDirectoriesTree(const char* rootDirectory, const char* exten
 }
 
 void E_Project::DrawDirectoriesTree(const PathNode& rootNode)
-{
-	ImGuiTreeNodeFlags treeNodeFlags	= ImGuiTreeNodeFlags_None;
-	std::string path					= "[NONE]";
-	std::string directory				= "[NONE]";
-
+{	
 	for (uint i = 0; i < rootNode.children.size(); ++i)
 	{
-		PathNode pathNode = rootNode.children[i];
+		const PathNode& pathNode = rootNode.children[i];
 
-		if (/*path_node.is_file*/ !EngineApp->fileSystem->IsDirectory(pathNode.path.c_str()))
-		{
+		if (pathNode.isLeaf)
 			continue;
-		}
 
-		path			= pathNode.path;
-		directory		= pathNode.local_path;
-		treeNodeFlags	= (pathNode.isLastDirectory) ? ImGuiTreeNodeFlags_Leaf : ImGuiTreeNodeFlags_None;
-		if (ImGui::TreeNodeEx(path.c_str(), treeNodeFlags, "%s", directory.c_str()))
+		const char* path		= pathNode.path.c_str();
+		const char* directory	= pathNode.local_path.c_str();
+		if (ImGui::TreeNodeEx(path, ((pathNode.isLastDirectory) ? ImGuiTreeNodeFlags_Leaf : ImGuiTreeNodeFlags_None), "%s", directory))
 		{
 			if (ImGui::IsItemClicked())
 			{
-				if (strcmp(directoryToDisplay, path.c_str()) != 0)
+				if (strcmp(directoryToDisplay, path) != 0)
 				{
-					sprintf_s(directoryToDisplay, MAX_DIRECTORY_SIZE, "%s", path.c_str());
+					sprintf_s(directoryToDisplay, MAX_DIRECTORY_SIZE, "%s", path);
 					refreshDirectoryToDisplay = true;
 				}
 			}
@@ -399,8 +389,8 @@ void E_Project::DrawGoToPreviousDirectoryButton()
 	ImGui::SetCursorPos(originalPos + iconOffset);
 	ImGui::Image((ImTextureID)engineIcons.folderIcon->GetTextureID(), iconSize, uv0, uv1, tintColor, bgColor);
 
-	if (ImGui::IsItemClicked())
-	{
+	if (ImGui::IsItemClicked() && !DirectoryToDisplayIsRootDirectory())
+	{	
 		std::string prevDir	= directoryToDisplay;
 		uint endPos			= prevDir.find_last_of("/");
 		prevDir				= prevDir.substr(0, endPos);
@@ -505,4 +495,9 @@ void E_Project::ClearAssetsToDisplay()
 	}
 
 	assetsToDisplay.clear();
+}
+
+bool E_Project::DirectoryToDisplayIsRootDirectory()
+{
+	return 	(strcmp(directoryToDisplay, rootDirectory.path.c_str()) == 0 || strcmp(directoryToDisplay, (rootDirectory.path + "/").c_str()) == 0);
 }
