@@ -4,28 +4,28 @@
 #include "C_UI_Button.h"
 #include "LevelGenerator.h"
 #include "GameObject.h"
-#include "PauseMenuManager.h"
+#include "MainMenuManager.h"
 
-PauseMenuManager::PauseMenuManager() : Script()
+MainMenuManager::MainMenuManager() : Script()
 {
 }
 
-PauseMenuManager::~PauseMenuManager()
+MainMenuManager::~MainMenuManager()
 {
 }
 
-void PauseMenuManager::Start()
+void MainMenuManager::Start()
 {
+
 	/*
-	continueButton = (C_UI_Button*)App->scene->GetGameObjectByName(buttonName.c_str())->GetComponent<C_UI_Button>();
+	playButton = (C_UI_Button*)App->scene->GetGameObjectByName(buttonName.c_str())->GetComponent<C_UI_Button>();
 	optionsButton = (C_UI_Button*)App->scene->GetGameObjectByName(buttonName1.c_str())->GetComponent<C_UI_Button>();
-	abandonRunButton = (C_UI_Button*)App->scene->GetGameObjectByName(buttonName2.c_str())->GetComponent<C_UI_Button>();
-	mainMenuButton = (C_UI_Button*)App->scene->GetGameObjectByName(buttonName3.c_str())->GetComponent<C_UI_Button>();
-	exitButton = (C_UI_Button*)App->scene->GetGameObjectByName(buttonName4.c_str())->GetComponent<C_UI_Button>();
+	continueButton = (C_UI_Button*)App->scene->GetGameObjectByName(buttonName2.c_str())->GetComponent<C_UI_Button>();
+	exitButton = (C_UI_Button*)App->scene->GetGameObjectByName(buttonName3.c_str())->GetComponent<C_UI_Button>();
 	*/
 }
 
-void PauseMenuManager::Update()
+void MainMenuManager::Update()
 {
 
 	//Continue Button
@@ -38,15 +38,6 @@ void PauseMenuManager::Update()
 	}
 
 	//Main Menu Button
-	if (mainMenuButton != nullptr)
-	{
-		if (mainMenuButton->IsPressed())
-		{
-			//App->scene->GetLevelGenerator()->InitiateLevel(1);
-		}
-	}
-
-	//Options Play Button
 	if (optionsButton != nullptr)
 	{
 		if (optionsButton->IsPressed())
@@ -55,21 +46,22 @@ void PauseMenuManager::Update()
 		}
 	}
 
-	//Abandon Run Button
-	if (abandonRunButton != nullptr)
+	//Options Play Button
+	if (playButton != nullptr)
 	{
-		if (abandonRunButton->IsPressed())
+		if (playButton->IsPressed())
 		{
-			//App->scene->GetLevelGenerator()->InitiateLevel(1);
+
 		}
 	}
+
 
 	//Start Play Button
 	if (exitButton != nullptr)
 	{
 		if (exitButton->IsPressed())
 		{
-			SDL_Quit();
+
 		}
 	}
 	
