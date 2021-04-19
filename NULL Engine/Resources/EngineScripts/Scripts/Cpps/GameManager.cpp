@@ -1,3 +1,6 @@
+#include "Application.h"
+#include "M_FileSystem.h"
+#include "FileSystemDefinitions.h"
 #include "GameManager.h"
 
 GameManager::GameManager(): Script()
@@ -14,6 +17,22 @@ void GameManager::Awake()
 	level.AddFixedRoom("Boss",1 ,15);*/
 
 	//Load de la primera scene?
+	for (int i = 0; i < level.level1.size(); ++i) 
+	{
+		if (!App->fileSystem->Exists((ASSETS_SCENES_PATH + level.level1[i]).c_str())) 
+		{
+			level.level1.erase(level.level1.begin() + i);
+			--i;
+		}
+	}
+	for (int i = 0; i < level.level2.size(); ++i)
+	{
+		if (!App->fileSystem->Exists((ASSETS_SCENES_PATH + level.level1[i]).c_str()))
+		{
+			level.level2.erase(level.level2.begin() + i);
+			--i;
+		}
+	}
 }
 
 void GameManager::Update()

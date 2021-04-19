@@ -39,6 +39,8 @@
 
 #include "MathGeoLib/include/Geometry/Line.h"
 
+#include "CoreDllHelpers.h"
+
 #define MAX_JOYSTICK_INPUT 32767
 #define MANDO_FILE "EngineScripts/Mando.json"
 
@@ -68,12 +70,11 @@ Player::~Player()
 void Player::Awake()
 {
 	char* buffer = nullptr;
-	//TODO IMPORTANT!!!!: Big memory leak !!!
 	uint size = App->fileSystem->Load(MANDO_FILE, &buffer);
 	if (buffer)
 	{
 		ParsonNode config(buffer);
-	
+
 		weaponUsed = config.GetInteger("Weapon used");
 		coins = config.GetInteger("Coins");
 		strongShots = true; //config.GetBool("Strong shots");
@@ -84,14 +85,12 @@ void Player::Awake()
 
 		load = true;
 	}
-	//TODO IMPORTANT!!!!: Big memory leak !!!
-	RELEASE_ARRAY(buffer);
-
+	CoreCrossDllHelpers::CoreReleaseBuffer(&buffer);
+	
 	if (!gameObject->GetComponent<C_RigidBody>())
 		gameObject->CreateComponent(ComponentType::RIGIDBODY);
 
-	std::vector<Component*> components;
-	gameObject->GetAllComponents(components);
+	std::vector<Component*> components = gameObject->GetAllComponents();
 	for (auto comp = components.begin(); comp != components.end(); ++comp)
 	{
 		if ((*comp)->GetType() == ComponentType::AUDIOSOURCE)

@@ -1,6 +1,8 @@
 #include "Application.h"
 #include "M_Scene.h"
 #include "Log.h"
+#include "GameManager.h"
+#include "GameObject.h"
 
 #include "Gate.h"
 
@@ -23,6 +25,9 @@ void Gate::CleanUp()
 void Gate::OnCollisionEnter(GameObject* object)
 {
 	//TODO: GameManager
-	/*if (!App->scene->nextScene)
-		App->scene->NextRoom();*/
+	if (gameManager != nullptr) 
+	{
+		GameManager* gameManagerScript = (GameManager*)gameManager->GetScript("GameManager");
+		gameManagerScript->level.GoNextRoom();
+	}
 }
