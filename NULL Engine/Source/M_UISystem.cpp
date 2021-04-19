@@ -99,11 +99,11 @@ UpdateStatus M_UISystem::PreUpdate(float dt)
 {
 	UpdateInputCanvas();
 
-	if (!inputCanvas->activeButtons.empty())
+	if (inputCanvas != nullptr)
 	{
-		InitHoveredDecorations();
+		if (!inputCanvas->activeButtons.empty())
+			InitHoveredDecorations();
 	}
-	
 
 	return UpdateStatus::CONTINUE;
 }
@@ -117,7 +117,8 @@ UpdateStatus M_UISystem::Update(float dt)
 		(*it)->UpdateActiveButtons();
 	}
 
-	inputCanvas->CheckButtonStates();
+	if (inputCanvas != nullptr)
+		inputCanvas->CheckButtonStates();
 
 	if (hoveredDecorationL != nullptr && hoveredDecorationR != nullptr)
 		UpdateHoveredDecorations();
@@ -141,6 +142,9 @@ bool M_UISystem::CleanUp()
 
 	inputCanvas = nullptr;
 
+	hoveredDecorationL = nullptr;
+	hoveredDecorationR = nullptr;
+
 	App->resourceManager->FreeResource(buttonHoverDecor->GetUID());
 
 	return true;
@@ -162,7 +166,8 @@ bool M_UISystem::SaveConfiguration(ParsonNode& root) const
 
 void M_UISystem::UpdateInputCanvas()
 {
-	if (canvasList.size() < 2 && !canvasList.empty())
+	inputCanvas = nullptr;
+	if (canvasList.size() == 1)
 	{
 		inputCanvas = (*canvasList.begin());
 		return;
@@ -185,8 +190,16 @@ void M_UISystem::DeleteCanvas(C_Canvas* canvas)
 	{
 		if ((*it) == canvas)
 		{
+			if ((*it) == inputCanvas)
+			{
+				isHoverDecorationAdded = false;
+				hoveredDecorationL = nullptr;
+				hoveredDecorationR = nullptr;
+			}
+
 			canvasList.erase(it);
 			UpdateInputCanvas();
+
 			return;
 		}
 	}
@@ -209,7 +222,7 @@ void M_UISystem::DeleteActiveButton(C_UI_Button* button)
 
 void M_UISystem::InitHoveredDecorations()
 {
-	if (hoveredDecorationL != nullptr || hoveredDecorationR != nullptr)
+	if (hoveredDecorationL != nullptr || hoveredDecorationR != nullptr || canvasList.empty())
 		return;
 
 	GameObject* canvas = inputCanvas->GetOwner();
@@ -219,13 +232,13 @@ void M_UISystem::InitHoveredDecorations()
 	newGOL = App->scene->CreateGameObject("Hovered Decoration L", canvas);
 	hoveredDecorationL = (C_UI_Image*)newGOL->CreateComponent(ComponentType::UI_IMAGE);
 	newGOL->CreateComponent(ComponentType::MATERIAL);
-	Rect2D rectL = { (inputCanvas->selectedButton->GetRect().x - inputCanvas->selectedButton->GetRect().w / 2 - 0.04), inputCanvas->selectedButton->GetRect().y, 0.02,0.02 };
+	Rect2D rectL = { (inputCanvas->selectedButton->GetRect().x - inputCanvas->selectedButton->GetRect().w / 2 - 0.04), inputCanvas->selectedButton->GetRect().y, 0.05,0.1 };
 	hoveredDecorationL->SetRect(rectL);
 
 	newGOR = App->scene->CreateGameObject("Hovered Decoration R", canvas);
 	hoveredDecorationR = (C_UI_Image*)newGOR->CreateComponent(ComponentType::UI_IMAGE);
 	newGOR->CreateComponent(ComponentType::MATERIAL);
-	Rect2D rectR = { inputCanvas->selectedButton->GetRect().x + 0.02 + inputCanvas->selectedButton->GetRect().w / 2, inputCanvas->selectedButton->GetRect().y, 0.02,0.02 };
+	Rect2D rectR = { inputCanvas->selectedButton->GetRect().x + 0.02 + inputCanvas->selectedButton->GetRect().w / 2, inputCanvas->selectedButton->GetRect().y, 0.05,0.1 };
 	hoveredDecorationR->SetRect(rectR);
 
 	isHoverDecorationAdded = true;
@@ -235,6 +248,10 @@ void M_UISystem::UpdateHoveredDecorations()
 {
 	if (inputCanvas != nullptr)
 	{
+		if (!isHoverDecorationAdded)
+		{
+			InitHoveredDecorations();
+		}
 		hoveredDecorationL->GetOwner()->parent = inputCanvas->GetOwner();
 		hoveredDecorationR->GetOwner()->parent = inputCanvas->GetOwner();
 

@@ -40,22 +40,22 @@
                         "W": 1.0926049947738647,
                         "H": 0.56977641582489014,
                         "IsInvisible": false,
-                        "IsInputCanvas": true
+                        "IsInputCanvas": false
                     }
                 }
             ]
         },
         {
-            "UID": 1450927800,
-            "ParentUID": 1474137658,
+            "UID": 522699159,
+            "ParentUID": 1782467013,
             "PrefabID": 0,
             "IsPrefab": false,
-            "Name": "MainMenu Manager",
+            "Name": "UI Button",
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": true,
+            "ShowBoundingBoxes": false,
             "Components": [
                 {
                     "Type": 1,
@@ -77,92 +77,23 @@
                     ]
                 },
                 {
-                    "Type": 24,
-                    "ResourceUID": 1900768331,
-                    "AssetsPath": "Assets\/Scripts\/\/MainMenuManager.h",
-                    "DataName": "MainMenuManager",
-                    "HasInspector": true,
-                    "InspectorVariables": [
-                        {
-                            "Type": 5,
-                            "Name": "buttonName",
-                            "string": "New Game"
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "UID": 1474137658,
-            "ParentUID": 598558801,
-            "PrefabID": 0,
-            "IsPrefab": false,
-            "Name": "MainScene",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": true,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        0,
-                        0
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                }
-            ]
-        },
-        {
-            "UID": 1803462951,
-            "ParentUID": 1474137658,
-            "PrefabID": 0,
-            "IsPrefab": false,
-            "Name": "Camera",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        0,
-                        -6.3000001907348633
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
+                    "Type": 23,
+                    "Button": {
+                        "X": 0.28499999642372131,
+                        "Y": 0.12999999523162842,
+                        "W": 0.31999999284744263,
+                        "H": 0.079999998211860657,
+                        "IsHovered": false
+                    }
                 },
                 {
-                    "Type": 5,
-                    "MinFOV": 1,
-                    "MaxFOV": 120,
-                    "Culling": false,
-                    "OrthogonalView": false,
-                    "HideFrustum": true
+                    "Type": 3,
+                    "Texture": {
+                        "AssetsPath": "Assets\/Textures\/UI\/MainMenu\/NewGameButton1.png",
+                        "AssetsName": "NewGameButton1.png",
+                        "LibaryPath": "Library\/Textures\/1065639556.netex",
+                        "LibraryFile": "1065639556.netex"
+                    }
                 }
             ]
         },
@@ -219,8 +150,60 @@
             ]
         },
         {
-            "UID": 847254948,
+            "UID": 786094045,
             "ParentUID": 520337368,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "UI Button",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 23,
+                    "Button": {
+                        "X": -0.2800000011920929,
+                        "Y": -0.15000000596046448,
+                        "W": 0.31999999284744263,
+                        "H": 0.079999998211860657,
+                        "IsHovered": false
+                    }
+                },
+                {
+                    "Type": 3,
+                    "Texture": {
+                        "AssetsPath": "Assets\/Textures\/UI\/MainMenu\/SettingsButton1.png",
+                        "AssetsName": "SettingsButton1.png",
+                        "LibaryPath": "Library\/Textures\/1773975367.netex",
+                        "LibraryFile": "1773975367.netex"
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 847254948,
+            "ParentUID": 1782467013,
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "Hovered Decoration L",
@@ -252,8 +235,8 @@
                 {
                     "Type": 21,
                     "Image": {
-                        "X": -0.54500001668930054,
-                        "Y": 0.51100003719329834,
+                        "X": 0.034999988973140717,
+                        "Y": -0.52149999141693115,
                         "W": 0.019999999552965164,
                         "H": 0.019999999552965164,
                         "IsHDL": true,
@@ -261,13 +244,71 @@
                     }
                 },
                 {
-                    "Type": 3
+                    "Type": 3,
+                    "Shader": {
+                        "AssetsPath": "Assets\/Shaders\/UIShader.shader",
+                        "AssetsName": "UIShader.shader",
+                        "LibaryPath": "Library\/Shaders\/1025410539.neshader",
+                        "LibraryFile": "1025410539.neshader"
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 1193893161,
+            "ParentUID": 1782467013,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "UI Button",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 23,
+                    "Button": {
+                        "X": 0.29499998688697815,
+                        "Y": -0.15999999642372131,
+                        "W": 0.31999999284744263,
+                        "H": 0.079999998211860657,
+                        "IsHovered": true
+                    }
+                },
+                {
+                    "Type": 3,
+                    "Texture": {
+                        "AssetsPath": "Assets\/Textures\/UI\/MainMenu\/SettingsButton1.png",
+                        "AssetsName": "SettingsButton1.png",
+                        "LibaryPath": "Library\/Textures\/1773975367.netex",
+                        "LibraryFile": "1773975367.netex"
+                    }
                 }
             ]
         },
         {
             "UID": 1257815095,
-            "ParentUID": 520337368,
+            "ParentUID": 1782467013,
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "Hovered Decoration R",
@@ -299,8 +340,8 @@
                 {
                     "Type": 21,
                     "Image": {
-                        "X": 0.02500000037252903,
-                        "Y": 0.51100003719329834,
+                        "X": 0.60499995946884155,
+                        "Y": -0.52149999141693115,
                         "W": 0.019999999552965164,
                         "H": 0.019999999552965164,
                         "IsHDL": false,
@@ -308,7 +349,223 @@
                     }
                 },
                 {
-                    "Type": 3
+                    "Type": 3,
+                    "Shader": {
+                        "AssetsPath": "Assets\/Shaders\/UIShader.shader",
+                        "AssetsName": "UIShader.shader",
+                        "LibaryPath": "Library\/Shaders\/1025410539.neshader",
+                        "LibraryFile": "1025410539.neshader"
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 1423046501,
+            "ParentUID": 1782467013,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "UI Button",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 23,
+                    "Button": {
+                        "X": 0.29499998688697815,
+                        "Y": 0,
+                        "W": 0.31999999284744263,
+                        "H": 0.079999998211860657,
+                        "IsHovered": false
+                    }
+                },
+                {
+                    "Type": 3,
+                    "Texture": {
+                        "AssetsPath": "Assets\/Textures\/UI\/MainMenu\/ContinueButton1.png",
+                        "AssetsName": "ContinueButton1.png",
+                        "LibaryPath": "Library\/Textures\/1043491886.netex",
+                        "LibraryFile": "1043491886.netex"
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 1450927800,
+            "ParentUID": 1474137658,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "MainMenu Manager",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": true,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 24,
+                    "ResourceUID": 1900768331,
+                    "AssetsPath": "Assets\/Scripts\/\/MainMenuManager.h",
+                    "DataName": "MainMenuManager",
+                    "HasInspector": false
+                }
+            ]
+        },
+        {
+            "UID": 1474137658,
+            "ParentUID": 2025242155,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "MainScene",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": true,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1782467013,
+            "ParentUID": 1803462951,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Canvas 2",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 13,
+                    "Canvas": {
+                        "X": 0,
+                        "Y": 0,
+                        "W": 1.0926049947738647,
+                        "H": 0.56977641582489014,
+                        "IsInvisible": false,
+                        "IsInputCanvas": true
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 1803462951,
+            "ParentUID": 1474137658,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Camera",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        -6.3000001907348633
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 5,
+                    "MinFOV": 1,
+                    "MaxFOV": 120,
+                    "Culling": false,
+                    "OrthogonalView": false,
+                    "HideFrustum": true
                 }
             ]
         },
@@ -360,58 +617,6 @@
                         "AssetsName": "ContinueButton1.png",
                         "LibaryPath": "Library\/Textures\/1043491886.netex",
                         "LibraryFile": "1043491886.netex"
-                    }
-                }
-            ]
-        },
-        {
-            "UID": 786094045,
-            "ParentUID": 520337368,
-            "PrefabID": 0,
-            "IsPrefab": false,
-            "Name": "UI Button",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": true,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        0,
-                        0
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {
-                    "Type": 23,
-                    "Button": {
-                        "X": -0.2800000011920929,
-                        "Y": -0.15000000596046448,
-                        "W": 0.31999999284744263,
-                        "H": 0.079999998211860657,
-                        "IsHovered": false
-                    }
-                },
-                {
-                    "Type": 3,
-                    "Texture": {
-                        "AssetsPath": "Assets\/Textures\/UI\/MainMenu\/SettingsButton1.png",
-                        "AssetsName": "SettingsButton1.png",
-                        "LibaryPath": "Library\/Textures\/1773975367.netex",
-                        "LibraryFile": "1773975367.netex"
                     }
                 }
             ]
