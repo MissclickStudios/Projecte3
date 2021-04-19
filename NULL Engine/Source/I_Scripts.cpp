@@ -31,6 +31,7 @@ bool Importer::Scripts::Import(const char* assetsPath, char* buffer, uint size, 
 	char api[] = "SCRIPTS_API";
 	unsigned int apiSize = strlen(api);
 	char scriptBaseClass[] = "Script";
+	char allowedInheritance[] = "ALLOWED_INHERITANCE";
 	Parser::ParsingState currentState;
 
 	if (!Parser::CheckNullterminatedBuffer(buffer, size))
@@ -125,14 +126,31 @@ bool Importer::Scripts::Import(const char* assetsPath, char* buffer, uint size, 
 				LOG("[ERROR] Not imported scripts from file %s because it won't compile: check %s class/struct after \"public\" specification ", assetsPath, scriptName.c_str());
 				return false;
 			}
+			//TODO: this bool ...
+			bool inheritanceAllowed = false;
 			unsigned int baseClassLength = strlen(scriptBaseClass);
-			if (std::string(cursor, baseClassLength) != scriptBaseClass)
+			if (strncmp(cursor, scriptBaseClass, baseClassLength))
 			{
-				cursor += baseClassLength;
-				LOG("[WARNING] Found class/struct %s in file %s marked to export that doesn't inherit from script class", scriptName.c_str(), assetsPath);
-				break;
+				char* nextSymbolStart = nullptr;
+				unsigned int simbolSize = 0;
+				Parser::ReadNextSymbol(cursor, nextSymbolStart, simbolSize);
+				if (Parser::LanguageSymbol(*nextSymbolStart))
+				{
+					LOG("[ERROR] Not Imported scripts in header %s because it will not compile: language symbol after public inheritance keyword in script %s", assetsPath, scriptName.c_str());
+					return false;
+				}
+				nextSymbolStart = nullptr;
+				simbolSize = 0;
+				Parser::ReadNextSymbol(cursor,nextSymbolStart,simbolSize);
+				if (!strncmp(allowedInheritance, nextSymbolStart, simbolSize)) 
+				{
+					LOG("[WARNING] Found class/struct %s in file %s marked to export that doesn't inherit from script class", scriptName.c_str(), assetsPath);
+					break;
+				}
+				inheritanceAllowed = true;
 			}
-			cursor += baseClassLength;
+			if(!inheritanceAllowed)
+				cursor += baseClassLength;
 			currentState = Parser::GoNextSymbol(cursor);
 			if (currentState != Parser::ParsingState::CONTINUE || *cursor != '{' )
 			{
@@ -147,8 +165,8 @@ bool Importer::Scripts::Import(const char* assetsPath, char* buffer, uint size, 
 				break;
 			}
 			//Engine script is valid
-			LOG("[STATUS] New script %s from file %s added successfully", scriptName.c_str(), assetsPath);
 			rScript->dataStructures.push_back({ scriptName, true });
+			LOG("[STATUS] New script %s from file %s added successfully", scriptName.c_str(), assetsPath);
 			break;
 		}
 		case ';': 

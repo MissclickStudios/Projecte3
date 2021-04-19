@@ -8,6 +8,7 @@
 #endif
 
 #define SCRIPTS_FUNCTION extern "C" SCRIPTS_API
+#define ALLOWED_INHERITANCE
 
 #define INSPECTOR_INPUT_INT(INT_) C_Script::InspectorInputInt(&INT_, #INT_)
 #define INSPECTOR_DRAGABLE_INT(INT_) C_Script::InspectorDragableInt(&INT_, #INT_)

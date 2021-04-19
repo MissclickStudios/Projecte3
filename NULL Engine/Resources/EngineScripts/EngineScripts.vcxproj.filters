@@ -21,52 +21,43 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Assets\Scripts\FirstScript.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Assets\Scripts\SecondScript.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Scripts\Headers\ScriptMacros.h">
       <Filter>Resource Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Assets\Scripts\Bullet.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Scripts\Helpers\Effect.h">
+      <Filter>Resource Files\Helpers</Filter>
     </ClInclude>
-    <ClInclude Include="..\Assets\Scripts\CameraMovement.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Scripts\Helpers\AimStates.h">
+      <Filter>Resource Files\Helpers</Filter>
     </ClInclude>
-    <ClInclude Include="..\Assets\Scripts\Gate.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Scripts\Helpers\EntityHelpers.h">
+      <Filter>Resource Files\Helpers</Filter>
     </ClInclude>
-    <ClInclude Include="..\Assets\Scripts\Prop.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Scripts\Helpers\Perk.h">
+      <Filter>Resource Files\Helpers</Filter>
     </ClInclude>
-    <ClInclude Include="..\Assets\Scripts\Player.h">
+    <ClInclude Include="Scripts\Helpers\Entity.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\Assets\Scripts\Blurrg.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\Assets\Scripts\Player.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="..\Assets\Scripts\SandTrooper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Scripts\Helpers\Projectile.h">
-      <Filter>Resource Files\Helpers</Filter>
+    <ClInclude Include="..\Assets\Scripts\Bullet.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Scripts\Helpers\Weapon.h">
-      <Filter>Resource Files\Helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Assets\Scripts\Coin.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Assets\Scripts\WeaponPerk.h">
+    <ClInclude Include="..\Assets\Scripts\Blaster.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Assets\Scripts\GameManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Assets\Scripts\MainMenuManager.h">
+    <ClInclude Include="Scripts\Helpers\Object.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Scripts\Helpers\LevelGenerator.h">
@@ -74,24 +65,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Scripts\Cpps\FirstScript.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Scripts\Cpps\SecondScript.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Scripts\Cpps\Bullet.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Scripts\Cpps\CameraMovement.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Scripts\Cpps\Gate.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Scripts\Cpps\Prop.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Scripts\Cpps\Player.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -101,19 +74,19 @@
     <ClCompile Include="Scripts\Cpps\SandTrooper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Scripts\Cpps\Bullet.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Scripts\Helpers\Entity.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="Scripts\Helpers\Weapon.cpp">
-      <Filter>Resource Files\Helpers</Filter>
-    </ClCompile>
-    <ClCompile Include="Scripts\Cpps\Coin.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Scripts\Cpps\WeaponPerk.cpp">
+    <ClCompile Include="Scripts\Cpps\Blaster.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Scripts\Cpps\GameManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Scripts\Cpps\MainMenuManager.cpp">
+    <ClCompile Include="Scripts\Helpers\Object.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Scripts\Helpers\LevelGenerator.cpp">

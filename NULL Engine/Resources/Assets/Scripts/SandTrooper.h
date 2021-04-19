@@ -1,90 +1,79 @@
 #pragma once
-#include "Script.h"
 #include "ScriptMacros.h"
 
-#include "Prefab.h"
 #include "Timer.h"
 
-#include "MathGeoLib/include/Math/float3.h"
+#include "Entity.h"
+#include "AimStates.h"
 
-class C_AudioSource;
-class GameObject;
-class Weapon;
+#include "MathGeoLib/include/Math/float2.h"
 
-class SCRIPTS_API SandTrooper : public Script
+enum class TrooperState
+{
+	IDLE,
+	PATROL,
+	CHASE,
+	FLEE,
+	DEAD_IN,
+	DEAD
+};
+
+class SCRIPTS_API Trooper : public Entity ALLOWED_INHERITANCE
 {
 public:
 
-	SandTrooper();
-	~SandTrooper();
+	Trooper();
+	virtual ~Trooper();
 
-	void Awake() override;
+	void SetUp() override;
 	void Update() override;
-	void CleanUp()override;
+	void CleanUp() override;
 
 	void OnCollisionEnter(GameObject* object) override;
 
-	void TakeDamage(float damage);
-	void Freeze(float amount, float duration);
-	void Weaken(float amount, float duration);
-
 	// Movement
-	float speed = 10.0f;
-
-	float detectionRange = 40.0f;
-
-	Prefab coin;
 	GameObject* player = nullptr;
 
-	// Weapon
-	float projectileSpeed = 100.0f;
-	float fireRate = 0.5f;
-	int ammo = 10;
-	int maxAmmo = 10;
-	bool automatic = true;
-	float reloadTime = 3.0f;
+	// Chase
+	float chaseDistance = 0.0f;
+	float chaseSpeedModifier = DEFAULT_MODIFIER;
+	float ChaseSpeed() { return speed * chaseSpeedModifier; }
 
-	Weapon* weapon;
-	Prefab projectilePrefab;
-
-	// Health
-	float health = 4.0f;
-	float maxHealth = 4.0f;
+	// Flee
+	float fleeDistance = 0.0f;
 
 	// Attack
-	float damage = 0.5f;
+	float attackDistance = 0.0f;
+
+	// Animations
+	AnimationInfo walkAnimation = { "Run" };
+	AnimationInfo runAnimation = { "Run" };
+	AnimationInfo fleeAnimation = { "Run" };
+	AnimationInfo shootAnimation = { "Shoot" };
+	AnimationInfo reloadAnimation = { "Reload" };
+	AnimationInfo changeAnimation = { "Change" };
+	AnimationInfo onGuardAnimation = { "OnGuard" };
 
 private:
-	void IdleSound();
+	Timer POOPOOTIMER; // temporary, go to Player.h for more info PepeLa
+	void DistanceToPlayer();
+	void LookAtPlayer();
 
-	float3 LookingAt();
+	TrooperState moveState = TrooperState::PATROL;
+	AimState aimState = AimState::IDLE;
 
-	C_AudioSource* idle = nullptr;
-	C_AudioSource* reload = nullptr;
-	C_AudioSource* death = nullptr;
+	// Logic
+	void ManageMovement();
+	void ManageAim();
 
 	// Movement
-	float distance = 10000.0f;	// Distance from the player
+	void Patrol();
+	void Chase();
+	void Flee();
 
-	float3 direction = float3::zero;
-
-	Timer reloadTimer;
-
-	bool isIdlePlaying = false;
-	Timer idleTimer;
-
-	// States
-	float speedModifier = 1;
-	float attackModifier = 1;
-	float defenseModifier = 1;
-
-	float freezeDuration = 0.0f;
-	Timer freezeTimer;
-	float weakDuration = 0.0f;
-	Timer weakTimer;
-
-	GameObject* mesh = nullptr;
+	float distance = 0.0f;
+	float2 moveDirection = float2::zero;
+	float2 aimDirection = float2::zero;
 };
 
-
-SCRIPTS_FUNCTION SandTrooper* CreateSandTrooper();
+SCRIPTS_FUNCTION Trooper* CreateTrooper();
