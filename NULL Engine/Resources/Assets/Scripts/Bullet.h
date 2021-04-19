@@ -29,6 +29,9 @@ private:
 	float onHitdamage = 0.0f;
 	std::vector<Effect> onHitEffects;
 
+	float autoDestructTime = 5.0f;
+	Timer autoDestructTimer;
+
 	bool hit = false;
 };
 

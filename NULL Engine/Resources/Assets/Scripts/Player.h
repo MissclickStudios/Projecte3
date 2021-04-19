@@ -27,9 +27,9 @@ public:
 	Player();
 	virtual ~Player();
 
-	void SetUp();
-	void Update();
-	void CleanUp();
+	void SetUp() override;
+	void Update() override;
+	void CleanUp() override;
 
 	// Interactions
 	void TakeDamage(float damage) override;

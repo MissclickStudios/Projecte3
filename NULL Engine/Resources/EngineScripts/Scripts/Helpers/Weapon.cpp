@@ -37,6 +37,7 @@ Weapon::~Weapon()
 
 void Weapon::Start()
 {
+	hand = App->scene->GetGameObjectByName("mixamorig:RightHand");
 	CreateProjectiles();
 	RefreshPerks();
 }
@@ -53,6 +54,8 @@ void Weapon::Update()
 void Weapon::CleanUp()
 {
 	DeleteProjectiles();
+
+	hand = nullptr;
 }
 
 void Weapon::Activate()
@@ -233,6 +236,7 @@ void Weapon::FireProjectile(float2 direction)
 
 	if (direction.IsZero())
 		return;
+	direction.Normalize();
 
 	Projectile* projectile = nullptr;
 
@@ -246,11 +250,10 @@ void Weapon::FireProjectile(float2 direction)
 	if (!projectile)
 		return;
 
-	float3 position;
+	float3 position = float3::zero;
 	if (hand)
 		position = hand->transform->GetWorldPosition();
-	else
-		position = gameObject->transform->GetWorldPosition();
+
 	projectile->object->transform->SetWorldPosition(position);
 
 	float rad = direction.AimedAngle();

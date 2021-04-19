@@ -9,6 +9,8 @@
 Bullet::Bullet() : Object()
 {
 	baseType = ObjectType::BULLET;
+
+	autoDestructTimer.Stop();
 }
 
 Bullet::~Bullet()
@@ -17,6 +19,11 @@ Bullet::~Bullet()
 
 void Bullet::Update()
 {
+	if (autoDestructTimer.ReadSec() >= autoDestructTime)
+	{
+		autoDestructTimer.Stop();
+		hit = true;
+	}
 	if (hit)
 	{
 		hit = false;
@@ -47,6 +54,8 @@ void Bullet::SetOnHitData(float damage, std::vector<Effect> effects)
 {
 	onHitdamage = damage;
 	onHitEffects = effects;
+
+	autoDestructTimer.Start();
 }
 
 SCRIPTS_FUNCTION Bullet* CreateBullet()

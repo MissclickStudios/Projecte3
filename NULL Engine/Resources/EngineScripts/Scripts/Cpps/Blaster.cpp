@@ -18,10 +18,7 @@ ShootState Blaster::ShootLogic()
         return ShootState::NO_AMMO;
 
 	if (!fireRateTimer.IsActive())
-	{
 		fireRateTimer.Start();
-        return ShootState::FIRED_PROJECTILE;
-	}
 	else if (fireRateTimer.ReadSec() >= fireRate)
 	{
 		fireRateTimer.Start(); // This will restart the timer

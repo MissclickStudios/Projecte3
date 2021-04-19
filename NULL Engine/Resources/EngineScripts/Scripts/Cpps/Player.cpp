@@ -98,18 +98,15 @@ void Player::SetUp()
 	// Create Weapons and save the Weapon script pointer
 	blasterGameObject = App->resourceManager->LoadPrefab(blaster.uid, App->scene->GetSceneRoot());
 	equipedGunGameObject = App->resourceManager->LoadPrefab(equipedGun.uid, App->scene->GetSceneRoot());
+
+	blasterWeapon = (Weapon*)GetObjectScript(blasterGameObject, ObjectType::WEAPON);
+	equipedGunWeapon = (Weapon*)GetObjectScript(equipedGunGameObject, ObjectType::WEAPON);
+
+	currentWeapon = blasterWeapon;
 }
 
 void Player::Update()
 {
-	if (!currentWeapon)
-	{
-		blasterWeapon = (Weapon*)GetObjectScript(blasterGameObject, ObjectType::WEAPON);
-		equipedGunWeapon = (Weapon*)GetObjectScript(equipedGunGameObject, ObjectType::WEAPON);
-
-		currentWeapon = blasterWeapon;
-	}
-
 	ManageMovement();
 	if (moveState != PlayerState::DEAD)
 		ManageAim();
@@ -117,6 +114,15 @@ void Player::Update()
 
 void Player::CleanUp()
 {
+	blasterGameObject->toDelete = true;
+	blasterGameObject = nullptr;
+	blasterWeapon = nullptr;
+
+	equipedGunGameObject->toDelete = true;
+	equipedGunGameObject = nullptr;
+	equipedGunWeapon = nullptr;
+
+	currentWeapon = nullptr;
 }
 
 void Player::TakeDamage(float damage)
