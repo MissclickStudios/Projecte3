@@ -24,6 +24,7 @@ class R_Material;
 class R_Texture;
 class R_Shader;
 
+class C_Transform;
 class C_Mesh;	
 class C_Material;
 
@@ -70,7 +71,7 @@ const float ParticlesCoords[] = {
 
 struct MeshRenderer
 {
-	MeshRenderer(float4x4* transform, C_Mesh* cMesh, C_Material* cMaterial);								// Will render the given mesh at the given position with the given mat & tex.
+	MeshRenderer(C_Transform* transform, C_Mesh* cMesh, C_Material* cMaterial);								// Will render the given mesh at the given position with the given mat & tex.
 
 	void Render						();
 
@@ -89,9 +90,9 @@ struct MeshRenderer
 	uint32 SetDefaultShader			(C_Material* cMaterial);
 	void ClearShader				();
 
-	float4x4*	transform;
-	C_Mesh*		cMesh;
-	C_Material*	cMaterial;
+	C_Transform*	transform;
+	C_Mesh*			cMesh;
+	C_Material*		cMaterial;
 };
 
 struct CuboidRenderer																							// Will render the wireframe of any given geometric form with 8 vertices.

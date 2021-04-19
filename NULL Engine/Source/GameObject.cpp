@@ -378,7 +378,7 @@ void GameObject::GetRenderers(std::vector<MeshRenderer>& meshRenderers, std::vec
 		{
 			if (cMeshes[i]->IsActive() && cMeshes[i]->GetMesh() != nullptr)
 			{				
-				meshRenderers.push_back(MeshRenderer(cTransform->GetWorldTransformPtr(), cMeshes[i], cMaterial));
+				meshRenderers.push_back(MeshRenderer(cTransform, cMeshes[i], cMaterial));
 			}
 		}
 	}
@@ -563,39 +563,39 @@ bool GameObject::HasChilds() const
 	return !childs.empty();
 }
 
-void GameObject::GetAllChilds(std::vector<GameObject*>& childs)
+void GameObject::GetAllChilds(std::vector<GameObject*>& children)
 {
-	if (this->childs.empty())
+	if (childs.empty())
 	{
 		//LOG("[WARNING] Game Object: GameObject { %s } did not have any childs!", this->GetName());
 		return;
 	}
 	
-	for (uint i = 0; i < this->childs.size(); ++i)
+	for (uint i = 0; i < childs.size(); ++i)
 	{
-		childs.push_back(this->childs[i]);
-		this->childs[i]->GetAllChilds(childs);
+		children.push_back(childs[i]);
+		childs[i]->GetAllChilds(children);
 	}
 }
 
-void GameObject::GetAllChilds(std::map<std::string, GameObject*>& childs)
+void GameObject::GetAllChilds(std::map<std::string, GameObject*>& children)
 {
-	if (this->childs.empty())
+	if (childs.empty())
 	{
 		//LOG("[WARNING] Game Object: GameObject { %s } did not have any childs!", this->GetName());
 		return;
 	}
 
-	for (uint i = 0; i < this->childs.size(); ++i)
+	for (uint i = 0; i < childs.size(); ++i)
 	{
-		childs.emplace(this->childs[i]->GetName(), this->childs[i]);
-		this->childs[i]->GetAllChilds(childs);
+		children.emplace(childs[i]->GetName(), childs[i]);
+		childs[i]->GetAllChilds(children);
 	}
 }
 
-void GameObject::GetAllChilds(std::unordered_map<std::string, GameObject*>& childs)
+void GameObject::GetAllChilds(std::unordered_map<std::string, GameObject*>& children)
 {
-	if (this->childs.empty())
+	if (childs.empty())
 	{
 		LOG("[WARNING] Game Object: GameObject { %s } did not have any childs!");
 		return;
@@ -603,8 +603,8 @@ void GameObject::GetAllChilds(std::unordered_map<std::string, GameObject*>& chil
 
 	for (uint i = 0; i < this->childs.size(); ++i)
 	{
-		childs.emplace(this->childs[i]->GetName(), this->childs[i]);
-		this->childs[i]->GetAllChilds(childs);
+		children.emplace(childs[i]->GetName(), childs[i]);
+		childs[i]->GetAllChilds(children);
 	}
 }
 

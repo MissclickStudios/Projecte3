@@ -30,7 +30,7 @@ inOrthogonalView(false),
 hideFrustum(false),
 updateProjectionMatrix(true)
 {
-	frustumPlanes = new Plane[NUM_FRUSTUM_PLANES];
+	frustumPlanes	= new Plane[NUM_FRUSTUM_PLANES];
 	frustumVertices	= new float3[NUM_FRUSTUM_VERTICES];
 
 	InitFrustum();

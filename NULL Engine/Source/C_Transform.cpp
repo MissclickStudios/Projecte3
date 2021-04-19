@@ -74,21 +74,17 @@ void C_Transform::UpdateLocalTransform()
 	localTransform = float4x4::FromTRS(localPosition, localRotation, localScale);
 
 	updateWorld = true;
-	
-	UpdateWorldTransform();
 }
 
 void C_Transform::UpdateWorldTransform()
 {
+	OPTICK_CATEGORY("Update World Transform", Optick::Category::GameLogic);
+	
 	GameObject* owner = GetOwner();
 
 	worldTransform = (owner->parent != nullptr) ? owner->parent->GetComponent<C_Transform>()->worldTransform * localTransform : localTransform;
 
-	for (uint i = 0; i < owner->childs.size(); ++i)
-	{
-		owner->childs[i]->GetComponent<C_Transform>()->UpdateWorldTransform();
-		//owner->childs[i]->GetTransformComponent()->updateWorldTransform = true;
-	}
+	SetChildsAsDirty();
 	
 	updateWorld = false;
 
@@ -101,15 +97,7 @@ void C_Transform::UpdateWorldTransform()
 
 void C_Transform::SyncWorldToLocal()
 {
-	const GameObject* owner = GetOwner();
-
-	worldTransform = (owner->parent != nullptr) ? owner->parent->GetComponent<C_Transform>()->worldTransform * localTransform : localTransform;
-
-	for (uint i = 0; i < owner->childs.size(); ++i)
-	{
-		owner->childs[i]->GetComponent<C_Transform>()->UpdateWorldTransform();
-		//owner->childs[i]->GetTransformComponent()->updateWorldTransform = true;
-	}
+	UpdateWorldTransform();
 }
 
 void C_Transform::SyncLocalToWorld()
@@ -120,11 +108,7 @@ void C_Transform::SyncLocalToWorld()
 
 	SetLocalTransform(localTransform);
 
-	for (uint i = 0; i < owner->childs.size(); ++i)
-	{
-		owner->childs[i]->GetComponent<C_Transform>()->UpdateWorldTransform();
-		//owner->childs[i]->GetTransformComponent()->updateWorldTransform = true;
-	}
+	SetChildsAsDirty();
 
 	C_Camera* cCamera = owner->GetComponent<C_Camera>();
 	if (cCamera != nullptr)
@@ -172,8 +156,7 @@ void C_Transform::SetLocalTransform(const float4x4& localTransform)
 
 	updateWorld = true;
 	
-	UpdateWorldTransform();
-
+	//UpdateWorldTransform();
 	//updateWorldTransform = true;
 }
 
@@ -186,9 +169,9 @@ void C_Transform::SetWorldTransform(const float4x4& worldTransform)
 
 void C_Transform::ImportTransform(const float3& position, const Quat& rotation, const float3& scale)
 {	
-	localPosition = position;
-	localRotation = rotation;
-	localScale = scale;
+	localPosition	= position;
+	localRotation	= rotation;
+	localScale		= scale;
 	
 	localEulerRotation = localRotation.ToEulerXYZ();
 
@@ -197,7 +180,7 @@ void C_Transform::ImportTransform(const float3& position, const Quat& rotation, 
 
 void C_Transform::ImportTransform(const Transform& transform)
 {
-	OPTICK_CATEGORY("Import Transform", Optick::Category::Animation);
+	OPTICK_CATEGORY("Import Transform", Optick::Category::GameLogic);
 	
 	localPosition	= transform.position;
 	localRotation	= transform.rotation;
@@ -206,6 +189,25 @@ void C_Transform::ImportTransform(const Transform& transform)
 	localEulerRotation = localRotation.ToEulerXYZ();
 
 	UpdateLocalTransform();
+}
+
+void C_Transform::SetChildsAsDirty()
+{
+	GameObject* owner = GetOwner();
+
+	if (owner->childs.empty())
+		return;
+
+	for (uint i = 0; i < owner->childs.size(); ++i)
+	{
+		C_Transform* childTransform = owner->childs[i]->GetComponent<C_Transform>();
+
+		if (childTransform != nullptr)
+		{
+			childTransform->updateWorld = true;
+			childTransform->SetChildsAsDirty();
+		}
+	}
 }
 
 // --- POSITION, ROTATION AND SCALE METHODS
@@ -240,6 +242,8 @@ float3 C_Transform::GetWorldPosition()
 	float3 p, s;
 	Quat rotation;
 	worldTransform.Decompose(p, rotation, s);
+
+	//GetWorldTransform().Decompose(p, rotation, s);
 
 	return p;
 }

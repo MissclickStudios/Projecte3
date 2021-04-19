@@ -34,6 +34,8 @@ public:																				// --- C_TRANSFORM METHODS ---
 	void		ImportTransform			(const float3& position, const Quat& rotation, const float3& scale);
 	void		ImportTransform			(const Transform& transform);
 
+	void		SetChildsAsDirty		();
+
 public:																				// --- GET/SET LOCAL AND WORLD POSITION, ROTATION AND SCALE
 	float3		GetLocalPosition		() const;									// Returns the position vector of the local transform.
 	Quat		GetLocalRotation		() const;									// Returns the rotation quaternion of the local transform.
