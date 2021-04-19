@@ -40,6 +40,8 @@ void Weapon::Start()
 	hand = App->scene->GetGameObjectByName("mixamorig:RightHand");
 	CreateProjectiles();
 	RefreshPerks();
+
+	SetUp();
 }
 
 void Weapon::Update()
@@ -257,7 +259,7 @@ void Weapon::FireProjectile(float2 direction)
 	projectile->object->transform->SetWorldPosition(position);
 
 	float rad = direction.AimedAngle();
-	projectile->object->transform->SetLocalRotation(float3(0, rad + DegToRad(90), 0));
+	projectile->object->transform->SetLocalRotation(float3(0, -rad, 0));
 
 	C_RigidBody* rigidBody = projectile->object->GetComponent<C_RigidBody>();
 	if (rigidBody)
@@ -267,7 +269,7 @@ void Weapon::FireProjectile(float2 direction)
 		rigidBody->SetLinearVelocity(aimDirection * ProjectileSpeed());
 	}
 
-	projectile->bulletScript->SetOnHitData(Damage(), onHitEffects);
+	projectile->bulletScript->SetOnHitData(Damage(), onHitEffects, BulletLifeTime());
 
 	//C_AudioSource* source = projectile->object->GetComponent<C_AudioSource>();
 	//if (source)

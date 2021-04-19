@@ -6,6 +6,7 @@
 #include "M_Scene.h"
 
 #include "GameObject.h"
+#include "C_Transform.h"
 #include "C_RigidBody.h"
 
 #include "C_Animator.h"
@@ -347,6 +348,8 @@ void Player::Aim()
 		aimDirection = moveDirection; // TEMPORARY
 	else
 		aimDirection = aimInput;
+
+	float rad = aimDirection.AimedAngle();
 }
 
 void Player::Dash()

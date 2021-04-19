@@ -37,6 +37,7 @@ SCRIPTS_FUNCTION Blaster* CreateBlaster()
     INSPECTOR_DRAGABLE_FLOAT(script->damage);
     INSPECTOR_DRAGABLE_FLOAT(script->projectileSpeed);
     INSPECTOR_DRAGABLE_FLOAT(script->fireRate);
+    INSPECTOR_DRAGABLE_FLOAT(script->bulletLifeTime);
     INSPECTOR_DRAGABLE_INT(script->ammo);
     INSPECTOR_DRAGABLE_INT(script->maxAmmo);
     INSPECTOR_DRAGABLE_INT(script->projectilesPerShot);
@@ -49,6 +50,7 @@ SCRIPTS_FUNCTION Blaster* CreateBlaster()
     INSPECTOR_DRAGABLE_FLOAT(script->damageModifier);
     INSPECTOR_DRAGABLE_FLOAT(script->projectileSpeedModifier);
     INSPECTOR_DRAGABLE_FLOAT(script->fireRateModifier);
+    INSPECTOR_DRAGABLE_FLOAT(script->bulletLifeTimeModifier);
     INSPECTOR_DRAGABLE_FLOAT(script->reloadTimeModifier);
     INSPECTOR_DRAGABLE_INT(script->maxAmmoModifier);
     INSPECTOR_DRAGABLE_INT(script->PPSModifier);

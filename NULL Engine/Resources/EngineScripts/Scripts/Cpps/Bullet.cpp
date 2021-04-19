@@ -10,7 +10,7 @@ Bullet::Bullet() : Object()
 {
 	baseType = ObjectType::BULLET;
 
-	autoDestructTimer.Stop();
+	lifeTimeTimer.Stop();
 }
 
 Bullet::~Bullet()
@@ -19,15 +19,15 @@ Bullet::~Bullet()
 
 void Bullet::Update()
 {
-	if (autoDestructTimer.ReadSec() >= autoDestructTime)
+	if (lifeTimeTimer.ReadSec() >= lifeTime)
 	{
-		autoDestructTimer.Stop();
+		lifeTimeTimer.Stop();
 		hit = true;
 	}
 	if (hit)
 	{
 		hit = false;
-		//shooter->ProjectileCollisionReport(index);
+		shooter->ProjectileCollisionReport(index);
 	}
 }
 
@@ -50,12 +50,13 @@ void Bullet::SetShooter(Weapon* shooter, int index)
 	this->index = index;
 }
 
-void Bullet::SetOnHitData(float damage, std::vector<Effect> effects)
+void Bullet::SetOnHitData(float damage, std::vector<Effect> effects, float lifeTime)
 {
 	onHitdamage = damage;
 	onHitEffects = effects;
 
-	autoDestructTimer.Start();
+	this->lifeTime = lifeTime;
+	lifeTimeTimer.Start();
 }
 
 SCRIPTS_FUNCTION Bullet* CreateBullet()
