@@ -977,6 +977,7 @@ GameObject* M_ResourceManager::LoadPrefab(uint _prefabId, GameObject* parent, Ga
 	if(rootObject != nullptr) //we use the transform from the root object to keep it in the same place it was in the scene
 	{
 		rootObjectLoaded->transform->SetLocalTransform(rootObject->transform->GetLocalTransform());
+		rootObjectLoaded->ForceUID(rootObject->GetUID());
 	}
 
 	return rootObjectLoaded;

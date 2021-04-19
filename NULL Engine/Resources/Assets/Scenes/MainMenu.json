@@ -38,7 +38,7 @@
                         "X": 0,
                         "Y": 0,
                         "W": 1.0926049947738647,
-                        "H": 0.56977641582489014,
+                        "H": 0.54020994901657104,
                         "IsInvisible": false
                     }
                 }
@@ -79,7 +79,7 @@
                     "Type": 21,
                     "Image": {
                         "X": 0.31000000238418579,
-                        "Y": 7.8231093825209541e-10,
+                        "Y": 0.0035000008065253496,
                         "W": 0.05000000074505806,
                         "H": 0.10000000149011612,
                         "IsHDL": false,
@@ -93,6 +93,12 @@
                         "AssetsName": "ButtonPart1.png",
                         "LibaryPath": "Library\/Textures\/1948734010.netex",
                         "LibraryFile": "1948734010.netex"
+                    },
+                    "Shader": {
+                        "AssetsPath": "Assets\/Shaders\/UIShader.shader",
+                        "AssetsName": "UIShader.shader",
+                        "LibaryPath": "Library\/Shaders\/1025410539.neshader",
+                        "LibraryFile": "1025410539.neshader"
                     }
                 }
             ]
@@ -184,7 +190,7 @@
                     "Type": 21,
                     "Image": {
                         "X": -0.25999999046325684,
-                        "Y": 7.8231093825209541e-10,
+                        "Y": 0.0035000008065253496,
                         "W": 0.05000000074505806,
                         "H": 0.10000000149011612,
                         "IsHDL": true,
@@ -198,6 +204,12 @@
                         "AssetsName": "ButtonPart1.png",
                         "LibaryPath": "Library\/Textures\/1948734010.netex",
                         "LibraryFile": "1948734010.netex"
+                    },
+                    "Shader": {
+                        "AssetsPath": "Assets\/Shaders\/UIShader.shader",
+                        "AssetsName": "UIShader.shader",
+                        "LibaryPath": "Library\/Shaders\/1025410539.neshader",
+                        "LibraryFile": "1025410539.neshader"
                     }
                 }
             ]
@@ -368,7 +380,7 @@
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": true,
+            "ShowBoundingBoxes": false,
             "Components": [
                 {
                     "Type": 1,
@@ -397,9 +409,14 @@
                     "HasInspector": true,
                     "InspectorVariables": [
                         {
-                            "Type": 5,
-                            "Name": "buttonName",
-                            "string": "New Game"
+                            "Type": 6,
+                            "Name": "newGameButton",
+                            "gameobject": 920236665
+                        },
+                        {
+                            "Type": 6,
+                            "Name": "gameManager",
+                            "gameobject": 2082473722
                         }
                     ]
                 }
@@ -407,7 +424,7 @@
         },
         {
             "UID": 1474137658,
-            "ParentUID": 1551649418,
+            "ParentUID": 583251704,
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "MainScene",
@@ -487,6 +504,12 @@
                         "AssetsName": "GameLogo2.png",
                         "LibaryPath": "Library\/Textures\/1155057581.netex",
                         "LibraryFile": "1155057581.netex"
+                    },
+                    "Shader": {
+                        "AssetsPath": "Assets\/Shaders\/UIShader.shader",
+                        "AssetsName": "UIShader.shader",
+                        "LibaryPath": "Library\/Shaders\/1025410539.neshader",
+                        "LibraryFile": "1025410539.neshader"
                     }
                 },
                 {
@@ -547,6 +570,12 @@
                         "AssetsName": "GameLogo1.png",
                         "LibaryPath": "Library\/Textures\/377039222.netex",
                         "LibraryFile": "377039222.netex"
+                    },
+                    "Shader": {
+                        "AssetsPath": "Assets\/Shaders\/UIShader.shader",
+                        "AssetsName": "UIShader.shader",
+                        "LibaryPath": "Library\/Shaders\/1025410539.neshader",
+                        "LibraryFile": "1025410539.neshader"
                     }
                 }
             ]
@@ -589,6 +618,74 @@
                     "Culling": false,
                     "OrthogonalView": false,
                     "HideFrustum": true
+                }
+            ]
+        },
+        {
+            "UID": 2082473722,
+            "ParentUID": 1474137658,
+            "PrefabID": 316805506,
+            "IsPrefab": true,
+            "Name": "GameManager",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": true,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 24,
+                    "ResourceUID": 1796064373,
+                    "AssetsPath": "Assets\/Scripts\/\/GameManager.h",
+                    "DataName": "GameManager",
+                    "HasInspector": true,
+                    "InspectorVariables": [
+                        {
+                            "Type": 7,
+                            "Name": "level1",
+                            "vectorstring": [
+                                "Level1_Room1.json",
+                                "Level1_Room2.json",
+                                "Level1_Room3.json",
+                                "Level1_Room6.json",
+                                "Level1_Room8.json",
+                                "Level1_Room9.json",
+                                "Level1_Room10.json"
+                            ]
+                        },
+                        {
+                            "Type": 7,
+                            "Name": "level2",
+                            "vectorstring": [
+                                "Level2_Room1.json",
+                                "Level2_Room3.json",
+                                "Level2_Room4.json",
+                                "Level2_Room5.json",
+                                "Level2_Room6.json",
+                                "Level2_Room7.json",
+                                "Level2_Room2.json"
+                            ]
+                        }
+                    ]
                 }
             ]
         }

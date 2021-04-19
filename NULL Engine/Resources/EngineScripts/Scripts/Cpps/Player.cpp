@@ -39,6 +39,8 @@
 
 #include "MathGeoLib/include/Geometry/Line.h"
 
+#include "CoreDllHelpers.h"
+
 #define MAX_JOYSTICK_INPUT 32767
 #define MANDO_FILE "EngineScripts/Mando.json"
 
@@ -72,7 +74,7 @@ void Player::Awake()
 	if (buffer)
 	{
 		ParsonNode config(buffer);
-	
+
 		weaponUsed = config.GetInteger("Weapon used");
 		coins = config.GetInteger("Coins");
 		strongShots = true; //config.GetBool("Strong shots");
@@ -83,14 +85,12 @@ void Player::Awake()
 
 		load = true;
 	}
-
-	RELEASE_ARRAY(buffer);
-
+	CoreCrossDllHelpers::CoreReleaseBuffer(&buffer);
+	
 	if (!gameObject->GetComponent<C_RigidBody>())
 		gameObject->CreateComponent(ComponentType::RIGIDBODY);
 
-	std::vector<Component*> components;
-	gameObject->GetAllComponents(components);
+	std::vector<Component*> components = gameObject->GetAllComponents();
 	for (auto comp = components.begin(); comp != components.end(); ++comp)
 	{
 		if ((*comp)->GetType() == ComponentType::AUDIOSOURCE)
@@ -177,7 +177,8 @@ void Player::Update()
 			if (!rigidBody || rigidBody->IsStatic())
 				rigidBody->SetIsActive(false);
 
-			App->scene->GetLevelGenerator()->InitiateLevel(1);
+			//TODO: Player death
+			//App->scene->GetLevelGenerator()->InitiateLevel(1);
 		}
 		return;
 	}

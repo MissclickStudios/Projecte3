@@ -1,3 +1,4 @@
+#include <algorithm>
 #include "Application.h"
 #include "LevelGenerator.h"
 #include "Random.h"
@@ -7,57 +8,23 @@
 #include "M_Input.h"
 #include "M_Scene.h"
 
-LevelGenerator::LevelGenerator():
-roomsToAdd (0),
-roomNum	(0),
-currentLevel(0)
+LevelGenerator::LevelGenerator() :
+	roomNum(0),
+	currentLevel(0)
 {
 
 }
 
 LevelGenerator::~LevelGenerator()
 {
-	allRooms.clear();
 	level1.clear();
 	level2.clear();
-
-}
-
-
-void LevelGenerator::GetRooms()
-{
-	App->fileSystem->GetAllFilesWithFilter(ASSETS_SCENES_PATH, allRooms, "Room", "json");
-	roomsToAdd = allRooms.size();
 }
 
 void LevelGenerator::GenerateLevel()
 {
-	float randomNum;
-	if (!allRooms.empty())
-	{
-		while (roomsToAdd > 0)
-		{
-			randomNum = Random::LCG::GetBoundedRandomUint(0,allRooms.size() - 1);
-
-			if (allRooms[randomNum].find("Level1") != std::string::npos)
-			{
-				level1.push_back(allRooms[randomNum]);
-				allRooms[randomNum].erase();
-				roomsToAdd--;
-			}
-			else if (allRooms[randomNum].find("Level2") != std::string::npos)
-			{
-				level2.push_back(allRooms[randomNum]);
-				allRooms[randomNum].erase();
-				roomsToAdd--;
-			}
-		}	
-	}
-	else
-	{
-		LOG("No rooms found to generate the level.");
-	}
-
+	std::random_shuffle(level1.begin(), level1.end());
+	std::random_shuffle(level2.begin(), level2.end());
 }
 
 void LevelGenerator::GoNextRoom()
@@ -69,10 +36,10 @@ void LevelGenerator::GoNextRoom()
 			if (roomNum < level1.size() - 1)
 			{
 				roomNum++;
-				App->scene->LoadScene(level1[roomNum].c_str());
+				App->scene->ScriptChangeScene(level1[roomNum]);
 			}
 
-			else if(roomNum == level1.size() - 1)
+			else if (roomNum == level1.size() - 1)
 			{
 				LOG("[SCENE] Level Generator: End of the Game Reached!");
 
@@ -87,9 +54,9 @@ void LevelGenerator::GoNextRoom()
 			if (roomNum < level2.size() - 1)
 			{
 				roomNum++;
-				App->scene->LoadScene(level2[roomNum].c_str());
+				App->scene->ScriptChangeScene(level2[roomNum]);
 			}
-			else if(roomNum == level2.size() - 1)
+			else if (roomNum == level2.size() - 1)
 			{
 				LOG("[SCENE] Level Generator: End of the Game Reached!");
 
@@ -108,7 +75,7 @@ void LevelGenerator::GoPreviousRoom()
 			if (roomNum > 0)
 			{
 				roomNum--;
-				App->scene->LoadScene(level1[roomNum].c_str());
+				App->scene->ScriptChangeScene(level1[roomNum]);
 			}
 			else
 			{
@@ -123,7 +90,7 @@ void LevelGenerator::GoPreviousRoom()
 			if (roomNum > 0)
 			{
 				roomNum--;
-				App->scene->LoadScene(level2[roomNum].c_str());
+				App->scene->ScriptChangeScene(level2[roomNum]);
 			}
 			else
 			{
@@ -140,7 +107,7 @@ void LevelGenerator::InitiateLevel(int level)
 	{
 		if (!level1.empty())
 		{
-			App->scene->LoadScene(level1[0].c_str());
+			App->scene->ScriptChangeScene(level1[0]);
 			roomNum = 0;
 			currentLevel = 1;
 		}
@@ -149,7 +116,7 @@ void LevelGenerator::InitiateLevel(int level)
 	{
 		if (!level2.empty())
 		{
-			App->scene->LoadScene(level2[0].c_str());
+			App->scene->ScriptChangeScene(level2[0]);
 			roomNum = 0;
 			currentLevel = 2;
 		}
@@ -160,13 +127,13 @@ void LevelGenerator::AddFixedRoom(std::string name, int level, int position)
 {
 	int newPosition = position - 1;
 	std::string roomPath = ASSETS_SCENES_PATH + name + ".json";
-	
+
 	if (App->fileSystem->Exists(roomPath.c_str()))
 	{
 		std::string tempRoom;
 		std::string tempRoom2;
-		
-		if(level == 1)
+
+		if (level == 1)
 		{
 			level1.resize(level1.size() + 1);
 
@@ -189,7 +156,7 @@ void LevelGenerator::AddFixedRoom(std::string name, int level, int position)
 						level1[i] = roomPath;
 					}
 				}
-				else if (i > newPosition&& i < level1.size())
+				else if (i > newPosition && i < level1.size())
 				{
 					tempRoom2 = level1[i];
 					level1[i] = tempRoom;
@@ -223,7 +190,7 @@ void LevelGenerator::AddFixedRoom(std::string name, int level, int position)
 						level2[i] = roomPath;
 					}
 				}
-				else if (i > newPosition&& i < level2.size())
+				else if (i > newPosition && i < level2.size())
 				{
 					tempRoom2 = level2[i];
 					level2[i] = tempRoom;
@@ -234,7 +201,7 @@ void LevelGenerator::AddFixedRoom(std::string name, int level, int position)
 			}
 		}
 	}
-	
+
 }
 
 void LevelGenerator::HandleRoomGeneration()
@@ -243,7 +210,7 @@ void LevelGenerator::HandleRoomGeneration()
 	{
 		if (App->input->GetKey(SDL_SCANCODE_KP_6) == KeyState::KEY_DOWN)
 		{
-			
+
 			GoNextRoom();
 
 			/*if(currentLevel == 1)
@@ -258,14 +225,14 @@ void LevelGenerator::HandleRoomGeneration()
 				(roomNum < level2.size() - 1) ? GoNextRoom() : LOG("[SCENE] Level Generator: End of the Game Reached!");
 <<<<<<< Updated upstream
 			}*/
-			
+
 		}
 		if (App->input->GetKey(SDL_SCANCODE_KP_4) == KeyState::KEY_DOWN)
 		{
-			if(currentLevel == 1)
+			if (currentLevel == 1)
 			{
 				(roomNum > 0) ? GoPreviousRoom() : LOG("[SCENE] Level Generator: Begin of the Level Reached!");
-				
+
 			}
 			else if (currentLevel == 2)
 			{

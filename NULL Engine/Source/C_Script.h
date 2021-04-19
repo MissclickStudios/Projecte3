@@ -19,7 +19,8 @@ struct NULL_API InspectorScriptData {
 		FLOAT3,
 		PREFAB,
 		STRING,
-		GAMEOBJECT
+		GAMEOBJECT,
+		VECTORSTRING
 		/*INT2,
 		INT3,
 		FLOAT2,
@@ -114,6 +115,8 @@ public:
 	static void InspectorPrefab(Prefab* variablePtr, const char* ptrName);
 
 	static void InspectorGameObject(GameObject** variablePtr, const char* ptrName);
+
+	static void InspectorStringVector(std::vector<std::string>* variablePtr, const char* ptrName);
 	
 	R_Script* resource = nullptr;
 private:
