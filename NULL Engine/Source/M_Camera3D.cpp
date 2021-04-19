@@ -105,6 +105,16 @@ UpdateStatus M_Camera3D::Update(float dt)
 {
 	masterCamera->GetComponent<C_Transform>()->GetWorldTransform();
 
+	/*if (masterCamera->GetComponent<C_Transform>()->updateWorld)
+	{
+		masterCamera->GetComponent<C_Camera>()->UpdateFrustumTransform();
+	}
+
+	if (currentCamera->GetOwner()->GetComponent<C_Transform>()->updateWorld)
+	{
+		currentCamera->UpdateFrustumTransform();
+	}*/
+
 	return UpdateStatus::CONTINUE;
 }
 

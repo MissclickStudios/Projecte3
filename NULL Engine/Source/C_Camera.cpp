@@ -44,21 +44,17 @@ C_Camera::~C_Camera()
 
 bool C_Camera::Update()
 {
-	bool ret = true;
-
-	return ret;
+	return true;
 }
 
 bool C_Camera::CleanUp()
 {
-	bool ret = true;
-
 	if (isCulling)
 	{
 		App->scene->SetCullingCamera(nullptr);
 	}
 
-	return ret;
+	return true;
 }
 
 bool C_Camera::SaveState(ParsonNode& root) const

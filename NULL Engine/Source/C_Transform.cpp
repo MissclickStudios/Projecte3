@@ -122,8 +122,6 @@ void C_Transform::SyncLocalToWorld()
 		if(App->gameState != GameState::PLAY)
 			c_rigidBody->TransformMovesRigidBody(false);
 	}
-
-	//syncLocalToGlobal = false;
 }
 
 float4x4 C_Transform::GetLocalTransform() const
@@ -155,9 +153,6 @@ void C_Transform::SetLocalTransform(const float4x4& localTransform)
 	localEulerRotation = localTransform.RotatePart().ToEulerXYZ();																// Use localRotation?
 
 	updateWorld = true;
-	
-	//UpdateWorldTransform();
-	//updateWorldTransform = true;
 }
 
 void C_Transform::SetWorldTransform(const float4x4& worldTransform)
