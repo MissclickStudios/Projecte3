@@ -277,7 +277,7 @@ bool E_MainMenuBar::CreateMainMenuItem()
 
 		if (ImGui::MenuItem("Directional Light"))
 		{
-			App->renderer->GenerateSceneLight(Color(1.0f, 1.0f, 1.0f, 1.0f), Color(0.6, 0.6, 0.6, 0.5), Color(0.6, 0.6, 0.6, 0.5), LightType::DIRECTIONAL);
+			App->renderer->GenerateSceneLight(Color(1.0f, 1.0f, 1.0f, 1.0f), Color(1.1, 1.1, 0.8, 1), Color(0.6, 0.6, 0.6, 0.5), LightType::DIRECTIONAL);
 		}
 
 		ImGui::Separator();

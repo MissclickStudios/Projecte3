@@ -105,9 +105,9 @@ bool C_Light::LoadState(ParsonNode& root)
 	{
 		directional->Active(true);
 		
-		directional->diffuse.Set(root.GetColor("Diffuse"));
-		directional->ambient.Set(root.GetColor("Ambient"));
-		directional->specular.Set(root.GetColor("Specular"));
+		directional->diffuse = root.GetColor("Diffuse");
+		directional->ambient = root.GetColor("Ambient");
+		directional->specular = root.GetColor("Specular");
 		directional->SetDirection(root.GetFloat3("Direction"));
 
 		this->GetOwner()->transform->SetLocalEulerRotation(directional->GetDirection());
@@ -117,9 +117,9 @@ bool C_Light::LoadState(ParsonNode& root)
 	{
 		pointLight->Active(true);
 		
-		pointLight->diffuse.Set(root.GetColor("Diffuse"));
-		pointLight->ambient.Set(root.GetColor("Ambient"));
-		pointLight->specular.Set(root.GetColor("Specular"));
+		pointLight->diffuse = root.GetColor("Diffuse");
+		pointLight->ambient = root.GetColor("Ambient");
+		pointLight->specular = root.GetColor("Specular");
 		pointLight->SetConstant(root.GetNumber("Constant"));
 		pointLight->SetLinear(root.GetNumber("Linear"));
 		pointLight->SetQuadratic(root.GetNumber("Quadratic"));

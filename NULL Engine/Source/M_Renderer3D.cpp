@@ -1517,16 +1517,16 @@ GameObject* M_Renderer3D::GenerateSceneLight(Color diffuse, Color ambient, Color
 	{
 	case LightType::DIRECTIONAL: 
 		lightComp->GetDirectionalLight()->Active(true);
-		lightComp->GetDirectionalLight()->ambient.Set(ambient);
-		lightComp->GetDirectionalLight()->diffuse.Set(diffuse);
-		lightComp->GetDirectionalLight()->specular.Set(specular);
+		lightComp->GetDirectionalLight()->ambient = ambient;
+		lightComp->GetDirectionalLight()->diffuse = diffuse;
+		lightComp->GetDirectionalLight()->specular = specular;
 		lightComp->GetDirectionalLight()->Init();
 		break;
 	case LightType::POINTLIGHT: 
 		lightComp->GetPointLight()->Active(true);
-		lightComp->GetPointLight()->ambient.Set(ambient);
-		lightComp->GetPointLight()->diffuse.Set(diffuse);
-		lightComp->GetPointLight()->specular.Set(specular);
+		lightComp->GetPointLight()->ambient = ambient;
+		lightComp->GetPointLight()->diffuse = diffuse;
+		lightComp->GetPointLight()->specular = specular;
 		lightComp->GetPointLight()->SetConstant(1.0f);
 		lightComp->GetPointLight()->SetLinear(0.09f);
 		lightComp->GetPointLight()->SetQuadratic(0.032f);
