@@ -16,10 +16,10 @@ public:
 	void Update() override;
 	//void PostUpdate()override;
 	//void CleanUp()override;
-	std::string buttonName = "Hi";
-	std::string buttonName1 = "Hi1";
-	std::string buttonName2 = "Hi2";
-	std::string buttonName3 = "Hi3";
+	std::string buttonName = "play";
+	std::string buttonName1 = "continue";
+	std::string buttonName2 = "options";
+	std::string buttonName3 = "exit";
 private:
 	C_UI_Button* playButton;
 	C_UI_Button* continueButton;

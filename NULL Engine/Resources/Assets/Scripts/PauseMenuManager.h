@@ -15,11 +15,11 @@ public:
 
 	void Update() override;
 
-	std::string buttonName = "Hi";
-	std::string buttonName1 = "Hi1";
-	std::string buttonName2 = "Hi2";
-	std::string buttonName3 = "Hi3";
-	std::string buttonName4 = "Hi4";
+	std::string buttonName = "continue";
+	std::string buttonName1 = "options";
+	std::string buttonName2 = "abandon run";
+	std::string buttonName3 = "main menu";
+	std::string buttonName4 = "exit";
 private:
 	C_UI_Button* continueButton;
 	C_UI_Button* optionsButton;
