@@ -51,9 +51,9 @@ void main()
     {
        totalPosition = vec4(position, 1.0f);
     } 
-    
+     
     gl_Position = projectionMatrix * viewMatrix * modelMatrix * totalPosition;
-   
+
     TexCoord = texCoord;
        
     objectColor = inColor;
@@ -230,6 +230,7 @@ vec4 CalculatePointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewD
 }
 
 #endif
+
 
 
 

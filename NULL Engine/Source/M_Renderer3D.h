@@ -76,7 +76,7 @@ struct MeshRenderer
 	void ApplyTextureAndMaterial	();
 	void ClearTextureAndMaterial	();
 
-	void RenderOutline(R_Mesh* rMesh);
+	void RenderOutline				(R_Mesh* rMesh);
 
 	void ApplyShader				();
 	uint32 SetDefaultShader			(C_Material* cMaterial);
@@ -85,6 +85,8 @@ struct MeshRenderer
 	float4x4*	transform;
 	C_Mesh*		cMesh;
 	C_Material*	cMaterial;
+
+	std::vector<float4x4> boneTransforms;
 };
 
 struct CuboidRenderer																							// Will render the wireframe of any given geometric form with 8 vertices.

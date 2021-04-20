@@ -1616,8 +1616,7 @@ void MeshRenderer::Render(bool outline)
 		glBindVertexArray(cMesh->GetSkinnedMesh()->VAO);
 		glDrawElements(GL_TRIANGLES, cMesh->GetSkinnedMesh()->indices.size(), GL_UNSIGNED_INT, nullptr);
 	}
-
-	if (outline) RenderOutline(rMesh);	
+	if (outline) RenderOutline(rMesh);
 
 	ClearShader();	
 
@@ -1660,6 +1659,7 @@ void MeshRenderer::RenderOutline(R_Mesh* rMesh)
 
 		if (shaderProgram != 0)
 		{
+
 			tempShader->SetUniform1f("outlineThickness", cMesh->GetOutlineThickness());
 
 			tempShader->SetUniformVec4f("outlineColor", (GLfloat*)&cMesh->GetOutlineColor());
@@ -1670,6 +1670,20 @@ void MeshRenderer::RenderOutline(R_Mesh* rMesh)
 
 			tempShader->SetUniformMatrix4("projectionMatrix", App->camera->GetCurrentCamera()->GetProjectionMatrixTransposed().ptr());
 
+			//Animations
+
+			cMesh->GetBoneTranforms(boneTransforms);
+
+			bool check = cMesh->GetSkinnedMesh() != nullptr;
+
+			tempShader->SetUniform1i("activeAnimation", (check));
+
+			if (!boneTransforms.empty())
+			{
+				tempShader->SetUniformMatrix4("finalBonesMatrices", (GLfloat*)&boneTransforms[0], boneTransforms.size());
+			}
+
+			boneTransforms.clear();
 		}
 	}
 
@@ -1906,7 +1920,6 @@ void MeshRenderer::ApplyShader()
 
 
 			//ANimations
-			std::vector<float4x4> boneTransforms;
 
 			cMesh->GetBoneTranforms(boneTransforms);
 			
@@ -1918,6 +1931,8 @@ void MeshRenderer::ApplyShader()
 			{				
 				cMaterial->GetShader()->SetUniformMatrix4("finalBonesMatrices", (GLfloat*)&boneTransforms[0], boneTransforms.size());
 			}
+
+			boneTransforms.clear();
 
 			// Light 
 			std::vector<GameObject*> dirLights;
