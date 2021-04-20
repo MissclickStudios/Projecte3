@@ -20,7 +20,7 @@ public:
 	void OnCollisionEnter(GameObject* object) override;
 
 	void SetShooter(Weapon* shooter, int index);
-	void SetOnHitData(float damage, std::vector<Effect> effects);
+	void SetOnHitData(float damage, std::vector<Effect> effects, float lifeTime);
 
 private:
 
@@ -29,8 +29,8 @@ private:
 	float onHitdamage = 0.0f;
 	std::vector<Effect> onHitEffects;
 
-	float autoDestructTime = 5.0f;
-	Timer autoDestructTimer;
+	float lifeTime = 0.0f;
+	Timer lifeTimeTimer;
 
 	bool hit = false;
 };

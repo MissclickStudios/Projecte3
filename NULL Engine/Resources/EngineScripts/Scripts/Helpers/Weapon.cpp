@@ -1,6 +1,7 @@
 #include "Weapon.h"
 
 #include "Application.h"
+#include "M_Physics.h"
 #include "M_Scene.h"
 #include "M_ResourceManager.h"
 
@@ -26,9 +27,6 @@ struct Projectile
 Weapon::Weapon() : Object()
 {
 	baseType = ObjectType::WEAPON;
-
-	fireRateTimer.Stop();
-	reloadTimer.Stop();
 }
 
 Weapon::~Weapon()
@@ -37,9 +35,8 @@ Weapon::~Weapon()
 
 void Weapon::Start()
 {
-	hand = App->scene->GetGameObjectByName("mixamorig:RightHand");
-	CreateProjectiles();
-	RefreshPerks();
+	fireRateTimer.Stop();
+	reloadTimer.Stop();
 }
 
 void Weapon::Update()
@@ -98,6 +95,27 @@ bool Weapon::Reload()
 		return true;
 	}
 	return false;
+}
+
+void Weapon::SetOwnership(EntityType type, GameObject* hand)
+{
+	this->hand = hand;
+
+	CreateProjectiles();
+	RefreshPerks();
+
+	SetUp();
+
+	if (type == EntityType::PLAYER)
+	{
+		for (uint i = 0; i < projectileNum; ++i)
+			if (!projectiles[i]->inUse)
+			{
+				C_RigidBody* rigidBody = projectiles[i]->object->GetComponent<C_RigidBody>();
+				if (rigidBody)
+					rigidBody->ChangeFilter(" bullet");
+			}
+	}
 }
 
 void Weapon::ProjectileCollisionReport(int index)
@@ -257,7 +275,7 @@ void Weapon::FireProjectile(float2 direction)
 	projectile->object->transform->SetWorldPosition(position);
 
 	float rad = direction.AimedAngle();
-	projectile->object->transform->SetLocalRotation(float3(0, rad + DegToRad(90), 0));
+	projectile->object->transform->SetLocalRotation(float3(0, -rad, 0));
 
 	C_RigidBody* rigidBody = projectile->object->GetComponent<C_RigidBody>();
 	if (rigidBody)
@@ -267,7 +285,7 @@ void Weapon::FireProjectile(float2 direction)
 		rigidBody->SetLinearVelocity(aimDirection * ProjectileSpeed());
 	}
 
-	projectile->bulletScript->SetOnHitData(Damage(), onHitEffects);
+	projectile->bulletScript->SetOnHitData(Damage(), onHitEffects, BulletLifeTime());
 
 	//C_AudioSource* source = projectile->object->GetComponent<C_AudioSource>();
 	//if (source)

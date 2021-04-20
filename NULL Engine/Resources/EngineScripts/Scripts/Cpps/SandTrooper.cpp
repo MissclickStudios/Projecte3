@@ -1,5 +1,9 @@
 #include "SandTrooper.h"
 
+#include "Application.h"
+#include "M_Scene.h"
+#include "M_ResourceManager.h"
+
 #include "GameObject.h"
 #include "C_Transform.h"
 #include "C_RigidBody.h"
@@ -46,6 +50,9 @@ SCRIPTS_FUNCTION Trooper* CreateTrooper()
 	// Attack
 	INSPECTOR_DRAGABLE_FLOAT(script->attackDistance);
 
+	//Weapons
+	INSPECTOR_PREFAB(script->blaster);
+
 	return script;
 }
 
@@ -53,8 +60,6 @@ SCRIPTS_FUNCTION Trooper* CreateTrooper()
 Trooper::Trooper() : Entity()
 {
 	type = EntityType::TROOPER;
-
-	POOPOOTIMER.Stop();
 }
 
 Trooper::~Trooper()
@@ -63,6 +68,22 @@ Trooper::~Trooper()
 
 void Trooper::SetUp()
 {
+	GameObject* hand = nullptr;
+	for (uint i = 0; i < skeleton->childs.size(); ++i)
+	{
+		std::string name = skeleton->childs[i]->GetName();
+		if (name == "Hand")
+		{
+			hand = skeleton->childs[i];
+			break;
+		}
+	}
+
+	// Create Weapons and save the Weapon script pointer
+	blasterGameObject = App->resourceManager->LoadPrefab(blaster.uid, App->scene->GetSceneRoot());
+
+	blasterWeapon = (Weapon*)GetObjectScript(blasterGameObject, ObjectType::WEAPON);
+	blasterWeapon->SetOwnership(type, hand);
 }
 
 void Trooper::Update()
@@ -74,6 +95,9 @@ void Trooper::Update()
 
 void Trooper::CleanUp()
 {
+	blasterGameObject->toDelete = true;
+	blasterGameObject = nullptr;
+	blasterWeapon = nullptr;
 }
 
 void Trooper::OnCollisionEnter(GameObject* object)
@@ -104,7 +128,8 @@ void Trooper::LookAtPlayer()
 {
 	float rad = aimDirection.AimedAngle();
 
-	// TODO: Rotate the Blurrg to face the player (waiting for the rigged mesh)
+	if (skeleton)
+		skeleton->transform->SetLocalRotation(float3(0, -rad + DegToRad(90), 0));
 }
 
 void Trooper::ManageMovement()
@@ -125,8 +150,8 @@ void Trooper::ManageMovement()
 	{
 	case TrooperState::IDLE:
 		rigidBody->SetLinearVelocity(float3::zero);
-		//if (aimState == AimState::SHOOT) // Comented till the shooting system is in place
-		//	break;
+		if (aimState == AimState::SHOOT) // Comented till the shooting system is in place
+			break;
 		if (distance > chaseDistance)
 		{
 			moveState = TrooperState::PATROL;
@@ -195,23 +220,37 @@ void Trooper::ManageAim()
 		break;
 	case AimState::SHOOT_IN:
 		currentAnimation = &shootAnimation;
-		POOPOOTIMER.Start();
 		aimState = AimState::SHOOT;
 
 	case AimState::SHOOT:
 		currentAnimation = &shootAnimation; // temporary till torso gets an independent animator
-		if (POOPOOTIMER.ReadSec() >= 0.6f)
+		switch (blasterWeapon->Shoot(aimDirection))
 		{
-			aimState = AimState::ON_GUARD;
-			POOPOOTIMER.Stop();
+		case ShootState::NO_FULLAUTO:
 			currentAnimation = nullptr;
+		aimState = AimState::ON_GUARD;
+			break;
+		case ShootState::WAINTING_FOR_NEXT:
+			break;
+		case ShootState::FIRED_PROJECTILE:
+			currentAnimation = nullptr;
+			aimState = AimState::ON_GUARD;
+			break;
+		case ShootState::RATE_FINISHED:
+			currentAnimation = nullptr;
+			aimState = AimState::ON_GUARD;
+			break;
+		case ShootState::NO_AMMO:
+			aimState = AimState::RELOAD_IN;
+			break;
 		}
 		break;
 	case AimState::RELOAD_IN:
 		aimState = AimState::RELOAD;
 
 	case AimState::RELOAD:
-		aimState = AimState::ON_GUARD;
+		if (blasterWeapon->Reload())
+			aimState = AimState::ON_GUARD;
 		break;
 	case AimState::CHANGE_IN:
 		aimState = AimState::CHANGE;

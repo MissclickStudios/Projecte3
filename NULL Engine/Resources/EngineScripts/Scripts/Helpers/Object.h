@@ -15,6 +15,7 @@ enum class ObjectType
 class Object : public Script
 {
 public:
+
 	Object() {}
 	virtual ~Object() {}
 

@@ -7,6 +7,8 @@
 #include "Perk.h"
 #include "Effect.h"
 
+#include "Entity.h"
+
 #include "MathGeoLib/include/Math/float2.h"
 
 #include <vector>
@@ -28,6 +30,7 @@ enum class ShootState
 	NO_FULLAUTO, // seems like rules specify that fullauto is not permited indoors, but wait...
 	WAINTING_FOR_NEXT,
 	FIRED_PROJECTILE,
+	RATE_FINISHED,
 	NO_AMMO
 };
 
@@ -49,6 +52,7 @@ public:
 	// Usability
 	virtual ShootState Shoot(float2 direction);
 	virtual bool Reload();
+	void SetOwnership(EntityType type, GameObject* hand);
 
 	// Bullet
 	void ProjectileCollisionReport(int index);
@@ -74,12 +78,13 @@ public:
 	float ProjectileSpeed() { return projectileSpeed * projectileSpeedModifier; }
 	float fireRate = 0.0f;
 	float FireRate() { return fireRate * fireRateModifier; }
+	float bulletLifeTime = 0.0f;
+	float BulletLifeTime() { return bulletLifeTime / bulletLifeTimeModifier; }
 	int ammo = 0;
 	int maxAmmo = 0;
 	int MaxAmmo() { return maxAmmo + maxAmmoModifier; }
 	int projectilesPerShot = 0;
 
-	GameObject* hand = nullptr;
 	// Reload
 	float reloadTime = 0.0f;
 	float ReloadTime() { return reloadTime / reloadTimeModifier; }
@@ -89,6 +94,7 @@ public:
 	float projectileSpeedModifier = DEFAULT_MODIFIER;
 	float fireRateModifier = DEFAULT_MODIFIER;
 	float reloadTimeModifier = DEFAULT_MODIFIER;
+	float bulletLifeTimeModifier = DEFAULT_MODIFIER;
 	int maxAmmoModifier = 0.0f;
 	int PPSModifier = 0.0f;
 
@@ -114,6 +120,9 @@ protected:
 
 	// Shoot
 	Timer fireRateTimer;
+
+	GameObject* hand = nullptr;
+
 	// Reload
 	Timer reloadTimer;
 

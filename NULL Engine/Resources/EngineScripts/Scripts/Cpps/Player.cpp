@@ -6,6 +6,7 @@
 #include "M_Scene.h"
 
 #include "GameObject.h"
+#include "C_Transform.h"
 #include "C_RigidBody.h"
 
 #include "C_Animator.h"
@@ -82,11 +83,6 @@ Player* CreatePlayer()
 Player::Player() : Entity()
 {
 	type = EntityType::PLAYER;
-
-	dashTimer.Stop();
-	dashCooldownTimer.Stop();
-	invencibilityTimer.Stop();
-	changeTimer.Stop();
 }
 
 Player::~Player()
@@ -95,12 +91,30 @@ Player::~Player()
 
 void Player::SetUp()
 {
+	dashTimer.Stop();
+	dashCooldownTimer.Stop();
+	invencibilityTimer.Stop();
+	changeTimer.Stop();
+
+	GameObject* hand = nullptr;
+	for (uint i = 0; i < skeleton->childs.size(); ++i)
+	{
+		std::string name = skeleton->childs[i]->GetName();
+		if (name == "Hand")
+		{
+			hand = skeleton->childs[i];
+			break;
+		}
+	}
+
 	// Create Weapons and save the Weapon script pointer
 	blasterGameObject = App->resourceManager->LoadPrefab(blaster.uid, App->scene->GetSceneRoot());
 	equipedGunGameObject = App->resourceManager->LoadPrefab(equipedGun.uid, App->scene->GetSceneRoot());
 
 	blasterWeapon = (Weapon*)GetObjectScript(blasterGameObject, ObjectType::WEAPON);
+	blasterWeapon->SetOwnership(type, hand);
 	equipedGunWeapon = (Weapon*)GetObjectScript(equipedGunGameObject, ObjectType::WEAPON);
+	equipedGunWeapon->SetOwnership(type, hand);
 
 	currentWeapon = blasterWeapon;
 }
@@ -212,15 +226,18 @@ void Player::ManageAim()
 		switch (currentWeapon->Shoot(aimDirection))
 		{
 		case ShootState::NO_FULLAUTO:
-			aimState = AimState::ON_GUARD;
 			currentAnimation = nullptr;
+			aimState = AimState::ON_GUARD;
 			break;
 		case ShootState::WAINTING_FOR_NEXT:
-			aimState = AimState::ON_GUARD;
 			break;
 		case ShootState::FIRED_PROJECTILE:
-			aimState = AimState::ON_GUARD;
 			currentAnimation = nullptr;
+			aimState = AimState::ON_GUARD;
+			break;
+		case ShootState::RATE_FINISHED:
+			currentAnimation = nullptr;
+			aimState = AimState::ON_GUARD;
 			break;
 		case ShootState::NO_AMMO:
 			aimState = AimState::RELOAD_IN;
@@ -347,6 +364,11 @@ void Player::Aim()
 		aimDirection = moveDirection; // TEMPORARY
 	else
 		aimDirection = aimInput;
+
+	float rad = aimDirection.AimedAngle();
+
+	if (skeleton)
+		skeleton->transform->SetLocalRotation(float3(0, -rad + DegToRad(90), 0));
 }
 
 void Player::Dash()

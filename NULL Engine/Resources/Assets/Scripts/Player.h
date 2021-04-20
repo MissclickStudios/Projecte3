@@ -48,7 +48,7 @@ public:
 	// Animations
 	AnimationInfo runAnimation = { "Run" };
 	AnimationInfo dashAnimation = { "Dash" };
-	AnimationInfo shootAnimation = { "Shoot" };
+	AnimationInfo shootAnimation = { "Shoot", 0.05f };
 	AnimationInfo reloadAnimation = { "Reload" };
 	AnimationInfo changeAnimation = { "Change" };
 	AnimationInfo onGuardAnimation = { "OnGuard" };
@@ -58,6 +58,9 @@ public:
 	float ChangeTime() { return changeTime / attackSpeedModifier; }
 	Prefab blaster;
 	Prefab equipedGun;
+
+	// Currency
+	int currency = 0;
 
 private:
 

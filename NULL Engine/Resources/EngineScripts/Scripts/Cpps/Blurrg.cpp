@@ -74,10 +74,6 @@ Blurrg* CreateBlurrg()
 Blurrg::Blurrg() : Entity()
 {
 	type = EntityType::BLURRG;
-	chargeTimer.Stop();
-	dashTimer.Stop();
-	dashCooldownTimer.Stop();
-	restTimer.Stop();
 }
 
 Blurrg::~Blurrg()
@@ -86,6 +82,10 @@ Blurrg::~Blurrg()
 
 void Blurrg::SetUp()
 {
+	chargeTimer.Stop();
+	dashTimer.Stop();
+	dashCooldownTimer.Stop();
+	restTimer.Stop();
 }
 
 void Blurrg::Update()
@@ -221,7 +221,8 @@ void Blurrg::LookAtPlayer()
 {
 	float rad = moveDirection.AimedAngle();
 
-	// TODO: Rotate the Blurrg to face the player (waiting for the rigged mesh)
+	if (skeleton)
+		skeleton->transform->SetLocalRotation(float3(0, -rad - DegToRad(90), 0));
 }
 
 void Blurrg::Wander()
