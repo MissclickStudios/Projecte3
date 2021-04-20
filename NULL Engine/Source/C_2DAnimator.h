@@ -23,13 +23,10 @@ public:
 	bool LoadState(ParsonNode& root) override;
 
 	//Plays the animation
-	void PlayAnimation(bool loop);
+	void PlayAnimation(bool loop, int animationNumber);
 
 	//Stops current animation
 	void StopAnimation();
-
-	//Adds a texture to animation vector
-	void AddTexture(R_Texture* tex);
 
 	//Gets the current id texture of the animation frame
 	uint GetIdFromAnimation();
@@ -42,19 +39,22 @@ public:
 	void SetAnimationPlayFromStart(bool x);
 	bool GetAnimationPlayFromStart();
 	
-	const char* GetName();
-	void ChangeName(const char* name);
+	const char* GetName(int animationNum);
+	void ChangeName(const char* name, int animationNum);
 
-	void GetAnimationSprites(const char* name);
+	void GetAnimationSprites(const char* name, int animationDestination);
 
 	static inline ComponentType GetType() { return ComponentType::ANIMATOR2D; }  
 
 private:
-	uint GetTextureIdFromVector(int index);
-
+	uint GetTextureIdFromVector(int index, int animationNum);
+	void LoopAnimation(int animation);
+	int							animationNumberPlaying;
 private:
 
 	std::vector<R_Texture*>		animation;
+	std::vector<R_Texture*>		animation1;
+	std::vector<R_Texture*>		animation2;
 	
 	int							animationCounter;
 	uint						animationStepTime;
@@ -70,6 +70,8 @@ private:
 	uint						currentFrameIdTexture;
 
 	std::string					name;
+	std::string					name1;
+	std::string					name2;
 };
 
 #endif // __C_2DANIMATOR__

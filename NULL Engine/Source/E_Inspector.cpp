@@ -1793,11 +1793,27 @@ void E_Inspector::DrawAnimator2DComponent(C_2DAnimator* cAnimator)
 			cAnimator->SetAnimationStepTime(k);
 
 		static char buffer[64];
-		strcpy_s(buffer, cAnimator->GetName());
+		strcpy_s(buffer, cAnimator->GetName(1));
 		if (ImGui::InputText("Animation Name", buffer, IM_ARRAYSIZE(buffer), ImGuiInputTextFlags_EnterReturnsTrue))
 		{
-			cAnimator->ChangeName(buffer);
-			cAnimator->GetAnimationSprites(buffer);
+			cAnimator->ChangeName(buffer,1);
+			cAnimator->GetAnimationSprites(buffer,1);
+		}
+
+		static char buffer1[64];
+		strcpy_s(buffer1, cAnimator->GetName(2));
+		if (ImGui::InputText("Aditional Animation Name", buffer1, IM_ARRAYSIZE(buffer1), ImGuiInputTextFlags_EnterReturnsTrue))
+		{
+			cAnimator->ChangeName(buffer1, 2);
+			cAnimator->GetAnimationSprites(buffer1, 2);
+		}
+
+		static char buffer2[64];
+		strcpy_s(buffer2, cAnimator->GetName(3));
+		if (ImGui::InputText("Aditional Animation Name 1", buffer2, IM_ARRAYSIZE(buffer), ImGuiInputTextFlags_EnterReturnsTrue))
+		{
+			cAnimator->ChangeName(buffer2, 3);
+			cAnimator->GetAnimationSprites(buffer2, 3);
 		}
 
 		bool animationOnLoopFromStart = cAnimator->GetAnimationPlayFromStart();

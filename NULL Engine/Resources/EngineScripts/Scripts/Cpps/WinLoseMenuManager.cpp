@@ -16,8 +16,16 @@ WinLoseMenuManager::~WinLoseMenuManager()
 
 void WinLoseMenuManager::Start()
 {
+	//backButton = (C_UI_Button*)App->scene->GetGameObjectByName(buttonName.c_str())->GetComponent<C_UI_Button>();
 }
 
 void WinLoseMenuManager::Update()
 {
+	if (backButton != nullptr)
+	{
+		if (backButton->IsPressed())
+		{
+
+		}
+	}
 }
