@@ -178,6 +178,8 @@ void Player::ManageMovement()
 			currentAnimation = &dashAnimation;
 			Dash();
 			dashTimer.Start();
+			if (rigidBody)
+				rigidBody->ChangeFilter(" player dashing");
 			moveState = PlayerState::DASH;
 
 		case PlayerState::DASH:
@@ -185,7 +187,8 @@ void Player::ManageMovement()
 			{
 				dashTimer.Stop();
 				dashCooldownTimer.Start();
-
+				if (rigidBody)
+					rigidBody->ChangeFilter(" player");
 				moveState = PlayerState::IDLE;
 			}
 			break;
