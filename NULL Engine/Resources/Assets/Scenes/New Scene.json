@@ -2359,7 +2359,7 @@
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
+            "ShowBoundingBoxes": true,
             "Components": [
                 {
                     "Type": 1,
@@ -2403,16 +2403,6 @@
                         },
                         {
                             "AnimationUID": 1548254464,
-                            "Name": "Shoot",
-                            "Start": 152,
-                            "End": 183,
-                            "Speed": 1,
-                            "Duration": 31,
-                            "DurationInSeconds": 1.0333333015441895,
-                            "Loop": true
-                        },
-                        {
-                            "AnimationUID": 1548254464,
                             "Name": "Shoot Big Gun",
                             "Start": 80,
                             "End": 93,
@@ -2423,13 +2413,13 @@
                         },
                         {
                             "AnimationUID": 1548254464,
-                            "Name": "Death",
-                            "Start": 186,
-                            "End": 317,
+                            "Name": "Shoot",
+                            "Start": 152,
+                            "End": 183,
                             "Speed": 1,
-                            "Duration": 131,
-                            "DurationInSeconds": 4.3666667938232422,
-                            "Loop": false
+                            "Duration": 31,
+                            "DurationInSeconds": 1.0333333015441895,
+                            "Loop": true
                         },
                         {
                             "AnimationUID": 1548254464,
@@ -2439,6 +2429,16 @@
                             "Speed": 1,
                             "Duration": 9,
                             "DurationInSeconds": 0.30000001192092896,
+                            "Loop": false
+                        },
+                        {
+                            "AnimationUID": 1548254464,
+                            "Name": "Death",
+                            "Start": 186,
+                            "End": 317,
+                            "Speed": 1,
+                            "Duration": 131,
+                            "DurationInSeconds": 4.3666667938232422,
                             "Loop": false
                         },
                         {
@@ -2590,7 +2590,7 @@
                         {
                             "Type": 4,
                             "Name": "equipedGun",
-                            "prefab": 1075179390
+                            "prefab": 170536259
                         }
                     ]
                 }
@@ -5166,7 +5166,7 @@
         },
         {
             "UID": 1793793900,
-            "ParentUID": 1237361883,
+            "ParentUID": 273612520,
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "MainScene",
