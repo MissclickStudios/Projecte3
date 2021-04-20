@@ -6,6 +6,7 @@
 #include "E_Toolbar.h"
 #include "Profiler.h"
 #include "M_ScriptManager.h"
+#include "FileSystemDefinitions.h"
 #include "MemoryManager.h"
 
 E_Toolbar::E_Toolbar() : EditorPanel("Toolbar")
@@ -62,7 +63,7 @@ void E_Toolbar::PlayAndStopButtons()
 			EngineApp->gameState = GameState::PLAY;
 			MC_Time::Game::Play();
 
-			EngineApp->editor->SaveSceneThroughEditor("PlayAutosave");
+			EngineApp->editor->SaveSceneThroughEditor(AUTOSAVE_FILE_NAME);
 
 			EngineApp->scriptManager->InitScripts();
 

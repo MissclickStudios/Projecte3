@@ -16,15 +16,21 @@ public:
 	void Update() override;
 	//void PostUpdate()override;
 	//void CleanUp()override;
-	GameObject* newGameButton = nullptr;
+	GameObject* playButtonObject = nullptr;
+	GameObject* continueButtonObject = nullptr;
+	GameObject* exitButtonObject = nullptr;
 	GameObject* gameManager = nullptr;
 private:
-	C_UI_Button* playButton;
+	C_UI_Button* playButton = nullptr;
+	C_UI_Button* continueButton = nullptr;
+	C_UI_Button* exitButton = nullptr;
 };
 
 SCRIPTS_FUNCTION MainMenuManager* CreateMainMenuManager() {
 	MainMenuManager* script = new MainMenuManager();
-	INSPECTOR_GAMEOBJECT(script->newGameButton);
+	INSPECTOR_GAMEOBJECT(script->playButtonObject);
+	INSPECTOR_GAMEOBJECT(script->continueButtonObject);
+	INSPECTOR_GAMEOBJECT(script->exitButtonObject);
 	INSPECTOR_GAMEOBJECT(script->gameManager);
 	return script;
 }

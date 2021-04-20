@@ -255,6 +255,9 @@ bool M_Scene::SaveScene(const char* sceneName) const
 		(*object)->SaveState(arrayNode);
 	}
 
+	if (!strcmp(sceneName,AUTOSAVE_FILE_NAME))
+		rootNode.SetString("Autosaved Sene Name", currentScene.c_str());
+
 	char* buffer		= nullptr;
 	std::string name	= (sceneName != nullptr) ? sceneName : sceneRoot->GetName();
 	std::string path	= ASSETS_SCENES_PATH + name + JSON_EXTENSION;
@@ -297,7 +300,7 @@ bool M_Scene::LoadScene(const char* path)
 
 	App->fileSystem->SplitFilePath(path, nullptr, &sceneName);
 
-	if(sceneName != "PlayAutosave")
+	if(sceneName != AUTOSAVE_FILE_NAME)
 		currentScene = sceneName;
 
 	App->camera->SetMasterCameraAsCurrentCamera();
@@ -326,6 +329,9 @@ bool M_Scene::LoadScene(const char* path)
 		ParsonArray modelsArray		= newRoot.GetArray("Models In Scene");
 		ParsonArray objectsArray	= newRoot.GetArray("Game Objects");
 		RELEASE_ARRAY(buffer);
+
+		if (sceneName == AUTOSAVE_FILE_NAME)
+			currentScene = newRoot.GetString("Autosaved Sene Name");
 
 		for (uint i = 0; i < modelsArray.size; ++i)
 		{

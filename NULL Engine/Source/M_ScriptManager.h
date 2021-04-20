@@ -41,6 +41,7 @@ public:
 protected:
 	HINSTANCE dllHandle;
 	std::vector<Script*>currentScripts;
+	void ResolveScriptHelperFunctions();
 
 	friend class C_Script;
 };

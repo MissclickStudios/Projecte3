@@ -28,6 +28,6 @@ void Gate::OnCollisionEnter(GameObject* object)
 	if (gameManager != nullptr) 
 	{
 		GameManager* gameManagerScript = (GameManager*)gameManager->GetScript("GameManager");
-		gameManagerScript->level.GoNextRoom();
+		gameManagerScript->GoNextRoom();
 	}
 }

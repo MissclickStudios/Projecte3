@@ -32,15 +32,7 @@ bool M_EngineScriptManager::Start()
 		while (MoveFileA(SCRIPTS_DLL_OUTPUT, SCRIPTS_DLL_WORKING) == FALSE) {}
 	}
 	dllHandle = LoadLibrary(SCRIPTS_DLL_WORKING);
-	if (dllHandle != nullptr)
-	{
-		StringVecPushBackString = (void(*)(void*, const std::string&))GetProcAddress(dllHandle, "StringVectorPushBackString");
-		StringVecPushBackChar = (void(*)(void*, const char*))GetProcAddress(dllHandle, "StringVectorPushBackChar");
-		StringVecEmplaceBackString = (void(*)(void*, const std::string&))GetProcAddress(dllHandle, "StringVectorEmplaceBackString");
-		StringVecEmplaceBackChar = (void(*)(void*, const char*))GetProcAddress(dllHandle, "StringVectorEmplaceBackChar");
-		StringVecReserve = (void(*)(void*, int))GetProcAddress(dllHandle, "StringVectorReserve");
-		StringVecErase = (void(*)(void*, int))GetProcAddress(dllHandle, "StringVectorErase");
-	}
+	ResolveScriptHelperFunctions();
 
 	App->resourceManager->GetAllScripts(aviableScripts);
 
@@ -209,6 +201,7 @@ void M_EngineScriptManager::HotReload()
 			if (dllHandle != nullptr) 
 			{
 				LOG("Successfully loaded new scripts dll");
+				ResolveScriptHelperFunctions();
 				if (root.GetBool("HaveScripts")) 
 				{
 					DeSerializeAllScripts(root.GetArray("CurrentScripts"));
@@ -368,7 +361,7 @@ void M_EngineScriptManager::DeSerializeAllScripts(const ParsonArray& scriptsArra
 									//std::vector<std::string>& inspectorStringVector = *(std::vector<std::string>*)(*item).ptr;
 									ParsonArray parsonStringArray = variable.GetArray("vectorstring");
 									//inspectorStringVector.reserve(parsonStringArray.size);
-									App->scriptManager->StringVecReserve((*item).ptr, parsonStringArray.size);
+									EngineApp->scriptManager->StringVecReserve((*item).ptr, parsonStringArray.size);
 									for (int j = 0; j < parsonStringArray.size; ++j)
 									{
 										//inspectorStringVector.emplace_back(parsonStringArray.GetString(i));
