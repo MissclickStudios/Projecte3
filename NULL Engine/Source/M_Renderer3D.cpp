@@ -1671,7 +1671,7 @@ void MeshRenderer::RenderOutline(R_Mesh* rMesh)
 
 			tempShader->SetUniformVec4f("outlineColor", (GLfloat*)&cMesh->GetOutlineColor());
 
-			tempShader->SetUniformMatrix4("modelMatrix", transform->Transposed().ptr());
+			tempShader->SetUniformMatrix4("modelMatrix", transform->GetWorldTransform().Transposed().ptr());
 
 			tempShader->SetUniformMatrix4("viewMatrix", App->camera->GetCurrentCamera()->GetViewMatrixTransposed().ptr());
 
