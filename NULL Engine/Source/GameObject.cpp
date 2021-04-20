@@ -694,6 +694,12 @@ void GameObject::ForceUID(const uint32& UID)
 
 void GameObject::SetName(const char* newName)
 {
+	if (isBone)
+	{
+		LOG("[WARNING] Game Object: Game Objects that are Animation Bones cannot be renamed!");
+		return;
+	}
+	
 	name = newName;
 }
 
