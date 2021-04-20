@@ -51,14 +51,16 @@ public:																									// --- GAME OBJECTS METHODS ---
 	void			SaveCurrentScene();
 	bool			SaveSceneAs(const char* sceneName = nullptr);										// To be called from editor
 	bool			NewScene();																			// Opens a new scene
+	
+	void			UpdateSceneFromRoot(GameObject* root);
+	void			RefreshSceneTransforms();
 
 	void			LoadResourceIntoScene(Resource* resource);
 
 	GameObject*		LoadPrefabIntoScene(ParsonNode* a, GameObject* parent);
 	void			LoadPrefabObject(GameObject* gameObject, ParsonNode* node);
-
+	
 	GameObject*		InstantiatePrefab(uint prefabID,GameObject* parent,float3 position,Quat rotation);
-
 
 	std::vector<GameObject*>*	GetGameObjects			();
 	

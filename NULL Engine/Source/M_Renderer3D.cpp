@@ -1569,7 +1569,7 @@ void M_Renderer3D::GenScreenBuffer()
 
 // --- RENDERER STRUCTURES METHODS ---
 // --- MESH RENDERER METHODS
-MeshRenderer::MeshRenderer(float4x4* transform, C_Mesh* cMesh,  C_Material* cMaterial) :
+MeshRenderer::MeshRenderer(C_Transform* transform, C_Mesh* cMesh,  C_Material* cMaterial) :
 transform	(transform),
 cMesh		(cMesh),
 cMaterial	(cMaterial)
@@ -1581,6 +1581,13 @@ void MeshRenderer::Render(bool outline)
 {
 	R_Mesh* rMesh = cMesh->GetMesh();
 	
+	std::string name = transform->GetOwner()->GetName();
+
+	if (strcmp(transform->GetOwner()->GetName(), "Blaster") == 0)
+	{
+		LOG("BRUH");
+	}
+
 	if (rMesh == nullptr)
 	{
 		LOG("[ERROR] Renderer 3D: Could not render Mesh! Error: R_Mesh* was nullptr.");
@@ -1906,7 +1913,7 @@ void MeshRenderer::ApplyShader()
 			
 			cMaterial->GetShader()->SetUniformVec4f("inColor", (GLfloat*)&cMaterial->GetMaterialColour());
 
-			cMaterial->GetShader()->SetUniformMatrix4("modelMatrix", transform->Transposed().ptr());
+			cMaterial->GetShader()->SetUniformMatrix4("modelMatrix", transform->GetWorldTransform().Transposed().ptr());
 
 			cMaterial->GetShader()->SetUniformMatrix4("viewMatrix", App->camera->GetCurrentCamera()->GetViewMatrixTransposed().ptr());
 

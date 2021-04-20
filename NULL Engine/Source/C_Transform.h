@@ -25,7 +25,7 @@ public:																				// --- C_TRANSFORM METHODS ---
 	void		SyncLocalToWorld		();											// Recalcuates the local transform to sync it to worldTransform.	Ex: new world --> SyncLocalToWorld();
 	
 	float4x4	GetLocalTransform		() const;									// Returns the local transform's 4x4 matrix. 
-	float4x4	GetWorldTransform		() const;									// Returns the world transform's 4x4 matrix.
+	float4x4	GetWorldTransform		();											// Returns the world transform's 4x4 matrix.
 	float4x4*	GetWorldTransformPtr	();											// Needed for renderers. The transform will be updated even if it is already in a renderer.
 
 	void		SetLocalTransform		(const float4x4& localTransform);			// Sets the local transform's 4x4 matrix with the one passed as argument.
@@ -34,16 +34,19 @@ public:																				// --- C_TRANSFORM METHODS ---
 	void		ImportTransform			(const float3& position, const Quat& rotation, const float3& scale);
 	void		ImportTransform			(const Transform& transform);
 
+	void		SetChildsAsDirty		();											// Will run along the transformations chain and set all children of this component's owner as dirty.
+	void		RefreshTransformsChain	();											// Will update the worldTransform of this component as well as those of it's owner's children (if needed).
+
 public:																				// --- GET/SET LOCAL AND WORLD POSITION, ROTATION AND SCALE
 	float3		GetLocalPosition		() const;									// Returns the position vector of the local transform.
 	Quat		GetLocalRotation		() const;									// Returns the rotation quaternion of the local transform.
 	float3		GetLocalEulerRotation	() const;									// Returns the rotation quaternion of the local transform in Euler Angles.
 	float3		GetLocalScale			() const;									// Returns the scale vector of the local transform.
 
-	float3		GetWorldPosition		() const;									// Returns the position vector of the world transform
-	Quat		GetWorldRotation		() const;									// Returns the rotation quaternion of the world transform. In Radiants.
-	float3		GetWorldEulerRotation	() const;									// Returns the rotation quaternion of the world transform in Euler Angles. In Radians.
-	float3		GetWorldScale			() const;									// Returns the scale vector of the world transform
+	float3		GetWorldPosition		();											// Returns the position vector of the world transform
+	Quat		GetWorldRotation		();											// Returns the rotation quaternion of the world transform. In Radiants.
+	float3		GetWorldEulerRotation	();											// Returns the rotation quaternion of the world transform in Euler Angles. In Radians.
+	float3		GetWorldScale			();											// Returns the scale vector of the world transform
 
 	void		SetLocalPosition		(const float3& newPosition);				// Sets localPosition to the given vector.			Ex: localPosition	= new_position;
 	void		SetLocalRotation		(const Quat& newRotation);					// Sets localRotation to the given quaternion.		Ex: localRotation	= new_rotation;
@@ -70,10 +73,6 @@ private:
 
 public:
 	bool updateWorld;																// Will be set to true if localTransform has been modified and worldTransform has been not synced to it.
-	bool syncLocal;																	// 
-	
-	bool syncLocalToGlobal;															// Will be set to true if a parameter of the localTransform has been modified and it has not been applied.
-	bool localIsDirty;																// Using Dirty flags + localTransform: Would be used to prevent the lclTrfm from being used while dirty.
 
 private:
 	float4x4	localTransform;														// Will represent the position, rotation and scale of the transform in Local Space.
@@ -84,6 +83,7 @@ private:
 	float3		localScale;															// Scale vector of the local transform.
 
 	float3		localEulerRotation;													// Rotation vector in euler angles that will be used for display purposes. In Radians
+	float3		worldEulerRotation;													// Rotation vector in euler angles that will be used for display purposes. In Radians
 };
 
 #endif // !_C_TRANSFORM_H__

@@ -131,28 +131,35 @@ UpdateStatus M_Scene::Update(float dt)
 
 	HandleCopyGO();
 
-	std::vector<MeshRenderer>		meshRenderers;
-	std::vector<CuboidRenderer>		cuboidRenderers;
-	std::vector<SkeletonRenderer>	skeletonRenderers;
-
 	// --- Sort GameObjects by Z-Buffer value
-	for (uint i = 0; i < gameObjects.size(); ++i)
-	{
-		GameObject* gameObject = gameObjects[i];																			// Creating a local var: Less optimized but more readable.
-		
-		if (gameObject->toDelete)
+	//UpdateSceneFromRoot(sceneRoot);
+	
+	for (uint i = 0; i < gameObjects.size(); ++i)														// First Pass to Delete or Update the GOs' state.
+	{	
+		if (gameObjects[i]->toDelete)
 		{
-			DeleteGameObject(gameObject, i);																				// Doing this on item = gameObjects.begin() will be problematic.
+			DeleteGameObject(gameObjects[i], i);
 			continue;
 		}
 
-		if (gameObject->IsActive())
+		if (gameObjects[i]->IsActive())
 		{
-			gameObject->Update();
+			gameObjects[i]->Update();
+		}
+	}
 
-			if (GameObjectIsInsideCullingCamera(gameObject) || gameObject == cullingCamera->GetOwner())	// Check for cullingCamera == nullptr is made at GameObjectIsInsideCullingCamera().
+	RefreshSceneTransforms();																			// Second pass to make sure that all GOs' World Transform is updated.
+
+	std::vector<MeshRenderer>		meshRenderers;
+	std::vector<CuboidRenderer>		cuboidRenderers;
+	std::vector<SkeletonRenderer>	skeletonRenderers;
+	for (uint i = 0; i < gameObjects.size(); ++i)														// Third pass to get the renderers with the fully updated GOs.
+	{
+		if (gameObjects[i]->IsActive())
+		{
+			if (GameObjectIsInsideCullingCamera(gameObjects[i]) || gameObjects[i] == cullingCamera->GetOwner())
 			{
-				gameObject->GetRenderers(meshRenderers, cuboidRenderers, skeletonRenderers);
+				gameObjects[i]->GetRenderers(meshRenderers, cuboidRenderers, skeletonRenderers);
 			}
 		}
 	}
@@ -181,13 +188,9 @@ UpdateStatus M_Scene::Update(float dt)
 
 	// --- Room Generation
 	level.HandleRoomGeneration();
-
 	//--
 	
-	
 	ShowFPS();
-
-
 
 	return UpdateStatus::CONTINUE;
 }
@@ -568,6 +571,50 @@ bool M_Scene::NewScene()
 	currentScene = "New Scene";
 
 	return true;
+}
+
+void M_Scene::UpdateSceneFromRoot(GameObject* root)
+{	
+	if (root->toDelete)
+	{
+		root->FreeChilds();
+		
+		DeleteGameObject(root);
+	}
+	else
+	{
+		if (root->IsActive())
+		{
+			root->Update();
+
+			root->GetComponent<C_Transform>()->GetWorldTransform();
+
+			if (GameObjectIsInsideCullingCamera(root) || root == cullingCamera->GetOwner())
+			{
+				std::vector<MeshRenderer>		meshRenderers;
+				std::vector<CuboidRenderer>		cuboidRenderers;
+				std::vector<SkeletonRenderer>	skeletonRenderers;
+				
+				root->GetRenderers(meshRenderers, cuboidRenderers, skeletonRenderers);
+
+				App->renderer->AddRenderersBatch(meshRenderers, cuboidRenderers, skeletonRenderers);
+
+				skeletonRenderers.clear();
+				cuboidRenderers.clear();
+				meshRenderers.clear();
+			}
+		}
+	}
+
+	for (uint i = 0; i < root->childs.size(); ++i)
+	{
+		UpdateSceneFromRoot(root->childs[i]);
+	}
+}
+
+void M_Scene::RefreshSceneTransforms()
+{
+	sceneRoot->GetComponent<C_Transform>()->RefreshTransformsChain();
 }
 
 void M_Scene::LoadResourceIntoScene(Resource* resource)

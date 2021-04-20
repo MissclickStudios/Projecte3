@@ -195,7 +195,7 @@ void C_Mesh::AnimateMesh()
 		delta = delta * rMesh->boneOffsets[bone->second];																									// Bone Transform Matrix
 		
 		boneTransforms[bone->second] = delta.Transposed();																												// -------------------------
-	}	
+	}
 }
 
 void C_Mesh::RefreshBoneMapping()

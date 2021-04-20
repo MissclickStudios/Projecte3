@@ -56,10 +56,10 @@ public:																									// --- PARENT/CHILDS METHODS
 	bool			DeleteChild							(GameObject* child);							// Deletes the given child from childs. Returns false upon not finding the child.
 	bool			HasChilds							() const;
 
-	void			GetAllChilds						(std::vector<GameObject*>& childs);						// 
-	void			GetAllChilds						(std::map<std::string, GameObject*>& childs);			// 
-	void			GetAllChilds						(std::unordered_map<std::string, GameObject*>& childs);	// 
-	GameObject*		FindChild							(const char* childName);								// 
+	void			GetAllChilds						(std::vector<GameObject*>& children);						// 
+	void			GetAllChilds						(std::map<std::string, GameObject*>& children);				// 
+	void			GetAllChilds						(std::unordered_map<std::string, GameObject*>& children);	// 
+	GameObject*		FindChild							(const char* childName);									// 
 
 	void			GetAllParents						(std::vector<GameObject*>& parents);					// Will return all the GO's parents until parent->isSceneRoot = true;
 
