@@ -9,7 +9,6 @@
 Entity::Entity() : Object()
 {
 	baseType = ObjectType::ENTITY;
-	deathTimer.Stop();
 }
 
 Entity::~Entity()
@@ -24,14 +23,24 @@ Entity::~Entity()
 
 void Entity::Start()
 {
+	deathTimer.Stop();
+
 	rigidBody = gameObject->GetComponent<C_RigidBody>();
 	if (rigidBody && rigidBody->IsStatic())
 		rigidBody = nullptr;
-
-	memset(effectCounters, 0, (uint)EffectType::EFFECTS_NUM); // Set all the counters to zero
-
 	animator = gameObject->GetComponent<C_Animator>();
 	currentAnimation = &idleAnimation;
+
+	for (uint i = 0; i < gameObject->childs.size(); ++i)
+	{
+		std::string name = gameObject->childs[i]->GetName();
+		if (name == "Skeleton")
+		{
+			skeleton = gameObject->childs[i];
+			break;
+		}
+	}
+	memset(effectCounters, 0, (uint)EffectType::EFFECTS_NUM); // Set all the counters to zero
 
 	SetUp();
 }

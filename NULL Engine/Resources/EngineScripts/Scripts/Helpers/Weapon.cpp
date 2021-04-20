@@ -1,6 +1,7 @@
 #include "Weapon.h"
 
 #include "Application.h"
+#include "M_Physics.h"
 #include "M_Scene.h"
 #include "M_ResourceManager.h"
 
@@ -26,9 +27,6 @@ struct Projectile
 Weapon::Weapon() : Object()
 {
 	baseType = ObjectType::WEAPON;
-
-	fireRateTimer.Stop();
-	reloadTimer.Stop();
 }
 
 Weapon::~Weapon()
@@ -37,11 +35,8 @@ Weapon::~Weapon()
 
 void Weapon::Start()
 {
-	hand = App->scene->GetGameObjectByName("mixamorig:RightHand");
-	CreateProjectiles();
-	RefreshPerks();
-
-	SetUp();
+	fireRateTimer.Stop();
+	reloadTimer.Stop();
 }
 
 void Weapon::Update()
@@ -100,6 +95,27 @@ bool Weapon::Reload()
 		return true;
 	}
 	return false;
+}
+
+void Weapon::SetOwnership(EntityType type, GameObject* hand)
+{
+	this->hand = hand;
+
+	CreateProjectiles();
+	RefreshPerks();
+
+	SetUp();
+
+	if (type == EntityType::PLAYER)
+	{
+		for (uint i = 0; i < projectileNum; ++i)
+			if (!projectiles[i]->inUse)
+			{
+				C_RigidBody* rigidBody = projectiles[i]->object->GetComponent<C_RigidBody>();
+				if (rigidBody)
+					rigidBody->ChangeFilter(" bullet");
+			}
+	}
 }
 
 void Weapon::ProjectileCollisionReport(int index)

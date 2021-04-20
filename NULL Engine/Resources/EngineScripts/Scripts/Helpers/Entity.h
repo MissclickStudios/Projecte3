@@ -80,6 +80,8 @@ public:
 	float deathDuration = 0.0f; // Time between the entity dies and it gets removed
 	
 	// Basic Animations
+	GameObject* skeleton = nullptr;
+
 	AnimationInfo idleAnimation = { "Idle" };
 	AnimationInfo deathAnimation = { "Death" };
 

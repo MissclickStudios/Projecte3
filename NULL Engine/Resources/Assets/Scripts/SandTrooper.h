@@ -6,6 +6,8 @@
 #include "Entity.h"
 #include "AimStates.h"
 
+#include "Blaster.h"
+
 #include "MathGeoLib/include/Math/float2.h"
 
 enum class TrooperState
@@ -54,8 +56,11 @@ public:
 	AnimationInfo changeAnimation = { "Change" };
 	AnimationInfo onGuardAnimation = { "OnGuard" };
 
+	// Weapons
+	Prefab blaster;
+
 private:
-	Timer POOPOOTIMER; // temporary, go to Player.h for more info PepeLa
+
 	void DistanceToPlayer();
 	void LookAtPlayer();
 
@@ -74,6 +79,10 @@ private:
 	float distance = 0.0f;
 	float2 moveDirection = float2::zero;
 	float2 aimDirection = float2::zero;
+
+	// Weapons
+	GameObject* blasterGameObject = nullptr;
+	Weapon* blasterWeapon = nullptr;
 };
 
 SCRIPTS_FUNCTION Trooper* CreateTrooper();
