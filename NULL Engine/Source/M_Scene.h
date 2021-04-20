@@ -52,6 +52,7 @@ public:																									// --- GAME OBJECTS METHODS ---
 	bool			SaveSceneAs(const char* sceneName = nullptr);										// To be called from editor
 	bool			NewScene();																			// Opens a new scene
 	
+	void			UpdateSceneFromRoot(GameObject* root);
 	void			RefreshSceneTransforms();
 
 	void			LoadResourceIntoScene(Resource* resource);

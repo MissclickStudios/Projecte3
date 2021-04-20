@@ -133,7 +133,7 @@ bool GameObject::Update()
 		}
 	}
 
-	UpdateBoundingBoxes();																					// Make the call in C_Transform after receiving a dirty flag?
+	//UpdateBoundingBoxes();																					// Make the call in C_Transform after receiving a dirty flag?
 
 	return ret;
 }
@@ -359,11 +359,13 @@ float3* GameObject::GetAABBVertices() const
 
 void GameObject::GetRenderers(std::vector<MeshRenderer>& meshRenderers, std::vector<CuboidRenderer>& cuboidRenderers, std::vector<SkeletonRenderer>& skeletonRenderers)
 {	
+	OPTICK_CATEGORY("Game Object: Get Renderers", Optick::Category::GameLogic);
+	
 	/*if (to_delete || (parent != nullptr && parent->to_delete))			// TMP Quickfix. Deleted GameObjects could potentially generate Renderers. Fix the issue at the root later.
 	{
 		return;
 	}*/
-	
+
 	std::vector<C_Mesh*> cMeshes;
 	GetComponents<C_Mesh>(cMeshes);
 
@@ -403,6 +405,8 @@ void GameObject::GetRenderers(std::vector<MeshRenderer>& meshRenderers, std::vec
 
 	if ((show_bounding_boxes || App->renderer->GetRenderBoundingBoxes()) && App->gameState != GameState::PLAY)
 	{
+		UpdateBoundingBoxes();																						// Make the call in C_Transform after receiving a dirty flag?
+
 		obb.GetCornerPoints(obb_vertices);
 		aabb.GetCornerPoints(aabb_vertices);
 

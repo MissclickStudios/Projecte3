@@ -16,8 +16,7 @@
 C_Transform::C_Transform(GameObject* owner) : Component(owner, ComponentType::TRANSFORM),
 localTransform	(float4x4::identity),
 worldTransform	(float4x4::identity),
-updateWorld		(false),
-syncLocal		(false)
+updateWorld		(false)
 {	
 	localTransform.Decompose(localPosition, localRotation, localScale);
 
@@ -31,12 +30,6 @@ C_Transform::~C_Transform()
 
 bool C_Transform::Update()
 {
-	/*if (updateWorld)
-		UpdateWorldTransform();
-
-	if (syncLocal)
-		SyncLocalToWorld();*/
-
 	return true;
 }
 
@@ -78,8 +71,6 @@ void C_Transform::UpdateLocalTransform()
 
 void C_Transform::UpdateWorldTransform()
 {
-	OPTICK_CATEGORY("Update World Transform", Optick::Category::GameLogic);
-	
 	GameObject* owner = GetOwner();
 
 	worldTransform = (owner->parent != nullptr) ? owner->parent->GetComponent<C_Transform>()->worldTransform * localTransform : localTransform;
@@ -102,6 +93,8 @@ void C_Transform::SyncWorldToLocal()
 
 void C_Transform::SyncLocalToWorld()
 {
+	OPTICK_CATEGORY("Sync Local To World", Optick::Category::GameLogic);
+	
 	GameObject* owner = GetOwner();
 	
 	localTransform = (owner->parent != nullptr) ? owner->parent->GetComponent<C_Transform>()->worldTransform.Inverted() * worldTransform : worldTransform;
@@ -250,23 +243,25 @@ float3 C_Transform::GetWorldPosition()
 	if (updateWorld)
 		UpdateWorldTransform();
 	
-	float3 p, s;
-	Quat rotation;
-	worldTransform.Decompose(p, rotation, s);
-
-	//GetWorldTransform().Decompose(p, rotation, s);
-
-	return p;
+	return worldTransform.TranslatePart();
 }
 
 Quat C_Transform::GetWorldRotation()
 {	
 	if (updateWorld)
 		UpdateWorldTransform();
-	
+
 	float3 p, s;
 	Quat rotation;
-	worldTransform.Decompose(p,rotation,s);
+
+	worldTransform.Decompose(p, rotation, s);
+
+	/*float3 s	= worldTransform.GetScale();																				// Faster but irrelevantly so on Release Mode.
+	float3x3 r	= worldTransform.RotatePart();
+
+	r.ScaleCol(0, 1.0f / s.x);
+	r.ScaleCol(1, 1.0f / s.y);
+	r.ScaleCol(2, 1.0f / s.z);*/
 
 	return rotation;
 }
@@ -282,6 +277,8 @@ float3 C_Transform::GetWorldEulerRotation()
 	worldTransform.Decompose(p, rotation, s);
 
 	return rotation.ToEulerXYZ() * RADTODEG;
+	
+	//return GetWorldRotation().ToEulerXYZ() * RADTODEG;																	// Faster but irrelevantly so on Release Mode.
 }
 
 float3 C_Transform::GetWorldScale()
@@ -289,12 +286,7 @@ float3 C_Transform::GetWorldScale()
 	if (updateWorld)
 		UpdateWorldTransform();
 	
-	float3 p, s;
-	Quat rotation;
-
-	worldTransform.Decompose(p, rotation, s);
-
-	return s;
+	return worldTransform.GetScale();
 }
 
 // -- SET METHODS
@@ -303,8 +295,7 @@ void C_Transform::SetLocalPosition(const float3& newPosition)
 	localPosition = newPosition;
 
 	UpdateLocalTransform();
-	//updateLocalTransform = true;																// Parameter modifications could be batched to re-calculate the local transform only once.
-}																								// However, this would allow access to the dirty local transform before it can be updated.
+}
 
 void C_Transform::SetLocalRotation(const Quat& newRotation)
 {

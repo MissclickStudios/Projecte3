@@ -161,7 +161,7 @@ UpdateStatus M_Input::PreUpdate(float dt)
 	while (SDL_PollEvent(&event))
 	{
 		//Process other modules input
-		for (std::vector<Module*>::const_iterator it = ModulesProcessInput.cbegin(); it != ModulesProcessInput.cend(); ++it)
+		for (std::vector<Module*>::const_iterator it = modulesProcessInput.cbegin(); it != modulesProcessInput.cend(); ++it)
 		{
 			if ((*it)->IsActive())
 				(*it)->ProcessInput(event);
@@ -532,5 +532,5 @@ bool M_Input::WindowSizeWasManipulated(Uint8 windowEvent) const
 
 void M_Input::AddModuleToProcessInput(Module* module)
 {
-	ModulesProcessInput.push_back(module);
+	modulesProcessInput.push_back(module);
 }

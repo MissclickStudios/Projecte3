@@ -73,10 +73,6 @@ private:
 
 public:
 	bool updateWorld;																// Will be set to true if localTransform has been modified and worldTransform has been not synced to it.
-	bool syncLocal;																	// 
-	
-	bool syncLocalToGlobal;															// Will be set to true if a parameter of the localTransform has been modified and it has not been applied.
-	bool localIsDirty;																// Using Dirty flags + localTransform: Would be used to prevent the lclTrfm from being used while dirty.
 
 private:
 	float4x4	localTransform;														// Will represent the position, rotation and scale of the transform in Local Space.
@@ -85,10 +81,6 @@ private:
 	float3		localPosition;														// Position vector of the local transform.
 	Quat		localRotation;														// Rotation quaternion of the local transform.
 	float3		localScale;															// Scale vector of the local transform.
-
-	float3		worldPosition;														// Position vector of the world transform.
-	Quat		worldRotation;														// Rotation quaternion of the world transform.
-	float3		worldScale;															// Scale vector of the world transform.
 
 	float3		localEulerRotation;													// Rotation vector in euler angles that will be used for display purposes. In Radians
 	float3		worldEulerRotation;													// Rotation vector in euler angles that will be used for display purposes. In Radians
