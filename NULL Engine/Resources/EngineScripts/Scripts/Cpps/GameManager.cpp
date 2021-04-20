@@ -248,6 +248,39 @@ void GameManager::InitiateLevel(int level)
 	}
 }
 
+void GameManager::Continue()
+{
+	if (enabled && App->fileSystem->Exists(saveFileName))
+	{
+		char* buffer = nullptr;
+		App->fileSystem->Load(saveFileName, &buffer);
+		ParsonNode jsonState(buffer);
+		//release Json File
+		CoreCrossDllHelpers::CoreReleaseBuffer(&buffer);
+		currentLevel = jsonState.GetInteger("currentLevel");
+		roomNum = jsonState.GetInteger("roomNum");
+		level1.clear();
+		level2.clear();
+		ParsonArray levelArray = jsonState.GetArray("level1");
+		level1.reserve(levelArray.size);
+		for (int i = 0; i < levelArray.size; ++i)
+		{
+			level1.emplace_back(levelArray.GetString(i));
+		}
+		ParsonArray levelArray2 = jsonState.GetArray("level2");
+		level2.reserve(levelArray2.size);
+		for (int i = 0; i < levelArray2.size; ++i)
+		{
+			level2.emplace_back(levelArray2.GetString(i));
+		}
+		//TODO:Spawn player and everything on the level
+		if (currentLevel == 1)
+			App->scene->ScriptChangeScene(level1[roomNum]);
+		else if (currentLevel == 2)
+			App->scene->ScriptChangeScene(level1[roomNum]);
+	}
+}
+
 void GameManager::AddFixedRoom(std::string name, int level, int position)
 {
 	int newPosition = position - 1;

@@ -12,6 +12,7 @@ public:
     void GenerateNewRun();
     void GoNextRoom();
     void InitiateLevel(int level);
+    void Continue();
 
 private:
     //Level Generator
