@@ -40,13 +40,6 @@ public:
 
 public:
 
-	//FT_Library  library;
-	//FT_Face     standardFace;
-	//FT_UInt		glyphIndex;
-	//FT_ULong	charcode;
-	//FT_Int32	loadFlags = FT_LOAD_DEFAULT;
-
-
 	R_Texture* buttonHoverDecor = nullptr;
 
 	std::vector<C_Canvas*> canvasList;

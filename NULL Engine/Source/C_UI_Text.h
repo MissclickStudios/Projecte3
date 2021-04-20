@@ -2,11 +2,13 @@
 #define __C_UI_TEXT_H__
 
 #include <string>
+#include "Macros.h"
 
 #include "M_UISystem.h"
 #include "OpenGL.h"
 #include "Color.h"
 #include "Component.h"
+#include <map>
 
 struct FT_FaceRec_;
 typedef FT_FaceRec_* FT_Face;
@@ -38,20 +40,19 @@ public:
 	static inline ComponentType GetType() { return ComponentType::UI_TEXT; }
 
 public:
+
 	void LoadBuffers();
-
-	//void Draw2D();
-	//void Draw2DCharacter(FT_Face id, float x, float y);
-	//void Draw3D();
-
 	void RenderText();
-
-	void GenerateTextureID();
+	void GenerateTextureID(std::string fontName);
 
 public:
+
 	Rect2D GetRect() const;
 	Color GetColor() const;
 	const char* GetText() const;
+	float GetFontSize() const;
+	uint GetHSpaceBetween() const;
+	float GetVSpaceBetween() const;
 
 	void SetText(const char* text);
 	void SetColor(Color color);
@@ -60,9 +61,10 @@ public:
 	void SetY(const float y);
 	void SetW(const float w);
 	void SetH(const float h);
-
+	void SetFontSize(const float fontSize);
+	void SetHSpaceBetween(const uint hSpaceBetween);
+	void SetVSpaceBetween(const float vSpaceBetween);
 	
-
 private:
 
 	Rect2D rect = { 0,0,0.001,0.001 };
@@ -84,13 +86,10 @@ private:
 	uint VAO;
 	uint VBO;
 
+	float fontSize = 0.001;
+	uint hSpaceBetween = 0; // extra space between letters
+	float vSpaceBetween = 15; // space between rows
+
 };
 
 #endif // !__C_UI_TEXT_H__
-
-
-
-
-
-
-
