@@ -770,6 +770,8 @@ void M_Renderer3D::RenderUIComponent(GameObject* gameObject)
 {
 	for (std::vector<GameObject*>::iterator it = gameObject->childs.begin(); it != gameObject->childs.end(); it++)
 	{
+		if (!(*it)->IsActive())
+			continue;
 
 		C_UI_Image* image = (*it)->GetComponent<C_UI_Image>();
 		if (image != nullptr)
