@@ -309,7 +309,7 @@
         },
         {
             "UID": 296213747,
-            "ParentUID": 1729838823,
+            "ParentUID": 983757219,
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "MainScene",
@@ -2968,108 +2968,6 @@
             ]
         },
         {
-            "UID": 1305491765,
-            "ParentUID": 296213747,
-            "PrefabID": 1123197396,
-            "IsPrefab": true,
-            "Name": "BlasterModel",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": true,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        -1.8851995468139648,
-                        5.4414501190185547,
-                        107.2786865234375
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        0.05000000074505806,
-                        0.05000000074505806,
-                        0.05000000074505806
-                    ]
-                }
-            ]
-        },
-        {
-            "UID": 2070380359,
-            "ParentUID": 1305491765,
-            "PrefabID": 1123197396,
-            "IsPrefab": true,
-            "Name": "BlasterMesh",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        -8.0307854659622535e-06,
-                        -30,
-                        0
-                    ],
-                    "LocalRotation": [
-                        -0.7071068286895752,
-                        0,
-                        0,
-                        0.70710670948028564
-                    ],
-                    "LocalScale": [
-                        1,
-                        1.0000001192092896,
-                        1.0000001192092896
-                    ]
-                },
-                {
-                    "Type": 2,
-                    "UID": 106224982,
-                    "Name": "Blaster.nemesh",
-                    "Path": "Library\/Meshes\/106224982.nemesh",
-                    "File": "106224982.nemesh",
-                    "ShowWireframe": false,
-                    "ShowBoundingBox": false
-                },
-                {
-                    "Type": 3,
-                    "Material": {
-                        "UID": 1703275201,
-                        "Color": [
-                            0.58823531866073608,
-                            0.58823531866073608,
-                            0.58823531866073608,
-                            1
-                        ],
-                        "Name": "Blaster.nemat",
-                        "Path": "Library\/Materials\/1703275201.nemat",
-                        "File": "1703275201.nemat"
-                    },
-                    "Texture": {
-                        "AssetsPath": "Assets\/Textures\/Weapons\/blaster.png",
-                        "AssetsName": "blaster.png",
-                        "LibaryPath": "Library\/Textures\/186960503.netex",
-                        "LibraryFile": "186960503.netex"
-                    },
-                    "Shader": {
-                        "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
-                        "AssetsName": "DefaultShader.shader",
-                        "LibaryPath": "Library\/Shaders\/1245753822.neshader",
-                        "LibraryFile": "1245753822.neshader"
-                    }
-                }
-            ]
-        },
-        {
             "UID": 1321608559,
             "ParentUID": 1338479405,
             "PrefabID": 0,
@@ -3691,6 +3589,84 @@
             ]
         },
         {
+            "UID": 1676066142,
+            "ParentUID": 296213747,
+            "PrefabID": 316805506,
+            "IsPrefab": true,
+            "Name": "Game Manager",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": true,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 24,
+                    "ResourceUID": 1796064373,
+                    "AssetsPath": "Assets\/Scripts\/\/GameManager.h",
+                    "DataName": "GameManager",
+                    "HasInspector": true,
+                    "InspectorVariables": [
+                        {
+                            "Type": 1,
+                            "Name": "enabled",
+                            "bool": true
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "mainMenuScene",
+                            "string": "MainMenu"
+                        },
+                        {
+                            "Type": 7,
+                            "Name": "level1",
+                            "vectorstring": [
+                                "Level1_Room1.json",
+                                "Level1_Room2.json",
+                                "Level1_Room3.json",
+                                "Level1_Room6.json",
+                                "Level1_Room8.json",
+                                "Level1_Room9.json",
+                                "Level1_Room10.json"
+                            ]
+                        },
+                        {
+                            "Type": 7,
+                            "Name": "level2",
+                            "vectorstring": [
+                                "Level2_Room1.json",
+                                "Level2_Room2.json",
+                                "Level2_Room3.json",
+                                "Level2_Room4.json",
+                                "Level2_Room5.json",
+                                "Level2_Room6.json",
+                                "Level2_Room7.json"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
             "UID": 1734665560,
             "ParentUID": 1325951637,
             "PrefabID": 0,
@@ -4247,84 +4223,6 @@
                         "LibaryPath": "Library\/Shaders\/1245753822.neshader",
                         "LibraryFile": "1245753822.neshader"
                     }
-                }
-            ]
-        },
-        {
-            "UID": 1676066142,
-            "ParentUID": 296213747,
-            "PrefabID": 316805506,
-            "IsPrefab": true,
-            "Name": "Game Manager",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": true,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        0,
-                        0
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {
-                    "Type": 24,
-                    "ResourceUID": 1796064373,
-                    "AssetsPath": "Assets\/Scripts\/\/GameManager.h",
-                    "DataName": "GameManager",
-                    "HasInspector": true,
-                    "InspectorVariables": [
-                        {
-                            "Type": 1,
-                            "Name": "enabled",
-                            "bool": true
-                        },
-                        {
-                            "Type": 5,
-                            "Name": "mainMenuScene",
-                            "string": "MainMenu"
-                        },
-                        {
-                            "Type": 7,
-                            "Name": "level1",
-                            "vectorstring": [
-                                "Level1_Room1.json",
-                                "Level1_Room2.json",
-                                "Level1_Room3.json",
-                                "Level1_Room6.json",
-                                "Level1_Room8.json",
-                                "Level1_Room9.json",
-                                "Level1_Room10.json"
-                            ]
-                        },
-                        {
-                            "Type": 7,
-                            "Name": "level2",
-                            "vectorstring": [
-                                "Level2_Room1.json",
-                                "Level2_Room2.json",
-                                "Level2_Room3.json",
-                                "Level2_Room4.json",
-                                "Level2_Room5.json",
-                                "Level2_Room6.json",
-                                "Level2_Room7.json"
-                            ]
-                        }
-                    ]
                 }
             ]
         }

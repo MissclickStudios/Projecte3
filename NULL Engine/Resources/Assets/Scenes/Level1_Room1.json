@@ -49,11 +49,6 @@
             "GameObjectUID": 649823649,
             "ModelResourceUID": 385458923,
             "ModelAssetsPath": "Assets\/Models\/Props\/bullet.fbx"
-        },
-        {
-            "GameObjectUID": 649823649,
-            "ModelResourceUID": 385458923,
-            "ModelAssetsPath": "Assets\/Models\/Props\/bullet.fbx"
         }
     ],
     "Game Objects": [
@@ -404,39 +399,6 @@
                         "LibaryPath": "Library\/Textures\/60971379.netex",
                         "LibraryFile": "60971379.netex"
                     }
-                }
-            ]
-        },
-        {
-            "UID": 117714491,
-            "ParentUID": 888400124,
-            "PrefabID": 1123197396,
-            "IsPrefab": true,
-            "Name": "BlasterModel",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": true,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        46.100166320800781,
-                        3.4883956909179688,
-                        68.035255432128906
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        0.05000000074505806,
-                        0.05000000074505806,
-                        0.05000000074505806
-                    ]
                 }
             ]
         },
@@ -1165,63 +1127,6 @@
             ]
         },
         {
-            "UID": 334275680,
-            "ParentUID": 649823649,
-            "PrefabID": 0,
-            "IsPrefab": false,
-            "Name": "Cylinder001",
-            "IsActive": false,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        0,
-                        0
-                    ],
-                    "LocalRotation": [
-                        -0.49999997019767761,
-                        0.49999997019767761,
-                        -0.49999997019767761,
-                        0.49999997019767761
-                    ],
-                    "LocalScale": [
-                        0.053197000175714493,
-                        0.053197000175714493,
-                        0.053197000175714493
-                    ]
-                },
-                {
-                    "Type": 2,
-                    "UID": 1894272663,
-                    "Name": "Cylinder001.nemesh",
-                    "Path": "Library\/Meshes\/1894272663.nemesh",
-                    "File": "1894272663.nemesh",
-                    "ShowWireframe": false,
-                    "ShowBoundingBox": false
-                },
-                {
-                    "Type": 3,
-                    "Material": {
-                        "UID": 2038824806,
-                        "Color": [
-                            1,
-                            0,
-                            0,
-                            1
-                        ],
-                        "Name": "Cylinder001.nemat",
-                        "Path": "Library\/Materials\/2038824806.nemat",
-                        "File": "2038824806.nemat"
-                    }
-                }
-            ]
-        },
-        {
             "UID": 354704657,
             "ParentUID": 178209032,
             "PrefabID": 0,
@@ -1667,28 +1572,10 @@
                     ]
                 },
                 {
-                    "Type": 2,
-                    "UID": 1819960244,
-                    "Name": "Blurrg001.nemesh",
-                    "Path": "Library\/Meshes\/1819960244.nemesh",
-                    "File": "1819960244.nemesh",
-                    "ShowWireframe": false,
-                    "ShowBoundingBox": false
+                    "Type": 2
                 },
                 {
                     "Type": 3,
-                    "Material": {
-                        "UID": 1622007230,
-                        "Color": [
-                            0.58823531866073608,
-                            0.58823531866073608,
-                            0.58823531866073608,
-                            1
-                        ],
-                        "Name": "Blurrg001.nemat",
-                        "Path": "Library\/Materials\/1622007230.nemat",
-                        "File": "1622007230.nemat"
-                    },
                     "Texture": {
                         "AssetsPath": "Assets\/Textures\/Enemies\/Blurrg\/Blurrg_Texture.png",
                         "AssetsName": "Blurrg_Texture.png",
@@ -1981,78 +1868,6 @@
             ]
         },
         {
-            "UID": 649823649,
-            "ParentUID": 923142133,
-            "PrefabID": 0,
-            "IsPrefab": false,
-            "Name": "Bullet0",
-            "IsActive": false,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        0,
-                        0
-                    ],
-                    "LocalRotation": [
-                        0,
-                        1,
-                        0,
-                        4.3711388286737929e-08
-                    ],
-                    "LocalScale": [
-                        0.50000005960464478,
-                        0.5,
-                        0.50000005960464478
-                    ]
-                },
-                {
-                    "Type": 8,
-                    "Is Static": false,
-                    "Filter": "NOT FOUND",
-                    "Mass": 10,
-                    "Density": 1,
-                    "Linear Damping": 0,
-                    "Angular Damping": 0,
-                    "Use Gravity": true,
-                    "Is Kinematic": true,
-                    "Freeze Position X": false,
-                    "Freeze Position Y": true,
-                    "Freeze Position Z": false,
-                    "Freeze Rotation X": true,
-                    "Freeze Rotation Y": true,
-                    "Freeze Rotation Z": true
-                },
-                {
-                    "Type": 9,
-                    "Is Trigger": true,
-                    "Show Collider": false,
-                    "Size X": 1,
-                    "Size Y": 1,
-                    "Size Z": 1,
-                    "Center X": 0,
-                    "Center Y": 0,
-                    "Center Z": 0
-                },
-                {
-                    "Type": 17,
-                    "Autodestruct": 3
-                },
-                {
-                    "Type": 14,
-                    "Playing Event": [
-                        "Mando_blaster_shot",
-                        4105130485
-                    ]
-                }
-            ]
-        },
-        {
             "UID": 744058339,
             "ParentUID": 888400124,
             "PrefabID": 0,
@@ -2199,7 +2014,7 @@
         },
         {
             "UID": 888400124,
-            "ParentUID": 598626105,
+            "ParentUID": 1041368411,
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "MainScene",
@@ -2353,39 +2168,6 @@
             ]
         },
         {
-            "UID": 923142133,
-            "ParentUID": 888400124,
-            "PrefabID": 0,
-            "IsPrefab": false,
-            "Name": "Bullets",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        0,
-                        0
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                }
-            ]
-        },
-        {
             "UID": 938839690,
             "ParentUID": 888400124,
             "PrefabID": 0,
@@ -2442,75 +2224,6 @@
                         -1,
                         -0.30000001192092896
                     ]
-                }
-            ]
-        },
-        {
-            "UID": 997500189,
-            "ParentUID": 117714491,
-            "PrefabID": 1123197396,
-            "IsPrefab": true,
-            "Name": "BlasterMesh",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        -8.0307854659622535e-06,
-                        -30,
-                        0
-                    ],
-                    "LocalRotation": [
-                        -0.7071068286895752,
-                        0,
-                        0,
-                        0.70710670948028564
-                    ],
-                    "LocalScale": [
-                        1,
-                        1.0000001192092896,
-                        1.0000001192092896
-                    ]
-                },
-                {
-                    "Type": 2,
-                    "UID": 106224982,
-                    "Name": "Blaster.nemesh",
-                    "Path": "Library\/Meshes\/106224982.nemesh",
-                    "File": "106224982.nemesh",
-                    "ShowWireframe": false,
-                    "ShowBoundingBox": false
-                },
-                {
-                    "Type": 3,
-                    "Material": {
-                        "UID": 1703275201,
-                        "Color": [
-                            0.58823531866073608,
-                            0.58823531866073608,
-                            0.58823531866073608,
-                            1
-                        ],
-                        "Name": "Blaster.nemat",
-                        "Path": "Library\/Materials\/1703275201.nemat",
-                        "File": "1703275201.nemat"
-                    },
-                    "Texture": {
-                        "AssetsPath": "Assets\/Textures\/Weapons\/blaster.png",
-                        "AssetsName": "blaster.png",
-                        "LibaryPath": "Library\/Textures\/186960503.netex",
-                        "LibraryFile": "186960503.netex"
-                    },
-                    "Shader": {
-                        "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
-                        "AssetsName": "DefaultShader.shader",
-                        "LibaryPath": "Library\/Shaders\/1245753822.neshader",
-                        "LibraryFile": "1245753822.neshader"
-                    }
                 }
             ]
         },
@@ -3860,6 +3573,84 @@
             ]
         },
         {
+            "UID": 1574754512,
+            "ParentUID": 888400124,
+            "PrefabID": 316805506,
+            "IsPrefab": true,
+            "Name": "Game Manager",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": true,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 24,
+                    "ResourceUID": 1796064373,
+                    "AssetsPath": "Assets\/Scripts\/\/GameManager.h",
+                    "DataName": "GameManager",
+                    "HasInspector": true,
+                    "InspectorVariables": [
+                        {
+                            "Type": 1,
+                            "Name": "enabled",
+                            "bool": false
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "mainMenuScene",
+                            "string": "MainMenu"
+                        },
+                        {
+                            "Type": 7,
+                            "Name": "level1",
+                            "vectorstring": [
+                                "Level1_Room1.json",
+                                "Level1_Room2.json",
+                                "Level1_Room3.json",
+                                "Level1_Room6.json",
+                                "Level1_Room8.json",
+                                "Level1_Room9.json",
+                                "Level1_Room10.json"
+                            ]
+                        },
+                        {
+                            "Type": 7,
+                            "Name": "level2",
+                            "vectorstring": [
+                                "Level2_Room1.json",
+                                "Level2_Room2.json",
+                                "Level2_Room3.json",
+                                "Level2_Room4.json",
+                                "Level2_Room5.json",
+                                "Level2_Room6.json",
+                                "Level2_Room7.json"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
             "UID": 1586427364,
             "ParentUID": 462578334,
             "PrefabID": 0,
@@ -4193,28 +3984,10 @@
                     ]
                 },
                 {
-                    "Type": 2,
-                    "UID": 1819960244,
-                    "Name": "Blurrg001.nemesh",
-                    "Path": "Library\/Meshes\/1819960244.nemesh",
-                    "File": "1819960244.nemesh",
-                    "ShowWireframe": false,
-                    "ShowBoundingBox": false
+                    "Type": 2
                 },
                 {
                     "Type": 3,
-                    "Material": {
-                        "UID": 1622007230,
-                        "Color": [
-                            0.58823531866073608,
-                            0.58823531866073608,
-                            0.58823531866073608,
-                            1
-                        ],
-                        "Name": "Blurrg001.nemat",
-                        "Path": "Library\/Materials\/1622007230.nemat",
-                        "File": "1622007230.nemat"
-                    },
                     "Texture": {
                         "AssetsPath": "Assets\/Textures\/Enemies\/Blurrg\/Blurrg_Texture.png",
                         "AssetsName": "Blurrg_Texture.png",
@@ -4488,84 +4261,6 @@
                         "LibaryPath": "Library\/Textures\/48777715.netex",
                         "LibraryFile": "48777715.netex"
                     }
-                }
-            ]
-        },
-        {
-            "UID": 1574754512,
-            "ParentUID": 888400124,
-            "PrefabID": 316805506,
-            "IsPrefab": true,
-            "Name": "Game Manager",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": true,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        0,
-                        0
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {
-                    "Type": 24,
-                    "ResourceUID": 1796064373,
-                    "AssetsPath": "Assets\/Scripts\/\/GameManager.h",
-                    "DataName": "GameManager",
-                    "HasInspector": true,
-                    "InspectorVariables": [
-                        {
-                            "Type": 1,
-                            "Name": "enabled",
-                            "bool": true
-                        },
-                        {
-                            "Type": 5,
-                            "Name": "mainMenuScene",
-                            "string": "MainMenu"
-                        },
-                        {
-                            "Type": 7,
-                            "Name": "level1",
-                            "vectorstring": [
-                                "Level1_Room1.json",
-                                "Level1_Room2.json",
-                                "Level1_Room3.json",
-                                "Level1_Room6.json",
-                                "Level1_Room8.json",
-                                "Level1_Room9.json",
-                                "Level1_Room10.json"
-                            ]
-                        },
-                        {
-                            "Type": 7,
-                            "Name": "level2",
-                            "vectorstring": [
-                                "Level2_Room1.json",
-                                "Level2_Room2.json",
-                                "Level2_Room3.json",
-                                "Level2_Room4.json",
-                                "Level2_Room5.json",
-                                "Level2_Room6.json",
-                                "Level2_Room7.json"
-                            ]
-                        }
-                    ]
                 }
             ]
         }

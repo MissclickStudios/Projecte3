@@ -35,7 +35,7 @@ void MainMenuManager::Update()
 	if (continueButton && continueButton->IsPressed() && gameManager != nullptr)
 	{
 		GameManager* gameManagerScript = (GameManager*)gameManager->GetScript("GameManager");
-		//gameManagerScript->Continue();
+		gameManagerScript->Continue();
 	}
 	if (exitButton && exitButton->IsPressed() && gameManager != nullptr)
 	{
