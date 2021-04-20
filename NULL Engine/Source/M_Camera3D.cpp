@@ -48,15 +48,10 @@ M_Camera3D::~M_Camera3D()
 // -----------------------------------------------------------------
 bool M_Camera3D::Init(ParsonNode& root)
 {
-
 	reference = root.GetFloat3("reference");
 
-	masterCamera->GetComponent<C_Transform>()->SetLocalPosition(root.GetFloat3("cameraPosition"));
-	masterCamera->GetComponent<C_Transform>()->SetLocalRotation(Quat(root.GetFloat4("cameraRotation").ptr()));
-
-	LookAt(reference);
-
-	//current_camera->UpdateFrustumTransform();
+	PointAt(root.GetFloat3("cameraPosition"), reference);
+	masterCamera->transform->SetLocalRotation(Quat(root.GetFloat4("cameraRotation").ptr()));
 
 	return true;
 }
@@ -68,6 +63,24 @@ bool M_Camera3D::Start()
 	bool ret = true;
 
 	return ret;
+}
+
+// -----------------------------------------------------------------
+UpdateStatus M_Camera3D::Update(float dt)
+{
+	masterCamera->GetComponent<C_Transform>()->GetWorldTransform();
+
+	/*if (masterCamera->GetComponent<C_Transform>()->updateWorld)											// Right now UpdateFrustumTransform() is done at C_Transform().
+	{
+		masterCamera->GetComponent<C_Camera>()->UpdateFrustumTransform();
+	}
+
+	if (currentCamera->GetOwner()->GetComponent<C_Transform>()->updateWorld)
+	{
+		currentCamera->UpdateFrustumTransform();
+	}*/
+
+	return UpdateStatus::CONTINUE;
 }
 
 // -----------------------------------------------------------------
@@ -90,6 +103,7 @@ bool M_Camera3D::LoadConfiguration(ParsonNode& configuration)
 	return ret;
 }
 
+// -----------------------------------------------------------------
 bool M_Camera3D::SaveConfiguration(ParsonNode& configuration) const
 {
 	configuration.SetFloat3("cameraPosition", masterCamera->transform->GetLocalPosition());
@@ -100,25 +114,7 @@ bool M_Camera3D::SaveConfiguration(ParsonNode& configuration) const
 	return true;
 }
 
-// -----------------------------------------------------------------
-UpdateStatus M_Camera3D::Update(float dt)
-{
-	masterCamera->GetComponent<C_Transform>()->GetWorldTransform();
-
-	/*if (masterCamera->GetComponent<C_Transform>()->updateWorld)
-	{
-		masterCamera->GetComponent<C_Camera>()->UpdateFrustumTransform();
-	}
-
-	if (currentCamera->GetOwner()->GetComponent<C_Transform>()->updateWorld)
-	{
-		currentCamera->UpdateFrustumTransform();
-	}*/
-
-	return UpdateStatus::CONTINUE;
-}
-
-// -----------------------------------------------------------------
+// --- M_CAMERA3D METHODS
 void M_Camera3D::CreateMasterCamera()
 {
 	masterCamera = new GameObject();

@@ -149,7 +149,7 @@ void C_Transform::SetLocalTransform(const float4x4& localTransform)
 }
 
 void C_Transform::SetWorldTransform(const float4x4& worldTransform)
-{
+{	
 	this->worldTransform = worldTransform;
 
 	SyncLocalToWorld();

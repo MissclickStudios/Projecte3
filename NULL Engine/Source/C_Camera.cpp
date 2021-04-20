@@ -182,14 +182,14 @@ void C_Camera::LookAt(const float3& target)
 	//float3 Y = Z.Cross(X);																							// 
 	//float3x3 look_at_matrix = float3x3(X, Y, Z);																		// ------------------------------------------------------
 
-	float3 newZ = float3(target - frustum.Pos()).Normalized();											// Constructing the new forward vector of the camera.
-	float3x3 lookAtMatrix = float3x3::LookAt(frustum.Front(), newZ, frustum.Up(), float3::unitY);				// Using the LookAt() method built in MathGeoLib to generate the mat.
+	float3 newZ = float3(target - frustum.Pos()).Normalized();															// Constructing the new forward vector of the camera.
+	float3x3 lookAtMatrix = float3x3::LookAt(frustum.Front(), newZ, frustum.Up(), float3::unitY);						// Using the LookAt() method built in MathGeoLib to generate the mat.
 
 	frustum.SetFront(lookAtMatrix.MulDir(frustum.Front()).Normalized());
 	frustum.SetUp(lookAtMatrix.MulDir(frustum.Up()).Normalized());
 
 	float4x4 worldMatrix = frustum.WorldMatrix();
-	this->GetOwner()->GetComponent<C_Transform>()->SetWorldTransform(worldMatrix);											// Setting the updated world transform.
+	this->GetOwner()->GetComponent<C_Transform>()->SetWorldTransform(worldMatrix);										// Setting the updated world transform.
 }
 
 void C_Camera::Move(const float3& velocity)
