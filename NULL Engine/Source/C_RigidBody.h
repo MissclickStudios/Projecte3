@@ -102,6 +102,7 @@ private:
 	bool freezeRotationZ = false;
 
 	std::string filter = "default";
+	bool toChangeFilter = true;
 };
 
 #endif // !__C_RIGIDBODY_H__
