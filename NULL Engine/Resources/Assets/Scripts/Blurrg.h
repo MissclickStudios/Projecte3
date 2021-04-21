@@ -41,7 +41,7 @@ public:
 	float chaseDistance = 0.0f;
 	float chaseSpeedModifier = DEFAULT_MODIFIER;
 	float ChaseSpeed() { return Speed() * chaseSpeedModifier; }
-	GameObject* player = nullptr;
+	std::string playerName = "Mando testbuild";
 
 	// Charge
 	float chargeDistance = 0.0f;
@@ -82,6 +82,8 @@ private:
 
 	float distance = 0.0f;
 	float2 moveDirection = float2::zero;
+
+	GameObject* player = nullptr;
 
 	// Charge
 	Timer chargeTimer;

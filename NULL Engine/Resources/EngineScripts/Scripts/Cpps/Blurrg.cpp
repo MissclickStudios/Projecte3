@@ -1,5 +1,8 @@
 #include "Blurrg.h"
 
+#include "Application.h"
+#include "M_Scene.h"
+
 #include "GameObject.h"
 #include "C_Transform.h"
 #include "C_RigidBody.h"
@@ -39,7 +42,7 @@ Blurrg* CreateBlurrg()
 	// Chase
 	INSPECTOR_DRAGABLE_FLOAT(script->chaseSpeedModifier);
 	INSPECTOR_DRAGABLE_FLOAT(script->chaseDistance);
-	INSPECTOR_GAMEOBJECT(script->player);
+	INSPECTOR_STRING(script->playerName);
 
 	// Charge
 	INSPECTOR_DRAGABLE_FLOAT(script->chargeDistance);
@@ -86,6 +89,8 @@ void Blurrg::SetUp()
 	dashTimer.Stop();
 	dashCooldownTimer.Stop();
 	restTimer.Stop();
+
+	player = App->scene->GetGameObjectByName(playerName.c_str());
 }
 
 void Blurrg::Update()

@@ -34,7 +34,7 @@ public:
 	void OnCollisionEnter(GameObject* object) override;
 
 	// Movement
-	GameObject* player = nullptr;
+	std::string playerName = "Mando testbuild";
 
 	// Chase
 	float chaseDistance = 0.0f;
@@ -79,6 +79,8 @@ private:
 	float distance = 0.0f;
 	float2 moveDirection = float2::zero;
 	float2 aimDirection = float2::zero;
+
+	GameObject* player = nullptr;
 
 	// Weapons
 	GameObject* blasterGameObject = nullptr;

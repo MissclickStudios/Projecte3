@@ -13,7 +13,7 @@
 Trooper* CreateTrooper()
 {
 	Trooper* script = new Trooper();
-
+	INSPECTOR_STRING(script->playerName);
 	// Entity ---
 	// Health
 	INSPECTOR_DRAGABLE_FLOAT(script->health);
@@ -37,9 +37,6 @@ Trooper* CreateTrooper()
 	INSPECTOR_DRAGABLE_FLOAT(script->deathDuration);
 
 	// Trooper ---
-	// Movement
-	INSPECTOR_GAMEOBJECT(script->player);
-
 	// Chase
 	INSPECTOR_DRAGABLE_FLOAT(script->chaseDistance);
 	INSPECTOR_DRAGABLE_FLOAT(script->chaseSpeedModifier);
@@ -68,6 +65,8 @@ Trooper::~Trooper()
 
 void Trooper::SetUp()
 {
+	player = App->scene->GetGameObjectByName(playerName.c_str());
+
 	GameObject* hand = nullptr;
 	if (skeleton)
 		for (uint i = 0; i < skeleton->childs.size(); ++i)

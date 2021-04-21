@@ -58,6 +58,8 @@ Player* CreatePlayer()
 	INSPECTOR_PREFAB(script->blaster);
 	INSPECTOR_PREFAB(script->equipedGun);
 
+	INSPECTOR_STRING(script->gameManager);
+
 	//// Animations ---
 	//// Movement
 	//INSPECTOR_STRING(script->idleAnimation.name);
@@ -215,7 +217,7 @@ void Player::ManageMovement()
 			if (deathTimer.ReadSec() >= deathDuration)
 			{
 				// DIE ALREADY !
-				GameObject* gameManagerObject = App->scene->GetGameObjectByName("Game Manager");
+				GameObject* gameManagerObject = App->scene->GetGameObjectByName(gameManager.c_str());
 				GameManager* gameManagerScript = (GameManager*)gameManagerObject->GetScript("GameManager");
 				gameManagerScript->GoNextRoom();
 			}

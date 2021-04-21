@@ -62,6 +62,8 @@ public:
 	// Currency
 	int currency = 0;
 
+	std::string gameManager = "Game Manager";
+
 private:
 
 	PlayerState moveState = PlayerState::IDLE;
