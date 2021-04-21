@@ -219,7 +219,7 @@ void Player::ManageMovement()
 				// DIE ALREADY !
 				GameObject* gameManagerObject = App->scene->GetGameObjectByName(gameManager.c_str());
 				GameManager* gameManagerScript = (GameManager*)gameManagerObject->GetScript("GameManager");
-				gameManagerScript->GoNextRoom();
+				gameManagerScript->ReturnHub();
 			}
 			break;
 		}

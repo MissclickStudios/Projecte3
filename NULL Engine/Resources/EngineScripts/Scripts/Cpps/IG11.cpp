@@ -38,7 +38,7 @@ IG11* CreateIG11()
 
 	// Trooper ---
 	// Movement
-	INSPECTOR_STRING(script->playerName);
+	INSPECTOR_GAMEOBJECT(script->player);
 
 	// Chase
 	INSPECTOR_DRAGABLE_FLOAT(script->chaseDistance);
@@ -68,8 +68,6 @@ IG11::~IG11()
 
 void IG11::SetUp()
 {
-	player = App->scene->GetGameObjectByName(playerName.c_str());
-
 	GameObject* hand = nullptr;
 	if (skeleton)
 	{
