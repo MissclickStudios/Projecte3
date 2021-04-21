@@ -16,6 +16,7 @@ public:
     void GoNextRoom();
     void InitiateLevel(int level);
     void Continue();
+    void ReturnHub();
 
 private:
     //Level Generator

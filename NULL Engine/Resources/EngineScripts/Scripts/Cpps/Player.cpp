@@ -11,6 +11,8 @@
 
 #include "C_Animator.h"
 
+#include "GameManager.h"
+
 #include "Log.h"
 
 #define MAX_INPUT 32767
@@ -213,6 +215,9 @@ void Player::ManageMovement()
 			if (deathTimer.ReadSec() >= deathDuration)
 			{
 				// DIE ALREADY !
+				GameObject* gameManagerObject = App->scene->GetGameObjectByName("Game Manager");
+				GameManager* gameManagerScript = (GameManager*)gameManagerObject->GetScript("GameManager");
+				gameManagerScript->GoNextRoom();
 			}
 			break;
 		}

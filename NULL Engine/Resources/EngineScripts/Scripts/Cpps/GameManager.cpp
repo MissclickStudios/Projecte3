@@ -293,6 +293,14 @@ void GameManager::Continue()
 	}
 }
 
+void GameManager::ReturnHub()
+{
+	currentLevel = 1;
+	roomNum = 0;
+	SaveManagerState();
+	App->scene->ScriptChangeScene(level1[0]);
+}
+
 void GameManager::AddFixedRoom(std::string name, int level, int position)
 {
 	int newPosition = position - 1;
