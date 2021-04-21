@@ -353,8 +353,8 @@
                     "Shader": {
                         "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
                         "AssetsName": "DefaultShader.shader",
-                        "LibaryPath": "Library\/Shaders\/1245753822.neshader",
-                        "LibraryFile": "1245753822.neshader"
+                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
+                        "LibraryFile": "800223282.neshader"
                     }
                 }
             ]
@@ -520,8 +520,8 @@
                     "Shader": {
                         "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
                         "AssetsName": "DefaultShader.shader",
-                        "LibaryPath": "Library\/Shaders\/1245753822.neshader",
-                        "LibraryFile": "1245753822.neshader"
+                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
+                        "LibraryFile": "800223282.neshader"
                     }
                 }
             ]
@@ -638,8 +638,8 @@
                     "Shader": {
                         "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
                         "AssetsName": "DefaultShader.shader",
-                        "LibaryPath": "Library\/Shaders\/1245753822.neshader",
-                        "LibraryFile": "1245753822.neshader"
+                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
+                        "LibraryFile": "800223282.neshader"
                     }
                 }
             ]
@@ -907,7 +907,7 @@
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
+            "ShowBoundingBoxes": true,
             "Components": [
                 {
                     "Type": 1,
@@ -952,9 +952,9 @@
                     "HasInspector": true,
                     "InspectorVariables": [
                         {
-                            "Type": 6,
-                            "Name": "gameManager",
-                            "gameobject": 0
+                            "Type": 5,
+                            "Name": "gameManagerName",
+                            "string": "Game Manager"
                         }
                     ]
                 }
@@ -1023,8 +1023,8 @@
                     "Shader": {
                         "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
                         "AssetsName": "DefaultShader.shader",
-                        "LibaryPath": "Library\/Shaders\/1245753822.neshader",
-                        "LibraryFile": "1245753822.neshader"
+                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
+                        "LibraryFile": "800223282.neshader"
                     }
                 }
             ]
@@ -1433,8 +1433,8 @@
                     "Shader": {
                         "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
                         "AssetsName": "DefaultShader.shader",
-                        "LibaryPath": "Library\/Shaders\/1245753822.neshader",
-                        "LibraryFile": "1245753822.neshader"
+                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
+                        "LibraryFile": "800223282.neshader"
                     }
                 }
             ]
@@ -1527,7 +1527,7 @@
         },
         {
             "UID": 1474137658,
-            "ParentUID": 1041368411,
+            "ParentUID": 1760068272,
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "MainScene",
@@ -1772,7 +1772,7 @@
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": true,
+            "ShowBoundingBoxes": false,
             "Components": [
                 {
                     "Type": 1,
@@ -1803,12 +1803,17 @@
                         {
                             "Type": 1,
                             "Name": "enabled",
-                            "bool": false
+                            "bool": true
                         },
                         {
                             "Type": 5,
                             "Name": "mainMenuScene",
                             "string": "MainMenu"
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "SpawnPointName",
+                            "string": "PlayerSpawn"
                         },
                         {
                             "Type": 7,
@@ -1819,8 +1824,7 @@
                                 "Level1_Room3.json",
                                 "Level1_Room6.json",
                                 "Level1_Room8.json",
-                                "Level1_Room9.json",
-                                "Level1_Room10.json"
+                                "Level1_Room9.json"
                             ]
                         },
                         {
@@ -1835,6 +1839,11 @@
                                 "Level2_Room6.json",
                                 "Level2_Room7.json"
                             ]
+                        },
+                        {
+                            "Type": 4,
+                            "Name": "playerPrefab",
+                            "prefab": 1997884416
                         }
                     ]
                 }
@@ -1878,7 +1887,8 @@
                         "Y": 0,
                         "W": 1.0926049947738647,
                         "H": 0.5787392258644104,
-                        "IsInvisible": false
+                        "IsInvisible": false,
+                        "IsInputCanvas": true
                     }
                 }
             ]
@@ -1991,8 +2001,8 @@
                     "Shader": {
                         "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
                         "AssetsName": "DefaultShader.shader",
-                        "LibaryPath": "Library\/Shaders\/1245753822.neshader",
-                        "LibraryFile": "1245753822.neshader"
+                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
+                        "LibraryFile": "800223282.neshader"
                     }
                 }
             ]
@@ -2150,8 +2160,8 @@
                     "Shader": {
                         "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
                         "AssetsName": "DefaultShader.shader",
-                        "LibaryPath": "Library\/Shaders\/1245753822.neshader",
-                        "LibraryFile": "1245753822.neshader"
+                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
+                        "LibraryFile": "800223282.neshader"
                     }
                 }
             ]
@@ -2333,6 +2343,39 @@
                     "Center X": 0,
                     "Center Y": 0,
                     "Center Z": 0
+                }
+            ]
+        },
+        {
+            "UID": 1817878075,
+            "ParentUID": 1474137658,
+            "PrefabID": 129017146,
+            "IsPrefab": true,
+            "Name": "PlayerSpawn",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": true,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -12.060975074768066,
+                        8.8001852035522461,
+                        67.696319580078125
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
                 }
             ]
         }

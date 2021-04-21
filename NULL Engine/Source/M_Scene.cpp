@@ -319,6 +319,7 @@ bool M_Scene::LoadScene(const char* path)
 	}
 
 	int modTime = App->fileSystem->GetLastModTime(path);
+	std::vector<GameObject*> prefabsToDelete;
 
 	if (buffer != nullptr)
 	{
@@ -404,6 +405,7 @@ bool M_Scene::LoadScene(const char* path)
 		}
 
 		std::map<uint, Prefab> prefabs = App->resourceManager->prefabs;
+		
 
 		// Re-Parenting
 		std::map<uint32, GameObject*>::iterator item;
@@ -425,13 +427,13 @@ bool M_Scene::LoadScene(const char* path)
 						{
 							if (prefabParent->second->prefabID == prefab->second.uid) //If parent is the same prefab then ignore object
 							{
-								RELEASE(item->second);
+								prefabsToDelete.push_back(item->second);
 								continue;
 							}
 							else //Then it's parent, so load prefab
 							{
 								App->resourceManager->LoadPrefab(prefab->second.uid, prefabParent->second, item->second);
-								RELEASE (item->second);
+								prefabsToDelete.push_back(item->second);
 								continue;
 							}
 						}
@@ -452,6 +454,12 @@ bool M_Scene::LoadScene(const char* path)
 		
 		tmp.clear();
 		App->renderer->ClearRenderers();
+	}
+
+	for (auto p = prefabsToDelete.begin(); p != prefabsToDelete.end(); ++p)
+	{
+		(*p)->CleanUp();
+		RELEASE(*p);
 	}
 
 	//Resolve script go pointers reassigning

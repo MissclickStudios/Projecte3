@@ -221,7 +221,7 @@ void M_UISystem::InitHoveredDecorations()
 
 void M_UISystem::UpdateHoveredDecorations()
 {
-	if (inputCanvas != nullptr)
+	/*if (inputCanvas != nullptr)
 	{
 		if (!isHoverDecorationAdded)
 		{
@@ -238,7 +238,7 @@ void M_UISystem::UpdateHoveredDecorations()
 			hoveredDecorationL->SetY((inputCanvas->selectedButton->GetRect().y + 0.011) * 3.5);
 			hoveredDecorationR->SetY((inputCanvas->selectedButton->GetRect().y + 0.011) * 3.5);
 		}
-	}
+	}*/
 }
 
 void M_UISystem::AddNewCanvas(C_Canvas* canvas)
