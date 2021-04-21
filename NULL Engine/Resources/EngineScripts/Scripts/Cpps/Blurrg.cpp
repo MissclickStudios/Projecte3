@@ -131,7 +131,8 @@ void Blurrg::Update()
 			break;
 		case BlurrgState::CHARGE_IN:
 			currentAnimation = &chargeAnimation;
-			rigidBody->SetLinearVelocity(float3::zero);
+			if (rigidBody)
+				rigidBody->SetLinearVelocity(float3::zero);
 			chargeTimer.Start();
 			state = BlurrgState::CHARGE;
 
@@ -158,7 +159,8 @@ void Blurrg::Update()
 			break;
 		case BlurrgState::REST_IN:
 			currentAnimation = &restAnimation;
-			rigidBody->SetLinearVelocity(float3::zero);
+			if (rigidBody)
+				rigidBody->SetLinearVelocity(float3::zero);
 			restTimer.Start();
 			state = BlurrgState::REST;
 
@@ -171,6 +173,8 @@ void Blurrg::Update()
 			break;
 		case BlurrgState::DEAD_IN:
 			currentAnimation = &deathAnimation;
+			if (rigidBody)
+				rigidBody->SetIsActive(false); // Disable the rigidbody to avoid more interactions with other entities
 			deathTimer.Start();
 			state = BlurrgState::DEAD;
 
@@ -204,6 +208,9 @@ void Blurrg::OnCollisionEnter(GameObject* object)
 
 void Blurrg::DistanceToPlayer()
 {
+	if (!player)
+		return;
+
 	float2 playerPosition, position;
 	playerPosition.x = player->transform->GetWorldPosition().x;
 	playerPosition.y = player->transform->GetWorldPosition().z;
@@ -227,13 +234,15 @@ void Blurrg::LookAtPlayer()
 
 void Blurrg::Wander()
 {
-	rigidBody->SetLinearVelocity(float3::zero);
+	if (rigidBody)
+		rigidBody->SetLinearVelocity(float3::zero);
 }
 
 void Blurrg::Chase()
 {
 	float3 direction = { moveDirection.x, 0.0f, moveDirection.y };
-	rigidBody->SetLinearVelocity(direction * ChaseSpeed());
+	if (rigidBody)
+		rigidBody->SetLinearVelocity(direction * ChaseSpeed());
 }
 
 void Blurrg::Dash()
@@ -244,5 +253,6 @@ void Blurrg::Dash()
 		decceleration = 1.0f;
 
 	float3 direction = { moveDirection.x, 0.0f, moveDirection.y };
-	rigidBody->SetLinearVelocity(direction * DashSpeed() * decceleration);
+	if (rigidBody)
+		rigidBody->SetLinearVelocity(direction * DashSpeed() * decceleration);
 }
