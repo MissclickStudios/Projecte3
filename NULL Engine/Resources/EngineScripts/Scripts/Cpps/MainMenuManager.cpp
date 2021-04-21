@@ -16,13 +16,10 @@ MainMenuManager::~MainMenuManager()
 
 void MainMenuManager::Start()
 {
-
-	/*
 	playButton = (C_UI_Button*)App->scene->GetGameObjectByName(buttonName.c_str())->GetComponent<C_UI_Button>();
 	optionsButton = (C_UI_Button*)App->scene->GetGameObjectByName(buttonName1.c_str())->GetComponent<C_UI_Button>();
 	continueButton = (C_UI_Button*)App->scene->GetGameObjectByName(buttonName2.c_str())->GetComponent<C_UI_Button>();
 	exitButton = (C_UI_Button*)App->scene->GetGameObjectByName(buttonName3.c_str())->GetComponent<C_UI_Button>();
-	*/
 }
 
 void MainMenuManager::Update()

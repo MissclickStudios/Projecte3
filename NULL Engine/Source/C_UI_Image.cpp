@@ -131,8 +131,8 @@ void C_UI_Image::Draw3D()
 
 	if (strcmp(GetOwner()->GetName(), "Hovered Decoration L") == 0 || strcmp(GetOwner()->GetName(), "Hovered Decoration R") == 0)
 		id = App->uiSystem->buttonHoverDecor->GetTextureID();
-
-	else if (GetOwner()->GetComponent<C_Material>() == nullptr && GetOwner()->GetComponent<C_2DAnimator>() == nullptr) return;
+	else
+ if (GetOwner()->GetComponent<C_Material>() == nullptr && GetOwner()->GetComponent<C_2DAnimator>() == nullptr) return;
 
 	else if (GetOwner()->GetComponent<C_2DAnimator>() != nullptr && GetOwner()->GetComponent<C_2DAnimator>()->IsAnimationPlaying())
 		id = GetOwner()->GetComponent<C_2DAnimator>()->GetIdFromAnimation();

@@ -16,13 +16,11 @@ PauseMenuManager::~PauseMenuManager()
 
 void PauseMenuManager::Start()
 {
-	/*
 	continueButton = (C_UI_Button*)App->scene->GetGameObjectByName(buttonName.c_str())->GetComponent<C_UI_Button>();
 	optionsButton = (C_UI_Button*)App->scene->GetGameObjectByName(buttonName1.c_str())->GetComponent<C_UI_Button>();
 	abandonRunButton = (C_UI_Button*)App->scene->GetGameObjectByName(buttonName2.c_str())->GetComponent<C_UI_Button>();
 	mainMenuButton = (C_UI_Button*)App->scene->GetGameObjectByName(buttonName3.c_str())->GetComponent<C_UI_Button>();
 	exitButton = (C_UI_Button*)App->scene->GetGameObjectByName(buttonName4.c_str())->GetComponent<C_UI_Button>();
-	*/
 }
 
 void PauseMenuManager::Update()

@@ -16,7 +16,7 @@ HUBShopMenuManager::~HUBShopMenuManager()
 
 void HUBShopMenuManager::Start()
 {
-	//button = (C_UI_Button*)App->scene->GetGameObjectByName(buttonName.c_str())->GetComponent<C_UI_Button>();
+	button = (C_UI_Button*)App->scene->GetGameObjectByName(buttonName.c_str())->GetComponent<C_UI_Button>();
 }
 
 void HUBShopMenuManager::Update()

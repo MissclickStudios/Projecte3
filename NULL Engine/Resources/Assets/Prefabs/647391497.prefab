@@ -1,84 +1,81 @@
 {
-    "Models In Scene": [],
-    "Game Objects": [
+    "UID": 216290538,
+    "ParentUID": 1021720924,
+    "PrefabID": 647391497,
+    "IsPrefab": true,
+    "Name": "Canvas",
+    "IsActive": true,
+    "IsStatic": false,
+    "IsSceneRoot": false,
+    "MaintainThroughScenes": false,
+    "ShowBoundingBoxes": true,
+    "Components": [
         {
-            "UID": 216290538,
-            "ParentUID": 1021720924,
-            "PrefabID": 0,
-            "IsPrefab": false,
-            "Name": "Canvas",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        0,
-                        0
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {
-                    "Type": 13,
-                    "Canvas": {
-                        "X": 0,
-                        "Y": 0,
-                        "W": 1.0926049947738647,
-                        "H": 0.5787392258644104,
-                        "IsInvisible": false,
-                        "IsInputCanvas": true
-                    }
-                },
-                {
-                    "Type": 24,
-                    "ResourceUID": 1900768331,
-                    "AssetsPath": "Assets\/Scripts\/\/MainMenuManager.h",
-                    "DataName": "MainMenuManager",
-                    "HasInspector": true,
-                    "InspectorVariables": [
-                        {
-                            "Type": 5,
-                            "Name": "buttonName",
-                            "string": "play"
-                        },
-                        {
-                            "Type": 5,
-                            "Name": "buttonName1",
-                            "string": "continue"
-                        },
-                        {
-                            "Type": 5,
-                            "Name": "buttonName2",
-                            "string": "options"
-                        },
-                        {
-                            "Type": 5,
-                            "Name": "buttonName3",
-                            "string": "exit"
-                        }
-                    ]
-                }
+            "Type": 1,
+            "LocalPosition": [
+                0,
+                0,
+                0
+            ],
+            "LocalRotation": [
+                0,
+                0,
+                0,
+                1
+            ],
+            "LocalScale": [
+                1,
+                1,
+                1
             ]
         },
         {
+            "Type": 13,
+            "Canvas": {
+                "X": 0,
+                "Y": 0,
+                "W": 1.0926049947738647,
+                "H": 0.5787392258644104,
+                "IsInvisible": false,
+                "IsInputCanvas": true
+            }
+        },
+        {
+            "Type": 24,
+            "ResourceUID": 1900768331,
+            "AssetsPath": "Assets\/Scripts\/\/MainMenuManager.h",
+            "DataName": "MainMenuManager",
+            "HasInspector": true,
+            "InspectorVariables": [
+                {
+                    "Type": 5,
+                    "Name": "buttonName",
+                    "string": "play"
+                },
+                {
+                    "Type": 5,
+                    "Name": "buttonName1",
+                    "string": "continue"
+                },
+                {
+                    "Type": 5,
+                    "Name": "buttonName2",
+                    "string": "options"
+                },
+                {
+                    "Type": 5,
+                    "Name": "buttonName3",
+                    "string": "exit"
+                }
+            ]
+        }
+    ],
+    "Children": [
+        {
             "UID": 821348306,
             "ParentUID": 216290538,
-            "PrefabID": 0,
-            "IsPrefab": false,
+            "PrefabID": 647391497,
+            "IsPrefab": true,
             "Name": "options",
             "IsActive": true,
             "IsStatic": false,
@@ -124,13 +121,14 @@
                         "LibraryFile": "1773975367.netex"
                     }
                 }
-            ]
+            ],
+            "Children": []
         },
         {
             "UID": 906643238,
             "ParentUID": 216290538,
-            "PrefabID": 0,
-            "IsPrefab": false,
+            "PrefabID": 647391497,
+            "IsPrefab": true,
             "Name": "Hovered Decoration L",
             "IsActive": true,
             "IsStatic": false,
@@ -183,87 +181,14 @@
                         "LibraryFile": "1025410539.neshader"
                     }
                 }
-            ]
-        },
-        {
-            "UID": 1011274403,
-            "ParentUID": 262512726,
-            "PrefabID": 0,
-            "IsPrefab": false,
-            "Name": "MainScene",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": true,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        0,
-                        0
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                }
-            ]
-        },
-        {
-            "UID": 1021720924,
-            "ParentUID": 1011274403,
-            "PrefabID": 0,
-            "IsPrefab": false,
-            "Name": "Camera",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": true,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        0,
-                        0
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {
-                    "Type": 5,
-                    "MinFOV": 1,
-                    "MaxFOV": 120,
-                    "Culling": false,
-                    "OrthogonalView": false,
-                    "HideFrustum": true
-                }
-            ]
+            ],
+            "Children": []
         },
         {
             "UID": 1022612397,
             "ParentUID": 216290538,
-            "PrefabID": 0,
-            "IsPrefab": false,
+            "PrefabID": 647391497,
+            "IsPrefab": true,
             "Name": "play",
             "IsActive": true,
             "IsStatic": false,
@@ -309,13 +234,14 @@
                         "LibraryFile": "1065639556.netex"
                     }
                 }
-            ]
+            ],
+            "Children": []
         },
         {
             "UID": 1274302584,
             "ParentUID": 216290538,
-            "PrefabID": 0,
-            "IsPrefab": false,
+            "PrefabID": 647391497,
+            "IsPrefab": true,
             "Name": "continue",
             "IsActive": true,
             "IsStatic": false,
@@ -361,13 +287,14 @@
                         "LibraryFile": "1043491886.netex"
                     }
                 }
-            ]
+            ],
+            "Children": []
         },
         {
             "UID": 1549200412,
             "ParentUID": 216290538,
-            "PrefabID": 0,
-            "IsPrefab": false,
+            "PrefabID": 647391497,
+            "IsPrefab": true,
             "Name": "Hovered Decoration R",
             "IsActive": true,
             "IsStatic": false,
@@ -420,13 +347,14 @@
                         "LibraryFile": "1025410539.neshader"
                     }
                 }
-            ]
+            ],
+            "Children": []
         },
         {
             "UID": 1701145829,
             "ParentUID": 216290538,
-            "PrefabID": 0,
-            "IsPrefab": false,
+            "PrefabID": 647391497,
+            "IsPrefab": true,
             "Name": "exit",
             "IsActive": true,
             "IsStatic": false,
@@ -472,7 +400,8 @@
                         "LibraryFile": "1724300843.netex"
                     }
                 }
-            ]
+            ],
+            "Children": []
         }
     ]
 } 

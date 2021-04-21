@@ -11,7 +11,7 @@
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
+            "ShowBoundingBoxes": true,
             "Components": [
                 {
                     "Type": 1,
@@ -187,7 +187,7 @@
         },
         {
             "UID": 1011274403,
-            "ParentUID": 262512726,
+            "ParentUID": 1125619091,
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "MainScene",
@@ -215,47 +215,6 @@
                         1,
                         1
                     ]
-                }
-            ]
-        },
-        {
-            "UID": 1021720924,
-            "ParentUID": 1011274403,
-            "PrefabID": 0,
-            "IsPrefab": false,
-            "Name": "Camera",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": true,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        0,
-                        0
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {
-                    "Type": 5,
-                    "MinFOV": 1,
-                    "MaxFOV": 120,
-                    "Culling": false,
-                    "OrthogonalView": false,
-                    "HideFrustum": true
                 }
             ]
         },
@@ -471,6 +430,47 @@
                         "LibaryPath": "Library\/Textures\/1724300843.netex",
                         "LibraryFile": "1724300843.netex"
                     }
+                }
+            ]
+        },
+        {
+            "UID": 1021720924,
+            "ParentUID": 1011274403,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Camera",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 5,
+                    "MinFOV": 1,
+                    "MaxFOV": 120,
+                    "Culling": false,
+                    "OrthogonalView": false,
+                    "HideFrustum": true
                 }
             ]
         }
