@@ -76,6 +76,16 @@ bool C_ParticleSystem::Update()
 		}
 	}
 
+	for (int i = 0; i < resource->emitters.size(); ++i)
+	{
+		if (resource->emitters[i].toDelete == true)
+		{
+			resource->emitters[i].CleanUp();
+			resource->emitters.erase(resource->emitters.begin()+i);
+			RefreshEmitterInstances();
+		}
+	}
+
 	if (stopAndDeleteCheck == true)
 	{
 		InternalStopAndDelete();

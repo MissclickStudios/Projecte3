@@ -99,9 +99,11 @@ void Emitter::SetAsDefault()
 {
 	AddModuleFromType(ParticleModule::Type::EMITTER_BASE);
 	AddModuleFromType(ParticleModule::Type::EMITTER_SPAWN);
+	AddModuleFromType(ParticleModule::Type::EMITTER_AREA);
 	AddModuleFromType(ParticleModule::Type::PARTICLE_LIFETIME);
 	AddModuleFromType(ParticleModule::Type::PARTICLE_COLOR);
 	AddModuleFromType(ParticleModule::Type::PARTICLE_MOVEMENT);
+	AddModuleFromType(ParticleModule::Type::PARTICLE_SIZE);
 	AddModuleFromType(ParticleModule::Type::PARTICLE_BILLBOARDING);
 }
 
@@ -124,9 +126,9 @@ bool Emitter::AddModuleFromType(ParticleModule::Type type)
 		case (ParticleModule::Type::EMITTER_SPAWN):
 			modules.push_back(new EmitterSpawn);
 			break;
-		//case(ParticleModule::Type::ParticlePosition):
-		//	modules.push_back(new ParticlePosition);
-		//	break;
+		case (ParticleModule::Type::EMITTER_AREA):
+			modules.push_back(new EmitterArea);
+			break;
 		case(ParticleModule::Type::PARTICLE_COLOR):
 			modules.push_back(new ParticleColor);
 			break;	
@@ -135,6 +137,9 @@ bool Emitter::AddModuleFromType(ParticleModule::Type type)
 			break;
 		case(ParticleModule::Type::PARTICLE_MOVEMENT):
 			modules.push_back(new ParticleMovement);
+			break;
+		case(ParticleModule::Type::PARTICLE_SIZE):
+			modules.push_back(new ParticleSize);
 			break;
 		case(ParticleModule::Type::PARTICLE_BILLBOARDING):
 			modules.push_back(new ParticleBillboarding);

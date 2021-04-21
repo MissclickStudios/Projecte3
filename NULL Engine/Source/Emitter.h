@@ -39,6 +39,8 @@ public:
 	R_Texture* emitterTexture = nullptr;
 
 	int maxParticleCount = 10;
+
+	bool toDelete = false;
 };
 
 #endif // !__EMITTER_H__
