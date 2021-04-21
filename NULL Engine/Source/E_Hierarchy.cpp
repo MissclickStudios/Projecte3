@@ -65,11 +65,11 @@ void E_Hierarchy::ProcessGameObject(GameObject* gameObject)
 	
 	if (!gameObject->IsActive())														// If the given game object is not active, the text of the tree node will be displayed in GREY.
 	{
-		/*if(gameObject->isPrefab)
-			color = { 0.2f, 0.2f, 1.0f, 1.0f };
-		else*/
 		color = { 0.5f, 0.5f, 0.5f, 1.0f };
 	}
+
+	if (gameObject->isPrefab)
+		color = { 0.6f, 0.6f, 1.0f, 1.0f };
 
 	ImGui::PushStyleColor(ImGuiCol_Text, color);
 	// --------------------------------------------

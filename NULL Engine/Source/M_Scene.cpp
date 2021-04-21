@@ -435,10 +435,14 @@ bool M_Scene::LoadScene(const char* path)
 						if (prefabParent != tmp.end())
 						{
 							if (prefabParent->second->prefabID == prefab->second.uid) //If parent is the same prefab then ignore object
+							{
+								RELEASE(item->second);
 								continue;
+							}
 							else //Then it's parent, so load prefab
 							{
 								App->resourceManager->LoadPrefab(prefab->second.uid, prefabParent->second, item->second);
+								RELEASE (item->second);
 								continue;
 							}
 						}
