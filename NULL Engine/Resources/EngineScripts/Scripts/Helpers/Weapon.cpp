@@ -108,20 +108,33 @@ void Weapon::SetOwnership(EntityType type, GameObject* hand)
 
 	if (type == EntityType::PLAYER)
 	{
+		if (!projectiles)
+			return;
 		for (uint i = 0; i < projectileNum; ++i)
+		{
+			if (!projectiles[i])
+				continue;
 			if (!projectiles[i]->inUse)
 			{
 				C_RigidBody* rigidBody = projectiles[i]->object->GetComponent<C_RigidBody>();
 				if (rigidBody)
 					rigidBody->ChangeFilter(" bullet");
 			}
+		}
 	}
 }
 
 void Weapon::ProjectileCollisionReport(int index)
 {
+	if (!projectiles)
+		return;
+	if (!projectiles[index])
+		return;
+
 	projectiles[index]->inUse = false;
 
+	if (!projectiles[index]->object)
+		return;
 	projectiles[index]->object->transform->SetLocalPosition(float3::zero);
 
 	projectiles[index]->object->SetIsActive(false);
@@ -201,6 +214,9 @@ void Weapon::CreateProjectiles()
 {
 	DeleteProjectiles();
 
+	if (projectilePrefab.uid == NULL)
+		return;
+
 	projectiles = new Projectile * [projectileNum];
 	projectileHolder = App->scene->CreateGameObject("Bullets", gameObject);
 
@@ -217,7 +233,8 @@ void Weapon::CreateProjectiles()
 
 		object->transform->SetLocalPosition(float3::zero);
 
-		projectile->bulletScript->SetShooter(this, i); // Set up the bullet script
+		if (projectile->bulletScript)
+			projectile->bulletScript->SetShooter(this, i); // Set up the bullet script
 
 		for (uint i = 0; i < object->components.size(); ++i)
 			object->components[i]->SetIsActive(false);
@@ -272,28 +289,32 @@ void Weapon::FireProjectile(float2 direction)
 	if (hand)
 		position = hand->transform->GetWorldPosition();
 
-	projectile->object->transform->SetWorldPosition(position);
-
-	float rad = direction.AimedAngle();
-	projectile->object->transform->SetLocalRotation(float3(0, -rad, 0));
-
-	C_RigidBody* rigidBody = projectile->object->GetComponent<C_RigidBody>();
-	if (rigidBody)
+	if (projectile->object)
 	{
-		float3 aimDirection = { direction.x, 0.0f, direction.y };
-		rigidBody->TransformMovesRigidBody(true);
-		rigidBody->SetLinearVelocity(aimDirection * ProjectileSpeed());
+		projectile->object->transform->SetWorldPosition(position);
+
+		float rad = direction.AimedAngle();
+		projectile->object->transform->SetLocalRotation(float3(0, -rad, 0));
+
+		C_RigidBody* rigidBody = projectile->object->GetComponent<C_RigidBody>();
+		if (rigidBody)
+		{
+			float3 aimDirection = { direction.x, 0.0f, direction.y };
+			rigidBody->TransformMovesRigidBody(true);
+			rigidBody->SetLinearVelocity(aimDirection * ProjectileSpeed());
+		}
+
+		if (projectile->bulletScript)
+			projectile->bulletScript->SetOnHitData(Damage(), onHitEffects, BulletLifeTime());
+
+		//C_AudioSource* source = projectile->object->GetComponent<C_AudioSource>();
+		//if (source)
+		//	source->PlayFx(source->GetEventId());
+
+		projectile->object->SetIsActive(true);
+		for (uint i = 0; i < projectile->object->components.size(); ++i)
+			projectile->object->components[i]->SetIsActive(true);
 	}
-
-	projectile->bulletScript->SetOnHitData(Damage(), onHitEffects, BulletLifeTime());
-
-	//C_AudioSource* source = projectile->object->GetComponent<C_AudioSource>();
-	//if (source)
-	//	source->PlayFx(source->GetEventId());
-
-	projectile->object->SetIsActive(true);
-	for (uint i = 0; i < projectile->object->components.size(); ++i)
-		projectile->object->components[i]->SetIsActive(true);
 }
 
 //	// Stats

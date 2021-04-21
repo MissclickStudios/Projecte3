@@ -69,21 +69,25 @@ Trooper::~Trooper()
 void Trooper::SetUp()
 {
 	GameObject* hand = nullptr;
-	for (uint i = 0; i < skeleton->childs.size(); ++i)
-	{
-		std::string name = skeleton->childs[i]->GetName();
-		if (name == "Hand")
+	if (skeleton)
+		for (uint i = 0; i < skeleton->childs.size(); ++i)
 		{
-			hand = skeleton->childs[i];
-			break;
+			std::string name = skeleton->childs[i]->GetName();
+			if (name == "Hand")
+			{
+				hand = skeleton->childs[i];
+				break;
+			}
 		}
-	}
 
 	// Create Weapons and save the Weapon script pointer
-	blasterGameObject = App->resourceManager->LoadPrefab(blaster.uid, App->scene->GetSceneRoot());
+	if(blaster.uid != NULL)
+		blasterGameObject = App->resourceManager->LoadPrefab(blaster.uid, App->scene->GetSceneRoot());
 
-	blasterWeapon = (Weapon*)GetObjectScript(blasterGameObject, ObjectType::WEAPON);
-	blasterWeapon->SetOwnership(type, hand);
+	if (blasterGameObject)
+		blasterWeapon = (Weapon*)GetObjectScript(blasterGameObject, ObjectType::WEAPON);
+	if (blasterWeapon)
+		blasterWeapon->SetOwnership(type, hand);
 }
 
 void Trooper::Update()
@@ -95,7 +99,8 @@ void Trooper::Update()
 
 void Trooper::CleanUp()
 {
-	blasterGameObject->toDelete = true;
+	if (blasterGameObject)
+		blasterGameObject->toDelete = true;
 	blasterGameObject = nullptr;
 	blasterWeapon = nullptr;
 }
@@ -109,6 +114,8 @@ void Trooper::OnCollisionEnter(GameObject* object)
 
 void Trooper::DistanceToPlayer()
 {
+	if (!player)
+		return;
 	float2 playerPosition, position;
 	playerPosition.x = player->transform->GetWorldPosition().x;
 	playerPosition.y = player->transform->GetWorldPosition().z;
@@ -149,8 +156,9 @@ void Trooper::ManageMovement()
 	switch (moveState)
 	{
 	case TrooperState::IDLE:
-		rigidBody->SetLinearVelocity(float3::zero);
-		if (aimState == AimState::SHOOT) // Comented till the shooting system is in place
+		if (rigidBody)
+			rigidBody->SetLinearVelocity(float3::zero);
+		if (aimState == AimState::SHOOT) // Prioritize shooting over moving
 			break;
 		if (distance > chaseDistance)
 		{
@@ -197,6 +205,8 @@ void Trooper::ManageMovement()
 		break;
 	case TrooperState::DEAD_IN:
 		currentAnimation = &deathAnimation;
+		if (rigidBody)
+			rigidBody->SetIsActive(false); // Disable the rigidbody to avoid more interactions with other entities
 		deathTimer.Start();
 		moveState = TrooperState::DEAD;
 
@@ -224,32 +234,33 @@ void Trooper::ManageAim()
 
 	case AimState::SHOOT:
 		currentAnimation = &shootAnimation; // temporary till torso gets an independent animator
-		switch (blasterWeapon->Shoot(aimDirection))
-		{
-		case ShootState::NO_FULLAUTO:
-			currentAnimation = nullptr;
-		aimState = AimState::ON_GUARD;
-			break;
-		case ShootState::WAINTING_FOR_NEXT:
-			break;
-		case ShootState::FIRED_PROJECTILE:
-			currentAnimation = nullptr;
+		if (blasterWeapon)
+			switch (blasterWeapon->Shoot(aimDirection))
+			{
+			case ShootState::NO_FULLAUTO:
+				currentAnimation = nullptr;
 			aimState = AimState::ON_GUARD;
-			break;
-		case ShootState::RATE_FINISHED:
-			currentAnimation = nullptr;
-			aimState = AimState::ON_GUARD;
-			break;
-		case ShootState::NO_AMMO:
-			aimState = AimState::RELOAD_IN;
-			break;
-		}
+				break;
+			case ShootState::WAINTING_FOR_NEXT:
+				break;
+			case ShootState::FIRED_PROJECTILE:
+				currentAnimation = nullptr;
+				aimState = AimState::ON_GUARD;
+				break;
+			case ShootState::RATE_FINISHED:
+				currentAnimation = nullptr;
+				aimState = AimState::ON_GUARD;
+				break;
+			case ShootState::NO_AMMO:
+				aimState = AimState::RELOAD_IN;
+				break;
+			}
 		break;
 	case AimState::RELOAD_IN:
 		aimState = AimState::RELOAD;
 
 	case AimState::RELOAD:
-		if (blasterWeapon->Reload())
+		if (blasterWeapon && blasterWeapon->Reload())
 			aimState = AimState::ON_GUARD;
 		break;
 	case AimState::CHANGE_IN:
@@ -263,17 +274,20 @@ void Trooper::ManageAim()
 
 void Trooper::Patrol()
 {
-	rigidBody->SetLinearVelocity(float3::zero);
+	if (rigidBody)
+		rigidBody->SetLinearVelocity(float3::zero);
 }
 
 void Trooper::Chase()
 {
 	float3 direction = { moveDirection.x, 0.0f, moveDirection.y };
-	rigidBody->SetLinearVelocity(direction * ChaseSpeed());
+	if (rigidBody)
+		rigidBody->SetLinearVelocity(direction * ChaseSpeed());
 }
 
 void Trooper::Flee()
 {
 	float3 direction = { -moveDirection.x, 0.0f, -moveDirection.y };
-	rigidBody->SetLinearVelocity(direction * ChaseSpeed());
+	if (rigidBody)
+		rigidBody->SetLinearVelocity(direction * ChaseSpeed());
 }

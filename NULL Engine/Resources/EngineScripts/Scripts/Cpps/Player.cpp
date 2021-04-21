@@ -96,25 +96,31 @@ void Player::SetUp()
 	invencibilityTimer.Stop();
 	changeTimer.Stop();
 
+
 	GameObject* hand = nullptr;
-	for (uint i = 0; i < skeleton->childs.size(); ++i)
-	{
-		std::string name = skeleton->childs[i]->GetName();
-		if (name == "Hand")
+	if (skeleton)
+		for (uint i = 0; i < skeleton->childs.size(); ++i)
 		{
-			hand = skeleton->childs[i];
-			break;
+			std::string name = skeleton->childs[i]->GetName();
+			if (name == "Hand")
+			{
+				hand = skeleton->childs[i];
+				break;
+			}
 		}
-	}
 
 	// Create Weapons and save the Weapon script pointer
 	blasterGameObject = App->resourceManager->LoadPrefab(blaster.uid, App->scene->GetSceneRoot());
 	equipedGunGameObject = App->resourceManager->LoadPrefab(equipedGun.uid, App->scene->GetSceneRoot());
 
-	blasterWeapon = (Weapon*)GetObjectScript(blasterGameObject, ObjectType::WEAPON);
-	blasterWeapon->SetOwnership(type, hand);
-	equipedGunWeapon = (Weapon*)GetObjectScript(equipedGunGameObject, ObjectType::WEAPON);
-	equipedGunWeapon->SetOwnership(type, hand);
+	if (blasterGameObject)
+		blasterWeapon = (Weapon*)GetObjectScript(blasterGameObject, ObjectType::WEAPON);
+	if (blasterWeapon)
+		blasterWeapon->SetOwnership(type, hand);
+	if (equipedGunGameObject)
+		equipedGunWeapon = (Weapon*)GetObjectScript(equipedGunGameObject, ObjectType::WEAPON);
+	if (blasterWeapon)
+		equipedGunWeapon->SetOwnership(type, hand);
 
 	currentWeapon = blasterWeapon;
 }
@@ -128,11 +134,13 @@ void Player::Update()
 
 void Player::CleanUp()
 {
-	blasterGameObject->toDelete = true;
+	if (blasterGameObject)
+		blasterGameObject->toDelete = true;
 	blasterGameObject = nullptr;
 	blasterWeapon = nullptr;
 
-	equipedGunGameObject->toDelete = true;
+	if (equipedGunGameObject)
+		equipedGunGameObject->toDelete = true;
 	equipedGunGameObject = nullptr;
 	equipedGunWeapon = nullptr;
 
@@ -168,7 +176,8 @@ void Player::ManageMovement()
 		{
 		case PlayerState::IDLE:
 			currentAnimation = &idleAnimation;
-			rigidBody->SetLinearVelocity(float3::zero);
+			if (rigidBody)
+				rigidBody->SetLinearVelocity(float3::zero);
 			break;
 		case PlayerState::RUN:
 			currentAnimation = &runAnimation;
@@ -194,7 +203,8 @@ void Player::ManageMovement()
 			break;
 		case PlayerState::DEAD_IN:
 			currentAnimation = &deathAnimation;
-			rigidBody->SetIsActive(false); // Disable the rigidbody to avoid more interactions with other entities
+			if (rigidBody)
+				rigidBody->SetIsActive(false); // Disable the rigidbody to avoid more interactions with other entities
 			deathTimer.Start();
 			moveState = PlayerState::DEAD;
 
@@ -226,32 +236,33 @@ void Player::ManageAim()
 
 	case AimState::SHOOT:
 		currentAnimation = &shootAnimation; // temporary till torso gets an independent animator
-		switch (currentWeapon->Shoot(aimDirection))
-		{
-		case ShootState::NO_FULLAUTO:
-			currentAnimation = nullptr;
-			aimState = AimState::ON_GUARD;
-			break;
-		case ShootState::WAINTING_FOR_NEXT:
-			break;
-		case ShootState::FIRED_PROJECTILE:
-			currentAnimation = nullptr;
-			aimState = AimState::ON_GUARD;
-			break;
-		case ShootState::RATE_FINISHED:
-			currentAnimation = nullptr;
-			aimState = AimState::ON_GUARD;
-			break;
-		case ShootState::NO_AMMO:
-			aimState = AimState::RELOAD_IN;
-			break;
-		}
+		if (currentWeapon)
+			switch (currentWeapon->Shoot(aimDirection))
+			{
+			case ShootState::NO_FULLAUTO:
+				currentAnimation = nullptr;
+				aimState = AimState::ON_GUARD;
+				break;
+			case ShootState::WAINTING_FOR_NEXT:
+				break;
+			case ShootState::FIRED_PROJECTILE:
+				currentAnimation = nullptr;
+				aimState = AimState::ON_GUARD;
+				break;
+			case ShootState::RATE_FINISHED:
+				currentAnimation = nullptr;
+				aimState = AimState::ON_GUARD;
+				break;
+			case ShootState::NO_AMMO:
+				aimState = AimState::RELOAD_IN;
+				break;
+			}
 		break;
 	case AimState::RELOAD_IN:
 		aimState = AimState::RELOAD;
 
 	case AimState::RELOAD:
-		if (currentWeapon->Reload())
+		if (currentWeapon && currentWeapon->Reload())
 			aimState = AimState::ON_GUARD;
 		break;
 	case AimState::CHANGE_IN:
@@ -358,7 +369,8 @@ void Player::Movement()
 	moveDirection = { moveInput.x, moveInput.y }; // Save the value
 
 	direction *= Speed(); // Apply the processed speed value to the unitari direction vector
-	rigidBody->SetLinearVelocity(direction);
+	if (rigidBody)
+		rigidBody->SetLinearVelocity(direction);
 }
 
 void Player::Aim()
@@ -379,5 +391,6 @@ void Player::Dash()
 	float3 direction = { moveDirection.x, 0, moveDirection.y };
 	direction.Normalize();
 
-	rigidBody->SetLinearVelocity(direction * DashSpeed());
+	if (rigidBody)
+		rigidBody->SetLinearVelocity(direction * DashSpeed());
 }
