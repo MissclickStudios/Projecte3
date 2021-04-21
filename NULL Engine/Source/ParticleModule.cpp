@@ -82,14 +82,30 @@ void EmitterSpawn::Update(float dt, EmitterInstance* emitter)
 	}
 }
 
-void EmitterArea::Load(ParsonNode& node)
-{
-
-}
-
 void EmitterArea::Save(ParsonNode& node)
 {
+	node.SetInteger("Type", (int)type);
 
+	node.SetNumber("areaX1", areaX1);
+	node.SetNumber("areaX2", areaX2);
+
+	node.SetNumber("areaY1", areaY1);
+	node.SetNumber("areaY2", areaY2);
+
+	node.SetNumber("areaZ1", areaZ1);
+	node.SetNumber("areaZ2", areaZ2);
+}
+
+void EmitterArea::Load(ParsonNode& node)
+{
+	areaX1 = node.GetNumber("areaX1");
+	areaX2 = node.GetNumber("areaX2");
+
+	areaY1 = node.GetNumber("areaY1");
+	areaY2 = node.GetNumber("areaY2");
+
+	areaZ1 = node.GetNumber("areaZ1");
+	areaZ2 = node.GetNumber("areaZ2");
 }
 
 void EmitterArea::Spawn(EmitterInstance* emitter, Particle* particle)
@@ -177,8 +193,7 @@ void ParticleColor::Save(ParsonNode& node)
 	node.SetColor("initialColor1",initialColor1);
 	node.SetColor("initialColor2", initialColor2);
 
-	node.SetBool("hideColor",hideColor);
-	node.SetBool("eraseColor", eraseColor);
+	node.SetBool("colorOverLifetime", colorOverLifetime);
 }
 
 void ParticleColor::Load(ParsonNode& node)
@@ -186,8 +201,7 @@ void ParticleColor::Load(ParsonNode& node)
 	initialColor1 = node.GetColor("initialColor1");
 	initialColor2 = node.GetColor("initialColor2");
 
-	hideColor = node.GetBool("hideColor");
-	eraseColor = node.GetBool("eraseColor");
+	colorOverLifetime = node.GetBool("colorOverLifetime");
 }
 
 void ParticleColor::Spawn(EmitterInstance* emitter, Particle* particle)
@@ -367,12 +381,20 @@ Quat ParticleBillboarding::GetAlignmentRotation(const float3& position, const fl
 
 void ParticleSize::Save(ParsonNode& node)
 {
+	node.SetInteger("Type", (int)type);
 
+	node.SetBool("SizeOverTime", SizeOverTime);
+
+	node.SetNumber("initialSize1", (double)initialSize1);
+	node.SetNumber("initialSize2", (double)initialSize2);
 }
 
 void ParticleSize::Load(ParsonNode& node)
 {
+	SizeOverTime = node.GetBool("SizeOverTime");
 
+	initialSize1 = (float)node.GetNumber("initialSize1");
+	initialSize2 = (float)node.GetNumber("initialSize2");
 }
 
 void ParticleSize::Spawn(EmitterInstance* emitter, Particle* particle)

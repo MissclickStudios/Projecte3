@@ -56,6 +56,8 @@ bool C_ParticleSystem::LoadState(ParsonNode& root)
 	previewEnabled = root.GetBool("previewEnabled");
 	stopAndDeleteCheck = root.GetBool("stopAndDeleteCheck");
 
+	RefreshEmitterInstances();
+
 	return true;
 }
 

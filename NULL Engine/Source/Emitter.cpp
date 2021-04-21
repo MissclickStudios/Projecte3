@@ -80,18 +80,30 @@ void Emitter::Load(ParsonNode& node)
 
 		ParticleModule* particleModule = nullptr;
 
-		switch ((ParticleModule::Type)mod.GetInteger("Type"))
+		ParticleModule::Type a = (ParticleModule::Type)mod.GetInteger("Type");
+
+		switch (a)
 		{
 			case ParticleModule::Type::EMITTER_BASE: particleModule = new EmitterBase(); break;
 			case ParticleModule::Type::EMITTER_SPAWN: particleModule = new EmitterSpawn(); break;
 			case ParticleModule::Type::PARTICLE_LIFETIME: particleModule = new ParticleLifetime(); break;
 			case ParticleModule::Type::PARTICLE_COLOR: particleModule = new ParticleColor(); break;
 			case ParticleModule::Type::PARTICLE_MOVEMENT: particleModule = new ParticleMovement(); break;
+			case ParticleModule::Type::EMITTER_AREA: particleModule = new EmitterArea(); break;
+			//case ParticleModule::Type::PARTICLE_ROTATION: particleModule = new ParticleRotation(); break;
+			case ParticleModule::Type::PARTICLE_SIZE: particleModule = new ParticleSize(); break;
+			case ParticleModule::Type::PARTICLE_BILLBOARDING: particleModule = new ParticleBillboarding(); break;
 		}
 
-		particleModule->Load(mod);
-
-		modules.push_back(particleModule);
+		if (particleModule != nullptr)
+		{
+			particleModule->Load(mod);
+			modules.push_back(particleModule);
+		}
+		else
+		{
+			LOG("Could not load particle module with type: %d", (int)a);
+		}
 	}
 }
 
