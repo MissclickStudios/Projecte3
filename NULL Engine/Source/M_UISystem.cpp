@@ -110,6 +110,21 @@ bool M_UISystem::CleanUp()
 	return true;
 }
 
+void M_UISystem::CleanUpScene()
+{
+	for (std::vector<C_Canvas*>::iterator canvasIt = canvasList.begin(); canvasIt != canvasList.end(); canvasIt++)
+	{
+		(*canvasIt)->activeButtons.clear();
+	}
+
+	canvasList.clear();
+
+	inputCanvas = nullptr;
+
+	hoveredDecorationL = nullptr;
+	hoveredDecorationR = nullptr;
+}
+
 bool M_UISystem::LoadConfiguration(ParsonNode& root)
 {
 	bool ret = true;
@@ -182,7 +197,7 @@ void M_UISystem::DeleteActiveButton(C_UI_Button* button)
 
 void M_UISystem::InitHoveredDecorations()
 {
-	if (hoveredDecorationL != nullptr || hoveredDecorationR != nullptr || canvasList.empty())
+	if (hoveredDecorationL != nullptr || hoveredDecorationR != nullptr || canvasList.empty() || inputCanvas != nullptr || inputCanvas->selectedButton != nullptr)
 		return;
 
 	GameObject* canvas = inputCanvas->GetOwner();

@@ -26,6 +26,8 @@ public:
 	UpdateStatus Update(float dt) override;
 	UpdateStatus PostUpdate(float dt) override;
 	bool CleanUp() override;
+
+	void CleanUpScene();
 		 
 	bool LoadConfiguration(ParsonNode& root) override;
 	bool SaveConfiguration(ParsonNode& root) const override;

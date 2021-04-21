@@ -4,14 +4,14 @@
         {
             "UID": 216290538,
             "ParentUID": 1021720924,
-            "PrefabID": 0,
-            "IsPrefab": false,
-            "Name": "Canvas",
+            "PrefabID": 1839441196,
+            "IsPrefab": true,
+            "Name": "Canvas Pause Menu",
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
+            "ShowBoundingBoxes": true,
             "Components": [
                 {
                     "Type": 1,
@@ -45,29 +45,34 @@
                 },
                 {
                     "Type": 24,
-                    "ResourceUID": 1900768331,
-                    "AssetsPath": "Assets\/Scripts\/\/MainMenuManager.h",
-                    "DataName": "MainMenuManager",
+                    "ResourceUID": 1314001864,
+                    "AssetsPath": "Assets\/Scripts\/\/PauseMenuManager.h",
+                    "DataName": "PauseMenuManager",
                     "HasInspector": true,
                     "InspectorVariables": [
                         {
                             "Type": 5,
                             "Name": "buttonName",
-                            "string": "play"
-                        },
-                        {
-                            "Type": 5,
-                            "Name": "buttonName1",
                             "string": "continue"
                         },
                         {
                             "Type": 5,
-                            "Name": "buttonName2",
+                            "Name": "buttonName1",
                             "string": "options"
                         },
                         {
                             "Type": 5,
+                            "Name": "buttonName2",
+                            "string": "abandon run"
+                        },
+                        {
+                            "Type": 5,
                             "Name": "buttonName3",
+                            "string": "main menu"
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "buttonName4",
                             "string": "exit"
                         }
                     ]
@@ -77,8 +82,8 @@
         {
             "UID": 821348306,
             "ParentUID": 216290538,
-            "PrefabID": 0,
-            "IsPrefab": false,
+            "PrefabID": 1839441196,
+            "IsPrefab": true,
             "Name": "options",
             "IsActive": true,
             "IsStatic": false,
@@ -129,8 +134,8 @@
         {
             "UID": 906643238,
             "ParentUID": 216290538,
-            "PrefabID": 0,
-            "IsPrefab": false,
+            "PrefabID": 1839441196,
+            "IsPrefab": true,
             "Name": "Hovered Decoration L",
             "IsActive": true,
             "IsStatic": false,
@@ -186,8 +191,54 @@
             ]
         },
         {
+            "UID": 985395350,
+            "ParentUID": 216290538,
+            "PrefabID": 1839441196,
+            "IsPrefab": true,
+            "Name": "main menu",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 23,
+                    "Button": {
+                        "X": -0.0099999997764825821,
+                        "Y": 0.0040000001899898052,
+                        "W": 0.31000000238418579,
+                        "H": 0.079999998211860657,
+                        "IsHovered": false
+                    }
+                },
+                {
+                    "Type": 3
+                }
+            ]
+        },
+        {
             "UID": 1011274403,
-            "ParentUID": 262512726,
+            "ParentUID": 1996981834,
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "MainScene",
@@ -228,20 +279,20 @@
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": true,
+            "ShowBoundingBoxes": false,
             "Components": [
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        0,
-                        0,
-                        0
+                        37.166206359863281,
+                        24.777463912963867,
+                        37.166206359863281
                     ],
                     "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
+                        -0.20184808969497681,
+                        0.37343847751617432,
+                        0.083608217537403107,
+                        0.90156018733978271
                     ],
                     "LocalScale": [
                         1,
@@ -262,9 +313,9 @@
         {
             "UID": 1022612397,
             "ParentUID": 216290538,
-            "PrefabID": 0,
-            "IsPrefab": false,
-            "Name": "play",
+            "PrefabID": 1839441196,
+            "IsPrefab": true,
+            "Name": "abandon run",
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
@@ -314,8 +365,8 @@
         {
             "UID": 1274302584,
             "ParentUID": 216290538,
-            "PrefabID": 0,
-            "IsPrefab": false,
+            "PrefabID": 1839441196,
+            "IsPrefab": true,
             "Name": "continue",
             "IsActive": true,
             "IsStatic": false,
@@ -346,7 +397,7 @@
                     "Type": 23,
                     "Button": {
                         "X": -0.0099999997764825821,
-                        "Y": 0,
+                        "Y": 0.20900000631809235,
                         "W": 0.31000000238418579,
                         "H": 0.079999998211860657,
                         "IsHovered": false
@@ -366,8 +417,8 @@
         {
             "UID": 1549200412,
             "ParentUID": 216290538,
-            "PrefabID": 0,
-            "IsPrefab": false,
+            "PrefabID": 1839441196,
+            "IsPrefab": true,
             "Name": "Hovered Decoration R",
             "IsActive": true,
             "IsStatic": false,
@@ -425,8 +476,8 @@
         {
             "UID": 1701145829,
             "ParentUID": 216290538,
-            "PrefabID": 0,
-            "IsPrefab": false,
+            "PrefabID": 1839441196,
+            "IsPrefab": true,
             "Name": "exit",
             "IsActive": true,
             "IsStatic": false,
