@@ -3,12 +3,13 @@
 
 #include <string>
 #include <vector>
-#include <unordered_map>
+#include <map>
 
 #include "MathGeoTransform.h"
 
 #include "BoneLink.h"
 #include "AnimatorClip.h"
+#include "AnimatorTrack.h"
 
 #include "Component.h"
 
@@ -28,12 +29,6 @@ struct Channel;
 
 typedef unsigned int		uint;
 typedef unsigned __int32	uint32;
-
-struct AnimatorBones
-{
-	std::string name;
-	std::vector<BoneLink> bones;
-};
 
 enum class InterpolationType																								// WIP IDEA
 {
@@ -179,7 +174,8 @@ private:
 	std::vector<BoneLink>*							blendingBones;										//
 	std::vector<LineSegment>						displayBones;										// Line Segments between GO bones. For debug purposes.
 
-	std::unordered_map<std::string, AnimatorClip>	clips;												// Segments of animations. "Idle", "Walk", "Attack"...
+	std::map<std::string, AnimatorTrack>			tracks;												// Allows to overlap multiple clips with diff. root bones. Ex: "Torso", "Legs", etc.
+	std::map<std::string, AnimatorClip>				clips;												// Segments of animations. "Idle", "Walk", "Attack", etc.
 
 	AnimatorClip*				currentClip;
 	AnimatorClip*				blendingClip;
