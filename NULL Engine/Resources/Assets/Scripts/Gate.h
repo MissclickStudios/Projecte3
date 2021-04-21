@@ -9,15 +9,19 @@ public:
 	Gate();
 	~Gate();
 
+	void Start()override;
 	void Update() override;
 	void CleanUp()override;
 
 	void OnCollisionEnter(GameObject* object) override;
-	GameObject* gameManager = nullptr;
+	std::string gameManagerName;
+
+private:
+	GameObject* gameManager;
 };
 
 SCRIPTS_FUNCTION Gate* CreateGate() {
 	Gate* script = new Gate();
-	INSPECTOR_GAMEOBJECT(script->gameManager);
+	INSPECTOR_STRING(script->gameManagerName);
 	return script;
 }

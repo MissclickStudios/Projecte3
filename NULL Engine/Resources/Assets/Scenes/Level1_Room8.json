@@ -1223,6 +1223,39 @@
             ]
         },
         {
+            "UID": 376933606,
+            "ParentUID": 577937931,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "PlayerSpawn",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": true,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -88.577362060546875,
+                        0,
+                        -104.67545318603516
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
             "UID": 397626171,
             "ParentUID": 582477695,
             "PrefabID": 92973232,
@@ -1599,7 +1632,7 @@
         },
         {
             "UID": 577937931,
-            "ParentUID": 669853468,
+            "ParentUID": 1576610753,
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "MainScene",
@@ -2330,37 +2363,37 @@
                         {
                             "Type": 5,
                             "Name": "SpawnPointName",
-                            "string": ""
+                            "string": "PlayerSpawn"
                         },
                         {
                             "Type": 7,
                             "Name": "level1",
                             "vectorstring": [
-                                "Level1_Room1.json",
-                                "Level1_Room2.json",
-                                "Level1_Room3.json",
-                                "Level1_Room6.json",
-                                "Level1_Room8.json",
-                                "Level1_Room9.json"
+                                "Assets\/Scenes\/Level1_Room1.json",
+                                "Assets\/Scenes\/Level1_Room8.json",
+                                "Assets\/Scenes\/Level1_Room6.json",
+                                "Assets\/Scenes\/Level1_Room2.json",
+                                "Assets\/Scenes\/Level1_Room9.json",
+                                "Assets\/Scenes\/Level1_Room3.json"
                             ]
                         },
                         {
                             "Type": 7,
                             "Name": "level2",
                             "vectorstring": [
-                                "Level2_Room1.json",
-                                "Level2_Room2.json",
-                                "Level2_Room3.json",
-                                "Level2_Room4.json",
-                                "Level2_Room5.json",
-                                "Level2_Room6.json",
-                                "Level2_Room7.json"
+                                "Assets\/Scenes\/Level2_Room2.json",
+                                "Assets\/Scenes\/Level2_Room3.json",
+                                "Assets\/Scenes\/Level2_Room4.json",
+                                "Assets\/Scenes\/Level2_Room1.json",
+                                "Assets\/Scenes\/Level2_Room6.json",
+                                "Assets\/Scenes\/Level2_Room7.json",
+                                "Assets\/Scenes\/Level2_Room5.json"
                             ]
                         },
                         {
                             "Type": 4,
                             "Name": "playerPrefab",
-                            "prefab": 1566744972
+                            "prefab": 228946096
                         }
                     ]
                 }
@@ -3110,7 +3143,7 @@
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": true,
+            "ShowBoundingBoxes": false,
             "Components": [
                 {
                     "Type": 1,
@@ -3126,9 +3159,9 @@
                         0.70710670948028564
                     ],
                     "LocalScale": [
-                        1,
+                        0.99999994039535522,
                         1.0000001192092896,
-                        1
+                        0.99999994039535522
                     ]
                 },
                 {
@@ -3157,7 +3190,7 @@
                         {
                             "Type": 6,
                             "Name": "gameManager",
-                            "gameobject": 0
+                            "gameobject": 898664623
                         }
                     ]
                 }
@@ -6345,39 +6378,6 @@
                         "LibaryPath": "Library\/Shaders\/1245753822.neshader",
                         "LibraryFile": "1245753822.neshader"
                     }
-                }
-            ]
-        },
-        {
-            "UID": 376933606,
-            "ParentUID": 577937931,
-            "PrefabID": 0,
-            "IsPrefab": false,
-            "Name": "PlayerSpawn",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": true,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        -88.577362060546875,
-                        0,
-                        -104.67545318603516
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
                 }
             ]
         }

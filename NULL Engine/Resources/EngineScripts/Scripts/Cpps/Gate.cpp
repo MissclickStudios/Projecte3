@@ -14,6 +14,11 @@ Gate::~Gate()
 {
 }
 
+void Gate::Start()
+{
+	gameManager = App->scene->GetGameObjectByName(gameManagerName.c_str());
+}
+
 void Gate::Update()
 {
 }

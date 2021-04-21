@@ -493,7 +493,7 @@
                     "LocalScale": [
                         1,
                         1.0000001192092896,
-                        0.27761375904083252
+                        0.27761378884315491
                     ]
                 },
                 {
@@ -520,9 +520,9 @@
                     "HasInspector": true,
                     "InspectorVariables": [
                         {
-                            "Type": 6,
-                            "Name": "gameManager",
-                            "gameobject": 0
+                            "Type": 5,
+                            "Name": "gameManagerName",
+                            "string": "Game Manager"
                         }
                     ]
                 }
@@ -703,6 +703,34 @@
                     "Center Z": 0
                 },
                 {
+                    "Type": 14,
+                    "Playing Event": [
+                        "blurrg_death",
+                        54005036
+                    ]
+                },
+                {
+                    "Type": 14,
+                    "Playing Event": [
+                        "blurrg_growl",
+                        2014711013
+                    ]
+                },
+                {
+                    "Type": 14,
+                    "Playing Event": [
+                        "blurrg_walking",
+                        159848451
+                    ]
+                },
+                {
+                    "Type": 14,
+                    "Playing Event": [
+                        "blurrg_hit",
+                        545667325
+                    ]
+                },
+                {
                     "Type": 24,
                     "ResourceUID": 682930301,
                     "AssetsPath": "Assets\/Scripts\/\/Blurrg.h",
@@ -834,34 +862,6 @@
                             "Name": "restDuration",
                             "float": 0
                         }
-                    ]
-                },
-                {
-                    "Type": 14,
-                    "Playing Event": [
-                        "blurrg_death",
-                        54005036
-                    ]
-                },
-                {
-                    "Type": 14,
-                    "Playing Event": [
-                        "blurrg_growl",
-                        2014711013
-                    ]
-                },
-                {
-                    "Type": 14,
-                    "Playing Event": [
-                        "blurrg_walking",
-                        159848451
-                    ]
-                },
-                {
-                    "Type": 14,
-                    "Playing Event": [
-                        "blurrg_hit",
-                        545667325
                     ]
                 }
             ]
@@ -1651,6 +1651,34 @@
                     "Center Z": 0
                 },
                 {
+                    "Type": 14,
+                    "Playing Event": [
+                        "blurrg_death",
+                        54005036
+                    ]
+                },
+                {
+                    "Type": 14,
+                    "Playing Event": [
+                        "blurrg_growl",
+                        2014711013
+                    ]
+                },
+                {
+                    "Type": 14,
+                    "Playing Event": [
+                        "blurrg_walking",
+                        159848451
+                    ]
+                },
+                {
+                    "Type": 14,
+                    "Playing Event": [
+                        "blurrg_hit",
+                        545667325
+                    ]
+                },
+                {
                     "Type": 24,
                     "ResourceUID": 682930301,
                     "AssetsPath": "Assets\/Scripts\/\/Blurrg.h",
@@ -1782,34 +1810,6 @@
                             "Name": "restDuration",
                             "float": 0
                         }
-                    ]
-                },
-                {
-                    "Type": 14,
-                    "Playing Event": [
-                        "blurrg_death",
-                        54005036
-                    ]
-                },
-                {
-                    "Type": 14,
-                    "Playing Event": [
-                        "blurrg_growl",
-                        2014711013
-                    ]
-                },
-                {
-                    "Type": 14,
-                    "Playing Event": [
-                        "blurrg_walking",
-                        159848451
-                    ]
-                },
-                {
-                    "Type": 14,
-                    "Playing Event": [
-                        "blurrg_hit",
-                        545667325
                     ]
                 }
             ]
@@ -2014,7 +2014,7 @@
         },
         {
             "UID": 888400124,
-            "ParentUID": 1041368411,
+            "ParentUID": 1576610753,
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "MainScene",
@@ -3613,7 +3613,7 @@
                         {
                             "Type": 1,
                             "Name": "enabled",
-                            "bool": false
+                            "bool": true
                         },
                         {
                             "Type": 5,
@@ -3621,30 +3621,39 @@
                             "string": "MainMenu"
                         },
                         {
+                            "Type": 5,
+                            "Name": "SpawnPointName",
+                            "string": "PlayerSpawn"
+                        },
+                        {
                             "Type": 7,
                             "Name": "level1",
                             "vectorstring": [
-                                "Level1_Room1.json",
-                                "Level1_Room2.json",
-                                "Level1_Room3.json",
-                                "Level1_Room6.json",
-                                "Level1_Room8.json",
-                                "Level1_Room9.json",
-                                "Level1_Room10.json"
+                                "Assets\/Scenes\/Level1_Room1.json",
+                                "Assets\/Scenes\/Level1_Room8.json",
+                                "Assets\/Scenes\/Level1_Room6.json",
+                                "Assets\/Scenes\/Level1_Room2.json",
+                                "Assets\/Scenes\/Level1_Room9.json",
+                                "Assets\/Scenes\/Level1_Room3.json"
                             ]
                         },
                         {
                             "Type": 7,
                             "Name": "level2",
                             "vectorstring": [
-                                "Level2_Room1.json",
-                                "Level2_Room2.json",
-                                "Level2_Room3.json",
-                                "Level2_Room4.json",
-                                "Level2_Room5.json",
-                                "Level2_Room6.json",
-                                "Level2_Room7.json"
+                                "Assets\/Scenes\/Level2_Room2.json",
+                                "Assets\/Scenes\/Level2_Room3.json",
+                                "Assets\/Scenes\/Level2_Room4.json",
+                                "Assets\/Scenes\/Level2_Room1.json",
+                                "Assets\/Scenes\/Level2_Room6.json",
+                                "Assets\/Scenes\/Level2_Room7.json",
+                                "Assets\/Scenes\/Level2_Room5.json"
                             ]
+                        },
+                        {
+                            "Type": 4,
+                            "Name": "playerPrefab",
+                            "prefab": 228946096
                         }
                     ]
                 }
