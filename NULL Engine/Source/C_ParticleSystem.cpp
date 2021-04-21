@@ -123,7 +123,7 @@ void C_ParticleSystem::SetParticleSystem(ResourceBase newParticleSystem)
 
 	if (a != nullptr)
 	{
-		CleanUp();
+		//CleanUp();
 		resource = a;
 		RefreshEmitterInstances();
 	}
