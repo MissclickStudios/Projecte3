@@ -1,5 +1,11 @@
 {
-    "Models In Scene": [],
+    "Models In Scene": [
+        {
+            "GameObjectUID": 826637280,
+            "ModelResourceUID": 1857086092,
+            "ModelAssetsPath": "Assets\/Models\/Primitives\/banana.fbx"
+        }
+    ],
     "Game Objects": [
         {
             "UID": 520337368,
@@ -38,8 +44,9 @@
                         "X": 0,
                         "Y": 0,
                         "W": 1.0926049947738647,
-                        "H": 0.59361416101455688,
-                        "IsInvisible": false
+                        "H": 0.5787392258644104,
+                        "IsInvisible": false,
+                        "IsInputCanvas": true
                     }
                 }
             ]
@@ -113,7 +120,7 @@
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": true,
+            "ShowBoundingBoxes": false,
             "Components": [
                 {
                     "Type": 1,
@@ -236,7 +243,7 @@
                         {
                             "Type": 4,
                             "Name": "playerPrefab",
-                            "prefab": 543836910
+                            "prefab": 1997884416
                         }
                     ]
                 }
@@ -521,7 +528,7 @@
         },
         {
             "UID": 1474137658,
-            "ParentUID": 1633734700,
+            "ParentUID": 272554041,
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "MainScene",
@@ -614,7 +621,9 @@
                     "Animation Step Time": 30,
                     "Animation Loop": true,
                     "Animation Set On Loop From Start": true,
-                    "Name": "Title"
+                    "Name": "Title",
+                    "Name1": "[NOT FOUND]",
+                    "Name2": "[NOT FOUND]"
                 }
             ]
         },
@@ -628,7 +637,7 @@
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": true,
+            "ShowBoundingBoxes": false,
             "Components": [
                 {
                     "Type": 1,
@@ -687,7 +696,7 @@
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": true,
+            "ShowBoundingBoxes": false,
             "Components": [
                 {
                     "Type": 1,
@@ -698,9 +707,9 @@
                     ],
                     "LocalRotation": [
                         0,
+                        -0.7071068286895752,
                         0,
-                        0,
-                        1
+                        0.7071068286895752
                     ],
                     "LocalScale": [
                         1,
@@ -715,6 +724,102 @@
                     "Culling": false,
                     "OrthogonalView": false,
                     "HideFrustum": true
+                }
+            ]
+        },
+        {
+            "UID": 826637280,
+            "ParentUID": 1474137658,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "banana.fbx",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 899814927,
+            "ParentUID": 826637280,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Banana",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        -0.70710676908493042,
+                        0,
+                        0,
+                        0.70710676908493042
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 571654826,
+                    "Name": "Banana.nemesh",
+                    "Path": "Library\/Meshes\/571654826.nemesh",
+                    "File": "571654826.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 2013694742,
+                        "Color": [
+                            0.58799999952316284,
+                            0.58799999952316284,
+                            0.58799999952316284,
+                            1
+                        ],
+                        "Name": "Banana.nemat",
+                        "Path": "Library\/Materials\/2013694742.nemat",
+                        "File": "2013694742.nemat"
+                    },
+                    "Shader": {
+                        "AssetsPath": "Assets\/Shaders\/\/DefaultShader.shader",
+                        "AssetsName": "DefaultShader.shader",
+                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
+                        "LibraryFile": "800223282.neshader"
+                    }
                 }
             ]
         }
