@@ -1,84 +1,81 @@
 {
-    "Models In Scene": [],
-    "Game Objects": [
+    "UID": 216290538,
+    "ParentUID": 1021720924,
+    "PrefabID": 1839441196,
+    "IsPrefab": true,
+    "Name": "Canvas Pause Menu",
+    "IsActive": true,
+    "IsStatic": false,
+    "IsSceneRoot": false,
+    "MaintainThroughScenes": false,
+    "ShowBoundingBoxes": true,
+    "Components": [
         {
-            "UID": 216290538,
-            "ParentUID": 1021720924,
-            "PrefabID": 1839441196,
-            "IsPrefab": true,
-            "Name": "Canvas Pause Menu",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": true,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        0,
-                        0
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {
-                    "Type": 13,
-                    "Canvas": {
-                        "X": 0,
-                        "Y": 0,
-                        "W": 1.0926049947738647,
-                        "H": 0.5787392258644104,
-                        "IsInvisible": false,
-                        "IsInputCanvas": true
-                    }
-                },
-                {
-                    "Type": 24,
-                    "ResourceUID": 1314001864,
-                    "AssetsPath": "Assets\/Scripts\/\/PauseMenuManager.h",
-                    "DataName": "PauseMenuManager",
-                    "HasInspector": true,
-                    "InspectorVariables": [
-                        {
-                            "Type": 5,
-                            "Name": "buttonName",
-                            "string": "continue"
-                        },
-                        {
-                            "Type": 5,
-                            "Name": "buttonName1",
-                            "string": "options"
-                        },
-                        {
-                            "Type": 5,
-                            "Name": "buttonName2",
-                            "string": "abandon run"
-                        },
-                        {
-                            "Type": 5,
-                            "Name": "buttonName3",
-                            "string": "main menu"
-                        },
-                        {
-                            "Type": 5,
-                            "Name": "buttonName4",
-                            "string": "exit"
-                        }
-                    ]
-                }
+            "Type": 1,
+            "LocalPosition": [
+                0,
+                0,
+                0
+            ],
+            "LocalRotation": [
+                0,
+                0,
+                0,
+                1
+            ],
+            "LocalScale": [
+                1,
+                1,
+                1
             ]
         },
+        {
+            "Type": 13,
+            "Canvas": {
+                "X": 0,
+                "Y": 0,
+                "W": 1.0926049947738647,
+                "H": 0.5787392258644104,
+                "IsInvisible": false,
+                "IsInputCanvas": true
+            }
+        },
+        {
+            "Type": 24,
+            "ResourceUID": 1314001864,
+            "AssetsPath": "Assets\/Scripts\/\/PauseMenuManager.h",
+            "DataName": "PauseMenuManager",
+            "HasInspector": true,
+            "InspectorVariables": [
+                {
+                    "Type": 5,
+                    "Name": "buttonName",
+                    "string": "continue"
+                },
+                {
+                    "Type": 5,
+                    "Name": "buttonName1",
+                    "string": "options"
+                },
+                {
+                    "Type": 5,
+                    "Name": "buttonName2",
+                    "string": "abandon run"
+                },
+                {
+                    "Type": 5,
+                    "Name": "buttonName3",
+                    "string": "main menu"
+                },
+                {
+                    "Type": 5,
+                    "Name": "buttonName4",
+                    "string": "exit"
+                }
+            ]
+        }
+    ],
+    "Children": [
         {
             "UID": 821348306,
             "ParentUID": 216290538,
@@ -129,7 +126,8 @@
                         "LibraryFile": "1773975367.netex"
                     }
                 }
-            ]
+            ],
+            "Children": []
         },
         {
             "UID": 906643238,
@@ -188,81 +186,8 @@
                         "LibraryFile": "1025410539.neshader"
                     }
                 }
-            ]
-        },
-        {
-            "UID": 1011274403,
-            "ParentUID": 1559074505,
-            "PrefabID": 0,
-            "IsPrefab": false,
-            "Name": "MainScene",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": true,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        0,
-                        0
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                }
-            ]
-        },
-        {
-            "UID": 1021720924,
-            "ParentUID": 1011274403,
-            "PrefabID": 0,
-            "IsPrefab": false,
-            "Name": "Camera",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        37.166206359863281,
-                        24.777463912963867,
-                        37.166206359863281
-                    ],
-                    "LocalRotation": [
-                        -0.20184808969497681,
-                        0.37343847751617432,
-                        0.083608217537403107,
-                        0.90156018733978271
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {
-                    "Type": 5,
-                    "MinFOV": 1,
-                    "MaxFOV": 120,
-                    "Culling": false,
-                    "OrthogonalView": false,
-                    "HideFrustum": true
-                }
-            ]
+            ],
+            "Children": []
         },
         {
             "UID": 1022612397,
@@ -314,7 +239,8 @@
                         "LibraryFile": "1065639556.netex"
                     }
                 }
-            ]
+            ],
+            "Children": []
         },
         {
             "UID": 1274302584,
@@ -366,7 +292,8 @@
                         "LibraryFile": "1043491886.netex"
                     }
                 }
-            ]
+            ],
+            "Children": []
         },
         {
             "UID": 1549200412,
@@ -425,7 +352,8 @@
                         "LibraryFile": "1025410539.neshader"
                     }
                 }
-            ]
+            ],
+            "Children": []
         },
         {
             "UID": 1701145829,
@@ -477,7 +405,8 @@
                         "LibraryFile": "1724300843.netex"
                     }
                 }
-            ]
+            ],
+            "Children": []
         },
         {
             "UID": 985395350,
@@ -523,7 +452,8 @@
                 {
                     "Type": 3
                 }
-            ]
+            ],
+            "Children": []
         }
     ]
 } 
