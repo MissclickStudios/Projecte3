@@ -1,6 +1,9 @@
 #pragma once
 #include "Script.h"
 #include "ScriptMacros.h"
+#include "Prefab.h"
+
+class GameObject;
 
 class SCRIPTS_API GameManager : public Script {
 public:
@@ -28,8 +31,11 @@ public:
 
     bool enabled;
     std::string mainMenuScene;
+    std::string SpawnPointName;
+    Prefab playerPrefab;
 
 private:
+    GameObject* playerGameObject = nullptr;
     const char* saveFileName = "GameState.json";
     int	currentLevel = 0;
     int	roomNum = 0;

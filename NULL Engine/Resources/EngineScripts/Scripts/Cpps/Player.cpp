@@ -96,6 +96,8 @@ void Player::SetUp()
 	invencibilityTimer.Stop();
 	changeTimer.Stop();
 
+	rigidBody->TransformMovesRigidBody(false);
+
 	GameObject* hand = nullptr;
 	for (uint i = 0; i < skeleton->childs.size(); ++i)
 	{

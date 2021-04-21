@@ -38,7 +38,7 @@
                         "X": 0,
                         "Y": 0,
                         "W": 1.0926049947738647,
-                        "H": 0.76386958360671997,
+                        "H": 0.59361416101455688,
                         "IsInvisible": false
                     }
                 }
@@ -204,6 +204,11 @@
                             "string": "MainMenu"
                         },
                         {
+                            "Type": 5,
+                            "Name": "SpawnPointName",
+                            "string": "PlayerSpawn"
+                        },
+                        {
                             "Type": 7,
                             "Name": "level1",
                             "vectorstring": [
@@ -212,8 +217,7 @@
                                 "Level1_Room3.json",
                                 "Level1_Room6.json",
                                 "Level1_Room8.json",
-                                "Level1_Room9.json",
-                                "Level1_Room10.json"
+                                "Level1_Room9.json"
                             ]
                         },
                         {
@@ -228,6 +232,11 @@
                                 "Level2_Room6.json",
                                 "Level2_Room7.json"
                             ]
+                        },
+                        {
+                            "Type": 4,
+                            "Name": "playerPrefab",
+                            "prefab": 543836910
                         }
                     ]
                 }
@@ -512,7 +521,7 @@
         },
         {
             "UID": 1474137658,
-            "ParentUID": 983757219,
+            "ParentUID": 1633734700,
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "MainScene",

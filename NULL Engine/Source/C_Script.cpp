@@ -226,7 +226,7 @@ void C_Script::LoadData(const char* name, bool engineScript)
 			Script* script = (Script*)scriptData;
 			App->scriptManager->currentScripts.push_back(script);
 			script->gameObject = GetOwner();
-			script->transform = script->gameObject->GetComponent<C_Transform>();
+			script->transform = script->gameObject->transform;
 			script->enabled = &isActive;
 #ifndef GAMEBUILD
 			script->dataName = &dataName;

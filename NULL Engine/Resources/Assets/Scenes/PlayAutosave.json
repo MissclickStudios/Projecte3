@@ -38,7 +38,7 @@
                         "X": 0,
                         "Y": 0,
                         "W": 1.0926049947738647,
-                        "H": 0.76386958360671997,
+                        "H": 0.59361416101455688,
                         "IsInvisible": false
                     }
                 }
@@ -79,7 +79,7 @@
                     "Type": 21,
                     "Image": {
                         "X": 0.31000000238418579,
-                        "Y": 0.0035000008065253496,
+                        "Y": -0.67900002002716064,
                         "W": 0.05000000074505806,
                         "H": 0.10000000149011612,
                         "IsHDL": false,
@@ -165,7 +165,7 @@
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
+            "ShowBoundingBoxes": true,
             "Components": [
                 {
                     "Type": 1,
@@ -204,29 +204,39 @@
                             "string": "MainMenu"
                         },
                         {
+                            "Type": 5,
+                            "Name": "SpawnPointName",
+                            "string": "PlayerSpawn"
+                        },
+                        {
                             "Type": 7,
                             "Name": "level1",
                             "vectorstring": [
-                                "Level1_Room1.json",
-                                "Level1_Room2.json",
-                                "Level1_Room3.json",
-                                "Level1_Room6.json",
-                                "Level1_Room8.json",
-                                "Level1_Room9.json"
+                                "Assets\/Scenes\/Level1_Room1.json",
+                                "Assets\/Scenes\/Level1_Room8.json",
+                                "Assets\/Scenes\/Level1_Room6.json",
+                                "Assets\/Scenes\/Level1_Room2.json",
+                                "Assets\/Scenes\/Level1_Room9.json",
+                                "Assets\/Scenes\/Level1_Room3.json"
                             ]
                         },
                         {
                             "Type": 7,
                             "Name": "level2",
                             "vectorstring": [
-                                "Level2_Room1.json",
-                                "Level2_Room2.json",
-                                "Level2_Room3.json",
-                                "Level2_Room4.json",
-                                "Level2_Room5.json",
-                                "Level2_Room6.json",
-                                "Level2_Room7.json"
+                                "Assets\/Scenes\/Level2_Room2.json",
+                                "Assets\/Scenes\/Level2_Room3.json",
+                                "Assets\/Scenes\/Level2_Room4.json",
+                                "Assets\/Scenes\/Level2_Room1.json",
+                                "Assets\/Scenes\/Level2_Room6.json",
+                                "Assets\/Scenes\/Level2_Room7.json",
+                                "Assets\/Scenes\/Level2_Room5.json"
                             ]
+                        },
+                        {
+                            "Type": 4,
+                            "Name": "playerPrefab",
+                            "prefab": 228946096
                         }
                     ]
                 }
@@ -267,7 +277,7 @@
                     "Type": 21,
                     "Image": {
                         "X": -0.25999999046325684,
-                        "Y": 0.0035000008065253496,
+                        "Y": -0.67900002002716064,
                         "W": 0.05000000074505806,
                         "H": 0.10000000149011612,
                         "IsHDL": true,
@@ -381,7 +391,7 @@
                         "Y": -0.20499999821186066,
                         "W": 0.31999999284744263,
                         "H": 0.079999998211860657,
-                        "IsHovered": false
+                        "IsHovered": true
                     }
                 },
                 {
@@ -433,7 +443,7 @@
                         "Y": -0.0099999997764825821,
                         "W": 0.31999999284744263,
                         "H": 0.079999998211860657,
-                        "IsHovered": true
+                        "IsHovered": false
                     }
                 },
                 {
@@ -511,7 +521,7 @@
         },
         {
             "UID": 1474137658,
-            "ParentUID": 1738331746,
+            "ParentUID": 243402987,
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "MainScene",
@@ -677,7 +687,7 @@
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
+            "ShowBoundingBoxes": true,
             "Components": [
                 {
                     "Type": 1,
