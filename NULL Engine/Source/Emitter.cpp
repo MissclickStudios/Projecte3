@@ -50,7 +50,8 @@ void Emitter::Save(ParsonNode& node)
 
 	uint32 textureUID = (emitterTexture != nullptr) ? emitterTexture->GetUID() : 0;
 	node.SetInteger("textureUID", textureUID);
-	node.SetString("texturePath", emitterTexture->GetAssetsPath());
+	
+	emitterTexture != nullptr ? node.SetString("texturePath", emitterTexture->GetAssetsPath()) : node.SetString("texturePath", "None");
 
 	node.SetInteger("maxParticleCount", maxParticleCount);
 
