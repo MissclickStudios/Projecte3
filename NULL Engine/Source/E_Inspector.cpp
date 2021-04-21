@@ -1097,7 +1097,6 @@ void E_Inspector::DrawCanvasComponent(C_Canvas* cCanvas)
 
 			// --- RECT ---
 			float2 size = { cCanvas->GetRect().w, cCanvas->GetRect().h };
-			float2 pivot = { cCanvas->pivot.x, cCanvas->pivot.y };
 
 			if (ImGui::DragFloat2("Rect", (float*)&size, 0.005f, 0.0f, 0.0f, "%.3f", NULL))
 			{
@@ -1108,48 +1107,7 @@ void E_Inspector::DrawCanvasComponent(C_Canvas* cCanvas)
 					
 				
 				cCanvas->SetSize(size);
-
-				if (pivot.x < cCanvas->GetPosition().x - cCanvas->GetSize().x / 2)
-					pivot.x = cCanvas->GetPosition().x - cCanvas->GetSize().x / 2;
-
-				if (pivot.x > cCanvas->GetPosition().x + cCanvas->GetSize().x / 2)
-					pivot.x = cCanvas->GetPosition().x + cCanvas->GetSize().x / 2;
-
-
-				if (pivot.y < cCanvas->GetPosition().y - cCanvas->GetSize().y / 2)
-					pivot.y = cCanvas->GetPosition().y - cCanvas->GetSize().y / 2;
-
-				if (pivot.y > cCanvas->GetPosition().y + cCanvas->GetSize().y / 2)
-					pivot.y = cCanvas->GetPosition().y + cCanvas->GetSize().y / 2;
-
-				cCanvas->pivot.x = pivot.x;
-				cCanvas->pivot.y = pivot.y;
 			}
-
-			// --- PIVOT ---
-			if (ImGui::DragFloat2("Pivot", (float*)&pivot, 0.005f, 0.0f, 0.0f, "%.3f", NULL))
-			{
-
-				if (pivot.x < cCanvas->GetPosition().x - cCanvas->GetSize().x / 2)
-					pivot.x = cCanvas->GetPosition().x - cCanvas->GetSize().x / 2;
-
-				if (pivot.x > cCanvas->GetPosition().x + cCanvas->GetSize().x / 2)
-					pivot.x = cCanvas->GetPosition().x + cCanvas->GetSize().x / 2;
-
-
-				if (pivot.y < cCanvas->GetPosition().y - cCanvas->GetSize().y / 2)
-					pivot.y = cCanvas->GetPosition().y - cCanvas->GetSize().y / 2;
-
-				if (pivot.y > cCanvas->GetPosition().y + cCanvas->GetSize().y / 2)
-					pivot.y = cCanvas->GetPosition().y + cCanvas->GetSize().y / 2;
-
-				cCanvas->pivot.x = pivot.x;
-				cCanvas->pivot.y = pivot.y;
-			}
-
-			if (ImGui::Button("Reset Pivot"))
-				cCanvas->pivot = cCanvas->GetPosition();
-
 		}
 
 		if (!show)
@@ -1347,7 +1305,6 @@ void E_Inspector::DrawUIImageComponent(C_UI_Image* image)
 
 void E_Inspector::DrawUITextComponent(C_UI_Text* text)
 {
-
 	static bool show = true;
 	if (ImGui::CollapsingHeader("Text", &show, ImGuiTreeNodeFlags_DefaultOpen))
 	{
@@ -1355,7 +1312,6 @@ void E_Inspector::DrawUITextComponent(C_UI_Text* text)
 		if (ImGui::Checkbox("Text Is Active", &isActive)) { text->SetIsActive(isActive); }
 
 		ImGui::Separator();
-
 
 		static char buffer[64];
 		strcpy_s(buffer, text->GetText());
@@ -1366,29 +1322,28 @@ void E_Inspector::DrawUITextComponent(C_UI_Text* text)
 
 		ImGui::SameLine(); HelpMarker("Press ENTER to Rename");
 
-
 		ImGui::Separator();
 
 		// --- RECT ---
 		float2 pos = { text->GetRect().x, text->GetRect().y };
-		float2 size = { text->GetRect().w * 1000, text->GetRect().h * 1000};
+		float2 size = { text->GetRect().w, text->GetRect().h};
 		Color newColor = text->GetColor();
 		float offset = 0.1;
 
 		C_Canvas* canvas = text->GetOwner()->parent->GetComponent<C_Canvas>();
 
-		if (ImGui::DragFloat2("Text Size", (float*)&size, 0.05f, 0.0f, 0.0f, "%.3f", NULL))
+		if (ImGui::DragFloat2("Text Size", (float*)&size, 0.005f, 0.0f, 0.0f, "%.3f", NULL))
 		{
 			if (size.x < 0)
 				size.x = 0;
 			if (size.y < 0)
 				size.y = 0;
 
-			text->SetW(size.x /1000);
-			text->SetH(size.y /1000);
+			text->SetW(size.x);
+			text->SetH(size.y);
 		}
 
-		if (ImGui::DragFloat2("Text Pos", (float*)&pos, 0.05f, 0.0f, 0.0f, "%.3f", NULL))
+		if (ImGui::DragFloat2("Text Pos", (float*)&pos, 0.005f, 0.0f, 0.0f, "%.3f", NULL))
 		{
 
 	/*		if (pos.x > canvas->GetPosition().x + canvas->GetSize().x - offset )
@@ -1408,9 +1363,32 @@ void E_Inspector::DrawUITextComponent(C_UI_Text* text)
 			text->SetY(pos.y);
 		}
 
-		if (ImGui::DragFloat4("Color", (float*)&newColor, 0.05f, 0.0f, 0.0f, "%.3f", NULL))
+		if (ImGui::DragFloat4("Color", (float*)&newColor, 0.01f, 0.0f, 1.0f, "%.3f", NULL))
 		{
 			text->SetColor(newColor);
+		}
+
+		float fontSize = text->GetFontSize() * 1000;
+		if (ImGui::DragFloat("Font Size", (float*)&fontSize, 0.05f, 0.0f, 0.0f, "%.3f", NULL))
+		{
+			text->SetFontSize(fontSize / 1000);
+		}
+
+		int hSB = text->GetHSpaceBetween();
+		if (ImGui::DragInt("Horizontal Space Between", (int*)&hSB, 1, 0.0f, 0.0f, "%.3f", NULL))
+		{
+			text->SetHSpaceBetween(hSB);
+		}
+
+		float vSB = text->GetVSpaceBetween();
+		if (ImGui::DragFloat("Vertical Space Between", (float*)&vSB, 0.05f, 0.0f, 0.0f, "%.3f", NULL))
+		{
+			text->SetVSpaceBetween(vSB);
+		}
+
+		if (ImGui::Button("Font"))
+		{
+			text->GenerateTextureID("Assets/Fonts/main_menu.ttf");
 		}
 	}
 
@@ -1855,11 +1833,27 @@ void E_Inspector::DrawAnimator2DComponent(C_2DAnimator* cAnimator)
 			cAnimator->SetAnimationStepTime(k);
 
 		static char buffer[64];
-		strcpy_s(buffer, cAnimator->GetName());
+		strcpy_s(buffer, cAnimator->GetName(1));
 		if (ImGui::InputText("Animation Name", buffer, IM_ARRAYSIZE(buffer), ImGuiInputTextFlags_EnterReturnsTrue))
 		{
-			cAnimator->ChangeName(buffer);
-			cAnimator->GetAnimationSprites(buffer);
+			cAnimator->ChangeName(buffer,1);
+			cAnimator->GetAnimationSprites(buffer,1);
+		}
+
+		static char buffer1[64];
+		strcpy_s(buffer1, cAnimator->GetName(2));
+		if (ImGui::InputText("Aditional Animation Name", buffer1, IM_ARRAYSIZE(buffer1), ImGuiInputTextFlags_EnterReturnsTrue))
+		{
+			cAnimator->ChangeName(buffer1, 2);
+			cAnimator->GetAnimationSprites(buffer1, 2);
+		}
+
+		static char buffer2[64];
+		strcpy_s(buffer2, cAnimator->GetName(3));
+		if (ImGui::InputText("Aditional Animation Name 1", buffer2, IM_ARRAYSIZE(buffer), ImGuiInputTextFlags_EnterReturnsTrue))
+		{
+			cAnimator->ChangeName(buffer2, 3);
+			cAnimator->GetAnimationSprites(buffer2, 3);
 		}
 
 		bool animationOnLoopFromStart = cAnimator->GetAnimationPlayFromStart();

@@ -1,3 +1,5 @@
+#include "C_UI_Text.h"
+#include "C_UI_Text.h"
 #include "Application.h"
 
 #include "GameObject.h"
@@ -33,11 +35,11 @@
 C_UI_Text::C_UI_Text(GameObject* owner, Rect2D rect) : Component(owner, ComponentType::UI_TEXT),
 VAO(0),
 VBO(0),
-color(0,0,0,1)
+color(1,0,0,1)
 {
 	text = "Some Text";
 	rShader = App->resourceManager->GetShader("FontShader");
-	GenerateTextureID();
+	GenerateTextureID("Assets/Fonts/in_game.ttf");
 	LoadBuffers();
 
 }
@@ -123,22 +125,43 @@ Rect2D C_UI_Text::GetRect() const
 {
 	return rect;
 }
+
 Color C_UI_Text::GetColor() const
 {
 	return color;
 }
+
 const char* C_UI_Text::GetText() const
 {
 	return text.c_str();
 }
+
+float C_UI_Text::GetFontSize() const
+{
+	return fontSize;
+}
+
+uint C_UI_Text::GetHSpaceBetween() const
+{
+	return hSpaceBetween;
+}
+
+float C_UI_Text::GetVSpaceBetween() const
+{
+	return vSpaceBetween;
+}
+
+
 void C_UI_Text::SetText(const char* text)
 {
 	this->text = text;
 }
+
 void C_UI_Text::SetColor(Color color)
 {
 	this->color = color;
 }
+
 void C_UI_Text::SetRect(const Rect2D& rect)
 {
 	this->rect = rect;
@@ -164,6 +187,21 @@ void C_UI_Text::SetH(const float h)
 	this->rect.h = h;
 }
 
+void C_UI_Text::SetFontSize(const float fontSize)
+{
+	this->fontSize = fontSize;
+}
+
+void C_UI_Text::SetHSpaceBetween(const uint hSpaceBetween)
+{
+	this->hSpaceBetween = hSpaceBetween;
+}
+
+void C_UI_Text::SetVSpaceBetween(const float vSpaceBetween)
+{
+	this->vSpaceBetween = vSpaceBetween;
+}
+
 
 void C_UI_Text::RenderText( )
 {
@@ -178,7 +216,7 @@ void C_UI_Text::RenderText( )
 	float x = canvas->GetPosition().x + GetRect().x;
 	float y = canvas->GetPosition().y + GetRect().y;
 
-	float4x4 projectionMatrix = float4x4::FromTRS(float3(x, y, 0), Quat::FromEulerXYZ(0, 0, 0), float3(GetRect().w, GetRect().h, 1)).Transposed();
+	float4x4 projectionMatrix = float4x4::FromTRS(float3(x, y, 0), Quat::FromEulerXYZ(0, 0, 0), float3(fontSize, fontSize, 1)).Transposed();
 
 
 	rShader->SetUniformVec4f("textColor", (GLfloat*)&color);
@@ -187,7 +225,9 @@ void C_UI_Text::RenderText( )
 	glActiveTexture(GL_TEXTURE0);
 	glBindVertexArray(VAO);
 
-
+	int i = 0;
+	uint it = 0;
+	bool rowHead = true;
 	std::string::const_iterator c;
 	for (c = text.begin(); c != text.end(); c++)
 	{
@@ -195,11 +235,13 @@ void C_UI_Text::RenderText( )
 
 		glBindTexture(GL_TEXTURE_2D, ch.textureID);
 
-		float xpos = (x + ch.bearing.x) ;
-		float ypos = (y - (ch.size.y - ch.bearing.y)) ;
+		float xpos = (x + ch.bearing.x);
+		float ypos = (y - (ch.size.y - ch.bearing.y));
 
-		float w = ch.size.x ;
-		float h = ch.size.y ;
+		float w = ch.size.x;
+		float h = ch.size.y;
+
+		ypos = ypos - vSpaceBetween * 5 * i;
 
 		float vertices[6][4] = {
 			{ xpos,     ypos + h,   0.0f, 0.0f },
@@ -216,8 +258,32 @@ void C_UI_Text::RenderText( )
 
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 
+		if (x > rect.w * 15000)
+		{
+			rowHead = true;
+			x = 0;
+			i++;
+		}
+		else
+		{
+			char j = text.at(it);
+			std::string converter = " ";
+			char k = converter.at(0);
+			if (j == k && rowHead)
+			{
+				// I know it's weirde but I can't think of another way to do it :/
+			}
+			else
+			{
+				float adv = ch.advance + hSpaceBetween * 10;
+				x += ((uint)adv >> 6);
+			}
 
-		x += (ch.advance >> 6) ;
+			rowHead = false;
+		}
+	
+
+		it++;
 	}
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -229,14 +295,14 @@ void C_UI_Text::RenderText( )
 	glUseProgram(0);
 }
 
-void C_UI_Text::GenerateTextureID()
+void C_UI_Text::GenerateTextureID(std::string fontName)
 {
 	if (FT_Init_FreeType(&ft))
 	{
 		LOG("ERROR::FREETYPE: Could not init FreeType Library");
 		return;
 	}
-	if (FT_New_Face(ft, "Assets/Fonts/in_game.ttf", 0, &face))
+	if (FT_New_Face(ft, fontName.c_str(), 0, &face))
 	{
 		LOG("ERROR::FREETYPE: Failed to load font");
 		return;
@@ -252,6 +318,7 @@ void C_UI_Text::GenerateTextureID()
 	
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
+	Characters.clear();
 	for (unsigned char c = 0; c < 128; c++)
 	{
 		// load character glyph 

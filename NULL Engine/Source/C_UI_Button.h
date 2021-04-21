@@ -17,8 +17,7 @@ class NULL_API C_UI_Button : public Component
 {
 public:
 
-	C_UI_Button(GameObject* owner, Rect2D rect = { 0,0,0.3,0.05 });
-
+	C_UI_Button(GameObject* owner, Rect2D rect = { 0,0,0.32,0.08 });
 	~C_UI_Button();
 
 	bool Update() override;
@@ -52,9 +51,11 @@ public:
 private:
 
 	UIButtonState state = UIButtonState::NONE;
-	Rect2D rect = { 0,0,0.3,0.05 };
+	Rect2D rect = { 0,0,0.32,0.08 };
 
 	bool isPressed = false;
+
+	bool isInit = false;
 
 };
 

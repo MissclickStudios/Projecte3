@@ -22,12 +22,9 @@
 C_UI_Button::C_UI_Button(GameObject* owner, Rect2D rect) : Component(owner, ComponentType::UI_BUTTON)
 {
 	state = UIButtonState::IDLE;
-	if (App->uiSystem->activeButtons.empty())
-	{
-		state = UIButtonState::HOVERED;
-		App->uiSystem->hoveredButton = this;
-	}
-	App->uiSystem->activeButtons.push_back(this);
+
+	//C_Canvas* canvas = owner->parent->GetComponent<C_Canvas>();
+	
 }
 
 C_UI_Button::~C_UI_Button()
@@ -45,6 +42,25 @@ bool C_UI_Button::Update()
 	C_Canvas* canvas = GetOwner()->parent->GetComponent<C_Canvas>();
 	if (canvas == nullptr)
 		return ret;
+
+	if (!isInit)
+	{
+		if (canvas->activeButtons.empty())
+		{
+			state = UIButtonState::HOVERED;
+			canvas->selectedButton = this;
+		}
+		else if (state == UIButtonState::HOVERED)
+		{
+			if (canvas->selectedButton != nullptr)
+				canvas->selectedButton->SetState(UIButtonState::IDLE);
+			canvas->selectedButton = this;
+		}
+
+		canvas->activeButtons.push_back(this);
+
+		isInit = true;
+	}
 
 	if (GetRect().w > canvas->GetRect().w)
 		SetW(canvas->GetRect().w);
@@ -179,12 +195,7 @@ bool C_UI_Button::LoadState(ParsonNode& root)
 	SetRect(r);
 
 	if (button.GetBool("IsHovered"))
-	{
-		if (App->uiSystem->hoveredButton != nullptr)
-			App->uiSystem->hoveredButton->SetState(UIButtonState::IDLE);
-		App->uiSystem->hoveredButton = this;
 		state = UIButtonState::HOVERED;
-	}
 	else
 		state = UIButtonState::IDLE;
 

@@ -340,6 +340,7 @@ bool M_Scene::LoadScene(const char* path)
 	{
 		App->renderer->ClearRenderers();
 		CleanUp();
+		App->uiSystem->CleanUpScene();
 
 		//std::vector<GameObject*> parentMaintained;
 		//CleanUpCurrentScene(parentMaintained);
