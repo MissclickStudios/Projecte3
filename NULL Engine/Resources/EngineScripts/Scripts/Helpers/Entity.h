@@ -19,7 +19,8 @@ enum class EntityType
 	ENTITY,
 	PLAYER,
 	BLURRG,
-	TROOPER
+	TROOPER,
+	IG11
 };
 
 class Entity : public Object

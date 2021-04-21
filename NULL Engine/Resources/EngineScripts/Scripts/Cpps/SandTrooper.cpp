@@ -10,7 +10,7 @@
 
 #include "Player.h"
 
-SCRIPTS_FUNCTION Trooper* CreateTrooper()
+Trooper* CreateTrooper()
 {
 	Trooper* script = new Trooper();
 
