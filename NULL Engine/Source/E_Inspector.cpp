@@ -2613,13 +2613,14 @@ void E_Inspector::DisplayParticleSystemControls(C_ParticleSystem* cParticleSyste
 	//combo showing all resources Already exists App->resourceManager->GetAllParticleSystems()
 	if (ImGui::BeginCombo("##Particle Systems", cParticleSystem->resource->name.c_str()))
 	{
-		std::vector<R_ParticleSystem*> particleSystems;
-		App->resourceManager->GetAllParticleSystems(particleSystems);
+		std::vector<ResourceBase> particleSystems;
+		App->resourceManager->GetResourceBases<R_ParticleSystem>(particleSystems);
 
 		for (auto it = particleSystems.begin(); it != particleSystems.end(); ++it)
 		{
-			bool isSelected = (cParticleSystem->resource == (*it));
-			if (ImGui::Selectable((*it)->name.c_str(), isSelected))
+			bool isSelected = (strcmp(cParticleSystem->resource->GetAssetsPath(),(*it).assetsPath.c_str()) == 0);
+
+			if (ImGui::Selectable((*it).assetsPath.c_str(), isSelected))
 			{
 				cParticleSystem->SetParticleSystem((*it));
 			}
@@ -2641,10 +2642,48 @@ void E_Inspector::DisplayParticleSystemControls(C_ParticleSystem* cParticleSyste
 		cParticleSystem->resource->SetAssetsPathAndFile(path.c_str(), buffer);
 		cParticleSystem->resource->name = buffer;
 	}
+
+	ImGui::SameLine();
+
+	bool preview = cParticleSystem->previewEnabled;
+	if (ImGui::Checkbox("Preview", &preview))
+	{
+		cParticleSystem->EnginePreview(preview);
+	}
+
+	bool stop = cParticleSystem->stopSpawn;
+	if (ImGui::Checkbox("Stop Spawn", &stop))
+	{
+		cParticleSystem->stopSpawn = stop;
+		if (stop == true)
+		{
+			cParticleSystem->StopSpawn();
+		}
+		else
+		{
+			cParticleSystem->ResumeSpawn();
+		}
+	}
+
+	bool stopDelete = cParticleSystem->tempDelete;
+	if (ImGui::Checkbox("Stop and Delete", &stopDelete))
+	{
+		cParticleSystem->tempDelete = stopDelete;
+		cParticleSystem->StopAndDelete();
+	}
 }
 
 void E_Inspector::DisplayEmitterInstances(C_ParticleSystem* cParticleSystem)
 {
+	std::string inputTextName;
+
+	static char buffer[32];
+	if (ImGui::InputText("Name a new emitter", buffer, IM_ARRAYSIZE(buffer), ImGuiInputTextFlags_EnterReturnsTrue))
+	{
+		cParticleSystem->resource->AddNewEmitter(buffer);
+		cParticleSystem->RefreshEmitterInstances();
+	}
+
 	for (uint i = 0; i < cParticleSystem->emitterInstances.size(); i++) //loop emitters
 	{
 		Emitter* emitter = cParticleSystem->emitterInstances[i]->emitter;
@@ -2655,53 +2694,36 @@ void E_Inspector::DisplayEmitterInstances(C_ParticleSystem* cParticleSystem)
 			ImGui::SetNextItemWidth(ImGui::GetWindowWidth() * 0.33f);
 			static char buffer[64];
 			strcpy_s(buffer, emitter->name.c_str());
-			std::string inputTextName = "Emitter Name ##" + std::to_string(i);
+			inputTextName = "Emitter Name ##" + std::to_string(i);
 			if (ImGui::InputText(inputTextName.c_str(), buffer, IM_ARRAYSIZE(buffer), ImGuiInputTextFlags_EnterReturnsTrue))
 			{
 				emitter->name = buffer;
 			}
 
-			ImGui::SameLine();
-
-			bool preview = cParticleSystem->previewEnabled;
-			if (ImGui::Checkbox("Preview", &preview))
-			{
-				cParticleSystem->EnginePreview(preview);
-			}
-
-			bool stop = cParticleSystem->stopSpawn;
-			if (ImGui::Checkbox("Stop Spawn", &stop))
-			{
-				cParticleSystem->stopSpawn = stop;
-				if (stop == true)
-				{
-					cParticleSystem->StopSpawn();
-				}
-				else
-				{
-					cParticleSystem->ResumeSpawn();
-				}
-
-			}
-
-			bool stopDelete = cParticleSystem->tempDelete;
-			if (ImGui::Checkbox("Stop And Delete", &stopDelete))
-			{
-				cParticleSystem->tempDelete = stopDelete;
-				cParticleSystem->StopAndDelete();
+			inputTextName = "Particle Number - " + emitter->name;
+			int particleNumber = emitter->maxParticleCount;
+			if (ImGui::InputInt(inputTextName.c_str(), &particleNumber, 1, 10, ImGuiInputTextFlags_EnterReturnsTrue))
+			{ 
+				emitter->SetParticleCount(particleNumber); 
+				cParticleSystem->RefreshEmitterInstances();
 			}
 
 			R_Texture* current = emitter->emitterTexture;
 			//combo showing all resources Already exists App->resourceManager->GetAllParticleSystems()
-			if (ImGui::BeginCombo("##Particle Texture", emitter->emitterTexture->GetAssetsFile()))
+			inputTextName = "Particle Texture - " + emitter->name;
+			if (ImGui::BeginCombo(inputTextName.c_str(), emitter->emitterTexture == nullptr ? "No Texture" : emitter->emitterTexture->GetAssetsFile()))
 			{
-				std::vector<R_Texture*> textures;
-				App->resourceManager->GetAllTextures(textures); //GetAll Text
+				std::vector<ResourceBase> textures;
+				App->resourceManager->GetResourceBases<R_Texture>(textures);
 
 				for (auto it = textures.begin(); it != textures.end(); ++it)
 				{
-					bool isSelected = (current == (*it));
-					if (ImGui::Selectable((*it)->GetAssetsFile(), isSelected))
+					bool isSelected = true;
+
+					if(emitter->emitterTexture != nullptr)
+						isSelected = (strcmp(emitter->emitterTexture->GetAssetsPath(), (*it).assetsPath.c_str()) == 0);
+
+					if (ImGui::Selectable((*it).assetsPath.c_str(), isSelected))
 					{
 						emitter->SetTexture((*it));
 					}
@@ -2711,11 +2733,11 @@ void E_Inspector::DisplayEmitterInstances(C_ParticleSystem* cParticleSystem)
 				ImGui::EndCombo();
 			}
 
-			ImGui::Combo("###", &moduleType, "Add Module\0ParticleMovement\0ParticleColor\0ParticleLifetime\0ParticleRotation\0ParticleSize\0ParticleBillboarding");
+			inputTextName = "Add Module - " + emitter->name;
+			ImGui::Combo(inputTextName.c_str(), &moduleType, "Add Module\0ParticleMovement\0ParticleColor\0ParticleLifetime\0ParticleRotation\0ParticleSize\0ParticleBillboarding\0EmitterArea");
 
-			ImGui::SameLine();
-
-			if ((ImGui::Button("ADD")))
+			inputTextName = "Add Module to " + emitter->name;
+			if ((ImGui::Button(inputTextName.c_str())))
 			{
 				if (moduleType != (int)ParticleModule::Type::NONE)
 				{
@@ -2726,9 +2748,17 @@ void E_Inspector::DisplayEmitterInstances(C_ParticleSystem* cParticleSystem)
 			ImGui::Separator();
 
 			DisplayParticleModules(emitter);
+
+			inputTextName = "DELETE - " + emitter->name;
+			bool toDelete = emitter->toDelete;
+			if (ImGui::Checkbox(inputTextName.c_str(), &toDelete))
+			{
+				emitter->toDelete = toDelete;
+
+			}
 		}
 
-		ImGui::Separator();
+		ImGui::Separator(); 
 	}
 }
 
@@ -2736,7 +2766,8 @@ void E_Inspector::DisplayParticleModules(Emitter* emitter)
 {
 	ImGui::TextColored(Cyan.C_Array(), "Particle Modules:");
 
-	ImGui::BeginChild("Particle Modules Child", ImVec2(0.0f, 269.0f), true, ImGuiWindowFlags_HorizontalScrollbar);
+	std::string inputTextName = emitter->name + " Modules";
+	ImGui::BeginChild(inputTextName.c_str(), ImVec2(0.0f, 269.0f), true, ImGuiWindowFlags_HorizontalScrollbar);
 
 	for (auto pModule = emitter->modules.cbegin(); pModule != emitter->modules.cend(); ++pModule)
 	{
@@ -2747,7 +2778,7 @@ void E_Inspector::DisplayParticleModules(Emitter* emitter)
 		{
 		case ParticleModule::Type::EMITTER_BASE:			{ DisplayEmitterBase((*pModule)); }				break;
 		case ParticleModule::Type::EMITTER_SPAWN:			{ DisplayEmitterSpawn((*pModule)); }			break;
-		case ParticleModule::Type::EMITTER_AREA:			{ /*DisplayEmitterArea((*pModule));*/ }			break;
+		case ParticleModule::Type::EMITTER_AREA:			{ DisplayEmitterArea((*pModule)); }				break;
 		case ParticleModule::Type::PARTICLE_MOVEMENT:		{ DisplayParticleMovement((*pModule)); }		break;
 		case ParticleModule::Type::PARTICLE_COLOR:			{ DisplayParticleColor((*pModule)); }			break;
 		case ParticleModule::Type::PARTICLE_LIFETIME:		{ DisplayParticleLifetime((*pModule)); }		break;
@@ -2801,7 +2832,36 @@ void E_Inspector::DisplayEmitterSpawn(ParticleModule* pModule)
 
 void E_Inspector::DisplayEmitterArea(ParticleModule* pModule)
 {
+	if (ImGui::TreeNodeEx("EmitterArea"/*, ImGuiTreeNodeFlags_DefaultOpen*/))
+	{
+		EmitterArea* emitterArea = (EmitterArea*)pModule;
 
+		float x1 = emitterArea->areaX1;
+		float x2 = emitterArea->areaX2;
+		float y1 = emitterArea->areaY1;
+		float y2 = emitterArea->areaY2;
+		float z1 = emitterArea->areaZ1;
+		float z2 = emitterArea->areaZ2;
+
+		bool hide = emitterArea->hideArea;
+		bool deleteModule = emitterArea->eraseArea;
+
+		if (ImGui::InputFloat("MinX", &x1, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue)) { emitterArea->areaX1 = x1; }
+		if (ImGui::InputFloat("MaxX", &x2, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue)) { emitterArea->areaX2 = x2; }
+		if (ImGui::InputFloat("MinY", &y1, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue)) { emitterArea->areaY1 = y1; }
+		if (ImGui::InputFloat("MaxY", &y2, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue)) { emitterArea->areaY2 = y2; }
+		if (ImGui::InputFloat("MinZ", &z1, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue)) { emitterArea->areaZ1 = z1; }
+		if (ImGui::InputFloat("MaxZ", &z2, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue)) { emitterArea->areaZ2 = z2; }
+
+		if (ImGui::Checkbox("Hide Area", &hide)) { emitterArea->hideArea = hide; }
+		if (ImGui::Checkbox("Delete Area", &deleteModule)) { emitterArea->eraseArea = deleteModule; }
+
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.0f, 0.0f, 0.0f, 0.25f));
+		if (ImGui::Button("Delete")) { /*Have access to Owner Emitter through Particle Module*/ }
+		ImGui::PopStyleColor();
+
+		ImGui::TreePop();
+	}
 }
 
 void E_Inspector::DisplayParticleMovement(ParticleModule* pModule)
@@ -2844,11 +2904,15 @@ void E_Inspector::DisplayParticleColor(ParticleModule* pModule)
 	{
 		ParticleColor* particleColor = (ParticleColor*)pModule;
 		
-		Color color			= particleColor->initialColor;
-		if (ImGui::InputFloat4("InitialColor", color.C_Array(), 4, ImGuiInputTextFlags_EnterReturnsTrue)) { particleColor->initialColor = color; }
-		
+		Color color1 = particleColor->initialColor1;
+		Color color2 = particleColor->initialColor2;
+		if (ImGui::InputFloat4("InitialColor1", color1.C_Array(), 4, ImGuiInputTextFlags_EnterReturnsTrue)) { particleColor->initialColor1 = color1; }
+		if (ImGui::InputFloat4("InitialColor2", color2.C_Array(), 4, ImGuiInputTextFlags_EnterReturnsTrue)) { particleColor->initialColor2 = color2; }
+
+		bool overLifetime	= particleColor->colorOverLifetime;
 		bool hide			= particleColor->hideColor;
 		bool deleteModule	= particleColor->eraseColor;
+		if (ImGui::Checkbox("Color Over Lifetime", &overLifetime))	{ particleColor->colorOverLifetime = overLifetime; }
 		if (ImGui::Checkbox("Hide Color", &hide))			{ particleColor->hideColor = hide; }
 		if (ImGui::Checkbox("Delete Color", &deleteModule))	{ particleColor->eraseColor = deleteModule; }
 
@@ -2891,7 +2955,30 @@ void E_Inspector::DisplayParticleRotation(ParticleModule* pModule)
 
 void E_Inspector::DisplayParticleSize(ParticleModule* pModule)
 {
+	if (ImGui::TreeNodeEx("Particle Size"/*, ImGuiTreeNodeFlags_DefaultOpen*/))
+	{
+		ParticleSize* particleSize = (ParticleSize*)pModule;
 
+		float size1 = particleSize->initialSize1;
+		if (ImGui::InputFloat("InitialSize_1", &size1, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue)) { particleSize->initialSize1 = size1; }
+
+		float size2 = particleSize->initialSize2;
+		if (ImGui::InputFloat("InitialSize_2", &size2, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue)) { particleSize->initialSize2 = size2; }
+
+		bool changeSizeOverTime = particleSize->SizeOverTime;
+		if (ImGui::Checkbox("Size Over Time", &changeSizeOverTime)) { particleSize->SizeOverTime = changeSizeOverTime; }
+
+		bool hide = particleSize->hideSize;
+		bool deleteModule = particleSize->eraseSize;
+		if (ImGui::Checkbox("Hide Size", &hide)) { particleSize->hideSize = hide; }
+		if (ImGui::Checkbox("Delete Size", &deleteModule)) { particleSize->eraseSize = deleteModule; }
+
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.0f, 0.0f, 0.0f, 0.25f));
+		if (ImGui::Button("Delete")) { /*Have access to Owner Emitter through Particle Module*/ }
+		ImGui::PopStyleColor();
+
+		ImGui::TreePop();
+	}
 }
 
 void E_Inspector::DisplayParticleBillboarding(ParticleModule* pModule)

@@ -127,6 +127,7 @@ void C_Material::LoadMaterial(ParsonNode& materialNode)
 	if (success)
 	{
 		rMaterial = (R_Material*)App->resourceManager->RequestResource((uint32)materialNode.GetNumber("UID"));
+
 		SetMaterialColour(materialNode.GetColor("Color"));
 	}
 

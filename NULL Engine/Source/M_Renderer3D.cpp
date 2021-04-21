@@ -944,7 +944,8 @@ void M_Renderer3D::RenderParticles()
 	for (it = particles.rbegin(); it != particles.rend(); ++it)			
 	{
 		//DrawParticle(it->second);
-		it->second.Render();
+		if(it->second.mat != nullptr)
+			it->second.Render();
 	}
 	particles.clear();
 }

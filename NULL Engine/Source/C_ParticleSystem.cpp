@@ -1,4 +1,5 @@
 #include "JSONParser.h"
+#include "Profiler.h"
 
 #include "MC_Time.h"
 #include "Emitter.h"
@@ -17,13 +18,12 @@
 
 C_ParticleSystem::C_ParticleSystem(GameObject* owner) : Component(owner, ComponentType::PARTICLES)
 {
-	AddDefaultEmitter();
+	OPTICK_CATEGORY("C_Particle COnstructor", Optick::Category::Debug)
 	SetAsDefaultComponent();
 }
 
 C_ParticleSystem::~C_ParticleSystem()
 {
-	delete defaultEmitter;
 	emitterInstances.clear();
 }
 
@@ -56,6 +56,8 @@ bool C_ParticleSystem::LoadState(ParsonNode& root)
 	previewEnabled = root.GetBool("previewEnabled");
 	stopAndDeleteCheck = root.GetBool("stopAndDeleteCheck");
 
+	RefreshEmitterInstances();
+
 	return true;
 }
 
@@ -73,6 +75,16 @@ bool C_ParticleSystem::Update()
 		for (unsigned int i = 0; i < emitterInstances.size(); ++i)
 		{
 			emitterInstances[i]->Update(MC_Time::Game::GetDT());
+		}
+	}
+
+	for (int i = 0; i < resource->emitters.size(); ++i)
+	{
+		if (resource->emitters[i].toDelete == true)
+		{
+			resource->emitters[i].CleanUp();
+			resource->emitters.erase(resource->emitters.begin()+i);
+			RefreshEmitterInstances();
 		}
 	}
 
@@ -104,12 +116,34 @@ void C_ParticleSystem::SetParticleSystem(R_ParticleSystem* newParticleSystem)
 {
 	CleanUp();
 	resource = newParticleSystem;
-	RefreshEmitters();
+	RefreshEmitterInstances();
 }
 
-void C_ParticleSystem::RefreshEmitters()
+void C_ParticleSystem::SetParticleSystem(ResourceBase newParticleSystem)
 {
-	Reset();
+	R_ParticleSystem* a = (R_ParticleSystem*)App->resourceManager->GetResourceFromLibrary(newParticleSystem.assetsPath.c_str());
+
+	if (a != nullptr)
+	{
+		//CleanUp();
+		resource = a;
+		RefreshEmitterInstances();
+	}
+	else
+	{
+		LOG("COuld not find Texture %s for emitter", newParticleSystem.assetsPath.c_str());
+	}
+}
+
+void C_ParticleSystem::RefreshEmitterInstances()
+{
+	OPTICK_CATEGORY("C_Particle RefreshEmitterInstances()", Optick::Category::Debug)
+
+	for (auto emitter = emitterInstances.begin(); emitter != emitterInstances.end(); ++emitter)
+	{
+		RELEASE (*emitter);
+	}
+
 	emitterInstances.clear();
 
 	for (auto emit = resource->emitters.begin(); emit != resource->emitters.end(); ++emit)
@@ -121,13 +155,13 @@ void C_ParticleSystem::RefreshEmitters()
 
 void C_ParticleSystem::AddParticleSystem(const char* name)
 {
+	OPTICK_CATEGORY("C_Particle AddParticleSystem()", Optick::Category::Debug)
 	//resource = new R_ParticleSystem();
 	std::string assetsPath = ASSETS_PARTICLESYSTEMS_PATH + std::string(name) + PARTICLESYSTEMS_AST_EXTENSION;
 	resource = (R_ParticleSystem*)App->resourceManager->CreateResource(ResourceType::PARTICLE_SYSTEM, assetsPath.c_str());
 
-	resource->AddDefaultEmitter();
-	RefreshEmitters();
-
+	resource->AddNewEmitter();
+	RefreshEmitterInstances();
 }
 
 void C_ParticleSystem::SaveParticleSystem() const
@@ -141,18 +175,16 @@ void C_ParticleSystem::SaveParticleSystem() const
 bool C_ParticleSystem::SetAsDefaultComponent()
 {
 	bool ret = false;
-
+	OPTICK_CATEGORY("C_Particle SetAsDefaultComponent()", Optick::Category::Debug)
 	AddParticleSystem("Default Particle System");
 
-	RefreshEmitters();
+	//RefreshEmitterInstances(); (it is already done inside AddParticleSystem())
 
 	return ret;
 }
 
-void C_ParticleSystem::AddDefaultEmitter()
+void C_ParticleSystem::AddNewEmitter()
 {
-	defaultEmitter = new Emitter();
-	defaultEmitter->SetAsDefault();
 }
 
 void C_ParticleSystem::EnginePreview(bool previewEnabled)

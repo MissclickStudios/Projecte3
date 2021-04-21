@@ -18,6 +18,7 @@
 #include "I_Materials.h"
 #include "I_Textures.h"
 #include "I_Shaders.h"
+#include "I_Particles.h"
 //#include "I_Scripts.h"
 
 #include "Importer.h"
@@ -72,7 +73,7 @@ bool Importer::ImportParticles(const char* buffer, R_ParticleSystem* rParticles)
 {
 	FindAndForceUID((Resource*)rParticles);
 	
-	/*bool success = Importer::Particles::Import(buffer, rParticles);*/
+	bool success = Importer::Particles::Import(buffer, rParticles);
 
 	return /*(success && rParticles != nullptr)*/ true;
 }

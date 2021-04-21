@@ -9,6 +9,22 @@
 bool Importer::Particles::Import(const char* buffer, R_ParticleSystem* rParticles)
 {
 	// Import can reamain emtpy as Save and Load can handle everything.
+	LOG("Importing particle system: %s", rParticles->GetAssetsPath());
+
+	uint written = 0;
+
+	ParsonNode particleSystemNode(buffer);
+	rParticles->name = particleSystemNode.GetString("name");
+
+	ParsonArray particleSystemArray = particleSystemNode.GetArray("Emitters");
+	for (int i = 0; i < particleSystemArray.size; ++i)
+	{
+		Emitter emit;
+		ParsonNode emitterNode = particleSystemArray.GetNode(i);
+		emit.Load(emitterNode);
+		rParticles->emitters.push_back(emit);
+	}
+
 
 	return true;
 }
