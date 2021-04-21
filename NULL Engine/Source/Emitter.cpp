@@ -64,7 +64,7 @@ void Emitter::Save(ParsonNode& node)
 
 void Emitter::Load(ParsonNode& node)
 {
-	node.SetString("name", name.c_str());
+	name = node.GetString("name");
 	
 	std::string path = node.GetString("texturePath");
 	emitterTexture = (R_Texture*)App->resourceManager->GetResourceFromLibrary(path.c_str());
