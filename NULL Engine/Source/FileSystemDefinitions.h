@@ -9,6 +9,7 @@
 #define ICONS_PATH						"Engine/Icons/"
 #define SCRIPTS_DLL_OUTPUT				"EngineScripts/Output/EngineScripts.dll"
 #define SCRIPTS_DLL_WORKING				"EngineScripts.dll"
+#define AUTOSAVE_FILE_NAME				"PlayAutosave"
 
 #define ASSETS_DIRECTORY				"Assets"
 #define ASSETS_PATH						"Assets/"

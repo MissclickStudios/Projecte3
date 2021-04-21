@@ -1,195 +1,193 @@
-#include "Application.h"
-#include "Log.h"
+#include "Blurrg.h"
 
+#include "Application.h"
 #include "M_Scene.h"
-#include "M_ResourceManager.h"
 
 #include "GameObject.h"
 #include "C_Transform.h"
 #include "C_RigidBody.h"
-#include "C_BoxCollider.h"
-#include "C_Mesh.h"
-#include "C_Material.h"
-#include "C_AudioSource.h"
 
-#include "Blurrg.h"
 #include "Player.h"
 
-Blurrg::Blurrg()
+Blurrg* CreateBlurrg()
 {
-	dashTime.Stop();
-	dashColdown.Stop();
-	dashCharge.Stop();
-	restTimer.Stop();
-	stepTimer.Stop();
+	Blurrg* script = new Blurrg();
 
-	freezeTimer.Stop();
+	// Entity ---
+	// Health
+	INSPECTOR_DRAGABLE_FLOAT(script->health);
+	INSPECTOR_DRAGABLE_FLOAT(script->maxHealth);
+
+	// Basic Stats
+	INSPECTOR_DRAGABLE_FLOAT(script->speed);
+	INSPECTOR_DRAGABLE_FLOAT(script->attackSpeed);
+	INSPECTOR_DRAGABLE_FLOAT(script->damage);
+	INSPECTOR_DRAGABLE_FLOAT(script->defense);
+
+	// Modifiers
+	INSPECTOR_DRAGABLE_FLOAT(script->maxHealthModifier);
+	INSPECTOR_DRAGABLE_FLOAT(script->speedModifier);
+	INSPECTOR_DRAGABLE_FLOAT(script->attackSpeedModifier);
+	INSPECTOR_DRAGABLE_FLOAT(script->damageModifier);
+	INSPECTOR_DRAGABLE_FLOAT(script->defenseModifier);
+	INSPECTOR_DRAGABLE_FLOAT(script->cooldownModifier);
+
+	// Death
+	INSPECTOR_DRAGABLE_FLOAT(script->deathDuration);
+
+	// Blurrg ---
+	// Wander
+	INSPECTOR_DRAGABLE_FLOAT(script->wanderRadius);
+
+	// Chase
+	INSPECTOR_DRAGABLE_FLOAT(script->chaseSpeedModifier);
+	INSPECTOR_DRAGABLE_FLOAT(script->chaseDistance);
+	INSPECTOR_STRING(script->playerName);
+
+	// Charge
+	INSPECTOR_DRAGABLE_FLOAT(script->chargeDistance);
+	INSPECTOR_DRAGABLE_FLOAT(script->chargeDuration);
+
+	// Dash
+	INSPECTOR_DRAGABLE_FLOAT(script->dashDamageModifier);
+	INSPECTOR_DRAGABLE_FLOAT(script->dashSpeed);
+	INSPECTOR_DRAGABLE_FLOAT(script->dashDuration);
+	INSPECTOR_DRAGABLE_FLOAT(script->dashCooldown);
+	INSPECTOR_DRAGABLE_FLOAT(script->dashDeccelerationRatio);
+
+	// Rest
+	INSPECTOR_DRAGABLE_FLOAT(script->restDuration);
+
+	//// Animations ---
+	//// Movement
+	//INSPECTOR_STRING(script->walkAnimation.name);
+	//INSPECTOR_DRAGABLE_FLOAT(script->walkAnimation.blendTime);
+	//INSPECTOR_STRING(script->chargeAnimation.name);
+	//INSPECTOR_DRAGABLE_FLOAT(script->chargeAnimation.blendTime);
+	//INSPECTOR_STRING(script->dashAnimation.name);
+	//INSPECTOR_DRAGABLE_FLOAT(script->dashAnimation.blendTime);
+	//INSPECTOR_STRING(script->restAnimation.name);
+	//INSPECTOR_DRAGABLE_FLOAT(script->restAnimation.blendTime);
+	//INSPECTOR_STRING(script->deathAnimation.name);
+	//INSPECTOR_DRAGABLE_FLOAT(script->deathAnimation.blendTime);
+
+	return script;
+}
+
+Blurrg::Blurrg() : Entity()
+{
+	type = EntityType::BLURRG;
 }
 
 Blurrg::~Blurrg()
 {
 }
 
-void Blurrg::Awake()
+void Blurrg::SetUp()
 {
-	std::vector<Component*> components;
-	gameObject->GetAllComponents(components);
-	for (auto comp = components.begin(); comp != components.end(); ++comp)
-	{
-		if ((*comp)->GetType() == ComponentType::AUDIOSOURCE)
-		{
-			C_AudioSource* source = (C_AudioSource*)(*comp);
-			std::string name = source->GetEventName();
+	chargeTimer.Stop();
+	dashTimer.Stop();
+	dashCooldownTimer.Stop();
+	restTimer.Stop();
 
-			if (name == "blurrg_walking")
-				step = source;
-			else if (name == "blurrg_growl")
-				charge = source;
-			else if (name == "blurrg_hit")
-				damaged = source;
-			else if (name == "blurrg_death")
-				death = source;
-		}
-	}
-
-	for (uint i = 0; i < gameObject->childs.size(); ++i)
-		if (gameObject->childs[i]->GetComponent<C_Mesh>())
-			mesh = gameObject->childs[i];
+	player = App->scene->GetGameObjectByName(playerName.c_str());
 }
 
 void Blurrg::Update()
 {
-	if (health <= 0.0f)
+	if (state != BlurrgState::DEAD)
 	{
-		if (death)
-			death->PlayFx(death->GetEventId());
-
-		for (uint i = 0; i < gameObject->components.size(); ++i)
-			gameObject->components[i]->SetIsActive(false);
-		gameObject->SetIsActive(false);
-
-		GameObject* coinGo = App->resourceManager->LoadPrefab(coin.uid, App->scene->GetSceneRoot());
-		coinGo->GetComponent<C_BoxCollider>()->Update();
-		float3 position = gameObject->transform->GetWorldPosition();
-		position.y += 2;
-		coinGo->transform->SetWorldPosition(position);
-
-		return;
-	}
-
-	if (player == nullptr)
-	{
-		std::vector<GameObject*>* gameObjects = App->scene->GetGameObjects();
-		for (auto object = gameObjects->begin(); object != gameObjects->end(); ++object)
-			if ((*object)->GetScript("Player"))
-				player = (*object);
-
-		if (player == nullptr)
-			return;
-	}
-
-	C_RigidBody* rigidBody = gameObject->GetComponent<C_RigidBody>();
-	if (!rigidBody || rigidBody->IsStatic())
-		return;
-
-	attackModifier = 1;
-	defenseModifier = 1;
-	Color color = Color(150.0f / 255.0f, 150.0f / 255.0f, 150.0f / 255.0f);
-	if (freezeTimer.IsActive())
-	{
-		if (freezeTimer.ReadSec() >= freezeDuration)
-		{
-			freezeTimer.Stop();
-		}
+		if (health <= 0.0f)
+			state = BlurrgState::DEAD_IN;
 		else
-		{
-			speedModifier = 0.3f;
-			color = Color(20.0f / 255.0f, 220.0f / 255.0f, 255.0f / 255.0f);
-		}
-	}
-	else
-		speedModifier = 1;
-
-	if (weakTimer.IsActive())
-	{
-		if (weakTimer.ReadSec() >= weakDuration)
-		{
-			weakTimer.Stop();
-		}
-		else
-		{
-			color = Color(250.0f / 255.0f, 20.0f / 255.0f, 10.0f / 255.0f);
-		}
-	}
-	else
-		defenseModifier = 1;
-
-	if (mesh)
-	{
-		C_Material* material = mesh->GetComponent<C_Material>();
-		material->SetMaterialColour(color);
-	}
-
-	if (!restTimer.IsActive())
-	{
-		if (dashCharge.IsActive())
-		{
-			// Dash
-			if (dashCharge.ReadSec() >= dashingCharge)
+			if ((state == BlurrgState::WANDER || state == BlurrgState::CHASE) && player)
 			{
-				dashCharge.Stop();
-				dashColdown.Start();
-				dashTime.Start();
-
-				rigidBody->SetLinearVelocity(direction * dashSpeed * speedModifier);
+				DistanceToPlayer();
+				if (state == BlurrgState::CHASE)
+					LookAtPlayer();
 			}
-		}
-		else if (!dashTime.IsActive())
-		{
-			direction = LookingAt();
+	}
 
-			if (distance < detectionRange)
+	if (rigidBody)
+		switch (state)
+		{
+		case BlurrgState::WANDER:
+			if (distance < chaseDistance)
 			{
-				// Move
-				direction *= speed * speedModifier;
-				rigidBody->SetLinearVelocity(direction);
-				StepSound();
-
-				if (dashColdown.IsActive())
-				{
-					if (dashColdown.ReadSec() >= dashingColdown)
-						dashColdown.Stop();
-				}
-				else if (distance < dashRange)
-				{
-					rigidBody->SetLinearVelocity(float3::zero);
-					dashCharge.Start();				// Start Charging Dash
-					if (charge)
-						charge->PlayFx(charge->GetEventId());
-				}
+				state = BlurrgState::CHASE;
+				break;
 			}
-		}
-		else if (dashTime.ReadSec() >= dashingTime / speedModifier)
-		{
-			dashTime.Stop();
+			currentAnimation = &walkAnimation;
+			Wander();
+			break;
+		case BlurrgState::CHASE:
+			if (distance > chaseDistance)
+			{
+				state = BlurrgState::WANDER;
+				break;
+			}
+			else if (distance < chargeDistance && (dashCooldownTimer.ReadSec() >= DashCooldown() || !dashCooldownTimer.IsActive()))
+			{
+				state = BlurrgState::CHARGE_IN;
+				break;
+			}
+			currentAnimation = &walkAnimation;
+			Chase();
+			break;
+		case BlurrgState::CHARGE_IN:
+			currentAnimation = &chargeAnimation;
+			if (rigidBody)
+				rigidBody->SetLinearVelocity(float3::zero);
+			chargeTimer.Start();
+			state = BlurrgState::CHARGE;
+
+		case BlurrgState::CHARGE:
+			if (chargeTimer.ReadSec() >= ChargeDuration())
+			{
+				chargeTimer.Stop();
+				state = BlurrgState::DASH_IN;
+			}
+			break;
+		case BlurrgState::DASH_IN:
+			currentAnimation = &dashAnimation;
+			dashTimer.Start();
+			state = BlurrgState::DASH;
+
+		case BlurrgState::DASH:
+			Dash();
+			if (dashTimer.ReadSec() >= DashDuration())
+			{
+				dashTimer.Stop();
+				dashCooldownTimer.Start();
+				state = BlurrgState::REST_IN;
+			}
+			break;
+		case BlurrgState::REST_IN:
+			currentAnimation = &restAnimation;
+			if (rigidBody)
+				rigidBody->SetLinearVelocity(float3::zero);
 			restTimer.Start();
-			rigidBody->SetLinearVelocity(direction * restSpeed * speedModifier);
+			state = BlurrgState::REST;
+
+		case BlurrgState::REST:
+			if (restTimer.ReadSec() >= RestDuration())
+			{
+				restTimer.Stop();
+				state = BlurrgState::WANDER;
+			}
+			break;
+		case BlurrgState::DEAD_IN:
+			currentAnimation = &deathAnimation;
+			if (rigidBody)
+				rigidBody->SetIsActive(false); // Disable the rigidbody to avoid more interactions with other entities
+			deathTimer.Start();
+			state = BlurrgState::DEAD;
+
+		case BlurrgState::DEAD:
+			if (deathTimer.ReadSec() >= deathDuration)
+				Deactivate();
+			break;
 		}
-	}
-	else
-	{
-		if (restTimer.ReadSec() >= dashRest / speedModifier)
-			restTimer.Stop();
-
-		float2 currentDir(direction.x, direction.z);
-		float currentRad = currentDir.AimedAngle();
-		currentRad += 0.05 * speedModifier;
-		direction.x = cos(currentRad);
-		direction.z = sin(currentRad);
-
-		if (mesh)
-			mesh->transform->SetLocalRotation(float3(DegToRad(-90), 0, currentRad));
-	}
 }
 
 void Blurrg::CleanUp()
@@ -198,116 +196,68 @@ void Blurrg::CleanUp()
 
 void Blurrg::OnCollisionEnter(GameObject* object)
 {
-	if (object == player)
+	Player* playerScript = (Player*)object->GetScript("Player");
+	if (playerScript)
 	{
-		float hitDamage = damage;
-		if (dashTime.IsActive())
-			hitDamage = dashDamage;
-
-		Player* script = (Player*)object->GetComponent<C_Script>()->GetScriptData();
-		script->TakeDamage(hitDamage * attackModifier);
+		switch (state)
+		{
+		case BlurrgState::DASH:
+			playerScript->TakeDamage(DashDamage());
+			break;
+		default:
+			playerScript->TakeDamage(Damage());
+			break;
+		}
 	}
 }
 
-void Blurrg::TakeDamage(float damage)
+void Blurrg::DistanceToPlayer()
 {
-	if (damaged)
-		damaged->PlayFx(damaged->GetEventId());
+	if (!player)
+		return;
 
-	health -= damage * defenseModifier;
-	if (health < 0.0f)
-		health = 0.0f;
-}
-
-void Blurrg::Freeze(float amount, float duration)
-{
-	speedModifier = amount;
-	freezeDuration = duration;
-	freezeTimer.Start();
-}
-
-void Blurrg::Weaken(float amount, float duration)
-{
-	defenseModifier = amount;
-	weakDuration = duration;
-	weakTimer.Start();
-}
-
-// Return normalized vector 3 of the direction the player is at
-float3 Blurrg::LookingAt()
-{
-	float2 playerPosition, position, lookVector;
+	float2 playerPosition, position;
 	playerPosition.x = player->transform->GetWorldPosition().x;
 	playerPosition.y = player->transform->GetWorldPosition().z;
 	position.x = gameObject->transform->GetWorldPosition().x;
 	position.y = gameObject->transform->GetWorldPosition().z;
+	moveDirection = playerPosition - position;
 
-	lookVector = playerPosition - position;
+	distance = moveDirection.Length();
 
-	distance = lookVector.Length();
-	if (lookVector.x == 0 && lookVector.y == 0) {}
-	else
-		lookVector.Normalize();
-	float rad = lookVector.AimedAngle() ;
-
-	for (uint i = 0; i < gameObject->childs.size(); ++i)
-		if (gameObject->childs[i]->GetComponent<C_Mesh>())
-		{
-			float rad = -lookVector.AimedAngle() + DegToRad(90);
-			gameObject->childs[i]->transform->SetLocalRotation(float3(DegToRad(-90), 0, rad));
-		}
-
-	if (mesh)
-	{
-		float rad = -lookVector.AimedAngle() + DegToRad(90);
-		mesh->transform->SetLocalRotation(float3(DegToRad(-90), 0, rad));
-	}
-
-	return { lookVector.x, 0, lookVector.y };
+	if (!moveDirection.IsZero())
+		moveDirection.Normalize();
 }
 
-void Blurrg::StepSound()
+void Blurrg::LookAtPlayer()
 {
-	if (!isStepPlaying)
-	{
-		isStepPlaying = true;
-		stepTimer.Start();
+	float rad = moveDirection.AimedAngle();
 
-		if (step)
-			step->PlayFx(step->GetEventId());
-	}
-	else
-		if (stepTimer.ReadSec() >= 0.4f)
-			isStepPlaying = false;
+	if (skeleton)
+		skeleton->transform->SetLocalRotation(float3(0, -rad - DegToRad(90), 0));
 }
 
-Blurrg* CreateBlurrg()
+void Blurrg::Wander()
 {
-	Blurrg* script = new Blurrg();
+	if (rigidBody)
+		rigidBody->SetLinearVelocity(float3::zero);
+}
 
-	// Movement
-	INSPECTOR_DRAGABLE_FLOAT(script->speed);
-	INSPECTOR_DRAGABLE_FLOAT(script->detectionRange);
-	INSPECTOR_PREFAB(script->coin);
+void Blurrg::Chase()
+{
+	float3 direction = { moveDirection.x, 0.0f, moveDirection.y };
+	if (rigidBody)
+		rigidBody->SetLinearVelocity(direction * ChaseSpeed());
+}
 
-	// Dash
-	INSPECTOR_DRAGABLE_FLOAT(script->dashSpeed);
-	INSPECTOR_DRAGABLE_FLOAT(script->dashingTime);
-	INSPECTOR_DRAGABLE_FLOAT(script->dashingCharge);
-	INSPECTOR_DRAGABLE_FLOAT(script->dashingColdown);
+void Blurrg::Dash()
+{
+	float secondsToStop = DashDuration() - dashTimer.ReadSec(); // Don't want to explain this by text
+	float decceleration = (secondsToStop / DashDuration()) * dashDeccelerationRatio; // if u have any doubts or questions ask me -> @David Rami
+	if (decceleration > 1.0f)
+		decceleration = 1.0f;
 
-	INSPECTOR_DRAGABLE_FLOAT(script->dashRange);
-
-	INSPECTOR_DRAGABLE_FLOAT(script->dashRest);
-	INSPECTOR_DRAGABLE_FLOAT(script->restSpeed);
-
-	// Health
-	INSPECTOR_DRAGABLE_FLOAT(script->health);
-	INSPECTOR_DRAGABLE_FLOAT(script->maxHealth);
-
-	// Attack
-	INSPECTOR_DRAGABLE_FLOAT(script->damage);
-	INSPECTOR_DRAGABLE_FLOAT(script->dashDamage);
-
-	return script;
+	float3 direction = { moveDirection.x, 0.0f, moveDirection.y };
+	if (rigidBody)
+		rigidBody->SetLinearVelocity(direction * DashSpeed() * decceleration);
 }

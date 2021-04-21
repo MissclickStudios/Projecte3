@@ -23,6 +23,7 @@ class R_Animation;
 
 class GameObject;
 class C_Transform;
+class C_Mesh;
 
 struct Channel;
 

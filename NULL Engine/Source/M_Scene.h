@@ -7,7 +7,6 @@
 #include "MathGeoLib/include/Geometry/LineSegment.h"
 #include "MathGeoLib/include/Geometry/Triangle.h"
 #include "Module.h"
-#include "LevelGenerator.h"
 
 namespace math
 {
@@ -123,7 +122,7 @@ public:																														// --- SCENE LIGHT METHODS
 
 	void ShowFPS();
 
-	LevelGenerator* GetLevelGenerator();
+	void ScriptChangeScene(const std::string& sceneName);
 	
 private:
 	std::vector<GameObject*> gameObjects;
@@ -141,14 +140,13 @@ private:
 
 	C_AudioSource*					music = nullptr;
 
-	LevelGenerator					level;
-
 	std::string currentScene;
 
 	std::vector<std::pair<uint32, GameObject**>> toAdd;
 
-public:
+private:
 	bool nextScene = false;
+	std::string nextSceneName;
 
 };
 

@@ -27,7 +27,8 @@ bool M_GameManager::Start()
 	GameApp->gameState = GameState::PLAY;
 	GameApp->renderer->SetRenderWorldGrid(false);
 	GameApp->renderer->SetRenderWorldAxis(false);
-	GameApp->scriptManager->InitScripts();
+	//TODO: InitScripts??? Crec k amb l'init de l'scene ia es fa?
+	//GameApp->scriptManager->InitScripts();
 	return true;
 }
 

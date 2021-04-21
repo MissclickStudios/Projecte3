@@ -1,33 +1,45 @@
 #pragma once
-#include <string>
 #include "Script.h"
 #include "ScriptMacros.h"
-
-#include "MathGeoLib/include/Math/float3.h"
-
 #include "Prefab.h"
 
 class GameObject;
-class C_UI_Text;
 
 class SCRIPTS_API GameManager : public Script {
 public:
     GameManager();
     ~GameManager();
-    //void Awake() override;
-    void Start() override;
-    //void PreUpdate()override;
-    void Update() override;
-    //void PostUpdate()override;
-    //void CleanUp()override;
+    void Awake() override;
+    void Update()override;
 
-    std::string fpsText = "Enter a GO name";
+    void GenerateNewRun();
+    void GoNextRoom();
+    void InitiateLevel(int level);
+    void Continue();
+    void ReturnHub();
 
-    C_UI_Text* fpsCount;
+private:
+    //Level Generator
+    void GenerateLevel();
+    void GoPreviousRoom();
+    void AddFixedRoom(std::string name, int level, int position);
+    void HandleRoomGeneration();
+    void SaveManagerState();
+
+public:
+    std::vector<std::string> level1;
+    std::vector<std::string> level2;
+
+    bool enabled;
+    std::string mainMenuScene;
+    std::string SpawnPointName;
+    Prefab playerPrefab;
+
+private:
+    GameObject* playerGameObject = nullptr;
+    const char* saveFileName = "GameState.json";
+    int	currentLevel = 0;
+    int	roomNum = 0;
 };
 
-SCRIPTS_FUNCTION GameManager* CreateGameManager() {
-    GameManager* script = new GameManager();
-    INSPECTOR_STRING(script->fpsText);
-    return script;
-}
+SCRIPTS_FUNCTION GameManager* CreateGameManager();

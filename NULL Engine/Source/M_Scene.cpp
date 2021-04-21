@@ -84,30 +84,15 @@ bool M_Scene::Start()
 	}
 
 	CreateSceneCamera("SceneCamera");
-
-	level.GetRooms();
-	level.GenerateLevel();
-	
-	level.AddFixedRoom("InitialL1", 1, 1);
-	level.AddFixedRoom("InitialL2", 2, 1);
-
-	level.AddFixedRoom("BossL1", 1, 10);
-	level.AddFixedRoom("BossL2", 2, 10);
-
-	level.AddFixedRoom("ShopL1", 1, 4);
-	level.AddFixedRoom("ShopL2", 2, 4);
-
-	/*level.AddFixedRoom("Start",1 ,1); 
-	level.AddFixedRoom("Boss",1 ,15);*/
-	
 	
 
 	if(App->gameState == GameState::PLAY)
-		App->scene->LoadScene("Assets/Scenes/MainMenu.json");
+		LoadScene("Assets/Scenes/MainMenu.json");
 	else
 	{
 		std::string s = ASSETS_SCENES_PATH + currentScene + JSON_EXTENSION;
 		LoadScene(s.c_str());
+		//LoadScene("Assets/Scenes/MainMenu.json");
 	}
 
 	//LoadScene("Assets/Scenes/UITestScene.json");
@@ -185,10 +170,6 @@ UpdateStatus M_Scene::Update(float dt)
 			}
 		}
 	}
-
-	// --- Room Generation
-	level.HandleRoomGeneration();
-	//--
 	
 	ShowFPS();
 
@@ -201,7 +182,7 @@ UpdateStatus M_Scene::PostUpdate(float dt)
 
 	if (nextScene)
 	{
-		level.GoNextRoom();
+		LoadScene(nextSceneName.c_str());
 		nextScene = false;
 	}
 
@@ -279,6 +260,9 @@ bool M_Scene::SaveScene(const char* sceneName) const
 		(*object)->SaveState(arrayNode);
 	}
 
+	if (!strcmp(sceneName,AUTOSAVE_FILE_NAME))
+		rootNode.SetString("Autosaved Sene Name", currentScene.c_str());
+
 	char* buffer		= nullptr;
 	std::string name	= (sceneName != nullptr) ? sceneName : sceneRoot->GetName();
 	std::string path	= ASSETS_SCENES_PATH + name + JSON_EXTENSION;
@@ -321,7 +305,7 @@ bool M_Scene::LoadScene(const char* path)
 
 	App->fileSystem->SplitFilePath(path, nullptr, &sceneName);
 
-	if(sceneName != "PlayAutosave")
+	if(sceneName != AUTOSAVE_FILE_NAME)
 		currentScene = sceneName;
 
 	App->camera->SetMasterCameraAsCurrentCamera();
@@ -339,6 +323,8 @@ bool M_Scene::LoadScene(const char* path)
 	if (buffer != nullptr)
 	{
 		App->renderer->ClearRenderers();
+		if (App->gameState == GameState::PLAY)
+			App->scriptManager->CleanUpScripts();
 		CleanUp();
 		App->uiSystem->CleanUpScene();
 
@@ -349,6 +335,9 @@ bool M_Scene::LoadScene(const char* path)
 		ParsonArray modelsArray		= newRoot.GetArray("Models In Scene");
 		ParsonArray objectsArray	= newRoot.GetArray("Game Objects");
 		RELEASE_ARRAY(buffer);
+
+		if (sceneName == AUTOSAVE_FILE_NAME)
+			currentScene = newRoot.GetString("Autosaved Sene Name");
 
 		for (uint i = 0; i < modelsArray.size; ++i)
 		{
@@ -1457,9 +1446,10 @@ void M_Scene::ShowFPS()
 	}*/
 }
 
-LevelGenerator* M_Scene::GetLevelGenerator()
+void M_Scene::ScriptChangeScene(const std::string& sceneName)
 {
-	return &level;
+	nextScene = true;
+	nextSceneName = sceneName;
 }
 
 void M_Scene::DeleteSelectedGameObject()

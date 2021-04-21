@@ -30,12 +30,18 @@ public:
 
 public:
 	C_Script* actualScriptLoading;
-	//TODO: Maybe not needed on gameplay
-	//To know if we have reloaded scripts this frame
+	//Scripts Dll vector Helpers
+	void (*StringVecPushBackString)(void*,const std::string&) = nullptr;
+	void (*StringVecPushBackChar)(void*,const char*) = nullptr;
+	void (*StringVecEmplaceBackChar)(void*,const char*) = nullptr;
+	void (*StringVecEmplaceBackString)(void*,const std::string&) = nullptr;
+	void (*StringVecReserve)(void*, int) = nullptr;
+	void (*StringVecErase)(void*, int) = nullptr;
 
 protected:
 	HINSTANCE dllHandle;
 	std::vector<Script*>currentScripts;
+	void ResolveScriptHelperFunctions();
 
 	friend class C_Script;
 };

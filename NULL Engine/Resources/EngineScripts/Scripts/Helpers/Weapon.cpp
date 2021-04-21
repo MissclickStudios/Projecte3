@@ -1,228 +1,347 @@
+#include "Weapon.h"
+
 #include "Application.h"
-#include "M_Input.h"
+#include "M_Physics.h"
 #include "M_Scene.h"
 #include "M_ResourceManager.h"
 
 #include "GameObject.h"
 #include "C_Transform.h"
 #include "C_RigidBody.h"
-#include "C_BoxCollider.h"
-#include "C_Script.h"
-#include "C_AudioSource.h"
 
 #include "Bullet.h"
 
-#include "Weapon.h"
-
-Weapon::Weapon(GameObject* shooter, Prefab projectilePrefab, int projectilesNum, int maxAmmo, float projectileSpeed, float fireRate, bool automatic)
+struct Projectile
 {
-	this->shooter = shooter;
-	this->projectilePrefab = projectilePrefab;
+	Projectile() : object(nullptr), inUse(false), bulletScript(nullptr) {}
+	Projectile(GameObject* object) : object(object), inUse(false) { FindBulletScript(); }
+	Projectile(GameObject* object, bool inUse) : object(object), inUse(inUse) { FindBulletScript(); }
 
-	this->projectilesNum = projectilesNum;
-	this->maxAmmo = maxAmmo;
-	ammo = maxAmmo;
+	void FindBulletScript() { if (object) bulletScript = (Bullet*)object->GetScript("Bullet"); }
 
-	this->projectileSpeed = projectileSpeed;
-	this->fireRate = fireRate;
-	fireRateTimer.Stop();
+	GameObject* object;
+	Bullet* bulletScript;
+	bool inUse;
+};
 
-	this->automatic = automatic;
+Weapon::Weapon() : Object()
+{
+	baseType = ObjectType::WEAPON;
 }
 
 Weapon::~Weapon()
 {
-	if (projectileStorage || projectiles)
-		CleanUp();
+}
+
+void Weapon::Start()
+{
+	fireRateTimer.Stop();
+	reloadTimer.Stop();
 }
 
 void Weapon::Update()
 {
-	if (!projectileStorage)
+	if (updateProjectiles)
 	{
-		if (projectiles)
-			DeleteProjectiles();
-		projectiles = new Projectile * [projectilesNum];
-
-		projectileStorage = App->scene->CreateGameObject("Bullets", App->scene->GetSceneRoot());
-		for (uint i = 0; i < projectilesNum; ++i)
-			projectiles[i] = CreateProjectile(i);
+		updateProjectiles = false;
+		CreateProjectiles();
 	}
 }
 
 void Weapon::CleanUp()
 {
-	if (projectiles)
-		DeleteProjectiles();
-	if (projectileStorage)
-		DeleteProjectileStorage();
+	DeleteProjectiles();
+
+	hand = nullptr;
 }
 
-bool Weapon::Shoot(float3 direction)
+void Weapon::Activate()
 {
-	if (ammo > 0)
-	{
-		if (!automatic)
-		{
-			if (App->input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_DOWN || App->input->GetGameControllerTrigger(1) == ButtonState::BUTTON_DOWN)
-			{
-				FireProjectile(direction);
-				return true;
-			}
-		}
-		else
-		{
-			if (App->input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_REPEAT || App->input->GetGameControllerTrigger(1) == ButtonState::BUTTON_REPEAT)
-			{
-				if (!fireRateTimer.IsActive())
-				{
-					FireProjectile(direction);
-					fireRateTimer.Start();
-				}
-				else if (fireRateTimer.ReadSec() >= fireRate)
-				{
-					FireProjectile(direction);
-					fireRateTimer.Stop();
-					fireRateTimer.Start();
-				}
+	for (uint i = 0; i < gameObject->components.size(); ++i)
+		gameObject->components[i]->SetIsActive(true);
+	gameObject->SetIsActive(true);
+}
 
-				return true;
-			}
-		}
+void Weapon::Deactivate()
+{
+	for (uint i = 0; i < gameObject->components.size(); ++i)
+		gameObject->components[i]->SetIsActive(false);
+	gameObject->SetIsActive(false);
+}
+
+ShootState Weapon::Shoot(float2 direction)
+{
+	ShootState state = ShootLogic();
+	if (state == ShootState::FIRED_PROJECTILE)
+	{
+		FireProjectile(direction);
+
+		ammo -= projectilesPerShot;
+		if (ammo < 0)
+			ammo = 0;
+	}
+	return state;
+}
+
+bool Weapon::Reload()
+{
+	if (!reloadTimer.IsActive())
+		reloadTimer.Start();
+	else if (reloadTimer.ReadSec() >= reloadTime)
+	{
+		reloadTimer.Stop();
+		ammo = MaxAmmo();
+
+		return true;
 	}
 	return false;
 }
 
-Projectile* Weapon::CreateProjectile(uint index)
+void Weapon::SetOwnership(EntityType type, GameObject* hand)
 {
-	GameObject* projectile = App->resourceManager->LoadPrefab(projectilePrefab.uid, projectileStorage);
-	projectile->GetComponent<C_BoxCollider>()->Update();
+	this->hand = hand;
 
-	char n[10];
-	sprintf_s(n, "%d", index);
-	std::string num = n;
-	std::string name("Projectile" + num);
+	CreateProjectiles();
+	RefreshPerks();
 
-	projectile->SetName(name.c_str());
+	SetUp();
 
-	float3 position = float3::zero;
-	projectile->transform->SetWorldPosition(position);
-
-	((Bullet*)projectile->GetComponent<C_Script>()->GetScriptData())->SetShooter(shooter, index);
-
-	for (uint i = 0; i < projectile->components.size(); ++i)
-		projectile->components[i]->SetIsActive(false);
-	projectile->SetIsActive(false);
-
-	return new Projectile(projectile);
+	if (type == EntityType::PLAYER)
+	{
+		if (!projectiles)
+			return;
+		for (uint i = 0; i < projectileNum; ++i)
+		{
+			if (!projectiles[i])
+				continue;
+			if (!projectiles[i]->inUse)
+			{
+				C_RigidBody* rigidBody = projectiles[i]->object->GetComponent<C_RigidBody>();
+				if (rigidBody)
+					rigidBody->ChangeFilter(" bullet");
+			}
+		}
+	}
 }
 
-void Weapon::FireProjectile(float3 direction)
+void Weapon::ProjectileCollisionReport(int index)
 {
-	if (!projectileStorage || !projectiles)
+	if (!projectiles)
+		return;
+	if (!projectiles[index])
+		return;
+
+	projectiles[index]->inUse = false;
+
+	if (!projectiles[index]->object)
+		return;
+	projectiles[index]->object->transform->SetLocalPosition(float3::zero);
+
+	projectiles[index]->object->SetIsActive(false);
+	for (uint i = 0; i < projectiles[index]->object->components.size(); ++i)
+		projectiles[index]->object->components[i]->SetIsActive(false);
+}
+
+void Weapon::RefreshPerks()
+{
+	// Reset modifiers and on hit effects to avoid overwritting
+	damageModifier = DEFAULT_MODIFIER;
+	projectileSpeedModifier = DEFAULT_MODIFIER;
+	fireRateModifier = DEFAULT_MODIFIER;
+	reloadTimeModifier = DEFAULT_MODIFIER;
+	maxAmmoModifier = 0.0f;
+	PPSModifier = 0.0f;
+	onHitEffects.clear();
+
+	// Apply each perk
+	for (uint i = 0; i < perks.size(); ++i)
+		switch (perks[i])
+		{
+		case Perk::DAMAGE_UP:
+			DamageUp();
+			break;
+		case Perk::MAXAMMO_UP:
+			MaxAmmoUp();
+			break;
+		case Perk::FIRERATE_UP:
+			FireRateUp();
+			break;
+		case Perk::FAST_RELOAD:
+			FastReload();
+			break;
+		case Perk::FREEZE_BULLETS:
+			FreezeBullets();
+			break;
+		}
+}
+
+void Weapon::AddPerk(Perk perk)
+{
+	perks.push_back(perk);
+	RefreshPerks();
+}
+
+void Weapon::DamageUp()
+{
+	damageModifier += 1.0f;
+}
+
+void Weapon::MaxAmmoUp()
+{
+	maxAmmoModifier += 10;
+}
+
+void Weapon::FireRateUp()
+{
+	fireRateModifier -= 0.2f;
+	if (fireRateModifier < 0.1f)
+		fireRateModifier = 0.1f;
+}
+
+void Weapon::FastReload()
+{
+	reloadTime -= 0.2f;
+	if (reloadTime < 0.1f)
+		reloadTime = 0.1f;
+}
+
+void Weapon::FreezeBullets()
+{
+	onHitEffects.emplace_back(Effect(EffectType::FROZEN, 4.0f, false));
+}
+
+void Weapon::CreateProjectiles()
+{
+	DeleteProjectiles();
+
+	if (projectilePrefab.uid == NULL)
+		return;
+
+	projectiles = new Projectile * [projectileNum];
+	projectileHolder = App->scene->CreateGameObject("Bullets", gameObject);
+
+	for (uint i = 0; i < projectileNum; ++i)
+	{
+		GameObject* object = App->resourceManager->LoadPrefab(projectilePrefab.uid, projectileHolder); // Load the prefab onto a gameobject
+		Projectile* projectile = new Projectile(object);
+
+		char n[10];
+		sprintf_s(n, "%d", i);
+		std::string num = n;
+		std::string name("Projectile" + num);
+		object->SetName(name.c_str()); // Rename it
+
+		object->transform->SetLocalPosition(float3::zero);
+
+		if (projectile->bulletScript)
+			projectile->bulletScript->SetShooter(this, i); // Set up the bullet script
+
+		for (uint i = 0; i < object->components.size(); ++i)
+			object->components[i]->SetIsActive(false);
+		object->SetIsActive(false);
+
+		projectiles[i] = projectile;
+	}
+}
+
+void Weapon::DeleteProjectiles()
+{
+	if (projectiles)
+	{
+		for (uint i = 0; i < projectileNum; ++i)
+		{
+			if (projectiles[i])
+				delete projectiles[i];
+			projectiles[i] = nullptr;
+		}
+		delete projectiles;
+		projectiles = nullptr;
+	}
+	if (projectileHolder)
+	{
+		projectileHolder->toDelete = true;
+		projectileHolder = nullptr;
+	}
+}
+
+void Weapon::FireProjectile(float2 direction)
+{
+	if (!projectileHolder || !projectiles)
 		return;
 
 	if (direction.IsZero())
-		++direction.z;
+		return;
+	direction.Normalize();
 
-	GameObject* projectile = nullptr;
+	Projectile* projectile = nullptr;
 
-	for (uint i = 0; i < projectilesNum; ++i)
+	for (uint i = 0; i < projectileNum; ++i)
 		if (!projectiles[i]->inUse)
 		{
 			projectiles[i]->inUse = true;
-			projectile = projectiles[i]->object;
+			projectile = projectiles[i];
 			break;
 		}
 	if (!projectile)
 		return;
 
-	float3 position = shooter->transform->GetWorldPosition();
-	float2 dir = { direction.x, -direction.z };
-	float2 invdir = { -direction.z, direction.x };
+	float3 position = float3::zero;
+	if (hand)
+		position = hand->transform->GetWorldPosition();
 
-	position.x += invdir.x * 1.4;
-	position.y += 6.5;
-	position.z += invdir.y * 1.4;
-	projectile->transform->SetWorldPosition(position);
-
-	float rad = dir.AimedAngle();
-	projectile->transform->SetLocalRotation(float3(0, rad + DegToRad(90), 0));
-
-	C_RigidBody* rigidBody = projectile->GetComponent<C_RigidBody>();
-	if (rigidBody)
+	if (projectile->object)
 	{
-		rigidBody->TransformMovesRigidBody(true);
-		rigidBody->SetLinearVelocity(direction * projectileSpeed);
-	}
+		projectile->object->transform->SetWorldPosition(position);
 
-	C_AudioSource* source = projectile->GetComponent<C_AudioSource>();
-	if (source)
-		source->PlayFx(source->GetEventId());
+		float rad = direction.AimedAngle();
+		projectile->object->transform->SetLocalRotation(float3(0, -rad, 0));
 
-	projectile->SetIsActive(true);
-	for (uint i = 0; i < projectile->components.size(); ++i)
-		projectile->components[i]->SetIsActive(true);
-
-	--ammo;
-}
-
-void Weapon::Reload()
-{
-	ammo = maxAmmo;
-}
-
-void Weapon::DisableProjectile(uint index)
-{
-	projectiles[index]->inUse = false;
-}
-
-bool Weapon::SandTrooperShoot(float3 direction, float modifier)
-{
-	if (ammo > 0)
-	{
-		if (!automatic)
+		C_RigidBody* rigidBody = projectile->object->GetComponent<C_RigidBody>();
+		if (rigidBody)
 		{
-			FireProjectile(direction);
-
-			return true;
+			float3 aimDirection = { direction.x, 0.0f, direction.y };
+			rigidBody->TransformMovesRigidBody(true);
+			rigidBody->SetLinearVelocity(aimDirection * ProjectileSpeed());
 		}
-		else
-		{
-			if (!fireRateTimer.IsActive())
-			{
-				FireProjectile(direction);
-				fireRateTimer.Start();
 
-				return true;
-			}
-			else if (fireRateTimer.ReadSec() >= fireRate / modifier)
-			{
-				FireProjectile(direction);
-				fireRateTimer.Stop();
-				fireRateTimer.Start();
+		if (projectile->bulletScript)
+			projectile->bulletScript->SetOnHitData(Damage(), onHitEffects, BulletLifeTime());
 
-				return true;
-			}
-		}
+		//C_AudioSource* source = projectile->object->GetComponent<C_AudioSource>();
+		//if (source)
+		//	source->PlayFx(source->GetEventId());
+
+		projectile->object->SetIsActive(true);
+		for (uint i = 0; i < projectile->object->components.size(); ++i)
+			projectile->object->components[i]->SetIsActive(true);
 	}
-	return false;
 }
 
-void Weapon::DeleteProjectiles()
-{
-	for (uint i = 0; i < projectilesNum; ++i)
-	{
-		if (projectiles[i])
-			delete projectiles[i];
-		projectiles[i] = nullptr;
-	}
-	delete projectiles;
-	projectiles = nullptr;
-}
-
-void Weapon::DeleteProjectileStorage()
-{
-	projectileStorage->toDelete = true;
-	projectileStorage = nullptr;
-}
+//	// Stats
+//	// Shoot
+//	INSPECTOR_DRAGABLE_FLOAT(damage);
+//	INSPECTOR_DRAGABLE_FLOAT(projectileSpeed);
+//	INSPECTOR_DRAGABLE_FLOAT(fireRate);
+//	INSPECTOR_DRAGABLE_INT(ammo);
+//	INSPECTOR_DRAGABLE_INT(maxAmmo);
+//	INSPECTOR_DRAGABLE_INT(projectilesPerShot);
+//
+//	INSPECTOR_GAMEOBJECT(hand);
+//	// Reload
+//	INSPECTOR_DRAGABLE_FLOAT(reloadTime);
+//
+//	// Modifiers
+//	INSPECTOR_DRAGABLE_FLOAT(damageModifier);
+//	INSPECTOR_DRAGABLE_FLOAT(projectileSpeedModifier);
+//	INSPECTOR_DRAGABLE_FLOAT(fireRateModifier);
+//	INSPECTOR_DRAGABLE_FLOAT(reloadTimeModifier);
+//	INSPECTOR_DRAGABLE_INT(maxAmmoModifier);
+//	INSPECTOR_DRAGABLE_INT(PPSModifier);
+//
+//	// Prefabs
+//	INSPECTOR_PREFAB(weaponModel);
+//	INSPECTOR_PREFAB(projectilePrefab);
+//
+//	// Projectiles
+//	INSPECTOR_DRAGABLE_INT(projectileNum);
+//	INSPECTOR_CHECKBOX_BOOL(updateProjectiles);

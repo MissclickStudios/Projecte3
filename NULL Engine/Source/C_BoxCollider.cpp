@@ -40,7 +40,7 @@ bool C_BoxCollider::Update()
 		{
 			shape->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE, !isTrigger);
 			shape->setFlag(physx::PxShapeFlag::eTRIGGER_SHAPE, isTrigger);
-
+			
 			physx::PxFilterData filterData;
 			const std::string* filter = GetOwner()->GetComponent<C_RigidBody>()->GetFilter();
 			filterData.word0 = (int)filter;

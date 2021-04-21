@@ -2,9 +2,9 @@
 #include "M_Scene.h"
 #include "C_Canvas.h"
 #include "C_UI_Button.h"
-#include "LevelGenerator.h"
 #include "GameObject.h"
 #include "MainMenuManager.h"
+#include "GameManager.h"
 
 MainMenuManager::MainMenuManager() : Script()
 {
@@ -16,50 +16,30 @@ MainMenuManager::~MainMenuManager()
 
 void MainMenuManager::Start()
 {
-	playButton = (C_UI_Button*)App->scene->GetGameObjectByName(buttonName.c_str())->GetComponent<C_UI_Button>();
-	optionsButton = (C_UI_Button*)App->scene->GetGameObjectByName(buttonName1.c_str())->GetComponent<C_UI_Button>();
-	continueButton = (C_UI_Button*)App->scene->GetGameObjectByName(buttonName2.c_str())->GetComponent<C_UI_Button>();
-	exitButton = (C_UI_Button*)App->scene->GetGameObjectByName(buttonName3.c_str())->GetComponent<C_UI_Button>();
+	if(playButtonObject != nullptr)
+		playButton = (C_UI_Button*)playButtonObject->GetComponent<C_UI_Button>();
+	if (continueButtonObject != nullptr)
+		continueButton = (C_UI_Button*)continueButtonObject->GetComponent<C_UI_Button>();
+	if (exitButtonObject != nullptr)
+		exitButton = (C_UI_Button*)exitButtonObject->GetComponent<C_UI_Button>();
 }
 
 void MainMenuManager::Update()
 {
-
-	//Continue Button
-	if (continueButton != nullptr)
+	if (playButton && playButton->IsPressed() && gameManager != nullptr)
 	{
-		if (continueButton->IsPressed())
-		{
-
-		}
+		GameManager* gameManagerScript = (GameManager*)gameManager->GetScript("GameManager");
+		gameManagerScript->GenerateNewRun();
+		gameManagerScript->InitiateLevel(1);
 	}
-
-	//Main Menu Button
-	if (optionsButton != nullptr)
+	if (continueButton && continueButton->IsPressed() && gameManager != nullptr)
 	{
-		if (optionsButton->IsPressed())
-		{
-			//App->scene->GetLevelGenerator()->InitiateLevel(1);
-		}
+		GameManager* gameManagerScript = (GameManager*)gameManager->GetScript("GameManager");
+		gameManagerScript->Continue();
 	}
-
-	//Options Play Button
-	if (playButton != nullptr)
+	if (exitButton && exitButton->IsPressed() && gameManager != nullptr)
 	{
-		if (playButton->IsPressed())
-		{
-
-		}
+		GameManager* gameManagerScript = (GameManager*)gameManager->GetScript("GameManager");
+		App->quit = true;
 	}
-
-
-	//Start Play Button
-	if (exitButton != nullptr)
-	{
-		if (exitButton->IsPressed())
-		{
-
-		}
-	}
-	
 }

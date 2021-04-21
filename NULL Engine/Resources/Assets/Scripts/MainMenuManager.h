@@ -16,22 +16,21 @@ public:
 	void Update() override;
 	//void PostUpdate()override;
 	//void CleanUp()override;
-	std::string buttonName = "play";
-	std::string buttonName1 = "continue";
-	std::string buttonName2 = "options";
-	std::string buttonName3 = "exit";
+	GameObject* playButtonObject = nullptr;
+	GameObject* continueButtonObject = nullptr;
+	GameObject* exitButtonObject = nullptr;
+	GameObject* gameManager = nullptr;
 private:
-	C_UI_Button* playButton;
-	C_UI_Button* continueButton;
-	C_UI_Button* optionsButton;
-	C_UI_Button* exitButton;
+	C_UI_Button* playButton = nullptr;
+	C_UI_Button* continueButton = nullptr;
+	C_UI_Button* exitButton = nullptr;
 };
 
 SCRIPTS_FUNCTION MainMenuManager* CreateMainMenuManager() {
 	MainMenuManager* script = new MainMenuManager();
-	INSPECTOR_STRING(script->buttonName);
-	INSPECTOR_STRING(script->buttonName1);
-	INSPECTOR_STRING(script->buttonName2);
-	INSPECTOR_STRING(script->buttonName3);
+	INSPECTOR_GAMEOBJECT(script->playButtonObject);
+	INSPECTOR_GAMEOBJECT(script->continueButtonObject);
+	INSPECTOR_GAMEOBJECT(script->exitButtonObject);
+	INSPECTOR_GAMEOBJECT(script->gameManager);
 	return script;
 }
