@@ -1008,84 +1008,6 @@
             ]
         },
         {
-            "UID": 1285169256,
-            "ParentUID": 2005580296,
-            "PrefabID": 316805506,
-            "IsPrefab": true,
-            "Name": "Game Manager",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": true,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        0,
-                        0
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {
-                    "Type": 24,
-                    "ResourceUID": 1796064373,
-                    "AssetsPath": "Assets\/Scripts\/\/GameManager.h",
-                    "DataName": "GameManager",
-                    "HasInspector": true,
-                    "InspectorVariables": [
-                        {
-                            "Type": 1,
-                            "Name": "enabled",
-                            "bool": false
-                        },
-                        {
-                            "Type": 5,
-                            "Name": "mainMenuScene",
-                            "string": "MainMenu"
-                        },
-                        {
-                            "Type": 7,
-                            "Name": "level1",
-                            "vectorstring": [
-                                "Level1_Room1.json",
-                                "Level1_Room2.json",
-                                "Level1_Room3.json",
-                                "Level1_Room6.json",
-                                "Level1_Room8.json",
-                                "Level1_Room9.json",
-                                "Level1_Room10.json"
-                            ]
-                        },
-                        {
-                            "Type": 7,
-                            "Name": "level2",
-                            "vectorstring": [
-                                "Level2_Room1.json",
-                                "Level2_Room2.json",
-                                "Level2_Room3.json",
-                                "Level2_Room4.json",
-                                "Level2_Room5.json",
-                                "Level2_Room6.json",
-                                "Level2_Room7.json"
-                            ]
-                        }
-                    ]
-                }
-            ]
-        },
-        {
             "UID": 1388249852,
             "ParentUID": 1739709232,
             "PrefabID": 1524961430,
@@ -1816,7 +1738,7 @@
         },
         {
             "UID": 2005580296,
-            "ParentUID": 1041368411,
+            "ParentUID": 326369159,
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "MainScene",
@@ -1832,6 +1754,39 @@
                         0,
                         0,
                         0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 2017243340,
+            "ParentUID": 2005580296,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "PlayerSpawn",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": true,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -20.525482177734375,
+                        0,
+                        48.298496246337891
                     ],
                     "LocalRotation": [
                         0,
@@ -2115,6 +2070,93 @@
                         "LibaryPath": "Library\/Shaders\/1245753822.neshader",
                         "LibraryFile": "1245753822.neshader"
                     }
+                }
+            ]
+        },
+        {
+            "UID": 69907933,
+            "ParentUID": 2005580296,
+            "PrefabID": 316805506,
+            "IsPrefab": true,
+            "Name": "Game Manager",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": true,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 24,
+                    "ResourceUID": 1796064373,
+                    "AssetsPath": "Assets\/Scripts\/\/GameManager.h",
+                    "DataName": "GameManager",
+                    "HasInspector": true,
+                    "InspectorVariables": [
+                        {
+                            "Type": 1,
+                            "Name": "enabled",
+                            "bool": true
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "mainMenuScene",
+                            "string": "MainMenu"
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "SpawnPointName",
+                            "string": "PlayerSpawn"
+                        },
+                        {
+                            "Type": 7,
+                            "Name": "level1",
+                            "vectorstring": [
+                                "Assets\/Scenes\/Level1_Room1.json",
+                                "Assets\/Scenes\/Level1_Room8.json",
+                                "Assets\/Scenes\/Level1_Room6.json",
+                                "Assets\/Scenes\/Level1_Room2.json",
+                                "Assets\/Scenes\/Level1_Room9.json",
+                                "Assets\/Scenes\/Level1_Room3.json"
+                            ]
+                        },
+                        {
+                            "Type": 7,
+                            "Name": "level2",
+                            "vectorstring": [
+                                "Assets\/Scenes\/Level2_Room2.json",
+                                "Assets\/Scenes\/Level2_Room3.json",
+                                "Assets\/Scenes\/Level2_Room4.json",
+                                "Assets\/Scenes\/Level2_Room1.json",
+                                "Assets\/Scenes\/Level2_Room6.json",
+                                "Assets\/Scenes\/Level2_Room7.json",
+                                "Assets\/Scenes\/Level2_Room5.json"
+                            ]
+                        },
+                        {
+                            "Type": 4,
+                            "Name": "playerPrefab",
+                            "prefab": 228946096
+                        }
+                    ]
                 }
             ]
         }

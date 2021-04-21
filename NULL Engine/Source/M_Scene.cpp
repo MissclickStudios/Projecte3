@@ -319,7 +319,7 @@ bool M_Scene::LoadScene(const char* path)
 	{
 		App->renderer->ClearRenderers();
 		if (App->gameState == GameState::PLAY)
-			App->scriptManager->CleanUp();
+			App->scriptManager->CleanUpScripts();
 		CleanUp();
 
 		//std::vector<GameObject*> parentMaintained;

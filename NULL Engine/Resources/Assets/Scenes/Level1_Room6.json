@@ -520,6 +520,39 @@
             ]
         },
         {
+            "UID": 126856711,
+            "ParentUID": 433834850,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "PlayerSpawn",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": true,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -73.726615905761719,
+                        0,
+                        83.197906494140625
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
             "UID": 140217253,
             "ParentUID": 90007483,
             "PrefabID": 0,
@@ -1192,7 +1225,7 @@
         },
         {
             "UID": 433834850,
-            "ParentUID": 1041368411,
+            "ParentUID": 669853468,
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "MainScene",
@@ -4054,12 +4087,17 @@
                         {
                             "Type": 1,
                             "Name": "enabled",
-                            "bool": false
+                            "bool": true
                         },
                         {
                             "Type": 5,
                             "Name": "mainMenuScene",
                             "string": "MainMenu"
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "SpawnPointName",
+                            "string": ""
                         },
                         {
                             "Type": 7,
@@ -4070,8 +4108,7 @@
                                 "Level1_Room3.json",
                                 "Level1_Room6.json",
                                 "Level1_Room8.json",
-                                "Level1_Room9.json",
-                                "Level1_Room10.json"
+                                "Level1_Room9.json"
                             ]
                         },
                         {
@@ -4086,6 +4123,11 @@
                                 "Level2_Room6.json",
                                 "Level2_Room7.json"
                             ]
+                        },
+                        {
+                            "Type": 4,
+                            "Name": "playerPrefab",
+                            "prefab": 1566744972
                         }
                     ]
                 }

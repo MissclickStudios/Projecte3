@@ -11,6 +11,9 @@
 #include "Log.h"
 #include "CoreDllHelpers.h"
 #include "GameObject.h"
+#include "M_ResourceManager.h"
+#include "C_Transform.h"
+#include "Player.h"
 
 GameManager::GameManager(): Script()
 {
@@ -54,6 +57,13 @@ void GameManager::Awake()
 				level2.emplace_back(levelArray2.GetString(i));
 			}
 			//TODO:Spawn player and everything on the level
+			playerGameObject = App->resourceManager->LoadPrefab(playerPrefab.uid, App->scene->GetSceneRoot());
+			GameObject* playerSpawn = App->scene->GetGameObjectByName(SpawnPointName.c_str());
+			if (playerSpawn != nullptr && playerGameObject != nullptr) 
+			{
+				playerGameObject->transform->SetLocalPosition(playerSpawn->transform->GetLocalPosition());
+				//playerTrans->SetLocalRotation(spawnTrans->GetLocalRotation());
+			}
 		}
 	}
 }
@@ -74,7 +84,8 @@ void GameManager::GenerateNewRun()
 		//Check that the input room files exist
 		for (int i = 0; i < level1.size(); ++i)
 		{
-			level1[i] = ASSETS_SCENES_PATH + level1[i];
+			if(!strstr(level1[i].c_str(),ASSETS_SCENES_PATH))
+				level1[i] = ASSETS_SCENES_PATH + level1[i];
 			if (!App->fileSystem->Exists(level1[i].c_str()))
 			{
 				level1.erase(level1.begin() + i);
@@ -83,7 +94,8 @@ void GameManager::GenerateNewRun()
 		}
 		for (int i = 0; i < level2.size(); ++i)
 		{
-			level2[i] = ASSETS_SCENES_PATH + level2[i];
+			if (!strstr(level2[i].c_str(), ASSETS_SCENES_PATH))
+				level2[i] = ASSETS_SCENES_PATH + level2[i];
 			if (!App->fileSystem->Exists(level2[i].c_str()))
 			{
 				level2.erase(level2.begin() + i);
@@ -428,7 +440,9 @@ GameManager* CreateGameManager() {
 	GameManager* script = new GameManager();
 	INSPECTOR_CHECKBOX_BOOL(script->enabled);
 	INSPECTOR_STRING(script->mainMenuScene);
+	INSPECTOR_STRING(script->SpawnPointName);
 	INSPECTOR_VECTOR_STRING(script->level1);
 	INSPECTOR_VECTOR_STRING(script->level2);
+	INSPECTOR_PREFAB(script->playerPrefab);
 	return script;
 }

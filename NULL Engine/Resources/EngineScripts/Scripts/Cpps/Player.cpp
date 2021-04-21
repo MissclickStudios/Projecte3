@@ -96,6 +96,7 @@ void Player::SetUp()
 	invencibilityTimer.Stop();
 	changeTimer.Stop();
 
+	rigidBody->TransformMovesRigidBody(false);
 
 	GameObject* hand = nullptr;
 	if (skeleton)

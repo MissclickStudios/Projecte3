@@ -48,12 +48,17 @@
                         {
                             "Type": 1,
                             "Name": "enabled",
-                            "bool": false
+                            "bool": true
                         },
                         {
                             "Type": 5,
                             "Name": "mainMenuScene",
                             "string": "MainMenu"
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "SpawnPointName",
+                            "string": ""
                         },
                         {
                             "Type": 7,
@@ -64,8 +69,7 @@
                                 "Level1_Room3.json",
                                 "Level1_Room6.json",
                                 "Level1_Room8.json",
-                                "Level1_Room9.json",
-                                "Level1_Room10.json"
+                                "Level1_Room9.json"
                             ]
                         },
                         {
@@ -80,6 +84,11 @@
                                 "Level2_Room6.json",
                                 "Level2_Room7.json"
                             ]
+                        },
+                        {
+                            "Type": 4,
+                            "Name": "playerPrefab",
+                            "prefab": 1566744972
                         }
                     ]
                 }
@@ -1918,7 +1927,7 @@
         },
         {
             "UID": 888400124,
-            "ParentUID": 1041368411,
+            "ParentUID": 669853468,
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "MainScene",
@@ -4351,6 +4360,39 @@
                         "LibaryPath": "Library\/Textures\/1024641721.netex",
                         "LibraryFile": "1024641721.netex"
                     }
+                }
+            ]
+        },
+        {
+            "UID": 398341266,
+            "ParentUID": 888400124,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "PlayerSpawn",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": true,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -55.609649658203125,
+                        0,
+                        -56.792686462402344
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
                 }
             ]
         }
