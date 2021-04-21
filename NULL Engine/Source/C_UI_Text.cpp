@@ -226,6 +226,8 @@ void C_UI_Text::RenderText( )
 	glBindVertexArray(VAO);
 
 	int i = 0;
+	uint it = 0;
+	bool rowHead = true;
 	std::string::const_iterator c;
 	for (c = text.begin(); c != text.end(); c++)
 	{
@@ -233,11 +235,11 @@ void C_UI_Text::RenderText( )
 
 		glBindTexture(GL_TEXTURE_2D, ch.textureID);
 
-		float xpos = (x + ch.bearing.x) ;
-		float ypos = (y - (ch.size.y - ch.bearing.y)) ;
+		float xpos = (x + ch.bearing.x);
+		float ypos = (y - (ch.size.y - ch.bearing.y));
 
-		float w = ch.size.x ;
-		float h = ch.size.y ;
+		float w = ch.size.x;
+		float h = ch.size.y;
 
 		ypos = ypos - vSpaceBetween * 5 * i;
 
@@ -258,14 +260,30 @@ void C_UI_Text::RenderText( )
 
 		if (x > rect.w * 15000)
 		{
+			rowHead = true;
 			x = 0;
 			i++;
 		}
 		else
 		{
-			float adv = ch.advance + hSpaceBetween * 10;
-			x += ((uint)adv >> 6);
+			char j = text.at(it);
+			std::string converter = " ";
+			char k = converter.at(0);
+			if (j == k && rowHead)
+			{
+				// I know it's weirde but I can't think of another way to do it :/
+			}
+			else
+			{
+				float adv = ch.advance + hSpaceBetween * 10;
+				x += ((uint)adv >> 6);
+			}
+
+			rowHead = false;
 		}
+	
+
+		it++;
 	}
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
