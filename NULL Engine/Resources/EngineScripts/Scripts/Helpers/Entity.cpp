@@ -97,13 +97,6 @@ void Entity::OnCollisionEnter(GameObject* object)
 {
 }
 
-void Entity::Deactivate()
-{
-	for (uint i = 0; i < gameObject->components.size(); ++i)
-		gameObject->components[i]->SetIsActive(false);
-	gameObject->SetIsActive(false);
-}
-
 void Entity::TakeDamage(float damage)
 {
 	health -= damage / Defense();

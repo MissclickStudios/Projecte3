@@ -55,20 +55,6 @@ void Weapon::CleanUp()
 	hand = nullptr;
 }
 
-void Weapon::Activate()
-{
-	for (uint i = 0; i < gameObject->components.size(); ++i)
-		gameObject->components[i]->SetIsActive(true);
-	gameObject->SetIsActive(true);
-}
-
-void Weapon::Deactivate()
-{
-	for (uint i = 0; i < gameObject->components.size(); ++i)
-		gameObject->components[i]->SetIsActive(false);
-	gameObject->SetIsActive(false);
-}
-
 ShootState Weapon::Shoot(float2 direction)
 {
 	ShootState state = ShootLogic();
@@ -136,10 +122,6 @@ void Weapon::ProjectileCollisionReport(int index)
 	if (!projectiles[index]->object)
 		return;
 	projectiles[index]->object->transform->SetLocalPosition(float3::zero);
-
-	projectiles[index]->object->SetIsActive(false);
-	for (uint i = 0; i < projectiles[index]->object->components.size(); ++i)
-		projectiles[index]->object->components[i]->SetIsActive(false);
 }
 
 void Weapon::RefreshPerks()

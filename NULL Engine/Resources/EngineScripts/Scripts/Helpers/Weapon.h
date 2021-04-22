@@ -46,9 +46,6 @@ public:
 	void Update() override;
 	void CleanUp() override;
 
-	void Activate();
-	void Deactivate();
-
 	// Usability
 	virtual ShootState Shoot(float2 direction);
 	virtual bool Reload();

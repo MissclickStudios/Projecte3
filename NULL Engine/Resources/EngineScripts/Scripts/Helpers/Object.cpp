@@ -14,3 +14,17 @@ Object* GetObjectScript(GameObject* gameObject, ObjectType baseType)
         }
     return nullptr;
 }
+
+void Object::Activate()
+{
+    for (uint i = 0; i < gameObject->components.size(); ++i)
+        gameObject->components[i]->SetIsActive(true);
+    gameObject->SetIsActive(true);
+}
+
+void Object::Deactivate()
+{
+    for (uint i = 0; i < gameObject->components.size(); ++i)
+        gameObject->components[i]->SetIsActive(false);
+    gameObject->SetIsActive(false);
+}

@@ -41,8 +41,6 @@ public:
 
 	virtual void OnCollisionEnter(GameObject* object) override;
 	
-	void Deactivate();
-	
 	// Interactions
 	virtual void TakeDamage(float damage);
 	virtual void Heal(float amount);

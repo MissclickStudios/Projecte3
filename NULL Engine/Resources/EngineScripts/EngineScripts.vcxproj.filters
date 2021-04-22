@@ -13,11 +13,26 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Resource Files\Helpers">
-      <UniqueIdentifier>{d4ef07aa-fbf4-4688-b038-6bc8239b8903}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Resource Files\CrossDllHelper">
       <UniqueIdentifier>{fa4eb3b3-6e55-4a29-a57d-1d4a7ae03b43}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Objects">
+      <UniqueIdentifier>{77f5d09d-1599-4bac-8505-1a724f7c68fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Objects\Entities">
+      <UniqueIdentifier>{87209bed-0ea2-4994-abee-2dff45608c7e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Objects\Weapons">
+      <UniqueIdentifier>{ec39401f-a3f6-405c-ac09-911440a11a60}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Objects\Collectables">
+      <UniqueIdentifier>{cdd0ec27-dceb-46c7-900e-1b55a9811248}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Objects\Base">
+      <UniqueIdentifier>{46196742-9e39-4977-829f-71c0f07f2286}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Objects\Helpers">
+      <UniqueIdentifier>{d4ef07aa-fbf4-4688-b038-6bc8239b8903}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -25,40 +40,16 @@
       <Filter>Resource Files</Filter>
     </ClInclude>
     <ClInclude Include="Scripts\Helpers\Effect.h">
-      <Filter>Resource Files\Helpers</Filter>
+      <Filter>Objects\Helpers</Filter>
     </ClInclude>
     <ClInclude Include="Scripts\Helpers\AimStates.h">
-      <Filter>Resource Files\Helpers</Filter>
+      <Filter>Objects\Helpers</Filter>
     </ClInclude>
     <ClInclude Include="Scripts\Helpers\EntityHelpers.h">
-      <Filter>Resource Files\Helpers</Filter>
+      <Filter>Objects\Helpers</Filter>
     </ClInclude>
     <ClInclude Include="Scripts\Helpers\Perk.h">
-      <Filter>Resource Files\Helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="Scripts\Helpers\Entity.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Assets\Scripts\Blurrg.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Assets\Scripts\Player.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Assets\Scripts\SandTrooper.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Assets\Scripts\Bullet.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Scripts\Helpers\Weapon.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Assets\Scripts\Blaster.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Scripts\Helpers\Object.h">
-      <Filter>Header Files</Filter>
+      <Filter>Objects\Helpers</Filter>
     </ClInclude>
     <ClInclude Include="..\Assets\Scripts\FirstScript.h">
       <Filter>Header Files</Filter>
@@ -90,38 +81,47 @@
     <ClInclude Include="..\Assets\Scripts\WinLoseMenuManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Assets\Scripts\IG11.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\Assets\Scripts\CameraMovement.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Scripts\Helpers\Object.h">
+      <Filter>Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Assets\Scripts\IG11.h">
+      <Filter>Objects\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Assets\Scripts\Player.h">
+      <Filter>Objects\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Assets\Scripts\SandTrooper.h">
+      <Filter>Objects\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Assets\Scripts\Blurrg.h">
+      <Filter>Objects\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Assets\Scripts\Blaster.h">
+      <Filter>Objects\Weapons</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Assets\Scripts\WeaponPerk.h">
+      <Filter>Objects\Collectables</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Assets\Scripts\Bullet.h">
+      <Filter>Objects\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Scripts\Helpers\Entity.h">
+      <Filter>Objects\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Scripts\Helpers\Weapon.h">
+      <Filter>Objects\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Assets\Scripts\Collectable.h">
+      <Filter>Objects\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Assets\Scripts\EntityPerk.h">
+      <Filter>Objects\Collectables</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Scripts\Cpps\Player.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Scripts\Cpps\Blurrg.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Scripts\Cpps\SandTrooper.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Scripts\Cpps\Bullet.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Scripts\Helpers\Entity.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Scripts\Helpers\Weapon.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Scripts\Cpps\Blaster.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Scripts\Helpers\Object.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Scripts\Helpers\CrossDllHelper.cpp">
       <Filter>Resource Files\CrossDllHelper</Filter>
     </ClCompile>
@@ -155,11 +155,44 @@
     <ClCompile Include="Scripts\Cpps\HUBShopMenuManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Scripts\Cpps\IG11.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Scripts\Cpps\CameraMovement.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Scripts\Cpps\Blaster.cpp">
+      <Filter>Objects\Weapons</Filter>
+    </ClCompile>
+    <ClCompile Include="Scripts\Cpps\Blurrg.cpp">
+      <Filter>Objects\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="Scripts\Cpps\Bullet.cpp">
+      <Filter>Objects\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="Scripts\Cpps\IG11.cpp">
+      <Filter>Objects\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="Scripts\Cpps\Player.cpp">
+      <Filter>Objects\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="Scripts\Cpps\SandTrooper.cpp">
+      <Filter>Objects\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="Scripts\Helpers\Entity.cpp">
+      <Filter>Objects\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="Scripts\Helpers\Weapon.cpp">
+      <Filter>Objects\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="Scripts\Cpps\WeaponPerk.cpp">
+      <Filter>Objects\Collectables</Filter>
+    </ClCompile>
+    <ClCompile Include="Scripts\Helpers\Object.cpp">
+      <Filter>Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Scripts\Cpps\Collectable.cpp">
+      <Filter>Objects\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="Scripts\Cpps\EntityPerk.cpp">
+      <Filter>Objects\Collectables</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

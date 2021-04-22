@@ -54,6 +54,7 @@ public:
 	AnimationInfo onGuardAnimation = { "OnGuard" };
 
 	// Weapons
+	Weapon* const GetCurrentWeapon() const { return currentWeapon; }
 	float changeTime = 0.0f;
 	float ChangeTime() { return changeTime / attackSpeedModifier; }
 	Prefab blaster;
