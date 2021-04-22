@@ -49,12 +49,6 @@ bool C_UI_Image::Update()
 	if (canvas == nullptr)
 		return ret;
 
-	//if (GetRect().w > canvas->GetRect().w)
-	//	SetW(canvas->GetRect().w);
-
-	//if(GetRect().h > canvas->GetRect().h)
-	//	SetH(canvas->GetRect().h);
-
 	return ret;
 }
 

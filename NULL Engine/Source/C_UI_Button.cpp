@@ -61,13 +61,6 @@ bool C_UI_Button::Update()
 
 		isInit = true;
 	}
-
-	if (GetRect().w > canvas->GetRect().w)
-		SetW(canvas->GetRect().w);
-
-	if(GetRect().h > canvas->GetRect().h)
-		SetH(canvas->GetRect().h);
-
 	return ret;
 }
 
