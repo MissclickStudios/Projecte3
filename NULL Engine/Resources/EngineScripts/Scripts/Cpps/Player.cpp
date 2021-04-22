@@ -227,8 +227,7 @@ void Player::ManageMovement()
 
 void Player::ManageAim()
 {
-	if (aimState == AimState::IDLE || aimState == AimState::ON_GUARD)
-		GatherAimInputs();
+	GatherAimInputs();
 	Aim();
 
 	switch (aimState)
@@ -349,6 +348,9 @@ void Player::GatherAimInputs()
 			aimInput.x = -MAX_INPUT;
 	}
 
+	if (!(aimState == AimState::IDLE || aimState == AimState::ON_GUARD)) // If the player is not on this states, ignore action inputs (shoot, reload, etc.)
+		return;
+
 	if (App->input->GetKey(SDL_SCANCODE_F) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(1) == ButtonState::BUTTON_DOWN)
 	{
 		aimState = AimState::CHANGE_IN;
@@ -383,7 +385,7 @@ void Player::Movement()
 
 void Player::Aim()
 {
-	if (aimInput.IsZero())
+	if (aimInput.IsZero() || moveState == PlayerState::DASH) // We force the player to look in the direction he is dashing if he is
 		aimDirection = moveDirection; // TEMPORARY
 	else
 		aimDirection = aimInput;
