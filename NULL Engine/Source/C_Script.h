@@ -38,7 +38,8 @@ struct NULL_API InspectorScriptData {
 		CHECKBOX,
 		INPUT_FLOAT,
 		DRAGABLE_FLOAT,
-		SLIDER_FLOAT
+		SLIDER_FLOAT,
+		TEXT
 	};
 
 	InspectorScriptData(const std::string& variableName, const DataType& variableType, void* ptr, const ShowMode& mode) {
@@ -111,6 +112,7 @@ public:
 	static void InspectorSliderFloat3(float3* variablePtr, const char* ptrName, const int& minValue, const int& maxValue);
 
 	static void InspectorString(std::string* variablePtr, const char* ptrName);
+	static void InspectorText(std::string* variablePtr, const char* ptrName);
 
 	static void InspectorPrefab(Prefab* variablePtr, const char* ptrName);
 

@@ -19,7 +19,7 @@ protected:
 
 	void Contact(Player* player);
 
-	void SetTypeInt();
+	void SetTypeInfo();
 };
 
 SCRIPTS_FUNCTION EntityPerk* CreateEntityPerk();

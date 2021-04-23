@@ -1522,10 +1522,24 @@ void E_Inspector::DrawScriptComponent(C_Script* cScript)
 				break;
 			case InspectorScriptData::DataType::STRING: 
 			{
+				switch ((*variable).showAs)
+				{
+				case InspectorScriptData::ShowMode::NONE:
+				{
+					char buffer[128];
+					strcpy_s(buffer, ((std::string*)(*variable).ptr)->c_str());
+					if (ImGui::InputText((*variable).variableName.data(), buffer, IM_ARRAYSIZE(buffer)))
+						*(std::string*)(*variable).ptr = buffer;
+					break;
+				}
+				case InspectorScriptData::ShowMode::TEXT:
+				{
 				char buffer[128];
 				strcpy_s(buffer, ((std::string*)(*variable).ptr)->c_str());
-				if (ImGui::InputText((*variable).variableName.data(), buffer, IM_ARRAYSIZE(buffer)))
-					*(std::string*)(*variable).ptr = buffer;
+				ImGui::Text((*variable).variableName.data(), buffer, IM_ARRAYSIZE(buffer));
+				break;
+				}
+				}
 				break;
 			}
 			case InspectorScriptData::DataType::PREFAB:

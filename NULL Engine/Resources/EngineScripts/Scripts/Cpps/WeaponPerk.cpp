@@ -17,16 +17,16 @@ void WeaponPerk::Contact(Player* player)
 		weapon->AddPerk(perk);
 }
 
-void WeaponPerk::SetTypeInt()
+void WeaponPerk::SetTypeInfo()
 {
-	typeInt = (int)perk;
 }
 
 SCRIPTS_FUNCTION WeaponPerk* CreateWeaponPerk()
 {
 	WeaponPerk* script = new WeaponPerk();
 
-	INSPECTOR_SLIDER_INT(script->typeInt, 0, (int)Perk::PERKS_NUM);
+	INSPECTOR_TEXT(script->typeName);
+	INSPECTOR_SLIDER_INT(script->typeInt, 0, (int)Perk::PERKS_NUM - 1);
 
 	return script;
 }

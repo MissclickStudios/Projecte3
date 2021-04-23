@@ -69,10 +69,15 @@ void Entity::PreUpdate()
 		}
 		else // Delete the effect if it ran out
 		{
+			--effectCounters[(uint)effects[i]->Type()]; // Substract one to the counter of this effect
+
 			delete effects[i];
 			effects.erase(effects.begin() + i);
-			--i;
-			--effectCounters[(uint)effects[i]->Type()]; // Substract one to the counter of this effect
+
+			if (i <= 0) // Avoid relying on uints turning a high number to exit the loop when there are no more effects
+				break;
+			else
+				--i;
 		}
 	}
 }

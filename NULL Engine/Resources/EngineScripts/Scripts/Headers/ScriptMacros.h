@@ -25,6 +25,7 @@
 #define INSPECTOR_SLIDER_FLOAT3(FLOAT3_, MIN_, MAX_) C_Script::InspectorSliderFloat3(&FLOAT3_, #FLOAT3_, MIN_, MAX_)
 
 #define INSPECTOR_STRING(STRING_) C_Script::InspectorString(&STRING_, #STRING_)
+#define INSPECTOR_TEXT(STRING_) C_Script::InspectorText(&STRING_, #STRING_)
 
 #define INSPECTOR_PREFAB(PREFAB_) C_Script::InspectorPrefab(&PREFAB_, #PREFAB_)
 

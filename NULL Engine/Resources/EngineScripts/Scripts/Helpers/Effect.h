@@ -2,7 +2,7 @@
 
 #include "Timer.h"
 
-enum class EffectType
+enum class EffectType // REMEMBER TO ADD A NEW ENTRY ON THE GET EFFECT NAME IF YOU ADD AN EFFECT (down below line 58ish)
 {
 	NONE = 0,
 	FROZEN,
@@ -54,3 +54,15 @@ private:
 	float duration = 0.0f;
 	Timer timer;
 };
+
+static const char* GetEffectName(EffectType effect)
+{
+	switch (effect)
+	{
+	case EffectType::FROZEN:
+		return "FROZEN";
+	case EffectType::EFFECTS_NUM:
+		return "ERROR";
+	}
+	return "NONE";
+}

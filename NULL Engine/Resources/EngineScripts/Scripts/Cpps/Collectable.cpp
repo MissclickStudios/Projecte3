@@ -19,7 +19,7 @@ void Collectable::Start()
 
 void Collectable::Update()
 {
-	SetTypeInt();
+	SetTypeInfo();
 
 	if (used)
 	{

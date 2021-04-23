@@ -580,6 +580,16 @@ void C_Script::InspectorString(std::string* variablePtr, const char* ptrName)
 		script->inspectorVariables.push_back(InspectorScriptData(variableName, InspectorScriptData::DataType::STRING, variablePtr, InspectorScriptData::ShowMode::NONE));
 }
 
+void C_Script::InspectorText(std::string* variablePtr, const char* ptrName)
+{
+	std::string variableName = GetVariableName(ptrName);
+
+	C_Script* script = App->scriptManager->actualScriptLoading;
+	if (script != nullptr)
+		script->inspectorVariables.push_back(InspectorScriptData(variableName, InspectorScriptData::DataType::STRING, variablePtr, InspectorScriptData::ShowMode::TEXT));
+
+}
+
 void C_Script::InspectorPrefab(Prefab* variablePtr, const char* ptrName)
 {
 	if (variablePtr != nullptr) {

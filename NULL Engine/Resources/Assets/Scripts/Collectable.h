@@ -17,6 +17,8 @@ public:
 	void OnTriggerEnter(GameObject* object);
 
 	int price = 0;
+
+	std::string typeName = " ";
 	int typeInt = 0;
 
 	bool used = false;
@@ -25,5 +27,5 @@ protected:
 
 	virtual void Contact(Player* player) = 0;
 
-	virtual void SetTypeInt() = 0;
+	virtual void SetTypeInfo() = 0;
 };
