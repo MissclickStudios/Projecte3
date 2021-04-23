@@ -137,7 +137,7 @@ void Player::SetUp()
 void Player::Update()
 {
 	ManageMovement();
-	if (moveState != PlayerState::DEAD)
+	if (moveState != PlayerState::DEAD && moveState != PlayerState::DASH)
 		ManageAim();
 }
 
