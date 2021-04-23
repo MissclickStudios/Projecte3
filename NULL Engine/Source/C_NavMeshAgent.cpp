@@ -4,7 +4,7 @@
 
 #include "C_NavMeshAgent.h"
 
-C_NavMeshAgent::C_NavMeshAgent(GameObject* owner) : Component(owner, ComponentType::NAVMESH_AGENT), rNavMesh(nullptr)
+C_NavMeshAgent::C_NavMeshAgent(GameObject* owner) : Component(owner, ComponentType::NAVMESH_AGENT)
 {
 
 }

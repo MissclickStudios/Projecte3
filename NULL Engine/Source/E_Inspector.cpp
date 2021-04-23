@@ -180,8 +180,8 @@ void E_Inspector::DrawGameObjectInfo(GameObject* selectedGameObject)
 	ImGui::SameLine();
 
 	// --- IS STATIC ---
-	//bool isStatic = selected_game_object->IsStatic();
-	bool isStatic = true;
+	bool isStatic = selectedGameObject->IsStatic();
+	//bool isStatic = true;
 	if (ImGui::Checkbox("Is Static", &isStatic))
 	{
 		selectedGameObject->SetIsStatic(isStatic);

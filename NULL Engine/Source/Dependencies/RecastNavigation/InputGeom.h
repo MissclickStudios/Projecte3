@@ -1,148 +1,155 @@
-//
-// Copyright (c) 2009-2010 Mikko Mononen memon@inside.org
-//
-// This software is provided 'as-is', without any express or implied
-// warranty.  In no event will the authors be held liable for any damages
-// arising from the use of this software.
-// Permission is granted to anyone to use this software for any purpose,
-// including commercial applications, and to alter it and redistribute it
-// freely, subject to the following restrictions:
-// 1. The origin of this software must not be misrepresented; you must not
-//    claim that you wrote the original software. If you use this software
-//    in a product, an acknowledgment in the product documentation would be
-//    appreciated but is not required.
-// 2. Altered source versions must be plainly marked as such, and must not be
-//    misrepresented as being the original software.
-// 3. This notice may not be removed or altered from any source distribution.
-//
+#ifndef __INPUTGEOMETRY_H__
+#define __INPUTGEOMETRY_H__
+#pragma once
 
-#ifndef INPUTGEOM_H
-#define INPUTGEOM_H
-
+#include <vector>
+#include "Math.h"
 #include "ChunkyTriMesh.h"
-#include "MathGeoLib/include/Math/float4x4.h"
 
+#include "MathGeoLib/include/Geometry/OBB.h"
+
+
+class GameObject;
 class R_Mesh;
 
-static const int MAX_CONVEXVOL_PTS = 12;
-struct ConvexVolume
-{
-	float verts[MAX_CONVEXVOL_PTS*3];
+typedef unsigned int uint;
+
+static const int MAX_CONVEXVOL_PTS = 9; // Recast has way fewer
+struct ConvexVolume {
+	float verts[MAX_CONVEXVOL_PTS * 3];
 	float hmin, hmax;
 	int nverts;
-	int area;
+	unsigned char area;
+	OBB obb;
 };
 
-struct BuildSettings
-{
-	// Cell size in world units
-	float cellSize;
-	// Cell height in world units
-	float cellHeight;
-	// Agent height in world units
-	float agentHeight;
-	// Agent radius in world units
-	float agentRadius;
-	// Agent max climb in world units
-	float agentMaxClimb;
-	// Agent max slope in degrees
-	float agentMaxSlope;
-	// Region minimum size in voxels.
-	// regionMinSize = sqrt(regionMinArea)
-	float regionMinSize;
-	// Region merge size in voxels.
-	// regionMergeSize = sqrt(regionMergeArea)
-	float regionMergeSize;
-	// Edge max length in world units
-	float edgeMaxLen;
-	// Edge max error in voxels
-	float edgeMaxError;
-	float vertsPerPoly;
-	// Detail sample distance in voxels
-	float detailSampleDist;
-	// Detail sample max error in voxel heights.
-	float detailSampleMaxError;
-	// Partition type, see SamplePartitionType
-	int partitionType;
-	// Bounds of the area to mesh
-	float navMeshBMin[3];
-	float navMeshBMax[3];
-	// Size of the tiles in voxels
-	float tileSize;
+struct RecastMesh {
+	~RecastMesh();
+
+	int* tris = nullptr;
+	int nverts;
+	int ntris;
+	unsigned char area;
 };
 
-class InputGeom
-{
-	rcChunkyTriMesh* m_chunkyMesh;
-	R_Mesh* m_mesh;
-	float m_meshBMin[3], m_meshBMax[3];
-	BuildSettings m_buildSettings;
-	bool m_hasBuildSettings;
-	
+class InputGeom {
+public:
+	/**
+	*Create recast compatible inputgeom from the specified entities.The entities have to be added to the
+	* scene before this call, as we need to calculate the world coordinates of the entity.
+	* Verticesand faces of the specified source entities are stored in this inputGeom, individual entity
+	* groupingand origin points are lost.
+	**/
+	InputGeom(const std::vector<GameObject*>& srcMeshes, bool createChunky = false);
+	~InputGeom();
+
+	const std::vector<RecastMesh>& getMeshes() const;
+	/**
+	* Return all vertices in the geometry.
+	**/
+	const float* getVerts() const;
+
+	/**
+	* The number of vertices stored in this inputGeom.
+	**/
+	uint getVertCount() const;
+
+	/**
+	* The number of triangles stored in this inputGeom.
+	**/
+	int getTriCount() const;
+
+	int getMaxTris() const;
+
+	/**
+	* Retrieve the normals calculated for this inputGeom. Note that the normals are not exact and are not meant for rendering,
+	* but they are good enough for navmesh calculation. Each normal corresponds to one vertex from getVerts() with the same index.
+	* The size of the normals array is 3*getVertCount().
+	**/
+	const float* getNormals() const;
+
+	/**
+	* The axis aligned bounding box minimum of this input Geom.
+	**/
+	const float* getMeshBoundsMin() const;
+
+	/**
+	* The axis aligned bounding box maximum of this input Geom.
+	**/
+	const float* getMeshBoundsMax() const;
+
+	/**
+	* The axis aligned bounding box maximum of this input Geom.
+	**/
+	const rcChunkyTriMesh* getChunkyMesh() const;
+
+	/**
+	* Wether this inputgeom has geometry
+	**/
+	bool hasMesh() const;
+
+	/**
+	* The amount of convex volumes
+	**/
+	int getConvexVolumeCount() const { return m_volumeCount; }
+
+	/**
+	* Pointer to the convex volumes array
+	**/
+	const ConvexVolume* getConvexVolumes() const { return m_volumes; }
+
+	int getOffMeshConnectionCount() const { return m_offMeshConCount; }
+	float* getOffMeshConnectionVerts() const { return (float*)m_offMeshConVerts; }
+	float* getOffMeshConnectionRads() const { return (float*)m_offMeshConRads; }
+	unsigned char* getOffMeshConnectionDirs() const { return (unsigned char*)m_offMeshConDirs; }
+	unsigned char* getOffMeshConnectionAreas() const { return (unsigned char*)m_offMeshConAreas; }
+	unsigned short* getOffMeshConnectionFlags() const { return (unsigned short*)m_offMeshConFlags; }
+	unsigned int* getOffMeshConnectionId() const { return (unsigned int*)m_offMeshConId; }
+
+private:
+	void ApplyTransform(const R_Mesh& rMesh, const float4x4& transform, float ret[3]);
+
+private:
+	bool m_mesh;
+
+	std::vector<RecastMesh> meshes;
+	float* verts;
+	int* tris;
+	unsigned char* areas;
+
+	rcChunkyTriMesh* chunkyTriMesh;
+
+	int nverts;
+	int ntris;
+	int maxtris;
+
+	float* normals;
+
+	float* bmin;
+	float* bmax;
+
+	// Not implemented yet
 	/// @name Off-Mesh connections.
 	///@{
 	static const int MAX_OFFMESH_CONNECTIONS = 256;
-	float m_offMeshConVerts[MAX_OFFMESH_CONNECTIONS*3*2];
+	float m_offMeshConVerts[MAX_OFFMESH_CONNECTIONS * 3 * 2];
 	float m_offMeshConRads[MAX_OFFMESH_CONNECTIONS];
 	unsigned char m_offMeshConDirs[MAX_OFFMESH_CONNECTIONS];
 	unsigned char m_offMeshConAreas[MAX_OFFMESH_CONNECTIONS];
 	unsigned short m_offMeshConFlags[MAX_OFFMESH_CONNECTIONS];
 	unsigned int m_offMeshConId[MAX_OFFMESH_CONNECTIONS];
-	int m_offMeshConCount;
+	int m_offMeshConCount = 0;
 	///@}
 
-	/// @name Convex Volumes.
+	/// @name Convex Volumes (temporary) added to this geometry.
 	///@{
 	static const int MAX_VOLUMES = 256;
 	ConvexVolume m_volumes[MAX_VOLUMES];
 	int m_volumeCount;
 	///@}
-public:
-	InputGeom();
-	~InputGeom();
 
-	bool CreateMesh(R_Mesh* mesh, float4x4 meshTransform);
-	void CombineMesh(R_Mesh* mesh, float4x4 meshTransform);
 
-	/// Method to return static mesh data.
-	const R_Mesh* getMesh() const { return m_mesh; }
-	const float* getMeshBoundsMin() const { return m_meshBMin; }
-	const float* getMeshBoundsMax() const { return m_meshBMax; }
-	const float* getNavMeshBoundsMin() const { return m_hasBuildSettings ? m_buildSettings.navMeshBMin : m_meshBMin; }
-	const float* getNavMeshBoundsMax() const { return m_hasBuildSettings ? m_buildSettings.navMeshBMax : m_meshBMax; }
-	const rcChunkyTriMesh* getChunkyMesh() const { return m_chunkyMesh; }
-	const BuildSettings* getBuildSettings() const { return m_hasBuildSettings ? &m_buildSettings : 0; }
-	bool raycastMesh(float* src, float* dst, float& tmin);
-
-	/// @name Off-Mesh connections.
-	///@{
-	int getOffMeshConnectionCount() const { return m_offMeshConCount; }
-	const float* getOffMeshConnectionVerts() const { return m_offMeshConVerts; }
-	const float* getOffMeshConnectionRads() const { return m_offMeshConRads; }
-	const unsigned char* getOffMeshConnectionDirs() const { return m_offMeshConDirs; }
-	const unsigned char* getOffMeshConnectionAreas() const { return m_offMeshConAreas; }
-	const unsigned short* getOffMeshConnectionFlags() const { return m_offMeshConFlags; }
-	const unsigned int* getOffMeshConnectionId() const { return m_offMeshConId; }
-	void addOffMeshConnection(const float* spos, const float* epos, const float rad,
-							  unsigned char bidir, unsigned char area, unsigned short flags);
-	void deleteOffMeshConnection(int i);
-	void drawOffMeshConnections(struct duDebugDraw* dd, bool hilight = false);
-	///@}
-
-	/// @name Box Volumes.
-	///@{
-	int getConvexVolumeCount() const { return m_volumeCount; }
-	const ConvexVolume* getConvexVolumes() const { return m_volumes; }
-	void addConvexVolume(const float* verts, const int nverts,
-						 const float minh, const float maxh, unsigned char area);
-	void deleteConvexVolume(int i);
-	void drawConvexVolumes(struct duDebugDraw* dd, bool hilight = false);
-	///@}
-	
-private:
-	// Explicitly disabled copy constructor and copy assignment operator.
-	InputGeom(const InputGeom&);
-	InputGeom& operator=(const InputGeom&);
 };
 
-#endif // INPUTGEOM_H
+#endif
+

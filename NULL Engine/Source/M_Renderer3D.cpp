@@ -219,8 +219,6 @@ UpdateStatus M_Renderer3D::PostUpdate(float dt)
 
 	SDL_GL_SwapWindow(App->window->GetWindow());
 
-	App->detour->DrawNavMesh();
-
 	return UpdateStatus::CONTINUE;
 }
 

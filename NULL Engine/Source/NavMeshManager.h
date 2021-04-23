@@ -89,7 +89,7 @@ protected:
 	float m_tileMemUsage;
 	int m_tileTriCount;
 
-	BuildSettings build_settings;
+	//BuildSettings build_settings;
 
 	unsigned char* buildTileMesh(const int tx, const int ty, const float* bmin, const float* bmax, int& dataSize);
 

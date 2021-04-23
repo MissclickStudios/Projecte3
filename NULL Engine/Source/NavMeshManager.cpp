@@ -1,4 +1,4 @@
-#include <cstring>
+/*#include <cstring>
 
 #include "NavMeshManager.h"
 
@@ -311,7 +311,7 @@ unsigned char* NavMeshManager::buildTileMesh(const int tx, const int ty, const f
 			LOG(RC_LOG_ERROR, "buildNavigation: Could not build monotone regions.");
 			return 0;
 		}
-	}*/
+	}
 	//else // SAMPLE_PARTITION_LAYERS
 	{
 		// Partition the walkable surface into simple regions without holes.
@@ -408,7 +408,7 @@ unsigned char* NavMeshManager::buildTileMesh(const int tx, const int ty, const f
 			{
 				m_pmesh->flags[i] = SAMPLE_POLYFLAGS_WALK | SAMPLE_POLYFLAGS_DOOR;
 			}
-		}*/
+		}
 
 		dtNavMeshCreateParams params;
 		memset(&params, 0, sizeof(params));
@@ -517,7 +517,7 @@ void NavMeshManager::handleRender()
 
 	// Draw mesh
 	/*duDebugDrawTriMesh(&m_dd, m_geom->getMesh()->getVerts(), m_geom->getMesh()->getVertCount(),
-		m_geom->getMesh()->getTris(), m_geom->getMesh()->getNormals(), m_geom->getMesh()->getTriCount(), 0, 1.0f);*/
+		m_geom->getMesh()->getTris(), m_geom->getMesh()->getNormals(), m_geom->getMesh()->getTriCount(), 0, 1.0f);
 	// Draw bounds
 	const float* bmin = m_geom->getMeshBoundsMin();
 	const float* bmax = m_geom->getMeshBoundsMax();
@@ -525,7 +525,7 @@ void NavMeshManager::handleRender()
 
 	if (m_navMesh != nullptr)
 	{
-		duDebugDraw* dd;
+		duDebugDraw* dd = nullptr;
 		duDebugDrawNavMeshWithClosedList(dd, *m_navMesh, *m_navQuery, m_navMeshDrawFlags);
 	}
 }
@@ -726,4 +726,4 @@ void NavMeshManager::resetCommonSettings()
 	m_detailSampleMaxError = 1.0f;
 	//m_partitionType = SAMPLE_PARTITION_WATERSHED;
 }
-
+*/

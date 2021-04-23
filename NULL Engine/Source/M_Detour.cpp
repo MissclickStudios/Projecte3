@@ -10,7 +10,7 @@
 
 M_Detour::M_Detour(bool isActive) : Module("Detour", isActive)
 {
-	geom = new InputGeom();
+	//geom = new InputGeom();
 }
 
 M_Detour::~M_Detour()
@@ -41,17 +41,17 @@ bool M_Detour::CleanUp()
 void M_Detour::BakeNavMesh()
 {
 
-	std::vector<GameObject*>::const_iterator it = App->scene->GetGameObjects()->cbegin();
+	/*std::vector<GameObject*>::const_iterator it = App->scene->GetGameObjects()->cbegin();
 
 	for (it; it != App->scene->GetGameObjects()->cend(); ++it)
 	{
-		if ((*it) != nullptr)
+		if ((*it) != nullptr && (*it)->IsStatic() == true)
 			AddGameObjectNavMesh(*it);
 
-	}
+	}*/
 }
 
-void M_Detour::AddGameObjectNavMesh(GameObject* gameObject)
+/*void M_Detour::AddGameObjectNavMesh(GameObject* gameObject)
 {
 	C_Mesh* componentMesh = gameObject->GetComponent<C_Mesh>();
 
@@ -68,10 +68,10 @@ void M_Detour::AddGameObjectNavMesh(GameObject* gameObject)
 		navMesh->handleSettings();
 		navMesh->handleBuild();
 	}
-}
+}*/
 
 void M_Detour::DrawNavMesh()
 {
-	if(navMesh != nullptr)
-		navMesh->handleRender();
+	//if(navMesh != nullptr)
+		//navMesh->handleRender();
 }

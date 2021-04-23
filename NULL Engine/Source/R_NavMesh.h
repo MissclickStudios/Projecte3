@@ -3,6 +3,8 @@
 
 #include "Resource.h"
 
+class dtNavMesh;
+
 class R_NavMesh : public Resource
 {
 public:
@@ -16,8 +18,8 @@ public:
 
 public:
 
+	dtNavMesh* navMesh;
 
-private:
 
 };
 

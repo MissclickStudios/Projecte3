@@ -23,6 +23,8 @@ bool R_NavMesh::SaveMeta(ParsonNode& metaRoot) const
 	
 	// REMEMBER TO GENERATE AN ASSET FILE FOR THIS
 
+
+
 	return true;
 }
 
