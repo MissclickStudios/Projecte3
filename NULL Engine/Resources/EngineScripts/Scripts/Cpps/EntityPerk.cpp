@@ -25,6 +25,8 @@ SCRIPTS_FUNCTION EntityPerk* CreateEntityPerk()
 {
 	EntityPerk* script = new EntityPerk();
 
+	INSPECTOR_DRAGABLE_INT(script->price);
+
 	INSPECTOR_TEXT(script->typeName);
 	INSPECTOR_SLIDER_INT(script->typeInt, 0, (int)EffectType::EFFECTS_NUM - 1);
 	INSPECTOR_DRAGABLE_FLOAT(script->duration);

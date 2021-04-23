@@ -59,10 +59,12 @@ static const char* GetEffectName(EffectType effect)
 {
 	switch (effect)
 	{
+	case EffectType::NONE:
+		return "NONE";
 	case EffectType::FROZEN:
 		return "FROZEN";
 	case EffectType::EFFECTS_NUM:
 		return "ERROR";
 	}
-	return "NONE";
+	return "U forgot to add the effect to string conversion... DUMBASS";
 }

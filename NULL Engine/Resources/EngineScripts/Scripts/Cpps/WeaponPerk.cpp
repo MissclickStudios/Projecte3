@@ -25,6 +25,8 @@ SCRIPTS_FUNCTION WeaponPerk* CreateWeaponPerk()
 {
 	WeaponPerk* script = new WeaponPerk();
 
+	INSPECTOR_DRAGABLE_INT(script->price);
+
 	INSPECTOR_TEXT(script->typeName);
 	INSPECTOR_SLIDER_INT(script->typeInt, 0, (int)Perk::PERKS_NUM - 1);
 

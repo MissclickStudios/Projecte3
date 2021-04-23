@@ -125,7 +125,11 @@ void Player::SetUp()
 	if (equipedGunGameObject)
 		equipedGunWeapon = (Weapon*)GetObjectScript(equipedGunGameObject, ObjectType::WEAPON);
 	if (blasterWeapon)
+	{
 		equipedGunWeapon->SetOwnership(type, hand);
+		if (equipedGunWeapon->weaponModel)
+			equipedGunWeapon->weaponModel->SetIsActive(false);
+	}
 
 	currentWeapon = blasterWeapon;
 }
@@ -190,13 +194,13 @@ void Player::ManageMovement()
 			break;
 		case PlayerState::DASH_IN:
 			currentAnimation = &dashAnimation;
-			Dash();
 			dashTimer.Start();
 			if (rigidBody)
 				rigidBody->ChangeFilter(" player dashing");
 			moveState = PlayerState::DASH;
 
 		case PlayerState::DASH:
+			Dash();
 			if (dashTimer.ReadSec() >= DashDuration()) // When the dash duration ends start the cooldown and reset the move state
 			{
 				dashTimer.Stop();
@@ -280,9 +284,21 @@ void Player::ManageAim()
 		if (changeTimer.ReadSec() >= ChangeTime())
 		{
 			if (blasterWeapon == currentWeapon)
+			{
 				currentWeapon = equipedGunWeapon;
+				if (blasterWeapon->weaponModel)
+					blasterWeapon->weaponModel->SetIsActive(false);
+				if (equipedGunWeapon->weaponModel)
+					equipedGunWeapon->weaponModel->SetIsActive(true);
+			}
 			else
+			{
 				currentWeapon = blasterWeapon;
+				if (blasterWeapon->weaponModel)
+					blasterWeapon->weaponModel->SetIsActive(true);
+				if (equipedGunWeapon->weaponModel)
+					equipedGunWeapon->weaponModel->SetIsActive(false);
+			}
 			aimState = AimState::ON_GUARD;
 		}
 		break;

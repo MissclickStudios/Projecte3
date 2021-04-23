@@ -18,6 +18,8 @@ static const char* GetPerkName(Perk perk)
 {
 	switch (perk)
 	{
+	case Perk::NONE:
+		return "NONE";
 	case Perk::DAMAGE_UP:
 		return "DAMAGE_UP";
 	case Perk::MAXAMMO_UP:
@@ -31,5 +33,5 @@ static const char* GetPerkName(Perk perk)
 	case Perk::PERKS_NUM:
 		return "ERROR";
 	}
-	return "NONE";
+	return "U forgot to add the perk to string conversion... DUMBASS";
 }

@@ -46,6 +46,13 @@ void Weapon::Update()
 		updateProjectiles = false;
 		CreateProjectiles();
 	}
+
+	if (weaponModel)
+	{
+		weaponModel->transform->SetLocalPosition(position);
+		weaponModel->transform->SetLocalEulerRotation(rotation);
+		weaponModel->transform->SetLocalScale(scale);
+	}
 }
 
 void Weapon::CleanUp()
@@ -94,6 +101,13 @@ void Weapon::SetOwnership(EntityType type, GameObject* hand)
 
 	if (type == EntityType::PLAYER)
 	{
+		if (weaponModelPrefab.uid != NULL)
+		{
+			GameObject* skeletonHand = App->scene->GetGameObjectByName("mixamorig:RightHand");
+			if (skeletonHand)
+				weaponModel = App->resourceManager->LoadPrefab(weaponModelPrefab.uid, skeletonHand); // Load the prefab onto a gameobject
+		}
+
 		if (!projectiles)
 			return;
 		for (uint i = 0; i < projectileNum; ++i)
