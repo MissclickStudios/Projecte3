@@ -43,8 +43,7 @@ animatorState	(AnimatorState::STOP)
 	cameraCulling	= true;
 	showBones		= false;
 
-	needsInit		= true;
-
+	init = true;
 }
 
 C_Animator::~C_Animator()
@@ -54,20 +53,34 @@ C_Animator::~C_Animator()
 	rootBone		= nullptr;
 }
 
+bool C_Animator::Start()
+{
+	/*GetAnimatedMeshes();
+
+	FindBones();
+	FindBoneLinks();
+	UpdateDisplayBones();
+
+	GenerateDefaultClips();*/
+	
+	return true;
+}
+
 bool C_Animator::Update()
 {
-	if (needsInit)
+	if (init)																								// Move Init to Start() later.
 	{
 		GetAnimatedMeshes();
+
 		FindBones();
 		FindBoneLinks();
-		GenerateDefaultClips();
-
 		UpdateDisplayBones();
 
-		needsInit = false;
-	}
+		GenerateDefaultClips();
 
+		init = false;
+	}
+	
 	if (showBones)
 	{
 		UpdateDisplayBones();
@@ -77,6 +90,8 @@ bool C_Animator::Update()
 
 	if (animatorState == AnimatorState::PLAY || animatorState == AnimatorState::STEP)
 	{
+		StepAnimation();
+		
 		if (currentClip != nullptr)
 		{
 			StepAnimation();
@@ -239,6 +254,15 @@ bool C_Animator::StepAnimation()
 	}
 	
 	UpdateChannelTransforms();
+
+	//float dt		= (App->gameState == GameState::PLAY) ? MC_Time::Game::GetDT() : MC_Time::Real::GetDT();			// In case a clip preview is needed outside Game Mode.
+	//float stepValue = dt * playbackSpeed;
+
+	//for (auto track = tracks.begin(); track != tracks.end(); ++track)
+	//{
+	//	track->second.StepTrack(stepValue);
+	//}
+
 	UpdateMeshSkinning();
 
 	return true;
@@ -301,13 +325,6 @@ bool C_Animator::StepClips()
 			blendingClip->StepClip(stepValue);
 		}
 	}
-
-	return true;
-}
-
-bool C_Animator::BlendAnimation()
-{
-
 
 	return true;
 }
@@ -849,36 +866,95 @@ bool C_Animator::AddClip(const AnimatorClip& clip)
 	return true;
 }
 
-bool C_Animator::EditClip(const std::string& originalClipName, const R_Animation* rAnimation, const std::string& name, uint start, uint end, float speed, bool loop)
+bool C_Animator::EditClip(const char* originalClipName, const AnimatorClip& editedClip)
 {	
-	auto originalClip = clips.find(originalClipName);
-	if (originalClip == clips.end())
+	if (clips.find(originalClipName) == clips.end())
+		return false;
+	
+	DeleteClip(originalClipName);
+
+	return AddClip(editedClip);
+}
+
+bool C_Animator::DeleteClip(const char* clipName)
+{
+	if (clips.find(clipName) == clips.end())
 	{
+		LOG("[ERROR] Animator Component: Could not Delete Clip { %s }! Error: Could not find Clip with the given name.", clipName);
 		return false;
 	}
 	
-	DeleteClip(originalClipName);
-	
-	bool success = AddClip(AnimatorClip(rAnimation, name, start, end, speed, loop));
-
-	return success;
-}
-
-bool C_Animator::DeleteClip(const std::string& clipName)
-{
 	if (currentClip != nullptr && std::string(currentClip->GetName()) == clipName)
-	{
 		ClearCurrentClip();
-	}
-	if (blendingClip != nullptr && std::string(currentClip->GetName()) == clipName)
-	{
+
+	if (blendingClip != nullptr && std::string(blendingClip->GetName()) == clipName)
 		ClearBlendingClip();
-	}
 	
-	return (clips.erase(clipName) == 1);																				// std::unordered_map::erase returns the amount of elements erased.
+	return (clips.erase(clipName) == 1);																				// std::map::erase() returns the amount of elements erased.
 }
 
-void C_Animator::PlayClip(const std::string& clipName, uint blendFrames)
+bool C_Animator::AddTrack(const AnimatorTrack& track)
+{
+	if (track.GetRootBone() == nullptr)
+	{
+		LOG("[ERROR] Animator Component: Could not Add Track { %s }! Error: Given AnimatorTrack's rootBone was nullptr.", track.GetName());
+		return false;
+	}
+	if (tracks.find(track.GetName()) != tracks.end())
+	{
+		LOG("[ERROR] Animator Component: Could not Add Track { %s }! Error: A track with the same name already exists.", track.GetName());
+		return false;
+	}
+
+	return (tracks.emplace(track.GetName(), track)).second;																					// The "second" element is a bool that is true
+}																																			// if the insertion took place.
+
+bool C_Animator::EditTrack(const char* originalTrackName, const AnimatorTrack& editedTrack)
+{
+	if (tracks.find(originalTrackName) == tracks.end())
+		return false;
+
+	DeleteTrack(originalTrackName);
+
+	return AddTrack(editedTrack);
+}
+
+bool C_Animator::DeleteTrack(const char* trackName)
+{	
+	if (tracks.find(trackName) == tracks.end())
+	{
+		LOG("[ERROR] Animator Component: Could not Delete Track { %s }! Error: Could not find Track with the given name.", trackName);
+		return false;
+	}
+	
+	return (tracks.erase(trackName) == 1);
+}
+
+AnimatorClip C_Animator::GetClip(const char* clipName) const
+{
+	auto clip = clips.find(clipName);
+	return (clip != clips.end()) ? clip->second : AnimatorClip(nullptr, "[NONE]", 0, 0, 1.0f, false);
+}
+
+AnimatorClip* C_Animator::GetClipAsPtr(const char* clipName)
+{
+	auto clip = clips.find(clipName);
+	return (clip != clips.end()) ? &clip->second : nullptr;
+}
+
+AnimatorTrack C_Animator::GetTrack(const char* trackName) const
+{
+	auto track = tracks.find(trackName);
+	return (track != tracks.end()) ? track->second : AnimatorTrack("[NONE]", nullptr);
+}
+
+AnimatorTrack* C_Animator::GetTrackAsPtr(const char* trackName)
+{
+	auto track = tracks.find(trackName);
+	return (track != tracks.end()) ? &track->second : nullptr;
+}
+
+void C_Animator::PlayClip(const char* clipName, uint blendFrames)
 {
 	auto item = clips.find(clipName);
 	if (item == clips.end())
@@ -904,7 +980,7 @@ void C_Animator::PlayClip(const std::string& clipName, uint blendFrames)
 	Play();
 }
 
-void C_Animator::PlayClip(const std::string& clipName, float blendTime)
+void C_Animator::PlayClip(const char* clipName, float blendTime)
 {
 	auto item = clips.find(clipName);
 	if (item == clips.end())
@@ -945,20 +1021,37 @@ bool C_Animator::Play()
 
 	animatorState = AnimatorState::PLAY;
 
-	if (CurrentClipExists())
-		currentClip->playing = true;
+	for (auto track = tracks.begin(); track != tracks.end(); ++track)
+	{
+		track->second.Play();
+	}
 
-	if (BlendingClipExists()) 
-		blendingClip->playing = true;
+	if (CurrentClipExists())														/* TRACK */
+		currentClip->playing = true;												/* TRACK */
+	if (BlendingClipExists()) 														/* TRACK */
+		blendingClip->playing = true;												/* TRACK */
 
 	return (animatorState == AnimatorState::PLAY);
 }
 
 bool C_Animator::Pause()
 {
-	if (animatorState != AnimatorState::PAUSE)
+	if (animatorState == AnimatorState::PAUSE)
 	{
-		(animatorState != AnimatorState::STOP) ? animatorState = AnimatorState::PAUSE : LOG("[WARNING] Animator Component: Cannot Pause a Stopped Animation!");
+		LOG("[WARNING] Animator Component: Animator is already in { PAUSE } State!");
+		return true;
+	}
+	if (animatorState == AnimatorState::STOP)
+	{
+		LOG("[WARNING] Animator Component: Cannot Pause a Stopped Animation!");
+		return false;
+	}
+
+	animatorState = AnimatorState::PAUSE;
+
+	for (auto track = tracks.begin(); track != tracks.end(); ++track)
+	{
+		track->second.Pause();
 	}
 
 	return (animatorState == AnimatorState::PAUSE);
@@ -966,9 +1059,22 @@ bool C_Animator::Pause()
 
 bool C_Animator::Step()
 {	
-	if (animatorState != AnimatorState::STEP)
+	if (animatorState == AnimatorState::STEP)
 	{
-		(animatorState == AnimatorState::PAUSE) ? animatorState = AnimatorState::STEP : LOG("[WARNING] Animator Component: Only Paused Animations can be Stepped!");
+		LOG("[WARNING] Animator Component: Animator is already in { STEP } state!");
+		return true;
+	}
+	if (animatorState != AnimatorState::PAUSE)
+	{
+		LOG("[WARNING] Animator Component: Only Paused Animations can be Stepped!");
+		return false;
+	}
+
+	animatorState = AnimatorState::STEP;
+
+	for (auto track = tracks.begin(); track != tracks.end(); ++track)
+	{
+		track->second.Step();
 	}
 
 	return (animatorState == AnimatorState::STEP);
@@ -978,16 +1084,21 @@ bool C_Animator::Stop()
 {
 	animatorState = AnimatorState::STOP;
 
-	if (CurrentClipExists())
+	for (auto track = tracks.begin(); track != tracks.end(); ++track)
 	{
-		currentClip->playing = false;
-		currentClip->ClearClip();
+		track->second.Stop();
 	}
-	if (BlendingClipExists())
-	{
-		blendingClip->playing = false;
-		blendingClip->ClearClip();
-	}
+
+	if (CurrentClipExists())				/* TRACK */
+	{										/* TRACK */
+		currentClip->playing = false;		/* TRACK */
+		currentClip->ClearClip();			/* TRACK */
+	}										/* TRACK */
+	if (BlendingClipExists())				/* TRACK */
+	{										/* TRACK */
+		blendingClip->playing = false;		/* TRACK */
+		blendingClip->ClearClip();			/* TRACK */
+	}										/* TRACK */
 
 	return (animatorState == AnimatorState::STOP);
 }
@@ -1073,18 +1184,6 @@ bool C_Animator::RefreshBoneDisplay()
 }
 
 // --- CURRENT/BLENDING ANIMATION METHODS
-AnimatorClip C_Animator::GetClip(const char* clipName) const
-{
-	auto clip = clips.find(clipName);
-	return (clip != clips.end()) ? clip->second : AnimatorClip(nullptr, "[NONE]", 0, 0, 1.0f, false);
-}
-
-AnimatorClip* C_Animator::GetClipAsPtr(const char* clipName)
-{
-	auto clip = clips.find(clipName);
-	return (clip != clips.end()) ? &clip->second : nullptr;
-}
-
 AnimatorClip* C_Animator::GetCurrentClip() const
 {
 	return currentClip;
@@ -1156,8 +1255,6 @@ void C_Animator::SetBlendingClip(AnimatorClip* clip, uint blendFrames)
 		LOG("%s! Error: Could not find the Bones of the Clip's animation (R_Animation*).");
 		return;
 	}
-	
-	LOG("BLENDING TO [%s]::[%u]", clip->GetName(), blendFrames);
 
 	blendingClip		= clip;
 	blendingBones		= &bones->second;

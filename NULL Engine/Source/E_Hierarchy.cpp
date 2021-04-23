@@ -1,3 +1,5 @@
+#include "Color.h"
+
 #include "EngineApplication.h"
 #include "M_Editor.h"
 #include "M_Scene.h"
@@ -65,10 +67,12 @@ void E_Hierarchy::ProcessGameObject(GameObject* gameObject)
 	
 	if (!gameObject->IsActive())														// If the given game object is not active, the text of the tree node will be displayed in GREY.
 	{
-		/*if(gameObject->isPrefab)
-			color = { 0.2f, 0.2f, 1.0f, 1.0f };
-		else*/
 		color = { 0.5f, 0.5f, 0.5f, 1.0f };
+	}
+
+	if (gameObject->isBone)
+	{
+		color = Pink.C_Array();
 	}
 
 	ImGui::PushStyleColor(ImGuiCol_Text, color);

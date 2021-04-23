@@ -6,48 +6,102 @@
 
 #include "BoneLink.h"
 
-class GameObject;
 class AnimatorClip;
+
+class GameObject;
+class C_Transform;
+
+struct Channel;
+
+typedef unsigned int uint;
+
+enum class TrackState
+{
+	PLAY,
+	PAUSE,
+	STEP,
+	STOP
+};
 
 class NULL_API AnimatorTrack
 {
 public:
 	AnimatorTrack();
-	AnimatorTrack(const std::string& name, GameObject* rootBone, AnimatorClip* currentClip = nullptr, AnimatorClip* blendingClip = nullptr);
+	AnimatorTrack(const std::string& name, const GameObject* rootBone);
 	~AnimatorTrack();
 
-	bool StepTrack();
+	bool StepTrack(float dt);
 	bool CleanUp();
 
-public:
-
-public:
-	bool				IsActive			() const;
-	void				Enable				();
-	void				Disable				();
+public:																																				// --- TRACK MANAGEMENT METHODS
+	bool				Play						();
+	bool				Pause						();
+	bool				Step						();
+	bool				Stop						();
 	
-	const char*			GetName				() const;
-	const GameObject*	GetRootBone			() const;
-	AnimatorClip*		GetCurrentClip		() const;
-	AnimatorClip*		GetBlendingClip		() const;
+	bool				PlayClip					(AnimatorClip* clip, std::vector<BoneLink>* clipBones, uint blendFrames = 0);
 
-	void				SetName				(const char* newName);
-	void				SetRootBone			(const GameObject* newRootBone);
-	void				SetCurrentClip		(AnimatorClip* newCurrentClip);
-	void				SetBlendingClip		(AnimatorClip* newBlendingClip);
+public:																																				// --- GET/SET METHODS
+	TrackState			GetTrackState				();
+	const char*			GetTrackStateAsString		();
+	
+	float				GetTrackSpeed				() const;
+	void				SetTrackSpeed				(float newTrackSpeed);
+
+	const char*			GetName						() const;
+	const GameObject*	GetRootBone					() const;
+	AnimatorClip*		GetCurrentClip				() const;
+	AnimatorClip*		GetBlendingClip				() const;
+
+	void				SetName						(const char* newName);
+	void				SetRootBone					(const GameObject* newRootBone);
+	bool				SetCurrentClip				(AnimatorClip* newClip, std::vector<BoneLink>* newBones);
+	bool				SetBlendingClip				(AnimatorClip* newClip, std::vector<BoneLink>* newBones, uint newBlendFrames);
+
+	bool				CurrentClipExists			() const;
+	bool				BlendingClipExists			() const;
+
+private:																																			// --- CLIP MANAGEMENT METHODS
+	bool				StepClips					(float dt);
+
+	void				SwitchBlendingToCurrent		();
+	void				ResetCurrentBones			();
+
+	bool				ValidateCurrentClip			();
+
+private:																																			// --- BONE/CHANNEL UPDATE METHODS
+	void				UpdateChannelTransforms		();
+
+	Transform			GetPoseToPoseTransform		(uint tick, const Channel& channel, const C_Transform* originalTransform) const;						
+	
+	Transform			GetInterpolatedTransform	(double keyframe, const Channel& channel, const C_Transform* originalTransform) const;				
+	const float3		GetInterpolatedPosition		(double keyframe, const Channel& channel) const;												
+	const Quat			GetInterpolatedRotation		(double keyframe, const Channel& channel) const;												
+	const float3		GetInterpolatedScale		(double keyframe, const Channel& channel) const;												
+	
+	Transform			GetBlendedTransform			(double bKeyframe, const Channel& bChannel, const Transform& originalTransform) const;			
+	const float3		GetBlendedPosition			(double bKeyframe, const Channel& bChannel, float bRate, const float3& originalPosition) const;	
+	const Quat			GetBlendedRotation			(double bKeyframe, const Channel& bChannel, float bRate, const Quat& originalRotation) const;	
+	const float3		GetBlendedScale				(double bKeyframe, const Channel& bChannel, float bRate, const float3& originalScale) const;	
 
 private:
-	bool				isActive;
-	
-	std::string			name;
-	
-	const GameObject*	rootBone;
-	
-	AnimatorClip*		currentClip;
-	AnimatorClip*		blendingClip;
+	TrackState				trackState;
+	float					trackSpeed;
 
-	std::vector<BoneLink>* currentBones;
-	std::vector<BoneLink>* blendingBones;
+	bool					interpolate;
+
+	std::string				name;
+	
+	const GameObject*		rootBone;
+	std::vector<BoneLink>	bones;
+	
+	AnimatorClip*			currentClip;
+	AnimatorClip*			blendingClip;
+
+	std::vector<BoneLink>*	currentBones;
+	std::vector<BoneLink>*	blendingBones;
+
+	uint					blendFrames;
 };
 
 #endif // !__ANIMATOR_TRACK_H__

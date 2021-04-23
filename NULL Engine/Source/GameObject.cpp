@@ -181,13 +181,11 @@ bool GameObject::SaveState(ParsonNode& root) const
 
 bool GameObject::LoadState(ParsonNode& root)
 {
-	bool ret = true;
-
 	ForceUID((uint)root.GetNumber("UID"));
-	parent_uid = (uint)root.GetNumber("ParentUID");
+	parent_uid	= (uint)root.GetNumber("ParentUID");
 
-	prefabID = (uint)root.GetNumber("PrefabID");
-	isPrefab = root.GetBool("IsPrefab");
+	prefabID	= (uint)root.GetNumber("PrefabID");
+	isPrefab	= root.GetBool("IsPrefab");
 
 	name					= root.GetString("Name");
 	isActive				= root.GetBool("IsActive");
@@ -196,80 +194,45 @@ bool GameObject::LoadState(ParsonNode& root)
 	maintainThroughScenes	= root.GetBool("MaintainThroughScenes");
 	show_bounding_boxes		= root.GetBool("ShowBoundingBoxes");
 
-	// Recalculate AABB and OBB
-
 	ParsonArray componentsArray = root.GetArray("Components");
-
 	for (uint i = 0; i < componentsArray.size; ++i)
 	{
 		ParsonNode componentNode = componentsArray.GetNode(i);
-		
 		if (!componentNode.NodeIsValid())
-			continue;
-		
-		ComponentType type	= (ComponentType)((int)componentNode.GetNumber("Type"));
-
-		if (type < (ComponentType)0)
-			continue;
-
-		if (type == ComponentType::TRANSFORM)
 		{
-			GetComponent<C_Transform>()->LoadState(componentNode);
 			continue;
 		}
-		else
+		
+		ComponentType type	= (ComponentType)((int)componentNode.GetNumber("Type"));
+		if (type == ComponentType::NONE)
 		{
-			Component* component = nullptr;
+			continue;
+		}
+		if (type == ComponentType::TRANSFORM)
+		{
+			transform->LoadState(componentNode);
+			continue;
+		}
 
-			switch (type)
+		Component* component = CreateComponent(type, false);
+		if (component != nullptr)
+		{
+			if (component->LoadState(componentNode))
 			{
-			//case COMPONENT_TYPE::TRANSFORM:		{ component = new C_Transform(this); }			break;
-			case ComponentType::MESH:				{ component = new C_Mesh(this); }				break;
-			case ComponentType::MATERIAL:			{ component = new C_Material(this); }			break;
-			case ComponentType::LIGHT:				{ component = new C_Light(this); }				break;
-			case ComponentType::CAMERA:				{ component = new C_Camera(this); } 			break;
-			case ComponentType::ANIMATOR:			{ component = new C_Animator(this); }			break;
-			case ComponentType::ANIMATION:			{ component = new C_Animation(this); }			break;
-			case ComponentType::AUDIOSOURCE:		{ component = new C_AudioSource(this); }		break;
-			case ComponentType::AUDIOLISTENER:		{ component = new C_AudioListener(this); }		break;
-			case ComponentType::SCRIPT:				{ component = new C_Script(this); }				break;
-			case ComponentType::RIGIDBODY:			{ component = new C_RigidBody(this); }			break;
-			case ComponentType::BOX_COLLIDER:		{ component = new C_BoxCollider(this); }		break;
-			case ComponentType::SPHERE_COLLIDER:	{ component = new C_SphereCollider(this); }		break;
-			case ComponentType::CAPSULE_COLLIDER:	{ component = new C_CapsuleCollider(this); }	break;
-			case ComponentType::PLAYER_CONTROLLER:	{ component = new C_PlayerController(this); }	break;
-			case ComponentType::BULLET_BEHAVIOR:	{ component = new C_BulletBehavior(this); }		break;
-			case ComponentType::PROP_BEHAVIOR:		{ component = new C_PropBehavior(this); }		break;
-			case ComponentType::CAMERA_BEHAVIOR:	{ component = new C_CameraBehavior(this); }		break;
-			case ComponentType::GATE_BEHAVIOR:		{ component = new C_GateBehavior(this); }		break;
-			case ComponentType::PARTICLES:			{ component = new C_ParticleSystem(this); }		break;
-			case ComponentType::CANVAS:				{ component = new C_Canvas(this); }				break;
-			case ComponentType::UI_IMAGE:			{ component = new C_UI_Image(this); }			break;
-			case ComponentType::UI_TEXT:			{ component = new C_UI_Text(this); }			break;
-			case ComponentType::UI_BUTTON:			{ component = new C_UI_Button(this); }			break;
-			case ComponentType::ANIMATOR2D:			{ component = new C_2DAnimator(this); }			break;
-			case ComponentType::NAVMESH_AGENT:		{ component = new C_NavMeshAgent(this); }		break;
+				component->Start();
+				components.push_back(component);
 			}
-
-			if (component != nullptr)
+			else 
 			{
-				if ((component->GetType() == ComponentType::CAMERA) && (App->gameState == GameState::PLAY)) //TODO fix this hardcode
-					App->camera->SetCurrentCamera((C_Camera*)component);
+				LOG("[WARNING] Game Object: Could not Load State of Component { %s } of Game Object { %s }!", component->GetNameFromType(), name.c_str());
 
-				if (component->LoadState(componentNode))
-				{
-					components.push_back(component);
-				}
-				else 
-				{
-					component->CleanUp();
-					delete component;
-				}
+				component->CleanUp();
+				delete component;
 			}
 		}
 	}
 
-	return ret;
+	return true;
 }
 
 // --- GAMEOBJECT METHODS ---
@@ -779,7 +742,7 @@ void GameObject::SetParentUID(const uint32& parentUID)
 }
 
 // --- COMPONENT METHODS ---
-Component* GameObject::CreateComponent(ComponentType type)
+Component* GameObject::CreateComponent(ComponentType type, bool addComponent)
 {
 	Component* component = nullptr;
 
@@ -824,7 +787,7 @@ Component* GameObject::CreateComponent(ComponentType type)
 	case ComponentType::BOX_COLLIDER:		{ component = new C_BoxCollider(this); }		break;
 	case ComponentType::SPHERE_COLLIDER:	{ component = new C_SphereCollider(this); }		break;
 	case ComponentType::CAPSULE_COLLIDER:	{ component = new C_CapsuleCollider(this); }	break;
-	case ComponentType::PARTICLES: 			{ component = new C_ParticleSystem(this); }			break;
+	case ComponentType::PARTICLE_SYSTEM: 	{ component = new C_ParticleSystem(this); }		break;
 	case ComponentType::CANVAS:				{ component = new C_Canvas(this); }				break;
 	case ComponentType::UI_IMAGE:			{ component = new C_UI_Image(this); }			break;
 	case ComponentType::UI_TEXT:			{ component = new C_UI_Text(this); }			break;
@@ -839,7 +802,7 @@ Component* GameObject::CreateComponent(ComponentType type)
 	case ComponentType::NAVMESH_AGENT:		{ component = new C_NavMeshAgent(this); }		break;
 	}
 
-	if (component != nullptr)
+	if (component != nullptr && addComponent)
 		components.push_back(component);
 
 	return component;
@@ -909,7 +872,7 @@ bool GameObject::GetAllComponents(std::vector<Component*>& components) const
 	return components.empty() ? false : true;
 }
 
-void* GameObject::GetScript(const char*scriptName)
+void* GameObject::GetScript(const char* scriptName)
 {
 	for (uint i = 0; i < components.size(); ++i) 
 		if (components[i]->GetType() == ComponentType::SCRIPT) 

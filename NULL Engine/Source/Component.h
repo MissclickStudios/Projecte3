@@ -25,7 +25,7 @@ enum class ComponentType
 	SPHERE_COLLIDER,										// 
 	CAPSULE_COLLIDER,										// -----------
 
-	PARTICLES,												// --- PARTICLE SYSTEM
+	PARTICLE_SYSTEM,										// --- PARTICLE SYSTEM
 
 	CANVAS,													// --- UI
 

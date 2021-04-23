@@ -259,7 +259,7 @@ void E_Inspector::DrawComponents(GameObject* selectedGameObject)
 		case ComponentType::BOX_COLLIDER:		{ DrawBoxColliderComponent((C_BoxCollider*)component); }			break;
 		case ComponentType::SPHERE_COLLIDER:	{ DrawSphereColliderComponent((C_SphereCollider*)component); }		break;
 		case ComponentType::CAPSULE_COLLIDER:	{ DrawCapsuleColliderComponent((C_CapsuleCollider*)component); }	break;
-		case ComponentType::PARTICLES:			{ DrawParticleSystemComponent((C_ParticleSystem*)component); }		break;
+		case ComponentType::PARTICLE_SYSTEM:	{ DrawParticleSystemComponent((C_ParticleSystem*)component); }		break;
 		case ComponentType::CANVAS:				{ DrawCanvasComponent((C_Canvas*)component); }						break;
 		case ComponentType::UI_IMAGE:			{ DrawUIImageComponent((C_UI_Image*)component); }					break;
 		case ComponentType::UI_TEXT:			{ DrawUITextComponent((C_UI_Text*)component); }						break;
@@ -2071,7 +2071,7 @@ void E_Inspector::DrawBasicSettings(Component* component, const char* state)
 	case ComponentType::BOX_COLLIDER:		{ label = "Box Collider is active"; }		break;
 	case ComponentType::SPHERE_COLLIDER:	{ label = "Sphere Collider is active"; }	break;
 	case ComponentType::CAPSULE_COLLIDER:	{ label = "Capsule Collider is active"; }	break;
-	case ComponentType::PARTICLES:			{ label = "Particles is active"; }			break;
+	case ComponentType::PARTICLE_SYSTEM:	{ label = "Particles is active"; }			break;
 	case ComponentType::CANVAS:				{ label = "Canvas is active"; }				break;
 	case ComponentType::AUDIOSOURCE:		{ label = "Audio Source is active";}		break;
 	case ComponentType::AUDIOLISTENER:		{ label = "Audio Listener is active"; }		break;
@@ -2425,7 +2425,7 @@ void E_Inspector::ClipEditorWindow(C_Animator* cAnimator)
 	ImGui::PushStyleColor(ImGuiCol_Button, { 0.0f, 1.0f, 0.0f, 0.5f });
 	if (ImGui::Button("Save"))		
 	{ 
-		bool success = cAnimator->EditClip(clipToEdit->GetName(), editedAnimation, editedName, editedStart, editedEnd, editedSpeed, editedLoop); 
+		bool success = cAnimator->EditClip(clipToEdit->GetName(), AnimatorClip(editedAnimation, editedName, editedStart, editedEnd, editedSpeed, editedLoop));
 		if (success)
 		{
 			strcpy_s(editedName, 128, "Edited Clip Name");																							// --- Re-setting the Edit Clip Parameters

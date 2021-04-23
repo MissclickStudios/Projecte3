@@ -64,7 +64,7 @@ const char* Component::GetNameFromType() const
 	case ComponentType::BOX_COLLIDER:		{ return "Box Collider"; }		break;
 	case ComponentType::SPHERE_COLLIDER:	{ return "Sphere Collider"; }	break;
 	case ComponentType::CAPSULE_COLLIDER:	{ return "Capsule Collider"; }	break;
-	case ComponentType::PARTICLES:			{ return "Particles"; }			break;
+	case ComponentType::PARTICLE_SYSTEM:			{ return "Particles"; }			break;
 	case ComponentType::CANVAS:				{ return "Canvas"; }			break;
 	case ComponentType::AUDIOSOURCE:		{ return "Audio Source";}		break;
 	case ComponentType::AUDIOLISTENER:		{ return "Audio Listener"; }	break;
