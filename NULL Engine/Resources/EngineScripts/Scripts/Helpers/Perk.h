@@ -1,6 +1,7 @@
 #pragma once
+#include "ScriptMacros.h"
 
-enum class Perk // REMEMBER TO ADD A NEW ENTRY ON THE GET PERK NAME IF YOU ADD A PERK (down below line 17ish)
+enum class ENGINE_ENUM Perk // REMEMBER TO ADD A NEW ENTRY ON THE GET PERK NAME IF YOU ADD A PERK (down below line 17ish)
 {
 	NONE,
 	DAMAGE_UP,

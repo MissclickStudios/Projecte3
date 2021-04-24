@@ -1,8 +1,9 @@
 #pragma once
+#include "ScriptMacros.h"
 
 #include "Timer.h"
 
-enum class EffectType // REMEMBER TO ADD A NEW ENTRY ON THE GET EFFECT NAME IF YOU ADD AN EFFECT (down below line 58ish)
+enum class ENGINE_ENUM EffectType // REMEMBER TO ADD A NEW ENTRY ON THE GET EFFECT NAME IF YOU ADD AN EFFECT (down below line 58ish)
 {
 	NONE = 0,
 	FROZEN,

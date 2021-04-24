@@ -19,8 +19,6 @@ void Collectable::Start()
 
 void Collectable::Update()
 {
-	SetTypeInfo();
-
 	if (used)
 	{
 		used = false;
