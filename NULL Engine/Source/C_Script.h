@@ -20,14 +20,8 @@ struct NULL_API InspectorScriptData {
 		PREFAB,
 		STRING,
 		GAMEOBJECT,
-		VECTORSTRING
-		/*INT2,
-		INT3,
-		FLOAT2,
-		FLOAT3,
-		STRING,
-		PREFAB, // DONE
-		GAMEOBJECT, // DONE*/
+		VECTORSTRING,
+		ENUM
 	};
 
 	enum ShowMode {
@@ -54,6 +48,8 @@ struct NULL_API InspectorScriptData {
 	ShowMode showAs;
 	void* ptr = nullptr;
 
+	//ugly
+	std::string enumName;
 	GameObject** obj = nullptr;
 	float minSlider = 0;
 	float maxSlider = 0;
@@ -119,6 +115,8 @@ public:
 	static void InspectorGameObject(GameObject** variablePtr, const char* ptrName);
 
 	static void InspectorStringVector(std::vector<std::string>* variablePtr, const char* ptrName);
+
+	static void InspectorEnum(void* variablePtr, const char* ptrName, const char* enumName, const char* definitionFile);
 	
 	R_Script* resource = nullptr;
 private:

@@ -32,6 +32,7 @@ static const char* GetPerkName(Perk perk)
 		return "FREEZE_BULLETS";
 	case Perk::PERKS_NUM:
 		return "ERROR";
+	default:
+		return "U forgot to add the perk to string conversion... DUMBASS";
 	}
-	return "U forgot to add the perk to string conversion... DUMBASS";
 }

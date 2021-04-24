@@ -120,6 +120,11 @@ HINSTANCE M_ScriptManager::GetDllHandle() const
 	return dllHandle;
 }
 
+bool M_ScriptManager::ParseEnum(const char* enumName, const char* definitionFile)
+{
+	return true;
+}
+
 void M_ScriptManager::ResolveScriptHelperFunctions()
 {
 	if (dllHandle != nullptr)
