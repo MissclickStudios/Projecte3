@@ -1,3 +1,5 @@
+#include "JSONParser.h"
+
 #include "Player.h"
 
 #include "Application.h"
@@ -102,35 +104,6 @@ void Player::SetUp()
 
 	rigidBody->TransformMovesRigidBody(false);
 
-	GameObject* hand = nullptr;
-	if (skeleton)
-		for (uint i = 0; i < skeleton->childs.size(); ++i)
-		{
-			std::string name = skeleton->childs[i]->GetName();
-			if (name == "Hand")
-			{
-				hand = skeleton->childs[i];
-				break;
-			}
-		}
-
-	// Create Weapons and save the Weapon script pointer
-	blasterGameObject = App->resourceManager->LoadPrefab(blaster.uid, App->scene->GetSceneRoot());
-	equipedGunGameObject = App->resourceManager->LoadPrefab(equipedGun.uid, App->scene->GetSceneRoot());
-
-	if (blasterGameObject)
-		blasterWeapon = (Weapon*)GetObjectScript(blasterGameObject, ObjectType::WEAPON);
-	if (blasterWeapon)
-		blasterWeapon->SetOwnership(type, hand);
-	if (equipedGunGameObject)
-		equipedGunWeapon = (Weapon*)GetObjectScript(equipedGunGameObject, ObjectType::WEAPON);
-	if (blasterWeapon)
-	{
-		equipedGunWeapon->SetOwnership(type, hand);
-		if (equipedGunWeapon->weaponModel)
-			equipedGunWeapon->weaponModel->SetIsActive(false);
-	}
-
 	currentWeapon = blasterWeapon;
 }
 
@@ -154,6 +127,130 @@ void Player::CleanUp()
 	equipedGunWeapon = nullptr;
 
 	currentWeapon = nullptr;
+}
+
+void Player::SaveState(ParsonNode& playerNode)
+{
+	playerNode.SetInteger("Currency", currency);
+	playerNode.SetInteger("Hub Currency", hubCurrency);
+
+	playerNode.SetNumber("Health", health);
+
+	ParsonArray effectsArray = playerNode.SetArray("Effects");
+	for (uint i = 0; i < effects.size(); ++i)
+	{
+		ParsonNode node = effectsArray.SetNode("Effect");
+		node.SetInteger("Type", (int)effects[i]->Type());
+		node.SetNumber("Duration", (double)effects[i]->RemainingDuration());
+		node.SetBool("Permanent", effects[i]->Permanent());
+	}
+
+	ParsonArray blasterPerks = playerNode.SetArray("Blaster Perks");
+	if (blasterWeapon)
+	{
+		playerNode.SetInteger("Blaster Ammo", blasterWeapon->ammo);
+		for (uint i = 0; i < blasterWeapon->perks.size(); ++i)
+			blasterPerks.SetNumber((double)blasterWeapon->perks[i]);
+	}
+
+	playerNode.SetInteger("Equiped Gun", equipedGun.uid);
+	ParsonArray equipedGunPerks = playerNode.SetArray("Equiped Gun Perks");
+	if (equipedGunWeapon)
+	{
+		playerNode.SetInteger("Equiped Gun Ammo", equipedGunWeapon->ammo);
+		for (uint i = 0; i < equipedGunWeapon->perks.size(); ++i)
+			equipedGunPerks.SetNumber((double)equipedGunWeapon->perks[i]);
+	}
+}
+
+void Player::LoadState(ParsonNode& playerNode)
+{
+	currency = playerNode.GetInteger("Currency");
+	hubCurrency = playerNode.GetInteger("Hub Currency");
+
+	health = playerNode.GetNumber("Health");
+
+	ParsonArray effectsArray = playerNode.GetArray("Effects");
+	for (uint i = 0; i < effectsArray.size; ++i)
+	{
+		ParsonNode node = effectsArray.GetNode(i);
+		EffectType type = (EffectType)node.GetInteger("Type");
+		float duration = node.GetNumber("Duration");
+		bool permanent = node.GetBool("Permanent");
+
+		AddEffect(type, duration, permanent);
+	}
+
+	GameObject* hand = nullptr;
+	if (skeleton)
+		for (uint i = 0; i < skeleton->childs.size(); ++i)
+		{
+			std::string name = skeleton->childs[i]->GetName();
+			if (name == "Hand")
+			{
+				hand = skeleton->childs[i];
+				break;
+			}
+		}
+
+	blasterGameObject = App->resourceManager->LoadPrefab(blaster.uid, App->scene->GetSceneRoot());
+	if (blasterGameObject)
+	{
+		blasterWeapon = (Weapon*)GetObjectScript(blasterGameObject, ObjectType::WEAPON);
+
+		if (blasterWeapon)
+		{
+			blasterWeapon->SetOwnership(type, hand);
+			blasterWeapon->ammo = playerNode.GetInteger("Blaster Ammo");
+
+			ParsonArray blasterPerks = playerNode.GetArray("Blaster Perks");
+			for (uint i = 0; i < blasterPerks.size; ++i)
+				blasterWeapon->AddPerk((Perk)(int)blasterPerks.GetNumber(i));
+		}
+	}
+
+	equipedGunGameObject = App->resourceManager->LoadPrefab(playerNode.GetInteger("Equiped Gun"), App->scene->GetSceneRoot());
+	if (equipedGunGameObject)
+	{
+		equipedGunWeapon = (Weapon*)GetObjectScript(equipedGunGameObject, ObjectType::WEAPON);
+
+		if (equipedGunWeapon)
+		{
+			equipedGunWeapon->SetOwnership(type, hand);
+			equipedGunWeapon->ammo = playerNode.GetInteger("Equiped Gun Ammo");
+
+			ParsonArray equipedGunPerks = playerNode.GetArray("Equiped Gun Perks");
+			for (uint i = 0; i < equipedGunPerks.size; ++i)
+				equipedGunWeapon->AddPerk((Perk)(int)equipedGunPerks.GetNumber(i));
+
+			if (equipedGunWeapon->weaponModel)
+				equipedGunWeapon->weaponModel->SetIsActive(false);
+		}
+	}
+}
+
+void Player::Reset()
+{
+	currency = 0;
+
+	health = maxHealth;
+
+	while (effects.size())
+	{
+		delete* effects.begin();
+		effects.erase(effects.begin());
+	}
+
+	if (blasterWeapon)
+	{
+		blasterWeapon->ammo = blasterWeapon->maxAmmo;
+		blasterWeapon->perks.clear();
+	}
+	if (equipedGunWeapon)
+	{
+		equipedGunWeapon->ammo = equipedGunWeapon->maxAmmo;
+		equipedGunWeapon->perks.clear();
+	}
 }
 
 void Player::TakeDamage(float damage)
@@ -219,12 +316,7 @@ void Player::ManageMovement()
 
 		case PlayerState::DEAD:
 			if (deathTimer.ReadSec() >= deathDuration)
-			{
-				// DIE ALREADY !
-				GameObject* gameManagerObject = App->scene->GetGameObjectByName(gameManager.c_str());
-				GameManager* gameManagerScript = (GameManager*)gameManagerObject->GetScript("GameManager");
-				gameManagerScript->ReturnHub();
-			}
+				moveState = PlayerState::DEAD_OUT;
 			break;
 		}
 }

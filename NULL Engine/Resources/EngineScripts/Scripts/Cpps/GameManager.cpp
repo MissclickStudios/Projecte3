@@ -68,11 +68,37 @@ void GameManager::Awake()
 	}
 }
 
+void GameManager::Start()
+{
+	if (enabled && mainMenuScene != App->scene->GetCurrentScene() && playerGameObject)
+	{
+		char* buffer = nullptr;
+		App->fileSystem->Load(saveFileName, &buffer);
+		ParsonNode jsonState(buffer);
+		//release Json File
+		CoreCrossDllHelpers::CoreReleaseBuffer(&buffer);
+		playerScript = (Player*)playerGameObject->GetScript("Player");
+		ParsonNode playerNode = jsonState.GetNode("player");
+		playerScript->LoadState(playerNode);
+		if (!strstr(App->scene->GetCurrentScene(), level1[0].c_str()))
+			playerScript->Reset();
+	}
+}
+
 void GameManager::Update()
 {
 	// --- Room Generation
-	if(enabled)
+	if (enabled) 
+	{
 		HandleRoomGeneration();
+
+		if (playerScript != nullptr && playerScript->moveState == PlayerState::DEAD_OUT) 
+		{
+			playerScript->Reset();
+			ReturnHub();
+		}
+	}
+
 	//S'ha de fer alguna manera de avisar l'scene que volem canviar de scene pero no fer-ho imediatament ??? -> si
 	//--
 }
@@ -438,7 +464,11 @@ void GameManager::SaveManagerState()
 	{
 		levelArray2.SetString(level2[i].c_str());
 	}
-
+	if (playerGameObject) 
+	{
+		ParsonNode playerNode = jsonState.SetNode("player");
+		playerScript->SaveState(playerNode);
+	}
 	char* buffer = nullptr;
 	jsonState.SerializeToFile(saveFileName, &buffer);
 	CoreCrossDllHelpers::CoreReleaseBuffer(&buffer);

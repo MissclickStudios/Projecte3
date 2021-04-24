@@ -65,6 +65,9 @@ void Entity::PreUpdate()
 			case EffectType::FROZEN:
 				Frozen();
 				break;
+			case EffectType::HEAL:
+				Heal(effects[i]);
+				break;
 			}
 		}
 		else // Delete the effect if it ran out
@@ -109,7 +112,7 @@ void Entity::TakeDamage(float damage)
 		health = 0.0f;
 }
 
-void Entity::Heal(float amount)
+void Entity::GiveHeal(float amount)
 {
 	health += amount;
 	if (health > MaxHealth())
@@ -130,6 +133,12 @@ void Entity::Frozen()
 {
 	speedModifier /= 2.5;
 	attackSpeedModifier /= 2.5;
+}
+
+void Entity::Heal(Effect* effect)
+{
+	GiveHeal(effect->Duration());
+	effect->End();
 }
 
 //	// Health

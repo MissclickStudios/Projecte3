@@ -18,8 +18,6 @@ public:
 protected:
 
 	void Contact(Player* player);
-
-	void SetTypeInfo();
 };
 
 SCRIPTS_FUNCTION EntityPerk* CreateEntityPerk();
