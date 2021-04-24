@@ -9,7 +9,6 @@
 
 #define SCRIPTS_FUNCTION extern "C" SCRIPTS_API
 #define ALLOWED_INHERITANCE
-#define ENGINE_ENUM
 
 #define INSPECTOR_INPUT_INT(INT_) C_Script::InspectorInputInt(&INT_, #INT_)
 #define INSPECTOR_DRAGABLE_INT(INT_) C_Script::InspectorDragableInt(&INT_, #INT_)
@@ -33,5 +32,3 @@
 #define INSPECTOR_GAMEOBJECT(GAMEOBJECT_) C_Script::InspectorGameObject(&GAMEOBJECT_, #GAMEOBJECT_)
 
 #define INSPECTOR_VECTOR_STRING(VECTORSTRING_) C_Script::InspectorStringVector(&VECTORSTRING_, #VECTORSTRING_)
-
-#define INSPECTOR_ENUM(ENUM_, ENUMNAME_, DEFINITION_FILE_) C_Script::InspectorEnum(&ENUM_, #ENUM_, ENUMNAME_, DEFINITION_FILE_);

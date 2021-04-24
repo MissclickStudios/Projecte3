@@ -1,13 +1,16 @@
 #ifndef __I_SCRIPT_H__
 #define __I_SCRIPT_H__
-#include <string>
-#include <map>
 
 class R_Script;
 
 namespace Parser
 {
-	enum class ParsingState : unsigned int;
+	enum class ParsingState : unsigned int
+	{
+		ERROR,
+		CONTINUE,
+		ENDFILE
+	};
 
 	bool CheckNullterminatedBuffer(char* buffer, int size);
 	bool LanguageSymbol(char symbol);
@@ -19,8 +22,6 @@ namespace Parser
 	ParsingState ReadNextSymbol(char*& cursor, char*& startSymbol, unsigned int& symbolSize);
 	//Leave the cursor on the start of the next symbol
 	ParsingState GoNextSymbol(char*& cursor);
-	bool CharIsNumber(char numberCheck);
-	bool NULL_API ParseEnum(const char* enumName, const char* definitionFile, std::map<std::string, std::map<int, std::string>>& inspectorEnums);
 }
 
 namespace Importer

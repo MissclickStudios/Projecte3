@@ -11,7 +11,6 @@
 #include "M_ResourceManager.h"
 #include "R_Script.h"
 #include "Prefab.h"
-#include "I_Scripts.h"
 
 #include "MemoryManager.h"
 
@@ -171,16 +170,6 @@ bool M_EngineScriptManager::CleanUp()
 	return true;
 }
 
-bool M_EngineScriptManager::ParseEnum(const char* enumName, const char* definitionFile)
-{
-	return Parser::ParseEnum(enumName, definitionFile, inspectorEnums);
-}
-
-const std::map<std::string, std::map< int, std::string>>& M_EngineScriptManager::GetInspectorEnums() const
-{
-	return inspectorEnums;
-}
-
 void M_EngineScriptManager::HotReload()
 {
 	ParsonNode root = ParsonNode();
@@ -213,7 +202,6 @@ void M_EngineScriptManager::HotReload()
 			{
 				LOG("Successfully loaded new scripts dll");
 				ResolveScriptHelperFunctions();
-				inspectorEnums.clear();
 				if (root.GetBool("HaveScripts")) 
 				{
 					DeSerializeAllScripts(root.GetArray("CurrentScripts"));
@@ -295,8 +283,6 @@ void M_EngineScriptManager::SerializeAllScripts(ParsonArray& scriptsArray)
 									}
 									break;
 								}
-								case InspectorScriptData::DataType::ENUM:
-									variable.SetInteger("enum", *(int*)scriptVariables[i].ptr); break;
 								}
 							}
 						}

@@ -14,14 +14,6 @@
 
 #include "MemoryManager.h"
 
-enum class Parser::ParsingState : unsigned int
-{
-	ERROR,
-	CONTINUE,
-	ENDFILE
-};
-
-
 bool Importer::Scripts::Import(const char* assetsPath, char* buffer, uint size, R_Script* rScript)
 {
 	//PROFILE FUNCTION TIME
@@ -277,6 +269,7 @@ bool Importer::Scripts::Load(const char* buffer, R_Script* rScript)
 }
 
 //---------------------------------------------PARSER-------------------------------------------------------------
+
 bool Parser::CheckNullterminatedBuffer(char* buffer, int size)
 {
 	return buffer[size] == '\0';
@@ -395,15 +388,14 @@ Parser::ParsingState Parser::ReadNextSymbol(char*& cursor, char*& startSymbol, u
 		++cursor;
 	}
 
-	startSymbol = cursor;
 	if (LanguageSymbol(*cursor))
 	{
 		symbolSize = 1;
-		++cursor;
 		return Parser::ParsingState::CONTINUE;
 	}
 
-	while (*cursor != ' ' && *cursor != '\t' && *cursor != '\n' && *cursor != '\r')
+	startSymbol = cursor;
+	while (*cursor != ' ' && *cursor != '\t' && *cursor != '\n')
 	{
 		if (cursor == '\0')
 			return Parser::ParsingState::ENDFILE;

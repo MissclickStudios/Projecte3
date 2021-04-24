@@ -21,7 +21,6 @@ enum class ENGINE_ENUM TestEnum2
 {
 	a, b = 12, c, d
 };
-
 class SCRIPTS_API FirstScript : public Script {
 public :
 	FirstScript();

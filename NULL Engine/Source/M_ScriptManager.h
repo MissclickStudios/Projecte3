@@ -28,8 +28,6 @@ public:
 
 	HINSTANCE GetDllHandle() const;
 
-	virtual bool ParseEnum(const char* enumName, const char* definitionFile);
-
 public:
 	C_Script* actualScriptLoading;
 	//Scripts Dll vector Helpers
