@@ -23,13 +23,18 @@ out vec4 FragColor;
   
 in vec2 TexCoords;
 
+uniform vec4 inColor;
 uniform sampler2D UITexture;
 
 void main()
 { 
-    FragColor = texture(UITexture, TexCoords);
+    
+    vec4 texColor = texture(UITexture, TexCoords);
+    FragColor = texColor * inColor;
 }
 
 #endif
+
+
 
 
