@@ -1712,9 +1712,16 @@ void E_Inspector::DrawUIButtonComponent(C_UI_Button* button)
 			button->SetX(pos.x);
 			button->SetY(pos.y);
 		}
-	}
 
-	ImGui::Separator();
+
+		if (!show)
+		{
+			componentToDelete = button;
+			showDeleteComponentPopup = true;
+		}
+
+		ImGui::Separator();
+	}
 }
 
 void E_Inspector::DrawPlayerControllerComponent(C_PlayerController* cController)

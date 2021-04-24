@@ -214,6 +214,11 @@ void C_Transform::RefreshTransformsChain()
 	}
 }
 
+float C_Transform::GetDistanceTo(float3 _position)
+{
+	return math::Sqrt((_position.x - localPosition.x) * (_position.x - localPosition.x) + (_position.y - localPosition.y) * (_position.y - localPosition.y) + (_position.z - localPosition.z) * (_position.z - localPosition.z));
+}
+
 // --- POSITION, ROTATION AND SCALE METHODS
 // -- GET METHODS
 float3 C_Transform::GetLocalPosition() const
