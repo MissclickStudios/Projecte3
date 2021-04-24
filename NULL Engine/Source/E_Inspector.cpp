@@ -861,9 +861,11 @@ void E_Inspector::DrawAudioSourceComponent(C_AudioSource* cAudioSource)
 			if ((ImGui::Button(("Play " + cAudioSource->GetEventName()).c_str())))
 			{
 				cAudioSource->PlayFx(currentEvent);
+				cAudioSource->isPlaying = false;
 			}
 			if ((ImGui::Button(("Stop " + cAudioSource->GetEventName()).c_str())))
 			{
+				cAudioSource->isPlaying = true;
 				cAudioSource->StopFx(currentEvent);
 			}
 		}
