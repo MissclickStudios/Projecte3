@@ -11,6 +11,7 @@ public:
     GameManager();
     ~GameManager();
     void Awake() override;
+    void Start()override;
     void Update()override;
 
     void GenerateNewRun();

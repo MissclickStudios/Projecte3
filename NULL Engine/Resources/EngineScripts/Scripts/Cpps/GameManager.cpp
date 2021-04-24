@@ -64,10 +64,24 @@ void GameManager::Awake()
 				playerGameObject->transform->SetLocalPosition(playerSpawn->transform->GetLocalPosition());
 				//playerTrans->SetLocalRotation(spawnTrans->GetLocalRotation());
 			}
-			playerScript = (Player*)playerGameObject->GetScript("Player");
-			ParsonNode playerNode = jsonState.GetNode("player");
-			playerScript->LoadState(playerNode);
 		}
+	}
+}
+
+void GameManager::Start()
+{
+	if (enabled && mainMenuScene != App->scene->GetCurrentScene() && playerGameObject)
+	{
+		char* buffer = nullptr;
+		App->fileSystem->Load(saveFileName, &buffer);
+		ParsonNode jsonState(buffer);
+		//release Json File
+		CoreCrossDllHelpers::CoreReleaseBuffer(&buffer);
+		playerScript = (Player*)playerGameObject->GetScript("Player");
+		ParsonNode playerNode = jsonState.GetNode("player");
+		playerScript->LoadState(playerNode);
+		if (!strstr(App->scene->GetCurrentScene(), level1[0].c_str()))
+			playerScript->Reset();
 	}
 }
 
@@ -80,6 +94,7 @@ void GameManager::Update()
 
 		if (playerScript != nullptr && playerScript->moveState == PlayerState::DEAD_OUT) 
 		{
+			playerScript->Reset();
 			ReturnHub();
 		}
 	}
@@ -449,8 +464,11 @@ void GameManager::SaveManagerState()
 	{
 		levelArray2.SetString(level2[i].c_str());
 	}
-	ParsonNode playerNode = jsonState.SetNode("player");
-	playerScript->SaveState(playerNode);
+	if (playerGameObject) 
+	{
+		ParsonNode playerNode = jsonState.SetNode("player");
+		playerScript->SaveState(playerNode);
+	}
 	char* buffer = nullptr;
 	jsonState.SerializeToFile(saveFileName, &buffer);
 	CoreCrossDllHelpers::CoreReleaseBuffer(&buffer);
