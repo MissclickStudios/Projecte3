@@ -5,6 +5,7 @@
 
 class GameObject;
 class C_2DAnimator;
+class Player;
 
 class SCRIPTS_API HUDManager : public Script {
 public:
@@ -28,7 +29,8 @@ private:
 	C_2DAnimator* secondaryWeaponImage;
 	C_2DAnimator* mandoImage;
 
-	GameObject* player;
+	GameObject* playerObject;
+	Player* player;
 };
 
 SCRIPTS_FUNCTION HUDManager* CreateHUDManager() {
