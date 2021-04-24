@@ -229,6 +229,30 @@ void Player::LoadState(ParsonNode& playerNode)
 	}
 }
 
+void Player::Reset()
+{
+	currency = 0;
+
+	health = maxHealth;
+
+	while (effects.size())
+	{
+		delete* effects.begin();
+		effects.erase(effects.begin());
+	}
+
+	if (blasterWeapon)
+	{
+		blasterWeapon->ammo = blasterWeapon->maxAmmo;
+		blasterWeapon->perks.clear();
+	}
+	if (equipedGunWeapon)
+	{
+		equipedGunWeapon->ammo = equipedGunWeapon->maxAmmo;
+		equipedGunWeapon->perks.clear();
+	}
+}
+
 void Player::TakeDamage(float damage)
 {
 	if (invencibilityTimer.ReadSec() >= invencibilityDuration)

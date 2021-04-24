@@ -35,6 +35,8 @@ public:
 	void SaveState(ParsonNode& playerNode);
 	void LoadState(ParsonNode& playerNode);
 
+	void Reset();
+
 	// Interactions
 	void TakeDamage(float damage) override;
 
