@@ -150,7 +150,7 @@ bool Importer::Scripts::Import(const char* assetsPath, char* buffer, uint size, 
 				nextSymbolStart = nullptr;
 				simbolSize = 0;
 				Parser::ReadNextSymbol(cursor,nextSymbolStart,simbolSize);
-				if (!strncmp(allowedInheritance, nextSymbolStart, simbolSize)) 
+				if (strncmp(nextSymbolStart, allowedInheritance, simbolSize))
 				{
 					LOG("[WARNING] Found class/struct %s in file %s marked to export that doesn't inherit from script class", scriptName.c_str(), assetsPath);
 					break;
