@@ -462,7 +462,7 @@ bool NULL_API Parser::ParseEnum(const char* enumName, const char* definitionFile
 					return false;
 			}
 
-			if (strncmp(enumName, enumFirstCharacter, enumNameSize))
+			if (strncmp(enumName, enumFirstCharacter, strlen(enumName)) || strncmp(enumFirstCharacter, enumName, enumNameSize))
 				continue;
 
 			char* startSymbol = nullptr;
@@ -488,6 +488,21 @@ bool NULL_API Parser::ParseEnum(const char* enumName, const char* definitionFile
 					inspectorEnums.erase(std::string(enumName));
 					RELEASE_ARRAY(buffer)
 						return false;
+				}
+					
+				if (*(startEnumName) == '}')
+				{
+					if (enumSize)
+					{
+						RELEASE_ARRAY(buffer)
+							return true;
+					}
+					else
+					{
+						inspectorEnums.erase(std::string(enumName));
+						RELEASE_ARRAY(buffer)
+							return false;
+					}
 				}
 
 				char* startSymbol2;

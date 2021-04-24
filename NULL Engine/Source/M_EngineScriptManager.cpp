@@ -384,7 +384,10 @@ void M_EngineScriptManager::DeSerializeAllScripts(const ParsonArray& scriptsArra
 									break;
 								}
 								case InspectorScriptData::DataType::ENUM:
-									*(int*)(*item).ptr = variable.GetInteger("enum"); break;
+									int readedInt = variable.GetInteger("enum");
+									if(inspectorEnums[(*item).enumName].find(readedInt) != inspectorEnums[(*item).enumName].end())
+										*(int*)(*item).ptr = readedInt; 
+									break;
 								}
 							}
 						}
