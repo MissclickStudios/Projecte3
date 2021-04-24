@@ -2,6 +2,7 @@
 #include "Script.h"
 #include "ScriptMacros.h"
 #include "Prefab.h"
+#include "Player.h"
 
 class GameObject;
 
@@ -37,6 +38,7 @@ public:
 
 private:
     GameObject* playerGameObject = nullptr;
+    Player* playerScript = nullptr;
     const char* saveFileName = "GameState.json";
     int	currentLevel = 0;
     int	roomNum = 0;
