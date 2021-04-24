@@ -97,8 +97,6 @@ protected:
 	// Death
 	Timer deathTimer;
 
-private:
-
 	// Effects
 	std::vector<Effect*> effects;
 	uint effectCounters[(uint)EffectType::EFFECTS_NUM];

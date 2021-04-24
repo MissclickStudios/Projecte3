@@ -32,6 +32,9 @@ public:
 	void Update() override;
 	void CleanUp() override;
 
+	void SaveState(ParsonNode& playerNode);
+	void LoadState(ParsonNode& playerNode);
+
 	// Interactions
 	void TakeDamage(float damage) override;
 
