@@ -21,6 +21,7 @@ public:
 	bool LoadState(ParsonNode& root) override;
 
 	void SetEvent(std::string name, unsigned int id);
+	void SetEvent(std::string name);
 	void GetEvent(std::string* name, unsigned int* id) const;
 	const std::string& GetEventName() const;
 	unsigned int GetEventId() const;

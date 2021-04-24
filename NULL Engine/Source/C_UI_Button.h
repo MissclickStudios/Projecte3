@@ -5,6 +5,7 @@
 
 #include "Component.h"
 
+class R_Shader;
 
 const float coordsBuffer[] = {
 1, 1,
