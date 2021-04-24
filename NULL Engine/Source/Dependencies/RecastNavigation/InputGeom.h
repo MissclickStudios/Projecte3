@@ -2,6 +2,7 @@
 #define __INPUTGEOMETRY_H__
 #pragma once
 
+#include "../Macros.h"
 #include <vector>
 #include "Math.h"
 #include "ChunkyTriMesh.h"
@@ -32,7 +33,7 @@ struct RecastMesh {
 	unsigned char area;
 };
 
-class InputGeom {
+class NULL_API InputGeom {
 public:
 	/**
 	*Create recast compatible inputgeom from the specified entities.The entities have to be added to the

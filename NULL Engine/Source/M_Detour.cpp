@@ -2,7 +2,6 @@
 
 #include "Application.h"
 
-#include "NavMeshManager.h"
 #include "M_Scene.h"
 #include "GameObject.h"
 #include "C_Mesh.h"
@@ -22,56 +21,112 @@ bool M_Detour::Init(ParsonNode& root)
 	return true;
 }
 
-bool M_Detour::Start()
-{
-	return true;
-}
-
-UpdateStatus M_Detour::Update(float dt)
-{
-
-	return UpdateStatus::CONTINUE;
-}
-
 bool M_Detour::CleanUp()
 {
 	return true;
 }
 
-void M_Detour::BakeNavMesh()
+void M_Detour::Draw() const
 {
-
-	/*std::vector<GameObject*>::const_iterator it = App->scene->GetGameObjects()->cbegin();
-
-	for (it; it != App->scene->GetGameObjects()->cend(); ++it)
-	{
-		if ((*it) != nullptr && (*it)->IsStatic() == true)
-			AddGameObjectNavMesh(*it);
-
-	}*/
 }
 
-/*void M_Detour::AddGameObjectNavMesh(GameObject* gameObject)
+void M_Detour::setDebugDraw(bool state)
 {
-	C_Mesh* componentMesh = gameObject->GetComponent<C_Mesh>();
+}
 
-	if (componentMesh != nullptr)
-	{
-		R_Mesh* rMesh = componentMesh->GetMesh();
-
-		float4x4 mTransform = gameObject->GetComponent<C_Transform>()->GetWorldTransform();
-
-		geom->CreateMesh(rMesh, mTransform);
-		
-		navMesh = new NavMeshManager();
-		navMesh->handleMeshChanged(geom);
-		navMesh->handleSettings();
-		navMesh->handleBuild();
-	}
-}*/
-
-void M_Detour::DrawNavMesh()
+bool M_Detour::createNavMesh(dtNavMeshCreateParams* params)
 {
-	//if(navMesh != nullptr)
-		//navMesh->handleRender();
+	return true;
+}
+
+void M_Detour::loadNavMeshFile(unsigned int UID)
+{
+}
+
+void M_Detour::deleteNavMesh()
+{
+}
+
+void M_Detour::clearNavMesh()
+{
+}
+
+int M_Detour::getAreaCost(unsigned int areaIndex) const
+{
+	return 0;
+}
+
+void M_Detour::setAreaCost(unsigned int areaIndex, float areaCost)
+{
+}
+
+int M_Detour::getAreaFromName(const char* name) const
+{
+	return 0;
+}
+
+int M_Detour::calculatePath(float3 sourcePosition, float3 destination, int areaMask, std::vector<float3>& path)
+{
+	return 0;
+}
+
+bool M_Detour::nearestPosInMesh(float3 sourcePosition, int areaMask, float3& nearestPoint)
+{
+	return false;
+}
+
+void M_Detour::setDefaultValues()
+{
+}
+
+void M_Detour::setDefaultBakeValues()
+{
+}
+
+const R_NavMesh* M_Detour::getNavMeshResource() const
+{
+	return nullptr;
+}
+
+void M_Detour::allocateNavMesh()
+{
+}
+
+void M_Detour::createRenderMeshes()
+{
+}
+
+void M_Detour::saveNavMesh() const
+{
+}
+
+inline void M_Detour::initNavQuery()
+{
+}
+
+bool M_Detour::createNavMeshData(dtNavMeshCreateParams* params, unsigned char** outData, int* outDataSize)
+{
+	return false;
+}
+
+unsigned int M_Detour::initNavMesh(const dtNavMeshParams* params)
+{
+	return 0;
+}
+
+void M_Detour::freeNavMeshData(void* ptr)
+{
+}
+
+void M_Detour::setAreaCosts()
+{
+}
+
+void M_Detour::processTile(const dtMeshTile* tile)
+{
+}
+
+Color M_Detour::areaToColor(unsigned int area) const
+{
+	return Color();
 }

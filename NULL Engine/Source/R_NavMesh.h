@@ -1,12 +1,14 @@
 #ifndef __R_NAVMESH_H__
 #define __R_NAVMESH_H__
 
+#include "Macros.h"
 #include "Resource.h"
 
 class dtNavMesh;
 
-class R_NavMesh : public Resource
+class NULL_API R_NavMesh : public Resource
 {
+	friend class M_Detour;
 public:
 	R_NavMesh();
 	~R_NavMesh();
@@ -19,7 +21,6 @@ public:
 public:
 
 	dtNavMesh* navMesh;
-
 
 };
 

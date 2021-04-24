@@ -14,6 +14,7 @@
 #include "M_EngineScriptManager.h"
 #include "M_Editor.h"
 #include "M_Detour.h"
+#include "M_Recast.h"
 
 #include "EngineMain.h"
 
@@ -31,11 +32,12 @@ EngineApplication::EngineApplication()
 	EngineApp = this;
 
 	editor = new M_Editor();
+	recast = new M_Recast();
 	scriptManager = new M_EngineScriptManager();
 
-	//13 = num of modules to pushback
-	//if you create or remove 1 module change the 13 accordingly
-	modules.reserve(13);
+	//14 = num of modules to pushback
+	//if you create or remove 1 module change the 14 accordingly
+	modules.reserve(14);
 
 	// Main Modules
 	AddModule(window);
@@ -52,6 +54,7 @@ EngineApplication::EngineApplication()
 	AddModule(uiSystem);
 	AddModule(detour);
 	AddModule(scene);
+	AddModule(recast);
 
 	// Renderer last!
 	AddModule(renderer);
