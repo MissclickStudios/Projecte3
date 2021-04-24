@@ -14,6 +14,14 @@
 
 #include "MemoryManager.h"
 
+enum class Parser::ParsingState : unsigned int
+{
+	ERROR,
+	CONTINUE,
+	ENDFILE
+};
+
+
 bool Importer::Scripts::Import(const char* assetsPath, char* buffer, uint size, R_Script* rScript)
 {
 	//PROFILE FUNCTION TIME
@@ -269,7 +277,6 @@ bool Importer::Scripts::Load(const char* buffer, R_Script* rScript)
 }
 
 //---------------------------------------------PARSER-------------------------------------------------------------
-
 bool Parser::CheckNullterminatedBuffer(char* buffer, int size)
 {
 	return buffer[size] == '\0';
@@ -388,14 +395,15 @@ Parser::ParsingState Parser::ReadNextSymbol(char*& cursor, char*& startSymbol, u
 		++cursor;
 	}
 
+	startSymbol = cursor;
 	if (LanguageSymbol(*cursor))
 	{
 		symbolSize = 1;
+		++cursor;
 		return Parser::ParsingState::CONTINUE;
 	}
 
-	startSymbol = cursor;
-	while (*cursor != ' ' && *cursor != '\t' && *cursor != '\n')
+	while (*cursor != ' ' && *cursor != '\t' && *cursor != '\n' && *cursor != '\r')
 	{
 		if (cursor == '\0')
 			return Parser::ParsingState::ENDFILE;
@@ -423,4 +431,144 @@ Parser::ParsingState Parser::GoNextSymbol(char*& cursor)
 		++cursor;
 	}
 	return Parser::ParsingState::CONTINUE;
+}
+
+bool Parser::CharIsNumber(char numberCheck)
+{
+	return (numberCheck == '0' || numberCheck == '1' || numberCheck == '2' || numberCheck == '3' || numberCheck == '4' || numberCheck == '5' || numberCheck == '6' || numberCheck == '7' || numberCheck == '8' || numberCheck == '9');
+}
+
+bool NULL_API Parser::ParseEnum(const char* enumName, const char* definitionFile, std::map<std::string, std::map<int, std::string>>& inspectorEnums)
+{
+	if(inspectorEnums.find(enumName) != inspectorEnums.end())
+		return true;
+
+	char* buffer = nullptr;
+	unsigned int size = App->fileSystem->Load(definitionFile, &buffer);
+	if (size && Parser::CheckNullterminatedBuffer(buffer, size))
+	{
+		char* cursor = buffer;
+		char api[] = "ENGINE_ENUM";
+		unsigned int apiSize = strlen(api);
+		Parser::ParsingState currentState;
+		while (Parser::GoEndSymbol(cursor, api, apiSize) == Parser::ParsingState::CONTINUE)
+		{
+			char* enumFirstCharacter = nullptr;
+			unsigned int enumNameSize;
+			currentState = Parser::ReadNextSymbol(cursor, enumFirstCharacter, enumNameSize);
+			if (currentState == Parser::ParsingState::ENDFILE || currentState == Parser::ParsingState::ERROR)
+			{
+				RELEASE_ARRAY(buffer)
+					return false;
+			}
+
+			if (strncmp(enumName, enumFirstCharacter, enumNameSize))
+				continue;
+
+			char* startSymbol = nullptr;
+			unsigned int symbolSize;
+			currentState = Parser::ReadNextSymbol(cursor, startSymbol, symbolSize);
+			if (currentState == Parser::ParsingState::ENDFILE || currentState == Parser::ParsingState::ERROR || *startSymbol != '{')
+			{
+				RELEASE_ARRAY(buffer)
+					return false;
+			}
+
+			//inspectorEnums[std::string(enumName)];
+			std::map<int, std::string>& enumMap = inspectorEnums[std::string(enumName)];
+
+			int enumSize = 0;
+			while (true)
+			{
+				char* startEnumName;
+				unsigned int enumNameSize;
+				currentState = Parser::ReadNextSymbol(cursor, startEnumName, enumNameSize);
+				if (currentState == Parser::ParsingState::ENDFILE || currentState == Parser::ParsingState::ERROR)
+				{
+					inspectorEnums.erase(std::string(enumName));
+					RELEASE_ARRAY(buffer)
+						return false;
+				}
+
+				char* startSymbol2;
+				unsigned int symbol2Size;
+				currentState = Parser::ReadNextSymbol(cursor, startSymbol2, symbol2Size);
+				if (currentState == Parser::ParsingState::ENDFILE || currentState == Parser::ParsingState::ERROR)
+				{
+					inspectorEnums.erase(std::string(enumName));
+					RELEASE_ARRAY(buffer)
+						return false;
+				}
+
+				switch (*startSymbol2)
+				{
+				case',':
+					enumMap[enumSize] = std::string(startEnumName, enumNameSize);
+					++enumSize;
+					continue;
+
+				case'=':
+				{
+					currentState = Parser::ReadNextSymbol(cursor, startSymbol2, symbol2Size);
+					if (currentState == Parser::ParsingState::ENDFILE || currentState == Parser::ParsingState::ERROR || !Parser::CharIsNumber(*startSymbol2))
+					{
+						inspectorEnums.erase(std::string(enumName));
+						RELEASE_ARRAY(buffer)
+							return false;
+					}
+					enumSize = std::atoi(std::string(startSymbol2, symbol2Size).c_str());
+
+					currentState = Parser::ReadNextSymbol(cursor, startSymbol2, symbol2Size);
+
+					if (currentState == Parser::ParsingState::ENDFILE || currentState == Parser::ParsingState::ERROR)
+					{
+						inspectorEnums.erase(std::string(enumName));
+						RELEASE_ARRAY(buffer)
+							return false;
+					}
+					switch (*startSymbol2)
+					{
+					case ',':
+						enumMap[enumSize] = std::string(startEnumName, enumNameSize);
+						++enumSize;
+						continue;
+					case '}':
+						if (enumSize)
+						{
+							enumMap[enumSize] = std::string(startEnumName, enumNameSize);
+							RELEASE_ARRAY(buffer)
+								return true;
+						}
+						else
+						{
+							inspectorEnums.erase(std::string(enumName));
+							RELEASE_ARRAY(buffer)
+								return false;
+						}
+					default:
+						inspectorEnums.erase(std::string(enumName));
+						RELEASE_ARRAY(buffer)
+							return false;
+					}
+				}
+				case '}':
+					if (enumSize)
+					{
+						enumMap[enumSize] = std::string(startEnumName, enumNameSize);
+						RELEASE_ARRAY(buffer)
+							return true;
+					}
+					inspectorEnums.erase(std::string(enumName));
+					RELEASE_ARRAY(buffer)
+						return false;
+				default:
+					inspectorEnums.erase(std::string(enumName));
+					RELEASE_ARRAY(buffer)
+						return false;
+				}
+			}
+		}
+	}
+	RELEASE_ARRAY(buffer)
+	return false;
 }

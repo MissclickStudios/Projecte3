@@ -10,6 +10,16 @@
 
 class GameObject;
 
+enum class ENGINE_ENUM TestEnum
+{
+	FIRST_ELEMENT,
+	SECOND_ELEMENT,
+	THIRD_ELEMENT = 32,
+	FORTH_ELEMENT,
+	FIFTH_ELEMENT,
+	sixthElement
+};
+
 class SCRIPTS_API FirstScript : public Script {
 public :
 	FirstScript();
@@ -34,6 +44,7 @@ public :
 	Prefab prefab2;
 	GameObject* object = nullptr;
 	std::vector<std::string> stringVec;
+	TestEnum testingEnums;
 };
 
 SCRIPTS_FUNCTION FirstScript* CreateFirstScript() {
@@ -52,5 +63,6 @@ SCRIPTS_FUNCTION FirstScript* CreateFirstScript() {
 	INSPECTOR_PREFAB(script->prefab2);
 	INSPECTOR_GAMEOBJECT(script->object);
 	INSPECTOR_VECTOR_STRING(script->stringVec);
+	INSPECTOR_ENUM(script->testingEnums, "TestEnum", "Assets/Scripts/FirstScript.h");
 	return script;
 }
