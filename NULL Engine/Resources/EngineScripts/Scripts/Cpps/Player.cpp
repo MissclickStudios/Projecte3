@@ -174,7 +174,7 @@ void Player::LoadState(ParsonNode& playerNode)
 	for (uint i = 0; i < effectsArray.size; ++i)
 	{
 		ParsonNode node = effectsArray.GetNode(i);
-		EffectType type = (EffectType)node.GetNumber("Type");
+		EffectType type = (EffectType)node.GetInteger("Type");
 		float duration = node.GetNumber("Duration");
 		bool permanent = node.GetBool("Permanent");
 
@@ -205,7 +205,7 @@ void Player::LoadState(ParsonNode& playerNode)
 
 			ParsonArray blasterPerks = playerNode.GetArray("Blaster Perks");
 			for (uint i = 0; i < blasterPerks.size; ++i)
-				blasterWeapon->AddPerk((Perk)blasterPerks.GetNumber(i));
+				blasterWeapon->AddPerk((Perk)(int)blasterPerks.GetNumber(i));
 		}
 	}
 
@@ -221,7 +221,7 @@ void Player::LoadState(ParsonNode& playerNode)
 
 			ParsonArray equipedGunPerks = playerNode.GetArray("Equiped Gun Perks");
 			for (uint i = 0; i < equipedGunPerks.size; ++i)
-				equipedGunWeapon->AddPerk((Perk)equipedGunPerks.GetNumber(i));
+				equipedGunWeapon->AddPerk((Perk)(int)equipedGunPerks.GetNumber(i));
 
 			if (equipedGunWeapon->weaponModel)
 				equipedGunWeapon->weaponModel->SetIsActive(false);
