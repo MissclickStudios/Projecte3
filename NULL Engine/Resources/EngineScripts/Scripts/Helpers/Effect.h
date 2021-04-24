@@ -3,15 +3,17 @@
 
 #include "Timer.h"
 
-enum class ENGINE_ENUM EffectType // REMEMBER TO ADD A NEW ENTRY ON THE GET EFFECT NAME IF YOU ADD AN EFFECT (down below line 58ish)
+// REMEMBER TO ADD A NEW ENTRY ON THE GET EFFECT NAME IF YOU ADD AN EFFECT (down below line 58ish)
+enum class ENGINE_ENUM EffectType
 {
 	NONE = 0,
 	FROZEN,
-
-	// This has to be the last entry
-	// NOT FOLLOWING THIS RULE WILL MESS UP THE EFFECTS SYSTEM AND PROBABLY CRASH THE GAME
-	EFFECTS_NUM // This signifies the amount of existing effects
+	HEAL,
+	EFFECTS_NUM
 };
+// This has to be the last entry
+// NOT FOLLOWING THIS RULE WILL MESS UP THE EFFECTS SYSTEM AND PROBABLY CRASH THE GAME
+// EFFECTS_NUM signifies the amount of existing effects
 
 class Effect
 {
@@ -55,17 +57,3 @@ private:
 	float duration = 0.0f;
 	Timer timer;
 };
-
-static const char* GetEffectName(EffectType effect)
-{
-	switch (effect)
-	{
-	case EffectType::NONE:
-		return "NONE";
-	case EffectType::FROZEN:
-		return "FROZEN";
-	case EffectType::EFFECTS_NUM:
-		return "ERROR";
-	}
-	return "U forgot to add the effect to string conversion... DUMBASS";
-}

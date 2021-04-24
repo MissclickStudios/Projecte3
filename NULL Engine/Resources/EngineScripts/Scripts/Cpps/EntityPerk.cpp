@@ -21,7 +21,7 @@ SCRIPTS_FUNCTION EntityPerk* CreateEntityPerk()
 
 	INSPECTOR_DRAGABLE_INT(script->price);
 
-	INSPECTOR_ENUM(script->type, "Effect", "EngineScripts/Scripts/Helpers/Effect.h");
+	INSPECTOR_ENUM(script->type, "EffectType", "EngineScripts/Scripts/Helpers/Effect.h");
 	INSPECTOR_DRAGABLE_FLOAT(script->duration);
 	INSPECTOR_CHECKBOX_BOOL(script->permanent);
 

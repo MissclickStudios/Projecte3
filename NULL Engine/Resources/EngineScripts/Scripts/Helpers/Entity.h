@@ -43,11 +43,12 @@ public:
 	
 	// Interactions
 	virtual void TakeDamage(float damage);
-	virtual void Heal(float amount);
+	virtual void GiveHeal(float amount);
 	void AddEffect(EffectType type, float duration, bool permanent = false);
 	
 	// Effect Functions
 	virtual void Frozen();
+	virtual void Heal(Effect* effect);
 	
 	// Type
 	EntityType type = EntityType::ENTITY;

@@ -17,7 +17,8 @@ enum class PlayerState
 	DASH_IN,
 	DASH,
 	DEAD_IN,
-	DEAD
+	DEAD,
+	DEAD_OUT
 };
 
 class SCRIPTS_API Player : public Entity ALLOWED_INHERITANCE
@@ -62,13 +63,14 @@ public:
 
 	// Currency
 	int currency = 0;
+	int hubCurrency = 0;
 
 	std::string gameManager = "Game Manager";
 
-private:
-
 	PlayerState moveState = PlayerState::IDLE;
 	AimState aimState = AimState::IDLE;
+
+private:
 
 	// Logic
 	void ManageMovement();

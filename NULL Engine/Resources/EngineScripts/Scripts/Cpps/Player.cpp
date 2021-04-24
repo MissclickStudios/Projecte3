@@ -219,12 +219,7 @@ void Player::ManageMovement()
 
 		case PlayerState::DEAD:
 			if (deathTimer.ReadSec() >= deathDuration)
-			{
-				// DIE ALREADY !
-				GameObject* gameManagerObject = App->scene->GetGameObjectByName(gameManager.c_str());
-				GameManager* gameManagerScript = (GameManager*)gameManagerObject->GetScript("GameManager");
-				gameManagerScript->ReturnHub();
-			}
+				moveState = PlayerState::DEAD_OUT;
 			break;
 		}
 }
