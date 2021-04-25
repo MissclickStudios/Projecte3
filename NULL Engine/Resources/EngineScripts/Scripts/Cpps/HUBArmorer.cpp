@@ -31,7 +31,7 @@ void HUBArmorer::Update()
 	{
 		if (mando->transform->GetDistanceTo(gameObject->transform->GetLocalPosition()) <= talkDistance)
 		{
-			if (App->input->GetKey(SDL_SCANCODE_B) == KeyState::KEY_DOWN)
+			if (App->input->GetKey(SDL_SCANCODE_B) == KeyState::KEY_UP || App->input->GetGameControllerButton(1) == ButtonState::BUTTON_UP )
 			{
 				hubShopCanvas->GetComponent<C_Canvas>()->SetIsActive(true);
 			}
