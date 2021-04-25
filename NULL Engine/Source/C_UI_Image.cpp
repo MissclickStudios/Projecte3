@@ -102,7 +102,8 @@ void C_UI_Image::Draw2D()
 	float4x4 projectionMatrix = float4x4::FromTRS(float3(x, y, 0), Quat::FromEulerXYZ(0, 0, 0), float3(GetRect().w, GetRect().h, 1)).Transposed();
 
 	glBindTexture(GL_TEXTURE_2D, id);
-
+	
+	GetOwner()->GetComponent<C_Material>()->GetShader()->SetUniform1i("useColor", (GLint)false);
 	GetOwner()->GetComponent<C_Material>()->GetShader()->SetUniformMatrix4("projection", projectionMatrix.ptr());
 
 	glBindBuffer(GL_ARRAY_BUFFER, VAO);
