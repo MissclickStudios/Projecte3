@@ -14,7 +14,7 @@ public:
 	void Update() override;
 	void CleanUp() override;
 
-	void OnTriggerEnter(GameObject* object) override;
+	void OnCollisionEnter(GameObject* object) override;
 
 	int price = 0;
 

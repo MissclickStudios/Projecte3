@@ -3,6 +3,7 @@
 #include "GameObject.h"
 #include "C_RigidBody.h"
 #include "C_Animator.h"
+#include "C_ParticleSystem.h"
 
 #include "ScriptMacros.h"
 
@@ -21,15 +22,16 @@ Entity::~Entity()
 	}
 }
 
-void Entity::Start()
+void Entity::Awake()
 {
-	deathTimer.Stop();
-
 	rigidBody = gameObject->GetComponent<C_RigidBody>();
 	if (rigidBody && rigidBody->IsStatic())
 		rigidBody = nullptr;
 	animator = gameObject->GetComponent<C_Animator>();
 	currentAnimation = &idleAnimation;
+
+	//hitParticle = gameObject->GetComponent<C_ParticleSystem>();
+	//hitParticle->StopSpawn();
 
 	for (uint i = 0; i < gameObject->childs.size(); ++i)
 	{
@@ -41,6 +43,11 @@ void Entity::Start()
 		}
 	}
 	memset(effectCounters, 0, (uint)EffectType::EFFECTS_NUM); // Set all the counters to zero
+}
+
+void Entity::Start()
+{
+	deathTimer.Stop();
 
 	SetUp();
 }

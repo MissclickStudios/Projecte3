@@ -13,6 +13,7 @@ typedef unsigned int uint;
 class GameObject;
 class C_RigidBody;
 class C_Animator;
+class C_ParticleSystem;
 
 enum class EntityType
 {
@@ -30,6 +31,7 @@ public:
 	Entity();
 	virtual ~Entity();
 	
+	virtual void Awake();
 	void Start();
 	virtual void SetUp() = 0;
 	
@@ -93,6 +95,9 @@ protected:
 	// Animations
 	C_Animator* animator = nullptr;
 	AnimationInfo* currentAnimation = nullptr;
+
+	// Particles
+	C_ParticleSystem* hitParticle = nullptr;
 
 	// Death
 	Timer deathTimer;

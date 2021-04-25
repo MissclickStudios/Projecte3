@@ -1491,7 +1491,7 @@
                 },
                 {
                     "Type": 9,
-                    "Is Trigger": true,
+                    "Is Trigger": false,
                     "Show Collider": true,
                     "Size X": 10,
                     "Size Y": 10,
@@ -1502,9 +1502,9 @@
                 },
                 {
                     "Type": 24,
-                    "ResourceUID": 1436245871,
-                    "AssetsPath": "Assets\/Scripts\/\/WeaponPerk.h",
-                    "DataName": "WeaponPerk",
+                    "ResourceUID": 1323039095,
+                    "AssetsPath": "Assets\/Scripts\/\/EntityPerk.h",
+                    "DataName": "EntityPerk",
                     "HasInspector": true,
                     "InspectorVariables": [
                         {
@@ -1514,8 +1514,18 @@
                         },
                         {
                             "Type": 8,
-                            "Name": "perk",
-                            "enum": 3
+                            "Name": "type",
+                            "enum": 1
+                        },
+                        {
+                            "Type": 2,
+                            "Name": "duration",
+                            "float": 5
+                        },
+                        {
+                            "Type": 1,
+                            "Name": "permanent",
+                            "bool": false
                         }
                     ]
                 }
@@ -1827,31 +1837,25 @@
                             "Type": 7,
                             "Name": "level1",
                             "vectorstring": [
-                                "Assets\/Scenes\/InitialL1.json",
                                 "Assets\/Scenes\/Level1_Room8.json",
                                 "Assets\/Scenes\/Level1_Room1.json",
-                                "Assets\/Scenes\/ShopL1.json",
                                 "Assets\/Scenes\/Level1_Room2.json",
                                 "Assets\/Scenes\/Level1_Room6.json",
                                 "Assets\/Scenes\/Level1_Room9.json",
-                                "Assets\/Scenes\/Level1_Room3.json",
-                                "Assets\/Scenes\/BossL1.json"
+                                "Assets\/Scenes\/Level1_Room3.json"
                             ]
                         },
                         {
                             "Type": 7,
                             "Name": "level2",
                             "vectorstring": [
-                                "Assets\/Scenes\/InitialL2.json",
                                 "Assets\/Scenes\/Level2_Room7.json",
                                 "Assets\/Scenes\/Level2_Room3.json",
-                                "Assets\/Scenes\/ShopL2.json",
                                 "Assets\/Scenes\/Level2_Room6.json",
                                 "Assets\/Scenes\/Level2_Room2.json",
                                 "Assets\/Scenes\/Level2_Room4.json",
                                 "Assets\/Scenes\/Level2_Room5.json",
-                                "Assets\/Scenes\/Level2_Room1.json",
-                                "Assets\/Scenes\/BossL2.json"
+                                "Assets\/Scenes\/Level2_Room1.json"
                             ]
                         },
                         {
@@ -2023,7 +2027,7 @@
         },
         {
             "UID": 2005580296,
-            "ParentUID": 1277239754,
+            "ParentUID": 895750700,
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "MainScene",

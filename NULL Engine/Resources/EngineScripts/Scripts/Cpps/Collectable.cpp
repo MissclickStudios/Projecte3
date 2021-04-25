@@ -30,17 +30,17 @@ void Collectable::CleanUp()
 {
 }
 
-void Collectable::OnTriggerEnter(GameObject* object)
+void Collectable::OnCollisionEnter(GameObject* object)
 {
 	Player* player = (Player*)object->GetScript("Player");
 	if (!player)
 		return;
 
-	used = true;
-
 	if (player->currency >= price)
 	{
 		player->currency -= price;
+
+		used = true;
 		Contact(player);
 	}
 }
