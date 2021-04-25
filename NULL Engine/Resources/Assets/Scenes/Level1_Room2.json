@@ -46,66 +46,6 @@
             ]
         },
         {
-            "UID": 14854429,
-            "ParentUID": 674156498,
-            "PrefabID": 0,
-            "IsPrefab": false,
-            "Name": "DirectionalLight",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        0,
-                        0
-                    ],
-                    "LocalRotation": [
-                        -0.0017224099719896913,
-                        -0.0087310606613755226,
-                        -0.0026026563718914986,
-                        0.99995702505111694
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {
-                    "Type": 4,
-                    "LightType": 1,
-                    "Diffuse": [
-                        1,
-                        1,
-                        1,
-                        1
-                    ],
-                    "Ambient": [
-                        1.1000000238418579,
-                        1.1000000238418579,
-                        0.80000001192092896,
-                        1
-                    ],
-                    "Specular": [
-                        0.60000002384185791,
-                        0.60000002384185791,
-                        0.60000002384185791,
-                        0.5
-                    ],
-                    "Direction": [
-                        -0.20000000298023224,
-                        -1,
-                        -0.30000001192092896
-                    ]
-                }
-            ]
-        },
-        {
             "UID": 15457655,
             "ParentUID": 643727976,
             "PrefabID": 998168501,
@@ -329,7 +269,7 @@
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
+            "ShowBoundingBoxes": true,
             "Components": [
                 {
                     "Type": 1,
@@ -3798,7 +3738,7 @@
                     "LocalPosition": [
                         -89.878379821777344,
                         0,
-                        -50.585952758789062
+                        -50.585952758789063
                     ],
                     "LocalRotation": [
                         0,
@@ -5216,7 +5156,7 @@
         },
         {
             "UID": 674156498,
-            "ParentUID": 1985790937,
+            "ParentUID": 1918561903,
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "MainScene",
@@ -6396,7 +6336,7 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        81.111282348632812,
+                        81.111282348632813,
                         0.30755805969238281,
                         96.396720886230469
                     ],
@@ -6429,7 +6369,7 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        126.05630493164062,
+                        126.05630493164063,
                         7.6607141494750977,
                         66.392684936523438
                     ],
@@ -6707,7 +6647,7 @@
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
+            "ShowBoundingBoxes": true,
             "Components": [
                 {
                     "Type": 1,
@@ -7654,7 +7594,7 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        -102.41909790039062,
+                        -102.41909790039063,
                         -3.5886709690093994,
                         0
                     ],
@@ -8859,7 +8799,7 @@
                     "Type": 1,
                     "LocalPosition": [
                         20.691720962524414,
-                        7.7638931274414062,
+                        7.7638931274414063,
                         63.294696807861328
                     ],
                     "LocalRotation": [
@@ -10537,7 +10477,7 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        102.41909790039062,
+                        102.41909790039063,
                         3.588670015335083,
                         0
                     ],
@@ -10950,6 +10890,75 @@
                         0.99999988079071045,
                         1
                     ]
+                }
+            ]
+        },
+        {
+            "UID": 1483922795,
+            "ParentUID": 674156498,
+            "PrefabID": 592009104,
+            "IsPrefab": true,
+            "Name": "DirectionalLight",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": true,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0.25493019819259644,
+                        -0.44245988130569458,
+                        -0.19810439646244049,
+                        0.83665674924850464
+                    ],
+                    "LocalScale": [
+                        1.0000003576278687,
+                        0.9999997615814209,
+                        0.99999994039535522
+                    ]
+                },
+                {
+                    "Type": 4,
+                    "LightType": 1,
+                    "Diffuse": [
+                        1,
+                        1,
+                        1,
+                        1
+                    ],
+                    "Ambient": [
+                        1.1000000238418579,
+                        1.1000000238418579,
+                        0.80000001192092896,
+                        1.1000000238418579
+                    ],
+                    "Specular": [
+                        0.60000002384185791,
+                        0.60000002384185791,
+                        0.60000002384185791,
+                        0.5
+                    ],
+                    "Direction": [
+                        27.706027984619141,
+                        -57.286094665527344,
+                        -11.299995422363281
+                    ]
+                },
+                {
+                    "Type": 3,
+                    "Texture": {
+                        "AssetsPath": "Assets\/Textures\/Blockouts\/Level1\/floor_arvala3_compressed_new.png",
+                        "AssetsName": "floor_arvala3_compressed_new.png",
+                        "LibaryPath": "Library\/Textures\/1037247170.netex",
+                        "LibraryFile": "1037247170.netex"
+                    }
                 }
             ]
         },
@@ -11621,7 +11630,7 @@
                     "LocalPosition": [
                         73.870773315429688,
                         -4.7704839706420898,
-                        -62.891250610351562
+                        -62.891250610351563
                     ],
                     "LocalRotation": [
                         0,
@@ -11703,7 +11712,7 @@
                     "LocalPosition": [
                         14.924609184265137,
                         -1.52587890625e-05,
-                        -69.631362915039062
+                        -69.631362915039063
                     ],
                     "LocalRotation": [
                         0,
@@ -11918,7 +11927,7 @@
                     "Type": 1,
                     "LocalPosition": [
                         39.123870849609375,
-                        -67.046585083007812,
+                        -67.046585083007813,
                         0.052620574831962585
                     ],
                     "LocalRotation": [
@@ -12103,7 +12112,7 @@
                     "LocalPosition": [
                         125.60071563720703,
                         7.7704448699951172,
-                        -60.205703735351562
+                        -60.205703735351563
                     ],
                     "LocalRotation": [
                         0,
@@ -12232,7 +12241,7 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        -82.141555786132812,
+                        -82.141555786132813,
                         -4.9737991503207013e-14,
                         -11.278599739074707
                     ],
@@ -13723,7 +13732,7 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        -98.671829223632812,
+                        -98.671829223632813,
                         4.1195225715637207,
                         -98.010948181152344
                     ],
@@ -15029,7 +15038,7 @@
                     "LocalPosition": [
                         20.625129699707031,
                         3.2954311370849609,
-                        44.369033813476562
+                        44.369033813476563
                     ],
                     "LocalRotation": [
                         0,
