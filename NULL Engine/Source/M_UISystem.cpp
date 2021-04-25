@@ -54,6 +54,7 @@ UpdateStatus M_UISystem::PreUpdate(float dt)
 		buttonHoverDecor = (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/UI/MainMenu/ButtonPart1.png");
 
 	UpdateInputCanvas();
+	//UpdateCanvasList();
 
 	if (inputCanvas != nullptr)
 	{
@@ -119,6 +120,8 @@ void M_UISystem::CleanUpScene()
 
 	canvasList.clear();
 
+	priorityIterator = 0;
+
 	inputCanvas = nullptr;
 
 	hoveredDecorationL = nullptr;
@@ -159,6 +162,24 @@ void M_UISystem::UpdateInputCanvas()
 	}
 }
 
+void M_UISystem::AddNewCanvas(C_Canvas* canvas)
+{
+	if (inputCanvas != nullptr)
+	{
+		for (std::vector<C_UI_Button*>::const_iterator it = inputCanvas->activeButtons.cbegin(); it != inputCanvas->activeButtons.cend(); it++)
+		{
+			(*it)->SetState(UIButtonState::IDLE);
+		}
+		inputCanvas->hoveredButton = nullptr;
+		inputCanvas->selectedButton = nullptr;
+	}
+
+	inputCanvas = canvas; // New one will allways be the input receiving canvas
+	canvasList.push_back(canvas);
+
+	//UpdateCanvasList();
+}
+
 void M_UISystem::DeleteCanvas(C_Canvas* canvas)
 {
 	for (std::vector<C_Canvas*>::const_iterator it = canvasList.cbegin(); it != canvasList.cend(); it++)
@@ -178,6 +199,37 @@ void M_UISystem::DeleteCanvas(C_Canvas* canvas)
 			return;
 		}
 	}
+}
+
+void M_UISystem::UpdateCanvasList()
+{
+	if (canvasList.size() < 2)
+		return;
+
+	// Create a new list and empty the other one into this one
+	std::vector<C_Canvas*> newCanvasList;
+	while (!canvasList.empty())
+	{
+		int i = -999;
+		for (std::vector<C_Canvas*>::iterator it = canvasList.begin(); it != canvasList.end(); it++)
+		{
+			if ((*it)->priority > i)
+			{
+				i = (*it)->priority;
+				canvasIterator = (*it);
+			}
+		}
+		for (std::vector<C_Canvas*>::iterator it = canvasList.begin(); it != canvasList.end(); it++)
+		{
+			if (canvasIterator == (*it))
+			{
+				newCanvasList.push_back(*it);
+				canvasList.erase(it);
+				break;
+			}
+		}
+	}
+	canvasList = newCanvasList;
 }
 
 void M_UISystem::DeleteActiveButton(C_UI_Button* button)
@@ -239,20 +291,4 @@ void M_UISystem::UpdateHoveredDecorations()
 			hoveredDecorationR->SetY((inputCanvas->selectedButton->GetRect().y + 0.011) * 3.5);
 		}
 	}*/
-}
-
-void M_UISystem::AddNewCanvas(C_Canvas* canvas)
-{
-	if (inputCanvas != nullptr)
-	{
-		for (std::vector<C_UI_Button*>::const_iterator it = inputCanvas->activeButtons.cbegin(); it != inputCanvas->activeButtons.cend(); it++)
-		{
-			(*it)->SetState(UIButtonState::IDLE);
-		}
-		inputCanvas->hoveredButton = nullptr;
-		inputCanvas->selectedButton = nullptr;
-	}
-
-	inputCanvas = canvas; // New one will allways be the input receiving canvas
-	canvasList.push_back(canvas);
 }

@@ -80,13 +80,6 @@ bool C_UI_Button::Update()
 
 		isInit = true;
 	}
-
-	if (GetRect().w > canvas->GetRect().w)
-		SetW(canvas->GetRect().w);
-
-	if(GetRect().h > canvas->GetRect().h)
-		SetH(canvas->GetRect().h);
-
 	return ret;
 }
 
@@ -191,7 +184,7 @@ void C_UI_Button::OnPressed()
 
 void C_UI_Button::OnReleased()
 {
-	SetState(UIButtonState::HOVERED);
+	SetState(UIButtonState::RELEASED);
 	SetIsPressed(false);
 }
 

@@ -1270,32 +1270,6 @@ void E_Inspector::DrawUIImageComponent(C_UI_Image* image)
 
 		if (ImGui::DragFloat2("Image Pos", (float*)&pos, 0.005f, 0.0f, 0.0f, "%.3f", NULL))
 		{
-			/*if (pos.x - size.x / 2 < canvas->GetPosition().x - canvas->GetSize().x / 2)
-				pos.x = canvas->GetPosition().x - canvas->GetSize().x / 2 + size.x / 2;
-
-			if (pos.x + size.x / 2 > canvas->GetPosition().x + canvas->GetSize().x / 2)
-				pos.x = canvas->GetPosition().x + canvas->GetSize().x / 2 - size.x / 2;
-
-
-			if (pos.y - size.y / 2 < canvas->GetPosition().y - canvas->GetSize().y / 2)
-				pos.y = canvas->GetPosition().y - canvas->GetSize().y / 2 + size.y / 2;
-
-			if (pos.y + size.y / 2 > canvas->GetPosition().y + canvas->GetSize().y / 2)
-				pos.y = canvas->GetPosition().y + canvas->GetSize().y / 2 - size.y / 2;*/
-
-			if (pos.x  > canvas->GetPosition().x + canvas->GetSize().x - offset)
-				pos.x =  canvas->GetPosition().x + canvas->GetSize().x - offset;
-
-			else if (pos.x - size.x < canvas->GetPosition().x - canvas->GetSize().x + offset)
-				pos.x = canvas->GetPosition().x - canvas->GetSize().x + size.x + offset;
-
-			else if (pos.y - size.y > canvas->GetPosition().y + canvas->GetSize().y - offset)
-				pos.y = canvas->GetPosition().y + canvas->GetSize().y + size.y - offset;
-
-			else if (pos.y  < canvas->GetPosition().y - canvas->GetSize().y + offset)
-				pos.y = canvas->GetPosition().y - canvas->GetSize().y  + offset;
-
-
 			image->SetX(pos.x);
 			image->SetY(pos.y);
 		}
@@ -1347,20 +1321,6 @@ void E_Inspector::DrawUITextComponent(C_UI_Text* text)
 
 		if (ImGui::DragFloat2("Text Pos", (float*)&pos, 0.005f, 0.0f, 0.0f, "%.3f", NULL))
 		{
-
-	/*		if (pos.x > canvas->GetPosition().x + canvas->GetSize().x - offset )
-				pos.x = canvas->GetPosition().x + canvas->GetSize().x - offset;
-
-			else if (pos.x - size.x < canvas->GetPosition().x - canvas->GetSize().x + offset)
-				pos.x = canvas->GetPosition().x - canvas->GetSize().x + size.x + offset;
-
-			else if (pos.y - size.y > canvas->GetPosition().y + canvas->GetSize().y - offset)
-				pos.y = canvas->GetPosition().y + canvas->GetSize().y + size.y - offset;
-
-			else if (pos.y < canvas->GetPosition().y - canvas->GetSize().y + offset)
-				pos.y = canvas->GetPosition().y - canvas->GetSize().y + offset;*/
-
-
 			text->SetX(pos.x);
 			text->SetY(pos.y);
 		}
@@ -1698,19 +1658,6 @@ void E_Inspector::DrawUIButtonComponent(C_UI_Button* button)
 
 		if (ImGui::DragFloat2("Button Pos", (float*)&pos, 0.005f, 0.0f, 0.0f, "%.3f", NULL))
 		{
-			if (pos.x - size.x / 2 < canvas->GetPosition().x - canvas->GetSize().x / 2)
-				pos.x = canvas->GetPosition().x - canvas->GetSize().x / 2 + size.x / 2;
-
-			if (pos.x + size.x / 2 > canvas->GetPosition().x + canvas->GetSize().x / 2)
-				pos.x = canvas->GetPosition().x + canvas->GetSize().x / 2 - size.x / 2;
-
-
-			if (pos.y - size.y / 2 < canvas->GetPosition().y - canvas->GetSize().y / 2)
-				pos.y = canvas->GetPosition().y - canvas->GetSize().y / 2 + size.y / 2;
-
-			if (pos.y + size.y / 2 > canvas->GetPosition().y + canvas->GetSize().y / 2)
-				pos.y = canvas->GetPosition().y + canvas->GetSize().y / 2 - size.y / 2;
-
 			button->SetX(pos.x);
 			button->SetY(pos.y);
 		}

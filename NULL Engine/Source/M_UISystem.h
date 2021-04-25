@@ -32,13 +32,16 @@ public:
 	bool LoadConfiguration(ParsonNode& root) override;
 	bool SaveConfiguration(ParsonNode& root) const override;
 
-	void UpdateInputCanvas();	
+	void UpdateInputCanvas();
+	void AddNewCanvas(C_Canvas* canvas);
 	void DeleteCanvas(C_Canvas* canvas);
+
+	void UpdateCanvasList();
+
 	void DeleteActiveButton(C_UI_Button* button);
 
 	void InitHoveredDecorations();
 	void UpdateHoveredDecorations();
-	void AddNewCanvas(C_Canvas* canvas);
 
 public:
 
@@ -53,7 +56,10 @@ public:
 	C_UI_Image* hoveredDecorationL = nullptr;
 	C_UI_Image* hoveredDecorationR = nullptr;
 
+	uint priorityIterator = 0;
+
 private:
+	C_Canvas* canvasIterator = nullptr;
 };
 
 #endif // !__M_UISYSTEM_H__
