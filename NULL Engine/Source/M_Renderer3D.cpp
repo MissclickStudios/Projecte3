@@ -1910,6 +1910,8 @@ void MeshRenderer::ApplyShader()
 
 		cMaterial->GetTexture() ? cMaterial->GetShader()->SetUniform1i("hasTexture", (GLint)true) : cMaterial->GetShader()->SetUniform1i("hasTexture", (GLint)false);
 
+		cMaterial->GetTakeDamage() ? cMaterial->GetShader()->SetUniform1i("takeDamage", (GLint)true) : cMaterial->GetShader()->SetUniform1i("takeDamage", (GLint)false);
+
 		if (shaderProgram != 0)
 		{
 			//Model

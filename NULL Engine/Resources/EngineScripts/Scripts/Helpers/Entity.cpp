@@ -4,6 +4,7 @@
 #include "C_RigidBody.h"
 #include "C_Animator.h"
 #include "C_ParticleSystem.h"
+#include "C_Material.h"
 
 #include "ScriptMacros.h"
 
@@ -39,7 +40,11 @@ void Entity::Awake()
 		if (name == "Skeleton")
 		{
 			skeleton = gameObject->childs[i];
-			break;
+			continue;
+		}
+		else if (gameObject->childs[i]->GetComponent<C_Material>())
+		{
+			material = gameObject->childs[i]->GetComponent<C_Material>();
 		}
 	}
 	memset(effectCounters, 0, (uint)EffectType::EFFECTS_NUM); // Set all the counters to zero
@@ -106,6 +111,11 @@ void Entity::PostUpdate()
 		else
 			animator->PlayClip(currentAnimation->name, currentAnimation->blendTime); // If there is no clip playing play the current animation
 	}
+
+	if (hitTimer.ReadSec() > 0.2 &&  material)
+	{
+		if(material->GetTakeDamage()) material->SetTakeDamage(false);
+	}
 }
 
 void Entity::OnCollisionEnter(GameObject* object)
@@ -117,6 +127,13 @@ void Entity::TakeDamage(float damage)
 	health -= damage / Defense();
 	if (health < 0.0f)
 		health = 0.0f;
+
+	if (material)
+	{
+		material->SetTakeDamage(true);
+		hitTimer.Start();
+	}
+	
 }
 
 void Entity::GiveHeal(float amount)

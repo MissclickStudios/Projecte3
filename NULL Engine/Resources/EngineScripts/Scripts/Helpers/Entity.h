@@ -14,6 +14,7 @@ class GameObject;
 class C_RigidBody;
 class C_Animator;
 class C_ParticleSystem;
+class C_Material;
 
 enum class EntityType
 {
@@ -99,8 +100,13 @@ protected:
 	// Particles
 	C_ParticleSystem* hitParticle = nullptr;
 
+	//Material
+	C_Material* material = nullptr;
+
 	// Death
 	Timer deathTimer;
+
+	Timer hitTimer;
 
 	// Effects
 	std::vector<Effect*> effects;
