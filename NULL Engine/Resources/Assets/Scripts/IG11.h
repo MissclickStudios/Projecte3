@@ -16,6 +16,7 @@ enum class IG11State
 	PATROL,
 	CHASE,
 	FLEE,
+	SPECIAL_ATTACK,
 	DEAD_IN,
 	DEAD
 };
@@ -34,7 +35,7 @@ public:
 	void OnCollisionEnter(GameObject* object) override;
 
 	// Movement
-	GameObject* player = nullptr;
+	std::string playerName = "Mando testbuild";
 
 	// Chase
 	float chaseDistance = 0.0f;
@@ -56,8 +57,13 @@ public:
 	// Attack
 	float attackDistance = 0.0f;
 
+	// Special Attack
+	float specialAttackDuration = 0.0f;
+	float specialAttackHp = 0.0f;
+
 	// Weapons
 	Prefab blaster;
+	Prefab sniper;
 
 private:
 
@@ -80,9 +86,20 @@ private:
 	float2 moveDirection = float2::zero;
 	float2 aimDirection = float2::zero;
 
+	GameObject* player = nullptr;
+
+	// Special Attack
+	void SpecialAttack(); // Rotation attack
+
+	Timer specialAttackTimer;
+
 	// Weapons
 	GameObject* blasterGameObject = nullptr;
 	Weapon* blasterWeapon = nullptr;
+
+	GameObject* sniperGameObject = nullptr;
+	Weapon* sniperWeapon = nullptr;
+
 };
 
 SCRIPTS_FUNCTION IG11* CreateIG11();

@@ -41,7 +41,7 @@
 #include "E_WantToSaveScene.h"
 
 #include "M_Editor.h"
-
+#include "CoreDllHelpers.h"
 #include "MemoryManager.h"
 
 #pragma comment (lib, "Source/Dependencies/glew/libx86/glew32.lib") //Needed for ImGui
@@ -496,7 +496,8 @@ void M_Editor::GetEngineIconsThroughEditor(Icons& engineIcons)
 void M_Editor::LoadResourceIntoSceneThroughEditor(const ImGuiPayload& payload)
 {
 	const char* draggedAssetPath = *(const char**)payload.Data;
-	if (App->fileSystem->GetFileExtension(draggedAssetPath) == "prefab")
+	std::string extension = App->fileSystem->GetFileExtension(draggedAssetPath);
+	if (extension == "prefab")
 	{
 		std::string prefabId;
 		EngineApp->fileSystem->SplitFilePath(draggedAssetPath, nullptr, &prefabId, nullptr);
@@ -508,6 +509,7 @@ void M_Editor::LoadResourceIntoSceneThroughEditor(const ImGuiPayload& payload)
 		if (draggedResource != nullptr)
 			EngineApp->scene->LoadResourceIntoScene(draggedResource);
 	}
+	CoreCrossDllHelpers::CoreReleaseString(extension);
 }
 
 const std::map<uint32, Resource*>* M_Editor::GetResourcesThroughEditor() const
