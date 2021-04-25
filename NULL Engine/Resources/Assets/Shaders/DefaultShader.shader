@@ -108,6 +108,7 @@ in vec3 modelNormal;
 in vec3 fragPos;
 out vec4 color;
 
+uniform bool takeDamage;
 uniform bool hasTexture;
 uniform sampler2D ourTexture;
 
@@ -130,6 +131,8 @@ void main()
        }
    }
   vec4 texColor = (hasTexture) ? texture(ourTexture, TexCoord) : vec4(1,1,1,1);
+
+if(takeDamage) outputColor = vec4(1,0,0,1);
 
    color = outputColor * texColor;
 

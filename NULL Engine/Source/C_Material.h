@@ -80,12 +80,16 @@ public:																						// --- GET/SET RESOURCES
 	uint32 const	GetShaderProgramID		();
 	void			SetShaderProgramID		(uint32 ID);
 	
+
+	bool			GetTakeDamage() const;
+	void			SetTakeDamage(bool value);
 public:
 	//std::vector<R_Texture*>		textures;												// Will store all the textures that this component can have.
 	//std::vector<uint>				texture_ids;											// Will store all the Texture Id's related with this Material Component.
 	//uint							texture_maps[7];										// { 0, 0, 0, 0, 0, 0, 0 };
 	//uint*							texture_maps;											// { 0, 0, 0, 0, 0, 0, 0 };
 	//TEXTURE_MAP					current_map;
+
 
 private:
 	R_Material*	rMaterial;													// Currently used material.
@@ -94,6 +98,8 @@ private:
 
 	bool		useDefaultTex;
 	bool		useAlbedoTex;
+
+	bool		takeDamage;
 };
 
 #endif // !__C_MATERIAL_H__
