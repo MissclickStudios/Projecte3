@@ -19,6 +19,7 @@ public:
     void InitiateLevel(int level);
     void Continue();
     void ReturnHub();
+    void ReturnToMainMenu();
 
 private:
     //Level Generator
