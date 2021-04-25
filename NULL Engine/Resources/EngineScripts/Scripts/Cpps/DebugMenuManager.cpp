@@ -103,21 +103,21 @@ void DebugMenuManager::Update()
 	if (addHealth != nullptr)
 		if (addHealth->GetState() == UIButtonState::RELEASED)
 		{
-			Player* gameManagerScript = (Player*)gameManager->GetScript("Player");
+			Player* gameManagerScript = (Player*)mando->GetScript("Player");
 			gameManagerScript->GiveHeal(healthHealed);
 		}
 
 	if (getCredits != nullptr)
 		if (getCredits->GetState() == UIButtonState::RELEASED)
 		{
-			Player* gameManagerScript = (Player*)gameManager->GetScript("Player");
+			Player* gameManagerScript = (Player*)mando->GetScript("Player");
 			gameManagerScript->currency += creditsToAdd;
 		}
 
 	if (getBeskar != nullptr)
 		if (getBeskar->GetState() == UIButtonState::RELEASED)
 		{
-			Player* gameManagerScript = (Player*)gameManager->GetScript("Player");
+			Player* gameManagerScript = (Player*)mando->GetScript("Player");
 			gameManagerScript->hubCurrency += beskarToAdd;
 		}
 
