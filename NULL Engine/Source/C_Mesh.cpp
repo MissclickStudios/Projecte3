@@ -81,6 +81,10 @@ bool C_Mesh::SaveState(ParsonNode& root) const
 
 		root.SetBool("ShowWireframe", showWireframe);
 		root.SetBool("ShowBoundingBox", showBoundingBox);
+
+		root.SetBool("Outline", outlineMesh);
+		root.SetNumber("OutlineThickness", outlineThickness);
+		root.SetColor("OutlineColor", outlineColor);
 	}
 
 	return ret;
@@ -99,6 +103,11 @@ bool C_Mesh::LoadState(ParsonNode& root)
 
 	showWireframe = root.GetBool("ShowWireframe");
 	showBoundingBox = root.GetBool("ShowBoundingBox");
+
+	outlineMesh = root.GetBool("Outline");
+	outlineThickness = root.GetNumber("OutlineThickness");
+	outlineColor = root.GetColor("OutlineColor");
+
 
 	if (rMesh == nullptr)
 	{
