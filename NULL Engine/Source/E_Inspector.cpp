@@ -63,7 +63,7 @@
 #include "MathGeoLib/include/Math/float3.h"
 
 #include <fstream>
-
+#include "CoreDllHelpers.h"
 #include "MemoryManager.h"
 
 #define MAX_VALUE 100000
@@ -762,7 +762,9 @@ void E_Inspector::DrawAnimatorComponent(C_Animator* cAnimator)								// TODO: S
 	{
 		if (cAnimator != nullptr)
 		{
-			DrawBasicSettings((Component*)cAnimator, cAnimator->GetAnimatorStateAsString().c_str());
+			std::string animator = cAnimator->GetAnimatorStateAsString();
+			DrawBasicSettings((Component*)cAnimator, animator.c_str());
+			CoreCrossDllHelpers::CoreReleaseString(animator);
 
 			// --- DISPLAY
 			if (ImGui::BeginTabBar("AnimatorTabBar", ImGuiTabBarFlags_None))
@@ -2271,6 +2273,8 @@ void E_Inspector::DisplayAnimatorControls(C_Animator* cAnimator)
 	if (ImGui::Button("Previous Keyframe"))		{ cAnimator->StepToPrevKeyframe(); }	ImGui::SameLine(150.0f);
 	if (ImGui::Button("Next Keyframe"))			{ cAnimator->StepToNextKeyframe(); }
 	if (ImGui::Button("Refresh Bone Display"))	{ cAnimator->RefreshBoneDisplay(); }
+
+	CoreCrossDllHelpers::CoreReleaseString(clipNamesString);
 }
 
 void E_Inspector::DisplayClipManager(C_Animator* cAnimator)
