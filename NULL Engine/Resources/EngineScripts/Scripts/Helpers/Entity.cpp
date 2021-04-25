@@ -106,11 +106,17 @@ void Entity::PreUpdate()
 		}
 	}
 
-	if (hitTimer.IsActive() && hitTimer.ReadSec() >= hitDuration)
+	if (material && hitTimer.IsActive())
 	{
-		hitTimer.Stop();
-		if (hitParticles)
-			hitParticles->stopSpawn = true;
+		material->SetAlternateColour(Color(1, 0, 0, 1));
+		material->SetTakeDamage(true);
+		if (material && hitTimer.ReadSec() > hitDuration)
+		{
+			hitTimer.Stop();
+			material->SetTakeDamage(false);
+			if (hitParticles)
+				hitParticles->stopSpawn = true;
+		}
 	}
 }
 
@@ -128,11 +134,6 @@ void Entity::PostUpdate()
 		else
 			animator->PlayClip(currentAnimation->name, currentAnimation->blendTime); // If there is no clip playing play the current animation
 	}
-
-	if (hitTimer.ReadSec() > 0.2 &&  material)
-	{
-		if(material->GetTakeDamage()) material->SetTakeDamage(false);
-	}
 }
 
 void Entity::OnCollisionEnter(GameObject* object)
@@ -148,8 +149,6 @@ void Entity::TakeDamage(float damage)
 	hitTimer.Start();
 	if (hitParticles)
 		hitParticles->stopSpawn = false;
-	if (material)
-		material->SetAlternateColour(Color(1, 0, 0, 1));
 }
 
 void Entity::GiveHeal(float amount)
@@ -173,6 +172,12 @@ void Entity::Frozen()
 {
 	speedModifier /= 2.5;
 	attackSpeedModifier /= 2.5;
+
+	if (material)
+	{
+		material->SetAlternateColour(Color(0, 1, 1, 1));
+		material->SetTakeDamage(true);
+	}
 }
 
 void Entity::Heal(Effect* effect)

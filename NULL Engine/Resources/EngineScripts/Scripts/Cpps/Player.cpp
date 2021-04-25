@@ -10,7 +10,7 @@
 #include "GameObject.h"
 #include "C_Transform.h"
 #include "C_RigidBody.h"
-
+#include "C_Material.h"
 #include "C_ParticleSystem.h"
 #include "Emitter.h"
 
@@ -277,6 +277,11 @@ void Player::TakeDamage(float damage)
 		hitTimer.Start();
 		if (hitParticles)
 			hitParticles->stopSpawn = false;
+		if (material)
+		{
+			material->SetAlternateColour(Color(1, 0, 0, 1));
+			material->SetTakeDamage(true);
+		}
 	}
 }
 
