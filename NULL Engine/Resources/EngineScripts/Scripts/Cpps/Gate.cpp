@@ -33,6 +33,8 @@ void Gate::OnCollisionEnter(GameObject* object)
 	if (gameManager != nullptr) 
 	{
 		GameManager* gameManagerScript = (GameManager*)gameManager->GetScript("GameManager");
+		if (gameManagerScript->playerScript)
+			gameManagerScript->playerScript->hubCurrency += 20;
 		gameManagerScript->GoNextRoom();
 	}
 }

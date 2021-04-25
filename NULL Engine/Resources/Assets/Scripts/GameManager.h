@@ -37,10 +37,10 @@ public:
     std::string mainMenuScene;
     std::string SpawnPointName;
     Prefab playerPrefab;
+    Player* playerScript = nullptr;
 
 private:
     GameObject* playerGameObject = nullptr;
-    Player* playerScript = nullptr;
     const char* saveFileName = "GameState.json";
     int	currentLevel = 0;
     int	roomNum = 0;

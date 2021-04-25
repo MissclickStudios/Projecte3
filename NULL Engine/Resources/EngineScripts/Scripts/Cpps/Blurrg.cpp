@@ -180,6 +180,11 @@ void Blurrg::Update()
 			currentAnimation = &deathAnimation;
 			if (rigidBody)
 				rigidBody->SetIsActive(false); // Disable the rigidbody to avoid more interactions with other entities
+			if (player)
+			{
+				Player* playerScript = (Player*)player->GetScript("Player");
+				playerScript->currency += 50;
+			}
 			deathTimer.Start();
 			state = BlurrgState::DEAD;
 

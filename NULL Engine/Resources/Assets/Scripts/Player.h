@@ -119,6 +119,9 @@ private:
 	Weapon* blasterWeapon = nullptr;
 	Weapon* equipedGunWeapon = nullptr;
 	Weapon* currentWeapon = nullptr;
+
+	// Debug
+	bool godMode = false;
 };
 
 SCRIPTS_FUNCTION Player* CreatePlayer();

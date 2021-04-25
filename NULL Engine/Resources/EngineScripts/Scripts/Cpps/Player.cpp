@@ -297,7 +297,8 @@ void Player::TakeDamage(float damage)
 
 void Player::SetGodMode(bool enable)
 {
-	if (enable)
+	godMode = enable;
+	if (godMode)
 	{
 		
 		defense = 0.0f;
