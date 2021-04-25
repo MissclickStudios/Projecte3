@@ -18,11 +18,25 @@ HUDManager::~HUDManager()
 
 void HUDManager::Start()
 {
-	mandoImage = (C_2DAnimator*)App->scene->GetGameObjectByName(mandoImageName.c_str())->GetComponent<C_2DAnimator>();
-	primaryWeaponImage = (C_2DAnimator*)App->scene->GetGameObjectByName(primaryWeaponImageName.c_str())->GetComponent<C_2DAnimator>();
-	secondaryWeaponImage = (C_2DAnimator*)App->scene->GetGameObjectByName(secondaryWeaponImageName.c_str())->GetComponent<C_2DAnimator>();
-	dashImage = (C_2DAnimator*)App->scene->GetGameObjectByName(dashImageName.c_str())->GetComponent<C_2DAnimator>();
-	creditsImage = (C_2DAnimator*)App->scene->GetGameObjectByName(creditsImageName.c_str())->GetComponent<C_2DAnimator>();
+	GameObject* a = App->scene->GetGameObjectByName(mandoImageName.c_str());
+	if(a != nullptr)
+		mandoImage = (C_2DAnimator*)a->GetComponent<C_2DAnimator>();
+
+	a = App->scene->GetGameObjectByName(primaryWeaponImageName.c_str());
+	if (a != nullptr)
+		primaryWeaponImage = (C_2DAnimator*)a->GetComponent<C_2DAnimator>();
+
+	a = App->scene->GetGameObjectByName(secondaryWeaponImageName.c_str());
+	if (a != nullptr)
+		secondaryWeaponImage = (C_2DAnimator*)a->GetComponent<C_2DAnimator>();
+
+	a = App->scene->GetGameObjectByName(dashImageName.c_str());
+	if (a != nullptr)
+		dashImage = (C_2DAnimator*)a->GetComponent<C_2DAnimator>();
+
+	a = App->scene->GetGameObjectByName(creditsImageName.c_str());
+	if (a != nullptr)
+		creditsImage = (C_2DAnimator*)a->GetComponent<C_2DAnimator>();
 
 	playerObject = App->scene->GetGameObjectByName(playerName.c_str());
 	player = (Player*)playerObject->GetScript("Player");
