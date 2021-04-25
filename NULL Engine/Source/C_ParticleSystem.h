@@ -20,6 +20,7 @@ public:
 	bool LoadState(ParsonNode& root) override;
 
 	static inline ComponentType GetType() { return ComponentType::PARTICLES; }															// Required for templated methods such as GetComponent().
+
 public:
 	void Reset();
 

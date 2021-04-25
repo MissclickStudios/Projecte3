@@ -3,8 +3,10 @@
 #include "GameObject.h"
 #include "C_RigidBody.h"
 #include "C_Animator.h"
-#include "C_ParticleSystem.h"
 #include "C_Material.h"
+
+#include "C_ParticleSystem.h"
+#include "Emitter.h"
 
 #include "ScriptMacros.h"
 
@@ -31,8 +33,16 @@ void Entity::Awake()
 	animator = gameObject->GetComponent<C_Animator>();
 	currentAnimation = &idleAnimation;
 
-	//hitParticle = gameObject->GetComponent<C_ParticleSystem>();
-	//hitParticle->StopSpawn();
+	// TODO: Particles with prefabs
+	particles = gameObject->GetComponent<C_ParticleSystem>();
+	if (particles)
+	{
+		particles->StopSpawn();
+
+		for (uint i = 0; i < particles->emitterInstances.size(); ++i)
+			if (particles->emitterInstances[i]->emitter->name == "Hit")
+				hitParticles = particles->emitterInstances[i];
+	}
 
 	for (uint i = 0; i < gameObject->childs.size(); ++i)
 	{
@@ -95,6 +105,13 @@ void Entity::PreUpdate()
 				--i;
 		}
 	}
+
+	if (hitTimer.IsActive() && hitTimer.ReadSec() >= hitDuration)
+	{
+		hitTimer.Stop();
+		if (hitParticles)
+			hitParticles->stopSpawn = true;
+	}
 }
 
 void Entity::PostUpdate()
@@ -128,12 +145,11 @@ void Entity::TakeDamage(float damage)
 	if (health < 0.0f)
 		health = 0.0f;
 
+	hitTimer.Start();
+	if (hitParticles)
+		hitParticles->stopSpawn = false;
 	if (material)
-	{
 		material->SetTakeDamage(true);
-		hitTimer.Start();
-	}
-	
 }
 
 void Entity::GiveHeal(float amount)
