@@ -6,6 +6,7 @@
 #include "GameObject.h"
 #include "HUDManager.h"
 #include "Player.h"
+#include "M_Input.h"
 
 HUDManager::HUDManager() : Script()
 {
@@ -31,6 +32,7 @@ void HUDManager::Update()
 {
 	if(player != nullptr)
 	{
+		
 		//Take damage animation
 		if (mandoImage != nullptr)
 		{
@@ -41,21 +43,21 @@ void HUDManager::Update()
 		//Reload primary weapon
 		if (primaryWeaponImage != nullptr)
 		{
-			if (player)
+			if (App->input->GetGameControllerButton(2) == ButtonState::BUTTON_DOWN)
 				primaryWeaponImage->PlayAnimation(false, 1);
 		}
 
 		//Shoot primary weapon
 		if (primaryWeaponImage != nullptr)
 		{
-			if (player)
+			if (App->input->GetGameControllerTrigger(1) == ButtonState::BUTTON_REPEAT)
 				primaryWeaponImage->PlayAnimation(false, 1);
 		}
 
 		//Swap primary weapon
 		if (primaryWeaponImage != nullptr)
 		{
-			if (player)
+			if (App->input->GetGameControllerButton(1) == ButtonState::BUTTON_DOWN)
 				primaryWeaponImage->PlayAnimation(false, 1);
 		}
 
@@ -80,18 +82,17 @@ void HUDManager::Update()
 				secondaryWeaponImage->PlayAnimation(false, 1);
 		}
 
-		//Dash animation
-		if (dashImage != nullptr)
-		{
-			if (player)
-				dashImage->PlayAnimation(false, 1);
-		}
-
 		//Get credit animation
 		if (creditsImage != nullptr)
 		{
 			if (player)
 				creditsImage->PlayAnimation(false, 1);
+		}
+			//Dash animation
+		if (dashImage != nullptr)
+		{
+			if (App->input->GetGameControllerTrigger(0) == ButtonState::BUTTON_DOWN)
+				dashImage->PlayAnimation(false, 1);
 		}
 	}
 }

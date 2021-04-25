@@ -144,10 +144,16 @@ void GameManager::GenerateNewRun(bool fromMenu)
 			//LEVEL2
 			//if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + "InitialL2.json").c_str()))
 			//	AddFixedRoom("InitialL2", 2, 1);
+			if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + "InitialL1.json").c_str()))
+				//AddFixedRoom("InitialL1", 1, 1);
+				level1.insert(level1.begin() + 1, (std::string(ASSETS_SCENES_PATH) + "InitialL1.json"));
+			//LEVEL2
+			//if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + "InitialL2.json").c_str()))
+			//	AddFixedRoom("InitialL2", 2, 1);
 
 			if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + "ShopL1.json").c_str()))
 				//AddFixedRoom("ShopL1", 1, 4);
-				level1.insert(level1.begin() + 3, (std::string(ASSETS_SCENES_PATH) + "ShopL1.json"));
+				level1.insert(level1.begin() + 4, (std::string(ASSETS_SCENES_PATH) + "ShopL1.json"));
 			//LEVEL2
 			//if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + "ShopL2.json").c_str()))
 			//	AddFixedRoom("ShopL2", 2, 4);
@@ -168,7 +174,7 @@ void GameManager::GenerateNewRun(bool fromMenu)
 			//level1.erase(level1.begin() + 6);
 			for (int i = 0; i < level1.size(); ++i)
 			{
-				if (strstr(level1[i].c_str(), "HUB.json") || strstr(level1[i].c_str(), "ShopL1") || strstr(level1[i].c_str(), "BossL1"))
+				if (strstr(level1[i].c_str(), "HUB.json") || strstr(level1[i].c_str(), "InitialL1") || strstr(level1[i].c_str(), "ShopL1") || strstr(level1[i].c_str(), "BossL1"))
 				{
 					level1.erase(level1.begin() + i);
 					--i;
@@ -184,9 +190,10 @@ void GameManager::GenerateNewRun(bool fromMenu)
 			//AddFixedRoom("ShopL1", 1, 4);
 			//AddFixedRoom("InitialL1", 1, 1);
 			level1.insert(level1.begin(), (std::string(ASSETS_SCENES_PATH) + "HUB.json"));
+			level1.insert(level1.begin() + 1, (std::string(ASSETS_SCENES_PATH) + "InitialL1.json"));
 			//AddFixedRoom("BossL1", 1, 10);
 			//AddFixedRoom("ShopL1", 1, 4);
-			level1.insert(level1.begin() + 3, (std::string(ASSETS_SCENES_PATH) + "ShopL1.json"));
+			level1.insert(level1.begin() + 4, (std::string(ASSETS_SCENES_PATH) + "ShopL1.json"));
 			level1.push_back((std::string(ASSETS_SCENES_PATH) + "BossL1.json"));
 		}
 

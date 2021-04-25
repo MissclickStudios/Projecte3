@@ -16,12 +16,12 @@ public:
 	void Start() override;
 	void Update() override;
 
-	std::string mandoImageName = "Back";
-	std::string secondaryWeaponImageName = "Back";
-	std::string primaryWeaponImageName = "Back";
-	std::string dashImageName = "Back";
-	std::string creditsImageName = "Back";
-	std::string playerName = "Back";
+	std::string mandoImageName = "Mando";
+	std::string secondaryWeaponImageName = "SecodaryWeapon";
+	std::string primaryWeaponImageName = "PrimaryWeapon";
+	std::string dashImageName = "Dash";
+	std::string creditsImageName = "Credits";
+	std::string playerName = "Mandalorian";
 
 private:
 	C_2DAnimator* mandoImage;
@@ -41,5 +41,6 @@ SCRIPTS_FUNCTION HUDManager* CreateHUDManager() {
 	INSPECTOR_STRING(script->primaryWeaponImageName);
 	INSPECTOR_STRING(script->dashImageName);
 	INSPECTOR_STRING(script->creditsImageName);
+	INSPECTOR_STRING(script->playerName);
 	return script;
 }
