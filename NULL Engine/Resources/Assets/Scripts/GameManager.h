@@ -2,6 +2,7 @@
 #include "Script.h"
 #include "ScriptMacros.h"
 #include "Prefab.h"
+#include "Player.h"
 
 class GameObject;
 
@@ -10,9 +11,10 @@ public:
     GameManager();
     ~GameManager();
     void Awake() override;
+    void Start()override;
     void Update()override;
 
-    void GenerateNewRun();
+    void GenerateNewRun(bool fromMenu);
     void GoNextRoom();
     void InitiateLevel(int level);
     void Continue();
@@ -37,6 +39,7 @@ public:
 
 private:
     GameObject* playerGameObject = nullptr;
+    Player* playerScript = nullptr;
     const char* saveFileName = "GameState.json";
     int	currentLevel = 0;
     int	roomNum = 0;

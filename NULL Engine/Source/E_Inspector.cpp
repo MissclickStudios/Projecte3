@@ -1401,9 +1401,6 @@ void E_Inspector::ScriptSelectCombo(C_Script*& cScript, const char* previewValue
 {
 	const std::map<std::string, std::string> scripts = ((M_EngineScriptManager*)EngineApp->scriptManager)->GetAviableScripts();
 
-	std::string select;
-	if (scripts.size() != 0)
-		select = (*scripts.begin()).first;
 	std::string label = "##"; label += previewValue + cScript->GetDataName();
 	if (ImGui::BeginCombo(label.c_str(), previewValue, ImGuiComboFlags_PopupAlignLeft))
 	{
@@ -1429,8 +1426,7 @@ void E_Inspector::ScriptSelectCombo(C_Script*& cScript, const char* previewValue
 				continue;
 			}
 
-			bool selectedScript = (select == (*it).first.c_str());
-			if (ImGui::Selectable((*it).first.c_str(), selectedScript))
+			if (ImGui::Selectable((*it).first.c_str(), false))
 			{
 				if (swapForCurrent) 
 				{
@@ -1524,10 +1520,19 @@ void E_Inspector::DrawScriptComponent(C_Script* cScript)
 				break;
 			case InspectorScriptData::DataType::STRING: 
 			{
-				char buffer[128];
-				strcpy_s(buffer, ((std::string*)(*variable).ptr)->c_str());
-				if (ImGui::InputText((*variable).variableName.data(), buffer, IM_ARRAYSIZE(buffer)))
-					*(std::string*)(*variable).ptr = buffer;
+				switch ((*variable).showAs)
+				{
+				case InspectorScriptData::ShowMode::NONE:
+				{
+					char buffer[128];
+					strcpy_s(buffer, ((std::string*)(*variable).ptr)->c_str());
+					if (ImGui::InputText((*variable).variableName.data(), buffer, IM_ARRAYSIZE(buffer)))
+						*(std::string*)(*variable).ptr = buffer;
+					break;
+				}
+				case InspectorScriptData::ShowMode::TEXT:
+					ImGui::Text(((std::string*)(*variable).ptr)->c_str()); break;
+				}
 				break;
 			}
 			case InspectorScriptData::DataType::PREFAB:
@@ -1581,7 +1586,7 @@ void E_Inspector::DrawScriptComponent(C_Script* cScript)
 				{
 					//int draggedIndex = -1;
 					std::vector<std::string>& stringVector = (*(std::vector<std::string>*)(*variable).ptr);
-					for (int i = 0; i < stringVector.size(); ++i) 
+					for (int i = 0; i < stringVector.size(); ++i)
 					{
 						char buffer[128];
 						strcpy_s(buffer, stringVector[i].c_str());
@@ -1598,7 +1603,7 @@ void E_Inspector::DrawScriptComponent(C_Script* cScript)
 							ImGui::EndDragDropSource();
 						}
 
-						if (ImGui::BeginDragDropTarget())												
+						if (ImGui::BeginDragDropTarget())
 						{
 							if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("STRING_VECTOR_NODE"))
 							{
@@ -1611,7 +1616,7 @@ void E_Inspector::DrawScriptComponent(C_Script* cScript)
 							ImGui::EndDragDropTarget();
 						}
 						//-----------------------------------DRAG DROP----------------------------------------------------
-						ImGui::SameLine(); 
+						ImGui::SameLine();
 						if (ImGui::Button(("Remove " + index).c_str()))
 						{
 							EngineApp->scriptManager->StringVecErase((*variable).ptr, i);
@@ -1621,11 +1626,29 @@ void E_Inspector::DrawScriptComponent(C_Script* cScript)
 					ImGui::Text("Add new string to vector");
 					char buffer[128];
 					strcpy_s(buffer, "");
-					if (ImGui::InputText("New Element", buffer, IM_ARRAYSIZE(buffer), ImGuiInputTextFlags_EnterReturnsTrue)) 
+					if (ImGui::InputText("New Element", buffer, IM_ARRAYSIZE(buffer), ImGuiInputTextFlags_EnterReturnsTrue))
 						EngineApp->scriptManager->StringVecPushBackString((*variable).ptr, buffer);
-					
+
 					ImGui::TreePop();
 				}
+				break;
+			}
+			case InspectorScriptData::DataType::ENUM:
+			{
+				const std::map<std::string, std::map<int,std::string>> enumsMap = ((M_EngineScriptManager*)EngineApp->scriptManager)->GetInspectorEnums();
+				const std::map<int, std::string>& enumMap = enumsMap.at((*variable).enumName);
+
+				std::string selected = enumMap.at(*(int*)(*variable).ptr);
+				if (ImGui::BeginCombo(std::string("##" + (*variable).variableName).c_str(), selected.c_str(), ImGuiComboFlags_PopupAlignLeft))
+				{
+					for (auto it = enumMap.cbegin(); it != enumMap.cend(); ++it)
+					{
+						if (ImGui::Selectable((*it).second.c_str(),(*it).second == selected))
+							*(int*)(*variable).ptr = (*it).first;
+					}
+					ImGui::EndCombo();
+				}
+				ImGui::SameLine(); ImGui::Text((*variable).variableName.c_str());
 				break;
 			}
 			}
@@ -1691,9 +1714,16 @@ void E_Inspector::DrawUIButtonComponent(C_UI_Button* button)
 			button->SetX(pos.x);
 			button->SetY(pos.y);
 		}
-	}
 
-	ImGui::Separator();
+
+		if (!show)
+		{
+			componentToDelete = button;
+			showDeleteComponentPopup = true;
+		}
+
+		ImGui::Separator();
+	}
 }
 
 void E_Inspector::DrawPlayerControllerComponent(C_PlayerController* cController)

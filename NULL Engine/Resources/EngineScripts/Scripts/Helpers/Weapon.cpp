@@ -46,6 +46,13 @@ void Weapon::Update()
 		updateProjectiles = false;
 		CreateProjectiles();
 	}
+
+	if (weaponModel)
+	{
+		weaponModel->transform->SetLocalPosition(position);
+		weaponModel->transform->SetLocalEulerRotation(rotation);
+		weaponModel->transform->SetLocalScale(scale);
+	}
 }
 
 void Weapon::CleanUp()
@@ -53,20 +60,6 @@ void Weapon::CleanUp()
 	DeleteProjectiles();
 
 	hand = nullptr;
-}
-
-void Weapon::Activate()
-{
-	for (uint i = 0; i < gameObject->components.size(); ++i)
-		gameObject->components[i]->SetIsActive(true);
-	gameObject->SetIsActive(true);
-}
-
-void Weapon::Deactivate()
-{
-	for (uint i = 0; i < gameObject->components.size(); ++i)
-		gameObject->components[i]->SetIsActive(false);
-	gameObject->SetIsActive(false);
 }
 
 ShootState Weapon::Shoot(float2 direction)
@@ -108,6 +101,13 @@ void Weapon::SetOwnership(EntityType type, GameObject* hand)
 
 	if (type == EntityType::PLAYER)
 	{
+		if (weaponModelPrefab.uid != NULL)
+		{
+			GameObject* skeletonHand = App->scene->GetGameObjectByName("mixamorig:RightHand");
+			if (skeletonHand)
+				weaponModel = App->resourceManager->LoadPrefab(weaponModelPrefab.uid, skeletonHand); // Load the prefab onto a gameobject
+		}
+
 		if (!projectiles)
 			return;
 		for (uint i = 0; i < projectileNum; ++i)
@@ -136,10 +136,6 @@ void Weapon::ProjectileCollisionReport(int index)
 	if (!projectiles[index]->object)
 		return;
 	projectiles[index]->object->transform->SetLocalPosition(float3::zero);
-
-	projectiles[index]->object->SetIsActive(false);
-	for (uint i = 0; i < projectiles[index]->object->components.size(); ++i)
-		projectiles[index]->object->components[i]->SetIsActive(false);
 }
 
 void Weapon::RefreshPerks()

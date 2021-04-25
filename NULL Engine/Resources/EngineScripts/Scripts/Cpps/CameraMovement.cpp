@@ -20,15 +20,13 @@ CameraMovement::~CameraMovement()
 {
 }
 
+void CameraMovement::Start()
+{
+	player = App->scene->GetGameObjectByName(playerName.c_str());
+}
+
 void CameraMovement::Update()
 {
-	if (player == nullptr)
-	{
-		std::vector<GameObject*>* gameObjects = App->scene->GetGameObjects();
-		for (auto object = gameObjects->begin(); object != gameObjects->end(); ++object)
-			if ((*object)->GetScript("Player"))
-				player = (*object);
-	}
 
 	if (player == nullptr)
 		return;

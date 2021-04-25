@@ -9,11 +9,12 @@ public:
 	CameraMovement();
 	~CameraMovement();
 
+	void Start() override;
 	void Update() override;
 	void CleanUp()override;
 
 	GameObject* player = nullptr;
-
+	std::string playerName = "Mandalorian";
 	float3 offset = float3::zero;
 };
 
@@ -21,6 +22,7 @@ SCRIPTS_FUNCTION CameraMovement* CreateCameraMovement() {
 	CameraMovement* script = new CameraMovement();
 
 	INSPECTOR_DRAGABLE_FLOAT3(script->offset);
+	INSPECTOR_STRING(script->playerName);
 
 	return script;
 }

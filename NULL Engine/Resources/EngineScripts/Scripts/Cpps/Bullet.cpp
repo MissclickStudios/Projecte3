@@ -29,6 +29,8 @@ void Bullet::Update()
 		hit = false;
 		if (shooter)
 			shooter->ProjectileCollisionReport(index);
+
+		Deactivate();
 	}
 }
 

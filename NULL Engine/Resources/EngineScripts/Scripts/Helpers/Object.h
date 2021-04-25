@@ -28,6 +28,9 @@ public:
 
 	virtual void CleanUp() override {}
 
+	void Activate();
+	void Deactivate();
+
 	virtual void OnDisable() override {}
 	virtual void OnEnable() override {}
 

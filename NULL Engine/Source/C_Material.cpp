@@ -25,7 +25,8 @@ rMaterial(nullptr),
 rTexture(nullptr),
 rShader(nullptr),
 useDefaultTex(false),
-useAlbedoTex(true)
+useAlbedoTex(true),
+takeDamage(false)
 {
 	
 }
@@ -311,4 +312,14 @@ uint32 const C_Material::GetShaderProgramID()
 void C_Material::SetShaderProgramID(uint32 ID)
 {
 	rShader->shaderProgramID = ID;
+}
+
+bool C_Material::GetTakeDamage() const
+{
+	return takeDamage;
+}
+
+void C_Material::SetTakeDamage(bool value)
+{
+	this->takeDamage = value;
 }

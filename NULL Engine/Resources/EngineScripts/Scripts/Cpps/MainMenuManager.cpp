@@ -29,7 +29,7 @@ void MainMenuManager::Update()
 	if (playButton && playButton->IsPressed() && gameManager != nullptr)
 	{
 		GameManager* gameManagerScript = (GameManager*)gameManager->GetScript("GameManager");
-		gameManagerScript->GenerateNewRun();
+		gameManagerScript->GenerateNewRun(true);
 		gameManagerScript->InitiateLevel(1);
 	}
 	if (continueButton && continueButton->IsPressed() && gameManager != nullptr)

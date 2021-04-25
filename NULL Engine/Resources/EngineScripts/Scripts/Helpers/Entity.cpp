@@ -3,6 +3,8 @@
 #include "GameObject.h"
 #include "C_RigidBody.h"
 #include "C_Animator.h"
+#include "C_ParticleSystem.h"
+#include "C_Material.h"
 
 #include "ScriptMacros.h"
 
@@ -21,15 +23,16 @@ Entity::~Entity()
 	}
 }
 
-void Entity::Start()
+void Entity::Awake()
 {
-	deathTimer.Stop();
-
 	rigidBody = gameObject->GetComponent<C_RigidBody>();
 	if (rigidBody && rigidBody->IsStatic())
 		rigidBody = nullptr;
 	animator = gameObject->GetComponent<C_Animator>();
 	currentAnimation = &idleAnimation;
+
+	//hitParticle = gameObject->GetComponent<C_ParticleSystem>();
+	//hitParticle->StopSpawn();
 
 	for (uint i = 0; i < gameObject->childs.size(); ++i)
 	{
@@ -37,10 +40,19 @@ void Entity::Start()
 		if (name == "Skeleton")
 		{
 			skeleton = gameObject->childs[i];
-			break;
+			continue;
+		}
+		else if (gameObject->childs[i]->GetComponent<C_Material>())
+		{
+			material = gameObject->childs[i]->GetComponent<C_Material>();
 		}
 	}
 	memset(effectCounters, 0, (uint)EffectType::EFFECTS_NUM); // Set all the counters to zero
+}
+
+void Entity::Start()
+{
+	deathTimer.Stop();
 
 	SetUp();
 }
@@ -65,14 +77,22 @@ void Entity::PreUpdate()
 			case EffectType::FROZEN:
 				Frozen();
 				break;
+			case EffectType::HEAL:
+				Heal(effects[i]);
+				break;
 			}
 		}
 		else // Delete the effect if it ran out
 		{
+			--effectCounters[(uint)effects[i]->Type()]; // Substract one to the counter of this effect
+
 			delete effects[i];
 			effects.erase(effects.begin() + i);
-			--i;
-			--effectCounters[(uint)effects[i]->Type()]; // Substract one to the counter of this effect
+
+			if (i <= 0) // Avoid relying on uints turning a high number to exit the loop when there are no more effects
+				break;
+			else
+				--i;
 		}
 	}
 }
@@ -91,17 +111,15 @@ void Entity::PostUpdate()
 		else
 			animator->PlayClip(currentAnimation->name, currentAnimation->blendTime); // If there is no clip playing play the current animation
 	}
+
+	if (hitTimer.ReadSec() > 0.2 &&  material)
+	{
+		if(material->GetTakeDamage()) material->SetTakeDamage(false);
+	}
 }
 
 void Entity::OnCollisionEnter(GameObject* object)
 {
-}
-
-void Entity::Deactivate()
-{
-	for (uint i = 0; i < gameObject->components.size(); ++i)
-		gameObject->components[i]->SetIsActive(false);
-	gameObject->SetIsActive(false);
 }
 
 void Entity::TakeDamage(float damage)
@@ -109,9 +127,16 @@ void Entity::TakeDamage(float damage)
 	health -= damage / Defense();
 	if (health < 0.0f)
 		health = 0.0f;
+
+	if (material)
+	{
+		material->SetTakeDamage(true);
+		hitTimer.Start();
+	}
+	
 }
 
-void Entity::Heal(float amount)
+void Entity::GiveHeal(float amount)
 {
 	health += amount;
 	if (health > MaxHealth())
@@ -132,6 +157,12 @@ void Entity::Frozen()
 {
 	speedModifier /= 2.5;
 	attackSpeedModifier /= 2.5;
+}
+
+void Entity::Heal(Effect* effect)
+{
+	GiveHeal(effect->Duration());
+	effect->End();
 }
 
 //	// Health

@@ -1,16 +1,19 @@
 #pragma once
+#include "ScriptMacros.h"
 
 #include "Timer.h"
 
-enum class EffectType
+// REMEMBER TO ADD A NEW ENTRY ON THE GET EFFECT NAME IF YOU ADD AN EFFECT (down below line 58ish)
+enum class ENGINE_ENUM EffectType
 {
 	NONE = 0,
 	FROZEN,
-
-	// This has to be the last entry
-	// NOT FOLLOWING THIS RULE WILL MESS UP THE EFFECTS SYSTEM AND PROBABLY CRASH THE GAME
-	EFFECTS_NUM // This signifies the amount of existing effects
+	HEAL,
+	EFFECTS_NUM
 };
+// This has to be the last entry
+// NOT FOLLOWING THIS RULE WILL MESS UP THE EFFECTS SYSTEM AND PROBABLY CRASH THE GAME
+// EFFECTS_NUM signifies the amount of existing effects
 
 class Effect
 {
@@ -44,7 +47,10 @@ public:
 	}
 
 	const EffectType Type() const { return type; }
+
 	const float Duration() const { return duration; }
+	const float RemainingDuration() const { return Duration() - timer.ReadSec(); }
+
 	const bool Permanent() const { return permanent; }
 
 private:

@@ -10,6 +10,7 @@
 #include "Entity.h"
 
 #include "MathGeoLib/include/Math/float2.h"
+#include "MathGeoLib/include/Math/float3.h"
 
 #include <vector>
 
@@ -45,9 +46,6 @@ public:
 	virtual void SetUp() = 0;
 	void Update() override;
 	void CleanUp() override;
-
-	void Activate();
-	void Deactivate();
 
 	// Usability
 	virtual ShootState Shoot(float2 direction);
@@ -102,9 +100,15 @@ public:
 	std::vector<Perk> perks;
 	std::vector<Effect> onHitEffects;
 
-	// Prefabs
-	Prefab weaponModel;
+	// Visuals
+	Prefab weaponModelPrefab;
 	Prefab projectilePrefab;
+
+	GameObject* weaponModel = nullptr;
+
+	float3 position = float3::zero;
+	float3 rotation = float3::zero;
+	float3 scale = float3::zero;
 
 	// Projectiles
 	int projectileNum = 0;

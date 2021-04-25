@@ -57,9 +57,12 @@ SCRIPTS_FUNCTION Blaster* CreateBlaster()
     INSPECTOR_DRAGABLE_INT(script->maxAmmoModifier);
     INSPECTOR_DRAGABLE_INT(script->PPSModifier);
 
-    // Prefabs
-    INSPECTOR_PREFAB(script->weaponModel);
+    // Visuals
     INSPECTOR_PREFAB(script->projectilePrefab);
+    INSPECTOR_PREFAB(script->weaponModelPrefab);  
+    INSPECTOR_INPUT_FLOAT3(script->position);
+    INSPECTOR_INPUT_FLOAT3(script->rotation);
+    INSPECTOR_INPUT_FLOAT3(script->scale);
 
     // Projectiles
     INSPECTOR_DRAGABLE_INT(script->projectileNum);

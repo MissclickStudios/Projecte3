@@ -13,6 +13,8 @@ typedef unsigned int uint;
 class GameObject;
 class C_RigidBody;
 class C_Animator;
+class C_ParticleSystem;
+class C_Material;
 
 enum class EntityType
 {
@@ -30,6 +32,7 @@ public:
 	Entity();
 	virtual ~Entity();
 	
+	virtual void Awake();
 	void Start();
 	virtual void SetUp() = 0;
 	
@@ -41,15 +44,14 @@ public:
 
 	virtual void OnCollisionEnter(GameObject* object) override;
 	
-	void Deactivate();
-	
 	// Interactions
 	virtual void TakeDamage(float damage);
-	virtual void Heal(float amount);
+	virtual void GiveHeal(float amount);
 	void AddEffect(EffectType type, float duration, bool permanent = false);
 	
 	// Effect Functions
 	virtual void Frozen();
+	virtual void Heal(Effect* effect);
 	
 	// Type
 	EntityType type = EntityType::ENTITY;
@@ -95,10 +97,16 @@ protected:
 	C_Animator* animator = nullptr;
 	AnimationInfo* currentAnimation = nullptr;
 
+	// Particles
+	C_ParticleSystem* hitParticle = nullptr;
+
+	//Material
+	C_Material* material = nullptr;
+
 	// Death
 	Timer deathTimer;
 
-private:
+	Timer hitTimer;
 
 	// Effects
 	std::vector<Effect*> effects;
