@@ -27,17 +27,41 @@ void DebugMenuManager::Start()
 	gameManager = App->scene->GetGameObjectByName(gameManagerName.c_str());
 	mando = App->scene->GetGameObjectByName(mandoName.c_str());
 
-	debugMenuCanvas = (C_Canvas*)App->scene->GetGameObjectByName(debugMenuCanvasName.c_str())->GetComponent<C_Canvas>();
+	GameObject* a = App->scene->GetGameObjectByName(debugMenuCanvasName.c_str());
+	if(a != nullptr)
+		debugMenuCanvas = (C_Canvas*)a->GetComponent<C_Canvas>();
 
-	godMode = (C_UI_Button*)App->scene->GetGameObjectByName(godModeName.c_str())->GetComponent<C_UI_Button>();
-	roomSkip = (C_UI_Button*)App->scene->GetGameObjectByName(roomSkipName.c_str())->GetComponent<C_UI_Button>();
-	addHealth = (C_UI_Button*)App->scene->GetGameObjectByName(addHealthName.c_str())->GetComponent<C_UI_Button>();
-	getCredits = (C_UI_Button*)App->scene->GetGameObjectByName(getCreditsName.c_str())->GetComponent<C_UI_Button>();
-	getBeskar = (C_UI_Button*)App->scene->GetGameObjectByName(getBeskarName.c_str())->GetComponent<C_UI_Button>();
-	spawnBlurgg = (C_UI_Button*)App->scene->GetGameObjectByName(spawnBlurggName.c_str())->GetComponent<C_UI_Button>();
-	spawnTrooper = (C_UI_Button*)App->scene->GetGameObjectByName(spawnTrooperName.c_str())->GetComponent<C_UI_Button>();
+	a = App->scene->GetGameObjectByName(godModeName.c_str());
+	if (a != nullptr)
+		godMode = (C_UI_Button*)a->GetComponent<C_UI_Button>();
 
-	fpsText = (C_UI_Text*)App->scene->GetGameObjectByName(fpsTextName.c_str())->GetComponent<C_UI_Text>();
+	a = App->scene->GetGameObjectByName(roomSkipName.c_str());
+	if (a != nullptr)
+		roomSkip = (C_UI_Button*)a->GetComponent<C_UI_Button>();
+
+	a = App->scene->GetGameObjectByName(addHealthName.c_str());
+	if (a != nullptr)
+		addHealth = (C_UI_Button*)a->GetComponent<C_UI_Button>();
+
+	a = App->scene->GetGameObjectByName(getCreditsName.c_str());
+	if (a != nullptr)
+		getCredits = (C_UI_Button*)a->GetComponent<C_UI_Button>();
+
+	a = App->scene->GetGameObjectByName(getBeskarName.c_str());
+	if (a != nullptr)
+		getBeskar = (C_UI_Button*)a->GetComponent<C_UI_Button>();
+
+	a = App->scene->GetGameObjectByName(spawnBlurggName.c_str());
+	if (a != nullptr)
+		spawnBlurgg = (C_UI_Button*)a->GetComponent<C_UI_Button>();
+
+	a = App->scene->GetGameObjectByName(spawnTrooperName.c_str());
+	if (a != nullptr)
+		spawnTrooper = (C_UI_Button*)a->GetComponent<C_UI_Button>();
+
+	a = App->scene->GetGameObjectByName(fpsTextName.c_str());
+	if (a != nullptr)
+		fpsText = (C_UI_Text*)a->GetComponent<C_UI_Text>();
 }
 
 void DebugMenuManager::Update()
@@ -79,8 +103,8 @@ void DebugMenuManager::Update()
 	if (addHealth != nullptr)
 		if (addHealth->GetState() == UIButtonState::RELEASED)
 		{
-			//Use Beskar Ingots
-			//LOG("OMG YOU HAVE JUST SPENT %d Beskar Ingots!", beskarCost);
+			Player* gameManagerScript = (Player*)gameManager->GetScript("Player");
+			gameManagerScript->GiveHeal(healthHealed);
 		}
 
 	if (getCredits != nullptr)

@@ -75,6 +75,9 @@ public:
 	PlayerState moveState = PlayerState::IDLE;
 	AimState aimState = AimState::IDLE;
 
+	// Debug
+	void SetGodMode(bool enable);
+
 private:
 
 	// Logic

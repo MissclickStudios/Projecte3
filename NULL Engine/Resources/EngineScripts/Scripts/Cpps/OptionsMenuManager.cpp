@@ -18,7 +18,9 @@ OptionsMenuManager::~OptionsMenuManager()
 
 void OptionsMenuManager::Start()
 {
-	backButton = (C_UI_Button*)App->scene->GetGameObjectByName(buttonName.c_str())->GetComponent<C_UI_Button>();
+	GameObject* a = App->scene->GetGameObjectByName(buttonName.c_str());
+	if(a != nullptr)
+		backButton = (C_UI_Button*)a->GetComponent<C_UI_Button>();
 
 }
 

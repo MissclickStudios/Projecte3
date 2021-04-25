@@ -15,15 +15,20 @@ public:
 
 	std::string exitButtonName = "ExitButton";
 	std::string buyButtonName = "BuyButton";
-	int beskarCost = 10;
+	std::string mandoName = "Mandalorian";
+
+	int beskarCost = 1;
 
 private:
 	C_UI_Button* exitButton = nullptr;
 	C_UI_Button* buyButton = nullptr;
+
+	GameObject* mando = nullptr;
 };
 
 SCRIPTS_FUNCTION HUBShopMenuManager* CreateHUBShopMenuManager() {
 	HUBShopMenuManager* script = new HUBShopMenuManager();
+	INSPECTOR_STRING(script->mandoName);
 	INSPECTOR_STRING(script->exitButtonName);
 	INSPECTOR_STRING(script->buyButtonName);
 	return script;
