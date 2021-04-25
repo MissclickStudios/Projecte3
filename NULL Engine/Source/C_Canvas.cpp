@@ -200,7 +200,7 @@ bool C_Canvas::CheckButtonStates()
 			bool prev = false;
 			bool next = false;
 
-			if ((App->input->GetKey(SDL_SCANCODE_UP) == KeyState::KEY_DOWN || App->input->GetGameControllerAxis(0) == AxisState::POSITIVE_AXIS_DOWN) && !selectedButton->IsPressed())
+			if ((App->input->GetKey(SDL_SCANCODE_UP) == KeyState::KEY_DOWN || App->input->GetGameControllerAxis(1) == AxisState::NEGATIVE_AXIS_DOWN) && !selectedButton->IsPressed())
 			{
 				for (std::vector<C_UI_Button*>::reverse_iterator buttonIt = activeButtons.rbegin(); buttonIt != activeButtons.rend(); buttonIt++)
 				{
@@ -223,7 +223,7 @@ bool C_Canvas::CheckButtonStates()
 					selectedButton->SetState(UIButtonState::HOVERED);
 			}
 
-			if ((App->input->GetKey(SDL_SCANCODE_DOWN) == KeyState::KEY_DOWN || App->input->GetGameControllerAxis(0) == AxisState::NEGATIVE_AXIS_DOWN) && !selectedButton->IsPressed())
+			if ((App->input->GetKey(SDL_SCANCODE_DOWN) == KeyState::KEY_DOWN || App->input->GetGameControllerAxis(1) == AxisState::POSITIVE_AXIS_DOWN) && !selectedButton->IsPressed())
 			{
 				for (std::vector<C_UI_Button*>::iterator buttonIt = activeButtons.begin(); buttonIt != activeButtons.end(); buttonIt++)
 				{
