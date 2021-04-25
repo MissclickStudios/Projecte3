@@ -22,6 +22,7 @@
 
 #include "E_Project.h"
 
+#include "CoreDllHelpers.h"
 #include "MemoryManager.h"
 
 #define MAX_DIRECTORY_SIZE		500
@@ -140,6 +141,7 @@ void E_Project::CheckFlags()
 			}
 			
 			assetsToDisplay.push_back({ path, file, type, assetTexture });
+			CoreCrossDllHelpers::CoreReleaseString(file);
 		}
 
 		refreshDirectoryToDisplay = false;
