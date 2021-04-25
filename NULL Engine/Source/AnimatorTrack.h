@@ -6,6 +6,8 @@
 
 #include "BoneLink.h"
 
+class ParsonNode;
+
 class AnimatorClip;
 
 class GameObject;
@@ -13,7 +15,8 @@ class C_Transform;
 
 struct Channel;
 
-typedef unsigned int uint;
+typedef unsigned int		uint;
+typedef unsigned __int32	uint32;
 
 enum class TrackState
 {
@@ -27,19 +30,32 @@ class NULL_API AnimatorTrack
 {
 public:
 	AnimatorTrack();
-	AnimatorTrack(const std::string& name, const GameObject* rootBone);
+	AnimatorTrack(const std::string& name, GameObject* rootBone);
 	~AnimatorTrack();
 
-	bool StepTrack(float dt);
-	bool CleanUp();
+	bool StepTrack	(float dt);
+	bool CleanUp	();
+
+	bool SaveState	(ParsonNode& root) const;
+	bool LoadState	(const ParsonNode& root);
 
 public:																																				// --- TRACK MANAGEMENT METHODS
 	bool				Play						();
 	bool				Pause						();
 	bool				Step						();
 	bool				Stop						();
-	
+
+public:																																				// --- CLIP MANAGEMENT METHODS (PUBLIC)
 	bool				PlayClip					(AnimatorClip* clip, std::vector<BoneLink>* clipBones, uint blendFrames = 0);
+	
+	bool				StepToPrevKeyframe			();
+	bool				StepToNextKeyframe			();
+
+	bool				CurrentClipExists			() const;
+	bool				BlendingClipExists			() const;
+	
+	void				FreeCurrentClip				();
+	void				FreeBlendingClip			();
 
 public:																																				// --- GET/SET METHODS
 	TrackState			GetTrackState				();
@@ -49,19 +65,16 @@ public:																																				// --- GET/SET METHODS
 	void				SetTrackSpeed				(float newTrackSpeed);
 
 	const char*			GetName						() const;
-	const GameObject*	GetRootBone					() const;
+	GameObject*			GetRootBone					() const;
 	AnimatorClip*		GetCurrentClip				() const;
 	AnimatorClip*		GetBlendingClip				() const;
 
 	void				SetName						(const char* newName);
-	void				SetRootBone					(const GameObject* newRootBone);
+	void				SetRootBone					(GameObject* newRootBone);
 	bool				SetCurrentClip				(AnimatorClip* newClip, std::vector<BoneLink>* newBones);
 	bool				SetBlendingClip				(AnimatorClip* newClip, std::vector<BoneLink>* newBones, uint newBlendFrames);
 
-	bool				CurrentClipExists			() const;
-	bool				BlendingClipExists			() const;
-
-private:																																			// --- CLIP MANAGEMENT METHODS
+private:																																			// --- CLIP MANAGEMENT METHODS (PRIVATE)
 	bool				StepClips					(float dt);
 
 	void				SwitchBlendingToCurrent		();
@@ -84,20 +97,21 @@ private:																																			// --- BONE/CHANNEL UPDATE METHODS
 	const Quat			GetBlendedRotation			(double bKeyframe, const Channel& bChannel, float bRate, const Quat& originalRotation) const;	
 	const float3		GetBlendedScale				(double bKeyframe, const Channel& bChannel, float bRate, const float3& originalScale) const;	
 
+public:
+	uint32					rootBoneUID;															// TMP until a better solution to Save & Load the root bone is found.
+
 private:
 	TrackState				trackState;
 	float					trackSpeed;
-
 	bool					interpolate;
 
 	std::string				name;
 	
-	const GameObject*		rootBone;
-	std::vector<BoneLink>	bones;
-	
+	GameObject*						rootBone;
+	std::map<uint32, GameObject*>	bones;
+
 	AnimatorClip*			currentClip;
 	AnimatorClip*			blendingClip;
-
 	std::vector<BoneLink>*	currentBones;
 	std::vector<BoneLink>*	blendingBones;
 

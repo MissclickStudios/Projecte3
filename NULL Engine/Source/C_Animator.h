@@ -59,7 +59,13 @@ public:
 
 	static inline ComponentType GetType() { return ComponentType::ANIMATOR; }
 
-public:
+public:																															// --- C_ANIMATOR STATE METHODS
+	bool			Play									(bool applyToTracks = false);
+	bool			Pause									(bool applyToTracks = true);
+	bool			Step									(bool applyToTracks = true);
+	bool			Stop									(bool applyToTracks = true);
+
+public:																															// --- C_ANIMATOR MANAGEMENT METHODS
 	void			AddAnimation							(R_Animation* rAnimation);
 	
 	bool			AddClip									(const AnimatorClip& clip);
@@ -70,42 +76,18 @@ public:
 	bool			EditTrack								(const char* originalTrackName, const AnimatorTrack& editedTrack);
 	bool			DeleteTrack								(const char* trackName);
 
-	AnimatorClip	GetClip									(const char* clipName) const;									// Rets invalid clip if not found. Check with clip->ClipIsValid().
-	AnimatorClip*	GetClipAsPtr							(const char* clipName);											// Returns nullptr if clip is not found.
+	AnimatorClip	GetClip									(const char* clipName) const;										// Rets invalid clip if not found. Check with clip->ClipIsValid().
+	AnimatorClip*	GetClipAsPtr							(const char* clipName);												// Returns nullptr if clip is not found.
+	AnimatorClip	GetClipByIndex							(uint index) const;
 
 	AnimatorTrack	GetTrack								(const char* trackName) const;
 	AnimatorTrack*	GetTrackAsPtr							(const char* trackName);
+	AnimatorTrack	GetTrackByIndex							(uint index) const;
 
-	void			PlayClip								(const char* clipName, uint blendFrames);
-	void			PlayClip								(const char* clipName, float blendTime);
-	
-	bool			Play									();
-	bool			Pause									();
-	bool			Step									();
-	bool			Stop									();
+	void			PlayClip								(const char* trackName, const char* clipName, uint blendFrames);
+	void			PlayClip								(const char* trackName, const char* clipName, float blendTime);
 
-public:																														// --- DEBUG METHODS
-	bool			StepToPrevKeyframe						();
-	bool			StepToNextKeyframe						();
-	bool			RefreshBoneDisplay						();
-
-public:																														// --- CURRENT/BLENDING ANIMATION METHODS
-	AnimatorClip*	GetCurrentClip							() const;														// /* TRACK */ 
-	AnimatorClip*	GetBlendingClip							() const;														// /* TRACK */
-
-	void			SetCurrentClip							(AnimatorClip* clip);											// /* TRACK */
-	void			SetBlendingClip							(AnimatorClip* clip, uint blendFrames);							// /* TRACK */
-
-	void			SetCurrentClipByIndex					(uint index);													// 
-	void			SetBlendingClipByIndex					(uint index, uint blendFrames);									// 
-
-	bool			CurrentClipExists						() const;														// /* TRACK */
-	bool			BlendingClipExists						() const;														// /* TRACK */
-
-	void			ClearCurrentClip						();																// /* TRACK */
-	void			ClearBlendingClip						();																// /* TRACK */
-
-public:																														// --- GET/SET METHODS
+public:																															// --- GET/SET METHODS
 	std::vector<LineSegment> GetDisplayBones				() const;
 	std::vector<std::string> GetClipNamesAsVector			() const;
 
@@ -117,76 +99,53 @@ public:																														// --- GET/SET METHODS
 	int				GetIndexByAnimation						(const R_Animation* rAnimation) const;
 
 	float			GetPlaybackSpeed						() const;
-	bool			GetInterpolate							() const;
 	bool			GetLoopAnimation						() const;
 	bool			GetPlayOnStart							() const;
 	bool			GetCameraCulling						() const;
 	bool			GetShowBones							() const;
 
 	void			SetPlaybackSpeed						(float playbackSpeed);
-	void			SetInterpolate							(bool setTo);
 	void			SetLoopAnimation						(bool setTo);
 	void			SetPlayOnStart							(bool setTo);
 	void			SetCameraCulling						(bool setTo);
 	void			SetShowBones							(bool setTo);
 		 
-private: 																													// --- C_ANIMATOR INITIALIZATION METHODS
+private: 																														// --- C_ANIMATOR INITIALIZATION METHODS
 	void			GetAnimatedMeshes						();
-	void			FindBones								();
-	void			FindBoneLinks							();
-	void			GenerateDefaultClips					();
-	
 	void			FindRootBone							();
 	void			SetRootBone								(GameObject* rootBone);
 	GameObject*		GetRootBone								() const;
+
+	void			FindBones								();
+	void			FindBoneLinks							();
+	std::vector<BoneLink>*	GetAnimationBoneLinks			(uint32 UID);
 	void			CrossCheckBonesWithMeshBoneMapping		();
-	
-	bool			GenerateDefaultClip						(const R_Animation* rAnimation, AnimatorClip& defaultClip);
 
-private:																													// --- ANIMATION/CLIP REPRODUCTION METHODS
+	void			GenerateDefaultClips					();																	/* CHECK */
+	bool			GenerateDefaultClip						(const R_Animation* rAnimation, AnimatorClip& defaultClip);			/* CHECK */
+
+	void			FindTracksRootBones						();
+	void			GeneratePreviewTrack					();
+
+private:																														// --- ANIMATION/CLIP REPRODUCTION METHODS
 	void			CheckGameState							();
-	
 	bool			StepAnimation							();
-	bool			StepClips								();																									/* TRACK */
-	bool			ValidateCurrentClip						();																									/* TRACK */
-					
-	void			SwitchBlendingToCurrent					();																									/* TRACK */
-	void			ResetBones								();																									/* TRACK */
 
-private:																													// --- BONE/CHANNEL UPDATE METHODS
-	void			UpdateChannelTransforms					();																									/* TRACK */
 	void			UpdateMeshSkinning						();
 	void			UpdateDisplayBones						();
 	void			GenerateBoneSegments					(const GameObject* bone);
-	
-	Transform		GetInterpolatedTransform				(double keyframe, const Channel& channel, C_Transform* originalTransform) const;					/* TRACK */
-	const float3	GetInterpolatedPosition					(double keyframe, const Channel& channel) const;													/* TRACK */
-	const Quat		GetInterpolatedRotation					(double keyframe, const Channel& channel) const;													/* TRACK */
-	const float3	GetInterpolatedScale					(double keyframe, const Channel& channel) const;													/* TRACK */
-
-	Transform		GetPoseToPoseTransform					(uint tick, const Channel& channel, C_Transform* originalTransform) const;							/* TRACK */
-
-	Transform		GetBlendedTransform						(double bKeyframe, const Channel& bChannel, const Transform& originalTransform) const;				/* TRACK */
-	const float3	GetBlendedPosition						(double bKeyframe, const Channel& bChannel, float bRate, const float3& originalPosition) const;		/* TRACK */
-	const Quat		GetBlendedRotation						(double bKeyframe, const Channel& bChannel, float bRate, const Quat& originalRotation) const;		/* TRACK */
-	const float3	GetBlendedScale							(double bKeyframe, const Channel& bChannel, float bRate, const float3& originalScale) const;		/* TRACK */
 
 private:
-	std::vector<R_Animation*>						animations;											// Animation Resources. Contain bone information (transforms...).
-	std::map<uint32, std::vector<BoneLink>>			animationBones;										// Stores the links between the animation bones and the GOs for each animation.
+	std::vector<R_Animation*>				animations;											// Animation Resources. Contain bone information (transforms...).
+	std::map<uint32, std::vector<BoneLink>>	animationBones;										// Stores the links between the animation bones and the GOs for each animation.
 	
-	std::vector<C_Mesh*>							animatedMeshes;										// TMP. Until a better implementation is found;
+	std::vector<C_Mesh*>					animatedMeshes;										// TMP. Until a better implementation is found;
 
-	std::vector<GameObject*>						bones;												//
-	std::vector<BoneLink>*							currentBones;		/* TRACK */								// Multiple animations will have the same bones.
-	std::vector<BoneLink>*							blendingBones;		/* TRACK */								//
-	std::vector<LineSegment>						displayBones;										// Line Segments between GO bones. For debug purposes.
+	std::vector<GameObject*>				bones;												//
+	std::vector<LineSegment>				displayBones;										// Line Segments between GO bones. For debug purposes.
 
-	std::map<std::string, AnimatorTrack>			tracks;												// Allows to overlap multiple clips with diff. root bones. Ex: "Torso", "Legs", etc.
-	std::map<std::string, AnimatorClip>				clips;												// Segments of animations. "Idle", "Walk", "Attack", etc.
-
-	AnimatorClip*				currentClip;		/* TRACK */
-	AnimatorClip*				blendingClip;		/* TRACK */
+	std::map<std::string, AnimatorTrack>	tracks;												// Allows to overlap multiple clips with diff. root bones. Ex: "Torso", "Legs", etc.
+	std::map<std::string, AnimatorClip>		clips;												// Segments of animations. "Idle", "Walk", "Attack", etc.
 
 	GameObject*					rootBone;
 
@@ -195,11 +154,8 @@ private:																								// --- FUNCTIONALITY VARIABLES
 
 	bool init;
 
-	uint			blendFrames;					/* TRACK */
-
 private:																								// --- GET/SET VARIABLES	
 	float			playbackSpeed;
-	bool			interpolate;					/* TRACK */
 	bool			loopAnimation;					/* DELETE */
 	bool			playOnStart;					/* DELETE */
 	bool			cameraCulling;

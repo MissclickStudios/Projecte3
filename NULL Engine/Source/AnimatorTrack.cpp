@@ -1,5 +1,6 @@
-#include "Profiler.h"
 #include "MathGeoTransform.h"
+#include "JSONParser.h"
+#include "Profiler.h"
 
 #include "VariableTypedefs.h"
 #include "Log.h"
@@ -17,6 +18,7 @@ trackSpeed		(1.0f),
 interpolate		(true),
 name			("[NONE]"),
 rootBone		(nullptr),
+rootBoneUID		(0),
 currentClip		(nullptr),
 blendingClip	(nullptr),
 currentBones	(nullptr),
@@ -26,19 +28,30 @@ blendFrames		(0)
 
 }
 
-AnimatorTrack::AnimatorTrack(const std::string& name, const GameObject* rootBone) :
+AnimatorTrack::AnimatorTrack(const std::string& name, GameObject* rootBone) :
 trackState		(TrackState::STOP),
 trackSpeed		(1.0f),
 interpolate		(true),
 name			(name),
 rootBone		(rootBone),
+rootBoneUID		(0),
 currentClip		(nullptr),
 blendingClip	(nullptr),
 currentBones	(nullptr),
 blendingBones	(nullptr),
 blendFrames		(0)
 {
+	if (rootBone != nullptr)
+	{
+		std::vector<GameObject*> tmp;
+		rootBone->GetAllChilds(tmp);
+		for (auto object = tmp.cbegin(); object != tmp.cend(); ++object)
+		{
+			bones.emplace((*object)->GetUID(), (*object));
+		}
 
+		tmp.clear();
+	}
 }
 
 AnimatorTrack::~AnimatorTrack()
@@ -50,11 +63,15 @@ bool AnimatorTrack::StepTrack(float dt)
 {
 	if (trackState == TrackState::PLAY || trackState == TrackState::STEP)
 	{
-		StepClips(dt);
-
 		if (trackState == TrackState::STEP)
 		{
 			Pause();
+		}
+		
+		bool success = StepClips(dt);
+		if (success)
+		{
+			UpdateChannelTransforms();
 		}
 	}
 
@@ -63,6 +80,36 @@ bool AnimatorTrack::StepTrack(float dt)
 
 bool AnimatorTrack::CleanUp()
 {
+	rootBone = nullptr;
+	bones.clear();
+	
+	currentClip		= nullptr;
+	blendingClip	= nullptr;
+	currentBones	= nullptr;
+	blendingBones	= nullptr;
+
+	return true;
+}
+
+bool AnimatorTrack::SaveState(ParsonNode& root) const
+{
+	root.SetString("Name", name.c_str());
+	root.SetNumber("RootBoneUID", (double)((rootBone != nullptr) ? rootBone->GetUID() : 0));
+
+	root.SetNumber("TrackSpeed", (double)trackSpeed);
+	root.SetBool("Interpolate", interpolate);
+	
+	return true;
+}
+
+bool AnimatorTrack::LoadState(const ParsonNode& root)
+{
+	name		= root.GetString("Name");
+	rootBoneUID = root.GetNumber("RootBoneUID");
+
+	trackSpeed	= (float)root.GetNumber("TrackSpeed");
+	interpolate = root.GetBool("Interpolate");
+	
 	return true;
 }
 
@@ -74,9 +121,12 @@ bool AnimatorTrack::Play()
 		LOG("[ERROR] Animator Track: Could not set Track State to { PLAY }! Error: Both currentClip and blendingClip were nullptr.");
 		return false;
 	}
-	if (currentClip == nullptr && blendingClip != nullptr)
+
+	bool success = ValidateCurrentClip();
+	if (!success)
 	{
-		SwitchBlendingToCurrent();
+		LOG("[ERROR] Animator Track: Could not set Track State to { PLAY }! Error: currentClip could not be validated (currentClip != nullptr).");
+		return false;
 	}
 
 	trackState = TrackState::PLAY;
@@ -128,6 +178,7 @@ bool AnimatorTrack::Stop()
 	return (trackState == TrackState::STOP);
 }
 
+// --- CLIP MANAGEMENT METHODS (PUBLIC)
 bool AnimatorTrack::PlayClip(AnimatorClip* clip, std::vector<BoneLink>* clipBones, uint blendFrames)
 {
 	if (clip == nullptr)
@@ -162,6 +213,221 @@ bool AnimatorTrack::PlayClip(AnimatorClip* clip, std::vector<BoneLink>* clipBone
 	return success;
 }
 
+bool AnimatorTrack::StepToPrevKeyframe()
+{
+	if (trackState == TrackState::PLAY)
+	{
+		LOG("[ERROR] Animator Track: Could not Step Animation to Prev Keyframe in Track { %s }! Error: Cannot Step an unpaused animation.", name.c_str());
+		return false;
+	}
+	if (currentClip == nullptr)
+	{
+		LOG("[ERROR] Animator Track: Could not Step Animation to Prev Keyframe in Track { %s }! Error: Current Clip (AnimatorClip*) was nullptr.", name.c_str());
+		return false;
+	}
+	if (currentBones == nullptr)
+	{
+		LOG("[ERROR] Animator Track: Could not Step Animation to Prev Keyframe in Track { %s }! Error: Current Bones is nullptr.", name.c_str());
+		return false;
+	}
+
+	currentClip->StepClipToPrevKeyframe();
+
+	for (auto bone = currentBones->cbegin(); bone != currentBones->cend(); ++bone)
+	{
+		C_Transform* cTransform = (*bone).gameObject->GetComponent<C_Transform>();
+		if (cTransform == nullptr)
+		{
+			continue;
+		}
+
+		cTransform->ImportTransform(GetInterpolatedTransform((double)currentClip->GetClipTick(), (*bone).channel, cTransform));
+	}
+}
+
+bool AnimatorTrack::StepToNextKeyframe()
+{
+	if (trackState == TrackState::PLAY)
+	{
+		LOG("[ERROR] Animator Track: Could not Step Animation to Next Keyframe in Track { %s }! Error: Cannot Step an unpaused animation.", name.c_str());
+		return false;
+	}
+	if (currentClip == nullptr)
+	{
+		LOG("[ERROR] Animator Track: Could not Step Animation to Next Keyframe in Track { %s }! Error: Current Clip (AnimatorClip*) was nullptr.", name.c_str());
+		return false;
+	}
+	if (currentBones == nullptr)
+	{
+		LOG("[ERROR] Animator Track: Could not Step Animation to Next Keyframe in Track { %s }! Error: Current Bones is nullptr", name.c_str());
+		return false;
+	}
+	
+	currentClip->StepClipToNextKeyframe();
+
+	for (auto bone = currentBones->cbegin(); bone != currentBones->cend(); ++bone)
+	{
+		C_Transform* cTransform = (*bone).gameObject->GetComponent<C_Transform>();
+		if (cTransform == nullptr)
+		{
+			continue;
+		}
+
+		cTransform->ImportTransform(GetInterpolatedTransform((double)currentClip->GetClipTick(), (*bone).channel, cTransform));
+	}
+}
+
+bool AnimatorTrack::CurrentClipExists() const
+{
+	return (currentClip != nullptr);
+}
+
+bool AnimatorTrack::BlendingClipExists() const
+{
+	return (blendingClip != nullptr);
+}
+
+void AnimatorTrack::FreeCurrentClip()
+{
+	currentClip		= nullptr;
+	currentBones	= nullptr;
+}
+
+void AnimatorTrack::FreeBlendingClip()
+{
+	blendingClip	= nullptr;
+	blendingBones	= nullptr;
+	blendFrames		= 0;
+}
+
+// -- GET/SET METHODS
+TrackState AnimatorTrack::GetTrackState()
+{
+	return trackState;
+}
+
+const char* AnimatorTrack::GetTrackStateAsString()
+{
+	switch (trackState)
+	{
+	case TrackState::PLAY:	{ return "PLAY"; }	break;
+	case TrackState::PAUSE: { return "PAUSE"; } break;
+	case TrackState::STEP:	{ return "STEP"; }	break;
+	case TrackState::STOP:	{ return "STOP"; }	break;
+	}
+
+	return "[NONE]";
+}
+
+float AnimatorTrack::GetTrackSpeed() const
+{
+	return trackSpeed;
+}
+
+void AnimatorTrack::SetTrackSpeed(float newTrackSpeed)
+{
+	trackSpeed = (newTrackSpeed >= 0.0f) ? newTrackSpeed : 0.0f;
+}
+
+const char* AnimatorTrack::GetName() const
+{
+	return name.c_str();
+}
+
+GameObject* AnimatorTrack::GetRootBone() const
+{
+	return rootBone;
+}
+
+AnimatorClip* AnimatorTrack::GetCurrentClip() const
+{
+	return currentClip;
+}
+
+AnimatorClip* AnimatorTrack::GetBlendingClip() const
+{
+	return blendingClip;
+}
+
+void AnimatorTrack::SetName(const char* newName)
+{
+	if (newName == nullptr)
+		return;
+	
+	name = newName;
+}
+
+void AnimatorTrack::SetRootBone(GameObject* newRootBone)
+{
+	if (newRootBone == nullptr || rootBone == newRootBone)
+		return;
+	
+	rootBone = newRootBone;
+
+	bones.clear();
+
+	std::vector<GameObject*> tmp;
+	rootBone->GetAllChilds(tmp);
+	for (auto object = tmp.cbegin(); object != tmp.cend(); ++object)
+	{
+		bones.emplace((*object)->GetUID(), (*object));
+	}
+
+	tmp.clear();
+}
+
+bool AnimatorTrack::SetCurrentClip(AnimatorClip* newClip, std::vector<BoneLink>* newBones)
+{
+	if (newClip == nullptr)
+	{
+		LOG("[ERROR] Animator Track: Could not Set Current Clip! Error: Given AnimatorClip* was nullptr.");
+		return false;
+	}
+	if (newClip->GetAnimation() == nullptr)
+	{
+		LOG("[ERROR] Animator Track: Could not Set Current Clip! Error: Given AnimatorClip* had no R_Animation* assigned to it.");
+		return false;
+	}
+	if (newBones == nullptr)
+	{
+		LOG("[ERROR] Animator Track: Could not Set Current Clip! Error: Given std::vector<BoneLink>* was nullptr.");
+		return false;
+	}
+
+	currentClip		= newClip;
+	currentBones	= newBones;
+
+	return true;
+}
+
+bool AnimatorTrack::SetBlendingClip(AnimatorClip* newClip, std::vector<BoneLink>* newBones, uint newBlendFrames)
+{
+	if (newClip == nullptr)
+	{
+		LOG("[ERROR] Animator Track: Could not Set Blending Clip! Error: Given AnimatorClip* was nullptr.");
+		return false;
+	}
+	if (newClip->GetAnimation() == nullptr)
+	{
+		LOG("[ERROR] Animator Track: Could not Set Blending Clip! Error: Given AnimatorClip* had no R_Animation* assigned to it.");
+		return false;
+	}
+	if (newBones == nullptr)
+	{
+		LOG("[ERROR] Animator Track: Could not Set Blending Clip! Error: Given std::vector<BoneLink>* was nullptr.");
+		return false;
+	}
+	
+	blendingClip	= newClip;
+	blendingBones	= newBones;
+	blendFrames		= newBlendFrames;
+
+	blendingClip->ClearClip();																											// Re-setting the clip just in case.
+
+	return true;
+}
+
+// --- CLIP MANAGEMENT METHODS (PRIVATE)
 bool AnimatorTrack::StepClips(float dt)
 {
 	bool currentExists	= (currentClip != nullptr);
@@ -227,133 +493,6 @@ bool AnimatorTrack::StepClips(float dt)
 	return false;
 }
 
-// -- GET/SET METHODS
-TrackState AnimatorTrack::GetTrackState()
-{
-	return trackState;
-}
-
-const char* AnimatorTrack::GetTrackStateAsString()
-{
-	switch (trackState)
-	{
-	case TrackState::PLAY:	{ return "PLAY"; }	break;
-	case TrackState::PAUSE: { return "PAUSE"; } break;
-	case TrackState::STEP:	{ return "STEP"; }	break;
-	case TrackState::STOP:	{ return "STOP"; }	break;
-	}
-
-	return "[NONE]";
-}
-
-float AnimatorTrack::GetTrackSpeed() const
-{
-	return trackSpeed;
-}
-
-void AnimatorTrack::SetTrackSpeed(float newTrackSpeed)
-{
-	trackSpeed = (newTrackSpeed >= 0.0f) ? newTrackSpeed : 0.0f;
-}
-
-const char* AnimatorTrack::GetName() const
-{
-	return name.c_str();
-}
-
-const GameObject* AnimatorTrack::GetRootBone() const
-{
-	return rootBone;
-}
-
-AnimatorClip* AnimatorTrack::GetCurrentClip() const
-{
-	return currentClip;
-}
-
-AnimatorClip* AnimatorTrack::GetBlendingClip() const
-{
-	return blendingClip;
-}
-
-void AnimatorTrack::SetName(const char* newName)
-{
-	if (newName == nullptr)
-		return;
-	
-	name = newName;
-}
-
-void AnimatorTrack::SetRootBone(const GameObject* newRootBone)
-{
-	if (newRootBone == nullptr)
-		return;
-	
-	rootBone = newRootBone;
-}
-
-bool AnimatorTrack::SetCurrentClip(AnimatorClip* newClip, std::vector<BoneLink>* newBones)
-{
-	if (newClip == nullptr)
-	{
-		LOG("[ERROR] Animator Track: Could not Set Current Clip! Error: Given AnimatorClip* was nullptr.");
-		return false;
-	}
-	if (newClip->GetAnimation() == nullptr)
-	{
-		LOG("[ERROR] Animator Track: Could not Set Current Clip! Error: Given AnimatorClip* had no R_Animation* assigned to it.");
-		return false;
-	}
-	if (newBones == nullptr)
-	{
-		LOG("[ERROR] Animator Track: Could not Set Current Clip! Error: Given std::vector<BoneLink>* was nullptr.");
-		return false;
-	}
-
-	currentClip		= newClip;
-	currentBones	= newBones;
-
-	return true;
-}
-
-bool AnimatorTrack::SetBlendingClip(AnimatorClip* newClip, std::vector<BoneLink>* newBones, uint newBlendFrames)
-{
-	if (newClip == nullptr)
-	{
-		LOG("[ERROR] Animator Track: Could not Set Blending Clip! Error: Given AnimatorClip* was nullptr.");
-		return false;
-	}
-	if (newClip->GetAnimation() == nullptr)
-	{
-		LOG("[ERROR] Animator Track: Could not Set Blending Clip! Error: Given AnimatorClip* had no R_Animation* assigned to it.");
-		return false;
-	}
-	if (newBones == nullptr)
-	{
-		LOG("[ERROR] Animator Track: Could not Set Blending Clip! Error: Given std::vector<BoneLink>* was nullptr.");
-		return false;
-	}
-	
-	blendingClip	= newClip;
-	blendingBones	= newBones;
-	blendFrames		= newBlendFrames;
-
-	blendingClip->ClearClip();																											// Re-setting the clip just in case.
-
-	return true;
-}
-
-bool AnimatorTrack::CurrentClipExists() const
-{
-	return (currentClip != nullptr);
-}
-
-bool AnimatorTrack::BlendingClipExists() const
-{
-	return (blendingClip != nullptr);
-}
-
-// --- CLIP MANAGEMENT METHODS
 void AnimatorTrack::SwitchBlendingToCurrent()
 {
 	if (blendingClip == nullptr)
@@ -367,15 +506,12 @@ void AnimatorTrack::SwitchBlendingToCurrent()
 		currentClip->playing = false;
 		currentClip->ClearClip();
 
-		currentClip		= nullptr;
-		currentBones	= nullptr;
+		FreeCurrentClip();
 	}
 
 	SetCurrentClip(blendingClip, currentBones);
 
-	blendingClip	= nullptr;
-	blendingBones	= nullptr;
-	blendFrames		= 0;
+	FreeBlendingClip();
 }
 
 void AnimatorTrack::ResetCurrentBones()
@@ -396,9 +532,18 @@ void AnimatorTrack::ResetCurrentBones()
 
 	for (auto bone = currentBones->cbegin(); bone != currentBones->cend(); ++bone)
 	{
-		//const Transform& iTransform = GetInterpolatedTransform((double)currentClip->GetStart(), bone->channel, bone->gameObject->transform);
 		bone->gameObject->transform->ImportTransform(GetInterpolatedTransform((double)currentClip->GetStart(), bone->channel, bone->gameObject->transform));
 	}
+}
+
+bool AnimatorTrack::ValidateCurrentClip()
+{
+	if (currentClip == nullptr && blendingClip != nullptr)
+	{
+		SwitchBlendingToCurrent();
+	}
+
+	return (currentClip != nullptr);
 }
 
 // --- BONE/CHANNEL UPDATE METHODS
@@ -413,9 +558,13 @@ void AnimatorTrack::UpdateChannelTransforms()
 	}
 
 	for (uint i = 0; i < currentBones->size(); ++i)
-	{
+	{	
 		const BoneLink& bone = currentBones->at(i);																									// (*currentBones)[i] would also be valid.
-		
+		if (bones.find(bone.gameObject->GetUID()) == bones.end())
+		{
+			continue;
+		}
+
 		if (interpolate)
 		{
 			Transform& iTransform = GetInterpolatedTransform(currentClip->GetAnimationFrame(), bone.channel, bone.gameObject->transform);

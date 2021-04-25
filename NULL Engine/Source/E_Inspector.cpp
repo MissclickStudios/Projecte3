@@ -2162,14 +2162,14 @@ void E_Inspector::DisplayAnimatorControls(C_Animator* cAnimator)
 	float minSpeed						= 0.1f;
 	float maxSpeed						= 10.0f;
 	
-	bool interpolate					= cAnimator->GetInterpolate();
+	bool interpolate					= /*cAnimator->GetInterpolate()*/ false;
 	bool loopAnimation					= cAnimator->GetLoopAnimation();
 	bool playOnStart					= cAnimator->GetPlayOnStart();
 	bool cameraCulling					= cAnimator->GetCameraCulling();
 	bool showBones						= cAnimator->GetShowBones();
 	
 	// -- CURRENT CLIP VARIABLES
-	AnimatorClip* currentClip			= cAnimator->GetCurrentClip();
+	AnimatorClip* currentClip			= /*cAnimator->GetCurrentClip()*/ nullptr;
 	
 	if (currentClip == nullptr)
 	{
@@ -2198,7 +2198,7 @@ void E_Inspector::DisplayAnimatorControls(C_Animator* cAnimator)
 	if (ImGui::Combo("Select Clip", &selectedClip, clipNamesString.c_str()))
 	{
 		char selected_name = clipNamesString[selectedClip];
-		cAnimator->SetCurrentClipByIndex((uint)selectedClip);
+		//cAnimator->SetCurrentClipByIndex((uint)selectedClip);
 	}
 
 	if (ImGui::Button("Play"))	{ cAnimator->Play(); }	ImGui::SameLine();
@@ -2208,7 +2208,7 @@ void E_Inspector::DisplayAnimatorControls(C_Animator* cAnimator)
 
 	if (ImGui::SliderFloat("Playback Speed", &speed, minSpeed, maxSpeed, "X %.3f", 0)) { cAnimator->SetPlaybackSpeed(speed); }
 
-	if (ImGui::Checkbox("Interpolate", &interpolate))		{ cAnimator->SetInterpolate(interpolate); }
+	if (ImGui::Checkbox("Interpolate", &interpolate))		{ /*cAnimator->SetInterpolate(interpolate)*/; }
 	if (ImGui::Checkbox("Loop Animation", &loopAnimation))	{ cAnimator->SetLoopAnimation(loopAnimation); }
 	if (ImGui::Checkbox("Play On Start", &playOnStart))		{ cAnimator->SetPlayOnStart(playOnStart); }
 	if (ImGui::Checkbox("Camera Culling", &cameraCulling))	{ cAnimator->SetCameraCulling(cameraCulling); }
@@ -2241,9 +2241,9 @@ void E_Inspector::DisplayAnimatorControls(C_Animator* cAnimator)
 	// --- ANIMATOR DEBUG CONTROLS
 	ImGui::TextColored(Cyan.C_Array(), "Debug Controls");
 
-	if (ImGui::Button("Previous Keyframe"))		{ cAnimator->StepToPrevKeyframe(); }	ImGui::SameLine(150.0f);
-	if (ImGui::Button("Next Keyframe"))			{ cAnimator->StepToNextKeyframe(); }
-	if (ImGui::Button("Refresh Bone Display"))	{ cAnimator->RefreshBoneDisplay(); }
+	if (ImGui::Button("Previous Keyframe"))		{ /*cAnimator->StepToPrevKeyframe()*/; }	ImGui::SameLine(150.0f);
+	if (ImGui::Button("Next Keyframe"))			{ /*cAnimator->StepToNextKeyframe()*/; }
+	if (ImGui::Button("Refresh Bone Display"))	{ /*cAnimator->RefreshBoneDisplay()*/; }
 }
 
 void E_Inspector::DisplayClipManager(C_Animator* cAnimator)
