@@ -92,25 +92,22 @@ struct PointLight
 };
 #define MAX_LIGHTPOINTS 5
 
+float specularStrength = 0.5;
+
 uniform int numPointLights;
 uniform DirLight dirLight;
 uniform PointLight pointLight[MAX_LIGHTPOINTS];
 uniform vec3 viewPos; 
-float specularStrength = 0.5;
-
-uniform vec4 outlineColor = vec4(0,0,0,1);
-uniform float litOutlineThickness = 0.1;
-uniform float unlitOutlineThickness = 0.4;
+uniform vec4 alternateColor;
+uniform bool takeDamage;
+uniform bool hasTexture;
+uniform sampler2D ourTexture;
 
 in vec4 objectColor;
 in vec2 TexCoord;
 in vec3 modelNormal;
 in vec3 fragPos;
 out vec4 color;
-
-uniform bool takeDamage;
-uniform bool hasTexture;
-uniform sampler2D ourTexture;
 
 vec4 CalculateDirectional(DirLight light, vec3 normal, vec3 viewDir, float specularStrength, vec4 objectColor);
 vec4 CalculatePointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir, float specularStrength, vec4 objectColor);
@@ -130,20 +127,18 @@ void main()
             outputColor += CalculatePointLight(pointLight[i], norm, fragPos, viewDir, specularStrength, objectColor);
        }
    }
-  vec4 texColor = (hasTexture) ? texture(ourTexture, TexCoord) : vec4(1,1,1,1);
+    
+     vec4 texColor = (hasTexture) ? texture(ourTexture, TexCoord) : vec4(1,1,1,1);
 
-if(takeDamage) outputColor = vec4(1,0,0,1);
+    if(takeDamage)
+    {
+        color = alternateColor * texColor;
+    }
+    else 
+    {
+        color = outputColor * texColor;
+    }
 
-   color = outputColor * texColor;
-
-
-    // if (dot(viewDir, norm) 
-    //     < mix(unlitOutlineThickness, litOutlineThickness, 
-    //     max(0.0, dot(norm, dirLight.direction))))
-    //  {
-    //     color = objectColor * outlineColor; 
-        
-    //  }
 
 }
 

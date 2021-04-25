@@ -236,6 +236,36 @@ void C_Material::SetMaterialColour(float r, float g, float b, float a)
 	}
 }
 
+Color C_Material::GetAlternateColour()
+{
+	if (rMaterial != nullptr)
+	{
+		return rMaterial->alternateColor;
+	}
+
+	return Color();
+}
+
+void C_Material::SetAlternateColour(const Color& newColour)
+{
+	if (rMaterial != nullptr)
+	{
+		rMaterial->alternateColor = newColour;
+	}
+}
+
+void C_Material::SetAlternateColour(float r, float g, float b, float a)
+{
+	if (rMaterial != nullptr)
+	{
+		rMaterial->alternateColor = Color(r, g, b, a);
+	}
+	else
+	{
+		LOG("[ERROR] Material Component of %s has no Material Resource!", this->GetOwner()->GetName());
+	}
+}
+
 void C_Material::AddTextureMap(TextureMap textureMap, uint texId)
 {
 	//texture_maps[(uint)textureMap] = texId;

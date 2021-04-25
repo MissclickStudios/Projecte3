@@ -130,6 +130,7 @@ void Entity::TakeDamage(float damage)
 
 	if (material)
 	{
+		material->SetAlternateColour(Color(1, 0, 0, 1));
 		material->SetTakeDamage(true);
 		hitTimer.Start();
 	}

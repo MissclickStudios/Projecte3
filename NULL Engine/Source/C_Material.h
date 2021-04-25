@@ -61,7 +61,11 @@ public:																						// --- GET/SET RESOURCES
 	Color			GetMaterialColour		();
 	void			SetMaterialColour		(const Color& newColour);
 	void			SetMaterialColour		(float r, float g, float b, float a);
-			
+	
+	Color			GetAlternateColour();
+	void			SetAlternateColour(const Color& newColour);
+	void			SetAlternateColour(float r, float g, float b, float a);
+
 	void			AddTextureMap			(TextureMap textureMap, uint texId);
 	void			SetCurrentTextureMap	(TextureMap textureMap);
 			

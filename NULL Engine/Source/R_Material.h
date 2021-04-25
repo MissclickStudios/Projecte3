@@ -58,7 +58,7 @@ public:
 public:
 	std::vector<MaterialData>	materials;									// In the end the amount of materials that will be used is "constant". It could be an array as mat[7] = { 0, 0,... };
 	Color						diffuseColor;
-
+	Color						alternateColor;
 private:
 	MaterialSettings			materialSettings;
 };
