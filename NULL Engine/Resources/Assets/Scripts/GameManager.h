@@ -19,6 +19,7 @@ public:
     void InitiateLevel(int level);
     void Continue();
     void ReturnHub();
+    void ReturnToMainMenu();
 
 private:
     //Level Generator
@@ -36,10 +37,10 @@ public:
     std::string mainMenuScene;
     std::string SpawnPointName;
     Prefab playerPrefab;
+    Player* playerScript = nullptr;
 
 private:
     GameObject* playerGameObject = nullptr;
-    Player* playerScript = nullptr;
     const char* saveFileName = "GameState.json";
     int	currentLevel = 0;
     int	roomNum = 0;

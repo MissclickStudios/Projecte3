@@ -29,6 +29,9 @@ C_Canvas::C_Canvas(GameObject* owner) : Component(owner, ComponentType::CANVAS)
 {
 	isInvisible = false;
 
+	App->uiSystem->priorityIterator++;
+	priority = App->uiSystem->priorityIterator;
+
 	// New one will allways be the input receiving canvas
 	App->uiSystem->AddNewCanvas(this);
 }
@@ -124,6 +127,8 @@ bool C_Canvas::SaveState(ParsonNode& root) const
 
 	ParsonNode canvas = root.SetNode("Canvas");
 
+	canvas.SetBool("IsActive", IsActive());
+
 	canvas.SetNumber("X", GetRect().x);
 	canvas.SetNumber("Y", GetRect().y);
 	canvas.SetNumber("W", GetRect().w);
@@ -135,6 +140,8 @@ bool C_Canvas::SaveState(ParsonNode& root) const
 	else
 		canvas.SetBool("IsInputCanvas", false);
 
+	canvas.SetInteger("Priority", priority);
+
 	return ret;
 }
 
@@ -143,6 +150,8 @@ bool C_Canvas::LoadState(ParsonNode& root)
 	bool ret = true;
 
 	ParsonNode canvas = root.GetNode("Canvas");
+
+	SetIsActive(canvas.GetBool("IsActive"));
 
 	Rect2D r;
 
@@ -159,6 +168,8 @@ bool C_Canvas::LoadState(ParsonNode& root)
 	if (canvas.GetBool("IsInputCanvas"))
 		App->uiSystem->inputCanvas = this;
 	
+	//priority = canvas.GetInteger("Priority");
+
 	return ret;
 }
 
@@ -169,6 +180,10 @@ bool C_Canvas::CheckButtonStates()
 
 	if (selectedButton != nullptr)
 	{
+		if (selectedButton->GetState() == UIButtonState::RELEASED)
+		{
+			selectedButton->SetState(UIButtonState::HOVERED);
+		}
 
 		// Check for selected button getting pressed
 		if (App->input->GetKey(SDL_SCANCODE_RETURN) == KeyState::KEY_DOWN || App->input->GetKey(SDL_SCANCODE_RETURN) == KeyState::KEY_REPEAT || App->input->GetGameControllerButton(0) == ButtonState::BUTTON_DOWN || App->input->GetGameControllerButton(0) == ButtonState::BUTTON_REPEAT)
@@ -178,20 +193,20 @@ bool C_Canvas::CheckButtonStates()
 
 		else if (App->input->GetKey(SDL_SCANCODE_RETURN) == KeyState::KEY_UP || App->input->GetGameControllerButton(0) == ButtonState::BUTTON_UP)
 		{
-			selectedButton->OnReleased(); /*(?)*/
+			selectedButton->OnReleased();
 		}
 
 
-		// Check for hovered button getting pressed
-		if (App->input->GetMouseButton(0) == KeyState::KEY_DOWN || App->input->GetMouseButton(0) == KeyState::KEY_REPEAT)
-		{
-			hoveredButton->OnPressed();
-		}
+		//// Check for hovered button getting pressed
+		//if (App->input->GetMouseButton(0) == KeyState::KEY_DOWN || App->input->GetMouseButton(0) == KeyState::KEY_REPEAT)
+		//{
+		//	hoveredButton->OnPressed();
+		//}
 
-		else if (App->input->GetMouseButton(0) == KeyState::KEY_UP)
-		{
-			hoveredButton->OnReleased();
-		}
+		//else if (App->input->GetMouseButton(0) == KeyState::KEY_UP)
+		//{
+		//	hoveredButton->OnReleased();
+		//}
 
 
 		// Check inputs for controller/keyboard
@@ -200,7 +215,7 @@ bool C_Canvas::CheckButtonStates()
 			bool prev = false;
 			bool next = false;
 
-			if ((App->input->GetKey(SDL_SCANCODE_UP) == KeyState::KEY_DOWN || App->input->GetGameControllerAxis(0) == AxisState::POSITIVE_AXIS_DOWN) && !selectedButton->IsPressed())
+			if ((App->input->GetKey(SDL_SCANCODE_UP) == KeyState::KEY_DOWN || App->input->GetGameControllerAxis(1) == AxisState::NEGATIVE_AXIS_DOWN) && !selectedButton->IsPressed())
 			{
 				for (std::vector<C_UI_Button*>::reverse_iterator buttonIt = activeButtons.rbegin(); buttonIt != activeButtons.rend(); buttonIt++)
 				{
@@ -223,7 +238,7 @@ bool C_Canvas::CheckButtonStates()
 					selectedButton->SetState(UIButtonState::HOVERED);
 			}
 
-			if ((App->input->GetKey(SDL_SCANCODE_DOWN) == KeyState::KEY_DOWN || App->input->GetGameControllerAxis(0) == AxisState::NEGATIVE_AXIS_DOWN) && !selectedButton->IsPressed())
+			if ((App->input->GetKey(SDL_SCANCODE_DOWN) == KeyState::KEY_DOWN || App->input->GetGameControllerAxis(1) == AxisState::POSITIVE_AXIS_DOWN) && !selectedButton->IsPressed())
 			{
 				for (std::vector<C_UI_Button*>::iterator buttonIt = activeButtons.begin(); buttonIt != activeButtons.end(); buttonIt++)
 				{
@@ -247,14 +262,16 @@ bool C_Canvas::CheckButtonStates()
 			}
 		}
 
+		//	!!!		Work In Progress	!!!
+
 		// Checking for inputs with mouse
-		if (activeButtons.size() > 1)
+		/*if (activeButtons.size() > 1)
 		{
 			for (std::vector<C_UI_Button*>::const_iterator buttonIt = activeButtons.cbegin(); buttonIt != activeButtons.cend(); buttonIt++)
 			{
 				float2 mousePos = { (float)App->input->GetMouseX(), (float)App->input->GetMouseY() };
 			}
-		}
+		}*/
 	}
 	else if (activeButtons.size() > 1)
 	{

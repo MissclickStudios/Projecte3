@@ -63,7 +63,7 @@
 #include "MathGeoLib/include/Math/float3.h"
 
 #include <fstream>
-
+#include "CoreDllHelpers.h"
 #include "MemoryManager.h"
 
 #define MAX_VALUE 100000
@@ -762,7 +762,9 @@ void E_Inspector::DrawAnimatorComponent(C_Animator* cAnimator)								// TODO: S
 	{
 		if (cAnimator != nullptr)
 		{
-			DrawBasicSettings((Component*)cAnimator, cAnimator->GetAnimatorStateAsString().c_str());
+			std::string animator = cAnimator->GetAnimatorStateAsString();
+			DrawBasicSettings((Component*)cAnimator, animator.c_str());
+			CoreCrossDllHelpers::CoreReleaseString(animator);
 
 			// --- DISPLAY
 			if (ImGui::BeginTabBar("AnimatorTabBar", ImGuiTabBarFlags_None))
@@ -1270,32 +1272,6 @@ void E_Inspector::DrawUIImageComponent(C_UI_Image* image)
 
 		if (ImGui::DragFloat2("Image Pos", (float*)&pos, 0.005f, 0.0f, 0.0f, "%.3f", NULL))
 		{
-			/*if (pos.x - size.x / 2 < canvas->GetPosition().x - canvas->GetSize().x / 2)
-				pos.x = canvas->GetPosition().x - canvas->GetSize().x / 2 + size.x / 2;
-
-			if (pos.x + size.x / 2 > canvas->GetPosition().x + canvas->GetSize().x / 2)
-				pos.x = canvas->GetPosition().x + canvas->GetSize().x / 2 - size.x / 2;
-
-
-			if (pos.y - size.y / 2 < canvas->GetPosition().y - canvas->GetSize().y / 2)
-				pos.y = canvas->GetPosition().y - canvas->GetSize().y / 2 + size.y / 2;
-
-			if (pos.y + size.y / 2 > canvas->GetPosition().y + canvas->GetSize().y / 2)
-				pos.y = canvas->GetPosition().y + canvas->GetSize().y / 2 - size.y / 2;*/
-
-			if (pos.x  > canvas->GetPosition().x + canvas->GetSize().x - offset)
-				pos.x =  canvas->GetPosition().x + canvas->GetSize().x - offset;
-
-			else if (pos.x - size.x < canvas->GetPosition().x - canvas->GetSize().x + offset)
-				pos.x = canvas->GetPosition().x - canvas->GetSize().x + size.x + offset;
-
-			else if (pos.y - size.y > canvas->GetPosition().y + canvas->GetSize().y - offset)
-				pos.y = canvas->GetPosition().y + canvas->GetSize().y + size.y - offset;
-
-			else if (pos.y  < canvas->GetPosition().y - canvas->GetSize().y + offset)
-				pos.y = canvas->GetPosition().y - canvas->GetSize().y  + offset;
-
-
 			image->SetX(pos.x);
 			image->SetY(pos.y);
 		}
@@ -1347,20 +1323,6 @@ void E_Inspector::DrawUITextComponent(C_UI_Text* text)
 
 		if (ImGui::DragFloat2("Text Pos", (float*)&pos, 0.005f, 0.0f, 0.0f, "%.3f", NULL))
 		{
-
-	/*		if (pos.x > canvas->GetPosition().x + canvas->GetSize().x - offset )
-				pos.x = canvas->GetPosition().x + canvas->GetSize().x - offset;
-
-			else if (pos.x - size.x < canvas->GetPosition().x - canvas->GetSize().x + offset)
-				pos.x = canvas->GetPosition().x - canvas->GetSize().x + size.x + offset;
-
-			else if (pos.y - size.y > canvas->GetPosition().y + canvas->GetSize().y - offset)
-				pos.y = canvas->GetPosition().y + canvas->GetSize().y + size.y - offset;
-
-			else if (pos.y < canvas->GetPosition().y - canvas->GetSize().y + offset)
-				pos.y = canvas->GetPosition().y - canvas->GetSize().y + offset;*/
-
-
 			text->SetX(pos.x);
 			text->SetY(pos.y);
 		}
@@ -1698,19 +1660,6 @@ void E_Inspector::DrawUIButtonComponent(C_UI_Button* button)
 
 		if (ImGui::DragFloat2("Button Pos", (float*)&pos, 0.005f, 0.0f, 0.0f, "%.3f", NULL))
 		{
-			if (pos.x - size.x / 2 < canvas->GetPosition().x - canvas->GetSize().x / 2)
-				pos.x = canvas->GetPosition().x - canvas->GetSize().x / 2 + size.x / 2;
-
-			if (pos.x + size.x / 2 > canvas->GetPosition().x + canvas->GetSize().x / 2)
-				pos.x = canvas->GetPosition().x + canvas->GetSize().x / 2 - size.x / 2;
-
-
-			if (pos.y - size.y / 2 < canvas->GetPosition().y - canvas->GetSize().y / 2)
-				pos.y = canvas->GetPosition().y - canvas->GetSize().y / 2 + size.y / 2;
-
-			if (pos.y + size.y / 2 > canvas->GetPosition().y + canvas->GetSize().y / 2)
-				pos.y = canvas->GetPosition().y + canvas->GetSize().y / 2 - size.y / 2;
-
 			button->SetX(pos.x);
 			button->SetY(pos.y);
 		}
@@ -1936,7 +1885,7 @@ void E_Inspector::DrawAnimator2DComponent(C_2DAnimator* cAnimator)
 
 		static char buffer2[64];
 		strcpy_s(buffer2, cAnimator->GetName(3));
-		if (ImGui::InputText("Aditional Animation Name 1", buffer2, IM_ARRAYSIZE(buffer), ImGuiInputTextFlags_EnterReturnsTrue))
+		if (ImGui::InputText("Aditional Animation Name 1", buffer2, IM_ARRAYSIZE(buffer2), ImGuiInputTextFlags_EnterReturnsTrue))
 		{
 			cAnimator->ChangeName(buffer2, 3);
 			cAnimator->GetAnimationSprites(buffer2, 3);
@@ -2324,6 +2273,8 @@ void E_Inspector::DisplayAnimatorControls(C_Animator* cAnimator)
 	if (ImGui::Button("Previous Keyframe"))		{ cAnimator->StepToPrevKeyframe(); }	ImGui::SameLine(150.0f);
 	if (ImGui::Button("Next Keyframe"))			{ cAnimator->StepToNextKeyframe(); }
 	if (ImGui::Button("Refresh Bone Display"))	{ cAnimator->RefreshBoneDisplay(); }
+
+	CoreCrossDllHelpers::CoreReleaseString(clipNamesString);
 }
 
 void E_Inspector::DisplayClipManager(C_Animator* cAnimator)

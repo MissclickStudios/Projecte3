@@ -13,8 +13,10 @@ typedef unsigned int uint;
 class GameObject;
 class C_RigidBody;
 class C_Animator;
-class C_ParticleSystem;
 class C_Material;
+
+class C_ParticleSystem;
+class EmitterInstance;
 
 enum class EntityType
 {
@@ -47,7 +49,7 @@ public:
 	// Interactions
 	virtual void TakeDamage(float damage);
 	virtual void GiveHeal(float amount);
-	void AddEffect(EffectType type, float duration, bool permanent = false);
+	Effect* AddEffect(EffectType type, float duration, bool permanent = false);
 	
 	// Effect Functions
 	virtual void Frozen();
@@ -80,6 +82,7 @@ public:
 	float cooldownModifier = DEFAULT_MODIFIER;
 
 	// Death
+	float hitDuration = 0.25f;
 	float deathDuration = 0.0f; // Time between the entity dies and it gets removed
 	
 	// Basic Animations
@@ -98,7 +101,9 @@ protected:
 	AnimationInfo* currentAnimation = nullptr;
 
 	// Particles
-	C_ParticleSystem* hitParticle = nullptr;
+	C_ParticleSystem* particles = nullptr;
+	
+	EmitterInstance* hitParticles = nullptr;
 
 	//Material
 	C_Material* material = nullptr;

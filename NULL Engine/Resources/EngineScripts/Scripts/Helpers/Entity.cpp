@@ -3,8 +3,10 @@
 #include "GameObject.h"
 #include "C_RigidBody.h"
 #include "C_Animator.h"
-#include "C_ParticleSystem.h"
 #include "C_Material.h"
+
+#include "C_ParticleSystem.h"
+#include "Emitter.h"
 
 #include "ScriptMacros.h"
 
@@ -31,8 +33,16 @@ void Entity::Awake()
 	animator = gameObject->GetComponent<C_Animator>();
 	currentAnimation = &idleAnimation;
 
-	//hitParticle = gameObject->GetComponent<C_ParticleSystem>();
-	//hitParticle->StopSpawn();
+	// TODO: Particles with prefabs
+	particles = gameObject->GetComponent<C_ParticleSystem>();
+	if (particles)
+	{
+		particles->StopSpawn();
+
+		for (uint i = 0; i < particles->emitterInstances.size(); ++i)
+			if (particles->emitterInstances[i]->emitter->name == "Hit")
+				hitParticles = particles->emitterInstances[i];
+	}
 
 	for (uint i = 0; i < gameObject->childs.size(); ++i)
 	{
@@ -53,12 +63,16 @@ void Entity::Awake()
 void Entity::Start()
 {
 	deathTimer.Stop();
+	hitTimer.Stop();
 
 	SetUp();
 }
 
 void Entity::PreUpdate()
 {
+	if (material)
+		material->SetTakeDamage(false);
+
 	// Set modifiers back to the default state
 	maxHealthModifier = 0.0f;
 	speedModifier = DEFAULT_MODIFIER;
@@ -95,6 +109,18 @@ void Entity::PreUpdate()
 				--i;
 		}
 	}
+
+	if (material && hitTimer.IsActive())
+	{
+		material->SetAlternateColour(Color(1, 0, 0, 1));
+		material->SetTakeDamage(true);
+		if (material && hitTimer.ReadSec() > hitDuration)
+		{
+			hitTimer.Stop();
+			if (hitParticles)
+				hitParticles->stopSpawn = true;
+		}
+	}
 }
 
 void Entity::PostUpdate()
@@ -111,11 +137,6 @@ void Entity::PostUpdate()
 		else
 			animator->PlayClip(currentAnimation->name, currentAnimation->blendTime); // If there is no clip playing play the current animation
 	}
-
-	if (hitTimer.ReadSec() > 0.2 &&  material)
-	{
-		if(material->GetTakeDamage()) material->SetTakeDamage(false);
-	}
 }
 
 void Entity::OnCollisionEnter(GameObject* object)
@@ -128,12 +149,9 @@ void Entity::TakeDamage(float damage)
 	if (health < 0.0f)
 		health = 0.0f;
 
-	if (material)
-	{
-		material->SetTakeDamage(true);
-		hitTimer.Start();
-	}
-	
+	hitTimer.Start();
+	if (hitParticles)
+		hitParticles->stopSpawn = false;
 }
 
 void Entity::GiveHeal(float amount)
@@ -143,20 +161,31 @@ void Entity::GiveHeal(float amount)
 		health = MaxHealth();
 }
 
-void Entity::AddEffect(EffectType type, float duration, bool permanent)
+Effect* Entity::AddEffect(EffectType type, float duration, bool permanent)
 {
+	Effect* output = nullptr;
 	// TODO: System to add a max stack to each effect so that more than one can exist at once
 
 	if (effectCounters[(uint)type]) // Check that this effect is not already on the entity
-		return;
-	effects.emplace_back(new Effect(type, duration, permanent)); // I use emplace instead of push to avoid unnecessary copies
+		return output;
+	
+	output = new Effect(type, duration, permanent);
+	effects.emplace_back(output); // I use emplace instead of push to avoid unnecessary copies
 	++effectCounters[(uint)type]; // Add one to the counter of this effect
+
+	return output;
 }
 
 void Entity::Frozen()
 {
 	speedModifier /= 2.5;
 	attackSpeedModifier /= 2.5;
+
+	if (material)
+	{
+		material->SetAlternateColour(Color(0, 1, 1, 1));
+		material->SetTakeDamage(true);
+	}
 }
 
 void Entity::Heal(Effect* effect)

@@ -19,7 +19,8 @@ enum class UIButtonState
 	NONE = 0,
 	IDLE,
 	HOVERED,
-	PRESSED
+	PRESSED,
+	RELEASED
 };
 
 class NULL_API C_UI_Button : public Component

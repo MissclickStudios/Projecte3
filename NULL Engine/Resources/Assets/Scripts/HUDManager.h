@@ -6,6 +6,7 @@
 
 class GameObject;
 class C_2DAnimator;
+class C_UI_Text;
 class Player;
 
 class SCRIPTS_API HUDManager : public Script {
@@ -16,12 +17,21 @@ public:
 	void Start() override;
 	void Update() override;
 
-	std::string mandoImageName = "Back";
-	std::string secondaryWeaponImageName = "Back";
-	std::string primaryWeaponImageName = "Back";
-	std::string dashImageName = "Back";
-	std::string creditsImageName = "Back";
-	std::string playerName = "Back";
+	std::string mandoImageName = "Mando";
+	std::string secondaryWeaponImageName = "SecodaryWeapon";
+	std::string primaryWeaponImageName = "PrimaryWeapon";
+	std::string dashImageName = "Dash";
+	std::string creditsImageName = "Credits";
+	std::string playerName = "Mandalorian";
+
+	std::string debugMenuCanvasName = "DebugMenuCanvas";
+	std::string hubShopCanvasName = "hubShopCanvas";
+	std::string hudCanvasName = "hubShopCanvas";
+	std::string pauseMenuCanvasName = "pauseMenuCanvas";
+
+	std::string creditsTextName = "CreditsText";
+	std::string beskarTextName = "BeskarText";
+	std::string ammoTextName = "AmmoText";
 
 private:
 	C_2DAnimator* mandoImage;
@@ -32,6 +42,15 @@ private:
 
 	GameObject* playerObject;
 	Player* player;
+
+	C_Canvas* debugMenuCanvas = nullptr;
+	C_Canvas* hubShopCanvas = nullptr;
+	C_Canvas* hudCanvas = nullptr;
+	C_Canvas* pauseMenuCanvas = nullptr;
+
+	C_UI_Text* creditsText = nullptr;
+	C_UI_Text* beskarText = nullptr;
+	C_UI_Text* ammoText = nullptr;
 };
 
 SCRIPTS_FUNCTION HUDManager* CreateHUDManager() {
@@ -41,5 +60,14 @@ SCRIPTS_FUNCTION HUDManager* CreateHUDManager() {
 	INSPECTOR_STRING(script->primaryWeaponImageName);
 	INSPECTOR_STRING(script->dashImageName);
 	INSPECTOR_STRING(script->creditsImageName);
+	INSPECTOR_STRING(script->playerName);
+	INSPECTOR_STRING(script->debugMenuCanvasName);
+	INSPECTOR_STRING(script->hubShopCanvasName);
+	INSPECTOR_STRING(script->hudCanvasName);
+	INSPECTOR_STRING(script->pauseMenuCanvasName);
+
+	INSPECTOR_STRING(script->creditsTextName);
+	INSPECTOR_STRING(script->beskarTextName);
+	INSPECTOR_STRING(script->ammoTextName);
 	return script;
 }

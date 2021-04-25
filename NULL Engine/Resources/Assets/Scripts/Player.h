@@ -75,6 +75,11 @@ public:
 	PlayerState moveState = PlayerState::IDLE;
 	AimState aimState = AimState::IDLE;
 
+	// Debug
+	void SetGodMode(bool enable);
+
+	bool GetGodMode()const;
+
 private:
 
 	// Logic
@@ -103,6 +108,8 @@ private:
 	Timer dashTimer;
 	Timer dashCooldownTimer;
 
+	EmitterInstance* dashParticles = nullptr;
+
 	// Invencibility frames
 	Timer invencibilityTimer;
 
@@ -114,6 +121,9 @@ private:
 	Weapon* blasterWeapon = nullptr;
 	Weapon* equipedGunWeapon = nullptr;
 	Weapon* currentWeapon = nullptr;
+
+	// Debug
+	bool godMode = false;
 };
 
 SCRIPTS_FUNCTION Player* CreatePlayer();

@@ -1,0 +1,373 @@
+{
+    "UID": 678408410,
+    "ParentUID": 1474137658,
+    "PrefabID": 1100574213,
+    "IsPrefab": true,
+    "Name": "IG11",
+    "IsActive": true,
+    "IsStatic": false,
+    "IsSceneRoot": false,
+    "MaintainThroughScenes": false,
+    "ShowBoundingBoxes": true,
+    "Components": [
+        {
+            "Type": 1,
+            "LocalPosition": [
+                -1.5402927398681641,
+                4.0984783172607422,
+                -4.1351985931396484
+            ],
+            "LocalRotation": [
+                0,
+                0,
+                0,
+                1
+            ],
+            "LocalScale": [
+                0.14999999105930328,
+                0.15000000596046448,
+                0.14999999105930328
+            ]
+        },
+        {
+            "Type": 8,
+            "Is Static": false,
+            "Filter": " enemy",
+            "Mass": 10,
+            "Density": 1,
+            "Linear Damping": 0,
+            "Angular Damping": 0,
+            "Use Gravity": false,
+            "Is Kinematic": true,
+            "Freeze Position X": false,
+            "Freeze Position Y": true,
+            "Freeze Position Z": false,
+            "Freeze Rotation X": true,
+            "Freeze Rotation Y": true,
+            "Freeze Rotation Z": true
+        },
+        {
+            "Type": 9,
+            "Is Trigger": false,
+            "Show Collider": true,
+            "Size X": 4,
+            "Size Y": 30,
+            "Size Z": 4,
+            "Center X": 0,
+            "Center Y": 0,
+            "Center Z": 0
+        },
+        {
+            "Type": 24,
+            "ResourceUID": 1967475610,
+            "AssetsPath": "Assets\/Scripts\/\/IG11.h",
+            "DataName": "IG11",
+            "HasInspector": true,
+            "InspectorVariables": [
+                {
+                    "Type": 5,
+                    "Name": "playerName",
+                    "string": "Mandalorian"
+                },
+                {
+                    "Type": 2,
+                    "Name": "health",
+                    "float": 10
+                },
+                {
+                    "Type": 2,
+                    "Name": "maxHealth",
+                    "float": 10
+                },
+                {
+                    "Type": 2,
+                    "Name": "speed",
+                    "float": 30
+                },
+                {
+                    "Type": 2,
+                    "Name": "attackSpeed",
+                    "float": 0
+                },
+                {
+                    "Type": 2,
+                    "Name": "damage",
+                    "float": 1
+                },
+                {
+                    "Type": 2,
+                    "Name": "defense",
+                    "float": 1
+                },
+                {
+                    "Type": 2,
+                    "Name": "maxHealthModifier",
+                    "float": 0
+                },
+                {
+                    "Type": 2,
+                    "Name": "speedModifier",
+                    "float": 1
+                },
+                {
+                    "Type": 2,
+                    "Name": "attackSpeedModifier",
+                    "float": 1
+                },
+                {
+                    "Type": 2,
+                    "Name": "damageModifier",
+                    "float": 1
+                },
+                {
+                    "Type": 2,
+                    "Name": "defenseModifier",
+                    "float": 1
+                },
+                {
+                    "Type": 2,
+                    "Name": "cooldownModifier",
+                    "float": 1
+                },
+                {
+                    "Type": 2,
+                    "Name": "deathDuration",
+                    "float": 1
+                },
+                {
+                    "Type": 2,
+                    "Name": "chaseDistance",
+                    "float": 200
+                },
+                {
+                    "Type": 2,
+                    "Name": "chaseSpeedModifier",
+                    "float": 1.25
+                },
+                {
+                    "Type": 2,
+                    "Name": "fleeDistance",
+                    "float": 0
+                },
+                {
+                    "Type": 2,
+                    "Name": "attackDistance",
+                    "float": 60
+                },
+                {
+                    "Type": 2,
+                    "Name": "specialAttackSpeed",
+                    "float": 200
+                },
+                {
+                    "Type": 2,
+                    "Name": "specialAttackSpins",
+                    "float": 2
+                },
+                {
+                    "Type": 2,
+                    "Name": "specialAttackHp",
+                    "float": 5
+                },
+                {
+                    "Type": 2,
+                    "Name": "specialAttackCooldown",
+                    "float": 10
+                },
+                {
+                    "Type": 4,
+                    "Name": "blaster",
+                    "prefab": 2046813174
+                },
+                {
+                    "Type": 4,
+                    "Name": "sniper",
+                    "prefab": 2046813174
+                }
+            ]
+        }
+    ],
+    "Children": [
+        {
+            "UID": 325653473,
+            "ParentUID": 678408410,
+            "PrefabID": 1100574213,
+            "IsPrefab": true,
+            "Name": "IG11 Mesh",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        1.9073486328125e-06,
+                        0,
+                        -15.714723587036133
+                    ],
+                    "LocalRotation": [
+                        -0.7071068286895752,
+                        -4.0822414079742103e-15,
+                        -6.3220348067716259e-08,
+                        0.7071068286895752
+                    ],
+                    "LocalScale": [
+                        1,
+                        0.99999898672103882,
+                        0.99999994039535522
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 981539682,
+                    "Name": "IG11.nemesh",
+                    "Path": "Library\/Meshes\/981539682.nemesh",
+                    "File": "981539682.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false,
+                    "Outline": false,
+                    "OutlineThickness": -2147483648,
+                    "OutlineColor": [
+                        0,
+                        0,
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 697069335,
+                        "Color": [
+                            1,
+                            1,
+                            1,
+                            1
+                        ],
+                        "Name": "IG11.nemat",
+                        "Path": "Library\/Materials\/697069335.nemat",
+                        "File": "697069335.nemat"
+                    },
+                    "Texture": {
+                        "AssetsPath": "Assets\/Textures\/Enemies\/IG11\/IG11_Texture.png",
+                        "AssetsName": "IG11_Texture.png",
+                        "LibaryPath": "Library\/Textures\/1828717129.netex",
+                        "LibraryFile": "1828717129.netex"
+                    },
+                    "Shader": {
+                        "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
+                        "AssetsName": "DefaultShader.shader",
+                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
+                        "LibraryFile": "800223282.neshader"
+                    }
+                }
+            ],
+            "Children": []
+        },
+        {
+            "UID": 1669936436,
+            "ParentUID": 678408410,
+            "PrefabID": 1100574213,
+            "IsPrefab": true,
+            "Name": "Skeleton",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ],
+            "Children": [
+                {
+                    "UID": 732574596,
+                    "ParentUID": 1669936436,
+                    "PrefabID": 1100574213,
+                    "IsPrefab": true,
+                    "Name": "HandLeft",
+                    "IsActive": true,
+                    "IsStatic": false,
+                    "IsSceneRoot": false,
+                    "MaintainThroughScenes": false,
+                    "ShowBoundingBoxes": false,
+                    "Components": [
+                        {
+                            "Type": 1,
+                            "LocalPosition": [
+                                15,
+                                42,
+                                24
+                            ],
+                            "LocalRotation": [
+                                0,
+                                0,
+                                0,
+                                1
+                            ],
+                            "LocalScale": [
+                                1,
+                                1,
+                                1
+                            ]
+                        }
+                    ],
+                    "Children": []
+                },
+                {
+                    "UID": 824326128,
+                    "ParentUID": 1669936436,
+                    "PrefabID": 1100574213,
+                    "IsPrefab": true,
+                    "Name": "HandRight",
+                    "IsActive": true,
+                    "IsStatic": false,
+                    "IsSceneRoot": false,
+                    "MaintainThroughScenes": false,
+                    "ShowBoundingBoxes": false,
+                    "Components": [
+                        {
+                            "Type": 1,
+                            "LocalPosition": [
+                                -15,
+                                42,
+                                24
+                            ],
+                            "LocalRotation": [
+                                0,
+                                0,
+                                0,
+                                1
+                            ],
+                            "LocalScale": [
+                                1,
+                                1,
+                                1
+                            ]
+                        }
+                    ],
+                    "Children": []
+                }
+            ]
+        }
+    ]
+} 

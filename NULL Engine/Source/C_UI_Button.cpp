@@ -80,13 +80,6 @@ bool C_UI_Button::Update()
 
 		isInit = true;
 	}
-
-	if (GetRect().w > canvas->GetRect().w)
-		SetW(canvas->GetRect().w);
-
-	if(GetRect().h > canvas->GetRect().h)
-		SetH(canvas->GetRect().h);
-
 	return ret;
 }
 
@@ -133,6 +126,7 @@ void C_UI_Button::Draw2D()
 
 	glBindTexture(GL_TEXTURE_2D, id);
 
+	GetOwner()->GetComponent<C_Material>()->GetShader()->SetUniform1i("useColor", (GLint)true);
 	GetOwner()->GetComponent<C_Material>()->GetShader()->SetUniformMatrix4("projection", projectionMatrix.ptr());
 	GetOwner()->GetComponent<C_Material>()->GetShader()->SetUniformVec4f("inColor", (GLfloat*)&tempColor);
 
@@ -191,7 +185,7 @@ void C_UI_Button::OnPressed()
 
 void C_UI_Button::OnReleased()
 {
-	SetState(UIButtonState::HOVERED);
+	SetState(UIButtonState::RELEASED);
 	SetIsPressed(false);
 }
 

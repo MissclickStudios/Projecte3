@@ -1918,6 +1918,8 @@ void MeshRenderer::ApplyShader()
 			
 			cMaterial->GetShader()->SetUniformVec4f("inColor", (GLfloat*)&cMaterial->GetMaterialColour());
 
+			cMaterial->GetShader()->SetUniformVec4f("alternateColor", (GLfloat*)&cMaterial->GetAlternateColour());
+
 			cMaterial->GetShader()->SetUniformMatrix4("modelMatrix", transform->GetWorldTransform().Transposed().ptr());
 
 			cMaterial->GetShader()->SetUniformMatrix4("viewMatrix", App->camera->GetCurrentCamera()->GetViewMatrixTransposed().ptr());

@@ -10,6 +10,9 @@
 #include "GameObject.h"
 #include "C_Transform.h"
 #include "C_RigidBody.h"
+#include "C_Material.h"
+#include "C_ParticleSystem.h"
+#include "Emitter.h"
 
 #include "C_Animator.h"
 
@@ -46,6 +49,11 @@ Player* CreatePlayer()
 	INSPECTOR_DRAGABLE_FLOAT(script->deathDuration);
 
 	// Player ---
+
+	// Currency
+	INSPECTOR_DRAGABLE_INT(script->currency);
+	INSPECTOR_DRAGABLE_INT(script->hubCurrency);
+
 	// Dash
 	INSPECTOR_DRAGABLE_FLOAT(script->dashSpeed);
 	INSPECTOR_DRAGABLE_FLOAT(script->dashDuration);
@@ -102,7 +110,13 @@ void Player::SetUp()
 	invencibilityTimer.Stop();
 	changeTimer.Stop();
 
-	rigidBody->TransformMovesRigidBody(false);
+	if (rigidBody)
+		rigidBody->TransformMovesRigidBody(false);
+
+	if (particles)
+		for (uint i = 0; i < particles->emitterInstances.size(); ++i)
+			if (particles->emitterInstances[i]->emitter->name == "Dash")
+				dashParticles = particles->emitterInstances[i];
 
 	currentWeapon = blasterWeapon;
 }
@@ -261,11 +275,49 @@ void Player::TakeDamage(float damage)
 		invencibilityTimer.Stop();
 	if (!invencibilityTimer.IsActive())
 	{
-		health -= damage / Defense();
+		float damageDealt = 0.0f;
+		if(Defense())
+		 damageDealt = damage / Defense();
+		health -= damageDealt;
+
 		if (health < 0.0f)
 			health = 0.0f;
 		invencibilityTimer.Start();
+
+		hitTimer.Start();
+		if (hitParticles)
+			hitParticles->stopSpawn = false;
+		if (material)
+		{
+			material->SetAlternateColour(Color(1, 0, 0, 1));
+			material->SetTakeDamage(true);
+		}
 	}
+}
+
+void Player::SetGodMode(bool enable)
+{
+	godMode = enable;
+	if (godMode)
+	{
+		
+		defense = 0.0f;
+		speed *= 2.0f;
+		if (blasterWeapon)
+			blasterWeapon->damage *= 4.0f;
+	}
+	else
+	{
+		defense = 1.0f;
+		speed /= 2.0f;
+		if (blasterWeapon)
+			blasterWeapon->damage /= 4;
+	}
+}
+
+bool Player::GetGodMode() const
+{
+	return godMode;
 }
 
 void Player::ManageMovement()
@@ -296,6 +348,8 @@ void Player::ManageMovement()
 			dashTimer.Start();
 			if (rigidBody)
 				rigidBody->ChangeFilter(" player dashing");
+			if (dashParticles)
+				dashParticles->stopSpawn = false;
 			moveState = PlayerState::DASH;
 
 		case PlayerState::DASH:
@@ -306,6 +360,8 @@ void Player::ManageMovement()
 				dashCooldownTimer.Start();
 				if (rigidBody)
 					rigidBody->ChangeFilter(" player");
+				if (dashParticles)
+					dashParticles->stopSpawn = true;
 				moveState = PlayerState::IDLE;
 			}
 			break;

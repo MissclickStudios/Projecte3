@@ -10,9 +10,13 @@
 
 #include "Player.h"
 
+#include "MC_Time.h"
+
 IG11* CreateIG11()
 {
 	IG11* script = new IG11();
+
+	INSPECTOR_STRING(script->playerName);
 
 	// Entity ---
 	// Health
@@ -36,10 +40,7 @@ IG11* CreateIG11()
 	// Death
 	INSPECTOR_DRAGABLE_FLOAT(script->deathDuration);
 
-	// Trooper ---
-	// Movement
-	INSPECTOR_GAMEOBJECT(script->player);
-
+	//IG-11
 	// Chase
 	INSPECTOR_DRAGABLE_FLOAT(script->chaseDistance);
 	INSPECTOR_DRAGABLE_FLOAT(script->chaseSpeedModifier);
@@ -50,8 +51,15 @@ IG11* CreateIG11()
 	// Attack
 	INSPECTOR_DRAGABLE_FLOAT(script->attackDistance);
 
+	// Special Attack
+	INSPECTOR_DRAGABLE_FLOAT(script->specialAttackSpeed);
+	INSPECTOR_DRAGABLE_FLOAT(script->specialAttackSpins);
+	INSPECTOR_DRAGABLE_FLOAT(script->specialAttackHp);
+	INSPECTOR_DRAGABLE_FLOAT(script->specialAttackCooldown);
+
 	//Weapons
 	INSPECTOR_PREFAB(script->blaster);
+	INSPECTOR_PREFAB(script->sniper);
 
 	return script;
 }
@@ -68,26 +76,47 @@ IG11::~IG11()
 
 void IG11::SetUp()
 {
-	GameObject* hand = nullptr;
+	specialAttackTimer.Stop();
+
+	player = App->scene->GetGameObjectByName(playerName.c_str());
+
+	GameObject* handLeft = nullptr;
+	GameObject* handRight = nullptr;
 	if (skeleton)
 	{
 		for (uint i = 0; i < skeleton->childs.size(); ++i)
 		{
 			std::string name = skeleton->childs[i]->GetName();
-			if (name == "Hand")
+			if (name == "HandLeft")
 			{
-				hand = skeleton->childs[i];
-				break;
+				handLeft = skeleton->childs[i];
+				continue;
 			}
+			if (name == "HandRight")
+			{
+				handRight = skeleton->childs[i];
+				continue;
+			}
+
 		}
 	}
 	
-
 	// Create Weapons and save the Weapon script pointer
-	blasterGameObject = App->resourceManager->LoadPrefab(blaster.uid, App->scene->GetSceneRoot());
+	if (blaster.uid != NULL)
+		blasterGameObject = App->resourceManager->LoadPrefab(blaster.uid, App->scene->GetSceneRoot());
 
-	blasterWeapon = (Weapon*)GetObjectScript(blasterGameObject, ObjectType::WEAPON);
-	blasterWeapon->SetOwnership(type, hand);
+	if (blasterGameObject)
+		blasterWeapon = (Weapon*)GetObjectScript(blasterGameObject, ObjectType::WEAPON);
+	if (blasterWeapon)
+		blasterWeapon->SetOwnership(type, handLeft);
+
+	if (sniper.uid != NULL)
+		sniperGameObject = App->resourceManager->LoadPrefab(sniper.uid, App->scene->GetSceneRoot());
+
+	if (sniperGameObject)
+		sniperWeapon = (Weapon*)GetObjectScript(sniperGameObject, ObjectType::WEAPON);
+	if (sniperWeapon)
+		sniperWeapon->SetOwnership(type, handRight);
 }
 
 void IG11::Update()
@@ -95,13 +124,20 @@ void IG11::Update()
 	ManageMovement();
 	if (moveState != IG11State::DEAD)
 		ManageAim();
+
 }
 
 void IG11::CleanUp()
 {
-	blasterGameObject->toDelete = true;
+	if (blasterGameObject)
+		blasterGameObject->toDelete = true;
 	blasterGameObject = nullptr;
 	blasterWeapon = nullptr;
+
+	if (sniperGameObject)
+		sniperGameObject->toDelete = true;
+	sniperGameObject = nullptr;
+	sniperWeapon = nullptr;
 }
 
 void IG11::OnCollisionEnter(GameObject* object)
@@ -113,6 +149,8 @@ void IG11::OnCollisionEnter(GameObject* object)
 
 void IG11::DistanceToPlayer()
 {
+	if (!player)
+		return;
 	float2 playerPosition, position;
 	playerPosition.x = player->transform->GetWorldPosition().x;
 	playerPosition.y = player->transform->GetWorldPosition().z;
@@ -150,6 +188,11 @@ void IG11::ManageMovement()
 		}
 	}
 
+	if (specialAttackTimer.IsActive() && specialAttackTimer.ReadSec() >= specialAttackCooldown)
+	{
+		specialAttackTimer.Stop();
+	}
+
 	switch (moveState)
 	{
 	case IG11State::IDLE:
@@ -171,6 +214,13 @@ void IG11::ManageMovement()
 			moveState = IG11State::FLEE;
 			break;
 		}
+		if (health <= 5.0f && !specialAttackTimer.IsActive())
+		{
+			specialAttackTimer.Start();
+			moveState = IG11State::SPECIAL_ATTACK_IN;
+			break;
+		}
+
 		break;
 	case IG11State::PATROL:
 		currentAnimation = &walkAnimation;
@@ -199,6 +249,40 @@ void IG11::ManageMovement()
 		}
 		Flee();
 		break;
+	case IG11State::SPECIAL_ATTACK_IN:
+		specialAttackStartAim = aimDirection;
+		specialAttackRot = 0.0f;
+
+		if (blasterWeapon)
+		{
+			blasterWeapon->fireRate = 0.05f;
+			blasterWeapon->ammo = 200;
+		}
+		if (sniperWeapon)
+		{
+			sniperWeapon->fireRate = 0.05f;
+			sniperWeapon->ammo = 200;
+		}
+
+		moveState = IG11State::SPECIAL_ATTACK;
+		
+	case IG11State::SPECIAL_ATTACK:
+		if (!SpecialAttack())
+		{
+			moveState = IG11State::IDLE;
+
+			if (blasterWeapon)
+			{
+				blasterWeapon->fireRate = 0.3f;
+				blasterWeapon->ammo = 0;
+			}
+			if (sniperWeapon)
+			{
+				sniperWeapon->fireRate = 0.3f;
+				sniperWeapon->ammo = 0;
+			}
+		}
+		break;
 	case IG11State::DEAD_IN:
 		currentAnimation = &deathAnimation;
 		deathTimer.Start();
@@ -216,7 +300,7 @@ void IG11::ManageAim()
 	switch (aimState)
 	{
 	case AimState::IDLE:
-		if (distance < attackDistance)
+		if (distance < attackDistance || moveState == IG11State::SPECIAL_ATTACK)
 			aimState = AimState::SHOOT_IN;
 		break;
 	case AimState::ON_GUARD:
@@ -248,12 +332,34 @@ void IG11::ManageAim()
 			aimState = AimState::RELOAD_IN;
 			break;
 		}
+		switch (sniperWeapon->Shoot(aimDirection))
+		{
+		case ShootState::NO_FULLAUTO:
+			currentAnimation = nullptr;
+			aimState = AimState::ON_GUARD;
+			break;
+		case ShootState::WAINTING_FOR_NEXT:
+			break;
+		case ShootState::FIRED_PROJECTILE:
+			currentAnimation = nullptr;
+			aimState = AimState::ON_GUARD;
+			break;
+		case ShootState::RATE_FINISHED:
+			currentAnimation = nullptr;
+			aimState = AimState::ON_GUARD;
+			break;
+		case ShootState::NO_AMMO:
+			aimState = AimState::RELOAD_IN;
+			break;
+		}
 		break;
 	case AimState::RELOAD_IN:
 		aimState = AimState::RELOAD;
 
 	case AimState::RELOAD:
 		if (blasterWeapon->Reload())
+			aimState = AimState::ON_GUARD;
+		if (sniperWeapon->Reload())
 			aimState = AimState::ON_GUARD;
 		break;
 	case AimState::CHANGE_IN:
@@ -280,4 +386,21 @@ void IG11::Flee()
 {
 	float3 direction = { -moveDirection.x, 0.0f, -moveDirection.y };
 	rigidBody->SetLinearVelocity(direction * ChaseSpeed());
+}
+
+bool IG11::SpecialAttack()
+{
+	specialAttackRot += specialAttackSpeed * MC_Time::Game::GetDT();
+
+	float angle = specialAttackStartAim.AimedAngle();
+	angle += DegToRad(specialAttackRot);
+
+	float x = cos(angle);
+	float y = sin(angle);
+	aimDirection = { x,y };
+
+	if (specialAttackRot >= 360.0f * specialAttackSpins)
+		return false;
+	
+	return true;
 }
