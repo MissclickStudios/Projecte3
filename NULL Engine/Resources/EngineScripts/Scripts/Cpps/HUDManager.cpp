@@ -32,6 +32,7 @@ void HUDManager::Update()
 {
 	if(player != nullptr)
 	{
+		
 		//Take damage animation
 		if (mandoImage != nullptr)
 		{
@@ -81,18 +82,17 @@ void HUDManager::Update()
 				secondaryWeaponImage->PlayAnimation(false, 1);
 		}
 
-		//Dash animation
-		if (dashImage != nullptr)
-		{
-			if (App->input->GetGameControllerTrigger(0) == ButtonState::BUTTON_DOWN)
-				dashImage->PlayAnimation(false, 1);
-		}
-
 		//Get credit animation
 		if (creditsImage != nullptr)
 		{
 			if (player)
 				creditsImage->PlayAnimation(false, 1);
+		}
+			//Dash animation
+		if (dashImage != nullptr)
+		{
+			if (App->input->GetGameControllerTrigger(0) == ButtonState::BUTTON_DOWN)
+				dashImage->PlayAnimation(false, 1);
 		}
 	}
 }
