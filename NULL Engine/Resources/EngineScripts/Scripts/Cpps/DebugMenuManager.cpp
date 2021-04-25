@@ -42,8 +42,8 @@ void DebugMenuManager::Update()
 	
 	if (fpsText != nullptr)
 	{
-		std::string FPSString = 
-		fpsText->SetText();
+		//std::string FPSString = App->
+		//fpsText->SetText();
 	}
 
 	if (roomSkip != nullptr)
