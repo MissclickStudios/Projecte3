@@ -35,7 +35,6 @@ public:
 	void Draw3D();
 
 	bool CheckButtonStates(); // Returns false if no buttons are hovered/pressed
-
 	
 	void UpdateActiveButtons();
 
@@ -57,6 +56,8 @@ public:
 
 	C_UI_Button* selectedButton = nullptr;
 	C_UI_Button* hoveredButton = nullptr;
+
+	int priority = 0;
 
 private:
 	C_UI_Button* buttonIterator = nullptr;

@@ -147,7 +147,7 @@ void C_UI_Button::OnPressed()
 
 void C_UI_Button::OnReleased()
 {
-	SetState(UIButtonState::HOVERED);
+	SetState(UIButtonState::RELEASED);
 	SetIsPressed(false);
 }
 
