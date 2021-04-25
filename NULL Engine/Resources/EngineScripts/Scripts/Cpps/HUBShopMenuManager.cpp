@@ -17,8 +17,13 @@ HUBShopMenuManager::~HUBShopMenuManager()
 
 void HUBShopMenuManager::Start()
 {
-	exitButton = (C_UI_Button*)App->scene->GetGameObjectByName(exitButtonName.c_str())->GetComponent<C_UI_Button>();
-	buyButton = (C_UI_Button*)App->scene->GetGameObjectByName(buyButtonName.c_str())->GetComponent<C_UI_Button>();
+	GameObject* a = App->scene->GetGameObjectByName(exitButtonName.c_str());
+	if(a != nullptr)
+		exitButton = (C_UI_Button*)a->GetComponent<C_UI_Button>();
+
+	a = App->scene->GetGameObjectByName(buyButtonName.c_str());
+	if (a != nullptr)
+		buyButton = (C_UI_Button*)a->GetComponent<C_UI_Button>();
 }
 
 void HUBShopMenuManager::Update()
