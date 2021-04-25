@@ -43,19 +43,21 @@ void GameManager::Awake()
 			currentLevel = jsonState.GetInteger("currentLevel");
 			roomNum = jsonState.GetInteger("roomNum");
 			level1.clear();
-			level2.clear();
+			//LEVEL2
+			//level2.clear();
 			ParsonArray levelArray = jsonState.GetArray("level1");
 			level1.reserve(levelArray.size);
 			for (int i = 0; i < levelArray.size;++i)
 			{
 				level1.emplace_back(levelArray.GetString(i));
 			}
-			ParsonArray levelArray2 = jsonState.GetArray("level2");
+			//LEVEL2
+			/*ParsonArray levelArray2 = jsonState.GetArray("level2");
 			level2.reserve(levelArray2.size);
 			for (int i = 0; i < levelArray2.size; ++i)
 			{
 				level2.emplace_back(levelArray2.GetString(i));
-			}
+			}*/
 			//TODO:Spawn player and everything on the level
 			playerGameObject = App->resourceManager->LoadPrefab(playerPrefab.uid, App->scene->GetSceneRoot());
 			GameObject* playerSpawn = App->scene->GetGameObjectByName(SpawnPointName.c_str());
@@ -103,7 +105,7 @@ void GameManager::Update()
 	//--
 }
 
-void GameManager::GenerateNewRun()
+void GameManager::GenerateNewRun(bool fromMenu)
 {
 	if (enabled) 
 	{
@@ -118,6 +120,7 @@ void GameManager::GenerateNewRun()
 				--i;
 			}
 		}
+		/*LEVEL2
 		for (int i = 0; i < level2.size(); ++i)
 		{
 			if (!strstr(level2[i].c_str(), ASSETS_SCENES_PATH))
@@ -127,25 +130,50 @@ void GameManager::GenerateNewRun()
 				level2.erase(level2.begin() + i);
 				--i;
 			}
+		}*/
+
+		if (fromMenu)
+		{
+			GenerateLevel(); //Nomes quan li donem a new game desde el main menu
+
+			//TODO: Not HardCode the fixed rooms
+			//TODO: inspector support adding fixed room
+			if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + "InitialL1.json").c_str()))
+				AddFixedRoom("InitialL1", 1, 1);
+			//LEVEL2
+			//if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + "InitialL2.json").c_str()))
+			//	AddFixedRoom("InitialL2", 2, 1);
+
+			if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + "BossL1.json").c_str()))
+				AddFixedRoom("BossL1", 1, 10);
+			//LEVEL2
+			//if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + "BossL2.json").c_str()))
+			//	AddFixedRoom("BossL2", 2, 10);
+
+			if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + "ShopL1.json").c_str()))
+				AddFixedRoom("ShopL1", 1, 4);
+			//LEVEL2
+			//if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + "ShopL2.json").c_str()))
+			//	AddFixedRoom("ShopL2", 2, 4);
 		}
+		else
+		{
+			//LEVEL2 falta per fixed
+			//remove fixed (harcoded)
+			level1.erase(level1.begin());
+			level1.erase(level1.begin() + 2);
+			level1.erase(level1.begin() + 6);
 
-		GenerateLevel(); //Nomes quan li donem a new game desde el main menu
+			//randomize levels again
+			GenerateLevel();
 
-		//TODO: Not HardCode the fixed rooms
-		if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + "InitialL1.json").c_str()))
-			AddFixedRoom("InitialL1", 1, 1); //TODO: inspector support adding fixed room
-		if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + "InitialL2.json").c_str()))
-			AddFixedRoom("InitialL2", 2, 1);
+			//add fixed again
+			AddFixedRoom("InitialL1", 1, 1);
 
-		if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + "BossL1.json").c_str()))
 			AddFixedRoom("BossL1", 1, 10);
-		if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + "BossL2.json").c_str()))
-			AddFixedRoom("BossL2", 2, 10);
 
-		if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + "ShopL1.json").c_str()))
 			AddFixedRoom("ShopL1", 1, 4);
-		if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + "ShopL2.json").c_str()))
-			AddFixedRoom("ShopL2", 2, 4);
+		}
 
 		SaveManagerState();
 	}
@@ -158,10 +186,13 @@ void GameManager::GenerateLevel()
 		.time_since_epoch()
 		.count();
 	shuffle(level1.begin(), level1.end(), std::default_random_engine(seed));
-	seed = std::chrono::system_clock::now()
+	
+	//LEVEL2
+	/*seed = std::chrono::system_clock::now()
 		.time_since_epoch()
 		.count();
-	shuffle(level2.begin(), level2.end(), std::default_random_engine(seed));
+	shuffle(level2.begin(), level2.end(), std::default_random_engine(seed));*/
+	
 	//Fisher-Yates shuffle
 	/*int size = level1.size();
 	for (int i = 0; i < size - 1; ++i) 
@@ -197,12 +228,15 @@ void GameManager::GoNextRoom()
 				else if (roomNum == level1.size() - 1)
 				{
 					LOG("[SCENE] Level Generator: End of the Game Reached!");
-
-					InitiateLevel(2);
+					//LEVEL2
+					//InitiateLevel(2);
+					//TODO:Win Condition
+					ReturnHub();
 				}
 			}
 		}
-		else if (currentLevel == 2)
+		//LEVEL2
+		/*else if (currentLevel == 2)
 		{
 			if (!level2.empty())
 			{
@@ -219,7 +253,7 @@ void GameManager::GoNextRoom()
 					InitiateLevel(1);
 				}
 			}
-		}
+		}*/
 	}
 }
 
@@ -241,7 +275,8 @@ void GameManager::GoPreviousRoom()
 			}
 		}
 	}
-	else if (currentLevel == 2)
+	//LEVEL2
+	/*else if (currentLevel == 2)
 	{
 		if (!level2.empty())
 		{
@@ -256,7 +291,7 @@ void GameManager::GoPreviousRoom()
 				LOG("End of the level reached.");
 			}
 		}
-	}
+	}*/
 }
 
 void GameManager::InitiateLevel(int level)
@@ -273,7 +308,8 @@ void GameManager::InitiateLevel(int level)
 				App->scene->ScriptChangeScene(level1[0]);
 			}
 		}
-		else if (level == 2)
+		//LEVEL2
+		/*else if (level == 2)
 		{
 			if (!level2.empty())
 			{
@@ -282,7 +318,7 @@ void GameManager::InitiateLevel(int level)
 				SaveManagerState();
 				App->scene->ScriptChangeScene(level2[0]);
 			}
-		}
+		}*/
 	}
 }
 
@@ -298,24 +334,27 @@ void GameManager::Continue()
 		currentLevel = jsonState.GetInteger("currentLevel");
 		roomNum = jsonState.GetInteger("roomNum");
 		level1.clear();
-		level2.clear();
+		//LEVEL2
+		//level2.clear();
 		ParsonArray levelArray = jsonState.GetArray("level1");
 		level1.reserve(levelArray.size);
 		for (int i = 0; i < levelArray.size; ++i)
 		{
 			level1.emplace_back(levelArray.GetString(i));
 		}
-		ParsonArray levelArray2 = jsonState.GetArray("level2");
+		//LEVEL2
+		/*ParsonArray levelArray2 = jsonState.GetArray("level2");
 		level2.reserve(levelArray2.size);
 		for (int i = 0; i < levelArray2.size; ++i)
 		{
 			level2.emplace_back(levelArray2.GetString(i));
-		}
+		}*/
 		//TODO:Spawn player and everything on the level
 		if (currentLevel == 1)
 			App->scene->ScriptChangeScene(level1[roomNum]);
-		else if (currentLevel == 2)
-			App->scene->ScriptChangeScene(level1[roomNum]);
+		//LEVEL2
+		//else if (currentLevel == 2)
+		//	App->scene->ScriptChangeScene(level1[roomNum]);
 	}
 }
 
@@ -323,6 +362,7 @@ void GameManager::ReturnHub()
 {
 	currentLevel = 1;
 	roomNum = 0;
+	GenerateNewRun(false);
 	SaveManagerState();
 	App->scene->ScriptChangeScene(level1[0]);
 }
@@ -437,13 +477,14 @@ void GameManager::HandleRoomGeneration()
 				(roomNum > 0) ? GoPreviousRoom() : LOG("[SCENE] Level Generator: Begin of the Level Reached!");
 
 			}
-			else if (currentLevel == 2)
+			//LEVEL2
+			/*else if (currentLevel == 2)
 			{
 				(roomNum > 0) ? GoPreviousRoom() : LOG("[SCENE] Level Generator: End of the Level Reached!");
 
 				(roomNum == 0) ? InitiateLevel(1) : LOG("[SCENE] Level Generator: Begin Level 1 ");
 
-			}
+			}*/
 		}
 	}
 }
@@ -459,11 +500,12 @@ void GameManager::SaveManagerState()
 	{
 		levelArray.SetString(level1[i].c_str());
 	}
-	ParsonArray levelArray2 = jsonState.SetArray("level2");
+	//LEVEL2
+	/*ParsonArray levelArray2 = jsonState.SetArray("level2");
 	for (int i = 0; i < level2.size(); ++i)
 	{
 		levelArray2.SetString(level2[i].c_str());
-	}
+	}*/
 	if (playerGameObject) 
 	{
 		ParsonNode playerNode = jsonState.SetNode("player");
@@ -480,7 +522,8 @@ GameManager* CreateGameManager() {
 	INSPECTOR_STRING(script->mainMenuScene);
 	INSPECTOR_STRING(script->SpawnPointName);
 	INSPECTOR_VECTOR_STRING(script->level1);
-	INSPECTOR_VECTOR_STRING(script->level2);
+	//LEVEL2
+	//INSPECTOR_VECTOR_STRING(script->level2);
 	INSPECTOR_PREFAB(script->playerPrefab);
 	return script;
 }
