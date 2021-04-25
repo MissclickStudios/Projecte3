@@ -78,6 +78,8 @@ public:
 	// Debug
 	void SetGodMode(bool enable);
 
+	bool GetGodMode()const;
+
 private:
 
 	// Logic

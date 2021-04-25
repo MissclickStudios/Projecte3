@@ -82,8 +82,19 @@ void DebugMenuManager::Update()
 	if (godMode != nullptr)
 		if (godMode->GetState() == UIButtonState::RELEASED)
 		{
-			//Use Beskar Ingots
-			//LOG("OMG YOU HAVE JUST SPENT %d Beskar Ingots!", beskarCost);
+			if (mando != nullptr)
+			{
+				Player* playerScript = (Player*)mando->GetScript("Player");
+
+				if (playerScript->GetGodMode())
+				{
+					playerScript->SetGodMode(false);
+				}
+				else
+				{
+					playerScript->SetGodMode(true);
+				}
+			}
 		}
 	
 	if (fpsText != nullptr)
@@ -96,29 +107,41 @@ void DebugMenuManager::Update()
 	if (roomSkip != nullptr)
 		if (roomSkip->GetState() == UIButtonState::RELEASED)
 		{
-			GameManager* gameManagerScript = (GameManager*)gameManager->GetScript("GameManager");
-			gameManagerScript->GoNextRoom();
+			if (gameManager != nullptr)
+			{
+				GameManager* gameManagerScript = (GameManager*)gameManager->GetScript("GameManager");
+				gameManagerScript->GoNextRoom();
+			}
 		}
 
 	if (addHealth != nullptr)
 		if (addHealth->GetState() == UIButtonState::RELEASED)
 		{
-			Player* gameManagerScript = (Player*)mando->GetScript("Player");
-			gameManagerScript->GiveHeal(healthHealed);
+			if (mando != nullptr)
+			{
+				Player* gameManagerScript = (Player*)mando->GetScript("Player");
+				gameManagerScript->GiveHeal(healthHealed);
+			}
 		}
 
 	if (getCredits != nullptr)
 		if (getCredits->GetState() == UIButtonState::RELEASED)
 		{
-			Player* gameManagerScript = (Player*)mando->GetScript("Player");
-			gameManagerScript->currency += creditsToAdd;
+			if (mando != nullptr)
+			{
+				Player* gameManagerScript = (Player*)mando->GetScript("Player");
+				gameManagerScript->currency += creditsToAdd;
+			}
 		}
 
 	if (getBeskar != nullptr)
 		if (getBeskar->GetState() == UIButtonState::RELEASED)
 		{
-			Player* gameManagerScript = (Player*)mando->GetScript("Player");
-			gameManagerScript->hubCurrency += beskarToAdd;
+			if (mando != nullptr)
+			{
+				Player* gameManagerScript = (Player*)mando->GetScript("Player");
+				gameManagerScript->hubCurrency += beskarToAdd;
+			}
 		}
 
 	if (spawnBlurgg != nullptr)

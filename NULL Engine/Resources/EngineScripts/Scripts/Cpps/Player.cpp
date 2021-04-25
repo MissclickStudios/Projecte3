@@ -315,6 +315,11 @@ void Player::SetGodMode(bool enable)
 	}
 }
 
+bool Player::GetGodMode() const
+{
+	return godMode;
+}
+
 void Player::ManageMovement()
 {
 	if (moveState != PlayerState::DEAD)

@@ -31,6 +31,7 @@ public:
 
 	std::string creditsTextName = "CreditsText";
 	std::string beskarTextName = "BeskarText";
+	std::string ammoTextName = "AmmoText";
 
 private:
 	C_2DAnimator* mandoImage;
@@ -49,6 +50,7 @@ private:
 
 	C_UI_Text* creditsText = nullptr;
 	C_UI_Text* beskarText = nullptr;
+	C_UI_Text* ammoText = nullptr;
 };
 
 SCRIPTS_FUNCTION HUDManager* CreateHUDManager() {
@@ -66,5 +68,6 @@ SCRIPTS_FUNCTION HUDManager* CreateHUDManager() {
 
 	INSPECTOR_STRING(script->creditsTextName);
 	INSPECTOR_STRING(script->beskarTextName);
+	INSPECTOR_STRING(script->ammoTextName);
 	return script;
 }

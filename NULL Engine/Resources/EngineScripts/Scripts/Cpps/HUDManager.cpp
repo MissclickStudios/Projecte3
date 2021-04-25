@@ -63,8 +63,13 @@ void HUDManager::Start()
 	if (a != nullptr)
 		beskarText = (C_UI_Text*)a->GetComponent<C_UI_Text>();
 
+	a = App->scene->GetGameObjectByName(ammoTextName.c_str());
+	if (a != nullptr)
+		ammoText = (C_UI_Text*)a->GetComponent<C_UI_Text>();
+
 	playerObject = App->scene->GetGameObjectByName(playerName.c_str());
-	player = (Player*)playerObject->GetScript("Player");
+	if(playerObject != nullptr)
+		player = (Player*)playerObject->GetScript("Player");
 }
 
 void HUDManager::Update()
@@ -99,6 +104,17 @@ void HUDManager::Update()
 			std::string tmp = "Currency: ";
 			tmp += std::to_string(player->currency).c_str();
 			creditsText->SetText(tmp.c_str());
+		}
+	}
+
+	if (ammoText != nullptr)
+	{
+		if (player != nullptr)
+		{
+			std::string tmp = std::to_string(player->GetCurrentWeapon()->ammo);
+			tmp += " / " ;
+			tmp += std::to_string(player->GetCurrentWeapon()->maxAmmo);
+			ammoText->SetText(tmp.c_str());
 		}
 	}
 
