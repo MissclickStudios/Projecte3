@@ -6,9 +6,19 @@
             "ModelAssetsPath": "Assets\/Models\/Characters\/Jawa_model.fbx"
         },
         {
+            "GameObjectUID": 1115136936,
+            "ModelResourceUID": 1525657543,
+            "ModelAssetsPath": "Assets\/Models\/Characters\/Macarena Dance.fbx"
+        },
+        {
             "GameObjectUID": 1338479405,
             "ModelResourceUID": 1364031152,
             "ModelAssetsPath": "Assets\/Models\/Blockouts\/FinalArtBlockouts\/level1V2_shop_45_final.fbx"
+        },
+        {
+            "GameObjectUID": 1509334525,
+            "ModelResourceUID": 1093951780,
+            "ModelAssetsPath": "Assets\/Models\/Characters\/Jawa_Idle1.fbx"
         }
     ],
     "Game Objects": [
@@ -142,6 +152,144 @@
             ]
         },
         {
+            "UID": 191638367,
+            "ParentUID": 807487571,
+            "PrefabID": 1986618084,
+            "IsPrefab": true,
+            "Name": "Jawa",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        1.0916428565979004,
+                        0,
+                        -0.16125106811523438
+                    ],
+                    "LocalRotation": [
+                        -0.70710664987564087,
+                        0,
+                        0,
+                        0.70710688829421997
+                    ],
+                    "LocalScale": [
+                        1,
+                        0.9999997615814209,
+                        0.9999997615814209
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 429966493,
+                    "Name": "Jawa.nemesh",
+                    "Path": "Library\/Meshes\/429966493.nemesh",
+                    "File": "429966493.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 922653620,
+                        "Color": [
+                            0.58799999952316284,
+                            0.58799999952316284,
+                            0.58799999952316284,
+                            1
+                        ],
+                        "Name": "Jawa.nemat",
+                        "Path": "Library\/Materials\/922653620.nemat",
+                        "File": "922653620.nemat"
+                    },
+                    "Texture": {
+                        "AssetsPath": "Assets\/Textures\/Characters\/Jawa_texture.png",
+                        "AssetsName": "Jawa_texture.png",
+                        "LibaryPath": "Library\/Textures\/121777076.netex",
+                        "LibraryFile": "121777076.netex"
+                    },
+                    "Shader": {
+                        "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
+                        "AssetsName": "DefaultShader.shader",
+                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
+                        "LibraryFile": "800223282.neshader"
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 212296280,
+            "ParentUID": 546065927,
+            "PrefabID": 1986618084,
+            "IsPrefab": true,
+            "Name": "Jawa",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        1.0916428565979004,
+                        0,
+                        -0.16125106811523438
+                    ],
+                    "LocalRotation": [
+                        -0.70710664987564087,
+                        0,
+                        0,
+                        0.70710688829421997
+                    ],
+                    "LocalScale": [
+                        1,
+                        0.9999997615814209,
+                        0.9999997615814209
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 429966493,
+                    "Name": "Jawa.nemesh",
+                    "Path": "Library\/Meshes\/429966493.nemesh",
+                    "File": "429966493.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 922653620,
+                        "Color": [
+                            0.58799999952316284,
+                            0.58799999952316284,
+                            0.58799999952316284,
+                            1
+                        ],
+                        "Name": "Jawa.nemat",
+                        "Path": "Library\/Materials\/922653620.nemat",
+                        "File": "922653620.nemat"
+                    },
+                    "Texture": {
+                        "AssetsPath": "Assets\/Textures\/Characters\/Jawa_texture.png",
+                        "AssetsName": "Jawa_texture.png",
+                        "LibaryPath": "Library\/Textures\/121777076.netex",
+                        "LibraryFile": "121777076.netex"
+                    },
+                    "Shader": {
+                        "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
+                        "AssetsName": "DefaultShader.shader",
+                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
+                        "LibraryFile": "800223282.neshader"
+                    }
+                }
+            ]
+        },
+        {
             "UID": 217897681,
             "ParentUID": 632085905,
             "PrefabID": 1986618084,
@@ -265,13 +413,18 @@
                             "float3x": 0,
                             "float3y": 120,
                             "float3z": 90
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "playerName",
+                            "string": "Mandalorian"
                         }
                     ]
                 }
             ]
         },
         {
-            "UID": 1674363179,
+            "UID": 57072630,
             "ParentUID": 276405857,
             "PrefabID": 1524961430,
             "IsPrefab": true,
@@ -315,126 +468,8 @@
             ]
         },
         {
-            "UID": 1153577191,
-            "ParentUID": 1674363179,
-            "PrefabID": 1524961430,
-            "IsPrefab": true,
-            "Name": "Heart3",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        0,
-                        0
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {
-                    "Type": 21,
-                    "Image": {
-                        "X": -0.60000002384185791,
-                        "Y": 0.58873921632766724,
-                        "W": 0.054999999701976776,
-                        "H": 0.10999999940395355,
-                        "IsHDL": false,
-                        "IsHDR": false
-                    }
-                },
-                {
-                    "Type": 3,
-                    "Texture": {
-                        "AssetsPath": "Assets\/Textures\/UI\/HUD\/HeartFull.png",
-                        "AssetsName": "HeartFull.png",
-                        "LibaryPath": "Library\/Textures\/1024641721.netex",
-                        "LibraryFile": "1024641721.netex"
-                    },
-                    "Shader": {
-                        "AssetsPath": "Assets\/Shaders\/UIShader.shader",
-                        "AssetsName": "UIShader.shader",
-                        "LibaryPath": "Library\/Shaders\/1025410539.neshader",
-                        "LibraryFile": "1025410539.neshader"
-                    }
-                }
-            ]
-        },
-        {
-            "UID": 656921097,
-            "ParentUID": 1674363179,
-            "PrefabID": 1524961430,
-            "IsPrefab": true,
-            "Name": "Minimap",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        0,
-                        0
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {
-                    "Type": 21,
-                    "Image": {
-                        "X": 0.73799997568130493,
-                        "Y": 0.47400000691413879,
-                        "W": 0.25,
-                        "H": 0.47499999403953552,
-                        "IsHDL": false,
-                        "IsHDR": false
-                    }
-                },
-                {
-                    "Type": 3,
-                    "Texture": {
-                        "AssetsPath": "Assets\/Textures\/UI\/HUD\/MiniMap.png",
-                        "AssetsName": "MiniMap.png",
-                        "LibaryPath": "Library\/Textures\/1046552748.netex",
-                        "LibraryFile": "1046552748.netex"
-                    },
-                    "Shader": {
-                        "AssetsPath": "Assets\/Shaders\/UIShader.shader",
-                        "AssetsName": "UIShader.shader",
-                        "LibaryPath": "Library\/Shaders\/1025410539.neshader",
-                        "LibraryFile": "1025410539.neshader"
-                    }
-                }
-            ]
-        },
-        {
-            "UID": 35100804,
-            "ParentUID": 1674363179,
+            "UID": 1953780975,
+            "ParentUID": 57072630,
             "PrefabID": 1524961430,
             "IsPrefab": true,
             "Name": "SecodaryWeapon",
@@ -492,8 +527,67 @@
             ]
         },
         {
-            "UID": 1032237594,
-            "ParentUID": 1674363179,
+            "UID": 1224219878,
+            "ParentUID": 57072630,
+            "PrefabID": 1524961430,
+            "IsPrefab": true,
+            "Name": "Heart3",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 21,
+                    "Image": {
+                        "X": -0.60000002384185791,
+                        "Y": 0.58873921632766724,
+                        "W": 0.054999999701976776,
+                        "H": 0.10999999940395355,
+                        "IsHDL": false,
+                        "IsHDR": false
+                    }
+                },
+                {
+                    "Type": 3,
+                    "Texture": {
+                        "AssetsPath": "Assets\/Textures\/UI\/HUD\/HeartFull.png",
+                        "AssetsName": "HeartFull.png",
+                        "LibaryPath": "Library\/Textures\/1024641721.netex",
+                        "LibraryFile": "1024641721.netex"
+                    },
+                    "Shader": {
+                        "AssetsPath": "Assets\/Shaders\/UIShader.shader",
+                        "AssetsName": "UIShader.shader",
+                        "LibaryPath": "Library\/Shaders\/1025410539.neshader",
+                        "LibraryFile": "1025410539.neshader"
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 1016948116,
+            "ParentUID": 57072630,
             "PrefabID": 1524961430,
             "IsPrefab": true,
             "Name": "PrimaryWeapon",
@@ -551,67 +645,8 @@
             ]
         },
         {
-            "UID": 629162743,
-            "ParentUID": 1674363179,
-            "PrefabID": 1524961430,
-            "IsPrefab": true,
-            "Name": "Heart2",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        0,
-                        0
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {
-                    "Type": 21,
-                    "Image": {
-                        "X": -0.72500002384185791,
-                        "Y": 0.58899998664855957,
-                        "W": 0.054999999701976776,
-                        "H": 0.11500000208616257,
-                        "IsHDL": false,
-                        "IsHDR": false
-                    }
-                },
-                {
-                    "Type": 3,
-                    "Texture": {
-                        "AssetsPath": "Assets\/Textures\/UI\/HUD\/HeartFull.png",
-                        "AssetsName": "HeartFull.png",
-                        "LibaryPath": "Library\/Textures\/1024641721.netex",
-                        "LibraryFile": "1024641721.netex"
-                    },
-                    "Shader": {
-                        "AssetsPath": "Assets\/Shaders\/UIShader.shader",
-                        "AssetsName": "UIShader.shader",
-                        "LibaryPath": "Library\/Shaders\/1025410539.neshader",
-                        "LibraryFile": "1025410539.neshader"
-                    }
-                }
-            ]
-        },
-        {
-            "UID": 576503065,
-            "ParentUID": 1674363179,
+            "UID": 259605266,
+            "ParentUID": 57072630,
             "PrefabID": 1524961430,
             "IsPrefab": true,
             "Name": "Credits",
@@ -669,8 +704,67 @@
             ]
         },
         {
-            "UID": 1481916618,
-            "ParentUID": 1674363179,
+            "UID": 462001657,
+            "ParentUID": 57072630,
+            "PrefabID": 1524961430,
+            "IsPrefab": true,
+            "Name": "Heart2",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 21,
+                    "Image": {
+                        "X": -0.72500002384185791,
+                        "Y": 0.58899998664855957,
+                        "W": 0.054999999701976776,
+                        "H": 0.11500000208616257,
+                        "IsHDL": false,
+                        "IsHDR": false
+                    }
+                },
+                {
+                    "Type": 3,
+                    "Texture": {
+                        "AssetsPath": "Assets\/Textures\/UI\/HUD\/HeartFull.png",
+                        "AssetsName": "HeartFull.png",
+                        "LibaryPath": "Library\/Textures\/1024641721.netex",
+                        "LibraryFile": "1024641721.netex"
+                    },
+                    "Shader": {
+                        "AssetsPath": "Assets\/Shaders\/UIShader.shader",
+                        "AssetsName": "UIShader.shader",
+                        "LibaryPath": "Library\/Shaders\/1025410539.neshader",
+                        "LibraryFile": "1025410539.neshader"
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 701246906,
+            "ParentUID": 57072630,
             "PrefabID": 1524961430,
             "IsPrefab": true,
             "Name": "Heart1",
@@ -728,8 +822,67 @@
             ]
         },
         {
-            "UID": 1153177659,
-            "ParentUID": 1674363179,
+            "UID": 250237117,
+            "ParentUID": 57072630,
+            "PrefabID": 1524961430,
+            "IsPrefab": true,
+            "Name": "Minimap",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 21,
+                    "Image": {
+                        "X": 0.73799997568130493,
+                        "Y": 0.47400000691413879,
+                        "W": 0.25,
+                        "H": 0.47499999403953552,
+                        "IsHDL": false,
+                        "IsHDR": false
+                    }
+                },
+                {
+                    "Type": 3,
+                    "Texture": {
+                        "AssetsPath": "Assets\/Textures\/UI\/HUD\/MiniMap.png",
+                        "AssetsName": "MiniMap.png",
+                        "LibaryPath": "Library\/Textures\/1046552748.netex",
+                        "LibraryFile": "1046552748.netex"
+                    },
+                    "Shader": {
+                        "AssetsPath": "Assets\/Shaders\/UIShader.shader",
+                        "AssetsName": "UIShader.shader",
+                        "LibaryPath": "Library\/Shaders\/1025410539.neshader",
+                        "LibraryFile": "1025410539.neshader"
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 216516549,
+            "ParentUID": 57072630,
             "PrefabID": 1524961430,
             "IsPrefab": true,
             "Name": "Dash",
@@ -788,7 +941,7 @@
         },
         {
             "UID": 296213747,
-            "ParentUID": 1836899128,
+            "ParentUID": 975111657,
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "MainScene",
@@ -869,7 +1022,7 @@
                     "LocalPosition": [
                         22.806819915771484,
                         40.92840576171875,
-                        14.166641235351563
+                        14.166641235351562
                     ],
                     "LocalRotation": [
                         -0.70710676908493042,
@@ -981,6 +1134,39 @@
                         "LibaryPath": "Library\/Shaders\/800223282.neshader",
                         "LibraryFile": "800223282.neshader"
                     }
+                }
+            ]
+        },
+        {
+            "UID": 372706878,
+            "ParentUID": 296213747,
+            "PrefabID": 129017146,
+            "IsPrefab": true,
+            "Name": "PlayerSpawn",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -4.120415210723877,
+                        5.7759871482849121,
+                        102.53910064697266
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
                 }
             ]
         },
@@ -1207,6 +1393,88 @@
             ]
         },
         {
+            "UID": 535249110,
+            "ParentUID": 296213747,
+            "PrefabID": 1986618084,
+            "IsPrefab": true,
+            "Name": "Jawa_model.fbx",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        24.443042755126953,
+                        4.8528566360473633,
+                        74.266159057617188
+                    ],
+                    "LocalRotation": [
+                        0,
+                        -0.35198527574539185,
+                        0,
+                        0.93600553274154663
+                    ],
+                    "LocalScale": [
+                        0.11999998241662979,
+                        0.11999999731779099,
+                        0.11999998241662979
+                    ]
+                },
+                {
+                    "Type": 8,
+                    "Is Static": true,
+                    "Filter": "default"
+                },
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 2,
+                    "Size Y": 6,
+                    "Size Z": 2,
+                    "Center X": 0,
+                    "Center Y": 4,
+                    "Center Z": 0
+                }
+            ]
+        },
+        {
+            "UID": 546065927,
+            "ParentUID": 296213747,
+            "PrefabID": 1986618084,
+            "IsPrefab": true,
+            "Name": "Jawa_model.fbx",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -31.843170166015625,
+                        4.8528623580932617,
+                        60.476875305175781
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0.29644110798835754,
+                        0,
+                        0.95505118370056152
+                    ],
+                    "LocalScale": [
+                        0.11999999731779099,
+                        0.11999999731779099,
+                        0.11999999731779099
+                    ]
+                }
+            ]
+        },
+        {
             "UID": 625146777,
             "ParentUID": 1338479405,
             "PrefabID": 0,
@@ -1317,9 +1585,9 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        118.61514282226563,
+                        118.61514282226562,
                         12.499984741210938,
-                        0.21890640258789063
+                        0.21890640258789062
                     ],
                     "LocalRotation": [
                         0,
@@ -1610,6 +1878,39 @@
             ]
         },
         {
+            "UID": 807487571,
+            "ParentUID": 296213747,
+            "PrefabID": 1986618084,
+            "IsPrefab": true,
+            "Name": "Jawa_model.fbx",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -76.701469421386719,
+                        4.8528628349304199,
+                        32.711441040039062
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0.9995652437210083,
+                        0,
+                        0.029484961181879044
+                    ],
+                    "LocalScale": [
+                        0.11999999731779099,
+                        0.11999999731779099,
+                        0.11999999731779099
+                    ]
+                }
+            ]
+        },
+        {
             "UID": 815796744,
             "ParentUID": 464391308,
             "PrefabID": 0,
@@ -1862,7 +2163,7 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        -477.64114379882813,
+                        -477.64114379882812,
                         40.62298583984375,
                         -44.545623779296875
                     ],
@@ -1927,7 +2228,7 @@
                     "LocalPosition": [
                         952.8909912109375,
                         37.488693237304688,
-                        -43.732742309570313
+                        -43.732742309570312
                     ],
                     "LocalRotation": [
                         1.3767878215276141e-07,
@@ -2064,7 +2365,7 @@
                     "Type": 1,
                     "LocalPosition": [
                         886.56982421875,
-                        179.35305786132813,
+                        179.35305786132812,
                         -12.62125301361084
                     ],
                     "LocalRotation": [
@@ -2307,6 +2608,39 @@
             ]
         },
         {
+            "UID": 1042133451,
+            "ParentUID": 296213747,
+            "PrefabID": 1986618084,
+            "IsPrefab": true,
+            "Name": "Jawa_model.fbx",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -76.376571655273438,
+                        4.8528628349304199,
+                        27.568721771240234
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        0.11999999731779099,
+                        0.11999999731779099,
+                        0.11999999731779099
+                    ]
+                }
+            ]
+        },
+        {
             "UID": 1045587424,
             "ParentUID": 1338479405,
             "PrefabID": 0,
@@ -2498,7 +2832,7 @@
                     "LocalPosition": [
                         -606.0494384765625,
                         40.62298583984375,
-                        474.16506958007813
+                        474.16506958007812
                     ],
                     "LocalRotation": [
                         -0.70710670948028564,
@@ -2534,6 +2868,75 @@
                         "Name": "Box074.nemat",
                         "Path": "Library\/Materials\/1843180134.nemat",
                         "File": "1843180134.nemat"
+                    },
+                    "Shader": {
+                        "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
+                        "AssetsName": "DefaultShader.shader",
+                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
+                        "LibraryFile": "800223282.neshader"
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 1116795438,
+            "ParentUID": 1042133451,
+            "PrefabID": 1986618084,
+            "IsPrefab": true,
+            "Name": "Jawa",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        1.0916428565979004,
+                        0,
+                        -0.16125106811523438
+                    ],
+                    "LocalRotation": [
+                        -0.70710664987564087,
+                        0,
+                        0,
+                        0.70710688829421997
+                    ],
+                    "LocalScale": [
+                        1,
+                        0.9999997615814209,
+                        0.9999997615814209
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 429966493,
+                    "Name": "Jawa.nemesh",
+                    "Path": "Library\/Meshes\/429966493.nemesh",
+                    "File": "429966493.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 922653620,
+                        "Color": [
+                            0.58799999952316284,
+                            0.58799999952316284,
+                            0.58799999952316284,
+                            1
+                        ],
+                        "Name": "Jawa.nemat",
+                        "Path": "Library\/Materials\/922653620.nemat",
+                        "File": "922653620.nemat"
+                    },
+                    "Texture": {
+                        "AssetsPath": "Assets\/Textures\/Characters\/Jawa_texture.png",
+                        "AssetsName": "Jawa_texture.png",
+                        "LibaryPath": "Library\/Textures\/121777076.netex",
+                        "LibraryFile": "121777076.netex"
                     },
                     "Shader": {
                         "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
@@ -3096,7 +3499,7 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        -410.40261840820313,
+                        -410.40261840820312,
                         40.62298583984375,
                         -208.41867065429688
                     ],
@@ -3722,7 +4125,7 @@
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": true,
+            "ShowBoundingBoxes": false,
             "Components": [
                 {
                     "Type": 1,
@@ -3769,25 +4172,12 @@
                             "Type": 7,
                             "Name": "level1",
                             "vectorstring": [
-                                "Level1_Room1.json",
-                                "Level1_Room2.json",
-                                "Level1_Room3.json",
-                                "Level1_Room6.json",
-                                "Level1_Room8.json",
-                                "Level1_Room9.json"
-                            ]
-                        },
-                        {
-                            "Type": 7,
-                            "Name": "level2",
-                            "vectorstring": [
-                                "Level2_Room1.json",
-                                "Level2_Room2.json",
-                                "Level2_Room3.json",
-                                "Level2_Room4.json",
-                                "Level2_Room5.json",
-                                "Level2_Room6.json",
-                                "Level2_Room7.json"
+                                "Assets\/Scenes\/Level1_Room8.json",
+                                "Assets\/Scenes\/Level1_Room1.json",
+                                "Assets\/Scenes\/Level1_Room2.json",
+                                "Assets\/Scenes\/Level1_Room6.json",
+                                "Assets\/Scenes\/Level1_Room9.json",
+                                "Assets\/Scenes\/Level1_Room3.json"
                             ]
                         },
                         {
@@ -3926,7 +4316,7 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        114.70889282226563,
+                        114.70889282226562,
                         12.5,
                         110.53936767578125
                     ],
@@ -3990,6 +4380,75 @@
                         1,
                         1
                     ]
+                }
+            ]
+        },
+        {
+            "UID": 1991926312,
+            "ParentUID": 535249110,
+            "PrefabID": 1986618084,
+            "IsPrefab": true,
+            "Name": "Jawa",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        1.0916428565979004,
+                        0,
+                        -0.16125106811523438
+                    ],
+                    "LocalRotation": [
+                        -0.70710664987564087,
+                        0,
+                        0,
+                        0.70710688829421997
+                    ],
+                    "LocalScale": [
+                        1,
+                        0.9999997615814209,
+                        0.9999997615814209
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 429966493,
+                    "Name": "Jawa.nemesh",
+                    "Path": "Library\/Meshes\/429966493.nemesh",
+                    "File": "429966493.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 922653620,
+                        "Color": [
+                            0.58799999952316284,
+                            0.58799999952316284,
+                            0.58799999952316284,
+                            1
+                        ],
+                        "Name": "Jawa.nemat",
+                        "Path": "Library\/Materials\/922653620.nemat",
+                        "File": "922653620.nemat"
+                    },
+                    "Texture": {
+                        "AssetsPath": "Assets\/Textures\/Characters\/Jawa_texture.png",
+                        "AssetsName": "Jawa_texture.png",
+                        "LibaryPath": "Library\/Textures\/121777076.netex",
+                        "LibraryFile": "121777076.netex"
+                    },
+                    "Shader": {
+                        "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
+                        "AssetsName": "DefaultShader.shader",
+                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
+                        "LibraryFile": "800223282.neshader"
+                    }
                 }
             ]
         },
@@ -4254,7 +4713,7 @@
                     "LocalPosition": [
                         1177.1226806640625,
                         60.057670593261719,
-                        -388.61770629882813
+                        -388.61770629882812
                     ],
                     "LocalRotation": [
                         0.2705981433391571,
@@ -4307,11 +4766,11 @@
             ]
         },
         {
-            "UID": 372706878,
-            "ParentUID": 296213747,
-            "PrefabID": 129017146,
-            "IsPrefab": true,
-            "Name": "PlayerSpawn",
+            "UID": 244565694,
+            "ParentUID": 1996653431,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "mixamorig:LeftFoot",
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
@@ -4321,9 +4780,42 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        -4.120415210723877,
-                        5.7759871482849121,
-                        102.53910064697266
+                        -1.006086769450576e-09,
+                        7.4637331962585449,
+                        1.8162265291721269e-07
+                    ],
+                    "LocalRotation": [
+                        0.29180994629859924,
+                        0.31807038187980652,
+                        -0.31896039843559265,
+                        0.84376692771911621
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        0.99999994039535522
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 339717101,
+            "ParentUID": 983045971,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "mixamorig:HeadTop_End",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        14.547092437744141,
+                        -1.2086907625198364
                     ],
                     "LocalRotation": [
                         0,
@@ -4340,11 +4832,11 @@
             ]
         },
         {
-            "UID": 1042133451,
-            "ParentUID": 296213747,
-            "PrefabID": 1986618084,
-            "IsPrefab": true,
-            "Name": "Jawa_model.fbx",
+            "UID": 404800022,
+            "ParentUID": 445967788,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "mixamorig:LeftHandIndex2",
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
@@ -4354,9 +4846,243 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        -76.376571655273438,
-                        4.8528628349304199,
-                        27.568721771240234
+                        4.8334278801576147e-08,
+                        1.4321426153182983,
+                        -4.3399218441209086e-08
+                    ],
+                    "LocalRotation": [
+                        0.42230013012886047,
+                        0.040519047528505325,
+                        -0.040653958916664124,
+                        0.90463697910308838
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 414917814,
+            "ParentUID": 1509334525,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "mixamorig:Hips",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -0.55140918493270874,
+                        26.197494506835938,
+                        -1.9941396713256836
+                    ],
+                    "LocalRotation": [
+                        0.14728105068206787,
+                        -0.029683802276849747,
+                        0.034654513001441956,
+                        0.98804163932800293
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 445967788,
+            "ParentUID": 1840609732,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "mixamorig:LeftHandIndex1",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        3.4701592710462137e-09,
+                        1.6675742864608765,
+                        -1.7591954559748046e-09
+                    ],
+                    "LocalRotation": [
+                        0.11814035475254059,
+                        0.98101842403411865,
+                        -0.042510088533163071,
+                        -0.14777925610542297
+                    ],
+                    "LocalScale": [
+                        0.99999994039535522,
+                        1,
+                        0.99999994039535522
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 461552992,
+            "ParentUID": 1393013179,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "mixamorig:Neck",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        4.6385908126831055,
+                        8.2479836294169218e-08
+                    ],
+                    "LocalRotation": [
+                        -0.1036827340722084,
+                        0.0071708136238157749,
+                        0.0041736885905265808,
+                        0.9945758581161499
+                    ],
+                    "LocalScale": [
+                        0.99999994039535522,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 709150021,
+            "ParentUID": 1509334525,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Jawa",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        1.091644287109375,
+                        0,
+                        -0.16125106811523438
+                    ],
+                    "LocalRotation": [
+                        -0.70710676908493042,
+                        0,
+                        0,
+                        0.70710676908493042
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 1084567511,
+                    "Name": "Jawa.nemesh",
+                    "Path": "Library\/Meshes\/1084567511.nemesh",
+                    "File": "1084567511.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 1002171164,
+                        "Color": [
+                            0.58799999952316284,
+                            0.58799999952316284,
+                            0.58799999952316284,
+                            1
+                        ],
+                        "Name": "Jawa.nemat",
+                        "Path": "Library\/Materials\/1002171164.nemat",
+                        "File": "1002171164.nemat"
+                    },
+                    "Texture": {
+                        "AssetsPath": "Assets\/Textures\/Characters\/Jawa_texture.png",
+                        "AssetsName": "Jawa_texture.png",
+                        "LibaryPath": "Library\/Textures\/121777076.netex",
+                        "LibraryFile": "121777076.netex"
+                    },
+                    "Shader": {
+                        "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
+                        "AssetsName": "DefaultShader.shader",
+                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
+                        "LibraryFile": "800223282.neshader"
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 881917321,
+            "ParentUID": 994744144,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "mixamorig:RightHandIndex1",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        6.4000538202435564e-09,
+                        1.3742198944091797,
+                        -3.6923129442811842e-08
+                    ],
+                    "LocalRotation": [
+                        -0.12715882062911987,
+                        0.98732692003250122,
+                        -0.034483045339584351,
+                        0.088471472263336182
+                    ],
+                    "LocalScale": [
+                        0.99999970197677612,
+                        0.99999994039535522,
+                        0.9999997615814209
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 897847185,
+            "ParentUID": 1973806415,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "mixamorig:RightToe_End",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -1.1536727129168867e-10,
+                        5.945930004119873,
+                        3.9185876765657213e-10
                     ],
                     "LocalRotation": [
                         0,
@@ -4365,19 +5091,19 @@
                         1
                     ],
                     "LocalScale": [
-                        0.11999999731779099,
-                        0.11999999731779099,
-                        0.11999999731779099
+                        1,
+                        1,
+                        1
                     ]
                 }
             ]
         },
         {
-            "UID": 1116795438,
-            "ParentUID": 1042133451,
-            "PrefabID": 1986618084,
-            "IsPrefab": true,
-            "Name": "Jawa",
+            "UID": 983045971,
+            "ParentUID": 461552992,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "mixamorig:Head",
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
@@ -4387,168 +5113,1561 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        1.0916428565979004,
                         0,
-                        -0.16125106811523438
+                        2.5943717956542969,
+                        -0.21556147933006287
                     ],
                     "LocalRotation": [
-                        -0.70710664987564087,
-                        0,
-                        0,
-                        0.70710688829421997
+                        -0.35639902949333191,
+                        0.037889797240495682,
+                        -0.086521796882152557,
+                        0.92954736948013306
                     ],
                     "LocalScale": [
-                        1,
-                        0.9999997615814209,
-                        0.9999997615814209
+                        0.99999994039535522,
+                        0.99999994039535522,
+                        0.99999994039535522
                     ]
-                },
-                {
-                    "Type": 2,
-                    "UID": 429966493,
-                    "Name": "Jawa.nemesh",
-                    "Path": "Library\/Meshes\/429966493.nemesh",
-                    "File": "429966493.nemesh",
-                    "ShowWireframe": false,
-                    "ShowBoundingBox": false
-                },
-                {
-                    "Type": 3,
-                    "Material": {
-                        "UID": 922653620,
-                        "Color": [
-                            0.58799999952316284,
-                            0.58799999952316284,
-                            0.58799999952316284,
-                            1
-                        ],
-                        "Name": "Jawa.nemat",
-                        "Path": "Library\/Materials\/922653620.nemat",
-                        "File": "922653620.nemat"
-                    },
-                    "Texture": {
-                        "AssetsPath": "Assets\/Textures\/Characters\/Jawa_texture.png",
-                        "AssetsName": "Jawa_texture.png",
-                        "LibaryPath": "Library\/Textures\/121777076.netex",
-                        "LibraryFile": "121777076.netex"
-                    },
-                    "Shader": {
-                        "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
-                        "AssetsName": "DefaultShader.shader",
-                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
-                        "LibraryFile": "800223282.neshader"
-                    }
                 }
             ]
         },
         {
-            "UID": 807487571,
+            "UID": 992938679,
+            "ParentUID": 1154432081,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "mixamorig:LeftHandIndex4",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -0.37540242075920105,
+                        0.37660977244377136,
+                        -0.84847480058670044
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 994744144,
+            "ParentUID": 1218497885,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "mixamorig:RightHand",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -1.0521269189212035e-08,
+                        10.069271087646484,
+                        -1.4137934556401888e-07
+                    ],
+                    "LocalRotation": [
+                        -0.198715940117836,
+                        0.73037976026535034,
+                        0.11508617550134659,
+                        0.64328271150588989
+                    ],
+                    "LocalScale": [
+                        1,
+                        0.99999994039535522,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 997348923,
+            "ParentUID": 2047373988,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "mixamorig:LeftForeArm",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -1.8191826933744437e-09,
+                        8.7532453536987305,
+                        2.0688663227019788e-08
+                    ],
+                    "LocalRotation": [
+                        0.015866000205278397,
+                        -0.00014450955495703965,
+                        0.83054834604263306,
+                        0.55672043561935425
+                    ],
+                    "LocalScale": [
+                        0.99999988079071045,
+                        0.99999988079071045,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1025944856,
+            "ParentUID": 1657828558,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "mixamorig:LeftToe_End",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -3.9811443031112503e-10,
+                        6.0754108428955078,
+                        3.0129854167171288e-10
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1154432081,
+            "ParentUID": 404800022,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "mixamorig:LeftHandIndex3",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -0.3703245222568512,
+                        1.0337536334991455,
+                        -1.1970874071121216
+                    ],
+                    "LocalRotation": [
+                        0.13517720997333527,
+                        -0.0014608455821871758,
+                        -0.05237092450261116,
+                        0.98943531513214111
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1190592697,
+            "ParentUID": 414917814,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "mixamorig:Spine",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        3.0920982360839844,
+                        -0.042671173810958862
+                    ],
+                    "LocalRotation": [
+                        0.084888271987438202,
+                        0.013344919309020042,
+                        0.05062161386013031,
+                        0.99501430988311768
+                    ],
+                    "LocalScale": [
+                        0.99999994039535522,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1206884310,
+            "ParentUID": 1393013179,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "mixamorig:LeftShoulder",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        2.2073841094970703,
+                        4.9018640518188477,
+                        -0.0082799959927797318
+                    ],
+                    "LocalRotation": [
+                        0.55012804269790649,
+                        0.45850664377212524,
+                        -0.53742629289627075,
+                        0.4453132152557373
+                    ],
+                    "LocalScale": [
+                        0.99999988079071045,
+                        0.99999988079071045,
+                        0.99999988079071045
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1218497885,
+            "ParentUID": 2069616657,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "mixamorig:RightForeArm",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        3.7390912588364245e-09,
+                        8.7529821395874023,
+                        6.6317291214090801e-08
+                    ],
+                    "LocalRotation": [
+                        0.0013871632982045412,
+                        0.00017004736582748592,
+                        -0.85050410032272339,
+                        0.5259665846824646
+                    ],
+                    "LocalScale": [
+                        0.99999988079071045,
+                        0.99999994039535522,
+                        0.99999988079071045
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1260853964,
+            "ParentUID": 881917321,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "mixamorig:RightHandIndex2",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        3.755453903409034e-08,
+                        1.4735344648361206,
+                        1.7924226547449962e-09
+                    ],
+                    "LocalRotation": [
+                        0.35868549346923828,
+                        -0.077516868710517883,
+                        -0.14980500936508179,
+                        0.91809278726577759
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1372272872,
+            "ParentUID": 1260853964,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "mixamorig:RightHandIndex3",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0.23445555567741394,
+                        1.4631664752960205,
+                        -1.1739424467086792
+                    ],
+                    "LocalRotation": [
+                        0.02706042118370533,
+                        0.084368348121643066,
+                        0.11938970535993576,
+                        0.98888617753982544
+                    ],
+                    "LocalScale": [
+                        0.99999994039535522,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1393013179,
+            "ParentUID": 1680350931,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "mixamorig:Spine2",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        4.1231875419616699,
+                        1.5844036083123569e-09
+                    ],
+                    "LocalRotation": [
+                        0.066857695579528809,
+                        0.0092232581228017807,
+                        0.034931093454360962,
+                        0.99710822105407715
+                    ],
+                    "LocalScale": [
+                        1,
+                        0.99999994039535522,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1509334525,
             "ParentUID": 296213747,
-            "PrefabID": 1986618084,
-            "IsPrefab": true,
-            "Name": "Jawa_model.fbx",
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Jawa_Idle1.fbx",
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
+            "ShowBoundingBoxes": true,
             "Components": [
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        -76.701469421386719,
-                        4.8528628349304199,
-                        32.711441040039063
+                        0,
+                        0,
+                        0
                     ],
                     "LocalRotation": [
                         0,
-                        0.9995652437210083,
-                        0,
-                        0.029484961181879044
-                    ],
-                    "LocalScale": [
-                        0.11999999731779099,
-                        0.11999999731779099,
-                        0.11999999731779099
-                    ]
-                }
-            ]
-        },
-        {
-            "UID": 191638367,
-            "ParentUID": 807487571,
-            "PrefabID": 1986618084,
-            "IsPrefab": true,
-            "Name": "Jawa",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        1.0916428565979004,
-                        0,
-                        -0.16125106811523438
-                    ],
-                    "LocalRotation": [
-                        -0.70710664987564087,
                         0,
                         0,
-                        0.70710688829421997
+                        1
                     ],
                     "LocalScale": [
                         1,
-                        0.9999997615814209,
-                        0.9999997615814209
+                        1,
+                        1
                     ]
                 },
                 {
-                    "Type": 2,
-                    "UID": 429966493,
-                    "Name": "Jawa.nemesh",
-                    "Path": "Library\/Meshes\/429966493.nemesh",
-                    "File": "429966493.nemesh",
-                    "ShowWireframe": false,
-                    "ShowBoundingBox": false
+                    "Type": 6,
+                    "Animations": [
+                        {
+                            "UID": 64870009,
+                            "Name": "mixamo.com.neanimat",
+                            "Path": "Library\/Animations\/64870009.neanimat",
+                            "File": "64870009.neanimat"
+                        }
+                    ],
+                    "Clips": [
+                        {
+                            "AnimationUID": 64870009,
+                            "Name": "IdleAnim",
+                            "Start": 0,
+                            "End": 365,
+                            "Speed": 1,
+                            "Duration": 365,
+                            "DurationInSeconds": 12.166666984558105,
+                            "Loop": true
+                        },
+                        {
+                            "AnimationUID": 64870009,
+                            "Name": "Idle",
+                            "Start": 0,
+                            "End": 246,
+                            "Speed": 1,
+                            "Duration": 246,
+                            "DurationInSeconds": 8.1999998092651367,
+                            "Loop": true
+                        }
+                    ],
+                    "CurrentClip": {
+                        "AnimationName": "mixamo.com",
+                        "Name": "IdleAnim"
+                    }
                 },
                 {
                     "Type": 3,
-                    "Material": {
-                        "UID": 922653620,
-                        "Color": [
-                            0.58799999952316284,
-                            0.58799999952316284,
-                            0.58799999952316284,
-                            1
-                        ],
-                        "Name": "Jawa.nemat",
-                        "Path": "Library\/Materials\/922653620.nemat",
-                        "File": "922653620.nemat"
-                    },
                     "Texture": {
                         "AssetsPath": "Assets\/Textures\/Characters\/Jawa_texture.png",
                         "AssetsName": "Jawa_texture.png",
                         "LibaryPath": "Library\/Textures\/121777076.netex",
                         "LibraryFile": "121777076.netex"
-                    },
-                    "Shader": {
-                        "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
-                        "AssetsName": "DefaultShader.shader",
-                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
-                        "LibraryFile": "800223282.neshader"
                     }
                 }
             ]
         },
         {
-            "UID": 535249110,
+            "UID": 1657828558,
+            "ParentUID": 244565694,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "mixamorig:LeftToeBase",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -1.6245373046785971e-07,
+                        8.8824357986450195,
+                        -1.7210062708272744e-07
+                    ],
+                    "LocalRotation": [
+                        0.38085460662841797,
+                        0.32683420181274414,
+                        -0.14605525135993958,
+                        0.85252392292022705
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1680350931,
+            "ParentUID": 1190592697,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "mixamorig:Spine1",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        3.6077921390533447,
+                        1.6171101124839993e-09
+                    ],
+                    "LocalRotation": [
+                        0.066885575652122498,
+                        0.0079855574294924736,
+                        0.035169109702110291,
+                        0.99710875749588013
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1757133776,
+            "ParentUID": 1372272872,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "mixamorig:RightHandIndex4",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0.54001212120056152,
+                        0.54178684949874878,
+                        -0.46417659521102905
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1840609732,
+            "ParentUID": 997348923,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "mixamorig:LeftHand",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        1.8768351317532961e-09,
+                        10.069039344787598,
+                        1.2820500217003428e-09
+                    ],
+                    "LocalRotation": [
+                        -0.19378039240837097,
+                        -0.7843940258026123,
+                        -0.012379935011267662,
+                        0.58908581733703613
+                    ],
+                    "LocalScale": [
+                        1.0000001192092896,
+                        1,
+                        1.0000001192092896
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1885173729,
+            "ParentUID": 1393013179,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "mixamorig:RightShoulder",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -2.2073841094970703,
+                        4.9015355110168457,
+                        0.015541950240731239
+                    ],
+                    "LocalRotation": [
+                        0.50022947788238525,
+                        -0.49368506669998169,
+                        0.54431766271591187,
+                        0.4579998254776001
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1973806415,
+            "ParentUID": 2088597392,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "mixamorig:RightToeBase",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -5.5483802441358421e-08,
+                        8.9314432144165039,
+                        5.7731590175080783e-08
+                    ],
+                    "LocalRotation": [
+                        0.37810301780700684,
+                        -0.32793521881103516,
+                        0.14528346061706543,
+                        0.85345733165740967
+                    ],
+                    "LocalScale": [
+                        0.99999994039535522,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1996653431,
+            "ParentUID": 2004667541,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "mixamorig:LeftLeg",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        10.820629119873047,
+                        -6.9109051814564282e-11
+                    ],
+                    "LocalRotation": [
+                        -0.32627326250076294,
+                        -0.72007656097412109,
+                        -0.05862785130739212,
+                        0.60958856344223022
+                    ],
+                    "LocalScale": [
+                        0.99999994039535522,
+                        1,
+                        0.99999988079071045
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 2000720356,
+            "ParentUID": 414917814,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "mixamorig:RightUpLeg",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -4.4862079620361328,
+                        -1.7178306579589844,
+                        -0.0095344483852386475
+                    ],
+                    "LocalRotation": [
+                        -0.21994826197624207,
+                        0.31630349159240723,
+                        0.91030001640319824,
+                        0.15142294764518738
+                    ],
+                    "LocalScale": [
+                        1,
+                        0.99999994039535522,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 2004667541,
+            "ParentUID": 414917814,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "mixamorig:LeftUpLeg",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        4.4862079620361328,
+                        -1.7178306579589844,
+                        -0.002927631139755249
+                    ],
+                    "LocalRotation": [
+                        0.12962035834789276,
+                        0.25597491860389709,
+                        0.94770270586013794,
+                        -0.13976764678955078
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 2047373988,
+            "ParentUID": 1206884310,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "mixamorig:LeftArm",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -1.9777912640961404e-09,
+                        4.8127713203430176,
+                        -2.9350879060530133e-08
+                    ],
+                    "LocalRotation": [
+                        0.42769476771354675,
+                        0.059256039559841156,
+                        0.31788322329521179,
+                        0.84410673379898071
+                    ],
+                    "LocalScale": [
+                        1,
+                        0.99999994039535522,
+                        0.99999994039535522
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 2067593362,
+            "ParentUID": 2000720356,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "mixamorig:RightLeg",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        10.820630073547363,
+                        -8.6970430857036263e-11
+                    ],
+                    "LocalRotation": [
+                        -0.078745491802692413,
+                        -0.59668952226638794,
+                        0.41369342803955078,
+                        0.68309491872787476
+                    ],
+                    "LocalScale": [
+                        0.99999988079071045,
+                        0.99999994039535522,
+                        0.99999988079071045
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 2069616657,
+            "ParentUID": 1885173729,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "mixamorig:RightArm",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -6.0358945619398696e-10,
+                        4.8127713203430176,
+                        -2.9382960065049701e-08
+                    ],
+                    "LocalRotation": [
+                        0.43410870432853699,
+                        0.0005548188928514719,
+                        -0.26489382982254028,
+                        0.8610345721244812
+                    ],
+                    "LocalScale": [
+                        1,
+                        0.99999994039535522,
+                        0.99999994039535522
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 2088597392,
+            "ParentUID": 2067593362,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "mixamorig:RightFoot",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        3.946667992416053e-11,
+                        7.4635787010192871,
+                        -3.5365999906389334e-08
+                    ],
+                    "LocalRotation": [
+                        0.42214387655258179,
+                        0.78029042482376099,
+                        -0.30294141173362732,
+                        0.34809195995330811
+                    ],
+                    "LocalScale": [
+                        0.99999994039535522,
+                        1,
+                        0.99999994039535522
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 26289237,
+            "ParentUID": 1357689009,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "mixamorig:LeftToe_End",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        5.5444537849780318e-12,
+                        6.0730190277099609,
+                        -6.2262084377096016e-10
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 34442155,
+            "ParentUID": 134794645,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "mixamorig:RightArm",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -2.8670005258746301e-10,
+                        4.339080810546875,
+                        -5.4529436965822242e-08
+                    ],
+                    "LocalRotation": [
+                        0.20432718098163605,
+                        0.68173694610595703,
+                        0.051154598593711853,
+                        0.70061999559402466
+                    ],
+                    "LocalScale": [
+                        0.99999988079071045,
+                        0.99999994039535522,
+                        0.99999988079071045
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 35044670,
+            "ParentUID": 1786902087,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "mixamorig:RightHandIndex2",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        3.8041349625927978e-08,
+                        1.5002022981643677,
+                        -6.3907265257512336e-08
+                    ],
+                    "LocalRotation": [
+                        0.4095802903175354,
+                        -0.049791723489761353,
+                        -0.0092916088178753853,
+                        0.91086685657501221
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 40204283,
+            "ParentUID": 314096661,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "mixamorig:LeftShoulder",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        2.097193717956543,
+                        5.0533504486083984,
+                        -0.0062724840827286243
+                    ],
+                    "LocalRotation": [
+                        0.49769419431686401,
+                        0.50542610883712769,
+                        -0.45685273408889771,
+                        0.5367780327796936
+                    ],
+                    "LocalScale": [
+                        0.99999988079071045,
+                        0.99999988079071045,
+                        0.99999988079071045
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 81835765,
+            "ParentUID": 626901933,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "mixamorig:RightLeg",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        10.428501129150391,
+                        -3.5919886509638843e-10
+                    ],
+                    "LocalRotation": [
+                        -0.010564099065959454,
+                        -0.66787707805633545,
+                        0.4455028772354126,
+                        0.59611737728118896
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 95851858,
+            "ParentUID": 2099798123,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "mixamorig:LeftHandIndex2",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -3.9870286627774476e-08,
+                        1.3681908845901489,
+                        -2.5532202130307269e-08
+                    ],
+                    "LocalRotation": [
+                        0.30013328790664673,
+                        0.030011091381311417,
+                        -0.0039828415028750896,
+                        0.95341682434082031
+                    ],
+                    "LocalScale": [
+                        0.99999994039535522,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 134794645,
+            "ParentUID": 314096661,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "mixamorig:RightShoulder",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -2.097193717956543,
+                        5.053093433380127,
+                        0.014070090837776661
+                    ],
+                    "LocalRotation": [
+                        0.50215417146682739,
+                        -0.50061076879501343,
+                        0.49747171998023987,
+                        0.49975192546844482
+                    ],
+                    "LocalScale": [
+                        0.99999988079071045,
+                        0.99999988079071045,
+                        0.99999988079071045
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 163345594,
+            "ParentUID": 1718365577,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "mixamorig:LeftFoot",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -2.2565134205621007e-09,
+                        6.893033504486084,
+                        1.2034188756615549e-08
+                    ],
+                    "LocalRotation": [
+                        0.30055299401283264,
+                        0.13515205681324005,
+                        -0.53787857294082642,
+                        0.7759435772895813
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 203928426,
+            "ParentUID": 2045141727,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "mixamorig:Head",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        2.612457275390625,
+                        -0.22011470794677734
+                    ],
+                    "LocalRotation": [
+                        -0.1361825168132782,
+                        0.13994622230529785,
+                        -0.039764843881130219,
+                        0.97994297742843628
+                    ],
+                    "LocalScale": [
+                        0.99999994039535522,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 213679574,
+            "ParentUID": 81835765,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "mixamorig:RightFoot",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        1.8954587899244757e-11,
+                        6.8929195404052734,
+                        -8.0475368591237384e-09
+                    ],
+                    "LocalRotation": [
+                        0.3923366367816925,
+                        0.79434871673583984,
+                        -0.25947108864784241,
+                        0.38439148664474487
+                    ],
+                    "LocalScale": [
+                        1,
+                        0.99999988079071045,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 303547078,
+            "ParentUID": 35044670,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "mixamorig:RightHandIndex3",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0.31645143032073975,
+                        1.1340277194976807,
+                        -1.2231935262680054
+                    ],
+                    "LocalRotation": [
+                        0.13195084035396576,
+                        -0.047663312405347824,
+                        0.013112785294651985,
+                        0.99002289772033691
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 314096661,
+            "ParentUID": 1636041521,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "mixamorig:Spine2",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        4.2174043655395508,
+                        3.9132966311861139e-10
+                    ],
+                    "LocalRotation": [
+                        0.031961157917976379,
+                        -0.01040214765816927,
+                        0.002877276623621583,
+                        0.99943089485168457
+                    ],
+                    "LocalScale": [
+                        1,
+                        0.99999994039535522,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 597652026,
+            "ParentUID": 1658161705,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "mixamorig:Spine",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        3.1628017425537109,
+                        -0.039953142404556274
+                    ],
+                    "LocalRotation": [
+                        -0.013093019835650921,
+                        -0.073433421552181244,
+                        -0.055729977786540985,
+                        0.99565571546554565
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        0.99999994039535522
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 626901933,
+            "ParentUID": 1658161705,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "mixamorig:RightUpLeg",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -4.3649587631225586,
+                        -1.757110595703125,
+                        -0.019292950630187988
+                    ],
+                    "LocalRotation": [
+                        -0.021379601210355759,
+                        0.20126049220561981,
+                        0.95735830068588257,
+                        0.20616061985492706
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 686556229,
+            "ParentUID": 203928426,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "mixamorig:HeadTop_End",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        14.646488189697266,
+                        -1.2340518236160278
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 768818818,
+            "ParentUID": 891194702,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "mixamorig:LeftForeArm",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -9.8632702005829742e-10,
+                        8.4170064926147461,
+                        -5.4632494084216887e-08
+                    ],
+                    "LocalRotation": [
+                        0.011555974371731281,
+                        -8.9496330474503338e-05,
+                        0.86080461740493774,
+                        0.50880426168441772
+                    ],
+                    "LocalScale": [
+                        0.99999988079071045,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 891194702,
+            "ParentUID": 40204283,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "mixamorig:LeftArm",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -1.4897583167083894e-09,
+                        4.339080810546875,
+                        -5.4509833091742621e-08
+                    ],
+                    "LocalRotation": [
+                        -0.025046249851584435,
+                        -0.087747514247894287,
+                        0.57715088129043579,
+                        0.8115231990814209
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 966398685,
+            "ParentUID": 213679574,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "mixamorig:RightToeBase",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        1.525327633089546e-07,
+                        9.3457736968994141,
+                        -1.6000051061837439e-07
+                    ],
+                    "LocalRotation": [
+                        0.39740759134292603,
+                        -0.34785723686218262,
+                        0.1662595272064209,
+                        0.83271867036819458
+                    ],
+                    "LocalScale": [
+                        0.99999994039535522,
+                        0.99999988079071045,
+                        0.99999994039535522
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 980187875,
+            "ParentUID": 966398685,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "mixamorig:RightToe_End",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        2.0643398102038191e-10,
+                        5.946052074432373,
+                        6.464859758636976e-10
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1070514589,
+            "ParentUID": 95851858,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "mixamorig:LeftHandIndex3",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -0.37515208125114441,
+                        1.6293922662734985,
+                        -1.0637059211730957
+                    ],
+                    "LocalRotation": [
+                        0.15600208938121796,
+                        0.031941521912813187,
+                        -0.036919329315423965,
+                        0.98654961585998535
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        0.99999994039535522
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1115136936,
             "ParentUID": 296213747,
-            "PrefabID": 1986618084,
-            "IsPrefab": true,
-            "Name": "Jawa_model.fbx",
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Macarena Dance.fbx",
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
@@ -4558,45 +6677,65 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        24.443042755126953,
-                        4.8528566360473633,
-                        74.266159057617188
+                        48.509696960449219,
+                        0,
+                        0
                     ],
                     "LocalRotation": [
                         0,
-                        -0.35198527574539185,
                         0,
-                        0.93600553274154663
+                        0,
+                        1
                     ],
                     "LocalScale": [
-                        0.11999998241662979,
-                        0.11999999731779099,
-                        0.11999998241662979
+                        1,
+                        1,
+                        1
                     ]
                 },
                 {
-                    "Type": 8,
-                    "Is Static": true,
-                    "Filter": "default"
+                    "Type": 6,
+                    "Animations": [
+                        {
+                            "UID": 1072194656,
+                            "Name": "mixamo.com.neanimat",
+                            "Path": "Library\/Animations\/1072194656.neanimat",
+                            "File": "1072194656.neanimat"
+                        }
+                    ],
+                    "Clips": [
+                        {
+                            "AnimationUID": 1072194656,
+                            "Name": "Dance",
+                            "Start": 0,
+                            "End": 246,
+                            "Speed": 1,
+                            "Duration": 246,
+                            "DurationInSeconds": 8.1999998092651367,
+                            "Loop": true
+                        }
+                    ],
+                    "CurrentClip": {
+                        "AnimationName": "mixamo.com",
+                        "Name": "Dance"
+                    }
                 },
                 {
-                    "Type": 9,
-                    "Is Trigger": false,
-                    "Show Collider": true,
-                    "Size X": 2,
-                    "Size Y": 6,
-                    "Size Z": 2,
-                    "Center X": 0,
-                    "Center Y": 4,
-                    "Center Z": 0
+                    "Type": 3,
+                    "Texture": {
+                        "AssetsPath": "Assets\/Textures\/Characters\/Jawa_texture.png",
+                        "AssetsName": "Jawa_texture.png",
+                        "LibaryPath": "Library\/Textures\/121777076.netex",
+                        "LibraryFile": "121777076.netex"
+                    }
                 }
             ]
         },
         {
-            "UID": 1991926312,
-            "ParentUID": 535249110,
-            "PrefabID": 1986618084,
-            "IsPrefab": true,
+            "UID": 1119814912,
+            "ParentUID": 1115136936,
+            "PrefabID": 0,
+            "IsPrefab": false,
             "Name": "Jawa",
             "IsActive": true,
             "IsStatic": false,
@@ -4607,35 +6746,35 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        1.0916428565979004,
+                        1.091644287109375,
                         0,
                         -0.16125106811523438
                     ],
                     "LocalRotation": [
-                        -0.70710664987564087,
+                        -0.70710676908493042,
                         0,
                         0,
-                        0.70710688829421997
+                        0.70710676908493042
                     ],
                     "LocalScale": [
                         1,
-                        0.9999997615814209,
-                        0.9999997615814209
+                        1,
+                        1
                     ]
                 },
                 {
                     "Type": 2,
-                    "UID": 429966493,
+                    "UID": 387667664,
                     "Name": "Jawa.nemesh",
-                    "Path": "Library\/Meshes\/429966493.nemesh",
-                    "File": "429966493.nemesh",
+                    "Path": "Library\/Meshes\/387667664.nemesh",
+                    "File": "387667664.nemesh",
                     "ShowWireframe": false,
                     "ShowBoundingBox": false
                 },
                 {
                     "Type": 3,
                     "Material": {
-                        "UID": 922653620,
+                        "UID": 235959848,
                         "Color": [
                             0.58799999952316284,
                             0.58799999952316284,
@@ -4643,8 +6782,8 @@
                             1
                         ],
                         "Name": "Jawa.nemat",
-                        "Path": "Library\/Materials\/922653620.nemat",
-                        "File": "922653620.nemat"
+                        "Path": "Library\/Materials\/235959848.nemat",
+                        "File": "235959848.nemat"
                     },
                     "Texture": {
                         "AssetsPath": "Assets\/Textures\/Characters\/Jawa_texture.png",
@@ -4662,11 +6801,11 @@
             ]
         },
         {
-            "UID": 546065927,
-            "ParentUID": 296213747,
-            "PrefabID": 1986618084,
-            "IsPrefab": true,
-            "Name": "Jawa_model.fbx",
+            "UID": 1305523203,
+            "ParentUID": 34442155,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "mixamorig:RightForeArm",
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
@@ -4676,30 +6815,30 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        -31.843170166015625,
-                        4.8528623580932617,
-                        60.476875305175781
+                        -2.858895786772564e-09,
+                        8.4176969528198242,
+                        -9.4475709033758903e-08
                     ],
                     "LocalRotation": [
-                        0,
-                        0.29644110798835754,
-                        0,
-                        0.95505118370056152
+                        -0.0080907642841339111,
+                        -5.6838427553884685e-05,
+                        0.92070966958999634,
+                        -0.39016431570053101
                     ],
                     "LocalScale": [
-                        0.11999999731779099,
-                        0.11999999731779099,
-                        0.11999999731779099
+                        1,
+                        1,
+                        0.99999994039535522
                     ]
                 }
             ]
         },
         {
-            "UID": 212296280,
-            "ParentUID": 546065927,
-            "PrefabID": 1986618084,
-            "IsPrefab": true,
-            "Name": "Jawa",
+            "UID": 1357689009,
+            "ParentUID": 163345594,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "mixamorig:LeftToeBase",
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
@@ -4709,57 +6848,384 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        1.0916428565979004,
-                        0,
-                        -0.16125106811523438
+                        1.0287654106377886e-07,
+                        9.2771482467651367,
+                        1.047987154834118e-07
                     ],
                     "LocalRotation": [
-                        -0.70710664987564087,
-                        0,
-                        0,
-                        0.70710688829421997
+                        0.39360925555229187,
+                        0.34849575161933899,
+                        -0.16436973214149475,
+                        0.83462870121002197
                     ],
                     "LocalScale": [
                         1,
-                        0.9999997615814209,
-                        0.9999997615814209
+                        0.99999994039535522,
+                        0.99999994039535522
                     ]
-                },
+                }
+            ]
+        },
+        {
+            "UID": 1396516755,
+            "ParentUID": 1658161705,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "mixamorig:LeftUpLeg",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
                 {
-                    "Type": 2,
-                    "UID": 429966493,
-                    "Name": "Jawa.nemesh",
-                    "Path": "Library\/Meshes\/429966493.nemesh",
-                    "File": "429966493.nemesh",
-                    "ShowWireframe": false,
-                    "ShowBoundingBox": false
-                },
+                    "Type": 1,
+                    "LocalPosition": [
+                        4.3649587631225586,
+                        -1.757110595703125,
+                        0.0020509958267211914
+                    ],
+                    "LocalRotation": [
+                        0.025284621864557266,
+                        0.0035402094945311546,
+                        0.98922628164291382,
+                        -0.14415089786052704
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1636041521,
+            "ParentUID": 597652026,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "mixamorig:Spine1",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
                 {
-                    "Type": 3,
-                    "Material": {
-                        "UID": 922653620,
-                        "Color": [
-                            0.58799999952316284,
-                            0.58799999952316284,
-                            0.58799999952316284,
-                            1
-                        ],
-                        "Name": "Jawa.nemat",
-                        "Path": "Library\/Materials\/922653620.nemat",
-                        "File": "922653620.nemat"
-                    },
-                    "Texture": {
-                        "AssetsPath": "Assets\/Textures\/Characters\/Jawa_texture.png",
-                        "AssetsName": "Jawa_texture.png",
-                        "LibaryPath": "Library\/Textures\/121777076.netex",
-                        "LibraryFile": "121777076.netex"
-                    },
-                    "Shader": {
-                        "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
-                        "AssetsName": "DefaultShader.shader",
-                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
-                        "LibraryFile": "800223282.neshader"
-                    }
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        3.6902282238006592,
+                        9.0395424479083886e-10
+                    ],
+                    "LocalRotation": [
+                        0.031801857054233551,
+                        -0.010725728236138821,
+                        0.0034056955482810736,
+                        0.99943095445632935
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1658161705,
+            "ParentUID": 1115136936,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "mixamorig:Hips",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0.34332045912742615,
+                        25.344182968139648,
+                        0.50847804546356201
+                    ],
+                    "LocalRotation": [
+                        0.0030580121092498302,
+                        -0.25524914264678955,
+                        0.012028458528220654,
+                        0.96679562330245972
+                    ],
+                    "LocalScale": [
+                        0.99999994039535522,
+                        0.99999994039535522,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1718365577,
+            "ParentUID": 1396516755,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "mixamorig:LeftLeg",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        10.428497314453125,
+                        -3.0901503578206757e-11
+                    ],
+                    "LocalRotation": [
+                        -0.40094101428985596,
+                        -0.67632901668548584,
+                        0.025775125250220299,
+                        0.61738240718841553
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1733040435,
+            "ParentUID": 1305523203,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "mixamorig:RightHand",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        1.1412311096137273e-08,
+                        10.537562370300293,
+                        1.854371163290125e-07
+                    ],
+                    "LocalRotation": [
+                        -0.025902658700942993,
+                        0.97489410638809204,
+                        0.0062729907222092152,
+                        0.22106821835041046
+                    ],
+                    "LocalScale": [
+                        1.0000002384185791,
+                        0.99999994039535522,
+                        1.0000002384185791
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1786902087,
+            "ParentUID": 1733040435,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "mixamorig:RightHandIndex1",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        2.540611276913296e-08,
+                        1.6281263828277588,
+                        -2.1267412719794265e-08
+                    ],
+                    "LocalRotation": [
+                        -0.1476442813873291,
+                        0.97546428442001343,
+                        -0.049007173627614975,
+                        0.15578500926494598
+                    ],
+                    "LocalScale": [
+                        0.9999997615814209,
+                        1,
+                        0.99999982118606567
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1876231634,
+            "ParentUID": 1070514589,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "mixamorig:LeftHandIndex4",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -0.45115429162979126,
+                        0.65622484683990479,
+                        -0.82498627901077271
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 2012030958,
+            "ParentUID": 303547078,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "mixamorig:RightHandIndex4",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0.43411558866500854,
+                        0.5077667236328125,
+                        -0.99615955352783203
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 2045141727,
+            "ParentUID": 314096661,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "mixamorig:Neck",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        4.7445764541625977,
+                        -3.7995917523403477e-08
+                    ],
+                    "LocalRotation": [
+                        -0.010718667879700661,
+                        0.023848444223403931,
+                        0.014538791961967945,
+                        0.99955248832702637
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 2052510150,
+            "ParentUID": 768818818,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "mixamorig:LeftHand",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -1.6634014166072575e-09,
+                        10.536114692687988,
+                        -1.8799184431372851e-10
+                    ],
+                    "LocalRotation": [
+                        -0.062939397990703583,
+                        0.9850844144821167,
+                        -0.067655749619007111,
+                        -0.14515464007854462
+                    ],
+                    "LocalScale": [
+                        1.0000004768371582,
+                        1,
+                        1.0000004768371582
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 2099798123,
+            "ParentUID": 2052510150,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "mixamorig:LeftHandIndex1",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        2.9579940274970795e-08,
+                        1.4382654428482056,
+                        -1.1034639868512386e-09
+                    ],
+                    "LocalRotation": [
+                        0.090927101671695709,
+                        0.98774927854537964,
+                        -0.031762048602104187,
+                        -0.12277951091527939
+                    ],
+                    "LocalScale": [
+                        0.99999994039535522,
+                        1,
+                        1
+                    ]
                 }
             ]
         }
