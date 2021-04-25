@@ -82,7 +82,7 @@ void GameManager::Start()
 		playerScript = (Player*)playerGameObject->GetScript("Player");
 		ParsonNode playerNode = jsonState.GetNode("player");
 		playerScript->LoadState(playerNode);
-		if (!strstr(App->scene->GetCurrentScene(), level1[0].c_str()))
+		if (strstr(level1[0].c_str(), App->scene->GetCurrentScene()))
 			playerScript->Reset();
 	}
 }
