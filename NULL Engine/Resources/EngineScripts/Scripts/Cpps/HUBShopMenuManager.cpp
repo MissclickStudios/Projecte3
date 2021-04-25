@@ -25,7 +25,7 @@ void HUBShopMenuManager::Update()
 {
 	if (exitButton != nullptr)
 	{
-		if (exitButton->IsPressed())
+		if (exitButton->GetState() == UIButtonState::RELEASED)
 		{
 			exitButton->SetIsPressed(false);
 			exitButton->SetState(UIButtonState::HOVERED);
@@ -35,7 +35,7 @@ void HUBShopMenuManager::Update()
 
 	if (buyButton != nullptr)
 	{
-		if (buyButton->IsPressed())
+		if (buyButton->GetState() == UIButtonState::RELEASED)
 		{
 			//Use Beskar Ingots
 			LOG("OMG YOU HAVE JUST SPENT %d Beskar Ingots!", beskarCost);

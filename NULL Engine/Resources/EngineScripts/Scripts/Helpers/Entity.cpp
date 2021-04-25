@@ -149,7 +149,7 @@ void Entity::TakeDamage(float damage)
 	if (hitParticles)
 		hitParticles->stopSpawn = false;
 	if (material)
-		material->SetTakeDamage(true);
+		material->SetAlternateColour(Color(1, 0, 0, 1));
 }
 
 void Entity::GiveHeal(float amount)

@@ -6,6 +6,7 @@
 class GameObject;
 class C_UI_Button;
 class C_UI_Text;
+class C_Canvas;
 
 class SCRIPTS_API DebugMenuManager : public Script {
 public:
@@ -16,7 +17,7 @@ public:
 
 	
 	int beskarToAdd = 10;
-	int currencyToAdd = 10;
+	int creditsToAdd = 10;
 	int healthHealed = 1;
 
 	std::string godModeName = "GodMode";
@@ -26,8 +27,10 @@ public:
 	std::string getBeskarName = "GetBeskarIngots";
 	std::string spawnBlurggName = "SpawnBlurgg";
 	std::string spawnTrooperName = "SpawnTrooper";
+	std::string gameManagerName = "GameManager";
+	std::string mandoName = "Mandalorian";
 
-	std::string fpsTextName = "FPSText";
+	std::string fpsTextName = "fpsText";
 
 	std::string debugMenuCanvasName = "DebugMenuCanvas";
 
@@ -44,11 +47,17 @@ private:
 
 	C_UI_Text* fpsText = nullptr;
 
-	GameObject* debugMenuCanvas = nullptr;
+	C_Canvas* debugMenuCanvas = nullptr;
+
+	GameObject* gameManager = nullptr;
+	GameObject* mando = nullptr;
 };
 
 SCRIPTS_FUNCTION DebugMenuManager* CreateDebugMenuManager() {
 	DebugMenuManager* script = new DebugMenuManager();
+	INSPECTOR_STRING(script->gameManagerName);
+	INSPECTOR_STRING(script->mandoName);
+	INSPECTOR_STRING(script->debugMenuCanvasName);
 	INSPECTOR_STRING(script->godModeName);
 	INSPECTOR_STRING(script->roomSkipName);
 	INSPECTOR_STRING(script->addHealthName);
