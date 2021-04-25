@@ -8,7 +8,7 @@
     "IsStatic": false,
     "IsSceneRoot": false,
     "MaintainThroughScenes": false,
-    "ShowBoundingBoxes": false,
+    "ShowBoundingBoxes": true,
     "Components": [
         {
             "Type": 1,
@@ -64,7 +64,7 @@
     ],
     "Children": [
         {
-            "UID": 1709975952,
+            "UID": 382315799,
             "ParentUID": 939333725,
             "PrefabID": 1524961430,
             "IsPrefab": true,
@@ -106,12 +106,66 @@
                         "IsInputCanvas": true,
                         "Priority": 4
                     }
+                },
+                {
+                    "Type": 24,
+                    "ResourceUID": 633707186,
+                    "AssetsPath": "Assets\/Scripts\/\/HUDManager.h",
+                    "DataName": "HUDManager",
+                    "HasInspector": true,
+                    "InspectorVariables": [
+                        {
+                            "Type": 5,
+                            "Name": "mandoImageName",
+                            "string": "Mando"
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "secondaryWeaponImageName",
+                            "string": "SecodaryWeapon"
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "primaryWeaponImageName",
+                            "string": "PrimaryWeapon"
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "dashImageName",
+                            "string": "Dash"
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "creditsImageName",
+                            "string": "Credits"
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "playerName",
+                            "string": "Mandalorian"
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "debugMenuCanvasName",
+                            "string": "DebugMenuCanvas"
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "hubShopCanvasName",
+                            "string": "HUBShopCanvas"
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "hudCanvasName",
+                            "string": "HUD"
+                        }
+                    ]
                 }
             ],
             "Children": [
                 {
-                    "UID": 1671890887,
-                    "ParentUID": 1709975952,
+                    "UID": 2091078273,
+                    "ParentUID": 382315799,
                     "PrefabID": 1524961430,
                     "IsPrefab": true,
                     "Name": "PrimaryWeapon",
@@ -170,8 +224,8 @@
                     "Children": []
                 },
                 {
-                    "UID": 1377084981,
-                    "ParentUID": 1709975952,
+                    "UID": 1094105911,
+                    "ParentUID": 382315799,
                     "PrefabID": 1524961430,
                     "IsPrefab": true,
                     "Name": "Dash",
@@ -230,8 +284,8 @@
                     "Children": []
                 },
                 {
-                    "UID": 1838489667,
-                    "ParentUID": 1709975952,
+                    "UID": 213645122,
+                    "ParentUID": 382315799,
                     "PrefabID": 1524961430,
                     "IsPrefab": true,
                     "Name": "SecodaryWeapon",
@@ -290,8 +344,8 @@
                     "Children": []
                 },
                 {
-                    "UID": 119100126,
-                    "ParentUID": 1709975952,
+                    "UID": 334348101,
+                    "ParentUID": 382315799,
                     "PrefabID": 1524961430,
                     "IsPrefab": true,
                     "Name": "Heart3",
@@ -350,8 +404,8 @@
                     "Children": []
                 },
                 {
-                    "UID": 201406179,
-                    "ParentUID": 1709975952,
+                    "UID": 648049703,
+                    "ParentUID": 382315799,
                     "PrefabID": 1524961430,
                     "IsPrefab": true,
                     "Name": "Credits",
@@ -410,8 +464,8 @@
                     "Children": []
                 },
                 {
-                    "UID": 1162331498,
-                    "ParentUID": 1709975952,
+                    "UID": 1309225161,
+                    "ParentUID": 382315799,
                     "PrefabID": 1524961430,
                     "IsPrefab": true,
                     "Name": "Heart2",
@@ -470,8 +524,8 @@
                     "Children": []
                 },
                 {
-                    "UID": 1897981700,
-                    "ParentUID": 1709975952,
+                    "UID": 941268720,
+                    "ParentUID": 382315799,
                     "PrefabID": 1524961430,
                     "IsPrefab": true,
                     "Name": "Heart1",
@@ -532,7 +586,7 @@
             ]
         },
         {
-            "UID": 2062747652,
+            "UID": 1345683097,
             "ParentUID": 939333725,
             "PrefabID": 1524961430,
             "IsPrefab": true,
@@ -584,6 +638,11 @@
                     "InspectorVariables": [
                         {
                             "Type": 5,
+                            "Name": "mandoName",
+                            "string": "Mandalorian"
+                        },
+                        {
+                            "Type": 5,
                             "Name": "exitButtonName",
                             "string": "ExitButton"
                         },
@@ -597,67 +656,8 @@
             ],
             "Children": [
                 {
-                    "UID": 1103951497,
-                    "ParentUID": 2062747652,
-                    "PrefabID": 1524961430,
-                    "IsPrefab": true,
-                    "Name": "ExitButton",
-                    "IsActive": true,
-                    "IsStatic": false,
-                    "IsSceneRoot": false,
-                    "MaintainThroughScenes": false,
-                    "ShowBoundingBoxes": false,
-                    "Components": [
-                        {
-                            "Type": 1,
-                            "LocalPosition": [
-                                0,
-                                0,
-                                0
-                            ],
-                            "LocalRotation": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ],
-                            "LocalScale": [
-                                1,
-                                1,
-                                1
-                            ]
-                        },
-                        {
-                            "Type": 23,
-                            "Button": {
-                                "X": 0.289000004529953,
-                                "Y": -0.24936962127685547,
-                                "W": 0.32499998807907104,
-                                "H": 0.079999998211860657,
-                                "IsHovered": false
-                            }
-                        },
-                        {
-                            "Type": 3,
-                            "Texture": {
-                                "AssetsPath": "Assets\/Textures\/heal.png",
-                                "AssetsName": "heal.png",
-                                "LibaryPath": "Library\/Textures\/1983478131.netex",
-                                "LibraryFile": "1983478131.netex"
-                            },
-                            "Shader": {
-                                "AssetsPath": "Assets\/Shaders\/UIShader.shader",
-                                "AssetsName": "UIShader.shader",
-                                "LibaryPath": "Library\/Shaders\/1025410539.neshader",
-                                "LibraryFile": "1025410539.neshader"
-                            }
-                        }
-                    ],
-                    "Children": []
-                },
-                {
-                    "UID": 2139254141,
-                    "ParentUID": 2062747652,
+                    "UID": 1305907654,
+                    "ParentUID": 1345683097,
                     "PrefabID": 1524961430,
                     "IsPrefab": true,
                     "Name": "BuyButton",
@@ -715,8 +715,8 @@
                     "Children": []
                 },
                 {
-                    "UID": 935181719,
-                    "ParentUID": 2062747652,
+                    "UID": 1688323238,
+                    "ParentUID": 1345683097,
                     "PrefabID": 1524961430,
                     "IsPrefab": true,
                     "Name": "Background",
@@ -762,7 +762,7 @@
             ]
         },
         {
-            "UID": 884249015,
+            "UID": 1382637652,
             "ParentUID": 939333725,
             "PrefabID": 1524961430,
             "IsPrefab": true,
@@ -771,7 +771,7 @@
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": true,
+            "ShowBoundingBoxes": false,
             "Components": [
                 {
                     "Type": 1,
@@ -872,8 +872,8 @@
             ],
             "Children": [
                 {
-                    "UID": 510899360,
-                    "ParentUID": 884249015,
+                    "UID": 165411949,
+                    "ParentUID": 1382637652,
                     "PrefabID": 1524961430,
                     "IsPrefab": true,
                     "Name": "SkipRoom",
@@ -931,8 +931,8 @@
                     "Children": []
                 },
                 {
-                    "UID": 1838176031,
-                    "ParentUID": 884249015,
+                    "UID": 865055254,
+                    "ParentUID": 1382637652,
                     "PrefabID": 1524961430,
                     "IsPrefab": true,
                     "Name": "GetCredits",
@@ -990,8 +990,8 @@
                     "Children": []
                 },
                 {
-                    "UID": 1139242329,
-                    "ParentUID": 884249015,
+                    "UID": 104329794,
+                    "ParentUID": 1382637652,
                     "PrefabID": 1524961430,
                     "IsPrefab": true,
                     "Name": "HealMando",
@@ -1049,8 +1049,8 @@
                     "Children": []
                 },
                 {
-                    "UID": 1063837145,
-                    "ParentUID": 884249015,
+                    "UID": 777444455,
+                    "ParentUID": 1382637652,
                     "PrefabID": 1524961430,
                     "IsPrefab": true,
                     "Name": "SpawnTrooper",
@@ -1108,8 +1108,8 @@
                     "Children": []
                 },
                 {
-                    "UID": 251432309,
-                    "ParentUID": 884249015,
+                    "UID": 1127383280,
+                    "ParentUID": 1382637652,
                     "PrefabID": 1524961430,
                     "IsPrefab": true,
                     "Name": "SpawnBlurgg",
@@ -1167,8 +1167,8 @@
                     "Children": []
                 },
                 {
-                    "UID": 1615285219,
-                    "ParentUID": 884249015,
+                    "UID": 536358908,
+                    "ParentUID": 1382637652,
                     "PrefabID": 1524961430,
                     "IsPrefab": true,
                     "Name": "fpsText",
@@ -1217,8 +1217,8 @@
                     "Children": []
                 },
                 {
-                    "UID": 203320972,
-                    "ParentUID": 884249015,
+                    "UID": 482278544,
+                    "ParentUID": 1382637652,
                     "PrefabID": 1524961430,
                     "IsPrefab": true,
                     "Name": "GodMode",
@@ -1276,8 +1276,8 @@
                     "Children": []
                 },
                 {
-                    "UID": 1248606694,
-                    "ParentUID": 884249015,
+                    "UID": 523906499,
+                    "ParentUID": 1382637652,
                     "PrefabID": 1524961430,
                     "IsPrefab": true,
                     "Name": "GetBeskarIngots",

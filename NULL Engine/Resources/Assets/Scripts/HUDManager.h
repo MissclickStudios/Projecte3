@@ -23,6 +23,9 @@ public:
 	std::string creditsImageName = "Credits";
 	std::string playerName = "Mandalorian";
 
+	std::string debugMenuCanvasName = "DebugMenuCanvas";
+	std::string hubShopCanvasName = "hubShopCanvas";
+	std::string hudCanvasName = "hubShopCanvas";
 private:
 	C_2DAnimator* mandoImage;
 	C_2DAnimator* secondaryWeaponImage;
@@ -32,6 +35,10 @@ private:
 
 	GameObject* playerObject;
 	Player* player;
+
+	C_Canvas* debugMenuCanvas = nullptr;
+	C_Canvas* hubShopCanvas = nullptr;
+	C_Canvas* hudCanvas = nullptr;
 };
 
 SCRIPTS_FUNCTION HUDManager* CreateHUDManager() {
@@ -42,5 +49,8 @@ SCRIPTS_FUNCTION HUDManager* CreateHUDManager() {
 	INSPECTOR_STRING(script->dashImageName);
 	INSPECTOR_STRING(script->creditsImageName);
 	INSPECTOR_STRING(script->playerName);
+	INSPECTOR_STRING(script->debugMenuCanvasName);
+	INSPECTOR_STRING(script->hubShopCanvasName);
+	INSPECTOR_STRING(script->hudCanvasName);
 	return script;
 }

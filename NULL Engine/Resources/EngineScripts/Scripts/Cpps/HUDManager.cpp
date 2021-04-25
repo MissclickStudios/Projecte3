@@ -38,12 +38,37 @@ void HUDManager::Start()
 	if (a != nullptr)
 		creditsImage = (C_2DAnimator*)a->GetComponent<C_2DAnimator>();
 
+	a = App->scene->GetGameObjectByName(debugMenuCanvasName.c_str());
+	if (a != nullptr)
+		debugMenuCanvas = (C_Canvas*)a->GetComponent<C_Canvas>();
+
+	a = App->scene->GetGameObjectByName(hubShopCanvasName.c_str());
+	if (a != nullptr)
+		hubShopCanvas = (C_Canvas*)a->GetComponent<C_Canvas>();
+
+	a = App->scene->GetGameObjectByName(hudCanvasName.c_str());
+	if (a != nullptr)
+		hudCanvas = (C_Canvas*)a->GetComponent<C_Canvas>();
+
 	playerObject = App->scene->GetGameObjectByName(playerName.c_str());
 	player = (Player*)playerObject->GetScript("Player");
 }
 
 void HUDManager::Update()
 {
+	//Pau Pedra did this
+	if(debugMenuCanvas != nullptr && hubShopCanvas != nullptr && hudCanvas != nullptr)
+		if (debugMenuCanvas->IsActive() || hubShopCanvas->IsActive())
+		{
+			if (hudCanvas->IsActive())
+				hudCanvas->SetIsActive(false);
+		}
+		else
+		{
+			if(!hudCanvas->IsActive())
+				hudCanvas->SetIsActive(true);
+		}
+
 	if(player != nullptr)
 	{
 		
