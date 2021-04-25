@@ -5,6 +5,7 @@
 
 class GameObject;
 class C_UI_Button;
+class C_Canvas;
 
 class SCRIPTS_API PauseMenuManager : public Script {
 public:
@@ -15,25 +16,38 @@ public:
 
 	void Update() override;
 
-	std::string buttonName = "continue";
-	std::string buttonName1 = "options";
-	std::string buttonName2 = "abandon run";
-	std::string buttonName3 = "main menu";
-	std::string buttonName4 = "exit";
+	std::string continueButtonName = "ContinueButton";
+	std::string optionsButtonName = "OptionsButton";
+	std::string abandonRunButtonName = "AbandonRunButton";
+	std::string mainMenuButtonName = "MainMenuButton";
+	std::string exitButtonName = "ExitButton";
+	std::string pauseMenuCanvasName = "PauseMenuCanvas";
+	std::string mandoName = "Mandalorian";
+	std::string gameManagerName = "Game Manager";
+
 private:
-	C_UI_Button* continueButton;
-	C_UI_Button* optionsButton;
-	C_UI_Button* abandonRunButton;
-	C_UI_Button* mainMenuButton;
-	C_UI_Button* exitButton;
+	C_UI_Button* continueButton = nullptr;
+	C_UI_Button* optionsButton = nullptr;
+	C_UI_Button* abandonRunButton = nullptr;
+	C_UI_Button* mainMenuButton = nullptr;
+	C_UI_Button* exitButton = nullptr;
+
+	C_Canvas* pauseMenuCanvas = nullptr;
+
+	GameObject* mando = nullptr;
+	GameObject* gameManager = nullptr;
 };
 
 SCRIPTS_FUNCTION PauseMenuManager* CreatePauseMenuManager() {
 	PauseMenuManager* script = new PauseMenuManager();
-	INSPECTOR_STRING(script->buttonName);
-	INSPECTOR_STRING(script->buttonName1);
-	INSPECTOR_STRING(script->buttonName2);
-	INSPECTOR_STRING(script->buttonName3);
-	INSPECTOR_STRING(script->buttonName4);
+
+	INSPECTOR_STRING(script->mandoName);
+	INSPECTOR_STRING(script->gameManagerName);
+	INSPECTOR_STRING(script->pauseMenuCanvasName);
+	INSPECTOR_STRING(script->continueButtonName);
+	INSPECTOR_STRING(script->optionsButtonName);
+	INSPECTOR_STRING(script->abandonRunButtonName);
+	INSPECTOR_STRING(script->mainMenuButtonName);
+	INSPECTOR_STRING(script->exitButtonName);
 	return script;
 }
