@@ -14,7 +14,7 @@ public:
     void Start()override;
     void Update()override;
 
-    void GenerateNewRun();
+    void GenerateNewRun(bool fromMenu);
     void GoNextRoom();
     void InitiateLevel(int level);
     void Continue();
