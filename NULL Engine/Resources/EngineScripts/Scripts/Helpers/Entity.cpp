@@ -3,8 +3,10 @@
 #include "GameObject.h"
 #include "C_RigidBody.h"
 #include "C_Animator.h"
-#include "C_ParticleSystem.h"
 #include "C_Material.h"
+
+#include "C_ParticleSystem.h"
+#include "Emitter.h"
 
 #include "ScriptMacros.h"
 
@@ -31,8 +33,16 @@ void Entity::Awake()
 	animator = gameObject->GetComponent<C_Animator>();
 	currentAnimation = &idleAnimation;
 
-	//hitParticle = gameObject->GetComponent<C_ParticleSystem>();
-	//hitParticle->StopSpawn();
+	// TODO: Particles with prefabs
+	particles = gameObject->GetComponent<C_ParticleSystem>();
+	if (particles)
+	{
+		particles->StopSpawn();
+
+		for (uint i = 0; i < particles->emitterInstances.size(); ++i)
+			if (particles->emitterInstances[i]->emitter->name == "Hit")
+				hitParticles = particles->emitterInstances[i];
+	}
 
 	for (uint i = 0; i < gameObject->childs.size(); ++i)
 	{
@@ -95,6 +105,19 @@ void Entity::PreUpdate()
 				--i;
 		}
 	}
+
+	if (material && hitTimer.IsActive())
+	{
+		material->SetAlternateColour(Color(1, 0, 0, 1));
+		material->SetTakeDamage(true);
+		if (material && hitTimer.ReadSec() > hitDuration)
+		{
+			hitTimer.Stop();
+			material->SetTakeDamage(false);
+			if (hitParticles)
+				hitParticles->stopSpawn = true;
+		}
+	}
 }
 
 void Entity::PostUpdate()
@@ -111,11 +134,6 @@ void Entity::PostUpdate()
 		else
 			animator->PlayClip(currentAnimation->name, currentAnimation->blendTime); // If there is no clip playing play the current animation
 	}
-
-	if (hitTimer.ReadSec() > 0.2 &&  material)
-	{
-		if(material->GetTakeDamage()) material->SetTakeDamage(false);
-	}
 }
 
 void Entity::OnCollisionEnter(GameObject* object)
@@ -128,13 +146,9 @@ void Entity::TakeDamage(float damage)
 	if (health < 0.0f)
 		health = 0.0f;
 
-	if (material)
-	{
-		material->SetAlternateColour(Color(1, 0, 0, 1));
-		material->SetTakeDamage(true);
-		hitTimer.Start();
-	}
-	
+	hitTimer.Start();
+	if (hitParticles)
+		hitParticles->stopSpawn = false;
 }
 
 void Entity::GiveHeal(float amount)
@@ -158,6 +172,12 @@ void Entity::Frozen()
 {
 	speedModifier /= 2.5;
 	attackSpeedModifier /= 2.5;
+
+	if (material)
+	{
+		material->SetAlternateColour(Color(0, 1, 1, 1));
+		material->SetTakeDamage(true);
+	}
 }
 
 void Entity::Heal(Effect* effect)

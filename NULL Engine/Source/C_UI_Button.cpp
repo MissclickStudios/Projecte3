@@ -126,6 +126,7 @@ void C_UI_Button::Draw2D()
 
 	glBindTexture(GL_TEXTURE_2D, id);
 
+	GetOwner()->GetComponent<C_Material>()->GetShader()->SetUniform1i("useColor", (GLint)true);
 	GetOwner()->GetComponent<C_Material>()->GetShader()->SetUniformMatrix4("projection", projectionMatrix.ptr());
 	GetOwner()->GetComponent<C_Material>()->GetShader()->SetUniformVec4f("inColor", (GLfloat*)&tempColor);
 

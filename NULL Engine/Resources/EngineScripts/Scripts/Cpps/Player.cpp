@@ -10,6 +10,9 @@
 #include "GameObject.h"
 #include "C_Transform.h"
 #include "C_RigidBody.h"
+#include "C_Material.h"
+#include "C_ParticleSystem.h"
+#include "Emitter.h"
 
 #include "C_Animator.h"
 
@@ -103,6 +106,11 @@ void Player::SetUp()
 	changeTimer.Stop();
 
 	rigidBody->TransformMovesRigidBody(false);
+
+	if (particles)
+		for (uint i = 0; i < particles->emitterInstances.size(); ++i)
+			if (particles->emitterInstances[i]->emitter->name == "Dash")
+				dashParticles = particles->emitterInstances[i];
 
 	currentWeapon = blasterWeapon;
 }
@@ -265,6 +273,15 @@ void Player::TakeDamage(float damage)
 		if (health < 0.0f)
 			health = 0.0f;
 		invencibilityTimer.Start();
+
+		hitTimer.Start();
+		if (hitParticles)
+			hitParticles->stopSpawn = false;
+		if (material)
+		{
+			material->SetAlternateColour(Color(1, 0, 0, 1));
+			material->SetTakeDamage(true);
+		}
 	}
 }
 
@@ -296,6 +313,8 @@ void Player::ManageMovement()
 			dashTimer.Start();
 			if (rigidBody)
 				rigidBody->ChangeFilter(" player dashing");
+			if (dashParticles)
+				dashParticles->stopSpawn = false;
 			moveState = PlayerState::DASH;
 
 		case PlayerState::DASH:
@@ -306,6 +325,8 @@ void Player::ManageMovement()
 				dashCooldownTimer.Start();
 				if (rigidBody)
 					rigidBody->ChangeFilter(" player");
+				if (dashParticles)
+					dashParticles->stopSpawn = true;
 				moveState = PlayerState::IDLE;
 			}
 			break;

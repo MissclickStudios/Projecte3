@@ -145,6 +145,7 @@ public:																									// --- COMPONENT GETTERS AND SETTERS
 		case ComponentType::SCRIPT: 			{ return "Script"; } 			break;					// 
 		case ComponentType::ANIMATOR2D:			{ return "Animator2D"; } 		break;					// 
 		case ComponentType::NAVMESH_AGENT:		{ return "NavMesh Agent"; }		break;					// 
+		case ComponentType::PARTICLES:			{ return "Particles"; }			break;					//
 		}																								// 
 																										// 
 		return "NONE";																					// 
