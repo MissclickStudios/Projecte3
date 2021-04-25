@@ -10,6 +10,8 @@
 
 #include "Player.h"
 
+#include "MC_Time.h"
+
 IG11* CreateIG11()
 {
 	IG11* script = new IG11();
@@ -50,8 +52,10 @@ IG11* CreateIG11()
 	INSPECTOR_DRAGABLE_FLOAT(script->attackDistance);
 
 	// Special Attack
-	INSPECTOR_DRAGABLE_FLOAT(script->specialAttackDuration);
+	INSPECTOR_DRAGABLE_FLOAT(script->specialAttackSpeed);
+	INSPECTOR_DRAGABLE_FLOAT(script->specialAttackSpins);
 	INSPECTOR_DRAGABLE_FLOAT(script->specialAttackHp);
+	INSPECTOR_DRAGABLE_FLOAT(script->specialAttackCooldown);
 
 	//Weapons
 	INSPECTOR_PREFAB(script->blaster);
@@ -120,6 +124,7 @@ void IG11::Update()
 	ManageMovement();
 	if (moveState != IG11State::DEAD)
 		ManageAim();
+
 }
 
 void IG11::CleanUp()
@@ -183,6 +188,11 @@ void IG11::ManageMovement()
 		}
 	}
 
+	if (specialAttackTimer.IsActive() && specialAttackTimer.ReadSec() >= specialAttackCooldown)
+	{
+		specialAttackTimer.Stop();
+	}
+
 	switch (moveState)
 	{
 	case IG11State::IDLE:
@@ -204,6 +214,13 @@ void IG11::ManageMovement()
 			moveState = IG11State::FLEE;
 			break;
 		}
+		if (health <= 5.0f && !specialAttackTimer.IsActive())
+		{
+			specialAttackTimer.Start();
+			moveState = IG11State::SPECIAL_ATTACK_IN;
+			break;
+		}
+
 		break;
 	case IG11State::PATROL:
 		currentAnimation = &walkAnimation;
@@ -232,9 +249,39 @@ void IG11::ManageMovement()
 		}
 		Flee();
 		break;
+	case IG11State::SPECIAL_ATTACK_IN:
+		specialAttackStartAim = aimDirection;
+		specialAttackRot = 0.0f;
+
+		if (blasterWeapon)
+		{
+			blasterWeapon->fireRate = 0.05f;
+			blasterWeapon->ammo = 200;
+		}
+		if (sniperWeapon)
+		{
+			sniperWeapon->fireRate = 0.05f;
+			sniperWeapon->ammo = 200;
+		}
+
+		moveState = IG11State::SPECIAL_ATTACK;
+		
 	case IG11State::SPECIAL_ATTACK:
-		specialAttackTimer.Start();
-		SpecialAttack();
+		if (!SpecialAttack())
+		{
+			moveState = IG11State::IDLE;
+
+			if (blasterWeapon)
+			{
+				blasterWeapon->fireRate = 0.3f;
+				blasterWeapon->ammo = 0;
+			}
+			if (sniperWeapon)
+			{
+				sniperWeapon->fireRate = 0.3f;
+				sniperWeapon->ammo = 0;
+			}
+		}
 		break;
 	case IG11State::DEAD_IN:
 		currentAnimation = &deathAnimation;
@@ -253,7 +300,7 @@ void IG11::ManageAim()
 	switch (aimState)
 	{
 	case AimState::IDLE:
-		if (distance < attackDistance)
+		if (distance < attackDistance || moveState == IG11State::SPECIAL_ATTACK)
 			aimState = AimState::SHOOT_IN;
 		break;
 	case AimState::ON_GUARD:
@@ -341,7 +388,19 @@ void IG11::Flee()
 	rigidBody->SetLinearVelocity(direction * ChaseSpeed());
 }
 
-void IG11::SpecialAttack()
+bool IG11::SpecialAttack()
 {
+	specialAttackRot += specialAttackSpeed * MC_Time::Game::GetDT();
 
+	float angle = specialAttackStartAim.AimedAngle();
+	angle += DegToRad(specialAttackRot);
+
+	float x = cos(angle);
+	float y = sin(angle);
+	aimDirection = { x,y };
+
+	if (specialAttackRot >= 360.0f * specialAttackSpins)
+		return false;
+	
+	return true;
 }
