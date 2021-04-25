@@ -105,7 +105,8 @@ void Player::SetUp()
 	invencibilityTimer.Stop();
 	changeTimer.Stop();
 
-	rigidBody->TransformMovesRigidBody(false);
+	if (rigidBody)
+		rigidBody->TransformMovesRigidBody(false);
 
 	if (particles)
 		for (uint i = 0; i < particles->emitterInstances.size(); ++i)
@@ -269,7 +270,11 @@ void Player::TakeDamage(float damage)
 		invencibilityTimer.Stop();
 	if (!invencibilityTimer.IsActive())
 	{
-		health -= damage / Defense();
+		float damageDealt = 0.0f;
+		if(Defense())
+		 damageDealt = damage / Defense();
+		health -= damageDealt;
+
 		if (health < 0.0f)
 			health = 0.0f;
 		invencibilityTimer.Start();
@@ -282,6 +287,25 @@ void Player::TakeDamage(float damage)
 			material->SetAlternateColour(Color(1, 0, 0, 1));
 			material->SetTakeDamage(true);
 		}
+	}
+}
+
+void Player::SetGodMode(bool enable)
+{
+	if (enable)
+	{
+		
+		defense = 0.0f;
+		speed *= 2.0f;
+		if (blasterWeapon)
+			blasterWeapon->damage *= 4.0f;
+	}
+	else
+	{
+		defense = 1.0f;
+		speed /= 2.0f;
+		if (blasterWeapon)
+			blasterWeapon->damage /= 4;
 	}
 }
 

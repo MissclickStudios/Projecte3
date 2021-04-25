@@ -63,12 +63,16 @@ void Entity::Awake()
 void Entity::Start()
 {
 	deathTimer.Stop();
+	hitTimer.Stop();
 
 	SetUp();
 }
 
 void Entity::PreUpdate()
 {
+	if (material)
+		material->SetTakeDamage(false);
+
 	// Set modifiers back to the default state
 	maxHealthModifier = 0.0f;
 	speedModifier = DEFAULT_MODIFIER;
@@ -113,7 +117,6 @@ void Entity::PreUpdate()
 		if (material && hitTimer.ReadSec() > hitDuration)
 		{
 			hitTimer.Stop();
-			material->SetTakeDamage(false);
 			if (hitParticles)
 				hitParticles->stopSpawn = true;
 		}
@@ -158,14 +161,19 @@ void Entity::GiveHeal(float amount)
 		health = MaxHealth();
 }
 
-void Entity::AddEffect(EffectType type, float duration, bool permanent)
+Effect* Entity::AddEffect(EffectType type, float duration, bool permanent)
 {
+	Effect* output = nullptr;
 	// TODO: System to add a max stack to each effect so that more than one can exist at once
 
 	if (effectCounters[(uint)type]) // Check that this effect is not already on the entity
-		return;
-	effects.emplace_back(new Effect(type, duration, permanent)); // I use emplace instead of push to avoid unnecessary copies
+		return output;
+	
+	output = new Effect(type, duration, permanent);
+	effects.emplace_back(output); // I use emplace instead of push to avoid unnecessary copies
 	++effectCounters[(uint)type]; // Add one to the counter of this effect
+
+	return output;
 }
 
 void Entity::Frozen()
