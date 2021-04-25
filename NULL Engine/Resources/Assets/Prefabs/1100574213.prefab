@@ -8,7 +8,7 @@
     "IsStatic": false,
     "IsSceneRoot": false,
     "MaintainThroughScenes": false,
-    "ShowBoundingBoxes": false,
+    "ShowBoundingBoxes": true,
     "Components": [
         {
             "Type": 1,
@@ -72,12 +72,12 @@
                 {
                     "Type": 2,
                     "Name": "health",
-                    "float": 12
+                    "float": 10
                 },
                 {
                     "Type": 2,
                     "Name": "maxHealth",
-                    "float": 12
+                    "float": 10
                 },
                 {
                     "Type": 2,
@@ -137,7 +137,7 @@
                 {
                     "Type": 2,
                     "Name": "chaseDistance",
-                    "float": 100
+                    "float": 200
                 },
                 {
                     "Type": 2,
@@ -152,17 +152,27 @@
                 {
                     "Type": 2,
                     "Name": "attackDistance",
-                    "float": 80
+                    "float": 60
                 },
                 {
                     "Type": 2,
-                    "Name": "specialAttackDuration",
+                    "Name": "specialAttackSpeed",
+                    "float": 200
+                },
+                {
+                    "Type": 2,
+                    "Name": "specialAttackSpins",
                     "float": 2
                 },
                 {
                     "Type": 2,
                     "Name": "specialAttackHp",
                     "float": 5
+                },
+                {
+                    "Type": 2,
+                    "Name": "specialAttackCooldown",
+                    "float": 10
                 },
                 {
                     "Type": 4,
@@ -179,7 +189,7 @@
     ],
     "Children": [
         {
-            "UID": 1884764955,
+            "UID": 325653473,
             "ParentUID": 678408410,
             "PrefabID": 1100574213,
             "IsPrefab": true,
@@ -216,7 +226,15 @@
                     "Path": "Library\/Meshes\/981539682.nemesh",
                     "File": "981539682.nemesh",
                     "ShowWireframe": false,
-                    "ShowBoundingBox": false
+                    "ShowBoundingBox": false,
+                    "Outline": false,
+                    "OutlineThickness": -2147483648,
+                    "OutlineColor": [
+                        0,
+                        0,
+                        0,
+                        0
+                    ]
                 },
                 {
                     "Type": 3,
@@ -249,7 +267,7 @@
             "Children": []
         },
         {
-            "UID": 2104532273,
+            "UID": 1669936436,
             "ParentUID": 678408410,
             "PrefabID": 1100574213,
             "IsPrefab": true,
@@ -282,11 +300,11 @@
             ],
             "Children": [
                 {
-                    "UID": 16588839,
-                    "ParentUID": 2104532273,
+                    "UID": 732574596,
+                    "ParentUID": 1669936436,
                     "PrefabID": 1100574213,
                     "IsPrefab": true,
-                    "Name": "HandRight",
+                    "Name": "HandLeft",
                     "IsActive": true,
                     "IsStatic": false,
                     "IsSceneRoot": false,
@@ -296,7 +314,7 @@
                         {
                             "Type": 1,
                             "LocalPosition": [
-                                -15,
+                                15,
                                 42,
                                 24
                             ],
@@ -316,11 +334,11 @@
                     "Children": []
                 },
                 {
-                    "UID": 2006205449,
-                    "ParentUID": 2104532273,
+                    "UID": 824326128,
+                    "ParentUID": 1669936436,
                     "PrefabID": 1100574213,
                     "IsPrefab": true,
-                    "Name": "HandLeft",
+                    "Name": "HandRight",
                     "IsActive": true,
                     "IsStatic": false,
                     "IsSceneRoot": false,
@@ -330,7 +348,7 @@
                         {
                             "Type": 1,
                             "LocalPosition": [
-                                15,
+                                -15,
                                 42,
                                 24
                             ],

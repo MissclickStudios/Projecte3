@@ -389,6 +389,12 @@ void GameManager::ReturnHub()
 	App->scene->ScriptChangeScene(level1[0]);
 }
 
+void GameManager::ReturnToMainMenu()
+{
+	std::string menuPath = ASSETS_SCENES_PATH + mainMenuScene + ".json";
+	App->scene->ScriptChangeScene(menuPath.c_str());
+}
+
 void GameManager::AddFixedRoom(std::string name, int level, int position)
 {
 	int newPosition = position - 1;
