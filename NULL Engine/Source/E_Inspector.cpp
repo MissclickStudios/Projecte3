@@ -1885,7 +1885,7 @@ void E_Inspector::DrawAnimator2DComponent(C_2DAnimator* cAnimator)
 
 		static char buffer2[64];
 		strcpy_s(buffer2, cAnimator->GetName(3));
-		if (ImGui::InputText("Aditional Animation Name 1", buffer2, IM_ARRAYSIZE(buffer), ImGuiInputTextFlags_EnterReturnsTrue))
+		if (ImGui::InputText("Aditional Animation Name 1", buffer2, IM_ARRAYSIZE(buffer2), ImGuiInputTextFlags_EnterReturnsTrue))
 		{
 			cAnimator->ChangeName(buffer2, 3);
 			cAnimator->GetAnimationSprites(buffer2, 3);
