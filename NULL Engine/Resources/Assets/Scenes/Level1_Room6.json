@@ -485,14 +485,14 @@
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
+            "ShowBoundingBoxes": true,
             "Components": [
                 {
                     "Type": 1,
                     "LocalPosition": [
                         -59.977073669433594,
-                        13.536947250366211,
-                        101.39830017089844
+                        6.5,
+                        96.580581665039063
                     ],
                     "LocalRotation": [
                         0,
@@ -1300,8 +1300,589 @@
             ]
         },
         {
+            "UID": 422865370,
+            "ParentUID": 433834850,
+            "PrefabID": 1524961430,
+            "IsPrefab": true,
+            "Name": "GameCameraVS2",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": true,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -2.6892490386962891,
+                        93.011032104492188,
+                        113.77838134765625
+                    ],
+                    "LocalRotation": [
+                        -0.42261835932731628,
+                        0,
+                        0,
+                        0.90630775690078735
+                    ],
+                    "LocalScale": [
+                        1,
+                        1.0000003576278687,
+                        1.0000003576278687
+                    ]
+                },
+                {
+                    "Type": 5,
+                    "MinFOV": 1,
+                    "MaxFOV": 120,
+                    "Culling": false,
+                    "OrthogonalView": false,
+                    "HideFrustum": true
+                },
+                {
+                    "Type": 15
+                },
+                {
+                    "Type": 24,
+                    "ResourceUID": 796678199,
+                    "AssetsPath": "Assets\/Scripts\/\/CameraMovement.h",
+                    "DataName": "CameraMovement",
+                    "HasInspector": true,
+                    "InspectorVariables": [
+                        {
+                            "Type": 3,
+                            "Name": "offset",
+                            "float3x": 0,
+                            "float3y": 120,
+                            "float3z": 90
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "playerName",
+                            "string": "Mandalorian"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 860892165,
+            "ParentUID": 422865370,
+            "PrefabID": 1524961430,
+            "IsPrefab": true,
+            "Name": "Canvas",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 13,
+                    "Canvas": {
+                        "X": 0,
+                        "Y": 0,
+                        "W": 1.0926049947738647,
+                        "H": 0.5787392258644104,
+                        "IsInvisible": false,
+                        "IsInputCanvas": true
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 2031884899,
+            "ParentUID": 860892165,
+            "PrefabID": 1524961430,
+            "IsPrefab": true,
+            "Name": "SecodaryWeapon",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 21,
+                    "Image": {
+                        "X": 0.71200001239776611,
+                        "Y": -0.47873923182487488,
+                        "W": 0.1550000011920929,
+                        "H": 0.31999999284744263,
+                        "IsHDL": false,
+                        "IsHDR": false
+                    }
+                },
+                {
+                    "Type": 3,
+                    "Texture": {
+                        "AssetsPath": "Assets\/Textures\/UI\/HUD\/SecondaryWeapon1.png",
+                        "AssetsName": "SecondaryWeapon1.png",
+                        "LibaryPath": "Library\/Textures\/1130462783.netex",
+                        "LibraryFile": "1130462783.netex"
+                    },
+                    "Shader": {
+                        "AssetsPath": "Assets\/Shaders\/UIShader.shader",
+                        "AssetsName": "UIShader.shader",
+                        "LibaryPath": "Library\/Shaders\/1025410539.neshader",
+                        "LibraryFile": "1025410539.neshader"
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 537643495,
+            "ParentUID": 860892165,
+            "PrefabID": 1524961430,
+            "IsPrefab": true,
+            "Name": "Heart3",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 21,
+                    "Image": {
+                        "X": -0.60000002384185791,
+                        "Y": 0.58873921632766724,
+                        "W": 0.054999999701976776,
+                        "H": 0.10999999940395355,
+                        "IsHDL": false,
+                        "IsHDR": false
+                    }
+                },
+                {
+                    "Type": 3,
+                    "Texture": {
+                        "AssetsPath": "Assets\/Textures\/UI\/HUD\/HeartFull.png",
+                        "AssetsName": "HeartFull.png",
+                        "LibaryPath": "Library\/Textures\/1024641721.netex",
+                        "LibraryFile": "1024641721.netex"
+                    },
+                    "Shader": {
+                        "AssetsPath": "Assets\/Shaders\/UIShader.shader",
+                        "AssetsName": "UIShader.shader",
+                        "LibaryPath": "Library\/Shaders\/1025410539.neshader",
+                        "LibraryFile": "1025410539.neshader"
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 94432817,
+            "ParentUID": 860892165,
+            "PrefabID": 1524961430,
+            "IsPrefab": true,
+            "Name": "PrimaryWeapon",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 21,
+                    "Image": {
+                        "X": 0.64800000190734863,
+                        "Y": -0.083999998867511749,
+                        "W": 0.30000001192092896,
+                        "H": 0.58499997854232788,
+                        "IsHDL": false,
+                        "IsHDR": false
+                    }
+                },
+                {
+                    "Type": 3,
+                    "Texture": {
+                        "AssetsPath": "Assets\/Textures\/UI\/HUD\/SelectedWeapon.png",
+                        "AssetsName": "SelectedWeapon.png",
+                        "LibaryPath": "Library\/Textures\/60971379.netex",
+                        "LibraryFile": "60971379.netex"
+                    },
+                    "Shader": {
+                        "AssetsPath": "Assets\/Shaders\/UIShader.shader",
+                        "AssetsName": "UIShader.shader",
+                        "LibaryPath": "Library\/Shaders\/1025410539.neshader",
+                        "LibraryFile": "1025410539.neshader"
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 460084692,
+            "ParentUID": 860892165,
+            "PrefabID": 1524961430,
+            "IsPrefab": true,
+            "Name": "Credits",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 21,
+                    "Image": {
+                        "X": -0.32199999690055847,
+                        "Y": 0.73299998044967651,
+                        "W": 0.42500001192092896,
+                        "H": 0.47999998927116394,
+                        "IsHDL": false,
+                        "IsHDR": false
+                    }
+                },
+                {
+                    "Type": 3,
+                    "Texture": {
+                        "AssetsPath": "Assets\/Textures\/UI\/HUD\/Credits.png",
+                        "AssetsName": "Credits.png",
+                        "LibaryPath": "Library\/Textures\/48777715.netex",
+                        "LibraryFile": "48777715.netex"
+                    },
+                    "Shader": {
+                        "AssetsPath": "Assets\/Shaders\/UIShader.shader",
+                        "AssetsName": "UIShader.shader",
+                        "LibaryPath": "Library\/Shaders\/1025410539.neshader",
+                        "LibraryFile": "1025410539.neshader"
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 1037214588,
+            "ParentUID": 860892165,
+            "PrefabID": 1524961430,
+            "IsPrefab": true,
+            "Name": "Heart2",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 21,
+                    "Image": {
+                        "X": -0.72500002384185791,
+                        "Y": 0.58899998664855957,
+                        "W": 0.054999999701976776,
+                        "H": 0.11500000208616257,
+                        "IsHDL": false,
+                        "IsHDR": false
+                    }
+                },
+                {
+                    "Type": 3,
+                    "Texture": {
+                        "AssetsPath": "Assets\/Textures\/UI\/HUD\/HeartFull.png",
+                        "AssetsName": "HeartFull.png",
+                        "LibaryPath": "Library\/Textures\/1024641721.netex",
+                        "LibraryFile": "1024641721.netex"
+                    },
+                    "Shader": {
+                        "AssetsPath": "Assets\/Shaders\/UIShader.shader",
+                        "AssetsName": "UIShader.shader",
+                        "LibaryPath": "Library\/Shaders\/1025410539.neshader",
+                        "LibraryFile": "1025410539.neshader"
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 1780694864,
+            "ParentUID": 860892165,
+            "PrefabID": 1524961430,
+            "IsPrefab": true,
+            "Name": "Heart1",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 21,
+                    "Image": {
+                        "X": -0.85000002384185791,
+                        "Y": 0.59373921155929565,
+                        "W": 0.054999999701976776,
+                        "H": 0.11500000208616257,
+                        "IsHDL": false,
+                        "IsHDR": false
+                    }
+                },
+                {
+                    "Type": 3,
+                    "Texture": {
+                        "AssetsPath": "Assets\/Textures\/UI\/HUD\/HeartFull.png",
+                        "AssetsName": "HeartFull.png",
+                        "LibaryPath": "Library\/Textures\/1024641721.netex",
+                        "LibraryFile": "1024641721.netex"
+                    },
+                    "Shader": {
+                        "AssetsPath": "Assets\/Shaders\/UIShader.shader",
+                        "AssetsName": "UIShader.shader",
+                        "LibaryPath": "Library\/Shaders\/1025410539.neshader",
+                        "LibraryFile": "1025410539.neshader"
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 68805108,
+            "ParentUID": 860892165,
+            "PrefabID": 1524961430,
+            "IsPrefab": true,
+            "Name": "Minimap",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 21,
+                    "Image": {
+                        "X": 0.73799997568130493,
+                        "Y": 0.47400000691413879,
+                        "W": 0.25,
+                        "H": 0.47499999403953552,
+                        "IsHDL": false,
+                        "IsHDR": false
+                    }
+                },
+                {
+                    "Type": 3,
+                    "Texture": {
+                        "AssetsPath": "Assets\/Textures\/UI\/HUD\/MiniMap.png",
+                        "AssetsName": "MiniMap.png",
+                        "LibaryPath": "Library\/Textures\/1046552748.netex",
+                        "LibraryFile": "1046552748.netex"
+                    },
+                    "Shader": {
+                        "AssetsPath": "Assets\/Shaders\/UIShader.shader",
+                        "AssetsName": "UIShader.shader",
+                        "LibaryPath": "Library\/Shaders\/1025410539.neshader",
+                        "LibraryFile": "1025410539.neshader"
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 698914399,
+            "ParentUID": 860892165,
+            "PrefabID": 1524961430,
+            "IsPrefab": true,
+            "Name": "Dash",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 21,
+                    "Image": {
+                        "X": -0.75800001621246338,
+                        "Y": -0.47873923182487488,
+                        "W": 0.17499999701976776,
+                        "H": 0.34000000357627869,
+                        "IsHDL": false,
+                        "IsHDR": false
+                    }
+                },
+                {
+                    "Type": 3,
+                    "Texture": {
+                        "AssetsPath": "Assets\/Textures\/UI\/HUD\/DashButton.png",
+                        "AssetsName": "DashButton.png",
+                        "LibaryPath": "Library\/Textures\/781650108.netex",
+                        "LibraryFile": "781650108.netex"
+                    },
+                    "Shader": {
+                        "AssetsPath": "Assets\/Shaders\/UIShader.shader",
+                        "AssetsName": "UIShader.shader",
+                        "LibaryPath": "Library\/Shaders\/1025410539.neshader",
+                        "LibraryFile": "1025410539.neshader"
+                    }
+                }
+            ]
+        },
+        {
             "UID": 433834850,
-            "ParentUID": 1320328579,
+            "ParentUID": 1690555528,
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "MainScene",
@@ -4646,7 +5227,7 @@
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": true,
+            "ShowBoundingBoxes": false,
             "Components": [
                 {
                     "Type": 1,
@@ -4693,31 +5274,18 @@
                             "Type": 7,
                             "Name": "level1",
                             "vectorstring": [
-                                "Assets\/Scenes\/Level1_Room1.json",
                                 "Assets\/Scenes\/Level1_Room8.json",
-                                "Assets\/Scenes\/Level1_Room6.json",
+                                "Assets\/Scenes\/Level1_Room1.json",
                                 "Assets\/Scenes\/Level1_Room2.json",
+                                "Assets\/Scenes\/Level1_Room6.json",
                                 "Assets\/Scenes\/Level1_Room9.json",
                                 "Assets\/Scenes\/Level1_Room3.json"
                             ]
                         },
                         {
-                            "Type": 7,
-                            "Name": "level2",
-                            "vectorstring": [
-                                "Assets\/Scenes\/Level2_Room2.json",
-                                "Assets\/Scenes\/Level2_Room3.json",
-                                "Assets\/Scenes\/Level2_Room4.json",
-                                "Assets\/Scenes\/Level2_Room1.json",
-                                "Assets\/Scenes\/Level2_Room6.json",
-                                "Assets\/Scenes\/Level2_Room7.json",
-                                "Assets\/Scenes\/Level2_Room5.json"
-                            ]
-                        },
-                        {
                             "Type": 4,
                             "Name": "playerPrefab",
-                            "prefab": 228946096
+                            "prefab": 1997884416
                         }
                     ]
                 }
@@ -5347,582 +5915,6 @@
                     "Center X": 0,
                     "Center Y": 0,
                     "Center Z": 0
-                }
-            ]
-        },
-        {
-            "UID": 422865370,
-            "ParentUID": 433834850,
-            "PrefabID": 1524961430,
-            "IsPrefab": true,
-            "Name": "GameCameraVS2",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": true,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        -2.6892490386962891,
-                        93.011032104492188,
-                        113.77838134765625
-                    ],
-                    "LocalRotation": [
-                        -0.4226183295249939,
-                        0,
-                        0,
-                        0.9063078761100769
-                    ],
-                    "LocalScale": [
-                        1,
-                        1.0000003576278687,
-                        1.0000003576278687
-                    ]
-                },
-                {
-                    "Type": 5,
-                    "MinFOV": 1,
-                    "MaxFOV": 120,
-                    "Culling": false,
-                    "OrthogonalView": false,
-                    "HideFrustum": true
-                },
-                {
-                    "Type": 15
-                },
-                {
-                    "Type": 24,
-                    "ResourceUID": 796678199,
-                    "AssetsPath": "Assets\/Scripts\/\/CameraMovement.h",
-                    "DataName": "CameraMovement",
-                    "HasInspector": true,
-                    "InspectorVariables": [
-                        {
-                            "Type": 3,
-                            "Name": "offset",
-                            "float3x": 0,
-                            "float3y": 120,
-                            "float3z": 90
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "UID": 931330274,
-            "ParentUID": 422865370,
-            "PrefabID": 1524961430,
-            "IsPrefab": true,
-            "Name": "Canvas",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        0,
-                        0
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {
-                    "Type": 13,
-                    "Canvas": {
-                        "X": 0,
-                        "Y": 0,
-                        "W": 1.0926049947738647,
-                        "H": 0.5787392258644104,
-                        "IsInvisible": false,
-                        "IsInputCanvas": true
-                    }
-                }
-            ]
-        },
-        {
-            "UID": 1882422377,
-            "ParentUID": 931330274,
-            "PrefabID": 1524961430,
-            "IsPrefab": true,
-            "Name": "Heart3",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        0,
-                        0
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {
-                    "Type": 21,
-                    "Image": {
-                        "X": -0.60000002384185791,
-                        "Y": 0.58873921632766724,
-                        "W": 0.054999999701976776,
-                        "H": 0.10999999940395355,
-                        "IsHDL": false,
-                        "IsHDR": false
-                    }
-                },
-                {
-                    "Type": 3,
-                    "Texture": {
-                        "AssetsPath": "Assets\/Textures\/UI\/HUD\/HeartFull.png",
-                        "AssetsName": "HeartFull.png",
-                        "LibaryPath": "Library\/Textures\/1024641721.netex",
-                        "LibraryFile": "1024641721.netex"
-                    },
-                    "Shader": {
-                        "AssetsPath": "Assets\/Shaders\/UIShader.shader",
-                        "AssetsName": "UIShader.shader",
-                        "LibaryPath": "Library\/Shaders\/1025410539.neshader",
-                        "LibraryFile": "1025410539.neshader"
-                    }
-                }
-            ]
-        },
-        {
-            "UID": 696955698,
-            "ParentUID": 931330274,
-            "PrefabID": 1524961430,
-            "IsPrefab": true,
-            "Name": "Minimap",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        0,
-                        0
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {
-                    "Type": 21,
-                    "Image": {
-                        "X": 0.73799997568130493,
-                        "Y": 0.47400000691413879,
-                        "W": 0.25,
-                        "H": 0.47499999403953552,
-                        "IsHDL": false,
-                        "IsHDR": false
-                    }
-                },
-                {
-                    "Type": 3,
-                    "Texture": {
-                        "AssetsPath": "Assets\/Textures\/UI\/HUD\/MiniMap.png",
-                        "AssetsName": "MiniMap.png",
-                        "LibaryPath": "Library\/Textures\/1046552748.netex",
-                        "LibraryFile": "1046552748.netex"
-                    },
-                    "Shader": {
-                        "AssetsPath": "Assets\/Shaders\/UIShader.shader",
-                        "AssetsName": "UIShader.shader",
-                        "LibaryPath": "Library\/Shaders\/1025410539.neshader",
-                        "LibraryFile": "1025410539.neshader"
-                    }
-                }
-            ]
-        },
-        {
-            "UID": 1980304592,
-            "ParentUID": 931330274,
-            "PrefabID": 1524961430,
-            "IsPrefab": true,
-            "Name": "SecodaryWeapon",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        0,
-                        0
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {
-                    "Type": 21,
-                    "Image": {
-                        "X": 0.71200001239776611,
-                        "Y": -0.47873923182487488,
-                        "W": 0.1550000011920929,
-                        "H": 0.31999999284744263,
-                        "IsHDL": false,
-                        "IsHDR": false
-                    }
-                },
-                {
-                    "Type": 3,
-                    "Texture": {
-                        "AssetsPath": "Assets\/Textures\/UI\/HUD\/SecondaryWeapon1.png",
-                        "AssetsName": "SecondaryWeapon1.png",
-                        "LibaryPath": "Library\/Textures\/1130462783.netex",
-                        "LibraryFile": "1130462783.netex"
-                    },
-                    "Shader": {
-                        "AssetsPath": "Assets\/Shaders\/UIShader.shader",
-                        "AssetsName": "UIShader.shader",
-                        "LibaryPath": "Library\/Shaders\/1025410539.neshader",
-                        "LibraryFile": "1025410539.neshader"
-                    }
-                }
-            ]
-        },
-        {
-            "UID": 1713737248,
-            "ParentUID": 931330274,
-            "PrefabID": 1524961430,
-            "IsPrefab": true,
-            "Name": "PrimaryWeapon",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        0,
-                        0
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {
-                    "Type": 21,
-                    "Image": {
-                        "X": 0.64800000190734863,
-                        "Y": -0.083999998867511749,
-                        "W": 0.30000001192092896,
-                        "H": 0.58499997854232788,
-                        "IsHDL": false,
-                        "IsHDR": false
-                    }
-                },
-                {
-                    "Type": 3,
-                    "Texture": {
-                        "AssetsPath": "Assets\/Textures\/UI\/HUD\/SelectedWeapon.png",
-                        "AssetsName": "SelectedWeapon.png",
-                        "LibaryPath": "Library\/Textures\/60971379.netex",
-                        "LibraryFile": "60971379.netex"
-                    },
-                    "Shader": {
-                        "AssetsPath": "Assets\/Shaders\/UIShader.shader",
-                        "AssetsName": "UIShader.shader",
-                        "LibaryPath": "Library\/Shaders\/1025410539.neshader",
-                        "LibraryFile": "1025410539.neshader"
-                    }
-                }
-            ]
-        },
-        {
-            "UID": 645456724,
-            "ParentUID": 931330274,
-            "PrefabID": 1524961430,
-            "IsPrefab": true,
-            "Name": "Heart2",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        0,
-                        0
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {
-                    "Type": 21,
-                    "Image": {
-                        "X": -0.72500002384185791,
-                        "Y": 0.58899998664855957,
-                        "W": 0.054999999701976776,
-                        "H": 0.11500000208616257,
-                        "IsHDL": false,
-                        "IsHDR": false
-                    }
-                },
-                {
-                    "Type": 3,
-                    "Texture": {
-                        "AssetsPath": "Assets\/Textures\/UI\/HUD\/HeartFull.png",
-                        "AssetsName": "HeartFull.png",
-                        "LibaryPath": "Library\/Textures\/1024641721.netex",
-                        "LibraryFile": "1024641721.netex"
-                    },
-                    "Shader": {
-                        "AssetsPath": "Assets\/Shaders\/UIShader.shader",
-                        "AssetsName": "UIShader.shader",
-                        "LibaryPath": "Library\/Shaders\/1025410539.neshader",
-                        "LibraryFile": "1025410539.neshader"
-                    }
-                }
-            ]
-        },
-        {
-            "UID": 693691562,
-            "ParentUID": 931330274,
-            "PrefabID": 1524961430,
-            "IsPrefab": true,
-            "Name": "Credits",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        0,
-                        0
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {
-                    "Type": 21,
-                    "Image": {
-                        "X": -0.32199999690055847,
-                        "Y": 0.73299998044967651,
-                        "W": 0.42500001192092896,
-                        "H": 0.47999998927116394,
-                        "IsHDL": false,
-                        "IsHDR": false
-                    }
-                },
-                {
-                    "Type": 3,
-                    "Texture": {
-                        "AssetsPath": "Assets\/Textures\/UI\/HUD\/Credits.png",
-                        "AssetsName": "Credits.png",
-                        "LibaryPath": "Library\/Textures\/48777715.netex",
-                        "LibraryFile": "48777715.netex"
-                    },
-                    "Shader": {
-                        "AssetsPath": "Assets\/Shaders\/UIShader.shader",
-                        "AssetsName": "UIShader.shader",
-                        "LibaryPath": "Library\/Shaders\/1025410539.neshader",
-                        "LibraryFile": "1025410539.neshader"
-                    }
-                }
-            ]
-        },
-        {
-            "UID": 471781474,
-            "ParentUID": 931330274,
-            "PrefabID": 1524961430,
-            "IsPrefab": true,
-            "Name": "Heart1",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        0,
-                        0
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {
-                    "Type": 21,
-                    "Image": {
-                        "X": -0.85000002384185791,
-                        "Y": 0.59373921155929565,
-                        "W": 0.054999999701976776,
-                        "H": 0.11500000208616257,
-                        "IsHDL": false,
-                        "IsHDR": false
-                    }
-                },
-                {
-                    "Type": 3,
-                    "Texture": {
-                        "AssetsPath": "Assets\/Textures\/UI\/HUD\/HeartFull.png",
-                        "AssetsName": "HeartFull.png",
-                        "LibaryPath": "Library\/Textures\/1024641721.netex",
-                        "LibraryFile": "1024641721.netex"
-                    },
-                    "Shader": {
-                        "AssetsPath": "Assets\/Shaders\/UIShader.shader",
-                        "AssetsName": "UIShader.shader",
-                        "LibaryPath": "Library\/Shaders\/1025410539.neshader",
-                        "LibraryFile": "1025410539.neshader"
-                    }
-                }
-            ]
-        },
-        {
-            "UID": 846547364,
-            "ParentUID": 931330274,
-            "PrefabID": 1524961430,
-            "IsPrefab": true,
-            "Name": "Dash",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        0,
-                        0
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {
-                    "Type": 21,
-                    "Image": {
-                        "X": -0.75800001621246338,
-                        "Y": -0.47873923182487488,
-                        "W": 0.17499999701976776,
-                        "H": 0.34000000357627869,
-                        "IsHDL": false,
-                        "IsHDR": false
-                    }
-                },
-                {
-                    "Type": 3,
-                    "Texture": {
-                        "AssetsPath": "Assets\/Textures\/UI\/HUD\/DashButton.png",
-                        "AssetsName": "DashButton.png",
-                        "LibaryPath": "Library\/Textures\/781650108.netex",
-                        "LibraryFile": "781650108.netex"
-                    },
-                    "Shader": {
-                        "AssetsPath": "Assets\/Shaders\/UIShader.shader",
-                        "AssetsName": "UIShader.shader",
-                        "LibaryPath": "Library\/Shaders\/1025410539.neshader",
-                        "LibraryFile": "1025410539.neshader"
-                    }
                 }
             ]
         }
