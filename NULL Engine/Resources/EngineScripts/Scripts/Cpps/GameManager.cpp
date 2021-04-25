@@ -82,6 +82,7 @@ void GameManager::Start()
 		playerScript = (Player*)playerGameObject->GetScript("Player");
 		ParsonNode playerNode = jsonState.GetNode("player");
 		playerScript->LoadState(playerNode);
+		//Reset if HUB
 		if (strstr(level1[0].c_str(), App->scene->GetCurrentScene()))
 			playerScript->Reset();
 	}
@@ -96,7 +97,7 @@ void GameManager::Update()
 
 		if (playerScript != nullptr && playerScript->moveState == PlayerState::DEAD_OUT) 
 		{
-			playerScript->Reset();
+			//playerScript->Reset();
 			ReturnHub();
 		}
 	}
