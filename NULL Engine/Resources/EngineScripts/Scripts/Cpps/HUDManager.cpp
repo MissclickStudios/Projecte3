@@ -117,7 +117,7 @@ void HUDManager::Update()
 		if (primaryWeaponImage != nullptr)
 		{
 			if (App->input->GetGameControllerButton(2) == ButtonState::BUTTON_DOWN)
-				primaryWeaponImage->PlayAnimation(false, 1);
+				primaryWeaponImage->PlayAnimation(false, 2);
 		}
 
 		//Shoot primary weapon
@@ -131,9 +131,9 @@ void HUDManager::Update()
 		if (primaryWeaponImage != nullptr)
 		{
 			if (App->input->GetGameControllerButton(1) == ButtonState::BUTTON_DOWN)
-				primaryWeaponImage->PlayAnimation(false, 1);
+				primaryWeaponImage->PlayAnimation(false, 3);
 		}
-
+/*
 		//Reload secondary weapon
 		if (secondaryWeaponImage != nullptr)
 		{
@@ -154,7 +154,7 @@ void HUDManager::Update()
 			if (player)
 				secondaryWeaponImage->PlayAnimation(false, 1);
 		}
-
+*/
 		//Get credit animation
 		if (creditsImage != nullptr)
 		{
