@@ -138,8 +138,8 @@ void GameManager::GenerateNewRun(bool fromMenu)
 
 			//TODO: Not HardCode the fixed rooms
 			//TODO: inspector support adding fixed room
-			if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + "InitialL1.json").c_str()))
-				AddFixedRoom("InitialL1", 1, 1);
+			if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + "HUB.json").c_str()))
+				AddFixedRoom("HUB", 1, 1);
 			//LEVEL2
 			//if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + "InitialL2.json").c_str()))
 			//	AddFixedRoom("InitialL2", 2, 1);
@@ -168,7 +168,7 @@ void GameManager::GenerateNewRun(bool fromMenu)
 			GenerateLevel();
 
 			//add fixed again
-			AddFixedRoom("InitialL1", 1, 1);
+			AddFixedRoom("HUB", 1, 1);
 
 			AddFixedRoom("BossL1", 1, 10);
 
