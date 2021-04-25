@@ -28,6 +28,7 @@ void HUBShopMenuManager::Update()
 		if (exitButton->IsPressed())
 		{
 			exitButton->SetIsPressed(false);
+			exitButton->SetState(UIButtonState::HOVERED);
 			gameObject->GetComponent<C_Canvas>()->SetIsActive(false);
 		}
 	}
