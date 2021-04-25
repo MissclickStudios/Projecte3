@@ -168,23 +168,10 @@ void GameManager::GenerateNewRun(bool fromMenu)
 			//level1.erase(level1.begin() + 6);
 			for (int i = 0; i < level1.size(); ++i)
 			{
-				if (strstr(level1[i].c_str(), "HUB.json"))
+				if (strstr(level1[i].c_str(), "HUB.json") || strstr(level1[i].c_str(), "ShopL1") || strstr(level1[i].c_str(), "BossL1"))
 				{
 					level1.erase(level1.begin() + i);
 					--i;
-					continue;
-				}
-				if (strstr(level1[i].c_str(), "ShopL1"))
-				{
-					level1.erase(level1.begin() + i);
-					--i;
-					continue;
-				}
-				if (strstr(level1[i].c_str(), "BossL1"))
-				{
-					level1.erase(level1.begin() + i);
-					--i;
-					continue;
 				}
 			}
 
