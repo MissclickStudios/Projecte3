@@ -178,7 +178,7 @@
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
+            "ShowBoundingBoxes": true,
             "Components": [
                 {
                     "Type": 1,
@@ -208,7 +208,7 @@
                     "Type": 9,
                     "Is Trigger": false,
                     "Show Collider": true,
-                    "Size X": 20,
+                    "Size X": 15,
                     "Size Y": 20,
                     "Size Z": 90,
                     "Center X": 0,
@@ -284,11 +284,11 @@
             ]
         },
         {
-            "UID": 70863831,
-            "ParentUID": 1018693346,
-            "PrefabID": 1420265605,
+            "UID": 67783074,
+            "ParentUID": 1968612734,
+            "PrefabID": 1524961430,
             "IsPrefab": true,
-            "Name": "barrel_mesh",
+            "Name": "Minimap",
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
@@ -299,55 +299,45 @@
                     "Type": 1,
                     "LocalPosition": [
                         0,
-                        4.9089632034301758,
+                        0,
                         0
                     ],
                     "LocalRotation": [
-                        -0.70710664987564087,
                         0,
                         0,
-                        0.70710688829421997
+                        0,
+                        1
                     ],
                     "LocalScale": [
-                        0.20000000298023224,
-                        0.19999998807907104,
-                        0.19999998807907104
+                        1,
+                        1,
+                        1
                     ]
                 },
                 {
-                    "Type": 2,
-                    "UID": 328036877,
-                    "Name": "barrel 2.nemesh",
-                    "Path": "Library\/Meshes\/328036877.nemesh",
-                    "File": "328036877.nemesh",
-                    "ShowWireframe": false,
-                    "ShowBoundingBox": false
+                    "Type": 21,
+                    "Image": {
+                        "X": 0.73799997568130493,
+                        "Y": 0.47400000691413879,
+                        "W": 0.25,
+                        "H": 0.47499999403953552,
+                        "IsHDL": false,
+                        "IsHDR": false
+                    }
                 },
                 {
                     "Type": 3,
-                    "Material": {
-                        "UID": 1914311419,
-                        "Color": [
-                            0.50196081399917603,
-                            0.50196081399917603,
-                            0.50196081399917603,
-                            1
-                        ],
-                        "Name": "barrel 2.nemat",
-                        "Path": "Library\/Materials\/1914311419.nemat",
-                        "File": "1914311419.nemat"
-                    },
                     "Texture": {
-                        "AssetsPath": "Assets\/Textures\/Props\/explosivebarrel_arvala_v2.png",
-                        "AssetsName": "explosivebarrel_arvala_v2.png",
-                        "LibaryPath": "Library\/Textures\/1724793512.netex",
-                        "LibraryFile": "1724793512.netex"
+                        "AssetsPath": "Assets\/Textures\/UI\/HUD\/MiniMap.png",
+                        "AssetsName": "MiniMap.png",
+                        "LibaryPath": "Library\/Textures\/1046552748.netex",
+                        "LibraryFile": "1046552748.netex"
                     },
                     "Shader": {
-                        "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
-                        "AssetsName": "DefaultShader.shader",
-                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
-                        "LibraryFile": "800223282.neshader"
+                        "AssetsPath": "Assets\/Shaders\/UIShader.shader",
+                        "AssetsName": "UIShader.shader",
+                        "LibaryPath": "Library\/Shaders\/1025410539.neshader",
+                        "LibraryFile": "1025410539.neshader"
                     }
                 }
             ]
@@ -362,7 +352,7 @@
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
+            "ShowBoundingBoxes": true,
             "Components": [
                 {
                     "Type": 1,
@@ -693,6 +683,65 @@
             ]
         },
         {
+            "UID": 148659413,
+            "ParentUID": 1968612734,
+            "PrefabID": 1524961430,
+            "IsPrefab": true,
+            "Name": "Heart2",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 21,
+                    "Image": {
+                        "X": -0.72500002384185791,
+                        "Y": 0.58899998664855957,
+                        "W": 0.054999999701976776,
+                        "H": 0.11500000208616257,
+                        "IsHDL": false,
+                        "IsHDR": false
+                    }
+                },
+                {
+                    "Type": 3,
+                    "Texture": {
+                        "AssetsPath": "Assets\/Textures\/UI\/HUD\/HeartFull.png",
+                        "AssetsName": "HeartFull.png",
+                        "LibaryPath": "Library\/Textures\/1024641721.netex",
+                        "LibraryFile": "1024641721.netex"
+                    },
+                    "Shader": {
+                        "AssetsPath": "Assets\/Shaders\/UIShader.shader",
+                        "AssetsName": "UIShader.shader",
+                        "LibaryPath": "Library\/Shaders\/1025410539.neshader",
+                        "LibraryFile": "1025410539.neshader"
+                    }
+                }
+            ]
+        },
+        {
             "UID": 168722337,
             "ParentUID": 132990815,
             "PrefabID": 0,
@@ -874,6 +923,144 @@
             ]
         },
         {
+            "UID": 230490742,
+            "ParentUID": 1574932380,
+            "PrefabID": 1420265605,
+            "IsPrefab": true,
+            "Name": "barrel_mesh",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        4.9089632034301758,
+                        0
+                    ],
+                    "LocalRotation": [
+                        -0.70710664987564087,
+                        0,
+                        0,
+                        0.70710688829421997
+                    ],
+                    "LocalScale": [
+                        0.20000000298023224,
+                        0.19999998807907104,
+                        0.19999998807907104
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 328036877,
+                    "Name": "barrel 2.nemesh",
+                    "Path": "Library\/Meshes\/328036877.nemesh",
+                    "File": "328036877.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 1914311419,
+                        "Color": [
+                            0.80000001192092896,
+                            0.80000001192092896,
+                            0.80000001192092896,
+                            1
+                        ],
+                        "Name": "barrel 2.nemat",
+                        "Path": "Library\/Materials\/1914311419.nemat",
+                        "File": "1914311419.nemat"
+                    },
+                    "Texture": {
+                        "AssetsPath": "Assets\/Textures\/Blockouts\/Level1\/explosive_barrel.png",
+                        "AssetsName": "explosive_barrel.png",
+                        "LibaryPath": "Library\/Textures\/1937685746.netex",
+                        "LibraryFile": "1937685746.netex"
+                    },
+                    "Shader": {
+                        "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
+                        "AssetsName": "DefaultShader.shader",
+                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
+                        "LibraryFile": "800223282.neshader"
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 308763070,
+            "ParentUID": 1973919974,
+            "PrefabID": 1420265605,
+            "IsPrefab": true,
+            "Name": "barrel_mesh",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        4.9089632034301758,
+                        0
+                    ],
+                    "LocalRotation": [
+                        -0.70710664987564087,
+                        0,
+                        0,
+                        0.70710688829421997
+                    ],
+                    "LocalScale": [
+                        0.20000000298023224,
+                        0.19999998807907104,
+                        0.19999998807907104
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 328036877,
+                    "Name": "barrel 2.nemesh",
+                    "Path": "Library\/Meshes\/328036877.nemesh",
+                    "File": "328036877.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 1914311419,
+                        "Color": [
+                            0.80000001192092896,
+                            0.80000001192092896,
+                            0.80000001192092896,
+                            1
+                        ],
+                        "Name": "barrel 2.nemat",
+                        "Path": "Library\/Materials\/1914311419.nemat",
+                        "File": "1914311419.nemat"
+                    },
+                    "Texture": {
+                        "AssetsPath": "Assets\/Textures\/Blockouts\/Level1\/explosive_barrel.png",
+                        "AssetsName": "explosive_barrel.png",
+                        "LibaryPath": "Library\/Textures\/1937685746.netex",
+                        "LibraryFile": "1937685746.netex"
+                    },
+                    "Shader": {
+                        "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
+                        "AssetsName": "DefaultShader.shader",
+                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
+                        "LibraryFile": "800223282.neshader"
+                    }
+                }
+            ]
+        },
+        {
             "UID": 309988642,
             "ParentUID": 1558034630,
             "PrefabID": 70424931,
@@ -925,75 +1112,6 @@
             ]
         },
         {
-            "UID": 325055176,
-            "ParentUID": 791824042,
-            "PrefabID": 1420265605,
-            "IsPrefab": true,
-            "Name": "barrel_mesh",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        4.9089632034301758,
-                        0
-                    ],
-                    "LocalRotation": [
-                        -0.70710664987564087,
-                        0,
-                        0,
-                        0.70710688829421997
-                    ],
-                    "LocalScale": [
-                        0.20000000298023224,
-                        0.19999998807907104,
-                        0.19999998807907104
-                    ]
-                },
-                {
-                    "Type": 2,
-                    "UID": 328036877,
-                    "Name": "barrel 2.nemesh",
-                    "Path": "Library\/Meshes\/328036877.nemesh",
-                    "File": "328036877.nemesh",
-                    "ShowWireframe": false,
-                    "ShowBoundingBox": false
-                },
-                {
-                    "Type": 3,
-                    "Material": {
-                        "UID": 1914311419,
-                        "Color": [
-                            0.50196081399917603,
-                            0.50196081399917603,
-                            0.50196081399917603,
-                            1
-                        ],
-                        "Name": "barrel 2.nemat",
-                        "Path": "Library\/Materials\/1914311419.nemat",
-                        "File": "1914311419.nemat"
-                    },
-                    "Texture": {
-                        "AssetsPath": "Assets\/Textures\/Props\/explosivebarrel_arvala_v2.png",
-                        "AssetsName": "explosivebarrel_arvala_v2.png",
-                        "LibaryPath": "Library\/Textures\/1724793512.netex",
-                        "LibraryFile": "1724793512.netex"
-                    },
-                    "Shader": {
-                        "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
-                        "AssetsName": "DefaultShader.shader",
-                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
-                        "LibraryFile": "800223282.neshader"
-                    }
-                }
-            ]
-        },
-        {
             "UID": 327057328,
             "ParentUID": 20345249,
             "PrefabID": 1922987151,
@@ -1003,14 +1121,14 @@
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
+            "ShowBoundingBoxes": true,
             "Components": [
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        -56.894371032714844,
+                        -39.566318511962891,
                         4.3978614807128906,
-                        62.406333923339844
+                        65.178619384765625
                     ],
                     "LocalRotation": [
                         0,
@@ -1267,9 +1385,9 @@
                     "Material": {
                         "UID": 1914311419,
                         "Color": [
-                            0.50196081399917603,
-                            0.50196081399917603,
-                            0.50196081399917603,
+                            0.80000001192092896,
+                            0.80000001192092896,
+                            0.80000001192092896,
                             1
                         ],
                         "Name": "barrel 2.nemat",
@@ -1281,6 +1399,75 @@
                         "AssetsName": "explosivebarrel_arvala_v2.png",
                         "LibaryPath": "Library\/Textures\/1724793512.netex",
                         "LibraryFile": "1724793512.netex"
+                    },
+                    "Shader": {
+                        "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
+                        "AssetsName": "DefaultShader.shader",
+                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
+                        "LibraryFile": "800223282.neshader"
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 475069776,
+            "ParentUID": 1320024146,
+            "PrefabID": 1420265605,
+            "IsPrefab": true,
+            "Name": "barrel_mesh",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        4.9089632034301758,
+                        0
+                    ],
+                    "LocalRotation": [
+                        -0.70710664987564087,
+                        0,
+                        0,
+                        0.70710688829421997
+                    ],
+                    "LocalScale": [
+                        0.20000000298023224,
+                        0.19999998807907104,
+                        0.19999998807907104
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 328036877,
+                    "Name": "barrel 2.nemesh",
+                    "Path": "Library\/Meshes\/328036877.nemesh",
+                    "File": "328036877.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 1914311419,
+                        "Color": [
+                            0.80000001192092896,
+                            0.80000001192092896,
+                            0.80000001192092896,
+                            1
+                        ],
+                        "Name": "barrel 2.nemat",
+                        "Path": "Library\/Materials\/1914311419.nemat",
+                        "File": "1914311419.nemat"
+                    },
+                    "Texture": {
+                        "AssetsPath": "Assets\/Textures\/Blockouts\/Level1\/explosive_barrel.png",
+                        "AssetsName": "explosive_barrel.png",
+                        "LibaryPath": "Library\/Textures\/1937685746.netex",
+                        "LibraryFile": "1937685746.netex"
                     },
                     "Shader": {
                         "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
@@ -1341,6 +1528,75 @@
             ]
         },
         {
+            "UID": 499105528,
+            "ParentUID": 1587871415,
+            "PrefabID": 1420265605,
+            "IsPrefab": true,
+            "Name": "barrel_mesh",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        4.9089632034301758,
+                        0
+                    ],
+                    "LocalRotation": [
+                        -0.70710664987564087,
+                        0,
+                        0,
+                        0.70710688829421997
+                    ],
+                    "LocalScale": [
+                        0.20000000298023224,
+                        0.19999998807907104,
+                        0.19999998807907104
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 328036877,
+                    "Name": "barrel 2.nemesh",
+                    "Path": "Library\/Meshes\/328036877.nemesh",
+                    "File": "328036877.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 1914311419,
+                        "Color": [
+                            0.80000001192092896,
+                            0.80000001192092896,
+                            0.80000001192092896,
+                            1
+                        ],
+                        "Name": "barrel 2.nemat",
+                        "Path": "Library\/Materials\/1914311419.nemat",
+                        "File": "1914311419.nemat"
+                    },
+                    "Texture": {
+                        "AssetsPath": "Assets\/Textures\/Blockouts\/Level1\/explosive_barrel.png",
+                        "AssetsName": "explosive_barrel.png",
+                        "LibaryPath": "Library\/Textures\/1937685746.netex",
+                        "LibraryFile": "1937685746.netex"
+                    },
+                    "Shader": {
+                        "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
+                        "AssetsName": "DefaultShader.shader",
+                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
+                        "LibraryFile": "800223282.neshader"
+                    }
+                }
+            ]
+        },
+        {
             "UID": 518756153,
             "ParentUID": 132990815,
             "PrefabID": 0,
@@ -1350,25 +1606,25 @@
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": true,
+            "ShowBoundingBoxes": false,
             "Components": [
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        -40.372138977050781,
-                        6.9458789825439453,
+                        -40.372135162353516,
+                        -6.3289995193481445,
                         39.331134796142578
                     ],
                     "LocalRotation": [
-                        2.873483305292757e-16,
-                        0.25882109999656677,
-                        -6.2895348651448302e-13,
+                        8.0457304908092622e-15,
+                        0.25882107019424438,
+                        -6.583733666749858e-13,
                         0.96592527627944946
                     ],
                     "LocalScale": [
-                        0.99998718500137329,
+                        0.99998760223388672,
                         1,
-                        1.0000003576278687
+                        0.99999994039535522
                     ]
                 },
                 {
@@ -1399,7 +1655,7 @@
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": true,
+            "ShowBoundingBoxes": false,
             "Components": [
                 {
                     "Type": 1,
@@ -1446,25 +1702,12 @@
                             "Type": 7,
                             "Name": "level1",
                             "vectorstring": [
-                                "Level1_Room1.json",
-                                "Level1_Room2.json",
-                                "Level1_Room3.json",
-                                "Level1_Room6.json",
-                                "Level1_Room8.json",
-                                "Level1_Room9.json"
-                            ]
-                        },
-                        {
-                            "Type": 7,
-                            "Name": "level2",
-                            "vectorstring": [
-                                "Level2_Room1.json",
-                                "Level2_Room2.json",
-                                "Level2_Room3.json",
-                                "Level2_Room4.json",
-                                "Level2_Room5.json",
-                                "Level2_Room6.json",
-                                "Level2_Room7.json"
+                                "Assets\/Scenes\/Level1_Room8.json",
+                                "Assets\/Scenes\/Level1_Room1.json",
+                                "Assets\/Scenes\/Level1_Room2.json",
+                                "Assets\/Scenes\/Level1_Room6.json",
+                                "Assets\/Scenes\/Level1_Room9.json",
+                                "Assets\/Scenes\/Level1_Room3.json"
                             ]
                         },
                         {
@@ -1559,10 +1802,10 @@
                         113.77838134765625
                     ],
                     "LocalRotation": [
-                        -0.4226183295249939,
+                        -0.42261835932731628,
                         0,
                         0,
-                        0.9063078761100769
+                        0.90630775690078735
                     ],
                     "LocalScale": [
                         1,
@@ -1594,8 +1837,72 @@
                             "float3x": 0,
                             "float3y": 120,
                             "float3z": 90
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "playerName",
+                            "string": "Mandalorian"
                         }
                     ]
+                }
+            ]
+        },
+        {
+            "UID": 612677371,
+            "ParentUID": 1968612734,
+            "PrefabID": 1524961430,
+            "IsPrefab": true,
+            "Name": "SecodaryWeapon",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 21,
+                    "Image": {
+                        "X": 0.71200001239776611,
+                        "Y": -0.47873923182487488,
+                        "W": 0.1550000011920929,
+                        "H": 0.31999999284744263,
+                        "IsHDL": false,
+                        "IsHDR": false
+                    }
+                },
+                {
+                    "Type": 3,
+                    "Texture": {
+                        "AssetsPath": "Assets\/Textures\/UI\/HUD\/SecondaryWeapon1.png",
+                        "AssetsName": "SecondaryWeapon1.png",
+                        "LibaryPath": "Library\/Textures\/1130462783.netex",
+                        "LibraryFile": "1130462783.netex"
+                    },
+                    "Shader": {
+                        "AssetsPath": "Assets\/Shaders\/UIShader.shader",
+                        "AssetsName": "UIShader.shader",
+                        "LibaryPath": "Library\/Shaders\/1025410539.neshader",
+                        "LibraryFile": "1025410539.neshader"
+                    }
                 }
             ]
         },
@@ -1609,20 +1916,20 @@
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
+            "ShowBoundingBoxes": true,
             "Components": [
                 {
                     "Type": 1,
                     "LocalPosition": [
                         53.241107940673828,
                         -0.40741172432899475,
-                        3.8103833198547363
+                        3.4600000381469727
                     ],
                     "LocalRotation": [
-                        -3.3436391676244792e-12,
-                        0.46801671385765076,
-                        4.6389511156041952e-12,
-                        0.88371962308883667
+                        0,
+                        0.46800693869590759,
+                        0,
+                        0.88372480869293213
                     ],
                     "LocalScale": [
                         0.99998849630355835,
@@ -1695,6 +2002,65 @@
                         "AssetsName": "DefaultShader.shader",
                         "LibaryPath": "Library\/Shaders\/800223282.neshader",
                         "LibraryFile": "800223282.neshader"
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 643436274,
+            "ParentUID": 1968612734,
+            "PrefabID": 1524961430,
+            "IsPrefab": true,
+            "Name": "Heart1",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 21,
+                    "Image": {
+                        "X": -0.85000002384185791,
+                        "Y": 0.59373921155929565,
+                        "W": 0.054999999701976776,
+                        "H": 0.11500000208616257,
+                        "IsHDL": false,
+                        "IsHDR": false
+                    }
+                },
+                {
+                    "Type": 3,
+                    "Texture": {
+                        "AssetsPath": "Assets\/Textures\/UI\/HUD\/HeartFull.png",
+                        "AssetsName": "HeartFull.png",
+                        "LibaryPath": "Library\/Textures\/1024641721.netex",
+                        "LibraryFile": "1024641721.netex"
+                    },
+                    "Shader": {
+                        "AssetsPath": "Assets\/Shaders\/UIShader.shader",
+                        "AssetsName": "UIShader.shader",
+                        "LibaryPath": "Library\/Shaders\/1025410539.neshader",
+                        "LibraryFile": "1025410539.neshader"
                     }
                 }
             ]
@@ -1973,7 +2339,7 @@
         },
         {
             "UID": 674156498,
-            "ParentUID": 1810176723,
+            "ParentUID": 975111657,
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "MainScene",
@@ -2254,6 +2620,65 @@
             ]
         },
         {
+            "UID": 733642678,
+            "ParentUID": 1968612734,
+            "PrefabID": 1524961430,
+            "IsPrefab": true,
+            "Name": "Credits",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 21,
+                    "Image": {
+                        "X": -0.32199999690055847,
+                        "Y": 0.73299998044967651,
+                        "W": 0.42500001192092896,
+                        "H": 0.47999998927116394,
+                        "IsHDL": false,
+                        "IsHDR": false
+                    }
+                },
+                {
+                    "Type": 3,
+                    "Texture": {
+                        "AssetsPath": "Assets\/Textures\/UI\/HUD\/Credits.png",
+                        "AssetsName": "Credits.png",
+                        "LibaryPath": "Library\/Textures\/48777715.netex",
+                        "LibraryFile": "48777715.netex"
+                    },
+                    "Shader": {
+                        "AssetsPath": "Assets\/Shaders\/UIShader.shader",
+                        "AssetsName": "UIShader.shader",
+                        "LibaryPath": "Library\/Shaders\/1025410539.neshader",
+                        "LibraryFile": "1025410539.neshader"
+                    }
+                }
+            ]
+        },
+        {
             "UID": 733897854,
             "ParentUID": 132990815,
             "PrefabID": 0,
@@ -2401,65 +2826,6 @@
             ]
         },
         {
-            "UID": 758768864,
-            "ParentUID": 1945932309,
-            "PrefabID": 1524961430,
-            "IsPrefab": true,
-            "Name": "PrimaryWeapon",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        0,
-                        0
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {
-                    "Type": 21,
-                    "Image": {
-                        "X": 0.64800000190734863,
-                        "Y": -0.083999998867511749,
-                        "W": 0.30000001192092896,
-                        "H": 0.58499997854232788,
-                        "IsHDL": false,
-                        "IsHDR": false
-                    }
-                },
-                {
-                    "Type": 3,
-                    "Texture": {
-                        "AssetsPath": "Assets\/Textures\/UI\/HUD\/SelectedWeapon.png",
-                        "AssetsName": "SelectedWeapon.png",
-                        "LibaryPath": "Library\/Textures\/60971379.netex",
-                        "LibraryFile": "60971379.netex"
-                    },
-                    "Shader": {
-                        "AssetsPath": "Assets\/Shaders\/UIShader.shader",
-                        "AssetsName": "UIShader.shader",
-                        "LibaryPath": "Library\/Shaders\/1025410539.neshader",
-                        "LibraryFile": "1025410539.neshader"
-                    }
-                }
-            ]
-        },
-        {
             "UID": 765805036,
             "ParentUID": 1844712668,
             "PrefabID": 1922987151,
@@ -2538,7 +2904,7 @@
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
+            "ShowBoundingBoxes": true,
             "Components": [
                 {
                     "Type": 1,
@@ -2660,124 +3026,6 @@
             ]
         },
         {
-            "UID": 809355419,
-            "ParentUID": 1945932309,
-            "PrefabID": 1524961430,
-            "IsPrefab": true,
-            "Name": "Credits",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        0,
-                        0
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {
-                    "Type": 21,
-                    "Image": {
-                        "X": -0.32199999690055847,
-                        "Y": 0.73299998044967651,
-                        "W": 0.42500001192092896,
-                        "H": 0.47999998927116394,
-                        "IsHDL": false,
-                        "IsHDR": false
-                    }
-                },
-                {
-                    "Type": 3,
-                    "Texture": {
-                        "AssetsPath": "Assets\/Textures\/UI\/HUD\/Credits.png",
-                        "AssetsName": "Credits.png",
-                        "LibaryPath": "Library\/Textures\/48777715.netex",
-                        "LibraryFile": "48777715.netex"
-                    },
-                    "Shader": {
-                        "AssetsPath": "Assets\/Shaders\/UIShader.shader",
-                        "AssetsName": "UIShader.shader",
-                        "LibaryPath": "Library\/Shaders\/1025410539.neshader",
-                        "LibraryFile": "1025410539.neshader"
-                    }
-                }
-            ]
-        },
-        {
-            "UID": 809624945,
-            "ParentUID": 1945932309,
-            "PrefabID": 1524961430,
-            "IsPrefab": true,
-            "Name": "SecodaryWeapon",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        0,
-                        0
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {
-                    "Type": 21,
-                    "Image": {
-                        "X": 0.71200001239776611,
-                        "Y": -0.47873923182487488,
-                        "W": 0.1550000011920929,
-                        "H": 0.31999999284744263,
-                        "IsHDL": false,
-                        "IsHDR": false
-                    }
-                },
-                {
-                    "Type": 3,
-                    "Texture": {
-                        "AssetsPath": "Assets\/Textures\/UI\/HUD\/SecondaryWeapon1.png",
-                        "AssetsName": "SecondaryWeapon1.png",
-                        "LibaryPath": "Library\/Textures\/1130462783.netex",
-                        "LibraryFile": "1130462783.netex"
-                    },
-                    "Shader": {
-                        "AssetsPath": "Assets\/Shaders\/UIShader.shader",
-                        "AssetsName": "UIShader.shader",
-                        "LibaryPath": "Library\/Shaders\/1025410539.neshader",
-                        "LibraryFile": "1025410539.neshader"
-                    }
-                }
-            ]
-        },
-        {
             "UID": 840840892,
             "ParentUID": 30291596,
             "PrefabID": 0,
@@ -2855,9 +3103,9 @@
                     "Material": {
                         "UID": 1914311419,
                         "Color": [
-                            0.50196081399917603,
-                            0.50196081399917603,
-                            0.50196081399917603,
+                            0.80000001192092896,
+                            0.80000001192092896,
+                            0.80000001192092896,
                             1
                         ],
                         "Name": "barrel 2.nemat",
@@ -3007,7 +3255,7 @@
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": true,
+            "ShowBoundingBoxes": false,
             "Components": [
                 {
                     "Type": 1,
@@ -3043,75 +3291,6 @@
                     "Center X": 0,
                     "Center Y": 0,
                     "Center Z": 0
-                }
-            ]
-        },
-        {
-            "UID": 880051005,
-            "ParentUID": 1574932380,
-            "PrefabID": 1420265605,
-            "IsPrefab": true,
-            "Name": "barrel_mesh",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        4.9089632034301758,
-                        0
-                    ],
-                    "LocalRotation": [
-                        -0.70710664987564087,
-                        0,
-                        0,
-                        0.70710688829421997
-                    ],
-                    "LocalScale": [
-                        0.20000000298023224,
-                        0.19999998807907104,
-                        0.19999998807907104
-                    ]
-                },
-                {
-                    "Type": 2,
-                    "UID": 328036877,
-                    "Name": "barrel 2.nemesh",
-                    "Path": "Library\/Meshes\/328036877.nemesh",
-                    "File": "328036877.nemesh",
-                    "ShowWireframe": false,
-                    "ShowBoundingBox": false
-                },
-                {
-                    "Type": 3,
-                    "Material": {
-                        "UID": 1914311419,
-                        "Color": [
-                            0.50196081399917603,
-                            0.50196081399917603,
-                            0.50196081399917603,
-                            1
-                        ],
-                        "Name": "barrel 2.nemat",
-                        "Path": "Library\/Materials\/1914311419.nemat",
-                        "File": "1914311419.nemat"
-                    },
-                    "Texture": {
-                        "AssetsPath": "Assets\/Textures\/Props\/explosivebarrel_arvala_v2.png",
-                        "AssetsName": "explosivebarrel_arvala_v2.png",
-                        "LibaryPath": "Library\/Textures\/1724793512.netex",
-                        "LibraryFile": "1724793512.netex"
-                    },
-                    "Shader": {
-                        "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
-                        "AssetsName": "DefaultShader.shader",
-                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
-                        "LibraryFile": "800223282.neshader"
-                    }
                 }
             ]
         },
@@ -3161,6 +3340,75 @@
                     "Center X": 0,
                     "Center Y": 0,
                     "Center Z": 0
+                }
+            ]
+        },
+        {
+            "UID": 898922428,
+            "ParentUID": 1018693346,
+            "PrefabID": 1420265605,
+            "IsPrefab": true,
+            "Name": "barrel_mesh",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        4.9089632034301758,
+                        0
+                    ],
+                    "LocalRotation": [
+                        -0.70710664987564087,
+                        0,
+                        0,
+                        0.70710688829421997
+                    ],
+                    "LocalScale": [
+                        0.20000000298023224,
+                        0.19999998807907104,
+                        0.19999998807907104
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 328036877,
+                    "Name": "barrel 2.nemesh",
+                    "Path": "Library\/Meshes\/328036877.nemesh",
+                    "File": "328036877.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 1914311419,
+                        "Color": [
+                            0.80000001192092896,
+                            0.80000001192092896,
+                            0.80000001192092896,
+                            1
+                        ],
+                        "Name": "barrel 2.nemat",
+                        "Path": "Library\/Materials\/1914311419.nemat",
+                        "File": "1914311419.nemat"
+                    },
+                    "Texture": {
+                        "AssetsPath": "Assets\/Textures\/Blockouts\/Level1\/explosive_barrel.png",
+                        "AssetsName": "explosive_barrel.png",
+                        "LibaryPath": "Library\/Textures\/1937685746.netex",
+                        "LibraryFile": "1937685746.netex"
+                    },
+                    "Shader": {
+                        "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
+                        "AssetsName": "DefaultShader.shader",
+                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
+                        "LibraryFile": "800223282.neshader"
+                    }
                 }
             ]
         },
@@ -3242,9 +3490,9 @@
                     "Material": {
                         "UID": 1914311419,
                         "Color": [
-                            0.50196081399917603,
-                            0.50196081399917603,
-                            0.50196081399917603,
+                            0.80000001192092896,
+                            0.80000001192092896,
+                            0.80000001192092896,
                             1
                         ],
                         "Name": "barrel 2.nemat",
@@ -3462,7 +3710,7 @@
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
+            "ShowBoundingBoxes": true,
             "Components": [
                 {
                     "Type": 1,
@@ -3580,25 +3828,25 @@
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
+            "ShowBoundingBoxes": true,
             "Components": [
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        92.306999206542969,
-                        -2.7000584602355957,
-                        9.2037324905395508
+                        105.27181243896484,
+                        -2.7003283500671387,
+                        3.5317962169647217
                     ],
                     "LocalRotation": [
-                        -2.0651174861959984e-14,
-                        1.303892815940344e-08,
-                        3.3248876742109079e-12,
-                        1
+                        -0.0093954158946871758,
+                        0.97600787878036499,
+                        0.19507376849651337,
+                        0.096264079213142395
                     ],
                     "LocalScale": [
-                        0.99996840953826904,
-                        1,
-                        0.99996840953826904
+                        1.000008225440979,
+                        0.99999982118606567,
+                        0.99997323751449585
                     ]
                 },
                 {
@@ -3942,65 +4190,6 @@
             ]
         },
         {
-            "UID": 1154645263,
-            "ParentUID": 1945932309,
-            "PrefabID": 1524961430,
-            "IsPrefab": true,
-            "Name": "Minimap",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        0,
-                        0
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {
-                    "Type": 21,
-                    "Image": {
-                        "X": 0.73799997568130493,
-                        "Y": 0.47400000691413879,
-                        "W": 0.25,
-                        "H": 0.47499999403953552,
-                        "IsHDL": false,
-                        "IsHDR": false
-                    }
-                },
-                {
-                    "Type": 3,
-                    "Texture": {
-                        "AssetsPath": "Assets\/Textures\/UI\/HUD\/MiniMap.png",
-                        "AssetsName": "MiniMap.png",
-                        "LibaryPath": "Library\/Textures\/1046552748.netex",
-                        "LibraryFile": "1046552748.netex"
-                    },
-                    "Shader": {
-                        "AssetsPath": "Assets\/Shaders\/UIShader.shader",
-                        "AssetsName": "UIShader.shader",
-                        "LibaryPath": "Library\/Shaders\/1025410539.neshader",
-                        "LibraryFile": "1025410539.neshader"
-                    }
-                }
-            ]
-        },
-        {
             "UID": 1162274115,
             "ParentUID": 132990815,
             "PrefabID": 0,
@@ -4095,65 +4284,6 @@
                     "Center X": 0,
                     "Center Y": 0,
                     "Center Z": 0
-                }
-            ]
-        },
-        {
-            "UID": 1164222584,
-            "ParentUID": 1945932309,
-            "PrefabID": 1524961430,
-            "IsPrefab": true,
-            "Name": "Heart1",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        0,
-                        0
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {
-                    "Type": 21,
-                    "Image": {
-                        "X": -0.85000002384185791,
-                        "Y": 0.59373921155929565,
-                        "W": 0.054999999701976776,
-                        "H": 0.11500000208616257,
-                        "IsHDL": false,
-                        "IsHDR": false
-                    }
-                },
-                {
-                    "Type": 3,
-                    "Texture": {
-                        "AssetsPath": "Assets\/Textures\/UI\/HUD\/HeartFull.png",
-                        "AssetsName": "HeartFull.png",
-                        "LibaryPath": "Library\/Textures\/1024641721.netex",
-                        "LibraryFile": "1024641721.netex"
-                    },
-                    "Shader": {
-                        "AssetsPath": "Assets\/Shaders\/UIShader.shader",
-                        "AssetsName": "UIShader.shader",
-                        "LibaryPath": "Library\/Shaders\/1025410539.neshader",
-                        "LibraryFile": "1025410539.neshader"
-                    }
                 }
             ]
         },
@@ -4276,11 +4406,178 @@
             ]
         },
         {
-            "UID": 1257968703,
-            "ParentUID": 1945932309,
+            "UID": 1234097542,
+            "ParentUID": 791824042,
+            "PrefabID": 1420265605,
+            "IsPrefab": true,
+            "Name": "barrel_mesh",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        4.9089632034301758,
+                        0
+                    ],
+                    "LocalRotation": [
+                        -0.70710664987564087,
+                        0,
+                        0,
+                        0.70710688829421997
+                    ],
+                    "LocalScale": [
+                        0.20000000298023224,
+                        0.19999998807907104,
+                        0.19999998807907104
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 328036877,
+                    "Name": "barrel 2.nemesh",
+                    "Path": "Library\/Meshes\/328036877.nemesh",
+                    "File": "328036877.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 1914311419,
+                        "Color": [
+                            0.80000001192092896,
+                            0.80000001192092896,
+                            0.80000001192092896,
+                            1
+                        ],
+                        "Name": "barrel 2.nemat",
+                        "Path": "Library\/Materials\/1914311419.nemat",
+                        "File": "1914311419.nemat"
+                    },
+                    "Texture": {
+                        "AssetsPath": "Assets\/Textures\/Blockouts\/Level1\/explosive_barrel.png",
+                        "AssetsName": "explosive_barrel.png",
+                        "LibaryPath": "Library\/Textures\/1937685746.netex",
+                        "LibraryFile": "1937685746.netex"
+                    },
+                    "Shader": {
+                        "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
+                        "AssetsName": "DefaultShader.shader",
+                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
+                        "LibraryFile": "800223282.neshader"
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 1275391138,
+            "ParentUID": 132990815,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Wall9",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -50.748207092285156,
+                        -0.69316035509109497,
+                        45.594707489013672
+                    ],
+                    "LocalRotation": [
+                        -2.0607655664382774e-13,
+                        -0.17364716529846191,
+                        -2.0490584055898875e-12,
+                        0.98480802774429321
+                    ],
+                    "LocalScale": [
+                        1.0000189542770386,
+                        1,
+                        1.0000193119049072
+                    ]
+                },
+                {
+                    "Type": 8,
+                    "Is Static": true,
+                    "Filter": "default"
+                },
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 20,
+                    "Size Y": 10,
+                    "Size Z": 45,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
+                }
+            ]
+        },
+        {
+            "UID": 1278496730,
+            "ParentUID": 132990815,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Wall24",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        71.698966979980469,
+                        -0.9399755597114563,
+                        14.631196022033691
+                    ],
+                    "LocalRotation": [
+                        0.00012475228868424892,
+                        -0.71594458818435669,
+                        -0.00033942810841836035,
+                        0.69815701246261597
+                    ],
+                    "LocalScale": [
+                        0.9999886155128479,
+                        1,
+                        1.0000052452087402
+                    ]
+                },
+                {
+                    "Type": 8,
+                    "Is Static": true,
+                    "Filter": "default"
+                },
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 10,
+                    "Size Y": 10,
+                    "Size Z": 25,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
+                }
+            ]
+        },
+        {
+            "UID": 1282757402,
+            "ParentUID": 1968612734,
             "PrefabID": 1524961430,
             "IsPrefab": true,
-            "Name": "Dash",
+            "Name": "PrimaryWeapon",
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
@@ -4309,10 +4606,10 @@
                 {
                     "Type": 21,
                     "Image": {
-                        "X": -0.75800001621246338,
-                        "Y": -0.47873923182487488,
-                        "W": 0.17499999701976776,
-                        "H": 0.34000000357627869,
+                        "X": 0.64800000190734863,
+                        "Y": -0.083999998867511749,
+                        "W": 0.30000001192092896,
+                        "H": 0.58499997854232788,
                         "IsHDL": false,
                         "IsHDR": false
                     }
@@ -4320,10 +4617,10 @@
                 {
                     "Type": 3,
                     "Texture": {
-                        "AssetsPath": "Assets\/Textures\/UI\/HUD\/DashButton.png",
-                        "AssetsName": "DashButton.png",
-                        "LibaryPath": "Library\/Textures\/781650108.netex",
-                        "LibraryFile": "781650108.netex"
+                        "AssetsPath": "Assets\/Textures\/UI\/HUD\/SelectedWeapon.png",
+                        "AssetsName": "SelectedWeapon.png",
+                        "LibaryPath": "Library\/Textures\/60971379.netex",
+                        "LibraryFile": "60971379.netex"
                     },
                     "Shader": {
                         "AssetsPath": "Assets\/Shaders\/UIShader.shader",
@@ -4331,55 +4628,6 @@
                         "LibaryPath": "Library\/Shaders\/1025410539.neshader",
                         "LibraryFile": "1025410539.neshader"
                     }
-                }
-            ]
-        },
-        {
-            "UID": 1275391138,
-            "ParentUID": 132990815,
-            "PrefabID": 0,
-            "IsPrefab": false,
-            "Name": "Wall9",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        -52.947460174560547,
-                        -0.69316095113754272,
-                        45.565158843994141
-                    ],
-                    "LocalRotation": [
-                        -2.1103587356362946e-13,
-                        -0.17364878952503204,
-                        -5.3391183618342608e-13,
-                        0.98480767011642456
-                    ],
-                    "LocalScale": [
-                        1.0000022649765015,
-                        1,
-                        1.0000193119049072
-                    ]
-                },
-                {
-                    "Type": 8,
-                    "Is Static": true,
-                    "Filter": "default"
-                },
-                {
-                    "Type": 9,
-                    "Is Trigger": false,
-                    "Show Collider": true,
-                    "Size X": 20,
-                    "Size Y": 10,
-                    "Size Z": 45,
-                    "Center X": 0,
-                    "Center Y": 0,
-                    "Center Z": 0
                 }
             ]
         },
@@ -4403,15 +4651,15 @@
                         80.596794128417969
                     ],
                     "LocalRotation": [
-                        7.4073554364936789e-13,
-                        0.043617278337478638,
-                        -2.1016454635619519e-12,
+                        7.4140742373565716e-13,
+                        0.043617267161607742,
+                        -2.0874207310589421e-12,
                         0.99904841184616089
                     ],
                     "LocalScale": [
-                        1.0000083446502686,
+                        1.0000089406967163,
                         1,
-                        1.0000932216644287
+                        1.0000938177108765
                     ]
                 },
                 {
@@ -4442,7 +4690,7 @@
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
+            "ShowBoundingBoxes": true,
             "Components": [
                 {
                     "Type": 1,
@@ -4633,55 +4881,6 @@
             ]
         },
         {
-            "UID": 1397959336,
-            "ParentUID": 132990815,
-            "PrefabID": 0,
-            "IsPrefab": false,
-            "Name": "Wall24",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        44.793376922607422,
-                        -0.57207733392715454,
-                        -3.1618897914886475
-                    ],
-                    "LocalRotation": [
-                        2.7311815054562386e-14,
-                        1.583309128250221e-08,
-                        2.3409956698833279e-12,
-                        1
-                    ],
-                    "LocalScale": [
-                        0.99996161460876465,
-                        1,
-                        0.99996161460876465
-                    ]
-                },
-                {
-                    "Type": 8,
-                    "Is Static": true,
-                    "Filter": "default"
-                },
-                {
-                    "Type": 9,
-                    "Is Trigger": false,
-                    "Show Collider": true,
-                    "Size X": 20,
-                    "Size Y": 10,
-                    "Size Z": 20,
-                    "Center X": 0,
-                    "Center Y": 0,
-                    "Center Z": 0
-                }
-            ]
-        },
-        {
             "UID": 1400658177,
             "ParentUID": 1082712991,
             "PrefabID": 92973232,
@@ -4802,11 +5001,11 @@
             ]
         },
         {
-            "UID": 1424689760,
-            "ParentUID": 132990815,
-            "PrefabID": 0,
-            "IsPrefab": false,
-            "Name": "Wall8",
+            "UID": 1413293758,
+            "ParentUID": 1968612734,
+            "PrefabID": 1524961430,
+            "IsPrefab": true,
+            "Name": "Dash",
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
@@ -4816,20 +5015,79 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        -54.339321136474609,
-                        -1.0130293369293213,
-                        92.161529541015625
+                        0,
+                        0,
+                        0
                     ],
                     "LocalRotation": [
-                        8.958433267189478e-16,
-                        0.13053248822689056,
-                        -1.2972006281641857e-12,
-                        0.99144405126571655
+                        0,
+                        0,
+                        0,
+                        1
                     ],
                     "LocalScale": [
-                        0.99998492002487183,
                         1,
-                        0.99999994039535522
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 21,
+                    "Image": {
+                        "X": -0.75800001621246338,
+                        "Y": -0.47873923182487488,
+                        "W": 0.17499999701976776,
+                        "H": 0.34000000357627869,
+                        "IsHDL": false,
+                        "IsHDR": false
+                    }
+                },
+                {
+                    "Type": 3,
+                    "Texture": {
+                        "AssetsPath": "Assets\/Textures\/UI\/HUD\/DashButton.png",
+                        "AssetsName": "DashButton.png",
+                        "LibaryPath": "Library\/Textures\/781650108.netex",
+                        "LibraryFile": "781650108.netex"
+                    },
+                    "Shader": {
+                        "AssetsPath": "Assets\/Shaders\/UIShader.shader",
+                        "AssetsName": "UIShader.shader",
+                        "LibaryPath": "Library\/Shaders\/1025410539.neshader",
+                        "LibraryFile": "1025410539.neshader"
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 1424689760,
+            "ParentUID": 132990815,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Wall8",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": true,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -49.034954071044922,
+                        -1.013028621673584,
+                        94.673591613769531
+                    ],
+                    "LocalRotation": [
+                        4.0303304855819622e-13,
+                        0.13053423166275024,
+                        -6.310338536430482e-12,
+                        0.99144381284713745
+                    ],
+                    "LocalScale": [
+                        0.99998307228088379,
+                        1,
+                        0.99996578693389893
                     ]
                 },
                 {
@@ -4900,8 +5158,8 @@
             ]
         },
         {
-            "UID": 1456454398,
-            "ParentUID": 1611669841,
+            "UID": 1471094673,
+            "ParentUID": 85558398,
             "PrefabID": 1420265605,
             "IsPrefab": true,
             "Name": "barrel_mesh",
@@ -4944,9 +5202,9 @@
                     "Material": {
                         "UID": 1914311419,
                         "Color": [
-                            0.50196081399917603,
-                            0.50196081399917603,
-                            0.50196081399917603,
+                            0.80000001192092896,
+                            0.80000001192092896,
+                            0.80000001192092896,
                             1
                         ],
                         "Name": "barrel 2.nemat",
@@ -4954,10 +5212,10 @@
                         "File": "1914311419.nemat"
                     },
                     "Texture": {
-                        "AssetsPath": "Assets\/Textures\/Props\/explosivebarrel_arvala_v2.png",
-                        "AssetsName": "explosivebarrel_arvala_v2.png",
-                        "LibaryPath": "Library\/Textures\/1724793512.netex",
-                        "LibraryFile": "1724793512.netex"
+                        "AssetsPath": "Assets\/Textures\/Blockouts\/Level1\/explosive_barrel.png",
+                        "AssetsName": "explosive_barrel.png",
+                        "LibaryPath": "Library\/Textures\/1937685746.netex",
+                        "LibraryFile": "1937685746.netex"
                     },
                     "Shader": {
                         "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
@@ -5032,9 +5290,9 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        32.304534912109375,
+                        6.8274121284484863,
                         -4.8530988693237305,
-                        73.051979064941406
+                        63.068717956542969
                     ],
                     "LocalRotation": [
                         0,
@@ -5332,7 +5590,7 @@
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
+            "ShowBoundingBoxes": true,
             "Components": [
                 {
                     "Type": 1,
@@ -5381,14 +5639,14 @@
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
+            "ShowBoundingBoxes": true,
             "Components": [
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        15.462900161743164,
+                        14.924609184265137,
                         -1.52587890625e-05,
-                        -74.323814392089844
+                        -69.631362915039062
                     ],
                     "LocalRotation": [
                         0,
@@ -5430,7 +5688,7 @@
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
+            "ShowBoundingBoxes": true,
             "Components": [
                 {
                     "Type": 1,
@@ -5597,7 +5855,7 @@
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
+            "ShowBoundingBoxes": true,
             "Components": [
                 {
                     "Type": 1,
@@ -5630,55 +5888,6 @@
                     "Size X": 3,
                     "Size Y": 20,
                     "Size Z": 3,
-                    "Center X": 0,
-                    "Center Y": 0,
-                    "Center Z": 0
-                }
-            ]
-        },
-        {
-            "UID": 1618204928,
-            "ParentUID": 132990815,
-            "PrefabID": 0,
-            "IsPrefab": false,
-            "Name": "Wall4",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        -62.836166381835938,
-                        4.5738353729248047,
-                        115.16337585449219
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {
-                    "Type": 8,
-                    "Is Static": true,
-                    "Filter": "default"
-                },
-                {
-                    "Type": 9,
-                    "Is Trigger": false,
-                    "Show Collider": true,
-                    "Size X": 10,
-                    "Size Y": 10,
-                    "Size Z": 10,
                     "Center X": 0,
                     "Center Y": 0,
                     "Center Z": 0
@@ -5853,65 +6062,6 @@
             ]
         },
         {
-            "UID": 1630720138,
-            "ParentUID": 1945932309,
-            "PrefabID": 1524961430,
-            "IsPrefab": true,
-            "Name": "Heart2",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        0,
-                        0
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {
-                    "Type": 21,
-                    "Image": {
-                        "X": -0.72500002384185791,
-                        "Y": 0.58899998664855957,
-                        "W": 0.054999999701976776,
-                        "H": 0.11500000208616257,
-                        "IsHDL": false,
-                        "IsHDR": false
-                    }
-                },
-                {
-                    "Type": 3,
-                    "Texture": {
-                        "AssetsPath": "Assets\/Textures\/UI\/HUD\/HeartFull.png",
-                        "AssetsName": "HeartFull.png",
-                        "LibaryPath": "Library\/Textures\/1024641721.netex",
-                        "LibraryFile": "1024641721.netex"
-                    },
-                    "Shader": {
-                        "AssetsPath": "Assets\/Shaders\/UIShader.shader",
-                        "AssetsName": "UIShader.shader",
-                        "LibaryPath": "Library\/Shaders\/1025410539.neshader",
-                        "LibraryFile": "1025410539.neshader"
-                    }
-                }
-            ]
-        },
-        {
             "UID": 1704657436,
             "ParentUID": 132990815,
             "PrefabID": 0,
@@ -6012,6 +6162,65 @@
             ]
         },
         {
+            "UID": 1736744977,
+            "ParentUID": 1968612734,
+            "PrefabID": 1524961430,
+            "IsPrefab": true,
+            "Name": "Heart3",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 21,
+                    "Image": {
+                        "X": -0.60000002384185791,
+                        "Y": 0.58873921632766724,
+                        "W": 0.054999999701976776,
+                        "H": 0.10999999940395355,
+                        "IsHDL": false,
+                        "IsHDR": false
+                    }
+                },
+                {
+                    "Type": 3,
+                    "Texture": {
+                        "AssetsPath": "Assets\/Textures\/UI\/HUD\/HeartFull.png",
+                        "AssetsName": "HeartFull.png",
+                        "LibaryPath": "Library\/Textures\/1024641721.netex",
+                        "LibraryFile": "1024641721.netex"
+                    },
+                    "Shader": {
+                        "AssetsPath": "Assets\/Shaders\/UIShader.shader",
+                        "AssetsName": "UIShader.shader",
+                        "LibaryPath": "Library\/Shaders\/1025410539.neshader",
+                        "LibraryFile": "1025410539.neshader"
+                    }
+                }
+            ]
+        },
+        {
             "UID": 1741514816,
             "ParentUID": 132990815,
             "PrefabID": 0,
@@ -6105,9 +6314,9 @@
                     "Material": {
                         "UID": 1914311419,
                         "Color": [
-                            0.50196081399917603,
-                            0.50196081399917603,
-                            0.50196081399917603,
+                            0.80000001192092896,
+                            0.80000001192092896,
+                            0.80000001192092896,
                             1
                         ],
                         "Name": "barrel 2.nemat",
@@ -6330,55 +6539,6 @@
             ]
         },
         {
-            "UID": 1930456231,
-            "ParentUID": 132990815,
-            "PrefabID": 0,
-            "IsPrefab": false,
-            "Name": "Wall31",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        115.27643585205078,
-                        4.2041187286376953,
-                        -23.476619720458984
-                    ],
-                    "LocalRotation": [
-                        4.8849762261530053e-15,
-                        3.7253244933310725e-09,
-                        5.4340554408657815e-13,
-                        1
-                    ],
-                    "LocalScale": [
-                        0.99999082088470459,
-                        1,
-                        0.99999082088470459
-                    ]
-                },
-                {
-                    "Type": 8,
-                    "Is Static": true,
-                    "Filter": "default"
-                },
-                {
-                    "Type": 9,
-                    "Is Trigger": false,
-                    "Show Collider": true,
-                    "Size X": 10,
-                    "Size Y": 10,
-                    "Size Z": 10,
-                    "Center X": 0,
-                    "Center Y": 0,
-                    "Center Z": 0
-                }
-            ]
-        },
-        {
             "UID": 1940006116,
             "ParentUID": 674156498,
             "PrefabID": 0,
@@ -6412,50 +6572,6 @@
             ]
         },
         {
-            "UID": 1945932309,
-            "ParentUID": 599710503,
-            "PrefabID": 1524961430,
-            "IsPrefab": true,
-            "Name": "Canvas",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        0,
-                        0
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {
-                    "Type": 13,
-                    "Canvas": {
-                        "X": 0,
-                        "Y": 0,
-                        "W": 1.0926049947738647,
-                        "H": 0.5787392258644104,
-                        "IsInvisible": false,
-                        "IsInputCanvas": true
-                    }
-                }
-            ]
-        },
-        {
             "UID": 1947454750,
             "ParentUID": 132990815,
             "PrefabID": 0,
@@ -6465,7 +6581,7 @@
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
+            "ShowBoundingBoxes": true,
             "Components": [
                 {
                     "Type": 1,
@@ -6501,6 +6617,75 @@
                     "Center X": 0,
                     "Center Y": 0,
                     "Center Z": 0
+                }
+            ]
+        },
+        {
+            "UID": 1963021046,
+            "ParentUID": 1611669841,
+            "PrefabID": 1420265605,
+            "IsPrefab": true,
+            "Name": "barrel_mesh",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        4.9089632034301758,
+                        0
+                    ],
+                    "LocalRotation": [
+                        -0.70710664987564087,
+                        0,
+                        0,
+                        0.70710688829421997
+                    ],
+                    "LocalScale": [
+                        0.20000000298023224,
+                        0.19999998807907104,
+                        0.19999998807907104
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 328036877,
+                    "Name": "barrel 2.nemesh",
+                    "Path": "Library\/Meshes\/328036877.nemesh",
+                    "File": "328036877.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 1914311419,
+                        "Color": [
+                            0.80000001192092896,
+                            0.80000001192092896,
+                            0.80000001192092896,
+                            1
+                        ],
+                        "Name": "barrel 2.nemat",
+                        "Path": "Library\/Materials\/1914311419.nemat",
+                        "File": "1914311419.nemat"
+                    },
+                    "Texture": {
+                        "AssetsPath": "Assets\/Textures\/Blockouts\/Level1\/explosive_barrel.png",
+                        "AssetsName": "explosive_barrel.png",
+                        "LibaryPath": "Library\/Textures\/1937685746.netex",
+                        "LibraryFile": "1937685746.netex"
+                    },
+                    "Shader": {
+                        "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
+                        "AssetsName": "DefaultShader.shader",
+                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
+                        "LibraryFile": "800223282.neshader"
+                    }
                 }
             ]
         },
@@ -6587,6 +6772,50 @@
             ]
         },
         {
+            "UID": 1968612734,
+            "ParentUID": 599710503,
+            "PrefabID": 1524961430,
+            "IsPrefab": true,
+            "Name": "Canvas",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 13,
+                    "Canvas": {
+                        "X": 0,
+                        "Y": 0,
+                        "W": 1.0926049947738647,
+                        "H": 0.5787392258644104,
+                        "IsInvisible": false,
+                        "IsInputCanvas": true
+                    }
+                }
+            ]
+        },
+        {
             "UID": 1973919974,
             "ParentUID": 674156498,
             "PrefabID": 1420265605,
@@ -6596,7 +6825,7 @@
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
+            "ShowBoundingBoxes": true,
             "Components": [
                 {
                     "Type": 1,
@@ -6754,55 +6983,6 @@
             ]
         },
         {
-            "UID": 1992187977,
-            "ParentUID": 132990815,
-            "PrefabID": 0,
-            "IsPrefab": false,
-            "Name": "Wall10",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        -64.131752014160156,
-                        4.4608936309814453,
-                        41.638710021972656
-                    ],
-                    "LocalRotation": [
-                        4.9960036108132044e-16,
-                        -1.8626449271863521e-09,
-                        -4.2632591250660323e-14,
-                        1
-                    ],
-                    "LocalScale": [
-                        0.99999940395355225,
-                        1,
-                        1
-                    ]
-                },
-                {
-                    "Type": 8,
-                    "Is Static": true,
-                    "Filter": "default"
-                },
-                {
-                    "Type": 9,
-                    "Is Trigger": false,
-                    "Show Collider": true,
-                    "Size X": 10,
-                    "Size Y": 10,
-                    "Size Z": 10,
-                    "Center X": 0,
-                    "Center Y": 0,
-                    "Center Z": 0
-                }
-            ]
-        },
-        {
             "UID": 1999941668,
             "ParentUID": 20345249,
             "PrefabID": 1922987151,
@@ -6934,55 +7114,6 @@
             ]
         },
         {
-            "UID": 2048318358,
-            "ParentUID": 132990815,
-            "PrefabID": 0,
-            "IsPrefab": false,
-            "Name": "Wall21",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        108.17562103271484,
-                        3.9488296508789062,
-                        -100.92617797851562
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {
-                    "Type": 8,
-                    "Is Static": true,
-                    "Filter": "default"
-                },
-                {
-                    "Type": 9,
-                    "Is Trigger": false,
-                    "Show Collider": true,
-                    "Size X": 10,
-                    "Size Y": 10,
-                    "Size Z": 10,
-                    "Center X": 0,
-                    "Center Y": 0,
-                    "Center Z": 0
-                }
-            ]
-        },
-        {
             "UID": 2063088642,
             "ParentUID": 1508923490,
             "PrefabID": 1096350165,
@@ -7052,75 +7183,6 @@
             ]
         },
         {
-            "UID": 2079054228,
-            "ParentUID": 85558398,
-            "PrefabID": 1420265605,
-            "IsPrefab": true,
-            "Name": "barrel_mesh",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        4.9089632034301758,
-                        0
-                    ],
-                    "LocalRotation": [
-                        -0.70710664987564087,
-                        0,
-                        0,
-                        0.70710688829421997
-                    ],
-                    "LocalScale": [
-                        0.20000000298023224,
-                        0.19999998807907104,
-                        0.19999998807907104
-                    ]
-                },
-                {
-                    "Type": 2,
-                    "UID": 328036877,
-                    "Name": "barrel 2.nemesh",
-                    "Path": "Library\/Meshes\/328036877.nemesh",
-                    "File": "328036877.nemesh",
-                    "ShowWireframe": false,
-                    "ShowBoundingBox": false
-                },
-                {
-                    "Type": 3,
-                    "Material": {
-                        "UID": 1914311419,
-                        "Color": [
-                            0.50196081399917603,
-                            0.50196081399917603,
-                            0.50196081399917603,
-                            1
-                        ],
-                        "Name": "barrel 2.nemat",
-                        "Path": "Library\/Materials\/1914311419.nemat",
-                        "File": "1914311419.nemat"
-                    },
-                    "Texture": {
-                        "AssetsPath": "Assets\/Textures\/Props\/explosivebarrel_arvala_v2.png",
-                        "AssetsName": "explosivebarrel_arvala_v2.png",
-                        "LibaryPath": "Library\/Textures\/1724793512.netex",
-                        "LibraryFile": "1724793512.netex"
-                    },
-                    "Shader": {
-                        "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
-                        "AssetsName": "DefaultShader.shader",
-                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
-                        "LibraryFile": "800223282.neshader"
-                    }
-                }
-            ]
-        },
-        {
             "UID": 2090825061,
             "ParentUID": 132990815,
             "PrefabID": 0,
@@ -7170,272 +7232,6 @@
             ]
         },
         {
-            "UID": 2118053715,
-            "ParentUID": 1320024146,
-            "PrefabID": 1420265605,
-            "IsPrefab": true,
-            "Name": "barrel_mesh",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        4.9089632034301758,
-                        0
-                    ],
-                    "LocalRotation": [
-                        -0.70710664987564087,
-                        0,
-                        0,
-                        0.70710688829421997
-                    ],
-                    "LocalScale": [
-                        0.20000000298023224,
-                        0.19999998807907104,
-                        0.19999998807907104
-                    ]
-                },
-                {
-                    "Type": 2,
-                    "UID": 328036877,
-                    "Name": "barrel 2.nemesh",
-                    "Path": "Library\/Meshes\/328036877.nemesh",
-                    "File": "328036877.nemesh",
-                    "ShowWireframe": false,
-                    "ShowBoundingBox": false
-                },
-                {
-                    "Type": 3,
-                    "Material": {
-                        "UID": 1914311419,
-                        "Color": [
-                            0.50196081399917603,
-                            0.50196081399917603,
-                            0.50196081399917603,
-                            1
-                        ],
-                        "Name": "barrel 2.nemat",
-                        "Path": "Library\/Materials\/1914311419.nemat",
-                        "File": "1914311419.nemat"
-                    },
-                    "Texture": {
-                        "AssetsPath": "Assets\/Textures\/Props\/explosivebarrel_arvala_v2.png",
-                        "AssetsName": "explosivebarrel_arvala_v2.png",
-                        "LibaryPath": "Library\/Textures\/1724793512.netex",
-                        "LibraryFile": "1724793512.netex"
-                    },
-                    "Shader": {
-                        "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
-                        "AssetsName": "DefaultShader.shader",
-                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
-                        "LibraryFile": "800223282.neshader"
-                    }
-                }
-            ]
-        },
-        {
-            "UID": 2126779252,
-            "ParentUID": 1587871415,
-            "PrefabID": 1420265605,
-            "IsPrefab": true,
-            "Name": "barrel_mesh",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        4.9089632034301758,
-                        0
-                    ],
-                    "LocalRotation": [
-                        -0.70710664987564087,
-                        0,
-                        0,
-                        0.70710688829421997
-                    ],
-                    "LocalScale": [
-                        0.20000000298023224,
-                        0.19999998807907104,
-                        0.19999998807907104
-                    ]
-                },
-                {
-                    "Type": 2,
-                    "UID": 328036877,
-                    "Name": "barrel 2.nemesh",
-                    "Path": "Library\/Meshes\/328036877.nemesh",
-                    "File": "328036877.nemesh",
-                    "ShowWireframe": false,
-                    "ShowBoundingBox": false
-                },
-                {
-                    "Type": 3,
-                    "Material": {
-                        "UID": 1914311419,
-                        "Color": [
-                            0.50196081399917603,
-                            0.50196081399917603,
-                            0.50196081399917603,
-                            1
-                        ],
-                        "Name": "barrel 2.nemat",
-                        "Path": "Library\/Materials\/1914311419.nemat",
-                        "File": "1914311419.nemat"
-                    },
-                    "Texture": {
-                        "AssetsPath": "Assets\/Textures\/Props\/explosivebarrel_arvala_v2.png",
-                        "AssetsName": "explosivebarrel_arvala_v2.png",
-                        "LibaryPath": "Library\/Textures\/1724793512.netex",
-                        "LibraryFile": "1724793512.netex"
-                    },
-                    "Shader": {
-                        "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
-                        "AssetsName": "DefaultShader.shader",
-                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
-                        "LibraryFile": "800223282.neshader"
-                    }
-                }
-            ]
-        },
-        {
-            "UID": 2129358746,
-            "ParentUID": 1945932309,
-            "PrefabID": 1524961430,
-            "IsPrefab": true,
-            "Name": "Heart3",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        0,
-                        0
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {
-                    "Type": 21,
-                    "Image": {
-                        "X": -0.60000002384185791,
-                        "Y": 0.58873921632766724,
-                        "W": 0.054999999701976776,
-                        "H": 0.10999999940395355,
-                        "IsHDL": false,
-                        "IsHDR": false
-                    }
-                },
-                {
-                    "Type": 3,
-                    "Texture": {
-                        "AssetsPath": "Assets\/Textures\/UI\/HUD\/HeartFull.png",
-                        "AssetsName": "HeartFull.png",
-                        "LibaryPath": "Library\/Textures\/1024641721.netex",
-                        "LibraryFile": "1024641721.netex"
-                    },
-                    "Shader": {
-                        "AssetsPath": "Assets\/Shaders\/UIShader.shader",
-                        "AssetsName": "UIShader.shader",
-                        "LibaryPath": "Library\/Shaders\/1025410539.neshader",
-                        "LibraryFile": "1025410539.neshader"
-                    }
-                }
-            ]
-        },
-        {
-            "UID": 2130346967,
-            "ParentUID": 1973919974,
-            "PrefabID": 1420265605,
-            "IsPrefab": true,
-            "Name": "barrel_mesh",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        4.9089632034301758,
-                        0
-                    ],
-                    "LocalRotation": [
-                        -0.70710664987564087,
-                        0,
-                        0,
-                        0.70710688829421997
-                    ],
-                    "LocalScale": [
-                        0.20000000298023224,
-                        0.19999998807907104,
-                        0.19999998807907104
-                    ]
-                },
-                {
-                    "Type": 2,
-                    "UID": 328036877,
-                    "Name": "barrel 2.nemesh",
-                    "Path": "Library\/Meshes\/328036877.nemesh",
-                    "File": "328036877.nemesh",
-                    "ShowWireframe": false,
-                    "ShowBoundingBox": false
-                },
-                {
-                    "Type": 3,
-                    "Material": {
-                        "UID": 1914311419,
-                        "Color": [
-                            0.50196081399917603,
-                            0.50196081399917603,
-                            0.50196081399917603,
-                            1
-                        ],
-                        "Name": "barrel 2.nemat",
-                        "Path": "Library\/Materials\/1914311419.nemat",
-                        "File": "1914311419.nemat"
-                    },
-                    "Texture": {
-                        "AssetsPath": "Assets\/Textures\/Props\/explosivebarrel_arvala_v2.png",
-                        "AssetsName": "explosivebarrel_arvala_v2.png",
-                        "LibaryPath": "Library\/Textures\/1724793512.netex",
-                        "LibraryFile": "1724793512.netex"
-                    },
-                    "Shader": {
-                        "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
-                        "AssetsName": "DefaultShader.shader",
-                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
-                        "LibraryFile": "800223282.neshader"
-                    }
-                }
-            ]
-        },
-        {
             "UID": 2144609886,
             "ParentUID": 132990815,
             "PrefabID": 0,
@@ -7450,14 +7246,14 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        -84.905693054199219,
+                        -80.000007629394531,
                         3.2034707069396973,
                         122.07077789306641
                     ],
                     "LocalRotation": [
-                        0,
-                        0,
-                        0,
+                        -6.6613381477509392e-16,
+                        -2.7939677238464355e-09,
+                        -4.2632564145606011e-14,
                         1
                     ],
                     "LocalScale": [
@@ -7475,7 +7271,7 @@
                     "Type": 9,
                     "Is Trigger": false,
                     "Show Collider": true,
-                    "Size X": 45,
+                    "Size X": 60,
                     "Size Y": 10,
                     "Size Z": 10,
                     "Center X": 0,
