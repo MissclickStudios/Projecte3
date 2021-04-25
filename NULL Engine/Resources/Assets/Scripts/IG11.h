@@ -16,6 +16,7 @@ enum class IG11State
 	PATROL,
 	CHASE,
 	FLEE,
+	SPECIAL_ATTACK_IN,
 	SPECIAL_ATTACK,
 	DEAD_IN,
 	DEAD
@@ -89,9 +90,11 @@ private:
 	GameObject* player = nullptr;
 
 	// Special Attack
-	void SpecialAttack(); // Rotation attack
+	bool SpecialAttack(); // Rotation attack
 
 	Timer specialAttackTimer;
+	float2 specialAttackStartAim = float2::zero;
+	float specialAttackRot = 0.0f;
 
 	// Weapons
 	GameObject* blasterGameObject = nullptr;

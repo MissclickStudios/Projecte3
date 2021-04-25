@@ -10,6 +10,8 @@
 
 #include "Player.h"
 
+#include "MC_Time.h"
+
 IG11* CreateIG11()
 {
 	IG11* script = new IG11();
@@ -120,6 +122,7 @@ void IG11::Update()
 	ManageMovement();
 	if (moveState != IG11State::DEAD)
 		ManageAim();
+
 }
 
 void IG11::CleanUp()
@@ -183,6 +186,11 @@ void IG11::ManageMovement()
 		}
 	}
 
+	if (specialAttackTimer.IsActive() && specialAttackTimer.ReadSec() >= specialAttackDuration)
+	{
+		specialAttackTimer.Stop();
+	}
+
 	switch (moveState)
 	{
 	case IG11State::IDLE:
@@ -204,6 +212,13 @@ void IG11::ManageMovement()
 			moveState = IG11State::FLEE;
 			break;
 		}
+		if (health <= 5.0f && !specialAttackTimer.IsActive())
+		{
+			specialAttackTimer.Start();
+			moveState = IG11State::SPECIAL_ATTACK_IN;
+			break;
+		}
+
 		break;
 	case IG11State::PATROL:
 		currentAnimation = &walkAnimation;
@@ -232,10 +247,15 @@ void IG11::ManageMovement()
 		}
 		Flee();
 		break;
+	case IG11State::SPECIAL_ATTACK_IN:
+		specialAttackStartAim = aimDirection;
+		specialAttackRot = 0.0f;
+		moveState = IG11State::SPECIAL_ATTACK;
+		
 	case IG11State::SPECIAL_ATTACK:
-		specialAttackTimer.Start();
 		SpecialAttack();
 		break;
+
 	case IG11State::DEAD_IN:
 		currentAnimation = &deathAnimation;
 		deathTimer.Start();
@@ -341,7 +361,24 @@ void IG11::Flee()
 	rigidBody->SetLinearVelocity(direction * ChaseSpeed());
 }
 
-void IG11::SpecialAttack()
+bool IG11::SpecialAttack()
 {
+	specialAttackRot += DegToRad(50.0f * MC_Time::Game::GetDT());
 
+	float angle = specialAttackStartAim.AimedAngle();
+	angle += specialAttackRot;
+
+	float x, y;
+
+	x = cos(angle);
+	y = sin(angle);
+
+	aimDirection = { x,y };
+
+	if (specialAttackRot > 6.3f)
+	{
+		return false;
+	}
+	
+	return true;
 }
