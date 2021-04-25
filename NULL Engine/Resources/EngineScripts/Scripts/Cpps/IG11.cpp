@@ -52,8 +52,10 @@ IG11* CreateIG11()
 	INSPECTOR_DRAGABLE_FLOAT(script->attackDistance);
 
 	// Special Attack
-	INSPECTOR_DRAGABLE_FLOAT(script->specialAttackDuration);
+	INSPECTOR_DRAGABLE_FLOAT(script->specialAttackSpeed);
+	INSPECTOR_DRAGABLE_FLOAT(script->specialAttackSpins);
 	INSPECTOR_DRAGABLE_FLOAT(script->specialAttackHp);
+	INSPECTOR_DRAGABLE_FLOAT(script->specialAttackCooldown);
 
 	//Weapons
 	INSPECTOR_PREFAB(script->blaster);
@@ -186,7 +188,7 @@ void IG11::ManageMovement()
 		}
 	}
 
-	if (specialAttackTimer.IsActive() && specialAttackTimer.ReadSec() >= specialAttackDuration)
+	if (specialAttackTimer.IsActive() && specialAttackTimer.ReadSec() >= specialAttackCooldown)
 	{
 		specialAttackTimer.Stop();
 	}
@@ -250,12 +252,37 @@ void IG11::ManageMovement()
 	case IG11State::SPECIAL_ATTACK_IN:
 		specialAttackStartAim = aimDirection;
 		specialAttackRot = 0.0f;
+
+		if (blasterWeapon)
+		{
+			blasterWeapon->fireRate = 0.05f;
+			blasterWeapon->ammo = 200;
+		}
+		if (sniperWeapon)
+		{
+			sniperWeapon->fireRate = 0.05f;
+			sniperWeapon->ammo = 200;
+		}
+
 		moveState = IG11State::SPECIAL_ATTACK;
 		
 	case IG11State::SPECIAL_ATTACK:
-		SpecialAttack();
-		break;
+		if (!SpecialAttack())
+		{
+			moveState = IG11State::IDLE;
 
+			if (blasterWeapon)
+			{
+				blasterWeapon->fireRate = 0.3f;
+				blasterWeapon->ammo = 0;
+			}
+			if (sniperWeapon)
+			{
+				sniperWeapon->fireRate = 0.3f;
+				sniperWeapon->ammo = 0;
+			}
+		}
+		break;
 	case IG11State::DEAD_IN:
 		currentAnimation = &deathAnimation;
 		deathTimer.Start();
@@ -273,7 +300,7 @@ void IG11::ManageAim()
 	switch (aimState)
 	{
 	case AimState::IDLE:
-		if (distance < attackDistance)
+		if (distance < attackDistance || moveState == IG11State::SPECIAL_ATTACK)
 			aimState = AimState::SHOOT_IN;
 		break;
 	case AimState::ON_GUARD:
@@ -363,22 +390,17 @@ void IG11::Flee()
 
 bool IG11::SpecialAttack()
 {
-	specialAttackRot += DegToRad(50.0f * MC_Time::Game::GetDT());
+	specialAttackRot += specialAttackSpeed * MC_Time::Game::GetDT();
 
 	float angle = specialAttackStartAim.AimedAngle();
-	angle += specialAttackRot;
+	angle += DegToRad(specialAttackRot);
 
-	float x, y;
-
-	x = cos(angle);
-	y = sin(angle);
-
+	float x = cos(angle);
+	float y = sin(angle);
 	aimDirection = { x,y };
 
-	if (specialAttackRot > 6.3f)
-	{
+	if (specialAttackRot >= 360.0f * specialAttackSpins)
 		return false;
-	}
 	
 	return true;
 }

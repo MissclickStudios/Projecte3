@@ -2,6 +2,7 @@
 #include "M_Scene.h"
 #include "C_Canvas.h"
 #include "C_UI_Button.h"
+#include "C_UI_Text.h"
 #include "C_2DAnimator.h"
 #include "GameObject.h"
 #include "HUDManager.h"
@@ -50,6 +51,18 @@ void HUDManager::Start()
 	if (a != nullptr)
 		hudCanvas = (C_Canvas*)a->GetComponent<C_Canvas>();
 
+	a = App->scene->GetGameObjectByName(pauseMenuCanvasName.c_str());
+	if (a != nullptr)
+		pauseMenuCanvas = (C_Canvas*)a->GetComponent<C_Canvas>();
+
+	a = App->scene->GetGameObjectByName(creditsTextName.c_str());
+	if (a != nullptr)
+		creditsText = (C_UI_Text*)a->GetComponent<C_UI_Text>();
+
+	a = App->scene->GetGameObjectByName(beskarTextName.c_str());
+	if (a != nullptr)
+		beskarText = (C_UI_Text*)a->GetComponent<C_UI_Text>();
+
 	playerObject = App->scene->GetGameObjectByName(playerName.c_str());
 	player = (Player*)playerObject->GetScript("Player");
 }
@@ -57,8 +70,8 @@ void HUDManager::Start()
 void HUDManager::Update()
 {
 	//Pau Pedra did this
-	if(debugMenuCanvas != nullptr && hubShopCanvas != nullptr && hudCanvas != nullptr)
-		if (debugMenuCanvas->IsActive() || hubShopCanvas->IsActive())
+	if(debugMenuCanvas != nullptr && hubShopCanvas != nullptr && hudCanvas != nullptr && pauseMenuCanvas != nullptr)
+		if (debugMenuCanvas->IsActive() || hubShopCanvas->IsActive() || pauseMenuCanvas->IsActive())
 		{
 			if (hudCanvas->IsActive())
 				hudCanvas->SetIsActive(false);
@@ -69,6 +82,27 @@ void HUDManager::Update()
 				hudCanvas->SetIsActive(true);
 		}
 
+	if (beskarText != nullptr)
+	{
+		if (player != nullptr)
+		{
+			std::string tmp = "Beskar: ";
+			tmp += std::to_string(player->hubCurrency).c_str();
+			beskarText->SetText(tmp.c_str());
+		}
+	}
+
+	if (creditsText != nullptr)
+	{
+		if (player != nullptr)
+		{
+			std::string tmp = "Currency: ";
+			tmp += std::to_string(player->currency).c_str();
+			creditsText->SetText(tmp.c_str());
+		}
+	}
+
+	//Santi Did this
 	if(player != nullptr)
 	{
 		

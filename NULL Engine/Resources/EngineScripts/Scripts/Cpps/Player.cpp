@@ -49,6 +49,11 @@ Player* CreatePlayer()
 	INSPECTOR_DRAGABLE_FLOAT(script->deathDuration);
 
 	// Player ---
+
+	// Currency
+	INSPECTOR_DRAGABLE_INT(script->currency);
+	INSPECTOR_DRAGABLE_INT(script->hubCurrency);
+
 	// Dash
 	INSPECTOR_DRAGABLE_FLOAT(script->dashSpeed);
 	INSPECTOR_DRAGABLE_FLOAT(script->dashDuration);

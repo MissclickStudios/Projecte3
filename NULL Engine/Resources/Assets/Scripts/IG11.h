@@ -59,8 +59,10 @@ public:
 	float attackDistance = 0.0f;
 
 	// Special Attack
-	float specialAttackDuration = 0.0f;
+	float specialAttackSpeed = 0.0f;
+	float specialAttackSpins = 0.0f;
 	float specialAttackHp = 0.0f;
+	float specialAttackCooldown = 0.0f;
 
 	// Weapons
 	Prefab blaster;

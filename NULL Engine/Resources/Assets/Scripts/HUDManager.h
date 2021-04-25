@@ -6,6 +6,7 @@
 
 class GameObject;
 class C_2DAnimator;
+class C_UI_Text;
 class Player;
 
 class SCRIPTS_API HUDManager : public Script {
@@ -26,6 +27,11 @@ public:
 	std::string debugMenuCanvasName = "DebugMenuCanvas";
 	std::string hubShopCanvasName = "hubShopCanvas";
 	std::string hudCanvasName = "hubShopCanvas";
+	std::string pauseMenuCanvasName = "pauseMenuCanvas";
+
+	std::string creditsTextName = "CreditsText";
+	std::string beskarTextName = "BeskarText";
+
 private:
 	C_2DAnimator* mandoImage;
 	C_2DAnimator* secondaryWeaponImage;
@@ -39,6 +45,10 @@ private:
 	C_Canvas* debugMenuCanvas = nullptr;
 	C_Canvas* hubShopCanvas = nullptr;
 	C_Canvas* hudCanvas = nullptr;
+	C_Canvas* pauseMenuCanvas = nullptr;
+
+	C_UI_Text* creditsText = nullptr;
+	C_UI_Text* beskarText = nullptr;
 };
 
 SCRIPTS_FUNCTION HUDManager* CreateHUDManager() {
@@ -52,5 +62,9 @@ SCRIPTS_FUNCTION HUDManager* CreateHUDManager() {
 	INSPECTOR_STRING(script->debugMenuCanvasName);
 	INSPECTOR_STRING(script->hubShopCanvasName);
 	INSPECTOR_STRING(script->hudCanvasName);
+	INSPECTOR_STRING(script->pauseMenuCanvasName);
+
+	INSPECTOR_STRING(script->creditsTextName);
+	INSPECTOR_STRING(script->beskarTextName);
 	return script;
 }
