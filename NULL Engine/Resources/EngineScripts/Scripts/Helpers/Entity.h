@@ -91,6 +91,8 @@ public:
 	AnimationInfo idleAnimation = { "Idle" };
 	AnimationInfo deathAnimation = { "Death" };
 
+	Timer hitTimer;	
+
 protected:
 
 	// Movement
@@ -111,7 +113,7 @@ protected:
 	// Death
 	Timer deathTimer;
 
-	Timer hitTimer;
+
 
 	// Effects
 	std::vector<Effect*> effects;

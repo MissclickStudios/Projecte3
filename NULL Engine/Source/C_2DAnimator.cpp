@@ -166,7 +166,7 @@ void C_2DAnimator::GetAnimationSprites(const char* name, int animationDestinatio
 		break;
 	case 3:
 		animation2.clear();
-		ChangeName(name, 2);
+		ChangeName(name, 3);
 		App->resourceManager->GetAllTextures(animation2, name);
 		break;
 	case 0:
