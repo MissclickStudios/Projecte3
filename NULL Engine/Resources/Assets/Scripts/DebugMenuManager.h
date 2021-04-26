@@ -35,7 +35,8 @@ public:
 	std::string debugMenuCanvasName = "DebugMenuCanvas";
 
 	//- unlock items missing
-
+	Prefab blurgg;
+	Prefab trooper;
 private:
 	C_UI_Button* godMode = nullptr;
 	C_UI_Button* roomSkip= nullptr;
@@ -66,5 +67,8 @@ SCRIPTS_FUNCTION DebugMenuManager* CreateDebugMenuManager() {
 	INSPECTOR_STRING(script->spawnBlurggName);
 	INSPECTOR_STRING(script->spawnTrooperName);
 	INSPECTOR_STRING(script->fpsTextName);
+
+	INSPECTOR_PREFAB(script->blurgg);
+	INSPECTOR_PREFAB(script->trooper);
 	return script;
 }

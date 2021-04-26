@@ -50,7 +50,7 @@ void PauseMenuManager::Update()
 
 	if (pauseMenuCanvas != nullptr)
 	{
-		if (App->input->GetKey(SDL_SCANCODE_ESCAPE) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(7) == ButtonState::BUTTON_DOWN)
+		if (App->input->GetKey(SDL_SCANCODE_ESCAPE) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(6) == ButtonState::BUTTON_DOWN)
 		{
 			if (pauseMenuCanvas->IsActive())
 				pauseMenuCanvas->SetIsActive(false);

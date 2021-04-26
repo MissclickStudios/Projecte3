@@ -2,6 +2,7 @@
 
 #include "MC_Time.h"
 #include "Log.h"
+#include "Prefab.h"
 
 #include "M_Input.h"
 #include "M_Scene.h"
@@ -67,7 +68,7 @@ void DebugMenuManager::Start()
 void DebugMenuManager::Update()
 {
 	if(debugMenuCanvas != nullptr)
-		if (App->input->GetKey(SDL_SCANCODE_COMMA) == KeyState::KEY_DOWN)
+		if (App->input->GetKey(SDL_SCANCODE_COMMA) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(4) == ButtonState::BUTTON_DOWN)
 		{
 			if (debugMenuCanvas->IsActive())
 			{
@@ -147,14 +148,12 @@ void DebugMenuManager::Update()
 	if (spawnBlurgg != nullptr)
 		if (spawnBlurgg->GetState() == UIButtonState::RELEASED)
 		{
-			//Use Beskar Ingots
-			//LOG("OMG YOU HAVE JUST SPENT %d Beskar Ingots!", beskarCost);
+			App->scene->InstantiatePrefab(blurgg.uid, nullptr, float3(0, 0, 0), Quat::identity);
 		}
 
 	if (spawnTrooper != nullptr)
 		if (spawnTrooper->GetState() == UIButtonState::RELEASED)
 		{
-			//Use Beskar Ingots
-			//LOG("OMG YOU HAVE JUST SPENT %d Beskar Ingots!", beskarCost);
+			App->scene->InstantiatePrefab(trooper.uid, nullptr, float3(0, 0, 0), Quat::identity);
 		}
 }
