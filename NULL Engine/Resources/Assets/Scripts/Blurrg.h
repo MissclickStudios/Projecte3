@@ -69,6 +69,12 @@ public:
 	AnimationInfo dashAnimation = { "Dash" };
 	AnimationInfo restAnimation = { "Rest" };
 
+	// Audio
+	std::string walkAudio;
+	std::string chargeAudio;
+	std::string damageAudio;
+	std::string deathAudio;
+
 private:
 
 	void DistanceToPlayer();

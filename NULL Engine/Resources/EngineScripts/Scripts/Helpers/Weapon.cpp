@@ -189,7 +189,7 @@ void Weapon::MaxAmmoUp()
 
 void Weapon::FireRateUp()
 {
-	fireRateModifier -= 0.2f;
+	fireRateModifier -= 0.5f;
 	if (fireRateModifier < 0.1f)
 		fireRateModifier = 0.1f;
 }

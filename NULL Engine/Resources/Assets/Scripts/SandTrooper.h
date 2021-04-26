@@ -59,6 +59,11 @@ public:
 	// Weapons
 	Prefab blaster;
 
+	// Audio
+	std::string walkAudio;
+	std::string damageAudio;
+	std::string deathAudio;
+
 private:
 
 	void DistanceToPlayer();
