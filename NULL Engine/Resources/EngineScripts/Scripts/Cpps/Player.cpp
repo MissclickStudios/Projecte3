@@ -124,7 +124,7 @@ void Player::SetUp()
 void Player::Update()
 {
 	ManageMovement();
-	if (moveState != PlayerState::DEAD && moveState != PlayerState::DASH)
+	if (moveState != PlayerState::DEAD)
 		ManageAim();
 }
 
@@ -304,14 +304,20 @@ void Player::SetGodMode(bool enable)
 		defense = 0.0f;
 		speed *= 2.0f;
 		if (blasterWeapon)
+		{
 			blasterWeapon->damage *= 4.0f;
+			blasterWeapon->projectilesPerShot = 0;
+		}
 	}
 	else
 	{
 		defense = 1.0f;
 		speed /= 2.0f;
 		if (blasterWeapon)
+		{
 			blasterWeapon->damage /= 4;
+			blasterWeapon->projectilesPerShot = 0;
+		}
 	}
 }
 
@@ -381,7 +387,8 @@ void Player::ManageMovement()
 
 void Player::ManageAim()
 {
-	GatherAimInputs();
+	if (moveState != PlayerState::DASH)
+		GatherAimInputs();
 	Aim();
 
 	switch (aimState)
