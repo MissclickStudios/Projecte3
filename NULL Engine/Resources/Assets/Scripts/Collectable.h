@@ -20,6 +20,9 @@ public:
 
 	bool used = false;
 
+	// Audio 
+	std::string buyAudio;
+
 protected:
 
 	virtual void Contact(Player* player) = 0;

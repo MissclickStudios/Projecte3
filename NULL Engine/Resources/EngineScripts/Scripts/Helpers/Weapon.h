@@ -114,6 +114,10 @@ public:
 	int projectileNum = 0;
 	bool updateProjectiles = false;
 
+	// Audio
+	std::string shootAudio;
+	std::string reloadAudio;
+
 protected:
 
 	virtual ShootState ShootLogic() = 0;

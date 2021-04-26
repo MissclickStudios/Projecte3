@@ -80,6 +80,14 @@ public:
 
 	bool GetGodMode()const;
 
+	// Audio
+	std::string walkAudio;
+	std::string dashAudio;
+	std::string changeWeaponAudio;
+	std::string damageAudio;
+	std::string deathAudio;
+	
+
 private:
 
 	// Logic
