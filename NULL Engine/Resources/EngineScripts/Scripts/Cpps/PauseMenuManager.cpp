@@ -102,6 +102,8 @@ void PauseMenuManager::Update()
 			{
 				Player* playerScript = (Player*)mando->GetScript("Player");
 				playerScript->health = 0;
+
+				pauseMenuCanvas->SetIsActive(false);
 			}
 		}
 	}
