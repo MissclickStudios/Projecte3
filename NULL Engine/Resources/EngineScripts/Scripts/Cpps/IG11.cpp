@@ -355,7 +355,7 @@ void IG11::ManageAim()
 		break;
 	case AimState::RELOAD_IN:
 		aimState = AimState::RELOAD;
-
+		currentAnimation = &reloadAnimation;
 	case AimState::RELOAD:
 		if (blasterWeapon->Reload())
 			aimState = AimState::ON_GUARD;
@@ -369,6 +369,8 @@ void IG11::ManageAim()
 		aimState = AimState::ON_GUARD;
 		break;
 	}
+
+	if(moveState == IG11State::SPECIAL_ATTACK) currentAnimation = &specialAnimation;
 }
 
 void IG11::Patrol()

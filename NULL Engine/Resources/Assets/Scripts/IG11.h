@@ -54,6 +54,7 @@ public:
 	AnimationInfo reloadAnimation = { "Reload" };
 	AnimationInfo changeAnimation = { "Change" };
 	AnimationInfo onGuardAnimation = { "OnGuard" };
+	AnimationInfo specialAnimation = { "SpecialAttack" };
 
 	// Attack
 	float attackDistance = 0.0f;
