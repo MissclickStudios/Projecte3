@@ -77,6 +77,8 @@ bool M_Audio::Start()
 
 	aSourceBackgroundMusic->SetEvent("background");
 
+	aSourceBackgroundMusic->PlayFx(aSourceBackgroundMusic->GetEventId());
+	
 	return true;
 }
 
