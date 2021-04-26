@@ -150,6 +150,8 @@ void Player::SaveState(ParsonNode& playerNode)
 
 	playerNode.SetNumber("Health", health);
 
+	playerNode.SetBool("God Mode", godMode);
+
 	ParsonArray effectsArray = playerNode.SetArray("Effects");
 	for (uint i = 0; i < effects.size(); ++i)
 	{
@@ -183,6 +185,9 @@ void Player::LoadState(ParsonNode& playerNode)
 	hubCurrency = playerNode.GetInteger("Hub Currency");
 
 	health = playerNode.GetNumber("Health");
+
+	godMode = playerNode.GetBool("God Mode");
+	SetGodMode(godMode);
 
 	ParsonArray effectsArray = playerNode.GetArray("Effects");
 	for (uint i = 0; i < effectsArray.size; ++i)
