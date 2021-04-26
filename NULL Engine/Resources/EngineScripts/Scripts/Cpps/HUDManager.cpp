@@ -72,6 +72,11 @@ void HUDManager::Start()
 	if(playerObject != nullptr)
 		player = (Player*)playerObject->GetScript("Player");
 
+
+	heart1 = App->scene->GetGameObjectByName(heart1Name.c_str());
+	heart2 = App->scene->GetGameObjectByName(heart2Name.c_str());
+	heart3 = App->scene->GetGameObjectByName(heart3Name.c_str());
+
 	hitAlready = false;
 }
 
@@ -192,5 +197,49 @@ void HUDManager::Update()
 
 		if (!player->hitTimer.IsActive())
 			hitAlready = false;
+
+		ManageHeartImage(player->health);
+	}
+}
+
+void HUDManager::ManageHeartImage(int hp)
+{
+	switch(hp) 
+	{
+	case 0:
+		heart1->SetIsActive(false);
+		heart2->SetIsActive(false);
+		heart3->SetIsActive(false);
+		break;
+	case 1:
+		heart1->SetIsActive(true);
+		heart2->SetIsActive(false);
+		heart3->SetIsActive(false);
+		break;
+	case 2:
+		heart1->SetIsActive(true);
+		heart2->SetIsActive(false);
+		heart3->SetIsActive(false);
+		break;
+	case 3:
+		heart1->SetIsActive(true);
+		heart2->SetIsActive(true);
+		heart3->SetIsActive(false);
+		break;
+	case 4:
+		heart1->SetIsActive(true);
+		heart2->SetIsActive(true);
+		heart3->SetIsActive(false);
+		break;
+	case 5:
+		heart1->SetIsActive(true);
+		heart2->SetIsActive(true);
+		heart3->SetIsActive(true);
+		break;				
+	case 6:					
+		heart1->SetIsActive(true);
+		heart2->SetIsActive(true);
+		heart3->SetIsActive(true);
+		break;
 	}
 }

@@ -33,6 +33,10 @@ public:
 	std::string beskarTextName = "BeskarText";
 	std::string ammoTextName = "AmmoText";
 
+
+	std::string heart1Name = "Heart1";
+	std::string heart2Name = "Heart2";
+	std::string heart3Name = "Heart3";
 private:
 	C_2DAnimator* mandoImage;
 	C_2DAnimator* secondaryWeaponImage;
@@ -52,7 +56,13 @@ private:
 	C_UI_Text* beskarText = nullptr;
 	C_UI_Text* ammoText = nullptr;
 
+	GameObject* heart1;
+	GameObject* heart2;
+	GameObject* heart3;
+
 	bool hitAlready;
+
+	void ManageHeartImage(int hp);
 };
 
 SCRIPTS_FUNCTION HUDManager* CreateHUDManager() {
