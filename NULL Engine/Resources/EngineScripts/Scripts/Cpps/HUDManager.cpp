@@ -9,6 +9,7 @@
 #include "Player.h"
 #include "M_Input.h"
 
+
 HUDManager::HUDManager() : Script()
 {
 }
@@ -125,7 +126,7 @@ void HUDManager::Update()
 		//Take damage animation
 		if (mandoImage != nullptr)
 		{
-			if (player)
+			if (player->hitTimer.IsActive())
 				mandoImage->PlayAnimation(false, 1);
 		}
 
