@@ -29,7 +29,7 @@ EmitterInstance::EmitterInstance(Emitter* emitter, C_ParticleSystem* component)
 
 EmitterInstance::~EmitterInstance()
 {
-	delete[] particleIndices;	
+	CleanUp();
 }
 
 void EmitterInstance::Init(Emitter* emitter, C_ParticleSystem* component)
@@ -52,6 +52,16 @@ void EmitterInstance::Update(float dt)
 	KillDeadParticles();
 	UpdateModules(dt);
 	DrawParticles();
+}
+
+void EmitterInstance::CleanUp()
+{
+	delete[] particleIndices;
+	
+	for (uint i = 0; i < particles.size(); ++i)
+	{
+		delete &particles[i];
+	}
 }
 
 void EmitterInstance::SpawnParticle()

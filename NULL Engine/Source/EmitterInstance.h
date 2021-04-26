@@ -19,14 +19,13 @@ public:
 	//if emitter equals null, a default emitter is added
 	void Init(Emitter* emitter, C_ParticleSystem* component);		
 	void Update(float dt);
+	void CleanUp();
 	void DrawParticles();
 
 	void SpawnParticle();
 	void ResetEmitter();
 
-private:	
 public:
-
 	void UpdateModules(float dt);
 	void KillDeadParticles();
 	void KillAll();
