@@ -19,7 +19,7 @@ ShootState Blaster::ShootLogic()
         fireRateTimer.Start();
         return ShootState::FIRED_PROJECTILE;
     }
-    else if (fireRateTimer.ReadSec() >= fireRate)
+    else if (fireRateTimer.ReadSec() >= FireRate())
     {
         fireRateTimer.Stop();
         if (ammo <= 0)
