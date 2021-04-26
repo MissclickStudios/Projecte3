@@ -1901,6 +1901,11 @@ void MeshRenderer::ApplyShader()
 	uint32 shaderProgram = 0;
 	if (cMaterial != nullptr)
 	{
+		std::vector<GameObject*> dirLights;
+		std::vector<GameObject*> pointLights;
+		App->scene->GetDirLights(dirLights);
+		App->scene->GetPointLights(pointLights);
+
 
 		cMaterial->GetShader() ? shaderProgram = cMaterial->GetShader()->shaderProgramID : shaderProgram;
 
@@ -1911,6 +1916,8 @@ void MeshRenderer::ApplyShader()
 		cMaterial->GetTexture() ? cMaterial->GetShader()->SetUniform1i("hasTexture", (GLint)true) : cMaterial->GetShader()->SetUniform1i("hasTexture", (GLint)false);
 
 		cMaterial->GetTakeDamage() ? cMaterial->GetShader()->SetUniform1i("takeDamage", (GLint)true) : cMaterial->GetShader()->SetUniform1i("takeDamage", (GLint)false);
+		
+		!dirLights.empty() ? cMaterial->GetShader()->SetUniform1i("useDirLight", (GLint)true) : cMaterial->GetShader()->SetUniform1i("useDirLight", (GLint)false);
 
 		if (shaderProgram != 0)
 		{
@@ -1949,10 +1956,6 @@ void MeshRenderer::ApplyShader()
 			boneTransforms.clear();
 
 			// Light 
-			std::vector<GameObject*> dirLights;
-			std::vector<GameObject*> pointLights; 
-			App->scene->GetDirLights(dirLights);
-			App->scene->GetPointLights(pointLights);
 
 			if (!dirLights.empty())
 			{

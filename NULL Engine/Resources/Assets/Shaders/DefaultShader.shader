@@ -99,6 +99,8 @@ uniform DirLight dirLight;
 uniform PointLight pointLight[MAX_LIGHTPOINTS];
 uniform vec3 viewPos; 
 uniform vec4 alternateColor;
+
+uniform bool useDirLight;
 uniform bool takeDamage;
 uniform bool hasTexture;
 uniform sampler2D ourTexture;
@@ -117,8 +119,11 @@ void main()
 
     vec3 norm = normalize(modelNormal);
     vec3 viewDir = normalize(viewPos - fragPos);
-
-   vec4 outputColor =  CalculateDirectional(dirLight, norm, viewDir, specularStrength, objectColor); 
+    vec4 outputColor = objectColor;
+    if(useDirLight)
+    {
+       outputColor =  CalculateDirectional(dirLight, norm, viewDir, specularStrength, objectColor);
+    }
    
    if(numPointLights > 0) 
    {
