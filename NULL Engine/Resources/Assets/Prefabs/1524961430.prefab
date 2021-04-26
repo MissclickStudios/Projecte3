@@ -8,7 +8,7 @@
     "IsStatic": false,
     "IsSceneRoot": false,
     "MaintainThroughScenes": false,
-    "ShowBoundingBoxes": false,
+    "ShowBoundingBoxes": true,
     "Components": [
         {
             "Type": 1,
@@ -103,7 +103,7 @@
                         "W": 1.0926049947738647,
                         "H": 0.5787392258644104,
                         "IsInvisible": false,
-                        "IsInputCanvas": true,
+                        "IsInputCanvas": false,
                         "Priority": 1
                     }
                 },
@@ -286,7 +286,7 @@
                         {
                             "Type": 21,
                             "Image": {
-                                "X": -0.72500002384185791,
+                                "X": -0.60500001907348633,
                                 "Y": 0.78899997472763062,
                                 "W": 0.054999999701976776,
                                 "H": 0.11500000208616257,
@@ -346,7 +346,7 @@
                         {
                             "Type": 21,
                             "Image": {
-                                "X": -0.85000002384185791,
+                                "X": -0.7149999737739563,
                                 "Y": 0.78899997472763062,
                                 "W": 0.054999999701976776,
                                 "H": 0.11500000208616257,
@@ -705,7 +705,7 @@
                         {
                             "Type": 21,
                             "Image": {
-                                "X": -0.60000002384185791,
+                                "X": -0.49500000476837158,
                                 "Y": 0.79400002956390381,
                                 "W": 0.054999999701976776,
                                 "H": 0.10999999940395355,
@@ -830,6 +830,75 @@
                         }
                     ],
                     "Children": []
+                },
+                {
+                    "UID": 407126887,
+                    "ParentUID": 3944067,
+                    "PrefabID": 1524961430,
+                    "IsPrefab": true,
+                    "Name": "Mando",
+                    "IsActive": true,
+                    "IsStatic": false,
+                    "IsSceneRoot": false,
+                    "MaintainThroughScenes": false,
+                    "ShowBoundingBoxes": false,
+                    "Components": [
+                        {
+                            "Type": 1,
+                            "LocalPosition": [
+                                0,
+                                0,
+                                0
+                            ],
+                            "LocalRotation": [
+                                0,
+                                0,
+                                0,
+                                1
+                            ],
+                            "LocalScale": [
+                                1,
+                                1,
+                                1
+                            ]
+                        },
+                        {
+                            "Type": 21,
+                            "Image": {
+                                "X": -0.8399999737739563,
+                                "Y": 0.77499997615814209,
+                                "W": 0.094999998807907104,
+                                "H": 0.13500000536441803,
+                                "IsHDL": false,
+                                "IsHDR": false
+                            }
+                        },
+                        {
+                            "Type": 3,
+                            "Texture": {
+                                "AssetsPath": "Assets\/Textures\/\/2DAnimations\/LowLife\/LowLife01.png",
+                                "AssetsName": "LowLife01.png",
+                                "LibaryPath": "Library\/Textures\/784501439.netex",
+                                "LibraryFile": "784501439.netex"
+                            },
+                            "Shader": {
+                                "AssetsPath": "Assets\/Shaders\/UIShader.shader",
+                                "AssetsName": "UIShader.shader",
+                                "LibaryPath": "Library\/Shaders\/1025410539.neshader",
+                                "LibraryFile": "1025410539.neshader"
+                            }
+                        },
+                        {
+                            "Type": 25,
+                            "Animation Step Time": 30,
+                            "Animation Loop": false,
+                            "Animation Set On Loop From Start": false,
+                            "Name": "LowLife",
+                            "Name1": "",
+                            "Name2": ""
+                        }
+                    ],
+                    "Children": []
                 }
             ]
         },
@@ -843,7 +912,7 @@
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": true,
+            "ShowBoundingBoxes": false,
             "Components": [
                 {
                     "Type": 1,
@@ -867,13 +936,13 @@
                 {
                     "Type": 13,
                     "Canvas": {
-                        "IsActive": false,
+                        "IsActive": true,
                         "X": 0,
                         "Y": 0,
                         "W": 1.0926049947738647,
                         "H": 0.5787392258644104,
                         "IsInvisible": false,
-                        "IsInputCanvas": false,
+                        "IsInputCanvas": true,
                         "Priority": 2
                     }
                 },
@@ -1327,12 +1396,6 @@
                         },
                         {
                             "Type": 3,
-                            "Texture": {
-                                "AssetsPath": "Assets\/Textures\/\/UI\/Debug\/GetBeskarButton1.png",
-                                "AssetsName": "GetBeskarButton1.png",
-                                "LibaryPath": "Library\/Textures\/1086737968.netex",
-                                "LibraryFile": "1086737968.netex"
-                            },
                             "Shader": {
                                 "AssetsPath": "Assets\/Shaders\/UIShader.shader",
                                 "AssetsName": "UIShader.shader",
@@ -1386,12 +1449,6 @@
                         },
                         {
                             "Type": 3,
-                            "Texture": {
-                                "AssetsPath": "Assets\/Textures\/\/UI\/Debug\/SkipRoomButton1.png",
-                                "AssetsName": "SkipRoomButton1.png",
-                                "LibaryPath": "Library\/Textures\/1145228221.netex",
-                                "LibraryFile": "1145228221.netex"
-                            },
                             "Shader": {
                                 "AssetsPath": "Assets\/Shaders\/UIShader.shader",
                                 "AssetsName": "UIShader.shader",
@@ -1445,12 +1502,6 @@
                         },
                         {
                             "Type": 3,
-                            "Texture": {
-                                "AssetsPath": "Assets\/Textures\/\/UI\/Debug\/SpawnBlurrgButton1.png",
-                                "AssetsName": "SpawnBlurrgButton1.png",
-                                "LibaryPath": "Library\/Textures\/161128425.netex",
-                                "LibraryFile": "161128425.netex"
-                            },
                             "Shader": {
                                 "AssetsPath": "Assets\/Shaders\/UIShader.shader",
                                 "AssetsName": "UIShader.shader",
@@ -1504,12 +1555,6 @@
                         },
                         {
                             "Type": 3,
-                            "Texture": {
-                                "AssetsPath": "Assets\/Textures\/\/UI\/Debug\/HealMandoButton1.png",
-                                "AssetsName": "HealMandoButton1.png",
-                                "LibaryPath": "Library\/Textures\/1405515363.netex",
-                                "LibraryFile": "1405515363.netex"
-                            },
                             "Shader": {
                                 "AssetsPath": "Assets\/Shaders\/UIShader.shader",
                                 "AssetsName": "UIShader.shader",
@@ -1563,12 +1608,6 @@
                         },
                         {
                             "Type": 3,
-                            "Texture": {
-                                "AssetsPath": "Assets\/Textures\/\/UI\/Debug\/GetCreditsButton1.png",
-                                "AssetsName": "GetCreditsButton1.png",
-                                "LibaryPath": "Library\/Textures\/1787702671.netex",
-                                "LibraryFile": "1787702671.netex"
-                            },
                             "Shader": {
                                 "AssetsPath": "Assets\/Shaders\/UIShader.shader",
                                 "AssetsName": "UIShader.shader",
@@ -1622,12 +1661,6 @@
                         },
                         {
                             "Type": 3,
-                            "Texture": {
-                                "AssetsPath": "Assets\/Textures\/\/UI\/Debug\/SpawnTrooperButton1.png",
-                                "AssetsName": "SpawnTrooperButton1.png",
-                                "LibaryPath": "Library\/Textures\/1614988644.netex",
-                                "LibraryFile": "1614988644.netex"
-                            },
                             "Shader": {
                                 "AssetsPath": "Assets\/Shaders\/UIShader.shader",
                                 "AssetsName": "UIShader.shader",
@@ -1681,12 +1714,6 @@
                         },
                         {
                             "Type": 3,
-                            "Texture": {
-                                "AssetsPath": "Assets\/Textures\/\/UI\/Debug\/GodModeButton1.png",
-                                "AssetsName": "GodModeButton1.png",
-                                "LibaryPath": "Library\/Textures\/2085412159.netex",
-                                "LibraryFile": "2085412159.netex"
-                            },
                             "Shader": {
                                 "AssetsPath": "Assets\/Shaders\/UIShader.shader",
                                 "AssetsName": "UIShader.shader",
