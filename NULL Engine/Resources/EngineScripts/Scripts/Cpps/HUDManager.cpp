@@ -8,7 +8,9 @@
 #include "HUDManager.h"
 #include "Player.h"
 #include "M_Input.h"
+#include "M_ResourceManager.h"
 #include "C_Material.h"
+#include "R_Texture.h"
 
 
 HUDManager::HUDManager() : Script()
@@ -84,6 +86,10 @@ void HUDManager::Start()
 	a = App->scene->GetGameObjectByName(heart3Name.c_str());
 	if (a != nullptr)
 		heart3 = (C_Material*)a->GetComponent<C_Material>();
+
+	fullHeart = (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/UI/HUD/HeartFull.png");
+	emptyHeart = (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/UI/HUD/HeartEmpty.png");
+	halfHeart = (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/UI/HUD/HeartHalf.png");
 
 	hitAlready = false;
 }
@@ -210,45 +216,55 @@ void HUDManager::Update()
 	}
 }
 
+void HUDManager::CleanUp()
+{
+	if (halfHeart != nullptr)
+		App->resourceManager->FreeResource(halfHeart->GetUID());
+	if (fullHeart != nullptr)
+		App->resourceManager->FreeResource(fullHeart->GetUID());
+	if (emptyHeart != nullptr)
+		App->resourceManager->FreeResource(emptyHeart->GetUID());
+}
+
 void HUDManager::ManageHeartImage(int hp)
 {
-	/*
+	
 	switch(hp) 
 	{
 	case 0:
-		//heart1->SwapTexture();
-		//heart2->SwapTexture();
-		//heart3->SwapTexture();
+		heart1->SwapTexture(emptyHeart);
+		heart2->SwapTexture(emptyHeart);
+		heart3->SwapTexture(emptyHeart);
 		break;
 	case 1:	  
 		heart1->SwapTexture(halfHeart);
-		//heart2->SwapTexture();
-		//heart3->SwapTexture();
+		heart2->SwapTexture(emptyHeart);
+		heart3->SwapTexture(emptyHeart);
 		break;
 	case 2:	  
-		heart1->SwapTexture(fullheart);
-		//heart2->SwapTexture();;
-		//heart3->SwapTexture();;
+		heart1->SwapTexture(fullHeart);
+		heart2->SwapTexture(emptyHeart);
+		heart3->SwapTexture(emptyHeart);
 		break;
 	case 3:	 
-		heart1->SwapTexture(fullheart);
+		heart1->SwapTexture(fullHeart);
 		heart2->SwapTexture(halfHeart);
-		//heart3->SwapTexture();
+		heart3->SwapTexture(emptyHeart);
 		break;
 	case 4:	  
-		heart1->SwapTexture(fullheart);
-		heart2->SwapTexture(fullheart);
-		//heart3->SwapTexture();
+		heart1->SwapTexture(fullHeart);
+		heart2->SwapTexture(fullHeart);
+		heart3->SwapTexture(emptyHeart);
 		break;
 	case 5:	  
-		heart1->SwapTexture(fullheart);
-		heart2->SwapTexture(fullheart);
+		heart1->SwapTexture(fullHeart);
+		heart2->SwapTexture(fullHeart);
 		heart3->SwapTexture(halfHeart);
 		break;
 	case 6:		
-		heart1->SwapTexture(fullheart);
-		heart2->SwapTexture(fullheart);
-		heart3->SwapTexture(fullheart);
+		heart1->SwapTexture(fullHeart);
+		heart2->SwapTexture(fullHeart);
+		heart3->SwapTexture(fullHeart);
 		break;
-	}*/
+	}
 }

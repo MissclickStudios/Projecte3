@@ -9,6 +9,7 @@ class C_2DAnimator;
 class C_UI_Text;
 class C_Material;
 class Player;
+class R_Texture;
 
 class SCRIPTS_API HUDManager : public Script {
 public:
@@ -17,6 +18,7 @@ public:
 
 	void Start() override;
 	void Update() override;
+	void CleanUp() override;
 
 	std::string mandoImageName = "Mando";
 	std::string secondaryWeaponImageName = "SecodaryWeapon";
@@ -62,7 +64,8 @@ private:
 	C_Material* heart3;
 
 	R_Texture* halfHeart;
-	R_Texture* fullheart;
+	R_Texture* fullHeart;
+	R_Texture* emptyHeart;
 
 	bool hitAlready;
 
