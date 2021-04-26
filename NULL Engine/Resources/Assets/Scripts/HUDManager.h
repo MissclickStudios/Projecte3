@@ -51,6 +51,8 @@ private:
 	C_UI_Text* creditsText = nullptr;
 	C_UI_Text* beskarText = nullptr;
 	C_UI_Text* ammoText = nullptr;
+
+	bool hitAlready;
 };
 
 SCRIPTS_FUNCTION HUDManager* CreateHUDManager() {
