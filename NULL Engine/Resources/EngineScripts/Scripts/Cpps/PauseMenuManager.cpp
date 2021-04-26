@@ -79,7 +79,7 @@ void PauseMenuManager::Update()
 			if (gameManager != nullptr)
 			{
 				GameManager* gameManagerScript = (GameManager*)gameManager->GetScript("GameManager");
-				//gameManagerScript.
+				gameManagerScript->ReturnToMainMenu();
 			}
 		}
 	}
