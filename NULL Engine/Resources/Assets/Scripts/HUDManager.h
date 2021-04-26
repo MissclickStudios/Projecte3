@@ -7,6 +7,7 @@
 class GameObject;
 class C_2DAnimator;
 class C_UI_Text;
+class C_Material;
 class Player;
 
 class SCRIPTS_API HUDManager : public Script {
@@ -56,9 +57,12 @@ private:
 	C_UI_Text* beskarText = nullptr;
 	C_UI_Text* ammoText = nullptr;
 
-	GameObject* heart1;
-	GameObject* heart2;
-	GameObject* heart3;
+	C_Material* heart1;
+	C_Material* heart2;
+	C_Material* heart3;
+
+	R_Texture* halfHeart;
+	R_Texture* fullheart;
 
 	bool hitAlready;
 
