@@ -3,6 +3,7 @@
 #include "Log.h"
 #include "M_Scene.h"
 #include "C_Canvas.h"
+#include "C_UI_Text.h"
 #include "C_UI_Button.h"
 #include "GameObject.h"
 
@@ -26,6 +27,10 @@ void HUBShopMenuManager::Start()
 	a = App->scene->GetGameObjectByName(buyButtonName.c_str());
 	if (a != nullptr)
 		buyButton = (C_UI_Button*)a->GetComponent<C_UI_Button>();
+
+	a = App->scene->GetGameObjectByName(beskarTextHubShopName.c_str());
+	if (a != nullptr)
+		beskarTextHubShop = (C_UI_Text*)a->GetComponent<C_UI_Text>();
 
 	mando = App->scene->GetGameObjectByName(mandoName.c_str());
 }
@@ -55,6 +60,16 @@ void HUBShopMenuManager::Update()
 					playerScript->hubCurrency -= beskarCost;
 				}
 			}
+		}
+	}
+
+	if (beskarTextHubShop != nullptr)
+	{
+		if (mando != nullptr)
+		{
+			Player* playerScript = (Player*)mando->GetScript("Player");
+
+			beskarTextHubShop->SetText(std::to_string(playerScript->hubCurrency).c_str());
 		}
 	}
 }

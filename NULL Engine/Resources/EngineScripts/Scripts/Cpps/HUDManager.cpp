@@ -91,7 +91,7 @@ void HUDManager::Update()
 	{
 		if (player != nullptr)
 		{
-			std::string tmp = "Beskar: ";
+			std::string tmp = "";
 			tmp += std::to_string(player->hubCurrency).c_str();
 			beskarText->SetText(tmp.c_str());
 		}
@@ -101,7 +101,7 @@ void HUDManager::Update()
 	{
 		if (player != nullptr)
 		{
-			std::string tmp = "Currency: ";
+			std::string tmp = "";
 			tmp += std::to_string(player->currency).c_str();
 			creditsText->SetText(tmp.c_str());
 		}
