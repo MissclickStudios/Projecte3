@@ -43,6 +43,8 @@ blendFrames		(0)
 {
 	if (rootBone != nullptr)
 	{
+		bones.emplace(rootBone->GetUID(), rootBone);
+		
 		std::vector<GameObject*> tmp;
 		rootBone->GetAllChilds(tmp);
 		for (auto object = tmp.cbegin(); object != tmp.cend(); ++object)
@@ -376,6 +378,8 @@ void AnimatorTrack::SetRootBone(GameObject* newRootBone)
 
 	bones.clear();
 
+	bones.emplace(rootBone->GetUID(), rootBone);
+
 	std::vector<GameObject*> tmp;
 	rootBone->GetAllChilds(tmp);
 	for (auto object = tmp.cbegin(); object != tmp.cend(); ++object)
@@ -500,7 +504,7 @@ bool AnimatorTrack::StepClips(float dt)
 		}
 	}
 
-	return false;
+	return true;
 }
 
 void AnimatorTrack::SwitchBlendingToCurrent()

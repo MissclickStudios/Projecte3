@@ -33,8 +33,6 @@ rootBone		(nullptr),
 animatorState	(AnimatorState::STOP)
 {	
 	playbackSpeed	= 1.0f;
-	loopAnimation	= false;
-	playOnStart		= true;
 	cameraCulling	= true;
 	showBones		= false;
 
@@ -728,6 +726,41 @@ void C_Animator::PlayClip(const char* trackName, const char* clipName, float ble
 	Play();
 }
 
+void C_Animator::SetTrackWithClip(const char* trackName, const char* clipName)
+{
+	auto track = tracks.find(trackName);
+	auto clip = clips.find(clipName);
+
+	if (track == tracks.end())
+	{
+		LOG("[ERROR] Animator Component: Could not Set Track With Clip! Error: Could not find any track with the given name!");
+		return;
+	}
+	if (clip == clips.end())
+	{
+		LOG("[ERROR] Animator Component: Could not Set Track With Clip! Error: Could not find any clip with the given name!");
+		return;
+	}
+
+	track->second.SetCurrentClip(&clip->second, GetAnimationBoneLinks(clip->second.GetAnimation()->GetUID()));
+}
+
+void C_Animator::SetTrackWithClip(AnimatorTrack* track, AnimatorClip* clip)
+{
+	if (track == nullptr)
+	{
+		LOG("[ERROR] Animator Component: Could not Set Track With Clip! Error: Could not find any track with the given name!");
+		return;
+	}
+	if (clip == nullptr)
+	{
+		LOG("[ERROR] Animator Component: Could not Set Track With Clip! Error: Could not find any clip with the given name!");
+		return;
+	}
+
+	track->SetCurrentClip(clip, GetAnimationBoneLinks(clip->GetAnimation()->GetUID()));
+}
+
 bool C_Animator::Play(bool applyToTracks)
 {
 	if (animatorState == AnimatorState::PLAY)
@@ -829,48 +862,6 @@ AnimatorClip* C_Animator::GetClipAsPtr(const char* clipName)
 	return (clip != clips.end()) ? &clip->second : nullptr;
 }
 
-AnimatorClip C_Animator::GetClipByIndex(uint index) const
-{
-	
-	
-	return AnimatorClip();
-}
-
-/*void C_Animator::SetCurrentClipByIndex(uint index)
-{
-	if (index >= clips.size())
-	{
-		LOG("[ERROR] Animator Component: Could not Set Current Clip By Index! Error: Given Index was out of bounds.");
-		return;
-	}
-
-	std::string errorString = "[ERROR] Animator Component: Could not Set Current Clip in { " + std::string(this->GetOwner()->GetName()) + " }'s Animator Component";
-
-	uint i = 0;
-	for (auto item = clips.cbegin(); item != clips.cend(); ++item)
-	{
-		if (i == index)																										// Dirty way of finding items in a map by index.
-		{
-			const AnimatorClip& clip = item->second;
-
-			if (animationBones.find(clip.GetAnimation()->GetUID()) == animationBones.end())
-			{
-				LOG("%s! Error: Could not find the Bones of the Clip's animation (R_Animation*).");
-				return;
-			}
-
-			currentClip	= (AnimatorClip*)&clip;
-			currentBones = &(animationBones.find(clip.GetAnimation()->GetUID())->second);
-
-			currentClip->ClearClip();
-
-			return;
-		}
-
-		++i;
-	}
-}*/
-
 AnimatorTrack C_Animator::GetTrack(const char* trackName) const
 {
 	auto track = tracks.find(trackName);
@@ -881,13 +872,6 @@ AnimatorTrack* C_Animator::GetTrackAsPtr(const char* trackName)
 {
 	auto track = tracks.find(trackName);
 	return (track != tracks.end()) ? &track->second : nullptr;
-}
-
-AnimatorTrack C_Animator::GetTrackByIndex(uint index) const
-{
-	
-	
-	return AnimatorTrack();
 }
 
 std::vector<R_Animation*>* C_Animator::GetAnimationsAsPtr()
@@ -915,28 +899,6 @@ std::vector<LineSegment> C_Animator::GetDisplayBones() const
 	return displayBones;
 }
 
-void C_Animator::GetClipNamesAsVector(std::vector<const char*>& clipNames) const
-{
-	if (clips.empty())
-		return;
-	
-	for (auto clip = clips.cbegin(); clip != clips.cend(); ++clip)
-	{
-		clipNames.push_back(clip->first.c_str());
-	}
-}
-
-void C_Animator::GetTrackNamesAsVector(std::vector<const char*>& trackNames) const
-{
-	if (tracks.empty())
-		return;
-
-	for (auto track = tracks.cbegin(); track != tracks.cend(); ++track)
-	{
-		trackNames.push_back(track->first.c_str());
-	}
-}
-
 std::string C_Animator::GetAnimatorStateAsString() const
 {
 	switch (animatorState)
@@ -950,75 +912,9 @@ std::string C_Animator::GetAnimatorStateAsString() const
 	return ("[NONE]");
 }
 
-std::string C_Animator::GetClipNamesAsString() const
-{
-	std::string clipNames = "";
-
-	for (auto clip = clips.cbegin(); clip != clips.cend(); ++clip)
-	{
-		clipNames += clip->first.c_str();
-		clipNames += '\0';
-	}
-
-	return clipNames;
-}
-
-std::string C_Animator::GetAnimationNamesAsString() const
-{
-	std::string animationNames = "";
-
-	for (auto animation = animations.cbegin(); animation != animations.cend(); ++animation)
-	{
-		animationNames += (*animation)->GetName();
-		animationNames += '\0';
-	}
-
-	return animationNames;
-}
-
-R_Animation* C_Animator::GetAnimationByIndex(uint index) const
-{
-	if (index >= animations.size())
-	{
-		LOG("[ERROR] Animator Component: Could not get Animation by Index! Error: Given index was out of bounds.");
-		return nullptr;
-	}
-
-	return animations[index];
-}
-
-int C_Animator::GetIndexByAnimation(const R_Animation* rAnimation) const
-{
-	if (rAnimation == nullptr)
-	{
-		LOG("[ERROR] Animator Component: Could not Get Index by Animation! Error: Given R_Animation* was nullptr.");
-		return -1;
-	}
-
-	for (uint i = 0; i < animations.size(); ++i)
-	{
-		if ((animations[i]->GetDuration() == rAnimation->GetDuration()) && (animations[i]->GetName() == std::string(rAnimation->GetName())))			// TMP. Check is too rudimentary.
-		{
-			return i;
-		}
-	}
-
-	return -1;
-}
-
 float C_Animator::GetPlaybackSpeed() const
 {
 	return playbackSpeed;
-}
-
-bool C_Animator::GetLoopAnimation() const
-{
-	return loopAnimation;
-}
-
-bool C_Animator::GetPlayOnStart() const
-{
-	return playOnStart;
 }
 
 bool C_Animator::GetCameraCulling() const
@@ -1034,16 +930,6 @@ bool C_Animator::GetShowBones() const
 void C_Animator::SetPlaybackSpeed(float playbackSpeed)
 {
 	this->playbackSpeed = playbackSpeed;
-}
-
-void C_Animator::SetLoopAnimation(bool setTo)
-{
-	loopAnimation = setTo;
-}
-
-void C_Animator::SetPlayOnStart(bool setTo)
-{
-	playOnStart = setTo;
 }
 
 void C_Animator::SetCameraCulling(bool setTo)

@@ -2145,55 +2145,122 @@ void E_Inspector::TextureDisplay(C_Material* cMaterial)
 void E_Inspector::DisplayAnimatorControls(C_Animator* cAnimator)
 {
 	// --- ANIMATOR VARIABLES
-	static int selectedClip				= 0;
-	std::string clipNamesString			= cAnimator->GetClipNamesAsString();
-	
-	float speed							= cAnimator->GetPlaybackSpeed();
-	float minSpeed						= 0.1f;
-	float maxSpeed						= 10.0f;
-	
-	bool interpolate					= /*cAnimator->GetInterpolate()*/ false;
-	bool loopAnimation					= cAnimator->GetLoopAnimation();
-	bool playOnStart					= cAnimator->GetPlayOnStart();
-	bool cameraCulling					= cAnimator->GetCameraCulling();
-	bool showBones						= cAnimator->GetShowBones();
+	float speed			= cAnimator->GetPlaybackSpeed();
+	float minSpeed		= 0.1f;
+	float maxSpeed		= 10.0f;
+						
+	bool interpolate	= /*cAnimator->GetInterpolate()*/ false;
+	bool cameraCulling	= cAnimator->GetCameraCulling();
+	bool showBones		= cAnimator->GetShowBones();
 	
 	// -- CURRENT CLIP VARIABLES
-	AnimatorClip* currentClip			= /*cAnimator->GetCurrentClip()*/ nullptr;
-	AnimatorTrack* currentTrack			= cAnimator->GetTrackAsPtr("Preview");
+	static std::map<std::string, AnimatorClip>* clips		= cAnimator->GetClipsAsPtr();
+	static std::map<std::string, AnimatorTrack>* tracks		= cAnimator->GetTracksAsPtr();
+
+	static AnimatorClip* currentClip		= nullptr;
+	static AnimatorTrack* currentTrack		= nullptr;
 	
-	if (currentClip == nullptr)
-	{
-		AnimatorClip Clip = AnimatorClip();
-		currentClip = &Clip;
-	}
+	static const char* trackName			= "[NONE]";
+	static const char* rootBoneName			= "[NONE]";
+	static float trackSpeed					= 1.0f;
+	static bool trackInterpolate			= true;
+
+	static const char* animationName		= "[NONE]";
+	static float animationTicksPerSecond	= 0.0f;
+	static float animationDuration			= 0.0f;
 	
-	const char* animationName			= currentClip->GetAnimationName();
-	float animationTicksPerSecond		= currentClip->GetAnimationTicksPerSecond();
-	float animationDuration				= currentClip->GetAnimationDuration();
+	static const char* currentClipName		= "[NONE]";
+	static uint currentClipStart			= 0;
+	static uint currentClipEnd				= 0;
+	static float currentClipSpeed			= 0.0f;
+	static float currentClipDuration		= 0.0f;
+	static bool currentClipLoop				= false;
 	
-	const char* currentClipName			= currentClip->GetName();
-	uint currentClipStart				= currentClip->GetStart();
-	uint currentClipEnd					= currentClip->GetEnd();
-	float currentClipSpeed				= currentClip->GetSpeed();
-	float currentClipDuration			= currentClip->GetDuration();
-	bool currentClipLoop				= currentClip->IsLooped();
-	
-	float clipTime						= currentClip->GetClipTime();
-	float clipFrame						= currentClip->GetClipFrame();
-	uint clipTicks						= currentClip->GetClipTick();
+	float clipTime							= (currentClip != nullptr) ? currentClip->GetClipTime()	 : 0.0f;									// --- Updated each frame
+	float clipFrame							= (currentClip != nullptr) ? currentClip->GetClipFrame() : 0.0f;									// 
+	uint clipTicks							= (currentClip != nullptr) ? currentClip->GetClipTick()	 : 0;										// ----------------------
 	
 	// --- ANIMATOR SETTINGS
 	ImGui::TextColored(Cyan.C_Array(), "Animation Settings");
 
-	if (ImGui::Combo("Select Clip", &selectedClip, clipNamesString.c_str()))
+	if (ImGui::BeginCombo("Select Track", ((currentTrack != nullptr) ? currentTrack->GetName() : "[SELECT TRACK]"), ImGuiComboFlags_None))
 	{
-		char* selected_name = &clipNamesString[selectedClip];
-		//cAnimator->SetCurrentClipByIndex((uint)selectedClip);
-		//if (currentTrack != nullptr) { currentTrack->SetCurrentClip(cAnimator->GetClipAsPtr(selected_name), ); }
+		for (auto track = tracks->begin(); track != tracks->end(); ++track)
+		{
+			if (ImGui::Selectable(track->second.GetName(), (&track->second == currentTrack), ImGuiSelectableFlags_None))
+			{
+				currentTrack = &track->second;
+
+				GameObject* rootBone = currentTrack->GetRootBone();
+
+				trackName			= currentTrack->GetName();
+				rootBoneName		= (rootBone != nullptr) ? rootBone->GetName() : "[NONE]";
+				trackSpeed			= currentTrack->GetTrackSpeed();
+				trackInterpolate	= currentTrack->GetInterpolate();
+			}
+		}
+
+		ImGui::EndCombo();
 	}
 
-	if (ImGui::Button("Play"))	{ cAnimator->Play(); }	ImGui::SameLine();
+	if (currentTrack == nullptr)
+	{
+		ImGui::TextColored(Yellow.C_Array(), "Select a Track to Continue.");
+
+		for (uint i = 0; i < 10; ++i)
+		{
+			ImGui::Text("");
+		}
+
+		return;
+	}
+
+	if (ImGui::BeginCombo("Select Clip", ((currentClip != nullptr) ? currentClip->GetName() : "[SELECT CLIP]"), ImGuiComboFlags_None))
+	{
+		for (auto clip = clips->begin(); clip != clips->end(); ++clip)
+		{
+			if (ImGui::Selectable(clip->second.GetName(), (&clip->second == currentClip), ImGuiSelectableFlags_None))
+			{
+				currentClip = &clip->second;
+
+				R_Animation* clipAnimation = (R_Animation*)currentClip->GetAnimation();
+				if (clipAnimation != nullptr)
+				{
+					animationName			= clipAnimation->GetName();
+					animationTicksPerSecond = clipAnimation->GetTicksPerSecond();
+					animationDuration		= clipAnimation->GetDuration();
+				}
+
+				currentClipName		= currentClip->GetName();
+				currentClipStart	= currentClip->GetStart();
+				currentClipEnd		= currentClip->GetEnd();
+				currentClipDuration = currentClip->GetDuration();
+				currentClipSpeed	= currentClip->GetSpeed();
+				currentClipLoop		= currentClip->IsLooped();
+
+				if (currentTrack != nullptr)
+				{
+					cAnimator->SetTrackWithClip(currentTrack, currentClip);
+				}
+			}
+		}
+
+		ImGui::EndCombo();
+	}
+
+	if (currentClip == nullptr)
+	{
+		ImGui::TextColored(Yellow.C_Array(), "Select a Track to Continue.");
+
+		for (uint i = 0; i < 10; ++i)
+		{
+			ImGui::Text("");
+		}
+
+		return;
+	}
+
+	if (ImGui::Button("Play"))	{ cAnimator->Play(true); }	ImGui::SameLine();
 	if (ImGui::Button("Pause"))	{ cAnimator->Pause(); }	ImGui::SameLine();
 	if (ImGui::Button("Step"))	{ cAnimator->Step(); }	ImGui::SameLine();
 	if (ImGui::Button("Stop"))	{ cAnimator->Stop(); }
@@ -2201,11 +2268,19 @@ void E_Inspector::DisplayAnimatorControls(C_Animator* cAnimator)
 	if (ImGui::SliderFloat("Playback Speed", &speed, minSpeed, maxSpeed, "X %.3f", 0)) { cAnimator->SetPlaybackSpeed(speed); }
 
 	if (ImGui::Checkbox("Interpolate", &interpolate))		{ /*cAnimator->SetInterpolate(interpolate)*/; }
-	if (ImGui::Checkbox("Loop Animation", &loopAnimation))	{ cAnimator->SetLoopAnimation(loopAnimation); }
-	if (ImGui::Checkbox("Play On Start", &playOnStart))		{ cAnimator->SetPlayOnStart(playOnStart); }
 	if (ImGui::Checkbox("Camera Culling", &cameraCulling))	{ cAnimator->SetCameraCulling(cameraCulling); }
 	if (ImGui::Checkbox("Show Bones", &showBones))			{ cAnimator->SetShowBones(showBones); }
 
+	ImGui::Separator();
+
+	// --- TRACK STATS
+	ImGui::TextColored(Cyan.C_Array(), "Track Stats");
+
+	ImGui::Text("Name:");				ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "	  	   %s",			trackName);
+	ImGui::Text("Root Bone:");			ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "	    %s",			rootBoneName);
+	ImGui::Text("Speed:");				ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "	  	  x%.3f",		trackSpeed);
+	ImGui::Text("Interpolate:");		ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "	  %s",				(interpolate) ? "True" : "False");
+	
 	ImGui::Separator();
 
 	// --- ANIMATOR STATS
@@ -2217,6 +2292,7 @@ void E_Inspector::DisplayAnimatorControls(C_Animator* cAnimator)
 
 	ImGui::Separator();
 
+	// --- CLIP STATS
 	ImGui::TextColored(Cyan.C_Array(), "Clip Stats");
 
 	ImGui::Text("Name:");				ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "             %s",		currentClipName);
@@ -2224,8 +2300,8 @@ void E_Inspector::DisplayAnimatorControls(C_Animator* cAnimator)
 	ImGui::Text("Frame:");				ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "            %.3f",	clipFrame);
 	ImGui::Text("Tick:");				ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "		     %u",		clipTicks);
 	ImGui::Text("Range:");				ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "            %u - %u", currentClipStart, currentClipEnd);
-	ImGui::Text("Speed:");				ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "            x%.3f",	currentClipSpeed);
 	ImGui::Text("Duration:");			ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "         %.3f",		currentClipDuration);
+	ImGui::Text("Speed:");				ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "            x%.3f",	currentClipSpeed);
 	ImGui::Text("Loop:");				ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "             %s",		(currentClipLoop) ? "True" : "False");
 
 	ImGui::Separator();

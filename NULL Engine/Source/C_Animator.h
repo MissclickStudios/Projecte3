@@ -59,13 +59,12 @@ public:
 
 	static inline ComponentType GetType() { return ComponentType::ANIMATOR; }
 
-public:																																// --- C_ANIMATOR STATE METHODS
+public:																																// --- C_ANIMATOR MANAGEMENT METHODS
 	bool			Play										(bool applyToTracks = false);
 	bool			Pause										(bool applyToTracks = true);
 	bool			Step										(bool applyToTracks = true);
 	bool			Stop										(bool applyToTracks = true);
 
-public:																																// --- C_ANIMATOR MANAGEMENT METHODS
 	void			AddAnimation								(R_Animation* rAnimation);
 	
 	bool			AddClip										(const AnimatorClip& clip);
@@ -79,40 +78,29 @@ public:																																// --- C_ANIMATOR MANAGEMENT METHODS
 	void			PlayClip									(const char* trackName, const char* clipName, uint blendFrames);
 	void			PlayClip									(const char* trackName, const char* clipName, float blendTime);
 
+	void			SetTrackWithClip							(const char* trackName, const char* clipName);
+	void			SetTrackWithClip							(AnimatorTrack* track, AnimatorClip* clip);
+
 public:																																// --- GET/SET METHODS
+	std::string		GetAnimatorStateAsString					() const;
+	std::vector<LineSegment> GetDisplayBones					() const;
+	
 	AnimatorClip	GetClip										(const char* clipName) const;										// Rets invalid clip if not found. Check ClipIsValid().
 	AnimatorClip*	GetClipAsPtr								(const char* clipName);												// Returns nullptr if clip is not found.
-	AnimatorClip	GetClipByIndex								(uint index) const;
 
 	AnimatorTrack	GetTrack									(const char* trackName) const;
 	AnimatorTrack*	GetTrackAsPtr								(const char* trackName);
-	AnimatorTrack	GetTrackByIndex								(uint index) const;
 
 	std::vector<R_Animation*>*				GetAnimationsAsPtr	();
 	std::vector<GameObject*>*				GetBonesAsPtr		();
 	std::map<std::string, AnimatorClip>*	GetClipsAsPtr		();
 	std::map<std::string, AnimatorTrack>*	GetTracksAsPtr		();
-	
-	std::vector<LineSegment> GetDisplayBones					() const;
-	void			GetClipNamesAsVector						(std::vector<const char*>& clipNames) const;
-	void			GetTrackNamesAsVector						(std::vector<const char*>& trackNames) const;
-
-	std::string		GetAnimatorStateAsString					() const;
-
-	std::string		GetClipNamesAsString						() const;
-	std::string		GetAnimationNamesAsString					() const;
-	R_Animation*	GetAnimationByIndex							(uint index) const;
-	int				GetIndexByAnimation							(const R_Animation* rAnimation) const;
 
 	float			GetPlaybackSpeed							() const;
-	bool			GetLoopAnimation							() const;
-	bool			GetPlayOnStart								() const;
 	bool			GetCameraCulling							() const;
 	bool			GetShowBones								() const;
 
 	void			SetPlaybackSpeed							(float playbackSpeed);
-	void			SetLoopAnimation							(bool setTo);
-	void			SetPlayOnStart								(bool setTo);
 	void			SetCameraCulling							(bool setTo);
 	void			SetShowBones								(bool setTo);
 		 
@@ -141,7 +129,11 @@ private:																															// --- ANIMATION/CLIP REPRODUCTION METHOD
 	void			UpdateDisplayBones							();
 	void			GenerateBoneSegments						(const GameObject* bone);
 
-private:
+private:																								// --- FUNCTIONALITY VARIABLES
+	AnimatorState	animatorState;
+	bool			init;
+
+private:																								// --- ANIMATION/TRACK/CLIP STRUCTURES
 	std::vector<R_Animation*>				animations;													// Animation Resources. Contain bone information (transforms...).
 	std::map<uint32, std::vector<BoneLink>>	animationBones;												// Stores the links between the animation bones and the GOs for each animation.
 	
@@ -155,17 +147,9 @@ private:
 
 	GameObject*								rootBone;
 
-private:																								// --- FUNCTIONALITY VARIABLES
-	AnimatorState	animatorState;
-
-	bool init;
-
 private:																								// --- GET/SET VARIABLES	
 	float			playbackSpeed;
-	bool			loopAnimation;					/* DELETE */
-	bool			playOnStart;					/* DELETE */
 	bool			cameraCulling;
-	
 	bool			showBones;
 };
 
