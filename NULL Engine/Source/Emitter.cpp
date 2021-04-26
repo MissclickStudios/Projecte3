@@ -209,7 +209,9 @@ void Emitter::SetTexture(ResourceBase newTexture)
 
 	if (a != nullptr)
 	{
-		App->resourceManager->FreeResource(emitterTexture->GetUID());
+		if(emitterTexture !=nullptr)
+			App->resourceManager->FreeResource(emitterTexture->GetUID());
+
 		emitterTexture = a;
 	}
 	else

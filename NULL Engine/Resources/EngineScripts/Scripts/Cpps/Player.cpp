@@ -124,7 +124,7 @@ void Player::SetUp()
 void Player::Update()
 {
 	ManageMovement();
-	if (moveState != PlayerState::DEAD && moveState != PlayerState::DASH)
+	if (moveState != PlayerState::DEAD)
 		ManageAim();
 }
 
@@ -149,6 +149,8 @@ void Player::SaveState(ParsonNode& playerNode)
 	playerNode.SetInteger("Hub Currency", hubCurrency);
 
 	playerNode.SetNumber("Health", health);
+
+	playerNode.SetBool("God Mode", godMode);
 
 	ParsonArray effectsArray = playerNode.SetArray("Effects");
 	for (uint i = 0; i < effects.size(); ++i)
@@ -183,6 +185,9 @@ void Player::LoadState(ParsonNode& playerNode)
 	hubCurrency = playerNode.GetInteger("Hub Currency");
 
 	health = playerNode.GetNumber("Health");
+
+	godMode = playerNode.GetBool("God Mode");
+	SetGodMode(godMode);
 
 	ParsonArray effectsArray = playerNode.GetArray("Effects");
 	for (uint i = 0; i < effectsArray.size; ++i)
@@ -302,16 +307,12 @@ void Player::SetGodMode(bool enable)
 	{
 		
 		defense = 0.0f;
-		speed *= 2.0f;
-		if (blasterWeapon)
-			blasterWeapon->damage *= 4.0f;
+		
 	}
 	else
 	{
 		defense = 1.0f;
-		speed /= 2.0f;
-		if (blasterWeapon)
-			blasterWeapon->damage /= 4;
+		
 	}
 }
 
@@ -381,7 +382,8 @@ void Player::ManageMovement()
 
 void Player::ManageAim()
 {
-	GatherAimInputs();
+	if (moveState != PlayerState::DASH)
+		GatherAimInputs();
 	Aim();
 
 	switch (aimState)

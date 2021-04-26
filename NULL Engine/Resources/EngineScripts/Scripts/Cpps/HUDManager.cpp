@@ -71,6 +71,8 @@ void HUDManager::Start()
 	playerObject = App->scene->GetGameObjectByName(playerName.c_str());
 	if(playerObject != nullptr)
 		player = (Player*)playerObject->GetScript("Player");
+
+	hitAlready = false;
 }
 
 void HUDManager::Update()
@@ -126,15 +128,18 @@ void HUDManager::Update()
 		//Take damage animation
 		if (mandoImage != nullptr)
 		{
-			if (player->hitTimer.IsActive())
+			if (player->hitTimer.IsActive() && !hitAlready)
+			{
 				mandoImage->PlayAnimation(false, 1);
+				hitAlready = true;
+			}
 		}
 
 		//Reload primary weapon
 		if (primaryWeaponImage != nullptr)
 		{
 			if (App->input->GetGameControllerButton(2) == ButtonState::BUTTON_DOWN)
-				primaryWeaponImage->PlayAnimation(false, 2);
+				primaryWeaponImage->PlayAnimation(false, 3);
 		}
 
 		//Shoot primary weapon
@@ -148,7 +153,7 @@ void HUDManager::Update()
 		if (primaryWeaponImage != nullptr)
 		{
 			if (App->input->GetGameControllerButton(1) == ButtonState::BUTTON_DOWN)
-				primaryWeaponImage->PlayAnimation(false, 3);
+				primaryWeaponImage->PlayAnimation(false, 2);
 		}
 /*
 		//Reload secondary weapon
@@ -184,5 +189,8 @@ void HUDManager::Update()
 			if (App->input->GetGameControllerTrigger(0) == ButtonState::BUTTON_DOWN)
 				dashImage->PlayAnimation(false, 1);
 		}
+
+		if (!player->hitTimer.IsActive())
+			hitAlready = false;
 	}
 }
