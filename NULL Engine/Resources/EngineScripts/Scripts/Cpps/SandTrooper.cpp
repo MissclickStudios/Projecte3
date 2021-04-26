@@ -7,6 +7,7 @@
 #include "GameObject.h"
 #include "C_Transform.h"
 #include "C_RigidBody.h"
+#include "C_AudioSource.h"
 
 #include "Player.h"
 
@@ -87,6 +88,22 @@ void Trooper::SetUp()
 		blasterWeapon = (Weapon*)GetObjectScript(blasterGameObject, ObjectType::WEAPON);
 	if (blasterWeapon)
 		blasterWeapon->SetOwnership(type, hand);
+
+	for (uint i = 0; i < gameObject->components.size(); ++i)
+	{
+		if (gameObject->components[i]->GetType() == ComponentType::AUDIOSOURCE)
+		{
+			C_AudioSource* source = (C_AudioSource*)gameObject->components[i];
+			std::string name = source->GetEventName();
+
+			if (name == "sandstormtrooper_walking")
+				walkAudio = source;
+			else if (name == "sandstormtrooper_idle")
+				damageAudio = source;
+			else if (name == "sandstormtrooper_death")
+				deathAudio = source;
+		}
+	}
 }
 
 void Trooper::Update()
@@ -203,6 +220,9 @@ void Trooper::ManageMovement()
 		Flee();
 		break;
 	case TrooperState::DEAD_IN:
+		if (deathAudio)
+			deathAudio->PlayFx(deathAudio->GetEventId());
+
 		currentAnimation = &deathAnimation;
 		if (rigidBody)
 			rigidBody->SetIsActive(false); // Disable the rigidbody to avoid more interactions with other entities

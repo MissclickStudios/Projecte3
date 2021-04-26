@@ -14,6 +14,7 @@ class GameObject;
 class C_RigidBody;
 class C_Animator;
 class C_Material;
+class C_AudioSource;
 
 class C_ParticleSystem;
 class EmitterInstance;
@@ -93,6 +94,10 @@ public:
 
 	Timer hitTimer;	
 
+	// Audio
+	C_AudioSource* walkAudio = nullptr;
+	C_AudioSource* damageAudio = nullptr;
+
 protected:
 
 	// Movement
@@ -113,9 +118,10 @@ protected:
 	// Death
 	Timer deathTimer;
 
-
-
 	// Effects
 	std::vector<Effect*> effects;
 	uint effectCounters[(uint)EffectType::EFFECTS_NUM];
+
+	// Audio
+	Timer stepTimer;
 };

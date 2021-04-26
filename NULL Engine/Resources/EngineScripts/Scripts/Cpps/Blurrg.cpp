@@ -6,6 +6,7 @@
 #include "GameObject.h"
 #include "C_Transform.h"
 #include "C_RigidBody.h"
+#include "C_AudioSource.h"
 
 #include "Player.h"
 
@@ -91,6 +92,24 @@ void Blurrg::SetUp()
 	restTimer.Stop();
 
 	player = App->scene->GetGameObjectByName(playerName.c_str());
+
+	for (uint i = 0; i < gameObject->components.size(); ++i)
+	{
+		if (gameObject->components[i]->GetType() == ComponentType::AUDIOSOURCE)
+		{
+			C_AudioSource* source = (C_AudioSource*)gameObject->components[i];
+			std::string name = source->GetEventName();
+
+			if (name == "blurrg_walking")
+				walkAudio = source;
+			else if (name == "blurrg_growl")
+				chargeAudio = source;
+			else if (name == "blurrg_hit")
+				damageAudio = source;
+			else if (name == "blurrg_death")
+				deathAudio = source;
+		}
+	}
 }
 
 void Blurrg::Update()
@@ -135,6 +154,9 @@ void Blurrg::Update()
 			Chase();
 			break;
 		case BlurrgState::CHARGE_IN:
+			if (chargeAudio)
+				chargeAudio->PlayFx(chargeAudio->GetEventId());
+
 			currentAnimation = &chargeAnimation;
 			if (rigidBody)
 				rigidBody->SetLinearVelocity(float3::zero);
@@ -177,6 +199,9 @@ void Blurrg::Update()
 			}
 			break;
 		case BlurrgState::DEAD_IN:
+			if (deathAudio)
+				deathAudio->PlayFx(deathAudio->GetEventId());
+
 			currentAnimation = &deathAnimation;
 			if (rigidBody)
 				rigidBody->SetIsActive(false); // Disable the rigidbody to avoid more interactions with other entities

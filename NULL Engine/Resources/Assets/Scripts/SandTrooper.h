@@ -10,6 +10,8 @@
 
 #include "MathGeoLib/include/Math/float2.h"
 
+class C_AudioSource;
+
 enum class TrooperState
 {
 	IDLE,
@@ -60,9 +62,7 @@ public:
 	Prefab blaster;
 
 	// Audio
-	std::string walkAudio;
-	std::string damageAudio;
-	std::string deathAudio;
+	C_AudioSource* deathAudio = nullptr;
 
 private:
 

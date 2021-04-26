@@ -7,6 +7,8 @@
 
 #include "MathGeoLib/include/Math/float2.h"
 
+class C_AudioSource;
+
 enum class BlurrgState
 {
 	WANDER,
@@ -70,10 +72,8 @@ public:
 	AnimationInfo restAnimation = { "Rest" };
 
 	// Audio
-	std::string walkAudio;
-	std::string chargeAudio;
-	std::string damageAudio;
-	std::string deathAudio;
+	C_AudioSource* chargeAudio = nullptr;
+	C_AudioSource* deathAudio = nullptr;
 
 private:
 

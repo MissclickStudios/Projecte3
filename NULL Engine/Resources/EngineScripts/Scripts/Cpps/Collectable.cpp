@@ -1,6 +1,7 @@
 #include "Collectable.h"
 
 #include "GameObject.h"
+#include "C_AudioSource.h"
 
 #include "Player.h"
 
@@ -15,6 +16,7 @@ Collectable::~Collectable()
 
 void Collectable::Start()
 {
+	buyAudio = gameObject->GetComponent<C_AudioSource>();
 }
 
 void Collectable::Update()
@@ -42,5 +44,8 @@ void Collectable::OnCollisionEnter(GameObject* object)
 
 		used = true;
 		Contact(player);
+
+		if (price != 0 && buyAudio)
+			buyAudio->PlayFx(buyAudio->GetEventId());
 	}
 }

@@ -8,6 +8,7 @@
 #include "GameObject.h"
 #include "C_Transform.h"
 #include "C_RigidBody.h"
+#include "C_AudioSource.h"
 
 #include "Bullet.h"
 
@@ -37,6 +38,24 @@ void Weapon::Start()
 {
 	fireRateTimer.Stop();
 	reloadTimer.Stop();
+
+	for (uint i = 0; i < gameObject->components.size(); ++i)
+	{
+		if (gameObject->components[i]->GetType() == ComponentType::AUDIOSOURCE)
+		{
+			C_AudioSource* source = (C_AudioSource*)gameObject->components[i];
+			std::string name = source->GetEventName();
+
+			if (name == "weapon_laser_01")
+				shootAudio = source;
+			else if (name == "weapon_laser_02_02")
+				shootAudio = source;
+			else if (name == "weapon_reload_01")
+				reloadAudio = source;
+			else if (name == "weapon_reload_02")
+				reloadAudio = source;
+		}
+	}
 }
 
 void Weapon::Update()
@@ -72,6 +91,9 @@ ShootState Weapon::Shoot(float2 direction)
 		ammo -= projectilesPerShot;
 		if (ammo < 0)
 			ammo = 0;
+
+		if (shootAudio)
+			shootAudio->PlayFx(shootAudio->GetEventId());
 	}
 	return state;
 }
@@ -84,6 +106,9 @@ bool Weapon::Reload()
 	{
 		reloadTimer.Stop();
 		ammo = MaxAmmo();
+
+		if (reloadAudio)
+			reloadAudio->PlayFx(reloadAudio->GetEventId());
 
 		return true;
 	}

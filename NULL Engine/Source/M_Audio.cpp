@@ -87,22 +87,22 @@ UpdateStatus M_Audio::Update(float dt)
 
 	//Depending on the engine state pause/play/resume/stop events
 
-	if (App->gameState == GameState::PLAY || App->gameState == GameState::STEP)
-	{
-		if (!aSourceBackgroundMusic->isPlaying)
-			aSourceBackgroundMusic->PlayFx(aSourceBackgroundMusic->GetEventId());
-	}
-	if (App->gameState == GameState::PAUSE)
-	{
-		if (aSourceBackgroundMusic->isPlaying)
-			aSourceBackgroundMusic->PauseFx(aSourceBackgroundMusic->GetEventId());
-	}
-	if (App->gameState == GameState::STOP)
-	{
-		if (aSourceBackgroundMusic->isPlaying)
-			aSourceBackgroundMusic->StopFx(aSourceBackgroundMusic->GetEventId());
-	}
-
+	//if (App->gameState == GameState::PLAY || App->gameState == GameState::STEP)
+	//{
+	//	if (!aSourceBackgroundMusic->isPlaying)
+	//		aSourceBackgroundMusic->PlayFx(aSourceBackgroundMusic->GetEventId());
+	//}
+	//if (App->gameState == GameState::PAUSE)
+	//{
+	//	if (aSourceBackgroundMusic->isPlaying)
+	//		aSourceBackgroundMusic->PauseFx(aSourceBackgroundMusic->GetEventId());
+	//}
+	//if (App->gameState == GameState::STOP)
+	//{
+	//	if (aSourceBackgroundMusic->isPlaying)
+	//		aSourceBackgroundMusic->StopFx(aSourceBackgroundMusic->GetEventId());
+	//}
+	//
 	return UpdateStatus::CONTINUE;
 }
 

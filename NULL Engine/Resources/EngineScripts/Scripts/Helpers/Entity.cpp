@@ -4,6 +4,7 @@
 #include "C_RigidBody.h"
 #include "C_Animator.h"
 #include "C_Material.h"
+#include "C_AudioSource.h"
 
 #include "C_ParticleSystem.h"
 #include "Emitter.h"
@@ -64,6 +65,7 @@ void Entity::Start()
 {
 	deathTimer.Stop();
 	hitTimer.Stop();
+	stepTimer.Stop();
 
 	SetUp();
 }
@@ -152,6 +154,9 @@ void Entity::TakeDamage(float damage)
 	hitTimer.Start();
 	if (hitParticles)
 		hitParticles->stopSpawn = false;
+
+	if (damageAudio)
+		damageAudio->PlayFx(damageAudio->GetEventId());
 }
 
 void Entity::GiveHeal(float amount)

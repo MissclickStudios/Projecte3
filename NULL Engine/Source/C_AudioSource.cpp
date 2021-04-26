@@ -111,11 +111,11 @@ unsigned int C_AudioSource::GetEventId() const
 
 void C_AudioSource::PlayFx(unsigned int eventId)
 {
-	if (!isPlaying)
-	{
+	//if (!isPlaying)
+	//{
 		wwiseObject->PlayEvent(eventId);
-		isPlaying = true;
-	}
+	//	isPlaying = true;
+	//}
 }
 
 void C_AudioSource::PlayFx(std::string name)

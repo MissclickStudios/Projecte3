@@ -3,6 +3,8 @@
 
 class Player;
 
+class C_AudioSource;
+
 class Collectable : public Object
 {
 public:
@@ -21,7 +23,7 @@ public:
 	bool used = false;
 
 	// Audio 
-	std::string buyAudio;
+	C_AudioSource* buyAudio = nullptr;
 
 protected:
 

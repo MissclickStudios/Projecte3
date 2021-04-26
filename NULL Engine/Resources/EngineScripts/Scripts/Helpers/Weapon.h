@@ -18,6 +18,8 @@
 
 struct Projectile;
 
+class C_AudioSource;
+
 enum class WeaponType
 {
 	WEAPON,
@@ -115,8 +117,8 @@ public:
 	bool updateProjectiles = false;
 
 	// Audio
-	std::string shootAudio;
-	std::string reloadAudio;
+	C_AudioSource* shootAudio = nullptr;
+	C_AudioSource* reloadAudio = nullptr;
 
 protected:
 

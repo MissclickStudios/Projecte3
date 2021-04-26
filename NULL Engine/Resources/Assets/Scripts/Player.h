@@ -10,6 +10,8 @@
 
 #include "MathGeoLib/include/Math/float2.h"
 
+class C_AudioSource;
+
 enum class PlayerState
 {
 	IDLE,
@@ -81,11 +83,9 @@ public:
 	bool GetGodMode()const;
 
 	// Audio
-	std::string walkAudio;
-	std::string dashAudio;
-	std::string changeWeaponAudio;
-	std::string damageAudio;
-	std::string deathAudio;
+	C_AudioSource* dashAudio = nullptr;
+	C_AudioSource* changeWeaponAudio = nullptr;
+	C_AudioSource* deathAudio = nullptr;
 	
 
 private:

@@ -13,6 +13,7 @@
 #include "C_Material.h"
 #include "C_ParticleSystem.h"
 #include "Emitter.h"
+#include "C_AudioSource.h"
 
 #include "C_Animator.h"
 
@@ -119,6 +120,26 @@ void Player::SetUp()
 				dashParticles = particles->emitterInstances[i];
 
 	currentWeapon = blasterWeapon;
+
+	for (uint i = 0; i < gameObject->components.size(); ++i)
+	{
+		if (gameObject->components[i]->GetType() == ComponentType::AUDIOSOURCE)
+		{
+			C_AudioSource* source = (C_AudioSource*)gameObject->components[i];
+			std::string name = source->GetEventName();
+
+			if (name == "mando_walking")
+				walkAudio = source;
+			else if (name == "mando_dash")
+				dashAudio = source;
+			else if (name == "weapon_change")
+				changeWeaponAudio = source;
+			else if (name == "mando_damaged")
+				damageAudio = source;
+			else if (name == "mando_death")
+				deathAudio = source;
+		}
+	}
 }
 
 void Player::Update()
@@ -297,6 +318,9 @@ void Player::TakeDamage(float damage)
 			material->SetAlternateColour(Color(1, 0, 0, 1));
 			material->SetTakeDamage(true);
 		}
+
+		if (damageAudio)
+			damageAudio->PlayFx(damageAudio->GetEventId());
 	}
 }
 
@@ -345,6 +369,9 @@ void Player::ManageMovement()
 			Movement();
 			break;
 		case PlayerState::DASH_IN:
+			if (dashAudio)
+				dashAudio->PlayFx(dashAudio->GetEventId());
+
 			currentAnimation = &dashAnimation;
 			dashTimer.Start();
 			if (rigidBody)
@@ -367,6 +394,9 @@ void Player::ManageMovement()
 			}
 			break;
 		case PlayerState::DEAD_IN:
+			if (deathAudio)
+				deathAudio->PlayFx(deathAudio->GetEventId());
+
 			currentAnimation = &deathAnimation;
 			if (rigidBody)
 				rigidBody->SetIsActive(false); // Disable the rigidbody to avoid more interactions with other entities
@@ -429,6 +459,9 @@ void Player::ManageAim()
 			aimState = AimState::ON_GUARD;
 		break;
 	case AimState::CHANGE_IN:
+		if (changeWeaponAudio)
+			changeWeaponAudio->PlayFx(changeWeaponAudio->GetEventId());
+
 		changeTimer.Start();
 		aimState = AimState::CHANGE;
 
