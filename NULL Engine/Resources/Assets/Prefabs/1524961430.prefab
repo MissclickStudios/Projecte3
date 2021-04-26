@@ -103,7 +103,7 @@
                         "W": 1.0926049947738647,
                         "H": 0.5787392258644104,
                         "IsInvisible": false,
-                        "IsInputCanvas": false,
+                        "IsInputCanvas": true,
                         "Priority": 1
                     }
                 },
@@ -308,6 +308,75 @@
                                 "LibaryPath": "Library\/Shaders\/1025410539.neshader",
                                 "LibraryFile": "1025410539.neshader"
                             }
+                        }
+                    ],
+                    "Children": []
+                },
+                {
+                    "UID": 407126887,
+                    "ParentUID": 3944067,
+                    "PrefabID": 1524961430,
+                    "IsPrefab": true,
+                    "Name": "Mando",
+                    "IsActive": true,
+                    "IsStatic": false,
+                    "IsSceneRoot": false,
+                    "MaintainThroughScenes": false,
+                    "ShowBoundingBoxes": true,
+                    "Components": [
+                        {
+                            "Type": 1,
+                            "LocalPosition": [
+                                0,
+                                0,
+                                0
+                            ],
+                            "LocalRotation": [
+                                0,
+                                0,
+                                0,
+                                1
+                            ],
+                            "LocalScale": [
+                                1,
+                                1,
+                                1
+                            ]
+                        },
+                        {
+                            "Type": 21,
+                            "Image": {
+                                "X": -0.8399999737739563,
+                                "Y": 0.77499997615814209,
+                                "W": 0.094999998807907104,
+                                "H": 0.13500000536441803,
+                                "IsHDL": false,
+                                "IsHDR": false
+                            }
+                        },
+                        {
+                            "Type": 3,
+                            "Texture": {
+                                "AssetsPath": "Assets\/Textures\/\/2DAnimations\/LowLife\/LowLife01.png",
+                                "AssetsName": "LowLife01.png",
+                                "LibaryPath": "Library\/Textures\/784501439.netex",
+                                "LibraryFile": "784501439.netex"
+                            },
+                            "Shader": {
+                                "AssetsPath": "Assets\/Shaders\/UIShader.shader",
+                                "AssetsName": "UIShader.shader",
+                                "LibaryPath": "Library\/Shaders\/1025410539.neshader",
+                                "LibraryFile": "1025410539.neshader"
+                            }
+                        },
+                        {
+                            "Type": 25,
+                            "Animation Step Time": 30,
+                            "Animation Loop": false,
+                            "Animation Set On Loop From Start": false,
+                            "Name": "LowLife",
+                            "Name1": "",
+                            "Name2": ""
                         }
                     ],
                     "Children": []
@@ -666,7 +735,7 @@
                             "Animation Set On Loop From Start": false,
                             "Name": "UseWeapon1",
                             "Name1": "ChangeWeapon",
-                            "Name2": "ChangeWeapon"
+                            "Name2": "ChargeWeapon"
                         }
                     ],
                     "Children": []
@@ -830,75 +899,6 @@
                         }
                     ],
                     "Children": []
-                },
-                {
-                    "UID": 407126887,
-                    "ParentUID": 3944067,
-                    "PrefabID": 1524961430,
-                    "IsPrefab": true,
-                    "Name": "Mando",
-                    "IsActive": true,
-                    "IsStatic": false,
-                    "IsSceneRoot": false,
-                    "MaintainThroughScenes": false,
-                    "ShowBoundingBoxes": false,
-                    "Components": [
-                        {
-                            "Type": 1,
-                            "LocalPosition": [
-                                0,
-                                0,
-                                0
-                            ],
-                            "LocalRotation": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ],
-                            "LocalScale": [
-                                1,
-                                1,
-                                1
-                            ]
-                        },
-                        {
-                            "Type": 21,
-                            "Image": {
-                                "X": -0.8399999737739563,
-                                "Y": 0.77499997615814209,
-                                "W": 0.094999998807907104,
-                                "H": 0.13500000536441803,
-                                "IsHDL": false,
-                                "IsHDR": false
-                            }
-                        },
-                        {
-                            "Type": 3,
-                            "Texture": {
-                                "AssetsPath": "Assets\/Textures\/\/2DAnimations\/LowLife\/LowLife01.png",
-                                "AssetsName": "LowLife01.png",
-                                "LibaryPath": "Library\/Textures\/784501439.netex",
-                                "LibraryFile": "784501439.netex"
-                            },
-                            "Shader": {
-                                "AssetsPath": "Assets\/Shaders\/UIShader.shader",
-                                "AssetsName": "UIShader.shader",
-                                "LibaryPath": "Library\/Shaders\/1025410539.neshader",
-                                "LibraryFile": "1025410539.neshader"
-                            }
-                        },
-                        {
-                            "Type": 25,
-                            "Animation Step Time": 30,
-                            "Animation Loop": false,
-                            "Animation Set On Loop From Start": false,
-                            "Name": "LowLife",
-                            "Name1": "",
-                            "Name2": ""
-                        }
-                    ],
-                    "Children": []
                 }
             ]
         },
@@ -936,13 +936,13 @@
                 {
                     "Type": 13,
                     "Canvas": {
-                        "IsActive": true,
+                        "IsActive": false,
                         "X": 0,
                         "Y": 0,
                         "W": 1.0926049947738647,
                         "H": 0.5787392258644104,
                         "IsInvisible": false,
-                        "IsInputCanvas": true,
+                        "IsInputCanvas": false,
                         "Priority": 2
                     }
                 },
@@ -1736,7 +1736,7 @@
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
+            "ShowBoundingBoxes": true,
             "Components": [
                 {
                     "Type": 1,
