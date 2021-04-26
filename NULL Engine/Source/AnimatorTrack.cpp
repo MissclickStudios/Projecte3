@@ -28,10 +28,10 @@ blendFrames		(0)
 
 }
 
-AnimatorTrack::AnimatorTrack(const std::string& name, GameObject* rootBone) :
+AnimatorTrack::AnimatorTrack(const char* name, GameObject* rootBone, float trackSpeed, bool interpolate) :
 trackState		(TrackState::STOP),
-trackSpeed		(1.0f),
-interpolate		(true),
+trackSpeed		(trackSpeed),
+interpolate		(interpolate),
 name			(name),
 rootBone		(rootBone),
 rootBoneUID		(0),
@@ -327,6 +327,16 @@ float AnimatorTrack::GetTrackSpeed() const
 void AnimatorTrack::SetTrackSpeed(float newTrackSpeed)
 {
 	trackSpeed = (newTrackSpeed >= 0.0f) ? newTrackSpeed : 0.0f;
+}
+
+bool AnimatorTrack::GetInterpolate() const
+{
+	return interpolate;
+}
+
+void AnimatorTrack::SetInterpolate(bool setTo)
+{
+	interpolate = setTo;
 }
 
 const char* AnimatorTrack::GetName() const

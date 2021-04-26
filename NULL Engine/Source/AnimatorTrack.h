@@ -30,7 +30,7 @@ class NULL_API AnimatorTrack
 {
 public:
 	AnimatorTrack();
-	AnimatorTrack(const std::string& name, GameObject* rootBone);
+	AnimatorTrack(const char* name, GameObject* rootBone, float trackSpeed = 1.0f, bool interpolate = true);
 	~AnimatorTrack();
 
 	bool StepTrack	(float dt);
@@ -63,6 +63,9 @@ public:																																				// --- GET/SET METHODS
 	
 	float				GetTrackSpeed				() const;
 	void				SetTrackSpeed				(float newTrackSpeed);
+
+	bool				GetInterpolate				() const;
+	void				SetInterpolate				(bool setTo);
 
 	const char*			GetName						() const;
 	GameObject*			GetRootBone					() const;

@@ -523,20 +523,6 @@ void C_Animator::FindBoneLinks()
 	boneMap.clear();
 }
 
-std::vector<BoneLink>* C_Animator::GetAnimationBoneLinks(uint32 UID)
-{
-	if (UID == 0)
-		return nullptr;
-
-	auto boneLinks = animationBones.find(UID);
-	if (boneLinks != animationBones.end())
-	{
-		return &boneLinks->second;
-	}
-
-	return nullptr;
-}
-
 void C_Animator::CrossCheckBonesWithMeshBoneMapping()
 {
 	if (animatedMeshes.empty())
@@ -567,6 +553,20 @@ void C_Animator::CrossCheckBonesWithMeshBoneMapping()
 			}
 		}
 	}
+}
+
+std::vector<BoneLink>* C_Animator::GetAnimationBoneLinks(uint32 UID)
+{
+	if (UID == 0)
+		return nullptr;
+
+	auto boneLinks = animationBones.find(UID);
+	if (boneLinks != animationBones.end())
+	{
+		return &boneLinks->second;
+	}
+
+	return nullptr;
 }
 
 // --- PUBLIC C_ANIMATOR METHODS
@@ -684,79 +684,6 @@ bool C_Animator::DeleteTrack(const char* trackName)
 	}
 	
 	return (tracks.erase(trackName) == 1);
-}
-
-AnimatorClip C_Animator::GetClip(const char* clipName) const
-{
-	auto clip = clips.find(clipName);
-	return (clip != clips.end()) ? clip->second : AnimatorClip(nullptr, "[NONE]", 0, 0, 1.0f, false);
-}
-
-AnimatorClip* C_Animator::GetClipAsPtr(const char* clipName)
-{
-	auto clip = clips.find(clipName);
-	return (clip != clips.end()) ? &clip->second : nullptr;
-}
-
-AnimatorClip C_Animator::GetClipByIndex(uint index) const
-{
-	
-	
-	return AnimatorClip();
-}
-
-/*void C_Animator::SetCurrentClipByIndex(uint index)
-{
-	if (index >= clips.size())
-	{
-		LOG("[ERROR] Animator Component: Could not Set Current Clip By Index! Error: Given Index was out of bounds.");
-		return;
-	}
-
-	std::string errorString = "[ERROR] Animator Component: Could not Set Current Clip in { " + std::string(this->GetOwner()->GetName()) + " }'s Animator Component";
-
-	uint i = 0;
-	for (auto item = clips.cbegin(); item != clips.cend(); ++item)
-	{
-		if (i == index)																										// Dirty way of finding items in a map by index.
-		{
-			const AnimatorClip& clip = item->second;
-
-			if (animationBones.find(clip.GetAnimation()->GetUID()) == animationBones.end())
-			{
-				LOG("%s! Error: Could not find the Bones of the Clip's animation (R_Animation*).");
-				return;
-			}
-
-			currentClip	= (AnimatorClip*)&clip;
-			currentBones = &(animationBones.find(clip.GetAnimation()->GetUID())->second);
-
-			currentClip->ClearClip();
-
-			return;
-		}
-
-		++i;
-	}
-}*/
-
-AnimatorTrack C_Animator::GetTrack(const char* trackName) const
-{
-	auto track = tracks.find(trackName);
-	return (track != tracks.end()) ? track->second : AnimatorTrack("[NONE]", nullptr);
-}
-
-AnimatorTrack* C_Animator::GetTrackAsPtr(const char* trackName)
-{
-	auto track = tracks.find(trackName);
-	return (track != tracks.end()) ? &track->second : nullptr;
-}
-
-AnimatorTrack C_Animator::GetTrackByIndex(uint index) const
-{
-	
-	
-	return AnimatorTrack();
 }
 
 void C_Animator::PlayClip(const char* trackName, const char* clipName, uint blendFrames)
@@ -890,21 +817,124 @@ bool C_Animator::Stop(bool applyToTracks)
 }
 
 // --- GET/SET METHODS
+AnimatorClip C_Animator::GetClip(const char* clipName) const
+{
+	auto clip = clips.find(clipName);
+	return (clip != clips.end()) ? clip->second : AnimatorClip(nullptr, "[NONE]", 0, 0, 1.0f, false);
+}
+
+AnimatorClip* C_Animator::GetClipAsPtr(const char* clipName)
+{
+	auto clip = clips.find(clipName);
+	return (clip != clips.end()) ? &clip->second : nullptr;
+}
+
+AnimatorClip C_Animator::GetClipByIndex(uint index) const
+{
+	
+	
+	return AnimatorClip();
+}
+
+/*void C_Animator::SetCurrentClipByIndex(uint index)
+{
+	if (index >= clips.size())
+	{
+		LOG("[ERROR] Animator Component: Could not Set Current Clip By Index! Error: Given Index was out of bounds.");
+		return;
+	}
+
+	std::string errorString = "[ERROR] Animator Component: Could not Set Current Clip in { " + std::string(this->GetOwner()->GetName()) + " }'s Animator Component";
+
+	uint i = 0;
+	for (auto item = clips.cbegin(); item != clips.cend(); ++item)
+	{
+		if (i == index)																										// Dirty way of finding items in a map by index.
+		{
+			const AnimatorClip& clip = item->second;
+
+			if (animationBones.find(clip.GetAnimation()->GetUID()) == animationBones.end())
+			{
+				LOG("%s! Error: Could not find the Bones of the Clip's animation (R_Animation*).");
+				return;
+			}
+
+			currentClip	= (AnimatorClip*)&clip;
+			currentBones = &(animationBones.find(clip.GetAnimation()->GetUID())->second);
+
+			currentClip->ClearClip();
+
+			return;
+		}
+
+		++i;
+	}
+}*/
+
+AnimatorTrack C_Animator::GetTrack(const char* trackName) const
+{
+	auto track = tracks.find(trackName);
+	return (track != tracks.end()) ? track->second : AnimatorTrack("[NONE]", nullptr);
+}
+
+AnimatorTrack* C_Animator::GetTrackAsPtr(const char* trackName)
+{
+	auto track = tracks.find(trackName);
+	return (track != tracks.end()) ? &track->second : nullptr;
+}
+
+AnimatorTrack C_Animator::GetTrackByIndex(uint index) const
+{
+	
+	
+	return AnimatorTrack();
+}
+
+std::vector<R_Animation*>* C_Animator::GetAnimationsAsPtr()
+{
+	return &animations;
+}
+
+std::vector<GameObject*>* C_Animator::GetBonesAsPtr()
+{
+	return &bones;
+}
+
+std::map<std::string, AnimatorClip>* C_Animator::GetClipsAsPtr()
+{
+	return &clips;
+}
+
+std::map<std::string, AnimatorTrack>* C_Animator::GetTracksAsPtr()
+{
+	return &tracks;
+}
+
 std::vector<LineSegment> C_Animator::GetDisplayBones() const
 {
 	return displayBones;
 }
 
-std::vector<std::string> C_Animator::GetClipNamesAsVector() const
+void C_Animator::GetClipNamesAsVector(std::vector<const char*>& clipNames) const
 {
-	std::vector<std::string> clipNames;
-
+	if (clips.empty())
+		return;
+	
 	for (auto clip = clips.cbegin(); clip != clips.cend(); ++clip)
 	{
-		clipNames.push_back(clip->first);
+		clipNames.push_back(clip->first.c_str());
 	}
+}
 
-	return clipNames;
+void C_Animator::GetTrackNamesAsVector(std::vector<const char*>& trackNames) const
+{
+	if (tracks.empty())
+		return;
+
+	for (auto track = tracks.cbegin(); track != tracks.cend(); ++track)
+	{
+		trackNames.push_back(track->first.c_str());
+	}
 }
 
 std::string C_Animator::GetAnimatorStateAsString() const
