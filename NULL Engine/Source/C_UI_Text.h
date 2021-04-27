@@ -5,7 +5,6 @@
 #include "Macros.h"
 
 #include "M_UISystem.h"
-#include "OpenGL.h"
 #include "Color.h"
 #include "Component.h"
 #include <map>

@@ -2,7 +2,6 @@
 
 #include "M_Renderer3D.h"
 #include "M_Camera3D.h"
-#include "M_Editor.h"
 #include "M_Window.h"
 #include "M_UISystem.h"
 #include "M_Scene.h"
@@ -16,9 +15,8 @@
 #include "C_UI_Button.h"
 #include "C_UI_Image.h"
 
-#include "E_Viewport.h"
-
-#include "OpenGL.h"
+#include "Dependencies/glew/include/glew.h"
+//#include "OpenGL.h"
 
 #include "MemoryManager.h"
 

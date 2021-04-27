@@ -1,14 +1,15 @@
 #include "C_UI_Text.h"
-#include "C_UI_Text.h"
 #include "Application.h"
 
 #include "GameObject.h"
 
 #include "M_Window.h"
 #include "M_Camera3D.h"
-#include "M_Editor.h"
 #include "M_Scene.h"
 #include "M_ResourceManager.h"
+
+#include "Dependencies/glew/include/glew.h"
+//#include "OpenGL.h"
 
 #include "C_Material.h"
 #include "C_Canvas.h"
@@ -16,12 +17,6 @@
 #include "C_Camera.h"
 
 #include "R_Shader.h"
-
-#include "E_Viewport.h"
-
-#include "C_UI_Text.h"
-
-
 
 #include "MemoryManager.h"
 

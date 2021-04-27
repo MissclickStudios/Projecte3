@@ -18,7 +18,8 @@
 
 #include "C_UI_Button.h"
 
-#include "OpenGL.h"
+#include "Dependencies/glew/include/glew.h"
+//#include "OpenGL.h"
 
 #include "MemoryManager.h"
 

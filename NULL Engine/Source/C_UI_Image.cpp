@@ -3,7 +3,6 @@
 #include "GameObject.h"
 
 #include "M_Camera3D.h"
-#include "M_Editor.h"
 #include "M_Scene.h"
 #include "M_UISystem.h"
 
@@ -18,11 +17,10 @@
 #include "R_Shader.h"
 #include "R_Texture.h"
 
-#include "E_Viewport.h"
-
 #include "C_UI_Image.h"
 
-#include "OpenGL.h"
+#include "Dependencies/glew/include/glew.h"
+//#include "OpenGL.h"
 
 #include "MemoryManager.h"
 
