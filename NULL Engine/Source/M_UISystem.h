@@ -13,7 +13,7 @@ class C_UI_Button;
 class C_UI_Image;
 class R_Texture;
 
-class NULL_API M_UISystem : public Module
+class MISSCLICK_API M_UISystem : public Module
 {
 public:
 

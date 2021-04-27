@@ -49,7 +49,7 @@ private:
 
 };
 
-class NULL_API M_Audio : public Module
+class MISSCLICK_API M_Audio : public Module
 {
 public:
 

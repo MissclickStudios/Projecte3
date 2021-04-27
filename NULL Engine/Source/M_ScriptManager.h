@@ -10,7 +10,7 @@ typedef unsigned __int64 uint64;
 class Script;
 class C_Script;
 
-class NULL_API M_ScriptManager : public Module
+class MISSCLICK_API M_ScriptManager : public Module
 {
 public:
 

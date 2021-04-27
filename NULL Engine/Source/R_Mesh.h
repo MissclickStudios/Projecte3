@@ -19,7 +19,7 @@ struct BoneWeight;
 
 typedef unsigned int uint;
 
-class NULL_API R_Mesh : public Resource
+class MISSCLICK_API R_Mesh : public Resource
 {
 public:
 	R_Mesh();

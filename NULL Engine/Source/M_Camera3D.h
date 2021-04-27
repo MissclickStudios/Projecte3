@@ -9,7 +9,7 @@ class GameObject;
 class C_Camera;
 class C_AudioListener;
 
-class NULL_API M_Camera3D : public Module
+class MISSCLICK_API M_Camera3D : public Module
 {
 public:
 	M_Camera3D(bool isActive = true);

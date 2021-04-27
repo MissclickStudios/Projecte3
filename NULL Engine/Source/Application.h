@@ -31,7 +31,7 @@ enum class GameState
 	STOP
 };
 
-class NULL_API Application
+class MISSCLICK_API Application
 {
 public:
 	Application();
@@ -121,7 +121,7 @@ protected:
 	Module* logger;
 };
 
-extern NULL_API Application* App;													// Allows to access the Application module from anywhere in the project.
+extern MISSCLICK_API Application* App;													// Allows to access the Application module from anywhere in the project.
 Application* CreateApplication();																
 
 #endif // !__APPLICATION_H__

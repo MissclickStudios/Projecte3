@@ -9,7 +9,7 @@ class R_Texture;
 class ParsonNode;
 class ResourceBase;
 
-class NULL_API Emitter
+class MISSCLICK_API Emitter
 {
 public:
 	Emitter();

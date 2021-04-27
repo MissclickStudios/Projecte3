@@ -14,7 +14,7 @@ const float texCoordsBuffer[] = {
 };
 
 
-class NULL_API C_UI_Image : public Component
+class MISSCLICK_API C_UI_Image : public Component
 {
 public:
 

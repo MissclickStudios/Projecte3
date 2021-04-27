@@ -7,7 +7,7 @@
 class ParsonNode;
 class GameObject;
 
-class NULL_API C_Transform : public Component
+class MISSCLICK_API C_Transform : public Component
 {
 public:
 	C_Transform(GameObject* owner);

@@ -12,7 +12,7 @@ class ParsonNode;
 class GameObject;
 class R_Mesh;
 
-class NULL_API C_Mesh : public Component
+class MISSCLICK_API C_Mesh : public Component
 {
 public:
 	C_Mesh(GameObject* owner);

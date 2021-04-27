@@ -28,7 +28,7 @@ typedef unsigned int		uint;
 typedef unsigned __int32	uint32;
 typedef unsigned __int64	uint64;
 
-class NULL_API M_ResourceManager : public Module
+class MISSCLICK_API M_ResourceManager : public Module
 {
 public:
 	M_ResourceManager();

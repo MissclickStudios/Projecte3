@@ -65,7 +65,7 @@ struct GameController
 
 #define MAX_MOUSE_BUTTONS 5
 
-class NULL_API M_Input : public Module
+class MISSCLICK_API M_Input : public Module
 {
 public:
 

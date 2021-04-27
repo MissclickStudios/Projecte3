@@ -10,7 +10,7 @@
 class Particle;
 class EmitterInstance;
 
-struct NULL_API ParticleModule
+struct MISSCLICK_API ParticleModule
 {
 	enum class Type
 	{

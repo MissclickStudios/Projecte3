@@ -11,7 +11,7 @@ class ParsonNode;
 class GameObject;
 struct AnimationClip;
 
-class NULL_API C_Animation : public Component
+class MISSCLICK_API C_Animation : public Component
 {
 public:
 	C_Animation(GameObject* owner);

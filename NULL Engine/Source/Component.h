@@ -49,7 +49,7 @@ enum class ComponentType
 	NAVMESH_AGENT											// --- NAVIGATION
 };
 
-class NULL_API Component
+class MISSCLICK_API Component
 {
 public:
 	Component(GameObject* owner, ComponentType type, bool isActive = true);

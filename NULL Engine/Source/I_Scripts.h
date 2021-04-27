@@ -20,7 +20,7 @@ namespace Parser
 	//Leave the cursor on the start of the next symbol
 	ParsingState GoNextSymbol(char*& cursor);
 	bool CharIsNumber(char numberCheck);
-	bool NULL_API ParseEnum(const char* enumName, const char* definitionFile, std::map<std::string, std::map<int, std::string>>& inspectorEnums);
+	bool MISSCLICK_API ParseEnum(const char* enumName, const char* definitionFile, std::map<std::string, std::map<int, std::string>>& inspectorEnums);
 }
 
 namespace Importer

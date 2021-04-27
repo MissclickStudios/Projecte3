@@ -22,7 +22,7 @@ typedef unsigned int uint;
 
 #define INVALID_PARSON_NUMBER -2147483647.0												// Not the actual max negative value of a double var., but an aproximation using long as reference.
 
-class NULL_API ParsonNode
+class MISSCLICK_API ParsonNode
 {
 public:
 	ParsonNode();
@@ -69,7 +69,7 @@ private:
 	JSON_Object*	rootNode;																
 };
 
-class NULL_API ParsonArray
+class MISSCLICK_API ParsonArray
 {
 public:
 	ParsonArray();

@@ -8,7 +8,7 @@ typedef unsigned char		uchar;
 typedef unsigned int		uint;
 typedef unsigned __int32	uint32;
 
-class NULL_API Timer
+class MISSCLICK_API Timer
 {
 public:
 	Timer();								// Constructor

@@ -25,7 +25,7 @@ struct Character
 	uint	advance;	
 };
 
-class NULL_API C_UI_Text : public Component
+class MISSCLICK_API C_UI_Text : public Component
 {
 public:
 	C_UI_Text(GameObject* owner, Rect2D rect = { 0,0,50,50 });

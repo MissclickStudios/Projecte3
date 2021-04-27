@@ -5,7 +5,7 @@
 
 typedef unsigned __int64 uint64;
 
-class NULL_API PerfectTimer
+class MISSCLICK_API PerfectTimer
 {
 public:
 	PerfectTimer();							// Constructor

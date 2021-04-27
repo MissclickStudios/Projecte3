@@ -19,23 +19,23 @@ namespace MC_Time
 	
 	namespace Real
 	{
-		void		NULL_API InitRealClock			();
-		void		NULL_API Update					();								// Will update the frame data for the frame it was called on. frame_count, prev_sec_frames, dt..
-		void		NULL_API DelayUntilFrameCap		(uint frameCap);
+		void		MISSCLICK_API InitRealClock			();
+		void		MISSCLICK_API Update					();								// Will update the frame data for the frame it was called on. frame_count, prev_sec_frames, dt..
+		void		MISSCLICK_API DelayUntilFrameCap		(uint frameCap);
 
-		void		NULL_API StartPerfTimer			();
-		void		NULL_API StopPerfTimer			();
-		float		NULL_API PeekPerfTimer			();
+		void		MISSCLICK_API StartPerfTimer			();
+		void		MISSCLICK_API StopPerfTimer			();
+		float		MISSCLICK_API PeekPerfTimer			();
 
-		Hourglass	NULL_API GetClock				();
-		FrameData	NULL_API GetFrameData			();
+		Hourglass	MISSCLICK_API GetClock				();
+		FrameData	MISSCLICK_API GetFrameData			();
 
-		float		NULL_API GetDT					();
-		uint64		NULL_API GetFrameCount			();
-		float		NULL_API GetTimeSinceStart		();
-		uint32		NULL_API GetFramesLastSecond	();
-		float		NULL_API GetAverageFPS			();
-		uint32		NULL_API GetMsLastFrame			();
+		float		MISSCLICK_API GetDT					();
+		uint64		MISSCLICK_API GetFrameCount			();
+		float		MISSCLICK_API GetTimeSinceStart		();
+		uint32		MISSCLICK_API GetFramesLastSecond	();
+		float		MISSCLICK_API GetAverageFPS			();
+		uint32		MISSCLICK_API GetMsLastFrame			();
 
 		namespace Utilities
 		{
@@ -49,25 +49,25 @@ namespace MC_Time
 
 	namespace Game
 	{
-		void		NULL_API Update					();
+		void		MISSCLICK_API Update					();
 		
-		void		NULL_API SetTimeScale			(float newTimeScale);
-		float		NULL_API GetTimeScale			();
+		void		MISSCLICK_API SetTimeScale			(float newTimeScale);
+		float		MISSCLICK_API GetTimeScale			();
 
-		void		NULL_API Play					();
-		void		NULL_API Pause					();
-		void		NULL_API Step					(uint numSteps = 1);
-		void		NULL_API Stop					();
+		void		MISSCLICK_API Play					();
+		void		MISSCLICK_API Pause					();
+		void		MISSCLICK_API Step					(uint numSteps = 1);
+		void		MISSCLICK_API Stop					();
 
-		Hourglass	NULL_API GetClock				();
-		FrameData	NULL_API GetFrameData			();
+		Hourglass	MISSCLICK_API GetClock				();
+		FrameData	MISSCLICK_API GetFrameData			();
 
-		float		NULL_API GetDT					();
-		uint64		NULL_API GetFrameCount			();
-		float		NULL_API GetTimeSinceStart		();
-		uint32		NULL_API GetFramesLastSecond	();
-		float		NULL_API GetAverageFPS			();
-		uint32		NULL_API GetMsLastFrame			();
+		float		MISSCLICK_API GetDT					();
+		uint64		MISSCLICK_API GetFrameCount			();
+		float		MISSCLICK_API GetTimeSinceStart		();
+		uint32		MISSCLICK_API GetFramesLastSecond	();
+		float		MISSCLICK_API GetAverageFPS			();
+		uint32		MISSCLICK_API GetMsLastFrame			();
 
 		namespace Utilities
 		{

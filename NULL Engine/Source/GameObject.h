@@ -24,7 +24,7 @@ struct Light;
 typedef unsigned int		uint;
 typedef unsigned __int32	uint32;
 
-class NULL_API GameObject
+class MISSCLICK_API GameObject
 {
 public:
 	GameObject();

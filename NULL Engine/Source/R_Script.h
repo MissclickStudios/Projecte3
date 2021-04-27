@@ -7,7 +7,7 @@
 #include <vector>
 #include <string>
 
-class NULL_API R_Script : public Resource {
+class MISSCLICK_API R_Script : public Resource {
 public:
 	R_Script();
 	virtual ~R_Script();

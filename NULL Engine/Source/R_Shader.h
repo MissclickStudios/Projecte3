@@ -40,7 +40,7 @@ struct Uniform
 
 };
 
-class NULL_API R_Shader : public Resource
+class MISSCLICK_API R_Shader : public Resource
 {
 public:
 	R_Shader();

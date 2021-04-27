@@ -23,7 +23,7 @@ enum class UIButtonState
 	RELEASED
 };
 
-class NULL_API C_UI_Button : public Component
+class MISSCLICK_API C_UI_Button : public Component
 {
 public:
 

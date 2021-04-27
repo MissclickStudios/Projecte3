@@ -26,9 +26,9 @@
 
 //Import/export engine core define
 #ifdef NULL_BUILD_DLL
-#define NULL_API __declspec(dllexport)
+#define MISSCLICK_API __declspec(dllexport)
 #else
-#define NULL_API __declspec(dllimport)
+#define MISSCLICK_API __declspec(dllimport)
 #endif
 
 MATH_BEGIN_NAMESPACE
@@ -40,7 +40,7 @@ MATH_BEGIN_NAMESPACE
    Well-formed polygons are always planar, i.e. all the vertices lie on the same plane. It is possible
    to store non-planar Polygons in this structure, but their representation is ambiguous, and for all practical
    purposes, should be avoided. */
-class NULL_API Polygon
+class MISSCLICK_API Polygon
 {
 public:
 	/// The default constructor creates a null polygon.

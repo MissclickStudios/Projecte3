@@ -7,7 +7,7 @@ class R_Texture;
 
 typedef unsigned int uint;
 
-struct NULL_API Icons
+struct MISSCLICK_API Icons
 {
 	Icons();
 

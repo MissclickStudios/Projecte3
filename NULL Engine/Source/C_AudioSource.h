@@ -8,7 +8,7 @@
 class GameObject;
 class WwiseObject;
 
-class NULL_API C_AudioSource : public Component
+class MISSCLICK_API C_AudioSource : public Component
 {
 public:
 	C_AudioSource(GameObject* owner);

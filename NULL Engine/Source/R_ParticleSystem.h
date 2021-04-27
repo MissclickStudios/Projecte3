@@ -6,7 +6,7 @@
 #include "Resource.h"
 #include "Emitter.h"
 
-class NULL_API R_ParticleSystem : public Resource
+class MISSCLICK_API R_ParticleSystem : public Resource
 {
 public:
 	R_ParticleSystem();

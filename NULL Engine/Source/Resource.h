@@ -30,7 +30,7 @@ enum class ResourceType													// IMPORTANT: Do not change the order of the
 	NONE
 };
 
-class NULL_API Resource
+class MISSCLICK_API Resource
 {
 public:
 	Resource(ResourceType type);

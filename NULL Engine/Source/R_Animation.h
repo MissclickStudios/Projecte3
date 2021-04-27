@@ -11,7 +11,7 @@
 class ParsonNode;
 struct Channel;
 
-class NULL_API R_Animation : public Resource
+class MISSCLICK_API R_Animation : public Resource
 {
 public:
 	R_Animation();

@@ -10,7 +10,7 @@ class R_Texture;
 
 typedef unsigned __int32 uint;
 
-class NULL_API C_2DAnimator : public Component
+class MISSCLICK_API C_2DAnimator : public Component
 {
 public:
 	C_2DAnimator(GameObject* owner);

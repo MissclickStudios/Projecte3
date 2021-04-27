@@ -11,7 +11,7 @@ class GameObject;
 class R_Script;
 class Prefab;
 
-struct NULL_API InspectorScriptData {
+struct MISSCLICK_API InspectorScriptData {
 	enum DataType {
 		INT,
 		BOOL,
@@ -55,7 +55,7 @@ struct NULL_API InspectorScriptData {
 	float maxSlider = 0;
 };
 
-class NULL_API C_Script : public Component
+class MISSCLICK_API C_Script : public Component
 {
 public:
 	C_Script(GameObject* owner);

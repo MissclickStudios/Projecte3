@@ -33,7 +33,7 @@ struct ModelNode
 	std::string		textureName;
 };
 
-class NULL_API R_Model : public Resource
+class MISSCLICK_API R_Model : public Resource
 {
 public:
 	R_Model();

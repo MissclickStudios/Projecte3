@@ -150,7 +150,7 @@ struct ParticleRenderer
 
 #define MAX_LIGHTS 8
 
-class NULL_API M_Renderer3D : public Module
+class MISSCLICK_API M_Renderer3D : public Module
 {
 public:
 	M_Renderer3D(bool isActive = true);

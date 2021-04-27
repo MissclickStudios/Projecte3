@@ -12,12 +12,12 @@ class ParsonNode;
 class C_UI_Button;
 class C_UI_Image;
 
-struct NULL_API Rect2D
+struct MISSCLICK_API Rect2D
 {
 	float x, y, w, h;
 };
 
-class NULL_API C_Canvas : public Component
+class MISSCLICK_API C_Canvas : public Component
 {
 public:
 	C_Canvas(GameObject* owner);

@@ -39,7 +39,7 @@ struct MaterialData
 	std::string		textureAssetsPath;
 };
 
-class NULL_API R_Material : public Resource
+class MISSCLICK_API R_Material : public Resource
 {
 public:
 	R_Material();

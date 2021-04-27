@@ -24,9 +24,9 @@
 
 //Import/export engine core define
 #ifdef NULL_BUILD_DLL
-#define NULL_API __declspec(dllexport)
+#define MISSCLICK_API __declspec(dllexport)
 #else
-#define NULL_API __declspec(dllimport)
+#define MISSCLICK_API __declspec(dllimport)
 #endif
 
 /** @brief A linear congruential random number generator.
@@ -67,7 +67,7 @@
 
 MATH_BEGIN_NAMESPACE
 
-class NULL_API LCG
+class MISSCLICK_API LCG
 {
 public:
 	/// Initializes the generator from the current system clock.

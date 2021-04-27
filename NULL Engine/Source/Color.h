@@ -8,7 +8,7 @@ namespace math
 	class float4;
 }
 
-struct NULL_API Color
+struct MISSCLICK_API Color
 {
 	float r, g, b, a;
 	
@@ -46,23 +46,23 @@ struct NULL_API Color
 	bool	operator ==(const Color& color);								// if (this.r == color.r && ... && this.a == this.a), then return true.
 };
 
-extern NULL_API Color Red;
-extern NULL_API Color Green;
-extern NULL_API Color Blue;
-extern NULL_API Color Cyan;
-extern NULL_API Color Magenta;
-extern NULL_API Color Yellow;
-extern NULL_API Color Orange;
-extern NULL_API Color Pink;
-extern NULL_API Color Purple;
-extern NULL_API Color Black;
-extern NULL_API Color White;
+extern MISSCLICK_API Color Red;
+extern MISSCLICK_API Color Green;
+extern MISSCLICK_API Color Blue;
+extern MISSCLICK_API Color Cyan;
+extern MISSCLICK_API Color Magenta;
+extern MISSCLICK_API Color Yellow;
+extern MISSCLICK_API Color Orange;
+extern MISSCLICK_API Color Pink;
+extern MISSCLICK_API Color Purple;
+extern MISSCLICK_API Color Black;
+extern MISSCLICK_API Color White;
 
-extern NULL_API Color LightRed;
-extern NULL_API Color LightGreen;
-extern NULL_API Color LightBlue;
-extern NULL_API Color LightCyan;
-extern NULL_API Color LightMagenta;
-extern NULL_API Color LightYellow;
+extern MISSCLICK_API Color LightRed;
+extern MISSCLICK_API Color LightGreen;
+extern MISSCLICK_API Color LightBlue;
+extern MISSCLICK_API Color LightCyan;
+extern MISSCLICK_API Color LightMagenta;
+extern MISSCLICK_API Color LightYellow;
 
 #endif // !__COLOR_H__

@@ -7,7 +7,7 @@
 class R_ParticleSystem;
 class ResourceBase;
 
-class NULL_API C_ParticleSystem : public Component
+class MISSCLICK_API C_ParticleSystem : public Component
 {
 public:
 	C_ParticleSystem(GameObject* owner);

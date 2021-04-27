@@ -438,7 +438,7 @@ bool Parser::CharIsNumber(char numberCheck)
 	return (numberCheck == '0' || numberCheck == '1' || numberCheck == '2' || numberCheck == '3' || numberCheck == '4' || numberCheck == '5' || numberCheck == '6' || numberCheck == '7' || numberCheck == '8' || numberCheck == '9');
 }
 
-bool NULL_API Parser::ParseEnum(const char* enumName, const char* definitionFile, std::map<std::string, std::map<int, std::string>>& inspectorEnums)
+bool MISSCLICK_API Parser::ParseEnum(const char* enumName, const char* definitionFile, std::map<std::string, std::map<int, std::string>>& inspectorEnums)
 {
 	if(inspectorEnums.find(enumName) != inspectorEnums.end())
 		return true;

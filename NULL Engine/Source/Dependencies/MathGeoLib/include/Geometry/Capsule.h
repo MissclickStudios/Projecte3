@@ -22,15 +22,15 @@
 
 //Import/export engine core define
 #ifdef NULL_BUILD_DLL
-#define NULL_API __declspec(dllexport)
+#define MISSCLICK_API __declspec(dllexport)
 #else
-#define NULL_API __declspec(dllimport)
+#define MISSCLICK_API __declspec(dllimport)
 #endif
 
 MATH_BEGIN_NAMESPACE
 
 /// A 3D cylinder with spherical ends.
-class NULL_API Capsule
+class MISSCLICK_API Capsule
 {
 public:
 	/// Specifies the two inner points of this capsule.

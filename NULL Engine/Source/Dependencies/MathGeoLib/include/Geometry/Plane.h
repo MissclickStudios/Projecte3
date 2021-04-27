@@ -22,16 +22,16 @@
 
 //Import/export engine core define
 #ifdef NULL_BUILD_DLL
-#define NULL_API __declspec(dllexport)
+#define MISSCLICK_API __declspec(dllexport)
 #else
-#define NULL_API __declspec(dllimport)
+#define MISSCLICK_API __declspec(dllimport)
 #endif
 
 MATH_BEGIN_NAMESPACE
 
 /// Specifies a plane in 3D space. This plane is an affine 2D subspace of the 3D space, meaning
 /// that its sides extend to infinity, and it does not necessarily pass through the origin.
-class NULL_API Plane
+class MISSCLICK_API Plane
 {
 public:
 	/// The direction this plane is facing at.

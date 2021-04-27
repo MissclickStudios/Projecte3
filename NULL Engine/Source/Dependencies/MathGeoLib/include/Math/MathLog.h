@@ -22,9 +22,9 @@
 
 //Import/export engine core define
 #ifdef NULL_BUILD_DLL
-#define NULL_API __declspec(dllexport)
+#define MISSCLICK_API __declspec(dllexport)
 #else
-#define NULL_API __declspec(dllimport)
+#define MISSCLICK_API __declspec(dllimport)
 #endif
 
 MATH_BEGIN_NAMESPACE
@@ -41,8 +41,8 @@ const MathLogChannel MathLogErrorNoCallstack = MathLogError|65536;
 const MathLogChannel MathLogWarningNoCallstack = MathLogWarning|65536;
 }
 
-NULL_API void PrintToConsoleVariadic(MathLogChannel channel, const char *format, ...);
-NULL_API void PrintToConsole(MathLogChannel channel, const char *str);
+MISSCLICK_API void PrintToConsoleVariadic(MathLogChannel channel, const char *format, ...);
+MISSCLICK_API void PrintToConsole(MathLogChannel channel, const char *str);
 
 #define STRINGIZE_HELPER(x) #x
 #define STRINGIZE(x) STRINGIZE_HELPER(x)

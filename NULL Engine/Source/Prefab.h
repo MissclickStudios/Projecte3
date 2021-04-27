@@ -5,7 +5,7 @@
 #include <string>
 typedef unsigned int uint;
 
-struct NULL_API Prefab
+struct MISSCLICK_API Prefab
 {
 	Prefab();
 	Prefab(uint uid, const char* name,int updateTime);
