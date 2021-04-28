@@ -31,9 +31,9 @@
 
 //Import/export engine core define
 #ifdef NULL_BUILD_DLL
-#define NULL_API __declspec(dllexport)
+#define MISSCLICK_API __declspec(dllexport)
 #else
-#define NULL_API __declspec(dllimport)
+#define MISSCLICK_API __declspec(dllimport)
 #endif
 
 MATH_BEGIN_NAMESPACE
@@ -42,7 +42,7 @@ MATH_BEGIN_NAMESPACE
 /** This class has two sets of member functions. The functions ending in a suffix '3' operate only on the
 	(x, y, z) part, ignoring the w component (or assuming a value of 0 or 1, where expectable). The functions
 	without the '3' suffix operate on all four elements of the vector. */
-class ALIGN16 NULL_API float4
+class ALIGN16 MISSCLICK_API float4
 {
 public:
 	enum

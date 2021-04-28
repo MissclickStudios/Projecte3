@@ -1,11 +1,12 @@
 #include "M_Editor.h"
-#include "Time.h"
+#include "MC_Time.h"
 #include "Color.h"
 
 #include "EngineApplication.h"
 #include "E_Toolbar.h"
 #include "Profiler.h"
 #include "M_ScriptManager.h"
+#include "FileSystemDefinitions.h"
 #include "MemoryManager.h"
 
 E_Toolbar::E_Toolbar() : EditorPanel("Toolbar")
@@ -60,11 +61,11 @@ void E_Toolbar::PlayAndStopButtons()
 		if (ImGui::Button("Play"))
 		{
 			EngineApp->gameState = GameState::PLAY;
-			Time::Game::Play();
+			MC_Time::Game::Play();
+
+			EngineApp->editor->SaveSceneThroughEditor(AUTOSAVE_FILE_NAME);
 
 			EngineApp->scriptManager->InitScripts();
-
-			EngineApp->editor->SaveSceneThroughEditor("PlayAutosave");
 
 		}
 	}
@@ -73,7 +74,7 @@ void E_Toolbar::PlayAndStopButtons()
 		if (ImGui::Button("Stop"))
 		{
 			EngineApp->gameState = GameState::STOP;
-			Time::Game::Stop();
+			MC_Time::Game::Stop();
 
 			EngineApp->scriptManager->CleanUpScripts();
 
@@ -92,7 +93,7 @@ void E_Toolbar::PauseAndStepButtons()
 			if (EngineApp->gameState == GameState::PLAY)
 			{
 				EngineApp->gameState = GameState::PAUSE;
-				Time::Game::Pause();
+				MC_Time::Game::Pause();
 			}
 			else
 			{
@@ -105,7 +106,7 @@ void E_Toolbar::PauseAndStepButtons()
 		if (ImGui::Button("Resume"))
 		{
 			EngineApp->gameState = GameState::PLAY;
-			Time::Game::Play();
+			MC_Time::Game::Play();
 		}
 	}
 
@@ -116,7 +117,7 @@ void E_Toolbar::PauseAndStepButtons()
 		if (EngineApp->gameState == GameState::PAUSE)
 		{
 			EngineApp->gameState = GameState::STEP;
-			Time::Game::Step();
+			MC_Time::Game::Step();
 		}
 		else
 		{
@@ -131,10 +132,10 @@ void E_Toolbar::TimeScaleSlider()
 
 	//ImGui::SetCursorPos(ImVec2(ImGui::GetCursorPosX(), ImGui::GetWindowHeight() * 0.5f));									// ATTENTION: THIS AFFECTS THE POSITIONING OF OTHER ITEMS.
 
-	float timeScale = Time::Game::GetTimeScale();
+	float timeScale = MC_Time::Game::GetTimeScale();
 	if (ImGui::SliderFloat("##", &timeScale, 0.250f, 4.000f, "X %.3f", ImGuiSliderFlags_None))
 	{
-		Time::Game::SetTimeScale(timeScale);
+		MC_Time::Game::SetTimeScale(timeScale);
 	}
 }
 
@@ -157,8 +158,8 @@ void E_Toolbar::GetTimeDisplayStrings(std::string& realTimeString, std::string& 
 {
 	//TODO: return string from dll memo leak
 	//can't call Time::Real::GetClock().GetTimeAsString() ???
-	Hourglass realTime = Time::Real::GetClock();
-	Hourglass gameTime = Time::Game::GetClock();
+	Hourglass realTime = MC_Time::Real::GetClock();
+	Hourglass gameTime = MC_Time::Game::GetClock();
 	realTimeString = (std::to_string(realTime.hours) + "h " + std::to_string(realTime.minutes) + "m " + std::to_string(realTime.seconds) + "s");
 	gameTimeString = (std::to_string(gameTime.hours) + "h " + std::to_string(gameTime.minutes) + "m " + std::to_string(gameTime.seconds) + "s");
 

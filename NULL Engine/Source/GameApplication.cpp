@@ -48,8 +48,8 @@ GameApplication::GameApplication()
 	AddModule(manager);
 	AddModule(audio);
 	AddModule(physics);
-	AddModule(scene);
 	AddModule(uiSystem);
+	AddModule(scene);
 
 	// Renderer last!
 	AddModule(renderer);

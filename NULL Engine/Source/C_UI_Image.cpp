@@ -3,9 +3,7 @@
 #include "GameObject.h"
 
 #include "M_Camera3D.h"
-#include "M_Editor.h"
 #include "M_Scene.h"
-
 #include "M_UISystem.h"
 
 #include "M_ResourceManager.h"
@@ -17,12 +15,12 @@
 #include "C_2DAnimator.h"
 
 #include "R_Shader.h"
-
-#include "E_Viewport.h"
+#include "R_Texture.h"
 
 #include "C_UI_Image.h"
 
-#include "OpenGL.h"
+#include "Dependencies/glew/include/glew.h"
+//#include "OpenGL.h"
 
 #include "MemoryManager.h"
 
@@ -30,7 +28,6 @@
 
 C_UI_Image::C_UI_Image(GameObject* owner, Rect2D rect) : Component(owner, ComponentType::UI_IMAGE)
 {
-	rShader = App->resourceManager->GetShader("UIShader");
 	LoadBuffers();
 }
 
@@ -49,12 +46,6 @@ bool C_UI_Image::Update()
 	C_Canvas* canvas = GetOwner()->parent->GetComponent<C_Canvas>();
 	if (canvas == nullptr)
 		return ret;
-
-	//if (GetRect().w > canvas->GetRect().w)
-	//	SetW(canvas->GetRect().w);
-
-	//if(GetRect().h > canvas->GetRect().h)
-	//	SetH(canvas->GetRect().h);
 
 	return ret;
 }
@@ -80,44 +71,47 @@ void C_UI_Image::LoadBuffers()
 
 void C_UI_Image::Draw2D()
 {
-	if (GetOwner()->GetComponent<C_Material>() == nullptr && GetOwner()->GetComponent<C_2DAnimator>() == nullptr) return;
+	uint32 id;
+
+	if (strcmp(GetOwner()->GetName(), "Hovered Decoration L") == 0 || strcmp(GetOwner()->GetName(), "Hovered Decoration R") == 0)
+		id = App->uiSystem->buttonHoverDecor->GetTextureID();
+
+	else if (GetOwner()->GetComponent<C_Material>() == nullptr && GetOwner()->GetComponent<C_2DAnimator>() == nullptr) return;
+
+	else if (GetOwner()->GetComponent<C_2DAnimator>() != nullptr && GetOwner()->GetComponent<C_2DAnimator>()->IsAnimationPlaying())
+		id = GetOwner()->GetComponent<C_2DAnimator>()->GetIdFromAnimation();
+
+	else
+		id = GetOwner()->GetComponent<C_Material>()->GetTextureID();
 
 	C_Canvas* canvas = GetOwner()->parent->GetComponent<C_Canvas>();
 	if (canvas == nullptr) return;
 
-	glUseProgram(rShader->shaderProgramID);
+	glEnable(GL_BLEND);
+
+	if(!GetOwner()->GetComponent<C_Material>()->GetShader())
+		GetOwner()->GetComponent<C_Material>()->SetShader(App->resourceManager->GetShader("UIShader"));
+
+	glUseProgram(GetOwner()->GetComponent<C_Material>()->GetShader()->shaderProgramID);
 
 	float x = canvas->GetPosition().x + GetRect().x;
 	float y = canvas->GetPosition().y + GetRect().y;
 
 	float4x4 projectionMatrix = float4x4::FromTRS(float3(x, y, 0), Quat::FromEulerXYZ(0, 0, 0), float3(GetRect().w, GetRect().h, 1)).Transposed();
 
-	uint32 textureID;
-
-
-	// if (GetOwner()->GetComponent<C_2DAnimator>() != nullptr && GetOwner()->GetComponent<C_2DAnimator>()->IsAnimationPlaying())
-	// 	id = GetOwner()->GetComponent<C_2DAnimator>()->GetIdFromAnimation();
-
-	if (GetOwner()->GetComponent<C_2DAnimator>() != nullptr)
-		textureID = GetOwner()->GetComponent<C_2DAnimator>()->GetIdFromAnimation();
-
-	else
-		textureID = GetOwner()->GetComponent<C_Material>()->GetTextureID();
-
-	glBindTexture(GL_TEXTURE_2D, textureID);
-
-	rShader->SetUniformMatrix4("projection", projectionMatrix.ptr());
+	glBindTexture(GL_TEXTURE_2D, id);
+	
+	GetOwner()->GetComponent<C_Material>()->GetShader()->SetUniform1i("useColor", (GLint)false);
+	GetOwner()->GetComponent<C_Material>()->GetShader()->SetUniformMatrix4("projection", projectionMatrix.ptr());
 
 	glBindBuffer(GL_ARRAY_BUFFER, VAO);
-
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, (GLvoid*)0);
 
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 
 
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glDisable(GL_BLEND);
 
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	glBindTexture(GL_TEXTURE_2D, 0);
 
@@ -126,21 +120,25 @@ void C_UI_Image::Draw2D()
 
 void C_UI_Image::Draw3D()
 {
-	if (GetOwner()->GetComponent<C_Material>() == nullptr && GetOwner()->GetComponent<C_2DAnimator>() == nullptr) return;
-	
+	uint32 id;
+
+	if (strcmp(GetOwner()->GetName(), "Hovered Decoration L") == 0 || strcmp(GetOwner()->GetName(), "Hovered Decoration R") == 0)
+		id = App->uiSystem->buttonHoverDecor->GetTextureID();
+	else
+ if (GetOwner()->GetComponent<C_Material>() == nullptr && GetOwner()->GetComponent<C_2DAnimator>() == nullptr) return;
+
+	else if (GetOwner()->GetComponent<C_2DAnimator>() != nullptr && GetOwner()->GetComponent<C_2DAnimator>()->IsAnimationPlaying())
+		id = GetOwner()->GetComponent<C_2DAnimator>()->GetIdFromAnimation();
+
+	else
+		id = GetOwner()->GetComponent<C_Material>()->GetTextureID();
+
 	glPushMatrix();
 	glMultMatrixf((GLfloat*)&GetOwner()->GetComponent<C_Transform>()->GetWorldTransform().Transposed());
 
 	glEnable(GL_BLEND);
 
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-
-	uint32 id;
-
-	if (GetOwner()->GetComponent<C_2DAnimator>() != nullptr && GetOwner()->GetComponent<C_2DAnimator>()->IsAnimationPlaying())
-		id = GetOwner()->GetComponent<C_2DAnimator>()->GetIdFromAnimation();
-	else
-		id = GetOwner()->GetComponent<C_Material>()->GetTextureID();
 
 	glBindTexture(GL_TEXTURE_2D, id); // Not sure
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);

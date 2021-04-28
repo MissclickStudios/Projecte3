@@ -22,15 +22,15 @@
 
 //Import/export engine core define
 #ifdef NULL_BUILD_DLL
-#define NULL_API __declspec(dllexport)
+#define MISSCLICK_API __declspec(dllexport)
 #else
-#define NULL_API __declspec(dllimport)
+#define MISSCLICK_API __declspec(dllimport)
 #endif
 
 MATH_BEGIN_NAMESPACE
 
 /// A line in 3D space is defined by an origin point and a direction, and extends to infinity in two directions.
-class NULL_API Line
+class MISSCLICK_API Line
 {
 public:
 	/// Specifies the origin of this line.

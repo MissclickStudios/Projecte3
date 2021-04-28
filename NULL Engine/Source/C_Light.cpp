@@ -66,16 +66,18 @@ bool C_Light::SaveState(ParsonNode& root) const
 
 	if (directional)
 	{
-		root.SetFloat4("Diffuse", (math::float4) & directional->diffuse);
-		root.SetFloat4("Ambient", (math::float4) & directional->ambient);
-		root.SetFloat4("Specular", (math::float4) & directional->specular);
+		root.SetColor("Diffuse", directional->diffuse);
+		root.SetColor("Ambient", directional->ambient);
+		root.SetColor("Specular", directional->specular);
+
 		root.SetFloat3("Direction", directional->GetDirection());
 	}
 	if (pointLight)
 	{
-		root.SetFloat4("Diffuse", (math::float4) & pointLight->diffuse);
-		root.SetFloat4("Ambient", (math::float4) & pointLight->ambient);
-		root.SetFloat4("Specular", (math::float4) & pointLight->specular);
+		root.SetColor("Diffuse", pointLight->diffuse);
+		root.SetColor("Ambient", pointLight->ambient);
+		root.SetColor("Specular", pointLight->specular);
+
 		root.SetNumber("Constant", pointLight->GetConstant());
 		root.SetNumber("Linear", pointLight->GetLinear());
 		root.SetNumber("Quadratic", pointLight->GetQuadratic());
@@ -95,30 +97,34 @@ bool C_Light::LoadState(ParsonNode& root)
 	{
 	case LightType::DIRECTIONAL:	directional = new DirectionalLight();	break;
 	case LightType::POINTLIGHT:		pointLight = new PointLight();			break;
-	case LightType::SPOTLIGHT: break;
-	case LightType::NONE: break;
+	case LightType::SPOTLIGHT:												break;
+	case LightType::NONE:													break;
 	}
 
 	if (directional)
 	{
 		directional->Active(true);
-		directional->diffuse.Set((Color&)root.GetFloat4("Diffuse"));
-		directional->ambient.Set((Color&)root.GetFloat4("Ambient"));
-		directional->specular.Set((Color&)root.GetFloat4("Specular"));
+		
+		directional->diffuse = root.GetColor("Diffuse");
+		directional->ambient = root.GetColor("Ambient");
+		directional->specular = root.GetColor("Specular");
 		directional->SetDirection(root.GetFloat3("Direction"));
+
 		this->GetOwner()->transform->SetLocalEulerRotation(directional->GetDirection());
 		directional->Init();
 	}
 	if (pointLight)
 	{
 		pointLight->Active(true);
-		pointLight->diffuse.Set((Color&)root.GetFloat4("Diffuse"));
-		pointLight->ambient.Set((Color&)root.GetFloat4("Ambient"));
-		pointLight->specular.Set((Color&)root.GetFloat4("Specular"));
+		
+		pointLight->diffuse = root.GetColor("Diffuse");
+		pointLight->ambient = root.GetColor("Ambient");
+		pointLight->specular = root.GetColor("Specular");
 		pointLight->SetConstant(root.GetNumber("Constant"));
 		pointLight->SetLinear(root.GetNumber("Linear"));
 		pointLight->SetQuadratic(root.GetNumber("Quadratic"));
 		pointLight->SetPosition(root.GetFloat3("Position"));
+		
 		pointLight->Init();
 	}
 

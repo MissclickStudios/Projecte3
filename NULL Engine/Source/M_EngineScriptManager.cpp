@@ -11,6 +11,7 @@
 #include "M_ResourceManager.h"
 #include "R_Script.h"
 #include "Prefab.h"
+#include "I_Scripts.h"
 
 #include "MemoryManager.h"
 
@@ -32,6 +33,7 @@ bool M_EngineScriptManager::Start()
 		while (MoveFileA(SCRIPTS_DLL_OUTPUT, SCRIPTS_DLL_WORKING) == FALSE) {}
 	}
 	dllHandle = LoadLibrary(SCRIPTS_DLL_WORKING);
+	ResolveScriptHelperFunctions();
 
 	App->resourceManager->GetAllScripts(aviableScripts);
 
@@ -169,6 +171,16 @@ bool M_EngineScriptManager::CleanUp()
 	return true;
 }
 
+bool M_EngineScriptManager::ParseEnum(const char* enumName, const char* definitionFile)
+{
+	return Parser::ParseEnum(enumName, definitionFile, inspectorEnums);
+}
+
+const std::map<std::string, std::map< int, std::string>>& M_EngineScriptManager::GetInspectorEnums() const
+{
+	return inspectorEnums;
+}
+
 void M_EngineScriptManager::HotReload()
 {
 	ParsonNode root = ParsonNode();
@@ -200,6 +212,8 @@ void M_EngineScriptManager::HotReload()
 			if (dllHandle != nullptr) 
 			{
 				LOG("Successfully loaded new scripts dll");
+				ResolveScriptHelperFunctions();
+				inspectorEnums.clear();
 				if (root.GetBool("HaveScripts")) 
 				{
 					DeSerializeAllScripts(root.GetArray("CurrentScripts"));
@@ -272,6 +286,17 @@ void M_EngineScriptManager::SerializeAllScripts(ParsonArray& scriptsArray)
 									else
 										variable.SetInteger("gameobject", 0);
 									break;
+								case InspectorScriptData::VECTORSTRING:
+								{
+									ParsonArray parsonStringArray = variable.SetArray("vectorstring");
+									for (std::vector<std::string>::const_iterator cit = (*(std::vector<std::string>*)scriptVariables[i].ptr).cbegin(); cit != (*(std::vector<std::string>*)scriptVariables[i].ptr).cend(); ++cit)
+									{
+										parsonStringArray.SetString((*cit).c_str());
+									}
+									break;
+								}
+								case InspectorScriptData::DataType::ENUM:
+									variable.SetInteger("enum", *(int*)scriptVariables[i].ptr); break;
 								}
 							}
 						}
@@ -338,10 +363,30 @@ void M_EngineScriptManager::DeSerializeAllScripts(const ParsonArray& scriptsArra
 									*(std::string*)(*item).ptr = variable.GetString("string"); break;
 								case InspectorScriptData::DataType::PREFAB:
 									*(Prefab*)(*item).ptr = EngineApp->resourceManager->prefabs[(unsigned int)variable.GetNumber("prefab")]; break;
-								case InspectorScriptData::DataType::GAMEOBJECT:
+								case InspectorScriptData::DataType::GAMEOBJECT: 
+								{
 									uint32 id = variable.GetInteger("gameobject");
 									if (id != 0)
 										*(*item).obj = EngineApp->scene->GetGameObjectByUID(id);
+									break; 
+								}
+								case InspectorScriptData::VECTORSTRING:
+								{
+									//std::vector<std::string>& inspectorStringVector = *(std::vector<std::string>*)(*item).ptr;
+									ParsonArray parsonStringArray = variable.GetArray("vectorstring");
+									//inspectorStringVector.reserve(parsonStringArray.size);
+									EngineApp->scriptManager->StringVecReserve((*item).ptr, parsonStringArray.size);
+									for (int j = 0; j < parsonStringArray.size; ++j)
+									{
+										//inspectorStringVector.emplace_back(parsonStringArray.GetString(i));
+										EngineApp->scriptManager->StringVecEmplaceBackString((*item).ptr, parsonStringArray.GetString(j));
+									}
+									break;
+								}
+								case InspectorScriptData::DataType::ENUM:
+									int readedInt = variable.GetInteger("enum");
+									if(inspectorEnums[(*item).enumName].find(readedInt) != inspectorEnums[(*item).enumName].end())
+										*(int*)(*item).ptr = readedInt; 
 									break;
 								}
 							}

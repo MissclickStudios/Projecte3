@@ -52,12 +52,12 @@ enum class AxisState
 
 struct GameController
 {
-	_SDL_GameController* id;
+	_SDL_GameController*	id;
 	int						index;
 
-	ButtonState* buttons;
-	ButtonState* triggers;
-	AxisState* axis;
+	ButtonState*			buttons;
+	ButtonState*			triggers;
+	AxisState*				axis;
 
 	float					max_axis_input_threshold;
 	float					min_axis_input_threshold;
@@ -65,7 +65,7 @@ struct GameController
 
 #define MAX_MOUSE_BUTTONS 5
 
-class NULL_API M_Input : public Module
+class MISSCLICK_API M_Input : public Module
 {
 public:
 
@@ -109,7 +109,7 @@ private:
 
 	GameController  gameController;
 
-	KeyState* keyboard;
+	KeyState*		keyboard;
 	KeyState		mouseButtons[MAX_MOUSE_BUTTONS];
 	uint			maxNumScancodes;
 
@@ -124,7 +124,7 @@ private:
 	int				prevMousePosX;
 	int				prevMousePosY;
 
-	std::vector<Module*> ModulesProcessInput;
+	std::vector<Module*> modulesProcessInput;
 };
 
 #endif // !__M_INPUT_H__

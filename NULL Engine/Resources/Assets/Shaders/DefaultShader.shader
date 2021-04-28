@@ -51,9 +51,9 @@ void main()
     {
        totalPosition = vec4(position, 1.0f);
     } 
-    
+     
     gl_Position = projectionMatrix * viewMatrix * modelMatrix * totalPosition;
-   
+
     TexCoord = texCoord;
        
     objectColor = inColor;
@@ -92,20 +92,24 @@ struct PointLight
 };
 #define MAX_LIGHTPOINTS 5
 
+float specularStrength = 0.5;
+
 uniform int numPointLights;
 uniform DirLight dirLight;
 uniform PointLight pointLight[MAX_LIGHTPOINTS];
 uniform vec3 viewPos; 
-float specularStrength = 0.5;
+uniform vec4 alternateColor;
+
+uniform bool useDirLight;
+uniform bool takeDamage;
+uniform bool hasTexture;
+uniform sampler2D ourTexture;
 
 in vec4 objectColor;
 in vec2 TexCoord;
 in vec3 modelNormal;
 in vec3 fragPos;
 out vec4 color;
-
-uniform bool hasTexture;
-uniform sampler2D ourTexture;
 
 vec4 CalculateDirectional(DirLight light, vec3 normal, vec3 viewDir, float specularStrength, vec4 objectColor);
 vec4 CalculatePointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir, float specularStrength, vec4 objectColor);
@@ -115,8 +119,11 @@ void main()
 
     vec3 norm = normalize(modelNormal);
     vec3 viewDir = normalize(viewPos - fragPos);
-
-   vec4 outputColor =  CalculateDirectional(dirLight, norm, viewDir, specularStrength, objectColor); 
+    vec4 outputColor = objectColor;
+    if(useDirLight)
+    {
+       outputColor =  CalculateDirectional(dirLight, norm, viewDir, specularStrength, objectColor);
+    }
    
    if(numPointLights > 0) 
    {
@@ -125,9 +132,18 @@ void main()
             outputColor += CalculatePointLight(pointLight[i], norm, fragPos, viewDir, specularStrength, objectColor);
        }
    }
-  vec4 texColor = (hasTexture) ? texture(ourTexture, TexCoord) : vec4(1,1,1,1);
+    
+     vec4 texColor = (hasTexture) ? texture(ourTexture, TexCoord) : vec4(1,1,1,1);
 
-   color = outputColor * texColor;
+    if(takeDamage)
+    {
+        color = alternateColor * texColor;
+    }
+    else 
+    {
+        color = outputColor * texColor;
+    }
+
 
 }
 
@@ -155,11 +171,11 @@ vec4 CalculateDirectional(DirLight light, vec3 normal, vec3 viewDir, float specu
 
     float intensity = 0.8 * diff + 0.2 * spec;
 
- 	if (intensity > 0.8) {
- 		intensity = 1.1;
+ 	if (intensity > 0.6) {
+ 		intensity = 0.7;
  	}
  	else if (intensity > 0.4) {
- 		intensity = 0.7;
+ 		intensity = 0.5;
  	}
  	else {
  		intensity = 0.5;
@@ -217,6 +233,7 @@ vec4 CalculatePointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewD
 }
 
 #endif
+
 
 
 

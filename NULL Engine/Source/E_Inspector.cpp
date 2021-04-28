@@ -6,7 +6,7 @@
 #include "Color.h"
 #include "AnimatorClip.h"
 
-#include "Time.h"
+#include "MC_Time.h"
 
 #include "EngineApplication.h"
 #include "M_Renderer3D.h"
@@ -63,7 +63,7 @@
 #include "MathGeoLib/include/Math/float3.h"
 
 #include <fstream>
-
+#include "CoreDllHelpers.h"
 #include "MemoryManager.h"
 
 #define MAX_VALUE 100000
@@ -259,7 +259,7 @@ void E_Inspector::DrawComponents(GameObject* selectedGameObject)
 		case ComponentType::BOX_COLLIDER:		{ DrawBoxColliderComponent((C_BoxCollider*)component); }			break;
 		case ComponentType::SPHERE_COLLIDER:	{ DrawSphereColliderComponent((C_SphereCollider*)component); }		break;
 		case ComponentType::CAPSULE_COLLIDER:	{ DrawCapsuleColliderComponent((C_CapsuleCollider*)component); }	break;
-		case ComponentType::PARTICLES:			{ DrawParticleSystemComponent((C_ParticleSystem*)component); }			break;
+		case ComponentType::PARTICLES:			{ DrawParticleSystemComponent((C_ParticleSystem*)component); }		break;
 		case ComponentType::CANVAS:				{ DrawCanvasComponent((C_Canvas*)component); }						break;
 		case ComponentType::UI_IMAGE:			{ DrawUIImageComponent((C_UI_Image*)component); }					break;
 		case ComponentType::UI_TEXT:			{ DrawUITextComponent((C_UI_Text*)component); }						break;
@@ -398,6 +398,26 @@ void E_Inspector::DrawMeshComponent(C_Mesh* cMesh)
 			if (ImGui::Checkbox("Show Bounding Box", &showBoundingBox))		{ cMesh->SetShowBoundingBox(showBoundingBox); }
 			if (ImGui::Checkbox("Draw Vertex Normals", &drawVertNormals))		{ cMesh->SetDrawVertexNormals(drawVertNormals); }
 			if (ImGui::Checkbox("Draw Face Normals", &drawFaceNormals))		{ cMesh->SetDrawFaceNormals(drawFaceNormals); }
+
+			ImGui::Separator();
+
+			// --- OUTLINE MODE ---
+			ImGui::TextColored(Cyan.C_Array(), "Outline Mesh:");
+
+			bool outlineMesh = cMesh->GetOutlineMesh();
+
+			if (ImGui::Checkbox("Outline Mesh", &outlineMesh)) { cMesh->SetOutlineMesh(outlineMesh); }
+
+			float outlineThickness = cMesh->GetOutlineThickness();
+
+			if(ImGui::SliderFloat("Outline Thickness", &outlineThickness, 0 , 4)) { cMesh->SetOutlineThickness(outlineThickness); }
+
+			Color color = cMesh->GetOutlineColor();
+
+			if (ImGui::ColorEdit4("Outline Color", (float*)&color, ImGuiColorEditFlags_None))
+			{
+				cMesh->SetOutlineColor(color);
+			}
 		}
 		else
 		{
@@ -742,7 +762,9 @@ void E_Inspector::DrawAnimatorComponent(C_Animator* cAnimator)								// TODO: S
 	{
 		if (cAnimator != nullptr)
 		{
-			DrawBasicSettings((Component*)cAnimator, cAnimator->GetAnimatorStateAsString().c_str());
+			std::string animator = cAnimator->GetAnimatorStateAsString();
+			DrawBasicSettings((Component*)cAnimator, animator.c_str());
+			CoreCrossDllHelpers::CoreReleaseString(animator);
 
 			// --- DISPLAY
 			if (ImGui::BeginTabBar("AnimatorTabBar", ImGuiTabBarFlags_None))
@@ -841,9 +863,11 @@ void E_Inspector::DrawAudioSourceComponent(C_AudioSource* cAudioSource)
 			if ((ImGui::Button(("Play " + cAudioSource->GetEventName()).c_str())))
 			{
 				cAudioSource->PlayFx(currentEvent);
+				cAudioSource->isPlaying = false;
 			}
 			if ((ImGui::Button(("Stop " + cAudioSource->GetEventName()).c_str())))
 			{
+				cAudioSource->isPlaying = true;
 				cAudioSource->StopFx(currentEvent);
 			}
 		}
@@ -1077,7 +1101,6 @@ void E_Inspector::DrawCanvasComponent(C_Canvas* cCanvas)
 
 			// --- RECT ---
 			float2 size = { cCanvas->GetRect().w, cCanvas->GetRect().h };
-			float2 pivot = { cCanvas->pivot.x, cCanvas->pivot.y };
 
 			if (ImGui::DragFloat2("Rect", (float*)&size, 0.005f, 0.0f, 0.0f, "%.3f", NULL))
 			{
@@ -1088,48 +1111,7 @@ void E_Inspector::DrawCanvasComponent(C_Canvas* cCanvas)
 					
 				
 				cCanvas->SetSize(size);
-
-				if (pivot.x < cCanvas->GetPosition().x - cCanvas->GetSize().x / 2)
-					pivot.x = cCanvas->GetPosition().x - cCanvas->GetSize().x / 2;
-
-				if (pivot.x > cCanvas->GetPosition().x + cCanvas->GetSize().x / 2)
-					pivot.x = cCanvas->GetPosition().x + cCanvas->GetSize().x / 2;
-
-
-				if (pivot.y < cCanvas->GetPosition().y - cCanvas->GetSize().y / 2)
-					pivot.y = cCanvas->GetPosition().y - cCanvas->GetSize().y / 2;
-
-				if (pivot.y > cCanvas->GetPosition().y + cCanvas->GetSize().y / 2)
-					pivot.y = cCanvas->GetPosition().y + cCanvas->GetSize().y / 2;
-
-				cCanvas->pivot.x = pivot.x;
-				cCanvas->pivot.y = pivot.y;
 			}
-
-			// --- PIVOT ---
-			if (ImGui::DragFloat2("Pivot", (float*)&pivot, 0.005f, 0.0f, 0.0f, "%.3f", NULL))
-			{
-
-				if (pivot.x < cCanvas->GetPosition().x - cCanvas->GetSize().x / 2)
-					pivot.x = cCanvas->GetPosition().x - cCanvas->GetSize().x / 2;
-
-				if (pivot.x > cCanvas->GetPosition().x + cCanvas->GetSize().x / 2)
-					pivot.x = cCanvas->GetPosition().x + cCanvas->GetSize().x / 2;
-
-
-				if (pivot.y < cCanvas->GetPosition().y - cCanvas->GetSize().y / 2)
-					pivot.y = cCanvas->GetPosition().y - cCanvas->GetSize().y / 2;
-
-				if (pivot.y > cCanvas->GetPosition().y + cCanvas->GetSize().y / 2)
-					pivot.y = cCanvas->GetPosition().y + cCanvas->GetSize().y / 2;
-
-				cCanvas->pivot.x = pivot.x;
-				cCanvas->pivot.y = pivot.y;
-			}
-
-			if (ImGui::Button("Reset Pivot"))
-				cCanvas->pivot = cCanvas->GetPosition();
-
 		}
 
 		if (!show)
@@ -1290,32 +1272,6 @@ void E_Inspector::DrawUIImageComponent(C_UI_Image* image)
 
 		if (ImGui::DragFloat2("Image Pos", (float*)&pos, 0.005f, 0.0f, 0.0f, "%.3f", NULL))
 		{
-			/*if (pos.x - size.x / 2 < canvas->GetPosition().x - canvas->GetSize().x / 2)
-				pos.x = canvas->GetPosition().x - canvas->GetSize().x / 2 + size.x / 2;
-
-			if (pos.x + size.x / 2 > canvas->GetPosition().x + canvas->GetSize().x / 2)
-				pos.x = canvas->GetPosition().x + canvas->GetSize().x / 2 - size.x / 2;
-
-
-			if (pos.y - size.y / 2 < canvas->GetPosition().y - canvas->GetSize().y / 2)
-				pos.y = canvas->GetPosition().y - canvas->GetSize().y / 2 + size.y / 2;
-
-			if (pos.y + size.y / 2 > canvas->GetPosition().y + canvas->GetSize().y / 2)
-				pos.y = canvas->GetPosition().y + canvas->GetSize().y / 2 - size.y / 2;*/
-
-			if (pos.x  > canvas->GetPosition().x + canvas->GetSize().x - offset)
-				pos.x =  canvas->GetPosition().x + canvas->GetSize().x - offset;
-
-			else if (pos.x - size.x < canvas->GetPosition().x - canvas->GetSize().x + offset)
-				pos.x = canvas->GetPosition().x - canvas->GetSize().x + size.x + offset;
-
-			else if (pos.y - size.y > canvas->GetPosition().y + canvas->GetSize().y - offset)
-				pos.y = canvas->GetPosition().y + canvas->GetSize().y + size.y - offset;
-
-			else if (pos.y  < canvas->GetPosition().y - canvas->GetSize().y + offset)
-				pos.y = canvas->GetPosition().y - canvas->GetSize().y  + offset;
-
-
 			image->SetX(pos.x);
 			image->SetY(pos.y);
 		}
@@ -1327,7 +1283,6 @@ void E_Inspector::DrawUIImageComponent(C_UI_Image* image)
 
 void E_Inspector::DrawUITextComponent(C_UI_Text* text)
 {
-
 	static bool show = true;
 	if (ImGui::CollapsingHeader("Text", &show, ImGuiTreeNodeFlags_DefaultOpen))
 	{
@@ -1336,66 +1291,124 @@ void E_Inspector::DrawUITextComponent(C_UI_Text* text)
 
 		ImGui::Separator();
 
-
-		/*static char buffer[64];
+		static char buffer[64];
 		strcpy_s(buffer, text->GetText());
 		if (ImGui::InputText("TextInput", buffer, IM_ARRAYSIZE(buffer), ImGuiInputTextFlags_EnterReturnsTrue))
 		{
 			text->SetText(buffer);
 		}
 
-		ImGui::SameLine(); HelpMarker("Press ENTER to Rename");*/
-
+		ImGui::SameLine(); HelpMarker("Press ENTER to Rename");
 
 		ImGui::Separator();
 
 		// --- RECT ---
 		float2 pos = { text->GetRect().x, text->GetRect().y };
-		float2 size = { text->GetRect().w * 1000, text->GetRect().h * 1000};
+		float2 size = { text->GetRect().w, text->GetRect().h};
 		Color newColor = text->GetColor();
 		float offset = 0.1;
 
 		C_Canvas* canvas = text->GetOwner()->parent->GetComponent<C_Canvas>();
 
-		if (ImGui::DragFloat2("Text Size", (float*)&size, 0.05f, 0.0f, 0.0f, "%.3f", NULL))
+		if (ImGui::DragFloat2("Text Size", (float*)&size, 0.005f, 0.0f, 0.0f, "%.3f", NULL))
 		{
 			if (size.x < 0)
 				size.x = 0;
 			if (size.y < 0)
 				size.y = 0;
 
-			text->SetW(size.x /1000);
-			text->SetH(size.y /1000);
+			text->SetW(size.x);
+			text->SetH(size.y);
 		}
 
-		if (ImGui::DragFloat2("Text Pos", (float*)&pos, 0.05f, 0.0f, 0.0f, "%.3f", NULL))
+		if (ImGui::DragFloat2("Text Pos", (float*)&pos, 0.005f, 0.0f, 0.0f, "%.3f", NULL))
 		{
-
-	/*		if (pos.x > canvas->GetPosition().x + canvas->GetSize().x - offset )
-				pos.x = canvas->GetPosition().x + canvas->GetSize().x - offset;
-
-			else if (pos.x - size.x < canvas->GetPosition().x - canvas->GetSize().x + offset)
-				pos.x = canvas->GetPosition().x - canvas->GetSize().x + size.x + offset;
-
-			else if (pos.y - size.y > canvas->GetPosition().y + canvas->GetSize().y - offset)
-				pos.y = canvas->GetPosition().y + canvas->GetSize().y + size.y - offset;
-
-			else if (pos.y < canvas->GetPosition().y - canvas->GetSize().y + offset)
-				pos.y = canvas->GetPosition().y - canvas->GetSize().y + offset;*/
-
-
 			text->SetX(pos.x);
 			text->SetY(pos.y);
 		}
 
-		if (ImGui::DragFloat4("Color", (float*)&newColor, 0.05f, 0.0f, 0.0f, "%.3f", NULL))
+		if (ImGui::DragFloat4("Color", (float*)&newColor, 0.01f, 0.0f, 1.0f, "%.3f", NULL))
 		{
 			text->SetColor(newColor);
+		}
+
+		float fontSize = text->GetFontSize() * 1000;
+		if (ImGui::DragFloat("Font Size", (float*)&fontSize, 0.05f, 0.0f, 0.0f, "%.3f", NULL))
+		{
+			text->SetFontSize(fontSize / 1000);
+		}
+
+		int hSB = text->GetHSpaceBetween();
+		if (ImGui::DragInt("Horizontal Space Between", (int*)&hSB, 1, 0.0f, 0.0f, "%.3f", NULL))
+		{
+			text->SetHSpaceBetween(hSB);
+		}
+
+		float vSB = text->GetVSpaceBetween();
+		if (ImGui::DragFloat("Vertical Space Between", (float*)&vSB, 0.05f, 0.0f, 0.0f, "%.3f", NULL))
+		{
+			text->SetVSpaceBetween(vSB);
+		}
+
+		if (ImGui::Button("Font"))
+		{
+			text->GenerateTextureID("Assets/Fonts/main_menu.ttf");
 		}
 	}
 
 	ImGui::Separator();
 
+}
+void E_Inspector::ScriptSelectCombo(C_Script*& cScript, const char* previewValue, bool swapForCurrent) 
+{
+	const std::map<std::string, std::string> scripts = ((M_EngineScriptManager*)EngineApp->scriptManager)->GetAviableScripts();
+
+	std::string label = "##"; label += previewValue + cScript->GetDataName();
+	if (ImGui::BeginCombo(label.c_str(), previewValue, ImGuiComboFlags_PopupAlignLeft))
+	{
+		//TODO: Forced and slow (improve)
+		std::vector<C_Script*>goCurrentScripts;
+		GameObject* owner = cScript->GetOwner();
+		owner->GetComponents<C_Script>(goCurrentScripts);
+		bool skip = false;
+		for (std::map<std::string, std::string>::const_iterator it = scripts.cbegin(); it != scripts.cend(); ++it)
+		{
+			for (std::vector< C_Script*>::const_iterator cit = goCurrentScripts.cbegin(); cit != goCurrentScripts.cend(); ++cit)
+			{
+				if ((*it).first == (*cit)->GetDataName())
+				{
+					skip = true;
+					break;
+				}
+
+			}
+			if (skip) 
+			{
+				skip = false;
+				continue;
+			}
+
+			if (ImGui::Selectable((*it).first.c_str(), false))
+			{
+				if (swapForCurrent) 
+				{
+					owner->DeleteComponent(cScript);
+					cScript = (C_Script*)owner->CreateComponent(ComponentType::SCRIPT);
+				}
+
+				cScript->resource = (R_Script*)App->resourceManager->GetResourceFromLibrary((*it).second.c_str());
+				for (int i = 0; i < cScript->resource->dataStructures.size(); ++i) {
+					if ((*it).first == cScript->resource->dataStructures[i].first)
+					{
+						cScript->LoadData((*it).first.c_str(), cScript->resource->dataStructures[i].second);
+						break;
+					}
+				}
+			}
+
+		}
+		ImGui::EndCombo();
+	}
 }
 
 void E_Inspector::DrawScriptComponent(C_Script* cScript)
@@ -1408,32 +1421,7 @@ void E_Inspector::DrawScriptComponent(C_Script* cScript)
 	{
 		if (ImGui::CollapsingHeader("Script", &show, ImGuiTreeNodeFlags_DefaultOpen))
 		{
-			const std::map<std::string, std::string> scripts = ((M_EngineScriptManager*)EngineApp->scriptManager)->GetAviableScripts();
-			
-			std::string select;
-			if(scripts.size() != 0)
-				select = (*scripts.begin()).first;
-
-			if (ImGui::BeginCombo("##Select Script", "SelectScript", ImGuiComboFlags_PopupAlignLeft))
-			{
-				for (std::map<std::string, std::string>::const_iterator it = scripts.cbegin(); it != scripts.cend(); ++it)
-				{
-					bool selectedScript = (select == (*it).first.c_str());
-					if (ImGui::Selectable((*it).first.c_str(), selectedScript)) 
-					{
-						cScript->resource = (R_Script*)App->resourceManager->GetResourceFromLibrary((*it).second.c_str());
-						for (int i = 0; i < cScript->resource->dataStructures.size(); ++i) {
-							if ((*it).first == cScript->resource->dataStructures[i].first)
-							{
-								cScript->LoadData((*it).first.c_str(), cScript->resource->dataStructures[i].second);
-								break;
-							}
-						}
-					}
-
-				}
-				ImGui::EndCombo();
-			}
+			ScriptSelectCombo(cScript, "Select Script",false);
 		}
 		if (!show)
 			cScript->GetOwner()->DeleteComponent(cScript);
@@ -1445,12 +1433,14 @@ void E_Inspector::DrawScriptComponent(C_Script* cScript)
 	if (ImGui::CollapsingHeader((cScript->GetDataName() + " (Script)").c_str(), &show, ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		//TODO: Show inspector variables
-		ImGui::Text("Name: %s", cScript->GetDataName().c_str());
+		ImGui::Text("Current Script: %s", cScript->GetDataName().c_str()); ImGui::SameLine(); 
+		ScriptSelectCombo(cScript, "Change Script", true);
 		ImGui::Spacing();
 		ImGui::Separator();
 		ImGui::Spacing();
 		std::vector<InspectorScriptData> inspectorVariables = cScript->GetInspectorVariables();
-		for (std::vector<InspectorScriptData>::iterator variable = inspectorVariables.begin(); variable != inspectorVariables.end(); ++variable)
+		unsigned int numVariables = inspectorVariables.size();
+		for (std::vector<InspectorScriptData>::iterator variable = inspectorVariables.begin(); variable != inspectorVariables.end(); ++variable,--numVariables)
 		{
 			switch ((*variable).variableType) 
 			{
@@ -1492,10 +1482,19 @@ void E_Inspector::DrawScriptComponent(C_Script* cScript)
 				break;
 			case InspectorScriptData::DataType::STRING: 
 			{
-				char buffer[128];
-				strcpy_s(buffer, ((std::string*)(*variable).ptr)->c_str());
-				if (ImGui::InputText((*variable).variableName.data(), buffer, IM_ARRAYSIZE(buffer)))
-					*(std::string*)(*variable).ptr = buffer;
+				switch ((*variable).showAs)
+				{
+				case InspectorScriptData::ShowMode::NONE:
+				{
+					char buffer[128];
+					strcpy_s(buffer, ((std::string*)(*variable).ptr)->c_str());
+					if (ImGui::InputText((*variable).variableName.data(), buffer, IM_ARRAYSIZE(buffer)))
+						*(std::string*)(*variable).ptr = buffer;
+					break;
+				}
+				case InspectorScriptData::ShowMode::TEXT:
+					ImGui::Text(((std::string*)(*variable).ptr)->c_str()); break;
+				}
 				break;
 			}
 			case InspectorScriptData::DataType::PREFAB:
@@ -1532,7 +1531,8 @@ void E_Inspector::DrawScriptComponent(C_Script* cScript)
 						GameObject* ptr = *(GameObject**)payload->Data;
 						if (ptr != nullptr) 
 						{
-							*(*variable).obj = ptr;
+							*(*variable).obj = App->scene->GetGameObjectByUID(ptr->GetUID());
+							//*(*variable).obj = ptr;
 						}
 					}
 					ImGui::EndDragDropTarget();
@@ -1542,10 +1542,84 @@ void E_Inspector::DrawScriptComponent(C_Script* cScript)
 					if ((*variable).obj != nullptr)
 						*(*variable).obj = nullptr;
 				break;
+			case InspectorScriptData::DataType::VECTORSTRING:
+			{
+				if (ImGui::TreeNodeEx((*variable).variableName.c_str()))
+				{
+					//int draggedIndex = -1;
+					std::vector<std::string>& stringVector = (*(std::vector<std::string>*)(*variable).ptr);
+					for (int i = 0; i < stringVector.size(); ++i)
+					{
+						char buffer[128];
+						strcpy_s(buffer, stringVector[i].c_str());
+						std::string index = std::to_string(i);
+						if (ImGui::InputText(((*variable).variableName + " " + index).c_str(), buffer, IM_ARRAYSIZE(buffer)))
+							stringVector[i] = buffer;
+						//-----------------------------------DRAG DROP----------------------------------------------------
+						if (ImGui::BeginDragDropSource())
+						{
+							//draggedIndex = i;
+							ImGui::SetDragDropPayload("STRING_VECTOR_NODE", /*&draggedIndex*/&i, sizeof(int), ImGuiCond_Once);
+							ImGui::Text("Dragging %s", stringVector[i].c_str());
+
+							ImGui::EndDragDropSource();
+						}
+
+						if (ImGui::BeginDragDropTarget())
+						{
+							if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("STRING_VECTOR_NODE"))
+							{
+								std::string tmp = stringVector[i];
+								stringVector[i] = stringVector[*(int*)payload->Data];
+								stringVector[*(int*)payload->Data] = tmp;
+								ImGui::FocusWindow(NULL);
+							}
+
+							ImGui::EndDragDropTarget();
+						}
+						//-----------------------------------DRAG DROP----------------------------------------------------
+						ImGui::SameLine();
+						if (ImGui::Button(("Remove " + index).c_str()))
+						{
+							EngineApp->scriptManager->StringVecErase((*variable).ptr, i);
+							--i;
+						}
+					}
+					ImGui::Text("Add new string to vector");
+					char buffer[128];
+					strcpy_s(buffer, "");
+					if (ImGui::InputText("New Element", buffer, IM_ARRAYSIZE(buffer), ImGuiInputTextFlags_EnterReturnsTrue))
+						EngineApp->scriptManager->StringVecPushBackString((*variable).ptr, buffer);
+
+					ImGui::TreePop();
+				}
+				break;
 			}
-			ImGui::Spacing();
-			ImGui::Separator();
-			ImGui::Spacing();
+			case InspectorScriptData::DataType::ENUM:
+			{
+				const std::map<std::string, std::map<int,std::string>> enumsMap = ((M_EngineScriptManager*)EngineApp->scriptManager)->GetInspectorEnums();
+				const std::map<int, std::string>& enumMap = enumsMap.at((*variable).enumName);
+
+				std::string selected = enumMap.at(*(int*)(*variable).ptr);
+				if (ImGui::BeginCombo(std::string("##" + (*variable).variableName).c_str(), selected.c_str(), ImGuiComboFlags_PopupAlignLeft))
+				{
+					for (auto it = enumMap.cbegin(); it != enumMap.cend(); ++it)
+					{
+						if (ImGui::Selectable((*it).second.c_str(),(*it).second == selected))
+							*(int*)(*variable).ptr = (*it).first;
+					}
+					ImGui::EndCombo();
+				}
+				ImGui::SameLine(); ImGui::Text((*variable).variableName.c_str());
+				break;
+			}
+			}
+			if (numVariables > 1) 
+			{
+				ImGui::Spacing();
+				ImGui::Separator();
+				ImGui::Spacing();
+			}
 		}
 	}
 	if (!show)
@@ -1586,25 +1660,19 @@ void E_Inspector::DrawUIButtonComponent(C_UI_Button* button)
 
 		if (ImGui::DragFloat2("Button Pos", (float*)&pos, 0.005f, 0.0f, 0.0f, "%.3f", NULL))
 		{
-			if (pos.x - size.x / 2 < canvas->GetPosition().x - canvas->GetSize().x / 2)
-				pos.x = canvas->GetPosition().x - canvas->GetSize().x / 2 + size.x / 2;
-
-			if (pos.x + size.x / 2 > canvas->GetPosition().x + canvas->GetSize().x / 2)
-				pos.x = canvas->GetPosition().x + canvas->GetSize().x / 2 - size.x / 2;
-
-
-			if (pos.y - size.y / 2 < canvas->GetPosition().y - canvas->GetSize().y / 2)
-				pos.y = canvas->GetPosition().y - canvas->GetSize().y / 2 + size.y / 2;
-
-			if (pos.y + size.y / 2 > canvas->GetPosition().y + canvas->GetSize().y / 2)
-				pos.y = canvas->GetPosition().y + canvas->GetSize().y / 2 - size.y / 2;
-
 			button->SetX(pos.x);
 			button->SetY(pos.y);
 		}
-	}
 
-	ImGui::Separator();
+
+		if (!show)
+		{
+			componentToDelete = button;
+			showDeleteComponentPopup = true;
+		}
+
+		ImGui::Separator();
+	}
 }
 
 void E_Inspector::DrawPlayerControllerComponent(C_PlayerController* cController)
@@ -1800,11 +1868,27 @@ void E_Inspector::DrawAnimator2DComponent(C_2DAnimator* cAnimator)
 			cAnimator->SetAnimationStepTime(k);
 
 		static char buffer[64];
-		strcpy_s(buffer, cAnimator->GetName());
+		strcpy_s(buffer, cAnimator->GetName(1));
 		if (ImGui::InputText("Animation Name", buffer, IM_ARRAYSIZE(buffer), ImGuiInputTextFlags_EnterReturnsTrue))
 		{
-			cAnimator->ChangeName(buffer);
-			cAnimator->GetAnimationSprites(buffer);
+			cAnimator->ChangeName(buffer,1);
+			cAnimator->GetAnimationSprites(buffer,1);
+		}
+
+		static char buffer1[64];
+		strcpy_s(buffer1, cAnimator->GetName(2));
+		if (ImGui::InputText("Aditional Animation Name", buffer1, IM_ARRAYSIZE(buffer1), ImGuiInputTextFlags_EnterReturnsTrue))
+		{
+			cAnimator->ChangeName(buffer1, 2);
+			cAnimator->GetAnimationSprites(buffer1, 2);
+		}
+
+		static char buffer2[64];
+		strcpy_s(buffer2, cAnimator->GetName(3));
+		if (ImGui::InputText("Aditional Animation Name 1", buffer2, IM_ARRAYSIZE(buffer2), ImGuiInputTextFlags_EnterReturnsTrue))
+		{
+			cAnimator->ChangeName(buffer2, 3);
+			cAnimator->GetAnimationSprites(buffer2, 3);
 		}
 
 		bool animationOnLoopFromStart = cAnimator->GetAnimationPlayFromStart();
@@ -2189,6 +2273,8 @@ void E_Inspector::DisplayAnimatorControls(C_Animator* cAnimator)
 	if (ImGui::Button("Previous Keyframe"))		{ cAnimator->StepToPrevKeyframe(); }	ImGui::SameLine(150.0f);
 	if (ImGui::Button("Next Keyframe"))			{ cAnimator->StepToNextKeyframe(); }
 	if (ImGui::Button("Refresh Bone Display"))	{ cAnimator->RefreshBoneDisplay(); }
+
+	CoreCrossDllHelpers::CoreReleaseString(clipNamesString);
 }
 
 void E_Inspector::DisplayClipManager(C_Animator* cAnimator)
@@ -2558,13 +2644,14 @@ void E_Inspector::DisplayParticleSystemControls(C_ParticleSystem* cParticleSyste
 	//combo showing all resources Already exists App->resourceManager->GetAllParticleSystems()
 	if (ImGui::BeginCombo("##Particle Systems", cParticleSystem->resource->name.c_str()))
 	{
-		std::vector<R_ParticleSystem*> particleSystems;
-		App->resourceManager->GetAllParticleSystems(particleSystems);
+		std::vector<ResourceBase> particleSystems;
+		App->resourceManager->GetResourceBases<R_ParticleSystem>(particleSystems);
 
 		for (auto it = particleSystems.begin(); it != particleSystems.end(); ++it)
 		{
-			bool isSelected = (cParticleSystem->resource == (*it));
-			if (ImGui::Selectable((*it)->name.c_str(), isSelected))
+			bool isSelected = (strcmp(cParticleSystem->resource->GetAssetsPath(),(*it).assetsPath.c_str()) == 0);
+
+			if (ImGui::Selectable((*it).assetsPath.c_str(), isSelected))
 			{
 				cParticleSystem->SetParticleSystem((*it));
 			}
@@ -2586,10 +2673,48 @@ void E_Inspector::DisplayParticleSystemControls(C_ParticleSystem* cParticleSyste
 		cParticleSystem->resource->SetAssetsPathAndFile(path.c_str(), buffer);
 		cParticleSystem->resource->name = buffer;
 	}
+
+	ImGui::SameLine();
+
+	bool preview = cParticleSystem->previewEnabled;
+	if (ImGui::Checkbox("Preview", &preview))
+	{
+		cParticleSystem->EnginePreview(preview);
+	}
+
+	bool stop = cParticleSystem->stopSpawn;
+	if (ImGui::Checkbox("Stop Spawn", &stop))
+	{
+		cParticleSystem->stopSpawn = stop;
+		if (stop == true)
+		{
+			cParticleSystem->StopSpawn();
+		}
+		else
+		{
+			cParticleSystem->ResumeSpawn();
+		}
+	}
+
+	bool stopDelete = cParticleSystem->tempDelete;
+	if (ImGui::Checkbox("Stop and Delete", &stopDelete))
+	{
+		cParticleSystem->tempDelete = stopDelete;
+		cParticleSystem->StopAndDelete();
+	}
 }
 
 void E_Inspector::DisplayEmitterInstances(C_ParticleSystem* cParticleSystem)
 {
+	std::string inputTextName;
+
+	static char buffer[32];
+	if (ImGui::InputText("Name a new emitter", buffer, IM_ARRAYSIZE(buffer), ImGuiInputTextFlags_EnterReturnsTrue))
+	{
+		cParticleSystem->resource->AddNewEmitter(buffer);
+		cParticleSystem->RefreshEmitterInstances();
+	}
+
 	for (uint i = 0; i < cParticleSystem->emitterInstances.size(); i++) //loop emitters
 	{
 		Emitter* emitter = cParticleSystem->emitterInstances[i]->emitter;
@@ -2600,53 +2725,36 @@ void E_Inspector::DisplayEmitterInstances(C_ParticleSystem* cParticleSystem)
 			ImGui::SetNextItemWidth(ImGui::GetWindowWidth() * 0.33f);
 			static char buffer[64];
 			strcpy_s(buffer, emitter->name.c_str());
-			std::string inputTextName = "Emitter Name ##" + std::to_string(i);
+			inputTextName = "Emitter Name ##" + std::to_string(i);
 			if (ImGui::InputText(inputTextName.c_str(), buffer, IM_ARRAYSIZE(buffer), ImGuiInputTextFlags_EnterReturnsTrue))
 			{
 				emitter->name = buffer;
 			}
 
-			ImGui::SameLine();
-
-			bool preview = cParticleSystem->previewEnabled;
-			if (ImGui::Checkbox("Preview", &preview))
-			{
-				cParticleSystem->EnginePreview(preview);
-			}
-
-			bool stop = cParticleSystem->stopSpawn;
-			if (ImGui::Checkbox("Stop Spawn", &stop))
-			{
-				cParticleSystem->stopSpawn = stop;
-				if (stop == true)
-				{
-					cParticleSystem->StopSpawn();
-				}
-				else
-				{
-					cParticleSystem->ResumeSpawn();
-				}
-
-			}
-
-			bool stopDelete = cParticleSystem->tempDelete;
-			if (ImGui::Checkbox("Stop And Delete", &stopDelete))
-			{
-				cParticleSystem->tempDelete = stopDelete;
-				cParticleSystem->StopAndDelete();
+			inputTextName = "Particle Number - " + emitter->name;
+			int particleNumber = emitter->maxParticleCount;
+			if (ImGui::InputInt(inputTextName.c_str(), &particleNumber, 1, 10, ImGuiInputTextFlags_EnterReturnsTrue))
+			{ 
+				emitter->SetParticleCount(particleNumber); 
+				cParticleSystem->RefreshEmitterInstances();
 			}
 
 			R_Texture* current = emitter->emitterTexture;
 			//combo showing all resources Already exists App->resourceManager->GetAllParticleSystems()
-			if (ImGui::BeginCombo("##Particle Texture", emitter->emitterTexture->GetAssetsFile()))
+			inputTextName = "Particle Texture - " + emitter->name;
+			if (ImGui::BeginCombo(inputTextName.c_str(), emitter->emitterTexture == nullptr ? "No Texture" : emitter->emitterTexture->GetAssetsFile()))
 			{
-				std::vector<R_Texture*> textures;
-				App->resourceManager->GetAllTextures(textures); //GetAll Text
+				std::vector<ResourceBase> textures;
+				App->resourceManager->GetResourceBases<R_Texture>(textures);
 
 				for (auto it = textures.begin(); it != textures.end(); ++it)
 				{
-					bool isSelected = (current == (*it));
-					if (ImGui::Selectable((*it)->GetAssetsFile(), isSelected))
+					bool isSelected = true;
+
+					if(emitter->emitterTexture != nullptr)
+						isSelected = (strcmp(emitter->emitterTexture->GetAssetsPath(), (*it).assetsPath.c_str()) == 0);
+
+					if (ImGui::Selectable((*it).assetsPath.c_str(), isSelected))
 					{
 						emitter->SetTexture((*it));
 					}
@@ -2656,11 +2764,11 @@ void E_Inspector::DisplayEmitterInstances(C_ParticleSystem* cParticleSystem)
 				ImGui::EndCombo();
 			}
 
-			ImGui::Combo("###", &moduleType, "Add Module\0ParticleMovement\0ParticleColor\0ParticleLifetime\0ParticleRotation\0ParticleSize\0ParticleBillboarding");
+			inputTextName = "Add Module - " + emitter->name;
+			ImGui::Combo(inputTextName.c_str(), &moduleType, "Add Module\0ParticleMovement\0ParticleColor\0ParticleLifetime\0ParticleRotation\0ParticleSize\0ParticleBillboarding\0EmitterArea");
 
-			ImGui::SameLine();
-
-			if ((ImGui::Button("ADD")))
+			inputTextName = "Add Module to " + emitter->name;
+			if ((ImGui::Button(inputTextName.c_str())))
 			{
 				if (moduleType != (int)ParticleModule::Type::NONE)
 				{
@@ -2671,9 +2779,17 @@ void E_Inspector::DisplayEmitterInstances(C_ParticleSystem* cParticleSystem)
 			ImGui::Separator();
 
 			DisplayParticleModules(emitter);
+
+			inputTextName = "DELETE - " + emitter->name;
+			bool toDelete = emitter->toDelete;
+			if (ImGui::Checkbox(inputTextName.c_str(), &toDelete))
+			{
+				emitter->toDelete = toDelete;
+
+			}
 		}
 
-		ImGui::Separator();
+		ImGui::Separator(); 
 	}
 }
 
@@ -2681,7 +2797,8 @@ void E_Inspector::DisplayParticleModules(Emitter* emitter)
 {
 	ImGui::TextColored(Cyan.C_Array(), "Particle Modules:");
 
-	ImGui::BeginChild("Particle Modules Child", ImVec2(0.0f, 269.0f), true, ImGuiWindowFlags_HorizontalScrollbar);
+	std::string inputTextName = emitter->name + " Modules";
+	ImGui::BeginChild(inputTextName.c_str(), ImVec2(0.0f, 269.0f), true, ImGuiWindowFlags_HorizontalScrollbar);
 
 	for (auto pModule = emitter->modules.cbegin(); pModule != emitter->modules.cend(); ++pModule)
 	{
@@ -2692,7 +2809,7 @@ void E_Inspector::DisplayParticleModules(Emitter* emitter)
 		{
 		case ParticleModule::Type::EMITTER_BASE:			{ DisplayEmitterBase((*pModule)); }				break;
 		case ParticleModule::Type::EMITTER_SPAWN:			{ DisplayEmitterSpawn((*pModule)); }			break;
-		case ParticleModule::Type::EMITTER_AREA:			{ /*DisplayEmitterArea((*pModule));*/ }			break;
+		case ParticleModule::Type::EMITTER_AREA:			{ DisplayEmitterArea((*pModule)); }				break;
 		case ParticleModule::Type::PARTICLE_MOVEMENT:		{ DisplayParticleMovement((*pModule)); }		break;
 		case ParticleModule::Type::PARTICLE_COLOR:			{ DisplayParticleColor((*pModule)); }			break;
 		case ParticleModule::Type::PARTICLE_LIFETIME:		{ DisplayParticleLifetime((*pModule)); }		break;
@@ -2746,7 +2863,36 @@ void E_Inspector::DisplayEmitterSpawn(ParticleModule* pModule)
 
 void E_Inspector::DisplayEmitterArea(ParticleModule* pModule)
 {
+	if (ImGui::TreeNodeEx("EmitterArea"/*, ImGuiTreeNodeFlags_DefaultOpen*/))
+	{
+		EmitterArea* emitterArea = (EmitterArea*)pModule;
 
+		float x1 = emitterArea->areaX1;
+		float x2 = emitterArea->areaX2;
+		float y1 = emitterArea->areaY1;
+		float y2 = emitterArea->areaY2;
+		float z1 = emitterArea->areaZ1;
+		float z2 = emitterArea->areaZ2;
+
+		bool hide = emitterArea->hideArea;
+		bool deleteModule = emitterArea->eraseArea;
+
+		if (ImGui::InputFloat("MinX", &x1, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue)) { emitterArea->areaX1 = x1; }
+		if (ImGui::InputFloat("MaxX", &x2, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue)) { emitterArea->areaX2 = x2; }
+		if (ImGui::InputFloat("MinY", &y1, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue)) { emitterArea->areaY1 = y1; }
+		if (ImGui::InputFloat("MaxY", &y2, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue)) { emitterArea->areaY2 = y2; }
+		if (ImGui::InputFloat("MinZ", &z1, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue)) { emitterArea->areaZ1 = z1; }
+		if (ImGui::InputFloat("MaxZ", &z2, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue)) { emitterArea->areaZ2 = z2; }
+
+		if (ImGui::Checkbox("Hide Area", &hide)) { emitterArea->hideArea = hide; }
+		if (ImGui::Checkbox("Delete Area", &deleteModule)) { emitterArea->eraseArea = deleteModule; }
+
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.0f, 0.0f, 0.0f, 0.25f));
+		if (ImGui::Button("Delete")) { /*Have access to Owner Emitter through Particle Module*/ }
+		ImGui::PopStyleColor();
+
+		ImGui::TreePop();
+	}
 }
 
 void E_Inspector::DisplayParticleMovement(ParticleModule* pModule)
@@ -2789,11 +2935,15 @@ void E_Inspector::DisplayParticleColor(ParticleModule* pModule)
 	{
 		ParticleColor* particleColor = (ParticleColor*)pModule;
 		
-		Color color			= particleColor->initialColor;
-		if (ImGui::InputFloat4("InitialColor", color.C_Array(), 4, ImGuiInputTextFlags_EnterReturnsTrue)) { particleColor->initialColor = color; }
-		
+		Color color1 = particleColor->initialColor1;
+		Color color2 = particleColor->initialColor2;
+		if (ImGui::InputFloat4("InitialColor1", color1.C_Array(), 4, ImGuiInputTextFlags_EnterReturnsTrue)) { particleColor->initialColor1 = color1; }
+		if (ImGui::InputFloat4("InitialColor2", color2.C_Array(), 4, ImGuiInputTextFlags_EnterReturnsTrue)) { particleColor->initialColor2 = color2; }
+
+		bool overLifetime	= particleColor->colorOverLifetime;
 		bool hide			= particleColor->hideColor;
 		bool deleteModule	= particleColor->eraseColor;
+		if (ImGui::Checkbox("Color Over Lifetime", &overLifetime))	{ particleColor->colorOverLifetime = overLifetime; }
 		if (ImGui::Checkbox("Hide Color", &hide))			{ particleColor->hideColor = hide; }
 		if (ImGui::Checkbox("Delete Color", &deleteModule))	{ particleColor->eraseColor = deleteModule; }
 
@@ -2836,7 +2986,30 @@ void E_Inspector::DisplayParticleRotation(ParticleModule* pModule)
 
 void E_Inspector::DisplayParticleSize(ParticleModule* pModule)
 {
+	if (ImGui::TreeNodeEx("Particle Size"/*, ImGuiTreeNodeFlags_DefaultOpen*/))
+	{
+		ParticleSize* particleSize = (ParticleSize*)pModule;
 
+		float size1 = particleSize->initialSize1;
+		if (ImGui::InputFloat("InitialSize_1", &size1, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue)) { particleSize->initialSize1 = size1; }
+
+		float size2 = particleSize->initialSize2;
+		if (ImGui::InputFloat("InitialSize_2", &size2, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue)) { particleSize->initialSize2 = size2; }
+
+		bool changeSizeOverTime = particleSize->SizeOverTime;
+		if (ImGui::Checkbox("Size Over Time", &changeSizeOverTime)) { particleSize->SizeOverTime = changeSizeOverTime; }
+
+		bool hide = particleSize->hideSize;
+		bool deleteModule = particleSize->eraseSize;
+		if (ImGui::Checkbox("Hide Size", &hide)) { particleSize->hideSize = hide; }
+		if (ImGui::Checkbox("Delete Size", &deleteModule)) { particleSize->eraseSize = deleteModule; }
+
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.0f, 0.0f, 0.0f, 0.25f));
+		if (ImGui::Button("Delete")) { /*Have access to Owner Emitter through Particle Module*/ }
+		ImGui::PopStyleColor();
+
+		ImGui::TreePop();
+	}
 }
 
 void E_Inspector::DisplayParticleBillboarding(ParticleModule* pModule)

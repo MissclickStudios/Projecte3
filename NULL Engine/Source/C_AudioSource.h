@@ -8,7 +8,7 @@
 class GameObject;
 class WwiseObject;
 
-class NULL_API C_AudioSource : public Component
+class MISSCLICK_API C_AudioSource : public Component
 {
 public:
 	C_AudioSource(GameObject* owner);
@@ -21,6 +21,7 @@ public:
 	bool LoadState(ParsonNode& root) override;
 
 	void SetEvent(std::string name, unsigned int id);
+	void SetEvent(std::string name);
 	void GetEvent(std::string* name, unsigned int* id) const;
 	const std::string& GetEventName() const;
 	unsigned int GetEventId() const;

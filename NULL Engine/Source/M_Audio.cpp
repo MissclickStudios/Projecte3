@@ -8,7 +8,8 @@
 
 #include "M_Audio.h"
 #include "AK/SoundEngine/Common/AkMemoryMgr.h"		// Memory Manager interface		
-#include "AK/SoundEngine/Common/AkModule.h"			// Default memory manager		
+#include "AK/SoundEngine/Common/AkModule.h"			// Default memory manager	
+#include "AK/SoundEngine/Common/AkCallback.h"
 
 #include "AK/SoundEngine/Common/IAkStreamMgr.h"		// Streaming Manager
 #include "AK/Tools/Common/AkPlatformFuncs.h"		// Thread defines
@@ -23,6 +24,10 @@
 #include "FileSystemDefinitions.h"
 #include "JSONParser.h"
 #include "Profiler.h"
+
+#include "C_AudioListener.h"
+#include "C_AudioSource.h"
+#include "M_Scene.h"
 
 #include <utility>
 #include <iostream>
@@ -67,6 +72,13 @@ bool M_Audio::Init(ParsonNode& root)
 bool M_Audio::Start()
 {
 	LoadEventsFromJson();
+
+	aSourceBackgroundMusic = new C_AudioSource(App->scene->GetMasterRoot());
+
+	aSourceBackgroundMusic->SetEvent("background");
+
+	aSourceBackgroundMusic->PlayFx(aSourceBackgroundMusic->GetEventId());
+	
 	return true;
 }
 
@@ -77,21 +89,22 @@ UpdateStatus M_Audio::Update(float dt)
 
 	//Depending on the engine state pause/play/resume/stop events
 
-
-	/*if (App->play)
-	if (App->gameState == GameState::PLAY || App->gameState == GameState::STEP)
-	{
-		ResumeAll();
-	}
-	if (App->gameState == GameState::PAUSE)
-	{
-		PauseAll();
-	}
-	if (App->gameState == GameState::STOP)
-	{
-		StopAll();
-	}*/
-
+	//if (App->gameState == GameState::PLAY || App->gameState == GameState::STEP)
+	//{
+	//	if (!aSourceBackgroundMusic->isPlaying)
+	//		aSourceBackgroundMusic->PlayFx(aSourceBackgroundMusic->GetEventId());
+	//}
+	//if (App->gameState == GameState::PAUSE)
+	//{
+	//	if (aSourceBackgroundMusic->isPlaying)
+	//		aSourceBackgroundMusic->PauseFx(aSourceBackgroundMusic->GetEventId());
+	//}
+	//if (App->gameState == GameState::STOP)
+	//{
+	//	if (aSourceBackgroundMusic->isPlaying)
+	//		aSourceBackgroundMusic->StopFx(aSourceBackgroundMusic->GetEventId());
+	//}
+	//
 	return UpdateStatus::CONTINUE;
 }
 

@@ -1,19 +1,16 @@
-#include "Application.h"
-#include "Log.h"
+#include "Bullet.h"
 
 #include "GameObject.h"
 #include "C_Transform.h"
 
-#include "Bullet.h"
-#include "Player.h"
-#include "Blurrg.h"
-#include "SandTrooper.h"
-
 #include "Weapon.h"
+#include "Entity.h"
 
-Bullet::Bullet() : Script()
+Bullet::Bullet() : Object()
 {
-	autodestructTimer.Stop();
+	baseType = ObjectType::BULLET;
+
+	lifeTimeTimer.Stop();
 }
 
 Bullet::~Bullet()
@@ -22,101 +19,51 @@ Bullet::~Bullet()
 
 void Bullet::Update()
 {
-	if (autodestructTimer.ReadSec() >= autodestruct)
+	if (lifeTimeTimer.ReadSec() >= lifeTime)
+	{
+		lifeTimeTimer.Stop();
 		hit = true;
-
+	}
 	if (hit)
 	{
 		hit = false;
+		if (shooter)
+			shooter->ProjectileCollisionReport(index);
 
-		gameObject->transform->SetWorldPosition(float3::zero);
-		for (uint i = 0; i < gameObject->components.size(); ++i)
-			gameObject->components[i]->SetIsActive(false);
-		gameObject->SetIsActive(false);
-
-		if (target == "enemies")
-		{
-			Player* player = (Player*)shooter->GetScript("Player");
-			if(player->weaponUsed == 1)
-				player->blaster->DisableProjectile(index);
-			else
-				player->sniper->DisableProjectile(index);
-		}
-		else if (target == "player")
-		{
-			((SandTrooper*)shooter->GetScript("SandTrooper"))->weapon->DisableProjectile(index);
-		}
-
-		autodestructTimer.Stop();
+		Deactivate();
 	}
-}
-
-void Bullet::CleanUp()
-{
-}
-
-void Bullet::OnEnable()
-{
-	StartAutodestructTimer();
 }
 
 void Bullet::OnCollisionEnter(GameObject* object)
 {
 	hit = true;
 
-	if (target == "enemies")
-	{
-		void* script = object->GetScript("Blurrg");
-		if (script)
-		{
-			if(freeze)
-				((Blurrg*)script)->Freeze(0.3f, 4.0f);
-			if (strong)
-				((Blurrg*)script)->Weaken(2.0f, 0.1f);
-			((Blurrg*)script)->TakeDamage(damage/2);
-		}
-		else
-		{
-			script = object->GetScript("SandTrooper");
-			if (script)
-			{
-				if (freeze)
-					((SandTrooper*)script)->Freeze(0.3f, 4.0f);
-				if (strong)
-					((SandTrooper*)script)->Weaken(2.0f, 0.1f);
-				((SandTrooper*)script)->TakeDamage(damage/2);
-			}
-		}
-	}
-	else if (target == "player")
-	{
-		void* script = object->GetScript("Player");
-		if (script)
-			((Player*)script)->TakeDamage(damage);
-	}
+	Entity* entity = (Entity*)GetObjectScript(object, ObjectType::ENTITY);
+	if (!entity)
+		return;
+
+	entity->TakeDamage(onHitdamage);
+	for (uint i = 0; i < onHitEffects.size(); ++i)
+		entity->AddEffect(onHitEffects[i].Type(), onHitEffects[i].Duration(), onHitEffects[i].Permanent());
 }
 
-void Bullet::SetShooter(GameObject* shooter, uint index)
+void Bullet::SetShooter(Weapon* shooter, int index)
 {
 	this->shooter = shooter;
 	this->index = index;
-
-	if (shooter->GetScript("Player"))
-		target = "enemies";
-	else if (shooter->GetScript("SandTrooper"))
-		target = "player";
 }
 
+void Bullet::SetOnHitData(float damage, std::vector<Effect> effects, float lifeTime)
+{
+	onHitdamage = damage;
+	onHitEffects = effects;
 
-Bullet* CreateBullet() 
+	this->lifeTime = lifeTime;
+	lifeTimeTimer.Start();
+}
+
+SCRIPTS_FUNCTION Bullet* CreateBullet()
 {
 	Bullet* script = new Bullet();
-
-	INSPECTOR_DRAGABLE_FLOAT(script->damage);
-	INSPECTOR_DRAGABLE_FLOAT(script->autodestruct);
-
-	INSPECTOR_CHECKBOX_BOOL(script->freeze);
-	INSPECTOR_CHECKBOX_BOOL(script->strong);
-
 	return script;
 }

@@ -1,12 +1,12 @@
+#include "JSONParser.h"
 #include "Profiler.h"													
 #include "OpenGL.h"														
-#include "Time.h"
-#include "JSONParser.h"
+
+#include "MC_Time.h"
 
 #include "Macros.h"														
 #include "Log.h"														
-
-														
+												
 #include "Icons.h"														
 #include "Primitive.h"
 #include "Light.h"
@@ -47,6 +47,7 @@
 
 #include "MemoryManager.h"
 
+#include "MathGeoLib/include/Math/float4x4.h"
 
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */	
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */	
@@ -107,28 +108,28 @@ bool M_Renderer3D::Init(ParsonNode& configuration)
 	renderColliders		= configuration.GetBool("renderColliders");
 	renderCanvas		= configuration.GetBool("renderCanvas");
 
-	worldGridColor		= configuration.GetFloat4("worldGridColor");
-	wireframeColor		= configuration.GetFloat4("wireframeColor");
-	vertexNormalsColor	= configuration.GetFloat4("vertexNormalsColor");
-	faceNormalsColor	= configuration.GetFloat4("faceNormalsColor");
+	worldGridColor		= configuration.GetColor("worldGridColor");
+	wireframeColor		= configuration.GetColor("wireframeColor");
+	vertexNormalsColor	= configuration.GetColor("vertexNormalsColor");
+	faceNormalsColor	= configuration.GetColor("faceNormalsColor");
 
-	aabbColor			= configuration.GetFloat4("aabbColor");
-	obbColor			= configuration.GetFloat4("obbColor");
-	frustumColor		= configuration.GetFloat4("frustumColor");
-	rayColor			= configuration.GetFloat4("rayColor");
-	boneColor			= configuration.GetFloat4("boneColor");
+	aabbColor			= configuration.GetColor("aabbColor");
+	obbColor			= configuration.GetColor("obbColor");
+	frustumColor		= configuration.GetColor("frustumColor");
+	rayColor			= configuration.GetColor("rayColor");
+	boneColor			= configuration.GetColor("boneColor");
 
 	if (App->gameState == GameState::PLAY)
 	{
-		renderWorldGrid = false;
-		renderWorldAxis = false;
-		renderWireframes = false;
+		renderWorldGrid		= false;
+		renderWorldAxis		= false;
+		renderWireframes	= false;
 		renderVertexNormals = false;
-		renderFaceNormals = false;
+		renderFaceNormals	= false;
 		renderBoundingBoxes = false;
-		renderSkeletons = false;
-		renderColliders = false;
-		renderCanvas = false;
+		renderSkeletons		= false;
+		renderColliders		= false;
+		renderCanvas		= false;
 	}
 
 	return ret;
@@ -153,7 +154,7 @@ UpdateStatus M_Renderer3D::PreUpdate(float dt)
 {	
 	OPTICK_CATEGORY("M_Renderer3D PreUpdate", Optick::Category::Module)
 
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 	glLoadIdentity();
 
 	glMatrixMode(GL_MODELVIEW);
@@ -421,6 +422,12 @@ bool M_Renderer3D::InitOpenGL()
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 		glEnable(GL_LIGHTING);
+
+		//Outline Settings
+		//glDepthFunc(GL_LESS);
+		glEnable(GL_STENCIL_TEST);
+		glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
+		glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 	}
 
 	return ret;
@@ -533,14 +540,14 @@ void M_Renderer3D::InitFramebuffers()
 	glBindTexture(GL_TEXTURE_2D, 0);
 
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, sceneRenderTexture, 0);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthBufferTexture, 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, depthBufferTexture, 0);
 
 	// --- DEPTH & STENCIL BUFFERS ---
 	glGenRenderbuffers(1, (GLuint*)&depthBuffer);
 	glBindRenderbuffer(GL_RENDERBUFFER, depthBuffer);
 	
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, App->window->GetWidth(), App->window->GetHeight());
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthBuffer);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, App->window->GetWidth(), App->window->GetHeight());
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, depthBuffer);
 	glBindRenderbuffer(GL_RENDERBUFFER, 0);
 
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
@@ -646,6 +653,9 @@ void M_Renderer3D::RenderScene()
 	glBindFramebuffer(GL_FRAMEBUFFER, sceneFramebuffer);
 	glClear(GL_DEPTH_BUFFER_BIT);
 	glClear(GL_COLOR_BUFFER_BIT);
+	glClear(GL_STENCIL_BUFFER_BIT);
+
+	defaultSkyBox.RenderSkybox();
 
 	if (renderWorldGrid)
 		DrawWorldGrid(worldGridSize);
@@ -681,7 +691,7 @@ void M_Renderer3D::RenderScene()
 		primitives[i]->RenderByIndices();
 	}
 	
-	defaultSkyBox.RenderSkybox();
+	
 
 	RenderUI();
 	
@@ -748,7 +758,7 @@ void M_Renderer3D::RenderUI()
 	for (auto uiIt = App->scene->GetGameObjects()->cbegin(); uiIt != App->scene->GetGameObjects()->cend(); ++uiIt)
 	{	
 		canvas = (*uiIt)->GetComponent<C_Canvas>();
-		if (canvas != nullptr)
+		if (canvas != nullptr && canvas->IsActive())
 		{
 			RenderUIComponent((*uiIt));
 
@@ -770,6 +780,8 @@ void M_Renderer3D::RenderUIComponent(GameObject* gameObject)
 {
 	for (std::vector<GameObject*>::iterator it = gameObject->childs.begin(); it != gameObject->childs.end(); it++)
 	{
+		if (!(*it)->IsActive())
+			continue;
 
 		C_UI_Image* image = (*it)->GetComponent<C_UI_Image>();
 		if (image != nullptr)
@@ -858,7 +870,7 @@ void M_Renderer3D::AddRenderersBatch(const std::vector<MeshRenderer>& meshRender
 	{
 		this->meshRenderers.push_back(meshRenderers[i]);
 	}
-
+	
 	for (uint i = 0; i < cuboidRenderers.size(); ++i)
 	{
 		this->cuboidRenderers.push_back(cuboidRenderers[i]);
@@ -874,7 +886,11 @@ void M_Renderer3D::RenderMeshes()
 {	
 	for (uint i = 0; i < meshRenderers.size(); ++i)
 	{
-		meshRenderers[i].Render();
+		bool temp = meshRenderers[i].cMesh->GetOutlineMesh();
+		if(temp)
+			meshRenderers[i].Render(temp);
+		else
+			meshRenderers[i].Render(temp);
 	}
 
 	meshRenderers.clear();
@@ -930,7 +946,8 @@ void M_Renderer3D::RenderParticles()
 	for (it = particles.rbegin(); it != particles.rend(); ++it)			
 	{
 		//DrawParticle(it->second);
-		it->second.Render();
+		if(it->second.mat != nullptr)
+			it->second.Render();
 	}
 	particles.clear();
 }
@@ -1503,16 +1520,16 @@ GameObject* M_Renderer3D::GenerateSceneLight(Color diffuse, Color ambient, Color
 	{
 	case LightType::DIRECTIONAL: 
 		lightComp->GetDirectionalLight()->Active(true);
-		lightComp->GetDirectionalLight()->ambient.Set(ambient);
-		lightComp->GetDirectionalLight()->diffuse.Set(diffuse);
-		lightComp->GetDirectionalLight()->specular.Set(specular);
+		lightComp->GetDirectionalLight()->ambient = ambient;
+		lightComp->GetDirectionalLight()->diffuse = diffuse;
+		lightComp->GetDirectionalLight()->specular = specular;
 		lightComp->GetDirectionalLight()->Init();
 		break;
 	case LightType::POINTLIGHT: 
 		lightComp->GetPointLight()->Active(true);
-		lightComp->GetPointLight()->ambient.Set(ambient);
-		lightComp->GetPointLight()->diffuse.Set(diffuse);
-		lightComp->GetPointLight()->specular.Set(specular);
+		lightComp->GetPointLight()->ambient = ambient;
+		lightComp->GetPointLight()->diffuse = diffuse;
+		lightComp->GetPointLight()->specular = specular;
 		lightComp->GetPointLight()->SetConstant(1.0f);
 		lightComp->GetPointLight()->SetLinear(0.09f);
 		lightComp->GetPointLight()->SetQuadratic(0.032f);
@@ -1532,9 +1549,9 @@ void M_Renderer3D::GenScreenBuffer()
 	glBindVertexArray(quadScreenVAO);
 
 	const GLfloat g_quad_vertex_buffer_data[] = {
+		-1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
 		-1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
 		1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
-		-1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
 		1.0f,  -1.0f, 0.0f, 1.0f, 0.0f,
 		1.0f, 1.0f, 0.0f, 1.0f, 1.0f,
 		-1.0f,  1.0f, 0.0f, 0.0f, 1.0f
@@ -1555,7 +1572,7 @@ void M_Renderer3D::GenScreenBuffer()
 
 // --- RENDERER STRUCTURES METHODS ---
 // --- MESH RENDERER METHODS
-MeshRenderer::MeshRenderer(float4x4* transform, C_Mesh* cMesh,  C_Material* cMaterial) :
+MeshRenderer::MeshRenderer(C_Transform* transform, C_Mesh* cMesh,  C_Material* cMaterial) :
 transform	(transform),
 cMesh		(cMesh),
 cMaterial	(cMaterial)
@@ -1563,14 +1580,36 @@ cMaterial	(cMaterial)
 
 }
 
-void MeshRenderer::Render()
+void MeshRenderer::Render(bool outline)
 {
 	R_Mesh* rMesh = cMesh->GetMesh();
 	
+	std::string name = transform->GetOwner()->GetName();
+
+	if (strcmp(transform->GetOwner()->GetName(), "Blaster") == 0)
+	{
+		LOG("BRUH");
+	}
+
 	if (rMesh == nullptr)
 	{
 		LOG("[ERROR] Renderer 3D: Could not render Mesh! Error: R_Mesh* was nullptr.");
 		return;
+	}
+
+	glEnable(GL_STENCIL_TEST);
+	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+
+	glClear(GL_STENCIL_BUFFER_BIT);
+
+	if (outline)
+	{
+		glStencilFunc(GL_ALWAYS, 1, 0xFF);
+		glStencilMask(0xFF);
+	}
+	else
+	{
+		glStencilMask(0x00);
 	}
 
 	ApplyDebugParameters();																									// Enable Wireframe Mode for this specific mesh, etc.
@@ -1587,14 +1626,18 @@ void MeshRenderer::Render()
 		glBindVertexArray(cMesh->GetSkinnedMesh()->VAO);
 		glDrawElements(GL_TRIANGLES, cMesh->GetSkinnedMesh()->indices.size(), GL_UNSIGNED_INT, nullptr);
 	}
-	
+	if (outline) RenderOutline(rMesh);
+
+	ClearShader();	
+
 	glBindVertexArray(0);																									//
 
 	glBindTexture(GL_TEXTURE_2D, 0);																						// ---------------------
 	
-	ClearShader();																											// Clear the specifications applied in ApplyShader().
 	ClearTextureAndMaterial();																								// Clear the specifications applied in ApplyTextureAndMaterial().
 	ClearDebugParameters();																									// Clear the specifications applied in ApplyDebugParameters().
+
+	
 
 	// --- DEBUG DRAW ---
 	if (rMesh->drawVertexNormals || App->renderer->GetRenderVertexNormals())
@@ -1606,6 +1649,71 @@ void MeshRenderer::Render()
 	{
 		RenderFaceNormals(rMesh);
 	}
+}
+
+void MeshRenderer::RenderOutline(R_Mesh* rMesh)
+{
+
+	glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
+	glStencilMask(0x00);
+
+	uint32 shaderProgram = 0;
+	if (cMaterial != nullptr)
+	{
+		R_Shader* tempShader;
+		tempShader = App->resourceManager->GetShader("OutlineShader");
+
+		tempShader ? shaderProgram = tempShader->shaderProgramID : shaderProgram;
+
+		glUseProgram(shaderProgram);
+
+		if (shaderProgram != 0)
+		{
+
+			tempShader->SetUniform1f("outlineThickness", cMesh->GetOutlineThickness());
+
+			tempShader->SetUniformVec4f("outlineColor", (GLfloat*)&cMesh->GetOutlineColor());
+
+			tempShader->SetUniformMatrix4("modelMatrix", transform->GetWorldTransform().Transposed().ptr());
+
+			tempShader->SetUniformMatrix4("viewMatrix", App->camera->GetCurrentCamera()->GetViewMatrixTransposed().ptr());
+
+			tempShader->SetUniformMatrix4("projectionMatrix", App->camera->GetCurrentCamera()->GetProjectionMatrixTransposed().ptr());
+
+			//Animations
+
+			cMesh->GetBoneTranforms(boneTransforms);
+
+			bool check = cMesh->GetSkinnedMesh() != nullptr;
+
+			tempShader->SetUniform1i("activeAnimation", (check));
+
+			if (!boneTransforms.empty())
+			{
+				tempShader->SetUniformMatrix4("finalBonesMatrices", (GLfloat*)&boneTransforms[0], boneTransforms.size());
+			}
+
+			boneTransforms.clear();
+		}
+	}
+
+	if (cMesh->GetSkinnedMesh() == nullptr)
+	{
+		glBindVertexArray(rMesh->VAO);
+		glDrawElements(GL_TRIANGLES, rMesh->indices.size(), GL_UNSIGNED_INT, nullptr);
+	}
+	else
+	{
+		glBindVertexArray(cMesh->GetSkinnedMesh()->VAO);
+		glDrawElements(GL_TRIANGLES, cMesh->GetSkinnedMesh()->indices.size(), GL_UNSIGNED_INT, nullptr);
+	}
+
+
+	glStencilMask(0xFF);
+	glStencilFunc(GL_ALWAYS, 1, 0xFF);
+	glEnable(GL_DEPTH_TEST);
+	glDisable(GL_STENCIL_TEST);
+
 }
 
 void MeshRenderer::RenderVertexNormals(const R_Mesh* rMesh)
@@ -1793,6 +1901,11 @@ void MeshRenderer::ApplyShader()
 	uint32 shaderProgram = 0;
 	if (cMaterial != nullptr)
 	{
+		std::vector<GameObject*> dirLights;
+		std::vector<GameObject*> pointLights;
+		App->scene->GetDirLights(dirLights);
+		App->scene->GetPointLights(pointLights);
+
 
 		cMaterial->GetShader() ? shaderProgram = cMaterial->GetShader()->shaderProgramID : shaderProgram;
 
@@ -1802,17 +1915,23 @@ void MeshRenderer::ApplyShader()
 
 		cMaterial->GetTexture() ? cMaterial->GetShader()->SetUniform1i("hasTexture", (GLint)true) : cMaterial->GetShader()->SetUniform1i("hasTexture", (GLint)false);
 
+		cMaterial->GetTakeDamage() ? cMaterial->GetShader()->SetUniform1i("takeDamage", (GLint)true) : cMaterial->GetShader()->SetUniform1i("takeDamage", (GLint)false);
+		
+		!dirLights.empty() ? cMaterial->GetShader()->SetUniform1i("useDirLight", (GLint)true) : cMaterial->GetShader()->SetUniform1i("useDirLight", (GLint)false);
+
 		if (shaderProgram != 0)
 		{
 			//Model
 			
 			cMaterial->GetShader()->SetUniformVec4f("inColor", (GLfloat*)&cMaterial->GetMaterialColour());
 
-			cMaterial->GetShader()->SetUniformMatrix4("modelMatrix", transform->Transposed().ptr());
+			cMaterial->GetShader()->SetUniformVec4f("alternateColor", (GLfloat*)&cMaterial->GetAlternateColour());
 
-			cMaterial->GetShader()->SetUniformMatrix4("viewMatrix", App->camera->GetCurrentCamera()->GetOGLViewMatrix());
+			cMaterial->GetShader()->SetUniformMatrix4("modelMatrix", transform->GetWorldTransform().Transposed().ptr());
 
-			cMaterial->GetShader()->SetUniformMatrix4("projectionMatrix", App->camera->GetCurrentCamera()->GetOGLProjectionMatrix());
+			cMaterial->GetShader()->SetUniformMatrix4("viewMatrix", App->camera->GetCurrentCamera()->GetViewMatrixTransposed().ptr());
+
+			cMaterial->GetShader()->SetUniformMatrix4("projectionMatrix", App->camera->GetCurrentCamera()->GetProjectionMatrixTransposed().ptr());
 
 			cMaterial->GetShader()->SetUniformVec3f("cameraPosition", (GLfloat*)&App->camera->GetCurrentCamera()->GetFrustum().Pos());
 			
@@ -1822,7 +1941,6 @@ void MeshRenderer::ApplyShader()
 
 
 			//ANimations
-			std::vector<float4x4> boneTransforms;
 
 			cMesh->GetBoneTranforms(boneTransforms);
 			
@@ -1835,11 +1953,9 @@ void MeshRenderer::ApplyShader()
 				cMaterial->GetShader()->SetUniformMatrix4("finalBonesMatrices", (GLfloat*)&boneTransforms[0], boneTransforms.size());
 			}
 
+			boneTransforms.clear();
+
 			// Light 
-			std::vector<GameObject*> dirLights;
-			std::vector<GameObject*> pointLights; 
-			App->scene->GetDirLights(dirLights);
-			App->scene->GetPointLights(pointLights);
 
 			if (!dirLights.empty())
 			{
@@ -2079,40 +2195,53 @@ void SkeletonRenderer::Render()
 ParticleRenderer::ParticleRenderer(R_Texture* mat, Color color, const float4x4 transform) : 
 mat(mat),
 color(color),
-transform(transform)
+transform(transform),
+VAO(0),
+shader(nullptr)
 {
+	shader = App->resourceManager->GetShader("ParticleShader");
+}
 
+void ParticleRenderer::LoadBuffers()
+{
+	glGenBuffers(1, &VAO);
+	glBindBuffer(GL_ARRAY_BUFFER, VAO);
+
+	glBufferData(GL_ARRAY_BUFFER, sizeof(ParticlesCoords), ParticlesCoords, GL_STATIC_DRAW);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, (GLvoid*)0);
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 void ParticleRenderer::Render()
 {
 
-	glPushMatrix();
-	glMultMatrixf((GLfloat*)&transform);
-
 	glEnable(GL_BLEND);
+	glEnable(GL_ALPHA_TEST);
 
-	glColor4f(0.0f, 0.0f, 0.0f, 1.0f);
+	glUseProgram(shader->shaderProgramID);
 
 	glBindTexture(GL_TEXTURE_2D, mat->GetTextureID());
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
 
-	int x =0;
-	int y = 0;
-	int w = 5;
-	int h = 5;
+	shader->SetUniformMatrix4("modelMatrix", transform.ptr());
 
-	glBegin(GL_QUADS);
-	glTexCoord2f(0, 0); glVertex2f(x -w / 2, y - h / 2);
-	glTexCoord2f(1, 0); glVertex2f(x +w / 2, y - h / 2);
-	glTexCoord2f(1, 1); glVertex2f(x +w / 2, y + h / 2);
-	glTexCoord2f(0, 1); glVertex2f(x -w / 2, y + h / 2);
-	glEnd();
+	shader->SetUniformMatrix4("viewMatrix", App->camera->GetCurrentCamera()->GetViewMatrixTransposed().ptr());
+
+	shader->SetUniformMatrix4("projectionMatrix", App->camera->GetCurrentCamera()->GetProjectionMatrixTransposed().ptr());
+
+	shader->SetUniformVec4f("color", (GLfloat*)&color);
+
+	glBindBuffer(GL_ARRAY_BUFFER, VAO);
+
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	glBindTexture(GL_TEXTURE_2D, 0);
 
-	glDisable(GL_BLEND);
+	glUseProgram(0);
 
-	glPopMatrix();
+	glDisable(GL_BLEND);
+	glDisable(GL_ALPHA_TEST);
 }

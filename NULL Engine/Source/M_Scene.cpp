@@ -16,6 +16,7 @@
 #include "M_ResourceManager.h"
 #include "M_UISystem.h"
 
+#include "ResourceBase.h"
 #include "Resource.h"
 #include "R_Model.h"
 #include "R_Mesh.h"
@@ -83,30 +84,15 @@ bool M_Scene::Start()
 	}
 
 	CreateSceneCamera("SceneCamera");
-
-	level.GetRooms();
-	level.GenerateLevel();
-	
-	level.AddFixedRoom("InitialL1", 1, 1);
-	level.AddFixedRoom("InitialL2", 2, 1);
-
-	level.AddFixedRoom("BossL1", 1, 10);
-	level.AddFixedRoom("BossL2", 2, 10);
-
-	level.AddFixedRoom("ShopL1", 1, 4);
-	level.AddFixedRoom("ShopL2", 2, 4);
-
-	/*level.AddFixedRoom("Start",1 ,1); 
-	level.AddFixedRoom("Boss",1 ,15);*/
-	
 	
 
 	if(App->gameState == GameState::PLAY)
-		App->scene->LoadScene("Assets/Scenes/MainMenu.json");
+		LoadScene("Assets/Scenes/MainMenu.json");
 	else
 	{
 		std::string s = ASSETS_SCENES_PATH + currentScene + JSON_EXTENSION;
 		LoadScene(s.c_str());
+		//LoadScene("Assets/Scenes/MainMenu.json");
 	}
 
 	//LoadScene("Assets/Scenes/UITestScene.json");
@@ -130,28 +116,35 @@ UpdateStatus M_Scene::Update(float dt)
 
 	HandleCopyGO();
 
-	std::vector<MeshRenderer>		meshRenderers;
-	std::vector<CuboidRenderer>		cuboidRenderers;
-	std::vector<SkeletonRenderer>	skeletonRenderers;
-
 	// --- Sort GameObjects by Z-Buffer value
-	for (uint i = 0; i < gameObjects.size(); ++i)
-	{
-		GameObject* gameObject = gameObjects[i];																			// Creating a local var: Less optimized but more readable.
-		
-		if (gameObject->toDelete)
+	//UpdateSceneFromRoot(sceneRoot);
+	
+	for (uint i = 0; i < gameObjects.size(); ++i)														// First Pass to Delete or Update the GOs' state.
+	{	
+		if (gameObjects[i]->toDelete)
 		{
-			DeleteGameObject(gameObject, i);																				// Doing this on item = gameObjects.begin() will be problematic.
+			DeleteGameObject(gameObjects[i], i);
 			continue;
 		}
 
-		if (gameObject->IsActive())
+		if (gameObjects[i]->IsActive())
 		{
-			gameObject->Update();
+			gameObjects[i]->Update();
+		}
+	}
 
-			if (GameObjectIsInsideCullingCamera(gameObject) || gameObject == cullingCamera->GetOwner())	// Check for cullingCamera == nullptr is made at GameObjectIsInsideCullingCamera().
+	RefreshSceneTransforms();																			// Second pass to make sure that all GOs' World Transform is updated.
+
+	std::vector<MeshRenderer>		meshRenderers;
+	std::vector<CuboidRenderer>		cuboidRenderers;
+	std::vector<SkeletonRenderer>	skeletonRenderers;
+	for (uint i = 0; i < gameObjects.size(); ++i)														// Third pass to get the renderers with the fully updated GOs.
+	{
+		if (gameObjects[i]->IsActive())
+		{
+			if (GameObjectIsInsideCullingCamera(gameObjects[i]) || gameObjects[i] == cullingCamera->GetOwner())
 			{
-				gameObject->GetRenderers(meshRenderers, cuboidRenderers, skeletonRenderers);
+				gameObjects[i]->GetRenderers(meshRenderers, cuboidRenderers, skeletonRenderers);
 			}
 		}
 	}
@@ -177,16 +170,8 @@ UpdateStatus M_Scene::Update(float dt)
 			}
 		}
 	}
-
-	// --- Room Generation
-	level.HandleRoomGeneration();
-
-	//--
-	
 	
 	ShowFPS();
-
-
 
 	return UpdateStatus::CONTINUE;
 }
@@ -197,7 +182,7 @@ UpdateStatus M_Scene::PostUpdate(float dt)
 
 	if (nextScene)
 	{
-		level.GoNextRoom();
+		LoadScene(nextSceneName.c_str());
 		nextScene = false;
 	}
 
@@ -275,6 +260,9 @@ bool M_Scene::SaveScene(const char* sceneName) const
 		(*object)->SaveState(arrayNode);
 	}
 
+	if (!strcmp(sceneName,AUTOSAVE_FILE_NAME))
+		rootNode.SetString("Autosaved Sene Name", currentScene.c_str());
+
 	char* buffer		= nullptr;
 	std::string name	= (sceneName != nullptr) ? sceneName : sceneRoot->GetName();
 	std::string path	= ASSETS_SCENES_PATH + name + JSON_EXTENSION;
@@ -317,7 +305,7 @@ bool M_Scene::LoadScene(const char* path)
 
 	App->fileSystem->SplitFilePath(path, nullptr, &sceneName);
 
-	if(sceneName != "PlayAutosave")
+	if(sceneName != AUTOSAVE_FILE_NAME)
 		currentScene = sceneName;
 
 	App->camera->SetMasterCameraAsCurrentCamera();
@@ -331,11 +319,15 @@ bool M_Scene::LoadScene(const char* path)
 	}
 
 	int modTime = App->fileSystem->GetLastModTime(path);
+	std::vector<GameObject*> prefabsToDelete;
 
 	if (buffer != nullptr)
 	{
 		App->renderer->ClearRenderers();
+		if (App->gameState == GameState::PLAY)
+			App->scriptManager->CleanUpScripts();
 		CleanUp();
+		App->uiSystem->CleanUpScene();
 
 		//std::vector<GameObject*> parentMaintained;
 		//CleanUpCurrentScene(parentMaintained);
@@ -344,6 +336,9 @@ bool M_Scene::LoadScene(const char* path)
 		ParsonArray modelsArray		= newRoot.GetArray("Models In Scene");
 		ParsonArray objectsArray	= newRoot.GetArray("Game Objects");
 		RELEASE_ARRAY(buffer);
+
+		if (sceneName == AUTOSAVE_FILE_NAME)
+			currentScene = newRoot.GetString("Autosaved Sene Name");
 
 		for (uint i = 0; i < modelsArray.size; ++i)
 		{
@@ -410,6 +405,7 @@ bool M_Scene::LoadScene(const char* path)
 		}
 
 		std::map<uint, Prefab> prefabs = App->resourceManager->prefabs;
+		
 
 		// Re-Parenting
 		std::map<uint32, GameObject*>::iterator item;
@@ -430,10 +426,14 @@ bool M_Scene::LoadScene(const char* path)
 						if (prefabParent != tmp.end())
 						{
 							if (prefabParent->second->prefabID == prefab->second.uid) //If parent is the same prefab then ignore object
+							{
+								prefabsToDelete.push_back(item->second);
 								continue;
+							}
 							else //Then it's parent, so load prefab
 							{
 								App->resourceManager->LoadPrefab(prefab->second.uid, prefabParent->second, item->second);
+								prefabsToDelete.push_back(item->second);
 								continue;
 							}
 						}
@@ -454,6 +454,12 @@ bool M_Scene::LoadScene(const char* path)
 		
 		tmp.clear();
 		App->renderer->ClearRenderers();
+	}
+
+	for (auto p = prefabsToDelete.begin(); p != prefabsToDelete.end(); ++p)
+	{
+		(*p)->CleanUp();
+		RELEASE(*p);
 	}
 
 	//Resolve script go pointers reassigning
@@ -567,6 +573,50 @@ bool M_Scene::NewScene()
 	currentScene = "New Scene";
 
 	return true;
+}
+
+void M_Scene::UpdateSceneFromRoot(GameObject* root)
+{	
+	if (root->toDelete)
+	{
+		root->FreeChilds();
+		
+		DeleteGameObject(root);
+	}
+	else
+	{
+		if (root->IsActive())
+		{
+			root->Update();
+
+			root->GetComponent<C_Transform>()->GetWorldTransform();
+
+			if (GameObjectIsInsideCullingCamera(root) || root == cullingCamera->GetOwner())
+			{
+				std::vector<MeshRenderer>		meshRenderers;
+				std::vector<CuboidRenderer>		cuboidRenderers;
+				std::vector<SkeletonRenderer>	skeletonRenderers;
+				
+				root->GetRenderers(meshRenderers, cuboidRenderers, skeletonRenderers);
+
+				App->renderer->AddRenderersBatch(meshRenderers, cuboidRenderers, skeletonRenderers);
+
+				skeletonRenderers.clear();
+				cuboidRenderers.clear();
+				meshRenderers.clear();
+			}
+		}
+	}
+
+	for (uint i = 0; i < root->childs.size(); ++i)
+	{
+		UpdateSceneFromRoot(root->childs[i]);
+	}
+}
+
+void M_Scene::RefreshSceneTransforms()
+{
+	sceneRoot->GetComponent<C_Transform>()->RefreshTransformsChain();
 }
 
 void M_Scene::LoadResourceIntoScene(Resource* resource)
@@ -1404,9 +1454,10 @@ void M_Scene::ShowFPS()
 	}*/
 }
 
-LevelGenerator* M_Scene::GetLevelGenerator()
+void M_Scene::ScriptChangeScene(const std::string& sceneName)
 {
-	return &level;
+	nextScene = true;
+	nextSceneName = sceneName;
 }
 
 void M_Scene::DeleteSelectedGameObject()

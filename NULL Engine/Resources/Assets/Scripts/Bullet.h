@@ -1,45 +1,38 @@
 #pragma once
-#include "Script.h"
+#include "Object.h"
 #include "ScriptMacros.h"
 
-#include "Timer.h"
+#include "Effect.h"
 
-class GameObject;
+#include <vector>
 
-class SCRIPTS_API Bullet : public Script 
+class Weapon;
+
+class SCRIPTS_API Bullet : public Object ALLOWED_INHERITANCE
 {
 public:
 
 	Bullet();
-	~Bullet();
+	virtual ~Bullet();
 
 	void Update() override;
-	void CleanUp()override;
-
-	void OnEnable() override;
 
 	void OnCollisionEnter(GameObject* object) override;
 
-	void SetShooter(GameObject* shooter, uint index);
-	void StartAutodestructTimer() { autodestructTimer.Start(); }
-
-	float damage = 1.0f;
-
-	float autodestruct = 3.0f;
-
-	// Effects
-	bool freeze = false;
-	bool strong = false;
+	void SetShooter(Weapon* shooter, int index);
+	void SetOnHitData(float damage, std::vector<Effect> effects, float lifeTime);
 
 private:
 
-	std::string target;
+	Weapon* shooter = nullptr;
+	int index = 0;
+	float onHitdamage = 0.0f;
+	std::vector<Effect> onHitEffects;
+
+	float lifeTime = 0.0f;
+	Timer lifeTimeTimer;
 
 	bool hit = false;
-	GameObject* shooter = nullptr;
-	uint index = 0;
-
-	Timer autodestructTimer;
 };
 
 SCRIPTS_FUNCTION Bullet* CreateBullet();

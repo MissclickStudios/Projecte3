@@ -23,16 +23,16 @@
 
 //Import/export engine core define
 #ifdef NULL_BUILD_DLL
-#define NULL_API __declspec(dllexport)
+#define MISSCLICK_API __declspec(dllexport)
 #else
-#define NULL_API __declspec(dllimport)
+#define MISSCLICK_API __declspec(dllimport)
 #endif
 
 MATH_BEGIN_NAMESPACE
 
 /// Represents an unindiced triangle mesh.
 /** This class stores a triangle mesh as flat array, optimized for ray intersections. */
-class NULL_API TriangleMesh
+class MISSCLICK_API TriangleMesh
 {
 public:
 	TriangleMesh();

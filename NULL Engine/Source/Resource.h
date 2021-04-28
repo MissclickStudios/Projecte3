@@ -26,11 +26,11 @@ enum class ResourceType													// IMPORTANT: Do not change the order of the
 	PARTICLE_SYSTEM,
 	PREFAB,
 	SCRIPT,
-	NAVMESH_AGENT,
+	NAVMESH,
 	NONE
 };
 
-class NULL_API Resource
+class MISSCLICK_API Resource
 {
 public:
 	Resource(ResourceType type);
@@ -40,6 +40,8 @@ public:
 
 	virtual bool SaveMeta(ParsonNode& metaRoot) const;
 	virtual bool LoadMeta(const ParsonNode& metaRoot);
+
+	virtual inline ResourceType GetType() { return type; }
 
 public:
 	ResourceType		GetType					() const;											// 

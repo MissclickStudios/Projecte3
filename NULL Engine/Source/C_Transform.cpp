@@ -14,10 +14,9 @@
 #include "MemoryManager.h"
 
 C_Transform::C_Transform(GameObject* owner) : Component(owner, ComponentType::TRANSFORM),
-localTransform			(float4x4::identity),
-worldTransform			(float4x4::identity)
-//syncLocalToGlobal		(false),
-//updateWorldTransform	(false)
+localTransform	(float4x4::identity),
+worldTransform	(float4x4::identity),
+updateWorld		(false)
 {	
 	localTransform.Decompose(localPosition, localRotation, localScale);
 
@@ -31,82 +30,34 @@ C_Transform::~C_Transform()
 
 bool C_Transform::Update()
 {
-	bool ret = true;
-
-	/*if (updateWorldTransform)
-	{
-		UpdateWorldTransform();
-	}*/
-
-	/*if (syncLocalToGlobal)
-	{
-		SyncLocalToWorld();
-	}*/
-
-	return ret;
+	return true;
 }
 
 bool C_Transform::CleanUp()
 {
-	bool ret = true;
-
-	return ret;
+	return true;
 }
 
 bool C_Transform::SaveState(ParsonNode& root) const
 {
-	bool ret = true;
-
 	root.SetNumber("Type", (uint)GetType());
 
-	ParsonArray position = root.SetArray("LocalPosition");
+	root.SetFloat3("LocalPosition", localPosition);
+	root.SetFloat4("LocalRotation", localRotation.CastToFloat4());
+	root.SetFloat3("LocalScale", localScale);
 
-	position.SetNumber(localPosition.x);
-	position.SetNumber(localPosition.y);
-	position.SetNumber(localPosition.z);
-
-	ParsonArray rotation = root.SetArray("LocalRotation");
-
-	rotation.SetNumber(localRotation.x);
-	rotation.SetNumber(localRotation.y);
-	rotation.SetNumber(localRotation.z);
-	rotation.SetNumber(localRotation.w);
-
-	ParsonArray scale = root.SetArray("LocalScale");
-
-	scale.SetNumber(localScale.x);
-	scale.SetNumber(localScale.y);
-	scale.SetNumber(localScale.z);
-
-	return ret;
+	return true;
 }
 
 bool C_Transform::LoadState(ParsonNode& root)
 {
-	bool ret = true;
-
-	ParsonArray position = root.GetArray("LocalPosition");
-
-	localPosition.x = (float)position.GetNumber(0);
-	localPosition.y = (float)position.GetNumber(1);
-	localPosition.z = (float)position.GetNumber(2);
-
-	ParsonArray rotation = root.GetArray("LocalRotation");
-
-	localRotation.x = (float)rotation.GetNumber(0);
-	localRotation.y = (float)rotation.GetNumber(1);
-	localRotation.z = (float)rotation.GetNumber(2);
-	localRotation.w = (float)rotation.GetNumber(3);
-
-	ParsonArray scale = root.GetArray("LocalScale");
-
-	localScale.x = (float)scale.GetNumber(0);
-	localScale.y = (float)scale.GetNumber(1);
-	localScale.z = (float)scale.GetNumber(2);
+	localPosition	= root.GetFloat3("LocalPosition");
+	localRotation	= root.GetQuat("LocalRotation");
+	localScale		= root.GetFloat3("LocalScale");
 
 	UpdateLocalTransform();
 
-	return ret;
+	return true;
 }
 
 // ------ C_TRANSFORM METHODS ------
@@ -115,11 +66,7 @@ void C_Transform::UpdateLocalTransform()
 {
 	localTransform = float4x4::FromTRS(localPosition, localRotation, localScale);
 
-	UpdateWorldTransform();
-
-	//syncLocalToGlobal = false;
-	//updateWorldTransform = true;
-	//UpdateWorldTransform();
+	updateWorld = true;
 }
 
 void C_Transform::UpdateWorldTransform()
@@ -128,47 +75,33 @@ void C_Transform::UpdateWorldTransform()
 
 	worldTransform = (owner->parent != nullptr) ? owner->parent->GetComponent<C_Transform>()->worldTransform * localTransform : localTransform;
 
-	for (uint i = 0; i < owner->childs.size(); ++i)
-	{
-		owner->childs[i]->GetComponent<C_Transform>()->UpdateWorldTransform();
-		//owner->childs[i]->GetTransformComponent()->updateWorldTransform = true;
-	}
+	SetChildsAsDirty();
+	
+	updateWorld = false;
 
 	C_Camera* c_camera = owner->GetComponent<C_Camera>();
 	if (c_camera != nullptr)
 	{
 		c_camera->UpdateFrustumTransform();
 	}
-
-	//updateWorldTransform = false;
 }
 
 void C_Transform::SyncWorldToLocal()
 {
-	const GameObject* owner = GetOwner();
-
-	worldTransform = (owner->parent != nullptr) ? owner->parent->GetComponent<C_Transform>()->worldTransform * localTransform : localTransform;
-
-	for (uint i = 0; i < owner->childs.size(); ++i)
-	{
-		owner->childs[i]->GetComponent<C_Transform>()->UpdateWorldTransform();
-		//owner->childs[i]->GetTransformComponent()->updateWorldTransform = true;
-	}
+	UpdateWorldTransform();
 }
 
 void C_Transform::SyncLocalToWorld()
 {
+	OPTICK_CATEGORY("Sync Local To World", Optick::Category::GameLogic);
+	
 	GameObject* owner = GetOwner();
 	
 	localTransform = (owner->parent != nullptr) ? owner->parent->GetComponent<C_Transform>()->worldTransform.Inverted() * worldTransform : worldTransform;
 
 	SetLocalTransform(localTransform);
 
-	for (uint i = 0; i < owner->childs.size(); ++i)
-	{
-		owner->childs[i]->GetComponent<C_Transform>()->UpdateWorldTransform();
-		//owner->childs[i]->GetTransformComponent()->updateWorldTransform = true;
-	}
+	SetChildsAsDirty();
 
 	C_Camera* cCamera = owner->GetComponent<C_Camera>();
 	if (cCamera != nullptr)
@@ -182,8 +115,6 @@ void C_Transform::SyncLocalToWorld()
 		if(App->gameState != GameState::PLAY)
 			c_rigidBody->TransformMovesRigidBody(false);
 	}
-
-	//syncLocalToGlobal = false;
 }
 
 float4x4 C_Transform::GetLocalTransform() const
@@ -191,13 +122,19 @@ float4x4 C_Transform::GetLocalTransform() const
 	return localTransform;
 }
 
-float4x4 C_Transform::GetWorldTransform() const
+float4x4 C_Transform::GetWorldTransform()
 {
+	if (updateWorld)
+		UpdateWorldTransform();
+	
 	return worldTransform;
 }
 
 float4x4* C_Transform::GetWorldTransformPtr()
 {
+	if (updateWorld)
+		UpdateWorldTransform();
+	
 	return &worldTransform;
 }
 
@@ -206,15 +143,13 @@ void C_Transform::SetLocalTransform(const float4x4& localTransform)
 	this->localTransform = localTransform;
 
 	localTransform.Decompose(localPosition, localRotation, localScale);
-	localEulerRotation = localTransform.RotatePart().ToEulerXYZ();
+	localEulerRotation = localTransform.RotatePart().ToEulerXYZ();																// Use localRotation?
 
-	UpdateWorldTransform();
-
-	//updateWorldTransform = true;
+	updateWorld = true;
 }
 
 void C_Transform::SetWorldTransform(const float4x4& worldTransform)
-{
+{	
 	this->worldTransform = worldTransform;
 
 	SyncLocalToWorld();
@@ -222,9 +157,9 @@ void C_Transform::SetWorldTransform(const float4x4& worldTransform)
 
 void C_Transform::ImportTransform(const float3& position, const Quat& rotation, const float3& scale)
 {	
-	localPosition = position;
-	localRotation = rotation;
-	localScale = scale;
+	localPosition	= position;
+	localRotation	= rotation;
+	localScale		= scale;
 	
 	localEulerRotation = localRotation.ToEulerXYZ();
 
@@ -233,7 +168,7 @@ void C_Transform::ImportTransform(const float3& position, const Quat& rotation, 
 
 void C_Transform::ImportTransform(const Transform& transform)
 {
-	OPTICK_CATEGORY("Import Transform", Optick::Category::Animation);
+	OPTICK_CATEGORY("Import Transform", Optick::Category::GameLogic);
 	
 	localPosition	= transform.position;
 	localRotation	= transform.rotation;
@@ -242,6 +177,46 @@ void C_Transform::ImportTransform(const Transform& transform)
 	localEulerRotation = localRotation.ToEulerXYZ();
 
 	UpdateLocalTransform();
+}
+
+void C_Transform::SetChildsAsDirty()
+{
+	GameObject* owner = GetOwner();
+
+	if (owner->childs.empty())
+		return;
+
+	for (uint i = 0; i < owner->childs.size(); ++i)
+	{
+		C_Transform* childTransform = owner->childs[i]->GetComponent<C_Transform>();
+
+		if (childTransform != nullptr)
+		{
+			childTransform->updateWorld = true;
+			childTransform->SetChildsAsDirty();
+		}
+	}
+}
+
+void C_Transform::RefreshTransformsChain()
+{
+	if (updateWorld)
+		UpdateWorldTransform();
+
+	GameObject* owner = GetOwner();
+
+	if (owner->childs.empty())
+		return;
+
+	for (uint i = 0; i < owner->childs.size(); ++i)
+	{
+		owner->childs[i]->GetComponent<C_Transform>()->RefreshTransformsChain();
+	}
+}
+
+float C_Transform::GetDistanceTo(float3 _position)
+{
+	return math::Sqrt((_position.x - localPosition.x) * (_position.x - localPosition.x) + (_position.y - localPosition.y) * (_position.y - localPosition.y) + (_position.z - localPosition.z) * (_position.z - localPosition.z));
 }
 
 // --- POSITION, ROTATION AND SCALE METHODS
@@ -260,6 +235,7 @@ float3 C_Transform::GetLocalEulerRotation() const
 {
 	return localEulerRotation;
 	//return localEulerRotation * RADTODEG;
+	//return localRotation.ToEulerXYZ() * RADTODEG;
 }
 
 float3 C_Transform::GetLocalScale() const
@@ -267,40 +243,55 @@ float3 C_Transform::GetLocalScale() const
 	return localScale;
 }
 
-float3 C_Transform::GetWorldPosition() const
+float3 C_Transform::GetWorldPosition()
 {
-	float3 p, s;
-	Quat rotation;
-	worldTransform.Decompose(p, rotation, s);
-
-	return p;
+	if (updateWorld)
+		UpdateWorldTransform();
+	
+	return worldTransform.TranslatePart();
 }
 
-Quat C_Transform::GetWorldRotation() const
-{
+Quat C_Transform::GetWorldRotation()
+{	
+	if (updateWorld)
+		UpdateWorldTransform();
+
 	float3 p, s;
 	Quat rotation;
-	worldTransform.Decompose(p,rotation,s);
+
+	worldTransform.Decompose(p, rotation, s);
+
+	/*float3 s	= worldTransform.GetScale();																				// Faster but irrelevantly so on Release Mode.
+	float3x3 r	= worldTransform.RotatePart();
+
+	r.ScaleCol(0, 1.0f / s.x);
+	r.ScaleCol(1, 1.0f / s.y);
+	r.ScaleCol(2, 1.0f / s.z);*/
 
 	return rotation;
 }
 
-float3 C_Transform::GetWorldEulerRotation() const
+float3 C_Transform::GetWorldEulerRotation()
 {
+	if (updateWorld)
+		UpdateWorldTransform();
+	
 	float3 p, s;
 	Quat rotation;
+
 	worldTransform.Decompose(p, rotation, s);
 
 	return rotation.ToEulerXYZ() * RADTODEG;
+	
+	//return GetWorldRotation().ToEulerXYZ() * RADTODEG;																	// Faster but irrelevantly so on Release Mode.
 }
 
-float3 C_Transform::GetWorldScale() const
+float3 C_Transform::GetWorldScale()
 {
-	float3 p, s;
-	Quat rotation;
-	worldTransform.Decompose(p, rotation, s);
-
-	return s;
+	if (updateWorld)
+		UpdateWorldTransform();
+	
+	return worldTransform.GetScale();
 }
 
 // -- SET METHODS
@@ -309,51 +300,37 @@ void C_Transform::SetLocalPosition(const float3& newPosition)
 	localPosition = newPosition;
 
 	UpdateLocalTransform();
-	//updateLocalTransform = true;																// Parameter modifications could be batched to re-calculate the local transform only once.
-}																									// However, this would allow access to the dirty local transform before it can be updated.
+}
 
 void C_Transform::SetLocalRotation(const Quat& newRotation)
 {
-	localRotation = newRotation;
-
-	localEulerRotation = localRotation.ToEulerXYZ();
+	localRotation		= newRotation;
+	localEulerRotation	= localRotation.ToEulerXYZ();
 
 	UpdateLocalTransform();
 }
 
 void C_Transform::SetLocalRotation(const float3& newRotation)
 {
-	localRotation = Quat::FromEulerXYZ(newRotation.x, newRotation.y, newRotation.z);
-	localEulerRotation = newRotation;
+	localRotation		= Quat::FromEulerXYZ(newRotation.x, newRotation.y, newRotation.z);
+	localEulerRotation	= newRotation;
 
 	UpdateLocalTransform();
 }
 
 void C_Transform::SetLocalEulerRotation(const float3& newEulerRotation)
 {
-	float3 new_euler = newEulerRotation * DEGTORAD;
-	localRotation = Quat::FromEulerXYZ(new_euler.x, new_euler.y, new_euler.z);
-	localEulerRotation = new_euler;
+	localEulerRotation	= newEulerRotation * DEGTORAD;
+	localRotation		= Quat::FromEulerXYZ(localEulerRotation.x, localEulerRotation.y, localEulerRotation.z);
 
 	UpdateLocalTransform();
 }
 
 void C_Transform::SetLocalScale(const float3& newScale)
 {
-	if (newScale.x == 0.0f || newScale.y == 0.0f || newScale.z == 0.0f)
-	{
-		float3 mod_scale = float3::one;
-		
-		mod_scale.x = (newScale.x == 0.0f) ? 0.01f : newScale.x;
-		mod_scale.y = (newScale.y == 0.0f) ? 0.01f : newScale.y;
-		mod_scale.z = (newScale.z == 0.0f) ? 0.01f : newScale.z;
-		
-		localScale = mod_scale;
-	}
-	else
-	{
-		localScale = newScale;
-	}
+	localScale.x = (newScale.x != 0.0f) ? newScale.x : 0.001f;																	// Allow negative scale values?
+	localScale.y = (newScale.y != 0.0f) ? newScale.y : 0.001f;
+	localScale.z = (newScale.z != 0.0f) ? newScale.z : 0.001f;
 
 	UpdateLocalTransform();
 }
@@ -405,22 +382,16 @@ void C_Transform::Translate(const float3& velocity)
 
 void C_Transform::Rotate(const Quat& angularVelocity)
 {
-	localRotation = localRotation * angularVelocity;
-
-	localEulerRotation += angularVelocity.ToEulerXYZ();
+	localRotation		= localRotation * angularVelocity;
+	localEulerRotation	= localRotation.ToEulerXYZ();
 
 	UpdateLocalTransform();
 }
 
 void C_Transform::Rotate(const float3& angularVelocity)
 {
-	localRotation = localRotation * Quat::FromEulerXYZ(angularVelocity.x, angularVelocity.y, angularVelocity.z);		// Only rotate Y? Would only look left/right horizontally.
-	localEulerRotation += angularVelocity;
-	
-	//float3 local = localRotation.ToEulerXYZ() * RADTODEG;																// If the above code is used to rotate objects, when used through
-	//float3 euler = localEulerRotation * RADTODEG;																		// the editor with euler angles, they will get out of sync with
-	//LOG("[SCENE] Local Rotation: { %.3f, %.3f, %.3f }", local.x, local.y, local.z);										// the localRotation quaternion at some rotations of the Y axis.
-	//LOG("[SCENE] Euler Rotation: { %.3f, %.3f, %.3f }", euler.x, euler.y, euler.z);										// Ex: Y = 95.0f --> X = 180.0f, Z = -180.0f ==> Gets out of sync.
+	localRotation		= localRotation * Quat::FromEulerXYZ(angularVelocity.x, angularVelocity.y, angularVelocity.z);
+	localEulerRotation	+= angularVelocity;
 
 	UpdateLocalTransform();
 }

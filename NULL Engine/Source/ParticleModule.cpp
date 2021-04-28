@@ -43,6 +43,7 @@ void EmitterBase::Update(float dt, EmitterInstance* emitter)
 		unsigned int particleIndex = emitter->particleIndices[i];
 		Particle* particle = &emitter->particles[particleIndex];
 
+		particle->normalizedLifetime = particle->currentLifetime / particle->maxLifetime;
 		particle->distanceToCamera = float3(App->camera->GetCurrentCamera()->GetFrustum().WorldMatrix().TranslatePart() - particle->position).LengthSq();
 	}
 	
@@ -79,6 +80,46 @@ void EmitterSpawn::Update(float dt, EmitterInstance* emitter)
 				SpawnParticle(); //SpawnParticle() will then call the Spawn() method in every particle module
 		}
 	}
+}
+
+void EmitterArea::Save(ParsonNode& node)
+{
+	node.SetInteger("Type", (int)type);
+
+	node.SetNumber("areaX1", areaX1);
+	node.SetNumber("areaX2", areaX2);
+
+	node.SetNumber("areaY1", areaY1);
+	node.SetNumber("areaY2", areaY2);
+
+	node.SetNumber("areaZ1", areaZ1);
+	node.SetNumber("areaZ2", areaZ2);
+}
+
+void EmitterArea::Load(ParsonNode& node)
+{
+	areaX1 = node.GetNumber("areaX1");
+	areaX2 = node.GetNumber("areaX2");
+
+	areaY1 = node.GetNumber("areaY1");
+	areaY2 = node.GetNumber("areaY2");
+
+	areaZ1 = node.GetNumber("areaZ1");
+	areaZ2 = node.GetNumber("areaZ2");
+}
+
+void EmitterArea::Spawn(EmitterInstance* emitter, Particle* particle)
+{
+	float positionX = math::Lerp(areaX1, areaX2, randomGenerator.Float());
+	float positionY = math::Lerp(areaY1, areaY2, randomGenerator.Float());
+	float positionZ = math::Lerp(areaZ1, areaZ2, randomGenerator.Float());
+
+	particle->position = float3(particle->position.x + positionX, particle->position.y + positionY, particle->position.z + positionZ);
+}
+
+void EmitterArea::Update(float dt, EmitterInstance* emitter)
+{
+
 }
 
 void ParticleMovement::Save(ParsonNode& node)
@@ -149,42 +190,55 @@ void ParticleColor::Save(ParsonNode& node)
 {
 	node.SetInteger("Type", (int)type);//TODO PARTICLE SYSTEM
 
-	node.SetColor("initialColor",initialColor);
+	node.SetColor("initialColor1",initialColor1);
+	node.SetColor("initialColor2", initialColor2);
 
-	node.SetBool("hideColor",hideColor);
-	node.SetBool("eraseColor", eraseColor);
+	node.SetBool("colorOverLifetime", colorOverLifetime);
 }
 
 void ParticleColor::Load(ParsonNode& node)
 {
-	initialColor = node.GetColor("initialColor");
+	initialColor1 = node.GetColor("initialColor1");
+	initialColor2 = node.GetColor("initialColor2");
 
-	hideColor = node.GetBool("hideColor");
-	eraseColor = node.GetBool("eraseColor");
+	colorOverLifetime = node.GetBool("colorOverLifetime");
 }
 
 void ParticleColor::Spawn(EmitterInstance* emitter, Particle* particle)
 {
-	particle->color = initialColor;
+	if (!colorOverLifetime)
+	{
+		particle->color.r = math::Lerp(initialColor1.r, initialColor2.r, randomGenerator.Float());
+		particle->color.g = math::Lerp(initialColor1.g, initialColor2.g, randomGenerator.Float());
+		particle->color.b = math::Lerp(initialColor1.b, initialColor2.b, randomGenerator.Float());
+	}
 }
 
 void ParticleColor::Update(float dt, EmitterInstance* emitter)
 {
-	//particles color over lifetime
-	/*for (unsigned int i = 0; i < emitter->activeParticles; ++i)
+	if (colorOverLifetime)
 	{
-		unsigned int particleIndex = emitter->particleIndices[i];
-		Particle* particle = &emitter->particles[particleIndex];
+		for (unsigned int i = 0; i < emitter->activeParticles; ++i)
+		{
+			unsigned int particleIndex = emitter->particleIndices[i];
+			Particle* particle = &emitter->particles[particleIndex];
 
-		if (particle->currentLifetime <= 0.25f)
-			particle->color = Color(1.0f, 0.0f, 0.0f, 1.0f);
+			float redDifference = initialColor2.r - initialColor1.r;
+			float newRed = initialColor1.r + (redDifference * particle->normalizedLifetime);
 
-		else if (particle->currentLifetime > 0.25f && particle->currentLifetime <= 0.75)
-			particle->color = Color(1.0f, 0.6f, 0.0f, 1.0f);
+			float greenDifference = initialColor2.g - initialColor1.g;
+			float newGreen = initialColor1.g + (greenDifference * particle->normalizedLifetime);
 
-		else
-			particle->color = Color(0.6f, 0.5f, 0.5f, 1.0f);
-	}*/
+			float blueDifference = initialColor2.b - initialColor1.b;
+			float newBlue = initialColor1.b + (blueDifference * particle->normalizedLifetime);
+
+			float alphaDifference = initialColor2.a - initialColor1.a;
+			float newAlpha = initialColor1.a + (alphaDifference * particle->normalizedLifetime);
+
+			particle->color = Color(newRed, newGreen, newBlue, newAlpha);
+		}
+	}
+
 	if (eraseColor == true)
 	{
 		emitter->emitter->DeleteModuleFromType(ParticleModule::Type::PARTICLE_COLOR);
@@ -319,7 +373,48 @@ Quat ParticleBillboarding::GetAlignmentRotation(const float3& position, const fl
 		}
 		break;
 	}
+	float3x3 result = float3x3(R, U, N);
 
-	return Quat(float3x3(R, U, N));
+	return result.ToQuat();
 }
 
+void ParticleSize::Save(ParsonNode& node)
+{
+	node.SetInteger("Type", (int)type);
+
+	node.SetBool("SizeOverTime", SizeOverTime);
+
+	node.SetNumber("initialSize1", (double)initialSize1);
+	node.SetNumber("initialSize2", (double)initialSize2);
+}
+
+void ParticleSize::Load(ParsonNode& node)
+{
+	SizeOverTime = node.GetBool("SizeOverTime");
+
+	initialSize1 = (float)node.GetNumber("initialSize1");
+	initialSize2 = (float)node.GetNumber("initialSize2");
+}
+
+void ParticleSize::Spawn(EmitterInstance* emitter, Particle* particle)
+{
+	if (!SizeOverTime)
+		particle->size = math::Lerp(initialSize1, initialSize2, randomGenerator.Float());
+	else
+		particle->size = initialSize1;
+}
+
+void ParticleSize::Update(float dt, EmitterInstance* emitter)
+{
+	if (SizeOverTime)
+	{
+		for (unsigned int i = 0; i < emitter->activeParticles; ++i)
+		{
+			unsigned int particleIndex = emitter->particleIndices[i];
+			Particle* particle = &emitter->particles[particleIndex];
+
+			float sizeDifference = initialSize2 - initialSize1;
+			particle->size = initialSize1 + (sizeDifference * particle->normalizedLifetime);
+		}
+	}
+}

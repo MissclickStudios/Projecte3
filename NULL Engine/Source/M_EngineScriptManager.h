@@ -29,6 +29,8 @@ public:
 	bool CleanUp() override;;
 
 	const std::map<std::string, std::string>& GetAviableScripts() const { return aviableScripts; }
+	bool ParseEnum(const char* enumName, const char* definitionFile) override;
+	const std::map<std::string, std::map<int, std::string>>& GetInspectorEnums() const;
 
 private:
 	void HotReload();
@@ -38,6 +40,7 @@ private:
 
 private:
 	std::map<std::string, std::string> aviableScripts;
+	std::map<std::string, std::map<int, std::string>> inspectorEnums;
 	uint64 lastModDll;
 	friend class C_Script;
 };

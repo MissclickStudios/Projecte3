@@ -26,16 +26,16 @@
 
 	//Import/export engine core define
 #ifdef NULL_BUILD_DLL
-#define NULL_API __declspec(dllexport)
+#define MISSCLICK_API __declspec(dllexport)
 #else
-#define NULL_API __declspec(dllimport)
+#define MISSCLICK_API __declspec(dllimport)
 #endif
 
 MATH_BEGIN_NAMESPACE
 
 /// A two-dimensional circle in 3D space.
 /** This class represents both a hollow circle (only edge) and a solid circle (disc). */
-class NULL_API Circle
+class MISSCLICK_API Circle
 {
 public:
 	/// The center position of this circle.

@@ -476,14 +476,11 @@ bool Importer::Meshes::Load(const char* buffer, R_Mesh* rMesh)
 
 		Utilities::LoadBoneMapping(&cursor, rMesh, headerData[4]);
 
-		for (auto bone = rMesh->boneMapping.begin(); bone != rMesh->boneMapping.end(); ++bone)
+		/*for (auto bone = rMesh->boneMapping.begin(); bone != rMesh->boneMapping.end(); ++bone)
 		{
 			LOG("BONE { %s } ==> ID { %u }", bone->first.c_str(), bone->second);
-		}
-
-		
+		}*/
 	}
-
 
 	// --- PRECALCULATED DATA ---
 	float3 aabbCorners[8];

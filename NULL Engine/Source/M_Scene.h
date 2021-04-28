@@ -7,7 +7,6 @@
 #include "MathGeoLib/include/Geometry/LineSegment.h"
 #include "MathGeoLib/include/Geometry/Triangle.h"
 #include "Module.h"
-#include "LevelGenerator.h"
 
 namespace math
 {
@@ -28,7 +27,7 @@ struct ModelNode;
 
 typedef unsigned __int32 uint32;
 
-class NULL_API M_Scene : public Module
+class MISSCLICK_API M_Scene : public Module
 {
 public:
 	M_Scene(bool isActive = true);
@@ -51,14 +50,16 @@ public:																									// --- GAME OBJECTS METHODS ---
 	void			SaveCurrentScene();
 	bool			SaveSceneAs(const char* sceneName = nullptr);										// To be called from editor
 	bool			NewScene();																			// Opens a new scene
+	
+	void			UpdateSceneFromRoot(GameObject* root);
+	void			RefreshSceneTransforms();
 
 	void			LoadResourceIntoScene(Resource* resource);
 
 	GameObject*		LoadPrefabIntoScene(ParsonNode* a, GameObject* parent);
 	void			LoadPrefabObject(GameObject* gameObject, ParsonNode* node);
-
+	
 	GameObject*		InstantiatePrefab(uint prefabID,GameObject* parent,float3 position,Quat rotation);
-
 
 	std::vector<GameObject*>*	GetGameObjects			();
 	
@@ -121,7 +122,7 @@ public:																														// --- SCENE LIGHT METHODS
 
 	void ShowFPS();
 
-	LevelGenerator* GetLevelGenerator();
+	void ScriptChangeScene(const std::string& sceneName);
 	
 private:
 	std::vector<GameObject*> gameObjects;
@@ -139,14 +140,13 @@ private:
 
 	C_AudioSource*					music = nullptr;
 
-	LevelGenerator					level;
-
 	std::string currentScene;
 
 	std::vector<std::pair<uint32, GameObject**>> toAdd;
 
-public:
+private:
 	bool nextScene = false;
+	std::string nextSceneName;
 
 };
 

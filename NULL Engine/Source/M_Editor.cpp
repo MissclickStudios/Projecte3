@@ -3,6 +3,9 @@
 #include "ImGui.h"
 #include "ImGui/include/imgui_internal.h"
 
+#include "MC_Time.h"
+#include "Log.h"
+
 #include "Icons.h"
 
 #include "EngineApplication.h"															// ATTENTION: Globals.h already included in Module.h
@@ -17,6 +20,7 @@
 #include "Importer.h"
 
 #include "GameObject.h"
+#include "C_Transform.h"
 
 #include "EditorPanel.h"
 #include "E_MainMenuBar.h"
@@ -37,13 +41,7 @@
 #include "E_WantToSaveScene.h"
 
 #include "M_Editor.h"
-
-#include "MemoryManager.h"
-#include "Time.h"
-
-#include "C_Transform.h"
-#include "Log.h"
-
+#include "CoreDllHelpers.h"
 #include "MemoryManager.h"
 
 #pragma comment (lib, "Source/Dependencies/glew/libx86/glew32.lib") //Needed for ImGui
@@ -182,7 +180,7 @@ UpdateStatus M_Editor::PostUpdate(float dt)
 	}
 	
 	// Editor: Configuration Frame Data Histograms
-	UpdateFrameData(Time::Real::GetFramesLastSecond(), Time::Real::GetMsLastFrame());
+	UpdateFrameData(MC_Time::Real::GetFramesLastSecond(), MC_Time::Real::GetMsLastFrame());
 	
 	return ret;
 }
@@ -498,7 +496,8 @@ void M_Editor::GetEngineIconsThroughEditor(Icons& engineIcons)
 void M_Editor::LoadResourceIntoSceneThroughEditor(const ImGuiPayload& payload)
 {
 	const char* draggedAssetPath = *(const char**)payload.Data;
-	if (App->fileSystem->GetFileExtension(draggedAssetPath) == "prefab")
+	std::string extension = App->fileSystem->GetFileExtension(draggedAssetPath);
+	if (extension == "prefab")
 	{
 		std::string prefabId;
 		EngineApp->fileSystem->SplitFilePath(draggedAssetPath, nullptr, &prefabId, nullptr);
@@ -510,11 +509,12 @@ void M_Editor::LoadResourceIntoSceneThroughEditor(const ImGuiPayload& payload)
 		if (draggedResource != nullptr)
 			EngineApp->scene->LoadResourceIntoScene(draggedResource);
 	}
+	CoreCrossDllHelpers::CoreReleaseString(extension);
 }
 
 const std::map<uint32, Resource*>* M_Editor::GetResourcesThroughEditor() const
 {
-	return EngineApp->resourceManager->GetResources();
+	return EngineApp->resourceManager->GetResourcesMap();
 }
 
 void M_Editor::SaveSceneThroughEditor(const char* sceneName)

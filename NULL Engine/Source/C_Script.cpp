@@ -102,6 +102,17 @@ bool C_Script::SaveState(ParsonNode& root) const
 				else
 					variable.SetInteger("gameobject", 0);
 				break;
+			case InspectorScriptData::VECTORSTRING: 
+			{
+				ParsonArray parsonStringArray = variable.SetArray("vectorstring");
+				for (std::vector<std::string>::const_iterator cit = (*(std::vector<std::string>*)inspectorVariables[i].ptr).cbegin(); cit != (*(std::vector<std::string>*)inspectorVariables[i].ptr).cend(); ++cit) 
+				{
+					parsonStringArray.SetString((*cit).c_str());
+				}
+				break; 
+			}
+			case InspectorScriptData::ENUM:
+				variable.SetInteger("enum", *(int*)inspectorVariables[i].ptr); break;
 			}
 		}
 	}
@@ -155,11 +166,28 @@ bool C_Script::LoadState(ParsonNode& root)
 							*(std::string*)inspectorVariables[i].ptr = variable.GetString("string"); break;
 						case InspectorScriptData::DataType::PREFAB:
 							*(Prefab*)inspectorVariables[i].ptr = App->resourceManager->prefabs[(unsigned int)variable.GetInteger("prefab")]; break;
-						case InspectorScriptData::DataType::GAMEOBJECT: //TODO: FINISH THIS !!!!
+						case InspectorScriptData::DataType::GAMEOBJECT:  //TODO: FINISH THIS !!!!
+						{
 							uint32 id = variable.GetInteger("gameobject");
 							if (id != 0)
 								App->scene->ResolveScriptGoPointer(id, inspectorVariables[i].obj);
+							break; 
+						}
+						case InspectorScriptData::VECTORSTRING:
+						{
+							//std::vector<std::string>& inspectorStringVector = *(std::vector<std::string>*)(*item).ptr;
+							ParsonArray parsonStringArray = variable.GetArray("vectorstring");
+							//inspectorStringVector.reserve(parsonStringArray.size);
+							App->scriptManager->StringVecReserve(inspectorVariables[i].ptr, parsonStringArray.size);
+							for (int k = 0; k < parsonStringArray.size; ++k)
+							{
+								//inspectorStringVector.emplace_back(parsonStringArray.GetString(i));
+								App->scriptManager->StringVecEmplaceBackString(inspectorVariables[i].ptr, parsonStringArray.GetString(k));
+							}
 							break;
+						}
+						case InspectorScriptData::DataType::ENUM:
+							*(int*)inspectorVariables[i].ptr = variable.GetInteger("enum"); break;
 						}
 					}
 				}
@@ -202,7 +230,7 @@ void C_Script::LoadData(const char* name, bool engineScript)
 			Script* script = (Script*)scriptData;
 			App->scriptManager->currentScripts.push_back(script);
 			script->gameObject = GetOwner();
-			script->transform = script->gameObject->GetComponent<C_Transform>();
+			script->transform = script->gameObject->transform;
 			script->enabled = &isActive;
 #ifndef GAMEBUILD
 			script->dataName = &dataName;
@@ -556,6 +584,16 @@ void C_Script::InspectorString(std::string* variablePtr, const char* ptrName)
 		script->inspectorVariables.push_back(InspectorScriptData(variableName, InspectorScriptData::DataType::STRING, variablePtr, InspectorScriptData::ShowMode::NONE));
 }
 
+void C_Script::InspectorText(std::string* variablePtr, const char* ptrName)
+{
+	std::string variableName = GetVariableName(ptrName);
+
+	C_Script* script = App->scriptManager->actualScriptLoading;
+	if (script != nullptr)
+		script->inspectorVariables.push_back(InspectorScriptData(variableName, InspectorScriptData::DataType::STRING, variablePtr, InspectorScriptData::ShowMode::TEXT));
+
+}
+
 void C_Script::InspectorPrefab(Prefab* variablePtr, const char* ptrName)
 {
 	if (variablePtr != nullptr) {
@@ -591,4 +629,27 @@ void C_Script::InspectorGameObject(GameObject** variablePtr, const char* ptrName
 		script->inspectorVariables.push_back(variable);
 	}
 
+}
+
+void C_Script::InspectorStringVector(std::vector<std::string>* variablePtr, const char* ptrName)
+{
+	std::string variableName = GetVariableName(ptrName);
+
+	C_Script* script = App->scriptManager->actualScriptLoading;
+	if (script != nullptr)
+		script->inspectorVariables.push_back(InspectorScriptData(variableName, InspectorScriptData::DataType::VECTORSTRING, variablePtr, InspectorScriptData::ShowMode::NONE));
+}
+
+void C_Script::InspectorEnum(void* variablePtr, const char* ptrName, const char* enumName, const char* definitionFile)
+{
+	std::string variableName = GetVariableName(ptrName);
+	if (App->scriptManager->ParseEnum(enumName,definitionFile))
+	{
+		C_Script* script = App->scriptManager->actualScriptLoading;
+		if (script != nullptr) {
+			InspectorScriptData variable(variableName, InspectorScriptData::DataType::ENUM, variablePtr, InspectorScriptData::NONE);
+			variable.enumName = enumName;
+			script->inspectorVariables.push_back(variable);
+		}
+	}
 }

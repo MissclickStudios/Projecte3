@@ -31,6 +31,7 @@ bool M_ScriptManager::Start()
 		while (MoveFileA(SCRIPTS_DLL_OUTPUT, SCRIPTS_DLL_WORKING) == FALSE) {}
 	}
 	dllHandle = LoadLibrary(SCRIPTS_DLL_WORKING);
+	ResolveScriptHelperFunctions();
 	return true;
 }
 
@@ -117,4 +118,22 @@ bool M_ScriptManager::CleanUp()
 HINSTANCE M_ScriptManager::GetDllHandle() const
 {
 	return dllHandle;
+}
+
+bool M_ScriptManager::ParseEnum(const char* enumName, const char* definitionFile)
+{
+	return true;
+}
+
+void M_ScriptManager::ResolveScriptHelperFunctions()
+{
+	if (dllHandle != nullptr)
+	{
+		StringVecPushBackString = (void(*)(void*, const std::string&))GetProcAddress(dllHandle, "StringVectorPushBackString");
+		StringVecPushBackChar = (void(*)(void*, const char*))GetProcAddress(dllHandle, "StringVectorPushBackChar");
+		StringVecEmplaceBackString = (void(*)(void*, const std::string&))GetProcAddress(dllHandle, "StringVectorEmplaceBackString");
+		StringVecEmplaceBackChar = (void(*)(void*, const char*))GetProcAddress(dllHandle, "StringVectorEmplaceBackChar");
+		StringVecReserve = (void(*)(void*, int))GetProcAddress(dllHandle, "StringVectorReserve");
+		StringVecErase = (void(*)(void*, int))GetProcAddress(dllHandle, "StringVectorErase");
+	}
 }

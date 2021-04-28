@@ -136,9 +136,8 @@ bool C_RigidBody::LoadState(ParsonNode& root)
 		freezeRotationZ = root.GetBool("Freeze Rotation Z");
 	}
 
-	filter = root.GetString("Filter");
-	// Used because when loading the rigidbody is created before the colliders so whe have to wait a till the update to update their filters
-	toChangeFilter = true;				
+	filter = root.GetString("Filter");	
+	toChangeFilter = true;
 
 	ApplyPhysicsChanges();
 
@@ -305,7 +304,6 @@ void C_RigidBody::ApplyPhysicsChanges()
 		dynamicBody->wakeUp();
 	}
 
-	toChangeFilter = true;
 	toUpdate = false;
 }
 

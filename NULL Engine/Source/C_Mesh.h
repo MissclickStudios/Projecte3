@@ -2,7 +2,7 @@
 #define __C_MESH_H__
 
 #include "Component.h"
-
+#include "Color.h"
 namespace math
 {
 	class float3;
@@ -12,7 +12,7 @@ class ParsonNode;
 class GameObject;
 class R_Mesh;
 
-class NULL_API C_Mesh : public Component
+class MISSCLICK_API C_Mesh : public Component
 {
 public:
 	C_Mesh(GameObject* owner);
@@ -55,10 +55,20 @@ public:																																// --- C_MESH DEBUG METHODS
 	bool		GetShowWireframe		() const;
 	bool		GetShowBoundingBox		() const;
 	
+	
 	void		SetDrawVertexNormals	(bool setTo);
 	void		SetDrawFaceNormals		(bool setTo);
 	void		SetShowWireframe		(bool setTo);
 	void		SetShowBoundingBox		(bool setTo);
+	
+	bool		GetOutlineMesh() const;
+	void		SetOutlineMesh(bool setTo);
+
+	Color		GetOutlineColor() const;
+	void		SetOutlineColor(Color color);
+
+	float		GetOutlineThickness() const;
+	void		SetOutlineThickness(float outline);
 
 private:
 	R_Mesh*		rMesh;
@@ -70,9 +80,15 @@ private:
 	std::vector<float4x4>				boneTransforms;
 	std::map<std::string, GameObject*>	boneMapping;
 	
+	
+
 private:																															// --- COMPONENT MESH DEBUG VARIABLES
 	bool	showWireframe;
 	bool	showBoundingBox;
+	
+	bool	outlineMesh;
+	Color	outlineColor;
+	float	outlineThickness;
 };
 
 #endif // !__C_MESH_H__

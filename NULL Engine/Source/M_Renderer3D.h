@@ -24,6 +24,7 @@ class R_Material;
 class R_Texture;
 class R_Shader;
 
+class C_Transform;
 class C_Mesh;	
 class C_Material;
 
@@ -52,11 +53,18 @@ enum class CuboidType
 	COLLIDER
 };
 
+const float ParticlesCoords[] = {
+1, 1,
+1, 0,
+0, 0,
+1,0,
+};
+
 struct MeshRenderer
 {
-	MeshRenderer(float4x4* transform, C_Mesh* cMesh, C_Material* cMaterial);								// Will render the given mesh at the given position with the given mat & tex.
+	MeshRenderer(C_Transform* transform, C_Mesh* cMesh, C_Material* cMaterial);								// Will render the given mesh at the given position with the given mat & tex.
 
-	void Render						();
+	void Render						(bool outline);
 
 	void RenderVertexNormals		(const R_Mesh* rMesh);
 	void RenderFaceNormals			(const R_Mesh* rMesh);
@@ -69,13 +77,20 @@ struct MeshRenderer
 	void ApplyTextureAndMaterial	();
 	void ClearTextureAndMaterial	();
 
+	void RenderOutline				(R_Mesh* rMesh);
+
 	void ApplyShader				();
 	uint32 SetDefaultShader			(C_Material* cMaterial);
 	void ClearShader				();
 
-	float4x4*	transform;
-	C_Mesh*		cMesh;
-	C_Material*	cMaterial;
+	std::vector<float4x4> boneTransforms;
+
+	C_Transform*	transform;
+	C_Mesh*			cMesh;
+	C_Material*		cMaterial;
+
+	float			distanceToCamera;
+
 };
 
 struct CuboidRenderer																							// Will render the wireframe of any given geometric form with 8 vertices.
@@ -122,16 +137,20 @@ struct ParticleRenderer
 {
 	ParticleRenderer(R_Texture* mat, Color color, const float4x4 transform);
 
+	void LoadBuffers();
 	void Render();
 
+	uint VAO;
+
 	R_Texture* mat;
+	R_Shader* shader;
 	Color color;
 	float4x4 transform;
 };
 
 #define MAX_LIGHTS 8
 
-class NULL_API M_Renderer3D : public Module
+class MISSCLICK_API M_Renderer3D : public Module
 {
 public:
 	M_Renderer3D(bool isActive = true);
@@ -306,8 +325,6 @@ private:
 	std::vector<MeshRenderer>		meshRenderers;
 	std::vector<CuboidRenderer>		cuboidRenderers;
 	std::vector<SkeletonRenderer>	skeletonRenderers;
-
-	
 	
 
 	Icons					engineIcons;

@@ -13,7 +13,7 @@ enum class PhysfsResult																	// Every PhysFS method that returns 1 or
 	SUCCESS
 };
 
-class NULL_API M_FileSystem : public Module
+class MISSCLICK_API M_FileSystem : public Module
 {
 public:
 	M_FileSystem(bool isActive = true);

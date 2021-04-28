@@ -19,6 +19,8 @@ C_2DAnimator::C_2DAnimator(GameObject* owner) : Component(owner, ComponentType::
 	animationPlaying = false;
 	playAnimation = false;
 
+	animationNumberPlaying = 1;
+
 	playFromTheStartOnLoop = false;
 
 	name = "";
@@ -36,50 +38,11 @@ bool C_2DAnimator::Update()
 
 	if (playFromTheStartOnLoop) 
 	{
-		PlayAnimation(true);
+		PlayAnimation(true,1);
 		playFromTheStartOnLoop = false;
 	}
 
-	//Start a new animation
-	if (playAnimation) 
-	{
-		animationPlaying = true;
-		animationCounter = 0;
-		animationTimer.Start();
-		playAnimation = false;
-	}
-
-	//Animation loop
-	if (animationPlaying) 
-		if (animationStepTime <= animationTimer.Read() && animationCounter < animation.size() - 1)
-		{
-			animationCounter++;
-			animationTimer.Stop();
-			animationTimer.Start();
-		}
-	
-	//Set the texture id of the current animation frame
-	if (animation.size() > 0)
-		currentFrameIdTexture = GetTextureIdFromVector(animationCounter);
-
-	if (animationCounter == animation.size() - 1)
-	{
-		if (!animationLoop)
-		{
-			animationPlaying = false;
-			animationCounter = 0;
-			playAnimation = false;
-			animationTimer.Stop();
-		}
-		else 
-		{
-			animationPlaying = true;
-			animationCounter = 0;
-			playAnimation = false;
-			animationTimer.Stop();
-			animationTimer.Start();
-		}
-	}
+	LoopAnimation(animationNumberPlaying);
 
 	return true;
 }
@@ -98,6 +61,8 @@ bool C_2DAnimator::SaveState(ParsonNode& root) const
 	root.SetBool("Animation Set On Loop From Start", playFromTheStartOnLoop);
 
 	root.SetString("Name", name.c_str());
+	root.SetString("Name1", name1.c_str());
+	root.SetString("Name2", name2.c_str());
 
 	return true;
 }
@@ -109,7 +74,12 @@ bool C_2DAnimator::LoadState(ParsonNode& root)
 	playFromTheStartOnLoop = root.GetBool("Animation Set On Loop From Start");
 
 	name = root.GetString("Name");
-	GetAnimationSprites(name.c_str());
+	name1 = root.GetString("Name1");
+	name2 = root.GetString("Name2");
+
+	GetAnimationSprites(name.c_str(),1);
+	GetAnimationSprites(name1.c_str(), 2);
+	GetAnimationSprites(name2.c_str(), 3);
 
 	return true;
 }
@@ -144,25 +114,70 @@ bool C_2DAnimator::GetAnimationPlayFromStart()
 	return playFromTheStartOnLoop;
 }
 
-const char* C_2DAnimator::GetName()
+const char* C_2DAnimator::GetName(int animationNum)
 {
-	return name.c_str();
+	switch (animationNum)
+	{
+	case 1:
+		return name.c_str();
+		break;
+	case 2:
+		return name1.c_str();
+		break;
+	case 3:
+		return name2.c_str();
+		break;
+	case 0:
+		break;
+	}
 }
 
-void C_2DAnimator::ChangeName(const char* name)
+void C_2DAnimator::ChangeName(const char* name, int animationNum)
 {
-	this->name = name;
+	switch (animationNum)
+	{
+	case 1:
+		this->name = name;
+		break;
+	case 2:
+		this->name1 = name;
+		break;
+	case 3:
+		this->name2 = name;
+		break;
+	case 0:
+		break;
+	}
 }
 
-void C_2DAnimator::GetAnimationSprites(const char* name)
+void C_2DAnimator::GetAnimationSprites(const char* name, int animationDestination)
 {
-	animation.clear();
-	ChangeName(name);
-	App->resourceManager->GetAllTextures(animation, name);
+	switch (animationDestination) 
+	{
+	case 1:	
+		animation.clear();
+		ChangeName(name,1);
+		App->resourceManager->GetAllTextures(animation, name);
+		break;
+	case 2:
+		animation1.clear();
+		ChangeName(name,2);
+		App->resourceManager->GetAllTextures(animation1, name);
+		break;
+	case 3:
+		animation2.clear();
+		ChangeName(name, 3);
+		App->resourceManager->GetAllTextures(animation2, name);
+		break;
+	case 0:
+		break;
+	}
+
 }
 
-void C_2DAnimator::PlayAnimation(bool loop)
+void C_2DAnimator::PlayAnimation(bool loop, int animationNumber)
 {
+	animationNumberPlaying = animationNumber;
 	playAnimation = true;
 	animationLoop = loop;
 }
@@ -171,14 +186,159 @@ void C_2DAnimator::StopAnimation()
 {
 }
 
-void C_2DAnimator::AddTexture(R_Texture* tex)
+uint C_2DAnimator::GetTextureIdFromVector(int index, int animationNum)
 {
-	animation.push_back(tex);
+	switch (animationNum) {
+	case 1:
+		return animation[index]->GetTextureID();
+		break;
+	case 2:
+		return animation1[index]->GetTextureID();
+		break;
+	case 3:
+		return animation2[index]->GetTextureID();
+		break;
+	case 0:
+		return animation[index]->GetTextureID();
+		break;
+	}
+
 }
 
-uint C_2DAnimator::GetTextureIdFromVector(int index)
+void C_2DAnimator::LoopAnimation(int animationNum)
 {
-	return animation[index]->GetTextureID();
+	switch (animationNum) 
+	{
+	case 1:
+		//Start a new animation
+		if (playAnimation)
+		{
+			animationPlaying = true;
+			animationCounter = 0;
+			animationTimer.Start();
+			playAnimation = false;
+		}
+
+		//Animation loop
+		if (animationPlaying)
+			if (animationStepTime <= animationTimer.Read() && animationCounter < animation.size() - 1)
+			{
+				animationCounter++;
+				animationTimer.Stop();
+				animationTimer.Start();
+			}
+
+		//Set the texture id of the current animation frame
+		if (animation.size() > 0)
+			currentFrameIdTexture = GetTextureIdFromVector(animationCounter,1);
+
+		if (animationCounter == animation.size() - 1)
+		{
+			if (!animationLoop)
+			{
+				animationPlaying = false;
+				animationCounter = 0;
+				playAnimation = false;
+				animationTimer.Stop();
+			}
+			else
+			{
+				animationPlaying = true;
+				animationCounter = 0;
+				playAnimation = false;
+				animationTimer.Stop();
+				animationTimer.Start();
+			}
+		}
+		break;
+	case 2:
+		//Start a new animation
+		if (playAnimation)
+		{
+			animationPlaying = true;
+			animationCounter = 0;
+			animationTimer.Start();
+			playAnimation = false;
+		}
+
+		//Animation loop
+		if (animationPlaying)
+			if (animationStepTime <= animationTimer.Read() && animationCounter < animation1.size() - 1)
+			{
+				animationCounter++;
+				animationTimer.Stop();
+				animationTimer.Start();
+			}
+
+		//Set the texture id of the current animation frame
+		if (animation1.size() > 0)
+			currentFrameIdTexture = GetTextureIdFromVector(animationCounter,2);
+
+		if (animationCounter == animation1.size() - 1)
+		{
+			if (!animationLoop)
+			{
+				animationPlaying = false;
+				animationCounter = 0;
+				playAnimation = false;
+				animationTimer.Stop();
+			}
+			else
+			{
+				animationPlaying = true;
+				animationCounter = 0;
+				playAnimation = false;
+				animationTimer.Stop();
+				animationTimer.Start();
+			}
+		}
+		break;
+	case 3:
+		//Start a new animation
+		if (playAnimation)
+		{
+			animationPlaying = true;
+			animationCounter = 0;
+			animationTimer.Start();
+			playAnimation = false;
+		}
+
+		//Animation loop
+		if (animationPlaying)
+			if (animationStepTime <= animationTimer.Read() && animationCounter < animation2.size() - 1)
+			{
+				animationCounter++;
+				animationTimer.Stop();
+				animationTimer.Start();
+			}
+
+		//Set the texture id of the current animation frame
+		if (animation2.size() > 0)
+			currentFrameIdTexture = GetTextureIdFromVector(animationCounter, 3);
+
+		if (animationCounter == animation2.size() - 1)
+		{
+			if (!animationLoop)
+			{
+				animationPlaying = false;
+				animationCounter = 0;
+				playAnimation = false;
+				animationTimer.Stop();
+			}
+			else
+			{
+				animationPlaying = true;
+				animationCounter = 0;
+				playAnimation = false;
+				animationTimer.Stop();
+				animationTimer.Start();
+			}
+		}
+		break;
+	case 0:
+		break;
+	}
+	
 }
 
 

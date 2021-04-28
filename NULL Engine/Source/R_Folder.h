@@ -7,7 +7,7 @@ class ParsonNode;
 
 typedef unsigned __int32 uint32;
 
-class NULL_API R_Folder : public Resource
+class MISSCLICK_API R_Folder : public Resource
 {
 public:
 	R_Folder();
@@ -17,6 +17,8 @@ public:
 
 	bool SaveMeta(ParsonNode& metaRoot) const override;
 	bool LoadMeta(const ParsonNode& metaRoot) override;
+
+	static inline ResourceType GetType() { return ResourceType::FOLDER; }
 
 public:
 	std::vector<uint32> GetContainedResources() const;

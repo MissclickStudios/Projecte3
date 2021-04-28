@@ -15,7 +15,7 @@ namespace Importer
 {
 	namespace Shaders
 	{
-		bool		NULL_API Import(const char* path, R_Shader* shader);
+		bool		MISSCLICK_API Import(const char* path, R_Shader* shader);
 		int			ImportVertex(std::string shaderFile, R_Shader* shader);
 		int			ImportFragment(std::string shaderFile, R_Shader* shader);
 

@@ -22,15 +22,15 @@
 
 //Import/export engine core define
 #ifdef NULL_BUILD_DLL
-#define NULL_API __declspec(dllexport)
+#define MISSCLICK_API __declspec(dllexport)
 #else
-#define NULL_API __declspec(dllimport)
+#define MISSCLICK_API __declspec(dllimport)
 #endif
 
 MATH_BEGIN_NAMESPACE
 
 /// A 3D sphere.
-class NULL_API Sphere
+class MISSCLICK_API Sphere
 {
 public:
 	/// The center point of this sphere.

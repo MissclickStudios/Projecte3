@@ -5,27 +5,16 @@
 
 #include "Component.h"
 
+
 const float texCoordsBuffer[] = {
--1, -1,
-1, -1,
--1, 1,
-1, -1,
 1, 1,
--1, 1,
+1, 0,
+0, 0,
+1,0,
 };
 
-//const float vertices[] = {
-//	// pos      // tex
-//	0.0f, 1.0f, 0.0f, 1.0f,
-//	1.0f, 0.0f, 1.0f, 0.0f,
-//	0.0f, 0.0f, 0.0f, 0.0f,
-//
-//	0.0f, 1.0f, 0.0f, 1.0f,
-//	1.0f, 1.0f, 1.0f, 1.0f,
-//	1.0f, 0.0f, 1.0f, 0.0f
-//};
 
-class NULL_API C_UI_Image : public Component
+class MISSCLICK_API C_UI_Image : public Component
 {
 public:
 
@@ -58,7 +47,7 @@ public:
 
 private:
 
-	Rect2D rect = { 0,0,2,2 };
+	Rect2D rect = { 0,0,1,1 };
 
 	uint VAO;
 	uint VBO;

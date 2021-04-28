@@ -17,7 +17,7 @@ class ParsonNode;
 
 #define MAX_MODULE_NAME_LENGTH 25
 
-class NULL_API Module
+class MISSCLICK_API Module
 {
 public:
 	Module(const char* name, bool isActive = true);

@@ -6,7 +6,7 @@
 class GameObject;
 class WwiseObject;
 
-class NULL_API C_AudioListener : public Component
+class MISSCLICK_API C_AudioListener : public Component
 {
 public:
 	C_AudioListener(GameObject* owner);

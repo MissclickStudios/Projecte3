@@ -82,6 +82,17 @@ void C_AudioSource::SetEvent(std::string name,  unsigned int id)
 	eventId = id;
 }
 
+void C_AudioSource::SetEvent(std::string name)
+{
+	std::map<std::string, unsigned int>::const_iterator it = App->audio->eventMap.find(name);
+
+	if (it != App->audio->eventMap.end())
+	{
+		eventName = (*it).first;
+		eventId = (*it).second;
+	}
+}
+
 void C_AudioSource::GetEvent(std::string* deu, unsigned int* ola) const
 {
 	*deu = eventName;
@@ -100,7 +111,11 @@ unsigned int C_AudioSource::GetEventId() const
 
 void C_AudioSource::PlayFx(unsigned int eventId)
 {
-	wwiseObject->PlayEvent(eventId);
+	//if (!isPlaying)
+	//{
+		wwiseObject->PlayEvent(eventId);
+	//	isPlaying = true;
+	//}
 }
 
 void C_AudioSource::PlayFx(std::string name)
@@ -109,23 +124,39 @@ void C_AudioSource::PlayFx(std::string name)
 
 	if (it != App->audio->eventMap.end())
 	{
-		wwiseObject->PlayEvent(eventId);
+		if (!isPlaying)
+		{
+			wwiseObject->PlayEvent(eventId);
+			isPlaying = true;
+		}
 	}
 }
 
 void C_AudioSource::PauseFx(unsigned int eventId)
 {
-	wwiseObject->PauseEvent(eventId);
+	if (isPlaying)
+	{
+		wwiseObject->PauseEvent(eventId);
+		isPlaying = false;
+	}
 }
 
 void C_AudioSource::ResumeFx(unsigned int eventId)
 {
-	wwiseObject->ResumeEvent(eventId);
+	if (!isPlaying)
+	{
+		wwiseObject->ResumeEvent(eventId);
+		isPlaying = true;
+	}
 }
 
 void C_AudioSource::StopFx(unsigned int eventId)
 {
-	wwiseObject->StopEvent(eventId);
+	if (isPlaying)
+	{
+		wwiseObject->StopEvent(eventId);
+		isPlaying = false;
+	}
 }
 
 float C_AudioSource::GetVolume()

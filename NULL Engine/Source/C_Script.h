@@ -11,7 +11,7 @@ class GameObject;
 class R_Script;
 class Prefab;
 
-struct NULL_API InspectorScriptData {
+struct MISSCLICK_API InspectorScriptData {
 	enum DataType {
 		INT,
 		BOOL,
@@ -19,14 +19,9 @@ struct NULL_API InspectorScriptData {
 		FLOAT3,
 		PREFAB,
 		STRING,
-		GAMEOBJECT
-		/*INT2,
-		INT3,
-		FLOAT2,
-		FLOAT3,
-		STRING,
-		PREFAB, // DONE
-		GAMEOBJECT, // DONE*/
+		GAMEOBJECT,
+		VECTORSTRING,
+		ENUM
 	};
 
 	enum ShowMode {
@@ -37,7 +32,8 @@ struct NULL_API InspectorScriptData {
 		CHECKBOX,
 		INPUT_FLOAT,
 		DRAGABLE_FLOAT,
-		SLIDER_FLOAT
+		SLIDER_FLOAT,
+		TEXT
 	};
 
 	InspectorScriptData(const std::string& variableName, const DataType& variableType, void* ptr, const ShowMode& mode) {
@@ -52,12 +48,14 @@ struct NULL_API InspectorScriptData {
 	ShowMode showAs;
 	void* ptr = nullptr;
 
+	//ugly
+	std::string enumName;
 	GameObject** obj = nullptr;
 	float minSlider = 0;
 	float maxSlider = 0;
 };
 
-class NULL_API C_Script : public Component
+class MISSCLICK_API C_Script : public Component
 {
 public:
 	C_Script(GameObject* owner);
@@ -110,10 +108,15 @@ public:
 	static void InspectorSliderFloat3(float3* variablePtr, const char* ptrName, const int& minValue, const int& maxValue);
 
 	static void InspectorString(std::string* variablePtr, const char* ptrName);
+	static void InspectorText(std::string* variablePtr, const char* ptrName);
 
 	static void InspectorPrefab(Prefab* variablePtr, const char* ptrName);
 
 	static void InspectorGameObject(GameObject** variablePtr, const char* ptrName);
+
+	static void InspectorStringVector(std::vector<std::string>* variablePtr, const char* ptrName);
+
+	static void InspectorEnum(void* variablePtr, const char* ptrName, const char* enumName, const char* definitionFile);
 	
 	R_Script* resource = nullptr;
 private:

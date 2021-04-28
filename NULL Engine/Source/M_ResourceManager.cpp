@@ -1,7 +1,7 @@
 #include "VariableTypedefs.h"
 #include "JSONParser.h"
 #include "Profiler.h"
-#include "Time.h"
+#include "MC_Time.h"
 #include "Random.h"
 #include "GameObject.h"
 //#include "Prefab.h"
@@ -80,7 +80,7 @@ UpdateStatus M_ResourceManager::PreUpdate(float dt)
 
 	UpdateStatus status = UpdateStatus::CONTINUE;
 
-	fileRefreshTimer += Time::Real::GetDT();
+	fileRefreshTimer += MC_Time::Real::GetDT();
 
 	if (fileRefreshTimer > fileRefreshRate)
 	{
@@ -193,7 +193,7 @@ uint32 M_ResourceManager::ImportFile(const char* assetsPath)
 	{
 		LOG("[WARNING] Resource Manager: The File to Import was already in the Library!");
 
-		std::map<uint32, std::string> libraryItems;
+		std::map<uint32, ResourceBase> libraryItems;
 		GetLibraryPairsFromMeta(assetsPath, libraryItems);
 
 		for (auto item = libraryItems.begin(); item != libraryItems.end(); ++item)
@@ -235,7 +235,7 @@ uint M_ResourceManager::SaveResourceToLibrary(Resource* resource)
 	case ResourceType::SHADER:			{ written = Importer::Shaders::Save((R_Shader*)resource, &buffer); }			break;
 	case ResourceType::PARTICLE_SYSTEM:	{ written = Importer::Particles::Save((R_ParticleSystem*)resource, &buffer); }	break;
 	case ResourceType::SCRIPT:			{ written = Importer::Scripts::Save((R_Script*)resource, &buffer); }			break;
-	case ResourceType::NAVMESH_AGENT:	{ written = Importer::Navigation::Save((R_NavMesh*)resource, &buffer); }		break;
+	case ResourceType::NAVMESH:	{ written = Importer::Navigation::Save((R_NavMesh*)resource, &buffer); }		break;
 	}
 
 	RELEASE_ARRAY(buffer);
@@ -251,7 +251,7 @@ uint M_ResourceManager::SaveResourceToLibrary(Resource* resource)
 		SaveMetaFile(resource);
 	}
 
-	library.emplace(resource->GetUID(), resource->GetLibraryPath());
+	library.emplace(resource->GetUID(), ResourceBase(resource));
 
 	return written;
 }
@@ -413,7 +413,7 @@ ResourceType M_ResourceManager::GetTypeFromAssetsExtension(const char* assetsPat
 	}
 	else if (extension == "navmesh")
 	{
-		type = ResourceType::NAVMESH_AGENT;
+		type = ResourceType::NAVMESH;
 	}
 	else if (extension == "[NONE]")
 	{
@@ -522,7 +522,6 @@ bool M_ResourceManager::GetForcedUIDsFromMeta(const char* assetsPath, std::map<s
 Resource* M_ResourceManager::CreateResource(ResourceType type, const char* assetsPath, uint32 forcedUID)
 {
 	Resource* resource = nullptr;
-
 	switch (type)
 	{
 	case ResourceType::MESH:			{ resource = new R_Mesh(); }			break;
@@ -535,7 +534,8 @@ Resource* M_ResourceManager::CreateResource(ResourceType type, const char* asset
 	case ResourceType::SHADER:			{ resource = new R_Shader(); }			break;
 	case ResourceType::PARTICLE_SYSTEM:	{ resource = new R_ParticleSystem(); }	break;
 	case ResourceType::SCRIPT:			{ resource = new R_Script(); }			break;
-	case ResourceType::NAVMESH_AGENT:	{ resource = new R_NavMesh(); }			break;
+	case ResourceType::NAVMESH:			{ resource = new R_NavMesh(); }			break;
+	case ResourceType::NONE:			{ /*resource = nullptr;*/ }				break;											// In case NONE is a trigger and a method needs to be called.
 	}
 
 	if (resource != nullptr)
@@ -598,7 +598,7 @@ bool M_ResourceManager::AllocateResource(uint32 UID, const char* assetsPath)
 	}
 
 	char* buffer				= nullptr;
-	const char* libraryPath		= library.find(UID)->second.c_str();
+	const char* libraryPath		= library.find(UID)->second.libraryPath.c_str();
 	uint read					= App->fileSystem->Load(libraryPath, &buffer);
 	if (read == 0)
 	{
@@ -621,7 +621,8 @@ bool M_ResourceManager::AllocateResource(uint32 UID, const char* assetsPath)
 	case ResourceType::SHADER:			{ success = Importer::Shaders::Load(buffer, (R_Shader*)resource); }				break;
 	case ResourceType::PARTICLE_SYSTEM:	{ success = Importer::Particles::Load(buffer, (R_ParticleSystem*)resource); }	break;
 	case ResourceType::SCRIPT:			{ success = Importer::Scripts::Load(buffer, (R_Script*)resource); }				break;
-	case ResourceType::NAVMESH_AGENT:	{ success = Importer::Navigation::Load(buffer, (R_NavMesh*)resource); }			break;
+	case ResourceType::NAVMESH:			{ success = Importer::Navigation::Load(buffer, (R_NavMesh*)resource); }			break;
+	case ResourceType::NONE:			{ /*success = false;*/ }														break;	// In case NONE is a trigger and a method needs to be called.
 	}
 
 	RELEASE_ARRAY(buffer);
@@ -749,7 +750,28 @@ bool M_ResourceManager::DeleteResource(Resource* resourceToDelete)
 	return true;
 }
 
-const std::map<uint32, Resource*>* M_ResourceManager::GetResources() const
+bool M_ResourceManager::RefreshResourceAssets(ResourceType type)
+{
+	/*if (!IsMetaType(type))
+		return;*/
+	
+	switch (type)
+	{
+	case ResourceType::MODEL:			{ RefreshDirectoryFiles(ASSETS_MODELS_PATH); }			break;
+	case ResourceType::TEXTURE:			{ RefreshDirectoryFiles(ASSETS_TEXTURES_PATH); }		break;
+	case ResourceType::FOLDER:			{ /*RefreshDirectoryFiles(ASSETS_FOLDERS_PATH);*/ }		break;
+	case ResourceType::SCENE:			{ /*RefreshDirectoryFiles(ASSETS_SCENES_PATH);*/ }		break;
+	case ResourceType::SHADER:			{ RefreshDirectoryFiles(ASSETS_SHADERS_PATH); }			break;
+	case ResourceType::PARTICLE_SYSTEM:	{ RefreshDirectoryFiles(ASSETS_PARTICLESYSTEMS_PATH); }	break;
+	case ResourceType::SCRIPT:			{ RefreshDirectoryFiles(ASSETS_SCRIPTS_PATH); }			break;
+	case ResourceType::NAVMESH:			{ RefreshDirectoryFiles(ASSETS_NAVIGATION_PATH); }		break;
+	case ResourceType::NONE:			{ RefreshDirectoryFiles(ASSETS_PATH); }					break;
+	}
+
+	return true;
+}
+
+const std::map<uint32, Resource*>* M_ResourceManager::GetResourcesMap() const
 {
 	return &this->resources;
 }
@@ -886,7 +908,7 @@ void M_ResourceManager::CreatePrefab(GameObject* gameObject)
 
 	SavePrefab(gameObject, id);
 
-	prefabs.emplace(id, Prefab(id, gameObject->GetName(), Time::GetUnixTime()));
+	prefabs.emplace(id, Prefab(id, gameObject->GetName(), MC_Time::GetUnixTime()));
 }
 
 void M_ResourceManager::UpdatePrefab(GameObject* gameObject)
@@ -907,7 +929,7 @@ void M_ResourceManager::UpdatePrefab(GameObject* gameObject)
 	std::map<uint32,Prefab>::iterator prefab = prefabs.find(id);
 	
 	if(prefab != prefabs.end())
-		prefab->second.updateTime = Time::GetUnixTime();
+		prefab->second.updateTime = MC_Time::GetUnixTime();
 }
 
 void M_ResourceManager::SavePrefab(GameObject* gameObject, uint _prefabId)
@@ -955,6 +977,7 @@ GameObject* M_ResourceManager::LoadPrefab(uint _prefabId, GameObject* parent, Ga
 	if(rootObject != nullptr) //we use the transform from the root object to keep it in the same place it was in the scene
 	{
 		rootObjectLoaded->transform->SetLocalTransform(rootObject->transform->GetLocalTransform());
+		rootObjectLoaded->ForceUID(rootObject->GetUID());
 	}
 
 	return rootObjectLoaded;
@@ -1283,8 +1306,6 @@ bool M_ResourceManager::GetResourceUIDsFromMeta(const char* assetsPath, std::vec
 
 bool M_ResourceManager::GetLibraryFilePathsFromMeta(const char* assetsPath, std::vector<std::string>& filePaths)
 {
-	bool ret = true;
-	
 	if (assetsPath == nullptr)
 	{
 		LOG("[ERROR] Resource Manager: Could not get Library File Paths from Meta File! Error: Given Assets Path was nullptr.");
@@ -1301,6 +1322,7 @@ bool M_ResourceManager::GetLibraryFilePathsFromMeta(const char* assetsPath, std:
 	if (!metaRoot.NodeIsValid())
 	{
 		LOG("%s! Error: Given Assets Path had no associated .meta file.", errorString.c_str());
+		return false;
 	}
 	if (!containedArray.ArrayIsValid())
 	{
@@ -1372,7 +1394,105 @@ bool M_ResourceManager::GetLibraryFilePathsFromMeta(const char* assetsPath, std:
 		filePaths.push_back(containedPath);
 	}
 
-	return ret;
+	return true;
+}
+
+bool M_ResourceManager::GetResourceBasesFromMeta(const char* assetsPath, std::vector<ResourceBase>& resourceBases)
+{
+	if (assetsPath == nullptr)
+	{
+		LOG("[ERROR] Resource Manager: Could not get Library File Paths from Meta File! Error: Given Assets Path was nullptr.");
+		return false;
+	}
+	
+	std::string errorString = "[ERROR] Resoruce Manager: Could not get Library File Paths from { " + std::string(assetsPath) + " }'s Meta File";
+
+	char* buffer				= nullptr;
+	ParsonNode metaRoot			= LoadMetaFile(assetsPath, &buffer);
+	ParsonArray containedArray	= metaRoot.GetArray("ContainedResources");
+	RELEASE_ARRAY(buffer);
+
+	if (!metaRoot.NodeIsValid())
+	{
+		LOG("%s! Error: Given Assets Path had no associated .meta file.", errorString.c_str());
+		return false;
+	}
+	if (!containedArray.ArrayIsValid())
+	{
+		LOG("%s! Error: ContainedResources array in Meta File was not valid.", errorString.c_str());
+		return false;
+	}
+
+	// --- MAIN RESOURCE
+	uint32 UID					= (uint32)metaRoot.GetNumber("UID");
+	ResourceType type			= (ResourceType)((int)metaRoot.GetNumber("Type"));
+	std::string rAssetsPath		= metaRoot.GetString("AssetsPath");
+	std::string rAssetsFile		= metaRoot.GetString("Name");
+	std::string rLibraryPath	= metaRoot.GetString("LibraryPath");
+	std::string rLibraryFile	= metaRoot.GetString("LibraryFile");
+	if (UID == 0)
+	{
+		LOG("%s! Error: Main Resource UID was 0.", errorString.c_str());
+		return false;
+	}
+
+	resourceBases.push_back(ResourceBase(UID, rAssetsPath, rAssetsFile, rLibraryPath, rLibraryFile, type));
+
+	// --- CONTAINED RESOURCES
+	for (uint i = 0; i < containedArray.size; ++i)
+	{
+		ParsonNode containedNode = containedArray.GetNode(i);
+		if (!containedNode.NodeIsValid())
+		{
+			continue;
+		}
+
+		std::string directory = "[NONE]";
+		std::string extension = "[NONE]";
+
+		uint32 containedUID					= (uint32)containedNode.GetNumber("UID");
+		ResourceType containedType			= (ResourceType)((int)containedNode.GetNumber("Type"));
+		std::string containedAssetsPath		= "[NONE]";
+		std::string containedAssetsFile		= containedNode.GetString("Name");
+		std::string containedLibraryPath	= containedNode.GetString("LibraryPath");
+		std::string containedLibraryFile	= "[NONE]";
+		bool success						= GetAssetsDirectoryAndExtensionFromType(containedType, directory, extension);
+		if (!success)
+		{
+			continue;
+		}
+		if (containedUID == 0)
+		{
+			continue;
+		}
+
+		containedAssetsPath		= directory + containedAssetsFile;
+		containedLibraryFile	= App->fileSystem->GetFileAndExtension(containedLibraryPath.c_str());
+		resourceBases.push_back(ResourceBase(containedUID, containedAssetsPath, containedAssetsFile, containedLibraryPath, containedLibraryFile, containedType));	// WIP until revision.
+	}
+	
+	return true;
+}
+
+bool M_ResourceManager::GetAssetsDirectoryAndExtensionFromType(const ResourceType& type, std::string& directory, std::string& extension)				// Extensions are a WIP.
+{
+	switch (type)
+	{
+	case ResourceType::MODEL:			{ directory = ASSETS_MODELS_PATH;			/*extension = MODELS_EXTENSION;*/ }				break;
+	case ResourceType::MESH:			{ directory = ASSETS_MODELS_PATH;			/*extension = MESHES_EXTENSION;*/ }				break;
+	case ResourceType::MATERIAL:		{ directory = ASSETS_MODELS_PATH;			/*extension = MATERIALS_EXTENSION;*/ }			break;
+	case ResourceType::TEXTURE:			{ directory = ASSETS_TEXTURES_PATH;			/*extension = TEXTURES_EXTENSION;*/ }			break;
+	case ResourceType::FOLDER:			{ /*directory = ASSETS_FOLDERS_PATH;			extension = FOLDERS_EXTENSION;*/ }			break;
+	case ResourceType::SCENE:			{ directory = ASSETS_SCENES_PATH;			/*extension = SCENES_EXTENSION;*/ }				break;
+	case ResourceType::ANIMATION:		{ directory = ASSETS_MODELS_PATH;			/*extension = ANIMATIONS_EXTENSION;*/ }			break;
+	case ResourceType::SHADER:			{ directory = ASSETS_SHADERS_PATH;			/*extension = SHADERS_EXTENSION;*/ }			break;
+	case ResourceType::PARTICLE_SYSTEM:	{ directory = ASSETS_PARTICLESYSTEMS_PATH;	/*extension = PARTICLESYSTEMS_EXTENSION;*/ }	break;
+	case ResourceType::SCRIPT:			{ directory = ASSETS_SCRIPTS_PATH;			/*extension = SCRIPTS_EXTENSION;*/ }			break;
+	case ResourceType::NAVMESH:			{ directory = ASSETS_NAVIGATION_PATH;		/*extension = NAVMESH_EXTENSION;*/ }			break;
+	case ResourceType::NONE:			{ return false; }																			break;
+	}
+	
+	return true;
 }
 
 bool M_ResourceManager::GetLibraryDirectoryAndExtensionFromType(const ResourceType& type, std::string& directory, std::string& extension)
@@ -1389,7 +1509,7 @@ bool M_ResourceManager::GetLibraryDirectoryAndExtensionFromType(const ResourceTy
 	case ResourceType::SHADER:			{ directory = SHADERS_PATH;			extension = SHADERS_EXTENSION; }			break;
 	case ResourceType::PARTICLE_SYSTEM:	{ directory = PARTICLESYSTEMS_PATH;	extension = PARTICLESYSTEMS_EXTENSION; }	break;
 	case ResourceType::SCRIPT:			{ directory = SCRIPTS_PATH;			extension = SCRIPTS_EXTENSION; }			break;
-	case ResourceType::NAVMESH_AGENT:	{ directory = NAVIGATION_PATH;		extension = NAVMESH_EXTENSION; }			break;
+	case ResourceType::NAVMESH:			{ directory = NAVIGATION_PATH;		extension = NAVMESH_EXTENSION; }			break;
 	case ResourceType::NONE:			{ return false; }																break;
 	}
 
@@ -1404,7 +1524,7 @@ bool M_ResourceManager::LoadMetaLibraryPairsIntoLibrary(const char* assetsPath)
 		return false;
 	}
 
-	std::map<uint32, std::string> libraryPairs;
+	std::map<uint32, ResourceBase> libraryPairs;
 	GetLibraryPairsFromMeta(assetsPath, libraryPairs);
 	if (libraryPairs.empty())
 		return true;
@@ -1419,7 +1539,7 @@ bool M_ResourceManager::LoadMetaLibraryPairsIntoLibrary(const char* assetsPath)
 	return true;
 }
 
-bool M_ResourceManager::GetLibraryPairsFromMeta(const char* assetsPath, std::map<uint32, std::string>& pairs)
+bool M_ResourceManager::GetLibraryPairsFromMeta(const char* assetsPath, std::map<uint32, ResourceBase>& pairs)
 {
 	if (assetsPath == nullptr)
 	{
@@ -1430,22 +1550,22 @@ bool M_ResourceManager::GetLibraryPairsFromMeta(const char* assetsPath, std::map
 	std::string errorString = "[ERROR] Resource Manager: Could not get Libarary Pairs from { " + std::string(assetsPath) + " }'s associated Meta File";
 
 	std::vector<uint32> resourceUids;
-	std::vector<std::string> libraryPaths;
+	std::vector<ResourceBase> resourceBases;
 
 	GetResourceUIDsFromMeta(assetsPath, resourceUids);
-	GetLibraryFilePathsFromMeta(assetsPath, libraryPaths);
+	GetResourceBasesFromMeta(assetsPath, resourceBases);
 
-	if (resourceUids.size() != libraryPaths.size())
+	if (resourceUids.size() != resourceBases.size())
 	{
 		LOG("%s! Error: Mismatched amount of Resource UIDs and Library Paths.", errorString.c_str());
 	}
 	for (uint i = 0; i < resourceUids.size(); ++i)
 	{
-		pairs.emplace(resourceUids[i], libraryPaths[i]);
+		pairs.emplace(resourceUids[i], resourceBases[i]);
 	}
 
 	resourceUids.clear();
-	libraryPaths.clear();
+	resourceBases.clear();
 
 	return true;
 }
@@ -1532,7 +1652,7 @@ uint32 M_ResourceManager::ImportFromAssets(const char* assetsPath)
 		case ResourceType::SHADER:			{ success = Importer::Shaders::Import(resource->GetAssetsPath(), (R_Shader*)resource); }	break;
 		case ResourceType::PARTICLE_SYSTEM:	{ success = Importer::ImportParticles(buffer, (R_ParticleSystem*)resource); }				break;
 		case ResourceType::SCRIPT:			{ success = Importer::Scripts::Import(assetsPath, buffer, read, (R_Script*)resource); }		break;
-		case ResourceType::NAVMESH_AGENT:	{ success = Importer::ImportNavMesh(buffer, (R_NavMesh*)resource); }						break;
+		case ResourceType::NAVMESH:	{ success = Importer::ImportNavMesh(buffer, (R_NavMesh*)resource); }						break;
 		}
 
 		RELEASE_ARRAY(buffer);
@@ -1626,7 +1746,7 @@ ResourceType M_ResourceManager::GetTypeFromLibraryExtension(const char* libraryP
 	else if (extension == SHADERS_EXTENSION)			{ type = ResourceType::SHADER; }
 	else if (extension == PARTICLESYSTEMS_EXTENSION)	{ type = ResourceType::PARTICLE_SYSTEM; }
 	else if (extension == SCRIPTS_EXTENSION)			{ type = ResourceType::SCRIPT; }
-	else if (extension == NAVMESH_EXTENSION)			{ type = ResourceType::NAVMESH_AGENT; }
+	else if (extension == NAVMESH_EXTENSION)			{ type = ResourceType::NAVMESH; }
 	else												{ type = ResourceType::NONE; }
 
 	return type;
@@ -1644,9 +1764,12 @@ bool M_ResourceManager::SaveMetaFile(Resource* resource) const
 	ParsonNode metaRoot = ParsonNode();
 	metaRoot.SetNumber("UID", resource->GetUID());																											// --- GENERAL RESOURCE META DATA
 	metaRoot.SetNumber("Type", (uint)resource->GetType());																									// 
+	
 	metaRoot.SetString("Name", resource->GetAssetsFile());																									// 
-	// ASSETS PATH?
+	metaRoot.SetString("AssetsPath", resource->GetAssetsPath());
+	metaRoot.SetString("LibraryFile", resource->GetLibraryFile());
 	metaRoot.SetString("LibraryPath", resource->GetLibraryPath());																							// 
+
 	metaRoot.SetNumber("ModificationTime", (double)App->fileSystem->GetLastModTime(resource->GetAssetsPath()));												// ------------------------------
 
 	resource->SaveMeta(metaRoot);																															// --- RESOURCE-SPECIFIC META DATA
@@ -1837,13 +1960,13 @@ bool M_ResourceManager::ResourceHasMetaType(Resource* resource) const
 	
 	switch (resource->GetType())
 	{
-		case ResourceType::FOLDER:		{ return true; }	break;
-		case ResourceType::MODEL:		{ return true; }	break;
-		case ResourceType::TEXTURE:		{ return true; }	break;
-		case ResourceType::SHADER:		{ return true; }	break;
+		case ResourceType::FOLDER:			{ return true; }	break;
+		case ResourceType::MODEL:			{ return true; }	break;
+		case ResourceType::TEXTURE:			{ return true; }	break;
+		case ResourceType::SHADER:			{ return true; }	break;
 		case ResourceType::PARTICLE_SYSTEM:	{ return true; }	break;
-		case ResourceType::SCRIPT:		{ return true; }	break;
-		case ResourceType::NAVMESH_AGENT:		{ return true; }	break;
+		case ResourceType::SCRIPT:			{ return true; }	break;
+		case ResourceType::NAVMESH:			{ return true; }	break;
 	}
 
 	return false;

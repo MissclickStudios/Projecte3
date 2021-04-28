@@ -9,7 +9,7 @@ class R_Animation;
 
 typedef unsigned int uint;
 
-class NULL_API AnimatorClip
+class MISSCLICK_API AnimatorClip
 {
 public:
 	AnimatorClip();

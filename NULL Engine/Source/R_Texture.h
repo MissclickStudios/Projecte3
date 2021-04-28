@@ -33,7 +33,7 @@ struct Texture
 	bool			compressed;												// Will be True if the texture comes from a compressed format (DDS, ...).
 };
 
-class NULL_API R_Texture : public Resource
+class MISSCLICK_API R_Texture : public Resource
 {
 public:
 	R_Texture();
@@ -43,6 +43,8 @@ public:
 
 	bool SaveMeta(ParsonNode& metaRoot) const override;
 	bool LoadMeta(const ParsonNode& metaRoot) override;
+
+	static inline ResourceType GetType() { return ResourceType::TEXTURE; }
 
 public:
 	Texture			GetTextureData			() const;

@@ -9,6 +9,8 @@
 #include "MathGeoLib/include/Math/float3.h"
 #include "AK/SoundEngine/Common/AkTypes.h"
 
+class C_AudioSource;
+
 class WwiseObject
 {
 public:
@@ -47,7 +49,7 @@ private:
 
 };
 
-class NULL_API M_Audio : public Module
+class MISSCLICK_API M_Audio : public Module
 {
 public:
 
@@ -74,12 +76,15 @@ public:
 	void		FindSoundBanks(std::vector<std::string>* banks);
 	void		LoadEventsFromJson();
 
+	C_AudioSource* GetBackgroundMusic() { return aSourceBackgroundMusic; }
+
 	std::map <std::string, unsigned int> eventMap;
 	std::vector<WwiseObject*> audioListenerList;
 	std::vector<WwiseObject*> audioSourceList;
 
 private:
 
+	C_AudioSource* aSourceBackgroundMusic = nullptr;
 };
 
 #endif //__AUDIO_H__

@@ -8,7 +8,10 @@
 Light::Light(LightType lightType) :
 type		(lightType),
 ref			(-1), 
-on			(false)
+on			(false),
+ambient		(1,1,0.8,1),
+diffuse		(1,1,1,1),
+specular	(0.6,0.6,0.6,1)
 //position	(0.0f, 0.0f, 0.0f)
 {
 

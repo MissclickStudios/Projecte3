@@ -1,4 +1,5 @@
 #include "JSONParser.h"
+#include "Profiler.h"
 
 #include "FileSystemDefinitions.h"
 
@@ -22,6 +23,7 @@ R_ParticleSystem::~R_ParticleSystem()
 
 bool R_ParticleSystem::CleanUp()
 {
+
 	return true;
 }
 
@@ -38,10 +40,9 @@ bool R_ParticleSystem::LoadMeta(const ParsonNode& metaRoot)
 	return true;
 }
 
-void R_ParticleSystem::AddDefaultEmitter()
+void R_ParticleSystem::AddNewEmitter()
 {
-	emitters.clear();
-	emitters.reserve(4);
+	OPTICK_CATEGORY("C_Particle AddNewEmitter()", Optick::Category::Debug)
 	emitters.push_back(Emitter());
 
 	emitters.back().modules.push_back(new EmitterBase);
@@ -49,3 +50,19 @@ void R_ParticleSystem::AddDefaultEmitter()
 	emitters.back().modules.push_back(new ParticleColor);
 	emitters.back().modules.push_back(new ParticleLifetime);
 }
+
+void R_ParticleSystem::AddNewEmitter(const char* name)
+{
+	OPTICK_CATEGORY("C_Particle AddNewEmitter()", Optick::Category::Debug)
+		emitters.push_back(Emitter(name));
+
+	emitters.back().modules.push_back(new EmitterBase);
+	emitters.back().modules.push_back(new EmitterSpawn);
+	emitters.back().modules.push_back(new ParticleColor);
+	emitters.back().modules.push_back(new ParticleLifetime);
+}
+
+//void R_ParticleSystem::DeleteEmitter()
+//{
+//
+//}

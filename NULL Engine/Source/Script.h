@@ -3,9 +3,9 @@
 
 //Import/export define
 #ifdef NULL_BUILD_DLL
-#define NULL_API __declspec(dllexport)
+#define MISSCLICK_API __declspec(dllexport)
 #else
-#define NULL_API __declspec(dllimport)
+#define MISSCLICK_API __declspec(dllimport)
 #endif
 
 #ifndef GAMEBUILD //TODO: When this gets included on the scripts project the macro never gets expanded
@@ -15,7 +15,7 @@
 class GameObject;
 class C_Transform;
 
-class NULL_API Script {
+class MISSCLICK_API Script {
 
 public:
 	Script() {}

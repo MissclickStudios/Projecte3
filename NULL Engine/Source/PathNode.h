@@ -5,7 +5,7 @@
 #include <vector>
 #include "Macros.h"
 
-struct NULL_API PathNode
+struct MISSCLICK_API PathNode
 {
 	PathNode();
 

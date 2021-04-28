@@ -1,36 +1,23 @@
 #pragma once
-#include "Script.h"
 #include "ScriptMacros.h"
 
-#include "MathGeoLib/include/Math/float2.h"
+#include "Collectable.h"
+#include "Weapon.h"
 
-class Player;
-
-class SCRIPTS_API WeaponPerk : public Script
+class SCRIPTS_API WeaponPerk : public Collectable ALLOWED_INHERITANCE
 {
 public:
 
 	WeaponPerk();
-	~WeaponPerk();
+	virtual ~WeaponPerk();
 
-	void Update() override;
-	void CleanUp() override;
+	Perk perk = Perk::DAMAGE_UP;
 
-	void OnCollisionEnter(GameObject* object) override;
+protected:
 
-	int cost = 200;
-	int effect = 1;
+	void Contact(Player* player);
 
-private:
-
-	bool used = false;
+	void SetTypeInfo();
 };
 
-SCRIPTS_FUNCTION WeaponPerk* CreateWeaponPerk() {
-	WeaponPerk* script = new WeaponPerk();
-
-	INSPECTOR_DRAGABLE_INT(script->cost);
-	INSPECTOR_SLIDER_INT(script->effect, 1, 2);
-
-	return script;
-}
+SCRIPTS_FUNCTION WeaponPerk* CreateWeaponPerk();

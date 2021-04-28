@@ -16,6 +16,7 @@
 
 #include "MemoryManager.h"
 
+
 #define INVALID_BONE_ID 4294967295
 
 C_Mesh::C_Mesh(GameObject* owner) : Component(owner, ComponentType::MESH),
@@ -24,7 +25,10 @@ skinnedMesh		(nullptr),
 rootBone		(nullptr),
 cAnimatorOwner	(nullptr),
 showWireframe	(false),
-showBoundingBox	(false)
+showBoundingBox	(false),
+outlineMesh		(false),
+outlineColor	(Color(0,0,0,1)),
+outlineThickness(1)
 {
 }
 
@@ -77,6 +81,10 @@ bool C_Mesh::SaveState(ParsonNode& root) const
 
 		root.SetBool("ShowWireframe", showWireframe);
 		root.SetBool("ShowBoundingBox", showBoundingBox);
+
+		root.SetBool("Outline", outlineMesh);
+		root.SetNumber("OutlineThickness", outlineThickness);
+		root.SetColor("OutlineColor", outlineColor);
 	}
 
 	return ret;
@@ -95,6 +103,11 @@ bool C_Mesh::LoadState(ParsonNode& root)
 
 	showWireframe = root.GetBool("ShowWireframe");
 	showBoundingBox = root.GetBool("ShowBoundingBox");
+
+	outlineMesh = root.GetBool("Outline");
+	outlineThickness = root.GetNumber("OutlineThickness");
+	outlineColor = root.GetColor("OutlineColor");
+
 
 	if (rMesh == nullptr)
 	{
@@ -191,7 +204,7 @@ void C_Mesh::AnimateMesh()
 		delta = delta * rMesh->boneOffsets[bone->second];																									// Bone Transform Matrix
 		
 		boneTransforms[bone->second] = delta.Transposed();																												// -------------------------
-	}	
+	}
 }
 
 void C_Mesh::RefreshBoneMapping()
@@ -313,6 +326,11 @@ bool C_Mesh::GetShowBoundingBox() const
 	return showBoundingBox;
 }
 
+bool C_Mesh::GetOutlineMesh() const
+{
+	return outlineMesh;
+}
+
 void C_Mesh::SetDrawVertexNormals(bool setTo)
 {
 	if (rMesh != nullptr)
@@ -338,4 +356,29 @@ void C_Mesh::SetShowBoundingBox(bool setTo)
 {
 	showBoundingBox = setTo;
 	this->GetOwner()->show_bounding_boxes = setTo;
+}
+
+void C_Mesh::SetOutlineMesh(bool setTo)
+{
+	this->outlineMesh = setTo;
+}
+
+Color C_Mesh::GetOutlineColor() const
+{
+	return this->outlineColor;
+}
+
+void C_Mesh::SetOutlineColor(Color color)
+{
+	this->outlineColor = color;
+}
+
+float C_Mesh::GetOutlineThickness() const
+{
+	return outlineThickness;
+}
+
+void C_Mesh::SetOutlineThickness(float outline)
+{
+	this->outlineThickness = outline;
 }

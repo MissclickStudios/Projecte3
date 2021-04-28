@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <vector>
 #include "Script.h"
 #include "ScriptMacros.h"
 
@@ -8,6 +9,18 @@
 #include "Prefab.h"
 
 class GameObject;
+
+enum class ENGINE_ENUM TestEnum
+{
+	FIRST_ELEMENT,
+	SECOND_ELEMENT,
+	THIRD_ELEMENT = 32,
+};
+
+enum class ENGINE_ENUM TestEnum2
+{
+	a, b = 12, c, d
+};
 
 class SCRIPTS_API FirstScript : public Script {
 public :
@@ -32,6 +45,9 @@ public :
 	Prefab tryPrefab;
 	Prefab prefab2;
 	GameObject* object = nullptr;
+	std::vector<std::string> stringVec;
+	TestEnum testingEnums;
+	TestEnum2 secondEnum = TestEnum2::c;
 };
 
 SCRIPTS_FUNCTION FirstScript* CreateFirstScript() {
@@ -49,5 +65,8 @@ SCRIPTS_FUNCTION FirstScript* CreateFirstScript() {
 	INSPECTOR_PREFAB(script->tryPrefab);
 	INSPECTOR_PREFAB(script->prefab2);
 	INSPECTOR_GAMEOBJECT(script->object);
+	INSPECTOR_VECTOR_STRING(script->stringVec);
+	INSPECTOR_ENUM(script->secondEnum, "TestEnum2", "Assets/Scripts/FirstScript.h");
+	INSPECTOR_ENUM(script->testingEnums, "TestEnum", "Assets/Scripts/FirstScript.h");
 	return script;
 }

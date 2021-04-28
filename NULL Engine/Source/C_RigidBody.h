@@ -6,7 +6,7 @@
 #include "MathGeoLib/include/Math/float3.h"
 #include "PhysX_3.4/Include/PxPhysicsAPI.h"
 
-class NULL_API C_RigidBody : public Component
+class MISSCLICK_API C_RigidBody : public Component
 {
 public:
 
@@ -101,8 +101,8 @@ private:
 	bool freezeRotationY = false;
 	bool freezeRotationZ = false;
 
-	bool toChangeFilter = true;
 	std::string filter = "default";
+	bool toChangeFilter = true;
 };
 
 #endif // !__C_RIGIDBODY_H__

@@ -22,9 +22,9 @@
 
 //Import/export engine core define
 #ifdef NULL_BUILD_DLL
-#define NULL_API __declspec(dllexport)
+#define MISSCLICK_API __declspec(dllexport)
 #else
-#define NULL_API __declspec(dllimport)
+#define MISSCLICK_API __declspec(dllimport)
 #endif
 
 MATH_BEGIN_NAMESPACE
@@ -34,7 +34,7 @@ MATH_BEGIN_NAMESPACE
 	with respect to the global world coordinate system. This allows OBBs to more tightly bound objects than AABBs do,
 	which always align with the world space axes. This flexibility has the drawback that the geometry tests and operations
 	involving OBBs are more costly, and representing an OBB in memory takes more space (15 floats vs 6 floats). */
-class NULL_API OBB
+class MISSCLICK_API OBB
 {
 public:
 	/// The center position of this OBB.

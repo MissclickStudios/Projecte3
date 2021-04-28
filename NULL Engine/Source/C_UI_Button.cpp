@@ -11,9 +11,15 @@
 #include "C_Transform.h"
 #include "C_Camera.h"
 
+#include "M_ResourceManager.h"
+
+#include "R_Shader.h"
+#include "R_Texture.h"
+
 #include "C_UI_Button.h"
 
-#include "OpenGL.h"
+#include "Dependencies/glew/include/glew.h"
+//#include "OpenGL.h"
 
 #include "MemoryManager.h"
 
@@ -22,18 +28,29 @@
 C_UI_Button::C_UI_Button(GameObject* owner, Rect2D rect) : Component(owner, ComponentType::UI_BUTTON)
 {
 	state = UIButtonState::IDLE;
-	if (App->uiSystem->activeButtons.empty())
-	{
-		state = UIButtonState::HOVERED;
-		App->uiSystem->hoveredButton = this;
-	}
-	App->uiSystem->activeButtons.push_back(this);
+
+	//C_Canvas* canvas = owner->parent->GetComponent<C_Canvas>();
+	
+	LoadBuffers();
 }
 
 C_UI_Button::~C_UI_Button()
 {
 
 }
+
+void C_UI_Button::LoadBuffers()
+{
+	glGenBuffers(1, &VAO);
+	glBindBuffer(GL_ARRAY_BUFFER, VAO);
+
+	glBufferData(GL_ARRAY_BUFFER, sizeof(coordsBuffer), coordsBuffer, GL_STATIC_DRAW);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, (GLvoid*)0);
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
 
 bool C_UI_Button::Update()
 {
@@ -46,12 +63,24 @@ bool C_UI_Button::Update()
 	if (canvas == nullptr)
 		return ret;
 
-	if (GetRect().w > canvas->GetRect().w)
-		SetW(canvas->GetRect().w);
+	if (!isInit)
+	{
+		if (canvas->activeButtons.empty())
+		{
+			state = UIButtonState::HOVERED;
+			canvas->selectedButton = this;
+		}
+		else if (state == UIButtonState::HOVERED)
+		{
+			if (canvas->selectedButton != nullptr)
+				canvas->selectedButton->SetState(UIButtonState::IDLE);
+			canvas->selectedButton = this;
+		}
 
-	if(GetRect().h > canvas->GetRect().h)
-		SetH(canvas->GetRect().h);
+		canvas->activeButtons.push_back(this);
 
+		isInit = true;
+	}
 	return ret;
 }
 
@@ -67,35 +96,54 @@ bool C_UI_Button::CleanUp()
 void C_UI_Button::Draw2D()
 {
 	if (GetOwner()->GetComponent<C_Material>() == nullptr) return;
+	Color tempColor;
+
+
+	if (state == UIButtonState::HOVERED)
+		tempColor = Color(1.0f, 1.0f, 1.0f, 1.0f);
+
+	else if (state == UIButtonState::PRESSED)
+		tempColor = Color(1.0f, 0.4f, 0.0f, 1.0f);
+
+	else
+		tempColor = Color(1.0f, 1.0f, 0.0f, 1.0f);
+
+	uint32 id = GetOwner()->GetComponent<C_Material>()->GetTextureID();
 
 	C_Canvas* canvas = GetOwner()->parent->GetComponent<C_Canvas>();
 	if (canvas == nullptr) return;
 
-	glPushMatrix();
-	glMultMatrixf((GLfloat*)&GetOwner()->parent->GetComponent<C_Transform>()->GetWorldTransform().Transposed());
+	glEnable(GL_BLEND);
 
-	if (state == UIButtonState::HOVERED)
-		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-	else if(state==UIButtonState::PRESSED)
-		glColor4f(1.0f, 0.4f, 0.0f, 1.0f);
-	else
-		glColor4f(1.0f, 1.0f, 0.0f, 1.0f);
-	
-	uint32 id = GetOwner()->GetComponent<C_Material>()->GetTextureID();
+	if (!GetOwner()->GetComponent<C_Material>()->GetShader())
+		GetOwner()->GetComponent<C_Material>()->SetShader(App->resourceManager->GetShader("UIShader"));
+
+	glUseProgram(GetOwner()->GetComponent<C_Material>()->GetShader()->shaderProgramID);
+
+	float x = canvas->GetPosition().x + GetRect().x;
+	float y = canvas->GetPosition().y + GetRect().y;
+
+	float4x4 projectionMatrix = float4x4::FromTRS(float3(x, y, 0), Quat::FromEulerXYZ(0, 0, 0), float3(GetRect().w, GetRect().h, 1)).Transposed();
+
 	glBindTexture(GL_TEXTURE_2D, id);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
 
-	glBegin(GL_QUADS);
-	glTexCoord2f(0, 0); glVertex2f(canvas->GetPosition().x + GetRect().x - GetRect().w / 2, canvas->GetPosition().y + GetRect().y - GetRect().h / 2);
-	glTexCoord2f(1, 0); glVertex2f(canvas->GetPosition().x + GetRect().x + GetRect().w / 2, canvas->GetPosition().y + GetRect().y - GetRect().h / 2);
-	glTexCoord2f(1, 1); glVertex2f(canvas->GetPosition().x + GetRect().x + GetRect().w / 2, canvas->GetPosition().y + GetRect().y + GetRect().h / 2);
-	glTexCoord2f(0, 1); glVertex2f(canvas->GetPosition().x + GetRect().x - GetRect().w / 2, canvas->GetPosition().y + GetRect().y + GetRect().h / 2);
-	glEnd();
+	GetOwner()->GetComponent<C_Material>()->GetShader()->SetUniform1i("useColor", (GLint)true);
+	GetOwner()->GetComponent<C_Material>()->GetShader()->SetUniformMatrix4("projection", projectionMatrix.ptr());
+	GetOwner()->GetComponent<C_Material>()->GetShader()->SetUniformVec4f("inColor", (GLfloat*)&tempColor);
 
-	glPopMatrix();
+
+	glBindBuffer(GL_ARRAY_BUFFER, VAO);
+
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+
+
+	glDisable(GL_BLEND);
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	glBindTexture(GL_TEXTURE_2D, 0);
+
+	glUseProgram(0);
 
 }
 
@@ -138,7 +186,7 @@ void C_UI_Button::OnPressed()
 
 void C_UI_Button::OnReleased()
 {
-	SetState(UIButtonState::HOVERED);
+	SetState(UIButtonState::RELEASED);
 	SetIsPressed(false);
 }
 
@@ -179,12 +227,7 @@ bool C_UI_Button::LoadState(ParsonNode& root)
 	SetRect(r);
 
 	if (button.GetBool("IsHovered"))
-	{
-		if (App->uiSystem->hoveredButton != nullptr)
-			App->uiSystem->hoveredButton->SetState(UIButtonState::IDLE);
-		App->uiSystem->hoveredButton = this;
 		state = UIButtonState::HOVERED;
-	}
 	else
 		state = UIButtonState::IDLE;
 

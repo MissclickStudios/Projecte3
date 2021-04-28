@@ -23,6 +23,7 @@ class R_Animation;
 
 class GameObject;
 class C_Transform;
+class C_Mesh;
 
 struct Channel;
 
@@ -49,7 +50,7 @@ enum class AnimatorState
 	STOP
 };
 
-class NULL_API C_Animator : public Component																				// In charge of managing Skeletal Animation
+class MISSCLICK_API C_Animator : public Component																				// In charge of managing Skeletal Animation
 {
 public:
 	C_Animator(GameObject* owner);

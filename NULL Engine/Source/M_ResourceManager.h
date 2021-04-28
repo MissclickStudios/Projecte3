@@ -5,24 +5,30 @@
 #include <string>
 
 #include "Module.h"
+
+#include "ResourceBase.h"
+#include "Resource.h"
+
 #include "Prefab.h"
 
 class ParsonNode;
-class Resource;
-//struct Prefab;
 
-enum class ResourceType;
+class Resource;
 class R_Shader;
 class R_Texture;
 class R_ParticleSystem;
 
 class GameObject;
 
+//struct Prefab;
+
+//enum class ResourceType;
+
 typedef unsigned int		uint;
 typedef unsigned __int32	uint32;
 typedef unsigned __int64	uint64;
 
-class NULL_API M_ResourceManager : public Module
+class MISSCLICK_API M_ResourceManager : public Module
 {
 public:
 	M_ResourceManager();
@@ -66,16 +72,96 @@ public:																								// --- RESOURCE MANAGER API ---
 	bool			DeleteResource					(uint32 UID);									// Completely erases a resource, both from memory and from the library.
 	bool			DeleteResource					(Resource* resourceToDelete);					// Same as the above but directly passing the resource as the argument.
 	
-	const std::map<uint32, Resource*>* GetResources	() const;										// Returns a pointer to the resources map.
+	bool			RefreshResourceAssets			(ResourceType type);
 
-	R_Shader*		GetShader						(const char* name);								//Look for a shader in the library and load and return it
-	void			GetAllShaders					(std::vector<R_Shader*>& shaders);				//Retrieve all the shaders in the library
-	void			GetAllParticleSystems			(std::vector<R_ParticleSystem*>& shaders);				//Retrieve all the particlesystems in the library
+	const std::map<uint32, Resource*>* GetResourcesMap	() const;									// Returns a pointer to the resources map.
 
-	void			GetAllTextures					(std::vector<R_Texture*>& textures, const char* name = nullptr);			//Retrieve all the shaders in the library
+	template <typename T>
+	T* GetResource(uint32 UID)
+	{
+		return (UID != 0) ? (T*)RequestResource(UID) : nullptr;										// Check for return type mismatch?
+	}
+	
+	template <typename T>
+	T* GetResource(const char* assetsPath)
+	{
+		if (assetsPath == nullptr)
+			return nullptr;
 
-	void			GetAllScripts					(std::map<std::string, std::string>& scripts);
-	void			ReloadAllScripts				();												//Called when hot reloading the scripts
+		uint32 UID = LoadFromLibrary(assetsPath);
+		if (UID != 0)
+		{
+			return (T*)RequestResource(UID);
+		}
+
+		return nullptr;
+	}
+
+	template <typename T>
+	bool GetResources(std::vector<T*>& resourcesWithType) const											// Remember to free the resources after finishing working with the vector.
+	{
+		if (resources.empty())
+			return false;
+
+		for (auto resource = resources.cbegin(); resource != resources.cend(); ++resource)
+		{
+			if (resource->second->GetType() == T::GetType())
+			{
+				resourcesWithType.push_back((T*)resource->second);										// Request here? Leave it to the user? bool argument?
+				++(*resourcesWithType)->references;
+			}
+		}
+		
+		return !resourcesWithType.empty();
+	}
+
+	template <typename T>
+	bool GetResourcesFromLibrary(std::vector<T*>& resourcesWithType)
+	{
+		if (library.empty())
+			return false;
+
+		for (auto libItem = library.cbegin(); libItem != library.cend(); ++libItem)
+		{
+			if (libItem->second.type == T::GetType())
+			{
+				if (AllocateResource(libItem->second.UID, libItem->second.assetsPath.c_str()))
+				{
+					T* resource = (T*)RequestResource(libItem->second.UID);
+					if (resource != nullptr)
+					{
+						resourcesWithType.push_back(resource);
+					}
+				}
+			}
+		}
+		
+		return !resourcesWithType.empty();
+	}
+
+	template <typename T>
+	bool GetResourceBases(std::vector<ResourceBase>& resourceBases)
+	{
+		if (library.empty())
+			return false;
+
+		for (auto libItem = library.cbegin(); libItem != library.cend(); ++libItem)
+		{
+			if (libItem->second.type == T::GetType())
+			{
+				resourceBases.push_back(libItem->second);
+			}
+		}
+	}
+
+	R_Shader*		GetShader						(const char* name);															// Look for a shader in the library and load and return it
+	void			GetAllShaders					(std::vector<R_Shader*>& shaders);											// Retrieve all the shaders in the library
+	void			GetAllParticleSystems			(std::vector<R_ParticleSystem*>& shaders);									// Retrieve all the particlesystems in the library
+
+	void			GetAllTextures					(std::vector<R_Texture*>& textures, const char* name = nullptr);			// Retrieve all the shaders in the library
+
+	void			GetAllScripts					(std::map<std::string, std::string>& scripts);								// 
+	void			ReloadAllScripts				();																			// Called when hot reloading the scripts
 	
 
 	// --- PREFAB METHODS
@@ -84,14 +170,14 @@ public:																								// --- RESOURCE MANAGER API ---
 
 	void			SavePrefab						(GameObject* gameObject, uint _prefabId);
 	void			SavePrefabObject				(GameObject* gameObject, ParsonNode* node);
-	GameObject*		LoadPrefab						(uint _prefabId, GameObject* parent, GameObject* rootObject = nullptr); //If the root object is not nullptr its transform component will be used
+	GameObject*		LoadPrefab						(uint _prefabId, GameObject* parent, GameObject* rootObject = nullptr);		// If the root object isn't NULL its Trfrm Comp. will be used.
 
 	Prefab*			GetPrefab(uint uid);
 	const char*		GetPrefabName(uint uid);
 	Prefab*			GetPrefabByName(const char* prefabName);
 	uint			GetPrefabUIDByName(const char* prefabName);
 	
-private:																															// --- ASSETS MONITORING METHODS ---
+private:																														// --- ASSETS MONITORING METHODS ---
 	void			RefreshDirectoryFiles			(const char* directory);
 	void			RefreshDirectory				(const char* directory, std::vector<std::string>& filesToImport, 
 														std::vector<std::string>& filesToUpdate, std::vector<std::string>& filesToDelete);
@@ -112,10 +198,12 @@ private:																															// --- ASSETS MONITORING METHODS ---
 	bool			GetResourceUIDsFromMeta						(const char* assetsPath, std::vector<uint32>& resourceUids);
 	//bool			GetForcedUIDsFromMeta						(const char* assetsPath, std::map<std::string, uint32>& forcedUIDs);
 	bool			GetLibraryFilePathsFromMeta					(const char* assetsPath, std::vector<std::string>& filePaths);
+	bool			GetResourceBasesFromMeta					(const char* assetsPath, std::vector<ResourceBase>& resourceBases);
+	bool			GetAssetsDirectoryAndExtensionFromType		(const ResourceType& type, std::string& directory, std::string& extension);
 	bool			GetLibraryDirectoryAndExtensionFromType		(const ResourceType& type, std::string& directory, std::string& extension);
 	
 	bool			LoadMetaLibraryPairsIntoLibrary				(const char* assetsPath);
-	bool			GetLibraryPairsFromMeta						(const char* assetsPath, std::map<uint32, std::string>& pairs);
+	bool			GetLibraryPairsFromMeta						(const char* assetsPath, std::map<uint32, ResourceBase>& pairs);
 
 	uint64			GetAssetFileModTimeFromMeta					(const char* assetsPath);
 	
@@ -141,7 +229,7 @@ private:																											// --- META FILE METHODS ---
 
 private:
 	std::map<uint32, Resource*>		resources;																		// Resources currently in memory.
-	std::map<uint32, std::string>	library;																		// UID and Library Path string of all loaded resources.
+	std::map<uint32, ResourceBase>	library;																		// UID and Library Path string of all loaded resources.
 
 	float							fileRefreshTimer;																// 
 	float							fileRefreshRate;																// 

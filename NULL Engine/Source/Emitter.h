@@ -7,14 +7,17 @@
 
 class R_Texture;
 class ParsonNode;
+class ResourceBase;
 
-class NULL_API Emitter
+class MISSCLICK_API Emitter
 {
 public:
 	Emitter();
+	Emitter(const char* name);
 
 	//Loop through all modules, loop through particles, update them     
 	void Update(float dt);
+	void CleanUp();
 
 	//Save and load?
 	void Save(ParsonNode& node);
@@ -24,7 +27,10 @@ public:
 	bool AddModuleFromType(ParticleModule::Type type);
 	bool DeleteModuleFromType(ParticleModule::Type type);
 
+	void SetParticleCount(int particleCount);
+
 	void SetTexture(R_Texture* newTexture);
+	void SetTexture(ResourceBase newTexture);
 
 public:
 	std::vector<ParticleModule*> modules;
@@ -33,6 +39,8 @@ public:
 	R_Texture* emitterTexture = nullptr;
 
 	int maxParticleCount = 10;
+
+	bool toDelete = false;
 };
 
 #endif // !__EMITTER_H__

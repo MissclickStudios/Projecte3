@@ -26,15 +26,15 @@
 
 //Import/export engine core define
 #ifdef NULL_BUILD_DLL
-#define NULL_API __declspec(dllexport)
+#define MISSCLICK_API __declspec(dllexport)
 #else
-#define NULL_API __declspec(dllimport)
+#define MISSCLICK_API __declspec(dllimport)
 #endif
 
 MATH_BEGIN_NAMESPACE
 
 /// A Frustum can be set to one of the two common different forms.
-enum NULL_API FrustumType
+enum MISSCLICK_API FrustumType
 {
 	InvalidFrustum = 0,
 
@@ -55,7 +55,7 @@ enum NULL_API FrustumType
 /// The Frustum class offers choosing between the two common conventions for the value ranges in 
 /// post-projection space. If you are using either the OpenGL or Diret3D API, you must feed the API data that matches
 /// the correct convention.
-enum NULL_API FrustumProjectiveSpace
+enum MISSCLICK_API FrustumProjectiveSpace
 {
 	FrustumSpaceInvalid = 0,
 
@@ -83,7 +83,7 @@ enum NULL_API FrustumProjectiveSpace
 ///       is always left-handed.
 /// @note Even though in the local space of the camera +Y is always up, in the world space one can use any 'world up' direction
 ///       as one pleases, by orienting the camera via the Frustum::up vector.
-enum NULL_API FrustumHandedness
+enum MISSCLICK_API FrustumHandedness
 {
 	FrustumHandednessInvalid = 0,
 
@@ -98,7 +98,7 @@ enum NULL_API FrustumHandedness
 };
 
 /// Represents either an orthographic or a perspective viewing frustum.
-class NULL_API Frustum
+class MISSCLICK_API Frustum
 {
 private:
 	/// Specifies whether this frustum is a perspective or an orthographic frustum.

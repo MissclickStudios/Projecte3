@@ -11,8 +11,9 @@ typedef unsigned int uint;
 class GameObject;
 class C_UI_Button;
 class C_UI_Image;
+class R_Texture;
 
-class NULL_API M_UISystem : public Module
+class MISSCLICK_API M_UISystem : public Module
 {
 public:
 
@@ -20,39 +21,45 @@ public:
 	~M_UISystem();
 
 	bool Init(ParsonNode& config) override;
+	bool Start() override;
 	UpdateStatus PreUpdate(float dt) override;
 	UpdateStatus Update(float dt) override;
 	UpdateStatus PostUpdate(float dt) override;
 	bool CleanUp() override;
+
+	void CleanUpScene();
 		 
 	bool LoadConfiguration(ParsonNode& root) override;
 	bool SaveConfiguration(ParsonNode& root) const override;
 
-	bool CheckButtonStates(); // Returns false if no buttons are hovered/pressed
+	void UpdateInputCanvas();
+	void AddNewCanvas(C_Canvas* canvas);
+	void DeleteCanvas(C_Canvas* canvas);
 
-	void UpdateActiveButtons();
+	void UpdateCanvasList();
+
+	void DeleteActiveButton(C_UI_Button* button);
+
 	void InitHoveredDecorations();
 	void UpdateHoveredDecorations();
-	void DeleteActiveButton(C_UI_Button* button);
 
 public:
 
-	//FT_Library  library;
-	//FT_Face     standardFace;
-	//FT_UInt		glyphIndex;
-	//FT_ULong	charcode;
-	//FT_Int32	loadFlags = FT_LOAD_DEFAULT;
+	R_Texture* buttonHoverDecor = nullptr;
 
-	std::vector<C_UI_Button*> activeButtons;
-	C_UI_Button* hoveredButton = nullptr;
+	std::vector<C_Canvas*> canvasList;
 
-	bool isMainMenu = true;
+	C_Canvas* inputCanvas = nullptr;
+
 	bool isHoverDecorationAdded = false;
+
 	C_UI_Image* hoveredDecorationL = nullptr;
 	C_UI_Image* hoveredDecorationR = nullptr;
 
+	uint priorityIterator = 0;
+
 private:
-	C_UI_Button* buttonIterator = nullptr;
+	C_Canvas* canvasIterator = nullptr;
 };
 
 #endif // !__M_UISYSTEM_H__

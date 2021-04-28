@@ -39,6 +39,7 @@ public:
 
 	float maxLifetime;
 	float currentLifetime = 0;  
+	float normalizedLifetime;
 
 	float rotation;
 

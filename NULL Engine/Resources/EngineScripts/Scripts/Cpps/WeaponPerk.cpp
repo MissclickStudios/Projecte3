@@ -1,9 +1,8 @@
-#include "GameObject.h"
-
 #include "WeaponPerk.h"
+
 #include "Player.h"
 
-WeaponPerk::WeaponPerk()
+WeaponPerk::WeaponPerk() : Collectable()
 {
 }
 
@@ -11,33 +10,20 @@ WeaponPerk::~WeaponPerk()
 {
 }
 
-void WeaponPerk::Update()
+void WeaponPerk::Contact(Player* player)
 {
-	if (used)
-	{
-		used = false;
-
-		for (uint i = 0; i < gameObject->components.size(); ++i)
-			gameObject->components[i]->SetIsActive(false);
-		gameObject->SetIsActive(false);
-	}
+	Weapon* const weapon = player->GetCurrentWeapon();
+	if (weapon)
+		weapon->AddPerk(perk);
 }
 
-void WeaponPerk::CleanUp()
+SCRIPTS_FUNCTION WeaponPerk* CreateWeaponPerk()
 {
-}
+	WeaponPerk* script = new WeaponPerk();
 
-void WeaponPerk::OnCollisionEnter(GameObject* object)
-{
-	Player* player = ((Player*)object->GetScript("Player"));
-	if (player->coins >= cost)
-	{
-		player->coins -= cost;
-		if (effect == 1)
-			player->BlasterStrongShots();
-		else
-			player->SniperFreezingShots();
+	INSPECTOR_DRAGABLE_INT(script->price);
 
-		used = true;
-	}
+	INSPECTOR_ENUM(script->perk, "Perk", "EngineScripts/Scripts/Helpers/Perk.h");
+
+	return script;
 }

@@ -24,7 +24,7 @@ struct Light;
 typedef unsigned int		uint;
 typedef unsigned __int32	uint32;
 
-class NULL_API GameObject
+class MISSCLICK_API GameObject
 {
 public:
 	GameObject();
@@ -56,10 +56,10 @@ public:																									// --- PARENT/CHILDS METHODS
 	bool			DeleteChild							(GameObject* child);							// Deletes the given child from childs. Returns false upon not finding the child.
 	bool			HasChilds							() const;
 
-	void			GetAllChilds						(std::vector<GameObject*>& childs);						// 
-	void			GetAllChilds						(std::map<std::string, GameObject*>& childs);			// 
-	void			GetAllChilds						(std::unordered_map<std::string, GameObject*>& childs);	// 
-	GameObject*		FindChild							(const char* childName);								// 
+	void			GetAllChilds						(std::vector<GameObject*>& children);						// 
+	void			GetAllChilds						(std::map<std::string, GameObject*>& children);				// 
+	void			GetAllChilds						(std::unordered_map<std::string, GameObject*>& children);	// 
+	GameObject*		FindChild							(const char* childName);									// 
 
 	void			GetAllParents						(std::vector<GameObject*>& parents);					// Will return all the GO's parents until parent->isSceneRoot = true;
 
@@ -145,6 +145,7 @@ public:																									// --- COMPONENT GETTERS AND SETTERS
 		case ComponentType::SCRIPT: 			{ return "Script"; } 			break;					// 
 		case ComponentType::ANIMATOR2D:			{ return "Animator2D"; } 		break;					// 
 		case ComponentType::NAVMESH_AGENT:		{ return "NavMesh Agent"; }		break;					// 
+		case ComponentType::PARTICLES:			{ return "Particles"; }			break;					//
 		}																								// 
 																										// 
 		return "NONE";																					// 
@@ -162,7 +163,7 @@ public:																									// --- COMPONENT GETTERS AND SETTERS
 			}																							//
 		}																								//
 																										//
-		return  (componentsWithType.empty()) ? false : true;											// 
+		return !componentsWithType.empty();																// 
 	}																									// -----------------------------------
 
 public:

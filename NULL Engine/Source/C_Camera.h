@@ -11,7 +11,7 @@ class GameObject;
 
 typedef unsigned int uint;
 
-class NULL_API C_Camera : public Component
+class MISSCLICK_API C_Camera : public Component
 {
 public:
 	C_Camera(GameObject* owner);

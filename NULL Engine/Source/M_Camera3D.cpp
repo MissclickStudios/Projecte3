@@ -1,5 +1,6 @@
-#include "Time.h"
 #include "JSONParser.h"
+
+#include "MC_Time.h"
 
 #include "Application.h"
 #include "Log.h"
@@ -47,15 +48,10 @@ M_Camera3D::~M_Camera3D()
 // -----------------------------------------------------------------
 bool M_Camera3D::Init(ParsonNode& root)
 {
-
 	reference = root.GetFloat3("reference");
 
-	masterCamera->GetComponent<C_Transform>()->SetLocalPosition(root.GetFloat3("cameraPosition"));
-	masterCamera->GetComponent<C_Transform>()->SetLocalRotation(Quat(root.GetFloat4("cameraRotation").ptr()));
-
-	LookAt(reference);
-
-	//current_camera->UpdateFrustumTransform();
+	PointAt(root.GetFloat3("cameraPosition"), reference);
+	masterCamera->transform->SetLocalRotation(Quat(root.GetFloat4("cameraRotation").ptr()));
 
 	return true;
 }
@@ -67,6 +63,24 @@ bool M_Camera3D::Start()
 	bool ret = true;
 
 	return ret;
+}
+
+// -----------------------------------------------------------------
+UpdateStatus M_Camera3D::Update(float dt)
+{
+	masterCamera->GetComponent<C_Transform>()->GetWorldTransform();
+
+	/*if (masterCamera->GetComponent<C_Transform>()->updateWorld)											// Right now UpdateFrustumTransform() is done at C_Transform().
+	{
+		masterCamera->GetComponent<C_Camera>()->UpdateFrustumTransform();
+	}
+
+	if (currentCamera->GetOwner()->GetComponent<C_Transform>()->updateWorld)
+	{
+		currentCamera->UpdateFrustumTransform();
+	}*/
+
+	return UpdateStatus::CONTINUE;
 }
 
 // -----------------------------------------------------------------
@@ -89,6 +103,7 @@ bool M_Camera3D::LoadConfiguration(ParsonNode& configuration)
 	return ret;
 }
 
+// -----------------------------------------------------------------
 bool M_Camera3D::SaveConfiguration(ParsonNode& configuration) const
 {
 	configuration.SetFloat3("cameraPosition", masterCamera->transform->GetLocalPosition());
@@ -99,14 +114,7 @@ bool M_Camera3D::SaveConfiguration(ParsonNode& configuration) const
 	return true;
 }
 
-// -----------------------------------------------------------------
-UpdateStatus M_Camera3D::Update(float dt)
-{
-
-	return UpdateStatus::CONTINUE;
-}
-
-// -----------------------------------------------------------------
+// --- M_CAMERA3D METHODS
 void M_Camera3D::CreateMasterCamera()
 {
 	masterCamera = new GameObject();
@@ -374,7 +382,7 @@ void M_Camera3D::FreeLookAround()
 void M_Camera3D::Orbit(const float2& orbitPoint)								// Almost identical to FreeLookAround(), but instead of only modifying XYZ, the position of the camera is also modified.
 {
 	Frustum frustum = currentCamera->GetFrustum();
-	float sensitivity = rotationSpeed * Time::Real::GetDT();
+	float sensitivity = rotationSpeed * MC_Time::Real::GetDT();
 
 	float3 newZ = frustum.Pos() - GetReference();
 
@@ -405,12 +413,12 @@ void M_Camera3D::PanCamera(const float2& panPoint)
 
 	if (panPoint.x != 0)
 	{
-		newX = -panPoint.x * frustum.WorldRight() * panSpeed * Time::Real::GetDT();
+		newX = -panPoint.x * frustum.WorldRight() * panSpeed * MC_Time::Real::GetDT();
 	}
 
 	if (panPoint.y != 0)
 	{
-		newY = panPoint.y * frustum.Up() * panSpeed * Time::Real::GetDT();
+		newY = panPoint.y * frustum.Up() * panSpeed * MC_Time::Real::GetDT();
 	}
 
 	newPosition = newX + newY;
@@ -421,7 +429,7 @@ void M_Camera3D::PanCamera(const float2& panPoint)
 void M_Camera3D::Zoom()
 {
 	Frustum frustum = currentCamera->GetFrustum();
-	float3 newZ = frustum.Front() * (float)App->input->GetMouseZ() * zoomSpeed * Time::Real::GetDT();
+	float3 newZ = frustum.Front() * (float)App->input->GetMouseZ() * zoomSpeed * MC_Time::Real::GetDT();
 
 	Move(newZ);
 }
@@ -431,11 +439,11 @@ void M_Camera3D::WASDMovement()
 {
 	float3 newPosition = float3::zero;
 	Frustum frustum = currentCamera->GetFrustum();
-	float movSpeed = movementSpeed * Time::Real::GetDT();
+	float movSpeed = movementSpeed * MC_Time::Real::GetDT();
 
 	if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KeyState::KEY_REPEAT)								// --- CAMERA MOVEMEMENT BOOST
 	{																									// 
-		movSpeed = movementSpeed * 2 * Time::Real::GetDT();											// 
+		movSpeed = movementSpeed * 2 * MC_Time::Real::GetDT();											// 
 	}																									// ---------------------------
 
 

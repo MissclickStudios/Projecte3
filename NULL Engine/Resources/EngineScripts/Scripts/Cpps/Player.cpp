@@ -2,792 +2,606 @@
 
 #include "Player.h"
 
-#include "VariableTypedefs.h"
-#include "Log.h"
-
 #include "Application.h"
 #include "M_Input.h"
-#include "M_Scene.h"
 #include "M_ResourceManager.h"
-#include "M_Camera3D.h"
-#include "M_Window.h"
-#include "M_Audio.h"
-#include "M_Physics.h"
-#include "M_FileSystem.h"
-
-#include "R_Texture.h"
+#include "M_Scene.h"
 
 #include "GameObject.h"
-
 #include "C_Transform.h"
-#include "C_Mesh.h"
-#include "C_Animator.h"
 #include "C_RigidBody.h"
-#include "C_BoxCollider.h"
-#include "C_Camera.h"
-#include "C_AudioSource.h"
 #include "C_Material.h"
+#include "C_ParticleSystem.h"
+#include "Emitter.h"
+#include "C_AudioSource.h"
 
-#include "C_Script.h"
-#include "R_Script.h"
-#include "Bullet.h"
+#include "C_Animator.h"
 
-#include "LevelGenerator.h"
-#include "Weapon.h"
+#include "GameManager.h"
 
-#include "Time.h"
+#include "Log.h"
 
-#include "MathGeoLib/include/Geometry/Line.h"
+#define MAX_INPUT 32767
 
-#define MAX_JOYSTICK_INPUT 32767
-#define MANDO_FILE "EngineScripts/Mando.json"
-
-enum class PlayerState
+Player* CreatePlayer()
 {
-	IDLE,
-	RUNNING,
-	DASHING,
-	SHOOTING_BLASTER,
-	SHOOTING_SNIPER,
-	RELOADING_BLASTER,
-	RELOADING_SNIPER,
-	DEAD
-};
+	Player* script = new Player();
 
-Player::Player() : Script(), state(PlayerState::IDLE)
+	// Entity ---
+	// Health
+	INSPECTOR_DRAGABLE_FLOAT(script->health);
+	INSPECTOR_DRAGABLE_FLOAT(script->maxHealth);
+
+	// Basic Stats
+	INSPECTOR_DRAGABLE_FLOAT(script->speed);
+	INSPECTOR_DRAGABLE_FLOAT(script->attackSpeed);
+	INSPECTOR_DRAGABLE_FLOAT(script->damage);
+	INSPECTOR_DRAGABLE_FLOAT(script->defense);
+
+	// Modifiers
+	INSPECTOR_DRAGABLE_FLOAT(script->maxHealthModifier);
+	INSPECTOR_DRAGABLE_FLOAT(script->speedModifier);
+	INSPECTOR_DRAGABLE_FLOAT(script->attackSpeedModifier);
+	INSPECTOR_DRAGABLE_FLOAT(script->damageModifier);
+	INSPECTOR_DRAGABLE_FLOAT(script->defenseModifier);
+	INSPECTOR_DRAGABLE_FLOAT(script->cooldownModifier);
+
+	// Death
+	INSPECTOR_DRAGABLE_FLOAT(script->deathDuration);
+
+	// Player ---
+
+	// Currency
+	INSPECTOR_DRAGABLE_INT(script->currency);
+	INSPECTOR_DRAGABLE_INT(script->hubCurrency);
+
+	// Dash
+	INSPECTOR_DRAGABLE_FLOAT(script->dashSpeed);
+	INSPECTOR_DRAGABLE_FLOAT(script->dashDuration);
+	INSPECTOR_DRAGABLE_FLOAT(script->dashCooldown);
+
+	// Invencibility frames
+	INSPECTOR_DRAGABLE_FLOAT(script->invencibilityDuration);
+
+	// Weapons
+	INSPECTOR_DRAGABLE_FLOAT(script->changeTime);
+
+	INSPECTOR_PREFAB(script->blaster);
+	INSPECTOR_PREFAB(script->equipedGun);
+
+	INSPECTOR_STRING(script->gameManager);
+
+	//// Animations ---
+	//// Movement
+	//INSPECTOR_STRING(script->idleAnimation.name);
+	//INSPECTOR_DRAGABLE_FLOAT(script->idleAnimation.blendTime);
+	//INSPECTOR_STRING(script->runAnimation.name);
+	//INSPECTOR_DRAGABLE_FLOAT(script->runAnimation.blendTime);
+	//INSPECTOR_STRING(script->dashAnimation.name);
+	//INSPECTOR_DRAGABLE_FLOAT(script->dashAnimation.blendTime);
+	//INSPECTOR_STRING(script->deathAnimation.name);
+	//INSPECTOR_DRAGABLE_FLOAT(script->deathAnimation.blendTime);
+	//
+	//// Aim
+	//INSPECTOR_STRING(script->shootAnimation.name);
+	//INSPECTOR_DRAGABLE_FLOAT(script->shootAnimation.blendTime);
+	//INSPECTOR_STRING(script->reloadAnimation.name);
+	//INSPECTOR_DRAGABLE_FLOAT(script->reloadAnimation.blendTime);
+	//INSPECTOR_STRING(script->changeAnimation.name);
+	//INSPECTOR_DRAGABLE_FLOAT(script->changeAnimation.blendTime);
+	//INSPECTOR_STRING(script->onGuardAnimation.name);
+	//INSPECTOR_DRAGABLE_FLOAT(script->onGuardAnimation.blendTime);
+
+	return script;
+}
+
+Player::Player() : Entity()
 {
-	blasterReloadTimer.Stop();
-	sniperReloadTimer.Stop();
-	shootAnimTimer.Stop();
+	type = EntityType::PLAYER;
 }
 
 Player::~Player()
 {
 }
 
-void Player::Awake()
+void Player::SetUp()
 {
-	char* buffer = nullptr;
-	uint size = App->fileSystem->Load(MANDO_FILE, &buffer);
-	if (buffer)
+	dashTimer.Stop();
+	dashCooldownTimer.Stop();
+	invencibilityTimer.Stop();
+	changeTimer.Stop();
+
+	if (rigidBody)
+		rigidBody->TransformMovesRigidBody(false);
+
+	if (particles)
+		for (uint i = 0; i < particles->emitterInstances.size(); ++i)
+			if (particles->emitterInstances[i]->emitter->name == "Dash")
+				dashParticles = particles->emitterInstances[i];
+
+	currentWeapon = blasterWeapon;
+
+	for (uint i = 0; i < gameObject->components.size(); ++i)
 	{
-		ParsonNode config(buffer);
-	
-		weaponUsed = config.GetInteger("Weapon used");
-		coins = config.GetInteger("Coins");
-		strongShots = true; //config.GetBool("Strong shots");
-		freezingShots = true; //config.GetBool("Freezing shots");
-		blasterAmmo = config.GetInteger("Blaster ammo");
-		sniperAmmo = config.GetInteger("Sniper ammo");
-		health = maxHealth; //(float)config.GetNumber("Health");
-
-		load = true;
-	}
-
-	RELEASE_ARRAY(buffer);
-
-	if (!gameObject->GetComponent<C_RigidBody>())
-		gameObject->CreateComponent(ComponentType::RIGIDBODY);
-
-	std::vector<Component*> components;
-	gameObject->GetAllComponents(components);
-	for (auto comp = components.begin(); comp != components.end(); ++comp)
-	{
-		if ((*comp)->GetType() == ComponentType::AUDIOSOURCE)
+		if (gameObject->components[i]->GetType() == ComponentType::AUDIOSOURCE)
 		{
-			C_AudioSource* source = (C_AudioSource*)(*comp);
+			C_AudioSource* source = (C_AudioSource*)gameObject->components[i];
 			std::string name = source->GetEventName();
 
-			if (name == "mando_damaged")
-				damaged = source;
+			if (name == "mando_walking")
+				walkAudio = source;
 			else if (name == "mando_dash")
-				dashSource = source;
-			else if (name == "mando_walking")
-				step = source;
-			else if (name == "mando_death")
-				death = source;
-			else if (name == "weapon_reload_01")
-				reloadBlaster = source;
-			else if (name == "weapon_reload_02")
-				reloadSniper = source;
+				dashAudio = source;
 			else if (name == "weapon_change")
-				weaponChange = source;
+				changeWeaponAudio = source;
+			else if (name == "mando_damaged")
+				damageAudio = source;
+			else if (name == "mando_death")
+				deathAudio = source;
 		}
 	}
-
-	if (!blaster)
-		blaster = new Weapon(gameObject, blasterBullet, 10u, blasterMaxAmmo, blasterSpeed, blasterRate, blasterAutomatic);
-	if (!sniper)
-		sniper = new Weapon(gameObject, sniperBullet, 2u, sniperMaxAmmo, sniperSpeed, sniperRate, sniperAutomatic);
-
-
-
-	std::vector<GameObject*>* gameObjects = App->scene->GetGameObjects();
-	for (auto object = gameObjects->begin(); object != gameObjects->end(); ++object)
-	{
-		std::string name = (*object)->GetName();
-		if (name == "Blaster")
-			blasterModel = (*object);
-		else if (name == "Sniper")
-			sniperModel = (*object);
-	}
-
-	if (weaponUsed == 1)
-	{
-		if (blasterModel)
-			blasterModel->SetIsActive(true);
-		if (sniperModel)
-			sniperModel->SetIsActive(false);
-	}
-	else
-	{
-		if (blasterModel)
-			blasterModel->SetIsActive(false);
-		if (sniperModel)
-			sniperModel->SetIsActive(true);
-	}
-
-	dashTime.Stop();
-	dashColdown.Stop();
-	stepTimer.Stop();
-	invulnerabilityTimer.Stop();
 }
 
 void Player::Update()
 {
-	Animations();
-	if (health <= 0.0f)
-	{
-		if (state != PlayerState::DEAD)
-		{
-			state = PlayerState::DEAD;
-
-			weaponUsed = 1;
-			coins = 0;
-			strongShots = false;
-			freezingShots = false;
-			health = maxHealth;
-			blasterAmmo = blasterMaxAmmo;
-			sniperAmmo = sniperMaxAmmo;
-
-			if (death)
-				death->PlayFx(death->GetEventId());
-
-			C_RigidBody* rigidBody = gameObject->GetComponent<C_RigidBody>();
-			if (!rigidBody || rigidBody->IsStatic())
-				rigidBody->SetIsActive(false);
-
-			App->scene->GetLevelGenerator()->InitiateLevel(1);
-		}
-		return;
-	}
-
-	Movement();
-
-	blaster->Update();
-	sniper->Update();
-	if (load)
-	{
-		load = false;
-		if (strongShots)
-			BlasterStrongShots();
-		if (freezingShots)
-			SniperFreezingShots();
-
-		blaster->ammo = blasterAmmo;
-		sniper->ammo = sniperAmmo;
-	}
-
-	blasterAmmo = blaster->ammo;
-	sniperAmmo = sniper->ammo;
-	Shooting();
-
-	if (App->input->GetKey(SDL_SCANCODE_K) == KeyState::KEY_DOWN && hearts != nullptr)
-		health -= 0.5f;
-	if (App->input->GetKey(SDL_SCANCODE_L) == KeyState::KEY_DOWN && hearts != nullptr)
-		health += 0.5f;
-
-	//HandleHp();
-	//HandleAmmo(ammo);
+	ManageMovement();
+	if (moveState != PlayerState::DEAD)
+		ManageAim();
 }
 
 void Player::CleanUp()
 {
-	ParsonNode config;
-	config.SetInteger("Weapon used", weaponUsed);
-	config.SetInteger("Coins", coins);
-	config.SetInteger("Blaster ammo", blasterAmmo);
-	config.SetInteger("Sniper ammo", sniperAmmo);
-	config.SetNumber("Health", (double)health);
-	config.SetBool("Strong shots", strongShots);
-	config.SetBool("Freezing shots", freezingShots);
+	if (blasterGameObject)
+		blasterGameObject->toDelete = true;
+	blasterGameObject = nullptr;
+	blasterWeapon = nullptr;
 
-	char* buffer = nullptr;
-	config.SerializeToFile(MANDO_FILE, &buffer);
+	if (equipedGunGameObject)
+		equipedGunGameObject->toDelete = true;
+	equipedGunGameObject = nullptr;
+	equipedGunWeapon = nullptr;
 
-	delete blaster; // Destructor calls CleanUp
-	blaster = nullptr;
+	currentWeapon = nullptr;
+}
 
-	if (storedAmmoTex)
+void Player::SaveState(ParsonNode& playerNode)
+{
+	playerNode.SetInteger("Currency", currency);
+	playerNode.SetInteger("Hub Currency", hubCurrency);
+
+	playerNode.SetNumber("Health", health);
+
+	playerNode.SetBool("God Mode", godMode);
+
+	ParsonArray effectsArray = playerNode.SetArray("Effects");
+	for (uint i = 0; i < effects.size(); ++i)
 	{
-		for (uint i = 0; i < 11; ++i)
+		ParsonNode node = effectsArray.SetNode("Effect");
+		node.SetInteger("Type", (int)effects[i]->Type());
+		node.SetNumber("Duration", (double)effects[i]->RemainingDuration());
+		node.SetBool("Permanent", effects[i]->Permanent());
+	}
+
+	ParsonArray blasterPerks = playerNode.SetArray("Blaster Perks");
+	if (blasterWeapon)
+	{
+		playerNode.SetInteger("Blaster Ammo", blasterWeapon->ammo);
+		for (uint i = 0; i < blasterWeapon->perks.size(); ++i)
+			blasterPerks.SetNumber((double)blasterWeapon->perks[i]);
+	}
+
+	playerNode.SetInteger("Equiped Gun", equipedGun.uid);
+	ParsonArray equipedGunPerks = playerNode.SetArray("Equiped Gun Perks");
+	if (equipedGunWeapon)
+	{
+		playerNode.SetInteger("Equiped Gun Ammo", equipedGunWeapon->ammo);
+		for (uint i = 0; i < equipedGunWeapon->perks.size(); ++i)
+			equipedGunPerks.SetNumber((double)equipedGunWeapon->perks[i]);
+	}
+}
+
+void Player::LoadState(ParsonNode& playerNode)
+{
+	currency = playerNode.GetInteger("Currency");
+	hubCurrency = playerNode.GetInteger("Hub Currency");
+
+	health = playerNode.GetNumber("Health");
+
+	godMode = playerNode.GetBool("God Mode");
+	SetGodMode(godMode);
+
+	ParsonArray effectsArray = playerNode.GetArray("Effects");
+	for (uint i = 0; i < effectsArray.size; ++i)
+	{
+		ParsonNode node = effectsArray.GetNode(i);
+		EffectType type = (EffectType)node.GetInteger("Type");
+		float duration = node.GetNumber("Duration");
+		bool permanent = node.GetBool("Permanent");
+
+		AddEffect(type, duration, permanent);
+	}
+
+	GameObject* hand = nullptr;
+	if (skeleton)
+		for (uint i = 0; i < skeleton->childs.size(); ++i)
 		{
-			if (ammoTex[i] != 0)
+			std::string name = skeleton->childs[i]->GetName();
+			if (name == "Hand")
 			{
-				App->resourceManager->FreeResource(ammoTex[i]->GetUID());
+				hand = skeleton->childs[i];
+				break;
 			}
+		}
+
+	blasterGameObject = App->resourceManager->LoadPrefab(blaster.uid, App->scene->GetSceneRoot());
+	if (blasterGameObject)
+	{
+		blasterWeapon = (Weapon*)GetObjectScript(blasterGameObject, ObjectType::WEAPON);
+
+		if (blasterWeapon)
+		{
+			blasterWeapon->SetOwnership(type, hand);
+			blasterWeapon->ammo = playerNode.GetInteger("Blaster Ammo");
+
+			ParsonArray blasterPerks = playerNode.GetArray("Blaster Perks");
+			for (uint i = 0; i < blasterPerks.size; ++i)
+				blasterWeapon->AddPerk((Perk)(int)blasterPerks.GetNumber(i));
 		}
 	}
 
-	if (full != nullptr) { App->resourceManager->FreeResource(full->GetUID()); }
-	if (half != nullptr) { App->resourceManager->FreeResource(half->GetUID()); }
-	if (empty != nullptr) { App->resourceManager->FreeResource(empty->GetUID()); }
+	// TODO: Load correct secondary gun
+	//equipedGunGameObject = App->resourceManager->LoadPrefab(playerNode.GetInteger("Equiped Gun"), App->scene->GetSceneRoot());
+	equipedGunGameObject = App->resourceManager->LoadPrefab(equipedGun.uid, App->scene->GetSceneRoot());
+	if (equipedGunGameObject)
+	{
+		equipedGunWeapon = (Weapon*)GetObjectScript(equipedGunGameObject, ObjectType::WEAPON);
+
+		if (equipedGunWeapon)
+		{
+			equipedGunWeapon->SetOwnership(type, hand);
+			equipedGunWeapon->ammo = playerNode.GetInteger("Equiped Gun Ammo");
+
+			ParsonArray equipedGunPerks = playerNode.GetArray("Equiped Gun Perks");
+			for (uint i = 0; i < equipedGunPerks.size; ++i)
+				equipedGunWeapon->AddPerk((Perk)(int)equipedGunPerks.GetNumber(i));
+
+			if (equipedGunWeapon->weaponModel)
+				equipedGunWeapon->weaponModel->SetIsActive(false);
+		}
+	}
+}
+
+void Player::Reset()
+{
+	currency = 0;
+
+	health = maxHealth;
+
+	while (effects.size())
+	{
+		delete* effects.begin();
+		effects.erase(effects.begin());
+	}
+
+	if (blasterWeapon)
+	{
+		blasterWeapon->ammo = blasterWeapon->maxAmmo;
+		blasterWeapon->perks.clear();
+	}
+	if (equipedGunWeapon)
+	{
+		equipedGunWeapon->ammo = equipedGunWeapon->maxAmmo;
+		equipedGunWeapon->perks.clear();
+	}
 }
 
 void Player::TakeDamage(float damage)
 {
-	if (!invulnerabilityTimer.IsActive())
+	if (invencibilityTimer.ReadSec() >= invencibilityDuration)
+		invencibilityTimer.Stop();
+	if (!invencibilityTimer.IsActive())
 	{
-		if (damaged)
-			damaged->PlayFx(damaged->GetEventId());
+		float damageDealt = 0.0f;
+		if(Defense())
+		 damageDealt = damage / Defense();
+		health -= damageDealt;
 
-		health -= damage;
 		if (health < 0.0f)
 			health = 0.0f;
-		invulnerabilityTimer.Start();
+		invencibilityTimer.Start();
+
+		hitTimer.Start();
+		if (hitParticles)
+			hitParticles->stopSpawn = false;
+		if (material)
+		{
+			material->SetAlternateColour(Color(1, 0, 0, 1));
+			material->SetTakeDamage(true);
+		}
+
+		if (damageAudio)
+			damageAudio->PlayFx(damageAudio->GetEventId());
+	}
+}
+
+void Player::SetGodMode(bool enable)
+{
+	godMode = enable;
+	if (godMode)
+	{
+		
+		defense = 0.0f;
+		
 	}
 	else
 	{
-		if (invulnerabilityTimer.ReadSec() >= invulnerability)
-			invulnerabilityTimer.Stop();
+		defense = 1.0f;
+		
 	}
 }
 
-void Player::BlasterStrongShots()
+bool Player::GetGodMode() const
 {
-	if (blaster)
-		for (uint i = 0; i < blaster->projectilesNum; ++i)
-			((Bullet*)blaster->projectiles[i]->object->GetScript("Bullet"))->strong = true;
+	return godMode;
 }
 
-void Player::SniperFreezingShots()
+void Player::ManageMovement()
 {
-	if (sniper)
-		for (uint i = 0; i < sniper->projectilesNum; ++i)
-			((Bullet*)sniper->projectiles[i]->object->GetScript("Bullet"))->freeze = true;
-}
-
-void Player::Animations()
-{
-	if (!playAnim)
+	if (moveState != PlayerState::DEAD)
 	{
-		aAnimator = gameObject->GetComponent<C_Animator>();
-
-		aAnimator->PlayClip("Idle", 0u);
-		playAnim = true;
-	}
-
-	AnimatorClip* currentClip = aAnimator->GetCurrentClip();
-	std::string clipName = (currentClip != nullptr) ? currentClip->GetName() : "[NONE]";
-
-	if (shootAnimTimer.IsActive())
-	{
-		if (shootAnimTimer.ReadSec() >= currentClip->GetDurationInSeconds())
-		{
-			shootAnimTimer.Stop();
-		}
+		if (health <= 0.0f)
+			moveState = PlayerState::DEAD_IN;
 		else
-			return;
+			if (moveState != PlayerState::DASH)
+				GatherMoveInputs();
 	}
 
-	switch (state)
+	if (rigidBody)
+		switch (moveState)
+		{
+		case PlayerState::IDLE:
+			currentAnimation = &idleAnimation;
+			if (rigidBody)
+				rigidBody->SetLinearVelocity(float3::zero);
+			break;
+		case PlayerState::RUN:
+			currentAnimation = &runAnimation;
+			Movement();
+			break;
+		case PlayerState::DASH_IN:
+			if (dashAudio)
+				dashAudio->PlayFx(dashAudio->GetEventId());
+
+			currentAnimation = &dashAnimation;
+			dashTimer.Start();
+			if (rigidBody)
+				rigidBody->ChangeFilter(" player dashing");
+			if (dashParticles)
+				dashParticles->stopSpawn = false;
+			moveState = PlayerState::DASH;
+
+		case PlayerState::DASH:
+			Dash();
+			if (dashTimer.ReadSec() >= DashDuration()) // When the dash duration ends start the cooldown and reset the move state
+			{
+				dashTimer.Stop();
+				dashCooldownTimer.Start();
+				if (rigidBody)
+					rigidBody->ChangeFilter(" player");
+				if (dashParticles)
+					dashParticles->stopSpawn = true;
+				moveState = PlayerState::IDLE;
+			}
+			break;
+		case PlayerState::DEAD_IN:
+			if (deathAudio)
+				deathAudio->PlayFx(deathAudio->GetEventId());
+
+			currentAnimation = &deathAnimation;
+			if (rigidBody)
+				rigidBody->SetIsActive(false); // Disable the rigidbody to avoid more interactions with other entities
+			deathTimer.Start();
+			moveState = PlayerState::DEAD;
+
+		case PlayerState::DEAD:
+			if (deathTimer.ReadSec() >= deathDuration)
+				moveState = PlayerState::DEAD_OUT;
+			break;
+		}
+}
+
+void Player::ManageAim()
+{
+	if (moveState != PlayerState::DASH)
+		GatherAimInputs();
+	Aim();
+
+	switch (aimState)
 	{
-	case PlayerState::IDLE:
-		if (currentClip && clipName != idle)
-			aAnimator->PlayClip(idle, 0.2f);
+	case AimState::IDLE:
 		break;
-	case PlayerState::RUNNING:
-		if (currentClip && clipName != walk)
-			aAnimator->PlayClip(walk, 0.2f);
+	case AimState::ON_GUARD:
+		aimState = AimState::IDLE;
 		break;
-	//case PlayerState::DASHING:
-	//	if (currentClip != nullptr && clipName != dash)
-	//	{
-	//		aAnimator->PlayClip(dash, 0u);
-	//	}
-	//	break;
-	case PlayerState::SHOOTING_BLASTER:
-		if (currentClip && clipName != shootBlaster)
+	case AimState::SHOOT_IN:
+		currentAnimation = &shootAnimation;
+		aimState = AimState::SHOOT;
+
+	case AimState::SHOOT:
+		currentAnimation = &shootAnimation; // temporary till torso gets an independent animator
+		if (currentWeapon)
+			switch (currentWeapon->Shoot(aimDirection))
+			{
+			case ShootState::NO_FULLAUTO:
+				currentAnimation = nullptr;
+				aimState = AimState::ON_GUARD;
+				break;
+			case ShootState::WAINTING_FOR_NEXT:
+				break;
+			case ShootState::FIRED_PROJECTILE:
+				currentAnimation = nullptr;
+				aimState = AimState::ON_GUARD;
+				break;
+			case ShootState::RATE_FINISHED:
+				currentAnimation = nullptr;
+				aimState = AimState::ON_GUARD;
+				break;
+			case ShootState::NO_AMMO:
+				aimState = AimState::RELOAD_IN;
+				break;
+			}
+		break;
+	case AimState::RELOAD_IN:
+		aimState = AimState::RELOAD;
+
+	case AimState::RELOAD:
+		if (currentWeapon && currentWeapon->Reload())
+			aimState = AimState::ON_GUARD;
+		break;
+	case AimState::CHANGE_IN:
+		if (changeWeaponAudio)
+			changeWeaponAudio->PlayFx(changeWeaponAudio->GetEventId());
+
+		changeTimer.Start();
+		aimState = AimState::CHANGE;
+
+	case AimState::CHANGE:
+		if (changeTimer.ReadSec() >= ChangeTime())
 		{
-			aAnimator->PlayClip(shootBlaster, 0.1f);
-			shootAnimTimer.Start();
+			if (blasterWeapon == currentWeapon)
+			{
+				currentWeapon = equipedGunWeapon;
+				if (blasterWeapon->weaponModel)
+					blasterWeapon->weaponModel->SetIsActive(false);
+				if (equipedGunWeapon->weaponModel)
+					equipedGunWeapon->weaponModel->SetIsActive(true);
+			}
+			else
+			{
+				currentWeapon = blasterWeapon;
+				if (blasterWeapon->weaponModel)
+					blasterWeapon->weaponModel->SetIsActive(true);
+				if (equipedGunWeapon->weaponModel)
+					equipedGunWeapon->weaponModel->SetIsActive(false);
+			}
+			aimState = AimState::ON_GUARD;
 		}
 		break;
-	case PlayerState::SHOOTING_SNIPER:
-		if (currentClip && clipName != shootBlaster)
-		{
-			aAnimator->PlayClip(shootBlaster, 0.1f);
-			shootAnimTimer.Start();
-		}
-		//if (currentClip != nullptr && clipName != shootSniper)
-		//{
-		//	aAnimator->PlayClip(shootSniper, 0u);
-		//  shootAnimTimer.Start();
-		//}
-		break;
-	case PlayerState::RELOADING_BLASTER:
-	//	if (currentClip != nullptr && clipName != "Shooting")
-	//	{
-	//		//aAnimator->PlayClip("Reloading", 0u);
-	//	}
-		if (currentClip && clipName != idle)
-		{
-			aAnimator->PlayClip(idle, 0.2f);
-		}
-		break;
-	case PlayerState::RELOADING_SNIPER:
-	//	if (currentClip != nullptr && clipName != "Shooting")
-	//	{
-	//		//aAnimator->PlayClip("Reloading", 0u);
-	//	}
-		if (currentClip && clipName != idle)
-		{
-			aAnimator->PlayClip(idle, 0.2f);
-		}
-		break;
-	//case PlayerState::DEAD:
-	//	if (currentClip != nullptr && clipName != die)
-	//	{
-	//		aAnimator->PlayClip(die, 0u);
-	//	}
-	//	break;
 	}
+}
+
+void Player::GatherMoveInputs()
+{
+	// Controller movement
+	moveInput.x = (float)App->input->GetGameControllerAxisValue(0);
+	moveInput.y = (float)App->input->GetGameControllerAxisValue(1);
+	// Keyboard movement
+	if (moveInput.IsZero())	// If there was no controller input
+	{
+		if (App->input->GetKey(SDL_SCANCODE_W) == KeyState::KEY_REPEAT)
+			moveInput.y = -MAX_INPUT;
+		if (App->input->GetKey(SDL_SCANCODE_S) == KeyState::KEY_REPEAT)
+			moveInput.y = MAX_INPUT;
+		if (App->input->GetKey(SDL_SCANCODE_D) == KeyState::KEY_REPEAT)
+			moveInput.x = MAX_INPUT;
+		if (App->input->GetKey(SDL_SCANCODE_A) == KeyState::KEY_REPEAT)
+			moveInput.x = -MAX_INPUT;
+	}
+
+	if (!dashCooldownTimer.IsActive())
+	{
+		if ((App->input->GetKey(SDL_SCANCODE_LSHIFT) == KeyState::KEY_DOWN
+			|| App->input->GetGameControllerTrigger(0) == ButtonState::BUTTON_DOWN))
+		{
+			if (!dashTimer.IsActive())
+				moveState = PlayerState::DASH_IN;
+
+			return;
+		}
+	}
+	else if (dashCooldownTimer.ReadSec() >= DashCooldown())
+		dashCooldownTimer.Stop();
+
+	if (!moveInput.IsZero())
+	{
+		moveState = PlayerState::RUN;
+		return;
+	}
+
+	moveState = PlayerState::IDLE;
+}
+
+void Player::GatherAimInputs()
+{
+	// Controller aim
+	aimInput.x = (float)App->input->GetGameControllerAxisValue(2);
+	aimInput.y = (float)App->input->GetGameControllerAxisValue(3);
+	// Keyboard aim
+	if (aimInput.IsZero())	// If there was no controller input
+	{
+		if (App->input->GetKey(SDL_SCANCODE_UP) == KeyState::KEY_REPEAT)
+			aimInput.y = -MAX_INPUT;
+		if (App->input->GetKey(SDL_SCANCODE_DOWN) == KeyState::KEY_REPEAT)
+			aimInput.y = MAX_INPUT;
+		if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KeyState::KEY_REPEAT)
+			aimInput.x = MAX_INPUT;
+		if (App->input->GetKey(SDL_SCANCODE_LEFT) == KeyState::KEY_REPEAT)
+			aimInput.x = -MAX_INPUT;
+	}
+
+	if (!(aimState == AimState::IDLE || aimState == AimState::ON_GUARD)) // If the player is not on this states, ignore action inputs (shoot, reload, etc.)
+		return;
+
+	if (App->input->GetKey(SDL_SCANCODE_F) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(1) == ButtonState::BUTTON_DOWN)
+	{
+		aimState = AimState::CHANGE_IN;
+		return;
+	}
+
+	if ((App->input->GetKey(SDL_SCANCODE_R) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(2) == ButtonState::BUTTON_DOWN))
+	{
+		aimState = AimState::RELOAD_IN;
+		return;
+	}
+
+	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_REPEAT || App->input->GetGameControllerTrigger(1) == ButtonState::BUTTON_REPEAT)
+	{
+		aimState = AimState::SHOOT_IN;
+		return;
+	}
+
+	aimState = AimState::IDLE;
 }
 
 void Player::Movement()
 {
-	C_RigidBody* rigidBody = gameObject->GetComponent<C_RigidBody>();
-	if (!rigidBody || rigidBody->IsStatic())
-		return;
+	float3 direction = { moveInput.x, 0, moveInput.y };
+	direction.Normalize();
+	moveDirection = { moveInput.x, moveInput.y }; // Save the value
 
-	if (!dashTime.IsActive())
-	{
-		int movX = 0;
-		int movY = 0;
-		// Controller movement
-		GetMovementVectorAxis(movX, movY);
-		// Keyboard movement
-		if (movX + movY == 0)
-		{
-			if (App->input->GetKey(SDL_SCANCODE_W) == KeyState::KEY_REPEAT)
-				movY = -MAX_JOYSTICK_INPUT;
-			if (App->input->GetKey(SDL_SCANCODE_S) == KeyState::KEY_REPEAT)
-				movY = MAX_JOYSTICK_INPUT;
-			if (App->input->GetKey(SDL_SCANCODE_D) == KeyState::KEY_REPEAT)
-				movX = MAX_JOYSTICK_INPUT;
-			if (App->input->GetKey(SDL_SCANCODE_A) == KeyState::KEY_REPEAT)
-				movX = -MAX_JOYSTICK_INPUT;
-		}
-		Move(rigidBody, movX, movY);
+	direction *= Speed(); // Apply the processed speed value to the unitari direction vector
+	if (rigidBody)
+		rigidBody->SetLinearVelocity(direction);
+}
 
-		if (dashColdown.IsActive())
-		{
-			if (dashColdown.ReadSec() >= dashingColdown)
-				dashColdown.Stop();
-		}
-		else if ((App->input->GetKey(SDL_SCANCODE_LSHIFT) == KeyState::KEY_DOWN || App->input->GetGameControllerTrigger(0) == ButtonState::BUTTON_DOWN))
-		{
-			// 0 -> player filter
-			// 4 -> enemy bullet filter
-			App->physics->GetInteractions()[0][4] = false;
-			App->physics->GetInteractions()[4][0] = false;
-
-			if (dashSource)
-				dashSource->PlayFx(dashSource->GetEventId());
-			state = PlayerState::DASHING;
-			dashColdown.Start();
-			dashTime.Start();
-		}
-	}
+void Player::Aim()
+{
+	if (aimInput.IsZero() || moveState == PlayerState::DASH) // We force the player to look in the direction he is dashing if he is
+		aimDirection = moveDirection; // TEMPORARY
 	else
-	{
-		rigidBody->SetLinearVelocity(lastDirection * dashSpeed);
+		aimDirection = aimInput;
 
-		if (dashTime.ReadSec() >= dashingTime)
-		{
-			// 0 -> player filter
-			// 4 -> enemy bullet filter
-			App->physics->GetInteractions()[0][4] = true;
-			App->physics->GetInteractions()[4][0] = true;
+	float rad = aimDirection.AimedAngle();
 
-			dashTime.Stop();
-		}
-	}
+	if (skeleton)
+		skeleton->transform->SetLocalRotation(float3(0, -rad + DegToRad(90), 0));
 }
 
-void Player::Move(C_RigidBody* rigidBody, int axisX, int axisY)
+void Player::Dash()
 {
-	float3 direction = { (float)axisX, 0, (float)axisY };
-
-	if (axisX == 0 && axisY == 0) { state = PlayerState::IDLE; }
-	else
-	{
-		state = PlayerState::RUNNING;
-
-		direction.Normalize();
-		lastDirection = direction;
-		StepSound();
-	}
-
-	direction *= speed;
-	rigidBody->SetLinearVelocity(direction);
-}
-
-void Player::Dash(C_RigidBody* rigidBody, int axisX, int axisY)
-{
-	state = PlayerState::DASHING;
-
-	rigidBody->SetLinearVelocity(lastDirection * dashSpeed);
-
-	dashColdown.Start();
-	dashTime.Start();
-}
-
-void Player::Shooting()
-{
-	int aimX = 0;
-	int aimY = 0;
-	// Controller aim
-	GetAimVectorAxis(aimX, aimY);
-	// Keyboard movement
-	if (aimX + aimY == 0)
-	{
-		if (App->input->GetKey(SDL_SCANCODE_UP) == KeyState::KEY_REPEAT)
-			aimY = -MAX_JOYSTICK_INPUT;
-		if (App->input->GetKey(SDL_SCANCODE_DOWN) == KeyState::KEY_REPEAT)
-			aimY = MAX_JOYSTICK_INPUT;
-		if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KeyState::KEY_REPEAT)
-			aimX = MAX_JOYSTICK_INPUT;
-		if (App->input->GetKey(SDL_SCANCODE_LEFT) == KeyState::KEY_REPEAT)
-			aimX = -MAX_JOYSTICK_INPUT;
-	}
-
-	float3 direction = { (float)aimX, 0, (float)aimY };
-	if (aimX == 0 && aimY == 0)
-	{
-		lastAim = lastDirection;
-	}
-	else
-	{
-		direction.Normalize();
-		lastAim = direction;
-	}
-
-	for (uint i = 0; i < gameObject->childs.size(); ++i)
-	{
-		float2 dir = { lastAim.x, -lastAim.z };
-		float rad = dir.AimedAngle();
-		if (!gameObject->childs[i]->GetComponent<C_Mesh>()) // FUCK MESHES ALL MY HOMIES HATE MESHES
-			gameObject->childs[i]->transform->SetLocalRotation(float3(0, rad + DegToRad(90), 0));
-	}
-
-	if (App->input->GetKey(SDL_SCANCODE_F) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(1) == ButtonState::BUTTON_DOWN)
-		if (weaponUsed == 1)
-		{
-			weaponUsed = 2;
-			if (blasterModel)
-				blasterModel->SetIsActive(false);
-			if (sniperModel)
-				sniperModel->SetIsActive(true);
-
-			if (weaponChange)
-				weaponChange->PlayFx(weaponChange->GetEventId());
-		}
-		else
-		{
-			weaponUsed = 1;
-			if (blasterModel)
-				blasterModel->SetIsActive(true);
-			if (sniperModel)
-				sniperModel->SetIsActive(false);
-
-			if (weaponChange)
-				weaponChange->PlayFx(weaponChange->GetEventId());
-		}
-
-	bool shooting = false;
-	if (weaponUsed == 1)
-	{
-		if (!blasterReloadTimer.IsActive())
-		{
-			if ((App->input->GetKey(SDL_SCANCODE_R) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(2) == ButtonState::BUTTON_DOWN)
-				|| blasterAmmo <= 0)
-			{
-				blasterReloadTimer.Start();
-				if (reloadBlaster)
-					reloadBlaster->PlayFx(reloadBlaster->GetEventId());
-			}
-			else
-				if (blaster->Shoot(lastAim))
-					state = PlayerState::SHOOTING_BLASTER;
-		}
-		else
-		{
-			state = PlayerState::RELOADING_BLASTER;
-			if (blasterReloadTimer.ReadSec() >= blasterReloadTime)
-			{
-				blaster->Reload();
-				blasterReloadTimer.Stop();
-			}
-		}
-	}
-	else
-	{
-		if (!sniperReloadTimer.IsActive())
-		{
-			if ((App->input->GetKey(SDL_SCANCODE_R) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(2) == ButtonState::BUTTON_DOWN)
-				|| sniperAmmo <= 0)
-			{
-				sniperReloadTimer.Start();
-				if (reloadSniper)
-					reloadSniper->PlayFx(reloadSniper->GetEventId());
-			}
-			else
-				if(sniper->Shoot(lastAim))
-					state = PlayerState::SHOOTING_SNIPER;
-		}
-		else
-		{
-			state = PlayerState::RELOADING_SNIPER;
-			if (sniperReloadTimer.ReadSec() >= sniperReloadTime)
-			{
-				sniper->Reload();
-				sniperReloadTimer.Stop();
-			}
-		}
-	}
-}
-
-float2 Player::MousePositionToWorldPosition(float mapPositionY)
-{
-	float2 mousePos = float2(App->input->GetMouseX(), App->input->GetMouseY());
-
-	float normMouseX = mousePos.x / (float)App->window->GetWidth();
-	float normMouseY = mousePos.y / (float)App->window->GetHeight();
-
-	float rayOriginX = (normMouseX - 0.5f) * 2;
-	float rayOriginY = (normMouseY - 0.5f) * 2;
-
-	LineSegment ray = App->camera->currentCamera->GetFrustum().UnProjectLineSegment(rayOriginX, rayOriginY);
-	float3 direction = ray.Dir();
-	float3 point = ray.AnyPointFast();
-
-	float2 position = float2::zero;
-	position.x = (-1 * direction.x * point.y) / direction.y + point.x;
-	position.y = (-1 * direction.z * point.y) / direction.y + point.z;
-
-	return position;
-}
-
-void Player::StepSound()
-{
-	if (!isStepPlaying)
-	{
-		isStepPlaying = true;
-		stepTimer.Start();
-		
-		if (step)
-			step->PlayFx(step->GetEventId());
-	}
-	else
-		if (stepTimer.ReadSec() >= 0.4f)
-			isStepPlaying = false;
-}
-
-void Player::GetMovementVectorAxis(int& axisX, int& axisY)
-{
-	axisX = App->input->GetGameControllerAxisValue(0);
-	axisY = App->input->GetGameControllerAxisValue(1);
-}
-
-void Player::GetAimVectorAxis(int& axisX, int& axisY)
-{
-	axisX = App->input->GetGameControllerAxisValue(2);
-	axisY = App->input->GetGameControllerAxisValue(3);
-}
-
-void Player::HandleAmmo(int ammo)
-{
-	std::vector<GameObject*>::const_iterator it = App->scene->GetGameObjects()->cbegin();
-
-	for (it; it != App->scene->GetGameObjects()->cend(); ++it)
-	{
-		if (strstr((*it)->GetName(), "PrimaryWeapon") != nullptr)
-		{
-			ammoUi = (*it);
-		}
-	}
-
-	if (!storedAmmoTex)
-	{
-		std::string ammoTexPath = "Assets/Textures/HUD/Numbers/Ammo";
-
-		for (uint i = 0; i < 11; ++i)
-		{
-			std::string path = ammoTexPath + std::to_string(i) + ".png";
-			ammoTex[i] = (R_Texture*)App->resourceManager->GetResourceFromLibrary(path.c_str());
-		}
-
-		storedAmmoTex = true;
-	}
-
-	if (ammoUi != nullptr)
-	{
-		C_Material* cMaterial = ammoUi->GetComponent<C_Material>();
-		if (cMaterial == nullptr)
-		{
-			return;
-		}
-
-		cMaterial->SwapTexture(ammoTex[ammo]);
-	}
-}
-
-void Player::HandleHp()
-{
-	std::vector<GameObject*>::const_iterator it = App->scene->GetGameObjects()->cbegin();
-
-	for (it; it != App->scene->GetGameObjects()->cend(); ++it)
-	{
-		if (strstr((*it)->GetName(), "Heart") != nullptr)
-		{
-			if (strstr((*it)->GetName(), "1") != nullptr)
-			{
-				hearts[0] = (*it);
-			}
-			else if (strstr((*it)->GetName(), "2") != nullptr)
-			{
-				hearts[1] = (*it);
-			}
-			else if (strstr((*it)->GetName(), "3") != nullptr)
-			{
-				hearts[2] = (*it);
-			}
-		}
-	}
-
-	if (full == nullptr)	{ full = (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/UI/HUD/HeartFull.png"); }
-	if (half == nullptr)	{ half = (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/UI/HUD/HeartHalf.png"); }
-	if (empty == nullptr)	{ empty = (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/UI/HUD/HeartEmpty.png"); }
-
-	if (App->input->GetKey(SDL_SCANCODE_K) == KeyState::KEY_DOWN && hearts != nullptr)
-	{
-		health -= 0.5;
-
-		if (health < 0)
-			health = 0;
-
-		if (health == 2.5)
-			hearts[(int)health]->GetComponent<C_Material>()->SwapTexture(half);
-
-		else if (health == 2)
-			hearts[(int)health]->GetComponent<C_Material>()->SwapTexture(empty);
-
-		else if (health == 1.5)
-			hearts[(int)health]->GetComponent<C_Material>()->SwapTexture(half);
-
-		else if (health == 1)
-			hearts[(int)health]->GetComponent<C_Material>()->SwapTexture(empty);
-
-		else if (health == 0.5)
-			hearts[(int)health]->GetComponent<C_Material>()->SwapTexture(half);
-
-		else if (health == 0)
-			hearts[(int)health]->GetComponent<C_Material>()->SwapTexture(empty);
-	}
-
-	if (App->input->GetKey(SDL_SCANCODE_L) == KeyState::KEY_DOWN && hearts != nullptr)
-	{
-
-		if (health == 2.5)
-			hearts[(int)health]->GetComponent<C_Material>()->SwapTexture(full);
-
-		else if (health == 2)
-			hearts[(int)health]->GetComponent<C_Material>()->SwapTexture(half);
-
-		else if (health == 1.5)
-			hearts[(int)health]->GetComponent<C_Material>()->SwapTexture(full);
-
-		else if (health == 1)
-			hearts[(int)health]->GetComponent<C_Material>()->SwapTexture(half);
-
-		else if (health == 0.5)
-			hearts[(int)health]->GetComponent<C_Material>()->SwapTexture(full);
-
-		else if (health == 0)
-			hearts[(int)health]->GetComponent<C_Material>()->SwapTexture(half);
-
-		health += 0.5;
-
-		if (health > maxHealth)
-			health = maxHealth;
-	}
-}
-
-Player* CreatePlayer()
-{
-	Player* script = new Player();
-
-	// Character
-	INSPECTOR_DRAGABLE_FLOAT(script->speed);
-	INSPECTOR_DRAGABLE_INT(script->coins);
-
-	// Dash
-	INSPECTOR_DRAGABLE_FLOAT(script->dashSpeed);
-	INSPECTOR_DRAGABLE_FLOAT(script->dashingTime);
-	INSPECTOR_DRAGABLE_FLOAT(script->dashingColdown);
-
-	// Health
-	INSPECTOR_DRAGABLE_FLOAT(script->health);
-	INSPECTOR_DRAGABLE_FLOAT(script->maxHealth);
-	INSPECTOR_DRAGABLE_FLOAT(script->invulnerability);
-
-	// Weapons
-	INSPECTOR_SLIDER_INT(script->weaponUsed, 1, 2);
-
-	// Blaster
-	INSPECTOR_PREFAB(script->blasterBullet);
-
-	INSPECTOR_DRAGABLE_FLOAT(script->blasterSpeed);
-	INSPECTOR_DRAGABLE_FLOAT(script->blasterRate);
-
-	INSPECTOR_DRAGABLE_INT(script->blasterAmmo);
-	INSPECTOR_DRAGABLE_INT(script->blasterMaxAmmo);
-	INSPECTOR_DRAGABLE_FLOAT(script->blasterReloadTime);
-
-	INSPECTOR_CHECKBOX_BOOL(script->blasterAutomatic);
-	INSPECTOR_CHECKBOX_BOOL(script->strongShots);
-
-	// Sniper
-	INSPECTOR_PREFAB(script->sniperBullet);
-
-	INSPECTOR_DRAGABLE_FLOAT(script->sniperSpeed);
-	INSPECTOR_DRAGABLE_FLOAT(script->sniperRate);
-
-	INSPECTOR_DRAGABLE_INT(script->sniperAmmo);
-	INSPECTOR_DRAGABLE_INT(script->sniperMaxAmmo);
-	INSPECTOR_DRAGABLE_FLOAT(script->sniperReloadTime);
-
-	INSPECTOR_CHECKBOX_BOOL(script->sniperAutomatic);
-	INSPECTOR_CHECKBOX_BOOL(script->freezingShots);
-
-	// Animations
-	INSPECTOR_STRING(script->idle);
-	INSPECTOR_STRING(script->walk);
-	INSPECTOR_STRING(script->dash);
-	INSPECTOR_STRING(script->shootBlaster);
-	INSPECTOR_STRING(script->shootSniper);
-	INSPECTOR_STRING(script->die);
-
-	return script;
+	float3 direction = { moveDirection.x, 0, moveDirection.y };
+	direction.Normalize();
+
+	if (rigidBody)
+		rigidBody->SetLinearVelocity(direction * DashSpeed());
 }

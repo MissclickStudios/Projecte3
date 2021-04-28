@@ -22,16 +22,16 @@
 
 //Import/export engine core define
 #ifdef NULL_BUILD_DLL
-#define NULL_API __declspec(dllexport)
+#define MISSCLICK_API __declspec(dllexport)
 #else
-#define NULL_API __declspec(dllimport)
+#define MISSCLICK_API __declspec(dllimport)
 #endif
 
 MATH_BEGIN_NAMESPACE
 
 /// Specifies a triangle through three points in 3D space.
 /** This class stores three member vertices a, b and c to specify the triangle. */
-class NULL_API Triangle
+class MISSCLICK_API Triangle
 {
 public:
 	/// The first triangle endpoint.
