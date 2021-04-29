@@ -26,6 +26,7 @@ InputGeom::InputGeom(const std::vector<GameObject*>& srcMeshes, bool createChunk
 	normals(nullptr),
 	verts(nullptr),
 	tris(nullptr),
+	areas(nullptr),
 	m_mesh(false),
 	chunkyTriMesh(nullptr)
 {
@@ -33,18 +34,19 @@ InputGeom::InputGeom(const std::vector<GameObject*>& srcMeshes, bool createChunk
 	vec _bmin, _bmax;
 	bool minmaxset = false;
 
-	/*float4x4 transform;
+	float4x4 transform;
 	// First pass to allocate our arrays
 	for (std::vector<GameObject*>::const_iterator it = srcMeshes.cbegin(); it != srcMeshes.cend(); ++it) {
 		r_mesh = (*it)->GetComponent<C_Mesh>()->GetMesh();
-		ntris += r_mesh->IndicesSize;
-		nverts += r_mesh->VerticesSize;
+		ntris += r_mesh->indices.size();
+		nverts += r_mesh->vertices.size();
 	}
 
 
 	meshes.reserve(srcMeshes.size());
 	verts = new float[nverts * 3];
 	tris = new int[ntris];
+	areas = new unsigned char[ntris / 3];
 
 	unsigned int t_verts = 0;
 	unsigned int t_indices = 0;
@@ -53,8 +55,7 @@ InputGeom::InputGeom(const std::vector<GameObject*>& srcMeshes, bool createChunk
 		m_mesh = true;
 		r_mesh = (*it)->GetComponent<C_Mesh>()->GetMesh();
 		transform = (*it)->GetComponent<C_Transform>()->GetWorldTransform();
-		r_mesh->CreateOBB();
-		OBB t_obb = r_mesh->obb;
+		OBB t_obb = r_mesh->aabb;
 		t_obb.Transform(transform);
 		AABB aabb = t_obb.MinimalEnclosingAABB();
 
@@ -62,24 +63,24 @@ InputGeom::InputGeom(const std::vector<GameObject*>& srcMeshes, bool createChunk
 
 		// We add the index count
 		meshes.back().tris = &tris[t_indices];
-		meshes.back().ntris = r_mesh->IndicesSize / 3;
+		meshes.back().ntris = r_mesh->indices.size() / 3;
 
 		// We do need to add the amount of vertices to the vertex they are pointing
-		for (int i = 0; i < r_mesh->IndicesSize; ++i)
-			meshes.back().tris[i] = r_mesh->Indices[i] + t_verts;
+		for (int i = 0; i < r_mesh->indices.size(); ++i)
+			meshes.back().tris[i] = r_mesh->indices[i] + t_verts;
 
-		t_indices += r_mesh->IndicesSize;
+		t_indices += r_mesh->indices.size();
 		if (meshes.back().ntris > maxtris)
 			maxtris = meshes.back().ntris;
 
 		// we add the transformed vertices
-		meshes.back().nverts = r_mesh->VerticesSize;
+		meshes.back().nverts = r_mesh->vertices.size();
 		float* vert_index = &verts[t_verts * 3];
-		for (int i = 0; i < r_mesh->VerticesSize; ++i) {
-			ApplyTransform(r_mesh->vertices[i], transform, vert_index);
+		for (int i = 0; i < r_mesh->vertices.size(); ++i) {
+			ApplyTransform(&r_mesh->vertices[i], transform, vert_index);
 			vert_index += 3;
 		}
-		t_verts += r_mesh->VerticesSize;
+		t_verts += r_mesh->vertices.size();
 
 		if (!minmaxset) {
 			minmaxset = true;
@@ -97,10 +98,10 @@ InputGeom::InputGeom(const std::vector<GameObject*>& srcMeshes, bool createChunk
 		else if (meshes.back().area == 1)
 			meshes.back().area = RC_NULL_AREA;
 
-		for (int i = 0; i < r_mesh->IndicesSize / 3; ++i)
+		for (int i = 0; i < r_mesh->indices.size() / 3; ++i)
 			areas[t_tris + i] = meshes.back().area;
-		t_tris += r_mesh->IndicesSize / 3;
-	}*/
+		t_tris += r_mesh->indices.size() / 3;
+	}
 
 	if (m_mesh) {
 		ntris /= 3;
@@ -177,19 +178,19 @@ bool InputGeom::hasMesh() const {
 	return m_mesh;
 }
 
-/*void InputGeom::ApplyTransform(const R_Mesh& rMesh, const float4x4& transform, float ret[3]) {
+void InputGeom::ApplyTransform(float* vertex, const float4x4& transform, float ret[3]) {
 	math::float3 original;
-	memcpy(original.ptr(), vertex.position, sizeof(float) * 3);
-	math::float3 globalVert = (transform * math::float4(vertex.position[0],
-		vertex.position[1],
-		vertex.position[2],
+	memcpy(original.ptr(), vertex, sizeof(float) * 3);
+	math::float3 globalVert = (transform * math::float4(vertex[0],
+		vertex[1],
+		vertex[2],
 		1)).xyz();
 	size_t a = sizeof(math::float3);
 
 	ret[0] = globalVert[0];
 	ret[1] = globalVert[1];
 	ret[2] = globalVert[2];
-}*/
+}
 
 RecastMesh::~RecastMesh() {
 }

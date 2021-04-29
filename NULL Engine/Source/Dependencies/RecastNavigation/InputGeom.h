@@ -108,7 +108,7 @@ public:
 	unsigned int* getOffMeshConnectionId() const { return (unsigned int*)m_offMeshConId; }
 
 private:
-	void ApplyTransform(const R_Mesh& rMesh, const float4x4& transform, float ret[3]);
+	void ApplyTransform(float* vertex, const float4x4& transform, float ret[3]);
 
 private:
 	bool m_mesh;

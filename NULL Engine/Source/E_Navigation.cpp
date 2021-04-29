@@ -156,21 +156,78 @@ bool E_Navigation::Draw(ImGuiIO& io)
 		}
 		if (ImGui::BeginTabItem("Object")) {
 			//MYTODO this should probably be a MeshRenderer rather than a mesh, but Cameras GO have MeshRenderers
-			uint selected_GOs = App->scene->GetGameObjects()->size();
-			if (selected_GOs <= 1) {
-				GameObject* selected = App->scene->GetSelectedGameObject();
-				if (selected != nullptr && selected->GetComponent<C_Mesh>() != nullptr) {
-					ImGui::Text(selected->GetName());
-					ImGui::Separator();
-					ImGui::Text("Navigation Static"); ImGui::SameLine();
-					if (ImGui::BeginPopup("Change Static Flags")) {
-						std::string enable;
-						if (popupNavigationFlag)
-							enable = "enable";
-						else
-							enable = "disable";
+			GameObject* selected = App->scene->GetSelectedGameObject();
+			if (selected != nullptr && selected->GetComponent<C_Mesh>() != nullptr) {
+				ImGui::Text(selected->GetName());
+				ImGui::Separator();
+				ImGui::Text("Navigation Static"); ImGui::SameLine();
+				if (ImGui::BeginPopup("Change Static Flags")) {
+					std::string enable;
+					if (popupNavigationFlag)
+						enable = "enable";
+					else
+						enable = "disable";
 
-						ImGui::Text(std::string("Do you want to " + enable + " the Navigation Static flag for al the child objects as well?").c_str());
+					ImGui::Text(std::string("Do you want to " + enable + " the Navigation Static flag for al the child objects as well?").c_str());
+					if (ImGui::Button("Yes, change children")) {
+						std::queue<GameObject*> childs;
+						childs.push(selected);
+
+						while (!childs.empty()) {
+							GameObject* current_child = childs.front();
+							childs.pop();
+
+							//We add all of its childs
+							for (uint i = 0; i < current_child->childs.size(); i++)
+								childs.push(current_child->childs[i]);
+
+							//We change the value of static
+							if (current_child->GetComponent<C_Mesh>() != nullptr && current_child->isNavigable != popupNavigationFlag) {
+								current_child->isNavigable = popupNavigationFlag;
+								if (popupNavigationFlag)
+									EngineApp->recast->AddGO(current_child);
+								else
+									EngineApp->recast->DeleteGO(current_child);
+							}
+						}
+						ImGui::CloseCurrentPopup();
+					}
+					ImGui::SameLine();
+					if (ImGui::Button("No, this object only")) {
+						selected->isNavigable = popupNavigationFlag;
+						if (popupNavigationFlag)
+							EngineApp->recast->AddGO(selected);
+						else
+							EngineApp->recast->DeleteGO(selected);
+						ImGui::CloseCurrentPopup();
+					}
+					ImGui::SameLine();
+					if (ImGui::Button("Cancel"))
+						ImGui::CloseCurrentPopup();
+
+					ImGui::EndPopup();
+				}
+				isNavigable = selected->isNavigable;
+				if (ImGui::Checkbox("##isNavigableCheckbox", &isNavigable)) {
+					if (selected->childs.size() > 0) {
+						popupNavigationFlag = isNavigable;
+						ImGui::OpenPopup("Change Static Flags");
+					}
+					else {
+						selected->isNavigable = isNavigable;
+						if (isNavigable)
+							EngineApp->recast->AddGO(selected);
+						else
+							EngineApp->recast->DeleteGO(selected);
+					}
+
+				}
+
+				if (selected->isNavigable) {
+
+					if (ImGui::BeginPopup("Change Navigation Area")) {
+						std::string popupAreaName = App->detour->areaNames[popupArea];
+						ImGui::Text(std::string("Do you want to change the navigation area to " + popupAreaName + " for all the child objects as well?").c_str());
 						if (ImGui::Button("Yes, change children")) {
 							std::queue<GameObject*> childs;
 							childs.push(selected);
@@ -184,23 +241,14 @@ bool E_Navigation::Draw(ImGuiIO& io)
 									childs.push(current_child->childs[i]);
 
 								//We change the value of static
-								if (current_child->GetComponent<C_Mesh>() != nullptr && current_child->isNavigable != popupNavigationFlag) {
-									current_child->isNavigable = popupNavigationFlag;
-									if (popupNavigationFlag)
-										EngineApp->recast->AddGO(current_child);
-									else
-										EngineApp->recast->DeleteGO(current_child);
-								}
+								if (current_child->GetComponent<C_Mesh>() != nullptr)
+									current_child->navigationArea = popupArea;
 							}
 							ImGui::CloseCurrentPopup();
 						}
 						ImGui::SameLine();
 						if (ImGui::Button("No, this object only")) {
-							selected->isNavigable = popupNavigationFlag;
-							if (popupNavigationFlag)
-								EngineApp->recast->AddGO(selected);
-							else
-								EngineApp->recast->DeleteGO(selected);
+							selected->navigationArea = popupArea;
 							ImGui::CloseCurrentPopup();
 						}
 						ImGui::SameLine();
@@ -209,90 +257,35 @@ bool E_Navigation::Draw(ImGuiIO& io)
 
 						ImGui::EndPopup();
 					}
-					isNavigable = selected->isNavigable;
-					if (ImGui::Checkbox("##isNavigableCheckbox", &isNavigable)) {
-						if (selected->childs.size() > 0) {
-							popupNavigationFlag = isNavigable;
-							ImGui::OpenPopup("Change Static Flags");
-						}
-						else {
-							selected->isNavigable = isNavigable;
-							if (isNavigable)
-								EngineApp->recast->AddGO(selected);
-							else
-								EngineApp->recast->DeleteGO(selected);
-						}
 
-					}
-
-					if (selected->isNavigable) {
-
-						if (ImGui::BeginPopup("Change Navigation Area")) {
-							std::string popupAreaName = App->detour->areaNames[popupArea];
-							ImGui::Text(std::string("Do you want to change the navigation area to " + popupAreaName + " for all the child objects as well?").c_str());
-							if (ImGui::Button("Yes, change children")) {
-								std::queue<GameObject*> childs;
-								childs.push(selected);
-
-								while (!childs.empty()) {
-									GameObject* current_child = childs.front();
-									childs.pop();
-
-									//We add all of its childs
-									for (uint i = 0; i < current_child->childs.size(); i++)
-										childs.push(current_child->childs[i]);
-
-									//We change the value of static
-									if (current_child->GetComponent<C_Mesh>() != nullptr)
-										current_child->navigationArea = popupArea;
-								}
-								ImGui::CloseCurrentPopup();
-							}
-							ImGui::SameLine();
-							if (ImGui::Button("No, this object only")) {
-								selected->navigationArea = popupArea;
-								ImGui::CloseCurrentPopup();
-							}
-							ImGui::SameLine();
-							if (ImGui::Button("Cancel"))
-								ImGui::CloseCurrentPopup();
-
-							ImGui::EndPopup();
-						}
-
-						ImGui::Text("Navigation Area"); ImGui::SameLine();
-						if (ImGui::BeginCombo("##areaCombo", App->detour->areaNames[selected->navigationArea])) {
-							for (int i = 0; i < BE_DETOUR_TOTAL_AREAS; ++i) {
-								std::string areaName = App->detour->areaNames[i];
-								if (areaName != "") {
-									ImGui::PushID((void*)App->detour->areaNames[i]);
-									if (ImGui::Selectable(App->detour->areaNames[i], i == selected->navigationArea)) {
-										if (selected->childs.size() != 0) {
-											popupArea = i;
-											openPopup = true;
-										}
-										else
-											selected->navigationArea = i;
+					ImGui::Text("Navigation Area"); ImGui::SameLine();
+					if (ImGui::BeginCombo("##areaCombo", App->detour->areaNames[selected->navigationArea])) {
+						for (int i = 0; i < BE_DETOUR_TOTAL_AREAS; ++i) {
+							std::string areaName = App->detour->areaNames[i];
+							if (areaName != "") {
+								ImGui::PushID((void*)App->detour->areaNames[i]);
+								if (ImGui::Selectable(App->detour->areaNames[i], i == selected->navigationArea)) {
+									if (selected->childs.size() != 0) {
+										popupArea = i;
+										openPopup = true;
 									}
-									ImGui::PopID();
+									else
+										selected->navigationArea = i;
 								}
+								ImGui::PopID();
 							}
-							ImGui::EndCombo();
 						}
-						if (openPopup) {
-							ImGui::OpenPopup("Change Navigation Area");
-							openPopup = false;
-						}
+						ImGui::EndCombo();
 					}
-
+					if (openPopup) {
+						ImGui::OpenPopup("Change Navigation Area");
+						openPopup = false;
+					}
 				}
-				else
-					ImGui::Text("Select one mesh from the scene.");
+
 			}
-			else {
-				ImGui::Text("You selected multiple GOs!");
-				ImGui::Text("Select just one mesh from the scene.");
-			}
+			else
+				ImGui::Text("Select one mesh from the scene.");
 
 			ImGui::EndTabItem();
 		}
