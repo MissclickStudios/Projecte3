@@ -10,6 +10,26 @@ class R_Texture;
 
 typedef unsigned __int32 uint;
 
+class Spritesheet 
+{
+public:
+	Spritesheet(R_Texture* spritesheet);
+	~Spritesheet();
+
+	void SetSpritesheetSize(int s_rows, int s_columns, int s_pisxelHeight, int s_pixelLenght);
+	uint GetSpriteIdTexture(int row, int column);
+
+private:
+
+	R_Texture* spriteSheet;
+
+	int rows;
+	int columns;
+
+	int pixelHeight;
+	int pixelLenght;
+};
+
 class MISSCLICK_API C_2DAnimator : public Component
 {
 public:

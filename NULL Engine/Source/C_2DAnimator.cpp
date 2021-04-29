@@ -341,5 +341,28 @@ void C_2DAnimator::LoopAnimation(int animationNum)
 	
 }
 
+Spritesheet::Spritesheet(R_Texture* spritesheet)
+{
+	spriteSheet = spritesheet;
+	columns = 0;
+	rows = 0;
+	pixelHeight = 0;
+	pixelLenght = 0;
+}
 
+Spritesheet::~Spritesheet()
+{
+}
 
+void Spritesheet::SetSpritesheetSize(int s_rows, int s_columns, int s_pisxelHeight, int s_pixelLenght)
+{
+	columns = s_columns;
+	rows = s_rows;
+	pixelHeight = s_pisxelHeight;
+	pixelLenght = s_pixelLenght;
+}
+
+uint Spritesheet::GetSpriteIdTexture(int row, int column)
+{
+	return uint();
+}
