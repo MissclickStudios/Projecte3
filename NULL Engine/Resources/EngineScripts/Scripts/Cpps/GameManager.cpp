@@ -63,9 +63,13 @@ void GameManager::Awake()
 			GameObject* playerSpawn = App->scene->GetGameObjectByName(SpawnPointName.c_str());
 			if (playerSpawn != nullptr && playerGameObject != nullptr) 
 			{
-				playerGameObject->transform->SetLocalPosition(playerSpawn->transform->GetLocalPosition());
+				spawnPoint = playerSpawn->transform->GetLocalPosition();
+				playerGameObject->transform->SetLocalPosition(spawnPoint);
 				//playerTrans->SetLocalRotation(spawnTrans->GetLocalRotation());
 			}
+			backtrackTimer.Start();
+			if (backtrack.size() != 0)
+				backtrack.clear();
 		}
 	}
 }
@@ -90,12 +94,28 @@ void GameManager::Start()
 
 void GameManager::Update()
 {
+	if (backtrackTimer.ReadSec() >= backtrackDuration)
+	{
+		if (backtrack.size() >= BACKTRACK)
+			backtrack.erase(backtrack.begin());
+		backtrack.push_back(playerScript->gameObject->transform->GetLocalPosition());
+
+		backtrackTimer.Start();
+	}
 	if (move)
 	{
 		move = false;
-
-		GameObject* playerSpawn = App->scene->GetGameObjectByName(SpawnPointName.c_str());
-		playerScript->MoveTo(playerSpawn->transform->GetLocalPosition());
+		float3 point = spawnPoint;
+		for (int i = backtrack.size() - 1; i >= 0; --i)
+		{
+			if (i == 0)
+				break;
+			if (backtrack[i].y != backtrack[i - 1].y)
+				continue;
+			point = backtrack[i];
+			break;
+		}
+		playerScript->MoveTo(point);
 	}
 	// --- Room Generation
 	if (enabled) 

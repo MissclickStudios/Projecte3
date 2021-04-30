@@ -1,13 +1,20 @@
 #pragma once
 #include "Script.h"
 #include "ScriptMacros.h"
+
 #include "Prefab.h"
+#include "Timer.h"
+
 #include "Player.h"
+
+#define BACKTRACK 5
 
 class GameObject;
 
-class SCRIPTS_API GameManager : public Script {
+class SCRIPTS_API GameManager : public Script 
+{
 public:
+
     GameManager();
     ~GameManager();
     void Awake() override;
@@ -48,6 +55,10 @@ private:
     int	roomNum = 0;
 
     bool move = false; // shhhhhh, don't tell jordi
+    float3 spawnPoint = float3::zero;
+    std::vector<float3> backtrack;
+    float backtrackDuration = 3.0f;
+    Timer backtrackTimer;
 };
 
 SCRIPTS_FUNCTION GameManager* CreateGameManager();
