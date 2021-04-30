@@ -14,6 +14,8 @@ public:
     void Start()override;
     void Update()override;
 
+    void OnCollisionEnter(GameObject* object) override;
+
     void GenerateNewRun(bool fromMenu);
     void GoNextRoom();
     void InitiateLevel(int level);
@@ -44,6 +46,8 @@ private:
     const char* saveFileName = "GameState.json";
     int	currentLevel = 0;
     int	roomNum = 0;
+
+    bool move = false; // shhhhhh, don't tell jordi
 };
 
 SCRIPTS_FUNCTION GameManager* CreateGameManager();

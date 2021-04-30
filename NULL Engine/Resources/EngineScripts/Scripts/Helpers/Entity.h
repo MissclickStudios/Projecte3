@@ -51,6 +51,7 @@ public:
 	virtual void TakeDamage(float damage);
 	virtual void GiveHeal(float amount);
 	Effect* AddEffect(EffectType type, float duration, bool permanent = false);
+	virtual void MoveTo(float3 position);
 	
 	// Effect Functions
 	virtual void Frozen();

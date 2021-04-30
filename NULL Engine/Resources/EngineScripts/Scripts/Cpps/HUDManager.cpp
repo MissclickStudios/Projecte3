@@ -133,10 +133,14 @@ void HUDManager::Update()
 	{
 		if (player != nullptr)
 		{
-			std::string tmp = std::to_string(player->GetCurrentWeapon()->ammo);
-			tmp += " / " ;
-			tmp += std::to_string(player->GetCurrentWeapon()->maxAmmo);
-			ammoText->SetText(tmp.c_str());
+			Weapon* weapon = player->GetCurrentWeapon();
+			if (weapon)
+			{
+				std::string tmp = std::to_string(weapon->ammo);
+				tmp += " / ";
+				tmp += std::to_string(weapon->maxAmmo);
+				ammoText->SetText(tmp.c_str());
+			}
 		}
 	}
 

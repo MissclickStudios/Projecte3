@@ -90,6 +90,13 @@ void GameManager::Start()
 
 void GameManager::Update()
 {
+	if (move)
+	{
+		move = false;
+
+		GameObject* playerSpawn = App->scene->GetGameObjectByName(SpawnPointName.c_str());
+		playerScript->MoveTo(playerSpawn->transform->GetLocalPosition());
+	}
 	// --- Room Generation
 	if (enabled) 
 	{
@@ -104,6 +111,15 @@ void GameManager::Update()
 
 	//S'ha de fer alguna manera de avisar l'scene que volem canviar de scene pero no fer-ho imediatament ??? -> si
 	//--
+}
+
+void GameManager::OnCollisionEnter(GameObject* object)
+{
+	if (object == playerGameObject && playerScript != nullptr)
+	{
+		playerScript->TakeDamage(0.5f);
+		move = true;
+	}
 }
 
 void GameManager::GenerateNewRun(bool fromMenu)

@@ -1,6 +1,7 @@
 #include "Entity.h"
 
 #include "GameObject.h"
+#include "C_Transform.h"
 #include "C_RigidBody.h"
 #include "C_Animator.h"
 #include "C_Material.h"
@@ -29,14 +30,14 @@ Entity::~Entity()
 void Entity::Awake()
 {
 	rigidBody = gameObject->GetComponent<C_RigidBody>();
-	if (rigidBody && rigidBody->IsStatic())
+	if (rigidBody != nullptr && rigidBody->IsStatic())
 		rigidBody = nullptr;
 	animator = gameObject->GetComponent<C_Animator>();
 	currentAnimation = &idleAnimation;
 
 	// TODO: Particles with prefabs
 	particles = gameObject->GetComponent<C_ParticleSystem>();
-	if (particles)
+	if (particles != nullptr)
 	{
 		particles->StopSpawn();
 
@@ -72,7 +73,7 @@ void Entity::Start()
 
 void Entity::PreUpdate()
 {
-	if (material)
+	if (material != nullptr)
 		material->SetTakeDamage(false);
 
 	// Set modifiers back to the default state
@@ -112,14 +113,14 @@ void Entity::PreUpdate()
 		}
 	}
 
-	if (material && hitTimer.IsActive())
+	if (material != nullptr && hitTimer.IsActive())
 	{
 		material->SetAlternateColour(Color(1, 0, 0, 1));
 		material->SetTakeDamage(true);
-		if (material && hitTimer.ReadSec() > hitDuration)
+		if (hitTimer.ReadSec() > hitDuration)
 		{
 			hitTimer.Stop();
-			if (hitParticles)
+			if (hitParticles != nullptr)
 				hitParticles->stopSpawn = true;
 		}
 	}
@@ -127,10 +128,10 @@ void Entity::PreUpdate()
 
 void Entity::PostUpdate()
 {
-	if (animator && currentAnimation)
+	if (animator != nullptr && currentAnimation != nullptr)
 	{
 		AnimatorClip* clip = animator->GetCurrentClip();
-		if (clip)
+		if (clip != nullptr)
 		{
 			std::string clipName = clip->GetName();
 			if (clipName != currentAnimation->name)	// If the animtion changed play the wanted clip
@@ -152,10 +153,10 @@ void Entity::TakeDamage(float damage)
 		health = 0.0f;
 
 	hitTimer.Start();
-	if (hitParticles)
+	if (hitParticles != nullptr)
 		hitParticles->stopSpawn = false;
 
-	if (damageAudio)
+	if (damageAudio != nullptr)
 		damageAudio->PlayFx(damageAudio->GetEventId());
 }
 
@@ -181,12 +182,18 @@ Effect* Entity::AddEffect(EffectType type, float duration, bool permanent)
 	return output;
 }
 
+void Entity::MoveTo(float3 position)
+{
+	gameObject->transform->SetLocalPosition(position);
+	rigidBody->TransformMovesRigidBody(true);
+}
+
 void Entity::Frozen()
 {
 	speedModifier /= 2.5;
 	attackSpeedModifier /= 2.5;
 
-	if (material)
+	if (material != nullptr)
 	{
 		material->SetAlternateColour(Color(0, 1, 1, 1));
 		material->SetTakeDamage(true);

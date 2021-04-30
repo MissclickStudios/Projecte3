@@ -362,7 +362,7 @@ void Player::ManageMovement()
 		case PlayerState::IDLE:
 			currentAnimation = &idleAnimation;
 			if (rigidBody)
-				rigidBody->SetLinearVelocity(float3::zero);
+				rigidBody->Set2DVelocity(float2::zero);
 			break;
 		case PlayerState::RUN:
 			currentAnimation = &runAnimation;
@@ -375,9 +375,13 @@ void Player::ManageMovement()
 			currentAnimation = &dashAnimation;
 			dashTimer.Start();
 			if (rigidBody)
+			{
 				rigidBody->ChangeFilter(" player dashing");
+				rigidBody->FreezePositionY(true);
+			}
 			if (dashParticles)
 				dashParticles->stopSpawn = false;
+
 			moveState = PlayerState::DASH;
 
 		case PlayerState::DASH:
@@ -387,9 +391,13 @@ void Player::ManageMovement()
 				dashTimer.Stop();
 				dashCooldownTimer.Start();
 				if (rigidBody)
+				{
 					rigidBody->ChangeFilter(" player");
+					rigidBody->FreezePositionY(false);
+				}
 				if (dashParticles)
 					dashParticles->stopSpawn = true;
+
 				moveState = PlayerState::IDLE;
 			}
 			break;
@@ -575,13 +583,13 @@ void Player::GatherAimInputs()
 
 void Player::Movement()
 {
-	float3 direction = { moveInput.x, 0, moveInput.y };
+	float2 direction = { moveInput.x, moveInput.y };
 	direction.Normalize();
 	moveDirection = { moveInput.x, moveInput.y }; // Save the value
 
 	direction *= Speed(); // Apply the processed speed value to the unitari direction vector
 	if (rigidBody)
-		rigidBody->SetLinearVelocity(direction);
+		rigidBody->Set2DVelocity(direction);
 }
 
 void Player::Aim()
@@ -599,9 +607,9 @@ void Player::Aim()
 
 void Player::Dash()
 {
-	float3 direction = { moveDirection.x, 0, moveDirection.y };
+	float2 direction = { moveDirection.x, moveDirection.y };
 	direction.Normalize();
 
 	if (rigidBody)
-		rigidBody->SetLinearVelocity(direction * DashSpeed());
+		rigidBody->Set2DVelocity(direction * DashSpeed());
 }
