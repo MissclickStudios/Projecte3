@@ -2511,7 +2511,7 @@
         },
         {
             "UID": 1474137658,
-            "ParentUID": 1785754850,
+            "ParentUID": 1069253198,
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "MainScene",
@@ -2748,7 +2748,7 @@
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": true,
+            "ShowBoundingBoxes": false,
             "Components": [
                 {
                     "Type": 1,
@@ -2768,6 +2768,22 @@
                         1,
                         1
                     ]
+                },
+                {
+                    "Type": 8,
+                    "Is Static": true,
+                    "Filter": " void"
+                },
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 500,
+                    "Size Y": 10,
+                    "Size Z": 500,
+                    "Center X": 0,
+                    "Center Y": -30,
+                    "Center Z": 0
                 },
                 {
                     "Type": 24,
@@ -2812,22 +2828,6 @@
                             "prefab": 1997884416
                         }
                     ]
-                },
-                {
-                    "Type": 8,
-                    "Is Static": true,
-                    "Filter": " gate"
-                },
-                {
-                    "Type": 9,
-                    "Is Trigger": false,
-                    "Show Collider": true,
-                    "Size X": 500,
-                    "Size Y": 10,
-                    "Size Z": 500,
-                    "Center X": 0,
-                    "Center Y": -15,
-                    "Center Z": 0
                 }
             ]
         },
@@ -3257,13 +3257,13 @@
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
+            "ShowBoundingBoxes": true,
             "Components": [
                 {
                     "Type": 1,
                     "LocalPosition": [
                         -6.5277099609375,
-                        18.986824035644531,
+                        2,
                         56.062488555908203
                     ],
                     "LocalRotation": [

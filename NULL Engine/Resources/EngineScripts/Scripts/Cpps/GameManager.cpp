@@ -115,10 +115,22 @@ void GameManager::Update()
 
 void GameManager::OnCollisionEnter(GameObject* object)
 {
-	if (object == playerGameObject && playerScript != nullptr)
+	if (object == nullptr)
+		return;
+
+	if (object == playerGameObject)
 	{
-		playerScript->TakeDamage(0.5f);
-		move = true;
+		if (playerScript != nullptr)
+		{
+			playerScript->TakeDamage(0.5f);
+			move = true;
+		}
+	}
+	else
+	{
+		Entity* entity = (Entity*)GetObjectScript(object, ObjectType::ENTITY);
+		if (entity != nullptr)
+			entity->TakeDamage(9999999999.0f);
 	}
 }
 

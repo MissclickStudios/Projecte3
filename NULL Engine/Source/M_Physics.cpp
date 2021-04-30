@@ -178,11 +178,12 @@ UpdateStatus M_Physics::Update(float dt)
 	else
 		simulating = false;
 
-	if (scene && simulating)
-	{
-		scene->simulate(dt);
-		scene->fetchResults(true);
-	}
+	if (dt < 1.0f)
+		if (scene && simulating)
+		{
+			scene->simulate(dt);
+			scene->fetchResults(true);
+		}
 
 	return UpdateStatus::CONTINUE;
 }
