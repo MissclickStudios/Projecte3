@@ -362,7 +362,34 @@ void Spritesheet::SetSpritesheetSize(int s_rows, int s_columns, int s_pisxelHeig
 	pixelLenght = s_pixelLenght;
 }
 
-uint Spritesheet::GetSpriteIdTexture(int row, int column)
+void Spritesheet::GetFrameProportions(int row, int column)
 {
-	return uint();
+	currentFrame.proportionBeginX = (pixelLenght * row) / pixelLenght * (rows - 1);
+	currentFrame.proportionFinalX = (pixelLenght * (row + 1)) / pixelLenght * (rows - 1);
+
+	currentFrame.proportionBeginY = (pixelHeight * column) / pixelHeight * (columns - 1);
+	currentFrame.proportionBeginY = (pixelHeight * column + 1) / pixelHeight * (columns - 1);
+}
+
+void Spritesheet::SetCurrentFrameLocation(int frameNumber)
+{
+	int rowN = 0;
+	int columnN = 0;
+
+	for (int i = 0; i <= rows; i++)
+	{
+		for (int k = 0; k <= rows; k++)
+		{
+			if(frameNumber == 0)
+			{
+				GetFrameProportions(rowN, columnN);
+			}
+
+
+			frameNumber--;
+			columnN++;
+		}
+		columnN = 0;
+		rowN++;
+	}
 }

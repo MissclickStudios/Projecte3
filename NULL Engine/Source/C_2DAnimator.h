@@ -10,6 +10,14 @@ class R_Texture;
 
 typedef unsigned __int32 uint;
 
+struct Frame 
+{
+	float proportionBeginX;
+	float proportionBeginY;
+	float proportionFinalX;
+	float proportionFinalY;
+};
+
 class Spritesheet 
 {
 public:
@@ -17,11 +25,15 @@ public:
 	~Spritesheet();
 
 	void SetSpritesheetSize(int s_rows, int s_columns, int s_pisxelHeight, int s_pixelLenght);
-	uint GetSpriteIdTexture(int row, int column);
+	Frame currentFrame;
 
 private:
 
+	void GetFrameProportions(int row, int column);
+	void SetCurrentFrameLocation(int frameNumber);
+
 	R_Texture* spriteSheet;
+
 
 	int rows;
 	int columns;
