@@ -96,9 +96,12 @@ void GameManager::Update()
 {
 	if (backtrackTimer.ReadSec() >= backtrackDuration)
 	{
-		if (backtrack.size() >= BACKTRACK)
-			backtrack.erase(backtrack.begin());
-		backtrack.push_back(playerScript->gameObject->transform->GetLocalPosition());
+		if (playerScript != nullptr && playerScript->moveState != PlayerState::DASH && playerScript->IsGrounded())
+		{
+			if (backtrack.size() >= BACKTRACK)
+				backtrack.erase(backtrack.begin());
+			backtrack.push_back(playerScript->gameObject->transform->GetLocalPosition());
+		}
 
 		backtrackTimer.Start();
 	}
@@ -110,7 +113,22 @@ void GameManager::Update()
 		{
 			if (i == 0)
 				break;
-			if (backtrack[i].y != backtrack[i - 1].y)
+
+			float current = backtrack[i].y * 1000;
+			int currentRounded = (int)(backtrack[i].y * 1000);
+			if (current >= (float)currentRounded)
+				current = (float)currentRounded;
+			else
+				current = (float)(currentRounded - 1);
+
+			float past = backtrack[i - 1].y * 1000;
+			int pastRounded = (int)(backtrack[i - 1].y * 1000);
+			if (past >= (float)pastRounded)
+				past = (float)pastRounded;
+			else
+				past = (float)(pastRounded - 1);
+				
+			if (current != past)
 				continue;
 			point = backtrack[i];
 			break;

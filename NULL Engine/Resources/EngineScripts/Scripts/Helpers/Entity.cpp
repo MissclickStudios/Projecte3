@@ -12,6 +12,8 @@
 
 #include "ScriptMacros.h"
 
+#include "MathGeoLib/include/Math/float3.h"
+
 Entity::Entity() : Object()
 {
 	baseType = ObjectType::ENTITY;
@@ -186,6 +188,16 @@ void Entity::MoveTo(float3 position)
 {
 	gameObject->transform->SetLocalPosition(position);
 	rigidBody->TransformMovesRigidBody(true);
+}
+
+bool Entity::IsGrounded()
+{
+	if (rigidBody == nullptr)
+		return false;
+
+	if ((int)rigidBody->GetLinearVelocity().y == 0)
+		return true;
+	return false;
 }
 
 void Entity::Frozen()

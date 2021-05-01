@@ -57,7 +57,7 @@ private:
     bool move = false; // shhhhhh, don't tell jordi
     float3 spawnPoint = float3::zero;
     std::vector<float3> backtrack;
-    float backtrackDuration = 3.0f;
+    float backtrackDuration = 1.0f;
     Timer backtrackTimer;
 };
 
