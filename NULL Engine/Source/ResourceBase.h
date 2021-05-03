@@ -9,7 +9,7 @@ enum class ResourceType;
 
 typedef unsigned __int32 uint32;
 
-class ResourceBase														// Later make Resource inherit from this.
+class ResourceBase														// Later make Resource inherit from this.										
 {
 public:
 	ResourceBase(uint32 UID, const std::string& assetsPath, const std::string& assetsFile, const std::string& libraryPath, const std::string& libraryFile, const ResourceType& type);
@@ -27,9 +27,6 @@ public:
 	std::string libraryFile;
 	
 	ResourceType type;
-
-private:
-
 };
 
 #endif // !__RESOURCE_BASE_H__

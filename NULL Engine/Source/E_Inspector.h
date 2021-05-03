@@ -40,6 +40,9 @@ class Resource;
 class R_Shader;
 class R_Texture;
 
+class AnimatorTrack;
+class AnimatorClip;
+
 class Emitter;
 
 class ModelSettings;
@@ -90,21 +93,23 @@ private:																										// --- DRAW COMPONENT METHODS ---
 	void DrawAnimator2DComponent		(C_2DAnimator* cAnimator);
 	void DrawNavMeshAgentComponent		(C_NavMeshAgent* cNavMeshAgent);
 
-private:																										// --- DRAW COMPONENT UTILITY METHODS ---
-	void AddComponentCombo				(GameObject* selectedGameObject);										// 
-	void DeleteComponentPopup			(GameObject* selectedGameObject);										// 
+private:																														// --- DRAW COMPONENT UTILITY METHODS ---
+	void AddComponentCombo				(GameObject* selectedGameObject);														// 
+	void DeleteComponentPopup			(GameObject* selectedGameObject);														// 
 	void AddUIComponent					(GameObject* selectedGameObject, ComponentType type);
 
 	// COMPONENT BASICS		--------
 	void DrawBasicSettings				(Component* component, const char* state = nullptr);
 
 	// MATERIAL COMPONENT	--------
-	void DisplayTextureData				(C_Material* cMaterial);												// Will display the texture's width, height, depth...
-	void TextureDisplay					(C_Material* cMaterial);												// Will display the texture as an image through Dear ImGui.
+	void DisplayTextureData				(C_Material* cMaterial);																// Will display the texture's width, height, depth...
+	void TextureDisplay					(C_Material* cMaterial);																// Will display the texture as an image through Dear ImGui.
 
 	// ANIMATOR COMPONENT	--------
 	void DisplayAnimatorControls		(C_Animator* cAnimator);
-	
+	bool CurrentTrackIsValid			(AnimatorTrack* currentTrack);
+	bool CurrentClipIsValid				(AnimatorClip* currentClip);
+
 	void DisplayClipManager				(C_Animator* cAnimator);
 	void ClipCreatorWindow				(C_Animator* cAnimator);
 	void ClipEditorWindow				(C_Animator* cAnimator);
@@ -112,6 +117,8 @@ private:																										// --- DRAW COMPONENT UTILITY METHODS ---
 	void DisplayTrackManager			(C_Animator* cAnimator);
 	void TrackCreatorWindow				(C_Animator* cAnimator);
 	void TrackEditorWindow				(C_Animator* cAnimator);
+
+
 
 	// SHADER COMPONENT		--------
 	void TextEditorWindow				();
@@ -147,7 +154,12 @@ private:
 	void DrawAnimationImportSettings	(AnimationSettings animationSettings);
 
 private:
+	GameObject* shownGameObject = nullptr;
+	bool		lockGameObject	= false;
+	
 	bool		showDeleteComponentPopup;
+	Component*	componentToDelete;
+	
 	bool		showTextEditorWindow;
 	bool		showSaveEditorPopup;
 	int			componentType;
@@ -156,13 +168,11 @@ private:
 	int			billboardingType;
 	int			moduleType;
 
-	Component*	componentToDelete;
-
-	GameObject* shownGameObject = nullptr;
-	bool lockGameObject = false;
+	// Animator Insector Variables
+	bool trackWasDeleted;
+	bool clipWasDeleted;
 
 	//Shader inspector utilities
-
 	std::vector<R_Shader*>	allShaders;
 	R_Shader*				shaderToRecompile;
 	TextEditor				editor;
