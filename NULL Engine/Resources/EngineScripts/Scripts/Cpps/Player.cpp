@@ -16,6 +16,7 @@
 #include "C_AudioSource.h"
 
 #include "C_Animator.h"
+#include "C_2DAnimator.h"
 
 #include "GameManager.h"
 
@@ -92,6 +93,13 @@ Player* CreatePlayer()
 	//INSPECTOR_STRING(script->onGuardAnimation.name);
 	//INSPECTOR_DRAGABLE_FLOAT(script->onGuardAnimation.blendTime);
 
+	// HUD Animations
+	INSPECTOR_STRING(script->mandoImageName);
+	INSPECTOR_STRING(script->secondaryWeaponImageName);
+	INSPECTOR_STRING(script->primaryWeaponImageName);
+	INSPECTOR_STRING(script->dashImageName);
+	INSPECTOR_STRING(script->creditsImageName);
+
 	return script;
 }
 
@@ -140,6 +148,26 @@ void Player::SetUp()
 				deathAudio = source;
 		}
 	}
+
+	GameObject* a = App->scene->GetGameObjectByName(mandoImageName.c_str());
+	if (a != nullptr)
+		mandoImage = (C_2DAnimator*)a->GetComponent<C_2DAnimator>();
+
+	a = App->scene->GetGameObjectByName(primaryWeaponImageName.c_str());
+	if (a != nullptr)
+		primaryWeaponImage = (C_2DAnimator*)a->GetComponent<C_2DAnimator>();
+
+	a = App->scene->GetGameObjectByName(secondaryWeaponImageName.c_str());
+	if (a != nullptr)
+		secondaryWeaponImage = (C_2DAnimator*)a->GetComponent<C_2DAnimator>();
+
+	a = App->scene->GetGameObjectByName(dashImageName.c_str());
+	if (a != nullptr)
+		dashImage = (C_2DAnimator*)a->GetComponent<C_2DAnimator>();
+
+	a = App->scene->GetGameObjectByName(creditsImageName.c_str());
+	if (a != nullptr)
+		creditsImage = (C_2DAnimator*)a->GetComponent<C_2DAnimator>();
 }
 
 void Player::Update()

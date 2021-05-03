@@ -11,6 +11,7 @@
 #include "MathGeoLib/include/Math/float2.h"
 
 class C_AudioSource;
+class C_2DAnimator;
 
 enum class PlayerState
 {
@@ -87,6 +88,20 @@ public:
 	C_AudioSource* changeWeaponAudio = nullptr;
 	C_AudioSource* deathAudio = nullptr;
 	
+
+	// HUD Animations Names
+	std::string mandoImageName = "Mando";
+	std::string secondaryWeaponImageName = "SecodaryWeapon";
+	std::string primaryWeaponImageName = "PrimaryWeapon";
+	std::string dashImageName = "Dash";
+	std::string creditsImageName = "Credits";
+
+	//HUD Animations
+	C_2DAnimator* mandoImage;
+	C_2DAnimator* secondaryWeaponImage;
+	C_2DAnimator* primaryWeaponImage;
+	C_2DAnimator* dashImage;
+	C_2DAnimator* creditsImage;
 
 private:
 
