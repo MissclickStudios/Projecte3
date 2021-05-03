@@ -1,5 +1,5 @@
 #include "JSONParser.h"
-
+#include "Profiler.h"
 #include "Application.h"
 #include "Log.h"
 #include "M_Physics.h"
@@ -40,6 +40,8 @@ C_RigidBody::~C_RigidBody()
 
 bool C_RigidBody::Update()
 {
+	OPTICK_CATEGORY("C_RigidBody Update", Optick::Category::Update);
+
 	if (!App->physics->simulating)
 		return true;
 

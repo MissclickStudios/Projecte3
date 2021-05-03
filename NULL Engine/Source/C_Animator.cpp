@@ -56,6 +56,8 @@ C_Animator::~C_Animator()
 
 bool C_Animator::Update()
 {
+	OPTICK_CATEGORY("C_Animator Update", Optick::Category::Update);
+
 	if (needsInit)
 	{
 		GetAnimatedMeshes();

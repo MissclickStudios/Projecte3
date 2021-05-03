@@ -63,6 +63,7 @@ bool C_ParticleSystem::LoadState(ParsonNode& root)
 
 bool C_ParticleSystem::Update()
 {
+	OPTICK_CATEGORY("C_ParticleSystem Update", Optick::Category::Update);
 	if (previewEnabled == true && MC_Time::Game::GetDT() == 0)
 	{
 		for (unsigned int i = 0; i < emitterInstances.size(); ++i)

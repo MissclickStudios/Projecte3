@@ -1,5 +1,6 @@
 #include "JSONParser.h"
 
+#include "Profiler.h"
 #include "Application.h"
 #include "M_Physics.h"
 
@@ -30,6 +31,8 @@ C_BoxCollider::~C_BoxCollider()
 
 bool C_BoxCollider::Update()
 {
+	OPTICK_CATEGORY("C_BoxCollider Update", Optick::Category::Update);
+
 	fil = (std::string*)shape->getSimulationFilterData().word0;
 
 	if (toUpdate != ColliderUpdateType::NONE)
