@@ -103,6 +103,7 @@ public:
 	std::vector<Effect> onHitEffects;
 
 	// Visuals
+	GameObject* GetHand(GameObject* object);
 	Prefab weaponModelPrefab;
 	Prefab projectilePrefab;
 

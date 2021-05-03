@@ -196,7 +196,8 @@ void IG11::ManageMovement()
 	switch (moveState)
 	{
 	case IG11State::IDLE:
-		rigidBody->SetLinearVelocity(float3::zero);
+		if (rigidBody != nullptr)
+			rigidBody->Set2DVelocity(float2::zero);
 		if (aimState == AimState::SHOOT) // Comented till the shooting system is in place
 			break;
 		if (distance > chaseDistance)
@@ -375,19 +376,20 @@ void IG11::ManageAim()
 
 void IG11::Patrol()
 {
-	rigidBody->SetLinearVelocity(float3::zero);
+	if (rigidBody != nullptr)
+		rigidBody->Set2DVelocity(float2::zero);
 }
 
 void IG11::Chase()
 {
-	float3 direction = { moveDirection.x, 0.0f, moveDirection.y };
-	rigidBody->SetLinearVelocity(direction * ChaseSpeed());
+	if (rigidBody != nullptr)
+		rigidBody->Set2DVelocity(moveDirection * ChaseSpeed());
 }
 
 void IG11::Flee()
 {
-	float3 direction = { -moveDirection.x, 0.0f, -moveDirection.y };
-	rigidBody->SetLinearVelocity(direction * ChaseSpeed());
+	if (rigidBody != nullptr)
+		rigidBody->Set2DVelocity(-moveDirection * ChaseSpeed());
 }
 
 bool IG11::SpecialAttack()

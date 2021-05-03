@@ -45,19 +45,14 @@ bool C_RigidBody::Update()
 	if (!App->physics->simulating)
 		return true;
 
-	//if (toChangeFilter)
-	//{
-	//	toChangeFilter = false;
-		ChangeFilter(filter);
-	//}
-
+	ChangeFilter(filter);
+	
 	if (!isStatic)
 	{
 		if (dynamicBody)
 		{
 			RigidBodyMovesTransform();
 
-			
 			if (toUpdate)
 				ApplyPhysicsChanges();
 
@@ -168,6 +163,13 @@ void C_RigidBody::SetIsActive(bool setTo)
 		}
 		else
 			App->physics->DeleteActor(body);
+}
+
+inline void C_RigidBody::Set2DVelocity(float2 vel)
+{
+	linearVel.x = vel.x;
+	linearVel.z = vel.y;
+	toUpdate = true;
 }
 
 void C_RigidBody::StopInertia()
@@ -290,7 +292,10 @@ void C_RigidBody::ApplyPhysicsChanges()
 		dynamicBody->setActorFlag(physx::PxActorFlag::eDISABLE_GRAVITY, !useGravity);
 		dynamicBody->setRigidBodyFlag(physx::PxRigidBodyFlag::eKINEMATIC, !isKinematic);
 
-		dynamicBody->setLinearVelocity(physx::PxVec3(linearVel.x, linearVel.y, linearVel.z));
+		physx::PxVec3 lVel;
+		if (disableY)
+			lVel = dynamicBody->getLinearVelocity();
+		dynamicBody->setLinearVelocity(physx::PxVec3(linearVel.x, lVel.y, linearVel.z));
 		dynamicBody->setAngularVelocity(physx::PxVec3(angularVel.x, angularVel.y, angularVel.z));
 		dynamicBody->setLinearDamping(linearDamping);
 		dynamicBody->setAngularDamping(angularDamping);

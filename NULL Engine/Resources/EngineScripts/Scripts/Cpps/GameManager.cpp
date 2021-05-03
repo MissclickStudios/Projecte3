@@ -63,9 +63,13 @@ void GameManager::Awake()
 			GameObject* playerSpawn = App->scene->GetGameObjectByName(SpawnPointName.c_str());
 			if (playerSpawn != nullptr && playerGameObject != nullptr) 
 			{
-				playerGameObject->transform->SetLocalPosition(playerSpawn->transform->GetLocalPosition());
+				spawnPoint = playerSpawn->transform->GetLocalPosition();
+				playerGameObject->transform->SetLocalPosition(spawnPoint);
 				//playerTrans->SetLocalRotation(spawnTrans->GetLocalRotation());
 			}
+			backtrackTimer.Start();
+			if (backtrack.size() != 0)
+				backtrack.clear();
 		}
 	}
 }
@@ -90,6 +94,47 @@ void GameManager::Start()
 
 void GameManager::Update()
 {
+	if (backtrackTimer.ReadSec() >= backtrackDuration)
+	{
+		if (playerScript != nullptr && playerScript->moveState != PlayerState::DASH && playerScript->IsGrounded())
+		{
+			if (backtrack.size() >= BACKTRACK)
+				backtrack.erase(backtrack.begin());
+			backtrack.push_back(playerScript->gameObject->transform->GetLocalPosition());
+		}
+
+		backtrackTimer.Start();
+	}
+	if (move)
+	{
+		move = false;
+		float3 point = spawnPoint;
+		for (int i = backtrack.size() - 1; i >= 0; --i)
+		{
+			if (i == 0)
+				break;
+
+			float current = backtrack[i].y * 1000;
+			int currentRounded = (int)(backtrack[i].y * 1000);
+			if (current >= (float)currentRounded)
+				current = (float)currentRounded;
+			else
+				current = (float)(currentRounded - 1);
+
+			float past = backtrack[i - 1].y * 1000;
+			int pastRounded = (int)(backtrack[i - 1].y * 1000);
+			if (past >= (float)pastRounded)
+				past = (float)pastRounded;
+			else
+				past = (float)(pastRounded - 1);
+				
+			if (current != past)
+				continue;
+			point = backtrack[i];
+			break;
+		}
+		playerScript->MoveTo(point);
+	}
 	// --- Room Generation
 	if (enabled) 
 	{
@@ -104,6 +149,27 @@ void GameManager::Update()
 
 	//S'ha de fer alguna manera de avisar l'scene que volem canviar de scene pero no fer-ho imediatament ??? -> si
 	//--
+}
+
+void GameManager::OnCollisionEnter(GameObject* object)
+{
+	if (object == nullptr)
+		return;
+
+	if (object == playerGameObject)
+	{
+		if (playerScript != nullptr)
+		{
+			playerScript->TakeDamage(0.5f);
+			move = true;
+		}
+	}
+	else
+	{
+		Entity* entity = (Entity*)GetObjectScript(object, ObjectType::ENTITY);
+		if (entity != nullptr)
+			entity->TakeDamage(9999999999.0f);
+	}
 }
 
 void GameManager::GenerateNewRun(bool fromMenu)
