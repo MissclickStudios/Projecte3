@@ -18,6 +18,7 @@ enum class UIButtonState
 	NONE = 0,
 	IDLE,
 	HOVERED,
+	PRESSEDIN,
 	PRESSED,
 	RELEASED
 };
@@ -44,16 +45,10 @@ public:
 	void Draw3D() override;
 
 public:
-	bool IsPressed() const;
-	bool FramePressed()const;
 	UIButtonState GetState()const;
 
 private:
-
 	UIButtonState state = UIButtonState::NONE;
-
-	bool isPressed = false;
-	bool framePressed = false;
 
 	uint VAO;
 	uint VBO;

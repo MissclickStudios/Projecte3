@@ -90,21 +90,29 @@ void C_UI_Button::HandleInput(C_UI** selectedUi)
 		}
 		if (App->input->GetKey(SDL_SCANCODE_RETURN) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(0) == ButtonState::BUTTON_DOWN) // TODO: make inputs mappable
 		{
-			framePressed = true;
-			isPressed = true;
-			state = UIButtonState::PRESSED;
+			state = UIButtonState::PRESSEDIN;
 		}
+		break;
+	case UIButtonState::PRESSEDIN:
+		state = UIButtonState::PRESSED;
 		break;
 	case UIButtonState::PRESSED:
-		framePressed = false;
+		if (*selectedUi != this)
+		{
+			state = UIButtonState::IDLE;
+			break;
+		}
 		if (App->input->GetKey(SDL_SCANCODE_RETURN) == KeyState::KEY_UP || App->input->GetGameControllerButton(0) == ButtonState::BUTTON_UP)
 		{
-			isPressed = false;
-			state = UIButtonState::HOVERED;
+			state = UIButtonState::RELEASED;
 		}
 		break;
+	case UIButtonState::RELEASED:
+		state = UIButtonState::HOVERED;
+		break;
 	default:
-		state = UIButtonState::IDLE; break;
+		state = UIButtonState::IDLE; 
+		break;
 	}
 }
 
@@ -122,7 +130,11 @@ void C_UI_Button::Draw2D()
 		tempColor = Color(1.0f, 1.0f, 0.0f, 1.0f); break;
 	case UIButtonState::HOVERED:
 		tempColor = Color(1.0f, 1.0f, 1.0f, 1.0f); break;
+	case UIButtonState::PRESSEDIN:
+		tempColor = Color(1.0f, 0.4f, 0.0f, 1.0f); break;
 	case UIButtonState::PRESSED:
+		tempColor = Color(1.0f, 0.4f, 0.0f, 1.0f); break;
+	case UIButtonState::RELEASED:
 		tempColor = Color(1.0f, 0.4f, 0.0f, 1.0f); break;
 	default:
 		tempColor = Color(1.0f, 1.0f, 0.0f, 1.0f); break;
@@ -244,14 +256,4 @@ bool C_UI_Button::LoadState(ParsonNode& root)
 UIButtonState C_UI_Button::GetState() const
 {
 	return state;
-}
-
-bool C_UI_Button::IsPressed() const
-{
-	return isPressed;
-}
-
-bool C_UI_Button::FramePressed() const
-{
-	return framePressed;
 }

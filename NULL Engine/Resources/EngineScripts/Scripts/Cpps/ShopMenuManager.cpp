@@ -20,11 +20,8 @@ void ShopMenuManager::Start()
 
 void ShopMenuManager::Update()
 {
-	if (button != nullptr)
+	if (button && button->GetState() == UIButtonState::PRESSEDIN)
 	{
-		if (button->IsPressed())
-		{
 
-		}
 	}
 }
