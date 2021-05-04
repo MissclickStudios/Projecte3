@@ -149,7 +149,12 @@ bool E_Navigation::Draw(ImGuiIO& io)
 				ImGui::SameLine();
 			}
 			if (ImGui::Button("Bake")) {
-				EngineApp->recast->BuildNavMesh();
+				GameObject* selected = App->scene->GetSelectedGameObject();
+				if (selected != nullptr && selected->GetComponent<C_Mesh>() != nullptr)
+					EngineApp->recast->BuildNavMesh();
+				else
+					LOG("Any game object has been selected or it doesn't have a mesh component");
+			
 			}
 
 			ImGui::EndTabItem();

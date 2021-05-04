@@ -74,5 +74,6 @@ uint Importer::NavMesh::Save(const R_NavMesh* rNavMesh, char** buffer)
 
 bool Importer::NavMesh::Load(const char* buffer, R_NavMesh* rNavMesh)
 {
+
 	return true;
 }

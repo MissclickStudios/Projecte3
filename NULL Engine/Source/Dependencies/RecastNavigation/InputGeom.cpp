@@ -30,7 +30,7 @@ InputGeom::InputGeom(const std::vector<GameObject*>& srcMeshes, bool createChunk
 	m_mesh(false),
 	chunkyTriMesh(nullptr)
 {
-	R_Mesh* r_mesh;
+	R_Mesh* r_mesh = nullptr;
 	vec _bmin, _bmax;
 	bool minmaxset = false;
 
@@ -76,7 +76,7 @@ InputGeom::InputGeom(const std::vector<GameObject*>& srcMeshes, bool createChunk
 		// we add the transformed vertices
 		meshes.back().nverts = r_mesh->vertices.size();
 		float* vert_index = &verts[t_verts * 3];
-		for (int i = 0; i < r_mesh->vertices.size(); ++i) {
+		for (int i = 0; i < r_mesh->vertices.size(); i+=3) {
 			ApplyTransform(&r_mesh->vertices[i], transform, vert_index);
 			vert_index += 3;
 		}

@@ -111,8 +111,11 @@ bool M_Detour::createNavMesh(dtNavMeshCreateParams* params)
 	if (navMeshResource == nullptr) {
 		// Create navMeshResource
 
+		std::string name = App->scene->GetCurrentScene();
+		std::string path = ASSETS_SCENES_PATH + name + NAVMESH_AST_EXTENSION;
+
 	}
-	navMeshResource->navMesh = m_navMesh;
+	//navMeshResource->navMesh = m_navMesh;
 
 	//Save Importer navmesh 
 	/*ImporterNavMesh* INavMesh = App->resources->GetImporter<ImporterNavMesh>();
@@ -272,7 +275,7 @@ void M_Detour::setAreaCosts()
 
 void M_Detour::processTile(const dtMeshTile* tile)
 {
-	/*for (int i = 0; i < tile->header->polyCount; ++i) {
+	for (int i = 0; i < tile->header->polyCount; ++i) {
 		const dtPoly* poly = &tile->polys[i];
 		if (poly->getType() == DT_POLYTYPE_OFFMESH_CONNECTION)	// Skip off-mesh links.
 			continue;
@@ -282,27 +285,25 @@ void M_Detour::processTile(const dtMeshTile* tile)
 
 
 		navpol->color = areaToColor(poly->getArea());
-		navpol->rmesh->VerticesSize = tile->header->vertCount + tile->header->detailVertCount;
-		navpol->rmesh->vertices = new float[navpol->rmesh->VerticesSize];
-		navpol->rmesh->IndicesSize = poly_d->triCount * 3;
-		navpol->rmesh->Indices = new uint[navpol->rmesh->IndicesSize];
+		navpol->rmesh->vertices.resize(tile->header->vertCount + tile->header->detailVertCount);
+		navpol->rmesh->vertices.reserve(navpol->rmesh->vertices.size());
+		navpol->rmesh->indices.resize(poly_d->triCount * 3);
+		navpol->rmesh->indices.reserve(navpol->rmesh->indices.size());
 
 
 		// We copy the vertices
-		for (int j = 0; j < navpol->rmesh->VerticesSize; ++j) {
+		for (int j = 0; j < navpol->rmesh->vertices.size(); ++j) {
 			float* vert;
 			if (j < tile->header->vertCount)
 				vert = &tile->verts[j * 3];
 			else
 				vert = &tile->detailVerts[(poly_d->vertBase + j - tile->header->vertCount) * 3];
 
-			memcpy(navpol->rmesh->vertices[j].position, vert, sizeof(float) * 3);
-			// @Improvement This is a fix for the navmesh render collinding with the geometry, might need to fix the renderer
-			navpol->rmesh->vertices[j].position[1] += 0.1f;
+			memcpy(&navpol->rmesh->vertices[j], vert, sizeof(float) * 3);
 		}
 
 		// Index pointer to copy the indices
-		uint* index_indices = navpol->rmesh->Indices;
+		uint* index_indices = navpol->rmesh->indices.data();
 		for (int j = 0; j < poly_d->triCount; ++j) {
 			const unsigned char* t = &tile->detailTris[(poly_d->triBase + j) * 4];
 			for (int k = 0; k < 3; ++k) {
@@ -316,9 +317,10 @@ void M_Detour::processTile(const dtMeshTile* tile)
 		}
 
 		//To create EBO and VBO
-		navpol->rmesh->LoadInMemory();
+		//Load in memory
+		//navpol->rmesh->LoadInMemory();
 		renderMeshes.push_back(navpol);
-	}*/
+	}
 }
 
 inline int bit(int a, int b) {
