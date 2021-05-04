@@ -1,4 +1,3 @@
-#include "C_UI_Text.h"
 #include "Application.h"
 
 #include "GameObject.h"
@@ -15,6 +14,7 @@
 #include "C_Canvas.h"
 #include "C_Transform.h"
 #include "C_Camera.h"
+#include "C_UI_Text.h"
 
 #include "R_Shader.h"
 
@@ -27,7 +27,7 @@
 
 #pragma comment (lib, "Source/Dependencies/FreeType/win32/freetype.lib")
 
-C_UI_Text::C_UI_Text(GameObject* owner, Rect2D rect) : Component(owner, ComponentType::UI_TEXT),
+C_UI_Text::C_UI_Text(GameObject* owner, Rect2D rect) : C_UI(owner, ComponentType::UI_TEXT,false, rect),
 VAO(0),
 VBO(0),
 color(1,0,0,1)
@@ -41,7 +41,13 @@ color(1,0,0,1)
 
 C_UI_Text::~C_UI_Text()
 {
-
+	GameObject* parent = GetOwner()->parent;
+	if (parent)
+	{
+		C_Canvas* canvas = parent->GetComponent<C_Canvas>();
+		if (canvas)
+			canvas->RemoveUiElement(this);
+	}
 }
 
 bool C_UI_Text::Update()
@@ -116,11 +122,6 @@ bool C_UI_Text::LoadState(ParsonNode& root)
 	return ret;
 }
 
-Rect2D C_UI_Text::GetRect() const
-{
-	return rect;
-}
-
 Color C_UI_Text::GetColor() const
 {
 	return color;
@@ -157,31 +158,6 @@ void C_UI_Text::SetColor(Color color)
 	this->color = color;
 }
 
-void C_UI_Text::SetRect(const Rect2D& rect)
-{
-	this->rect = rect;
-}
-
-void C_UI_Text::SetX(const float x)
-{
-	this->rect.x = x;
-}
-
-void C_UI_Text::SetY(const float y)
-{
-	this->rect.y = y;
-}
-
-void C_UI_Text::SetW(const float w)
-{
-	this->rect.w = w;
-}
-
-void C_UI_Text::SetH(const float h)
-{
-	this->rect.h = h;
-}
-
 void C_UI_Text::SetFontSize(const float fontSize)
 {
 	this->fontSize = fontSize;
@@ -198,7 +174,7 @@ void C_UI_Text::SetVSpaceBetween(const float vSpaceBetween)
 }
 
 
-void C_UI_Text::RenderText( )
+void C_UI_Text::Draw2D( )
 {
 	glEnable(GL_CULL_FACE);
 	glEnable(GL_BLEND);
@@ -224,7 +200,7 @@ void C_UI_Text::RenderText( )
 	uint it = 0;
 	bool rowHead = true;
 	std::string::const_iterator c;
-	for (c = text.begin(); c != text.end(); c++)
+	for (c = text.begin(); c != text.end(); ++c)
 	{
 		Character ch = Characters[*c];
 
@@ -278,7 +254,7 @@ void C_UI_Text::RenderText( )
 		}
 	
 
-		it++;
+		++it;
 	}
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);

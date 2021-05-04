@@ -8,12 +8,10 @@
 #include "M_Input.h"
 
 #include "GameObject.h"
-
-#include "C_Camera.h"
 #include "C_Transform.h"
 #include "C_Canvas.h"
+#include "C_UI.h"
 #include "C_UI_Button.h"
-#include "C_UI_Image.h"
 
 #include "Dependencies/glew/include/glew.h"
 //#include "OpenGL.h"
@@ -25,13 +23,6 @@
 
 C_Canvas::C_Canvas(GameObject* owner) : Component(owner, ComponentType::CANVAS)
 {
-	isInvisible = false;
-
-	App->uiSystem->priorityIterator++;
-	priority = App->uiSystem->priorityIterator;
-
-	// New one will allways be the input receiving canvas
-	App->uiSystem->AddNewCanvas(this);
 }
 
 C_Canvas::~C_Canvas()
@@ -41,23 +32,76 @@ C_Canvas::~C_Canvas()
 
 bool C_Canvas::Update()
 {
-	bool ret = true;
-
-	//This will be world space only
+	//TODO: This will be world space only
 	if (IsActive())
-	{
-		GameObject* owner = GetOwner();
-
 		if (App->camera->GetCurrentCamera() != App->camera->masterCamera->GetComponent<C_Camera>())
 			SetSize({ App->camera->GetCurrentCamera()->GetFrustum().NearPlaneWidth(), App->camera->GetCurrentCamera()->GetFrustum().NearPlaneHeight() });
-	}
 
-	return ret;
+	return true;
 }
 
-void C_Canvas::Draw2D()
+void C_Canvas::HandleInput()
 {
-	if (App->renderer->GetRenderCanvas())
+	if (!IsActive()) //poder fer tmbe un unable input??
+		return;
+	if ((App->input->GetKey(SDL_SCANCODE_DOWN) == KeyState::KEY_DOWN || App->input->GetGameControllerAxis(1) == AxisState::POSITIVE_AXIS_DOWN))
+	{
+		for (int i = 0; i < uiElements.size(); ++i)
+		{
+			if (uiElements[i] == selectedUi)
+			{
+				int startingIndex = i;
+				int j = startingIndex + 1;
+				if (j >= uiElements.size())
+					j = 0;
+				for (j; j != startingIndex; ++j)
+				{
+					if (uiElements[j]->Interactuable())
+					{
+						selectedUi = uiElements[j];
+						break;
+					}
+					if (j == uiElements.size() -1)
+						j = -1;
+				}
+				break;
+			}
+		}
+	}
+	else if ((App->input->GetKey(SDL_SCANCODE_UP) == KeyState::KEY_DOWN || App->input->GetGameControllerAxis(1) == AxisState::NEGATIVE_AXIS_DOWN))
+	{
+		for (int i = uiElements.size() - 1; i >= 0; --i)
+		{
+			if (uiElements[i] == selectedUi)
+			{
+				int startingIndex = i;
+				int j = startingIndex - 1;
+				if (j <= -1)
+					j = uiElements.size() - 1;
+				for (j; j != startingIndex; --j)
+				{
+					if (uiElements[j]->Interactuable()) 
+					{
+						selectedUi = uiElements[j];
+						break;
+					}
+					if (j == 0)
+						j = uiElements.size();
+				}
+				break;
+			}
+		}
+	}
+
+	for (std::vector<C_UI*>::const_iterator it = uiElements.cbegin(); it != uiElements.cend(); ++it)
+	{
+		(*it)->HandleInput(&selectedUi);
+	}
+}
+
+void C_Canvas::Draw2D(bool renderCanvas)
+{
+	if (renderCanvas)
 	{
 		glPushMatrix();
 		glMultMatrixf((GLfloat*)&GetOwner()->GetComponent<C_Transform>()->GetWorldTransform().Transposed());
@@ -80,11 +124,17 @@ void C_Canvas::Draw2D()
 
 		glPopMatrix();
 	}
+	for (std::vector<C_UI*>::reverse_iterator it = uiElements.rbegin(); it != uiElements.rend(); ++it) 
+	{
+		//passarli un rect2d del seu parent
+		//Com es modifica el rect2d????
+		(*it)->Draw2D();
+	}
 }
 
-void C_Canvas::Draw3D()
+void C_Canvas::Draw3D(bool renderCanvas)
 {
-	if (App->renderer->GetRenderCanvas())
+	if (renderCanvas)
 	{
 		glPushMatrix();
 		glMultMatrixf((GLfloat*)&GetOwner()->GetComponent<C_Transform>()->GetWorldTransform().Transposed());
@@ -110,17 +160,11 @@ void C_Canvas::Draw3D()
 
 bool C_Canvas::CleanUp()
 {
-	bool ret = true;
-
-	App->uiSystem->DeleteCanvas(this);
-
-	return ret;
+	return true;
 }
 
 bool C_Canvas::SaveState(ParsonNode& root) const
 {
-	bool ret = true;
-
 	root.SetNumber("Type", (uint)GetType());
 
 	ParsonNode canvas = root.SetNode("Canvas");
@@ -131,22 +175,12 @@ bool C_Canvas::SaveState(ParsonNode& root) const
 	canvas.SetNumber("Y", GetRect().y);
 	canvas.SetNumber("W", GetRect().w);
 	canvas.SetNumber("H", GetRect().h);
-	canvas.SetBool("IsInvisible", isInvisible);
 
-	if (App->uiSystem->inputCanvas == this)
-		canvas.SetBool("IsInputCanvas", true);
-	else
-		canvas.SetBool("IsInputCanvas", false);
-
-	canvas.SetInteger("Priority", priority);
-
-	return ret;
+	return true;
 }
 
 bool C_Canvas::LoadState(ParsonNode& root)
 {
-	bool ret = true;
-
 	ParsonNode canvas = root.GetNode("Canvas");
 
 	SetIsActive(canvas.GetBool("IsActive"));
@@ -159,165 +193,35 @@ bool C_Canvas::LoadState(ParsonNode& root)
 	r.h = canvas.GetNumber("H");
 
 	SetRect(r);
-
-	bool isInvis = canvas.GetBool("IsInvisible");
-	SetIsInvisible(isInvis);
-
-	if (canvas.GetBool("IsInputCanvas"))
-		App->uiSystem->inputCanvas = this;
 	
 	//priority = canvas.GetInteger("Priority");
 
-	return ret;
+	return true;
 }
 
 
-bool C_Canvas::CheckButtonStates()
+void C_Canvas::RemoveUiElement(C_UI* element)
 {
-	bool ret = false;
-
-	if (selectedButton != nullptr)
+	for (std::vector<C_UI*>::iterator it = uiElements.begin(); it != uiElements.cend(); ++it)
 	{
-		if (selectedButton->GetState() == UIButtonState::RELEASED)
+		if ((*it) == element)
 		{
-			selectedButton->SetState(UIButtonState::HOVERED);
+			uiElements.erase(it);
+			break;
 		}
-
-		// Check for selected button getting pressed
-		if (App->input->GetKey(SDL_SCANCODE_RETURN) == KeyState::KEY_DOWN || App->input->GetKey(SDL_SCANCODE_RETURN) == KeyState::KEY_REPEAT || App->input->GetGameControllerButton(0) == ButtonState::BUTTON_DOWN || App->input->GetGameControllerButton(0) == ButtonState::BUTTON_REPEAT)
-		{
-			selectedButton->OnPressed();
-		}
-
-		else if (App->input->GetKey(SDL_SCANCODE_RETURN) == KeyState::KEY_UP || App->input->GetGameControllerButton(0) == ButtonState::BUTTON_UP)
-		{
-			selectedButton->OnReleased();
-		}
-
-
-		//// Check for hovered button getting pressed
-		//if (App->input->GetMouseButton(0) == KeyState::KEY_DOWN || App->input->GetMouseButton(0) == KeyState::KEY_REPEAT)
-		//{
-		//	hoveredButton->OnPressed();
-		//}
-
-		//else if (App->input->GetMouseButton(0) == KeyState::KEY_UP)
-		//{
-		//	hoveredButton->OnReleased();
-		//}
-
-
-		// Check inputs for controller/keyboard
-		if (activeButtons.size() > 1)
-		{
-			bool prev = false;
-			bool next = false;
-
-			if ((App->input->GetKey(SDL_SCANCODE_UP) == KeyState::KEY_DOWN || App->input->GetGameControllerAxis(1) == AxisState::NEGATIVE_AXIS_DOWN) && !selectedButton->IsPressed())
-			{
-				for (std::vector<C_UI_Button*>::reverse_iterator buttonIt = activeButtons.rbegin(); buttonIt != activeButtons.rend(); buttonIt++)
-				{
-					if ((*buttonIt)->IsActive())
-					{
-						if ((*buttonIt)->GetState() == UIButtonState::HOVERED)
-						{
-							(*buttonIt)->SetState(UIButtonState::IDLE);
-							prev = true;
-						}
-						else if (prev)
-						{
-							(*buttonIt)->SetState(UIButtonState::HOVERED);
-							selectedButton = (*buttonIt);
-							prev = false;
-						}
-					}
-				}
-				if (prev)
-					selectedButton->SetState(UIButtonState::HOVERED);
-			}
-
-			if ((App->input->GetKey(SDL_SCANCODE_DOWN) == KeyState::KEY_DOWN || App->input->GetGameControllerAxis(1) == AxisState::POSITIVE_AXIS_DOWN) && !selectedButton->IsPressed())
-			{
-				for (std::vector<C_UI_Button*>::iterator buttonIt = activeButtons.begin(); buttonIt != activeButtons.end(); buttonIt++)
-				{
-					if ((*buttonIt)->IsActive())
-					{
-						if ((*buttonIt)->GetState() == UIButtonState::HOVERED)
-						{
-							(*buttonIt)->SetState(UIButtonState::IDLE);
-							next = true;
-						}
-						else if (next)
-						{
-							(*buttonIt)->SetState(UIButtonState::HOVERED);
-							selectedButton = (*buttonIt);
-							next = false;
-						}
-					}
-				}
-				if (next)
-					selectedButton->SetState(UIButtonState::HOVERED);
-			}
-		}
-
-		//	!!!		Work In Progress	!!!
-
-		// Checking for inputs with mouse
-		/*if (activeButtons.size() > 1)
-		{
-			for (std::vector<C_UI_Button*>::const_iterator buttonIt = activeButtons.cbegin(); buttonIt != activeButtons.cend(); buttonIt++)
-			{
-				float2 mousePos = { (float)App->input->GetMouseX(), (float)App->input->GetMouseY() };
-			}
-		}*/
 	}
-	else if (activeButtons.size() > 1)
-	{
-		selectedButton = (*activeButtons.begin());
-		selectedButton->SetState(UIButtonState::HOVERED);
-	}
-
-	return ret;
 }
 
-
-void C_Canvas::UpdateActiveButtons()
+void C_Canvas::ResetUi()
 {
-	if (activeButtons.size() < 2)
-		return;
-
-	// Create a new list and empty the other one into this one
-	std::vector<C_UI_Button*> newButtonsList;
-	while (!activeButtons.empty())
+	uiElements.clear();
+	selectedUi = nullptr;
+	std::vector<GameObject*>& children = GetOwner()->childs;
+	for (std::vector<GameObject*>::const_iterator it = children.cbegin(); it != children.cend(); ++it)
 	{
-		float y = -999;
-		for (std::vector<C_UI_Button*>::iterator buttonIt = activeButtons.begin(); buttonIt != activeButtons.end(); buttonIt++)
-		{
-			if ((*buttonIt)->GetRect().y > y)
-			{
-				y = (*buttonIt)->GetRect().y;
-				buttonIterator = (*buttonIt);
-			}
-		}
-		for (std::vector<C_UI_Button*>::iterator buttonIt2 = activeButtons.begin(); buttonIt2 != activeButtons.end(); buttonIt2++)
-		{
-			if ((*buttonIt2) == buttonIterator)
-			{
-				newButtonsList.push_back(*buttonIt2);
-				activeButtons.erase(buttonIt2);
-				break;
-			}
-		}
+		(*it)->GetUiComponents(uiElements);
 	}
-	activeButtons = newButtonsList;
 }
-
-
-
-
-
-
-
 
 float2 C_Canvas::GetPosition() const
 {
@@ -332,11 +236,6 @@ float2 C_Canvas::GetSize() const
 Rect2D C_Canvas::GetRect() const
 {
 	return rect;
-}
-
-bool C_Canvas::IsInvisible() const
-{
-	return isInvisible;
 }
 
 void C_Canvas::SetPosition(const float2& position)
@@ -357,10 +256,5 @@ void C_Canvas::SetRect(const Rect2D& rect)
 	this->rect.y = rect.y;
 	this->rect.w = rect.w;
 	this->rect.h = rect.h;
-}
-
-void C_Canvas::SetIsInvisible(const bool setTo)
-{
-	isInvisible = setTo;
 }
 

@@ -41,6 +41,7 @@
 #include "C_CameraBehavior.h"
 #include "C_GateBehavior.h"
 #include "C_Canvas.h"
+#include "C_UI.h"
 #include "C_UI_Image.h"
 #include "C_UI_Text.h"
 #include "C_UI_Button.h"
@@ -1090,8 +1091,8 @@ void E_Inspector::DrawCanvasComponent(C_Canvas* cCanvas)
 			bool isActive = cCanvas->IsActive();
 			if (ImGui::Checkbox("Canvas Is Active", &isActive)) { cCanvas->SetIsActive(isActive); }
 
-			bool isInvisible = cCanvas->IsInvisible();
-			if (ImGui::Checkbox("Canvas Is Invisible", &isInvisible)) { cCanvas->SetIsInvisible(isInvisible); }
+			//bool isInvisible = cCanvas->IsInvisible();
+			//if (ImGui::Checkbox("Canvas Is Invisible", &isInvisible)) { cCanvas->SetIsInvisible(isInvisible); }
 
 			ImGui::Separator();
 

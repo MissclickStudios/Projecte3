@@ -11,6 +11,7 @@
 #include "M_ResourceManager.h"
 #include "C_Material.h"
 #include "R_Texture.h"
+#include "M_UISystem.h"
 
 
 HUDManager::HUDManager() : Script()
@@ -52,8 +53,11 @@ void HUDManager::Start()
 		hubShopCanvas = (C_Canvas*)a->GetComponent<C_Canvas>();
 
 	a = App->scene->GetGameObjectByName(hudCanvasName.c_str());
-	if (a != nullptr)
+	if (a != nullptr) 
+	{
 		hudCanvas = (C_Canvas*)a->GetComponent<C_Canvas>();
+		App->uiSystem->PushCanvas(hudCanvas);
+	}
 
 	a = App->scene->GetGameObjectByName(pauseMenuCanvasName.c_str());
 	if (a != nullptr)

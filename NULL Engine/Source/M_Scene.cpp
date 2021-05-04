@@ -327,7 +327,7 @@ bool M_Scene::LoadScene(const char* path)
 		if (App->gameState == GameState::PLAY)
 			App->scriptManager->CleanUpScripts();
 		CleanUp();
-		App->uiSystem->CleanUpScene();
+		App->uiSystem->ClearActiveCanvas();
 
 		//std::vector<GameObject*> parentMaintained;
 		//CleanUpCurrentScene(parentMaintained);
@@ -737,10 +737,6 @@ void M_Scene::DeleteGameObject(GameObject* gameObject,  int index)
 	if (gameObject == animationRoot)
 	{
 		animationRoot = nullptr;
-	}
-	if (gameObject->GetComponent<C_UI_Button>() != nullptr)
-	{
-		App->uiSystem->DeleteActiveButton(gameObject->GetComponent<C_UI_Button>());
 	}
 	
 	auto item = models.find(gameObject->GetUID());

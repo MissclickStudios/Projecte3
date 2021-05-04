@@ -20,6 +20,7 @@ public:
 	GameObject* continueButtonObject = nullptr;
 	GameObject* exitButtonObject = nullptr;
 	GameObject* gameManager = nullptr;
+	GameObject* canvasObject = nullptr;
 private:
 	C_UI_Button* playButton = nullptr;
 	C_UI_Button* continueButton = nullptr;
@@ -32,5 +33,6 @@ SCRIPTS_FUNCTION MainMenuManager* CreateMainMenuManager() {
 	INSPECTOR_GAMEOBJECT(script->continueButtonObject);
 	INSPECTOR_GAMEOBJECT(script->exitButtonObject);
 	INSPECTOR_GAMEOBJECT(script->gameManager);
+	INSPECTOR_GAMEOBJECT(script->canvasObject);
 	return script;
 }
