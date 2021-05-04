@@ -115,7 +115,7 @@ bool Weapon::Reload()
 	return false;
 }
 
-void Weapon::SetOwnership(EntityType type, GameObject* hand)
+void Weapon::SetOwnership(EntityType type, GameObject* hand, std::string handName)
 {
 	this->hand = hand;
 
@@ -126,7 +126,7 @@ void Weapon::SetOwnership(EntityType type, GameObject* hand)
 
 	if (this->hand != nullptr && weaponModelPrefab.uid != NULL)
 	{
-		GameObject* skeletonHand = GetHand(this->hand->parent);
+		GameObject* skeletonHand = GetHand(this->hand->parent, handName);
 		if (skeletonHand)
 			weaponModel = App->resourceManager->LoadPrefab(weaponModelPrefab.uid, skeletonHand); // Load the prefab onto a gameobject
 	}
@@ -231,15 +231,16 @@ void Weapon::FreezeBullets()
 	onHitEffects.emplace_back(Effect(EffectType::FROZEN, 4.0f, false));
 }
 
-GameObject* Weapon::GetHand(GameObject* object)
+GameObject* Weapon::GetHand(GameObject* object, std::string handName)
 {
 	for (int i = 0; i < object->childs.size(); ++i)
 	{
 		std::string name = object->childs[i]->GetName();
-		if (name == "mixamorig:RightHand")
+		bool check = (name == handName);
+		if (check)
 			return object->childs[i];
 
-		GameObject* output = GetHand(object->childs[i]);
+		GameObject* output = GetHand(object->childs[i], handName);
 		if (output != nullptr)
 			return output;
 	}

@@ -52,7 +52,7 @@ public:
 	// Usability
 	virtual ShootState Shoot(float2 direction);
 	virtual bool Reload();
-	void SetOwnership(EntityType type, GameObject* hand);
+	void SetOwnership(EntityType type, GameObject* hand, std::string handName = "");
 
 	// Bullet
 	void ProjectileCollisionReport(int index);
@@ -103,7 +103,7 @@ public:
 	std::vector<Effect> onHitEffects;
 
 	// Visuals
-	GameObject* GetHand(GameObject* object);
+	GameObject* GetHand(GameObject* object, std::string handName = "");
 	Prefab weaponModelPrefab;
 	Prefab projectilePrefab;
 

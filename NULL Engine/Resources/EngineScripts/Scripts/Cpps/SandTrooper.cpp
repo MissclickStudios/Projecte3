@@ -51,6 +51,10 @@ Trooper* CreateTrooper()
 	//Weapons
 	INSPECTOR_PREFAB(script->blaster);
 
+	//Hand Name
+
+	INSPECTOR_STRING(script->handName);
+
 	return script;
 }
 

@@ -27,6 +27,7 @@ Player* CreatePlayer()
 {
 	Player* script = new Player();
 
+	
 	// Entity ---
 	// Health
 	INSPECTOR_DRAGABLE_FLOAT(script->health);
@@ -70,6 +71,10 @@ Player* CreatePlayer()
 	INSPECTOR_PREFAB(script->equipedGun);
 
 	INSPECTOR_STRING(script->gameManager);
+
+	//Hand Name
+
+	INSPECTOR_STRING(script->handName);
 
 	//// Animations ---
 	//// Movement
@@ -240,7 +245,7 @@ void Player::LoadState(ParsonNode& playerNode)
 
 		if (blasterWeapon)
 		{
-			blasterWeapon->SetOwnership(type, hand);
+			blasterWeapon->SetOwnership(type, hand, handName);
 			blasterWeapon->ammo = playerNode.GetInteger("Blaster Ammo");
 
 			ParsonArray blasterPerks = playerNode.GetArray("Blaster Perks");
@@ -258,7 +263,7 @@ void Player::LoadState(ParsonNode& playerNode)
 
 		if (equipedGunWeapon)
 		{
-			equipedGunWeapon->SetOwnership(type, hand);
+			equipedGunWeapon->SetOwnership(type, hand, handName);
 			equipedGunWeapon->ammo = playerNode.GetInteger("Equiped Gun Ammo");
 
 			ParsonArray equipedGunPerks = playerNode.GetArray("Equiped Gun Perks");

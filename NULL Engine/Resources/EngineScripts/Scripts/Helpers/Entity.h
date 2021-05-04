@@ -100,6 +100,8 @@ public:
 	C_AudioSource* walkAudio = nullptr;
 	C_AudioSource* damageAudio = nullptr;
 
+	std::string handName;
+
 protected:
 
 	// Movement
