@@ -1,5 +1,6 @@
 #include "Application.h"
 
+#include "Profiler.h"
 #include "GameObject.h"
 
 #include "M_Camera3D.h"
@@ -55,6 +56,8 @@ void C_UI_Button::LoadBuffers()
 bool C_UI_Button::Update()
 {
 	bool ret = true;
+
+	OPTICK_CATEGORY("C_UI_Button Update", Optick::Category::Update);
 
 	if (IsActive() == false)
 		return ret;

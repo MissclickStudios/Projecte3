@@ -31,11 +31,11 @@
 #include "C_CapsuleCollider.h"
 #include "C_ParticleSystem.h"
 #include "C_NavMeshAgent.h"
-#include "C_PlayerController.h"
-#include "C_BulletBehavior.h"
-#include "C_PropBehavior.h"
-#include "C_CameraBehavior.h"
-#include "C_GateBehavior.h"
+//#include "C_PlayerController.h"
+//#include "C_BulletBehavior.h"
+//#include "C_PropBehavior.h"
+//#include "C_CameraBehavior.h"
+//#include "C_GateBehavior.h"
 
 #include "C_Canvas.h"
 
@@ -123,6 +123,7 @@ bool GameObject::Start()
 
 bool GameObject::Update()
 {
+	OPTICK_CATEGORY("Game Object Update",Optick::Category::Update);
 	bool ret = true;
 
 	for (uint i = 0; i < components.size(); ++i)
@@ -237,11 +238,11 @@ bool GameObject::LoadState(ParsonNode& root)
 			case ComponentType::BOX_COLLIDER:		{ component = new C_BoxCollider(this); }		break;
 			case ComponentType::SPHERE_COLLIDER:	{ component = new C_SphereCollider(this); }		break;
 			case ComponentType::CAPSULE_COLLIDER:	{ component = new C_CapsuleCollider(this); }	break;
-			case ComponentType::PLAYER_CONTROLLER:	{ component = new C_PlayerController(this); }	break;
-			case ComponentType::BULLET_BEHAVIOR:	{ component = new C_BulletBehavior(this); }		break;
-			case ComponentType::PROP_BEHAVIOR:		{ component = new C_PropBehavior(this); }		break;
-			case ComponentType::CAMERA_BEHAVIOR:	{ component = new C_CameraBehavior(this); }		break;
-			case ComponentType::GATE_BEHAVIOR:		{ component = new C_GateBehavior(this); }		break;
+			//case ComponentType::PLAYER_CONTROLLER:	{ component = new C_PlayerController(this); }	break;
+			//case ComponentType::BULLET_BEHAVIOR:	{ component = new C_BulletBehavior(this); }		break;
+			//case ComponentType::PROP_BEHAVIOR:		{ component = new C_PropBehavior(this); }		break;
+			//case ComponentType::CAMERA_BEHAVIOR:	{ component = new C_CameraBehavior(this); }		break;
+			//case ComponentType::GATE_BEHAVIOR:		{ component = new C_GateBehavior(this); }		break;
 			case ComponentType::PARTICLES:			{ component = new C_ParticleSystem(this); }		break;
 			case ComponentType::CANVAS:				{ component = new C_Canvas(this); }				break;
 			case ComponentType::UI_IMAGE:			{ component = new C_UI_Image(this); }			break;
@@ -792,11 +793,11 @@ Component* GameObject::CreateComponent(ComponentType type)
 		LOG("[ERROR] RigidBody Component could not be added to %s! Error: No duplicates allowed!", name.c_str());
 		return nullptr;
 	}
-	if (type == ComponentType::PLAYER_CONTROLLER && GetComponent<C_PlayerController>() != nullptr)
-	{
-		LOG("[ERROR] Player Controller Component could not be added to %s! Error: No duplicates allowed!", name.c_str());
-		return nullptr;
-	}
+	//if (type == ComponentType::PLAYER_CONTROLLER && GetComponent<C_PlayerController>() != nullptr)
+	//{
+	//	LOG("[ERROR] Player Controller Component could not be added to %s! Error: No duplicates allowed!", name.c_str());
+	//	return nullptr;
+	//}
 	if (type == ComponentType::UI_IMAGE && GetComponent<C_UI_Image>() != nullptr)
 	{
 		LOG("[ERROR] Player Controller Component could not be added to %s! Error: No duplicates allowed!", name.c_str());
@@ -824,11 +825,11 @@ Component* GameObject::CreateComponent(ComponentType type)
 	case ComponentType::UI_TEXT:			{ component = new C_UI_Text(this); }			break;
 	case ComponentType::SCRIPT:				{ component = new C_Script(this); }				break;
 	case ComponentType::UI_BUTTON:			{ component = new C_UI_Button(this); }			break;
-	case ComponentType::PLAYER_CONTROLLER:	{ component = new C_PlayerController(this); }	break;
-	case ComponentType::BULLET_BEHAVIOR:	{ component = new C_BulletBehavior(this); }		break;
-	case ComponentType::PROP_BEHAVIOR:		{ component = new C_PropBehavior(this); }		break;
-	case ComponentType::CAMERA_BEHAVIOR:	{ component = new C_CameraBehavior(this); }		break;
-	case ComponentType::GATE_BEHAVIOR:		{ component = new C_GateBehavior(this); }		break;
+	//case ComponentType::PLAYER_CONTROLLER:	{ component = new C_PlayerController(this); }	break;
+	//case ComponentType::BULLET_BEHAVIOR:	{ component = new C_BulletBehavior(this); }		break;
+	//case ComponentType::PROP_BEHAVIOR:		{ component = new C_PropBehavior(this); }		break;
+	//case ComponentType::CAMERA_BEHAVIOR:	{ component = new C_CameraBehavior(this); }		break;
+	//case ComponentType::GATE_BEHAVIOR:		{ component = new C_GateBehavior(this); }		break;
 	case ComponentType::ANIMATOR2D:			{ component = new C_2DAnimator(this); }			break;
 	case ComponentType::NAVMESH_AGENT:		{ component = new C_NavMeshAgent(this); }		break;
 	}

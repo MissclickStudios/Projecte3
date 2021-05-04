@@ -83,11 +83,11 @@ private:																										// --- DRAW COMPONENT METHODS ---
 	void DrawUITextComponent			(C_UI_Text* text);
 	void DrawScriptComponent			(C_Script* cScript);
 	void DrawUIButtonComponent			(C_UI_Button* button);
-	void DrawPlayerControllerComponent	(C_PlayerController* controller);
-	void DrawBulletBehaviorComponent	(C_BulletBehavior* behavior);
-	void DrawPropBehaviorComponent		(C_PropBehavior* behavior);
-	void DrawCameraBehaviorComponent	(C_CameraBehavior* behavior); 
-	void DrawGateBehaviorComponent		(C_GateBehavior* behavior);
+	//void DrawPlayerControllerComponent	(C_PlayerController* controller);
+	//void DrawBulletBehaviorComponent	(C_BulletBehavior* behavior);
+	//void DrawPropBehaviorComponent		(C_PropBehavior* behavior);
+	//void DrawCameraBehaviorComponent	(C_CameraBehavior* behavior); 
+	//void DrawGateBehaviorComponent		(C_GateBehavior* behavior);
 	void DrawAnimator2DComponent		(C_2DAnimator* cAnimator);
 	void DrawNavMeshAgentComponent		(C_NavMeshAgent* cNavMeshAgent);
 
@@ -131,13 +131,13 @@ private:																										// --- DRAW COMPONENT UTILITY METHODS ---
 	void ScriptSelectCombo(C_Script*& cScript, const char* previewValue, bool swapForCurrent);
 
 private:
-	void DrawImportSettings				(Resource* selectedResource);
+	//void DrawImportSettings				(Resource* selectedResource);
 
-	void DrawModelImportSettings		(ModelSettings modelSettings);
-	void DrawMeshImportSettings			(MeshSettings meshSettings);
-	void DrawMaterialImportSettings		(MaterialSettings materialSettings);
-	void DrawTextureImportSettings		(TextureSettings textureSettings);
-	void DrawAnimationImportSettings	(AnimationSettings animationSettings);
+	//void DrawModelImportSettings		(ModelSettings modelSettings);
+	//void DrawMeshImportSettings			(MeshSettings meshSettings);
+	//void DrawMaterialImportSettings		(MaterialSettings materialSettings);
+	//void DrawTextureImportSettings		(TextureSettings textureSettings);
+	//void DrawAnimationImportSettings	(AnimationSettings animationSettings);
 
 private:
 	bool		showDeleteComponentPopup;
