@@ -18,7 +18,7 @@
 #include "I_Shaders.h"
 #include "I_Particles.h"
 #include "I_Scripts.h"
-#include "I_NavMesh.h"
+#include "I_Navigation.h"
 
 #include "Application.h"
 #include "FileSystemDefinitions.h"
@@ -235,7 +235,7 @@ uint M_ResourceManager::SaveResourceToLibrary(Resource* resource)
 	case ResourceType::SHADER:			{ written = Importer::Shaders::Save((R_Shader*)resource, &buffer); }			break;
 	case ResourceType::PARTICLE_SYSTEM:	{ written = Importer::Particles::Save((R_ParticleSystem*)resource, &buffer); }	break;
 	case ResourceType::SCRIPT:			{ written = Importer::Scripts::Save((R_Script*)resource, &buffer); }			break;
-	case ResourceType::NAVMESH_AGENT:	{ written = Importer::NavMesh::Save((R_NavMesh*)resource, &buffer); }		break;
+	case ResourceType::NAVMESH_AGENT:	{ written = Importer::Navigation::Save((R_NavMesh*)resource, &buffer); }		break;
 	}
 
 	RELEASE_ARRAY(buffer);
@@ -621,7 +621,7 @@ bool M_ResourceManager::AllocateResource(uint32 UID, const char* assetsPath)
 	case ResourceType::SHADER:			{ success = Importer::Shaders::Load(buffer, (R_Shader*)resource); }				break;
 	case ResourceType::PARTICLE_SYSTEM:	{ success = Importer::Particles::Load(buffer, (R_ParticleSystem*)resource); }	break;
 	case ResourceType::SCRIPT:			{ success = Importer::Scripts::Load(buffer, (R_Script*)resource); }				break;
-	case ResourceType::NAVMESH_AGENT:	{ success = Importer::NavMesh::Load(buffer, (R_NavMesh*)resource); }			break;
+	case ResourceType::NAVMESH_AGENT:	{ success = Importer::Navigation::Load(buffer, (R_NavMesh*)resource); }			break;
 	}
 
 	RELEASE_ARRAY(buffer);

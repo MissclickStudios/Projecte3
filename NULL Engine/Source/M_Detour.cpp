@@ -3,8 +3,11 @@
 #include "RecastNavigation/Detour/Include/DetourNavMeshQuery.h"
 #include "RecastNavigation/Detour/Include/DetourNavMeshBuilder.h"
 
+#include "FileSystemDefinitions.h"
+
 #include "Application.h"
 
+#include "M_ResourceManager.h"
 #include "M_Scene.h"
 #include "GameObject.h"
 #include "C_Mesh.h"
@@ -108,18 +111,17 @@ bool M_Detour::createNavMesh(dtNavMeshCreateParams* params)
 		return false;
 	}
 
-	if (navMeshResource == nullptr) {
-		// Create navMeshResource
+	if (navMeshResource == nullptr)
+	{
+		std::string resourceName = App->scene->GetCurrentScene();
+		resourceName = ASSETS_NAVIGATION_PATH + resourceName + NAVMESH_AST_EXTENSION;
 
-		std::string name = App->scene->GetCurrentScene();
-		std::string path = ASSETS_SCENES_PATH + name + NAVMESH_AST_EXTENSION;
-
+		navMeshResource = (R_NavMesh*)App->resourceManager->CreateResource(ResourceType::NAVMESH_AGENT, resourceName.c_str());
 	}
-	//navMeshResource->navMesh = m_navMesh;
+	navMeshResource->navMesh = m_navMesh;
 
 	//Save Importer navmesh 
-	/*ImporterNavMesh* INavMesh = App->resources->GetImporter<ImporterNavMesh>();
-	INavMesh->Save(navMeshResource);*/
+	App->resourceManager->SaveResourceToLibrary(navMeshResource);
 
 	//If we are in the editor we need to create the draw meshes
 	if (App->gameState == GameState::STOP) {
@@ -134,6 +136,7 @@ bool M_Detour::createNavMesh(dtNavMeshCreateParams* params)
 
 void M_Detour::loadNavMeshFile(unsigned int UID)
 {
+
 }
 
 void M_Detour::deleteNavMesh()
@@ -216,24 +219,75 @@ int M_Detour::calculatePath(float3 sourcePosition, float3 destination, int areaM
 
 bool M_Detour::nearestPosInMesh(float3 sourcePosition, int areaMask, float3& nearestPoint)
 {
-	return false;
+	m_filterQuery->setIncludeFlags(areaMask);
+	dtPolyRef nearestPoly;
+	dtStatus status;
+
+	//Find the nearest point
+	status = m_navQuery->findNearestPoly(sourcePosition.ptr(), m_Extents, m_filterQuery, &nearestPoly, nearestPoint.ptr());
+	return !((status & DT_FAILURE) || (status & DT_STATUS_DETAIL_MASK)); //If we found an error we return false
 }
 
 void M_Detour::setDefaultValues()
 {
+	for (int i = 3; i < BE_DETOUR_TOTAL_AREAS; ++i) {
+		sprintf_s(areaNames[i], "");
+		areaCosts[i] = 1;
+	}
+
+	//Inititalize names
+	sprintf_s(areaNames[0], "Walkable");
+	sprintf_s(areaNames[1], "Not Walkable");
+	sprintf_s(areaNames[2], "Jump");
+
+	//Change value of Jump to 2 by default
+	areaCosts[2] = 2;
+
+	setDefaultBakeValues();
+	setAreaCosts();
 }
 
 void M_Detour::setDefaultBakeValues()
 {
+	agentRadius = 0.5f;
+	agentHeight = 2.0f;
+	maxSlope = 45.0f;
+	stepHeight = 0.4f;
+	voxelSize = 0.15f;
+	voxelHeight = 0.2f;
+
+	regionMinSize = 8;
+	regionMergeSize = 20;
+	edgeMaxLen = 12.0f;
+	edgeMaxError = 1.3f;
+	vertsPerPoly = 6.0f;
+	detailSampleDist = 6.0f;
+	detailSampleMaxError = 1.0f;
+
+	buildTiledMesh = true;
 }
 
 const R_NavMesh* M_Detour::getNavMeshResource() const
 {
-	return nullptr;
+	return navMeshResource;
 }
 
 void M_Detour::allocateNavMesh()
 {
+	if (navMeshResource == nullptr)
+	{
+		std::string resourceName = App->scene->GetCurrentScene();
+		resourceName = ASSETS_NAVIGATION_PATH + resourceName + NAVMESH_AST_EXTENSION;
+
+		navMeshResource = (R_NavMesh*)App->resourceManager->CreateResource(ResourceType::NAVMESH_AGENT, resourceName.c_str());
+	}
+
+	if (navMeshResource->navMesh != nullptr)
+		dtFreeNavMesh(navMeshResource->navMesh);
+
+	navMeshResource->navMesh = dtAllocNavMesh();
+
+	App->resourceManager->SaveResourceToLibrary(navMeshResource);
 }
 
 void M_Detour::createRenderMeshes()
@@ -271,6 +325,11 @@ void M_Detour::freeNavMeshData(void* ptr)
 
 void M_Detour::setAreaCosts()
 {
+	if (m_filterQuery != nullptr) {
+		m_filterQuery->setAreaCost(0, areaCosts[0]);
+		for (int i = 2; i < BE_DETOUR_TOTAL_AREAS; ++i)
+			m_filterQuery->setAreaCost(i, areaCosts[i]);
+	}
 }
 
 void M_Detour::processTile(const dtMeshTile* tile)

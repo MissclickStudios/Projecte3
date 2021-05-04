@@ -1,27 +1,27 @@
 #include "R_NavMesh.h"
 
-#include "I_NavMesh.h"
+#include "I_Navigation.h"
+#include "FileSystemDefinitions.h"
 
 #include "Application.h"
 #include "M_FileSystem.h"
 
 #include "RecastNavigation/Detour/Include/DetourNavMesh.h"
 
-bool Importer::NavMesh::Import(const char* buffer, R_NavMesh* rNavMesh)
+bool Importer::Navigation::Import(const char* buffer, R_NavMesh* rNavMesh)
 {
 
 	return true;
 }
 
-uint Importer::NavMesh::Save(const R_NavMesh* rNavMesh, char** buffer)
+uint Importer::Navigation::Save(const R_NavMesh* rNavMesh, char** buffer)
 {
 	uint written = 0;
 
-	uint datasize = 0;
-	char* data = nullptr;
-	char* d_index = nullptr;
+	uint size = 0;
+	char* cursor = nullptr;
 	NavMeshSetHeader* header = new NavMeshSetHeader();
-	datasize += sizeof(NavMeshSetHeader);
+	size += sizeof(NavMeshSetHeader);
 	header->magic = NAVMESHSET_MAGIC;
 	header->version = NAVMESHSET_VERSION;
 	header->numTiles = 0;
@@ -31,18 +31,18 @@ uint Importer::NavMesh::Save(const R_NavMesh* rNavMesh, char** buffer)
 		const dtMeshTile* tile = (const dtMeshTile*)mesh->getTile(i);
 		if (!tile || !tile->header || !tile->dataSize) continue;
 		header->numTiles++;
-		datasize += sizeof(NavMeshTileHeader);
-		datasize += tile->dataSize;
+		size += sizeof(NavMeshTileHeader);
+		size += tile->dataSize;
 	}
 
 	memcpy(&header->params, mesh->getParams(), sizeof(dtNavMeshParams));
 
-	data = new char[datasize];
-	d_index = data;
+	*buffer = new char[size];
+	cursor = *buffer;
 
 	// We write the header file
-	memcpy(d_index, header, sizeof(NavMeshSetHeader));
-	d_index += sizeof(NavMeshSetHeader);
+	memcpy(cursor, header, sizeof(NavMeshSetHeader));
+	cursor += sizeof(NavMeshSetHeader);
 
 	// Store tiles.
 	for (int i = 0; i < mesh->getMaxTiles(); ++i) {
@@ -52,27 +52,24 @@ uint Importer::NavMesh::Save(const R_NavMesh* rNavMesh, char** buffer)
 		NavMeshTileHeader tileHeader;
 		tileHeader.tileRef = mesh->getTileRef(tile);
 		tileHeader.dataSize = tile->dataSize;
-		memcpy(d_index, &tileHeader, sizeof(NavMeshTileHeader));
-		d_index += sizeof(NavMeshTileHeader);
+		memcpy(cursor, &tileHeader, sizeof(NavMeshTileHeader));
+		cursor += sizeof(NavMeshTileHeader);
 
-		memcpy(d_index, tile->data, tile->dataSize);
-		d_index += tile->dataSize;
+		memcpy(cursor, tile->data, tile->dataSize);
+		cursor += tile->dataSize;
 	}
 
-	written = App->fileSystem->Save(rNavMesh->GetLibraryFile(), data, datasize);
-
-	if (data) {
-		delete[] data;
-		data = nullptr;
-		d_index = nullptr;
-	}
-
+	cursor = nullptr;
 	delete header;
+
+	// --- SAVING THE BUFFER ---
+	std::string path = NAVIGATION_PATH + std::to_string(rNavMesh->GetUID()) + NAVMESH_EXTENSION;
+	written = App->fileSystem->Save(path.c_str(), *buffer, size);
 
 	return written;
 }
 
-bool Importer::NavMesh::Load(const char* buffer, R_NavMesh* rNavMesh)
+bool Importer::Navigation::Load(const char* buffer, R_NavMesh* rNavMesh)
 {
 
 	return true;

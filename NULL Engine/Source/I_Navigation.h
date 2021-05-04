@@ -30,7 +30,7 @@ static const int NAVMESHSET_VERSION = 1;
 
 namespace Importer
 {
-	namespace NavMesh
+	namespace Navigation
 	{
 		bool Import	(const char* buffer, R_NavMesh* rNavMesh);
 		uint Save	(const R_NavMesh* rNavMesh, char** buffer);
