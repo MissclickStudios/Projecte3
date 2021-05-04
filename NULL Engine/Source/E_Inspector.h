@@ -36,6 +36,7 @@ class C_UI_Button;
 class C_2DAnimator;
 class C_NavMeshAgent;
 
+class ResourceBase;
 class Resource;
 class R_Shader;
 class R_Texture;
@@ -101,9 +102,20 @@ private:																														// --- DRAW COMPONENT UTILITY METHODS ---
 	// COMPONENT BASICS		--------
 	void DrawBasicSettings				(Component* component, const char* state = nullptr);
 
+	// MESH COMPONENT		--------
+	void DisplayMeshSelector			(C_Mesh* cMesh, std::map<std::string, ResourceBase>& meshBases);
+	
 	// MATERIAL COMPONENT	--------
+	void DisplayMaterial				(C_Material* cMaterial);
+	void DisplayMaterialSelector		(C_Material* cMaterial, std::map<std::string, ResourceBase>& materialBases);
+
+	void DisplayShader					(C_Material* cMaterial);
+	void DisplayShaderSelector			(C_Material* cMaterial, std::map<std::string, ResourceBase>& shaderBases);
+	
+	void DisplayTexture					(C_Material* cMaterial);
+	void DisplayTextureSelector			(C_Material* cMaterial, std::map<std::string, ResourceBase>& textureBases);
 	void DisplayTextureData				(C_Material* cMaterial);																// Will display the texture's width, height, depth...
-	void TextureDisplay					(C_Material* cMaterial);																// Will display the texture as an image through Dear ImGui.
+	void TextureImageDisplay			(C_Material* cMaterial);																// Will display the texture as an image through Dear ImGui.
 
 	// ANIMATOR COMPONENT	--------
 	void DisplayAnimatorControls		(C_Animator* cAnimator);
@@ -117,8 +129,6 @@ private:																														// --- DRAW COMPONENT UTILITY METHODS ---
 	void DisplayTrackManager			(C_Animator* cAnimator);
 	void TrackCreatorWindow				(C_Animator* cAnimator);
 	void TrackEditorWindow				(C_Animator* cAnimator);
-
-
 
 	// SHADER COMPONENT		--------
 	void TextEditorWindow				();
@@ -164,24 +174,17 @@ private:
 	bool		showSaveEditorPopup;
 	int			componentType;
 
-	int			mapToDisplay;
 	int			billboardingType;
 	int			moduleType;
 
 	// Animator Insector Variables
-	bool trackWasDeleted;
-	bool clipWasDeleted;
+	bool		trackWasDeleted;
+	bool		clipWasDeleted;
 
 	//Shader inspector utilities
-	std::vector<R_Shader*>	allShaders;
-	R_Shader*				shaderToRecompile;
-	TextEditor				editor;
-	std::string				fileToEdit;
-	std::string				shaderName;
-
-	std::vector<R_Texture*>	allTextures;
-	std::string				texName;
-
+	R_Shader*	shaderToRecompile;
+	TextEditor	editor;
+	std::string	fileToEdit;
 };
 
 #endif // !__E_INSPECTOR_H__

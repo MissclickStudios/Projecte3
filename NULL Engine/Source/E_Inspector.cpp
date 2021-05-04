@@ -48,7 +48,8 @@
 #include "C_2DAnimator.h"
 #include "C_NavMeshAgent.h"
 
-#include "R_Shader.h"
+#include "ResourceBase.h"
+#include "R_Mesh.h"
 #include "R_Texture.h"
 #include "R_Animation.h"
 #include "R_Shader.h"
@@ -75,9 +76,7 @@ componentToDelete			(nullptr),
 showTextEditorWindow		(false),
 showSaveEditorPopup			(false),
 componentType				(0),
-mapToDisplay				(0),
 shaderToRecompile			(nullptr),
-texName						("NONE"),
 trackWasDeleted				(false),
 clipWasDeleted				(false)
 {
@@ -353,84 +352,83 @@ void E_Inspector::DrawMeshComponent(C_Mesh* cMesh)
 	bool show = true;
 	if (ImGui::CollapsingHeader("Mesh", &show, ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		if (cMesh != nullptr)
-		{
-			// --- IS ACTIVE ---
-			bool meshIsActive = cMesh->IsActive();
-			if (ImGui::Checkbox("Mesh Is Active", &meshIsActive))
-			{
-				cMesh->SetIsActive(meshIsActive);
-			}
-
-			ImGui::Separator();
-
-			// --- FILE PATH ---
-			ImGui::Text("File:");	ImGui::SameLine(); ImGui::TextColored(Green.C_Array(), "%s", cMesh->GetMeshFile());
-
-			ImGui::Separator();
-
-			// --- MESH DATA ---
-			ImGui::TextColored(Cyan.C_Array(), "Mesh Data:");
-
-			uint numVertices		= 0;
-			uint numNormals		= 0;
-			uint numTexCoords		= 0;
-			uint numIndices		= 0;
-			uint numBones			= 0;
-
-			cMesh->GetMeshData(numVertices, numNormals, numTexCoords, numIndices, numBones);
-
-			ImGui::Text("Vertices:");		ImGui::SameLine();		ImGui::TextColored(Yellow.C_Array(), "  %u", numVertices);
-			ImGui::Text("Normals:");		ImGui::SameLine();		ImGui::TextColored(Yellow.C_Array(), "   %u", numNormals);
-			ImGui::Text("Tex Coords:");		ImGui::SameLine();		ImGui::TextColored(Yellow.C_Array(), "%u", numTexCoords);
-			ImGui::Text("Indices:");		ImGui::SameLine();		ImGui::TextColored(Yellow.C_Array(), "   %u", numIndices);
-			ImGui::Text("Bones: ");			ImGui::SameLine();		ImGui::TextColored(Yellow.C_Array(), "    %u",	numBones);
-
-			ImGui::Separator();
-
-			// --- DRAW MODE ---
-			ImGui::TextColored(Cyan.C_Array(), "Draw Mode:");
-
-			bool showWireframe		= cMesh->GetShowWireframe();
-			bool showBoundingBox	= cMesh->GetShowBoundingBox();
-			bool drawVertNormals	= cMesh->GetDrawVertexNormals();
-			bool drawFaceNormals	= cMesh->GetDrawFaceNormals();
-
-			if (ImGui::Checkbox("Show Wireframe", &showWireframe))				{ cMesh->SetShowWireframe(showWireframe); }
-			if (ImGui::Checkbox("Show Bounding Box", &showBoundingBox))		{ cMesh->SetShowBoundingBox(showBoundingBox); }
-			if (ImGui::Checkbox("Draw Vertex Normals", &drawVertNormals))		{ cMesh->SetDrawVertexNormals(drawVertNormals); }
-			if (ImGui::Checkbox("Draw Face Normals", &drawFaceNormals))		{ cMesh->SetDrawFaceNormals(drawFaceNormals); }
-
-			ImGui::Separator();
-
-			// --- OUTLINE MODE ---
-			ImGui::TextColored(Cyan.C_Array(), "Outline Mesh:");
-
-			bool outlineMesh = cMesh->GetOutlineMesh();
-
-			if (ImGui::Checkbox("Outline Mesh", &outlineMesh)) { cMesh->SetOutlineMesh(outlineMesh); }
-
-			float outlineThickness = cMesh->GetOutlineThickness();
-
-			if(ImGui::SliderFloat("Outline Thickness", &outlineThickness, 0 , 4)) { cMesh->SetOutlineThickness(outlineThickness); }
-
-			Color color = cMesh->GetOutlineColor();
-
-			if (ImGui::ColorEdit4("Outline Color", (float*)&color, ImGuiColorEditFlags_None))
-			{
-				cMesh->SetOutlineColor(color);
-			}
-		}
-		else
-		{
-			LOG("[ERROR] Could not get the Mesh Component from %s Game Object!", cMesh->GetOwner()->GetName());
-		}
-
 		if (!show)
 		{
-			componentToDelete				= cMesh;
-			showDeleteComponentPopup		= true;
+			componentToDelete			= cMesh;
+			showDeleteComponentPopup	= true;
+
+			return;
 		}
+
+		if (cMesh == nullptr)
+		{
+			LOG("[ERROR] Could not get the Mesh Component from %s Game Object!", cMesh->GetOwner()->GetName());
+			ImGui::Separator();
+
+			return;
+		}
+
+		bool meshIsActive			= cMesh->IsActive();
+			
+		static uint numVertices		= 0;
+		static uint numNormals		= 0;
+		static uint numTexCoords	= 0;
+		static uint numIndices		= 0;
+		static uint numBones		= 0;
+
+		bool showWireframe			= cMesh->GetShowWireframe();
+		bool showBoundingBox		= cMesh->GetShowBoundingBox();
+		bool drawVertNormals		= cMesh->GetDrawVertexNormals();
+		bool drawFaceNormals		= cMesh->GetDrawFaceNormals();
+		
+		bool outlineMesh			= cMesh->GetOutlineMesh();
+		float outlineThickness		= cMesh->GetOutlineThickness();
+		Color outlineColor			= cMesh->GetOutlineColor();
+		
+		static std::map<std::string, ResourceBase> meshBases;
+
+		// --- IS ACTIVE ---
+		if (ImGui::Checkbox("Mesh Is Active", &meshIsActive))
+		{
+			cMesh->SetIsActive(meshIsActive);
+		}
+
+		ImGui::Separator();
+
+		// --- MESH SELECTOR ---
+		DisplayMeshSelector(cMesh, meshBases);
+
+		ImGui::Separator();
+
+		// --- MESH DATA ---
+		ImGui::TextColored(Cyan.C_Array(), "Mesh Data:");
+
+		cMesh->GetMeshData(numVertices, numNormals, numTexCoords, numIndices, numBones);
+
+		ImGui::Text("Vertices:");		ImGui::SameLine();		ImGui::TextColored(Yellow.C_Array(), "  %u",	numVertices);
+		ImGui::Text("Normals:");		ImGui::SameLine();		ImGui::TextColored(Yellow.C_Array(), "   %u",	numNormals);
+		ImGui::Text("Tex Coords:");		ImGui::SameLine();		ImGui::TextColored(Yellow.C_Array(), "%u",		numTexCoords);
+		ImGui::Text("Indices:");		ImGui::SameLine();		ImGui::TextColored(Yellow.C_Array(), "   %u",	numIndices);
+		ImGui::Text("Bones: ");			ImGui::SameLine();		ImGui::TextColored(Yellow.C_Array(), "    %u",	numBones);
+
+		ImGui::Separator();
+
+		// --- DRAW MODE ---
+		ImGui::TextColored(Cyan.C_Array(), "Draw Mode:");
+
+		if (ImGui::Checkbox("Show Wireframe", &showWireframe))							{ cMesh->SetShowWireframe(showWireframe); }
+		if (ImGui::Checkbox("Show Bounding Box", &showBoundingBox))						{ cMesh->SetShowBoundingBox(showBoundingBox); }
+		if (ImGui::Checkbox("Draw Vertex Normals", &drawVertNormals))					{ cMesh->SetDrawVertexNormals(drawVertNormals); }
+		if (ImGui::Checkbox("Draw Face Normals", &drawFaceNormals))						{ cMesh->SetDrawFaceNormals(drawFaceNormals); }
+
+		ImGui::Separator();
+
+		// --- OUTLINE MODE ---
+		ImGui::TextColored(Cyan.C_Array(), "Outline Mesh:");
+
+		if (ImGui::Checkbox("Outline Mesh", &outlineMesh))								{ cMesh->SetOutlineMesh(outlineMesh); }
+		if (ImGui::SliderFloat("Outline Thickness", &outlineThickness, 0.0f , 4.0f))	{ cMesh->SetOutlineThickness(outlineThickness); }
+		if (ImGui::ColorEdit4("Outline Color", outlineColor.C_Array()))					{ cMesh->SetOutlineColor(outlineColor); }
 
 		ImGui::Separator();
 	}
@@ -441,157 +439,53 @@ void E_Inspector::DrawMaterialComponent(C_Material* cMaterial)
 	bool show = true;
 	if (ImGui::CollapsingHeader("Material", &show, ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		if (cMaterial != nullptr)
-		{
-			bool materialIsActive = cMaterial->IsActive();
-			if (ImGui::Checkbox("Material Is Active", &materialIsActive))
-			{
-				cMaterial->SetIsActive(materialIsActive);
-			}
-
-			ImGui::Separator();
-
-			// --- MATERIAL PATH ---
-			ImGui::Text("File:");		ImGui::SameLine(); ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0f), "%s", cMaterial->GetTextureFile());
-
-			ImGui::Separator();
-
-			// --- MATERIAL COLOR & ALPHA ---
-			ImGui::TextColored(ImVec4(0.0f, 1.0f, 1.0f, 1.0f), "Material Data:");
-
-			Color color = cMaterial->GetMaterialColour();
-
-			if (ImGui::ColorEdit3("Diffuse Color", (float*)&color, ImGuiColorEditFlags_NoAlpha))
-			{
-				cMaterial->SetMaterialColour(color);
-			}
-
-			if (ImGui::SliderFloat("Diffuse Alpha", (float*)&color.a, 0.0f, 1.0f, "%.3f"))
-			{
-				cMaterial->SetMaterialColour(color);
-			}
-
-			if (ImGui::Button("Save Material"))
-			{
-				//App->resourceManager->SaveResourceToLibrary((Resource*)cMaterial->GetMaterial());
-			}
-
-			ImGui::Separator();
-
-			// --- SHADER DATA ---
-			ImGui::TextColored(ImVec4(0.0f, 1.0f, 1.0f, 1.0f), "Shader Data:");
-
-			ImGui::Text("Shader Active:");
-			ImGui::SameLine();
-
-			if (cMaterial->GetShader() != nullptr)
-			{
-					ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), cMaterial->GetShader()->GetAssetsFile());
-
-				if (allShaders.empty()) App->resourceManager->GetAllShaders(allShaders);
-				shaderName = cMaterial->GetShader()->GetAssetsFile();
-				if (ImGui::BeginCombo("Shader", cMaterial->GetShader()->GetAssetsFile(), ImGuiComboFlags_PopupAlignLeft))
-				{
-					for (uint i = 0; i < allShaders.size(); i++)
-					{
-						const bool selectedShader = (shaderName == allShaders[i]->GetAssetsFile());
-						if (ImGui::Selectable(allShaders[i]->GetAssetsFile(), selectedShader))
-						{
-							cMaterial->SetShader(allShaders[i]);
-
-							shaderName = allShaders[i]->GetAssetsFile();
-						}
-					}
-					ImGui::EndCombo();
-				}
-
-				if (ImGui::Button("Edit Shader"))
-				{
-					CallTextEditor(cMaterial);
-				}
-
-				R_Shader* shader = cMaterial->GetShader();
-				for (uint i = 0; i < shader->uniforms.size(); i++)
-				{
-					switch (shader->uniforms[i].uniformType)
-					{
-					case UniformType::INT:			ImGui::DragInt(shader->uniforms[i].name.c_str(), &shader->uniforms[i].integer, 0.02f, 0.0f, 0.0f, "%.2f");							break;
-					case UniformType::FLOAT:		ImGui::DragFloat(shader->uniforms[i].name.c_str(), &shader->uniforms[i].floatNumber, 0.02f, 0.0f, 0.0f, "%.2f");					break;
-					case UniformType::INT_VEC2:		ImGui::DragInt2(shader->uniforms[i].name.c_str(), (int*)&shader->uniforms[i].vec2, 0.02f, 0.0f, 0.0f, "%.2f");						break;
-					case UniformType::INT_VEC3:		ImGui::DragInt3(shader->uniforms[i].name.c_str(), (int*)&shader->uniforms[i].vec3, 0.02f, 0.0f, 0.0f, "%.2f");						break;
-					case UniformType::INT_VEC4:		ImGui::DragInt4(shader->uniforms[i].name.c_str(), (int*)&shader->uniforms[i].vec4, 0.02f, 0.0f, 0.0f, "%.2f");						break;
-					case UniformType::FLOAT_VEC2:	ImGui::DragFloat2(shader->uniforms[i].name.c_str(), (float*)&shader->uniforms[i].vec2, 0.02f, 0.0f, 0.0f, "%.2f");					break;
-					case UniformType::FLOAT_VEC3:	ImGui::DragFloat3(shader->uniforms[i].name.c_str(), (float*)&shader->uniforms[i].vec3, 0.02f, 0.0f, 0.0f, "%.2f");					break;
-					case UniformType::FLOAT_VEC4:	ImGui::DragFloat4(shader->uniforms[i].name.c_str(), (float*)&shader->uniforms[i].vec4, 0.02f, 0.0f, 0.0f, "%.2f");					break;
-					case UniformType::MATRIX4:		ImGui::DragFloat4(shader->uniforms[i].name.c_str(), shader->uniforms[i].matrix4.ToEulerXYZ().ptr(), 0.02f, 0.0f, 0.0f, "%.2f");		break;
-					}
-				}
-
-				if (!cMaterial->GetShader()->uniforms.empty())
-				{
-					if (ImGui::Button("Save Uniforms"))
-					{
-						App->resourceManager->SaveResourceToLibrary(cMaterial->GetShader());
-					}
-				}
-			}
-			ImGui::Separator();
-
-			// --- TEXTURE DATA ---
-
-			/*if (allTextures.empty()) 
-				App->resourceManager->GetAllTextures(allTextures);
-			
-			if (texName == "NONE" && cMaterial->GetTexture())
-			{
-				texName = cMaterial->GetTexture()->GetAssetsFile();
-			}
-			if (ImGui::BeginCombo("Texture", texName.c_str(), ImGuiComboFlags_PopupAlignLeft))
-			{
-				for (uint i = 0; i < allTextures.size(); i++)
-				{
-					const bool selectedShader = (texName.c_str() == allTextures[i]->GetAssetsFile());
-					if (ImGui::Selectable(allTextures[i]->GetAssetsFile(), selectedShader))
-					{
-						cMaterial->SwapTexture(allTextures[i]);
-
-						texName = allTextures[i]->GetAssetsFile();
-					}
-				}
-				ImGui::EndCombo();
-			}*/
-
-			DisplayTextureData(cMaterial);
-
-			ImGui::Separator();
-
-			// --- MAIN MAPS ---
-			ImGui::TextColored(ImVec4(0.0f, 1.0f, 1.0f, 1.0f), "Main Maps:");
-
-			if (ImGui::Combo("Textures(WIP)", &mapToDisplay, "Diffuse\0Specular\0Ambient\0Height\0Normal\0"))
-			{
-				LOG("[SCENE] Changed to map %d", mapToDisplay);
-			}
-
-			bool useCheckeredTex = cMaterial->UseDefaultTexture();
-			if (ImGui::Checkbox("Use Default Texture", &useCheckeredTex))
-			{
-				cMaterial->SetUseDefaultTexture(useCheckeredTex);
-			}
-
-			// --- TEXTURE DISPLAY ---
-			TextureDisplay(cMaterial);
-		}
-		else
-		{
-			LOG("[ERROR] Could not get the Material Component from %s Game Object!", cMaterial->GetOwner()->GetName());
-		}
-
 		if (!show)
 		{
-			componentToDelete				= cMaterial;
-			showDeleteComponentPopup		= true;
+			componentToDelete			= cMaterial;
+			showDeleteComponentPopup	= true;
+
+			return;
 		}
+		
+		if (cMaterial == nullptr)
+		{
+			LOG("[ERROR] Could not get the Material Component from %s Game Object!", cMaterial->GetOwner()->GetName());
+			ImGui::Separator();
+			return;
+		}
+
+		// --- MATERIAL GENERAL SETTINGS ---
+		bool materialIsActive = cMaterial->IsActive();
+		if (ImGui::Checkbox("Material Is Active", &materialIsActive))	{ cMaterial->SetIsActive(materialIsActive); }
+
+		ImGui::Separator();
+
+		// --- MATERIAL ---
+		ImGui::Separator();
+		ImGui::Separator();
+		
+		ImGui::TextColored(Cyan.C_Array(), "Material:");
+		
+		DisplayMaterial(cMaterial);
+
+		ImGui::Separator();
+
+		// --- SHADER ---
+		ImGui::Separator();
+		ImGui::Separator();
+		
+		ImGui::TextColored(Cyan.C_Array(), "Shader:");
+
+		DisplayShader(cMaterial);
+
+		ImGui::Separator();
+
+		// --- TEXTURE ---
+		ImGui::Separator();
+
+		ImGui::TextColored(Cyan.C_Array(), "Texture:");
+		
+		DisplayTexture(cMaterial);
 
 		ImGui::Separator();
 	}
@@ -2092,32 +1986,244 @@ void E_Inspector::DrawBasicSettings(Component* component, const char* state)
 	ImGui::Separator();
 }
 
+void E_Inspector::DisplayMeshSelector(C_Mesh* cMesh, std::map<std::string, ResourceBase>& meshBases)
+{
+	if (ImGui::BeginCombo("Select Mesh", cMesh->GetMeshFile(), ImGuiComboFlags_None))
+	{
+		if (meshBases.empty())																									// Convoluted and overengineered, but it works :).
+		{
+			std::vector<ResourceBase> rBases;
+			App->resourceManager->GetResourceBases<R_Mesh>(rBases);
+
+			for (auto base = rBases.cbegin(); base != rBases.cend(); ++base)
+			{
+				meshBases.emplace((*base).assetsFile, *base);																	// std::map will sort the bases by Alphabetical Order.
+			}
+
+			rBases.clear();
+		}
+			
+		for (auto mesh = meshBases.cbegin(); mesh != meshBases.cend(); ++mesh)
+		{
+			if (ImGui::Selectable(mesh->first.c_str(), (mesh->first == cMesh->GetMeshFile())))
+			{	
+				bool success = App->resourceManager->AllocateResource(mesh->second.UID, mesh->second.assetsPath.c_str());
+				if (success) { cMesh->SetMesh((R_Mesh*)App->resourceManager->RequestResource(mesh->second.UID)); }
+
+				meshBases.clear();
+
+				break;
+			}
+		}
+		
+		ImGui::EndCombo();
+	}
+}
+
+void E_Inspector::DisplayMaterial(C_Material* cMaterial)
+{
+	Color color = cMaterial->GetMaterialColour();
+	static std::map<std::string, ResourceBase> materialBases;
+
+	// --- MATERIAL SELECTOR ---
+	ImGui::Separator();
+	
+	DisplayMaterialSelector(cMaterial, materialBases);
+
+	ImGui::Separator();
+
+	// --- MATERIAL COLOR & ALPHA ---
+	ImGui::TextColored(Green.C_Array(), "Material Data:");
+
+	if (ImGui::ColorEdit3("Diffuse Color", (float*)&color, ImGuiColorEditFlags_NoAlpha))	{ cMaterial->SetMaterialColour(color); }
+	if (ImGui::SliderFloat("Diffuse Alpha", (float*)&color.a, 0.0f, 1.0f, "%.3f"))			{ cMaterial->SetMaterialColour(color); }
+	
+	if (ImGui::Button("Save Material"))														{ /*App->resourceManager->SaveResourceToLibrary((Resource*)cMaterial->GetMaterial());*/ }
+}
+
+void E_Inspector::DisplayMaterialSelector(C_Material* cMaterial, std::map<std::string, ResourceBase>& materialBases)
+{
+	if (ImGui::BeginCombo("Select Material", "[SELECT MATERIAL]"))
+	{
+		ImGui::EndCombo();
+	}
+}
+
+void E_Inspector::DisplayShader(C_Material* cMaterial)
+{
+	static std::map<std::string, ResourceBase> shaderBases;
+
+	R_Shader* shader = cMaterial->GetShader();
+	if (cMaterial->GetShader() == nullptr)
+	{
+		return;
+	}
+
+	// --- SHADER SELECTOR ---
+	ImGui::Separator();
+	
+	DisplayShaderSelector(cMaterial, shaderBases);
+
+	if (ImGui::Button("Edit Shader")) { CallTextEditor(cMaterial); }
+	
+	ImGui::Separator();
+
+	// --- SHADER DATA ---
+	if (!cMaterial->GetShader()->uniforms.empty())
+	{
+		if (ImGui::TreeNodeEx("Shader Data:"))
+		{
+			for (uint i = 0; i < shader->uniforms.size(); i++)
+			{
+				switch (shader->uniforms[i].uniformType)
+				{
+				case UniformType::INT:			ImGui::DragInt(shader->uniforms[i].name.c_str(), &shader->uniforms[i].integer, 0.02f, 0.0f, 0.0f, "%.2f");							break;
+				case UniformType::FLOAT:		ImGui::DragFloat(shader->uniforms[i].name.c_str(), &shader->uniforms[i].floatNumber, 0.02f, 0.0f, 0.0f, "%.2f");					break;
+				case UniformType::INT_VEC2:		ImGui::DragInt2(shader->uniforms[i].name.c_str(), (int*)&shader->uniforms[i].vec2, 0.02f, 0.0f, 0.0f, "%.2f");						break;
+				case UniformType::INT_VEC3:		ImGui::DragInt3(shader->uniforms[i].name.c_str(), (int*)&shader->uniforms[i].vec3, 0.02f, 0.0f, 0.0f, "%.2f");						break;
+				case UniformType::INT_VEC4:		ImGui::DragInt4(shader->uniforms[i].name.c_str(), (int*)&shader->uniforms[i].vec4, 0.02f, 0.0f, 0.0f, "%.2f");						break;
+				case UniformType::FLOAT_VEC2:	ImGui::DragFloat2(shader->uniforms[i].name.c_str(), (float*)&shader->uniforms[i].vec2, 0.02f, 0.0f, 0.0f, "%.2f");					break;
+				case UniformType::FLOAT_VEC3:	ImGui::DragFloat3(shader->uniforms[i].name.c_str(), (float*)&shader->uniforms[i].vec3, 0.02f, 0.0f, 0.0f, "%.2f");					break;
+				case UniformType::FLOAT_VEC4:	ImGui::DragFloat4(shader->uniforms[i].name.c_str(), (float*)&shader->uniforms[i].vec4, 0.02f, 0.0f, 0.0f, "%.2f");					break;
+				case UniformType::MATRIX4:		ImGui::DragFloat4(shader->uniforms[i].name.c_str(), shader->uniforms[i].matrix4.ToEulerXYZ().ptr(), 0.02f, 0.0f, 0.0f, "%.2f");		break;
+				}
+			}
+
+			ImGui::TreePop();
+		}
+		
+		if (ImGui::Button("Save Uniforms"))
+		{
+			App->resourceManager->SaveResourceToLibrary(cMaterial->GetShader());
+		}
+	}
+}
+
+void E_Inspector::DisplayShaderSelector(C_Material* cMaterial, std::map<std::string, ResourceBase>& shaderBases)
+{
+	const char* currentShaderName = (cMaterial->GetShader() != nullptr) ? cMaterial->GetShader()->GetAssetsFile() : "[NONE]";
+	
+	if (ImGui::BeginCombo("Select Shader", cMaterial->GetShader()->GetAssetsFile(), ImGuiComboFlags_PopupAlignLeft))
+	{
+		if (shaderBases.empty())
+		{
+			std::vector<ResourceBase> rBases;
+			App->resourceManager->GetResourceBases<R_Shader>(rBases);
+
+			for (auto base = rBases.cbegin(); base != rBases.cend(); ++base)
+			{
+				shaderBases.emplace((*base).assetsFile.c_str(), *base);
+			}
+
+			rBases.clear();
+		}
+		
+		for (auto shader = shaderBases.cbegin(); shader != shaderBases.cend(); ++shader)
+		{
+			if (ImGui::Selectable(shader->first.c_str(), (shader->first == cMaterial->GetShader()->GetAssetsFile())))
+			{
+				cMaterial->SetShader(App->resourceManager->GetResource<R_Shader>(shader->second.assetsPath.c_str()));
+
+				shaderBases.clear();
+
+				break;
+			}
+		}
+
+		ImGui::EndCombo();
+	}
+}
+
+void E_Inspector::DisplayTexture(C_Material* cMaterial)
+{
+	static std::map<std::string, ResourceBase> textureBases;
+	
+	static int mapToDisplay = 0;
+	
+	bool useCheckeredTex	= cMaterial->UseDefaultTexture();
+	
+	// --- TEXTURE SELECTOR ---
+	ImGui::Separator();
+
+	DisplayTextureSelector(cMaterial, textureBases);
+
+	ImGui::Separator();
+
+	// --- TEXTURE DATA ---
+	DisplayTextureData(cMaterial);
+
+	ImGui::Separator();
+
+	// --- TEXTURE MAPS ---
+	ImGui::TextColored(Green.C_Array(), "Maps:");
+
+	if (ImGui::Combo("Textures(WIP)", &mapToDisplay, "Diffuse\0Specular\0Ambient\0Height\0Normal\0"))	{ LOG("[SCENE] Changed to map %d", mapToDisplay); }
+	if (ImGui::Checkbox("Use Default Texture", &useCheckeredTex))										{ cMaterial->SetUseDefaultTexture(useCheckeredTex); }
+
+	// --- TEXTURE DISPLAY ---
+	TextureImageDisplay(cMaterial);
+}
+
+void E_Inspector::DisplayTextureSelector(C_Material* cMaterial, std::map<std::string, ResourceBase>& textureBases)
+{
+	if (ImGui::BeginCombo("Select Texture", cMaterial->GetTextureFile(), ImGuiComboFlags_None))
+	{
+		if (textureBases.empty())
+		{
+			std::vector<ResourceBase> rBases;
+			App->resourceManager->GetResourceBases<R_Texture>(rBases);
+
+			for (auto base = rBases.cbegin(); base != rBases.cend(); ++base)
+			{
+				textureBases.emplace((*base).assetsFile.c_str(), *base);
+			}
+
+			rBases.clear();
+		}
+
+		for (auto texture = textureBases.cbegin(); texture != textureBases.cend(); ++texture)
+		{
+			if (ImGui::Selectable(texture->first.c_str(), (texture->first == cMaterial->GetTextureFile())))
+			{
+				bool success = App->resourceManager->AllocateResource(texture->second.UID, texture->second.assetsPath.c_str());
+				cMaterial->SetTexture((R_Texture*)App->resourceManager->RequestResource(texture->second.UID));
+
+				textureBases.clear();
+
+				break;
+			}
+		}
+
+		ImGui::EndCombo();
+	}
+}
+
 void E_Inspector::DisplayTextureData(C_Material* cMaterial)
 {
-	ImGui::TextColored(ImVec4(0.0f, 1.0f, 1.0f, 1.0f), "Texture Data:");
+	ImGui::TextColored(Green.C_Array(), "Texture Data:");
 
-	uint id					= 0;
-	uint width				= 0;
-	uint height				= 0;
-	uint depth				= 0;
-	uint bpp				= 0;
-	uint size				= 0;
-	std::string format		= "NONE";
-	bool compressed			= 0;
+	static uint id				= 0;
+	static uint width			= 0;
+	static uint height			= 0;
+	static uint depth			= 0;
+	static uint bpp				= 0;
+	static uint size			= 0;
+	static std::string format	= "[NONE]";
+	static bool compressed		= 0;
 
 	cMaterial->GetTextureInfo(id, width, height, depth, bpp, size, format, compressed);
 
-	ImGui::Text("Texture ID:");		ImGui::SameLine(); ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%u", id);
-	ImGui::Text("Width:");			ImGui::SameLine(); ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "     %upx", width);
-	ImGui::Text("Height:");			ImGui::SameLine(); ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "    %upx", height);
-	ImGui::Text("Depth:");			ImGui::SameLine(); ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "     %u", depth);
+	ImGui::Text("Texture ID:");		ImGui::SameLine(); ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%u",			id);
+	ImGui::Text("Width:");			ImGui::SameLine(); ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "     %upx",	width);
+	ImGui::Text("Height:");			ImGui::SameLine(); ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "    %upx",	height);
+	ImGui::Text("Depth:");			ImGui::SameLine(); ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "     %u",	depth);
 	ImGui::Text("Bpp:");			ImGui::SameLine(); ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "       %uB", bpp);
-	ImGui::Text("Size:");			ImGui::SameLine(); ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "      %uB", size);
-	ImGui::Text("Format:");			ImGui::SameLine(); ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "    %s", format.c_str());
-	ImGui::Text("Compressed:");		ImGui::SameLine(); ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%s", compressed ? "True" : "False");
+	ImGui::Text("Size:");			ImGui::SameLine(); ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "      %uB",	size);
+	ImGui::Text("Format:");			ImGui::SameLine(); ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "    %s",		format.c_str());
+	ImGui::Text("Compressed:");		ImGui::SameLine(); ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%s",			compressed ? "True" : "False");
 }
 
-void E_Inspector::TextureDisplay(C_Material* cMaterial)
+void E_Inspector::TextureImageDisplay(C_Material* cMaterial)
 {
 	ImTextureID texId		= 0;
 	ImVec2 displaySize		= { ImGui::GetWindowWidth() * 0.925f , ImGui::GetWindowWidth() * 0.925f };		// Display Size will be 7.5% smaller than the Window Width.
@@ -2173,7 +2279,6 @@ void E_Inspector::DisplayAnimatorControls(C_Animator* cAnimator)
 	if (clipWasDeleted)
 	{
 		currentClip		= nullptr;
-
 		clipWasDeleted	= false;
 	}
 
