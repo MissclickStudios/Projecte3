@@ -6,18 +6,17 @@
 
 #include "C_BoxCollider.h"
 
-#include "ExplosiveBarrel.h"
+#include "SarlaacTrap.h"
 
-ExplosiveBarrel::ExplosiveBarrel() : Object()
-{
-	baseType = ObjectType::EXPLOSIVE_BARREL;
-}
-
-ExplosiveBarrel::~ExplosiveBarrel()
+SarlaacTrap::SarlaacTrap() : Script()
 {
 }
 
-void ExplosiveBarrel::Start()
+SarlaacTrap::~SarlaacTrap()
+{
+}
+
+void SarlaacTrap::Start()
 {
 	gameManager = App->scene->GetGameObjectByName(gameManagerName.c_str());
 	explosionObject = gameObject->FindChild(explosionObjectName.c_str());
@@ -26,14 +25,14 @@ void ExplosiveBarrel::Start()
 
 }
 
-void ExplosiveBarrel::Update()
+void SarlaacTrap::Update()
 {
 	if (exploded)
 	{
 		//deactivate mesh, trigger
-		//barrelCollider->SetIsActive(false);
+		barrelCollider->SetIsActive(false);
 		barrelCollider->SetSize(barrelColliderSize);
-		
+
 		exploded = false;
 		//play particles
 	}
@@ -41,9 +40,8 @@ void ExplosiveBarrel::Update()
 	if (toExplode)
 	{
 		//Activate explosion collider
-		
+
 		barrelCollider->SetIsActive(true);
-		barrelCollider->SetSize(explosionTriggerSize);
 
 		exploded = true;
 		toExplode = false;
@@ -51,22 +49,22 @@ void ExplosiveBarrel::Update()
 
 }
 
-void ExplosiveBarrel::CleanUp()
+void SarlaacTrap::CleanUp()
 {
 }
 
-void ExplosiveBarrel::OnCollisionEnter(GameObject* object)
+void SarlaacTrap::OnCollisionEnter(GameObject* object)
 {
 	if (GetObjectScript(object, ObjectType::BULLET) != nullptr)
 	{
 		toExplode = true;
 		barrelCollider->SetTrigger(true);
-		barrelCollider->SetIsActive(false);
-		
+		//barrelCollider->SetIsActive(false);
+		barrelCollider->SetSize(explosionTriggerSize);
 	}
 }
 
-void ExplosiveBarrel::OnTriggerRepeat(GameObject* object)
+void SarlaacTrap::OnTriggerRepeat(GameObject* object)
 {
 	Entity* entity = (Entity*)GetObjectScript(object, ObjectType::ENTITY);
 

@@ -34,6 +34,9 @@
     <Filter Include="Objects\Helpers">
       <UniqueIdentifier>{d4ef07aa-fbf4-4688-b038-6bc8239b8903}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Objects\Environment">
+      <UniqueIdentifier>{92fbfe23-e66f-4181-9c66-5f899cf2b851}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Scripts\Headers\ScriptMacros.h">
@@ -130,7 +133,10 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\Assets\Scripts\ExplosiveBarrel.h">
-      <Filter>Header Files</Filter>
+      <Filter>Objects\Environment</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Assets\Scripts\SarlaacTrap.h">
+      <Filter>Objects\Environment</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -216,7 +222,10 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Scripts\Cpps\ExplosiveBarrel.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Objects\Environment</Filter>
+    </ClCompile>
+    <ClCompile Include="Scripts\Cpps\SarlaacTrap.cpp">
+      <Filter>Objects\Environment</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -1,4 +1,3 @@
-
 #include "Script.h"
 #include "ScriptMacros.h"
 #include "MathGeoLib/include/Math/float3.h"
@@ -6,10 +5,10 @@
 class GameObject;
 class C_BoxCollider;
 
-class SCRIPTS_API ExplosiveBarrel : public Object ALLOWED_INHERITANCE {
+class SCRIPTS_API SarlaacTrap : public Script {
 public:
-	ExplosiveBarrel();
-	~ExplosiveBarrel();
+	SarlaacTrap();
+	~SarlaacTrap();
 
 	void Start()override;
 	void Update() override;
@@ -31,13 +30,13 @@ private:
 	GameObject* gameManager = nullptr;
 	GameObject* explosionObject = nullptr;
 	C_BoxCollider* barrelCollider = nullptr;
-	
+
 	bool toExplode = false;
 	bool exploded = false;
 };
 
-SCRIPTS_FUNCTION ExplosiveBarrel* CreateExplosiveBarrel() {
-	ExplosiveBarrel* script = new ExplosiveBarrel();
+SCRIPTS_FUNCTION SarlaacTrap* CreateSarlaacTrap() {
+	SarlaacTrap* script = new SarlaacTrap();
 	INSPECTOR_STRING(script->gameManagerName);
 	INSPECTOR_STRING(script->explosionObjectName);
 	INSPECTOR_INPUT_FLOAT3(script->barrelColliderSize);
