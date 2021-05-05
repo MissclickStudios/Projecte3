@@ -5,6 +5,7 @@
 
 #include <string>
 #include <vector>
+#include <unordered_map>
 
 #define DEFAULT_MODIFIER 1.0f
 
@@ -17,7 +18,6 @@ class C_Material;
 class C_AudioSource;
 
 class C_ParticleSystem;
-class EmitterInstance;
 
 enum class EntityType
 {
@@ -100,7 +100,13 @@ public:
 	C_AudioSource* walkAudio = nullptr;
 	C_AudioSource* damageAudio = nullptr;
 
+	// Particles
+	std::vector<std::string> particleNames;
+
 protected:
+
+	// Particles
+	C_ParticleSystem* GetParticles(std::string particleName);
 
 	// Movement
 	C_RigidBody* rigidBody = nullptr;
@@ -108,11 +114,6 @@ protected:
 	// Animations
 	C_Animator* animator = nullptr;
 	AnimationInfo* currentAnimation = nullptr;
-
-	// Particles
-	C_ParticleSystem* particles = nullptr;
-	
-	EmitterInstance* hitParticles = nullptr;
 
 	//Material
 	C_Material* material = nullptr;
@@ -126,4 +127,9 @@ protected:
 
 	// Audio
 	Timer stepTimer;
+
+private:
+
+	// Particles
+	std::unordered_map<std::string, C_ParticleSystem*> particles;
 };

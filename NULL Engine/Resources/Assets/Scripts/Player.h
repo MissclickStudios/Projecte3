@@ -131,8 +131,6 @@ private:
 	Timer dashTimer;
 	Timer dashCooldownTimer;
 
-	EmitterInstance* dashParticles = nullptr;
-
 	// Invencibility frames
 	Timer invencibilityTimer;
 
