@@ -33,7 +33,7 @@ struct RecastMesh {
 	unsigned char area;
 };
 
-class NULL_API InputGeom {
+class MISSCLICK_API InputGeom {
 public:
 	/**
 	*Create recast compatible inputgeom from the specified entities.The entities have to be added to the

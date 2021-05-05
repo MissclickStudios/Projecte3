@@ -118,7 +118,7 @@ bool M_Detour::createNavMesh(dtNavMeshCreateParams* params)
 		std::string resourceName = App->scene->GetCurrentScene();
 		resourceName = ASSETS_NAVIGATION_PATH + resourceName + NAVMESH_AST_EXTENSION;
 
-		navMeshResource = (R_NavMesh*)App->resourceManager->CreateResource(ResourceType::NAVMESH_AGENT, resourceName.c_str());
+		navMeshResource = (R_NavMesh*)App->resourceManager->CreateResource(ResourceType::NAVMESH, resourceName.c_str());
 
 		navMeshResource->SetNavMeshName(App->scene->GetCurrentScene());
 	}
@@ -414,7 +414,7 @@ void M_Detour::allocateNavMesh()
 		std::string resourceName = App->scene->GetCurrentScene();
 		resourceName = ASSETS_NAVIGATION_PATH + resourceName + NAVMESH_AST_EXTENSION;
 
-		navMeshResource = (R_NavMesh*)App->resourceManager->CreateResource(ResourceType::NAVMESH_AGENT, resourceName.c_str());
+		navMeshResource = (R_NavMesh*)App->resourceManager->CreateResource(ResourceType::NAVMESH, resourceName.c_str());
 		navMeshResource->SetNavMeshName(App->scene->GetCurrentScene());
 	}
 

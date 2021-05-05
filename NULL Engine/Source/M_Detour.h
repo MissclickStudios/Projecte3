@@ -31,7 +31,7 @@ enum PolyFlags {
 	POLYFLAGS_ALL = 0xffffff      // All abilities.
 };
 
-struct NULL_API navigationPoly {
+struct MISSCLICK_API navigationPoly {
 	navigationPoly();
 	~navigationPoly();
 
@@ -39,7 +39,7 @@ struct NULL_API navigationPoly {
 	Color color;
 };
 
-class NULL_API M_Detour : public Module
+class MISSCLICK_API M_Detour : public Module
 {
 	friend class M_Recast;
 public:

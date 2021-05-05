@@ -8,7 +8,7 @@
 
 class dtNavMesh;
 
-class NULL_API R_NavMesh : public Resource
+class MISSCLICK_API R_NavMesh : public Resource
 {
 	friend class M_Detour;
 public:
