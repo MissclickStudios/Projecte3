@@ -4,6 +4,8 @@
 #include "Macros.h"
 #include "Resource.h"
 
+#include <string>
+
 class dtNavMesh;
 
 class NULL_API R_NavMesh : public Resource
@@ -18,9 +20,13 @@ public:
 	bool SaveMeta(ParsonNode& metaRoot) const override;
 	bool LoadMeta(const ParsonNode& metaRoot) override;
 
+	void SetNavMeshName(const char* newName);
+	const char* GetNavMeshName();
+
 public:
 
-	dtNavMesh* navMesh;
+	std::string navMeshName = "";
+ 	dtNavMesh* navMesh = nullptr;
 
 };
 

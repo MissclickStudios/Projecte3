@@ -10,14 +10,14 @@
 
 bool Importer::Navigation::Import(const char* buffer, R_NavMesh* rNavMesh)
 {
-
+	Load(buffer, rNavMesh);
 	return true;
 }
 
 uint Importer::Navigation::Save(const R_NavMesh* rNavMesh, char** buffer)
 {
 	uint written = 0;
-
+	
 	uint size = 0;
 	char* cursor = nullptr;
 	NavMeshSetHeader* header = new NavMeshSetHeader();
@@ -66,11 +66,65 @@ uint Importer::Navigation::Save(const R_NavMesh* rNavMesh, char** buffer)
 	std::string path = NAVIGATION_PATH + std::to_string(rNavMesh->GetUID()) + NAVMESH_EXTENSION;
 	written = App->fileSystem->Save(path.c_str(), *buffer, size);
 
+	std::string pathAss = ASSETS_NAVIGATION_PATH + rNavMesh->navMeshName + NAVMESH_AST_EXTENSION;
+	App->fileSystem->Save(pathAss.c_str(), *buffer, size);
+
 	return written;
 }
 
 bool Importer::Navigation::Load(const char* buffer, R_NavMesh* rNavMesh)
 {
+	bool ret = true;
+	
+	char* cursor = (char*)buffer;
+	// Read header.
+	NavMeshSetHeader header;
+	errno_t readRes = memcpy_s(&header, sizeof(NavMeshSetHeader), cursor, sizeof(NavMeshSetHeader));
+	cursor += sizeof(NavMeshSetHeader);
 
-	return true;
+	if (readRes != 0)
+		return false;
+
+	if (header.magic != NAVMESHSET_MAGIC)
+		return false;
+
+	if (header.version != NAVMESHSET_VERSION)
+		return false;
+
+	rNavMesh->navMesh = dtAllocNavMesh();
+	if (!rNavMesh->navMesh)
+		return false;
+
+	dtNavMeshParams params;
+	memcpy(&params, &header.params, sizeof(dtNavMeshParams));
+
+	dtStatus status = rNavMesh->navMesh->init(&params);
+	if (dtStatusFailed(status))
+		return false;
+
+	// Read tiles.
+	for (int i = 0; i < header.numTiles; ++i) {
+		NavMeshTileHeader tileHeader;
+		readRes = memcpy_s(&tileHeader, sizeof(NavMeshTileHeader), cursor, sizeof(NavMeshTileHeader));
+		cursor += sizeof(NavMeshTileHeader);
+		if (readRes != 0)
+			return false;
+
+		if (!tileHeader.tileRef || !tileHeader.dataSize)
+			break;
+
+		unsigned char* data = (unsigned char*)dtAlloc(tileHeader.dataSize, DT_ALLOC_PERM);
+		if (!data) break;
+		memset(data, 0, tileHeader.dataSize);
+		readRes = memcpy_s(data, tileHeader.dataSize, cursor, tileHeader.dataSize);
+		cursor += tileHeader.dataSize;
+		if (readRes != 0) {
+			dtFree(data);
+			return false;
+		}
+
+		rNavMesh->navMesh->addTile(data, tileHeader.dataSize, DT_TILE_FREE_DATA, tileHeader.tileRef, 0);
+	}
+
+	return ret;
 }

@@ -53,7 +53,7 @@ public:
 	void setDebugDraw(bool state);
 
 	bool createNavMesh(dtNavMeshCreateParams* params);
-	void loadNavMeshFile(unsigned int UID);
+	void loadNavMeshFile(unsigned int navMeshUid, const char* navMeshPath);
 
 	void deleteNavMesh();
 	void clearNavMesh();
@@ -66,6 +66,7 @@ public:
 	// Will write the path to variable path, return number of verts
 	int calculatePath(float3 sourcePosition, float3 destination, int areaMask, std::vector<float3>& path);
 	bool nearestPosInMesh(float3 sourcePosition, int areaMask, float3& nearestPoint);
+
 
 	void setDefaultValues();
 	void setDefaultBakeValues();
