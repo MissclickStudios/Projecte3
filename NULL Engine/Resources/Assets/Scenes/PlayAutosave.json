@@ -717,6 +717,83 @@
             ]
         },
         {
+            "UID": 276608581,
+            "ParentUID": 1560690647,
+            "PrefabID": 202576878,
+            "IsPrefab": true,
+            "Name": "barrel_mesh",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        -0.70710664987564087,
+                        0,
+                        0,
+                        0.70710694789886475
+                    ],
+                    "LocalScale": [
+                        0.20000000298023224,
+                        0.19999997317790985,
+                        0.19999997317790985
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 328036877,
+                    "Name": "barrel 2.nemesh",
+                    "Path": "Library\/Meshes\/328036877.nemesh",
+                    "File": "328036877.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false,
+                    "Outline": false,
+                    "OutlineThickness": -2147483648,
+                    "OutlineColor": [
+                        0,
+                        0,
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 1914311419,
+                        "Color": [
+                            0.80000001192092896,
+                            0.80000001192092896,
+                            0.80000001192092896,
+                            1
+                        ],
+                        "Name": "barrel 2.nemat",
+                        "Path": "Library\/Materials\/1914311419.nemat",
+                        "File": "1914311419.nemat"
+                    },
+                    "Texture": {
+                        "AssetsPath": "Assets\/Textures\/\/Props\/explosivebarrel_arvala_v2.png",
+                        "AssetsName": "explosivebarrel_arvala_v2.png",
+                        "LibaryPath": "Library\/Textures\/1724793512.netex",
+                        "LibraryFile": "1724793512.netex"
+                    },
+                    "Shader": {
+                        "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
+                        "AssetsName": "DefaultShader.shader",
+                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
+                        "LibraryFile": "800223282.neshader"
+                    }
+                }
+            ]
+        },
+        {
             "UID": 284735132,
             "ParentUID": 1027556786,
             "PrefabID": 1524961430,
@@ -2511,7 +2588,7 @@
         },
         {
             "UID": 1474137658,
-            "ParentUID": 1218813402,
+            "ParentUID": 1560409542,
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "MainScene",
@@ -2734,6 +2811,93 @@
                     "Size Z": 50,
                     "Center X": 0,
                     "Center Y": 0,
+                    "Center Z": 0
+                }
+            ]
+        },
+        {
+            "UID": 1560690647,
+            "ParentUID": 1474137658,
+            "PrefabID": 202576878,
+            "IsPrefab": true,
+            "Name": "Explosive barrel",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": true,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        7.9907040596008301,
+                        2.1177854537963867,
+                        -10.799300193786621
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 24,
+                    "ResourceUID": 128210617,
+                    "AssetsPath": "Assets\/Scripts\/\/ExplosiveBarrel.h",
+                    "DataName": "ExplosiveBarrel",
+                    "HasInspector": true,
+                    "InspectorVariables": [
+                        {
+                            "Type": 5,
+                            "Name": "gameManagerName",
+                            "string": ""
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "explosionObjectName",
+                            "string": "Explosion"
+                        },
+                        {
+                            "Type": 3,
+                            "Name": "barrelColliderSize",
+                            "float3x": 5,
+                            "float3y": 5,
+                            "float3z": 5
+                        },
+                        {
+                            "Type": 3,
+                            "Name": "explosionTriggerSize",
+                            "float3x": 20,
+                            "float3y": 10,
+                            "float3z": 20
+                        },
+                        {
+                            "Type": 0,
+                            "Name": "damage",
+                            "int": 1
+                        }
+                    ]
+                },
+                {
+                    "Type": 8,
+                    "Is Static": true,
+                    "Filter": " void"
+                },
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 5,
+                    "Size Y": 10,
+                    "Size Z": 5,
+                    "Center X": 0,
+                    "Center Y": 5,
                     "Center Z": 0
                 }
             ]
@@ -3611,6 +3775,39 @@
                         "LibaryPath": "Library\/Shaders\/1025410539.neshader",
                         "LibraryFile": "1025410539.neshader"
                     }
+                }
+            ]
+        },
+        {
+            "UID": 2117272972,
+            "ParentUID": 1560690647,
+            "PrefabID": 202576878,
+            "IsPrefab": true,
+            "Name": "Explosion",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
                 }
             ]
         }

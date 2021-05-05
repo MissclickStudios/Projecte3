@@ -31,9 +31,8 @@ void ExplosiveBarrel::Update()
 	if (exploded)
 	{
 		//deactivate mesh, trigger
-		//barrelCollider->SetIsActive(false);
-		barrelCollider->SetSize(barrelColliderSize);
-		
+		barrelCollider->SetIsActive(false);
+
 		exploded = false;
 		//play particles
 	}
@@ -41,9 +40,6 @@ void ExplosiveBarrel::Update()
 	if (toExplode)
 	{
 		//Activate explosion collider
-		
-		barrelCollider->SetIsActive(true);
-		barrelCollider->SetSize(explosionTriggerSize);
 
 		exploded = true;
 		toExplode = false;
@@ -61,8 +57,7 @@ void ExplosiveBarrel::OnCollisionEnter(GameObject* object)
 	{
 		toExplode = true;
 		barrelCollider->SetTrigger(true);
-		barrelCollider->SetIsActive(false);
-		
+		barrelCollider->SetSize(explosionTriggerSize);
 	}
 }
 
