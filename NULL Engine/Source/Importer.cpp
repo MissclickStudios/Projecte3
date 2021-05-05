@@ -20,6 +20,7 @@
 #include "I_Shaders.h"
 #include "I_Particles.h"
 //#include "I_Scripts.h"
+#include "I_Navigation.h"
 
 #include "Importer.h"
 
@@ -91,9 +92,9 @@ bool Importer::ImportNavMesh(const char* buffer, R_NavMesh* rNavMesh)
 {
 	FindAndForceUID((Resource*)rNavMesh);
 
-	/*bool success = Importer::Navigation::Import(buffer, rNavMesh);*/
+	bool success = Importer::Navigation::Import(buffer, rNavMesh);
 
-	return /*(success && rNavMesh != nullptr)*/ true;
+	return (success && rNavMesh != nullptr);
 }
 
 void Importer::FindAndForceUID(Resource* resource)

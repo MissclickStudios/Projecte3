@@ -13,6 +13,7 @@
 #include "M_UISystem.h"
 #include "M_ScriptManager.h"
 #include "M_GameManager.h"
+#include "M_Detour.h"
 
 #include "EngineMain.h"
 
@@ -32,9 +33,9 @@ GameApplication::GameApplication()
 	manager = new M_GameManager();
 	scriptManager = new M_ScriptManager();
 
-	//12 = num of modules to pushback
-	//if you create or remove 1 module change the 12 accordingly
-	modules.reserve(12);
+	//13 = num of modules to pushback
+	//if you create or remove 1 module change the 13 accordingly
+	modules.reserve(13);
 
 	// Main Modules
 	AddModule(window);
@@ -50,6 +51,7 @@ GameApplication::GameApplication()
 	AddModule(physics);
 	AddModule(uiSystem);
 	AddModule(scene);
+	AddModule(detour);
 
 	// Renderer last!
 	AddModule(renderer);

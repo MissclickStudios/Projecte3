@@ -20,6 +20,7 @@
 #include "M_ResourceManager.h"											
 #include "M_Editor.h"													
 #include "M_Scene.h"
+#include "M_Detour.h"
 
 #include "R_Mesh.h"														
 #include "R_Material.h"													

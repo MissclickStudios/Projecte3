@@ -15,6 +15,7 @@
 #include "M_Editor.h"
 #include "M_ResourceManager.h"
 #include "M_UISystem.h"
+#include "M_Detour.h"
 
 #include "ResourceBase.h"
 #include "Resource.h"
@@ -22,6 +23,7 @@
 #include "R_Mesh.h"
 #include "R_Texture.h"
 #include "R_Scene.h"
+#include "R_NavMesh.h"
 
 #include "GameObject.h"
 #include "Component.h"
@@ -262,6 +264,12 @@ bool M_Scene::SaveScene(const char* sceneName) const
 
 	if (!strcmp(sceneName,AUTOSAVE_FILE_NAME))
 		rootNode.SetString("Autosaved Sene Name", currentScene.c_str());
+		
+	ParsonNode navMeshNode = rootNode.SetNode("NavMesh");
+	R_NavMesh* navMeshResource = (R_NavMesh*)App->detour->getNavMeshResource() ;
+	
+	navMeshNode.SetNumber("UID", (navMeshResource != nullptr) ? navMeshResource->GetUID() : 0);
+	navMeshNode.SetString("Assets Path", (navMeshResource != nullptr) ? navMeshResource->GetAssetsPath() : "[NONE]");
 
 	char* buffer		= nullptr;
 	std::string name	= (sceneName != nullptr) ? sceneName : sceneRoot->GetName();
@@ -454,6 +462,13 @@ bool M_Scene::LoadScene(const char* path)
 		
 		tmp.clear();
 		App->renderer->ClearRenderers();
+
+		//Nav Mesh
+		ParsonNode navMeshNode = newRoot.GetNode("NavMesh");
+		uint navMeshUid = navMeshNode.GetNumber("UID");
+		std::string navMeshPath = navMeshNode.GetString("Assets Path");
+
+		App->detour->loadNavMeshFile(navMeshUid, navMeshPath.c_str());
 	}
 
 	for (auto p = prefabsToDelete.begin(); p != prefabsToDelete.end(); ++p)

@@ -4,6 +4,7 @@
 #include "Application.h"
 
 class M_Editor;
+class M_Recast;
 
 class EngineApplication : public /*EngineNamespace::*/Application {
 
@@ -17,6 +18,7 @@ public:
 
 public:
 	class M_Editor* editor;
+	class M_Recast* recast;
 };
 
 extern EngineApplication* EngineApp;

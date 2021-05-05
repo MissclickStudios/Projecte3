@@ -190,6 +190,10 @@ public:
 	bool			isPrefab = false;																	// Defines if the object is part of a prefav
 	uint			prefabID = 0;																		// Id of the prefab the game object is part of
 
+	//Navigation
+	uint			navigationArea = 0;																	// Describes the navigation of the current game object
+	bool			isNavigable = false;																// Defines is the object is navigable.
+
 private:
 	uint32			uid;																				// Unique IDentifier of this GameObject.
 	std::string		name;																				// Name of this GameObject.
@@ -199,6 +203,8 @@ private:
 	uint32			parent_uid;																			// Only for Serialization purposes. Maybe will be repurposed later.
 
 	bool			maintainThroughScenes;																// Will determine whether or not the GO will be deleted when changing scenes.
+
+
 
 };
 
