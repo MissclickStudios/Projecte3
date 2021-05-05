@@ -86,7 +86,25 @@ ShootState Weapon::Shoot(float2 direction)
 	ShootState state = ShootLogic();
 	if (state == ShootState::FIRED_PROJECTILE)
 	{
-		FireProjectile(direction);
+		if (projectilesPerShot > 1)
+		{
+			float newX = direction.x;
+			float newY = direction.y;
+			for (uint i = 0; i < projectilesPerShot; ++i)
+			{
+				FireProjectile(direction);
+				newX += shotSpreadArea;
+				newY += shotSpreadArea;
+
+				direction = float2(newX, newY);
+			}
+		}
+		else if (ammo != 0)
+		{
+			FireProjectile(direction);
+		}
+		
+		
 
 		ammo -= projectilesPerShot;
 		if (ammo < 0)

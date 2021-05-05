@@ -67,6 +67,7 @@ SCRIPTS_FUNCTION Blaster* CreateBlaster()
     // Projectiles
     INSPECTOR_DRAGABLE_INT(script->projectileNum);
     INSPECTOR_CHECKBOX_BOOL(script->updateProjectiles);
+    INSPECTOR_DRAGABLE_FLOAT(script->shotSpreadArea);
 
     return script;
 }

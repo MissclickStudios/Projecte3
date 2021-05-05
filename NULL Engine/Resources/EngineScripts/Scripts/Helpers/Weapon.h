@@ -85,6 +85,8 @@ public:
 	int MaxAmmo() { return maxAmmo + maxAmmoModifier; }
 	int projectilesPerShot = 0;
 
+	float shotSpreadArea;
+
 	// Reload
 	float reloadTime = 0.0f;
 	float ReloadTime() { return reloadTime / reloadTimeModifier; }
