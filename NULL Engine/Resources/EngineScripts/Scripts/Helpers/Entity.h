@@ -28,6 +28,12 @@ enum class EntityType
 	IG11
 };
 
+enum class EntityState
+{
+	NONE,
+	STUNED
+};
+
 class Entity : public Object
 {
 public:
@@ -40,7 +46,8 @@ public:
 	virtual void SetUp() = 0;
 	
 	void PreUpdate();
-	virtual void Update() = 0;
+	void Update();
+	virtual void Behavior() = 0;
 	void PostUpdate();
 	
 	virtual void CleanUp() = 0;
@@ -50,7 +57,7 @@ public:
 	// Interactions
 	virtual void TakeDamage(float damage);
 	virtual void GiveHeal(float amount);
-	Effect* AddEffect(EffectType type, float duration, bool permanent = false);
+	Effect* AddEffect(EffectType type, float duration, bool permanent = false, void* data = nullptr);
 	virtual void MoveTo(float3 position);
 	bool IsGrounded();
 	
@@ -93,6 +100,7 @@ public:
 
 	AnimationInfo idleAnimation = { "Idle" };
 	AnimationInfo deathAnimation = { "Death" };
+	AnimationInfo stunAnimation = { "Stun" };
 
 	Timer hitTimer;	
 
@@ -129,6 +137,8 @@ protected:
 	Timer stepTimer;
 
 private:
+
+	EntityState entityState = EntityState::NONE;
 
 	// Particles
 	std::unordered_map<std::string, C_ParticleSystem*> particles;

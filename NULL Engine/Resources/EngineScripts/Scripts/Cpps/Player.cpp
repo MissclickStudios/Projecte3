@@ -139,7 +139,7 @@ void Player::SetUp()
 	}
 }
 
-void Player::Update()
+void Player::Behavior()
 {
 	ManageMovement();
 	if (moveState != PlayerState::DEAD)

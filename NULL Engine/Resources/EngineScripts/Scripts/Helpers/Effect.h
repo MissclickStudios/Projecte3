@@ -9,6 +9,9 @@ enum class ENGINE_ENUM EffectType
 	NONE = 0,
 	FROZEN,
 	HEAL,
+	STUN,
+	KNOCKUP,
+	KNOCKBACK,
 	EFFECTS_NUM
 };
 // This has to be the last entry
@@ -19,7 +22,7 @@ class Effect
 {
 public:
 
-	Effect(EffectType type, float duration, bool permanent) : duration(duration), permanent(permanent)
+	Effect(EffectType type, float duration, bool permanent, void* data) : duration(duration), permanent(permanent), data(data)
 	{
 		if (type != EffectType::EFFECTS_NUM) // This avoids the game crashig if someone requests a EFFECTS_NUM effect by accident
 			this->type = type;
@@ -53,10 +56,14 @@ public:
 
 	const bool Permanent() const { return permanent; }
 
+	const void* Data() const { return data; }
+
 private:
 
 	EffectType type = EffectType::NONE;
 	bool permanent = false;
 	float duration = 0.0f;
 	Timer timer;
+
+	void* data = nullptr; // used to store any extra info about the effect, scary shit doe
 };

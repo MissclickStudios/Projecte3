@@ -112,7 +112,7 @@ void Blurrg::SetUp()
 	}
 }
 
-void Blurrg::Update()
+void Blurrg::Behavior()
 {
 	if (state != BlurrgState::DEAD)
 	{

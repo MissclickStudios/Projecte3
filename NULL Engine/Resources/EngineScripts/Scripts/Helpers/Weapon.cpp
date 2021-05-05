@@ -228,7 +228,7 @@ void Weapon::FastReload()
 
 void Weapon::FreezeBullets()
 {
-	onHitEffects.emplace_back(Effect(EffectType::FROZEN, 4.0f, false));
+	onHitEffects.emplace_back(Effect(EffectType::FROZEN, 4.0f, false, nullptr));
 }
 
 GameObject* Weapon::GetHand(GameObject* object)

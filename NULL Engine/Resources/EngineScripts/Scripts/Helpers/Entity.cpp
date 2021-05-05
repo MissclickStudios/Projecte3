@@ -132,6 +132,19 @@ void Entity::PreUpdate()
 	}
 }
 
+void Entity::Update()
+{
+	switch (entityState)
+	{
+	case EntityState::NONE:
+		Behavior();
+		break;
+	case EntityState::STUNED:
+		currentAnimation = &stunAnimation;
+		break;
+	}
+}
+
 void Entity::PostUpdate()
 {
 	if (animator != nullptr && currentAnimation != nullptr)
@@ -173,7 +186,7 @@ void Entity::GiveHeal(float amount)
 		health = MaxHealth();
 }
 
-Effect* Entity::AddEffect(EffectType type, float duration, bool permanent)
+Effect* Entity::AddEffect(EffectType type, float duration, bool permanent, void* data)
 {
 	Effect* output = nullptr;
 	// TODO: System to add a max stack to each effect so that more than one can exist at once
@@ -181,7 +194,7 @@ Effect* Entity::AddEffect(EffectType type, float duration, bool permanent)
 	if (effectCounters[(uint)type]) // Check that this effect is not already on the entity
 		return output;
 	
-	output = new Effect(type, duration, permanent);
+	output = new Effect(type, duration, permanent, data);
 	effects.emplace_back(output); // I use emplace instead of push to avoid unnecessary copies
 	++effectCounters[(uint)type]; // Add one to the counter of this effect
 

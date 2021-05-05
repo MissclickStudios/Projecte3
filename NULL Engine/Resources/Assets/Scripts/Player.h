@@ -32,7 +32,7 @@ public:
 	virtual ~Player();
 
 	void SetUp() override;
-	void Update() override;
+	void Behavior() override;
 	void CleanUp() override;
 
 	void SaveState(ParsonNode& playerNode);
