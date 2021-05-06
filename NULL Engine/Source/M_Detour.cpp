@@ -141,9 +141,10 @@ bool M_Detour::createNavMesh(dtNavMeshCreateParams* params)
 
 void M_Detour::loadNavMeshFile(unsigned int navMeshUid, const char* navMeshPath)
 {
-	App->resourceManager->AllocateResource(navMeshUid, navMeshPath);
-	
-	navMeshResource = (R_NavMesh*) App->resourceManager->RequestResource(navMeshUid);
+	//App->resourceManager->AllocateResource(navMeshUid, navMeshPath);
+	//navMeshResource = (R_NavMesh*) App->resourceManager->RequestResource(navMeshUid);
+
+	navMeshResource = App->resourceManager->GetResource<R_NavMesh>(navMeshPath);
 
 	if (navMeshResource != nullptr)
 	{
@@ -425,7 +426,6 @@ void M_Detour::allocateNavMesh()
 	navMeshResource->navMesh = dtAllocNavMesh();
 	navMeshResource->SetNavMeshName(App->scene->GetCurrentScene());
 
-	App->resourceManager->SaveResourceToLibrary(navMeshResource);
 }
 
 void M_Detour::createRenderMeshes()
@@ -434,6 +434,7 @@ void M_Detour::createRenderMeshes()
 
 void M_Detour::saveNavMesh() const
 {
+	App->resourceManager->SaveResourceToLibrary(navMeshResource);
 }
 
 inline void M_Detour::initNavQuery()
