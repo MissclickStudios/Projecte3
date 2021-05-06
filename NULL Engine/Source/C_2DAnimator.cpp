@@ -1,5 +1,5 @@
 #include "JSONParser.h"
-
+#include "Profiler.h"
 #include "Application.h"
 
 #include "C_2DAnimator.h"
@@ -32,6 +32,8 @@ C_2DAnimator::~C_2DAnimator()
 
 bool C_2DAnimator::Update()
 {
+	OPTICK_CATEGORY("C_2DAnimator Update", Optick::Category::Update);
+
 	if (App->gameState != GameState::PLAY)
 		return true;
 

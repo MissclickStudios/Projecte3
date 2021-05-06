@@ -14,6 +14,10 @@ void Blaster::SetUp()
 
 ShootState Blaster::ShootLogic()
 {
+    //Dirty fix, needs improvement
+    if(FireRate() < fireRateThreshold)
+        return ShootState::FIRED_PROJECTILE;
+
     if (!fireRateTimer.IsActive())
     {
         fireRateTimer.Start();
@@ -67,6 +71,7 @@ SCRIPTS_FUNCTION Blaster* CreateBlaster()
     // Projectiles
     INSPECTOR_DRAGABLE_INT(script->projectileNum);
     INSPECTOR_CHECKBOX_BOOL(script->updateProjectiles);
+    INSPECTOR_DRAGABLE_FLOAT(script->shotSpreadArea);
 
     return script;
 }

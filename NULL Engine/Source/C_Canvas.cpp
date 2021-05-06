@@ -1,5 +1,7 @@
 #include "Application.h"
 
+#include "Profiler.h"
+
 #include "M_Renderer3D.h"
 #include "M_Camera3D.h"
 #include "M_Window.h"
@@ -42,6 +44,8 @@ C_Canvas::~C_Canvas()
 bool C_Canvas::Update()
 {
 	bool ret = true;
+
+	OPTICK_CATEGORY("C_Canvas Update", Optick::Category::Update);
 
 	//This will be world space only
 	if (IsActive())

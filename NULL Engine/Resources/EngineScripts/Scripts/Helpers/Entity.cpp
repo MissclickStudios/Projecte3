@@ -1,6 +1,7 @@
 #include "Entity.h"
 
 #include "GameObject.h"
+#include "C_Transform.h"
 #include "C_RigidBody.h"
 #include "C_Animator.h"
 #include "C_Material.h"
@@ -10,6 +11,8 @@
 #include "Emitter.h"
 
 #include "ScriptMacros.h"
+
+#include "MathGeoLib/include/Math/float3.h"
 
 Entity::Entity() : Object()
 {
@@ -29,21 +32,10 @@ Entity::~Entity()
 void Entity::Awake()
 {
 	rigidBody = gameObject->GetComponent<C_RigidBody>();
-	if (rigidBody && rigidBody->IsStatic())
+	if (rigidBody != nullptr && rigidBody->IsStatic())
 		rigidBody = nullptr;
 	animator = gameObject->GetComponent<C_Animator>();
 	currentAnimation = &idleAnimation;
-
-	// TODO: Particles with prefabs
-	particles = gameObject->GetComponent<C_ParticleSystem>();
-	if (particles)
-	{
-		particles->StopSpawn();
-
-		for (uint i = 0; i < particles->emitterInstances.size(); ++i)
-			if (particles->emitterInstances[i]->emitter->name == "Hit")
-				hitParticles = particles->emitterInstances[i];
-	}
 
 	for (uint i = 0; i < gameObject->childs.size(); ++i)
 	{
@@ -56,6 +48,21 @@ void Entity::Awake()
 		else if (gameObject->childs[i]->GetComponent<C_Material>())
 		{
 			material = gameObject->childs[i]->GetComponent<C_Material>();
+		}
+		else if (name == "Particles")
+		{
+			for (uint n = 0; n < gameObject->childs[i]->childs.size(); ++n)
+			{
+				C_ParticleSystem* particle = gameObject->childs[i]->childs[n]->GetComponent<C_ParticleSystem>();
+				if (particle == nullptr)
+					continue;
+				std::string particleName = gameObject->childs[i]->childs[n]->GetName();
+
+				particle->StopSpawn();
+
+				particleNames.push_back(particleName); // For graphical representation porpouses
+				particles.insert(std::make_pair(particleName, particle));
+			}
 		}
 	}
 	memset(effectCounters, 0, (uint)EffectType::EFFECTS_NUM); // Set all the counters to zero
@@ -72,7 +79,7 @@ void Entity::Start()
 
 void Entity::PreUpdate()
 {
-	if (material)
+	if (material != nullptr)
 		material->SetTakeDamage(false);
 
 	// Set modifiers back to the default state
@@ -112,25 +119,38 @@ void Entity::PreUpdate()
 		}
 	}
 
-	if (material && hitTimer.IsActive())
+	if (material != nullptr && hitTimer.IsActive())
 	{
 		material->SetAlternateColour(Color(1, 0, 0, 1));
 		material->SetTakeDamage(true);
-		if (material && hitTimer.ReadSec() > hitDuration)
+		if (hitTimer.ReadSec() > hitDuration)
 		{
 			hitTimer.Stop();
-			if (hitParticles)
-				hitParticles->stopSpawn = true;
+			if (GetParticles("Hit") != nullptr)
+				GetParticles("Hit")->StopSpawn();
 		}
+	}
+}
+
+void Entity::Update()
+{
+	switch (entityState)
+	{
+	case EntityState::NONE:
+		Behavior();
+		break;
+	case EntityState::STUNED:
+		currentAnimation = &stunAnimation;
+		break;
 	}
 }
 
 void Entity::PostUpdate()
 {
-	if (animator && currentAnimation)
+	if (animator != nullptr && currentAnimation != nullptr)
 	{
 		AnimatorClip* clip = animator->GetCurrentClip();
-		if (clip)
+		if (clip != nullptr)
 		{
 			std::string clipName = clip->GetName();
 			if (clipName != currentAnimation->name)	// If the animtion changed play the wanted clip
@@ -152,10 +172,10 @@ void Entity::TakeDamage(float damage)
 		health = 0.0f;
 
 	hitTimer.Start();
-	if (hitParticles)
-		hitParticles->stopSpawn = false;
+	if (GetParticles("Hit") != nullptr)
+		GetParticles("Hit")->ResumeSpawn();
 
-	if (damageAudio)
+	if (damageAudio != nullptr)
 		damageAudio->PlayFx(damageAudio->GetEventId());
 }
 
@@ -166,7 +186,7 @@ void Entity::GiveHeal(float amount)
 		health = MaxHealth();
 }
 
-Effect* Entity::AddEffect(EffectType type, float duration, bool permanent)
+Effect* Entity::AddEffect(EffectType type, float duration, bool permanent, void* data)
 {
 	Effect* output = nullptr;
 	// TODO: System to add a max stack to each effect so that more than one can exist at once
@@ -174,11 +194,27 @@ Effect* Entity::AddEffect(EffectType type, float duration, bool permanent)
 	if (effectCounters[(uint)type]) // Check that this effect is not already on the entity
 		return output;
 	
-	output = new Effect(type, duration, permanent);
+	output = new Effect(type, duration, permanent, data);
 	effects.emplace_back(output); // I use emplace instead of push to avoid unnecessary copies
 	++effectCounters[(uint)type]; // Add one to the counter of this effect
 
 	return output;
+}
+
+void Entity::MoveTo(float3 position)
+{
+	gameObject->transform->SetLocalPosition(position);
+	rigidBody->TransformMovesRigidBody(true);
+}
+
+bool Entity::IsGrounded()
+{
+	if (rigidBody == nullptr)
+		return false;
+
+	if ((int)rigidBody->GetLinearVelocity().y == 0)
+		return true;
+	return false;
 }
 
 void Entity::Frozen()
@@ -186,7 +222,7 @@ void Entity::Frozen()
 	speedModifier /= 2.5;
 	attackSpeedModifier /= 2.5;
 
-	if (material)
+	if (material != nullptr)
 	{
 		material->SetAlternateColour(Color(0, 1, 1, 1));
 		material->SetTakeDamage(true);
@@ -197,6 +233,11 @@ void Entity::Heal(Effect* effect)
 {
 	GiveHeal(effect->Duration());
 	effect->End();
+}
+
+C_ParticleSystem* Entity::GetParticles(std::string particleName)
+{
+	return particles.find(particleName)->second;
 }
 
 //	// Health

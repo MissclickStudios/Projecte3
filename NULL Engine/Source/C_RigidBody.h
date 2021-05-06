@@ -37,6 +37,7 @@ public:
 	inline float3			GetLinearVelocity() { return linearVel; }
 	inline float3			GetAngularVelocity() { return angularVel; }
 	inline void				SetLinearVelocity(float3 vel) { linearVel = vel; toUpdate = true; }
+	inline void				Set2DVelocity(float2 vel);
 	inline void				SetAngularVelocity(float3 vel) { angularVel = vel; toUpdate = true; }
 
 	void					StopInertia();
@@ -72,6 +73,8 @@ public:
 
 	void TransformMovesRigidBody(bool stopInertia);
 
+	void DisableY(bool enable) { disableY = enable; }
+
 private:
 
 	void ApplyPhysicsChanges();
@@ -103,6 +106,7 @@ private:
 
 	std::string filter = "default";
 	bool toChangeFilter = true;
+	bool disableY = true;
 };
 
 #endif // !__C_RIGIDBODY_H__

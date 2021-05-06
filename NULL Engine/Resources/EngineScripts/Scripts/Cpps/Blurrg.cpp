@@ -112,7 +112,7 @@ void Blurrg::SetUp()
 	}
 }
 
-void Blurrg::Update()
+void Blurrg::Behavior()
 {
 	if (state != BlurrgState::DEAD)
 	{
@@ -159,7 +159,7 @@ void Blurrg::Update()
 
 			currentAnimation = &chargeAnimation;
 			if (rigidBody)
-				rigidBody->SetLinearVelocity(float3::zero);
+				rigidBody->Set2DVelocity(float2::zero);
 			chargeTimer.Start();
 			state = BlurrgState::CHARGE;
 
@@ -187,7 +187,7 @@ void Blurrg::Update()
 		case BlurrgState::REST_IN:
 			currentAnimation = &restAnimation;
 			if (rigidBody)
-				rigidBody->SetLinearVelocity(float3::zero);
+				rigidBody->Set2DVelocity(float2::zero);
 			restTimer.Start();
 			state = BlurrgState::REST;
 
@@ -270,14 +270,13 @@ void Blurrg::LookAtPlayer()
 void Blurrg::Wander()
 {
 	if (rigidBody)
-		rigidBody->SetLinearVelocity(float3::zero);
+		rigidBody->Set2DVelocity(float2::zero);
 }
 
 void Blurrg::Chase()
 {
-	float3 direction = { moveDirection.x, 0.0f, moveDirection.y };
 	if (rigidBody)
-		rigidBody->SetLinearVelocity(direction * ChaseSpeed());
+		rigidBody->Set2DVelocity(moveDirection * ChaseSpeed());
 }
 
 void Blurrg::Dash()
@@ -287,7 +286,6 @@ void Blurrg::Dash()
 	if (decceleration > 1.0f)
 		decceleration = 1.0f;
 
-	float3 direction = { moveDirection.x, 0.0f, moveDirection.y };
 	if (rigidBody)
-		rigidBody->SetLinearVelocity(direction * DashSpeed() * decceleration);
+		rigidBody->Set2DVelocity(moveDirection * DashSpeed() * decceleration);
 }

@@ -27,6 +27,7 @@ Player* CreatePlayer()
 {
 	Player* script = new Player();
 
+	
 	// Entity ---
 	// Health
 	INSPECTOR_DRAGABLE_FLOAT(script->health);
@@ -71,6 +72,11 @@ Player* CreatePlayer()
 
 	INSPECTOR_STRING(script->gameManager);
 
+	//Hand Name
+
+	INSPECTOR_STRING(script->handName);
+	INSPECTOR_VECTOR_STRING(script->particleNames);
+
 	//// Animations ---
 	//// Movement
 	//INSPECTOR_STRING(script->idleAnimation.name);
@@ -111,13 +117,8 @@ void Player::SetUp()
 	invencibilityTimer.Stop();
 	changeTimer.Stop();
 
-	if (rigidBody)
+	if (rigidBody != nullptr)
 		rigidBody->TransformMovesRigidBody(false);
-
-	if (particles)
-		for (uint i = 0; i < particles->emitterInstances.size(); ++i)
-			if (particles->emitterInstances[i]->emitter->name == "Dash")
-				dashParticles = particles->emitterInstances[i];
 
 	currentWeapon = blasterWeapon;
 
@@ -142,7 +143,7 @@ void Player::SetUp()
 	}
 }
 
-void Player::Update()
+void Player::Behavior()
 {
 	ManageMovement();
 	if (moveState != PlayerState::DEAD)
@@ -151,12 +152,12 @@ void Player::Update()
 
 void Player::CleanUp()
 {
-	if (blasterGameObject)
+	if (blasterGameObject != nullptr)
 		blasterGameObject->toDelete = true;
 	blasterGameObject = nullptr;
 	blasterWeapon = nullptr;
 
-	if (equipedGunGameObject)
+	if (equipedGunGameObject != nullptr)
 		equipedGunGameObject->toDelete = true;
 	equipedGunGameObject = nullptr;
 	equipedGunWeapon = nullptr;
@@ -183,7 +184,7 @@ void Player::SaveState(ParsonNode& playerNode)
 	}
 
 	ParsonArray blasterPerks = playerNode.SetArray("Blaster Perks");
-	if (blasterWeapon)
+	if (blasterWeapon != nullptr)
 	{
 		playerNode.SetInteger("Blaster Ammo", blasterWeapon->ammo);
 		for (uint i = 0; i < blasterWeapon->perks.size(); ++i)
@@ -192,7 +193,7 @@ void Player::SaveState(ParsonNode& playerNode)
 
 	playerNode.SetInteger("Equiped Gun", equipedGun.uid);
 	ParsonArray equipedGunPerks = playerNode.SetArray("Equiped Gun Perks");
-	if (equipedGunWeapon)
+	if (equipedGunWeapon != nullptr)
 	{
 		playerNode.SetInteger("Equiped Gun Ammo", equipedGunWeapon->ammo);
 		for (uint i = 0; i < equipedGunWeapon->perks.size(); ++i)
@@ -222,7 +223,7 @@ void Player::LoadState(ParsonNode& playerNode)
 	}
 
 	GameObject* hand = nullptr;
-	if (skeleton)
+	if (skeleton != nullptr)
 		for (uint i = 0; i < skeleton->childs.size(); ++i)
 		{
 			std::string name = skeleton->childs[i]->GetName();
@@ -234,13 +235,13 @@ void Player::LoadState(ParsonNode& playerNode)
 		}
 
 	blasterGameObject = App->resourceManager->LoadPrefab(blaster.uid, App->scene->GetSceneRoot());
-	if (blasterGameObject)
+	if (blasterGameObject != nullptr)
 	{
 		blasterWeapon = (Weapon*)GetObjectScript(blasterGameObject, ObjectType::WEAPON);
 
-		if (blasterWeapon)
+		if (blasterWeapon != nullptr)
 		{
-			blasterWeapon->SetOwnership(type, hand);
+			blasterWeapon->SetOwnership(type, hand, handName);
 			blasterWeapon->ammo = playerNode.GetInteger("Blaster Ammo");
 
 			ParsonArray blasterPerks = playerNode.GetArray("Blaster Perks");
@@ -252,20 +253,20 @@ void Player::LoadState(ParsonNode& playerNode)
 	// TODO: Load correct secondary gun
 	//equipedGunGameObject = App->resourceManager->LoadPrefab(playerNode.GetInteger("Equiped Gun"), App->scene->GetSceneRoot());
 	equipedGunGameObject = App->resourceManager->LoadPrefab(equipedGun.uid, App->scene->GetSceneRoot());
-	if (equipedGunGameObject)
+	if (equipedGunGameObject != nullptr)
 	{
 		equipedGunWeapon = (Weapon*)GetObjectScript(equipedGunGameObject, ObjectType::WEAPON);
 
-		if (equipedGunWeapon)
+		if (equipedGunWeapon != nullptr)
 		{
-			equipedGunWeapon->SetOwnership(type, hand);
+			equipedGunWeapon->SetOwnership(type, hand, handName);
 			equipedGunWeapon->ammo = playerNode.GetInteger("Equiped Gun Ammo");
 
 			ParsonArray equipedGunPerks = playerNode.GetArray("Equiped Gun Perks");
 			for (uint i = 0; i < equipedGunPerks.size; ++i)
 				equipedGunWeapon->AddPerk((Perk)(int)equipedGunPerks.GetNumber(i));
 
-			if (equipedGunWeapon->weaponModel)
+			if (equipedGunWeapon->weaponModel != nullptr)
 				equipedGunWeapon->weaponModel->SetIsActive(false);
 		}
 	}
@@ -283,12 +284,12 @@ void Player::Reset()
 		effects.erase(effects.begin());
 	}
 
-	if (blasterWeapon)
+	if (blasterWeapon != nullptr)
 	{
 		blasterWeapon->ammo = blasterWeapon->maxAmmo;
 		blasterWeapon->perks.clear();
 	}
-	if (equipedGunWeapon)
+	if (equipedGunWeapon != nullptr)
 	{
 		equipedGunWeapon->ammo = equipedGunWeapon->maxAmmo;
 		equipedGunWeapon->perks.clear();
@@ -311,15 +312,15 @@ void Player::TakeDamage(float damage)
 		invencibilityTimer.Start();
 
 		hitTimer.Start();
-		if (hitParticles)
-			hitParticles->stopSpawn = false;
-		if (material)
+		if (GetParticles("Hit") != nullptr)
+			GetParticles("Hit")->ResumeSpawn();
+		if (material != nullptr)
 		{
 			material->SetAlternateColour(Color(1, 0, 0, 1));
 			material->SetTakeDamage(true);
 		}
 
-		if (damageAudio)
+		if (damageAudio != nullptr)
 			damageAudio->PlayFx(damageAudio->GetEventId());
 	}
 }
@@ -361,23 +362,27 @@ void Player::ManageMovement()
 		{
 		case PlayerState::IDLE:
 			currentAnimation = &idleAnimation;
-			if (rigidBody)
-				rigidBody->SetLinearVelocity(float3::zero);
+			if (rigidBody != nullptr)
+				rigidBody->Set2DVelocity(float2::zero);
 			break;
 		case PlayerState::RUN:
 			currentAnimation = &runAnimation;
 			Movement();
 			break;
 		case PlayerState::DASH_IN:
-			if (dashAudio)
+			if (dashAudio != nullptr)
 				dashAudio->PlayFx(dashAudio->GetEventId());
 
 			currentAnimation = &dashAnimation;
 			dashTimer.Start();
-			if (rigidBody)
+			if (rigidBody != nullptr)
+			{
 				rigidBody->ChangeFilter(" player dashing");
-			if (dashParticles)
-				dashParticles->stopSpawn = false;
+				rigidBody->FreezePositionY(true);
+			}
+			if (GetParticles("Dash") != nullptr)
+				GetParticles("Dash")->ResumeSpawn();
+
 			moveState = PlayerState::DASH;
 
 		case PlayerState::DASH:
@@ -386,19 +391,23 @@ void Player::ManageMovement()
 			{
 				dashTimer.Stop();
 				dashCooldownTimer.Start();
-				if (rigidBody)
+				if (rigidBody != nullptr)
+				{
 					rigidBody->ChangeFilter(" player");
-				if (dashParticles)
-					dashParticles->stopSpawn = true;
+					rigidBody->FreezePositionY(false);
+				}
+				if (GetParticles("Dash") != nullptr)
+					GetParticles("Dash")->StopSpawn();
+
 				moveState = PlayerState::IDLE;
 			}
 			break;
 		case PlayerState::DEAD_IN:
-			if (deathAudio)
+			if (deathAudio != nullptr)
 				deathAudio->PlayFx(deathAudio->GetEventId());
 
 			currentAnimation = &deathAnimation;
-			if (rigidBody)
+			if (rigidBody != nullptr)
 				rigidBody->SetIsActive(false); // Disable the rigidbody to avoid more interactions with other entities
 			deathTimer.Start();
 			moveState = PlayerState::DEAD;
@@ -429,7 +438,7 @@ void Player::ManageAim()
 
 	case AimState::SHOOT:
 		currentAnimation = &shootAnimation; // temporary till torso gets an independent animator
-		if (currentWeapon)
+		if (currentWeapon != nullptr)
 			switch (currentWeapon->Shoot(aimDirection))
 			{
 			case ShootState::NO_FULLAUTO:
@@ -459,7 +468,7 @@ void Player::ManageAim()
 			aimState = AimState::ON_GUARD;
 		break;
 	case AimState::CHANGE_IN:
-		if (changeWeaponAudio)
+		if (changeWeaponAudio != nullptr)
 			changeWeaponAudio->PlayFx(changeWeaponAudio->GetEventId());
 
 		changeTimer.Start();
@@ -471,17 +480,17 @@ void Player::ManageAim()
 			if (blasterWeapon == currentWeapon)
 			{
 				currentWeapon = equipedGunWeapon;
-				if (blasterWeapon->weaponModel)
+				if (blasterWeapon->weaponModel != nullptr)
 					blasterWeapon->weaponModel->SetIsActive(false);
-				if (equipedGunWeapon->weaponModel)
+				if (equipedGunWeapon->weaponModel != nullptr)
 					equipedGunWeapon->weaponModel->SetIsActive(true);
 			}
 			else
 			{
 				currentWeapon = blasterWeapon;
-				if (blasterWeapon->weaponModel)
+				if (blasterWeapon->weaponModel != nullptr)
 					blasterWeapon->weaponModel->SetIsActive(true);
-				if (equipedGunWeapon->weaponModel)
+				if (equipedGunWeapon->weaponModel != nullptr)
 					equipedGunWeapon->weaponModel->SetIsActive(false);
 			}
 			aimState = AimState::ON_GUARD;
@@ -575,13 +584,13 @@ void Player::GatherAimInputs()
 
 void Player::Movement()
 {
-	float3 direction = { moveInput.x, 0, moveInput.y };
+	float2 direction = { moveInput.x, moveInput.y };
 	direction.Normalize();
 	moveDirection = { moveInput.x, moveInput.y }; // Save the value
 
 	direction *= Speed(); // Apply the processed speed value to the unitari direction vector
-	if (rigidBody)
-		rigidBody->SetLinearVelocity(direction);
+	if (rigidBody != nullptr)
+		rigidBody->Set2DVelocity(direction);
 }
 
 void Player::Aim()
@@ -593,15 +602,15 @@ void Player::Aim()
 
 	float rad = aimDirection.AimedAngle();
 
-	if (skeleton)
+	if (skeleton != nullptr)
 		skeleton->transform->SetLocalRotation(float3(0, -rad + DegToRad(90), 0));
 }
 
 void Player::Dash()
 {
-	float3 direction = { moveDirection.x, 0, moveDirection.y };
+	float2 direction = { moveDirection.x, moveDirection.y };
 	direction.Normalize();
 
-	if (rigidBody)
-		rigidBody->SetLinearVelocity(direction * DashSpeed());
+	if (rigidBody != nullptr)
+		rigidBody->Set2DVelocity(direction * DashSpeed());
 }

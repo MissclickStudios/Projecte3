@@ -51,15 +51,24 @@ IG11* CreateIG11()
 	// Attack
 	INSPECTOR_DRAGABLE_FLOAT(script->attackDistance);
 
-	// Special Attack
-	INSPECTOR_DRAGABLE_FLOAT(script->specialAttackSpeed);
-	INSPECTOR_DRAGABLE_FLOAT(script->specialAttackSpins);
-	INSPECTOR_DRAGABLE_FLOAT(script->specialAttackHp);
-	INSPECTOR_DRAGABLE_FLOAT(script->specialAttackCooldown);
+	// Spiral Attack
+	INSPECTOR_DRAGABLE_FLOAT(script->spiralAttackSpeed);
+	INSPECTOR_DRAGABLE_FLOAT(script->spiralAttackSpins);
+	INSPECTOR_DRAGABLE_FLOAT(script->spiralAttackHp);
+	INSPECTOR_DRAGABLE_FLOAT(script->spiralAttackCooldown);
+
+	// U Attack
+
+	INSPECTOR_DRAGABLE_FLOAT(script->UAttackShots);
+	INSPECTOR_DRAGABLE_FLOAT(script->UAttackCooldown);
 
 	//Weapons
 	INSPECTOR_PREFAB(script->blaster);
 	INSPECTOR_PREFAB(script->sniper);
+	//Hand Name
+
+	INSPECTOR_STRING(script->rightHandName);
+	INSPECTOR_STRING(script->leftHandName);
 
 	return script;
 }
@@ -76,7 +85,8 @@ IG11::~IG11()
 
 void IG11::SetUp()
 {
-	specialAttackTimer.Stop();
+	spiralAttackTimer.Stop();
+	UAttackTimer.Stop();
 
 	player = App->scene->GetGameObjectByName(playerName.c_str());
 
@@ -108,7 +118,7 @@ void IG11::SetUp()
 	if (blasterGameObject)
 		blasterWeapon = (Weapon*)GetObjectScript(blasterGameObject, ObjectType::WEAPON);
 	if (blasterWeapon)
-		blasterWeapon->SetOwnership(type, handLeft);
+		blasterWeapon->SetOwnership(type, handLeft, leftHandName);
 
 	if (sniper.uid != NULL)
 		sniperGameObject = App->resourceManager->LoadPrefab(sniper.uid, App->scene->GetSceneRoot());
@@ -116,10 +126,10 @@ void IG11::SetUp()
 	if (sniperGameObject)
 		sniperWeapon = (Weapon*)GetObjectScript(sniperGameObject, ObjectType::WEAPON);
 	if (sniperWeapon)
-		sniperWeapon->SetOwnership(type, handRight);
+		sniperWeapon->SetOwnership(type, handRight, rightHandName);
 }
 
-void IG11::Update()
+void IG11::Behavior()
 {
 	ManageMovement();
 	if (moveState != IG11State::DEAD)
@@ -188,16 +198,22 @@ void IG11::ManageMovement()
 		}
 	}
 
-	if (specialAttackTimer.IsActive() && specialAttackTimer.ReadSec() >= specialAttackCooldown)
+	if (spiralAttackTimer.IsActive() && spiralAttackTimer.ReadSec() >= spiralAttackCooldown)
 	{
-		specialAttackTimer.Stop();
+		spiralAttackTimer.Stop();
+	}
+	else if (UAttackTimer.IsActive() && UAttackTimer.ReadSec() >= UAttackCooldown)
+	{
+		UAttackTimer.Stop();
+		UAttackShots += 15;
 	}
 
 	switch (moveState)
 	{
 	case IG11State::IDLE:
-		rigidBody->SetLinearVelocity(float3::zero);
-		if (aimState == AimState::SHOOT) // Comented till the shooting system is in place
+		if (rigidBody != nullptr)
+			rigidBody->Set2DVelocity(float2::zero);
+		if (aimState == AimState::SHOOT) 
 			break;
 		if (distance > chaseDistance)
 		{
@@ -214,10 +230,16 @@ void IG11::ManageMovement()
 			moveState = IG11State::FLEE;
 			break;
 		}
-		if (health <= 5.0f && !specialAttackTimer.IsActive())
+		if (health <= 5.0f && !spiralAttackTimer.IsActive())
 		{
-			specialAttackTimer.Start();
-			moveState = IG11State::SPECIAL_ATTACK_IN;
+			spiralAttackTimer.Start();
+			moveState = IG11State::SPIRAL_ATTACK_IN;
+			break;
+		}
+		else if (health < 8.0f  && health > 5.0f && UAttackShots > 0)
+		{
+			UAttackTimer.Start();
+			moveState = IG11State::U_ATTACK_IN;
 			break;
 		}
 
@@ -249,25 +271,14 @@ void IG11::ManageMovement()
 		}
 		Flee();
 		break;
-	case IG11State::SPECIAL_ATTACK_IN:
+	case IG11State::U_ATTACK_IN:
 		specialAttackStartAim = aimDirection;
 		specialAttackRot = 0.0f;
 
-		if (blasterWeapon)
-		{
-			blasterWeapon->fireRate = 0.05f;
-			blasterWeapon->ammo = 200;
-		}
-		if (sniperWeapon)
-		{
-			sniperWeapon->fireRate = 0.05f;
-			sniperWeapon->ammo = 200;
-		}
+		moveState = IG11State::U_ATTACK;
 
-		moveState = IG11State::SPECIAL_ATTACK;
-		
-	case IG11State::SPECIAL_ATTACK:
-		if (!SpecialAttack())
+	case IG11State::U_ATTACK:
+		if (!UAttack())
 		{
 			moveState = IG11State::IDLE;
 
@@ -275,11 +286,38 @@ void IG11::ManageMovement()
 			{
 				blasterWeapon->fireRate = 0.3f;
 				blasterWeapon->ammo = 0;
+				blasterWeapon->projectilesPerShot = 1;
 			}
 			if (sniperWeapon)
 			{
 				sniperWeapon->fireRate = 0.3f;
 				sniperWeapon->ammo = 0;
+				sniperWeapon->projectilesPerShot = 1;
+			}
+		}
+		break;
+	case IG11State::SPIRAL_ATTACK_IN:
+		specialAttackStartAim = aimDirection;
+		specialAttackRot = 0.0f;
+
+		moveState = IG11State::SPIRAL_ATTACK;
+		
+	case IG11State::SPIRAL_ATTACK:
+		if (!SpiralAttack())
+		{
+			moveState = IG11State::IDLE;
+
+			if (blasterWeapon)
+			{
+				blasterWeapon->fireRate = 0.3f;
+				blasterWeapon->ammo = 0;
+				blasterWeapon->projectilesPerShot = 1;
+			}
+			if (sniperWeapon)
+			{
+				sniperWeapon->fireRate = 0.3f;
+				sniperWeapon->ammo = 0;
+				sniperWeapon->projectilesPerShot = 1;
 			}
 		}
 		break;
@@ -300,7 +338,7 @@ void IG11::ManageAim()
 	switch (aimState)
 	{
 	case AimState::IDLE:
-		if (distance < attackDistance || moveState == IG11State::SPECIAL_ATTACK)
+		if (distance < attackDistance || moveState == IG11State::SPIRAL_ATTACK)
 			aimState = AimState::SHOOT_IN;
 		break;
 	case AimState::ON_GUARD:
@@ -312,6 +350,12 @@ void IG11::ManageAim()
 
 	case AimState::SHOOT:
 		currentAnimation = &shootAnimation; // temporary till torso gets an independent animator
+
+		if (moveState != IG11State::SPIRAL_ATTACK)
+			secondaryAimDirection = aimDirection;
+		if (moveState == IG11State::U_ATTACK)
+			UAttackShots--;
+
 		switch (blasterWeapon->Shoot(aimDirection))
 		{
 		case ShootState::NO_FULLAUTO:
@@ -332,7 +376,7 @@ void IG11::ManageAim()
 			aimState = AimState::RELOAD_IN;
 			break;
 		}
-		switch (sniperWeapon->Shoot(aimDirection))
+		switch (sniperWeapon->Shoot(secondaryAimDirection))
 		{
 		case ShootState::NO_FULLAUTO:
 			currentAnimation = nullptr;
@@ -370,30 +414,30 @@ void IG11::ManageAim()
 		break;
 	}
 
-	if(moveState == IG11State::SPECIAL_ATTACK) currentAnimation = &specialAnimation;
+	if(moveState == IG11State::SPIRAL_ATTACK) currentAnimation = &specialAnimation;
 }
 
 void IG11::Patrol()
 {
-	rigidBody->SetLinearVelocity(float3::zero);
+	if (rigidBody != nullptr)
+		rigidBody->Set2DVelocity(float2::zero);
 }
 
 void IG11::Chase()
 {
-	float3 direction = { moveDirection.x, 0.0f, moveDirection.y };
-	rigidBody->SetLinearVelocity(direction * ChaseSpeed());
+	if (rigidBody != nullptr)
+		rigidBody->Set2DVelocity(moveDirection * ChaseSpeed());
 }
 
 void IG11::Flee()
 {
-	float3 direction = { -moveDirection.x, 0.0f, -moveDirection.y };
-	rigidBody->SetLinearVelocity(direction * ChaseSpeed());
+	if (rigidBody != nullptr)
+		rigidBody->Set2DVelocity(-moveDirection * ChaseSpeed());
 }
 
-bool IG11::SpecialAttack()
+bool IG11::SpiralAttack()
 {
-	specialAttackRot += specialAttackSpeed * MC_Time::Game::GetDT();
-
+	specialAttackRot += spiralAttackSpeed * MC_Time::Game::GetDT();
 	float angle = specialAttackStartAim.AimedAngle();
 	angle += DegToRad(specialAttackRot);
 
@@ -401,8 +445,44 @@ bool IG11::SpecialAttack()
 	float y = sin(angle);
 	aimDirection = { x,y };
 
-	if (specialAttackRot >= 360.0f * specialAttackSpins)
+	if (blasterWeapon)
+	{
+		blasterWeapon->fireRate = 0.0001f;
+		blasterWeapon->ammo = 20;
+		blasterWeapon->projectilesPerShot = 3;
+		blasterWeapon->shotSpreadArea = 5;
+	}
+	if (sniperWeapon)
+	{
+		sniperWeapon->fireRate = 0.01f;
+		sniperWeapon->ammo = 20;
+		sniperWeapon->projectilesPerShot = 3;
+		sniperWeapon->shotSpreadArea = 5;
+		secondaryAimDirection = -aimDirection;
+	}
+
+	if (specialAttackRot >= 360.0f * spiralAttackSpins)
 		return false;
 	
+	return true;
+}
+
+bool IG11::UAttack()
+{
+
+	if (blasterWeapon)
+	{
+		blasterWeapon->projectilesPerShot = 10;
+		blasterWeapon->ammo = 20;
+		blasterWeapon->shotSpreadArea = 5;
+	}
+
+	if (sniperWeapon)
+		sniperWeapon->projectilesPerShot = 0;
+
+	if (UAttackShots <= 0)
+		return false;
+
+
 	return true;
 }

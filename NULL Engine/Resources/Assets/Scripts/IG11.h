@@ -16,8 +16,10 @@ enum class IG11State
 	PATROL,
 	CHASE,
 	FLEE,
-	SPECIAL_ATTACK_IN,
-	SPECIAL_ATTACK,
+	SPIRAL_ATTACK_IN,
+	SPIRAL_ATTACK,
+	U_ATTACK_IN,
+	U_ATTACK,
 	DEAD_IN,
 	DEAD
 };
@@ -30,7 +32,7 @@ public:
 	virtual ~IG11();
 
 	void SetUp() override;
-	void Update() override;
+	void Behavior() override;
 	void CleanUp() override;
 
 	void OnCollisionEnter(GameObject* object) override;
@@ -60,14 +62,20 @@ public:
 	float attackDistance = 0.0f;
 
 	// Special Attack
-	float specialAttackSpeed = 0.0f;
-	float specialAttackSpins = 0.0f;
-	float specialAttackHp = 0.0f;
-	float specialAttackCooldown = 0.0f;
+	float spiralAttackSpeed = 0.0f;
+	float spiralAttackSpins = 0.0f;
+	float spiralAttackHp = 0.0f;
+	float spiralAttackCooldown = 0.0f;
+
+	float UAttackShots = 0.0f;
+	float UAttackCooldown = 0.0f;
 
 	// Weapons
 	Prefab blaster;
 	Prefab sniper;
+
+	std::string rightHandName;
+	std::string leftHandName;
 
 private:
 
@@ -89,13 +97,17 @@ private:
 	float distance = 0.0f;
 	float2 moveDirection = float2::zero;
 	float2 aimDirection = float2::zero;
+	float2 secondaryAimDirection = float2::zero;
 
 	GameObject* player = nullptr;
 
 	// Special Attack
-	bool SpecialAttack(); // Rotation attack
+	bool SpiralAttack();
+	bool UAttack();
 
-	Timer specialAttackTimer;
+	Timer spiralAttackTimer;
+	Timer UAttackTimer;
+
 	float2 specialAttackStartAim = float2::zero;
 	float specialAttackRot = 0.0f;
 

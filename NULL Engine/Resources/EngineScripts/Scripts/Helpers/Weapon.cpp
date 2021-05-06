@@ -10,6 +10,7 @@
 #include "C_RigidBody.h"
 #include "C_AudioSource.h"
 
+#include "MathGeoLib/include/Math/MathFunc.h"
 #include "Bullet.h"
 
 struct Projectile
@@ -86,8 +87,15 @@ ShootState Weapon::Shoot(float2 direction)
 	ShootState state = ShootLogic();
 	if (state == ShootState::FIRED_PROJECTILE)
 	{
-		FireProjectile(direction);
-
+		if (projectilesPerShot > 1 && shotSpreadArea > 0)
+		{
+			SpreadProjectiles(direction);
+		}
+		else if (projectilesPerShot != 0)
+		{
+			FireProjectile(direction);
+		}
+		
 		ammo -= projectilesPerShot;
 		if (ammo < 0)
 			ammo = 0;
@@ -115,7 +123,7 @@ bool Weapon::Reload()
 	return false;
 }
 
-void Weapon::SetOwnership(EntityType type, GameObject* hand)
+void Weapon::SetOwnership(EntityType type, GameObject* hand, std::string handName)
 {
 	this->hand = hand;
 
@@ -124,15 +132,15 @@ void Weapon::SetOwnership(EntityType type, GameObject* hand)
 
 	SetUp();
 
+	if (this->hand != nullptr && weaponModelPrefab.uid != NULL)
+	{
+		GameObject* skeletonHand = GetHand(this->hand->parent, handName);
+		if (skeletonHand)
+			weaponModel = App->resourceManager->LoadPrefab(weaponModelPrefab.uid, skeletonHand); // Load the prefab onto a gameobject
+	}
+
 	if (type == EntityType::PLAYER)
 	{
-		if (weaponModelPrefab.uid != NULL)
-		{
-			GameObject* skeletonHand = App->scene->GetGameObjectByName("mixamorig:RightHand");
-			if (skeletonHand)
-				weaponModel = App->resourceManager->LoadPrefab(weaponModelPrefab.uid, skeletonHand); // Load the prefab onto a gameobject
-		}
-
 		if (!projectiles)
 			return;
 		for (uint i = 0; i < projectileNum; ++i)
@@ -228,7 +236,54 @@ void Weapon::FastReload()
 
 void Weapon::FreezeBullets()
 {
-	onHitEffects.emplace_back(Effect(EffectType::FROZEN, 4.0f, false));
+	onHitEffects.emplace_back(Effect(EffectType::FROZEN, 4.0f, false, nullptr));
+}
+
+void Weapon::SpreadProjectiles(float2 direction)
+{
+	float sin = math::Sin(DegToRad(shotSpreadArea));
+
+	float cos = math::Cos(DegToRad(shotSpreadArea));
+
+	float2 initialDirection = direction;
+	for (uint i = 0; i < projectilesPerShot; ++i)
+	{
+		FireProjectile(direction);
+
+		if (i < projectilesPerShot / 2)
+		{
+			direction = float2(cos * direction.x + (-sin * direction.y), sin * direction.x + (cos * direction.y));
+		}
+		else if (i == int(projectilesPerShot / 2))
+		{
+			direction = initialDirection;
+			sin = math::Sin(DegToRad(-shotSpreadArea));
+			cos = math::Cos(DegToRad(-shotSpreadArea));
+
+			direction = float2(cos * direction.x + (-sin * direction.y), sin * direction.x + (cos * direction.y));
+
+		}
+		else if (i >= projectilesPerShot / 2)
+		{
+			direction = float2(cos * direction.x + (-sin * direction.y), sin * direction.x + (cos * direction.y));
+		}
+	}
+}
+
+GameObject* Weapon::GetHand(GameObject* object, std::string handName)
+{
+	for (int i = 0; i < object->childs.size(); ++i)
+	{
+		std::string name = object->childs[i]->GetName();
+		bool check = (name == handName);
+		if (check)
+			return object->childs[i];
+
+		GameObject* output = GetHand(object->childs[i], handName);
+		if (output != nullptr)
+			return output;
+	}
+	return nullptr;
 }
 
 void Weapon::CreateProjectiles()

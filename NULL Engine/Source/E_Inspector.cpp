@@ -34,12 +34,12 @@
 #include "C_BoxCollider.h"
 #include "C_SphereCollider.h"
 #include "C_CapsuleCollider.h"
-#include "C_PlayerController.h"
-#include "C_BulletBehavior.h"
+//#include "C_PlayerController.h"
+//#include "C_BulletBehavior.h"
 #include "C_ParticleSystem.h"
-#include "C_PropBehavior.h"
-#include "C_CameraBehavior.h"
-#include "C_GateBehavior.h"
+//#include "C_PropBehavior.h"
+//#include "C_CameraBehavior.h"
+//#include "C_GateBehavior.h"
 #include "C_Canvas.h"
 #include "C_UI_Image.h"
 #include "C_UI_Text.h"
@@ -101,10 +101,12 @@ bool E_Inspector::Draw(ImGuiIO& io)
 	
 	if (!lockGameObject)
 	{
-		GameObject* selected = EngineApp->editor->GetSelectedGameObjectThroughEditor();
+		shownGameObject = EngineApp->editor->GetSelectedGameObjectThroughEditor();
 
-		if(selected != nullptr)
+		/*if (selected != nullptr)
 			shownGameObject = selected;
+		else
+			shownGameObject = nullptr;*/
 	}
 	else
 	{
@@ -265,11 +267,11 @@ void E_Inspector::DrawComponents(GameObject* selectedGameObject)
 		case ComponentType::UI_TEXT:			{ DrawUITextComponent((C_UI_Text*)component); }						break;
 		case ComponentType::SCRIPT:				{ DrawScriptComponent((C_Script*)component); }						break;
 		case ComponentType::UI_BUTTON:			{ DrawUIButtonComponent((C_UI_Button*)component); }					break;
-		case ComponentType::PLAYER_CONTROLLER:	{ DrawPlayerControllerComponent((C_PlayerController*)component); }	break;
-		case ComponentType::BULLET_BEHAVIOR:	{ DrawBulletBehaviorComponent((C_BulletBehavior*)component); }		break;
-		case ComponentType::PROP_BEHAVIOR:		{ DrawPropBehaviorComponent((C_PropBehavior*)component); }			break;
-		case ComponentType::CAMERA_BEHAVIOR:	{ DrawCameraBehaviorComponent((C_CameraBehavior*)component); }		break;
-		case ComponentType::GATE_BEHAVIOR:		{ DrawGateBehaviorComponent((C_GateBehavior*)component); }			break;
+		//case ComponentType::PLAYER_CONTROLLER:	{ DrawPlayerControllerComponent((C_PlayerController*)component); }	break;
+		//case ComponentType::BULLET_BEHAVIOR:	{ DrawBulletBehaviorComponent((C_BulletBehavior*)component); }		break;
+		//case ComponentType::PROP_BEHAVIOR:		{ DrawPropBehaviorComponent((C_PropBehavior*)component); }			break;
+		//case ComponentType::CAMERA_BEHAVIOR:	{ DrawCameraBehaviorComponent((C_CameraBehavior*)component); }		break;
+		//case ComponentType::GATE_BEHAVIOR:		{ DrawGateBehaviorComponent((C_GateBehavior*)component); }			break;
 		case ComponentType::ANIMATOR2D:			{ DrawAnimator2DComponent((C_2DAnimator*)component); }				break;
 		case ComponentType::NAVMESH_AGENT:		{ DrawNavMeshAgentComponent((C_NavMeshAgent*)component); }			break;
 		}
@@ -1675,184 +1677,184 @@ void E_Inspector::DrawUIButtonComponent(C_UI_Button* button)
 	}
 }
 
-void E_Inspector::DrawPlayerControllerComponent(C_PlayerController* cController)
-{
-	bool show = true;
-	if (ImGui::CollapsingHeader("Player Controller", &show, ImGuiTreeNodeFlags_Leaf))
-	{
-		bool isActive = cController->IsActive();
-		if (ImGui::Checkbox("Controller Is Active", &isActive))
-			cController->SetIsActive(isActive);
-
-		ImGui::SameLine(ImGui::GetWindowWidth() * 0.69f);
-
-		uint state = (uint)cController->state;
-		ImGui::Text("State:"); ImGui::SameLine(); ImGui::TextColored(&Yellow, "{ %u }", state);
-
-		ImGui::Separator();
-		if (ImGui::TreeNodeEx("Character"))
-		{
-			float speed = cController->Speed();
-			if (ImGui::InputFloat("Speed", &speed, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
-				cController->SetSpeed(speed);
-
-			ImGui::Separator();
-
-			uint state = (uint)cController->state;
-			ImGui::Text("Player State:"); ImGui::SameLine(); ImGui::TextColored(Yellow.C_Array(), "{ %u }", state);
-
-			ImGui::TreePop();
-		}
-
-		if (ImGui::TreeNodeEx("Weapon"))
-		{
-			float bulletSpeed = cController->BulletSpeed();
-			if (ImGui::InputFloat("Bullet Speed", &bulletSpeed, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
-				cController->SetBulletSpeed(bulletSpeed);
-
-			float fireRate = cController->FireRate();
-			if (ImGui::InputFloat("Fire Rate", &fireRate, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
-				cController->SetFireRate(fireRate);
-
-			int ammo = cController->CurrentAmmo();
-			if (ImGui::InputInt("Ammo", &ammo, 1, 10, ImGuiInputTextFlags_EnterReturnsTrue))
-				cController->SetCurrentAmmo(ammo);
-
-			int maxAmmo = cController->MaxAmmo();
-			if (ImGui::InputInt("Max Ammo", &maxAmmo, 1, 10, ImGuiInputTextFlags_EnterReturnsTrue))
-				cController->SetMaxAmmo(maxAmmo);
-
-			bool automatic = cController->IsAutomatic();
-			if (ImGui::Checkbox("Automatic", &automatic))
-				cController->SetAutomatic(automatic);
-
-			ImGui::Separator();
-
-			ImGui::TreePop();
-		}
-
-		if (ImGui::TreeNodeEx("Dash"))
-		{
-			float dashSpeed = cController->DashSpeed();
-			if (ImGui::InputFloat("Dash Speed", &dashSpeed, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
-				cController->SetDashSpeed(dashSpeed);
-
-			float dashTime = cController->DashTime();
-			if (ImGui::InputFloat("Dash Time", &dashTime, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
-				cController->SetDashTime(dashTime);
-
-			float dashColdown = cController->DashColdown();
-			if (ImGui::InputFloat("Dash Coldown", &dashColdown, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
-				cController->SetDashColdown(dashColdown);
-
-			ImGui::TreePop();
-		}
-
-		if (!show)
-		{
-			componentToDelete = cController;
-			showDeleteComponentPopup = true;
-		}
-
-		ImGui::Separator();
-	}
-	return;
-}
-
-void E_Inspector::DrawBulletBehaviorComponent(C_BulletBehavior* cBehavior)
-{
-	bool show = true;
-	if (ImGui::CollapsingHeader("Bullet Bahavior", &show, ImGuiTreeNodeFlags_Leaf))
-	{
-		bool isActive = cBehavior->IsActive();
-		if (ImGui::Checkbox("Bullet Is Active", &isActive))
-			cBehavior->SetIsActive(isActive);
-
-		ImGui::Separator();
-
-		float autodestruct = cBehavior->GetAutodestruct();
-		if (ImGui::InputFloat("Autodestruction", &autodestruct, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
-			cBehavior->SetAutodestruct(autodestruct);
-
-		if (!show)
-		{
-			componentToDelete = cBehavior;
-			showDeleteComponentPopup = true;
-		}
-
-		ImGui::Separator();
-	}
-	return;
-}
-
-void E_Inspector::DrawPropBehaviorComponent(C_PropBehavior* cBehavior)
-{
-	bool show = true;
-	if (ImGui::CollapsingHeader("Prop Bahavior", &show, ImGuiTreeNodeFlags_Leaf))
-	{
-		bool isActive = cBehavior->IsActive();
-		if (ImGui::Checkbox("Prop Is Active", &isActive))
-			cBehavior->SetIsActive(isActive);
-
-		if (!show)
-		{
-			componentToDelete = cBehavior;
-			showDeleteComponentPopup = true;
-		}
-
-		ImGui::Separator();
-	}
-	return;
-}
-
-void E_Inspector::DrawCameraBehaviorComponent(C_CameraBehavior* cBehavior)
-{
-	bool show = true;
-	if (ImGui::CollapsingHeader("Camera Bahavior", &show, ImGuiTreeNodeFlags_Leaf))
-	{
-		bool isActive = cBehavior->IsActive();
-		if (ImGui::Checkbox("Camera Behavior Is Active", &isActive))
-			cBehavior->SetIsActive(isActive);
-
-		ImGui::Separator();
-
-		float3 offset = cBehavior->GetOffset();
-		float o[3] = { offset.x, offset.y, offset.z };
-		if (ImGui::InputFloat3("Offset", o, 4, ImGuiInputTextFlags_EnterReturnsTrue))
-			cBehavior->SetOffset(float3(o[0], o[1], o[2]));
-
-		if (!show)
-		{
-			componentToDelete = cBehavior;
-			showDeleteComponentPopup = true;
-		}
-
-		ImGui::Separator();
-	}
-	return;
-}
-
-void E_Inspector::DrawGateBehaviorComponent(C_GateBehavior* cBehavior)
-{
-	bool show = true;
-	if (ImGui::CollapsingHeader("Gate Bahavior", &show, ImGuiTreeNodeFlags_Leaf))
-	{
-		bool isActive = cBehavior->IsActive();
-		if (ImGui::Checkbox("Gate Is Active", &isActive))
-			cBehavior->SetIsActive(isActive);
-
-		ImGui::Separator();
-
-		if (!show)
-		{
-			componentToDelete = cBehavior;
-			showDeleteComponentPopup = true;
-		}
-
-		ImGui::Separator();
-	}
-	return;
-}
+//void E_Inspector::DrawPlayerControllerComponent(C_PlayerController* cController)
+//{
+//	bool show = true;
+//	if (ImGui::CollapsingHeader("Player Controller", &show, ImGuiTreeNodeFlags_Leaf))
+//	{
+//		bool isActive = cController->IsActive();
+//		if (ImGui::Checkbox("Controller Is Active", &isActive))
+//			cController->SetIsActive(isActive);
+//
+//		ImGui::SameLine(ImGui::GetWindowWidth() * 0.69f);
+//
+//		uint state = (uint)cController->state;
+//		ImGui::Text("State:"); ImGui::SameLine(); ImGui::TextColored(&Yellow, "{ %u }", state);
+//
+//		ImGui::Separator();
+//		if (ImGui::TreeNodeEx("Character"))
+//		{
+//			float speed = cController->Speed();
+//			if (ImGui::InputFloat("Speed", &speed, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
+//				cController->SetSpeed(speed);
+//
+//			ImGui::Separator();
+//
+//			uint state = (uint)cController->state;
+//			ImGui::Text("Player State:"); ImGui::SameLine(); ImGui::TextColored(Yellow.C_Array(), "{ %u }", state);
+//
+//			ImGui::TreePop();
+//		}
+//
+//		if (ImGui::TreeNodeEx("Weapon"))
+//		{
+//			float bulletSpeed = cController->BulletSpeed();
+//			if (ImGui::InputFloat("Bullet Speed", &bulletSpeed, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
+//				cController->SetBulletSpeed(bulletSpeed);
+//
+//			float fireRate = cController->FireRate();
+//			if (ImGui::InputFloat("Fire Rate", &fireRate, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
+//				cController->SetFireRate(fireRate);
+//
+//			int ammo = cController->CurrentAmmo();
+//			if (ImGui::InputInt("Ammo", &ammo, 1, 10, ImGuiInputTextFlags_EnterReturnsTrue))
+//				cController->SetCurrentAmmo(ammo);
+//
+//			int maxAmmo = cController->MaxAmmo();
+//			if (ImGui::InputInt("Max Ammo", &maxAmmo, 1, 10, ImGuiInputTextFlags_EnterReturnsTrue))
+//				cController->SetMaxAmmo(maxAmmo);
+//
+//			bool automatic = cController->IsAutomatic();
+//			if (ImGui::Checkbox("Automatic", &automatic))
+//				cController->SetAutomatic(automatic);
+//
+//			ImGui::Separator();
+//
+//			ImGui::TreePop();
+//		}
+//
+//		if (ImGui::TreeNodeEx("Dash"))
+//		{
+//			float dashSpeed = cController->DashSpeed();
+//			if (ImGui::InputFloat("Dash Speed", &dashSpeed, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
+//				cController->SetDashSpeed(dashSpeed);
+//
+//			float dashTime = cController->DashTime();
+//			if (ImGui::InputFloat("Dash Time", &dashTime, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
+//				cController->SetDashTime(dashTime);
+//
+//			float dashColdown = cController->DashColdown();
+//			if (ImGui::InputFloat("Dash Coldown", &dashColdown, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
+//				cController->SetDashColdown(dashColdown);
+//
+//			ImGui::TreePop();
+//		}
+//
+//		if (!show)
+//		{
+//			componentToDelete = cController;
+//			showDeleteComponentPopup = true;
+//		}
+//
+//		ImGui::Separator();
+//	}
+//	return;
+//}
+//
+//void E_Inspector::DrawBulletBehaviorComponent(C_BulletBehavior* cBehavior)
+//{
+//	bool show = true;
+//	if (ImGui::CollapsingHeader("Bullet Bahavior", &show, ImGuiTreeNodeFlags_Leaf))
+//	{
+//		bool isActive = cBehavior->IsActive();
+//		if (ImGui::Checkbox("Bullet Is Active", &isActive))
+//			cBehavior->SetIsActive(isActive);
+//
+//		ImGui::Separator();
+//
+//		float autodestruct = cBehavior->GetAutodestruct();
+//		if (ImGui::InputFloat("Autodestruction", &autodestruct, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))
+//			cBehavior->SetAutodestruct(autodestruct);
+//
+//		if (!show)
+//		{
+//			componentToDelete = cBehavior;
+//			showDeleteComponentPopup = true;
+//		}
+//
+//		ImGui::Separator();
+//	}
+//	return;
+//}
+//
+//void E_Inspector::DrawPropBehaviorComponent(C_PropBehavior* cBehavior)
+//{
+//	bool show = true;
+//	if (ImGui::CollapsingHeader("Prop Bahavior", &show, ImGuiTreeNodeFlags_Leaf))
+//	{
+//		bool isActive = cBehavior->IsActive();
+//		if (ImGui::Checkbox("Prop Is Active", &isActive))
+//			cBehavior->SetIsActive(isActive);
+//
+//		if (!show)
+//		{
+//			componentToDelete = cBehavior;
+//			showDeleteComponentPopup = true;
+//		}
+//
+//		ImGui::Separator();
+//	}
+//	return;
+//}
+//
+//void E_Inspector::DrawCameraBehaviorComponent(C_CameraBehavior* cBehavior)
+//{
+//	bool show = true;
+//	if (ImGui::CollapsingHeader("Camera Bahavior", &show, ImGuiTreeNodeFlags_Leaf))
+//	{
+//		bool isActive = cBehavior->IsActive();
+//		if (ImGui::Checkbox("Camera Behavior Is Active", &isActive))
+//			cBehavior->SetIsActive(isActive);
+//
+//		ImGui::Separator();
+//
+//		float3 offset = cBehavior->GetOffset();
+//		float o[3] = { offset.x, offset.y, offset.z };
+//		if (ImGui::InputFloat3("Offset", o, 4, ImGuiInputTextFlags_EnterReturnsTrue))
+//			cBehavior->SetOffset(float3(o[0], o[1], o[2]));
+//
+//		if (!show)
+//		{
+//			componentToDelete = cBehavior;
+//			showDeleteComponentPopup = true;
+//		}
+//
+//		ImGui::Separator();
+//	}
+//	return;
+//}
+//
+//void E_Inspector::DrawGateBehaviorComponent(C_GateBehavior* cBehavior)
+//{
+//	bool show = true;
+//	if (ImGui::CollapsingHeader("Gate Bahavior", &show, ImGuiTreeNodeFlags_Leaf))
+//	{
+//		bool isActive = cBehavior->IsActive();
+//		if (ImGui::Checkbox("Gate Is Active", &isActive))
+//			cBehavior->SetIsActive(isActive);
+//
+//		ImGui::Separator();
+//
+//		if (!show)
+//		{
+//			componentToDelete = cBehavior;
+//			showDeleteComponentPopup = true;
+//		}
+//
+//		ImGui::Separator();
+//	}
+//	return;
+//}
 
 void E_Inspector::DrawAnimator2DComponent(C_2DAnimator* cAnimator)
 {
