@@ -110,7 +110,7 @@ void Trooper::SetUp()
 	}
 }
 
-void Trooper::Update()
+void Trooper::Behavior()
 {
 	ManageMovement();
 	if (moveState != TrooperState::DEAD)

@@ -129,7 +129,7 @@ void IG11::SetUp()
 		sniperWeapon->SetOwnership(type, handRight, rightHandName);
 }
 
-void IG11::Update()
+void IG11::Behavior()
 {
 	ManageMovement();
 	if (moveState != IG11State::DEAD)

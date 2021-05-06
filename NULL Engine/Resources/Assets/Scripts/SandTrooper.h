@@ -30,7 +30,7 @@ public:
 	virtual ~Trooper();
 
 	void SetUp() override;
-	void Update() override;
+	void Behavior() override;
 	void CleanUp() override;
 
 	void OnCollisionEnter(GameObject* object) override;
