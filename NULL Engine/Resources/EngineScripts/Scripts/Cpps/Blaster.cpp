@@ -14,6 +14,10 @@ void Blaster::SetUp()
 
 ShootState Blaster::ShootLogic()
 {
+    //Dirty fix, needs improvement
+    if(FireRate() < fireRateThreshold)
+        return ShootState::FIRED_PROJECTILE;
+
     if (!fireRateTimer.IsActive())
     {
         fireRateTimer.Start();

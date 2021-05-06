@@ -35,6 +35,15 @@
 
 #include "assume.h"
 
+
+	//Import/export engine core define
+#ifdef NULL_BUILD_DLL
+#define MISSCLICK_API __declspec(dllexport)
+#else
+#define MISSCLICK_API __declspec(dllimport)
+#endif
+
+
 MATH_BEGIN_NAMESPACE
 
 /// Converts the given amount of degrees into radians.
@@ -46,13 +55,13 @@ FORCE_INLINE float RadToDeg(float radians) { return radians * (180.f / pi); }
 
 /// Computes the function sin(x).
 /** @see Cos(), Tan(), SinCos(), Asin(), Acos(), Atan(), Atan2(), Sinh(), Cosh(), Tanh(). */
-float Sin(float angleRadians);
+MISSCLICK_API float Sin(float angleRadians);
 /// Computes the function cos(x).
 /** @see Sin(), Tan(), SinCos(), Asin(), Acos(), Atan(), Atan2(), Sinh(), Cosh(), Tanh(). */
-float Cos(float angleRadians);
+MISSCLICK_API float Cos(float angleRadians);
 /// Computes the function tan(x).
 /** @see Sin(), Cos(), SinCos(), Asin(), Acos(), Atan(), Atan2(), Sinh(), Cosh(), Tanh(). */
-float Tan(float angleRadians);
+MISSCLICK_API float Tan(float angleRadians);
 /// Simultaneously computes both sin(x) and cos(x), which yields a small performance increase over to
 /// computing them separately.
 /** @see Sin(), Cos(), Tan(), Asin(), Acos(), Atan(), Atan2(), Sinh(), Cosh(), Tanh(). */

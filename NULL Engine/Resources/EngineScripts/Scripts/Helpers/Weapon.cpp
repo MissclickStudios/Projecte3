@@ -10,6 +10,7 @@
 #include "C_RigidBody.h"
 #include "C_AudioSource.h"
 
+#include "MathGeoLib/include/Math/MathFunc.h"
 #include "Bullet.h"
 
 struct Projectile
@@ -86,26 +87,15 @@ ShootState Weapon::Shoot(float2 direction)
 	ShootState state = ShootLogic();
 	if (state == ShootState::FIRED_PROJECTILE)
 	{
-		if (projectilesPerShot > 1)
+		if (projectilesPerShot > 1 && shotSpreadArea > 0)
 		{
-			float newX = direction.x;
-			float newY = direction.y;
-			for (uint i = 0; i < projectilesPerShot; ++i)
-			{
-				FireProjectile(direction);
-				newX += shotSpreadArea;
-				newY += shotSpreadArea;
-
-				direction = float2(newX, newY);
-			}
+			SpreadProjectiles(direction);
 		}
-		else if (ammo != 0)
+		else if (projectilesPerShot != 0)
 		{
 			FireProjectile(direction);
 		}
 		
-		
-
 		ammo -= projectilesPerShot;
 		if (ammo < 0)
 			ammo = 0;
@@ -247,6 +237,37 @@ void Weapon::FastReload()
 void Weapon::FreezeBullets()
 {
 	onHitEffects.emplace_back(Effect(EffectType::FROZEN, 4.0f, false));
+}
+
+void Weapon::SpreadProjectiles(float2 direction)
+{
+	float sin = math::Sin(DegToRad(shotSpreadArea));
+
+	float cos = math::Cos(DegToRad(shotSpreadArea));
+
+	float2 initialDirection = direction;
+	for (uint i = 0; i < projectilesPerShot; ++i)
+	{
+		FireProjectile(direction);
+
+		if (i < projectilesPerShot / 2)
+		{
+			direction = float2(cos * direction.x + (-sin * direction.y), sin * direction.x + (cos * direction.y));
+		}
+		else if (i == int(projectilesPerShot / 2))
+		{
+			direction = initialDirection;
+			sin = math::Sin(DegToRad(-shotSpreadArea));
+			cos = math::Cos(DegToRad(-shotSpreadArea));
+
+			direction = float2(cos * direction.x + (-sin * direction.y), sin * direction.x + (cos * direction.y));
+
+		}
+		else if (i >= projectilesPerShot / 2)
+		{
+			direction = float2(cos * direction.x + (-sin * direction.y), sin * direction.x + (cos * direction.y));
+		}
+	}
 }
 
 GameObject* Weapon::GetHand(GameObject* object, std::string handName)

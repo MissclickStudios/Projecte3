@@ -886,11 +886,11 @@ void M_Renderer3D::RenderMeshes()
 {	
 	for (uint i = 0; i < meshRenderers.size(); ++i)
 	{
-		bool temp = meshRenderers[i].cMesh->GetOutlineMesh();
-		if(temp)
-			meshRenderers[i].Render(temp);
+
+		if(meshRenderers[i].cMesh->GetOutlineMesh())
+			meshRenderers[i].Render(true);
 		else
-			meshRenderers[i].Render(temp);
+			meshRenderers[i].Render(false);
 	}
 
 	meshRenderers.clear();

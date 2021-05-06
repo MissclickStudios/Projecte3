@@ -97,6 +97,7 @@ private:
 	float distance = 0.0f;
 	float2 moveDirection = float2::zero;
 	float2 aimDirection = float2::zero;
+	float2 secondaryAimDirection = float2::zero;
 
 	GameObject* player = nullptr;
 
@@ -104,7 +105,9 @@ private:
 	bool SpiralAttack();
 	bool UAttack();
 
-	Timer specialAttackTimer;
+	Timer spiralAttackTimer;
+	Timer UAttackTimer;
+
 	float2 specialAttackStartAim = float2::zero;
 	float specialAttackRot = 0.0f;
 

@@ -84,8 +84,10 @@ public:
 	int maxAmmo = 0;
 	int MaxAmmo() { return maxAmmo + maxAmmoModifier; }
 	int projectilesPerShot = 0;
+	float fireRateThreshold = 0.1f;
 
 	float shotSpreadArea;
+	void SpreadProjectiles(float2 direction);
 
 	// Reload
 	float reloadTime = 0.0f;
