@@ -4,9 +4,8 @@
 #include "C_Transform.h"
 
 #include "Weapon.h"
-#include "Entity.h"
 
-Bullet::Bullet() : Object()
+Bullet::Bullet() : Entity()
 {
 	baseType = ObjectType::BULLET;
 
@@ -17,7 +16,7 @@ Bullet::~Bullet()
 {
 }
 
-void Bullet::Update()
+void Bullet::Behavior()
 {
 	if (lifeTimeTimer.ReadSec() >= lifeTime)
 	{
@@ -32,6 +31,16 @@ void Bullet::Update()
 
 		Deactivate();
 	}
+}
+
+void Bullet::EntityPause()
+{
+	lifeTimeTimer.Pause();
+}
+
+void Bullet::EntityResume()
+{
+	lifeTimeTimer.Resume();
 }
 
 void Bullet::OnCollisionEnter(GameObject* object)

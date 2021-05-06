@@ -82,6 +82,22 @@ void Weapon::CleanUp()
 	hand = nullptr;
 }
 
+void Weapon::OnPause()
+{
+	fireRateTimer.Pause();
+	reloadTimer.Pause();
+
+	WeaponPause();
+}
+
+void Weapon::OnResume()
+{
+	fireRateTimer.Resume();
+	reloadTimer.Resume();
+
+	WeaponResume();
+}
+
 ShootState Weapon::Shoot(float2 direction)
 {
 	ShootState state = ShootLogic();

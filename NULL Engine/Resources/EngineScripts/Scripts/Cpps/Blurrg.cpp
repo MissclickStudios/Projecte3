@@ -241,6 +241,22 @@ void Blurrg::OnCollisionEnter(GameObject* object)
 	}
 }
 
+void Blurrg::EntityPause()
+{
+	chargeTimer.Pause();
+	dashTimer.Pause();
+	dashCooldownTimer.Pause();
+	restTimer.Pause();
+}
+
+void Blurrg::EntityResume()
+{
+	chargeTimer.Resume();
+	dashTimer.Resume();
+	dashCooldownTimer.Resume();
+	restTimer.Resume();
+}
+
 void Blurrg::DistanceToPlayer()
 {
 	if (!player)

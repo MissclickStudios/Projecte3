@@ -4,9 +4,8 @@
 #include "Hourglass.h"
 #include "Macros.h"
 
-typedef unsigned char		uchar;
-typedef unsigned int		uint;
-typedef unsigned __int32	uint32;
+typedef unsigned __int32	Uint32;
+typedef __int32	int32;
 
 class MISSCLICK_API Timer
 {
@@ -17,17 +16,21 @@ public:
 public:
 	void	Start			();				// Initializes the timer.
 	void	Stop			();				// Stops the timer.
+	void	Pause			();
+	void	Resume			();
 
-	uint32	Read			() const;		// Will return the registered time in milliseconds.
+	Uint32	Read			() const;		// Will return the registered time in milliseconds.
 	float	ReadSec			() const;		// Will return the registered time in seconds.
 
 	bool	IsActive		() const;
-	void	AddTimeToClock	();
+	bool	IsPaused		() const;
+	void	AddTimeToClock	(int32 ticks);
+	void	AddTimeToClock	(float seconds);
 
 private:
 	bool		running;						// Will keep track of whether or not the timer is still active.
-	uint32		startedAt;						// Will keep track of the exact moment at which the timer started running.
-	uint32		stoppedAt;						// Will keep track of the exact moment at which the timer stopped running.
+	int32			startedAt;					// Will keep track of the exact moment at which the timer started running.
+	int32			pausedAt;
 };
 
 #endif //__TIMER_H__

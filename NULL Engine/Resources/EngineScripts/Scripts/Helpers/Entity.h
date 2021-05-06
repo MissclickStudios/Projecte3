@@ -16,6 +16,7 @@ class C_RigidBody;
 class C_Animator;
 class C_Material;
 class C_AudioSource;
+class C_Mesh;
 
 class C_ParticleSystem;
 
@@ -51,6 +52,11 @@ public:
 	void PostUpdate();
 	
 	virtual void CleanUp() = 0;
+
+	void OnPause() override;
+	virtual void EntityPause() {}
+	void OnResume() override;
+	virtual void EntityResume() {}
 
 	virtual void OnCollisionEnter(GameObject* object) override;
 	
@@ -119,6 +125,9 @@ protected:
 
 	// Movement
 	C_RigidBody* rigidBody = nullptr;
+
+	// Mesh
+	C_Mesh* mesh = nullptr;
 
 	// Animations
 	C_Animator* animator = nullptr;

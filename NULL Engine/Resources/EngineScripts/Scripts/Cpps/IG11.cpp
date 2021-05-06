@@ -150,6 +150,18 @@ void IG11::CleanUp()
 	sniperWeapon = nullptr;
 }
 
+void IG11::EntityPause()
+{
+	spiralAttackTimer.Pause();
+	UAttackTimer.Pause();
+}
+
+void IG11::EntityResume()
+{
+	spiralAttackTimer.Resume();
+	UAttackTimer.Resume();
+}
+
 void IG11::OnCollisionEnter(GameObject* object)
 {
 	Player* playerScript = (Player*)object->GetScript("Player");

@@ -6,6 +6,7 @@
 #include "C_Animator.h"
 #include "C_Material.h"
 #include "C_AudioSource.h"
+#include "C_Mesh.h"
 
 #include "C_ParticleSystem.h"
 #include "Emitter.h"
@@ -45,8 +46,9 @@ void Entity::Awake()
 			skeleton = gameObject->childs[i];
 			continue;
 		}
-		else if (gameObject->childs[i]->GetComponent<C_Material>())
+		else if (gameObject->childs[i]->GetComponent<C_Mesh>())
 		{
+			mesh = gameObject->childs[i]->GetComponent<C_Mesh>();
 			material = gameObject->childs[i]->GetComponent<C_Material>();
 		}
 		else if (name == "Particles")
@@ -159,6 +161,28 @@ void Entity::PostUpdate()
 		else
 			animator->PlayClip(currentAnimation->name, currentAnimation->blendTime); // If there is no clip playing play the current animation
 	}
+}
+
+void Entity::OnPause()
+{
+	deathTimer.Pause();
+	stepTimer.Pause();
+
+	if (rigidBody != nullptr)
+		rigidBody->SetIsActive(false);
+
+	EntityPause();
+}
+
+void Entity::OnResume()
+{
+	deathTimer.Resume();
+	stepTimer.Resume();
+
+	if (rigidBody != nullptr)
+		rigidBody->SetIsActive(true);
+
+	EntityResume();
 }
 
 void Entity::OnCollisionEnter(GameObject* object)

@@ -12,6 +12,9 @@ public:
 
 	void SetUp() override;
 
+	void WeaponPause() {}
+	void WeaponResume() {}
+
 	ShootState ShootLogic() override;
 };
 

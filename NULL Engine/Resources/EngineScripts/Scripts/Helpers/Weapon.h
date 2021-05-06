@@ -49,6 +49,11 @@ public:
 	void Update() override;
 	void CleanUp() override;
 
+	void OnPause() override;
+	virtual void WeaponPause() {}
+	void OnResume() override;
+	virtual void WeaponResume() {}
+
 	// Usability
 	virtual ShootState Shoot(float2 direction);
 	virtual bool Reload();

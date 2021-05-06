@@ -125,6 +125,14 @@ void Trooper::CleanUp()
 	blasterWeapon = nullptr;
 }
 
+void Trooper::EntityPause()
+{
+}
+
+void Trooper::EntityResume()
+{
+}
+
 void Trooper::OnCollisionEnter(GameObject* object)
 {
 	Player* playerScript = (Player*)object->GetScript("Player");

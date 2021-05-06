@@ -1,5 +1,5 @@
 #pragma once
-#include "Object.h"
+#include "Entity.h"
 #include "ScriptMacros.h"
 
 #include "Effect.h"
@@ -8,14 +8,19 @@
 
 class Weapon;
 
-class SCRIPTS_API Bullet : public Object ALLOWED_INHERITANCE
+class SCRIPTS_API Bullet : public Entity ALLOWED_INHERITANCE
 {
 public:
 
 	Bullet();
 	virtual ~Bullet();
 
-	void Update() override;
+	void SetUp() {}
+	void Behavior() override;
+	void CleanUp() {}
+
+	void EntityPause() override;
+	void EntityResume() override;
 
 	void OnCollisionEnter(GameObject* object) override;
 

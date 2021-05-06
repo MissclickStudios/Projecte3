@@ -12,8 +12,8 @@
 #include "C_RigidBody.h"
 #include "C_Material.h"
 #include "C_ParticleSystem.h"
-#include "Emitter.h"
 #include "C_AudioSource.h"
+#include "C_Mesh.h"
 
 #include "C_Animator.h"
 
@@ -62,7 +62,8 @@ Player* CreatePlayer()
 	INSPECTOR_DRAGABLE_FLOAT(script->dashCooldown);
 
 	// Invencibility frames
-	INSPECTOR_DRAGABLE_FLOAT(script->invencibilityDuration);
+	INSPECTOR_DRAGABLE_FLOAT(script->invencibilityDuration); 
+	INSPECTOR_DRAGABLE_FLOAT(script->intermitentMesh);
 
 	// Weapons
 	INSPECTOR_DRAGABLE_FLOAT(script->changeTime);
@@ -115,6 +116,7 @@ void Player::SetUp()
 	dashTimer.Stop();
 	dashCooldownTimer.Stop();
 	invencibilityTimer.Stop();
+	intermitentMeshTimer.Stop();
 	changeTimer.Stop();
 
 	if (rigidBody != nullptr)
@@ -147,7 +149,34 @@ void Player::Behavior()
 {
 	ManageMovement();
 	if (moveState != PlayerState::DEAD)
+	{
+		if (invencibilityTimer.IsActive())
+		{
+			if (invencibilityTimer.ReadSec() >= invencibilityDuration)
+			{
+				invencibilityTimer.Stop();
+				intermitentMeshTimer.Stop();
+				if (mesh != nullptr)
+					mesh->SetIsActive(true);
+			}
+			else if (!intermitentMeshTimer.IsActive())
+			{
+				intermitentMeshTimer.Start();
+				if (mesh != nullptr)
+					mesh->SetIsActive(!mesh->IsActive());
+
+				LOG("start int timer");
+			}
+			else if (intermitentMeshTimer.ReadSec() >= intermitentMesh)
+			{
+				intermitentMeshTimer.Stop();
+
+				LOG("stop int timer");
+			}
+		}
+
 		ManageAim();
+	}
 }
 
 void Player::CleanUp()
@@ -163,6 +192,24 @@ void Player::CleanUp()
 	equipedGunWeapon = nullptr;
 
 	currentWeapon = nullptr;
+}
+
+void Player::EntityPause()
+{
+	dashTimer.Pause();
+	dashCooldownTimer.Pause();
+	invencibilityTimer.Pause();
+	intermitentMeshTimer.Pause();
+	changeTimer.Pause();
+}
+
+void Player::EntityResume()
+{
+	dashTimer.Resume();
+	dashCooldownTimer.Resume();
+	invencibilityTimer.Resume();
+	intermitentMeshTimer.Resume();
+	changeTimer.Resume();
 }
 
 void Player::SaveState(ParsonNode& playerNode)
@@ -298,8 +345,6 @@ void Player::Reset()
 
 void Player::TakeDamage(float damage)
 {
-	if (invencibilityTimer.ReadSec() >= invencibilityDuration)
-		invencibilityTimer.Stop();
 	if (!invencibilityTimer.IsActive())
 	{
 		float damageDealt = 0.0f;

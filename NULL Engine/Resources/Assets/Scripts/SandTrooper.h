@@ -33,6 +33,9 @@ public:
 	void Behavior() override;
 	void CleanUp() override;
 
+	void EntityPause() override;
+	void EntityResume() override;
+
 	void OnCollisionEnter(GameObject* object) override;
 
 	// Movement
