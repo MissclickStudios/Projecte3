@@ -44,7 +44,9 @@ public:
 	float rotation;
 
 	float3 movementDirection;
-	float velocity = 0.0f;
+	float movementIntensity = 0.0f;
+	float3 velocity;
+	float3 acceleration;
 
 	float size = 1.0f;
 	Color color;

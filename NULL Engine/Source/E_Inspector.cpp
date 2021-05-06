@@ -2909,6 +2909,8 @@ void E_Inspector::DisplayParticleMovement(ParticleModule* pModule)
 		float intensity2	= particleMovement->initialIntensity2;
 		float3 direction1	= particleMovement->initialDirection1;
 		float3 direction2	= particleMovement->initialDirection2;
+		float3 acceleration1 = particleMovement->initialAcceleration1;
+		float3 acceleration2 = particleMovement->initialAcceleration2;
 		
 		bool hide			= particleMovement->hideMovement;
 		bool deleteModule	= particleMovement->eraseMovement;
@@ -2917,7 +2919,9 @@ void E_Inspector::DisplayParticleMovement(ParticleModule* pModule)
 		if (ImGui::InputFloat("InitialIntensity_B", &intensity2, 1, 1, 4, ImGuiInputTextFlags_EnterReturnsTrue))	{ particleMovement->initialIntensity2 = intensity2; }
 		if (ImGui::InputFloat3("InitialDirection_A", (float*)&direction1, 4, ImGuiInputTextFlags_EnterReturnsTrue)) { particleMovement->initialDirection1 = direction1; }
 		if (ImGui::InputFloat3("InitialDirection_B", (float*)&direction2, 4, ImGuiInputTextFlags_EnterReturnsTrue)) { particleMovement->initialDirection2 = direction2; }
-		
+		if (ImGui::InputFloat3("InitialAcceleration_A", (float*)&acceleration1, 4, ImGuiInputTextFlags_EnterReturnsTrue)) { particleMovement->initialAcceleration1 = acceleration1; }
+		if (ImGui::InputFloat3("InitialAcceleration_B", (float*)&acceleration2, 4, ImGuiInputTextFlags_EnterReturnsTrue)) { particleMovement->initialAcceleration2 = acceleration2; }
+
 		if (ImGui::Checkbox("Hide Movement", &hide))			{ particleMovement->hideMovement = hide; }
 		if (ImGui::Checkbox("Delete Movement", &deleteModule))	{ particleMovement->eraseMovement = deleteModule; }
 
@@ -2933,7 +2937,7 @@ void E_Inspector::DisplayParticleColor(ParticleModule* pModule)
 {
 	/*bool show = true;
 	if (ImGui::CollapsingHeader("Particle Color", &show, ImGuiTreeNodeFlags_DefaultOpen))*/
-	if (ImGui::TreeNodeEx("Particle Color"/*, ImGuiTreeNodeFlags_DefaultOpen*/))
+	if (ImGui::TreeNodeEx("Particle Color"/*, ImGuiTreeNodeFlags_DefaultOpen*/)) 
 	{
 		ParticleColor* particleColor = (ParticleColor*)pModule;
 		

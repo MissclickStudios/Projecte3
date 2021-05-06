@@ -66,16 +66,18 @@ bool C_ParticleSystem::Update()
 	OPTICK_CATEGORY("C_ParticleSystem Update", Optick::Category::Update);
 	if (previewEnabled == true && MC_Time::Game::GetDT() == 0)
 	{
+		float realTimer = MC_Time::Real::GetDT();
 		for (unsigned int i = 0; i < emitterInstances.size(); ++i)
 		{
-			emitterInstances[i]->Update(MC_Time::Real::GetDT());
+			emitterInstances[i]->Update(realTimer);
 		}
 	}
 	else
 	{
+		float gameTimer = MC_Time::Game::GetDT();
 		for (unsigned int i = 0; i < emitterInstances.size(); ++i)
 		{
-			emitterInstances[i]->Update(MC_Time::Game::GetDT());
+			emitterInstances[i]->Update(gameTimer);
 		}
 	}
 

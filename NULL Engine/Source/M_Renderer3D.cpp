@@ -85,7 +85,6 @@ bool M_Renderer3D::Init(ParsonNode& configuration)
 {
 	LOG("Creating 3D Renderer context");
 	bool ret = true;
-
 	ret = InitOpenGL();																			// Initializing OpenGL. (Context and initial configuration)
 
 	OnResize();																					// Projection matrix recalculation to keep up with the resizing of the window.
@@ -146,6 +145,8 @@ bool M_Renderer3D::Start()
 	defaultSkyBox.CreateSkybox();
 
 	GenScreenBuffer();
+
+	particleShader = App->resourceManager->GetShader("ParticleShader");
 
 	return true;
 }
@@ -938,7 +939,9 @@ void M_Renderer3D::RenderSkeletons()
 
 void M_Renderer3D::AddParticle(const float4x4& transform, R_Texture* material, Color color, float distanceToCamera)
 {
-	particles.insert(std::make_pair(distanceToCamera, ParticleRenderer(material, color, transform)));
+	ParticleRenderer pRenderer = ParticleRenderer(material, color, transform);
+	pRenderer.shader = particleShader;
+	particles.insert(std::map<float, ParticleRenderer>::value_type(distanceToCamera, pRenderer));
 }
 
 void M_Renderer3D::RenderParticles()
@@ -2200,7 +2203,7 @@ transform(transform),
 VAO(0),
 shader(nullptr)
 {
-	shader = App->resourceManager->GetShader("ParticleShader");
+
 }
 
 void ParticleRenderer::LoadBuffers()
