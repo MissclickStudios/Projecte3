@@ -4,6 +4,15 @@
 
 class GameObject;
 class C_BoxCollider;
+class C_Animator;
+
+enum class SarlaacState
+{
+	IDLE,	//Waiting to be activated
+	MOVING, //Animating towards DAMAGING
+	DAMAGING, //Damage for 1 frame
+	SLEEPING  //Waits for a brief time until going back to IDLE
+};
 
 class SCRIPTS_API SarlaacTrap : public Script {
 public:
@@ -14,33 +23,31 @@ public:
 	void Update() override;
 	void CleanUp()override;
 
-	void OnCollisionEnter(GameObject* object) override;
-
 	void OnTriggerRepeat(GameObject* object) override;
 
-	std::string gameManagerName;
-	std::string explosionObjectName;
+	void StartMoving();
 
-	float3 barrelColliderSize = float3::zero;
-	float3 explosionTriggerSize = float3::zero;
+	std::string animationName = "Eat";
 
 	int damage = 0;
 
-private:
-	GameObject* gameManager = nullptr;
-	GameObject* explosionObject = nullptr;
-	C_BoxCollider* barrelCollider = nullptr;
+	float activationTime = 1.f;
+	float sleepingTime = 1.f;
 
-	bool toExplode = false;
-	bool exploded = false;
+private:
+
+	float animationTimer = 0.0f;
+
+	C_Animator* sarlaacAnimator = nullptr;
+
+	SarlaacState state = SarlaacState::IDLE;
 };
 
 SCRIPTS_FUNCTION SarlaacTrap* CreateSarlaacTrap() {
 	SarlaacTrap* script = new SarlaacTrap();
-	INSPECTOR_STRING(script->gameManagerName);
-	INSPECTOR_STRING(script->explosionObjectName);
-	INSPECTOR_INPUT_FLOAT3(script->barrelColliderSize);
-	INSPECTOR_INPUT_FLOAT3(script->explosionTriggerSize);
 	INSPECTOR_INPUT_INT(script->damage);
+	INSPECTOR_STRING(script->animationName);
+	INSPECTOR_DRAGABLE_FLOAT(script->activationTime);
+	INSPECTOR_DRAGABLE_FLOAT(script->sleepingTime);
 	return script;
 }

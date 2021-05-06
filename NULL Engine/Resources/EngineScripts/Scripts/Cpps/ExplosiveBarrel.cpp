@@ -4,6 +4,7 @@
 #include "GameManager.h"
 #include "GameObject.h"
 
+#include "C_ParticleSystem.h"
 #include "C_BoxCollider.h"
 
 #include "ExplosiveBarrel.h"
@@ -20,7 +21,11 @@ ExplosiveBarrel::~ExplosiveBarrel()
 void ExplosiveBarrel::Start()
 {
 	gameManager = App->scene->GetGameObjectByName(gameManagerName.c_str());
-	explosionObject = gameObject->FindChild(explosionObjectName.c_str());
+	barrelObject = gameObject->FindChild(barrelObjectName.c_str());
+
+	explosionParticles = gameObject->GetComponent<C_ParticleSystem>();
+
+	explosionParticles->StopSpawn();
 
 	barrelCollider = gameObject->GetComponent<C_BoxCollider>();
 
@@ -32,6 +37,7 @@ void ExplosiveBarrel::Update()
 	{
 		//deactivate mesh, trigger
 		barrelCollider->SetIsActive(false);
+		barrelCollider->SetSize(barrelColliderSize);
 
 		exploded = false;
 		//play particles
@@ -39,7 +45,10 @@ void ExplosiveBarrel::Update()
 
 	if (toExplode)
 	{
-		//Activate explosion collider
+		
+		barrelObject->SetIsActive(false);
+
+		explosionParticles->ResumeSpawn();
 
 		exploded = true;
 		toExplode = false;

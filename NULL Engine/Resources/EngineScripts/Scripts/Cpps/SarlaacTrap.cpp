@@ -1,9 +1,11 @@
 #include "Application.h"
+#include "MC_Time.h"
 #include "M_Scene.h"
 #include "Log.h"
 #include "GameManager.h"
 #include "GameObject.h"
 
+#include "C_Animator.h"
 #include "C_BoxCollider.h"
 
 #include "SarlaacTrap.h"
@@ -18,33 +20,55 @@ SarlaacTrap::~SarlaacTrap()
 
 void SarlaacTrap::Start()
 {
-	gameManager = App->scene->GetGameObjectByName(gameManagerName.c_str());
-	explosionObject = gameObject->FindChild(explosionObjectName.c_str());
 
-	barrelCollider = gameObject->GetComponent<C_BoxCollider>();
+	sarlaacAnimator = gameObject->GetComponent<C_Animator>();
 
 }
 
 void SarlaacTrap::Update()
 {
-	if (exploded)
+	switch (state)
 	{
-		//deactivate mesh, trigger
-		barrelCollider->SetIsActive(false);
-		barrelCollider->SetSize(barrelColliderSize);
 
-		exploded = false;
-		//play particles
-	}
+	case SarlaacState::IDLE:
 
-	if (toExplode)
-	{
-		//Activate explosion collider
+		break;
 
-		barrelCollider->SetIsActive(true);
+	case SarlaacState::DAMAGING:
 
-		exploded = true;
-		toExplode = false;
+		state = SarlaacState::IDLE;
+
+
+		break;
+
+	case SarlaacState::MOVING:
+
+		if (animationTimer >= activationTime)
+		{
+			state = SarlaacState::DAMAGING;
+			animationTimer = 0.f;
+		}
+		else
+		{
+			animationTimer += MC_Time::Game::GetDT();
+		}
+
+
+		break;
+
+	case SarlaacState::SLEEPING:
+
+		if (animationTimer >= sleepingTime)
+		{
+			state = SarlaacState::IDLE;
+			animationTimer = 0.f;
+		}
+		else
+		{
+			animationTimer += MC_Time::Game::GetDT();
+		}
+
+		break;
 	}
 
 }
@@ -53,26 +77,46 @@ void SarlaacTrap::CleanUp()
 {
 }
 
-void SarlaacTrap::OnCollisionEnter(GameObject* object)
-{
-	if (GetObjectScript(object, ObjectType::BULLET) != nullptr)
-	{
-		toExplode = true;
-		barrelCollider->SetTrigger(true);
-		//barrelCollider->SetIsActive(false);
-		barrelCollider->SetSize(explosionTriggerSize);
-	}
-}
-
 void SarlaacTrap::OnTriggerRepeat(GameObject* object)
 {
 	Entity* entity = (Entity*)GetObjectScript(object, ObjectType::ENTITY);
 
-	LOG("Barrel hit entity lol");
-
 	if (!entity)
 		return;
 
-	entity->TakeDamage(damage);
 
+	switch (state)
+	{
+
+		case SarlaacState::IDLE:
+
+			StartMoving();
+
+			break;
+
+		case SarlaacState::DAMAGING:
+
+			entity->TakeDamage(damage);
+
+			break;
+
+		case SarlaacState::MOVING:
+
+			break;
+
+		case SarlaacState::SLEEPING:
+
+			break;
+	}
+	
+	
+
+}
+
+void SarlaacTrap::StartMoving()
+{
+	state = SarlaacState::MOVING;
+
+	//Animator play clip
+	sarlaacAnimator->PlayClip(animationName, 0u);
 }

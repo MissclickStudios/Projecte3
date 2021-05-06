@@ -890,7 +890,7 @@ void C_Animator::PlayClip(const std::string& clipName, uint blendFrames)
 	}
 	if (currentClip != nullptr && currentClip->GetName() == clipName)													// This makes it so the user is unable to play the same clip twice.
 	{
-		return;
+		//return;
 	}
 	
 	if (currentClip == nullptr || blendFrames == 0 || blendFrames > item->second.GetDuration())
