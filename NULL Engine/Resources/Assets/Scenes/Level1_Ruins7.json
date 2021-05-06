@@ -1,11 +1,5 @@
 {
-    "Models In Scene": [
-        {
-            "GameObjectUID": 713663715,
-            "ModelResourceUID": 1531748892,
-            "ModelAssetsPath": "Assets\/Models\/Blockouts\/Alpha1\/Level1_Ruins7_Collapsed.fbx"
-        }
-    ],
+    "Models In Scene": [],
     "Game Objects": [
         {
             "UID": 4920671,
@@ -563,7 +557,7 @@
                         "H": 0.5787392258644104,
                         "IsInvisible": false,
                         "IsInputCanvas": false,
-                        "Priority": 3
+                        "Priority": 1
                     }
                 },
                 {
@@ -1393,7 +1387,7 @@
         },
         {
             "UID": 353183467,
-            "ParentUID": 1520434943,
+            "ParentUID": 1288591109,
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "MainScene",
@@ -1715,7 +1709,7 @@
                         "File": "1822940866.nemat"
                     },
                     "Texture": {
-                        "AssetsPath": "Assets\/Textures\/Blockouts\/Level1\/Cactus_Texture.png",
+                        "AssetsPath": "Assets\/Textures\/\/Blockouts\/Level1\/Cactus_Texture.png",
                         "AssetsName": "Cactus_Texture.png",
                         "LibaryPath": "Library\/Textures\/635781203.netex",
                         "LibraryFile": "635781203.netex"
@@ -2008,7 +2002,7 @@
                         "File": "1908489352.nemat"
                     },
                     "Texture": {
-                        "AssetsPath": "Assets\/Textures\/Blockouts\/Level1\/sarlaac_arvala.png",
+                        "AssetsPath": "Assets\/Textures\/\/Blockouts\/Level1\/sarlaac_arvala.png",
                         "AssetsName": "sarlaac_arvala.png",
                         "LibaryPath": "Library\/Textures\/752624901.netex",
                         "LibraryFile": "752624901.netex"
@@ -2444,7 +2438,7 @@
                 {
                     "Type": 3,
                     "Texture": {
-                        "AssetsPath": "Assets\/Textures\/Blockouts\/Level1\/floor_arvala3_compressed_new.png",
+                        "AssetsPath": "Assets\/Textures\/\/Blockouts\/Level1\/floor_arvala3_compressed_new.png",
                         "AssetsName": "floor_arvala3_compressed_new.png",
                         "LibaryPath": "Library\/Textures\/1037247170.netex",
                         "LibraryFile": "1037247170.netex"
@@ -2526,7 +2520,7 @@
                         "H": 0.5787392258644104,
                         "IsInvisible": false,
                         "IsInputCanvas": false,
-                        "Priority": 1
+                        "Priority": 2
                     }
                 },
                 {
@@ -2795,6 +2789,83 @@
                         0.99999988079071045,
                         1,
                         1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 622251241,
+            "ParentUID": 353183467,
+            "PrefabID": 316805506,
+            "IsPrefab": true,
+            "Name": "Game Manager",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": true,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 24,
+                    "ResourceUID": 1796064373,
+                    "AssetsPath": "Assets\/Scripts\/\/GameManager.h",
+                    "DataName": "GameManager",
+                    "HasInspector": true,
+                    "InspectorVariables": [
+                        {
+                            "Type": 1,
+                            "Name": "enabled",
+                            "bool": true
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "mainMenuScene",
+                            "string": "MainMenu"
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "SpawnPointName",
+                            "string": "PlayerSpawn"
+                        },
+                        {
+                            "Type": 7,
+                            "Name": "level1",
+                            "vectorstring": [
+                                "Level1_Room1.json",
+                                "Level1_Room2.json",
+                                "Level1_Room3.json",
+                                "Level1_Room4.json",
+                                "Level1_Room5.json",
+                                "Level1_Room6.json",
+                                "Level1_Room7.json",
+                                "Level1_Room8.json",
+                                "Level1_Room9.json"
+                            ]
+                        },
+                        {
+                            "Type": 4,
+                            "Name": "playerPrefab",
+                            "prefab": 1997884416
+                        }
                     ]
                 }
             ]
@@ -3471,7 +3542,7 @@
                         "File": "1822940866.nemat"
                     },
                     "Texture": {
-                        "AssetsPath": "Assets\/Textures\/Blockouts\/Level1\/Cactus_Texture.png",
+                        "AssetsPath": "Assets\/Textures\/\/Blockouts\/Level1\/Cactus_Texture.png",
                         "AssetsName": "Cactus_Texture.png",
                         "LibaryPath": "Library\/Textures\/635781203.netex",
                         "LibraryFile": "635781203.netex"
@@ -4447,7 +4518,7 @@
                         "H": 0.5787392258644104,
                         "IsInvisible": false,
                         "IsInputCanvas": true,
-                        "Priority": 4
+                        "Priority": 3
                     }
                 },
                 {
@@ -6470,7 +6541,7 @@
                         "File": "1822940866.nemat"
                     },
                     "Texture": {
-                        "AssetsPath": "Assets\/Textures\/Blockouts\/Level1\/Cactus_Texture.png",
+                        "AssetsPath": "Assets\/Textures\/\/Blockouts\/Level1\/Cactus_Texture.png",
                         "AssetsName": "Cactus_Texture.png",
                         "LibaryPath": "Library\/Textures\/635781203.netex",
                         "LibraryFile": "635781203.netex"
@@ -6645,7 +6716,7 @@
                         "H": 0.5787392258644104,
                         "IsInvisible": false,
                         "IsInputCanvas": false,
-                        "Priority": 2
+                        "Priority": 4
                     }
                 },
                 {
@@ -7049,7 +7120,7 @@
                 {
                     "Type": 3,
                     "Texture": {
-                        "AssetsPath": "Assets\/Textures\/UI\/HUD\/DashButton.png",
+                        "AssetsPath": "Assets\/Textures\/\/UI\/HUD\/DashButton.png",
                         "AssetsName": "DashButton.png",
                         "LibaryPath": "Library\/Textures\/781650108.netex",
                         "LibraryFile": "781650108.netex"
@@ -9016,7 +9087,7 @@
                         "File": "2136996470.nemat"
                     },
                     "Texture": {
-                        "AssetsPath": "Assets\/Textures\/Blockouts\/Level1\/wall_Holes.png",
+                        "AssetsPath": "Assets\/Textures\/\/Blockouts\/Level1\/wall_Holes.png",
                         "AssetsName": "wall_Holes.png",
                         "LibaryPath": "Library\/Textures\/1476231768.netex",
                         "LibraryFile": "1476231768.netex"
@@ -9605,7 +9676,7 @@
                         "File": "1822940866.nemat"
                     },
                     "Texture": {
-                        "AssetsPath": "Assets\/Textures\/Blockouts\/Level1\/Cactus_Texture.png",
+                        "AssetsPath": "Assets\/Textures\/\/Blockouts\/Level1\/Cactus_Texture.png",
                         "AssetsName": "Cactus_Texture.png",
                         "LibaryPath": "Library\/Textures\/635781203.netex",
                         "LibraryFile": "635781203.netex"
@@ -9780,7 +9851,7 @@
                         "File": "2137999214.nemat"
                     },
                     "Texture": {
-                        "AssetsPath": "Assets\/Textures\/Blockouts\/Level1\/floor_arvala3_compressed_new.png",
+                        "AssetsPath": "Assets\/Textures\/\/Blockouts\/Level1\/floor_arvala3_compressed_new.png",
                         "AssetsName": "floor_arvala3_compressed_new.png",
                         "LibaryPath": "Library\/Textures\/1037247170.netex",
                         "LibraryFile": "1037247170.netex"
