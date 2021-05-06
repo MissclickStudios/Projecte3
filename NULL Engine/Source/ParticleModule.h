@@ -109,7 +109,10 @@ struct ParticleMovement : ParticleModule
 
 	float3 initialPosition1 = float3::zero;
 	float3 initialPosition2 = float3::zero;
-
+	
+	float3 initialAcceleration1 = float3(0.0f, -0.5f, .0f);
+	float3 initialAcceleration2 = float3(0.0f, -0.5f, .0f);
+	
 	bool hideMovement = false;
 	bool eraseMovement = false;
 };

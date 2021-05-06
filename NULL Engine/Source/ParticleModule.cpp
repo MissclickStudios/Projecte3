@@ -136,8 +136,8 @@ void ParticleMovement::Save(ParsonNode& node)
 	node.SetFloat3("initialPosition1",initialPosition1);
 	node.SetFloat3("initialPosition2", initialPosition2);
 
-	node.SetBool("hideMovement", hideMovement);
-	node.SetBool("eraseMovement", eraseMovement);
+	node.SetFloat3("initialAcceleration1", initialAcceleration1);
+	node.SetFloat3("initialAcceleration2", initialAcceleration2);
 }
 
 void ParticleMovement::Load(ParsonNode& node)
@@ -153,8 +153,8 @@ void ParticleMovement::Load(ParsonNode& node)
 	initialPosition1 = node.GetFloat3("initialPosition1");
 	initialPosition2 = node.GetFloat3("initialPosition2");
 
-	hideMovement = node.GetBool("hideMovement");
-	eraseMovement = node.GetBool("eraseMovement");
+	initialAcceleration1 = node.GetFloat3("initialAcceleration1");
+	initialAcceleration2 = node.GetFloat3("initialAcceleration2");
 }
 
 void ParticleMovement::Spawn(EmitterInstance* emitter, Particle* particle)
@@ -163,8 +163,13 @@ void ParticleMovement::Spawn(EmitterInstance* emitter, Particle* particle)
 	float directionY = math::Lerp(initialDirection1.y, initialDirection2.y, randomGenerator.Float());
 	float directionZ = math::Lerp(initialDirection1.z, initialDirection2.z, randomGenerator.Float());
 	particle->movementDirection = float3(directionX, directionY, directionZ);
+	particle->movementIntensity = math::Lerp(initialIntensity1, initialIntensity2, randomGenerator.Float());
+	particle->velocity = particle->movementDirection * particle->movementIntensity;
 
-	particle->velocity = math::Lerp(initialIntensity1, initialIntensity2, randomGenerator.Float());
+	float accelerationX = math::Lerp(initialAcceleration1.x, initialAcceleration2.x, randomGenerator.Float());
+	float accelerationY = math::Lerp(initialAcceleration1.y, initialAcceleration2.y, randomGenerator.Float());
+	float accelerationZ = math::Lerp(initialAcceleration1.z, initialAcceleration2.z, randomGenerator.Float());
+	particle->acceleration = float3(accelerationX, accelerationY, accelerationZ);
 }
 
 void ParticleMovement::Update(float dt, EmitterInstance* emitter)
@@ -176,8 +181,8 @@ void ParticleMovement::Update(float dt, EmitterInstance* emitter)
 			unsigned int particleIndex = emitter->particleIndices[i];
 			Particle* particle = &emitter->particles[particleIndex];
 
-			particle->position += particle->movementDirection * particle->velocity * dt;
-		
+			particle->velocity += particle->acceleration;
+			particle->position += particle->velocity * dt;	
 		}
 	}
 	if (eraseMovement == true)
