@@ -39,6 +39,16 @@ bool C_BoxCollider::Update()
 	{
 		GetOwner()->GetComponent<C_RigidBody>()->GetRigidBody()->detachShape(*shape);
 
+		if (toUpdate == ColliderUpdateType::SHAPE || toUpdate == ColliderUpdateType::ALL)
+		{
+			shape->release();
+
+			physx::PxBoxGeometry boxGeometry = physx::PxBoxGeometry(physx::PxVec3(colliderSize.x / 2, colliderSize.y / 2, colliderSize.z / 2));
+			shape = App->physics->physics->createShape(boxGeometry, *App->physics->material);
+
+			physx::PxVec3 p = physx::PxVec3(centerPosition.x, centerPosition.y, centerPosition.z);
+			shape->setLocalPose(physx::PxTransform(p));
+		}
 		if (toUpdate == ColliderUpdateType::STATE || toUpdate == ColliderUpdateType::ALL)
 		{
 			shape->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE, !isTrigger);
@@ -50,16 +60,6 @@ bool C_BoxCollider::Update()
 
 			shape->setSimulationFilterData(filterData);
 			shape->setQueryFilterData(filterData);
-		}
-		if (toUpdate == ColliderUpdateType::SHAPE || toUpdate == ColliderUpdateType::ALL)
-		{
-			shape->release();
-
-			physx::PxBoxGeometry boxGeometry = physx::PxBoxGeometry(physx::PxVec3(colliderSize.x / 2, colliderSize.y / 2, colliderSize.z / 2));
-			shape = App->physics->physics->createShape(boxGeometry, *App->physics->material);
-
-			physx::PxVec3 p = physx::PxVec3(centerPosition.x, centerPosition.y, centerPosition.z);
-			shape->setLocalPose(physx::PxTransform(p));
 		}
 		toUpdate = ColliderUpdateType::NONE;
 

@@ -29,6 +29,7 @@ public:
 
 	const float3	Size() const { return colliderSize; }
 	void			SetSize(float x, float y, float z) { colliderSize = { x,y,z }; ToUpdate(ColliderUpdateType::SHAPE);}
+	void			SetSize(float3 size) { colliderSize = { size.x, size.y, size.z }; ToUpdate(ColliderUpdateType::SHAPE); }
 	const float3	GetCenter() const { return centerPosition; }
 	void			SetCenter(float x, float y, float z) { centerPosition = { x,y,z }; ToUpdate(ColliderUpdateType::SHAPE); }
 
