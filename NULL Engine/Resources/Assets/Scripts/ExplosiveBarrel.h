@@ -33,6 +33,8 @@ private:
 	C_BoxCollider* barrelCollider = nullptr;
 	C_ParticleSystem* explosionParticles = nullptr;
 	
+	float particleTimer = 0.f;
+
 	bool toExplode = false;
 	bool exploded = false;
 };

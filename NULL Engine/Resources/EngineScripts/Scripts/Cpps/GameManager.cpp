@@ -76,6 +76,18 @@ void GameManager::Awake()
 
 void GameManager::Start()
 {
+	//find all enemies
+	std::vector<GameObject*>* objects = App->scene->GetGameObjects();
+	for (auto go = objects->begin(); go != objects->end(); ++go)
+	{
+		Entity* entity = (Entity*)GetObjectScript((*go), ObjectType::ENTITY);
+		if (entity != nullptr)
+		{
+			enemies.push_back(entity);
+		}
+	}
+
+
 	if (enabled && mainMenuScene != App->scene->GetCurrentScene() && playerGameObject)
 	{
 		char* buffer = nullptr;
@@ -94,47 +106,8 @@ void GameManager::Start()
 
 void GameManager::Update()
 {
-	if (backtrackTimer.ReadSec() >= backtrackDuration)
-	{
-		if (playerScript != nullptr && playerScript->moveState != PlayerState::DASH && playerScript->IsGrounded())
-		{
-			if (backtrack.size() >= BACKTRACK)
-				backtrack.erase(backtrack.begin());
-			backtrack.push_back(playerScript->gameObject->transform->GetLocalPosition());
-		}
+	BackTrackUpdate();
 
-		backtrackTimer.Start();
-	}
-	if (move)
-	{
-		move = false;
-		float3 point = spawnPoint;
-		for (int i = backtrack.size() - 1; i >= 0; --i)
-		{
-			if (i == 0)
-				break;
-
-			float current = backtrack[i].y * 1000;
-			int currentRounded = (int)(backtrack[i].y * 1000);
-			if (current >= (float)currentRounded)
-				current = (float)currentRounded;
-			else
-				current = (float)(currentRounded - 1);
-
-			float past = backtrack[i - 1].y * 1000;
-			int pastRounded = (int)(backtrack[i - 1].y * 1000);
-			if (past >= (float)pastRounded)
-				past = (float)pastRounded;
-			else
-				past = (float)(pastRounded - 1);
-				
-			if (current != past)
-				continue;
-			point = backtrack[i];
-			break;
-		}
-		playerScript->MoveTo(point);
-	}
 	// --- Room Generation
 	if (enabled) 
 	{
@@ -609,6 +582,51 @@ void GameManager::SaveManagerState()
 	char* buffer = nullptr;
 	jsonState.SerializeToFile(saveFileName, &buffer);
 	CoreCrossDllHelpers::CoreReleaseBuffer(&buffer);
+}
+
+void GameManager::BackTrackUpdate()
+{
+	if (backtrackTimer.ReadSec() >= backtrackDuration)
+	{
+		if (playerScript != nullptr && playerScript->moveState != PlayerState::DASH && playerScript->IsGrounded())
+		{
+			if (backtrack.size() >= BACKTRACK)
+				backtrack.erase(backtrack.begin());
+			backtrack.push_back(playerScript->gameObject->transform->GetLocalPosition());
+		}
+
+		backtrackTimer.Start();
+	}
+	if (move)
+	{
+		move = false;
+		float3 point = spawnPoint;
+		for (int i = backtrack.size() - 1; i >= 0; --i)
+		{
+			if (i == 0)
+				break;
+
+			float current = backtrack[i].y * 1000;
+			int currentRounded = (int)(backtrack[i].y * 1000);
+			if (current >= (float)currentRounded)
+				current = (float)currentRounded;
+			else
+				current = (float)(currentRounded - 1);
+
+			float past = backtrack[i - 1].y * 1000;
+			int pastRounded = (int)(backtrack[i - 1].y * 1000);
+			if (past >= (float)pastRounded)
+				past = (float)pastRounded;
+			else
+				past = (float)(pastRounded - 1);
+
+			if (current != past)
+				continue;
+			point = backtrack[i];
+			break;
+		}
+		playerScript->MoveTo(point);
+	}
 }
 
 GameManager* CreateGameManager() {

@@ -38,6 +38,8 @@ private:
     void HandleRoomGeneration();
     void SaveManagerState();
 
+    void BackTrackUpdate();
+
 public:
     std::vector<std::string> level1;
     std::vector<std::string> level2;
@@ -53,6 +55,8 @@ private:
     const char* saveFileName = "GameState.json";
     int	currentLevel = 0;
     int	roomNum = 0;
+
+    std::vector<Entity*> enemies;
 
     bool move = false; // shhhhhh, don't tell jordi
     float3 spawnPoint = float3::zero;
