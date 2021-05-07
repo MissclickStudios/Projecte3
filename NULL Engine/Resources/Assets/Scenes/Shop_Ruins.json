@@ -3383,7 +3383,7 @@
         },
         {
             "UID": 1598465591,
-            "ParentUID": 1493571742,
+            "ParentUID": 124883247,
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "MainScene",
@@ -3647,9 +3647,9 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        9.6022148132324219,
+                        16.567010879516602,
                         -1.1780121326446533,
-                        20.625556945800781
+                        21.427997589111328
                     ],
                     "LocalRotation": [
                         0,
@@ -4375,6 +4375,69 @@
                         "LibaryPath": "Library\/Shaders\/1025410539.neshader",
                         "LibraryFile": "1025410539.neshader"
                     }
+                }
+            ]
+        },
+        {
+            "UID": 545210471,
+            "ParentUID": 1598465591,
+            "PrefabID": 1384021613,
+            "IsPrefab": true,
+            "Name": "NextSceneTrigger",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": true,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        124.24002838134766,
+                        5.5019998550415039,
+                        -77.373458862304688
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0.7071068286895752,
+                        0,
+                        0.70710670948028564
+                    ],
+                    "LocalScale": [
+                        1.0000002384185791,
+                        1.0000001192092896,
+                        1.0000002384185791
+                    ]
+                },
+                {
+                    "Type": 8,
+                    "Is Static": true,
+                    "Filter": " gate"
+                },
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 5,
+                    "Size Y": 10,
+                    "Size Z": 55,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
+                },
+                {
+                    "Type": 24,
+                    "ResourceUID": 1710105955,
+                    "AssetsPath": "Assets\/Scripts\/\/Gate.h",
+                    "DataName": "Gate",
+                    "HasInspector": true,
+                    "InspectorVariables": [
+                        {
+                            "Type": 5,
+                            "Name": "gameManagerName",
+                            "string": "Game Manager"
+                        }
+                    ]
                 }
             ]
         }
