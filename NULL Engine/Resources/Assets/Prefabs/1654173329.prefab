@@ -1,0 +1,405 @@
+{
+    "UID": 1533436305,
+    "ParentUID": 1474137658,
+    "PrefabID": 1654173329,
+    "IsPrefab": true,
+    "Name": "Turret",
+    "IsActive": true,
+    "IsStatic": false,
+    "IsSceneRoot": false,
+    "MaintainThroughScenes": false,
+    "ShowBoundingBoxes": true,
+    "Components": [
+        {
+            "Type": 1,
+            "LocalPosition": [
+                0,
+                0,
+                0
+            ],
+            "LocalRotation": [
+                0,
+                0,
+                0,
+                1
+            ],
+            "LocalScale": [
+                1,
+                1,
+                1
+            ]
+        },
+        {
+            "Type": 8,
+            "Is Static": false,
+            "Filter": " enemy",
+            "Mass": 10,
+            "Density": 1,
+            "Linear Damping": 0,
+            "Angular Damping": 0,
+            "Use Gravity": false,
+            "Is Kinematic": false,
+            "Freeze Position X": false,
+            "Freeze Position Y": false,
+            "Freeze Position Z": false,
+            "Freeze Rotation X": true,
+            "Freeze Rotation Y": true,
+            "Freeze Rotation Z": true
+        },
+        {
+            "Type": 9,
+            "Is Trigger": false,
+            "Show Collider": true,
+            "Size X": 7,
+            "Size Y": 7,
+            "Size Z": 7,
+            "Center X": 0,
+            "Center Y": 3,
+            "Center Z": -1
+        },
+        {
+            "Type": 24,
+            "ResourceUID": 886533196,
+            "AssetsPath": "Assets\/Scripts\/\/Turret.h",
+            "DataName": "Turret",
+            "HasInspector": true,
+            "InspectorVariables": [
+                {
+                    "Type": 5,
+                    "Name": "playerName",
+                    "string": "Mandalorian"
+                },
+                {
+                    "Type": 2,
+                    "Name": "health",
+                    "float": 1
+                },
+                {
+                    "Type": 2,
+                    "Name": "maxHealth",
+                    "float": 1
+                },
+                {
+                    "Type": 2,
+                    "Name": "speed",
+                    "float": 0
+                },
+                {
+                    "Type": 2,
+                    "Name": "attackSpeed",
+                    "float": 0
+                },
+                {
+                    "Type": 2,
+                    "Name": "damage",
+                    "float": 0
+                },
+                {
+                    "Type": 2,
+                    "Name": "defense",
+                    "float": 1
+                },
+                {
+                    "Type": 2,
+                    "Name": "maxHealthModifier",
+                    "float": 0
+                },
+                {
+                    "Type": 2,
+                    "Name": "speedModifier",
+                    "float": 1
+                },
+                {
+                    "Type": 2,
+                    "Name": "attackSpeedModifier",
+                    "float": 1
+                },
+                {
+                    "Type": 2,
+                    "Name": "damageModifier",
+                    "float": 1
+                },
+                {
+                    "Type": 2,
+                    "Name": "defenseModifier",
+                    "float": 1
+                },
+                {
+                    "Type": 2,
+                    "Name": "cooldownModifier",
+                    "float": 1
+                },
+                {
+                    "Type": 2,
+                    "Name": "deathDuration",
+                    "float": 1
+                },
+                {
+                    "Type": 2,
+                    "Name": "attackDistance",
+                    "float": 30
+                },
+                {
+                    "Type": 4,
+                    "Name": "blaster",
+                    "prefab": 1609990140
+                },
+                {
+                    "Type": 5,
+                    "Name": "handName",
+                    "string": "Hand"
+                }
+            ]
+        }
+    ],
+    "Children": [
+        {
+            "UID": 366259880,
+            "ParentUID": 1533436305,
+            "PrefabID": 1654173329,
+            "IsPrefab": true,
+            "Name": "Skeleton",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -1.1920928955078125e-07,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ],
+            "Children": [
+                {
+                    "UID": 943047485,
+                    "ParentUID": 366259880,
+                    "PrefabID": 1654173329,
+                    "IsPrefab": true,
+                    "Name": "Hand",
+                    "IsActive": true,
+                    "IsStatic": false,
+                    "IsSceneRoot": false,
+                    "MaintainThroughScenes": false,
+                    "ShowBoundingBoxes": false,
+                    "Components": [
+                        {
+                            "Type": 1,
+                            "LocalPosition": [
+                                0.003144741291180253,
+                                5.1071252822875977,
+                                1.9898421764373779
+                            ],
+                            "LocalRotation": [
+                                0,
+                                0,
+                                0,
+                                1
+                            ],
+                            "LocalScale": [
+                                1,
+                                1,
+                                1
+                            ]
+                        }
+                    ],
+                    "Children": []
+                },
+                {
+                    "UID": 2020393814,
+                    "ParentUID": 366259880,
+                    "PrefabID": 1654173329,
+                    "IsPrefab": true,
+                    "Name": "Head",
+                    "IsActive": true,
+                    "IsStatic": false,
+                    "IsSceneRoot": false,
+                    "MaintainThroughScenes": false,
+                    "ShowBoundingBoxes": false,
+                    "Components": [
+                        {
+                            "Type": 1,
+                            "LocalPosition": [
+                                0,
+                                3.2654428482055664,
+                                -1.9073486328125e-06
+                            ],
+                            "LocalRotation": [
+                                0,
+                                0,
+                                0,
+                                1
+                            ],
+                            "LocalScale": [
+                                1,
+                                1,
+                                1
+                            ]
+                        }
+                    ],
+                    "Children": [
+                        {
+                            "UID": 254727427,
+                            "ParentUID": 2020393814,
+                            "PrefabID": 1654173329,
+                            "IsPrefab": true,
+                            "Name": "Mesh",
+                            "IsActive": true,
+                            "IsStatic": false,
+                            "IsSceneRoot": false,
+                            "MaintainThroughScenes": false,
+                            "ShowBoundingBoxes": false,
+                            "Components": [
+                                {
+                                    "Type": 1,
+                                    "LocalPosition": [
+                                        -0.47651022672653198,
+                                        -9.5367431640625e-07,
+                                        1.498160719871521
+                                    ],
+                                    "LocalRotation": [
+                                        -0.70710664987564087,
+                                        0,
+                                        0,
+                                        0.70710694789886475
+                                    ],
+                                    "LocalScale": [
+                                        0.025399999693036079,
+                                        0.025399994105100632,
+                                        0.025399994105100632
+                                    ]
+                                },
+                                {
+                                    "Type": 2,
+                                    "UID": 458238241,
+                                    "Name": "Head.nemesh",
+                                    "Path": "Library\/Meshes\/458238241.nemesh",
+                                    "File": "458238241.nemesh",
+                                    "ShowWireframe": false,
+                                    "ShowBoundingBox": false,
+                                    "Outline": false,
+                                    "OutlineThickness": 1,
+                                    "OutlineColor": [
+                                        0,
+                                        0,
+                                        0,
+                                        1
+                                    ]
+                                },
+                                {
+                                    "Type": 3,
+                                    "Material": {
+                                        "UID": 2135000476,
+                                        "Color": [
+                                            0.80000001192092896,
+                                            0.80000001192092896,
+                                            0.80000001192092896,
+                                            1
+                                        ],
+                                        "Name": "Head.nemat",
+                                        "Path": "Library\/Materials\/2135000476.nemat",
+                                        "File": "2135000476.nemat"
+                                    },
+                                    "Shader": {
+                                        "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
+                                        "AssetsName": "DefaultShader.shader",
+                                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
+                                        "LibraryFile": "800223282.neshader"
+                                    }
+                                }
+                            ],
+                            "Children": []
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 797246407,
+            "ParentUID": 1533436305,
+            "PrefabID": 1654173329,
+            "IsPrefab": true,
+            "Name": "Base",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        2.328265905380249,
+                        0
+                    ],
+                    "LocalRotation": [
+                        -0.70710664987564087,
+                        0,
+                        0,
+                        0.70710688829421997
+                    ],
+                    "LocalScale": [
+                        0.025399999693036079,
+                        0.025399995967745781,
+                        0.025399995967745781
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 1229761385,
+                    "Name": "Base.nemesh",
+                    "Path": "Library\/Meshes\/1229761385.nemesh",
+                    "File": "1229761385.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false,
+                    "Outline": false,
+                    "OutlineThickness": 1,
+                    "OutlineColor": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ]
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 1339346489,
+                        "Color": [
+                            0.80000001192092896,
+                            0.80000001192092896,
+                            0.80000001192092896,
+                            1
+                        ],
+                        "Name": "Base.nemat",
+                        "Path": "Library\/Materials\/1339346489.nemat",
+                        "File": "1339346489.nemat"
+                    },
+                    "Shader": {
+                        "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
+                        "AssetsName": "DefaultShader.shader",
+                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
+                        "LibraryFile": "800223282.neshader"
+                    }
+                }
+            ],
+            "Children": []
+        }
+    ]
+} 
