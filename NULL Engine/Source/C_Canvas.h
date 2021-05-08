@@ -3,19 +3,13 @@
 
 #include <vector>
 
-#include "Component.h"
+#include "C_UI.h"
 
 #include "MathGeoLib/include/Math/float2.h"
 #include "MathGeoLib/include/Math/float3.h"
 
 class ParsonNode;
-class C_UI_Button;
-class C_UI_Image;
-
-struct MISSCLICK_API Rect2D
-{
-	float x, y, w, h;
-};
+class GameObject;
 
 class MISSCLICK_API C_Canvas : public Component
 {
@@ -31,39 +25,32 @@ public:
 
 	static inline ComponentType GetType() { return ComponentType::CANVAS; }
 
-	void Draw2D();
-	void Draw3D();
+	void Draw2D(bool renderCavas); // const??
+	void Draw3D(bool renderCanvas);
 
-	bool CheckButtonStates(); // Returns false if no buttons are hovered/pressed
-	
-	void UpdateActiveButtons();
 
-public:
-
+	void RemoveUiElement(C_UI*element);
 	float2 GetPosition() const;
 	float2 GetSize() const;
 	Rect2D GetRect() const;
-	bool IsInvisible() const;
 
 	void SetPosition(const float2& postion);
 	void SetSize(const float2& size);
 	void SetRect(const Rect2D& rect);
-	void SetIsInvisible(const bool setTo);
 
 public:
-
-	std::vector<C_UI_Button*> activeButtons;
-
-	C_UI_Button* selectedButton = nullptr;
-	C_UI_Button* hoveredButton = nullptr;
-
-	int priority = 0;
-
+	bool debugDraw = false;
 private:
-	C_UI_Button* buttonIterator = nullptr;
-
+	void ResetUi();
+	void HandleInput();
+private:
 	Rect2D rect = { 0,0,50,50 };
-	bool isInvisible; // This is not the same as active, this just prevents drawing
+	C_UI* selectedUi = nullptr;
+	std::vector<C_UI*> uiElements;
+	std::vector<GameObject*>cachedObjects; //removable if we had event system
+
+	friend class M_UISystem;
+	friend class E_Inspector;
 };
 
 #endif // !__C_CANVAS_H__

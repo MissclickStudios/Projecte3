@@ -1,6 +1,7 @@
 #include "JSONParser.h"
 #include "Profiler.h"													
-#include "OpenGL.h"														
+//#include "OpenGL.h"
+#include "Dependencies/glew/include/glew.h"
 
 #include "MC_Time.h"
 
@@ -17,10 +18,10 @@
 #include "M_Camera3D.h"													
 #include "M_Input.h"													
 #include "M_FileSystem.h"												
-#include "M_ResourceManager.h"											
-#include "M_Editor.h"													
+#include "M_ResourceManager.h"																								
 #include "M_Scene.h"
 #include "M_Detour.h"
+#include "M_UISystem.h"
 
 #include "R_Mesh.h"														
 #include "R_Material.h"													
@@ -755,68 +756,38 @@ void M_Renderer3D::RenderUI()
 {
 	OPTICK_CATEGORY("RenderUI", Optick::Category::Rendering)
 	SetTo2DRenderSettings(true);
-
-	C_Canvas* canvas = nullptr;
-	for (auto uiIt = App->scene->GetGameObjects()->cbegin(); uiIt != App->scene->GetGameObjects()->cend(); ++uiIt)
-	{	
-		canvas = (*uiIt)->GetComponent<C_Canvas>();
-		if (canvas != nullptr && canvas->IsActive())
-		{
-			RenderUIComponent((*uiIt));
-
-			if (!canvas->IsInvisible())
-			{
-				if (App->camera->currentCamera != App->camera->masterCamera->GetComponent<C_Camera>())
-					canvas->Draw2D();
-
-				else
-					canvas->Draw3D();
-			}
-		}
-	}
-
-	SetTo2DRenderSettings(false);
-}
-
-void M_Renderer3D::RenderUIComponent(GameObject* gameObject)
-{
-	for (std::vector<GameObject*>::iterator it = gameObject->childs.begin(); it != gameObject->childs.end(); it++)
+	/*
+	if (App->camera->currentCamera != App->camera->masterCamera->GetComponent<C_Camera>())
+		canvas->Draw2D();
+	else
+		canvas->Draw3D();
+	*/
+	if (App->gameState != GameState::PLAY)
 	{
-		if (!(*it)->IsActive())
-			continue;
-
-		C_UI_Image* image = (*it)->GetComponent<C_UI_Image>();
-		if (image != nullptr)
+		const std::vector<C_Canvas*> canvasToDraw = App->uiSystem->GetAllCanvas();
+		for (std::vector<C_Canvas*>::const_iterator it = canvasToDraw.cbegin(); it != canvasToDraw.cend(); ++it)
 		{
-			if (App->camera->currentCamera != App->camera->masterCamera->GetComponent<C_Camera>())
-				image->Draw2D();
-
-			else
-				image->Draw3D();
+			//TODO: DRAW THE UI ELEMENTS ON 3D
+			// SetTo2DRenderSettings(false);
+			//(*rit)->Draw3D(renderCanvas);
+			//SetTo2DRenderSettings(false);
+			if ((*it)->debugDraw)
+				(*it)->Draw2D(renderCanvas);
 		}
-
-		C_UI_Text* text = (*it)->GetComponent<C_UI_Text>();
-		if (text != nullptr)
-		{
-			if (App->camera->currentCamera != App->camera->masterCamera->GetComponent<C_Camera>())
-				text->RenderText();
-		}
-
-		C_UI_Button* button = (*it)->GetComponent<C_UI_Button>();
-		if (button != nullptr)
-		{
-			if (App->camera->currentCamera != App->camera->masterCamera->GetComponent<C_Camera>())
-				button->Draw2D();
-
-			else
-				button->Draw3D();
-		}
-
-		for (std::vector<GameObject*>::iterator childIt = (*it)->childs.begin(); childIt != (*it)->childs.end(); childIt++)
-		{
-			RenderUIComponent(*childIt);
-		}
+		SetTo2DRenderSettings(false);
+		return;
 	}
+	std::list<C_Canvas*> canvasToDraw = App->uiSystem->GetActiveCanvas();
+	for (std::list<C_Canvas*>::reverse_iterator rit = canvasToDraw.rbegin(); rit != canvasToDraw.rend(); ++rit)
+	{
+		//TODO: DRAW THE UI ELEMENTS ON 3D
+		// SetTo2DRenderSettings(false);
+		//(*rit)->Draw3D(renderCanvas);
+		//SetTo2DRenderSettings(false);
+		if ((*rit)->IsActive())
+			(*rit)->Draw2D(renderCanvas);
+	}
+	SetTo2DRenderSettings(false);
 }
 
 void M_Renderer3D::RenderFramebufferTexture()
@@ -1552,7 +1523,7 @@ void M_Renderer3D::GenScreenBuffer()
 	glGenVertexArrays(1, &quadScreenVAO);
 	glBindVertexArray(quadScreenVAO);
 
-	const GLfloat g_quad_vertex_buffer_data[] = {
+	const GLfloat quadVertexBufferData[] = {
 		-1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
 		-1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
 		1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
@@ -1561,10 +1532,10 @@ void M_Renderer3D::GenScreenBuffer()
 		-1.0f,  1.0f, 0.0f, 0.0f, 1.0f
 	};
 
-	GLuint quad_vertexbuffer;
-	glGenBuffers(1, &quad_vertexbuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, quad_vertexbuffer);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(g_quad_vertex_buffer_data), g_quad_vertex_buffer_data, GL_STATIC_DRAW);
+	GLuint quadVertexbuffer;
+	glGenBuffers(1, &quadVertexbuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, quadVertexbuffer);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertexBufferData), quadVertexBufferData, GL_STATIC_DRAW);
 
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 5, (void*)0);

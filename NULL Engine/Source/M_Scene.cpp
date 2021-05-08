@@ -242,8 +242,7 @@ bool M_Scene::LoadConfiguration(ParsonNode& root)
 // -------------- SCENE METHODS --------------
 bool M_Scene::SaveScene(const char* sceneName) const
 {
-	bool ret = true;
-
+	App->uiSystem->SaveCanvasChildrenOrder();
 	ParsonNode rootNode		= ParsonNode();
 
 	ParsonArray modelArray = rootNode.SetArray("Models In Scene");
@@ -302,13 +301,11 @@ bool M_Scene::SaveScene(const char* sceneName) const
 
 	RELEASE_ARRAY(buffer);
 
-	return ret;
+	return true;
 }
 
 bool M_Scene::LoadScene(const char* path)
 {
-	bool ret = true;
-
 	std::string sceneName;
 
 	App->fileSystem->SplitFilePath(path, nullptr, &sceneName);
@@ -335,7 +332,7 @@ bool M_Scene::LoadScene(const char* path)
 		if (App->gameState == GameState::PLAY)
 			App->scriptManager->CleanUpScripts();
 		CleanUp();
-		App->uiSystem->CleanUpScene();
+		App->uiSystem->ClearActiveCanvas();
 
 		//std::vector<GameObject*> parentMaintained;
 		//CleanUpCurrentScene(parentMaintained);
@@ -496,11 +493,12 @@ bool M_Scene::LoadScene(const char* path)
 
 	LOG("Successfully Loaded Scene: %s", path);
 
+	App->uiSystem->ReorderCanvasChildren();
 	//if (!CheckSceneLight()) AddSceneLight(App->renderer->GenerateSceneLight(Color(1.0f, 1.0f, 1.0f, 1.0f), Color(0.6, 0.6, 0.6, 0.5), Color(0.6, 0.6, 0.6, 0.5), LightType::DIRECTIONAL));
 	if (App->gameState == GameState::PLAY)
 		App->scriptManager->InitScripts();
 
-	return ret;
+	return true;
 }
 
 bool M_Scene::CleanUpCurrentScene(std::vector<GameObject*>& parentMaintained)						// ATTENTION: Look for a way to erase an item in a loop and keep iter. without problems.
@@ -752,10 +750,6 @@ void M_Scene::DeleteGameObject(GameObject* gameObject,  int index)
 	if (gameObject == animationRoot)
 	{
 		animationRoot = nullptr;
-	}
-	if (gameObject->GetComponent<C_UI_Button>() != nullptr)
-	{
-		App->uiSystem->DeleteActiveButton(gameObject->GetComponent<C_UI_Button>());
 	}
 	
 	auto item = models.find(gameObject->GetUID());

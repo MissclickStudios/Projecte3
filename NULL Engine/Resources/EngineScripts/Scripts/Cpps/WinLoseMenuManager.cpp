@@ -22,7 +22,7 @@ void WinLoseMenuManager::Update()
 {
 	if (backButton != nullptr)
 	{
-		if (backButton->IsPressed())
+		if (backButton->GetState() == UIButtonState::PRESSEDIN)
 		{
 
 		}

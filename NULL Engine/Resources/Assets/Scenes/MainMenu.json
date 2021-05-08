@@ -17,7 +17,7 @@
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
+            "ShowBoundingBoxes": true,
             "Components": [
                 {
                     "Type": 1,
@@ -45,10 +45,7 @@
                         "X": 0,
                         "Y": 0,
                         "W": 1.0926049947738647,
-                        "H": 0.5787392258644104,
-                        "IsInvisible": false,
-                        "IsInputCanvas": true,
-                        "Priority": 1
+                        "H": 0.5787392258644104
                     }
                 }
             ]
@@ -86,13 +83,11 @@
                 },
                 {
                     "Type": 23,
-                    "Button": {
-                        "X": 0,
-                        "Y": -0.075000002980232239,
-                        "W": 0.31999999284744263,
-                        "H": 0.079999998211860657,
-                        "IsHovered": false
-                    }
+                    "X": 0,
+                    "Y": -0.075000002980232239,
+                    "W": 0.31999999284744263,
+                    "H": 0.079999998211860657,
+                    "childOrder": 3
                 },
                 {
                     "Type": 3,
@@ -121,7 +116,7 @@
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
+            "ShowBoundingBoxes": true,
             "Components": [
                 {
                     "Type": 1,
@@ -171,7 +166,10 @@
                                 "Level1_Room1.json",
                                 "Level1_Room2.json",
                                 "Level1_Room3.json",
+                                "Level1_Room4.json",
+                                "Level1_Room5.json",
                                 "Level1_Room6.json",
+                                "Level1_Room7.json",
                                 "Level1_Room8.json",
                                 "Level1_Room9.json"
                             ]
@@ -223,7 +221,7 @@
             "ParentUID": 520337368,
             "PrefabID": 0,
             "IsPrefab": false,
-            "Name": "UI Button",
+            "Name": "Settings",
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
@@ -251,13 +249,11 @@
                 },
                 {
                     "Type": 23,
-                    "Button": {
-                        "X": 0,
-                        "Y": -0.21500000357627869,
-                        "W": 0.31999999284744263,
-                        "H": 0.079999998211860657,
-                        "IsHovered": false
-                    }
+                    "X": 0,
+                    "Y": -0.21500000357627869,
+                    "W": 0.31999999284744263,
+                    "H": 0.079999998211860657,
+                    "childOrder": 4
                 },
                 {
                     "Type": 3,
@@ -309,13 +305,11 @@
                 },
                 {
                     "Type": 23,
-                    "Button": {
-                        "X": 0,
-                        "Y": -0.36000001430511475,
-                        "W": 0.31999999284744263,
-                        "H": 0.079999998211860657,
-                        "IsHovered": true
-                    }
+                    "X": 0,
+                    "Y": -0.36000001430511475,
+                    "W": 0.31999999284744263,
+                    "H": 0.079999998211860657,
+                    "childOrder": 5
                 },
                 {
                     "Type": 3,
@@ -438,13 +432,11 @@
                 },
                 {
                     "Type": 23,
-                    "Button": {
-                        "X": 0,
-                        "Y": 0.070000000298023224,
-                        "W": 0.31999999284744263,
-                        "H": 0.079999998211860657,
-                        "IsHovered": false
-                    }
+                    "X": 0,
+                    "Y": 0.070000000298023224,
+                    "W": 0.31999999284744263,
+                    "H": 0.079999998211860657,
+                    "childOrder": 2
                 },
                 {
                     "Type": 3,
@@ -520,6 +512,11 @@
                             "Type": 6,
                             "Name": "gameManager",
                             "gameobject": 764877460
+                        },
+                        {
+                            "Type": 6,
+                            "Name": "canvasObject",
+                            "gameobject": 520337368
                         }
                     ]
                 }
@@ -527,7 +524,7 @@
         },
         {
             "UID": 1474137658,
-            "ParentUID": 458913441,
+            "ParentUID": 657420450,
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "MainScene",
@@ -563,12 +560,12 @@
             "ParentUID": 520337368,
             "PrefabID": 0,
             "IsPrefab": false,
-            "Name": "UI Image",
+            "Name": "SandsImage",
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": true,
+            "ShowBoundingBoxes": false,
             "Components": [
                 {
                     "Type": 1,
@@ -591,14 +588,11 @@
                 },
                 {
                     "Type": 21,
-                    "Image": {
-                        "X": 0,
-                        "Y": 0.27500000596046448,
-                        "W": 0.74000000953674316,
-                        "H": 0.4699999988079071,
-                        "IsHDL": false,
-                        "IsHDR": false
-                    }
+                    "X": 0,
+                    "Y": 0.27500000596046448,
+                    "W": 0.74000000953674316,
+                    "H": 0.4699999988079071,
+                    "childOrder": 1
                 },
                 {
                     "Type": 3,
@@ -631,7 +625,7 @@
             "ParentUID": 520337368,
             "PrefabID": 0,
             "IsPrefab": false,
-            "Name": "UI Image",
+            "Name": "TitleMandalorian",
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
@@ -659,14 +653,11 @@
                 },
                 {
                     "Type": 21,
-                    "Image": {
-                        "X": 0,
-                        "Y": 0.079999998211860657,
-                        "W": 0.98500001430511475,
-                        "H": 1.1000000238418579,
-                        "IsHDL": false,
-                        "IsHDR": false
-                    }
+                    "X": 0,
+                    "Y": 0.079999998211860657,
+                    "W": 0.98500001430511475,
+                    "H": 1.1000000238418579,
+                    "childOrder": 0
                 },
                 {
                     "Type": 3,

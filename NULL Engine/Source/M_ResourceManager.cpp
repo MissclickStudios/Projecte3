@@ -24,6 +24,7 @@
 #include "FileSystemDefinitions.h"
 #include "M_FileSystem.h"
 #include "M_Scene.h"
+#include "M_UISystem.h"
 
 #include "C_Transform.h"
 
@@ -934,6 +935,8 @@ void M_ResourceManager::UpdatePrefab(GameObject* gameObject)
 
 void M_ResourceManager::SavePrefab(GameObject* gameObject, uint _prefabId)
 {
+	//Always reorder ui before saving prefabs or scenes
+	App->uiSystem->SaveCanvasChildrenOrder();
 	ParsonNode rootNode;
 
 	SavePrefabObject(gameObject,&rootNode);

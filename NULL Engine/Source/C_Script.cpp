@@ -143,7 +143,8 @@ bool C_Script::LoadState(ParsonNode& root)
 		if (!inspectorVariables.empty() && root.GetBool("HasInspector"))
 		{
 			ParsonArray variablesToLoad = root.GetArray("InspectorVariables");
-			for (int i = 0; i < inspectorVariables.size(); ++i) {
+			for (int i = 0; i < inspectorVariables.size(); ++i) 
+			{
 				for (int j = 0; j < variablesToLoad.size; ++j)
 				{
 					ParsonNode variable = variablesToLoad.GetNode(j);

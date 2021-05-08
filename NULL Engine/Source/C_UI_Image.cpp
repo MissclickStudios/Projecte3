@@ -26,35 +26,30 @@
 
 #include "JSONParser.h"
 
-C_UI_Image::C_UI_Image(GameObject* owner, Rect2D rect) : Component(owner, ComponentType::UI_IMAGE)
+C_UI_Image::C_UI_Image(GameObject* owner, Rect2D rect) : C_UI(owner, ComponentType::UI_IMAGE, false, rect)
 {
 	LoadBuffers();
 }
 
 C_UI_Image::~C_UI_Image()
 {
-
+	GameObject* parent = GetOwner()->parent;
+	if (parent) 
+	{
+		C_Canvas* canvas = parent->GetComponent<C_Canvas>();
+		if (canvas)
+			canvas->RemoveUiElement(this);
+	}
 }
 
 bool C_UI_Image::Update()
 {
-	bool ret = true;
-
-	if (IsActive() == false)
-		return ret;
-
-	C_Canvas* canvas = GetOwner()->parent->GetComponent<C_Canvas>();
-	if (canvas == nullptr)
-		return ret;
-
-	return ret;
+	return true;
 }
 
 bool C_UI_Image::CleanUp()
 {
-	bool ret = true;
-
-	return ret;
+	return true;
 }
 
 void C_UI_Image::LoadBuffers()
@@ -69,30 +64,34 @@ void C_UI_Image::LoadBuffers()
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
+void C_UI_Image::HandleInput(C_UI** selectedUi)
+{
+}
+
 void C_UI_Image::Draw2D()
 {
 	uint32 id;
+	C_2DAnimator* cAnimator = GetOwner()->GetComponent<C_2DAnimator>();
+	C_Material* cMaterial = GetOwner()->GetComponent<C_Material>();
 
-	if (strcmp(GetOwner()->GetName(), "Hovered Decoration L") == 0 || strcmp(GetOwner()->GetName(), "Hovered Decoration R") == 0)
-		id = App->uiSystem->buttonHoverDecor->GetTextureID();
+	if (cMaterial == nullptr) 
+		return;
 
-	else if (GetOwner()->GetComponent<C_Material>() == nullptr && GetOwner()->GetComponent<C_2DAnimator>() == nullptr) return;
-
-	else if (GetOwner()->GetComponent<C_2DAnimator>() != nullptr && GetOwner()->GetComponent<C_2DAnimator>()->IsAnimationPlaying())
-		id = GetOwner()->GetComponent<C_2DAnimator>()->GetIdFromAnimation();
+	else if (cAnimator && cAnimator->IsAnimationPlaying())
+		id = cAnimator->GetIdFromAnimation();
 
 	else
-		id = GetOwner()->GetComponent<C_Material>()->GetTextureID();
+		id = cMaterial->GetTextureID();
 
 	C_Canvas* canvas = GetOwner()->parent->GetComponent<C_Canvas>();
 	if (canvas == nullptr) return;
 
 	glEnable(GL_BLEND);
 
-	if(!GetOwner()->GetComponent<C_Material>()->GetShader())
-		GetOwner()->GetComponent<C_Material>()->SetShader(App->resourceManager->GetShader("UIShader"));
+	if(!cMaterial->GetShader())
+		cMaterial->SetShader(App->resourceManager->GetShader("UIShader"));
 
-	glUseProgram(GetOwner()->GetComponent<C_Material>()->GetShader()->shaderProgramID);
+	glUseProgram(cMaterial->GetShader()->shaderProgramID);
 
 	float x = canvas->GetPosition().x + GetRect().x;
 	float y = canvas->GetPosition().y + GetRect().y;
@@ -101,8 +100,8 @@ void C_UI_Image::Draw2D()
 
 	glBindTexture(GL_TEXTURE_2D, id);
 	
-	GetOwner()->GetComponent<C_Material>()->GetShader()->SetUniform1i("useColor", (GLint)false);
-	GetOwner()->GetComponent<C_Material>()->GetShader()->SetUniformMatrix4("projection", projectionMatrix.ptr());
+	cMaterial->GetShader()->SetUniform1i("useColor", (GLint)false);
+	cMaterial->GetShader()->SetUniformMatrix4("projection", projectionMatrix.ptr());
 
 	glBindBuffer(GL_ARRAY_BUFFER, VAO);
 
@@ -121,17 +120,18 @@ void C_UI_Image::Draw2D()
 void C_UI_Image::Draw3D()
 {
 	uint32 id;
+	C_2DAnimator* cAnimator = GetOwner()->GetComponent<C_2DAnimator>();
+	C_Material* cMaterial = GetOwner()->GetComponent<C_Material>();
 
-	if (strcmp(GetOwner()->GetName(), "Hovered Decoration L") == 0 || strcmp(GetOwner()->GetName(), "Hovered Decoration R") == 0)
-		id = App->uiSystem->buttonHoverDecor->GetTextureID();
+
+	if (cMaterial == nullptr && cAnimator == nullptr) 
+		return;
+
+	else if (cAnimator->IsAnimationPlaying())
+		id = cAnimator->GetIdFromAnimation();
+
 	else
- if (GetOwner()->GetComponent<C_Material>() == nullptr && GetOwner()->GetComponent<C_2DAnimator>() == nullptr) return;
-
-	else if (GetOwner()->GetComponent<C_2DAnimator>() != nullptr && GetOwner()->GetComponent<C_2DAnimator>()->IsAnimationPlaying())
-		id = GetOwner()->GetComponent<C_2DAnimator>()->GetIdFromAnimation();
-
-	else
-		id = GetOwner()->GetComponent<C_Material>()->GetTextureID();
+		id = cMaterial->GetTextureID();
 
 	glPushMatrix();
 	glMultMatrixf((GLfloat*)&GetOwner()->GetComponent<C_Transform>()->GetWorldTransform().Transposed());
@@ -162,89 +162,31 @@ void C_UI_Image::Draw3D()
 
 bool C_UI_Image::SaveState(ParsonNode& root) const
 {
-	bool ret = true;
-
 	root.SetNumber("Type", (uint)GetType());
 
-	ParsonNode image = root.SetNode("Image");
+	root.SetNumber("X", GetRect().x);
+	root.SetNumber("Y", GetRect().y);
+	root.SetNumber("W", GetRect().w);
+	root.SetNumber("H", GetRect().h);
 
-	image.SetNumber("X", GetRect().x);
-	image.SetNumber("Y", GetRect().y);
-	image.SetNumber("W", GetRect().w);
-	image.SetNumber("H", GetRect().h);
+	 root.SetNumber("childOrder", childOrder);
 
-	if (strcmp(GetOwner()->GetName(), "Hovered Decoration L") == 0)
-		image.SetBool("IsHDL", true);
-	else
-		image.SetBool("IsHDL", false);
-
-	if (strcmp(GetOwner()->GetName(), "Hovered Decoration R") == 0)
-		image.SetBool("IsHDR", true);
-	else
-		image.SetBool("IsHDR", false);
-
-	return ret;
+	return true;
 }
 
 bool C_UI_Image::LoadState(ParsonNode& root)
 {
-	bool ret = true;
+	/*ParsonNode image = root.GetNode("Image");
+	rect.x = image.GetNumber("X");
+	rect.y = image.GetNumber("Y");
+	rect.w = image.GetNumber("W");
+	rect.h = image.GetNumber("H");*/
 
-	ParsonNode image = root.GetNode("Image");
+	rect.x = root.GetNumber("X");
+	rect.y = root.GetNumber("Y");
+	rect.w = root.GetNumber("W");
+	rect.h = root.GetNumber("H");
 
-	Rect2D r;
-
-	r.x = image.GetNumber("X");
-	r.y = image.GetNumber("Y");
-	r.w = image.GetNumber("W");
-	r.h = image.GetNumber("H");
-
-	SetRect(r);
-
-	if (image.GetBool("IsHDL"))
-	{
-		App->uiSystem->hoveredDecorationL = this;
-		App->uiSystem->isHoverDecorationAdded = true;
-	}
-
-	if (image.GetBool("IsHDR"))
-	{
-		App->uiSystem->hoveredDecorationR = this;
-		App->uiSystem->isHoverDecorationAdded = true;
-	}
-	return ret;
-}
-
-
-Rect2D C_UI_Image::GetRect() const
-{
-	return rect;
-}
-
-
-
-
-void C_UI_Image::SetRect(const Rect2D& rect)
-{
-	this->rect = rect;
-}
-
-void C_UI_Image::SetX(const float x)
-{
-	this->rect.x = x;
-}
-
-void C_UI_Image::SetY(const float y)
-{
-	this->rect.y = y;
-}
-
-void C_UI_Image::SetW(const float w)
-{
-	this->rect.w = w;
-}
-
-void C_UI_Image::SetH(const float h)
-{
-	this->rect.h = h;
+	childOrder = root.GetNumber("childOrder");
+	return true;
 }

@@ -15,6 +15,7 @@
 
 class ParsonNode;
 class C_Transform;
+class C_UI;
 
 struct MeshRenderer;
 struct CuboidRenderer;
@@ -93,6 +94,9 @@ public:																									// --- COMPONENT GETTERS AND SETTERS
 	bool							GetAllComponents	(std::vector<Component*>& components) const;	// 
 
 	void*			GetScript							(const char* scriptName);						//
+	void GetUiComponents(std::vector<C_UI*>& uiComponents);
+	C_UI* GetUiComponent();
+	void SetUiChildOrder(int index);
 
 	template<typename T>																				// --- GET COMPONENT TEMPLATED METHOD
 	T* GetComponent() const																				// 

@@ -38,7 +38,7 @@
 //#include "C_GateBehavior.h"
 
 #include "C_Canvas.h"
-
+#include "C_UI.h"
 #include "C_UI_Image.h"
 #include "C_UI_Text.h"
 #include "C_UI_Button.h"
@@ -912,6 +912,34 @@ void* GameObject::GetScript(const char*scriptName)
 				return ((C_Script*)components[i])->GetScriptData();
 			
 	return nullptr;
+}
+
+void GameObject::GetUiComponents(std::vector<C_UI*>& uiComponents)
+{
+	for (uint i = 0; i < components.size(); ++i)
+	{																					
+		if (components[i] != nullptr && (components[i]->GetType() == ComponentType::UI_BUTTON || components[i]->GetType() == ComponentType::UI_IMAGE || components[i]->GetType() == ComponentType::UI_TEXT))
+			uiComponents.push_back((C_UI*)components[i]);						
+	}																						
+}
+
+C_UI* GameObject::GetUiComponent()
+{
+	for (uint i = 0; i < components.size(); ++i)
+	{
+		if (components[i] != nullptr && (components[i]->GetType() == ComponentType::UI_BUTTON || components[i]->GetType() == ComponentType::UI_IMAGE || components[i]->GetType() == ComponentType::UI_TEXT))
+			return (C_UI*)components[i];
+	}
+	return nullptr;
+}
+
+void GameObject::SetUiChildOrder(int index)
+{
+	for (uint i = 0; i < components.size(); ++i)
+	{
+		if (components[i] != nullptr && (components[i]->GetType() == ComponentType::UI_BUTTON || components[i]->GetType() == ComponentType::UI_IMAGE || components[i]->GetType() == ComponentType::UI_TEXT))
+			((C_UI*)components[i])->childOrder = index;
+	}
 }
 
 // ---

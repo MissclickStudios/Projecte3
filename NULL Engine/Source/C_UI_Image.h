@@ -3,7 +3,7 @@
 
 #include <string>
 
-#include "Component.h"
+#include "C_UI.h"
 
 
 const float texCoordsBuffer[] = {
@@ -14,7 +14,7 @@ const float texCoordsBuffer[] = {
 };
 
 
-class MISSCLICK_API C_UI_Image : public Component
+class MISSCLICK_API C_UI_Image : public C_UI
 {
 public:
 
@@ -32,23 +32,11 @@ public:
 
 	void LoadBuffers();
 
-	void Draw2D();
-	void Draw3D();
-
-public:
-
-	Rect2D GetRect() const;
-
-	void SetRect(const Rect2D& rect);
-	void SetX(const float x);
-	void SetY(const float y);
-	void SetW(const float w);
-	void SetH(const float h);
+	void HandleInput(C_UI** selectedUi)override;
+	void Draw2D()override;
+	void Draw3D()override;
 
 private:
-
-	Rect2D rect = { 0,0,1,1 };
-
 	uint VAO;
 	uint VBO;
 

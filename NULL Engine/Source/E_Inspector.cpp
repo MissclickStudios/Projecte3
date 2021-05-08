@@ -41,6 +41,7 @@
 //#include "C_CameraBehavior.h"
 //#include "C_GateBehavior.h"
 #include "C_Canvas.h"
+#include "C_UI.h"
 #include "C_UI_Image.h"
 #include "C_UI_Text.h"
 #include "C_UI_Button.h"
@@ -1089,12 +1090,19 @@ void E_Inspector::DrawCanvasComponent(C_Canvas* cCanvas)
 	{
 		if (cCanvas != nullptr)
 		{
-			bool isActive = cCanvas->IsActive();
-			if (ImGui::Checkbox("Canvas Is Active", &isActive)) { cCanvas->SetIsActive(isActive); }
+			//bool isActive = cCanvas->IsActive();
+			//if (ImGui::Checkbox("Canvas Is Active", &isActive)) { cCanvas->SetIsActive(isActive); }
 
-			bool isInvisible = cCanvas->IsInvisible();
-			if (ImGui::Checkbox("Canvas Is Invisible", &isInvisible)) { cCanvas->SetIsInvisible(isInvisible); }
-
+			//bool isInvisible = cCanvas->IsInvisible();
+			//if (ImGui::Checkbox("Canvas Is Invisible", &isInvisible)) { cCanvas->SetIsInvisible(isInvisible); }
+			if (ImGui::Checkbox("Debug draw", &cCanvas->debugDraw))
+			{
+				if (cCanvas->debugDraw)
+					cCanvas->ResetUi();
+				else
+					cCanvas->cachedObjects.clear();
+			}
+				/*cCanvas->debugDraw = */
 			ImGui::Separator();
 
 			ImGui::TextColored(Cyan.C_Array(), "Canvas Settings:");
@@ -1113,6 +1121,34 @@ void E_Inspector::DrawCanvasComponent(C_Canvas* cCanvas)
 					
 				
 				cCanvas->SetSize(size);
+			}
+
+			ImGui::Separator();
+
+			if (ImGui::TreeNode("Reorder Ui children"))
+			{
+				// Simple reordering
+				HelpMarker(
+					"Reordering Ui children "
+					"The rendering order is from first to last");
+				std::vector<GameObject*>& children = cCanvas->GetOwner()->childs;
+				for (int n = 0; n < children.size(); ++n)
+				{
+					GameObject* child = children[n];
+					ImGui::Selectable(child->GetName());
+
+					if (ImGui::IsItemActive() && !ImGui::IsItemHovered())
+					{
+						int n_next = n + (ImGui::GetMouseDragDelta(0).y < 0.f ? -1 : 1);
+						if (n_next >= 0 && n_next < children.size())
+						{
+							children[n] = children[n_next];
+							children[n_next] = child;
+							ImGui::ResetMouseDragDelta();
+						}
+					}
+				}
+				ImGui::TreePop();
 			}
 		}
 

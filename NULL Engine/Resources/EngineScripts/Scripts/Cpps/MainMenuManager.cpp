@@ -5,6 +5,7 @@
 #include "GameObject.h"
 #include "MainMenuManager.h"
 #include "GameManager.h"
+#include "M_UISystem.h"
 
 MainMenuManager::MainMenuManager() : Script()
 {
@@ -16,6 +17,12 @@ MainMenuManager::~MainMenuManager()
 
 void MainMenuManager::Start()
 {
+	if (canvasObject) 
+	{
+		C_Canvas* canvas = canvasObject->GetComponent<C_Canvas>();
+		if (canvas)
+			App->uiSystem->PushCanvas(canvas);
+	}
 	if(playButtonObject != nullptr)
 		playButton = (C_UI_Button*)playButtonObject->GetComponent<C_UI_Button>();
 	if (continueButtonObject != nullptr)
@@ -26,18 +33,18 @@ void MainMenuManager::Start()
 
 void MainMenuManager::Update()
 {
-	if (playButton && playButton->IsPressed() && gameManager != nullptr)
+	if (playButton && playButton->GetState() == UIButtonState::PRESSEDIN && gameManager != nullptr)
 	{
 		GameManager* gameManagerScript = (GameManager*)gameManager->GetScript("GameManager");
 		gameManagerScript->GenerateNewRun(true);
 		gameManagerScript->InitiateLevel(1);
 	}
-	if (continueButton && continueButton->IsPressed() && gameManager != nullptr)
+	if (continueButton && continueButton->GetState() == UIButtonState::PRESSEDIN && gameManager != nullptr)
 	{
 		GameManager* gameManagerScript = (GameManager*)gameManager->GetScript("GameManager");
 		gameManagerScript->Continue();
 	}
-	if (exitButton && exitButton->IsPressed() && gameManager != nullptr)
+	if (exitButton && exitButton->GetState() == UIButtonState::PRESSEDIN && gameManager != nullptr)
 	{
 		GameManager* gameManagerScript = (GameManager*)gameManager->GetScript("GameManager");
 		App->quit = true;
