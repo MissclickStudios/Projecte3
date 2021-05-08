@@ -95,6 +95,9 @@ public:																									// --- COMPONENT GETTERS AND SETTERS
 
 	void*			GetScript							(const char* scriptName);						//
 	void GetUiComponents(std::vector<C_UI*>& uiComponents);
+	C_UI* GetUiComponent();
+	void SetUiChildOrder(int index);
+
 	template<typename T>																				// --- GET COMPONENT TEMPLATED METHOD
 	T* GetComponent() const																				// 
 	{																									//  

@@ -164,28 +164,29 @@ bool C_UI_Image::SaveState(ParsonNode& root) const
 {
 	root.SetNumber("Type", (uint)GetType());
 
-	ParsonNode image = root.SetNode("Image");
+	root.SetNumber("X", GetRect().x);
+	root.SetNumber("Y", GetRect().y);
+	root.SetNumber("W", GetRect().w);
+	root.SetNumber("H", GetRect().h);
 
-	image.SetNumber("X", GetRect().x);
-	image.SetNumber("Y", GetRect().y);
-	image.SetNumber("W", GetRect().w);
-	image.SetNumber("H", GetRect().h);
+	 root.SetNumber("childOrder", childOrder);
 
 	return true;
 }
 
 bool C_UI_Image::LoadState(ParsonNode& root)
 {
-	ParsonNode image = root.GetNode("Image");
+	/*ParsonNode image = root.GetNode("Image");
+	rect.x = image.GetNumber("X");
+	rect.y = image.GetNumber("Y");
+	rect.w = image.GetNumber("W");
+	rect.h = image.GetNumber("H");*/
 
-	Rect2D r;
+	rect.x = root.GetNumber("X");
+	rect.y = root.GetNumber("Y");
+	rect.w = root.GetNumber("W");
+	rect.h = root.GetNumber("H");
 
-	r.x = image.GetNumber("X");
-	r.y = image.GetNumber("Y");
-	r.w = image.GetNumber("W");
-	r.h = image.GetNumber("H");
-
-	SetRect(r);
-
+	childOrder = root.GetNumber("childOrder");
 	return true;
 }

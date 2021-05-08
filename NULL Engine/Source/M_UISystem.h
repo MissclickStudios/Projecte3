@@ -2,6 +2,7 @@
 #define __M_UISYSTEM_H__
 
 #include <list>
+#include <vector>
 #include "Module.h"
 
 
@@ -29,10 +30,16 @@ public:
 	//void DeleteCanvas(C_Canvas* canvas); TODO!!! Maybe handle these on the destructor of component canvas
 
 	const std::list<C_Canvas*>& GetActiveCanvas()const;
+	const std::vector<C_Canvas*>& GetAllCanvas()const;
 	void ClearActiveCanvas();
+	void ReorderCanvasChildren();
+	void SaveCanvasChildrenOrder();
 
 private:
 	std::list<C_Canvas*> activeCanvas;
+	std::vector<C_Canvas*> allCanvas;
+
+	friend class C_Canvas;
 };
 
 #endif // !__M_UISYSTEM_H__

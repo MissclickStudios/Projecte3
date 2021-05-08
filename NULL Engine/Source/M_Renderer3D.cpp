@@ -760,6 +760,21 @@ void M_Renderer3D::RenderUI()
 	else
 		canvas->Draw3D();
 	*/
+	if (App->gameState != GameState::PLAY)
+	{
+		const std::vector<C_Canvas*> canvasToDraw = App->uiSystem->GetAllCanvas();
+		for (std::vector<C_Canvas*>::const_iterator it = canvasToDraw.cbegin(); it != canvasToDraw.cend(); ++it)
+		{
+			//TODO: DRAW THE UI ELEMENTS ON 3D
+			// SetTo2DRenderSettings(false);
+			//(*rit)->Draw3D(renderCanvas);
+			//SetTo2DRenderSettings(false);
+			if ((*it)->debugDraw)
+				(*it)->Draw2D(renderCanvas);
+		}
+		SetTo2DRenderSettings(false);
+		return;
+	}
 	std::list<C_Canvas*> canvasToDraw = App->uiSystem->GetActiveCanvas();
 	for (std::list<C_Canvas*>::reverse_iterator rit = canvasToDraw.rbegin(); rit != canvasToDraw.rend(); ++rit)
 	{

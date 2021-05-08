@@ -40,9 +40,12 @@ public:
 
 protected:
 	Rect2D rect = { 0,0,1,1 };
+	short childOrder = -1;
 private:
 	bool interactuable = false;
 
+	friend class M_UISystem;
+	friend class GameObject;
 };
 
 #endif // !__C_UI_H__

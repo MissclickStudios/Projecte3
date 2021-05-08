@@ -149,7 +149,6 @@ void C_UI_Button::Draw2D()
 	C_Canvas* canvas = GetOwner()->parent->GetComponent<C_Canvas>();
 	if (canvas == nullptr)
 	{
-
 		return;
 	}
 	Rect2D parentRect = canvas->GetRect();
@@ -211,46 +210,33 @@ void C_UI_Button::Draw3D()
 
 bool C_UI_Button::SaveState(ParsonNode& root) const
 {
-	bool ret = true;
-
 	root.SetNumber("Type", (uint)GetType());
 
-	ParsonNode button = root.SetNode("Button");
+	root.SetNumber("X", GetRect().x);
+	root.SetNumber("Y", GetRect().y);
+	root.SetNumber("W", GetRect().w);
+	root.SetNumber("H", GetRect().h);
 
-	button.SetNumber("X", GetRect().x);
-	button.SetNumber("Y", GetRect().y);
-	button.SetNumber("W", GetRect().w);
-	button.SetNumber("H", GetRect().h);
-
-	if (state == UIButtonState::HOVERED || state == UIButtonState::PRESSED)
-		button.SetBool("IsHovered", true);
-	else
-		button.SetBool("IsHovered", false);
-
-	return ret;
+	root.SetInteger("childOrder", childOrder);
+	return true;
 }
 
 bool C_UI_Button::LoadState(ParsonNode& root)
 {
-	bool ret = true;
+	/*ParsonNode button = root.GetNode("Button");
+	rect.x = button.GetNumber("X");
+	rect.y = button.GetNumber("Y");
+	rect.w = button.GetNumber("W");
+	rect.h = button.GetNumber("H");*/
 
-	ParsonNode button = root.GetNode("Button");
+	rect.x = root.GetNumber("X");
+	rect.y = root.GetNumber("Y");
+	rect.w = root.GetNumber("W");
+	rect.h = root.GetNumber("H");
 
-	Rect2D r;
+	childOrder = root.GetInteger("childOrder");
 
-	r.x = button.GetNumber("X");
-	r.y = button.GetNumber("Y");
-	r.w = button.GetNumber("W");
-	r.h = button.GetNumber("H");
-
-	SetRect(r);
-
-	if (button.GetBool("IsHovered"))
-		state = UIButtonState::HOVERED;
-	else
-		state = UIButtonState::IDLE;
-
-	return ret;
+	return true;
 }
 
 UIButtonState C_UI_Button::GetState() const

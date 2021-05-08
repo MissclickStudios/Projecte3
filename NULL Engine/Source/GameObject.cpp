@@ -922,6 +922,25 @@ void GameObject::GetUiComponents(std::vector<C_UI*>& uiComponents)
 	}																						
 }
 
+C_UI* GameObject::GetUiComponent()
+{
+	for (uint i = 0; i < components.size(); ++i)
+	{
+		if (components[i] != nullptr && (components[i]->GetType() == ComponentType::UI_BUTTON || components[i]->GetType() == ComponentType::UI_IMAGE || components[i]->GetType() == ComponentType::UI_TEXT))
+			return (C_UI*)components[i];
+	}
+	return nullptr;
+}
+
+void GameObject::SetUiChildOrder(int index)
+{
+	for (uint i = 0; i < components.size(); ++i)
+	{
+		if (components[i] != nullptr && (components[i]->GetType() == ComponentType::UI_BUTTON || components[i]->GetType() == ComponentType::UI_IMAGE || components[i]->GetType() == ComponentType::UI_TEXT))
+			((C_UI*)components[i])->childOrder = index;
+	}
+}
+
 // ---
 uint32 GameObject::GetUID() const
 {

@@ -9,6 +9,7 @@
 #include "MathGeoLib/include/Math/float3.h"
 
 class ParsonNode;
+class GameObject;
 
 class MISSCLICK_API C_Canvas : public Component
 {
@@ -24,13 +25,11 @@ public:
 
 	static inline ComponentType GetType() { return ComponentType::CANVAS; }
 
-	void HandleInput();
-	void Draw2D(bool renderCavas);
+	void Draw2D(bool renderCavas); // const??
 	void Draw3D(bool renderCanvas);
 
 
 	void RemoveUiElement(C_UI*element);
-	void ResetUi();
 	float2 GetPosition() const;
 	float2 GetSize() const;
 	Rect2D GetRect() const;
@@ -39,12 +38,19 @@ public:
 	void SetSize(const float2& size);
 	void SetRect(const Rect2D& rect);
 
+public:
+	bool debugDraw = false;
+private:
+	void ResetUi();
+	void HandleInput();
 private:
 	Rect2D rect = { 0,0,50,50 };
 	C_UI* selectedUi = nullptr;
 	std::vector<C_UI*> uiElements;
+	std::vector<GameObject*>cachedObjects; //removable if we had event system
 
-	
+	friend class M_UISystem;
+	friend class E_Inspector;
 };
 
 #endif // !__C_CANVAS_H__

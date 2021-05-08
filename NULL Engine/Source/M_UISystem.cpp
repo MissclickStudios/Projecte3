@@ -10,6 +10,7 @@
 
 #include "R_Texture.h"
 
+#include "C_UI.h"
 #include "C_Canvas.h"
 #include "C_Camera.h"
 #include "C_Transform.h"
@@ -22,7 +23,7 @@
 
 M_UISystem::M_UISystem(bool isActive) : Module("UISystem", isActive)
 {
-	
+
 }
 
 // Destructor
@@ -34,6 +35,28 @@ M_UISystem::~M_UISystem()
 UpdateStatus M_UISystem::Update(float dt)
 {
 	OPTICK_CATEGORY("M_UISystem Update", Optick::Category::Module);
+	for (std::list<C_Canvas*>::reverse_iterator rit = activeCanvas.rbegin(); rit != activeCanvas.rend(); ++rit)
+	{
+		if ((*rit)->IsActive())
+		{
+			//This code is very ugly
+			//We need event system to react when a gameObject is deleted or a child order changed
+			std::vector<GameObject*>& children = (*rit)->GetOwner()->childs;
+			if (children.size() != (*rit)->cachedObjects.size())
+				(*rit)->ResetUi();
+			else
+			{
+				for (int i = 0; i < children.size(); ++i)
+				{
+					if (children[i] != (*rit)->cachedObjects[i]) 
+					{
+						(*rit)->ResetUi();
+						break;
+					}
+				}
+			}
+		}
+	}
 	if (App->gameState == GameState::PLAY && !activeCanvas.empty())
 		activeCanvas.front()->HandleInput();
 
@@ -69,6 +92,7 @@ void M_UISystem::PushCanvas(C_Canvas* canvas)
 C_Canvas* M_UISystem::PopCanvas()
 {
 	C_Canvas* topCanvas = activeCanvas.front();
+	topCanvas->cachedObjects.clear();
 	activeCanvas.pop_front();
 	return topCanvas;
 }
@@ -83,7 +107,47 @@ const std::list<C_Canvas*>& M_UISystem::GetActiveCanvas() const
 	return activeCanvas;
 }
 
+const std::vector<C_Canvas*>& M_UISystem::GetAllCanvas() const
+{
+	return allCanvas;
+}
+
 void M_UISystem::ClearActiveCanvas()
 {
 	activeCanvas.clear();
+}
+
+void M_UISystem::ReorderCanvasChildren()
+{
+	for (std::vector<C_Canvas*>::const_iterator it = allCanvas.cbegin(); it != allCanvas.cend(); ++it)
+	{
+		std::vector<GameObject*>& children = (*it)->GetOwner()->childs;
+		int index = -1;
+		for (int i = 0; i < children.size(); ++i)
+		{
+			if (children[i]->GetUiComponent() != nullptr)
+			{
+				while (index != i)
+				{
+					index = (*children[i]->GetUiComponent()).childOrder;
+					GameObject* temp = children[index];
+					children[index] = children[i];
+					children[i] = temp;
+				}
+			}
+		}
+	}
+}
+
+void M_UISystem::SaveCanvasChildrenOrder()
+{
+	for (std::vector<C_Canvas*>::const_iterator it = allCanvas.cbegin(); it != allCanvas.cend(); ++it)
+	{
+		std::vector<GameObject*>& children = (*it)->GetOwner()->childs;
+		for (int i = 0; i < children.size(); ++i)
+		{
+			std::vector<C_UI*>uiComponents;
+			children[i]->SetUiChildOrder(i);
+		}
+	}
 }

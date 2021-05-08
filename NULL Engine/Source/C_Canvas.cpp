@@ -4,6 +4,7 @@
 #include "M_Camera3D.h"
 #include "M_Window.h"
 #include "M_UISystem.h"
+//#include <list> included by module uiSystem
 #include "M_Scene.h"
 #include "M_Input.h"
 
@@ -23,11 +24,33 @@
 
 C_Canvas::C_Canvas(GameObject* owner) : Component(owner, ComponentType::CANVAS)
 {
+	App->uiSystem->allCanvas.push_back(this);
 }
 
 C_Canvas::~C_Canvas()
 {
-
+	//TODO: delete from active canvas list???? (if not it crashes if i delete a canvas in game mode)
+	if (App->gameState == GameState::PLAY)
+	{
+		std::list<C_Canvas*>& activeCanvas = App->uiSystem->activeCanvas;
+		for (std::list<C_Canvas*>::iterator it = activeCanvas.begin(); it != activeCanvas.end(); ++it)
+		{
+			if ((*it) == this)
+			{
+				activeCanvas.erase(it);
+				break;
+			}
+		}
+	}
+	std::vector<C_Canvas*>& allCanvas = App->uiSystem->allCanvas;
+	for (std::vector<C_Canvas*>::iterator it = allCanvas.begin(); it != allCanvas.end(); ++it)
+	{
+		if ((*it) == this)
+		{
+			allCanvas.erase(it);
+			break;
+		}
+	}
 }
 
 bool C_Canvas::Update()
@@ -216,8 +239,8 @@ void C_Canvas::ResetUi()
 {
 	uiElements.clear();
 	selectedUi = nullptr;
-	std::vector<GameObject*>& children = GetOwner()->childs;
-	for (std::vector<GameObject*>::const_iterator it = children.cbegin(); it != children.cend(); ++it)
+	cachedObjects = GetOwner()->childs;
+	for (std::vector<GameObject*>::const_iterator it = cachedObjects.cbegin(); it != cachedObjects.cend(); ++it)
 	{
 		(*it)->GetUiComponents(uiElements);
 	}

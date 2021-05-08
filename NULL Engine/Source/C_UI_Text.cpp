@@ -87,39 +87,40 @@ void C_UI_Text::LoadBuffers()
 
 bool C_UI_Text::SaveState(ParsonNode& root) const
 {
-	bool ret = true;
-
 	root.SetNumber("Type", (uint)GetType());
+	root.SetString("Text", text.c_str());
+	root.SetFloat4("Color", { color.r, color.g, color.b, color.a });
+	root.SetNumber("X", GetRect().x);
+	root.SetNumber("Y", GetRect().y);
+	root.SetNumber("W", GetRect().w);
+	root.SetNumber("H", GetRect().h);
 
-	ParsonNode textNode = root.SetNode("Text");
-
-	textNode.SetString("Text", text.c_str());
-	float4 newColor = { color.r, color.g, color.b, color.a };
-	textNode.SetFloat4("Color", newColor);
-	textNode.SetNumber("X", GetRect().x);
-	textNode.SetNumber("Y", GetRect().y);
-	textNode.SetNumber("W", GetRect().w);
-	textNode.SetNumber("H", GetRect().h);
-
-	return ret;
+	root.SetInteger("childOrder", childOrder);
+	return true;
 }
 
 bool C_UI_Text::LoadState(ParsonNode& root)
 {
-	bool ret = true;
-
-	ParsonNode textNode = root.GetNode("Text");
-	text = textNode.GetString("Text");
-	float4 newColor = (textNode.GetFloat4("Color"));
+	/*ParsonNode node = root.GetNode("text");
+	text = node.GetString("Text");
+	float4 newColor = (node.GetFloat4("Color"));
 	color = Color(newColor.x, newColor.y, newColor.z, newColor.w);
-	Rect2D r;
-	r.x = textNode.GetNumber("X");
-	r.y = textNode.GetNumber("Y");
-	r.w = textNode.GetNumber("W");
-	r.h = textNode.GetNumber("H");
-	SetRect(r);
+	rect.x = node.GetNumber("X");
+	rect.y = node.GetNumber("Y");
+	rect.w = node.GetNumber("W");
+	rect.h = node.GetNumber("H");*/
 
-	return ret;
+	text = root.GetString("Text");
+	float4 newColor = (root.GetFloat4("Color"));
+	color = Color(newColor.x, newColor.y, newColor.z, newColor.w);
+	rect.x = root.GetNumber("X");
+	rect.y = root.GetNumber("Y");
+	rect.w = root.GetNumber("W");
+	rect.h = root.GetNumber("H");
+
+	childOrder = root.GetInteger("childOrder");
+
+	return true;
 }
 
 Color C_UI_Text::GetColor() const
