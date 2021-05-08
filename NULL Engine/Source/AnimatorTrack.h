@@ -26,7 +26,7 @@ enum class TrackState
 	STOP
 };
 
-class NULL_API AnimatorTrack
+class MISSCLICK_API AnimatorTrack
 {
 public:
 	AnimatorTrack();
