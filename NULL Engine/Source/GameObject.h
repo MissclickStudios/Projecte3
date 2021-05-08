@@ -86,7 +86,7 @@ public:																									// --- GAME OBJECT GETTERS AND SETTERS
 	void			SetParentUID						(const uint32& parentUID);						// 
 
 public:																									// --- COMPONENT GETTERS AND SETTERS
-	Component*		CreateComponent						(ComponentType type);							// Creates a component of the given type and adds it to the components vector.
+	Component*		CreateComponent						(ComponentType type, bool addComponent = true);	// Creates a component of the given type and adds it to the components vector.
 	bool			DeleteComponent						(Component* componentToDelete);					// Deletes the given component from the Components vector. Returs False on ERROR.
 	void			ReplaceComponent					(Component* newComponent);						// 
 

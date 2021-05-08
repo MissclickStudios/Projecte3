@@ -44,7 +44,7 @@ playing		(false)
 	durationInSeconds		= (animation != nullptr) ? (duration / animation->GetTicksPerSecond()) : 0.0f;
 }
 
-bool AnimatorClip::StepClip(const float& dt)
+bool AnimatorClip::StepClip(float dt)
 {
 	if (animation == nullptr)
 		return false;

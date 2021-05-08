@@ -1,3 +1,5 @@
+#include "Color.h"
+
 #include "EngineApplication.h"
 #include "M_Editor.h"
 #include "M_Scene.h"
@@ -68,8 +70,10 @@ void E_Hierarchy::ProcessGameObject(GameObject* gameObject)
 		color = { 0.5f, 0.5f, 0.5f, 1.0f };
 	}
 
-	if (gameObject->isPrefab)
-		color = { 0.6f, 0.6f, 1.0f, 1.0f };
+	if (gameObject->isBone)
+	{
+		color = Pink.C_Array();
+	}
 
 	ImGui::PushStyleColor(ImGuiCol_Text, color);
 	// --------------------------------------------

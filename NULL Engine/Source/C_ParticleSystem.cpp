@@ -16,7 +16,7 @@
 
 #include "MemoryManager.h"
 
-C_ParticleSystem::C_ParticleSystem(GameObject* owner) : Component(owner, ComponentType::PARTICLES)
+C_ParticleSystem::C_ParticleSystem(GameObject* owner) : Component(owner, ComponentType::PARTICLE_SYSTEM)
 {
 	OPTICK_CATEGORY("C_Particle COnstructor", Optick::Category::Debug)
 	SetAsDefaultComponent();

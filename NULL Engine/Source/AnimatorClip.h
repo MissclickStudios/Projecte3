@@ -15,7 +15,7 @@ public:
 	AnimatorClip();
 	AnimatorClip(const R_Animation* animation, const std::string& name, uint start, uint end, float speed, bool loop);
 
-	bool StepClip	(const float& dt);
+	bool StepClip	(float dt);
 	void ClearClip	();
 
 	bool SaveState	(ParsonNode& root) const;
