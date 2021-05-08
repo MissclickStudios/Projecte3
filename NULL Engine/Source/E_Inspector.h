@@ -118,9 +118,10 @@ private:																														// --- DRAW COMPONENT UTILITY METHODS ---
 	void TextureImageDisplay			(C_Material* cMaterial);																// Will display the texture as an image through Dear ImGui.
 
 	// ANIMATOR COMPONENT	--------
+	void DisplayAnimatorSettings		(C_Animator* cAnimator);
 	void DisplayAnimatorControls		(C_Animator* cAnimator);
-	bool CurrentTrackIsValid			(AnimatorTrack* currentTrack);
-	bool CurrentClipIsValid				(AnimatorClip* currentClip);
+	void DisplayTrackViewer				(C_Animator* cAnimator);
+	void DisplayTrackStats				(AnimatorTrack* track, AnimatorClip* clip);
 
 	void DisplayClipManager				(C_Animator* cAnimator);
 	void ClipCreatorWindow				(C_Animator* cAnimator);

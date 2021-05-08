@@ -363,7 +363,7 @@ void C_Animator::GenerateBoneSegments(const GameObject* bone)
 
 	for (uint i = 0; i < bone->childs.size(); ++i)
 	{
-		if (!bone->childs[i]->isBone)
+		if (/*!bone->childs[i]->isBone*/ bone->childs[i]->components.size() != 1)
 			continue;
 
 		LineSegment displayBone = { float3::zero, float3::zero };
@@ -722,6 +722,52 @@ void C_Animator::PlayClip(const char* trackName, const char* clipName, float ble
 	}
 
 	track->second.PlayClip(&clip->second, GetAnimationBoneLinks(clip->second.GetAnimation()->GetUID()), (uint)(blendTime * clip->second.GetAnimationTicksPerSecond()));
+
+	Play();
+}
+
+void C_Animator::PlayClip(AnimatorTrack* track, AnimatorClip* clip, uint blendFrames)
+{
+	if (track == nullptr)
+	{
+		LOG("[ERROR] Animator Component: Could not Play Clip! Error: Given AnimatorTrack* was nullptr.");
+		return;
+	}
+	if (clip == nullptr)
+	{
+		LOG("[ERROR] Animator Component: Could not Play Clip! Error: Given AnimatorClip* was nullptr.");
+		return;
+	}
+	if (clip->GetAnimation() == nullptr)
+	{
+		LOG("[ERROR] Animator Component: Could not Play Clip! Error: Given AnimatorClip's R_Animation* was nullptr.");
+		return;
+	}
+
+	track->PlayClip(clip, GetAnimationBoneLinks(clip->GetAnimation()->GetUID()), blendFrames);
+
+	Play();
+}
+
+void C_Animator::PlayClip(AnimatorTrack* track, AnimatorClip* clip, float blendTime)
+{
+	if (track == nullptr)
+	{
+		LOG("[ERROR] Animator Component: Could not Play Clip! Error: Given AnimatorTrack* was nullptr.");
+		return;
+	}
+	if (clip == nullptr)
+	{
+		LOG("[ERROR] Animator Component: Could not Play Clip! Error: Given AnimatorClip* was nullptr.");
+		return;
+	}
+	if (clip->GetAnimation() == nullptr)
+	{
+		LOG("[ERROR] Animator Component: Could not Play Clip! Error: Given AnimatorClip's R_Animation* was nullptr.");
+		return;
+	}
+
+	track->PlayClip(clip, GetAnimationBoneLinks(clip->GetAnimation()->GetUID()), (uint)(blendTime * clip->GetAnimation()->GetTicksPerSecond()));
 
 	Play();
 }

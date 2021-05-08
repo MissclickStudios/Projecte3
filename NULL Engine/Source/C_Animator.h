@@ -77,6 +77,8 @@ public:																																// --- C_ANIMATOR MANAGEMENT METHODS
 
 	void			PlayClip									(const char* trackName, const char* clipName, uint blendFrames);
 	void			PlayClip									(const char* trackName, const char* clipName, float blendTime);
+	void			PlayClip									(AnimatorTrack* track, AnimatorClip* clip, uint blendFrames);
+	void			PlayClip									(AnimatorTrack* track, AnimatorClip* clip, float blendTime);
 
 	void			SetTrackWithClip							(const char* trackName, const char* clipName);
 	void			SetTrackWithClip							(AnimatorTrack* track, AnimatorClip* clip);

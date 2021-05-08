@@ -193,11 +193,11 @@ bool AnimatorTrack::PlayClip(AnimatorClip* clip, std::vector<BoneLink>* clipBone
 		LOG("[ERROR] Animator Track: Could not Play Clip! Error: Given std::vector<BoneLink>* was nullptr");
 		return false;
 	}
-	if (currentClip != nullptr && currentClip->GetName() == clip->GetName())															// Cannot play the same clip twice.
-	{
-		LOG("[WARNING] Animator Track: Cannot Play the same Clip twice!");
-		return false;
-	}
+	//if (currentClip != nullptr && currentClip->GetName() == clip->GetName())															// Cannot play the same clip twice.
+	//{
+	//	LOG("[WARNING] Animator Track: Cannot Play the same Clip twice!");
+	//	return false;
+	//}
 
 	bool success = false;
 	if (currentClip == nullptr || blendFrames == 0 || blendFrames > clip->GetDuration())

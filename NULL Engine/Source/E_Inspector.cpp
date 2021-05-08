@@ -401,7 +401,7 @@ void E_Inspector::DrawMeshComponent(C_Mesh* cMesh)
 		ImGui::Separator();
 
 		// --- MESH DATA ---
-		ImGui::TextColored(Cyan.C_Array(), "Mesh Data:");
+		ImGui::TextColored(Green.C_Array(), "Mesh Data:");
 
 		cMesh->GetMeshData(numVertices, numNormals, numTexCoords, numIndices, numBones);
 
@@ -414,7 +414,7 @@ void E_Inspector::DrawMeshComponent(C_Mesh* cMesh)
 		ImGui::Separator();
 
 		// --- DRAW MODE ---
-		ImGui::TextColored(Cyan.C_Array(), "Draw Mode:");
+		ImGui::TextColored(Green.C_Array(), "Draw Mode:");
 
 		if (ImGui::Checkbox("Show Wireframe", &showWireframe))							{ cMesh->SetShowWireframe(showWireframe); }
 		if (ImGui::Checkbox("Show Bounding Box", &showBoundingBox))						{ cMesh->SetShowBoundingBox(showBoundingBox); }
@@ -424,7 +424,7 @@ void E_Inspector::DrawMeshComponent(C_Mesh* cMesh)
 		ImGui::Separator();
 
 		// --- OUTLINE MODE ---
-		ImGui::TextColored(Cyan.C_Array(), "Outline Mesh:");
+		ImGui::TextColored(Green.C_Array(), "Outline Mesh:");
 
 		if (ImGui::Checkbox("Outline Mesh", &outlineMesh))								{ cMesh->SetOutlineMesh(outlineMesh); }
 		if (ImGui::SliderFloat("Outline Thickness", &outlineThickness, 0.0f , 4.0f))	{ cMesh->SetOutlineThickness(outlineThickness); }
@@ -464,8 +464,6 @@ void E_Inspector::DrawMaterialComponent(C_Material* cMaterial)
 		ImGui::Separator();
 		ImGui::Separator();
 		
-		ImGui::TextColored(Cyan.C_Array(), "Material:");
-		
 		DisplayMaterial(cMaterial);
 
 		ImGui::Separator();
@@ -473,8 +471,6 @@ void E_Inspector::DrawMaterialComponent(C_Material* cMaterial)
 		// --- SHADER ---
 		ImGui::Separator();
 		ImGui::Separator();
-		
-		ImGui::TextColored(Cyan.C_Array(), "Shader:");
 
 		DisplayShader(cMaterial);
 
@@ -482,8 +478,6 @@ void E_Inspector::DrawMaterialComponent(C_Material* cMaterial)
 
 		// --- TEXTURE ---
 		ImGui::Separator();
-
-		ImGui::TextColored(Cyan.C_Array(), "Texture:");
 		
 		DisplayTexture(cMaterial);
 
@@ -665,7 +659,7 @@ void E_Inspector::DrawAnimatorComponent(C_Animator* cAnimator)								// TODO: S
 			{
 				if (ImGui::BeginTabItem("Settings & Controls"))
 				{
-					DisplayAnimatorControls(cAnimator);
+					DisplayAnimatorSettings(cAnimator);
 
 					ImGui::EndTabItem();
 				}
@@ -2025,6 +2019,8 @@ void E_Inspector::DisplayMaterial(C_Material* cMaterial)
 	Color color = cMaterial->GetMaterialColour();
 	static std::map<std::string, ResourceBase> materialBases;
 
+	ImGui::TextColored(Green.C_Array(), "Material:");
+	
 	// --- MATERIAL SELECTOR ---
 	ImGui::Separator();
 	
@@ -2033,7 +2029,7 @@ void E_Inspector::DisplayMaterial(C_Material* cMaterial)
 	ImGui::Separator();
 
 	// --- MATERIAL COLOR & ALPHA ---
-	ImGui::TextColored(Green.C_Array(), "Material Data:");
+	ImGui::TextColored(Cyan.C_Array(), "Material Data:");
 
 	if (ImGui::ColorEdit3("Diffuse Color", (float*)&color, ImGuiColorEditFlags_NoAlpha))	{ cMaterial->SetMaterialColour(color); }
 	if (ImGui::SliderFloat("Diffuse Alpha", (float*)&color.a, 0.0f, 1.0f, "%.3f"))			{ cMaterial->SetMaterialColour(color); }
@@ -2058,6 +2054,8 @@ void E_Inspector::DisplayShader(C_Material* cMaterial)
 	{
 		return;
 	}
+
+	ImGui::TextColored(Green.C_Array(), "Shader:");
 
 	// --- SHADER SELECTOR ---
 	ImGui::Separator();
@@ -2137,11 +2135,11 @@ void E_Inspector::DisplayShaderSelector(C_Material* cMaterial, std::map<std::str
 void E_Inspector::DisplayTexture(C_Material* cMaterial)
 {
 	static std::map<std::string, ResourceBase> textureBases;
-	
 	static int mapToDisplay = 0;
-	
 	bool useCheckeredTex	= cMaterial->UseDefaultTexture();
 	
+	ImGui::TextColored(Green.C_Array(), "Texture:");
+
 	// --- TEXTURE SELECTOR ---
 	ImGui::Separator();
 
@@ -2155,7 +2153,7 @@ void E_Inspector::DisplayTexture(C_Material* cMaterial)
 	ImGui::Separator();
 
 	// --- TEXTURE MAPS ---
-	ImGui::TextColored(Green.C_Array(), "Maps:");
+	ImGui::TextColored(Cyan.C_Array(), "Maps:");
 
 	if (ImGui::Combo("Textures(WIP)", &mapToDisplay, "Diffuse\0Specular\0Ambient\0Height\0Normal\0"))	{ LOG("[SCENE] Changed to map %d", mapToDisplay); }
 	if (ImGui::Checkbox("Use Default Texture", &useCheckeredTex))										{ cMaterial->SetUseDefaultTexture(useCheckeredTex); }
@@ -2200,7 +2198,7 @@ void E_Inspector::DisplayTextureSelector(C_Material* cMaterial, std::map<std::st
 
 void E_Inspector::DisplayTextureData(C_Material* cMaterial)
 {
-	ImGui::TextColored(Green.C_Array(), "Texture Data:");
+	ImGui::TextColored(Cyan.C_Array(), "Texture Data:");
 
 	static uint id				= 0;
 	static uint width			= 0;
@@ -2242,7 +2240,7 @@ void E_Inspector::TextureImageDisplay(C_Material* cMaterial)
 
 	if (texId != 0)
 	{
-		ImGui::TextColored(ImVec4(0.0f, 1.0f, 1.0f, 1.0f), "Texture Display:");
+		ImGui::TextColored(Cyan.C_Array(), "Texture Display:");
 
 		ImGui::Spacing();
 
@@ -2250,174 +2248,194 @@ void E_Inspector::TextureImageDisplay(C_Material* cMaterial)
 	}
 }
 
+void E_Inspector::DisplayAnimatorSettings(C_Animator* cAnimator)
+{	
+	// --- ANIMATOR CONTROLS
+	DisplayAnimatorControls(cAnimator);
+
+	// --- ANIMATOR SETTINGS
+	
+	ImGui::Separator();
+	ImGui::Separator();
+
+	DisplayTrackViewer(cAnimator);
+}
+
 void E_Inspector::DisplayAnimatorControls(C_Animator* cAnimator)
 {
 	// --- ANIMATOR VARIABLES
 	float speed				= cAnimator->GetPlaybackSpeed();
-	static float minSpeed	= 0.1f;
-	static float maxSpeed	= 10.0f;
-						
 	bool interpolate		= /*cAnimator->GetInterpolate()*/ false;
 	bool cameraCulling		= cAnimator->GetCameraCulling();
 	bool showBones			= cAnimator->GetShowBones();
 	
-	// --- TRACK AND CLIP VARIABLES
-	static std::map<std::string, AnimatorClip>* clips		= cAnimator->GetClipsAsPtr();
-	static std::map<std::string, AnimatorTrack>* tracks		= cAnimator->GetTracksAsPtr();
+	ImGui::TextColored(Green.C_Array(), "Animator Controls");
 
-	static AnimatorClip* currentClip						= nullptr;
-	static AnimatorTrack* currentTrack						= nullptr;
-
-	if (trackWasDeleted)
-	{
-		currentTrack	= nullptr;
-		currentClip		= nullptr;
-
-		trackWasDeleted	= false;
-	}
-
-	if (clipWasDeleted)
-	{
-		currentClip		= nullptr;
-		clipWasDeleted	= false;
-	}
-
-	// --- ANIMATOR SETTINGS
-	ImGui::TextColored(Cyan.C_Array(), "Animation Settings");
-
-	if (ImGui::BeginCombo("Select Track", ((currentTrack != nullptr) ? currentTrack->GetName() : "[SELECT TRACK]"), ImGuiComboFlags_None))
-	{
-		for (auto track = tracks->begin(); track != tracks->end(); ++track)
-		{
-			if (ImGui::Selectable(track->second.GetName(), (&track->second == currentTrack), ImGuiSelectableFlags_None))
-			{
-				if (track->second.GetRootBone() == nullptr)
-					continue;
-				
-				currentTrack = &track->second;
-
-				break;
-			}
-		}
-
-		ImGui::EndCombo();
-	}
-
-	if (!CurrentTrackIsValid(currentTrack))
-	{
-		currentTrack	= nullptr;
-		currentClip		= nullptr;
-		return;
-	}
-
-	if (ImGui::BeginCombo("Select Clip", ((currentClip != nullptr) ? currentClip->GetName() : "[SELECT CLIP]"), ImGuiComboFlags_None))
-	{
-		for (auto clip = clips->begin(); clip != clips->end(); ++clip)
-		{
-			if (ImGui::Selectable(clip->second.GetName(), (&clip->second == currentClip), ImGuiSelectableFlags_None))
-			{
-				if (clip->second.GetAnimation() == nullptr)
-					continue;
-
-				currentClip = &clip->second;
-
-				cAnimator->SetTrackWithClip(currentTrack, currentClip);
-
-				break;
-			}
-		}
-
-		ImGui::EndCombo();
-	}
-
-	if (!CurrentClipIsValid(currentClip))
-	{
-		currentClip = nullptr;
-		return;
-	}
-
-	if (ImGui::Button("Play"))	{ cAnimator->Play(true); }	ImGui::SameLine();
-	if (ImGui::Button("Pause"))	{ cAnimator->Pause(); }		ImGui::SameLine();
-	if (ImGui::Button("Step"))	{ cAnimator->Step(); }		ImGui::SameLine();
-	if (ImGui::Button("Stop"))	{ cAnimator->Stop(); }
-
-	if (ImGui::SliderFloat("Playback Speed", &speed, minSpeed, maxSpeed, "X %.3f", 0)) { cAnimator->SetPlaybackSpeed(speed); }
+	if (ImGui::SliderFloat("Playback Speed", &speed, 0.1f, 10.0f, "X %.3f", ImGuiSliderFlags_None)) { cAnimator->SetPlaybackSpeed(speed); }
 
 	if (ImGui::Checkbox("Interpolate", &interpolate))		{ /*cAnimator->SetInterpolate(interpolate);*/ }
 	if (ImGui::Checkbox("Camera Culling", &cameraCulling))	{ cAnimator->SetCameraCulling(cameraCulling); }
 	if (ImGui::Checkbox("Show Bones", &showBones))			{ cAnimator->SetShowBones(showBones); }
+	
+	if (ImGui::Button("Play All"))	{ cAnimator->Play(true); }	ImGui::SameLine();
+	if (ImGui::Button("Pause All"))	{ cAnimator->Pause(); }		ImGui::SameLine();
+	if (ImGui::Button("Step All"))	{ cAnimator->Step(); }		ImGui::SameLine();
+	if (ImGui::Button("Stop All"))	{ cAnimator->Stop(); }
 
 	ImGui::Separator();
+}
 
-	// --- TRACK STATS
-	ImGui::TextColored(Cyan.C_Array(), "Track Stats");
+void E_Inspector::DisplayTrackViewer(C_Animator* cAnimator)
+{
+	// --- TRACK VIEWER VARIABLES
+	std::map<std::string, AnimatorTrack>* tracks	= cAnimator->GetTracksAsPtr();
+	std::map<std::string, AnimatorClip>* clips		= cAnimator->GetClipsAsPtr();
+	
+	ImGui::TextColored(Cyan.C_Array(), "Track Viewer");
+	
+	ImGui::BeginChild("Track Viewer Child", ImVec2(0.0f, 269.0f), true, ImGuiWindowFlags_HorizontalScrollbar);
 
-	ImGui::Text("Name:");				ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "	  	   %s",			currentTrack->GetName());
-	ImGui::Text("Root Bone:");			ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "	    %s",			currentTrack->GetRootBone()->GetName());
-	ImGui::Text("Speed:");				ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "	  	  x%.3f",		currentTrack->GetTrackSpeed());
-	ImGui::Text("Interpolate:");		ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "	  %s",				(currentTrack->GetInterpolate()) ? "True" : "False");
+	for (auto trackItem = tracks->begin(); trackItem != tracks->end(); ++trackItem)
+	{	
+		if (ImGui::TreeNodeEx(trackItem->first.c_str(), ImGuiTreeNodeFlags_None))
+		{
+			AnimatorTrack* track	= &trackItem->second;
+			AnimatorClip* clip		= track->GetCurrentClip();
+			GameObject* rootBone	= track->GetRootBone();
+			float trackSpeed		= track->GetTrackSpeed();
+			bool interpolate		= track->GetInterpolate();
+
+			ImGui::BeginChild(trackItem->first.c_str(), ImVec2(0.0f, 185.0f), true, ImGuiWindowFlags_HorizontalScrollbar);
+
+			ImGui::TextColored(Cyan.C_Array(), "Track Controls:");
+
+			// --- Select Clip Combo
+			if (ImGui::BeginCombo("Select Clip", ((clip != nullptr) ? clip->GetName() : "[SELECT CLIP]"), ImGuiComboFlags_None))
+			{
+				for (auto clipItem = clips->begin(); clipItem != clips->end(); ++clipItem)
+				{
+					if (ImGui::Selectable(clipItem->second.GetName(), (&clipItem->second == clip), ImGuiSelectableFlags_None))
+					{
+						if (clipItem->second.GetAnimation() == nullptr)
+							continue;
+
+						cAnimator->SetTrackWithClip(track, &clipItem->second);
+
+						break;
+					}
+				}
+
+				ImGui::EndCombo();
+			}
+
+			if (ImGui::Button("Play"))					{ cAnimator->PlayClip(track, clip, 0u); }	ImGui::SameLine();
+			if (ImGui::Button("Pause"))					{ track->Pause(); }							ImGui::SameLine();
+			if (ImGui::Button("Step"))					{ track->Step(); }							ImGui::SameLine();
+			if (ImGui::Button("Stop"))					{ track->Stop(); }
+
+			if (ImGui::TreeNodeEx("Advanced Controls", ImGuiTreeNodeFlags_None))
+			{
+				if (ImGui::BeginCombo("Root Bone", ((rootBone != nullptr) ? rootBone->GetName() : "SELECT ROOT BONE"), ImGuiComboFlags_None))
+				{	
+					std::vector<GameObject*>* bones = cAnimator->GetBonesAsPtr();
+					
+					for (uint i = 0; i < bones->size(); ++i)
+					{
+						GameObject* bone = bones->at(i);
+						if (bone == nullptr)
+							continue;
+
+						if (ImGui::Selectable(bone->GetName(), (bone == rootBone), ImGuiSelectableFlags_None))
+						{
+							//rootBone = bone;
+							track->SetRootBone(bone);
+						}
+					}
+
+					ImGui::EndCombo();
+				}
+
+				if (ImGui::SliderFloat("Speed", &trackSpeed, 0.1f, 10.0f, "x%.2f")) { track->SetTrackSpeed(trackSpeed); }
+				if (ImGui::Checkbox("Interpolate", &interpolate))					{ track->SetInterpolate(interpolate); }
+
+				if (ImGui::Button("Previous Keyframe"))		{ track->StepToPrevKeyframe(); }	ImGui::SameLine();
+				if (ImGui::Button("Next Keyframe"))			{ track->StepToNextKeyframe(); }
+
+				ImGui::TreePop();
+			}
+			
+			ImGui::Separator();
+			ImGui::Separator();
+
+			ImGui::TextColored(Cyan.C_Array(), "Track Stats:");
+
+			ImGui::Text("Track State:");	ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "{ %s }",	track->GetTrackStateAsString());
+
+			if (clip != nullptr)
+			{
+				ImGui::Text("Clip Time:");	ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "  %.3fs",	(clip != nullptr) ? clip->GetClipTime() : 0.0f);
+				ImGui::Text("Clip Frame:");	ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), " %.3f",	(clip != nullptr) ? clip->GetClipFrame() : 0.0f);
+				ImGui::Text("Clip Tick:");	ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "  %u",	(clip != nullptr) ? clip->GetClipTick() : 0.0f);
+			}
+			else
+			{
+				ImGui::TextColored(Yellow.C_Array(), "Track has no Assigned Clip!");
+			}
+			
+			//DisplayTrackStats(track, clip);
+
+			ImGui::EndChild();
+
+			ImGui::TreePop();
+		}
+	}
+
+	ImGui::EndChild();
+}
+
+void E_Inspector::DisplayTrackStats(AnimatorTrack* track, AnimatorClip* clip)
+{
+	if (track == nullptr)
+		return;
+	
+	ImGui::TextColored(Green.C_Array(), "Track Info:");
+
+	ImGui::Text("Name:");				ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "	  	   %s",			track->GetName());
+	ImGui::Text("Root Bone:");			ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "	    %s",			track->GetRootBone()->GetName());
+	ImGui::Text("Speed:");				ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "	  	  x%.3f",		track->GetTrackSpeed());
+	ImGui::Text("Interpolate:");		ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "	  %s",				(track->GetInterpolate()) ? "True" : "False");
 	
 	ImGui::Separator();
 
-	// --- ANIMATOR STATS
-	ImGui::TextColored(Cyan.C_Array(), "Animation Stats");
+	if (clip == nullptr)
+	{
+		ImGui::TextColored(Yellow.C_Array(), "This Track has no Assigned Clip!");
+		//ImGui::TreePop();
+		return;
+	}
 
-	ImGui::Text("Name:");				ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "             %s",		currentClip->GetAnimation()->GetName());
-	ImGui::Text("Ticks Per Second:");	ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), " %.3f",				currentClip->GetAnimation()->GetTicksPerSecond());
-	ImGui::Text("Duration:");			ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "         %.3f",		currentClip->GetAnimation()->GetDuration());
+	// --- ANIMATION STATS
+	ImGui::TextColored(Green.C_Array(), "Animation Info");
+
+	// --- REVISE. POSSIBLE NULLPTR
+	ImGui::Text("Name:");				ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "             %s",		clip->GetAnimation()->GetName());
+	ImGui::Text("Ticks Per Second:");	ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), " %.3f",				clip->GetAnimation()->GetTicksPerSecond());
+	ImGui::Text("Duration:");			ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "         %.3f",		clip->GetAnimation()->GetDuration());
 
 	ImGui::Separator();
 
 	// --- CLIP STATS
-	ImGui::TextColored(Cyan.C_Array(), "Clip Stats");
+	ImGui::TextColored(Green.C_Array(), "Clip Info");
 
-	ImGui::Text("Name:");				ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "             %s",		currentClip->GetName());
-	ImGui::Text("Time:");				ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "             %.3f",	currentClip->GetClipTime());
-	ImGui::Text("Frame:");				ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "            %.3f",	currentClip->GetClipFrame());
-	ImGui::Text("Tick:");				ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "		     %u",		currentClip->GetClipTick());
-	ImGui::Text("Range:");				ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "            %u - %u", currentClip->GetStart(), currentClip->GetEnd());
-	ImGui::Text("Duration:");			ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "         %.3f",		currentClip->GetDuration());
-	ImGui::Text("Speed:");				ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "            x%.3f",	currentClip->GetSpeed());
-	ImGui::Text("Loop:");				ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "             %s",		(currentClip->IsLooped()) ? "True" : "False");
-
-	ImGui::Separator();
-
-	// --- ANIMATOR DEBUG CONTROLS
-	ImGui::TextColored(Cyan.C_Array(), "Debug Controls");
-
-	if (ImGui::Button("Previous Keyframe"))		{ /*cAnimator->StepToPrevKeyframe()*/; }	ImGui::SameLine(150.0f);
-	if (ImGui::Button("Next Keyframe"))			{ /*cAnimator->StepToNextKeyframe()*/; }
-	if (ImGui::Button("Refresh Bone Display"))	{ /*cAnimator->RefreshBoneDisplay()*/; }
+	ImGui::Text("Name:");				ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "             %s",		clip->GetName());
+	ImGui::Text("Time:");				ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "             %.3f",	clip->GetClipTime());
+	ImGui::Text("Frame:");				ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "            %.3f",	clip->GetClipFrame());
+	ImGui::Text("Tick:");				ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "		     %u",		clip->GetClipTick());
+	ImGui::Text("Range:");				ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "            %u - %u", clip->GetStart(), clip->GetEnd());
+	ImGui::Text("Duration:");			ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "         %.3f",		clip->GetDuration());
+	ImGui::Text("Speed:");				ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "            x%.3f",	clip->GetSpeed());
+	ImGui::Text("Loop:");				ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "             %s",		(clip->IsLooped()) ? "True" : "False");
 }
-
-bool E_Inspector::CurrentTrackIsValid(AnimatorTrack* currentTrack)
-{
-	if (currentTrack == nullptr)
-	{
-		ImGui::TextColored(Yellow.C_Array(), "Select a Track to Continue.");
-
-		ImGui::Text("\n\n\n\n\n\n\n\n\n\n");
-
-		return false;
-	}
-	
-	return true;
-}
-
-bool E_Inspector::CurrentClipIsValid(AnimatorClip* currentClip)
-{
-	if (currentClip == nullptr)
-	{
-		ImGui::TextColored(Yellow.C_Array(), "Select a Clip to Continue.");
-
-		ImGui::Text("\n\n\n\n\n\n\n\n\n\n");
-
-		return false;
-	}
-	
-	return true;
-}
-
 
 void E_Inspector::DisplayClipManager(C_Animator* cAnimator)
 {
@@ -2616,6 +2634,8 @@ void E_Inspector::ClipEditorWindow(C_Animator* cAnimator)
 				editedEnd		= (int)selectedClip->GetEnd();
 				editedSpeed		= selectedClip->GetSpeed();
 				editedLoop		= selectedClip->IsLooped();
+
+				editedMax		= editedEnd;
 			}
 		}
 		
@@ -2802,7 +2822,7 @@ void E_Inspector::TrackCreatorWindow(C_Animator* cAnimator)
 	static char trackName[128]				= "Enter Track Name";
 	static float trackSpeed					= 1.0f;
 	static bool interpolate					= true;
-	static std::vector<GameObject*>* bones	= cAnimator->GetBonesAsPtr();
+	std::vector<GameObject*>* bones			= cAnimator->GetBonesAsPtr();
 	static GameObject* rootBone				= (!bones->empty()) ? bones->at(0) : nullptr;
 
 	ImGuiInputTextFlags inputTxtFlags = ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_AutoSelectAll;
@@ -2868,8 +2888,8 @@ void E_Inspector::TrackCreatorWindow(C_Animator* cAnimator)
 void E_Inspector::TrackEditorWindow(C_Animator* cAnimator)
 {
 	// EDITED TRACK VARIABLES
-	static std::map<std::string, AnimatorTrack>* tracks = cAnimator->GetTracksAsPtr();
-	static std::vector<GameObject*>* bones				= cAnimator->GetBonesAsPtr();
+	std::map<std::string, AnimatorTrack>* tracks = cAnimator->GetTracksAsPtr();
+	std::vector<GameObject*>* bones				= cAnimator->GetBonesAsPtr();
 
 	static AnimatorTrack* editedTrack	= nullptr;
 	static char	trackName[128]			= "Edited Track Name";
