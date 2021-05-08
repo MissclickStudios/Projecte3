@@ -1,19 +1,26 @@
 #include <algorithm>
 #include <chrono>
 #include <random>
-#include "Application.h"
-#include "M_FileSystem.h"
+
 #include "FileSystemDefinitions.h"
-#include "M_Scene.h"
-#include "M_Input.h"
 #include "JSONParser.h"
-#include "GameManager.h"
 #include "Log.h"
 #include "CoreDllHelpers.h"
-#include "GameObject.h"
+
+#include "Application.h"
+
+#include "M_FileSystem.h"
 #include "M_ResourceManager.h"
+#include "M_Scene.h"
+#include "M_Input.h"
+
+#include "GameObject.h"
+
 #include "C_Transform.h"
+
+#include "GameManager.h"
 #include "Player.h"
+#include "Gate.h"
 
 GameManager::GameManager(): Script()
 {
@@ -72,6 +79,14 @@ void GameManager::Awake()
 				backtrack.clear();
 		}
 	}
+
+	GameObject* tmp = App->scene->GetGameObjectByName(gateName.c_str());
+
+	if (tmp != nullptr)
+	{
+		gate = (Gate*)tmp->GetScript("Gate");
+	}
+
 }
 
 void GameManager::Start()
@@ -81,7 +96,7 @@ void GameManager::Start()
 	for (auto go = objects->begin(); go != objects->end(); ++go)
 	{
 		Entity* entity = (Entity*)GetObjectScript((*go), ObjectType::ENTITY);
-		if (entity != nullptr)
+		if (entity != nullptr && entity->type != EntityType::PLAYER)
 		{
 			enemies.push_back(entity);
 		}
@@ -119,6 +134,8 @@ void GameManager::Update()
 			ReturnHub();
 		}
 	}
+
+	GateUpdate(); //Checks if gate should be unlocked
 
 	//S'ha de fer alguna manera de avisar l'scene que volem canviar de scene pero no fer-ho imediatament ??? -> si
 	//--
@@ -627,6 +644,27 @@ void GameManager::BackTrackUpdate()
 		}
 		playerScript->MoveTo(point);
 	}
+}
+
+void GameManager::GateUpdate()
+{
+	if(gate != nullptr)
+		if (gate->isLocked)
+		{
+			if (enemies.size() <= 0)
+			{
+				gate->Unlock();
+				return;
+			}
+
+			for (auto enemy = enemies.begin(); enemy != enemies.end(); ++enemy)
+			{
+				if ((*enemy)->health > 0)
+					return;
+			}
+
+			gate->Unlock();
+		}
 }
 
 GameManager* CreateGameManager() {

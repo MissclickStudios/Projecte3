@@ -35,6 +35,20 @@ void Gate::OnCollisionEnter(GameObject* object)
 		GameManager* gameManagerScript = (GameManager*)gameManager->GetScript("GameManager");
 		if (gameManagerScript->playerScript)
 			gameManagerScript->playerScript->hubCurrency += 20;
-		gameManagerScript->GoNextRoom();
+
+		if(!isLocked)
+			gameManagerScript->GoNextRoom();
 	}
+}
+
+void Gate::Unlock()
+{
+	isLocked = false;
+}
+
+Gate* CreateGate()
+{
+	Gate* script = new Gate();
+	INSPECTOR_STRING(script->gameManagerName);
+	return script;
 }

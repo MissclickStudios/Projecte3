@@ -10,6 +10,7 @@
 #define BACKTRACK 5
 
 class GameObject;
+class Gate;
 
 class SCRIPTS_API GameManager : public Script 
 {
@@ -39,6 +40,7 @@ private:
     void SaveManagerState();
 
     void BackTrackUpdate();
+    void GateUpdate();
 
 public:
     std::vector<std::string> level1;
@@ -47,11 +49,15 @@ public:
     bool enabled;
     std::string mainMenuScene;
     std::string SpawnPointName;
+    std::string gateName = "NextSceneTrigger";
+
     Prefab playerPrefab;
     Player* playerScript = nullptr;
 
 private:
     GameObject* playerGameObject = nullptr;
+    Gate* gate = nullptr;
+
     const char* saveFileName = "GameState.json";
     int	currentLevel = 0;
     int	roomNum = 0;
