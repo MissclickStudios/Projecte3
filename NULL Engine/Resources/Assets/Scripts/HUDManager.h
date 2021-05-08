@@ -47,6 +47,10 @@ private:
 	C_2DAnimator* dashImage;
 	C_2DAnimator* creditsImage;
 
+	C_2DAnimator* heart1Image;
+	C_2DAnimator* heart2Image;
+	C_2DAnimator* heart3Image;
+
 	GameObject* playerObject;
 	Player* player;
 
@@ -68,6 +72,14 @@ private:
 	R_Texture* emptyHeart;
 
 	bool hitAlready;
+
+	bool health1;
+	bool health2;
+	bool health3;
+	bool health4;
+	bool health5;
+	bool health6;
+
 
 	void ManageHeartImage(int hp);
 };

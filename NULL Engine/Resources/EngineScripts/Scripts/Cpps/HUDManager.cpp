@@ -77,19 +77,27 @@ void HUDManager::Start()
 
 	a = App->scene->GetGameObjectByName(heart1Name.c_str());
 	if (a != nullptr)
-		heart1 = (C_Material*)a->GetComponent<C_Material>();
+		heart1Image = (C_2DAnimator*)a->GetComponent<C_2DAnimator>();
 
 	a = App->scene->GetGameObjectByName(heart2Name.c_str());
 	if (a != nullptr)
-		heart2 = (C_Material*)a->GetComponent<C_Material>();
+		heart2Image = (C_2DAnimator*)a->GetComponent<C_2DAnimator>();
 
 	a = App->scene->GetGameObjectByName(heart3Name.c_str());
 	if (a != nullptr)
-		heart3 = (C_Material*)a->GetComponent<C_Material>();
+		heart3Image = (C_2DAnimator*)a->GetComponent<C_2DAnimator>();
+
 
 	fullHeart = (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/UI/HUD/HeartFull.png");
 	emptyHeart = (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/UI/HUD/HeartEmpty.png");
 	halfHeart = (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/UI/HUD/HeartHalf.png");
+
+	health1 = false;
+	health2 = false;
+	health3 = false;
+	health4 = false;
+	health5 = false;
+	health6 = false;
 
 	hitAlready = false;
 }
@@ -239,31 +247,61 @@ void HUDManager::ManageHeartImage(int hp)
 		heart1->SwapTexture(emptyHeart);
 		heart2->SwapTexture(emptyHeart);
 		heart3->SwapTexture(emptyHeart);
+//	if (!health1)
+//	{
+//		heart1Image->PlayAnimation(false, 2);
+//		health1 = true;
+//	}
 		break;
 	case 1:	  
 		heart1->SwapTexture(halfHeart);
 		heart2->SwapTexture(emptyHeart);
 		heart3->SwapTexture(emptyHeart);
+//	if (!health2)
+//	{
+//	heart1Image->PlayAnimation(false, 1);
+//	health2 = true;
+//	}
 		break;
 	case 2:	  
 		heart1->SwapTexture(fullHeart);
 		heart2->SwapTexture(emptyHeart);
 		heart3->SwapTexture(emptyHeart);
+//	if (!health3)
+//	{
+//	heart2Image->PlayAnimation(false, 2);
+//	health3 = true;
+//	}
 		break;
 	case 3:	 
 		heart1->SwapTexture(fullHeart);
 		heart2->SwapTexture(halfHeart);
 		heart3->SwapTexture(emptyHeart);
+//	if (!health4)
+//	{
+//	heart2Image->PlayAnimation(false, 1);
+//	health4 = true;
+//	}
 		break;
 	case 4:	  
 		heart1->SwapTexture(fullHeart);
 		heart2->SwapTexture(fullHeart);
 		heart3->SwapTexture(emptyHeart);
+//	if (!health5)
+//	{
+//	heart3Image->PlayAnimation(false, 2);
+//	health5 = true;
+//	}
 		break;
 	case 5:	  
 		heart1->SwapTexture(fullHeart);
 		heart2->SwapTexture(fullHeart);
 		heart3->SwapTexture(halfHeart);
+//	if (!health6)
+//	{
+//	heart3Image->PlayAnimation(false, 1);
+//	health6 = true;
+//	}
 		break;
 	case 6:		
 		heart1->SwapTexture(fullHeart);
