@@ -237,7 +237,17 @@ void Entity::Heal(Effect* effect)
 
 C_ParticleSystem* Entity::GetParticles(std::string particleName)
 {
-	return particles.find(particleName)->second;
+	bool found = false;
+	for (uint i = 0; i < particleNames.size(); ++i)
+		if (particleNames[i] == particleName)
+		{
+			found = true;
+			break;
+		}
+
+	if (found)
+		return particles.find(particleName)->second;
+	return nullptr;
 }
 
 //	// Health
