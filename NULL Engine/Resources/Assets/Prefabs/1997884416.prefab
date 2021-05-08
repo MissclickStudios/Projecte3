@@ -1,5 +1,5 @@
 {
-    "UID": 252751859,
+    "UID": 1353195059,
     "ParentUID": 1474137658,
     "PrefabID": 1997884416,
     "IsPrefab": true,
@@ -13,9 +13,9 @@
         {
             "Type": 1,
             "LocalPosition": [
-                2.4440469741821289,
-                22.528820037841797,
-                45.960063934326172
+                0,
+                0,
+                9.5367431640625e-07
             ],
             "LocalRotation": [
                 0,
@@ -49,16 +49,6 @@
                     "Duration": 57,
                     "DurationInSeconds": 1.8999999761581421,
                     "Loop": true
-                },
-                {
-                    "AnimationUID": 1548254464,
-                    "Name": "Shoot Big Gun",
-                    "Start": 80,
-                    "End": 93,
-                    "Speed": 1,
-                    "Duration": 13,
-                    "DurationInSeconds": 0.43333333730697632,
-                    "Loop": false
                 },
                 {
                     "AnimationUID": 1548254464,
@@ -99,6 +89,16 @@
                     "Duration": 19,
                     "DurationInSeconds": 0.63333332538604736,
                     "Loop": true
+                },
+                {
+                    "AnimationUID": 1548254464,
+                    "Name": "ShootRifle",
+                    "Start": 80,
+                    "End": 93,
+                    "Speed": 1,
+                    "Duration": 13,
+                    "DurationInSeconds": 0.43333333730697632,
+                    "Loop": false
                 }
             ],
             "CurrentClip": {
@@ -264,7 +264,7 @@
                 {
                     "Type": 5,
                     "Name": "handName",
-                    "string": ""
+                    "string": "mixamorig:RightHand"
                 },
                 {
                     "Type": 7,
@@ -311,8 +311,8 @@
     ],
     "Children": [
         {
-            "UID": 343042794,
-            "ParentUID": 252751859,
+            "UID": 121213754,
+            "ParentUID": 1353195059,
             "PrefabID": 1997884416,
             "IsPrefab": true,
             "Name": "Skeleton",
@@ -344,8 +344,8 @@
             ],
             "Children": [
                 {
-                    "UID": 1108121135,
-                    "ParentUID": 343042794,
+                    "UID": 422512801,
+                    "ParentUID": 121213754,
                     "PrefabID": 1997884416,
                     "IsPrefab": true,
                     "Name": "Aim",
@@ -377,8 +377,8 @@
                     ],
                     "Children": [
                         {
-                            "UID": 658474561,
-                            "ParentUID": 1108121135,
+                            "UID": 621040715,
+                            "ParentUID": 422512801,
                             "PrefabID": 1997884416,
                             "IsPrefab": true,
                             "Name": "AimMesh",
@@ -457,8 +457,8 @@
                     ]
                 },
                 {
-                    "UID": 1541621470,
-                    "ParentUID": 343042794,
+                    "UID": 2069258977,
+                    "ParentUID": 121213754,
                     "PrefabID": 1997884416,
                     "IsPrefab": true,
                     "Name": "mixamorig:Hips",
@@ -490,8 +490,8 @@
                     ],
                     "Children": [
                         {
-                            "UID": 319367741,
-                            "ParentUID": 1541621470,
+                            "UID": 1829180655,
+                            "ParentUID": 2069258977,
                             "PrefabID": 1997884416,
                             "IsPrefab": true,
                             "Name": "mixamorig:Spine",
@@ -523,8 +523,8 @@
                             ],
                             "Children": [
                                 {
-                                    "UID": 796705701,
-                                    "ParentUID": 319367741,
+                                    "UID": 838481710,
+                                    "ParentUID": 1829180655,
                                     "PrefabID": 1997884416,
                                     "IsPrefab": true,
                                     "Name": "mixamorig:Spine1",
@@ -556,8 +556,8 @@
                                     ],
                                     "Children": [
                                         {
-                                            "UID": 305233682,
-                                            "ParentUID": 796705701,
+                                            "UID": 1353873210,
+                                            "ParentUID": 838481710,
                                             "PrefabID": 1997884416,
                                             "IsPrefab": true,
                                             "Name": "mixamorig:Spine2",
@@ -589,8 +589,8 @@
                                             ],
                                             "Children": [
                                                 {
-                                                    "UID": 699862613,
-                                                    "ParentUID": 305233682,
+                                                    "UID": 1526173912,
+                                                    "ParentUID": 1353873210,
                                                     "PrefabID": 1997884416,
                                                     "IsPrefab": true,
                                                     "Name": "mixamorig:Neck",
@@ -622,8 +622,8 @@
                                                     ],
                                                     "Children": [
                                                         {
-                                                            "UID": 261550887,
-                                                            "ParentUID": 699862613,
+                                                            "UID": 1727056955,
+                                                            "ParentUID": 1526173912,
                                                             "PrefabID": 1997884416,
                                                             "IsPrefab": true,
                                                             "Name": "mixamorig:Head",
@@ -655,8 +655,8 @@
                                                             ],
                                                             "Children": [
                                                                 {
-                                                                    "UID": 1957682674,
-                                                                    "ParentUID": 261550887,
+                                                                    "UID": 1936951590,
+                                                                    "ParentUID": 1727056955,
                                                                     "PrefabID": 1997884416,
                                                                     "IsPrefab": true,
                                                                     "Name": "mixamorig:HeadTop_End",
@@ -693,8 +693,8 @@
                                                     ]
                                                 },
                                                 {
-                                                    "UID": 12707492,
-                                                    "ParentUID": 305233682,
+                                                    "UID": 964168901,
+                                                    "ParentUID": 1353873210,
                                                     "PrefabID": 1997884416,
                                                     "IsPrefab": true,
                                                     "Name": "mixamorig:RightShoulder",
@@ -726,8 +726,8 @@
                                                     ],
                                                     "Children": [
                                                         {
-                                                            "UID": 101707561,
-                                                            "ParentUID": 12707492,
+                                                            "UID": 1364178513,
+                                                            "ParentUID": 964168901,
                                                             "PrefabID": 1997884416,
                                                             "IsPrefab": true,
                                                             "Name": "mixamorig:RightArm",
@@ -759,8 +759,8 @@
                                                             ],
                                                             "Children": [
                                                                 {
-                                                                    "UID": 1765417150,
-                                                                    "ParentUID": 101707561,
+                                                                    "UID": 1519791919,
+                                                                    "ParentUID": 1364178513,
                                                                     "PrefabID": 1997884416,
                                                                     "IsPrefab": true,
                                                                     "Name": "mixamorig:RightForeArm",
@@ -792,8 +792,8 @@
                                                                     ],
                                                                     "Children": [
                                                                         {
-                                                                            "UID": 1339439673,
-                                                                            "ParentUID": 1765417150,
+                                                                            "UID": 2011257339,
+                                                                            "ParentUID": 1519791919,
                                                                             "PrefabID": 1997884416,
                                                                             "IsPrefab": true,
                                                                             "Name": "mixamorig:RightHand",
@@ -825,8 +825,8 @@
                                                                             ],
                                                                             "Children": [
                                                                                 {
-                                                                                    "UID": 1456858234,
-                                                                                    "ParentUID": 1339439673,
+                                                                                    "UID": 1410530764,
+                                                                                    "ParentUID": 2011257339,
                                                                                     "PrefabID": 1997884416,
                                                                                     "IsPrefab": true,
                                                                                     "Name": "mixamorig:RightHandThumb1",
@@ -858,8 +858,8 @@
                                                                                     ],
                                                                                     "Children": [
                                                                                         {
-                                                                                            "UID": 1280229197,
-                                                                                            "ParentUID": 1456858234,
+                                                                                            "UID": 1802606720,
+                                                                                            "ParentUID": 1410530764,
                                                                                             "PrefabID": 1997884416,
                                                                                             "IsPrefab": true,
                                                                                             "Name": "mixamorig:RightHandThumb2",
@@ -891,8 +891,8 @@
                                                                                             ],
                                                                                             "Children": [
                                                                                                 {
-                                                                                                    "UID": 1072953728,
-                                                                                                    "ParentUID": 1280229197,
+                                                                                                    "UID": 1871849563,
+                                                                                                    "ParentUID": 1802606720,
                                                                                                     "PrefabID": 1997884416,
                                                                                                     "IsPrefab": true,
                                                                                                     "Name": "mixamorig:RightHandThumb3",
@@ -924,8 +924,8 @@
                                                                                                     ],
                                                                                                     "Children": [
                                                                                                         {
-                                                                                                            "UID": 2117589928,
-                                                                                                            "ParentUID": 1072953728,
+                                                                                                            "UID": 69954301,
+                                                                                                            "ParentUID": 1871849563,
                                                                                                             "PrefabID": 1997884416,
                                                                                                             "IsPrefab": true,
                                                                                                             "Name": "mixamorig:RightHandThumb4",
@@ -964,8 +964,8 @@
                                                                                     ]
                                                                                 },
                                                                                 {
-                                                                                    "UID": 1599186981,
-                                                                                    "ParentUID": 1339439673,
+                                                                                    "UID": 1186432745,
+                                                                                    "ParentUID": 2011257339,
                                                                                     "PrefabID": 1997884416,
                                                                                     "IsPrefab": true,
                                                                                     "Name": "mixamorig:RightHandIndex1",
@@ -997,8 +997,8 @@
                                                                                     ],
                                                                                     "Children": [
                                                                                         {
-                                                                                            "UID": 256762901,
-                                                                                            "ParentUID": 1599186981,
+                                                                                            "UID": 744139098,
+                                                                                            "ParentUID": 1186432745,
                                                                                             "PrefabID": 1997884416,
                                                                                             "IsPrefab": true,
                                                                                             "Name": "mixamorig:RightHandIndex2",
@@ -1030,8 +1030,8 @@
                                                                                             ],
                                                                                             "Children": [
                                                                                                 {
-                                                                                                    "UID": 1880514980,
-                                                                                                    "ParentUID": 256762901,
+                                                                                                    "UID": 616030947,
+                                                                                                    "ParentUID": 744139098,
                                                                                                     "PrefabID": 1997884416,
                                                                                                     "IsPrefab": true,
                                                                                                     "Name": "mixamorig:RightHandIndex3",
@@ -1063,8 +1063,8 @@
                                                                                                     ],
                                                                                                     "Children": [
                                                                                                         {
-                                                                                                            "UID": 1699930175,
-                                                                                                            "ParentUID": 1880514980,
+                                                                                                            "UID": 169449343,
+                                                                                                            "ParentUID": 616030947,
                                                                                                             "PrefabID": 1997884416,
                                                                                                             "IsPrefab": true,
                                                                                                             "Name": "mixamorig:RightHandIndex4",
@@ -1103,8 +1103,8 @@
                                                                                     ]
                                                                                 },
                                                                                 {
-                                                                                    "UID": 1610863263,
-                                                                                    "ParentUID": 1339439673,
+                                                                                    "UID": 1614611921,
+                                                                                    "ParentUID": 2011257339,
                                                                                     "PrefabID": 1997884416,
                                                                                     "IsPrefab": true,
                                                                                     "Name": "mixamorig:RightHandMiddle1",
@@ -1136,8 +1136,8 @@
                                                                                     ],
                                                                                     "Children": [
                                                                                         {
-                                                                                            "UID": 167129689,
-                                                                                            "ParentUID": 1610863263,
+                                                                                            "UID": 658541722,
+                                                                                            "ParentUID": 1614611921,
                                                                                             "PrefabID": 1997884416,
                                                                                             "IsPrefab": true,
                                                                                             "Name": "mixamorig:RightHandMiddle2",
@@ -1169,8 +1169,8 @@
                                                                                             ],
                                                                                             "Children": [
                                                                                                 {
-                                                                                                    "UID": 1809501357,
-                                                                                                    "ParentUID": 167129689,
+                                                                                                    "UID": 1926455147,
+                                                                                                    "ParentUID": 658541722,
                                                                                                     "PrefabID": 1997884416,
                                                                                                     "IsPrefab": true,
                                                                                                     "Name": "mixamorig:RightHandMiddle3",
@@ -1202,8 +1202,8 @@
                                                                                                     ],
                                                                                                     "Children": [
                                                                                                         {
-                                                                                                            "UID": 1825637239,
-                                                                                                            "ParentUID": 1809501357,
+                                                                                                            "UID": 214252114,
+                                                                                                            "ParentUID": 1926455147,
                                                                                                             "PrefabID": 1997884416,
                                                                                                             "IsPrefab": true,
                                                                                                             "Name": "mixamorig:RightHandMiddle4",
@@ -1242,8 +1242,8 @@
                                                                                     ]
                                                                                 },
                                                                                 {
-                                                                                    "UID": 749758649,
-                                                                                    "ParentUID": 1339439673,
+                                                                                    "UID": 19649050,
+                                                                                    "ParentUID": 2011257339,
                                                                                     "PrefabID": 1997884416,
                                                                                     "IsPrefab": true,
                                                                                     "Name": "mixamorig:RightHandPinky1",
@@ -1275,8 +1275,8 @@
                                                                                     ],
                                                                                     "Children": [
                                                                                         {
-                                                                                            "UID": 605562153,
-                                                                                            "ParentUID": 749758649,
+                                                                                            "UID": 1356575448,
+                                                                                            "ParentUID": 19649050,
                                                                                             "PrefabID": 1997884416,
                                                                                             "IsPrefab": true,
                                                                                             "Name": "mixamorig:RightHandPinky2",
@@ -1308,8 +1308,8 @@
                                                                                             ],
                                                                                             "Children": [
                                                                                                 {
-                                                                                                    "UID": 1424974877,
-                                                                                                    "ParentUID": 605562153,
+                                                                                                    "UID": 1180037934,
+                                                                                                    "ParentUID": 1356575448,
                                                                                                     "PrefabID": 1997884416,
                                                                                                     "IsPrefab": true,
                                                                                                     "Name": "mixamorig:RightHandPinky3",
@@ -1341,8 +1341,8 @@
                                                                                                     ],
                                                                                                     "Children": [
                                                                                                         {
-                                                                                                            "UID": 1065516625,
-                                                                                                            "ParentUID": 1424974877,
+                                                                                                            "UID": 1757564537,
+                                                                                                            "ParentUID": 1180037934,
                                                                                                             "PrefabID": 1997884416,
                                                                                                             "IsPrefab": true,
                                                                                                             "Name": "mixamorig:RightHandPinky4",
@@ -1381,8 +1381,8 @@
                                                                                     ]
                                                                                 },
                                                                                 {
-                                                                                    "UID": 1514128701,
-                                                                                    "ParentUID": 1339439673,
+                                                                                    "UID": 1527674316,
+                                                                                    "ParentUID": 2011257339,
                                                                                     "PrefabID": 1997884416,
                                                                                     "IsPrefab": true,
                                                                                     "Name": "mixamorig:RightHandRing1",
@@ -1414,8 +1414,8 @@
                                                                                     ],
                                                                                     "Children": [
                                                                                         {
-                                                                                            "UID": 966762678,
-                                                                                            "ParentUID": 1514128701,
+                                                                                            "UID": 1905817788,
+                                                                                            "ParentUID": 1527674316,
                                                                                             "PrefabID": 1997884416,
                                                                                             "IsPrefab": true,
                                                                                             "Name": "mixamorig:RightHandRing2",
@@ -1447,8 +1447,8 @@
                                                                                             ],
                                                                                             "Children": [
                                                                                                 {
-                                                                                                    "UID": 1811044257,
-                                                                                                    "ParentUID": 966762678,
+                                                                                                    "UID": 1681495893,
+                                                                                                    "ParentUID": 1905817788,
                                                                                                     "PrefabID": 1997884416,
                                                                                                     "IsPrefab": true,
                                                                                                     "Name": "mixamorig:RightHandRing3",
@@ -1480,8 +1480,8 @@
                                                                                                     ],
                                                                                                     "Children": [
                                                                                                         {
-                                                                                                            "UID": 440536996,
-                                                                                                            "ParentUID": 1811044257,
+                                                                                                            "UID": 4147167,
+                                                                                                            "ParentUID": 1681495893,
                                                                                                             "PrefabID": 1997884416,
                                                                                                             "IsPrefab": true,
                                                                                                             "Name": "mixamorig:RightHandRing4",
@@ -1528,8 +1528,8 @@
                                                     ]
                                                 },
                                                 {
-                                                    "UID": 1553220899,
-                                                    "ParentUID": 305233682,
+                                                    "UID": 1805996119,
+                                                    "ParentUID": 1353873210,
                                                     "PrefabID": 1997884416,
                                                     "IsPrefab": true,
                                                     "Name": "mixamorig:LeftShoulder",
@@ -1561,8 +1561,8 @@
                                                     ],
                                                     "Children": [
                                                         {
-                                                            "UID": 1859884966,
-                                                            "ParentUID": 1553220899,
+                                                            "UID": 1455423409,
+                                                            "ParentUID": 1805996119,
                                                             "PrefabID": 1997884416,
                                                             "IsPrefab": true,
                                                             "Name": "mixamorig:LeftArm",
@@ -1594,8 +1594,8 @@
                                                             ],
                                                             "Children": [
                                                                 {
-                                                                    "UID": 1239974843,
-                                                                    "ParentUID": 1859884966,
+                                                                    "UID": 678977312,
+                                                                    "ParentUID": 1455423409,
                                                                     "PrefabID": 1997884416,
                                                                     "IsPrefab": true,
                                                                     "Name": "mixamorig:LeftForeArm",
@@ -1627,8 +1627,8 @@
                                                                     ],
                                                                     "Children": [
                                                                         {
-                                                                            "UID": 520851350,
-                                                                            "ParentUID": 1239974843,
+                                                                            "UID": 1124344628,
+                                                                            "ParentUID": 678977312,
                                                                             "PrefabID": 1997884416,
                                                                             "IsPrefab": true,
                                                                             "Name": "mixamorig:LeftHand",
@@ -1660,8 +1660,8 @@
                                                                             ],
                                                                             "Children": [
                                                                                 {
-                                                                                    "UID": 2001210539,
-                                                                                    "ParentUID": 520851350,
+                                                                                    "UID": 1936244091,
+                                                                                    "ParentUID": 1124344628,
                                                                                     "PrefabID": 1997884416,
                                                                                     "IsPrefab": true,
                                                                                     "Name": "mixamorig:LeftHandRing1",
@@ -1693,8 +1693,8 @@
                                                                                     ],
                                                                                     "Children": [
                                                                                         {
-                                                                                            "UID": 11390041,
-                                                                                            "ParentUID": 2001210539,
+                                                                                            "UID": 1102514582,
+                                                                                            "ParentUID": 1936244091,
                                                                                             "PrefabID": 1997884416,
                                                                                             "IsPrefab": true,
                                                                                             "Name": "mixamorig:LeftHandRing2",
@@ -1726,8 +1726,8 @@
                                                                                             ],
                                                                                             "Children": [
                                                                                                 {
-                                                                                                    "UID": 1761376719,
-                                                                                                    "ParentUID": 11390041,
+                                                                                                    "UID": 417645315,
+                                                                                                    "ParentUID": 1102514582,
                                                                                                     "PrefabID": 1997884416,
                                                                                                     "IsPrefab": true,
                                                                                                     "Name": "mixamorig:LeftHandRing3",
@@ -1759,8 +1759,8 @@
                                                                                                     ],
                                                                                                     "Children": [
                                                                                                         {
-                                                                                                            "UID": 2064159719,
-                                                                                                            "ParentUID": 1761376719,
+                                                                                                            "UID": 1728817292,
+                                                                                                            "ParentUID": 417645315,
                                                                                                             "PrefabID": 1997884416,
                                                                                                             "IsPrefab": true,
                                                                                                             "Name": "mixamorig:LeftHandRing4",
@@ -1799,8 +1799,8 @@
                                                                                     ]
                                                                                 },
                                                                                 {
-                                                                                    "UID": 634077943,
-                                                                                    "ParentUID": 520851350,
+                                                                                    "UID": 201952840,
+                                                                                    "ParentUID": 1124344628,
                                                                                     "PrefabID": 1997884416,
                                                                                     "IsPrefab": true,
                                                                                     "Name": "mixamorig:LeftHandThumb1",
@@ -1832,8 +1832,8 @@
                                                                                     ],
                                                                                     "Children": [
                                                                                         {
-                                                                                            "UID": 2033741903,
-                                                                                            "ParentUID": 634077943,
+                                                                                            "UID": 438418463,
+                                                                                            "ParentUID": 201952840,
                                                                                             "PrefabID": 1997884416,
                                                                                             "IsPrefab": true,
                                                                                             "Name": "mixamorig:LeftHandThumb2",
@@ -1865,8 +1865,8 @@
                                                                                             ],
                                                                                             "Children": [
                                                                                                 {
-                                                                                                    "UID": 579947546,
-                                                                                                    "ParentUID": 2033741903,
+                                                                                                    "UID": 1916981212,
+                                                                                                    "ParentUID": 438418463,
                                                                                                     "PrefabID": 1997884416,
                                                                                                     "IsPrefab": true,
                                                                                                     "Name": "mixamorig:LeftHandThumb3",
@@ -1898,8 +1898,8 @@
                                                                                                     ],
                                                                                                     "Children": [
                                                                                                         {
-                                                                                                            "UID": 1132992725,
-                                                                                                            "ParentUID": 579947546,
+                                                                                                            "UID": 1649186021,
+                                                                                                            "ParentUID": 1916981212,
                                                                                                             "PrefabID": 1997884416,
                                                                                                             "IsPrefab": true,
                                                                                                             "Name": "mixamorig:LeftHandThumb4",
@@ -1938,8 +1938,8 @@
                                                                                     ]
                                                                                 },
                                                                                 {
-                                                                                    "UID": 1837809748,
-                                                                                    "ParentUID": 520851350,
+                                                                                    "UID": 895762204,
+                                                                                    "ParentUID": 1124344628,
                                                                                     "PrefabID": 1997884416,
                                                                                     "IsPrefab": true,
                                                                                     "Name": "mixamorig:LeftHandIndex1",
@@ -1971,8 +1971,8 @@
                                                                                     ],
                                                                                     "Children": [
                                                                                         {
-                                                                                            "UID": 1616468644,
-                                                                                            "ParentUID": 1837809748,
+                                                                                            "UID": 851109271,
+                                                                                            "ParentUID": 895762204,
                                                                                             "PrefabID": 1997884416,
                                                                                             "IsPrefab": true,
                                                                                             "Name": "mixamorig:LeftHandIndex2",
@@ -2004,8 +2004,8 @@
                                                                                             ],
                                                                                             "Children": [
                                                                                                 {
-                                                                                                    "UID": 2069213636,
-                                                                                                    "ParentUID": 1616468644,
+                                                                                                    "UID": 67929006,
+                                                                                                    "ParentUID": 851109271,
                                                                                                     "PrefabID": 1997884416,
                                                                                                     "IsPrefab": true,
                                                                                                     "Name": "mixamorig:LeftHandIndex3",
@@ -2037,8 +2037,8 @@
                                                                                                     ],
                                                                                                     "Children": [
                                                                                                         {
-                                                                                                            "UID": 1318115152,
-                                                                                                            "ParentUID": 2069213636,
+                                                                                                            "UID": 1072210785,
+                                                                                                            "ParentUID": 67929006,
                                                                                                             "PrefabID": 1997884416,
                                                                                                             "IsPrefab": true,
                                                                                                             "Name": "mixamorig:LeftHandIndex4",
@@ -2077,8 +2077,8 @@
                                                                                     ]
                                                                                 },
                                                                                 {
-                                                                                    "UID": 1911995355,
-                                                                                    "ParentUID": 520851350,
+                                                                                    "UID": 430421321,
+                                                                                    "ParentUID": 1124344628,
                                                                                     "PrefabID": 1997884416,
                                                                                     "IsPrefab": true,
                                                                                     "Name": "mixamorig:LeftHandMiddle1",
@@ -2110,8 +2110,8 @@
                                                                                     ],
                                                                                     "Children": [
                                                                                         {
-                                                                                            "UID": 1614644164,
-                                                                                            "ParentUID": 1911995355,
+                                                                                            "UID": 2114427678,
+                                                                                            "ParentUID": 430421321,
                                                                                             "PrefabID": 1997884416,
                                                                                             "IsPrefab": true,
                                                                                             "Name": "mixamorig:LeftHandMiddle2",
@@ -2143,8 +2143,8 @@
                                                                                             ],
                                                                                             "Children": [
                                                                                                 {
-                                                                                                    "UID": 1622912987,
-                                                                                                    "ParentUID": 1614644164,
+                                                                                                    "UID": 1971314371,
+                                                                                                    "ParentUID": 2114427678,
                                                                                                     "PrefabID": 1997884416,
                                                                                                     "IsPrefab": true,
                                                                                                     "Name": "mixamorig:LeftHandMiddle3",
@@ -2176,8 +2176,8 @@
                                                                                                     ],
                                                                                                     "Children": [
                                                                                                         {
-                                                                                                            "UID": 259038883,
-                                                                                                            "ParentUID": 1622912987,
+                                                                                                            "UID": 815550954,
+                                                                                                            "ParentUID": 1971314371,
                                                                                                             "PrefabID": 1997884416,
                                                                                                             "IsPrefab": true,
                                                                                                             "Name": "mixamorig:LeftHandMiddle4",
@@ -2216,8 +2216,8 @@
                                                                                     ]
                                                                                 },
                                                                                 {
-                                                                                    "UID": 1661128860,
-                                                                                    "ParentUID": 520851350,
+                                                                                    "UID": 1563608718,
+                                                                                    "ParentUID": 1124344628,
                                                                                     "PrefabID": 1997884416,
                                                                                     "IsPrefab": true,
                                                                                     "Name": "mixamorig:LeftHandPinky1",
@@ -2249,8 +2249,8 @@
                                                                                     ],
                                                                                     "Children": [
                                                                                         {
-                                                                                            "UID": 388584139,
-                                                                                            "ParentUID": 1661128860,
+                                                                                            "UID": 918294940,
+                                                                                            "ParentUID": 1563608718,
                                                                                             "PrefabID": 1997884416,
                                                                                             "IsPrefab": true,
                                                                                             "Name": "mixamorig:LeftHandPinky2",
@@ -2282,8 +2282,8 @@
                                                                                             ],
                                                                                             "Children": [
                                                                                                 {
-                                                                                                    "UID": 967549819,
-                                                                                                    "ParentUID": 388584139,
+                                                                                                    "UID": 337864341,
+                                                                                                    "ParentUID": 918294940,
                                                                                                     "PrefabID": 1997884416,
                                                                                                     "IsPrefab": true,
                                                                                                     "Name": "mixamorig:LeftHandPinky3",
@@ -2315,8 +2315,8 @@
                                                                                                     ],
                                                                                                     "Children": [
                                                                                                         {
-                                                                                                            "UID": 1632794130,
-                                                                                                            "ParentUID": 967549819,
+                                                                                                            "UID": 600487092,
+                                                                                                            "ParentUID": 337864341,
                                                                                                             "PrefabID": 1997884416,
                                                                                                             "IsPrefab": true,
                                                                                                             "Name": "mixamorig:LeftHandPinky4",
@@ -2369,8 +2369,8 @@
                             ]
                         },
                         {
-                            "UID": 1340439580,
-                            "ParentUID": 1541621470,
+                            "UID": 275505651,
+                            "ParentUID": 2069258977,
                             "PrefabID": 1997884416,
                             "IsPrefab": true,
                             "Name": "mixamorig:LeftUpLeg",
@@ -2402,8 +2402,8 @@
                             ],
                             "Children": [
                                 {
-                                    "UID": 229603024,
-                                    "ParentUID": 1340439580,
+                                    "UID": 1811353122,
+                                    "ParentUID": 275505651,
                                     "PrefabID": 1997884416,
                                     "IsPrefab": true,
                                     "Name": "mixamorig:LeftLeg",
@@ -2435,8 +2435,8 @@
                                     ],
                                     "Children": [
                                         {
-                                            "UID": 1788611009,
-                                            "ParentUID": 229603024,
+                                            "UID": 1126956387,
+                                            "ParentUID": 1811353122,
                                             "PrefabID": 1997884416,
                                             "IsPrefab": true,
                                             "Name": "mixamorig:LeftFoot",
@@ -2468,8 +2468,8 @@
                                             ],
                                             "Children": [
                                                 {
-                                                    "UID": 882524103,
-                                                    "ParentUID": 1788611009,
+                                                    "UID": 1251202415,
+                                                    "ParentUID": 1126956387,
                                                     "PrefabID": 1997884416,
                                                     "IsPrefab": true,
                                                     "Name": "mixamorig:LeftToeBase",
@@ -2501,8 +2501,8 @@
                                                     ],
                                                     "Children": [
                                                         {
-                                                            "UID": 716714425,
-                                                            "ParentUID": 882524103,
+                                                            "UID": 1639374106,
+                                                            "ParentUID": 1251202415,
                                                             "PrefabID": 1997884416,
                                                             "IsPrefab": true,
                                                             "Name": "mixamorig:LeftToe_End",
@@ -2543,8 +2543,8 @@
                             ]
                         },
                         {
-                            "UID": 77017967,
-                            "ParentUID": 1541621470,
+                            "UID": 1982974535,
+                            "ParentUID": 2069258977,
                             "PrefabID": 1997884416,
                             "IsPrefab": true,
                             "Name": "mixamorig:RightUpLeg",
@@ -2576,8 +2576,8 @@
                             ],
                             "Children": [
                                 {
-                                    "UID": 577884795,
-                                    "ParentUID": 77017967,
+                                    "UID": 810895558,
+                                    "ParentUID": 1982974535,
                                     "PrefabID": 1997884416,
                                     "IsPrefab": true,
                                     "Name": "mixamorig:RightLeg",
@@ -2609,8 +2609,8 @@
                                     ],
                                     "Children": [
                                         {
-                                            "UID": 1106728174,
-                                            "ParentUID": 577884795,
+                                            "UID": 150532074,
+                                            "ParentUID": 810895558,
                                             "PrefabID": 1997884416,
                                             "IsPrefab": true,
                                             "Name": "mixamorig:RightFoot",
@@ -2642,8 +2642,8 @@
                                             ],
                                             "Children": [
                                                 {
-                                                    "UID": 533354677,
-                                                    "ParentUID": 1106728174,
+                                                    "UID": 1974741994,
+                                                    "ParentUID": 150532074,
                                                     "PrefabID": 1997884416,
                                                     "IsPrefab": true,
                                                     "Name": "mixamorig:RightToeBase",
@@ -2675,8 +2675,8 @@
                                                     ],
                                                     "Children": [
                                                         {
-                                                            "UID": 1357999025,
-                                                            "ParentUID": 533354677,
+                                                            "UID": 515764514,
+                                                            "ParentUID": 1974741994,
                                                             "PrefabID": 1997884416,
                                                             "IsPrefab": true,
                                                             "Name": "mixamorig:RightToe_End",
@@ -2719,8 +2719,8 @@
                     ]
                 },
                 {
-                    "UID": 1066495830,
-                    "ParentUID": 343042794,
+                    "UID": 944465908,
+                    "ParentUID": 121213754,
                     "PrefabID": 1997884416,
                     "IsPrefab": true,
                     "Name": "Hand",
@@ -2755,8 +2755,8 @@
             ]
         },
         {
-            "UID": 1449411849,
-            "ParentUID": 252751859,
+            "UID": 1364912296,
+            "ParentUID": 1353195059,
             "PrefabID": 1997884416,
             "IsPrefab": true,
             "Name": "Mesh",
@@ -2833,8 +2833,8 @@
             "Children": []
         },
         {
-            "UID": 1945339095,
-            "ParentUID": 252751859,
+            "UID": 1236475638,
+            "ParentUID": 1353195059,
             "PrefabID": 1997884416,
             "IsPrefab": true,
             "Name": "Particles",
@@ -2866,8 +2866,8 @@
             ],
             "Children": [
                 {
-                    "UID": 1952459782,
-                    "ParentUID": 1945339095,
+                    "UID": 1335841371,
+                    "ParentUID": 1236475638,
                     "PrefabID": 1997884416,
                     "IsPrefab": true,
                     "Name": "Dash",
@@ -2909,8 +2909,8 @@
                     "Children": []
                 },
                 {
-                    "UID": 1944933843,
-                    "ParentUID": 1945339095,
+                    "UID": 826523671,
+                    "ParentUID": 1236475638,
                     "PrefabID": 1997884416,
                     "IsPrefab": true,
                     "Name": "Hit",

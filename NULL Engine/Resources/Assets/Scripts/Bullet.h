@@ -1,26 +1,27 @@
 #pragma once
-#include "Entity.h"
+#include "Object.h"
 #include "ScriptMacros.h"
 
 #include "Effect.h"
 
 #include <vector>
 
+class C_RigidBody;
 class Weapon;
 
-class SCRIPTS_API Bullet : public Entity ALLOWED_INHERITANCE
+class SCRIPTS_API Bullet : public Object ALLOWED_INHERITANCE
 {
 public:
 
 	Bullet();
 	virtual ~Bullet();
 
-	void SetUp() {}
-	void Behavior() override;
-	void CleanUp() {}
+	void Awake() override;
+	void Update() override;
+	void CleanUp() override;
 
-	void EntityPause() override;
-	void EntityResume() override;
+	void OnPause() override;
+	void OnResume() override;
 
 	void OnCollisionEnter(GameObject* object) override;
 
@@ -28,6 +29,8 @@ public:
 	void SetOnHitData(float damage, std::vector<Effect> effects, float lifeTime);
 
 private:
+
+	C_RigidBody* rigidBody = nullptr;
 
 	Weapon* shooter = nullptr;
 	int index = 0;

@@ -64,7 +64,7 @@ public:
 	virtual void TakeDamage(float damage);
 	virtual void GiveHeal(float amount);
 	Effect* AddEffect(EffectType type, float duration, bool permanent = false, void* data = nullptr);
-	virtual void MoveTo(float3 position);
+	virtual void ChangePosition(float3 position);
 	bool IsGrounded();
 	
 	// Effect Functions

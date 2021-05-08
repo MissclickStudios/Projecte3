@@ -246,6 +246,8 @@ void Player::SaveState(ParsonNode& playerNode)
 		for (uint i = 0; i < equipedGunWeapon->perks.size(); ++i)
 			equipedGunPerks.SetNumber((double)equipedGunWeapon->perks[i]);
 	}
+
+	playerNode.SetBool("Using Equiped Gun", usingEquipedGun);
 }
 
 void Player::LoadState(ParsonNode& playerNode)
@@ -317,6 +319,12 @@ void Player::LoadState(ParsonNode& playerNode)
 				equipedGunWeapon->weaponModel->SetIsActive(false);
 		}
 	}
+
+	usingEquipedGun = playerNode.GetBool("Using Equiped Gun");
+	if (usingEquipedGun && equipedGunWeapon != nullptr)
+		currentWeapon = equipedGunWeapon;
+	else
+		currentWeapon = blasterWeapon;
 }
 
 void Player::Reset()
@@ -341,6 +349,8 @@ void Player::Reset()
 		equipedGunWeapon->ammo = equipedGunWeapon->maxAmmo;
 		equipedGunWeapon->perks.clear();
 	}
+
+	usingEquipedGun = false;
 }
 
 void Player::TakeDamage(float damage)
@@ -482,7 +492,11 @@ void Player::ManageAim()
 		aimState = AimState::SHOOT;
 
 	case AimState::SHOOT:
-		currentAnimation = &shootAnimation; // temporary till torso gets an independent animator
+		if (!usingEquipedGun)
+			currentAnimation = &shootAnimation; // temporary till torso gets an independent animator
+		else
+			currentAnimation = &shootRifleAnimation;
+
 		if (currentWeapon != nullptr)
 			switch (currentWeapon->Shoot(aimDirection))
 			{
@@ -524,6 +538,7 @@ void Player::ManageAim()
 		{
 			if (blasterWeapon == currentWeapon)
 			{
+				usingEquipedGun = true;
 				currentWeapon = equipedGunWeapon;
 				if (blasterWeapon->weaponModel != nullptr)
 					blasterWeapon->weaponModel->SetIsActive(false);
@@ -532,6 +547,7 @@ void Player::ManageAim()
 			}
 			else
 			{
+				usingEquipedGun = false;
 				currentWeapon = blasterWeapon;
 				if (blasterWeapon->weaponModel != nullptr)
 					blasterWeapon->weaponModel->SetIsActive(true);

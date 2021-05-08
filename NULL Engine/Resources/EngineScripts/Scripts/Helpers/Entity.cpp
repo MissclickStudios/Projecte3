@@ -225,7 +225,7 @@ Effect* Entity::AddEffect(EffectType type, float duration, bool permanent, void*
 	return output;
 }
 
-void Entity::MoveTo(float3 position)
+void Entity::ChangePosition(float3 position)
 {
 	gameObject->transform->SetLocalPosition(position);
 	rigidBody->TransformMovesRigidBody(true);

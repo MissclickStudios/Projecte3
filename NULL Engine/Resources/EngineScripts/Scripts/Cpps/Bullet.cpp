@@ -2,10 +2,11 @@
 
 #include "GameObject.h"
 #include "C_Transform.h"
+#include "C_RigidBody.h"
 
 #include "Weapon.h"
 
-Bullet::Bullet() : Entity()
+Bullet::Bullet() : Object()
 {
 	baseType = ObjectType::BULLET;
 
@@ -16,7 +17,12 @@ Bullet::~Bullet()
 {
 }
 
-void Bullet::Behavior()
+void Bullet::Awake()
+{
+	rigidBody = gameObject->GetComponent<C_RigidBody>();
+}
+
+void Bullet::Update()
 {
 	if (lifeTimeTimer.ReadSec() >= lifeTime)
 	{
@@ -33,14 +39,24 @@ void Bullet::Behavior()
 	}
 }
 
-void Bullet::EntityPause()
+void Bullet::CleanUp()
 {
-	lifeTimeTimer.Pause();
 }
 
-void Bullet::EntityResume()
+void Bullet::OnPause()
+{
+	lifeTimeTimer.Pause();
+
+	if (rigidBody != nullptr)
+		rigidBody->SetIsActive(false);
+}
+
+void Bullet::OnResume()
 {
 	lifeTimeTimer.Resume();
+
+	if (rigidBody != nullptr)
+		rigidBody->SetIsActive(true);
 }
 
 void Bullet::OnCollisionEnter(GameObject* object)

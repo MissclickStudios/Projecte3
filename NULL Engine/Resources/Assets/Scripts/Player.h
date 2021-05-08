@@ -62,6 +62,7 @@ public:
 	AnimationInfo runAnimation = { "Run" };
 	AnimationInfo dashAnimation = { "Dash" };
 	AnimationInfo shootAnimation = { "Shoot", 0.05f };
+	AnimationInfo shootRifleAnimation = { "ShootRifle", 0.05f };
 	AnimationInfo reloadAnimation = { "Reload" };
 	AnimationInfo changeAnimation = { "Change" };
 	AnimationInfo onGuardAnimation = { "OnGuard" };
@@ -140,6 +141,7 @@ private:
 	Timer intermitentMeshTimer;
 
 	// Weapons
+	bool usingEquipedGun = false;
 	Timer changeTimer;
 
 	GameObject* blasterGameObject = nullptr;

@@ -133,7 +133,7 @@ void GameManager::Update()
 			point = backtrack[i];
 			break;
 		}
-		playerScript->MoveTo(point);
+		playerScript->ChangePosition(point);
 	}
 	// --- Room Generation
 	if (enabled) 
