@@ -103,7 +103,15 @@
                     "Path": "Library\/Meshes\/1214841820.nemesh",
                     "File": "1214841820.nemesh",
                     "ShowWireframe": false,
-                    "ShowBoundingBox": false
+                    "ShowBoundingBox": false,
+                    "Outline": false,
+                    "OutlineThickness": -2147483648,
+                    "OutlineColor": [
+                        0,
+                        0,
+                        0,
+                        0
+                    ]
                 },
                 {
                     "Type": 3,
@@ -122,8 +130,8 @@
                     "Shader": {
                         "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
                         "AssetsName": "DefaultShader.shader",
-                        "LibaryPath": "Library\/Shaders\/1245753822.neshader",
-                        "LibraryFile": "1245753822.neshader"
+                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
+                        "LibraryFile": "800223282.neshader"
                     }
                 }
             ]
@@ -595,7 +603,15 @@
                     "Path": "Library\/Meshes\/106224982.nemesh",
                     "File": "106224982.nemesh",
                     "ShowWireframe": false,
-                    "ShowBoundingBox": false
+                    "ShowBoundingBox": false,
+                    "Outline": false,
+                    "OutlineThickness": -2147483648,
+                    "OutlineColor": [
+                        0,
+                        0,
+                        0,
+                        0
+                    ]
                 },
                 {
                     "Type": 3,
@@ -612,7 +628,7 @@
                         "File": "1703275201.nemat"
                     },
                     "Texture": {
-                        "AssetsPath": "Assets\/Textures\/Weapons\/blaster.png",
+                        "AssetsPath": "Assets\/Textures\/\/Weapons\/blaster.png",
                         "AssetsName": "blaster.png",
                         "LibaryPath": "Library\/Textures\/186960503.netex",
                         "LibraryFile": "186960503.netex"
@@ -620,8 +636,8 @@
                     "Shader": {
                         "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
                         "AssetsName": "DefaultShader.shader",
-                        "LibaryPath": "Library\/Shaders\/1245753822.neshader",
-                        "LibraryFile": "1245753822.neshader"
+                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
+                        "LibraryFile": "800223282.neshader"
                     }
                 }
             ]
@@ -934,6 +950,16 @@
                     "Clips": [
                         {
                             "AnimationUID": 1270401542,
+                            "Name": "Death",
+                            "Start": 150,
+                            "End": 259,
+                            "Speed": 1,
+                            "Duration": 109,
+                            "DurationInSeconds": 3.6333334445953369,
+                            "Loop": false
+                        },
+                        {
+                            "AnimationUID": 1270401542,
                             "Name": "Idle",
                             "Start": 0,
                             "End": 62,
@@ -961,22 +987,9 @@
                             "Duration": 14,
                             "DurationInSeconds": 0.46666666865348816,
                             "Loop": true
-                        },
-                        {
-                            "AnimationUID": 1270401542,
-                            "Name": "Death",
-                            "Start": 150,
-                            "End": 259,
-                            "Speed": 1,
-                            "Duration": 109,
-                            "DurationInSeconds": 3.6333334445953369,
-                            "Loop": false
                         }
                     ],
-                    "CurrentClip": {
-                        "AnimationName": "Take 001",
-                        "Name": "Take 001 Default"
-                    }
+                    "Tracks": []
                 },
                 {
                     "Type": 8,
@@ -1013,6 +1026,11 @@
                     "DataName": "Trooper",
                     "HasInspector": true,
                     "InspectorVariables": [
+                        {
+                            "Type": 5,
+                            "Name": "playerName",
+                            "string": "Mando testbuild"
+                        },
                         {
                             "Type": 2,
                             "Name": "health",
@@ -1079,11 +1097,6 @@
                             "float": 5
                         },
                         {
-                            "Type": 6,
-                            "Name": "player",
-                            "gameobject": 817442262
-                        },
-                        {
                             "Type": 2,
                             "Name": "chaseDistance",
                             "float": 100
@@ -1107,6 +1120,11 @@
                             "Type": 4,
                             "Name": "blaster",
                             "prefab": 1402394502
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "handName",
+                            "string": ""
                         }
                     ]
                 }
@@ -1264,10 +1282,7 @@
                             "Loop": true
                         }
                     ],
-                    "CurrentClip": {
-                        "AnimationName": "Take 001",
-                        "Name": "Take 001 Default"
-                    }
+                    "Tracks": []
                 },
                 {
                     "Type": 8,
@@ -1385,9 +1400,9 @@
                             "float": 80
                         },
                         {
-                            "Type": 6,
-                            "Name": "player",
-                            "gameobject": 817442262
+                            "Type": 5,
+                            "Name": "playerName",
+                            "string": "Mando testbuild"
                         },
                         {
                             "Type": 2,
@@ -1736,6 +1751,11 @@
                     "HasInspector": true,
                     "InspectorVariables": [
                         {
+                            "Type": 5,
+                            "Name": "playerName",
+                            "string": "Mando testbuild"
+                        },
+                        {
                             "Type": 2,
                             "Name": "health",
                             "float": 20
@@ -1801,11 +1821,6 @@
                             "float": 5
                         },
                         {
-                            "Type": 6,
-                            "Name": "player",
-                            "gameobject": 817442262
-                        },
-                        {
                             "Type": 2,
                             "Name": "chaseDistance",
                             "float": 100
@@ -1826,9 +1841,54 @@
                             "float": 80
                         },
                         {
+                            "Type": 2,
+                            "Name": "spiralAttackSpeed",
+                            "float": 0
+                        },
+                        {
+                            "Type": 2,
+                            "Name": "spiralAttackSpins",
+                            "float": 0
+                        },
+                        {
+                            "Type": 2,
+                            "Name": "spiralAttackHp",
+                            "float": 0
+                        },
+                        {
+                            "Type": 2,
+                            "Name": "spiralAttackCooldown",
+                            "float": 0
+                        },
+                        {
+                            "Type": 2,
+                            "Name": "UAttackShots",
+                            "float": 0
+                        },
+                        {
+                            "Type": 2,
+                            "Name": "UAttackCooldown",
+                            "float": 0
+                        },
+                        {
                             "Type": 4,
                             "Name": "blaster",
                             "prefab": 1075179390
+                        },
+                        {
+                            "Type": 4,
+                            "Name": "sniper",
+                            "prefab": 0
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "rightHandName",
+                            "string": ""
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "leftHandName",
+                            "string": ""
                         }
                     ]
                 },
@@ -1933,7 +1993,15 @@
                     "Path": "Library\/Meshes\/1763086860.nemesh",
                     "File": "1763086860.nemesh",
                     "ShowWireframe": false,
-                    "ShowBoundingBox": false
+                    "ShowBoundingBox": false,
+                    "Outline": false,
+                    "OutlineThickness": -2147483648,
+                    "OutlineColor": [
+                        0,
+                        0,
+                        0,
+                        0
+                    ]
                 },
                 {
                     "Type": 3,
@@ -1952,8 +2020,8 @@
                     "Shader": {
                         "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
                         "AssetsName": "DefaultShader.shader",
-                        "LibaryPath": "Library\/Shaders\/1245753822.neshader",
-                        "LibraryFile": "1245753822.neshader"
+                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
+                        "LibraryFile": "800223282.neshader"
                     }
                 }
             ]
@@ -2563,12 +2631,42 @@
                     "Clips": [
                         {
                             "AnimationUID": 1548254464,
+                            "Name": "Dash",
+                            "Start": 95,
+                            "End": 104,
+                            "Speed": 1,
+                            "Duration": 9,
+                            "DurationInSeconds": 0.30000001192092896,
+                            "Loop": false
+                        },
+                        {
+                            "AnimationUID": 1548254464,
+                            "Name": "Death",
+                            "Start": 186,
+                            "End": 317,
+                            "Speed": 1,
+                            "Duration": 131,
+                            "DurationInSeconds": 4.3666667938232422,
+                            "Loop": false
+                        },
+                        {
+                            "AnimationUID": 1548254464,
                             "Name": "Idle",
                             "Start": 0,
                             "End": 57,
                             "Speed": 1,
                             "Duration": 57,
                             "DurationInSeconds": 1.8999999761581421,
+                            "Loop": true
+                        },
+                        {
+                            "AnimationUID": 1548254464,
+                            "Name": "Run",
+                            "Start": 58,
+                            "End": 77,
+                            "Speed": 1,
+                            "Duration": 19,
+                            "DurationInSeconds": 0.63333332538604736,
                             "Loop": true
                         },
                         {
@@ -2590,42 +2688,9 @@
                             "Duration": 13,
                             "DurationInSeconds": 0.43333333730697632,
                             "Loop": false
-                        },
-                        {
-                            "AnimationUID": 1548254464,
-                            "Name": "Death",
-                            "Start": 186,
-                            "End": 317,
-                            "Speed": 1,
-                            "Duration": 131,
-                            "DurationInSeconds": 4.3666667938232422,
-                            "Loop": false
-                        },
-                        {
-                            "AnimationUID": 1548254464,
-                            "Name": "Dash",
-                            "Start": 95,
-                            "End": 104,
-                            "Speed": 1,
-                            "Duration": 9,
-                            "DurationInSeconds": 0.30000001192092896,
-                            "Loop": false
-                        },
-                        {
-                            "AnimationUID": 1548254464,
-                            "Name": "Run",
-                            "Start": 58,
-                            "End": 77,
-                            "Speed": 1,
-                            "Duration": 19,
-                            "DurationInSeconds": 0.63333332538604736,
-                            "Loop": true
                         }
                     ],
-                    "CurrentClip": {
-                        "AnimationName": "Take 001",
-                        "Name": "Take 001 Default"
-                    }
+                    "Tracks": []
                 },
                 {
                     "Type": 8,
@@ -2728,6 +2793,16 @@
                             "float": 5
                         },
                         {
+                            "Type": 0,
+                            "Name": "currency",
+                            "int": 0
+                        },
+                        {
+                            "Type": 0,
+                            "Name": "hubCurrency",
+                            "int": 0
+                        },
+                        {
                             "Type": 2,
                             "Name": "dashSpeed",
                             "float": 80
@@ -2761,6 +2836,21 @@
                             "Type": 4,
                             "Name": "equipedGun",
                             "prefab": 170536259
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "gameManager",
+                            "string": "Game Manager"
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "handName",
+                            "string": ""
+                        },
+                        {
+                            "Type": 7,
+                            "Name": "particleNames",
+                            "vectorstring": []
                         }
                     ]
                 }
@@ -4025,7 +4115,15 @@
                     "Path": "Library\/Meshes\/1348672898.nemesh",
                     "File": "1348672898.nemesh",
                     "ShowWireframe": false,
-                    "ShowBoundingBox": false
+                    "ShowBoundingBox": false,
+                    "Outline": false,
+                    "OutlineThickness": -2147483648,
+                    "OutlineColor": [
+                        0,
+                        0,
+                        0,
+                        0
+                    ]
                 },
                 {
                     "Type": 3,
@@ -4044,8 +4142,8 @@
                     "Shader": {
                         "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
                         "AssetsName": "DefaultShader.shader",
-                        "LibaryPath": "Library\/Shaders\/1245753822.neshader",
-                        "LibraryFile": "1245753822.neshader"
+                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
+                        "LibraryFile": "800223282.neshader"
                     }
                 }
             ]
@@ -4979,7 +5077,15 @@
                     "Path": "Library\/Meshes\/1683919720.nemesh",
                     "File": "1683919720.nemesh",
                     "ShowWireframe": false,
-                    "ShowBoundingBox": false
+                    "ShowBoundingBox": false,
+                    "Outline": false,
+                    "OutlineThickness": -2147483648,
+                    "OutlineColor": [
+                        0,
+                        0,
+                        0,
+                        0
+                    ]
                 },
                 {
                     "Type": 3,
@@ -4998,8 +5104,8 @@
                     "Shader": {
                         "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
                         "AssetsName": "DefaultShader.shader",
-                        "LibaryPath": "Library\/Shaders\/1245753822.neshader",
-                        "LibraryFile": "1245753822.neshader"
+                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
+                        "LibraryFile": "800223282.neshader"
                     }
                 }
             ]
@@ -5075,7 +5181,15 @@
                     "Path": "Library\/Meshes\/981539682.nemesh",
                     "File": "981539682.nemesh",
                     "ShowWireframe": false,
-                    "ShowBoundingBox": false
+                    "ShowBoundingBox": false,
+                    "Outline": false,
+                    "OutlineThickness": -2147483648,
+                    "OutlineColor": [
+                        0,
+                        0,
+                        0,
+                        0
+                    ]
                 },
                 {
                     "Type": 3,
@@ -5092,7 +5206,7 @@
                         "File": "697069335.nemat"
                     },
                     "Texture": {
-                        "AssetsPath": "Assets\/Textures\/Enemies\/IG11\/IG11_Texture.png",
+                        "AssetsPath": "Assets\/Textures\/\/Enemies\/IG11\/IG11_Texture.png",
                         "AssetsName": "IG11_Texture.png",
                         "LibaryPath": "Library\/Textures\/1828717129.netex",
                         "LibraryFile": "1828717129.netex"
@@ -5100,8 +5214,8 @@
                     "Shader": {
                         "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
                         "AssetsName": "DefaultShader.shader",
-                        "LibaryPath": "Library\/Shaders\/1245753822.neshader",
-                        "LibraryFile": "1245753822.neshader"
+                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
+                        "LibraryFile": "800223282.neshader"
                     }
                 }
             ]
@@ -5471,7 +5585,7 @@
         },
         {
             "UID": 1793793900,
-            "ParentUID": 1093084228,
+            "ParentUID": 677450964,
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "MainScene",
@@ -6293,7 +6407,15 @@
                     "Path": "Library\/Meshes\/586366371.nemesh",
                     "File": "586366371.nemesh",
                     "ShowWireframe": false,
-                    "ShowBoundingBox": false
+                    "ShowBoundingBox": false,
+                    "Outline": false,
+                    "OutlineThickness": -2147483648,
+                    "OutlineColor": [
+                        0,
+                        0,
+                        0,
+                        0
+                    ]
                 },
                 {
                     "Type": 3,
@@ -6312,8 +6434,8 @@
                     "Shader": {
                         "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
                         "AssetsName": "DefaultShader.shader",
-                        "LibaryPath": "Library\/Shaders\/1245753822.neshader",
-                        "LibraryFile": "1245753822.neshader"
+                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
+                        "LibraryFile": "800223282.neshader"
                     }
                 }
             ]
@@ -6384,5 +6506,9 @@
                 }
             ]
         }
-    ]
+    ],
+    "NavMesh": {
+        "UID": 0,
+        "Assets Path": "[NONE]"
+    }
 } 
