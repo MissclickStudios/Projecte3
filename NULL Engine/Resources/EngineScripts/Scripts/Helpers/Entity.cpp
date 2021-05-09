@@ -6,6 +6,7 @@
 #include "C_Animator.h"
 #include "C_Material.h"
 #include "C_AudioSource.h"
+#include "C_Mesh.h"
 
 #include "AnimatorTrack.h"
 
@@ -47,8 +48,9 @@ void Entity::Awake()
 			skeleton = gameObject->childs[i];
 			continue;
 		}
-		else if (gameObject->childs[i]->GetComponent<C_Material>())
+		else if (gameObject->childs[i]->GetComponent<C_Mesh>())
 		{
+			mesh = gameObject->childs[i]->GetComponent<C_Mesh>();
 			material = gameObject->childs[i]->GetComponent<C_Material>();
 		}
 		else if (name == "Particles")
@@ -91,6 +93,7 @@ void Entity::PreUpdate()
 	damageModifier = DEFAULT_MODIFIER;
 	defenseModifier = DEFAULT_MODIFIER;
 	cooldownModifier = DEFAULT_MODIFIER;
+	entityState = EntityState::NONE;
 
 	// Loop through the Effects and call the respective functions
 	for (uint i = 0; i < effects.size(); ++i)
@@ -104,6 +107,12 @@ void Entity::PreUpdate()
 				break;
 			case EffectType::HEAL:
 				Heal(effects[i]);
+				break;
+			case EffectType::STUN:
+				Stun(effects[i]);
+				break;
+			case EffectType::KNOCKBACK:
+				KnockBack(effects[i]);
 				break;
 			}
 		}
@@ -128,8 +137,8 @@ void Entity::PreUpdate()
 		if (hitTimer.ReadSec() > hitDuration)
 		{
 			hitTimer.Stop();
-			if (GetParticles("Hit") != nullptr)
-				GetParticles("Hit")->StopSpawn();
+			//if (GetParticles("Hit") != nullptr)
+			//	GetParticles("Hit")->StopSpawn();
 		}
 	}
 }
@@ -163,6 +172,28 @@ void Entity::PostUpdate()
 	}
 }
 
+void Entity::OnPause()
+{
+	deathTimer.Pause();
+	stepTimer.Pause();
+
+	if (rigidBody != nullptr)
+		rigidBody->SetIsActive(false);
+
+	EntityPause();
+}
+
+void Entity::OnResume()
+{
+	deathTimer.Resume();
+	stepTimer.Resume();
+
+	if (rigidBody != nullptr)
+		rigidBody->SetIsActive(true);
+
+	EntityResume();
+}
+
 void Entity::OnCollisionEnter(GameObject* object)
 {
 }
@@ -174,8 +205,8 @@ void Entity::TakeDamage(float damage)
 		health = 0.0f;
 
 	hitTimer.Start();
-	if (GetParticles("Hit") != nullptr)
-		GetParticles("Hit")->ResumeSpawn();
+	//if (GetParticles("Hit") != nullptr)
+	//	GetParticles("Hit")->ResumeSpawn();
 
 	if (damageAudio != nullptr)
 		damageAudio->PlayFx(damageAudio->GetEventId());
@@ -190,20 +221,23 @@ void Entity::GiveHeal(float amount)
 
 Effect* Entity::AddEffect(EffectType type, float duration, bool permanent, void* data)
 {
-	Effect* output = nullptr;
 	// TODO: System to add a max stack to each effect so that more than one can exist at once
-
 	if (effectCounters[(uint)type]) // Check that this effect is not already on the entity
-		return output;
+	{
+		if (data != nullptr)
+			delete data;
+
+		return nullptr;
+	}
 	
-	output = new Effect(type, duration, permanent, data);
+	Effect* output = new Effect(type, duration, permanent, data);
 	effects.emplace_back(output); // I use emplace instead of push to avoid unnecessary copies
 	++effectCounters[(uint)type]; // Add one to the counter of this effect
 
 	return output;
 }
 
-void Entity::MoveTo(float3 position)
+void Entity::ChangePosition(float3 position)
 {
 	gameObject->transform->SetLocalPosition(position);
 	rigidBody->TransformMovesRigidBody(true);
@@ -235,6 +269,27 @@ void Entity::Heal(Effect* effect)
 {
 	GiveHeal(effect->Duration());
 	effect->End();
+}
+
+void Entity::Stun(Effect* effect)
+{
+	entityState = EntityState::STUNED;
+}
+
+void Entity::KnockBack(Effect* effect)
+{
+	std::pair<bool, float3>* data = (std::pair<bool, float3>*)effect->Data();
+	if (data && data->first)
+	{
+		data->first = false;
+
+		if (rigidBody != nullptr)
+		{
+			rigidBody->StopInertia();
+			rigidBody->AddForce(data->second);
+		}
+	}
+	entityState = EntityState::STUNED;
 }
 
 C_ParticleSystem* Entity::GetParticles(std::string particleName)

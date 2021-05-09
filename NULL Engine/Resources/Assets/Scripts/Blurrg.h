@@ -36,6 +36,9 @@ public:
 
 	void OnCollisionEnter(GameObject* object) override;
 
+	void EntityPause() override;
+	void EntityResume() override;
+
 	// Wander
 	float wanderRadius = 0.0f;
 

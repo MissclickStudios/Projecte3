@@ -32,6 +32,16 @@ void Collectable::CleanUp()
 {
 }
 
+void Collectable::OnPause()
+{
+	CollectablePause();
+}
+
+void Collectable::OnResume()
+{
+	CollectableResume();
+}
+
 void Collectable::OnCollisionEnter(GameObject* object)
 {
 	Player* player = (Player*)object->GetScript("Player");

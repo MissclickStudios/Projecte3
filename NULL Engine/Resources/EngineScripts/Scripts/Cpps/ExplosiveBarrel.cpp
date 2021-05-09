@@ -4,8 +4,9 @@
 #include "M_Scene.h"
 #include "Log.h"
 #include "GameManager.h"
-#include "GameObject.h"
 
+#include "GameObject.h"
+#include "C_Transform.h"
 #include "C_ParticleSystem.h"
 #include "C_BoxCollider.h"
 
@@ -85,12 +86,25 @@ void ExplosiveBarrel::OnCollisionEnter(GameObject* object)
 void ExplosiveBarrel::OnTriggerRepeat(GameObject* object)
 {
 	Entity* entity = (Entity*)GetObjectScript(object, ObjectType::ENTITY);
-
-	LOG("Barrel hit entity lol");
-
 	if (!entity)
 		return;
 
-	entity->TakeDamage(damage);
+	float2 entityPosition, position;
+	entityPosition.x = entity->transform->GetWorldPosition().x;
+	entityPosition.y = entity->transform->GetWorldPosition().z;
+	position.x = gameObject->transform->GetWorldPosition().x;
+	position.y = gameObject->transform->GetWorldPosition().z;
+	float2 direction = entityPosition - position;
 
+	float distance = direction.Length();
+	if (distance < 1.0f)
+		distance = 1.0f;
+
+	float currentPower = power / distance;
+
+	direction.Normalize();
+	direction *= currentPower;
+	
+	entity->AddEffect(EffectType::KNOCKBACK, 0.75f, false, new std::pair<bool, float3>(true, { direction.x, currentPower, direction.y }));
+	entity->TakeDamage(damage);
 }

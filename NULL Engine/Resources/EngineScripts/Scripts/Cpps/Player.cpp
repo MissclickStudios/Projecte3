@@ -12,8 +12,8 @@
 #include "C_RigidBody.h"
 #include "C_Material.h"
 #include "C_ParticleSystem.h"
-#include "Emitter.h"
 #include "C_AudioSource.h"
+#include "C_Mesh.h"
 
 #include "C_Animator.h"
 
@@ -62,7 +62,8 @@ Player* CreatePlayer()
 	INSPECTOR_DRAGABLE_FLOAT(script->dashCooldown);
 
 	// Invencibility frames
-	INSPECTOR_DRAGABLE_FLOAT(script->invencibilityDuration);
+	INSPECTOR_DRAGABLE_FLOAT(script->invencibilityDuration); 
+	INSPECTOR_DRAGABLE_FLOAT(script->intermitentMesh);
 
 	// Weapons
 	INSPECTOR_DRAGABLE_FLOAT(script->changeTime);
@@ -115,6 +116,7 @@ void Player::SetUp()
 	dashTimer.Stop();
 	dashCooldownTimer.Stop();
 	invencibilityTimer.Stop();
+	intermitentMeshTimer.Stop();
 	changeTimer.Stop();
 
 	if (rigidBody != nullptr)
@@ -145,9 +147,38 @@ void Player::SetUp()
 
 void Player::Behavior()
 {
+	if (App->input->GetKey(SDL_SCANCODE_1) == KeyState::KEY_DOWN)
+		AddEffect(EffectType::KNOCKBACK, 2.0f, false, new std::pair<bool, float3>(true, { 100000, 1000000, 0 }));
 	ManageMovement();
 	if (moveState != PlayerState::DEAD)
+	{
+		if (invencibilityTimer.IsActive())
+		{
+			if (invencibilityTimer.ReadSec() >= invencibilityDuration)
+			{
+				invencibilityTimer.Stop();
+				intermitentMeshTimer.Stop();
+				if (mesh != nullptr)
+					mesh->SetIsActive(true);
+			}
+			else if (!intermitentMeshTimer.IsActive())
+			{
+				intermitentMeshTimer.Start();
+				if (mesh != nullptr)
+					mesh->SetIsActive(!mesh->IsActive());
+
+				LOG("start int timer");
+			}
+			else if (intermitentMeshTimer.ReadSec() >= intermitentMesh)
+			{
+				intermitentMeshTimer.Stop();
+
+				LOG("stop int timer");
+			}
+		}
+
 		ManageAim();
+	}
 }
 
 void Player::CleanUp()
@@ -163,6 +194,24 @@ void Player::CleanUp()
 	equipedGunWeapon = nullptr;
 
 	currentWeapon = nullptr;
+}
+
+void Player::EntityPause()
+{
+	dashTimer.Pause();
+	dashCooldownTimer.Pause();
+	invencibilityTimer.Pause();
+	intermitentMeshTimer.Pause();
+	changeTimer.Pause();
+}
+
+void Player::EntityResume()
+{
+	dashTimer.Resume();
+	dashCooldownTimer.Resume();
+	invencibilityTimer.Resume();
+	intermitentMeshTimer.Resume();
+	changeTimer.Resume();
 }
 
 void Player::SaveState(ParsonNode& playerNode)
@@ -199,6 +248,8 @@ void Player::SaveState(ParsonNode& playerNode)
 		for (uint i = 0; i < equipedGunWeapon->perks.size(); ++i)
 			equipedGunPerks.SetNumber((double)equipedGunWeapon->perks[i]);
 	}
+
+	playerNode.SetBool("Using Equiped Gun", usingEquipedGun);
 }
 
 void Player::LoadState(ParsonNode& playerNode)
@@ -270,6 +321,12 @@ void Player::LoadState(ParsonNode& playerNode)
 				equipedGunWeapon->weaponModel->SetIsActive(false);
 		}
 	}
+
+	usingEquipedGun = playerNode.GetBool("Using Equiped Gun");
+	if (usingEquipedGun && equipedGunWeapon != nullptr)
+		currentWeapon = equipedGunWeapon;
+	else
+		currentWeapon = blasterWeapon;
 }
 
 void Player::Reset()
@@ -294,12 +351,12 @@ void Player::Reset()
 		equipedGunWeapon->ammo = equipedGunWeapon->maxAmmo;
 		equipedGunWeapon->perks.clear();
 	}
+
+	usingEquipedGun = false;
 }
 
 void Player::TakeDamage(float damage)
 {
-	if (invencibilityTimer.ReadSec() >= invencibilityDuration)
-		invencibilityTimer.Stop();
 	if (!invencibilityTimer.IsActive())
 	{
 		float damageDealt = 0.0f;
@@ -437,7 +494,11 @@ void Player::ManageAim()
 		aimState = AimState::SHOOT;
 
 	case AimState::SHOOT:
-		currentAnimation = &shootAnimation; // temporary till torso gets an independent animator
+		if (!usingEquipedGun)
+			currentAnimation = &shootAnimation; // temporary till torso gets an independent animator
+		else
+			currentAnimation = &shootRifleAnimation;
+
 		if (currentWeapon != nullptr)
 			switch (currentWeapon->Shoot(aimDirection))
 			{
@@ -479,6 +540,7 @@ void Player::ManageAim()
 		{
 			if (blasterWeapon == currentWeapon)
 			{
+				usingEquipedGun = true;
 				currentWeapon = equipedGunWeapon;
 				if (blasterWeapon->weaponModel != nullptr)
 					blasterWeapon->weaponModel->SetIsActive(false);
@@ -487,6 +549,7 @@ void Player::ManageAim()
 			}
 			else
 			{
+				usingEquipedGun = false;
 				currentWeapon = blasterWeapon;
 				if (blasterWeapon->weaponModel != nullptr)
 					blasterWeapon->weaponModel->SetIsActive(true);

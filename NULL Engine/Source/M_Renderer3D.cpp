@@ -420,7 +420,7 @@ bool M_Renderer3D::InitOpenGL()
 		SetGLFlag(GL_ALPHA_TEST, false);
 		glAlphaFunc(GL_GREATER, 0.20f);													// Have alpha test in c_material (color alpha)?
 
-		SetGLFlag(GL_BLEND, false);
+		SetGLFlag(GL_BLEND, true);
 		glBlendEquation(GL_FUNC_ADD);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -1571,7 +1571,7 @@ void MeshRenderer::Render(bool outline)
 		LOG("[ERROR] Renderer 3D: Could not render Mesh! Error: R_Mesh* was nullptr.");
 		return;
 	}
-
+	glEnable(GL_BLEND);
 	glEnable(GL_STENCIL_TEST);
 	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 

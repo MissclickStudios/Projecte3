@@ -27,6 +27,8 @@ public:
 
 	int damage = 0;
 
+	float power = 2000000.0f;
+
 private:
 	GameObject* gameManager = nullptr;
 	GameObject* barrelObject = nullptr;

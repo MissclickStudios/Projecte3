@@ -35,6 +35,9 @@ public:
 	void Behavior() override;
 	void CleanUp() override;
 
+	void EntityPause() override;
+	void EntityResume() override;
+
 	void SaveState(ParsonNode& playerNode);
 	void LoadState(ParsonNode& playerNode);
 
@@ -53,11 +56,13 @@ public:
 
 	// Invencibility frames
 	float invencibilityDuration = 0.0f;
+	float intermitentMesh = 0.0f;
 
 	// Animations
 	AnimationInfo runAnimation = { "Run" };
 	AnimationInfo dashAnimation = { "Dash" };
 	AnimationInfo shootAnimation = { "Shoot", 0.05f };
+	AnimationInfo shootRifleAnimation = { "ShootRifle", 0.05f };
 	AnimationInfo reloadAnimation = { "Reload" };
 	AnimationInfo changeAnimation = { "Change" };
 	AnimationInfo onGuardAnimation = { "OnGuard" };
@@ -133,8 +138,10 @@ private:
 
 	// Invencibility frames
 	Timer invencibilityTimer;
+	Timer intermitentMeshTimer;
 
 	// Weapons
+	bool usingEquipedGun = false;
 	Timer changeTimer;
 
 	GameObject* blasterGameObject = nullptr;

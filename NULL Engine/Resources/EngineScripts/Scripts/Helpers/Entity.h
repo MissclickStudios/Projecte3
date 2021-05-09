@@ -16,6 +16,7 @@ class C_RigidBody;
 class C_Animator;
 class C_Material;
 class C_AudioSource;
+class C_Mesh;
 
 class C_ParticleSystem;
 
@@ -55,19 +56,27 @@ public:
 
 	virtual void CleanUp() = 0;
 
+	void OnPause() override;
+	virtual void EntityPause() {}
+	void OnResume() override;
+	virtual void EntityResume() {}
+
 	virtual void OnCollisionEnter(GameObject* object) override;
 
 	// Interactions
 	virtual void TakeDamage(float damage);
 	virtual void GiveHeal(float amount);
 	Effect* AddEffect(EffectType type, float duration, bool permanent = false, void* data = nullptr);
-	virtual void MoveTo(float3 position);
+	virtual void ChangePosition(float3 position);
 	bool IsGrounded();
 
 	// Effect Functions
 	virtual void Frozen();
 	virtual void Heal(Effect* effect);
 
+	virtual void Stun(Effect* effect);
+	virtual void KnockBack(Effect* effect);
+	
 	// Type
 	EntityType type = EntityType::ENTITY;
 
@@ -122,6 +131,9 @@ protected:
 
 	// Movement
 	C_RigidBody* rigidBody = nullptr;
+
+	// Mesh
+	C_Mesh* mesh = nullptr;
 
 	// Animations
 	C_Animator* animator = nullptr;

@@ -35,6 +35,9 @@ public:
 	virtual void OnDisable() override {}
 	virtual void OnEnable() override {}
 
+	virtual void OnPause() {}
+	virtual void OnResume() {}
+
 	virtual void OnCollisionEnter(GameObject* object) override {}
 	virtual void OnCollisionRepeat(GameObject* object) override {}
 	virtual void OnCollisionExit(GameObject* object) override {}
