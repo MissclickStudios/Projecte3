@@ -31,6 +31,14 @@ public:
 			timer.Stop();
 	}
 
+	~Effect()
+	{
+		if (data != nullptr)
+		{
+			delete data;
+		}
+	}
+
 	const bool IsActive() const
 	{ 
 		if (permanent)

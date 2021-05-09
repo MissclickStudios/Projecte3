@@ -669,7 +669,7 @@ void GameManager::BackTrackUpdate()
 			point = backtrack[i];
 			break;
 		}
-		playerScript->MoveTo(point);
+		playerScript->ChangePosition(point);
 	}
 }
 
