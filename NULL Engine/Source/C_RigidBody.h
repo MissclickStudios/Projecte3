@@ -47,7 +47,7 @@ public:
 	inline physx::PxReal	GetAngularDamping() { return angularDamping; }
 	inline physx::PxReal	GetLinearDamping() { return linearDamping; }
 
-	inline void				AddForce(physx::PxVec3 force, physx::PxForceMode::Enum mode) { if (dynamicBody) dynamicBody->addForce(force, mode); }
+	inline void				AddForce(float3 force) { if (dynamicBody) dynamicBody->addForce(physx::PxVec3(force.x, force.y, force.z), physx::PxForceMode::Enum::eFORCE); }
 	inline void				AddTorque(physx::PxVec3 force, physx::PxForceMode::Enum mode) { if (dynamicBody)dynamicBody->addTorque(force, mode); }
 
 	inline void				FrozenPositions(bool& x, bool& y, bool& z) { x = freezePositionX; y = freezePositionY; z = freezePositionZ; }

@@ -70,6 +70,8 @@ public:
 	// Effect Functions
 	virtual void Frozen();
 	virtual void Heal(Effect* effect);
+	virtual void Stun(Effect* effect);
+	virtual void KnockBack(Effect* effect);
 	
 	// Type
 	EntityType type = EntityType::ENTITY;
