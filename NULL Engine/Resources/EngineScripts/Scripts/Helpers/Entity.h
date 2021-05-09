@@ -19,13 +19,16 @@ class C_AudioSource;
 
 class C_ParticleSystem;
 
-enum class EntityType
+enum class EntityType // jeje titties
 {
 	ENTITY,
 	PLAYER,
 	BLURRG,
 	TROOPER,
-	IG11
+	DARK_TROOPER,
+	IG11,
+	IG12,
+	TURRET
 };
 
 enum class EntityState
@@ -49,30 +52,30 @@ public:
 	void Update();
 	virtual void Behavior() = 0;
 	void PostUpdate();
-	
+
 	virtual void CleanUp() = 0;
 
 	virtual void OnCollisionEnter(GameObject* object) override;
-	
+
 	// Interactions
 	virtual void TakeDamage(float damage);
 	virtual void GiveHeal(float amount);
 	Effect* AddEffect(EffectType type, float duration, bool permanent = false, void* data = nullptr);
 	virtual void MoveTo(float3 position);
 	bool IsGrounded();
-	
+
 	// Effect Functions
 	virtual void Frozen();
 	virtual void Heal(Effect* effect);
-	
+
 	// Type
 	EntityType type = EntityType::ENTITY;
-	
+
 	// Health
 	float health = 1.0f;
 	float maxHealth = 1.0f;
 	float MaxHealth() { return maxHealth + maxHealthModifier; }
-	
+
 	// Basic Stats
 	float speed = 0.0f;
 	const float Speed() const { return speed * speedModifier; }
@@ -82,7 +85,7 @@ public:
 	const float Damage() const { return damage * damageModifier; }
 	float defense = 1.0f;
 	const float Defense() const { return defense * defenseModifier; }
-	
+
 	// Modifiers
 	float maxHealthModifier = 0.0f;
 	float speedModifier = DEFAULT_MODIFIER;
