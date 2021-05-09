@@ -193,11 +193,11 @@ bool AnimatorTrack::PlayClip(AnimatorClip* clip, std::vector<BoneLink>* clipBone
 		LOG("[ERROR] Animator Track: Could not Play Clip! Error: Given std::vector<BoneLink>* was nullptr");
 		return false;
 	}
-	//if (currentClip != nullptr && currentClip->GetName() == clip->GetName())															// Cannot play the same clip twice.
-	//{
-	//	LOG("[WARNING] Animator Track: Cannot Play the same Clip twice!");
-	//	return false;
-	//}
+	if (currentClip != nullptr && currentClip->GetName() == clip->GetName())															// Cannot play the same clip twice.
+	{
+		LOG("[WARNING] Animator Track: Cannot Play the same Clip twice!");
+		return false;
+	}
 
 	bool success = false;
 	if (currentClip == nullptr || blendFrames == 0 || blendFrames > clip->GetDuration())
@@ -210,7 +210,10 @@ bool AnimatorTrack::PlayClip(AnimatorClip* clip, std::vector<BoneLink>* clipBone
 		success = SetBlendingClip(clip, clipBones, blendFrames);
 	}
 	
-	Play();
+	if (success && trackState != TrackState::PLAY)
+	{
+		Play();
+	}
 
 	return success;
 }
@@ -416,6 +419,11 @@ bool AnimatorTrack::SetCurrentClip(AnimatorClip* newClip, std::vector<BoneLink>*
 
 bool AnimatorTrack::SetBlendingClip(AnimatorClip* newClip, std::vector<BoneLink>* newBones, uint newBlendFrames)
 {
+	if (blendingClip == newClip)
+	{
+		return false;
+	}
+	
 	if (newClip == nullptr)
 	{
 		LOG("[ERROR] Animator Track: Could not Set Blending Clip! Error: Given AnimatorClip* was nullptr.");
@@ -446,7 +454,6 @@ bool AnimatorTrack::StepClips(float dt)
 {
 	bool currentExists	= (currentClip != nullptr);
 	bool blendingExists = (blendingClip != nullptr);
-
 	if (!currentExists && !blendingExists)
 	{
 		LOG("[ERROR] Animator Component: Could not Step Clips! Error: There were no Current or Blending Clips set.");
@@ -457,50 +464,32 @@ bool AnimatorTrack::StepClips(float dt)
 		SwitchBlendingToCurrent();
 	}
 
-	if (blendingExists)
+	float stepValue = dt * trackSpeed;
+	if (stepValue == 0.0f)
 	{
+		LOG("[WARNING] Animator Track: Step Value was 0.0f! dt: { %.3f } trackSpeed: { %.3f }", dt, trackSpeed);
+		return false;
+	}
+	
+	if (blendingClip != nullptr)
+	{
+		blendingClip->StepClip(stepValue);
+		
 		if (blendingClip->GetAnimationFrame() > (float)(blendingClip->GetStart() + blendFrames))										// ATTENTION HERE.
 		{
 			SwitchBlendingToCurrent();
+			return true;
 		}
 	}
 
 	if (currentClip != nullptr)
 	{
-		float stepValue = dt * trackSpeed;
-		if (stepValue == 0.0f)
-		{
-			LOG("[WARNING] Animator Track: Step Value was 0.0f! dt: { %.3f } trackSpeed: { %.3f }", dt, trackSpeed);
-			return false;
-		}
-		
 		bool success = currentClip->StepClip(stepValue);
-		if (!success)
+		if (!success && !currentClip->IsLooped())
 		{
-			if (blendingExists)
-			{
-				if (((blendingClip->GetAnimationFrame() - blendingClip->GetStart()) / blendFrames) >= 1.0f)								// Keeps Current Clip until blending is done.
-				{
-					blendingClip->StepClip(stepValue);																					// ATTENTION HERE
-					SwitchBlendingToCurrent();
-				}
-
-				return true;
-			}
-			else
-			{
-				if (!currentClip->IsLooped())
-				{
-					Stop();
-					ResetCurrentBones();
-					return false;
-				}
-			}
-		}
-
-		if (blendingExists)
-		{
-			blendingClip->StepClip(stepValue);
+			Stop();
+			ResetCurrentBones();
+			return false;
 		}
 	}
 
@@ -523,7 +512,7 @@ void AnimatorTrack::SwitchBlendingToCurrent()
 		FreeCurrentClip();
 	}
 
-	SetCurrentClip(blendingClip, currentBones);
+	SetCurrentClip(blendingClip, blendingBones);
 
 	FreeBlendingClip();
 }
