@@ -36,8 +36,7 @@ void SarlaacTrap::Update()
 
 	case SarlaacState::DAMAGING:
 
-		state = SarlaacState::IDLE;
-
+		state = SarlaacState::SLEEPING;
 
 		break;
 
@@ -118,5 +117,5 @@ void SarlaacTrap::StartMoving()
 	state = SarlaacState::MOVING;
 
 	//Animator play clip
-	sarlaacAnimator->PlayClip(animationName, 0u);
+	sarlaacAnimator->PlayClip("Preview",animationName.c_str(), 0u);
 }

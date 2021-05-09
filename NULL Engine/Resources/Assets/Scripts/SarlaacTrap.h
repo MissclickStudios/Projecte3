@@ -32,7 +32,7 @@ public:
 	int damage = 0;
 
 	float activationTime = 1.f;
-	float sleepingTime = 1.f;
+	float sleepingTime = 2.f;
 
 private:
 
