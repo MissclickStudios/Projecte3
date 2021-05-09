@@ -154,7 +154,7 @@ void Entity::PostUpdate()
 		AnimatorClip* clip = animator->GetTrack("Preview").GetCurrentClip();
 
 		if (clip == nullptr || clip->GetName() != currentAnimation->name)										// If no clip playing or animation/clip changed
-			animator->PlayClip("Preview", currentAnimation->name.c_str(), currentAnimation->blendTime);
+			animator->PlayClip(currentAnimation->track.c_str(), currentAnimation->name.c_str(), currentAnimation->blendTime);
 
 		/*if (clip != nullptr)
 		{
