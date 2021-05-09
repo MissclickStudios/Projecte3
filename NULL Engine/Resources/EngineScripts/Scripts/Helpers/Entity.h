@@ -25,7 +25,8 @@ enum class EntityType
 	PLAYER,
 	BLURRG,
 	TROOPER,
-	IG11
+	IG11,
+	GROGU
 };
 
 enum class EntityState

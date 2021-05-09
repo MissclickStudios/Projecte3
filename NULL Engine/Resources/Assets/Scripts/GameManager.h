@@ -6,6 +6,7 @@
 #include "Timer.h"
 
 #include "Player.h"
+#include "Grogu.h"
 
 #define BACKTRACK 5
 
@@ -48,8 +49,12 @@ public:
     Prefab playerPrefab;
     Player* playerScript = nullptr;
 
+    Prefab groguPrefab;
+    Grogu* groguScript = nullptr;
+
 private:
     GameObject* playerGameObject = nullptr;
+    GameObject* groguGameObject = nullptr;
     const char* saveFileName = "GameState.json";
     int	currentLevel = 0;
     int	roomNum = 0;

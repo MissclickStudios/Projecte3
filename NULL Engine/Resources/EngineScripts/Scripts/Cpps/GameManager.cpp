@@ -67,6 +67,16 @@ void GameManager::Awake()
 				playerGameObject->transform->SetLocalPosition(spawnPoint);
 				//playerTrans->SetLocalRotation(spawnTrans->GetLocalRotation());
 			}
+
+			groguGameObject = App->resourceManager->LoadPrefab(groguPrefab.uid, App->scene->GetSceneRoot());
+			if (playerSpawn != nullptr && groguGameObject != nullptr)
+			{
+				float3 offset = { 0,0,3 };
+				spawnPoint = playerSpawn->transform->GetLocalPosition() + offset;
+				groguGameObject->transform->SetLocalPosition(spawnPoint);
+				//playerTrans->SetLocalRotation(spawnTrans->GetLocalRotation());
+			}
+
 			backtrackTimer.Start();
 			if (backtrack.size() != 0)
 				backtrack.clear();
@@ -620,5 +630,6 @@ GameManager* CreateGameManager() {
 	//LEVEL2
 	//INSPECTOR_VECTOR_STRING(script->level2);
 	INSPECTOR_PREFAB(script->playerPrefab);
+	INSPECTOR_PREFAB(script->groguPrefab);
 	return script;
 }
