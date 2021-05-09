@@ -26,6 +26,7 @@ enum class EntityType
 	BLURRG,
 	TROOPER,
 	IG11,
+	IG12,
 	TURRET
 };
 
