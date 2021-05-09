@@ -1,4 +1,6 @@
 #include "Application.h"
+#include "MC_Time.h"
+
 #include "M_Scene.h"
 #include "Log.h"
 #include "GameManager.h"
@@ -39,8 +41,18 @@ void ExplosiveBarrel::Update()
 		barrelCollider->SetIsActive(false);
 		barrelCollider->SetSize(barrelColliderSize);
 
-		exploded = false;
 		//play particles
+		if (particleTimer < 1.f)
+		{
+			particleTimer += MC_Time::Game::GetDT();
+		}
+		else
+		{
+			//deactivate everything
+			explosionParticles->StopSpawn();
+			exploded = false;
+			gameObject->SetIsActive(false);
+		}
 	}
 
 	if (toExplode)

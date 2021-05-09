@@ -14,14 +14,13 @@ public:
 	void CleanUp()override;
 
 	void OnCollisionEnter(GameObject* object) override;
-	std::string gameManagerName;
 
+	void Unlock();
+
+	std::string gameManagerName;
+	bool isLocked = true;
 private:
 	GameObject* gameManager;
 };
 
-SCRIPTS_FUNCTION Gate* CreateGate() {
-	Gate* script = new Gate();
-	INSPECTOR_STRING(script->gameManagerName);
-	return script;
-}
+SCRIPTS_FUNCTION Gate* CreateGate();

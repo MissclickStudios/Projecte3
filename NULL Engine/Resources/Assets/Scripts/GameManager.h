@@ -10,6 +10,7 @@
 #define BACKTRACK 5
 
 class GameObject;
+class Gate;
 
 class SCRIPTS_API GameManager : public Script 
 {
@@ -38,6 +39,9 @@ private:
     void HandleRoomGeneration();
     void SaveManagerState();
 
+    void BackTrackUpdate();
+    void GateUpdate();
+
 public:
     std::vector<std::string> level1;
     int l1Easy = -1;
@@ -49,19 +53,22 @@ public:
     bool enabled;
     std::string mainMenuScene;
     std::string SpawnPointName;
+    std::string gateName = "NextSceneTrigger";
+
     Prefab playerPrefab;
     Player* playerScript = nullptr;
 
 private:
     GameObject* playerGameObject = nullptr;
+    Gate* gate = nullptr;
+
     const char* saveFileName = "GameState.json";
     int	currentLevel = 0;
     int	roomNum = 0;
 
-    //if(!Jordi)
-        bool move = false; // shhhhhh, don't tell jordi
-    //else
-        //he gone :)
+    std::vector<Entity*> enemies;
+
+    bool move = false; // shhhhhh, don't tell jordi
     float3 spawnPoint = float3::zero;
     std::vector<float3> backtrack;
     float backtrackDuration = 1.0f;
