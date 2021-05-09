@@ -610,14 +610,14 @@ bool C_Animator::EditClip(const char* originalClipName, const AnimatorClip& edit
 {	
 	if (clips.find(originalClipName) == clips.end())
 		return false;
-	
+
+	DeleteClip(originalClipName);
+
 	if (clips.find(editedClip.GetName()) != clips.end())
 	{
 		LOG("[ERROR] Animator Component: Could not Edit Clip! Error: There was another clip with the same name as the given editedClip.");
 		return false;
 	}
-
-	DeleteClip(originalClipName);
 
 	return AddClip(editedClip);
 }
