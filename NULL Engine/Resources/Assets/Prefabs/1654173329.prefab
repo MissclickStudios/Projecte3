@@ -1,5 +1,5 @@
 {
-    "UID": 1533436305,
+    "UID": 236140778,
     "ParentUID": 1474137658,
     "PrefabID": 1654173329,
     "IsPrefab": true,
@@ -13,7 +13,7 @@
         {
             "Type": 1,
             "LocalPosition": [
-                0,
+                4.76837158203125e-07,
                 0,
                 0
             ],
@@ -54,12 +54,12 @@
             "Size Y": 7,
             "Size Z": 7,
             "Center X": 0,
-            "Center Y": 3,
+            "Center Y": 0.5,
             "Center Z": -1
         },
         {
             "Type": 24,
-            "ResourceUID": 886533196,
+            "ResourceUID": 941988715,
             "AssetsPath": "Assets\/Scripts\/\/Turret.h",
             "DataName": "Turret",
             "HasInspector": true,
@@ -72,12 +72,12 @@
                 {
                     "Type": 2,
                     "Name": "health",
-                    "float": 1
+                    "float": 5
                 },
                 {
                     "Type": 2,
                     "Name": "maxHealth",
-                    "float": 1
+                    "float": 5
                 },
                 {
                     "Type": 2,
@@ -92,7 +92,7 @@
                 {
                     "Type": 2,
                     "Name": "damage",
-                    "float": 0
+                    "float": 0.5
                 },
                 {
                     "Type": 2,
@@ -137,7 +137,7 @@
                 {
                     "Type": 2,
                     "Name": "attackDistance",
-                    "float": 30
+                    "float": 50
                 },
                 {
                     "Type": 4,
@@ -147,15 +147,87 @@
                 {
                     "Type": 5,
                     "Name": "handName",
-                    "string": "Hand"
+                    "string": "no"
                 }
             ]
         }
     ],
     "Children": [
         {
-            "UID": 366259880,
-            "ParentUID": 1533436305,
+            "UID": 560670338,
+            "ParentUID": 236140778,
+            "PrefabID": 1654173329,
+            "IsPrefab": true,
+            "Name": "Base",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        -0.70710670948028564,
+                        0,
+                        0,
+                        0.7071068286895752
+                    ],
+                    "LocalScale": [
+                        0.025399999693036079,
+                        0.02539999783039093,
+                        0.02539999783039093
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 1632523845,
+                    "Name": "Base.nemesh",
+                    "Path": "Library\/Meshes\/1632523845.nemesh",
+                    "File": "1632523845.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false,
+                    "Outline": false,
+                    "OutlineThickness": 1,
+                    "OutlineColor": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ]
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 223111623,
+                        "Color": [
+                            0.80000001192092896,
+                            0.80000001192092896,
+                            0.80000001192092896,
+                            1
+                        ],
+                        "Name": "Base.nemat",
+                        "Path": "Library\/Materials\/223111623.nemat",
+                        "File": "223111623.nemat"
+                    },
+                    "Shader": {
+                        "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
+                        "AssetsName": "DefaultShader.shader",
+                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
+                        "LibraryFile": "800223282.neshader"
+                    }
+                }
+            ],
+            "Children": []
+        },
+        {
+            "UID": 1142328412,
+            "ParentUID": 236140778,
             "PrefabID": 1654173329,
             "IsPrefab": true,
             "Name": "Skeleton",
@@ -187,8 +259,8 @@
             ],
             "Children": [
                 {
-                    "UID": 943047485,
-                    "ParentUID": 366259880,
+                    "UID": 13375616,
+                    "ParentUID": 1142328412,
                     "PrefabID": 1654173329,
                     "IsPrefab": true,
                     "Name": "Hand",
@@ -202,7 +274,7 @@
                             "Type": 1,
                             "LocalPosition": [
                                 0.003144741291180253,
-                                5.1071252822875977,
+                                2.1789751052856445,
                                 1.9898421764373779
                             ],
                             "LocalRotation": [
@@ -221,8 +293,8 @@
                     "Children": []
                 },
                 {
-                    "UID": 2020393814,
-                    "ParentUID": 366259880,
+                    "UID": 1695965139,
+                    "ParentUID": 1142328412,
                     "PrefabID": 1654173329,
                     "IsPrefab": true,
                     "Name": "Head",
@@ -254,8 +326,8 @@
                     ],
                     "Children": [
                         {
-                            "UID": 254727427,
-                            "ParentUID": 2020393814,
+                            "UID": 1175222496,
+                            "ParentUID": 1695965139,
                             "PrefabID": 1654173329,
                             "IsPrefab": true,
                             "Name": "Mesh",
@@ -268,28 +340,28 @@
                                 {
                                     "Type": 1,
                                     "LocalPosition": [
-                                        -0.47651022672653198,
-                                        -9.5367431640625e-07,
-                                        1.498160719871521
+                                        -0.44602298736572266,
+                                        -2.3458631038665771,
+                                        0
                                     ],
                                     "LocalRotation": [
                                         -0.70710664987564087,
                                         0,
                                         0,
-                                        0.70710694789886475
+                                        0.70710688829421997
                                     ],
                                     "LocalScale": [
                                         0.025399999693036079,
-                                        0.025399994105100632,
-                                        0.025399994105100632
+                                        0.025399995967745781,
+                                        0.025399995967745781
                                     ]
                                 },
                                 {
                                     "Type": 2,
-                                    "UID": 458238241,
+                                    "UID": 689848836,
                                     "Name": "Head.nemesh",
-                                    "Path": "Library\/Meshes\/458238241.nemesh",
-                                    "File": "458238241.nemesh",
+                                    "Path": "Library\/Meshes\/689848836.nemesh",
+                                    "File": "689848836.nemesh",
                                     "ShowWireframe": false,
                                     "ShowBoundingBox": false,
                                     "Outline": false,
@@ -304,7 +376,7 @@
                                 {
                                     "Type": 3,
                                     "Material": {
-                                        "UID": 2135000476,
+                                        "UID": 1641529648,
                                         "Color": [
                                             0.80000001192092896,
                                             0.80000001192092896,
@@ -312,8 +384,8 @@
                                             1
                                         ],
                                         "Name": "Head.nemat",
-                                        "Path": "Library\/Materials\/2135000476.nemat",
-                                        "File": "2135000476.nemat"
+                                        "Path": "Library\/Materials\/1641529648.nemat",
+                                        "File": "1641529648.nemat"
                                     },
                                     "Shader": {
                                         "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
@@ -328,78 +400,6 @@
                     ]
                 }
             ]
-        },
-        {
-            "UID": 797246407,
-            "ParentUID": 1533436305,
-            "PrefabID": 1654173329,
-            "IsPrefab": true,
-            "Name": "Base",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        2.328265905380249,
-                        0
-                    ],
-                    "LocalRotation": [
-                        -0.70710664987564087,
-                        0,
-                        0,
-                        0.70710688829421997
-                    ],
-                    "LocalScale": [
-                        0.025399999693036079,
-                        0.025399995967745781,
-                        0.025399995967745781
-                    ]
-                },
-                {
-                    "Type": 2,
-                    "UID": 1229761385,
-                    "Name": "Base.nemesh",
-                    "Path": "Library\/Meshes\/1229761385.nemesh",
-                    "File": "1229761385.nemesh",
-                    "ShowWireframe": false,
-                    "ShowBoundingBox": false,
-                    "Outline": false,
-                    "OutlineThickness": 1,
-                    "OutlineColor": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ]
-                },
-                {
-                    "Type": 3,
-                    "Material": {
-                        "UID": 1339346489,
-                        "Color": [
-                            0.80000001192092896,
-                            0.80000001192092896,
-                            0.80000001192092896,
-                            1
-                        ],
-                        "Name": "Base.nemat",
-                        "Path": "Library\/Materials\/1339346489.nemat",
-                        "File": "1339346489.nemat"
-                    },
-                    "Shader": {
-                        "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
-                        "AssetsName": "DefaultShader.shader",
-                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
-                        "LibraryFile": "800223282.neshader"
-                    }
-                }
-            ],
-            "Children": []
         }
     ]
 } 
