@@ -71,7 +71,7 @@ void GameManager::Awake()
 			groguGameObject = App->resourceManager->LoadPrefab(groguPrefab.uid, App->scene->GetSceneRoot());
 			if (playerSpawn != nullptr && groguGameObject != nullptr)
 			{
-				float3 offset = { 0,0,3 };
+				float3 offset = { 0,0,7 };
 				spawnPoint = playerSpawn->transform->GetLocalPosition() + offset;
 				groguGameObject->transform->SetLocalPosition(spawnPoint);
 				//playerTrans->SetLocalRotation(spawnTrans->GetLocalRotation());

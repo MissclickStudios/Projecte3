@@ -9,11 +9,6 @@
             "GameObjectUID": 1709430045,
             "ModelResourceUID": 1877781044,
             "ModelAssetsPath": "Assets\/Models\/Characters\/Jawa_model.fbx"
-        },
-        {
-            "GameObjectUID": 2023968864,
-            "ModelResourceUID": 1266705681,
-            "ModelAssetsPath": "Assets\/Models\/Primitives\/cube.fbx"
         }
     ],
     "Game Objects": [
@@ -1446,7 +1441,7 @@
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": true,
+            "ShowBoundingBoxes": false,
             "Components": [
                 {
                     "Type": 1,
@@ -1473,7 +1468,7 @@
                     "MaxFOV": 120,
                     "Culling": false,
                     "OrthogonalView": false,
-                    "HideFrustum": false
+                    "HideFrustum": true
                 },
                 {
                     "Type": 15
@@ -1748,7 +1743,7 @@
                         "X": 0,
                         "Y": 0,
                         "W": 1.0926049947738647,
-                        "H": 0.56977641582489014,
+                        "H": 0.5787392258644104,
                         "IsInvisible": false,
                         "IsInputCanvas": true,
                         "Priority": 3
@@ -2515,79 +2510,8 @@
             ]
         },
         {
-            "UID": 1449298992,
-            "ParentUID": 2023968864,
-            "PrefabID": 0,
-            "IsPrefab": false,
-            "Name": "Box001",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        0,
-                        0
-                    ],
-                    "LocalRotation": [
-                        -0.70710676908493042,
-                        0,
-                        0,
-                        0.70710676908493042
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {
-                    "Type": 2,
-                    "UID": 1348672898,
-                    "Name": "Box001.nemesh",
-                    "Path": "Library\/Meshes\/1348672898.nemesh",
-                    "File": "1348672898.nemesh",
-                    "ShowWireframe": false,
-                    "ShowBoundingBox": false,
-                    "Outline": false,
-                    "OutlineThickness": 1,
-                    "OutlineColor": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ]
-                },
-                {
-                    "Type": 3,
-                    "Material": {
-                        "UID": 1528333877,
-                        "Color": [
-                            0.80000001192092896,
-                            0.80000001192092896,
-                            0.80000001192092896,
-                            1
-                        ],
-                        "Name": "Box001.nemat",
-                        "Path": "Library\/Materials\/1528333877.nemat",
-                        "File": "1528333877.nemat"
-                    },
-                    "Shader": {
-                        "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
-                        "AssetsName": "DefaultShader.shader",
-                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
-                        "LibraryFile": "800223282.neshader"
-                    }
-                }
-            ]
-        },
-        {
             "UID": 1474137658,
-            "ParentUID": 503130633,
+            "ParentUID": 1764509720,
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "MainScene",
@@ -2906,6 +2830,11 @@
                             "Type": 4,
                             "Name": "playerPrefab",
                             "prefab": 1997884416
+                        },
+                        {
+                            "Type": 4,
+                            "Name": "groguPrefab",
+                            "prefab": 13642032
                         }
                     ]
                 }
@@ -3691,123 +3620,6 @@
                         "LibaryPath": "Library\/Shaders\/1025410539.neshader",
                         "LibraryFile": "1025410539.neshader"
                     }
-                }
-            ]
-        },
-        {
-            "UID": 2023968864,
-            "ParentUID": 1474137658,
-            "PrefabID": 0,
-            "IsPrefab": false,
-            "Name": "Grogu Temp",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": true,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        3.6909658908843994,
-                        75.10247802734375
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        5,
-                        5,
-                        5
-                    ]
-                },
-                {
-                    "Type": 24,
-                    "ResourceUID": 202095318,
-                    "AssetsPath": "Assets\/Scripts\/\/Grogu.h",
-                    "DataName": "Grogu",
-                    "HasInspector": true,
-                    "InspectorVariables": [
-                        {
-                            "Type": 2,
-                            "Name": "health",
-                            "float": 1
-                        },
-                        {
-                            "Type": 2,
-                            "Name": "maxHealth",
-                            "float": 1
-                        },
-                        {
-                            "Type": 2,
-                            "Name": "speed",
-                            "float": 0
-                        },
-                        {
-                            "Type": 2,
-                            "Name": "attackSpeed",
-                            "float": 0
-                        },
-                        {
-                            "Type": 2,
-                            "Name": "damage",
-                            "float": 0
-                        },
-                        {
-                            "Type": 2,
-                            "Name": "defense",
-                            "float": 1
-                        },
-                        {
-                            "Type": 2,
-                            "Name": "maxHealthModifier",
-                            "float": 0
-                        },
-                        {
-                            "Type": 2,
-                            "Name": "speedModifier",
-                            "float": 1
-                        },
-                        {
-                            "Type": 2,
-                            "Name": "attackSpeedModifier",
-                            "float": 1
-                        },
-                        {
-                            "Type": 2,
-                            "Name": "damageModifier",
-                            "float": 1
-                        },
-                        {
-                            "Type": 2,
-                            "Name": "defenseModifier",
-                            "float": 1
-                        },
-                        {
-                            "Type": 2,
-                            "Name": "cooldownModifier",
-                            "float": 1
-                        },
-                        {
-                            "Type": 2,
-                            "Name": "deathDuration",
-                            "float": 0
-                        },
-                        {
-                            "Type": 5,
-                            "Name": "handName",
-                            "string": ""
-                        },
-                        {
-                            "Type": 7,
-                            "Name": "particleNames",
-                            "vectorstring": []
-                        }
-                    ]
                 }
             ]
         }

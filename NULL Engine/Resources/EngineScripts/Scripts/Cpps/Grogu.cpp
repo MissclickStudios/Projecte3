@@ -3,16 +3,10 @@
 #include "Grogu.h"
 
 #include "Application.h"
-#include "M_ResourceManager.h"
 #include "M_Scene.h"
 
 #include "GameObject.h"
 #include "C_Transform.h"
-#include "C_RigidBody.h"
-#include "C_Material.h"
-#include "C_AudioSource.h"
-
-#include "C_Animator.h"
 
 #include "GameManager.h"
 
@@ -106,7 +100,7 @@ void Grogu::ManageRotation()
 	aimDirection.y = direction.z;
 
 	float rad = aimDirection.AimedAngle();
-	gameObject->transform->SetLocalRotation(float3(0, -rad + DegToRad(90), 0));
+	gameObject->transform->SetLocalRotation(float3(0, -rad + DegToRad(180), 0));
 }
 
 void Grogu::Movement()
