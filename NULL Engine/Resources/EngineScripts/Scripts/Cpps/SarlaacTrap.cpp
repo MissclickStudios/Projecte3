@@ -118,5 +118,5 @@ void SarlaacTrap::StartMoving()
 	state = SarlaacState::MOVING;
 
 	//Animator play clip
-	sarlaacAnimator->PlayClip(animationName, 0u);
+	//sarlaacAnimator->PlayClip(animationName, 0u);
 }

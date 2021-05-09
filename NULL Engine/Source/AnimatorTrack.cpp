@@ -465,7 +465,7 @@ bool AnimatorTrack::StepClips(float dt)
 		}
 	}
 
-	if (currentExists)
+	if (currentClip != nullptr)
 	{
 		float stepValue = dt * trackSpeed;
 		if (stepValue == 0.0f)
