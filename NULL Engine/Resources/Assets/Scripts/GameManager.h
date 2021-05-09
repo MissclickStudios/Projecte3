@@ -40,7 +40,11 @@ private:
 
 public:
     std::vector<std::string> level1;
-    std::vector<std::string> level2;
+    int l1Easy = -1;
+    int l1Intermediate = -1;
+    std::vector<std::string> level1Ruins;
+    int RuinsEasy = -1;
+    int RuinsIntermediate = -1;
 
     bool enabled;
     std::string mainMenuScene;
@@ -54,7 +58,10 @@ private:
     int	currentLevel = 0;
     int	roomNum = 0;
 
-    bool move = false; // shhhhhh, don't tell jordi
+    //if(!Jordi)
+        bool move = false; // shhhhhh, don't tell jordi
+    //else
+        //he gone :)
     float3 spawnPoint = float3::zero;
     std::vector<float3> backtrack;
     float backtrackDuration = 1.0f;
