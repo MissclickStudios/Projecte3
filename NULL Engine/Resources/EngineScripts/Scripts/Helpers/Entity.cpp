@@ -16,6 +16,7 @@
 #include "ScriptMacros.h"
 
 #include "MathGeoLib/include/Math/float3.h"
+#include "CoreDllHelpers.h"
 
 Entity::Entity() : Object()
 {
@@ -30,6 +31,7 @@ Entity::~Entity()
 		delete *effects.begin();
 		effects.erase(effects.begin());
 	}
+	CoreCrossDllHelpers::CoreReleaseString(handName);
 }
 
 void Entity::Awake()
