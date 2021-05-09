@@ -11,12 +11,15 @@
 
 #include "M_ResourceManager.h"
 #include "M_Scene.h"
+#include "M_Renderer3D.h"
 #include "GameObject.h"
 #include "C_Mesh.h"
 #include "C_Transform.h"
 
+#include "R_Material.h"
 #include "R_Mesh.h"
 #include "R_NavMesh.h"
+
 
 M_Detour::M_Detour(bool isActive) : Module("Detour", isActive)
 {
@@ -62,10 +65,17 @@ bool M_Detour::CleanUp()
 
 void M_Detour::Draw() const
 {
+	if (debugDraw && navMeshResource != nullptr && navMeshResource->navMesh != nullptr) {
+		for (int i = 0; i < renderMeshes.size(); ++i)
+		{
+			//App->renderer.
+		}
+	}
 }
 
 void M_Detour::setDebugDraw(bool state)
 {
+	debugDraw = state;
 }
 
 bool M_Detour::createNavMesh(dtNavMeshCreateParams* params)
@@ -132,9 +142,6 @@ bool M_Detour::createNavMesh(dtNavMeshCreateParams* params)
 	if (App->gameState == GameState::STOP) {
 		createRenderMeshes();
 	}
-
-	//We save the scene so that it stores the NavMesh
-	//App->scene_manager->SaveScene(App->scene_manager->currentScene);
 
 	return true;
 }
@@ -238,6 +245,18 @@ void M_Detour::allocateNavMesh()
 
 void M_Detour::createRenderMeshes()
 {
+	if (navMeshResource != nullptr && navMeshResource->navMesh != nullptr) {
+		for (int i = 0; i < renderMeshes.size(); ++i)
+			delete renderMeshes[i];
+		renderMeshes.clear();
+
+		const dtNavMesh* mesh = navMeshResource->navMesh;
+		for (int ti = 0; ti < mesh->getMaxTiles(); ++ti) {
+			const dtMeshTile* tile = mesh->getTile(ti);
+			if (!tile->header) continue;
+			processTile(tile);
+		}
+	}
 }
 
 void M_Detour::saveNavMesh() const
@@ -322,9 +341,7 @@ void M_Detour::processTile(const dtMeshTile* tile)
 			}
 		}
 
-		//To create EBO and VBO
-		//Load in memory
-		//navpol->rmesh->LoadInMemory();
+		//navpol->rmesh.
 		renderMeshes.push_back(navpol);
 	}
 }

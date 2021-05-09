@@ -117,10 +117,7 @@ private:
 	dtNavMeshQuery* m_navQuery = nullptr;
 	dtQueryFilter* m_filterQuery = nullptr;
 	std::vector<navigationPoly*> renderMeshes;
-	R_Material* mat = nullptr;
+
 	float m_Extents[3];
-
-
-
 };
 #endif // __M_DETOUR_H__
