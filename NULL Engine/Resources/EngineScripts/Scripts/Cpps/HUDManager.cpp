@@ -264,7 +264,6 @@ void HUDManager::ManageHeartImage(int hp)
 			heart1Image->PlayAnimation(false, 1);
 			health1 = true;
 		}
-		health1 = false;
 		health2 = false;
 		health3 = false;
 		health4 = false;
@@ -281,7 +280,6 @@ void HUDManager::ManageHeartImage(int hp)
 		health2 = true;
 		}
 		health1 = false;
-		health2 = false;
 		health3 = false;
 		health4 = false;
 		health5 = false;
@@ -298,7 +296,6 @@ void HUDManager::ManageHeartImage(int hp)
 		}
 		health1 = false;
 		health2 = false;
-		health3 = false;
 		health4 = false;
 		health5 = false;
 		health6 = false;
@@ -315,7 +312,6 @@ void HUDManager::ManageHeartImage(int hp)
 		health1 = false;
 		health2 = false;
 		health3 = false;
-		health4 = false;
 		health5 = false;
 		health6 = false;
 		break;
@@ -332,7 +328,6 @@ void HUDManager::ManageHeartImage(int hp)
 		health2 = false;
 		health3 = false;
 		health4 = false;
-		health5 = false;
 		health6 = false;
 		break;
 	case 5:	  
@@ -349,7 +344,6 @@ void HUDManager::ManageHeartImage(int hp)
 		health3 = false;
 		health4 = false;
 		health5 = false;
-		health6 = false;
 		break;
 	case 6:		
 		heart1->SwapTexture(fullHeart);
