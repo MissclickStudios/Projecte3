@@ -47,11 +47,11 @@ EngineApplication::EngineApplication()
 	AddModule(resourceManager);
 
 	// Scenes
+	AddModule(uiSystem);
 	AddModule(scriptManager);
 	AddModule(editor);
 	AddModule(audio);
 	AddModule(physics);
-	AddModule(uiSystem);
 	AddModule(detour);
 	AddModule(scene);
 	AddModule(recast);

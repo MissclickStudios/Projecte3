@@ -93,6 +93,8 @@ C_Canvas* M_UISystem::PopCanvas()
 {
 	C_Canvas* topCanvas = activeCanvas.front();
 	topCanvas->cachedObjects.clear();
+	topCanvas->selectedUi->ResetInput();
+	topCanvas->selectedUi = nullptr;
 	activeCanvas.pop_front();
 	return topCanvas;
 }
@@ -104,6 +106,8 @@ void M_UISystem::RemoveActiveCanvas(C_Canvas* canvas)
 		if ((*it) == canvas)
 		{
 			(*it)->cachedObjects.clear();
+			(*it)->selectedUi->ResetInput();
+			(*it)->selectedUi = nullptr;
 			activeCanvas.erase(it);
 			break;
 		}

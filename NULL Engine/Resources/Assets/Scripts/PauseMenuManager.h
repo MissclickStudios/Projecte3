@@ -16,7 +16,7 @@ public:
 
 	void Update() override;
 
-	std::string continueButtonName = "ContinueButton";
+	std::string resumeButtonName = "ResumeButton";
 	std::string optionsButtonName = "OptionsButton";
 	std::string abandonRunButtonName = "AbandonRunButton";
 	std::string mainMenuButtonName = "MainMenuButton";
@@ -26,7 +26,7 @@ public:
 	std::string gameManagerName = "Game Manager";
 
 private:
-	C_UI_Button* continueButton = nullptr;
+	C_UI_Button* resumeButton = nullptr;
 	C_UI_Button* optionsButton = nullptr;
 	C_UI_Button* abandonRunButton = nullptr;
 	C_UI_Button* mainMenuButton = nullptr;
@@ -46,7 +46,7 @@ SCRIPTS_FUNCTION PauseMenuManager* CreatePauseMenuManager() {
 	INSPECTOR_STRING(script->mandoName);
 	INSPECTOR_STRING(script->gameManagerName);
 	INSPECTOR_STRING(script->pauseMenuCanvasName);
-	INSPECTOR_STRING(script->continueButtonName);
+	INSPECTOR_STRING(script->resumeButtonName);
 	INSPECTOR_STRING(script->optionsButtonName);
 	INSPECTOR_STRING(script->abandonRunButtonName);
 	INSPECTOR_STRING(script->mainMenuButtonName);

@@ -61,8 +61,8 @@ public:
 	// Animations
 	AnimationInfo runAnimation = { "Run" };
 	AnimationInfo dashAnimation = { "Dash" };
-	AnimationInfo shootAnimation = { "Shoot", 0.05f };
-	AnimationInfo shootRifleAnimation = { "ShootRifle", 0.05f };
+	AnimationInfo shootAnimation = { "Shoot"};
+	AnimationInfo shootRifleAnimation = { "ShootRifle"};
 	AnimationInfo reloadAnimation = { "Reload" };
 	AnimationInfo changeAnimation = { "Change" };
 	AnimationInfo onGuardAnimation = { "OnGuard" };

@@ -209,6 +209,11 @@ void C_UI_Button::Draw3D()
 
 }
 
+void C_UI_Button::ResetInput()
+{
+	state = UIButtonState::IDLE;
+}
+
 bool C_UI_Button::SaveState(ParsonNode& root) const
 {
 	root.SetNumber("Type", (uint)GetType());

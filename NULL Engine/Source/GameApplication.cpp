@@ -45,11 +45,11 @@ GameApplication::GameApplication()
 	AddModule(resourceManager);
 
 	// Scenes
+	AddModule(uiSystem);
 	AddModule(scriptManager);
 	AddModule(manager);
 	AddModule(audio);
 	AddModule(physics);
-	AddModule(uiSystem);
 	AddModule(scene);
 	AddModule(detour);
 

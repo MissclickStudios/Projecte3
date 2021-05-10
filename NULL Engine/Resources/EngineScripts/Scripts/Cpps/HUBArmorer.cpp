@@ -1,8 +1,8 @@
 #include "Application.h"
 #include "M_Scene.h"
-#include "Log.h"
 
 #include "M_Input.h"
+#include "M_UISystem.h"
 
 #include "C_Transform.h"
 #include "C_Canvas.h"
@@ -22,7 +22,9 @@ HUBArmorer::~HUBArmorer()
 void HUBArmorer::Start()
 {
 	mando = App->scene->GetGameObjectByName(mandoName.c_str());
-	hubShopCanvas = App->scene->GetGameObjectByName(hubShopCanvasName.c_str());
+	GameObject* object = App->scene->GetGameObjectByName(hubShopCanvasName.c_str());
+	if(object)
+		hubShopCanvas = object->GetComponent<C_Canvas>();
 }
 
 void HUBArmorer::Update()

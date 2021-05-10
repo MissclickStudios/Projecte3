@@ -24,9 +24,9 @@ void PauseMenuManager::Start()
 	if(a != nullptr)
 		pauseMenuCanvas = (C_Canvas*)a->GetComponent<C_Canvas>();
 
-	a = App->scene->GetGameObjectByName(continueButtonName.c_str());
+	a = App->scene->GetGameObjectByName(resumeButtonName.c_str());
 	if (a != nullptr)
-		continueButton = (C_UI_Button*)a->GetComponent<C_UI_Button>();
+		resumeButton = (C_UI_Button*)a->GetComponent<C_UI_Button>();
 
 	a = App->scene->GetGameObjectByName(abandonRunButtonName.c_str());
 	if (a != nullptr)
@@ -66,11 +66,12 @@ void PauseMenuManager::Update()
 	}
 
 	//Continue Button
-	if (continueButton != nullptr && pauseMenuCanvas != nullptr)
+	if (resumeButton != nullptr && pauseMenuCanvas != nullptr)
 	{
-		if (continueButton->GetState() == UIButtonState::RELEASED)
+		if (resumeButton->GetState() == UIButtonState::RELEASED)
 		{
 			App->uiSystem->RemoveActiveCanvas(pauseMenuCanvas);
+			canvasActive = false;
 		}
 	}
 

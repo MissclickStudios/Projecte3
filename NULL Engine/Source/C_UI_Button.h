@@ -48,6 +48,9 @@ public:
 	UIButtonState GetState()const;
 
 private:
+	void ResetInput()override;
+
+private:
 	UIButtonState state = UIButtonState::NONE;
 
 	uint VAO;
