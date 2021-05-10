@@ -28,6 +28,7 @@ public:
 	int damage = 0;
 
 	float power = 2000000.0f;
+	float particleEmitttingTime = 1.f;
 
 private:
 	GameObject* gameManager = nullptr;
@@ -36,7 +37,7 @@ private:
 	C_ParticleSystem* explosionParticles = nullptr;
 	
 	float particleTimer = 0.f;
-
+	
 	bool toExplode = false;
 	bool exploded = false;
 };
@@ -48,5 +49,6 @@ SCRIPTS_FUNCTION ExplosiveBarrel* CreateExplosiveBarrel() {
 	INSPECTOR_INPUT_FLOAT3(script->barrelColliderSize);
 	INSPECTOR_INPUT_FLOAT3(script->explosionTriggerSize);
 	INSPECTOR_INPUT_INT(script->damage);
+	INSPECTOR_DRAGABLE_FLOAT(script->particleEmitttingTime);
 	return script;
 }

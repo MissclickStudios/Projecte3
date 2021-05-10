@@ -43,7 +43,7 @@ void ExplosiveBarrel::Update()
 		barrelCollider->SetSize(barrelColliderSize);
 
 		//play particles
-		if (particleTimer < 1.f)
+		if (particleTimer < particleEmitttingTime)
 		{
 			particleTimer += MC_Time::Game::GetDT();
 		}
