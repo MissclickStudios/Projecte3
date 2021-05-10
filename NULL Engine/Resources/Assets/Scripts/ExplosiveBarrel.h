@@ -5,6 +5,7 @@
 
 class GameObject;
 class C_BoxCollider;
+class C_AudioSource;
 
 class SCRIPTS_API ExplosiveBarrel : public Object ALLOWED_INHERITANCE {
 public:
@@ -29,6 +30,10 @@ public:
 
 	float power = 2000000.0f;
 	float particleEmitttingTime = 1.f;
+
+	// Audio
+
+	C_AudioSource* explosion = nullptr;
 
 private:
 	GameObject* gameManager = nullptr;
