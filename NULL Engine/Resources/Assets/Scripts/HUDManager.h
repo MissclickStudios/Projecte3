@@ -27,8 +27,6 @@ public:
 	std::string creditsImageName = "Credits";
 	std::string playerName = "Mandalorian";
 
-	std::string hudCanvasName = "hubShopCanvas";
-
 	std::string creditsTextName = "CreditsText";
 	std::string beskarTextName = "BeskarText";
 	std::string ammoTextName = "AmmoText";
@@ -86,7 +84,6 @@ SCRIPTS_FUNCTION HUDManager* CreateHUDManager() {
 	INSPECTOR_STRING(script->dashImageName);
 	INSPECTOR_STRING(script->creditsImageName);
 	INSPECTOR_STRING(script->playerName);
-	INSPECTOR_STRING(script->hudCanvasName);
 
 	INSPECTOR_STRING(script->creditsTextName);
 	INSPECTOR_STRING(script->beskarTextName);

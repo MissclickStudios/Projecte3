@@ -137,9 +137,9 @@
                     "Material": {
                         "UID": 94664905,
                         "Color": [
-                            0.80000001192092896,
-                            0.80000001192092896,
-                            0.80000001192092896,
+                            0.50196081399917603,
+                            0.50196081399917603,
+                            0.50196081399917603,
                             1
                         ],
                         "Name": "Box075.nemat",
@@ -309,11 +309,6 @@
                             "Type": 5,
                             "Name": "mandoName",
                             "string": "Mandalorian"
-                        },
-                        {
-                            "Type": 5,
-                            "Name": "debugMenuCanvasName",
-                            "string": "DebugMenuCanvas"
                         },
                         {
                             "Type": 5,
@@ -1094,9 +1089,9 @@
                     "Material": {
                         "UID": 94664905,
                         "Color": [
-                            0.80000001192092896,
-                            0.80000001192092896,
-                            0.80000001192092896,
+                            0.50196081399917603,
+                            0.50196081399917603,
+                            0.50196081399917603,
                             1
                         ],
                         "Name": "Box075.nemat",
@@ -1122,7 +1117,7 @@
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": true,
+            "ShowBoundingBoxes": false,
             "Components": [
                 {
                     "Type": 1,
@@ -1165,9 +1160,9 @@
                     "Material": {
                         "UID": 1446400354,
                         "Color": [
-                            0.58799999952316284,
-                            0.58799999952316284,
-                            0.58799999952316284,
+                            0.50196081399917603,
+                            0.50196081399917603,
+                            0.50196081399917603,
                             1
                         ],
                         "Name": "JawaShip.nemat",
@@ -1424,6 +1419,16 @@
                             "string": "PlayerSpawn"
                         },
                         {
+                            "Type": 0,
+                            "Name": "l1Easy",
+                            "int": 1
+                        },
+                        {
+                            "Type": 0,
+                            "Name": "l1Intermediate",
+                            "int": 4
+                        },
+                        {
                             "Type": 7,
                             "Name": "level1",
                             "vectorstring": [
@@ -1439,9 +1444,37 @@
                             ]
                         },
                         {
+                            "Type": 0,
+                            "Name": "RuinsEasy",
+                            "int": 1
+                        },
+                        {
+                            "Type": 0,
+                            "Name": "RuinsIntermediate",
+                            "int": 4
+                        },
+                        {
+                            "Type": 7,
+                            "Name": "level1Ruins",
+                            "vectorstring": [
+                                "Level1_Ruins1.json",
+                                "Level1_Ruins2.json",
+                                "Level1_Ruins3.json",
+                                "Level1_Ruins4.json",
+                                "Level1_Ruins5.json",
+                                "Level1_Ruins6.json",
+                                "Level1_Ruins7.json"
+                            ]
+                        },
+                        {
                             "Type": 4,
                             "Name": "playerPrefab",
                             "prefab": 1997884416
+                        },
+                        {
+                            "Type": 4,
+                            "Name": "groguPrefab",
+                            "prefab": 13642032
                         }
                     ]
                 }
@@ -1570,13 +1603,8 @@
                         },
                         {
                             "Type": 5,
-                            "Name": "pauseMenuCanvasName",
-                            "string": "PauseMenuCanvas"
-                        },
-                        {
-                            "Type": 5,
-                            "Name": "continueButtonName",
-                            "string": "ContinueButton"
+                            "Name": "resumeButtonName",
+                            "string": "ResumeButton"
                         },
                         {
                             "Type": 5,
@@ -1866,11 +1894,6 @@
                     "DataName": "HUBShopMenuManager",
                     "HasInspector": true,
                     "InspectorVariables": [
-                        {
-                            "Type": 5,
-                            "Name": "beskarTextHubShopName",
-                            "string": "BeskarTextHubShop"
-                        },
                         {
                             "Type": 5,
                             "Name": "mandoName",
@@ -2767,9 +2790,9 @@
                     "Material": {
                         "UID": 1645023417,
                         "Color": [
-                            1,
-                            1,
-                            1,
+                            0.50196081399917603,
+                            0.50196081399917603,
+                            0.50196081399917603,
                             1
                         ],
                         "Name": "Tend001.nemat",
@@ -3289,26 +3312,6 @@
                         },
                         {
                             "Type": 5,
-                            "Name": "debugMenuCanvasName",
-                            "string": "DebugMenuCanvas"
-                        },
-                        {
-                            "Type": 5,
-                            "Name": "hubShopCanvasName",
-                            "string": "hubShopCanvas"
-                        },
-                        {
-                            "Type": 5,
-                            "Name": "hudCanvasName",
-                            "string": "hubShopCanvas"
-                        },
-                        {
-                            "Type": 5,
-                            "Name": "pauseMenuCanvasName",
-                            "string": "pauseMenuCanvas"
-                        },
-                        {
-                            "Type": 5,
                             "Name": "creditsTextName",
                             "string": "CreditsText"
                         },
@@ -3707,9 +3710,9 @@
                     "Material": {
                         "UID": 94664905,
                         "Color": [
-                            0.80000001192092896,
-                            0.80000001192092896,
-                            0.80000001192092896,
+                            0.50196081399917603,
+                            0.50196081399917603,
+                            0.50196081399917603,
                             1
                         ],
                         "Name": "Box075.nemat",
@@ -3727,7 +3730,7 @@
         },
         {
             "UID": 1598465591,
-            "ParentUID": 1225086233,
+            "ParentUID": 861872891,
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "MainScene",
@@ -3811,9 +3814,9 @@
                     "Material": {
                         "UID": 94664905,
                         "Color": [
-                            0.80000001192092896,
-                            0.80000001192092896,
-                            0.80000001192092896,
+                            0.50196081399917603,
+                            0.50196081399917603,
+                            0.50196081399917603,
                             1
                         ],
                         "Name": "Box075.nemat",
@@ -3944,13 +3947,13 @@
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
+            "ShowBoundingBoxes": true,
             "Components": [
                 {
                     "Type": 1,
                     "LocalPosition": [
                         16.567010879516602,
-                        -1.1780121326446533,
+                        -3.509796142578125,
                         21.427997589111328
                     ],
                     "LocalRotation": [
@@ -3975,7 +3978,7 @@
                     "Is Trigger": false,
                     "Show Collider": true,
                     "Size X": 350,
-                    "Size Y": 2,
+                    "Size Y": 10,
                     "Size Z": 350,
                     "Center X": 0,
                     "Center Y": 0,
@@ -4092,7 +4095,7 @@
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
+            "ShowBoundingBoxes": true,
             "Components": [
                 {
                     "Type": 1,
