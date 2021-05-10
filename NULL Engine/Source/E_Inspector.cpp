@@ -2115,13 +2115,7 @@ void E_Inspector::DisplayMaterialSelector(C_Material* cMaterial, std::map<std::s
 void E_Inspector::DisplayShader(C_Material* cMaterial)
 {
 	static std::map<std::string, ResourceBase> shaderBases;
-
-	R_Shader* shader = cMaterial->GetShader();
-	if (cMaterial->GetShader() == nullptr)
-	{
-		return;
-	}
-
+	
 	ImGui::TextColored(Green.C_Array(), "Shader:");
 
 	// --- SHADER SELECTOR ---
@@ -2134,6 +2128,12 @@ void E_Inspector::DisplayShader(C_Material* cMaterial)
 	ImGui::Separator();
 
 	// --- SHADER DATA ---
+	R_Shader* shader = cMaterial->GetShader();
+	if (shader == nullptr)
+	{
+		return;
+	}
+
 	if (!cMaterial->GetShader()->uniforms.empty())
 	{
 		if (ImGui::TreeNodeEx("Shader Data:"))
@@ -2168,7 +2168,7 @@ void E_Inspector::DisplayShaderSelector(C_Material* cMaterial, std::map<std::str
 {
 	const char* currentShaderName = (cMaterial->GetShader() != nullptr) ? cMaterial->GetShader()->GetAssetsFile() : "[NONE]";
 	
-	if (ImGui::BeginCombo("Select Shader", cMaterial->GetShader()->GetAssetsFile(), ImGuiComboFlags_PopupAlignLeft))
+	if (ImGui::BeginCombo("Select Shader", currentShaderName, ImGuiComboFlags_PopupAlignLeft))
 	{
 		if (shaderBases.empty())
 		{
