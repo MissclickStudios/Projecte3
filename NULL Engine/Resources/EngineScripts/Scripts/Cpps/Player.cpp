@@ -15,6 +15,8 @@
 #include "C_AudioSource.h"
 #include "C_Mesh.h"
 
+#include "C_2DAnimator.h"
+
 #include "C_Animator.h"
 
 #include "GameManager.h"
@@ -143,6 +145,26 @@ void Player::SetUp()
 				deathAudio = source;
 		}
 	}
+
+	GameObject* a = App->scene->GetGameObjectByName(mandoImageName.c_str());
+	if (a != nullptr)
+		mandoImage = (C_2DAnimator*)a->GetComponent<C_2DAnimator>();
+
+	a = App->scene->GetGameObjectByName(primaryWeaponImageName.c_str());
+	if (a != nullptr)
+		primaryWeaponImage = (C_2DAnimator*)a->GetComponent<C_2DAnimator>();
+
+	a = App->scene->GetGameObjectByName(secondaryWeaponImageName.c_str());
+	if (a != nullptr)
+		secondaryWeaponImage = (C_2DAnimator*)a->GetComponent<C_2DAnimator>();
+
+	a = App->scene->GetGameObjectByName(dashImageName.c_str());
+	if (a != nullptr)
+		dashImage = (C_2DAnimator*)a->GetComponent<C_2DAnimator>();
+
+	a = App->scene->GetGameObjectByName(creditsImageName.c_str());
+	if (a != nullptr)
+		creditsImage = (C_2DAnimator*)a->GetComponent<C_2DAnimator>();
 }
 
 void Player::Behavior()
@@ -676,4 +698,6 @@ void Player::Dash()
 
 	if (rigidBody != nullptr)
 		rigidBody->Set2DVelocity(direction * DashSpeed());
+
+	dashImage->PlayAnimation(false, 1);
 }

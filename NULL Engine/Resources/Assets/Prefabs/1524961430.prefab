@@ -64,11 +64,11 @@
     ],
     "Children": [
         {
-            "UID": 263526361,
+            "UID": 27299344,
             "ParentUID": 939333725,
             "PrefabID": 1524961430,
             "IsPrefab": true,
-            "Name": "PauseMenuCanvas",
+            "Name": "HUBShopCanvas",
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
@@ -79,11 +79,11 @@
                     "Type": 1,
                     "LocalPosition": [
                         0,
-                        0,
-                        0
+                        -7.62939453125e-06,
+                        -1.52587890625e-05
                     ],
                     "LocalRotation": [
-                        0,
+                        7.4505823732806675e-09,
                         0,
                         0,
                         1
@@ -91,7 +91,7 @@
                     "LocalScale": [
                         1,
                         1,
-                        1
+                        0.99999988079071045
                     ]
                 },
                 {
@@ -106,11 +106,16 @@
                 },
                 {
                     "Type": 24,
-                    "ResourceUID": 1314001864,
-                    "AssetsPath": "Assets\/Scripts\/\/PauseMenuManager.h",
-                    "DataName": "PauseMenuManager",
+                    "ResourceUID": 1649072618,
+                    "AssetsPath": "Assets\/Scripts\/\/HUBShopMenuManager.h",
+                    "DataName": "HUBShopMenuManager",
                     "HasInspector": true,
                     "InspectorVariables": [
+                        {
+                            "Type": 5,
+                            "Name": "beskarTextHubShopName",
+                            "string": "BeskarTextHubShop"
+                        },
                         {
                             "Type": 5,
                             "Name": "mandoName",
@@ -118,49 +123,24 @@
                         },
                         {
                             "Type": 5,
-                            "Name": "gameManagerName",
-                            "string": "Game Manager"
-                        },
-                        {
-                            "Type": 5,
-                            "Name": "pauseMenuCanvasName",
-                            "string": "PauseMenuCanvas"
-                        },
-                        {
-                            "Type": 5,
-                            "Name": "continueButtonName",
-                            "string": "ContinueButton"
-                        },
-                        {
-                            "Type": 5,
-                            "Name": "optionsButtonName",
-                            "string": "OptionsButton"
-                        },
-                        {
-                            "Type": 5,
-                            "Name": "abandonRunButtonName",
-                            "string": "AbandonRunButton"
-                        },
-                        {
-                            "Type": 5,
-                            "Name": "mainMenuButtonName",
-                            "string": "MainMenuButton"
-                        },
-                        {
-                            "Type": 5,
                             "Name": "exitButtonName",
                             "string": "ExitButton"
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "buyButtonName",
+                            "string": "BuyButton"
                         }
                     ]
                 }
             ],
             "Children": [
                 {
-                    "UID": 612110803,
-                    "ParentUID": 263526361,
+                    "UID": 663897332,
+                    "ParentUID": 27299344,
                     "PrefabID": 1524961430,
                     "IsPrefab": true,
-                    "Name": "ResumeButton",
+                    "Name": "Background",
                     "IsActive": true,
                     "IsStatic": false,
                     "IsSceneRoot": false,
@@ -187,37 +167,22 @@
                             ]
                         },
                         {
-                            "Type": 23,
-                            "X": 0,
-                            "Y": 0.32499998807907104,
-                            "W": 0.25999999046325684,
-                            "H": 0.059999998658895493,
+                            "Type": 21,
+                            "X": -0.0030000000260770321,
+                            "Y": 0,
+                            "W": 0.55500000715255737,
+                            "H": 0.7149999737739563,
                             "childOrder": 0
-                        },
-                        {
-                            "Type": 3,
-                            "Texture": {
-                                "AssetsPath": "Assets\/Textures\/\/UI\/Pause Menu\/ResumeButton1.png",
-                                "AssetsName": "ResumeButton1.png",
-                                "LibaryPath": "Library\/Textures\/774061459.netex",
-                                "LibraryFile": "774061459.netex"
-                            },
-                            "Shader": {
-                                "AssetsPath": "Assets\/Shaders\/UIShader.shader",
-                                "AssetsName": "UIShader.shader",
-                                "LibaryPath": "Library\/Shaders\/1025410539.neshader",
-                                "LibraryFile": "1025410539.neshader"
-                            }
                         }
                     ],
                     "Children": []
                 },
                 {
-                    "UID": 1451834445,
-                    "ParentUID": 263526361,
+                    "UID": 30740742,
+                    "ParentUID": 27299344,
                     "PrefabID": 1524961430,
                     "IsPrefab": true,
-                    "Name": "AbandonRunButton",
+                    "Name": "Beskar",
                     "IsActive": true,
                     "IsStatic": false,
                     "IsSceneRoot": false,
@@ -244,20 +209,20 @@
                             ]
                         },
                         {
-                            "Type": 23,
-                            "X": 0,
-                            "Y": 0.14499999582767487,
-                            "W": 0.27000001072883606,
+                            "Type": 21,
+                            "X": -0.84500002861022949,
+                            "Y": 0.4050000011920929,
+                            "W": 0.05000000074505806,
                             "H": 0.079999998211860657,
                             "childOrder": 1
                         },
                         {
                             "Type": 3,
                             "Texture": {
-                                "AssetsPath": "Assets\/Textures\/\/UI\/Pause Menu\/AbandonRunButton1.png",
-                                "AssetsName": "AbandonRunButton1.png",
-                                "LibaryPath": "Library\/Textures\/509377707.netex",
-                                "LibraryFile": "509377707.netex"
+                                "AssetsPath": "Assets\/Textures\/\/UI\/HUD\/BeskarIngot.png",
+                                "AssetsName": "BeskarIngot.png",
+                                "LibaryPath": "Library\/Textures\/2037260634.netex",
+                                "LibraryFile": "2037260634.netex"
                             },
                             "Shader": {
                                 "AssetsPath": "Assets\/Shaders\/UIShader.shader",
@@ -270,11 +235,11 @@
                     "Children": []
                 },
                 {
-                    "UID": 1180367284,
-                    "ParentUID": 263526361,
+                    "UID": 1449169683,
+                    "ParentUID": 27299344,
                     "PrefabID": 1524961430,
                     "IsPrefab": true,
-                    "Name": "MainMenuButton",
+                    "Name": "BeskarTextHubShop",
                     "IsActive": true,
                     "IsStatic": false,
                     "IsSceneRoot": false,
@@ -301,37 +266,29 @@
                             ]
                         },
                         {
-                            "Type": 23,
-                            "X": 0,
-                            "Y": -0.004999999888241291,
-                            "W": 0.27000001072883606,
-                            "H": 0.085000000894069672,
+                            "Type": 22,
+                            "Text": "160",
+                            "Color": [
+                                0.87000000476837158,
+                                0.74000000953674316,
+                                1,
+                                1
+                            ],
+                            "X": -0.77999997138977051,
+                            "Y": 0.38499999046325684,
+                            "W": 0.075999997556209564,
+                            "H": 0.0010000000474974513,
                             "childOrder": 2
-                        },
-                        {
-                            "Type": 3,
-                            "Texture": {
-                                "AssetsPath": "Assets\/Textures\/\/UI\/Pause Menu\/MainMenuButton1.png",
-                                "AssetsName": "MainMenuButton1.png",
-                                "LibaryPath": "Library\/Textures\/1712174435.netex",
-                                "LibraryFile": "1712174435.netex"
-                            },
-                            "Shader": {
-                                "AssetsPath": "Assets\/Shaders\/UIShader.shader",
-                                "AssetsName": "UIShader.shader",
-                                "LibaryPath": "Library\/Shaders\/1025410539.neshader",
-                                "LibraryFile": "1025410539.neshader"
-                            }
                         }
                     ],
                     "Children": []
                 },
                 {
-                    "UID": 1420184139,
-                    "ParentUID": 263526361,
+                    "UID": 1591341144,
+                    "ParentUID": 27299344,
                     "PrefabID": 1524961430,
                     "IsPrefab": true,
-                    "Name": "ExitButton",
+                    "Name": "BuyButton",
                     "IsActive": true,
                     "IsStatic": false,
                     "IsSceneRoot": false,
@@ -359,19 +316,19 @@
                         },
                         {
                             "Type": 23,
-                            "X": 0,
-                            "Y": -0.15000000596046448,
-                            "W": 0.25,
-                            "H": 0.085000000894069672,
+                            "X": -0.008999999612569809,
+                            "Y": 0.079999998211860657,
+                            "W": 0.11500000208616257,
+                            "H": 0.090000003576278687,
                             "childOrder": 3
                         },
                         {
                             "Type": 3,
                             "Texture": {
-                                "AssetsPath": "Assets\/Textures\/\/UI\/MainMenu\/ExitButton1.png",
-                                "AssetsName": "ExitButton1.png",
-                                "LibaryPath": "Library\/Textures\/1724300843.netex",
-                                "LibraryFile": "1724300843.netex"
+                                "AssetsPath": "Assets\/Textures\/\/UI\/Price2.png",
+                                "AssetsName": "Price2.png",
+                                "LibaryPath": "Library\/Textures\/656465180.netex",
+                                "LibraryFile": "656465180.netex"
                             },
                             "Shader": {
                                 "AssetsPath": "Assets\/Shaders\/UIShader.shader",
@@ -386,7 +343,7 @@
             ]
         },
         {
-            "UID": 514167447,
+            "UID": 499695259,
             "ParentUID": 939333725,
             "PrefabID": 1524961430,
             "IsPrefab": true,
@@ -395,7 +352,7 @@
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": true,
+            "ShowBoundingBoxes": false,
             "Components": [
                 {
                     "Type": 1,
@@ -488,8 +445,8 @@
             ],
             "Children": [
                 {
-                    "UID": 27057030,
-                    "ParentUID": 514167447,
+                    "UID": 740027442,
+                    "ParentUID": 499695259,
                     "PrefabID": 1524961430,
                     "IsPrefab": true,
                     "Name": "BeskarText",
@@ -537,8 +494,8 @@
                     "Children": []
                 },
                 {
-                    "UID": 1659518613,
-                    "ParentUID": 514167447,
+                    "UID": 1415683845,
+                    "ParentUID": 499695259,
                     "PrefabID": 1524961430,
                     "IsPrefab": true,
                     "Name": "AmmoText",
@@ -586,8 +543,8 @@
                     "Children": []
                 },
                 {
-                    "UID": 1158915330,
-                    "ParentUID": 514167447,
+                    "UID": 1610502443,
+                    "ParentUID": 499695259,
                     "PrefabID": 1524961430,
                     "IsPrefab": true,
                     "Name": "PrimaryWeapon",
@@ -652,8 +609,8 @@
                     "Children": []
                 },
                 {
-                    "UID": 705929207,
-                    "ParentUID": 514167447,
+                    "UID": 1599144333,
+                    "ParentUID": 499695259,
                     "PrefabID": 1524961430,
                     "IsPrefab": true,
                     "Name": "SecodaryWeapon",
@@ -709,8 +666,8 @@
                     "Children": []
                 },
                 {
-                    "UID": 1231777641,
-                    "ParentUID": 514167447,
+                    "UID": 50791623,
+                    "ParentUID": 499695259,
                     "PrefabID": 1524961430,
                     "IsPrefab": true,
                     "Name": "CreditsText",
@@ -758,8 +715,8 @@
                     "Children": []
                 },
                 {
-                    "UID": 34512011,
-                    "ParentUID": 514167447,
+                    "UID": 371055948,
+                    "ParentUID": 499695259,
                     "PrefabID": 1524961430,
                     "IsPrefab": true,
                     "Name": "Dash",
@@ -813,7 +770,7 @@
                         },
                         {
                             "Type": 25,
-                            "Animation Step Time": 30,
+                            "Animation Step Time": 20,
                             "Animation Loop": false,
                             "Animation Set On Loop From Start": false,
                             "Name": "DashButton",
@@ -824,8 +781,8 @@
                     "Children": []
                 },
                 {
-                    "UID": 604869324,
-                    "ParentUID": 514167447,
+                    "UID": 5141851,
+                    "ParentUID": 499695259,
                     "PrefabID": 1524961430,
                     "IsPrefab": true,
                     "Name": "Heart2",
@@ -881,8 +838,8 @@
                     "Children": []
                 },
                 {
-                    "UID": 1506223418,
-                    "ParentUID": 514167447,
+                    "UID": 39865,
+                    "ParentUID": 499695259,
                     "PrefabID": 1524961430,
                     "IsPrefab": true,
                     "Name": "Mando",
@@ -947,8 +904,8 @@
                     "Children": []
                 },
                 {
-                    "UID": 1624227416,
-                    "ParentUID": 514167447,
+                    "UID": 1723976047,
+                    "ParentUID": 499695259,
                     "PrefabID": 1524961430,
                     "IsPrefab": true,
                     "Name": "Heart1",
@@ -1004,8 +961,8 @@
                     "Children": []
                 },
                 {
-                    "UID": 1947302017,
-                    "ParentUID": 514167447,
+                    "UID": 1593831882,
+                    "ParentUID": 499695259,
                     "PrefabID": 1524961430,
                     "IsPrefab": true,
                     "Name": "Heart3",
@@ -1061,8 +1018,8 @@
                     "Children": []
                 },
                 {
-                    "UID": 1733140753,
-                    "ParentUID": 514167447,
+                    "UID": 764422976,
+                    "ParentUID": 499695259,
                     "PrefabID": 1524961430,
                     "IsPrefab": true,
                     "Name": "Credits",
@@ -1118,8 +1075,8 @@
                     "Children": []
                 },
                 {
-                    "UID": 272605611,
-                    "ParentUID": 514167447,
+                    "UID": 2014610662,
+                    "ParentUID": 499695259,
                     "PrefabID": 1524961430,
                     "IsPrefab": true,
                     "Name": "Beskar",
@@ -1177,11 +1134,11 @@
             ]
         },
         {
-            "UID": 906680067,
+            "UID": 1587517145,
             "ParentUID": 939333725,
             "PrefabID": 1524961430,
             "IsPrefab": true,
-            "Name": "HUBShopCanvas",
+            "Name": "PauseMenuCanvas",
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
@@ -1192,11 +1149,11 @@
                     "Type": 1,
                     "LocalPosition": [
                         0,
-                        -7.62939453125e-06,
-                        -1.52587890625e-05
+                        0,
+                        0
                     ],
                     "LocalRotation": [
-                        7.4505823732806675e-09,
+                        0,
                         0,
                         0,
                         1
@@ -1204,7 +1161,7 @@
                     "LocalScale": [
                         1,
                         1,
-                        0.99999988079071045
+                        1
                     ]
                 },
                 {
@@ -1219,16 +1176,11 @@
                 },
                 {
                     "Type": 24,
-                    "ResourceUID": 1649072618,
-                    "AssetsPath": "Assets\/Scripts\/\/HUBShopMenuManager.h",
-                    "DataName": "HUBShopMenuManager",
+                    "ResourceUID": 1314001864,
+                    "AssetsPath": "Assets\/Scripts\/\/PauseMenuManager.h",
+                    "DataName": "PauseMenuManager",
                     "HasInspector": true,
                     "InspectorVariables": [
-                        {
-                            "Type": 5,
-                            "Name": "beskarTextHubShopName",
-                            "string": "BeskarTextHubShop"
-                        },
                         {
                             "Type": 5,
                             "Name": "mandoName",
@@ -1236,172 +1188,49 @@
                         },
                         {
                             "Type": 5,
-                            "Name": "exitButtonName",
-                            "string": "ExitButton"
+                            "Name": "gameManagerName",
+                            "string": "Game Manager"
                         },
                         {
                             "Type": 5,
-                            "Name": "buyButtonName",
-                            "string": "BuyButton"
+                            "Name": "pauseMenuCanvasName",
+                            "string": "PauseMenuCanvas"
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "resumeButtonName",
+                            "string": "ResumeButton"
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "optionsButtonName",
+                            "string": "OptionsButton"
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "abandonRunButtonName",
+                            "string": "AbandonRunButton"
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "mainMenuButtonName",
+                            "string": "MainMenuButton"
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "exitButtonName",
+                            "string": "ExitButton"
                         }
                     ]
                 }
             ],
             "Children": [
                 {
-                    "UID": 814296994,
-                    "ParentUID": 906680067,
+                    "UID": 688532145,
+                    "ParentUID": 1587517145,
                     "PrefabID": 1524961430,
                     "IsPrefab": true,
-                    "Name": "Background",
-                    "IsActive": true,
-                    "IsStatic": false,
-                    "IsSceneRoot": false,
-                    "MaintainThroughScenes": false,
-                    "ShowBoundingBoxes": false,
-                    "Components": [
-                        {
-                            "Type": 1,
-                            "LocalPosition": [
-                                0,
-                                0,
-                                0
-                            ],
-                            "LocalRotation": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ],
-                            "LocalScale": [
-                                1,
-                                1,
-                                1
-                            ]
-                        },
-                        {
-                            "Type": 21,
-                            "X": -0.0030000000260770321,
-                            "Y": 0,
-                            "W": 0.55500000715255737,
-                            "H": 0.7149999737739563,
-                            "childOrder": 0
-                        }
-                    ],
-                    "Children": []
-                },
-                {
-                    "UID": 2017322070,
-                    "ParentUID": 906680067,
-                    "PrefabID": 1524961430,
-                    "IsPrefab": true,
-                    "Name": "Beskar",
-                    "IsActive": true,
-                    "IsStatic": false,
-                    "IsSceneRoot": false,
-                    "MaintainThroughScenes": false,
-                    "ShowBoundingBoxes": false,
-                    "Components": [
-                        {
-                            "Type": 1,
-                            "LocalPosition": [
-                                0,
-                                0,
-                                0
-                            ],
-                            "LocalRotation": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ],
-                            "LocalScale": [
-                                1,
-                                1,
-                                1
-                            ]
-                        },
-                        {
-                            "Type": 21,
-                            "X": -0.84500002861022949,
-                            "Y": 0.4050000011920929,
-                            "W": 0.05000000074505806,
-                            "H": 0.079999998211860657,
-                            "childOrder": 1
-                        },
-                        {
-                            "Type": 3,
-                            "Texture": {
-                                "AssetsPath": "Assets\/Textures\/\/UI\/HUD\/BeskarIngot.png",
-                                "AssetsName": "BeskarIngot.png",
-                                "LibaryPath": "Library\/Textures\/2037260634.netex",
-                                "LibraryFile": "2037260634.netex"
-                            },
-                            "Shader": {
-                                "AssetsPath": "Assets\/Shaders\/UIShader.shader",
-                                "AssetsName": "UIShader.shader",
-                                "LibaryPath": "Library\/Shaders\/1025410539.neshader",
-                                "LibraryFile": "1025410539.neshader"
-                            }
-                        }
-                    ],
-                    "Children": []
-                },
-                {
-                    "UID": 1338763802,
-                    "ParentUID": 906680067,
-                    "PrefabID": 1524961430,
-                    "IsPrefab": true,
-                    "Name": "BeskarTextHubShop",
-                    "IsActive": true,
-                    "IsStatic": false,
-                    "IsSceneRoot": false,
-                    "MaintainThroughScenes": false,
-                    "ShowBoundingBoxes": false,
-                    "Components": [
-                        {
-                            "Type": 1,
-                            "LocalPosition": [
-                                0,
-                                0,
-                                0
-                            ],
-                            "LocalRotation": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ],
-                            "LocalScale": [
-                                1,
-                                1,
-                                1
-                            ]
-                        },
-                        {
-                            "Type": 22,
-                            "Text": "160",
-                            "Color": [
-                                0.87000000476837158,
-                                0.74000000953674316,
-                                1,
-                                1
-                            ],
-                            "X": -0.77999997138977051,
-                            "Y": 0.38499999046325684,
-                            "W": 0.075999997556209564,
-                            "H": 0.0010000000474974513,
-                            "childOrder": 2
-                        }
-                    ],
-                    "Children": []
-                },
-                {
-                    "UID": 579931472,
-                    "ParentUID": 906680067,
-                    "PrefabID": 1524961430,
-                    "IsPrefab": true,
-                    "Name": "BuyButton",
+                    "Name": "ResumeButton",
                     "IsActive": true,
                     "IsStatic": false,
                     "IsSceneRoot": false,
@@ -1429,19 +1258,190 @@
                         },
                         {
                             "Type": 23,
-                            "X": -0.008999999612569809,
-                            "Y": 0.079999998211860657,
-                            "W": 0.11500000208616257,
-                            "H": 0.090000003576278687,
+                            "X": 0,
+                            "Y": 0.32499998807907104,
+                            "W": 0.25999999046325684,
+                            "H": 0.059999998658895493,
+                            "childOrder": 0
+                        },
+                        {
+                            "Type": 3,
+                            "Texture": {
+                                "AssetsPath": "Assets\/Textures\/\/UI\/Pause Menu\/ResumeButton1.png",
+                                "AssetsName": "ResumeButton1.png",
+                                "LibaryPath": "Library\/Textures\/774061459.netex",
+                                "LibraryFile": "774061459.netex"
+                            },
+                            "Shader": {
+                                "AssetsPath": "Assets\/Shaders\/UIShader.shader",
+                                "AssetsName": "UIShader.shader",
+                                "LibaryPath": "Library\/Shaders\/1025410539.neshader",
+                                "LibraryFile": "1025410539.neshader"
+                            }
+                        }
+                    ],
+                    "Children": []
+                },
+                {
+                    "UID": 1153722541,
+                    "ParentUID": 1587517145,
+                    "PrefabID": 1524961430,
+                    "IsPrefab": true,
+                    "Name": "AbandonRunButton",
+                    "IsActive": true,
+                    "IsStatic": false,
+                    "IsSceneRoot": false,
+                    "MaintainThroughScenes": false,
+                    "ShowBoundingBoxes": false,
+                    "Components": [
+                        {
+                            "Type": 1,
+                            "LocalPosition": [
+                                0,
+                                0,
+                                0
+                            ],
+                            "LocalRotation": [
+                                0,
+                                0,
+                                0,
+                                1
+                            ],
+                            "LocalScale": [
+                                1,
+                                1,
+                                1
+                            ]
+                        },
+                        {
+                            "Type": 23,
+                            "X": 0,
+                            "Y": 0.14499999582767487,
+                            "W": 0.27000001072883606,
+                            "H": 0.079999998211860657,
+                            "childOrder": 1
+                        },
+                        {
+                            "Type": 3,
+                            "Texture": {
+                                "AssetsPath": "Assets\/Textures\/\/UI\/Pause Menu\/AbandonRunButton1.png",
+                                "AssetsName": "AbandonRunButton1.png",
+                                "LibaryPath": "Library\/Textures\/509377707.netex",
+                                "LibraryFile": "509377707.netex"
+                            },
+                            "Shader": {
+                                "AssetsPath": "Assets\/Shaders\/UIShader.shader",
+                                "AssetsName": "UIShader.shader",
+                                "LibaryPath": "Library\/Shaders\/1025410539.neshader",
+                                "LibraryFile": "1025410539.neshader"
+                            }
+                        }
+                    ],
+                    "Children": []
+                },
+                {
+                    "UID": 1338113115,
+                    "ParentUID": 1587517145,
+                    "PrefabID": 1524961430,
+                    "IsPrefab": true,
+                    "Name": "MainMenuButton",
+                    "IsActive": true,
+                    "IsStatic": false,
+                    "IsSceneRoot": false,
+                    "MaintainThroughScenes": false,
+                    "ShowBoundingBoxes": false,
+                    "Components": [
+                        {
+                            "Type": 1,
+                            "LocalPosition": [
+                                0,
+                                0,
+                                0
+                            ],
+                            "LocalRotation": [
+                                0,
+                                0,
+                                0,
+                                1
+                            ],
+                            "LocalScale": [
+                                1,
+                                1,
+                                1
+                            ]
+                        },
+                        {
+                            "Type": 23,
+                            "X": 0,
+                            "Y": -0.004999999888241291,
+                            "W": 0.27000001072883606,
+                            "H": 0.085000000894069672,
+                            "childOrder": 2
+                        },
+                        {
+                            "Type": 3,
+                            "Texture": {
+                                "AssetsPath": "Assets\/Textures\/\/UI\/Pause Menu\/MainMenuButton1.png",
+                                "AssetsName": "MainMenuButton1.png",
+                                "LibaryPath": "Library\/Textures\/1712174435.netex",
+                                "LibraryFile": "1712174435.netex"
+                            },
+                            "Shader": {
+                                "AssetsPath": "Assets\/Shaders\/UIShader.shader",
+                                "AssetsName": "UIShader.shader",
+                                "LibaryPath": "Library\/Shaders\/1025410539.neshader",
+                                "LibraryFile": "1025410539.neshader"
+                            }
+                        }
+                    ],
+                    "Children": []
+                },
+                {
+                    "UID": 1079710701,
+                    "ParentUID": 1587517145,
+                    "PrefabID": 1524961430,
+                    "IsPrefab": true,
+                    "Name": "ExitButton",
+                    "IsActive": true,
+                    "IsStatic": false,
+                    "IsSceneRoot": false,
+                    "MaintainThroughScenes": false,
+                    "ShowBoundingBoxes": false,
+                    "Components": [
+                        {
+                            "Type": 1,
+                            "LocalPosition": [
+                                0,
+                                0,
+                                0
+                            ],
+                            "LocalRotation": [
+                                0,
+                                0,
+                                0,
+                                1
+                            ],
+                            "LocalScale": [
+                                1,
+                                1,
+                                1
+                            ]
+                        },
+                        {
+                            "Type": 23,
+                            "X": 0,
+                            "Y": -0.15000000596046448,
+                            "W": 0.25,
+                            "H": 0.085000000894069672,
                             "childOrder": 3
                         },
                         {
                             "Type": 3,
                             "Texture": {
-                                "AssetsPath": "Assets\/Textures\/\/UI\/Price2.png",
-                                "AssetsName": "Price2.png",
-                                "LibaryPath": "Library\/Textures\/656465180.netex",
-                                "LibraryFile": "656465180.netex"
+                                "AssetsPath": "Assets\/Textures\/\/UI\/MainMenu\/ExitButton1.png",
+                                "AssetsName": "ExitButton1.png",
+                                "LibaryPath": "Library\/Textures\/1724300843.netex",
+                                "LibraryFile": "1724300843.netex"
                             },
                             "Shader": {
                                 "AssetsPath": "Assets\/Shaders\/UIShader.shader",
@@ -1456,7 +1456,7 @@
             ]
         },
         {
-            "UID": 1974787738,
+            "UID": 1917549595,
             "ParentUID": 939333725,
             "PrefabID": 1524961430,
             "IsPrefab": true,
@@ -1573,8 +1573,8 @@
             ],
             "Children": [
                 {
-                    "UID": 250177601,
-                    "ParentUID": 1974787738,
+                    "UID": 1623932360,
+                    "ParentUID": 1917549595,
                     "PrefabID": 1524961430,
                     "IsPrefab": true,
                     "Name": "SpawnTrooper",
@@ -1624,8 +1624,8 @@
                     "Children": []
                 },
                 {
-                    "UID": 337302228,
-                    "ParentUID": 1974787738,
+                    "UID": 909696347,
+                    "ParentUID": 1917549595,
                     "PrefabID": 1524961430,
                     "IsPrefab": true,
                     "Name": "HealMando",
@@ -1675,8 +1675,8 @@
                     "Children": []
                 },
                 {
-                    "UID": 1097124761,
-                    "ParentUID": 1974787738,
+                    "UID": 1365993517,
+                    "ParentUID": 1917549595,
                     "PrefabID": 1524961430,
                     "IsPrefab": true,
                     "Name": "fpsText",
@@ -1724,8 +1724,8 @@
                     "Children": []
                 },
                 {
-                    "UID": 1051268142,
-                    "ParentUID": 1974787738,
+                    "UID": 635853184,
+                    "ParentUID": 1917549595,
                     "PrefabID": 1524961430,
                     "IsPrefab": true,
                     "Name": "GetBeskarIngots",
@@ -1775,8 +1775,8 @@
                     "Children": []
                 },
                 {
-                    "UID": 178808188,
-                    "ParentUID": 1974787738,
+                    "UID": 1945894055,
+                    "ParentUID": 1917549595,
                     "PrefabID": 1524961430,
                     "IsPrefab": true,
                     "Name": "SpawnBlurgg",
@@ -1826,8 +1826,8 @@
                     "Children": []
                 },
                 {
-                    "UID": 1905697193,
-                    "ParentUID": 1974787738,
+                    "UID": 744954955,
+                    "ParentUID": 1917549595,
                     "PrefabID": 1524961430,
                     "IsPrefab": true,
                     "Name": "SkipRoom",
@@ -1877,8 +1877,8 @@
                     "Children": []
                 },
                 {
-                    "UID": 280181754,
-                    "ParentUID": 1974787738,
+                    "UID": 1427694203,
+                    "ParentUID": 1917549595,
                     "PrefabID": 1524961430,
                     "IsPrefab": true,
                     "Name": "GetCredits",
@@ -1928,8 +1928,8 @@
                     "Children": []
                 },
                 {
-                    "UID": 1666687182,
-                    "ParentUID": 1974787738,
+                    "UID": 2013830136,
+                    "ParentUID": 1917549595,
                     "PrefabID": 1524961430,
                     "IsPrefab": true,
                     "Name": "GodMode",
