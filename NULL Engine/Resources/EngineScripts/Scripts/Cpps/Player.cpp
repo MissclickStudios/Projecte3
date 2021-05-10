@@ -434,6 +434,10 @@ void Player::ManageMovement()
 				GatherMoveInputs();
 	}
 
+	C_ParticleSystem* dust = GetParticles("Run");
+	if (dust != nullptr)
+		dust->StopSpawn();
+
 	if (rigidBody)
 		switch (moveState)
 		{
@@ -445,6 +449,9 @@ void Player::ManageMovement()
 		case PlayerState::RUN:
 			currentAnimation = &runAnimation;
 			Movement();
+			
+			if (dust != nullptr)
+				dust->ResumeSpawn();
 			break;
 		case PlayerState::DASH_IN:
 			if (dashAudio != nullptr)
