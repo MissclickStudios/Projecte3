@@ -162,15 +162,22 @@ void Entity::PostUpdate()
 {
 	if (animator != nullptr && currentAnimation != nullptr)
 	{
-		AnimatorClip* clip = animator->GetTrack("Preview").GetCurrentClip(); //Fix this puto mico angel
-		if (clip != nullptr)
+		AnimatorClip* clip = animator->GetTrack("Preview").GetCurrentClip();
+
+		if (clip == nullptr || clip->GetName() != currentAnimation->name)										// If no clip playing or animation/clip changed
+			animator->PlayClip(currentAnimation->track.c_str(), currentAnimation->name.c_str(), currentAnimation->blendTime);
+
+		/*if (clip != nullptr)
 		{
-			std::string clipName = clip->GetName();
-			if (clipName != currentAnimation->name)	// If the animtion changed play the wanted clip
-				animator->PlayClip("Preview",currentAnimation->name.c_str(), currentAnimation->blendTime);
+			if (clip->GetName() != currentAnimation->name)	// If the animtion changed play the wanted clip
+			{
+				animator->PlayClip("Preview", currentAnimation->name.c_str(), currentAnimation->blendTime);
+			}
 		}
 		else
-			animator->PlayClip("Preview",currentAnimation->name.c_str(), currentAnimation->blendTime); // If there is no clip playing play the current animation
+		{
+			animator->PlayClip("Preview", currentAnimation->name.c_str(), currentAnimation->blendTime); // If there is no clip playing play the current animation
+		}*/
 	}
 }
 

@@ -1655,7 +1655,7 @@ uint32 M_ResourceManager::ImportFromAssets(const char* assetsPath)
 		case ResourceType::SHADER:			{ success = Importer::Shaders::Import(resource->GetAssetsPath(), (R_Shader*)resource); }	break;
 		case ResourceType::PARTICLE_SYSTEM:	{ success = Importer::ImportParticles(buffer, (R_ParticleSystem*)resource); }				break;
 		case ResourceType::SCRIPT:			{ success = Importer::Scripts::Import(assetsPath, buffer, read, (R_Script*)resource); }		break;
-		case ResourceType::NAVMESH:	{ success = Importer::ImportNavMesh(buffer, (R_NavMesh*)resource); }						break;
+		case ResourceType::NAVMESH:			{ success = Importer::ImportNavMesh(buffer, (R_NavMesh*)resource); }						break;
 		}
 
 		RELEASE_ARRAY(buffer);

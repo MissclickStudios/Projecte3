@@ -2368,11 +2368,12 @@ void E_Inspector::DisplayTrackViewer(C_Animator* cAnimator)
 		{
 			AnimatorTrack* track	= &trackItem->second;
 			AnimatorClip* clip		= track->GetCurrentClip();
+			AnimatorClip* blendClip = track->GetBlendingClip();
 			GameObject* rootBone	= track->GetRootBone();
 			float trackSpeed		= track->GetTrackSpeed();
 			bool interpolate		= track->GetInterpolate();
 
-			ImGui::BeginChild(trackItem->first.c_str(), ImVec2(0.0f, 185.0f), true, ImGuiWindowFlags_HorizontalScrollbar);
+			ImGui::BeginChild(trackItem->first.c_str(), ImVec2(0.0f, 202.5f), true, ImGuiWindowFlags_HorizontalScrollbar);
 
 			ImGui::TextColored(Cyan.C_Array(), "Track Controls:");
 
@@ -2434,15 +2435,16 @@ void E_Inspector::DisplayTrackViewer(C_Animator* cAnimator)
 			ImGui::Separator();
 			ImGui::Separator();
 
-			ImGui::TextColored(Cyan.C_Array(), "Track Stats:");
-
-			ImGui::Text("Track State:");	ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "{ %s }",	track->GetTrackStateAsString());
+			ImGui::TextColored(Cyan.C_Array(), "Track Stats:"); ImGui::SameLine(ImGui::GetWindowWidth() * 0.5f);
+			ImGui::Text("Track State:");						ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "{ %s }",	track->GetTrackStateAsString());
 
 			if (clip != nullptr)
 			{
-				ImGui::Text("Clip Time:");	ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "  %.3fs",	(clip != nullptr) ? clip->GetClipTime() : 0.0f);
-				ImGui::Text("Clip Frame:");	ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), " %.3f",	(clip != nullptr) ? clip->GetClipFrame() : 0.0f);
-				ImGui::Text("Clip Tick:");	ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "  %u",	(clip != nullptr) ? clip->GetClipTick() : 0.0f);
+				ImGui::Text("Current Clip:");	ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), " %s",			clip->GetName());
+				ImGui::Text("Blending Clip:");	ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "%s",			(blendClip != nullptr) ? blendClip->GetName() : "[NONE]");
+				ImGui::Text("Clip Time:");		ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "    %.3fs",	clip->GetClipTime());
+				ImGui::Text("Clip Frame:");		ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "   %.3f",		clip->GetClipFrame());
+				ImGui::Text("Clip Tick:");		ImGui::SameLine();	ImGui::TextColored(Yellow.C_Array(), "    %u",		clip->GetClipTick());
 			}
 			else
 			{
@@ -2702,7 +2704,7 @@ void E_Inspector::ClipEditorWindow(C_Animator* cAnimator)
 				editedSpeed		= selectedClip->GetSpeed();
 				editedLoop		= selectedClip->IsLooped();
 
-				editedMax		= editedEnd;
+				editedMax		= (selectedAnimation != nullptr) ? selectedAnimation->GetDuration() : 0;
 			}
 		}
 		

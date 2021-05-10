@@ -126,12 +126,12 @@ bool AnimatorClip::ClipIsValid() const
 
 void AnimatorClip::StepClipToPrevKeyframe()
 {
-	tick = (tick != start) ? --tick : end;
+	tick = ((tick + start) > start) ? --tick : (end - start);
 }
 
 void AnimatorClip::StepClipToNextKeyframe()
 {
-	tick = (tick != end) ? ++tick : start;
+	tick = ((tick + start) < end) ? ++tick : 0;
 }
 
 // --- CLIP TIME DATA GET/SET METHODS

@@ -610,14 +610,14 @@ bool C_Animator::EditClip(const char* originalClipName, const AnimatorClip& edit
 {	
 	if (clips.find(originalClipName) == clips.end())
 		return false;
-	
+
+	DeleteClip(originalClipName);
+
 	if (clips.find(editedClip.GetName()) != clips.end())
 	{
 		LOG("[ERROR] Animator Component: Could not Edit Clip! Error: There was another clip with the same name as the given editedClip.");
 		return false;
 	}
-
-	DeleteClip(originalClipName);
 
 	return AddClip(editedClip);
 }
@@ -699,10 +699,18 @@ void C_Animator::PlayClip(const char* trackName, const char* clipName, uint blen
 		LOG("[ERROR] Animator Component: Could not Play Clip! Error: Could not find any clip with the given name!");
 		return;
 	}
+	if (clip->second.GetAnimation() == nullptr)
+	{
+		LOG("[ERROR] Animator Component: Could not Play Clip! Error: Clip with given name had no R_Animation*.");
+		return;
+	}
 	
-	track->second.PlayClip(&clip->second, GetAnimationBoneLinks(clip->second.GetAnimation()->GetUID()), blendFrames);
+	bool success = track->second.PlayClip(&clip->second, GetAnimationBoneLinks(clip->second.GetAnimation()->GetUID()), blendFrames);
 
-	Play();
+	if (success && (animatorState != AnimatorState::PLAY))
+	{
+		Play();
+	}
 }
 
 void C_Animator::PlayClip(const char* trackName, const char* clipName, float blendTime)
@@ -712,18 +720,26 @@ void C_Animator::PlayClip(const char* trackName, const char* clipName, float ble
 
 	if (track == tracks.end())
 	{
-		LOG("[ERROR] Animator Component: Could not Play Clip! Error: Could not find any track with the given name!");
+		LOG("[ERROR] Animator Component: Could not Play Clip! Error: Could not find any track with the given name.");
 		return;
 	}
 	if (clip == clips.end())
 	{
-		LOG("[ERROR] Animator Component: Could not Play Clip! Error: Could not find any clip with the given name!");
+		LOG("[ERROR] Animator Component: Could not Play Clip! Error: Could not find any clip with the given name.");
+		return;
+	}
+	if (clip->second.GetAnimation() == nullptr)
+	{
+		LOG("[ERROR] Animator Component: Could not Play Clip! Error: Clip with given name had no R_Animation*.");
 		return;
 	}
 
-	track->second.PlayClip(&clip->second, GetAnimationBoneLinks(clip->second.GetAnimation()->GetUID()), (uint)(blendTime * clip->second.GetAnimationTicksPerSecond()));
+	bool success = track->second.PlayClip(&clip->second, GetAnimationBoneLinks(clip->second.GetAnimation()->GetUID()), (uint)(blendTime * clip->second.GetAnimationTicksPerSecond()));
 
-	Play();
+	if (success && (animatorState != AnimatorState::PLAY))
+	{
+		Play();
+	}
 }
 
 void C_Animator::PlayClip(AnimatorTrack* track, AnimatorClip* clip, uint blendFrames)
@@ -744,9 +760,12 @@ void C_Animator::PlayClip(AnimatorTrack* track, AnimatorClip* clip, uint blendFr
 		return;
 	}
 
-	track->PlayClip(clip, GetAnimationBoneLinks(clip->GetAnimation()->GetUID()), blendFrames);
+	bool success = track->PlayClip(clip, GetAnimationBoneLinks(clip->GetAnimation()->GetUID()), blendFrames);
 
-	Play();
+	if (success && (animatorState != AnimatorState::PLAY))
+	{
+		Play();
+	}
 }
 
 void C_Animator::PlayClip(AnimatorTrack* track, AnimatorClip* clip, float blendTime)
@@ -767,9 +786,12 @@ void C_Animator::PlayClip(AnimatorTrack* track, AnimatorClip* clip, float blendT
 		return;
 	}
 
-	track->PlayClip(clip, GetAnimationBoneLinks(clip->GetAnimation()->GetUID()), (uint)(blendTime * clip->GetAnimation()->GetTicksPerSecond()));
+	bool success = track->PlayClip(clip, GetAnimationBoneLinks(clip->GetAnimation()->GetUID()), (uint)(blendTime * clip->GetAnimation()->GetTicksPerSecond()));
 
-	Play();
+	if (success && (animatorState != AnimatorState::PLAY))
+	{
+		Play();
+	}
 }
 
 void C_Animator::SetTrackWithClip(const char* trackName, const char* clipName)
