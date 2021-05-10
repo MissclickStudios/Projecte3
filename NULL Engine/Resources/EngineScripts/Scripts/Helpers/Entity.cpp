@@ -139,8 +139,8 @@ void Entity::PreUpdate()
 		if (hitTimer.ReadSec() > hitDuration)
 		{
 			hitTimer.Stop();
-			//if (GetParticles("Hit") != nullptr)
-			//	GetParticles("Hit")->StopSpawn();
+			if (GetParticles("Hit") != nullptr)
+				GetParticles("Hit")->StopSpawn();
 		}
 	}
 }
@@ -214,8 +214,8 @@ void Entity::TakeDamage(float damage)
 		health = 0.0f;
 
 	hitTimer.Start();
-	//if (GetParticles("Hit") != nullptr)
-	//	GetParticles("Hit")->ResumeSpawn();
+	if (GetParticles("Hit") != nullptr)
+		GetParticles("Hit")->ResumeSpawn();
 
 	if (damageAudio != nullptr)
 		damageAudio->PlayFx(damageAudio->GetEventId());

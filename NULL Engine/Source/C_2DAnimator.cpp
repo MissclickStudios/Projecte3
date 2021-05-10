@@ -179,6 +179,7 @@ void C_2DAnimator::GetAnimationSprites(const char* name, int animationDestinatio
 
 void C_2DAnimator::PlayAnimation(bool loop, int animationNumber)
 {
+	if (!this) return;
 	animationNumberPlaying = animationNumber;
 	playAnimation = true;
 	animationLoop = loop;
