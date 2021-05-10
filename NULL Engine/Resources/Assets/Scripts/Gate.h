@@ -3,6 +3,7 @@
 #include "ScriptMacros.h"
 
 class GameObject;
+class C_AudioSource;
 
 class SCRIPTS_API Gate : public Script {
 public:
@@ -17,10 +18,15 @@ public:
 
 	void Unlock();
 
+	float quoteTimer = 0.f;
+	float quoteDelay = 5.f;
+
 	std::string gameManagerName;
 	bool isLocked = true;
+
+	C_AudioSource* quote = nullptr;
 private:
-	GameObject* gameManager;
+	GameObject* gameManager = nullptr;
 };
 
 SCRIPTS_FUNCTION Gate* CreateGate();
