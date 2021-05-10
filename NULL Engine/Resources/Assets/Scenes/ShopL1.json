@@ -962,7 +962,7 @@
         },
         {
             "UID": 296213747,
-            "ParentUID": 730339335,
+            "ParentUID": 106453230,
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "MainScene",
@@ -1107,8 +1107,8 @@
                         },
                         {
                             "Type": 5,
-                            "Name": "continueButtonName",
-                            "string": "ContinueButton"
+                            "Name": "resumeButtonName",
+                            "string": "ResumeButton"
                         },
                         {
                             "Type": 5,
@@ -4769,23 +4769,8 @@
                         },
                         {
                             "Type": 5,
-                            "Name": "debugMenuCanvasName",
-                            "string": "DebugMenuCanvas"
-                        },
-                        {
-                            "Type": 5,
-                            "Name": "hubShopCanvasName",
-                            "string": "hubShopCanvas"
-                        },
-                        {
-                            "Type": 5,
                             "Name": "hudCanvasName",
                             "string": "hubShopCanvas"
-                        },
-                        {
-                            "Type": 5,
-                            "Name": "pauseMenuCanvasName",
-                            "string": "pauseMenuCanvas"
                         },
                         {
                             "Type": 5,
@@ -5196,6 +5181,16 @@
                             "string": "PlayerSpawn"
                         },
                         {
+                            "Type": 0,
+                            "Name": "l1Easy",
+                            "int": -1
+                        },
+                        {
+                            "Type": 0,
+                            "Name": "l1Intermediate",
+                            "int": -1
+                        },
+                        {
                             "Type": 7,
                             "Name": "level1",
                             "vectorstring": [
@@ -5208,9 +5203,29 @@
                             ]
                         },
                         {
+                            "Type": 0,
+                            "Name": "RuinsEasy",
+                            "int": -1
+                        },
+                        {
+                            "Type": 0,
+                            "Name": "RuinsIntermediate",
+                            "int": -1
+                        },
+                        {
+                            "Type": 7,
+                            "Name": "level1Ruins",
+                            "vectorstring": []
+                        },
+                        {
                             "Type": 4,
                             "Name": "playerPrefab",
                             "prefab": 1997884416
+                        },
+                        {
+                            "Type": 4,
+                            "Name": "groguPrefab",
+                            "prefab": 0
                         }
                     ]
                 }
@@ -6268,7 +6283,7 @@
                     "Type": 1,
                     "LocalPosition": [
                         0,
-                        4.9034452438354492,
+                        5.7154541015625,
                         -0.41589546203613281
                     ],
                     "LocalRotation": [
@@ -6293,7 +6308,7 @@
                     "Is Trigger": false,
                     "Show Collider": true,
                     "Size X": 300,
-                    "Size Y": 1,
+                    "Size Y": 10,
                     "Size Z": 300,
                     "Center X": 0,
                     "Center Y": 0,
