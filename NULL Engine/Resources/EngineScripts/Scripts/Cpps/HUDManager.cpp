@@ -222,102 +222,102 @@ void HUDManager::CleanUp()
 void HUDManager::ManageHeartImage(int hp)
 {
 
-	//switch(hp) 
-	//{
-	//case 0:
-	//	heart1->SwapTexture(emptyHeart);
-	//	heart2->SwapTexture(emptyHeart);
-	//	heart3->SwapTexture(emptyHeart);
-	//	if (!health1)
-	//	{
-	//		heart1Image->PlayAnimation(false, 1);
-	//		health1 = true;
-	//	}
-	//	health2 = false;
-	//	health3 = false;
-	//	health4 = false;
-	//	health5 = false;
-	//	health6 = false;
-	//	break;
-	//case 1:	  
-	//	heart1->SwapTexture(halfHeart);
-	//	heart2->SwapTexture(emptyHeart);
-	//	heart3->SwapTexture(emptyHeart);
-	//	if (!health2)
-	//	{
-	//	heart1Image->PlayAnimation(false, 2);
-	//	health2 = true;
-	//	}
-	//	health1 = false;
-	//	health3 = false;
-	//	health4 = false;
-	//	health5 = false;
-	//	health6 = false;
-	//	break;
-	//case 2:	  
-	//	heart1->SwapTexture(fullHeart);
-	//	heart2->SwapTexture(emptyHeart);
-	//	heart3->SwapTexture(emptyHeart);
-	//	if (!health3)
-	//	{
-	//	heart2Image->PlayAnimation(false, 1);
-	//	health3 = true;
-	//	}
-	//	health1 = false;
-	//	health2 = false;
-	//	health4 = false;
-	//	health5 = false;
-	//	health6 = false;
-	//	break;
-	//case 3:	 
-	//	heart1->SwapTexture(fullHeart);
-	//	heart2->SwapTexture(halfHeart);
-	//	heart3->SwapTexture(emptyHeart);
-	//	if (!health4)
-	//	{
-	//	heart2Image->PlayAnimation(false, 2);
-	//	health4 = true;
-	//	}
-	//	health1 = false;
-	//	health2 = false;
-	//	health3 = false;
-	//	health5 = false;
-	//	health6 = false;
-	//	break;
-	//case 4:	  
-	//	heart1->SwapTexture(fullHeart);
-	//	heart2->SwapTexture(fullHeart);
-	//	heart3->SwapTexture(emptyHeart);
-	//	if (!health5)
-	//	{
-	//	heart3Image->PlayAnimation(false, 1);
-	//	health5 = true;
-	//	}
-	//	health1 = false;
-	//	health2 = false;
-	//	health3 = false;
-	//	health4 = false;
-	//	health6 = false;
-	//	break;
-	//case 5:	  
-	//	heart1->SwapTexture(fullHeart);
-	//	heart2->SwapTexture(fullHeart);
-	//	heart3->SwapTexture(halfHeart);
-	//	if (!health6)
-	//	{
-	//	heart3Image->PlayAnimation(false, 2);
-	//	health6 = true;
-	//	}
-	//	health1 = false;
-	//	health2 = false;
-	//	health3 = false;
-	//	health4 = false;
-	//	health5 = false;
-	//	break;
-	//case 6:		
-	//	heart1->SwapTexture(fullHeart);
-	//	heart2->SwapTexture(fullHeart);
-	//	heart3->SwapTexture(fullHeart);
-	//	break;
-	//}
+	switch(hp) 
+	{
+	case 0:
+		heart1->SwapTexture(emptyHeart);
+		heart2->SwapTexture(emptyHeart);
+		heart3->SwapTexture(emptyHeart);
+		if (!health1)
+		{
+			heart1Image->PlayAnimation(false, 1);
+			health1 = true;
+		}
+		health2 = false;
+		health3 = false;
+		health4 = false;
+		health5 = false;
+		health6 = false;
+		break;
+	case 1:	  
+		heart1->SwapTexture(halfHeart);
+		heart2->SwapTexture(emptyHeart);
+		heart3->SwapTexture(emptyHeart);
+		if (!health2)
+		{
+		heart1Image->PlayAnimation(false, 2);
+		health2 = true;
+		}
+		health1 = false;
+		health3 = false;
+		health4 = false;
+		health5 = false;
+		health6 = false;
+		break;
+	case 2:	  
+		heart1->SwapTexture(fullHeart);
+		heart2->SwapTexture(emptyHeart);
+		heart3->SwapTexture(emptyHeart);
+		if (!health3)
+		{
+		heart2Image->PlayAnimation(false, 1);
+		health3 = true;
+		}
+		health1 = false;
+		health2 = false;
+		health4 = false;
+		health5 = false;
+		health6 = false;
+		break;
+	case 3:	 
+		heart1->SwapTexture(fullHeart);
+		heart2->SwapTexture(halfHeart);
+		heart3->SwapTexture(emptyHeart);
+		if (!health4)
+		{
+		heart2Image->PlayAnimation(false, 2);
+		health4 = true;
+		}
+		health1 = false;
+		health2 = false;
+		health3 = false;
+		health5 = false;
+		health6 = false;
+		break;
+	case 4:	  
+		heart1->SwapTexture(fullHeart);
+		heart2->SwapTexture(fullHeart);
+		heart3->SwapTexture(emptyHeart);
+		if (!health5)
+		{
+		heart3Image->PlayAnimation(false, 1);
+		health5 = true;
+		}
+		health1 = false;
+		health2 = false;
+		health3 = false;
+		health4 = false;
+		health6 = false;
+		break;
+	case 5:	  
+		heart1->SwapTexture(fullHeart);
+		heart2->SwapTexture(fullHeart);
+		heart3->SwapTexture(halfHeart);
+		if (!health6)
+		{
+		heart3Image->PlayAnimation(false, 2);
+		health6 = true;
+		}
+		health1 = false;
+		health2 = false;
+		health3 = false;
+		health4 = false;
+		health5 = false;
+		break;
+	case 6:		
+		heart1->SwapTexture(fullHeart);
+		heart2->SwapTexture(fullHeart);
+		heart3->SwapTexture(fullHeart);
+		break;
+	}
 }
