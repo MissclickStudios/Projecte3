@@ -20,11 +20,9 @@ PauseMenuManager::~PauseMenuManager()
 
 void PauseMenuManager::Start()
 {
-	GameObject* a = App->scene->GetGameObjectByName(pauseMenuCanvasName.c_str());
-	if(a != nullptr)
-		pauseMenuCanvas = (C_Canvas*)a->GetComponent<C_Canvas>();
+	pauseMenuCanvas = (C_Canvas*)gameObject->GetComponent<C_Canvas>();
 
-	a = App->scene->GetGameObjectByName(resumeButtonName.c_str());
+	GameObject* a = App->scene->GetGameObjectByName(resumeButtonName.c_str());
 	if (a != nullptr)
 		resumeButton = (C_UI_Button*)a->GetComponent<C_UI_Button>();
 
@@ -50,7 +48,7 @@ void PauseMenuManager::Update()
 {
 	if (pauseMenuCanvas != nullptr)
 	{
-		if (App->input->GetKey(SDL_SCANCODE_BACKSPACE) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(6) == ButtonState::BUTTON_DOWN)
+		if (App->input->GetKey(SDL_SCANCODE_ESCAPE) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(6) == ButtonState::BUTTON_DOWN)
 		{
 			if (canvasActive)
 			{
