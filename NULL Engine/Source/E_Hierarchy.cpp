@@ -63,7 +63,7 @@ void E_Hierarchy::PrintGameObjectsOnHierarchy()
 void E_Hierarchy::ProcessGameObject(GameObject* gameObject)
 {	
 	// ------ Setting the tree node's color. ------
-	ImVec4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
+	ImVec4 color = White.C_Array();
 	
 	if (!gameObject->IsActive())														// If the given game object is not active, the text of the tree node will be displayed in GREY.
 	{
@@ -73,6 +73,11 @@ void E_Hierarchy::ProcessGameObject(GameObject* gameObject)
 	if (gameObject->isBone)
 	{
 		color = Pink.C_Array();
+	}
+
+	if (gameObject->isPrefab)
+	{
+		color = LightBlue.C_Array();
 	}
 
 	ImGui::PushStyleColor(ImGuiCol_Text, color);
