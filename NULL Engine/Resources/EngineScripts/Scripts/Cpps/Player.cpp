@@ -169,8 +169,6 @@ void Player::SetUp()
 
 void Player::Behavior()
 {
-	if (App->input->GetKey(SDL_SCANCODE_1) == KeyState::KEY_DOWN)
-		AddEffect(EffectType::KNOCKBACK, 2.0f, false, new std::pair<bool, float3>(true, { 100000, 1000000, 0 }));
 	ManageMovement();
 	if (moveState != PlayerState::DEAD)
 	{
