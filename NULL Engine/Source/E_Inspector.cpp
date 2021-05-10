@@ -3260,6 +3260,8 @@ void E_Inspector::DisplayParticleSystemControls(C_ParticleSystem* cParticleSyste
 		std::vector<ResourceBase> particleSystems;
 		App->resourceManager->GetResourceBases<R_ParticleSystem>(particleSystems);
 
+		
+
 		for (auto it = particleSystems.begin(); it != particleSystems.end(); ++it)
 		{
 			bool isSelected = (strcmp(cParticleSystem->resource->GetAssetsPath(),(*it).assetsPath.c_str()) == 0);
@@ -3360,6 +3362,15 @@ void E_Inspector::DisplayEmitterInstances(C_ParticleSystem* cParticleSystem)
 				std::vector<ResourceBase> textures;
 				App->resourceManager->GetResourceBases<R_Texture>(textures);
 
+				//Sort by name
+				struct {
+					bool operator()(ResourceBase a, ResourceBase b) const {
+						return App->fileSystem->GetLastDirectory(a.assetsPath.c_str()) > App->fileSystem->GetLastDirectory(b.assetsPath.c_str());
+					}
+				} customTextureSort;
+
+				std::sort(textures.begin(), textures.end(), customTextureSort);
+
 				for (auto it = textures.begin(); it != textures.end(); ++it)
 				{
 					bool isSelected = true;
@@ -3367,7 +3378,7 @@ void E_Inspector::DisplayEmitterInstances(C_ParticleSystem* cParticleSystem)
 					if(emitter->emitterTexture != nullptr)
 						isSelected = (strcmp(emitter->emitterTexture->GetAssetsPath(), (*it).assetsPath.c_str()) == 0);
 
-					if (ImGui::Selectable((*it).assetsPath.c_str(), isSelected))
+					if (ImGui::Selectable(App->fileSystem->GetLastDirectoryAndFile((*it).assetsPath.c_str()).c_str(), isSelected))
 					{
 						emitter->SetTexture((*it));
 					}
