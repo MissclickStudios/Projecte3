@@ -697,5 +697,5 @@ void Player::Dash()
 	if (rigidBody != nullptr)
 		rigidBody->Set2DVelocity(direction * DashSpeed());
 
-	dashImage->PlayAnimation(false, 1);
+	//dashImage->PlayAnimation(false, 1);
 }
