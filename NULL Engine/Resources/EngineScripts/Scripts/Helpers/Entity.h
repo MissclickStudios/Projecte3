@@ -29,7 +29,8 @@ enum class EntityType // jeje titties
 	DARK_TROOPER,
 	IG11,
 	IG12,
-	TURRET
+	TURRET,
+	GROGU
 };
 
 enum class EntityState
