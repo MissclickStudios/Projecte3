@@ -250,6 +250,10 @@ void C_Canvas::ResetUi()
 	{
 		(*it)->GetUiComponents(uiElements);
 	}
+	for (std::vector<C_UI*>::reverse_iterator it = uiElements.rbegin(); it != uiElements.rend(); ++it)
+	{
+		(*it)->ResetInput();
+	}
 }
 
 float2 C_Canvas::GetPosition() const
