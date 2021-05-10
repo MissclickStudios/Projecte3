@@ -74,7 +74,6 @@ void GameManager::Awake()
 				float3 offset = { 0,0,7 };
 				spawnPoint = playerSpawn->transform->GetLocalPosition() + offset;
 				groguGameObject->transform->SetLocalPosition(spawnPoint);
-				//playerTrans->SetLocalRotation(spawnTrans->GetLocalRotation());
 			}
 
 			backtrackTimer.Start();

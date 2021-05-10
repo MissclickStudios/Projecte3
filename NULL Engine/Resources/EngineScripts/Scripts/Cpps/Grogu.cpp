@@ -4,6 +4,7 @@
 
 #include "Application.h"
 #include "M_Scene.h"
+#include "M_Input.h"
 
 #include "GameObject.h"
 #include "C_Transform.h"
@@ -25,6 +26,8 @@ Grogu* CreateGrogu()
 	INSPECTOR_DRAGABLE_FLOAT(script->speedModifier);
 	// Behaviour
 	INSPECTOR_DRAGABLE_FLOAT(script->maxDistanceToMando);
+	// Ability
+	INSPECTOR_DRAGABLE_FLOAT(script->abilityCooldown);
 
 	return script;
 }
@@ -40,6 +43,7 @@ Grogu::~Grogu()
 
 void Grogu::SetUp()
 {
+	abilityCooldownTimer.Stop();
 	player = App->scene->GetGameObjectByName(playerName.c_str());
 }
 
@@ -50,6 +54,7 @@ void Grogu::Behavior()
 		return;
 	ManageMovement();
 	ManageRotation();
+	ManageAbility();
 }
 
 void Grogu::CleanUp()
@@ -69,7 +74,6 @@ void Grogu::LoadState(ParsonNode& groguNode)
 
 void Grogu::Reset()
 {
-	// Set position to that closest to Mando
 	// Reset ability's cooldown
 }	
 
@@ -103,7 +107,27 @@ void Grogu::ManageRotation()
 	gameObject->transform->SetLocalRotation(float3(0, -rad + DegToRad(180), 0));
 }
 
+void Grogu::ManageAbility()
+{
+	if (abilityCooldownTimer.IsActive())
+	{
+		if (abilityCooldownTimer.ReadSec() >= AbilityCooldown())
+			abilityCooldownTimer.Stop();
+		return;
+	}
+	if (App->input->GetKey(SDL_SCANCODE_N) == KeyState::KEY_DOWN)
+	{
+		Ability();
+	}
+}
+
 void Grogu::Movement()
 {
+	gameObject->transform->SetWorldPosition(position);
+}
+
+void Grogu::Ability()
+{
+	abilityCooldownTimer.Start();
 	gameObject->transform->SetWorldPosition(position);
 }

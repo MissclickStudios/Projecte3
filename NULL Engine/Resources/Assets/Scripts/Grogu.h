@@ -31,21 +31,28 @@ public:
 	GameObject* player = nullptr;
 	std::string playerName = "Mandalorian";
 
+	float abilityCooldown = 0.0f;
+	float AbilityCooldown() { return abilityCooldown / cooldownModifier; }
+
 private:
 
 	// Logic
 	void ManageMovement();
 	void ManageRotation();
+	void ManageAbility();
 
-	// Movement
+	// Actions
 	void Movement();
+	void Ability();
 
 	float3 position = float3::zero;
-
 	float2 aimDirection = float2::zero;
+	Timer abilityCooldownTimer;
 
 public:
 	float maxDistanceToMando = 7.0f;
+
+
 };
 
 SCRIPTS_FUNCTION Grogu* CreateGrogu();
