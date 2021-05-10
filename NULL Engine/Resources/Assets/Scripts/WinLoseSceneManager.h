@@ -6,10 +6,10 @@
 class GameObject;
 class C_UI_Button;
 
-class SCRIPTS_API WinSceneManager : public Script {
+class SCRIPTS_API WinLoseSceneManager : public Script {
 public:
-	WinSceneManager();
-	~WinSceneManager();
+	WinLoseSceneManager();
+	~WinLoseSceneManager();
 	//void Awake() override;
 	void Start() override;
 	//void PreUpdate()override;
@@ -20,8 +20,8 @@ public:
 	GameObject* canvasObject = nullptr;
 };
 
-SCRIPTS_FUNCTION WinSceneManager* CreateWinSceneManager() {
-	WinSceneManager* script = new WinSceneManager();
+SCRIPTS_FUNCTION WinLoseSceneManager* CreateWinLoseSceneManager() {
+	WinLoseSceneManager* script = new WinLoseSceneManager();
 	INSPECTOR_GAMEOBJECT(script->gameManagerObject);
 	INSPECTOR_GAMEOBJECT(script->canvasObject);
 	return script;

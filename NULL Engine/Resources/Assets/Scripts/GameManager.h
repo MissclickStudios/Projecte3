@@ -55,6 +55,7 @@ public:
     std::string mainMenuScene;
     std::string SpawnPointName;
     std::string gateName = "NextSceneTrigger";
+    std::string loseSceneName = "Assets/Scenes/LoseScene.json";
 
     Prefab playerPrefab;
     Player* playerScript = nullptr;

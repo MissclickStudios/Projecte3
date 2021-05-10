@@ -138,7 +138,8 @@ void GameManager::Update()
 		if (playerScript != nullptr && playerScript->moveState == PlayerState::DEAD_OUT) 
 		{
 			//playerScript->Reset();
-			ReturnHub();
+			//ReturnHub();
+			App->scene->ScriptChangeScene(loseSceneName.c_str());
 		}
 	}
 
@@ -706,6 +707,7 @@ GameManager* CreateGameManager() {
 	INSPECTOR_CHECKBOX_BOOL(script->enabled);
 	INSPECTOR_STRING(script->mainMenuScene);
 	INSPECTOR_STRING(script->SpawnPointName);
+	INSPECTOR_STRING(script->loseSceneName);
 	INSPECTOR_INPUT_INT(script->l1Easy);
 	INSPECTOR_INPUT_INT(script->l1Intermediate);
 	INSPECTOR_VECTOR_STRING(script->level1);
