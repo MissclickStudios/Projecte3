@@ -28,9 +28,7 @@ void HUBShopMenuManager::Start()
 	if (a != nullptr)
 		buyButton = (C_UI_Button*)a->GetComponent<C_UI_Button>();
 
-	a = App->scene->GetGameObjectByName(beskarTextHubShopName.c_str());
-	if (a != nullptr)
-		beskarTextHubShop = (C_UI_Text*)a->GetComponent<C_UI_Text>();
+	beskarTextHubShop = (C_UI_Text*)gameObject->GetComponent<C_UI_Text>();
 
 	mando = App->scene->GetGameObjectByName(mandoName.c_str());
 }
