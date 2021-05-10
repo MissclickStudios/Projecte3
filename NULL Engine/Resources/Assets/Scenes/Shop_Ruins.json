@@ -312,11 +312,6 @@
                         },
                         {
                             "Type": 5,
-                            "Name": "debugMenuCanvasName",
-                            "string": "DebugMenuCanvas"
-                        },
-                        {
-                            "Type": 5,
                             "Name": "godModeName",
                             "string": "GodMode"
                         },
@@ -1424,6 +1419,16 @@
                             "string": "PlayerSpawn"
                         },
                         {
+                            "Type": 0,
+                            "Name": "l1Easy",
+                            "int": -1
+                        },
+                        {
+                            "Type": 0,
+                            "Name": "l1Intermediate",
+                            "int": -1
+                        },
+                        {
                             "Type": 7,
                             "Name": "level1",
                             "vectorstring": [
@@ -1439,9 +1444,29 @@
                             ]
                         },
                         {
+                            "Type": 0,
+                            "Name": "RuinsEasy",
+                            "int": -1
+                        },
+                        {
+                            "Type": 0,
+                            "Name": "RuinsIntermediate",
+                            "int": -1
+                        },
+                        {
+                            "Type": 7,
+                            "Name": "level1Ruins",
+                            "vectorstring": []
+                        },
+                        {
                             "Type": 4,
                             "Name": "playerPrefab",
                             "prefab": 1997884416
+                        },
+                        {
+                            "Type": 4,
+                            "Name": "groguPrefab",
+                            "prefab": 0
                         }
                     ]
                 }
@@ -1570,13 +1595,8 @@
                         },
                         {
                             "Type": 5,
-                            "Name": "pauseMenuCanvasName",
-                            "string": "PauseMenuCanvas"
-                        },
-                        {
-                            "Type": 5,
-                            "Name": "continueButtonName",
-                            "string": "ContinueButton"
+                            "Name": "resumeButtonName",
+                            "string": "ResumeButton"
                         },
                         {
                             "Type": 5,
@@ -1866,11 +1886,6 @@
                     "DataName": "HUBShopMenuManager",
                     "HasInspector": true,
                     "InspectorVariables": [
-                        {
-                            "Type": 5,
-                            "Name": "beskarTextHubShopName",
-                            "string": "BeskarTextHubShop"
-                        },
                         {
                             "Type": 5,
                             "Name": "mandoName",
@@ -3289,26 +3304,6 @@
                         },
                         {
                             "Type": 5,
-                            "Name": "debugMenuCanvasName",
-                            "string": "DebugMenuCanvas"
-                        },
-                        {
-                            "Type": 5,
-                            "Name": "hubShopCanvasName",
-                            "string": "hubShopCanvas"
-                        },
-                        {
-                            "Type": 5,
-                            "Name": "hudCanvasName",
-                            "string": "hubShopCanvas"
-                        },
-                        {
-                            "Type": 5,
-                            "Name": "pauseMenuCanvasName",
-                            "string": "pauseMenuCanvas"
-                        },
-                        {
-                            "Type": 5,
                             "Name": "creditsTextName",
                             "string": "CreditsText"
                         },
@@ -3727,7 +3722,7 @@
         },
         {
             "UID": 1598465591,
-            "ParentUID": 1225086233,
+            "ParentUID": 1480430694,
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "MainScene",
@@ -3944,13 +3939,13 @@
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
+            "ShowBoundingBoxes": true,
             "Components": [
                 {
                     "Type": 1,
                     "LocalPosition": [
                         16.567010879516602,
-                        -1.1780121326446533,
+                        -3.509796142578125,
                         21.427997589111328
                     ],
                     "LocalRotation": [
@@ -3975,7 +3970,7 @@
                     "Is Trigger": false,
                     "Show Collider": true,
                     "Size X": 350,
-                    "Size Y": 2,
+                    "Size Y": 10,
                     "Size Z": 350,
                     "Center X": 0,
                     "Center Y": 0,

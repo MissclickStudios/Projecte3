@@ -29,11 +29,9 @@ void DebugMenuManager::Start()
 	gameManager = App->scene->GetGameObjectByName(gameManagerName.c_str());
 	mando = App->scene->GetGameObjectByName(mandoName.c_str());
 
-	GameObject* a = App->scene->GetGameObjectByName(debugMenuCanvasName.c_str());
-	if(a != nullptr)
-		debugMenuCanvas = (C_Canvas*)a->GetComponent<C_Canvas>();
+	debugMenuCanvas = (C_Canvas*)gameObject->GetComponent<C_Canvas>();
 
-	a = App->scene->GetGameObjectByName(godModeName.c_str());
+	GameObject* a = App->scene->GetGameObjectByName(godModeName.c_str());
 	if (a != nullptr)
 		godMode = (C_UI_Button*)a->GetComponent<C_UI_Button>();
 
