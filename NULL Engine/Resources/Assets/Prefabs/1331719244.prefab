@@ -1,6 +1,6 @@
 {
-    "UID": 733308559,
-    "ParentUID": 1474137658,
+    "UID": 836262258,
+    "ParentUID": 694363612,
     "PrefabID": 1331719244,
     "IsPrefab": true,
     "Name": "Vaporator",
@@ -13,9 +13,9 @@
         {
             "Type": 1,
             "LocalPosition": [
-                87.802528381347656,
-                0,
-                70.856239318847656
+                192.60588073730469,
+                -1.9181532859802246,
+                87.253082275390625
             ],
             "LocalRotation": [
                 0,
@@ -24,9 +24,9 @@
                 1
             ],
             "LocalScale": [
-                0.1600000262260437,
-                0.1600000262260437,
-                0.1600000262260437
+                0.24908804893493652,
+                0.24908804893493652,
+                0.24908804893493652
             ]
         },
         {
@@ -48,8 +48,8 @@
     ],
     "Children": [
         {
-            "UID": 379173538,
-            "ParentUID": 733308559,
+            "UID": 1598942527,
+            "ParentUID": 836262258,
             "PrefabID": 1331719244,
             "IsPrefab": true,
             "Name": "Cylinder001",
@@ -63,7 +63,7 @@
                     "Type": 1,
                     "LocalPosition": [
                         0,
-                        4.7683493903605267e-05,
+                        5.8240785598754883,
                         0
                     ],
                     "LocalRotation": [
@@ -110,10 +110,10 @@
                         "File": "197114366.nemat"
                     },
                     "Texture": {
-                        "AssetsPath": "Assets\/Textures\/\/Props\/moisture_vaporator.png",
-                        "AssetsName": "moisture_vaporator.png",
-                        "LibaryPath": "Library\/Textures\/1251108293.netex",
-                        "LibraryFile": "1251108293.netex"
+                        "AssetsPath": "Assets\/Textures\/\/Blockouts\/Level1\/moisture_arvala.png",
+                        "AssetsName": "moisture_arvala.png",
+                        "LibaryPath": "Library\/Textures\/1390400254.netex",
+                        "LibraryFile": "1390400254.netex"
                     },
                     "Shader": {
                         "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
@@ -126,8 +126,8 @@
             "Children": []
         },
         {
-            "UID": 848957507,
-            "ParentUID": 733308559,
+            "UID": 1923702076,
+            "ParentUID": 836262258,
             "PrefabID": 1331719244,
             "IsPrefab": true,
             "Name": "Particles",
@@ -140,9 +140,9 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
+                        -1,
                         0,
-                        0,
-                        0
+                        -2.11260986328125
                     ],
                     "LocalRotation": [
                         0,
@@ -159,8 +159,51 @@
             ],
             "Children": [
                 {
-                    "UID": 1139419888,
-                    "ParentUID": 848957507,
+                    "UID": 689422033,
+                    "ParentUID": 1923702076,
+                    "PrefabID": 1331719244,
+                    "IsPrefab": true,
+                    "Name": "Second Idle",
+                    "IsActive": true,
+                    "IsStatic": false,
+                    "IsSceneRoot": false,
+                    "MaintainThroughScenes": false,
+                    "ShowBoundingBoxes": false,
+                    "Components": [
+                        {
+                            "Type": 1,
+                            "LocalPosition": [
+                                1.12939453125,
+                                23.200786590576172,
+                                2.432281494140625
+                            ],
+                            "LocalRotation": [
+                                0.7071068286895752,
+                                0,
+                                0,
+                                0.70710670948028564
+                            ],
+                            "LocalScale": [
+                                1,
+                                1.0000002384185791,
+                                1.0000002384185791
+                            ]
+                        },
+                        {
+                            "Type": 12,
+                            "particleSystemUID": 1851511683,
+                            "particleSystemAssetsPath": "Assets\/ParticleSystems\/VAPORATOR2.particles",
+                            "stopSpawn": false,
+                            "tempDelete": false,
+                            "previewEnabled": true,
+                            "stopAndDeleteCheck": false
+                        }
+                    ],
+                    "Children": []
+                },
+                {
+                    "UID": 1886553403,
+                    "ParentUID": 1923702076,
                     "PrefabID": 1331719244,
                     "IsPrefab": true,
                     "Name": "Idle",
@@ -173,9 +216,9 @@
                         {
                             "Type": 1,
                             "LocalPosition": [
-                                87.898300170898438,
-                                0.99985599517822266,
-                                70.958633422851563
+                                -7.8385009765625,
+                                15.298847198486328,
+                                -5.399505615234375
                             ],
                             "LocalRotation": [
                                 0,
@@ -193,49 +236,6 @@
                             "Type": 12,
                             "particleSystemUID": 2072017682,
                             "particleSystemAssetsPath": "Assets\/ParticleSystems\/Spark.particles",
-                            "stopSpawn": false,
-                            "tempDelete": false,
-                            "previewEnabled": true,
-                            "stopAndDeleteCheck": false
-                        }
-                    ],
-                    "Children": []
-                },
-                {
-                    "UID": 917505656,
-                    "ParentUID": 848957507,
-                    "PrefabID": 1331719244,
-                    "IsPrefab": true,
-                    "Name": "Second Idle",
-                    "IsActive": true,
-                    "IsStatic": false,
-                    "IsSceneRoot": false,
-                    "MaintainThroughScenes": false,
-                    "ShowBoundingBoxes": false,
-                    "Components": [
-                        {
-                            "Type": 1,
-                            "LocalPosition": [
-                                87.928115844726563,
-                                2.2616184196522227e-06,
-                                70.835006713867188
-                            ],
-                            "LocalRotation": [
-                                0.7071068286895752,
-                                0,
-                                0,
-                                0.70710670948028564
-                            ],
-                            "LocalScale": [
-                                1,
-                                1.0000003576278687,
-                                1.0000003576278687
-                            ]
-                        },
-                        {
-                            "Type": 12,
-                            "particleSystemUID": 1851511683,
-                            "particleSystemAssetsPath": "Assets\/ParticleSystems\/VAPORATOR2.particles",
                             "stopSpawn": false,
                             "tempDelete": false,
                             "previewEnabled": true,
