@@ -9,6 +9,7 @@
 #include "C_Transform.h"
 #include "C_ParticleSystem.h"
 #include "C_BoxCollider.h"
+#include "C_AudioSource.h"
 
 #include "ExplosiveBarrel.h"
 
@@ -23,6 +24,8 @@ ExplosiveBarrel::~ExplosiveBarrel()
 
 void ExplosiveBarrel::Start()
 {
+	explosion = new C_AudioSource(gameObject);
+
 	gameManager = App->scene->GetGameObjectByName(gameManagerName.c_str());
 	barrelObject = gameObject->FindChild(barrelObjectName.c_str());
 
@@ -58,7 +61,9 @@ void ExplosiveBarrel::Update()
 
 	if (toExplode)
 	{
-		
+		explosion->SetEvent("item_barrel_explosion");
+		explosion->SetVolume(5.0f);
+ 		explosion->PlayFx(explosion->GetEventId());
 		barrelObject->SetIsActive(false);
 
 		explosionParticles->ResumeSpawn();

@@ -230,8 +230,8 @@ void GameManager::GenerateNewRun(bool fromMenu)
 				//AddFixedRoom("BossL2", 2, 10);
 				level1Ruins.push_back((std::string(ASSETS_SCENES_PATH) + "Boss_Ruins.json"));
 			//LEVEL2
-			//if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + "WinScene.json").c_str()))
-				//AddFixedRoom("WinScene", 2, 10);
+			if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + "WinScene.json").c_str()))
+				level1Ruins.push_back((std::string(ASSETS_SCENES_PATH) + "WinScene.json"));
 		}
 		else
 		{
@@ -270,8 +270,8 @@ void GameManager::GenerateNewRun(bool fromMenu)
 				level1Ruins.insert(level1Ruins.begin() + 3, (std::string(ASSETS_SCENES_PATH) + "Shop_Ruins.json"));
 			if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + "Boss_Ruins.json").c_str()))
 				level1Ruins.push_back((std::string(ASSETS_SCENES_PATH) + "Boss_Ruins.json"));
-			//win scene ??
-			//level1Ruins.push_back((std::string(ASSETS_SCENES_PATH) + "BossL1.json"));
+			if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + "WinScene.json").c_str()))
+				level1Ruins.push_back((std::string(ASSETS_SCENES_PATH) + "WinScene.json"));
 		}
 
 		SaveManagerState();
