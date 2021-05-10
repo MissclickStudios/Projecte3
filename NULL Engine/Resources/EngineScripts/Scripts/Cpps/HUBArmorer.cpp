@@ -29,16 +29,30 @@ void HUBArmorer::Update()
 {
 	if (mando != nullptr)
 	{
-		if (mando->transform->GetDistanceTo(gameObject->transform->GetLocalPosition()) <= talkDistance)
+		switch (state)
 		{
-			//if (App->input->GetKey(SDL_SCANCODE_B) == KeyState::KEY_UP || App->input->GetGameControllerButton(1) == ButtonState::BUTTON_UP )
-			//{
-				hubShopCanvas->GetComponent<C_Canvas>()->SetIsActive(true);
-			//}
-		}
-		else
-		{
-			hubShopCanvas->GetComponent<C_Canvas>()->SetIsActive(false);
+		case HUBArmorerState::INACTIVE:
+			if (mando->transform->GetDistanceTo(gameObject->transform->GetLocalPosition()) <= talkDistance)
+			{
+				//if (App->input->GetKey(SDL_SCANCODE_B) == KeyState::KEY_UP || App->input->GetGameControllerButton(1) == ButtonState::BUTTON_UP )
+				//{
+				App->uiSystem->PushCanvas(hubShopCanvas);
+				//}
+				state = HUBArmorerState::ACTIVE;
+			}
+			break;
+		case HUBArmorerState::ACTIVE:
+			if (mando->transform->GetDistanceTo(gameObject->transform->GetLocalPosition()) >= talkDistance)
+			{
+				//if (App->input->GetKey(SDL_SCANCODE_B) == KeyState::KEY_UP || App->input->GetGameControllerButton(1) == ButtonState::BUTTON_UP )
+				//{
+				App->uiSystem->RemoveActiveCanvas(hubShopCanvas);
+				//}
+				state = HUBArmorerState::INACTIVE;
+			}
+			break;
+		default:
+			state = HUBArmorerState::INACTIVE; break;
 		}
 	}
 }

@@ -27,7 +27,7 @@ public:
 
 	void PushCanvas(C_Canvas* canvas);
 	C_Canvas* PopCanvas();
-	//void DeleteCanvas(C_Canvas* canvas); TODO!!! Maybe handle these on the destructor of component canvas
+	void RemoveActiveCanvas(C_Canvas* canvas);
 
 	const std::list<C_Canvas*>& GetActiveCanvas()const;
 	const std::vector<C_Canvas*>& GetAllCanvas()const;

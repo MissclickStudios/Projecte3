@@ -36,6 +36,8 @@ private:
 
 	GameObject* mando = nullptr;
 	GameObject* gameManager = nullptr;
+
+	bool canvasActive = false;
 };
 
 SCRIPTS_FUNCTION PauseMenuManager* CreatePauseMenuManager() {

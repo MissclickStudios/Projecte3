@@ -97,10 +97,18 @@ C_Canvas* M_UISystem::PopCanvas()
 	return topCanvas;
 }
 
-/*void M_UISystem::DeleteCanvas(C_Canvas* canvas) Handle these on the destructor of C_Canvas !!!
+void M_UISystem::RemoveActiveCanvas(C_Canvas* canvas)
 {
-	
-}*/
+	for (std::list<C_Canvas*>::iterator it = activeCanvas.begin(); it != activeCanvas.end(); ++it)
+	{
+		if ((*it) == canvas)
+		{
+			(*it)->cachedObjects.clear();
+			activeCanvas.erase(it);
+			break;
+		}
+	}
+}
 
 const std::list<C_Canvas*>& M_UISystem::GetActiveCanvas() const
 {

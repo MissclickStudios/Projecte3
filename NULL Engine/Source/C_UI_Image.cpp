@@ -73,8 +73,9 @@ void C_UI_Image::Draw2D()
 	uint32 id;
 	C_2DAnimator* cAnimator = GetOwner()->GetComponent<C_2DAnimator>();
 	C_Material* cMaterial = GetOwner()->GetComponent<C_Material>();
+	C_Canvas* canvas = GetOwner()->parent->GetComponent<C_Canvas>();
 
-	if (cMaterial == nullptr) 
+	if (cMaterial == nullptr || canvas == nullptr)
 		return;
 
 	else if (cAnimator && cAnimator->IsAnimationPlaying())
@@ -82,9 +83,6 @@ void C_UI_Image::Draw2D()
 
 	else
 		id = cMaterial->GetTextureID();
-
-	C_Canvas* canvas = GetOwner()->parent->GetComponent<C_Canvas>();
-	if (canvas == nullptr) return;
 
 	glEnable(GL_BLEND);
 

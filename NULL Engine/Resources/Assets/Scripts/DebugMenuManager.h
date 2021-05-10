@@ -52,6 +52,8 @@ private:
 
 	GameObject* gameManager = nullptr;
 	GameObject* mando = nullptr;
+
+	bool canvasActive = false;
 };
 
 SCRIPTS_FUNCTION DebugMenuManager* CreateDebugMenuManager() {

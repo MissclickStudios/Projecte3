@@ -6,6 +6,7 @@
 
 #include "M_Input.h"
 #include "M_Scene.h"
+#include "M_UISystem.h"
 
 #include "C_Canvas.h"
 #include "C_UI_Button.h"
@@ -70,13 +71,15 @@ void DebugMenuManager::Update()
 	if(debugMenuCanvas != nullptr)
 		if (App->input->GetKey(SDL_SCANCODE_COMMA) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(4) == ButtonState::BUTTON_DOWN)
 		{
-			if (debugMenuCanvas->IsActive())
+			if (canvasActive)
 			{
-				debugMenuCanvas->SetIsActive(false);
+				App->uiSystem->RemoveActiveCanvas(debugMenuCanvas);
+				canvasActive = false;
 			}
 			else
 			{
-				debugMenuCanvas->SetIsActive(true);
+				App->uiSystem->PushCanvas(debugMenuCanvas);
+				canvasActive = true;
 			}
 		}
 

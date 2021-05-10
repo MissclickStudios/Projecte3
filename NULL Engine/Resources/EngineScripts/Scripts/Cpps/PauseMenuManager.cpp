@@ -5,6 +5,7 @@
 #include "C_Canvas.h"
 #include "C_UI_Button.h"
 #include "GameObject.h"
+#include "M_UISystem.h"
 #include "PauseMenuManager.h"
 #include "Player.h"
 #include "GameManager.h"
@@ -47,40 +48,39 @@ void PauseMenuManager::Start()
 
 void PauseMenuManager::Update()
 {
-
 	if (pauseMenuCanvas != nullptr)
 	{
-		if (App->input->GetKey(SDL_SCANCODE_ESCAPE) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(6) == ButtonState::BUTTON_DOWN)
+		if (App->input->GetKey(SDL_SCANCODE_BACKSPACE) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(6) == ButtonState::BUTTON_DOWN)
 		{
-			if (pauseMenuCanvas->IsActive())
-				pauseMenuCanvas->SetIsActive(false);
-			else
-				pauseMenuCanvas->SetIsActive(true);
+			if (canvasActive)
+			{
+				App->uiSystem->RemoveActiveCanvas(pauseMenuCanvas);
+				canvasActive = false;
+			}
+			else 
+			{
+				App->uiSystem->PushCanvas(pauseMenuCanvas);
+				canvasActive = true;
+			}
 		}
 	}
 
 	//Continue Button
-	if (continueButton != nullptr)
+	if (continueButton != nullptr && pauseMenuCanvas != nullptr)
 	{
 		if (continueButton->GetState() == UIButtonState::RELEASED)
 		{
-			if (pauseMenuCanvas != nullptr)
-			{
-				pauseMenuCanvas->SetIsActive(false);
-			}
+			App->uiSystem->RemoveActiveCanvas(pauseMenuCanvas);
 		}
 	}
 
 	//Main Menu Button
-	if (mainMenuButton != nullptr)
+	if (mainMenuButton != nullptr && gameManager != nullptr)
 	{
 		if (mainMenuButton->GetState() == UIButtonState::RELEASED)
 		{
-			if (gameManager != nullptr)
-			{
-				GameManager* gameManagerScript = (GameManager*)gameManager->GetScript("GameManager");
-				gameManagerScript->ReturnToMainMenu();
-			}
+			GameManager* gameManagerScript = (GameManager*)gameManager->GetScript("GameManager");
+			gameManagerScript->ReturnToMainMenu();
 		}
 	}
 
@@ -94,17 +94,14 @@ void PauseMenuManager::Update()
 	}
 
 	//Abandon Run Button
-	if (abandonRunButton != nullptr)
+	if (abandonRunButton != nullptr && mando != nullptr)
 	{
 		if (abandonRunButton->GetState() == UIButtonState::RELEASED)
 		{
-			if (mando != nullptr)
-			{
-				Player* playerScript = (Player*)mando->GetScript("Player");
-				playerScript->health = 0;
+			Player* playerScript = (Player*)mando->GetScript("Player");
+			playerScript->health = 0;
 
-				pauseMenuCanvas->SetIsActive(false);
-			}
+			App->uiSystem->RemoveActiveCanvas(pauseMenuCanvas);
 		}
 	}
 
@@ -112,9 +109,7 @@ void PauseMenuManager::Update()
 	if (exitButton != nullptr)
 	{
 		if (exitButton->GetState() == UIButtonState::RELEASED)
-		{
 			App->quit = true; //wtf is this shit
-		}
 	}
 
 }

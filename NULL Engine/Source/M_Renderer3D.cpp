@@ -784,8 +784,8 @@ void M_Renderer3D::RenderUI()
 		// SetTo2DRenderSettings(false);
 		//(*rit)->Draw3D(renderCanvas);
 		//SetTo2DRenderSettings(false);
-		if ((*rit)->IsActive())
-			(*rit)->Draw2D(renderCanvas);
+		//if ((*rit)->IsActive())
+		(*rit)->Draw2D(renderCanvas);
 	}
 	SetTo2DRenderSettings(false);
 }

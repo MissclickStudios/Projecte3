@@ -4,7 +4,12 @@
 #include "ScriptMacros.h"
 
 class GameObject;
-class C_UI_Button;
+class C_Canvas;
+
+enum class HUBArmorerState: char {
+	ACTIVE,
+	INACTIVE,
+};
 
 class SCRIPTS_API HUBArmorer : public Script {
 public:
@@ -18,9 +23,9 @@ public:
 	std::string mandoName = "Mando testbuild";
 	float talkDistance = 10.f;
 private:
-	GameObject* hubShopCanvas = nullptr;
-	GameObject* HUDCanvas = nullptr;
+	C_Canvas* hubShopCanvas = nullptr;
 	GameObject* mando = nullptr;
+	HUBArmorerState state = HUBArmorerState::INACTIVE;
 };
 
 SCRIPTS_FUNCTION HUBArmorer* CreateHUBArmorer() {

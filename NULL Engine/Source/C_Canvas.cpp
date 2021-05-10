@@ -70,8 +70,9 @@ bool C_Canvas::Update()
 
 void C_Canvas::HandleInput()
 {
-	if (!IsActive()) //poder fer tmbe un unable input??
-		return;
+	//if (!IsActive()) //poder fer tmbe un unable input??
+		//return;
+
 	if ((App->input->GetKey(SDL_SCANCODE_DOWN) == KeyState::KEY_DOWN || App->input->GetGameControllerAxis(1) == AxisState::POSITIVE_AXIS_DOWN))
 	{
 		for (int i = 0; i < uiElements.size(); ++i)
