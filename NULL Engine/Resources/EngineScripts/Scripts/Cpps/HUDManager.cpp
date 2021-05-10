@@ -199,11 +199,11 @@ void HUDManager::Update()
 				creditsImage->PlayAnimation(false, 1);
 		}
 			//Dash animation
-		if (dashImage != nullptr)
-		{
-			if (App->input->GetGameControllerTrigger(0) == ButtonState::BUTTON_DOWN)
-				dashImage->PlayAnimation(false, 1);
-		}
+	//	if (dashImage != nullptr)
+	//	{
+	//		if (App->input->GetGameControllerTrigger(0) == ButtonState::BUTTON_DOWN)
+	//			dashImage->PlayAnimation(false, 1);
+	//	}
 
 		if (!player->hitTimer.IsActive())
 			hitAlready = false;
