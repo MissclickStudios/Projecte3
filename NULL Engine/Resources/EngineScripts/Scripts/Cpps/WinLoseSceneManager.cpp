@@ -2,20 +2,20 @@
 #include "M_Scene.h"
 #include "C_Canvas.h"
 #include "GameObject.h"
-#include "WinSceneManager.h"
+#include "WinLoseSceneManager.h"
 #include "GameManager.h"
 #include "M_UISystem.h"
 #include "M_Input.h"
 
-WinSceneManager::WinSceneManager() : Script()
+WinLoseSceneManager::WinLoseSceneManager() : Script()
 {
 }
 
-WinSceneManager::~WinSceneManager()
+WinLoseSceneManager::~WinLoseSceneManager()
 {
 }
 
-void WinSceneManager::Start()
+void WinLoseSceneManager::Start()
 {
 	if (canvasObject)
 	{
@@ -26,12 +26,11 @@ void WinSceneManager::Start()
 
 }
 
-void WinSceneManager::Update()
+void WinLoseSceneManager::Update()
 {
 	if (gameManagerObject && App->input->GetKey(SDL_SCANCODE_RETURN) == KeyState::KEY_UP || App->input->GetGameControllerButton(0) == ButtonState::BUTTON_UP)
 	{
 		GameManager* gameManagerScript = (GameManager*)gameManagerObject->GetScript("GameManager");
-		gameManagerScript->GenerateNewRun(false);
-		gameManagerScript->InitiateLevel(1);
+		gameManagerScript->ReturnHub();
 	}
 }

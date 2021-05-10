@@ -33,18 +33,18 @@ void MainMenuManager::Start()
 
 void MainMenuManager::Update()
 {
-	if (playButton && playButton->GetState() == UIButtonState::PRESSEDIN && gameManager != nullptr)
+	if (playButton && playButton->GetState() == UIButtonState::RELEASED && gameManager != nullptr)
 	{
 		GameManager* gameManagerScript = (GameManager*)gameManager->GetScript("GameManager");
 		gameManagerScript->GenerateNewRun(true);
 		gameManagerScript->InitiateLevel(1);
 	}
-	if (continueButton && continueButton->GetState() == UIButtonState::PRESSEDIN && gameManager != nullptr)
+	if (continueButton && continueButton->GetState() == UIButtonState::RELEASED && gameManager != nullptr)
 	{
 		GameManager* gameManagerScript = (GameManager*)gameManager->GetScript("GameManager");
 		gameManagerScript->Continue();
 	}
-	if (exitButton && exitButton->GetState() == UIButtonState::PRESSEDIN && gameManager != nullptr)
+	if (exitButton && exitButton->GetState() == UIButtonState::RELEASED && gameManager != nullptr)
 	{
 		GameManager* gameManagerScript = (GameManager*)gameManager->GetScript("GameManager");
 		App->quit = true;

@@ -48,9 +48,15 @@ void Weapon::Start()
 			std::string name = source->GetEventName();
 
 			if (name == "weapon_laser_01")
+			{
 				shootAudio = source;
+				shootAudio->SetVolume(0.5f);
+			}
 			else if (name == "weapon_laser_02_02")
+			{
 				shootAudio = source;
+				shootAudio->SetVolume(0.25f);
+			}
 			else if (name == "weapon_reload_01")
 				reloadAudio = source;
 			else if (name == "weapon_reload_02")

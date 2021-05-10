@@ -1,6 +1,8 @@
 #include "Application.h"
 #include "M_Scene.h"
+#include "MC_Time.h"
 #include "Log.h"
+#include "C_AudioSource.h"
 #include "GameManager.h"
 #include "GameObject.h"
 
@@ -17,14 +19,20 @@ Gate::~Gate()
 void Gate::Start()
 {
 	gameManager = App->scene->GetGameObjectByName(gameManagerName.c_str());
+
+	quote = new C_AudioSource(gameObject);
+	quote->SetEvent("fckSebas");
+	quote->SetVolume(1.5f);
 }
 
 void Gate::Update()
 {
+	quoteTimer += MC_Time::Game::GetDT();
 }
 
 void Gate::CleanUp()
 {
+	delete quote;
 }
 
 void Gate::OnCollisionEnter(GameObject* object)
@@ -39,6 +47,14 @@ void Gate::OnCollisionEnter(GameObject* object)
 				gameManagerScript->playerScript->hubCurrency += 20;
 			gameManagerScript->GoNextRoom();
 		}
+		else
+		{
+			if (quoteTimer >= quoteDelay)
+			{
+				quote->PlayFx(quote->GetEventId());
+				quoteTimer = 0.f;
+			}
+		}
 	}
 }
 
@@ -51,5 +67,6 @@ Gate* CreateGate()
 {
 	Gate* script = new Gate();
 	INSPECTOR_STRING(script->gameManagerName);
+	INSPECTOR_DRAGABLE_FLOAT(script->quoteDelay);
 	return script;
 }

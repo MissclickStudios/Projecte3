@@ -59,7 +59,7 @@
         },
         {
             "UID": 371728131,
-            "ParentUID": 638033428,
+            "ParentUID": 1585585826,
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "MainScene",
@@ -147,6 +147,58 @@
             ]
         },
         {
+            "UID": 454933260,
+            "ParentUID": 371728131,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "WinSceneManager",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 24,
+                    "ResourceUID": 139127934,
+                    "AssetsPath": "Assets\/Scripts\/\/WinLoseSceneManager.h",
+                    "DataName": "WinLoseSceneManager",
+                    "HasInspector": true,
+                    "InspectorVariables": [
+                        {
+                            "Type": 6,
+                            "Name": "gameManagerObject",
+                            "gameobject": 1876816008
+                        },
+                        {
+                            "Type": 6,
+                            "Name": "canvasObject",
+                            "gameobject": 546855136
+                        }
+                    ]
+                }
+            ]
+        },
+        {
             "UID": 546855136,
             "ParentUID": 1342880680,
             "PrefabID": 0,
@@ -156,7 +208,7 @@
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": true,
+            "ShowBoundingBoxes": false,
             "Components": [
                 {
                     "Type": 1,
@@ -407,58 +459,6 @@
             ]
         },
         {
-            "UID": 454933260,
-            "ParentUID": 371728131,
-            "PrefabID": 0,
-            "IsPrefab": false,
-            "Name": "WinSceneManager",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        0,
-                        0
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {
-                    "Type": 24,
-                    "ResourceUID": 2127049345,
-                    "AssetsPath": "Assets\/Scripts\/\/WinSceneManager.h",
-                    "DataName": "WinSceneManager",
-                    "HasInspector": true,
-                    "InspectorVariables": [
-                        {
-                            "Type": 6,
-                            "Name": "gameManagerObject",
-                            "gameobject": 1876816008
-                        },
-                        {
-                            "Type": 6,
-                            "Name": "canvasObject",
-                            "gameobject": 546855136
-                        }
-                    ]
-                }
-            ]
-        },
-        {
             "UID": 1876816008,
             "ParentUID": 371728131,
             "PrefabID": 316805506,
@@ -468,7 +468,7 @@
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
+            "ShowBoundingBoxes": true,
             "Components": [
                 {
                     "Type": 1,

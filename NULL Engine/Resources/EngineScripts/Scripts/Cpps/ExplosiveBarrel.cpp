@@ -76,6 +76,7 @@ void ExplosiveBarrel::Update()
 
 void ExplosiveBarrel::CleanUp()
 {
+	delete explosion;
 }
 
 void ExplosiveBarrel::OnCollisionEnter(GameObject* object)
