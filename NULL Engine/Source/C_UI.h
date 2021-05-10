@@ -47,6 +47,7 @@ private:
 
 	friend class M_UISystem;
 	friend class GameObject;
+	friend class C_Canvas;
 };
 
 #endif // !__C_UI_H__
