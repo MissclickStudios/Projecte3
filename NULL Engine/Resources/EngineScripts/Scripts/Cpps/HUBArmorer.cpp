@@ -22,9 +22,7 @@ HUBArmorer::~HUBArmorer()
 void HUBArmorer::Start()
 {
 	mando = App->scene->GetGameObjectByName(mandoName.c_str());
-	GameObject* object = App->scene->GetGameObjectByName(hubShopCanvasName.c_str());
-	if(object)
-		hubShopCanvas = object->GetComponent<C_Canvas>();
+	hubShopCanvas = gameObject->GetComponent<C_Canvas>();
 }
 
 void HUBArmorer::Update()
