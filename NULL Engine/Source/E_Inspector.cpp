@@ -2903,7 +2903,7 @@ void E_Inspector::TrackCreatorWindow(C_Animator* cAnimator)
 
 	ImGui::InputText("Track Name", trackName, IM_ARRAYSIZE(trackName), inputTxtFlags);
 
-	if (ImGui::BeginCombo("Track Root Bone", rootBone->GetName(), ImGuiComboFlags_None))
+	if (ImGui::BeginCombo("Track Root Bone", ((rootBone != nullptr) ? rootBone->GetName() : "[NONE]"), ImGuiComboFlags_None))
 	{	
 		for (uint i = 0; i < bones->size(); ++i)
 		{
