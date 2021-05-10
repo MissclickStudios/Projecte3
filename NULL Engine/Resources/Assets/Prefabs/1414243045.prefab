@@ -1,5 +1,5 @@
 {
-    "UID": 527919706,
+    "UID": 375682556,
     "ParentUID": 1474137658,
     "PrefabID": 1414243045,
     "IsPrefab": true,
@@ -13,9 +13,9 @@
         {
             "Type": 1,
             "LocalPosition": [
-                12.181726455688477,
+                76.17486572265625,
                 4.2875156402587891,
-                46.928607940673828
+                44.2706298828125
             ],
             "LocalRotation": [
                 0,
@@ -51,10 +51,7 @@
                     "Loop": false
                 }
             ],
-            "CurrentClip": {
-                "AnimationName": "Take 001",
-                "Name": "Take 001 Default"
-            }
+            "Tracks": []
         },
         {
             "Type": 24,
@@ -104,8 +101,8 @@
     ],
     "Children": [
         {
-            "UID": 589974596,
-            "ParentUID": 527919706,
+            "UID": 1281827549,
+            "ParentUID": 375682556,
             "PrefabID": 1414243045,
             "IsPrefab": true,
             "Name": "Base",
@@ -182,8 +179,8 @@
             "Children": []
         },
         {
-            "UID": 1246884186,
-            "ParentUID": 527919706,
+            "UID": 736642450,
+            "ParentUID": 375682556,
             "PrefabID": 1414243045,
             "IsPrefab": true,
             "Name": "MAIN",
@@ -215,8 +212,8 @@
             ],
             "Children": [
                 {
-                    "UID": 1053688266,
-                    "ParentUID": 1246884186,
+                    "UID": 1119786601,
+                    "ParentUID": 736642450,
                     "PrefabID": 1414243045,
                     "IsPrefab": true,
                     "Name": "SUELO",
@@ -249,8 +246,8 @@
                     "Children": []
                 },
                 {
-                    "UID": 709463892,
-                    "ParentUID": 1246884186,
+                    "UID": 365553374,
+                    "ParentUID": 736642450,
                     "PrefabID": 1414243045,
                     "IsPrefab": true,
                     "Name": "DIENTES",
@@ -283,8 +280,8 @@
                     "Children": []
                 },
                 {
-                    "UID": 1478646828,
-                    "ParentUID": 1246884186,
+                    "UID": 2107991797,
+                    "ParentUID": 736642450,
                     "PrefabID": 1414243045,
                     "IsPrefab": true,
                     "Name": "BOCAGRAN",
@@ -316,8 +313,8 @@
                     ],
                     "Children": [
                         {
-                            "UID": 513618129,
-                            "ParentUID": 1478646828,
+                            "UID": 1858260330,
+                            "ParentUID": 2107991797,
                             "PrefabID": 1414243045,
                             "IsPrefab": true,
                             "Name": "BOCAGRANPUNTA",
@@ -352,8 +349,8 @@
                     ]
                 },
                 {
-                    "UID": 767042239,
-                    "ParentUID": 1246884186,
+                    "UID": 1721256721,
+                    "ParentUID": 736642450,
                     "PrefabID": 1414243045,
                     "IsPrefab": true,
                     "Name": "BOCAPEQUE",
@@ -385,8 +382,8 @@
                     ],
                     "Children": [
                         {
-                            "UID": 842607122,
-                            "ParentUID": 767042239,
+                            "UID": 428511405,
+                            "ParentUID": 1721256721,
                             "PrefabID": 1414243045,
                             "IsPrefab": true,
                             "Name": "BOCAPEQUEPUNTA",
@@ -421,8 +418,8 @@
                     ]
                 },
                 {
-                    "UID": 627451367,
-                    "ParentUID": 1246884186,
+                    "UID": 953024519,
+                    "ParentUID": 736642450,
                     "PrefabID": 1414243045,
                     "IsPrefab": true,
                     "Name": "LENGUA",
@@ -450,6 +447,84 @@
                                 1,
                                 1
                             ]
+                        }
+                    ],
+                    "Children": []
+                }
+            ]
+        },
+        {
+            "UID": 919572307,
+            "ParentUID": 375682556,
+            "PrefabID": 1414243045,
+            "IsPrefab": true,
+            "Name": "Particles",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ],
+            "Children": [
+                {
+                    "UID": 1620917665,
+                    "ParentUID": 919572307,
+                    "PrefabID": 1414243045,
+                    "IsPrefab": true,
+                    "Name": "Idle",
+                    "IsActive": true,
+                    "IsStatic": false,
+                    "IsSceneRoot": false,
+                    "MaintainThroughScenes": false,
+                    "ShowBoundingBoxes": false,
+                    "Components": [
+                        {
+                            "Type": 1,
+                            "LocalPosition": [
+                                75.779953002929688,
+                                2.586639404296875,
+                                44.525829315185547
+                            ],
+                            "LocalRotation": [
+                                0,
+                                0,
+                                0,
+                                1
+                            ],
+                            "LocalScale": [
+                                1,
+                                1,
+                                1
+                            ]
+                        },
+                        {
+                            "Type": 12,
+                            "particleSystemUID": 279901250,
+                            "particleSystemAssetsPath": "Assets\/ParticleSystems\/Sarlacc.particles",
+                            "stopSpawn": false,
+                            "tempDelete": false,
+                            "previewEnabled": true,
+                            "stopAndDeleteCheck": false
                         }
                     ],
                     "Children": []
