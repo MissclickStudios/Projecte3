@@ -2134,7 +2134,7 @@ void E_Inspector::DisplayShader(C_Material* cMaterial)
 		return;
 	}
 
-	if (!cMaterial->GetShader()->uniforms.empty())
+	if (!shader->uniforms.empty())
 	{
 		if (ImGui::TreeNodeEx("Shader Data:"))
 		{
