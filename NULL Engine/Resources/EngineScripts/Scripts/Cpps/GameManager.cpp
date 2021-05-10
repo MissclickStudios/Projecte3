@@ -66,13 +66,11 @@ void GameManager::Awake()
 				level1Ruins.emplace_back(levelArray2.GetString(i));
 			}
 			//TODO:Spawn player and everything on the level
-			playerGameObject = App->resourceManager->LoadPrefab(playerPrefab.uid, App->scene->GetSceneRoot());
 			GameObject* playerSpawn = App->scene->GetGameObjectByName(SpawnPointName.c_str());
-			if (playerSpawn != nullptr && playerGameObject != nullptr) 
+			if (playerSpawn != nullptr) 
 			{
 				spawnPoint = playerSpawn->transform->GetLocalPosition();
-				playerGameObject->transform->SetLocalPosition(spawnPoint);
-				//playerTrans->SetLocalRotation(spawnTrans->GetLocalRotation());
+				playerGameObject = App->scene->InstantiatePrefab(playerPrefab.uid, App->scene->GetSceneRoot(), spawnPoint,Quat::identity);
 			}
 
 			groguGameObject = App->resourceManager->LoadPrefab(groguPrefab.uid, App->scene->GetSceneRoot());
