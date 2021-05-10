@@ -124,7 +124,7 @@ void C_UI_Button::Draw2D()
 		return;
 	
 	//TODO: Inspector pick color !!!
-	Color tempColor;
+	/*Color tempColor;
 	switch (state)
 	{
 	case UIButtonState::IDLE:
@@ -139,8 +139,23 @@ void C_UI_Button::Draw2D()
 		tempColor = Color(1.0f, 0.4f, 0.0f, 1.0f); break;
 	default:
 		tempColor = Color(1.0f, 1.0f, 0.0f, 1.0f); break;
+	}*/
+	Color tempColor;
+	switch (state)
+	{
+	case UIButtonState::IDLE:
+		tempColor = Color(0.97f, 0.76f, 0.58f, 1.0f); break;
+	case UIButtonState::HOVERED:
+		tempColor = Color(1.0f, 1.0f, 1.0f, 1.0f); break;
+	case UIButtonState::PRESSEDIN:
+		tempColor = Color(1.0f, 0.4f, 0.19f, 1.0f); break;
+	case UIButtonState::PRESSED:
+		tempColor = Color(1.0f, 0.4f, 0.19f, 1.0f); break;
+	case UIButtonState::RELEASED:
+		tempColor = Color(1.0f, 0.4f, 0.19f, 1.0f); break;
+	default:
+		tempColor = Color(0.97f, 0.76f, 0.58f, 1.0f); break;
 	}
-
 	if (!cMaterial->GetShader())
 		return;
 	R_Shader* shader = cMaterial->GetShader();
