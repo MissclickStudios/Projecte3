@@ -74,7 +74,6 @@ bool C_Animator::Update()
 
 		init = false;
 	}
-	
 	if (showBones)
 	{
 		UpdateDisplayBones();
@@ -379,7 +378,7 @@ void C_Animator::GenerateBoneSegments(const GameObject* bone)
 
 // --- C_ANIMATOR INITIALIZATION METHODS
 void C_Animator::GetAnimatedMeshes()
-{
+{	
 	std::map<std::string, GameObject*> childs;
 	this->GetOwner()->GetAllChilds(childs);
 	std::vector<C_Mesh*> cMeshes;
@@ -388,7 +387,7 @@ void C_Animator::GetAnimatedMeshes()
 		cMeshes.clear();
 		child->second->GetComponents<C_Mesh>(cMeshes);
 		for (uint i = 0; i < cMeshes.size(); ++i)
-		{
+		{	
 			R_Mesh* rMesh = cMeshes[i]->GetMesh();
 			if (rMesh != nullptr && !rMesh->boneMapping.empty())
 			{
@@ -400,27 +399,56 @@ void C_Animator::GetAnimatedMeshes()
 }
 
 void C_Animator::FindRootBone()
-{
-	std::vector<GameObject*> childs;
+{	
+	std::map<std::string, GameObject*> childs;
 	this->GetOwner()->GetAllChilds(childs);
 	for (auto animesh = animatedMeshes.begin(); animesh != animatedMeshes.end(); ++animesh)							// Finding root bone by cross-checking with animesh. Maybe overengineered?
 	{
-		std::map<std::string, uint> mapping = (*animesh)->GetMesh()->boneMapping;
-		if (mapping.empty())
+		std::map<std::string, uint>* mapping = &(*animesh)->GetMesh()->boneMapping;
+		if (mapping->empty())
 		{
 			continue;
 		}
 
-		for (auto child = childs.begin(); child != childs.end(); ++child)
+		std::string rootName = "[NONE]";
+		for (auto bone = mapping->cbegin(); bone != mapping->cend(); ++bone)
 		{
-			auto result = mapping.find((*child)->GetName());
-			if (result != mapping.end())
+			if (bone->second == 1u)																					// bone->second == 1 means it is the root bone.
 			{
-				rootBone = (*child);																				// 1st bone to be found in the mapping is the most likely to be the root.
+				rootName = bone->first;
 				break;
 			}
 		}
+
+		auto result = childs.find(rootName);
+		if (result != childs.end())
+		{
+			rootBone = result->second;
+			break;
+		}
+
+		//for (auto child = childs.begin(); child != childs.end(); ++child)
+		//{
+		//	auto result = mapping.find((*child)->GetName());
+		//	if (result != mapping.end())
+		//	{
+		//		rootBone = (*child);																				// 1st bone to be found in the mapping is the most likely to be the root.
+		//		break;
+		//	}
+		//}
 	}
+
+	//if (rootBone == nullptr)
+	//{
+	//	for (auto child = childs.cbegin(); child != childs.cend(); ++child)
+	//	{
+	//		if (child->second->isBone && !child->second->parent->isBone)
+	//		{
+	//			rootBone = child->second;
+	//			break;
+	//		}
+	//	}
+	//}
 }
 
 void C_Animator::SetRootBone(GameObject* rootBone)
@@ -459,18 +487,21 @@ void C_Animator::FindBones()
 {
 	FindRootBone();
 
-	if (rootBone != nullptr)
+	if (rootBone == nullptr)
 	{
-		bones.push_back(rootBone);
-		rootBone->GetAllChilds(bones);
-
-		for (auto animesh = animatedMeshes.cbegin(); animesh != animatedMeshes.cend(); ++animesh)
-		{
-			(*animesh)->SetRootBone(rootBone);															// Setting the root bone for the Animated Mesh, not this Component. Necessary?
-		}
-
-		CrossCheckBonesWithMeshBoneMapping();
+		LOG("[ERROR] Animator Component: Could not find Root Bone!");
+		return;
 	}
+
+	bones.push_back(rootBone);
+	rootBone->GetAllChilds(bones);
+
+	for (auto animesh = animatedMeshes.cbegin(); animesh != animatedMeshes.cend(); ++animesh)
+	{
+		(*animesh)->SetRootBone(rootBone);															// Setting the root bone for the Animated Mesh, not this Component. Necessary?
+	}
+
+	CrossCheckBonesWithMeshBoneMapping();
 }
 
 void C_Animator::FindBoneLinks()
@@ -720,7 +751,7 @@ void C_Animator::PlayClip(const char* trackName, const char* clipName, float ble
 
 	if (track == tracks.end())
 	{
-		LOG("[ERROR] Animator Component: Could not Play Clip! Error: Could not find any track with the given name.");
+		//LOG("[ERROR] Animator Component: Could not Play Clip! Error: Could not find any track with the given name.");
 		return;
 	}
 	if (clip == clips.end())

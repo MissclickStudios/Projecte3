@@ -12,7 +12,7 @@ M_Window::M_Window(bool isActive) : Module("Window", isActive)
 	screenSurface		= nullptr;
 
 	screenWidth			= SCREEN_WIDTH;
-	screenHeight = SCREEN_HEIGHT;
+	screenHeight		= SCREEN_HEIGHT;
 
 	isMaximized			= WIN_MAXIMIZED;
 	isFullscreen		= WIN_FULLSCREEN;
