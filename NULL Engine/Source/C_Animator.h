@@ -109,11 +109,11 @@ public:																																// --- GET/SET METHODS
 		 
 private: 																															// --- C_ANIMATOR INITIALIZATION METHODS
 	void			GetAnimatedMeshes							();
-	void			FindRootBone								();
+	void			FindRootBone								(GameObject* child);
 	void			SetRootBone									(GameObject* rootBone);
 	GameObject*		GetRootBone									() const;
 
-	void			FindBones									();
+	void			FindBones									();																	// Finds the root bone by it. the childs recursively.
 	void			FindBoneLinks								();
 	void			CrossCheckBonesWithMeshBoneMapping			();																	/* CHECK */
 	std::vector<BoneLink>*	GetAnimationBoneLinks				(uint32 UID);

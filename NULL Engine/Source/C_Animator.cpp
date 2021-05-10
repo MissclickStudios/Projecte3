@@ -398,57 +398,36 @@ void C_Animator::GetAnimatedMeshes()
 	}
 }
 
-void C_Animator::FindRootBone()
-{	
-	std::map<std::string, GameObject*> childs;
-	this->GetOwner()->GetAllChilds(childs);
-	for (auto animesh = animatedMeshes.begin(); animesh != animatedMeshes.end(); ++animesh)							// Finding root bone by cross-checking with animesh. Maybe overengineered?
+void C_Animator::FindRootBone(GameObject* child)
+{
+	if (child == nullptr || child->childs.empty())
 	{
-		std::map<std::string, uint>* mapping = &(*animesh)->GetMesh()->boneMapping;
-		if (mapping->empty())
-		{
-			continue;
-		}
+		return;
+	}
 
-		std::string rootName = "[NONE]";
-		for (auto bone = mapping->cbegin(); bone != mapping->cend(); ++bone)
+	for (auto animesh = animatedMeshes.cbegin(); animesh != animatedMeshes.cend(); ++animesh)
+	{
+		if (rootBone != nullptr)
+			return;
+		
+		std::map<std::string, uint>* mapping = &(*animesh)->GetMesh()->boneMapping;
+		
+		for (auto childItem = child->childs.cbegin(); childItem != child->childs.cend(); ++childItem)
 		{
-			if (bone->second == 1u)																					// bone->second == 1 means it is the root bone.
+			LOG("CHILD { %s }", (*childItem)->GetName());
+			
+			if (mapping->find((*childItem)->GetName()) != mapping->end())
 			{
-				rootName = bone->first;
+				rootBone = (*childItem);
 				break;
 			}
 		}
-
-		auto result = childs.find(rootName);
-		if (result != childs.end())
-		{
-			rootBone = result->second;
-			break;
-		}
-
-		//for (auto child = childs.begin(); child != childs.end(); ++child)
-		//{
-		//	auto result = mapping.find((*child)->GetName());
-		//	if (result != mapping.end())
-		//	{
-		//		rootBone = (*child);																				// 1st bone to be found in the mapping is the most likely to be the root.
-		//		break;
-		//	}
-		//}
 	}
 
-	//if (rootBone == nullptr)
-	//{
-	//	for (auto child = childs.cbegin(); child != childs.cend(); ++child)
-	//	{
-	//		if (child->second->isBone && !child->second->parent->isBone)
-	//		{
-	//			rootBone = child->second;
-	//			break;
-	//		}
-	//	}
-	//}
+	for (uint i = 0; i < child->childs.size(); ++i)
+	{
+		FindRootBone(child->childs[i]);
+	}
 }
 
 void C_Animator::SetRootBone(GameObject* rootBone)
@@ -485,7 +464,7 @@ GameObject* C_Animator::GetRootBone() const
 
 void C_Animator::FindBones()
 {
-	FindRootBone();
+	FindRootBone(this->GetOwner());
 
 	if (rootBone == nullptr)
 	{
