@@ -32,8 +32,6 @@ public:
 
 	std::string fpsTextName = "fpsText";
 
-	std::string debugMenuCanvasName = "DebugMenuCanvas";
-
 	//- unlock items missing
 	Prefab blurgg;
 	Prefab trooper;
@@ -60,7 +58,6 @@ SCRIPTS_FUNCTION DebugMenuManager* CreateDebugMenuManager() {
 	DebugMenuManager* script = new DebugMenuManager();
 	INSPECTOR_STRING(script->gameManagerName);
 	INSPECTOR_STRING(script->mandoName);
-	INSPECTOR_STRING(script->debugMenuCanvasName);
 	INSPECTOR_STRING(script->godModeName);
 	INSPECTOR_STRING(script->roomSkipName);
 	INSPECTOR_STRING(script->addHealthName);

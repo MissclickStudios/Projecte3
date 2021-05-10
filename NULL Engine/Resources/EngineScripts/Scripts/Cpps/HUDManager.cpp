@@ -44,12 +44,9 @@ void HUDManager::Start()
 	if (a != nullptr)
 		creditsImage = (C_2DAnimator*)a->GetComponent<C_2DAnimator>();
 
-	a = App->scene->GetGameObjectByName(hudCanvasName.c_str());
-	if (a != nullptr) 
-	{
-		hudCanvas = (C_Canvas*)a->GetComponent<C_Canvas>();
+	hudCanvas = (C_Canvas*)gameObject->GetComponent<C_Canvas>();
+	if(hudCanvas)
 		App->uiSystem->PushCanvas(hudCanvas);
-	}
 
 	a = App->scene->GetGameObjectByName(creditsTextName.c_str());
 	if (a != nullptr)

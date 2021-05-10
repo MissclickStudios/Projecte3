@@ -1910,6 +1910,9 @@ void MeshRenderer::ApplyShader()
 
 			cMaterial->GetShader()->SetUniformVec3f("cameraPosition", (GLfloat*)&App->camera->GetCurrentCamera()->GetFrustum().Pos());
 			
+
+			cMaterial->GetShader()->SetUniform1f("deltaTime", MC_Time::Game::GetDT());
+
  			//Skybox
 			
 			cMaterial->GetShader()->SetUniform1i("skybox", 11);

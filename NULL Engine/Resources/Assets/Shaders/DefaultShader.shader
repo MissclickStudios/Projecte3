@@ -20,6 +20,8 @@ uniform mat4 modelMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
 
+uniform float deltaTime;
+
 uniform bool activeAnimation;
 uniform mat4 finalBonesMatrices[MAX_BONES];
 

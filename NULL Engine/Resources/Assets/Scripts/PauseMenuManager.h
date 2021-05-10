@@ -21,7 +21,6 @@ public:
 	std::string abandonRunButtonName = "AbandonRunButton";
 	std::string mainMenuButtonName = "MainMenuButton";
 	std::string exitButtonName = "ExitButton";
-	std::string pauseMenuCanvasName = "PauseMenuCanvas";
 	std::string mandoName = "Mandalorian";
 	std::string gameManagerName = "Game Manager";
 
@@ -45,7 +44,6 @@ SCRIPTS_FUNCTION PauseMenuManager* CreatePauseMenuManager() {
 
 	INSPECTOR_STRING(script->mandoName);
 	INSPECTOR_STRING(script->gameManagerName);
-	INSPECTOR_STRING(script->pauseMenuCanvasName);
 	INSPECTOR_STRING(script->resumeButtonName);
 	INSPECTOR_STRING(script->optionsButtonName);
 	INSPECTOR_STRING(script->abandonRunButtonName);

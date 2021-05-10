@@ -17,7 +17,6 @@ public:
 	std::string exitButtonName = "ExitButton";
 	std::string buyButtonName = "BuyButton";
 	std::string mandoName = "Mandalorian";
-	std::string beskarTextHubShopName = "BeskarTextHubShop";
 
 	int beskarCost = 2;
 
@@ -33,7 +32,6 @@ private:
 SCRIPTS_FUNCTION HUBShopMenuManager* CreateHUBShopMenuManager() {
 	HUBShopMenuManager* script = new HUBShopMenuManager();
 
-	INSPECTOR_STRING(script->beskarTextHubShopName);
 	INSPECTOR_STRING(script->mandoName);
 	INSPECTOR_STRING(script->exitButtonName);
 	INSPECTOR_STRING(script->buyButtonName);
