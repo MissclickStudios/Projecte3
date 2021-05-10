@@ -962,7 +962,7 @@
         },
         {
             "UID": 296213747,
-            "ParentUID": 106453230,
+            "ParentUID": 1024593114,
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "MainScene",
@@ -1099,11 +1099,6 @@
                             "Type": 5,
                             "Name": "gameManagerName",
                             "string": "Game Manager"
-                        },
-                        {
-                            "Type": 5,
-                            "Name": "pauseMenuCanvasName",
-                            "string": "PauseMenuCanvas"
                         },
                         {
                             "Type": 5,
@@ -1764,9 +1759,9 @@
                     "Material": {
                         "UID": 258656652,
                         "Color": [
-                            0.58799999952316284,
-                            0.58799999952316284,
-                            0.58799999952316284,
+                            0.50196081399917603,
+                            0.50196081399917603,
+                            0.50196081399917603,
                             1
                         ],
                         "Name": "JawaShip.nemat",
@@ -1841,9 +1836,9 @@
                     "Material": {
                         "UID": 1151802398,
                         "Color": [
-                            0.58823531866073608,
-                            0.58823531866073608,
-                            0.58823531866073608,
+                            0.50196081399917603,
+                            0.50196081399917603,
+                            0.50196081399917603,
                             1
                         ],
                         "Name": "ruined_wall.nemat",
@@ -3275,7 +3270,7 @@
                 {
                     "Type": 3,
                     "Texture": {
-                        "AssetsPath": "Assets\/Textures\/Blockouts\/Level1\/floor_arvala3_compressed_new.png",
+                        "AssetsPath": "Assets\/Textures\/\/Blockouts\/Level1\/floor_arvala3_compressed_new.png",
                         "AssetsName": "floor_arvala3_compressed_new.png",
                         "LibaryPath": "Library\/Textures\/1037247170.netex",
                         "LibraryFile": "1037247170.netex"
@@ -3677,11 +3672,6 @@
                     "InspectorVariables": [
                         {
                             "Type": 5,
-                            "Name": "beskarTextHubShopName",
-                            "string": "BeskarTextHubShop"
-                        },
-                        {
-                            "Type": 5,
                             "Name": "mandoName",
                             "string": "Mandalorian"
                         },
@@ -4068,11 +4058,6 @@
                             "Type": 5,
                             "Name": "mandoName",
                             "string": "Mandalorian"
-                        },
-                        {
-                            "Type": 5,
-                            "Name": "debugMenuCanvasName",
-                            "string": "DebugMenuCanvas"
                         },
                         {
                             "Type": 5,
@@ -4769,11 +4754,6 @@
                         },
                         {
                             "Type": 5,
-                            "Name": "hudCanvasName",
-                            "string": "hubShopCanvas"
-                        },
-                        {
-                            "Type": 5,
                             "Name": "creditsTextName",
                             "string": "CreditsText"
                         },
@@ -5137,7 +5117,7 @@
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
+            "ShowBoundingBoxes": true,
             "Components": [
                 {
                     "Type": 1,
@@ -5183,39 +5163,50 @@
                         {
                             "Type": 0,
                             "Name": "l1Easy",
-                            "int": -1
+                            "int": 1
                         },
                         {
                             "Type": 0,
                             "Name": "l1Intermediate",
-                            "int": -1
+                            "int": 4
                         },
                         {
                             "Type": 7,
                             "Name": "level1",
                             "vectorstring": [
-                                "Assets\/Scenes\/Level1_Room8.json",
-                                "Assets\/Scenes\/Level1_Room1.json",
-                                "Assets\/Scenes\/Level1_Room2.json",
-                                "Assets\/Scenes\/Level1_Room6.json",
-                                "Assets\/Scenes\/Level1_Room9.json",
-                                "Assets\/Scenes\/Level1_Room3.json"
+                                "Level1_Room1.json",
+                                "Level1_Room2.json",
+                                "Level1_Room3.json",
+                                "Level1_Room4.json",
+                                "Level1_Room5.json",
+                                "Level1_Room6.json",
+                                "Level1_Room7.json",
+                                "Level1_Room8.json",
+                                "Level1_Room9.json"
                             ]
                         },
                         {
                             "Type": 0,
                             "Name": "RuinsEasy",
-                            "int": -1
+                            "int": 1
                         },
                         {
                             "Type": 0,
                             "Name": "RuinsIntermediate",
-                            "int": -1
+                            "int": 4
                         },
                         {
                             "Type": 7,
                             "Name": "level1Ruins",
-                            "vectorstring": []
+                            "vectorstring": [
+                                "Level1_Ruins1.json",
+                                "Level1_Ruins2.json",
+                                "Level1_Ruins3.json",
+                                "Level1_Ruins4.json",
+                                "Level1_Ruins5.json",
+                                "Level1_Ruins6.json",
+                                "Level1_Ruins7.json"
+                            ]
                         },
                         {
                             "Type": 4,
@@ -5225,7 +5216,7 @@
                         {
                             "Type": 4,
                             "Name": "groguPrefab",
-                            "prefab": 0
+                            "prefab": 13642032
                         }
                     ]
                 }
@@ -6128,7 +6119,7 @@
                         "File": "808214186.nemat"
                     },
                     "Texture": {
-                        "AssetsPath": "Assets\/Textures\/Blockouts\/Level1\/floor_arvala3_compressed_new.png",
+                        "AssetsPath": "Assets\/Textures\/\/Blockouts\/Level1\/floor_arvala3_compressed_new.png",
                         "AssetsName": "floor_arvala3_compressed_new.png",
                         "LibaryPath": "Library\/Textures\/1037247170.netex",
                         "LibraryFile": "1037247170.netex"
@@ -6784,7 +6775,7 @@
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
+            "ShowBoundingBoxes": true,
             "Components": [
                 {
                     "Type": 1,
