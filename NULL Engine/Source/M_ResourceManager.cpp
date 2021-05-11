@@ -70,6 +70,8 @@ bool M_ResourceManager::Start()
 	RefreshDirectoryFiles(ASSETS_DIRECTORY);
 	RefreshDirectoryFiles(ENGINE_DIRECTORY);
 
+	TrimLibrary();
+
 	FindPrefabs();
 
 	return true;
@@ -1244,6 +1246,37 @@ bool M_ResourceManager::DeleteFromLibrary(const char* assetsPath)
 	resourceUids.clear();
 
 	return ret;
+}
+
+bool M_ResourceManager::TrimLibrary()
+{
+	std::vector<std::string> files;
+	std::vector<std::string> directories;
+	App->fileSystem->DiscoverAllFiles(LIBRARY_PATH, files, directories, nullptr);
+
+	std::map<std::string, uint32> fileUIDs;
+	for (auto file = files.cbegin(); file != files.cend(); ++file)
+	{
+		uint32 UID = 0;
+		sscanf(App->fileSystem->GetFile((*file).c_str()).c_str(), "%u", &UID);
+
+		if (UID != 0)
+			fileUIDs.emplace((*file), UID);
+	}
+
+	for (auto UID = fileUIDs.cbegin(); UID != fileUIDs.cend(); ++UID)
+	{
+		if (library.find(UID->second) == library.end())
+		{
+			App->fileSystem->Remove(UID->first.c_str());
+		}
+	}
+
+	fileUIDs.clear();
+	directories.clear();
+	files.clear();
+
+	return true;
 }
 
 bool M_ResourceManager::GetResourceUIDsFromMeta(const char* assetsPath, std::vector<uint32>& resourceUids)

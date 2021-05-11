@@ -195,6 +195,8 @@ private:																														// --- ASSETS MONITORING METHODS ---
 	bool			DeleteFromAssets				(const char* assetsPath);
 	bool			DeleteFromLibrary				(const char* assetsPath);
 
+	bool			TrimLibrary						();
+
 	bool			GetResourceUIDsFromMeta						(const char* assetsPath, std::vector<uint32>& resourceUids);
 	//bool			GetForcedUIDsFromMeta						(const char* assetsPath, std::map<std::string, uint32>& forcedUIDs);
 	bool			GetLibraryFilePathsFromMeta					(const char* assetsPath, std::vector<std::string>& filePaths);

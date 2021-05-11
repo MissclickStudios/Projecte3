@@ -932,16 +932,26 @@ std::string M_FileSystem::GetDirectory(const char* path)
 std::string M_FileSystem::GetLastDirectory(const char* path)
 {	
 	std::string fullPath	= NormalizePath(path);											// Assets/Dir/LastDir/File.extension. Normalized to avoid errors regarding "\".
-	std::string dirPath	= "";
-	std::string lastDir	= "";
+	std::string dirPath		= "";
+	std::string lastDir		= "";
 
 	SplitFilePath(fullPath.c_str(), &dirPath, nullptr, nullptr);							// Assets/Dir/LastDir/
 
-	dirPath			= dirPath.substr(0, dirPath.size() - 1);							// Assets/Dir/LastDir
+	dirPath				= dirPath.substr(0, dirPath.size() - 1);							// Assets/Dir/LastDir
 	uint last_dir_start	= dirPath.find_last_of("/") + 1;									// Getting the position of the "/" before the last directory.
-	lastDir			= dirPath.substr(last_dir_start, dirPath.size()) + "/";			// LastDir/
+	lastDir				= dirPath.substr(last_dir_start, dirPath.size()) + "/";				// LastDir/
 
 	return lastDir;
+}
+
+std::string M_FileSystem::GetFile(const char* path)
+{
+	std::string fullPath	= NormalizePath(path);
+	std::string file		= "";
+	
+	SplitFilePath(fullPath.c_str(), nullptr, &file, nullptr);
+
+	return file;
 }
 
 std::string M_FileSystem::GetFileExtension(const char* path)
