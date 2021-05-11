@@ -160,6 +160,11 @@
                             "string": "PlayerSpawn"
                         },
                         {
+                            "Type": 5,
+                            "Name": "loseSceneName",
+                            "string": "Assets\/Scenes\/LoseScene.json"
+                        },
+                        {
                             "Type": 0,
                             "Name": "l1Easy",
                             "int": 1
@@ -376,7 +381,7 @@
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
+            "ShowBoundingBoxes": true,
             "Components": [
                 {
                     "Type": 1,
@@ -427,6 +432,12 @@
                         "Name": "Banana.nemat",
                         "Path": "Library\/Materials\/2013694742.nemat",
                         "File": "2013694742.nemat"
+                    },
+                    "Texture": {
+                        "AssetsPath": "Assets\/Textures\/iobamium.PNG",
+                        "AssetsName": "iobamium.PNG",
+                        "LibaryPath": "Library\/Textures\/45294972.netex",
+                        "LibraryFile": "45294972.netex"
                     },
                     "Shader": {
                         "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
@@ -562,7 +573,7 @@
         },
         {
             "UID": 1474137658,
-            "ParentUID": 928780122,
+            "ParentUID": 1920502582,
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "MainScene",
@@ -662,7 +673,7 @@
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
+            "ShowBoundingBoxes": true,
             "Components": [
                 {
                     "Type": 1,
@@ -686,9 +697,9 @@
                 {
                     "Type": 21,
                     "X": 0,
-                    "Y": 0.064999997615814209,
-                    "W": 0.87000000476837158,
-                    "H": 0.99000000953674316,
+                    "Y": 0.76499998569488525,
+                    "W": 0.20000000298023224,
+                    "H": 0.125,
                     "childOrder": 0
                 },
                 {
@@ -718,7 +729,7 @@
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": true,
+            "ShowBoundingBoxes": false,
             "Components": [
                 {
                     "Type": 1,

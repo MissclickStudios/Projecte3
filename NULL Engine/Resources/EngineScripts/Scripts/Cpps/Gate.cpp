@@ -22,7 +22,7 @@ void Gate::Start()
 
 	quote = new C_AudioSource(gameObject);
 	quote->SetEvent("fckSebas");
-	quote->SetVolume(1.5f);
+	quote->SetVolume(1.f);
 }
 
 void Gate::Update()

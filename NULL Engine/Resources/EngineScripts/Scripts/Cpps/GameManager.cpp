@@ -103,7 +103,7 @@ void GameManager::Start()
 	for (auto go = objects->begin(); go != objects->end(); ++go)
 	{
 		Entity* entity = (Entity*)GetObjectScript((*go), ObjectType::ENTITY);
-		if (entity != nullptr && entity->type != EntityType::PLAYER)
+		if (entity != nullptr && entity->type != EntityType::PLAYER && entity->type != EntityType::GROGU)
 		{
 			enemies.push_back(entity);
 		}
@@ -345,7 +345,7 @@ void GameManager::GoNextRoom()
 					//LEVEL2
 					InitiateLevel(2);
 					//TODO: Win Condition poder posar 
-					ReturnHub();
+					//ReturnHub();
 				}
 			}
 		}

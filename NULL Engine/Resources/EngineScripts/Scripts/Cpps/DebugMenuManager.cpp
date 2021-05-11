@@ -26,7 +26,7 @@ DebugMenuManager::~DebugMenuManager()
 
 void DebugMenuManager::Start()
 {
-	gameManager = App->scene->GetGameObjectByName(gameManagerName.c_str());
+	gameManager = App->scene->GetGameObjectByName("Game Manager"); //This is hardcoded. Too bad!
 	mando = App->scene->GetGameObjectByName(mandoName.c_str());
 
 	debugMenuCanvas = (C_Canvas*)gameObject->GetComponent<C_Canvas>();

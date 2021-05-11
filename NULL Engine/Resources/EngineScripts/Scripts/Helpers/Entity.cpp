@@ -160,7 +160,7 @@ void Entity::Update()
 
 void Entity::PostUpdate()
 {
-	if (animator != nullptr && currentAnimation != nullptr)
+	if (animator != nullptr && currentAnimation != nullptr )
 	{
 		AnimatorClip* clip = animator->GetTrack("Preview").GetCurrentClip();
 
