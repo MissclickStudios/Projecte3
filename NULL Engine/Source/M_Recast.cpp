@@ -56,7 +56,7 @@ bool M_Recast::Init(ParsonNode& config)
 
 void M_Recast::AddGO(GameObject* go)
 {
-	if (go->isNavigable == true)
+	if (go->isNavigable)
 		NavigationGameObjects.push_back(go);
 }
 
@@ -77,12 +77,12 @@ bool M_Recast::CleanUp()
 
 bool M_Recast::BuildNavMesh()
 {
-	bool ret = false;
+	bool ret = true;
 	LOG("[Recast mesh]: Starting Nav Mesh build");
 
 	if (NavigationGameObjects.size() == 0) {
 		LOG("[Recast mesh]: No input mesh");
-		ret = false;
+		return false;
 	}
 
 	InputGeom* m_geom = new InputGeom(NavigationGameObjects, EngineApp->detour->buildTiledMesh);

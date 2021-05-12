@@ -9,10 +9,12 @@
 #include "Component.h"
 #include "C_Mesh.h"
 #include "M_Scene.h"
+#include "R_NavMesh.h"
 
 #include "EngineApplication.h"
 #include "M_Recast.h"
 
+#include "RecastNavigation/Detour/Include/DetourNavMesh.h"
 
 E_Navigation::E_Navigation() : EditorPanel("Navigation")
 {
@@ -150,7 +152,7 @@ bool E_Navigation::Draw(ImGuiIO& io)
 			}
 			if (ImGui::Button("Bake")) {
 				GameObject* selected = App->scene->GetSelectedGameObject();
-				if (selected != nullptr && selected->GetComponent<C_Mesh>() != nullptr)
+				if ((selected != nullptr) && (selected->GetComponent<C_Mesh>() != nullptr) && (selected->isNavigable))
 					EngineApp->recast->BuildNavMesh();
 				else
 					LOG("Any game object has been selected or it doesn't have a mesh component");
@@ -230,39 +232,6 @@ bool E_Navigation::Draw(ImGuiIO& io)
 
 				if (selected->isNavigable) {
 
-					if (ImGui::BeginPopup("Change Navigation Area")) {
-						std::string popupAreaName = App->detour->areaNames[popupArea];
-						ImGui::Text(std::string("Do you want to change the navigation area to " + popupAreaName + " for all the child objects as well?").c_str());
-						if (ImGui::Button("Yes, change children")) {
-							std::queue<GameObject*> childs;
-							childs.push(selected);
-
-							while (!childs.empty()) {
-								GameObject* current_child = childs.front();
-								childs.pop();
-
-								//We add all of its childs
-								for (uint i = 0; i < current_child->childs.size(); i++)
-									childs.push(current_child->childs[i]);
-
-								//We change the value of static
-								if (current_child->GetComponent<C_Mesh>() != nullptr)
-									current_child->navigationArea = popupArea;
-							}
-							ImGui::CloseCurrentPopup();
-						}
-						ImGui::SameLine();
-						if (ImGui::Button("No, this object only")) {
-							selected->navigationArea = popupArea;
-							ImGui::CloseCurrentPopup();
-						}
-						ImGui::SameLine();
-						if (ImGui::Button("Cancel"))
-							ImGui::CloseCurrentPopup();
-
-						ImGui::EndPopup();
-					}
-
 					ImGui::Text("Navigation Area"); ImGui::SameLine();
 					if (ImGui::BeginCombo("##areaCombo", App->detour->areaNames[selected->navigationArea])) {
 						for (int i = 0; i < BE_DETOUR_TOTAL_AREAS; ++i) {
@@ -270,21 +239,12 @@ bool E_Navigation::Draw(ImGuiIO& io)
 							if (areaName != "") {
 								ImGui::PushID((void*)App->detour->areaNames[i]);
 								if (ImGui::Selectable(App->detour->areaNames[i], i == selected->navigationArea)) {
-									if (selected->childs.size() != 0) {
-										popupArea = i;
-										openPopup = true;
-									}
-									else
-										selected->navigationArea = i;
+									selected->navigationArea = i;
 								}
 								ImGui::PopID();
 							}
 						}
 						ImGui::EndCombo();
-					}
-					if (openPopup) {
-						ImGui::OpenPopup("Change Navigation Area");
-						openPopup = false;
 					}
 				}
 
