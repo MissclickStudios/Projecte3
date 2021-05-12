@@ -17,7 +17,6 @@ private:
 	void PauseAndStepButtons	();
 	void TimeScaleSlider		();
 	void TimeDisplay			();
-	void GetTimeDisplayStrings	(std::string& realTimeString, std::string& gameTimeString);
 };
 
 #endif // !__E_TOOLBAR_H__
