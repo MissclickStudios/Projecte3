@@ -24,6 +24,14 @@ C_2DAnimator::C_2DAnimator(GameObject* owner) : Component(owner, ComponentType::
 	playFromTheStartOnLoop = false;
 
 	name = "";
+
+	//test
+	spritesheet = new Spritesheet((R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/spritesheet.png"));
+	spritesheet->rows = 3;
+	spritesheet->columns = 4;
+	spritesheet->pixelHeight = 256;
+	spritesheet->pixelLenght = 256;
+	spritesheet->animationNumber = 11;
 }
 
 C_2DAnimator::~C_2DAnimator()
@@ -224,7 +232,7 @@ void C_2DAnimator::LoopAnimation(int animationNum)
 
 		//Animation loop
 		if (animationPlaying)
-			if (animationStepTime <= animationTimer.Read() && animationCounter < animation.size() - 1)
+			if (animationStepTime <= animationTimer.Read() && animationCounter < spritesheet->animationNumber - 1)
 			{
 				animationCounter++;
 				animationTimer.Stop();
@@ -232,10 +240,11 @@ void C_2DAnimator::LoopAnimation(int animationNum)
 			}
 
 		//Set the texture id of the current animation frame
-		if (animation.size() > 0)
-			currentFrameIdTexture = GetTextureIdFromVector(animationCounter,1);
+		if (spritesheet->animationNumber > 0)
+			//currentFrameIdTexture = GetTextureIdFromVector(animationCounter,1);
+			spritesheet->SetCurrentFrameLocation(animationCounter);
 
-		if (animationCounter == animation.size() - 1)
+		if (animationCounter == spritesheet->animationNumber - 1)
 		{
 			if (!animationLoop)
 			{

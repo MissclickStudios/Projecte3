@@ -26,20 +26,22 @@ public:
 
 	void SetSpritesheetSize(int s_rows, int s_columns, int s_pisxelHeight, int s_pixelLenght);
 	Frame currentFrame;
-
-private:
-
-	void GetFrameProportions(int row, int column);
 	void SetCurrentFrameLocation(int frameNumber);
-
-	R_Texture* spriteSheet;
-
-
+	R_Texture* spriteSheet;	
 	int rows;
 	int columns;
 
+	int animationNumber;
+	
 	int pixelHeight;
 	int pixelLenght;
+private:
+	void GetFrameProportions(int row, int column);
+
+
+
+
+
 };
 
 class MISSCLICK_API C_2DAnimator : public Component
@@ -77,6 +79,8 @@ public:
 	void GetAnimationSprites(const char* name, int animationDestination);
 
 	static inline ComponentType GetType() { return ComponentType::ANIMATOR2D; }  
+
+	Spritesheet*				spritesheet;
 
 private:
 	uint GetTextureIdFromVector(int index, int animationNum);
