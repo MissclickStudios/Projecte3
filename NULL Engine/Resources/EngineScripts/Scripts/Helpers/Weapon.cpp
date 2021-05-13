@@ -37,7 +37,7 @@ Weapon::~Weapon()
 
 void Weapon::Start()
 {
-	fireRateTimer.Stop();
+	fireRateTimer = 0;
 	reloadTimer.Stop();
 
 	for (uint i = 0; i < gameObject->components.size(); ++i)
@@ -90,7 +90,7 @@ void Weapon::CleanUp()
 
 void Weapon::OnPause()
 {
-	fireRateTimer.Pause();
+	//fireRateTimer.Pause();
 	reloadTimer.Pause();
 
 	WeaponPause();
@@ -98,7 +98,7 @@ void Weapon::OnPause()
 
 void Weapon::OnResume()
 {
-	fireRateTimer.Resume();
+	//fireRateTimer.Resume();
 	reloadTimer.Resume();
 
 	WeaponResume();

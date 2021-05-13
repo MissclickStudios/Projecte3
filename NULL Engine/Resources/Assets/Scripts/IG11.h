@@ -104,6 +104,8 @@ private:
 
 	GameObject* player = nullptr;
 
+	float baseFireRate = 0.0f;
+
 	// Special Attack
 	bool SpiralAttack();
 	bool UAttack();

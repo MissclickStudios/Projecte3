@@ -139,7 +139,8 @@ protected:
 	virtual void FireProjectile(float2 direction);
 
 	// Shoot
-	Timer fireRateTimer;
+	//Timer fireRateTimer;
+	float fireRateTimer;
 
 	GameObject* hand = nullptr;
 
