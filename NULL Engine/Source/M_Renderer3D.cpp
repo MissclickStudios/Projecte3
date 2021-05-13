@@ -800,16 +800,7 @@ void M_Renderer3D::RenderFramebufferTexture()
 
 	glUseProgram(screenShader->shaderProgramID);
 
-	if (App->scene->nextScene && App->scene->transitionProgresion <= 1.0f)
-		App->scene->transitionProgresion += MC_Time::Game::GetDT();
-
-	else if (!App->scene->nextScene && App->scene->transitionProgresion > 0.0f)
-		App->scene->transitionProgresion -= MC_Time::Game::GetDT();
-
-	/*else
-		App->scene->transitionProgresion = 0;*/
-
-	screenShader->SetUniform1f("progression", App->scene->transitionProgresion);
+	App->scene->DoSceneTransition(screenShader, 1);
 	
 	glBindVertexArray(quadScreenVAO);
 	glDisable(GL_DEPTH_TEST);

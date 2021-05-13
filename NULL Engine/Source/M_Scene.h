@@ -20,6 +20,7 @@ class Resource;
 class R_Scene;
 class R_Model;
 class R_Texture;
+class R_Shader;
 class GameObject;
 class C_Camera;
 
@@ -123,6 +124,8 @@ public:																														// --- SCENE LIGHT METHODS
 	void ShowFPS();
 
 	void ScriptChangeScene(const std::string& sceneName);
+
+	void DoSceneTransition(R_Shader* screenShader, float transitionSpeed);
 	
 private:
 	std::vector<GameObject*> gameObjects;
@@ -144,8 +147,9 @@ private:
 
 	std::vector<std::pair<uint32, GameObject**>> toAdd;
 
-public:
+private:
 	bool nextScene = false;
+	bool sceneIsLoaded = false;
 	float transitionProgresion;
 	std::string nextSceneName;
 
