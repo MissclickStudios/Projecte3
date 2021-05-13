@@ -7,10 +7,13 @@
 
 
 const float texCoordsBuffer[] = {
-1, 1,
-1, 0,
-0, 0,
-1,0,
+		 0.0f, 1.0f, 0.0f, 1.0f,
+		1.0f, 0.0f, 1.0f, 0.0f,
+		0.0f, 0.0f, 0.0f, 0.0f,
+
+		0.0f, 1.0f, 0.0f, 1.0f,
+		1.0f, 1.0f, 1.0f, 1.0f,
+		1.0f, 0.0f, 1.0f, 0.0f
 };
 
 
@@ -39,8 +42,6 @@ public:
 private:
 	uint VAO;
 	uint VBO;
-
-	R_Shader* rShader;
 };
 
 #endif // !__C_UI_IMAGE_H__

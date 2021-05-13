@@ -1,5 +1,6 @@
 #include "Blaster.h"
-
+#include "MC_Time.h"
+#include "Log.h"
 Blaster::Blaster() : Weapon()
 {
 }
@@ -14,25 +15,32 @@ void Blaster::SetUp()
 
 ShootState Blaster::ShootLogic()
 {
-    //Dirty fix, needs improvement
-    if(FireRate() < fireRateThreshold)
-        return ShootState::FIRED_PROJECTILE;
+    ////Dirty fix, needs improvement
+    //if(FireRate() < fireRateThreshold)
+    //    return ShootState::FIRED_PROJECTILE;
 
-    if (!fireRateTimer.IsActive())
+    LOG("[fireRateTimer %.3f]::[DT %.3f]", fireRateTimer, MC_Time::Game::GetDT());
+
+    if (fireRateTimer == 0)
     {
-        fireRateTimer.Start();
+        fireRateTimer += (MC_Time::Game::GetDT() * 10);
         return ShootState::FIRED_PROJECTILE;
     }
-    else if (fireRateTimer.ReadSec() >= FireRate())
+    else if (fireRateTimer < FireRate())
     {
-        fireRateTimer.Stop();
+        fireRateTimer += (MC_Time::Game::GetDT() * 10);
+        return ShootState::WAINTING_FOR_NEXT;
+    }
+    else if (fireRateTimer   >= FireRate() )
+    {
+        fireRateTimer = 0;
         if (ammo <= 0)
             return ShootState::NO_AMMO;
         else
             return ShootState::RATE_FINISHED;
     }
 
-    return ShootState::WAINTING_FOR_NEXT;
+  //  return ShootState::WAINTING_FOR_NEXT;
 }
 
 SCRIPTS_FUNCTION Blaster* CreateBlaster()

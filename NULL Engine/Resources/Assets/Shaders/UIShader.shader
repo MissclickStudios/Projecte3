@@ -2,15 +2,17 @@
 #ifdef __Vertex_Shader__
 
 layout (location = 0) in vec2 UIpos;
+layout (location = 1) in vec2 UICoords;
+
 
 out vec2 TexCoords;
 uniform mat4 projection;
+uniform mat4 model;
 
 void main()
 {
-    gl_Position = projection * vec4(UIpos, 0.0, 1.0); 
-    TexCoords = vec2((UIpos.x + 1.0) / 2,
-                    (UIpos.y + 1.0) /2);
+    gl_Position = projection * model * vec4(UIpos, 0.0, 1.0); 
+    TexCoords = UICoords;
 }  
 
 #endif
