@@ -1585,6 +1585,7 @@ void MeshRenderer::Render(bool outline)
 		LOG("[ERROR] Renderer 3D: Could not render Mesh! Error: R_Mesh* was nullptr.");
 		return;
 	}
+
 	glEnable(GL_BLEND);
 	glEnable(GL_STENCIL_TEST);
 	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
@@ -1642,7 +1643,6 @@ void MeshRenderer::Render(bool outline)
 
 void MeshRenderer::RenderOutline(R_Mesh* rMesh)
 {
-
 	glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
 	glStencilMask(0x00);
 
@@ -1702,7 +1702,6 @@ void MeshRenderer::RenderOutline(R_Mesh* rMesh)
 	glStencilFunc(GL_ALWAYS, 1, 0xFF);
 	glEnable(GL_DEPTH_TEST);
 	glDisable(GL_STENCIL_TEST);
-
 }
 
 void MeshRenderer::RenderVertexNormals(const R_Mesh* rMesh)
@@ -2208,7 +2207,6 @@ void ParticleRenderer::LoadBuffers()
 
 void ParticleRenderer::Render()
 {
-
 	glEnable(GL_BLEND);
 	glEnable(GL_ALPHA_TEST);
 

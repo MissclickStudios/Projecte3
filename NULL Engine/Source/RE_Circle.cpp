@@ -68,7 +68,7 @@ bool RE_Circle::CleanUp()
 	return true;
 }
 
-// --- RE_Circle METHODS
+// --- RE_CIRCLE METHODS
 void RE_Circle::CalculateVertices()
 {
 	float sectorStep	= (2 * PI) / sectors;

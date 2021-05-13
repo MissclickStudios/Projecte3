@@ -8,13 +8,13 @@
 #include "MathGeoLib/include/Geometry/LineSegment.h"
 #include "MathGeoLib/include/Geometry/Triangle.h"
 
+#include "Icons.h"
+#include "Light.h"
+#include "Renderer.h"
+
 #include "SkyBox.h"
 
-#include "Icons.h"
-
 #include "Module.h"
-
-#include "Light.h"
 
 class ParsonNode;
 
@@ -88,9 +88,6 @@ struct MeshRenderer
 	C_Transform*	transform;
 	C_Mesh*			cMesh;
 	C_Material*		cMaterial;
-
-	float			distanceToCamera;
-
 };
 
 struct CuboidRenderer																							// Will render the wireframe of any given geometric form with 8 vertices.
@@ -137,8 +134,8 @@ struct ParticleRenderer
 {
 	ParticleRenderer(R_Texture* mat, Color color, const float4x4 transform);
 
-	void LoadBuffers();
 	void Render();
+	void LoadBuffers();
 
 	uint VAO;
 
@@ -267,8 +264,8 @@ public:																											// --- DEBUG GET/SET METHODS
 	bool			GetRenderBoundingBoxes		() const;														// 
 	bool			GetRenderSkeletons			() const;														// 
 	bool			GetRenderPrimitiveExamples	() const;														// 
-	bool			GetRenderColliders() const;
-	bool			GetRenderCanvas() const;
+	bool			GetRenderColliders			() const;
+	bool			GetRenderCanvas				() const;
 
 	void			SetWorldGridSize			(const uint& worldGridSize);
 
@@ -302,14 +299,14 @@ public:																											// --- DEBUG GET/SET METHODS
 	void			SetRenderBoundingBoxes		(const bool& setTo);											// 
 	void			SetRenderSkeletons			(const bool& setTo);
 	void			SetRenderPrimtiveExamples	(const bool& setTo);											// 
-	void			SetRenderColliders (const bool& setTo);
-	void			SetRenderCanvas(const bool& setTo);
+	void			SetRenderColliders			(const bool& setTo);
+	void			SetRenderCanvas				(const bool& setTo);
 
 public:
-	void			AddPostSceneRenderModule(Module* module);
-	GameObject*		GenerateSceneLight(Color diffuse, Color ambient, Color specular, LightType lightType);
+	void			AddPostSceneRenderModule	(Module* module);
+	GameObject*		GenerateSceneLight			(Color diffuse, Color ambient, Color specular, LightType lightType);
 private:
-	void			GenScreenBuffer();
+	void			GenScreenBuffer				();
 
 public:
 	//Light					lights[MAX_LIGHTS];																	// 
@@ -322,11 +319,12 @@ public:
 	std::vector<Primitive*>	primitives;
 
 private:
-	std::vector<MeshRenderer>		meshRenderers;
-	std::vector<CuboidRenderer>		cuboidRenderers;
-	std::vector<SkeletonRenderer>	skeletonRenderers;
+	std::multimap<float, Renderer*>		renderers;																// Multimap with distance to camera and Renderers.
 	
-
+	std::vector<MeshRenderer>			meshRenderers;
+	std::vector<CuboidRenderer>			cuboidRenderers;
+	std::vector<SkeletonRenderer>		skeletonRenderers;
+	
 	Icons					engineIcons;
 
 	uint					sceneFramebuffer;
@@ -374,11 +372,11 @@ private:																										// --- DEBUG VARIABLES ---		// TODO: CREATE A 
 	bool	renderColliders = false;
 	bool	renderCanvas = false;
 
-	bool					renderPrimitiveExamples;															//
+	bool					renderPrimitiveExamples;					//
 
 	std::vector<Module*>	PostSceneRenderModules;
 
-	std::map<float, ParticleRenderer> particles;												//map of the particles to render. It is ordered depending on the (float)distance to camera. Allows propper rendering
+	std::map<float, ParticleRenderer> particles;						//map of the particles to render. It is ordered depending on the (float)distance to camera. Allows propper rendering
 	R_Shader* particleShader = nullptr;
 };
 
