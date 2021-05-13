@@ -316,6 +316,7 @@ public:
 	
 	SDL_GLContext			context;																			// 
 	R_Shader*				defaultShader = nullptr;
+	R_Shader*				screenShader = nullptr;
 	Skybox					defaultSkyBox;
 
 	std::vector<Primitive*>	primitives;

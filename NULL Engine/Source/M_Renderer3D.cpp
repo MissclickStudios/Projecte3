@@ -796,7 +796,21 @@ void M_Renderer3D::RenderFramebufferTexture()
 	//glViewport(0, 0, App->window->GetWidth(), App->window->GetHeight());
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	glUseProgram(App->resourceManager->GetShader("ScreenShader")->shaderProgramID);
+	if (!screenShader) screenShader = App->resourceManager->GetShader("ScreenShader");
+
+	glUseProgram(screenShader->shaderProgramID);
+
+	if (App->scene->nextScene && App->scene->transitionProgresion <= 1.0f)
+		App->scene->transitionProgresion += MC_Time::Game::GetDT();
+
+	else if (!App->scene->nextScene && App->scene->transitionProgresion > 0.0f)
+		App->scene->transitionProgresion -= MC_Time::Game::GetDT();
+
+	/*else
+		App->scene->transitionProgresion = 0;*/
+
+	screenShader->SetUniform1f("progression", App->scene->transitionProgresion);
+	
 	glBindVertexArray(quadScreenVAO);
 	glDisable(GL_DEPTH_TEST);
 	glBindTexture(GL_TEXTURE_2D, sceneRenderTexture);

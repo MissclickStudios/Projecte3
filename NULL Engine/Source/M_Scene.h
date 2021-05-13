@@ -144,8 +144,9 @@ private:
 
 	std::vector<std::pair<uint32, GameObject**>> toAdd;
 
-private:
+public:
 	bool nextScene = false;
+	float transitionProgresion;
 	std::string nextSceneName;
 
 };

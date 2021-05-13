@@ -51,7 +51,8 @@ masterRoot				(nullptr),
 sceneRoot				(nullptr),
 animationRoot			(nullptr),
 selectedGameObject		(nullptr),
-cullingCamera			(nullptr)
+cullingCamera			(nullptr),
+transitionProgresion	(0)
 {
 	CreateMasterRoot();
 	CreateSceneRoot("MainScene");
@@ -183,7 +184,7 @@ UpdateStatus M_Scene::PostUpdate(float dt)
 {	
 	OPTICK_CATEGORY("M_Scene PostUpdate", Optick::Category::Module)
 
-	if (nextScene)
+	if (nextScene && transitionProgresion >= 1.0f)
 	{
 		LoadScene(nextSceneName.c_str());
 		nextScene = false;
