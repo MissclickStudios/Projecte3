@@ -130,8 +130,6 @@ void E_Toolbar::TimeScaleSlider()
 {
 	ImGui::SetNextItemWidth(75.0f);
 
-	//ImGui::SetCursorPos(ImVec2(ImGui::GetCursorPosX(), ImGui::GetWindowHeight() * 0.5f));									// ATTENTION: THIS AFFECTS THE POSITIONING OF OTHER ITEMS.
-
 	float timeScale = MC_Time::Game::GetTimeScale();
 	if (ImGui::SliderFloat("##", &timeScale, 0.250f, 4.000f, "X %.3f", ImGuiSliderFlags_None))
 	{
@@ -141,26 +139,10 @@ void E_Toolbar::TimeScaleSlider()
 
 void E_Toolbar::TimeDisplay()
 {	
-	std::string realTimeString = "[NONE]";
-	std::string gameTimeString = "[NONE]";
-
-
-	GetTimeDisplayStrings(realTimeString, gameTimeString);
-
-	//ImGui::SetCursorPos(ImVec2(ImGui::GetCursorPosX(), ImGui::GetWindowHeight() * 0.575f));									// ATTENTION: THIS AFFECTS THE POSITIONING OF OTHER ITEMS.
-
-	ImGui::Text("Real Time:"); ImGui::SameLine(); ImGui::TextColored(&Yellow, " %s", realTimeString.c_str());
-	ImGui::SameLine();
-	ImGui::Text("Game Time:"); ImGui::SameLine(); ImGui::TextColored(&Yellow, " %s", gameTimeString.c_str());
-}
-
-void E_Toolbar::GetTimeDisplayStrings(std::string& realTimeString, std::string& gameTimeString)
-{
-	//TODO: return string from dll memo leak
-	//can't call Time::Real::GetClock().GetTimeAsString() ???
 	Hourglass realTime = MC_Time::Real::GetClock();
 	Hourglass gameTime = MC_Time::Game::GetClock();
-	realTimeString = (std::to_string(realTime.hours) + "h " + std::to_string(realTime.minutes) + "m " + std::to_string(realTime.seconds) + "s");
-	gameTimeString = (std::to_string(gameTime.hours) + "h " + std::to_string(gameTime.minutes) + "m " + std::to_string(gameTime.seconds) + "s");
 
+	ImGui::Text("Real Time:"); ImGui::SameLine(); ImGui::TextColored(&Yellow, "%uh %um %.3fs", realTime.hours, realTime.minutes, realTime.seconds);
+	ImGui::SameLine();
+	ImGui::Text("Game Time:"); ImGui::SameLine(); ImGui::TextColored(&Yellow, "%uh %um %.3fs", gameTime.hours, gameTime.minutes, gameTime.seconds);
 }

@@ -58,16 +58,6 @@ public:
 	void deleteNavMesh();
 	void clearNavMesh();
 
-	// Functions for scripting
-	int getAreaCost(unsigned int areaIndex) const;
-	void setAreaCost(unsigned int areaIndex, float areaCost);
-	int getAreaFromName(const char* name) const;
-	static int allAreas() { return POLYFLAGS_ALL; }
-	// Will write the path to variable path, return number of verts
-	int calculatePath(float3 sourcePosition, float3 destination, int areaMask, std::vector<float3>& path);
-	bool nearestPosInMesh(float3 sourcePosition, int areaMask, float3& nearestPoint);
-
-
 	void setDefaultValues();
 	void setDefaultBakeValues();
 	const R_NavMesh* getNavMeshResource() const;
@@ -87,6 +77,18 @@ private:
 
 	//Copy of Detour dunsigned intToCol but without transforming to unsigned int
 	Color areaToColor(unsigned int area) const;
+
+public:
+	// Scripting
+	int getAreaCost(unsigned int areaIndex) const;
+	void setAreaCost(unsigned int areaIndex, float areaCost);
+	int getAreaFromName(const char* name) const;
+	static int allAreas() { return POLYFLAGS_ALL; }
+	// Will write the path to variable path, return number of verts
+	int calculatePath(float3 sourcePosition, float3 destination, int areaMask, std::vector<float3>& path);
+	bool nearestPosInMesh(float3 sourcePosition, int areaMask, float3& nearestPoint);
+
+
 
 public:
 	float agentRadius = 0.5f;
@@ -115,8 +117,7 @@ private:
 	dtNavMeshQuery* m_navQuery = nullptr;
 	dtQueryFilter* m_filterQuery = nullptr;
 	std::vector<navigationPoly*> renderMeshes;
-	R_Material* mat = nullptr;
-	float m_Extents[3];
 
+	float m_Extents[3];
 };
 #endif // __M_DETOUR_H__

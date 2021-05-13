@@ -2,6 +2,7 @@
 #define __C_NAVMESH_H__
 
 #include "Component.h"
+#include "MathGeoLib/include/Math/float3.h"
 
 class ParsonNode;
 class GameObject;
@@ -22,10 +23,15 @@ public:
 	bool LoadState	(ParsonNode& root) override;
 
 public:
+	bool CalculatePath(float3 originPos, float3 targetPos);
 
+public:
 
-private:
-	R_NavMesh* rNavMesh;
+	int areaMask;
+	float3 destination;
+	float3 path;
+	float radius;
+
 };
 
 #endif	// !__C_NAVMESH_H__

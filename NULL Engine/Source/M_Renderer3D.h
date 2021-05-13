@@ -105,8 +105,8 @@ struct CuboidRenderer																							// Will render the wireframe of any 
 
 	const float3*	vertices;
 	CuboidType		type;
-	Color		color;
-	float		edgeWidth;
+	Color			color;
+	float			edgeWidth;
 };
 
 struct RayRenderer

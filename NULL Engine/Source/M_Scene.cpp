@@ -119,6 +119,7 @@ UpdateStatus M_Scene::Update(float dt)
 	HandleCopyGO();
 
 	// --- Sort GameObjects by Z-Buffer value
+	
 	//UpdateSceneFromRoot(sceneRoot);
 	
 	for (uint i = 0; i < gameObjects.size(); ++i)														// First Pass to Delete or Update the GOs' state.
@@ -173,7 +174,7 @@ UpdateStatus M_Scene::Update(float dt)
 		}
 	}
 	
-	ShowFPS();
+	//ShowFPS();
 
 	return UpdateStatus::CONTINUE;
 }

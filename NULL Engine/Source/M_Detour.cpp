@@ -11,12 +11,15 @@
 
 #include "M_ResourceManager.h"
 #include "M_Scene.h"
+#include "M_Renderer3D.h"
 #include "GameObject.h"
 #include "C_Mesh.h"
 #include "C_Transform.h"
 
+#include "R_Material.h"
 #include "R_Mesh.h"
 #include "R_NavMesh.h"
+
 
 M_Detour::M_Detour(bool isActive) : Module("Detour", isActive)
 {
@@ -62,10 +65,17 @@ bool M_Detour::CleanUp()
 
 void M_Detour::Draw() const
 {
+	if (debugDraw && navMeshResource != nullptr && navMeshResource->navMesh != nullptr) {
+		for (int i = 0; i < renderMeshes.size(); ++i)
+		{
+			//App->renderer.
+		}
+	}
 }
 
 void M_Detour::setDebugDraw(bool state)
 {
+	debugDraw = state;
 }
 
 bool M_Detour::createNavMesh(dtNavMeshCreateParams* params)
@@ -133,17 +143,15 @@ bool M_Detour::createNavMesh(dtNavMeshCreateParams* params)
 		createRenderMeshes();
 	}
 
-	//We save the scene so that it stores the NavMesh
-	//App->scene_manager->SaveScene(App->scene_manager->currentScene);
-
 	return true;
 }
 
 void M_Detour::loadNavMeshFile(unsigned int navMeshUid, const char* navMeshPath)
 {
-	App->resourceManager->AllocateResource(navMeshUid, navMeshPath);
-	
-	navMeshResource = (R_NavMesh*) App->resourceManager->RequestResource(navMeshUid);
+	//App->resourceManager->AllocateResource(navMeshUid, navMeshPath);
+	//navMeshResource = (R_NavMesh*) App->resourceManager->RequestResource(navMeshUid);
+
+	navMeshResource = App->resourceManager->GetResource<R_NavMesh>(navMeshPath);
 
 	if (navMeshResource != nullptr)
 	{
@@ -171,8 +179,202 @@ void M_Detour::clearNavMesh()
 	renderMeshes.clear();
 }
 
-// Scripting
+void M_Detour::setDefaultValues()
+{
+	for (int i = 3; i < BE_DETOUR_TOTAL_AREAS; ++i) {
+		sprintf_s(areaNames[i], "");
+		areaCosts[i] = 1;
+	}
 
+	//Inititalize names
+	sprintf_s(areaNames[0], "Walkable");
+	sprintf_s(areaNames[1], "Not Walkable");
+	sprintf_s(areaNames[2], "Jump");
+
+	//Change value of Jump to 2 by default
+	areaCosts[2] = 2;
+
+	setDefaultBakeValues();
+	setAreaCosts();
+}
+
+void M_Detour::setDefaultBakeValues()
+{
+	agentRadius = 0.5f;
+	agentHeight = 2.0f;
+	maxSlope = 45.0f;
+	stepHeight = 0.4f;
+	voxelSize = 0.15f;
+	voxelHeight = 0.2f;
+
+	regionMinSize = 8;
+	regionMergeSize = 20;
+	edgeMaxLen = 12.0f;
+	edgeMaxError = 1.3f;
+	vertsPerPoly = 6.0f;
+	detailSampleDist = 6.0f;
+	detailSampleMaxError = 1.0f;
+
+	buildTiledMesh = true;
+}
+
+const R_NavMesh* M_Detour::getNavMeshResource() const
+{
+	return navMeshResource;
+}
+
+void M_Detour::allocateNavMesh()
+{
+	if (navMeshResource == nullptr)
+	{
+		std::string resourceName = App->scene->GetCurrentScene();
+		resourceName = ASSETS_NAVIGATION_PATH + resourceName + NAVMESH_AST_EXTENSION;
+
+		navMeshResource = (R_NavMesh*)App->resourceManager->CreateResource(ResourceType::NAVMESH, resourceName.c_str());
+		navMeshResource->SetNavMeshName(App->scene->GetCurrentScene());
+	}
+
+	if (navMeshResource->navMesh != nullptr)
+		dtFreeNavMesh(navMeshResource->navMesh);
+
+
+	navMeshResource->navMesh = dtAllocNavMesh();
+	navMeshResource->SetNavMeshName(App->scene->GetCurrentScene());
+
+}
+
+void M_Detour::createRenderMeshes()
+{
+	if (navMeshResource != nullptr && navMeshResource->navMesh != nullptr) {
+		for (int i = 0; i < renderMeshes.size(); ++i)
+			delete renderMeshes[i];
+		renderMeshes.clear();
+
+		const dtNavMesh* mesh = navMeshResource->navMesh;
+		for (int ti = 0; ti < mesh->getMaxTiles(); ++ti) {
+			const dtMeshTile* tile = mesh->getTile(ti);
+			if (!tile->header) continue;
+			processTile(tile);
+		}
+	}
+}
+
+void M_Detour::saveNavMesh() const
+{
+	App->resourceManager->SaveResourceToLibrary(navMeshResource);
+}
+
+inline void M_Detour::initNavQuery()
+{
+	if (navMeshResource != nullptr && navMeshResource->navMesh != nullptr)
+		m_navQuery->init(navMeshResource->navMesh, 2048);
+}
+
+bool M_Detour::createNavMeshData(dtNavMeshCreateParams* params, unsigned char** outData, int* outDataSize)
+{
+	return dtCreateNavMeshData(params, outData, outDataSize);
+}
+
+unsigned int M_Detour::initNavMesh(const dtNavMeshParams* params)
+{
+	uint ret = DT_FAILURE;
+	if (navMeshResource != nullptr && navMeshResource->navMesh != nullptr)
+		ret = navMeshResource->navMesh->init(params);
+
+	return ret;
+}
+
+void M_Detour::freeNavMeshData(void* ptr)
+{
+	dtFree(ptr);
+}
+
+void M_Detour::setAreaCosts()
+{
+	if (m_filterQuery != nullptr) {
+		m_filterQuery->setAreaCost(0, areaCosts[0]);
+		for (int i = 2; i < BE_DETOUR_TOTAL_AREAS; ++i)
+			m_filterQuery->setAreaCost(i, areaCosts[i]);
+	}
+}
+
+void M_Detour::processTile(const dtMeshTile* tile)
+{
+	for (int i = 0; i < tile->header->polyCount; ++i) {
+		const dtPoly* poly = &tile->polys[i];
+		if (poly->getType() == DT_POLYTYPE_OFFMESH_CONNECTION)	// Skip off-mesh links.
+			continue;
+
+		const dtPolyDetail* poly_d = &tile->detailMeshes[i];
+		navigationPoly* navpol = new navigationPoly();
+
+
+		navpol->color = areaToColor(poly->getArea());
+		navpol->rmesh->vertices.resize(tile->header->vertCount + tile->header->detailVertCount);
+		navpol->rmesh->vertices.reserve(navpol->rmesh->vertices.size());
+		navpol->rmesh->indices.resize(poly_d->triCount * 3);
+		navpol->rmesh->indices.reserve(navpol->rmesh->indices.size());
+
+
+		// We copy the vertices
+		for (int j = 0; j < navpol->rmesh->vertices.size(); ++j) {
+			float* vert;
+			if (j < tile->header->vertCount)
+				vert = &tile->verts[j * 3];
+			else
+				vert = &tile->detailVerts[(poly_d->vertBase + j - tile->header->vertCount) * 3];
+
+			memcpy(&navpol->rmesh->vertices[j], vert, sizeof(float) * 3);
+		}
+
+		// Index pointer to copy the indices
+		uint* index_indices = navpol->rmesh->indices.data();
+		for (int j = 0; j < poly_d->triCount; ++j) {
+			const unsigned char* t = &tile->detailTris[(poly_d->triBase + j) * 4];
+			for (int k = 0; k < 3; ++k) {
+				if (t[k] < poly->vertCount)
+					(*index_indices) = poly->verts[t[k]];
+				else
+					(*index_indices) = t[k] - poly->vertCount + tile->header->vertCount;
+				index_indices++;
+
+			}
+		}
+
+		//navpol->rmesh.
+		renderMeshes.push_back(navpol);
+	}
+}
+
+inline int bit(int a, int b) {
+	return (a & (1 << b)) >> b;
+}
+
+Color M_Detour::areaToColor(unsigned int area) const
+{
+	if (area == 0)
+		return Color(0, 192, 255, 255);
+	else {
+		int	r = bit(area, 1) + bit(area, 3) * 2 + 1;
+		int	g = bit(area, 2) + bit(area, 4) * 2 + 1;
+		int	b = bit(area, 0) + bit(area, 5) * 2 + 1;
+
+		return Color(r * 63, g * 63, b * 63, 255);
+	}
+}
+
+navigationPoly::navigationPoly() {
+	rmesh = new R_Mesh();
+}
+
+navigationPoly::~navigationPoly() {
+	if (rmesh) {
+		rmesh->CleanUp();
+		delete rmesh;
+	}
+}
+
+// Scripting
 inline bool inRange(const float* v1, const float* v2, const float r, const float h)
 {
 	const float dx = v2[0] - v1[0];
@@ -361,189 +563,4 @@ bool M_Detour::nearestPosInMesh(float3 sourcePosition, int areaMask, float3& nea
 	//Find the nearest point
 	status = m_navQuery->findNearestPoly(sourcePosition.ptr(), m_Extents, m_filterQuery, &nearestPoly, nearestPoint.ptr());
 	return !((status & DT_FAILURE) || (status & DT_STATUS_DETAIL_MASK)); //If we found an error we return false
-}
-
-void M_Detour::setDefaultValues()
-{
-	for (int i = 3; i < BE_DETOUR_TOTAL_AREAS; ++i) {
-		sprintf_s(areaNames[i], "");
-		areaCosts[i] = 1;
-	}
-
-	//Inititalize names
-	sprintf_s(areaNames[0], "Walkable");
-	sprintf_s(areaNames[1], "Not Walkable");
-	sprintf_s(areaNames[2], "Jump");
-
-	//Change value of Jump to 2 by default
-	areaCosts[2] = 2;
-
-	setDefaultBakeValues();
-	setAreaCosts();
-}
-
-void M_Detour::setDefaultBakeValues()
-{
-	agentRadius = 0.5f;
-	agentHeight = 2.0f;
-	maxSlope = 45.0f;
-	stepHeight = 0.4f;
-	voxelSize = 0.15f;
-	voxelHeight = 0.2f;
-
-	regionMinSize = 8;
-	regionMergeSize = 20;
-	edgeMaxLen = 12.0f;
-	edgeMaxError = 1.3f;
-	vertsPerPoly = 6.0f;
-	detailSampleDist = 6.0f;
-	detailSampleMaxError = 1.0f;
-
-	buildTiledMesh = true;
-}
-
-const R_NavMesh* M_Detour::getNavMeshResource() const
-{
-	return navMeshResource;
-}
-
-void M_Detour::allocateNavMesh()
-{
-	if (navMeshResource == nullptr)
-	{
-		std::string resourceName = App->scene->GetCurrentScene();
-		resourceName = ASSETS_NAVIGATION_PATH + resourceName + NAVMESH_AST_EXTENSION;
-
-		navMeshResource = (R_NavMesh*)App->resourceManager->CreateResource(ResourceType::NAVMESH, resourceName.c_str());
-		navMeshResource->SetNavMeshName(App->scene->GetCurrentScene());
-	}
-
-	if (navMeshResource->navMesh != nullptr)
-		dtFreeNavMesh(navMeshResource->navMesh);
-
-
-	navMeshResource->navMesh = dtAllocNavMesh();
-	navMeshResource->SetNavMeshName(App->scene->GetCurrentScene());
-
-	App->resourceManager->SaveResourceToLibrary(navMeshResource);
-}
-
-void M_Detour::createRenderMeshes()
-{
-}
-
-void M_Detour::saveNavMesh() const
-{
-}
-
-inline void M_Detour::initNavQuery()
-{
-	if (navMeshResource != nullptr && navMeshResource->navMesh != nullptr)
-		m_navQuery->init(navMeshResource->navMesh, 2048);
-}
-
-bool M_Detour::createNavMeshData(dtNavMeshCreateParams* params, unsigned char** outData, int* outDataSize)
-{
-	return dtCreateNavMeshData(params, outData, outDataSize);
-}
-
-unsigned int M_Detour::initNavMesh(const dtNavMeshParams* params)
-{
-	uint ret = DT_FAILURE;
-	if (navMeshResource != nullptr && navMeshResource->navMesh != nullptr)
-		ret = navMeshResource->navMesh->init(params);
-
-	return ret;
-}
-
-void M_Detour::freeNavMeshData(void* ptr)
-{
-	dtFree(ptr);
-}
-
-void M_Detour::setAreaCosts()
-{
-	if (m_filterQuery != nullptr) {
-		m_filterQuery->setAreaCost(0, areaCosts[0]);
-		for (int i = 2; i < BE_DETOUR_TOTAL_AREAS; ++i)
-			m_filterQuery->setAreaCost(i, areaCosts[i]);
-	}
-}
-
-void M_Detour::processTile(const dtMeshTile* tile)
-{
-	for (int i = 0; i < tile->header->polyCount; ++i) {
-		const dtPoly* poly = &tile->polys[i];
-		if (poly->getType() == DT_POLYTYPE_OFFMESH_CONNECTION)	// Skip off-mesh links.
-			continue;
-
-		const dtPolyDetail* poly_d = &tile->detailMeshes[i];
-		navigationPoly* navpol = new navigationPoly();
-
-
-		navpol->color = areaToColor(poly->getArea());
-		navpol->rmesh->vertices.resize(tile->header->vertCount + tile->header->detailVertCount);
-		navpol->rmesh->vertices.reserve(navpol->rmesh->vertices.size());
-		navpol->rmesh->indices.resize(poly_d->triCount * 3);
-		navpol->rmesh->indices.reserve(navpol->rmesh->indices.size());
-
-
-		// We copy the vertices
-		for (int j = 0; j < navpol->rmesh->vertices.size(); ++j) {
-			float* vert;
-			if (j < tile->header->vertCount)
-				vert = &tile->verts[j * 3];
-			else
-				vert = &tile->detailVerts[(poly_d->vertBase + j - tile->header->vertCount) * 3];
-
-			memcpy(&navpol->rmesh->vertices[j], vert, sizeof(float) * 3);
-		}
-
-		// Index pointer to copy the indices
-		uint* index_indices = navpol->rmesh->indices.data();
-		for (int j = 0; j < poly_d->triCount; ++j) {
-			const unsigned char* t = &tile->detailTris[(poly_d->triBase + j) * 4];
-			for (int k = 0; k < 3; ++k) {
-				if (t[k] < poly->vertCount)
-					(*index_indices) = poly->verts[t[k]];
-				else
-					(*index_indices) = t[k] - poly->vertCount + tile->header->vertCount;
-				index_indices++;
-
-			}
-		}
-
-		//To create EBO and VBO
-		//Load in memory
-		//navpol->rmesh->LoadInMemory();
-		renderMeshes.push_back(navpol);
-	}
-}
-
-inline int bit(int a, int b) {
-	return (a & (1 << b)) >> b;
-}
-
-Color M_Detour::areaToColor(unsigned int area) const
-{
-	if (area == 0)
-		return Color(0, 192, 255, 255);
-	else {
-		int	r = bit(area, 1) + bit(area, 3) * 2 + 1;
-		int	g = bit(area, 2) + bit(area, 4) * 2 + 1;
-		int	b = bit(area, 0) + bit(area, 5) * 2 + 1;
-
-		return Color(r * 63, g * 63, b * 63, 255);
-	}
-}
-
-navigationPoly::navigationPoly() {
-	rmesh = new R_Mesh();
-}
-
-navigationPoly::~navigationPoly() {
-	if (rmesh) {
-		rmesh->CleanUp();
-		delete rmesh;
-	}
 }
