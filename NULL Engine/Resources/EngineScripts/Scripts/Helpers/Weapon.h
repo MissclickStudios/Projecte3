@@ -2,7 +2,7 @@
 #include "Object.h"
 
 #include "Prefab.h"
-#include "Timer.h"
+#include "PerfectTimer.h"
 
 #include "Perk.h"
 #include "Effect.h"
@@ -139,7 +139,7 @@ protected:
 	virtual void FireProjectile(float2 direction);
 
 	// Shoot
-	Timer fireRateTimer;
+	PerfectTimer fireRateTimer;
 
 	GameObject* hand = nullptr;
 

@@ -459,14 +459,14 @@ bool IG11::SpiralAttack()
 
 	if (blasterWeapon)
 	{
-		blasterWeapon->fireRate = 0.0001f * MC_Time::Game::GetDT();
+		blasterWeapon->fireRate = 0.001f;
 		blasterWeapon->ammo = 20;
 		blasterWeapon->projectilesPerShot = 3;
 		blasterWeapon->shotSpreadArea = 5;
 	}
 	if (sniperWeapon)
 	{
-		sniperWeapon->fireRate = 0.01f * MC_Time::Game::GetDT();
+		sniperWeapon->fireRate = 0.001f;
 		sniperWeapon->ammo = 20;
 		sniperWeapon->projectilesPerShot = 3;
 		sniperWeapon->shotSpreadArea = 5;

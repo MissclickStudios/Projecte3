@@ -1,5 +1,7 @@
 #include "Blaster.h"
 
+#include "Log.h"
+
 Blaster::Blaster() : Weapon()
 {
 }
@@ -14,22 +16,21 @@ void Blaster::SetUp()
 
 ShootState Blaster::ShootLogic()
 {
-    //Dirty fix, needs improvement
-    if(FireRate() < fireRateThreshold)
-        return ShootState::FIRED_PROJECTILE;
-
     if (!fireRateTimer.IsActive())
     {
         fireRateTimer.Start();
         return ShootState::FIRED_PROJECTILE;
     }
-    else if (fireRateTimer.ReadSec() >= FireRate())
+    else 
     {
-        fireRateTimer.Stop();
-        if (ammo <= 0)
-            return ShootState::NO_AMMO;
-        else
-            return ShootState::RATE_FINISHED;
+        if (fireRateTimer.ReadMs() / 1000.0f >= FireRate())
+        {
+            fireRateTimer.Stop();
+            if (ammo <= 0)
+                return ShootState::NO_AMMO;
+            else
+                return ShootState::RATE_FINISHED;
+        }
     }
 
     return ShootState::WAINTING_FOR_NEXT;

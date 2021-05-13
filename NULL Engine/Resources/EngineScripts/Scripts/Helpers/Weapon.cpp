@@ -90,7 +90,7 @@ void Weapon::CleanUp()
 
 void Weapon::OnPause()
 {
-	fireRateTimer.Pause();
+	//fireRateTimer.Pause();
 	reloadTimer.Pause();
 
 	WeaponPause();
@@ -98,7 +98,7 @@ void Weapon::OnPause()
 
 void Weapon::OnResume()
 {
-	fireRateTimer.Resume();
+	//fireRateTimer.Resume();
 	reloadTimer.Resume();
 
 	WeaponResume();
