@@ -6,6 +6,9 @@
 
 #include "Color.h"
 
+#define STANDARD_LINE_WIDTH	1.0f
+#define BASE_LINE_WIDTH		3.0f
+
 enum class RendererType
 {
 	MESH,

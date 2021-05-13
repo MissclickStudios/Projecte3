@@ -47,6 +47,7 @@ public:																																// --- MESH SKINNING METHODS
 	R_Mesh*		GetSkinnedMesh			() const;
 	void		GetBoneMapping			(std::map<std::string, GameObject*>& boneMapping);
 	void		GetBoneTranforms		(std::vector<float4x4>& boneTransforms);
+	std::vector<float4x4>* GetBoneTransformsAsPtr();
 
 	bool		RefreshSkinning			();																							// 
 	void		AnimateMesh				();																							// 

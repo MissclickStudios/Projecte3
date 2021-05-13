@@ -135,6 +135,11 @@ void C_Mesh::GetBoneTranforms(std::vector<float4x4>& boneTransforms)
 		boneTransforms = this->boneTransforms;
 }
 
+std::vector<float4x4>* C_Mesh::GetBoneTransformsAsPtr()
+{
+	return &boneTransforms;
+}
+
 bool C_Mesh::RefreshSkinning()
 {	
 	if (rMesh == nullptr || !this->isActive)

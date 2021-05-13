@@ -22,6 +22,22 @@ RE_Ray::~RE_Ray()
 
 bool RE_Ray::Render()
 {
+	GLfloat A[3] = { ray.a.x, ray.a.y , ray.a.z };
+	GLfloat B[3] = { ray.b.x, ray.b.y , ray.b.z };
+
+	glColor4f(color.r, color.g, color.b, color.a);
+
+	glLineWidth(lineWidth);
+	glBegin(GL_LINES);
+
+	glVertex3fv(A);
+	glVertex3fv(B);
+
+	glEnd();
+	glLineWidth(STANDARD_LINE_WIDTH);
+
+	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+	
 	return true;
 }
 
