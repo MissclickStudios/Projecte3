@@ -90,7 +90,7 @@ void C_UI_Image::Draw2D()
 		return;
 
 	else if (cAnimator && cAnimator->IsAnimationPlaying())
-		id = cAnimator->GetIdFromAnimation();
+		id = cAnimator->spritesheet->spriteSheet->GetTextureID();
 
 	else
 		id = cMaterial->GetTextureID();
@@ -115,20 +115,32 @@ void C_UI_Image::Draw2D()
 	cMaterial->GetShader()->SetUniformMatrix4("model", identity.Transposed().ptr());
 	cMaterial->GetShader()->SetUniformMatrix4("projection", projectionMatrix.ptr());
 	
+	
 	//Uncomment the code below to update the texture coords in real time
+	if(cAnimator != nullptr && cAnimator->IsAnimationPlaying())
+	{
+	float newCoords[] = {
+			0.0f, 1.0f, cAnimator->spritesheet->currentFrame.proportionBeginX, cAnimator->spritesheet->currentFrame.proportionFinalY,
+			1.0f, 0.0f, cAnimator->spritesheet->currentFrame.proportionFinalX, cAnimator->spritesheet->currentFrame.proportionBeginY,
+			0.0f, 0.0f, cAnimator->spritesheet->currentFrame.proportionBeginX, cAnimator->spritesheet->currentFrame.proportionBeginY,
 
-	//float newCoords[] = {
-	//		 0.0f, 1.0f, 0.0f, 0.5f,
-	//		1.0f, 0.0f, 0.5f, 0.0f,
-	//		0.0f, 0.0f, 0.0f, 0.0f,
+			0.0f, 1.0f, cAnimator->spritesheet->currentFrame.proportionBeginX, cAnimator->spritesheet->currentFrame.proportionFinalY,
+			1.0f, 1.0f, cAnimator->spritesheet->currentFrame.proportionFinalX, cAnimator->spritesheet->currentFrame.proportionFinalY,
+			1.0f, 0.0f, cAnimator->spritesheet->currentFrame.proportionFinalX,  cAnimator->spritesheet->currentFrame.proportionBeginY
 
-	//		0.0f, 1.0f, 0.0f, 0.5f,
-	//		1.0f, 1.0f, 0.5f, 0.5f,
-	//		1.0f, 0.0f, 0.5f, 0.0f
-	//};
+		//    0.0f, 1.0f, 0.0f, 0.5f,
+		//	1.0f, 0.0f, 0.5f, 0.0f,
+		//	0.0f, 0.0f, 0.0f, 0.0f,
+		//
+		//	0.0f, 1.0f, 0.0f, 0.5f,
+		//	1.0f, 1.0f, 0.5f, 0.5f,
+		//	1.0f, 0.0f, 0.5f, 0.0f
+	};	
 
-	//glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	//glBufferData(GL_ARRAY_BUFFER, sizeof(newCoords), newCoords, GL_DYNAMIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(newCoords), newCoords, GL_DYNAMIC_DRAW);
+	}
+
 
 	glBindVertexArray(VAO);
 
