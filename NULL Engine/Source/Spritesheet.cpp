@@ -28,32 +28,25 @@ void Spritesheet::SetSpritesheetSize(int s_rows, int s_columns, int s_pisxelHeig
 	pixelLenght = s_pixelLenght;
 }
 
+Frame* Spritesheet::GetAtlasPosition(int pixelPosX, int pixelPosY, int pixelWidth, int pixelHeight)
+{
+	Frame* frame = new Frame();
+
+	return frame;
+}
+
 void Spritesheet::GetFrameProportions(int row, int column)
 {
-	currentFrame.proportionBeginX = (pixelLenght * row) / pixelLenght * (rows - 1);
-	currentFrame.proportionFinalX = (pixelLenght * (row + 1)) / pixelLenght * (rows - 1);
+	currentFrame.proportionBeginX = row /(rows - 1);
+	currentFrame.proportionFinalX =  (row + 1) / (rows - 1);
 
-	currentFrame.proportionBeginY = (pixelHeight * column) / pixelHeight * (columns - 1);
-	currentFrame.proportionBeginY = (pixelHeight * column + 1) / pixelHeight * (columns - 1);
+	currentFrame.proportionBeginY = column/ (columns - 1);
+	currentFrame.proportionBeginY = (column + 1) /(columns - 1);
 }
+
+
 
 void Spritesheet::SetCurrentFrameLocation(int frameNumber)
 {
-	int rowN = 0;
-	int columnN = 0;
-
-	for (int i = 0; i <= rows; i++)
-	{
-		for (int k = 0; k <= rows; k++)
-		{
-			if (frameNumber == 0)
-			{
-				GetFrameProportions(rowN, columnN);
-			}
-			frameNumber--;
-			columnN++;
-		}
-		columnN = 0;
-		rowN++;
-	}
+		GetFrameProportions(1, 1);
 }

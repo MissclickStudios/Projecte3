@@ -244,7 +244,7 @@ void C_2DAnimator::LoopAnimation(int animationNum)
 		//Set the texture id of the current animation frame
 		if (spritesheet->animationNumber > 0)
 			//currentFrameIdTexture = GetTextureIdFromVector(animationCounter,1);
-			spritesheet->SetCurrentFrameLocation(animationCounter);
+			spritesheet->SetCurrentFrameLocation(animationCounter + 1);
 
 		if (animationCounter == spritesheet->animationNumber - 1)
 		{

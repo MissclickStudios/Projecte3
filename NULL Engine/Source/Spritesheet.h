@@ -26,6 +26,8 @@ public:
 
 	int animationNumber;
 
+	Frame* GetAtlasPosition(int pixelPosX, int pixelPosY, int pixelWidth, int pixelHeight);
+
 	int pixelHeight;
 	int pixelLenght;
 private:
