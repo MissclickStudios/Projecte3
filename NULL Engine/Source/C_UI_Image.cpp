@@ -16,8 +16,11 @@
 
 #include "R_Shader.h"
 #include "R_Texture.h"
+#include "Spritesheet.h"
 
 #include "C_UI_Image.h"
+
+#include "M_Input.h"
 
 #include "Dependencies/glew/include/glew.h"
 //#include "OpenGL.h"
@@ -69,7 +72,6 @@ void C_UI_Image::LoadBuffers()
 	// texture coord attribute
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
 	glEnableVertexAttribArray(1);
-
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
@@ -123,12 +125,12 @@ void C_UI_Image::Draw2D()
 			0.0f, 1.0f, cAnimator->spritesheet->currentFrame.proportionBeginX, cAnimator->spritesheet->currentFrame.proportionFinalY,
 			1.0f, 0.0f, cAnimator->spritesheet->currentFrame.proportionFinalX, cAnimator->spritesheet->currentFrame.proportionBeginY,
 			0.0f, 0.0f, cAnimator->spritesheet->currentFrame.proportionBeginX, cAnimator->spritesheet->currentFrame.proportionBeginY,
-
+		
 			0.0f, 1.0f, cAnimator->spritesheet->currentFrame.proportionBeginX, cAnimator->spritesheet->currentFrame.proportionFinalY,
 			1.0f, 1.0f, cAnimator->spritesheet->currentFrame.proportionFinalX, cAnimator->spritesheet->currentFrame.proportionFinalY,
 			1.0f, 0.0f, cAnimator->spritesheet->currentFrame.proportionFinalX,  cAnimator->spritesheet->currentFrame.proportionBeginY
-
-		//    0.0f, 1.0f, 0.0f, 0.5f,
+		
+		//    0.0f, 1.0f, 0.0f , 0.5f,
 		//	1.0f, 0.0f, 0.5f, 0.0f,
 		//	0.0f, 0.0f, 0.0f, 0.0f,
 		//
@@ -168,7 +170,6 @@ void C_UI_Image::Draw3D()
 
 	else if (cAnimator->IsAnimationPlaying())
 		id = cAnimator->GetIdFromAnimation();
-
 	else
 		id = cMaterial->GetTextureID();
 

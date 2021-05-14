@@ -1,0 +1,35 @@
+#ifndef __SPRITESHEET_H__
+#define __SPRITESHEET_H__
+
+class R_Texture;
+
+struct Frame
+{
+	float proportionBeginX;
+	float proportionBeginY;
+	float proportionFinalX;
+	float proportionFinalY;
+};
+
+class Spritesheet
+{
+public:
+	Spritesheet(R_Texture* spritesheet);
+	~Spritesheet();
+
+	void SetSpritesheetSize(int s_rows, int s_columns, int s_pisxelHeight, int s_pixelLenght);
+	Frame currentFrame;
+	void SetCurrentFrameLocation(int frameNumber);
+	R_Texture* spriteSheet;
+	int rows;
+	int columns;
+
+	int animationNumber;
+
+	int pixelHeight;
+	int pixelLenght;
+private:
+	void GetFrameProportions(int row, int column);
+};
+
+#endif // !__SPRITESHEET_H__
