@@ -37,11 +37,11 @@ Frame* Spritesheet::GetAtlasPosition(int pixelPosX, int pixelPosY, int pixelWidt
 
 void Spritesheet::GetFrameProportions(int row, int column)
 {
-	currentFrame.proportionBeginX = row /(rows - 1);
-	currentFrame.proportionFinalX =  (row + 1) / (rows - 1);
+	currentFrame.proportionBeginX = (float)row /rows;
+	currentFrame.proportionFinalX =  ((float)row + 1) /rows;
 
-	currentFrame.proportionBeginY = column/ (columns - 1);
-	currentFrame.proportionBeginY = (column + 1) /(columns - 1);
+	currentFrame.proportionBeginY = (float)column/ columns;
+	currentFrame.proportionFinalY = ((float)column + 1) /columns;
 }
 
 
