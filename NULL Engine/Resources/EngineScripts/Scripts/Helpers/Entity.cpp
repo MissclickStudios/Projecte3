@@ -110,6 +110,12 @@ void Entity::PreUpdate()
 			case EffectType::HEAL:
 				Heal(effects[i]);
 				break;
+			case EffectType::MAX_HEALTH_MODIFY:
+				MaxHealthModify(effects[i]);
+				break;
+			case EffectType::SPEED_MODIFY:
+				SpeedModify(effects[i]);
+				break;
 			case EffectType::STUN:
 				Stun(effects[i]);
 				break;
@@ -278,6 +284,16 @@ void Entity::Heal(Effect* effect)
 {
 	GiveHeal(effect->Duration());
 	effect->End();
+}
+
+void Entity::MaxHealthModify(Effect* effect)
+{
+	maxHealthModifier += effect->Duration();
+}
+
+void Entity::SpeedModify(Effect* effect)
+{
+	speedModifier *= effect->Duration();
 }
 
 void Entity::Stun(Effect* effect)

@@ -74,7 +74,8 @@ public:
 	// Effect Functions
 	virtual void Frozen();
 	virtual void Heal(Effect* effect);
-
+	virtual void MaxHealthModify(Effect* effect);
+	virtual void SpeedModify(Effect* effect);
 	virtual void Stun(Effect* effect);
 	virtual void KnockBack(Effect* effect);
 	

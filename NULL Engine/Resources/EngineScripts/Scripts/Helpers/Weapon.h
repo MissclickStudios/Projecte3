@@ -64,13 +64,15 @@ public:
 
 	// Perks
 	void RefreshPerks(); // Resets the modifiers and applies all the current perks
-	void AddPerk(Perk perk);
+	void AddPerk(PerkType perk, float amount, float duration);
 
-	virtual void DamageUp();
-	virtual void MaxAmmoUp();
-	virtual void FireRateUp();
-	virtual void FastReload();
-	virtual void FreezeBullets();
+	virtual void DamageModify(Perk* perk);
+	virtual void MaxAmmoModify(Perk* perk);
+	virtual void FireRateModify(Perk* perk);
+	virtual void ReloadTimeModify(Perk* perk);
+	virtual void BulletLifeTimeModify(Perk* perk);
+	virtual void FreezeBullets(Perk* perk);
+	virtual void StunBullets(Perk* perk);
 
 	// Type
 	WeaponType type = WeaponType::WEAPON;
@@ -87,16 +89,17 @@ public:
 	float BulletLifeTime() { return bulletLifeTime / bulletLifeTimeModifier; }
 	int ammo = 0;
 	int maxAmmo = 0;
-	int MaxAmmo() { return maxAmmo + maxAmmoModifier; }
+	int MaxAmmo() { return maxAmmo * maxAmmoModifier; }
 	int projectilesPerShot = 0;
-	float fireRateThreshold = 0.1f;
+	float fireRateCap = 0.001f;
+	float reloadTimeCap = 0.1f;
 
 	float shotSpreadArea;
 	void SpreadProjectiles(float2 direction);
 
 	// Reload
 	float reloadTime = 0.0f;
-	float ReloadTime() { return reloadTime / reloadTimeModifier; }
+	float ReloadTime() { return reloadTime * reloadTimeModifier; }
 
 	// Modifiers
 	float damageModifier = DEFAULT_MODIFIER;
@@ -104,7 +107,7 @@ public:
 	float fireRateModifier = DEFAULT_MODIFIER;
 	float reloadTimeModifier = DEFAULT_MODIFIER;
 	float bulletLifeTimeModifier = DEFAULT_MODIFIER;
-	int maxAmmoModifier = 0.0f;
+	int maxAmmoModifier = DEFAULT_MODIFIER;
 	int PPSModifier = 0.0f;
 
 	// Perks - most condecorated league player in the west btw, no cringe intended

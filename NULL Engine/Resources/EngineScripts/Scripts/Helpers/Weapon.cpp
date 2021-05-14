@@ -200,65 +200,82 @@ void Weapon::RefreshPerks()
 	projectileSpeedModifier = DEFAULT_MODIFIER;
 	fireRateModifier = DEFAULT_MODIFIER;
 	reloadTimeModifier = DEFAULT_MODIFIER;
-	maxAmmoModifier = 0.0f;
+	maxAmmoModifier = DEFAULT_MODIFIER;
 	PPSModifier = 0.0f;
 	onHitEffects.clear();
 
+	PerkType t;
 	// Apply each perk
 	for (uint i = 0; i < perks.size(); ++i)
-		switch (perks[i])
+		switch (perks[i].Type())
 		{
-		case Perk::DAMAGE_UP:
-			DamageUp();
+		case PerkType::DAMAGE_MODIFY:
+			DamageModify(&perks[i]);
 			break;
-		case Perk::MAXAMMO_UP:
-			MaxAmmoUp();
+		case PerkType::MAXAMMO_MODIFY:
+			MaxAmmoModify(&perks[i]);
 			break;
-		case Perk::FIRERATE_UP:
-			FireRateUp();
+		case PerkType::FIRERATE_MODIFY:
+			FireRateModify(&perks[i]);
 			break;
-		case Perk::FAST_RELOAD:
-			FastReload();
+		case PerkType::RELOAD_TIME_MODIFY:
+			ReloadTimeModify(&perks[i]);
 			break;
-		case Perk::FREEZE_BULLETS:
-			FreezeBullets();
+		case PerkType::BULLET_LIFETIME_MODIFY:
+			BulletLifeTimeModify(&perks[i]);
+			break;
+		case PerkType::FREEZE_BULLETS:
+			FreezeBullets(&perks[i]);
+			break;
+		case PerkType::STUN_BULLETS:
+			StunBullets(&perks[i]);
 			break;
 		}
 }
 
-void Weapon::AddPerk(Perk perk)
+void Weapon::AddPerk(PerkType type, float amount, float duration)
 {
-	perks.push_back(perk);
+	perks.push_back(Perk(type, amount, duration));
 	RefreshPerks();
 }
 
-void Weapon::DamageUp()
+void Weapon::DamageModify(Perk* perk)
 {
-	damageModifier += 1.0f;
+	damageModifier *= perk->Amount();
 }
 
-void Weapon::MaxAmmoUp()
+void Weapon::MaxAmmoModify(Perk* perk)
 {
-	maxAmmoModifier += 10;
+	maxAmmoModifier *= perk->Amount();
 }
 
-void Weapon::FireRateUp()
+void Weapon::FireRateModify(Perk* perk)
 {
-	fireRateModifier -= 0.5f;
-	if (fireRateModifier < 0.1f)
-		fireRateModifier = 0.1f;
+	float requestedFireRate = fireRate * fireRateModifier * perk->Amount();
+	if (requestedFireRate >= fireRateCap)
+		fireRateModifier *= perk->Amount();
 }
 
-void Weapon::FastReload()
+void Weapon::ReloadTimeModify(Perk* perk)
 {
-	reloadTime -= 0.2f;
-	if (reloadTime < 0.1f)
-		reloadTime = 0.1f;
+	float requestedReloadTime = reloadTime * reloadTimeModifier * perk->Amount();
+	if (requestedReloadTime >= reloadTimeCap)
+		reloadTimeModifier *= perk->Amount();
 }
 
-void Weapon::FreezeBullets()
+void Weapon::BulletLifeTimeModify(Perk* perk)
 {
-	onHitEffects.emplace_back(Effect(EffectType::FROZEN, 4.0f, false, nullptr));
+	bulletLifeTimeModifier *= perk->Amount();
+}
+
+void Weapon::FreezeBullets(Perk* perk)
+{
+	onHitEffects.emplace_back(Effect(EffectType::FROZEN, perk->Duration(), false, nullptr));
+}
+
+void Weapon::StunBullets(Perk* perk)
+{
+	onHitEffects.emplace_back(Effect(EffectType::STUN, perk->Duration(), false, nullptr));
 }
 
 void Weapon::SpreadProjectiles(float2 direction)

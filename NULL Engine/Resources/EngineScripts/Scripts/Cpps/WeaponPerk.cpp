@@ -12,9 +12,9 @@ WeaponPerk::~WeaponPerk()
 
 void WeaponPerk::Contact(Player* player)
 {
-	Weapon* const weapon = player->GetCurrentWeapon();
-	if (weapon)
-		weapon->AddPerk(perk);
+	//Weapon* const weapon = player->GetCurrentWeapon();
+	//if (weapon)
+	//	weapon->AddPerk(perk);
 }
 
 SCRIPTS_FUNCTION WeaponPerk* CreateWeaponPerk()
