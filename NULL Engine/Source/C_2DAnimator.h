@@ -38,6 +38,8 @@ public:
 
 	bool IsAnimationPlaying();
 
+	void SetSpritesheetTexture(R_Texture* spritesheet, int animationNumber);
+
 	void SetAnimationPlayFromStart(bool x);
 	bool GetAnimationPlayFromStart();
 	

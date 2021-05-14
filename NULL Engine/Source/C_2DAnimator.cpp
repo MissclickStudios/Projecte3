@@ -27,7 +27,7 @@ C_2DAnimator::C_2DAnimator(GameObject* owner) : Component(owner, ComponentType::
 
 	name = "";
 
-	//test
+	//ANIMATION 2D TESTING
 	spritesheet = new Spritesheet((R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/spritesheet.png"));
 	spritesheet->rows = 3;
 	spritesheet->columns = 4;
@@ -114,6 +114,22 @@ int C_2DAnimator::GetAnimationStepTime()
 bool C_2DAnimator::IsAnimationPlaying()
 {
 	return animationPlaying;
+}
+
+void C_2DAnimator::SetSpritesheetTexture(R_Texture* spritesheet, int animationNumber)
+{
+	switch (animationNumber) 
+	{
+	case 1:
+		this->spritesheet = new Spritesheet(spritesheet);
+		break;
+	case 2:
+		break;
+	case 3:
+		break;
+	case 0:
+		break;
+	}
 }
 
 void C_2DAnimator::SetAnimationPlayFromStart(bool x)

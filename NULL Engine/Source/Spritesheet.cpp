@@ -48,5 +48,23 @@ void Spritesheet::GetFrameProportions(int row, int column)
 
 void Spritesheet::SetCurrentFrameLocation(int frameNumber)
 {
-		GetFrameProportions(2, 2);
+	int rowN = 1;
+	int columnN = 1;
+	int count = 0;
+
+	//hmmmmmmmm
+	for (int k = 1; k < rows; k++) 
+	{
+		for (int i = 1; i < columns; i++) 
+		{	
+			columnN++;
+			count++;
+			if(count == frameNumber){}
+			GetFrameProportions(rowN, columnN);
+		}
+		rowN++;
+		columnN = 1;
+		if (count == frameNumber)
+		GetFrameProportions(rowN, columnN);
+	}
 }

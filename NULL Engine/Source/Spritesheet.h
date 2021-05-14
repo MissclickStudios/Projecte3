@@ -18,19 +18,20 @@ public:
 	~Spritesheet();
 
 	void SetSpritesheetSize(int s_rows, int s_columns, int s_pisxelHeight, int s_pixelLenght);
-	Frame currentFrame;
 	void SetCurrentFrameLocation(int frameNumber);
-	R_Texture* spriteSheet;
-	int rows;
-	int columns;
-
-	int animationNumber;
-
 	Frame* GetAtlasPosition(int pixelPosX, int pixelPosY, int pixelWidth, int pixelHeight);
 
+	Frame currentFrame;
+
+	R_Texture* spriteSheet;
+	
+	int rows;
+	int columns;
+	int animationNumber;
 	int pixelHeight;
 	int pixelLenght;
 private:
+
 	void GetFrameProportions(int row, int column);
 };
 
