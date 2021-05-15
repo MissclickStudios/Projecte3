@@ -511,13 +511,15 @@ AxisState M_Input::GetGameControllerAxis(int id) const
 
 int M_Input::GetGameControllerAxisValue(int id) const
 {
-	if (gameController.id != nullptr) {
+	if (gameController.id != nullptr) 
+	{
 		if(SDL_GameControllerGetAxis(gameController.id, SDL_GameControllerAxis(id)) < -JOYSTICK_THRESHOLD)
-		return SDL_GameControllerGetAxis(gameController.id, SDL_GameControllerAxis(id));
+			return SDL_GameControllerGetAxis(gameController.id, SDL_GameControllerAxis(id));
 
 		if (SDL_GameControllerGetAxis(gameController.id, SDL_GameControllerAxis(id)) > JOYSTICK_THRESHOLD)
-		return SDL_GameControllerGetAxis(gameController.id, SDL_GameControllerAxis(id));
+			return SDL_GameControllerGetAxis(gameController.id, SDL_GameControllerAxis(id));
 	}
+
 	return 0;
 }
 

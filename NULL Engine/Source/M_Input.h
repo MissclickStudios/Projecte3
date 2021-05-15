@@ -11,7 +11,7 @@
 #define MAX_AXIS 32767								
 #define CONTROLLER_INDEX 0							
 #define TRIGGER_INDEX 4		
-#define JOYSTICK_THRESHOLD 4000
+#define JOYSTICK_THRESHOLD 8000
 
 #define LEFT_TRIGGER 0								
 #define RIGHT_TRIGGER 1								

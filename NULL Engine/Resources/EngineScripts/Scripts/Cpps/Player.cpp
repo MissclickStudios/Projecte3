@@ -76,7 +76,6 @@ Player* CreatePlayer()
 	INSPECTOR_STRING(script->gameManager);
 
 	//Hand Name
-
 	INSPECTOR_STRING(script->handName);
 	INSPECTOR_VECTOR_STRING(script->particleNames);
 
@@ -133,16 +132,11 @@ void Player::SetUp()
 			C_AudioSource* source = (C_AudioSource*)gameObject->components[i];
 			std::string name = source->GetEventName();
 
-			if (name == "mando_walking")
-				walkAudio = source;
-			else if (name == "mando_dash")
-				dashAudio = source;
-			else if (name == "weapon_change")
-				changeWeaponAudio = source;
-			else if (name == "mando_damaged")
-				damageAudio = source;
-			else if (name == "mando_death")
-				deathAudio = source;
+			if (name == "mando_walking")		{ walkAudio = source; }
+			else if (name == "mando_dash")		{ dashAudio = source; }
+			else if (name == "weapon_change")	{ changeWeaponAudio = source; }
+			else if (name == "mando_damaged")	{ damageAudio = source; }
+			else if (name == "mando_death")		{ deathAudio = source; }
 		}
 	}
 
