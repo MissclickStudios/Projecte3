@@ -16,8 +16,11 @@
 
 #include "R_Shader.h"
 #include "R_Texture.h"
+#include "Spritesheet.h"
 
 #include "C_UI_Image.h"
+
+#include "M_Input.h"
 
 #include "Dependencies/glew/include/glew.h"
 //#include "OpenGL.h"
@@ -70,7 +73,6 @@ void C_UI_Image::LoadBuffers()
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
 	glEnableVertexAttribArray(1);
 
-
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
 }
@@ -90,7 +92,7 @@ void C_UI_Image::Draw2D()
 		return;
 
 	else if (cAnimator && cAnimator->IsAnimationPlaying())
-		id = cAnimator->GetIdFromAnimation();
+		id = cAnimator->spritesheet->spriteSheet->GetTextureID();
 
 	else
 		id = cMaterial->GetTextureID();
@@ -115,20 +117,43 @@ void C_UI_Image::Draw2D()
 	cMaterial->GetShader()->SetUniformMatrix4("model", identity.Transposed().ptr());
 	cMaterial->GetShader()->SetUniformMatrix4("projection", projectionMatrix.ptr());
 	
+	
 	//Uncomment the code below to update the texture coords in real time
+	if(cAnimator != nullptr && cAnimator->IsAnimationPlaying())
+	{
+	float newCoords[] = {
+			0.0f, 1.0f, cAnimator->spritesheet->currentFrame.proportionBeginX, cAnimator->spritesheet->currentFrame.proportionFinalY,
+			1.0f, 0.0f, cAnimator->spritesheet->currentFrame.proportionFinalX, cAnimator->spritesheet->currentFrame.proportionBeginY,
+			0.0f, 0.0f, cAnimator->spritesheet->currentFrame.proportionBeginX, cAnimator->spritesheet->currentFrame.proportionBeginY,
+		
+			0.0f, 1.0f, cAnimator->spritesheet->currentFrame.proportionBeginX, cAnimator->spritesheet->currentFrame.proportionFinalY,
+			1.0f, 1.0f, cAnimator->spritesheet->currentFrame.proportionFinalX, cAnimator->spritesheet->currentFrame.proportionFinalY,
+			1.0f, 0.0f, cAnimator->spritesheet->currentFrame.proportionFinalX,  cAnimator->spritesheet->currentFrame.proportionBeginY
+		
 
-	//float newCoords[] = {
-	//		 0.0f, 1.0f, 0.0f, 0.5f,
-	//		1.0f, 0.0f, 0.5f, 0.0f,
-	//		0.0f, 0.0f, 0.0f, 0.0f,
 
-	//		0.0f, 1.0f, 0.0f, 0.5f,
-	//		1.0f, 1.0f, 0.5f, 0.5f,
-	//		1.0f, 0.0f, 0.5f, 0.0f
-	//};
+	//	    0.0f, 1.0f, 0.0f , 0.9361f,
+	//		1.0f, 0.0f, 0.1816f, 1.0f,
+	//		0.0f, 0.0f, 0.0f, 1.0f,
+	//	
+	//		0.0f, 1.0f, 0.0f, 0.9361f,
+	//		1.0f, 1.0f, 0.1816f,0.9361f,
+	//		1.0f, 0.0f, 0.1816f, 1.0f
+	//
+			/*
+			0.0f, 1.0f, 0.0f , 0.5f,
+			1.0f, 0.0f, 0.5f, 0.0f,
+			0.0f, 0.0f, 0.0f, 0.0f,
 
-	//glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	//glBufferData(GL_ARRAY_BUFFER, sizeof(newCoords), newCoords, GL_DYNAMIC_DRAW);
+			0.0f, 1.0f, 0.0f, 0.5f,
+			1.0f, 1.0f, 0.5f, 0.5f,
+			1.0f, 0.0f, 0.5f, 0.0f*/
+	};	
+
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(newCoords), newCoords, GL_DYNAMIC_DRAW);
+	}
+
 
 	glBindVertexArray(VAO);
 
@@ -156,7 +181,6 @@ void C_UI_Image::Draw3D()
 
 	else if (cAnimator->IsAnimationPlaying())
 		id = cAnimator->GetIdFromAnimation();
-
 	else
 		id = cMaterial->GetTextureID();
 

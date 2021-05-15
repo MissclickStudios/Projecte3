@@ -24,6 +24,7 @@
 #include "R_Mesh.h"
 #include "R_Texture.h"
 #include "R_Scene.h"
+#include "R_Shader.h"
 #include "R_NavMesh.h"
 
 #include "GameObject.h"
@@ -45,6 +46,7 @@
 #include "M_Scene.h"
 #include "M_ScriptManager.h"
 
+#include "MC_Time.h"
 #include "MemoryManager.h"
 
 M_Scene::M_Scene(bool isActive) : Module("SceneManager", isActive),
@@ -52,7 +54,8 @@ masterRoot				(nullptr),
 sceneRoot				(nullptr),
 animationRoot			(nullptr),
 selectedGameObject		(nullptr),
-cullingCamera			(nullptr)
+cullingCamera			(nullptr),
+transitionProgresion	(0)
 {
 	CreateMasterRoot();
 	CreateSceneRoot("MainScene");
@@ -177,6 +180,7 @@ UpdateStatus M_Scene::Update(float dt)
 	
 	//ShowFPS();
 
+
 	return UpdateStatus::CONTINUE;
 }
 
@@ -184,10 +188,11 @@ UpdateStatus M_Scene::PostUpdate(float dt)
 {	
 	OPTICK_CATEGORY("M_Scene PostUpdate", Optick::Category::Module)
 
-	if (nextScene)
+	if (nextScene && transitionProgresion >= 1.0f)
 	{
 		LoadScene(nextSceneName.c_str());
 		nextScene = false;
+		sceneIsLoaded = true;
 	}
 
 	return UpdateStatus::CONTINUE;
@@ -1422,6 +1427,7 @@ void M_Scene::NextRoom()
 {
 	
 	nextScene = true;
+	sceneIsLoaded = false;
 	
 }
 
@@ -1471,7 +1477,19 @@ void M_Scene::ShowFPS()
 void M_Scene::ScriptChangeScene(const std::string& sceneName)
 {
 	nextScene = true;
+	sceneIsLoaded = false;
 	nextSceneName = sceneName;
+}
+
+void M_Scene::DoSceneTransition(R_Shader* screenShader, float transitionSpeed)
+{
+	if (nextScene && transitionProgresion < 1.0f)
+		transitionProgresion += MC_Time::Game::GetDT() / transitionSpeed;
+
+	else if (sceneIsLoaded && transitionProgresion > 0.0f)
+		transitionProgresion -= (MC_Time::Game::GetDT() / transitionSpeed);
+
+	screenShader->SetUniform1f("progression", transitionProgresion);
 }
 
 void M_Scene::DeleteSelectedGameObject()

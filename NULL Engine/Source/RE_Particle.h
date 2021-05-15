@@ -8,6 +8,13 @@ class R_Shader;
 
 typedef unsigned int uint;
 
+const float ParticlesCoords[] = {
+	1,	1,
+	1,	0,
+	0,	0,
+	1,	0,
+};
+
 class RE_Particle : public Renderer
 {
 public:
@@ -19,9 +26,10 @@ public:
 	bool CleanUp() override;
 
 private:
+	void LoadBuffers();
 
 private:
-	uint VAO;
+	uint		VAO;
 
 	R_Texture*	rTexture;
 	R_Shader*	rShader;

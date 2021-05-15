@@ -22,6 +22,27 @@ RE_Skeleton::~RE_Skeleton()
 
 bool RE_Skeleton::Render()
 {
+	GLfloat A[3]	= {};
+	GLfloat B[3]	= {};
+	uint bytes		= sizeof(float) * 3;
+
+	glColor4f(color.r, color.g, color.b, color.a);
+	glLineWidth(lineWidth);
+	glBegin(GL_LINES);
+
+	for (uint i = 0; i < bones.size(); ++i)
+	{
+		memcpy(A, (const void*)bones[i].a.ptr(), bytes);
+		memcpy(B, (const void*)bones[i].b.ptr(), bytes);
+
+		glVertex3fv(A);
+		glVertex3fv(B);
+	}
+
+	glEnd();
+	glLineWidth(STANDARD_LINE_WIDTH);
+	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+	
 	return true;
 }
 
