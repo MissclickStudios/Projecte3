@@ -83,6 +83,7 @@ public:
 
 public:
 	KeyState		GetKey(int id) const;
+	bool			GetKey(int id, KeyState state) const;
 	KeyState		GetMouseButton(int id) const;
 	uint			GetMaxNumScancodes() const;
 

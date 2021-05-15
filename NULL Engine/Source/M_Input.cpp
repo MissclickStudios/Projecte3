@@ -424,6 +424,11 @@ KeyState M_Input::GetKey(int id) const
 	return keyboard[id];
 }
 
+bool M_Input::GetKey(int id, KeyState state) const
+{
+	return (keyboard[id] == state);
+}
+
 KeyState M_Input::GetMouseButton(int id) const
 {
 	return mouseButtons[id];

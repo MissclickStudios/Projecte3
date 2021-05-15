@@ -399,17 +399,8 @@ void Player::TakeDamage(float damage)
 void Player::SetGodMode(bool enable)
 {
 	godMode = enable;
-	if (godMode)
-	{
-		
-		defense = 0.0f;
-		
-	}
-	else
-	{
-		defense = 1.0f;
-		
-	}
+	
+	defense = (godMode) ? 0.0f : 1.0f;
 }
 
 bool Player::GetGodMode() const
@@ -422,85 +413,97 @@ void Player::ManageMovement()
 	if (moveState != PlayerState::DEAD)
 	{
 		if (health <= 0.0f)
+		{
 			moveState = PlayerState::DEAD_IN;
+		}
 		else
+		{
 			if (moveState != PlayerState::DASH)
 				GatherMoveInputs();
+		}
 	}
 
 	C_ParticleSystem* dust = GetParticles("Run");
 	if (dust != nullptr)
 		dust->StopSpawn();
 
-	if (rigidBody)
-		switch (moveState)
-		{
-		case PlayerState::IDLE:
-			currentAnimation = &idleAnimation;
-			if (rigidBody != nullptr)
-				rigidBody->Set2DVelocity(float2::zero);
-			break;
-		case PlayerState::RUN:
-			currentAnimation = &runAnimation;
-			Movement();
-			
-			if (dust != nullptr)
-				dust->ResumeSpawn();
-			break;
-		case PlayerState::DASH_IN:
-			if (dashAudio != nullptr)
-				dashAudio->PlayFx(dashAudio->GetEventId());
+	if (rigidBody == nullptr)														// Ending early in case there is no rigidBody associated with the player.
+		return;
 
-			currentAnimation = &dashAnimation;
-			dashTimer.Start();
+	switch (moveState)
+	{
+	case PlayerState::IDLE:
+		currentAnimation = &idleAnimation;
+		if (rigidBody != nullptr)
+			rigidBody->Set2DVelocity(float2::zero);
+
+		break;
+	case PlayerState::RUN:
+		currentAnimation = &runAnimation;
+		Movement();
+		
+		if (dust != nullptr)
+			dust->ResumeSpawn();
+
+		break;
+	case PlayerState::DASH_IN:
+		if (dashAudio != nullptr)
+			dashAudio->PlayFx(dashAudio->GetEventId());
+	
+		currentAnimation = &dashAnimation;
+		dashTimer.Start();
+		if (rigidBody != nullptr)
+		{
+			rigidBody->ChangeFilter(" player dashing");
+			rigidBody->FreezePositionY(true);
+		}
+		if (GetParticles("Dash") != nullptr)
+		{
+			GetParticles("Dash")->ResumeSpawn();
+		}
+	
+		moveState = PlayerState::DASH;
+	
+	case PlayerState::DASH:
+		Dash();
+		if (dashTimer.ReadSec() >= DashDuration()) // When the dash duration ends start the cooldown and reset the move state
+		{
+			dashTimer.Stop();
+			dashCooldownTimer.Start();
 			if (rigidBody != nullptr)
 			{
-				rigidBody->ChangeFilter(" player dashing");
-				rigidBody->FreezePositionY(true);
+				rigidBody->ChangeFilter(" player");
+				rigidBody->FreezePositionY(false);
 			}
 			if (GetParticles("Dash") != nullptr)
-				GetParticles("Dash")->ResumeSpawn();
-
-			moveState = PlayerState::DASH;
-
-		case PlayerState::DASH:
-			Dash();
-			if (dashTimer.ReadSec() >= DashDuration()) // When the dash duration ends start the cooldown and reset the move state
-			{
-				dashTimer.Stop();
-				dashCooldownTimer.Start();
-				if (rigidBody != nullptr)
-				{
-					rigidBody->ChangeFilter(" player");
-					rigidBody->FreezePositionY(false);
-				}
-				if (GetParticles("Dash") != nullptr)
-					GetParticles("Dash")->StopSpawn();
-
-				moveState = PlayerState::IDLE;
-			}
-			break;
-		case PlayerState::DEAD_IN:
-			if (deathAudio != nullptr)
-				deathAudio->PlayFx(deathAudio->GetEventId());
-
-			currentAnimation = &deathAnimation;
-			if (rigidBody != nullptr)
-				rigidBody->SetIsActive(false); // Disable the rigidbody to avoid more interactions with other entities
-			deathTimer.Start();
-			moveState = PlayerState::DEAD;
-
-		case PlayerState::DEAD:
-			if (deathTimer.ReadSec() >= deathDuration)
-				moveState = PlayerState::DEAD_OUT;
-			break;
+				GetParticles("Dash")->StopSpawn();
+	
+			moveState = PlayerState::IDLE;
 		}
+		break;
+	case PlayerState::DEAD_IN:
+		if (deathAudio != nullptr)
+			deathAudio->PlayFx(deathAudio->GetEventId());
+	
+		currentAnimation = &deathAnimation;
+		if (rigidBody != nullptr)
+			rigidBody->SetIsActive(false); // Disable the rigidbody to avoid more interactions with other entities
+		deathTimer.Start();
+		moveState = PlayerState::DEAD;
+	
+	case PlayerState::DEAD:
+		if (deathTimer.ReadSec() >= deathDuration)
+			moveState = PlayerState::DEAD_OUT;
+
+		break;
+	}
 }
 
 void Player::ManageAim()
 {
 	if (moveState != PlayerState::DASH)
 		GatherAimInputs();
+
 	Aim();
 
 	switch (aimState)
@@ -515,10 +518,12 @@ void Player::ManageAim()
 		aimState = AimState::SHOOT;
 
 	case AimState::SHOOT:
-		if (!usingEquipedGun)
+		/*if (!usingEquipedGun)
 			currentAnimation = &shootAnimation; // temporary till torso gets an independent animator
 		else
-			currentAnimation = &shootRifleAnimation;
+			currentAnimation = &shootRifleAnimation;*/
+
+		currentAnimation = (!usingEquipedGun) ? &shootAnimation : &shootRifleAnimation;
 
 		if (currentWeapon != nullptr)
 			switch (currentWeapon->Shoot(aimDirection))
@@ -588,23 +593,19 @@ void Player::GatherMoveInputs()
 	// Controller movement
 	moveInput.x = (float)App->input->GetGameControllerAxisValue(0);
 	moveInput.y = (float)App->input->GetGameControllerAxisValue(1);
+
 	// Keyboard movement
 	if (moveInput.IsZero())	// If there was no controller input
 	{
-		if (App->input->GetKey(SDL_SCANCODE_W) == KeyState::KEY_REPEAT)
-			moveInput.y = -MAX_INPUT;
-		if (App->input->GetKey(SDL_SCANCODE_S) == KeyState::KEY_REPEAT)
-			moveInput.y = MAX_INPUT;
-		if (App->input->GetKey(SDL_SCANCODE_D) == KeyState::KEY_REPEAT)
-			moveInput.x = MAX_INPUT;
-		if (App->input->GetKey(SDL_SCANCODE_A) == KeyState::KEY_REPEAT)
-			moveInput.x = -MAX_INPUT;
+		if (App->input->GetKey(SDL_SCANCODE_W) == KeyState::KEY_REPEAT) { moveInput.y = -MAX_INPUT; }
+		if (App->input->GetKey(SDL_SCANCODE_S) == KeyState::KEY_REPEAT) { moveInput.y = MAX_INPUT; }
+		if (App->input->GetKey(SDL_SCANCODE_D) == KeyState::KEY_REPEAT) { moveInput.x = MAX_INPUT; }
+		if (App->input->GetKey(SDL_SCANCODE_A) == KeyState::KEY_REPEAT) { moveInput.x = -MAX_INPUT; }
 	}
 
 	if (!dashCooldownTimer.IsActive())
 	{
-		if ((App->input->GetKey(SDL_SCANCODE_LSHIFT) == KeyState::KEY_DOWN
-			|| App->input->GetGameControllerTrigger(0) == ButtonState::BUTTON_DOWN))
+		if ((App->input->GetKey(SDL_SCANCODE_LSHIFT) == KeyState::KEY_DOWN || App->input->GetGameControllerTrigger(0) == ButtonState::BUTTON_DOWN))
 		{
 			if (!dashTimer.IsActive())
 				moveState = PlayerState::DASH_IN;
@@ -613,7 +614,9 @@ void Player::GatherMoveInputs()
 		}
 	}
 	else if (dashCooldownTimer.ReadSec() >= DashCooldown())
+	{
 		dashCooldownTimer.Stop();
+	}
 
 	if (!moveInput.IsZero())
 	{
@@ -629,20 +632,18 @@ void Player::GatherAimInputs()
 	// Controller aim
 	aimInput.x = (float)App->input->GetGameControllerAxisValue(2);
 	aimInput.y = (float)App->input->GetGameControllerAxisValue(3);
+	
 	// Keyboard aim
 	if (aimInput.IsZero())	// If there was no controller input
 	{
-		if (App->input->GetKey(SDL_SCANCODE_UP) == KeyState::KEY_REPEAT)
-			aimInput.y = -MAX_INPUT;
-		if (App->input->GetKey(SDL_SCANCODE_DOWN) == KeyState::KEY_REPEAT)
-			aimInput.y = MAX_INPUT;
-		if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KeyState::KEY_REPEAT)
-			aimInput.x = MAX_INPUT;
-		if (App->input->GetKey(SDL_SCANCODE_LEFT) == KeyState::KEY_REPEAT)
-			aimInput.x = -MAX_INPUT;
+		if (App->input->GetKey(SDL_SCANCODE_UP) == KeyState::KEY_REPEAT)	{ aimInput.y = -MAX_INPUT; }
+		if (App->input->GetKey(SDL_SCANCODE_DOWN) == KeyState::KEY_REPEAT)	{ aimInput.y = MAX_INPUT; }
+		if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KeyState::KEY_REPEAT)	{ aimInput.x = MAX_INPUT; }
+		if (App->input->GetKey(SDL_SCANCODE_LEFT) == KeyState::KEY_REPEAT)	{ aimInput.x = -MAX_INPUT; }
 	}
 
-	if (!(aimState == AimState::IDLE || aimState == AimState::ON_GUARD)) // If the player is not on this states, ignore action inputs (shoot, reload, etc.)
+	//if (!(aimState == AimState::IDLE || aimState == AimState::ON_GUARD)) // If the player is not on this states, ignore action inputs (shoot, reload, etc.)
+	if (aimState != AimState::IDLE && aimState != AimState::ON_GUARD) // If the player is not on this states, ignore action inputs (shoot, reload, etc.)
 		return;
 
 	if (App->input->GetKey(SDL_SCANCODE_F) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(1) == ButtonState::BUTTON_DOWN)
@@ -668,35 +669,45 @@ void Player::GatherAimInputs()
 
 void Player::Movement()
 {
-	float2 direction = { moveInput.x, moveInput.y };
+	/*float2 direction = { moveInput.x, moveInput.y };
 	direction.Normalize();
 	moveDirection = { moveInput.x, moveInput.y }; // Save the value
 
 	direction *= Speed(); // Apply the processed speed value to the unitari direction vector
 	if (rigidBody != nullptr)
-		rigidBody->Set2DVelocity(direction);
+		rigidBody->Set2DVelocity(direction);*/
+
+	moveDirection = moveInput;
+
+	if (rigidBody != nullptr)
+		rigidBody->Set2DVelocity((moveInput.Normalized()) * Speed());
 }
 
 void Player::Aim()
 {
-	if (aimInput.IsZero() || moveState == PlayerState::DASH) // We force the player to look in the direction he is dashing if he is
+	/*if (aimInput.IsZero() || moveState == PlayerState::DASH) // We force the player to look in the direction he is dashing if he is
 		aimDirection = moveDirection; // TEMPORARY
 	else
-		aimDirection = aimInput;
+		aimDirection = aimInput;*/
+	
+	aimDirection = (aimInput.IsZero() || moveState == PlayerState::DASH) ? moveDirection : aimInput;
 
 	float rad = aimDirection.AimedAngle();
-
+	
 	if (skeleton != nullptr)
 		skeleton->transform->SetLocalRotation(float3(0, -rad + DegToRad(90), 0));
 }
 
 void Player::Dash()
 {
-	float2 direction = { moveDirection.x, moveDirection.y };
+	/*float2 direction = { moveDirection.x, moveDirection.y };
 	direction.Normalize();
 
 	if (rigidBody != nullptr)
-		rigidBody->Set2DVelocity(direction * DashSpeed());
-
+		rigidBody->Set2DVelocity(direction * DashSpeed());*/
+	
+	if (rigidBody != nullptr)
+		rigidBody->Set2DVelocity((moveDirection.Normalized()) * DashSpeed());
+	
 	//dashImage->PlayAnimation(false, 1);
 }
