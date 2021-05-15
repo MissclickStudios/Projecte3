@@ -408,9 +408,9 @@ void E_Inspector::DrawMeshComponent(C_Mesh* cMesh)
 
 		cMesh->GetMeshData(numVertices, numNormals, numTexCoords, numIndices, numBones);
 
-		ImGui::Text("Vertices:");		ImGui::SameLine();		ImGui::TextColored(Yellow.C_Array(), "  %u",	numVertices);
-		ImGui::Text("Normals:");		ImGui::SameLine();		ImGui::TextColored(Yellow.C_Array(), "   %u",	numNormals);
-		ImGui::Text("Tex Coords:");		ImGui::SameLine();		ImGui::TextColored(Yellow.C_Array(), "%u",		numTexCoords);
+		ImGui::Text("Vertices:");		ImGui::SameLine();		ImGui::TextColored(Yellow.C_Array(), "  %u",	numVertices / 3);
+		ImGui::Text("Normals:");		ImGui::SameLine();		ImGui::TextColored(Yellow.C_Array(), "   %u",	numNormals / 3);
+		ImGui::Text("Tex Coords:");		ImGui::SameLine();		ImGui::TextColored(Yellow.C_Array(), "%u",		numTexCoords / 2);
 		ImGui::Text("Indices:");		ImGui::SameLine();		ImGui::TextColored(Yellow.C_Array(), "   %u",	numIndices);
 		ImGui::Text("Bones: ");			ImGui::SameLine();		ImGui::TextColored(Yellow.C_Array(), "    %u",	numBones);
 
@@ -2413,7 +2413,11 @@ void E_Inspector::DisplayTrackViewer(C_Animator* cAnimator)
 						if (bone == nullptr)
 							continue;
 
-						if (ImGui::Selectable(bone->GetName(), (bone == rootBone), ImGuiSelectableFlags_None))
+						std::string boneName = bone->GetName();
+						if (!bone->isBone)
+							boneName += " (Not Animated)";
+
+						if (ImGui::Selectable(boneName.c_str(), (bone == rootBone), ImGuiSelectableFlags_None))
 						{
 							//rootBone = bone;
 							track->SetRootBone(bone);
@@ -2911,7 +2915,11 @@ void E_Inspector::TrackCreatorWindow(C_Animator* cAnimator)
 			if (bone == nullptr)
 				continue;
 
-			if (ImGui::Selectable(bone->GetName(), (bone == rootBone), ImGuiSelectableFlags_None))
+			std::string boneName = bone->GetName();
+			if (!bone->isBone)
+				boneName += " (Not Animated)";
+
+			if (ImGui::Selectable(boneName.c_str(), (bone == rootBone), ImGuiSelectableFlags_None))
 			{
 				rootBone = bone;
 			}
@@ -3005,7 +3013,11 @@ void E_Inspector::TrackEditorWindow(C_Animator* cAnimator)
 			if (bone == nullptr)
 				continue;
 
-			if (ImGui::Selectable(bone->GetName(), (bone == rootBone), ImGuiSelectableFlags_None))
+			std::string boneName = bone->GetName();
+			if (!bone->isBone)
+				boneName += " (Not Animated)";
+
+			if (ImGui::Selectable(boneName.c_str(), (bone == rootBone), ImGuiSelectableFlags_None))
 			{
 				rootBone = bone;
 			}

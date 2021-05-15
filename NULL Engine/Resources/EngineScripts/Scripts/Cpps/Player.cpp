@@ -513,7 +513,11 @@ void Player::ManageAim()
 	case AimState::ON_GUARD:
 		aimState = AimState::IDLE;
 		break;
+	case AimState::AIMING:
+		LOG("AIMING THIS SHIT UP");
+		break;
 	case AimState::SHOOT_IN:
+		LOG("SHOOTIN'");
 		currentAnimation = &shootAnimation;
 		aimState = AimState::SHOOT;
 
@@ -522,6 +526,8 @@ void Player::ManageAim()
 			currentAnimation = &shootAnimation; // temporary till torso gets an independent animator
 		else
 			currentAnimation = &shootRifleAnimation;*/
+
+		LOG("JUST SHOOT MAN");
 
 		currentAnimation = (!usingEquipedGun) ? &shootAnimation : &shootRifleAnimation;
 
@@ -642,8 +648,7 @@ void Player::GatherAimInputs()
 		if (App->input->GetKey(SDL_SCANCODE_LEFT) == KeyState::KEY_REPEAT)	{ aimInput.x = -MAX_INPUT; }
 	}
 
-	//if (!(aimState == AimState::IDLE || aimState == AimState::ON_GUARD)) // If the player is not on this states, ignore action inputs (shoot, reload, etc.)
-	if (aimState != AimState::IDLE && aimState != AimState::ON_GUARD) // If the player is not on this states, ignore action inputs (shoot, reload, etc.)
+	if (aimState != AimState::IDLE && aimState != AimState::AIMING && aimState != AimState::ON_GUARD) // If the player is not on this states, ignore action inputs (shoot, reload, etc.)
 		return;
 
 	if (App->input->GetKey(SDL_SCANCODE_F) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(1) == ButtonState::BUTTON_DOWN)
@@ -669,14 +674,6 @@ void Player::GatherAimInputs()
 
 void Player::Movement()
 {
-	/*float2 direction = { moveInput.x, moveInput.y };
-	direction.Normalize();
-	moveDirection = { moveInput.x, moveInput.y }; // Save the value
-
-	direction *= Speed(); // Apply the processed speed value to the unitari direction vector
-	if (rigidBody != nullptr)
-		rigidBody->Set2DVelocity(direction);*/
-
 	moveDirection = moveInput;
 
 	if (rigidBody != nullptr)
@@ -684,11 +681,15 @@ void Player::Movement()
 }
 
 void Player::Aim()
-{
-	/*if (aimInput.IsZero() || moveState == PlayerState::DASH) // We force the player to look in the direction he is dashing if he is
-		aimDirection = moveDirection; // TEMPORARY
-	else
-		aimDirection = aimInput;*/
+{	
+	if (aimState == AimState::IDLE && !aimInput.IsZero())
+	{
+		aimState = AimState::AIMING;
+	}
+	if (aimState == AimState::AIMING && aimInput.IsZero())
+	{
+		aimState = AimState::IDLE;
+	}
 	
 	aimDirection = (aimInput.IsZero() || moveState == PlayerState::DASH) ? moveDirection : aimInput;
 
@@ -699,13 +700,7 @@ void Player::Aim()
 }
 
 void Player::Dash()
-{
-	/*float2 direction = { moveDirection.x, moveDirection.y };
-	direction.Normalize();
-
-	if (rigidBody != nullptr)
-		rigidBody->Set2DVelocity(direction * DashSpeed());*/
-	
+{	
 	if (rigidBody != nullptr)
 		rigidBody->Set2DVelocity((moveDirection.Normalized()) * DashSpeed());
 	

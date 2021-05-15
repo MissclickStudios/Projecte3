@@ -15,6 +15,8 @@
 
 #include "ScriptMacros.h"
 
+#include "Player.h"
+
 #include "MathGeoLib/include/Math/float3.h"
 #include "CoreDllHelpers.h"
 
@@ -166,18 +168,29 @@ void Entity::PostUpdate()
 
 		if (clip == nullptr || clip->GetName() != currentAnimation->name)										// If no clip playing or animation/clip changed
 			animator->PlayClip(currentAnimation->track.c_str(), currentAnimation->name.c_str(), currentAnimation->blendTime);
+		
+		//if (type != EntityType::PLAYER)
+		//{
+		//	AnimatorClip* clip = animator->GetTrack("Preview").GetCurrentClip();
 
-		/*if (clip != nullptr)
-		{
-			if (clip->GetName() != currentAnimation->name)	// If the animtion changed play the wanted clip
-			{
-				animator->PlayClip("Preview", currentAnimation->name.c_str(), currentAnimation->blendTime);
-			}
-		}
-		else
-		{
-			animator->PlayClip("Preview", currentAnimation->name.c_str(), currentAnimation->blendTime); // If there is no clip playing play the current animation
-		}*/
+		//	if (clip == nullptr || clip->GetName() != currentAnimation->name)										// If no clip playing or animation/clip changed
+		//		animator->PlayClip(currentAnimation->track.c_str(), currentAnimation->name.c_str(), currentAnimation->blendTime);
+		//}
+		//else
+		//{
+		//	Player* player = (Player*)this;
+		//	if (player->aimState != AimState::AIMING)
+		//	{
+		//		AnimatorClip* clip = animator->GetTrack("Preview").GetCurrentClip();
+
+		//		if (clip == nullptr || clip->GetName() != currentAnimation->name)										// If no clip playing or animation/clip changed
+		//			animator->PlayClip(currentAnimation->track.c_str(), currentAnimation->name.c_str(), currentAnimation->blendTime);
+		//	}
+		//	else
+		//	{
+		//		LOG("YO BOY AIMING");
+		//	}
+		//}
 	}
 }
 
@@ -264,7 +277,7 @@ bool Entity::IsGrounded()
 
 void Entity::Frozen()
 {
-	speedModifier /= 2.5;
+	speedModifier /= 2.5;											// /= 2.5f is equivalent to *= 0.4f.
 	attackSpeedModifier /= 2.5;
 
 	if (material != nullptr)
