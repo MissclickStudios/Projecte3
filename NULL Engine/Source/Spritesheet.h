@@ -28,8 +28,9 @@ public:
 	int rows;
 	int columns;
 	int animationNumber;
-	int pixelHeight;
-	int pixelLenght;
+
+	int spritesheetPixelWidth;
+	int spritesheetPixelHeight;
 private:
 
 	void GetFrameProportions(int row, int column);

@@ -12,8 +12,9 @@ Spritesheet::Spritesheet(R_Texture* spritesheet)
 	spriteSheet = spritesheet;
 	columns = 0;
 	rows = 0;
-	pixelHeight = 0;
-	pixelLenght = 0;
+
+	spritesheetPixelWidth = 0;
+	spritesheetPixelHeight = 0;
 }
 
 Spritesheet::~Spritesheet()
@@ -24,13 +25,19 @@ void Spritesheet::SetSpritesheetSize(int s_rows, int s_columns, int s_pisxelHeig
 {
 	columns = s_columns;
 	rows = s_rows;
-	pixelHeight = s_pisxelHeight;
-	pixelLenght = s_pixelLenght;
+	spritesheetPixelHeight = s_pisxelHeight;
+	spritesheetPixelWidth = s_pixelLenght;
 }
 
 Frame* Spritesheet::GetAtlasPosition(int pixelPosX, int pixelPosY, int pixelWidth, int pixelHeight)
 {
 	Frame* frame = new Frame();
+
+	frame->proportionBeginX = (float)pixelPosX / spritesheetPixelWidth;
+	frame->proportionFinalX = ((float)pixelPosX + pixelWidth) / spritesheetPixelWidth;
+
+	frame->proportionBeginY = (float)pixelPosY / spritesheetPixelHeight;
+	frame->proportionFinalY = ((float)pixelPosY + pixelHeight) / spritesheetPixelHeight;
 
 	return frame;
 }
