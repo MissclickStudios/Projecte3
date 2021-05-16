@@ -5,6 +5,8 @@
 #include "GameObject.h"
 #include "ShopMenuManager.h"
 
+#include "GroundItem.h"
+
 ShopMenuManager::ShopMenuManager()
 {
 }

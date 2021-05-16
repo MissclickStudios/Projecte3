@@ -257,7 +257,12 @@ void Player::SaveState(ParsonNode& playerNode)
 	{
 		playerNode.SetInteger("Blaster Ammo", blasterWeapon->ammo);
 		for (uint i = 0; i < blasterWeapon->perks.size(); ++i)
-			blasterPerks.SetNumber((double)blasterWeapon->perks[i]);
+		{
+			ParsonNode node = blasterPerks.SetNode("Perk");
+			node.SetInteger("Type", (int)blasterWeapon->perks[i].Type());
+			node.SetNumber("Amount", blasterWeapon->perks[i].Amount());
+			node.SetNumber("Duration", blasterWeapon->perks[i].Duration());
+		}
 	}
 
 	playerNode.SetInteger("Equiped Gun", equipedGun.uid);
@@ -266,7 +271,12 @@ void Player::SaveState(ParsonNode& playerNode)
 	{
 		playerNode.SetInteger("Equiped Gun Ammo", equipedGunWeapon->ammo);
 		for (uint i = 0; i < equipedGunWeapon->perks.size(); ++i)
-			equipedGunPerks.SetNumber((double)equipedGunWeapon->perks[i]);
+		{
+			ParsonNode node = equipedGunPerks.SetNode("Perk");
+			node.SetInteger("Type", (int)equipedGunWeapon->perks[i].Type());
+			node.SetNumber("Amount", equipedGunWeapon->perks[i].Amount());
+			node.SetNumber("Duration", equipedGunWeapon->perks[i].Duration());
+		}
 	}
 
 	playerNode.SetBool("Using Equiped Gun", usingEquipedGun);
@@ -317,7 +327,10 @@ void Player::LoadState(ParsonNode& playerNode)
 
 			ParsonArray blasterPerks = playerNode.GetArray("Blaster Perks");
 			for (uint i = 0; i < blasterPerks.size; ++i)
-				blasterWeapon->AddPerk((Perk)(int)blasterPerks.GetNumber(i));
+			{
+				ParsonNode node = blasterPerks.GetNode(i);
+				blasterWeapon->AddPerk((PerkType)node.GetInteger("Type"), node.GetNumber("Amount"), node.GetNumber("Duration"));
+			}
 		}
 	}
 
@@ -335,7 +348,10 @@ void Player::LoadState(ParsonNode& playerNode)
 
 			ParsonArray equipedGunPerks = playerNode.GetArray("Equiped Gun Perks");
 			for (uint i = 0; i < equipedGunPerks.size; ++i)
-				equipedGunWeapon->AddPerk((Perk)(int)equipedGunPerks.GetNumber(i));
+			{
+				ParsonNode node = equipedGunPerks.GetNode(i);
+				equipedGunWeapon->AddPerk((PerkType)node.GetInteger("Type"), node.GetNumber("Amount"), node.GetNumber("Duration"));
+			}
 
 			if (equipedGunWeapon->weaponModel != nullptr)
 				equipedGunWeapon->weaponModel->SetIsActive(false);
@@ -665,8 +681,8 @@ void Player::GatherAimInputs()
 
 	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_REPEAT || App->input->GetGameControllerTrigger(1) == ButtonState::BUTTON_REPEAT)
 	{
-		aimState = AimState::SHOOT_IN;
-		return;
+	aimState = AimState::SHOOT_IN;
+	return;
 	}
 
 	aimState = AimState::IDLE;

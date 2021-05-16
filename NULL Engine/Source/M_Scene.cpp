@@ -192,7 +192,6 @@ UpdateStatus M_Scene::PostUpdate(float dt)
 	{
 		LoadScene(nextSceneName.c_str());
 		nextScene = false;
-		sceneIsLoaded = true;
 	}
 
 	return UpdateStatus::CONTINUE;
@@ -1425,10 +1424,7 @@ void M_Scene::GetPointLights(std::vector<GameObject*>& pointLights)
 
 void M_Scene::NextRoom()
 {
-	
 	nextScene = true;
-	sceneIsLoaded = false;
-	
 }
 
 void M_Scene::HandleCopyGO() //TODO Cntrl + c / Cntrl + v
@@ -1477,7 +1473,6 @@ void M_Scene::ShowFPS()
 void M_Scene::ScriptChangeScene(const std::string& sceneName)
 {
 	nextScene = true;
-	sceneIsLoaded = false;
 	nextSceneName = sceneName;
 }
 
@@ -1486,8 +1481,8 @@ void M_Scene::DoSceneTransition(R_Shader* screenShader, float transitionSpeed)
 	if (nextScene && transitionProgresion < 1.0f)
 		transitionProgresion += MC_Time::Game::GetDT() / transitionSpeed;
 
-	else if (sceneIsLoaded && transitionProgresion > 0.0f)
-		transitionProgresion -= (MC_Time::Game::GetDT() / transitionSpeed);
+	else if (!nextScene &&  transitionProgresion > 0.0f)
+		transitionProgresion -= (MC_Time::Game::GetDT() > 0.1f ? 0 : MC_Time::Game::GetDT() / transitionSpeed);
 
 	screenShader->SetUniform1f("progression", transitionProgresion);
 }

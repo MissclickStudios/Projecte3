@@ -1,6 +1,8 @@
 #include "Blaster.h"
+
 #include "MC_Time.h"
 #include "Log.h"
+
 Blaster::Blaster() : Weapon()
 {
 }
@@ -15,29 +17,21 @@ void Blaster::SetUp()
 
 ShootState Blaster::ShootLogic()
 {
-    ////Dirty fix, needs improvement
-    //if(FireRate() < fireRateThreshold)
-    //    return ShootState::FIRED_PROJECTILE;
-
-    LOG("[fireRateTimer %.3f]::[DT %.3f]", fireRateTimer, MC_Time::Game::GetDT());
-
-    if (fireRateTimer == 0)
+    if (!fireRateTimer.IsActive())
     {
-        fireRateTimer += (MC_Time::Game::GetDT() * 10);
+        fireRateTimer.Start();
         return ShootState::FIRED_PROJECTILE;
     }
-    else if (fireRateTimer < FireRate())
+    else 
     {
-        fireRateTimer += (MC_Time::Game::GetDT() * 10);
-        return ShootState::WAINTING_FOR_NEXT;
-    }
-    else if (fireRateTimer   >= FireRate() )
-    {
-        fireRateTimer = 0;
-        if (ammo <= 0)
-            return ShootState::NO_AMMO;
-        else
-            return ShootState::RATE_FINISHED;
+        if (fireRateTimer.ReadMs() / 1000.0f >= FireRate())
+        {
+            fireRateTimer.Stop();
+            if (ammo <= 0)
+                return ShootState::NO_AMMO;
+            else
+                return ShootState::RATE_FINISHED;
+        }
     }
 
   //  return ShootState::WAINTING_FOR_NEXT;
@@ -52,6 +46,7 @@ SCRIPTS_FUNCTION Blaster* CreateBlaster()
     INSPECTOR_DRAGABLE_FLOAT(script->damage);
     INSPECTOR_DRAGABLE_FLOAT(script->projectileSpeed);
     INSPECTOR_DRAGABLE_FLOAT(script->fireRate);
+    INSPECTOR_DRAGABLE_FLOAT(script->fireRateCap);
     INSPECTOR_DRAGABLE_FLOAT(script->bulletLifeTime);
     INSPECTOR_DRAGABLE_INT(script->ammo);
     INSPECTOR_DRAGABLE_INT(script->maxAmmo);
@@ -59,6 +54,7 @@ SCRIPTS_FUNCTION Blaster* CreateBlaster()
 
     // Reload
     INSPECTOR_DRAGABLE_FLOAT(script->reloadTime);
+    INSPECTOR_DRAGABLE_FLOAT(script->reloadTimeCap);
 
     // Modifiers
     INSPECTOR_DRAGABLE_FLOAT(script->damageModifier);
@@ -66,7 +62,7 @@ SCRIPTS_FUNCTION Blaster* CreateBlaster()
     INSPECTOR_DRAGABLE_FLOAT(script->fireRateModifier);
     INSPECTOR_DRAGABLE_FLOAT(script->bulletLifeTimeModifier);
     INSPECTOR_DRAGABLE_FLOAT(script->reloadTimeModifier);
-    INSPECTOR_DRAGABLE_INT(script->maxAmmoModifier);
+    INSPECTOR_DRAGABLE_FLOAT(script->maxAmmoModifier);
     INSPECTOR_DRAGABLE_INT(script->PPSModifier);
 
     // Visuals

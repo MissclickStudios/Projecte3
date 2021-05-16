@@ -22,12 +22,19 @@
 #include "Player.h"
 #include "Gate.h"
 
+#include "Items.h"
+
 GameManager::GameManager(): Script()
 {
 }
 
 GameManager::~GameManager()
 {
+	while (chestItemPool.size())
+	{
+		delete * chestItemPool.begin();
+		chestItemPool.erase(chestItemPool.begin());
+	}
 }
 
 void GameManager::Awake()
@@ -84,6 +91,38 @@ void GameManager::Awake()
 			backtrackTimer.Start();
 			if (backtrack.size() != 0)
 				backtrack.clear();
+
+			// Clear the vector if it has data
+			while (chestItemPool.size())
+			{
+				delete* chestItemPool.begin();
+				chestItemPool.erase(chestItemPool.begin());
+			}
+			//Load Json state
+			char* itemBuffer = nullptr;
+			App->fileSystem->Load("ChestItemPool.json", &itemBuffer);
+			ParsonNode itemFile(itemBuffer);
+			//release Json File
+			CoreCrossDllHelpers::CoreReleaseBuffer(&itemBuffer);
+			ParsonArray itemArray = itemFile.GetArray("Items");
+			for (uint i = 0; i < itemArray.size; ++i)
+			{
+				ParsonNode itemNode = itemArray.GetNode(i);
+				if (!itemNode.NodeIsValid())
+					break;
+
+				std::string name = itemNode.GetString("Name");
+				std::string description = itemNode.GetString("Description");
+				int price = itemNode.GetInteger("Price");
+				ItemRarity rarity = (ItemRarity)itemNode.GetInteger("Rarity");
+				int min = itemNode.GetInteger("Min");
+				int max = itemNode.GetInteger("Max");
+				float power = itemNode.GetNumber("Power");
+				float duration = itemNode.GetInteger("Duration");
+				float chance = itemNode.GetInteger("Chance");
+				std::string texturePath = itemNode.GetString("Texture Path");
+				chestItemPool.emplace_back(new ItemData(name, description, price, rarity, power, duration, chance, min, max, texturePath));
+			}
 		}
 	}
 
@@ -93,7 +132,6 @@ void GameManager::Awake()
 	{
 		gate = (Gate*)tmp->GetScript("Gate");
 	}
-
 }
 
 void GameManager::Start()

@@ -51,6 +51,8 @@ public:
 	static inline ComponentType GetType() { return ComponentType::ANIMATOR2D; }  
 
 	Spritesheet*				spritesheet;
+	Spritesheet*				spritesheet2;
+	Spritesheet*				spritesheet3;
 
 private:
 	uint GetTextureIdFromVector(int index, int animationNum);
