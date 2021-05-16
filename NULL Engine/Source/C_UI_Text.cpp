@@ -90,10 +90,10 @@ bool C_UI_Text::SaveState(ParsonNode& root) const
 	root.SetNumber("Type", (uint)GetType());
 	root.SetString("Text", text.c_str());
 	root.SetFloat4("Color", { color.r, color.g, color.b, color.a });
-	root.SetNumber("X", GetRect().x);
-	root.SetNumber("Y", GetRect().y);
-	root.SetNumber("W", GetRect().w);
-	root.SetNumber("H", GetRect().h);
+	root.SetNumber("X", rect.x);
+	root.SetNumber("Y", rect.y);
+	root.SetNumber("W", rect.w);
+	root.SetNumber("H", rect.h);
 
 	root.SetInteger("childOrder", childOrder);
 	return true;

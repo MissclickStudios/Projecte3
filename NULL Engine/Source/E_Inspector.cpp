@@ -1564,7 +1564,7 @@ void E_Inspector::DrawUIButtonComponent(C_UI_Button* button)
 		float2 pos = { button->GetRect().x, button->GetRect().y };
 		float2 size = { button->GetRect().w, button->GetRect().h };
 
-		C_Canvas* canvas = button->GetOwner()->parent->GetComponent<C_Canvas>();
+		//C_Canvas* canvas = button->GetOwner()->parent->GetComponent<C_Canvas>();
 
 		if (ImGui::DragFloat2("Button Size", (float*)&size, 0.005f, 0.0f, 0.0f, "%.3f", NULL))
 		{
@@ -1891,108 +1891,54 @@ void E_Inspector::DrawNavMeshAgentComponent(C_NavMeshAgent* cNavMeshAgent)
 	return;
 }
 
+void E_Inspector::DrawUICheckboxComponent(C_UI_Checkbox* checkbox)
+{
+}
+
 // --- DRAW COMPONENT UTILITY METHODS ---
 void E_Inspector::AddComponentCombo(GameObject* selectedGameObject)
 {
-	ImGui::Combo("##", &componentType, "Add Component\0Transform\0Mesh\0Material\0Light\0Camera\0Animator\0Animation\0RigidBody\0Box Collider\0Sphere Collider\0Capsule Collider\0Particle System\0Canvas\0Audio Source\0Audio Listener\0Player Controller\0Bullet Behavior\0Prop Behavior\0Camera Behavior\0Gate Behavior\0UI Image\0UI Text\0UI Button\0Script\0Animator 2D\0NavMesh Agent");
+	ImGui::Combo("##", &componentType, "Add Component\0Transform\0Mesh\0Material\0Light\0Camera\0Animator\0Animation\0RigidBody\0Box Collider\0Sphere Collider\0Capsule Collider\0Particle System\0Canvas\0Audio Source\0Audio Listener\0Player Controller\0Bullet Behavior\0Prop Behavior\0Camera Behavior\0Gate Behavior\0UI Image\0UI Text\0UI Button\0Script\0Animator 2D\0NavMesh Agent\0UI Checkbox");
 
 	ImGui::SameLine();
 
 	if ((ImGui::Button("ADD")))
 	{ 
-		if (componentType != (int)ComponentType::NONE)
+		switch (componentType)
 		{
-			if (componentType == (int)ComponentType::UI_IMAGE)
-				AddUIComponent(selectedGameObject, ComponentType::UI_IMAGE);
-			else if (componentType == (int)ComponentType::UI_TEXT)
-				AddUIComponent(selectedGameObject, ComponentType::UI_TEXT);
-			else if (componentType == (int)ComponentType::UI_BUTTON)
-				AddUIComponent(selectedGameObject, ComponentType::UI_BUTTON);
-
-			else
-				selectedGameObject->CreateComponent((ComponentType)componentType);
+		case (int)ComponentType::NONE: break;
+		case (int)ComponentType::UI_IMAGE: AddUIComponent(selectedGameObject, ComponentType::UI_IMAGE); break;
+		case (int)ComponentType::UI_TEXT: AddUIComponent(selectedGameObject, ComponentType::UI_TEXT); break;
+		case (int)ComponentType::UI_BUTTON: AddUIComponent(selectedGameObject, ComponentType::UI_BUTTON); break;
+		case (int)ComponentType::UI_CHECKBOX: AddUIComponent(selectedGameObject, ComponentType::UI_CHECKBOX); break;
+		default: selectedGameObject->CreateComponent((ComponentType)componentType); break;
 		}
 	}
 }
 
 void E_Inspector::AddUIComponent(GameObject* selectedGameObject, ComponentType type)
 {
-	if (type == ComponentType::UI_IMAGE)
+	// Option 1: selectedGameObject has a canvas
+	if (selectedGameObject->GetComponent<C_Canvas>() != nullptr)
 	{
-		// Option 1: selectedGameObject has a canvas
-		if (selectedGameObject->GetComponent<C_Canvas>() != nullptr)
-		{
-			GameObject* newGO;
-			newGO = App->scene->CreateGameObject("UI Image", selectedGameObject);
-			newGO->CreateComponent(ComponentType::UI_IMAGE);
-		}
-		// Option 2: selectedGameObject's parent has a canvas
-		else if (selectedGameObject->parent->GetComponent<C_Canvas>() != nullptr)
-		{
-			selectedGameObject->SetName("UI Image");
-			selectedGameObject->CreateComponent(ComponentType::UI_IMAGE);
-		}
-		// Option 3: need to crete a canvas
-		else
-		{
-			selectedGameObject->SetName("Canvas");
-			selectedGameObject->CreateComponent(ComponentType::CANVAS);
-
-			GameObject* newImage = App->scene->CreateGameObject("UI Image", selectedGameObject);
-			newImage->CreateComponent(ComponentType::UI_IMAGE);
-		}
+		GameObject* newGO;
+		newGO = App->scene->CreateGameObject("New Ui", selectedGameObject);
+		newGO->CreateComponent(type);
 	}
-
-	else if (type == ComponentType::UI_TEXT)
+	// Option 2: selectedGameObject's parent has a canvas
+	else if (selectedGameObject->parent->GetComponent<C_Canvas>() != nullptr)
 	{
-		// Option 1: selectedGameObject has a canvas
-		if (selectedGameObject->GetComponent<C_Canvas>() != nullptr)
-		{
-			GameObject* newGO;
-			newGO = App->scene->CreateGameObject("UI Text", selectedGameObject);
-			newGO->CreateComponent(ComponentType::UI_TEXT);
-		}
-		// Option 2: selectedGameObject's parent has a canvas
-		else if (selectedGameObject->parent->GetComponent<C_Canvas>() != nullptr)
-		{
-			selectedGameObject->SetName("UI Text");
-			selectedGameObject->CreateComponent(ComponentType::UI_TEXT);
-		}
-		// Option 3: need to crete a canvas
-		else
-		{
-			selectedGameObject->SetName("Canvas");
-			selectedGameObject->CreateComponent(ComponentType::CANVAS);
-
-			GameObject* newText = App->scene->CreateGameObject("UI Text", selectedGameObject);
-			newText->CreateComponent(ComponentType::UI_TEXT);
-		}
+		selectedGameObject->SetName("New Ui");
+		selectedGameObject->CreateComponent(type);
 	}
-
-	else if (type == ComponentType::UI_BUTTON)
+	// Option 3: need to crete a canvas
+	else
 	{
-		// Option 1: selectedGameObject has a canvas
-		if (selectedGameObject->GetComponent<C_Canvas>() != nullptr)
-		{
-			GameObject* newGO;
-			newGO = App->scene->CreateGameObject("UI Button", selectedGameObject);
-			newGO->CreateComponent(ComponentType::UI_BUTTON);
-		}
-		// Option 2: selectedGameObject's parent has a canvas
-		else if (selectedGameObject->parent->GetComponent<C_Canvas>() != nullptr)
-		{
-			selectedGameObject->SetName("UI Button");
-			selectedGameObject->CreateComponent(ComponentType::UI_BUTTON);
-		}
-		// Option 3: need to crete a canvas
-		else
-		{
-			selectedGameObject->SetName("Canvas");
-			selectedGameObject->CreateComponent(ComponentType::CANVAS);
+		selectedGameObject->SetName("Canvas");
+		selectedGameObject->CreateComponent(ComponentType::CANVAS);
 
-			GameObject* newText = App->scene->CreateGameObject("UI Button", selectedGameObject);
-			newText->CreateComponent(ComponentType::UI_BUTTON);
-		}
+		GameObject* newImage = App->scene->CreateGameObject("New Ui", selectedGameObject);
+		newImage->CreateComponent(type);
 	}
 }
 

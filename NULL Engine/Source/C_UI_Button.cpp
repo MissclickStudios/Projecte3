@@ -26,10 +26,8 @@
 
 #include "JSONParser.h"
 
-C_UI_Button::C_UI_Button(GameObject* owner, Rect2D rect) : C_UI(owner, ComponentType::UI_BUTTON, true, rect)
+C_UI_Button::C_UI_Button(GameObject* owner, Rect2D rect) : C_UI(owner, ComponentType::UI_BUTTON, true, rect), state(UIButtonState::IDLE)
 {
-	state = UIButtonState::IDLE;
-
 	//TODO: posarlo en el vector del component canvas !!!!!!!
 	LoadBuffers();
 }
@@ -47,14 +45,40 @@ C_UI_Button::~C_UI_Button()
 
 void C_UI_Button::LoadBuffers()
 {
-	glGenBuffers(1, &VAO);
-	glBindBuffer(GL_ARRAY_BUFFER, VAO);
+	/*const float coordsBuffer[] = {
+		1, 1,
+		1, 0,
+		0, 0,
+		1,0,
+	};*/
+	const float texCoordsBuffer[] = {
+		0.0f, 1.0f, 0.0f, 1.0f,
+		1.0f, 0.0f, 1.0f, 0.0f,
+		0.0f, 0.0f, 0.0f, 0.0f,
 
-	glBufferData(GL_ARRAY_BUFFER, sizeof(coordsBuffer), coordsBuffer, GL_STATIC_DRAW);
+		0.0f, 1.0f, 0.0f, 1.0f,
+		1.0f, 1.0f, 1.0f, 1.0f,
+		1.0f, 0.0f, 1.0f, 0.0f
+	};
+	//TODO: spritesheet calculations
+	glGenVertexArrays(1, &VAO);
+	glGenBuffers(1, &VBO);
+
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(texCoordsBuffer), texCoordsBuffer, GL_STATIC_DRAW);
+
+	glBindVertexArray(VAO);
+
+	// position attribute
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, (GLvoid*)0);
+
+	// texture coord attribute
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
+	glEnableVertexAttribArray(1);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindVertexArray(0);
 }
 
 
@@ -120,26 +144,11 @@ void C_UI_Button::HandleInput(C_UI** selectedUi)
 void C_UI_Button::Draw2D()
 {
 	C_Material* cMaterial = GetOwner()->GetComponent<C_Material>();
-	if (cMaterial == nullptr) 
+	C_Canvas* canvas = GetOwner()->parent->GetComponent<C_Canvas>();
+	if (cMaterial == nullptr || canvas == nullptr)
 		return;
 	
 	//TODO: Inspector pick color !!!
-	/*Color tempColor;
-	switch (state)
-	{
-	case UIButtonState::IDLE:
-		tempColor = Color(1.0f, 1.0f, 0.0f, 1.0f); break;
-	case UIButtonState::HOVERED:
-		tempColor = Color(1.0f, 1.0f, 1.0f, 1.0f); break;
-	case UIButtonState::PRESSEDIN:
-		tempColor = Color(1.0f, 0.4f, 0.0f, 1.0f); break;
-	case UIButtonState::PRESSED:
-		tempColor = Color(1.0f, 0.4f, 0.0f, 1.0f); break;
-	case UIButtonState::RELEASED:
-		tempColor = Color(1.0f, 0.4f, 0.0f, 1.0f); break;
-	default:
-		tempColor = Color(1.0f, 1.0f, 0.0f, 1.0f); break;
-	}*/
 	Color tempColor;
 	switch (state)
 	{
@@ -156,33 +165,24 @@ void C_UI_Button::Draw2D()
 	default:
 		tempColor = Color(0.97f, 0.76f, 0.58f, 1.0f); break;
 	}
-	if (!cMaterial->GetShader())
-		return;
-	R_Shader* shader = cMaterial->GetShader();
-	uint32 id = cMaterial->GetTextureID();
 
-	//TODO: Parent of parent draw (simplement buscar un C_UI i si no return)
-	C_Canvas* canvas = GetOwner()->parent->GetComponent<C_Canvas>();
-	if (canvas == nullptr)
-	{
-		return;
-	}
-	Rect2D parentRect = canvas->GetRect();
+	if (!cMaterial->GetShader())
+		cMaterial->SetShader(App->resourceManager->GetShader("UIShader"));
+	
+	uint32 id = cMaterial->GetTextureID();
 
 	glEnable(GL_BLEND);
 
-	if (!shader)
-		cMaterial->SetShader(App->resourceManager->GetShader("UIShader"));
+	//Canvas position always returns 0,0 for 2d rendering
+	float x = canvas->GetPosition().x + rect.x;
+	float y = canvas->GetPosition().y + rect.y;
 
-	float x = canvas->GetPosition().x + GetRect().x;
-	float y = canvas->GetPosition().y + GetRect().y;
-
-	glUseProgram(shader->shaderProgramID);
+	glUseProgram(cMaterial->GetShader()->shaderProgramID);
 	float4x4 projectionMatrix = float4x4::FromTRS(float3(x, y, 0), Quat::FromEulerXYZ(0, 0, 0), float3(GetRect().w, GetRect().h, 1)).Transposed();
 	glBindTexture(GL_TEXTURE_2D, id);
-	shader->SetUniform1i("useColor", (GLint)true);
-	shader->SetUniformMatrix4("projection", projectionMatrix.ptr());
-	shader->SetUniformVec4f("inColor", (GLfloat*)&tempColor);
+	cMaterial->GetShader()->SetUniform1i("useColor", (GLint)true);
+	cMaterial->GetShader()->SetUniformMatrix4("projection", projectionMatrix.ptr());
+	cMaterial->GetShader()->SetUniformVec4f("inColor", (GLfloat*)&tempColor);
 
 	glBindBuffer(GL_ARRAY_BUFFER, VAO);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
@@ -233,10 +233,10 @@ bool C_UI_Button::SaveState(ParsonNode& root) const
 {
 	root.SetNumber("Type", (uint)GetType());
 
-	root.SetNumber("X", GetRect().x);
-	root.SetNumber("Y", GetRect().y);
-	root.SetNumber("W", GetRect().w);
-	root.SetNumber("H", GetRect().h);
+	root.SetNumber("X", rect.x);
+	root.SetNumber("Y", rect.y);
+	root.SetNumber("W", rect.w);
+	root.SetNumber("H", rect.h);
 
 	root.SetInteger("childOrder", childOrder);
 	return true;

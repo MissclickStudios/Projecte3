@@ -5,18 +5,6 @@
 
 #include "C_UI.h"
 
-
-const float texCoordsBuffer[] = {
-		0.0f, 1.0f, 0.0f, 1.0f,
-		1.0f, 0.0f, 1.0f, 0.0f,
-		0.0f, 0.0f, 0.0f, 0.0f,
-
-		0.0f, 1.0f, 0.0f, 1.0f,
-		1.0f, 1.0f, 1.0f, 1.0f,
-		1.0f, 0.0f, 1.0f, 0.0f
-};
-
-
 class MISSCLICK_API C_UI_Image : public C_UI
 {
 public:

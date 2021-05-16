@@ -57,6 +57,16 @@ bool C_UI_Image::CleanUp()
 
 void C_UI_Image::LoadBuffers()
 {
+	const float texCoordsBuffer[] = {
+		0.0f, 1.0f, 0.0f, 1.0f,
+		1.0f, 0.0f, 1.0f, 0.0f,
+		0.0f, 0.0f, 0.0f, 0.0f,
+
+		0.0f, 1.0f, 0.0f, 1.0f,
+		1.0f, 1.0f, 1.0f, 1.0f,
+		1.0f, 0.0f, 1.0f, 0.0f
+	};
+
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
 
@@ -121,37 +131,37 @@ void C_UI_Image::Draw2D()
 	//Uncomment the code below to update the texture coords in real time
 	if(cAnimator != nullptr && cAnimator->IsAnimationPlaying())
 	{
-	float newCoords[] = {
+		float newCoords[] = {
 			0.0f, 1.0f, cAnimator->spritesheet->currentFrame.proportionBeginX, cAnimator->spritesheet->currentFrame.proportionFinalY,
 			1.0f, 0.0f, cAnimator->spritesheet->currentFrame.proportionFinalX, cAnimator->spritesheet->currentFrame.proportionBeginY,
 			0.0f, 0.0f, cAnimator->spritesheet->currentFrame.proportionBeginX, cAnimator->spritesheet->currentFrame.proportionBeginY,
-		
+
 			0.0f, 1.0f, cAnimator->spritesheet->currentFrame.proportionBeginX, cAnimator->spritesheet->currentFrame.proportionFinalY,
 			1.0f, 1.0f, cAnimator->spritesheet->currentFrame.proportionFinalX, cAnimator->spritesheet->currentFrame.proportionFinalY,
 			1.0f, 0.0f, cAnimator->spritesheet->currentFrame.proportionFinalX,  cAnimator->spritesheet->currentFrame.proportionBeginY
-		
 
 
-	//	    0.0f, 1.0f, 0.0f , 0.9361f,
-	//		1.0f, 0.0f, 0.1816f, 1.0f,
-	//		0.0f, 0.0f, 0.0f, 1.0f,
-	//	
-	//		0.0f, 1.0f, 0.0f, 0.9361f,
-	//		1.0f, 1.0f, 0.1816f,0.9361f,
-	//		1.0f, 0.0f, 0.1816f, 1.0f
-	//
-			/*
-			0.0f, 1.0f, 0.0f , 0.5f,
-			1.0f, 0.0f, 0.5f, 0.0f,
-			0.0f, 0.0f, 0.0f, 0.0f,
 
-			0.0f, 1.0f, 0.0f, 0.5f,
-			1.0f, 1.0f, 0.5f, 0.5f,
-			1.0f, 0.0f, 0.5f, 0.0f*/
-	};	
+			//	    0.0f, 1.0f, 0.0f , 0.9361f,
+			//		1.0f, 0.0f, 0.1816f, 1.0f,
+			//		0.0f, 0.0f, 0.0f, 1.0f,
+			//	
+			//		0.0f, 1.0f, 0.0f, 0.9361f,
+			//		1.0f, 1.0f, 0.1816f,0.9361f,
+			//		1.0f, 0.0f, 0.1816f, 1.0f
+			//
+					/*
+					0.0f, 1.0f, 0.0f , 0.5f,
+					1.0f, 0.0f, 0.5f, 0.0f,
+					0.0f, 0.0f, 0.0f, 0.0f,
 
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(newCoords), newCoords, GL_DYNAMIC_DRAW);
+					0.0f, 1.0f, 0.0f, 0.5f,
+					1.0f, 1.0f, 0.5f, 0.5f,
+					1.0f, 0.0f, 0.5f, 0.0f*/
+		};
+
+		glBindBuffer(GL_ARRAY_BUFFER, VBO);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(newCoords), newCoords, GL_DYNAMIC_DRAW);
 	}
 
 
@@ -215,10 +225,10 @@ bool C_UI_Image::SaveState(ParsonNode& root) const
 {
 	root.SetNumber("Type", (uint)GetType());
 
-	root.SetNumber("X", GetRect().x);
-	root.SetNumber("Y", GetRect().y);
-	root.SetNumber("W", GetRect().w);
-	root.SetNumber("H", GetRect().h);
+	root.SetNumber("X", rect.x);
+	root.SetNumber("Y", rect.y);
+	root.SetNumber("W", rect.w);
+	root.SetNumber("H", rect.h);
 
 	 root.SetNumber("childOrder", childOrder);
 
