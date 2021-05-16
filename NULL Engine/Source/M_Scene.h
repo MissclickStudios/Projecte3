@@ -149,7 +149,6 @@ private:
 
 private:
 	bool nextScene = false;
-	bool sceneIsLoaded = false;
 	float transitionProgresion;
 	std::string nextSceneName;
 
