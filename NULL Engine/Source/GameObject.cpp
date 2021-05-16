@@ -42,6 +42,7 @@
 #include "C_UI_Image.h"
 #include "C_UI_Text.h"
 #include "C_UI_Button.h"
+#include "C_UI_Checkbox.h"
 
 #include "C_2DAnimator.h"
 
@@ -806,6 +807,7 @@ Component* GameObject::CreateComponent(ComponentType type, bool addComponent)
 	//case ComponentType::GATE_BEHAVIOR:		{ component = new C_GateBehavior(this); }		break;
 	case ComponentType::ANIMATOR2D:			{ component = new C_2DAnimator(this); }			break;
 	case ComponentType::NAVMESH_AGENT:		{ component = new C_NavMeshAgent(this); }		break;
+	case ComponentType::UI_CHECKBOX:		{ component = new C_UI_Checkbox(this); }		break;
 	}
 
 	if (component != nullptr && addComponent)
