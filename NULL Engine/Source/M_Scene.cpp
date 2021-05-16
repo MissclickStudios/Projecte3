@@ -1,6 +1,7 @@
 #include "Profiler.h"
 #include "MathGeoTransform.h"
 
+#include "MC_Time.h"
 #include "JSONParser.h"
 #include "Random.h"
 
@@ -92,7 +93,7 @@ bool M_Scene::Start()
 	
 
 	if(App->gameState == GameState::PLAY)
-		LoadScene("Assets/Scenes/MainMenu.json");
+		LoadScene("Assets/Scenes/HUB.json");
 	else
 	{
 		std::string s = ASSETS_SCENES_PATH + currentScene + JSON_EXTENSION;
@@ -251,6 +252,8 @@ bool M_Scene::SaveScene(const char* sceneName) const
 	App->uiSystem->SaveCanvasChildrenOrder();
 	ParsonNode rootNode		= ParsonNode();
 
+	rootNode.SetNumber("ModTime", MC_Time::GetUnixTime());
+
 	ParsonArray modelArray = rootNode.SetArray("Models In Scene");
 	for (auto item = models.begin(); item != models.end(); ++item)
 	{
@@ -329,7 +332,7 @@ bool M_Scene::LoadScene(const char* path)
 		return false;
 	}
 
-	int modTime = App->fileSystem->GetLastModTime(path);
+	
 	std::vector<GameObject*> prefabsToDelete;
 
 	if (buffer != nullptr)
@@ -346,6 +349,7 @@ bool M_Scene::LoadScene(const char* path)
 		ParsonNode newRoot			= ParsonNode(buffer);
 		ParsonArray modelsArray		= newRoot.GetArray("Models In Scene");
 		ParsonArray objectsArray	= newRoot.GetArray("Game Objects");
+		int modTime = newRoot.GetNumber("ModTime");
 		RELEASE_ARRAY(buffer);
 
 		if (sceneName == AUTOSAVE_FILE_NAME)

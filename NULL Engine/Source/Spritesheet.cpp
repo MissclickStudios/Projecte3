@@ -44,34 +44,30 @@ Frame* Spritesheet::GetAtlasPosition(int pixelPosX, int pixelPosY, int pixelWidt
 
 void Spritesheet::GetFrameProportions(int row, int column)
 {
-	currentFrame.proportionBeginX = (float)column / columns;
-	currentFrame.proportionFinalX = ((float)column + 1) / columns;
+	currentFrame.proportionBeginX = ((float)column - 1) / columns;
+	currentFrame.proportionFinalX = (float)column / columns;
 
-	currentFrame.proportionBeginY =  (float)row / rows;
-	currentFrame.proportionFinalY =  ((float)row + 1) / rows;
+	currentFrame.proportionBeginY =  ((float)row - 1) / rows;
+	currentFrame.proportionFinalY =  (float)row / rows;
 }
 
 
 
 void Spritesheet::SetCurrentFrameLocation(int frameNumber)
 {
-	int rowN = 1;
-	int columnN = 1;
-	int count = 0;
+	int count = 1;
+	int rowsN = 1;
+	int columnsN = 1;
 
-	//hmmmmmmmm
-	for (int k = 1; k < rows; k++) 
+	for(int i = 1; i < rows; i++)
 	{
-		for (int i = 1; i < columns; i++) 
-		{	
-			columnN++;
+		rowsN = i;
+		for(int k = 1; k < columns; k++)
+		{
+			columnsN = k;
 			count++;
-			if(count == frameNumber){}
-			GetFrameProportions(rowN, columnN);
+			if(count == frameNumber)
+			GetFrameProportions(rowsN, columnsN);
 		}
-		rowN++;
-		columnN = 1;
-		if (count == frameNumber)
-		GetFrameProportions(rowN, columnN);
 	}
 }

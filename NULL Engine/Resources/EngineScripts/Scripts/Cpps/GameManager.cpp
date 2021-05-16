@@ -638,46 +638,49 @@ void GameManager::SaveManagerState()
 
 void GameManager::BackTrackUpdate()
 {
-	if (backtrackTimer.ReadSec() >= backtrackDuration)
+	if (playerScript != nullptr)
 	{
-		if (playerScript != nullptr && playerScript->moveState != PlayerState::DASH && playerScript->IsGrounded())
+		if (backtrackTimer.ReadSec() >= backtrackDuration)
 		{
-			if (backtrack.size() >= BACKTRACK)
-				backtrack.erase(backtrack.begin());
-			backtrack.push_back(playerScript->gameObject->transform->GetLocalPosition());
-		}
+			if (playerScript != nullptr && playerScript->moveState != PlayerState::DASH && playerScript->IsGrounded())
+			{
+				if (backtrack.size() >= BACKTRACK)
+					backtrack.erase(backtrack.begin());
+				backtrack.push_back(playerScript->gameObject->transform->GetLocalPosition());
+			}
 
-		backtrackTimer.Start();
-	}
-	if (move)
-	{
-		move = false;
-		float3 point = spawnPoint;
-		for (int i = backtrack.size() - 1; i >= 0; --i)
+			backtrackTimer.Start();
+		}
+		if (move)
 		{
-			if (i == 0)
+			move = false;
+			float3 point = spawnPoint;
+			for (int i = backtrack.size() - 1; i >= 0; --i)
+			{
+				if (i == 0)
+					break;
+
+				float current = backtrack[i].y * 1000;
+				int currentRounded = (int)(backtrack[i].y * 1000);
+				if (current >= (float)currentRounded)
+					current = (float)currentRounded;
+				else
+					current = (float)(currentRounded - 1);
+
+				float past = backtrack[i - 1].y * 1000;
+				int pastRounded = (int)(backtrack[i - 1].y * 1000);
+				if (past >= (float)pastRounded)
+					past = (float)pastRounded;
+				else
+					past = (float)(pastRounded - 1);
+
+				if (current != past)
+					continue;
+				point = backtrack[i];
 				break;
-
-			float current = backtrack[i].y * 1000;
-			int currentRounded = (int)(backtrack[i].y * 1000);
-			if (current >= (float)currentRounded)
-				current = (float)currentRounded;
-			else
-				current = (float)(currentRounded - 1);
-
-			float past = backtrack[i - 1].y * 1000;
-			int pastRounded = (int)(backtrack[i - 1].y * 1000);
-			if (past >= (float)pastRounded)
-				past = (float)pastRounded;
-			else
-				past = (float)(pastRounded - 1);
-
-			if (current != past)
-				continue;
-			point = backtrack[i];
-			break;
+			}
+			playerScript->ChangePosition(point);
 		}
-		playerScript->ChangePosition(point);
 	}
 }
 
