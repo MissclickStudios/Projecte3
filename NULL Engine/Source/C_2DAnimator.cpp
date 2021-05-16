@@ -122,8 +122,10 @@ void C_2DAnimator::SetSpritesheetTexture(R_Texture* spritesheet, int animationNu
 		this->spritesheet = new Spritesheet(spritesheet);
 		break;
 	case 2:
+		this->spritesheet2 = new Spritesheet(spritesheet);
 		break;
 	case 3:
+		this->spritesheet3 = new Spritesheet(spritesheet);
 		break;
 	case 0:
 		break;
