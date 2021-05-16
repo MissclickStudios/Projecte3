@@ -28,10 +28,10 @@ C_2DAnimator::C_2DAnimator(GameObject* owner) : Component(owner, ComponentType::
 	name = "";
 
 	//ANIMATION 2D TESTING
-	spritesheet = new Spritesheet((R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/spritesheet.png"));
-	spritesheet->rows = 3;
-	spritesheet->columns = 4;
-	spritesheet->animationNumber = 11;
+	spritesheet = new Spritesheet((R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/ChangeWeapon.png"));
+	spritesheet->rows = 4;
+	spritesheet->columns = 3;
+	spritesheet->animationNumber = 12;
 }
 
 C_2DAnimator::~C_2DAnimator()
