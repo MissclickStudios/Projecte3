@@ -37,6 +37,9 @@
     <Filter Include="Objects\Environment">
       <UniqueIdentifier>{92fbfe23-e66f-4181-9c66-5f899cf2b851}</UniqueIdentifier>
     </Filter>
+    <Filter Include="DialogSystem">
+      <UniqueIdentifier>{ed3459db-f6b8-4548-a1d0-92a6eaf4371e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Scripts\Headers\ScriptMacros.h">
@@ -150,6 +153,10 @@
     <ClInclude Include="..\Assets\Scripts\QuestManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\Assets\Scripts\DialogManager.h">
+      <Filter>DialogSystem</Filter>
+
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Scripts\Helpers\CrossDllHelper.cpp">
@@ -250,6 +257,9 @@
     </ClCompile>
     <ClCompile Include="Scripts\Cpps\QuestManager.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Scripts\Cpps\DialogManager.cpp">
+      <Filter>DialogSystem</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -119,6 +119,8 @@ void M_FileSystem::CreateLibraryDirectories()
 	CreateDir(ASSETS_SCRIPTS_PATH);
 	CreateDir(ASSETS_TEXTURES_PATH);
 
+	CreateDir(ASSETS_DIALOGS_PATH);
+
 	CreateDir(LIBRARY_PATH);
 	CreateDir(ANIMATIONS_PATH);
 	CreateDir(BONES_PATH);

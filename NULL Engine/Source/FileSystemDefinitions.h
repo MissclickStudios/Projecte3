@@ -24,6 +24,7 @@
 #define ASSETS_TEXTURES_PATH			"Assets/Textures/"
 #define ASSETS_SKYBOX_PATH				"Assets/Textures/Skybox/"
 #define ASSETS_ANIMATION2D_PATH			"Assets/Animations2D/"
+#define ASSETS_DIALOGS_PATH				"Assets/Dialogs/"
 
 #define LIBRARY_PATH					"Library/"
 #define ANIMATIONS_PATH					"Library/Animations/"

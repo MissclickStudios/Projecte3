@@ -32,6 +32,8 @@ public:
     void ReturnHub();
     void ReturnToMainMenu();
 
+    //Dialog
+
 private:
     //Level Generator
     void GenerateLevel();
