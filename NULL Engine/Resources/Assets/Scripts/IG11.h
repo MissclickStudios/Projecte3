@@ -20,6 +20,10 @@ enum class IG11State
 	SPIRAL_ATTACK,
 	U_ATTACK_IN,
 	U_ATTACK,
+	DOUBLE_SPIRAL_ATTACK_IN,
+	DOUBLE_SPIRAL_ATTACK,
+	ROTATE_ATTACK_IN,
+	ROTATE_ATTACK,
 	DEAD_IN,
 	DEAD
 };
@@ -92,6 +96,9 @@ private:
 	void ManageMovement();
 	void ManageAim();
 
+	IG11State FirstStageAttacks();
+	IG11State SecondStageAttacks();
+
 	// Movement
 	void Patrol();
 	void Chase();
@@ -109,6 +116,8 @@ private:
 	// Special Attack
 	bool SpiralAttack();
 	bool UAttack();
+	bool DoubleSpiralAttack();
+	bool RotateAttack();
 
 	Timer spiralAttackTimer;
 	Timer UAttackTimer;
@@ -116,6 +125,7 @@ private:
 	float2 specialAttackStartAim = float2::zero;
 	float specialAttackRot = 0.0f;
 
+	uint randomAttack = 0;
 	// Weapons
 	GameObject* blasterGameObject = nullptr;
 	Weapon* blasterWeapon = nullptr;
