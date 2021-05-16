@@ -19,7 +19,7 @@ ShootState Blaster::ShootLogic()
 {
     if (!fireRateTimer.IsActive())
     {
-        fireRateTimer += (MC_Time::Game::GetDT() * 10);
+
         return ShootState::FIRED_PROJECTILE;
     }
     else 

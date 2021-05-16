@@ -12,6 +12,7 @@
 
 class GameObject;
 class Gate;
+struct ItemData;
 
 class SCRIPTS_API GameManager : public Script 
 {
@@ -31,6 +32,8 @@ public:
     void Continue();
     void ReturnHub();
     void ReturnToMainMenu();
+
+    std::vector<ItemData*> GetChestItemPool() const { return chestItemPool; };
 
 private:
     //Level Generator
@@ -62,6 +65,8 @@ public:
 
     Prefab groguPrefab;
     Grogu* groguScript = nullptr;
+
+    std::vector<ItemData*> chestItemPool;
 
 private:
     GameObject* playerGameObject = nullptr;
