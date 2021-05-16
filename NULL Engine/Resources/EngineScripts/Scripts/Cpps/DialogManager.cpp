@@ -43,9 +43,9 @@ void DialogManager::CleanUp()
 
 }
 
-DialogSystem DialogManager::LoadDialogSystem(const char* path)
+DialogSystem* DialogManager::LoadDialogSystem(const char* path)
 {
-
+	return nullptr;
 }
 
 void DialogManager::StartDialog(const char* dialogName)
@@ -58,7 +58,9 @@ void DialogManager::StartDialog(DialogSystem* dialogSystem)
 	state = DialogState::SLIDE_IN;
 }
 
-SCRIPTS_FUNCTION DialogManager* CreateCameraMovement()
+DialogManager* CreateDialogManager()
 {
+	DialogManager* script = new DialogManager();
 
+	return script;
 }
