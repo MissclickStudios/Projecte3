@@ -153,17 +153,17 @@ void C_UI_Button::Draw2D()
 	switch (state)
 	{
 	case UIButtonState::IDLE:
-		tempColor = Color(0.97f, 0.76f, 0.58f, 1.0f); break;
+		tempColor = idle; break;
 	case UIButtonState::HOVERED:
-		tempColor = Color(1.0f, 1.0f, 1.0f, 1.0f); break;
+		tempColor = hovered; break;
 	case UIButtonState::PRESSEDIN:
-		tempColor = Color(1.0f, 0.4f, 0.19f, 1.0f); break;
+		tempColor = pressed; break;
 	case UIButtonState::PRESSED:
-		tempColor = Color(1.0f, 0.4f, 0.19f, 1.0f); break;
+		tempColor = pressed; break;
 	case UIButtonState::RELEASED:
-		tempColor = Color(1.0f, 0.4f, 0.19f, 1.0f); break;
+		tempColor = pressed; break;
 	default:
-		tempColor = Color(0.97f, 0.76f, 0.58f, 1.0f); break;
+		tempColor = idle; break;
 	}
 
 	if (!cMaterial->GetShader())
@@ -184,11 +184,11 @@ void C_UI_Button::Draw2D()
 	cMaterial->GetShader()->SetUniformMatrix4("projection", projectionMatrix.ptr());
 	cMaterial->GetShader()->SetUniformVec4f("inColor", (GLfloat*)&tempColor);
 
-	glBindBuffer(GL_ARRAY_BUFFER, VAO);
+	glBindVertexArray(VAO);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 
 	glDisable(GL_BLEND);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindVertexArray(0);
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glUseProgram(0);
 }
@@ -238,6 +238,10 @@ bool C_UI_Button::SaveState(ParsonNode& root) const
 	root.SetNumber("W", rect.w);
 	root.SetNumber("H", rect.h);
 
+	root.SetNumber("idler", idle.r); root.SetNumber("idleg", idle.g); root.SetNumber("idleb", idle.b); root.SetNumber("idlea", idle.a);
+	root.SetNumber("hoveredr", hovered.r); root.SetNumber("hoveredg", hovered.g); root.SetNumber("hoveredb", hovered.b); root.SetNumber("hovereda", hovered.a);
+	root.SetNumber("pressedr", pressed.r); root.SetNumber("pressedg", pressed.g); root.SetNumber("pressedb", pressed.b); root.SetNumber("presseda", pressed.a);
+	
 	root.SetInteger("childOrder", childOrder);
 	return true;
 }
@@ -254,6 +258,10 @@ bool C_UI_Button::LoadState(ParsonNode& root)
 	rect.y = root.GetNumber("Y");
 	rect.w = root.GetNumber("W");
 	rect.h = root.GetNumber("H");
+
+	idle.r = root.GetNumber("idler"); idle.g = root.GetNumber("idleg"); idle.b = root.GetNumber("idleb"); idle.a =root.GetNumber("idlea");
+	hovered.r = root.GetNumber("hoveredr"); hovered.g = root.GetNumber("hoveredg"); hovered.b = root.GetNumber("hoveredb"); hovered.a = root.GetNumber("hovereda");
+	pressed.r = root.GetNumber("pressedr"); pressed.g = root.GetNumber("pressedg"); pressed.b = root.GetNumber("pressedb"); pressed.a = root.GetNumber("presseda");
 
 	childOrder = root.GetInteger("childOrder");
 

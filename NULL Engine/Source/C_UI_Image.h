@@ -1,8 +1,6 @@
 #ifndef __C_UI_IMAGE_H__
 #define __C_UI_IMAGE_H__
 
-#include <string>
-
 #include "C_UI.h"
 
 class MISSCLICK_API C_UI_Image : public C_UI

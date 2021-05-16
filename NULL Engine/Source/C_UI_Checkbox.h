@@ -2,6 +2,7 @@
 #define __C_UI_CHECKBOX_H__
 
 #include "C_Ui.h"
+#include "Spritesheet.h"
 
 class R_Shader;
 
@@ -10,10 +11,14 @@ enum class UICheckboxState
 	NONE = 0,
 	CHECKED,
 	UNCHECKED,
-	HOVEREDCHECKED,
-	HOVEREDUNCHECKED,
-	SWAPTOCHECKED,
-	SWAPTOUNCHECKED
+	HOVERED_CHECKED,
+	HOVERED_UNCHECKED,
+	PRESSED_CHECKED_IN,
+	PRESSED_CHECKED,
+	PRESSED_CHECKED_OUT,
+	PRESSED_UNCHECKED_IN,
+	PRESSED_UNCHECKED,
+	PRESSED_UNCHECKED_OUT,
 };
 
 class MISSCLICK_API C_UI_Checkbox : public C_UI
@@ -28,6 +33,8 @@ public:
 
 	bool SaveState(ParsonNode& root) const override;
 	bool LoadState(ParsonNode& root) override;
+	void SetChecked();
+	void SetUnchecked();
 
 	void LoadBuffers();
 
@@ -42,6 +49,8 @@ public:
 
 private:
 	void ResetInput()override;
+	Frame GetTexturePosition(int pixelPosX, int pixelPosY, int pixelWidth, int pixelHeight);
+	const char* NameFromState(UICheckboxState state);
 
 private:
 	UICheckboxState state = UICheckboxState::UNCHECKED;
@@ -49,7 +58,17 @@ private:
 	unsigned int VAO;
 	unsigned int VBO;
 
+	int pixelCoord[24];
+	Frame unhoverUnchecked;
+	Frame hoverUnchecked;
+	Frame unhoverChecked;
+	Frame hoverChecked;
+	Frame pressedChecked;
+	Frame pressedUnchecked;
+
 	R_Shader* rShader;
+
+	friend class E_Inspector;
 };
 
 #endif // !__C_UI_CHECKBOX_H__

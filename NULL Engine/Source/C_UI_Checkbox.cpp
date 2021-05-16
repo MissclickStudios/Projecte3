@@ -44,6 +44,30 @@ bool C_UI_Checkbox::SaveState(ParsonNode& root) const
 	root.SetNumber("W", rect.w);
 	root.SetNumber("H", rect.h);
 
+	ParsonArray pixelCoords = root.SetArray("pixelCoords");
+	for (int i = 0; i < 24; ++i)
+		pixelCoords.SetNumber((double)pixelCoord[i]);
+
+	ParsonNode node;
+	node = root.SetNode("unhover uncheck");
+	node.SetNumber("x", unhoverUnchecked.proportionBeginX); node.SetNumber("y", unhoverUnchecked.proportionBeginY);
+	node.SetNumber("w", unhoverUnchecked.proportionFinalX); node.SetNumber("h", unhoverUnchecked.proportionFinalY);
+	node = root.SetNode("hover uncheck");
+	node.SetNumber("x", hoverUnchecked.proportionBeginX); node.SetNumber("y", hoverUnchecked.proportionBeginY);
+	node.SetNumber("w", hoverUnchecked.proportionFinalX); node.SetNumber("h", hoverUnchecked.proportionFinalY);
+	node = root.SetNode("unhover check");
+	node.SetNumber("x", unhoverChecked.proportionBeginX); node.SetNumber("y", unhoverChecked.proportionBeginY);
+	node.SetNumber("w", unhoverChecked.proportionFinalX); node.SetNumber("h", unhoverChecked.proportionFinalY);
+	node = root.SetNode("hover check");
+	node.SetNumber("x", hoverChecked.proportionBeginX); node.SetNumber("y", hoverChecked.proportionBeginY);
+	node.SetNumber("w", hoverChecked.proportionFinalX); node.SetNumber("h", hoverChecked.proportionFinalY);
+	node = root.SetNode("pressed check");
+	node.SetNumber("x", pressedChecked.proportionBeginX); node.SetNumber("y", pressedChecked.proportionBeginY);
+	node.SetNumber("w", pressedChecked.proportionFinalX); node.SetNumber("h", pressedChecked.proportionFinalY);
+	node = root.SetNode("pressed uncheck");
+	node.SetNumber("x", pressedUnchecked.proportionBeginX); node.SetNumber("y", pressedUnchecked.proportionBeginY);
+	node.SetNumber("w", pressedUnchecked.proportionFinalX); node.SetNumber("h", pressedUnchecked.proportionFinalY);
+
 	root.SetInteger("childOrder", childOrder);
 	return true;
 }
@@ -55,27 +79,93 @@ bool C_UI_Checkbox::LoadState(ParsonNode& root)
 	rect.w = root.GetNumber("W");
 	rect.h = root.GetNumber("H");
 
+	ParsonArray pixelCoords = root.GetArray("pixelCoords");
+	if(pixelCoords.ArrayIsValid())
+		for (int i = 0; i < pixelCoords.size; ++i)
+			pixelCoord[i] = (int)pixelCoords.GetNumber(i);
+
+	ParsonNode node;
+	node = root.GetNode("unhover uncheck");
+	if (node.NodeIsValid()) 
+	{
+		unhoverUnchecked.proportionBeginX = node.GetNumber("x"); unhoverUnchecked.proportionBeginY = node.GetNumber("y");
+		unhoverUnchecked.proportionFinalX = node.GetNumber("w"); unhoverUnchecked.proportionFinalY = node.GetNumber("h");
+	}
+	node = root.GetNode("hover uncheck");
+	if (node.NodeIsValid()) 
+	{
+		hoverUnchecked.proportionBeginX = node.GetNumber("x"); hoverUnchecked.proportionBeginY = node.GetNumber("y");
+		hoverUnchecked.proportionFinalX = node.GetNumber("w"); hoverUnchecked.proportionFinalY = node.GetNumber("h");
+	}
+	node = root.GetNode("unhover check");
+	if (node.NodeIsValid()) 
+	{
+		unhoverChecked.proportionBeginX = node.GetNumber("x"); unhoverChecked.proportionBeginY = node.GetNumber("y");
+		unhoverChecked.proportionFinalX = node.GetNumber("w"); unhoverChecked.proportionFinalY = node.GetNumber("h");
+	}
+	node = root.GetNode("hover check");
+	if (node.NodeIsValid()) 
+	{
+		hoverChecked.proportionBeginX = node.GetNumber("x"); hoverChecked.proportionBeginY = node.GetNumber("y");
+		hoverChecked.proportionFinalX = node.GetNumber("w"); hoverChecked.proportionFinalY = node.GetNumber("h");
+	}
+	node = root.GetNode("pressed check");
+	if (node.NodeIsValid()) 
+	{
+		pressedChecked.proportionBeginX = node.GetNumber("x"); pressedChecked.proportionBeginY = node.GetNumber("y");
+		pressedChecked.proportionFinalX = node.GetNumber("w"); pressedChecked.proportionFinalY = node.GetNumber("h");
+	}
+	node = root.GetNode("pressed uncheck");
+	if (node.NodeIsValid()) 
+	{
+		pressedUnchecked.proportionBeginX = node.GetNumber("x"); pressedUnchecked.proportionBeginY = node.GetNumber("y");
+		pressedUnchecked.proportionFinalX = node.GetNumber("w"); pressedUnchecked.proportionFinalY = node.GetNumber("h");
+	}
+	
 	childOrder = root.GetInteger("childOrder");
 	return true;
 }
 
+void C_UI_Checkbox::SetChecked()
+{
+	state = UICheckboxState::CHECKED;
+}
+
+void C_UI_Checkbox::SetUnchecked()
+{
+	state = UICheckboxState::UNCHECKED;
+}
+
 void C_UI_Checkbox::LoadBuffers()
 {
-	const float coordsBuffer[] = {
-		1, 1,
-		1, 0,
-		0, 0,
-		1,0,
-	};
-	//TODO: spritesheet calculations
-	glGenBuffers(1, &VAO);
-	glBindBuffer(GL_ARRAY_BUFFER, VAO);
+	const float texCoordsBuffer[] = {
+		0.0f, 1.0f, 0.0f, 1.0f,
+		1.0f, 0.0f, 1.0f, 0.0f,
+		0.0f, 0.0f, 0.0f, 0.0f,
 
-	glBufferData(GL_ARRAY_BUFFER, sizeof(coordsBuffer), coordsBuffer, GL_STATIC_DRAW);
+		0.0f, 1.0f, 0.0f, 1.0f,
+		1.0f, 1.0f, 1.0f, 1.0f,
+		1.0f, 0.0f, 1.0f, 0.0f
+	};
+
+	glGenVertexArrays(1, &VAO);
+	glGenBuffers(1, &VBO);
+
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(texCoordsBuffer), texCoordsBuffer, GL_DYNAMIC_DRAW);
+
+	glBindVertexArray(VAO);
+
+	// position attribute
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, (GLvoid*)0);
+
+	// texture coord attribute
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
+	glEnableVertexAttribArray(1);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindVertexArray(0);
 }
 
 void C_UI_Checkbox::HandleInput(C_UI** selectedUi)
@@ -92,7 +182,7 @@ void C_UI_Checkbox::HandleInput(C_UI** selectedUi)
 	case UICheckboxState::UNCHECKED:
 		if (*selectedUi == nullptr || *selectedUi == this)
 		{
-			state = UICheckboxState::HOVEREDUNCHECKED;
+			state = UICheckboxState::HOVERED_UNCHECKED;
 			*selectedUi = this;
 		}
 		break;
@@ -100,37 +190,69 @@ void C_UI_Checkbox::HandleInput(C_UI** selectedUi)
 	case UICheckboxState::CHECKED:
 		if (*selectedUi == nullptr || *selectedUi == this)
 		{
-			state = UICheckboxState::HOVEREDCHECKED;
+			state = UICheckboxState::HOVERED_CHECKED;
 			*selectedUi = this;
 		}
 		break;
 
-	case UICheckboxState::HOVEREDUNCHECKED:
+	case UICheckboxState::HOVERED_UNCHECKED:
 		if (*selectedUi != this)
 		{
 			state = UICheckboxState::UNCHECKED;
 			break;
 		}
 		if (App->input->GetKey(SDL_SCANCODE_RETURN) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(0) == ButtonState::BUTTON_DOWN) // TODO: make inputs mappable
-			state = UICheckboxState::SWAPTOCHECKED;
+			state = UICheckboxState::PRESSED_UNCHECKED_IN;
 		break;
 
-	case UICheckboxState::HOVEREDCHECKED:
+	case UICheckboxState::HOVERED_CHECKED:
 		if (*selectedUi != this)
 		{
 			state = UICheckboxState::CHECKED;
 			break;
 		}
 		if (App->input->GetKey(SDL_SCANCODE_RETURN) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(0) == ButtonState::BUTTON_DOWN) // TODO: make inputs mappable
-			state = UICheckboxState::SWAPTOUNCHECKED;
+			state = UICheckboxState::PRESSED_CHECKED_IN;
 		break;
 
-	case UICheckboxState::SWAPTOCHECKED:
-		state = UICheckboxState::HOVEREDCHECKED;
+	case UICheckboxState::PRESSED_CHECKED_IN:
+		state = UICheckboxState::PRESSED_CHECKED;
 		break;
 
-	case UICheckboxState::SWAPTOUNCHECKED:
-		state = UICheckboxState::HOVEREDUNCHECKED;
+	case UICheckboxState::PRESSED_CHECKED:
+		if (*selectedUi != this)
+		{
+			state = UICheckboxState::CHECKED;
+			break;
+		}
+		if (App->input->GetKey(SDL_SCANCODE_RETURN) == KeyState::KEY_UP || App->input->GetGameControllerButton(0) == ButtonState::BUTTON_UP)
+		{
+			state = UICheckboxState::PRESSED_CHECKED_OUT;
+		}
+		break;
+
+	case UICheckboxState::PRESSED_CHECKED_OUT:
+		state = UICheckboxState::HOVERED_UNCHECKED;
+		break;
+
+	case UICheckboxState::PRESSED_UNCHECKED_IN:
+		state = UICheckboxState::PRESSED_UNCHECKED;
+		break;
+
+	case UICheckboxState::PRESSED_UNCHECKED:
+		if (*selectedUi != this)
+		{
+			state = UICheckboxState::UNCHECKED;
+			break;
+		}
+		if (App->input->GetKey(SDL_SCANCODE_RETURN) == KeyState::KEY_UP || App->input->GetGameControllerButton(0) == ButtonState::BUTTON_UP)
+		{
+			state = UICheckboxState::PRESSED_UNCHECKED_OUT;
+		}
+		break;
+
+	case UICheckboxState::PRESSED_UNCHECKED_OUT:
+		state = UICheckboxState::HOVERED_CHECKED;
 		break;
 
 	default:
@@ -141,55 +263,107 @@ void C_UI_Checkbox::HandleInput(C_UI** selectedUi)
 
 void C_UI_Checkbox::Draw2D()
 {
-	/*C_Material* cMaterial = GetOwner()->GetComponent<C_Material>();
+	C_Material* cMaterial = GetOwner()->GetComponent<C_Material>();
 	C_Canvas* canvas = GetOwner()->parent->GetComponent<C_Canvas>();
-	if (cMaterial == nullptr || !cMaterial->GetShader() || canvas == nullptr)
+	if (cMaterial == nullptr || canvas == nullptr)
 		return;
 
-	//TODO: Inspector pick color !!!
-	Color tempColor;
+	Frame currentFrame;
 	switch (state)
 	{
-	case UIButtonState::IDLE:
-		tempColor = Color(0.97f, 0.76f, 0.58f, 1.0f); break;
-	case UIButtonState::HOVERED:
-		tempColor = Color(1.0f, 1.0f, 1.0f, 1.0f); break;
-	case UIButtonState::PRESSEDIN:
-		tempColor = Color(1.0f, 0.4f, 0.19f, 1.0f); break;
-	case UIButtonState::PRESSED:
-		tempColor = Color(1.0f, 0.4f, 0.19f, 1.0f); break;
-	case UIButtonState::RELEASED:
-		tempColor = Color(1.0f, 0.4f, 0.19f, 1.0f); break;
-	default:
-		tempColor = Color(0.97f, 0.76f, 0.58f, 1.0f); break;
+	case UICheckboxState::NONE: currentFrame = unhoverUnchecked;  break;
+	case UICheckboxState::UNCHECKED: currentFrame = unhoverUnchecked; break;
+	case UICheckboxState::CHECKED: currentFrame = unhoverChecked; break;
+	case UICheckboxState::HOVERED_UNCHECKED: currentFrame = hoverUnchecked; break;
+	case UICheckboxState::HOVERED_CHECKED: currentFrame = hoverChecked; break;
+	case UICheckboxState::PRESSED_CHECKED_IN: currentFrame = pressedChecked; break;
+	case UICheckboxState::PRESSED_CHECKED: currentFrame = pressedChecked; break;
+	case UICheckboxState::PRESSED_CHECKED_OUT: currentFrame = pressedChecked; break;
+	case UICheckboxState::PRESSED_UNCHECKED_IN: currentFrame = pressedUnchecked; break;
+	case UICheckboxState::PRESSED_UNCHECKED: currentFrame = pressedUnchecked; break;
+	case UICheckboxState::PRESSED_UNCHECKED_OUT: currentFrame = pressedUnchecked; break;
+	default: currentFrame = unhoverUnchecked; break;
 	}
-	R_Shader* shader = cMaterial->GetShader();
-	uint32 id = cMaterial->GetTextureID();
 
-	Rect2D parentRect = canvas->GetRect();
+	if (!cMaterial->GetShader())
+		cMaterial->SetShader(App->resourceManager->GetShader("UIShader"));
+
+	uint32 id = cMaterial->GetTextureID();
 
 	glEnable(GL_BLEND);
 
-	if (!shader)
-		cMaterial->SetShader(App->resourceManager->GetShader("UIShader"));
+	//Canvas position always returns 0,0 for 2d rendering
+	float x = canvas->GetPosition().x + rect.x;
+	float y = canvas->GetPosition().y + rect.y;
 
-	float x = canvas->GetPosition().x + GetRect().x;
-	float y = canvas->GetPosition().y + GetRect().y;
-
-	glUseProgram(shader->shaderProgramID);
+	glUseProgram(cMaterial->GetShader()->shaderProgramID);
 	float4x4 projectionMatrix = float4x4::FromTRS(float3(x, y, 0), Quat::FromEulerXYZ(0, 0, 0), float3(GetRect().w, GetRect().h, 1)).Transposed();
 	glBindTexture(GL_TEXTURE_2D, id);
-	shader->SetUniform1i("useColor", (GLint)true);
-	shader->SetUniformMatrix4("projection", projectionMatrix.ptr());
-	shader->SetUniformVec4f("inColor", (GLfloat*)&tempColor);
+	cMaterial->GetShader()->SetUniform1i("useColor", (GLint)false);
+	cMaterial->GetShader()->SetUniformMatrix4("projection", projectionMatrix.ptr());
+	//cMaterial->GetShader()->SetUniformVec4f("inColor", (GLfloat*)&tempColor);
 
-	glBindBuffer(GL_ARRAY_BUFFER, VAO);
+	float newCoords[] = {
+		0.0f, 1.0f, currentFrame.proportionBeginX, currentFrame.proportionFinalY,
+		1.0f, 0.0f, currentFrame.proportionFinalX, currentFrame.proportionBeginY,
+		0.0f, 0.0f, currentFrame.proportionBeginX, currentFrame.proportionBeginY,
+
+		0.0f, 1.0f, currentFrame.proportionBeginX, currentFrame.proportionFinalY,
+		1.0f, 1.0f, currentFrame.proportionFinalX, currentFrame.proportionFinalY,
+		1.0f, 0.0f, currentFrame.proportionFinalX, currentFrame.proportionBeginY
+	};
+
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(newCoords), newCoords);
+
+	glBindVertexArray(VAO);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 
 	glDisable(GL_BLEND);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindVertexArray(0);
 	glBindTexture(GL_TEXTURE_2D, 0);
-	glUseProgram(0);*/
+	glUseProgram(0);
+}
+
+Frame C_UI_Checkbox::GetTexturePosition(int pixelPosX, int pixelPosY, int pixelWidth, int pixelHeight)
+{
+
+	C_Material* cMaterial = GetOwner()->GetComponent<C_Material>();
+	if (!cMaterial)
+		return { 0, 0, 1, 1 };
+
+	uint32 id = cMaterial->GetTextureID();
+	unsigned int spritesheetPixelWidth, spritesheetPixelHeight = 0; cMaterial->GetTextureSize(spritesheetPixelWidth, spritesheetPixelHeight);
+	if(!spritesheetPixelWidth && !spritesheetPixelHeight)
+		return { 0, 0, 1, 1 };
+
+	Frame frame;
+	frame.proportionBeginX = (float)pixelPosX / spritesheetPixelWidth;
+	frame.proportionFinalX = ((float)pixelPosX + pixelWidth) / spritesheetPixelWidth;
+
+	frame.proportionBeginY = (float)pixelPosY / spritesheetPixelHeight;
+	frame.proportionFinalY = ((float)pixelPosY + pixelHeight) / spritesheetPixelHeight;
+
+	return frame;
+}
+
+const char* C_UI_Checkbox::NameFromState(UICheckboxState state)
+{
+	switch (state)
+	{
+	case UICheckboxState::NONE: return "UNCHECKED";
+	case UICheckboxState::UNCHECKED: return "UNCHECKED";
+	case UICheckboxState::CHECKED: return "CHECKED";
+	case UICheckboxState::HOVERED_UNCHECKED: return "HOVERED_UNCHECKED";
+	case UICheckboxState::HOVERED_CHECKED: return "HOVERED_CHECKED";
+	case UICheckboxState::PRESSED_CHECKED_IN: return "PRESSED_CHECKED";
+	case UICheckboxState::PRESSED_CHECKED: return "PRESSED_CHECKED";
+	case UICheckboxState::PRESSED_CHECKED_OUT: return "PRESSED_CHECKED";
+	case UICheckboxState::PRESSED_UNCHECKED_IN: return "PRESSED_UNCHECKED";
+	case UICheckboxState::PRESSED_UNCHECKED: return "PRESSED_UNCHECKED";
+	case UICheckboxState::PRESSED_UNCHECKED_OUT: return "PRESSED_UNCHECKED";
+	default: return "UNCHECKED";
+	}
 }
 
 void C_UI_Checkbox::Draw3D()

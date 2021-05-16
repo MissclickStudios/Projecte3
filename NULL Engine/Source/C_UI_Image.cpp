@@ -119,12 +119,12 @@ void C_UI_Image::Draw2D()
 
 	float4x4 projectionMatrix = float4x4::FromTRS(float3(x, y, 0), Quat::FromEulerXYZ(0, 0, 0), float3(GetRect().w, GetRect().h, 1)).Transposed();
 
-	float4x4 identity = float4x4::identity;
+	//float4x4 identity = float4x4::identity;
 
 	glBindTexture(GL_TEXTURE_2D, id);
 	
 	cMaterial->GetShader()->SetUniform1i("useColor", (GLint)false);
-	cMaterial->GetShader()->SetUniformMatrix4("model", identity.Transposed().ptr());
+	//cMaterial->GetShader()->SetUniformMatrix4("model", identity.Transposed().ptr());
 	cMaterial->GetShader()->SetUniformMatrix4("projection", projectionMatrix.ptr());
 	
 	
@@ -161,7 +161,7 @@ void C_UI_Image::Draw2D()
 		};
 
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(newCoords), newCoords, GL_DYNAMIC_DRAW);
+		glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(newCoords), newCoords);
 	}
 
 
@@ -186,10 +186,10 @@ void C_UI_Image::Draw3D()
 	C_Material* cMaterial = GetOwner()->GetComponent<C_Material>();
 
 
-	if (cMaterial == nullptr && cAnimator == nullptr) 
+	if (cMaterial == nullptr) 
 		return;
 
-	else if (cAnimator->IsAnimationPlaying())
+	else if (cAnimator && cAnimator->IsAnimationPlaying())
 		id = cAnimator->GetIdFromAnimation();
 	else
 		id = cMaterial->GetTextureID();
