@@ -45,6 +45,7 @@
 #include "C_UI_Image.h"
 #include "C_UI_Text.h"
 #include "C_UI_Button.h"
+#include "C_UI_Checkbox.h"
 #include "C_Script.h"
 #include "C_2DAnimator.h"
 #include "C_NavMeshAgent.h"
@@ -276,6 +277,7 @@ void E_Inspector::DrawComponents(GameObject* selectedGameObject)
 		//case ComponentType::GATE_BEHAVIOR:		{ DrawGateBehaviorComponent((C_GateBehavior*)component); }			break;
 		case ComponentType::ANIMATOR2D:			{ DrawAnimator2DComponent((C_2DAnimator*)component); }				break;
 		case ComponentType::NAVMESH_AGENT:		{ DrawNavMeshAgentComponent((C_NavMeshAgent*)component); }			break;
+		case ComponentType::UI_CHECKBOX:		{ DrawUICheckboxComponent((C_UI_Checkbox*)component); }				break;
 		}
 		if (type == ComponentType::NONE)
 		{
@@ -1582,7 +1584,30 @@ void E_Inspector::DrawUIButtonComponent(C_UI_Button* button)
 			button->SetY(pos.y);
 		}
 
+		ImGui::ColorEdit3("Idle Diffuse Color", (float*)&button->idle, ImGuiColorEditFlags_NoAlpha);
+		ImGui::SliderFloat("Idle Diffuse Alpha", (float*)&button->idle.a, 0.0f, 1.0f, "%.3f");
 
+		ImGui::ColorEdit3("Hovered Diffuse Color", (float*)&button->hovered, ImGuiColorEditFlags_NoAlpha);
+		ImGui::SliderFloat("Hovered Diffuse Alpha", (float*)&button->hovered.a, 0.0f, 1.0f, "%.3f");
+
+		ImGui::ColorEdit3("Pressed Diffuse Color", (float*)&button->pressed, ImGuiColorEditFlags_NoAlpha);
+		ImGui::SliderFloat("Pressed Diffuse Alpha", (float*)&button->pressed.a, 0.0f, 1.0f, "%.3f");
+
+		static float copyedColours[12];
+
+		if (ImGui::Button("Copy Colors"))
+		{
+			memcpy(copyedColours, (float*)&button->idle, 4*sizeof(float));
+			memcpy(copyedColours+4, (float*)&button->hovered, 4 * sizeof(float));
+			memcpy(copyedColours+8, (float*)&button->pressed, 4 * sizeof(float));
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Paste Colors"))
+		{
+			memcpy((float*)&button->idle, copyedColours, 4 * sizeof(float));
+			memcpy((float*)&button->hovered, copyedColours+4, 4 * sizeof(float));
+			memcpy((float*)&button->pressed, copyedColours+8, 4 * sizeof(float));
+		}
 		if (!show)
 		{
 			componentToDelete = button;
@@ -1851,6 +1876,109 @@ void E_Inspector::DrawNavMeshAgentComponent(C_NavMeshAgent* cNavMeshAgent)
 
 void E_Inspector::DrawUICheckboxComponent(C_UI_Checkbox* checkbox)
 {
+	static bool show = true;
+	if (ImGui::CollapsingHeader("CheckBox", &show, ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		bool isActive = checkbox->IsActive();
+		if (ImGui::Checkbox("Checkbox Is Active", &isActive)) { checkbox->SetIsActive(isActive); }
+
+		ImGui::Separator();
+
+		// --- RECT ---
+		float2 pos = { checkbox->GetRect().x, checkbox->GetRect().y };
+		float2 size = { checkbox->GetRect().w, checkbox->GetRect().h };
+
+		//C_Canvas* canvas = button->GetOwner()->parent->GetComponent<C_Canvas>();
+
+		if (ImGui::DragFloat2("Checkbox Size", (float*)&size, 0.005f, 0.0f, 0.0f, "%.3f", NULL))
+		{
+			if (size.x < 0)
+				size.x = 0;
+			if (size.y < 0)
+				size.y = 0;
+
+			checkbox->SetW(size.x);
+			checkbox->SetH(size.y);
+		}
+
+		if (ImGui::DragFloat2("Checkbox Pos", (float*)&pos, 0.005f, 0.0f, 0.0f, "%.3f", NULL))
+		{
+			checkbox->SetX(pos.x);
+			checkbox->SetY(pos.y);
+		}
+
+		UICheckboxState selected = checkbox->state;
+		const char* nameSelected = checkbox->NameFromState(selected);
+		if (ImGui::BeginCombo("##Current Draw State", nameSelected, ImGuiComboFlags_PopupAlignLeft))
+		{
+			if (ImGui::Selectable("UNCHECKED", !strcmp("UNCHECKED", nameSelected)))
+				checkbox->state = UICheckboxState::UNCHECKED;
+			if (ImGui::Selectable("CHECKED", !strcmp("CHECKED", nameSelected)))
+				checkbox->state = UICheckboxState::CHECKED;
+			if (ImGui::Selectable("HOVERED_UNCHECKED", !strcmp("HOVERED_UNCHECKED", nameSelected)))
+				checkbox->state = UICheckboxState::HOVERED_UNCHECKED;
+			if (ImGui::Selectable("HOVERED_CHECKED", !strcmp("HOVERED_CHECKED", nameSelected)))
+				checkbox->state = UICheckboxState::HOVERED_CHECKED;
+			if (ImGui::Selectable("PRESSED_UNCHECKED", !strcmp("PRESSED_UNCHECKED", nameSelected)))
+				checkbox->state = UICheckboxState::PRESSED_UNCHECKED;
+			if (ImGui::Selectable("PRESSED_CHECKED", !strcmp("PRESSED_CHECKED", nameSelected)))
+				checkbox->state = UICheckboxState::PRESSED_CHECKED;
+			ImGui::EndCombo();
+		}
+
+		ImGui::Text("pixel TexCoord (x,y,w,h)");
+		switch (checkbox->state) 
+		{
+		case UICheckboxState::UNCHECKED:
+			if (ImGui::DragInt4("Unhovered Unchecked", checkbox->pixelCoord))
+				checkbox->unhoverUnchecked = checkbox->GetTexturePosition(checkbox->pixelCoord[0], checkbox->pixelCoord[1], checkbox->pixelCoord[2], checkbox->pixelCoord[3]);
+			break;
+		case UICheckboxState::HOVERED_UNCHECKED:
+			if (ImGui::DragInt4("Hovered Unchecked", checkbox->pixelCoord + 4))
+				checkbox->hoverUnchecked = checkbox->GetTexturePosition(checkbox->pixelCoord[4], checkbox->pixelCoord[5], checkbox->pixelCoord[6], checkbox->pixelCoord[7]);
+			break;
+		case UICheckboxState::CHECKED:
+			if (ImGui::DragInt4("Unhovered Checked", checkbox->pixelCoord + 8))
+				checkbox->unhoverChecked = checkbox->GetTexturePosition(checkbox->pixelCoord[8], checkbox->pixelCoord[9], checkbox->pixelCoord[10], checkbox->pixelCoord[11]);
+			break;
+		case UICheckboxState::HOVERED_CHECKED:
+			if (ImGui::DragInt4("Hovered Checked", checkbox->pixelCoord + 12))
+				checkbox->hoverChecked = checkbox->GetTexturePosition(checkbox->pixelCoord[12], checkbox->pixelCoord[13], checkbox->pixelCoord[14], checkbox->pixelCoord[15]);
+			break;
+		case UICheckboxState::PRESSED_CHECKED_IN:
+			if (ImGui::DragInt4("Pressed Checked", checkbox->pixelCoord + 16))
+				checkbox->pressedChecked = checkbox->GetTexturePosition(checkbox->pixelCoord[16], checkbox->pixelCoord[17], checkbox->pixelCoord[18], checkbox->pixelCoord[19]);
+			break;
+		case UICheckboxState::PRESSED_CHECKED:
+			if (ImGui::DragInt4("Pressed Checked", checkbox->pixelCoord + 16))
+				checkbox->pressedChecked = checkbox->GetTexturePosition(checkbox->pixelCoord[16], checkbox->pixelCoord[17], checkbox->pixelCoord[18], checkbox->pixelCoord[19]);
+			break;
+		case UICheckboxState::PRESSED_CHECKED_OUT:
+			if (ImGui::DragInt4("Pressed Checked", checkbox->pixelCoord + 16))
+				checkbox->pressedChecked = checkbox->GetTexturePosition(checkbox->pixelCoord[16], checkbox->pixelCoord[17], checkbox->pixelCoord[18], checkbox->pixelCoord[19]);
+			break;
+		case UICheckboxState::PRESSED_UNCHECKED_IN:
+			if (ImGui::DragInt4("Pressed Unchecked", checkbox->pixelCoord + 20))
+				checkbox->pressedUnchecked = checkbox->GetTexturePosition(checkbox->pixelCoord[20], checkbox->pixelCoord[21], checkbox->pixelCoord[22], checkbox->pixelCoord[23]);
+			break;
+		case UICheckboxState::PRESSED_UNCHECKED:
+			if (ImGui::DragInt4("Pressed Unchecked", checkbox->pixelCoord + 20))
+				checkbox->pressedUnchecked = checkbox->GetTexturePosition(checkbox->pixelCoord[20], checkbox->pixelCoord[21], checkbox->pixelCoord[22], checkbox->pixelCoord[23]);
+			break;
+		case UICheckboxState::PRESSED_UNCHECKED_OUT:
+			if (ImGui::DragInt4("Pressed Unchecked", checkbox->pixelCoord + 20))
+				checkbox->pressedUnchecked = checkbox->GetTexturePosition(checkbox->pixelCoord[20], checkbox->pixelCoord[21], checkbox->pixelCoord[22], checkbox->pixelCoord[23]);
+			break;
+		}
+
+		if (!show)
+		{
+			componentToDelete = checkbox;
+			showDeleteComponentPopup = true;
+		}
+
+		ImGui::Separator();
+	}
 }
 
 // --- DRAW COMPONENT UTILITY METHODS ---
