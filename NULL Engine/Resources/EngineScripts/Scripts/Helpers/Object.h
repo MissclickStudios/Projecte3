@@ -10,7 +10,8 @@ enum class ObjectType
 	WEAPON,
 	BULLET,
 	COLLECTABLE,
-	EXPLOSIVE_BARREL
+	EXPLOSIVE_BARREL,
+	ITEM
 };
 
 class Object : public Script

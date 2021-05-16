@@ -13,6 +13,8 @@
 #include "C_ParticleSystem.h"
 #include "Emitter.h"
 
+#include "Random.h"
+
 #include "ScriptMacros.h"
 
 #include "MathGeoLib/include/Math/float3.h"
@@ -109,6 +111,12 @@ void Entity::PreUpdate()
 				break;
 			case EffectType::HEAL:
 				Heal(effects[i]);
+				break;
+			case EffectType::MAX_HEALTH_MODIFY:
+				MaxHealthModify(effects[i]);
+				break;
+			case EffectType::SPEED_MODIFY:
+				SpeedModify(effects[i]);
 				break;
 			case EffectType::STUN:
 				Stun(effects[i]);
@@ -280,9 +288,29 @@ void Entity::Heal(Effect* effect)
 	effect->End();
 }
 
+void Entity::MaxHealthModify(Effect* effect)
+{
+	maxHealthModifier += effect->Duration();
+}
+
+void Entity::SpeedModify(Effect* effect)
+{
+	speedModifier *= effect->Duration();
+}
+
 void Entity::Stun(Effect* effect)
 {
-	entityState = EntityState::STUNED;
+	std::pair<bool, float>* data = (std::pair<bool, float>*)effect->Data();
+	if (data && data->first)
+	{
+		data->first = false;
+
+		float num = Random::LCG::GetBoundedRandomFloat(0, 100);
+		if (num > data->second)
+			effect->End();
+	}
+	else
+		entityState = EntityState::STUNED;
 }
 
 void Entity::KnockBack(Effect* effect)
