@@ -1,32 +1,53 @@
 #include "Player.h"
 #include "Weapon.h"
 
+#include "ItemRarity.h"
+
 #include "JSONParser.h"
 
 #include <string>
 
 #define EFFECTS_STATS_ARRAY_NAME "Effects Stats"
 
-enum class ItemRarity
+// Data that acuratelly stores all information of an item stored in an item pool
+struct ItemData
 {
-	COMMON,
-	RARE,
-	EPIC,
-	UNIQUE
+	ItemData() : name(""), description(""), price(0), rarity(ItemRarity::COMMON), power(0.0f), duration(0.0f), chance(0.0f), min(0), max(0), texturePath("") {}
+	ItemData(std::string name, std::string description, int price, ItemRarity rarity, float power, float duration, float chance, int min, int max, std::string texturePath)
+		: name(name), description(description), price(price), rarity(rarity), power(power), duration(duration), chance(chance), min(min), max(max), texturePath(texturePath) {}
+
+	std::string name;
+	std::string description;
+	int price;
+	ItemRarity rarity;
+
+	float power;
+	float duration;
+	float chance;
+
+	int min;
+	int max;
+
+	std::string texturePath;
 };
 
 class Item
 {
 public:
 
-	Item(ParsonNode itemNode, ItemRarity rarity, bool toBuy) : name(name), rarity(rarity)
+	Item(const ItemData* const itemData, bool toBuy)
 	{
-		name = itemNode.GetString("Name");
-		description = itemNode.GetString("Description");
+		name = itemData->name;
+		description = itemData->description;
+
 		if (toBuy)
-			price = itemNode.GetArray("Price").GetNumber((uint)rarity);
+			price = itemData->price;
 		else
 			price = 0;
+
+		rarity = itemData->rarity;
+
+		texturePath = itemData->texturePath;
 	}
 	virtual ~Item() {}
 
@@ -38,45 +59,27 @@ public:
 	int price;
 	ItemRarity rarity;
 
+	std::string texturePath;
+
 	// Create a new item, jordi not gonn like this... too bad
 	// THIS ALLOCATES MEMORY THAT NEEDS TO BE FREED, DONT FORGET
-	static Item* CreateItem(ParsonNode itemNode, ItemRarity rarity, bool toBuy)
-	{
-		std::string name = itemNode.GetString("Name");
-		if (name == "Amplifier Barrel")
-			return (Item*)new AmplifierBarrel(itemNode, rarity, toBuy);
-		else if (name == "Electrocuting Pulse")
-			return (Item*)new ElectrocutingPulse(itemNode, rarity, toBuy);
-		else if (name == "Cold Bullets")
-			return (Item*)new ColdBullets(itemNode, rarity, toBuy);
-		else if (name == "Long Barrel")
-			return (Item*)new LongBarrel(itemNode, rarity, toBuy);
-		else if (name == "Rapid Fire")
-			return (Item*)new RapidFire(itemNode, rarity, toBuy);
-		else if (name == "Extended Magazine")
-			return (Item*)new ExtendedMagazine(itemNode, rarity, toBuy);
-		else if (name == "Fast Magazine")
-			return (Item*)new FastMagazine(itemNode, rarity, toBuy);
-		else if (name == "Stim Pack")
-			return (Item*)new StimPack(itemNode, rarity, toBuy);
-		else if (name == "Durasteel Reinforcement")
-			return (Item*)new DurasteelReinforcement(itemNode, rarity, toBuy);
-		else if (name == "Propulsed Boots")
-			return (Item*)new PropulsedBoots(itemNode, rarity, toBuy);
-		
-	}
+	static Item* CreateItem(const ItemData* const itemData, bool toBuy = true);
 
-	// Find an Item in the json file given its name
-	static ParsonNode FindNode(ParsonArray itemArray, std::string name)
+	// Find an Item in the json file given its id
+	static const ItemData* const FindItem(const std::vector<ItemData*> items, const int num)
 	{
-		ParsonNode itemNode;
-		for (uint i = 0; i < itemArray.size; ++i)
-		{
-			itemNode = itemArray.GetNode(i);
-			if (itemNode.GetString("Name") == name)
-				return itemNode;
-		}
-		return ParsonNode();
+		for (uint i = 0; i < items.size(); ++i)
+			if (num >= items[i]->min && num <= items[i]->max)
+				return items[i];
+		return nullptr;
+	}
+	// Find an Item in the json file given its name and rarity
+	static const ItemData* const FindItem(const std::vector<ItemData*> items, const std::string name, ItemRarity rarity)
+	{
+		for (uint i = 0; i < items.size(); ++i)
+			if (items[i]->name == name && items[i]->rarity == rarity)
+				return items[i];
+		return nullptr;
 	}
 };
 
@@ -84,9 +87,9 @@ class AmplifierBarrel : public Item
 {
 public:
 
-	AmplifierBarrel(ParsonNode itemNode, ItemRarity rarity, bool toBuy) : Item(itemNode, rarity, toBuy)
+	AmplifierBarrel(const ItemData* const itemData, bool toBuy) : Item(itemData, toBuy)
 	{
-		damageIncrease = itemNode.GetArray(EFFECTS_STATS_ARRAY_NAME).GetNumber((uint)rarity);
+		damageIncrease = itemData->power;
 	}
 	virtual ~AmplifierBarrel() {}
 
@@ -99,7 +102,7 @@ public:
 		if (weapon == nullptr)
 			return;
 
-		weapon->AddPerk(PerkType::DAMAGE_MODIFY, new float(damageIncrease));
+		weapon->AddPerk(PerkType::DAMAGE_MODIFY, damageIncrease, 0.0f);
 	}
 
 	float damageIncrease;
@@ -109,11 +112,10 @@ class ElectrocutingPulse : public Item
 {
 public:
 
-	ElectrocutingPulse(ParsonNode itemNode, ItemRarity rarity, bool toBuy) : Item(itemNode, rarity, toBuy)
+	ElectrocutingPulse(const ItemData* const itemData, bool toBuy) : Item(itemData, toBuy)
 	{
-		ParsonNode effectDataNode = itemNode.GetArray(EFFECTS_STATS_ARRAY_NAME).GetNode((uint)rarity);
-		stunChance = effectDataNode.GetNumber("Stun Chance");
-		stunDuration = effectDataNode.GetNumber("Stun Duration");
+		stunDuration = itemData->duration;
+		stunChance = itemData->chance;
 	}
 	virtual ~ElectrocutingPulse() {}
 
@@ -126,7 +128,7 @@ public:
 		if (weapon == nullptr)
 			return;
 
-		weapon->AddPerk(PerkType::STUN_BULLETS, new std::pair<float, float>(stunChance, stunDuration));
+		weapon->AddPerk(PerkType::STUN_BULLETS, stunChance, stunDuration);
 	}
 
 	float stunChance;
@@ -137,11 +139,10 @@ class ColdBullets : public Item
 {
 public:
 
-	ColdBullets(ParsonNode itemNode, ItemRarity rarity, bool toBuy) : Item(itemNode, rarity, toBuy)
+	ColdBullets(const ItemData* const itemData, bool toBuy) : Item(itemData, toBuy)
 	{
-		ParsonNode effectDataNode = itemNode.GetArray(EFFECTS_STATS_ARRAY_NAME).GetNode((uint)rarity);
-		speedSlow = effectDataNode.GetNumber("Speed Slow");
-		slowDuration = effectDataNode.GetNumber("Slow Duration");
+		speedSlow = itemData->power;
+		slowDuration = itemData->duration;
 	}
 	virtual ~ColdBullets() {}
 
@@ -154,7 +155,7 @@ public:
 		if (weapon == nullptr)
 			return;
 
-		weapon->AddPerk(PerkType::FREEZE_BULLETS, new std::pair<float, float>(speedSlow, slowDuration));
+		weapon->AddPerk(PerkType::FREEZE_BULLETS, speedSlow, slowDuration);
 	}
 
 	float speedSlow;
@@ -165,9 +166,9 @@ class LongBarrel : public Item
 {
 public:
 
-	LongBarrel(ParsonNode itemNode, ItemRarity rarity, bool toBuy) : Item(itemNode, rarity, toBuy)
+	LongBarrel(const ItemData* const itemData, bool toBuy) : Item(itemData, toBuy)
 	{
-		bulletLifeTimeIncrease = itemNode.GetArray(EFFECTS_STATS_ARRAY_NAME).GetNumber((uint)rarity);
+		bulletLifeTimeIncrease = itemData->power;
 	}
 	virtual ~LongBarrel() {}
 
@@ -180,7 +181,7 @@ public:
 		if (weapon == nullptr)
 			return;
 
-		weapon->AddPerk(PerkType::BULLET_LIFETIME_MODIFY, new float(bulletLifeTimeIncrease));
+		weapon->AddPerk(PerkType::BULLET_LIFETIME_MODIFY, bulletLifeTimeIncrease, 0.0f);
 	}
 
 	float bulletLifeTimeIncrease;
@@ -190,9 +191,9 @@ class RapidFire : public Item
 {
 public:
 
-	RapidFire(ParsonNode itemNode, ItemRarity rarity, bool toBuy) : Item(itemNode, rarity, toBuy)
+	RapidFire(const ItemData* const itemData, bool toBuy) : Item(itemData, toBuy)
 	{
-		fireRateIncrease = itemNode.GetArray(EFFECTS_STATS_ARRAY_NAME).GetNumber((uint)rarity);
+		fireRateIncrease = itemData->power;
 	}
 	virtual ~RapidFire() {}
 
@@ -205,7 +206,7 @@ public:
 		if (weapon == nullptr)
 			return;
 
-		weapon->AddPerk(PerkType::FIRERATE_MODIFY, new float(fireRateIncrease));
+		weapon->AddPerk(PerkType::FIRERATE_MODIFY, fireRateIncrease, 0.0f);
 	}
 
 	float fireRateIncrease;
@@ -215,11 +216,10 @@ class ExtendedMagazine : public Item
 {
 public:
 
-	ExtendedMagazine(ParsonNode itemNode, ItemRarity rarity, bool toBuy) : Item(itemNode, rarity, toBuy)
+	ExtendedMagazine(const ItemData* const itemData, bool toBuy) : Item(itemData, toBuy)
 	{
-		ParsonNode effectDataNode = itemNode.GetArray(EFFECTS_STATS_ARRAY_NAME).GetNode((uint)rarity);
-		capacityIncrease = effectDataNode.GetNumber("Capacity Increase");
-		reloadTimeIncrease = effectDataNode.GetNumber("Reload Time Decrease");
+		capacityIncrease = itemData->power;
+		reloadTimeIncrease = itemData->duration;
 	}
 	virtual ~ExtendedMagazine() {}
 
@@ -232,8 +232,8 @@ public:
 		if (weapon == nullptr)
 			return;
 
-		weapon->AddPerk(PerkType::MAXAMMO_MODIFY, new float(capacityIncrease));
-		weapon->AddPerk(PerkType::RELOAD_TIME_MODIFY, new float(reloadTimeIncrease));
+		weapon->AddPerk(PerkType::MAXAMMO_MODIFY, capacityIncrease, 0.0f);
+		weapon->AddPerk(PerkType::RELOAD_TIME_MODIFY, reloadTimeIncrease, 0.0f);
 	}
 
 	float capacityIncrease;
@@ -244,9 +244,9 @@ class FastMagazine : public Item
 {
 public:
 
-	FastMagazine(ParsonNode itemNode, ItemRarity rarity, bool toBuy) : Item(itemNode, rarity, toBuy)
+	FastMagazine(const ItemData* const itemData, bool toBuy) : Item(itemData, toBuy)
 	{
-		reloadTimeDecrease = itemNode.GetArray(EFFECTS_STATS_ARRAY_NAME).GetNumber((uint)rarity);
+		reloadTimeDecrease = itemData->power;
 	}
 	virtual ~FastMagazine() {}
 
@@ -259,7 +259,7 @@ public:
 		if (weapon == nullptr)
 			return;
 
-		weapon->AddPerk(PerkType::RELOAD_TIME_MODIFY, new float(reloadTimeDecrease));
+		weapon->AddPerk(PerkType::RELOAD_TIME_MODIFY, reloadTimeDecrease, 0.0f);
 	}
 
 	float reloadTimeDecrease;
@@ -269,9 +269,9 @@ class StimPack : public Item
 {
 public:
 
-	StimPack(ParsonNode itemNode, ItemRarity rarity, bool toBuy) : Item(itemNode, rarity, toBuy)
+	StimPack(const ItemData* const itemData, bool toBuy) : Item(itemData, toBuy)
 	{
-		healAmount = itemNode.GetArray(EFFECTS_STATS_ARRAY_NAME).GetNumber((uint)rarity);
+		healAmount = itemData->power;
 	}
 	virtual ~StimPack() {}
 
@@ -290,9 +290,9 @@ class DurasteelReinforcement : public Item
 {
 public:
 
-	DurasteelReinforcement(ParsonNode itemNode, ItemRarity rarity, bool toBuy) : Item(itemNode, rarity, toBuy)
+	DurasteelReinforcement(const ItemData* const itemData, bool toBuy) : Item(itemData, toBuy)
 	{
-		maxHeathIncrease = itemNode.GetArray(EFFECTS_STATS_ARRAY_NAME).GetNumber((uint)rarity);
+		maxHeathIncrease = itemData->power;
 	}
 	virtual ~DurasteelReinforcement() {}
 
@@ -311,9 +311,9 @@ class PropulsedBoots : public Item
 {
 public:
 
-	PropulsedBoots(ParsonNode itemNode, ItemRarity rarity, bool toBuy) : Item(itemNode, rarity, toBuy)
+	PropulsedBoots(const ItemData* const itemData, bool toBuy) : Item(itemData, toBuy)
 	{
-		speedIncrease = itemNode.GetArray(EFFECTS_STATS_ARRAY_NAME).GetNumber((uint)rarity);
+		speedIncrease = itemData->power;
 	}
 	virtual ~PropulsedBoots() {}
 

@@ -86,7 +86,7 @@ public:
 	float fireRate = 0.0f;
 	float FireRate() { return fireRate * fireRateModifier; }
 	float bulletLifeTime = 0.0f;
-	float BulletLifeTime() { return bulletLifeTime / bulletLifeTimeModifier; }
+	float BulletLifeTime() { return bulletLifeTime * bulletLifeTimeModifier; }
 	int ammo = 0;
 	int maxAmmo = 0;
 	int MaxAmmo() { return maxAmmo * maxAmmoModifier; }
@@ -107,7 +107,7 @@ public:
 	float fireRateModifier = DEFAULT_MODIFIER;
 	float reloadTimeModifier = DEFAULT_MODIFIER;
 	float bulletLifeTimeModifier = DEFAULT_MODIFIER;
-	int maxAmmoModifier = DEFAULT_MODIFIER;
+	float maxAmmoModifier = DEFAULT_MODIFIER;
 	int PPSModifier = 0.0f;
 
 	// Perks - most condecorated league player in the west btw, no cringe intended

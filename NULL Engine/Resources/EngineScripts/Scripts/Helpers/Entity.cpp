@@ -13,6 +13,8 @@
 #include "C_ParticleSystem.h"
 #include "Emitter.h"
 
+#include "Random.h"
+
 #include "ScriptMacros.h"
 
 #include "MathGeoLib/include/Math/float3.h"
@@ -298,7 +300,17 @@ void Entity::SpeedModify(Effect* effect)
 
 void Entity::Stun(Effect* effect)
 {
-	entityState = EntityState::STUNED;
+	std::pair<bool, float>* data = (std::pair<bool, float>*)effect->Data();
+	if (data && data->first)
+	{
+		data->first = false;
+
+		float num = Random::LCG::GetBoundedRandomFloat(0, 100);
+		if (num > data->second)
+			effect->End();
+	}
+	else
+		entityState = EntityState::STUNED;
 }
 
 void Entity::KnockBack(Effect* effect)

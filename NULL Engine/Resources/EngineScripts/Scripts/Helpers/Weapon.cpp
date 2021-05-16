@@ -275,7 +275,7 @@ void Weapon::FreezeBullets(Perk* perk)
 
 void Weapon::StunBullets(Perk* perk)
 {
-	onHitEffects.emplace_back(Effect(EffectType::STUN, perk->Duration(), false, nullptr));
+	onHitEffects.emplace_back(Effect(EffectType::STUN, perk->Duration(), false, new std::pair<bool, float>(true, perk->Amount())));
 }
 
 void Weapon::SpreadProjectiles(float2 direction)
