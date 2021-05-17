@@ -2,7 +2,7 @@
 #include "VariableTypedefs.h"
 #include "Macros.h"
 #include "Log.h"
-
+#include "Dependencies/glew/include/glew.h"
 #include "RE_Circle.h"
 
 RE_Circle::RE_Circle(float4x4* transform, float radius, uint sectors, float lineWidth, Color color) : Renderer(RendererType::CIRCLE, transform, lineWidth, color),

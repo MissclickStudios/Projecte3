@@ -2,7 +2,6 @@
 #define __RENDERER_H__
 
 #include "MathGeoLib/include/Math/float4x4.h"
-#include "OpenGL.h"
 
 #include "Color.h"
 

@@ -45,12 +45,6 @@ C_UI_Button::~C_UI_Button()
 
 void C_UI_Button::LoadBuffers()
 {
-	/*const float coordsBuffer[] = {
-		1, 1,
-		1, 0,
-		0, 0,
-		1,0,
-	};*/
 	const float texCoordsBuffer[] = {
 		0.0f, 1.0f, 0.0f, 1.0f,
 		1.0f, 0.0f, 1.0f, 0.0f,
@@ -60,12 +54,12 @@ void C_UI_Button::LoadBuffers()
 		1.0f, 1.0f, 1.0f, 1.0f,
 		1.0f, 0.0f, 1.0f, 0.0f
 	};
-	//TODO: spritesheet calculations
+
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
 
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(texCoordsBuffer), texCoordsBuffer, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(texCoordsBuffer), texCoordsBuffer, GL_DYNAMIC_DRAW);
 
 	glBindVertexArray(VAO);
 
@@ -184,6 +178,19 @@ void C_UI_Button::Draw2D()
 	cMaterial->GetShader()->SetUniformMatrix4("projection", projectionMatrix.ptr());
 	cMaterial->GetShader()->SetUniformVec4f("inColor", (GLfloat*)&tempColor);
 
+	float newCoords[] = {
+		0.0f, 1.0f, textCoord.proportionBeginX, textCoord.proportionFinalY,
+		1.0f, 0.0f, textCoord.proportionFinalX, textCoord.proportionBeginY,
+		0.0f, 0.0f, textCoord.proportionBeginX, textCoord.proportionBeginY,
+												
+		0.0f, 1.0f, textCoord.proportionBeginX, textCoord.proportionFinalY,
+		1.0f, 1.0f, textCoord.proportionFinalX, textCoord.proportionFinalY,
+		1.0f, 0.0f, textCoord.proportionFinalX, textCoord.proportionBeginY
+	};
+
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(newCoords), newCoords);
+
 	glBindVertexArray(VAO);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 
@@ -229,6 +236,28 @@ void C_UI_Button::ResetInput()
 	state = UIButtonState::IDLE;
 }
 
+Frame C_UI_Button::GetTexturePosition(int pixelPosX, int pixelPosY, int pixelWidth, int pixelHeight)
+{
+
+	C_Material* cMaterial = GetOwner()->GetComponent<C_Material>();
+	if (!cMaterial)
+		return { 0, 0, 1, 1 };
+
+	uint32 id = cMaterial->GetTextureID();
+	unsigned int spritesheetPixelWidth, spritesheetPixelHeight = 0; cMaterial->GetTextureSize(spritesheetPixelWidth, spritesheetPixelHeight);
+	if (!spritesheetPixelWidth && !spritesheetPixelHeight)
+		return { 0, 0, 1, 1 };
+
+	Frame frame;
+	frame.proportionBeginX = (float)pixelPosX / spritesheetPixelWidth;
+	frame.proportionFinalX = ((float)pixelPosX + pixelWidth) / spritesheetPixelWidth;
+
+	frame.proportionBeginY = (float)pixelPosY / spritesheetPixelHeight;
+	frame.proportionFinalY = ((float)pixelPosY + pixelHeight) / spritesheetPixelHeight;
+
+	return frame;
+}
+
 bool C_UI_Button::SaveState(ParsonNode& root) const
 {
 	root.SetNumber("Type", (uint)GetType());
@@ -238,10 +267,21 @@ bool C_UI_Button::SaveState(ParsonNode& root) const
 	root.SetNumber("W", rect.w);
 	root.SetNumber("H", rect.h);
 
+	//color
 	root.SetNumber("idler", idle.r); root.SetNumber("idleg", idle.g); root.SetNumber("idleb", idle.b); root.SetNumber("idlea", idle.a);
 	root.SetNumber("hoveredr", hovered.r); root.SetNumber("hoveredg", hovered.g); root.SetNumber("hoveredb", hovered.b); root.SetNumber("hovereda", hovered.a);
 	root.SetNumber("pressedr", pressed.r); root.SetNumber("pressedg", pressed.g); root.SetNumber("pressedb", pressed.b); root.SetNumber("presseda", pressed.a);
 	
+	//textCoords
+	ParsonArray pixelCoords = root.SetArray("pixelCoords");
+	for (int i = 0; i < 4; ++i)
+		pixelCoords.SetNumber((double)pixelCoord[i]);
+
+	ParsonNode node;
+	node = root.SetNode("textureCoords");
+	node.SetNumber("x", textCoord.proportionBeginX); node.SetNumber("y", textCoord.proportionBeginY);
+	node.SetNumber("w", textCoord.proportionFinalX); node.SetNumber("h", textCoord.proportionFinalY);
+
 	root.SetInteger("childOrder", childOrder);
 	return true;
 }
@@ -259,9 +299,24 @@ bool C_UI_Button::LoadState(ParsonNode& root)
 	rect.w = root.GetNumber("W");
 	rect.h = root.GetNumber("H");
 
+	//color
 	idle.r = root.GetNumber("idler"); idle.g = root.GetNumber("idleg"); idle.b = root.GetNumber("idleb"); idle.a =root.GetNumber("idlea");
 	hovered.r = root.GetNumber("hoveredr"); hovered.g = root.GetNumber("hoveredg"); hovered.b = root.GetNumber("hoveredb"); hovered.a = root.GetNumber("hovereda");
 	pressed.r = root.GetNumber("pressedr"); pressed.g = root.GetNumber("pressedg"); pressed.b = root.GetNumber("pressedb"); pressed.a = root.GetNumber("presseda");
+
+	//textCoords
+	ParsonArray pixelCoords = root.GetArray("pixelCoords");
+	if (pixelCoords.ArrayIsValid())
+		for (int i = 0; i < pixelCoords.size; ++i)
+			pixelCoord[i] = (int)pixelCoords.GetNumber(i);
+
+	ParsonNode node;
+	node = root.GetNode("textureCoords");
+	if (node.NodeIsValid())
+	{
+		textCoord.proportionBeginX = node.GetNumber("x"); textCoord.proportionBeginY = node.GetNumber("y");
+		textCoord.proportionFinalX = node.GetNumber("w"); textCoord.proportionFinalY = node.GetNumber("h");
+	}
 
 	childOrder = root.GetInteger("childOrder");
 

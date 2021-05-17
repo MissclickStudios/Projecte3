@@ -93,7 +93,7 @@ bool M_Scene::Start()
 	
 
 	if(App->gameState == GameState::PLAY)
-		LoadScene("Assets/Scenes/HUB.json");
+		LoadScene("Assets/Scenes/MainMenu.json");
 	else
 	{
 		std::string s = ASSETS_SCENES_PATH + currentScene + JSON_EXTENSION;

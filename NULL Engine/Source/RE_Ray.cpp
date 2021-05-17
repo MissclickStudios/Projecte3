@@ -1,6 +1,6 @@
 #include "Application.h"
 #include "M_Renderer3D.h"
-
+#include "Dependencies/glew/include/glew.h"
 #include "RE_Ray.h"
 
 RE_Ray::RE_Ray(float4x4* transform, float lineWidth, Color color, const LineSegment& ray) : Renderer(RendererType::RAY, transform, lineWidth, color),

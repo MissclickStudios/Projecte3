@@ -1,6 +1,6 @@
 #include "Application.h"
 #include "M_Renderer3D.h"
-
+#include "Dependencies/glew/include/glew.h"
 #include "RE_Cuboid.h"
 
 RE_Cuboid::RE_Cuboid(float4x4* transform, float lineWidth, Color color, const float3* vertices, Cuboid_Type cuboidType) : Renderer(RendererType::CUBOID, transform, lineWidth, color),

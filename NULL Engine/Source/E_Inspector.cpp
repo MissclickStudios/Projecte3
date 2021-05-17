@@ -1609,6 +1609,10 @@ void E_Inspector::DrawUIButtonComponent(C_UI_Button* button)
 			memcpy((float*)&button->hovered, copyedColours+4, 4 * sizeof(float));
 			memcpy((float*)&button->pressed, copyedColours+8, 4 * sizeof(float));
 		}
+
+		if (ImGui::DragInt4("pixel TexCoord (x,y,w,h)", button->pixelCoord))
+			button->textCoord = button->GetTexturePosition(button->pixelCoord[0], button->pixelCoord[1], button->pixelCoord[2], button->pixelCoord[3]);
+
 		if (!show)
 		{
 			componentToDelete = button;
