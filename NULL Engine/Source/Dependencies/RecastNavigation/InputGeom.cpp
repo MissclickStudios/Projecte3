@@ -76,7 +76,7 @@ InputGeom::InputGeom(const std::vector<GameObject*>& srcMeshes, bool createChunk
 		// we add the transformed vertices
 		meshes.back().nverts = r_mesh->vertices.size()/3;
 		float* vert_index = &verts[t_verts * 3];
-		for (int i = 0; i < r_mesh->vertices.size()/3; i+=3) {
+		for (int i = 0; i < r_mesh->vertices.size(); i+=3) {
 			ApplyTransform(&r_mesh->vertices[i], &r_mesh->vertices[i+1], &r_mesh->vertices[i+2], transform, vert_index);
 			vert_index += 3;
 		}

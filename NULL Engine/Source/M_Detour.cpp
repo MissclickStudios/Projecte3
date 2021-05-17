@@ -256,6 +256,7 @@ void M_Detour::createRenderMeshes()
 			if (!tile->header) continue;
 			processTile(tile);
 		}
+		LoadNavMeshBuffer(renderMeshes);
 	}
 }
 
@@ -310,21 +311,26 @@ void M_Detour::processTile(const dtMeshTile* tile)
 
 
 		navpol->color = areaToColor(poly->getArea());
-		navpol->rmesh->vertices.resize(tile->header->vertCount + tile->header->detailVertCount);
-		navpol->rmesh->vertices.reserve(navpol->rmesh->vertices.size()/3);
+		navpol->rmesh->vertices.reserve((tile->header->vertCount + tile->header->detailVertCount)*3);
+		int size = navpol->rmesh->vertices.capacity();
+		navpol->rmesh->vertices.clear();
+		//navpol->rmesh->vertices.reserve(navpol->rmesh->vertices.size()/3);
 		navpol->rmesh->indices.resize(poly_d->triCount * 3);
 		navpol->rmesh->indices.reserve(navpol->rmesh->indices.size());
 
 
 		// We copy the vertices
-		for (int j = 0; j < navpol->rmesh->vertices.size()/3; ++j) {
+		for (int j = 0; j < size; j+=3) {
 			float* vert;
 			if (j < tile->header->vertCount)
-				vert = &tile->verts[j * 3];
+				vert = &tile->verts[j];
 			else
-				vert = &tile->detailVerts[(poly_d->vertBase + j - tile->header->vertCount) * 3];
+				vert = &tile->detailVerts[(poly_d->vertBase + j - tile->header->vertCount)];
 
-			memcpy(&navpol->rmesh->vertices[j], vert, sizeof(float) * 3);
+			navpol->rmesh->vertices.push_back(tile->verts[j]);
+			navpol->rmesh->vertices.push_back(tile->verts[j + 1]);
+			navpol->rmesh->vertices.push_back(tile->verts[j + 2]);
+			//memcpy(&navpol->rmesh->vertices[j], vert, sizeof(float) * 3);
 		}
 
 		// Index pointer to copy the indices
@@ -344,7 +350,7 @@ void M_Detour::processTile(const dtMeshTile* tile)
 		//navpol->rmesh.
 		renderMeshes.push_back(navpol);
 	}
-
+	//TO draw tile per tile?
 	LoadNavMeshBuffer(renderMeshes);
 }
 
