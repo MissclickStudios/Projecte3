@@ -3,6 +3,7 @@
 
 #include "C_Ui.h"
 #include "Color.h"
+#include "Spritesheet.h"
 
 class R_Shader;
 
@@ -42,7 +43,7 @@ public:
 
 private:
 	void ResetInput()override;
-
+	Frame GetTexturePosition(int pixelPosX, int pixelPosY, int pixelWidth, int pixelHeight);
 private:
 	UIButtonState state = UIButtonState::NONE;
 
@@ -53,6 +54,8 @@ private:
 	Color pressed = { 1.0f, 0.4f, 0.19f, 1.0f };
 
 	R_Shader* rShader;
+	int pixelCoord[4];
+	Frame textCoord = { 0, 0, 1, 1 };
 
 	friend class E_Inspector;
 };
