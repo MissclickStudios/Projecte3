@@ -435,17 +435,19 @@ void Player::AnimatePlayer()
 
 		if ((previewClip == nullptr) || (previewClip->GetName() != currentAnimation->name))											// If no clip playing or animation/clip changed
 			animator->PlayClip(currentAnimation->track.c_str(), currentAnimation->name.c_str(), currentAnimation->blendTime);
+
+		if (preview->GetTrackState() == TrackState::STOP)
+		{
+			preview->Play();
+		}
 	}
 	else
-	{
+	{	
 		AnimationInfo* torsoInfo	= GetAimStateAnimation();
 		AnimationInfo* legsInfo		= GetMoveStateAnimation();
 		if (torsoInfo == nullptr || legsInfo == nullptr)
 		{
 			LOG("DEFAULTING AIMING TO PREVIEW");
-
-			if (torsoInfo == nullptr)
-				LOG("DEFAULTED DUE TO MISSING TORSO INFO { %u }::{ %u }", aimState, currentWeapon->type);
 			
 			AnimatorClip* previewClip = preview->GetCurrentClip();
 
@@ -454,22 +456,33 @@ void Player::AnimatePlayer()
 		}
 		else
 		{
-			LOG("ANIMATION SPLITTING");
+			if (torsoTrack == nullptr || legsTrack == nullptr)
+			{
+				LOG("[WARNING] Player Script: torsoTrack or legsTrack was nullptr!");
+				return;
+			}
 
 			if (preview->GetTrackState() != TrackState::STOP)
 				preview->Stop();
 
-			AnimatorClip* torsoClip = (torsoTrack != nullptr) ? torsoTrack->GetCurrentClip() : nullptr;
-			AnimatorClip* legsClip	= (legsTrack != nullptr) ? legsTrack->GetCurrentClip() : nullptr;
+			AnimatorClip* torsoClip = torsoTrack->GetCurrentClip();
+			AnimatorClip* legsClip	= legsTrack->GetCurrentClip();
+
+			//LOG("TORSO: [%s]::[%s]::[%s]", torsoInfo->track.c_str(), torsoInfo->name.c_str(), (torsoClip != nullptr) ? torsoClip->GetName() : "NO TORSO CLIP");
+			//LOG("LEGS: [%s]::[%s]::[%s]", legsInfo->track.c_str(), legsInfo->name.c_str(), (legsClip != nullptr) ? legsClip->GetName() : "NO LEGS CLIP");
 
 			if ((torsoClip == nullptr) || (torsoClip->GetName() != torsoInfo->name))
-				animator->PlayClip(torsoInfo->track.c_str(), torsoInfo->name.c_str(), torsoInfo->blendTime);
+				animator->PlayClip(torsoTrack->GetName(), torsoInfo->name.c_str(), torsoInfo->blendTime);
 
 			if ((legsClip == nullptr) || (legsClip->GetName() != legsInfo->name))
-				animator->PlayClip(legsInfo->track.c_str(), legsInfo->name.c_str(), legsInfo->blendTime);
-		}
+				animator->PlayClip(legsTrack->GetName(), legsInfo->name.c_str(), legsInfo->blendTime);
 
-		//LOG("YO BOY AIMING/SHOOTIN/RELOADIN");
+			if (torsoTrack->GetTrackState() == TrackState::STOP)
+				torsoTrack->Play();
+
+			if (legsTrack->GetTrackState() == TrackState::STOP)
+				legsTrack->Play();
+		}
 	}
 }
 
@@ -492,15 +505,15 @@ AnimationInfo* Player::GetAimStateAnimation()
 {
 	switch (aimState)
 	{
-	case AimState::IDLE:		{ &idleAnimation; }			break;
-	case AimState::ON_GUARD:	{ &idleAnimation; }			break;
-	case AimState::AIMING:		{ GetAimAnimation(); }		break;
-	case AimState::SHOOT_IN:	{ GetShootAnimation(); }	break;
-	case AimState::SHOOT:		{ GetShootAnimation(); }	break;
-	case AimState::RELOAD_IN:	{ GetReloadAnimation(); }	break;
-	case AimState::RELOAD:		{ GetReloadAnimation(); }	break;
-	case AimState::CHANGE_IN:	{ &changeAnimation; }		break;
-	case AimState::CHANGE:		{ &changeAnimation; }		break;
+	case AimState::IDLE:		{ return &idleAnimation; }			break;
+	case AimState::ON_GUARD:	{ return &idleAnimation; }			break;
+	case AimState::AIMING:		{ return GetAimAnimation(); }		break;
+	case AimState::SHOOT_IN:	{ return GetShootAnimation(); }		break;
+	case AimState::SHOOT:		{ return GetShootAnimation(); }		break;
+	case AimState::RELOAD_IN:	{ return GetReloadAnimation(); }	break;
+	case AimState::RELOAD:		{ return GetReloadAnimation(); }	break;
+	case AimState::CHANGE_IN:	{ return &changeAnimation; }		break;
+	case AimState::CHANGE:		{ return &changeAnimation; }		break;
 	}
 	
 	return nullptr;
@@ -513,10 +526,10 @@ AnimationInfo* Player::GetAimAnimation()
 	
 	switch (currentWeapon->type)
 	{
-	case WeaponType::BLASTER:	{ LOG("AIM BLASTER{ %s }", aimBlasterAnimation.name.c_str());	return &aimBlasterAnimation; }	break;
-	case WeaponType::SNIPER:	{ LOG("AIM SNIPER { %s }", aimSniperAnimation.name.c_str());	return &aimSniperAnimation; }	break;
-	case WeaponType::SHOTGUN:	{ LOG("AIM SHOTGUN{ %s }", aimShotgunAnimation.name.c_str());	return &aimShotgunAnimation; }	break;
-	case WeaponType::MINIGUN:	{ LOG("AIM MINIGUN{ %s }", aimMinigunAnimation.name.c_str());	return &aimMinigunAnimation; }	break;
+	case WeaponType::BLASTER:	{ /*LOG("AIM BLASTER{ %s }", aimBlasterAnimation.name.c_str());*/	return &aimBlasterAnimation; }	break;
+	case WeaponType::SNIPER:	{ /*LOG("AIM SNIPER { %s }", aimSniperAnimation.name.c_str());*/	return &aimSniperAnimation; }	break;
+	case WeaponType::SHOTGUN:	{ /*LOG("AIM SHOTGUN{ %s }", aimShotgunAnimation.name.c_str());*/	return &aimShotgunAnimation; }	break;
+	case WeaponType::MINIGUN:	{ /*LOG("AIM MINIGUN{ %s }", aimMinigunAnimation.name.c_str());*/	return &aimMinigunAnimation; }	break;
 	}
 	
 	LOG("COULD NOT GET AIM ANIMATION");
@@ -531,10 +544,10 @@ AnimationInfo* Player::GetShootAnimation()
 	
 	switch (currentWeapon->type)
 	{
-	case WeaponType::BLASTER:	{ LOG("SHOOT BLASTER { %s }", shootBlasterAnimation.name.c_str()); return &shootBlasterAnimation; }	break;
-	case WeaponType::SNIPER:	{ LOG("SHOOT SNIPER  { %s }", shootSniperAnimation.name.c_str());	return &shootSniperAnimation; }	break;
-	case WeaponType::SHOTGUN:	{ LOG("SHOOT SHOTGUN { %s }", shootShotgunAnimation.name.c_str()); return &shootShotgunAnimation; }	break;
-	case WeaponType::MINIGUN:	{ LOG("SHOOT MINIGUN { %s }", shootMinigunAnimation.name.c_str()); return &shootMinigunAnimation; }	break;
+	case WeaponType::BLASTER:	{ /*LOG("SHOOT BLASTER { %s }", shootBlasterAnimation.name.c_str());*/	return &shootBlasterAnimation; }	break;
+	case WeaponType::SNIPER:	{ /*LOG("SHOOT SNIPER  { %s }", shootSniperAnimation.name.c_str());*/	return &shootSniperAnimation; }		break;
+	case WeaponType::SHOTGUN:	{ /*LOG("SHOOT SHOTGUN { %s }", shootShotgunAnimation.name.c_str());*/	return &shootShotgunAnimation; }	break;
+	case WeaponType::MINIGUN:	{ /*LOG("SHOOT MINIGUN { %s }", shootMinigunAnimation.name.c_str());*/	return &shootMinigunAnimation; }	break;
 	}
 
 	LOG("COULD NOT GET SHOOT ANIMATION");
@@ -549,10 +562,10 @@ AnimationInfo* Player::GetReloadAnimation()
 
 	switch (currentWeapon->type)
 	{
-	case WeaponType::BLASTER:	{ LOG("RELOAD BLASTER { %s }", reloadBlasterAnimation.name.c_str());	return &reloadBlasterAnimation; }	break;
-	case WeaponType::SNIPER:	{ LOG("RELOAD SNIPER  { %s }", reloadSniperAnimation.name.c_str());		return &reloadSniperAnimation; }	break;
-	case WeaponType::SHOTGUN:	{ LOG("RELOAD SHOTGUN { %s }", reloadShotgunAnimation.name.c_str());	return &reloadShotgunAnimation; }	break;
-	case WeaponType::MINIGUN:	{ LOG("RELOAD MINIGUN { %s }", reloadMinigunAnimation.name.c_str());	return &reloadMinigunAnimation; }	break;
+	case WeaponType::BLASTER:	{ /*LOG("RELOAD BLASTER { %s }", reloadBlasterAnimation.name.c_str());*/	return &reloadBlasterAnimation; }	break;
+	case WeaponType::SNIPER:	{ /*LOG("RELOAD SNIPER  { %s }", reloadSniperAnimation.name.c_str());*/		return &reloadSniperAnimation; }	break;
+	case WeaponType::SHOTGUN:	{ /*LOG("RELOAD SHOTGUN { %s }", reloadShotgunAnimation.name.c_str());*/	return &reloadShotgunAnimation; }	break;
+	case WeaponType::MINIGUN:	{ /*LOG("RELOAD MINIGUN { %s }", reloadMinigunAnimation.name.c_str());*/	return &reloadMinigunAnimation; }	break;
 	}
 	
 	LOG("COULD NOT GET RELOAD ANIMATION");
