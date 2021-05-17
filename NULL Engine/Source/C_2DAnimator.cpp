@@ -94,11 +94,6 @@ bool C_2DAnimator::LoadState(ParsonNode& root)
 	return true;
 }
 
-uint C_2DAnimator::GetIdFromAnimation()
-{
-	return currentFrameIdTexture;
-}
-
 void C_2DAnimator::SetAnimationStepTime(int time)
 {
 	animationStepTime = time;
@@ -211,29 +206,6 @@ void C_2DAnimator::PlayAnimation(bool loop, int animationNumber)
 	animationLoop = loop;
 }
 
-void C_2DAnimator::StopAnimation()
-{
-}
-
-uint C_2DAnimator::GetTextureIdFromVector(int index, int animationNum)
-{
-	switch (animationNum) {
-	case 1:
-		return animation[index]->GetTextureID();
-		break;
-	case 2:
-		return animation1[index]->GetTextureID();
-		break;
-	case 3:
-		return animation2[index]->GetTextureID();
-		break;
-	case 0:
-		return animation[index]->GetTextureID();
-		break;
-	}
-
-}
-
 void C_2DAnimator::LoopAnimation(int animationNum)
 {
 	switch (animationNum) 
@@ -283,7 +255,6 @@ void C_2DAnimator::LoopAnimation(int animationNum)
 		break;
 
 	case 2:
-
 		//Start a new animation
 		if (playAnimation)
 		{
@@ -295,18 +266,19 @@ void C_2DAnimator::LoopAnimation(int animationNum)
 
 		//Animation loop
 		if (animationPlaying)
-			if (animationStepTime <= animationTimer.Read() && animationCounter < animation1.size() - 1)
+			if (animationStepTime <= animationTimer.Read() && animationCounter < spritesheet2->animationNumber - 1)
 			{
 				animationCounter++;
 				animationTimer.Stop();
 				animationTimer.Start();
 			}
 
-		//Set the texture id of the current animation frame
-		if (animation1.size() > 0)
-			currentFrameIdTexture = GetTextureIdFromVector(animationCounter,2);
+		//Set the texture coordinates of the current frame
+		if (spritesheet2->animationNumber > 0 && animationPlaying)
+			//currentFrameIdTexture = GetTextureIdFromVector(animationCounter,1);
+			spritesheet2->SetCurrentFrameLocation(animationCounter + 1);
 
-		if (animationCounter == animation1.size() - 1)
+		if (animationCounter == spritesheet2->animationNumber - 1)
 		{
 			if (!animationLoop)
 			{
@@ -327,7 +299,6 @@ void C_2DAnimator::LoopAnimation(int animationNum)
 		break;
 
 	case 3:
-
 		//Start a new animation
 		if (playAnimation)
 		{
@@ -339,18 +310,19 @@ void C_2DAnimator::LoopAnimation(int animationNum)
 
 		//Animation loop
 		if (animationPlaying)
-			if (animationStepTime <= animationTimer.Read() && animationCounter < animation2.size() - 1)
+			if (animationStepTime <= animationTimer.Read() && animationCounter < spritesheet3->animationNumber - 1)
 			{
 				animationCounter++;
 				animationTimer.Stop();
 				animationTimer.Start();
 			}
 
-		//Set the texture id of the current animation frame
-		if (animation2.size() > 0)
-			currentFrameIdTexture = GetTextureIdFromVector(animationCounter, 3);
+		//Set the texture coordinates of the current frame
+		if (spritesheet3->animationNumber > 0 && animationPlaying)
+			//currentFrameIdTexture = GetTextureIdFromVector(animationCounter,1);
+			spritesheet3->SetCurrentFrameLocation(animationCounter + 1);
 
-		if (animationCounter == animation2.size() - 1)
+		if (animationCounter == spritesheet3->animationNumber - 1)
 		{
 			if (!animationLoop)
 			{

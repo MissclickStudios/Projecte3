@@ -140,28 +140,33 @@ void C_UI_Image::Draw2D()
 			1.0f, 1.0f, cAnimator->spritesheet->currentFrame.proportionFinalX, cAnimator->spritesheet->currentFrame.proportionFinalY,
 			1.0f, 0.0f, cAnimator->spritesheet->currentFrame.proportionFinalX,  cAnimator->spritesheet->currentFrame.proportionBeginY
 
+			/*
+			0.0f, 1.0f, 0.0f , 1.0f,
+			1.0f, 0.0f, 1.0f, 0.0f,
+			0.0f, 0.0f, 0.0f, 0.0f,
 
-
-			//	    0.0f, 1.0f, 0.0f , 0.9361f,
-			//		1.0f, 0.0f, 0.1816f, 1.0f,
-			//		0.0f, 0.0f, 0.0f, 1.0f,
-			//	
-			//		0.0f, 1.0f, 0.0f, 0.9361f,
-			//		1.0f, 1.0f, 0.1816f,0.9361f,
-			//		1.0f, 0.0f, 0.1816f, 1.0f
-			//
-					/*
-					0.0f, 1.0f, 0.0f , 0.5f,
-					1.0f, 0.0f, 0.5f, 0.0f,
-					0.0f, 0.0f, 0.0f, 0.0f,
-
-					0.0f, 1.0f, 0.0f, 0.5f,
-					1.0f, 1.0f, 0.5f, 0.5f,
-					1.0f, 0.0f, 0.5f, 0.0f*/
+			0.0f, 1.0f, 0.0f, 1.0f,
+			1.0f, 1.0f, 1.0f, 1.0f,
+			1.0f, 0.0f, 1.0f, 0.0f*/
 		};
 
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
 		glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(newCoords), newCoords);
+	}
+	else
+	{
+		float standartCoords[] = {
+	0.0f, 1.0f, 0.0f , 1.0f,
+	1.0f, 0.0f, 1.0f, 0.0f,
+	0.0f, 0.0f, 0.0f, 0.0f,
+
+	0.0f, 1.0f, 0.0f, 1.0f,
+	1.0f, 1.0f, 1.0f, 1.0f,
+	1.0f, 0.0f, 1.0f, 0.0f
+		};
+
+		glBindBuffer(GL_ARRAY_BUFFER, VBO);
+		glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(standartCoords), standartCoords);
 	}
 
 
@@ -189,10 +194,7 @@ void C_UI_Image::Draw3D()
 	if (cMaterial == nullptr) 
 		return;
 
-	else if (cAnimator && cAnimator->IsAnimationPlaying())
-		id = cAnimator->GetIdFromAnimation();
-	else
-		id = cMaterial->GetTextureID();
+	id = cMaterial->GetTextureID();
 
 	glPushMatrix();
 	glMultMatrixf((GLfloat*)&GetOwner()->GetComponent<C_Transform>()->GetWorldTransform().Transposed());

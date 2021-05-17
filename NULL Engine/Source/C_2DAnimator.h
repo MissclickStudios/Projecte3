@@ -27,12 +27,6 @@ public:
 	//Plays the animation
 	void PlayAnimation(bool loop, int animationNumber);
 
-	//Stops current animation
-	void StopAnimation();
-
-	//Gets the current id texture of the animation frame
-	uint GetIdFromAnimation();
-
 	void SetAnimationStepTime(int time);
 	int GetAnimationStepTime();
 
@@ -55,7 +49,6 @@ public:
 	Spritesheet*				spritesheet3;
 
 private:
-	uint GetTextureIdFromVector(int index, int animationNum);
 	void LoopAnimation(int animation);
 	int							animationNumberPlaying;
 private:
