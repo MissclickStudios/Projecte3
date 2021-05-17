@@ -133,6 +133,13 @@ private:
 	GameObject* sniperGameObject = nullptr;
 	Weapon* sniperWeapon = nullptr;
 
+	//Hands
+	GameObject* handLeft = nullptr;
+	GameObject* handRight = nullptr;
+
+	//float3 alternativeRight;
+	//float3 alternativeLeft;
+
 };
 
 SCRIPTS_FUNCTION IG11* CreateIG11();

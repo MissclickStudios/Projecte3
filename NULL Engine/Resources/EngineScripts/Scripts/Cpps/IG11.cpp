@@ -91,8 +91,7 @@ void IG11::SetUp()
 
 	player = App->scene->GetGameObjectByName(playerName.c_str());
 
-	GameObject* handLeft = nullptr;
-	GameObject* handRight = nullptr;
+
 	if (skeleton)
 	{
 		for (uint i = 0; i < skeleton->childs.size(); ++i)
@@ -131,6 +130,10 @@ void IG11::SetUp()
 		sniperWeapon = (Weapon*)GetObjectScript(sniperGameObject, ObjectType::WEAPON);
 	if (sniperWeapon)
 		sniperWeapon->SetOwnership(type, handRight, rightHandName);
+
+
+	/*alternativeLeft = float3(handLeft->transform->GetLocalPosition().x, handLeft->transform->GetLocalPosition().y, handLeft->transform->GetLocalPosition().z - 10);
+	alternativeRight = float3(handRight->transform->GetLocalPosition().x, handRight->transform->GetLocalPosition().y, handRight->transform->GetLocalPosition().z - 10);*/
 }
 
 void IG11::Behavior()
@@ -143,7 +146,7 @@ void IG11::Behavior()
 
 void IG11::CleanUp()
 {
-	if (blasterGameObject)
+	if (blasterGameObject) 
 		blasterGameObject->toDelete = true;
 	blasterGameObject = nullptr;
 	blasterWeapon = nullptr;
@@ -335,6 +338,7 @@ void IG11::ManageMovement()
 				blasterWeapon->fireRate = baseFireRate;
 				blasterWeapon->ammo = 0;
 				blasterWeapon->projectilesPerShot = 1;
+				blasterWeapon->projectileSpeed = 90;
 			}
 			if (sniperWeapon)
 			{
@@ -383,6 +387,8 @@ void IG11::ManageMovement()
 
 void IG11::ManageAim()
 {
+	
+	
 	switch (aimState)
 	{
 	case AimState::IDLE:
@@ -403,6 +409,10 @@ void IG11::ManageAim()
 			secondaryAimDirection = aimDirection;
 		if (moveState == IG11State::U_ATTACK)
 			UAttackShots--;
+
+		if (moveState == IG11State::SPIRAL_ATTACK ||
+			moveState == IG11State::ROTATE_ATTACK ||
+			moveState == IG11State::DOUBLE_SPIRAL_ATTACK) currentAnimation = &specialAnimation;
 
 		switch (blasterWeapon->Shoot(aimDirection))
 		{
@@ -462,9 +472,7 @@ void IG11::ManageAim()
 		break;
 	}
 
-	if(moveState == IG11State::SPIRAL_ATTACK ||
-		moveState == IG11State::ROTATE_ATTACK||
-		moveState == IG11State::DOUBLE_SPIRAL_ATTACK) currentAnimation = &specialAnimation;
+	
 }
 
 IG11State IG11::FirstStageAttacks()
@@ -569,6 +577,9 @@ void IG11::Flee()
 
 bool IG11::SpiralAttack()
 {
+	//handRight->transform->SetLocalPosition(alternativeRight);
+	//handLeft->transform->SetLocalPosition(alternativeLeft);
+
 	specialAttackRot += spiralAttackSpeed * MC_Time::Game::GetDT();
 	float angle = specialAttackStartAim.AimedAngle();
 	angle += DegToRad(specialAttackRot);
@@ -663,6 +674,7 @@ bool IG11::RotateAttack()
 		blasterWeapon->projectilesPerShot = 10;
 		blasterWeapon->ammo = 50;
 		blasterWeapon->shotSpreadArea = 40;
+		blasterWeapon->projectileSpeed = 60;
 	}
 
 	if (sniperWeapon)
