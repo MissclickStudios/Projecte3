@@ -4,6 +4,7 @@
 
 #include <string>
 
+class C_Canvas;
 class C_UI_Button;
 class C_UI_Text;
 
@@ -20,35 +21,33 @@ public:
 	void Start() override;
 	void Update() override;
 
-	void SetItem(GroundItem* item) { this->item = item; }
+	const GroundItem* GetItem() const { return item; }
+	void SetItem(GroundItem* item);
 
+	std::string canvasName = "Item Menu";
 	std::string buyButtonName = "Buy Button";
 	std::string nameTextName = "Name Text";
 	std::string descriptionTextName = "Description Text";
 	std::string priceTextName = "Price Text";
+	std::string rarityTextName = "Rarity Text";
 
 	std::string playerName = "Mandalorian";
 
+	C_Canvas* canvas = nullptr;
+
+	float closeMenuThreshold = 10.0f;
+
 private:
 
-	C_UI_Button* buy = nullptr;
+	C_UI_Button* buyButton = nullptr;
 
-	C_UI_Text* name = nullptr;
-	C_UI_Text* description = nullptr;
-	C_UI_Text* price = nullptr;
+	C_UI_Text* nameText = nullptr;
+	C_UI_Text* descriptionText = nullptr;
+	C_UI_Text* priceText = nullptr;
+	C_UI_Text* rarityText = nullptr;
 
 	Player* player = nullptr;
 	GroundItem* item = nullptr;
 };
 
-SCRIPTS_FUNCTION ItemMenuManager* CreateItemMenuManager()
-{
-	ItemMenuManager* script = new ItemMenuManager();
-
-	INSPECTOR_STRING(script->buyButtonName);
-	INSPECTOR_STRING(script->nameTextName);
-	INSPECTOR_STRING(script->descriptionTextName);
-	INSPECTOR_STRING(script->priceTextName);
-
-	return script;
-}
+SCRIPTS_FUNCTION ItemMenuManager* CreateItemMenuManager();
