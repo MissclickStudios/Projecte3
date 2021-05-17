@@ -106,12 +106,15 @@ void C_UI_Image::Draw2D()
 		switch (cAnimator->animationNumberPlaying) 
 		{
 		case 1:
+			if(cAnimator->spritesheet!= nullptr)
 			id = cAnimator->spritesheet->spriteSheet->GetTextureID();
 			break;
 		case 2:
+			if (cAnimator->spritesheet2 != nullptr)
 			id = cAnimator->spritesheet2->spriteSheet->GetTextureID();
 			break;
 		case 3:
+			if (cAnimator->spritesheet3 != nullptr)
 			id = cAnimator->spritesheet3->spriteSheet->GetTextureID();
 			break;
 		}
