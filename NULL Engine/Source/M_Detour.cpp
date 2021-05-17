@@ -68,7 +68,7 @@ void M_Detour::Draw() const
 	if (debugDraw && navMeshResource != nullptr && navMeshResource->navMesh != nullptr) {
 		for (int i = 0; i < renderMeshes.size(); ++i)
 		{
-			//App->renderer.
+		
 		}
 	}
 }
@@ -311,13 +311,13 @@ void M_Detour::processTile(const dtMeshTile* tile)
 
 		navpol->color = areaToColor(poly->getArea());
 		navpol->rmesh->vertices.resize(tile->header->vertCount + tile->header->detailVertCount);
-		navpol->rmesh->vertices.reserve(navpol->rmesh->vertices.size());
+		navpol->rmesh->vertices.reserve(navpol->rmesh->vertices.size()/3);
 		navpol->rmesh->indices.resize(poly_d->triCount * 3);
 		navpol->rmesh->indices.reserve(navpol->rmesh->indices.size());
 
 
 		// We copy the vertices
-		for (int j = 0; j < navpol->rmesh->vertices.size(); ++j) {
+		for (int j = 0; j < navpol->rmesh->vertices.size()/3; ++j) {
 			float* vert;
 			if (j < tile->header->vertCount)
 				vert = &tile->verts[j * 3];
@@ -344,6 +344,8 @@ void M_Detour::processTile(const dtMeshTile* tile)
 		//navpol->rmesh.
 		renderMeshes.push_back(navpol);
 	}
+
+	LoadNavMeshBuffer(renderMeshes);
 }
 
 inline int bit(int a, int b) {
@@ -371,6 +373,14 @@ navigationPoly::~navigationPoly() {
 	if (rmesh) {
 		rmesh->CleanUp();
 		delete rmesh;
+	}
+}
+
+void M_Detour::LoadNavMeshBuffer(std::vector<navigationPoly*> meshes)
+{
+	for (int i = 0; i != meshes.size(); ++i)
+	{
+		meshes[i]->rmesh->LoadStaticBuffers();
 	}
 }
 

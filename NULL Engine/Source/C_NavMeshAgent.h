@@ -3,35 +3,45 @@
 
 #include "Component.h"
 #include "MathGeoLib/include/Math/float3.h"
+#include <vector>
 
 class ParsonNode;
 class GameObject;
 
 class R_NavMesh;
 
-class C_NavMeshAgent : public Component
+class MISSCLICK_API C_NavMeshAgent : public Component
 {
 public:
 	C_NavMeshAgent(GameObject* owner);
 	~C_NavMeshAgent();
 
-	bool Start		() override;
-	bool Update		() override;
-	bool CleanUp	() override;
+	bool Start() override;
+	bool Update() override;
+	bool CleanUp() override;
 
-	bool SaveState	(ParsonNode& root) const override;
-	bool LoadState	(ParsonNode& root) override;
+	bool SaveState(ParsonNode& root) const override;
+	bool LoadState(ParsonNode& root) override;
+
+	static inline ComponentType GetType() { return ComponentType::NAVMESH_AGENT; }								// This is needed to use templeates for functions such as GetComponent<>();
 
 public:
-	bool CalculatePath(float3 originPos, float3 targetPos);
+	bool SetDestination(float3 destination);
+	bool HasDestination();
+	void CancelDestination();
 
-public:
+	bool hasDestination;
+	float3 destinationPoint;
 
-	int areaMask;
-	float3 destination;
-	float3 path;
+private:
+	bool CalculatePath(float3 destination);
+
+	std::vector<float3> path;
+	float3 nextPoint;
+
 	float radius;
 
+	int areaMask = 1;
 };
 
 #endif	// !__C_NAVMESH_H__

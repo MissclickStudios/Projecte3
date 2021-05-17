@@ -334,15 +334,10 @@ static void calcTriNormal(const float* v0, const float* v1, const float* v2, flo
 void rcMarkWalkableTriangles(rcContext* ctx, const float walkableSlopeAngle,
 	const float* verts, int nv,
 	const int* tris, int nt,
-	unsigned char* areas,
-	unsigned char area = RC_WALKABLE_AREA)
+	unsigned char* areas)
 {
 	rcIgnoreUnused(ctx);
 	rcIgnoreUnused(nv);
-
-	// No need to check anything if this is a non-walkable mesh
-	if (area == RC_NULL_AREA)
-		return;
 
 	const float walkableThr = cosf(walkableSlopeAngle / 180.0f * RC_PI);
 
@@ -354,26 +349,7 @@ void rcMarkWalkableTriangles(rcContext* ctx, const float walkableSlopeAngle,
 		calcTriNormal(&verts[tri[0] * 3], &verts[tri[1] * 3], &verts[tri[2] * 3], norm);
 		// Check if the face is walkable.
 		if (norm[1] > walkableThr)
-			areas[i] = area;
-	}
-}
-
-void rcMarkWalkableTriangles(rcContext* ctx, const float walkableSlopeAngle, const float* verts, int nv, const int* tris, const unsigned char* triareas, int nt, unsigned char* areas) {
-	rcIgnoreUnused(ctx);
-	rcIgnoreUnused(nv);
-	const float walkableThr = cosf(walkableSlopeAngle / 180.0f * RC_PI);
-
-	float norm[3];
-
-	for (int i = 0; i < nt; ++i) {
-		// If this triangle will be non-walkable we can skip it
-		if (triareas[i] == RC_NULL_AREA)
-			continue;
-		const int* tri = &tris[i * 3];
-		calcTriNormal(&verts[tri[0] * 3], &verts[tri[1] * 3], &verts[tri[2] * 3], norm);
-		// Check if the face is walkable.
-		if (norm[1] > walkableThr)
-			areas[i] = triareas[i];
+			areas[i] = RC_WALKABLE_AREA;
 	}
 }
 

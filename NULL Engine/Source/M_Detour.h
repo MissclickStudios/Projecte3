@@ -78,6 +78,8 @@ private:
 	//Copy of Detour dunsigned intToCol but without transforming to unsigned int
 	Color areaToColor(unsigned int area) const;
 
+	void LoadNavMeshBuffer(std::vector<navigationPoly*> meshes);
+
 public:
 	// Scripting
 	int getAreaCost(unsigned int areaIndex) const;
@@ -91,13 +93,12 @@ public:
 
 
 public:
-	float agentRadius = 0.5f;
+	float m_cellSize = 0.3f;
+	float m_cellHeight = 0.2f;
 	float agentHeight = 2.0f;
+	float agentRadius = 0.5f;
+	float agentMaxClimb = 0.9f;
 	float maxSlope = 45.0f;
-	float stepHeight = 0.4f;
-	float voxelSize = 0.15f;
-	float voxelHeight = 0.2f;
-
 	float regionMinSize = 8;
 	float regionMergeSize = 20;
 	float edgeMaxLen = 12.0f;
@@ -106,17 +107,23 @@ public:
 	float detailSampleDist = 6.0f;
 	float detailSampleMaxError = 1.0f;
 
+	float stepHeight = 0.4f;
+	float voxelSize = 0.15f;
+	float voxelHeight = 0.2f;
+
 	bool buildTiledMesh = true;
 
 	char areaNames[BE_DETOUR_TOTAL_AREAS][100];
 	float areaCosts[BE_DETOUR_TOTAL_AREAS];
 
-private:
-	bool debugDraw = false;
+	std::vector<navigationPoly*> renderMeshes;
+	bool debugDraw = true;
 	R_NavMesh* navMeshResource = nullptr;
+
+private:
+	
 	dtNavMeshQuery* m_navQuery = nullptr;
 	dtQueryFilter* m_filterQuery = nullptr;
-	std::vector<navigationPoly*> renderMeshes;
 
 	float m_Extents[3];
 };

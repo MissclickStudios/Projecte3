@@ -39,7 +39,7 @@ InputGeom::InputGeom(const std::vector<GameObject*>& srcMeshes, bool createChunk
 	for (std::vector<GameObject*>::const_iterator it = srcMeshes.cbegin(); it != srcMeshes.cend(); ++it) {
 		r_mesh = (*it)->GetComponent<C_Mesh>()->GetMesh();
 		ntris += r_mesh->indices.size();
-		nverts += r_mesh->vertices.size();
+		nverts += r_mesh->vertices.size()/3;
 	}
 
 
@@ -55,7 +55,7 @@ InputGeom::InputGeom(const std::vector<GameObject*>& srcMeshes, bool createChunk
 		m_mesh = true;
 		r_mesh = (*it)->GetComponent<C_Mesh>()->GetMesh();
 		transform = (*it)->GetComponent<C_Transform>()->GetWorldTransform();
-		OBB t_obb = r_mesh->aabb;
+		OBB t_obb = OBB(r_mesh->aabb);
 		t_obb.Transform(transform);
 		AABB aabb = t_obb.MinimalEnclosingAABB();
 
@@ -74,13 +74,13 @@ InputGeom::InputGeom(const std::vector<GameObject*>& srcMeshes, bool createChunk
 			maxtris = meshes.back().ntris;
 
 		// we add the transformed vertices
-		meshes.back().nverts = r_mesh->vertices.size();
+		meshes.back().nverts = r_mesh->vertices.size()/3;
 		float* vert_index = &verts[t_verts * 3];
-		for (int i = 0; i < r_mesh->vertices.size(); i+=3) {
-			ApplyTransform(&r_mesh->vertices[i], transform, vert_index);
+		for (int i = 0; i < r_mesh->vertices.size()/3; ++i) {
+			ApplyTransform(&r_mesh->vertices[i], &r_mesh->vertices[i+1], &r_mesh->vertices[i+2], transform, vert_index);
 			vert_index += 3;
 		}
-		t_verts += r_mesh->vertices.size();
+		t_verts += r_mesh->vertices.size()/3;
 
 		if (!minmaxset) {
 			minmaxset = true;
@@ -178,14 +178,9 @@ bool InputGeom::hasMesh() const {
 	return m_mesh;
 }
 
-void InputGeom::ApplyTransform(float* vertex, const float4x4& transform, float ret[3]) {
-	math::float3 original;
-	memcpy(original.ptr(), vertex, sizeof(float) * 3);
-	math::float3 globalVert = (transform * math::float4(vertex[0],
-		vertex[1],
-		vertex[2],
-		1)).xyz();
-	size_t a = sizeof(math::float3);
+void InputGeom::ApplyTransform(float* vertexX, float* vertexY, float* vertexZ, const float4x4& transform, float ret[3]) {
+	
+	math::float3 globalVert = (transform * math::float4(*vertexX,*vertexY,*vertexZ,1)).xyz();
 
 	ret[0] = globalVert[0];
 	ret[1] = globalVert[1];
