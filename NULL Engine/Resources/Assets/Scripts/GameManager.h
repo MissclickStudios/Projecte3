@@ -12,6 +12,7 @@
 
 class GameObject;
 class Gate;
+class DialogManager;
 
 class SCRIPTS_API GameManager : public Script 
 {
@@ -64,6 +65,7 @@ public:
 
     Prefab groguPrefab;
     Grogu* groguScript = nullptr;
+    DialogManager* dialogManager = nullptr;
 
 private:
     GameObject* playerGameObject = nullptr;

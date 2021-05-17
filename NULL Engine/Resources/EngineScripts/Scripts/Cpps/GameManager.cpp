@@ -19,6 +19,7 @@
 #include "C_Transform.h"
 
 #include "GameManager.h"
+#include "DialogManager.h"
 #include "Player.h"
 #include "Gate.h"
 
@@ -89,6 +90,8 @@ void GameManager::Awake()
 
 	GameObject* tmp = App->scene->GetGameObjectByName(gateName.c_str());
 
+	dialogManager = (DialogManager*)App->scene->GetGameObjectByName("DialogCanvas")->GetScript("DialogManager");
+
 	if (tmp != nullptr)
 	{
 		gate = (Gate*)tmp->GetScript("Gate");
@@ -108,6 +111,8 @@ void GameManager::Start()
 			enemies.push_back(entity);
 		}
 	}
+
+	dialogManager->StartDialog("Dialogs/GroguHello.json");
 
 
 	if (enabled && mainMenuScene != App->scene->GetCurrentScene() && playerGameObject)
