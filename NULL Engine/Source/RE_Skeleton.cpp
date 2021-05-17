@@ -1,6 +1,6 @@
 #include "Application.h"
 #include "M_Renderer3D.h"
-
+#include "Dependencies/glew/include/glew.h"
 #include "RE_Skeleton.h"
 
 RE_Skeleton::RE_Skeleton(float4x4* transform, float lineWidth, Color color, const std::vector<LineSegment>& bones) : Renderer(RendererType::SKELETON, transform, lineWidth, color),
