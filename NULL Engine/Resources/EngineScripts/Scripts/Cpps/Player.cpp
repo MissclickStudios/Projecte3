@@ -120,6 +120,18 @@ void Player::SetUp()
 	intermitentMeshTimer.Stop();
 	changeTimer.Stop();
 
+	if (animator != nullptr)
+	{
+		torsoTrack	= animator->GetTrackAsPtr("Torso");
+		legsTrack	= animator->GetTrackAsPtr("Legs");
+
+		if (torsoTrack == nullptr)
+			LOG("COULD NOT RETRIEVE TORSO TRACK");
+
+		if (legsTrack == nullptr)
+			LOG("COULD NOT RETRIEVE LEGS TRACK");
+	}
+	
 	if (rigidBody != nullptr)
 		rigidBody->TransformMovesRigidBody(false);
 
@@ -205,7 +217,7 @@ void Player::CleanUp()
 	if (equipedGunGameObject != nullptr)
 		equipedGunGameObject->toDelete = true;
 	equipedGunGameObject = nullptr;
-	equipedGunWeapon = nullptr;
+	secondaryWeapon = nullptr;
 
 	currentWeapon = nullptr;
 }
@@ -256,11 +268,11 @@ void Player::SaveState(ParsonNode& playerNode)
 
 	playerNode.SetInteger("Equiped Gun", equipedGun.uid);
 	ParsonArray equipedGunPerks = playerNode.SetArray("Equiped Gun Perks");
-	if (equipedGunWeapon != nullptr)
+	if (secondaryWeapon != nullptr)
 	{
-		playerNode.SetInteger("Equiped Gun Ammo", equipedGunWeapon->ammo);
-		for (uint i = 0; i < equipedGunWeapon->perks.size(); ++i)
-			equipedGunPerks.SetNumber((double)equipedGunWeapon->perks[i]);
+		playerNode.SetInteger("Equiped Gun Ammo", secondaryWeapon->ammo);
+		for (uint i = 0; i < secondaryWeapon->perks.size(); ++i)
+			equipedGunPerks.SetNumber((double)secondaryWeapon->perks[i]);
 	}
 
 	playerNode.SetBool("Using Equiped Gun", usingEquipedGun);
@@ -271,7 +283,7 @@ void Player::LoadState(ParsonNode& playerNode)
 	currency = playerNode.GetInteger("Currency");
 	hubCurrency = playerNode.GetInteger("Hub Currency");
 
-	health = playerNode.GetNumber("Health");
+	health = (float)playerNode.GetNumber("Health");
 
 	godMode = playerNode.GetBool("God Mode");
 	SetGodMode(godMode);
@@ -281,7 +293,7 @@ void Player::LoadState(ParsonNode& playerNode)
 	{
 		ParsonNode node = effectsArray.GetNode(i);
 		EffectType type = (EffectType)node.GetInteger("Type");
-		float duration = node.GetNumber("Duration");
+		float duration = (float)node.GetNumber("Duration");
 		bool permanent = node.GetBool("Permanent");
 
 		AddEffect(type, duration, permanent);
@@ -306,6 +318,8 @@ void Player::LoadState(ParsonNode& playerNode)
 
 		if (blasterWeapon != nullptr)
 		{
+			blasterWeapon->type = WeaponType::BLASTER;
+
 			blasterWeapon->SetOwnership(type, hand, handName);
 			blasterWeapon->ammo = playerNode.GetInteger("Blaster Ammo");
 
@@ -320,25 +334,25 @@ void Player::LoadState(ParsonNode& playerNode)
 	equipedGunGameObject = App->resourceManager->LoadPrefab(equipedGun.uid, App->scene->GetSceneRoot());
 	if (equipedGunGameObject != nullptr)
 	{
-		equipedGunWeapon = (Weapon*)GetObjectScript(equipedGunGameObject, ObjectType::WEAPON);
+		secondaryWeapon = (Weapon*)GetObjectScript(equipedGunGameObject, ObjectType::WEAPON);
 
-		if (equipedGunWeapon != nullptr)
+		if (secondaryWeapon != nullptr)
 		{
-			equipedGunWeapon->SetOwnership(type, hand, handName);
-			equipedGunWeapon->ammo = playerNode.GetInteger("Equiped Gun Ammo");
+			secondaryWeapon->SetOwnership(type, hand, handName);
+			secondaryWeapon->ammo = playerNode.GetInteger("Equiped Gun Ammo");
 
 			ParsonArray equipedGunPerks = playerNode.GetArray("Equiped Gun Perks");
 			for (uint i = 0; i < equipedGunPerks.size; ++i)
-				equipedGunWeapon->AddPerk((Perk)(int)equipedGunPerks.GetNumber(i));
+				secondaryWeapon->AddPerk((Perk)(int)equipedGunPerks.GetNumber(i));
 
-			if (equipedGunWeapon->weaponModel != nullptr)
-				equipedGunWeapon->weaponModel->SetIsActive(false);
+			if (secondaryWeapon->weaponModel != nullptr)
+				secondaryWeapon->weaponModel->SetIsActive(false);
 		}
 	}
 
 	usingEquipedGun = playerNode.GetBool("Using Equiped Gun");
-	if (usingEquipedGun && equipedGunWeapon != nullptr)
-		currentWeapon = equipedGunWeapon;
+	if (usingEquipedGun && secondaryWeapon != nullptr)
+		currentWeapon = secondaryWeapon;
 	else
 		currentWeapon = blasterWeapon;
 }
@@ -360,10 +374,10 @@ void Player::Reset()
 		blasterWeapon->ammo = blasterWeapon->maxAmmo;
 		blasterWeapon->perks.clear();
 	}
-	if (equipedGunWeapon != nullptr)
+	if (secondaryWeapon != nullptr)
 	{
-		equipedGunWeapon->ammo = equipedGunWeapon->maxAmmo;
-		equipedGunWeapon->perks.clear();
+		secondaryWeapon->ammo = secondaryWeapon->maxAmmo;
+		secondaryWeapon->perks.clear();
 	}
 
 	usingEquipedGun = false;
@@ -396,10 +410,159 @@ void Player::TakeDamage(float damage)
 	}
 }
 
+void Player::AnimatePlayer()
+{
+	if (animator == nullptr)
+		return;
+
+	AnimatorTrack* preview = animator->GetTrackAsPtr("Preview");
+
+	if (aimState == AimState::IDLE)
+	{
+		if (torsoTrack != nullptr)
+		{
+			if (torsoTrack->GetTrackState() != TrackState::STOP)
+				torsoTrack->Stop();
+		}
+			
+		if (legsTrack != nullptr)
+		{
+			if (legsTrack->GetTrackState() != TrackState::STOP)
+				legsTrack->Stop();
+		}
+		
+		AnimatorClip* previewClip = preview->GetCurrentClip();
+
+		if ((previewClip == nullptr) || (previewClip->GetName() != currentAnimation->name))											// If no clip playing or animation/clip changed
+			animator->PlayClip(currentAnimation->track.c_str(), currentAnimation->name.c_str(), currentAnimation->blendTime);
+	}
+	else
+	{
+		AnimationInfo* torsoInfo	= GetAimStateAnimation();
+		AnimationInfo* legsInfo		= GetMoveStateAnimation();
+		if (torsoInfo == nullptr || legsInfo == nullptr)
+		{
+			LOG("DEFAULTING AIMING TO PREVIEW");
+
+			if (torsoInfo == nullptr)
+				LOG("DEFAULTED DUE TO MISSING TORSO INFO { %u }::{ %u }", aimState, currentWeapon->type);
+			
+			AnimatorClip* previewClip = preview->GetCurrentClip();
+
+			if ((previewClip == nullptr) || (previewClip->GetName() != currentAnimation->name))										// If no clip playing or animation/clip changed
+				animator->PlayClip(currentAnimation->track.c_str(), currentAnimation->name.c_str(), currentAnimation->blendTime);
+		}
+		else
+		{
+			LOG("ANIMATION SPLITTING");
+
+			if (preview->GetTrackState() != TrackState::STOP)
+				preview->Stop();
+
+			AnimatorClip* torsoClip = (torsoTrack != nullptr) ? torsoTrack->GetCurrentClip() : nullptr;
+			AnimatorClip* legsClip	= (legsTrack != nullptr) ? legsTrack->GetCurrentClip() : nullptr;
+
+			if ((torsoClip == nullptr) || (torsoClip->GetName() != torsoInfo->name))
+				animator->PlayClip(torsoInfo->track.c_str(), torsoInfo->name.c_str(), torsoInfo->blendTime);
+
+			if ((legsClip == nullptr) || (legsClip->GetName() != legsInfo->name))
+				animator->PlayClip(legsInfo->track.c_str(), legsInfo->name.c_str(), legsInfo->blendTime);
+		}
+
+		//LOG("YO BOY AIMING/SHOOTIN/RELOADIN");
+	}
+}
+
+AnimationInfo* Player::GetMoveStateAnimation()
+{
+	switch (moveState)
+	{
+	case PlayerState::IDLE:		{ return &idleAnimation; }	break;
+	case PlayerState::RUN:		{ return &runAnimation; }	break;
+	case PlayerState::DASH_IN:	{ return &dashAnimation; }	break;
+	case PlayerState::DASH:		{ return &dashAnimation; }	break;
+	case PlayerState::DEAD_IN:	{ return &deathAnimation; }	break;
+	case PlayerState::DEAD:		{ return &deathAnimation; }	break;
+	}
+	
+	return nullptr;
+}
+
+AnimationInfo* Player::GetAimStateAnimation()
+{
+	switch (aimState)
+	{
+	case AimState::IDLE:		{ &idleAnimation; }			break;
+	case AimState::ON_GUARD:	{ &idleAnimation; }			break;
+	case AimState::AIMING:		{ GetAimAnimation(); }		break;
+	case AimState::SHOOT_IN:	{ GetShootAnimation(); }	break;
+	case AimState::SHOOT:		{ GetShootAnimation(); }	break;
+	case AimState::RELOAD_IN:	{ GetReloadAnimation(); }	break;
+	case AimState::RELOAD:		{ GetReloadAnimation(); }	break;
+	case AimState::CHANGE_IN:	{ &changeAnimation; }		break;
+	case AimState::CHANGE:		{ &changeAnimation; }		break;
+	}
+	
+	return nullptr;
+}
+
+AnimationInfo* Player::GetAimAnimation()
+{
+	if (currentWeapon == nullptr)
+		return nullptr;
+	
+	switch (currentWeapon->type)
+	{
+	case WeaponType::BLASTER:	{ LOG("AIM BLASTER{ %s }", aimBlasterAnimation.name.c_str());	return &aimBlasterAnimation; }	break;
+	case WeaponType::SNIPER:	{ LOG("AIM SNIPER { %s }", aimSniperAnimation.name.c_str());	return &aimSniperAnimation; }	break;
+	case WeaponType::SHOTGUN:	{ LOG("AIM SHOTGUN{ %s }", aimShotgunAnimation.name.c_str());	return &aimShotgunAnimation; }	break;
+	case WeaponType::MINIGUN:	{ LOG("AIM MINIGUN{ %s }", aimMinigunAnimation.name.c_str());	return &aimMinigunAnimation; }	break;
+	}
+	
+	LOG("COULD NOT GET AIM ANIMATION");
+
+	return nullptr;
+}
+
+AnimationInfo* Player::GetShootAnimation()
+{
+	if (currentWeapon == nullptr)
+		return nullptr;
+	
+	switch (currentWeapon->type)
+	{
+	case WeaponType::BLASTER:	{ LOG("SHOOT BLASTER { %s }", shootBlasterAnimation.name.c_str()); return &shootBlasterAnimation; }	break;
+	case WeaponType::SNIPER:	{ LOG("SHOOT SNIPER  { %s }", shootSniperAnimation.name.c_str());	return &shootSniperAnimation; }	break;
+	case WeaponType::SHOTGUN:	{ LOG("SHOOT SHOTGUN { %s }", shootShotgunAnimation.name.c_str()); return &shootShotgunAnimation; }	break;
+	case WeaponType::MINIGUN:	{ LOG("SHOOT MINIGUN { %s }", shootMinigunAnimation.name.c_str()); return &shootMinigunAnimation; }	break;
+	}
+
+	LOG("COULD NOT GET SHOOT ANIMATION");
+
+	return nullptr;
+}
+
+AnimationInfo* Player::GetReloadAnimation()
+{
+	if (currentWeapon == nullptr)
+		return nullptr;
+
+	switch (currentWeapon->type)
+	{
+	case WeaponType::BLASTER:	{ LOG("RELOAD BLASTER { %s }", reloadBlasterAnimation.name.c_str());	return &reloadBlasterAnimation; }	break;
+	case WeaponType::SNIPER:	{ LOG("RELOAD SNIPER  { %s }", reloadSniperAnimation.name.c_str());		return &reloadSniperAnimation; }	break;
+	case WeaponType::SHOTGUN:	{ LOG("RELOAD SHOTGUN { %s }", reloadShotgunAnimation.name.c_str());	return &reloadShotgunAnimation; }	break;
+	case WeaponType::MINIGUN:	{ LOG("RELOAD MINIGUN { %s }", reloadMinigunAnimation.name.c_str());	return &reloadMinigunAnimation; }	break;
+	}
+	
+	LOG("COULD NOT GET RELOAD ANIMATION");
+
+	return nullptr;
+}
+
 void Player::SetGodMode(bool enable)
 {
 	godMode = enable;
-	
 	defense = (godMode) ? 0.0f : 1.0f;
 }
 
@@ -434,6 +597,7 @@ void Player::ManageMovement()
 	{
 	case PlayerState::IDLE:
 		currentAnimation = &idleAnimation;
+
 		if (rigidBody != nullptr)
 			rigidBody->Set2DVelocity(float2::zero);
 
@@ -514,10 +678,10 @@ void Player::ManageAim()
 		aimState = AimState::IDLE;
 		break;
 	case AimState::AIMING:
-		LOG("AIMING THIS SHIT UP");
+		//LOG("AIMING THIS SHIT UP");
 		break;
 	case AimState::SHOOT_IN:
-		LOG("SHOOTIN'");
+		//LOG("SHOOTIN'");
 		currentAnimation = &shootAnimation;
 		aimState = AimState::SHOOT;
 
@@ -527,9 +691,9 @@ void Player::ManageAim()
 		else
 			currentAnimation = &shootRifleAnimation;*/
 
-		LOG("JUST SHOOT MAN");
+		//LOG("JUST SHOOT MAN");
 
-		currentAnimation = (!usingEquipedGun) ? &shootAnimation : &shootRifleAnimation;
+		currentAnimation = (!usingEquipedGun) ? &shootAnimation : &shootSniperAnimation;
 
 		if (currentWeapon != nullptr)
 			switch (currentWeapon->Shoot(aimDirection))
@@ -573,11 +737,11 @@ void Player::ManageAim()
 			if (blasterWeapon == currentWeapon)
 			{
 				usingEquipedGun = true;
-				currentWeapon = equipedGunWeapon;
+				currentWeapon = secondaryWeapon;
 				if (blasterWeapon->weaponModel != nullptr)
 					blasterWeapon->weaponModel->SetIsActive(false);
-				if (equipedGunWeapon->weaponModel != nullptr)
-					equipedGunWeapon->weaponModel->SetIsActive(true);
+				if (secondaryWeapon->weaponModel != nullptr)
+					secondaryWeapon->weaponModel->SetIsActive(true);
 			}
 			else
 			{
@@ -585,8 +749,8 @@ void Player::ManageAim()
 				currentWeapon = blasterWeapon;
 				if (blasterWeapon->weaponModel != nullptr)
 					blasterWeapon->weaponModel->SetIsActive(true);
-				if (equipedGunWeapon->weaponModel != nullptr)
-					equipedGunWeapon->weaponModel->SetIsActive(false);
+				if (secondaryWeapon->weaponModel != nullptr)
+					secondaryWeapon->weaponModel->SetIsActive(false);
 			}
 			aimState = AimState::ON_GUARD;
 		}
@@ -690,7 +854,7 @@ void Player::Aim()
 	{
 		aimState = AimState::IDLE;
 	}
-	
+
 	aimDirection = (aimInput.IsZero() || moveState == PlayerState::DASH) ? moveDirection : aimInput;
 
 	float rad = aimDirection.AimedAngle();

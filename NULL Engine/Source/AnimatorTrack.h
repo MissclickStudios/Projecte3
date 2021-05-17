@@ -102,6 +102,7 @@ private:																																			// --- BONE/CHANNEL UPDATE METHODS
 
 public:
 	uint32					rootBoneUID;															// TMP until a better solution to Save & Load the root bone is found.
+	std::string				rootBoneName;
 
 private:
 	TrackState				trackState;

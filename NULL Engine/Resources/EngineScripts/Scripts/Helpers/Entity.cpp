@@ -163,34 +163,23 @@ void Entity::Update()
 void Entity::PostUpdate()
 {
 	if (animator != nullptr && currentAnimation != nullptr )
-	{
-		AnimatorClip* clip = animator->GetTrack("Preview").GetCurrentClip();
-
-		if (clip == nullptr || clip->GetName() != currentAnimation->name)										// If no clip playing or animation/clip changed
-			animator->PlayClip(currentAnimation->track.c_str(), currentAnimation->name.c_str(), currentAnimation->blendTime);
+	{	
+		AnimatorTrack* preview = animator->GetTrackAsPtr("Preview");
 		
-		//if (type != EntityType::PLAYER)
-		//{
-		//	AnimatorClip* clip = animator->GetTrack("Preview").GetCurrentClip();
+		if (preview == nullptr)
+			return;
 
-		//	if (clip == nullptr || clip->GetName() != currentAnimation->name)										// If no clip playing or animation/clip changed
-		//		animator->PlayClip(currentAnimation->track.c_str(), currentAnimation->name.c_str(), currentAnimation->blendTime);
-		//}
-		//else
-		//{
-		//	Player* player = (Player*)this;
-		//	if (player->aimState != AimState::AIMING)
-		//	{
-		//		AnimatorClip* clip = animator->GetTrack("Preview").GetCurrentClip();
+		if ((type != EntityType::PLAYER))
+		{
+			AnimatorClip* clip = preview->GetCurrentClip();
 
-		//		if (clip == nullptr || clip->GetName() != currentAnimation->name)										// If no clip playing or animation/clip changed
-		//			animator->PlayClip(currentAnimation->track.c_str(), currentAnimation->name.c_str(), currentAnimation->blendTime);
-		//	}
-		//	else
-		//	{
-		//		LOG("YO BOY AIMING");
-		//	}
-		//}
+			if (clip == nullptr || clip->GetName() != currentAnimation->name)										// If no clip playing or animation/clip changed
+				animator->PlayClip(currentAnimation->track.c_str(), currentAnimation->name.c_str(), currentAnimation->blendTime);
+		}
+		else
+		{
+			((Player*)this)->AnimatePlayer();
+		}
 	}
 }
 

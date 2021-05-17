@@ -97,6 +97,7 @@ bool AnimatorTrack::SaveState(ParsonNode& root) const
 {
 	root.SetString("Name", name.c_str());
 	root.SetNumber("RootBoneUID", (double)((rootBone != nullptr) ? rootBone->GetUID() : 0));
+	root.SetString("RootBoneName", (rootBone != nullptr) ? rootBone->GetName() : "[NONE]");
 
 	root.SetNumber("TrackSpeed", (double)trackSpeed);
 	root.SetBool("Interpolate", interpolate);
@@ -106,11 +107,12 @@ bool AnimatorTrack::SaveState(ParsonNode& root) const
 
 bool AnimatorTrack::LoadState(const ParsonNode& root)
 {
-	name		= root.GetString("Name");
-	rootBoneUID = root.GetNumber("RootBoneUID");
+	name			= root.GetString("Name");
+	rootBoneUID		= root.GetNumber("RootBoneUID");
+	rootBoneName	= root.GetString("RootBoneName");
 
-	trackSpeed	= (float)root.GetNumber("TrackSpeed");
-	interpolate = root.GetBool("Interpolate");
+	trackSpeed		= (float)root.GetNumber("TrackSpeed");
+	interpolate		= root.GetBool("Interpolate");
 	
 	return true;
 }

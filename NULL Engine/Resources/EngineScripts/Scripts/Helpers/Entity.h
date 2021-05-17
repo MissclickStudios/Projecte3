@@ -7,18 +7,15 @@
 #include <vector>
 #include <unordered_map>
 
-#define DEFAULT_MODIFIER 1.0f
-
-typedef unsigned int uint;
-
 class GameObject;
-class C_RigidBody;
-class C_Animator;
-class C_Material;
-class C_AudioSource;
 class C_Mesh;
-
+class C_Material;
+class C_Animator;
+class C_RigidBody;
+class C_AudioSource;
 class C_ParticleSystem;
+
+class AnimatorTrack;
 
 enum class EntityType // jeje titties
 {
@@ -38,6 +35,10 @@ enum class EntityState
 	NONE,
 	STUNED
 };
+
+typedef unsigned int uint;
+
+#define DEFAULT_MODIFIER 1.0f
 
 class Entity : public Object
 {

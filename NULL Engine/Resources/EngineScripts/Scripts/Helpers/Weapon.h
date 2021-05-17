@@ -25,7 +25,8 @@ enum class WeaponType
 	WEAPON,
 	BLASTER,
 	SNIPER,
-	SHOTGUN
+	SHOTGUN,
+	MINIGUN
 };
 
 enum class ShootState
@@ -37,7 +38,7 @@ enum class ShootState
 	NO_AMMO
 };
 
-class  Weapon : public Object
+class Weapon : public Object
 {
 public:
 
@@ -104,8 +105,8 @@ public:
 	float fireRateModifier = DEFAULT_MODIFIER;
 	float reloadTimeModifier = DEFAULT_MODIFIER;
 	float bulletLifeTimeModifier = DEFAULT_MODIFIER;
-	int maxAmmoModifier = 0.0f;
-	int PPSModifier = 0.0f;
+	int maxAmmoModifier = 0;
+	int PPSModifier = 0;
 
 	// Perks - most condecorated league player in the west btw, no cringe intended
 	std::vector<Perk> perks;
