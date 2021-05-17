@@ -79,17 +79,17 @@ void M_Recast::DeleteGO(GameObject* go)
 bool M_Recast::CleanUp()
 {
 	delete[] m_triareas;
-	m_triareas = 0;
+	m_triareas = nullptr;
 	rcFreeHeightField(m_solid);
-	m_solid = 0;
+	m_solid = nullptr;
 	rcFreeCompactHeightfield(m_chf);
-	m_chf = 0;
+	m_chf = nullptr;
 	rcFreeContourSet(m_cset);
-	m_cset = 0;
+	m_cset = nullptr;
 	rcFreePolyMesh(m_pmesh);
-	m_pmesh = 0;
+	m_pmesh = nullptr;
 	rcFreePolyMeshDetail(m_dmesh);
-	m_dmesh = 0;
+	m_dmesh = nullptr;
 	
 	return true;
 }
@@ -112,6 +112,28 @@ bool M_Recast::BuildNavMesh()
 		return false;
 	}
 
+	// Init build configuration from GUI
+	memset(&m_cfg, 0, sizeof(m_cfg));
+	m_cfg.cs = App->detour->m_cellSize;
+	m_cfg.ch = App->detour->m_cellHeight;
+	m_cfg.walkableSlopeAngle = App->detour->maxSlope;
+	m_cfg.walkableHeight = (int)ceilf(App->detour->agentHeight / m_cfg.ch);
+	m_cfg.walkableClimb = (int)floorf(App->detour->agentMaxClimb / m_cfg.ch);
+	m_cfg.walkableRadius = (int)ceilf(App->detour->agentRadius / m_cfg.cs);
+	m_cfg.maxEdgeLen = (int)(App->detour->edgeMaxLen / App->detour->m_cellSize);
+	m_cfg.maxSimplificationError = App->detour->edgeMaxError;
+	m_cfg.minRegionArea = (int)rcSqr(App->detour->regionMinSize);		// Note: area = size*size
+	m_cfg.mergeRegionArea = (int)rcSqr(App->detour->regionMergeSize);	// Note: area = size*size
+	m_cfg.maxVertsPerPoly = (int)App->detour->vertsPerPoly;
+	m_cfg.tileSize = (int)m_tileSize;
+	m_cfg.borderSize = m_cfg.walkableRadius + 3; // Reserve enough padding.
+	m_cfg.width = m_cfg.tileSize + m_cfg.borderSize * 2;
+	m_cfg.height = m_cfg.tileSize + m_cfg.borderSize * 2;
+	m_cfg.detailSampleDist = App->detour->detailSampleDist < 0.9f ? 0 : App->detour->m_cellSize * App->detour->detailSampleDist;
+	m_cfg.detailSampleMaxError = App->detour->m_cellHeight * App->detour->detailSampleMaxError;
+	rcVcopy(m_cfg.bmin, m_geom->getMeshBoundsMin());
+	rcVcopy(m_cfg.bmax, m_geom->getMeshBoundsMax());
+
 	if (EngineApp->detour->buildTiledMesh)
 		ret = BuildTiledNavMesh(m_geom);
 	else
@@ -123,11 +145,23 @@ bool M_Recast::BuildNavMesh()
 }
 
 bool M_Recast::BuildSoloNavMesh(const InputGeom* m_geom)
-{//
-		// Step 1. Initialize build config.
-		//
-		// Reset build times gathering.
+{	
+	//
+	// Step 1. Initialize build config.
+	//
+	if (!m_geom || !m_geom->getMeshes().data())
+	{
+		m_ctx->log(RC_LOG_ERROR, "buildNavigation: Input mesh is not specified.");
+		return false;
+	}
+
+	CleanUp();
+
+	//
+	// Step 1. Initialize build config.
+	//
 	
+	// Reset build times gathering.
 	m_ctx->resetTimers();
 
 	// Start the build process.
@@ -151,7 +185,7 @@ bool M_Recast::BuildSoloNavMesh(const InputGeom* m_geom)
 	//
 
 	// Allocate voxel heightfield where we rasterize our input data to.
-	rcHeightfield* m_solid = rcAllocHeightfield();
+	m_solid = rcAllocHeightfield();
 	if (!m_solid) {
 		LOG("[Recast mesh]: Out of memory 'solid'.");
 		return false;
@@ -164,7 +198,7 @@ bool M_Recast::BuildSoloNavMesh(const InputGeom* m_geom)
 	// Allocate array that can hold triangle area types.
 	// If you have multiple meshes you need to process, allocate
 	// and array which can hold the max number of triangles you need to process.
-	unsigned char* m_triareas = new unsigned char[m_geom->getMaxTris()];
+	m_triareas = new unsigned char[m_geom->getMaxTris()];
 	if (!m_triareas) {
 		LOG("[Recast mesh]: Out of memory 'm_triareas' (%d).", m_geom->getMaxTris());
 		return false;
@@ -205,7 +239,7 @@ bool M_Recast::BuildSoloNavMesh(const InputGeom* m_geom)
 	// Compact the heightfield so that it is faster to handle from now on.
 	// This will result more cache coherent data as well as the neighbours
 	// between walkable cells will be calculated.
-	rcCompactHeightfield* m_chf = rcAllocCompactHeightfield();
+	m_chf = rcAllocCompactHeightfield();
 	if (!m_chf) {
 		LOG("[Recast mesh]: Out of memory 'chf'.");
 		return false;
@@ -250,7 +284,7 @@ bool M_Recast::BuildSoloNavMesh(const InputGeom* m_geom)
 	//
 
 	// Create contours.
-	rcContourSet* m_cset = rcAllocContourSet();
+	m_cset = rcAllocContourSet();
 	if (!m_cset) {
 		LOG("[Recast mesh]: Out of memory 'cset'.");
 		return false;
@@ -265,7 +299,7 @@ bool M_Recast::BuildSoloNavMesh(const InputGeom* m_geom)
 	//
 
 	// Build polygon navmesh from the contours.
-	rcPolyMesh* m_pmesh = rcAllocPolyMesh();
+	m_pmesh = rcAllocPolyMesh();
 	if (!m_pmesh) {
 		LOG("[Recast mesh]: Out of memory 'pmesh'.");
 		return false;
@@ -279,7 +313,7 @@ bool M_Recast::BuildSoloNavMesh(const InputGeom* m_geom)
 	// Step 7. Create detail mesh which allows to access approximate height on each polygon.
 	//
 
-	rcPolyMeshDetail* m_dmesh = rcAllocPolyMeshDetail();
+	m_dmesh = rcAllocPolyMeshDetail();
 	if (!m_dmesh) {
 		LOG("[Recast mesh]: Out of memory 'pmdtl'.");
 		return false;
@@ -459,26 +493,6 @@ unsigned char* M_Recast::BuildTile(const InputGeom* m_geom, const int tx, const 
 	const int nverts = m_geom->getVertCount();
 	const int ntris = m_geom->getTriCount();
 	const rcChunkyTriMesh* chunkyMesh = m_geom->getChunkyMesh();
-
-	memset(&m_cfg, 0, sizeof(m_cfg));
-	m_cfg.cs = App->detour->m_cellSize;
-	m_cfg.ch = App->detour->m_cellHeight;
-	m_cfg.walkableSlopeAngle = App->detour->maxSlope;
-	m_cfg.walkableHeight = (int)ceilf(App->detour->agentHeight / m_cfg.ch);
-	m_cfg.walkableClimb = (int)floorf(App->detour->agentMaxClimb / m_cfg.ch);
-	m_cfg.walkableRadius = (int)ceilf(App->detour->agentRadius / m_cfg.cs);
-	m_cfg.maxEdgeLen = (int)(App->detour->edgeMaxLen / App->detour->m_cellSize);
-	m_cfg.maxSimplificationError = App->detour->edgeMaxError;
-	m_cfg.minRegionArea = (int)rcSqr(App->detour->regionMinSize);		// Note: area = size*size
-	m_cfg.mergeRegionArea = (int)rcSqr(App->detour->regionMergeSize);	// Note: area = size*size
-	m_cfg.maxVertsPerPoly = (int)App->detour->vertsPerPoly;
-	m_cfg.tileSize = (int)m_tileSize;
-	m_cfg.borderSize = m_cfg.walkableRadius + 3; // Reserve enough padding.
-	m_cfg.width = m_cfg.tileSize + m_cfg.borderSize * 2;
-	m_cfg.height = m_cfg.tileSize + m_cfg.borderSize * 2;
-	m_cfg.detailSampleDist = App->detour->detailSampleDist < 0.9f ? 0 : App->detour->m_cellSize * App->detour->detailSampleDist;
-	m_cfg.detailSampleMaxError = App->detour->m_cellHeight * App->detour->detailSampleMaxError;
-
 
 	// Expand the heighfield bounding box by border size to find the extents of geometry we need to build this tile.
 	//
