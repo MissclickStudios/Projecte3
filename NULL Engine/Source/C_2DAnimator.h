@@ -48,9 +48,10 @@ public:
 	Spritesheet*				spritesheet2;
 	Spritesheet*				spritesheet3;
 
+	int							animationNumberPlaying;
 private:
 	void LoopAnimation(int animation);
-	int							animationNumberPlaying;
+
 private:
 
 	std::vector<R_Texture*>		animation;

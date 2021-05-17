@@ -102,8 +102,20 @@ void C_UI_Image::Draw2D()
 		return;
 
 	else if (cAnimator && cAnimator->IsAnimationPlaying())
-		id = cAnimator->spritesheet->spriteSheet->GetTextureID();
-
+	{
+		switch (cAnimator->animationNumberPlaying) 
+		{
+		case 1:
+			id = cAnimator->spritesheet->spriteSheet->GetTextureID();
+			break;
+		case 2:
+			id = cAnimator->spritesheet2->spriteSheet->GetTextureID();
+			break;
+		case 3:
+			id = cAnimator->spritesheet3->spriteSheet->GetTextureID();
+			break;
+		}
+	}
 	else
 		id = cMaterial->GetTextureID();
 
@@ -139,15 +151,6 @@ void C_UI_Image::Draw2D()
 			0.0f, 1.0f, cAnimator->spritesheet->currentFrame.proportionBeginX, cAnimator->spritesheet->currentFrame.proportionFinalY,
 			1.0f, 1.0f, cAnimator->spritesheet->currentFrame.proportionFinalX, cAnimator->spritesheet->currentFrame.proportionFinalY,
 			1.0f, 0.0f, cAnimator->spritesheet->currentFrame.proportionFinalX,  cAnimator->spritesheet->currentFrame.proportionBeginY
-
-			/*
-			0.0f, 1.0f, 0.0f , 1.0f,
-			1.0f, 0.0f, 1.0f, 0.0f,
-			0.0f, 0.0f, 0.0f, 0.0f,
-
-			0.0f, 1.0f, 0.0f, 1.0f,
-			1.0f, 1.0f, 1.0f, 1.0f,
-			1.0f, 0.0f, 1.0f, 0.0f*/
 		};
 
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
@@ -156,13 +159,13 @@ void C_UI_Image::Draw2D()
 	else
 	{
 		float standartCoords[] = {
-	0.0f, 1.0f, 0.0f , 1.0f,
-	1.0f, 0.0f, 1.0f, 0.0f,
-	0.0f, 0.0f, 0.0f, 0.0f,
-
-	0.0f, 1.0f, 0.0f, 1.0f,
-	1.0f, 1.0f, 1.0f, 1.0f,
-	1.0f, 0.0f, 1.0f, 0.0f
+			0.0f, 1.0f, 0.0f , 1.0f,
+			1.0f, 0.0f, 1.0f, 0.0f,
+			0.0f, 0.0f, 0.0f, 0.0f,
+		
+			0.0f, 1.0f, 0.0f, 1.0f,
+			1.0f, 1.0f, 1.0f, 1.0f,
+			1.0f, 0.0f, 1.0f, 0.0f
 		};
 
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
