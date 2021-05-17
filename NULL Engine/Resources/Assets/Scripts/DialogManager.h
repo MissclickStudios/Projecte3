@@ -8,6 +8,7 @@
 
 typedef unsigned int uint;
 class R_Texture;
+class C_Canvas;
 class C_UI_Image;
 class C_UI_Text;
 
@@ -19,22 +20,37 @@ enum class DialogState
 	NO_DIALOG
 };
 
-struct DialogPhrase
+struct DialogLine
 {
-	std::string text = "This Phrase is empty";
+	DialogLine(const char* _text, const char* _speakerName)
+	{
+		lineText = _text;
+		speakerName = _speakerName;
+	}
 
+	std::string lineText = "This Phrase is empty";
 	std::string speakerName = "Default Speaker";
 };
 
 struct Dialog
 {
+	Dialog(const char* name)
+	{
+
+	}
+
 	std::string dialogName = "Default Name";
 
-	std::vector<DialogPhrase*> phrases;
+	std::vector<DialogLine*> phrases;
 };
 
 struct DialogSystem
 {
+	DialogSystem(const char* name)
+	{
+		dialogSystemName = name;
+	}
+
 	std::string dialogSystemName = "Default Name";
 
 	std::vector<Dialog*> dialogPool; //All the dialogs that can randomly trigger when Starting this dialog (There cana lso be just one)
@@ -49,20 +65,46 @@ public:
 	void Update() override;
 	void CleanUp()override;
 
+	void StartTalking();
+
 	DialogSystem* LoadDialogSystem(const char* path); //Loads dialog for the scene to be used later (path starts from Assets/Dialogs/)
+private:
+
+public:
 
 	//StartDialog
 	void StartDialog(const char* dialogName);
 	void StartDialog(DialogSystem* dialogSystem);
 
-	std::vector<DialogSystem*> dialogSystemsLoaded; //All the dialogs the scene has loaded in
-
-	DialogState state = DialogState::NO_DIALOG;
-
+public:
+	C_Canvas* dialogCanvas = nullptr;
 	C_UI_Image* speakerImage = nullptr;
 	C_UI_Image* textBackground = nullptr;
 	C_UI_Text* speakerText = nullptr;
 	C_UI_Text* dialogText = nullptr;
+
+	std::string dialogCanvasName = "DialogCanvas";
+	std::string speakerImageName = "SpeakerImage";
+	std::string textBackgroundName = "DialogBackground";
+	std::string speakerTextName = "SpeakerText";
+	std::string dialogTextName = "DialogText";
+
+private:
+	std::vector<DialogSystem*> dialogSystemsLoaded; //All the dialogs the scene has loaded in
+
+	DialogState state = DialogState::NO_DIALOG;
+
+	std::string currentText;
+
+	DialogSystem* currentDialogSystem = nullptr;
+	Dialog* currentDialog = nullptr;
+	DialogLine* currentLine = nullptr;
+
+	uint currentLineLetter = 0; //Holds the current letter position in string that has to be added in the line
+
+	float textSpeed = 1.f;
+	float nextLetterBaseTime = 0.1f;
+	float nextLetterTimer = 0.f;
 };
 
 SCRIPTS_FUNCTION DialogManager* CreateDialogManager();
