@@ -290,15 +290,22 @@ void C_Animator::FindTracksRootBones()
 	if (tracks.empty())
 		return;
 
-	std::map<uint32, GameObject*> tmp;
+	/*std::map<uint32, GameObject*> tmp;
 	for (auto bone = bones.cbegin(); bone != bones.cend(); ++bone)
 	{
 		tmp.emplace((*bone)->GetUID(), (*bone));
+	}*/
+
+	std::map<std::string, GameObject*> tmp;
+	for (auto bone = bones.cbegin(); bone != bones.cend(); ++bone)
+	{
+		tmp.emplace((*bone)->GetName(), (*bone));
 	}
 
 	for (auto track = tracks.begin(); track != tracks.end(); ++track)
 	{
-		auto bone = tmp.find(track->second.rootBoneUID);
+		//auto bone = tmp.find(track->second.rootBoneUID);
+		auto bone = tmp.find(track->second.rootBoneName);
 		if (bone == tmp.end())
 			continue;
 
