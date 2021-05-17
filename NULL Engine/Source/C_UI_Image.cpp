@@ -146,18 +146,57 @@ void C_UI_Image::Draw2D()
 	//Uncomment the code below to update the texture coords in real time
 	if(cAnimator != nullptr && cAnimator->IsAnimationPlaying())
 	{
-		float newCoords[] = {
-			0.0f, 1.0f, cAnimator->spritesheet->currentFrame.proportionBeginX, cAnimator->spritesheet->currentFrame.proportionFinalY,
-			1.0f, 0.0f, cAnimator->spritesheet->currentFrame.proportionFinalX, cAnimator->spritesheet->currentFrame.proportionBeginY,
-			0.0f, 0.0f, cAnimator->spritesheet->currentFrame.proportionBeginX, cAnimator->spritesheet->currentFrame.proportionBeginY,
+		switch(cAnimator->animationNumberPlaying)
+		{
+		case 1:
+		{
+			float newCoords[] = {
+	0.0f, 1.0f, cAnimator->spritesheet->currentFrame.proportionBeginX, cAnimator->spritesheet->currentFrame.proportionFinalY,
+	1.0f, 0.0f, cAnimator->spritesheet->currentFrame.proportionFinalX, cAnimator->spritesheet->currentFrame.proportionBeginY,
+	0.0f, 0.0f, cAnimator->spritesheet->currentFrame.proportionBeginX, cAnimator->spritesheet->currentFrame.proportionBeginY,
 
-			0.0f, 1.0f, cAnimator->spritesheet->currentFrame.proportionBeginX, cAnimator->spritesheet->currentFrame.proportionFinalY,
-			1.0f, 1.0f, cAnimator->spritesheet->currentFrame.proportionFinalX, cAnimator->spritesheet->currentFrame.proportionFinalY,
-			1.0f, 0.0f, cAnimator->spritesheet->currentFrame.proportionFinalX,  cAnimator->spritesheet->currentFrame.proportionBeginY
-		};
+	0.0f, 1.0f, cAnimator->spritesheet->currentFrame.proportionBeginX, cAnimator->spritesheet->currentFrame.proportionFinalY,
+	1.0f, 1.0f, cAnimator->spritesheet->currentFrame.proportionFinalX, cAnimator->spritesheet->currentFrame.proportionFinalY,
+	1.0f, 0.0f, cAnimator->spritesheet->currentFrame.proportionFinalX,  cAnimator->spritesheet->currentFrame.proportionBeginY
+			};
 
-		glBindBuffer(GL_ARRAY_BUFFER, VBO);
-		glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(newCoords), newCoords);
+			glBindBuffer(GL_ARRAY_BUFFER, VBO);
+			glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(newCoords), newCoords);
+			break;
+		}
+		case 2:
+		{
+			float newCoordsSecond[] = {
+	0.0f, 1.0f, cAnimator->spritesheet2->currentFrame.proportionBeginX, cAnimator->spritesheet2->currentFrame.proportionFinalY,
+	1.0f, 0.0f, cAnimator->spritesheet2->currentFrame.proportionFinalX, cAnimator->spritesheet2->currentFrame.proportionBeginY,
+	0.0f, 0.0f, cAnimator->spritesheet2->currentFrame.proportionBeginX, cAnimator->spritesheet2->currentFrame.proportionBeginY,
+
+	0.0f, 1.0f, cAnimator->spritesheet2->currentFrame.proportionBeginX, cAnimator->spritesheet2->currentFrame.proportionFinalY,
+	1.0f, 1.0f, cAnimator->spritesheet2->currentFrame.proportionFinalX, cAnimator->spritesheet2->currentFrame.proportionFinalY,
+	1.0f, 0.0f, cAnimator->spritesheet2->currentFrame.proportionFinalX,  cAnimator->spritesheet2->currentFrame.proportionBeginY
+			};
+
+			glBindBuffer(GL_ARRAY_BUFFER, VBO);
+			glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(newCoordsSecond), newCoordsSecond);
+			break;
+		}
+		case 3:
+		{
+			float newCoordsThird[] = {
+	0.0f, 1.0f, cAnimator->spritesheet3->currentFrame.proportionBeginX, cAnimator->spritesheet3->currentFrame.proportionFinalY,
+	1.0f, 0.0f, cAnimator->spritesheet3->currentFrame.proportionFinalX, cAnimator->spritesheet3->currentFrame.proportionBeginY,
+	0.0f, 0.0f, cAnimator->spritesheet3->currentFrame.proportionBeginX, cAnimator->spritesheet3->currentFrame.proportionBeginY,
+
+	0.0f, 1.0f, cAnimator->spritesheet3->currentFrame.proportionBeginX, cAnimator->spritesheet3->currentFrame.proportionFinalY,
+	1.0f, 1.0f, cAnimator->spritesheet3->currentFrame.proportionFinalX, cAnimator->spritesheet3->currentFrame.proportionFinalY,
+	1.0f, 0.0f, cAnimator->spritesheet3->currentFrame.proportionFinalX,  cAnimator->spritesheet3->currentFrame.proportionBeginY
+			};
+
+			glBindBuffer(GL_ARRAY_BUFFER, VBO);
+			glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(newCoordsThird), newCoordsThird);
+			break;
+		}
+		}
 	}
 	else
 	{

@@ -37,6 +37,16 @@ C_2DAnimator::C_2DAnimator(GameObject* owner) : Component(owner, ComponentType::
 	spritesheet->columns = 3;
 	spritesheet->animationNumber = 12;
 
+	spritesheet2 = new Spritesheet((R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/ChangeWeapon.png"));
+	spritesheet2->rows = 10;
+	spritesheet2->columns = 10;
+	spritesheet2->animationNumber = 100;
+
+	spritesheet3 = new Spritesheet((R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/ChangeWeapon.png"));
+	spritesheet3->rows = 10;
+	spritesheet3->columns = 10;
+	spritesheet3->animationNumber = 100;
+
 
 }
 
