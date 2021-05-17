@@ -51,24 +51,28 @@ void InGameShop::Start()
 		while (searches < 10) // RIP while(true) loop, you'll be missed. 16/5/21 (13:00) - 16/5/21 (13:05)
 		{
 			uint num = Random::LCG::GetBoundedRandomUint(0, 100);
-			LOG("%d", num);
 			if (item->AddItem(gameManager->GetChestItemPool(), num))
 			{
 				if (item->item != nullptr)
 				{
-					std::string* name = &item->item->name;
+					std::string name = item->item->name;
 
 					bool found = false;
 					for (uint n = 0; n < itemNames.size(); ++n)
-						if (itemNames[n] == *name)
+					{
+						LOG("%s [vs] %s", itemNames[n].c_str(), name.c_str());
+						if (itemNames[n] == name)
 						{
+							LOG("SAME");
 							found = true;
 							break;
 						}
+						LOG("NO SAME");
+					}
 
 					if (!found)
 					{
-						itemNames.push_back(*name);
+						itemNames.push_back(name);
 						break;
 					}
 				}

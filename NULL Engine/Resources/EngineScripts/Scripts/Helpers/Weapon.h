@@ -63,7 +63,7 @@ public:
 	void ProjectileCollisionReport(int index);
 
 	// Perks
-	void RefreshPerks(); // Resets the modifiers and applies all the current perks
+	void RefreshPerks(bool reset = false); // Resets the modifiers and applies all the current perks
 	void AddPerk(PerkType perk, float amount, float duration);
 
 	virtual void DamageModify(Perk* perk);

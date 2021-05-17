@@ -10,8 +10,12 @@
 
 #include "MathGeoLib/include/Math/float2.h"
 
+#include "ItemRarity.h"
+
 class C_AudioSource;
 class C_2DAnimator;
+
+struct ItemData;
 
 enum class PlayerState
 {
@@ -108,6 +112,10 @@ public:
 	C_2DAnimator* dashImage;
 	C_2DAnimator* creditsImage;
 
+	// Items
+	void AddItem(ItemData* item);
+	void ApplyItems();
+
 private:
 
 	// Logic
@@ -152,6 +160,10 @@ private:
 
 	// Debug
 	bool godMode = false;
+
+	// Items
+	std::vector<std::pair<bool, ItemData*>> items;
+	std::vector<std::pair<bool, ItemData*>> savedItems;
 };
 
 SCRIPTS_FUNCTION Player* CreatePlayer();

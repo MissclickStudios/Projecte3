@@ -1,6 +1,6 @@
 #include "Items.h"
 
-Item* Item::CreateItem(const ItemData* const itemData, bool toBuy)
+Item* Item::CreateItem(ItemData* itemData, bool toBuy)
 {
 	std::string name = itemData->name;
 	if (name == "Amplifier Barrel")

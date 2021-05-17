@@ -48,6 +48,8 @@ void GroundItem::Update()
 
 void GroundItem::CleanUp()
 {
+	if (item != nullptr)
+		delete item;
 }
 
 void GroundItem::OnPause()
@@ -74,12 +76,16 @@ void GroundItem::PickUp(Player* player)
 {
 	player->currency -= item->price;
 	item->PickUp(player);
+	player->AddItem(item->data);
 	Deactivate();
 }
 
 bool GroundItem::AddItem(const std::vector<ItemData*> items, int num, bool toBuy)
 {
-	const ItemData* const itemData = Item::FindItem(items, num);
+	if (item != nullptr)
+		delete item;
+
+	ItemData* const itemData = Item::FindItem(items, num);
 	if (itemData == nullptr)
 		return false;
 
@@ -100,7 +106,10 @@ bool GroundItem::AddItem(const std::vector<ItemData*> items, int num, bool toBuy
 
 bool GroundItem::AddItemByName(const std::vector<ItemData*> items, std::string name, ItemRarity rarity, bool toBuy)
 {
-	const ItemData* const itemData = Item::FindItem(items, name, rarity);
+	if (item != nullptr)
+		delete item;
+
+	ItemData* const itemData = Item::FindItem(items, name, rarity);
 	if (itemData == nullptr)
 		return false;
 

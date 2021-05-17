@@ -115,13 +115,13 @@ void GameManager::Awake()
 				std::string description = itemNode.GetString("Description");
 				int price = itemNode.GetInteger("Price");
 				ItemRarity rarity = (ItemRarity)itemNode.GetInteger("Rarity");
-				int min = itemNode.GetInteger("Min");
-				int max = itemNode.GetInteger("Max");
+				int minimum = itemNode.GetInteger("Min");
+				int maximum = itemNode.GetInteger("Max");
 				float power = itemNode.GetNumber("Power");
 				float duration = itemNode.GetInteger("Duration");
 				float chance = itemNode.GetInteger("Chance");
 				std::string texturePath = itemNode.GetString("Texture Path");
-				chestItemPool.emplace_back(new ItemData(name, description, price, rarity, power, duration, chance, min, max, texturePath));
+				chestItemPool.emplace_back(new ItemData(name, description, price, rarity, power, duration, chance, minimum, maximum, texturePath));
 			}
 		}
 	}

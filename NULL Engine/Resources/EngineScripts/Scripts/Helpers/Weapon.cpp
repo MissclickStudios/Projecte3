@@ -193,7 +193,7 @@ void Weapon::ProjectileCollisionReport(int index)
 	projectiles[index]->object->transform->SetLocalPosition(float3::zero);
 }
 
-void Weapon::RefreshPerks()
+void Weapon::RefreshPerks(bool reset)
 {
 	// Reset modifiers and on hit effects to avoid overwritting
 	damageModifier = DEFAULT_MODIFIER;
@@ -204,7 +204,11 @@ void Weapon::RefreshPerks()
 	PPSModifier = 0.0f;
 	onHitEffects.clear();
 
-	PerkType t;
+	if (reset)
+	{
+		perks.clear();
+		return;
+	}
 	// Apply each perk
 	for (uint i = 0; i < perks.size(); ++i)
 		switch (perks[i].Type())

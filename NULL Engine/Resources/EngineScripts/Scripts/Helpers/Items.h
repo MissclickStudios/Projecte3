@@ -12,9 +12,9 @@
 // Data that acuratelly stores all information of an item stored in an item pool
 struct ItemData
 {
-	ItemData() : name(""), description(""), price(0), rarity(ItemRarity::COMMON), power(0.0f), duration(0.0f), chance(0.0f), min(0), max(0), texturePath("") {}
-	ItemData(std::string name, std::string description, int price, ItemRarity rarity, float power, float duration, float chance, int min, int max, std::string texturePath)
-		: name(name), description(description), price(price), rarity(rarity), power(power), duration(duration), chance(chance), min(min), max(max), texturePath(texturePath) {}
+	ItemData() : name(""), description(""), price(0), rarity(ItemRarity::COMMON), power(0.0f), duration(0.0f), chance(0.0f), minimum(0), maximum(0), texturePath("") {}
+	ItemData(std::string name, std::string description, int price, ItemRarity rarity, float power, float duration, float chance, int minimum, int maximum, std::string texturePath)
+		: name(name), description(description), price(price), rarity(rarity), power(power), duration(duration), chance(chance), minimum(minimum), maximum(maximum), texturePath(texturePath) {}
 
 	std::string name;
 	std::string description;
@@ -25,8 +25,8 @@ struct ItemData
 	float duration;
 	float chance;
 
-	int min;
-	int max;
+	int minimum;
+	int maximum;
 
 	std::string texturePath;
 };
@@ -35,7 +35,7 @@ class Item
 {
 public:
 
-	Item(const ItemData* const itemData, bool toBuy)
+	Item(ItemData* itemData, bool toBuy) : data(itemData)
 	{
 		name = itemData->name;
 		description = itemData->description;
@@ -61,20 +61,22 @@ public:
 
 	std::string texturePath;
 
+	ItemData* data = nullptr;
+
 	// Create a new item, jordi not gonn like this... too bad
 	// THIS ALLOCATES MEMORY THAT NEEDS TO BE FREED, DONT FORGET
-	static Item* CreateItem(const ItemData* const itemData, bool toBuy = true);
+	static Item* CreateItem(ItemData* itemData, bool toBuy = true);
 
 	// Find an Item in the json file given its id
-	static const ItemData* const FindItem(const std::vector<ItemData*> items, const int num)
+	static ItemData* FindItem(const std::vector<ItemData*> items, const int num)
 	{
 		for (uint i = 0; i < items.size(); ++i)
-			if (num >= items[i]->min && num <= items[i]->max)
+			if (num >= items[i]->minimum && num <= items[i]->maximum)
 				return items[i];
 		return nullptr;
 	}
 	// Find an Item in the json file given its name and rarity
-	static const ItemData* const FindItem(const std::vector<ItemData*> items, const std::string name, ItemRarity rarity)
+	static ItemData* FindItem(const std::vector<ItemData*> items, const std::string name, ItemRarity rarity)
 	{
 		for (uint i = 0; i < items.size(); ++i)
 			if (items[i]->name == name && items[i]->rarity == rarity)
@@ -87,7 +89,7 @@ class AmplifierBarrel : public Item
 {
 public:
 
-	AmplifierBarrel(const ItemData* const itemData, bool toBuy) : Item(itemData, toBuy)
+	AmplifierBarrel(ItemData* itemData, bool toBuy) : Item(itemData, toBuy)
 	{
 		damageIncrease = itemData->power;
 	}
@@ -112,7 +114,7 @@ class ElectrocutingPulse : public Item
 {
 public:
 
-	ElectrocutingPulse(const ItemData* const itemData, bool toBuy) : Item(itemData, toBuy)
+	ElectrocutingPulse(ItemData* itemData, bool toBuy) : Item(itemData, toBuy)
 	{
 		stunDuration = itemData->duration;
 		stunChance = itemData->chance;
@@ -139,7 +141,7 @@ class ColdBullets : public Item
 {
 public:
 
-	ColdBullets(const ItemData* const itemData, bool toBuy) : Item(itemData, toBuy)
+	ColdBullets(ItemData* itemData, bool toBuy) : Item(itemData, toBuy)
 	{
 		speedSlow = itemData->power;
 		slowDuration = itemData->duration;
@@ -166,7 +168,7 @@ class LongBarrel : public Item
 {
 public:
 
-	LongBarrel(const ItemData* const itemData, bool toBuy) : Item(itemData, toBuy)
+	LongBarrel(ItemData* itemData, bool toBuy) : Item(itemData, toBuy)
 	{
 		bulletLifeTimeIncrease = itemData->power;
 	}
@@ -191,7 +193,7 @@ class RapidFire : public Item
 {
 public:
 
-	RapidFire(const ItemData* const itemData, bool toBuy) : Item(itemData, toBuy)
+	RapidFire(ItemData* itemData, bool toBuy) : Item(itemData, toBuy)
 	{
 		fireRateIncrease = itemData->power;
 	}
@@ -216,7 +218,7 @@ class ExtendedMagazine : public Item
 {
 public:
 
-	ExtendedMagazine(const ItemData* const itemData, bool toBuy) : Item(itemData, toBuy)
+	ExtendedMagazine(ItemData* itemData, bool toBuy) : Item(itemData, toBuy)
 	{
 		capacityIncrease = itemData->power;
 		reloadTimeIncrease = itemData->duration;
@@ -244,7 +246,7 @@ class FastMagazine : public Item
 {
 public:
 
-	FastMagazine(const ItemData* const itemData, bool toBuy) : Item(itemData, toBuy)
+	FastMagazine(ItemData* itemData, bool toBuy) : Item(itemData, toBuy)
 	{
 		reloadTimeDecrease = itemData->power;
 	}
@@ -269,7 +271,7 @@ class StimPack : public Item
 {
 public:
 
-	StimPack(const ItemData* const itemData, bool toBuy) : Item(itemData, toBuy)
+	StimPack(ItemData* itemData, bool toBuy) : Item(itemData, toBuy)
 	{
 		healAmount = itemData->power;
 	}
@@ -290,7 +292,7 @@ class DurasteelReinforcement : public Item
 {
 public:
 
-	DurasteelReinforcement(const ItemData* const itemData, bool toBuy) : Item(itemData, toBuy)
+	DurasteelReinforcement(ItemData* itemData, bool toBuy) : Item(itemData, toBuy)
 	{
 		maxHeathIncrease = itemData->power;
 	}
@@ -311,7 +313,7 @@ class PropulsedBoots : public Item
 {
 public:
 
-	PropulsedBoots(const ItemData* const itemData, bool toBuy) : Item(itemData, toBuy)
+	PropulsedBoots(ItemData* itemData, bool toBuy) : Item(itemData, toBuy)
 	{
 		speedIncrease = itemData->power;
 	}
