@@ -36,12 +36,12 @@ struct Dialog
 {
 	Dialog(const char* name)
 	{
-
+		dialogName = name;
 	}
 
 	std::string dialogName = "Default Name";
 
-	std::vector<DialogLine*> phrases;
+	std::vector<DialogLine*> lines;
 };
 
 struct DialogSystem
@@ -66,6 +66,7 @@ public:
 	void CleanUp()override;
 
 	void StartTalking();
+	void StartNewLine();
 
 	DialogSystem* LoadDialogSystem(const char* path); //Loads dialog for the scene to be used later (path starts from Assets/Dialogs/)
 private:
@@ -73,7 +74,7 @@ private:
 public:
 
 	//StartDialog
-	void StartDialog(const char* dialogName);
+	bool StartDialog(const char* dialogName);
 	void StartDialog(DialogSystem* dialogSystem);
 
 public:
@@ -99,11 +100,11 @@ private:
 	DialogSystem* currentDialogSystem = nullptr;
 	Dialog* currentDialog = nullptr;
 	DialogLine* currentLine = nullptr;
+	std::vector<DialogLine*>::iterator currentLineIterator;
 
 	uint currentLineLetter = 0; //Holds the current letter position in string that has to be added in the line
 
-	float textSpeed = 1.f;
-	float nextLetterBaseTime = 0.1f;
+	float textSpeed = 0.1f;
 	float nextLetterTimer = 0.f;
 };
 
