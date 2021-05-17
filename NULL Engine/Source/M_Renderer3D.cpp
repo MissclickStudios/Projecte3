@@ -1917,6 +1917,8 @@ void MeshRenderer::ApplyShader()
 
 			cMaterial->GetShader()->SetUniform1f("deltaTime", MC_Time::Game::GetDT());
 
+			cMaterial->GetShader()->SetUniform1f("Time", MC_Time::Game::GetTimeSinceStart());
+
  			//Skybox
 			
 			cMaterial->GetShader()->SetUniform1i("skybox", 11);
