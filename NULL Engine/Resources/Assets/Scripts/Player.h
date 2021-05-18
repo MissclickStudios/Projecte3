@@ -112,6 +112,10 @@ public:
 	PlayerState moveState = PlayerState::IDLE;
 	AimState aimState = AimState::IDLE;
 
+	// AIM HUD
+	GameObject* idleAimPlane	= nullptr;
+	GameObject* aimingAimPlane	= nullptr;
+
 	// Debug
 	void SetGodMode(bool enable);
 
