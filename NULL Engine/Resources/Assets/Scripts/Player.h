@@ -114,7 +114,7 @@ public:
 
 	// Items
 	void AddItem(ItemData* item);
-	void ApplyItems();
+	const std::vector<std::pair<bool, ItemData*>>* const GetItems() const { return &items; }
 
 private:
 
@@ -162,6 +162,8 @@ private:
 	bool godMode = false;
 
 	// Items
+	void ApplyItems();
+
 	std::vector<std::pair<bool, ItemData*>> items;
 	std::vector<std::pair<bool, ItemData*>> savedItems;
 };

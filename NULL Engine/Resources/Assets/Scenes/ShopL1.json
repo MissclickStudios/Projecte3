@@ -1,15 +1,10 @@
 {
-    "ModTime": 1621289512,
+    "ModTime": 1621351364,
     "Models In Scene": [
         {
             "GameObjectUID": 632085905,
             "ModelResourceUID": 1877781044,
             "ModelAssetsPath": "Assets\/Models\/Characters\/Jawa_model.fbx"
-        },
-        {
-            "GameObjectUID": 1756462466,
-            "ModelResourceUID": 1068552071,
-            "ModelAssetsPath": "Assets\/Models\/Primitives\/plane.fbx"
         }
     ],
     "Game Objects": [
@@ -1066,12 +1061,12 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        60,
-                        40,
-                        60
+                        -33.494842529296875,
+                        125.15885162353516,
+                        118.83938598632813
                     ],
                     "LocalRotation": [
-                        -0.20184808969497681,
+                        -0.201848104596138,
                         0.37343847751617432,
                         0.083608217537403107,
                         0.90156018733978271
@@ -1079,7 +1074,7 @@
                     "LocalScale": [
                         1,
                         1,
-                        1
+                        0.99999994039535522
                     ]
                 },
                 {
@@ -1223,7 +1218,7 @@
         },
         {
             "UID": 296213747,
-            "ParentUID": 2140136640,
+            "ParentUID": 433414000,
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "MainScene",
@@ -1673,6 +1668,77 @@
             ]
         },
         {
+            "UID": 320968493,
+            "ParentUID": 778438339,
+            "PrefabID": 361067843,
+            "IsPrefab": true,
+            "Name": "PlaneMesh",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        -0.70710670948028564,
+                        0,
+                        0,
+                        0.7071068286895752
+                    ],
+                    "LocalScale": [
+                        5,
+                        5,
+                        0.0010000000474974513
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 1016193486,
+                    "Name": "Plane001.nemesh",
+                    "Path": "Library\/Meshes\/1016193486.nemesh",
+                    "File": "1016193486.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false,
+                    "Outline": false,
+                    "OutlineThickness": 1,
+                    "OutlineColor": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ]
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 1705422038,
+                        "Color": [
+                            0.80000001192092896,
+                            0.80000001192092896,
+                            0.80000001192092896,
+                            1
+                        ],
+                        "Name": "Plane001.nemat",
+                        "Path": "Library\/Materials\/1705422038.nemat",
+                        "File": "1705422038.nemat"
+                    },
+                    "Shader": {
+                        "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
+                        "AssetsName": "DefaultShader.shader",
+                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
+                        "LibraryFile": "800223282.neshader"
+                    }
+                }
+            ]
+        },
+        {
             "UID": 324689824,
             "ParentUID": 296213747,
             "PrefabID": 361067843,
@@ -1981,77 +2047,6 @@
             ]
         },
         {
-            "UID": 364550618,
-            "ParentUID": 1756462466,
-            "PrefabID": 361067843,
-            "IsPrefab": true,
-            "Name": "PlaneMesh",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        0,
-                        0
-                    ],
-                    "LocalRotation": [
-                        -0.70710670948028564,
-                        0,
-                        0,
-                        0.7071068286895752
-                    ],
-                    "LocalScale": [
-                        5,
-                        5,
-                        0.0010000000474974513
-                    ]
-                },
-                {
-                    "Type": 2,
-                    "UID": 1016193486,
-                    "Name": "Plane001.nemesh",
-                    "Path": "Library\/Meshes\/1016193486.nemesh",
-                    "File": "1016193486.nemesh",
-                    "ShowWireframe": false,
-                    "ShowBoundingBox": false,
-                    "Outline": false,
-                    "OutlineThickness": 1,
-                    "OutlineColor": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ]
-                },
-                {
-                    "Type": 3,
-                    "Material": {
-                        "UID": 1705422038,
-                        "Color": [
-                            0.80000001192092896,
-                            0.80000001192092896,
-                            0.80000001192092896,
-                            1
-                        ],
-                        "Name": "Plane001.nemat",
-                        "Path": "Library\/Materials\/1705422038.nemat",
-                        "File": "1705422038.nemat"
-                    },
-                    "Shader": {
-                        "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
-                        "AssetsName": "DefaultShader.shader",
-                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
-                        "LibraryFile": "800223282.neshader"
-                    }
-                }
-            ]
-        },
-        {
             "UID": 372706878,
             "ParentUID": 296213747,
             "PrefabID": 129017146,
@@ -2061,7 +2056,7 @@
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": true,
+            "ShowBoundingBoxes": false,
             "Components": [
                 {
                     "Type": 1,
@@ -2776,7 +2771,7 @@
                 },
                 {
                     "Type": 22,
-                    "Text": "FPS: 60",
+                    "Text": "FPS: 206",
                     "Color": [
                         1,
                         1,
@@ -3264,6 +3259,11 @@
                             "Type": 7,
                             "Name": "itemNames",
                             "vectorstring": []
+                        },
+                        {
+                            "Type": 0,
+                            "Name": "rollAttempts",
+                            "int": 100
                         }
                     ]
                 }
@@ -3699,7 +3699,7 @@
                 },
                 {
                     "Type": 22,
-                    "Text": "160",
+                    "Text": "1000",
                     "Color": [
                         1,
                         1,
@@ -3760,6 +3760,69 @@
                     "Center X": 0,
                     "Center Y": 0,
                     "Center Z": 0
+                }
+            ]
+        },
+        {
+            "UID": 778438339,
+            "ParentUID": 296213747,
+            "PrefabID": 361067843,
+            "IsPrefab": true,
+            "Name": "ShopItem",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": true,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -10.789156913757324,
+                        7.9669771194458008,
+                        13.71258544921875
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 8,
+                    "Is Static": true,
+                    "Filter": " gate"
+                },
+                {
+                    "Type": 9,
+                    "Is Trigger": true,
+                    "Show Collider": true,
+                    "Size X": 5,
+                    "Size Y": 5,
+                    "Size Z": 5,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
+                },
+                {
+                    "Type": 24,
+                    "ResourceUID": 1610975512,
+                    "AssetsPath": "Assets\/Scripts\/\/GroundItem.h",
+                    "DataName": "GroundItem",
+                    "HasInspector": true,
+                    "InspectorVariables": [
+                        {
+                            "Type": 5,
+                            "Name": "itemMenuName",
+                            "string": "Item Menu"
+                        }
+                    ]
                 }
             ]
         },
@@ -3970,7 +4033,7 @@
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": true,
+            "ShowBoundingBoxes": false,
             "Components": [
                 {
                     "Type": 1,
@@ -4257,7 +4320,7 @@
                 },
                 {
                     "Type": 22,
-                    "Text": "Item Description",
+                    "Text": "Sack of coins, it has galactic currency\n known by everyone used mainly to trade in markets Value of 5.",
                     "Color": [
                         1,
                         1,
@@ -4762,7 +4825,7 @@
                 },
                 {
                     "Type": 22,
-                    "Text": "10 \/ 10",
+                    "Text": "18 \/ 10",
                     "Color": [
                         1,
                         1,
@@ -5600,7 +5663,7 @@
                 },
                 {
                     "Type": 22,
-                    "Text": "Item Name",
+                    "Text": "Galactic Credit",
                     "Color": [
                         1,
                         1,
@@ -6067,7 +6130,7 @@
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": true,
+            "ShowBoundingBoxes": false,
             "Components": [
                 {
                     "Type": 1,
@@ -6263,7 +6326,7 @@
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": true,
+            "ShowBoundingBoxes": false,
             "Components": [
                 {
                     "Type": 1,
@@ -6283,6 +6346,22 @@
                         1,
                         1
                     ]
+                },
+                {
+                    "Type": 8,
+                    "Is Static": true,
+                    "Filter": "default"
+                },
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 1000,
+                    "Size Y": 100,
+                    "Size Z": 1000,
+                    "Center X": 0,
+                    "Center Y": -75,
+                    "Center Z": 0
                 },
                 {
                     "Type": 24,
@@ -6325,13 +6404,17 @@
                             "Type": 7,
                             "Name": "level1",
                             "vectorstring": [
-                                "Level1_Room4.json",
-                                "Level1_Room9.json",
-                                "Level1_Room1.json",
-                                "Level1_Room3.json",
-                                "Level1_Room7.json",
-                                "Level1_Room6.json",
-                                "Level1_Room5.json"
+                                "Assets\/Scenes\/HUB.json",
+                                "Assets\/Scenes\/InitialL1.json",
+                                "Assets\/Scenes\/Level1_Room1.json",
+                                "Assets\/Scenes\/Level1_Room6.json",
+                                "Assets\/Scenes\/Level1_Room3.json",
+                                "Assets\/Scenes\/ShopL1.json",
+                                "Assets\/Scenes\/Level1_Room9.json",
+                                "Assets\/Scenes\/Level1_Room5.json",
+                                "Assets\/Scenes\/Level1_Room4.json",
+                                "Assets\/Scenes\/Level1_Room7.json",
+                                "Assets\/Scenes\/BossL1.json"
                             ]
                         },
                         {
@@ -6348,13 +6431,16 @@
                             "Type": 7,
                             "Name": "level1Ruins",
                             "vectorstring": [
-                                "Level1_Ruins1.json",
-                                "Level1_Ruins7.json",
-                                "Level1_Ruins3.json",
-                                "Level1_Ruins2.json",
-                                "Level1_Ruins5.json",
-                                "Level1_Ruins6.json",
-                                "Level1_Ruins4.json"
+                                "Assets\/Scenes\/Level1_Ruins1.json",
+                                "Assets\/Scenes\/Level1_Ruins2.json",
+                                "Assets\/Scenes\/Level1_Ruins4.json",
+                                "Assets\/Scenes\/Level1_Ruins5.json",
+                                "Assets\/Scenes\/Shop_Ruins.json",
+                                "Assets\/Scenes\/Level1_Ruins3.json",
+                                "Assets\/Scenes\/Level1_Ruins7.json",
+                                "Assets\/Scenes\/Level1_Ruins6.json",
+                                "Assets\/Scenes\/Boss_Ruins.json",
+                                "Assets\/Scenes\/WinScene.json"
                             ]
                         },
                         {
@@ -6366,24 +6452,13 @@
                             "Type": 4,
                             "Name": "groguPrefab",
                             "prefab": 13642032
+                        },
+                        {
+                            "Type": 4,
+                            "Name": "chestPrefab",
+                            "prefab": 673064202
                         }
                     ]
-                },
-                {
-                    "Type": 8,
-                    "Is Static": true,
-                    "Filter": "default"
-                },
-                {
-                    "Type": 9,
-                    "Is Trigger": false,
-                    "Show Collider": true,
-                    "Size X": 1000,
-                    "Size Y": 100,
-                    "Size Z": 1000,
-                    "Center X": 0,
-                    "Center Y": -75,
-                    "Center Z": 0
                 }
             ]
         },
@@ -6420,7 +6495,7 @@
                 },
                 {
                     "Type": 22,
-                    "Text": "Item Price",
+                    "Text": "Press Enter\/A to pick up",
                     "Color": [
                         1,
                         0.55000001192092896,
@@ -6737,69 +6812,6 @@
             ]
         },
         {
-            "UID": 1756462466,
-            "ParentUID": 296213747,
-            "PrefabID": 361067843,
-            "IsPrefab": true,
-            "Name": "ShopItem",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        -9.2276620864868164,
-                        9.1333141326904297,
-                        15.09385871887207
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {
-                    "Type": 8,
-                    "Is Static": true,
-                    "Filter": " gate"
-                },
-                {
-                    "Type": 9,
-                    "Is Trigger": true,
-                    "Show Collider": true,
-                    "Size X": 5,
-                    "Size Y": 5,
-                    "Size Z": 5,
-                    "Center X": 0,
-                    "Center Y": 0,
-                    "Center Z": 0
-                },
-                {
-                    "Type": 24,
-                    "ResourceUID": 1610975512,
-                    "AssetsPath": "Assets\/Scripts\/\/GroundItem.h",
-                    "DataName": "GroundItem",
-                    "HasInspector": true,
-                    "InspectorVariables": [
-                        {
-                            "Type": 5,
-                            "Name": "itemMenuName",
-                            "string": "Item Menu"
-                        }
-                    ]
-                }
-            ]
-        },
-        {
             "UID": 1759209421,
             "ParentUID": 296213747,
             "PrefabID": 0,
@@ -6998,7 +7010,7 @@
                 },
                 {
                     "Type": 22,
-                    "Text": "0",
+                    "Text": "4950",
                     "Color": [
                         1,
                         1,
@@ -7582,11 +7594,11 @@
                 },
                 {
                     "Type": 22,
-                    "Text": "Item Rarity",
+                    "Text": "COMMON",
                     "Color": [
+                        0.40000000596046448,
                         1,
-                        0,
-                        0,
+                        0.40000000596046448,
                         1
                     ],
                     "X": -0.97000002861022949,

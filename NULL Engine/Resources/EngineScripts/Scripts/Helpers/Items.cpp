@@ -23,6 +23,10 @@ Item* Item::CreateItem(ItemData* itemData, bool toBuy)
 		return (Item*)new DurasteelReinforcement(itemData, toBuy);
 	else if (name == "Propulsed Boots")
 		return (Item*)new PropulsedBoots(itemData, toBuy);
+	else if (name == "Beskar Ingots")
+		return (Item*)new BeskarIngots(itemData, toBuy);
+	else if (name == "Galactic Credit")
+		return (Item*)new GalacticCredit(itemData, toBuy);
 
 	return nullptr;
 }

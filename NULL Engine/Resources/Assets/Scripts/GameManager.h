@@ -22,7 +22,7 @@ public:
     ~GameManager();
     void Awake() override;
     void Start()override;
-    void Update()override;
+    void Update()override; 
 
     void OnCollisionEnter(GameObject* object) override;
 
@@ -65,8 +65,7 @@ public:
 
     Prefab groguPrefab;
     Grogu* groguScript = nullptr;
-
-    std::vector<ItemData*> chestItemPool;
+    Prefab chestPrefab;
 
 private:
     GameObject* playerGameObject = nullptr;
@@ -77,13 +76,19 @@ private:
     int	currentLevel = 0;
     int	roomNum = 0;
 
-    std::vector<Entity*> enemies;
+    std::vector<std::pair<bool, Entity*>> enemies;
 
     bool move = false; // shhhhhh, don't tell jordi
     float3 spawnPoint = float3::zero;
     std::vector<float3> backtrack;
     float backtrackDuration = 1.0f;
     Timer backtrackTimer;
+
+    // Items
+    std::vector<ItemData*> chestItemPool;
+
+    // Chest
+    Entity* lastEnemyDead = nullptr;
 };
 
 SCRIPTS_FUNCTION GameManager* CreateGameManager();

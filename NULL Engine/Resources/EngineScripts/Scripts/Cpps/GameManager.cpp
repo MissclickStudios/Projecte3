@@ -143,7 +143,7 @@ void GameManager::Start()
 		Entity* entity = (Entity*)GetObjectScript((*go), ObjectType::ENTITY);
 		if (entity != nullptr && entity->type != EntityType::PLAYER && entity->type != EntityType::GROGU)
 		{
-			enemies.push_back(entity);
+			enemies.push_back(std::make_pair(false, entity));
 		}
 	}
 
@@ -733,13 +733,42 @@ void GameManager::GateUpdate()
 				return;
 			}
 
+			int alive = 0;
 			for (auto enemy = enemies.begin(); enemy != enemies.end(); ++enemy)
 			{
-				if ((*enemy)->health > 0)
-					return;
+				if ((*enemy).second->health > 0)
+					++alive;
+				else if (!(*enemy).first)
+				{
+					(*enemy).first = true;
+					lastEnemyDead = (*enemy).second;
+				}
 			}
+			if (alive > 0)
+				return;
 
 			gate->Unlock();
+			if (chestPrefab.uid != NULL)
+			{
+				GameObject* chest = App->resourceManager->LoadPrefab(chestPrefab.uid, App->scene->GetSceneRoot());
+				if (chest != nullptr && lastEnemyDead != nullptr)
+				{
+					float3 position = lastEnemyDead->transform->GetWorldPosition();
+					chest->transform->SetWorldPosition(position);
+
+					float2 playerPosition, chestPosition;
+					playerPosition.x = playerGameObject->transform->GetWorldPosition().x;
+					playerPosition.y = playerGameObject->transform->GetWorldPosition().z;
+					chestPosition.x = chest->transform->GetWorldPosition().x;
+					chestPosition.y = chest->transform->GetWorldPosition().z;
+
+					float2 direction = playerPosition - chestPosition;
+					if (!direction.IsZero())
+						direction.Normalize();
+					float rad = direction.AimedAngle();
+					chest->transform->SetLocalRotation(float3(0, -rad, 0));
+				}
+			}
 		}
 }
 
@@ -757,5 +786,7 @@ GameManager* CreateGameManager() {
 	INSPECTOR_VECTOR_STRING(script->level1Ruins);
 	INSPECTOR_PREFAB(script->playerPrefab);
 	INSPECTOR_PREFAB(script->groguPrefab);
+	INSPECTOR_PREFAB(script->chestPrefab);
+
 	return script;
 }

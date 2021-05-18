@@ -90,27 +90,32 @@ void ItemMenuManager::SetItem(GroundItem* item)
 	descriptionText->SetText(this->item->item->description.c_str());
 
 	if (this->item->item->price > 0)
-		priceText->SetText(std::to_string(this->item->item->price).c_str());
+	{
+		std::string text = "Price: ";
+		text += std::to_string(this->item->item->price);
+		text += "      Press Enter/A to pick up";
+		priceText->SetText(text.c_str());
+	}
 	else
-		priceText->SetText("Pick Up");
+		priceText->SetText("Press Enter/A to pick up");
 
 	switch (this->item->item->rarity)
 	{
 	case ItemRarity::COMMON:
 		rarityText->SetText("COMMON");
-		rarityText->SetColor(Color(0.4, 1, 0.4));
+		rarityText->SetColor(COMMON_COLOR);
 		break;
 	case ItemRarity::RARE:
 		rarityText->SetText("RARE");
-		rarityText->SetColor(Color(0.4, 1, 1));
+		rarityText->SetColor(RARE_COLOR);
 		break;
 	case ItemRarity::EPIC:
 		rarityText->SetText("EPIC");
-		rarityText->SetColor(Color(1, 0.4, 1));
+		rarityText->SetColor(EPIC_COLOR);
 		break;
 	case ItemRarity::UNIQUE:
 		rarityText->SetText("UNIQUE");
-		rarityText->SetColor(Color(1, 1, 0.4));
+		rarityText->SetColor(UNIQUE_COLOR);
 		break;
 	}
 }

@@ -363,6 +363,7 @@ void Player::LoadState(ParsonNode& playerNode)
 		item->PickUp(this); // Apply the item effects and/or perks
 		delete item;
 
+		items.push_back(std::make_pair(usedWeapon, savedData));
 		savedItems.push_back(std::make_pair(usedWeapon, savedData)); // Save this itemData to be deleted later
 		// ye this is the best i can do, deal with it
 		// any brilliant solutions u might have to this problem weren't aparent at the time

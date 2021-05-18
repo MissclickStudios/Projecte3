@@ -204,6 +204,7 @@ void Weapon::RefreshPerks(bool reset)
 	reloadTimeModifier = DEFAULT_MODIFIER;
 	maxAmmoModifier = DEFAULT_MODIFIER;
 	PPSModifier = 0.0f;
+
 	onHitEffects.clear();
 
 	if (reset)
@@ -284,12 +285,12 @@ void Weapon::SpreadModify(Perk* perk)
 
 void Weapon::FreezeBullets(Perk* perk)
 {
-	onHitEffects.emplace_back(Effect(EffectType::FROZEN, perk->Duration(), false, nullptr));
+	onHitEffects.emplace_back(Effect(EffectType::FROZEN, perk->Duration(), perk->Amount()));
 }
 
 void Weapon::StunBullets(Perk* perk)
 {
-	onHitEffects.emplace_back(Effect(EffectType::STUN, perk->Duration(), false, new std::pair<bool, float>(true, perk->Amount())));
+	onHitEffects.emplace_back(Effect(EffectType::STUN, perk->Duration(), false, 0.0f, perk->Amount()));
 }
 
 void Weapon::SpreadProjectiles(float2 direction)

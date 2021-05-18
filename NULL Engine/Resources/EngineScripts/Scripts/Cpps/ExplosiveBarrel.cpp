@@ -110,7 +110,7 @@ void ExplosiveBarrel::OnTriggerRepeat(GameObject* object)
 
 	direction.Normalize();
 	direction *= currentPower;
-	
-	entity->AddEffect(EffectType::KNOCKBACK, 0.75f, false, new std::pair<bool, float3>(true, { direction.x, currentPower, direction.y }));
+
+	entity->AddEffect(EffectType::KNOCKBACK, 0.75f, false, 0.0f, 0.0f, float3(direction.x, 0.0f, direction.y));
 	entity->TakeDamage(damage);
 }

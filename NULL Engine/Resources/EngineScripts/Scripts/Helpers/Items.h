@@ -63,6 +63,8 @@ public:
 
 	ItemData* data = nullptr;
 
+	bool toSave = true;
+
 	// Create a new item, jordi not gonn like this... too bad
 	// THIS ALLOCATES MEMORY THAT NEEDS TO BE FREED, DONT FORGET
 	static Item* CreateItem(ItemData* itemData, bool toBuy = true);
@@ -273,6 +275,7 @@ public:
 
 	StimPack(ItemData* itemData, bool toBuy) : Item(itemData, toBuy)
 	{
+		toSave = false;
 		healAmount = itemData->power;
 	}
 	virtual ~StimPack() {}
@@ -328,4 +331,48 @@ public:
 	}
 
 	float speedIncrease;
+};
+
+class BeskarIngots : public Item
+{
+public:
+	BeskarIngots(ItemData* itemData, bool toBuy) : Item(itemData, toBuy)
+	{
+		toSave = false;
+		ingots = (int)itemData->power;
+	}
+	virtual ~BeskarIngots() {}
+
+
+	void PickUp(Player* player)
+	{
+		if (player == nullptr)
+			return;
+
+		player->hubCurrency += ingots;
+	}
+
+	int ingots;
+};
+
+class GalacticCredit : public Item
+{
+public:
+
+	GalacticCredit(ItemData* itemData, bool toBuy) : Item(itemData, toBuy)
+	{
+		toSave = false;
+		credits = (int)itemData->power;
+	}
+	virtual ~GalacticCredit() {}
+
+	void PickUp(Player* player)
+	{
+		if (player == nullptr)
+			return;
+
+		player->currency += credits;
+	}
+
+	int credits;
 };

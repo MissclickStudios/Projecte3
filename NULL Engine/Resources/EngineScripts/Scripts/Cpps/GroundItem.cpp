@@ -76,7 +76,8 @@ void GroundItem::PickUp(Player* player)
 {
 	player->currency -= item->price;
 	item->PickUp(player);
-	player->AddItem(item->data);
+	if (item->toSave)
+		player->AddItem(item->data);
 	Deactivate();
 }
 
