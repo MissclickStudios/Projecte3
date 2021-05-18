@@ -59,13 +59,42 @@ public:
 	float intermitentMesh = 0.0f;
 
 	// Animations
-	AnimationInfo runAnimation = { "Run" };
-	AnimationInfo dashAnimation = { "Dash" };
-	AnimationInfo shootAnimation = { "Shoot"};
-	AnimationInfo shootRifleAnimation = { "ShootRifle"};
-	AnimationInfo reloadAnimation = { "Reload" };
-	AnimationInfo changeAnimation = { "Change" };
-	AnimationInfo onGuardAnimation = { "OnGuard" };
+	void AnimatePlayer();
+	AnimationInfo* GetMoveStateAnimation();
+	AnimationInfo* GetAimStateAnimation();
+	AnimationInfo* GetAimAnimation();
+	AnimationInfo* GetShootAnimation();
+	AnimationInfo* GetReloadAnimation();
+
+	AnimatorTrack* torsoTrack	= nullptr;
+	AnimatorTrack* legsTrack	= nullptr;
+
+	AnimationInfo runAnimation				= { "Run" };
+	AnimationInfo dashAnimation				= { "Dash" };
+
+	AnimationInfo aimAnimation				= { "Aim" };
+	AnimationInfo aimBlasterAnimation		= { "AimBlaster" };
+	AnimationInfo aimSniperAnimation		= { "AimSniper" };
+	AnimationInfo aimMinigunAnimation		= { "AimMinigun" };
+	AnimationInfo aimShotgunAnimation		= { "AimShotgun" };
+
+	AnimationInfo shootAnimation			= { "Shoot" };
+	AnimationInfo shootBlasterAnimation		= { "ShootBlaster" };
+	AnimationInfo shootSniperAnimation		= { "ShootSniper"};
+	AnimationInfo shootMinigunAnimation		= { "ShootMinigun" };
+	AnimationInfo shootShotgunAnimation		= { "ShootShotgun" };
+
+	AnimationInfo reloadAnimation			= { "Reload" };
+	AnimationInfo reloadBlasterAnimation	= { "ReloadBlaster" };
+	AnimationInfo reloadSniperAnimation		= { "ReloadSniper" };
+	AnimationInfo reloadMinigunAnimation	= { "ReloadMinigun" };
+	AnimationInfo reloadShotgunAnimation	= { "ReloadShotgun" };
+
+	AnimationInfo changeAnimation			= { "Change" };
+	AnimationInfo onGuardAnimation			= { "OnGuard" };
+
+	AnimationInfo torsoAnimation			= { "Idle", "Torso" };
+	AnimationInfo legsAnimation				= { "Idle", "Legs" };
 
 	// Weapons
 	Weapon* const GetCurrentWeapon() const { return currentWeapon; }
@@ -95,11 +124,11 @@ public:
 	
 
 	// HUD Animations Names
-	std::string mandoImageName = "Mando";
-	std::string secondaryWeaponImageName = "SecodaryWeapon";
-	std::string primaryWeaponImageName = "PrimaryWeapon";
-	std::string dashImageName = "Dash";
-	std::string creditsImageName = "Credits";
+	std::string mandoImageName				= "Mando";
+	std::string secondaryWeaponImageName	= "SecodaryWeapon";
+	std::string primaryWeaponImageName		= "PrimaryWeapon";
+	std::string dashImageName				= "Dash";
+	std::string creditsImageName			= "Credits";
 
 	//HUD Animations
 	C_2DAnimator* mandoImage;
@@ -144,11 +173,12 @@ private:
 	bool usingEquipedGun = false;
 	Timer changeTimer;
 
-	GameObject* blasterGameObject = nullptr;
-	GameObject* equipedGunGameObject = nullptr;
-	Weapon* blasterWeapon = nullptr;
-	Weapon* equipedGunWeapon = nullptr;
-	Weapon* currentWeapon = nullptr;
+	GameObject* blasterGameObject		= nullptr;
+	GameObject* equipedGunGameObject	= nullptr;
+
+	Weapon* blasterWeapon				= nullptr;
+	Weapon* secondaryWeapon				= nullptr;
+	Weapon* currentWeapon				= nullptr;
 
 	// Debug
 	bool godMode = false;
