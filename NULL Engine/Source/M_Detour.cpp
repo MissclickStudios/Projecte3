@@ -256,7 +256,7 @@ void M_Detour::createRenderMeshes()
 			if (!tile->header) continue;
 			processTile(tile);
 		}
-		LoadNavMeshBuffer(renderMeshes);
+		LoadNavMeshBuffers(renderMeshes);
 	}
 }
 
@@ -349,7 +349,7 @@ void M_Detour::processTile(const dtMeshTile* tile)
 		renderMeshes.push_back(navpol);
 	}
 	//TO draw tile per tile?
-	LoadNavMeshBuffer(renderMeshes);
+	//LoadNavMeshBuffer(renderMeshes);
 }
 
 inline int bit(int a, int b) {
@@ -380,7 +380,8 @@ navigationPoly::~navigationPoly() {
 	}
 }
 
-void M_Detour::LoadNavMeshBuffer(std::vector<navigationPoly*> meshes)
+//TODO: maybe put everything together in 1 buffer will increase performance
+void M_Detour::LoadNavMeshBuffers(std::vector<navigationPoly*>& meshes)
 {
 	for (int i = 0; i != meshes.size(); ++i)
 	{
