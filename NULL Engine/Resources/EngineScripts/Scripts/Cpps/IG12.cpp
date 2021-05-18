@@ -40,7 +40,7 @@ IG12* CreateIG12()
 	// Death
 	INSPECTOR_DRAGABLE_FLOAT(script->deathDuration);
 
-	//IG-11
+	//IG-12
 	// Chase
 	INSPECTOR_DRAGABLE_FLOAT(script->chaseDistance);
 	INSPECTOR_DRAGABLE_FLOAT(script->chaseSpeedModifier);
@@ -57,24 +57,32 @@ IG12* CreateIG12()
 	INSPECTOR_DRAGABLE_FLOAT(script->spiralAttackHp);
 	INSPECTOR_DRAGABLE_FLOAT(script->spiralAttackCooldown);
 
-	// U Attack
+	// Line Attack
 	INSPECTOR_DRAGABLE_FLOAT(script->lineAttackSpeed);
 	INSPECTOR_DRAGABLE_FLOAT(script->lineAttackShots);
 	INSPECTOR_DRAGABLE_FLOAT(script->lineAttackCooldown);
 	INSPECTOR_DRAGABLE_FLOAT(script->lineAttackSpins);
 	INSPECTOR_DRAGABLE_FLOAT(script->lineAttackHp);
 
+	// Bombing Attack
+	INSPECTOR_DRAGABLE_FLOAT(script->bombingAttackSpeed);
+	INSPECTOR_DRAGABLE_FLOAT(script->bombingAttackShots);
+	INSPECTOR_DRAGABLE_FLOAT(script->bombingAttackCooldown);
+	INSPECTOR_DRAGABLE_FLOAT(script->bombingAttackHp);
+	INSPECTOR_DRAGABLE_FLOAT(script->bombingAttackBigAreaSide);
+	INSPECTOR_DRAGABLE_FLOAT(script->bombingAttackSmallAreaSide);
+	INSPECTOR_DRAGABLE_FLOAT(script->bombFallingTime);
+
 	//Weapons
 	INSPECTOR_PREFAB(script->blaster);
 	INSPECTOR_PREFAB(script->sniper);
+	
 	//Hand Name
-
 	INSPECTOR_STRING(script->rightHandName);
 	INSPECTOR_STRING(script->leftHandName);
 
 	return script;
 }
-
 
 IG12::IG12() : Entity()
 {
@@ -91,6 +99,7 @@ void IG12::SetUp()
 	lineAttackTimer.Stop();
 
 	player = App->scene->GetGameObjectByName(playerName.c_str());
+	userAttackDistance = attackDistance;
 
 	GameObject* handLeft = nullptr;
 	GameObject* handRight = nullptr;
@@ -129,6 +138,8 @@ void IG12::SetUp()
 		sniperWeapon = (Weapon*)GetObjectScript(sniperGameObject, ObjectType::WEAPON);
 	if (sniperWeapon)
 		sniperWeapon->SetOwnership(type, handRight, rightHandName);
+
+	//TODO: Add the red scope prefab
 }
 
 void IG12::Behavior()
@@ -169,7 +180,7 @@ void IG12::DistanceToPlayer()
 	position.x = gameObject->transform->GetWorldPosition().x;
 	position.y = gameObject->transform->GetWorldPosition().z;
 	aimDirection = playerPosition - position;
-
+	
 	distance = aimDirection.Length();
 	// TODO: Separate aim and movement once the pathfinding is implemented
 	moveDirection = aimDirection;
@@ -208,7 +219,13 @@ void IG12::ManageMovement()
 	if (lineAttackTimer.IsActive() && lineAttackTimer.ReadSec() >= lineAttackCooldown)
 	{
 		lineAttackTimer.Stop();
-		lineAttackShots = 15;
+		lineAttackShots += 15;
+	}
+
+	if (bombingAttackTimer.IsActive() && bombingAttackTimer.ReadSec() >= bombingAttackCooldown)
+	{
+		bombingAttackTimer.Stop();
+		bombingAttackShots += 75;
 	}
 
 	switch (moveState)
@@ -239,10 +256,16 @@ void IG12::ManageMovement()
 			moveState = IG12State::SPIRAL_ATTACK_IN;
 			break;
 		}
-		if (health < 8.0f && !lineAttackTimer.IsActive())
+		if (health <= 9.0f && !lineAttackTimer.IsActive())
 		{
 			lineAttackTimer.Start();
 			moveState = IG12State::LINE_ATTACK_IN;
+			break;
+		}
+		if (health <= 9.0f && !bombingAttackTimer.IsActive())
+		{
+			bombingAttackTimer.Start();
+			moveState = IG12State::BOMBING_ATTACK_IN;
 			break;
 		}
 
@@ -277,32 +300,94 @@ void IG12::ManageMovement()
 	case IG12State::LINE_ATTACK_IN:
 		specialAttackStartAim = aimDirection;
 		specialAttackRot = 0.0f;
-
+		attackDistance = 200.0f;
 		moveState = IG12State::LINE_ATTACK;
 
 	case IG12State::LINE_ATTACK:
 		if (!LineAttack())
 		{
 			moveState = IG12State::IDLE;
-
-			if (blasterWeapon)
+			attackDistance = userAttackDistance;
+			if (health > 5.0f)
 			{
-				blasterWeapon->fireRate = 0.3f;
-				blasterWeapon->ammo = 0;
-				blasterWeapon->projectilesPerShot = 1;
+				if (blasterWeapon)
+				{
+					blasterWeapon->fireRate = 0.3f;
+					blasterWeapon->ammo = 0;
+					blasterWeapon->projectilesPerShot = 1;
+				}
+				if (sniperWeapon)
+				{
+					sniperWeapon->fireRate = 0.3f;
+					sniperWeapon->ammo = 0;
+					sniperWeapon->projectilesPerShot = 1;
+				}
 			}
-			if (sniperWeapon)
+			else
 			{
-				sniperWeapon->fireRate = 0.3f;
-				sniperWeapon->ammo = 0;
-				sniperWeapon->projectilesPerShot = 1;
+				if (blasterWeapon)
+				{
+					blasterWeapon->fireRate = 0.3f;
+					blasterWeapon->ammo = 0;
+					blasterWeapon->projectilesPerShot = 2;
+				}
+				if (sniperWeapon)
+				{
+					sniperWeapon->fireRate = 0.3f;
+					sniperWeapon->ammo = 0;
+					sniperWeapon->projectilesPerShot = 2;
+				}
+			}
+		}
+		break;
+	case IG12State::BOMBING_ATTACK_IN:
+		specialAttackStartAim = aimDirection;
+		specialAttackRot = 0.0f;
+		attackDistance = 200.0f;
+		moveState = IG12State::LINE_ATTACK;
+
+	case IG12State::BOMBING_ATTACK:
+		if (!BombingAttack())
+		{
+			moveState = IG12State::IDLE;
+			attackDistance = userAttackDistance;
+
+			if (health > 5.0f)
+			{
+				if (blasterWeapon)
+				{
+					blasterWeapon->fireRate = 0.3f;
+					blasterWeapon->ammo = 0;
+					blasterWeapon->projectilesPerShot = 1;
+				}
+				if (sniperWeapon)
+				{
+					sniperWeapon->fireRate = 0.3f;
+					sniperWeapon->ammo = 0;
+					sniperWeapon->projectilesPerShot = 1;
+				}
+			}
+			else
+			{
+				if (blasterWeapon)
+				{
+					blasterWeapon->fireRate = 0.3f;
+					blasterWeapon->ammo = 0;
+					blasterWeapon->projectilesPerShot = 2;
+				}
+				if (sniperWeapon)
+				{
+					sniperWeapon->fireRate = 0.3f;
+					sniperWeapon->ammo = 0;
+					sniperWeapon->projectilesPerShot = 2;
+				}
 			}
 		}
 		break;
 	case IG12State::SPIRAL_ATTACK_IN:
 		specialAttackStartAim = aimDirection;
 		specialAttackRot = 0.0f;
-
+		
 		moveState = IG12State::SPIRAL_ATTACK;
 
 	case IG12State::SPIRAL_ATTACK:
@@ -310,17 +395,35 @@ void IG12::ManageMovement()
 		{
 			moveState = IG12State::IDLE;
 
-			if (blasterWeapon)
+			if (health > 5.0f)
 			{
-				blasterWeapon->fireRate = 0.3f;
-				blasterWeapon->ammo = 0;
-				blasterWeapon->projectilesPerShot = 1;
+				if (blasterWeapon)
+				{
+					blasterWeapon->fireRate = 0.3f;
+					blasterWeapon->ammo = 0;
+					blasterWeapon->projectilesPerShot = 1;
+				}
+				if (sniperWeapon)
+				{
+					sniperWeapon->fireRate = 0.3f;
+					sniperWeapon->ammo = 0;
+					sniperWeapon->projectilesPerShot = 1;
+				}
 			}
-			if (sniperWeapon)
+			else
 			{
-				sniperWeapon->fireRate = 0.3f;
-				sniperWeapon->ammo = 0;
-				sniperWeapon->projectilesPerShot = 1;
+				if (blasterWeapon)
+				{
+					blasterWeapon->fireRate = 0.3f;
+					blasterWeapon->ammo = 0;
+					blasterWeapon->projectilesPerShot = 2;
+				}
+				if (sniperWeapon)
+				{
+					sniperWeapon->fireRate = 0.3f;
+					sniperWeapon->ammo = 0;
+					sniperWeapon->projectilesPerShot = 2;
+				}
 			}
 		}
 		break;    
@@ -472,41 +575,65 @@ bool IG12::SpiralAttack()
 
 bool IG12::LineAttack()
 {
-	//if (health > 5)
-	//{
-	//	if (blasterWeapon)
-	//	{
-	//		blasterWeapon->fireRate = 0.001f;
-	//		blasterWeapon->projectilesPerShot = 3;
-	//		blasterWeapon->ammo = 30;
-	//		blasterWeapon->shotSpreadArea = 3;
-	//	}
-
-	//	if (sniperWeapon)
-	//		sniperWeapon->projectilesPerShot = 0;
-	//}
-	//else
+	if (blasterWeapon)
 	{
-		if (blasterWeapon)
-		{
-			blasterWeapon->fireRate = 0.001f;
-			blasterWeapon->projectilesPerShot = 3;
-			blasterWeapon->ammo = 30;
-			blasterWeapon->shotSpreadArea = 3;
-		}
-
-		if (sniperWeapon)
-		{
-			blasterWeapon->fireRate = 0.001f;
-			blasterWeapon->projectilesPerShot = 3;
-			blasterWeapon->ammo = 30;
-			blasterWeapon->shotSpreadArea = 3;
-		}
+		blasterWeapon->fireRate = 0.001f;
+		blasterWeapon->projectilesPerShot = 3;
+		blasterWeapon->ammo = 30;
+		blasterWeapon->shotSpreadArea = 3;
 	}
+
+	if (sniperWeapon)
+		sniperWeapon->projectilesPerShot = 0;
 	
 	if (lineAttackShots <= 0)
 		return false;
 
+	return true;
+}
+
+bool IG12::BombingAttack()
+{
+	if (blasterWeapon)
+	{
+		blasterWeapon->projectilesPerShot = 0;
+	}
+	if (sniperWeapon)
+	{
+		sniperWeapon->projectilesPerShot = 0;	
+	}
+
+	float2 playerPosition;
+	playerPosition.x = player->transform->GetWorldPosition().x;
+	playerPosition.y = player->transform->GetWorldPosition().z;
+	//method to calculate where arround the player will the next bomb fall
+	float2 bombPosition = CalculateNextBomb(playerPosition.x, playerPosition.y);
+
+	//method to drop the bomb in the previously calculated position and inflict damage if needed.
+	if (bombTimer.IsActive() && bombTimer.ReadSec() >= bombFallingTime)
+	{
+		bombTimer.Stop();
+		bombingAttackShots -= 1;
+
+		if(playerPosition.x >= bombPosition.x - bombingAttackSmallAreaSide && playerPosition.x < bombPosition.x + bombingAttackSmallAreaSide)
+			if (playerPosition.y >= bombPosition.y - bombingAttackSmallAreaSide && playerPosition.y < bombPosition.y + bombingAttackSmallAreaSide)
+			{
+				LOG("Player bomb hit");
+			}	
+	}
+	else
+		bombTimer.Start();
+
+	if (bombingAttackShots <= 0)
+		return false;
 
 	return true;
 }
+
+float2 IG12::CalculateNextBomb(float x, float y)
+{
+	float bombX = Lerp(x - (bombingAttackBigAreaSide * 0.5), x + (bombingAttackBigAreaSide * 0.5), randomGenerator.Float());
+	float bombY = Lerp(y - (bombingAttackBigAreaSide * 0.5), y + (bombingAttackBigAreaSide * 0.5), randomGenerator.Float());
+	return float2(bombX, bombX);
+}
+

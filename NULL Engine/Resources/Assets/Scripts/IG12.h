@@ -10,6 +10,8 @@
 #include "Blaster.h"
 
 #include "MathGeoLib/include/Math/float2.h"
+#include "MathGeoLib/include/Algorithm/Random/LCG.h"
+
 
 enum class IG12State
 {
@@ -21,6 +23,8 @@ enum class IG12State
 	SPIRAL_ATTACK,
 	LINE_ATTACK_IN,
 	LINE_ATTACK,
+	BOMBING_ATTACK_IN,
+	BOMBING_ATTACK,
 	DEAD_IN,
 	DEAD
 };
@@ -61,6 +65,7 @@ public:
 
 	// Attack
 	float attackDistance = 0.0f;
+	float userAttackDistance = 0.0f;
 
 	// Special Attack
 	float spiralAttackSpeed = 0.0f;
@@ -73,6 +78,14 @@ public:
 	float lineAttackHp = 0.0f;
 	float lineAttackCooldown = 0.0f;
 	float lineAttackShots = 0.0f;
+
+	float bombingAttackSpeed = 0.0f;
+	float bombingAttackHp = 0.0f;
+	float bombingAttackCooldown = 0.0f;
+	float bombingAttackShots = 0.0f;
+	float bombingAttackBigAreaSide = 0.0f;
+	float bombingAttackSmallAreaSide = 0.0f;
+	float bombFallingTime = 0.0f;
 
 	// Weapons
 	Prefab blaster;
@@ -108,9 +121,15 @@ private:
 	// Special Attack
 	bool SpiralAttack();
 	bool LineAttack();
+	bool BombingAttack();
+
+	float2 CalculateNextBomb(float x, float y);
+	void DropBomb(float x, float y);
 
 	Timer spiralAttackTimer;
 	Timer lineAttackTimer;
+	Timer bombingAttackTimer;
+	Timer bombTimer;
 
 	float2 specialAttackStartAim = float2::zero;
 	float specialAttackRot = 0.0f;
@@ -122,6 +141,7 @@ private:
 	GameObject* sniperGameObject = nullptr;
 	Weapon* sniperWeapon = nullptr;
 
+	LCG randomGenerator;
 };
 
 SCRIPTS_FUNCTION IG12* CreateIG12();
