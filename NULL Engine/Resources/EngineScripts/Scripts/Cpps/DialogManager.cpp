@@ -98,7 +98,6 @@ void DialogManager::Update()
 
 					if (++currentLineIterator != currentDialog->lines.end()) //If it's not the last one
 					{
-
 						currentLine = (*currentLineIterator);
 						StartNewLine();
 						state = DialogState::TALKING;
@@ -108,7 +107,6 @@ void DialogManager::Update()
 						App->uiSystem->RemoveActiveCanvas(dialogCanvas);
 						//Clear elements
 					}
-
 			}
 
 			break;
