@@ -13,6 +13,8 @@ public:
 	void Update() override;
 	void CleanUp()override;
 
+	void CameraShake(float duration, float shakeMagnitude);
+	float timeElapsed = 0.0f;
 	GameObject* player = nullptr;
 	std::string playerName = "Mandalorian";
 	float3 offset = float3::zero;
