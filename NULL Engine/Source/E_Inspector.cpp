@@ -1846,42 +1846,50 @@ void E_Inspector::DrawAnimator2DComponent(C_2DAnimator* cAnimator)
 		if (ImGui::Checkbox("Set animation on loop from start:", &animationOnLoopFromStart))
 			cAnimator->SetAnimationPlayFromStart(animationOnLoopFromStart);
 
-		ImGui::Text("Spritesheet 1 settings");
+		if (cAnimator->spritesheet != nullptr)
+		{
+			ImGui::Text("Spritesheet 1 settings");
 
-		int r = cAnimator->spritesheet->rows;
-		int c = cAnimator->spritesheet->columns;
-		int a = cAnimator->spritesheet->animationNumber;
-		ImGui::InputInt("Spritesheet rows", &r);
-		ImGui::InputInt("Spritesheet columns", &c);
-		ImGui::InputInt("Number of animations", &a);
-		cAnimator->spritesheet->rows = r;
-		cAnimator->spritesheet->columns = c;
-		cAnimator->spritesheet->animationNumber = a;
-/*
+			int r = cAnimator->spritesheet->rows;
+			int c = cAnimator->spritesheet->columns;
+			int a = cAnimator->spritesheet->animationNumber;
+			ImGui::InputInt("Spritesheet rows", &r);
+			ImGui::InputInt("Spritesheet columns", &c);
+			ImGui::InputInt("Number of animations", &a);
+			cAnimator->spritesheet->rows = r;
+			cAnimator->spritesheet->columns = c;
+			cAnimator->spritesheet->animationNumber = a;
+		}
+
+		if (cAnimator->spritesheet2 != nullptr)
+		{
 		ImGui::Text("Spritesheet 2 settings");
-		
-		int rr = cAnimator->spritesheet2->rows;
-		int cc = cAnimator->spritesheet2->columns;
-		int aa = cAnimator->spritesheet2->animationNumber;
-		ImGui::InputInt("Spritesheet rows", &rr);
-		ImGui::InputInt("Spritesheet columns", &cc);
-		ImGui::InputInt("Number of animations", &aa);
-		cAnimator->spritesheet2->rows = rr;
-		cAnimator->spritesheet2->columns = cc;
-		cAnimator->spritesheet2->animationNumber = aa;
 
-		ImGui::Text("Spritesheet 3 settings");
+			int rr = cAnimator->spritesheet2->rows;
+			int cc = cAnimator->spritesheet2->columns;
+			int aa = cAnimator->spritesheet2->animationNumber;
+			ImGui::InputInt("Spritesheet rows", &rr);
+			ImGui::InputInt("Spritesheet columns", &cc);
+			ImGui::InputInt("Number of animations", &aa);
+			cAnimator->spritesheet2->rows = rr;
+			cAnimator->spritesheet2->columns = cc;
+			cAnimator->spritesheet2->animationNumber = aa;
+		}
 
-		int rrr = cAnimator->spritesheet3->rows;
-		int ccc = cAnimator->spritesheet3->columns;
-		int aaa = cAnimator->spritesheet3->animationNumber;
-		ImGui::InputInt("Spritesheet rows", &rrr);
-		ImGui::InputInt("Spritesheet columns", &ccc);
-		ImGui::InputInt("Number of animations", &aaa);
-		cAnimator->spritesheet3->rows = rrr;
-		cAnimator->spritesheet3->columns = ccc;
-		cAnimator->spritesheet3->animationNumber = aaa;
-*/
+		if (cAnimator->spritesheet3 != nullptr)
+		{
+			ImGui::Text("Spritesheet 3 settings");
+
+			int rrr = cAnimator->spritesheet3->rows;
+			int ccc = cAnimator->spritesheet3->columns;
+			int aaa = cAnimator->spritesheet3->animationNumber;
+			ImGui::InputInt("Spritesheet rows", &rrr);
+			ImGui::InputInt("Spritesheet columns", &ccc);
+			ImGui::InputInt("Number of animations", &aaa);
+			cAnimator->spritesheet3->rows = rrr;
+			cAnimator->spritesheet3->columns = ccc;
+			cAnimator->spritesheet3->animationNumber = aaa;
+		}
 
 
 

@@ -27,11 +27,27 @@ C_2DAnimator::C_2DAnimator(GameObject* owner) : Component(owner, ComponentType::
 
 	name = "";
 
+	spritesheet = nullptr;
+	spritesheet2 = nullptr;
+	spritesheet3 = nullptr;
+
 	//ANIMATION 2D TESTING
 	spritesheet = new Spritesheet((R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/ChangeWeapon.png"));
 	spritesheet->rows = 4;
 	spritesheet->columns = 3;
 	spritesheet->animationNumber = 12;
+
+	spritesheet2 = new Spritesheet((R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/ChangeWeapon.png"));
+	spritesheet2->rows = 10;
+	spritesheet2->columns = 10;
+	spritesheet2->animationNumber = 100;
+
+	spritesheet3 = new Spritesheet((R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/ChangeWeapon.png"));
+	spritesheet3->rows = 10;
+	spritesheet3->columns = 10;
+	spritesheet3->animationNumber = 100;
+
+
 }
 
 C_2DAnimator::~C_2DAnimator()
@@ -92,11 +108,6 @@ bool C_2DAnimator::LoadState(ParsonNode& root)
 	GetAnimationSprites(name2.c_str(), 3);
 
 	return true;
-}
-
-uint C_2DAnimator::GetIdFromAnimation()
-{
-	return currentFrameIdTexture;
 }
 
 void C_2DAnimator::SetAnimationStepTime(int time)
@@ -186,16 +197,22 @@ void C_2DAnimator::GetAnimationSprites(const char* name, int animationDestinatio
 		animation.clear();
 		ChangeName(name,1);
 		App->resourceManager->GetAllTextures(animation, name);
+		if (!animation.empty() && spritesheet != nullptr)
+		spritesheet->spriteSheet = animation[0];
 		break;
 	case 2:
 		animation1.clear();
 		ChangeName(name,2);
 		App->resourceManager->GetAllTextures(animation1, name);
+		if (!animation1.empty() && spritesheet2 != nullptr)
+		spritesheet2->spriteSheet = animation1[0];
 		break;
 	case 3:
 		animation2.clear();
 		ChangeName(name, 3);
 		App->resourceManager->GetAllTextures(animation2, name);
+		if (!animation2.empty() && spritesheet3 != nullptr)
+		spritesheet3->spriteSheet = animation2[0];
 		break;
 	case 0:
 		break;
@@ -211,47 +228,26 @@ void C_2DAnimator::PlayAnimation(bool loop, int animationNumber)
 	animationLoop = loop;
 }
 
-void C_2DAnimator::StopAnimation()
-{
-}
-
 int C_2DAnimator::GetAnimationNumber()
 {
 	return animationNumberPlaying;
 }
 
-uint C_2DAnimator::GetTextureIdFromVector(int index, int animationNum)
-{
-	switch (animationNum) {
-	case 1:
-		return animation[index]->GetTextureID();
-		break;
-	case 2:
-		return animation1[index]->GetTextureID();
-		break;
-	case 3:
-		return animation2[index]->GetTextureID();
-		break;
-	case 0:
-		return animation[index]->GetTextureID();
-		break;
-	}
-
-}
-
 void C_2DAnimator::LoopAnimation(int animationNum)
 {
-	switch (animationNum) 
+	switch (animationNum)
 	{
 	case 1:
-		//Start a new animation
-		if (playAnimation)
+		if (spritesheet != nullptr)
 		{
-			animationPlaying = true;
-			animationCounter = 0;
-			animationTimer.Start();
-			playAnimation = false;
-		}
+			//Start a new animation
+			if (playAnimation)
+			{
+				animationPlaying = true;
+				animationCounter = 0;
+				animationTimer.Start();
+				playAnimation = false;
+			}
 
 		//Animation loop
 		if (animationPlaying)
@@ -264,7 +260,6 @@ void C_2DAnimator::LoopAnimation(int animationNum)
 
 		//Set the texture coordinates of the current frame
 		if (spritesheet->animationNumber > 0 && animationPlaying)
-			//currentFrameIdTexture = GetTextureIdFromVector(animationCounter,1);
 			spritesheet->SetCurrentFrameLocation(animationCounter + 1);
 
 		if (animationCounter == spritesheet->animationNumber - 1)
@@ -285,33 +280,35 @@ void C_2DAnimator::LoopAnimation(int animationNum)
 				animationTimer.Start();
 			}
 		}
+	}
 		break;
 
 	case 2:
-
-		//Start a new animation
-		if (playAnimation)
+		if (spritesheet2 != nullptr)
 		{
-			animationPlaying = true;
-			animationCounter = 0;
-			animationTimer.Start();
-			playAnimation = false;
-		}
+			//Start a new animation
+			if (playAnimation)
+			{
+				animationPlaying = true;
+				animationCounter = 0;
+				animationTimer.Start();
+				playAnimation = false;
+			}
 
 		//Animation loop
 		if (animationPlaying)
-			if (animationStepTime <= animationTimer.Read() && animationCounter < animation1.size() - 1)
+			if (animationStepTime <= animationTimer.Read() && animationCounter < spritesheet2->animationNumber - 1)
 			{
 				animationCounter++;
 				animationTimer.Stop();
 				animationTimer.Start();
 			}
 
-		//Set the texture id of the current animation frame
-		if (animation1.size() > 0)
-			currentFrameIdTexture = GetTextureIdFromVector(animationCounter,2);
+		//Set the texture coordinates of the current frame
+		if (spritesheet2->animationNumber > 0 && animationPlaying)
+			spritesheet2->SetCurrentFrameLocation(animationCounter + 1);
 
-		if (animationCounter == animation1.size() - 1)
+		if (animationCounter == spritesheet2->animationNumber - 1)
 		{
 			if (!animationLoop)
 			{
@@ -329,48 +326,51 @@ void C_2DAnimator::LoopAnimation(int animationNum)
 				animationTimer.Start();
 			}
 		}
+	}
 		break;
 
 	case 3:
-
-		//Start a new animation
-		if (playAnimation)
+		if (spritesheet3 != nullptr)
 		{
-			animationPlaying = true;
-			animationCounter = 0;
-			animationTimer.Start();
-			playAnimation = false;
-		}
-
-		//Animation loop
-		if (animationPlaying)
-			if (animationStepTime <= animationTimer.Read() && animationCounter < animation2.size() - 1)
-			{
-				animationCounter++;
-				animationTimer.Stop();
-				animationTimer.Start();
-			}
-
-		//Set the texture id of the current animation frame
-		if (animation2.size() > 0)
-			currentFrameIdTexture = GetTextureIdFromVector(animationCounter, 3);
-
-		if (animationCounter == animation2.size() - 1)
-		{
-			if (!animationLoop)
-			{
-				animationPlaying = false;
-				animationCounter = 0;
-				playAnimation = false;
-				animationTimer.Stop();
-			}
-			else
+			//Start a new animation
+			if (playAnimation)
 			{
 				animationPlaying = true;
 				animationCounter = 0;
-				playAnimation = false;
-				animationTimer.Stop();
 				animationTimer.Start();
+				playAnimation = false;
+			}
+
+			//Animation loop
+			if (animationPlaying)
+				if (animationStepTime <= animationTimer.Read() && animationCounter < spritesheet3->animationNumber - 1)
+				{
+					animationCounter++;
+					animationTimer.Stop();
+					animationTimer.Start();
+				}
+
+			//Set the texture coordinates of the current frame
+			if (spritesheet3->animationNumber > 0 && animationPlaying)
+				spritesheet3->SetCurrentFrameLocation(animationCounter + 1);
+
+			if (animationCounter == spritesheet3->animationNumber - 1)
+			{
+				if (!animationLoop)
+				{
+					animationPlaying = false;
+					animationCounter = 0;
+					playAnimation = false;
+					animationTimer.Stop();
+				}
+				else
+				{
+					animationPlaying = true;
+					animationCounter = 0;
+					playAnimation = false;
+					animationTimer.Stop();
+					animationTimer.Start();
+				}
 			}
 		}
 		break;

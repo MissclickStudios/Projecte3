@@ -29,19 +29,6 @@ void Spritesheet::SetSpritesheetSize(int s_rows, int s_columns, int s_pisxelHeig
 	spritesheetPixelWidth = s_pixelLenght;
 }
 
-Frame* Spritesheet::GetAtlasPosition(int pixelPosX, int pixelPosY, int pixelWidth, int pixelHeight)
-{
-	Frame* frame = new Frame();
-
-	frame->proportionBeginX = (float)pixelPosX / spritesheetPixelWidth;
-	frame->proportionFinalX = ((float)pixelPosX + pixelWidth) / spritesheetPixelWidth;
-
-	frame->proportionBeginY = (float)pixelPosY / spritesheetPixelHeight;
-	frame->proportionFinalY = ((float)pixelPosY + pixelHeight) / spritesheetPixelHeight;
-
-	return frame;
-}
-
 void Spritesheet::GetFrameProportions(int row, int column)
 {
 	currentFrame.proportionBeginX = ((float)column - 1) / columns;

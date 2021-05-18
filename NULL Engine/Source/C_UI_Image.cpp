@@ -239,10 +239,7 @@ void C_UI_Image::Draw3D()
 	if (cMaterial == nullptr) 
 		return;
 
-	else if (cAnimator && cAnimator->IsAnimationPlaying())
-		id = cAnimator->GetIdFromAnimation();
-	else
-		id = cMaterial->GetTextureID();
+	id = cMaterial->GetTextureID();
 
 	glPushMatrix();
 	glMultMatrixf((GLfloat*)&GetOwner()->GetComponent<C_Transform>()->GetWorldTransform().Transposed());
