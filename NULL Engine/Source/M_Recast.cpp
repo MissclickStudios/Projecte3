@@ -140,6 +140,7 @@ bool M_Recast::BuildNavMesh()
 		ret = BuildSoloNavMesh(m_geom);
 
 	delete m_geom;
+	m_geom = nullptr;
 
 	return ret;
 }
