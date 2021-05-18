@@ -131,7 +131,7 @@ void Player::SetUp()
 		if (legsTrack == nullptr)
 			LOG("COULD NOT RETRIEVE LEGS TRACK");
 	}
-	
+
 	if (rigidBody != nullptr)
 		rigidBody->TransformMovesRigidBody(false);
 
@@ -151,6 +151,19 @@ void Player::SetUp()
 			else if (name == "mando_death")		{ deathAudio = source; }
 		}
 	}
+
+	idleAimPlane	= App->scene->GetGameObjectByName("IdlePlane");
+	aimingAimPlane	= App->scene->GetGameObjectByName("AimingPlane");
+
+	if (idleAimPlane == nullptr)
+		LOG("COULD NOT RETRIEVE IDLE PLANE");
+	else
+		idleAimPlane->SetIsActive(true);
+
+	if (aimingAimPlane == nullptr)
+		LOG("COULD NOT RETRIEVE AIMING PLANE");
+	else
+		aimingAimPlane->SetIsActive(false);
 
 	GameObject* a = App->scene->GetGameObjectByName(mandoImageName.c_str());
 	if (a != nullptr)
@@ -418,7 +431,7 @@ void Player::AnimatePlayer()
 	AnimatorTrack* preview = animator->GetTrackAsPtr("Preview");
 
 	if (aimState == AimState::IDLE)
-	{
+	{	
 		if (torsoTrack != nullptr)
 		{
 			if (torsoTrack->GetTrackState() != TrackState::STOP)
@@ -686,16 +699,25 @@ void Player::ManageAim()
 	switch (aimState)
 	{
 	case AimState::IDLE:
+		if (idleAimPlane != nullptr)
+			idleAimPlane->SetIsActive(true);
+
+		if (aimingAimPlane != nullptr)
+			aimingAimPlane->SetIsActive(false);
 		break;
 	case AimState::ON_GUARD:
 		aimState = AimState::IDLE;
 		break;
 	case AimState::AIMING:
-		//LOG("AIMING THIS SHIT UP");
+		if (idleAimPlane != nullptr)
+			idleAimPlane->SetIsActive(false);
+
+		if (aimingAimPlane != nullptr)
+			aimingAimPlane->SetIsActive(true);
 		break;
 	case AimState::SHOOT_IN:
 		//LOG("SHOOTIN'");
-		currentAnimation = &shootAnimation;
+		currentAnimation = GetShootAnimation();
 		aimState = AimState::SHOOT;
 
 	case AimState::SHOOT:
@@ -706,7 +728,9 @@ void Player::ManageAim()
 
 		//LOG("JUST SHOOT MAN");
 
-		currentAnimation = (!usingEquipedGun) ? &shootAnimation : &shootSniperAnimation;
+		//currentAnimation = (!usingEquipedGun) ? &shootAnimation : &shootSniperAnimation;
+
+		currentAnimation = GetShootAnimation();
 
 		if (currentWeapon != nullptr)
 			switch (currentWeapon->Shoot(aimDirection))
