@@ -411,6 +411,13 @@ void Player::Reset()
 		equipedGunWeapon->perks.clear();
 	}
 
+	items.clear();
+	while (savedItems.size() != 0)
+	{
+		delete savedItems.begin()->second;
+		savedItems.erase(savedItems.begin());
+	}
+
 	usingEquipedGun = false;
 }
 

@@ -71,6 +71,7 @@ public:
 	virtual void FireRateModify(Perk* perk);
 	virtual void ReloadTimeModify(Perk* perk);
 	virtual void BulletLifeTimeModify(Perk* perk);
+	virtual void SpreadModify(Perk* perk);
 	virtual void FreezeBullets(Perk* perk);
 	virtual void StunBullets(Perk* perk);
 
@@ -93,6 +94,8 @@ public:
 	int projectilesPerShot = 0;
 	float fireRateCap = 0.001f;
 	float reloadTimeCap = 0.1f;
+	float3 spreadRadius = float3::zero;
+	float3 SpreadRadius() { return spreadRadius * spreadRadiusModifier; }
 
 	float shotSpreadArea;
 	void SpreadProjectiles(float2 direction);
@@ -109,6 +112,7 @@ public:
 	float bulletLifeTimeModifier = DEFAULT_MODIFIER;
 	float maxAmmoModifier = DEFAULT_MODIFIER;
 	int PPSModifier = 0.0f;
+	float spreadRadiusModifier = DEFAULT_MODIFIER;
 
 	// Perks - most condecorated league player in the west btw, no cringe intended
 	std::vector<Perk> perks;

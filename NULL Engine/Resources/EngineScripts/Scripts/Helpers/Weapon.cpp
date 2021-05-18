@@ -13,6 +13,8 @@
 #include "MathGeoLib/include/Math/MathFunc.h"
 #include "Bullet.h"
 
+#include "Random.h"
+
 struct Projectile
 {
 	Projectile() : object(nullptr), inUse(false), bulletScript(nullptr) {}
@@ -228,6 +230,9 @@ void Weapon::RefreshPerks(bool reset)
 		case PerkType::BULLET_LIFETIME_MODIFY:
 			BulletLifeTimeModify(&perks[i]);
 			break;
+		case PerkType::SPREAD_MODIFY:
+			SpreadModify(&perks[i]);
+			break;
 		case PerkType::FREEZE_BULLETS:
 			FreezeBullets(&perks[i]);
 			break;
@@ -270,6 +275,11 @@ void Weapon::ReloadTimeModify(Perk* perk)
 void Weapon::BulletLifeTimeModify(Perk* perk)
 {
 	bulletLifeTimeModifier *= perk->Amount();
+}
+
+void Weapon::SpreadModify(Perk* perk)
+{
+	spreadRadiusModifier *= perk->Amount();
 }
 
 void Weapon::FreezeBullets(Perk* perk)
@@ -406,7 +416,20 @@ void Weapon::FireProjectile(float2 direction)
 
 	float3 position = float3::zero;
 	if (hand)
+	{
 		position = hand->transform->GetWorldPosition();
+		float3 spread = SpreadRadius();
+		if (!spread.IsZero())
+		{
+			float x = Random::LCG::GetBoundedRandomFloat(-spread.x, spread.x);
+			float y = Random::LCG::GetBoundedRandomFloat(-spread.y, spread.y);
+			float z = Random::LCG::GetBoundedRandomFloat(-spread.z, spread.z);
+
+			position.x += x;
+			position.y += y;
+			position.z += z;
+		}
+	}
 
 	if (projectile->object)
 	{
