@@ -1196,6 +1196,9 @@ void E_Inspector::DrawUIImageComponent(C_UI_Image* image)
 			image->SetX(pos.x);
 			image->SetY(pos.y);
 		}
+
+		if (ImGui::DragInt4("pixel TexCoord (x,y,w,h)", image->pixelCoord))
+			image->textCoord = image->GetTexturePosition(image->pixelCoord[0], image->pixelCoord[1], image->pixelCoord[2], image->pixelCoord[3]);
 	}
 
 	ImGui::Separator();

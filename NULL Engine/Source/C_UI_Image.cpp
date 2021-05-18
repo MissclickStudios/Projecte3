@@ -102,14 +102,29 @@ void C_UI_Image::Draw2D()
 		return;
 
 	else if (cAnimator && cAnimator->IsAnimationPlaying())
-		id = cAnimator->spritesheet->spriteSheet->GetTextureID();
-
+	{
+		switch (cAnimator->GetAnimationNumber())
+		{
+		case 1:
+			if (cAnimator->spritesheet != nullptr)
+				id = cAnimator->spritesheet->spriteSheet->GetTextureID();
+			break;
+		case 2:
+			if (cAnimator->spritesheet2 != nullptr)
+				id = cAnimator->spritesheet2->spriteSheet->GetTextureID();
+			break;
+		case 3:
+			if (cAnimator->spritesheet3 != nullptr)
+				id = cAnimator->spritesheet3->spriteSheet->GetTextureID();
+			break;
+		}
+	}
 	else
 		id = cMaterial->GetTextureID();
 
 	glEnable(GL_BLEND);
 
-	if(!cMaterial->GetShader())
+	if (!cMaterial->GetShader())
 		cMaterial->SetShader(App->resourceManager->GetShader("UIShader"));
 
 	glUseProgram(cMaterial->GetShader()->shaderProgramID);
@@ -122,46 +137,81 @@ void C_UI_Image::Draw2D()
 	//float4x4 identity = float4x4::identity;
 
 	glBindTexture(GL_TEXTURE_2D, id);
-	
+
 	cMaterial->GetShader()->SetUniform1i("useColor", (GLint)false);
 	//cMaterial->GetShader()->SetUniformMatrix4("model", identity.Transposed().ptr());
 	cMaterial->GetShader()->SetUniformMatrix4("projection", projectionMatrix.ptr());
-	
-	
+
+
 	//Uncomment the code below to update the texture coords in real time
-	if(cAnimator != nullptr && cAnimator->IsAnimationPlaying())
+	if (cAnimator != nullptr && cAnimator->IsAnimationPlaying())
 	{
-		float newCoords[] = {
-			0.0f, 1.0f, cAnimator->spritesheet->currentFrame.proportionBeginX, cAnimator->spritesheet->currentFrame.proportionFinalY,
-			1.0f, 0.0f, cAnimator->spritesheet->currentFrame.proportionFinalX, cAnimator->spritesheet->currentFrame.proportionBeginY,
-			0.0f, 0.0f, cAnimator->spritesheet->currentFrame.proportionBeginX, cAnimator->spritesheet->currentFrame.proportionBeginY,
+		switch (cAnimator->GetAnimationNumber())
+		{
+		case 1:
+		{
+			float newCoords[] = {
+	0.0f, 1.0f, cAnimator->spritesheet->currentFrame.proportionBeginX, cAnimator->spritesheet->currentFrame.proportionFinalY,
+	1.0f, 0.0f, cAnimator->spritesheet->currentFrame.proportionFinalX, cAnimator->spritesheet->currentFrame.proportionBeginY,
+	0.0f, 0.0f, cAnimator->spritesheet->currentFrame.proportionBeginX, cAnimator->spritesheet->currentFrame.proportionBeginY,
 
-			0.0f, 1.0f, cAnimator->spritesheet->currentFrame.proportionBeginX, cAnimator->spritesheet->currentFrame.proportionFinalY,
-			1.0f, 1.0f, cAnimator->spritesheet->currentFrame.proportionFinalX, cAnimator->spritesheet->currentFrame.proportionFinalY,
-			1.0f, 0.0f, cAnimator->spritesheet->currentFrame.proportionFinalX,  cAnimator->spritesheet->currentFrame.proportionBeginY
+	0.0f, 1.0f, cAnimator->spritesheet->currentFrame.proportionBeginX, cAnimator->spritesheet->currentFrame.proportionFinalY,
+	1.0f, 1.0f, cAnimator->spritesheet->currentFrame.proportionFinalX, cAnimator->spritesheet->currentFrame.proportionFinalY,
+	1.0f, 0.0f, cAnimator->spritesheet->currentFrame.proportionFinalX,  cAnimator->spritesheet->currentFrame.proportionBeginY
+			};
 
+			glBindBuffer(GL_ARRAY_BUFFER, VBO);
+			glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(newCoords), newCoords);
+			break;
+		}
+		case 2:
+		{
+			float newCoordsSecond[] = {
+	0.0f, 1.0f, cAnimator->spritesheet2->currentFrame.proportionBeginX, cAnimator->spritesheet2->currentFrame.proportionFinalY,
+	1.0f, 0.0f, cAnimator->spritesheet2->currentFrame.proportionFinalX, cAnimator->spritesheet2->currentFrame.proportionBeginY,
+	0.0f, 0.0f, cAnimator->spritesheet2->currentFrame.proportionBeginX, cAnimator->spritesheet2->currentFrame.proportionBeginY,
 
+	0.0f, 1.0f, cAnimator->spritesheet2->currentFrame.proportionBeginX, cAnimator->spritesheet2->currentFrame.proportionFinalY,
+	1.0f, 1.0f, cAnimator->spritesheet2->currentFrame.proportionFinalX, cAnimator->spritesheet2->currentFrame.proportionFinalY,
+	1.0f, 0.0f, cAnimator->spritesheet2->currentFrame.proportionFinalX,  cAnimator->spritesheet2->currentFrame.proportionBeginY
+			};
 
-			//	    0.0f, 1.0f, 0.0f , 0.9361f,
-			//		1.0f, 0.0f, 0.1816f, 1.0f,
-			//		0.0f, 0.0f, 0.0f, 1.0f,
-			//	
-			//		0.0f, 1.0f, 0.0f, 0.9361f,
-			//		1.0f, 1.0f, 0.1816f,0.9361f,
-			//		1.0f, 0.0f, 0.1816f, 1.0f
-			//
-					/*
-					0.0f, 1.0f, 0.0f , 0.5f,
-					1.0f, 0.0f, 0.5f, 0.0f,
-					0.0f, 0.0f, 0.0f, 0.0f,
+			glBindBuffer(GL_ARRAY_BUFFER, VBO);
+			glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(newCoordsSecond), newCoordsSecond);
+			break;
+		}
+		case 3:
+		{
+			float newCoordsThird[] = {
+	0.0f, 1.0f, cAnimator->spritesheet3->currentFrame.proportionBeginX, cAnimator->spritesheet3->currentFrame.proportionFinalY,
+	1.0f, 0.0f, cAnimator->spritesheet3->currentFrame.proportionFinalX, cAnimator->spritesheet3->currentFrame.proportionBeginY,
+	0.0f, 0.0f, cAnimator->spritesheet3->currentFrame.proportionBeginX, cAnimator->spritesheet3->currentFrame.proportionBeginY,
 
-					0.0f, 1.0f, 0.0f, 0.5f,
-					1.0f, 1.0f, 0.5f, 0.5f,
-					1.0f, 0.0f, 0.5f, 0.0f*/
+	0.0f, 1.0f, cAnimator->spritesheet3->currentFrame.proportionBeginX, cAnimator->spritesheet3->currentFrame.proportionFinalY,
+	1.0f, 1.0f, cAnimator->spritesheet3->currentFrame.proportionFinalX, cAnimator->spritesheet3->currentFrame.proportionFinalY,
+	1.0f, 0.0f, cAnimator->spritesheet3->currentFrame.proportionFinalX,  cAnimator->spritesheet3->currentFrame.proportionBeginY
+			};
+
+			glBindBuffer(GL_ARRAY_BUFFER, VBO);
+			glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(newCoordsThird), newCoordsThird);
+			break;
+		}
+		}
+	}
+	else
+	{
+		float theCoords[] = {
+		0.0f, 1.0f, textCoord.proportionBeginX, textCoord.proportionFinalY,
+		1.0f, 0.0f, textCoord.proportionFinalX, textCoord.proportionBeginY,
+		0.0f, 0.0f, textCoord.proportionBeginX, textCoord.proportionBeginY,
+
+		0.0f, 1.0f, textCoord.proportionBeginX, textCoord.proportionFinalY,
+		1.0f, 1.0f, textCoord.proportionFinalX, textCoord.proportionFinalY,
+		1.0f, 0.0f, textCoord.proportionFinalX, textCoord.proportionBeginY
 		};
 
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
-		glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(newCoords), newCoords);
+		glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(theCoords), theCoords);
 	}
 
 
@@ -173,7 +223,7 @@ void C_UI_Image::Draw2D()
 	glBindVertexArray(0);
 
 	glDisable(GL_BLEND);
-	
+
 	glBindTexture(GL_TEXTURE_2D, 0);
 
 	glUseProgram(0);
@@ -220,6 +270,28 @@ void C_UI_Image::Draw3D()
 
 }
 
+Frame C_UI_Image::GetTexturePosition(int pixelPosX, int pixelPosY, int pixelWidth, int pixelHeight)
+{
+
+	C_Material* cMaterial = GetOwner()->GetComponent<C_Material>();
+	if (!cMaterial)
+		return { 0, 0, 1, 1 };
+
+	uint32 id = cMaterial->GetTextureID();
+	unsigned int spritesheetPixelWidth, spritesheetPixelHeight = 0; cMaterial->GetTextureSize(spritesheetPixelWidth, spritesheetPixelHeight);
+	if (!spritesheetPixelWidth && !spritesheetPixelHeight)
+		return { 0, 0, 1, 1 };
+
+	Frame frame;
+	frame.proportionBeginX = (float)pixelPosX / spritesheetPixelWidth;
+	frame.proportionFinalX = ((float)pixelPosX + pixelWidth) / spritesheetPixelWidth;
+
+	frame.proportionBeginY = (float)pixelPosY / spritesheetPixelHeight;
+	frame.proportionFinalY = ((float)pixelPosY + pixelHeight) / spritesheetPixelHeight;
+
+	return frame;
+}
+
 
 bool C_UI_Image::SaveState(ParsonNode& root) const
 {
@@ -229,6 +301,16 @@ bool C_UI_Image::SaveState(ParsonNode& root) const
 	root.SetNumber("Y", rect.y);
 	root.SetNumber("W", rect.w);
 	root.SetNumber("H", rect.h);
+
+	//textCoords
+	ParsonArray pixelCoords = root.SetArray("pixelCoords");
+	for (int i = 0; i < 4; ++i)
+		pixelCoords.SetNumber((double)pixelCoord[i]);
+
+	ParsonNode node;
+	node = root.SetNode("textureCoords");
+	node.SetNumber("x", textCoord.proportionBeginX); node.SetNumber("y", textCoord.proportionBeginY);
+	node.SetNumber("w", textCoord.proportionFinalX); node.SetNumber("h", textCoord.proportionFinalY);
 
 	 root.SetNumber("childOrder", childOrder);
 
@@ -247,6 +329,20 @@ bool C_UI_Image::LoadState(ParsonNode& root)
 	rect.y = root.GetNumber("Y");
 	rect.w = root.GetNumber("W");
 	rect.h = root.GetNumber("H");
+
+	//textCoords
+	ParsonArray pixelCoords = root.GetArray("pixelCoords");
+	if (pixelCoords.ArrayIsValid())
+		for (int i = 0; i < pixelCoords.size; ++i)
+			pixelCoord[i] = (int)pixelCoords.GetNumber(i);
+
+	ParsonNode node;
+	node = root.GetNode("textureCoords");
+	if (node.NodeIsValid())
+	{
+		textCoord.proportionBeginX = node.GetNumber("x"); textCoord.proportionBeginY = node.GetNumber("y");
+		textCoord.proportionFinalX = node.GetNumber("w"); textCoord.proportionFinalY = node.GetNumber("h");
+	}
 
 	childOrder = root.GetNumber("childOrder");
 	return true;

@@ -215,6 +215,11 @@ void C_2DAnimator::StopAnimation()
 {
 }
 
+int C_2DAnimator::GetAnimationNumber()
+{
+	return animationNumberPlaying;
+}
+
 uint C_2DAnimator::GetTextureIdFromVector(int index, int animationNum)
 {
 	switch (animationNum) {

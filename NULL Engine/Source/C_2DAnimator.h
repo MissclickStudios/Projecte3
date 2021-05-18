@@ -54,6 +54,8 @@ public:
 	Spritesheet*				spritesheet2;
 	Spritesheet*				spritesheet3;
 
+	int GetAnimationNumber();
+
 private:
 	uint GetTextureIdFromVector(int index, int animationNum);
 	void LoopAnimation(int animation);
