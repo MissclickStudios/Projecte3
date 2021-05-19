@@ -172,6 +172,12 @@ void IG11::OnCollisionEnter(GameObject* object)
 		playerScript->TakeDamage(Damage());
 }
 
+void IG11::BossPiercing(Effect* effect)
+{
+	TakeDamage(effect->Power());
+	effect->End();
+}
+
 void IG11::DistanceToPlayer()
 {
 	if (!player)

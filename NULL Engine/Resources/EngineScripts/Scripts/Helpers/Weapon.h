@@ -74,6 +74,7 @@ public:
 	virtual void SpreadModify(Perk* perk);
 	virtual void FreezeBullets(Perk* perk);
 	virtual void StunBullets(Perk* perk);
+	virtual void JacketBullets(Perk* perk);
 
 	// Type
 	WeaponType type = WeaponType::WEAPON;

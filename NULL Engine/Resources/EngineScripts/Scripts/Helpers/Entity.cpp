@@ -124,6 +124,9 @@ void Entity::PreUpdate()
 			case EffectType::KNOCKBACK:
 				KnockBack(effects[i]);
 				break;
+			case EffectType::BOSS_PIERCING:
+				BossPiercing(effects[i]);
+				break;
 			}
 		}
 		else // Delete the effect if it ran out

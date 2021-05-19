@@ -27,6 +27,7 @@ Item* Item::CreateItem(ItemData* itemData, bool toBuy)
 		return (Item*)new BeskarIngots(itemData, toBuy);
 	else if (name == "Galactic Credit")
 		return (Item*)new GalacticCredit(itemData, toBuy);
-
+	else if (name == "Jacket Bullets")
+		return (Item*)new JacketBullets(itemData, toBuy);
 	return nullptr;
 }

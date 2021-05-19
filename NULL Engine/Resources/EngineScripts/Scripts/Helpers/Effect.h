@@ -15,6 +15,7 @@ enum class ENGINE_ENUM EffectType
 	SPEED_MODIFY,
 	STUN,
 	KNOCKBACK,
+	BOSS_PIERCING,
 	EFFECTS_NUM
 };
 // This has to be the last entry

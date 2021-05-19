@@ -40,6 +40,9 @@ public:
 
 	void OnCollisionEnter(GameObject* object) override;
 
+	// Effects
+	void BossPiercing(Effect* effect);
+
 	// Movement
 	std::string playerName = "Mando testbuild";
 

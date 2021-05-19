@@ -376,3 +376,28 @@ public:
 
 	int credits;
 };
+
+class JacketBullets : public Item
+{
+public:
+
+	JacketBullets(ItemData* itemData, bool toBuy) : Item(itemData, toBuy)
+	{
+		damageMultiplier = itemData->power;
+	}
+	virtual ~JacketBullets() {}
+
+	void PickUp(Player* player)
+	{
+		if (player == nullptr)
+			return;
+
+		Weapon* weapon = player->GetCurrentWeapon();
+		if (weapon == nullptr)
+			return;
+
+		weapon->AddPerk(PerkType::JACKET_BULLETS, damageMultiplier, 0.0f);
+	}
+
+	float damageMultiplier;
+};

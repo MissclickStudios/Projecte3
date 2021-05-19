@@ -13,6 +13,7 @@ enum class ENGINE_ENUM PerkType
 	SPREAD_MODIFY,
 	FREEZE_BULLETS,
 	STUN_BULLETS,
+	JACKET_BULLETS,
 	PERKS_NUM
 };
 // This has to be the last entry

@@ -78,6 +78,7 @@ public:
 	virtual void SpeedModify(Effect* effect);
 	virtual void Stun(Effect* effect);
 	virtual void KnockBack(Effect* effect);
+	virtual void BossPiercing(Effect* effect) {}
 	
 	// Type
 	EntityType type = EntityType::ENTITY;

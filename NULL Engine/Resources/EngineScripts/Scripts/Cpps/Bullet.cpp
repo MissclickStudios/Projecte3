@@ -69,7 +69,7 @@ void Bullet::OnCollisionEnter(GameObject* object)
 
 	entity->TakeDamage(onHitdamage);
 	for (uint i = 0; i < onHitEffects.size(); ++i)
-		entity->AddEffect(onHitEffects[i].Type(), onHitEffects[i].Duration(), onHitEffects[i].Permanent());
+		entity->AddEffect(onHitEffects[i].Type(), onHitEffects[i].Duration(), onHitEffects[i].Permanent(), onHitEffects[i].Power(), onHitEffects[i].Chance(), onHitEffects[i].Direction(), onHitEffects[i].start);
 }
 
 void Bullet::SetShooter(Weapon* shooter, int index)
