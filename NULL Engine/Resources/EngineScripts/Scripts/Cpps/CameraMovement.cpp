@@ -32,6 +32,7 @@ void CameraMovement::Start()
 {
 	player = App->scene->GetGameObjectByName(playerName.c_str());
 	playerScript = (Player*)player->GetScript("Player");
+	initialRot = gameObject->transform->GetWorldRotation();
 }
 
 void CameraMovement::Update()
@@ -50,7 +51,11 @@ void CameraMovement::Update()
 
 	float3 position = player->transform->GetWorldPosition();
 	position += offset;
+
 	gameObject->transform->SetWorldPosition(position);
+
+	if (!gameObject->transform->GetWorldRotation().Equals(initialRot)) 
+		gameObject->transform->SetWorldRotation(initialRot);
 	
 	if (playerScript != nullptr & playerScript->hitTimer.IsActive()) 
 		CameraShake(shakeDuration, shakeMagnitude);
@@ -84,18 +89,21 @@ void CameraMovement::CameraShake(float duration, float magnitude)
 void CameraMovement::MoveCameraTo(GameObject* destination, float progress)
 {
 	if (nextPoint >= destination->childs.size())
-	{
-		nextPoint = 0;
 		return;
-	}
 
 	float3 destinationPos = destination->childs[nextPoint]->transform->GetWorldPosition();
 
 	float3 nextPos = destinationPos.Lerp(gameObject->transform->GetWorldPosition(), 1.0f - progress);
 
+	Quat destinationRot = destination->childs[nextPoint]->transform->GetWorldRotation();
+
+	Quat nextRot = destinationRot.Lerp(gameObject->transform->GetWorldRotation(), 1.0f - progress);
+
 	gameObject->transform->SetWorldPosition(nextPos);
 
-	if (gameObject->transform->GetWorldPosition().Distance(destinationPos) < 1.0f)
+	gameObject->transform->SetWorldRotation(nextRot);
+
+	if (gameObject->transform->GetWorldPosition().Distance(destinationPos) < distanceToTransition)
 	{
 		nextPoint++;
 		nextPointProgress = 0;

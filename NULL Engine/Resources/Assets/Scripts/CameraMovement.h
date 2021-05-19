@@ -3,6 +3,7 @@
 #include "ScriptMacros.h"
 
 #include "MathGeoLib/include/Math/float3.h"
+#include "MathGeoLib/include/Math/Quat.h"
 
 class Player;
 
@@ -28,10 +29,12 @@ public:
 
 	//Camera
 	float3 offset = float3::zero;
+	Quat initialRot = Quat::identity;
 	GameObject* destinationPoints;
 	float nextPoint = 0.0f;
 	float nextPointProgress = 0.0f;
 	float cameraSpeed = 0.0f;
+	float distanceToTransition = 0.0f;
 	std::string destinationPointsName = "DestinationPoints";
 };
 
@@ -43,6 +46,7 @@ SCRIPTS_FUNCTION CameraMovement* CreateCameraMovement() {
 	INSPECTOR_INPUT_FLOAT(script->shakeMagnitude);
 	INSPECTOR_INPUT_FLOAT(script->shakeDuration);
 	INSPECTOR_INPUT_FLOAT(script->cameraSpeed);
+	INSPECTOR_INPUT_FLOAT(script->distanceToTransition);
 	INSPECTOR_STRING(script->destinationPointsName);
 	return script;
 }
