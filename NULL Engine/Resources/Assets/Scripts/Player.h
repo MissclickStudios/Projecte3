@@ -16,12 +16,40 @@ class C_2DAnimator;
 enum class PlayerState
 {
 	IDLE,
+	WALK,
 	RUN,
 	DASH_IN,
 	DASH,
 	DEAD_IN,
 	DEAD,
 	DEAD_OUT
+};
+
+enum class PlayerDirection
+{
+	NONE,
+	FORWARDS,
+	BACKWARDS,
+	LEFT,
+	RIGHT
+};
+
+enum class AimDirection
+{
+	NONE,
+	FORWARDS,
+	BACKWARDS,
+	LEFT,
+	RIGHT
+};
+
+enum class RunDirection
+{
+	NONE,
+	FORWARDS,
+	BACKWARDS,
+	LEFT,
+	RIGHT
 };
 
 class SCRIPTS_API Player : public Entity ALLOWED_INHERITANCE
@@ -41,26 +69,33 @@ public:
 	void SaveState(ParsonNode& playerNode);
 	void LoadState(ParsonNode& playerNode);
 
+public:
+
 	void Reset();
 
 	// Interactions
 	void TakeDamage(float damage) override;
 
+	// Movement
+	float walkSpeed			= DEFAULT_MODIFIER;									// Factor by which the player's speed will be reduced when in WALK state.
+
 	// Dash
-	float dashSpeed = 0.0f;
-	float DashSpeed() { return dashSpeed * speedModifier; }
-	float dashDuration = 0.0f;
-	float DashDuration() { return dashDuration / speedModifier; }
-	float dashCooldown = 0.0f;
-	float DashCooldown() { return dashCooldown / cooldownModifier; }
+	float DashSpeed()		{ return dashSpeed * speedModifier; }
+	float DashDuration()	{ return dashDuration / speedModifier; }
+	float DashCooldown()	{ return dashCooldown / cooldownModifier; }
+	
+	float dashSpeed			= 0.0f;
+	float dashDuration		= 0.0f;
+	float dashCooldown		= 0.0f;
 
 	// Invencibility frames
-	float invencibilityDuration = 0.0f;
-	float intermitentMesh = 0.0f;
+	float invincibilityDuration = 0.0f;
+	float intermitentMesh		= 0.0f;
 
 	// Animations
 	void AnimatePlayer();
 	AnimationInfo* GetMoveStateAnimation();
+	AnimationInfo* GetLegsAnimation();
 	AnimationInfo* GetAimStateAnimation();
 	AnimationInfo* GetAimAnimation();
 	AnimationInfo* GetShootAnimation();
@@ -69,48 +104,60 @@ public:
 	AnimatorTrack* torsoTrack	= nullptr;
 	AnimatorTrack* legsTrack	= nullptr;
 
+	AnimationInfo mainMenuAnimation			= { "MainMenu" };
+
+	AnimationInfo walkAnimation				= { "Walk" };
+
 	AnimationInfo runAnimation				= { "Run" };
+	AnimationInfo runForwardsAnimation		= { "RunForwards" };
+	AnimationInfo runBackwardsAnimation		= { "RunBackwards" };
+	AnimationInfo runLeftAnimation			= { "RunLeft" };
+	AnimationInfo runRightAnimation			= { "RunRight" };
+
 	AnimationInfo dashAnimation				= { "Dash" };
 
-	AnimationInfo aimAnimation				= { "Aim" };
 	AnimationInfo aimBlasterAnimation		= { "AimBlaster" };
 	AnimationInfo aimSniperAnimation		= { "AimSniper" };
 	AnimationInfo aimMinigunAnimation		= { "AimMinigun" };
 	AnimationInfo aimShotgunAnimation		= { "AimShotgun" };
 
-	AnimationInfo shootAnimation			= { "Shoot" };
 	AnimationInfo shootBlasterAnimation		= { "ShootBlaster" };
 	AnimationInfo shootSniperAnimation		= { "ShootSniper"};
 	AnimationInfo shootMinigunAnimation		= { "ShootMinigun" };
 	AnimationInfo shootShotgunAnimation		= { "ShootShotgun" };
 
-	AnimationInfo reloadAnimation			= { "Reload" };
 	AnimationInfo reloadBlasterAnimation	= { "ReloadBlaster" };
 	AnimationInfo reloadSniperAnimation		= { "ReloadSniper" };
-	AnimationInfo reloadMinigunAnimation	= { "ReloadMinigun" };
+	AnimationInfo reloadMinigunAnimation	= { "ReloadMinigun" }; 
 	AnimationInfo reloadShotgunAnimation	= { "ReloadShotgun" };
 
-	AnimationInfo changeAnimation			= { "Change" };
+	AnimationInfo stunnedAnimation			= { "Stunned" };
+	AnimationInfo knockedbackAnimation		= { "KnockedBack"};
+	
+	AnimationInfo talkAnimation				= { "Talk" };
+	AnimationInfo useAnimation				= { "Use" };
+	AnimationInfo openChestAnimation		= { "OpenChest" };
+	AnimationInfo signalGroguAnimation		= { "SignalGrogu" };
+
+	AnimationInfo changeWeaponAnimation		= { "ChangeWeapon" };
 	AnimationInfo onGuardAnimation			= { "OnGuard" };
 
-	AnimationInfo torsoAnimation			= { "Idle", "Torso" };
-	AnimationInfo legsAnimation				= { "Idle", "Legs" };
-
 	// Weapons
-	Weapon* const GetCurrentWeapon() const { return currentWeapon; }
+	Weapon* const GetCurrentWeapon() const	{ return currentWeapon; }
+	float ChangeTime()						{ return changeTime / attackSpeedModifier; }
+	
 	float changeTime = 0.0f;
-	float ChangeTime() { return changeTime / attackSpeedModifier; }
 	Prefab blaster;
 	Prefab equipedGun;
 
 	// Currency
-	int currency = 0;
-	int hubCurrency = 0;
+	int currency				= 0;
+	int hubCurrency				= 0;
 
-	std::string gameManager = "Game Manager";
+	std::string gameManager		= "Game Manager";
 
-	PlayerState moveState = PlayerState::IDLE;
-	AimState aimState = AimState::IDLE;
+	PlayerState moveState		= PlayerState::IDLE;
+	AimState aimState			= AimState::IDLE;
 
 	// AIM HUD
 	GameObject* idleAimPlane	= nullptr;
@@ -118,13 +165,12 @@ public:
 
 	// Debug
 	void SetGodMode(bool enable);
-
 	bool GetGodMode()const;
 
 	// Audio
-	C_AudioSource* dashAudio = nullptr;
-	C_AudioSource* changeWeaponAudio = nullptr;
-	C_AudioSource* deathAudio = nullptr;
+	C_AudioSource* dashAudio				= nullptr;
+	C_AudioSource* deathAudio				= nullptr;
+	C_AudioSource* changeWeaponAudio		= nullptr;
 	
 
 	// HUD Animations Names
@@ -136,8 +182,8 @@ public:
 
 	//HUD Animations
 	C_2DAnimator* mandoImage;
-	C_2DAnimator* secondaryWeaponImage;
 	C_2DAnimator* primaryWeaponImage;
+	C_2DAnimator* secondaryWeaponImage;
 	C_2DAnimator* dashImage;
 	C_2DAnimator* creditsImage;
 
@@ -151,21 +197,27 @@ private:
 	void GatherMoveInputs();
 	void GatherAimInputs();
 
-	float2 moveInput = float2::zero;
-	float2 aimInput = float2::zero;
+	void SetPlayerDirection();
+	void SetAimDirection();
+
+	PlayerDirection playerDirection	= PlayerDirection::NONE;
+	AimDirection aimDirection		= AimDirection::NONE;
+	float2 moveInput				= float2::zero;
+	float2 aimInput					= float2::zero;
 
 	// Movement
 	void Movement();
 
-	float2 moveDirection = float2::zero;
+	float2 moveVector				= float2::zero;
 
 	// Aim
 	void Aim();
 
-	float2 aimDirection = float2::zero;
+	float2 aimVector				= float2::zero;
 
 	// Dash
 	void Dash();
+	
 	Timer dashTimer;
 	Timer dashCooldownTimer;
 
@@ -174,11 +226,11 @@ private:
 	Timer intermitentMeshTimer;
 
 	// Weapons
-	bool usingEquipedGun = false;
+	bool usingSecondaryGun				= false;
 	Timer changeTimer;
 
 	GameObject* blasterGameObject		= nullptr;
-	GameObject* equipedGunGameObject	= nullptr;
+	GameObject* secondaryGunGameObject	= nullptr;
 
 	Weapon* blasterWeapon				= nullptr;
 	Weapon* secondaryWeapon				= nullptr;
