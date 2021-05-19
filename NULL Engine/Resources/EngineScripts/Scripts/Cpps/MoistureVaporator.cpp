@@ -29,7 +29,7 @@ void MoistureVaporator::Start()
 	gameManager = App->scene->GetGameObjectByName(gameManagerName.c_str());
 	vaporatorObject = gameObject->FindChild(vaporatorObjectName.c_str());
 
-	explosionParticles = gameObject->GetComponent<C_ParticleSystem>();
+	explosionParticles = gameObject->FindChild("StunParticles")->GetComponent<C_ParticleSystem>();
 
 	explosionParticles->StopSpawn();
 
@@ -95,22 +95,6 @@ void MoistureVaporator::OnTriggerRepeat(GameObject* object)
 	if (!entity)
 		return;
 
-	float2 entityPosition, position;
-	entityPosition.x = entity->transform->GetWorldPosition().x;
-	entityPosition.y = entity->transform->GetWorldPosition().z;
-	position.x = gameObject->transform->GetWorldPosition().x;
-	position.y = gameObject->transform->GetWorldPosition().z;
-	float2 direction = entityPosition - position;
-
-	float distance = direction.Length();
-	if (distance < 1.0f)
-		distance = 1.0f;
-
-	float currentPower = power / distance;
-
-	direction.Normalize();
-	direction *= currentPower;
-
-	entity->AddEffect(EffectType::KNOCKBACK, 0.75f, false, new std::pair<bool, float3>(true, { direction.x, currentPower, direction.y }));
+	entity->AddEffect(EffectType::STUN, stunDuration, false);
 	entity->TakeDamage(damage);
 }

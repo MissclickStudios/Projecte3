@@ -90,7 +90,9 @@ void GameManager::Awake()
 
 	GameObject* tmp = App->scene->GetGameObjectByName(gateName.c_str());
 
-	dialogManager = (DialogManager*)App->scene->GetGameObjectByName("DialogCanvas")->GetScript("DialogManager");
+	tmp = App->scene->GetGameObjectByName("DialogCanvas");
+	if(tmp!=nullptr)
+		dialogManager = (DialogManager*)tmp->GetScript("DialogManager");
 
 	if (tmp != nullptr)
 	{

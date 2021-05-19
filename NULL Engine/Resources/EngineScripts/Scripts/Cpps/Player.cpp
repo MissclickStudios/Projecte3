@@ -481,7 +481,7 @@ void Player::AnimatePlayer()
 	}
 	else
 	{	
-		LOG("DIRECTIONS: [%d]::[%d]::[%s]", playerDirection, aimDirection, GetLegsAnimation()->name.c_str());
+		//LOG("DIRECTIONS: [%d]::[%d]::[%s]", playerDirection, aimDirection, GetLegsAnimation()->name.c_str());
 		
 		AnimationInfo* torsoInfo	= GetAimStateAnimation();
 		AnimationInfo* legsInfo		= GetMoveStateAnimation();

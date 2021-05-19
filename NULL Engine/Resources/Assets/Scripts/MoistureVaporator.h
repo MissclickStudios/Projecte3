@@ -32,6 +32,8 @@ public:
 	float power = 2000000.0f;
 	float particleEmitttingTime = 1.f;
 
+	float stunDuration = 1.f;
+
 	// Audio
 
 	C_AudioSource* explosion = nullptr;
@@ -50,6 +52,7 @@ private:
 
 SCRIPTS_FUNCTION MoistureVaporator* CreateMoistureVaporator() {
 	MoistureVaporator* script = new MoistureVaporator();
+	INSPECTOR_DRAGABLE_FLOAT(script->stunDuration);
 	INSPECTOR_STRING(script->gameManagerName);
 	INSPECTOR_STRING(script->vaporatorObjectName);
 	INSPECTOR_INPUT_FLOAT3(script->vaporatorColliderSize);
