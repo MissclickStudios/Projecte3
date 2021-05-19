@@ -1,4 +1,5 @@
 #include "M_Recast.h"
+#include "M_Scene.h"
 
 #include "RecastNavigation/Detour/Include/DetourNavMeshBuilder.h"
 #include "RecastNavigation/Detour/Include/DetourNavMesh.h"
@@ -105,9 +106,22 @@ bool M_Recast::BuildNavMesh()
 	bool ret = true;
 	LOG("[Recast mesh]: Starting Nav Mesh build");
 
-	if (NavigationGameObjects.size() == 0) {
-		LOG("[Recast mesh]: No input mesh");
-		return false;
+	if (NavigationGameObjects.empty()) 
+	{
+		std::vector<GameObject*>* objects = App->scene->GetGameObjects();
+		for (std::vector<GameObject*>::const_iterator cit = (*objects).cbegin(); cit != (*objects).cend(); ++cit)
+		{
+			if ((*cit)->isNavigable) 
+			{
+				NavigationGameObjects.push_back((*cit));
+				LOG("Added fff");
+			}
+		}
+		if (NavigationGameObjects.empty()) 
+		{
+			LOG("[Recast mesh]: No input mesh");
+			return false;
+		}
 	}
 
 	InputGeom* m_geom = new InputGeom(NavigationGameObjects, EngineApp->detour->buildTiledMesh);
@@ -485,9 +499,9 @@ bool M_Recast::BuildTiledNavMesh(const InputGeom* m_geom)
 	}
 
 	// We save the navmesh, create its render meshes and initialize the navQuery
-	EngineApp->detour->saveNavMesh();
 	EngineApp->detour->initNavQuery();
 	EngineApp->detour->createRenderMeshes();
+	EngineApp->detour->saveNavMesh();
 
 	return true;
 }

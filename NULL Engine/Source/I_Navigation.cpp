@@ -5,6 +5,8 @@
 
 #include "Application.h"
 #include "M_FileSystem.h"
+#include "M_ResourceManager.h"
+#include "M_Detour.h"
 
 #include "RecastNavigation/Detour/Include/DetourNavMesh.h"
 
@@ -14,7 +16,7 @@ bool Importer::Navigation::Import(const char* buffer, R_NavMesh* rNavMesh)
 	return true;
 }
 
-uint Importer::Navigation::Save(const R_NavMesh* rNavMesh, char** buffer)
+uint Importer::Navigation::Save(R_NavMesh* rNavMesh, char** buffer)
 {
 	uint written = 0;
 	
@@ -75,7 +77,11 @@ uint Importer::Navigation::Save(const R_NavMesh* rNavMesh, char** buffer)
 
 bool Importer::Navigation::Load(const char* buffer, R_NavMesh* rNavMesh)
 {
-	bool ret = true;
+	uint32 forcedUID = App->resourceManager->GetForcedUIDFromMeta(rNavMesh->GetAssetsPath());
+	if (forcedUID != 0)
+	{
+		rNavMesh->ForceUID(forcedUID);
+	}
 	
 	char* cursor = (char*)buffer;
 	// Read header.
@@ -127,5 +133,5 @@ bool Importer::Navigation::Load(const char* buffer, R_NavMesh* rNavMesh)
 		rNavMesh->navMesh->addTile(data, tileHeader.dataSize, DT_TILE_FREE_DATA, tileHeader.tileRef, 0);
 	}
 
-	return ret;
+	return true;
 }
