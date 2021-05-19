@@ -135,6 +135,28 @@ void Player::SetUp()
 			LOG("COULD NOT RETRIEVE LEGS TRACK");
 	}
 
+	// --- LEG ANIMATIONS
+	legsMatrix[(int)AimDirection::FORWARDS][(int)PlayerDirection::FORWARDS]		= &runForwardsAnimation;			// AF + MF --> F
+	legsMatrix[(int)AimDirection::FORWARDS][(int)PlayerDirection::BACKWARDS]	= &runBackwardsAnimation;			// AF + MB --> B
+	legsMatrix[(int)AimDirection::FORWARDS][(int)PlayerDirection::LEFT]			= &runLeftAnimation;				// AF + ML --> L
+	legsMatrix[(int)AimDirection::FORWARDS][(int)PlayerDirection::RIGHT]		= &runRightAnimation;				// AF + MR --> R
+
+	legsMatrix[(int)AimDirection::BACKWARDS][(int)PlayerDirection::FORWARDS]	= &runBackwardsAnimation;			// AB + MF --> B
+	legsMatrix[(int)AimDirection::BACKWARDS][(int)PlayerDirection::BACKWARDS]	= &runForwardsAnimation;			// AB + MB --> F
+	legsMatrix[(int)AimDirection::BACKWARDS][(int)PlayerDirection::LEFT]		= &runRightAnimation;				// AB + ML --> R
+	legsMatrix[(int)AimDirection::BACKWARDS][(int)PlayerDirection::RIGHT]		= &runLeftAnimation;				// AB + MR --> L
+
+	legsMatrix[(int)AimDirection::LEFT][(int)PlayerDirection::FORWARDS]			= &runRightAnimation;				// AL + MF --> R				
+	legsMatrix[(int)AimDirection::LEFT][(int)PlayerDirection::BACKWARDS]		= &runLeftAnimation;				// AL + MB --> L
+	legsMatrix[(int)AimDirection::LEFT][(int)PlayerDirection::LEFT]				= &runForwardsAnimation;			// AL + ML --> F
+	legsMatrix[(int)AimDirection::LEFT][(int)PlayerDirection::RIGHT]			= &runBackwardsAnimation;			// AL + MR --> B
+
+	legsMatrix[(int)AimDirection::RIGHT][(int)PlayerDirection::FORWARDS]		= &runLeftAnimation;				// AR + MF --> L
+	legsMatrix[(int)AimDirection::RIGHT][(int)PlayerDirection::BACKWARDS]		= &runRightAnimation;				// AR + MB --> R
+	legsMatrix[(int)AimDirection::RIGHT][(int)PlayerDirection::LEFT]			= &runBackwardsAnimation;			// AR + ML --> B
+	legsMatrix[(int)AimDirection::RIGHT][(int)PlayerDirection::RIGHT]			= &runForwardsAnimation;			// AR + MR --> F
+
+	// --- RIGID BODY
 	if (rigidBody != nullptr)
 		rigidBody->TransformMovesRigidBody(false);
 
@@ -459,7 +481,7 @@ void Player::AnimatePlayer()
 	}
 	else
 	{	
-		LOG("DIRECTIONS: [%d]::[%d]", playerDirection, aimDirection);
+		LOG("DIRECTIONS: [%d]::[%d]::[%s]", playerDirection, aimDirection, GetLegsAnimation()->name.c_str());
 		
 		AnimationInfo* torsoInfo	= GetAimStateAnimation();
 		AnimationInfo* legsInfo		= GetMoveStateAnimation();
@@ -525,48 +547,7 @@ AnimationInfo* Player::GetLegsAnimation()
 	if (moveInput.IsZero())
 		return &idleAnimation;
 
-	if (aimDirection == AimDirection::FORWARDS)
-	{
-		switch (playerDirection)
-		{
-		case PlayerDirection::FORWARDS:		{ return &runForwardsAnimation; }	break;		// AF + MF --> F
-		case PlayerDirection::BACKWARDS:	{ return &runBackwardsAnimation; }	break;		// AF + MB --> B
-		case PlayerDirection::LEFT:			{ return &runLeftAnimation; }		break;		// AF + ML --> L
-		case PlayerDirection::RIGHT:		{ return &runRightAnimation; }		break;		// AF + MR --> R
-		}
-	}
-	else if (aimDirection == AimDirection::BACKWARDS)
-	{
-		switch (playerDirection)
-		{
-		case PlayerDirection::FORWARDS:		{ return &runBackwardsAnimation; }	break;		// AB + MF --> B
-		case PlayerDirection::BACKWARDS:	{ return &runForwardsAnimation; }	break;		// AB + MB --> F
-		case PlayerDirection::LEFT:			{ return &runRightAnimation; }		break;		// AB + ML --> R
-		case PlayerDirection::RIGHT:		{ return &runLeftAnimation; }		break;		// AB + MR --> L
-		}
-	}
-	else if (aimDirection == AimDirection::LEFT)
-	{
-		switch (playerDirection)
-		{
-		case PlayerDirection::FORWARDS:		{ return &runRightAnimation; }		break;		// AL + MF --> R
-		case PlayerDirection::BACKWARDS:	{ return &runLeftAnimation; }		break;		// AL + MB --> L
-		case PlayerDirection::LEFT:			{ return &runForwardsAnimation; }	break;		// AL + ML --> F
-		case PlayerDirection::RIGHT:		{ return &runBackwardsAnimation; }	break;		// AL + MR --> B
-		}
-	}
-	else if (aimDirection == AimDirection::RIGHT)
-	{
-		switch (playerDirection)
-		{
-		case PlayerDirection::FORWARDS:		{ return &runLeftAnimation; }		break;		// AR + MF --> L
-		case PlayerDirection::BACKWARDS:	{ return &runRightAnimation; }		break;		// AR + MB --> R
-		case PlayerDirection::LEFT:			{ return &runBackwardsAnimation; }	break;		// AR + ML --> B
-		case PlayerDirection::RIGHT:		{ return &runForwardsAnimation; }	break;		// AR + MR --> F
-		}
-	}
-
-	return &idleAnimation;
+	return legsMatrix[(int)aimDirection][(int)playerDirection];
 }
 
 AnimationInfo* Player::GetAimStateAnimation()

@@ -27,29 +27,29 @@ enum class PlayerState
 
 enum class PlayerDirection
 {
-	NONE,
 	FORWARDS,
 	BACKWARDS,
 	LEFT,
-	RIGHT
+	RIGHT,
+	NONE
 };
 
 enum class AimDirection
 {
-	NONE,
 	FORWARDS,
 	BACKWARDS,
 	LEFT,
-	RIGHT
+	RIGHT,
+	NONE
 };
 
 enum class RunDirection
 {
-	NONE,
 	FORWARDS,
 	BACKWARDS,
 	LEFT,
-	RIGHT
+	RIGHT,
+	NONE
 };
 
 class SCRIPTS_API Player : public Entity ALLOWED_INHERITANCE
@@ -100,9 +100,11 @@ public:
 	AnimationInfo* GetAimAnimation();
 	AnimationInfo* GetShootAnimation();
 	AnimationInfo* GetReloadAnimation();
+	
+	AnimationInfo* legsMatrix[4][4]			= { nullptr };
 
-	AnimatorTrack* torsoTrack	= nullptr;
-	AnimatorTrack* legsTrack	= nullptr;
+	AnimatorTrack* torsoTrack				= nullptr;
+	AnimatorTrack* legsTrack				= nullptr;
 
 	AnimationInfo mainMenuAnimation			= { "MainMenu" };
 
@@ -186,6 +188,10 @@ public:
 	C_2DAnimator* secondaryWeaponImage;
 	C_2DAnimator* dashImage;
 	C_2DAnimator* creditsImage;
+
+	// Controller
+	float joystickThreshold					= 25.0f;
+	float joystickFactor					= 327.67;
 
 private:
 
