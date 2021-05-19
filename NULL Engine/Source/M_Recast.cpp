@@ -53,6 +53,11 @@ m_tileTriCount(0)
 
 M_Recast::~M_Recast()
 {
+	if (m_ctx != nullptr)
+	{
+		delete m_ctx;
+		m_ctx = nullptr;
+	}
 }
 
 bool M_Recast::Init(ParsonNode& config)
@@ -90,6 +95,7 @@ bool M_Recast::CleanUp()
 	m_pmesh = nullptr;
 	rcFreePolyMeshDetail(m_dmesh);
 	m_dmesh = nullptr;
+
 	
 	return true;
 }
@@ -140,6 +146,7 @@ bool M_Recast::BuildNavMesh()
 		ret = BuildSoloNavMesh(m_geom);
 
 	delete m_geom;
+	m_geom = nullptr;
 
 	return ret;
 }

@@ -61,6 +61,7 @@ uint Importer::Navigation::Save(const R_NavMesh* rNavMesh, char** buffer)
 
 	cursor = nullptr;
 	delete header;
+	header = nullptr;
 
 	// --- SAVING THE BUFFER ---
 	std::string path = NAVIGATION_PATH + std::to_string(rNavMesh->GetUID()) + NAVMESH_EXTENSION;
