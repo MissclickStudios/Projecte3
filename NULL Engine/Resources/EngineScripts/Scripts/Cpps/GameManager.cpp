@@ -114,7 +114,8 @@ void GameManager::Start()
 		}
 	}
 
-	dialogManager->StartDialog("Dialogs/GroguHello.json");
+	if(dialogManager != nullptr)
+		dialogManager->StartDialog("Assets/Dialogs/GroguHello.json");
 
 
 	if (enabled && mainMenuScene != App->scene->GetCurrentScene() && playerGameObject)
