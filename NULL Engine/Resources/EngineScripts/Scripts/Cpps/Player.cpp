@@ -23,7 +23,9 @@
 
 #include "Log.h"
 
-#define MAX_INPUT 32767
+#define MAX_INPUT		32767
+#define WALK_THRESHOLD	16384
+#define WALKING_FACTOR	0.5f
 
 Player* CreatePlayer()
 {
@@ -37,6 +39,7 @@ Player* CreatePlayer()
 
 	// Basic Stats
 	INSPECTOR_DRAGABLE_FLOAT(script->speed);
+	INSPECTOR_DRAGABLE_FLOAT(script->walkSpeed);
 	INSPECTOR_DRAGABLE_FLOAT(script->attackSpeed);
 	INSPECTOR_DRAGABLE_FLOAT(script->damage);
 	INSPECTOR_DRAGABLE_FLOAT(script->defense);
@@ -64,7 +67,7 @@ Player* CreatePlayer()
 	INSPECTOR_DRAGABLE_FLOAT(script->dashCooldown);
 
 	// Invencibility frames
-	INSPECTOR_DRAGABLE_FLOAT(script->invencibilityDuration); 
+	INSPECTOR_DRAGABLE_FLOAT(script->invincibilityDuration); 
 	INSPECTOR_DRAGABLE_FLOAT(script->intermitentMesh);
 
 	// Weapons
@@ -193,7 +196,7 @@ void Player::Behavior()
 	{
 		if (invencibilityTimer.IsActive())
 		{
-			if (invencibilityTimer.ReadSec() >= invencibilityDuration)
+			if (invencibilityTimer.ReadSec() >= invincibilityDuration)
 			{
 				invencibilityTimer.Stop();
 				intermitentMeshTimer.Stop();
@@ -227,9 +230,9 @@ void Player::CleanUp()
 	blasterGameObject = nullptr;
 	blasterWeapon = nullptr;
 
-	if (equipedGunGameObject != nullptr)
-		equipedGunGameObject->toDelete = true;
-	equipedGunGameObject = nullptr;
+	if (secondaryGunGameObject != nullptr)
+		secondaryGunGameObject->toDelete = true;
+	secondaryGunGameObject = nullptr;
 	secondaryWeapon = nullptr;
 
 	currentWeapon = nullptr;
@@ -288,7 +291,7 @@ void Player::SaveState(ParsonNode& playerNode)
 			equipedGunPerks.SetNumber((double)secondaryWeapon->perks[i]);
 	}
 
-	playerNode.SetBool("Using Equiped Gun", usingEquipedGun);
+	playerNode.SetBool("Using Equiped Gun", usingSecondaryGun);
 }
 
 void Player::LoadState(ParsonNode& playerNode)
@@ -344,10 +347,10 @@ void Player::LoadState(ParsonNode& playerNode)
 
 	// TODO: Load correct secondary gun
 	//equipedGunGameObject = App->resourceManager->LoadPrefab(playerNode.GetInteger("Equiped Gun"), App->scene->GetSceneRoot());
-	equipedGunGameObject = App->resourceManager->LoadPrefab(equipedGun.uid, App->scene->GetSceneRoot());
-	if (equipedGunGameObject != nullptr)
+	secondaryGunGameObject = App->resourceManager->LoadPrefab(equipedGun.uid, App->scene->GetSceneRoot());
+	if (secondaryGunGameObject != nullptr)
 	{
-		secondaryWeapon = (Weapon*)GetObjectScript(equipedGunGameObject, ObjectType::WEAPON);
+		secondaryWeapon = (Weapon*)GetObjectScript(secondaryGunGameObject, ObjectType::WEAPON);
 
 		if (secondaryWeapon != nullptr)
 		{
@@ -363,8 +366,8 @@ void Player::LoadState(ParsonNode& playerNode)
 		}
 	}
 
-	usingEquipedGun = playerNode.GetBool("Using Equiped Gun");
-	if (usingEquipedGun && secondaryWeapon != nullptr)
+	usingSecondaryGun = playerNode.GetBool("Using Equiped Gun");
+	if (usingSecondaryGun && secondaryWeapon != nullptr)
 		currentWeapon = secondaryWeapon;
 	else
 		currentWeapon = blasterWeapon;
@@ -393,7 +396,7 @@ void Player::Reset()
 		secondaryWeapon->perks.clear();
 	}
 
-	usingEquipedGun = false;
+	usingSecondaryGun = false;
 }
 
 void Player::TakeDamage(float damage)
@@ -456,6 +459,8 @@ void Player::AnimatePlayer()
 	}
 	else
 	{	
+		LOG("DIRECTIONS: [%d]::[%d]", playerDirection, aimDirection);
+		
 		AnimationInfo* torsoInfo	= GetAimStateAnimation();
 		AnimationInfo* legsInfo		= GetMoveStateAnimation();
 		if (torsoInfo == nullptr || legsInfo == nullptr)
@@ -503,15 +508,65 @@ AnimationInfo* Player::GetMoveStateAnimation()
 {
 	switch (moveState)
 	{
-	case PlayerState::IDLE:		{ return &idleAnimation; }	break;
-	case PlayerState::RUN:		{ return &runAnimation; }	break;
-	case PlayerState::DASH_IN:	{ return &dashAnimation; }	break;
-	case PlayerState::DASH:		{ return &dashAnimation; }	break;
-	case PlayerState::DEAD_IN:	{ return &deathAnimation; }	break;
-	case PlayerState::DEAD:		{ return &deathAnimation; }	break;
+	case PlayerState::IDLE:		{ return &idleAnimation; }		break;
+	case PlayerState::WALK:		{ return &walkAnimation; }		break;
+	case PlayerState::RUN:		{ return /*GetLegsAnimation();*/ &runAnimation; }	break;
+	case PlayerState::DASH_IN:	{ return &dashAnimation; }		break;
+	case PlayerState::DASH:		{ return &dashAnimation; }		break;
+	case PlayerState::DEAD_IN:	{ return &deathAnimation; }		break;
+	case PlayerState::DEAD:		{ return &deathAnimation; }		break;
 	}
 	
 	return nullptr;
+}
+
+AnimationInfo* Player::GetLegsAnimation()
+{	
+	if (moveInput.IsZero())
+		return &idleAnimation;
+
+	if (aimDirection == AimDirection::FORWARDS)
+	{
+		switch (playerDirection)
+		{
+		case PlayerDirection::FORWARDS:		{ return &runForwardsAnimation; }	break;		// AF + MF --> F
+		case PlayerDirection::BACKWARDS:	{ return &runBackwardsAnimation; }	break;		// AF + MB --> B
+		case PlayerDirection::LEFT:			{ return &runLeftAnimation; }		break;		// AF + ML --> L
+		case PlayerDirection::RIGHT:		{ return &runRightAnimation; }		break;		// AF + MR --> R
+		}
+	}
+	else if (aimDirection == AimDirection::BACKWARDS)
+	{
+		switch (playerDirection)
+		{
+		case PlayerDirection::FORWARDS:		{ return &runBackwardsAnimation; }	break;		// AB + MF --> B
+		case PlayerDirection::BACKWARDS:	{ return &runForwardsAnimation; }	break;		// AB + MB --> F
+		case PlayerDirection::LEFT:			{ return &runRightAnimation; }		break;		// AB + ML --> R
+		case PlayerDirection::RIGHT:		{ return &runLeftAnimation; }		break;		// AB + MR --> L
+		}
+	}
+	else if (aimDirection == AimDirection::LEFT)
+	{
+		switch (playerDirection)
+		{
+		case PlayerDirection::FORWARDS:		{ return &runRightAnimation; }		break;		// AL + MF --> R
+		case PlayerDirection::BACKWARDS:	{ return &runLeftAnimation; }		break;		// AL + MB --> L
+		case PlayerDirection::LEFT:			{ return &runForwardsAnimation; }	break;		// AL + ML --> F
+		case PlayerDirection::RIGHT:		{ return &runBackwardsAnimation; }	break;		// AL + MR --> B
+		}
+	}
+	else if (aimDirection == AimDirection::RIGHT)
+	{
+		switch (playerDirection)
+		{
+		case PlayerDirection::FORWARDS:		{ return &runLeftAnimation; }		break;		// AR + MF --> L
+		case PlayerDirection::BACKWARDS:	{ return &runRightAnimation; }		break;		// AR + MB --> R
+		case PlayerDirection::LEFT:			{ return &runBackwardsAnimation; }	break;		// AR + ML --> B
+		case PlayerDirection::RIGHT:		{ return &runForwardsAnimation; }	break;		// AR + MR --> F
+		}
+	}
+
+	return &idleAnimation;
 }
 
 AnimationInfo* Player::GetAimStateAnimation()
@@ -525,8 +580,8 @@ AnimationInfo* Player::GetAimStateAnimation()
 	case AimState::SHOOT:		{ return GetShootAnimation(); }		break;
 	case AimState::RELOAD_IN:	{ return GetReloadAnimation(); }	break;
 	case AimState::RELOAD:		{ return GetReloadAnimation(); }	break;
-	case AimState::CHANGE_IN:	{ return &changeAnimation; }		break;
-	case AimState::CHANGE:		{ return &changeAnimation; }		break;
+	case AimState::CHANGE_IN:	{ return &changeWeaponAnimation; }	break;
+	case AimState::CHANGE:		{ return &changeWeaponAnimation; }	break;
 	}
 	
 	return nullptr;
@@ -626,6 +681,14 @@ void Player::ManageMovement()
 
 		if (rigidBody != nullptr)
 			rigidBody->Set2DVelocity(float2::zero);
+
+		break;
+	case PlayerState::WALK:
+		currentAnimation = &walkAnimation;
+		Movement();
+
+		if (dust != nullptr)
+			dust->ResumeSpawn();
 
 		break;
 	case PlayerState::RUN:
@@ -733,7 +796,7 @@ void Player::ManageAim()
 		currentAnimation = GetShootAnimation();
 
 		if (currentWeapon != nullptr)
-			switch (currentWeapon->Shoot(aimDirection))
+			switch (currentWeapon->Shoot(aimVector))
 			{
 			case ShootState::NO_FULLAUTO:
 				currentAnimation = nullptr;
@@ -773,7 +836,7 @@ void Player::ManageAim()
 		{
 			if (blasterWeapon == currentWeapon)
 			{
-				usingEquipedGun = true;
+				usingSecondaryGun = true;
 				currentWeapon = secondaryWeapon;
 				if (blasterWeapon->weaponModel != nullptr)
 					blasterWeapon->weaponModel->SetIsActive(false);
@@ -782,7 +845,7 @@ void Player::ManageAim()
 			}
 			else
 			{
-				usingEquipedGun = false;
+				usingSecondaryGun = false;
 				currentWeapon = blasterWeapon;
 				if (blasterWeapon->weaponModel != nullptr)
 					blasterWeapon->weaponModel->SetIsActive(true);
@@ -810,6 +873,8 @@ void Player::GatherMoveInputs()
 		if (App->input->GetKey(SDL_SCANCODE_A) == KeyState::KEY_REPEAT) { moveInput.x = -MAX_INPUT; }
 	}
 
+	SetPlayerDirection();
+
 	if (!dashCooldownTimer.IsActive())
 	{
 		if ((App->input->GetKey(SDL_SCANCODE_LSHIFT) == KeyState::KEY_DOWN || App->input->GetGameControllerTrigger(0) == ButtonState::BUTTON_DOWN))
@@ -826,8 +891,11 @@ void Player::GatherMoveInputs()
 	}
 
 	if (!moveInput.IsZero())
-	{
-		moveState = PlayerState::RUN;
+	{	
+		bool overWalkThreshold = (moveInput.x > WALK_THRESHOLD) || (-moveInput.x > WALK_THRESHOLD) || (moveInput.y > WALK_THRESHOLD) || (-moveInput.y > WALK_THRESHOLD);
+		
+		moveState = (overWalkThreshold) ? PlayerState::RUN : PlayerState::WALK;
+
 		return;
 	}
 
@@ -848,6 +916,8 @@ void Player::GatherAimInputs()
 		if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KeyState::KEY_REPEAT)	{ aimInput.x = MAX_INPUT; }
 		if (App->input->GetKey(SDL_SCANCODE_LEFT) == KeyState::KEY_REPEAT)	{ aimInput.x = -MAX_INPUT; }
 	}
+
+	SetAimDirection();
 
 	if (aimState != AimState::IDLE && aimState != AimState::AIMING && aimState != AimState::ON_GUARD) // If the player is not on this states, ignore action inputs (shoot, reload, etc.)
 		return;
@@ -873,12 +943,56 @@ void Player::GatherAimInputs()
 	aimState = AimState::IDLE;
 }
 
+void Player::SetPlayerDirection()
+{
+	if (moveInput.IsZero())
+	{
+		playerDirection = PlayerDirection::NONE;
+		return;
+	}
+
+	float absX = moveInput.x * moveInput.x;
+	float absY = moveInput.y * moveInput.y;
+
+	if (absX > absY)
+	{
+		playerDirection = (moveInput.x < 0.0f) ? PlayerDirection::LEFT : PlayerDirection::RIGHT;
+	}
+	else
+	{
+		playerDirection = (moveInput.y < 0.0f) ? PlayerDirection::FORWARDS : PlayerDirection::BACKWARDS;
+	}
+}
+
+void Player::SetAimDirection()
+{
+	if (aimInput.IsZero())
+	{
+		aimDirection = AimDirection::NONE;
+		return;
+	}
+
+	float absX = aimInput.x * aimInput.x;
+	float absY = aimInput.y * aimInput.y;
+
+	if (absX > absY)
+	{
+		aimDirection = (aimInput.x < 0.0f) ? AimDirection::LEFT : AimDirection::RIGHT;
+	}
+	else
+	{
+		aimDirection = (aimInput.y < 0.0f) ? AimDirection::FORWARDS : AimDirection::BACKWARDS;
+	}
+}
+
 void Player::Movement()
 {
-	moveDirection = moveInput;
+	moveVector = moveInput;
+
+	float speed = (moveState == PlayerState::RUN) ? Speed() : (walkSpeed * speedModifier);
 
 	if (rigidBody != nullptr)
-		rigidBody->Set2DVelocity((moveInput.Normalized()) * Speed());
+		rigidBody->Set2DVelocity((moveInput.Normalized()) * speed);
 }
 
 void Player::Aim()
@@ -892,9 +1006,9 @@ void Player::Aim()
 		aimState = AimState::IDLE;
 	}
 
-	aimDirection = (aimInput.IsZero() || moveState == PlayerState::DASH) ? moveDirection : aimInput;
+	aimVector = (aimInput.IsZero() || moveState == PlayerState::DASH) ? moveVector : aimInput;
 
-	float rad = aimDirection.AimedAngle();
+	float rad = aimVector.AimedAngle();
 	
 	if (skeleton != nullptr)
 		skeleton->transform->SetLocalRotation(float3(0, -rad + DegToRad(90), 0));
@@ -903,7 +1017,7 @@ void Player::Aim()
 void Player::Dash()
 {	
 	if (rigidBody != nullptr)
-		rigidBody->Set2DVelocity((moveDirection.Normalized()) * DashSpeed());
+		rigidBody->Set2DVelocity((moveVector.Normalized()) * DashSpeed());
 	
 	//dashImage->PlayAnimation(false, 1);
 }

@@ -88,14 +88,15 @@ public:
 	float MaxHealth() { return maxHealth + maxHealthModifier; }
 
 	// Basic Stats
-	float speed = 0.0f;
-	const float Speed() const { return speed * speedModifier; }
-	float attackSpeed = 0.0f;
+	const float Speed() const		{ return speed * speedModifier; }
 	const float AttackSpeed() const { return attackSpeed * attackSpeedModifier; }
-	float damage = 0.0f;
-	const float Damage() const { return damage * damageModifier; }
-	float defense = 1.0f;
-	const float Defense() const { return defense * defenseModifier; }
+	const float Damage() const		{ return damage * damageModifier; }
+	const float Defense() const		{ return defense * defenseModifier; }
+	
+	float speed						= 0.0f;
+	float attackSpeed				= 0.0f;
+	float damage					= 0.0f;
+	float defense					= 1.0f;
 
 	// Modifiers
 	float maxHealthModifier = 0.0f;
