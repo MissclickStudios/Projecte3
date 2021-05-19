@@ -85,7 +85,6 @@ void ExplosiveBarrel::OnCollisionEnter(GameObject* object)
 	{
 		toExplode = true;
 		barrelCollider->SetTrigger(true);
-		barrelCollider->SetSize(explosionTriggerSize);
 	}
 }
 
