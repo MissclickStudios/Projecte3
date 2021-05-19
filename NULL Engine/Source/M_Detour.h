@@ -78,7 +78,7 @@ private:
 	//Copy of Detour dunsigned intToCol but without transforming to unsigned int
 	Color areaToColor(unsigned int area) const;
 
-	void LoadNavMeshBuffer(std::vector<navigationPoly*> meshes);
+	void LoadNavMeshBuffers(std::vector<navigationPoly*>& meshes);
 
 public:
 	// Scripting

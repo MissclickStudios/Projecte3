@@ -256,7 +256,7 @@ void M_Detour::createRenderMeshes()
 			if (!tile->header) continue;
 			processTile(tile);
 		}
-		LoadNavMeshBuffer(renderMeshes);
+		LoadNavMeshBuffers(renderMeshes);
 	}
 }
 
@@ -311,28 +311,26 @@ void M_Detour::processTile(const dtMeshTile* tile)
 
 
 		navpol->color = areaToColor(poly->getArea());
-		navpol->rmesh->vertices.reserve((tile->header->vertCount + tile->header->detailVertCount)*3);
-		int size = navpol->rmesh->vertices.capacity();
-		navpol->rmesh->vertices.clear();
+		int size = (tile->header->vertCount + tile->header->detailVertCount);
+		navpol->rmesh->vertices.resize(size*3);
 		//navpol->rmesh->vertices.reserve(navpol->rmesh->vertices.size()/3);
-		navpol->rmesh->indices.resize(poly_d->triCount * 3);
-		navpol->rmesh->indices.reserve(navpol->rmesh->indices.size());
 
-
+		float* vertData = navpol->rmesh->vertices.data();
 		// We copy the vertices
-		for (int j = 0; j < size; j+=3) {
+		for (int j = 0; j < size; ++j) {
 			float* vert;
 			if (j < tile->header->vertCount)
-				vert = &tile->verts[j];
+				vert = &tile->verts[j * 3];
 			else
-				vert = &tile->detailVerts[(poly_d->vertBase + j - tile->header->vertCount)];
+				vert = &tile->detailVerts[(poly_d->vertBase + j - tile->header->vertCount) * 3];
 
-			navpol->rmesh->vertices.push_back(tile->verts[j]);
-			navpol->rmesh->vertices.push_back(tile->verts[j + 1]);
-			navpol->rmesh->vertices.push_back(tile->verts[j + 2]);
-			//memcpy(&navpol->rmesh->vertices[j], vert, sizeof(float) * 3);
+			memcpy(&vertData[j*3], vert, sizeof(float) * 3);
+			// @Improvement This is a fix for the navmesh render collinding with the geometry, might need to fix the renderer
+			//navpol->rmesh->vertices[j].position[1] += 0.1f;
 		}
 
+		navpol->rmesh->indices.resize(poly_d->triCount * 3);
+		//navpol->rmesh->indices.reserve(navpol->rmesh->indices.size());
 		// Index pointer to copy the indices
 		uint* index_indices = navpol->rmesh->indices.data();
 		for (int j = 0; j < poly_d->triCount; ++j) {
@@ -351,7 +349,7 @@ void M_Detour::processTile(const dtMeshTile* tile)
 		renderMeshes.push_back(navpol);
 	}
 	//TO draw tile per tile?
-	LoadNavMeshBuffer(renderMeshes);
+	//LoadNavMeshBuffer(renderMeshes);
 }
 
 inline int bit(int a, int b) {
@@ -382,7 +380,8 @@ navigationPoly::~navigationPoly() {
 	}
 }
 
-void M_Detour::LoadNavMeshBuffer(std::vector<navigationPoly*> meshes)
+//TODO: maybe put everything together in 1 buffer will increase performance
+void M_Detour::LoadNavMeshBuffers(std::vector<navigationPoly*>& meshes)
 {
 	for (int i = 0; i != meshes.size(); ++i)
 	{
