@@ -78,45 +78,92 @@ void ItemMenuManager::Update()
 			}
 		}
 	}
+	else if (weapon.uid != NULL)
+	{
+		if (buyButton != nullptr && buyButton->GetState() == UIButtonState::PRESSEDIN)
+		{
+			player->EquipWeapon(weapon);
+			weapon = Prefab();
+			weaponPosition = float3::zero;
+
+			App->uiSystem->RemoveActiveCanvas(canvas);
+		}
+		else
+		{
+			float3 playerPosition = player->transform->GetWorldPosition();
+
+			float distance = playerPosition.Distance(weaponPosition);
+			if (distance >= closeMenuThreshold)
+			{
+				weapon = Prefab();
+				weaponPosition = float3::zero;
+
+				App->uiSystem->RemoveActiveCanvas(canvas);
+			}
+		}
+	}
 	else
 		App->uiSystem->RemoveActiveCanvas(canvas);
 }
 
 void ItemMenuManager::SetItem(GroundItem* item)
 {
-	this->item = item;
-
-	nameText->SetText(this->item->item->name.c_str());
-	descriptionText->SetText(this->item->item->description.c_str());
-
-	if (this->item->item->price > 0)
+	if (weapon.uid == NULL && this->item == nullptr)
 	{
-		std::string text = "Price: ";
-		text += std::to_string(this->item->item->price);
-		text += "      Press Enter/A to pick up";
-		priceText->SetText(text.c_str());
+		this->item = item;
+
+		nameText->SetText(this->item->item->name.c_str());
+		descriptionText->SetText(this->item->item->description.c_str());
+
+		if (this->item->item->price > 0)
+		{
+			std::string text = "Price: ";
+			text += std::to_string(this->item->item->price);
+			text += "      Press Enter/A to pick up";
+			priceText->SetText(text.c_str());
+		}
+		else
+			priceText->SetText("Press Enter/A to pick up");
+
+		switch (this->item->item->rarity)
+		{
+		case ItemRarity::COMMON:
+			rarityText->SetText("COMMON");
+			rarityText->SetColor(COMMON_COLOR);
+			break;
+		case ItemRarity::RARE:
+			rarityText->SetText("RARE");
+			rarityText->SetColor(RARE_COLOR);
+			break;
+		case ItemRarity::EPIC:
+			rarityText->SetText("EPIC");
+			rarityText->SetColor(EPIC_COLOR);
+			break;
+		case ItemRarity::UNIQUE:
+			rarityText->SetText("UNIQUE");
+			rarityText->SetColor(UNIQUE_COLOR);
+			break;
+		}
+
+		App->uiSystem->PushCanvas(canvas);
 	}
-	else
-		priceText->SetText("Press Enter/A to pick up");
+}
 
-	switch (this->item->item->rarity)
+void ItemMenuManager::SetWeapon(Prefab weapon, float3 position, std::string name, std::string description)
+{
+	if (weapon.uid == NULL)
+		return;
+
+	if (this->weapon.uid == NULL && item == nullptr)
 	{
-	case ItemRarity::COMMON:
-		rarityText->SetText("COMMON");
-		rarityText->SetColor(COMMON_COLOR);
-		break;
-	case ItemRarity::RARE:
-		rarityText->SetText("RARE");
-		rarityText->SetColor(RARE_COLOR);
-		break;
-	case ItemRarity::EPIC:
-		rarityText->SetText("EPIC");
-		rarityText->SetColor(EPIC_COLOR);
-		break;
-	case ItemRarity::UNIQUE:
-		rarityText->SetText("UNIQUE");
-		rarityText->SetColor(UNIQUE_COLOR);
-		break;
+		nameText->SetText(name.c_str());
+		descriptionText->SetText(description.c_str());
+		priceText->SetText("Press Enter/A to pick up");
+		rarityText-> SetText("");
+
+		weaponPosition = position;
+		this->weapon = weapon;
+		App->uiSystem->PushCanvas(canvas);
 	}
 }
 

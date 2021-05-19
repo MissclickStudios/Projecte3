@@ -52,7 +52,7 @@ void InGameShop::Update()
 	std::vector<GameObject*>* gameObjects = App->scene->GetGameObjects();
 	for (uint i = 0; i < gameObjects->size(); ++i)
 	{
-		GroundItem* item = (GroundItem*)GetObjectScript((*gameObjects)[i], ObjectType::ITEM);
+		GroundItem* item = (GroundItem*)GetObjectScript((*gameObjects)[i], ObjectType::GROUND_ITEM);
 		if (item == nullptr)
 			continue;
 

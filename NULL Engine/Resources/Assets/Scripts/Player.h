@@ -72,6 +72,7 @@ public:
 	AnimationInfo onGuardAnimation = { "OnGuard" };
 
 	// Weapons
+	void EquipWeapon(Prefab weapon);
 	Weapon* const GetCurrentWeapon() const { return currentWeapon; }
 	float changeTime = 0.0f;
 	float ChangeTime() { return changeTime / attackSpeedModifier; }
@@ -152,6 +153,7 @@ private:
 	bool usingEquipedGun = false;
 	Timer changeTimer;
 
+	GameObject* hand = nullptr;
 	GameObject* blasterGameObject = nullptr;
 	GameObject* equipedGunGameObject = nullptr;
 	Weapon* blasterWeapon = nullptr;

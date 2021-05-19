@@ -17,7 +17,7 @@
 
 GroundItem::GroundItem() : Object()
 {
-	baseType = ObjectType::ITEM;
+	baseType = ObjectType::GROUND_ITEM;
 }
 
 GroundItem::~GroundItem()
@@ -65,11 +65,7 @@ void GroundItem::OnTriggerRepeat(GameObject* object)
 	if (item == nullptr)
 		return;
 
-	if (this != itemMenu->GetItem()) // WHAT HAPPENS IF I PUSH A PUSHED CANVAS?
-	{
-		itemMenu->SetItem(this);
-		App->uiSystem->PushCanvas(itemMenu->canvas);
-	}
+	itemMenu->SetItem(this);
 }
 
 void GroundItem::PickUp(Player* player)

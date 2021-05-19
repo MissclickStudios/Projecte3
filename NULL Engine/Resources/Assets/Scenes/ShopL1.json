@@ -1,10 +1,15 @@
 {
-    "ModTime": 1621429611,
+    "ModTime": 1621459202,
     "Models In Scene": [
         {
             "GameObjectUID": 632085905,
             "ModelResourceUID": 1877781044,
             "ModelAssetsPath": "Assets\/Models\/Characters\/Jawa_model.fbx"
+        },
+        {
+            "GameObjectUID": 2071856406,
+            "ModelResourceUID": 683248846,
+            "ModelAssetsPath": "Assets\/Models\/Weapons\/Blaster.fbx"
         }
     ],
     "Game Objects": [
@@ -1218,7 +1223,7 @@
         },
         {
             "UID": 296213747,
-            "ParentUID": 1369159263,
+            "ParentUID": 839849503,
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "MainScene",
@@ -2272,6 +2277,77 @@
                         "AssetsName": "ruined_wall_texture.png",
                         "LibaryPath": "Library\/Textures\/351492050.netex",
                         "LibraryFile": "351492050.netex"
+                    },
+                    "Shader": {
+                        "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
+                        "AssetsName": "DefaultShader.shader",
+                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
+                        "LibraryFile": "800223282.neshader"
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 385756783,
+            "ParentUID": 2071856406,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "BlastermeshiAYAYA",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -4.1822609901428223,
+                        -2.5939579010009766,
+                        0
+                    ],
+                    "LocalRotation": [
+                        -0.7071068286895752,
+                        0,
+                        0,
+                        0.70710670948028564
+                    ],
+                    "LocalScale": [
+                        0.10000000149011612,
+                        0.10000000894069672,
+                        0.10000000894069672
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 106224982,
+                    "Name": "Blaster.nemesh",
+                    "Path": "Library\/Meshes\/106224982.nemesh",
+                    "File": "106224982.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false,
+                    "Outline": false,
+                    "OutlineThickness": 1,
+                    "OutlineColor": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ]
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 1703275201,
+                        "Color": [
+                            0.26666668057441711,
+                            0.19215686619281769,
+                            0.54509806632995605,
+                            1
+                        ],
+                        "Name": "Blaster.nemat",
+                        "Path": "Library\/Materials\/1703275201.nemat",
+                        "File": "1703275201.nemat"
                     },
                     "Shader": {
                         "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
@@ -8260,6 +8336,79 @@
                     "Center X": 0,
                     "Center Y": 0,
                     "Center Z": 0
+                }
+            ]
+        },
+        {
+            "UID": 2071856406,
+            "ParentUID": 296213747,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "YOOOOO",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": true,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -41.012897491455078,
+                        10.071083068847656,
+                        41.045398712158203
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 8,
+                    "Is Static": true,
+                    "Filter": " gate"
+                },
+                {
+                    "Type": 9,
+                    "Is Trigger": true,
+                    "Show Collider": true,
+                    "Size X": 10,
+                    "Size Y": 10,
+                    "Size Z": 10,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
+                },
+                {
+                    "Type": 24,
+                    "ResourceUID": 159624972,
+                    "AssetsPath": "Assets\/Scripts\/\/WeaponItem.h",
+                    "DataName": "WeaponItem",
+                    "HasInspector": true,
+                    "InspectorVariables": [
+                        {
+                            "Type": 5,
+                            "Name": "gunName",
+                            "string": "COCK"
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "gunDescription",
+                            "string": "yeee u already know"
+                        },
+                        {
+                            "Type": 4,
+                            "Name": "weapon",
+                            "prefab": 1609990140
+                        }
+                    ]
                 }
             ]
         },

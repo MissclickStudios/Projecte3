@@ -261,6 +261,7 @@ void Player::SaveState(ParsonNode& playerNode)
 		node.SetBool("Permanent", effects[i]->Permanent());
 	}
 
+	playerNode.SetInteger("Equiped Gun", (int)equipedGun.uid);
 	playerNode.SetBool("Using Equiped Gun", usingEquipedGun);
 	if (blasterWeapon != nullptr)
 		playerNode.SetInteger("Blaster Ammo", blasterWeapon->ammo);
@@ -302,7 +303,6 @@ void Player::LoadState(ParsonNode& playerNode)
 		AddEffect(type, duration, permanent);
 	}
 
-	GameObject* hand = nullptr;
 	if (skeleton != nullptr)
 		for (uint i = 0; i < skeleton->childs.size(); ++i)
 		{
@@ -328,7 +328,10 @@ void Player::LoadState(ParsonNode& playerNode)
 
 	// TODO: Load correct secondary gun
 	//equipedGunGameObject = App->resourceManager->LoadPrefab(playerNode.GetInteger("Equiped Gun"), App->scene->GetSceneRoot());
-	equipedGunGameObject = App->resourceManager->LoadPrefab(equipedGun.uid, App->scene->GetSceneRoot());
+	uint uid = (uint)playerNode.GetInteger("Equiped Gun");
+	if (uid == NULL)
+		uid = equipedGun.uid;
+	equipedGunGameObject = App->resourceManager->LoadPrefab(uid, App->scene->GetSceneRoot());
 	if (equipedGunGameObject != nullptr)
 	{
 		equipedGunWeapon = (Weapon*)GetObjectScript(equipedGunGameObject, ObjectType::WEAPON);
@@ -336,7 +339,10 @@ void Player::LoadState(ParsonNode& playerNode)
 		if (equipedGunWeapon != nullptr)
 		{
 			equipedGunWeapon->SetOwnership(type, hand, handName);
-			equipedGunWeapon->ammo = playerNode.GetInteger("Equiped Gun Ammo");
+			int savedAmmo = playerNode.GetInteger("Equiped Gun Ammo");
+			if (savedAmmo > equipedGunWeapon->MaxAmmo())
+				savedAmmo = equipedGunWeapon->MaxAmmo();
+			equipedGunWeapon->ammo = savedAmmo;
 		}
 	}
 
@@ -446,6 +452,28 @@ void Player::TakeDamage(float damage)
 
 		if (damageAudio != nullptr)
 			damageAudio->PlayFx(damageAudio->GetEventId());
+	}
+}
+
+void Player::EquipWeapon(Prefab weapon)
+{
+	if (equipedGunWeapon != nullptr)
+	{
+		if (equipedGunWeapon->weaponModel != nullptr)
+			equipedGunWeapon->weaponModel->SetIsActive(false);
+	}
+
+	equipedGunGameObject = App->resourceManager->LoadPrefab(weapon.uid, App->scene->GetSceneRoot());
+	equipedGun = weapon;
+	if (equipedGunGameObject != nullptr)
+	{
+		equipedGunWeapon = (Weapon*)GetObjectScript(equipedGunGameObject, ObjectType::WEAPON);
+
+		if (equipedGunWeapon != nullptr)
+		{
+			equipedGunWeapon->SetOwnership(type, hand, handName);
+			currentWeapon = equipedGunWeapon;
+		}
 	}
 }
 

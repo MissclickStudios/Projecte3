@@ -42,8 +42,6 @@ public:
 
 protected:
 
-	bool used = false;
-
 	C_Material* material = nullptr;
 
 	ItemMenuManager* itemMenu = nullptr;

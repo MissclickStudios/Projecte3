@@ -2,6 +2,10 @@
 #include "Script.h"
 #include "ScriptMacros.h"
 
+#include "Prefab.h"
+
+#include "MathGeoLib/include/Math/float3.h"
+
 #include <string>
 
 class C_Canvas;
@@ -23,6 +27,8 @@ public:
 
 	const GroundItem* GetItem() const { return item; }
 	void SetItem(GroundItem* item);
+
+	void SetWeapon(Prefab weapon, float3 position, std::string name, std::string description);
 
 	std::string canvasName = "Item Menu";
 	std::string buyButtonName = "Buy Button";
@@ -48,6 +54,9 @@ private:
 
 	Player* player = nullptr;
 	GroundItem* item = nullptr;
+
+	Prefab weapon;
+	float3 weaponPosition = float3::zero;
 };
 
 SCRIPTS_FUNCTION ItemMenuManager* CreateItemMenuManager();
