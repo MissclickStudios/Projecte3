@@ -11,10 +11,11 @@
 #include "C_Transform.h"
 
 #include "CameraMovement.h"
+#include "Entity.h"
+#include "Player.h"
 
 #include "Random.h"
 #include "MC_Time.h"
-
 
 #include "M_Input.h"
 
@@ -30,6 +31,7 @@ CameraMovement::~CameraMovement()
 void CameraMovement::Start()
 {
 	player = App->scene->GetGameObjectByName(playerName.c_str());
+	playerScript = (Player*)player->GetScript("Player");
 }
 
 void CameraMovement::Update()
@@ -39,13 +41,12 @@ void CameraMovement::Update()
 		return;
 
 	float3 position = player->transform->GetWorldPosition();
-
-
 	position += offset;
 	gameObject->transform->SetWorldPosition(position);
 	
-	
-	if (App->input->GetKey(SDL_SCANCODE_M) == KeyState::KEY_REPEAT) CameraShake(0.15f, 1.0f);
+	if (playerScript != nullptr & playerScript->hitTimer.IsActive()) 
+		CameraShake(shakeDuration, shakeMagnitude);
+
 }
 
 void CameraMovement::CleanUp()
@@ -53,28 +54,22 @@ void CameraMovement::CleanUp()
 	LOG("CleanUp");
 }
 
-void CameraMovement::CameraShake(float duration, float shakeMagnitude)
+void CameraMovement::CameraShake(float duration, float magnitude)
 {
-	float3 originalPos;
-	float x;
-	float y;
-	
-	originalPos = gameObject->transform->GetWorldPosition();
+	float3 originalPos = gameObject->transform->GetWorldPosition();
+	float x = Random::LCG::GetBoundedRandomFloat(-1.0f, 1.0f) * magnitude;
+	float y = Random::LCG::GetBoundedRandomFloat(-1.0f, 1.0f) * magnitude;
 
-	if (timeElapsed < duration)
+	if (duration > 0.0f)
 	{
-		x = Random::LCG::GetBoundedRandomFloat(-1.0f, 1.0f) * shakeMagnitude;
-		y = Random::LCG::GetBoundedRandomFloat(-1.0f, 1.0f) * shakeMagnitude;
-
-		timeElapsed += MC_Time::Game::GetDT();
+		duration -= MC_Time::Game::GetDT();
 		
 		gameObject->transform->SetWorldPosition(float3(originalPos.x + x, originalPos.y + y, originalPos.z));
-
 	}
 	else
 	{
 		gameObject->transform->SetWorldPosition(originalPos);
-		timeElapsed = 0;
+		duration = 0;
 	}
 
 }
