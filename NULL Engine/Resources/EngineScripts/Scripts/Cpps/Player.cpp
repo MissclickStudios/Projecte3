@@ -279,6 +279,7 @@ void Player::SaveState(ParsonNode& playerNode)
 		node.SetNumber("Power", items[i].second->power);
 		node.SetNumber("Duration", items[i].second->duration);
 		node.SetNumber("Chance", items[i].second->chance);
+		node.SetString("Texture Path", items[i].second->texturePath.c_str());
 	}
 }
 
@@ -358,6 +359,7 @@ void Player::LoadState(ParsonNode& playerNode)
 		savedData->power = node.GetNumber("Power");
 		savedData->duration = node.GetNumber("Duration");
 		savedData->chance = node.GetNumber("Chance");
+		savedData->texturePath = node.GetString("Texture Path");
 
 		Item* item = Item::CreateItem(savedData); // Get an item with the data we loaded
 
@@ -461,6 +463,12 @@ void Player::EquipWeapon(Prefab weapon)
 	{
 		if (equipedGunWeapon->weaponModel != nullptr)
 			equipedGunWeapon->weaponModel->SetIsActive(false);
+		equipedGunWeapon = nullptr;
+	}
+	if (equipedGunGameObject != nullptr)
+	{
+		equipedGunGameObject->toDelete = true;
+		equipedGunGameObject = nullptr;
 	}
 
 	equipedGunGameObject = App->resourceManager->LoadPrefab(weapon.uid, App->scene->GetSceneRoot());

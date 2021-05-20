@@ -66,6 +66,7 @@ public:
     Prefab groguPrefab;
     Grogu* groguScript = nullptr;
     Prefab chestPrefab;
+    int chestSpawnChance = 60;
 
 private:
     GameObject* playerGameObject = nullptr;

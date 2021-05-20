@@ -8,6 +8,7 @@
 #include "ItemRarity.h"
 
 class C_Material;
+class C_ParticleSystem;
 class ItemMenuManager;
 
 class Item;
@@ -43,6 +44,7 @@ public:
 protected:
 
 	C_Material* material = nullptr;
+	C_ParticleSystem* particle = nullptr;
 
 	ItemMenuManager* itemMenu = nullptr;
 };

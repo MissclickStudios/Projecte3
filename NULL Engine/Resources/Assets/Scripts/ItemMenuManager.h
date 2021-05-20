@@ -41,7 +41,7 @@ public:
 
 	C_Canvas* canvas = nullptr;
 
-	float closeMenuThreshold = 10.0f;
+	float closeMenuThreshold = 12.0f;
 
 private:
 

@@ -2,13 +2,17 @@
 
 #include "Application.h"
 #include "M_Scene.h"
+#include "M_Camera3D.h"
 #include "M_UISystem.h"
 #include "M_ResourceManager.h"
 #include "R_Texture.h"
 
 #include "GameObject.h"
+#include "C_Transform.h"
 #include "C_Material.h"
 #include "C_Canvas.h"
+#include "C_ParticleSystem.h"
+#include "Emitter.h"
 
 #include "Player.h"
 #include "ItemMenuManager.h"
@@ -26,9 +30,17 @@ GroundItem::~GroundItem()
 
 void GroundItem::Awake()
 {
-	GameObject* gameObject = App->scene->GetGameObjectByName(itemMenuName.c_str());
-	if (gameObject != nullptr)
-		itemMenu = (ItemMenuManager*)gameObject->GetScript("ItemMenuManager");
+	GameObject* menuGameObject = App->scene->GetGameObjectByName(itemMenuName.c_str());
+	if (menuGameObject != nullptr)
+		itemMenu = (ItemMenuManager*)menuGameObject->GetScript("ItemMenuManager");
+
+	for (uint i = 0; i < gameObject->components.size(); ++i) // CANT GETCOMPONENT() OF PARTICLE SYSTEM
+	{
+		if (gameObject->components[i]->GetType() == ComponentType::PARTICLE_SYSTEM)
+			particle = (C_ParticleSystem*)gameObject->components[i];
+	}
+	if (particle != nullptr)
+		particle->StopSpawn();
 
 	for (uint i = 0; i < gameObject->childs.size(); ++i)
 	{
@@ -44,6 +56,23 @@ void GroundItem::Awake()
 
 void GroundItem::Update()
 {
+	float3 N, U, _U, R;
+	float4x4 cameraTransform = App->camera->GetCurrentCamera()->GetOwner()->transform->GetWorldTransform();
+	float3 direction = float3(cameraTransform.TranslatePart() - gameObject->transform->GetWorldPosition()).Normalized(); //normalized vector between the camera and gameobject position
+
+	// Screem Aligned
+	//N = cameraTransform.WorldZ().Normalized().Neg();	// N is the inverse of the camera +Z
+	//U = cameraTransform.WorldY().Normalized();			// U is the up vector from the camera (already perpendicular to N)
+	//R = U.Cross(N).Normalized();						// R is the cross product between  U and N
+	// World Aligned
+	N = direction;										// N is the direction
+	_U = cameraTransform.WorldY().Normalized();			// _U is the up vector form the camera, only used to calculate R
+	R = _U.Cross(N).Normalized();						// R is the cross product between U and N
+	U = N.Cross(R).Normalized();						// U is the cross product between N and R
+
+	float3x3 result = float3x3(R, U, N);
+
+	gameObject->transform->SetWorldRotation(result.ToQuat());
 }
 
 void GroundItem::CleanUp()
@@ -97,6 +126,32 @@ bool GroundItem::AddItem(const std::vector<ItemData*> items, int num, bool toBuy
 			if (texture != nullptr)
 				material->SetTexture(texture);
 		}
+
+	if (particle != nullptr)
+	{
+		particle->StopSpawn();
+		for (uint i = 0; i < particle->emitterInstances.size(); ++i)
+		{
+			std::string rarityName = "NONE";
+			switch (item->rarity)
+			{
+			case ItemRarity::COMMON:
+				rarityName = "COMMON";
+				break;
+			case ItemRarity::RARE:
+				rarityName = "RARE";
+				break;
+			case ItemRarity::EPIC:
+				rarityName = "EPIC";
+				break;
+			case ItemRarity::UNIQUE:
+				rarityName = "UNIQUE";
+				break;
+			}
+			if (particle->emitterInstances[i]->emitter->name == rarityName)
+				particle->emitterInstances[i]->stopSpawn = false;
+		}
+	}
 
 	return true;
 }

@@ -24,6 +24,8 @@
 
 #include "Items.h"
 
+#include "Random.h"
+
 GameManager::GameManager(): Script()
 {
 }
@@ -748,7 +750,8 @@ void GameManager::GateUpdate()
 				return;
 
 			gate->Unlock();
-			if (chestPrefab.uid != NULL)
+			uint num = Random::LCG::GetBoundedRandomUint(0, 100);
+			if (num <= chestSpawnChance && chestPrefab.uid != NULL)
 			{
 				GameObject* chest = App->resourceManager->LoadPrefab(chestPrefab.uid, App->scene->GetSceneRoot());
 				if (chest != nullptr && lastEnemyDead != nullptr)
@@ -774,6 +777,7 @@ void GameManager::GateUpdate()
 
 GameManager* CreateGameManager() {
 	GameManager* script = new GameManager();
+
 	INSPECTOR_CHECKBOX_BOOL(script->enabled);
 	INSPECTOR_STRING(script->mainMenuScene);
 	INSPECTOR_STRING(script->SpawnPointName);
@@ -787,6 +791,7 @@ GameManager* CreateGameManager() {
 	INSPECTOR_PREFAB(script->playerPrefab);
 	INSPECTOR_PREFAB(script->groguPrefab);
 	INSPECTOR_PREFAB(script->chestPrefab);
+	INSPECTOR_DRAGABLE_INT(script->chestSpawnChance);
 
 	return script;
 }
