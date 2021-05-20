@@ -33,6 +33,7 @@ class C_ParticleSystem;
 class C_UI_Image;
 class C_UI_Text;
 class C_UI_Button;
+class C_UI_Checkbox;
 class C_2DAnimator;
 class C_NavMeshAgent;
 
@@ -93,6 +94,7 @@ private:																										// --- DRAW COMPONENT METHODS ---
 	//void DrawGateBehaviorComponent		(C_GateBehavior* behavior);
 	void DrawAnimator2DComponent		(C_2DAnimator* cAnimator);
 	void DrawNavMeshAgentComponent		(C_NavMeshAgent* cNavMeshAgent);
+	void DrawUICheckboxComponent(C_UI_Checkbox* checkbox);
 
 private:																														// --- DRAW COMPONENT UTILITY METHODS ---
 	void AddComponentCombo				(GameObject* selectedGameObject);														// 

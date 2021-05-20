@@ -1,7 +1,3 @@
-#include "OpenGL.h"
-
-#include "MathGeoLib/include/Math/float4x4.h"
-
 #include "VariableDefinitions.h"
 #include "VariableTypedefs.h"
 #include "Macros.h"
@@ -9,9 +5,19 @@
 
 #include "RE_Circle.h"
 
-RE_Circle::RE_Circle(float4x4 transform, float3 position, float radius, uint sectors, float lineWidth, Color color) : Renderer(lineWidth, color),
-transform	(transform),
-position	(position),
+RE_Circle::RE_Circle(float4x4* transform, float radius, uint sectors, float lineWidth, Color color) : Renderer(RendererType::CIRCLE, transform, lineWidth, color),
+radius		(radius),
+sectors		(sectors),
+vertices	((sectors != 0) ? new float[(sectors * 3)] : nullptr)
+{
+	if (vertices != nullptr)
+	{
+		memset(vertices, 0, sectors * 3);
+		CalculateVertices();
+	}
+}
+
+RE_Circle::RE_Circle(float4x4* transform, float radius, uint sectors) : Renderer(RendererType::CIRCLE, transform),
 radius		(radius),
 sectors		(sectors),
 vertices	((sectors != 0) ? new float[(sectors * 3)] : nullptr)
@@ -41,7 +47,7 @@ bool RE_Circle::Render()
 	glBegin(GL_LINE_LOOP);
 	
 	glPushMatrix();
-	glMultMatrixf((GLfloat*)&transform.Transposed());
+	glMultMatrixf((GLfloat*)&transform->Transposed());
 
 	for (uint i = 0, j = 0; i < sectors; ++i, j += 3)
 	{
@@ -62,7 +68,7 @@ bool RE_Circle::CleanUp()
 	return true;
 }
 
-// --- RE_Circle METHODS
+// --- RE_CIRCLE METHODS
 void RE_Circle::CalculateVertices()
 {
 	float sectorStep	= (2 * PI) / sectors;

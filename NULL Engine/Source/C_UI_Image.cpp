@@ -16,8 +16,11 @@
 
 #include "R_Shader.h"
 #include "R_Texture.h"
+#include "Spritesheet.h"
 
 #include "C_UI_Image.h"
+
+#include "M_Input.h"
 
 #include "Dependencies/glew/include/glew.h"
 //#include "OpenGL.h"
@@ -54,14 +57,34 @@ bool C_UI_Image::CleanUp()
 
 void C_UI_Image::LoadBuffers()
 {
-	glGenBuffers(1, &VAO);
-	glBindBuffer(GL_ARRAY_BUFFER, VAO);
+	const float texCoordsBuffer[] = {
+		0.0f, 1.0f, 0.0f, 1.0f,
+		1.0f, 0.0f, 1.0f, 0.0f,
+		0.0f, 0.0f, 0.0f, 0.0f,
 
-	glBufferData(GL_ARRAY_BUFFER, sizeof(texCoordsBuffer), texCoordsBuffer, GL_STATIC_DRAW);
+		0.0f, 1.0f, 0.0f, 1.0f,
+		1.0f, 1.0f, 1.0f, 1.0f,
+		1.0f, 0.0f, 1.0f, 0.0f
+	};
+
+	glGenVertexArrays(1, &VAO);
+	glGenBuffers(1, &VBO);
+
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(texCoordsBuffer), texCoordsBuffer, GL_DYNAMIC_DRAW);
+
+	glBindVertexArray(VAO);
+
+	// position attribute
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, (GLvoid*)0);
+
+	// texture coord attribute
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
+	glEnableVertexAttribArray(1);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindVertexArray(0);
 }
 
 void C_UI_Image::HandleInput(C_UI** selectedUi)
@@ -79,7 +102,7 @@ void C_UI_Image::Draw2D()
 		return;
 
 	else if (cAnimator && cAnimator->IsAnimationPlaying())
-		id = cAnimator->GetIdFromAnimation();
+		id = cAnimator->spritesheet->spriteSheet->GetTextureID();
 
 	else
 		id = cMaterial->GetTextureID();
@@ -96,20 +119,61 @@ void C_UI_Image::Draw2D()
 
 	float4x4 projectionMatrix = float4x4::FromTRS(float3(x, y, 0), Quat::FromEulerXYZ(0, 0, 0), float3(GetRect().w, GetRect().h, 1)).Transposed();
 
+	float4x4 identity = float4x4::identity;
+
 	glBindTexture(GL_TEXTURE_2D, id);
 	
 	cMaterial->GetShader()->SetUniform1i("useColor", (GLint)false);
+	cMaterial->GetShader()->SetUniformMatrix4("model", identity.Transposed().ptr());
 	cMaterial->GetShader()->SetUniformMatrix4("projection", projectionMatrix.ptr());
+	
+	
+	//Uncomment the code below to update the texture coords in real time
+	if(cAnimator != nullptr && cAnimator->IsAnimationPlaying())
+	{
+		float newCoords[] = {
+			0.0f, 1.0f, cAnimator->spritesheet->currentFrame.proportionBeginX, cAnimator->spritesheet->currentFrame.proportionFinalY,
+			1.0f, 0.0f, cAnimator->spritesheet->currentFrame.proportionFinalX, cAnimator->spritesheet->currentFrame.proportionBeginY,
+			0.0f, 0.0f, cAnimator->spritesheet->currentFrame.proportionBeginX, cAnimator->spritesheet->currentFrame.proportionBeginY,
 
-	glBindBuffer(GL_ARRAY_BUFFER, VAO);
+			0.0f, 1.0f, cAnimator->spritesheet->currentFrame.proportionBeginX, cAnimator->spritesheet->currentFrame.proportionFinalY,
+			1.0f, 1.0f, cAnimator->spritesheet->currentFrame.proportionFinalX, cAnimator->spritesheet->currentFrame.proportionFinalY,
+			1.0f, 0.0f, cAnimator->spritesheet->currentFrame.proportionFinalX,  cAnimator->spritesheet->currentFrame.proportionBeginY
+
+
+
+			//	    0.0f, 1.0f, 0.0f , 0.9361f,
+			//		1.0f, 0.0f, 0.1816f, 1.0f,
+			//		0.0f, 0.0f, 0.0f, 1.0f,
+			//	
+			//		0.0f, 1.0f, 0.0f, 0.9361f,
+			//		1.0f, 1.0f, 0.1816f,0.9361f,
+			//		1.0f, 0.0f, 0.1816f, 1.0f
+			//
+					/*
+					0.0f, 1.0f, 0.0f , 0.5f,
+					1.0f, 0.0f, 0.5f, 0.0f,
+					0.0f, 0.0f, 0.0f, 0.0f,
+
+					0.0f, 1.0f, 0.0f, 0.5f,
+					1.0f, 1.0f, 0.5f, 0.5f,
+					1.0f, 0.0f, 0.5f, 0.0f*/
+		};
+
+		glBindBuffer(GL_ARRAY_BUFFER, VBO);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(newCoords), newCoords, GL_DYNAMIC_DRAW);
+	}
+
+
+	glBindVertexArray(VAO);
 
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindVertexArray(0);
 
 	glDisable(GL_BLEND);
-
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
+	
 	glBindTexture(GL_TEXTURE_2D, 0);
 
 	glUseProgram(0);
@@ -127,7 +191,6 @@ void C_UI_Image::Draw3D()
 
 	else if (cAnimator->IsAnimationPlaying())
 		id = cAnimator->GetIdFromAnimation();
-
 	else
 		id = cMaterial->GetTextureID();
 
@@ -162,10 +225,10 @@ bool C_UI_Image::SaveState(ParsonNode& root) const
 {
 	root.SetNumber("Type", (uint)GetType());
 
-	root.SetNumber("X", GetRect().x);
-	root.SetNumber("Y", GetRect().y);
-	root.SetNumber("W", GetRect().w);
-	root.SetNumber("H", GetRect().h);
+	root.SetNumber("X", rect.x);
+	root.SetNumber("Y", rect.y);
+	root.SetNumber("W", rect.w);
+	root.SetNumber("H", rect.h);
 
 	 root.SetNumber("childOrder", childOrder);
 

@@ -23,10 +23,22 @@ out vec4 FragColor;
 in vec2 TexCoords;
 
 uniform sampler2D screenTexture;
+uniform float progression;
 
 void main()
 { 
-    FragColor = texture(screenTexture, TexCoords);
+    
+    
+    if (TexCoords.x < progression) 
+    {
+        FragColor = vec4(0, 0, 0, 1);
+    }
+    else 
+    {
+        FragColor = texture(screenTexture, TexCoords);
+    }
+    
+    
 }
 
 #endif

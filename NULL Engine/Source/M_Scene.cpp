@@ -1,6 +1,7 @@
 #include "Profiler.h"
 #include "MathGeoTransform.h"
 
+#include "MC_Time.h"
 #include "JSONParser.h"
 #include "Random.h"
 
@@ -23,6 +24,7 @@
 #include "R_Mesh.h"
 #include "R_Texture.h"
 #include "R_Scene.h"
+#include "R_Shader.h"
 #include "R_NavMesh.h"
 
 #include "GameObject.h"
@@ -44,6 +46,7 @@
 #include "M_Scene.h"
 #include "M_ScriptManager.h"
 
+#include "MC_Time.h"
 #include "MemoryManager.h"
 
 M_Scene::M_Scene(bool isActive) : Module("SceneManager", isActive),
@@ -51,7 +54,8 @@ masterRoot				(nullptr),
 sceneRoot				(nullptr),
 animationRoot			(nullptr),
 selectedGameObject		(nullptr),
-cullingCamera			(nullptr)
+cullingCamera			(nullptr),
+transitionProgresion	(0)
 {
 	CreateMasterRoot();
 	CreateSceneRoot("MainScene");
@@ -89,7 +93,7 @@ bool M_Scene::Start()
 	
 
 	if(App->gameState == GameState::PLAY)
-		LoadScene("Assets/Scenes/MainMenu.json");
+		LoadScene("Assets/Scenes/HUB.json");
 	else
 	{
 		std::string s = ASSETS_SCENES_PATH + currentScene + JSON_EXTENSION;
@@ -176,6 +180,7 @@ UpdateStatus M_Scene::Update(float dt)
 	
 	//ShowFPS();
 
+
 	return UpdateStatus::CONTINUE;
 }
 
@@ -183,7 +188,7 @@ UpdateStatus M_Scene::PostUpdate(float dt)
 {	
 	OPTICK_CATEGORY("M_Scene PostUpdate", Optick::Category::Module)
 
-	if (nextScene)
+	if (nextScene && transitionProgresion >= 1.0f)
 	{
 		LoadScene(nextSceneName.c_str());
 		nextScene = false;
@@ -245,6 +250,8 @@ bool M_Scene::SaveScene(const char* sceneName) const
 {
 	App->uiSystem->SaveCanvasChildrenOrder();
 	ParsonNode rootNode		= ParsonNode();
+
+	rootNode.SetNumber("ModTime", MC_Time::GetUnixTime());
 
 	ParsonArray modelArray = rootNode.SetArray("Models In Scene");
 	for (auto item = models.begin(); item != models.end(); ++item)
@@ -324,7 +331,7 @@ bool M_Scene::LoadScene(const char* path)
 		return false;
 	}
 
-	int modTime = App->fileSystem->GetLastModTime(path);
+	
 	std::vector<GameObject*> prefabsToDelete;
 
 	if (buffer != nullptr)
@@ -341,6 +348,7 @@ bool M_Scene::LoadScene(const char* path)
 		ParsonNode newRoot			= ParsonNode(buffer);
 		ParsonArray modelsArray		= newRoot.GetArray("Models In Scene");
 		ParsonArray objectsArray	= newRoot.GetArray("Game Objects");
+		int modTime = newRoot.GetNumber("ModTime");
 		RELEASE_ARRAY(buffer);
 
 		if (sceneName == AUTOSAVE_FILE_NAME)
@@ -1416,9 +1424,7 @@ void M_Scene::GetPointLights(std::vector<GameObject*>& pointLights)
 
 void M_Scene::NextRoom()
 {
-	
 	nextScene = true;
-	
 }
 
 void M_Scene::HandleCopyGO() //TODO Cntrl + c / Cntrl + v
@@ -1468,6 +1474,17 @@ void M_Scene::ScriptChangeScene(const std::string& sceneName)
 {
 	nextScene = true;
 	nextSceneName = sceneName;
+}
+
+void M_Scene::DoSceneTransition(R_Shader* screenShader, float transitionSpeed)
+{
+	if (nextScene && transitionProgresion < 1.0f)
+		transitionProgresion += MC_Time::Game::GetDT() / transitionSpeed;
+
+	else if (!nextScene &&  transitionProgresion > 0.0f)
+		transitionProgresion -= (MC_Time::Game::GetDT() > 0.1f ? 0 : MC_Time::Game::GetDT() / transitionSpeed);
+
+	screenShader->SetUniform1f("progression", transitionProgresion);
 }
 
 void M_Scene::DeleteSelectedGameObject()

@@ -70,7 +70,7 @@ bool M_ResourceManager::Start()
 	RefreshDirectoryFiles(ASSETS_DIRECTORY);
 	RefreshDirectoryFiles(ENGINE_DIRECTORY);
 
-	TrimLibrary();
+	//TrimLibrary();
 
 	FindPrefabs();
 
@@ -952,6 +952,8 @@ void M_ResourceManager::SavePrefab(GameObject* gameObject, uint _prefabId)
 	App->uiSystem->SaveCanvasChildrenOrder();
 	ParsonNode rootNode;
 
+	rootNode.SetNumber("ModTime", MC_Time::GetUnixTime());
+
 	SavePrefabObject(gameObject,&rootNode);
 
 	char* buffer = nullptr;
@@ -1653,19 +1655,17 @@ void M_ResourceManager::FindPrefabs()
 	
 	char* buffer = nullptr;
 	std::string fileName;
-	int modTime = 0;
 	for (auto file = files.begin(); file != files.end(); file++)
 	{
 		fileName = ASSETS_PREFABS_PATH + (*file);
 		App->fileSystem->Load(fileName.c_str(), &buffer);
 
 		ParsonNode prefab(buffer);
+		int modTime = prefab.GetNumber("ModTime");
 		RELEASE_ARRAY(buffer);
 
 		std::string id;
 		App->fileSystem->SplitFilePath((*file).c_str(), nullptr, &id);
-
-		modTime = App->fileSystem->GetLastModTime(fileName.c_str());
 		
 		prefabs.emplace(atoi((*file).c_str()), Prefab(atoi((*file).c_str()),prefab.GetString("Name"),modTime));												// atoi()? Will there be any problems if you just emplace(a, b)?
 	}

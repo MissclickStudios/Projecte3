@@ -10,8 +10,12 @@
 
 #include "MathGeoLib/include/Math/float2.h"
 
+#include "ItemRarity.h"
+
 class C_AudioSource;
 class C_2DAnimator;
+
+struct ItemData;
 
 enum class PlayerState
 {
@@ -151,9 +155,10 @@ public:
 	AnimationInfo onGuardAnimation			= { "OnGuard" };
 
 	// Weapons
-	Weapon* const GetCurrentWeapon() const	{ return currentWeapon; }
 	float ChangeTime()						{ return changeTime / attackSpeedModifier; }
-	
+	void EquipWeapon(Prefab weapon);
+	Weapon* const GetCurrentWeapon() const { return currentWeapon; }
+
 	float changeTime = 0.0f;
 	Prefab blaster;
 	Prefab equipedGun;
@@ -197,6 +202,10 @@ public:
 	// Controller
 	float joystickThreshold					= 25.0f;
 	float joystickFactor					= 327.67;
+
+	// Items
+	void AddItem(ItemData* item);
+	const std::vector<std::pair<bool, ItemData*>>* const GetItems() const { return &items; }
 
 private:
 
@@ -267,15 +276,21 @@ private:
 	bool usingSecondaryGun				= false;
 	Timer changeTimer;
 
-	GameObject* blasterGameObject		= nullptr;
-	GameObject* secondaryGunGameObject	= nullptr;
-
-	Weapon* blasterWeapon				= nullptr;
-	Weapon* secondaryWeapon				= nullptr;
-	Weapon* currentWeapon				= nullptr;
+	GameObject* hand = nullptr;
+	GameObject* blasterGameObject = nullptr;
+	GameObject* equipedGunGameObject = nullptr;
+	Weapon* blasterWeapon = nullptr;
+	Weapon* equipedGunWeapon = nullptr;
+	Weapon* currentWeapon = nullptr;
 
 	// Debug
 	bool godMode = false;
+
+	// Items
+	void ApplyItems();
+
+	std::vector<std::pair<bool, ItemData*>> items;
+	std::vector<std::pair<bool, ItemData*>> savedItems;
 };
 
 SCRIPTS_FUNCTION Player* CreatePlayer();

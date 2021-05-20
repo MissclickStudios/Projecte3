@@ -13,6 +13,21 @@
 #include "MathGeoLib/include/Math/MathFunc.h"
 #include "Bullet.h"
 
+#include "Random.h"
+
+#include <algorithm>
+
+struct {
+	bool operator()(Perk a, Perk b) const
+	{
+		if (a.Type() >= b.Type())
+			return false;
+		if (a.Type() < b.Type())
+			return true;
+		return false;
+	}
+} perkSort;
+
 struct Projectile
 {
 	Projectile() : object(nullptr), inUse(false), bulletScript(nullptr) {}
@@ -90,7 +105,7 @@ void Weapon::CleanUp()
 
 void Weapon::OnPause()
 {
-	fireRateTimer.Pause();
+	//fireRateTimer.Pause();
 	reloadTimer.Pause();
 
 	WeaponPause();
@@ -98,7 +113,7 @@ void Weapon::OnPause()
 
 void Weapon::OnResume()
 {
-	fireRateTimer.Resume();
+	//fireRateTimer.Resume();
 	reloadTimer.Resume();
 
 	WeaponResume();
@@ -193,72 +208,112 @@ void Weapon::ProjectileCollisionReport(int index)
 	projectiles[index]->object->transform->SetLocalPosition(float3::zero);
 }
 
-void Weapon::RefreshPerks()
+void Weapon::RefreshPerks(bool reset)
 {
 	// Reset modifiers and on hit effects to avoid overwritting
 	damageModifier = DEFAULT_MODIFIER;
 	projectileSpeedModifier = DEFAULT_MODIFIER;
 	fireRateModifier = DEFAULT_MODIFIER;
 	reloadTimeModifier = DEFAULT_MODIFIER;
-	maxAmmoModifier = 0.0f;
+	maxAmmoModifier = DEFAULT_MODIFIER;
 	PPSModifier = 0.0f;
+
 	onHitEffects.clear();
 
+	if (reset)
+	{
+		perks.clear();
+		return;
+	}
 	// Apply each perk
 	for (uint i = 0; i < perks.size(); ++i)
-		switch (perks[i])
+		switch (perks[i].Type())
 		{
-		case Perk::DAMAGE_UP:
-			DamageUp();
+		case PerkType::DAMAGE_MODIFY:
+			DamageModify(&perks[i]);
 			break;
-		case Perk::MAXAMMO_UP:
-			MaxAmmoUp();
+		case PerkType::MAXAMMO_MODIFY:
+			MaxAmmoModify(&perks[i]);
 			break;
-		case Perk::FIRERATE_UP:
-			FireRateUp();
+		case PerkType::FIRERATE_MODIFY:
+			FireRateModify(&perks[i]);
 			break;
-		case Perk::FAST_RELOAD:
-			FastReload();
+		case PerkType::RELOAD_TIME_MODIFY:
+			ReloadTimeModify(&perks[i]);
 			break;
-		case Perk::FREEZE_BULLETS:
-			FreezeBullets();
+		case PerkType::BULLET_LIFETIME_MODIFY:
+			BulletLifeTimeModify(&perks[i]);
+			break;
+		case PerkType::SPREAD_MODIFY:
+			SpreadModify(&perks[i]);
+			break;
+		case PerkType::FREEZE_BULLETS:
+			FreezeBullets(&perks[i]);
+			break;
+		case PerkType::STUN_BULLETS:
+			StunBullets(&perks[i]);
+			break;
+		case PerkType::JACKET_BULLETS:
+			JacketBullets(&perks[i]);
 			break;
 		}
 }
 
-void Weapon::AddPerk(Perk perk)
+void Weapon::AddPerk(PerkType type, float amount, float duration)
 {
-	perks.push_back(perk);
+	perks.push_back(Perk(type, amount, duration));
+	std::sort(perks.begin(), perks.end(), perkSort);
 	RefreshPerks();
 }
 
-void Weapon::DamageUp()
+void Weapon::DamageModify(Perk* perk)
 {
-	damageModifier += 1.0f;
+	damageModifier *= perk->Amount();
 }
 
-void Weapon::MaxAmmoUp()
+void Weapon::MaxAmmoModify(Perk* perk)
 {
-	maxAmmoModifier += 10;
+	maxAmmoModifier *= perk->Amount();
 }
 
-void Weapon::FireRateUp()
+void Weapon::FireRateModify(Perk* perk)
 {
-	fireRateModifier -= 0.5f;
-	if (fireRateModifier < 0.1f)
-		fireRateModifier = 0.1f;
+	float requestedFireRate = fireRate * fireRateModifier * perk->Amount();
+	if (requestedFireRate >= fireRateCap)
+		fireRateModifier *= perk->Amount();
 }
 
-void Weapon::FastReload()
+void Weapon::ReloadTimeModify(Perk* perk)
 {
-	reloadTime -= 0.2f;
-	if (reloadTime < 0.1f)
-		reloadTime = 0.1f;
+	float requestedReloadTime = reloadTime * reloadTimeModifier * perk->Amount();
+	if (requestedReloadTime >= reloadTimeCap)
+		reloadTimeModifier *= perk->Amount();
 }
 
-void Weapon::FreezeBullets()
+void Weapon::BulletLifeTimeModify(Perk* perk)
 {
-	onHitEffects.emplace_back(Effect(EffectType::FROZEN, 4.0f, false, nullptr));
+	bulletLifeTimeModifier *= perk->Amount();
+}
+
+void Weapon::SpreadModify(Perk* perk)
+{
+	spreadRadiusModifier *= perk->Amount();
+}
+
+void Weapon::FreezeBullets(Perk* perk)
+{
+	onHitEffects.emplace_back(Effect(EffectType::FROZEN, perk->Duration(), perk->Amount()));
+}
+
+void Weapon::StunBullets(Perk* perk)
+{
+	onHitEffects.emplace_back(Effect(EffectType::STUN, perk->Duration(), false, 0.0f, perk->Amount()));
+}
+
+void Weapon::JacketBullets(Perk* perk)
+{
+	float extraDamage = Damage() * perk->Amount() - Damage();
+	onHitEffects.emplace_back(Effect(EffectType::BOSS_PIERCING, 0.0f, true, extraDamage));
 }
 
 void Weapon::SpreadProjectiles(float2 direction)
@@ -385,7 +440,20 @@ void Weapon::FireProjectile(float2 direction)
 
 	float3 position = float3::zero;
 	if (hand)
+	{
 		position = hand->transform->GetWorldPosition();
+		float3 spread = SpreadRadius();
+		if (!spread.IsZero())
+		{
+			float x = Random::LCG::GetBoundedRandomFloat(-spread.x, spread.x);
+			float y = Random::LCG::GetBoundedRandomFloat(-spread.y, spread.y);
+			float z = Random::LCG::GetBoundedRandomFloat(-spread.z, spread.z);
+
+			position.x += x;
+			position.y += y;
+			position.z += z;
+		}
+	}
 
 	if (projectile->object)
 	{

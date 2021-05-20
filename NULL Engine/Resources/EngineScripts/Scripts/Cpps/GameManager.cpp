@@ -23,12 +23,21 @@
 #include "Player.h"
 #include "Gate.h"
 
+#include "Items.h"
+
+#include "Random.h"
+
 GameManager::GameManager(): Script()
 {
 }
 
 GameManager::~GameManager()
 {
+	while (chestItemPool.size())
+	{
+		delete * chestItemPool.begin();
+		chestItemPool.erase(chestItemPool.begin());
+	}
 }
 
 void GameManager::Awake()
@@ -85,6 +94,38 @@ void GameManager::Awake()
 			backtrackTimer.Start();
 			if (backtrack.size() != 0)
 				backtrack.clear();
+
+			// Clear the vector if it has data
+			while (chestItemPool.size())
+			{
+				delete* chestItemPool.begin();
+				chestItemPool.erase(chestItemPool.begin());
+			}
+			//Load Json state
+			char* itemBuffer = nullptr;
+			App->fileSystem->Load("ChestItemPool.json", &itemBuffer);
+			ParsonNode itemFile(itemBuffer);
+			//release Json File
+			CoreCrossDllHelpers::CoreReleaseBuffer(&itemBuffer);
+			ParsonArray itemArray = itemFile.GetArray("Items");
+			for (uint i = 0; i < itemArray.size; ++i)
+			{
+				ParsonNode itemNode = itemArray.GetNode(i);
+				if (!itemNode.NodeIsValid())
+					break;
+
+				std::string name = itemNode.GetString("Name");
+				std::string description = itemNode.GetString("Description");
+				int price = itemNode.GetInteger("Price");
+				ItemRarity rarity = (ItemRarity)itemNode.GetInteger("Rarity");
+				int minimum = itemNode.GetInteger("Min");
+				int maximum = itemNode.GetInteger("Max");
+				float power = itemNode.GetNumber("Power");
+				float duration = itemNode.GetInteger("Duration");
+				float chance = itemNode.GetInteger("Chance");
+				std::string texturePath = itemNode.GetString("Texture Path");
+				chestItemPool.emplace_back(new ItemData(name, description, price, rarity, power, duration, chance, minimum, maximum, texturePath));
+			}
 		}
 	}
 
@@ -98,7 +139,6 @@ void GameManager::Awake()
 	{
 		gate = (Gate*)tmp->GetScript("Gate");
 	}
-
 }
 
 void GameManager::Start()
@@ -110,7 +150,7 @@ void GameManager::Start()
 		Entity* entity = (Entity*)GetObjectScript((*go), ObjectType::ENTITY);
 		if (entity != nullptr && entity->type != EntityType::PLAYER && entity->type != EntityType::GROGU)
 		{
-			enemies.push_back(entity);
+			enemies.push_back(std::make_pair(false, entity));
 		}
 	}
 
@@ -646,46 +686,49 @@ void GameManager::SaveManagerState()
 
 void GameManager::BackTrackUpdate()
 {
-	if (backtrackTimer.ReadSec() >= backtrackDuration)
+	if (playerScript != nullptr)
 	{
-		if (playerScript != nullptr && playerScript->moveState != PlayerState::DASH && playerScript->IsGrounded())
+		if (backtrackTimer.ReadSec() >= backtrackDuration)
 		{
-			if (backtrack.size() >= BACKTRACK)
-				backtrack.erase(backtrack.begin());
-			backtrack.push_back(playerScript->gameObject->transform->GetLocalPosition());
-		}
+			if (playerScript != nullptr && playerScript->moveState != PlayerState::DASH && playerScript->IsGrounded())
+			{
+				if (backtrack.size() >= BACKTRACK)
+					backtrack.erase(backtrack.begin());
+				backtrack.push_back(playerScript->gameObject->transform->GetLocalPosition());
+			}
 
-		backtrackTimer.Start();
-	}
-	if (move)
-	{
-		move = false;
-		float3 point = spawnPoint;
-		for (int i = backtrack.size() - 1; i >= 0; --i)
+			backtrackTimer.Start();
+		}
+		if (move)
 		{
-			if (i == 0)
+			move = false;
+			float3 point = spawnPoint;
+			for (int i = backtrack.size() - 1; i >= 0; --i)
+			{
+				if (i == 0)
+					break;
+
+				float current = backtrack[i].y * 1000;
+				int currentRounded = (int)(backtrack[i].y * 1000);
+				if (current >= (float)currentRounded)
+					current = (float)currentRounded;
+				else
+					current = (float)(currentRounded - 1);
+
+				float past = backtrack[i - 1].y * 1000;
+				int pastRounded = (int)(backtrack[i - 1].y * 1000);
+				if (past >= (float)pastRounded)
+					past = (float)pastRounded;
+				else
+					past = (float)(pastRounded - 1);
+
+				if (current != past)
+					continue;
+				point = backtrack[i];
 				break;
-
-			float current = backtrack[i].y * 1000;
-			int currentRounded = (int)(backtrack[i].y * 1000);
-			if (current >= (float)currentRounded)
-				current = (float)currentRounded;
-			else
-				current = (float)(currentRounded - 1);
-
-			float past = backtrack[i - 1].y * 1000;
-			int pastRounded = (int)(backtrack[i - 1].y * 1000);
-			if (past >= (float)pastRounded)
-				past = (float)pastRounded;
-			else
-				past = (float)(pastRounded - 1);
-
-			if (current != past)
-				continue;
-			point = backtrack[i];
-			break;
+			}
+			playerScript->ChangePosition(point);
 		}
-		playerScript->ChangePosition(point);
 	}
 }
 
@@ -700,18 +743,49 @@ void GameManager::GateUpdate()
 				return;
 			}
 
+			int alive = 0;
 			for (auto enemy = enemies.begin(); enemy != enemies.end(); ++enemy)
 			{
-				if ((*enemy)->health > 0)
-					return;
+				if ((*enemy).second->health > 0)
+					++alive;
+				else if (!(*enemy).first)
+				{
+					(*enemy).first = true;
+					lastEnemyDead = (*enemy).second;
+				}
 			}
+			if (alive > 0)
+				return;
 
 			gate->Unlock();
+			uint num = Random::LCG::GetBoundedRandomUint(0, 100);
+			if (num <= chestSpawnChance && chestPrefab.uid != NULL)
+			{
+				GameObject* chest = App->resourceManager->LoadPrefab(chestPrefab.uid, App->scene->GetSceneRoot());
+				if (chest != nullptr && lastEnemyDead != nullptr)
+				{
+					float3 position = lastEnemyDead->transform->GetWorldPosition();
+					chest->transform->SetWorldPosition(position);
+
+					float2 playerPosition, chestPosition;
+					playerPosition.x = playerGameObject->transform->GetWorldPosition().x;
+					playerPosition.y = playerGameObject->transform->GetWorldPosition().z;
+					chestPosition.x = chest->transform->GetWorldPosition().x;
+					chestPosition.y = chest->transform->GetWorldPosition().z;
+
+					float2 direction = playerPosition - chestPosition;
+					if (!direction.IsZero())
+						direction.Normalize();
+					float rad = direction.AimedAngle();
+					chest->transform->SetLocalRotation(float3(0, -rad, 0));
+				}
+			}
 		}
 }
 
 GameManager* CreateGameManager() {
 	GameManager* script = new GameManager();
+
 	INSPECTOR_CHECKBOX_BOOL(script->enabled);
 	INSPECTOR_STRING(script->mainMenuScene);
 	INSPECTOR_STRING(script->SpawnPointName);
@@ -724,5 +798,8 @@ GameManager* CreateGameManager() {
 	INSPECTOR_VECTOR_STRING(script->level1Ruins);
 	INSPECTOR_PREFAB(script->playerPrefab);
 	INSPECTOR_PREFAB(script->groguPrefab);
+	INSPECTOR_PREFAB(script->chestPrefab);
+	INSPECTOR_DRAGABLE_INT(script->chestSpawnChance);
+
 	return script;
 }

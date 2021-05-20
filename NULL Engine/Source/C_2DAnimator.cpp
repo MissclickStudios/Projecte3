@@ -5,6 +5,8 @@
 #include "C_2DAnimator.h"
 #include "R_Texture.h"
 
+#include "Spritesheet.h"
+
 #include "M_FileSystem.h"
 #include "M_ResourceManager.h"
 #include "FileSystemDefinitions.h"
@@ -24,6 +26,12 @@ C_2DAnimator::C_2DAnimator(GameObject* owner) : Component(owner, ComponentType::
 	playFromTheStartOnLoop = false;
 
 	name = "";
+
+	//ANIMATION 2D TESTING
+	spritesheet = new Spritesheet((R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/ChangeWeapon.png"));
+	spritesheet->rows = 4;
+	spritesheet->columns = 3;
+	spritesheet->animationNumber = 12;
 }
 
 C_2DAnimator::~C_2DAnimator()
@@ -104,6 +112,24 @@ int C_2DAnimator::GetAnimationStepTime()
 bool C_2DAnimator::IsAnimationPlaying()
 {
 	return animationPlaying;
+}
+
+void C_2DAnimator::SetSpritesheetTexture(R_Texture* spritesheet, int animationNumber)
+{
+	switch (animationNumber) 
+	{
+	case 1:
+		this->spritesheet = new Spritesheet(spritesheet);
+		break;
+	case 2:
+		this->spritesheet2 = new Spritesheet(spritesheet);
+		break;
+	case 3:
+		this->spritesheet3 = new Spritesheet(spritesheet);
+		break;
+	case 0:
+		break;
+	}
 }
 
 void C_2DAnimator::SetAnimationPlayFromStart(bool x)
@@ -224,18 +250,19 @@ void C_2DAnimator::LoopAnimation(int animationNum)
 
 		//Animation loop
 		if (animationPlaying)
-			if (animationStepTime <= animationTimer.Read() && animationCounter < animation.size() - 1)
+			if (animationStepTime <= animationTimer.Read() && animationCounter < spritesheet->animationNumber - 1)
 			{
 				animationCounter++;
 				animationTimer.Stop();
 				animationTimer.Start();
 			}
 
-		//Set the texture id of the current animation frame
-		if (animation.size() > 0)
-			currentFrameIdTexture = GetTextureIdFromVector(animationCounter,1);
+		//Set the texture coordinates of the current frame
+		if (spritesheet->animationNumber > 0 && animationPlaying)
+			//currentFrameIdTexture = GetTextureIdFromVector(animationCounter,1);
+			spritesheet->SetCurrentFrameLocation(animationCounter + 1);
 
-		if (animationCounter == animation.size() - 1)
+		if (animationCounter == spritesheet->animationNumber - 1)
 		{
 			if (!animationLoop)
 			{
@@ -254,7 +281,9 @@ void C_2DAnimator::LoopAnimation(int animationNum)
 			}
 		}
 		break;
+
 	case 2:
+
 		//Start a new animation
 		if (playAnimation)
 		{
@@ -296,7 +325,9 @@ void C_2DAnimator::LoopAnimation(int animationNum)
 			}
 		}
 		break;
+
 	case 3:
+
 		//Start a new animation
 		if (playAnimation)
 		{
@@ -338,61 +369,11 @@ void C_2DAnimator::LoopAnimation(int animationNum)
 			}
 		}
 		break;
+
 	case 0:
+
 		break;
 	}
 	
 }
 
-Spritesheet::Spritesheet(R_Texture* spritesheet)
-{
-	spriteSheet = spritesheet;
-	columns = 0;
-	rows = 0;
-	pixelHeight = 0;
-	pixelLenght = 0;
-}
-
-Spritesheet::~Spritesheet()
-{
-}
-
-void Spritesheet::SetSpritesheetSize(int s_rows, int s_columns, int s_pisxelHeight, int s_pixelLenght)
-{
-	columns = s_columns;
-	rows = s_rows;
-	pixelHeight = s_pisxelHeight;
-	pixelLenght = s_pixelLenght;
-}
-
-void Spritesheet::GetFrameProportions(int row, int column)
-{
-	currentFrame.proportionBeginX = (pixelLenght * row) / pixelLenght * (rows - 1);
-	currentFrame.proportionFinalX = (pixelLenght * (row + 1)) / pixelLenght * (rows - 1);
-
-	currentFrame.proportionBeginY = (pixelHeight * column) / pixelHeight * (columns - 1);
-	currentFrame.proportionBeginY = (pixelHeight * column + 1) / pixelHeight * (columns - 1);
-}
-
-void Spritesheet::SetCurrentFrameLocation(int frameNumber)
-{
-	int rowN = 0;
-	int columnN = 0;
-
-	for (int i = 0; i <= rows; i++)
-	{
-		for (int k = 0; k <= rows; k++)
-		{
-			if(frameNumber == 0)
-			{
-				GetFrameProportions(rowN, columnN);
-			}
-
-
-			frameNumber--;
-			columnN++;
-		}
-		columnN = 0;
-		rowN++;
-	}
-}

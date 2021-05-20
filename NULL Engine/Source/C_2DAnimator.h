@@ -7,40 +7,10 @@
 
 class GameObject;
 class R_Texture;
+class Spritesheet;
 
 typedef unsigned __int32 uint;
 
-struct Frame 
-{
-	float proportionBeginX;
-	float proportionBeginY;
-	float proportionFinalX;
-	float proportionFinalY;
-};
-
-class Spritesheet 
-{
-public:
-	Spritesheet(R_Texture* spritesheet);
-	~Spritesheet();
-
-	void SetSpritesheetSize(int s_rows, int s_columns, int s_pisxelHeight, int s_pixelLenght);
-	Frame currentFrame;
-
-private:
-
-	void GetFrameProportions(int row, int column);
-	void SetCurrentFrameLocation(int frameNumber);
-
-	R_Texture* spriteSheet;
-
-
-	int rows;
-	int columns;
-
-	int pixelHeight;
-	int pixelLenght;
-};
 
 class MISSCLICK_API C_2DAnimator : public Component
 {
@@ -68,6 +38,8 @@ public:
 
 	bool IsAnimationPlaying();
 
+	void SetSpritesheetTexture(R_Texture* spritesheet, int animationNumber);
+
 	void SetAnimationPlayFromStart(bool x);
 	bool GetAnimationPlayFromStart();
 	
@@ -77,6 +49,10 @@ public:
 	void GetAnimationSprites(const char* name, int animationDestination);
 
 	static inline ComponentType GetType() { return ComponentType::ANIMATOR2D; }  
+
+	Spritesheet*				spritesheet;
+	Spritesheet*				spritesheet2;
+	Spritesheet*				spritesheet3;
 
 private:
 	uint GetTextureIdFromVector(int index, int animationNum);

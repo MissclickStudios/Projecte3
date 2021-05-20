@@ -46,7 +46,9 @@ enum class ComponentType
 
 	ANIMATOR2D,												// --- ANIMATIONS2D
 
-	NAVMESH_AGENT											// --- NAVIGATION
+	NAVMESH_AGENT,											// --- NAVIGATION
+
+	UI_CHECKBOX
 };
 
 class MISSCLICK_API Component

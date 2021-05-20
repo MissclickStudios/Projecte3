@@ -40,6 +40,9 @@ public:
 
 	void OnCollisionEnter(GameObject* object) override;
 
+	// Effects
+	void BossPiercing(Effect* effect);
+
 	// Movement
 	std::string playerName = "Mando testbuild";
 
@@ -103,6 +106,8 @@ private:
 	float2 secondaryAimDirection = float2::zero;
 
 	GameObject* player = nullptr;
+
+	float baseFireRate = 0.0f;
 
 	// Special Attack
 	bool SpiralAttack();

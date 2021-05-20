@@ -11,7 +11,7 @@ public:
 	WeaponPerk();
 	virtual ~WeaponPerk();
 
-	Perk perk = Perk::DAMAGE_UP;
+	PerkType perk = PerkType::NONE;
 
 protected:
 

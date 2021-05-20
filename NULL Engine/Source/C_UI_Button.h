@@ -1,17 +1,9 @@
 #ifndef __C_UI_BUTTON_H__
 #define __C_UI_BUTTON_H__
 
-#include <string>
 #include "C_Ui.h"
 
 class R_Shader;
-
-const float coordsBuffer[] = {
-1, 1,
-1, 0,
-0, 0,
-1,0,
-};
 
 enum class UIButtonState
 {

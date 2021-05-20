@@ -2,7 +2,7 @@
 #include "Object.h"
 
 #include "Prefab.h"
-#include "Timer.h"
+#include "PerfectTimer.h"
 
 #include "Perk.h"
 #include "Effect.h"
@@ -64,14 +64,18 @@ public:
 	void ProjectileCollisionReport(int index);
 
 	// Perks
-	void RefreshPerks(); // Resets the modifiers and applies all the current perks
-	void AddPerk(Perk perk);
+	void RefreshPerks(bool reset = false); // Resets the modifiers and applies all the current perks
+	void AddPerk(PerkType perk, float amount, float duration);
 
-	virtual void DamageUp();
-	virtual void MaxAmmoUp();
-	virtual void FireRateUp();
-	virtual void FastReload();
-	virtual void FreezeBullets();
+	virtual void DamageModify(Perk* perk);
+	virtual void MaxAmmoModify(Perk* perk);
+	virtual void FireRateModify(Perk* perk);
+	virtual void ReloadTimeModify(Perk* perk);
+	virtual void BulletLifeTimeModify(Perk* perk);
+	virtual void SpreadModify(Perk* perk);
+	virtual void FreezeBullets(Perk* perk);
+	virtual void StunBullets(Perk* perk);
+	virtual void JacketBullets(Perk* perk);
 
 	// Type
 	WeaponType type = WeaponType::WEAPON;
@@ -85,19 +89,22 @@ public:
 	float fireRate = 0.0f;
 	float FireRate() { return fireRate * fireRateModifier; }
 	float bulletLifeTime = 0.0f;
-	float BulletLifeTime() { return bulletLifeTime / bulletLifeTimeModifier; }
+	float BulletLifeTime() { return bulletLifeTime * bulletLifeTimeModifier; }
 	int ammo = 0;
 	int maxAmmo = 0;
-	int MaxAmmo() { return maxAmmo + maxAmmoModifier; }
+	int MaxAmmo() { return maxAmmo * maxAmmoModifier; }
 	int projectilesPerShot = 0;
-	float fireRateThreshold = 0.1f;
+	float fireRateCap = 0.001f;
+	float reloadTimeCap = 0.1f;
+	float3 spreadRadius = float3::zero;
+	float3 SpreadRadius() { return spreadRadius * spreadRadiusModifier; }
 
 	float shotSpreadArea;
 	void SpreadProjectiles(float2 direction);
 
 	// Reload
 	float reloadTime = 0.0f;
-	float ReloadTime() { return reloadTime / reloadTimeModifier; }
+	float ReloadTime() { return reloadTime * reloadTimeModifier; }
 
 	// Modifiers
 	float damageModifier = DEFAULT_MODIFIER;
@@ -105,8 +112,9 @@ public:
 	float fireRateModifier = DEFAULT_MODIFIER;
 	float reloadTimeModifier = DEFAULT_MODIFIER;
 	float bulletLifeTimeModifier = DEFAULT_MODIFIER;
-	int maxAmmoModifier = 0;
-	int PPSModifier = 0;
+	float maxAmmoModifier = DEFAULT_MODIFIER;
+	int PPSModifier = 0.0f;
+	float spreadRadiusModifier = DEFAULT_MODIFIER;
 
 	// Perks - most condecorated league player in the west btw, no cringe intended
 	std::vector<Perk> perks;
@@ -140,7 +148,7 @@ protected:
 	virtual void FireProjectile(float2 direction);
 
 	// Shoot
-	Timer fireRateTimer;
+	PerfectTimer fireRateTimer;
 
 	GameObject* hand = nullptr;
 

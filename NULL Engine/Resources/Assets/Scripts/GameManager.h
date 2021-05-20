@@ -12,7 +12,11 @@
 
 class GameObject;
 class Gate;
+
 class DialogManager;
+
+struct ItemData;
+
 
 class SCRIPTS_API GameManager : public Script 
 {
@@ -22,7 +26,7 @@ public:
     ~GameManager();
     void Awake() override;
     void Start()override;
-    void Update()override;
+    void Update()override; 
 
     void OnCollisionEnter(GameObject* object) override;
 
@@ -33,7 +37,7 @@ public:
     void ReturnHub();
     void ReturnToMainMenu();
 
-    //Dialog
+    std::vector<ItemData*> GetChestItemPool() const { return chestItemPool; };
 
 private:
     //Level Generator
@@ -65,7 +69,12 @@ public:
 
     Prefab groguPrefab;
     Grogu* groguScript = nullptr;
+
     DialogManager* dialogManager = nullptr;
+
+    Prefab chestPrefab;
+    int chestSpawnChance = 60;
+
 
 private:
     GameObject* playerGameObject = nullptr;
@@ -76,7 +85,7 @@ private:
     int	currentLevel = 0;
     int	roomNum = 0;
 
-    std::vector<Entity*> enemies;
+    std::vector<std::pair<bool, Entity*>> enemies;
 
     bool move = false; // shhhhhh, don't tell jordi
     float3 spawnPoint = float3::zero;
@@ -87,6 +96,13 @@ private:
     //Story vars
     bool visitedHUB = false;            //When mando enters the HUB for the first time a cinematic + dialog should happen
     bool defeatedIG11FirstTime = false; //When Mando hasn't defeated IG-11 Grogu should not be with him and IG-11 should use a special dialog
+
+    // Items
+    std::vector<ItemData*> chestItemPool;
+
+    // Chest
+    Entity* lastEnemyDead = nullptr;
+
 };
 
 SCRIPTS_FUNCTION GameManager* CreateGameManager();

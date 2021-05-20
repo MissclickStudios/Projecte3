@@ -118,7 +118,10 @@ void IG11::SetUp()
 	if (blasterGameObject)
 		blasterWeapon = (Weapon*)GetObjectScript(blasterGameObject, ObjectType::WEAPON);
 	if (blasterWeapon)
+	{
 		blasterWeapon->SetOwnership(type, handLeft, leftHandName);
+		baseFireRate = blasterWeapon->fireRate;
+	}
 
 	if (sniper.uid != NULL)
 		sniperGameObject = App->resourceManager->LoadPrefab(sniper.uid, App->scene->GetSceneRoot());
@@ -169,6 +172,12 @@ void IG11::OnCollisionEnter(GameObject* object)
 		playerScript->TakeDamage(Damage());
 }
 
+void IG11::BossPiercing(Effect* effect)
+{
+	TakeDamage(effect->Power());
+	effect->End();
+}
+
 void IG11::DistanceToPlayer()
 {
 	if (!player)
@@ -210,6 +219,8 @@ void IG11::ManageMovement()
 		}
 	}
 
+
+	//USE DT!
 	if (spiralAttackTimer.IsActive() && spiralAttackTimer.ReadSec() >= spiralAttackCooldown)
 	{
 		spiralAttackTimer.Stop();
@@ -219,6 +230,7 @@ void IG11::ManageMovement()
 		UAttackTimer.Stop();
 		UAttackShots += 15;
 	}
+	//----
 
 	switch (moveState)
 	{
@@ -296,13 +308,13 @@ void IG11::ManageMovement()
 
 			if (blasterWeapon)
 			{
-				blasterWeapon->fireRate = 0.3f;
+				blasterWeapon->fireRate = baseFireRate;
 				blasterWeapon->ammo = 0;
 				blasterWeapon->projectilesPerShot = 1;
 			}
 			if (sniperWeapon)
 			{
-				sniperWeapon->fireRate = 0.3f;
+				sniperWeapon->fireRate = baseFireRate;
 				sniperWeapon->ammo = 0;
 				sniperWeapon->projectilesPerShot = 1;
 			}
@@ -321,13 +333,13 @@ void IG11::ManageMovement()
 
 			if (blasterWeapon)
 			{
-				blasterWeapon->fireRate = 0.3f;
+				blasterWeapon->fireRate = baseFireRate;
 				blasterWeapon->ammo = 0;
 				blasterWeapon->projectilesPerShot = 1;
 			}
 			if (sniperWeapon)
 			{
-				sniperWeapon->fireRate = 0.3f;
+				sniperWeapon->fireRate = baseFireRate;
 				sniperWeapon->ammo = 0;
 				sniperWeapon->projectilesPerShot = 1;
 			}
@@ -459,14 +471,14 @@ bool IG11::SpiralAttack()
 
 	if (blasterWeapon)
 	{
-		blasterWeapon->fireRate = 0.0001f * MC_Time::Game::GetDT();
+		blasterWeapon->fireRate = 0.001f;
 		blasterWeapon->ammo = 20;
 		blasterWeapon->projectilesPerShot = 3;
 		blasterWeapon->shotSpreadArea = 5;
 	}
 	if (sniperWeapon)
 	{
-		sniperWeapon->fireRate = 0.01f * MC_Time::Game::GetDT();
+		sniperWeapon->fireRate = 0.001f;
 		sniperWeapon->ammo = 20;
 		sniperWeapon->projectilesPerShot = 3;
 		sniperWeapon->shotSpreadArea = 5;

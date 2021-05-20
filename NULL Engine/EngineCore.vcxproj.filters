@@ -205,6 +205,12 @@
     <Filter Include="Source\6_Tools\NavMesh">
       <UniqueIdentifier>{645c4925-39a7-4ddf-9dfa-9991cf9c03ff}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\5_Containers\Renderer3D\Renderers">
+      <UniqueIdentifier>{3ceb0553-09be-444a-ba4f-a61fb12e6158}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\5_Containers\Spritesheet">
+      <UniqueIdentifier>{c72a7a33-02d5-402b-8849-d04c4bdb78bd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Application.cpp">
@@ -573,9 +579,6 @@
     <ClCompile Include="Source\Renderer.cpp">
       <Filter>Source\5_Containers\Renderer3D</Filter>
     </ClCompile>
-    <ClCompile Include="Source\RE_Circle.cpp">
-      <Filter>Source\5_Containers\Renderer3D</Filter>
-    </ClCompile>
     <ClCompile Include="Source\C_ParticleSystem.cpp">
       <Filter>Source\4_GameObjects\Components</Filter>
     </ClCompile>
@@ -767,6 +770,30 @@
     </ClCompile>
     <ClCompile Include="Source\AnimatorTrack.cpp">
       <Filter>Source\5_Containers\Animator</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\RE_Circle.cpp">
+      <Filter>Source\5_Containers\Renderer3D\Renderers</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\RE_Cuboid.cpp">
+      <Filter>Source\5_Containers\Renderer3D\Renderers</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\RE_Mesh.cpp">
+      <Filter>Source\5_Containers\Renderer3D\Renderers</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\RE_Skeleton.cpp">
+      <Filter>Source\5_Containers\Renderer3D\Renderers</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\RE_Ray.cpp">
+      <Filter>Source\5_Containers\Renderer3D\Renderers</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\RE_Particle.cpp">
+      <Filter>Source\5_Containers\Renderer3D\Renderers</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Spritesheet.cpp">
+      <Filter>Source\5_Containers\Spritesheet</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\C_UI_Checkbox.cpp">
+      <Filter>Source\4_GameObjects\Components\UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1508,9 +1535,6 @@
     <ClInclude Include="Source\Renderer.h">
       <Filter>Source\5_Containers\Renderer3D</Filter>
     </ClInclude>
-    <ClInclude Include="Source\RE_Circle.h">
-      <Filter>Source\5_Containers\Renderer3D</Filter>
-    </ClInclude>
     <ClInclude Include="Source\C_ParticleSystem.h">
       <Filter>Source\4_GameObjects\Components</Filter>
     </ClInclude>
@@ -1687,6 +1711,30 @@
     </ClInclude>
     <ClInclude Include="Source\AnimatorTrack.h">
       <Filter>Source\5_Containers\Animator</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\RE_Circle.h">
+      <Filter>Source\5_Containers\Renderer3D\Renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\RE_Cuboid.h">
+      <Filter>Source\5_Containers\Renderer3D\Renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\RE_Mesh.h">
+      <Filter>Source\5_Containers\Renderer3D\Renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\RE_Skeleton.h">
+      <Filter>Source\5_Containers\Renderer3D\Renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\RE_Ray.h">
+      <Filter>Source\5_Containers\Renderer3D\Renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\RE_Particle.h">
+      <Filter>Source\5_Containers\Renderer3D\Renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Spritesheet.h">
+      <Filter>Source\5_Containers\Spritesheet</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\C_UI_Checkbox.h">
+      <Filter>Source\4_GameObjects\Components\UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

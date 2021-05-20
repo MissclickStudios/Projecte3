@@ -68,16 +68,18 @@ public:
 	// Interactions
 	virtual void TakeDamage(float damage);
 	virtual void GiveHeal(float amount);
-	Effect* AddEffect(EffectType type, float duration, bool permanent = false, void* data = nullptr);
+	Effect* AddEffect(EffectType type, float duration, bool permanent = false, float power = 0.0f, float chance = 0.0f, float3 direction = float3::zero, bool start = true);
 	virtual void ChangePosition(float3 position);
 	bool IsGrounded();
 
 	// Effect Functions
 	virtual void Frozen();
 	virtual void Heal(Effect* effect);
-
+	virtual void MaxHealthModify(Effect* effect);
+	virtual void SpeedModify(Effect* effect);
 	virtual void Stun(Effect* effect);
 	virtual void KnockBack(Effect* effect);
+	virtual void BossPiercing(Effect* effect) {}
 	
 	// Type
 	EntityType type = EntityType::ENTITY;
