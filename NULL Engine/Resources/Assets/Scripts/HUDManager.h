@@ -2,6 +2,7 @@
 #include <string>
 #include "Script.h"
 #include "ScriptMacros.h"
+#include "Weapon.h"
 
 
 class GameObject;
@@ -20,6 +21,8 @@ public:
 	void Update() override;
 	void CleanUp() override;
 
+	void ManageWeaponHUD();
+
 	std::string mandoImageName = "Mando";
 	std::string secondaryWeaponImageName = "SecodaryWeapon";
 	std::string primaryWeaponImageName = "PrimaryWeapon";
@@ -35,6 +38,12 @@ public:
 	std::string heart1Name = "Heart1";
 	std::string heart2Name = "Heart2";
 	std::string heart3Name = "Heart3";
+
+	std::string weapon1Name = "pog1";
+	std::string weapon2Name = "pog2";
+	std::string weapon3Name = "pog3";
+	std::string weapon4Name = "pog4";
+
 private:
 	C_2DAnimator* mandoImage;
 	C_2DAnimator* secondaryWeaponImage;
@@ -48,6 +57,11 @@ private:
 
 	GameObject* playerObject;
 	Player* player;
+
+	GameObject* weapon1;
+	GameObject* weapon2;
+	GameObject* weapon3;
+	GameObject* weapon4;
 
 	C_Canvas* hudCanvas = nullptr;
 
@@ -72,6 +86,7 @@ private:
 	bool health5;
 	bool health6;
 
+	WeaponType type;
 
 	void ManageHeartImage(int hp);
 };
@@ -88,5 +103,10 @@ SCRIPTS_FUNCTION HUDManager* CreateHUDManager() {
 	INSPECTOR_STRING(script->creditsTextName);
 	INSPECTOR_STRING(script->beskarTextName);
 	INSPECTOR_STRING(script->ammoTextName);
+
+	INSPECTOR_STRING(script->weapon1Name);
+	INSPECTOR_STRING(script->weapon2Name);
+	INSPECTOR_STRING(script->weapon3Name);
+	INSPECTOR_STRING(script->weapon4Name);
 	return script;
 }

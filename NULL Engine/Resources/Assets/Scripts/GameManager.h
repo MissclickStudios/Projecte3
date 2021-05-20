@@ -83,6 +83,10 @@ private:
     std::vector<float3> backtrack;
     float backtrackDuration = 1.0f;
     Timer backtrackTimer;
+
+    //Story vars
+    bool visitedHUB = false;            //When mando enters the HUB for the first time a cinematic + dialog should happen
+    bool defeatedIG11FirstTime = false; //When Mando hasn't defeated IG-11 Grogu should not be with him and IG-11 should use a special dialog
 };
 
 SCRIPTS_FUNCTION GameManager* CreateGameManager();
