@@ -281,7 +281,7 @@ private:
 	GameObject* secondaryGunGameObject	= nullptr;
 
 	Weapon* blasterWeapon				= nullptr;
-	Weapon* secondaryGunWeapon			= nullptr;
+	Weapon* secondaryWeapon				= nullptr;
 	Weapon* currentWeapon				= nullptr;
 
 	// Debug

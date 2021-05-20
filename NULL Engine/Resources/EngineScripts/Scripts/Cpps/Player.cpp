@@ -300,8 +300,8 @@ void Player::SaveState(ParsonNode& playerNode)
 	if (blasterWeapon != nullptr)
 		playerNode.SetInteger("Blaster Ammo", blasterWeapon->ammo);
 
-	if (secondaryGunWeapon != nullptr)
-		playerNode.SetInteger("Equiped Gun Ammo", secondaryGunWeapon->ammo);
+	if (secondaryWeapon != nullptr)
+		playerNode.SetInteger("Equiped Gun Ammo", secondaryWeapon->ammo);
 
 	ParsonArray itemArray = playerNode.SetArray("Items");
 	for (uint i = 0; i < items.size(); ++i)
@@ -375,11 +375,11 @@ void Player::LoadState(ParsonNode& playerNode)
 
 		if (secondaryWeapon != nullptr)
 		{
-			secondaryGunWeapon->SetOwnership(type, hand, handName);
+			secondaryWeapon->SetOwnership(type, hand, handName);
 			int savedAmmo = playerNode.GetInteger("Equiped Gun Ammo");
-			if (savedAmmo > secondaryGunWeapon->MaxAmmo())
-				savedAmmo = secondaryGunWeapon->MaxAmmo();
-			secondaryGunWeapon->ammo = savedAmmo;
+			if (savedAmmo > secondaryWeapon->MaxAmmo())
+				savedAmmo = secondaryWeapon->MaxAmmo();
+			secondaryWeapon->ammo = savedAmmo;
 		}
 	}
 
@@ -399,8 +399,8 @@ void Player::LoadState(ParsonNode& playerNode)
 
 		Item* item = Item::CreateItem(savedData); // Get an item with the data we loaded
 
-		if (usedWeapon && secondaryGunWeapon != nullptr)
-			currentWeapon = secondaryGunWeapon; // Set the current weapon to the one that has to recieve the item, fancy i know
+		if (usedWeapon && secondaryWeapon != nullptr)
+			currentWeapon = secondaryWeapon; // Set the current weapon to the one that has to recieve the item, fancy i know
 		else
 			currentWeapon = blasterWeapon;
 
@@ -415,21 +415,21 @@ void Player::LoadState(ParsonNode& playerNode)
 	}
 
 	usingSecondaryGun = playerNode.GetBool("Using Equiped Gun");
-	if (usingSecondaryGun && secondaryGunWeapon != nullptr)
+	if (usingSecondaryGun && secondaryWeapon != nullptr)
 	{
-		currentWeapon = secondaryGunWeapon;
+		currentWeapon = secondaryWeapon;
 		if (blasterWeapon->weaponModel != nullptr)
 			blasterWeapon->weaponModel->SetIsActive(false);
-		if (secondaryGunWeapon->weaponModel != nullptr)
-			secondaryGunWeapon->weaponModel->SetIsActive(true);
+		if (secondaryWeapon->weaponModel != nullptr)
+			secondaryWeapon->weaponModel->SetIsActive(true);
 	}
 	else
 	{
 		currentWeapon = blasterWeapon;
 		if (blasterWeapon->weaponModel != nullptr)
 			blasterWeapon->weaponModel->SetIsActive(true);
-		if (secondaryGunWeapon->weaponModel != nullptr)
-			secondaryGunWeapon->weaponModel->SetIsActive(false);
+		if (secondaryWeapon->weaponModel != nullptr)
+			secondaryWeapon->weaponModel->SetIsActive(false);
 	}
 }
 
@@ -496,11 +496,11 @@ void Player::TakeDamage(float damage)
 
 void Player::EquipWeapon(Prefab weapon)
 {
-	if (secondaryGunWeapon != nullptr)
+	if (secondaryWeapon != nullptr)
 	{
-		if (secondaryGunWeapon->weaponModel != nullptr)
-			secondaryGunWeapon->weaponModel->SetIsActive(false);
-		secondaryGunWeapon = nullptr;
+		if (secondaryWeapon->weaponModel != nullptr)
+			secondaryWeapon->weaponModel->SetIsActive(false);
+		secondaryWeapon = nullptr;
 	}
 	if (secondaryGunGameObject != nullptr)
 	{
@@ -512,12 +512,12 @@ void Player::EquipWeapon(Prefab weapon)
 	equipedGun = weapon;
 	if (secondaryGunGameObject != nullptr)
 	{
-		secondaryGunWeapon = (Weapon*)GetObjectScript(secondaryGunGameObject, ObjectType::WEAPON);
+		secondaryWeapon = (Weapon*)GetObjectScript(secondaryGunGameObject, ObjectType::WEAPON);
 
-		if (secondaryGunWeapon != nullptr)
+		if (secondaryWeapon != nullptr)
 		{
-			secondaryGunWeapon->SetOwnership(type, hand, handName);
-			currentWeapon = secondaryGunWeapon;
+			secondaryWeapon->SetOwnership(type, hand, handName);
+			currentWeapon = secondaryWeapon;
 		}
 	}
 }
