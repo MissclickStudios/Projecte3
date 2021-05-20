@@ -10,7 +10,6 @@ R_NavMesh::R_NavMesh() : Resource(ResourceType::NAVMESH)
 
 R_NavMesh::~R_NavMesh()
 {
-
 }
 
 bool R_NavMesh::CleanUp()

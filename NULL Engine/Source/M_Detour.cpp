@@ -168,7 +168,7 @@ void M_Detour::loadNavMeshFile(unsigned int navMeshUid, const char* navMeshPath)
 			if (dtStatusFailed(status)) {
 				LOG("Could not init Detour navmesh query");
 			}
-			LOG("%d", navMeshResource->navMesh->getMaxTiles());
+			createRenderMeshes();
 		}
 	}
 	
@@ -176,6 +176,20 @@ void M_Detour::loadNavMeshFile(unsigned int navMeshUid, const char* navMeshPath)
 
 void M_Detour::deleteNavMesh()
 {
+	if (navMeshResource)
+	{
+		for (int i = 0; i < renderMeshes.size(); ++i) 
+		{
+			delete renderMeshes[i];
+		}
+		renderMeshes.clear();
+
+		if (navMeshResource->navMesh) 
+		{
+			dtFreeNavMesh(navMeshResource->navMesh);
+			navMeshResource->navMesh = nullptr;
+		}
+	}
 }
 
 void M_Detour::clearNavMesh()
