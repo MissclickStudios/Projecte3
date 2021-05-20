@@ -20,7 +20,7 @@ struct Projectile;
 
 class C_AudioSource;
 
-enum class WeaponType
+enum class ENGINE_ENUM WeaponType
 {
 	WEAPON,
 	BLASTER,
