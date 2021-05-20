@@ -4,6 +4,7 @@
 #include "R_Shader.h"
 #include "C_UI_Image.h"
 #include "C_UI_Text.h"
+#include "C_UI_Button.h"
 
 #include "DialogManager.h"
 
@@ -67,9 +68,17 @@ void DialogManager::Update()
 
 			App->uiSystem->PushCanvas(dialogCanvas);
 			StartTalking();
+
 			break; 
 		case DialogState::TALKING:
 			//Update text until it's full
+
+			if (dialogButton->GetState() == UIButtonState::PRESSEDIN)
+			{
+				dialogText->SetText(currentLine->lineText.c_str());
+				state = DialogState::TALKED;
+				currentLineLetter = 0;
+			}
 
 			nextLetterTimer += MC_Time::Game::GetDT();
 
@@ -92,7 +101,7 @@ void DialogManager::Update()
 		case DialogState::TALKED:
 			//Wait for input, then go to next phrase if there is any. Close dialog if not
 
-			if (App->input->GetGameControllerButton(1) == ButtonState::BUTTON_DOWN || App->input->GetKey(SDL_SCANCODE_RETURN) == KeyState::KEY_DOWN)
+			if (dialogButton->GetState() == UIButtonState::PRESSEDIN)
 			{
 				//next line and go to talking or no dialog
 
@@ -105,6 +114,7 @@ void DialogManager::Update()
 					else
 					{
 						App->uiSystem->RemoveActiveCanvas(dialogCanvas);
+						state = DialogState::NO_DIALOG;
 						//Clear elements
 					}
 			}
@@ -225,6 +235,7 @@ DialogManager* CreateDialogManager()
 	DialogManager* script = new DialogManager();
 	INSPECTOR_STRING(script->dialogCanvasName);
 	INSPECTOR_STRING(script->dialogTextName);
+	INSPECTOR_STRING(script->dialogButtonName);
 	INSPECTOR_STRING(script->speakerImageName);
 	INSPECTOR_STRING(script->speakerTextName);
 	INSPECTOR_STRING(script->textBackgroundName);

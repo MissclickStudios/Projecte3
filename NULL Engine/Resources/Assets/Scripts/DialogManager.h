@@ -11,6 +11,7 @@ class R_Texture;
 class C_Canvas;
 class C_UI_Image;
 class C_UI_Text;
+class C_UI_Button;
 
 enum class DialogState
 {
@@ -83,13 +84,14 @@ public:
 	C_UI_Image* textBackground = nullptr;
 	C_UI_Text* speakerText = nullptr;
 	C_UI_Text* dialogText = nullptr;
+	C_UI_Button* dialogButton = nullptr;
 
 	std::string dialogCanvasName = "DialogCanvas";
 	std::string speakerImageName = "SpeakerImage";
 	std::string textBackgroundName = "DialogBackground";
 	std::string speakerTextName = "SpeakerText";
 	std::string dialogTextName = "DialogText";
-
+	std::string dialogButtonName = "DialogButton";
 private:
 	std::vector<DialogSystem*> dialogSystemsLoaded; //All the dialogs the scene has loaded in
 
