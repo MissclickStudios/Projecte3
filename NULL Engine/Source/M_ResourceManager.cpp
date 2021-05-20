@@ -364,6 +364,17 @@ Resource* M_ResourceManager::GetResourceFromLibrary(const char* assetsPath)
 	return resource;
 }
 
+Resource* M_ResourceManager::GetResourceFromLibrary(uint32 UID)
+{
+	auto resourceBase = library.find(UID);
+	if (resourceBase == library.end())
+	{
+		return nullptr;
+	}
+
+	return GetResourceFromLibrary(resourceBase->second.assetsPath.c_str());
+}
+
 void M_ResourceManager::RefreshProjectDirectories()
 {
 	RefreshDirectoryFiles(ASSETS_DIRECTORY);
