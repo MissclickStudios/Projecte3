@@ -39,7 +39,9 @@ bool C_NavMeshAgent::Update()
 	{
 		if (hasDestination)
 		{
-			direction = destinationPoint - currentPos;
+			nextPoint = path[i];
+
+			direction = nextPoint - currentPos;
 
 			float2 directorVector = direction.xz();
 
@@ -48,9 +50,7 @@ bool C_NavMeshAgent::Update()
 
 			rigidBody->Set2DVelocity(directorVector * velocity);
 
-			nextPoint = path[i];
-
-			if (GetOwner()->transform->GetDistanceTo(currentPos) < 1.0f)
+			if (GetOwner()->transform->GetDistanceTo(currentPos) < 5.0f)
 			{
 				currentPos = nextPoint;
 
@@ -60,7 +60,12 @@ bool C_NavMeshAgent::Update()
 			if (i == (path.size()-1))
 			{
 				i = 0;
+
+				directorVector = { 0,0 };
+
 				hasDestination = false;
+
+				rigidBody->Set2DVelocity(directorVector * velocity);
 			}
 
 			LOG("%u", i);
@@ -99,7 +104,7 @@ bool C_NavMeshAgent::SetDestination(float3 destination)
 		AgentPath(origin, destination);
 
 
-	return false;
+	return true;
 }
 
 bool C_NavMeshAgent::HasDestination()
