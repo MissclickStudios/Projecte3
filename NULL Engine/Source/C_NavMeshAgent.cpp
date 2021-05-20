@@ -13,7 +13,7 @@
 C_NavMeshAgent::C_NavMeshAgent(GameObject* owner) : Component(owner, ComponentType::NAVMESH_AGENT)
 {
 	radius = 0;
-	destinationPoint = owner->GetComponent<C_Transform>()->GetWorldPosition();
+	destinationPoint = float3::zero;
 }
 
 C_NavMeshAgent::~C_NavMeshAgent()
@@ -28,10 +28,7 @@ bool C_NavMeshAgent::Start()
 
 bool C_NavMeshAgent::Update()
 {
-
 	CalculatePath(destinationPoint);
-
-	destinationPoint = path.back();
 
 	return true;
 }

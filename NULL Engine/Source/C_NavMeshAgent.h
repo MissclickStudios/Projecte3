@@ -33,10 +33,12 @@ public:
 	bool hasDestination;
 	float3 destinationPoint;
 
+	std::vector<float3> path;
+
 private:
+	
 	bool CalculatePath(float3 destination);
 
-	std::vector<float3> path;
 	float3 nextPoint;
 
 	float radius;
