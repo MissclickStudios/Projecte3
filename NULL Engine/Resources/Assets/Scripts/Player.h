@@ -16,6 +16,7 @@ class C_2DAnimator;
 enum class PlayerState
 {
 	IDLE,
+	INTERACT,
 	WALK,
 	RUN,
 	DASH_IN,
@@ -25,31 +26,31 @@ enum class PlayerState
 	DEAD_OUT
 };
 
-enum class PlayerDirection
+enum class MoveDirection
 {
+	NONE,
 	FORWARDS,
 	BACKWARDS,
 	LEFT,
-	RIGHT,
-	NONE
+	RIGHT
 };
 
 enum class AimDirection
 {
+	NONE,
 	FORWARDS,
 	BACKWARDS,
 	LEFT,
-	RIGHT,
-	NONE
+	RIGHT
 };
 
-enum class RunDirection
+enum class InteractionType
 {
-	FORWARDS,
-	BACKWARDS,
-	LEFT,
-	RIGHT,
-	NONE
+	NONE,
+	TALK,
+	USE,
+	OPEN_CHEST,
+	SIGNAL_GROGU
 };
 
 class SCRIPTS_API Player : public Entity ALLOWED_INHERITANCE
@@ -70,11 +71,16 @@ public:
 	void LoadState(ParsonNode& playerNode);
 
 public:
-
+	
 	void Reset();
+
+	// States
+	PlayerState moveState				= PlayerState::IDLE;
+	AimState aimState					= AimState::IDLE;
 
 	// Interactions
 	void TakeDamage(float damage) override;
+	void SetPlayerInteraction(InteractionType type);
 
 	// Movement
 	float walkSpeed			= DEFAULT_MODIFIER;									// Factor by which the player's speed will be reduced when in WALK state.
@@ -101,7 +107,7 @@ public:
 	AnimationInfo* GetShootAnimation();
 	AnimationInfo* GetReloadAnimation();
 	
-	AnimationInfo* legsMatrix[4][4]			= { nullptr };
+	AnimationInfo* legsMatrix[5][5]			= { nullptr };
 
 	AnimatorTrack* torsoTrack				= nullptr;
 	AnimatorTrack* legsTrack				= nullptr;
@@ -158,9 +164,6 @@ public:
 
 	std::string gameManager		= "Game Manager";
 
-	PlayerState moveState		= PlayerState::IDLE;
-	AimState aimState			= AimState::IDLE;
-
 	// AIM HUD
 	GameObject* idleAimPlane	= nullptr;
 	GameObject* aimingAimPlane	= nullptr;
@@ -169,12 +172,14 @@ public:
 	void SetGodMode(bool enable);
 	bool GetGodMode()const;
 
-	// Audio
+	// Particles and SFX
+	C_ParticleSystem* runParticles			= nullptr;
+	C_ParticleSystem* dashParticles			= nullptr;
+
 	C_AudioSource* dashAudio				= nullptr;
 	C_AudioSource* deathAudio				= nullptr;
 	C_AudioSource* changeWeaponAudio		= nullptr;
 	
-
 	// HUD Animations Names
 	std::string mandoImageName				= "Mando";
 	std::string secondaryWeaponImageName	= "SecodaryWeapon";
@@ -195,34 +200,61 @@ public:
 
 private:
 
+	// Set Up
+	void SetUpLegsMatrix();
+
 	// Logic
 	void ManageMovement();
 	void ManageAim();
 
+	void MoveIdle();
+	void Interact();
+	void Walk();
+	void Run();
+	void DashIn();
+	void Dash();
+	void DeadIn();
+	void Dead();
+
+	void AimIdle();
+	void OnGuard();
+	void Aiming();
+	void ShootIn();
+	void Shoot();
+	void ReloadIn();
+	void Reload();
+	void ChangeIn();
+	void Change();
+
+
 	// Inputs & State Selection
 	void GatherMoveInputs();
 	void GatherAimInputs();
+	void GatherInteractionInputs();
 
 	void SetPlayerDirection();
 	void SetAimDirection();
 
-	PlayerDirection playerDirection	= PlayerDirection::NONE;
-	AimDirection aimDirection		= AimDirection::NONE;
-	float2 moveInput				= float2::zero;
-	float2 aimInput					= float2::zero;
+	MoveDirection moveDirection			= MoveDirection::NONE;
+	AimDirection aimDirection			= AimDirection::NONE;
+	InteractionType currentInteraction	= InteractionType::NONE;
+	
+	float2 moveInput			= float2::zero;
+	float2 aimInput				= float2::zero;
+
 
 	// Movement
 	void Movement();
 
-	float2 moveVector				= float2::zero;
+	float2 moveVector			= float2::zero;
 
 	// Aim
 	void Aim();
 
-	float2 aimVector				= float2::zero;
+	float2 aimVector			= float2::zero;
 
 	// Dash
-	void Dash();
+	void ApplyDash();
 	
 	Timer dashTimer;
 	Timer dashCooldownTimer;

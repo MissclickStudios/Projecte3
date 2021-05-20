@@ -32,7 +32,7 @@ ShootState Blaster::ShootLogic()
             return ShootState::RATE_FINISHED;
     }
 
-    return ShootState::WAINTING_FOR_NEXT;
+    return ShootState::WAITING_FOR_NEXT;
 }
 
 SCRIPTS_FUNCTION Blaster* CreateBlaster()

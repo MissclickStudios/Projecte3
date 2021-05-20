@@ -735,7 +735,7 @@ void C_Animator::PlayClip(const char* trackName, const char* clipName, float ble
 	auto track	= tracks.find(trackName);
 	auto clip	= clips.find(clipName);
 
-	LOG("TRACK NAME { %s } ::: CLIP NAME { %s }", trackName, clipName);
+	//LOG("TRACK NAME { %s } ::: CLIP NAME { %s }", trackName, clipName);
 
 	if (track == tracks.end())
 	{

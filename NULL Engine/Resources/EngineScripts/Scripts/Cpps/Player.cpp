@@ -31,7 +31,6 @@ Player* CreatePlayer()
 {
 	Player* script = new Player();
 
-	
 	// Entity ---
 	// Health
 	INSPECTOR_DRAGABLE_FLOAT(script->health);
@@ -39,7 +38,6 @@ Player* CreatePlayer()
 
 	// Basic Stats
 	INSPECTOR_DRAGABLE_FLOAT(script->speed);
-	INSPECTOR_DRAGABLE_FLOAT(script->walkSpeed);
 	INSPECTOR_DRAGABLE_FLOAT(script->attackSpeed);
 	INSPECTOR_DRAGABLE_FLOAT(script->damage);
 	INSPECTOR_DRAGABLE_FLOAT(script->defense);
@@ -56,6 +54,8 @@ Player* CreatePlayer()
 	INSPECTOR_DRAGABLE_FLOAT(script->deathDuration);
 
 	// Player ---
+	// Walk
+	INSPECTOR_DRAGABLE_FLOAT(script->walkSpeed);
 
 	// Currency
 	INSPECTOR_DRAGABLE_INT(script->currency);
@@ -123,44 +123,34 @@ void Player::SetUp()
 	intermitentMeshTimer.Stop();
 	changeTimer.Stop();
 
+	// --- ANIMATIONS
 	if (animator != nullptr)
 	{
 		torsoTrack	= animator->GetTrackAsPtr("Torso");
 		legsTrack	= animator->GetTrackAsPtr("Legs");
 
 		if (torsoTrack == nullptr)
-			LOG("COULD NOT RETRIEVE TORSO TRACK");
+			LOG("[ERROR] Player Script: Could not retrieve { TORSO } Animator Track! Error: C_Animator's GetTrackAsPtr() failed.");
 
 		if (legsTrack == nullptr)
-			LOG("COULD NOT RETRIEVE LEGS TRACK");
+			LOG("[ERROR] Player Script: Could not retrieve { LEGS } Animator Track! Error: C_Animator's GetTrackAsPtr() failed.");
 	}
 
-	// --- LEG ANIMATIONS
-	legsMatrix[(int)AimDirection::FORWARDS][(int)PlayerDirection::FORWARDS]		= &runForwardsAnimation;			// AF + MF --> F
-	legsMatrix[(int)AimDirection::FORWARDS][(int)PlayerDirection::BACKWARDS]	= &runBackwardsAnimation;			// AF + MB --> B
-	legsMatrix[(int)AimDirection::FORWARDS][(int)PlayerDirection::LEFT]			= &runLeftAnimation;				// AF + ML --> L
-	legsMatrix[(int)AimDirection::FORWARDS][(int)PlayerDirection::RIGHT]		= &runRightAnimation;				// AF + MR --> R
-
-	legsMatrix[(int)AimDirection::BACKWARDS][(int)PlayerDirection::FORWARDS]	= &runBackwardsAnimation;			// AB + MF --> B
-	legsMatrix[(int)AimDirection::BACKWARDS][(int)PlayerDirection::BACKWARDS]	= &runForwardsAnimation;			// AB + MB --> F
-	legsMatrix[(int)AimDirection::BACKWARDS][(int)PlayerDirection::LEFT]		= &runRightAnimation;				// AB + ML --> R
-	legsMatrix[(int)AimDirection::BACKWARDS][(int)PlayerDirection::RIGHT]		= &runLeftAnimation;				// AB + MR --> L
-
-	legsMatrix[(int)AimDirection::LEFT][(int)PlayerDirection::FORWARDS]			= &runRightAnimation;				// AL + MF --> R				
-	legsMatrix[(int)AimDirection::LEFT][(int)PlayerDirection::BACKWARDS]		= &runLeftAnimation;				// AL + MB --> L
-	legsMatrix[(int)AimDirection::LEFT][(int)PlayerDirection::LEFT]				= &runForwardsAnimation;			// AL + ML --> F
-	legsMatrix[(int)AimDirection::LEFT][(int)PlayerDirection::RIGHT]			= &runBackwardsAnimation;			// AL + MR --> B
-
-	legsMatrix[(int)AimDirection::RIGHT][(int)PlayerDirection::FORWARDS]		= &runLeftAnimation;				// AR + MF --> L
-	legsMatrix[(int)AimDirection::RIGHT][(int)PlayerDirection::BACKWARDS]		= &runRightAnimation;				// AR + MB --> R
-	legsMatrix[(int)AimDirection::RIGHT][(int)PlayerDirection::LEFT]			= &runBackwardsAnimation;			// AR + ML --> B
-	legsMatrix[(int)AimDirection::RIGHT][(int)PlayerDirection::RIGHT]			= &runForwardsAnimation;			// AR + MR --> F
+	SetUpLegsMatrix();
 
 	// --- RIGID BODY
 	if (rigidBody != nullptr)
 		rigidBody->TransformMovesRigidBody(false);
 
+	// --- WEAPONS
 	currentWeapon = blasterWeapon;
+
+	// --- PARTICLES AND SFX
+	runParticles	= GetParticles("Run");
+	dashParticles	= GetParticles("Dash");
+
+	(runParticles != nullptr)	? runParticles->StopSpawn()		: LOG("[ERROR] Player Script: Could not retrieve { RUN } Particle System! Error: GetParticles() failed.");
+	(dashParticles != nullptr)	? dashParticles->StopSpawn()	: LOG("[ERROR] Player Script: Could not retrieve { DASH } Particle System! Error: GetParticles() failed.");
 
 	for (uint i = 0; i < gameObject->components.size(); ++i)
 	{
@@ -448,6 +438,20 @@ void Player::TakeDamage(float damage)
 	}
 }
 
+void Player::SetPlayerInteraction(InteractionType type)
+{
+	switch (type)
+	{
+	case InteractionType::NONE:				{;} break;
+	case InteractionType::TALK:				{;} break;
+	case InteractionType::USE:				{;} break;
+	case InteractionType::OPEN_CHEST:		{;} break;
+	case InteractionType::SIGNAL_GROGU:		{;} break;
+	}
+
+	currentInteraction = type;
+}
+
 void Player::AnimatePlayer()
 {
 	if (animator == nullptr)
@@ -481,7 +485,7 @@ void Player::AnimatePlayer()
 	}
 	else
 	{	
-		//LOG("DIRECTIONS: [%d]::[%d]::[%s]", playerDirection, aimDirection, GetLegsAnimation()->name.c_str());
+		LOG("DIRECTIONS: [%d]::[%d]::[%s]", aimDirection, moveDirection, GetLegsAnimation()->name.c_str());
 		
 		AnimationInfo* torsoInfo	= GetAimStateAnimation();
 		AnimationInfo* legsInfo		= GetMoveStateAnimation();
@@ -547,7 +551,7 @@ AnimationInfo* Player::GetLegsAnimation()
 	if (moveInput.IsZero())
 		return &idleAnimation;
 
-	return legsMatrix[(int)aimDirection][(int)playerDirection];
+	return legsMatrix[(int)aimDirection][(int)moveDirection];
 }
 
 AnimationInfo* Player::GetAimStateAnimation()
@@ -633,6 +637,40 @@ bool Player::GetGodMode() const
 	return godMode;
 }
 
+void Player::SetUpLegsMatrix()
+{
+	// All NONE elements will most probably not be used. Added just in case.
+	legsMatrix[(int)AimDirection::NONE][(int)MoveDirection::NONE]			= &idleAnimation;					// AN + MN --> I
+	legsMatrix[(int)AimDirection::NONE][(int)MoveDirection::FORWARDS]		= &runForwardsAnimation;			// AN + MF --> F
+	legsMatrix[(int)AimDirection::NONE][(int)MoveDirection::BACKWARDS]		= &runBackwardsAnimation;			// AN + MB --> B
+	legsMatrix[(int)AimDirection::NONE][(int)MoveDirection::LEFT]			= &runLeftAnimation;				// AN + ML --> L
+	legsMatrix[(int)AimDirection::NONE][(int)MoveDirection::RIGHT]			= &runRightAnimation;				// AN + MR --> R
+
+	legsMatrix[(int)AimDirection::FORWARDS][(int)MoveDirection::NONE]		= &idleAnimation;					// AF + MN --> I
+	legsMatrix[(int)AimDirection::FORWARDS][(int)MoveDirection::FORWARDS]	= &runForwardsAnimation;			// AF + MF --> F
+	legsMatrix[(int)AimDirection::FORWARDS][(int)MoveDirection::BACKWARDS]	= &runBackwardsAnimation;			// AF + MB --> B
+	legsMatrix[(int)AimDirection::FORWARDS][(int)MoveDirection::LEFT]		= &runLeftAnimation;				// AF + ML --> L
+	legsMatrix[(int)AimDirection::FORWARDS][(int)MoveDirection::RIGHT]		= &runRightAnimation;				// AF + MR --> R
+
+	legsMatrix[(int)AimDirection::BACKWARDS][(int)MoveDirection::NONE]		= &idleAnimation;					// AB + MN --> I
+	legsMatrix[(int)AimDirection::BACKWARDS][(int)MoveDirection::FORWARDS]	= &runBackwardsAnimation;			// AB + MF --> B
+	legsMatrix[(int)AimDirection::BACKWARDS][(int)MoveDirection::BACKWARDS]	= &runForwardsAnimation;			// AB + MB --> F
+	legsMatrix[(int)AimDirection::BACKWARDS][(int)MoveDirection::LEFT]		= &runRightAnimation;				// AB + ML --> R
+	legsMatrix[(int)AimDirection::BACKWARDS][(int)MoveDirection::RIGHT]		= &runLeftAnimation;				// AB + MR --> L
+
+	legsMatrix[(int)AimDirection::LEFT][(int)MoveDirection::NONE]			= &idleAnimation;					// AL + MN --> I
+	legsMatrix[(int)AimDirection::LEFT][(int)MoveDirection::FORWARDS]		= &runRightAnimation;				// AL + MF --> R
+	legsMatrix[(int)AimDirection::LEFT][(int)MoveDirection::BACKWARDS]		= &runLeftAnimation;				// AL + MB --> L
+	legsMatrix[(int)AimDirection::LEFT][(int)MoveDirection::LEFT]			= &runForwardsAnimation;			// AL + ML --> F
+	legsMatrix[(int)AimDirection::LEFT][(int)MoveDirection::RIGHT]			= &runBackwardsAnimation;			// AL + MR --> B
+
+	legsMatrix[(int)AimDirection::RIGHT][(int)MoveDirection::NONE]			= &runLeftAnimation;				// AR + MN --> I
+	legsMatrix[(int)AimDirection::RIGHT][(int)MoveDirection::FORWARDS]		= &runLeftAnimation;				// AR + MF --> L
+	legsMatrix[(int)AimDirection::RIGHT][(int)MoveDirection::BACKWARDS]		= &runRightAnimation;				// AR + MB --> R
+	legsMatrix[(int)AimDirection::RIGHT][(int)MoveDirection::LEFT]			= &runBackwardsAnimation;			// AR + ML --> B
+	legsMatrix[(int)AimDirection::RIGHT][(int)MoveDirection::RIGHT]			= &runForwardsAnimation;			// AR + MR --> F
+}
+
 void Player::ManageMovement()
 {
 	if (moveState != PlayerState::DEAD)
@@ -640,96 +678,38 @@ void Player::ManageMovement()
 		if (health <= 0.0f)
 		{
 			moveState = PlayerState::DEAD_IN;
+			//moveState = PlayerState::DEAD;
 		}
 		else
 		{
-			if (moveState != PlayerState::DASH)
-				GatherMoveInputs();
+			GatherInteractionInputs();
+
+			if (currentInteraction == InteractionType::NONE)
+			{
+				if (moveState != PlayerState::DASH)
+					GatherMoveInputs();
+			}
 		}
 	}
 
-	C_ParticleSystem* dust = GetParticles("Run");
-	if (dust != nullptr)
-		dust->StopSpawn();
+	if (runParticles != nullptr)
+		runParticles->StopSpawn();
 
 	if (rigidBody == nullptr)														// Ending early in case there is no rigidBody associated with the player.
 		return;
 
 	switch (moveState)
 	{
-	case PlayerState::IDLE:
-		currentAnimation = &idleAnimation;
+	case PlayerState::IDLE:		{ MoveIdle(); } break;
+	case PlayerState::INTERACT: { Interact(); } break;
+	case PlayerState::WALK:		{ Walk(); }		break;
+	case PlayerState::RUN:		{ Run(); }		break;
 
-		if (rigidBody != nullptr)
-			rigidBody->Set2DVelocity(float2::zero);
+	case PlayerState::DASH_IN:	{ DashIn(); }
+	case PlayerState::DASH:		{ Dash(); }		break;
 
-		break;
-	case PlayerState::WALK:
-		currentAnimation = &walkAnimation;
-		Movement();
-
-		if (dust != nullptr)
-			dust->ResumeSpawn();
-
-		break;
-	case PlayerState::RUN:
-		currentAnimation = &runAnimation;
-		Movement();
-		
-		if (dust != nullptr)
-			dust->ResumeSpawn();
-
-		break;
-	case PlayerState::DASH_IN:
-		if (dashAudio != nullptr)
-			dashAudio->PlayFx(dashAudio->GetEventId());
-	
-		currentAnimation = &dashAnimation;
-		dashTimer.Start();
-		if (rigidBody != nullptr)
-		{
-			rigidBody->ChangeFilter(" player dashing");
-			rigidBody->FreezePositionY(true);
-		}
-		if (GetParticles("Dash") != nullptr)
-		{
-			GetParticles("Dash")->ResumeSpawn();
-		}
-	
-		moveState = PlayerState::DASH;
-	
-	case PlayerState::DASH:
-		Dash();
-		if (dashTimer.ReadSec() >= DashDuration()) // When the dash duration ends start the cooldown and reset the move state
-		{
-			dashTimer.Stop();
-			dashCooldownTimer.Start();
-			if (rigidBody != nullptr)
-			{
-				rigidBody->ChangeFilter(" player");
-				rigidBody->FreezePositionY(false);
-			}
-			if (GetParticles("Dash") != nullptr)
-				GetParticles("Dash")->StopSpawn();
-	
-			moveState = PlayerState::IDLE;
-		}
-		break;
-	case PlayerState::DEAD_IN:
-		if (deathAudio != nullptr)
-			deathAudio->PlayFx(deathAudio->GetEventId());
-	
-		currentAnimation = &deathAnimation;
-		if (rigidBody != nullptr)
-			rigidBody->SetIsActive(false); // Disable the rigidbody to avoid more interactions with other entities
-		deathTimer.Start();
-		moveState = PlayerState::DEAD;
-	
-	case PlayerState::DEAD:
-		if (deathTimer.ReadSec() >= deathDuration)
-			moveState = PlayerState::DEAD_OUT;
-
-		break;
+	case PlayerState::DEAD_IN:	{ DeadIn(); }
+	case PlayerState::DEAD:		{ Dead(); }		break;
 	}
 }
 
@@ -742,101 +722,215 @@ void Player::ManageAim()
 
 	switch (aimState)
 	{
-	case AimState::IDLE:
-		if (idleAimPlane != nullptr)
-			idleAimPlane->SetIsActive(true);
+	case AimState::IDLE:		{ AimIdle(); }	break;
+	case AimState::ON_GUARD:	{ OnGuard(); }	break;
+	case AimState::AIMING:		{ Aiming(); }	break;
 
-		if (aimingAimPlane != nullptr)
-			aimingAimPlane->SetIsActive(false);
-		break;
-	case AimState::ON_GUARD:
-		aimState = AimState::IDLE;
-		break;
-	case AimState::AIMING:
-		if (idleAimPlane != nullptr)
-			idleAimPlane->SetIsActive(false);
+	case AimState::SHOOT_IN:	{ ShootIn(); }
+	case AimState::SHOOT:		{ Shoot(); }	break;
 
-		if (aimingAimPlane != nullptr)
-			aimingAimPlane->SetIsActive(true);
-		break;
-	case AimState::SHOOT_IN:
-		//LOG("SHOOTIN'");
-		currentAnimation = GetShootAnimation();
-		aimState = AimState::SHOOT;
+	case AimState::RELOAD_IN:	{ ReloadIn(); }
+	case AimState::RELOAD:		{ Reload(); }	break;
 
-	case AimState::SHOOT:
-		/*if (!usingEquipedGun)
-			currentAnimation = &shootAnimation; // temporary till torso gets an independent animator
-		else
-			currentAnimation = &shootRifleAnimation;*/
-
-		//LOG("JUST SHOOT MAN");
-
-		//currentAnimation = (!usingEquipedGun) ? &shootAnimation : &shootSniperAnimation;
-
-		currentAnimation = GetShootAnimation();
-
-		if (currentWeapon != nullptr)
-			switch (currentWeapon->Shoot(aimVector))
-			{
-			case ShootState::NO_FULLAUTO:
-				currentAnimation = nullptr;
-				aimState = AimState::ON_GUARD;
-				break;
-			case ShootState::WAINTING_FOR_NEXT:
-				break;
-			case ShootState::FIRED_PROJECTILE:
-				currentAnimation = nullptr;
-				aimState = AimState::ON_GUARD;
-				break;
-			case ShootState::RATE_FINISHED:
-				currentAnimation = nullptr;
-				aimState = AimState::ON_GUARD;
-				break;
-			case ShootState::NO_AMMO:
-				aimState = AimState::RELOAD_IN;
-				break;
-			}
-		break;
-	case AimState::RELOAD_IN:
-		aimState = AimState::RELOAD;
-
-	case AimState::RELOAD:
-		if (currentWeapon && currentWeapon->Reload())
-			aimState = AimState::ON_GUARD;
-		break;
-	case AimState::CHANGE_IN:
-		if (changeWeaponAudio != nullptr)
-			changeWeaponAudio->PlayFx(changeWeaponAudio->GetEventId());
-
-		changeTimer.Start();
-		aimState = AimState::CHANGE;
-
-	case AimState::CHANGE:
-		if (changeTimer.ReadSec() >= ChangeTime())
-		{
-			if (blasterWeapon == currentWeapon)
-			{
-				usingSecondaryGun = true;
-				currentWeapon = secondaryWeapon;
-				if (blasterWeapon->weaponModel != nullptr)
-					blasterWeapon->weaponModel->SetIsActive(false);
-				if (secondaryWeapon->weaponModel != nullptr)
-					secondaryWeapon->weaponModel->SetIsActive(true);
-			}
-			else
-			{
-				usingSecondaryGun = false;
-				currentWeapon = blasterWeapon;
-				if (blasterWeapon->weaponModel != nullptr)
-					blasterWeapon->weaponModel->SetIsActive(true);
-				if (secondaryWeapon->weaponModel != nullptr)
-					secondaryWeapon->weaponModel->SetIsActive(false);
-			}
-			aimState = AimState::ON_GUARD;
-		}
-		break;
+	case AimState::CHANGE_IN:	{ ChangeIn(); }
+	case AimState::CHANGE:		{ Change(); }	break;
 	}
+}
+
+// --- MOVEMENT STATES
+void Player::MoveIdle()
+{
+	currentAnimation = &idleAnimation;
+
+	if (rigidBody != nullptr)
+		rigidBody->Set2DVelocity(float2::zero);
+}
+
+void Player::Interact()
+{
+
+}
+
+void Player::Walk()
+{
+	currentAnimation = &walkAnimation;
+	Movement();
+
+	if (runParticles != nullptr)
+		runParticles->ResumeSpawn();
+}
+
+void Player::Run()
+{
+	currentAnimation = &runAnimation;
+	Movement();
+
+	if (runParticles != nullptr)
+		runParticles->ResumeSpawn();
+
+}
+
+void Player::DashIn()
+{
+	if (dashAudio != nullptr)
+		dashAudio->PlayFx(dashAudio->GetEventId());
+
+	currentAnimation = &dashAnimation;
+
+	dashTimer.Start();
+
+	if (rigidBody != nullptr)
+	{
+		rigidBody->ChangeFilter(" player dashing");
+		rigidBody->FreezePositionY(true);
+	}
+
+	if (dashParticles != nullptr)
+		dashParticles->ResumeSpawn();
+
+	moveState = PlayerState::DASH;
+}
+
+void Player::Dash()
+{
+	ApplyDash();
+
+	if (dashTimer.ReadSec() >= DashDuration())				// When the dash duration ends start the cooldown and reset the move state
+	{
+		dashTimer.Stop();
+		dashCooldownTimer.Start();
+
+		if (rigidBody != nullptr)
+		{
+			rigidBody->ChangeFilter(" player");
+			rigidBody->FreezePositionY(false);
+		}
+
+		if (dashParticles != nullptr)
+			dashParticles->StopSpawn();
+
+		moveState = PlayerState::IDLE;
+	}
+}
+
+void Player::DeadIn()
+{
+	currentAnimation = &deathAnimation;
+
+	if (deathAudio != nullptr)
+		deathAudio->PlayFx(deathAudio->GetEventId());
+
+	if (rigidBody != nullptr)
+		rigidBody->SetIsActive(false);						// Disable the rigidbody to avoid more interactions with other entities
+
+	deathTimer.Start();
+
+	moveState = PlayerState::DEAD;
+}
+
+void Player::Dead()
+{
+	if (deathTimer.ReadSec() >= deathDuration)
+		moveState = PlayerState::DEAD_OUT;
+}
+
+// --- AIM STATES
+void Player::AimIdle()
+{
+	if (idleAimPlane != nullptr)
+		idleAimPlane->SetIsActive(true);
+
+	if (aimingAimPlane != nullptr)
+		aimingAimPlane->SetIsActive(false);
+}
+
+void Player::OnGuard()
+{
+	aimState = AimState::IDLE;
+}
+
+void Player::Aiming()
+{
+	if (idleAimPlane != nullptr)
+		idleAimPlane->SetIsActive(false);
+
+	if (aimingAimPlane != nullptr)
+		aimingAimPlane->SetIsActive(true);
+}
+
+void Player::ShootIn()
+{
+	currentAnimation	= GetShootAnimation();
+	aimState			= AimState::SHOOT;
+}
+
+void Player::Shoot()
+{
+	if (currentWeapon == nullptr)
+		return;
+	
+	currentAnimation = GetShootAnimation();
+
+	switch (currentWeapon->Shoot(aimVector))
+	{
+	case ShootState::NO_FULLAUTO:		{ currentAnimation = nullptr; aimState = AimState::ON_GUARD; }		break;
+	case ShootState::WAITING_FOR_NEXT:	{ /* DO NOTHING */ }												break;
+	case ShootState::FIRED_PROJECTILE:	{ currentAnimation = nullptr; aimState = AimState::ON_GUARD; }		break;
+	case ShootState::RATE_FINISHED:		{ currentAnimation = nullptr; aimState = AimState::ON_GUARD; }		break;
+	case ShootState::NO_AMMO:			{ /*currentAnimation = nullptr;*/ aimState = AimState::RELOAD_IN; }	break;
+	}
+}
+
+void Player::ReloadIn()
+{
+	aimState = AimState::RELOAD;
+}
+
+void Player::Reload()
+{
+	if (currentWeapon != nullptr && currentWeapon->Reload())
+		aimState = AimState::ON_GUARD;
+}
+
+void Player::ChangeIn()
+{
+	changeTimer.Start();
+	
+	if (changeWeaponAudio != nullptr)
+		changeWeaponAudio->PlayFx(changeWeaponAudio->GetEventId());
+
+	aimState = AimState::CHANGE;
+}
+
+void Player::Change()
+{
+	if (changeTimer.ReadSec() < ChangeTime())
+		return;
+	
+	if (blasterWeapon == currentWeapon)
+	{
+		usingSecondaryGun	= true;
+		currentWeapon		= secondaryWeapon;
+
+		if (blasterWeapon->weaponModel != nullptr)
+			blasterWeapon->weaponModel->SetIsActive(false);
+
+		if (secondaryWeapon->weaponModel != nullptr)
+			secondaryWeapon->weaponModel->SetIsActive(true);
+	}
+	else
+	{
+		usingSecondaryGun	= false;
+		currentWeapon		= blasterWeapon;
+
+		if (blasterWeapon->weaponModel != nullptr)
+			blasterWeapon->weaponModel->SetIsActive(true);
+
+		if (secondaryWeapon->weaponModel != nullptr)
+			secondaryWeapon->weaponModel->SetIsActive(false);
+	}
+
+	aimState = AimState::ON_GUARD;
 }
 
 void Player::GatherMoveInputs()
@@ -862,6 +956,7 @@ void Player::GatherMoveInputs()
 		{
 			if (!dashTimer.IsActive())
 				moveState = PlayerState::DASH_IN;
+				//moveState = PlayerState::DASH;
 
 			return;
 		}
@@ -906,29 +1001,37 @@ void Player::GatherAimInputs()
 	if (App->input->GetKey(SDL_SCANCODE_F) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(1) == ButtonState::BUTTON_DOWN)
 	{
 		aimState = AimState::CHANGE_IN;
+		//aimState = AimState::CHANGE;
 		return;
 	}
 
 	if ((App->input->GetKey(SDL_SCANCODE_R) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(2) == ButtonState::BUTTON_DOWN))
 	{
 		aimState = AimState::RELOAD_IN;
+		//aimState = AimState::RELOAD;
 		return;
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_REPEAT || App->input->GetGameControllerTrigger(1) == ButtonState::BUTTON_REPEAT)
 	{
 		aimState = AimState::SHOOT_IN;
+		//aimState = AimState::SHOOT;
 		return;
 	}
 
 	aimState = AimState::IDLE;
 }
 
+void Player::GatherInteractionInputs()
+{
+
+}
+
 void Player::SetPlayerDirection()
 {
 	if (moveInput.IsZero())
 	{
-		playerDirection = PlayerDirection::NONE;
+		moveDirection = MoveDirection::NONE;
 		return;
 	}
 
@@ -937,11 +1040,11 @@ void Player::SetPlayerDirection()
 
 	if (absX > absY)
 	{
-		playerDirection = (moveInput.x < 0.0f) ? PlayerDirection::LEFT : PlayerDirection::RIGHT;
+		moveDirection = (moveInput.x < 0.0f) ? MoveDirection::LEFT : MoveDirection::RIGHT;
 	}
 	else
 	{
-		playerDirection = (moveInput.y < 0.0f) ? PlayerDirection::FORWARDS : PlayerDirection::BACKWARDS;
+		moveDirection = (moveInput.y < 0.0f) ? MoveDirection::FORWARDS : MoveDirection::BACKWARDS;
 	}
 }
 
@@ -995,7 +1098,7 @@ void Player::Aim()
 		skeleton->transform->SetLocalRotation(float3(0, -rad + DegToRad(90), 0));
 }
 
-void Player::Dash()
+void Player::ApplyDash()
 {	
 	if (rigidBody != nullptr)
 		rigidBody->Set2DVelocity((moveVector.Normalized()) * DashSpeed());

@@ -32,7 +32,7 @@ enum class WeaponType
 enum class ShootState
 {
 	NO_FULLAUTO, // seems like rules specify that fullauto is not permited indoors, but wait...
-	WAINTING_FOR_NEXT,
+	WAITING_FOR_NEXT,
 	FIRED_PROJECTILE,
 	RATE_FINISHED,
 	NO_AMMO
