@@ -90,7 +90,7 @@ public:
 	int getAreaFromName(const char* name) const;
 	static int allAreas() { return POLYFLAGS_ALL; }
 	// Will write the path to variable path, return number of verts
-	int calculatePath(float3 sourcePosition, float3 destination, int areaMask, std::vector<float3>& path);
+	bool CalculatePath(float3 sourcePosition, float3 destination, std::vector<float3>& path);
 	bool nearestPosInMesh(float3 sourcePosition, int areaMask, float3& nearestPoint);
 
 	void ReCalculatePath();
@@ -99,7 +99,7 @@ public:
 	float m_cellSize = 0.3f;
 	float m_cellHeight = 0.2f;
 	float agentHeight = 2.0f;
-	float agentRadius = 0.5f;
+	float agentRadius = 2.0f;
 	float agentMaxClimb = 0.9f;
 	float maxSlope = 45.0f;
 	float regionMinSize = 8;
@@ -140,8 +140,6 @@ private:
 		TOOLMODE_FIND_LOCAL_NEIGHBOURHOOD,
 	};
 
-	float m_Extents[3];
-
 	//Pathfinding
 	ToolMode m_toolMode;
 
@@ -169,10 +167,12 @@ private:
 	int m_nrandPoints;
 	bool m_randPointsInCircle;
 
-	float m_spos[3];
-	float m_epos[3];
+	float3 m_startPos;
+	float3 m_endPos;
 	float m_hitPos[3];
 	float m_hitNormal[3];
+	float m_Extents[3];
+
 	bool m_hitResult;
 	float m_distanceToWall;
 	float m_neighbourhoodRadius;

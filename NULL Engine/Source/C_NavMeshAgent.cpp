@@ -1,4 +1,5 @@
 #include "JSONParser.h"
+#include "Log.h"
 
 #include "GameObject.h"
 
@@ -8,12 +9,17 @@
 #include "Component.h"
 #include "C_NavMeshAgent.h"
 #include "C_Transform.h"
+#include "C_RigidBody.h"
+
 
 
 C_NavMeshAgent::C_NavMeshAgent(GameObject* owner) : Component(owner, ComponentType::NAVMESH_AGENT)
 {
 	radius = 0;
-	destinationPoint = float3::zero;
+	origin = owner->GetComponent<C_Transform>()->GetWorldPosition();	
+	hasDestination = false;
+	currentPos = origin;
+	direction = float3::zero;
 }
 
 C_NavMeshAgent::~C_NavMeshAgent()
@@ -23,12 +29,45 @@ C_NavMeshAgent::~C_NavMeshAgent()
 
 bool C_NavMeshAgent::Start()
 {
+	rigidBody = GetOwner()->GetComponent<C_RigidBody>();
 	return true;
 }
 
 bool C_NavMeshAgent::Update()
 {
-	CalculatePath(destinationPoint);
+	if (rigidBody)
+	{
+		if (hasDestination)
+		{
+			direction = destinationPoint - currentPos;
+
+			float2 directorVector = direction.xz();
+
+			if (!directorVector.IsZero())
+				directorVector.Normalize();
+
+			rigidBody->Set2DVelocity(directorVector * velocity);
+
+			nextPoint = path[i];
+
+			if (GetOwner()->transform->GetDistanceTo(currentPos) < 1.0f)
+			{
+				currentPos = nextPoint;
+
+				nextPoint = path[++i];
+			}
+			
+			if (i == (path.size()-1))
+			{
+				i = 0;
+				hasDestination = false;
+			}
+
+			LOG("%u", i);
+			LOG("La posicion del angel: X->%f, Y->%f, Z->%f", currentPos.x, currentPos.y, currentPos.z);
+
+		}
+	}
 
 	return true;
 }
@@ -52,25 +91,29 @@ bool C_NavMeshAgent::LoadState(ParsonNode& root)
 
 bool C_NavMeshAgent::SetDestination(float3 destination)
 {
+	float2 pos = { destination.x, destination.z };
+	
+	destinationPoint = { pos.x, 0, pos.y };
+	
+	if(hasDestination == false)
+		AgentPath(origin, destination);
+
+
 	return false;
 }
 
 bool C_NavMeshAgent::HasDestination()
 {
-	return false;
+	return hasDestination;
 }
 
 void C_NavMeshAgent::CancelDestination()
 {
 }
 
-bool C_NavMeshAgent::CalculatePath(float3 destination)
+bool C_NavMeshAgent::AgentPath(float3 origin, float3 destination)
 {
-
-	float3 ownerPos = GetOwner()->GetComponent<C_Transform>()->GetWorldPosition();
-
-	int succes = App->detour->calculatePath(ownerPos, destination, areaMask, path);
-
-	return false;
+	hasDestination = true;
+	return  App->detour->CalculatePath(origin, destination, path);
 }
 

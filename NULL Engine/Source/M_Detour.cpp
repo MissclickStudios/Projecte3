@@ -612,57 +612,62 @@ bool M_Detour::nearestPosInMesh(float3 sourcePosition, int areaMask, float3& nea
 	return !((status & DT_FAILURE) || (status & DT_STATUS_DETAIL_MASK)); //If we found an error we return false
 }
 
-int M_Detour::calculatePath(float3 sourcePosition, float3 destination, int areaMask, std::vector<float3>& path)
+bool M_Detour::CalculatePath(float3 sourcePosition, float3 destination, std::vector<float3>& path)
 {
 	if (navMeshResource != nullptr && navMeshResource->navMesh != nullptr && m_navQuery != nullptr)
 	{
-		m_filterQuery->setIncludeFlags(areaMask);
 		dtStatus status;
-		dtPolyRef StartPoly;
 		float StartNearest[3];
-		dtPolyRef EndPoly;
 		float EndNearest[3];
-		dtPolyRef PolyPath[BE_DETOUR_MAX_PATHPOLY];
-		int nPathCount = 0;
-		float StraightPath[BE_DETOUR_MAX_PATHVERT * 3];
-		int nVertCount = 0;
-
 
 		// find the start polygon
-		status = m_navQuery->findNearestPoly(sourcePosition.ptr(), m_Extents, m_filterQuery, &StartPoly, StartNearest);
-		if ((status & DT_FAILURE) || (status & DT_STATUS_DETAIL_MASK)) return -1; // couldn't find a polygon
+		status = m_navQuery->findNearestPoly(sourcePosition.ptr(), m_Extents, m_filterQuery, &m_startRef, StartNearest);
+		if ((status & DT_FAILURE) || (status & DT_STATUS_DETAIL_MASK)) return false; // couldn't find a polygon
 
 		// find the end polygon
-		status = m_navQuery->findNearestPoly(destination.ptr(), m_Extents, m_filterQuery, &EndPoly, EndNearest);
-		if ((status & DT_FAILURE) || (status & DT_STATUS_DETAIL_MASK)) return -2; // couldn't find a polygon
+		status = m_navQuery->findNearestPoly(destination.ptr(), m_Extents, m_filterQuery, &m_endRef, EndNearest);
+		if ((status & DT_FAILURE) || (status & DT_STATUS_DETAIL_MASK)) return false; // couldn't find a polygon
 
-		status = m_navQuery->findPath(StartPoly, EndPoly, StartNearest, EndNearest, m_filterQuery, PolyPath, &nPathCount, BE_DETOUR_MAX_PATHPOLY);
-		if ((status & DT_FAILURE) || (status & DT_STATUS_DETAIL_MASK)) return -3; // couldn't create a path
-		if (nPathCount == 0) return -4; // couldn't find a path
+		status = m_navQuery->findPath(m_startRef, m_endRef, sourcePosition.ptr(), destination.ptr(), m_filterQuery, m_polys, &m_npolys, BE_DETOUR_MAX_PATHPOLY);
+		if ((status & DT_FAILURE) || (status & DT_STATUS_DETAIL_MASK)) return false; // couldn't create a path
+		
+		m_nstraightPath = 0;
 
-		status = m_navQuery->findStraightPath(StartNearest, EndNearest, PolyPath, nPathCount, StraightPath, NULL, NULL, &nVertCount, BE_DETOUR_MAX_PATHVERT);
-		if ((status & DT_FAILURE) || (status & DT_STATUS_DETAIL_MASK)) return -5; // couldn't create a path
-		if (nVertCount == 0) return -6; // couldn't find a path
+		if (m_npolys)
+		{
+			// In case of partial path, make sure the end point is clamped to the last polygon.
+			float endPos[3];
+			dtVcopy(endPos, destination.ptr());
+			if (m_polys[m_npolys - 1] != m_endRef)
+				m_navQuery->closestPointOnPoly(m_polys[m_npolys - 1], destination.ptr(), endPos, 0);
 
-		path.resize(nPathCount);
-		memcpy(path.data(), StraightPath, sizeof(float) * nVertCount * 3);
+			m_navQuery->findStraightPath(sourcePosition.ptr(), endPos, m_polys, m_npolys,
+				m_straightPath, m_straightPathFlags,
+				m_straightPathPolys, &m_nstraightPath, MAX_POLYS, m_straightPathOptions);
+		}
 
-		return nPathCount;
+		path.resize(m_nstraightPath);
+		memcpy(path.data(), m_straightPath, sizeof(float) * m_nstraightPath * 3);
+
+		m_startPos = sourcePosition;
+		m_endPos = destination;
+		m_startPosSet = true;
+		m_endPosSet = true;
 	}
 }
 
 void M_Detour::ReCalculatePath()
 {
-	if (!navMeshResource->navMesh)
+	if (!navMeshResource || !navMeshResource->navMesh)
 		return;
 
 	if (m_startPosSet)
-		m_navQuery->findNearestPoly(m_spos, m_polyPickExt, m_filterQuery, &m_startRef, 0);
+		m_navQuery->findNearestPoly(m_startPos.ptr(), m_polyPickExt, m_filterQuery, &m_startRef, 0);
 	else
 		m_startRef = 0;
 
 	if (m_endPosSet)
-		m_navQuery->findNearestPoly(m_epos, m_polyPickExt, m_filterQuery, &m_endRef, 0);
+		m_navQuery->findNearestPoly(m_endPos.ptr(), m_polyPickExt, m_filterQuery, &m_endRef, 0);
 	else
 		m_endRef = 0;
 
@@ -673,7 +678,7 @@ void M_Detour::ReCalculatePath()
 		m_pathIterNum = 0;
 		if (m_startPosSet && m_endPosSet && m_startRef && m_endRef)
 		{
-			m_navQuery->findPath(m_startRef, m_endRef, m_spos, m_epos, m_filterQuery, m_polys, &m_npolys, MAX_POLYS);
+			m_navQuery->findPath(m_startRef, m_endRef, m_startPos.ptr(), m_endPos.ptr(), m_filterQuery, m_polys, &m_npolys, MAX_POLYS);
 
 			m_nsmoothPath = 0;
 
@@ -685,8 +690,8 @@ void M_Detour::ReCalculatePath()
 				int npolys = m_npolys;
 
 				float iterPos[3], targetPos[3];
-				m_navQuery->closestPointOnPoly(m_startRef, m_spos, iterPos, 0);
-				m_navQuery->closestPointOnPoly(polys[npolys - 1], m_epos, targetPos, 0);
+				m_navQuery->closestPointOnPoly(m_startRef, m_startPos.ptr(), iterPos, 0);
+				m_navQuery->closestPointOnPoly(polys[npolys - 1], m_endPos.ptr(), targetPos, 0);
 
 				static const float STEP_SIZE = 0.5f;
 				static const float SLOP = 0.01f;
@@ -812,17 +817,17 @@ void M_Detour::ReCalculatePath()
 	{
 		if (m_startPosSet && m_endPosSet && m_startRef && m_endRef)
 		{
-			m_navQuery->findPath(m_startRef, m_endRef, m_spos, m_epos, m_filterQuery, m_polys, &m_npolys, MAX_POLYS);
+			m_navQuery->findPath(m_startRef, m_endRef, m_startPos.ptr(), m_endPos.ptr(), m_filterQuery, m_polys, &m_npolys, MAX_POLYS);
 			m_nstraightPath = 0;
 			if (m_npolys)
 			{
 				// In case of partial path, make sure the end point is clamped to the last polygon.
 				float epos[3];
-				dtVcopy(epos, m_epos);
+				dtVcopy(epos, m_endPos.ptr());
 				if (m_polys[m_npolys - 1] != m_endRef)
-					m_navQuery->closestPointOnPoly(m_polys[m_npolys - 1], m_epos, epos, 0);
+					m_navQuery->closestPointOnPoly(m_polys[m_npolys - 1], m_endPos.ptr(), epos, 0);
 
-				m_navQuery->findStraightPath(m_spos, epos, m_polys, m_npolys,
+				m_navQuery->findStraightPath(m_startPos.ptr(), epos, m_polys, m_npolys,
 					m_straightPath, m_straightPathFlags,
 					m_straightPathPolys, &m_nstraightPath, MAX_POLYS, m_straightPathOptions);
 			}
@@ -840,7 +845,7 @@ void M_Detour::ReCalculatePath()
 			m_npolys = 0;
 			m_nstraightPath = 0;
 
-			m_pathFindStatus = m_navQuery->initSlicedFindPath(m_startRef, m_endRef, m_spos, m_epos, m_filterQuery, DT_FINDPATH_ANY_ANGLE);
+			m_pathFindStatus = m_navQuery->initSlicedFindPath(m_startRef, m_endRef, m_startPos.ptr(), m_endPos.ptr(), m_filterQuery, DT_FINDPATH_ANY_ANGLE);
 		}
 		else
 		{
@@ -856,20 +861,20 @@ void M_Detour::ReCalculatePath()
 			float t = 0;
 			m_npolys = 0;
 			m_nstraightPath = 2;
-			m_straightPath[0] = m_spos[0];
-			m_straightPath[1] = m_spos[1];
-			m_straightPath[2] = m_spos[2];
-			m_navQuery->raycast(m_startRef, m_spos, m_epos, m_filterQuery, &t, m_hitNormal, m_polys, &m_npolys, MAX_POLYS);
+			m_straightPath[0] = m_startPos[0];
+			m_straightPath[1] = m_startPos[1];
+			m_straightPath[2] = m_startPos[2];
+			m_navQuery->raycast(m_startRef, m_startPos.ptr(), m_endPos.ptr(), m_filterQuery, &t, m_hitNormal, m_polys, &m_npolys, MAX_POLYS);
 			if (t > 1)
 			{
 				// No hit
-				dtVcopy(m_hitPos, m_epos);
+				dtVcopy(m_hitPos, m_endPos.ptr());
 				m_hitResult = false;
 			}
 			else
 			{
 				// Hit
-				dtVlerp(m_hitPos, m_spos, m_epos, t);
+				dtVlerp(m_hitPos, m_startPos.ptr(), m_endPos.ptr(), t);
 				m_hitResult = true;
 			}
 			// Adjust height.
@@ -888,18 +893,18 @@ void M_Detour::ReCalculatePath()
 		if (m_startPosSet && m_startRef)
 		{
 			m_distanceToWall = 0.0f;
-			m_navQuery->findDistanceToWall(m_startRef, m_spos, 100.0f, m_filterQuery, &m_distanceToWall, m_hitPos, m_hitNormal);
+			m_navQuery->findDistanceToWall(m_startRef, m_startPos.ptr(), 100.0f, m_filterQuery, &m_distanceToWall, m_hitPos, m_hitNormal);
 		}
 	}
 	else if (m_toolMode == TOOLMODE_FIND_POLYS_IN_CIRCLE)
 	{
 		if (m_startPosSet && m_startRef && m_endPosSet)
 		{
-			const float dx = m_epos[0] - m_spos[0];
-			const float dz = m_epos[2] - m_spos[2];
+			const float dx = m_endPos[0] - m_startPos[0];
+			const float dz = m_endPos[2] - m_startPos[2];
 			float dist = sqrtf(dx * dx + dz * dz);
 
-			m_navQuery->findPolysAroundCircle(m_startRef, m_spos, dist, m_filterQuery,
+			m_navQuery->findPolysAroundCircle(m_startRef, m_startPos.ptr(), dist, m_filterQuery,
 				m_polys, m_parent, 0, &m_npolys, MAX_POLYS);
 
 		}
@@ -908,25 +913,25 @@ void M_Detour::ReCalculatePath()
 	{
 		if (m_startPosSet && m_startRef && m_endPosSet)
 		{
-			const float nx = (m_epos[2] - m_spos[2]) * 0.25f;
-			const float nz = -(m_epos[0] - m_spos[0]) * 0.25f;
+			const float nx = (m_endPos[2] - m_startPos[2]) * 0.25f;
+			const float nz = -(m_endPos[0] - m_startPos[0]) * 0.25f;
 			const float agentHeight = 2.0f;
 
-			m_queryPoly[0] = m_spos[0] + nx * 1.2f;
-			m_queryPoly[1] = m_spos[1] + agentHeight / 2;
-			m_queryPoly[2] = m_spos[2] + nz * 1.2f;
+			m_queryPoly[0] = m_startPos[0] + nx * 1.2f;
+			m_queryPoly[1] = m_startPos[1] + agentHeight / 2;
+			m_queryPoly[2] = m_startPos[2] + nz * 1.2f;
 
-			m_queryPoly[3] = m_spos[0] - nx * 1.3f;
-			m_queryPoly[4] = m_spos[1] + agentHeight / 2;
-			m_queryPoly[5] = m_spos[2] - nz * 1.3f;
+			m_queryPoly[3] = m_startPos[0] - nx * 1.3f;
+			m_queryPoly[4] = m_startPos[1] + agentHeight / 2;
+			m_queryPoly[5] = m_startPos[2] - nz * 1.3f;
 
-			m_queryPoly[6] = m_epos[0] - nx * 0.8f;
-			m_queryPoly[7] = m_epos[1] + agentHeight / 2;
-			m_queryPoly[8] = m_epos[2] - nz * 0.8f;
+			m_queryPoly[6] = m_endPos[0] - nx * 0.8f;
+			m_queryPoly[7] = m_endPos[1] + agentHeight / 2;
+			m_queryPoly[8] = m_endPos[2] - nz * 0.8f;
 
-			m_queryPoly[9] = m_epos[0] + nx;
-			m_queryPoly[10] = m_epos[1] + agentHeight / 2;
-			m_queryPoly[11] = m_epos[2] + nz;
+			m_queryPoly[9] = m_endPos[0] + nx;
+			m_queryPoly[10] = m_endPos[1] + agentHeight / 2;
+			m_queryPoly[11] = m_endPos[2] + nz;
 
 			m_navQuery->findPolysAroundShape(m_startRef, m_queryPoly, 4, m_filterQuery,
 				m_polys, m_parent, 0, &m_npolys, MAX_POLYS);
@@ -936,7 +941,7 @@ void M_Detour::ReCalculatePath()
 	{
 		if (m_startPosSet && m_startRef)
 		{
-			m_navQuery->findLocalNeighbourhood(m_startRef, m_spos, m_neighbourhoodRadius, m_filterQuery,
+			m_navQuery->findLocalNeighbourhood(m_startRef, m_startPos.ptr(), m_neighbourhoodRadius, m_filterQuery,
 				m_polys, m_parent, &m_npolys, MAX_POLYS);
 		}
 	}

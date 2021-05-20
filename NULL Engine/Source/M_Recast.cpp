@@ -301,7 +301,7 @@ bool M_Recast::BuildSoloNavMesh(const InputGeom* m_geom)
 	}
 
 	//
-	// Step 5. Trace and simplify region contours.
+	// Step 5. Trace and simplify region contours.f
 	//
 
 	// Create contours.

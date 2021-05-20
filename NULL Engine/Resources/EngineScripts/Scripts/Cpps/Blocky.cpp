@@ -20,30 +20,27 @@ void Blocky::Awake()
 	LOG("Awake");
 
 	agent = gameObject->GetComponent<C_NavMeshAgent>();
-	agent->destinationPoint = { 0,0,0 };
 }
 
 void Blocky::Start()
 {
-	LOG("Start");
+	agent->SetDestination({ -69.0f, 0.0f, -7.0f });
 }
 
 void Blocky::PreUpdate()
 {
-	LOG("PreUpdate");
 }
 
 void Blocky::Update()
 {
-	gameObject->transform->SetWorldPosition(*(agent->path.begin()+1));	
+	
 }
 
 void Blocky::PostUpdate()
 {
-	LOG("PostUpdate");
 }
 
 void Blocky::CleanUp()
 {
-	LOG("CleanUp");
+
 }

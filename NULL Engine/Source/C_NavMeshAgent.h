@@ -3,10 +3,12 @@
 
 #include "Component.h"
 #include "MathGeoLib/include/Math/float3.h"
+#include "MathGeoLib/include/Math/float2.h"
 #include <vector>
 
 class ParsonNode;
 class GameObject;
+class C_RigidBody;
 
 class R_NavMesh;
 
@@ -30,20 +32,31 @@ public:
 	bool HasDestination();
 	void CancelDestination();
 
+	float3 origin;
 	bool hasDestination;
 	float3 destinationPoint;
 
 	std::vector<float3> path;
 
+	bool AgentPath(float3 origin, float3 destination);
+
+	float3 currentPos;
+
 private:
-	
-	bool CalculatePath(float3 destination);
+
+	C_RigidBody* rigidBody = nullptr;
+
+	float velocity = 10.0f;
 
 	float3 nextPoint;
 
 	float radius;
 
 	int areaMask = 1;
+
+	int i = 1;
+
+	float3 direction;
 };
 
 #endif	// !__C_NAVMESH_H__
