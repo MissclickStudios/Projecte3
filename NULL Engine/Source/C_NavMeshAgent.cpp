@@ -39,7 +39,7 @@ bool C_NavMeshAgent::Update()
 	{
 		if (hasDestination)
 		{
-			nextPoint = path[i];
+			nextPoint = path[indexPath];
 
 			direction = nextPoint - currentPos;
 
@@ -53,13 +53,12 @@ bool C_NavMeshAgent::Update()
 			if (GetOwner()->transform->GetDistanceTo(currentPos) < 5.0f)
 			{
 				currentPos = nextPoint;
-
-				nextPoint = path[++i];
+				nextPoint = path[++indexPath];
 			}
 			
-			if (i == (path.size()-1))
+			if (indexPath == (path.size()-1))
 			{
-				i = 0;
+				indexPath = 0;
 
 				directorVector = { 0,0 };
 
@@ -67,10 +66,6 @@ bool C_NavMeshAgent::Update()
 
 				rigidBody->Set2DVelocity(directorVector * velocity);
 			}
-
-			LOG("%u", i);
-			LOG("La posicion del angel: X->%f, Y->%f, Z->%f", currentPos.x, currentPos.y, currentPos.z);
-
 		}
 	}
 
@@ -114,6 +109,17 @@ bool C_NavMeshAgent::HasDestination()
 
 void C_NavMeshAgent::CancelDestination()
 {
+	hasDestination = false;
+	path.clear();
+	indexPath = 0;
+}
+
+void C_NavMeshAgent::StopAndCancelDestination()
+{
+	indexPath = 0;
+	path.clear();
+	hasDestination = false;
+	rigidBody->Set2DVelocity({ 0,0 });
 }
 
 bool C_NavMeshAgent::AgentPath(float3 origin, float3 destination)

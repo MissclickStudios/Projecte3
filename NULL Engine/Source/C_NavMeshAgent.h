@@ -31,6 +31,7 @@ public:
 	bool SetDestination(float3 destination);
 	bool HasDestination();
 	void CancelDestination();
+	void StopAndCancelDestination();
 
 	float3 origin;
 	bool hasDestination;
@@ -54,7 +55,7 @@ private:
 
 	int areaMask = 1;
 
-	int i = 1;
+	int indexPath = 1;
 
 	float3 direction;
 };
