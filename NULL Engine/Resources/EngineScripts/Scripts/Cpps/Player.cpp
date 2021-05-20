@@ -296,12 +296,12 @@ void Player::SaveState(ParsonNode& playerNode)
 	}
 
 	playerNode.SetInteger("Equiped Gun", (int)equipedGun.uid);
-	playerNode.SetBool("Using Equiped Gun", usingEquipedGun);
+	playerNode.SetBool("Using Equiped Gun", usingSecondaryGun);
 	if (blasterWeapon != nullptr)
 		playerNode.SetInteger("Blaster Ammo", blasterWeapon->ammo);
 
-	if (equipedGunWeapon != nullptr)
-		playerNode.SetInteger("Equiped Gun Ammo", equipedGunWeapon->ammo);
+	if (secondaryGunWeapon != nullptr)
+		playerNode.SetInteger("Equiped Gun Ammo", secondaryGunWeapon->ammo);
 
 	ParsonArray itemArray = playerNode.SetArray("Items");
 	for (uint i = 0; i < items.size(); ++i)
@@ -368,18 +368,18 @@ void Player::LoadState(ParsonNode& playerNode)
 	uint uid = (uint)playerNode.GetInteger("Equiped Gun");
 	if (uid == NULL)
 		uid = equipedGun.uid;
-	equipedGunGameObject = App->resourceManager->LoadPrefab(uid, App->scene->GetSceneRoot());
-	if (equipedGunGameObject != nullptr)
+	secondaryGunGameObject = App->resourceManager->LoadPrefab(uid, App->scene->GetSceneRoot());
+	if (secondaryGunGameObject != nullptr)
 	{
 		secondaryWeapon = (Weapon*)GetObjectScript(secondaryGunGameObject, ObjectType::WEAPON);
 
 		if (secondaryWeapon != nullptr)
 		{
-			equipedGunWeapon->SetOwnership(type, hand, handName);
+			secondaryGunWeapon->SetOwnership(type, hand, handName);
 			int savedAmmo = playerNode.GetInteger("Equiped Gun Ammo");
-			if (savedAmmo > equipedGunWeapon->MaxAmmo())
-				savedAmmo = equipedGunWeapon->MaxAmmo();
-			equipedGunWeapon->ammo = savedAmmo;
+			if (savedAmmo > secondaryGunWeapon->MaxAmmo())
+				savedAmmo = secondaryGunWeapon->MaxAmmo();
+			secondaryGunWeapon->ammo = savedAmmo;
 		}
 	}
 
@@ -399,8 +399,8 @@ void Player::LoadState(ParsonNode& playerNode)
 
 		Item* item = Item::CreateItem(savedData); // Get an item with the data we loaded
 
-		if (usedWeapon && equipedGunWeapon != nullptr)
-			currentWeapon = equipedGunWeapon; // Set the current weapon to the one that has to recieve the item, fancy i know
+		if (usedWeapon && secondaryGunWeapon != nullptr)
+			currentWeapon = secondaryGunWeapon; // Set the current weapon to the one that has to recieve the item, fancy i know
 		else
 			currentWeapon = blasterWeapon;
 
@@ -414,22 +414,22 @@ void Player::LoadState(ParsonNode& playerNode)
 		// so fix it if u want but dont bother me
 	}
 
-	usingEquipedGun = playerNode.GetBool("Using Equiped Gun");
-	if (usingEquipedGun && equipedGunWeapon != nullptr)
+	usingSecondaryGun = playerNode.GetBool("Using Equiped Gun");
+	if (usingSecondaryGun && secondaryGunWeapon != nullptr)
 	{
-		currentWeapon = equipedGunWeapon;
+		currentWeapon = secondaryGunWeapon;
 		if (blasterWeapon->weaponModel != nullptr)
 			blasterWeapon->weaponModel->SetIsActive(false);
-		if (equipedGunWeapon->weaponModel != nullptr)
-			equipedGunWeapon->weaponModel->SetIsActive(true);
+		if (secondaryGunWeapon->weaponModel != nullptr)
+			secondaryGunWeapon->weaponModel->SetIsActive(true);
 	}
 	else
 	{
 		currentWeapon = blasterWeapon;
 		if (blasterWeapon->weaponModel != nullptr)
 			blasterWeapon->weaponModel->SetIsActive(true);
-		if (equipedGunWeapon->weaponModel != nullptr)
-			equipedGunWeapon->weaponModel->SetIsActive(false);
+		if (secondaryGunWeapon->weaponModel != nullptr)
+			secondaryGunWeapon->weaponModel->SetIsActive(false);
 	}
 }
 
@@ -463,7 +463,7 @@ void Player::Reset()
 		savedItems.erase(savedItems.begin());
 	}
 
-	usingEquipedGun = false;
+	usingSecondaryGun = false;
 }
 
 void Player::TakeDamage(float damage)
@@ -496,28 +496,28 @@ void Player::TakeDamage(float damage)
 
 void Player::EquipWeapon(Prefab weapon)
 {
-	if (equipedGunWeapon != nullptr)
+	if (secondaryGunWeapon != nullptr)
 	{
-		if (equipedGunWeapon->weaponModel != nullptr)
-			equipedGunWeapon->weaponModel->SetIsActive(false);
-		equipedGunWeapon = nullptr;
+		if (secondaryGunWeapon->weaponModel != nullptr)
+			secondaryGunWeapon->weaponModel->SetIsActive(false);
+		secondaryGunWeapon = nullptr;
 	}
-	if (equipedGunGameObject != nullptr)
+	if (secondaryGunGameObject != nullptr)
 	{
-		equipedGunGameObject->toDelete = true;
-		equipedGunGameObject = nullptr;
+		secondaryGunGameObject->toDelete = true;
+		secondaryGunGameObject = nullptr;
 	}
 
-	equipedGunGameObject = App->resourceManager->LoadPrefab(weapon.uid, App->scene->GetSceneRoot());
+	secondaryGunGameObject = App->resourceManager->LoadPrefab(weapon.uid, App->scene->GetSceneRoot());
 	equipedGun = weapon;
-	if (equipedGunGameObject != nullptr)
+	if (secondaryGunGameObject != nullptr)
 	{
-		equipedGunWeapon = (Weapon*)GetObjectScript(equipedGunGameObject, ObjectType::WEAPON);
+		secondaryGunWeapon = (Weapon*)GetObjectScript(secondaryGunGameObject, ObjectType::WEAPON);
 
-		if (equipedGunWeapon != nullptr)
+		if (secondaryGunWeapon != nullptr)
 		{
-			equipedGunWeapon->SetOwnership(type, hand, handName);
-			currentWeapon = equipedGunWeapon;
+			secondaryGunWeapon->SetOwnership(type, hand, handName);
+			currentWeapon = secondaryGunWeapon;
 		}
 	}
 }
@@ -759,14 +759,14 @@ void Player::AddItem(ItemData* item)
 {
 	for (uint i = 0; i < items.size(); ++i)
 	{
-		if (items[i].first == usingEquipedGun && items[i].second->name == item->name && items[i].second->rarity <= item->rarity)
+		if (items[i].first == usingSecondaryGun && items[i].second->name == item->name && items[i].second->rarity <= item->rarity)
 		{
 			items[i].second = item;
 			ApplyItems();
 			return;
 		}
 	}
-	items.push_back(std::make_pair(usingEquipedGun, item));
+	items.push_back(std::make_pair(usingSecondaryGun, item));
 }
 
 void Player::ApplyItems()

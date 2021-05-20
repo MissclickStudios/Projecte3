@@ -276,12 +276,13 @@ private:
 	bool usingSecondaryGun				= false;
 	Timer changeTimer;
 
-	GameObject* hand = nullptr;
-	GameObject* blasterGameObject = nullptr;
-	GameObject* equipedGunGameObject = nullptr;
-	Weapon* blasterWeapon = nullptr;
-	Weapon* equipedGunWeapon = nullptr;
-	Weapon* currentWeapon = nullptr;
+	GameObject* hand					= nullptr;
+	GameObject* blasterGameObject		= nullptr;
+	GameObject* secondaryGunGameObject	= nullptr;
+
+	Weapon* blasterWeapon				= nullptr;
+	Weapon* secondaryGunWeapon			= nullptr;
+	Weapon* currentWeapon				= nullptr;
 
 	// Debug
 	bool godMode = false;
