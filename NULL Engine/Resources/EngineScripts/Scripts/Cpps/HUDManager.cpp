@@ -12,6 +12,7 @@
 #include "C_Material.h"
 #include "R_Texture.h"
 #include "M_UISystem.h"
+#include "Weapon.h"
 
 
 HUDManager::HUDManager() : Script()
@@ -87,6 +88,22 @@ void HUDManager::Start()
 	a = App->scene->GetGameObjectByName(heart3Name.c_str());
 	if (a != nullptr)
 		heart3Image = (C_2DAnimator*)a->GetComponent<C_2DAnimator>();
+
+	a = App->scene->GetGameObjectByName(weapon1Name.c_str());
+	if (a != nullptr)
+		weapon1 = a;
+
+	a = App->scene->GetGameObjectByName(weapon2Name.c_str());
+	if (a != nullptr)
+		weapon2 = a;
+
+	a = App->scene->GetGameObjectByName(weapon3Name.c_str());
+	if (a != nullptr)
+		weapon3 = a;
+
+	a = App->scene->GetGameObjectByName(weapon4Name.c_str());
+	if (a != nullptr)
+		weapon4 = a;
 
 
 	fullHeart = (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/UI/HUD/HeartFull.png");
@@ -217,6 +234,29 @@ void HUDManager::CleanUp()
 		App->resourceManager->FreeResource(fullHeart->GetUID());
 	if (emptyHeart != nullptr)
 		App->resourceManager->FreeResource(emptyHeart->GetUID());
+}
+
+void HUDManager::ManageWeaponHUD()
+{
+	switch (type) 
+	{
+	case WeaponType::BLASTER:
+
+		break;
+	case WeaponType::MINIGUN:
+
+		break;
+	case WeaponType::SHOTGUN:
+
+		break;
+	case WeaponType::SNIPER:
+
+		break;
+	case WeaponType::WEAPON:
+
+		break;
+	}
+
 }
 
 void HUDManager::ManageHeartImage(int hp)
