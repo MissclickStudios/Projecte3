@@ -42,6 +42,9 @@ SCRIPTS_FUNCTION Blaster* CreateBlaster()
     Blaster* script = new Blaster();
 
     // Weapon
+    // Type
+    INSPECTOR_ENUM(script->type, "WeaponType", "EngineScripts/Scripts/Helpers/Weapon.h");
+
     // Stats
     INSPECTOR_DRAGABLE_FLOAT(script->damage);
     INSPECTOR_DRAGABLE_FLOAT(script->projectileSpeed);
