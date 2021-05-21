@@ -79,8 +79,8 @@ public:
 	void Reset();
 
 	// States
-	PlayerState moveState				= PlayerState::IDLE;
-	AimState aimState					= AimState::IDLE;
+	PlayerState moveState	= PlayerState::IDLE;
+	AimState aimState		= AimState::IDLE;
 
 	// Interactions
 	void TakeDamage(float damage) override;

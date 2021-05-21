@@ -950,8 +950,8 @@ void Player::Dead()
 // --- AIM STATES
 void Player::AimIdle()
 {
-	if (idleAimPlane != nullptr)
-		idleAimPlane->SetIsActive(true);
+	/*if (idleAimPlane != nullptr)
+		idleAimPlane->SetIsActive(true);*/
 
 	if (aimingAimPlane != nullptr)
 		aimingAimPlane->SetIsActive(false);
@@ -964,8 +964,8 @@ void Player::OnGuard()
 
 void Player::Aiming()
 {
-	if (idleAimPlane != nullptr)
-		idleAimPlane->SetIsActive(false);
+	/*if (idleAimPlane != nullptr)
+		idleAimPlane->SetIsActive(false);*/
 
 	if (aimingAimPlane != nullptr)
 		aimingAimPlane->SetIsActive(true);
