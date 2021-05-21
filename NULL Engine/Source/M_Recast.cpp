@@ -136,7 +136,7 @@ bool M_Recast::BuildNavMesh()
 	memset(&m_cfg, 0, sizeof(m_cfg));
 	m_cfg.cs = App->detour->m_cellSize;
 	m_cfg.ch = App->detour->m_cellHeight;
-	m_cfg.walkableSlopeAngle = App->detour->maxSlope;
+	m_cfg.walkableSlopeAngle = App->detour->maxSlopeAngle;
 	m_cfg.walkableHeight = (int)ceilf(App->detour->agentHeight / m_cfg.ch);
 	m_cfg.walkableClimb = (int)floorf(App->detour->agentMaxClimb / m_cfg.ch);
 	m_cfg.walkableRadius = (int)ceilf(App->detour->agentRadius / m_cfg.cs);

@@ -195,45 +195,6 @@ void M_Detour::clearNavMesh()
 	renderMeshes.clear();
 }
 
-void M_Detour::setDefaultValues()
-{
-	for (int i = 3; i < BE_DETOUR_TOTAL_AREAS; ++i) {
-		sprintf_s(areaNames[i], "");
-		areaCosts[i] = 1;
-	}
-
-	//Inititalize names
-	sprintf_s(areaNames[0], "Walkable");
-	sprintf_s(areaNames[1], "Not Walkable");
-	sprintf_s(areaNames[2], "Jump");
-
-	//Change value of Jump to 2 by default
-	areaCosts[2] = 2;
-
-	setDefaultBakeValues();
-	setAreaCosts();
-}
-
-void M_Detour::setDefaultBakeValues()
-{
-	agentRadius = 0.5f;
-	agentHeight = 2.0f;
-	maxSlope = 45.0f;
-	stepHeight = 0.4f;
-	voxelSize = 0.15f;
-	voxelHeight = 0.2f;
-
-	regionMinSize = 8;
-	regionMergeSize = 20;
-	edgeMaxLen = 12.0f;
-	edgeMaxError = 1.3f;
-	vertsPerPoly = 6.0f;
-	detailSampleDist = 6.0f;
-	detailSampleMaxError = 1.0f;
-
-	buildTiledMesh = true;
-}
-
 const R_NavMesh* M_Detour::getNavMeshResource() const
 {
 	return navMeshResource;

@@ -35,7 +35,7 @@ bool C_NavMeshAgent::Start()
 
 bool C_NavMeshAgent::Update()
 {
-	if (rigidBody)
+	if (rigidBody && App->gameState == GameState::PLAY)
 	{
 		if (hasDestination)
 		{
@@ -56,7 +56,7 @@ bool C_NavMeshAgent::Update()
 				nextPoint = path[++indexPath];
 			}
 			
-			if (indexPath == (path.size()-1))
+			if (indexPath > (path.size()-1))
 			{
 				indexPath = 0;
 
@@ -92,12 +92,18 @@ bool C_NavMeshAgent::LoadState(ParsonNode& root)
 bool C_NavMeshAgent::SetDestination(float3 destination)
 {
 	float2 pos = { destination.x, destination.z };
-	
-	destinationPoint = { pos.x, 0, pos.y };
-	
-	if(hasDestination == false)
-		AgentPath(origin, destination);
 
+	destinationPoint = { pos.x, 0, pos.y };
+
+	indexPath = 1;
+
+	origin = GetOwner()->transform->GetWorldPosition();
+
+	origin.y = 0;
+
+	currentPos = origin;
+
+	AgentPath(origin, destination);
 
 	return true;
 }

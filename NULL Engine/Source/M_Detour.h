@@ -61,8 +61,6 @@ public:
 	void deleteNavMesh();
 	void clearNavMesh();
 
-	void setDefaultValues();
-	void setDefaultBakeValues();
 	const R_NavMesh* getNavMeshResource() const;
 	void allocateNavMesh();
 	void createRenderMeshes();
@@ -96,12 +94,19 @@ public:
 	void ReCalculatePath();
 
 public:
+
+	float agentRadius = 4.0f;
+	float agentHeight = 2.0f;
+	float agentMaxClimb = 0.9f;
+	float maxSlopeAngle = 45.0f;
+	float stepHeight = 0.4f;
+
 	float m_cellSize = 0.3f;
 	float m_cellHeight = 0.2f;
-	float agentHeight = 2.0f;
-	float agentRadius = 4.0f;
-	float agentMaxClimb = 0.9f;
-	float maxSlope = 45.0f;
+
+	float voxelSize = 0.15f;
+	float voxelHeight = 0.2f;
+
 	float regionMinSize = 8;
 	float regionMergeSize = 20;
 	float edgeMaxLen = 12.0f;
@@ -109,10 +114,6 @@ public:
 	float vertsPerPoly = 6.0f;
 	float detailSampleDist = 6.0f;
 	float detailSampleMaxError = 1.0f;
-
-	float stepHeight = 0.4f;
-	float voxelSize = 0.15f;
-	float voxelHeight = 0.2f;
 
 	bool buildTiledMesh = true;
 

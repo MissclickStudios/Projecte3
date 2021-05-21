@@ -1,5 +1,9 @@
 #include "Blocky.h"
 #include "Log.h"
+
+#include "Application.h"
+#include "M_Scene.h"
+
 #include "GameObject.h"
 #include "C_NavMeshAgent.h"
 #include "C_Transform.h"
@@ -25,8 +29,10 @@ void Blocky::Awake()
 
 void Blocky::Start()
 {
+	mando = App->scene->GetGameObjectByName("Mandalorian");
+
 	agent->origin = gameObject->GetComponent<C_Transform>()->GetWorldPosition();
-	agent->SetDestination({ -65.0f, 0.0f, -80.0f });
+	//agent->SetDestination({ -65.0f, 0.0f, -80.0f });
 }
 
 void Blocky::PreUpdate()
@@ -35,7 +41,10 @@ void Blocky::PreUpdate()
 
 void Blocky::Update()
 {
-	
+	if (mando )
+	{
+		agent->SetDestination(mando->transform->GetWorldPosition());
+	}
 }
 
 void Blocky::PostUpdate()

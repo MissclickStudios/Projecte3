@@ -43,11 +43,11 @@ public:
 
 	float3 currentPos;
 
+	float velocity = 30.0f;
+
 private:
 
 	C_RigidBody* rigidBody = nullptr;
-
-	float velocity = 10.0f;
 
 	float3 nextPoint;
 
