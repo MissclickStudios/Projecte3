@@ -51,9 +51,9 @@
             "ModelAssetsPath": "Assets\/Models\/Props\/bullet.fbx"
         },
         {
-            "GameObjectUID": 1296760141,
-            "ModelResourceUID": 1416251719,
-            "ModelAssetsPath": "Assets\/Models\/Blockouts\/NewBeta\/Ruins\/Level1_Ruins1.fbx"
+            "GameObjectUID": 1172792180,
+            "ModelResourceUID": 591075314,
+            "ModelAssetsPath": "Assets\/Models\/Blockouts\/NewBeta\/Level1\/Level1_Room2.fbx"
         }
     ],
     "Game Objects": [
@@ -187,7 +187,7 @@
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": true,
+            "ShowBoundingBoxes": false,
             "NavigationInfo": {
                 "isNavigable": false,
                 "navigationArea": 0
@@ -196,7 +196,7 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        -58.865196228027344,
+                        -43.964881896972656,
                         104.10703277587891,
                         219.40119934082031
                     ],
@@ -312,81 +312,6 @@
                     "Name": "HalfHeartHit",
                     "Name1": "FullHeartHit",
                     "Name2": ""
-                }
-            ]
-        },
-        {
-            "UID": 98779381,
-            "ParentUID": 1296760141,
-            "PrefabID": 0,
-            "IsPrefab": false,
-            "Name": "Doorway_Ruins",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
-            "NavigationInfo": {
-                "isNavigable": false,
-                "navigationArea": 0
-            },
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        2614.4931640625,
-                        277.45291137695312,
-                        -959.73907470703125
-                    ],
-                    "LocalRotation": [
-                        0.009031960740685463,
-                        0.70704913139343262,
-                        0.70704913139343262,
-                        -0.009031960740685463
-                    ],
-                    "LocalScale": [
-                        3.973383903503418,
-                        3.1932399272918701,
-                        3.973383903503418
-                    ]
-                },
-                {
-                    "Type": 2,
-                    "UID": 876646907,
-                    "Name": "Doorway_Ruins.nemesh",
-                    "Path": "Library\/Meshes\/876646907.nemesh",
-                    "File": "876646907.nemesh",
-                    "ShowWireframe": false,
-                    "ShowBoundingBox": false,
-                    "Outline": false,
-                    "OutlineThickness": 1,
-                    "OutlineColor": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ]
-                },
-                {
-                    "Type": 3,
-                    "Material": {
-                        "UID": 1549064507,
-                        "Color": [
-                            0.5,
-                            0.5,
-                            0.5,
-                            1
-                        ],
-                        "Name": "Doorway_Ruins.nemat",
-                        "Path": "Library\/Materials\/1549064507.nemat",
-                        "File": "1549064507.nemat"
-                    },
-                    "Shader": {
-                        "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
-                        "AssetsName": "DefaultShader.shader",
-                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
-                        "LibraryFile": "800223282.neshader"
-                    }
                 }
             ]
         },
@@ -523,6 +448,81 @@
             ]
         },
         {
+            "UID": 206915838,
+            "ParentUID": 1172792180,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Doorway_Ruins",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -628.11505126953125,
+                        -415.98947143554688,
+                        -10.363533020019531
+                    ],
+                    "LocalRotation": [
+                        -0.40777325630187988,
+                        0.40777313709259033,
+                        0.57768583297729492,
+                        0.57768595218658447
+                    ],
+                    "LocalScale": [
+                        3.973383903503418,
+                        3.1932399272918701,
+                        3.973383903503418
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 367253322,
+                    "Name": "Doorway_Ruins.nemesh",
+                    "Path": "Library\/Meshes\/367253322.nemesh",
+                    "File": "367253322.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false,
+                    "Outline": false,
+                    "OutlineThickness": 1,
+                    "OutlineColor": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ]
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 603229780,
+                        "Color": [
+                            0.5,
+                            0.5,
+                            0.5,
+                            1
+                        ],
+                        "Name": "Doorway_Ruins.nemat",
+                        "Path": "Library\/Materials\/603229780.nemat",
+                        "File": "603229780.nemat"
+                    },
+                    "Shader": {
+                        "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
+                        "AssetsName": "DefaultShader.shader",
+                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
+                        "LibraryFile": "800223282.neshader"
+                    }
+                }
+            ]
+        },
+        {
             "UID": 210649374,
             "ParentUID": 80146169,
             "PrefabID": 1524961430,
@@ -635,87 +635,6 @@
                     "Name": "UseWeapon1",
                     "Name1": "ChangeWeapon",
                     "Name2": "ChargeWeapon"
-                }
-            ]
-        },
-        {
-            "UID": 230388298,
-            "ParentUID": 1296760141,
-            "PrefabID": 0,
-            "IsPrefab": false,
-            "Name": "UnderFloor",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
-            "NavigationInfo": {
-                "isNavigable": false,
-                "navigationArea": 0
-            },
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        1607.246337890625,
-                        -37.810871124267578,
-                        -6697.10888671875
-                    ],
-                    "LocalRotation": [
-                        -0.70710664987564087,
-                        0,
-                        0,
-                        0.70710688829421997
-                    ],
-                    "LocalScale": [
-                        1,
-                        0.9999997615814209,
-                        0.9999997615814209
-                    ]
-                },
-                {
-                    "Type": 2,
-                    "UID": 308335615,
-                    "Name": "UnderFloor.nemesh",
-                    "Path": "Library\/Meshes\/308335615.nemesh",
-                    "File": "308335615.nemesh",
-                    "ShowWireframe": false,
-                    "ShowBoundingBox": false,
-                    "Outline": false,
-                    "OutlineThickness": 1,
-                    "OutlineColor": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ]
-                },
-                {
-                    "Type": 3,
-                    "Material": {
-                        "UID": 387316503,
-                        "Color": [
-                            0.5,
-                            0.5,
-                            0.5,
-                            1
-                        ],
-                        "Name": "UnderFloor.nemat",
-                        "Path": "Library\/Materials\/387316503.nemat",
-                        "File": "387316503.nemat"
-                    },
-                    "Texture": {
-                        "AssetsPath": "Assets\/Textures\/\/Blockouts\/Level1\/floor_arvala3_compressed_new.png",
-                        "AssetsName": "floor_arvala3_compressed_new.png",
-                        "LibaryPath": "Library\/Textures\/1037247170.netex",
-                        "LibraryFile": "1037247170.netex"
-                    },
-                    "Shader": {
-                        "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
-                        "AssetsName": "DefaultShader.shader",
-                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
-                        "LibraryFile": "800223282.neshader"
-                    }
                 }
             ]
         },
@@ -1147,6 +1066,81 @@
             ]
         },
         {
+            "UID": 386300912,
+            "ParentUID": 1172792180,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Cactus",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        1369.3555908203125,
+                        2.974510669708252,
+                        -689.14617919921875
+                    ],
+                    "LocalRotation": [
+                        0.23387300968170166,
+                        0.4656415581703186,
+                        0.84056550264358521,
+                        -0.14809149503707886
+                    ],
+                    "LocalScale": [
+                        1.1979399919509888,
+                        1.1979409456253052,
+                        1
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 1718082971,
+                    "Name": "Cactus.nemesh",
+                    "Path": "Library\/Meshes\/1718082971.nemesh",
+                    "File": "1718082971.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false,
+                    "Outline": false,
+                    "OutlineThickness": 1,
+                    "OutlineColor": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ]
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 1962869738,
+                        "Color": [
+                            0.5,
+                            0.5,
+                            0.5,
+                            1
+                        ],
+                        "Name": "Cactus.nemat",
+                        "Path": "Library\/Materials\/1962869738.nemat",
+                        "File": "1962869738.nemat"
+                    },
+                    "Shader": {
+                        "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
+                        "AssetsName": "DefaultShader.shader",
+                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
+                        "LibraryFile": "800223282.neshader"
+                    }
+                }
+            ]
+        },
+        {
             "UID": 429419755,
             "ParentUID": 1232738392,
             "PrefabID": 1524961430,
@@ -1267,11 +1261,11 @@
             ]
         },
         {
-            "UID": 509824008,
-            "ParentUID": 1296760141,
+            "UID": 506519629,
+            "ParentUID": 1172792180,
             "PrefabID": 0,
             "IsPrefab": false,
-            "Name": "Turbines",
+            "Name": "SmallStones",
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
@@ -1285,28 +1279,28 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        1060.1268310546875,
-                        108.5972900390625,
-                        -2698.202392578125
+                        560.2054443359375,
+                        -8.1984481811523438,
+                        -708.16278076171875
                     ],
                     "LocalRotation": [
-                        -0.62025588750839233,
-                        -0.34012418985366821,
-                        0.6785091757774353,
-                        0.19804881513118744
+                        0.26586079597473145,
+                        0.64695179462432861,
+                        0.6664581298828125,
+                        -0.2580794095993042
                     ],
                     "LocalScale": [
-                        3.9370079040527344,
-                        3.9370067119598389,
-                        3.9370090961456299
+                        1.1861280202865601,
+                        1.1861280202865601,
+                        1.1861279010772705
                     ]
                 },
                 {
                     "Type": 2,
-                    "UID": 519268482,
-                    "Name": "Turbines.nemesh",
-                    "Path": "Library\/Meshes\/519268482.nemesh",
-                    "File": "519268482.nemesh",
+                    "UID": 574123222,
+                    "Name": "SmallStones.nemesh",
+                    "Path": "Library\/Meshes\/574123222.nemesh",
+                    "File": "574123222.nemesh",
                     "ShowWireframe": false,
                     "ShowBoundingBox": false,
                     "Outline": false,
@@ -1321,16 +1315,91 @@
                 {
                     "Type": 3,
                     "Material": {
-                        "UID": 1251271724,
+                        "UID": 2067200898,
                         "Color": [
                             0.5,
                             0.5,
                             0.5,
                             1
                         ],
-                        "Name": "Turbines.nemat",
-                        "Path": "Library\/Materials\/1251271724.nemat",
-                        "File": "1251271724.nemat"
+                        "Name": "SmallStones.nemat",
+                        "Path": "Library\/Materials\/2067200898.nemat",
+                        "File": "2067200898.nemat"
+                    },
+                    "Shader": {
+                        "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
+                        "AssetsName": "DefaultShader.shader",
+                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
+                        "LibraryFile": "800223282.neshader"
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 511469047,
+            "ParentUID": 1172792180,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "StoneWalls",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -110.7974853515625,
+                        -8.4245986938476562,
+                        -459.4776611328125
+                    ],
+                    "LocalRotation": [
+                        -0.70710676908493042,
+                        0,
+                        0,
+                        0.70710676908493042
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 1560170280,
+                    "Name": "StoneWalls.nemesh",
+                    "Path": "Library\/Meshes\/1560170280.nemesh",
+                    "File": "1560170280.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false,
+                    "Outline": false,
+                    "OutlineThickness": 1,
+                    "OutlineColor": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ]
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 892198620,
+                        "Color": [
+                            0.5,
+                            0.5,
+                            0.5,
+                            1
+                        ],
+                        "Name": "StoneWalls.nemat",
+                        "Path": "Library\/Materials\/892198620.nemat",
+                        "File": "892198620.nemat"
                     },
                     "Shader": {
                         "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
@@ -1439,6 +1508,81 @@
                             "string": "AmmoText"
                         }
                     ]
+                }
+            ]
+        },
+        {
+            "UID": 534665012,
+            "ParentUID": 1172792180,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "GigaRock",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        1506.807861328125,
+                        -1.2615432739257812,
+                        -694.881591796875
+                    ],
+                    "LocalRotation": [
+                        -0.51578015089035034,
+                        0.48370519280433655,
+                        0.48370519280433655,
+                        0.51578015089035034
+                    ],
+                    "LocalScale": [
+                        1.9287999868392944,
+                        1.9287999868392944,
+                        1.9287999868392944
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 1578747001,
+                    "Name": "GigaRock.nemesh",
+                    "Path": "Library\/Meshes\/1578747001.nemesh",
+                    "File": "1578747001.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false,
+                    "Outline": false,
+                    "OutlineThickness": 1,
+                    "OutlineColor": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ]
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 1436935867,
+                        "Color": [
+                            0.5,
+                            0.5,
+                            0.5,
+                            1
+                        ],
+                        "Name": "GigaRock.nemat",
+                        "Path": "Library\/Materials\/1436935867.nemat",
+                        "File": "1436935867.nemat"
+                    },
+                    "Shader": {
+                        "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
+                        "AssetsName": "DefaultShader.shader",
+                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
+                        "LibraryFile": "800223282.neshader"
+                    }
                 }
             ]
         },
@@ -1615,6 +1759,81 @@
             ]
         },
         {
+            "UID": 642412789,
+            "ParentUID": 1172792180,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "NonFunctional_Moisture",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -478.52838134765625,
+                        -393.87481689453125,
+                        -739.5350341796875
+                    ],
+                    "LocalRotation": [
+                        -0.47817668318748474,
+                        -0.52090984582901001,
+                        -0.52090984582901001,
+                        0.47817668318748474
+                    ],
+                    "LocalScale": [
+                        2.2478289604187012,
+                        2.2478289604187012,
+                        2.2478289604187012
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 1926350547,
+                    "Name": "NonFunctional_Moisture.nemesh",
+                    "Path": "Library\/Meshes\/1926350547.nemesh",
+                    "File": "1926350547.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false,
+                    "Outline": false,
+                    "OutlineThickness": 1,
+                    "OutlineColor": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ]
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 1950193890,
+                        "Color": [
+                            0.5,
+                            0.5,
+                            0.5,
+                            1
+                        ],
+                        "Name": "NonFunctional_Moisture.nemat",
+                        "Path": "Library\/Materials\/1950193890.nemat",
+                        "File": "1950193890.nemat"
+                    },
+                    "Shader": {
+                        "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
+                        "AssetsName": "DefaultShader.shader",
+                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
+                        "LibraryFile": "800223282.neshader"
+                    }
+                }
+            ]
+        },
+        {
             "UID": 649823649,
             "ParentUID": 923142133,
             "PrefabID": 0,
@@ -1742,81 +1961,6 @@
                         "AssetsName": "UIShader.shader",
                         "LibaryPath": "Library\/Shaders\/1025410539.neshader",
                         "LibraryFile": "1025410539.neshader"
-                    }
-                }
-            ]
-        },
-        {
-            "UID": 698232568,
-            "ParentUID": 1296760141,
-            "PrefabID": 0,
-            "IsPrefab": false,
-            "Name": "Walls_Ruins",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
-            "NavigationInfo": {
-                "isNavigable": false,
-                "navigationArea": 0
-            },
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        644.49365234375,
-                        277.45294189453125,
-                        -891.2291259765625
-                    ],
-                    "LocalRotation": [
-                        -0.49999988079071045,
-                        -0.49999991059303284,
-                        -0.50000011920928955,
-                        0.5
-                    ],
-                    "LocalScale": [
-                        3.973383903503418,
-                        3.1932399272918701,
-                        3.973383903503418
-                    ]
-                },
-                {
-                    "Type": 2,
-                    "UID": 1209783236,
-                    "Name": "Walls_Ruins.nemesh",
-                    "Path": "Library\/Meshes\/1209783236.nemesh",
-                    "File": "1209783236.nemesh",
-                    "ShowWireframe": false,
-                    "ShowBoundingBox": false,
-                    "Outline": false,
-                    "OutlineThickness": 1,
-                    "OutlineColor": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ]
-                },
-                {
-                    "Type": 3,
-                    "Material": {
-                        "UID": 2010038216,
-                        "Color": [
-                            0.5,
-                            0.5,
-                            0.5,
-                            1
-                        ],
-                        "Name": "Walls_Ruins.nemat",
-                        "Path": "Library\/Materials\/2010038216.nemat",
-                        "File": "2010038216.nemat"
-                    },
-                    "Shader": {
-                        "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
-                        "AssetsName": "DefaultShader.shader",
-                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
-                        "LibraryFile": "800223282.neshader"
                     }
                 }
             ]
@@ -2169,81 +2313,6 @@
             ]
         },
         {
-            "UID": 791289507,
-            "ParentUID": 1296760141,
-            "PrefabID": 0,
-            "IsPrefab": false,
-            "Name": "NonFunctional_Moisture",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
-            "NavigationInfo": {
-                "isNavigable": false,
-                "navigationArea": 0
-            },
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        929.2908935546875,
-                        127.95147705078125,
-                        -3827.686767578125
-                    ],
-                    "LocalRotation": [
-                        -0.35620817542076111,
-                        0.017241925001144409,
-                        -0.20490765571594238,
-                        0.91149938106536865
-                    ],
-                    "LocalScale": [
-                        2.2883059978485107,
-                        2.2883059978485107,
-                        2.2883059978485107
-                    ]
-                },
-                {
-                    "Type": 2,
-                    "UID": 968770356,
-                    "Name": "NonFunctional_Moisture.nemesh",
-                    "Path": "Library\/Meshes\/968770356.nemesh",
-                    "File": "968770356.nemesh",
-                    "ShowWireframe": false,
-                    "ShowBoundingBox": false,
-                    "Outline": false,
-                    "OutlineThickness": 1,
-                    "OutlineColor": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ]
-                },
-                {
-                    "Type": 3,
-                    "Material": {
-                        "UID": 742053747,
-                        "Color": [
-                            0.5,
-                            0.5,
-                            0.5,
-                            1
-                        ],
-                        "Name": "NonFunctional_Moisture.nemat",
-                        "Path": "Library\/Materials\/742053747.nemat",
-                        "File": "742053747.nemat"
-                    },
-                    "Shader": {
-                        "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
-                        "AssetsName": "DefaultShader.shader",
-                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
-                        "LibraryFile": "800223282.neshader"
-                    }
-                }
-            ]
-        },
-        {
             "UID": 804211183,
             "ParentUID": 1232738392,
             "PrefabID": 1524961430,
@@ -2304,83 +2373,8 @@
             ]
         },
         {
-            "UID": 835188160,
-            "ParentUID": 1296760141,
-            "PrefabID": 0,
-            "IsPrefab": false,
-            "Name": "Jawa_Vehicle",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
-            "NavigationInfo": {
-                "isNavigable": false,
-                "navigationArea": 0
-            },
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        3037.2724609375,
-                        291.95361328125,
-                        -2493.406494140625
-                    ],
-                    "LocalRotation": [
-                        -0.68780195713043213,
-                        0.16409900784492493,
-                        0.16409900784492493,
-                        0.68780195713043213
-                    ],
-                    "LocalScale": [
-                        2.7608497142791748,
-                        2.7608497142791748,
-                        2.7608499526977539
-                    ]
-                },
-                {
-                    "Type": 2,
-                    "UID": 1367661188,
-                    "Name": "Jawa_Vehicle.nemesh",
-                    "Path": "Library\/Meshes\/1367661188.nemesh",
-                    "File": "1367661188.nemesh",
-                    "ShowWireframe": false,
-                    "ShowBoundingBox": false,
-                    "Outline": false,
-                    "OutlineThickness": 1,
-                    "OutlineColor": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ]
-                },
-                {
-                    "Type": 3,
-                    "Material": {
-                        "UID": 662145415,
-                        "Color": [
-                            0.5,
-                            0.5,
-                            0.5,
-                            1
-                        ],
-                        "Name": "Jawa_Vehicle.nemat",
-                        "Path": "Library\/Materials\/662145415.nemat",
-                        "File": "662145415.nemat"
-                    },
-                    "Shader": {
-                        "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
-                        "AssetsName": "DefaultShader.shader",
-                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
-                        "LibraryFile": "800223282.neshader"
-                    }
-                }
-            ]
-        },
-        {
             "UID": 888400124,
-            "ParentUID": 998561608,
+            "ParentUID": 676579476,
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "MainScene",
@@ -2416,11 +2410,11 @@
             ]
         },
         {
-            "UID": 910066969,
-            "ParentUID": 1296760141,
+            "UID": 910655336,
+            "ParentUID": 1172792180,
             "PrefabID": 0,
             "IsPrefab": false,
-            "Name": "GigaRocks",
+            "Name": "Mojave",
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
@@ -2434,28 +2428,28 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        2293.638916015625,
-                        -1.2615432739257812,
-                        -2366.489013671875
+                        601.63262939453125,
+                        -6.09619140625,
+                        -632.5380859375
                     ],
                     "LocalRotation": [
-                        -0.22123336791992188,
-                        0.67160689830780029,
-                        0.67160689830780029,
-                        0.22123335301876068
+                        -0.69132363796234131,
+                        -0.066231757402420044,
+                        -0.1946735680103302,
+                        0.69266676902770996
                     ],
                     "LocalScale": [
-                        1.3869996070861816,
-                        1.3869997262954712,
-                        1.3869997262954712
+                        5.8122925758361816,
+                        5.8122940063476562,
+                        5.8122940063476562
                     ]
                 },
                 {
                     "Type": 2,
-                    "UID": 414927661,
-                    "Name": "GigaRocks.nemesh",
-                    "Path": "Library\/Meshes\/414927661.nemesh",
-                    "File": "414927661.nemesh",
+                    "UID": 575437275,
+                    "Name": "Mojave.nemesh",
+                    "Path": "Library\/Meshes\/575437275.nemesh",
+                    "File": "575437275.nemesh",
                     "ShowWireframe": false,
                     "ShowBoundingBox": false,
                     "Outline": false,
@@ -2470,16 +2464,16 @@
                 {
                     "Type": 3,
                     "Material": {
-                        "UID": 1876150684,
+                        "UID": 1211087990,
                         "Color": [
                             0.5,
                             0.5,
                             0.5,
                             1
                         ],
-                        "Name": "GigaRocks.nemat",
-                        "Path": "Library\/Materials\/1876150684.nemat",
-                        "File": "1876150684.nemat"
+                        "Name": "Mojave.nemat",
+                        "Path": "Library\/Materials\/1211087990.nemat",
+                        "File": "1211087990.nemat"
                     },
                     "Shader": {
                         "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
@@ -2524,6 +2518,81 @@
                         1,
                         1
                     ]
+                }
+            ]
+        },
+        {
+            "UID": 923474932,
+            "ParentUID": 1172792180,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "ColumnRocks",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        1791.15380859375,
+                        -408.42645263671875,
+                        645.111572265625
+                    ],
+                    "LocalRotation": [
+                        -0.2790336012840271,
+                        0.64972323179244995,
+                        0.64972323179244995,
+                        0.2790336012840271
+                    ],
+                    "LocalScale": [
+                        3.205899715423584,
+                        3.205899715423584,
+                        3.2058999538421631
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 1882816886,
+                    "Name": "ColumnRocks.nemesh",
+                    "Path": "Library\/Meshes\/1882816886.nemesh",
+                    "File": "1882816886.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false,
+                    "Outline": false,
+                    "OutlineThickness": 1,
+                    "OutlineColor": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ]
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 1192607326,
+                        "Color": [
+                            0.5,
+                            0.5,
+                            0.5,
+                            1
+                        ],
+                        "Name": "ColumnRocks.nemat",
+                        "Path": "Library\/Materials\/1192607326.nemat",
+                        "File": "1192607326.nemat"
+                    },
+                    "Shader": {
+                        "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
+                        "AssetsName": "DefaultShader.shader",
+                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
+                        "LibraryFile": "800223282.neshader"
+                    }
                 }
             ]
         },
@@ -2601,81 +2670,6 @@
             ]
         },
         {
-            "UID": 941425636,
-            "ParentUID": 1296760141,
-            "PrefabID": 0,
-            "IsPrefab": false,
-            "Name": "SmallStones",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
-            "NavigationInfo": {
-                "isNavigable": false,
-                "navigationArea": 0
-            },
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        1538.2852783203125,
-                        -37.767925262451172,
-                        -1127.1243896484375
-                    ],
-                    "LocalRotation": [
-                        -0.65406149625778198,
-                        0.26870694756507874,
-                        0.26870697736740112,
-                        0.65406173467636108
-                    ],
-                    "LocalScale": [
-                        1.7304469347000122,
-                        1.7304466962814331,
-                        1.7304466962814331
-                    ]
-                },
-                {
-                    "Type": 2,
-                    "UID": 1793297516,
-                    "Name": "SmallStones.nemesh",
-                    "Path": "Library\/Meshes\/1793297516.nemesh",
-                    "File": "1793297516.nemesh",
-                    "ShowWireframe": false,
-                    "ShowBoundingBox": false,
-                    "Outline": false,
-                    "OutlineThickness": 1,
-                    "OutlineColor": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ]
-                },
-                {
-                    "Type": 3,
-                    "Material": {
-                        "UID": 762092150,
-                        "Color": [
-                            0.5,
-                            0.5,
-                            0.5,
-                            1
-                        ],
-                        "Name": "SmallStones.nemat",
-                        "Path": "Library\/Materials\/762092150.nemat",
-                        "File": "762092150.nemat"
-                    },
-                    "Shader": {
-                        "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
-                        "AssetsName": "DefaultShader.shader",
-                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
-                        "LibraryFile": "800223282.neshader"
-                    }
-                }
-            ]
-        },
-        {
             "UID": 976211103,
             "ParentUID": 1886328384,
             "PrefabID": 0,
@@ -2729,11 +2723,11 @@
             ]
         },
         {
-            "UID": 991176245,
-            "ParentUID": 1296760141,
+            "UID": 978556385,
+            "ParentUID": 1172792180,
             "PrefabID": 0,
             "IsPrefab": false,
-            "Name": "BorderStones",
+            "Name": "LowerFloor",
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
@@ -2747,28 +2741,28 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        2390.779052734375,
-                        -33.571098327636719,
-                        -2271.05419921875
+                        2395.7685546875,
+                        -396.168212890625,
+                        -1660.8546142578125
                     ],
                     "LocalRotation": [
-                        -0.69261008501052856,
-                        0.14244744181632996,
-                        0.14244744181632996,
-                        0.69261008501052856
+                        -0.70710676908493042,
+                        0,
+                        0,
+                        0.70710676908493042
                     ],
                     "LocalScale": [
-                        3.8262600898742676,
-                        3.8262600898742676,
-                        3.8262600898742676
+                        1,
+                        1,
+                        1
                     ]
                 },
                 {
                     "Type": 2,
-                    "UID": 1589324094,
-                    "Name": "BorderStones.nemesh",
-                    "Path": "Library\/Meshes\/1589324094.nemesh",
-                    "File": "1589324094.nemesh",
+                    "UID": 1302862657,
+                    "Name": "LowerFloor.nemesh",
+                    "Path": "Library\/Meshes\/1302862657.nemesh",
+                    "File": "1302862657.nemesh",
                     "ShowWireframe": false,
                     "ShowBoundingBox": false,
                     "Outline": false,
@@ -2783,16 +2777,16 @@
                 {
                     "Type": 3,
                     "Material": {
-                        "UID": 1237836699,
+                        "UID": 1186761011,
                         "Color": [
                             0.5,
                             0.5,
                             0.5,
                             1
                         ],
-                        "Name": "BorderStones.nemat",
-                        "Path": "Library\/Materials\/1237836699.nemat",
-                        "File": "1237836699.nemat"
+                        "Name": "LowerFloor.nemat",
+                        "Path": "Library\/Materials\/1186761011.nemat",
+                        "File": "1186761011.nemat"
                     },
                     "Shader": {
                         "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
@@ -2977,81 +2971,6 @@
             ]
         },
         {
-            "UID": 1092433131,
-            "ParentUID": 1296760141,
-            "PrefabID": 0,
-            "IsPrefab": false,
-            "Name": "Ruble_Ruins",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
-            "NavigationInfo": {
-                "isNavigable": false,
-                "navigationArea": 0
-            },
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        1584.46826171875,
-                        14.244293212890625,
-                        -1224.2923583984375
-                    ],
-                    "LocalRotation": [
-                        0.17682862281799316,
-                        0.29897567629814148,
-                        0.68993902206420898,
-                        0.63508212566375732
-                    ],
-                    "LocalScale": [
-                        3.1039302349090576,
-                        3.1039292812347412,
-                        3.1039299964904785
-                    ]
-                },
-                {
-                    "Type": 2,
-                    "UID": 1006171199,
-                    "Name": "Ruble_Ruins.nemesh",
-                    "Path": "Library\/Meshes\/1006171199.nemesh",
-                    "File": "1006171199.nemesh",
-                    "ShowWireframe": false,
-                    "ShowBoundingBox": false,
-                    "Outline": false,
-                    "OutlineThickness": 1,
-                    "OutlineColor": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ]
-                },
-                {
-                    "Type": 3,
-                    "Material": {
-                        "UID": 1875964086,
-                        "Color": [
-                            0.5,
-                            0.5,
-                            0.5,
-                            1
-                        ],
-                        "Name": "Ruble_Ruins.nemat",
-                        "Path": "Library\/Materials\/1875964086.nemat",
-                        "File": "1875964086.nemat"
-                    },
-                    "Shader": {
-                        "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
-                        "AssetsName": "DefaultShader.shader",
-                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
-                        "LibraryFile": "800223282.neshader"
-                    }
-                }
-            ]
-        },
-        {
             "UID": 1155563077,
             "ParentUID": 888400124,
             "PrefabID": 0,
@@ -3149,11 +3068,11 @@
             ]
         },
         {
-            "UID": 1186489063,
-            "ParentUID": 1296760141,
+            "UID": 1172792180,
+            "ParentUID": 888400124,
             "PrefabID": 0,
             "IsPrefab": false,
-            "Name": "Cactus",
+            "Name": "Level1_Room2.fbx",
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
@@ -3167,28 +3086,65 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        1957.11474609375,
-                        4.916015625,
-                        -1705.072998046875
+                        0,
+                        0,
+                        0
                     ],
                     "LocalRotation": [
-                        -0.70710676908493042,
                         0,
                         0,
-                        0.70710676908493042
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        0.12999999523162842,
+                        0.12999999523162842,
+                        0.12999999523162842
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1202512153,
+            "ParentUID": 1172792180,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Arc",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": true,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        1091.3414306640625,
+                        -5.347266674041748,
+                        -764.5625
+                    ],
+                    "LocalRotation": [
+                        -0.5,
+                        0.5,
+                        0.50000005960464478,
+                        0.50000011920928955
                     ],
                     "LocalScale": [
                         1,
                         1,
-                        1
+                        1.0083349943161011
                     ]
                 },
                 {
                     "Type": 2,
-                    "UID": 1596573268,
-                    "Name": "Cactus.nemesh",
-                    "Path": "Library\/Meshes\/1596573268.nemesh",
-                    "File": "1596573268.nemesh",
+                    "UID": 448625718,
+                    "Name": "Arc.nemesh",
+                    "Path": "Library\/Meshes\/448625718.nemesh",
+                    "File": "448625718.nemesh",
                     "ShowWireframe": false,
                     "ShowBoundingBox": false,
                     "Outline": false,
@@ -3203,16 +3159,16 @@
                 {
                     "Type": 3,
                     "Material": {
-                        "UID": 1273922708,
+                        "UID": 768950910,
                         "Color": [
                             0.5,
                             0.5,
                             0.5,
                             1
                         ],
-                        "Name": "Cactus.nemat",
-                        "Path": "Library\/Materials\/1273922708.nemat",
-                        "File": "1273922708.nemat"
+                        "Name": "Arc.nemat",
+                        "Path": "Library\/Materials\/768950910.nemat",
+                        "File": "768950910.nemat"
                     },
                     "Shader": {
                         "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
@@ -3340,11 +3296,11 @@
             ]
         },
         {
-            "UID": 1256422165,
-            "ParentUID": 1296760141,
+            "UID": 1270312648,
+            "ParentUID": 1172792180,
             "PrefabID": 0,
             "IsPrefab": false,
-            "Name": "Arc",
+            "Name": "Walls_Ruins",
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
@@ -3358,28 +3314,28 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        2434.634033203125,
-                        58.389694213867188,
-                        -1670.8248291015625
+                        2071.65283203125,
+                        -413.45074462890625,
+                        -389.86599731445312
                     ],
                     "LocalRotation": [
-                        -0.70710664987564087,
-                        0,
-                        0,
-                        0.70710688829421997
+                        -0.49999988079071045,
+                        -0.49999991059303284,
+                        -0.50000011920928955,
+                        0.5
                     ],
                     "LocalScale": [
-                        1.614811897277832,
-                        1.6148117780685425,
-                        1.6282718181610107
+                        3.973383903503418,
+                        3.1932399272918701,
+                        3.973383903503418
                     ]
                 },
                 {
                     "Type": 2,
-                    "UID": 2063639861,
-                    "Name": "Arc.nemesh",
-                    "Path": "Library\/Meshes\/2063639861.nemesh",
-                    "File": "2063639861.nemesh",
+                    "UID": 617832007,
+                    "Name": "Walls_Ruins.nemesh",
+                    "Path": "Library\/Meshes\/617832007.nemesh",
+                    "File": "617832007.nemesh",
                     "ShowWireframe": false,
                     "ShowBoundingBox": false,
                     "Outline": false,
@@ -3394,16 +3350,16 @@
                 {
                     "Type": 3,
                     "Material": {
-                        "UID": 1719811087,
+                        "UID": 2132193584,
                         "Color": [
                             0.5,
                             0.5,
                             0.5,
                             1
                         ],
-                        "Name": "Arc.nemat",
-                        "Path": "Library\/Materials\/1719811087.nemat",
-                        "File": "1719811087.nemat"
+                        "Name": "Walls_Ruins.nemat",
+                        "Path": "Library\/Materials\/2132193584.nemat",
+                        "File": "2132193584.nemat"
                     },
                     "Shader": {
                         "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
@@ -3467,48 +3423,11 @@
             ]
         },
         {
-            "UID": 1296760141,
-            "ParentUID": 888400124,
+            "UID": 1369735470,
+            "ParentUID": 1172792180,
             "PrefabID": 0,
             "IsPrefab": false,
-            "Name": "Level1_Ruins1.fbx",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": true,
-            "NavigationInfo": {
-                "isNavigable": false,
-                "navigationArea": 0
-            },
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        0,
-                        0
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        0.12999999523162842,
-                        0.12999999523162842,
-                        0.12999999523162842
-                    ]
-                }
-            ]
-        },
-        {
-            "UID": 1341971213,
-            "ParentUID": 1296760141,
-            "PrefabID": 0,
-            "IsPrefab": false,
-            "Name": "MiddleRocks",
+            "Name": "UpperFloor",
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
@@ -3522,9 +3441,9 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        1804.40576171875,
-                        4.9228515625,
-                        -1438.7222900390625
+                        717.04736328125,
+                        0,
+                        89.845100402832031
                     ],
                     "LocalRotation": [
                         -0.70710676908493042,
@@ -3533,17 +3452,17 @@
                         0.70710676908493042
                     ],
                     "LocalScale": [
-                        1.5693540573120117,
-                        1.5693540573120117,
-                        1.5693540573120117
+                        1,
+                        1,
+                        1
                     ]
                 },
                 {
                     "Type": 2,
-                    "UID": 954273891,
-                    "Name": "MiddleRocks.nemesh",
-                    "Path": "Library\/Meshes\/954273891.nemesh",
-                    "File": "954273891.nemesh",
+                    "UID": 1194328188,
+                    "Name": "UpperFloor.nemesh",
+                    "Path": "Library\/Meshes\/1194328188.nemesh",
+                    "File": "1194328188.nemesh",
                     "ShowWireframe": false,
                     "ShowBoundingBox": false,
                     "Outline": false,
@@ -3558,16 +3477,16 @@
                 {
                     "Type": 3,
                     "Material": {
-                        "UID": 800978072,
+                        "UID": 1903448555,
                         "Color": [
                             0.5,
                             0.5,
                             0.5,
                             1
                         ],
-                        "Name": "MiddleRocks.nemat",
-                        "Path": "Library\/Materials\/800978072.nemat",
-                        "File": "800978072.nemat"
+                        "Name": "UpperFloor.nemat",
+                        "Path": "Library\/Materials\/1903448555.nemat",
+                        "File": "1903448555.nemat"
                     },
                     "Shader": {
                         "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
@@ -3679,6 +3598,81 @@
                     "W": 0.15600000321865082,
                     "H": 0.0010000000474974513,
                     "childOrder": 1
+                }
+            ]
+        },
+        {
+            "UID": 1488621193,
+            "ParentUID": 1172792180,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "ExteriorWalls",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        364.11859130859375,
+                        -306.29412841796875,
+                        -720.4088134765625
+                    ],
+                    "LocalRotation": [
+                        -0.70710676908493042,
+                        0,
+                        0,
+                        0.70710676908493042
+                    ],
+                    "LocalScale": [
+                        1.4837089776992798,
+                        2.6769349575042725,
+                        1.7679599523544312
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 1735273633,
+                    "Name": "ExteriorWalls.nemesh",
+                    "Path": "Library\/Meshes\/1735273633.nemesh",
+                    "File": "1735273633.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false,
+                    "Outline": false,
+                    "OutlineThickness": 1,
+                    "OutlineColor": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ]
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 498073814,
+                        "Color": [
+                            0.5,
+                            0.5,
+                            0.5,
+                            1
+                        ],
+                        "Name": "ExteriorWalls.nemat",
+                        "Path": "Library\/Materials\/498073814.nemat",
+                        "File": "498073814.nemat"
+                    },
+                    "Shader": {
+                        "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
+                        "AssetsName": "DefaultShader.shader",
+                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
+                        "LibraryFile": "800223282.neshader"
+                    }
                 }
             ]
         },
@@ -3798,81 +3792,6 @@
                         "AssetsName": "UIShader.shader",
                         "LibaryPath": "Library\/Shaders\/1025410539.neshader",
                         "LibraryFile": "1025410539.neshader"
-                    }
-                }
-            ]
-        },
-        {
-            "UID": 1525256681,
-            "ParentUID": 1296760141,
-            "PrefabID": 0,
-            "IsPrefab": false,
-            "Name": "OuterWalls",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
-            "NavigationInfo": {
-                "isNavigable": false,
-                "navigationArea": 0
-            },
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        2389.332763671875,
-                        -58.760101318359375,
-                        -3096.24853515625
-                    ],
-                    "LocalRotation": [
-                        -0.5,
-                        0.5,
-                        0.5,
-                        0.50000011920928955
-                    ],
-                    "LocalScale": [
-                        1.4837088584899902,
-                        2.6769347190856934,
-                        1.7679597139358521
-                    ]
-                },
-                {
-                    "Type": 2,
-                    "UID": 1124011045,
-                    "Name": "OuterWalls.nemesh",
-                    "Path": "Library\/Meshes\/1124011045.nemesh",
-                    "File": "1124011045.nemesh",
-                    "ShowWireframe": false,
-                    "ShowBoundingBox": false,
-                    "Outline": false,
-                    "OutlineThickness": 1,
-                    "OutlineColor": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ]
-                },
-                {
-                    "Type": 3,
-                    "Material": {
-                        "UID": 468867265,
-                        "Color": [
-                            0.5,
-                            0.5,
-                            0.5,
-                            1
-                        ],
-                        "Name": "OuterWalls.nemat",
-                        "Path": "Library\/Materials\/468867265.nemat",
-                        "File": "468867265.nemat"
-                    },
-                    "Shader": {
-                        "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
-                        "AssetsName": "DefaultShader.shader",
-                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
-                        "LibraryFile": "800223282.neshader"
                     }
                 }
             ]
@@ -4127,81 +4046,6 @@
             ]
         },
         {
-            "UID": 1700879944,
-            "ParentUID": 1296760141,
-            "PrefabID": 0,
-            "IsPrefab": false,
-            "Name": "ShoptTents",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
-            "NavigationInfo": {
-                "isNavigable": false,
-                "navigationArea": 0
-            },
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        2976.272216796875,
-                        237.37374877929688,
-                        -2032.373779296875
-                    ],
-                    "LocalRotation": [
-                        -0.70710676908493042,
-                        0,
-                        0,
-                        0.70710676908493042
-                    ],
-                    "LocalScale": [
-                        2.4512500762939453,
-                        2.4512500762939453,
-                        2.4512500762939453
-                    ]
-                },
-                {
-                    "Type": 2,
-                    "UID": 419318350,
-                    "Name": "ShoptTents.nemesh",
-                    "Path": "Library\/Meshes\/419318350.nemesh",
-                    "File": "419318350.nemesh",
-                    "ShowWireframe": false,
-                    "ShowBoundingBox": false,
-                    "Outline": false,
-                    "OutlineThickness": 1,
-                    "OutlineColor": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ]
-                },
-                {
-                    "Type": 3,
-                    "Material": {
-                        "UID": 470148032,
-                        "Color": [
-                            1,
-                            1,
-                            1,
-                            1
-                        ],
-                        "Name": "ShoptTents.nemat",
-                        "Path": "Library\/Materials\/470148032.nemat",
-                        "File": "470148032.nemat"
-                    },
-                    "Shader": {
-                        "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
-                        "AssetsName": "DefaultShader.shader",
-                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
-                        "LibraryFile": "800223282.neshader"
-                    }
-                }
-            ]
-        },
-        {
             "UID": 1782034460,
             "ParentUID": 530286247,
             "PrefabID": 1524961430,
@@ -4452,6 +4296,81 @@
             ]
         },
         {
+            "UID": 1832152453,
+            "ParentUID": 1172792180,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Ruble_Ruins",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        1432.2694091796875,
+                        5.1675510406494141,
+                        -609.76885986328125
+                    ],
+                    "LocalRotation": [
+                        0.2828066349029541,
+                        0.62391859292984009,
+                        0.68258577585220337,
+                        -0.25460290908813477
+                    ],
+                    "LocalScale": [
+                        1.2897950410842896,
+                        1.2897950410842896,
+                        1.0766769647598267
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 52265807,
+                    "Name": "Ruble_Ruins.nemesh",
+                    "Path": "Library\/Meshes\/52265807.nemesh",
+                    "File": "52265807.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false,
+                    "Outline": false,
+                    "OutlineThickness": 1,
+                    "OutlineColor": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ]
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 960451129,
+                        "Color": [
+                            0.5,
+                            0.5,
+                            0.5,
+                            1
+                        ],
+                        "Name": "Ruble_Ruins.nemat",
+                        "Path": "Library\/Materials\/960451129.nemat",
+                        "File": "960451129.nemat"
+                    },
+                    "Shader": {
+                        "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
+                        "AssetsName": "DefaultShader.shader",
+                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
+                        "LibraryFile": "800223282.neshader"
+                    }
+                }
+            ]
+        },
+        {
             "UID": 1846059975,
             "ParentUID": 80146169,
             "PrefabID": 1524961430,
@@ -4552,7 +4471,7 @@
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
+            "ShowBoundingBoxes": true,
             "NavigationInfo": {
                 "isNavigable": false,
                 "navigationArea": 0
@@ -4576,81 +4495,6 @@
                         1,
                         1
                     ]
-                }
-            ]
-        },
-        {
-            "UID": 1886592368,
-            "ParentUID": 1296760141,
-            "PrefabID": 0,
-            "IsPrefab": false,
-            "Name": "ColumnRocks",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
-            "NavigationInfo": {
-                "isNavigable": false,
-                "navigationArea": 0
-            },
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        1301.337890625,
-                        0,
-                        -2807.103515625
-                    ],
-                    "LocalRotation": [
-                        -0.61298364400863647,
-                        0.35249260067939758,
-                        0.35249260067939758,
-                        0.61298364400863647
-                    ],
-                    "LocalScale": [
-                        2.2771000862121582,
-                        2.2771000862121582,
-                        2.2771000862121582
-                    ]
-                },
-                {
-                    "Type": 2,
-                    "UID": 2052434714,
-                    "Name": "ColumnRocks.nemesh",
-                    "Path": "Library\/Meshes\/2052434714.nemesh",
-                    "File": "2052434714.nemesh",
-                    "ShowWireframe": false,
-                    "ShowBoundingBox": false,
-                    "Outline": false,
-                    "OutlineThickness": 1,
-                    "OutlineColor": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ]
-                },
-                {
-                    "Type": 3,
-                    "Material": {
-                        "UID": 1142835661,
-                        "Color": [
-                            0.5,
-                            0.5,
-                            0.5,
-                            1
-                        ],
-                        "Name": "ColumnRocks.nemat",
-                        "Path": "Library\/Materials\/1142835661.nemat",
-                        "File": "1142835661.nemat"
-                    },
-                    "Shader": {
-                        "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
-                        "AssetsName": "DefaultShader.shader",
-                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
-                        "LibraryFile": "800223282.neshader"
-                    }
                 }
             ]
         },
@@ -4768,6 +4612,81 @@
             ]
         },
         {
+            "UID": 1943117192,
+            "ParentUID": 1172792180,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Turbines",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -67.205352783203125,
+                        -1.6375389099121094,
+                        -696.92169189453125
+                    ],
+                    "LocalRotation": [
+                        -0.75424730777740479,
+                        0.18521170318126678,
+                        0.23982574045658112,
+                        0.58248722553253174
+                    ],
+                    "LocalScale": [
+                        3.9370076656341553,
+                        3.9370079040527344,
+                        3.9370090961456299
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 31902628,
+                    "Name": "Turbines.nemesh",
+                    "Path": "Library\/Meshes\/31902628.nemesh",
+                    "File": "31902628.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false,
+                    "Outline": false,
+                    "OutlineThickness": 1,
+                    "OutlineColor": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ]
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 594772990,
+                        "Color": [
+                            0.5,
+                            0.5,
+                            0.5,
+                            1
+                        ],
+                        "Name": "Turbines.nemat",
+                        "Path": "Library\/Materials\/594772990.nemat",
+                        "File": "594772990.nemat"
+                    },
+                    "Shader": {
+                        "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
+                        "AssetsName": "DefaultShader.shader",
+                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
+                        "LibraryFile": "800223282.neshader"
+                    }
+                }
+            ]
+        },
+        {
             "UID": 1973620483,
             "ParentUID": 888400124,
             "PrefabID": 129017146,
@@ -4870,87 +4789,6 @@
                     "Name": "HalfHeartHit",
                     "Name1": "FullHeartHit",
                     "Name2": ""
-                }
-            ]
-        },
-        {
-            "UID": 2016949542,
-            "ParentUID": 1296760141,
-            "PrefabID": 0,
-            "IsPrefab": false,
-            "Name": "UpperFloor",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
-            "NavigationInfo": {
-                "isNavigable": false,
-                "navigationArea": 0
-            },
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        1593.4315185546875,
-                        -52.520454406738281,
-                        -2258.931396484375
-                    ],
-                    "LocalRotation": [
-                        -0.70710670948028564,
-                        0,
-                        0,
-                        0.7071068286895752
-                    ],
-                    "LocalScale": [
-                        1,
-                        0.99999988079071045,
-                        0.99999988079071045
-                    ]
-                },
-                {
-                    "Type": 2,
-                    "UID": 235869899,
-                    "Name": "UpperFloor.nemesh",
-                    "Path": "Library\/Meshes\/235869899.nemesh",
-                    "File": "235869899.nemesh",
-                    "ShowWireframe": false,
-                    "ShowBoundingBox": false,
-                    "Outline": false,
-                    "OutlineThickness": 1,
-                    "OutlineColor": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ]
-                },
-                {
-                    "Type": 3,
-                    "Material": {
-                        "UID": 1838273317,
-                        "Color": [
-                            0.5,
-                            0.5,
-                            0.5,
-                            1
-                        ],
-                        "Name": "UpperFloor.nemat",
-                        "Path": "Library\/Materials\/1838273317.nemat",
-                        "File": "1838273317.nemat"
-                    },
-                    "Texture": {
-                        "AssetsPath": "Assets\/Textures\/\/Blockouts\/Level1\/floor_arvala3_compressed_new.png",
-                        "AssetsName": "floor_arvala3_compressed_new.png",
-                        "LibaryPath": "Library\/Textures\/1037247170.netex",
-                        "LibraryFile": "1037247170.netex"
-                    },
-                    "Shader": {
-                        "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
-                        "AssetsName": "DefaultShader.shader",
-                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
-                        "LibraryFile": "800223282.neshader"
-                    }
                 }
             ]
         },
@@ -5082,84 +4920,8 @@
                     "Name2": ""
                 }
             ]
-        },
-        {
-            "UID": 2114556049,
-            "ParentUID": 1296760141,
-            "PrefabID": 0,
-            "IsPrefab": false,
-            "Name": "Mojave",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
-            "NavigationInfo": {
-                "isNavigable": false,
-                "navigationArea": 0
-            },
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        2298.9404296875,
-                        117.4478759765625,
-                        -3023.86865234375
-                    ],
-                    "LocalRotation": [
-                        -0.50426900386810303,
-                        0.49569422006607056,
-                        0.49569422006607056,
-                        0.50426900386810303
-                    ],
-                    "LocalScale": [
-                        8.6387605667114258,
-                        8.6387605667114258,
-                        8.6387605667114258
-                    ]
-                },
-                {
-                    "Type": 2,
-                    "UID": 1060234638,
-                    "Name": "Mojave.nemesh",
-                    "Path": "Library\/Meshes\/1060234638.nemesh",
-                    "File": "1060234638.nemesh",
-                    "ShowWireframe": false,
-                    "ShowBoundingBox": false,
-                    "Outline": false,
-                    "OutlineThickness": 1,
-                    "OutlineColor": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ]
-                },
-                {
-                    "Type": 3,
-                    "Material": {
-                        "UID": 1287817514,
-                        "Color": [
-                            0.5,
-                            0.5,
-                            0.5,
-                            1
-                        ],
-                        "Name": "Mojave.nemat",
-                        "Path": "Library\/Materials\/1287817514.nemat",
-                        "File": "1287817514.nemat"
-                    },
-                    "Shader": {
-                        "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
-                        "AssetsName": "DefaultShader.shader",
-                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
-                        "LibraryFile": "800223282.neshader"
-                    }
-                }
-            ]
         }
     ],
-    "Autosaved Sene Name": "Level1_Ruins1B",
     "NavMesh": {
         "UID": 0,
         "Assets Path": "[NONE]"
