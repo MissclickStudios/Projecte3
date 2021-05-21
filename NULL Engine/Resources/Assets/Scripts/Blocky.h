@@ -16,6 +16,8 @@ public :
 	void CleanUp()override;
 
 	C_NavMeshAgent* agent;
+
+	GameObject* mando = nullptr;
 };
 
 SCRIPTS_FUNCTION Blocky* CreateBlocky() {
