@@ -20,11 +20,13 @@ void Blocky::Awake()
 	LOG("Awake");
 
 	agent = gameObject->GetComponent<C_NavMeshAgent>();
+
 }
 
 void Blocky::Start()
 {
-	agent->SetDestination({ -69.0f, 0.0f, -7.0f });
+	agent->origin = gameObject->GetComponent<C_Transform>()->GetWorldPosition();
+	agent->SetDestination({ -65.0f, 0.0f, -80.0f });
 }
 
 void Blocky::PreUpdate()

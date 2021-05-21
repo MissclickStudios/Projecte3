@@ -50,7 +50,7 @@ bool C_NavMeshAgent::Update()
 
 			rigidBody->Set2DVelocity(directorVector * velocity);
 
-			if (GetOwner()->transform->GetDistanceTo(currentPos) < 5.0f)
+			if (GetOwner()->transform->GetDistanceTo(nextPoint) <= 1.0f)
 			{
 				currentPos = nextPoint;
 				nextPoint = path[++indexPath];
