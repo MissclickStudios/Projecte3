@@ -44,11 +44,6 @@ bool M_Detour::Init(ParsonNode& root)
 	//Change value of Jump to 2 by default
 	areaCosts[2] = 2;
 
-	agentRadius = 0.5f;
-	agentHeight = 2.0f;
-	maxSlope = 45.0f;
-	stepHeight = 0.4f;
-
 	m_navQuery = dtAllocNavMeshQuery();
 	m_filterQuery= new dtQueryFilter();
 
