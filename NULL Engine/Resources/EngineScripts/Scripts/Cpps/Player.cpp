@@ -206,6 +206,9 @@ void Player::SetUp()
 
 void Player::Behavior()
 {
+	if (!allowInput)
+		return;
+
 	ManageInteractions();
 	
 	if (currentInteraction == InteractionType::NONE)
@@ -453,6 +456,16 @@ void Player::Reset()
 	}
 
 	usingSecondaryGun = false;
+}
+
+void Player::EnableInput()
+{
+	allowInput = true;
+}
+
+void Player::DisableInput()
+{
+	allowInput = false;
 }
 
 void Player::TakeDamage(float damage)
