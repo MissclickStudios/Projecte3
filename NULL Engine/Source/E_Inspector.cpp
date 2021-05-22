@@ -1868,9 +1868,9 @@ void E_Inspector::DrawAnimator2DComponent(C_2DAnimator* cAnimator)
 			int rr = cAnimator->spritesheet2->rows;
 			int cc = cAnimator->spritesheet2->columns;
 			int aa = cAnimator->spritesheet2->animationNumber;
-			ImGui::InputInt("Spritesheet rows", &rr);
-			ImGui::InputInt("Spritesheet columns", &cc);
-			ImGui::InputInt("Number of animations", &aa);
+			ImGui::InputInt("Spritesheet2 rows", &rr);
+			ImGui::InputInt("Spritesheet2 columns", &cc);
+			ImGui::InputInt("Number of animations 2", &aa);
 			cAnimator->spritesheet2->rows = rr;
 			cAnimator->spritesheet2->columns = cc;
 			cAnimator->spritesheet2->animationNumber = aa;
@@ -1883,9 +1883,9 @@ void E_Inspector::DrawAnimator2DComponent(C_2DAnimator* cAnimator)
 			int rrr = cAnimator->spritesheet3->rows;
 			int ccc = cAnimator->spritesheet3->columns;
 			int aaa = cAnimator->spritesheet3->animationNumber;
-			ImGui::InputInt("Spritesheet rows", &rrr);
-			ImGui::InputInt("Spritesheet columns", &ccc);
-			ImGui::InputInt("Number of animations", &aaa);
+			ImGui::InputInt("Spritesheet3 rows", &rrr);
+			ImGui::InputInt("Spritesheet3 columns", &ccc);
+			ImGui::InputInt("Number of animations 3", &aaa);
 			cAnimator->spritesheet3->rows = rrr;
 			cAnimator->spritesheet3->columns = ccc;
 			cAnimator->spritesheet3->animationNumber = aaa;

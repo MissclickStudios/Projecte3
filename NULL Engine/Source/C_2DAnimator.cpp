@@ -38,14 +38,14 @@ C_2DAnimator::C_2DAnimator(GameObject* owner) : Component(owner, ComponentType::
 	spritesheet->animationNumber = 12;
 
 	spritesheet2 = new Spritesheet((R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/ChangeWeapon.png"));
-	spritesheet2->rows = 10;
-	spritesheet2->columns = 10;
-	spritesheet2->animationNumber = 100;
+	spritesheet2->rows = 5;
+	spritesheet2->columns = 5;
+	spritesheet2->animationNumber = 25;
 
 	spritesheet3 = new Spritesheet((R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/ChangeWeapon.png"));
-	spritesheet3->rows = 10;
-	spritesheet3->columns = 10;
-	spritesheet3->animationNumber = 100;
+	spritesheet3->rows = 5;
+	spritesheet3->columns = 5;
+	spritesheet3->animationNumber = 25;
 
 
 }
@@ -90,6 +90,18 @@ bool C_2DAnimator::SaveState(ParsonNode& root) const
 	root.SetString("Name1", name1.c_str());
 	root.SetString("Name2", name2.c_str());
 
+	root.SetNumber("Spritesheet Rows", (uint)spritesheet->rows);
+	root.SetNumber("Spritesheet Columns", (uint)spritesheet->columns);
+	root.SetNumber("Spritesheet Animation Number", (uint)spritesheet->animationNumber);
+
+	root.SetNumber("Spritesheet2 Rows", (uint)spritesheet2->rows);
+	root.SetNumber("Spritesheet2 Columns", (uint)spritesheet2->columns);
+	root.SetNumber("Spritesheet2 Animation Number", (uint)spritesheet2->animationNumber);
+
+	root.SetNumber("Spritesheet3 Rows", (uint)spritesheet3->rows);
+	root.SetNumber("Spritesheet3 Columns", (uint)spritesheet3->columns);
+	root.SetNumber("Spritesheet3 Animation Number", (uint)spritesheet3->animationNumber);
+
 	return true;
 }
 
@@ -106,6 +118,19 @@ bool C_2DAnimator::LoadState(ParsonNode& root)
 	GetAnimationSprites(name.c_str(),1);
 	GetAnimationSprites(name1.c_str(), 2);
 	GetAnimationSprites(name2.c_str(), 3);
+
+	
+	spritesheet->rows = (uint)root.GetNumber("Spritesheet Rows");
+	spritesheet->columns = (uint)root.GetNumber("Spritesheet Columns");
+	spritesheet->animationNumber = (uint)root.GetNumber("Spritesheet Animation Number");
+
+	spritesheet2->rows = (uint)root.GetNumber("Spritesheet2 Rows");
+	spritesheet2->columns = (uint)root.GetNumber("Spritesheet2 Columns");
+	spritesheet2->animationNumber = (uint)root.GetNumber("Spritesheet2 Animation Number");
+			   
+	spritesheet3->rows = (uint)root.GetNumber("Spritesheet3 Rows");
+	spritesheet3->columns = (uint)root.GetNumber("Spritesheet3 Columns");
+	spritesheet3->animationNumber = (uint)root.GetNumber("Spritesheet3 Animation Number");
 
 	return true;
 }
