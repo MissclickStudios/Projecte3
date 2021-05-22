@@ -63,6 +63,7 @@ EngineApplication::EngineApplication()
 	input->AddModuleToProcessInput(editor);
 	renderer->AddPostSceneRenderModule(editor);
 	logger = editor;
+	scene->noTransitions = true;
 }
 
 EngineApplication::~EngineApplication()

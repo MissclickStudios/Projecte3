@@ -1,5 +1,5 @@
 {
-    "ModTime": 1621672778,
+    "ModTime": 1621682630,
     "Models In Scene": [
         {
             "GameObjectUID": 826637280,
@@ -254,7 +254,7 @@
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": true,
+            "ShowBoundingBoxes": false,
             "Components": [
                 {
                     "Type": 1,
@@ -282,7 +282,7 @@
                         "X": 0,
                         "Y": 0,
                         "W": 1.0926049947738647,
-                        "H": 0.5787392258644104
+                        "H": 0.64435684680938721
                     }
                 }
             ]
@@ -619,6 +619,41 @@
                     "Center Z": 0
                 },
                 {
+                    "Type": 14,
+                    "Playing Event": [
+                        "mando_walking",
+                        3331669632
+                    ]
+                },
+                {
+                    "Type": 14,
+                    "Playing Event": [
+                        "mando_dash",
+                        1534355823
+                    ]
+                },
+                {
+                    "Type": 14,
+                    "Playing Event": [
+                        "weapon_change",
+                        2342448520
+                    ]
+                },
+                {
+                    "Type": 14,
+                    "Playing Event": [
+                        "mando_damaged",
+                        2518076300
+                    ]
+                },
+                {
+                    "Type": 14,
+                    "Playing Event": [
+                        "mando_death",
+                        469170087
+                    ]
+                },
+                {
                     "Type": 24,
                     "ResourceUID": 645819728,
                     "AssetsPath": "Assets\/Scripts\/\/Player.h",
@@ -755,41 +790,6 @@
                             "Name": "particleNames",
                             "vectorstring": []
                         }
-                    ]
-                },
-                {
-                    "Type": 14,
-                    "Playing Event": [
-                        "mando_walking",
-                        3331669632
-                    ]
-                },
-                {
-                    "Type": 14,
-                    "Playing Event": [
-                        "mando_dash",
-                        1534355823
-                    ]
-                },
-                {
-                    "Type": 14,
-                    "Playing Event": [
-                        "weapon_change",
-                        2342448520
-                    ]
-                },
-                {
-                    "Type": 14,
-                    "Playing Event": [
-                        "mando_damaged",
-                        2518076300
-                    ]
-                },
-                {
-                    "Type": 14,
-                    "Playing Event": [
-                        "mando_death",
-                        469170087
                     ]
                 }
             ]
@@ -964,7 +964,7 @@
                         "X": 0,
                         "Y": 0,
                         "W": 1.0926049947738647,
-                        "H": 0.5787392258644104
+                        "H": 0.64435684680938721
                     }
                 }
             ]
@@ -1542,7 +1542,7 @@
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
+            "ShowBoundingBoxes": true,
             "Components": [
                 {
                     "Type": 1,
@@ -1582,10 +1582,10 @@
                     "pressedb": 0.18999999761581421,
                     "presseda": 1,
                     "pixelCoords": [
-                        3193486,
                         0,
-                        -1,
-                        -1
+                        0,
+                        465,
+                        92
                     ],
                     "textureCoords": {
                         "x": 0,
@@ -1794,10 +1794,10 @@
                     "pressedb": 0.18999999761581421,
                     "presseda": 1,
                     "pixelCoords": [
-                        2767555,
                         0,
-                        -1,
-                        -1
+                        0,
+                        466,
+                        92
                     ],
                     "textureCoords": {
                         "x": 0,
@@ -1874,16 +1874,16 @@
                     "pressedb": 0.18999999761581421,
                     "presseda": 1,
                     "pixelCoords": [
-                        2768998,
                         0,
-                        -1,
-                        -1
+                        0,
+                        466,
+                        92
                     ],
                     "textureCoords": {
                         "x": 0,
                         "y": 0,
                         "w": 1,
-                        "h": 1
+                        "h": 0.98924732208251953
                     },
                     "childOrder": 5
                 },
@@ -2027,7 +2027,7 @@
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
+            "ShowBoundingBoxes": true,
             "Components": [
                 {
                     "Type": 1,
@@ -2257,16 +2257,16 @@
                     "pressedb": 0.18999999761581421,
                     "presseda": 1,
                     "pixelCoords": [
-                        2768611,
                         0,
-                        -1,
-                        -1
+                        0,
+                        466,
+                        92
                     ],
                     "textureCoords": {
                         "x": 0,
                         "y": 0,
                         "w": 1,
-                        "h": 1
+                        "h": 0.98924732208251953
                     },
                     "childOrder": 3
                 },
@@ -2703,9 +2703,9 @@
                     "H": 0.21500000357627869,
                     "pixelCoords": [
                         0,
-                        -16121856,
-                        7536934,
-                        0
+                        0,
+                        895,
+                        229
                     ],
                     "textureCoords": {
                         "x": 0,
@@ -3212,6 +3212,16 @@
                     "InspectorVariables": [
                         {
                             "Type": 6,
+                            "Name": "gameManager",
+                            "gameobject": 764877460
+                        },
+                        {
+                            "Type": 6,
+                            "Name": "mainCanvasObject",
+                            "gameobject": 520337368
+                        },
+                        {
+                            "Type": 6,
                             "Name": "playButtonObject",
                             "gameobject": 920236665
                         },
@@ -3222,18 +3232,33 @@
                         },
                         {
                             "Type": 6,
+                            "Name": "settingsButtonObject",
+                            "gameobject": 881809844
+                        },
+                        {
+                            "Type": 6,
                             "Name": "exitButtonObject",
                             "gameobject": 887629445
                         },
                         {
                             "Type": 6,
-                            "Name": "gameManager",
-                            "gameobject": 764877460
+                            "Name": "settingsCanvasObject",
+                            "gameobject": 223525146
                         },
                         {
                             "Type": 6,
-                            "Name": "canvasObject",
-                            "gameobject": 520337368
+                            "Name": "backButtonObject",
+                            "gameobject": 777295374
+                        },
+                        {
+                            "Type": 6,
+                            "Name": "fullScreenCheckObject",
+                            "gameobject": 2057127973
+                        },
+                        {
+                            "Type": 6,
+                            "Name": "vsyncCheckObject",
+                            "gameobject": 1711345152
                         }
                     ]
                 }
@@ -3241,7 +3266,7 @@
         },
         {
             "UID": 1474137658,
-            "ParentUID": 1052748269,
+            "ParentUID": 1685273442,
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "MainScene",
@@ -3458,7 +3483,7 @@
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
+            "ShowBoundingBoxes": true,
             "Components": [
                 {
                     "Type": 1,
@@ -3486,10 +3511,10 @@
                     "W": 0.98000001907348633,
                     "H": 0.2800000011920929,
                     "pixelCoords": [
-                        -17958194,
-                        -17958194,
-                        -17958194,
-                        -17958194
+                        0,
+                        0,
+                        2021,
+                        319
                     ],
                     "textureCoords": {
                         "x": 0,
@@ -3513,15 +3538,6 @@
                         "LibaryPath": "Library\/Shaders\/1025410539.neshader",
                         "LibraryFile": "1025410539.neshader"
                     }
-                },
-                {
-                    "Type": 25,
-                    "Animation Step Time": 70,
-                    "Animation Loop": true,
-                    "Animation Set On Loop From Start": true,
-                    "Name": "TitleArvala",
-                    "Name1": "[NOT FOUND]",
-                    "Name2": "[NOT FOUND]"
                 }
             ]
         },
@@ -3904,16 +3920,16 @@
                     "pressedb": 0.18999999761581421,
                     "presseda": 1,
                     "pixelCoords": [
-                        2768177,
                         0,
-                        -1,
-                        -1
+                        0,
+                        466,
+                        92
                     ],
                     "textureCoords": {
                         "x": 0,
                         "y": 0,
                         "w": 1,
-                        "h": 1
+                        "h": 0.98924732208251953
                     },
                     "childOrder": 2
                 },
@@ -3977,7 +3993,7 @@
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
+            "ShowBoundingBoxes": true,
             "Components": [
                 {
                     "Type": 1,
@@ -4282,7 +4298,7 @@
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
+            "ShowBoundingBoxes": true,
             "Components": [
                 {
                     "Type": 1,

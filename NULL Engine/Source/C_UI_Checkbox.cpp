@@ -370,6 +370,16 @@ void C_UI_Checkbox::Draw3D()
 {
 }
 
+void C_UI_Checkbox::Check()
+{
+	state = UICheckboxState::CHECKED;
+}
+
+void C_UI_Checkbox::UnCheck()
+{
+	state = UICheckboxState::UNCHECKED;
+}
+
 UICheckboxState C_UI_Checkbox::GetState() const
 {
 	return state;

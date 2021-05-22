@@ -149,9 +149,11 @@ private:
 
 private:
 	bool nextScene = false;
+	bool noTransitions = false;
 	float transitionProgresion;
 	std::string nextSceneName;
 
+	friend class EngineApplication;
 };
 
 #endif // !__M_SCENE_H__
