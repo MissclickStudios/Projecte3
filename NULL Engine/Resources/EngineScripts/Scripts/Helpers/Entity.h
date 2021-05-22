@@ -33,7 +33,8 @@ enum class EntityType // jeje titties
 enum class EntityState
 {
 	NONE,
-	STUNED
+	STUNED,
+	KNOCKEDBACK
 };
 
 typedef unsigned int uint;
@@ -115,9 +116,10 @@ public:
 	// Basic Animations
 	GameObject* skeleton = nullptr;
 
-	AnimationInfo idleAnimation = { "Idle" };
-	AnimationInfo deathAnimation = { "Death" };
-	AnimationInfo stunAnimation = { "Stun" };
+	AnimationInfo idleAnimation			= { "Idle" };
+	AnimationInfo deathAnimation		= { "Death" };
+	AnimationInfo stunAnimation			= { "Stun" };
+	AnimationInfo knockbackAnimation	= { "Knockback" };
 
 	Timer hitTimer;	
 
@@ -131,6 +133,9 @@ public:
 
 protected:
 
+	// State
+	EntityState GetEntityState();
+	
 	// Particles
 	C_ParticleSystem* GetParticles(std::string particleName);
 

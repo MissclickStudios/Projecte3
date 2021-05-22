@@ -162,12 +162,9 @@ void Entity::Update()
 {
 	switch (entityState)
 	{
-	case EntityState::NONE:
-		Behavior();
-		break;
-	case EntityState::STUNED:
-		currentAnimation = &stunAnimation;
-		break;
+	case EntityState::NONE:			{ Behavior(); }								break;
+	case EntityState::STUNED:		{ currentAnimation = &stunAnimation; }		break;
+	case EntityState::KNOCKEDBACK:	{ currentAnimation = &knockbackAnimation; } break;
 	}
 }
 
@@ -324,7 +321,14 @@ void Entity::KnockBack(Effect* effect)
 			rigidBody->AddForce(effect->Direction());
 		}
 	}
-	entityState = EntityState::STUNED;
+
+	//entityState = EntityState::STUNED;
+	entityState = EntityState::KNOCKEDBACK;
+}
+
+EntityState Entity::GetEntityState()
+{
+	return entityState;
 }
 
 C_ParticleSystem* Entity::GetParticles(std::string particleName)

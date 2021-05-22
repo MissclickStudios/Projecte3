@@ -121,7 +121,7 @@ void Player::SetUp()
 {
 	dashTimer.Stop();
 	dashCooldownTimer.Stop();
-	invencibilityTimer.Stop();
+	invincibilityTimer.Stop();
 	intermitentMeshTimer.Stop();
 	changeTimer.Stop();
 
@@ -206,35 +206,18 @@ void Player::SetUp()
 
 void Player::Behavior()
 {
-	ManageMovement();
-	if (moveState != PlayerState::DEAD || moveState != PlayerState::DEAD_OUT)
+	ManageInteractions();
+	
+	if (currentInteraction == InteractionType::NONE)
 	{
-		if (invencibilityTimer.IsActive())
+		ManageMovement();
+
+		if (moveState != PlayerState::DEAD && moveState != PlayerState::DEAD_OUT)
 		{
-			if (invencibilityTimer.ReadSec() >= invincibilityDuration)
-			{
-				invencibilityTimer.Stop();
-				intermitentMeshTimer.Stop();
-				if (mesh != nullptr)
-					mesh->SetIsActive(true);
-			}
-			else if (!intermitentMeshTimer.IsActive())
-			{
-				intermitentMeshTimer.Start();
-				if (mesh != nullptr)
-					mesh->SetIsActive(!mesh->IsActive());
+			ManageAim();
 
-				LOG("start int timer");
-			}
-			else if (intermitentMeshTimer.ReadSec() >= intermitentMesh)
-			{
-				intermitentMeshTimer.Stop();
-
-				LOG("stop int timer");
-			}
+			ManageInvincibility();
 		}
-
-		ManageAim();
 	}
 }
 
@@ -242,11 +225,13 @@ void Player::CleanUp()
 {
 	if (blasterGameObject != nullptr)
 		blasterGameObject->toDelete = true;
+
 	blasterGameObject = nullptr;
 	blasterWeapon = nullptr;
 
 	if (secondaryGunGameObject != nullptr)
 		secondaryGunGameObject->toDelete = true;
+
 	secondaryGunGameObject = nullptr;
 	secondaryWeapon = nullptr;
 
@@ -263,7 +248,7 @@ void Player::EntityPause()
 {
 	dashTimer.Pause();
 	dashCooldownTimer.Pause();
-	invencibilityTimer.Pause();
+	invincibilityTimer.Pause();
 	intermitentMeshTimer.Pause();
 	changeTimer.Pause();
 }
@@ -272,7 +257,7 @@ void Player::EntityResume()
 {
 	dashTimer.Resume();
 	dashCooldownTimer.Resume();
-	invencibilityTimer.Resume();
+	invincibilityTimer.Resume();
 	intermitentMeshTimer.Resume();
 	changeTimer.Resume();
 }
@@ -418,16 +403,20 @@ void Player::LoadState(ParsonNode& playerNode)
 	if (usingSecondaryGun && secondaryWeapon != nullptr)
 	{
 		currentWeapon = secondaryWeapon;
+
 		if (blasterWeapon->weaponModel != nullptr)
 			blasterWeapon->weaponModel->SetIsActive(false);
+
 		if (secondaryWeapon->weaponModel != nullptr)
 			secondaryWeapon->weaponModel->SetIsActive(true);
 	}
 	else
 	{
 		currentWeapon = blasterWeapon;
+
 		if (blasterWeapon->weaponModel != nullptr)
 			blasterWeapon->weaponModel->SetIsActive(true);
+
 		if (secondaryWeapon->weaponModel != nullptr)
 			secondaryWeapon->weaponModel->SetIsActive(false);
 	}
@@ -468,7 +457,7 @@ void Player::Reset()
 
 void Player::TakeDamage(float damage)
 {
-	if (!invencibilityTimer.IsActive())
+	if (!invincibilityTimer.IsActive())
 	{
 		float damageDealt = 0.0f;
 		if(Defense())
@@ -477,7 +466,7 @@ void Player::TakeDamage(float damage)
 
 		if (health < 0.0f)
 			health = 0.0f;
-		invencibilityTimer.Start();
+		invincibilityTimer.Start();
 
 		hitTimer.Start();
 		if (GetParticles("Hit") != nullptr)
@@ -522,18 +511,42 @@ void Player::EquipWeapon(Prefab weapon)
 	}
 }
 
-void Player::SetPlayerInteraction(InteractionType type)
-{
-	switch (type)
+void Player::SetPlayerInteraction(InteractionType type, float duration)
+{	
+	currentInteraction	= type;
+	interactionDuration = duration;
+
+	if (type == InteractionType::NONE)
 	{
-	case InteractionType::NONE:				{;} break;
-	case InteractionType::TALK:				{;} break;
-	case InteractionType::USE:				{;} break;
-	case InteractionType::OPEN_CHEST:		{;} break;
-	case InteractionType::SIGNAL_GROGU:		{;} break;
+		interactionTimer.Stop();
+		interactionDuration = 0.0f;
+		return;
 	}
 
-	currentInteraction = type;
+	switch (currentInteraction)
+	{
+	case InteractionType::USE:				{ Use(); }			break;
+	case InteractionType::BUY:				{ Buy(); }			break;
+	case InteractionType::TALK:				{ Talk(); }			break;
+	case InteractionType::OPEN_CHEST:		{ OpenChest(); }	break;
+	case InteractionType::SIGNAL_GROGU:		{ SignalGrogu(); }	break;
+	}
+
+	/*if (duration != 0.0f)
+	{
+		interactionDuration = duration;
+	}
+	else
+	{
+		switch (type)
+		{
+		case InteractionType::TALK:				{ interactionDuration = GetAnimatorClipDuration("Talk"); }			break;
+		case InteractionType::USE:				{ interactionDuration = GetAnimatorClipDuration("Use"); }			break;
+		case InteractionType::BUY:				{ interactionDuration = GetAnimatorClipDuration("Use"); }			break;
+		case InteractionType::OPEN_CHEST:		{ interactionDuration = GetAnimatorClipDuration("OpenChest"); }		break;
+		case InteractionType::SIGNAL_GROGU:		{ interactionDuration = GetAnimatorClipDuration("SignalGrogu"); }	break;
+		}
+	}*/
 }
 
 void Player::AnimatePlayer()
@@ -543,7 +556,7 @@ void Player::AnimatePlayer()
 
 	AnimatorTrack* preview = animator->GetTrackAsPtr("Preview");
 
-	if (aimState == AimState::IDLE)
+	if (GetEntityState() != EntityState::NONE || aimState == AimState::IDLE)											// TAKE INTO ACCOUNT STUN AND KNOCKBACK + LOOK INTO DASH PROBLEMS 
 	{	
 		if (torsoTrack != nullptr)
 		{
@@ -663,10 +676,10 @@ AnimationInfo* Player::GetAimAnimation()
 	
 	switch (currentWeapon->type)
 	{
-	case WeaponType::BLASTER:	{ /*LOG("AIM BLASTER{ %s }", aimBlasterAnimation.name.c_str());*/	return &aimBlasterAnimation; }	break;
-	case WeaponType::SNIPER:	{ /*LOG("AIM SNIPER { %s }", aimSniperAnimation.name.c_str());*/	return &aimSniperAnimation; }	break;
-	case WeaponType::SHOTGUN:	{ /*LOG("AIM SHOTGUN{ %s }", aimShotgunAnimation.name.c_str());*/	return &aimShotgunAnimation; }	break;
-	case WeaponType::MINIGUN:	{ /*LOG("AIM MINIGUN{ %s }", aimMinigunAnimation.name.c_str());*/	return &aimMinigunAnimation; }	break;
+	case WeaponType::BLASTER:	{ return &aimBlasterAnimation; }	break;
+	case WeaponType::SNIPER:	{ return &aimSniperAnimation; }		break;
+	case WeaponType::SHOTGUN:	{ return &aimShotgunAnimation; }	break;
+	case WeaponType::MINIGUN:	{ return &aimMinigunAnimation; }	break;
 	}
 	
 	LOG("COULD NOT GET AIM ANIMATION");
@@ -681,10 +694,10 @@ AnimationInfo* Player::GetShootAnimation()
 	
 	switch (currentWeapon->type)
 	{
-	case WeaponType::BLASTER:	{ /*LOG("SHOOT BLASTER { %s }", shootBlasterAnimation.name.c_str());*/	return &shootBlasterAnimation; }	break;
-	case WeaponType::SNIPER:	{ /*LOG("SHOOT SNIPER  { %s }", shootSniperAnimation.name.c_str());*/	return &shootSniperAnimation; }		break;
-	case WeaponType::SHOTGUN:	{ /*LOG("SHOOT SHOTGUN { %s }", shootShotgunAnimation.name.c_str());*/	return &shootShotgunAnimation; }	break;
-	case WeaponType::MINIGUN:	{ /*LOG("SHOOT MINIGUN { %s }", shootMinigunAnimation.name.c_str());*/	return &shootMinigunAnimation; }	break;
+	case WeaponType::BLASTER:	{ return &shootBlasterAnimation; }	break;
+	case WeaponType::SNIPER:	{ return &shootSniperAnimation; }	break;
+	case WeaponType::SHOTGUN:	{ return &shootShotgunAnimation; }	break;
+	case WeaponType::MINIGUN:	{ return &shootMinigunAnimation; }	break;
 	}
 
 	LOG("COULD NOT GET SHOOT ANIMATION");
@@ -699,10 +712,10 @@ AnimationInfo* Player::GetReloadAnimation()
 
 	switch (currentWeapon->type)
 	{
-	case WeaponType::BLASTER:	{ /*LOG("RELOAD BLASTER { %s }", reloadBlasterAnimation.name.c_str());*/	return &reloadBlasterAnimation; }	break;
-	case WeaponType::SNIPER:	{ /*LOG("RELOAD SNIPER  { %s }", reloadSniperAnimation.name.c_str());*/		return &reloadSniperAnimation; }	break;
-	case WeaponType::SHOTGUN:	{ /*LOG("RELOAD SHOTGUN { %s }", reloadShotgunAnimation.name.c_str());*/	return &reloadShotgunAnimation; }	break;
-	case WeaponType::MINIGUN:	{ /*LOG("RELOAD MINIGUN { %s }", reloadMinigunAnimation.name.c_str());*/	return &reloadMinigunAnimation; }	break;
+	case WeaponType::BLASTER:	{ return &reloadBlasterAnimation; }	break;
+	case WeaponType::SNIPER:	{ return &reloadSniperAnimation; }	break;
+	case WeaponType::SHOTGUN:	{ return &reloadShotgunAnimation; }	break;
+	case WeaponType::MINIGUN:	{ return &reloadMinigunAnimation; }	break;
 	}
 	
 	LOG("COULD NOT GET RELOAD ANIMATION");
@@ -766,6 +779,7 @@ void Player::AddItem(ItemData* item)
 			return;
 		}
 	}
+
 	items.push_back(std::make_pair(usingSecondaryGun, item));
 }
 
@@ -784,19 +798,57 @@ void Player::ApplyItems()
 	}
 }
 
-void Player::ManageMovement()
+float Player::GetAnimatorClipDuration(const char* clipName)
 {
-	if (moveState != PlayerState::DEAD || moveState != PlayerState::DEAD_OUT)
+	AnimatorClip* clip = animator->GetClipAsPtr(clipName);
+
+	return (clip != nullptr) ? clip->GetDurationInSeconds() : 0.0f;
+}
+
+void Player::ManageInteractions()
+{
+	GatherInteractionInputs();
+
+	if (currentInteraction != InteractionType::NONE && !interactionTimer.IsActive())					// If there is an interaction and the timer is not active.
+	{
+		interactionTimer.Start();
+	}
+	else if (currentInteraction == InteractionType::NONE && interactionTimer.IsActive())				// If there is no interaction and the timer is active.
+	{
+		interactionTimer.Stop();
+		interactionDuration = 0.0f;
+	}
+
+	if (currentInteraction != InteractionType::TALK)													// If the interaction is TALK, then it will be ended when the dialog system says so.
+	{
+		if (interactionTimer.ReadSec() > interactionDuration)
+		{
+			interactionTimer.Stop();
+			SetPlayerInteraction(InteractionType::NONE);
+		}
+	}
+
+	/*switch (currentInteraction)
+	{
+	case InteractionType::NONE:				{}					break;
+	case InteractionType::USE:				{ Use(); }			break;
+	case InteractionType::BUY:				{ Buy(); }			break;
+	case InteractionType::TALK:				{ Talk(); }			break;
+	case InteractionType::OPEN_CHEST:		{ OpenChest(); }	break;
+	case InteractionType::SIGNAL_GROGU:		{ SignalGrogu(); }	break;
+	}*/
+}
+
+void Player::ManageMovement()
+{	
+	if (moveState != PlayerState::DEAD && moveState != PlayerState::DEAD_OUT)
 	{
 		if (health <= 0.0f)
 		{
 			moveState = PlayerState::DEAD_IN;
-			//moveState = PlayerState::DEAD;
 		}
 		else
 		{
-			GatherInteractionInputs();
-
 			if (currentInteraction == InteractionType::NONE)
 			{
 				if (moveState != PlayerState::DASH)
@@ -814,7 +866,6 @@ void Player::ManageMovement()
 	switch (moveState)
 	{
 	case PlayerState::IDLE:		{ MoveIdle(); } break;
-	case PlayerState::INTERACT: { Interact(); } break;
 	case PlayerState::WALK:		{ Walk(); }		break;
 	case PlayerState::RUN:		{ Run(); }		break;
 
@@ -850,7 +901,78 @@ void Player::ManageAim()
 	}
 }
 
-// --- MOVEMENT STATES
+void Player::ManageInvincibility()
+{	
+	if (!invincibilityTimer.IsActive())
+		return;
+	
+	if (invincibilityTimer.ReadSec() >= invincibilityDuration)
+	{
+		invincibilityTimer.Stop();
+		intermitentMeshTimer.Stop();
+		
+		if (mesh != nullptr)
+			mesh->SetIsActive(true);
+	}
+	else if (!intermitentMeshTimer.IsActive())
+	{
+		intermitentMeshTimer.Start();
+		
+		if (mesh != nullptr)
+			mesh->SetIsActive(!mesh->IsActive());
+
+		//LOG("start int timer");
+	}
+	else if (intermitentMeshTimer.ReadSec() >= intermitentMesh)
+	{
+		intermitentMeshTimer.Stop();
+
+		//LOG("stop int timer");
+	}
+}
+
+// --- INTERACTION STATE METHODS
+void Player::Talk()
+{
+	currentAnimation = &talkAnimation;
+
+	if (interactionDuration == 0.0f)
+		interactionDuration = GetAnimatorClipDuration("Talk");
+}
+
+void Player::Use()
+{
+	currentAnimation = &useAnimation;
+
+	if (interactionDuration == 0.0f)
+		interactionDuration = GetAnimatorClipDuration("Use");
+}
+
+void Player::Buy()
+{
+	currentAnimation = &useAnimation;
+
+	if (interactionDuration == 0.0f)
+		interactionDuration = GetAnimatorClipDuration("Use");
+}
+
+void Player::OpenChest()
+{
+	currentAnimation = &openChestAnimation;
+
+	if (interactionDuration == 0.0f)
+		interactionDuration = GetAnimatorClipDuration("OpenChest");
+}
+
+void Player::SignalGrogu()
+{
+	currentAnimation = &signalGroguAnimation;
+
+	if (interactionDuration == 0.0f)
+		interactionDuration = GetAnimatorClipDuration("SignalGrogu");
+}
+
+// --- MOVEMENT STATE METHODS
 void Player::MoveIdle()
 {
 	currentAnimation = &idleAnimation;
@@ -947,11 +1069,11 @@ void Player::Dead()
 		moveState = PlayerState::DEAD_OUT;
 }
 
-// --- AIM STATES
+// --- AIM STATE METHODS
 void Player::AimIdle()
 {
-	if (idleAimPlane != nullptr)
-		idleAimPlane->SetIsActive(true);
+	/*if (idleAimPlane != nullptr)
+		idleAimPlane->SetIsActive(true);*/
 
 	if (aimingAimPlane != nullptr)
 		aimingAimPlane->SetIsActive(false);
@@ -964,8 +1086,8 @@ void Player::OnGuard()
 
 void Player::Aiming()
 {
-	if (idleAimPlane != nullptr)
-		idleAimPlane->SetIsActive(false);
+	/*if (idleAimPlane != nullptr)
+		idleAimPlane->SetIsActive(false);*/
 
 	if (aimingAimPlane != nullptr)
 		aimingAimPlane->SetIsActive(true);
@@ -1136,7 +1258,27 @@ void Player::GatherAimInputs()
 
 void Player::GatherInteractionInputs()
 {
-
+	if (health <= 0.0f)
+	{
+		SetPlayerInteraction(InteractionType::NONE);
+		return;
+	}
+	
+	if (currentInteraction == InteractionType::NONE)
+	{
+		if (App->input->GetKey(SDL_SCANCODE_Q) == KeyState::KEY_DOWN)
+		{
+			SetPlayerInteraction(InteractionType::SIGNAL_GROGU);
+		}
+	}
+	
+	if (currentInteraction == InteractionType::TALK)
+	{
+		if (App->input->GetKey(SDL_SCANCODE_BACKSPACE) == KeyState::KEY_DOWN)
+		{
+			SetPlayerInteraction(InteractionType::NONE);
+		}
+	}
 }
 
 void Player::SetPlayerDirection()
