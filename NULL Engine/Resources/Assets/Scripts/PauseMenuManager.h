@@ -17,12 +17,12 @@ public:
 
 	void Update() override;
 
+	std::string mandoName = "Mandalorian";
+	std::string gameManagerName = "Game Manager";
 	std::string resumeButtonName = "ResumeButton";
 	std::string optionsButtonName = "SettingsButton";
 	std::string abandonRunButtonName = "AbandonButton";
 	std::string mainMenuButtonName = "MenuButton";
-	std::string mandoName = "Mandalorian";
-	std::string gameManagerName = "Game Manager";
 	std::string optionsMenuCanvasStr = "PauseSettingsCanvas";
 	std::string optionsFullscreenStr = "FullscreenCheck";
 	std::string optionsVsyncStr = "VsyncCheck";
@@ -54,7 +54,7 @@ SCRIPTS_FUNCTION PauseMenuManager* CreatePauseMenuManager() {
 	INSPECTOR_STRING(script->gameManagerName);
 	INSPECTOR_STRING(script->resumeButtonName);
 	INSPECTOR_STRING(script->optionsButtonName);
-	INSPECTOR_STRING(script->abandonRunButtonName);
+	//INSPECTOR_STRING(script->abandonRunButtonName); (momo leak en debug !!??)
 	INSPECTOR_STRING(script->mainMenuButtonName);
 	INSPECTOR_STRING(script->optionsMenuCanvasStr);
 	INSPECTOR_STRING(script->optionsFullscreenStr);

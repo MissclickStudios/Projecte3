@@ -47,6 +47,7 @@ C_UI_Image::~C_UI_Image()
 
 bool C_UI_Image::Update()
 {
+	//GetTextureCoords();
 	return true;
 }
 
@@ -300,6 +301,23 @@ Frame C_UI_Image::GetTexturePosition(int pixelPosX, int pixelPosY, int pixelWidt
 	return frame;
 }
 
+void C_UI_Image::GetTextureCoords()
+{
+	C_Material* cMaterial = GetOwner()->GetComponent<C_Material>();
+	if (!cMaterial)
+		return;
+
+	uint32 id = cMaterial->GetTextureID();
+	unsigned int spritesheetPixelWidth, spritesheetPixelHeight = 0; cMaterial->GetTextureSize(spritesheetPixelWidth, spritesheetPixelHeight);
+	if (!spritesheetPixelWidth && !spritesheetPixelHeight)
+		return;
+	
+	pixelCoord[0] = textCoord.proportionBeginX * spritesheetPixelWidth; /// (int)spritesheetPixelWidth;
+	pixelCoord[1] = textCoord.proportionBeginY * spritesheetPixelHeight; /// (int)spritesheetPixelHeight;
+	pixelCoord[2] = textCoord.proportionFinalX * spritesheetPixelWidth; /// (int)spritesheetPixelWidth - pixelCoord[0];
+	pixelCoord[3] = textCoord.proportionFinalY * spritesheetPixelHeight; /// (int)spritesheetPixelHeight - pixelCoord[1];
+}
+
 
 bool C_UI_Image::SaveState(ParsonNode& root) const
 {
@@ -310,10 +328,10 @@ bool C_UI_Image::SaveState(ParsonNode& root) const
 	root.SetNumber("W", rect.w);
 	root.SetNumber("H", rect.h);
 
-	//textCoords
+	/*//textCoords
 	ParsonArray pixelCoords = root.SetArray("pixelCoords");
 	for (int i = 0; i < 4; ++i)
-		pixelCoords.SetNumber((double)pixelCoord[i]);
+		pixelCoords.SetNumber((double)pixelCoord[i]);*/
 
 	ParsonNode colorNode;
 	colorNode = root.SetNode("imgColor");
@@ -325,6 +343,11 @@ bool C_UI_Image::SaveState(ParsonNode& root) const
 	textureNode = root.SetNode("textureCoords");
 	textureNode.SetNumber("x", textCoord.proportionBeginX); textureNode.SetNumber("y", textCoord.proportionBeginY);
 	textureNode.SetNumber("w", textCoord.proportionFinalX); textureNode.SetNumber("h", textCoord.proportionFinalY);
+
+	ParsonNode InsptextCoord;
+	InsptextCoord = root.SetNode("inspectorTextureCoords");
+	InsptextCoord.SetInteger("x", pixelCoord[0]); InsptextCoord.SetInteger("y", pixelCoord[1]);
+	InsptextCoord.SetInteger("w", pixelCoord[2]); InsptextCoord.SetInteger("h", pixelCoord[3]);
 
 	 root.SetNumber("childOrder", childOrder);
 
@@ -345,10 +368,17 @@ bool C_UI_Image::LoadState(ParsonNode& root)
 	rect.h = root.GetNumber("H");
 
 	//textCoords
-	ParsonArray pixelCoords = root.GetArray("pixelCoords");
+	/*ParsonArray pixelCoords = root.GetArray("pixelCoords");
 	if (pixelCoords.ArrayIsValid())
 		for (int i = 0; i < pixelCoords.size; ++i)
-			pixelCoord[i] = (int)pixelCoords.GetNumber(i);
+			pixelCoord[i] = (int)pixelCoords.GetNumber(i);*/
+	ParsonNode InsptextCoord;
+	InsptextCoord = root.GetNode("inspectorTextureCoords");
+	if (InsptextCoord.NodeIsValid()) 
+	{
+		pixelCoord[0] = InsptextCoord.GetInteger("x"); pixelCoord[1] = InsptextCoord.GetInteger("y");
+		pixelCoord[2] = InsptextCoord.GetInteger("w"); pixelCoord[3] = InsptextCoord.GetInteger("h");
+	}
 
 	ParsonNode colorNode;
 	colorNode = root.GetNode("imgColor");
