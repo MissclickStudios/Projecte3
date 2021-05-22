@@ -100,6 +100,7 @@ void IG12::SetUp()
 {
 	firstStageTimer.Stop();
 	secondStageTimer.Stop();
+	bombTimer.Stop();
 
 	player = App->scene->GetGameObjectByName(playerName.c_str());
 	userAttackDistance = attackDistance;
@@ -169,7 +170,7 @@ void IG12::OnCollisionEnter(GameObject* object)
 {
 	Player* playerScript = (Player*)object->GetScript("Player");
 	if (playerScript)
-		playerScript->TakeDamage(Damage());
+		playerScript->TakeDamage(1.0f);
 }
 
 void IG12::DistanceToPlayer()
@@ -619,11 +620,13 @@ bool IG12::BombingAttack()
 	{
 		bombTimer.Stop();
 
-		if(playerPosition.x >= bombPosition.x - bombingAttackSmallAreaSide && playerPosition.x < bombPosition.x + bombingAttackSmallAreaSide)
-			if (playerPosition.y >= bombPosition.y - bombingAttackSmallAreaSide && playerPosition.y < bombPosition.y + bombingAttackSmallAreaSide)
+		if(player->transform->GetWorldPosition().x >= bombPosition.x - bombingAttackSmallAreaSide && player->transform->GetWorldPosition().x < bombPosition.x + bombingAttackSmallAreaSide)
+			if (player->transform->GetWorldPosition().z >= bombPosition.y - bombingAttackSmallAreaSide && player->transform->GetWorldPosition().z < bombPosition.y + bombingAttackSmallAreaSide)
 			{
-				LOG("Player bomb hit");
-			}	
+				Player* playerScript = (Player*)player->GetScript("Player");
+				if (playerScript)
+					playerScript->TakeDamage(Damage());
+			}
 	}
 	else if (!bombTimer.IsActive())
 	{
