@@ -23,6 +23,8 @@
 
 #include "Log.h"
 
+#include "MathGeoLib/include/Math/float3.h"
+
 #define MAX_INPUT 32767
 
 Player* CreatePlayer()

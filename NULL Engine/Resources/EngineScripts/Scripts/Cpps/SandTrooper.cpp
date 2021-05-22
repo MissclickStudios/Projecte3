@@ -163,7 +163,10 @@ void Trooper::DistanceToPlayer()
 
 void Trooper::LookAtPlayer()
 {
-	float rad = aimDirection.AimedAngle();
+	float2 direction = aimDirection;
+	if (moveState != TrooperState::IDLE)
+		direction = moveDirection;
+	float rad = direction.AimedAngle();
 
 	if (skeleton)
 		skeleton->transform->SetLocalRotation(float3(0, -rad + DegToRad(90), 0));
@@ -323,7 +326,10 @@ void Trooper::Patrol()
 void Trooper::Chase()
 {
 	if (agent != nullptr)
+	{
 		agent->SetDestination(player->transform->GetWorldPosition());
+		moveDirection = float2(agent->direction.x, agent->direction.z);
+	}
 }
 
 void Trooper::Flee()

@@ -45,6 +45,8 @@ public:
 
 	float velocity = 30.0f;
 
+	float3 direction = float3::zero;
+
 private:
 
 	C_RigidBody* rigidBody = nullptr;
@@ -56,8 +58,6 @@ private:
 	int areaMask = 1;
 
 	int indexPath = 1;
-
-	float3 direction;
 };
 
 #endif	// !__C_NAVMESH_H__

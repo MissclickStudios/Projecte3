@@ -115,7 +115,8 @@ void Blurrg::SetUp()
 
 	agent = gameObject->GetComponent<C_NavMeshAgent>();
 
-	agent->origin = gameObject->GetComponent<C_Transform>()->GetWorldPosition();
+	if (agent != nullptr)
+		agent->origin = gameObject->GetComponent<C_Transform>()->GetWorldPosition();
 	
 }
 
