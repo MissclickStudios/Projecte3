@@ -5,6 +5,7 @@
 
 class GameObject;
 class C_UI_Button;
+class C_UI_Checkbox;
 class C_Canvas;
 
 class SCRIPTS_API PauseMenuManager : public Script {
@@ -17,26 +18,33 @@ public:
 	void Update() override;
 
 	std::string resumeButtonName = "ResumeButton";
-	std::string optionsButtonName = "OptionsButton";
-	std::string abandonRunButtonName = "AbandonRunButton";
-	std::string mainMenuButtonName = "MainMenuButton";
-	std::string exitButtonName = "ExitButton";
+	std::string optionsButtonName = "SettingsButton";
+	std::string abandonRunButtonName = "AbandonButton";
+	std::string mainMenuButtonName = "MenuButton";
 	std::string mandoName = "Mandalorian";
 	std::string gameManagerName = "Game Manager";
+	std::string optionsMenuCanvasStr = "PauseSettingsCanvas";
+	std::string optionsFullscreenStr = "FullscreenCheck";
+	std::string optionsVsyncStr = "VsyncCheck";
+	std::string backButtonStr = "BackButton";
 
 private:
+	C_Canvas* pauseMenuCanvas = nullptr;
 	C_UI_Button* resumeButton = nullptr;
 	C_UI_Button* optionsButton = nullptr;
 	C_UI_Button* abandonRunButton = nullptr;
 	C_UI_Button* mainMenuButton = nullptr;
-	C_UI_Button* exitButton = nullptr;
 
-	C_Canvas* pauseMenuCanvas = nullptr;
+	C_Canvas* optionsMenuCanvas = nullptr;
+	C_UI_Checkbox* fullScreenCheck = nullptr;
+	C_UI_Checkbox* vsyncCheck = nullptr;
+	C_UI_Button* backButton = nullptr;
 
 	GameObject* mando = nullptr;
 	GameObject* gameManager = nullptr;
 
 	bool canvasActive = false;
+	bool onSettings = false;
 };
 
 SCRIPTS_FUNCTION PauseMenuManager* CreatePauseMenuManager() {
@@ -48,6 +56,9 @@ SCRIPTS_FUNCTION PauseMenuManager* CreatePauseMenuManager() {
 	INSPECTOR_STRING(script->optionsButtonName);
 	INSPECTOR_STRING(script->abandonRunButtonName);
 	INSPECTOR_STRING(script->mainMenuButtonName);
-	INSPECTOR_STRING(script->exitButtonName);
+	INSPECTOR_STRING(script->optionsMenuCanvasStr);
+	INSPECTOR_STRING(script->optionsFullscreenStr);
+	INSPECTOR_STRING(script->optionsVsyncStr);
+	INSPECTOR_STRING(script->backButtonStr);
 	return script;
 }
