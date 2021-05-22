@@ -248,6 +248,13 @@ void IG12::ManageMovement()
 		else
 			firstStageTimer.Start();
 	}
+	else if (!firstStageTimer.IsActive() && !secondStageTimer.IsActive())
+	{
+		if (health <= 5)
+			secondStageTimer.Start();
+		else
+			firstStageTimer.Start();
+	}
 
 	switch (moveState)
 	{
@@ -572,7 +579,7 @@ bool IG12::SpiralAttack()
 
 	/*if (specialAttackRot >= 360.0f * spiralAttackSpins)
 		return false;*/
-	if (spiralAttackTimer.ReadSec() >= spiralAttackDuration)
+	if (!spiralAttackTimer.IsActive())
 		return false;
 
 	return true;
@@ -591,7 +598,7 @@ bool IG12::LineAttack()
 	if (sniperWeapon)
 		sniperWeapon->projectilesPerShot = 0;
 	
-	if (lineAttackTimer.ReadSec() >= lineAttackDuration)
+	if (!lineAttackTimer.IsActive())
 		return false;
 
 	return true;
@@ -627,7 +634,7 @@ bool IG12::BombingAttack()
 		crosshair->transform->SetWorldPosition(float3(bombPosition.x, 5, bombPosition.y));
 	}
 
-	if (bombingAttackTimer.ReadSec() >= bombingAttackDuration)
+	if (!bombingAttackTimer.IsActive())
 		return false;
 
 	return true;
@@ -646,9 +653,15 @@ void IG12::pickFirstStageAttack()
 	float randAttack = Lerp(0, 2, randomGenerator.Float());
 
 	if (randAttack <= 1)
+	{
 		bombingAttackTimer.Start();
+		moveState = IG12State::BOMBING_ATTACK_IN;
+	}
 	else
+	{
 		lineAttackTimer.Start();
+		moveState = IG12State::LINE_ATTACK_IN;
+	}
 }
 
 void IG12::pickSecondStageAttack()
@@ -657,9 +670,15 @@ void IG12::pickSecondStageAttack()
 	float randAttack = Lerp(0, 2, randomGenerator.Float());
 
 	if (randAttack <= 1)
+	{
 		bombingAttackTimer.Start();
+		moveState = IG12State::BOMBING_ATTACK_IN;
+	}
 	else
+	{
 		spiralAttackTimer.Start();
+		moveState = IG12State::SPIRAL_ATTACK_IN;
+	}
 }
 
 
