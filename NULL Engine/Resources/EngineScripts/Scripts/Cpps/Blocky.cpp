@@ -41,7 +41,7 @@ void Blocky::PreUpdate()
 
 void Blocky::Update()
 {
-	if (mando )
+	if (mando)
 	{
 		agent->SetDestination(mando->transform->GetWorldPosition());
 	}

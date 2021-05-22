@@ -35,7 +35,7 @@ bool C_NavMeshAgent::Start()
 
 bool C_NavMeshAgent::Update()
 {
-	if (rigidBody && App->gameState == GameState::PLAY)
+	if (rigidBody && App->gameState == GameState::PLAY && App->detour->navMeshResource)
 	{
 		if (hasDestination)
 		{
@@ -60,7 +60,7 @@ bool C_NavMeshAgent::Update()
 			{
 				indexPath = 0;
 
-				directorVector = { 0,0 };
+				directorVector = { 0.0f,0.0f };
 
 				hasDestination = false;
 
@@ -93,13 +93,13 @@ bool C_NavMeshAgent::SetDestination(float3 destination)
 {
 	float2 pos = { destination.x, destination.z };
 
-	destinationPoint = { pos.x, 0, pos.y };
+	destinationPoint = { pos.x, 0.0f, pos.y };
 
 	indexPath = 1;
 
 	origin = GetOwner()->transform->GetWorldPosition();
 
-	origin.y = 0;
+	origin.y = 0.0f;
 
 	currentPos = origin;
 
@@ -125,7 +125,7 @@ void C_NavMeshAgent::StopAndCancelDestination()
 	indexPath = 0;
 	path.clear();
 	hasDestination = false;
-	rigidBody->Set2DVelocity({ 0,0 });
+	rigidBody->Set2DVelocity({ 0.0f,0.0f });
 }
 
 bool C_NavMeshAgent::AgentPath(float3 origin, float3 destination)
