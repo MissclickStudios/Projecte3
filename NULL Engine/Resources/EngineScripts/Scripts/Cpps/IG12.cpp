@@ -50,24 +50,27 @@ IG12* CreateIG12()
 
 	// Attack
 	INSPECTOR_DRAGABLE_FLOAT(script->attackDistance);
+	INSPECTOR_DRAGABLE_FLOAT(script->firstStageAttackCooldown);
+	INSPECTOR_DRAGABLE_FLOAT(script->secondStageAttackCooldown);
+
 
 	// Spiral Attack
+	INSPECTOR_DRAGABLE_FLOAT(script->spiralAttackDuration);
 	INSPECTOR_DRAGABLE_FLOAT(script->spiralAttackSpeed);
 	INSPECTOR_DRAGABLE_FLOAT(script->spiralAttackSpins);
 	INSPECTOR_DRAGABLE_FLOAT(script->spiralAttackHp);
-	INSPECTOR_DRAGABLE_FLOAT(script->spiralAttackCooldown);
 
 	// Line Attack
+	INSPECTOR_DRAGABLE_FLOAT(script->lineAttackDuration);
 	INSPECTOR_DRAGABLE_FLOAT(script->lineAttackSpeed);
 	INSPECTOR_DRAGABLE_FLOAT(script->lineAttackShots);
-	INSPECTOR_DRAGABLE_FLOAT(script->lineAttackCooldown);
 	INSPECTOR_DRAGABLE_FLOAT(script->lineAttackSpins);
 	INSPECTOR_DRAGABLE_FLOAT(script->lineAttackHp);
 
 	// Bombing Attack
+	INSPECTOR_DRAGABLE_FLOAT(script->bombingAttackDuration);
 	INSPECTOR_DRAGABLE_FLOAT(script->bombingAttackSpeed);
 	INSPECTOR_DRAGABLE_FLOAT(script->bombingAttackShots);
-	INSPECTOR_DRAGABLE_FLOAT(script->bombingAttackCooldown);
 	INSPECTOR_DRAGABLE_FLOAT(script->bombingAttackHp);
 	INSPECTOR_DRAGABLE_FLOAT(script->bombingAttackBigAreaSide);
 	INSPECTOR_DRAGABLE_FLOAT(script->bombingAttackSmallAreaSide);
@@ -95,8 +98,8 @@ IG12::~IG12()
 
 void IG12::SetUp()
 {
-	spiralAttackTimer.Stop();
-	lineAttackTimer.Stop();
+	firstStageTimer.Stop();
+	secondStageTimer.Stop();
 
 	player = App->scene->GetGameObjectByName(playerName.c_str());
 	userAttackDistance = attackDistance;
@@ -138,8 +141,8 @@ void IG12::SetUp()
 		sniperWeapon = (Weapon*)GetObjectScript(sniperGameObject, ObjectType::WEAPON);
 	if (sniperWeapon)
 		sniperWeapon->SetOwnership(type, handRight, rightHandName);
-
-	//TODO: Add the red scope prefab
+	
+	crosshair = gameObject->FindChild("Aim");
 }
 
 void IG12::Behavior()
@@ -147,7 +150,6 @@ void IG12::Behavior()
 	ManageMovement();
 	if (moveState != IG12State::DEAD)
 		ManageAim();
-
 }
 
 void IG12::CleanUp()
@@ -210,22 +212,41 @@ void IG12::ManageMovement()
 				LookAtPlayer();
 		}
 	}
-
-	if (spiralAttackTimer.IsActive() && spiralAttackTimer.ReadSec() >= spiralAttackCooldown)
+	if (firstStageTimer.IsActive() && firstStageTimer.ReadSec() >= firstStageAttackCooldown)
+	{
+		firstStageTimer.Stop();
+		pickFirstStageAttack();
+	}
+	else if (secondStageTimer.IsActive() && secondStageTimer.ReadSec() >= secondStageAttackCooldown)
+	{
+		secondStageTimer.Stop();
+		pickSecondStageAttack();
+	}
+	else if (spiralAttackTimer.IsActive() && spiralAttackTimer.ReadSec() >= spiralAttackDuration)
 	{
 		spiralAttackTimer.Stop();
-	}
-	
-	if (lineAttackTimer.IsActive() && lineAttackTimer.ReadSec() >= lineAttackCooldown)
+		if (health <= 5)
+			secondStageTimer.Start();
+		else
+			firstStageTimer.Start();
+	}	
+	else if (lineAttackTimer.IsActive() && lineAttackTimer.ReadSec() >= lineAttackDuration)
 	{
 		lineAttackTimer.Stop();
 		lineAttackShots += 15;
+		if (health <= 5)
+			secondStageTimer.Start();
+		else
+			firstStageTimer.Start();
 	}
-
-	if (bombingAttackTimer.IsActive() && bombingAttackTimer.ReadSec() >= bombingAttackCooldown)
+	else if (bombingAttackTimer.IsActive() && bombingAttackTimer.ReadSec() >= bombingAttackDuration)
 	{
 		bombingAttackTimer.Stop();
-		bombingAttackShots += 75;
+		bombingAttackShots = 5;
+		if (health <= 5)
+			secondStageTimer.Start();
+		else
+			firstStageTimer.Start();
 	}
 
 	switch (moveState)
@@ -248,24 +269,6 @@ void IG12::ManageMovement()
 		if (distance < fleeDistance)
 		{
 			moveState = IG12State::FLEE;
-			break;
-		}
-		if (health <= 5.0f && !spiralAttackTimer.IsActive())
-		{
-			spiralAttackTimer.Start();
-			moveState = IG12State::SPIRAL_ATTACK_IN;
-			break;
-		}
-		if (health <= 9.0f && !lineAttackTimer.IsActive())
-		{
-			lineAttackTimer.Start();
-			moveState = IG12State::LINE_ATTACK_IN;
-			break;
-		}
-		if (health <= 9.0f && !bombingAttackTimer.IsActive())
-		{
-			bombingAttackTimer.Start();
-			moveState = IG12State::BOMBING_ATTACK_IN;
 			break;
 		}
 
@@ -344,7 +347,7 @@ void IG12::ManageMovement()
 		specialAttackStartAim = aimDirection;
 		specialAttackRot = 0.0f;
 		attackDistance = 200.0f;
-		moveState = IG12State::LINE_ATTACK;
+		moveState = IG12State::BOMBING_ATTACK;
 
 	case IG12State::BOMBING_ATTACK:
 		if (!BombingAttack())
@@ -567,7 +570,9 @@ bool IG12::SpiralAttack()
 		secondaryAimDirection = -aimDirection;
 	}
 
-	if (specialAttackRot >= 360.0f * spiralAttackSpins)
+	/*if (specialAttackRot >= 360.0f * spiralAttackSpins)
+		return false;*/
+	if (spiralAttackTimer.ReadSec() >= spiralAttackDuration)
 		return false;
 
 	return true;
@@ -586,7 +591,7 @@ bool IG12::LineAttack()
 	if (sniperWeapon)
 		sniperWeapon->projectilesPerShot = 0;
 	
-	if (lineAttackShots <= 0)
+	if (lineAttackTimer.ReadSec() >= lineAttackDuration)
 		return false;
 
 	return true;
@@ -603,17 +608,9 @@ bool IG12::BombingAttack()
 		sniperWeapon->projectilesPerShot = 0;	
 	}
 
-	float2 playerPosition;
-	playerPosition.x = player->transform->GetWorldPosition().x;
-	playerPosition.y = player->transform->GetWorldPosition().z;
-	//method to calculate where arround the player will the next bomb fall
-	float2 bombPosition = CalculateNextBomb(playerPosition.x, playerPosition.y);
-
-	//method to drop the bomb in the previously calculated position and inflict damage if needed.
 	if (bombTimer.IsActive() && bombTimer.ReadSec() >= bombFallingTime)
 	{
 		bombTimer.Stop();
-		bombingAttackShots -= 1;
 
 		if(playerPosition.x >= bombPosition.x - bombingAttackSmallAreaSide && playerPosition.x < bombPosition.x + bombingAttackSmallAreaSide)
 			if (playerPosition.y >= bombPosition.y - bombingAttackSmallAreaSide && playerPosition.y < bombPosition.y + bombingAttackSmallAreaSide)
@@ -621,10 +618,16 @@ bool IG12::BombingAttack()
 				LOG("Player bomb hit");
 			}	
 	}
-	else
+	else if (!bombTimer.IsActive())
+	{
+		playerPosition.x = player->transform->GetWorldPosition().x;
+		playerPosition.y = player->transform->GetWorldPosition().z;
 		bombTimer.Start();
+		bombPosition = CalculateNextBomb(playerPosition.x, playerPosition.y);
+		crosshair->transform->SetWorldPosition(float3(bombPosition.x, 5, bombPosition.y));
+	}
 
-	if (bombingAttackShots <= 0)
+	if (bombingAttackTimer.ReadSec() >= bombingAttackDuration)
 		return false;
 
 	return true;
@@ -634,6 +637,30 @@ float2 IG12::CalculateNextBomb(float x, float y)
 {
 	float bombX = Lerp(x - (bombingAttackBigAreaSide * 0.5), x + (bombingAttackBigAreaSide * 0.5), randomGenerator.Float());
 	float bombY = Lerp(y - (bombingAttackBigAreaSide * 0.5), y + (bombingAttackBigAreaSide * 0.5), randomGenerator.Float());
-	return float2(bombX, bombX);
+	return float2(bombX, bombY);
 }
+
+void IG12::pickFirstStageAttack()
+{
+	//bombing attack, straight line attack
+	float randAttack = Lerp(0, 2, randomGenerator.Float());
+
+	if (randAttack <= 1)
+		bombingAttackTimer.Start();
+	else
+		lineAttackTimer.Start();
+}
+
+void IG12::pickSecondStageAttack()
+{
+	//spiral attack, straight line attack
+	float randAttack = Lerp(0, 2, randomGenerator.Float());
+
+	if (randAttack <= 1)
+		bombingAttackTimer.Start();
+	else
+		spiralAttackTimer.Start();
+}
+
+
 

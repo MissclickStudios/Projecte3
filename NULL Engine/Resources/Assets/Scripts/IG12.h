@@ -67,21 +67,24 @@ public:
 	float attackDistance = 0.0f;
 	float userAttackDistance = 0.0f;
 
+	float firstStageAttackCooldown = 0.0f;
+	float secondStageAttackCooldown = 0.0f;
+
 	// Special Attack
+	float spiralAttackDuration = 0.0f;
 	float spiralAttackSpeed = 0.0f;
 	float spiralAttackSpins = 0.0f;
 	float spiralAttackHp = 0.0f;
-	float spiralAttackCooldown = 0.0f;
 
+	float lineAttackDuration = 0.0f;
 	float lineAttackSpeed = 0.0f;
 	float lineAttackSpins = 0.0f;
-	float lineAttackHp = 0.0f;
-	float lineAttackCooldown = 0.0f;
 	float lineAttackShots = 0.0f;
+	float lineAttackHp = 0.0f;
 
+	float bombingAttackDuration = 0.0f;
 	float bombingAttackSpeed = 0.0f;
 	float bombingAttackHp = 0.0f;
-	float bombingAttackCooldown = 0.0f;
 	float bombingAttackShots = 0.0f;
 	float bombingAttackBigAreaSide = 0.0f;
 	float bombingAttackSmallAreaSide = 0.0f;
@@ -123,13 +126,22 @@ private:
 	bool LineAttack();
 	bool BombingAttack();
 
-	float2 CalculateNextBomb(float x, float y);
-	void DropBomb(float x, float y);
+	void pickFirstStageAttack();		//Randomly picks an attack from the first stage
+	void pickSecondStageAttack();		//Randomly picks an attack from the second stage
 
+	float2 CalculateNextBomb(float x, float y);
+
+	Timer firstStageTimer;
+	Timer secondStageTimer;
 	Timer spiralAttackTimer;
 	Timer lineAttackTimer;
 	Timer bombingAttackTimer;
 	Timer bombTimer;
+	
+	float2 bombPosition = float2::zero;
+	float2 playerPosition = float2::zero;
+
+	GameObject* crosshair = nullptr;
 
 	float2 specialAttackStartAim = float2::zero;
 	float specialAttackRot = 0.0f;

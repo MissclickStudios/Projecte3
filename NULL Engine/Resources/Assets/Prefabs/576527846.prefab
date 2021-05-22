@@ -1,5 +1,5 @@
 {
-    "UID": 1328539088,
+    "UID": 1803807296,
     "ParentUID": 1474137658,
     "PrefabID": 576527846,
     "IsPrefab": true,
@@ -52,16 +52,6 @@
                 },
                 {
                     "AnimationUID": 853661712,
-                    "Name": "SpecialAttack",
-                    "Start": 26,
-                    "End": 148,
-                    "Speed": 1,
-                    "Duration": 122,
-                    "DurationInSeconds": 5.0833334922790527,
-                    "Loop": false
-                },
-                {
-                    "AnimationUID": 853661712,
                     "Name": "Run",
                     "Start": 0,
                     "End": 24,
@@ -79,12 +69,19 @@
                     "Duration": 35,
                     "DurationInSeconds": 1.4583333730697632,
                     "Loop": true
+                },
+                {
+                    "AnimationUID": 853661712,
+                    "Name": "SpecialAttack",
+                    "Start": 26,
+                    "End": 148,
+                    "Speed": 1,
+                    "Duration": 122,
+                    "DurationInSeconds": 5.0833334922790527,
+                    "Loop": false
                 }
             ],
-            "CurrentClip": {
-                "AnimationName": "Take 001",
-                "Name": "Take 001 Default"
-            }
+            "Tracks": []
         },
         {
             "Type": 8,
@@ -244,7 +241,7 @@
                 {
                     "Type": 2,
                     "Name": "lineAttackCooldown",
-                    "float": 5
+                    "float": 10
                 },
                 {
                     "Type": 2,
@@ -255,6 +252,41 @@
                     "Type": 2,
                     "Name": "lineAttackHp",
                     "float": 0
+                },
+                {
+                    "Type": 2,
+                    "Name": "bombingAttackSpeed",
+                    "float": 0
+                },
+                {
+                    "Type": 2,
+                    "Name": "bombingAttackShots",
+                    "float": 5
+                },
+                {
+                    "Type": 2,
+                    "Name": "bombingAttackCooldown",
+                    "float": 30
+                },
+                {
+                    "Type": 2,
+                    "Name": "bombingAttackHp",
+                    "float": 0
+                },
+                {
+                    "Type": 2,
+                    "Name": "bombingAttackBigAreaSide",
+                    "float": 20
+                },
+                {
+                    "Type": 2,
+                    "Name": "bombingAttackSmallAreaSide",
+                    "float": 5
+                },
+                {
+                    "Type": 2,
+                    "Name": "bombFallingTime",
+                    "float": 1
                 },
                 {
                     "Type": 4,
@@ -281,8 +313,121 @@
     ],
     "Children": [
         {
-            "UID": 1104548919,
-            "ParentUID": 1328539088,
+            "UID": 39725900,
+            "ParentUID": 1803807296,
+            "PrefabID": 576527846,
+            "IsPrefab": true,
+            "Name": "Aim",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        -3.4332275390625e-05,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        1.1187939862204308e-27,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        200.00001525878906,
+                        1,
+                        200.00001525878906
+                    ]
+                }
+            ],
+            "Children": [
+                {
+                    "UID": 592749042,
+                    "ParentUID": 39725900,
+                    "PrefabID": 576527846,
+                    "IsPrefab": true,
+                    "Name": "AimMesh",
+                    "IsActive": true,
+                    "IsStatic": false,
+                    "IsSceneRoot": false,
+                    "MaintainThroughScenes": false,
+                    "ShowBoundingBoxes": false,
+                    "Components": [
+                        {
+                            "Type": 1,
+                            "LocalPosition": [
+                                0,
+                                10,
+                                1.1920928955078125e-07
+                            ],
+                            "LocalRotation": [
+                                -0.70710664987564087,
+                                5.3178042000055612e-32,
+                                -4.4441548167300767e-30,
+                                0.70710688829421997
+                            ],
+                            "LocalScale": [
+                                0.99999958276748657,
+                                0.9999995231628418,
+                                0.99999982118606567
+                            ]
+                        },
+                        {
+                            "Type": 2,
+                            "UID": 1016193486,
+                            "Name": "Plane001.nemesh",
+                            "Path": "Library\/Meshes\/1016193486.nemesh",
+                            "File": "1016193486.nemesh",
+                            "ShowWireframe": false,
+                            "ShowBoundingBox": false,
+                            "Outline": false,
+                            "OutlineThickness": 1,
+                            "OutlineColor": [
+                                0.78431373834609985,
+                                0,
+                                0,
+                                1
+                            ]
+                        },
+                        {
+                            "Type": 3,
+                            "Material": {
+                                "UID": 1705422038,
+                                "Color": [
+                                    0.31862747669219971,
+                                    0.31862428784370422,
+                                    0.31862428784370422,
+                                    1
+                                ],
+                                "Name": "Plane001.nemat",
+                                "Path": "Library\/Materials\/1705422038.nemat",
+                                "File": "1705422038.nemat"
+                            },
+                            "Texture": {
+                                "AssetsPath": "Assets\/Textures\/\/UI\/RedCrosshair.png",
+                                "AssetsName": "RedCrosshair.png",
+                                "LibaryPath": "Library\/Textures\/951890215.netex",
+                                "LibraryFile": "951890215.netex"
+                            },
+                            "Shader": {
+                                "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
+                                "AssetsName": "DefaultShader.shader",
+                                "LibaryPath": "Library\/Shaders\/800223282.neshader",
+                                "LibraryFile": "800223282.neshader"
+                            }
+                        }
+                    ],
+                    "Children": []
+                }
+            ]
+        },
+        {
+            "UID": 1196367778,
+            "ParentUID": 1803807296,
             "PrefabID": 576527846,
             "IsPrefab": true,
             "Name": "Skeleton",
@@ -314,8 +459,42 @@
             ],
             "Children": [
                 {
-                    "UID": 1481060924,
-                    "ParentUID": 1104548919,
+                    "UID": 92620594,
+                    "ParentUID": 1196367778,
+                    "PrefabID": 576527846,
+                    "IsPrefab": true,
+                    "Name": "HandLeft",
+                    "IsActive": true,
+                    "IsStatic": false,
+                    "IsSceneRoot": false,
+                    "MaintainThroughScenes": false,
+                    "ShowBoundingBoxes": false,
+                    "Components": [
+                        {
+                            "Type": 1,
+                            "LocalPosition": [
+                                33.762493133544922,
+                                90.514961242675781,
+                                71.068611145019531
+                            ],
+                            "LocalRotation": [
+                                0,
+                                0,
+                                0,
+                                1
+                            ],
+                            "LocalScale": [
+                                1,
+                                1,
+                                1
+                            ]
+                        }
+                    ],
+                    "Children": []
+                },
+                {
+                    "UID": 190481254,
+                    "ParentUID": 1196367778,
                     "PrefabID": 576527846,
                     "IsPrefab": true,
                     "Name": "HandRight",
@@ -348,8 +527,77 @@
                     "Children": []
                 },
                 {
-                    "UID": 1671444474,
-                    "ParentUID": 1104548919,
+                    "UID": 500072208,
+                    "ParentUID": 1196367778,
+                    "PrefabID": 576527846,
+                    "IsPrefab": true,
+                    "Name": "group1",
+                    "IsActive": true,
+                    "IsStatic": false,
+                    "IsSceneRoot": false,
+                    "MaintainThroughScenes": false,
+                    "ShowBoundingBoxes": false,
+                    "Components": [
+                        {
+                            "Type": 1,
+                            "LocalPosition": [
+                                0,
+                                0,
+                                0
+                            ],
+                            "LocalRotation": [
+                                0,
+                                0,
+                                0,
+                                1
+                            ],
+                            "LocalScale": [
+                                1,
+                                1,
+                                1
+                            ]
+                        }
+                    ],
+                    "Children": [
+                        {
+                            "UID": 1474521210,
+                            "ParentUID": 500072208,
+                            "PrefabID": 576527846,
+                            "IsPrefab": true,
+                            "Name": "left1",
+                            "IsActive": true,
+                            "IsStatic": false,
+                            "IsSceneRoot": false,
+                            "MaintainThroughScenes": false,
+                            "ShowBoundingBoxes": false,
+                            "Components": [
+                                {
+                                    "Type": 1,
+                                    "LocalPosition": [
+                                        -1000.0999755859375,
+                                        53.733524322509766,
+                                        28.491634368896484
+                                    ],
+                                    "LocalRotation": [
+                                        0,
+                                        0,
+                                        0,
+                                        0.99999994039535522
+                                    ],
+                                    "LocalScale": [
+                                        1,
+                                        1,
+                                        1
+                                    ]
+                                }
+                            ],
+                            "Children": []
+                        }
+                    ]
+                },
+                {
+                    "UID": 1604591456,
+                    "ParentUID": 1196367778,
                     "PrefabID": 576527846,
                     "IsPrefab": true,
                     "Name": "group",
@@ -381,8 +629,8 @@
                     ],
                     "Children": [
                         {
-                            "UID": 503444061,
-                            "ParentUID": 1671444474,
+                            "UID": 629577758,
+                            "ParentUID": 1604591456,
                             "PrefabID": 576527846,
                             "IsPrefab": true,
                             "Name": "Hip",
@@ -396,7 +644,7 @@
                                     "Type": 1,
                                     "LocalPosition": [
                                         0.312379390001297,
-                                        124.92849731445313,
+                                        124.92849731445312,
                                         0
                                     ],
                                     "LocalRotation": [
@@ -414,8 +662,8 @@
                             ],
                             "Children": [
                                 {
-                                    "UID": 1668619760,
-                                    "ParentUID": 503444061,
+                                    "UID": 722478776,
+                                    "ParentUID": 629577758,
                                     "PrefabID": 576527846,
                                     "IsPrefab": true,
                                     "Name": "Legs",
@@ -447,8 +695,8 @@
                                     ],
                                     "Children": [
                                         {
-                                            "UID": 1675435659,
-                                            "ParentUID": 1668619760,
+                                            "UID": 791189926,
+                                            "ParentUID": 722478776,
                                             "PrefabID": 576527846,
                                             "IsPrefab": true,
                                             "Name": "RLeg",
@@ -480,8 +728,8 @@
                                             ],
                                             "Children": [
                                                 {
-                                                    "UID": 903322685,
-                                                    "ParentUID": 1675435659,
+                                                    "UID": 849907678,
+                                                    "ParentUID": 791189926,
                                                     "PrefabID": 576527846,
                                                     "IsPrefab": true,
                                                     "Name": "RKnee",
@@ -513,8 +761,8 @@
                                                     ],
                                                     "Children": [
                                                         {
-                                                            "UID": 1993083408,
-                                                            "ParentUID": 903322685,
+                                                            "UID": 1604941524,
+                                                            "ParentUID": 849907678,
                                                             "PrefabID": 576527846,
                                                             "IsPrefab": true,
                                                             "Name": "RAnkle",
@@ -546,8 +794,8 @@
                                                             ],
                                                             "Children": [
                                                                 {
-                                                                    "UID": 1507849474,
-                                                                    "ParentUID": 1993083408,
+                                                                    "UID": 372367555,
+                                                                    "ParentUID": 1604941524,
                                                                     "PrefabID": 576527846,
                                                                     "IsPrefab": true,
                                                                     "Name": "RFoot",
@@ -586,8 +834,8 @@
                                             ]
                                         },
                                         {
-                                            "UID": 1633542247,
-                                            "ParentUID": 1668619760,
+                                            "UID": 1329103372,
+                                            "ParentUID": 722478776,
                                             "PrefabID": 576527846,
                                             "IsPrefab": true,
                                             "Name": "LLeg",
@@ -619,8 +867,8 @@
                                             ],
                                             "Children": [
                                                 {
-                                                    "UID": 563992280,
-                                                    "ParentUID": 1633542247,
+                                                    "UID": 1610680623,
+                                                    "ParentUID": 1329103372,
                                                     "PrefabID": 576527846,
                                                     "IsPrefab": true,
                                                     "Name": "LKnee",
@@ -652,8 +900,8 @@
                                                     ],
                                                     "Children": [
                                                         {
-                                                            "UID": 2074152767,
-                                                            "ParentUID": 563992280,
+                                                            "UID": 2111459808,
+                                                            "ParentUID": 1610680623,
                                                             "PrefabID": 576527846,
                                                             "IsPrefab": true,
                                                             "Name": "LAnkle",
@@ -685,8 +933,8 @@
                                                             ],
                                                             "Children": [
                                                                 {
-                                                                    "UID": 665562022,
-                                                                    "ParentUID": 2074152767,
+                                                                    "UID": 1077203503,
+                                                                    "ParentUID": 2111459808,
                                                                     "PrefabID": 576527846,
                                                                     "IsPrefab": true,
                                                                     "Name": "LFoot",
@@ -727,8 +975,8 @@
                                     ]
                                 },
                                 {
-                                    "UID": 1794360079,
-                                    "ParentUID": 503444061,
+                                    "UID": 1498956313,
+                                    "ParentUID": 629577758,
                                     "PrefabID": 576527846,
                                     "IsPrefab": true,
                                     "Name": "Back",
@@ -760,8 +1008,8 @@
                                     ],
                                     "Children": [
                                         {
-                                            "UID": 1947638348,
-                                            "ParentUID": 1794360079,
+                                            "UID": 266843007,
+                                            "ParentUID": 1498956313,
                                             "PrefabID": 576527846,
                                             "IsPrefab": true,
                                             "Name": "Back1",
@@ -793,8 +1041,8 @@
                                             ],
                                             "Children": [
                                                 {
-                                                    "UID": 698709923,
-                                                    "ParentUID": 1947638348,
+                                                    "UID": 1633143071,
+                                                    "ParentUID": 266843007,
                                                     "PrefabID": 576527846,
                                                     "IsPrefab": true,
                                                     "Name": "Back2",
@@ -826,8 +1074,8 @@
                                                     ],
                                                     "Children": [
                                                         {
-                                                            "UID": 926521604,
-                                                            "ParentUID": 698709923,
+                                                            "UID": 992708955,
+                                                            "ParentUID": 1633143071,
                                                             "PrefabID": 576527846,
                                                             "IsPrefab": true,
                                                             "Name": "Back3",
@@ -859,8 +1107,8 @@
                                                             ],
                                                             "Children": [
                                                                 {
-                                                                    "UID": 233364381,
-                                                                    "ParentUID": 926521604,
+                                                                    "UID": 18289786,
+                                                                    "ParentUID": 992708955,
                                                                     "PrefabID": 576527846,
                                                                     "IsPrefab": true,
                                                                     "Name": "Neck",
@@ -892,8 +1140,8 @@
                                                                     ],
                                                                     "Children": [
                                                                         {
-                                                                            "UID": 1594593561,
-                                                                            "ParentUID": 233364381,
+                                                                            "UID": 827801442,
+                                                                            "ParentUID": 18289786,
                                                                             "PrefabID": 576527846,
                                                                             "IsPrefab": true,
                                                                             "Name": "Head",
@@ -925,8 +1173,8 @@
                                                                             ],
                                                                             "Children": [
                                                                                 {
-                                                                                    "UID": 523188902,
-                                                                                    "ParentUID": 1594593561,
+                                                                                    "UID": 1955775511,
+                                                                                    "ParentUID": 827801442,
                                                                                     "PrefabID": 576527846,
                                                                                     "IsPrefab": true,
                                                                                     "Name": "HeadEnd",
@@ -963,11 +1211,11 @@
                                                                     ]
                                                                 },
                                                                 {
-                                                                    "UID": 2094876448,
-                                                                    "ParentUID": 926521604,
+                                                                    "UID": 129969946,
+                                                                    "ParentUID": 992708955,
                                                                     "PrefabID": 576527846,
                                                                     "IsPrefab": true,
-                                                                    "Name": "LClav",
+                                                                    "Name": "RClav",
                                                                     "IsActive": true,
                                                                     "IsStatic": false,
                                                                     "IsSceneRoot": false,
@@ -977,9 +1225,9 @@
                                                                         {
                                                                             "Type": 1,
                                                                             "LocalPosition": [
-                                                                                -0.34534379839897156,
-                                                                                -14.7216796875,
-                                                                                -1.0197869642070145e-06
+                                                                                -1.4748480319976807,
+                                                                                14.651679992675781,
+                                                                                1.0178699767493526e-06
                                                                             ],
                                                                             "LocalRotation": [
                                                                                 0,
@@ -996,11 +1244,11 @@
                                                                     ],
                                                                     "Children": [
                                                                         {
-                                                                            "UID": 1139309115,
-                                                                            "ParentUID": 2094876448,
+                                                                            "UID": 658310187,
+                                                                            "ParentUID": 129969946,
                                                                             "PrefabID": 576527846,
                                                                             "IsPrefab": true,
-                                                                            "Name": "LShoulder",
+                                                                            "Name": "RShoulder",
                                                                             "IsActive": true,
                                                                             "IsStatic": false,
                                                                             "IsSceneRoot": false,
@@ -1010,30 +1258,30 @@
                                                                                 {
                                                                                     "Type": 1,
                                                                                     "LocalPosition": [
-                                                                                        -4.9288439750671387,
-                                                                                        -16.100629806518555,
-                                                                                        0.31004390120506287
+                                                                                        -6.151547908782959,
+                                                                                        15.674460411071777,
+                                                                                        0.31004568934440613
                                                                                     ],
                                                                                     "LocalRotation": [
-                                                                                        0.45813709497451782,
-                                                                                        -0.49087780714035034,
-                                                                                        -0.43630033731460571,
-                                                                                        0.5989919900894165
+                                                                                        -0.41151893138885498,
+                                                                                        -0.5511741042137146,
+                                                                                        0.44678580760955811,
+                                                                                        0.57205057144165039
                                                                                     ],
                                                                                     "LocalScale": [
+                                                                                        1.0000001192092896,
                                                                                         1,
-                                                                                        1,
-                                                                                        0.99999988079071045
+                                                                                        1
                                                                                     ]
                                                                                 }
                                                                             ],
                                                                             "Children": [
                                                                                 {
-                                                                                    "UID": 1768380164,
-                                                                                    "ParentUID": 1139309115,
+                                                                                    "UID": 517099857,
+                                                                                    "ParentUID": 658310187,
                                                                                     "PrefabID": 576527846,
                                                                                     "IsPrefab": true,
-                                                                                    "Name": "LElbow",
+                                                                                    "Name": "RElbow",
                                                                                     "IsActive": true,
                                                                                     "IsStatic": false,
                                                                                     "IsSceneRoot": false,
@@ -1043,15 +1291,15 @@
                                                                                         {
                                                                                             "Type": 1,
                                                                                             "LocalPosition": [
-                                                                                                -6.4301691055297852,
-                                                                                                -40.839309692382813,
-                                                                                                0.1240151971578598
+                                                                                                -9.5478391647338867,
+                                                                                                40.224739074707031,
+                                                                                                0.12402059882879257
                                                                                             ],
                                                                                             "LocalRotation": [
-                                                                                                0.052225880324840546,
-                                                                                                -0.16889862716197968,
-                                                                                                -0.023940587416291237,
-                                                                                                0.98395770788192749
+                                                                                                -0.074538782238960266,
+                                                                                                0.012970216572284698,
+                                                                                                -0.0019932244904339314,
+                                                                                                0.99713188409805298
                                                                                             ],
                                                                                             "LocalScale": [
                                                                                                 0.99999994039535522,
@@ -1062,11 +1310,11 @@
                                                                                     ],
                                                                                     "Children": [
                                                                                         {
-                                                                                            "UID": 1007008846,
-                                                                                            "ParentUID": 1768380164,
+                                                                                            "UID": 1668905679,
+                                                                                            "ParentUID": 517099857,
                                                                                             "PrefabID": 576527846,
                                                                                             "IsPrefab": true,
-                                                                                            "Name": "Lwrist",
+                                                                                            "Name": "RWrist",
                                                                                             "IsActive": true,
                                                                                             "IsStatic": false,
                                                                                             "IsSceneRoot": false,
@@ -1076,15 +1324,15 @@
                                                                                                 {
                                                                                                     "Type": 1,
                                                                                                     "LocalPosition": [
-                                                                                                        -6.0928301811218262,
-                                                                                                        -36.033576965332031,
-                                                                                                        -1.5639268159866333
+                                                                                                        -8.7465229034423828,
+                                                                                                        35.176887512207031,
+                                                                                                        -1.5611374378204346
                                                                                                     ],
                                                                                                     "LocalRotation": [
-                                                                                                        0.029653679579496384,
-                                                                                                        0.0016269775805994868,
-                                                                                                        -0.015308912843465805,
-                                                                                                        0.99944174289703369
+                                                                                                        0,
+                                                                                                        0,
+                                                                                                        0,
+                                                                                                        1
                                                                                                     ],
                                                                                                     "LocalScale": [
                                                                                                         1,
@@ -1095,11 +1343,11 @@
                                                                                             ],
                                                                                             "Children": [
                                                                                                 {
-                                                                                                    "UID": 232707386,
-                                                                                                    "ParentUID": 1007008846,
+                                                                                                    "UID": 1332479641,
+                                                                                                    "ParentUID": 1668905679,
                                                                                                     "PrefabID": 576527846,
                                                                                                     "IsPrefab": true,
-                                                                                                    "Name": "LHand",
+                                                                                                    "Name": "RHand",
                                                                                                     "IsActive": true,
                                                                                                     "IsStatic": false,
                                                                                                     "IsSceneRoot": false,
@@ -1109,9 +1357,9 @@
                                                                                                         {
                                                                                                             "Type": 1,
                                                                                                             "LocalPosition": [
-                                                                                                                -5.0929269790649414,
-                                                                                                                -20.550920486450195,
-                                                                                                                -0.60682141780853271
+                                                                                                                -6.6559238433837891,
+                                                                                                                20.098810195922852,
+                                                                                                                -0.60681849718093872
                                                                                                             ],
                                                                                                             "LocalRotation": [
                                                                                                                 0,
@@ -1128,8 +1376,8 @@
                                                                                                     ],
                                                                                                     "Children": [
                                                                                                         {
-                                                                                                            "UID": 758925546,
-                                                                                                            "ParentUID": 232707386,
+                                                                                                            "UID": 1310559240,
+                                                                                                            "ParentUID": 1332479641,
                                                                                                             "PrefabID": 576527846,
                                                                                                             "IsPrefab": true,
                                                                                                             "Name": "Blaster Model",
@@ -1161,8 +1409,8 @@
                                                                                                             ],
                                                                                                             "Children": [
                                                                                                                 {
-                                                                                                                    "UID": 7967391,
-                                                                                                                    "ParentUID": 758925546,
+                                                                                                                    "UID": 1527083326,
+                                                                                                                    "ParentUID": 1310559240,
                                                                                                                     "PrefabID": 576527846,
                                                                                                                     "IsPrefab": true,
                                                                                                                     "Name": "BlasterMesh",
@@ -1241,8 +1489,8 @@
                                                                                                             ]
                                                                                                         },
                                                                                                         {
-                                                                                                            "UID": 1079115612,
-                                                                                                            "ParentUID": 232707386,
+                                                                                                            "UID": 1370599895,
+                                                                                                            "ParentUID": 1332479641,
                                                                                                             "PrefabID": 576527846,
                                                                                                             "IsPrefab": true,
                                                                                                             "Name": "Blaster Model",
@@ -1274,8 +1522,8 @@
                                                                                                             ],
                                                                                                             "Children": [
                                                                                                                 {
-                                                                                                                    "UID": 845434087,
-                                                                                                                    "ParentUID": 1079115612,
+                                                                                                                    "UID": 1806486512,
+                                                                                                                    "ParentUID": 1370599895,
                                                                                                                     "PrefabID": 576527846,
                                                                                                                     "IsPrefab": true,
                                                                                                                     "Name": "BlasterMesh",
@@ -1364,11 +1612,11 @@
                                                                     ]
                                                                 },
                                                                 {
-                                                                    "UID": 684277405,
-                                                                    "ParentUID": 926521604,
+                                                                    "UID": 1524722905,
+                                                                    "ParentUID": 992708955,
                                                                     "PrefabID": 576527846,
                                                                     "IsPrefab": true,
-                                                                    "Name": "RClav",
+                                                                    "Name": "LClav",
                                                                     "IsActive": true,
                                                                     "IsStatic": false,
                                                                     "IsSceneRoot": false,
@@ -1378,9 +1626,9 @@
                                                                         {
                                                                             "Type": 1,
                                                                             "LocalPosition": [
-                                                                                -1.4748480319976807,
-                                                                                14.651679992675781,
-                                                                                1.0178699767493526e-06
+                                                                                -0.34534379839897156,
+                                                                                -14.7216796875,
+                                                                                -1.0197869642070145e-06
                                                                             ],
                                                                             "LocalRotation": [
                                                                                 0,
@@ -1397,11 +1645,11 @@
                                                                     ],
                                                                     "Children": [
                                                                         {
-                                                                            "UID": 12985214,
-                                                                            "ParentUID": 684277405,
+                                                                            "UID": 656862214,
+                                                                            "ParentUID": 1524722905,
                                                                             "PrefabID": 576527846,
                                                                             "IsPrefab": true,
-                                                                            "Name": "RShoulder",
+                                                                            "Name": "LShoulder",
                                                                             "IsActive": true,
                                                                             "IsStatic": false,
                                                                             "IsSceneRoot": false,
@@ -1411,30 +1659,30 @@
                                                                                 {
                                                                                     "Type": 1,
                                                                                     "LocalPosition": [
-                                                                                        -6.151547908782959,
-                                                                                        15.674460411071777,
-                                                                                        0.31004568934440613
+                                                                                        -4.9288439750671387,
+                                                                                        -16.100629806518555,
+                                                                                        0.31004390120506287
                                                                                     ],
                                                                                     "LocalRotation": [
-                                                                                        -0.41151893138885498,
-                                                                                        -0.5511741042137146,
-                                                                                        0.44678580760955811,
-                                                                                        0.57205057144165039
+                                                                                        0.45813709497451782,
+                                                                                        -0.49087780714035034,
+                                                                                        -0.43630033731460571,
+                                                                                        0.5989919900894165
                                                                                     ],
                                                                                     "LocalScale": [
-                                                                                        1.0000001192092896,
                                                                                         1,
-                                                                                        1
+                                                                                        1,
+                                                                                        0.99999988079071045
                                                                                     ]
                                                                                 }
                                                                             ],
                                                                             "Children": [
                                                                                 {
-                                                                                    "UID": 754332649,
-                                                                                    "ParentUID": 12985214,
+                                                                                    "UID": 2083886856,
+                                                                                    "ParentUID": 656862214,
                                                                                     "PrefabID": 576527846,
                                                                                     "IsPrefab": true,
-                                                                                    "Name": "RElbow",
+                                                                                    "Name": "LElbow",
                                                                                     "IsActive": true,
                                                                                     "IsStatic": false,
                                                                                     "IsSceneRoot": false,
@@ -1444,15 +1692,15 @@
                                                                                         {
                                                                                             "Type": 1,
                                                                                             "LocalPosition": [
-                                                                                                -9.5478391647338867,
-                                                                                                40.224739074707031,
-                                                                                                0.12402059882879257
+                                                                                                -6.4301691055297852,
+                                                                                                -40.839309692382812,
+                                                                                                0.1240151971578598
                                                                                             ],
                                                                                             "LocalRotation": [
-                                                                                                -0.074538782238960266,
-                                                                                                0.012970216572284698,
-                                                                                                -0.0019932244904339314,
-                                                                                                0.99713188409805298
+                                                                                                0.052225880324840546,
+                                                                                                -0.16889862716197968,
+                                                                                                -0.023940587416291237,
+                                                                                                0.98395770788192749
                                                                                             ],
                                                                                             "LocalScale": [
                                                                                                 0.99999994039535522,
@@ -1463,11 +1711,11 @@
                                                                                     ],
                                                                                     "Children": [
                                                                                         {
-                                                                                            "UID": 1910040355,
-                                                                                            "ParentUID": 754332649,
+                                                                                            "UID": 303367676,
+                                                                                            "ParentUID": 2083886856,
                                                                                             "PrefabID": 576527846,
                                                                                             "IsPrefab": true,
-                                                                                            "Name": "RWrist",
+                                                                                            "Name": "Lwrist",
                                                                                             "IsActive": true,
                                                                                             "IsStatic": false,
                                                                                             "IsSceneRoot": false,
@@ -1477,15 +1725,15 @@
                                                                                                 {
                                                                                                     "Type": 1,
                                                                                                     "LocalPosition": [
-                                                                                                        -8.7465229034423828,
-                                                                                                        35.176887512207031,
-                                                                                                        -1.5611374378204346
+                                                                                                        -6.0928301811218262,
+                                                                                                        -36.033576965332031,
+                                                                                                        -1.5639268159866333
                                                                                                     ],
                                                                                                     "LocalRotation": [
-                                                                                                        0,
-                                                                                                        0,
-                                                                                                        0,
-                                                                                                        1
+                                                                                                        0.029653679579496384,
+                                                                                                        0.0016269775805994868,
+                                                                                                        -0.015308912843465805,
+                                                                                                        0.99944174289703369
                                                                                                     ],
                                                                                                     "LocalScale": [
                                                                                                         1,
@@ -1496,11 +1744,11 @@
                                                                                             ],
                                                                                             "Children": [
                                                                                                 {
-                                                                                                    "UID": 1092771377,
-                                                                                                    "ParentUID": 1910040355,
+                                                                                                    "UID": 1622848637,
+                                                                                                    "ParentUID": 303367676,
                                                                                                     "PrefabID": 576527846,
                                                                                                     "IsPrefab": true,
-                                                                                                    "Name": "RHand",
+                                                                                                    "Name": "LHand",
                                                                                                     "IsActive": true,
                                                                                                     "IsStatic": false,
                                                                                                     "IsSceneRoot": false,
@@ -1510,9 +1758,9 @@
                                                                                                         {
                                                                                                             "Type": 1,
                                                                                                             "LocalPosition": [
-                                                                                                                -6.6559238433837891,
-                                                                                                                20.098810195922852,
-                                                                                                                -0.60681849718093872
+                                                                                                                -5.0929269790649414,
+                                                                                                                -20.550920486450195,
+                                                                                                                -0.60682141780853271
                                                                                                             ],
                                                                                                             "LocalRotation": [
                                                                                                                 0,
@@ -1529,8 +1777,8 @@
                                                                                                     ],
                                                                                                     "Children": [
                                                                                                         {
-                                                                                                            "UID": 1337658882,
-                                                                                                            "ParentUID": 1092771377,
+                                                                                                            "UID": 544894956,
+                                                                                                            "ParentUID": 1622848637,
                                                                                                             "PrefabID": 576527846,
                                                                                                             "IsPrefab": true,
                                                                                                             "Name": "Blaster Model",
@@ -1562,8 +1810,8 @@
                                                                                                             ],
                                                                                                             "Children": [
                                                                                                                 {
-                                                                                                                    "UID": 749752222,
-                                                                                                                    "ParentUID": 1337658882,
+                                                                                                                    "UID": 1304675250,
+                                                                                                                    "ParentUID": 544894956,
                                                                                                                     "PrefabID": 576527846,
                                                                                                                     "IsPrefab": true,
                                                                                                                     "Name": "BlasterMesh",
@@ -1642,8 +1890,8 @@
                                                                                                             ]
                                                                                                         },
                                                                                                         {
-                                                                                                            "UID": 1888126315,
-                                                                                                            "ParentUID": 1092771377,
+                                                                                                            "UID": 1654861428,
+                                                                                                            "ParentUID": 1622848637,
                                                                                                             "PrefabID": 576527846,
                                                                                                             "IsPrefab": true,
                                                                                                             "Name": "Blaster Model",
@@ -1675,8 +1923,8 @@
                                                                                                             ],
                                                                                                             "Children": [
                                                                                                                 {
-                                                                                                                    "UID": 1312421796,
-                                                                                                                    "ParentUID": 1888126315,
+                                                                                                                    "UID": 963289344,
+                                                                                                                    "ParentUID": 1654861428,
                                                                                                                     "PrefabID": 576527846,
                                                                                                                     "IsPrefab": true,
                                                                                                                     "Name": "BlasterMesh",
@@ -1775,115 +2023,12 @@
                             ]
                         }
                     ]
-                },
-                {
-                    "UID": 2015799179,
-                    "ParentUID": 1104548919,
-                    "PrefabID": 576527846,
-                    "IsPrefab": true,
-                    "Name": "HandLeft",
-                    "IsActive": true,
-                    "IsStatic": false,
-                    "IsSceneRoot": false,
-                    "MaintainThroughScenes": false,
-                    "ShowBoundingBoxes": false,
-                    "Components": [
-                        {
-                            "Type": 1,
-                            "LocalPosition": [
-                                33.762493133544922,
-                                90.514961242675781,
-                                71.068611145019531
-                            ],
-                            "LocalRotation": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ],
-                            "LocalScale": [
-                                1,
-                                1,
-                                1
-                            ]
-                        }
-                    ],
-                    "Children": []
-                },
-                {
-                    "UID": 1395261749,
-                    "ParentUID": 1104548919,
-                    "PrefabID": 576527846,
-                    "IsPrefab": true,
-                    "Name": "group1",
-                    "IsActive": true,
-                    "IsStatic": false,
-                    "IsSceneRoot": false,
-                    "MaintainThroughScenes": false,
-                    "ShowBoundingBoxes": false,
-                    "Components": [
-                        {
-                            "Type": 1,
-                            "LocalPosition": [
-                                0,
-                                0,
-                                0
-                            ],
-                            "LocalRotation": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ],
-                            "LocalScale": [
-                                1,
-                                1,
-                                1
-                            ]
-                        }
-                    ],
-                    "Children": [
-                        {
-                            "UID": 1239867972,
-                            "ParentUID": 1395261749,
-                            "PrefabID": 576527846,
-                            "IsPrefab": true,
-                            "Name": "left1",
-                            "IsActive": true,
-                            "IsStatic": false,
-                            "IsSceneRoot": false,
-                            "MaintainThroughScenes": false,
-                            "ShowBoundingBoxes": false,
-                            "Components": [
-                                {
-                                    "Type": 1,
-                                    "LocalPosition": [
-                                        -1000.0999755859375,
-                                        53.733524322509766,
-                                        28.491634368896484
-                                    ],
-                                    "LocalRotation": [
-                                        0,
-                                        0,
-                                        0,
-                                        0.99999994039535522
-                                    ],
-                                    "LocalScale": [
-                                        1,
-                                        1,
-                                        1
-                                    ]
-                                }
-                            ],
-                            "Children": []
-                        }
-                    ]
                 }
             ]
         },
         {
-            "UID": 1588978395,
-            "ParentUID": 1328539088,
+            "UID": 1808107603,
+            "ParentUID": 1803807296,
             "PrefabID": 576527846,
             "IsPrefab": true,
             "Name": "Mesh",
