@@ -142,6 +142,8 @@ void DialogManager::StartTalking()
 {
 	state = DialogState::TALKING;
 
+	mando->SetPlayerInteraction(InteractionType::TALK);
+
 	StartNewLine();
 }
 
@@ -221,7 +223,7 @@ bool DialogManager::StartDialog(const char* dialogName)
 	currentLine = currentDialog->lines.front();
 	currentLineIterator = currentDialog->lines.begin();
 
-	mando->SetPlayerInteraction(InteractionType::TALK);
+	
 
 	state = DialogState::SLIDE_IN;
 
