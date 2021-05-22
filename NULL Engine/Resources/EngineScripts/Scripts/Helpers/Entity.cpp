@@ -322,8 +322,13 @@ void Entity::KnockBack(Effect* effect)
 		}
 	}
 
-	entityState = EntityState::STUNED;
-	//entityState = EntityState::KNOCKEDBACK;
+	//entityState = EntityState::STUNED;
+	entityState = EntityState::KNOCKEDBACK;
+}
+
+EntityState Entity::GetEntityState()
+{
+	return entityState;
 }
 
 C_ParticleSystem* Entity::GetParticles(std::string particleName)

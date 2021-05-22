@@ -133,6 +133,9 @@ public:
 
 protected:
 
+	// State
+	EntityState GetEntityState();
+	
 	// Particles
 	C_ParticleSystem* GetParticles(std::string particleName);
 

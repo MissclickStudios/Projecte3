@@ -20,7 +20,6 @@ struct ItemData;
 enum class PlayerState
 {
 	IDLE,
-	INTERACT,
 	WALK,
 	RUN,
 	DASH_IN,
@@ -53,6 +52,7 @@ enum class InteractionType
 	NONE,
 	TALK,
 	USE,
+	BUY,
 	OPEN_CHEST,
 	SIGNAL_GROGU
 };
@@ -84,7 +84,7 @@ public:
 
 	// Interactions
 	void TakeDamage(float damage) override;
-	void SetPlayerInteraction(InteractionType type);
+	void SetPlayerInteraction(InteractionType type, float duration = 0.0f);		// If duration is 0.0f, then the duration will be set with the duration of the clip.
 
 	// Movement
 	float walkSpeed			= DEFAULT_MODIFIER;									// Factor by which the player's speed will be reduced when in WALK state.
@@ -157,7 +157,7 @@ public:
 	// Weapons
 	float ChangeTime()						{ return changeTime / attackSpeedModifier; }
 	void EquipWeapon(Prefab weapon);
-	Weapon* const GetCurrentWeapon() const { return currentWeapon; }
+	Weapon* const GetCurrentWeapon() const	{ return currentWeapon; }
 
 	float changeTime = 0.0f;
 	Prefab blaster;
@@ -213,9 +213,22 @@ private:
 	void SetUpLegsMatrix();
 
 	// Logic
+	void ManageInteractions();
 	void ManageMovement();
 	void ManageAim();
+	void ManageInvincibility();
 
+	// Interaction Methods
+	void Use();
+	void Buy();
+	void Talk();
+	void OpenChest();
+	void SignalGrogu();
+	
+	Timer interactionTimer;
+	float interactionDuration = 0.0f;
+
+	// Movement Methods
 	void MoveIdle();
 	void Interact();
 	void Walk();
@@ -225,6 +238,7 @@ private:
 	void DeadIn();
 	void Dead();
 
+	// Aim Methods
 	void AimIdle();
 	void OnGuard();
 	void Aiming();
@@ -234,7 +248,6 @@ private:
 	void Reload();
 	void ChangeIn();
 	void Change();
-
 
 	// Inputs & State Selection
 	void GatherMoveInputs();
@@ -248,19 +261,19 @@ private:
 	AimDirection aimDirection			= AimDirection::NONE;
 	InteractionType currentInteraction	= InteractionType::NONE;
 	
-	float2 moveInput			= float2::zero;
-	float2 aimInput				= float2::zero;
+	float2 moveInput					= float2::zero;
+	float2 aimInput						= float2::zero;
 
 
 	// Movement
 	void Movement();
 
-	float2 moveVector			= float2::zero;
+	float2 moveVector					= float2::zero;
 
 	// Aim
 	void Aim();
 
-	float2 aimVector			= float2::zero;
+	float2 aimVector					= float2::zero;
 
 	// Dash
 	void ApplyDash();
@@ -269,7 +282,7 @@ private:
 	Timer dashCooldownTimer;
 
 	// Invencibility frames
-	Timer invencibilityTimer;
+	Timer invincibilityTimer;
 	Timer intermitentMeshTimer;
 
 	// Weapons
@@ -284,14 +297,17 @@ private:
 	Weapon* secondaryWeapon				= nullptr;
 	Weapon* currentWeapon				= nullptr;
 
-	// Debug
-	bool godMode = false;
-
 	// Items
 	void ApplyItems();
 
 	std::vector<std::pair<bool, ItemData*>> items;
 	std::vector<std::pair<bool, ItemData*>> savedItems;
+
+	// Utilities
+	float GetAnimatorClipDuration(const char* clipName);
+
+	// Debug
+	bool godMode = false;
 };
 
 SCRIPTS_FUNCTION Player* CreatePlayer();
