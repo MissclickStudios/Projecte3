@@ -76,8 +76,10 @@ void GameManager::Awake()
 				level1Ruins.emplace_back(levelArray2.GetString(i));
 			}
 
-			//Load story
+			//Load story & dialogs
 			defeatedIG11FirstTime = jsonState.GetBool("defeatedIG11FirstTime");
+			defeatedIG12FirstTime = jsonState.GetBool("defeatedIG12FirstTime");
+			talkedToArmorer = jsonState.GetBool("talkedToArmorer");
 
 			//TODO:Spawn player and everything on the level
 			GameObject* playerSpawn = App->scene->GetGameObjectByName(SpawnPointName.c_str());
@@ -90,14 +92,15 @@ void GameManager::Awake()
 			if(defeatedIG11FirstTime)
 				groguGameObject = App->scene->InstantiatePrefab(groguPrefab.uid, App->scene->GetSceneRoot(),float3::zero, Quat::identity);
 
-
-
-			if (playerSpawn != nullptr && groguGameObject != nullptr)
+			if (playerSpawn != nullptr && groguGameObject != nullptr && defeatedIG11FirstTime)
 			{
 				float3 offset = { 0,0,7 };
 				spawnPoint = playerSpawn->transform->GetLocalPosition() + offset;
 				groguGameObject->transform->SetLocalPosition(spawnPoint);
 			}
+
+			App->scene->InstantiatePrefab(mistPlane1.uid, App->scene->GetSceneRoot(), mistPlane1Position, Quat::identity);
+			App->scene->InstantiatePrefab(mistPlane2.uid, App->scene->GetSceneRoot(), mistPlane2Position, Quat::identity);
 
 			backtrackTimer.Start();
 			if (backtrack.size() != 0)
@@ -162,10 +165,7 @@ void GameManager::Start()
 		}
 	}
 
-	if(dialogManager != nullptr)
-		dialogManager->StartDialog("Assets/Dialogs/GroguHello.json");
-
-
+	//Load Player state
 	if (enabled && mainMenuScene != App->scene->GetCurrentScene() && playerGameObject)
 	{
 		char* buffer = nullptr;
@@ -180,6 +180,32 @@ void GameManager::Start()
 		if (strstr(level1[0].c_str(), App->scene->GetCurrentScene()))
 			playerScript->Reset();
 	}
+
+	//Start Dialogs based on scene
+	if (dialogManager != nullptr)
+	{
+		
+		if (strcmp(App->scene->GetCurrentScene(),"BossL1" ) == 0)
+		{
+			if(!defeatedIG11FirstTime)
+				dialogManager->StartDialog("Assets/Dialogs/1st Conversation IG-11.json");
+			else
+				dialogManager->StartDialog("Assets/Dialogs/Pool Conversation IG-11.json");
+			return;
+		}
+
+		if (strcmp(App->scene->GetCurrentScene(), "Boss_Ruins") == 0)
+		{
+			if (!defeatedIG12FirstTime)
+				dialogManager->StartDialog("Assets/Dialogs/1st Conversation IG-11.json");
+			else
+				dialogManager->StartDialog("Assets/Dialogs/Pool Conversation IG-11.json");
+			return;
+		}
+		
+		dialogManager->StartDialog("Assets/Dialogs/GroguHello.json");
+	}
+		
 }
 
 void GameManager::Update()
@@ -521,6 +547,10 @@ void GameManager::Continue()
 		}
 		//Story
 		defeatedIG11FirstTime = jsonState.GetBool("defeatedIG11FirstTime");
+		defeatedIG12FirstTime = jsonState.GetBool("defeatedIG12FirstTime");
+		talkedToArmorer = jsonState.GetBool("talkedToArmorer");
+
+
 		//TODO:Spawn player and everything on the level
 		if (currentLevel == 1)
 			App->scene->ScriptChangeScene(level1[roomNum]);
@@ -696,6 +726,8 @@ void GameManager::SaveManagerState()
 	CoreCrossDllHelpers::CoreReleaseBuffer(&buffer);
 
 	jsonState.SetBool("defeatedIG11FirstTime", defeatedIG11FirstTime);
+	jsonState.SetBool("defeatedIG12FirstTime", defeatedIG12FirstTime);
+	jsonState.SetBool("talkedToArmorer", talkedToArmorer);
 }
 
 void GameManager::BackTrackUpdate()
@@ -803,9 +835,22 @@ void GameManager::KilledIG11()
 	LOG("Killed IG11");
 	if (!defeatedIG11FirstTime)
 	{
-		
 		defeatedIG11FirstTime = true;
 		groguGameObject = App->scene->InstantiatePrefab(groguPrefab.uid, App->scene->GetSceneRoot(), float3::zero, Quat::identity);
+	}
+}
+
+void GameManager::TalkedToArmorer()
+{
+	LOG("Talked to armorer");
+	if (!talkedToArmorer)
+	{
+		dialogManager->StartDialog("1st Conversation Armorer.json");
+		talkedToArmorer = true;
+	}
+	else
+	{
+		dialogManager->StartDialog("Pool Conversation Armorer.json");
 	}
 }
 
@@ -826,6 +871,11 @@ GameManager* CreateGameManager() {
 	INSPECTOR_PREFAB(script->groguPrefab);
 	INSPECTOR_PREFAB(script->chestPrefab);
 	INSPECTOR_DRAGABLE_INT(script->chestSpawnChance);
+
+	INSPECTOR_PREFAB(script->mistPlane1);
+	INSPECTOR_PREFAB(script->mistPlane2);
+	INSPECTOR_SLIDER_FLOAT3(script->mistPlane1Position, -1000.f, 1000.f);
+	INSPECTOR_SLIDER_FLOAT3(script->mistPlane2Position, -1000.f, 1000.f);
 
 	return script;
 }

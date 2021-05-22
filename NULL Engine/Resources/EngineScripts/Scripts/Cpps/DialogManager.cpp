@@ -5,6 +5,7 @@
 #include "C_UI_Image.h"
 #include "C_UI_Text.h"
 #include "C_UI_Button.h"
+#include "Player.h"
 
 #include "DialogManager.h"
 
@@ -58,6 +59,9 @@ void DialogManager::Start()
 	if (tmp != nullptr)
 		dialogButton = tmp->GetComponent<C_UI_Button>();
 
+	tmp = App->scene->GetGameObjectByName(mandoName.c_str());
+	if (tmp != nullptr)
+		mando = (Player*)tmp->GetScript("Player");
 }
 
 void DialogManager::Update()
@@ -119,6 +123,8 @@ void DialogManager::Update()
 					{
 						App->uiSystem->RemoveActiveCanvas(dialogCanvas);
 						state = DialogState::NO_DIALOG;
+
+						mando->SetPlayerInteraction(InteractionType::NONE);
 						//Clear elements
 					}
 			}
@@ -203,6 +209,9 @@ DialogSystem* DialogManager::LoadDialogSystem(const char* path)
 
 bool DialogManager::StartDialog(const char* dialogName)
 {
+	//look for loaded dialogs
+
+	//if not found then load it
 	currentDialogSystem = LoadDialogSystem(dialogName);
 
 	if (currentDialogSystem == nullptr)
@@ -211,6 +220,8 @@ bool DialogManager::StartDialog(const char* dialogName)
 	currentDialog = currentDialogSystem->dialogPool[Random::LCG::GetBoundedRandomUint(0, currentDialogSystem->dialogPool.size()-1)];
 	currentLine = currentDialog->lines.front();
 	currentLineIterator = currentDialog->lines.begin();
+
+	mando->SetPlayerInteraction(InteractionType::TALK);
 
 	state = DialogState::SLIDE_IN;
 

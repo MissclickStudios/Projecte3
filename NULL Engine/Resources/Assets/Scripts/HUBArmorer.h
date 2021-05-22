@@ -3,7 +3,7 @@
 #include "Script.h"
 #include "ScriptMacros.h"
 
-class GameObject;
+class Player;
 class C_Canvas;
 
 enum class HUBArmorerState: char {
@@ -24,7 +24,7 @@ public:
 	float talkDistance = 10.f;
 private:
 	C_Canvas* hubShopCanvas = nullptr;
-	GameObject* mando = nullptr;
+	Player* mando = nullptr;
 	HUBArmorerState state = HUBArmorerState::INACTIVE;
 };
 
