@@ -86,7 +86,7 @@ in vec3 modelNormal;
 in vec3 fragPos;
 out vec4 color;
 
-uniform vec2 wind_direction = vec2(0.6, 0.3);
+uniform vec2 wind_direction = vec2(0.1, 0.9);
 
 vec4 CalculateDirectional(DirLight light, vec3 normal, vec3 viewDir, float specularStrength, vec4 objectColor);
 vec4 CalculatePointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir, float specularStrength, vec4 objectColor);
@@ -113,8 +113,8 @@ void main()
    vec4 texColor;
    if(hasTexture)
    {
-   		vec2 displaced_TexCoord = vec2(TexCoord.x + (Time/512)*0.02* wind_direction.x, TexCoord.y + (Time/512)*0.02* wind_direction.x);
-   		texColor = vec4(0.83, 0.7, 0.7, texture(ourTexture, displaced_TexCoord).r*0.3);
+   		vec2 displaced_TexCoord = vec2(TexCoord.x + (Time/512)*0.02* wind_direction.x, TexCoord.y + (Time/512)*0.02* wind_direction.y);
+   		texColor = vec4(0.83, 0.7, 0.6, texture(ourTexture, displaced_TexCoord).r*0.35);
 		
    }
  	else{
@@ -212,6 +212,10 @@ vec4 CalculatePointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewD
 }
 
 #endif
+
+
+
+
 
 
 
