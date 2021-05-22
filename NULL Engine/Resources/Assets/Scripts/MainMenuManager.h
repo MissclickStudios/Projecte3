@@ -52,6 +52,7 @@ SCRIPTS_FUNCTION MainMenuManager* CreateMainMenuManager() {
 	INSPECTOR_GAMEOBJECT(script->settingsButtonObject);
 	INSPECTOR_GAMEOBJECT(script->exitButtonObject);
 	INSPECTOR_GAMEOBJECT(script->settingsCanvasObject);
+	INSPECTOR_GAMEOBJECT(script->fullScreenCheckObject);
 	INSPECTOR_GAMEOBJECT(script->vsyncCheckObject);
 	INSPECTOR_GAMEOBJECT(script->mainCanvasObject);
 	INSPECTOR_GAMEOBJECT(script->backButtonObject);
