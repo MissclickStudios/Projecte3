@@ -54,6 +54,10 @@ void DialogManager::Start()
 	if (tmp != nullptr)
 		dialogText = tmp->GetComponent<C_UI_Text>();
 
+	tmp = App->scene->GetGameObjectByName(dialogButtonName.c_str());
+	if (tmp != nullptr)
+		dialogButton = tmp->GetComponent<C_UI_Button>();
+
 }
 
 void DialogManager::Update()

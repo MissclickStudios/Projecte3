@@ -10,6 +10,8 @@
 
 #include "MathGeoLib/include/Math/float2.h"
 
+class GameManager;
+
 enum class IG11State
 {
 	IDLE,
@@ -31,6 +33,7 @@ public:
 	IG11();
 	virtual ~IG11();
 
+	void Start() override;
 	void SetUp() override;
 	void Behavior() override;
 	void CleanUp() override;
@@ -125,6 +128,9 @@ private:
 
 	GameObject* sniperGameObject = nullptr;
 	Weapon* sniperWeapon = nullptr;
+
+	//Game manager
+	GameManager* gameManager = nullptr;
 
 };
 

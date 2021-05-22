@@ -1,3 +1,5 @@
+#include "GameManager.h"
+
 #include "IG11.h"
 
 #include "Application.h"
@@ -70,6 +72,8 @@ IG11* CreateIG11()
 	INSPECTOR_STRING(script->rightHandName);
 	INSPECTOR_STRING(script->leftHandName);
 
+	
+
 	return script;
 }
 
@@ -81,6 +85,17 @@ IG11::IG11() : Entity()
 
 IG11::~IG11()
 {
+}
+
+void IG11::Start()
+{
+	//GameManager
+	GameObject* tmp = App->scene->GetGameObjectByName("Game Manager");
+
+	if (tmp != nullptr)
+	{
+		gameManager = (GameManager*)tmp->GetScript("GameManager");
+	}
 }
 
 void IG11::SetUp()
@@ -349,6 +364,7 @@ void IG11::ManageMovement()
 		currentAnimation = &deathAnimation;
 		deathTimer.Start();
 		moveState = IG11State::DEAD;
+		gameManager->KilledIG11();
 
 	case IG11State::DEAD:
 		if (deathTimer.ReadSec() >= deathDuration)
@@ -379,46 +395,48 @@ void IG11::ManageAim()
 			secondaryAimDirection = aimDirection;
 		if (moveState == IG11State::U_ATTACK)
 			UAttackShots--;
-
-		switch (blasterWeapon->Shoot(aimDirection))
+		if (blasterWeapon != nullptr)
 		{
-		case ShootState::NO_FULLAUTO:
-			currentAnimation = nullptr;
-			aimState = AimState::ON_GUARD;
-			break;
-		case ShootState::WAITING_FOR_NEXT:
-			break;
-		case ShootState::FIRED_PROJECTILE:
-			currentAnimation = nullptr;
-			aimState = AimState::ON_GUARD;
-			break;
-		case ShootState::RATE_FINISHED:
-			currentAnimation = nullptr;
-			aimState = AimState::ON_GUARD;
-			break;
-		case ShootState::NO_AMMO:
-			aimState = AimState::RELOAD_IN;
-			break;
-		}
-		switch (sniperWeapon->Shoot(secondaryAimDirection))
-		{
-		case ShootState::NO_FULLAUTO:
-			currentAnimation = nullptr;
-			aimState = AimState::ON_GUARD;
-			break;
-		case ShootState::WAITING_FOR_NEXT:
-			break;
-		case ShootState::FIRED_PROJECTILE:
-			currentAnimation = nullptr;
-			aimState = AimState::ON_GUARD;
-			break;
-		case ShootState::RATE_FINISHED:
-			currentAnimation = nullptr;
-			aimState = AimState::ON_GUARD;
-			break;
-		case ShootState::NO_AMMO:
-			aimState = AimState::RELOAD_IN;
-			break;
+			switch (blasterWeapon->Shoot(aimDirection))
+			{
+			case ShootState::NO_FULLAUTO:
+				currentAnimation = nullptr;
+				aimState = AimState::ON_GUARD;
+				break;
+			case ShootState::WAITING_FOR_NEXT:
+				break;
+			case ShootState::FIRED_PROJECTILE:
+				currentAnimation = nullptr;
+				aimState = AimState::ON_GUARD;
+				break;
+			case ShootState::RATE_FINISHED:
+				currentAnimation = nullptr;
+				aimState = AimState::ON_GUARD;
+				break;
+			case ShootState::NO_AMMO:
+				aimState = AimState::RELOAD_IN;
+				break;
+			}
+			switch (sniperWeapon->Shoot(secondaryAimDirection))
+			{
+			case ShootState::NO_FULLAUTO:
+				currentAnimation = nullptr;
+				aimState = AimState::ON_GUARD;
+				break;
+			case ShootState::WAITING_FOR_NEXT:
+				break;
+			case ShootState::FIRED_PROJECTILE:
+				currentAnimation = nullptr;
+				aimState = AimState::ON_GUARD;
+				break;
+			case ShootState::RATE_FINISHED:
+				currentAnimation = nullptr;
+				aimState = AimState::ON_GUARD;
+				break;
+			case ShootState::NO_AMMO:
+				aimState = AimState::RELOAD_IN;
+				break;
+			}
 		}
 		break;
 	case AimState::RELOAD_IN:

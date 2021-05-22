@@ -39,12 +39,15 @@ public:
 
     std::vector<ItemData*> GetChestItemPool() const { return chestItemPool; };
 
+    void KilledIG11();
+
 private:
     //Level Generator
     void GenerateLevel();
     void GoPreviousRoom();
     void AddFixedRoom(std::string name, int level, int position);
     void HandleRoomGeneration();
+
     void SaveManagerState();
 
     void BackTrackUpdate();
