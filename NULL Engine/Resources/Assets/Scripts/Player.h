@@ -82,6 +82,9 @@ public:
 	PlayerState moveState	= PlayerState::IDLE;
 	AimState aimState		= AimState::IDLE;
 
+	void EnableInput();
+	void DisableInput();
+
 	// Interactions
 	void TakeDamage(float damage) override;
 	void SetPlayerInteraction(InteractionType type, float duration = 0.0f);		// If duration is 0.0f, then the duration will be set with the duration of the clip.
@@ -208,6 +211,8 @@ public:
 	const std::vector<std::pair<bool, ItemData*>>* const GetItems() const { return &items; }
 
 private:
+	// Inputs
+	bool allowInput = true;
 
 	// Set Up
 	void SetUpLegsMatrix();
