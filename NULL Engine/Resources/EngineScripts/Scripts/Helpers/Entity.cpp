@@ -17,6 +17,8 @@
 
 #include "ScriptMacros.h"
 
+#include "Player.h"
+
 #include "MathGeoLib/include/Math/float3.h"
 #include "CoreDllHelpers.h"
 
@@ -124,6 +126,9 @@ void Entity::PreUpdate()
 			case EffectType::KNOCKBACK:
 				KnockBack(effects[i]);
 				break;
+			case EffectType::BOSS_PIERCING:
+				BossPiercing(effects[i]);
+				break;
 			}
 		}
 		else // Delete the effect if it ran out
@@ -157,35 +162,32 @@ void Entity::Update()
 {
 	switch (entityState)
 	{
-	case EntityState::NONE:
-		Behavior();
-		break;
-	case EntityState::STUNED:
-		currentAnimation = &stunAnimation;
-		break;
+	case EntityState::NONE:			{ Behavior(); }								break;
+	case EntityState::STUNED:		{ currentAnimation = &stunAnimation; }		break;
+	case EntityState::KNOCKEDBACK:	{ currentAnimation = &knockbackAnimation; } break;
 	}
 }
 
 void Entity::PostUpdate()
 {
 	if (animator != nullptr && currentAnimation != nullptr )
-	{
-		AnimatorClip* clip = animator->GetTrack("Preview").GetCurrentClip();
+	{	
+		AnimatorTrack* preview = animator->GetTrackAsPtr("Preview");
+		
+		if (preview == nullptr)
+			return;
 
-		if (clip == nullptr || clip->GetName() != currentAnimation->name)										// If no clip playing or animation/clip changed
-			animator->PlayClip(currentAnimation->track.c_str(), currentAnimation->name.c_str(), currentAnimation->blendTime);
-
-		/*if (clip != nullptr)
+		if ((type != EntityType::PLAYER))
 		{
-			if (clip->GetName() != currentAnimation->name)	// If the animtion changed play the wanted clip
-			{
-				animator->PlayClip("Preview", currentAnimation->name.c_str(), currentAnimation->blendTime);
-			}
+			AnimatorClip* clip = preview->GetCurrentClip();
+
+			if (clip == nullptr || clip->GetName() != currentAnimation->name)										// If no clip playing or animation/clip changed
+				animator->PlayClip(currentAnimation->track.c_str(), currentAnimation->name.c_str(), currentAnimation->blendTime);
 		}
 		else
 		{
-			animator->PlayClip("Preview", currentAnimation->name.c_str(), currentAnimation->blendTime); // If there is no clip playing play the current animation
-		}*/
+			((Player*)this)->AnimatePlayer();
+		}
 	}
 }
 
@@ -236,18 +238,13 @@ void Entity::GiveHeal(float amount)
 		health = MaxHealth();
 }
 
-Effect* Entity::AddEffect(EffectType type, float duration, bool permanent, void* data)
+Effect* Entity::AddEffect(EffectType type, float duration, bool permanent, float power, float chance, float3 direction, bool start)
 {
 	// TODO: System to add a max stack to each effect so that more than one can exist at once
 	if (effectCounters[(uint)type]) // Check that this effect is not already on the entity
-	{
-		if (data != nullptr)
-			delete data;
-
 		return nullptr;
-	}
 	
-	Effect* output = new Effect(type, duration, permanent, data);
+	Effect* output = new Effect(type, duration, permanent, power, chance, direction, start);
 	effects.emplace_back(output); // I use emplace instead of push to avoid unnecessary copies
 	++effectCounters[(uint)type]; // Add one to the counter of this effect
 
@@ -272,7 +269,7 @@ bool Entity::IsGrounded()
 
 void Entity::Frozen()
 {
-	speedModifier /= 2.5;
+	speedModifier /= 2.5;											// /= 2.5f is equivalent to *= 0.4f.
 	attackSpeedModifier /= 2.5;
 
 	if (material != nullptr)
@@ -300,13 +297,12 @@ void Entity::SpeedModify(Effect* effect)
 
 void Entity::Stun(Effect* effect)
 {
-	std::pair<bool, float>* data = (std::pair<bool, float>*)effect->Data();
-	if (data && data->first)
+	if (effect->start)
 	{
-		data->first = false;
+		effect->start = false;
 
 		float num = Random::LCG::GetBoundedRandomFloat(0, 100);
-		if (num > data->second)
+		if (num > effect->Chance())
 			effect->End();
 	}
 	else
@@ -315,18 +311,24 @@ void Entity::Stun(Effect* effect)
 
 void Entity::KnockBack(Effect* effect)
 {
-	std::pair<bool, float3>* data = (std::pair<bool, float3>*)effect->Data();
-	if (data && data->first)
+	if (effect->start)
 	{
-		data->first = false;
+		effect->start = false;
 
 		if (rigidBody != nullptr)
 		{
 			rigidBody->StopInertia();
-			rigidBody->AddForce(data->second);
+			rigidBody->AddForce(effect->Direction());
 		}
 	}
-	entityState = EntityState::STUNED;
+
+	//entityState = EntityState::STUNED;
+	entityState = EntityState::KNOCKEDBACK;
+}
+
+EntityState Entity::GetEntityState()
+{
+	return entityState;
 }
 
 C_ParticleSystem* Entity::GetParticles(std::string particleName)

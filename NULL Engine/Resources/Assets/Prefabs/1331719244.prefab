@@ -1,6 +1,6 @@
 {
-    "UID": 836262258,
-    "ParentUID": 694363612,
+    "UID": 1132262890,
+    "ParentUID": 1474137658,
     "PrefabID": 1331719244,
     "IsPrefab": true,
     "Name": "Vaporator",
@@ -8,14 +8,14 @@
     "IsStatic": false,
     "IsSceneRoot": false,
     "MaintainThroughScenes": false,
-    "ShowBoundingBoxes": true,
+    "ShowBoundingBoxes": false,
     "Components": [
         {
             "Type": 1,
             "LocalPosition": [
-                192.60588073730469,
-                -1.9181532859802246,
-                87.253082275390625
+                -6.1019821166992188,
+                2.1286606788635254,
+                19.129873275756836
             ],
             "LocalRotation": [
                 0,
@@ -44,15 +44,58 @@
             "Center X": 0,
             "Center Y": 0,
             "Center Z": 0
+        },
+        {
+            "Type": 24,
+            "ResourceUID": 2056065135,
+            "AssetsPath": "Assets\/Scripts\/\/MoistureVaporator.h",
+            "DataName": "MoistureVaporator",
+            "HasInspector": true,
+            "InspectorVariables": [
+                {
+                    "Type": 5,
+                    "Name": "gameManagerName",
+                    "string": "Game Manager"
+                },
+                {
+                    "Type": 5,
+                    "Name": "vaporatorObjectName",
+                    "string": "VaporatorMesh"
+                },
+                {
+                    "Type": 3,
+                    "Name": "vaporatorColliderSize",
+                    "float3x": 0,
+                    "float3y": 0,
+                    "float3z": 0
+                },
+                {
+                    "Type": 3,
+                    "Name": "stunTriggerSize",
+                    "float3x": 10,
+                    "float3y": 20,
+                    "float3z": 10
+                },
+                {
+                    "Type": 0,
+                    "Name": "damage",
+                    "int": 0
+                },
+                {
+                    "Type": 2,
+                    "Name": "particleEmitttingTime",
+                    "float": 1
+                }
+            ]
         }
     ],
     "Children": [
         {
-            "UID": 1598942527,
-            "ParentUID": 836262258,
+            "UID": 1883617121,
+            "ParentUID": 1132262890,
             "PrefabID": 1331719244,
             "IsPrefab": true,
-            "Name": "Cylinder001",
+            "Name": "VaporatorMesh",
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
@@ -126,8 +169,8 @@
             "Children": []
         },
         {
-            "UID": 1923702076,
-            "ParentUID": 836262258,
+            "UID": 1848561038,
+            "ParentUID": 1132262890,
             "PrefabID": 1331719244,
             "IsPrefab": true,
             "Name": "Particles",
@@ -159,8 +202,8 @@
             ],
             "Children": [
                 {
-                    "UID": 689422033,
-                    "ParentUID": 1923702076,
+                    "UID": 685995952,
+                    "ParentUID": 1848561038,
                     "PrefabID": 1331719244,
                     "IsPrefab": true,
                     "Name": "Second Idle",
@@ -202,8 +245,8 @@
                     "Children": []
                 },
                 {
-                    "UID": 1886553403,
-                    "ParentUID": 1923702076,
+                    "UID": 826471272,
+                    "ParentUID": 1848561038,
                     "PrefabID": 1331719244,
                     "IsPrefab": true,
                     "Name": "Idle",
@@ -211,14 +254,14 @@
                     "IsStatic": false,
                     "IsSceneRoot": false,
                     "MaintainThroughScenes": false,
-                    "ShowBoundingBoxes": false,
+                    "ShowBoundingBoxes": true,
                     "Components": [
                         {
                             "Type": 1,
                             "LocalPosition": [
-                                -7.8385009765625,
+                                4.4113998413085938,
                                 15.298847198486328,
-                                -5.399505615234375
+                                -3.6357574462890625
                             ],
                             "LocalRotation": [
                                 0,
@@ -236,6 +279,49 @@
                             "Type": 12,
                             "particleSystemUID": 2072017682,
                             "particleSystemAssetsPath": "Assets\/ParticleSystems\/Spark.particles",
+                            "stopSpawn": false,
+                            "tempDelete": false,
+                            "previewEnabled": true,
+                            "stopAndDeleteCheck": false
+                        }
+                    ],
+                    "Children": []
+                },
+                {
+                    "UID": 1980290293,
+                    "ParentUID": 1848561038,
+                    "PrefabID": 1331719244,
+                    "IsPrefab": true,
+                    "Name": "StunParticles",
+                    "IsActive": true,
+                    "IsStatic": false,
+                    "IsSceneRoot": false,
+                    "MaintainThroughScenes": false,
+                    "ShowBoundingBoxes": false,
+                    "Components": [
+                        {
+                            "Type": 1,
+                            "LocalPosition": [
+                                0,
+                                33.476829528808594,
+                                0
+                            ],
+                            "LocalRotation": [
+                                0,
+                                0,
+                                0,
+                                1
+                            ],
+                            "LocalScale": [
+                                4.0146446228027344,
+                                4.0146446228027344,
+                                4.0146446228027344
+                            ]
+                        },
+                        {
+                            "Type": 12,
+                            "particleSystemUID": 146294263,
+                            "particleSystemAssetsPath": "Assets\/ParticleSystems\/VaporatorStunParticles.particles",
                             "stopSpawn": false,
                             "tempDelete": false,
                             "previewEnabled": true,

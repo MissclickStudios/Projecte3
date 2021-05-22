@@ -1,6 +1,6 @@
 #include "Items.h"
 
-Item* Item::CreateItem(const ItemData* const itemData, bool toBuy)
+Item* Item::CreateItem(ItemData* itemData, bool toBuy)
 {
 	std::string name = itemData->name;
 	if (name == "Amplifier Barrel")
@@ -23,6 +23,11 @@ Item* Item::CreateItem(const ItemData* const itemData, bool toBuy)
 		return (Item*)new DurasteelReinforcement(itemData, toBuy);
 	else if (name == "Propulsed Boots")
 		return (Item*)new PropulsedBoots(itemData, toBuy);
-
+	else if (name == "Beskar Ingots")
+		return (Item*)new BeskarIngots(itemData, toBuy);
+	else if (name == "Galactic Credit")
+		return (Item*)new GalacticCredit(itemData, toBuy);
+	else if (name == "Jacket Bullets")
+		return (Item*)new JacketBullets(itemData, toBuy);
 	return nullptr;
 }

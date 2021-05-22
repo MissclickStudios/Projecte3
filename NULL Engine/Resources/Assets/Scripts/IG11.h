@@ -10,6 +10,8 @@
 
 #include "MathGeoLib/include/Math/float2.h"
 
+class GameManager;
+
 enum class IG11State
 {
 	IDLE,
@@ -35,6 +37,7 @@ public:
 	IG11();
 	virtual ~IG11();
 
+	void Start() override;
 	void SetUp() override;
 	void Behavior() override;
 	void CleanUp() override;
@@ -43,6 +46,9 @@ public:
 	void EntityResume() override;
 
 	void OnCollisionEnter(GameObject* object) override;
+
+	// Effects
+	void BossPiercing(Effect* effect);
 
 	// Movement
 	std::string playerName = "Mando testbuild";
@@ -139,6 +145,8 @@ private:
 
 	//float3 alternativeRight;
 	//float3 alternativeLeft;
+	//Game manager
+	GameManager* gameManager = nullptr;
 
 };
 

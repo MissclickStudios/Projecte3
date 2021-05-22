@@ -100,6 +100,11 @@ Application::~Application()
 bool Application::Init()
 {
 	//PERF_TIMER_START(perf_timer);
+
+	//for (int i = 0; i < 1000000; i++)
+	//{
+	//	LOG("Pre init");
+	//}
 	
 	LOG("Application Init --------------");
 

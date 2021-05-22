@@ -1,11 +1,6 @@
 {
-    "Models In Scene": [
-        {
-            "GameObjectUID": 223984270,
-            "ModelResourceUID": 853247104,
-            "ModelAssetsPath": "Assets\/Models\/Blockouts\/Alpha2\/Level1\/lvl1Initial_v6.FBX"
-        }
-    ],
+    "ModTime": 1621629588,
+    "Models In Scene": [],
     "Game Objects": [
         {
             "UID": 1776966,
@@ -896,6 +891,54 @@
             ]
         },
         {
+            "UID": 325197411,
+            "ParentUID": 1234470292,
+            "PrefabID": 609784459,
+            "IsPrefab": true,
+            "Name": "Price Text",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 22,
+                    "Text": "Item Price",
+                    "Color": [
+                        1,
+                        0.55000001192092896,
+                        0.019999999552965164,
+                        1
+                    ],
+                    "X": -0.97000002861022949,
+                    "Y": -0.76999998092651367,
+                    "W": 0.056000001728534698,
+                    "H": 0.0010000000474974513,
+                    "childOrder": 3
+                }
+            ]
+        },
+        {
             "UID": 327699942,
             "ParentUID": 1887011575,
             "PrefabID": 1524961430,
@@ -1135,6 +1178,79 @@
                         "LibaryPath": "Library\/Shaders\/800223282.neshader",
                         "LibraryFile": "800223282.neshader"
                     }
+                }
+            ]
+        },
+        {
+            "UID": 408568312,
+            "ParentUID": 2005580296,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Sniper Item",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -2.3521175384521484,
+                        7.2107343673706055,
+                        -16.3828125
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 8,
+                    "Is Static": true,
+                    "Filter": " gate"
+                },
+                {
+                    "Type": 9,
+                    "Is Trigger": true,
+                    "Show Collider": true,
+                    "Size X": 10,
+                    "Size Y": 5,
+                    "Size Z": 10,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
+                },
+                {
+                    "Type": 24,
+                    "ResourceUID": 159624972,
+                    "AssetsPath": "Assets\/Scripts\/\/WeaponItem.h",
+                    "DataName": "WeaponItem",
+                    "HasInspector": true,
+                    "InspectorVariables": [
+                        {
+                            "Type": 5,
+                            "Name": "gunName",
+                            "string": "Sniper"
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "gunDescription",
+                            "string": "Long range with a lot of damage, kinda slow doe"
+                        },
+                        {
+                            "Type": 4,
+                            "Name": "weapon",
+                            "prefab": 170536259
+                        }
+                    ]
                 }
             ]
         },
@@ -1603,7 +1719,7 @@
                         "File": "1655393013.nemat"
                     },
                     "Texture": {
-                        "AssetsPath": "Assets\/Textures\/Blockouts\/Level1\/floor_arvala3_compressed_new.png",
+                        "AssetsPath": "Assets\/Textures\/\/Blockouts\/Level1\/floor_arvala3_compressed_new.png",
                         "AssetsName": "floor_arvala3_compressed_new.png",
                         "LibaryPath": "Library\/Textures\/1037247170.netex",
                         "LibraryFile": "1037247170.netex"
@@ -1695,6 +1811,47 @@
                         1,
                         1
                     ]
+                }
+            ]
+        },
+        {
+            "UID": 761982542,
+            "ParentUID": 1234470292,
+            "PrefabID": 609784459,
+            "IsPrefab": true,
+            "Name": "Buy Button",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 23,
+                    "X": 0,
+                    "Y": 0,
+                    "W": 0.079999998211860657,
+                    "H": 0.079999998211860657,
+                    "childOrder": 0
                 }
             ]
         },
@@ -2923,7 +3080,7 @@
                         "File": "533808394.nemat"
                     },
                     "Texture": {
-                        "AssetsPath": "Assets\/Textures\/Blockouts\/Level1\/floor_arvala3_compressed_new.png",
+                        "AssetsPath": "Assets\/Textures\/\/Blockouts\/Level1\/floor_arvala3_compressed_new.png",
                         "AssetsName": "floor_arvala3_compressed_new.png",
                         "LibaryPath": "Library\/Textures\/1037247170.netex",
                         "LibraryFile": "1037247170.netex"
@@ -3396,6 +3553,161 @@
                         "LibaryPath": "Library\/Shaders\/800223282.neshader",
                         "LibraryFile": "800223282.neshader"
                     }
+                }
+            ]
+        },
+        {
+            "UID": 1234470292,
+            "ParentUID": 1864884191,
+            "PrefabID": 609784459,
+            "IsPrefab": true,
+            "Name": "Item Menu",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": true,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 13,
+                    "Canvas": {
+                        "IsActive": true,
+                        "X": 0,
+                        "Y": 0,
+                        "W": 1.0926049947738647,
+                        "H": 0.57391655445098877
+                    }
+                },
+                {
+                    "Type": 24,
+                    "ResourceUID": 643521645,
+                    "AssetsPath": "Assets\/Scripts\/\/ItemMenuManager.h",
+                    "DataName": "ItemMenuManager",
+                    "HasInspector": true,
+                    "InspectorVariables": [
+                        {
+                            "Type": 5,
+                            "Name": "canvasName",
+                            "string": "Item Menu"
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "buyButtonName",
+                            "string": "Buy Button"
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "nameTextName",
+                            "string": "Name Text"
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "descriptionTextName",
+                            "string": "Description Text"
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "priceTextName",
+                            "string": "Price Text"
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "playerName",
+                            "string": "Mandalorian"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1236766388,
+            "ParentUID": 2005580296,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Minigun Item",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -42.338962554931641,
+                        6.192629337310791,
+                        -19.69732666015625
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 8,
+                    "Is Static": true,
+                    "Filter": " gate"
+                },
+                {
+                    "Type": 9,
+                    "Is Trigger": true,
+                    "Show Collider": true,
+                    "Size X": 10,
+                    "Size Y": 5,
+                    "Size Z": 10,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
+                },
+                {
+                    "Type": 24,
+                    "ResourceUID": 159624972,
+                    "AssetsPath": "Assets\/Scripts\/\/WeaponItem.h",
+                    "DataName": "WeaponItem",
+                    "HasInspector": true,
+                    "InspectorVariables": [
+                        {
+                            "Type": 5,
+                            "Name": "gunName",
+                            "string": "Minigun"
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "gunDescription",
+                            "string": "Low damage but dam this shit shoots fast"
+                        },
+                        {
+                            "Type": 4,
+                            "Name": "weapon",
+                            "prefab": 728386717
+                        }
+                    ]
                 }
             ]
         },
@@ -3916,6 +4228,83 @@
                         "AssetsName": "Cactus_Texture.png",
                         "LibaryPath": "Library\/Textures\/635781203.netex",
                         "LibraryFile": "635781203.netex"
+                    },
+                    "Shader": {
+                        "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
+                        "AssetsName": "DefaultShader.shader",
+                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
+                        "LibraryFile": "800223282.neshader"
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 1371880062,
+            "ParentUID": 408568312,
+            "PrefabID": 1100103111,
+            "IsPrefab": true,
+            "Name": "SniperMesh",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -2.2880082130432129,
+                        0,
+                        2.3700790405273438
+                    ],
+                    "LocalRotation": [
+                        0.49112334847450256,
+                        0.50872188806533813,
+                        0.50872164964675903,
+                        -0.49112343788146973
+                    ],
+                    "LocalScale": [
+                        0.039999976754188538,
+                        0.039999973028898239,
+                        0.03999999538064003
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 1763086860,
+                    "Name": "Franco003.nemesh",
+                    "Path": "Library\/Meshes\/1763086860.nemesh",
+                    "File": "1763086860.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false,
+                    "Outline": false,
+                    "OutlineThickness": 1,
+                    "OutlineColor": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ]
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 1999984834,
+                        "Color": [
+                            0.58799999952316284,
+                            0.58799999952316284,
+                            0.58799999952316284,
+                            1
+                        ],
+                        "Name": "Franco003.nemat",
+                        "Path": "Library\/Materials\/1999984834.nemat",
+                        "File": "1999984834.nemat"
+                    },
+                    "Texture": {
+                        "AssetsPath": "Assets\/Textures\/\/Weapons\/rifle.png",
+                        "AssetsName": "rifle.png",
+                        "LibaryPath": "Library\/Textures\/251940081.netex",
+                        "LibraryFile": "251940081.netex"
                     },
                     "Shader": {
                         "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
@@ -4782,6 +5171,26 @@
                             "Type": 5,
                             "Name": "ammoTextName",
                             "string": "AmmoText"
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "weapon1Name",
+                            "string": "pog1"
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "weapon2Name",
+                            "string": "pog2"
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "weapon3Name",
+                            "string": "pog3"
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "weapon4Name",
+                            "string": "pog4"
                         }
                     ]
                 }
@@ -4932,6 +5341,54 @@
                         "LibaryPath": "Library\/Shaders\/800223282.neshader",
                         "LibraryFile": "800223282.neshader"
                     }
+                }
+            ]
+        },
+        {
+            "UID": 1657796026,
+            "ParentUID": 1234470292,
+            "PrefabID": 609784459,
+            "IsPrefab": true,
+            "Name": "Description Text",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": true,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 22,
+                    "Text": "Item Description",
+                    "Color": [
+                        1,
+                        1,
+                        1,
+                        1
+                    ],
+                    "X": -0.97000002861022949,
+                    "Y": -0.55500000715255737,
+                    "W": 0.039999999105930328,
+                    "H": 0.85100001096725464,
+                    "childOrder": 2
                 }
             ]
         },
@@ -5126,6 +5583,79 @@
                     "Center X": 0,
                     "Center Y": 0,
                     "Center Z": 0
+                }
+            ]
+        },
+        {
+            "UID": 1703396648,
+            "ParentUID": 2005580296,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Shotgun Item",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -22.997447967529297,
+                        6.9819564819335938,
+                        -18.158578872680664
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 8,
+                    "Is Static": true,
+                    "Filter": " gate"
+                },
+                {
+                    "Type": 9,
+                    "Is Trigger": true,
+                    "Show Collider": true,
+                    "Size X": 10,
+                    "Size Y": 5,
+                    "Size Z": 10,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
+                },
+                {
+                    "Type": 24,
+                    "ResourceUID": 159624972,
+                    "AssetsPath": "Assets\/Scripts\/\/WeaponItem.h",
+                    "DataName": "WeaponItem",
+                    "HasInspector": true,
+                    "InspectorVariables": [
+                        {
+                            "Type": 5,
+                            "Name": "gunName",
+                            "string": "Shotgun"
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "gunDescription",
+                            "string": "Hela damage, hela swag, straight fire"
+                        },
+                        {
+                            "Type": 4,
+                            "Name": "weapon",
+                            "prefab": 1174459823
+                        }
+                    ]
                 }
             ]
         },
@@ -5529,6 +6059,16 @@
                             "Type": 4,
                             "Name": "groguPrefab",
                             "prefab": 13642032
+                        },
+                        {
+                            "Type": 4,
+                            "Name": "chestPrefab",
+                            "prefab": 0
+                        },
+                        {
+                            "Type": 0,
+                            "Name": "chestSpawnChance",
+                            "int": 60
                         }
                     ]
                 },
@@ -6321,7 +6861,7 @@
         },
         {
             "UID": 2005580296,
-            "ParentUID": 1274179315,
+            "ParentUID": 1338522090,
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "MainScene",
@@ -6396,6 +6936,54 @@
             ]
         },
         {
+            "UID": 2018950207,
+            "ParentUID": 1234470292,
+            "PrefabID": 609784459,
+            "IsPrefab": true,
+            "Name": "Name Text",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 22,
+                    "Text": "Item Name",
+                    "Color": [
+                        1,
+                        1,
+                        1,
+                        1
+                    ],
+                    "X": -0.97000002861022949,
+                    "Y": -0.40000000596046448,
+                    "W": 0.086000002920627594,
+                    "H": 0.0010000000474974513,
+                    "childOrder": 1
+                }
+            ]
+        },
+        {
             "UID": 2046191352,
             "ParentUID": 1638464561,
             "PrefabID": 1524961430,
@@ -6448,6 +7036,54 @@
                         "LibaryPath": "Library\/Shaders\/1025410539.neshader",
                         "LibraryFile": "1025410539.neshader"
                     }
+                }
+            ]
+        },
+        {
+            "UID": 2051356661,
+            "ParentUID": 1234470292,
+            "PrefabID": 609784459,
+            "IsPrefab": true,
+            "Name": "Rarity Text",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 22,
+                    "Text": "Item Rarity",
+                    "Color": [
+                        1,
+                        0,
+                        0,
+                        1
+                    ],
+                    "X": -0.97000002861022949,
+                    "Y": -0.47999998927116394,
+                    "W": 0.061000000685453415,
+                    "H": 0.0010000000474974513,
+                    "childOrder": 4
                 }
             ]
         },

@@ -19,10 +19,13 @@
 #include "C_Transform.h"
 
 #include "GameManager.h"
+#include "DialogManager.h"
 #include "Player.h"
 #include "Gate.h"
 
 #include "Items.h"
+
+#include "Random.h"
 
 GameManager::GameManager(): Script()
 {
@@ -72,6 +75,12 @@ void GameManager::Awake()
 			{
 				level1Ruins.emplace_back(levelArray2.GetString(i));
 			}
+
+			//Load story & dialogs
+			defeatedIG11FirstTime = jsonState.GetBool("defeatedIG11FirstTime");
+			defeatedIG12FirstTime = jsonState.GetBool("defeatedIG12FirstTime");
+			talkedToArmorer = jsonState.GetBool("talkedToArmorer");
+
 			//TODO:Spawn player and everything on the level
 			GameObject* playerSpawn = App->scene->GetGameObjectByName(SpawnPointName.c_str());
 			if (playerSpawn != nullptr) 
@@ -80,13 +89,18 @@ void GameManager::Awake()
 				playerGameObject = App->scene->InstantiatePrefab(playerPrefab.uid, App->scene->GetSceneRoot(), spawnPoint,Quat::identity);
 			}
 
-			groguGameObject = App->resourceManager->LoadPrefab(groguPrefab.uid, App->scene->GetSceneRoot());
-			if (playerSpawn != nullptr && groguGameObject != nullptr)
+			if(defeatedIG11FirstTime)
+				groguGameObject = App->scene->InstantiatePrefab(groguPrefab.uid, App->scene->GetSceneRoot(),float3::zero, Quat::identity);
+
+			if (playerSpawn != nullptr && groguGameObject != nullptr && defeatedIG11FirstTime)
 			{
 				float3 offset = { 0,0,7 };
 				spawnPoint = playerSpawn->transform->GetLocalPosition() + offset;
 				groguGameObject->transform->SetLocalPosition(spawnPoint);
 			}
+
+			App->scene->InstantiatePrefab(mistPlane1.uid, App->scene->GetSceneRoot(), mistPlane1Position, Quat::identity);
+			App->scene->InstantiatePrefab(mistPlane2.uid, App->scene->GetSceneRoot(), mistPlane2Position, Quat::identity);
 
 			backtrackTimer.Start();
 			if (backtrack.size() != 0)
@@ -115,19 +129,23 @@ void GameManager::Awake()
 				std::string description = itemNode.GetString("Description");
 				int price = itemNode.GetInteger("Price");
 				ItemRarity rarity = (ItemRarity)itemNode.GetInteger("Rarity");
-				int min = itemNode.GetInteger("Min");
-				int max = itemNode.GetInteger("Max");
+				int minimum = itemNode.GetInteger("Min");
+				int maximum = itemNode.GetInteger("Max");
 				float power = itemNode.GetNumber("Power");
 				float duration = itemNode.GetInteger("Duration");
 				float chance = itemNode.GetInteger("Chance");
 				std::string texturePath = itemNode.GetString("Texture Path");
-				chestItemPool.emplace_back(new ItemData(name, description, price, rarity, power, duration, chance, min, max, texturePath));
+				chestItemPool.emplace_back(new ItemData(name, description, price, rarity, power, duration, chance, minimum, maximum, texturePath));
 			}
 		}
 	}
 
-	GameObject* tmp = App->scene->GetGameObjectByName(gateName.c_str());
+	GameObject* tmp = App->scene->GetGameObjectByName("DialogCanvas"); 
 
+	if(tmp!=nullptr)
+		dialogManager = (DialogManager*)tmp->GetScript("DialogManager");
+
+	tmp = App->scene->GetGameObjectByName(gateName.c_str());
 	if (tmp != nullptr)
 	{
 		gate = (Gate*)tmp->GetScript("Gate");
@@ -143,11 +161,11 @@ void GameManager::Start()
 		Entity* entity = (Entity*)GetObjectScript((*go), ObjectType::ENTITY);
 		if (entity != nullptr && entity->type != EntityType::PLAYER && entity->type != EntityType::GROGU)
 		{
-			enemies.push_back(entity);
+			enemies.push_back(std::make_pair(false, entity));
 		}
 	}
 
-
+	//Load Player state
 	if (enabled && mainMenuScene != App->scene->GetCurrentScene() && playerGameObject)
 	{
 		char* buffer = nullptr;
@@ -162,6 +180,32 @@ void GameManager::Start()
 		if (strstr(level1[0].c_str(), App->scene->GetCurrentScene()))
 			playerScript->Reset();
 	}
+
+	//Start Dialogs based on scene
+	if (dialogManager != nullptr)
+	{
+		
+		if (strcmp(App->scene->GetCurrentScene(),"BossL1" ) == 0)
+		{
+			if(!defeatedIG11FirstTime)
+				dialogManager->StartDialog("Assets/Dialogs/1st Conversation IG-11.json");
+			else
+				dialogManager->StartDialog("Assets/Dialogs/Pool Conversation IG-11.json");
+			return;
+		}
+
+		if (strcmp(App->scene->GetCurrentScene(), "Boss_Ruins") == 0)
+		{
+			if (!defeatedIG12FirstTime)
+				dialogManager->StartDialog("Assets/Dialogs/1st Conversation IG-11.json");
+			else
+				dialogManager->StartDialog("Assets/Dialogs/Pool Conversation IG-11.json");
+			return;
+		}
+		
+		dialogManager->StartDialog("Assets/Dialogs/GroguHello.json");
+	}
+		
 }
 
 void GameManager::Update()
@@ -501,12 +545,20 @@ void GameManager::Continue()
 		{
 			level1Ruins.emplace_back(levelArray2.GetString(i));
 		}
+		//Story
+		defeatedIG11FirstTime = jsonState.GetBool("defeatedIG11FirstTime");
+		defeatedIG12FirstTime = jsonState.GetBool("defeatedIG12FirstTime");
+		talkedToArmorer = jsonState.GetBool("talkedToArmorer");
+
+
 		//TODO:Spawn player and everything on the level
 		if (currentLevel == 1)
 			App->scene->ScriptChangeScene(level1[roomNum]);
 		//LEVEL2
 		else if (currentLevel == 2)
 			App->scene->ScriptChangeScene(level1Ruins[roomNum]);
+
+		
 	}
 }
 
@@ -672,6 +724,10 @@ void GameManager::SaveManagerState()
 	char* buffer = nullptr;
 	jsonState.SerializeToFile(saveFileName, &buffer);
 	CoreCrossDllHelpers::CoreReleaseBuffer(&buffer);
+
+	jsonState.SetBool("defeatedIG11FirstTime", defeatedIG11FirstTime);
+	jsonState.SetBool("defeatedIG12FirstTime", defeatedIG12FirstTime);
+	jsonState.SetBool("talkedToArmorer", talkedToArmorer);
 }
 
 void GameManager::BackTrackUpdate()
@@ -733,18 +789,74 @@ void GameManager::GateUpdate()
 				return;
 			}
 
+			int alive = 0;
 			for (auto enemy = enemies.begin(); enemy != enemies.end(); ++enemy)
 			{
-				if ((*enemy)->health > 0)
-					return;
+				if ((*enemy).second->health > 0)
+					++alive;
+				else if (!(*enemy).first)
+				{
+					(*enemy).first = true;
+					lastEnemyDead = (*enemy).second;
+				}
 			}
+			if (alive > 0)
+				return;
 
 			gate->Unlock();
+
+			uint num = Random::LCG::GetBoundedRandomUint(0, 100);
+			if (num <= chestSpawnChance && chestPrefab.uid != NULL)
+			{
+				GameObject* chest = App->resourceManager->LoadPrefab(chestPrefab.uid, App->scene->GetSceneRoot());
+				if (chest != nullptr && lastEnemyDead != nullptr)
+				{
+					float3 position = lastEnemyDead->transform->GetWorldPosition();
+					chest->transform->SetWorldPosition(position);
+
+					float2 playerPosition, chestPosition;
+					playerPosition.x = playerGameObject->transform->GetWorldPosition().x;
+					playerPosition.y = playerGameObject->transform->GetWorldPosition().z;
+					chestPosition.x = chest->transform->GetWorldPosition().x;
+					chestPosition.y = chest->transform->GetWorldPosition().z;
+
+					float2 direction = playerPosition - chestPosition;
+					if (!direction.IsZero())
+						direction.Normalize();
+					float rad = direction.AimedAngle();
+					chest->transform->SetLocalRotation(float3(0, -rad, 0));
+				}
+			}
 		}
+}
+
+void GameManager::KilledIG11()
+{
+	LOG("Killed IG11");
+	if (!defeatedIG11FirstTime)
+	{
+		defeatedIG11FirstTime = true;
+		groguGameObject = App->scene->InstantiatePrefab(groguPrefab.uid, App->scene->GetSceneRoot(), float3::zero, Quat::identity);
+	}
+}
+
+void GameManager::TalkedToArmorer()
+{
+	LOG("Talked to armorer");
+	if (!talkedToArmorer)
+	{
+		dialogManager->StartDialog("1st Conversation Armorer.json");
+		talkedToArmorer = true;
+	}
+	else
+	{
+		dialogManager->StartDialog("Pool Conversation Armorer.json");
+	}
 }
 
 GameManager* CreateGameManager() {
 	GameManager* script = new GameManager();
+
 	INSPECTOR_CHECKBOX_BOOL(script->enabled);
 	INSPECTOR_STRING(script->mainMenuScene);
 	INSPECTOR_STRING(script->SpawnPointName);
@@ -757,5 +869,13 @@ GameManager* CreateGameManager() {
 	INSPECTOR_VECTOR_STRING(script->level1Ruins);
 	INSPECTOR_PREFAB(script->playerPrefab);
 	INSPECTOR_PREFAB(script->groguPrefab);
+	INSPECTOR_PREFAB(script->chestPrefab);
+	INSPECTOR_DRAGABLE_INT(script->chestSpawnChance);
+
+	INSPECTOR_PREFAB(script->mistPlane1);
+	INSPECTOR_PREFAB(script->mistPlane2);
+	INSPECTOR_SLIDER_FLOAT3(script->mistPlane1Position, -1000.f, 1000.f);
+	INSPECTOR_SLIDER_FLOAT3(script->mistPlane2Position, -1000.f, 1000.f);
+
 	return script;
 }

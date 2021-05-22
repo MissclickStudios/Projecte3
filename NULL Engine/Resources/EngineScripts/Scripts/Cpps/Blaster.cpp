@@ -34,7 +34,7 @@ ShootState Blaster::ShootLogic()
         }
     }
 
-  //  return ShootState::WAINTING_FOR_NEXT;
+    return ShootState::WAITING_FOR_NEXT;
 }
 
 SCRIPTS_FUNCTION Blaster* CreateBlaster()
@@ -42,6 +42,9 @@ SCRIPTS_FUNCTION Blaster* CreateBlaster()
     Blaster* script = new Blaster();
 
     // Weapon
+    // Type
+    INSPECTOR_ENUM(script->type, "WeaponType", "EngineScripts/Scripts/Helpers/Weapon.h");
+
     // Stats
     INSPECTOR_DRAGABLE_FLOAT(script->damage);
     INSPECTOR_DRAGABLE_FLOAT(script->projectileSpeed);
@@ -51,6 +54,8 @@ SCRIPTS_FUNCTION Blaster* CreateBlaster()
     INSPECTOR_DRAGABLE_INT(script->ammo);
     INSPECTOR_DRAGABLE_INT(script->maxAmmo);
     INSPECTOR_DRAGABLE_INT(script->projectilesPerShot);
+    INSPECTOR_DRAGABLE_FLOAT(script->shotSpreadArea);
+    INSPECTOR_DRAGABLE_FLOAT3(script->spreadRadius);
 
     // Reload
     INSPECTOR_DRAGABLE_FLOAT(script->reloadTime);
@@ -64,6 +69,7 @@ SCRIPTS_FUNCTION Blaster* CreateBlaster()
     INSPECTOR_DRAGABLE_FLOAT(script->reloadTimeModifier);
     INSPECTOR_DRAGABLE_FLOAT(script->maxAmmoModifier);
     INSPECTOR_DRAGABLE_INT(script->PPSModifier);
+    INSPECTOR_DRAGABLE_FLOAT(script->spreadRadiusModifier);
 
     // Visuals
     INSPECTOR_PREFAB(script->projectilePrefab);
@@ -75,7 +81,6 @@ SCRIPTS_FUNCTION Blaster* CreateBlaster()
     // Projectiles
     INSPECTOR_DRAGABLE_INT(script->projectileNum);
     INSPECTOR_CHECKBOX_BOOL(script->updateProjectiles);
-    INSPECTOR_DRAGABLE_FLOAT(script->shotSpreadArea);
 
     return script;
 }

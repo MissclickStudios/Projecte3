@@ -290,15 +290,22 @@ void C_Animator::FindTracksRootBones()
 	if (tracks.empty())
 		return;
 
-	std::map<uint32, GameObject*> tmp;
+	/*std::map<uint32, GameObject*> tmp;
 	for (auto bone = bones.cbegin(); bone != bones.cend(); ++bone)
 	{
 		tmp.emplace((*bone)->GetUID(), (*bone));
+	}*/
+
+	std::map<std::string, GameObject*> tmp;
+	for (auto bone = bones.cbegin(); bone != bones.cend(); ++bone)
+	{
+		tmp.emplace((*bone)->GetName(), (*bone));
 	}
 
 	for (auto track = tracks.begin(); track != tracks.end(); ++track)
 	{
-		auto bone = tmp.find(track->second.rootBoneUID);
+		//auto bone = tmp.find(track->second.rootBoneUID);
+		auto bone = tmp.find(track->second.rootBoneName);
 		if (bone == tmp.end())
 			continue;
 
@@ -728,14 +735,16 @@ void C_Animator::PlayClip(const char* trackName, const char* clipName, float ble
 	auto track	= tracks.find(trackName);
 	auto clip	= clips.find(clipName);
 
+	//LOG("TRACK NAME { %s } ::: CLIP NAME { %s }", trackName, clipName);
+
 	if (track == tracks.end())
 	{
-		//LOG("[ERROR] Animator Component: Could not Play Clip! Error: Could not find any track with the given name.");
+		LOG("[ERROR] Animator Component: Could not Play Clip! Error: Could not find any track with the given name.");
 		return;
 	}
 	if (clip == clips.end())
 	{
-		LOG("[ERROR] Animator Component: Could not Play Clip! Error: Could not find any clip with the given name.");
+		LOG("[ERROR] Animator Component: Could not Play Clip! Error: Could not find any clip with name { %s }.", clipName);
 		return;
 	}
 	if (clip->second.GetAnimation() == nullptr)

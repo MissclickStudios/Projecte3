@@ -13,6 +13,21 @@
 #include "MathGeoLib/include/Math/MathFunc.h"
 #include "Bullet.h"
 
+#include "Random.h"
+
+#include <algorithm>
+
+struct {
+	bool operator()(Perk a, Perk b) const
+	{
+		if (a.Type() >= b.Type())
+			return false;
+		if (a.Type() < b.Type())
+			return true;
+		return false;
+	}
+} perkSort;
+
 struct Projectile
 {
 	Projectile() : object(nullptr), inUse(false), bulletScript(nullptr) {}
@@ -193,7 +208,7 @@ void Weapon::ProjectileCollisionReport(int index)
 	projectiles[index]->object->transform->SetLocalPosition(float3::zero);
 }
 
-void Weapon::RefreshPerks()
+void Weapon::RefreshPerks(bool reset)
 {
 	// Reset modifiers and on hit effects to avoid overwritting
 	damageModifier = DEFAULT_MODIFIER;
@@ -202,9 +217,14 @@ void Weapon::RefreshPerks()
 	reloadTimeModifier = DEFAULT_MODIFIER;
 	maxAmmoModifier = DEFAULT_MODIFIER;
 	PPSModifier = 0.0f;
+
 	onHitEffects.clear();
 
-	PerkType t;
+	if (reset)
+	{
+		perks.clear();
+		return;
+	}
 	// Apply each perk
 	for (uint i = 0; i < perks.size(); ++i)
 		switch (perks[i].Type())
@@ -224,11 +244,17 @@ void Weapon::RefreshPerks()
 		case PerkType::BULLET_LIFETIME_MODIFY:
 			BulletLifeTimeModify(&perks[i]);
 			break;
+		case PerkType::SPREAD_MODIFY:
+			SpreadModify(&perks[i]);
+			break;
 		case PerkType::FREEZE_BULLETS:
 			FreezeBullets(&perks[i]);
 			break;
 		case PerkType::STUN_BULLETS:
 			StunBullets(&perks[i]);
+			break;
+		case PerkType::JACKET_BULLETS:
+			JacketBullets(&perks[i]);
 			break;
 		}
 }
@@ -236,6 +262,7 @@ void Weapon::RefreshPerks()
 void Weapon::AddPerk(PerkType type, float amount, float duration)
 {
 	perks.push_back(Perk(type, amount, duration));
+	std::sort(perks.begin(), perks.end(), perkSort);
 	RefreshPerks();
 }
 
@@ -268,14 +295,25 @@ void Weapon::BulletLifeTimeModify(Perk* perk)
 	bulletLifeTimeModifier *= perk->Amount();
 }
 
+void Weapon::SpreadModify(Perk* perk)
+{
+	spreadRadiusModifier *= perk->Amount();
+}
+
 void Weapon::FreezeBullets(Perk* perk)
 {
-	onHitEffects.emplace_back(Effect(EffectType::FROZEN, perk->Duration(), false, nullptr));
+	onHitEffects.emplace_back(Effect(EffectType::FROZEN, perk->Duration(), perk->Amount()));
 }
 
 void Weapon::StunBullets(Perk* perk)
 {
-	onHitEffects.emplace_back(Effect(EffectType::STUN, perk->Duration(), false, new std::pair<bool, float>(true, perk->Amount())));
+	onHitEffects.emplace_back(Effect(EffectType::STUN, perk->Duration(), false, 0.0f, perk->Amount()));
+}
+
+void Weapon::JacketBullets(Perk* perk)
+{
+	float extraDamage = Damage() * perk->Amount() - Damage();
+	onHitEffects.emplace_back(Effect(EffectType::BOSS_PIERCING, 0.0f, true, extraDamage));
 }
 
 void Weapon::SpreadProjectiles(float2 direction)
@@ -402,7 +440,20 @@ void Weapon::FireProjectile(float2 direction)
 
 	float3 position = float3::zero;
 	if (hand)
+	{
 		position = hand->transform->GetWorldPosition();
+		float3 spread = SpreadRadius();
+		if (!spread.IsZero())
+		{
+			float x = Random::LCG::GetBoundedRandomFloat(-spread.x, spread.x);
+			float y = Random::LCG::GetBoundedRandomFloat(-spread.y, spread.y);
+			float z = Random::LCG::GetBoundedRandomFloat(-spread.z, spread.z);
+
+			position.x += x;
+			position.y += y;
+			position.z += z;
+		}
+	}
 
 	if (projectile->object)
 	{

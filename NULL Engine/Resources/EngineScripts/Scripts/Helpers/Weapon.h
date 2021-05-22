@@ -20,24 +20,25 @@ struct Projectile;
 
 class C_AudioSource;
 
-enum class WeaponType
+enum class ENGINE_ENUM WeaponType
 {
 	WEAPON,
 	BLASTER,
 	SNIPER,
-	SHOTGUN
+	SHOTGUN,
+	MINIGUN
 };
 
 enum class ShootState
 {
 	NO_FULLAUTO, // seems like rules specify that fullauto is not permited indoors, but wait...
-	WAINTING_FOR_NEXT,
+	WAITING_FOR_NEXT,
 	FIRED_PROJECTILE,
 	RATE_FINISHED,
 	NO_AMMO
 };
 
-class  Weapon : public Object
+class Weapon : public Object
 {
 public:
 
@@ -63,7 +64,7 @@ public:
 	void ProjectileCollisionReport(int index);
 
 	// Perks
-	void RefreshPerks(); // Resets the modifiers and applies all the current perks
+	void RefreshPerks(bool reset = false); // Resets the modifiers and applies all the current perks
 	void AddPerk(PerkType perk, float amount, float duration);
 
 	virtual void DamageModify(Perk* perk);
@@ -71,8 +72,10 @@ public:
 	virtual void FireRateModify(Perk* perk);
 	virtual void ReloadTimeModify(Perk* perk);
 	virtual void BulletLifeTimeModify(Perk* perk);
+	virtual void SpreadModify(Perk* perk);
 	virtual void FreezeBullets(Perk* perk);
 	virtual void StunBullets(Perk* perk);
+	virtual void JacketBullets(Perk* perk);
 
 	// Type
 	WeaponType type = WeaponType::WEAPON;
@@ -93,6 +96,8 @@ public:
 	int projectilesPerShot = 0;
 	float fireRateCap = 0.001f;
 	float reloadTimeCap = 0.1f;
+	float3 spreadRadius = float3::zero;
+	float3 SpreadRadius() { return spreadRadius * spreadRadiusModifier; }
 
 	float shotSpreadArea;
 	void SpreadProjectiles(float2 direction);
@@ -109,6 +114,7 @@ public:
 	float bulletLifeTimeModifier = DEFAULT_MODIFIER;
 	float maxAmmoModifier = DEFAULT_MODIFIER;
 	int PPSModifier = 0.0f;
+	float spreadRadiusModifier = DEFAULT_MODIFIER;
 
 	// Perks - most condecorated league player in the west btw, no cringe intended
 	std::vector<Perk> perks;

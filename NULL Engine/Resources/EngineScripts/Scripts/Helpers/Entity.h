@@ -7,18 +7,15 @@
 #include <vector>
 #include <unordered_map>
 
-#define DEFAULT_MODIFIER 1.0f
-
-typedef unsigned int uint;
-
 class GameObject;
-class C_RigidBody;
-class C_Animator;
-class C_Material;
-class C_AudioSource;
 class C_Mesh;
-
+class C_Material;
+class C_Animator;
+class C_RigidBody;
+class C_AudioSource;
 class C_ParticleSystem;
+
+class AnimatorTrack;
 
 enum class EntityType // jeje titties
 {
@@ -36,8 +33,13 @@ enum class EntityType // jeje titties
 enum class EntityState
 {
 	NONE,
-	STUNED
+	STUNED,
+	KNOCKEDBACK
 };
+
+typedef unsigned int uint;
+
+#define DEFAULT_MODIFIER 1.0f
 
 class Entity : public Object
 {
@@ -67,7 +69,7 @@ public:
 	// Interactions
 	virtual void TakeDamage(float damage);
 	virtual void GiveHeal(float amount);
-	Effect* AddEffect(EffectType type, float duration, bool permanent = false, void* data = nullptr);
+	Effect* AddEffect(EffectType type, float duration, bool permanent = false, float power = 0.0f, float chance = 0.0f, float3 direction = float3::zero, bool start = true);
 	virtual void ChangePosition(float3 position);
 	bool IsGrounded();
 
@@ -78,6 +80,7 @@ public:
 	virtual void SpeedModify(Effect* effect);
 	virtual void Stun(Effect* effect);
 	virtual void KnockBack(Effect* effect);
+	virtual void BossPiercing(Effect* effect) {}
 	
 	// Type
 	EntityType type = EntityType::ENTITY;
@@ -88,14 +91,15 @@ public:
 	float MaxHealth() { return maxHealth + maxHealthModifier; }
 
 	// Basic Stats
-	float speed = 0.0f;
-	const float Speed() const { return speed * speedModifier; }
-	float attackSpeed = 0.0f;
+	const float Speed() const		{ return speed * speedModifier; }
 	const float AttackSpeed() const { return attackSpeed * attackSpeedModifier; }
-	float damage = 0.0f;
-	const float Damage() const { return damage * damageModifier; }
-	float defense = 1.0f;
-	const float Defense() const { return defense * defenseModifier; }
+	const float Damage() const		{ return damage * damageModifier; }
+	const float Defense() const		{ return defense * defenseModifier; }
+	
+	float speed						= 0.0f;
+	float attackSpeed				= 0.0f;
+	float damage					= 0.0f;
+	float defense					= 1.0f;
 
 	// Modifiers
 	float maxHealthModifier = 0.0f;
@@ -112,9 +116,10 @@ public:
 	// Basic Animations
 	GameObject* skeleton = nullptr;
 
-	AnimationInfo idleAnimation = { "Idle" };
-	AnimationInfo deathAnimation = { "Death" };
-	AnimationInfo stunAnimation = { "Stun" };
+	AnimationInfo idleAnimation			= { "Idle" };
+	AnimationInfo deathAnimation		= { "Death" };
+	AnimationInfo stunAnimation			= { "Stun" };
+	AnimationInfo knockbackAnimation	= { "Knockback" };
 
 	Timer hitTimer;	
 
@@ -128,6 +133,9 @@ public:
 
 protected:
 
+	// State
+	EntityState GetEntityState();
+	
 	// Particles
 	C_ParticleSystem* GetParticles(std::string particleName);
 
