@@ -75,6 +75,10 @@ void GameManager::Awake()
 			{
 				level1Ruins.emplace_back(levelArray2.GetString(i));
 			}
+
+			//Load story
+			defeatedIG11FirstTime = jsonState.GetBool("defeatedIG11FirstTime");
+
 			//TODO:Spawn player and everything on the level
 			GameObject* playerSpawn = App->scene->GetGameObjectByName(SpawnPointName.c_str());
 			if (playerSpawn != nullptr) 
@@ -83,7 +87,11 @@ void GameManager::Awake()
 				playerGameObject = App->scene->InstantiatePrefab(playerPrefab.uid, App->scene->GetSceneRoot(), spawnPoint,Quat::identity);
 			}
 
-			groguGameObject = App->resourceManager->LoadPrefab(groguPrefab.uid, App->scene->GetSceneRoot());
+			if(defeatedIG11FirstTime)
+				groguGameObject = App->scene->InstantiatePrefab(groguPrefab.uid, App->scene->GetSceneRoot(),float3::zero, Quat::identity);
+
+
+
 			if (playerSpawn != nullptr && groguGameObject != nullptr)
 			{
 				float3 offset = { 0,0,7 };
@@ -129,12 +137,12 @@ void GameManager::Awake()
 		}
 	}
 
-	GameObject* tmp = App->scene->GetGameObjectByName(gateName.c_str());
+	GameObject* tmp = App->scene->GetGameObjectByName("DialogCanvas"); 
 
-	tmp = App->scene->GetGameObjectByName("DialogCanvas");
 	if(tmp!=nullptr)
 		dialogManager = (DialogManager*)tmp->GetScript("DialogManager");
 
+	tmp = App->scene->GetGameObjectByName(gateName.c_str());
 	if (tmp != nullptr)
 	{
 		gate = (Gate*)tmp->GetScript("Gate");
@@ -511,12 +519,16 @@ void GameManager::Continue()
 		{
 			level1Ruins.emplace_back(levelArray2.GetString(i));
 		}
+		//Story
+		defeatedIG11FirstTime = jsonState.GetBool("defeatedIG11FirstTime");
 		//TODO:Spawn player and everything on the level
 		if (currentLevel == 1)
 			App->scene->ScriptChangeScene(level1[roomNum]);
 		//LEVEL2
 		else if (currentLevel == 2)
 			App->scene->ScriptChangeScene(level1Ruins[roomNum]);
+
+		
 	}
 }
 
@@ -682,6 +694,8 @@ void GameManager::SaveManagerState()
 	char* buffer = nullptr;
 	jsonState.SerializeToFile(saveFileName, &buffer);
 	CoreCrossDllHelpers::CoreReleaseBuffer(&buffer);
+
+	jsonState.SetBool("defeatedIG11FirstTime", defeatedIG11FirstTime);
 }
 
 void GameManager::BackTrackUpdate()
@@ -758,6 +772,7 @@ void GameManager::GateUpdate()
 				return;
 
 			gate->Unlock();
+
 			uint num = Random::LCG::GetBoundedRandomUint(0, 100);
 			if (num <= chestSpawnChance && chestPrefab.uid != NULL)
 			{
@@ -781,6 +796,17 @@ void GameManager::GateUpdate()
 				}
 			}
 		}
+}
+
+void GameManager::KilledIG11()
+{
+	LOG("Killed IG11");
+	if (!defeatedIG11FirstTime)
+	{
+		
+		defeatedIG11FirstTime = true;
+		groguGameObject = App->scene->InstantiatePrefab(groguPrefab.uid, App->scene->GetSceneRoot(), float3::zero, Quat::identity);
+	}
 }
 
 GameManager* CreateGameManager() {
