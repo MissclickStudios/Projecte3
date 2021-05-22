@@ -123,8 +123,9 @@ public:
 
 	AnimationInfo walkAnimation				= { "Walk" };
 
-	AnimationInfo runAnimation				= { "Run" };
-	AnimationInfo runForwardsAnimation		= { "RunForwards" };
+	AnimationInfo runForwardsAnimation		= { "RunForwardsLight" };
+	AnimationInfo runForwardsLightAnimation	= { "RunForwardsLight" };
+	AnimationInfo runForwardsHeavyAnimation	= { "RunForwardsHeavy" };
 	AnimationInfo runBackwardsAnimation		= { "RunBackwards" };
 	AnimationInfo runLeftAnimation			= { "RunLeft" };
 	AnimationInfo runRightAnimation			= { "RunRight" };
@@ -146,8 +147,8 @@ public:
 	AnimationInfo reloadMinigunAnimation	= { "ReloadMinigun" }; 
 	AnimationInfo reloadShotgunAnimation	= { "ReloadShotgun" };
 
-	AnimationInfo stunnedAnimation			= { "Stunned" };
-	AnimationInfo knockedbackAnimation		= { "KnockedBack"};
+	AnimationInfo stunnedAnimation			= { "Stun" };
+	AnimationInfo knockedbackAnimation		= { "Knockback"};
 	
 	AnimationInfo talkAnimation				= { "Talk" };
 	AnimationInfo useAnimation				= { "Use" };

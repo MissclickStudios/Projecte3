@@ -646,7 +646,7 @@ AnimationInfo* Player::GetMoveStateAnimation()
 	{
 	case PlayerState::IDLE:		{ return &idleAnimation; }		break;
 	case PlayerState::WALK:		{ return &walkAnimation; }		break;
-	case PlayerState::RUN:		{ return /*GetLegsAnimation();*/ &runAnimation; }	break;
+	case PlayerState::RUN:		{ return GetLegsAnimation(); }	break;
 	case PlayerState::DASH_IN:	{ return &dashAnimation; }		break;
 	case PlayerState::DASH:		{ return &dashAnimation; }		break;
 	case PlayerState::DEAD_IN:	{ return &deathAnimation; }		break;
@@ -660,6 +660,14 @@ AnimationInfo* Player::GetLegsAnimation()
 {	
 	if (moveInput.IsZero())
 		return &idleAnimation;
+
+	if (aimInput.IsZero())
+	{
+		if (currentWeapon == nullptr)
+			return &runForwardsLightAnimation;
+
+		return (currentWeapon->type != WeaponType::MINIGUN) ? &runForwardsLightAnimation : &runForwardsHeavyAnimation;
+	}
 
 	return legsMatrix[(int)aimDirection][(int)moveDirection];
 }
@@ -1010,7 +1018,7 @@ void Player::Walk()
 
 void Player::Run()
 {
-	currentAnimation = &runAnimation;
+	currentAnimation = &runForwardsAnimation;
 	Movement();
 
 	if (runParticles != nullptr)
