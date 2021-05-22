@@ -1,15 +1,11 @@
 #include "Application.h"
-
-#include "Profiler.h"
 #include "GameObject.h"
 
-#include "M_Camera3D.h"
 #include "M_Scene.h"
 #include "M_Input.h"
 
 #include "C_Material.h"
 #include "C_Transform.h"
-#include "C_Camera.h"
 
 #include "M_ResourceManager.h"
 
@@ -162,10 +158,8 @@ void C_UI_Button::Draw2D()
 
 	if (!cMaterial->GetShader())
 		cMaterial->SetShader(App->resourceManager->GetShader("UIShader"));
-	
-	uint32 id = cMaterial->GetTextureID();
 
-	glEnable(GL_BLEND);
+	//glEnable(GL_BLEND); enabled in draw 2d render ui
 
 	//Canvas position always returns 0,0 for 2d rendering
 	float x = canvas->GetPosition().x + rect.x;
@@ -173,7 +167,7 @@ void C_UI_Button::Draw2D()
 
 	glUseProgram(cMaterial->GetShader()->shaderProgramID);
 	float4x4 projectionMatrix = float4x4::FromTRS(float3(x, y, 0), Quat::FromEulerXYZ(0, 0, 0), float3(GetRect().w, GetRect().h, 1)).Transposed();
-	glBindTexture(GL_TEXTURE_2D, id);
+	glBindTexture(GL_TEXTURE_2D, cMaterial->GetTextureID());
 	cMaterial->GetShader()->SetUniform1i("useColor", (GLint)true);
 	cMaterial->GetShader()->SetUniformMatrix4("projection", projectionMatrix.ptr());
 	cMaterial->GetShader()->SetUniformVec4f("inColor", (GLfloat*)&tempColor);
@@ -194,7 +188,7 @@ void C_UI_Button::Draw2D()
 	glBindVertexArray(VAO);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 
-	glDisable(GL_BLEND);
+	//glDisable(GL_BLEND);
 	glBindVertexArray(0);
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glUseProgram(0);
