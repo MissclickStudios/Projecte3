@@ -1197,6 +1197,9 @@ void E_Inspector::DrawUIImageComponent(C_UI_Image* image)
 			image->SetY(pos.y);
 		}
 
+		ImGui::ColorEdit3("Diffuse Color", (float*)&image->color, ImGuiColorEditFlags_NoAlpha);
+		ImGui::SliderFloat("Diffuse Alpha", (float*)&image->color.a, 0.0f, 1.0f, "%.3f");
+
 		if (ImGui::DragInt4("pixel TexCoord (x,y,w,h)", image->pixelCoord))
 			image->textCoord = image->GetTexturePosition(image->pixelCoord[0], image->pixelCoord[1], image->pixelCoord[2], image->pixelCoord[3]);
 	}

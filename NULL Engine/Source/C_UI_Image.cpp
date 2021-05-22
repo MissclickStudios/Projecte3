@@ -138,7 +138,8 @@ void C_UI_Image::Draw2D()
 
 	glBindTexture(GL_TEXTURE_2D, id);
 
-	cMaterial->GetShader()->SetUniform1i("useColor", (GLint)false);
+	cMaterial->GetShader()->SetUniform1i("useColor", (GLint)true);
+	cMaterial->GetShader()->SetUniformVec4f("inColor", (GLfloat*)&color);
 	//cMaterial->GetShader()->SetUniformMatrix4("model", identity.Transposed().ptr());
 	cMaterial->GetShader()->SetUniformMatrix4("projection", projectionMatrix.ptr());
 
@@ -267,6 +268,16 @@ void C_UI_Image::Draw3D()
 
 }
 
+void C_UI_Image::SetColor(unsigned char r, unsigned char g, unsigned char b, unsigned char a)
+{
+	color = Color(r/255.f, g/255.f, b/255.f, a/255.f);
+}
+
+void C_UI_Image::ResetColor()
+{
+	color = Color(1.0f, 1.0f, 1.0f, 1.0f);
+}
+
 Frame C_UI_Image::GetTexturePosition(int pixelPosX, int pixelPosY, int pixelWidth, int pixelHeight)
 {
 
@@ -304,10 +315,16 @@ bool C_UI_Image::SaveState(ParsonNode& root) const
 	for (int i = 0; i < 4; ++i)
 		pixelCoords.SetNumber((double)pixelCoord[i]);
 
-	ParsonNode node;
-	node = root.SetNode("textureCoords");
-	node.SetNumber("x", textCoord.proportionBeginX); node.SetNumber("y", textCoord.proportionBeginY);
-	node.SetNumber("w", textCoord.proportionFinalX); node.SetNumber("h", textCoord.proportionFinalY);
+	ParsonNode colorNode;
+	colorNode = root.SetNode("imgColor");
+	colorNode.SetNumber("r", color.r); colorNode.SetNumber("g", color.g);
+	colorNode.SetNumber("b", color.b); colorNode.SetNumber("a", color.a);
+
+
+	ParsonNode textureNode;
+	textureNode = root.SetNode("textureCoords");
+	textureNode.SetNumber("x", textCoord.proportionBeginX); textureNode.SetNumber("y", textCoord.proportionBeginY);
+	textureNode.SetNumber("w", textCoord.proportionFinalX); textureNode.SetNumber("h", textCoord.proportionFinalY);
 
 	 root.SetNumber("childOrder", childOrder);
 
@@ -333,6 +350,14 @@ bool C_UI_Image::LoadState(ParsonNode& root)
 		for (int i = 0; i < pixelCoords.size; ++i)
 			pixelCoord[i] = (int)pixelCoords.GetNumber(i);
 
+	ParsonNode colorNode;
+	colorNode = root.GetNode("imgColor");
+	if (colorNode.NodeIsValid())
+	{
+		color.r = colorNode.GetNumber("r"); color.g = colorNode.GetNumber("g");
+		color.b = colorNode.GetNumber("b"); color.a = colorNode.GetNumber("a");
+	}
+	
 	ParsonNode node;
 	node = root.GetNode("textureCoords");
 	if (node.NodeIsValid())

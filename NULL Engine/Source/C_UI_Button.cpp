@@ -159,7 +159,7 @@ void C_UI_Button::Draw2D()
 	if (!cMaterial->GetShader())
 		cMaterial->SetShader(App->resourceManager->GetShader("UIShader"));
 
-	//glEnable(GL_BLEND); enabled in draw 2d render ui
+	glEnable(GL_BLEND); //enabled in draw 2d render ui
 
 	//Canvas position always returns 0,0 for 2d rendering
 	float x = canvas->GetPosition().x + rect.x;
@@ -188,7 +188,7 @@ void C_UI_Button::Draw2D()
 	glBindVertexArray(VAO);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 
-	//glDisable(GL_BLEND);
+	glDisable(GL_BLEND);
 	glBindVertexArray(0);
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glUseProgram(0);
