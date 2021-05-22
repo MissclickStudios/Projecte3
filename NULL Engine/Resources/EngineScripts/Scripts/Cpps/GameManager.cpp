@@ -191,6 +191,7 @@ void GameManager::Start()
 				dialogManager->StartDialog("Assets/Dialogs/1st Conversation IG-11.json");
 			else
 				dialogManager->StartDialog("Assets/Dialogs/Pool Conversation IG-11.json");
+			return;
 		}
 
 		if (strcmp(App->scene->GetCurrentScene(), "Boss_Ruins") == 0)
@@ -199,8 +200,10 @@ void GameManager::Start()
 				dialogManager->StartDialog("Assets/Dialogs/1st Conversation IG-11.json");
 			else
 				dialogManager->StartDialog("Assets/Dialogs/Pool Conversation IG-11.json");
+			return;
 		}
 		
+		dialogManager->StartDialog("Assets/Dialogs/GroguHello.json");
 	}
 		
 }

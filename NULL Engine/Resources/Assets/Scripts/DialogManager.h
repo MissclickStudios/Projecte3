@@ -12,6 +12,7 @@ class C_Canvas;
 class C_UI_Image;
 class C_UI_Text;
 class C_UI_Button;
+class Player;
 
 enum class DialogState
 {
@@ -86,12 +87,16 @@ public:
 	C_UI_Text* dialogText = nullptr;
 	C_UI_Button* dialogButton = nullptr;
 
+	Player* mando = nullptr;
+
 	std::string dialogCanvasName = "DialogCanvas";
 	std::string speakerImageName = "SpeakerImage";
 	std::string textBackgroundName = "DialogBackground";
 	std::string speakerTextName = "SpeakerText";
 	std::string dialogTextName = "DialogText";
 	std::string dialogButtonName = "DialogButton";
+	std::string mandoName = "Mandalorian";
+
 private:
 	std::vector<DialogSystem*> dialogSystemsLoaded; //All the dialogs the scene has loaded in
 
