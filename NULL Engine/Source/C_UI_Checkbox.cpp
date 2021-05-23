@@ -290,7 +290,7 @@ void C_UI_Checkbox::Draw2D()
 
 	uint32 id = cMaterial->GetTextureID();
 
-	glEnable(GL_BLEND);
+	glEnable(GL_BLEND); //enabled in draw 2d render ui
 
 	//Canvas position always returns 0,0 for 2d rendering
 	float x = canvas->GetPosition().x + rect.x;
@@ -368,6 +368,16 @@ const char* C_UI_Checkbox::NameFromState(UICheckboxState state)
 
 void C_UI_Checkbox::Draw3D()
 {
+}
+
+void C_UI_Checkbox::Check()
+{
+	state = UICheckboxState::CHECKED;
+}
+
+void C_UI_Checkbox::UnCheck()
+{
+	state = UICheckboxState::UNCHECKED;
 }
 
 UICheckboxState C_UI_Checkbox::GetState() const

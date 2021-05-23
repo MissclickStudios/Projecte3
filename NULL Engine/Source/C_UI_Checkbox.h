@@ -43,6 +43,8 @@ public:
 	void HandleInput(C_UI** selectedUi) override;
 	void Draw2D() override;
 	void Draw3D() override;
+	void Check();
+	void UnCheck();
 
 public:
 	UICheckboxState GetState()const;

@@ -27,12 +27,6 @@ public:
 	//Plays the animation
 	void PlayAnimation(bool loop, int animationNumber);
 
-	//Stops current animation
-	void StopAnimation();
-
-	//Gets the current id texture of the animation frame
-	uint GetIdFromAnimation();
-
 	void SetAnimationStepTime(int time);
 	int GetAnimationStepTime();
 
@@ -54,10 +48,12 @@ public:
 	Spritesheet*				spritesheet2;
 	Spritesheet*				spritesheet3;
 
+	int GetAnimationNumber();
+
+	
 private:
-	uint GetTextureIdFromVector(int index, int animationNum);
 	void LoopAnimation(int animation);
-	int							animationNumberPlaying;
+
 private:
 
 	std::vector<R_Texture*>		animation;
@@ -66,6 +62,8 @@ private:
 	
 	int							animationCounter;
 	uint						animationStepTime;
+
+	int							animationNumberPlaying;
 
 	Timer						animationTimer;
 

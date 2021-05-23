@@ -1,6 +1,7 @@
 #ifndef __C_UI_IMAGE_H__
 #define __C_UI_IMAGE_H__
 
+#include "Spritesheet.h"
 #include "C_UI.h"
 
 class MISSCLICK_API C_UI_Image : public C_UI
@@ -25,9 +26,20 @@ public:
 	void Draw2D()override;
 	void Draw3D()override;
 
+	void SetColor(unsigned char r, unsigned char g, unsigned char b, unsigned char a);
+	void ResetColor();
+
+private:
+	Frame GetTexturePosition(int pixelPosX, int pixelPosY, int pixelWidth, int pixelHeight);
 private:
 	uint VAO;
 	uint VBO;
+
+	Color color = { 1.0f, 1.0f, 1.0f, 1.0f };
+	int pixelCoord[4];
+	Frame textCoord = { 0, 0, 1, 1 };
+		
+	friend class E_Inspector;
 };
 
 #endif // !__C_UI_IMAGE_H__

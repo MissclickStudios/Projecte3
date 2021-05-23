@@ -92,6 +92,10 @@ void M_UISystem::PushCanvas(C_Canvas* canvas)
 C_Canvas* M_UISystem::PopCanvas()
 {
 	C_Canvas* topCanvas = activeCanvas.front();
+	for (std::vector<C_UI*>::reverse_iterator it = topCanvas->uiElements.rbegin(); it != topCanvas->uiElements.rend(); ++it)
+	{
+		(*it)->ResetInput();
+	}
 	topCanvas->cachedObjects.clear();
 	activeCanvas.pop_front();
 	return topCanvas;
@@ -103,6 +107,10 @@ void M_UISystem::RemoveActiveCanvas(C_Canvas* canvas)
 	{
 		if ((*it) == canvas)
 		{
+			for (std::vector<C_UI*>::reverse_iterator rit = (*it)->uiElements.rbegin(); rit != (*it)->uiElements.rend(); ++rit)
+			{
+				(*rit)->ResetInput();
+			}
 			(*it)->cachedObjects.clear();
 			activeCanvas.erase(it);
 			break;

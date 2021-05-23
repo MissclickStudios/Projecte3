@@ -188,10 +188,18 @@ UpdateStatus M_Scene::PostUpdate(float dt)
 {	
 	OPTICK_CATEGORY("M_Scene PostUpdate", Optick::Category::Module)
 
-	if (nextScene && transitionProgresion >= 1.0f)
+	if (nextScene)
 	{
-		LoadScene(nextSceneName.c_str());
-		nextScene = false;
+		if (noTransitions) 
+		{
+			LoadScene(nextSceneName.c_str());
+			nextScene = false;
+		}
+		else if (transitionProgresion >= 1.0f)
+		{
+			LoadScene(nextSceneName.c_str());
+			nextScene = false;
+		}
 	}
 
 	return UpdateStatus::CONTINUE;
