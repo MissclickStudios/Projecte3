@@ -104,44 +104,31 @@ void Entity::PreUpdate()
 	// Loop through the Effects and call the respective functions
 	for (uint i = 0; i < effects.size(); ++i)
 	{
-		if (effects[i]->IsActive()) // Check if the effect duration is ongoing
+		if (effects[i]->IsActive())															// Check if the effect duration is ongoing
 		{
-			switch (effects[i]->Type()) // Call the corresponding function
+			switch (effects[i]->Type())														// Call the corresponding function
 			{
-			case EffectType::FROZEN:
-				Frozen();
-				break;
-			case EffectType::HEAL:
-				Heal(effects[i]);
-				break;
-			case EffectType::MAX_HEALTH_MODIFY:
-				MaxHealthModify(effects[i]);
-				break;
-			case EffectType::SPEED_MODIFY:
-				SpeedModify(effects[i]);
-				break;
-			case EffectType::STUN:
-				Stun(effects[i]);
-				break;
-			case EffectType::KNOCKBACK:
-				KnockBack(effects[i]);
-				break;
-			case EffectType::BOSS_PIERCING:
-				BossPiercing(effects[i]);
-				break;
+			case EffectType::FROZEN:			{ Frozen(); }						break;
+			case EffectType::HEAL:				{ Heal(effects[i]); }				break;
+			case EffectType::MAX_HEALTH_MODIFY: { MaxHealthModify(effects[i]); }	break;
+			case EffectType::SPEED_MODIFY:		{ SpeedModify(effects[i]); }		break;
+			case EffectType::STUN:				{ Stun(effects[i]); }				break;
+			case EffectType::KNOCKBACK:			{ KnockBack(effects[i]); }			break;
+			case EffectType::ELECTROCUTE:		{ Electrocute(effects[i]); }		break;
+			case EffectType::BOSS_PIERCING:		{ BossPiercing(effects[i]); }		break;
 			}
 		}
-		else // Delete the effect if it ran out
+		else																				// Delete the effect if it ran out
 		{
-			--effectCounters[(uint)effects[i]->Type()]; // Substract one to the counter of this effect
+			--effectCounters[(uint)effects[i]->Type()];										// Substract one to the counter of this effect
 
 			delete effects[i];
 			effects.erase(effects.begin() + i);
 
-			if (i <= 0) // Avoid relying on uints turning a high number to exit the loop when there are no more effects
+			if (i <= 0)																		// Avoid relying on uints turning a high number to exit the loop when there are no more effects
 				break;
-			else
-				--i;
+
+			--i;
 		}
 	}
 
@@ -162,9 +149,10 @@ void Entity::Update()
 {
 	switch (entityState)
 	{
-	case EntityState::NONE:			{ Behavior(); }								break;
-	case EntityState::STUNED:		{ currentAnimation = &stunAnimation; }		break;
-	case EntityState::KNOCKEDBACK:	{ currentAnimation = &knockbackAnimation; } break;
+	case EntityState::NONE:			{ Behavior(); }									break;
+	case EntityState::STUNED:		{ currentAnimation = &stunAnimation; }			break;
+	case EntityState::KNOCKEDBACK:	{ currentAnimation = &knockbackAnimation; }		break;
+	case EntityState::ELECTROCUTED: { currentAnimation = &electrocutedAnimation; }	break;
 	}
 }
 
@@ -306,7 +294,9 @@ void Entity::Stun(Effect* effect)
 			effect->End();
 	}
 	else
+	{
 		entityState = EntityState::STUNED;
+	}
 }
 
 void Entity::KnockBack(Effect* effect)
@@ -324,6 +314,21 @@ void Entity::KnockBack(Effect* effect)
 
 	//entityState = EntityState::STUNED;
 	entityState = EntityState::KNOCKEDBACK;
+}
+
+void Entity::Electrocute(Effect* effect)
+{
+	if (effect->start)
+	{
+		effect->start = false;
+
+		if (rigidBody != nullptr)
+		{
+			rigidBody->StopInertia();
+		}
+	}
+
+	entityState = EntityState::ELECTROCUTED;
 }
 
 EntityState Entity::GetEntityState()

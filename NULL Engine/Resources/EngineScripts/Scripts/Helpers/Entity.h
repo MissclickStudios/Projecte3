@@ -34,7 +34,8 @@ enum class EntityState
 {
 	NONE,
 	STUNED,
-	KNOCKEDBACK
+	KNOCKEDBACK,
+	ELECTROCUTED
 };
 
 typedef unsigned int uint;
@@ -80,6 +81,7 @@ public:
 	virtual void SpeedModify(Effect* effect);
 	virtual void Stun(Effect* effect);
 	virtual void KnockBack(Effect* effect);
+	virtual void Electrocute(Effect* effect);
 	virtual void BossPiercing(Effect* effect) {}
 	
 	// Type
@@ -120,6 +122,7 @@ public:
 	AnimationInfo deathAnimation		= { "Death" };
 	AnimationInfo stunAnimation			= { "Stun" };
 	AnimationInfo knockbackAnimation	= { "Knockback" };
+	AnimationInfo electrocutedAnimation = { "Electrocuted" };
 
 	Timer hitTimer;	
 
