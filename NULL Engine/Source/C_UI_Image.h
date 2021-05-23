@@ -3,6 +3,7 @@
 
 #include "Spritesheet.h"
 #include "C_UI.h"
+#include "Color.h"
 
 class MISSCLICK_API C_UI_Image : public C_UI
 {
