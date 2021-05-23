@@ -1922,7 +1922,31 @@ void E_Inspector::DrawNavMeshAgentComponent(C_NavMeshAgent* cNavMeshAgent)
 
 		ImGui::Separator();
 
-		ImGui::Text("WORK IN PROGRESS");
+		ImGui::Text(cNavMeshAgent->GetOwner()->GetName());
+
+		float aVelocity = cNavMeshAgent->velocity;
+		if (ImGui::InputFloat("Agent Velocity", &aVelocity))
+		{
+			cNavMeshAgent->velocity = aVelocity;
+		}
+
+		ImGui::Text("Origin: X->%f ", cNavMeshAgent->origin.x);
+		ImGui::SameLine();
+		ImGui::Text("Y->%f ", cNavMeshAgent->origin.y);
+		ImGui::SameLine();
+		ImGui::Text("Z->%f", cNavMeshAgent->origin.z);
+		
+		ImGui::Text("Destination: X->%f ", cNavMeshAgent->destinationPoint.x);
+		ImGui::SameLine();
+		ImGui::Text("Y->%f ", cNavMeshAgent->destinationPoint.y);
+		ImGui::SameLine();
+		ImGui::Text("Z->%f", cNavMeshAgent->destinationPoint.z);
+
+		ImGui::Text("CurrentPos: X->%f ", cNavMeshAgent->currentPos.x);
+		ImGui::SameLine();
+		ImGui::Text("Y->%f ", cNavMeshAgent->currentPos.y);
+		ImGui::SameLine();
+		ImGui::Text("Z->%f", cNavMeshAgent->currentPos.z);
 
 		if (!show)
 		{

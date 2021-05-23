@@ -32,7 +32,7 @@ public:
 	bool BuildNavMesh();
 	bool BuildSoloNavMesh(const InputGeom* m_geom);
 	bool BuildTiledNavMesh(const InputGeom* m_geom);
-	void BuildTile(const InputGeom* m_geom, const int tx, const int ty, unsigned char** data, int* datasize);
+	unsigned char* BuildTile(const InputGeom* m_geom, const int tx, const int ty, const float* bmin, const float* bmax, int& datasize);
 
 private:
 	void MarkOBBArea(const math::OBB& obb, unsigned char areaId, rcCompactHeightfield& chf);
@@ -45,8 +45,25 @@ public:
 private:
 	std::vector<GameObject*> NavigationGameObjects;
 
+	rcContext* m_ctx = nullptr;
+
 	//Recast variables
+	unsigned char* m_triareas = nullptr;
+	rcHeightfield* m_solid = nullptr;
+	rcCompactHeightfield* m_chf = nullptr;
+	rcContourSet* m_cset = nullptr;
+	rcPolyMesh* m_pmesh = nullptr;
+	rcPolyMeshDetail* m_dmesh = nullptr;
 	rcConfig m_cfg;
+
+	int m_maxTiles;
+	int m_maxPolysPerTile;
+	float m_tileSize;
+
+	unsigned int m_tileCol;
+	float m_lastBuiltTileBmin[3];
+	float m_lastBuiltTileBmax[3];
+	int m_tileTriCount;
 
 };
 

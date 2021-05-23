@@ -1,20 +1,25 @@
 #include "JSONParser.h"
+#include "Log.h"
 
 #include "GameObject.h"
 
 #include "Application.h"
 #include "M_Detour.h"
 
+#include "Component.h"
 #include "C_NavMeshAgent.h"
 #include "C_Transform.h"
+#include "C_RigidBody.h"
+
 
 
 C_NavMeshAgent::C_NavMeshAgent(GameObject* owner) : Component(owner, ComponentType::NAVMESH_AGENT)
 {
-	areaMask = 0;
-	destination = float3::zero;
-	path = float3::zero;
 	radius = 0;
+	origin = owner->GetComponent<C_Transform>()->GetWorldPosition();	
+	hasDestination = false;
+	currentPos = origin;
+	direction = float3::zero;
 }
 
 C_NavMeshAgent::~C_NavMeshAgent()
@@ -24,11 +29,45 @@ C_NavMeshAgent::~C_NavMeshAgent()
 
 bool C_NavMeshAgent::Start()
 {
+	rigidBody = GetOwner()->GetComponent<C_RigidBody>();
 	return true;
 }
 
 bool C_NavMeshAgent::Update()
 {
+	if (rigidBody && App->gameState == GameState::PLAY && App->detour->navMeshResource)
+	{
+		if (hasDestination)
+		{
+			nextPoint = path[indexPath];
+
+			direction = nextPoint - currentPos;
+
+			float2 directorVector = direction.xz();
+
+			if (!directorVector.IsZero())
+				directorVector.Normalize();
+
+			rigidBody->Set2DVelocity(directorVector * velocity);
+
+			if (GetOwner()->transform->GetDistanceTo(nextPoint) <= 1.0f)
+			{
+				currentPos = nextPoint;
+				nextPoint = path[++indexPath];
+			}
+			
+			if (indexPath > (path.size()-1))
+			{
+				indexPath = 0;
+
+				directorVector = { 0.0f,0.0f };
+
+				hasDestination = false;
+
+				rigidBody->Set2DVelocity(directorVector * velocity);
+			}
+		}
+	}
 
 	return true;
 }
@@ -41,7 +80,7 @@ bool C_NavMeshAgent::CleanUp()
 bool C_NavMeshAgent::SaveState(ParsonNode& root) const
 {
 	root.SetNumber("Type", (double)GetType());
-	
+
 	return true;
 }
 
@@ -50,15 +89,53 @@ bool C_NavMeshAgent::LoadState(ParsonNode& root)
 	return true;
 }
 
-bool C_NavMeshAgent::CalculatePath(float3 originPos, float3 targetPos)
+bool C_NavMeshAgent::SetDestination(float3 destination)
 {
-	std::vector<float3> path;
-	
-	int succes = App->detour->calculatePath(originPos, targetPos, areaMask, path);
+	float2 pos = { destination.x, destination.z };
 
+	destinationPoint = { pos.x, 0.0f, pos.y };
 
+	indexPath = 1;
 
-	
-	return false;
+	origin = GetOwner()->transform->GetWorldPosition();
+
+	origin.y = 0.0f;
+
+	currentPos = origin;
+
+	AgentPath(origin, destination);
+
+	return true;
+}
+
+bool C_NavMeshAgent::HasDestination()
+{
+	return hasDestination;
+}
+
+void C_NavMeshAgent::CancelDestination()
+{
+	hasDestination = false;
+	path.clear();
+	indexPath = 0;
+}
+
+void C_NavMeshAgent::StopAndCancelDestination()
+{
+	indexPath = 0;
+	path.clear();
+	hasDestination = false;
+	rigidBody->Set2DVelocity({ 0.0f,0.0f });
+}
+
+const float3 C_NavMeshAgent::GetNextPathPoint() const
+{
+	return nextPoint;
+}
+
+bool C_NavMeshAgent::AgentPath(float3 origin, float3 destination)
+{
+	hasDestination = true;
+	return  App->detour->CalculatePath(origin, destination, path);
 }
 

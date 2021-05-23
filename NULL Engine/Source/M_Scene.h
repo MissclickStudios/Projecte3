@@ -27,6 +27,7 @@ class C_Camera;
 struct ModelNode;
 
 typedef unsigned __int32 uint32;
+typedef unsigned int uint;
 
 class MISSCLICK_API M_Scene : public Module
 {

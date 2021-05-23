@@ -11,6 +11,7 @@
 #include "MathGeoLib/include/Math/float2.h"
 
 class C_AudioSource;
+class C_NavMeshAgent;
 
 enum class DarkTrooperState
 {
@@ -63,6 +64,9 @@ public:
 	// Weapons
 	Prefab blaster;
 	Prefab shotgun;
+
+	// Agent
+	C_NavMeshAgent* agent = nullptr;
 
 	// Audio
 	C_AudioSource* deathAudio = nullptr;

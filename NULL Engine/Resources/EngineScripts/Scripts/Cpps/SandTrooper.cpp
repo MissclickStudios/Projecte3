@@ -8,6 +8,7 @@
 #include "C_Transform.h"
 #include "C_RigidBody.h"
 #include "C_AudioSource.h"
+#include "C_NavMeshAgent.h"
 
 #include "Player.h"
 
@@ -108,6 +109,11 @@ void Trooper::SetUp()
 				deathAudio = source;
 		}
 	}
+
+	agent = gameObject->GetComponent<C_NavMeshAgent>();
+
+	if (agent != nullptr)
+		agent->origin = gameObject->GetComponent<C_Transform>()->GetWorldPosition();
 }
 
 void Trooper::Behavior()
@@ -149,19 +155,19 @@ void Trooper::DistanceToPlayer()
 	playerPosition.y = player->transform->GetWorldPosition().z;
 	position.x = gameObject->transform->GetWorldPosition().x;
 	position.y = gameObject->transform->GetWorldPosition().z;
+
 	aimDirection = playerPosition - position;
 
 	distance = aimDirection.Length();
 	// TODO: Separate aim and movement once the pathfinding is implemented
-	moveDirection = aimDirection;
-
-	if (!moveDirection.IsZero())
-		moveDirection.Normalize();
 }
 
 void Trooper::LookAtPlayer()
 {
-	float rad = aimDirection.AimedAngle();
+	float2 direction = aimDirection;
+	if (moveState != TrooperState::IDLE)
+		direction = moveDirection;
+	float rad = direction.AimedAngle();
 
 	if (skeleton)
 		skeleton->transform->SetLocalRotation(float3(0, -rad + DegToRad(90), 0));
@@ -310,18 +316,22 @@ void Trooper::ManageAim()
 
 void Trooper::Patrol()
 {
-	if (rigidBody != nullptr)
-		rigidBody->SetLinearVelocity(float3::zero);
+	if (agent != nullptr)
+		agent->SetDestination(gameObject->transform->GetWorldPosition());
+
 }
 
 void Trooper::Chase()
 {
-	if (rigidBody != nullptr)
-		rigidBody->Set2DVelocity(moveDirection * ChaseSpeed());
+	if (agent != nullptr)
+	{
+		agent->SetDestination(player->transform->GetWorldPosition());
+		moveDirection = float2(agent->direction.x, agent->direction.z);
+	}
 }
 
 void Trooper::Flee()
 {
-	if (rigidBody != nullptr)
-		rigidBody->Set2DVelocity(-moveDirection * ChaseSpeed());
+	if (agent != nullptr)
+		agent->SetDestination(-player->transform->GetWorldPosition());
 }

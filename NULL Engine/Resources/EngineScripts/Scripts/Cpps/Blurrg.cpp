@@ -7,6 +7,7 @@
 #include "C_Transform.h"
 #include "C_RigidBody.h"
 #include "C_AudioSource.h"
+#include "C_NavMeshAgent.h"
 
 #include "Player.h"
 
@@ -110,6 +111,13 @@ void Blurrg::SetUp()
 				deathAudio = source;
 		}
 	}
+
+
+	agent = gameObject->GetComponent<C_NavMeshAgent>();
+
+	if (agent != nullptr)
+		agent->origin = gameObject->GetComponent<C_Transform>()->GetWorldPosition();
+	
 }
 
 void Blurrg::Behavior()
@@ -158,8 +166,8 @@ void Blurrg::Behavior()
 				chargeAudio->PlayFx(chargeAudio->GetEventId());
 
 			currentAnimation = &chargeAnimation;
-			if (rigidBody)
-				rigidBody->Set2DVelocity(float2::zero);
+			if (agent != nullptr)
+				agent->StopAndCancelDestination();
 			chargeTimer.Start();
 			state = BlurrgState::CHARGE;
 
@@ -172,6 +180,8 @@ void Blurrg::Behavior()
 			break;
 		case BlurrgState::DASH_IN:
 			currentAnimation = &dashAnimation;
+			if (agent != nullptr)
+				agent->StopAndCancelDestination();
 			dashTimer.Start();
 			state = BlurrgState::DASH;
 
@@ -186,8 +196,8 @@ void Blurrg::Behavior()
 			break;
 		case BlurrgState::REST_IN:
 			currentAnimation = &restAnimation;
-			if (rigidBody)
-				rigidBody->Set2DVelocity(float2::zero);
+			if (agent != nullptr)
+				agent->StopAndCancelDestination();
 			restTimer.Start();
 			state = BlurrgState::REST;
 
@@ -267,6 +277,7 @@ void Blurrg::DistanceToPlayer()
 	playerPosition.y = player->transform->GetWorldPosition().z;
 	position.x = gameObject->transform->GetWorldPosition().x;
 	position.y = gameObject->transform->GetWorldPosition().z;
+
 	moveDirection = playerPosition - position;
 
 	distance = moveDirection.Length();
@@ -285,14 +296,16 @@ void Blurrg::LookAtPlayer()
 
 void Blurrg::Wander()
 {
-	if (rigidBody)
-		rigidBody->Set2DVelocity(float2::zero);
+	if (agent != nullptr)
+		agent->SetDestination(gameObject->transform->GetWorldPosition());
 }
 
 void Blurrg::Chase()
 {
-	if (rigidBody)
-		rigidBody->Set2DVelocity(moveDirection * ChaseSpeed());
+	if (agent != nullptr) {
+		agent->velocity = ChaseSpeed();
+		agent->SetDestination(player->transform->GetWorldPosition());
+	}
 }
 
 void Blurrg::Dash()
@@ -302,6 +315,9 @@ void Blurrg::Dash()
 	if (decceleration > 1.0f)
 		decceleration = 1.0f;
 
-	if (rigidBody)
-		rigidBody->Set2DVelocity(moveDirection * DashSpeed() * decceleration);
+	if (agent != nullptr) {
+		agent->velocity = DashSpeed() * decceleration;
+		agent->SetDestination(agent->destinationPoint);
+	}
+
 }

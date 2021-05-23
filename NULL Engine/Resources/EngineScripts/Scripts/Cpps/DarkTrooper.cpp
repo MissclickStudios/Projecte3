@@ -8,6 +8,7 @@
 #include "C_Transform.h"
 #include "C_RigidBody.h"
 #include "C_AudioSource.h"
+#include "C_NavMeshAgent.h"
 
 #include "Player.h"
 
@@ -120,6 +121,11 @@ void DarkTrooper::SetUp()
 	}
 
 	currentWeapon = blasterWeapon;
+
+	agent = gameObject->GetComponent<C_NavMeshAgent>();
+
+	if (agent != nullptr)
+		agent->origin = gameObject->GetComponent<C_Transform>()->GetWorldPosition();
 }
 
 void DarkTrooper::Behavior()
@@ -157,15 +163,14 @@ void DarkTrooper::DistanceToPlayer()
 
 	distance = aimDirection.Length();
 	// TODO: Separate aim and movement once the pathfinding is implemented
-	moveDirection = aimDirection;
-
-	if (!moveDirection.IsZero())
-		moveDirection.Normalize();
 }
 
 void DarkTrooper::LookAtPlayer()
 {
-	float rad = aimDirection.AimedAngle();
+	float2 direction = aimDirection;
+	if (moveState != DarkTrooperState::IDLE)
+		direction = moveDirection;
+	float rad = direction.AimedAngle();
 
 	if (skeleton)
 		skeleton->transform->SetLocalRotation(float3(0, -rad + DegToRad(90), 0));
@@ -316,18 +321,25 @@ void DarkTrooper::ManageAim()
 
 void DarkTrooper::Patrol()
 {
-	if (rigidBody != nullptr)
-		rigidBody->SetLinearVelocity(float3::zero);
+	if (agent != nullptr)
+	{
+		float3 pos = { gameObject->transform->GetWorldPosition().x, 0.0f, gameObject->transform->GetWorldPosition().z };
+
+		agent->SetDestination(pos);
+	}
 }
 
 void DarkTrooper::Chase()
 {
-	if (rigidBody != nullptr)
-		rigidBody->Set2DVelocity(moveDirection * ChaseSpeed());
+	if (agent != nullptr)
+	{
+		agent->SetDestination(player->transform->GetWorldPosition());
+		moveDirection = float2(agent->direction.x, agent->direction.z);
+	}
 }
 
 void DarkTrooper::Flee()
 {
-	if (rigidBody != nullptr)
-		rigidBody->Set2DVelocity(-moveDirection * ChaseSpeed());
+	if (agent != nullptr)
+		agent->SetDestination(-player->transform->GetWorldPosition());
 }

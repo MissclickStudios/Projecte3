@@ -153,8 +153,6 @@ bool GameObject::CleanUp()
 
 bool GameObject::SaveState(ParsonNode& root) const
 {
-	bool ret = true;
-
 	root.SetNumber("UID", uid);
 
 	uint parentUID = (parent != nullptr) ? parent->uid : 0;
@@ -169,6 +167,9 @@ bool GameObject::SaveState(ParsonNode& root) const
 	root.SetBool("IsSceneRoot", isSceneRoot);
 	root.SetBool("MaintainThroughScenes", maintainThroughScenes);
 	root.SetBool("ShowBoundingBoxes", show_bounding_boxes);
+	ParsonNode navNode = root.SetNode("NavigationInfo");
+	navNode.SetBool("isNavigable",isNavigable);
+	navNode.SetInteger("navigationArea", navigationArea);
 
 	ParsonArray componentArray = root.SetArray("Components");
 
@@ -178,7 +179,7 @@ bool GameObject::SaveState(ParsonNode& root) const
 		components[i]->SaveState(componentNode);
 	}
 
-	return ret;
+	return true;
 }
 
 bool GameObject::LoadState(ParsonNode& root)
@@ -195,6 +196,13 @@ bool GameObject::LoadState(ParsonNode& root)
 	isSceneRoot				= root.GetBool("IsSceneRoot");
 	maintainThroughScenes	= root.GetBool("MaintainThroughScenes");
 	show_bounding_boxes		= root.GetBool("ShowBoundingBoxes");
+
+	ParsonNode navNode = root.GetNode("NavigationInfo");
+	if (navNode.NodeIsValid()) 
+	{
+		isNavigable = navNode.GetBool("isNavigable");
+		navigationArea = navNode.GetInteger("navigationArea");
+	}
 
 	ParsonArray componentsArray = root.GetArray("Components");
 	for (uint i = 0; i < componentsArray.size; ++i)

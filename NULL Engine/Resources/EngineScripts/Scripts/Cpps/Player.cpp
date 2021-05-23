@@ -28,6 +28,8 @@
 #define MAX_INPUT		32767
 #define WALK_THRESHOLD	16384
 #define WALKING_FACTOR	0.5f
+#include "MathGeoLib/include/Math/float3.h"
+
 
 Player* CreatePlayer()
 {

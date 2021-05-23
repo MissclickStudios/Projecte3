@@ -27,6 +27,7 @@
 #include "R_Material.h"													
 #include "R_Texture.h"
 #include "R_Shader.h"
+#include "R_NavMesh.h"
 
 #include "I_Textures.h"													
 #include "I_Shaders.h"							//TODO: erase
@@ -684,6 +685,32 @@ void M_Renderer3D::RenderScene()
 	{
 		RayRenderer last_ray = RayRenderer(App->camera->lastRaycast, rayColor, rayWidth);
 		last_ray.Render();
+	}
+
+	if (App->detour->debugDraw && App->detour->navMeshResource != nullptr && App->detour->navMeshResource->navMesh != nullptr) {
+		if (App->detour->renderMeshes.data() != nullptr)
+		{
+			R_Shader* shaderProgram = App->resourceManager->GetShader("DefaultShader");;
+
+			for (int i = 0; i < App->detour->renderMeshes.size(); ++i)
+			{
+
+				glUseProgram(shaderProgram->shaderProgramID);
+
+				shaderProgram->SetUniformMatrix4("modelMatrix", (GLfloat*)float4x4::identity.ptr());
+
+				shaderProgram->SetUniformMatrix4("viewMatrix", App->camera->GetCurrentCamera()->GetViewMatrixTransposed().ptr());
+
+				shaderProgram->SetUniformMatrix4("projectionMatrix", App->camera->GetCurrentCamera()->GetProjectionMatrixTransposed().ptr());
+
+				shaderProgram->SetUniformVec3f("cameraPosition", (GLfloat*)&App->camera->GetCurrentCamera()->GetFrustum().Pos());
+
+				glBindVertexArray(App->detour->renderMeshes[i]->rmesh->VAO);
+				glDrawElements(GL_TRIANGLES, App->detour->renderMeshes[i]->rmesh->indices.size(), GL_UNSIGNED_INT, nullptr);
+				glUseProgram(0);
+				glBindVertexArray(0);	
+			}
+		}
 	}
 
 	//PrimitiveDrawExamples p_ex = PrimitiveDrawExamples();
