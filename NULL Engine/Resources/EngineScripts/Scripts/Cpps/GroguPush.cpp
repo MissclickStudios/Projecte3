@@ -21,6 +21,7 @@ GroguPush* CreateGroguPush()
 
 	INSPECTOR_INPUT_FLOAT3(script->abilityRadius);
 	INSPECTOR_INPUT_FLOAT(script->abilityCooldown);
+	INSPECTOR_INPUT_FLOAT(script->abilityPower);
 
 	return script;
 }
