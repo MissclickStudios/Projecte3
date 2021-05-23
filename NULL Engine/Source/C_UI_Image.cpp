@@ -47,7 +47,6 @@ C_UI_Image::~C_UI_Image()
 
 bool C_UI_Image::Update()
 {
-	//GetTextureCoords();
 	return true;
 }
 
@@ -300,24 +299,6 @@ Frame C_UI_Image::GetTexturePosition(int pixelPosX, int pixelPosY, int pixelWidt
 
 	return frame;
 }
-
-void C_UI_Image::GetTextureCoords()
-{
-	C_Material* cMaterial = GetOwner()->GetComponent<C_Material>();
-	if (!cMaterial)
-		return;
-
-	uint32 id = cMaterial->GetTextureID();
-	unsigned int spritesheetPixelWidth, spritesheetPixelHeight = 0; cMaterial->GetTextureSize(spritesheetPixelWidth, spritesheetPixelHeight);
-	if (!spritesheetPixelWidth && !spritesheetPixelHeight)
-		return;
-	
-	pixelCoord[0] = textCoord.proportionBeginX * spritesheetPixelWidth; /// (int)spritesheetPixelWidth;
-	pixelCoord[1] = textCoord.proportionBeginY * spritesheetPixelHeight; /// (int)spritesheetPixelHeight;
-	pixelCoord[2] = textCoord.proportionFinalX * spritesheetPixelWidth; /// (int)spritesheetPixelWidth - pixelCoord[0];
-	pixelCoord[3] = textCoord.proportionFinalY * spritesheetPixelHeight; /// (int)spritesheetPixelHeight - pixelCoord[1];
-}
-
 
 bool C_UI_Image::SaveState(ParsonNode& root) const
 {
