@@ -1,6 +1,6 @@
 {
-    "ModTime": 1621706884,
-    "UID": 747289806,
+    "ModTime": 1621773394,
+    "UID": 253173066,
     "ParentUID": 1474137658,
     "PrefabID": 208460407,
     "IsPrefab": true,
@@ -9,7 +9,11 @@
     "IsStatic": false,
     "IsSceneRoot": false,
     "MaintainThroughScenes": false,
-    "ShowBoundingBoxes": true,
+    "ShowBoundingBoxes": false,
+    "NavigationInfo": {
+        "isNavigable": false,
+        "navigationArea": 0
+    },
     "Components": [
         {
             "Type": 1,
@@ -165,14 +169,14 @@
             "Tracks": [
                 {
                     "Name": "Legs",
-                    "RootBoneUID": 1743921695,
+                    "RootBoneUID": 1655961531,
                     "RootBoneName": "Legs",
                     "TrackSpeed": 1,
                     "Interpolate": true
                 },
                 {
                     "Name": "Torso",
-                    "RootBoneUID": 1913349723,
+                    "RootBoneUID": 1455341409,
                     "RootBoneName": "Torso",
                     "TrackSpeed": 1,
                     "Interpolate": true
@@ -389,8 +393,8 @@
     ],
     "Children": [
         {
-            "UID": 1800554755,
-            "ParentUID": 747289806,
+            "UID": 1365494320,
+            "ParentUID": 253173066,
             "PrefabID": 208460407,
             "IsPrefab": true,
             "Name": "Mesh",
@@ -398,7 +402,11 @@
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
+            "ShowBoundingBoxes": true,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
             "Components": [
                 {
                     "Type": 1,
@@ -451,10 +459,10 @@
                         "File": "1411065054.nemat"
                     },
                     "Texture": {
-                        "AssetsPath": "Assets\/Textures\/\/Mando\/Mando_Texture.png",
-                        "AssetsName": "Mando_Texture.png",
-                        "LibaryPath": "Library\/Textures\/973208872.netex",
-                        "LibraryFile": "973208872.netex"
+                        "AssetsPath": "Assets\/Textures\/Mando\/mando_texture_v03.png",
+                        "AssetsName": "mando_texture_v03.png",
+                        "LibaryPath": "Library\/Textures\/1063346379.netex",
+                        "LibraryFile": "1063346379.netex"
                     },
                     "Shader": {
                         "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
@@ -467,8 +475,8 @@
             "Children": []
         },
         {
-            "UID": 709247797,
-            "ParentUID": 747289806,
+            "UID": 663671028,
+            "ParentUID": 253173066,
             "PrefabID": 208460407,
             "IsPrefab": true,
             "Name": "Particles",
@@ -477,6 +485,10 @@
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
             "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
             "Components": [
                 {
                     "Type": 1,
@@ -501,8 +513,8 @@
             "Children": []
         },
         {
-            "UID": 558667544,
-            "ParentUID": 747289806,
+            "UID": 1194308429,
+            "ParentUID": 253173066,
             "PrefabID": 208460407,
             "IsPrefab": true,
             "Name": "Skeleton",
@@ -511,6 +523,10 @@
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
             "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
             "Components": [
                 {
                     "Type": 1,
@@ -534,8 +550,8 @@
             ],
             "Children": [
                 {
-                    "UID": 1427227659,
-                    "ParentUID": 558667544,
+                    "UID": 1593414353,
+                    "ParentUID": 1194308429,
                     "PrefabID": 208460407,
                     "IsPrefab": true,
                     "Name": "mixamorig:Hips",
@@ -544,6 +560,10 @@
                     "IsSceneRoot": false,
                     "MaintainThroughScenes": false,
                     "ShowBoundingBoxes": false,
+                    "NavigationInfo": {
+                        "isNavigable": false,
+                        "navigationArea": 0
+                    },
                     "Components": [
                         {
                             "Type": 1,
@@ -567,8 +587,8 @@
                     ],
                     "Children": [
                         {
-                            "UID": 1913349723,
-                            "ParentUID": 1427227659,
+                            "UID": 1455341409,
+                            "ParentUID": 1593414353,
                             "PrefabID": 208460407,
                             "IsPrefab": true,
                             "Name": "Torso",
@@ -577,6 +597,10 @@
                             "IsSceneRoot": false,
                             "MaintainThroughScenes": false,
                             "ShowBoundingBoxes": false,
+                            "NavigationInfo": {
+                                "isNavigable": false,
+                                "navigationArea": 0
+                            },
                             "Components": [
                                 {
                                     "Type": 1,
@@ -600,8 +624,8 @@
                             ],
                             "Children": [
                                 {
-                                    "UID": 570676055,
-                                    "ParentUID": 1913349723,
+                                    "UID": 1785203469,
+                                    "ParentUID": 1455341409,
                                     "PrefabID": 208460407,
                                     "IsPrefab": true,
                                     "Name": "mixamorig:Spine",
@@ -610,6 +634,10 @@
                                     "IsSceneRoot": false,
                                     "MaintainThroughScenes": false,
                                     "ShowBoundingBoxes": false,
+                                    "NavigationInfo": {
+                                        "isNavigable": false,
+                                        "navigationArea": 0
+                                    },
                                     "Components": [
                                         {
                                             "Type": 1,
@@ -633,8 +661,8 @@
                                     ],
                                     "Children": [
                                         {
-                                            "UID": 228732695,
-                                            "ParentUID": 570676055,
+                                            "UID": 2128452831,
+                                            "ParentUID": 1785203469,
                                             "PrefabID": 208460407,
                                             "IsPrefab": true,
                                             "Name": "mixamorig:Spine1",
@@ -643,6 +671,10 @@
                                             "IsSceneRoot": false,
                                             "MaintainThroughScenes": false,
                                             "ShowBoundingBoxes": false,
+                                            "NavigationInfo": {
+                                                "isNavigable": false,
+                                                "navigationArea": 0
+                                            },
                                             "Components": [
                                                 {
                                                     "Type": 1,
@@ -666,8 +698,8 @@
                                             ],
                                             "Children": [
                                                 {
-                                                    "UID": 1380869407,
-                                                    "ParentUID": 228732695,
+                                                    "UID": 83421332,
+                                                    "ParentUID": 2128452831,
                                                     "PrefabID": 208460407,
                                                     "IsPrefab": true,
                                                     "Name": "mixamorig:Spine2",
@@ -676,6 +708,10 @@
                                                     "IsSceneRoot": false,
                                                     "MaintainThroughScenes": false,
                                                     "ShowBoundingBoxes": false,
+                                                    "NavigationInfo": {
+                                                        "isNavigable": false,
+                                                        "navigationArea": 0
+                                                    },
                                                     "Components": [
                                                         {
                                                             "Type": 1,
@@ -699,8 +735,8 @@
                                                     ],
                                                     "Children": [
                                                         {
-                                                            "UID": 157682616,
-                                                            "ParentUID": 1380869407,
+                                                            "UID": 584975175,
+                                                            "ParentUID": 83421332,
                                                             "PrefabID": 208460407,
                                                             "IsPrefab": true,
                                                             "Name": "mixamorig:Neck",
@@ -709,6 +745,10 @@
                                                             "IsSceneRoot": false,
                                                             "MaintainThroughScenes": false,
                                                             "ShowBoundingBoxes": false,
+                                                            "NavigationInfo": {
+                                                                "isNavigable": false,
+                                                                "navigationArea": 0
+                                                            },
                                                             "Components": [
                                                                 {
                                                                     "Type": 1,
@@ -732,8 +772,8 @@
                                                             ],
                                                             "Children": [
                                                                 {
-                                                                    "UID": 1659609792,
-                                                                    "ParentUID": 157682616,
+                                                                    "UID": 1927380492,
+                                                                    "ParentUID": 584975175,
                                                                     "PrefabID": 208460407,
                                                                     "IsPrefab": true,
                                                                     "Name": "mixamorig:Head",
@@ -742,6 +782,10 @@
                                                                     "IsSceneRoot": false,
                                                                     "MaintainThroughScenes": false,
                                                                     "ShowBoundingBoxes": false,
+                                                                    "NavigationInfo": {
+                                                                        "isNavigable": false,
+                                                                        "navigationArea": 0
+                                                                    },
                                                                     "Components": [
                                                                         {
                                                                             "Type": 1,
@@ -765,8 +809,8 @@
                                                                     ],
                                                                     "Children": [
                                                                         {
-                                                                            "UID": 1881464506,
-                                                                            "ParentUID": 1659609792,
+                                                                            "UID": 44681750,
+                                                                            "ParentUID": 1927380492,
                                                                             "PrefabID": 208460407,
                                                                             "IsPrefab": true,
                                                                             "Name": "mixamorig:HeadTop_End",
@@ -775,6 +819,10 @@
                                                                             "IsSceneRoot": false,
                                                                             "MaintainThroughScenes": false,
                                                                             "ShowBoundingBoxes": false,
+                                                                            "NavigationInfo": {
+                                                                                "isNavigable": false,
+                                                                                "navigationArea": 0
+                                                                            },
                                                                             "Components": [
                                                                                 {
                                                                                     "Type": 1,
@@ -803,8 +851,8 @@
                                                             ]
                                                         },
                                                         {
-                                                            "UID": 1437513129,
-                                                            "ParentUID": 1380869407,
+                                                            "UID": 12772968,
+                                                            "ParentUID": 83421332,
                                                             "PrefabID": 208460407,
                                                             "IsPrefab": true,
                                                             "Name": "mixamorig:LeftShoulder",
@@ -813,6 +861,10 @@
                                                             "IsSceneRoot": false,
                                                             "MaintainThroughScenes": false,
                                                             "ShowBoundingBoxes": false,
+                                                            "NavigationInfo": {
+                                                                "isNavigable": false,
+                                                                "navigationArea": 0
+                                                            },
                                                             "Components": [
                                                                 {
                                                                     "Type": 1,
@@ -836,8 +888,8 @@
                                                             ],
                                                             "Children": [
                                                                 {
-                                                                    "UID": 977094420,
-                                                                    "ParentUID": 1437513129,
+                                                                    "UID": 2008975898,
+                                                                    "ParentUID": 12772968,
                                                                     "PrefabID": 208460407,
                                                                     "IsPrefab": true,
                                                                     "Name": "mixamorig:LeftArm",
@@ -846,6 +898,10 @@
                                                                     "IsSceneRoot": false,
                                                                     "MaintainThroughScenes": false,
                                                                     "ShowBoundingBoxes": false,
+                                                                    "NavigationInfo": {
+                                                                        "isNavigable": false,
+                                                                        "navigationArea": 0
+                                                                    },
                                                                     "Components": [
                                                                         {
                                                                             "Type": 1,
@@ -869,8 +925,8 @@
                                                                     ],
                                                                     "Children": [
                                                                         {
-                                                                            "UID": 1927476468,
-                                                                            "ParentUID": 977094420,
+                                                                            "UID": 553112975,
+                                                                            "ParentUID": 2008975898,
                                                                             "PrefabID": 208460407,
                                                                             "IsPrefab": true,
                                                                             "Name": "mixamorig:LeftForeArm",
@@ -879,6 +935,10 @@
                                                                             "IsSceneRoot": false,
                                                                             "MaintainThroughScenes": false,
                                                                             "ShowBoundingBoxes": false,
+                                                                            "NavigationInfo": {
+                                                                                "isNavigable": false,
+                                                                                "navigationArea": 0
+                                                                            },
                                                                             "Components": [
                                                                                 {
                                                                                     "Type": 1,
@@ -902,8 +962,8 @@
                                                                             ],
                                                                             "Children": [
                                                                                 {
-                                                                                    "UID": 1789281756,
-                                                                                    "ParentUID": 1927476468,
+                                                                                    "UID": 1216873250,
+                                                                                    "ParentUID": 553112975,
                                                                                     "PrefabID": 208460407,
                                                                                     "IsPrefab": true,
                                                                                     "Name": "mixamorig:LeftHand",
@@ -912,6 +972,10 @@
                                                                                     "IsSceneRoot": false,
                                                                                     "MaintainThroughScenes": false,
                                                                                     "ShowBoundingBoxes": false,
+                                                                                    "NavigationInfo": {
+                                                                                        "isNavigable": false,
+                                                                                        "navigationArea": 0
+                                                                                    },
                                                                                     "Components": [
                                                                                         {
                                                                                             "Type": 1,
@@ -935,8 +999,8 @@
                                                                                     ],
                                                                                     "Children": [
                                                                                         {
-                                                                                            "UID": 482812282,
-                                                                                            "ParentUID": 1789281756,
+                                                                                            "UID": 677049029,
+                                                                                            "ParentUID": 1216873250,
                                                                                             "PrefabID": 208460407,
                                                                                             "IsPrefab": true,
                                                                                             "Name": "mixamorig:LeftHandMiddle1",
@@ -945,6 +1009,10 @@
                                                                                             "IsSceneRoot": false,
                                                                                             "MaintainThroughScenes": false,
                                                                                             "ShowBoundingBoxes": false,
+                                                                                            "NavigationInfo": {
+                                                                                                "isNavigable": false,
+                                                                                                "navigationArea": 0
+                                                                                            },
                                                                                             "Components": [
                                                                                                 {
                                                                                                     "Type": 1,
@@ -968,8 +1036,8 @@
                                                                                             ],
                                                                                             "Children": [
                                                                                                 {
-                                                                                                    "UID": 2038698248,
-                                                                                                    "ParentUID": 482812282,
+                                                                                                    "UID": 983895317,
+                                                                                                    "ParentUID": 677049029,
                                                                                                     "PrefabID": 208460407,
                                                                                                     "IsPrefab": true,
                                                                                                     "Name": "mixamorig:LeftHandMiddle2",
@@ -978,6 +1046,10 @@
                                                                                                     "IsSceneRoot": false,
                                                                                                     "MaintainThroughScenes": false,
                                                                                                     "ShowBoundingBoxes": false,
+                                                                                                    "NavigationInfo": {
+                                                                                                        "isNavigable": false,
+                                                                                                        "navigationArea": 0
+                                                                                                    },
                                                                                                     "Components": [
                                                                                                         {
                                                                                                             "Type": 1,
@@ -1001,8 +1073,8 @@
                                                                                                     ],
                                                                                                     "Children": [
                                                                                                         {
-                                                                                                            "UID": 738373520,
-                                                                                                            "ParentUID": 2038698248,
+                                                                                                            "UID": 161914793,
+                                                                                                            "ParentUID": 983895317,
                                                                                                             "PrefabID": 208460407,
                                                                                                             "IsPrefab": true,
                                                                                                             "Name": "mixamorig:LeftHandMiddle3",
@@ -1011,6 +1083,10 @@
                                                                                                             "IsSceneRoot": false,
                                                                                                             "MaintainThroughScenes": false,
                                                                                                             "ShowBoundingBoxes": false,
+                                                                                                            "NavigationInfo": {
+                                                                                                                "isNavigable": false,
+                                                                                                                "navigationArea": 0
+                                                                                                            },
                                                                                                             "Components": [
                                                                                                                 {
                                                                                                                     "Type": 1,
@@ -1034,8 +1110,8 @@
                                                                                                             ],
                                                                                                             "Children": [
                                                                                                                 {
-                                                                                                                    "UID": 555407717,
-                                                                                                                    "ParentUID": 738373520,
+                                                                                                                    "UID": 493673948,
+                                                                                                                    "ParentUID": 161914793,
                                                                                                                     "PrefabID": 208460407,
                                                                                                                     "IsPrefab": true,
                                                                                                                     "Name": "mixamorig:LeftHandMiddle4",
@@ -1044,6 +1120,10 @@
                                                                                                                     "IsSceneRoot": false,
                                                                                                                     "MaintainThroughScenes": false,
                                                                                                                     "ShowBoundingBoxes": false,
+                                                                                                                    "NavigationInfo": {
+                                                                                                                        "isNavigable": false,
+                                                                                                                        "navigationArea": 0
+                                                                                                                    },
                                                                                                                     "Components": [
                                                                                                                         {
                                                                                                                             "Type": 1,
@@ -1074,8 +1154,8 @@
                                                                                             ]
                                                                                         },
                                                                                         {
-                                                                                            "UID": 156726938,
-                                                                                            "ParentUID": 1789281756,
+                                                                                            "UID": 1627844669,
+                                                                                            "ParentUID": 1216873250,
                                                                                             "PrefabID": 208460407,
                                                                                             "IsPrefab": true,
                                                                                             "Name": "mixamorig:LeftHandIndex1",
@@ -1084,6 +1164,10 @@
                                                                                             "IsSceneRoot": false,
                                                                                             "MaintainThroughScenes": false,
                                                                                             "ShowBoundingBoxes": false,
+                                                                                            "NavigationInfo": {
+                                                                                                "isNavigable": false,
+                                                                                                "navigationArea": 0
+                                                                                            },
                                                                                             "Components": [
                                                                                                 {
                                                                                                     "Type": 1,
@@ -1107,8 +1191,8 @@
                                                                                             ],
                                                                                             "Children": [
                                                                                                 {
-                                                                                                    "UID": 216009770,
-                                                                                                    "ParentUID": 156726938,
+                                                                                                    "UID": 633563772,
+                                                                                                    "ParentUID": 1627844669,
                                                                                                     "PrefabID": 208460407,
                                                                                                     "IsPrefab": true,
                                                                                                     "Name": "mixamorig:LeftHandIndex2",
@@ -1117,6 +1201,10 @@
                                                                                                     "IsSceneRoot": false,
                                                                                                     "MaintainThroughScenes": false,
                                                                                                     "ShowBoundingBoxes": false,
+                                                                                                    "NavigationInfo": {
+                                                                                                        "isNavigable": false,
+                                                                                                        "navigationArea": 0
+                                                                                                    },
                                                                                                     "Components": [
                                                                                                         {
                                                                                                             "Type": 1,
@@ -1140,8 +1228,8 @@
                                                                                                     ],
                                                                                                     "Children": [
                                                                                                         {
-                                                                                                            "UID": 1924112737,
-                                                                                                            "ParentUID": 216009770,
+                                                                                                            "UID": 390712868,
+                                                                                                            "ParentUID": 633563772,
                                                                                                             "PrefabID": 208460407,
                                                                                                             "IsPrefab": true,
                                                                                                             "Name": "mixamorig:LeftHandIndex3",
@@ -1150,6 +1238,10 @@
                                                                                                             "IsSceneRoot": false,
                                                                                                             "MaintainThroughScenes": false,
                                                                                                             "ShowBoundingBoxes": false,
+                                                                                                            "NavigationInfo": {
+                                                                                                                "isNavigable": false,
+                                                                                                                "navigationArea": 0
+                                                                                                            },
                                                                                                             "Components": [
                                                                                                                 {
                                                                                                                     "Type": 1,
@@ -1173,8 +1265,8 @@
                                                                                                             ],
                                                                                                             "Children": [
                                                                                                                 {
-                                                                                                                    "UID": 1024218136,
-                                                                                                                    "ParentUID": 1924112737,
+                                                                                                                    "UID": 803447037,
+                                                                                                                    "ParentUID": 390712868,
                                                                                                                     "PrefabID": 208460407,
                                                                                                                     "IsPrefab": true,
                                                                                                                     "Name": "mixamorig:LeftHandIndex4",
@@ -1183,6 +1275,10 @@
                                                                                                                     "IsSceneRoot": false,
                                                                                                                     "MaintainThroughScenes": false,
                                                                                                                     "ShowBoundingBoxes": false,
+                                                                                                                    "NavigationInfo": {
+                                                                                                                        "isNavigable": false,
+                                                                                                                        "navigationArea": 0
+                                                                                                                    },
                                                                                                                     "Components": [
                                                                                                                         {
                                                                                                                             "Type": 1,
@@ -1213,8 +1309,8 @@
                                                                                             ]
                                                                                         },
                                                                                         {
-                                                                                            "UID": 1647566305,
-                                                                                            "ParentUID": 1789281756,
+                                                                                            "UID": 1655892367,
+                                                                                            "ParentUID": 1216873250,
                                                                                             "PrefabID": 208460407,
                                                                                             "IsPrefab": true,
                                                                                             "Name": "mixamorig:LeftHandRing1",
@@ -1223,6 +1319,10 @@
                                                                                             "IsSceneRoot": false,
                                                                                             "MaintainThroughScenes": false,
                                                                                             "ShowBoundingBoxes": false,
+                                                                                            "NavigationInfo": {
+                                                                                                "isNavigable": false,
+                                                                                                "navigationArea": 0
+                                                                                            },
                                                                                             "Components": [
                                                                                                 {
                                                                                                     "Type": 1,
@@ -1246,8 +1346,8 @@
                                                                                             ],
                                                                                             "Children": [
                                                                                                 {
-                                                                                                    "UID": 1010022802,
-                                                                                                    "ParentUID": 1647566305,
+                                                                                                    "UID": 55314074,
+                                                                                                    "ParentUID": 1655892367,
                                                                                                     "PrefabID": 208460407,
                                                                                                     "IsPrefab": true,
                                                                                                     "Name": "mixamorig:LeftHandRing2",
@@ -1256,6 +1356,10 @@
                                                                                                     "IsSceneRoot": false,
                                                                                                     "MaintainThroughScenes": false,
                                                                                                     "ShowBoundingBoxes": false,
+                                                                                                    "NavigationInfo": {
+                                                                                                        "isNavigable": false,
+                                                                                                        "navigationArea": 0
+                                                                                                    },
                                                                                                     "Components": [
                                                                                                         {
                                                                                                             "Type": 1,
@@ -1279,8 +1383,8 @@
                                                                                                     ],
                                                                                                     "Children": [
                                                                                                         {
-                                                                                                            "UID": 569673815,
-                                                                                                            "ParentUID": 1010022802,
+                                                                                                            "UID": 1066874773,
+                                                                                                            "ParentUID": 55314074,
                                                                                                             "PrefabID": 208460407,
                                                                                                             "IsPrefab": true,
                                                                                                             "Name": "mixamorig:LeftHandRing3",
@@ -1289,6 +1393,10 @@
                                                                                                             "IsSceneRoot": false,
                                                                                                             "MaintainThroughScenes": false,
                                                                                                             "ShowBoundingBoxes": false,
+                                                                                                            "NavigationInfo": {
+                                                                                                                "isNavigable": false,
+                                                                                                                "navigationArea": 0
+                                                                                                            },
                                                                                                             "Components": [
                                                                                                                 {
                                                                                                                     "Type": 1,
@@ -1312,8 +1420,8 @@
                                                                                                             ],
                                                                                                             "Children": [
                                                                                                                 {
-                                                                                                                    "UID": 1664943055,
-                                                                                                                    "ParentUID": 569673815,
+                                                                                                                    "UID": 973845577,
+                                                                                                                    "ParentUID": 1066874773,
                                                                                                                     "PrefabID": 208460407,
                                                                                                                     "IsPrefab": true,
                                                                                                                     "Name": "mixamorig:LeftHandRing4",
@@ -1322,6 +1430,10 @@
                                                                                                                     "IsSceneRoot": false,
                                                                                                                     "MaintainThroughScenes": false,
                                                                                                                     "ShowBoundingBoxes": false,
+                                                                                                                    "NavigationInfo": {
+                                                                                                                        "isNavigable": false,
+                                                                                                                        "navigationArea": 0
+                                                                                                                    },
                                                                                                                     "Components": [
                                                                                                                         {
                                                                                                                             "Type": 1,
@@ -1352,8 +1464,8 @@
                                                                                             ]
                                                                                         },
                                                                                         {
-                                                                                            "UID": 93994679,
-                                                                                            "ParentUID": 1789281756,
+                                                                                            "UID": 1234330611,
+                                                                                            "ParentUID": 1216873250,
                                                                                             "PrefabID": 208460407,
                                                                                             "IsPrefab": true,
                                                                                             "Name": "mixamorig:LeftHandThumb1",
@@ -1362,6 +1474,10 @@
                                                                                             "IsSceneRoot": false,
                                                                                             "MaintainThroughScenes": false,
                                                                                             "ShowBoundingBoxes": false,
+                                                                                            "NavigationInfo": {
+                                                                                                "isNavigable": false,
+                                                                                                "navigationArea": 0
+                                                                                            },
                                                                                             "Components": [
                                                                                                 {
                                                                                                     "Type": 1,
@@ -1385,8 +1501,8 @@
                                                                                             ],
                                                                                             "Children": [
                                                                                                 {
-                                                                                                    "UID": 1219888884,
-                                                                                                    "ParentUID": 93994679,
+                                                                                                    "UID": 591628870,
+                                                                                                    "ParentUID": 1234330611,
                                                                                                     "PrefabID": 208460407,
                                                                                                     "IsPrefab": true,
                                                                                                     "Name": "mixamorig:LeftHandThumb2",
@@ -1395,6 +1511,10 @@
                                                                                                     "IsSceneRoot": false,
                                                                                                     "MaintainThroughScenes": false,
                                                                                                     "ShowBoundingBoxes": false,
+                                                                                                    "NavigationInfo": {
+                                                                                                        "isNavigable": false,
+                                                                                                        "navigationArea": 0
+                                                                                                    },
                                                                                                     "Components": [
                                                                                                         {
                                                                                                             "Type": 1,
@@ -1418,8 +1538,8 @@
                                                                                                     ],
                                                                                                     "Children": [
                                                                                                         {
-                                                                                                            "UID": 504737548,
-                                                                                                            "ParentUID": 1219888884,
+                                                                                                            "UID": 1732249514,
+                                                                                                            "ParentUID": 591628870,
                                                                                                             "PrefabID": 208460407,
                                                                                                             "IsPrefab": true,
                                                                                                             "Name": "mixamorig:LeftHandThumb3",
@@ -1428,6 +1548,10 @@
                                                                                                             "IsSceneRoot": false,
                                                                                                             "MaintainThroughScenes": false,
                                                                                                             "ShowBoundingBoxes": false,
+                                                                                                            "NavigationInfo": {
+                                                                                                                "isNavigable": false,
+                                                                                                                "navigationArea": 0
+                                                                                                            },
                                                                                                             "Components": [
                                                                                                                 {
                                                                                                                     "Type": 1,
@@ -1451,8 +1575,8 @@
                                                                                                             ],
                                                                                                             "Children": [
                                                                                                                 {
-                                                                                                                    "UID": 906192739,
-                                                                                                                    "ParentUID": 504737548,
+                                                                                                                    "UID": 2125595867,
+                                                                                                                    "ParentUID": 1732249514,
                                                                                                                     "PrefabID": 208460407,
                                                                                                                     "IsPrefab": true,
                                                                                                                     "Name": "mixamorig:LeftHandThumb4",
@@ -1461,6 +1585,10 @@
                                                                                                                     "IsSceneRoot": false,
                                                                                                                     "MaintainThroughScenes": false,
                                                                                                                     "ShowBoundingBoxes": false,
+                                                                                                                    "NavigationInfo": {
+                                                                                                                        "isNavigable": false,
+                                                                                                                        "navigationArea": 0
+                                                                                                                    },
                                                                                                                     "Components": [
                                                                                                                         {
                                                                                                                             "Type": 1,
@@ -1491,8 +1619,8 @@
                                                                                             ]
                                                                                         },
                                                                                         {
-                                                                                            "UID": 249760479,
-                                                                                            "ParentUID": 1789281756,
+                                                                                            "UID": 1304198415,
+                                                                                            "ParentUID": 1216873250,
                                                                                             "PrefabID": 208460407,
                                                                                             "IsPrefab": true,
                                                                                             "Name": "mixamorig:LeftHandPinky1",
@@ -1501,6 +1629,10 @@
                                                                                             "IsSceneRoot": false,
                                                                                             "MaintainThroughScenes": false,
                                                                                             "ShowBoundingBoxes": false,
+                                                                                            "NavigationInfo": {
+                                                                                                "isNavigable": false,
+                                                                                                "navigationArea": 0
+                                                                                            },
                                                                                             "Components": [
                                                                                                 {
                                                                                                     "Type": 1,
@@ -1524,8 +1656,8 @@
                                                                                             ],
                                                                                             "Children": [
                                                                                                 {
-                                                                                                    "UID": 2128065183,
-                                                                                                    "ParentUID": 249760479,
+                                                                                                    "UID": 1543669376,
+                                                                                                    "ParentUID": 1304198415,
                                                                                                     "PrefabID": 208460407,
                                                                                                     "IsPrefab": true,
                                                                                                     "Name": "mixamorig:LeftHandPinky2",
@@ -1534,6 +1666,10 @@
                                                                                                     "IsSceneRoot": false,
                                                                                                     "MaintainThroughScenes": false,
                                                                                                     "ShowBoundingBoxes": false,
+                                                                                                    "NavigationInfo": {
+                                                                                                        "isNavigable": false,
+                                                                                                        "navigationArea": 0
+                                                                                                    },
                                                                                                     "Components": [
                                                                                                         {
                                                                                                             "Type": 1,
@@ -1557,8 +1693,8 @@
                                                                                                     ],
                                                                                                     "Children": [
                                                                                                         {
-                                                                                                            "UID": 1502851289,
-                                                                                                            "ParentUID": 2128065183,
+                                                                                                            "UID": 1784762063,
+                                                                                                            "ParentUID": 1543669376,
                                                                                                             "PrefabID": 208460407,
                                                                                                             "IsPrefab": true,
                                                                                                             "Name": "mixamorig:LeftHandPinky3",
@@ -1567,6 +1703,10 @@
                                                                                                             "IsSceneRoot": false,
                                                                                                             "MaintainThroughScenes": false,
                                                                                                             "ShowBoundingBoxes": false,
+                                                                                                            "NavigationInfo": {
+                                                                                                                "isNavigable": false,
+                                                                                                                "navigationArea": 0
+                                                                                                            },
                                                                                                             "Components": [
                                                                                                                 {
                                                                                                                     "Type": 1,
@@ -1590,8 +1730,8 @@
                                                                                                             ],
                                                                                                             "Children": [
                                                                                                                 {
-                                                                                                                    "UID": 126729649,
-                                                                                                                    "ParentUID": 1502851289,
+                                                                                                                    "UID": 2128296081,
+                                                                                                                    "ParentUID": 1784762063,
                                                                                                                     "PrefabID": 208460407,
                                                                                                                     "IsPrefab": true,
                                                                                                                     "Name": "mixamorig:LeftHandPinky4",
@@ -1600,6 +1740,10 @@
                                                                                                                     "IsSceneRoot": false,
                                                                                                                     "MaintainThroughScenes": false,
                                                                                                                     "ShowBoundingBoxes": false,
+                                                                                                                    "NavigationInfo": {
+                                                                                                                        "isNavigable": false,
+                                                                                                                        "navigationArea": 0
+                                                                                                                    },
                                                                                                                     "Components": [
                                                                                                                         {
                                                                                                                             "Type": 1,
@@ -1638,8 +1782,8 @@
                                                             ]
                                                         },
                                                         {
-                                                            "UID": 916440065,
-                                                            "ParentUID": 1380869407,
+                                                            "UID": 620190361,
+                                                            "ParentUID": 83421332,
                                                             "PrefabID": 208460407,
                                                             "IsPrefab": true,
                                                             "Name": "mixamorig:RightShoulder",
@@ -1648,6 +1792,10 @@
                                                             "IsSceneRoot": false,
                                                             "MaintainThroughScenes": false,
                                                             "ShowBoundingBoxes": false,
+                                                            "NavigationInfo": {
+                                                                "isNavigable": false,
+                                                                "navigationArea": 0
+                                                            },
                                                             "Components": [
                                                                 {
                                                                     "Type": 1,
@@ -1671,8 +1819,8 @@
                                                             ],
                                                             "Children": [
                                                                 {
-                                                                    "UID": 2036749949,
-                                                                    "ParentUID": 916440065,
+                                                                    "UID": 1672918529,
+                                                                    "ParentUID": 620190361,
                                                                     "PrefabID": 208460407,
                                                                     "IsPrefab": true,
                                                                     "Name": "mixamorig:RightArm",
@@ -1681,6 +1829,10 @@
                                                                     "IsSceneRoot": false,
                                                                     "MaintainThroughScenes": false,
                                                                     "ShowBoundingBoxes": false,
+                                                                    "NavigationInfo": {
+                                                                        "isNavigable": false,
+                                                                        "navigationArea": 0
+                                                                    },
                                                                     "Components": [
                                                                         {
                                                                             "Type": 1,
@@ -1704,8 +1856,8 @@
                                                                     ],
                                                                     "Children": [
                                                                         {
-                                                                            "UID": 1305409448,
-                                                                            "ParentUID": 2036749949,
+                                                                            "UID": 1338341635,
+                                                                            "ParentUID": 1672918529,
                                                                             "PrefabID": 208460407,
                                                                             "IsPrefab": true,
                                                                             "Name": "mixamorig:RightForeArm",
@@ -1714,6 +1866,10 @@
                                                                             "IsSceneRoot": false,
                                                                             "MaintainThroughScenes": false,
                                                                             "ShowBoundingBoxes": false,
+                                                                            "NavigationInfo": {
+                                                                                "isNavigable": false,
+                                                                                "navigationArea": 0
+                                                                            },
                                                                             "Components": [
                                                                                 {
                                                                                     "Type": 1,
@@ -1737,8 +1893,8 @@
                                                                             ],
                                                                             "Children": [
                                                                                 {
-                                                                                    "UID": 105577392,
-                                                                                    "ParentUID": 1305409448,
+                                                                                    "UID": 541576810,
+                                                                                    "ParentUID": 1338341635,
                                                                                     "PrefabID": 208460407,
                                                                                     "IsPrefab": true,
                                                                                     "Name": "mixamorig:RightHand",
@@ -1747,6 +1903,10 @@
                                                                                     "IsSceneRoot": false,
                                                                                     "MaintainThroughScenes": false,
                                                                                     "ShowBoundingBoxes": false,
+                                                                                    "NavigationInfo": {
+                                                                                        "isNavigable": false,
+                                                                                        "navigationArea": 0
+                                                                                    },
                                                                                     "Components": [
                                                                                         {
                                                                                             "Type": 1,
@@ -1770,8 +1930,8 @@
                                                                                     ],
                                                                                     "Children": [
                                                                                         {
-                                                                                            "UID": 1964654940,
-                                                                                            "ParentUID": 105577392,
+                                                                                            "UID": 1766093959,
+                                                                                            "ParentUID": 541576810,
                                                                                             "PrefabID": 208460407,
                                                                                             "IsPrefab": true,
                                                                                             "Name": "mixamorig:RightHandMiddle1",
@@ -1780,6 +1940,10 @@
                                                                                             "IsSceneRoot": false,
                                                                                             "MaintainThroughScenes": false,
                                                                                             "ShowBoundingBoxes": false,
+                                                                                            "NavigationInfo": {
+                                                                                                "isNavigable": false,
+                                                                                                "navigationArea": 0
+                                                                                            },
                                                                                             "Components": [
                                                                                                 {
                                                                                                     "Type": 1,
@@ -1803,8 +1967,8 @@
                                                                                             ],
                                                                                             "Children": [
                                                                                                 {
-                                                                                                    "UID": 757665585,
-                                                                                                    "ParentUID": 1964654940,
+                                                                                                    "UID": 1866793975,
+                                                                                                    "ParentUID": 1766093959,
                                                                                                     "PrefabID": 208460407,
                                                                                                     "IsPrefab": true,
                                                                                                     "Name": "mixamorig:RightHandMiddle2",
@@ -1813,6 +1977,10 @@
                                                                                                     "IsSceneRoot": false,
                                                                                                     "MaintainThroughScenes": false,
                                                                                                     "ShowBoundingBoxes": false,
+                                                                                                    "NavigationInfo": {
+                                                                                                        "isNavigable": false,
+                                                                                                        "navigationArea": 0
+                                                                                                    },
                                                                                                     "Components": [
                                                                                                         {
                                                                                                             "Type": 1,
@@ -1836,8 +2004,8 @@
                                                                                                     ],
                                                                                                     "Children": [
                                                                                                         {
-                                                                                                            "UID": 1358286032,
-                                                                                                            "ParentUID": 757665585,
+                                                                                                            "UID": 1029521899,
+                                                                                                            "ParentUID": 1866793975,
                                                                                                             "PrefabID": 208460407,
                                                                                                             "IsPrefab": true,
                                                                                                             "Name": "mixamorig:RightHandMiddle3",
@@ -1846,6 +2014,10 @@
                                                                                                             "IsSceneRoot": false,
                                                                                                             "MaintainThroughScenes": false,
                                                                                                             "ShowBoundingBoxes": false,
+                                                                                                            "NavigationInfo": {
+                                                                                                                "isNavigable": false,
+                                                                                                                "navigationArea": 0
+                                                                                                            },
                                                                                                             "Components": [
                                                                                                                 {
                                                                                                                     "Type": 1,
@@ -1869,8 +2041,8 @@
                                                                                                             ],
                                                                                                             "Children": [
                                                                                                                 {
-                                                                                                                    "UID": 1550256648,
-                                                                                                                    "ParentUID": 1358286032,
+                                                                                                                    "UID": 87840721,
+                                                                                                                    "ParentUID": 1029521899,
                                                                                                                     "PrefabID": 208460407,
                                                                                                                     "IsPrefab": true,
                                                                                                                     "Name": "mixamorig:RightHandMiddle4",
@@ -1879,6 +2051,10 @@
                                                                                                                     "IsSceneRoot": false,
                                                                                                                     "MaintainThroughScenes": false,
                                                                                                                     "ShowBoundingBoxes": false,
+                                                                                                                    "NavigationInfo": {
+                                                                                                                        "isNavigable": false,
+                                                                                                                        "navigationArea": 0
+                                                                                                                    },
                                                                                                                     "Components": [
                                                                                                                         {
                                                                                                                             "Type": 1,
@@ -1909,8 +2085,8 @@
                                                                                             ]
                                                                                         },
                                                                                         {
-                                                                                            "UID": 1149744216,
-                                                                                            "ParentUID": 105577392,
+                                                                                            "UID": 538195219,
+                                                                                            "ParentUID": 541576810,
                                                                                             "PrefabID": 208460407,
                                                                                             "IsPrefab": true,
                                                                                             "Name": "mixamorig:RightHandThumb1",
@@ -1919,6 +2095,10 @@
                                                                                             "IsSceneRoot": false,
                                                                                             "MaintainThroughScenes": false,
                                                                                             "ShowBoundingBoxes": false,
+                                                                                            "NavigationInfo": {
+                                                                                                "isNavigable": false,
+                                                                                                "navigationArea": 0
+                                                                                            },
                                                                                             "Components": [
                                                                                                 {
                                                                                                     "Type": 1,
@@ -1942,8 +2122,8 @@
                                                                                             ],
                                                                                             "Children": [
                                                                                                 {
-                                                                                                    "UID": 2031103669,
-                                                                                                    "ParentUID": 1149744216,
+                                                                                                    "UID": 1041365393,
+                                                                                                    "ParentUID": 538195219,
                                                                                                     "PrefabID": 208460407,
                                                                                                     "IsPrefab": true,
                                                                                                     "Name": "mixamorig:RightHandThumb2",
@@ -1952,6 +2132,10 @@
                                                                                                     "IsSceneRoot": false,
                                                                                                     "MaintainThroughScenes": false,
                                                                                                     "ShowBoundingBoxes": false,
+                                                                                                    "NavigationInfo": {
+                                                                                                        "isNavigable": false,
+                                                                                                        "navigationArea": 0
+                                                                                                    },
                                                                                                     "Components": [
                                                                                                         {
                                                                                                             "Type": 1,
@@ -1975,8 +2159,8 @@
                                                                                                     ],
                                                                                                     "Children": [
                                                                                                         {
-                                                                                                            "UID": 830594640,
-                                                                                                            "ParentUID": 2031103669,
+                                                                                                            "UID": 1963328804,
+                                                                                                            "ParentUID": 1041365393,
                                                                                                             "PrefabID": 208460407,
                                                                                                             "IsPrefab": true,
                                                                                                             "Name": "mixamorig:RightHandThumb3",
@@ -1985,6 +2169,10 @@
                                                                                                             "IsSceneRoot": false,
                                                                                                             "MaintainThroughScenes": false,
                                                                                                             "ShowBoundingBoxes": false,
+                                                                                                            "NavigationInfo": {
+                                                                                                                "isNavigable": false,
+                                                                                                                "navigationArea": 0
+                                                                                                            },
                                                                                                             "Components": [
                                                                                                                 {
                                                                                                                     "Type": 1,
@@ -2008,8 +2196,8 @@
                                                                                                             ],
                                                                                                             "Children": [
                                                                                                                 {
-                                                                                                                    "UID": 742896164,
-                                                                                                                    "ParentUID": 830594640,
+                                                                                                                    "UID": 1336754372,
+                                                                                                                    "ParentUID": 1963328804,
                                                                                                                     "PrefabID": 208460407,
                                                                                                                     "IsPrefab": true,
                                                                                                                     "Name": "mixamorig:RightHandThumb4",
@@ -2018,6 +2206,10 @@
                                                                                                                     "IsSceneRoot": false,
                                                                                                                     "MaintainThroughScenes": false,
                                                                                                                     "ShowBoundingBoxes": false,
+                                                                                                                    "NavigationInfo": {
+                                                                                                                        "isNavigable": false,
+                                                                                                                        "navigationArea": 0
+                                                                                                                    },
                                                                                                                     "Components": [
                                                                                                                         {
                                                                                                                             "Type": 1,
@@ -2048,8 +2240,8 @@
                                                                                             ]
                                                                                         },
                                                                                         {
-                                                                                            "UID": 1902281610,
-                                                                                            "ParentUID": 105577392,
+                                                                                            "UID": 1290277231,
+                                                                                            "ParentUID": 541576810,
                                                                                             "PrefabID": 208460407,
                                                                                             "IsPrefab": true,
                                                                                             "Name": "mixamorig:RightHandRing1",
@@ -2058,6 +2250,10 @@
                                                                                             "IsSceneRoot": false,
                                                                                             "MaintainThroughScenes": false,
                                                                                             "ShowBoundingBoxes": false,
+                                                                                            "NavigationInfo": {
+                                                                                                "isNavigable": false,
+                                                                                                "navigationArea": 0
+                                                                                            },
                                                                                             "Components": [
                                                                                                 {
                                                                                                     "Type": 1,
@@ -2081,8 +2277,8 @@
                                                                                             ],
                                                                                             "Children": [
                                                                                                 {
-                                                                                                    "UID": 1960713068,
-                                                                                                    "ParentUID": 1902281610,
+                                                                                                    "UID": 267475526,
+                                                                                                    "ParentUID": 1290277231,
                                                                                                     "PrefabID": 208460407,
                                                                                                     "IsPrefab": true,
                                                                                                     "Name": "mixamorig:RightHandRing2",
@@ -2091,6 +2287,10 @@
                                                                                                     "IsSceneRoot": false,
                                                                                                     "MaintainThroughScenes": false,
                                                                                                     "ShowBoundingBoxes": false,
+                                                                                                    "NavigationInfo": {
+                                                                                                        "isNavigable": false,
+                                                                                                        "navigationArea": 0
+                                                                                                    },
                                                                                                     "Components": [
                                                                                                         {
                                                                                                             "Type": 1,
@@ -2114,8 +2314,8 @@
                                                                                                     ],
                                                                                                     "Children": [
                                                                                                         {
-                                                                                                            "UID": 886815818,
-                                                                                                            "ParentUID": 1960713068,
+                                                                                                            "UID": 1082171494,
+                                                                                                            "ParentUID": 267475526,
                                                                                                             "PrefabID": 208460407,
                                                                                                             "IsPrefab": true,
                                                                                                             "Name": "mixamorig:RightHandRing3",
@@ -2124,6 +2324,10 @@
                                                                                                             "IsSceneRoot": false,
                                                                                                             "MaintainThroughScenes": false,
                                                                                                             "ShowBoundingBoxes": false,
+                                                                                                            "NavigationInfo": {
+                                                                                                                "isNavigable": false,
+                                                                                                                "navigationArea": 0
+                                                                                                            },
                                                                                                             "Components": [
                                                                                                                 {
                                                                                                                     "Type": 1,
@@ -2147,8 +2351,8 @@
                                                                                                             ],
                                                                                                             "Children": [
                                                                                                                 {
-                                                                                                                    "UID": 1604202097,
-                                                                                                                    "ParentUID": 886815818,
+                                                                                                                    "UID": 814136774,
+                                                                                                                    "ParentUID": 1082171494,
                                                                                                                     "PrefabID": 208460407,
                                                                                                                     "IsPrefab": true,
                                                                                                                     "Name": "mixamorig:RightHandRing4",
@@ -2157,6 +2361,10 @@
                                                                                                                     "IsSceneRoot": false,
                                                                                                                     "MaintainThroughScenes": false,
                                                                                                                     "ShowBoundingBoxes": false,
+                                                                                                                    "NavigationInfo": {
+                                                                                                                        "isNavigable": false,
+                                                                                                                        "navigationArea": 0
+                                                                                                                    },
                                                                                                                     "Components": [
                                                                                                                         {
                                                                                                                             "Type": 1,
@@ -2187,8 +2395,8 @@
                                                                                             ]
                                                                                         },
                                                                                         {
-                                                                                            "UID": 1198928455,
-                                                                                            "ParentUID": 105577392,
+                                                                                            "UID": 330164081,
+                                                                                            "ParentUID": 541576810,
                                                                                             "PrefabID": 208460407,
                                                                                             "IsPrefab": true,
                                                                                             "Name": "mixamorig:RightHandIndex1",
@@ -2197,6 +2405,10 @@
                                                                                             "IsSceneRoot": false,
                                                                                             "MaintainThroughScenes": false,
                                                                                             "ShowBoundingBoxes": false,
+                                                                                            "NavigationInfo": {
+                                                                                                "isNavigable": false,
+                                                                                                "navigationArea": 0
+                                                                                            },
                                                                                             "Components": [
                                                                                                 {
                                                                                                     "Type": 1,
@@ -2220,8 +2432,8 @@
                                                                                             ],
                                                                                             "Children": [
                                                                                                 {
-                                                                                                    "UID": 1821447486,
-                                                                                                    "ParentUID": 1198928455,
+                                                                                                    "UID": 1924319007,
+                                                                                                    "ParentUID": 330164081,
                                                                                                     "PrefabID": 208460407,
                                                                                                     "IsPrefab": true,
                                                                                                     "Name": "mixamorig:RightHandIndex2",
@@ -2230,6 +2442,10 @@
                                                                                                     "IsSceneRoot": false,
                                                                                                     "MaintainThroughScenes": false,
                                                                                                     "ShowBoundingBoxes": false,
+                                                                                                    "NavigationInfo": {
+                                                                                                        "isNavigable": false,
+                                                                                                        "navigationArea": 0
+                                                                                                    },
                                                                                                     "Components": [
                                                                                                         {
                                                                                                             "Type": 1,
@@ -2253,8 +2469,8 @@
                                                                                                     ],
                                                                                                     "Children": [
                                                                                                         {
-                                                                                                            "UID": 1876156308,
-                                                                                                            "ParentUID": 1821447486,
+                                                                                                            "UID": 1734323314,
+                                                                                                            "ParentUID": 1924319007,
                                                                                                             "PrefabID": 208460407,
                                                                                                             "IsPrefab": true,
                                                                                                             "Name": "mixamorig:RightHandIndex3",
@@ -2263,6 +2479,10 @@
                                                                                                             "IsSceneRoot": false,
                                                                                                             "MaintainThroughScenes": false,
                                                                                                             "ShowBoundingBoxes": false,
+                                                                                                            "NavigationInfo": {
+                                                                                                                "isNavigable": false,
+                                                                                                                "navigationArea": 0
+                                                                                                            },
                                                                                                             "Components": [
                                                                                                                 {
                                                                                                                     "Type": 1,
@@ -2286,8 +2506,8 @@
                                                                                                             ],
                                                                                                             "Children": [
                                                                                                                 {
-                                                                                                                    "UID": 45747321,
-                                                                                                                    "ParentUID": 1876156308,
+                                                                                                                    "UID": 70565494,
+                                                                                                                    "ParentUID": 1734323314,
                                                                                                                     "PrefabID": 208460407,
                                                                                                                     "IsPrefab": true,
                                                                                                                     "Name": "mixamorig:RightHandIndex4",
@@ -2296,6 +2516,10 @@
                                                                                                                     "IsSceneRoot": false,
                                                                                                                     "MaintainThroughScenes": false,
                                                                                                                     "ShowBoundingBoxes": false,
+                                                                                                                    "NavigationInfo": {
+                                                                                                                        "isNavigable": false,
+                                                                                                                        "navigationArea": 0
+                                                                                                                    },
                                                                                                                     "Components": [
                                                                                                                         {
                                                                                                                             "Type": 1,
@@ -2326,8 +2550,8 @@
                                                                                             ]
                                                                                         },
                                                                                         {
-                                                                                            "UID": 172444422,
-                                                                                            "ParentUID": 105577392,
+                                                                                            "UID": 742300887,
+                                                                                            "ParentUID": 541576810,
                                                                                             "PrefabID": 208460407,
                                                                                             "IsPrefab": true,
                                                                                             "Name": "mixamorig:RightHandPinky1",
@@ -2336,6 +2560,10 @@
                                                                                             "IsSceneRoot": false,
                                                                                             "MaintainThroughScenes": false,
                                                                                             "ShowBoundingBoxes": false,
+                                                                                            "NavigationInfo": {
+                                                                                                "isNavigable": false,
+                                                                                                "navigationArea": 0
+                                                                                            },
                                                                                             "Components": [
                                                                                                 {
                                                                                                     "Type": 1,
@@ -2359,8 +2587,8 @@
                                                                                             ],
                                                                                             "Children": [
                                                                                                 {
-                                                                                                    "UID": 705960490,
-                                                                                                    "ParentUID": 172444422,
+                                                                                                    "UID": 513123531,
+                                                                                                    "ParentUID": 742300887,
                                                                                                     "PrefabID": 208460407,
                                                                                                     "IsPrefab": true,
                                                                                                     "Name": "mixamorig:RightHandPinky2",
@@ -2369,6 +2597,10 @@
                                                                                                     "IsSceneRoot": false,
                                                                                                     "MaintainThroughScenes": false,
                                                                                                     "ShowBoundingBoxes": false,
+                                                                                                    "NavigationInfo": {
+                                                                                                        "isNavigable": false,
+                                                                                                        "navigationArea": 0
+                                                                                                    },
                                                                                                     "Components": [
                                                                                                         {
                                                                                                             "Type": 1,
@@ -2392,8 +2624,8 @@
                                                                                                     ],
                                                                                                     "Children": [
                                                                                                         {
-                                                                                                            "UID": 1966646747,
-                                                                                                            "ParentUID": 705960490,
+                                                                                                            "UID": 2098551078,
+                                                                                                            "ParentUID": 513123531,
                                                                                                             "PrefabID": 208460407,
                                                                                                             "IsPrefab": true,
                                                                                                             "Name": "mixamorig:RightHandPinky3",
@@ -2402,6 +2634,10 @@
                                                                                                             "IsSceneRoot": false,
                                                                                                             "MaintainThroughScenes": false,
                                                                                                             "ShowBoundingBoxes": false,
+                                                                                                            "NavigationInfo": {
+                                                                                                                "isNavigable": false,
+                                                                                                                "navigationArea": 0
+                                                                                                            },
                                                                                                             "Components": [
                                                                                                                 {
                                                                                                                     "Type": 1,
@@ -2425,8 +2661,8 @@
                                                                                                             ],
                                                                                                             "Children": [
                                                                                                                 {
-                                                                                                                    "UID": 943188266,
-                                                                                                                    "ParentUID": 1966646747,
+                                                                                                                    "UID": 867730660,
+                                                                                                                    "ParentUID": 2098551078,
                                                                                                                     "PrefabID": 208460407,
                                                                                                                     "IsPrefab": true,
                                                                                                                     "Name": "mixamorig:RightHandPinky4",
@@ -2435,6 +2671,10 @@
                                                                                                                     "IsSceneRoot": false,
                                                                                                                     "MaintainThroughScenes": false,
                                                                                                                     "ShowBoundingBoxes": false,
+                                                                                                                    "NavigationInfo": {
+                                                                                                                        "isNavigable": false,
+                                                                                                                        "navigationArea": 0
+                                                                                                                    },
                                                                                                                     "Components": [
                                                                                                                         {
                                                                                                                             "Type": 1,
@@ -2481,8 +2721,8 @@
                             ]
                         },
                         {
-                            "UID": 1743921695,
-                            "ParentUID": 1427227659,
+                            "UID": 1655961531,
+                            "ParentUID": 1593414353,
                             "PrefabID": 208460407,
                             "IsPrefab": true,
                             "Name": "Legs",
@@ -2491,6 +2731,10 @@
                             "IsSceneRoot": false,
                             "MaintainThroughScenes": false,
                             "ShowBoundingBoxes": false,
+                            "NavigationInfo": {
+                                "isNavigable": false,
+                                "navigationArea": 0
+                            },
                             "Components": [
                                 {
                                     "Type": 1,
@@ -2514,8 +2758,8 @@
                             ],
                             "Children": [
                                 {
-                                    "UID": 1975244770,
-                                    "ParentUID": 1743921695,
+                                    "UID": 1670006430,
+                                    "ParentUID": 1655961531,
                                     "PrefabID": 208460407,
                                     "IsPrefab": true,
                                     "Name": "mixamorig:RightUpLeg",
@@ -2524,6 +2768,10 @@
                                     "IsSceneRoot": false,
                                     "MaintainThroughScenes": false,
                                     "ShowBoundingBoxes": false,
+                                    "NavigationInfo": {
+                                        "isNavigable": false,
+                                        "navigationArea": 0
+                                    },
                                     "Components": [
                                         {
                                             "Type": 1,
@@ -2547,8 +2795,8 @@
                                     ],
                                     "Children": [
                                         {
-                                            "UID": 1245454840,
-                                            "ParentUID": 1975244770,
+                                            "UID": 1032742611,
+                                            "ParentUID": 1670006430,
                                             "PrefabID": 208460407,
                                             "IsPrefab": true,
                                             "Name": "mixamorig:RightLeg",
@@ -2557,6 +2805,10 @@
                                             "IsSceneRoot": false,
                                             "MaintainThroughScenes": false,
                                             "ShowBoundingBoxes": false,
+                                            "NavigationInfo": {
+                                                "isNavigable": false,
+                                                "navigationArea": 0
+                                            },
                                             "Components": [
                                                 {
                                                     "Type": 1,
@@ -2580,8 +2832,8 @@
                                             ],
                                             "Children": [
                                                 {
-                                                    "UID": 1702340500,
-                                                    "ParentUID": 1245454840,
+                                                    "UID": 1046280137,
+                                                    "ParentUID": 1032742611,
                                                     "PrefabID": 208460407,
                                                     "IsPrefab": true,
                                                     "Name": "mixamorig:RightFoot",
@@ -2590,6 +2842,10 @@
                                                     "IsSceneRoot": false,
                                                     "MaintainThroughScenes": false,
                                                     "ShowBoundingBoxes": false,
+                                                    "NavigationInfo": {
+                                                        "isNavigable": false,
+                                                        "navigationArea": 0
+                                                    },
                                                     "Components": [
                                                         {
                                                             "Type": 1,
@@ -2613,8 +2869,8 @@
                                                     ],
                                                     "Children": [
                                                         {
-                                                            "UID": 1269157894,
-                                                            "ParentUID": 1702340500,
+                                                            "UID": 1768173840,
+                                                            "ParentUID": 1046280137,
                                                             "PrefabID": 208460407,
                                                             "IsPrefab": true,
                                                             "Name": "mixamorig:RightToeBase",
@@ -2623,6 +2879,10 @@
                                                             "IsSceneRoot": false,
                                                             "MaintainThroughScenes": false,
                                                             "ShowBoundingBoxes": false,
+                                                            "NavigationInfo": {
+                                                                "isNavigable": false,
+                                                                "navigationArea": 0
+                                                            },
                                                             "Components": [
                                                                 {
                                                                     "Type": 1,
@@ -2646,8 +2906,8 @@
                                                             ],
                                                             "Children": [
                                                                 {
-                                                                    "UID": 623311010,
-                                                                    "ParentUID": 1269157894,
+                                                                    "UID": 1977016748,
+                                                                    "ParentUID": 1768173840,
                                                                     "PrefabID": 208460407,
                                                                     "IsPrefab": true,
                                                                     "Name": "mixamorig:RightToe_End",
@@ -2656,6 +2916,10 @@
                                                                     "IsSceneRoot": false,
                                                                     "MaintainThroughScenes": false,
                                                                     "ShowBoundingBoxes": false,
+                                                                    "NavigationInfo": {
+                                                                        "isNavigable": false,
+                                                                        "navigationArea": 0
+                                                                    },
                                                                     "Components": [
                                                                         {
                                                                             "Type": 1,
@@ -2688,8 +2952,8 @@
                                     ]
                                 },
                                 {
-                                    "UID": 947210201,
-                                    "ParentUID": 1743921695,
+                                    "UID": 405443735,
+                                    "ParentUID": 1655961531,
                                     "PrefabID": 208460407,
                                     "IsPrefab": true,
                                     "Name": "mixamorig:LeftUpLeg",
@@ -2698,6 +2962,10 @@
                                     "IsSceneRoot": false,
                                     "MaintainThroughScenes": false,
                                     "ShowBoundingBoxes": false,
+                                    "NavigationInfo": {
+                                        "isNavigable": false,
+                                        "navigationArea": 0
+                                    },
                                     "Components": [
                                         {
                                             "Type": 1,
@@ -2721,8 +2989,8 @@
                                     ],
                                     "Children": [
                                         {
-                                            "UID": 1997400966,
-                                            "ParentUID": 947210201,
+                                            "UID": 1581625574,
+                                            "ParentUID": 405443735,
                                             "PrefabID": 208460407,
                                             "IsPrefab": true,
                                             "Name": "mixamorig:LeftLeg",
@@ -2731,6 +2999,10 @@
                                             "IsSceneRoot": false,
                                             "MaintainThroughScenes": false,
                                             "ShowBoundingBoxes": false,
+                                            "NavigationInfo": {
+                                                "isNavigable": false,
+                                                "navigationArea": 0
+                                            },
                                             "Components": [
                                                 {
                                                     "Type": 1,
@@ -2754,8 +3026,8 @@
                                             ],
                                             "Children": [
                                                 {
-                                                    "UID": 1654732386,
-                                                    "ParentUID": 1997400966,
+                                                    "UID": 1766092317,
+                                                    "ParentUID": 1581625574,
                                                     "PrefabID": 208460407,
                                                     "IsPrefab": true,
                                                     "Name": "mixamorig:LeftFoot",
@@ -2764,6 +3036,10 @@
                                                     "IsSceneRoot": false,
                                                     "MaintainThroughScenes": false,
                                                     "ShowBoundingBoxes": false,
+                                                    "NavigationInfo": {
+                                                        "isNavigable": false,
+                                                        "navigationArea": 0
+                                                    },
                                                     "Components": [
                                                         {
                                                             "Type": 1,
@@ -2787,8 +3063,8 @@
                                                     ],
                                                     "Children": [
                                                         {
-                                                            "UID": 967370822,
-                                                            "ParentUID": 1654732386,
+                                                            "UID": 540168616,
+                                                            "ParentUID": 1766092317,
                                                             "PrefabID": 208460407,
                                                             "IsPrefab": true,
                                                             "Name": "mixamorig:LeftToeBase",
@@ -2797,6 +3073,10 @@
                                                             "IsSceneRoot": false,
                                                             "MaintainThroughScenes": false,
                                                             "ShowBoundingBoxes": false,
+                                                            "NavigationInfo": {
+                                                                "isNavigable": false,
+                                                                "navigationArea": 0
+                                                            },
                                                             "Components": [
                                                                 {
                                                                     "Type": 1,
@@ -2820,8 +3100,8 @@
                                                             ],
                                                             "Children": [
                                                                 {
-                                                                    "UID": 1821330972,
-                                                                    "ParentUID": 967370822,
+                                                                    "UID": 801934647,
+                                                                    "ParentUID": 540168616,
                                                                     "PrefabID": 208460407,
                                                                     "IsPrefab": true,
                                                                     "Name": "mixamorig:LeftToe_End",
@@ -2830,6 +3110,10 @@
                                                                     "IsSceneRoot": false,
                                                                     "MaintainThroughScenes": false,
                                                                     "ShowBoundingBoxes": false,
+                                                                    "NavigationInfo": {
+                                                                        "isNavigable": false,
+                                                                        "navigationArea": 0
+                                                                    },
                                                                     "Components": [
                                                                         {
                                                                             "Type": 1,
@@ -2866,8 +3150,8 @@
                     ]
                 },
                 {
-                    "UID": 616093354,
-                    "ParentUID": 558667544,
+                    "UID": 817390737,
+                    "ParentUID": 1194308429,
                     "PrefabID": 208460407,
                     "IsPrefab": true,
                     "Name": "Hand",
@@ -2876,6 +3160,10 @@
                     "IsSceneRoot": false,
                     "MaintainThroughScenes": false,
                     "ShowBoundingBoxes": false,
+                    "NavigationInfo": {
+                        "isNavigable": false,
+                        "navigationArea": 0
+                    },
                     "Components": [
                         {
                             "Type": 1,
@@ -2900,8 +3188,8 @@
                     "Children": []
                 },
                 {
-                    "UID": 210552396,
-                    "ParentUID": 558667544,
+                    "UID": 239807111,
+                    "ParentUID": 1194308429,
                     "PrefabID": 208460407,
                     "IsPrefab": true,
                     "Name": "Aim",
@@ -2910,6 +3198,10 @@
                     "IsSceneRoot": false,
                     "MaintainThroughScenes": false,
                     "ShowBoundingBoxes": false,
+                    "NavigationInfo": {
+                        "isNavigable": false,
+                        "navigationArea": 0
+                    },
                     "Components": [
                         {
                             "Type": 1,
@@ -2933,8 +3225,8 @@
                     ],
                     "Children": [
                         {
-                            "UID": 222890624,
-                            "ParentUID": 210552396,
+                            "UID": 1631366678,
+                            "ParentUID": 239807111,
                             "PrefabID": 208460407,
                             "IsPrefab": true,
                             "Name": "IdlePlane",
@@ -2943,6 +3235,10 @@
                             "IsSceneRoot": false,
                             "MaintainThroughScenes": false,
                             "ShowBoundingBoxes": true,
+                            "NavigationInfo": {
+                                "isNavigable": false,
+                                "navigationArea": 0
+                            },
                             "Components": [
                                 {
                                     "Type": 1,
@@ -2999,8 +3295,8 @@
                             "Children": []
                         },
                         {
-                            "UID": 2099601384,
-                            "ParentUID": 210552396,
+                            "UID": 1127667493,
+                            "ParentUID": 239807111,
                             "PrefabID": 208460407,
                             "IsPrefab": true,
                             "Name": "AimingPlane",
@@ -3009,6 +3305,10 @@
                             "IsSceneRoot": false,
                             "MaintainThroughScenes": false,
                             "ShowBoundingBoxes": true,
+                            "NavigationInfo": {
+                                "isNavigable": false,
+                                "navigationArea": 0
+                            },
                             "Components": [
                                 {
                                     "Type": 1,
@@ -3067,8 +3367,8 @@
                     ]
                 },
                 {
-                    "UID": 978911122,
-                    "ParentUID": 558667544,
+                    "UID": 1192966726,
+                    "ParentUID": 1194308429,
                     "PrefabID": 208460407,
                     "IsPrefab": true,
                     "Name": "Hand Blaster",
@@ -3077,6 +3377,10 @@
                     "IsSceneRoot": false,
                     "MaintainThroughScenes": false,
                     "ShowBoundingBoxes": false,
+                    "NavigationInfo": {
+                        "isNavigable": false,
+                        "navigationArea": 0
+                    },
                     "Components": [
                         {
                             "Type": 1,
@@ -3101,8 +3405,8 @@
                     "Children": []
                 },
                 {
-                    "UID": 1627098505,
-                    "ParentUID": 558667544,
+                    "UID": 1657682624,
+                    "ParentUID": 1194308429,
                     "PrefabID": 208460407,
                     "IsPrefab": true,
                     "Name": "Hand Rifle",
@@ -3111,6 +3415,10 @@
                     "IsSceneRoot": false,
                     "MaintainThroughScenes": false,
                     "ShowBoundingBoxes": false,
+                    "NavigationInfo": {
+                        "isNavigable": false,
+                        "navigationArea": 0
+                    },
                     "Components": [
                         {
                             "Type": 1,
@@ -3135,8 +3443,8 @@
                     "Children": []
                 },
                 {
-                    "UID": 59635579,
-                    "ParentUID": 558667544,
+                    "UID": 1727675491,
+                    "ParentUID": 1194308429,
                     "PrefabID": 208460407,
                     "IsPrefab": true,
                     "Name": "Hand Minigun",
@@ -3145,6 +3453,10 @@
                     "IsSceneRoot": false,
                     "MaintainThroughScenes": false,
                     "ShowBoundingBoxes": false,
+                    "NavigationInfo": {
+                        "isNavigable": false,
+                        "navigationArea": 0
+                    },
                     "Components": [
                         {
                             "Type": 1,
@@ -3169,8 +3481,8 @@
                     "Children": []
                 },
                 {
-                    "UID": 2089087600,
-                    "ParentUID": 558667544,
+                    "UID": 1695794247,
+                    "ParentUID": 1194308429,
                     "PrefabID": 208460407,
                     "IsPrefab": true,
                     "Name": "Hand Shotgun",
@@ -3179,6 +3491,10 @@
                     "IsSceneRoot": false,
                     "MaintainThroughScenes": false,
                     "ShowBoundingBoxes": false,
+                    "NavigationInfo": {
+                        "isNavigable": false,
+                        "navigationArea": 0
+                    },
                     "Components": [
                         {
                             "Type": 1,
