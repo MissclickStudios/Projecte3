@@ -24,13 +24,9 @@ Grogu* CreateGrogu()
 	// Basic Stats
 	INSPECTOR_DRAGABLE_FLOAT(script->speed);
 	// Modifiers
-	INSPECTOR_DRAGABLE_FLOAT(script->cooldownModifier);
 	INSPECTOR_DRAGABLE_FLOAT(script->speedModifier);
 	// Behaviour
 	INSPECTOR_DRAGABLE_FLOAT(script->maxDistanceToMando);
-	// Ability
-	INSPECTOR_DRAGABLE_FLOAT(script->abilityCooldown);
-	INSPECTOR_DRAGABLE_FLOAT(script->abilityRadius);
 
 	return script;
 }
@@ -46,15 +42,14 @@ Grogu::~Grogu()
 
 void Grogu::SetUp()
 {
-	abilityCooldownTimer.Stop();
 	player = App->scene->GetGameObjectByName(playerName.c_str());
 
 	if (rigidBody != nullptr)
+	{
+		rigidBody->FreezeRotationX(true);
 		rigidBody->FreezeRotationY(true);
-
-	abilityCollider = gameObject->GetComponent<C_BoxCollider>();
-	if (abilityCollider != nullptr)
-		abilityCollider->SetIsActive(true);
+		rigidBody->FreezeRotationZ(true);
+	}
 }
 
 void Grogu::Behavior()
@@ -65,7 +60,6 @@ void Grogu::Behavior()
 
 	ManageMovement();
 	ManageRotation();
-	ManageAbility();
 }
 
 void Grogu::CleanUp()
@@ -85,13 +79,19 @@ void Grogu::LoadState(ParsonNode& groguNode)
 
 void Grogu::Reset()
 {
-	// Reset ability's cooldown
+
 }	
 
 void Grogu::ManageMovement()
 {
+	float3 position = gameObject->transform->GetWorldPosition();
+	float3 playerPos = player->transform->GetWorldPosition();
+
+	// Update Grogu's Y
+	gameObject->transform->SetLocalPosition({ position.x, playerPos.y, position.z });
+
 	// Check if player and grogu are apart
-	float3 deltaPos = player->transform->GetWorldPosition() - gameObject->transform->GetWorldPosition();
+	float3 deltaPos = playerPos - position;
 
 	if (sqrt(deltaPos.x * deltaPos.x + deltaPos.z * deltaPos.z) > maxDistanceToMando)
 	{
@@ -117,24 +117,6 @@ void Grogu::ManageRotation()
 	gameObject->transform->SetLocalRotation(float3(0, -rad + DegToRad(180), 0));
 }
 
-void Grogu::ManageAbility()
-{
-	if (abilityCooldownTimer.IsActive())
-	{
-		if (abilityCooldownTimer.ReadSec() >= AbilityCooldown())
-			abilityCooldownTimer.Stop();
-
-		/*if (abilityCollider != nullptr)
-			abilityCollider->SetIsActive(false);*/
-
-		return;
-	}
-	if (App->input->GetKey(SDL_SCANCODE_N) == KeyState::KEY_DOWN)
-	{
-		Ability();
-	}
-}
-
 void Grogu::Movement()
 {
 	float2 moveDirection = { direction.x, direction.z };
@@ -143,43 +125,3 @@ void Grogu::Movement()
 	if (rigidBody != nullptr)
 		rigidBody->Set2DVelocity(moveDirection);
 }
-
-void Grogu::Ability()
-{
-	abilityCooldownTimer.Start();
-
-	if (abilityCollider != nullptr)
-	{
-		//abilityCollider->SetIsActive(true);
-		abilityCollider->SetTrigger(true);
-	}
-}
-//
-//void Grogu::OnTriggerRepeat(GameObject* object)
-//{
-//	if (object == gameObject)
-//		return;
-//
-//	Entity* entity = (Entity*)GetObjectScript(object, ObjectType::ENTITY);
-//	if (!entity)
-//		return;
-//
-//	float2 entityPosition, position;
-//	entityPosition.x = entity->transform->GetWorldPosition().x;
-//	entityPosition.y = entity->transform->GetWorldPosition().z;
-//	position.x = gameObject->transform->GetWorldPosition().x;
-//	position.y = gameObject->transform->GetWorldPosition().z;
-//	float2 direction = entityPosition - position;
-//
-//	float distance = direction.Length();
-//	if (distance < 1.0f)
-//		distance = 1.0f;
-//
-//	float currentPower = abilityPower / distance;
-//
-//	direction.Normalize();
-//	direction *= currentPower;
-//
-//	entity->AddEffect(EffectType::KNOCKBACK, 0.75f, false, new std::pair<bool, float3>(true, { direction.x, currentPower, direction.y }));
-//	entity->TakeDamage(damage);
-//}

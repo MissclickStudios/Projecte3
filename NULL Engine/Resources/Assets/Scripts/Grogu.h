@@ -22,8 +22,6 @@ public:
 	void Behavior() override;
 	void CleanUp() override;
 
-	//void OnTriggerRepeat(GameObject* object) override;
-
 	void SaveState(ParsonNode& groguNode);
 	void LoadState(ParsonNode& groguNode);
 
@@ -34,30 +32,19 @@ public:
 	GameObject* player = nullptr;
 	std::string playerName = "Mandalorian";
 
-	float abilityCooldown = 0.0f;
-	float AbilityCooldown() { return abilityCooldown / cooldownModifier; }
-
-	C_BoxCollider* abilityCollider = nullptr;
-
 private:
 
 	// Logic
 	void ManageMovement();
 	void ManageRotation();
-	void ManageAbility();
 
 	// Actions
 	void Movement();
-	void Ability();
 
 	float3 direction = float3::zero;
 
-	Timer abilityCooldownTimer;
-
 public:
 	float maxDistanceToMando = 7.0f;
-	float abilityPower = 2000000.0f;
-	float abilityRadius = 0;
 
 };
 
