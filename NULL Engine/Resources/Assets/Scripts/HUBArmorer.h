@@ -5,6 +5,7 @@
 
 class Player;
 class C_Canvas;
+class GameManager;
 
 enum class HUBArmorerState: char {
 	ACTIVE,
@@ -25,6 +26,7 @@ public:
 private:
 	C_Canvas* hubShopCanvas = nullptr;
 	Player* mando = nullptr;
+	GameManager* gameManager = nullptr;
 	HUBArmorerState state = HUBArmorerState::INACTIVE;
 };
 

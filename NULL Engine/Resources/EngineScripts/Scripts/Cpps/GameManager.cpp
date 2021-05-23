@@ -188,22 +188,22 @@ void GameManager::Start()
 		if (strcmp(App->scene->GetCurrentScene(),"BossL1" ) == 0)
 		{
 			if(!defeatedIG11FirstTime)
-				dialogManager->StartDialog("Assets/Dialogs/1st Conversation IG-11.json");
+				dialogManager->StartDialog("1st Conversation IG-11");
 			else
-				dialogManager->StartDialog("Assets/Dialogs/Pool Conversation IG-11.json");
+				dialogManager->StartDialog("Pool Conversation IG-11");
 			return;
 		}
 
 		if (strcmp(App->scene->GetCurrentScene(), "Boss_Ruins") == 0)
 		{
 			if (!defeatedIG12FirstTime)
-				dialogManager->StartDialog("Assets/Dialogs/1st Conversation IG-11.json");
+				dialogManager->StartDialog("1st Conversation IG-11.json");
 			else
-				dialogManager->StartDialog("Assets/Dialogs/Pool Conversation IG-11.json");
+				dialogManager->StartDialog("Pool Conversation IG-11");
 			return;
 		}
 		
-		dialogManager->StartDialog("Assets/Dialogs/GroguHello.json");
+		dialogManager->StartDialog("GroguHello");
 	}
 		
 }
@@ -845,13 +845,19 @@ void GameManager::TalkedToArmorer()
 	LOG("Talked to armorer");
 	if (!talkedToArmorer)
 	{
-		dialogManager->StartDialog("1st Conversation Armorer.json");
+		dialogManager->StartDialog("1st Conversation Armorer");
 		talkedToArmorer = true;
 	}
 	else
 	{
-		dialogManager->StartDialog("Pool Conversation Armorer.json");
+		dialogManager->StartDialog("Pool Conversation Armorer");
 	}
+}
+
+void GameManager::BoughtFromArmorer()
+{
+	LOG("Bought from armorer");
+	dialogManager->StartDialog("Pool Conversation Armorer Bought");
 }
 
 GameManager* CreateGameManager() {

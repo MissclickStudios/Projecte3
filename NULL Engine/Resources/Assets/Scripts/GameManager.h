@@ -42,6 +42,7 @@ public:
     //Dialog & Story funtions
     void KilledIG11();
     void TalkedToArmorer();
+    void BoughtFromArmorer();
 
 private:
     //Level Generator

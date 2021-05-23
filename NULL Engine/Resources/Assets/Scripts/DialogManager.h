@@ -70,13 +70,13 @@ public:
 	void StartTalking();
 	void StartNewLine();
 
-	DialogSystem* LoadDialogSystem(const char* path); //Loads dialog for the scene to be used later (path starts from Assets/Dialogs/)
+	DialogSystem* LoadDialogSystem(const char* dialogName); //Loads dialog for the scene to be used later (Pass only the name of the dialog)
 private:
 
 public:
 
 	//StartDialog
-	bool StartDialog(const char* dialogName);
+	bool StartDialog(const char* dialogName); // dialogName = Name of the dialog only
 	void StartDialog(DialogSystem* dialogSystem);
 
 public:

@@ -6,6 +6,7 @@
 class GameObject;
 class C_UI_Button;
 class C_UI_Text;
+class GameManager;
 
 class SCRIPTS_API HUBShopMenuManager : public Script {
 public:
@@ -27,6 +28,7 @@ private:
 	C_UI_Text* beskarTextHubShop = nullptr;
 
 	GameObject* mando = nullptr;
+	GameManager* gameManager = nullptr;
 };
 
 SCRIPTS_FUNCTION HUBShopMenuManager* CreateHUBShopMenuManager() {

@@ -10,6 +10,7 @@
 #include "DialogManager.h"
 
 #include "Random.h"
+#include "FileSystemDefinitions.h"
 #include "Log.h"
 #include "MC_Time.h"
 #include "JSONParser.h"
@@ -157,10 +158,14 @@ void DialogManager::StartNewLine()
 	currentLineLetter = 0;
 }
 
-DialogSystem* DialogManager::LoadDialogSystem(const char* path)
+DialogSystem* DialogManager::LoadDialogSystem(const char* dialogName)
 {
+	std::string path = ASSETS_DIALOGS_PATH;
+	path += dialogName;
+	path += ".json";
+
 	char* buffer = nullptr;
-	App->fileSystem->Load(path, &buffer);
+	App->fileSystem->Load(path.c_str(), &buffer);
 
 	ParsonNode dialogRoot(buffer);
 
@@ -211,10 +216,21 @@ DialogSystem* DialogManager::LoadDialogSystem(const char* path)
 
 bool DialogManager::StartDialog(const char* dialogName)
 {
+	bool found = false;
+
 	//look for loaded dialogs
+	for (auto loadedSystem = dialogSystemsLoaded.begin(); loadedSystem != dialogSystemsLoaded.end() ; ++loadedSystem)
+	{
+		if (strcmp((*loadedSystem)->dialogSystemName.c_str(), dialogName) == 0)
+		{
+			currentDialogSystem = (*loadedSystem);
+			found = true;
+		}
+	}
 
 	//if not found then load it
-	currentDialogSystem = LoadDialogSystem(dialogName);
+	if(!found)
+		currentDialogSystem = LoadDialogSystem(dialogName);
 
 	if (currentDialogSystem == nullptr)
 		return false;
