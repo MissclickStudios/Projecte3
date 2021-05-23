@@ -43,7 +43,10 @@ bool C_RigidBody::Update()
 	OPTICK_CATEGORY("C_RigidBody Update", Optick::Category::Update);
 
 	if (!App->physics->simulating)
+	{
+		TransformMovesRigidBody(false);
 		return true;
+	}
 
 	ChangeFilter(filter);
 	
