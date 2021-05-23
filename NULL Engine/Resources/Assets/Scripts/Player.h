@@ -270,7 +270,6 @@ private:
 	float2 moveInput					= float2::zero;
 	float2 aimInput						= float2::zero;
 
-
 	// Movement
 	void Movement();
 
@@ -296,6 +295,11 @@ private:
 	Timer changeTimer;
 
 	GameObject* hand					= nullptr;
+	GameObject* blasterBarrelTip		= nullptr;
+	GameObject* sniperBarrelTip			= nullptr;
+	GameObject* shotgunBarrelTip		= nullptr;
+	GameObject* minigunBarrelTip		= nullptr;
+
 	GameObject* blasterGameObject		= nullptr;
 	GameObject* secondaryGunGameObject	= nullptr;
 
@@ -309,6 +313,11 @@ private:
 	std::vector<std::pair<bool, ItemData*>> items;
 	std::vector<std::pair<bool, ItemData*>> savedItems;
 
+	// Animations
+	GameObject* hip		= nullptr;
+	GameObject* torso	= nullptr;
+	GameObject* legs	= nullptr;
+	
 	// Utilities
 	float GetAnimatorClipDuration(const char* clipName);
 
