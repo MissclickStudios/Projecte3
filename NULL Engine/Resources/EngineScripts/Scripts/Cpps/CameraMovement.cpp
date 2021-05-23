@@ -28,17 +28,29 @@ CameraMovement::~CameraMovement()
 {
 }
 
+CameraMovement* CreateCameraMovement() {
+	CameraMovement* script = new CameraMovement();
+
+	INSPECTOR_DRAGABLE_FLOAT3(script->offset);
+	INSPECTOR_STRING(script->playerName);
+	INSPECTOR_INPUT_FLOAT(script->shakeMagnitude);
+	INSPECTOR_INPUT_FLOAT(script->shakeDuration);
+	INSPECTOR_INPUT_FLOAT(script->cameraSpeed);
+	INSPECTOR_INPUT_FLOAT(script->distanceToTransition);
+	INSPECTOR_STRING(script->destinationPointsName);
+	return script;
+}
+
 void CameraMovement::Start()
 {
 	player = App->scene->GetGameObjectByName(playerName.c_str());
 	playerScript = (Player*)player->GetScript("Player");
 	initialRot = gameObject->transform->GetWorldRotation();
+	destinationPoints = App->scene->GetGameObjectByName(destinationPointsName.c_str());
 }
 
 void CameraMovement::Update()
 {
-	destinationPoints = App->scene->GetGameObjectByName(destinationPointsName.c_str());
-
 	if (player == nullptr)
 		return;
 
@@ -86,12 +98,12 @@ void CameraMovement::CameraShake(float duration, float magnitude)
 
 }
 
-void CameraMovement::MoveCameraTo(GameObject* destination, float progress)
+bool CameraMovement::MoveCameraTo(GameObject* destination, float progress)
 {
 	if (nextPoint >= destination->childs.size())
-		return;
+		return true;
 
-	float3 destinationPos = destination->childs[nextPoint]->transform->GetWorldPosition();
+	destinationPos = destination->childs[nextPoint]->transform->GetWorldPosition();
 
 	float3 nextPos = destinationPos.Lerp(gameObject->transform->GetWorldPosition(), 1.0f - progress);
 
@@ -110,4 +122,5 @@ void CameraMovement::MoveCameraTo(GameObject* destination, float progress)
 		progress = 0;
 	}
 
+	return false;
 }

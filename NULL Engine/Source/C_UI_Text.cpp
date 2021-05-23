@@ -178,7 +178,7 @@ void C_UI_Text::SetVSpaceBetween(const float vSpaceBetween)
 void C_UI_Text::Draw2D( )
 {
 	glEnable(GL_CULL_FACE);
-	//glEnable(GL_BLEND); enabled in draw 2d render ui
+	glEnable(GL_BLEND); //enabled in draw 2d render ui
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	glUseProgram(rShader->shaderProgramID);
@@ -260,7 +260,7 @@ void C_UI_Text::Draw2D( )
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-	//glDisable(GL_BLEND);
+	glDisable(GL_BLEND);
 	glDisable(GL_CULL_FACE);
 	glBindVertexArray(0);
 	glBindTexture(GL_TEXTURE_2D, 0);

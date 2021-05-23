@@ -22,9 +22,9 @@
 #include "DialogManager.h"
 #include "Player.h"
 #include "Gate.h"
+#include "CameraMovement.h"
 
 #include "Items.h"
-
 #include "Random.h"
 
 GameManager::GameManager(): Script()
@@ -180,6 +180,11 @@ void GameManager::Start()
 		if (strstr(level1[0].c_str(), App->scene->GetCurrentScene()))
 			playerScript->Reset();
 	}
+
+	//Camera cutscenes movement
+	cameraGameObject = App->scene->GetGameObjectByName(cameraName.c_str());
+	cameraScript = (CameraMovement*)cameraGameObject->GetScript("CameraMovement");
+
 
 	//Start Dialogs based on scene
 	if (dialogManager != nullptr)
@@ -867,6 +872,7 @@ GameManager* CreateGameManager() {
 	INSPECTOR_STRING(script->mainMenuScene);
 	INSPECTOR_STRING(script->SpawnPointName);
 	INSPECTOR_STRING(script->loseSceneName);
+	INSPECTOR_STRING(script->cameraName);
 	INSPECTOR_INPUT_INT(script->l1Easy);
 	INSPECTOR_INPUT_INT(script->l1Intermediate);
 	INSPECTOR_VECTOR_STRING(script->level1);

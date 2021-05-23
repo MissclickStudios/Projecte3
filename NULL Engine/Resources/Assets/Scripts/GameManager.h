@@ -12,8 +12,10 @@
 
 class GameObject;
 class Gate;
-
+class CameraMovement;
 class DialogManager;
+
+class PerfectTimer;
 
 struct ItemData;
 
@@ -76,6 +78,8 @@ public:
     Prefab groguPrefab;
     Grogu* groguScript = nullptr;
 
+    
+    
     Prefab mistPlane1;
     Prefab mistPlane2;
     float3 mistPlane1Position = float3::zero;
@@ -83,11 +87,18 @@ public:
 
     DialogManager* dialogManager = nullptr;
 
+
     Prefab chestPrefab;
     int chestSpawnChance = 60;
 
+    std::string cameraName = "GameCameraVS2";
 
 private:
+
+    GameObject* cameraGameObject = nullptr;
+    CameraMovement* cameraScript = nullptr;
+    PerfectTimer cameraProgression;
+
     GameObject* playerGameObject = nullptr;
     Gate* gate = nullptr;
 

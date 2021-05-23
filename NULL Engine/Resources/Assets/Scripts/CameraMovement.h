@@ -17,7 +17,7 @@ public:
 	void CleanUp()override;
 
 	void CameraShake(float duration, float magnitude);
-	void MoveCameraTo(GameObject* destination, float progress);
+	bool MoveCameraTo(GameObject* destination, float progress);
 
 	//Shake variables
 	float shakeDuration = 0.0f;
@@ -35,18 +35,8 @@ public:
 	float nextPointProgress = 0.0f;
 	float cameraSpeed = 0.0f;
 	float distanceToTransition = 0.0f;
+	float3 destinationPos;
 	std::string destinationPointsName = "DestinationPoints";
 };
 
-SCRIPTS_FUNCTION CameraMovement* CreateCameraMovement() {
-	CameraMovement* script = new CameraMovement();
-
-	INSPECTOR_DRAGABLE_FLOAT3(script->offset);
-	INSPECTOR_STRING(script->playerName);
-	INSPECTOR_INPUT_FLOAT(script->shakeMagnitude);
-	INSPECTOR_INPUT_FLOAT(script->shakeDuration);
-	INSPECTOR_INPUT_FLOAT(script->cameraSpeed);
-	INSPECTOR_INPUT_FLOAT(script->distanceToTransition);
-	INSPECTOR_STRING(script->destinationPointsName);
-	return script;
-}
+SCRIPTS_FUNCTION CameraMovement* CreateCameraMovement();
