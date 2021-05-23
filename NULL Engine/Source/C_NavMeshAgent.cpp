@@ -128,6 +128,11 @@ void C_NavMeshAgent::StopAndCancelDestination()
 	rigidBody->Set2DVelocity({ 0.0f,0.0f });
 }
 
+const float3 C_NavMeshAgent::GetNextPathPoint() const
+{
+	return nextPoint;
+}
+
 bool C_NavMeshAgent::AgentPath(float3 origin, float3 destination)
 {
 	hasDestination = true;

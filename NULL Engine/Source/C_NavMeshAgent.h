@@ -33,6 +33,8 @@ public:
 	void CancelDestination();
 	void StopAndCancelDestination();
 
+	const float3 GetNextPathPoint() const;
+
 	float3 origin;
 	bool hasDestination;
 	float3 destinationPoint;

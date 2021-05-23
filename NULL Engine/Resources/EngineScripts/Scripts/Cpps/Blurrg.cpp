@@ -297,10 +297,7 @@ void Blurrg::LookAtPlayer()
 void Blurrg::Wander()
 {
 	if (agent != nullptr)
-	{
-		float3 pos = { gameObject->transform->GetWorldPosition().x, 0.0f, gameObject->transform->GetWorldPosition().z };
-		agent->SetDestination(pos);
-	}
+		agent->SetDestination(gameObject->transform->GetWorldPosition());
 }
 
 void Blurrg::Chase()
