@@ -21,6 +21,7 @@
 #include "M_FileSystem.h"
 #include "M_Input.h"
 #include "M_UISystem.h"
+#include "DialogManager.h"
 
 DialogManager::DialogManager()
 {
@@ -212,6 +213,11 @@ DialogSystem* DialogManager::LoadDialogSystem(const char* dialogName)
 	dialogSystemsLoaded.push_back(newDialogSystem);
 
 	return newDialogSystem;
+}
+
+DialogState DialogManager::GetDialogState()
+{
+	return state;
 }
 
 bool DialogManager::StartDialog(const char* dialogName)
