@@ -325,10 +325,10 @@ void IG11::ManageMovement()
 			break;
 		}
 
-		if (health > 5.0f) 
+		if (health > 200.0f) 
 			moveState = FirstStageAttacks();
 
-		else if (health <= 5.0f)
+		else if (health <= 200.0f)
 			moveState = SecondStageAttacks();
 
 		break;
