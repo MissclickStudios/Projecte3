@@ -1,0 +1,366 @@
+{
+    "ModTime": 1621885072,
+    "UID": 429666908,
+    "ParentUID": 1474137658,
+    "PrefabID": 1677494843,
+    "IsPrefab": true,
+    "Name": "BossHealthBar",
+    "IsActive": true,
+    "IsStatic": false,
+    "IsSceneRoot": false,
+    "MaintainThroughScenes": false,
+    "ShowBoundingBoxes": true,
+    "NavigationInfo": {
+        "isNavigable": false,
+        "navigationArea": 0
+    },
+    "Components": [
+        {
+            "Type": 1,
+            "LocalPosition": [
+                0,
+                0,
+                0
+            ],
+            "LocalRotation": [
+                0,
+                0,
+                0,
+                1
+            ],
+            "LocalScale": [
+                1,
+                1,
+                1
+            ]
+        },
+        {
+            "Type": 13,
+            "Canvas": {
+                "IsActive": true,
+                "X": 0,
+                "Y": 0,
+                "W": 1.0926049947738647,
+                "H": 0.58770197629928589
+            }
+        }
+    ],
+    "Children": [
+        {
+            "UID": 2086020045,
+            "ParentUID": 429666908,
+            "PrefabID": 1677494843,
+            "IsPrefab": true,
+            "Name": "BossIcon",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 21,
+                    "X": 0.79000002145767212,
+                    "Y": 0.64999997615814209,
+                    "W": 0.1550000011920929,
+                    "H": 0.25499999523162842,
+                    "imgColor": {
+                        "r": 1,
+                        "g": 1,
+                        "b": 1,
+                        "a": 1
+                    },
+                    "textureCoords": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 1,
+                        "h": 1
+                    },
+                    "inspectorTextureCoords": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 285,
+                        "h": 263
+                    },
+                    "childOrder": 0
+                },
+                {
+                    "Type": 3,
+                    "Texture": {
+                        "AssetsPath": "Assets\/Textures\/\/UI\/HUD\/BossHealthBar\/BossIcon1.png",
+                        "AssetsName": "BossIcon1.png",
+                        "LibaryPath": "Library\/Textures\/1337882738.netex",
+                        "LibraryFile": "1337882738.netex"
+                    },
+                    "Shader": {
+                        "AssetsPath": "Assets\/Shaders\/UIShader.shader",
+                        "AssetsName": "UIShader.shader",
+                        "LibaryPath": "Library\/Shaders\/1025410539.neshader",
+                        "LibraryFile": "1025410539.neshader"
+                    }
+                }
+            ],
+            "Children": []
+        },
+        {
+            "UID": 663784932,
+            "ParentUID": 429666908,
+            "PrefabID": 1677494843,
+            "IsPrefab": true,
+            "Name": "BossLifeForeground",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 21,
+                    "X": 0.05000000074505806,
+                    "Y": 0.79500001668930054,
+                    "W": 0.75,
+                    "H": 0.085000000894069672,
+                    "imgColor": {
+                        "r": 1,
+                        "g": 1,
+                        "b": 1,
+                        "a": 1
+                    },
+                    "textureCoords": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 1,
+                        "h": 1
+                    },
+                    "inspectorTextureCoords": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 1440,
+                        "h": 95
+                    },
+                    "childOrder": 1
+                },
+                {
+                    "Type": 3,
+                    "Texture": {
+                        "AssetsPath": "Assets\/Textures\/\/UI\/HUD\/BossHealthBar\/BossLifeForeground.png",
+                        "AssetsName": "BossLifeForeground.png",
+                        "LibaryPath": "Library\/Textures\/554228518.netex",
+                        "LibraryFile": "554228518.netex"
+                    },
+                    "Shader": {
+                        "AssetsPath": "Assets\/Shaders\/UIShader.shader",
+                        "AssetsName": "UIShader.shader",
+                        "LibaryPath": "Library\/Shaders\/1025410539.neshader",
+                        "LibraryFile": "1025410539.neshader"
+                    }
+                }
+            ],
+            "Children": []
+        },
+        {
+            "UID": 1339630448,
+            "ParentUID": 429666908,
+            "PrefabID": 1677494843,
+            "IsPrefab": true,
+            "Name": "BossLife",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 21,
+                    "X": 0.064999997615814209,
+                    "Y": 0.81000000238418579,
+                    "W": 0.73000001907348633,
+                    "H": 0.054999999701976776,
+                    "imgColor": {
+                        "r": 1,
+                        "g": 1,
+                        "b": 1,
+                        "a": 1
+                    },
+                    "textureCoords": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 1,
+                        "h": 1
+                    },
+                    "inspectorTextureCoords": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 882,
+                        "h": 61
+                    },
+                    "childOrder": 2
+                },
+                {
+                    "Type": 3,
+                    "Texture": {
+                        "AssetsPath": "Assets\/Textures\/\/UI\/HUD\/BossHealthBar\/BossLife.png",
+                        "AssetsName": "BossLife.png",
+                        "LibaryPath": "Library\/Textures\/1925880967.netex",
+                        "LibraryFile": "1925880967.netex"
+                    },
+                    "Shader": {
+                        "AssetsPath": "Assets\/Shaders\/UIShader.shader",
+                        "AssetsName": "UIShader.shader",
+                        "LibaryPath": "Library\/Shaders\/1025410539.neshader",
+                        "LibraryFile": "1025410539.neshader"
+                    }
+                }
+            ],
+            "Children": []
+        },
+        {
+            "UID": 1509094618,
+            "ParentUID": 429666908,
+            "PrefabID": 1677494843,
+            "IsPrefab": true,
+            "Name": "BossLifeBackground",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 21,
+                    "X": 0.059999998658895493,
+                    "Y": 0.80500000715255737,
+                    "W": 0.72500002384185791,
+                    "H": 0.05000000074505806,
+                    "imgColor": {
+                        "r": 1,
+                        "g": 1,
+                        "b": 1,
+                        "a": 1
+                    },
+                    "textureCoords": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 1,
+                        "h": 1
+                    },
+                    "inspectorTextureCoords": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 1397,
+                        "h": 61
+                    },
+                    "childOrder": 3
+                },
+                {
+                    "Type": 3,
+                    "Texture": {
+                        "AssetsPath": "Assets\/Textures\/\/UI\/HUD\/BossHealthBar\/BossLifeBackground.png",
+                        "AssetsName": "BossLifeBackground.png",
+                        "LibaryPath": "Library\/Textures\/1469819415.netex",
+                        "LibraryFile": "1469819415.netex"
+                    },
+                    "Shader": {
+                        "AssetsPath": "Assets\/Shaders\/UIShader.shader",
+                        "AssetsName": "UIShader.shader",
+                        "LibaryPath": "Library\/Shaders\/1025410539.neshader",
+                        "LibraryFile": "1025410539.neshader"
+                    }
+                }
+            ],
+            "Children": []
+        }
+    ]
+} 
