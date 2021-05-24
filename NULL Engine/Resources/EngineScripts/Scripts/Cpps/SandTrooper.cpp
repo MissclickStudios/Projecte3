@@ -1,4 +1,5 @@
 #include "SandTrooper.h"
+#include "Random.h"
 
 #include "Application.h"
 #include "M_Scene.h"
@@ -55,6 +56,9 @@ Trooper* CreateTrooper()
 	//Hand Name
 
 	INSPECTOR_STRING(script->handName);
+
+	INSPECTOR_SLIDER_INT(script->minCredits, 0, 1000);
+	INSPECTOR_SLIDER_INT(script->maxCredits, 0, 1000);
 
 	return script;
 }
@@ -247,7 +251,7 @@ void Trooper::ManageMovement()
 		if (player)
 		{
 			Player* playerScript = (Player*)player->GetScript("Player");
-			playerScript->currency += 50;
+			playerScript->currency += Random::LCG::GetBoundedRandomUint(minCredits, maxCredits);
 		}
 		deathTimer.Start();
 		moveState = TrooperState::DEAD;

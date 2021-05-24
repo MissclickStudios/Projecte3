@@ -40,12 +40,13 @@ void Gate::OnCollisionEnter(GameObject* object)
 	//TODO: GameManager
 	if (gameManager != nullptr) 
 	{
-		if (!isLocked)
+		if (!isLocked && !triggeredNextRoom)
 		{
 			GameManager* gameManagerScript = (GameManager*)gameManager->GetScript("GameManager");
-			if (gameManagerScript->playerScript)
-				gameManagerScript->playerScript->hubCurrency += 20;
+
 			gameManagerScript->GoNextRoom();
+
+			triggeredNextRoom = true;
 		}
 		else
 		{
