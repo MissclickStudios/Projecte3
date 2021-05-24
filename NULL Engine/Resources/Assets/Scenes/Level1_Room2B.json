@@ -1,5 +1,5 @@
 {
-    "ModTime": 1621866525,
+    "ModTime": 1621875416,
     "Models In Scene": [
         {
             "GameObjectUID": 649823649,
@@ -50,6 +50,11 @@
             "GameObjectUID": 649823649,
             "ModelResourceUID": 385458923,
             "ModelAssetsPath": "Assets\/Models\/Props\/bullet.fbx"
+        },
+        {
+            "GameObjectUID": 739926329,
+            "ModelResourceUID": 518335777,
+            "ModelAssetsPath": "Assets\/Models\/Blockouts\/NewBeta\/NavPlanes\/Lv1_Room2_NavPlane.FBX"
         },
         {
             "GameObjectUID": 1603827416,
@@ -382,26 +387,6 @@
                         },
                         {
                             "Type": 5,
-                            "Name": "debugMenuCanvasName",
-                            "string": "DebugMenuCanvas"
-                        },
-                        {
-                            "Type": 5,
-                            "Name": "hubShopCanvasName",
-                            "string": "hubShopCanvas"
-                        },
-                        {
-                            "Type": 5,
-                            "Name": "hudCanvasName",
-                            "string": "hubShopCanvas"
-                        },
-                        {
-                            "Type": 5,
-                            "Name": "pauseMenuCanvasName",
-                            "string": "pauseMenuCanvas"
-                        },
-                        {
-                            "Type": 5,
                             "Name": "creditsTextName",
                             "string": "CreditsText"
                         },
@@ -414,6 +399,26 @@
                             "Type": 5,
                             "Name": "ammoTextName",
                             "string": "AmmoText"
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "weapon1Name",
+                            "string": "pog1"
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "weapon2Name",
+                            "string": "pog2"
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "weapon3Name",
+                            "string": "pog3"
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "weapon4Name",
+                            "string": "pog4"
                         }
                     ]
                 }
@@ -938,6 +943,11 @@
                             "Type": 5,
                             "Name": "gameManagerName",
                             "string": "Game Manager"
+                        },
+                        {
+                            "Type": 2,
+                            "Name": "quoteDelay",
+                            "float": 5
                         }
                     ]
                 }
@@ -2782,8 +2792,8 @@
             "MaintainThroughScenes": false,
             "ShowBoundingBoxes": false,
             "NavigationInfo": {
-                "isNavigable": false,
-                "navigationArea": 0
+                "isNavigable": true,
+                "navigationArea": 1
             },
             "Components": [
                 {
@@ -3190,7 +3200,39 @@
                     "ResourceUID": 643521645,
                     "AssetsPath": "Assets\/Scripts\/\/ItemMenuManager.h",
                     "DataName": "ItemMenuManager",
-                    "HasInspector": false
+                    "HasInspector": true,
+                    "InspectorVariables": [
+                        {
+                            "Type": 5,
+                            "Name": "canvasName",
+                            "string": "Item Menu"
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "buyButtonName",
+                            "string": "Buy Button"
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "nameTextName",
+                            "string": "Name Text"
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "descriptionTextName",
+                            "string": "Description Text"
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "priceTextName",
+                            "string": "Price Text"
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "playerName",
+                            "string": "Mandalorian"
+                        }
+                    ]
                 }
             ]
         },
@@ -3244,7 +3286,39 @@
                     "ResourceUID": 146181121,
                     "AssetsPath": "Assets\/Scripts\/\/DialogManager.h",
                     "DataName": "DialogManager",
-                    "HasInspector": false
+                    "HasInspector": true,
+                    "InspectorVariables": [
+                        {
+                            "Type": 5,
+                            "Name": "dialogCanvasName",
+                            "string": "DialogCanvas"
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "dialogTextName",
+                            "string": "DialogText"
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "dialogButtonName",
+                            "string": "DialogButton"
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "speakerImageName",
+                            "string": "SpeakerImage"
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "speakerTextName",
+                            "string": "SpeakerText"
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "textBackgroundName",
+                            "string": "DialogBackground"
+                        }
+                    ]
                 }
             ]
         },
@@ -3312,13 +3386,8 @@
                         },
                         {
                             "Type": 5,
-                            "Name": "pauseMenuCanvasName",
-                            "string": "PauseMenuCanvas"
-                        },
-                        {
-                            "Type": 5,
-                            "Name": "continueButtonName",
-                            "string": "ContinueButton"
+                            "Name": "resumeButtonName",
+                            "string": "ResumeButton"
                         },
                         {
                             "Type": 5,
@@ -3327,18 +3396,28 @@
                         },
                         {
                             "Type": 5,
-                            "Name": "abandonRunButtonName",
-                            "string": "AbandonRunButton"
-                        },
-                        {
-                            "Type": 5,
                             "Name": "mainMenuButtonName",
                             "string": "MainButton"
                         },
                         {
                             "Type": 5,
-                            "Name": "exitButtonName",
-                            "string": "ExitButton"
+                            "Name": "optionsMenuCanvasStr",
+                            "string": "PauseSettingsCanvas"
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "optionsFullscreenStr",
+                            "string": "FullscreenCheck"
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "optionsVsyncStr",
+                            "string": "VsyncCheck"
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "backButtonStr",
+                            "string": "BackButton"
                         }
                     ]
                 }
@@ -3346,7 +3425,7 @@
         },
         {
             "UID": 888400124,
-            "ParentUID": 2091192132,
+            "ParentUID": 822684939,
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "MainScene",
@@ -6000,7 +6079,7 @@
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": true,
+            "ShowBoundingBoxes": false,
             "NavigationInfo": {
                 "isNavigable": false,
                 "navigationArea": 0
@@ -6845,6 +6924,26 @@
                             "string": "PlayerSpawn"
                         },
                         {
+                            "Type": 5,
+                            "Name": "loseSceneName",
+                            "string": "Assets\/Scenes\/LoseScene.json"
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "cameraName",
+                            "string": "GameCameraVS2"
+                        },
+                        {
+                            "Type": 0,
+                            "Name": "l1Easy",
+                            "int": 1
+                        },
+                        {
+                            "Type": 0,
+                            "Name": "l1Intermediate",
+                            "int": 4
+                        },
+                        {
                             "Type": 7,
                             "Name": "level1",
                             "vectorstring": [
@@ -6858,9 +6957,71 @@
                             ]
                         },
                         {
+                            "Type": 0,
+                            "Name": "RuinsEasy",
+                            "int": 1
+                        },
+                        {
+                            "Type": 0,
+                            "Name": "RuinsIntermediate",
+                            "int": 4
+                        },
+                        {
+                            "Type": 7,
+                            "Name": "level1Ruins",
+                            "vectorstring": [
+                                "Level1_Ruins1.json",
+                                "Level1_Ruins7.json",
+                                "Level1_Ruins3.json",
+                                "Level1_Ruins2.json",
+                                "Level1_Ruins5.json",
+                                "Level1_Ruins6.json",
+                                "Level1_Ruins4.json"
+                            ]
+                        },
+                        {
                             "Type": 4,
                             "Name": "playerPrefab",
                             "prefab": 813688999
+                        },
+                        {
+                            "Type": 4,
+                            "Name": "groguPrefab",
+                            "prefab": 13642032
+                        },
+                        {
+                            "Type": 4,
+                            "Name": "chestPrefab",
+                            "prefab": 0
+                        },
+                        {
+                            "Type": 0,
+                            "Name": "chestSpawnChance",
+                            "int": 60
+                        },
+                        {
+                            "Type": 4,
+                            "Name": "mistPlane1",
+                            "prefab": 0
+                        },
+                        {
+                            "Type": 4,
+                            "Name": "mistPlane2",
+                            "prefab": 0
+                        },
+                        {
+                            "Type": 3,
+                            "Name": "mistPlane1Position",
+                            "float3x": 0,
+                            "float3y": 0,
+                            "float3z": 0
+                        },
+                        {
+                            "Type": 3,
+                            "Name": "mistPlane2Position",
+                            "float3x": 0,
+                            "float3y": 0,
+                            "float3z": 0
                         }
                     ]
                 },
@@ -7111,11 +7272,6 @@
                     "InspectorVariables": [
                         {
                             "Type": 5,
-                            "Name": "beskarTextHubShopName",
-                            "string": "BeskarTextHubShop"
-                        },
-                        {
-                            "Type": 5,
                             "Name": "mandoName",
                             "string": "Mandalorian"
                         },
@@ -7250,6 +7406,36 @@
                             "Type": 5,
                             "Name": "playerName",
                             "string": "Mandalorian"
+                        },
+                        {
+                            "Type": 2,
+                            "Name": "shakeMagnitude",
+                            "float": 0
+                        },
+                        {
+                            "Type": 2,
+                            "Name": "shakeDuration",
+                            "float": 0
+                        },
+                        {
+                            "Type": 2,
+                            "Name": "cameraSpeed",
+                            "float": 0
+                        },
+                        {
+                            "Type": 2,
+                            "Name": "distanceToTransition",
+                            "float": 0
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "destinationPointsName",
+                            "string": "DestinationPoints"
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "playerPointsName",
+                            "string": "PlayerPoints"
                         }
                     ]
                 }
@@ -7316,11 +7502,6 @@
                             "Type": 5,
                             "Name": "mandoName",
                             "string": "Mandalorian"
-                        },
-                        {
-                            "Type": 5,
-                            "Name": "debugMenuCanvasName",
-                            "string": "DebugMenuCanvas"
                         },
                         {
                             "Type": 5,
@@ -7682,10 +7863,122 @@
                     "childOrder": 0
                 }
             ]
+        },
+        {
+            "UID": 573227073,
+            "ParentUID": 739926329,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Plane001",
+            "IsActive": false,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": true,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        731.56939697265625,
+                        0,
+                        94.922149658203125
+                    ],
+                    "LocalRotation": [
+                        -0.70710676908493042,
+                        0,
+                        0,
+                        0.70710676908493042
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 1953437132,
+                    "Name": "Plane001.nemesh",
+                    "Path": "Library\/Meshes\/1953437132.nemesh",
+                    "File": "1953437132.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false,
+                    "Outline": false,
+                    "OutlineThickness": 1,
+                    "OutlineColor": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ]
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 107202462,
+                        "Color": [
+                            0.80000001192092896,
+                            0.80000001192092896,
+                            0.80000001192092896,
+                            1
+                        ],
+                        "Name": "Plane001.nemat",
+                        "Path": "Library\/Materials\/107202462.nemat",
+                        "File": "107202462.nemat"
+                    },
+                    "Shader": {
+                        "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
+                        "AssetsName": "DefaultShader.shader",
+                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
+                        "LibraryFile": "800223282.neshader"
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 739926329,
+            "ParentUID": 888400124,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Lv1_Room2_NavPlane.FBX",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0.7071068286895752,
+                        0,
+                        0.7071068286895752
+                    ],
+                    "LocalScale": [
+                        0.12999999523162842,
+                        0.12999999523162842,
+                        0.12999999523162842
+                    ]
+                }
+            ]
         }
     ],
     "NavMesh": {
-        "UID": 0,
-        "Assets Path": "[NONE]"
+        "UID": 25712266,
+        "Assets Path": "Assets\/Navigation\/Level1_Room2B.navmesh"
     }
 } 

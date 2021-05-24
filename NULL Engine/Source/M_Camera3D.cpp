@@ -22,8 +22,8 @@
 #define ZOOM_SPEED 300.0f
 
 M_Camera3D::M_Camera3D(bool isActive) : Module("Camera3D", isActive),
-masterCamera		(nullptr),
-currentCamera		(nullptr),
+masterCamera	(nullptr),
+currentCamera	(nullptr),
 drawLastRaycast	(false)
 {
 	CreateMasterCamera();

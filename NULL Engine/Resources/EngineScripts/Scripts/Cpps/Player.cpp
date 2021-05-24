@@ -635,13 +635,13 @@ void Player::AnimatePlayer()
 	}
 	else
 	{	
-		LOG("DIRECTIONS: [%d]::[%d]::[%s]::[%s]", aimDirection, moveDirection, GetAimStateAnimation()->name.c_str(), GetLegsAnimation()->name.c_str());
+		//LOG("DIRECTIONS: [%d]::[%d]::[%s]::[%s]", aimDirection, moveDirection, GetAimStateAnimation()->name.c_str(), GetLegsAnimation()->name.c_str());
 		
 		AnimationInfo* torsoInfo	= GetAimStateAnimation();
 		AnimationInfo* legsInfo		= GetMoveStateAnimation();
 		if (torsoInfo == nullptr || legsInfo == nullptr)
 		{
-			LOG("DEFAULTING AIMING TO PREVIEW");
+			//LOG("DEFAULTING AIMING TO PREVIEW");
 			
 			fromPreview = true;
 
@@ -656,10 +656,13 @@ void Player::AnimatePlayer()
 			{
 				fromPreview = false;
 
-				AnimatorClip* previewClip = preview->GetCurrentClip();
+				//AnimatorClip* previewClip = preview->GetCurrentClip();
 
-				if ((previewClip == nullptr) || (previewClip->GetName() != torsoInfo->name))										// If no clip playing or animation/clip changed
-					animator->PlayClip(preview->GetName(), torsoInfo->name.c_str(), torsoInfo->blendTime);
+				//if ((previewClip == nullptr) || (previewClip->GetName() != torsoInfo->name))										// If no clip playing or animation/clip changed
+				//	animator->PlayClip(preview->GetName(), torsoInfo->name.c_str(), torsoInfo->blendTime);
+
+				/*if (hip != nullptr)
+					hip->transform->Rotate()*/
 
 				return;
 			}
@@ -1413,7 +1416,13 @@ void Player::Movement()
 {
 	moveVector = moveInput;
 
-	float speed = (moveState == PlayerState::RUN) ? Speed() : (walkSpeed * speedModifier);
+	float speed = Speed();
+
+	if (moveState == PlayerState::WALK)
+		speed = (walkSpeed * speedModifier);
+
+	if (aimState == AimState::SHOOT)
+		speed = (aimingSpeed * speedModifier);
 
 	if (rigidBody != nullptr)
 		rigidBody->Set2DVelocity((moveInput.Normalized()) * speed);
