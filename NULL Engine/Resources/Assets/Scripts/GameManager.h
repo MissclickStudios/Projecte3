@@ -110,6 +110,9 @@ public:
 
     bool doCameraCutscene = false;
 
+    //Story & dialog vars
+    StoryDialogData storyDialogState;
+
 private:
 
     GameObject* cameraGameObject = nullptr;
@@ -132,8 +135,8 @@ private:
     float backtrackDuration = 1.0f;
     Timer backtrackTimer;
 
-    //Story & dialog vars
-    StoryDialogData storyDialogState;
+    
+   
 
     // Items
     std::vector<ItemData*> chestItemPool;
