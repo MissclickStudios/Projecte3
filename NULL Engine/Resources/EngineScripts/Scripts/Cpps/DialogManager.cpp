@@ -222,6 +222,9 @@ DialogState DialogManager::GetDialogState()
 
 bool DialogManager::StartDialog(const char* dialogName)
 {
+	if (state != DialogState::NO_DIALOG)
+		return false;
+
 	bool found = false;
 
 	//look for loaded dialogs
@@ -239,25 +242,16 @@ bool DialogManager::StartDialog(const char* dialogName)
 		currentDialogSystem = LoadDialogSystem(dialogName);
 
 	if (currentDialogSystem == nullptr)
+	{
+		LOG("Dialog %s could not be started. It wasn't found", dialogName);
 		return false;
+	}
 
 	currentDialog = currentDialogSystem->dialogPool[Random::LCG::GetBoundedRandomUint(0, currentDialogSystem->dialogPool.size()-1)];
 	currentLine = currentDialog->lines.front();
 	currentLineIterator = currentDialog->lines.begin();
 
-	
-
 	state = DialogState::SLIDE_IN;
-
-	//for (auto dialog = dialogSystemsLoaded.begin(); dialog != dialogSystemsLoaded.end(); ++dialog)
-	//{
-	//	if (strcmp((*dialog)->dialogSystemName.c_str(),dialogName) == 0) 
-	//	{
-	//		currentDialogSystem = (*dialog);
-	//		currentDialog = (*dialog)->dialogPool[Random::LCG::GetBoundedRandomUint(0, (*dialog)->dialogPool.size())];
-	//		currentLine = currentDialog->lines.front();
-	//	}
-	//}
 
 	return true;
 }

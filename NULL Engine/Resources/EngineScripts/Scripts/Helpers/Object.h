@@ -12,7 +12,8 @@ enum class ObjectType
 	COLLECTABLE,
 	EXPLOSIVE_BARREL,
 	GROUND_ITEM,
-	WEAPON_ITEM
+	WEAPON_ITEM,
+	GROGU_ABILITY
 };
 
 class Object : public Script

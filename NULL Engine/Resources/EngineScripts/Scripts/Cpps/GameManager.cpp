@@ -78,9 +78,7 @@ void GameManager::Awake()
 			}
 
 			//Load story & dialogs
-			defeatedIG11FirstTime = jsonState.GetBool("defeatedIG11FirstTime");
-			defeatedIG12FirstTime = jsonState.GetBool("defeatedIG12FirstTime");
-			talkedToArmorer = jsonState.GetBool("talkedToArmorer");
+			storyDialogState.Load(jsonState);
 
 			//TODO:Spawn player and everything on the level
 			GameObject* playerSpawn = App->scene->GetGameObjectByName(SpawnPointName.c_str());
@@ -90,10 +88,10 @@ void GameManager::Awake()
 				playerGameObject = App->scene->InstantiatePrefab(playerPrefab.uid, App->scene->GetSceneRoot(), spawnPoint,Quat::identity);
 			}
 
-			if(defeatedIG11FirstTime)
+			if(storyDialogState.defeatedIG11FirstTime)
 				groguGameObject = App->scene->InstantiatePrefab(groguPrefab.uid, App->scene->GetSceneRoot(),float3::zero, Quat::identity);
 
-			if (playerSpawn != nullptr && groguGameObject != nullptr && defeatedIG11FirstTime)
+			if (playerSpawn != nullptr && groguGameObject != nullptr && storyDialogState.defeatedIG11FirstTime)
 			{
 				float3 offset = { 0,0,7 };
 				spawnPoint = playerSpawn->transform->GetLocalPosition() + offset;
@@ -184,16 +182,17 @@ void GameManager::Start()
 
 	//Camera cutscenes movement
 	cameraGameObject = App->scene->GetGameObjectByName(cameraName.c_str());
-	cameraScript = (CameraMovement*)cameraGameObject->GetScript("CameraMovement");
+	if(cameraGameObject != nullptr)
+		cameraScript = (CameraMovement*)cameraGameObject->GetScript("CameraMovement");
 
 
-	//Start Dialogs based on scene
+	//Start Dialogs based on scene & Advance Story
 	if (dialogManager != nullptr)
 	{
 		
-		if (strcmp(App->scene->GetCurrentScene(),"BossL1" ) == 0)
+		if (strcmp(App->scene->GetCurrentScene(),"BossL1" ) == 0 )
 		{
-			if(!defeatedIG11FirstTime)
+			if(!storyDialogState.defeatedIG11FirstTime)
 				dialogManager->StartDialog("1st Conversation IG-11");
 			else
 				dialogManager->StartDialog("Pool Conversation IG-11");
@@ -202,14 +201,26 @@ void GameManager::Start()
 
 		if (strcmp(App->scene->GetCurrentScene(), "Boss_Ruins") == 0)
 		{
-			if (!defeatedIG12FirstTime)
-				dialogManager->StartDialog("1st Conversation IG-11.json");
+			if (!storyDialogState.defeatedIG12FirstTime)
+				dialogManager->StartDialog("1st Conversation IG-11");
 			else
 				dialogManager->StartDialog("Pool Conversation IG-11");
 			return;
 		}
+
+		if (strcmp(App->scene->GetCurrentScene(), "HUB") == 0)
+		{
+			if (!storyDialogState.firstTimeHub)
+			{
+				storyDialogState.firstTimeHub = true;
+				dialogManager->StartDialog("1st Conversation Cantine");
+			}
+			else
+				dialogManager->StartDialog("Pool Conversation Cantine Death");
+			return;
+		}
 		
-		dialogManager->StartDialog("GroguHello");
+		//dialogManager->StartDialog("GroguHello");
 	}
 		
 }
@@ -557,9 +568,7 @@ void GameManager::Continue()
 			level1Ruins.emplace_back(levelArray2.GetString(i));
 		}
 		//Story
-		defeatedIG11FirstTime = jsonState.GetBool("defeatedIG11FirstTime");
-		defeatedIG12FirstTime = jsonState.GetBool("defeatedIG12FirstTime");
-		talkedToArmorer = jsonState.GetBool("talkedToArmorer");
+		storyDialogState.Load(jsonState);
 
 
 		//TODO:Spawn player and everything on the level
@@ -736,9 +745,7 @@ void GameManager::SaveManagerState()
 	jsonState.SerializeToFile(saveFileName, &buffer);
 	CoreCrossDllHelpers::CoreReleaseBuffer(&buffer);
 
-	jsonState.SetBool("defeatedIG11FirstTime", defeatedIG11FirstTime);
-	jsonState.SetBool("defeatedIG12FirstTime", defeatedIG12FirstTime);
-	jsonState.SetBool("talkedToArmorer", talkedToArmorer);
+	storyDialogState.Save(jsonState);
 }
 
 void GameManager::BackTrackUpdate()
@@ -844,20 +851,21 @@ void GameManager::GateUpdate()
 void GameManager::KilledIG11()
 {
 	LOG("Killed IG11");
-	if (!defeatedIG11FirstTime)
+	if (!storyDialogState.defeatedIG11FirstTime)
 	{
-		defeatedIG11FirstTime = true;
+		storyDialogState.defeatedIG11FirstTime = true;
 		groguGameObject = App->scene->InstantiatePrefab(groguPrefab.uid, App->scene->GetSceneRoot(), float3::zero, Quat::identity);
+		dialogManager->StartDialog("1st Conversation Grogu");
 	}
 }
 
 void GameManager::TalkedToArmorer()
 {
 	LOG("Talked to armorer");
-	if (!talkedToArmorer)
+	if (!storyDialogState.talkedToArmorer)
 	{
 		dialogManager->StartDialog("1st Conversation Armorer");
-		talkedToArmorer = true;
+		storyDialogState.talkedToArmorer = true;
 	}
 	else
 	{
@@ -896,4 +904,24 @@ GameManager* CreateGameManager() {
 	INSPECTOR_SLIDER_FLOAT3(script->mistPlane2Position, -1000.f, 1000.f);
 
 	return script;
+}
+
+void StoryDialogData::Save(ParsonNode &node)
+{
+	node.SetBool("visitedHUB", visitedHUB);
+	node.SetBool("defeatedIG11FirstTime", defeatedIG11FirstTime);
+	node.SetBool("defeatedIG12FirstTime", defeatedIG12FirstTime);
+	node.SetBool("talkedToArmorer", talkedToArmorer);
+	node.SetBool("firstTimeHub", firstTimeHub);
+	node.SetBool("talkedToGrogu", talkedToGrogu);
+}
+
+void StoryDialogData::Load(ParsonNode &node)
+{
+	visitedHUB = node.GetBool("visitedHUB");
+	defeatedIG11FirstTime = node.GetBool("defeatedIG11FirstTime");
+	defeatedIG12FirstTime = node.GetBool("defeatedIG12FirstTime");
+	talkedToArmorer = node.GetBool("talkedToArmorer");
+	firstTimeHub = node.GetBool("firstTimeHub");
+	talkedToGrogu = node.GetBool("talkedToGrogu");
 }
