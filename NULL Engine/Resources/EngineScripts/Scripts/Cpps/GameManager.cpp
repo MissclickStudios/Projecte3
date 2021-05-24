@@ -26,6 +26,7 @@
 
 #include "Items.h"
 #include "Random.h"
+#include "MC_Time.h"
 
 GameManager::GameManager(): Script()
 {
@@ -215,6 +216,11 @@ void GameManager::Start()
 
 void GameManager::Update()
 {
+	if (dialogManager->GetDialogState() != DialogState::NO_DIALOG && cameraScript->destinationPoints != nullptr)
+		doCameraCutscene = true;
+	else
+		doCameraCutscene = false;
+		
 	BackTrackUpdate();
 
 	// --- Room Generation
