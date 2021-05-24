@@ -71,6 +71,8 @@ public:
 	void StartNewLine();
 
 	DialogSystem* LoadDialogSystem(const char* dialogName); //Loads dialog for the scene to be used later (Pass only the name of the dialog)
+
+	DialogState GetDialogState();
 private:
 
 public:
@@ -78,8 +80,6 @@ public:
 	//StartDialog
 	bool StartDialog(const char* dialogName); // dialogName = Name of the dialog only
 	void StartDialog(DialogSystem* dialogSystem);
-
-	DialogState GetDialogState();
 
 public:
 	C_Canvas* dialogCanvas = nullptr;

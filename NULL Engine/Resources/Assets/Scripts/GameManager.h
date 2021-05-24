@@ -19,6 +19,21 @@ class PerfectTimer;
 
 struct ItemData;
 
+class StoryDialogData
+{
+public:
+    bool visitedHUB = false;            //When mando enters the HUB for the first time a cinematic + dialog should happen
+    bool defeatedIG11FirstTime = false; //When Mando hasn't defeated IG-11 Grogu should not be with him and IG-11 should use a special dialog
+    bool defeatedIG12FirstTime = false;
+    bool talkedToArmorer = false;
+    bool firstTimeHub = false;
+    bool talkedToGrogu = false;
+
+    void Save(ParsonNode &node);
+    void Load(ParsonNode &node);
+    
+};
+
 
 class SCRIPTS_API GameManager : public Script 
 {
@@ -118,10 +133,7 @@ private:
     Timer backtrackTimer;
 
     //Story & dialog vars
-    bool visitedHUB = false;            //When mando enters the HUB for the first time a cinematic + dialog should happen
-    bool defeatedIG11FirstTime = false; //When Mando hasn't defeated IG-11 Grogu should not be with him and IG-11 should use a special dialog
-    bool defeatedIG12FirstTime = false;
-    bool talkedToArmorer = false;
+    StoryDialogData storyDialogState;
 
     // Items
     std::vector<ItemData*> chestItemPool;

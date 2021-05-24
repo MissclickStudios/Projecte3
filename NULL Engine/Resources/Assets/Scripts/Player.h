@@ -90,7 +90,8 @@ public:
 	void SetPlayerInteraction(InteractionType type, float duration = 0.0f);		// If duration is 0.0f, then the duration will be set with the duration of the clip.
 
 	// Movement
-	float walkSpeed			= DEFAULT_MODIFIER;									// Factor by which the player's speed will be reduced when in WALK state.
+	float walkSpeed			= DEFAULT_MODIFIER;									// Speed at which the player will move the moment they enter the WALK State.
+	float aimingSpeed		= DEFAULT_MODIFIER;									// Speed at which the player will move the moment they have any AimState other than AimState::NONE.
 
 	// Dash
 	float DashSpeed()		{ return dashSpeed * speedModifier; }
@@ -207,6 +208,10 @@ public:
 	float joystickThreshold					= 25.0f;
 	float joystickFactor					= 327.67;
 
+	// Hands
+	GameObject* rightHand					= nullptr;
+	GameObject* leftHand					= nullptr;
+
 	// Items
 	void AddItem(ItemData* item);
 	const std::vector<std::pair<bool, ItemData*>>* const GetItems() const { return &items; }
@@ -273,7 +278,6 @@ private:
 	float2 moveInput					= float2::zero;
 	float2 aimInput						= float2::zero;
 
-
 	// Movement
 	void Movement();
 
@@ -298,7 +302,11 @@ private:
 	bool usingSecondaryGun				= false;
 	Timer changeTimer;
 
-	GameObject* hand					= nullptr;
+	GameObject* blasterBarrelTip		= nullptr;
+	GameObject* sniperBarrelTip			= nullptr;
+	GameObject* shotgunBarrelTip		= nullptr;
+	GameObject* minigunBarrelTip		= nullptr;
+
 	GameObject* blasterGameObject		= nullptr;
 	GameObject* secondaryGunGameObject	= nullptr;
 
@@ -312,6 +320,11 @@ private:
 	std::vector<std::pair<bool, ItemData*>> items;
 	std::vector<std::pair<bool, ItemData*>> savedItems;
 
+	// Animations
+	GameObject* hip		= nullptr;
+	GameObject* torso	= nullptr;
+	GameObject* legs	= nullptr;
+	
 	// Utilities
 	float GetAnimatorClipDuration(const char* clipName);
 

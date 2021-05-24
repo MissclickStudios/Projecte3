@@ -43,6 +43,9 @@ C_UI_Image::~C_UI_Image()
 		if (canvas)
 			canvas->RemoveUiElement(this);
 	}
+	// --- Delete Buffers
+	glDeleteBuffers(1, (GLuint*)&VAO);
+	glDeleteBuffers(1, (GLuint*)&VBO);
 }
 
 bool C_UI_Image::Update()

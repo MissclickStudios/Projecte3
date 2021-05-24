@@ -45,7 +45,7 @@ void HUBArmorer::Update()
 		case HUBArmorerState::INACTIVE:
 			if (mando->transform->GetDistanceTo(gameObject->transform->GetLocalPosition()) <= talkDistance)
 			{
-				if (App->input->GetKey(SDL_SCANCODE_B) == KeyState::KEY_UP || App->input->GetGameControllerButton(1) == ButtonState::BUTTON_UP ) // A/X button on controller
+				if (App->input->GetKey(SDL_SCANCODE_B) == KeyState::KEY_UP || App->input->GetGameControllerButton(0) == ButtonState::BUTTON_UP ) // A/X button on controller
 				{
 					App->uiSystem->PushCanvas(hubShopCanvas);
 					state = HUBArmorerState::ACTIVE;
@@ -55,7 +55,7 @@ void HUBArmorer::Update()
 			}
 			break;
 		case HUBArmorerState::ACTIVE:
-			if (App->input->GetKey(SDL_SCANCODE_B) == KeyState::KEY_UP || App->input->GetGameControllerButton(2) == ButtonState::BUTTON_UP) // B/Square button on controller
+			if (App->input->GetKey(SDL_SCANCODE_B) == KeyState::KEY_UP || App->input->GetGameControllerButton(1) == ButtonState::BUTTON_UP) // B/Square button on controller
 			{
 				App->uiSystem->RemoveActiveCanvas(hubShopCanvas);
 				state = HUBArmorerState::INACTIVE;

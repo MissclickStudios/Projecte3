@@ -47,6 +47,7 @@
 #include "C_UI_Text.h"
 #include "C_UI_Button.h"
 #include "C_UI_Checkbox.h"
+#include "C_UI_Slider.h"
 #include "C_Script.h"
 #include "C_2DAnimator.h"
 #include "C_NavMeshAgent.h"
@@ -2065,6 +2066,66 @@ void E_Inspector::DrawUICheckboxComponent(C_UI_Checkbox* checkbox)
 	}
 }
 
+void E_Inspector::DrawUISliderComponent(C_UI_Slider* slider)
+{
+	static bool show = true;
+	if (ImGui::CollapsingHeader("slider", &show, ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		bool isActive = slider->IsActive();
+		if (ImGui::Checkbox("slider Is Active", &isActive)) { slider->SetIsActive(isActive); }
+
+		ImGui::Separator();
+
+		// --- RECT ---
+		float2 pos = { slider->GetRect().x, slider->GetRect().y };
+		float2 size = { slider->GetRect().w, slider->GetRect().h };
+
+		//C_Canvas* canvas = button->GetOwner()->parent->GetComponent<C_Canvas>();
+
+		if (ImGui::DragFloat2("slider Size", (float*)&size, 0.005f, 0.0f, 0.0f, "%.3f", NULL))
+		{
+			if (size.x < 0)
+				size.x = 0;
+			if (size.y < 0)
+				size.y = 0;
+
+			slider->SetW(size.x);
+			slider->SetH(size.y);
+		}
+
+		if (ImGui::DragFloat2("slider Pos", (float*)&pos, 0.005f, 0.0f, 0.0f, "%.3f", NULL))
+		{
+			slider->SetX(pos.x);
+			slider->SetY(pos.y);
+		}
+
+		ImGui::DragFloat("Max Value", &slider->maxValue);
+		ImGui::DragInt("Num Rects", &slider->numRects);
+		ImGui::DragFloat("Offset", &slider->offset);
+
+		ImGui::Text("Unhovered Unchecked TexCoord (x,y,w,h)");
+		if (ImGui::DragInt4("Unhovered Unchecked", slider->pixelCoord))
+			slider->unhoverUnchecked = slider->GetTexturePosition(slider->pixelCoord[0], slider->pixelCoord[1], slider->pixelCoord[2], slider->pixelCoord[3]);
+		ImGui::Text("Hovered Unchecked TexCoord (x,y,w,h)");
+		if (ImGui::DragInt4("Hovered Unchecked", slider->pixelCoord + 4))
+			slider->hoverUnchecked = slider->GetTexturePosition(slider->pixelCoord[4], slider->pixelCoord[5], slider->pixelCoord[6], slider->pixelCoord[7]);
+		ImGui::Text("Unhovered Checked TexCoord (x,y,w,h)");
+		if (ImGui::DragInt4("Unhovered Checked", slider->pixelCoord + 8))
+			slider->unhoverChecked = slider->GetTexturePosition(slider->pixelCoord[8], slider->pixelCoord[9], slider->pixelCoord[10], slider->pixelCoord[11]);
+		ImGui::Text("Hovered Checked TexCoord (x,y,w,h)");
+		if (ImGui::DragInt4("Hovered Checked", slider->pixelCoord + 12))
+			slider->hoverChecked = slider->GetTexturePosition(slider->pixelCoord[12], slider->pixelCoord[13], slider->pixelCoord[14], slider->pixelCoord[15]);
+
+		if (!show)
+		{
+			componentToDelete = slider;
+			showDeleteComponentPopup = true;
+		}
+
+		ImGui::Separator();
+	}
+}
+
 // --- DRAW COMPONENT UTILITY METHODS ---
 void E_Inspector::AddComponentCombo(GameObject* selectedGameObject)
 {
@@ -2081,6 +2142,7 @@ void E_Inspector::AddComponentCombo(GameObject* selectedGameObject)
 		case (int)ComponentType::UI_TEXT: AddUIComponent(selectedGameObject, ComponentType::UI_TEXT); break;
 		case (int)ComponentType::UI_BUTTON: AddUIComponent(selectedGameObject, ComponentType::UI_BUTTON); break;
 		case (int)ComponentType::UI_CHECKBOX: AddUIComponent(selectedGameObject, ComponentType::UI_CHECKBOX); break;
+		case (int)ComponentType::UI_SLIDER: AddUIComponent(selectedGameObject, ComponentType::UI_SLIDER); break;
 		default: selectedGameObject->CreateComponent((ComponentType)componentType); break;
 		}
 	}

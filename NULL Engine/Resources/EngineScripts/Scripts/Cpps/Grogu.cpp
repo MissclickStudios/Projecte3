@@ -8,6 +8,8 @@
 
 #include "GameObject.h"
 #include "C_Transform.h"
+#include "C_RigidBody.h"
+#include "C_BoxCollider.h"
 
 #include "GameManager.h"
 
@@ -22,12 +24,9 @@ Grogu* CreateGrogu()
 	// Basic Stats
 	INSPECTOR_DRAGABLE_FLOAT(script->speed);
 	// Modifiers
-	INSPECTOR_DRAGABLE_FLOAT(script->cooldownModifier);
 	INSPECTOR_DRAGABLE_FLOAT(script->speedModifier);
 	// Behaviour
 	INSPECTOR_DRAGABLE_FLOAT(script->maxDistanceToMando);
-	// Ability
-	INSPECTOR_DRAGABLE_FLOAT(script->abilityCooldown);
 
 	return script;
 }
@@ -43,8 +42,14 @@ Grogu::~Grogu()
 
 void Grogu::SetUp()
 {
-	abilityCooldownTimer.Stop();
 	player = App->scene->GetGameObjectByName(playerName.c_str());
+
+	if (rigidBody != nullptr)
+	{
+		rigidBody->FreezeRotationX(true);
+		rigidBody->FreezeRotationY(true);
+		rigidBody->FreezeRotationZ(true);
+	}
 }
 
 void Grogu::Behavior()
@@ -52,9 +57,9 @@ void Grogu::Behavior()
 	// Check if player is referenced properly
 	if (player == nullptr)
 		return;
+
 	ManageMovement();
 	ManageRotation();
-	ManageAbility();
 }
 
 void Grogu::CleanUp()
@@ -74,60 +79,49 @@ void Grogu::LoadState(ParsonNode& groguNode)
 
 void Grogu::Reset()
 {
-	// Reset ability's cooldown
+
 }	
 
 void Grogu::ManageMovement()
 {
+	float3 position = gameObject->transform->GetWorldPosition();
+	float3 playerPos = player->transform->GetWorldPosition();
+
+	// Update Grogu's Y
+	gameObject->transform->SetLocalPosition({ position.x, playerPos.y, position.z });
+
 	// Check if player and grogu are apart
-	position = gameObject->transform->GetWorldPosition();
-	float3 deltaPos = player->transform->GetWorldPosition() - gameObject->transform->GetWorldPosition();
+	float3 deltaPos = playerPos - position;
 
 	if (sqrt(deltaPos.x * deltaPos.x + deltaPos.z * deltaPos.z) > maxDistanceToMando)
 	{
-		float3 direction = deltaPos;
+		direction = deltaPos;
 		direction.Normalize();
 
-		direction *= Speed();
-		position += direction;
-
 		Movement();
+	}
+	else
+	{
+		if (rigidBody != nullptr)
+			rigidBody->Set2DVelocity(float2::zero);
 	}
 }
 
 void Grogu::ManageRotation()
 {
-	float3 deltaPos = player->transform->GetWorldPosition() - gameObject->transform->GetWorldPosition();
-	float3 direction = deltaPos;
+	float3 direction = player->transform->GetWorldPosition() - gameObject->transform->GetWorldPosition();
 	direction.Normalize();
-	aimDirection.x = direction.x;
-	aimDirection.y = direction.z;
+	float2 aimDirection = { direction.x, direction.z };
 
 	float rad = aimDirection.AimedAngle();
 	gameObject->transform->SetLocalRotation(float3(0, -rad + DegToRad(180), 0));
 }
 
-void Grogu::ManageAbility()
-{
-	if (abilityCooldownTimer.IsActive())
-	{
-		if (abilityCooldownTimer.ReadSec() >= AbilityCooldown())
-			abilityCooldownTimer.Stop();
-		return;
-	}
-	if (App->input->GetKey(SDL_SCANCODE_N) == KeyState::KEY_DOWN)
-	{
-		Ability();
-	}
-}
-
 void Grogu::Movement()
 {
-	gameObject->transform->SetWorldPosition(position);
-}
+	float2 moveDirection = { direction.x, direction.z };
+	moveDirection *= Speed();
 
-void Grogu::Ability()
-{
-	abilityCooldownTimer.Start();
-	gameObject->transform->SetWorldPosition(position);
+	if (rigidBody != nullptr)
+		rigidBody->Set2DVelocity(moveDirection);
 }
