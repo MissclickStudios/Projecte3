@@ -1,4 +1,3 @@
-
 #include "Script.h"
 #include "ScriptMacros.h"
 #include "MathGeoLib/include/Math/float3.h"
@@ -6,9 +5,8 @@
 class GameObject;
 class C_BoxCollider;
 class C_AudioSource;
-class C_Animator2D;
 
-class SCRIPTS_API GroguPush : public Object ALLOWED_INHERITANCE 
+class SCRIPTS_API GroguPush : public Object ALLOWED_INHERITANCE
 {
 public:
 
@@ -20,16 +18,13 @@ public:
 	void CleanUp() override;
 
 	void OnTriggerRepeat(GameObject* object) override;
-
+	void OnTriggerExit(GameObject* object) override;
 	float3 abilityRadius = float3::one;
 
-	float abilityPower = 10000000.0f;
-	float abilityCooldown = 0.0f;
+	float abilityPower = 2000000.0f;
+	float abilityCooldown = 5.0f;
 
 private:
-
-	std::string groguName = "SidekickButton";
-	C_2DAnimator* groguImage;
 
 	std::string gameManager = "Game Manager";
 
@@ -37,16 +32,19 @@ private:
 	std::string playerName = "Mandalorian";
 
 	C_BoxCollider* abilityCollider = nullptr;
-		
+
 	bool toExplode = false;
 	bool exploded = false;
 
 	Timer abilityCooldownTimer;
 
 
+
+
+
 public:
 
 	bool doAbility = false;
 };
-
+//
 SCRIPTS_FUNCTION GroguPush* CreateGroguPush();

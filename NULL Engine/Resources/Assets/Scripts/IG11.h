@@ -9,8 +9,11 @@
 #include "Blaster.h"
 
 #include "MathGeoLib/include/Math/float2.h"
+#include <string>
 
 class GameManager;
+class C_Canvas;
+class C_UI_Image;
 
 enum class IG11State
 {
@@ -46,6 +49,7 @@ public:
 	void EntityResume() override;
 
 	void OnCollisionEnter(GameObject* object) override;
+	void TakeDamage(float damage)override;
 
 	// Effects
 	void BossPiercing(Effect* effect);
@@ -94,6 +98,9 @@ public:
 	float maxCredits = 0.f;
 
 	int beskarValue = 10;
+
+	GameObject* healthBarCanvasObject = nullptr;
+	std::string lifeBarImageStr = "BossLife";
 
 private:
 
@@ -152,6 +159,10 @@ private:
 	//float3 alternativeLeft;
 	//Game manager
 	GameManager* gameManager = nullptr;
+
+	C_Canvas* healthBarCanvas = nullptr;
+	C_UI_Image* healthBarImage = nullptr;
+	float healthMaxW = 0.0f;
 
 };
 
