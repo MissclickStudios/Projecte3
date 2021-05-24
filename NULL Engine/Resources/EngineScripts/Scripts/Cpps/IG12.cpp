@@ -7,6 +7,7 @@
 #include "GameObject.h"
 #include "C_Transform.h"
 #include "C_RigidBody.h"
+#include "C_ParticleSystem.h"
 
 #include "Player.h"
 
@@ -249,6 +250,14 @@ void IG12::ManageMovement()
 		else
 			firstStageTimer.Start();
 	}
+	else if (bombingAndSpiralAttackTimer.IsActive() && bombingAndSpiralAttackTimer.ReadSec() >= bombingAttackDuration)
+	{
+		bombingAndSpiralAttackTimer.Stop();
+		if (health <= 5)
+			secondStageTimer.Start();
+		else
+			firstStageTimer.Start();
+	}
 	else if (!firstStageTimer.IsActive() && !secondStageTimer.IsActive())
 	{
 		if (health <= 5)
@@ -437,7 +446,50 @@ void IG12::ManageMovement()
 				}
 			}
 		}
-		break;    
+		break;
+	case IG12State::BOMBING_AND_SPIRAL_ATTACK_IN:
+		specialAttackStartAim = aimDirection;
+		specialAttackRot = 0.0f;
+
+		moveState = IG12State::BOMBING_AND_SPIRAL_ATTACK;
+
+	case IG12State::BOMBING_AND_SPIRAL_ATTACK:
+		if (!BombingAndSpiralAttack())
+		{
+			moveState = IG12State::IDLE;
+
+			if (health > 5.0f)
+			{
+				if (blasterWeapon)
+				{
+					blasterWeapon->fireRate = 0.3f;
+					blasterWeapon->ammo = 0;
+					blasterWeapon->projectilesPerShot = 1;
+				}
+				if (sniperWeapon)
+				{
+					sniperWeapon->fireRate = 0.3f;
+					sniperWeapon->ammo = 0;
+					sniperWeapon->projectilesPerShot = 1;
+				}
+			}
+			else
+			{
+				if (blasterWeapon)
+				{
+					blasterWeapon->fireRate = 0.3f;
+					blasterWeapon->ammo = 0;
+					blasterWeapon->projectilesPerShot = 2;
+				}
+				if (sniperWeapon)
+				{
+					sniperWeapon->fireRate = 0.3f;
+					sniperWeapon->ammo = 0;
+					sniperWeapon->projectilesPerShot = 2;
+				}
+			}
+		}
+		break;
 	case IG12State::DEAD_IN:
 		currentAnimation = &deathAnimation;
 		deathTimer.Start();
@@ -619,6 +671,8 @@ bool IG12::BombingAttack()
 	if (bombTimer.IsActive() && bombTimer.ReadSec() >= bombFallingTime)
 	{
 		bombTimer.Stop();
+		//if (GetParticles("Hit") != nullptr)
+		//	GetParticles("Hit")->ResumeSpawn();
 
 		if(player->transform->GetWorldPosition().x >= bombPosition.x - bombingAttackSmallAreaSide && player->transform->GetWorldPosition().x < bombPosition.x + bombingAttackSmallAreaSide)
 			if (player->transform->GetWorldPosition().z >= bombPosition.y - bombingAttackSmallAreaSide && player->transform->GetWorldPosition().z < bombPosition.y + bombingAttackSmallAreaSide)
@@ -650,6 +704,60 @@ float2 IG12::CalculateNextBomb(float x, float y)
 	return float2(bombX, bombY);
 }
 
+
+bool IG12::BombingAndSpiralAttack()
+{
+	specialAttackRot += spiralAttackSpeed * MC_Time::Game::GetDT();
+	float angle = specialAttackStartAim.AimedAngle();
+	angle += DegToRad(specialAttackRot);
+
+	float x = cos(angle);
+	float y = sin(angle);
+	aimDirection = { x,y };
+
+	if (blasterWeapon)
+	{
+		blasterWeapon->fireRate = 0.0001f;
+		blasterWeapon->ammo = 20;
+		blasterWeapon->projectilesPerShot = 3;
+		blasterWeapon->shotSpreadArea = 5;
+	}
+	if (sniperWeapon)
+	{
+		sniperWeapon->fireRate = 0.01f;
+		sniperWeapon->ammo = 20;
+		sniperWeapon->projectilesPerShot = 3;
+		sniperWeapon->shotSpreadArea = 5;
+		secondaryAimDirection = -aimDirection;
+	}
+
+	if (bombTimer.IsActive() && bombTimer.ReadSec() >= bombFallingTime)
+	{
+		bombTimer.Stop();
+
+		if (player->transform->GetWorldPosition().x >= bombPosition.x - bombingAttackSmallAreaSide && player->transform->GetWorldPosition().x < bombPosition.x + bombingAttackSmallAreaSide)
+			if (player->transform->GetWorldPosition().z >= bombPosition.y - bombingAttackSmallAreaSide && player->transform->GetWorldPosition().z < bombPosition.y + bombingAttackSmallAreaSide)
+			{
+				Player* playerScript = (Player*)player->GetScript("Player");
+				if (playerScript)
+					playerScript->TakeDamage(Damage());
+			}
+	}
+	else if (!bombTimer.IsActive())
+	{
+		playerPosition.x = player->transform->GetWorldPosition().x;
+		playerPosition.y = player->transform->GetWorldPosition().z;
+		bombTimer.Start();
+		bombPosition = CalculateNextBomb(playerPosition.x, playerPosition.y);
+		crosshair->transform->SetWorldPosition(float3(bombPosition.x, 5, bombPosition.y));
+	}
+
+	if (!bombingAndSpiralAttackTimer.IsActive())
+		return false;
+
+	return true;
+}
+
 void IG12::pickFirstStageAttack()
 {
 	//bombing attack, straight line attack
@@ -674,8 +782,8 @@ void IG12::pickSecondStageAttack()
 
 	if (randAttack <= 1)
 	{
-		bombingAttackTimer.Start();
-		moveState = IG12State::BOMBING_ATTACK_IN;
+		bombingAndSpiralAttackTimer.Start();
+		moveState = IG12State::BOMBING_AND_SPIRAL_ATTACK_IN;
 	}
 	else
 	{

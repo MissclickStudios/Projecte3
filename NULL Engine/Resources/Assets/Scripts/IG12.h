@@ -25,6 +25,8 @@ enum class IG12State
 	LINE_ATTACK,
 	BOMBING_ATTACK_IN,
 	BOMBING_ATTACK,
+	BOMBING_AND_SPIRAL_ATTACK_IN,
+	BOMBING_AND_SPIRAL_ATTACK,
 	DEAD_IN,
 	DEAD
 };
@@ -125,6 +127,7 @@ private:
 	bool SpiralAttack();
 	bool LineAttack();
 	bool BombingAttack();
+	bool BombingAndSpiralAttack();
 
 	void pickFirstStageAttack();		//Randomly picks an attack from the first stage
 	void pickSecondStageAttack();		//Randomly picks an attack from the second stage
@@ -137,6 +140,7 @@ private:
 	Timer lineAttackTimer;
 	Timer bombingAttackTimer;
 	Timer bombTimer;
+	Timer bombingAndSpiralAttackTimer;
 	
 	float2 bombPosition = float2::zero;
 	float2 playerPosition = float2::zero;
