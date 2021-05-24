@@ -10,6 +10,8 @@
 #include "C_ParticleSystem.h"
 
 #include "Player.h"
+#include "GameManager.h"
+#include "DialogManager.h"
 
 #include "MC_Time.h"
 
@@ -144,6 +146,14 @@ void IG12::SetUp()
 	if (sniperWeapon)
 		sniperWeapon->SetOwnership(type, handRight, rightHandName);
 	
+	//GameManager
+	GameObject* tmp = App->scene->GetGameObjectByName("Game Manager");
+
+	if (tmp != nullptr)
+	{
+		gameManager = (GameManager*)tmp->GetScript("GameManager");
+	}
+
 	crosshair = gameObject->FindChild("Aim");
 }
 
@@ -214,6 +224,15 @@ void IG12::ManageMovement()
 				LookAtPlayer();
 		}
 	}
+
+	//Handle cutscene
+	if (gameManager->dialogManager->GetDialogState() != DialogState::NO_DIALOG)
+	{
+		currentAnimation = &specialAnimation;
+		aimState = AimState::ON_GUARD;
+		return;
+	}
+
 	if (firstStageTimer.IsActive() && firstStageTimer.ReadSec() >= firstStageAttackCooldown)
 	{
 		firstStageTimer.Stop();

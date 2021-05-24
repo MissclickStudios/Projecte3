@@ -1,4 +1,5 @@
 #include "GameManager.h"
+#include "Random.h"
 
 #include "IG11.h"
 
@@ -74,7 +75,7 @@ IG11* CreateIG11()
 	INSPECTOR_STRING(script->rightHandName);
 	INSPECTOR_STRING(script->leftHandName);
 
-	
+	INSPECTOR_SLIDER_INT(script->beskarValue,0,1000);
 
 	return script;
 }
@@ -252,6 +253,8 @@ void IG11::ManageMovement()
 		return;
 	}
 
+	Player* tmp = nullptr;
+
 	switch (moveState)
 	{
 	case IG11State::IDLE:
@@ -414,6 +417,10 @@ void IG11::ManageMovement()
 		currentAnimation = &deathAnimation;
 		deathTimer.Start();
 		moveState = IG11State::DEAD;
+		
+		tmp = (Player*)player->GetScript("Payer");
+		tmp->hubCurrency += beskarValue;
+
 		gameManager->KilledIG11();
 
 	case IG11State::DEAD:
