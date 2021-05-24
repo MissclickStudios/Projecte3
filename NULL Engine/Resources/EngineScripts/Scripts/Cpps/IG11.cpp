@@ -11,6 +11,7 @@
 #include "C_RigidBody.h"
 
 #include "Player.h"
+#include "DialogManager.h"
 
 #include "MC_Time.h"
 #include "Random.h"
@@ -97,6 +98,11 @@ void IG11::Start()
 	{
 		gameManager = (GameManager*)tmp->GetScript("GameManager");
 	}
+
+
+	//TEMPORAL FIX DO NOT DO THIS!!!!!!!
+
+	SetUp();
 }
 
 void IG11::SetUp()
@@ -238,6 +244,14 @@ void IG11::ManageMovement()
 		}
 	}
 
+	//Handle cutscene
+	if (gameManager->dialogManager->GetDialogState() != DialogState::NO_DIALOG)
+	{
+		currentAnimation = &specialAnimation;
+		aimState = AimState::ON_GUARD;
+		return;
+	}
+
 	switch (moveState)
 	{
 	case IG11State::IDLE:
@@ -261,9 +275,11 @@ void IG11::ManageMovement()
 			break;
 		}
 
-		if (health > 5.0f) moveState = FirstStageAttacks();
+		if (health > 5.0f) 
+			moveState = FirstStageAttacks();
 
-		else if (health <= 5.0f) moveState = SecondStageAttacks();
+		else if (health <= 5.0f)
+			moveState = SecondStageAttacks();
 
 		break;
 	case IG11State::PATROL:
@@ -432,6 +448,10 @@ void IG11::ManageAim()
 		if (moveState == IG11State::U_ATTACK)
 			UAttackShots--;
 			
+		if (moveState == IG11State::SPIRAL_ATTACK ||
+			moveState == IG11State::ROTATE_ATTACK ||
+			moveState == IG11State::DOUBLE_SPIRAL_ATTACK) currentAnimation = &specialAnimation;
+
 		if (blasterWeapon != nullptr)
 		{
 			switch (blasterWeapon->Shoot(aimDirection))

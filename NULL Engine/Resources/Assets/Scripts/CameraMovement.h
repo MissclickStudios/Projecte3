@@ -31,13 +31,15 @@ public:
 	//Camera
 	float3 offset = float3::zero;
 	Quat initialRot = Quat::identity;
-	GameObject* destinationPoints;
 	float nextPoint = 0.0f;
 	float nextPointProgress = 0.0f;
 	float cameraSpeed = 0.0f;
 	float distanceToTransition = 0.0f;
-	float3 destinationPos;
+	GameObject* destinationPoints;
 	std::string destinationPointsName = "DestinationPoints";
+
+	GameObject* playerDestinationPoints;
+	std::string playerPointsName = "PlayerPoints";
 	//Game Manager
 
 	std::string gameManagerName = "Game Manager";

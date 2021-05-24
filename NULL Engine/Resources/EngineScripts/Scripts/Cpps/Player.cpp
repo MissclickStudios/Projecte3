@@ -222,7 +222,11 @@ void Player::Behavior()
 			ManageAim();
 
 			ManageInvincibility();
+
+			doDieCutscene = false;
 		}
+		else
+			doDieCutscene = true;
 	}
 }
 

@@ -211,6 +211,9 @@ public:
 	void AddItem(ItemData* item);
 	const std::vector<std::pair<bool, ItemData*>>* const GetItems() const { return &items; }
 
+	//Die cutscene
+	bool doDieCutscene = false;
+
 private:
 	// Inputs
 	bool allowInput = true;
