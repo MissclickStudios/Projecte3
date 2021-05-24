@@ -1,5 +1,7 @@
 #include "DarkTrooper.h"
 
+#include "Random.h"
+
 #include "Application.h"
 #include "M_Scene.h"
 #include "M_ResourceManager.h"
@@ -57,6 +59,9 @@ DarkTrooper* CreateDarkTrooper()
 	//Hand Name
 
 	INSPECTOR_STRING(script->handName);
+
+	INSPECTOR_SLIDER_FLOAT(script->minCredits, 0.f, 1000.f);
+	INSPECTOR_SLIDER_FLOAT(script->maxCredits, 0.f, 1000.f);
 
 	return script;
 }
@@ -252,7 +257,7 @@ void DarkTrooper::ManageMovement()
 		if (player)
 		{
 			Player* playerScript = (Player*)player->GetScript("Player");
-			playerScript->currency += 50;
+			playerScript->currency += Random::LCG::GetBoundedRandomFloat(minCredits, maxCredits);
 		}
 		deathTimer.Start();
 		moveState = DarkTrooperState::DEAD;

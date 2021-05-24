@@ -82,6 +82,9 @@ public:
 	C_AudioSource* chargeAudio = nullptr;
 	C_AudioSource* deathAudio = nullptr;
 
+	uint minCredits = 0.f;
+	uint maxCredits = 0.f;
+
 private:
 
 	void DistanceToPlayer();

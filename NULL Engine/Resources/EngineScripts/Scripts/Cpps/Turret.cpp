@@ -1,4 +1,5 @@
 #include "Turret.h"
+#include "Random.h"
 
 #include "Application.h"
 #include "M_Scene.h"
@@ -47,6 +48,9 @@ SCRIPTS_FUNCTION Turret* CreateTurret()
 	//Hand Name
 
 	INSPECTOR_STRING(script->handName);
+
+	INSPECTOR_SLIDER_FLOAT(script->minCredits, 0.f, 1000.f);
+	INSPECTOR_SLIDER_FLOAT(script->maxCredits, 0.f, 1000.f);
 
 	return script;
 }
@@ -130,7 +134,7 @@ void Turret::Behavior()
 		if (player)
 		{
 			Player* playerScript = (Player*)player->GetScript("Player");
-			playerScript->currency += 50;
+			playerScript->currency += Random::LCG::GetBoundedRandomFloat(minCredits, maxCredits);
 		}
 		deathTimer.Start();
 		moveState = TurretState::DEAD;

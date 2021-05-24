@@ -71,6 +71,9 @@ public:
 	// Audio
 	C_AudioSource* deathAudio = nullptr;
 
+	float minCredits = 0.f;
+	float maxCredits = 0.f;
+
 private:
 
 	void DistanceToPlayer();
