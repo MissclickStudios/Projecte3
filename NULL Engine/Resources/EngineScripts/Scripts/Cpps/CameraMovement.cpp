@@ -12,6 +12,7 @@
 
 #include "GameManager.h"
 #include "CameraMovement.h"
+#include "DialogManager.h"
 #include "Entity.h"
 #include "Player.h"
 
@@ -40,6 +41,7 @@ CameraMovement* CreateCameraMovement() {
 	INSPECTOR_INPUT_FLOAT(script->cameraSpeed);
 	INSPECTOR_INPUT_FLOAT(script->distanceToTransition);
 	INSPECTOR_STRING(script->destinationPointsName);
+	INSPECTOR_STRING(script->playerPointsName);
 	return script;
 }
 
@@ -55,6 +57,7 @@ void CameraMovement::Start()
 
 	initialRot = gameObject->transform->GetWorldRotation();
 	destinationPoints = App->scene->GetGameObjectByName(destinationPointsName.c_str());
+	playerDestinationPoints = App->scene->GetGameObjectByName(playerPointsName.c_str());
 }
 
 void CameraMovement::Update()
@@ -68,6 +71,12 @@ void CameraMovement::Update()
 		MoveCameraTo(destinationPoints, nextPointProgress);
 		return;
 	}
+	else if (playerScript->doDieCutscene && playerDestinationPoints != nullptr)
+	{
+		nextPointProgress += (MC_Time::Game::GetDT() * cameraSpeed) / 7;
+		MoveCameraTo(playerDestinationPoints, nextPointProgress);
+		return;
+	}
 
 	float3 position = player->transform->GetWorldPosition();
 	position += offset;
@@ -79,6 +88,12 @@ void CameraMovement::Update()
 	
 	if (playerScript != nullptr & playerScript->hitTimer.IsActive()) 
 		CameraShake(shakeDuration, shakeMagnitude);
+
+	if (gameManagerScript->dialogManager->GetDialogState() == DialogState::NO_DIALOG)
+	{
+		nextPointProgress = 0;
+		nextPoint = 0;
+	}
 }
 
 void CameraMovement::CleanUp()

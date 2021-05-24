@@ -149,6 +149,8 @@ void GameManager::Awake()
 	{
 		gate = (Gate*)tmp->GetScript("Gate");
 	}
+
+	
 }
 
 void GameManager::Start()
@@ -182,15 +184,15 @@ void GameManager::Start()
 
 	//Camera cutscenes movement
 	cameraGameObject = App->scene->GetGameObjectByName(cameraName.c_str());
+
 	if(cameraGameObject != nullptr)
 		cameraScript = (CameraMovement*)cameraGameObject->GetScript("CameraMovement");
-
 
 	//Start Dialogs based on scene & Advance Story
 	if (dialogManager != nullptr)
 	{
 		
-		if (strcmp(App->scene->GetCurrentScene(),"BossL1" ) == 0 )
+		if (strcmp(App->scene->GetCurrentScene(),"bossL1" ) == 0 )
 		{
 			if(!storyDialogState.defeatedIG11FirstTime)
 				dialogManager->StartDialog("1st Conversation IG-11");
@@ -227,10 +229,14 @@ void GameManager::Start()
 
 void GameManager::Update()
 {
-	if (dialogManager->GetDialogState() != DialogState::NO_DIALOG && cameraScript->destinationPoints != nullptr)
-		doCameraCutscene = true;
-	else
-		doCameraCutscene = false;
+	// --- Handle Camera cutscene
+	if (dialogManager != nullptr)
+	{
+		if (dialogManager->GetDialogState() != DialogState::NO_DIALOG && cameraScript->destinationPoints != nullptr)
+			doCameraCutscene = true;
+		else
+			doCameraCutscene = false;
+	}	
 		
 	BackTrackUpdate();
 
