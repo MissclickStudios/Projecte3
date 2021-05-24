@@ -280,6 +280,7 @@ void E_Inspector::DrawComponents(GameObject* selectedGameObject)
 		case ComponentType::ANIMATOR2D:			{ DrawAnimator2DComponent((C_2DAnimator*)component); }				break;
 		case ComponentType::NAVMESH_AGENT:		{ DrawNavMeshAgentComponent((C_NavMeshAgent*)component); }			break;
 		case ComponentType::UI_CHECKBOX:		{ DrawUICheckboxComponent((C_UI_Checkbox*)component); }				break;
+		case ComponentType::UI_SLIDER:			{ DrawUISliderComponent((C_UI_Slider*)component); }					break;
 		}
 		if (type == ComponentType::NONE)
 		{
@@ -2129,7 +2130,7 @@ void E_Inspector::DrawUISliderComponent(C_UI_Slider* slider)
 // --- DRAW COMPONENT UTILITY METHODS ---
 void E_Inspector::AddComponentCombo(GameObject* selectedGameObject)
 {
-	ImGui::Combo("##", &componentType, "Add Component\0Transform\0Mesh\0Material\0Light\0Camera\0Animator\0Animation\0RigidBody\0Box Collider\0Sphere Collider\0Capsule Collider\0Particle System\0Canvas\0Audio Source\0Audio Listener\0Player Controller\0Bullet Behavior\0Prop Behavior\0Camera Behavior\0Gate Behavior\0UI Image\0UI Text\0UI Button\0Script\0Animator 2D\0NavMesh Agent\0UI Checkbox");
+	ImGui::Combo("##", &componentType, "Add Component\0Transform\0Mesh\0Material\0Light\0Camera\0Animator\0Animation\0RigidBody\0Box Collider\0Sphere Collider\0Capsule Collider\0Particle System\0Canvas\0Audio Source\0Audio Listener\0Player Controller\0Bullet Behavior\0Prop Behavior\0Camera Behavior\0Gate Behavior\0UI Image\0UI Text\0UI Button\0Script\0Animator 2D\0NavMesh Agent\0UI Checkbox\0UI Slider");
 
 	ImGui::SameLine();
 
