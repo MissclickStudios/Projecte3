@@ -130,7 +130,9 @@ public:
 	C_AudioSource* walkAudio = nullptr;
 	C_AudioSource* damageAudio = nullptr;
 
+	// Hand
 	std::string handName;
+
 	// Particles
 	std::vector<std::string> particleNames;
 

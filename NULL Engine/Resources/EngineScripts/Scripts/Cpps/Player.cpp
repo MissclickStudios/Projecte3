@@ -58,6 +58,7 @@ Player* CreatePlayer()
 	// Player ---
 	// Walk
 	INSPECTOR_DRAGABLE_FLOAT(script->walkSpeed);
+	INSPECTOR_DRAGABLE_FLOAT(script->aimingSpeed);
 
 	// Currency
 	INSPECTOR_DRAGABLE_INT(script->currency);
@@ -80,8 +81,14 @@ Player* CreatePlayer()
 
 	INSPECTOR_STRING(script->gameManager);
 
-	//Hand Name
+	// Hand Name
 	INSPECTOR_STRING(script->handName);
+
+	INSPECTOR_GAMEOBJECT(script->rightHand);
+	INSPECTOR_GAMEOBJECT(script->leftHand);
+
+
+	// Particles & SFX
 	INSPECTOR_VECTOR_STRING(script->particleNames);
 
 	//// Animations ---
@@ -119,11 +126,18 @@ Player::~Player()
 
 void Player::SetUp()
 {
+	if (rightHand == nullptr)
+		LOG("RIOT");
+
+	if (leftHand == nullptr)
+		LOG("RIOT II");
+	
 	dashTimer.Stop();
 	dashCooldownTimer.Stop();
 	invincibilityTimer.Stop();
 	intermitentMeshTimer.Stop();
 	changeTimer.Stop();
+	interactionTimer.Stop();
 
 	// --- ANIMATIONS
 	if (animator != nullptr)
@@ -137,13 +151,26 @@ void Player::SetUp()
 		if (legsTrack == nullptr)
 			LOG("[ERROR] Player Script: Could not retrieve { LEGS } Animator Track! Error: C_Animator's GetTrackAsPtr() failed.");
 
-		torso	= App->scene->GetGameObjectByName("Torso");
+		
+		/*torso	= torsoTrack->GetRootBone();								// At this point in execution both the tracks and the animator do not have the Root Bone set.
+		legs	= legsTrack->GetRootBone();
+		hip		= animator->GetRootBone();*/
+
+		torso	= App->scene->GetGameObjectByName("Torso");					// Hence, a more hamfisted approach is needed to be able to Set Up the Player properly.
 		legs	= App->scene->GetGameObjectByName("Legs");
+		hip		= App->scene->GetGameObjectByName("mixamorig:Hips");
+
+		if (torso == nullptr)
+			LOG("[ERROR] Player Script: Could not retrieve { TORSO } Root Bone! Error: C_AnimatorTrack's GetRootBone() failed.");
+
+		if (legs == nullptr)
+			LOG("[ERROR] Player Script: Could not retrieve { LEGS } Root Bone! Error: C_AnimatorTrack's GetRootBone() failed.");
+
+		if (hip == nullptr)
+			LOG("[ERROR] Player Script: Could not retrieve { HIP } Root Bone! Error: C_Animator's GetRootBone() failed.");
 	}
 
 	SetUpLegsMatrix();
-
-	hip = animator->GetRootBone();
 
 	// --- RIGID BODY
 	if (rigidBody != nullptr)
@@ -199,7 +226,7 @@ void Player::SetUp()
 }
 
 void Player::Behavior()
-{
+{	
 	if (!allowInput)
 		return;
 
@@ -326,7 +353,7 @@ void Player::LoadState(ParsonNode& playerNode)
 			std::string name = skeleton->childs[i]->GetName();
 			if (name == "Hand")
 			{
-				hand = skeleton->childs[i];
+				rightHand = skeleton->childs[i];
 				break;
 			}
 		}
@@ -340,7 +367,7 @@ void Player::LoadState(ParsonNode& playerNode)
 		{
 			blasterWeapon->type = WeaponType::BLASTER;
 
-			blasterWeapon->SetOwnership(type, hand, handName);
+			blasterWeapon->SetOwnership(type, rightHand, handName);
 			blasterWeapon->ammo = playerNode.GetInteger("Blaster Ammo");
 		}
 	}
@@ -357,7 +384,7 @@ void Player::LoadState(ParsonNode& playerNode)
 
 		if (secondaryWeapon != nullptr)
 		{
-			secondaryWeapon->SetOwnership(type, hand, handName);
+			secondaryWeapon->SetOwnership(type, rightHand, handName);
 			int savedAmmo = playerNode.GetInteger("Equiped Gun Ammo");
 			if (savedAmmo > secondaryWeapon->MaxAmmo())
 				savedAmmo = secondaryWeapon->MaxAmmo();
@@ -512,7 +539,7 @@ void Player::EquipWeapon(Prefab weapon)
 
 		if (secondaryWeapon != nullptr)
 		{
-			secondaryWeapon->SetOwnership(type, hand, handName);
+			secondaryWeapon->SetOwnership(type, rightHand, handName);
 			currentWeapon = secondaryWeapon;
 		}
 	}
@@ -529,6 +556,13 @@ void Player::SetPlayerInteraction(InteractionType type, float duration)
 		interactionDuration = 0.0f;
 		return;
 	}
+
+	moveState == PlayerState::IDLE;
+	
+	if (rigidBody != nullptr)
+		rigidBody->StopInertia();
+
+	aimState == AimState::IDLE;
 
 	switch (currentInteraction)
 	{
@@ -557,11 +591,11 @@ void Player::SetPlayerInteraction(InteractionType type, float duration)
 }
 
 void Player::AnimatePlayer()
-{
+{	
 	if (animator == nullptr)
 		return;
 
-	bool fromPreview = false;
+	static bool fromPreview = false;
 	
 	AnimatorTrack* preview = animator->GetTrackAsPtr("Preview");
 
@@ -593,7 +627,7 @@ void Player::AnimatePlayer()
 	}
 	else
 	{	
-		LOG("DIRECTIONS: [%d]::[%d]::[%s]", aimDirection, moveDirection, GetLegsAnimation()->name.c_str());
+		LOG("DIRECTIONS: [%d]::[%d]::[%s]::[%s]", aimDirection, moveDirection, GetAimStateAnimation()->name.c_str(), GetLegsAnimation()->name.c_str());
 		
 		AnimationInfo* torsoInfo	= GetAimStateAnimation();
 		AnimationInfo* legsInfo		= GetMoveStateAnimation();
@@ -609,19 +643,17 @@ void Player::AnimatePlayer()
 				animator->PlayClip(currentAnimation->track.c_str(), currentAnimation->name.c_str(), currentAnimation->blendTime);
 		}
 		else
-		{
-			if (fromPreview)
+		{	
+			if (fromPreview)																										// Way to reset the hip right before it stops being used.
 			{
 				fromPreview = false;
 
-				if (hip != nullptr)
-					hip->transform->SetWorldRotation(gameObject->transform->GetWorldRotation());
+				AnimatorClip* previewClip = preview->GetCurrentClip();
 
-				if (torso != nullptr)
-					torso->transform->SetWorldRotation(gameObject->transform->GetWorldRotation());
+				if ((previewClip == nullptr) || (previewClip->GetName() != torsoInfo->name))										// If no clip playing or animation/clip changed
+					animator->PlayClip(preview->GetName(), torsoInfo->name.c_str(), torsoInfo->blendTime);
 
-				if (legs != nullptr)
-					legs->transform->SetWorldRotation(gameObject->transform->GetWorldRotation());
+				return;
 			}
 			
 			if (torsoTrack == nullptr || legsTrack == nullptr)
@@ -630,14 +662,11 @@ void Player::AnimatePlayer()
 				return;
 			}
 
+			AnimatorClip* torsoClip = torsoTrack->GetCurrentClip();
+			AnimatorClip* legsClip = legsTrack->GetCurrentClip();
+
 			if (preview->GetTrackState() != TrackState::STOP)
 				preview->Stop();
-
-			AnimatorClip* torsoClip = torsoTrack->GetCurrentClip();
-			AnimatorClip* legsClip	= legsTrack->GetCurrentClip();
-
-			//LOG("TORSO: [%s]::[%s]::[%s]", torsoInfo->track.c_str(), torsoInfo->name.c_str(), (torsoClip != nullptr) ? torsoClip->GetName() : "NO TORSO CLIP");
-			//LOG("LEGS: [%s]::[%s]::[%s]", legsInfo->track.c_str(), legsInfo->name.c_str(), (legsClip != nullptr) ? legsClip->GetName() : "NO LEGS CLIP");
 
 			if ((torsoClip == nullptr) || (torsoClip->GetName() != torsoInfo->name))
 				animator->PlayClip(torsoTrack->GetName(), torsoInfo->name.c_str(), torsoInfo->blendTime);
@@ -1304,6 +1333,16 @@ void Player::GatherInteractionInputs()
 		if (App->input->GetKey(SDL_SCANCODE_Q) == KeyState::KEY_DOWN)
 		{
 			SetPlayerInteraction(InteractionType::SIGNAL_GROGU);
+		}
+
+		if (App->input->GetKey(SDL_SCANCODE_E) == KeyState::KEY_DOWN)
+		{
+			SetPlayerInteraction(InteractionType::USE);
+		}
+
+		if (App->input->GetKey(SDL_SCANCODE_R) == KeyState::KEY_DOWN)
+		{
+			SetPlayerInteraction(InteractionType::OPEN_CHEST);
 		}
 	}
 	
