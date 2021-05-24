@@ -234,6 +234,8 @@ void Player::Behavior()
 
 	ManageInteractions();
 	
+	//LOG("[%d]::[%d]::[%d]", (int)moveState, (int)aimState, (int)currentInteraction);
+
 	if (currentInteraction == InteractionType::NONE)
 	{
 		ManageMovement();
@@ -563,12 +565,12 @@ void Player::SetPlayerInteraction(InteractionType type, float duration)
 		return;
 	}
 
-	moveState == PlayerState::IDLE;
+	moveState = PlayerState::IDLE;
 	
 	if (rigidBody != nullptr)
 		rigidBody->StopInertia();
 
-	aimState == AimState::IDLE;
+	aimState = AimState::IDLE;
 
 	switch (currentInteraction)
 	{
@@ -1340,12 +1342,12 @@ void Player::GatherInteractionInputs()
 	
 	if (currentInteraction == InteractionType::NONE)
 	{
-		if (App->input->GetKey(SDL_SCANCODE_Q) == KeyState::KEY_DOWN)
+		if (App->input->GetKey(SDL_SCANCODE_G) == KeyState::KEY_DOWN)
 		{
 			SetPlayerInteraction(InteractionType::SIGNAL_GROGU);
 		}
 
-		if (App->input->GetKey(SDL_SCANCODE_E) == KeyState::KEY_DOWN)
+		/*if (App->input->GetKey(SDL_SCANCODE_E) == KeyState::KEY_DOWN)
 		{
 			SetPlayerInteraction(InteractionType::USE);
 		}
@@ -1353,7 +1355,7 @@ void Player::GatherInteractionInputs()
 		if (App->input->GetKey(SDL_SCANCODE_R) == KeyState::KEY_DOWN)
 		{
 			SetPlayerInteraction(InteractionType::OPEN_CHEST);
-		}
+		}*/
 	}
 	
 	if (currentInteraction == InteractionType::TALK)
