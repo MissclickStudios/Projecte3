@@ -9,6 +9,7 @@
 #include "C_RigidBody.h"
 #include "C_AudioSource.h"
 #include "C_NavMeshAgent.h"
+#include "C_ParticleSystem.h"
 
 #include "Player.h"
 
@@ -122,6 +123,14 @@ void Blurrg::SetUp()
 	if (agent != nullptr)
 		agent->origin = gameObject->GetComponent<C_Transform>()->GetWorldPosition();
 	
+	// Particles & SFX
+	hitParticles = gameObject->GetComponent<C_ParticleSystem>();
+	(hitParticles != nullptr) ? hitParticles->StopSpawn() : LOG("[ERROR] Blurg Script: Could not find { HIT } Particle System!");
+
+	GameObject* chargeParticlesGO = gameObject->FindChild("Charge");
+	chargeParticles = (chargeParticlesGO != nullptr) ? chargeParticlesGO->GetComponent<C_ParticleSystem>() : nullptr;
+	
+	(chargeParticles != nullptr) ? chargeParticles->StopSpawn() : LOG("[ERROR] Blurg Script: Could not find { CHARGE } Particle System!");
 }
 
 void Blurrg::Behavior()
@@ -189,6 +198,9 @@ void Blurrg::Behavior()
 			dashTimer.Start();
 			state = BlurrgState::DASH;
 
+			if (chargeParticles != nullptr)
+				chargeParticles->ResumeSpawn();
+
 		case BlurrgState::DASH:
 			Dash();
 			if (dashTimer.ReadSec() >= DashDuration())
@@ -196,6 +208,9 @@ void Blurrg::Behavior()
 				dashTimer.Stop();
 				dashCooldownTimer.Start();
 				state = BlurrgState::REST_IN;
+				
+				if (chargeParticles != nullptr)
+					chargeParticles->StopSpawn();
 			}
 			break;
 		case BlurrgState::REST_IN:
