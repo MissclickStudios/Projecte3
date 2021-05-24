@@ -583,7 +583,7 @@ void IG12::ManageAim()
 		break;
 	}
 
-	if (moveState == IG12State::SPIRAL_ATTACK) currentAnimation = &specialAnimation;
+	if (moveState == IG12State::SPIRAL_ATTACK || moveState == IG12State::BOMBING_AND_SPIRAL_ATTACK) currentAnimation = &specialAnimation;
 }
 
 void IG12::Patrol()
