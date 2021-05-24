@@ -46,7 +46,7 @@ void Spritesheet::SetCurrentFrameLocation(int frameNumber)
 	int rowsN = 1;
 	int columnsN = 1;
 
-	for(int i = 1; i < rows; i++)
+	for(int i = 0; i < rows; i++)
 	{
 		rowsN = i;
 		for(int k = 1; k < columns; k++)

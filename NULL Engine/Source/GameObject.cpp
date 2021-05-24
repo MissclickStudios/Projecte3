@@ -43,6 +43,7 @@
 #include "C_UI_Text.h"
 #include "C_UI_Button.h"
 #include "C_UI_Checkbox.h"
+#include "C_UI_Slider.h"
 
 #include "C_2DAnimator.h"
 
@@ -781,11 +782,6 @@ Component* GameObject::CreateComponent(ComponentType type, bool addComponent)
 	//	LOG("[ERROR] Player Controller Component could not be added to %s! Error: No duplicates allowed!", name.c_str());
 	//	return nullptr;
 	//}
-	if (type == ComponentType::UI_IMAGE && GetComponent<C_UI_Image>() != nullptr)
-	{
-		LOG("[ERROR] Player Controller Component could not be added to %s! Error: No duplicates allowed!", name.c_str());
-		return nullptr;
-	}
 
 	switch(type)
 	{
@@ -816,6 +812,7 @@ Component* GameObject::CreateComponent(ComponentType type, bool addComponent)
 	case ComponentType::ANIMATOR2D:			{ component = new C_2DAnimator(this); }			break;
 	case ComponentType::NAVMESH_AGENT:		{ component = new C_NavMeshAgent(this); }		break;
 	case ComponentType::UI_CHECKBOX:		{ component = new C_UI_Checkbox(this); }		break;
+	case ComponentType::UI_SLIDER:			{ component = new C_UI_Slider(this); }			break;
 	}
 
 	if (component != nullptr && addComponent)

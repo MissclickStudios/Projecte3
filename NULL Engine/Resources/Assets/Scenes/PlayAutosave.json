@@ -1,5 +1,5 @@
 {
-    "ModTime": 1621859693,
+    "ModTime": 1621864829,
     "Models In Scene": [
         {
             "GameObjectUID": 1782055158,
@@ -8,6 +8,87 @@
         }
     ],
     "Game Objects": [
+        {
+            "UID": 3035412,
+            "ParentUID": 1190275414,
+            "PrefabID": 660456825,
+            "IsPrefab": true,
+            "Name": "Gatling",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        -0.49539270997047424,
+                        0.50456535816192627,
+                        0.50456529855728149,
+                        0.49539265036582947
+                    ],
+                    "LocalScale": [
+                        0.13000002503395081,
+                        0.13000002503395081,
+                        0.13000001013278961
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 1131873780,
+                    "Name": "Gatling.nemesh",
+                    "Path": "Library\/Meshes\/1131873780.nemesh",
+                    "File": "1131873780.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false,
+                    "Outline": false,
+                    "OutlineThickness": 1,
+                    "OutlineColor": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ]
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 272010715,
+                        "Color": [
+                            0.58799999952316284,
+                            0.58799999952316284,
+                            0.58799999952316284,
+                            1
+                        ],
+                        "Name": "Gatling.nemat",
+                        "Path": "Library\/Materials\/272010715.nemat",
+                        "File": "272010715.nemat"
+                    },
+                    "Texture": {
+                        "AssetsPath": "Assets\/Textures\/\/Weapons\/minigun_texture.png",
+                        "AssetsName": "minigun_texture.png",
+                        "LibaryPath": "Library\/Textures\/1434591972.netex",
+                        "LibraryFile": "1434591972.netex"
+                    },
+                    "Shader": {
+                        "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
+                        "AssetsName": "DefaultShader.shader",
+                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
+                        "LibraryFile": "800223282.neshader"
+                    }
+                }
+            ]
+        },
         {
             "UID": 20633570,
             "ParentUID": 1782055158,
@@ -507,6 +588,87 @@
             ]
         },
         {
+            "UID": 307819042,
+            "ParentUID": 1320636572,
+            "PrefabID": 1892247408,
+            "IsPrefab": true,
+            "Name": "SniperMesh",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -2.2880082130432129,
+                        0,
+                        2.3700790405273438
+                    ],
+                    "LocalRotation": [
+                        0.49112334847450256,
+                        0.50872188806533813,
+                        0.50872164964675903,
+                        -0.49112343788146973
+                    ],
+                    "LocalScale": [
+                        0.039999976754188538,
+                        0.039999973028898239,
+                        0.03999999538064003
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 1763086860,
+                    "Name": "Franco003.nemesh",
+                    "Path": "Library\/Meshes\/1763086860.nemesh",
+                    "File": "1763086860.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false,
+                    "Outline": false,
+                    "OutlineThickness": 1,
+                    "OutlineColor": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ]
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 1999984834,
+                        "Color": [
+                            0.58799999952316284,
+                            0.58799999952316284,
+                            0.58799999952316284,
+                            1
+                        ],
+                        "Name": "Franco003.nemat",
+                        "Path": "Library\/Materials\/1999984834.nemat",
+                        "File": "1999984834.nemat"
+                    },
+                    "Texture": {
+                        "AssetsPath": "Assets\/Textures\/\/Weapons\/rifle.png",
+                        "AssetsName": "rifle.png",
+                        "LibaryPath": "Library\/Textures\/251940081.netex",
+                        "LibraryFile": "251940081.netex"
+                    },
+                    "Shader": {
+                        "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
+                        "AssetsName": "DefaultShader.shader",
+                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
+                        "LibraryFile": "800223282.neshader"
+                    }
+                }
+            ]
+        },
+        {
             "UID": 311623626,
             "ParentUID": 1389943533,
             "PrefabID": 528499712,
@@ -663,83 +825,6 @@
             ]
         },
         {
-            "UID": 408568312,
-            "ParentUID": 2005580296,
-            "PrefabID": 0,
-            "IsPrefab": false,
-            "Name": "Sniper Item",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
-            "NavigationInfo": {
-                "isNavigable": false,
-                "navigationArea": 0
-            },
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        -2.3521175384521484,
-                        7.2107343673706055,
-                        -16.3828125
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {
-                    "Type": 8,
-                    "Is Static": true,
-                    "Filter": " gate"
-                },
-                {
-                    "Type": 9,
-                    "Is Trigger": true,
-                    "Show Collider": true,
-                    "Size X": 10,
-                    "Size Y": 5,
-                    "Size Z": 10,
-                    "Center X": 0,
-                    "Center Y": 0,
-                    "Center Z": 0
-                },
-                {
-                    "Type": 24,
-                    "ResourceUID": 159624972,
-                    "AssetsPath": "Assets\/Scripts\/\/WeaponItem.h",
-                    "DataName": "WeaponItem",
-                    "HasInspector": true,
-                    "InspectorVariables": [
-                        {
-                            "Type": 5,
-                            "Name": "gunName",
-                            "string": "Sniper"
-                        },
-                        {
-                            "Type": 5,
-                            "Name": "gunDescription",
-                            "string": "Long range with a lot of damage, kinda slow doe"
-                        },
-                        {
-                            "Type": 4,
-                            "Name": "weapon",
-                            "prefab": 170536259
-                        }
-                    ]
-                }
-            ]
-        },
-        {
             "UID": 410019566,
             "ParentUID": 2002885081,
             "PrefabID": 528499712,
@@ -811,6 +896,83 @@
                         "LibaryPath": "Library\/Shaders\/800223282.neshader",
                         "LibraryFile": "800223282.neshader"
                     }
+                }
+            ]
+        },
+        {
+            "UID": 521348857,
+            "ParentUID": 2005580296,
+            "PrefabID": 443534678,
+            "IsPrefab": true,
+            "Name": "Shotgun Item",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": true,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -63.492439270019531,
+                        6.9819564819335938,
+                        -71.076667785644531
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 8,
+                    "Is Static": true,
+                    "Filter": " gate"
+                },
+                {
+                    "Type": 9,
+                    "Is Trigger": true,
+                    "Show Collider": true,
+                    "Size X": 10,
+                    "Size Y": 5,
+                    "Size Z": 10,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
+                },
+                {
+                    "Type": 24,
+                    "ResourceUID": 159624972,
+                    "AssetsPath": "Assets\/Scripts\/\/WeaponItem.h",
+                    "DataName": "WeaponItem",
+                    "HasInspector": true,
+                    "InspectorVariables": [
+                        {
+                            "Type": 5,
+                            "Name": "gunName",
+                            "string": "Shotgun"
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "gunDescription",
+                            "string": "Hela damage, hela swag, straight fire"
+                        },
+                        {
+                            "Type": 4,
+                            "Name": "weapon",
+                            "prefab": 1174459823
+                        }
+                    ]
                 }
             ]
         },
@@ -2213,6 +2375,43 @@
             ]
         },
         {
+            "UID": 1190275414,
+            "ParentUID": 1251280521,
+            "PrefabID": 660456825,
+            "IsPrefab": true,
+            "Name": "MinigunModel",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -2.3424949645996094,
+                        0,
+                        0.83642768859863281
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
             "UID": 1207358168,
             "ParentUID": 1782055158,
             "PrefabID": 0,
@@ -2294,10 +2493,10 @@
             ]
         },
         {
-            "UID": 1236766388,
+            "UID": 1251280521,
             "ParentUID": 2005580296,
-            "PrefabID": 0,
-            "IsPrefab": false,
+            "PrefabID": 660456825,
+            "IsPrefab": true,
             "Name": "Minigun Item",
             "IsActive": true,
             "IsStatic": false,
@@ -2312,9 +2511,9 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        -42.338962554931641,
-                        6.192629337310791,
-                        -19.69732666015625
+                        -46.873023986816406,
+                        6.1926298141479492,
+                        -87.084365844726563
                     ],
                     "LocalRotation": [
                         0,
@@ -2482,11 +2681,11 @@
             ]
         },
         {
-            "UID": 1371880062,
-            "ParentUID": 408568312,
-            "PrefabID": 1100103111,
+            "UID": 1320636572,
+            "ParentUID": 2005580296,
+            "PrefabID": 1892247408,
             "IsPrefab": true,
-            "Name": "SniperMesh",
+            "Name": "Sniper Item",
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
@@ -2500,65 +2699,61 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        -2.2880082130432129,
-                        0,
-                        2.3700790405273438
+                        -30.843875885009766,
+                        7.2107348442077637,
+                        -103.54600524902344
                     ],
                     "LocalRotation": [
-                        0.49112334847450256,
-                        0.50872188806533813,
-                        0.50872164964675903,
-                        -0.49112343788146973
-                    ],
-                    "LocalScale": [
-                        0.039999976754188538,
-                        0.039999973028898239,
-                        0.03999999538064003
-                    ]
-                },
-                {
-                    "Type": 2,
-                    "UID": 1763086860,
-                    "Name": "Franco003.nemesh",
-                    "Path": "Library\/Meshes\/1763086860.nemesh",
-                    "File": "1763086860.nemesh",
-                    "ShowWireframe": false,
-                    "ShowBoundingBox": false,
-                    "Outline": false,
-                    "OutlineThickness": 1,
-                    "OutlineColor": [
                         0,
                         0,
                         0,
                         1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
                     ]
                 },
                 {
-                    "Type": 3,
-                    "Material": {
-                        "UID": 1999984834,
-                        "Color": [
-                            0.58799999952316284,
-                            0.58799999952316284,
-                            0.58799999952316284,
-                            1
-                        ],
-                        "Name": "Franco003.nemat",
-                        "Path": "Library\/Materials\/1999984834.nemat",
-                        "File": "1999984834.nemat"
-                    },
-                    "Texture": {
-                        "AssetsPath": "Assets\/Textures\/\/Weapons\/rifle.png",
-                        "AssetsName": "rifle.png",
-                        "LibaryPath": "Library\/Textures\/251940081.netex",
-                        "LibraryFile": "251940081.netex"
-                    },
-                    "Shader": {
-                        "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
-                        "AssetsName": "DefaultShader.shader",
-                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
-                        "LibraryFile": "800223282.neshader"
-                    }
+                    "Type": 8,
+                    "Is Static": true,
+                    "Filter": " gate"
+                },
+                {
+                    "Type": 9,
+                    "Is Trigger": true,
+                    "Show Collider": true,
+                    "Size X": 10,
+                    "Size Y": 5,
+                    "Size Z": 10,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
+                },
+                {
+                    "Type": 24,
+                    "ResourceUID": 159624972,
+                    "AssetsPath": "Assets\/Scripts\/\/WeaponItem.h",
+                    "DataName": "WeaponItem",
+                    "HasInspector": true,
+                    "InspectorVariables": [
+                        {
+                            "Type": 5,
+                            "Name": "gunName",
+                            "string": "Sniper"
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "gunDescription",
+                            "string": "Long range with a lot of damage, kinda slow doe"
+                        },
+                        {
+                            "Type": 4,
+                            "Name": "weapon",
+                            "prefab": 170536259
+                        }
+                    ]
                 }
             ]
         },
@@ -3084,83 +3279,6 @@
             ]
         },
         {
-            "UID": 1703396648,
-            "ParentUID": 2005580296,
-            "PrefabID": 0,
-            "IsPrefab": false,
-            "Name": "Shotgun Item",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
-            "NavigationInfo": {
-                "isNavigable": false,
-                "navigationArea": 0
-            },
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        -22.997447967529297,
-                        6.9819564819335938,
-                        -18.158578872680664
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {
-                    "Type": 8,
-                    "Is Static": true,
-                    "Filter": " gate"
-                },
-                {
-                    "Type": 9,
-                    "Is Trigger": true,
-                    "Show Collider": true,
-                    "Size X": 10,
-                    "Size Y": 5,
-                    "Size Z": 10,
-                    "Center X": 0,
-                    "Center Y": 0,
-                    "Center Z": 0
-                },
-                {
-                    "Type": 24,
-                    "ResourceUID": 159624972,
-                    "AssetsPath": "Assets\/Scripts\/\/WeaponItem.h",
-                    "DataName": "WeaponItem",
-                    "HasInspector": true,
-                    "InspectorVariables": [
-                        {
-                            "Type": 5,
-                            "Name": "gunName",
-                            "string": "Shotgun"
-                        },
-                        {
-                            "Type": 5,
-                            "Name": "gunDescription",
-                            "string": "Hela damage, hela swag, straight fire"
-                        },
-                        {
-                            "Type": 4,
-                            "Name": "weapon",
-                            "prefab": 1174459823
-                        }
-                    ]
-                }
-            ]
-        },
-        {
             "UID": 1754722213,
             "ParentUID": 1782055158,
             "PrefabID": 0,
@@ -3661,7 +3779,7 @@
             ]
         },
         {
-            "UID": 130391089,
+            "UID": 673939760,
             "ParentUID": 1864884191,
             "PrefabID": 1524961430,
             "IsPrefab": true,
@@ -3747,8 +3865,8 @@
             ]
         },
         {
-            "UID": 1603438937,
-            "ParentUID": 130391089,
+            "UID": 1872826928,
+            "ParentUID": 673939760,
             "PrefabID": 1524961430,
             "IsPrefab": true,
             "Name": "SpeakerText",
@@ -3799,8 +3917,8 @@
             ]
         },
         {
-            "UID": 84698007,
-            "ParentUID": 130391089,
+            "UID": 548896008,
+            "ParentUID": 673939760,
             "PrefabID": 1524961430,
             "IsPrefab": true,
             "Name": "DialogText",
@@ -3851,8 +3969,8 @@
             ]
         },
         {
-            "UID": 1511472691,
-            "ParentUID": 130391089,
+            "UID": 59396363,
+            "ParentUID": 673939760,
             "PrefabID": 1524961430,
             "IsPrefab": true,
             "Name": "DialogBackground",
@@ -3929,8 +4047,8 @@
             ]
         },
         {
-            "UID": 1538090453,
-            "ParentUID": 130391089,
+            "UID": 1519487861,
+            "ParentUID": 673939760,
             "PrefabID": 1524961430,
             "IsPrefab": true,
             "Name": "DialogButton",
@@ -3998,7 +4116,7 @@
             ]
         },
         {
-            "UID": 739008196,
+            "UID": 582655064,
             "ParentUID": 1864884191,
             "PrefabID": 1524961430,
             "IsPrefab": true,
@@ -4084,8 +4202,8 @@
             ]
         },
         {
-            "UID": 72951887,
-            "ParentUID": 739008196,
+            "UID": 1574461659,
+            "ParentUID": 582655064,
             "PrefabID": 1524961430,
             "IsPrefab": true,
             "Name": "Buy Button",
@@ -4153,8 +4271,8 @@
             ]
         },
         {
-            "UID": 1380817473,
-            "ParentUID": 739008196,
+            "UID": 419642805,
+            "ParentUID": 582655064,
             "PrefabID": 1524961430,
             "IsPrefab": true,
             "Name": "Name Text",
@@ -4205,8 +4323,8 @@
             ]
         },
         {
-            "UID": 672278757,
-            "ParentUID": 739008196,
+            "UID": 643195539,
+            "ParentUID": 582655064,
             "PrefabID": 1524961430,
             "IsPrefab": true,
             "Name": "Description Text",
@@ -4257,8 +4375,8 @@
             ]
         },
         {
-            "UID": 1267977069,
-            "ParentUID": 739008196,
+            "UID": 100480444,
+            "ParentUID": 582655064,
             "PrefabID": 1524961430,
             "IsPrefab": true,
             "Name": "Price Text",
@@ -4309,8 +4427,8 @@
             ]
         },
         {
-            "UID": 498329656,
-            "ParentUID": 739008196,
+            "UID": 625904303,
+            "ParentUID": 582655064,
             "PrefabID": 1524961430,
             "IsPrefab": true,
             "Name": "Rarity Text",
@@ -4361,7 +4479,7 @@
             ]
         },
         {
-            "UID": 1112835661,
+            "UID": 1420387272,
             "ParentUID": 1864884191,
             "PrefabID": 1524961430,
             "IsPrefab": true,
@@ -4462,8 +4580,8 @@
             ]
         },
         {
-            "UID": 1301285481,
-            "ParentUID": 1112835661,
+            "UID": 1490378421,
+            "ParentUID": 1420387272,
             "PrefabID": 1524961430,
             "IsPrefab": true,
             "Name": "PauseTitle",
@@ -4540,8 +4658,8 @@
             ]
         },
         {
-            "UID": 141338141,
-            "ParentUID": 1112835661,
+            "UID": 954695558,
+            "ParentUID": 1420387272,
             "PrefabID": 1524961430,
             "IsPrefab": true,
             "Name": "ResumeButton",
@@ -4650,8 +4768,8 @@
             ]
         },
         {
-            "UID": 7032484,
-            "ParentUID": 1112835661,
+            "UID": 809880682,
+            "ParentUID": 1420387272,
             "PrefabID": 1524961430,
             "IsPrefab": true,
             "Name": "SettingsButton",
@@ -4734,8 +4852,8 @@
             ]
         },
         {
-            "UID": 1192179857,
-            "ParentUID": 1112835661,
+            "UID": 1816429985,
+            "ParentUID": 1420387272,
             "PrefabID": 1524961430,
             "IsPrefab": true,
             "Name": "AbandonButton",
@@ -4818,8 +4936,8 @@
             ]
         },
         {
-            "UID": 483247527,
-            "ParentUID": 1112835661,
+            "UID": 1019197007,
+            "ParentUID": 1420387272,
             "PrefabID": 1524961430,
             "IsPrefab": true,
             "Name": "MenuButton",
@@ -4902,8 +5020,8 @@
             ]
         },
         {
-            "UID": 1823536895,
-            "ParentUID": 1112835661,
+            "UID": 34365661,
+            "ParentUID": 1420387272,
             "PrefabID": 1524961430,
             "IsPrefab": true,
             "Name": "PauseBackground",
@@ -4980,7 +5098,7 @@
             ]
         },
         {
-            "UID": 1434445513,
+            "UID": 996056844,
             "ParentUID": 1864884191,
             "PrefabID": 1524961430,
             "IsPrefab": true,
@@ -5101,8 +5219,8 @@
             ]
         },
         {
-            "UID": 618797857,
-            "ParentUID": 1434445513,
+            "UID": 580269268,
+            "ParentUID": 996056844,
             "PrefabID": 1524961430,
             "IsPrefab": true,
             "Name": "BeskarText",
@@ -5137,7 +5255,7 @@
                 },
                 {
                     "Type": 22,
-                    "Text": "160",
+                    "Text": "140",
                     "Color": [
                         1,
                         1,
@@ -5153,8 +5271,8 @@
             ]
         },
         {
-            "UID": 1603695431,
-            "ParentUID": 1434445513,
+            "UID": 660501815,
+            "ParentUID": 996056844,
             "PrefabID": 1524961430,
             "IsPrefab": true,
             "Name": "AmmoText",
@@ -5189,7 +5307,7 @@
                 },
                 {
                     "Type": 22,
-                    "Text": "10 \/ 10",
+                    "Text": "8 \/ 10",
                     "Color": [
                         1,
                         1,
@@ -5205,8 +5323,8 @@
             ]
         },
         {
-            "UID": 1991458170,
-            "ParentUID": 1434445513,
+            "UID": 1660623858,
+            "ParentUID": 996056844,
             "PrefabID": 1524961430,
             "IsPrefab": true,
             "Name": "CreditsText",
@@ -5257,8 +5375,8 @@
             ]
         },
         {
-            "UID": 866753633,
-            "ParentUID": 1434445513,
+            "UID": 520468138,
+            "ParentUID": 996056844,
             "PrefabID": 1524961430,
             "IsPrefab": true,
             "Name": "SecodaryWeapon",
@@ -5335,8 +5453,8 @@
             ]
         },
         {
-            "UID": 1539317222,
-            "ParentUID": 1434445513,
+            "UID": 2048673464,
+            "ParentUID": 996056844,
             "PrefabID": 1524961430,
             "IsPrefab": true,
             "Name": "PrimaryWeapon",
@@ -5413,7 +5531,7 @@
                 {
                     "Type": 25,
                     "Animation Step Time": 30,
-                    "Animation Loop": false,
+                    "Animation Loop": true,
                     "Animation Set On Loop From Start": false,
                     "Name": "UseWeapon4",
                     "Name1": "ChangeWeapon",
@@ -5431,8 +5549,8 @@
             ]
         },
         {
-            "UID": 777199964,
-            "ParentUID": 1434445513,
+            "UID": 1168990298,
+            "ParentUID": 996056844,
             "PrefabID": 1524961430,
             "IsPrefab": true,
             "Name": "Mando",
@@ -5527,8 +5645,8 @@
             ]
         },
         {
-            "UID": 647214106,
-            "ParentUID": 1434445513,
+            "UID": 203223600,
+            "ParentUID": 996056844,
             "PrefabID": 1524961430,
             "IsPrefab": true,
             "Name": "SidekickButton",
@@ -5536,7 +5654,7 @@
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
+            "ShowBoundingBoxes": true,
             "NavigationInfo": {
                 "isNavigable": false,
                 "navigationArea": 0
@@ -5601,12 +5719,30 @@
                         "LibaryPath": "Library\/Shaders\/1025410539.neshader",
                         "LibraryFile": "1025410539.neshader"
                     }
+                },
+                {
+                    "Type": 25,
+                    "Animation Step Time": 30,
+                    "Animation Loop": false,
+                    "Animation Set On Loop From Start": false,
+                    "Name": "SidekickButton",
+                    "Name1": "",
+                    "Name2": "",
+                    "Spritesheet Rows": 2,
+                    "Spritesheet Columns": 4,
+                    "Spritesheet Animation Number": 8,
+                    "Spritesheet2 Rows": 5,
+                    "Spritesheet2 Columns": 5,
+                    "Spritesheet2 Animation Number": 25,
+                    "Spritesheet3 Rows": 5,
+                    "Spritesheet3 Columns": 5,
+                    "Spritesheet3 Animation Number": 25
                 }
             ]
         },
         {
-            "UID": 1348708350,
-            "ParentUID": 1434445513,
+            "UID": 1944879090,
+            "ParentUID": 996056844,
             "PrefabID": 1524961430,
             "IsPrefab": true,
             "Name": "Heart1",
@@ -5701,8 +5837,8 @@
             ]
         },
         {
-            "UID": 858004245,
-            "ParentUID": 1434445513,
+            "UID": 337696758,
+            "ParentUID": 996056844,
             "PrefabID": 1524961430,
             "IsPrefab": true,
             "Name": "Heart2",
@@ -5797,8 +5933,8 @@
             ]
         },
         {
-            "UID": 255465925,
-            "ParentUID": 1434445513,
+            "UID": 256924864,
+            "ParentUID": 996056844,
             "PrefabID": 1524961430,
             "IsPrefab": true,
             "Name": "Heart3",
@@ -5893,8 +6029,8 @@
             ]
         },
         {
-            "UID": 98331012,
-            "ParentUID": 1434445513,
+            "UID": 875715422,
+            "ParentUID": 996056844,
             "PrefabID": 1524961430,
             "IsPrefab": true,
             "Name": "Credits",
@@ -5971,8 +6107,8 @@
             ]
         },
         {
-            "UID": 256874953,
-            "ParentUID": 1434445513,
+            "UID": 427360214,
+            "ParentUID": 996056844,
             "PrefabID": 1524961430,
             "IsPrefab": true,
             "Name": "Beskar",
@@ -6049,7 +6185,7 @@
             ]
         },
         {
-            "UID": 725044270,
+            "UID": 1612271359,
             "ParentUID": 1864884191,
             "PrefabID": 1524961430,
             "IsPrefab": true,
@@ -6165,8 +6301,8 @@
             ]
         },
         {
-            "UID": 187058090,
-            "ParentUID": 725044270,
+            "UID": 2106480093,
+            "ParentUID": 1612271359,
             "PrefabID": 1524961430,
             "IsPrefab": true,
             "Name": "fpsText",
@@ -6201,7 +6337,7 @@
                 },
                 {
                     "Type": 22,
-                    "Text": "FPS: 60",
+                    "Text": "FPS: 61",
                     "Color": [
                         1,
                         1,
@@ -6217,8 +6353,8 @@
             ]
         },
         {
-            "UID": 1026168844,
-            "ParentUID": 725044270,
+            "UID": 1395514450,
+            "ParentUID": 1612271359,
             "PrefabID": 1524961430,
             "IsPrefab": true,
             "Name": "GodMode",
@@ -6301,8 +6437,8 @@
             ]
         },
         {
-            "UID": 683291747,
-            "ParentUID": 725044270,
+            "UID": 727133954,
+            "ParentUID": 1612271359,
             "PrefabID": 1524961430,
             "IsPrefab": true,
             "Name": "HealMando",
@@ -6385,8 +6521,8 @@
             ]
         },
         {
-            "UID": 1116532752,
-            "ParentUID": 725044270,
+            "UID": 13587593,
+            "ParentUID": 1612271359,
             "PrefabID": 1524961430,
             "IsPrefab": true,
             "Name": "GetCredits",
@@ -6469,8 +6605,8 @@
             ]
         },
         {
-            "UID": 257178996,
-            "ParentUID": 725044270,
+            "UID": 526079122,
+            "ParentUID": 1612271359,
             "PrefabID": 1524961430,
             "IsPrefab": true,
             "Name": "GetBeskarIngots",
@@ -6553,8 +6689,8 @@
             ]
         },
         {
-            "UID": 496066288,
-            "ParentUID": 725044270,
+            "UID": 756893902,
+            "ParentUID": 1612271359,
             "PrefabID": 1524961430,
             "IsPrefab": true,
             "Name": "SpawnBlurrg",
@@ -6637,8 +6773,8 @@
             ]
         },
         {
-            "UID": 1061729163,
-            "ParentUID": 725044270,
+            "UID": 1080088835,
+            "ParentUID": 1612271359,
             "PrefabID": 1524961430,
             "IsPrefab": true,
             "Name": "SpawnTrooper",
@@ -6721,8 +6857,8 @@
             ]
         },
         {
-            "UID": 306779207,
-            "ParentUID": 725044270,
+            "UID": 1807243190,
+            "ParentUID": 1612271359,
             "PrefabID": 1524961430,
             "IsPrefab": true,
             "Name": "SkipRoom",
@@ -6805,8 +6941,8 @@
             ]
         },
         {
-            "UID": 1683773776,
-            "ParentUID": 725044270,
+            "UID": 245526227,
+            "ParentUID": 1612271359,
             "PrefabID": 1524961430,
             "IsPrefab": true,
             "Name": "DebugBackground",
@@ -6883,7 +7019,7 @@
             ]
         },
         {
-            "UID": 452746124,
+            "UID": 733363380,
             "ParentUID": 1864884191,
             "PrefabID": 1524961430,
             "IsPrefab": true,
@@ -6930,8 +7066,8 @@
             ]
         },
         {
-            "UID": 85190932,
-            "ParentUID": 452746124,
+            "UID": 105330730,
+            "ParentUID": 733363380,
             "PrefabID": 1524961430,
             "IsPrefab": true,
             "Name": "PauseSettingsTitle",
@@ -7008,8 +7144,8 @@
             ]
         },
         {
-            "UID": 1082391902,
-            "ParentUID": 452746124,
+            "UID": 1874717082,
+            "ParentUID": 733363380,
             "PrefabID": 1524961430,
             "IsPrefab": true,
             "Name": "MusicImage",
@@ -7086,8 +7222,8 @@
             ]
         },
         {
-            "UID": 2119663232,
-            "ParentUID": 452746124,
+            "UID": 1587665664,
+            "ParentUID": 733363380,
             "PrefabID": 1524961430,
             "IsPrefab": true,
             "Name": "EffectsImage",
@@ -7164,8 +7300,8 @@
             ]
         },
         {
-            "UID": 320492249,
-            "ParentUID": 452746124,
+            "UID": 818916723,
+            "ParentUID": 733363380,
             "PrefabID": 1524961430,
             "IsPrefab": true,
             "Name": "FullScreenImage",
@@ -7242,8 +7378,8 @@
             ]
         },
         {
-            "UID": 1782676056,
-            "ParentUID": 452746124,
+            "UID": 1227237091,
+            "ParentUID": 733363380,
             "PrefabID": 1524961430,
             "IsPrefab": true,
             "Name": "FullscreenCheck",
@@ -7364,8 +7500,8 @@
             ]
         },
         {
-            "UID": 1419134512,
-            "ParentUID": 452746124,
+            "UID": 1466867760,
+            "ParentUID": 733363380,
             "PrefabID": 1524961430,
             "IsPrefab": true,
             "Name": "VsyncImage",
@@ -7442,8 +7578,8 @@
             ]
         },
         {
-            "UID": 513906078,
-            "ParentUID": 452746124,
+            "UID": 1476485539,
+            "ParentUID": 733363380,
             "PrefabID": 1524961430,
             "IsPrefab": true,
             "Name": "VsyncCheck",
@@ -7564,8 +7700,8 @@
             ]
         },
         {
-            "UID": 1237637629,
-            "ParentUID": 452746124,
+            "UID": 354788477,
+            "ParentUID": 733363380,
             "PrefabID": 1524961430,
             "IsPrefab": true,
             "Name": "BackButton",
@@ -7648,8 +7784,8 @@
             ]
         },
         {
-            "UID": 995973848,
-            "ParentUID": 452746124,
+            "UID": 396001505,
+            "ParentUID": 733363380,
             "PrefabID": 1524961430,
             "IsPrefab": true,
             "Name": "PauseSettingsBackground",
@@ -7726,7 +7862,7 @@
             ]
         },
         {
-            "UID": 166592223,
+            "UID": 1560035630,
             "ParentUID": 1864884191,
             "PrefabID": 1524961430,
             "IsPrefab": true,
@@ -7797,8 +7933,8 @@
             ]
         },
         {
-            "UID": 22646569,
-            "ParentUID": 166592223,
+            "UID": 1792825497,
+            "ParentUID": 1560035630,
             "PrefabID": 1524961430,
             "IsPrefab": true,
             "Name": "ArmorerDraw",
@@ -7875,8 +8011,8 @@
             ]
         },
         {
-            "UID": 762404587,
-            "ParentUID": 166592223,
+            "UID": 1143097355,
+            "ParentUID": 1560035630,
             "PrefabID": 1524961430,
             "IsPrefab": true,
             "Name": "BeskarTextHubShop",
@@ -7927,8 +8063,8 @@
             ]
         },
         {
-            "UID": 1387776179,
-            "ParentUID": 166592223,
+            "UID": 1356943426,
+            "ParentUID": 1560035630,
             "PrefabID": 1524961430,
             "IsPrefab": true,
             "Name": "BuyButton",
@@ -8011,8 +8147,8 @@
             ]
         },
         {
-            "UID": 281793942,
-            "ParentUID": 166592223,
+            "UID": 1903838152,
+            "ParentUID": 1560035630,
             "PrefabID": 1524961430,
             "IsPrefab": true,
             "Name": "Mandooou",
@@ -8089,8 +8225,8 @@
             ]
         },
         {
-            "UID": 551527734,
-            "ParentUID": 166592223,
+            "UID": 982821270,
+            "ParentUID": 1560035630,
             "PrefabID": 1524961430,
             "IsPrefab": true,
             "Name": "Armor",
@@ -8167,8 +8303,8 @@
             ]
         },
         {
-            "UID": 1799870080,
-            "ParentUID": 166592223,
+            "UID": 882741531,
+            "ParentUID": 1560035630,
             "PrefabID": 1524961430,
             "IsPrefab": true,
             "Name": "BlasterUpgrade",
@@ -8245,8 +8381,8 @@
             ]
         },
         {
-            "UID": 111882415,
-            "ParentUID": 166592223,
+            "UID": 1476637773,
+            "ParentUID": 1560035630,
             "PrefabID": 1524961430,
             "IsPrefab": true,
             "Name": "TextBackground",
@@ -8323,8 +8459,8 @@
             ]
         },
         {
-            "UID": 379318161,
-            "ParentUID": 166592223,
+            "UID": 2106215390,
+            "ParentUID": 1560035630,
             "PrefabID": 1524961430,
             "IsPrefab": true,
             "Name": "Background",
@@ -8779,7 +8915,7 @@
         },
         {
             "UID": 2005580296,
-            "ParentUID": 1457190516,
+            "ParentUID": 1176295068,
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "MainScene",
