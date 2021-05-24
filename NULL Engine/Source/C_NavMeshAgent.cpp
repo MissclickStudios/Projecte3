@@ -67,6 +67,10 @@ bool C_NavMeshAgent::Update()
 				rigidBody->Set2DVelocity(directorVector * velocity);
 			}
 		}
+		else
+		{
+			rigidBody->Set2DVelocity(float2(0.0f,0.0f));
+		}
 	}
 
 	return true;
@@ -117,12 +121,12 @@ void C_NavMeshAgent::CancelDestination()
 {
 	hasDestination = false;
 	path.clear();
-	indexPath = 0;
+	indexPath = 1;
 }
 
 void C_NavMeshAgent::StopAndCancelDestination()
 {
-	indexPath = 0;
+	indexPath = 1;
 	path.clear();
 	hasDestination = false;
 	if(rigidBody != nullptr)
@@ -136,7 +140,14 @@ const float3 C_NavMeshAgent::GetNextPathPoint() const
 
 bool C_NavMeshAgent::AgentPath(float3 origin, float3 destination)
 {
-	hasDestination = true;
-	return  App->detour->CalculatePath(origin, destination, path);
+
+	App->detour->CalculatePath(origin, destination, path);
+
+	if (path.empty())
+		hasDestination = false;
+	else
+		hasDestination = true;
+
+	return  true;
 }
 
