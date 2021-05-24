@@ -134,11 +134,13 @@ public:
 	AnimationInfo dashAnimation				= { "Dash" };
 
 	AnimationInfo aimBlasterAnimation		= { "AimBlaster" };
+	//AnimationInfo aimBlasterAnimation		= { "AimBlasterAlt" };
 	AnimationInfo aimSniperAnimation		= { "AimSniper" };
 	AnimationInfo aimMinigunAnimation		= { "AimMinigun" };
 	AnimationInfo aimShotgunAnimation		= { "AimShotgun" };
 
 	AnimationInfo shootBlasterAnimation		= { "ShootBlaster" };
+	//AnimationInfo shootBlasterAnimation		= { "ShootBlasterAlt" };
 	AnimationInfo shootSniperAnimation		= { "ShootSniper"};
 	AnimationInfo shootMinigunAnimation		= { "ShootMinigun" };
 	AnimationInfo shootShotgunAnimation		= { "ShootShotgun" };

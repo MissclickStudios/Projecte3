@@ -22,11 +22,15 @@ void MandoMainMenu::Start()
 
 void MandoMainMenu::Update()
 {
-
-	if (mandoAnimator != nullptr)
+	if (mandoAnimator != nullptr && !animating)
 	{
-		mandoAnimator->PlayClip("Preview", "Idle",0.f);
+		if (mandoAnimator->GetTrackAsPtr("Preview") != nullptr)
+		{
+			mandoAnimator->PlayClip("Preview", "Idle", 0.f);
+			animating = true;
+		}
 	}
+	
 }
 
 void MandoMainMenu::CleanUp()

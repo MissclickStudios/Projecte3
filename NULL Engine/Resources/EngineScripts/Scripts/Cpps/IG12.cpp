@@ -15,6 +15,11 @@
 
 #include "MC_Time.h"
 
+#include "C_AudioSource.h"
+#include "C_Canvas.h"
+#include "C_UI_Image.h"
+#include "M_UISystem.h"
+
 IG12* CreateIG12()
 {
 	IG12* script = new IG12();
@@ -87,6 +92,10 @@ IG12* CreateIG12()
 	INSPECTOR_STRING(script->rightHandName);
 	INSPECTOR_STRING(script->leftHandName);
 
+	//Health Bar
+	INSPECTOR_GAMEOBJECT(script->healthBarCanvasObject);
+	INSPECTOR_STRING(script->lifeBarImageStr);
+
 	return script;
 }
 
@@ -155,6 +164,24 @@ void IG12::SetUp()
 	}
 
 	crosshair = gameObject->FindChild("Aim");
+
+	if (healthBarCanvasObject)
+	{
+		healthBarCanvas = healthBarCanvasObject->GetComponent<C_Canvas>();
+		if (healthBarCanvas)
+			App->uiSystem->PushCanvas(healthBarCanvas);
+		for (int i = 0; i < healthBarCanvasObject->childs.size(); ++i)
+		{
+			if (!strcmp(healthBarCanvasObject->childs[i]->GetName(), lifeBarImageStr.c_str()))
+			{
+
+				healthBarImage = healthBarCanvasObject->childs[i]->GetComponent<C_UI_Image>();
+				if (healthBarImage)
+					healthMaxW = healthBarImage->GetRect().w;
+				break;
+			}
+		}
+	}
 }
 
 void IG12::Behavior()
@@ -182,6 +209,26 @@ void IG12::OnCollisionEnter(GameObject* object)
 	Player* playerScript = (Player*)object->GetScript("Player");
 	if (playerScript)
 		playerScript->TakeDamage(1.0f);
+}
+
+void IG12::TakeDamage(float damage)
+{
+	health -= damage / Defense();
+	if (health < 0.0f)
+		health = 0.0f;
+
+	hitTimer.Start();
+	if (GetParticles("Hit") != nullptr)
+		GetParticles("Hit")->ResumeSpawn();
+
+	if (damageAudio != nullptr)
+		damageAudio->PlayFx(damageAudio->GetEventId());
+
+	if (healthBarImage)
+	{
+		Rect2D rect = healthBarImage->GetRect();
+		healthBarImage->SetW(healthMaxW * health / maxHealth);
+	}
 }
 
 void IG12::DistanceToPlayer()
@@ -513,6 +560,8 @@ void IG12::ManageMovement()
 		currentAnimation = &deathAnimation;
 		deathTimer.Start();
 		moveState = IG12State::DEAD;
+		if (healthBarCanvas)
+			App->uiSystem->RemoveActiveCanvas(healthBarCanvas);
 
 	case IG12State::DEAD:
 		if (deathTimer.ReadSec() >= deathDuration)

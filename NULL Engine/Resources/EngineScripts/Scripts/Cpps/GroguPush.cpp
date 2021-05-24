@@ -7,13 +7,13 @@
 #include "Log.h"
 #include "GameManager.h"
 
+#include "GameManager.h"
 #include "GameObject.h"
 #include "C_Transform.h"
 #include "C_ParticleSystem.h"
 #include "C_BoxCollider.h"
 #include "C_AudioSource.h"
-#include "C_2DAnimator.h"
-
+#include "C_RigidBody.h"
 #include "GroguPush.h"
 
 GroguPush* CreateGroguPush()
@@ -30,6 +30,7 @@ GroguPush* CreateGroguPush()
 GroguPush::GroguPush() : Object()
 {
 	baseType = ObjectType::GROGU_ABILITY;
+	abilityCooldownTimer.Stop();
 }
 
 GroguPush::~GroguPush()
@@ -40,12 +41,14 @@ void GroguPush::Start()
 {
 	player = App->scene->GetGameObjectByName(playerName.c_str());
 
-	GameObject* a = App->scene->GetGameObjectByName(groguName.c_str());
-	if (a != nullptr)
-		groguImage = (C_2DAnimator*)a->GetComponent<C_2DAnimator>();
-
 	abilityCollider = gameObject->GetComponent<C_BoxCollider>();
 	abilityCollider->SetSize(abilityRadius);
+	abilityCooldownTimer.Start();
+
+	GameObject* tmp = App->scene->GetGameObjectByName("Game Manager");
+	if (tmp != nullptr)
+		gameManager = (GameManager*)tmp->GetScript("GameManager");
+
 }
 
 void GroguPush::Update()
@@ -55,26 +58,29 @@ void GroguPush::Update()
 	abilityCollider->SetTrigger(false);
 	abilityCollider->SetIsActive(false);
 
-	if (abilityCooldownTimer.IsActive())
-	{
-		if (abilityCooldownTimer.ReadSec() >= abilityCooldown)
-			abilityCooldownTimer.Stop();
 
-		return;
-	}
 
-	if (App->input->GetKey(SDL_SCANCODE_G) == KeyState::KEY_DOWN)
+
+	if ((App->input->GetKey(SDL_SCANCODE_G) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(SDL_CONTROLLER_BUTTON_LEFTSHOULDER) == ButtonState::BUTTON_DOWN) && (abilityCooldownTimer.ReadSec() > abilityCooldown) && gameManager->storyDialogState.defeatedIG11FirstTime)
 	{
+
+
 		doAbility = true;
-		groguImage->PlayAnimation(false, 1);
+
 		abilityCollider->SetIsActive(true);
 		abilityCollider->SetTrigger(true);
+
+		abilityCooldownTimer.Start();
+
 	}
+
+
+
 }
 
 void GroguPush::CleanUp()
 {
-	
+
 }
 
 void GroguPush::OnTriggerRepeat(GameObject* object)
@@ -99,10 +105,25 @@ void GroguPush::OnTriggerRepeat(GameObject* object)
 	if (distance < 1.0f)
 		distance = 1.0f;
 
-	float currentPower = abilityPower / distance;
-
+	//float currentPower = abilityPower / distance;
+	float currentPower = abilityPower;
 	direction.Normalize();
 	direction *= currentPower;
-	
-	entity->AddEffect(EffectType::KNOCKBACK, 0.75f, false, currentPower,0.f,float3(direction.x, 0.f,direction.y),true);
+	entity->gameObject->GetComponent<C_RigidBody>()->FreezePositionY(true);
+	entity->AddEffect(EffectType::KNOCKBACK, 0.25f, false, currentPower, 0.f, float3(direction.x, 0.f, direction.y), true);
+
+
+}
+
+void GroguPush::OnTriggerExit(GameObject* object)
+{
+	Entity* entity = (Entity*)GetObjectScript(object, ObjectType::ENTITY);
+	if (!entity)
+		return;
+
+	if (entity->type == EntityType::GROGU || entity->type == EntityType::PLAYER)
+		return;
+
+
+	entity->gameObject->GetComponent<C_RigidBody>()->FreezePositionY(false);
 }

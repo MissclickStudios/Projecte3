@@ -13,6 +13,8 @@
 #include "MathGeoLib/include/Algorithm/Random/LCG.h"
 
 class GameManager;
+class C_Canvas;
+class C_UI_Image;
 
 enum class IG12State
 {
@@ -44,6 +46,7 @@ public:
 	void CleanUp() override;
 
 	void OnCollisionEnter(GameObject* object) override;
+	void TakeDamage(float damage)override;
 
 	// Movement
 	std::string playerName = "Mando testbuild";
@@ -102,6 +105,9 @@ public:
 
 	float minCredits = 0.f;
 	float maxCredits = 0.f;
+
+	GameObject* healthBarCanvasObject = nullptr;
+	std::string lifeBarImageStr = "BossLife";
 
 private:
 
@@ -164,6 +170,10 @@ private:
 	LCG randomGenerator;
 
 	GameManager* gameManager = nullptr;
+
+	C_Canvas* healthBarCanvas = nullptr;
+	C_UI_Image* healthBarImage = nullptr;
+	float healthMaxW = 0.0f;
 };
 
 SCRIPTS_FUNCTION IG12* CreateIG12();

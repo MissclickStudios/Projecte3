@@ -9,6 +9,7 @@
 
 class C_AudioSource;
 class C_NavMeshAgent;
+class C_ParticleSystem;
 
 enum class BlurrgState
 {
@@ -84,6 +85,10 @@ public:
 
 	int minCredits = 0.f;
 	int maxCredits = 0.f;
+
+	// Particles & SFX
+	C_ParticleSystem* hitParticles;
+	C_ParticleSystem* chargeParticles;
 
 private:
 

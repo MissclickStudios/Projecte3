@@ -1,6 +1,7 @@
 {
-    "UID": 1407346246,
-    "ParentUID": 888400124,
+    "ModTime": 1621880866,
+    "UID": 458182644,
+    "ParentUID": 1474137658,
     "PrefabID": 1607205956,
     "IsPrefab": true,
     "Name": "Blurrg",
@@ -17,20 +18,20 @@
         {
             "Type": 1,
             "LocalPosition": [
-                72.626991271972656,
-                -1.52587890625e-05,
-                -62.023605346679688
+                38.419822692871094,
+                -1.3947066690889187e-05,
+                -17.716684341430664
             ],
             "LocalRotation": [
                 0,
+                1,
                 0,
-                0,
-                1
+                4.8506403338421933e-09
             ],
             "LocalScale": [
+                0.1199999526143074,
                 0.11999999731779099,
-                0.11999999731779099,
-                0.11999999731779099
+                0.1199999526143074
             ]
         },
         {
@@ -125,7 +126,7 @@
                 {
                     "Type": 2,
                     "Name": "health",
-                    "float": 4
+                    "float": 120
                 },
                 {
                     "Type": 2,
@@ -135,7 +136,7 @@
                 {
                     "Type": 2,
                     "Name": "speed",
-                    "float": 15
+                    "float": 12
                 },
                 {
                     "Type": 2,
@@ -210,7 +211,7 @@
                 {
                     "Type": 2,
                     "Name": "chargeDistance",
-                    "float": 40
+                    "float": 50
                 },
                 {
                     "Type": 2,
@@ -225,7 +226,7 @@
                 {
                     "Type": 2,
                     "Name": "dashSpeed",
-                    "float": 90
+                    "float": 75
                 },
                 {
                     "Type": 2,
@@ -246,6 +247,16 @@
                     "Type": 2,
                     "Name": "restDuration",
                     "float": 1
+                },
+                {
+                    "Type": 0,
+                    "Name": "minCredits",
+                    "int": 8
+                },
+                {
+                    "Type": 0,
+                    "Name": "maxCredits",
+                    "int": 15
                 }
             ]
         },
@@ -292,8 +303,8 @@
     ],
     "Children": [
         {
-            "UID": 610652596,
-            "ParentUID": 1407346246,
+            "UID": 52225978,
+            "ParentUID": 458182644,
             "PrefabID": 1607205956,
             "IsPrefab": true,
             "Name": "BlurrgMesh",
@@ -374,8 +385,8 @@
             "Children": []
         },
         {
-            "UID": 1446255512,
-            "ParentUID": 1407346246,
+            "UID": 1145040327,
+            "ParentUID": 458182644,
             "PrefabID": 1607205956,
             "IsPrefab": true,
             "Name": "Skeleton",
@@ -411,8 +422,8 @@
             ],
             "Children": [
                 {
-                    "UID": 881194220,
-                    "ParentUID": 1446255512,
+                    "UID": 743655837,
+                    "ParentUID": 1145040327,
                     "PrefabID": 1607205956,
                     "IsPrefab": true,
                     "Name": "joint7",
@@ -448,8 +459,8 @@
                     ],
                     "Children": [
                         {
-                            "UID": 3991750,
-                            "ParentUID": 881194220,
+                            "UID": 211404239,
+                            "ParentUID": 743655837,
                             "PrefabID": 1607205956,
                             "IsPrefab": true,
                             "Name": "joint8",
@@ -485,8 +496,8 @@
                             ],
                             "Children": [
                                 {
-                                    "UID": 1621428111,
-                                    "ParentUID": 3991750,
+                                    "UID": 1522663452,
+                                    "ParentUID": 211404239,
                                     "PrefabID": 1607205956,
                                     "IsPrefab": true,
                                     "Name": "LeftShoulder",
@@ -522,8 +533,8 @@
                                     ],
                                     "Children": [
                                         {
-                                            "UID": 1331294980,
-                                            "ParentUID": 1621428111,
+                                            "UID": 1257534881,
+                                            "ParentUID": 1522663452,
                                             "PrefabID": 1607205956,
                                             "IsPrefab": true,
                                             "Name": "joint28",
@@ -559,8 +570,8 @@
                                             ],
                                             "Children": [
                                                 {
-                                                    "UID": 1277878556,
-                                                    "ParentUID": 1331294980,
+                                                    "UID": 1121456265,
+                                                    "ParentUID": 1257534881,
                                                     "PrefabID": 1607205956,
                                                     "IsPrefab": true,
                                                     "Name": "joint29",
@@ -596,8 +607,8 @@
                                                     ],
                                                     "Children": [
                                                         {
-                                                            "UID": 436746852,
-                                                            "ParentUID": 1277878556,
+                                                            "UID": 907544183,
+                                                            "ParentUID": 1121456265,
                                                             "PrefabID": 1607205956,
                                                             "IsPrefab": true,
                                                             "Name": "joint30",
@@ -633,8 +644,8 @@
                                                             ],
                                                             "Children": [
                                                                 {
-                                                                    "UID": 629812312,
-                                                                    "ParentUID": 436746852,
+                                                                    "UID": 1815829079,
+                                                                    "ParentUID": 907544183,
                                                                     "PrefabID": 1607205956,
                                                                     "IsPrefab": true,
                                                                     "Name": "joint31",
@@ -679,8 +690,8 @@
                                     ]
                                 },
                                 {
-                                    "UID": 1892248207,
-                                    "ParentUID": 3991750,
+                                    "UID": 1050538879,
+                                    "ParentUID": 211404239,
                                     "PrefabID": 1607205956,
                                     "IsPrefab": true,
                                     "Name": "RightShoulder",
@@ -716,8 +727,8 @@
                                     ],
                                     "Children": [
                                         {
-                                            "UID": 1622372899,
-                                            "ParentUID": 1892248207,
+                                            "UID": 1815583523,
+                                            "ParentUID": 1050538879,
                                             "PrefabID": 1607205956,
                                             "IsPrefab": true,
                                             "Name": "joint22",
@@ -753,8 +764,8 @@
                                             ],
                                             "Children": [
                                                 {
-                                                    "UID": 863627478,
-                                                    "ParentUID": 1622372899,
+                                                    "UID": 1769591071,
+                                                    "ParentUID": 1815583523,
                                                     "PrefabID": 1607205956,
                                                     "IsPrefab": true,
                                                     "Name": "joint23",
@@ -790,8 +801,8 @@
                                                     ],
                                                     "Children": [
                                                         {
-                                                            "UID": 1509738559,
-                                                            "ParentUID": 863627478,
+                                                            "UID": 625869186,
+                                                            "ParentUID": 1769591071,
                                                             "PrefabID": 1607205956,
                                                             "IsPrefab": true,
                                                             "Name": "joint24",
@@ -827,8 +838,8 @@
                                                             ],
                                                             "Children": [
                                                                 {
-                                                                    "UID": 1817306205,
-                                                                    "ParentUID": 1509738559,
+                                                                    "UID": 1430950479,
+                                                                    "ParentUID": 625869186,
                                                                     "PrefabID": 1607205956,
                                                                     "IsPrefab": true,
                                                                     "Name": "joint25",
@@ -873,8 +884,8 @@
                                     ]
                                 },
                                 {
-                                    "UID": 2068734086,
-                                    "ParentUID": 3991750,
+                                    "UID": 2114899745,
+                                    "ParentUID": 211404239,
                                     "PrefabID": 1607205956,
                                     "IsPrefab": true,
                                     "Name": "joint9",
@@ -910,8 +921,8 @@
                                     ],
                                     "Children": [
                                         {
-                                            "UID": 1893719528,
-                                            "ParentUID": 2068734086,
+                                            "UID": 2128517657,
+                                            "ParentUID": 2114899745,
                                             "PrefabID": 1607205956,
                                             "IsPrefab": true,
                                             "Name": "joint10",
@@ -947,8 +958,8 @@
                                             ],
                                             "Children": [
                                                 {
-                                                    "UID": 269308236,
-                                                    "ParentUID": 1893719528,
+                                                    "UID": 659900138,
+                                                    "ParentUID": 2128517657,
                                                     "PrefabID": 1607205956,
                                                     "IsPrefab": true,
                                                     "Name": "joint32",
@@ -991,8 +1002,8 @@
                             ]
                         },
                         {
-                            "UID": 330739996,
-                            "ParentUID": 881194220,
+                            "UID": 1558231190,
+                            "ParentUID": 743655837,
                             "PrefabID": 1607205956,
                             "IsPrefab": true,
                             "Name": "LeftLeg",
@@ -1028,8 +1039,8 @@
                             ],
                             "Children": [
                                 {
-                                    "UID": 1091404604,
-                                    "ParentUID": 330739996,
+                                    "UID": 770072327,
+                                    "ParentUID": 1558231190,
                                     "PrefabID": 1607205956,
                                     "IsPrefab": true,
                                     "Name": "LeftKnee",
@@ -1065,8 +1076,8 @@
                                     ],
                                     "Children": [
                                         {
-                                            "UID": 1316662265,
-                                            "ParentUID": 1091404604,
+                                            "UID": 1215765882,
+                                            "ParentUID": 770072327,
                                             "PrefabID": 1607205956,
                                             "IsPrefab": true,
                                             "Name": "joint13",
@@ -1102,8 +1113,8 @@
                                             ],
                                             "Children": [
                                                 {
-                                                    "UID": 1750250050,
-                                                    "ParentUID": 1316662265,
+                                                    "UID": 614898226,
+                                                    "ParentUID": 1215765882,
                                                     "PrefabID": 1607205956,
                                                     "IsPrefab": true,
                                                     "Name": "joint14",
@@ -1139,8 +1150,8 @@
                                                     ],
                                                     "Children": [
                                                         {
-                                                            "UID": 1310058939,
-                                                            "ParentUID": 1750250050,
+                                                            "UID": 793891151,
+                                                            "ParentUID": 614898226,
                                                             "PrefabID": 1607205956,
                                                             "IsPrefab": true,
                                                             "Name": "joint15",
@@ -1176,8 +1187,8 @@
                                                             ],
                                                             "Children": [
                                                                 {
-                                                                    "UID": 876682738,
-                                                                    "ParentUID": 1310058939,
+                                                                    "UID": 1399922475,
+                                                                    "ParentUID": 793891151,
                                                                     "PrefabID": 1607205956,
                                                                     "IsPrefab": true,
                                                                     "Name": "joint16",
@@ -1224,8 +1235,8 @@
                             ]
                         },
                         {
-                            "UID": 356477211,
-                            "ParentUID": 881194220,
+                            "UID": 1539510347,
+                            "ParentUID": 743655837,
                             "PrefabID": 1607205956,
                             "IsPrefab": true,
                             "Name": "Tail",
@@ -1261,8 +1272,8 @@
                             ],
                             "Children": [
                                 {
-                                    "UID": 1699992522,
-                                    "ParentUID": 356477211,
+                                    "UID": 392246449,
+                                    "ParentUID": 1539510347,
                                     "PrefabID": 1607205956,
                                     "IsPrefab": true,
                                     "Name": "joint18",
@@ -1298,8 +1309,8 @@
                                     ],
                                     "Children": [
                                         {
-                                            "UID": 1132665686,
-                                            "ParentUID": 1699992522,
+                                            "UID": 1440424354,
+                                            "ParentUID": 392246449,
                                             "PrefabID": 1607205956,
                                             "IsPrefab": true,
                                             "Name": "joint19",
@@ -1335,8 +1346,8 @@
                                             ],
                                             "Children": [
                                                 {
-                                                    "UID": 621535761,
-                                                    "ParentUID": 1132665686,
+                                                    "UID": 160665208,
+                                                    "ParentUID": 1440424354,
                                                     "PrefabID": 1607205956,
                                                     "IsPrefab": true,
                                                     "Name": "joint20",
@@ -1372,8 +1383,8 @@
                                                     ],
                                                     "Children": [
                                                         {
-                                                            "UID": 320227548,
-                                                            "ParentUID": 621535761,
+                                                            "UID": 1123766421,
+                                                            "ParentUID": 160665208,
                                                             "PrefabID": 1607205956,
                                                             "IsPrefab": true,
                                                             "Name": "joint21",
@@ -1418,8 +1429,8 @@
                             ]
                         },
                         {
-                            "UID": 1417765178,
-                            "ParentUID": 881194220,
+                            "UID": 111743604,
+                            "ParentUID": 743655837,
                             "PrefabID": 1607205956,
                             "IsPrefab": true,
                             "Name": "RightLeg",
@@ -1455,8 +1466,8 @@
                             ],
                             "Children": [
                                 {
-                                    "UID": 1551042488,
-                                    "ParentUID": 1417765178,
+                                    "UID": 1330664922,
+                                    "ParentUID": 111743604,
                                     "PrefabID": 1607205956,
                                     "IsPrefab": true,
                                     "Name": "RightKnee",
@@ -1492,8 +1503,8 @@
                                     ],
                                     "Children": [
                                         {
-                                            "UID": 1522485487,
-                                            "ParentUID": 1551042488,
+                                            "UID": 580252680,
+                                            "ParentUID": 1330664922,
                                             "PrefabID": 1607205956,
                                             "IsPrefab": true,
                                             "Name": "joint3",
@@ -1529,8 +1540,8 @@
                                             ],
                                             "Children": [
                                                 {
-                                                    "UID": 1788107971,
-                                                    "ParentUID": 1522485487,
+                                                    "UID": 666080822,
+                                                    "ParentUID": 580252680,
                                                     "PrefabID": 1607205956,
                                                     "IsPrefab": true,
                                                     "Name": "joint4",
@@ -1566,8 +1577,8 @@
                                                     ],
                                                     "Children": [
                                                         {
-                                                            "UID": 32704673,
-                                                            "ParentUID": 1788107971,
+                                                            "UID": 1625501602,
+                                                            "ParentUID": 666080822,
                                                             "PrefabID": 1607205956,
                                                             "IsPrefab": true,
                                                             "Name": "joint5",
@@ -1603,8 +1614,8 @@
                                                             ],
                                                             "Children": [
                                                                 {
-                                                                    "UID": 542444820,
-                                                                    "ParentUID": 32704673,
+                                                                    "UID": 1125897013,
+                                                                    "ParentUID": 1625501602,
                                                                     "PrefabID": 1607205956,
                                                                     "IsPrefab": true,
                                                                     "Name": "joint6",
@@ -1651,6 +1662,92 @@
                             ]
                         }
                     ]
+                }
+            ]
+        },
+        {
+            "UID": 775342926,
+            "ParentUID": 458182644,
+            "PrefabID": 1607205956,
+            "IsPrefab": true,
+            "Name": "Particles",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        45.486114501953125,
+                        -61.307899475097656
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        8.3333339691162109,
+                        8.3333339691162109,
+                        8.3333339691162109
+                    ]
+                }
+            ],
+            "Children": [
+                {
+                    "UID": 2113281678,
+                    "ParentUID": 775342926,
+                    "PrefabID": 1607205956,
+                    "IsPrefab": true,
+                    "Name": "Charge",
+                    "IsActive": true,
+                    "IsStatic": false,
+                    "IsSceneRoot": false,
+                    "MaintainThroughScenes": false,
+                    "ShowBoundingBoxes": false,
+                    "NavigationInfo": {
+                        "isNavigable": false,
+                        "navigationArea": 0
+                    },
+                    "Components": [
+                        {
+                            "Type": 1,
+                            "LocalPosition": [
+                                0,
+                                0,
+                                1.5861377716064453
+                            ],
+                            "LocalRotation": [
+                                0,
+                                0,
+                                0,
+                                1
+                            ],
+                            "LocalScale": [
+                                1,
+                                1,
+                                1
+                            ]
+                        },
+                        {
+                            "Type": 12,
+                            "particleSystemUID": 1636415046,
+                            "particleSystemAssetsPath": "Assets\/ParticleSystems\/Charge.particles",
+                            "stopSpawn": false,
+                            "tempDelete": false,
+                            "previewEnabled": true,
+                            "stopAndDeleteCheck": false
+                        }
+                    ],
+                    "Children": []
                 }
             ]
         }

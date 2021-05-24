@@ -234,6 +234,8 @@ void Player::Behavior()
 
 	ManageInteractions();
 	
+	//LOG("[%d]::[%d]::[%d]", (int)moveState, (int)aimState, (int)currentInteraction);
+
 	if (currentInteraction == InteractionType::NONE)
 	{
 		ManageMovement();
@@ -563,12 +565,12 @@ void Player::SetPlayerInteraction(InteractionType type, float duration)
 		return;
 	}
 
-	moveState == PlayerState::IDLE;
+	moveState = PlayerState::IDLE;
 	
 	if (rigidBody != nullptr)
 		rigidBody->StopInertia();
 
-	aimState == AimState::IDLE;
+	aimState = AimState::IDLE;
 
 	switch (currentInteraction)
 	{
@@ -633,13 +635,13 @@ void Player::AnimatePlayer()
 	}
 	else
 	{	
-		LOG("DIRECTIONS: [%d]::[%d]::[%s]::[%s]", aimDirection, moveDirection, GetAimStateAnimation()->name.c_str(), GetLegsAnimation()->name.c_str());
+		//LOG("DIRECTIONS: [%d]::[%d]::[%s]::[%s]", aimDirection, moveDirection, GetAimStateAnimation()->name.c_str(), GetLegsAnimation()->name.c_str());
 		
 		AnimationInfo* torsoInfo	= GetAimStateAnimation();
 		AnimationInfo* legsInfo		= GetMoveStateAnimation();
 		if (torsoInfo == nullptr || legsInfo == nullptr)
 		{
-			LOG("DEFAULTING AIMING TO PREVIEW");
+			//LOG("DEFAULTING AIMING TO PREVIEW");
 			
 			fromPreview = true;
 
@@ -658,6 +660,9 @@ void Player::AnimatePlayer()
 
 				if ((previewClip == nullptr) || (previewClip->GetName() != torsoInfo->name))										// If no clip playing or animation/clip changed
 					animator->PlayClip(preview->GetName(), torsoInfo->name.c_str(), torsoInfo->blendTime);
+
+				/*if (hip != nullptr)
+					hip->transform->Rotate()*/
 
 				return;
 			}
@@ -1340,12 +1345,12 @@ void Player::GatherInteractionInputs()
 	
 	if (currentInteraction == InteractionType::NONE)
 	{
-		if (App->input->GetKey(SDL_SCANCODE_Q) == KeyState::KEY_DOWN)
+		if (App->input->GetKey(SDL_SCANCODE_G) == KeyState::KEY_DOWN)
 		{
 			SetPlayerInteraction(InteractionType::SIGNAL_GROGU);
 		}
 
-		if (App->input->GetKey(SDL_SCANCODE_E) == KeyState::KEY_DOWN)
+		/*if (App->input->GetKey(SDL_SCANCODE_E) == KeyState::KEY_DOWN)
 		{
 			SetPlayerInteraction(InteractionType::USE);
 		}
@@ -1353,7 +1358,7 @@ void Player::GatherInteractionInputs()
 		if (App->input->GetKey(SDL_SCANCODE_R) == KeyState::KEY_DOWN)
 		{
 			SetPlayerInteraction(InteractionType::OPEN_CHEST);
-		}
+		}*/
 	}
 	
 	if (currentInteraction == InteractionType::TALK)
@@ -1411,7 +1416,13 @@ void Player::Movement()
 {
 	moveVector = moveInput;
 
-	float speed = (moveState == PlayerState::RUN) ? Speed() : (walkSpeed * speedModifier);
+	float speed = Speed();
+
+	if (moveState == PlayerState::WALK)
+		speed = (walkSpeed * speedModifier);
+
+	if (aimState == AimState::SHOOT)
+		speed = (aimingSpeed * speedModifier);
 
 	if (rigidBody != nullptr)
 		rigidBody->Set2DVelocity((moveInput.Normalized()) * speed);

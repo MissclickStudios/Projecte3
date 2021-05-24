@@ -6,6 +6,7 @@
 #include "GameObject.h"
 
 #include "C_Animator.h"
+#include "C_ParticleSystem.h"
 #include "C_BoxCollider.h"
 
 #include "SarlaacTrap.h"
@@ -23,15 +24,24 @@ void SarlaacTrap::Start()
 
 	sarlaacAnimator = gameObject->GetComponent<C_Animator>();
 
+	GameObject* idleParticlesGO = gameObject->FindChild("Idle");
+	GameObject* attackParticlesGO = gameObject->FindChild("Attack");
+
+	idleParticles = (idleParticlesGO != nullptr) ? idleParticlesGO->GetComponent<C_ParticleSystem>() : nullptr;
+	attackParticles = (attackParticlesGO != nullptr) ? attackParticlesGO->GetComponent<C_ParticleSystem>() : nullptr;
+
+	(idleParticles != nullptr) ? idleParticles->StopSpawn() : LOG("[ERROR] SarlaccTrap Script: Could not find { IDLE } Particle System!");
+	(attackParticles != nullptr) ? attackParticles->StopSpawn() : LOG("[ERROR] SarlaccTrap Script: Could not find { ATTACK } Particle System!");
 }
 
 void SarlaacTrap::Update()
-{
+{	
 	switch (state)
 	{
 
 	case SarlaacState::IDLE:
-
+		if (idleParticles != nullptr)
+			idleParticles->ResumeSpawn();
 		break;
 
 	case SarlaacState::DAMAGING:
@@ -61,6 +71,9 @@ void SarlaacTrap::Update()
 		{
 			state = SarlaacState::IDLE;
 			animationTimer = 0.f;
+
+			if (attackParticles != nullptr)
+				attackParticles->StopSpawn();
 		}
 		else
 		{
@@ -115,6 +128,12 @@ void SarlaacTrap::OnTriggerRepeat(GameObject* object)
 void SarlaacTrap::StartMoving()
 {
 	state = SarlaacState::MOVING;
+
+	if (idleParticles != nullptr)
+		idleParticles->StopSpawn();
+
+	if (attackParticles != nullptr)
+		attackParticles->ResumeSpawn();
 
 	//Animator play clip
 	sarlaacAnimator->PlayClip("Preview",animationName.c_str(), 0u);

@@ -5,6 +5,7 @@
 class GameObject;
 class C_BoxCollider;
 class C_Animator;
+class C_ParticleSystem;
 
 enum class SarlaacState
 {
@@ -39,6 +40,9 @@ private:
 	float animationTimer = 0.0f;
 
 	C_Animator* sarlaacAnimator = nullptr;
+
+	C_ParticleSystem* idleParticles		= nullptr;
+	C_ParticleSystem* attackParticles	= nullptr;
 
 	SarlaacState state = SarlaacState::IDLE;
 };

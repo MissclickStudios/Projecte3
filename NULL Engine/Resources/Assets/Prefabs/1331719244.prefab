@@ -1,6 +1,7 @@
 {
-    "UID": 1132262890,
-    "ParentUID": 1474137658,
+    "ModTime": 1621879584,
+    "UID": 1930769913,
+    "ParentUID": 888400124,
     "PrefabID": 1331719244,
     "IsPrefab": true,
     "Name": "Vaporator",
@@ -8,14 +9,18 @@
     "IsStatic": false,
     "IsSceneRoot": false,
     "MaintainThroughScenes": false,
-    "ShowBoundingBoxes": false,
+    "ShowBoundingBoxes": true,
+    "NavigationInfo": {
+        "isNavigable": false,
+        "navigationArea": 0
+    },
     "Components": [
         {
             "Type": 1,
             "LocalPosition": [
-                -6.1019821166992188,
-                2.1286606788635254,
-                19.129873275756836
+                0,
+                -3.1498532295227051,
+                0
             ],
             "LocalRotation": [
                 0,
@@ -24,9 +29,9 @@
                 1
             ],
             "LocalScale": [
-                0.24908804893493652,
-                0.24908804893493652,
-                0.24908804893493652
+                0.5031578540802002,
+                0.5031578540802002,
+                0.5031578540802002
             ]
         },
         {
@@ -38,9 +43,9 @@
             "Type": 9,
             "Is Trigger": false,
             "Show Collider": true,
-            "Size X": 3,
-            "Size Y": 20,
-            "Size Z": 3,
+            "Size X": 6,
+            "Size Y": 40,
+            "Size Z": 6,
             "Center X": 0,
             "Center Y": 0,
             "Center Z": 0
@@ -52,6 +57,11 @@
             "DataName": "MoistureVaporator",
             "HasInspector": true,
             "InspectorVariables": [
+                {
+                    "Type": 2,
+                    "Name": "stunDuration",
+                    "float": 1
+                },
                 {
                     "Type": 5,
                     "Name": "gameManagerName",
@@ -91,8 +101,8 @@
     ],
     "Children": [
         {
-            "UID": 1883617121,
-            "ParentUID": 1132262890,
+            "UID": 984870612,
+            "ParentUID": 1930769913,
             "PrefabID": 1331719244,
             "IsPrefab": true,
             "Name": "VaporatorMesh",
@@ -101,6 +111,10 @@
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
             "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
             "Components": [
                 {
                     "Type": 1,
@@ -153,10 +167,10 @@
                         "File": "197114366.nemat"
                     },
                     "Texture": {
-                        "AssetsPath": "Assets\/Textures\/\/Blockouts\/Level1\/moisture_arvala.png",
-                        "AssetsName": "moisture_arvala.png",
-                        "LibaryPath": "Library\/Textures\/1390400254.netex",
-                        "LibraryFile": "1390400254.netex"
+                        "AssetsPath": "Assets\/Textures\/\/Blockouts\/Props&Textures_v02\/moisture_texture_v02.png",
+                        "AssetsName": "moisture_texture_v02.png",
+                        "LibaryPath": "Library\/Textures\/166995452.netex",
+                        "LibraryFile": "166995452.netex"
                     },
                     "Shader": {
                         "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
@@ -169,8 +183,8 @@
             "Children": []
         },
         {
-            "UID": 1848561038,
-            "ParentUID": 1132262890,
+            "UID": 665905857,
+            "ParentUID": 1930769913,
             "PrefabID": 1331719244,
             "IsPrefab": true,
             "Name": "Particles",
@@ -179,6 +193,10 @@
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
             "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
             "Components": [
                 {
                     "Type": 1,
@@ -202,8 +220,8 @@
             ],
             "Children": [
                 {
-                    "UID": 685995952,
-                    "ParentUID": 1848561038,
+                    "UID": 26598580,
+                    "ParentUID": 665905857,
                     "PrefabID": 1331719244,
                     "IsPrefab": true,
                     "Name": "Second Idle",
@@ -212,6 +230,10 @@
                     "IsSceneRoot": false,
                     "MaintainThroughScenes": false,
                     "ShowBoundingBoxes": false,
+                    "NavigationInfo": {
+                        "isNavigable": false,
+                        "navigationArea": 0
+                    },
                     "Components": [
                         {
                             "Type": 1,
@@ -245,8 +267,8 @@
                     "Children": []
                 },
                 {
-                    "UID": 826471272,
-                    "ParentUID": 1848561038,
+                    "UID": 1508661739,
+                    "ParentUID": 665905857,
                     "PrefabID": 1331719244,
                     "IsPrefab": true,
                     "Name": "Idle",
@@ -255,6 +277,10 @@
                     "IsSceneRoot": false,
                     "MaintainThroughScenes": false,
                     "ShowBoundingBoxes": true,
+                    "NavigationInfo": {
+                        "isNavigable": false,
+                        "navigationArea": 0
+                    },
                     "Components": [
                         {
                             "Type": 1,
@@ -288,8 +314,8 @@
                     "Children": []
                 },
                 {
-                    "UID": 1980290293,
-                    "ParentUID": 1848561038,
+                    "UID": 1498690982,
+                    "ParentUID": 665905857,
                     "PrefabID": 1331719244,
                     "IsPrefab": true,
                     "Name": "StunParticles",
@@ -298,6 +324,10 @@
                     "IsSceneRoot": false,
                     "MaintainThroughScenes": false,
                     "ShowBoundingBoxes": false,
+                    "NavigationInfo": {
+                        "isNavigable": false,
+                        "navigationArea": 0
+                    },
                     "Components": [
                         {
                             "Type": 1,
