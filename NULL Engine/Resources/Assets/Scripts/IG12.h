@@ -12,6 +12,7 @@
 #include "MathGeoLib/include/Math/float2.h"
 #include "MathGeoLib/include/Algorithm/Random/LCG.h"
 
+class GameManager;
 
 enum class IG12State
 {
@@ -158,6 +159,8 @@ private:
 	Weapon* sniperWeapon = nullptr;
 
 	LCG randomGenerator;
+
+	GameManager* gameManager = nullptr;
 };
 
 SCRIPTS_FUNCTION IG12* CreateIG12();
