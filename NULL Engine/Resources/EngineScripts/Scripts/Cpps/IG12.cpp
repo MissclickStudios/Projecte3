@@ -164,6 +164,7 @@ void IG12::SetUp()
 	}
 
 	crosshair = gameObject->FindChild("Aim");
+	crosshair->transform->SetWorldPosition(float3(bombPosition.x, 500, bombPosition.y));
 
 	if (healthBarCanvasObject)
 	{
@@ -293,7 +294,7 @@ void IG12::ManageMovement()
 	else if (spiralAttackTimer.IsActive() && spiralAttackTimer.ReadSec() >= spiralAttackDuration)
 	{
 		spiralAttackTimer.Stop();
-		if (health <= 5)
+		if (health <= (maxHealth * 0.5))
 			secondStageTimer.Start();
 		else
 			firstStageTimer.Start();
@@ -302,7 +303,7 @@ void IG12::ManageMovement()
 	{
 		lineAttackTimer.Stop();
 		lineAttackShots += 15;
-		if (health <= 5)
+		if (health <= (maxHealth * 0.5))
 			secondStageTimer.Start();
 		else
 			firstStageTimer.Start();
@@ -311,7 +312,7 @@ void IG12::ManageMovement()
 	{
 		bombingAttackTimer.Stop();
 		bombingAttackShots = 5;
-		if (health <= 5)
+		if (health <= (maxHealth * 0.5))
 			secondStageTimer.Start();
 		else
 			firstStageTimer.Start();
@@ -319,14 +320,14 @@ void IG12::ManageMovement()
 	else if (bombingAndSpiralAttackTimer.IsActive() && bombingAndSpiralAttackTimer.ReadSec() >= bombingAttackDuration)
 	{
 		bombingAndSpiralAttackTimer.Stop();
-		if (health <= 5)
+		if (health <= (maxHealth * 0.5))
 			secondStageTimer.Start();
 		else
 			firstStageTimer.Start();
 	}
 	else if (!firstStageTimer.IsActive() && !secondStageTimer.IsActive())
 	{
-		if (health <= 5)
+		if (health <= (maxHealth * 0.5))
 			secondStageTimer.Start();
 		else
 			firstStageTimer.Start();
@@ -394,7 +395,7 @@ void IG12::ManageMovement()
 		{
 			moveState = IG12State::IDLE;
 			attackDistance = userAttackDistance;
-			if (health > 5.0f)
+			if (health > (maxHealth * 0.5))
 			{
 				if (blasterWeapon)
 				{
@@ -481,7 +482,7 @@ void IG12::ManageMovement()
 		{
 			moveState = IG12State::IDLE;
 
-			if (health > 5.0f)
+			if (health > (maxHealth * 0.5))
 			{
 				if (blasterWeapon)
 				{
@@ -524,7 +525,7 @@ void IG12::ManageMovement()
 		{
 			moveState = IG12State::IDLE;
 
-			if (health > 5.0f)
+			if (health > (maxHealth * 0.5))
 			{
 				if (blasterWeapon)
 				{
@@ -588,7 +589,7 @@ void IG12::ManageAim()
 	case AimState::SHOOT:
 		currentAnimation = &shootAnimation; // temporary till torso gets an independent animator
 
-		if (moveState != IG12State::SPIRAL_ATTACK)
+		if (moveState != IG12State::SPIRAL_ATTACK && moveState != IG12State::BOMBING_AND_SPIRAL_ATTACK)
 			secondaryAimDirection = aimDirection;
 		if (moveState == IG12State::LINE_ATTACK)
 			lineAttackShots--;
@@ -684,7 +685,7 @@ bool IG12::SpiralAttack()
 
 	if (blasterWeapon)
 	{
-		blasterWeapon->fireRate = 0.0001f;
+		blasterWeapon->fireRate = 0.01f;
 		blasterWeapon->ammo = 20;
 		blasterWeapon->projectilesPerShot = 3;
 		blasterWeapon->shotSpreadArea = 5;
@@ -710,7 +711,7 @@ bool IG12::LineAttack()
 {
 	if (blasterWeapon)
 	{
-		blasterWeapon->fireRate = 0.001f;
+		blasterWeapon->fireRate = 0.01f;
 		blasterWeapon->projectilesPerShot = 3;
 		blasterWeapon->ammo = 30;
 		blasterWeapon->shotSpreadArea = 3;
@@ -760,7 +761,10 @@ bool IG12::BombingAttack()
 	}
 
 	if (!bombingAttackTimer.IsActive())
+	{
+		crosshair->transform->SetWorldPosition(float3(bombPosition.x, 500, bombPosition.y));
 		return false;
+	}
 
 	return true;
 }
@@ -785,7 +789,7 @@ bool IG12::BombingAndSpiralAttack()
 
 	if (blasterWeapon)
 	{
-		blasterWeapon->fireRate = 0.0001f;
+		blasterWeapon->fireRate = 0.01f;
 		blasterWeapon->ammo = 20;
 		blasterWeapon->projectilesPerShot = 3;
 		blasterWeapon->shotSpreadArea = 5;
@@ -821,7 +825,10 @@ bool IG12::BombingAndSpiralAttack()
 	}
 
 	if (!bombingAndSpiralAttackTimer.IsActive())
+	{
+		crosshair->transform->SetWorldPosition(float3(bombPosition.x, 500, bombPosition.y));
 		return false;
+	}
 
 	return true;
 }
