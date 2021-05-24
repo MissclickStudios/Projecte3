@@ -78,7 +78,7 @@ void GameManager::Awake()
 			}
 
 			//Load story & dialogs
-			storyDialogState.Load(jsonState);
+			storyDialogState.Load(&jsonState);
 
 			//TODO:Spawn player and everything on the level
 			GameObject* playerSpawn = App->scene->GetGameObjectByName(SpawnPointName.c_str());
@@ -88,8 +88,8 @@ void GameManager::Awake()
 				playerGameObject = App->scene->InstantiatePrefab(playerPrefab.uid, App->scene->GetSceneRoot(), spawnPoint,Quat::identity);
 			}
 
-			//if(storyDialogState.defeatedIG11FirstTime)
-				groguGameObject = App->scene->InstantiatePrefab(groguPrefab.uid, App->scene->GetSceneRoot(),float3::zero, Quat::identity);
+			if(storyDialogState.defeatedIG11FirstTime)
+				groguGameObject = App->scene->InstantiatePrefab(groguPrefab.uid, App->scene->GetSceneRoot(), playerGameObject->transform->GetWorldPosition(), Quat::identity);
 
 			if (playerSpawn != nullptr && groguGameObject != nullptr && storyDialogState.defeatedIG11FirstTime)
 			{
@@ -574,7 +574,7 @@ void GameManager::Continue()
 			level1Ruins.emplace_back(levelArray2.GetString(i));
 		}
 		//Story
-		storyDialogState.Load(jsonState);
+		storyDialogState.Load(&jsonState);
 
 
 		//TODO:Spawn player and everything on the level
@@ -747,11 +747,12 @@ void GameManager::SaveManagerState()
 		ParsonNode playerNode = jsonState.SetNode("player");
 		playerScript->SaveState(playerNode);
 	}
+
+	storyDialogState.Save(&jsonState);
+
 	char* buffer = nullptr;
 	jsonState.SerializeToFile(saveFileName, &buffer);
 	CoreCrossDllHelpers::CoreReleaseBuffer(&buffer);
-
-	storyDialogState.Save(jsonState);
 }
 
 void GameManager::BackTrackUpdate()
@@ -856,6 +857,7 @@ void GameManager::GateUpdate()
 
 void GameManager::KilledIG11()
 {
+	
 	LOG("Killed IG11");
 	if (!storyDialogState.defeatedIG11FirstTime)
 	{
@@ -912,22 +914,22 @@ GameManager* CreateGameManager() {
 	return script;
 }
 
-void StoryDialogData::Save(ParsonNode &node)
+void StoryDialogData::Save(ParsonNode *node)
 {
-	node.SetBool("visitedHUB", visitedHUB);
-	node.SetBool("defeatedIG11FirstTime", defeatedIG11FirstTime);
-	node.SetBool("defeatedIG12FirstTime", defeatedIG12FirstTime);
-	node.SetBool("talkedToArmorer", talkedToArmorer);
-	node.SetBool("firstTimeHub", firstTimeHub);
-	node.SetBool("talkedToGrogu", talkedToGrogu);
+	node->SetBool("visitedHUB", visitedHUB);
+	node->SetBool("defeatedIG11FirstTime", defeatedIG11FirstTime);
+	node->SetBool("defeatedIG12FirstTime", defeatedIG12FirstTime);
+	node->SetBool("talkedToArmorer", talkedToArmorer);
+	node->SetBool("firstTimeHub", firstTimeHub);
+	node->SetBool("talkedToGrogu", talkedToGrogu);
 }
 
-void StoryDialogData::Load(ParsonNode &node)
+void StoryDialogData::Load(ParsonNode *node)
 {
-	visitedHUB = node.GetBool("visitedHUB");
-	defeatedIG11FirstTime = node.GetBool("defeatedIG11FirstTime");
-	defeatedIG12FirstTime = node.GetBool("defeatedIG12FirstTime");
-	talkedToArmorer = node.GetBool("talkedToArmorer");
-	firstTimeHub = node.GetBool("firstTimeHub");
-	talkedToGrogu = node.GetBool("talkedToGrogu");
+	visitedHUB = node->GetBool("visitedHUB");
+	defeatedIG11FirstTime = node->GetBool("defeatedIG11FirstTime");
+	defeatedIG12FirstTime = node->GetBool("defeatedIG12FirstTime");
+	talkedToArmorer = node->GetBool("talkedToArmorer");
+	firstTimeHub = node->GetBool("firstTimeHub");
+	talkedToGrogu = node->GetBool("talkedToGrogu");
 }

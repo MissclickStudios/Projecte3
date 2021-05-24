@@ -24,6 +24,8 @@ public:
 	std::string gameManagerName;
 	bool isLocked = true;
 
+	bool triggeredNextRoom = false;
+
 	C_AudioSource* quote = nullptr;
 private:
 	GameObject* gameManager = nullptr;

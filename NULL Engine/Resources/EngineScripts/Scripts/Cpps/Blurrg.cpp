@@ -1,4 +1,5 @@
 #include "Blurrg.h"
+#include "Random.h"
 
 #include "Application.h"
 #include "M_Scene.h"
@@ -59,6 +60,9 @@ Blurrg* CreateBlurrg()
 
 	// Rest
 	INSPECTOR_DRAGABLE_FLOAT(script->restDuration);
+
+	INSPECTOR_SLIDER_INT(script->minCredits, 0, 1000);
+	INSPECTOR_SLIDER_INT(script->maxCredits, 0, 1000);
 
 	//// Animations ---
 	//// Movement
@@ -218,7 +222,8 @@ void Blurrg::Behavior()
 			if (player)
 			{
 				Player* playerScript = (Player*)player->GetScript("Player");
-				playerScript->currency += 50;
+
+				playerScript->currency += Random::LCG::GetBoundedRandomFloat(minCredits,maxCredits);
 			}
 			deathTimer.Start();
 			state = BlurrgState::DEAD;

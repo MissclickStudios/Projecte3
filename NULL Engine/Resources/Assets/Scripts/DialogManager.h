@@ -73,6 +73,8 @@ public:
 	DialogSystem* LoadDialogSystem(const char* dialogName); //Loads dialog for the scene to be used later (Pass only the name of the dialog)
 
 	DialogState GetDialogState();
+
+	void EndDialog();
 private:
 
 public:
