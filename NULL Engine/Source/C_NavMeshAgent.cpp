@@ -125,7 +125,8 @@ void C_NavMeshAgent::StopAndCancelDestination()
 	indexPath = 0;
 	path.clear();
 	hasDestination = false;
-	rigidBody->Set2DVelocity({ 0.0f,0.0f });
+	if(rigidBody != nullptr)
+		rigidBody->Set2DVelocity({ 0.0f,0.0f });
 }
 
 const float3 C_NavMeshAgent::GetNextPathPoint() const
