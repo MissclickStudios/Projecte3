@@ -902,7 +902,7 @@ void GameObject::GetUiComponents(std::vector<C_UI*>& uiComponents)
 {
 	for (uint i = 0; i < components.size(); ++i)
 	{																					
-		if (components[i] != nullptr && (components[i]->GetType() == ComponentType::UI_BUTTON || components[i]->GetType() == ComponentType::UI_IMAGE || components[i]->GetType() == ComponentType::UI_TEXT) || components[i]->GetType() == ComponentType::UI_CHECKBOX)
+		if (components[i] != nullptr && (components[i]->GetType() == ComponentType::UI_BUTTON || components[i]->GetType() == ComponentType::UI_IMAGE || components[i]->GetType() == ComponentType::UI_TEXT) || components[i]->GetType() == ComponentType::UI_CHECKBOX || components[i]->GetType() == ComponentType::UI_IMAGE || components[i]->GetType() == ComponentType::UI_TEXT || components[i]->GetType() == ComponentType::UI_SLIDER)
 			uiComponents.push_back((C_UI*)components[i]);						
 	}																						
 }
@@ -911,7 +911,7 @@ C_UI* GameObject::GetUiComponent()
 {
 	for (uint i = 0; i < components.size(); ++i)
 	{
-		if (components[i] != nullptr && (components[i]->GetType() == ComponentType::UI_BUTTON || components[i]->GetType() == ComponentType::UI_IMAGE || components[i]->GetType() == ComponentType::UI_TEXT || components[i]->GetType() == ComponentType::UI_CHECKBOX))
+		if (components[i] != nullptr && (components[i]->GetType() == ComponentType::UI_BUTTON || components[i]->GetType() == ComponentType::UI_IMAGE || components[i]->GetType() == ComponentType::UI_TEXT || components[i]->GetType() == ComponentType::UI_CHECKBOX || components[i]->GetType() == ComponentType::UI_IMAGE || components[i]->GetType() == ComponentType::UI_TEXT) || components[i]->GetType() == ComponentType::UI_SLIDER)
 			return (C_UI*)components[i];
 	}
 	return nullptr;
