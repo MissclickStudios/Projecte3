@@ -580,22 +580,6 @@ void Player::SetPlayerInteraction(InteractionType type, float duration)
 	case InteractionType::OPEN_CHEST:		{ OpenChest(); }	break;
 	case InteractionType::SIGNAL_GROGU:		{ SignalGrogu(); }	break;
 	}
-
-	/*if (duration != 0.0f)
-	{
-		interactionDuration = duration;
-	}
-	else
-	{
-		switch (type)
-		{
-		case InteractionType::TALK:				{ interactionDuration = GetAnimatorClipDuration("Talk"); }			break;
-		case InteractionType::USE:				{ interactionDuration = GetAnimatorClipDuration("Use"); }			break;
-		case InteractionType::BUY:				{ interactionDuration = GetAnimatorClipDuration("Use"); }			break;
-		case InteractionType::OPEN_CHEST:		{ interactionDuration = GetAnimatorClipDuration("OpenChest"); }		break;
-		case InteractionType::SIGNAL_GROGU:		{ interactionDuration = GetAnimatorClipDuration("SignalGrogu"); }	break;
-		}
-	}*/
 }
 
 void Player::AnimatePlayer()
@@ -921,6 +905,7 @@ void Player::ManageMovement()
 		if (health <= 0.0f)
 		{
 			moveState = PlayerState::DEAD_IN;
+			aimState = AimState::IDLE;
 		}
 		else
 		{
