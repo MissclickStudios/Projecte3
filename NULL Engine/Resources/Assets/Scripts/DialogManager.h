@@ -81,8 +81,6 @@ public:
 	bool StartDialog(const char* dialogName); // dialogName = Name of the dialog only
 	void StartDialog(DialogSystem* dialogSystem);
 
-	DialogState GetDialogState();
-
 public:
 	C_Canvas* dialogCanvas = nullptr;
 	C_UI_Image* speakerImage = nullptr;

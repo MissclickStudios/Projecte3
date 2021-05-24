@@ -49,14 +49,62 @@
             "GameObjectUID": 649823649,
             "ModelResourceUID": 385458923,
             "ModelAssetsPath": "Assets\/Models\/Props\/bullet.fbx"
-        },
-        {
-            "GameObjectUID": 649823649,
-            "ModelResourceUID": 385458923,
-            "ModelAssetsPath": "Assets\/Models\/Props\/bullet.fbx"
         }
     ],
     "Game Objects": [
+        {
+            "UID": 48431673,
+            "ParentUID": 503302045,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Wall05",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        4.8794851303100586,
+                        9.7063074111938477,
+                        2.1961650848388672
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0.30070579051971436,
+                        0,
+                        0.95371699333190918
+                    ],
+                    "LocalScale": [
+                        0.99999994039535522,
+                        1,
+                        0.99999994039535522
+                    ]
+                },
+                {
+                    "Type": 8,
+                    "Is Static": true,
+                    "Filter": "default"
+                },
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 2,
+                    "Size Y": 20,
+                    "Size Z": 50,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
+                }
+            ]
+        },
         {
             "UID": 58266801,
             "ParentUID": 569967658,
@@ -268,7 +316,7 @@
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
+            "ShowBoundingBoxes": true,
             "NavigationInfo": {
                 "isNavigable": false,
                 "navigationArea": 0
@@ -277,9 +325,9 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        -43.964881896972656,
-                        104.10703277587891,
-                        219.40119934082031
+                        227.59819030761719,
+                        120.99998474121094,
+                        167.88995361328125
                     ],
                     "LocalRotation": [
                         -0.42261835932731628,
@@ -324,6 +372,59 @@
                             "string": "Mandalorian"
                         }
                     ]
+                }
+            ]
+        },
+        {
+            "UID": 81870806,
+            "ParentUID": 503302045,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Wall20",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        16.488071441650391,
+                        9.8219356536865234,
+                        253.29080200195313
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0.42261835932731628,
+                        0,
+                        0.90630775690078735
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 8,
+                    "Is Static": true,
+                    "Filter": "default"
+                },
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 2,
+                    "Size Y": 20,
+                    "Size Z": 50,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
                 }
             ]
         },
@@ -393,6 +494,112 @@
                     "Name": "HalfHeartHit",
                     "Name1": "FullHeartHit",
                     "Name2": ""
+                }
+            ]
+        },
+        {
+            "UID": 97942861,
+            "ParentUID": 1023928555,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Interior10",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        139.34860229492188,
+                        4.6556644439697266,
+                        33.444194793701172
+                    ],
+                    "LocalRotation": [
+                        0,
+                        -0.087155744433403015,
+                        0,
+                        0.99619472026824951
+                    ],
+                    "LocalScale": [
+                        0.99999994039535522,
+                        1,
+                        0.99999994039535522
+                    ]
+                },
+                {
+                    "Type": 8,
+                    "Is Static": true,
+                    "Filter": "default"
+                },
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 15,
+                    "Size Y": 10,
+                    "Size Z": 5,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
+                }
+            ]
+        },
+        {
+            "UID": 99478372,
+            "ParentUID": 1023928555,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Interior21",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        198.22715759277344,
+                        0.73834609985351563,
+                        92.035537719726563
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 8,
+                    "Is Static": true,
+                    "Filter": "default"
+                },
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 10,
+                    "Size Y": 10,
+                    "Size Z": 5,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
                 }
             ]
         },
@@ -556,20 +763,20 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        95.572532653808594,
-                        7.5140399932861328,
-                        -107.783935546875
+                        283.38375854492188,
+                        5.4698605537414551,
+                        -206.45184326171875
                     ],
                     "LocalRotation": [
                         -6.1891483937870362e-08,
                         0.70795571804046631,
                         -6.174295208438707e-08,
-                        0.70625686645507812
+                        0.70625686645507813
                     ],
                     "LocalScale": [
                         1,
                         1.0000001192092896,
-                        0.27761393785476685
+                        0.27761399745941162
                     ]
                 },
                 {
@@ -583,7 +790,7 @@
                     "Show Collider": true,
                     "Size X": 5,
                     "Size Y": 10,
-                    "Size Z": 20,
+                    "Size Z": 40,
                     "Center X": 0,
                     "Center Y": 0,
                     "Center Z": 0
@@ -606,6 +813,271 @@
                             "float": 5
                         }
                     ]
+                }
+            ]
+        },
+        {
+            "UID": 164967051,
+            "ParentUID": 1023928555,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Interior16",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        240.52656555175781,
+                        3.5766644477844238,
+                        -129.09764099121094
+                    ],
+                    "LocalRotation": [
+                        0,
+                        -0.342020183801651,
+                        0,
+                        0.93969261646270752
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 8,
+                    "Is Static": true,
+                    "Filter": "default"
+                },
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 10,
+                    "Size Y": 10,
+                    "Size Z": 5,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
+                }
+            ]
+        },
+        {
+            "UID": 184424150,
+            "ParentUID": 1023928555,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Interior12",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        175.92266845703125,
+                        4.8543782234191895,
+                        -26.676673889160156
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 8,
+                    "Is Static": true,
+                    "Filter": "default"
+                },
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 32,
+                    "Size Y": 10,
+                    "Size Z": 7,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
+                }
+            ]
+        },
+        {
+            "UID": 185168015,
+            "ParentUID": 503302045,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Wall08",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        105.18920135498047,
+                        9.7578372955322266,
+                        -88.753494262695313
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 8,
+                    "Is Static": true,
+                    "Filter": "default"
+                },
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 2,
+                    "Size Y": 20,
+                    "Size Z": 35,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
+                }
+            ]
+        },
+        {
+            "UID": 186530009,
+            "ParentUID": 1023928555,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Interior13",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        188.91026306152344,
+                        4.2295775413513184,
+                        -31.822273254394531
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 8,
+                    "Is Static": true,
+                    "Filter": "default"
+                },
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 6,
+                    "Size Y": 10,
+                    "Size Z": 10,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
+                }
+            ]
+        },
+        {
+            "UID": 195465063,
+            "ParentUID": 1023928555,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Interior11",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        68.982856750488281,
+                        8.3161239624023438,
+                        -3.3378467559814453
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 8,
+                    "Is Static": true,
+                    "Filter": "default"
+                },
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 7,
+                    "Size Y": 20,
+                    "Size Z": 35,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
                 }
             ]
         },
@@ -732,7 +1204,7 @@
                         "X": 0,
                         "Y": 0,
                         "W": 1.0926049947738647,
-                        "H": 0.5787392258644104
+                        "H": 0.57391655445098877
                     }
                 }
             ]
@@ -807,6 +1279,59 @@
             ]
         },
         {
+            "UID": 230582006,
+            "ParentUID": 503302045,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Wall12",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        263.09063720703125,
+                        10.002071380615234,
+                        -219.83335876464844
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 8,
+                    "Is Static": true,
+                    "Filter": "default"
+                },
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 2,
+                    "Size Y": 20,
+                    "Size Z": 100,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
+                }
+            ]
+        },
+        {
             "UID": 255603945,
             "ParentUID": 569967658,
             "PrefabID": 0,
@@ -830,10 +1355,10 @@
                         -1744.274658203125
                     ],
                     "LocalRotation": [
-                        -0.59492874145507812,
+                        -0.59492874145507813,
                         -0.38217762112617493,
                         -0.38217762112617493,
-                        0.59492874145507812
+                        0.59492874145507813
                     ],
                     "LocalScale": [
                         1.1861280202865601,
@@ -1068,12 +1593,12 @@
             ]
         },
         {
-            "UID": 334275680,
-            "ParentUID": 649823649,
+            "UID": 307116606,
+            "ParentUID": 1023928555,
             "PrefabID": 0,
             "IsPrefab": false,
-            "Name": "Cylinder001",
-            "IsActive": false,
+            "Name": "Interior18",
+            "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
@@ -1086,53 +1611,37 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        0,
-                        0,
-                        0
+                        276.46676635742188,
+                        3.3815927505493164,
+                        -67.554954528808594
                     ],
                     "LocalRotation": [
-                        -0.49999997019767761,
-                        0.49999997019767761,
-                        -0.49999997019767761,
-                        0.49999997019767761
+                        0,
+                        0,
+                        0,
+                        1
                     ],
                     "LocalScale": [
-                        0.053197000175714493,
-                        0.053197000175714493,
-                        0.053197000175714493
+                        1,
+                        1,
+                        1
                     ]
                 },
                 {
-                    "Type": 2,
-                    "UID": 1894272663,
-                    "Name": "Cylinder001.nemesh",
-                    "Path": "Library\/Meshes\/1894272663.nemesh",
-                    "File": "1894272663.nemesh",
-                    "ShowWireframe": false,
-                    "ShowBoundingBox": false,
-                    "Outline": false,
-                    "OutlineThickness": -2147483648,
-                    "OutlineColor": [
-                        0,
-                        0,
-                        0,
-                        0
-                    ]
+                    "Type": 8,
+                    "Is Static": true,
+                    "Filter": "default"
                 },
                 {
-                    "Type": 3,
-                    "Material": {
-                        "UID": 2038824806,
-                        "Color": [
-                            1,
-                            0,
-                            0,
-                            1
-                        ],
-                        "Name": "Cylinder001.nemat",
-                        "Path": "Library\/Materials\/2038824806.nemat",
-                        "File": "2038824806.nemat"
-                    }
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 40,
+                    "Size Y": 10,
+                    "Size Z": 9,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
                 }
             ]
         },
@@ -1193,6 +1702,59 @@
                         "LibaryPath": "Library\/Shaders\/1025410539.neshader",
                         "LibraryFile": "1025410539.neshader"
                     }
+                }
+            ]
+        },
+        {
+            "UID": 366832218,
+            "ParentUID": 503302045,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Wall07",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        30.831558227539063,
+                        10.09705638885498,
+                        -72.470962524414063
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 8,
+                    "Is Static": true,
+                    "Filter": "default"
+                },
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 150,
+                    "Size Y": 20,
+                    "Size Z": 2,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
                 }
             ]
         },
@@ -1309,8 +1871,61 @@
                         "X": 0,
                         "Y": 0,
                         "W": 1.0926049947738647,
-                        "H": 0.5787392258644104
+                        "H": 0.57391655445098877
                     }
+                }
+            ]
+        },
+        {
+            "UID": 407953355,
+            "ParentUID": 503302045,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Wall09",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        136.88125610351563,
+                        10.09053897857666,
+                        -102.45756530761719
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 8,
+                    "Is Static": true,
+                    "Filter": "default"
+                },
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 75,
+                    "Size Y": 20,
+                    "Size Z": 2,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
                 }
             ]
         },
@@ -1431,6 +2046,43 @@
                         "LibaryPath": "Library\/Shaders\/1025410539.neshader",
                         "LibraryFile": "1025410539.neshader"
                     }
+                }
+            ]
+        },
+        {
+            "UID": 503302045,
+            "ParentUID": 888400124,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "WallsColliders",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
                 }
             ]
         },
@@ -1557,7 +2209,7 @@
                         "X": 0,
                         "Y": 0,
                         "W": 1.0926049947738647,
-                        "H": 0.5787392258644104
+                        "H": 0.57391655445098877
                     }
                 },
                 {
@@ -1613,6 +2265,112 @@
                             "string": "AmmoText"
                         }
                     ]
+                }
+            ]
+        },
+        {
+            "UID": 551789581,
+            "ParentUID": 503302045,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Wall15",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        348.52716064453125,
+                        9.3537845611572266,
+                        77.913177490234375
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 8,
+                    "Is Static": true,
+                    "Filter": "default"
+                },
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 2,
+                    "Size Y": 20,
+                    "Size Z": 175,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
+                }
+            ]
+        },
+        {
+            "UID": 565527970,
+            "ParentUID": 503302045,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Wall03",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        78.317337036132813,
+                        9.6049041748046875,
+                        72.233566284179688
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 8,
+                    "Is Static": true,
+                    "Filter": "default"
+                },
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 5,
+                    "Size Y": 20,
+                    "Size Z": 120,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
                 }
             ]
         },
@@ -1826,78 +2584,6 @@
             ]
         },
         {
-            "UID": 649823649,
-            "ParentUID": 923142133,
-            "PrefabID": 0,
-            "IsPrefab": false,
-            "Name": "Bullet0",
-            "IsActive": false,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
-            "NavigationInfo": {
-                "isNavigable": false,
-                "navigationArea": 0
-            },
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        0,
-                        0
-                    ],
-                    "LocalRotation": [
-                        0,
-                        1,
-                        0,
-                        4.3711388286737929e-08
-                    ],
-                    "LocalScale": [
-                        0.50000005960464478,
-                        0.5,
-                        0.50000005960464478
-                    ]
-                },
-                {
-                    "Type": 8,
-                    "Is Static": false,
-                    "Filter": "NOT FOUND",
-                    "Mass": 10,
-                    "Density": 1,
-                    "Linear Damping": 0,
-                    "Angular Damping": 0,
-                    "Use Gravity": true,
-                    "Is Kinematic": true,
-                    "Freeze Position X": false,
-                    "Freeze Position Y": true,
-                    "Freeze Position Z": false,
-                    "Freeze Rotation X": true,
-                    "Freeze Rotation Y": true,
-                    "Freeze Rotation Z": true
-                },
-                {
-                    "Type": 9,
-                    "Is Trigger": true,
-                    "Show Collider": false,
-                    "Size X": 1,
-                    "Size Y": 1,
-                    "Size Z": 1,
-                    "Center X": 0,
-                    "Center Y": 0,
-                    "Center Z": 0
-                },
-                {
-                    "Type": 14,
-                    "Playing Event": [
-                        "Mando_blaster_shot",
-                        4105130485
-                    ]
-                }
-            ]
-        },
-        {
             "UID": 672770593,
             "ParentUID": 569967658,
             "PrefabID": 0,
@@ -1975,6 +2661,59 @@
                         "LibaryPath": "Library\/Shaders\/800223282.neshader",
                         "LibraryFile": "800223282.neshader"
                     }
+                }
+            ]
+        },
+        {
+            "UID": 696603691,
+            "ParentUID": 1023928555,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Interior17",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        233.77168273925781,
+                        4.882319450378418,
+                        -113.16730499267578
+                    ],
+                    "LocalRotation": [
+                        0,
+                        -0.342020183801651,
+                        0,
+                        0.93969261646270752
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 8,
+                    "Is Static": true,
+                    "Filter": "default"
+                },
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 6,
+                    "Size Y": 10,
+                    "Size Z": 38,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
                 }
             ]
         },
@@ -2333,11 +3072,11 @@
             ]
         },
         {
-            "UID": 778059141,
-            "ParentUID": 1886328384,
+            "UID": 759146315,
+            "ParentUID": 503302045,
             "PrefabID": 0,
             "IsPrefab": false,
-            "Name": "Floor3",
+            "Name": "Wall11",
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
@@ -2351,9 +3090,9 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        -79.979728698730469,
-                        -4,
-                        -64.9183349609375
+                        214.56007385253906,
+                        9.0497722625732422,
+                        -169.97659301757813
                     ],
                     "LocalRotation": [
                         0,
@@ -2377,8 +3116,114 @@
                     "Is Trigger": false,
                     "Show Collider": true,
                     "Size X": 100,
-                    "Size Y": 10,
-                    "Size Z": 120,
+                    "Size Y": 20,
+                    "Size Z": 2,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
+                }
+            ]
+        },
+        {
+            "UID": 760073285,
+            "ParentUID": 503302045,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Wall13",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        295.8072509765625,
+                        9.4159164428710938,
+                        -128.47837829589844
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 8,
+                    "Is Static": true,
+                    "Filter": "default"
+                },
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 2,
+                    "Size Y": 20,
+                    "Size Z": 250,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
+                }
+            ]
+        },
+        {
+            "UID": 775556615,
+            "ParentUID": 503302045,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Wall14",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        332.5469970703125,
+                        9.6404018402099609,
+                        -3.4828624725341797
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 8,
+                    "Is Static": true,
+                    "Filter": "default"
+                },
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 75,
+                    "Size Y": 20,
+                    "Size Z": 2,
                     "Center X": 0,
                     "Center Y": 0,
                     "Center Z": 0
@@ -2442,6 +3287,59 @@
                         "LibaryPath": "Library\/Shaders\/1025410539.neshader",
                         "LibraryFile": "1025410539.neshader"
                     }
+                }
+            ]
+        },
+        {
+            "UID": 807718944,
+            "ParentUID": 1023928555,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Interior07",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        147.08021545410156,
+                        4.0108561515808105,
+                        115.52774047851563
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 8,
+                    "Is Static": true,
+                    "Filter": "default"
+                },
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 35,
+                    "Size Y": 10,
+                    "Size Z": 7,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
                 }
             ]
         },
@@ -2528,7 +3426,7 @@
         },
         {
             "UID": 888400124,
-            "ParentUID": 93566235,
+            "ParentUID": 956407886,
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "MainScene",
@@ -2560,6 +3458,59 @@
                         1,
                         1
                     ]
+                }
+            ]
+        },
+        {
+            "UID": 895780991,
+            "ParentUID": 1023928555,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Interior20",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        193.06742858886719,
+                        4.4815378189086914,
+                        67.919898986816406
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 8,
+                    "Is Static": true,
+                    "Filter": "default"
+                },
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 7,
+                    "Size Y": 10,
+                    "Size Z": 53,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
                 }
             ]
         },
@@ -2645,43 +3596,6 @@
             ]
         },
         {
-            "UID": 923142133,
-            "ParentUID": 888400124,
-            "PrefabID": 0,
-            "IsPrefab": false,
-            "Name": "Bullets",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
-            "NavigationInfo": {
-                "isNavigable": false,
-                "navigationArea": 0
-            },
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        0,
-                        0
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                }
-            ]
-        },
-        {
             "UID": 938839690,
             "ParentUID": 888400124,
             "PrefabID": 592009104,
@@ -2755,59 +3669,6 @@
             ]
         },
         {
-            "UID": 976211103,
-            "ParentUID": 1886328384,
-            "PrefabID": 0,
-            "IsPrefab": false,
-            "Name": "Floor1",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
-            "NavigationInfo": {
-                "isNavigable": false,
-                "navigationArea": 0
-            },
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        -51.926685333251953,
-                        -4,
-                        64.673271179199219
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {
-                    "Type": 8,
-                    "Is Static": true,
-                    "Filter": "default"
-                },
-                {
-                    "Type": 9,
-                    "Is Trigger": false,
-                    "Show Collider": true,
-                    "Size X": 150,
-                    "Size Y": 10,
-                    "Size Z": 120,
-                    "Center X": 0,
-                    "Center Y": 0,
-                    "Center Z": 0
-                }
-            ]
-        },
-        {
             "UID": 992691499,
             "ParentUID": 373384966,
             "PrefabID": 1524961430,
@@ -2864,6 +3725,59 @@
                         "LibaryPath": "Library\/Shaders\/1025410539.neshader",
                         "LibraryFile": "1025410539.neshader"
                     }
+                }
+            ]
+        },
+        {
+            "UID": 995138089,
+            "ParentUID": 1023928555,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Interior01",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        48.60675048828125,
+                        5.9891538619995117,
+                        216.26141357421875
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 8,
+                    "Is Static": true,
+                    "Filter": "default"
+                },
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 15,
+                    "Size Y": 10,
+                    "Size Z": 20,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
                 }
             ]
         },
@@ -3009,11 +3923,11 @@
             ]
         },
         {
-            "UID": 1038267085,
-            "ParentUID": 1886328384,
+            "UID": 1021415190,
+            "ParentUID": 1023928555,
             "PrefabID": 0,
             "IsPrefab": false,
-            "Name": "Floor4",
+            "Name": "Interior19",
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
@@ -3027,9 +3941,9 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        45.078426361083984,
-                        -4,
-                        -57.926212310791016
+                        212.73745727539063,
+                        4.5842680931091309,
+                        44.982368469238281
                     ],
                     "LocalRotation": [
                         0,
@@ -3052,9 +3966,99 @@
                     "Type": 9,
                     "Is Trigger": false,
                     "Show Collider": true,
-                    "Size X": 150,
-                    "Size Y": 10,
-                    "Size Z": 130,
+                    "Size X": 35,
+                    "Size Y": 12,
+                    "Size Z": 7,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
+                }
+            ]
+        },
+        {
+            "UID": 1023928555,
+            "ParentUID": 888400124,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "InteriorsColliders",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1042793294,
+            "ParentUID": 1023928555,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Interior09",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        142.73898315429688,
+                        5.6798648834228516,
+                        49.619140625
+                    ],
+                    "LocalRotation": [
+                        0,
+                        -0.043619390577077866,
+                        0,
+                        0.99904823303222656
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 8,
+                    "Is Static": true,
+                    "Filter": "default"
+                },
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 6,
+                    "Size Y": 12,
+                    "Size Z": 35,
                     "Center X": 0,
                     "Center Y": 0,
                     "Center Z": 0
@@ -3139,6 +4143,112 @@
                         "LibaryPath": "Library\/Shaders\/800223282.neshader",
                         "LibraryFile": "800223282.neshader"
                     }
+                }
+            ]
+        },
+        {
+            "UID": 1094893737,
+            "ParentUID": 1023928555,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Interior06",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        169.89710998535156,
+                        4.6704025268554688,
+                        174.32405090332031
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 8,
+                    "Is Static": true,
+                    "Filter": "default"
+                },
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 7,
+                    "Size Y": 10,
+                    "Size Z": 35,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
+                }
+            ]
+        },
+        {
+            "UID": 1148953778,
+            "ParentUID": 1023928555,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Interior02",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": true,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        64.657798767089844,
+                        8.2868881225585938,
+                        218.47621154785156
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 8,
+                    "Is Static": true,
+                    "Filter": "default"
+                },
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 4,
+                    "Size Y": 20,
+                    "Size Z": 10,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
                 }
             ]
         },
@@ -3236,6 +4346,165 @@
                         "LibaryPath": "Library\/Shaders\/1025410539.neshader",
                         "LibraryFile": "1025410539.neshader"
                     }
+                }
+            ]
+        },
+        {
+            "UID": 1205796414,
+            "ParentUID": 503302045,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Wall02",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        29.260669708251953,
+                        7.9432525634765625,
+                        133.4615478515625
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 8,
+                    "Is Static": true,
+                    "Filter": "default"
+                },
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 100,
+                    "Size Y": 20,
+                    "Size Z": 5,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
+                }
+            ]
+        },
+        {
+            "UID": 1213949620,
+            "ParentUID": 1023928555,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Interior15",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        199.63787841796875,
+                        1.5474553108215332,
+                        -98.480819702148438
+                    ],
+                    "LocalRotation": [
+                        0,
+                        -0.342020183801651,
+                        0,
+                        0.93969261646270752
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 8,
+                    "Is Static": true,
+                    "Filter": "default"
+                },
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 5,
+                    "Size Y": 10,
+                    "Size Z": 10,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
+                }
+            ]
+        },
+        {
+            "UID": 1225305598,
+            "ParentUID": 503302045,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Wall19",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        17.680068969726563,
+                        10.297998428344727,
+                        -57.909904479980469
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0.38268345594406128,
+                        0,
+                        0.92387950420379639
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 8,
+                    "Is Static": true,
+                    "Filter": "default"
+                },
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 50,
+                    "Size Y": 20,
+                    "Size Z": 2,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
                 }
             ]
         },
@@ -3437,6 +4706,59 @@
             ]
         },
         {
+            "UID": 1238980107,
+            "ParentUID": 1023928555,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Interior08",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        132.12931823730469,
+                        2.3207635879516602,
+                        120.52378082275391
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 8,
+                    "Is Static": true,
+                    "Filter": "default"
+                },
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 5,
+                    "Size Y": 7,
+                    "Size Z": 10,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
+                }
+            ]
+        },
+        {
             "UID": 1260548166,
             "ParentUID": 569967658,
             "PrefabID": 0,
@@ -3554,7 +4876,7 @@
                 },
                 {
                     "Type": 22,
-                    "Text": "FPS: 60",
+                    "Text": "FPS: 61",
                     "Color": [
                         1,
                         1,
@@ -3566,6 +4888,112 @@
                     "W": 0.31099998950958252,
                     "H": 0.061000000685453415,
                     "childOrder": 0
+                }
+            ]
+        },
+        {
+            "UID": 1288907520,
+            "ParentUID": 1023928555,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Interior22",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        263.43453979492188,
+                        4.9710087776184082,
+                        70.890151977539063
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 8,
+                    "Is Static": true,
+                    "Filter": "default"
+                },
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 37,
+                    "Size Y": 10,
+                    "Size Z": 6,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
+                }
+            ]
+        },
+        {
+            "UID": 1294250621,
+            "ParentUID": 1023928555,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Interior04",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        142.50732421875,
+                        4.49871826171875,
+                        215.14114379882813
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 8,
+                    "Is Static": true,
+                    "Filter": "default"
+                },
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 37,
+                    "Size Y": 10,
+                    "Size Z": 5,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
                 }
             ]
         },
@@ -3651,6 +5079,59 @@
             ]
         },
         {
+            "UID": 1358024055,
+            "ParentUID": 503302045,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Wall10",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        173.07264709472656,
+                        9.2978057861328125,
+                        -140.260009765625
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 8,
+                    "Is Static": true,
+                    "Filter": "default"
+                },
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 2,
+                    "Size Y": 20,
+                    "Size Z": 75,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
+                }
+            ]
+        },
+        {
             "UID": 1412972901,
             "ParentUID": 530286247,
             "PrefabID": 1524961430,
@@ -3703,6 +5184,59 @@
             ]
         },
         {
+            "UID": 1420132236,
+            "ParentUID": 503302045,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Wall01",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        2.2663345336914063,
+                        9.5800657272338867,
+                        183.14695739746094
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 8,
+                    "Is Static": true,
+                    "Filter": "default"
+                },
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 2,
+                    "Size Y": 20,
+                    "Size Z": 200,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
+                }
+            ]
+        },
+        {
             "UID": 1453496360,
             "ParentUID": 530286247,
             "PrefabID": 1524961430,
@@ -3739,7 +5273,7 @@
                 },
                 {
                     "Type": 22,
-                    "Text": "10 \/ 10",
+                    "Text": "6 \/ 10",
                     "Color": [
                         1,
                         1,
@@ -3935,6 +5469,59 @@
             ]
         },
         {
+            "UID": 1567325228,
+            "ParentUID": 1023928555,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Interior05",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        174.59573364257813,
+                        4.5364418029785156,
+                        190.12538146972656
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 8,
+                    "Is Static": true,
+                    "Filter": "default"
+                },
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 15,
+                    "Size Y": 10,
+                    "Size Z": 5,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
+                }
+            ]
+        },
+        {
             "UID": 1568685475,
             "ParentUID": 530286247,
             "PrefabID": 1524961430,
@@ -3995,6 +5582,59 @@
             ]
         },
         {
+            "UID": 1574136040,
+            "ParentUID": 503302045,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Wall17",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        255.01699829101563,
+                        10.014337539672852,
+                        212.70831298828125
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 8,
+                    "Is Static": true,
+                    "Filter": "default"
+                },
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 5,
+                    "Size Y": 20,
+                    "Size Z": 120,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
+                }
+            ]
+        },
+        {
             "UID": 1580093352,
             "ParentUID": 1846059975,
             "PrefabID": 1524961430,
@@ -4051,6 +5691,165 @@
                         "LibaryPath": "Library\/Shaders\/1025410539.neshader",
                         "LibraryFile": "1025410539.neshader"
                     }
+                }
+            ]
+        },
+        {
+            "UID": 1620368014,
+            "ParentUID": 1023928555,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Interior23",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        279.31576538085938,
+                        0.72506952285766602,
+                        67.16461181640625
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 8,
+                    "Is Static": true,
+                    "Filter": "default"
+                },
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 5,
+                    "Size Y": 10,
+                    "Size Z": 10,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
+                }
+            ]
+        },
+        {
+            "UID": 1628981519,
+            "ParentUID": 503302045,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Wall04",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        28.726325988769531,
+                        8.6029376983642578,
+                        14.172389984130859
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 8,
+                    "Is Static": true,
+                    "Filter": "default"
+                },
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 100,
+                    "Size Y": 20,
+                    "Size Z": 5,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
+                }
+            ]
+        },
+        {
+            "UID": 1653650224,
+            "ParentUID": 1023928555,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Interior14",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        184.75862121582031,
+                        4.5983800888061523,
+                        -104.01322937011719
+                    ],
+                    "LocalRotation": [
+                        0,
+                        -0.342020183801651,
+                        0,
+                        0.93969261646270752
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 8,
+                    "Is Static": true,
+                    "Filter": "default"
+                },
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 35,
+                    "Size Y": 10,
+                    "Size Z": 5,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
                 }
             ]
         },
@@ -4124,6 +5923,165 @@
             ]
         },
         {
+            "UID": 1709585224,
+            "ParentUID": 503302045,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Wall18",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        108.45022583007813,
+                        11.504814147949219,
+                        269.07904052734375
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 8,
+                    "Is Static": true,
+                    "Filter": "default"
+                },
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 300,
+                    "Size Y": 20,
+                    "Size Z": 2,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
+                }
+            ]
+        },
+        {
+            "UID": 1747230999,
+            "ParentUID": 503302045,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Wall16",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        302.697265625,
+                        9.6963357925415039,
+                        154.80145263671875
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 8,
+                    "Is Static": true,
+                    "Filter": "default"
+                },
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 100,
+                    "Size Y": 20,
+                    "Size Z": 5,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
+                }
+            ]
+        },
+        {
+            "UID": 1759228163,
+            "ParentUID": 503302045,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Wall06",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0.78742885589599609,
+                        10.038949966430664,
+                        -33.033660888671875
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 8,
+                    "Is Static": true,
+                    "Filter": "default"
+                },
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 2,
+                    "Size Y": 20,
+                    "Size Z": 100,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
+                }
+            ]
+        },
+        {
             "UID": 1782034460,
             "ParentUID": 530286247,
             "PrefabID": 1524961430,
@@ -4160,7 +6118,7 @@
                 },
                 {
                     "Type": 22,
-                    "Text": "160",
+                    "Text": "0",
                     "Color": [
                         1,
                         1,
@@ -4251,13 +6209,17 @@
                             "Type": 7,
                             "Name": "level1",
                             "vectorstring": [
-                                "Level1_Room4.json",
-                                "Level1_Room9.json",
-                                "Level1_Room1.json",
-                                "Level1_Room3.json",
-                                "Level1_Room7.json",
-                                "Level1_Room6.json",
-                                "Level1_Room5.json"
+                                "Assets\/Scenes\/HUB.json",
+                                "Assets\/Scenes\/InitialL1.json",
+                                "Assets\/Scenes\/Level1_Room4.json",
+                                "Assets\/Scenes\/Level1_Room9.json",
+                                "Assets\/Scenes\/Level1_Room1.json",
+                                "Assets\/Scenes\/Level1_Room3.json",
+                                "Assets\/Scenes\/ShopL1.json",
+                                "Assets\/Scenes\/Level1_Room7.json",
+                                "Assets\/Scenes\/Level1_Room6.json",
+                                "Assets\/Scenes\/Level1_Room5.json",
+                                "Assets\/Scenes\/BossL1.json"
                             ]
                         },
                         {
@@ -4274,13 +6236,16 @@
                             "Type": 7,
                             "Name": "level1Ruins",
                             "vectorstring": [
-                                "Level1_Ruins1.json",
-                                "Level1_Ruins7.json",
-                                "Level1_Ruins3.json",
-                                "Level1_Ruins2.json",
-                                "Level1_Ruins5.json",
-                                "Level1_Ruins6.json",
-                                "Level1_Ruins4.json"
+                                "Assets\/Scenes\/Level1_Ruins1.json",
+                                "Assets\/Scenes\/Level1_Ruins7.json",
+                                "Assets\/Scenes\/Level1_Ruins2.json",
+                                "Assets\/Scenes\/Shop_Ruins.json",
+                                "Assets\/Scenes\/Level1_Ruins3.json",
+                                "Assets\/Scenes\/Level1_Ruins5.json",
+                                "Assets\/Scenes\/Level1_Ruins4.json",
+                                "Assets\/Scenes\/Level1_Ruins6.json",
+                                "Assets\/Scenes\/Boss_Ruins.json",
+                                "Assets\/Scenes\/WinScene.json"
                             ]
                         },
                         {
@@ -4465,6 +6430,59 @@
             ]
         },
         {
+            "UID": 1880494799,
+            "ParentUID": 1023928555,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Interior24",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        332.097900390625,
+                        5.8836326599121094,
+                        52.764457702636719
+                    ],
+                    "LocalRotation": [
+                        0,
+                        -0.2588191032409668,
+                        0,
+                        0.96592581272125244
+                    ],
+                    "LocalScale": [
+                        0.99999994039535522,
+                        1,
+                        0.99999994039535522
+                    ]
+                },
+                {
+                    "Type": 8,
+                    "Is Static": true,
+                    "Filter": "default"
+                },
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 50,
+                    "Size Y": 12,
+                    "Size Z": 8,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
+                }
+            ]
+        },
+        {
             "UID": 1886328384,
             "ParentUID": 888400124,
             "PrefabID": 0,
@@ -4474,7 +6492,7 @@
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": true,
+            "ShowBoundingBoxes": false,
             "NavigationInfo": {
                 "isNavigable": false,
                 "navigationArea": 0
@@ -4483,9 +6501,9 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
+                        -0.34372329711914063,
                         0,
-                        0,
-                        0
+                        -4.2435874938964844
                     ],
                     "LocalRotation": [
                         0,
@@ -4580,9 +6598,9 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        78.082183837890625,
+                        138.11538696289063,
                         -4,
-                        72.607223510742188
+                        -1.7885532379150391
                     ],
                     "LocalRotation": [
                         0,
@@ -4605,9 +6623,62 @@
                     "Type": 9,
                     "Is Trigger": false,
                     "Show Collider": true,
-                    "Size X": 110,
+                    "Size X": 500,
                     "Size Y": 10,
-                    "Size Z": 110,
+                    "Size Z": 600,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
+                }
+            ]
+        },
+        {
+            "UID": 1967997417,
+            "ParentUID": 1023928555,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Interior03",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        80.567924499511719,
+                        9.3912734985351563,
+                        212.27699279785156
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 8,
+                    "Is Static": true,
+                    "Filter": "default"
+                },
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 36,
+                    "Size Y": 20,
+                    "Size Z": 6,
                     "Center X": 0,
                     "Center Y": 0,
                     "Center Z": 0
@@ -4624,7 +6695,7 @@
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": true,
+            "ShowBoundingBoxes": false,
             "NavigationInfo": {
                 "isNavigable": false,
                 "navigationArea": 0
@@ -4633,9 +6704,9 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        -82.757667541503906,
-                        19.843452453613281,
-                        101.89545440673828
+                        22.206016540527344,
+                        19.843450546264648,
+                        217.63313293457031
                     ],
                     "LocalRotation": [
                         0,
@@ -4740,7 +6811,7 @@
                     "Type": 1,
                     "LocalPosition": [
                         1541.1646728515625,
-                        184.01614379882812,
+                        184.01614379882813,
                         -1699.32275390625
                     ],
                     "LocalRotation": [
@@ -4811,7 +6882,7 @@
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": true,
+            "ShowBoundingBoxes": false,
             "NavigationInfo": {
                 "isNavigable": false,
                 "navigationArea": 0
@@ -4821,7 +6892,7 @@
                     "Type": 1,
                     "LocalPosition": [
                         -489.9517822265625,
-                        175.98513793945312,
+                        175.98513793945313,
                         533.27630615234375
                     ],
                     "LocalRotation": [
@@ -5008,6 +7079,59 @@
                     "Name": "HalfHeartHit",
                     "Name1": "FullHeartHit",
                     "Name2": ""
+                }
+            ]
+        },
+        {
+            "UID": 2113333272,
+            "ParentUID": 1023928555,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Interior25",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        310.58709716796875,
+                        4.009890079498291,
+                        45.833465576171875
+                    ],
+                    "LocalRotation": [
+                        0,
+                        -0.2588191032409668,
+                        0,
+                        0.96592581272125244
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 8,
+                    "Is Static": true,
+                    "Filter": "default"
+                },
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 6,
+                    "Size Y": 10,
+                    "Size Z": 10,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
                 }
             ]
         }

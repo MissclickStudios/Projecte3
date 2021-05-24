@@ -10,6 +10,8 @@
 #include "Blaster.h"
 
 #include "MathGeoLib/include/Math/float2.h"
+#include "MathGeoLib/include/Algorithm/Random/LCG.h"
+
 
 enum class IG12State
 {
@@ -21,6 +23,10 @@ enum class IG12State
 	SPIRAL_ATTACK,
 	LINE_ATTACK_IN,
 	LINE_ATTACK,
+	BOMBING_ATTACK_IN,
+	BOMBING_ATTACK,
+	BOMBING_AND_SPIRAL_ATTACK_IN,
+	BOMBING_AND_SPIRAL_ATTACK,
 	DEAD_IN,
 	DEAD
 };
@@ -61,18 +67,30 @@ public:
 
 	// Attack
 	float attackDistance = 0.0f;
+	float userAttackDistance = 0.0f;
+
+	float firstStageAttackCooldown = 0.0f;
+	float secondStageAttackCooldown = 0.0f;
 
 	// Special Attack
+	float spiralAttackDuration = 0.0f;
 	float spiralAttackSpeed = 0.0f;
 	float spiralAttackSpins = 0.0f;
 	float spiralAttackHp = 0.0f;
-	float spiralAttackCooldown = 0.0f;
 
+	float lineAttackDuration = 0.0f;
 	float lineAttackSpeed = 0.0f;
 	float lineAttackSpins = 0.0f;
-	float lineAttackHp = 0.0f;
-	float lineAttackCooldown = 0.0f;
 	float lineAttackShots = 0.0f;
+	float lineAttackHp = 0.0f;
+
+	float bombingAttackDuration = 0.0f;
+	float bombingAttackSpeed = 0.0f;
+	float bombingAttackHp = 0.0f;
+	float bombingAttackShots = 0.0f;
+	float bombingAttackBigAreaSide = 0.0f;
+	float bombingAttackSmallAreaSide = 0.0f;
+	float bombFallingTime = 0.0f;
 
 	// Weapons
 	Prefab blaster;
@@ -108,9 +126,26 @@ private:
 	// Special Attack
 	bool SpiralAttack();
 	bool LineAttack();
+	bool BombingAttack();
+	bool BombingAndSpiralAttack();
 
+	void pickFirstStageAttack();		//Randomly picks an attack from the first stage
+	void pickSecondStageAttack();		//Randomly picks an attack from the second stage
+
+	float2 CalculateNextBomb(float x, float y);
+
+	Timer firstStageTimer;
+	Timer secondStageTimer;
 	Timer spiralAttackTimer;
 	Timer lineAttackTimer;
+	Timer bombingAttackTimer;
+	Timer bombTimer;
+	Timer bombingAndSpiralAttackTimer;
+	
+	float2 bombPosition = float2::zero;
+	float2 playerPosition = float2::zero;
+
+	GameObject* crosshair = nullptr;
 
 	float2 specialAttackStartAim = float2::zero;
 	float specialAttackRot = 0.0f;
@@ -122,6 +157,7 @@ private:
 	GameObject* sniperGameObject = nullptr;
 	Weapon* sniperWeapon = nullptr;
 
+	LCG randomGenerator;
 };
 
 SCRIPTS_FUNCTION IG12* CreateIG12();

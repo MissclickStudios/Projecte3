@@ -23,6 +23,9 @@ C_UI_Checkbox::~C_UI_Checkbox()
 		if (canvas)
 			canvas->RemoveUiElement(this);
 	}
+	// --- Delete Buffers
+	glDeleteBuffers(1, (GLuint*)&VAO);
+	glDeleteBuffers(1, (GLuint*)&VBO);
 }
 
 bool C_UI_Checkbox::Update()

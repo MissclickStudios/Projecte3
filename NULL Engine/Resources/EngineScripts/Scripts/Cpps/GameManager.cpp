@@ -88,7 +88,7 @@ void GameManager::Awake()
 				playerGameObject = App->scene->InstantiatePrefab(playerPrefab.uid, App->scene->GetSceneRoot(), spawnPoint,Quat::identity);
 			}
 
-			if(storyDialogState.defeatedIG11FirstTime)
+			//if(storyDialogState.defeatedIG11FirstTime)
 				groguGameObject = App->scene->InstantiatePrefab(groguPrefab.uid, App->scene->GetSceneRoot(),float3::zero, Quat::identity);
 
 			if (playerSpawn != nullptr && groguGameObject != nullptr && storyDialogState.defeatedIG11FirstTime)
@@ -149,6 +149,8 @@ void GameManager::Awake()
 	{
 		gate = (Gate*)tmp->GetScript("Gate");
 	}
+
+	
 }
 
 void GameManager::Start()
@@ -182,9 +184,9 @@ void GameManager::Start()
 
 	//Camera cutscenes movement
 	cameraGameObject = App->scene->GetGameObjectByName(cameraName.c_str());
+
 	if(cameraGameObject != nullptr)
 		cameraScript = (CameraMovement*)cameraGameObject->GetScript("CameraMovement");
-
 
 	//Start Dialogs based on scene & Advance Story
 	if (dialogManager != nullptr)
@@ -227,10 +229,14 @@ void GameManager::Start()
 
 void GameManager::Update()
 {
-	if (dialogManager->GetDialogState() != DialogState::NO_DIALOG && cameraScript->destinationPoints != nullptr)
-		doCameraCutscene = true;
-	else
-		doCameraCutscene = false;
+	// --- Handle Camera cutscene
+	if (dialogManager != nullptr)
+	{
+		if (dialogManager->GetDialogState() != DialogState::NO_DIALOG && cameraScript->destinationPoints != nullptr)
+			doCameraCutscene = true;
+		else
+			doCameraCutscene = false;
+	}	
 		
 	BackTrackUpdate();
 

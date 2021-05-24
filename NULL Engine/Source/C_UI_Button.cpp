@@ -37,6 +37,9 @@ C_UI_Button::~C_UI_Button()
 		if (canvas)
 			canvas->RemoveUiElement(this);
 	}
+	// --- Delete Buffers
+	glDeleteBuffers(1, (GLuint*)&VAO);
+	glDeleteBuffers(1, (GLuint*)&VBO);
 }
 
 void C_UI_Button::LoadBuffers()
