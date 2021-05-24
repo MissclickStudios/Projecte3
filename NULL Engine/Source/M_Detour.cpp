@@ -610,6 +610,8 @@ bool M_Detour::CalculatePath(float3 sourcePosition, float3 destination, std::vec
 		m_startPosSet = true;
 		m_endPosSet = true;
 	}
+
+	return true;
 }
 
 void M_Detour::ReCalculatePath()
