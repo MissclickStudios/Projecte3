@@ -70,7 +70,7 @@ bool M_ResourceManager::Start()
 	RefreshDirectoryFiles(ASSETS_DIRECTORY);
 	RefreshDirectoryFiles(ENGINE_DIRECTORY);
 
-	//TrimLibrary();
+	TrimLibrary();
 
 	FindPrefabs();
 
