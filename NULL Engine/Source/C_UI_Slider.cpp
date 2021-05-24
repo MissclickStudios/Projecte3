@@ -9,7 +9,7 @@
 #include "Dependencies/glew/include/glew.h"
 #include "JSONParser.h"
 
-C_UI_Slider::C_UI_Slider(GameObject* owner, Rect2D rect) : C_UI(owner, ComponentType::UI_BUTTON, true, rect)
+C_UI_Slider::C_UI_Slider(GameObject* owner, Rect2D rect) : C_UI(owner, ComponentType::UI_SLIDER, true, rect)
 {
 	LoadBuffers();
 }
