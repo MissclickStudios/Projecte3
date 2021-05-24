@@ -9,6 +9,7 @@
 
 class C_AudioSource;
 class C_2DAnimator;
+class C_BoxCollider;
 
 class SCRIPTS_API Grogu : public Entity ALLOWED_INHERITANCE
 {
@@ -31,27 +32,19 @@ public:
 	GameObject* player = nullptr;
 	std::string playerName = "Mandalorian";
 
-	float abilityCooldown = 0.0f;
-	float AbilityCooldown() { return abilityCooldown / cooldownModifier; }
-
 private:
 
 	// Logic
 	void ManageMovement();
 	void ManageRotation();
-	void ManageAbility();
 
 	// Actions
 	void Movement();
-	void Ability();
 
-	float3 position = float3::zero;
-	float2 aimDirection = float2::zero;
-	Timer abilityCooldownTimer;
+	float3 direction = float3::zero;
 
 public:
 	float maxDistanceToMando = 7.0f;
-
 
 };
 
