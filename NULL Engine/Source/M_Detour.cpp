@@ -50,6 +50,9 @@ bool M_Detour::Init(ParsonNode& root)
 	// Set default size of box around points to look for nav polygons
 	m_Extents[0] = 32.0f; m_Extents[1] = 32.0f; m_Extents[2] = 32.0f;
 
+
+	debugDraw = false;
+
 	return true;
 }
 
