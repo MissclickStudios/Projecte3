@@ -1190,6 +1190,7 @@ void Player::Shoot()
 void Player::ReloadIn()
 {
 	aimState = AimState::RELOAD;
+	primaryWeaponImage->PlayAnimation(false, 3);
 }
 
 void Player::Reload()
