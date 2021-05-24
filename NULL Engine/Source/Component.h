@@ -48,7 +48,8 @@ enum class ComponentType
 
 	NAVMESH_AGENT,											// --- NAVIGATION
 
-	UI_CHECKBOX
+	UI_CHECKBOX,
+	UI_SLIDER
 };
 
 class MISSCLICK_API Component
