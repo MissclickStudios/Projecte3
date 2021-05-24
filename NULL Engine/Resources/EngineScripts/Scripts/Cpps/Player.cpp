@@ -656,10 +656,10 @@ void Player::AnimatePlayer()
 			{
 				fromPreview = false;
 
-				//AnimatorClip* previewClip = preview->GetCurrentClip();
+				AnimatorClip* previewClip = preview->GetCurrentClip();
 
-				//if ((previewClip == nullptr) || (previewClip->GetName() != torsoInfo->name))										// If no clip playing or animation/clip changed
-				//	animator->PlayClip(preview->GetName(), torsoInfo->name.c_str(), torsoInfo->blendTime);
+				if ((previewClip == nullptr) || (previewClip->GetName() != torsoInfo->name))										// If no clip playing or animation/clip changed
+					animator->PlayClip(preview->GetName(), torsoInfo->name.c_str(), torsoInfo->blendTime);
 
 				/*if (hip != nullptr)
 					hip->transform->Rotate()*/
