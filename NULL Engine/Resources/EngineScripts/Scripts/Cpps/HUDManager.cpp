@@ -163,7 +163,7 @@ void HUDManager::Update()
 				hitAlready = true;
 			}
 		}
-
+		/*
 		//Reload primary weapon
 		if (primaryWeaponImage != nullptr)
 		{
@@ -184,6 +184,7 @@ void HUDManager::Update()
 			if (App->input->GetGameControllerButton(1) == ButtonState::BUTTON_DOWN)
 				primaryWeaponImage->PlayAnimation(false, 2);
 		}
+		*/
 /*
 		//Reload secondary weapon
 		if (secondaryWeaponImage != nullptr)
