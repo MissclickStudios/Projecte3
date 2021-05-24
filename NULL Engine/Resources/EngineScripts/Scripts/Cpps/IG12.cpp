@@ -531,7 +531,7 @@ void IG12::ManageAim()
 			currentAnimation = nullptr;
 			aimState = AimState::ON_GUARD;
 			break;
-		case ShootState::WAINTING_FOR_NEXT:
+		case ShootState::WAITING_FOR_NEXT:
 			break;
 		case ShootState::FIRED_PROJECTILE:
 			currentAnimation = nullptr;
@@ -551,7 +551,7 @@ void IG12::ManageAim()
 			currentAnimation = nullptr;
 			aimState = AimState::ON_GUARD;
 			break;
-		case ShootState::WAINTING_FOR_NEXT:
+		case ShootState::WAITING_FOR_NEXT:
 			break;
 		case ShootState::FIRED_PROJECTILE:
 			currentAnimation = nullptr;
