@@ -110,17 +110,10 @@ void main()
        }
    }
     
-   vec4 texColor;
-   if(hasTexture)
-   {
-   		vec2 displaced_TexCoord = vec2(TexCoord.x + (Time/512)*0.02* wind_direction.x, TexCoord.y + (Time/512)*0.02* wind_direction.y);
-   		texColor = vec4(0.93, 0.54, 0.38, texture(ourTexture, displaced_TexCoord).r*0.3);
+   	vec2 displaced_TexCoord = vec2(TexCoord.x + (Time/512)*0.02* wind_direction.x, TexCoord.y + (Time/512)*0.02* wind_direction.y);
+   	vec4 texColor = vec4(0.93, 0.54, 0.38, texture(ourTexture, displaced_TexCoord).r*0.3);
 		
-   }
- 	else{
-   		texColor = vec4(1.0, 0.0, 0.5, 0.5);
- 	} 
- 
+  
   color = outputColor * texColor;
 
 
@@ -212,6 +205,7 @@ vec4 CalculatePointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewD
 }
 
 #endif
+
 
 
 
