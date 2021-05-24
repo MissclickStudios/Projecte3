@@ -85,6 +85,8 @@ public:																																// --- C_ANIMATOR MANAGEMENT METHODS
 	void			SetTrackWithClip							(AnimatorTrack* track, AnimatorClip* clip);
 
 public:																																// --- GET/SET METHODS
+	GameObject*		GetRootBone									() const;
+	
 	std::string		GetAnimatorStateAsString					() const;
 	std::vector<LineSegment> GetDisplayBones					() const;
 	
@@ -106,12 +108,11 @@ public:																																// --- GET/SET METHODS
 	void			SetPlaybackSpeed							(float playbackSpeed);
 	void			SetCameraCulling							(bool setTo);
 	void			SetShowBones								(bool setTo);
-		 
+
 private: 																															// --- C_ANIMATOR INITIALIZATION METHODS
 	void			GetAnimatedMeshes							();
 	void			FindRootBone								(GameObject* child);
 	void			SetRootBone									(GameObject* rootBone);
-	GameObject*		GetRootBone									() const;
 
 	void			FindBones									();																	// Finds the root bone by it. the childs recursively.
 	void			FindBoneLinks								();
