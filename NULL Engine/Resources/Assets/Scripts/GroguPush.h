@@ -6,6 +6,7 @@
 class GameObject;
 class C_BoxCollider;
 class C_AudioSource;
+class C_Animator2D;
 
 class SCRIPTS_API GroguPush : public Object ALLOWED_INHERITANCE 
 {
@@ -26,6 +27,9 @@ public:
 	float abilityCooldown = 0.0f;
 
 private:
+
+	std::string groguName = "SidekickButton";
+	C_2DAnimator* groguImage;
 
 	std::string gameManager = "Game Manager";
 
