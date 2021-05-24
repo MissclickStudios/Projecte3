@@ -82,8 +82,8 @@ public:
 	C_AudioSource* chargeAudio = nullptr;
 	C_AudioSource* deathAudio = nullptr;
 
-	uint minCredits = 0.f;
-	uint maxCredits = 0.f;
+	int minCredits = 0.f;
+	int maxCredits = 0.f;
 
 private:
 

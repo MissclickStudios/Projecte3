@@ -71,8 +71,8 @@ public:
 	// Audio
 	C_AudioSource* deathAudio = nullptr;
 
-	float minCredits = 0.f;
-	float maxCredits = 0.f;
+	int minCredits = 0.f;
+	int maxCredits = 0.f;
 
 private:
 

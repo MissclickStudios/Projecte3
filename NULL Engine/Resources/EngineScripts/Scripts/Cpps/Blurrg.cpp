@@ -61,8 +61,8 @@ Blurrg* CreateBlurrg()
 	// Rest
 	INSPECTOR_DRAGABLE_FLOAT(script->restDuration);
 
-	INSPECTOR_SLIDER_FLOAT(script->minCredits, 0.f, 1000.f);
-	INSPECTOR_SLIDER_FLOAT(script->maxCredits, 0.f, 1000.f);
+	INSPECTOR_SLIDER_INT(script->minCredits, 0, 1000);
+	INSPECTOR_SLIDER_INT(script->maxCredits, 0, 1000);
 
 	//// Animations ---
 	//// Movement
