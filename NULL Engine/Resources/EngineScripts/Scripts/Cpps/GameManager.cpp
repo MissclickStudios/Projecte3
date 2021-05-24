@@ -98,11 +98,7 @@ void GameManager::Awake()
 				groguGameObject->transform->SetLocalPosition(spawnPoint);
 			}
 
-			if (strcmp(App->scene->GetCurrentScene(), "HUB") != 0)
-			{
-				App->scene->InstantiatePrefab(mistPlane1.uid, App->scene->GetSceneRoot(), mistPlane1Position, Quat::identity);
-				App->scene->InstantiatePrefab(mistPlane2.uid, App->scene->GetSceneRoot(), mistPlane2Position, Quat::identity);
-			}
+			
 
 			backtrackTimer.Start();
 			if (backtrack.size() != 0)
@@ -234,6 +230,14 @@ void GameManager::Start()
 
 void GameManager::Update()
 {
+	if(!instantiatedSandstorm)
+		if (strcmp(App->scene->GetCurrentScene(), "HUB") != 0 && strcmp(App->scene->GetCurrentScene(), "LoseScreen") != 0 && strcmp(App->scene->GetCurrentScene(), "WinScreen") != 0)
+		{
+			App->scene->InstantiatePrefab(mistPlane1.uid, App->scene->GetSceneRoot(), mistPlane1Position, Quat::identity);
+			App->scene->InstantiatePrefab(mistPlane2.uid, App->scene->GetSceneRoot(), mistPlane2Position, Quat::identity);
+			instantiatedSandstorm = true;
+		}
+
 	// --- Handle Camera cutscene
 	if (dialogManager != nullptr)
 	{
