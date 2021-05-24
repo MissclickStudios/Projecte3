@@ -23,6 +23,8 @@ public:
 private:
 
 	C_Animator* mandoAnimator = nullptr;
+
+	bool animating = false;
 };
 
 SCRIPTS_FUNCTION MandoMainMenu* CreateMandoMainMenu();

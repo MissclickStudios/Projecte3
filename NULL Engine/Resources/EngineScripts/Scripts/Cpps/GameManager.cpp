@@ -98,8 +98,11 @@ void GameManager::Awake()
 				groguGameObject->transform->SetLocalPosition(spawnPoint);
 			}
 
-			App->scene->InstantiatePrefab(mistPlane1.uid, App->scene->GetSceneRoot(), mistPlane1Position, Quat::identity);
-			App->scene->InstantiatePrefab(mistPlane2.uid, App->scene->GetSceneRoot(), mistPlane2Position, Quat::identity);
+			if (strcmp(App->scene->GetCurrentScene(), "HUB") != 0)
+			{
+				App->scene->InstantiatePrefab(mistPlane1.uid, App->scene->GetSceneRoot(), mistPlane1Position, Quat::identity);
+				App->scene->InstantiatePrefab(mistPlane2.uid, App->scene->GetSceneRoot(), mistPlane2Position, Quat::identity);
+			}
 
 			backtrackTimer.Start();
 			if (backtrack.size() != 0)
@@ -187,6 +190,8 @@ void GameManager::Start()
 
 	if(cameraGameObject != nullptr)
 		cameraScript = (CameraMovement*)cameraGameObject->GetScript("CameraMovement");
+
+	
 
 	//Start Dialogs based on scene & Advance Story
 	if (dialogManager != nullptr)
