@@ -5,6 +5,7 @@
 class GameObject;
 class C_BoxCollider;
 class C_AudioSource;
+class GameManager;
 
 class SCRIPTS_API GroguPush : public Object ALLOWED_INHERITANCE
 {
@@ -38,9 +39,7 @@ private:
 
 	Timer abilityCooldownTimer;
 
-
-
-
+	GameManager* gameManager = nullptr;
 
 public:
 
