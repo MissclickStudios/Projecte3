@@ -1,7 +1,7 @@
 {
-    "ModTime": 1621880656,
-    "UID": 1631516746,
-    "ParentUID": 1346112540,
+    "ModTime": 1621891784,
+    "UID": 80146169,
+    "ParentUID": 888400124,
     "PrefabID": 1524961430,
     "IsPrefab": true,
     "Name": "GameCameraVS2",
@@ -18,9 +18,9 @@
         {
             "Type": 1,
             "LocalPosition": [
-                97.884315490722656,
-                154.77702331542969,
-                204.75331115722656
+                -67.469337463378906,
+                151.13621520996094,
+                163.35392761230469
             ],
             "LocalRotation": [
                 -0.42261835932731628,
@@ -67,22 +67,22 @@
                 {
                     "Type": 2,
                     "Name": "shakeMagnitude",
-                    "float": 0.5
+                    "float": 0
                 },
                 {
                     "Type": 2,
                     "Name": "shakeDuration",
-                    "float": 0.5
+                    "float": 0
                 },
                 {
                     "Type": 2,
                     "Name": "cameraSpeed",
-                    "float": 0.004999999888241291
+                    "float": 0
                 },
                 {
                     "Type": 2,
                     "Name": "distanceToTransition",
-                    "float": 15
+                    "float": 0
                 },
                 {
                     "Type": 5,
@@ -99,8 +99,978 @@
     ],
     "Children": [
         {
-            "UID": 1181549446,
-            "ParentUID": 1631516746,
+            "UID": 632642613,
+            "ParentUID": 80146169,
+            "PrefabID": 1524961430,
+            "IsPrefab": true,
+            "Name": "PauseMenuCanvas",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 13,
+                    "Canvas": {
+                        "IsActive": false,
+                        "X": 0,
+                        "Y": 0,
+                        "W": 1.0926049947738647,
+                        "H": 0.5787392258644104
+                    }
+                },
+                {
+                    "Type": 24,
+                    "ResourceUID": 1314001864,
+                    "AssetsPath": "Assets\/Scripts\/\/PauseMenuManager.h",
+                    "DataName": "PauseMenuManager",
+                    "HasInspector": true,
+                    "InspectorVariables": [
+                        {
+                            "Type": 5,
+                            "Name": "mandoName",
+                            "string": "Mandalorian"
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "gameManagerName",
+                            "string": "Game Manager"
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "resumeButtonName",
+                            "string": "ResumeButton"
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "optionsButtonName",
+                            "string": "SettingsButton"
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "mainMenuButtonName",
+                            "string": "MainButton"
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "optionsMenuCanvasStr",
+                            "string": "PauseSettingsCanvas"
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "optionsFullscreenStr",
+                            "string": "FullscreenCheck"
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "optionsVsyncStr",
+                            "string": "VsyncCheck"
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "backButtonStr",
+                            "string": "BackButton"
+                        }
+                    ]
+                }
+            ],
+            "Children": [
+                {
+                    "UID": 1118748978,
+                    "ParentUID": 632642613,
+                    "PrefabID": 1524961430,
+                    "IsPrefab": true,
+                    "Name": "PauseTitle",
+                    "IsActive": true,
+                    "IsStatic": false,
+                    "IsSceneRoot": false,
+                    "MaintainThroughScenes": false,
+                    "ShowBoundingBoxes": false,
+                    "NavigationInfo": {
+                        "isNavigable": false,
+                        "navigationArea": 0
+                    },
+                    "Components": [
+                        {
+                            "Type": 1,
+                            "LocalPosition": [
+                                0,
+                                0,
+                                0
+                            ],
+                            "LocalRotation": [
+                                0,
+                                0,
+                                0,
+                                1
+                            ],
+                            "LocalScale": [
+                                1,
+                                1,
+                                1
+                            ]
+                        },
+                        {
+                            "Type": 21,
+                            "X": -0.1550000011920929,
+                            "Y": 0.1550000011920929,
+                            "W": 0.31000000238418579,
+                            "H": 0.15999999642372131,
+                            "imgColor": {
+                                "r": 1,
+                                "g": 1,
+                                "b": 1,
+                                "a": 1
+                            },
+                            "textureCoords": {
+                                "x": 0,
+                                "y": 0,
+                                "w": 1,
+                                "h": 1
+                            },
+                            "inspectorTextureCoords": {
+                                "x": 0,
+                                "y": 0,
+                                "w": 578,
+                                "h": 169
+                            },
+                            "childOrder": 0
+                        },
+                        {
+                            "Type": 3,
+                            "Texture": {
+                                "AssetsPath": "Assets\/Textures\/\/UI\/Pause Menu\/PauseTitle.png",
+                                "AssetsName": "PauseTitle.png",
+                                "LibaryPath": "Library\/Textures\/587622663.netex",
+                                "LibraryFile": "587622663.netex"
+                            },
+                            "Shader": {
+                                "AssetsPath": "Assets\/Shaders\/UIShader.shader",
+                                "AssetsName": "UIShader.shader",
+                                "LibaryPath": "Library\/Shaders\/1025410539.neshader",
+                                "LibraryFile": "1025410539.neshader"
+                            }
+                        }
+                    ],
+                    "Children": []
+                },
+                {
+                    "UID": 1483096767,
+                    "ParentUID": 632642613,
+                    "PrefabID": 1524961430,
+                    "IsPrefab": true,
+                    "Name": "ResumeButton",
+                    "IsActive": true,
+                    "IsStatic": false,
+                    "IsSceneRoot": false,
+                    "MaintainThroughScenes": false,
+                    "ShowBoundingBoxes": false,
+                    "NavigationInfo": {
+                        "isNavigable": false,
+                        "navigationArea": 0
+                    },
+                    "Components": [
+                        {
+                            "Type": 1,
+                            "LocalPosition": [
+                                0,
+                                0,
+                                0
+                            ],
+                            "LocalRotation": [
+                                0,
+                                0,
+                                0,
+                                1
+                            ],
+                            "LocalScale": [
+                                1,
+                                1,
+                                1
+                            ]
+                        },
+                        {
+                            "Type": 23,
+                            "X": -0.14000000059604645,
+                            "Y": 0.02500000037252903,
+                            "W": 0.28999999165534973,
+                            "H": 0.079999998211860657,
+                            "idler": 0.9686274528503418,
+                            "idleg": 0.7607843279838562,
+                            "idleb": 0.58039218187332153,
+                            "idlea": 1,
+                            "hoveredr": 1,
+                            "hoveredg": 1,
+                            "hoveredb": 1,
+                            "hovereda": 1,
+                            "pressedr": 1,
+                            "pressedg": 0.40000000596046448,
+                            "pressedb": 0.18999999761581421,
+                            "presseda": 1,
+                            "pixelCoords": [
+                                1957456,
+                                0,
+                                -1,
+                                -1
+                            ],
+                            "textureCoords": {
+                                "x": 0,
+                                "y": 0,
+                                "w": 1,
+                                "h": 1
+                            },
+                            "childOrder": 1
+                        },
+                        {
+                            "Type": 21,
+                            "X": 0,
+                            "Y": 0,
+                            "W": 50,
+                            "H": 50,
+                            "imgColor": {
+                                "r": 1,
+                                "g": 1,
+                                "b": 1,
+                                "a": 1
+                            },
+                            "textureCoords": {
+                                "x": 0,
+                                "y": 0,
+                                "w": 1,
+                                "h": 1
+                            },
+                            "inspectorTextureCoords": {
+                                "x": 0,
+                                "y": 0,
+                                "w": 550,
+                                "h": 84
+                            },
+                            "childOrder": 1
+                        },
+                        {
+                            "Type": 3,
+                            "Texture": {
+                                "AssetsPath": "Assets\/Textures\/\/UI\/Pause Menu\/PauseResumeButton.png",
+                                "AssetsName": "PauseResumeButton.png",
+                                "LibaryPath": "Library\/Textures\/1757330783.netex",
+                                "LibraryFile": "1757330783.netex"
+                            },
+                            "Shader": {
+                                "AssetsPath": "Assets\/Shaders\/UIShader.shader",
+                                "AssetsName": "UIShader.shader",
+                                "LibaryPath": "Library\/Shaders\/1025410539.neshader",
+                                "LibraryFile": "1025410539.neshader"
+                            }
+                        }
+                    ],
+                    "Children": []
+                },
+                {
+                    "UID": 981687328,
+                    "ParentUID": 632642613,
+                    "PrefabID": 1524961430,
+                    "IsPrefab": true,
+                    "Name": "SettingsButton",
+                    "IsActive": true,
+                    "IsStatic": false,
+                    "IsSceneRoot": false,
+                    "MaintainThroughScenes": false,
+                    "ShowBoundingBoxes": false,
+                    "NavigationInfo": {
+                        "isNavigable": false,
+                        "navigationArea": 0
+                    },
+                    "Components": [
+                        {
+                            "Type": 1,
+                            "LocalPosition": [
+                                0,
+                                0,
+                                0
+                            ],
+                            "LocalRotation": [
+                                0,
+                                0,
+                                0,
+                                1
+                            ],
+                            "LocalScale": [
+                                1,
+                                1,
+                                1
+                            ]
+                        },
+                        {
+                            "Type": 23,
+                            "X": -0.14000000059604645,
+                            "Y": -0.094999998807907104,
+                            "W": 0.28999999165534973,
+                            "H": 0.079999998211860657,
+                            "idler": 0.97000002861022949,
+                            "idleg": 0.75999999046325684,
+                            "idleb": 0.57999998331069946,
+                            "idlea": 1,
+                            "hoveredr": 1,
+                            "hoveredg": 1,
+                            "hoveredb": 1,
+                            "hovereda": 1,
+                            "pressedr": 1,
+                            "pressedg": 0.40000000596046448,
+                            "pressedb": 0.18999999761581421,
+                            "presseda": 1,
+                            "pixelCoords": [
+                                2134475,
+                                0,
+                                -1,
+                                -1
+                            ],
+                            "textureCoords": {
+                                "x": 0,
+                                "y": 0,
+                                "w": 1,
+                                "h": 1
+                            },
+                            "childOrder": 2
+                        },
+                        {
+                            "Type": 3,
+                            "Texture": {
+                                "AssetsPath": "Assets\/Textures\/\/UI\/Pause Menu\/PauseSettingsButton.png",
+                                "AssetsName": "PauseSettingsButton.png",
+                                "LibaryPath": "Library\/Textures\/688106359.netex",
+                                "LibraryFile": "688106359.netex"
+                            },
+                            "Shader": {
+                                "AssetsPath": "Assets\/Shaders\/UIShader.shader",
+                                "AssetsName": "UIShader.shader",
+                                "LibaryPath": "Library\/Shaders\/1025410539.neshader",
+                                "LibraryFile": "1025410539.neshader"
+                            }
+                        }
+                    ],
+                    "Children": []
+                },
+                {
+                    "UID": 418173061,
+                    "ParentUID": 632642613,
+                    "PrefabID": 1524961430,
+                    "IsPrefab": true,
+                    "Name": "AbandonButton",
+                    "IsActive": true,
+                    "IsStatic": false,
+                    "IsSceneRoot": false,
+                    "MaintainThroughScenes": false,
+                    "ShowBoundingBoxes": false,
+                    "NavigationInfo": {
+                        "isNavigable": false,
+                        "navigationArea": 0
+                    },
+                    "Components": [
+                        {
+                            "Type": 1,
+                            "LocalPosition": [
+                                0,
+                                0,
+                                0
+                            ],
+                            "LocalRotation": [
+                                0,
+                                0,
+                                0,
+                                1
+                            ],
+                            "LocalScale": [
+                                1,
+                                1,
+                                1
+                            ]
+                        },
+                        {
+                            "Type": 23,
+                            "X": -0.14000000059604645,
+                            "Y": -0.2199999988079071,
+                            "W": 0.28999999165534973,
+                            "H": 0.079999998211860657,
+                            "idler": 0.97000002861022949,
+                            "idleg": 0.75999999046325684,
+                            "idleb": 0.57999998331069946,
+                            "idlea": 1,
+                            "hoveredr": 1,
+                            "hoveredg": 1,
+                            "hoveredb": 1,
+                            "hovereda": 1,
+                            "pressedr": 1,
+                            "pressedg": 0.40000000596046448,
+                            "pressedb": 0.18999999761581421,
+                            "presseda": 1,
+                            "pixelCoords": [
+                                2134046,
+                                0,
+                                -1,
+                                -1
+                            ],
+                            "textureCoords": {
+                                "x": 0,
+                                "y": 0,
+                                "w": 1,
+                                "h": 1
+                            },
+                            "childOrder": 3
+                        },
+                        {
+                            "Type": 3,
+                            "Texture": {
+                                "AssetsPath": "Assets\/Textures\/\/UI\/Pause Menu\/PauseAbandonButton.png",
+                                "AssetsName": "PauseAbandonButton.png",
+                                "LibaryPath": "Library\/Textures\/2103030993.netex",
+                                "LibraryFile": "2103030993.netex"
+                            },
+                            "Shader": {
+                                "AssetsPath": "Assets\/Shaders\/UIShader.shader",
+                                "AssetsName": "UIShader.shader",
+                                "LibaryPath": "Library\/Shaders\/1025410539.neshader",
+                                "LibraryFile": "1025410539.neshader"
+                            }
+                        }
+                    ],
+                    "Children": []
+                },
+                {
+                    "UID": 1798038071,
+                    "ParentUID": 632642613,
+                    "PrefabID": 1524961430,
+                    "IsPrefab": true,
+                    "Name": "MenuButton",
+                    "IsActive": true,
+                    "IsStatic": false,
+                    "IsSceneRoot": false,
+                    "MaintainThroughScenes": false,
+                    "ShowBoundingBoxes": false,
+                    "NavigationInfo": {
+                        "isNavigable": false,
+                        "navigationArea": 0
+                    },
+                    "Components": [
+                        {
+                            "Type": 1,
+                            "LocalPosition": [
+                                0,
+                                0,
+                                0
+                            ],
+                            "LocalRotation": [
+                                0,
+                                0,
+                                0,
+                                1
+                            ],
+                            "LocalScale": [
+                                1,
+                                1,
+                                1
+                            ]
+                        },
+                        {
+                            "Type": 23,
+                            "X": -0.14000000059604645,
+                            "Y": -0.36500000953674316,
+                            "W": 0.28999999165534973,
+                            "H": 0.079999998211860657,
+                            "idler": 0.97000002861022949,
+                            "idleg": 0.75999999046325684,
+                            "idleb": 0.57999998331069946,
+                            "idlea": 1,
+                            "hoveredr": 1,
+                            "hoveredg": 1,
+                            "hoveredb": 1,
+                            "hovereda": 1,
+                            "pressedr": 1,
+                            "pressedg": 0.40000000596046448,
+                            "pressedb": 0.18999999761581421,
+                            "presseda": 1,
+                            "pixelCoords": [
+                                2133087,
+                                0,
+                                -1,
+                                -1
+                            ],
+                            "textureCoords": {
+                                "x": 0,
+                                "y": 0,
+                                "w": 1,
+                                "h": 1
+                            },
+                            "childOrder": 4
+                        },
+                        {
+                            "Type": 3,
+                            "Texture": {
+                                "AssetsPath": "Assets\/Textures\/\/UI\/Pause Menu\/Recurso 163.png",
+                                "AssetsName": "Recurso 163.png",
+                                "LibaryPath": "Library\/Textures\/1313945373.netex",
+                                "LibraryFile": "1313945373.netex"
+                            },
+                            "Shader": {
+                                "AssetsPath": "Assets\/Shaders\/UIShader.shader",
+                                "AssetsName": "UIShader.shader",
+                                "LibaryPath": "Library\/Shaders\/1025410539.neshader",
+                                "LibraryFile": "1025410539.neshader"
+                            }
+                        }
+                    ],
+                    "Children": []
+                },
+                {
+                    "UID": 447620307,
+                    "ParentUID": 632642613,
+                    "PrefabID": 1524961430,
+                    "IsPrefab": true,
+                    "Name": "PauseBackground",
+                    "IsActive": true,
+                    "IsStatic": false,
+                    "IsSceneRoot": false,
+                    "MaintainThroughScenes": false,
+                    "ShowBoundingBoxes": false,
+                    "NavigationInfo": {
+                        "isNavigable": false,
+                        "navigationArea": 0
+                    },
+                    "Components": [
+                        {
+                            "Type": 1,
+                            "LocalPosition": [
+                                0,
+                                0,
+                                0
+                            ],
+                            "LocalRotation": [
+                                0,
+                                0,
+                                0,
+                                1
+                            ],
+                            "LocalScale": [
+                                1,
+                                1,
+                                1
+                            ]
+                        },
+                        {
+                            "Type": 21,
+                            "X": -0.20000000298023224,
+                            "Y": -0.50499999523162842,
+                            "W": 0.40000000596046448,
+                            "H": 1.0099999904632568,
+                            "imgColor": {
+                                "r": 1,
+                                "g": 1,
+                                "b": 1,
+                                "a": 1
+                            },
+                            "textureCoords": {
+                                "x": 0,
+                                "y": 0,
+                                "w": 1,
+                                "h": 1
+                            },
+                            "inspectorTextureCoords": {
+                                "x": 0,
+                                "y": 0,
+                                "w": 761,
+                                "h": 1089
+                            },
+                            "childOrder": 5
+                        },
+                        {
+                            "Type": 3,
+                            "Texture": {
+                                "AssetsPath": "Assets\/Textures\/\/UI\/Pause Menu\/PauseBackground.png",
+                                "AssetsName": "PauseBackground.png",
+                                "LibaryPath": "Library\/Textures\/1833194840.netex",
+                                "LibraryFile": "1833194840.netex"
+                            },
+                            "Shader": {
+                                "AssetsPath": "Assets\/Shaders\/UIShader.shader",
+                                "AssetsName": "UIShader.shader",
+                                "LibaryPath": "Library\/Shaders\/1025410539.neshader",
+                                "LibraryFile": "1025410539.neshader"
+                            }
+                        }
+                    ],
+                    "Children": []
+                }
+            ]
+        },
+        {
+            "UID": 1007866390,
+            "ParentUID": 80146169,
+            "PrefabID": 1524961430,
+            "IsPrefab": true,
+            "Name": "DialogCanvas",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 13,
+                    "Canvas": {
+                        "IsActive": true,
+                        "X": 0,
+                        "Y": 0,
+                        "W": 1.0926049947738647,
+                        "H": 0.5787392258644104
+                    }
+                },
+                {
+                    "Type": 24,
+                    "ResourceUID": 146181121,
+                    "AssetsPath": "Assets\/Scripts\/\/DialogManager.h",
+                    "DataName": "DialogManager",
+                    "HasInspector": true,
+                    "InspectorVariables": [
+                        {
+                            "Type": 5,
+                            "Name": "dialogCanvasName",
+                            "string": "DialogCanvas"
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "dialogTextName",
+                            "string": "DialogText"
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "dialogButtonName",
+                            "string": "DialogButton"
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "speakerImageName",
+                            "string": "SpeakerImage"
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "speakerTextName",
+                            "string": "SpeakerText"
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "textBackgroundName",
+                            "string": "DialogBackground"
+                        }
+                    ]
+                }
+            ],
+            "Children": [
+                {
+                    "UID": 1413895595,
+                    "ParentUID": 1007866390,
+                    "PrefabID": 1524961430,
+                    "IsPrefab": true,
+                    "Name": "SpeakerText",
+                    "IsActive": true,
+                    "IsStatic": false,
+                    "IsSceneRoot": false,
+                    "MaintainThroughScenes": false,
+                    "ShowBoundingBoxes": false,
+                    "NavigationInfo": {
+                        "isNavigable": false,
+                        "navigationArea": 0
+                    },
+                    "Components": [
+                        {
+                            "Type": 1,
+                            "LocalPosition": [
+                                0,
+                                0,
+                                0
+                            ],
+                            "LocalRotation": [
+                                0,
+                                0,
+                                0,
+                                1
+                            ],
+                            "LocalScale": [
+                                1,
+                                1,
+                                1
+                            ]
+                        },
+                        {
+                            "Type": 22,
+                            "Text": "Mando",
+                            "Color": [
+                                1,
+                                1,
+                                1,
+                                1
+                            ],
+                            "X": -0.43999999761581421,
+                            "Y": -0.70999997854232788,
+                            "W": 0.072999998927116394,
+                            "H": 0.15999999642372131,
+                            "childOrder": 0
+                        }
+                    ],
+                    "Children": []
+                },
+                {
+                    "UID": 1060038978,
+                    "ParentUID": 1007866390,
+                    "PrefabID": 1524961430,
+                    "IsPrefab": true,
+                    "Name": "DialogText",
+                    "IsActive": true,
+                    "IsStatic": false,
+                    "IsSceneRoot": false,
+                    "MaintainThroughScenes": false,
+                    "ShowBoundingBoxes": true,
+                    "NavigationInfo": {
+                        "isNavigable": false,
+                        "navigationArea": 0
+                    },
+                    "Components": [
+                        {
+                            "Type": 1,
+                            "LocalPosition": [
+                                0,
+                                0,
+                                0
+                            ],
+                            "LocalRotation": [
+                                0,
+                                0,
+                                0,
+                                1
+                            ],
+                            "LocalScale": [
+                                1,
+                                1,
+                                1
+                            ]
+                        },
+                        {
+                            "Type": 22,
+                            "Text": "Hello Mandalorian. Here I have a selection of upgrades that you",
+                            "Color": [
+                                1,
+                                1,
+                                1,
+                                1
+                            ],
+                            "X": -0.43999999761581421,
+                            "Y": -0.7850000262260437,
+                            "W": 0.054999999701976776,
+                            "H": 0.05000000074505806,
+                            "childOrder": 1
+                        }
+                    ],
+                    "Children": []
+                },
+                {
+                    "UID": 371865410,
+                    "ParentUID": 1007866390,
+                    "PrefabID": 1524961430,
+                    "IsPrefab": true,
+                    "Name": "DialogBackground",
+                    "IsActive": true,
+                    "IsStatic": false,
+                    "IsSceneRoot": false,
+                    "MaintainThroughScenes": false,
+                    "ShowBoundingBoxes": false,
+                    "NavigationInfo": {
+                        "isNavigable": false,
+                        "navigationArea": 0
+                    },
+                    "Components": [
+                        {
+                            "Type": 1,
+                            "LocalPosition": [
+                                0,
+                                0,
+                                0
+                            ],
+                            "LocalRotation": [
+                                0,
+                                0,
+                                0,
+                                1
+                            ],
+                            "LocalScale": [
+                                1,
+                                1,
+                                1
+                            ]
+                        },
+                        {
+                            "Type": 21,
+                            "X": -0.48500001430511475,
+                            "Y": -0.92000001668930054,
+                            "W": 0.94499999284744263,
+                            "H": 0.31999999284744263,
+                            "imgColor": {
+                                "r": 1,
+                                "g": 1,
+                                "b": 1,
+                                "a": 1
+                            },
+                            "textureCoords": {
+                                "x": 0,
+                                "y": 0,
+                                "w": 1,
+                                "h": 1
+                            },
+                            "inspectorTextureCoords": {
+                                "x": 0,
+                                "y": 0,
+                                "w": 1820,
+                                "h": 308
+                            },
+                            "childOrder": 2
+                        },
+                        {
+                            "Type": 3,
+                            "Texture": {
+                                "AssetsPath": "Assets\/Textures\/\/UI\/HUD\/DialogBackground.png",
+                                "AssetsName": "DialogBackground.png",
+                                "LibaryPath": "Library\/Textures\/238587908.netex",
+                                "LibraryFile": "238587908.netex"
+                            },
+                            "Shader": {
+                                "AssetsPath": "Assets\/Shaders\/UIShader.shader",
+                                "AssetsName": "UIShader.shader",
+                                "LibaryPath": "Library\/Shaders\/1025410539.neshader",
+                                "LibraryFile": "1025410539.neshader"
+                            }
+                        }
+                    ],
+                    "Children": []
+                },
+                {
+                    "UID": 1305909568,
+                    "ParentUID": 1007866390,
+                    "PrefabID": 1524961430,
+                    "IsPrefab": true,
+                    "Name": "DialogButton",
+                    "IsActive": true,
+                    "IsStatic": false,
+                    "IsSceneRoot": false,
+                    "MaintainThroughScenes": false,
+                    "ShowBoundingBoxes": false,
+                    "NavigationInfo": {
+                        "isNavigable": false,
+                        "navigationArea": 0
+                    },
+                    "Components": [
+                        {
+                            "Type": 1,
+                            "LocalPosition": [
+                                0,
+                                0,
+                                0
+                            ],
+                            "LocalRotation": [
+                                0,
+                                0,
+                                0,
+                                1
+                            ],
+                            "LocalScale": [
+                                1,
+                                1,
+                                1
+                            ]
+                        },
+                        {
+                            "Type": 23,
+                            "X": 0,
+                            "Y": 0,
+                            "W": 0.31999999284744263,
+                            "H": 0.079999998211860657,
+                            "idler": 0.97000002861022949,
+                            "idleg": 0.75999999046325684,
+                            "idleb": 0.57999998331069946,
+                            "idlea": 1,
+                            "hoveredr": 1,
+                            "hoveredg": 1,
+                            "hoveredb": 1,
+                            "hovereda": 1,
+                            "pressedr": 1,
+                            "pressedg": 0.40000000596046448,
+                            "pressedb": 0.18999999761581421,
+                            "presseda": 1,
+                            "pixelCoords": [
+                                47144,
+                                0,
+                                -1,
+                                -1
+                            ],
+                            "textureCoords": {
+                                "x": 0,
+                                "y": 0,
+                                "w": 1,
+                                "h": 1
+                            },
+                            "childOrder": 3
+                        }
+                    ],
+                    "Children": []
+                }
+            ]
+        },
+        {
+            "UID": 1381797846,
+            "ParentUID": 80146169,
             "PrefabID": 1524961430,
             "IsPrefab": true,
             "Name": "PauseSettingsCanvas",
@@ -146,8 +1116,8 @@
             ],
             "Children": [
                 {
-                    "UID": 1488171083,
-                    "ParentUID": 1181549446,
+                    "UID": 264749444,
+                    "ParentUID": 1381797846,
                     "PrefabID": 1524961430,
                     "IsPrefab": true,
                     "Name": "PauseSettingsTitle",
@@ -225,8 +1195,8 @@
                     "Children": []
                 },
                 {
-                    "UID": 820543304,
-                    "ParentUID": 1181549446,
+                    "UID": 862033574,
+                    "ParentUID": 1381797846,
                     "PrefabID": 1524961430,
                     "IsPrefab": true,
                     "Name": "MusicImage",
@@ -304,8 +1274,8 @@
                     "Children": []
                 },
                 {
-                    "UID": 1045439310,
-                    "ParentUID": 1181549446,
+                    "UID": 540604276,
+                    "ParentUID": 1381797846,
                     "PrefabID": 1524961430,
                     "IsPrefab": true,
                     "Name": "EffectsImage",
@@ -383,8 +1353,8 @@
                     "Children": []
                 },
                 {
-                    "UID": 587691292,
-                    "ParentUID": 1181549446,
+                    "UID": 1085951256,
+                    "ParentUID": 1381797846,
                     "PrefabID": 1524961430,
                     "IsPrefab": true,
                     "Name": "FullScreenImage",
@@ -462,8 +1432,8 @@
                     "Children": []
                 },
                 {
-                    "UID": 1142408430,
-                    "ParentUID": 1181549446,
+                    "UID": 1898310685,
+                    "ParentUID": 1381797846,
                     "PrefabID": 1524961430,
                     "IsPrefab": true,
                     "Name": "FullscreenCheck",
@@ -585,8 +1555,8 @@
                     "Children": []
                 },
                 {
-                    "UID": 1519016257,
-                    "ParentUID": 1181549446,
+                    "UID": 1861305344,
+                    "ParentUID": 1381797846,
                     "PrefabID": 1524961430,
                     "IsPrefab": true,
                     "Name": "VsyncImage",
@@ -664,8 +1634,8 @@
                     "Children": []
                 },
                 {
-                    "UID": 2057614649,
-                    "ParentUID": 1181549446,
+                    "UID": 1821916043,
+                    "ParentUID": 1381797846,
                     "PrefabID": 1524961430,
                     "IsPrefab": true,
                     "Name": "VsyncCheck",
@@ -787,8 +1757,8 @@
                     "Children": []
                 },
                 {
-                    "UID": 423864119,
-                    "ParentUID": 1181549446,
+                    "UID": 983023959,
+                    "ParentUID": 1381797846,
                     "PrefabID": 1524961430,
                     "IsPrefab": true,
                     "Name": "BackButton",
@@ -872,8 +1842,8 @@
                     "Children": []
                 },
                 {
-                    "UID": 967391727,
-                    "ParentUID": 1181549446,
+                    "UID": 1290932061,
+                    "ParentUID": 1381797846,
                     "PrefabID": 1524961430,
                     "IsPrefab": true,
                     "Name": "PauseSettingsBackground",
@@ -953,11 +1923,11 @@
             ]
         },
         {
-            "UID": 696502445,
-            "ParentUID": 1631516746,
+            "UID": 1523684372,
+            "ParentUID": 80146169,
             "PrefabID": 1524961430,
             "IsPrefab": true,
-            "Name": "DialogCanvas",
+            "Name": "ItemMenu",
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
@@ -999,488 +1969,51 @@
                 },
                 {
                     "Type": 24,
-                    "ResourceUID": 146181121,
-                    "AssetsPath": "Assets\/Scripts\/\/DialogManager.h",
-                    "DataName": "DialogManager",
+                    "ResourceUID": 643521645,
+                    "AssetsPath": "Assets\/Scripts\/\/ItemMenuManager.h",
+                    "DataName": "ItemMenuManager",
                     "HasInspector": true,
                     "InspectorVariables": [
                         {
                             "Type": 5,
-                            "Name": "dialogCanvasName",
-                            "string": "DialogCanvas"
+                            "Name": "canvasName",
+                            "string": "Item Menu"
                         },
                         {
                             "Type": 5,
-                            "Name": "dialogTextName",
-                            "string": "DialogText"
+                            "Name": "buyButtonName",
+                            "string": "Buy Button"
                         },
                         {
                             "Type": 5,
-                            "Name": "dialogButtonName",
-                            "string": "DialogButton"
+                            "Name": "nameTextName",
+                            "string": "Name Text"
                         },
                         {
                             "Type": 5,
-                            "Name": "speakerImageName",
-                            "string": "SpeakerImage"
+                            "Name": "descriptionTextName",
+                            "string": "Description Text"
                         },
                         {
                             "Type": 5,
-                            "Name": "speakerTextName",
-                            "string": "SpeakerText"
+                            "Name": "priceTextName",
+                            "string": "Price Text"
                         },
                         {
                             "Type": 5,
-                            "Name": "textBackgroundName",
-                            "string": "DialogBackground"
-                        }
-                    ]
-                }
-            ],
-            "Children": [
-                {
-                    "UID": 517512168,
-                    "ParentUID": 696502445,
-                    "PrefabID": 1524961430,
-                    "IsPrefab": true,
-                    "Name": "SpeakerText",
-                    "IsActive": true,
-                    "IsStatic": false,
-                    "IsSceneRoot": false,
-                    "MaintainThroughScenes": false,
-                    "ShowBoundingBoxes": false,
-                    "NavigationInfo": {
-                        "isNavigable": false,
-                        "navigationArea": 0
-                    },
-                    "Components": [
-                        {
-                            "Type": 1,
-                            "LocalPosition": [
-                                0,
-                                0,
-                                0
-                            ],
-                            "LocalRotation": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ],
-                            "LocalScale": [
-                                1,
-                                1,
-                                1
-                            ]
-                        },
-                        {
-                            "Type": 22,
-                            "Text": "Mando",
-                            "Color": [
-                                1,
-                                1,
-                                1,
-                                1
-                            ],
-                            "X": -0.43999999761581421,
-                            "Y": -0.70999997854232788,
-                            "W": 0.072999998927116394,
-                            "H": 0.15999999642372131,
-                            "childOrder": 0
-                        }
-                    ],
-                    "Children": []
-                },
-                {
-                    "UID": 149374093,
-                    "ParentUID": 696502445,
-                    "PrefabID": 1524961430,
-                    "IsPrefab": true,
-                    "Name": "DialogText",
-                    "IsActive": true,
-                    "IsStatic": false,
-                    "IsSceneRoot": false,
-                    "MaintainThroughScenes": false,
-                    "ShowBoundingBoxes": true,
-                    "NavigationInfo": {
-                        "isNavigable": false,
-                        "navigationArea": 0
-                    },
-                    "Components": [
-                        {
-                            "Type": 1,
-                            "LocalPosition": [
-                                0,
-                                0,
-                                0
-                            ],
-                            "LocalRotation": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ],
-                            "LocalScale": [
-                                1,
-                                1,
-                                1
-                            ]
-                        },
-                        {
-                            "Type": 22,
-                            "Text": "Hello Mandalorian. Here I have a selection of upgrades that you",
-                            "Color": [
-                                1,
-                                1,
-                                1,
-                                1
-                            ],
-                            "X": -0.43999999761581421,
-                            "Y": -0.7850000262260437,
-                            "W": 0.054999999701976776,
-                            "H": 0.05000000074505806,
-                            "childOrder": 1
-                        }
-                    ],
-                    "Children": []
-                },
-                {
-                    "UID": 285594614,
-                    "ParentUID": 696502445,
-                    "PrefabID": 1524961430,
-                    "IsPrefab": true,
-                    "Name": "DialogBackground",
-                    "IsActive": true,
-                    "IsStatic": false,
-                    "IsSceneRoot": false,
-                    "MaintainThroughScenes": false,
-                    "ShowBoundingBoxes": false,
-                    "NavigationInfo": {
-                        "isNavigable": false,
-                        "navigationArea": 0
-                    },
-                    "Components": [
-                        {
-                            "Type": 1,
-                            "LocalPosition": [
-                                0,
-                                0,
-                                0
-                            ],
-                            "LocalRotation": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ],
-                            "LocalScale": [
-                                1,
-                                1,
-                                1
-                            ]
-                        },
-                        {
-                            "Type": 21,
-                            "X": -0.48500001430511475,
-                            "Y": -0.92000001668930054,
-                            "W": 0.94499999284744263,
-                            "H": 0.31999999284744263,
-                            "imgColor": {
-                                "r": 1,
-                                "g": 1,
-                                "b": 1,
-                                "a": 1
-                            },
-                            "textureCoords": {
-                                "x": 0,
-                                "y": 0,
-                                "w": 1,
-                                "h": 1
-                            },
-                            "inspectorTextureCoords": {
-                                "x": 0,
-                                "y": 0,
-                                "w": 1820,
-                                "h": 308
-                            },
-                            "childOrder": 2
-                        },
-                        {
-                            "Type": 3,
-                            "Texture": {
-                                "AssetsPath": "Assets\/Textures\/\/UI\/HUD\/DialogBackground.png",
-                                "AssetsName": "DialogBackground.png",
-                                "LibaryPath": "Library\/Textures\/238587908.netex",
-                                "LibraryFile": "238587908.netex"
-                            },
-                            "Shader": {
-                                "AssetsPath": "Assets\/Shaders\/UIShader.shader",
-                                "AssetsName": "UIShader.shader",
-                                "LibaryPath": "Library\/Shaders\/1025410539.neshader",
-                                "LibraryFile": "1025410539.neshader"
-                            }
-                        }
-                    ],
-                    "Children": []
-                },
-                {
-                    "UID": 631904484,
-                    "ParentUID": 696502445,
-                    "PrefabID": 1524961430,
-                    "IsPrefab": true,
-                    "Name": "DialogButton",
-                    "IsActive": true,
-                    "IsStatic": false,
-                    "IsSceneRoot": false,
-                    "MaintainThroughScenes": false,
-                    "ShowBoundingBoxes": false,
-                    "NavigationInfo": {
-                        "isNavigable": false,
-                        "navigationArea": 0
-                    },
-                    "Components": [
-                        {
-                            "Type": 1,
-                            "LocalPosition": [
-                                0,
-                                0,
-                                0
-                            ],
-                            "LocalRotation": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ],
-                            "LocalScale": [
-                                1,
-                                1,
-                                1
-                            ]
-                        },
-                        {
-                            "Type": 23,
-                            "X": 0,
-                            "Y": 0,
-                            "W": 0.31999999284744263,
-                            "H": 0.079999998211860657,
-                            "idler": 0.97000002861022949,
-                            "idleg": 0.75999999046325684,
-                            "idleb": 0.57999998331069946,
-                            "idlea": 1,
-                            "hoveredr": 1,
-                            "hoveredg": 1,
-                            "hoveredb": 1,
-                            "hovereda": 1,
-                            "pressedr": 1,
-                            "pressedg": 0.40000000596046448,
-                            "pressedb": 0.18999999761581421,
-                            "presseda": 1,
-                            "pixelCoords": [
-                                47144,
-                                0,
-                                -1,
-                                -1
-                            ],
-                            "textureCoords": {
-                                "x": 0,
-                                "y": 0,
-                                "w": 1,
-                                "h": 1
-                            },
-                            "childOrder": 3
-                        }
-                    ],
-                    "Children": []
-                }
-            ]
-        },
-        {
-            "UID": 2042720601,
-            "ParentUID": 1631516746,
-            "PrefabID": 1524961430,
-            "IsPrefab": true,
-            "Name": "PauseMenuCanvas",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
-            "NavigationInfo": {
-                "isNavigable": false,
-                "navigationArea": 0
-            },
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        0,
-                        0
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {
-                    "Type": 13,
-                    "Canvas": {
-                        "IsActive": false,
-                        "X": 0,
-                        "Y": 0,
-                        "W": 1.0926049947738647,
-                        "H": 0.5787392258644104
-                    }
-                },
-                {
-                    "Type": 24,
-                    "ResourceUID": 1314001864,
-                    "AssetsPath": "Assets\/Scripts\/\/PauseMenuManager.h",
-                    "DataName": "PauseMenuManager",
-                    "HasInspector": true,
-                    "InspectorVariables": [
-                        {
-                            "Type": 5,
-                            "Name": "mandoName",
+                            "Name": "playerName",
                             "string": "Mandalorian"
-                        },
-                        {
-                            "Type": 5,
-                            "Name": "gameManagerName",
-                            "string": "Game Manager"
-                        },
-                        {
-                            "Type": 5,
-                            "Name": "resumeButtonName",
-                            "string": "ResumeButton"
-                        },
-                        {
-                            "Type": 5,
-                            "Name": "optionsButtonName",
-                            "string": "SettingsButton"
-                        },
-                        {
-                            "Type": 5,
-                            "Name": "mainMenuButtonName",
-                            "string": "MainButton"
-                        },
-                        {
-                            "Type": 5,
-                            "Name": "optionsMenuCanvasStr",
-                            "string": "PauseSettingsCanvas"
-                        },
-                        {
-                            "Type": 5,
-                            "Name": "optionsFullscreenStr",
-                            "string": "FullscreenCheck"
-                        },
-                        {
-                            "Type": 5,
-                            "Name": "optionsVsyncStr",
-                            "string": "VsyncCheck"
-                        },
-                        {
-                            "Type": 5,
-                            "Name": "backButtonStr",
-                            "string": "BackButton"
                         }
                     ]
                 }
             ],
             "Children": [
                 {
-                    "UID": 1677474439,
-                    "ParentUID": 2042720601,
+                    "UID": 1277708875,
+                    "ParentUID": 1523684372,
                     "PrefabID": 1524961430,
                     "IsPrefab": true,
-                    "Name": "PauseTitle",
-                    "IsActive": true,
-                    "IsStatic": false,
-                    "IsSceneRoot": false,
-                    "MaintainThroughScenes": false,
-                    "ShowBoundingBoxes": false,
-                    "NavigationInfo": {
-                        "isNavigable": false,
-                        "navigationArea": 0
-                    },
-                    "Components": [
-                        {
-                            "Type": 1,
-                            "LocalPosition": [
-                                0,
-                                0,
-                                0
-                            ],
-                            "LocalRotation": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ],
-                            "LocalScale": [
-                                1,
-                                1,
-                                1
-                            ]
-                        },
-                        {
-                            "Type": 21,
-                            "X": -0.1550000011920929,
-                            "Y": 0.1550000011920929,
-                            "W": 0.31000000238418579,
-                            "H": 0.15999999642372131,
-                            "imgColor": {
-                                "r": 1,
-                                "g": 1,
-                                "b": 1,
-                                "a": 1
-                            },
-                            "textureCoords": {
-                                "x": 0,
-                                "y": 0,
-                                "w": 1,
-                                "h": 1
-                            },
-                            "inspectorTextureCoords": {
-                                "x": 0,
-                                "y": 0,
-                                "w": 578,
-                                "h": 169
-                            },
-                            "childOrder": 0
-                        },
-                        {
-                            "Type": 3,
-                            "Texture": {
-                                "AssetsPath": "Assets\/Textures\/\/UI\/Pause Menu\/PauseTitle.png",
-                                "AssetsName": "PauseTitle.png",
-                                "LibaryPath": "Library\/Textures\/587622663.netex",
-                                "LibraryFile": "587622663.netex"
-                            },
-                            "Shader": {
-                                "AssetsPath": "Assets\/Shaders\/UIShader.shader",
-                                "AssetsName": "UIShader.shader",
-                                "LibaryPath": "Library\/Shaders\/1025410539.neshader",
-                                "LibraryFile": "1025410539.neshader"
-                            }
-                        }
-                    ],
-                    "Children": []
-                },
-                {
-                    "UID": 79697233,
-                    "ParentUID": 2042720601,
-                    "PrefabID": 1524961430,
-                    "IsPrefab": true,
-                    "Name": "ResumeButton",
+                    "Name": "Buy Button",
                     "IsActive": true,
                     "IsStatic": false,
                     "IsSceneRoot": false,
@@ -1512,86 +2045,98 @@
                         },
                         {
                             "Type": 23,
-                            "X": -0.14000000059604645,
-                            "Y": 0.02500000037252903,
-                            "W": 0.28999999165534973,
-                            "H": 0.079999998211860657,
-                            "idler": 0.9686274528503418,
-                            "idleg": 0.7607843279838562,
-                            "idleb": 0.58039218187332153,
-                            "idlea": 1,
-                            "hoveredr": 1,
-                            "hoveredg": 1,
-                            "hoveredb": 1,
-                            "hovereda": 1,
-                            "pressedr": 1,
-                            "pressedg": 0.40000000596046448,
-                            "pressedb": 0.18999999761581421,
-                            "presseda": 1,
-                            "pixelCoords": [
-                                1957456,
-                                0,
-                                -1,
-                                -1
-                            ],
-                            "textureCoords": {
-                                "x": 0,
-                                "y": 0,
-                                "w": 1,
-                                "h": 1
-                            },
-                            "childOrder": 1
-                        },
-                        {
-                            "Type": 21,
                             "X": 0,
                             "Y": 0,
-                            "W": 50,
-                            "H": 50,
-                            "imgColor": {
-                                "r": 1,
-                                "g": 1,
-                                "b": 1,
-                                "a": 1
-                            },
+                            "W": 0.079999998211860657,
+                            "H": 0.079999998211860657,
+                            "idler": -2147483648,
+                            "idleg": -2147483648,
+                            "idleb": -2147483648,
+                            "idlea": -2147483648,
+                            "hoveredr": -2147483648,
+                            "hoveredg": -2147483648,
+                            "hoveredb": -2147483648,
+                            "hovereda": -2147483648,
+                            "pressedr": -2147483648,
+                            "pressedg": -2147483648,
+                            "pressedb": -2147483648,
+                            "presseda": -2147483648,
+                            "pixelCoords": [
+                                723229,
+                                0,
+                                -1,
+                                -1
+                            ],
                             "textureCoords": {
                                 "x": 0,
                                 "y": 0,
                                 "w": 1,
                                 "h": 1
                             },
-                            "inspectorTextureCoords": {
-                                "x": 0,
-                                "y": 0,
-                                "w": 550,
-                                "h": 84
-                            },
+                            "childOrder": 0
+                        }
+                    ],
+                    "Children": []
+                },
+                {
+                    "UID": 2007240498,
+                    "ParentUID": 1523684372,
+                    "PrefabID": 1524961430,
+                    "IsPrefab": true,
+                    "Name": "Name Text",
+                    "IsActive": true,
+                    "IsStatic": false,
+                    "IsSceneRoot": false,
+                    "MaintainThroughScenes": false,
+                    "ShowBoundingBoxes": false,
+                    "NavigationInfo": {
+                        "isNavigable": false,
+                        "navigationArea": 0
+                    },
+                    "Components": [
+                        {
+                            "Type": 1,
+                            "LocalPosition": [
+                                0,
+                                0,
+                                0
+                            ],
+                            "LocalRotation": [
+                                0,
+                                0,
+                                0,
+                                1
+                            ],
+                            "LocalScale": [
+                                1,
+                                1,
+                                1
+                            ]
+                        },
+                        {
+                            "Type": 22,
+                            "Text": "Item Name",
+                            "Color": [
+                                1,
+                                1,
+                                1,
+                                1
+                            ],
+                            "X": -0.97000002861022949,
+                            "Y": -0.40000000596046448,
+                            "W": 0.086000002920627594,
+                            "H": 0.0010000000474974513,
                             "childOrder": 1
-                        },
-                        {
-                            "Type": 3,
-                            "Texture": {
-                                "AssetsPath": "Assets\/Textures\/\/UI\/Pause Menu\/PauseResumeButton.png",
-                                "AssetsName": "PauseResumeButton.png",
-                                "LibaryPath": "Library\/Textures\/1757330783.netex",
-                                "LibraryFile": "1757330783.netex"
-                            },
-                            "Shader": {
-                                "AssetsPath": "Assets\/Shaders\/UIShader.shader",
-                                "AssetsName": "UIShader.shader",
-                                "LibaryPath": "Library\/Shaders\/1025410539.neshader",
-                                "LibraryFile": "1025410539.neshader"
-                            }
                         }
                     ],
                     "Children": []
                 },
                 {
-                    "UID": 1981107829,
-                    "ParentUID": 2042720601,
+                    "UID": 2012762395,
+                    "ParentUID": 1523684372,
                     "PrefabID": 1524961430,
                     "IsPrefab": true,
-                    "Name": "SettingsButton",
+                    "Name": "Description Text",
                     "IsActive": true,
                     "IsStatic": false,
                     "IsSceneRoot": false,
@@ -1622,61 +2167,29 @@
                             ]
                         },
                         {
-                            "Type": 23,
-                            "X": -0.14000000059604645,
-                            "Y": -0.094999998807907104,
-                            "W": 0.28999999165534973,
-                            "H": 0.079999998211860657,
-                            "idler": 0.97000002861022949,
-                            "idleg": 0.75999999046325684,
-                            "idleb": 0.57999998331069946,
-                            "idlea": 1,
-                            "hoveredr": 1,
-                            "hoveredg": 1,
-                            "hoveredb": 1,
-                            "hovereda": 1,
-                            "pressedr": 1,
-                            "pressedg": 0.40000000596046448,
-                            "pressedb": 0.18999999761581421,
-                            "presseda": 1,
-                            "pixelCoords": [
-                                2134475,
-                                0,
-                                -1,
-                                -1
+                            "Type": 22,
+                            "Text": "Item Description",
+                            "Color": [
+                                1,
+                                1,
+                                1,
+                                1
                             ],
-                            "textureCoords": {
-                                "x": 0,
-                                "y": 0,
-                                "w": 1,
-                                "h": 1
-                            },
+                            "X": -0.97000002861022949,
+                            "Y": -0.55500000715255737,
+                            "W": 0.039999999105930328,
+                            "H": 0.85100001096725464,
                             "childOrder": 2
-                        },
-                        {
-                            "Type": 3,
-                            "Texture": {
-                                "AssetsPath": "Assets\/Textures\/\/UI\/Pause Menu\/PauseSettingsButton.png",
-                                "AssetsName": "PauseSettingsButton.png",
-                                "LibaryPath": "Library\/Textures\/688106359.netex",
-                                "LibraryFile": "688106359.netex"
-                            },
-                            "Shader": {
-                                "AssetsPath": "Assets\/Shaders\/UIShader.shader",
-                                "AssetsName": "UIShader.shader",
-                                "LibaryPath": "Library\/Shaders\/1025410539.neshader",
-                                "LibraryFile": "1025410539.neshader"
-                            }
                         }
                     ],
                     "Children": []
                 },
                 {
-                    "UID": 1705604159,
-                    "ParentUID": 2042720601,
+                    "UID": 1374744741,
+                    "ParentUID": 1523684372,
                     "PrefabID": 1524961430,
                     "IsPrefab": true,
-                    "Name": "AbandonButton",
+                    "Name": "Price Text",
                     "IsActive": true,
                     "IsStatic": false,
                     "IsSceneRoot": false,
@@ -1707,61 +2220,29 @@
                             ]
                         },
                         {
-                            "Type": 23,
-                            "X": -0.14000000059604645,
-                            "Y": -0.2199999988079071,
-                            "W": 0.28999999165534973,
-                            "H": 0.079999998211860657,
-                            "idler": 0.97000002861022949,
-                            "idleg": 0.75999999046325684,
-                            "idleb": 0.57999998331069946,
-                            "idlea": 1,
-                            "hoveredr": 1,
-                            "hoveredg": 1,
-                            "hoveredb": 1,
-                            "hovereda": 1,
-                            "pressedr": 1,
-                            "pressedg": 0.40000000596046448,
-                            "pressedb": 0.18999999761581421,
-                            "presseda": 1,
-                            "pixelCoords": [
-                                2134046,
-                                0,
-                                -1,
-                                -1
+                            "Type": 22,
+                            "Text": "Item Price",
+                            "Color": [
+                                1,
+                                0.55000001192092896,
+                                0.019999999552965164,
+                                1
                             ],
-                            "textureCoords": {
-                                "x": 0,
-                                "y": 0,
-                                "w": 1,
-                                "h": 1
-                            },
+                            "X": -0.97000002861022949,
+                            "Y": -0.76999998092651367,
+                            "W": 0.056000001728534698,
+                            "H": 0.0010000000474974513,
                             "childOrder": 3
-                        },
-                        {
-                            "Type": 3,
-                            "Texture": {
-                                "AssetsPath": "Assets\/Textures\/\/UI\/Pause Menu\/PauseAbandonButton.png",
-                                "AssetsName": "PauseAbandonButton.png",
-                                "LibaryPath": "Library\/Textures\/2103030993.netex",
-                                "LibraryFile": "2103030993.netex"
-                            },
-                            "Shader": {
-                                "AssetsPath": "Assets\/Shaders\/UIShader.shader",
-                                "AssetsName": "UIShader.shader",
-                                "LibaryPath": "Library\/Shaders\/1025410539.neshader",
-                                "LibraryFile": "1025410539.neshader"
-                            }
                         }
                     ],
                     "Children": []
                 },
                 {
-                    "UID": 1459705688,
-                    "ParentUID": 2042720601,
+                    "UID": 1590741596,
+                    "ParentUID": 1523684372,
                     "PrefabID": 1524961430,
                     "IsPrefab": true,
-                    "Name": "MenuButton",
+                    "Name": "Rarity Text",
                     "IsActive": true,
                     "IsStatic": false,
                     "IsSceneRoot": false,
@@ -1792,130 +2273,19 @@
                             ]
                         },
                         {
-                            "Type": 23,
-                            "X": -0.14000000059604645,
-                            "Y": -0.36500000953674316,
-                            "W": 0.28999999165534973,
-                            "H": 0.079999998211860657,
-                            "idler": 0.97000002861022949,
-                            "idleg": 0.75999999046325684,
-                            "idleb": 0.57999998331069946,
-                            "idlea": 1,
-                            "hoveredr": 1,
-                            "hoveredg": 1,
-                            "hoveredb": 1,
-                            "hovereda": 1,
-                            "pressedr": 1,
-                            "pressedg": 0.40000000596046448,
-                            "pressedb": 0.18999999761581421,
-                            "presseda": 1,
-                            "pixelCoords": [
-                                2133087,
+                            "Type": 22,
+                            "Text": "Item Rarity",
+                            "Color": [
+                                1,
                                 0,
-                                -1,
-                                -1
+                                0,
+                                1
                             ],
-                            "textureCoords": {
-                                "x": 0,
-                                "y": 0,
-                                "w": 1,
-                                "h": 1
-                            },
+                            "X": -0.97000002861022949,
+                            "Y": -0.47999998927116394,
+                            "W": 0.061000000685453415,
+                            "H": 0.0010000000474974513,
                             "childOrder": 4
-                        },
-                        {
-                            "Type": 3,
-                            "Texture": {
-                                "AssetsPath": "Assets\/Textures\/\/UI\/Pause Menu\/Recurso 163.png",
-                                "AssetsName": "Recurso 163.png",
-                                "LibaryPath": "Library\/Textures\/1313945373.netex",
-                                "LibraryFile": "1313945373.netex"
-                            },
-                            "Shader": {
-                                "AssetsPath": "Assets\/Shaders\/UIShader.shader",
-                                "AssetsName": "UIShader.shader",
-                                "LibaryPath": "Library\/Shaders\/1025410539.neshader",
-                                "LibraryFile": "1025410539.neshader"
-                            }
-                        }
-                    ],
-                    "Children": []
-                },
-                {
-                    "UID": 1486454330,
-                    "ParentUID": 2042720601,
-                    "PrefabID": 1524961430,
-                    "IsPrefab": true,
-                    "Name": "PauseBackground",
-                    "IsActive": true,
-                    "IsStatic": false,
-                    "IsSceneRoot": false,
-                    "MaintainThroughScenes": false,
-                    "ShowBoundingBoxes": false,
-                    "NavigationInfo": {
-                        "isNavigable": false,
-                        "navigationArea": 0
-                    },
-                    "Components": [
-                        {
-                            "Type": 1,
-                            "LocalPosition": [
-                                0,
-                                0,
-                                0
-                            ],
-                            "LocalRotation": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ],
-                            "LocalScale": [
-                                1,
-                                1,
-                                1
-                            ]
-                        },
-                        {
-                            "Type": 21,
-                            "X": -0.20000000298023224,
-                            "Y": -0.50499999523162842,
-                            "W": 0.40000000596046448,
-                            "H": 1.0099999904632568,
-                            "imgColor": {
-                                "r": 1,
-                                "g": 1,
-                                "b": 1,
-                                "a": 1
-                            },
-                            "textureCoords": {
-                                "x": 0,
-                                "y": 0,
-                                "w": 1,
-                                "h": 1
-                            },
-                            "inspectorTextureCoords": {
-                                "x": 0,
-                                "y": 0,
-                                "w": 761,
-                                "h": 1089
-                            },
-                            "childOrder": 5
-                        },
-                        {
-                            "Type": 3,
-                            "Texture": {
-                                "AssetsPath": "Assets\/Textures\/\/UI\/Pause Menu\/PauseBackground.png",
-                                "AssetsName": "PauseBackground.png",
-                                "LibaryPath": "Library\/Textures\/1833194840.netex",
-                                "LibraryFile": "1833194840.netex"
-                            },
-                            "Shader": {
-                                "AssetsPath": "Assets\/Shaders\/UIShader.shader",
-                                "AssetsName": "UIShader.shader",
-                                "LibaryPath": "Library\/Shaders\/1025410539.neshader",
-                                "LibraryFile": "1025410539.neshader"
-                            }
                         }
                     ],
                     "Children": []
@@ -1923,8 +2293,8 @@
             ]
         },
         {
-            "UID": 1304702839,
-            "ParentUID": 1631516746,
+            "UID": 1941947380,
+            "ParentUID": 80146169,
             "PrefabID": 1524961430,
             "IsPrefab": true,
             "Name": "DebugMenuCanvas",
@@ -2039,8 +2409,8 @@
             ],
             "Children": [
                 {
-                    "UID": 803945086,
-                    "ParentUID": 1304702839,
+                    "UID": 450611316,
+                    "ParentUID": 1941947380,
                     "PrefabID": 1524961430,
                     "IsPrefab": true,
                     "Name": "fpsText",
@@ -2092,8 +2462,8 @@
                     "Children": []
                 },
                 {
-                    "UID": 1920956250,
-                    "ParentUID": 1304702839,
+                    "UID": 123320512,
+                    "ParentUID": 1941947380,
                     "PrefabID": 1524961430,
                     "IsPrefab": true,
                     "Name": "GodMode",
@@ -2177,8 +2547,8 @@
                     "Children": []
                 },
                 {
-                    "UID": 2061069831,
-                    "ParentUID": 1304702839,
+                    "UID": 476841015,
+                    "ParentUID": 1941947380,
                     "PrefabID": 1524961430,
                     "IsPrefab": true,
                     "Name": "HealMando",
@@ -2262,8 +2632,8 @@
                     "Children": []
                 },
                 {
-                    "UID": 485801329,
-                    "ParentUID": 1304702839,
+                    "UID": 1703152949,
+                    "ParentUID": 1941947380,
                     "PrefabID": 1524961430,
                     "IsPrefab": true,
                     "Name": "GetCredits",
@@ -2347,8 +2717,8 @@
                     "Children": []
                 },
                 {
-                    "UID": 1022609421,
-                    "ParentUID": 1304702839,
+                    "UID": 837024661,
+                    "ParentUID": 1941947380,
                     "PrefabID": 1524961430,
                     "IsPrefab": true,
                     "Name": "GetBeskarIngots",
@@ -2432,8 +2802,8 @@
                     "Children": []
                 },
                 {
-                    "UID": 1137552272,
-                    "ParentUID": 1304702839,
+                    "UID": 303855842,
+                    "ParentUID": 1941947380,
                     "PrefabID": 1524961430,
                     "IsPrefab": true,
                     "Name": "SpawnBlurrg",
@@ -2517,8 +2887,8 @@
                     "Children": []
                 },
                 {
-                    "UID": 1661673665,
-                    "ParentUID": 1304702839,
+                    "UID": 1937227519,
+                    "ParentUID": 1941947380,
                     "PrefabID": 1524961430,
                     "IsPrefab": true,
                     "Name": "SpawnTrooper",
@@ -2602,8 +2972,8 @@
                     "Children": []
                 },
                 {
-                    "UID": 392605606,
-                    "ParentUID": 1304702839,
+                    "UID": 801358293,
+                    "ParentUID": 1941947380,
                     "PrefabID": 1524961430,
                     "IsPrefab": true,
                     "Name": "SkipRoom",
@@ -2687,8 +3057,8 @@
                     "Children": []
                 },
                 {
-                    "UID": 1665831879,
-                    "ParentUID": 1304702839,
+                    "UID": 919225198,
+                    "ParentUID": 1941947380,
                     "PrefabID": 1524961430,
                     "IsPrefab": true,
                     "Name": "DebugBackground",
@@ -2768,1424 +3138,8 @@
             ]
         },
         {
-            "UID": 1008546190,
-            "ParentUID": 1631516746,
-            "PrefabID": 1524961430,
-            "IsPrefab": true,
-            "Name": "HUBShopCanvas",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
-            "NavigationInfo": {
-                "isNavigable": false,
-                "navigationArea": 0
-            },
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        -7.62939453125e-06,
-                        -1.52587890625e-05
-                    ],
-                    "LocalRotation": [
-                        7.4505823732806675e-09,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        0.99999988079071045
-                    ]
-                },
-                {
-                    "Type": 13,
-                    "Canvas": {
-                        "IsActive": false,
-                        "X": 0,
-                        "Y": 0,
-                        "W": 1.0926049947738647,
-                        "H": 0.5787392258644104
-                    }
-                },
-                {
-                    "Type": 24,
-                    "ResourceUID": 1649072618,
-                    "AssetsPath": "Assets\/Scripts\/\/HUBShopMenuManager.h",
-                    "DataName": "HUBShopMenuManager",
-                    "HasInspector": true,
-                    "InspectorVariables": [
-                        {
-                            "Type": 5,
-                            "Name": "mandoName",
-                            "string": "Mandalorian"
-                        },
-                        {
-                            "Type": 5,
-                            "Name": "exitButtonName",
-                            "string": "ExitButton"
-                        },
-                        {
-                            "Type": 5,
-                            "Name": "buyButtonName",
-                            "string": "BuyButton"
-                        }
-                    ]
-                }
-            ],
-            "Children": [
-                {
-                    "UID": 1681624885,
-                    "ParentUID": 1008546190,
-                    "PrefabID": 1524961430,
-                    "IsPrefab": true,
-                    "Name": "BeskarText",
-                    "IsActive": true,
-                    "IsStatic": false,
-                    "IsSceneRoot": false,
-                    "MaintainThroughScenes": false,
-                    "ShowBoundingBoxes": false,
-                    "NavigationInfo": {
-                        "isNavigable": false,
-                        "navigationArea": 0
-                    },
-                    "Components": [
-                        {
-                            "Type": 1,
-                            "LocalPosition": [
-                                0,
-                                0,
-                                0
-                            ],
-                            "LocalRotation": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ],
-                            "LocalScale": [
-                                1,
-                                1,
-                                1
-                            ]
-                        },
-                        {
-                            "Type": 22,
-                            "Text": "001",
-                            "Color": [
-                                1,
-                                1,
-                                1,
-                                1
-                            ],
-                            "X": -0.59500002861022949,
-                            "Y": 0.68000000715255737,
-                            "W": 0.065999999642372131,
-                            "H": 0.0060000000521540642,
-                            "childOrder": 0
-                        }
-                    ],
-                    "Children": []
-                },
-                {
-                    "UID": 508550542,
-                    "ParentUID": 1008546190,
-                    "PrefabID": 1524961430,
-                    "IsPrefab": true,
-                    "Name": "ItemTitle",
-                    "IsActive": true,
-                    "IsStatic": false,
-                    "IsSceneRoot": false,
-                    "MaintainThroughScenes": false,
-                    "ShowBoundingBoxes": false,
-                    "NavigationInfo": {
-                        "isNavigable": false,
-                        "navigationArea": 0
-                    },
-                    "Components": [
-                        {
-                            "Type": 1,
-                            "LocalPosition": [
-                                0,
-                                0,
-                                0
-                            ],
-                            "LocalRotation": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ],
-                            "LocalScale": [
-                                1,
-                                1,
-                                1
-                            ]
-                        },
-                        {
-                            "Type": 22,
-                            "Text": "-Durasteel Upgrade-",
-                            "Color": [
-                                1,
-                                1,
-                                1,
-                                1
-                            ],
-                            "X": -0.40000000596046448,
-                            "Y": -0.19499999284744263,
-                            "W": 0.48600000143051147,
-                            "H": 0,
-                            "childOrder": 1
-                        }
-                    ],
-                    "Children": []
-                },
-                {
-                    "UID": 1002819217,
-                    "ParentUID": 1008546190,
-                    "PrefabID": 1524961430,
-                    "IsPrefab": true,
-                    "Name": "ItemText",
-                    "IsActive": true,
-                    "IsStatic": false,
-                    "IsSceneRoot": false,
-                    "MaintainThroughScenes": false,
-                    "ShowBoundingBoxes": false,
-                    "NavigationInfo": {
-                        "isNavigable": false,
-                        "navigationArea": 0
-                    },
-                    "Components": [
-                        {
-                            "Type": 1,
-                            "LocalPosition": [
-                                0,
-                                0,
-                                0
-                            ],
-                            "LocalRotation": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ],
-                            "LocalScale": [
-                                1,
-                                1,
-                                1
-                            ]
-                        },
-                        {
-                            "Type": 22,
-                            "Text": "Grants the player +1 Max Health",
-                            "Color": [
-                                1,
-                                1,
-                                1,
-                                1
-                            ],
-                            "X": -0.49000000953674316,
-                            "Y": -0.30500000715255737,
-                            "W": 0.045000001788139343,
-                            "H": 0.32600000500679016,
-                            "childOrder": 2
-                        }
-                    ],
-                    "Children": []
-                },
-                {
-                    "UID": 1850118596,
-                    "ParentUID": 1008546190,
-                    "PrefabID": 1524961430,
-                    "IsPrefab": true,
-                    "Name": "Beskars",
-                    "IsActive": true,
-                    "IsStatic": false,
-                    "IsSceneRoot": false,
-                    "MaintainThroughScenes": false,
-                    "ShowBoundingBoxes": false,
-                    "NavigationInfo": {
-                        "isNavigable": false,
-                        "navigationArea": 0
-                    },
-                    "Components": [
-                        {
-                            "Type": 1,
-                            "LocalPosition": [
-                                0,
-                                0,
-                                0
-                            ],
-                            "LocalRotation": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ],
-                            "LocalScale": [
-                                1,
-                                1,
-                                1
-                            ]
-                        },
-                        {
-                            "Type": 21,
-                            "X": -0.65499997138977051,
-                            "Y": 0.64999997615814209,
-                            "W": 0.15000000596046448,
-                            "H": 0.085000000894069672,
-                            "imgColor": {
-                                "r": 1,
-                                "g": 1,
-                                "b": 1,
-                                "a": 1
-                            },
-                            "textureCoords": {
-                                "x": 0,
-                                "y": 0,
-                                "w": 1,
-                                "h": 1
-                            },
-                            "inspectorTextureCoords": {
-                                "x": 176485744,
-                                "y": 179329312,
-                                "w": 0,
-                                "h": 0
-                            },
-                            "childOrder": 3
-                        },
-                        {
-                            "Type": 3,
-                            "Texture": {
-                                "AssetsPath": "Assets\/Textures\/\/UI\/Armorer\/Recurso 141.png",
-                                "AssetsName": "Recurso 141.png",
-                                "LibaryPath": "Library\/Textures\/61670648.netex",
-                                "LibraryFile": "61670648.netex"
-                            },
-                            "Shader": {
-                                "AssetsPath": "Assets\/Shaders\/UIShader.shader",
-                                "AssetsName": "UIShader.shader",
-                                "LibaryPath": "Library\/Shaders\/1025410539.neshader",
-                                "LibraryFile": "1025410539.neshader"
-                            }
-                        }
-                    ],
-                    "Children": []
-                },
-                {
-                    "UID": 717108815,
-                    "ParentUID": 1008546190,
-                    "PrefabID": 1524961430,
-                    "IsPrefab": true,
-                    "Name": "ArmorerDraw",
-                    "IsActive": true,
-                    "IsStatic": false,
-                    "IsSceneRoot": false,
-                    "MaintainThroughScenes": false,
-                    "ShowBoundingBoxes": false,
-                    "NavigationInfo": {
-                        "isNavigable": false,
-                        "navigationArea": 0
-                    },
-                    "Components": [
-                        {
-                            "Type": 1,
-                            "LocalPosition": [
-                                0,
-                                0,
-                                0
-                            ],
-                            "LocalRotation": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ],
-                            "LocalScale": [
-                                1,
-                                1,
-                                1
-                            ]
-                        },
-                        {
-                            "Type": 21,
-                            "X": -0.25499999523162842,
-                            "Y": -1.0099999904632568,
-                            "W": 1.0700000524520874,
-                            "H": 1.8799999952316284,
-                            "imgColor": {
-                                "r": 1,
-                                "g": 1,
-                                "b": 1,
-                                "a": 1
-                            },
-                            "textureCoords": {
-                                "x": 0,
-                                "y": 0,
-                                "w": 1,
-                                "h": 1
-                            },
-                            "inspectorTextureCoords": {
-                                "x": 0,
-                                "y": 0,
-                                "w": 1024,
-                                "h": 1024
-                            },
-                            "childOrder": 4
-                        },
-                        {
-                            "Type": 3,
-                            "Texture": {
-                                "AssetsPath": "Assets\/Textures\/\/UI\/HUBShop\/ArmorerIllustration.png",
-                                "AssetsName": "ArmorerIllustration.png",
-                                "LibaryPath": "Library\/Textures\/683947447.netex",
-                                "LibraryFile": "683947447.netex"
-                            },
-                            "Shader": {
-                                "AssetsPath": "Assets\/Shaders\/UIShader.shader",
-                                "AssetsName": "UIShader.shader",
-                                "LibaryPath": "Library\/Shaders\/1025410539.neshader",
-                                "LibraryFile": "1025410539.neshader"
-                            }
-                        }
-                    ],
-                    "Children": []
-                },
-                {
-                    "UID": 680895847,
-                    "ParentUID": 1008546190,
-                    "PrefabID": 1524961430,
-                    "IsPrefab": true,
-                    "Name": "ArmorText",
-                    "IsActive": true,
-                    "IsStatic": false,
-                    "IsSceneRoot": false,
-                    "MaintainThroughScenes": false,
-                    "ShowBoundingBoxes": false,
-                    "NavigationInfo": {
-                        "isNavigable": false,
-                        "navigationArea": 0
-                    },
-                    "Components": [
-                        {
-                            "Type": 1,
-                            "LocalPosition": [
-                                0,
-                                0,
-                                0
-                            ],
-                            "LocalRotation": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ],
-                            "LocalScale": [
-                                1,
-                                1,
-                                1
-                            ]
-                        },
-                        {
-                            "Type": 22,
-                            "Text": "1",
-                            "Color": [
-                                1,
-                                1,
-                                1,
-                                1
-                            ],
-                            "X": -0.19499999284744263,
-                            "Y": 0.4050000011920929,
-                            "W": 0.0010000000474974513,
-                            "H": 0.0010000000474974513,
-                            "childOrder": 5
-                        }
-                    ],
-                    "Children": []
-                },
-                {
-                    "UID": 751735846,
-                    "ParentUID": 1008546190,
-                    "PrefabID": 1524961430,
-                    "IsPrefab": true,
-                    "Name": "ArmorUpgrade",
-                    "IsActive": true,
-                    "IsStatic": false,
-                    "IsSceneRoot": false,
-                    "MaintainThroughScenes": false,
-                    "ShowBoundingBoxes": false,
-                    "NavigationInfo": {
-                        "isNavigable": false,
-                        "navigationArea": 0
-                    },
-                    "Components": [
-                        {
-                            "Type": 1,
-                            "LocalPosition": [
-                                0,
-                                0,
-                                0
-                            ],
-                            "LocalRotation": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ],
-                            "LocalScale": [
-                                1,
-                                1,
-                                1
-                            ]
-                        },
-                        {
-                            "Type": 21,
-                            "X": -0.55500000715255737,
-                            "Y": 0.31499999761581421,
-                            "W": 0.125,
-                            "H": 0.22499999403953552,
-                            "imgColor": {
-                                "r": 1,
-                                "g": 1,
-                                "b": 1,
-                                "a": 1
-                            },
-                            "textureCoords": {
-                                "x": 0,
-                                "y": 0,
-                                "w": 1,
-                                "h": 1
-                            },
-                            "inspectorTextureCoords": {
-                                "x": 0,
-                                "y": 0,
-                                "w": 128,
-                                "h": 128
-                            },
-                            "childOrder": 6
-                        },
-                        {
-                            "Type": 3,
-                            "Texture": {
-                                "AssetsPath": "Assets\/Textures\/\/UI\/Armorer\/ArmorUpgrade2.png",
-                                "AssetsName": "ArmorUpgrade2.png",
-                                "LibaryPath": "Library\/Textures\/994399859.netex",
-                                "LibraryFile": "994399859.netex"
-                            },
-                            "Shader": {
-                                "AssetsPath": "Assets\/Shaders\/UIShader.shader",
-                                "AssetsName": "UIShader.shader",
-                                "LibaryPath": "Library\/Shaders\/1025410539.neshader",
-                                "LibraryFile": "1025410539.neshader"
-                            }
-                        }
-                    ],
-                    "Children": []
-                },
-                {
-                    "UID": 933881543,
-                    "ParentUID": 1008546190,
-                    "PrefabID": 1524961430,
-                    "IsPrefab": true,
-                    "Name": "ArmorButton",
-                    "IsActive": true,
-                    "IsStatic": false,
-                    "IsSceneRoot": false,
-                    "MaintainThroughScenes": false,
-                    "ShowBoundingBoxes": false,
-                    "NavigationInfo": {
-                        "isNavigable": false,
-                        "navigationArea": 0
-                    },
-                    "Components": [
-                        {
-                            "Type": 1,
-                            "LocalPosition": [
-                                0,
-                                0,
-                                0
-                            ],
-                            "LocalRotation": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ],
-                            "LocalScale": [
-                                1,
-                                1,
-                                1
-                            ]
-                        },
-                        {
-                            "Type": 23,
-                            "X": -0.20999999344348907,
-                            "Y": 0.37999999523162842,
-                            "W": 0.11500000208616257,
-                            "H": 0.094999998807907104,
-                            "idler": 0.81862747669219971,
-                            "idleg": 0.81862306594848633,
-                            "idleb": 0.8186192512512207,
-                            "idlea": 1,
-                            "hoveredr": 1,
-                            "hoveredg": 1,
-                            "hoveredb": 1,
-                            "hovereda": 1,
-                            "pressedr": 0.30882352590560913,
-                            "pressedg": 0.30882138013839722,
-                            "pressedb": 0.30882042646408081,
-                            "presseda": 1,
-                            "pixelCoords": [
-                                218732,
-                                0,
-                                -1,
-                                -1
-                            ],
-                            "textureCoords": {
-                                "x": 0,
-                                "y": 0,
-                                "w": 1,
-                                "h": 1
-                            },
-                            "childOrder": 7
-                        },
-                        {
-                            "Type": 3,
-                            "Texture": {
-                                "AssetsPath": "Assets\/Textures\/UI\/Armorer\/BeskarPrice.png",
-                                "AssetsName": "BeskarPrice.png",
-                                "LibaryPath": "Library\/Textures\/1118662855.netex",
-                                "LibraryFile": "1118662855.netex"
-                            },
-                            "Shader": {
-                                "AssetsPath": "Assets\/Shaders\/UIShader.shader",
-                                "AssetsName": "UIShader.shader",
-                                "LibaryPath": "Library\/Shaders\/1025410539.neshader",
-                                "LibraryFile": "1025410539.neshader"
-                            }
-                        }
-                    ],
-                    "Children": []
-                },
-                {
-                    "UID": 1557670435,
-                    "ParentUID": 1008546190,
-                    "PrefabID": 1524961430,
-                    "IsPrefab": true,
-                    "Name": "TicketText",
-                    "IsActive": true,
-                    "IsStatic": false,
-                    "IsSceneRoot": false,
-                    "MaintainThroughScenes": false,
-                    "ShowBoundingBoxes": false,
-                    "NavigationInfo": {
-                        "isNavigable": false,
-                        "navigationArea": 0
-                    },
-                    "Components": [
-                        {
-                            "Type": 1,
-                            "LocalPosition": [
-                                0,
-                                0,
-                                0
-                            ],
-                            "LocalRotation": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ],
-                            "LocalScale": [
-                                1,
-                                1,
-                                1
-                            ]
-                        },
-                        {
-                            "Type": 22,
-                            "Text": "1",
-                            "Color": [
-                                1,
-                                1,
-                                1,
-                                1
-                            ],
-                            "X": -0.19499999284744263,
-                            "Y": 0.10000000149011612,
-                            "W": 0.0010000000474974513,
-                            "H": 0.0010000000474974513,
-                            "childOrder": 8
-                        }
-                    ],
-                    "Children": []
-                },
-                {
-                    "UID": 863193437,
-                    "ParentUID": 1008546190,
-                    "PrefabID": 1524961430,
-                    "IsPrefab": true,
-                    "Name": "TicketUpgrade",
-                    "IsActive": true,
-                    "IsStatic": false,
-                    "IsSceneRoot": false,
-                    "MaintainThroughScenes": false,
-                    "ShowBoundingBoxes": false,
-                    "NavigationInfo": {
-                        "isNavigable": false,
-                        "navigationArea": 0
-                    },
-                    "Components": [
-                        {
-                            "Type": 1,
-                            "LocalPosition": [
-                                0,
-                                0,
-                                0
-                            ],
-                            "LocalRotation": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ],
-                            "LocalScale": [
-                                1,
-                                1,
-                                1
-                            ]
-                        },
-                        {
-                            "Type": 21,
-                            "X": -0.55000001192092896,
-                            "Y": 0.019999999552965164,
-                            "W": 0.10999999940395355,
-                            "H": 0.18999999761581421,
-                            "imgColor": {
-                                "r": 1,
-                                "g": 1,
-                                "b": 1,
-                                "a": 1
-                            },
-                            "textureCoords": {
-                                "x": 0,
-                                "y": 0,
-                                "w": 1,
-                                "h": 1
-                            },
-                            "inspectorTextureCoords": {
-                                "x": 0,
-                                "y": 0,
-                                "w": 128,
-                                "h": 128
-                            },
-                            "childOrder": 9
-                        },
-                        {
-                            "Type": 3,
-                            "Texture": {
-                                "AssetsPath": "Assets\/Textures\/\/UI\/HUBShop\/ConsummeristTendencies2.png",
-                                "AssetsName": "ConsummeristTendencies2.png",
-                                "LibaryPath": "Library\/Textures\/950302656.netex",
-                                "LibraryFile": "950302656.netex"
-                            },
-                            "Shader": {
-                                "AssetsPath": "Assets\/Shaders\/UIShader.shader",
-                                "AssetsName": "UIShader.shader",
-                                "LibaryPath": "Library\/Shaders\/1025410539.neshader",
-                                "LibraryFile": "1025410539.neshader"
-                            }
-                        }
-                    ],
-                    "Children": []
-                },
-                {
-                    "UID": 124582773,
-                    "ParentUID": 1008546190,
-                    "PrefabID": 1524961430,
-                    "IsPrefab": true,
-                    "Name": "TicketButton",
-                    "IsActive": true,
-                    "IsStatic": false,
-                    "IsSceneRoot": false,
-                    "MaintainThroughScenes": false,
-                    "ShowBoundingBoxes": false,
-                    "NavigationInfo": {
-                        "isNavigable": false,
-                        "navigationArea": 0
-                    },
-                    "Components": [
-                        {
-                            "Type": 1,
-                            "LocalPosition": [
-                                0,
-                                0,
-                                0
-                            ],
-                            "LocalRotation": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ],
-                            "LocalScale": [
-                                1,
-                                1,
-                                1
-                            ]
-                        },
-                        {
-                            "Type": 23,
-                            "X": -0.20499999821186066,
-                            "Y": 0.070000000298023224,
-                            "W": 0.11500000208616257,
-                            "H": 0.094999998807907104,
-                            "idler": 0.71078431606292725,
-                            "idleg": 0.71078068017959595,
-                            "idleb": 0.71077722311019897,
-                            "idlea": 1,
-                            "hoveredr": 1,
-                            "hoveredg": 1,
-                            "hoveredb": 1,
-                            "hovereda": 1,
-                            "pressedr": 0.25980395078659058,
-                            "pressedg": 0.25980213284492493,
-                            "pressedb": 0.25980135798454285,
-                            "presseda": 1,
-                            "pixelCoords": [
-                                219038,
-                                0,
-                                -1,
-                                -1
-                            ],
-                            "textureCoords": {
-                                "x": 0,
-                                "y": 0,
-                                "w": 1,
-                                "h": 1
-                            },
-                            "childOrder": 10
-                        },
-                        {
-                            "Type": 3,
-                            "Texture": {
-                                "AssetsPath": "Assets\/Textures\/UI\/Armorer\/BeskarPrice.png",
-                                "AssetsName": "BeskarPrice.png",
-                                "LibaryPath": "Library\/Textures\/1118662855.netex",
-                                "LibraryFile": "1118662855.netex"
-                            },
-                            "Shader": {
-                                "AssetsPath": "Assets\/Shaders\/UIShader.shader",
-                                "AssetsName": "UIShader.shader",
-                                "LibaryPath": "Library\/Shaders\/1025410539.neshader",
-                                "LibraryFile": "1025410539.neshader"
-                            }
-                        }
-                    ],
-                    "Children": []
-                },
-                {
-                    "UID": 1581927685,
-                    "ParentUID": 1008546190,
-                    "PrefabID": 1524961430,
-                    "IsPrefab": true,
-                    "Name": "BootsText",
-                    "IsActive": true,
-                    "IsStatic": false,
-                    "IsSceneRoot": false,
-                    "MaintainThroughScenes": false,
-                    "ShowBoundingBoxes": false,
-                    "NavigationInfo": {
-                        "isNavigable": false,
-                        "navigationArea": 0
-                    },
-                    "Components": [
-                        {
-                            "Type": 1,
-                            "LocalPosition": [
-                                0,
-                                0,
-                                0
-                            ],
-                            "LocalRotation": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ],
-                            "LocalScale": [
-                                1,
-                                1,
-                                1
-                            ]
-                        },
-                        {
-                            "Type": 22,
-                            "Text": "1",
-                            "Color": [
-                                1,
-                                1,
-                                1,
-                                1
-                            ],
-                            "X": 0.36000001430511475,
-                            "Y": 0.40999999642372131,
-                            "W": 0.0010000000474974513,
-                            "H": 0.0010000000474974513,
-                            "childOrder": 11
-                        }
-                    ],
-                    "Children": []
-                },
-                {
-                    "UID": 1427803221,
-                    "ParentUID": 1008546190,
-                    "PrefabID": 1524961430,
-                    "IsPrefab": true,
-                    "Name": "BootsUpgrade",
-                    "IsActive": true,
-                    "IsStatic": false,
-                    "IsSceneRoot": false,
-                    "MaintainThroughScenes": false,
-                    "ShowBoundingBoxes": false,
-                    "NavigationInfo": {
-                        "isNavigable": false,
-                        "navigationArea": 0
-                    },
-                    "Components": [
-                        {
-                            "Type": 1,
-                            "LocalPosition": [
-                                0,
-                                0,
-                                0
-                            ],
-                            "LocalRotation": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ],
-                            "LocalScale": [
-                                1,
-                                1,
-                                1
-                            ]
-                        },
-                        {
-                            "Type": 21,
-                            "X": -0.02500000037252903,
-                            "Y": 0.28999999165534973,
-                            "W": 0.1550000011920929,
-                            "H": 0.26499998569488525,
-                            "imgColor": {
-                                "r": 1,
-                                "g": 1,
-                                "b": 1,
-                                "a": 1
-                            },
-                            "textureCoords": {
-                                "x": 0,
-                                "y": 0,
-                                "w": 1,
-                                "h": 1
-                            },
-                            "inspectorTextureCoords": {
-                                "x": 0,
-                                "y": 0,
-                                "w": 128,
-                                "h": 128
-                            },
-                            "childOrder": 12
-                        },
-                        {
-                            "Type": 3,
-                            "Texture": {
-                                "AssetsPath": "Assets\/Textures\/UI\/Armorer\/PropulsedBoots.png",
-                                "AssetsName": "PropulsedBoots.png",
-                                "LibaryPath": "Library\/Textures\/1784685853.netex",
-                                "LibraryFile": "1784685853.netex"
-                            },
-                            "Shader": {
-                                "AssetsPath": "Assets\/Shaders\/UIShader.shader",
-                                "AssetsName": "UIShader.shader",
-                                "LibaryPath": "Library\/Shaders\/1025410539.neshader",
-                                "LibraryFile": "1025410539.neshader"
-                            }
-                        }
-                    ],
-                    "Children": []
-                },
-                {
-                    "UID": 1868138517,
-                    "ParentUID": 1008546190,
-                    "PrefabID": 1524961430,
-                    "IsPrefab": true,
-                    "Name": "BootsButton",
-                    "IsActive": true,
-                    "IsStatic": false,
-                    "IsSceneRoot": false,
-                    "MaintainThroughScenes": false,
-                    "ShowBoundingBoxes": false,
-                    "NavigationInfo": {
-                        "isNavigable": false,
-                        "navigationArea": 0
-                    },
-                    "Components": [
-                        {
-                            "Type": 1,
-                            "LocalPosition": [
-                                0,
-                                0,
-                                0
-                            ],
-                            "LocalRotation": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ],
-                            "LocalScale": [
-                                1,
-                                1,
-                                1
-                            ]
-                        },
-                        {
-                            "Type": 23,
-                            "X": 0.3449999988079071,
-                            "Y": 0.37999999523162842,
-                            "W": 0.11500000208616257,
-                            "H": 0.094999998807907104,
-                            "idler": 0.69117647409439087,
-                            "idleg": 0.69117295742034912,
-                            "idleb": 0.69116955995559692,
-                            "idlea": 1,
-                            "hoveredr": 1,
-                            "hoveredg": 1,
-                            "hoveredb": 1,
-                            "hovereda": 1,
-                            "pressedr": 0.22058820724487305,
-                            "pressedg": 0.22058667242527008,
-                            "pressedb": 0.22058600187301636,
-                            "presseda": 1,
-                            "pixelCoords": [
-                                219249,
-                                0,
-                                -1,
-                                -1
-                            ],
-                            "textureCoords": {
-                                "x": 0,
-                                "y": 0,
-                                "w": 1,
-                                "h": 1
-                            },
-                            "childOrder": 13
-                        },
-                        {
-                            "Type": 3,
-                            "Texture": {
-                                "AssetsPath": "Assets\/Textures\/UI\/Armorer\/BeskarPrice.png",
-                                "AssetsName": "BeskarPrice.png",
-                                "LibaryPath": "Library\/Textures\/1118662855.netex",
-                                "LibraryFile": "1118662855.netex"
-                            },
-                            "Shader": {
-                                "AssetsPath": "Assets\/Shaders\/UIShader.shader",
-                                "AssetsName": "UIShader.shader",
-                                "LibaryPath": "Library\/Shaders\/1025410539.neshader",
-                                "LibraryFile": "1025410539.neshader"
-                            }
-                        }
-                    ],
-                    "Children": []
-                },
-                {
-                    "UID": 1042521358,
-                    "ParentUID": 1008546190,
-                    "PrefabID": 1524961430,
-                    "IsPrefab": true,
-                    "Name": "LiquidText",
-                    "IsActive": true,
-                    "IsStatic": false,
-                    "IsSceneRoot": false,
-                    "MaintainThroughScenes": false,
-                    "ShowBoundingBoxes": false,
-                    "NavigationInfo": {
-                        "isNavigable": false,
-                        "navigationArea": 0
-                    },
-                    "Components": [
-                        {
-                            "Type": 1,
-                            "LocalPosition": [
-                                0,
-                                0,
-                                0
-                            ],
-                            "LocalRotation": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ],
-                            "LocalScale": [
-                                1,
-                                1,
-                                1
-                            ]
-                        },
-                        {
-                            "Type": 22,
-                            "Text": "1",
-                            "Color": [
-                                1,
-                                1,
-                                1,
-                                1
-                            ],
-                            "X": 0.36500000953674316,
-                            "Y": 0.11500000208616257,
-                            "W": 0.0010000000474974513,
-                            "H": 0.0010000000474974513,
-                            "childOrder": 14
-                        }
-                    ],
-                    "Children": []
-                },
-                {
-                    "UID": 838855410,
-                    "ParentUID": 1008546190,
-                    "PrefabID": 1524961430,
-                    "IsPrefab": true,
-                    "Name": "LiquidUpgrade",
-                    "IsActive": true,
-                    "IsStatic": false,
-                    "IsSceneRoot": false,
-                    "MaintainThroughScenes": false,
-                    "ShowBoundingBoxes": false,
-                    "NavigationInfo": {
-                        "isNavigable": false,
-                        "navigationArea": 0
-                    },
-                    "Components": [
-                        {
-                            "Type": 1,
-                            "LocalPosition": [
-                                0,
-                                0,
-                                0
-                            ],
-                            "LocalRotation": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ],
-                            "LocalScale": [
-                                1,
-                                1,
-                                1
-                            ]
-                        },
-                        {
-                            "Type": 21,
-                            "X": -0.02500000037252903,
-                            "Y": 0.0099999997764825821,
-                            "W": 0.16500000655651093,
-                            "H": 0.25999999046325684,
-                            "imgColor": {
-                                "r": 1,
-                                "g": 1,
-                                "b": 1,
-                                "a": 1
-                            },
-                            "textureCoords": {
-                                "x": 0,
-                                "y": 0,
-                                "w": 1,
-                                "h": 1
-                            },
-                            "inspectorTextureCoords": {
-                                "x": 176485744,
-                                "y": 179329312,
-                                "w": 0,
-                                "h": 0
-                            },
-                            "childOrder": 15
-                        },
-                        {
-                            "Type": 3,
-                            "Texture": {
-                                "AssetsPath": "Assets\/Textures\/UI\/Armorer\/RefrigerationLiquid.png",
-                                "AssetsName": "RefrigerationLiquid.png",
-                                "LibaryPath": "Library\/Textures\/357439940.netex",
-                                "LibraryFile": "357439940.netex"
-                            },
-                            "Shader": {
-                                "AssetsPath": "Assets\/Shaders\/UIShader.shader",
-                                "AssetsName": "UIShader.shader",
-                                "LibaryPath": "Library\/Shaders\/1025410539.neshader",
-                                "LibraryFile": "1025410539.neshader"
-                            }
-                        }
-                    ],
-                    "Children": []
-                },
-                {
-                    "UID": 1233416822,
-                    "ParentUID": 1008546190,
-                    "PrefabID": 1524961430,
-                    "IsPrefab": true,
-                    "Name": "LiquidButton",
-                    "IsActive": true,
-                    "IsStatic": false,
-                    "IsSceneRoot": false,
-                    "MaintainThroughScenes": false,
-                    "ShowBoundingBoxes": false,
-                    "NavigationInfo": {
-                        "isNavigable": false,
-                        "navigationArea": 0
-                    },
-                    "Components": [
-                        {
-                            "Type": 1,
-                            "LocalPosition": [
-                                0,
-                                0,
-                                0
-                            ],
-                            "LocalRotation": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ],
-                            "LocalScale": [
-                                1,
-                                1,
-                                1
-                            ]
-                        },
-                        {
-                            "Type": 23,
-                            "X": 0.34999999403953552,
-                            "Y": 0.090000003576278687,
-                            "W": 0.11500000208616257,
-                            "H": 0.094999998807907104,
-                            "idler": 0.70588231086730957,
-                            "idleg": 0.70587849617004395,
-                            "idleb": 0.7058752179145813,
-                            "idlea": 1,
-                            "hoveredr": 1,
-                            "hoveredg": 1,
-                            "hoveredb": 1,
-                            "hovereda": 1,
-                            "pressedr": 0.26960784196853638,
-                            "pressedg": 0.26960590481758118,
-                            "pressedb": 0.2696051299571991,
-                            "presseda": 1,
-                            "pixelCoords": [
-                                219536,
-                                0,
-                                -1,
-                                -1
-                            ],
-                            "textureCoords": {
-                                "x": 0,
-                                "y": 0,
-                                "w": 1,
-                                "h": 1
-                            },
-                            "childOrder": 16
-                        },
-                        {
-                            "Type": 3,
-                            "Texture": {
-                                "AssetsPath": "Assets\/Textures\/UI\/Armorer\/BeskarPrice.png",
-                                "AssetsName": "BeskarPrice.png",
-                                "LibaryPath": "Library\/Textures\/1118662855.netex",
-                                "LibraryFile": "1118662855.netex"
-                            },
-                            "Shader": {
-                                "AssetsPath": "Assets\/Shaders\/UIShader.shader",
-                                "AssetsName": "UIShader.shader",
-                                "LibaryPath": "Library\/Shaders\/1025410539.neshader",
-                                "LibraryFile": "1025410539.neshader"
-                            }
-                        }
-                    ],
-                    "Children": []
-                },
-                {
-                    "UID": 25254530,
-                    "ParentUID": 1008546190,
-                    "PrefabID": 1524961430,
-                    "IsPrefab": true,
-                    "Name": "TextBackground",
-                    "IsActive": true,
-                    "IsStatic": false,
-                    "IsSceneRoot": false,
-                    "MaintainThroughScenes": false,
-                    "ShowBoundingBoxes": false,
-                    "NavigationInfo": {
-                        "isNavigable": false,
-                        "navigationArea": 0
-                    },
-                    "Components": [
-                        {
-                            "Type": 1,
-                            "LocalPosition": [
-                                0,
-                                0,
-                                0
-                            ],
-                            "LocalRotation": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ],
-                            "LocalScale": [
-                                1,
-                                1,
-                                1
-                            ]
-                        },
-                        {
-                            "Type": 21,
-                            "X": -0.5899999737739563,
-                            "Y": -0.56999999284744263,
-                            "W": 0.76999998092651367,
-                            "H": 0.55000001192092896,
-                            "imgColor": {
-                                "r": 1,
-                                "g": 1,
-                                "b": 1,
-                                "a": 1
-                            },
-                            "textureCoords": {
-                                "x": 0,
-                                "y": 0,
-                                "w": 1,
-                                "h": 1
-                            },
-                            "inspectorTextureCoords": {
-                                "x": 0,
-                                "y": 0,
-                                "w": 600,
-                                "h": 256
-                            },
-                            "childOrder": 17
-                        },
-                        {
-                            "Type": 3,
-                            "Texture": {
-                                "AssetsPath": "Assets\/Textures\/\/UI\/Armorer\/ArmorerBackground2.png",
-                                "AssetsName": "ArmorerBackground2.png",
-                                "LibaryPath": "Library\/Textures\/1004150875.netex",
-                                "LibraryFile": "1004150875.netex"
-                            },
-                            "Shader": {
-                                "AssetsPath": "Assets\/Shaders\/UIShader.shader",
-                                "AssetsName": "UIShader.shader",
-                                "LibaryPath": "Library\/Shaders\/1025410539.neshader",
-                                "LibraryFile": "1025410539.neshader"
-                            }
-                        }
-                    ],
-                    "Children": []
-                },
-                {
-                    "UID": 806498371,
-                    "ParentUID": 1008546190,
-                    "PrefabID": 1524961430,
-                    "IsPrefab": true,
-                    "Name": "Background",
-                    "IsActive": true,
-                    "IsStatic": false,
-                    "IsSceneRoot": false,
-                    "MaintainThroughScenes": false,
-                    "ShowBoundingBoxes": false,
-                    "NavigationInfo": {
-                        "isNavigable": false,
-                        "navigationArea": 0
-                    },
-                    "Components": [
-                        {
-                            "Type": 1,
-                            "LocalPosition": [
-                                0,
-                                0,
-                                0
-                            ],
-                            "LocalRotation": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ],
-                            "LocalScale": [
-                                1,
-                                1,
-                                1
-                            ]
-                        },
-                        {
-                            "Type": 21,
-                            "X": -0.76800000667572021,
-                            "Y": -0.93500000238418579,
-                            "W": 1.3550000190734863,
-                            "H": 1.8949999809265137,
-                            "imgColor": {
-                                "r": 1,
-                                "g": 1,
-                                "b": 1,
-                                "a": 1
-                            },
-                            "textureCoords": {
-                                "x": 0,
-                                "y": 0,
-                                "w": 1,
-                                "h": 1
-                            },
-                            "inspectorTextureCoords": {
-                                "x": 0,
-                                "y": 0,
-                                "w": 1300,
-                                "h": 1024
-                            },
-                            "childOrder": 18
-                        },
-                        {
-                            "Type": 3,
-                            "Texture": {
-                                "AssetsPath": "Assets\/Textures\/\/UI\/Armorer\/ArmorerBackground1.png",
-                                "AssetsName": "ArmorerBackground1.png",
-                                "LibaryPath": "Library\/Textures\/1437530803.netex",
-                                "LibraryFile": "1437530803.netex"
-                            },
-                            "Shader": {
-                                "AssetsPath": "Assets\/Shaders\/UIShader.shader",
-                                "AssetsName": "UIShader.shader",
-                                "LibaryPath": "Library\/Shaders\/1025410539.neshader",
-                                "LibraryFile": "1025410539.neshader"
-                            }
-                        }
-                    ],
-                    "Children": []
-                }
-            ]
-        },
-        {
-            "UID": 562052468,
-            "ParentUID": 1631516746,
+            "UID": 2101394980,
+            "ParentUID": 80146169,
             "PrefabID": 1524961430,
             "IsPrefab": true,
             "Name": "HUD",
@@ -4305,8 +3259,8 @@
             ],
             "Children": [
                 {
-                    "UID": 995008580,
-                    "ParentUID": 562052468,
+                    "UID": 1638766160,
+                    "ParentUID": 2101394980,
                     "PrefabID": 1524961430,
                     "IsPrefab": true,
                     "Name": "BeskarText",
@@ -4358,8 +3312,8 @@
                     "Children": []
                 },
                 {
-                    "UID": 548653131,
-                    "ParentUID": 562052468,
+                    "UID": 1536811662,
+                    "ParentUID": 2101394980,
                     "PrefabID": 1524961430,
                     "IsPrefab": true,
                     "Name": "AmmoText",
@@ -4411,8 +3365,8 @@
                     "Children": []
                 },
                 {
-                    "UID": 1719299513,
-                    "ParentUID": 562052468,
+                    "UID": 648104291,
+                    "ParentUID": 2101394980,
                     "PrefabID": 1524961430,
                     "IsPrefab": true,
                     "Name": "CreditsText",
@@ -4464,8 +3418,8 @@
                     "Children": []
                 },
                 {
-                    "UID": 14093440,
-                    "ParentUID": 562052468,
+                    "UID": 1078646924,
+                    "ParentUID": 2101394980,
                     "PrefabID": 1524961430,
                     "IsPrefab": true,
                     "Name": "SecodaryWeapon",
@@ -4543,8 +3497,8 @@
                     "Children": []
                 },
                 {
-                    "UID": 74098529,
-                    "ParentUID": 562052468,
+                    "UID": 43878746,
+                    "ParentUID": 2101394980,
                     "PrefabID": 1524961430,
                     "IsPrefab": true,
                     "Name": "PrimaryWeapon",
@@ -4640,8 +3594,8 @@
                     "Children": []
                 },
                 {
-                    "UID": 1410315151,
-                    "ParentUID": 562052468,
+                    "UID": 1387463965,
+                    "ParentUID": 2101394980,
                     "PrefabID": 1524961430,
                     "IsPrefab": true,
                     "Name": "Mando",
@@ -4737,8 +3691,8 @@
                     "Children": []
                 },
                 {
-                    "UID": 66839133,
-                    "ParentUID": 562052468,
+                    "UID": 1578320636,
+                    "ParentUID": 2101394980,
                     "PrefabID": 1524961430,
                     "IsPrefab": true,
                     "Name": "SidekickButton",
@@ -4746,7 +3700,7 @@
                     "IsStatic": false,
                     "IsSceneRoot": false,
                     "MaintainThroughScenes": false,
-                    "ShowBoundingBoxes": false,
+                    "ShowBoundingBoxes": true,
                     "NavigationInfo": {
                         "isNavigable": false,
                         "navigationArea": 0
@@ -4811,13 +3765,31 @@
                                 "LibaryPath": "Library\/Shaders\/1025410539.neshader",
                                 "LibraryFile": "1025410539.neshader"
                             }
+                        },
+                        {
+                            "Type": 25,
+                            "Animation Step Time": 30,
+                            "Animation Loop": false,
+                            "Animation Set On Loop From Start": false,
+                            "Name": "SidekickButton",
+                            "Name1": "",
+                            "Name2": "",
+                            "Spritesheet Rows": 2,
+                            "Spritesheet Columns": 4,
+                            "Spritesheet Animation Number": 8,
+                            "Spritesheet2 Rows": 5,
+                            "Spritesheet2 Columns": 5,
+                            "Spritesheet2 Animation Number": 25,
+                            "Spritesheet3 Rows": 5,
+                            "Spritesheet3 Columns": 5,
+                            "Spritesheet3 Animation Number": 25
                         }
                     ],
                     "Children": []
                 },
                 {
-                    "UID": 884001958,
-                    "ParentUID": 562052468,
+                    "UID": 1125282838,
+                    "ParentUID": 2101394980,
                     "PrefabID": 1524961430,
                     "IsPrefab": true,
                     "Name": "Heart1",
@@ -4913,8 +3885,8 @@
                     "Children": []
                 },
                 {
-                    "UID": 1370430485,
-                    "ParentUID": 562052468,
+                    "UID": 1118413779,
+                    "ParentUID": 2101394980,
                     "PrefabID": 1524961430,
                     "IsPrefab": true,
                     "Name": "Heart2",
@@ -5010,8 +3982,8 @@
                     "Children": []
                 },
                 {
-                    "UID": 1732777213,
-                    "ParentUID": 562052468,
+                    "UID": 2019429342,
+                    "ParentUID": 2101394980,
                     "PrefabID": 1524961430,
                     "IsPrefab": true,
                     "Name": "Heart3",
@@ -5107,8 +4079,8 @@
                     "Children": []
                 },
                 {
-                    "UID": 1087325365,
-                    "ParentUID": 562052468,
+                    "UID": 965310082,
+                    "ParentUID": 2101394980,
                     "PrefabID": 1524961430,
                     "IsPrefab": true,
                     "Name": "Credits",
@@ -5186,8 +4158,8 @@
                     "Children": []
                 },
                 {
-                    "UID": 1690401539,
-                    "ParentUID": 562052468,
+                    "UID": 740018461,
+                    "ParentUID": 2101394980,
                     "PrefabID": 1524961430,
                     "IsPrefab": true,
                     "Name": "Beskar",
@@ -5267,11 +4239,11 @@
             ]
         },
         {
-            "UID": 176662983,
-            "ParentUID": 1631516746,
+            "UID": 2112770151,
+            "ParentUID": 80146169,
             "PrefabID": 1524961430,
             "IsPrefab": true,
-            "Name": "Item Menu",
+            "Name": "HUBShopCanvas",
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
@@ -5286,11 +4258,11 @@
                     "Type": 1,
                     "LocalPosition": [
                         0,
-                        0,
-                        0
+                        -7.62939453125e-06,
+                        -1.52587890625e-05
                     ],
                     "LocalRotation": [
-                        0,
+                        7.4505823732806675e-09,
                         0,
                         0,
                         1
@@ -5298,13 +4270,13 @@
                     "LocalScale": [
                         1,
                         1,
-                        1
+                        0.99999988079071045
                     ]
                 },
                 {
                     "Type": 13,
                     "Canvas": {
-                        "IsActive": true,
+                        "IsActive": false,
                         "X": 0,
                         "Y": 0,
                         "W": 1.0926049947738647,
@@ -5313,60 +4285,168 @@
                 },
                 {
                     "Type": 24,
-                    "ResourceUID": 643521645,
-                    "AssetsPath": "Assets\/Scripts\/\/ItemMenuManager.h",
-                    "DataName": "ItemMenuManager",
+                    "ResourceUID": 1649072618,
+                    "AssetsPath": "Assets\/Scripts\/\/HUBShopMenuManager.h",
+                    "DataName": "HUBShopMenuManager",
                     "HasInspector": true,
                     "InspectorVariables": [
                         {
                             "Type": 5,
-                            "Name": "canvasName",
-                            "string": "Item Menu"
+                            "Name": "mandoName",
+                            "string": "Mandalorian"
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "exitButtonName",
+                            "string": "ExitButton"
                         },
                         {
                             "Type": 5,
                             "Name": "buyButtonName",
-                            "string": "Buy Button"
-                        },
-                        {
-                            "Type": 5,
-                            "Name": "nameTextName",
-                            "string": "Name Text"
-                        },
-                        {
-                            "Type": 5,
-                            "Name": "descriptionTextName",
-                            "string": "Description Text"
-                        },
-                        {
-                            "Type": 5,
-                            "Name": "priceTextName",
-                            "string": "Price Text"
-                        },
-                        {
-                            "Type": 5,
-                            "Name": "playerName",
-                            "string": "Mandalorian"
+                            "string": "BuyButton"
                         }
                     ]
-                },
-                {
-                    "Type": 3,
-                    "Texture": {
-                        "AssetsPath": "Assets\/Textures\/UI\/Shop\/ShopIconArmor.png",
-                        "AssetsName": "ShopIconArmor.png",
-                        "LibaryPath": "Library\/Textures\/739427130.netex",
-                        "LibraryFile": "739427130.netex"
-                    }
                 }
             ],
             "Children": [
                 {
-                    "UID": 454168657,
-                    "ParentUID": 176662983,
+                    "UID": 307135297,
+                    "ParentUID": 2112770151,
                     "PrefabID": 1524961430,
                     "IsPrefab": true,
-                    "Name": "Buy Button",
+                    "Name": "ArmorerDraw",
+                    "IsActive": true,
+                    "IsStatic": false,
+                    "IsSceneRoot": false,
+                    "MaintainThroughScenes": false,
+                    "ShowBoundingBoxes": false,
+                    "NavigationInfo": {
+                        "isNavigable": false,
+                        "navigationArea": 0
+                    },
+                    "Components": [
+                        {
+                            "Type": 1,
+                            "LocalPosition": [
+                                0,
+                                0,
+                                0
+                            ],
+                            "LocalRotation": [
+                                0,
+                                0,
+                                0,
+                                1
+                            ],
+                            "LocalScale": [
+                                1,
+                                1,
+                                1
+                            ]
+                        },
+                        {
+                            "Type": 21,
+                            "X": -0.37999999523162842,
+                            "Y": -1.0049999952316284,
+                            "W": 1.0700000524520874,
+                            "H": 1.8799999952316284,
+                            "imgColor": {
+                                "r": 1,
+                                "g": 1,
+                                "b": 1,
+                                "a": 1
+                            },
+                            "textureCoords": {
+                                "x": 0,
+                                "y": 0,
+                                "w": 1,
+                                "h": 1
+                            },
+                            "inspectorTextureCoords": {
+                                "x": 0,
+                                "y": 0,
+                                "w": 1024,
+                                "h": 1024
+                            },
+                            "childOrder": 0
+                        },
+                        {
+                            "Type": 3,
+                            "Texture": {
+                                "AssetsPath": "Assets\/Textures\/\/UI\/HUBShop\/ArmorerIllustration.png",
+                                "AssetsName": "ArmorerIllustration.png",
+                                "LibaryPath": "Library\/Textures\/683947447.netex",
+                                "LibraryFile": "683947447.netex"
+                            },
+                            "Shader": {
+                                "AssetsPath": "Assets\/Shaders\/UIShader.shader",
+                                "AssetsName": "UIShader.shader",
+                                "LibaryPath": "Library\/Shaders\/1025410539.neshader",
+                                "LibraryFile": "1025410539.neshader"
+                            }
+                        }
+                    ],
+                    "Children": []
+                },
+                {
+                    "UID": 1433316014,
+                    "ParentUID": 2112770151,
+                    "PrefabID": 1524961430,
+                    "IsPrefab": true,
+                    "Name": "BeskarTextHubShop",
+                    "IsActive": true,
+                    "IsStatic": false,
+                    "IsSceneRoot": false,
+                    "MaintainThroughScenes": false,
+                    "ShowBoundingBoxes": false,
+                    "NavigationInfo": {
+                        "isNavigable": false,
+                        "navigationArea": 0
+                    },
+                    "Components": [
+                        {
+                            "Type": 1,
+                            "LocalPosition": [
+                                0,
+                                0,
+                                0
+                            ],
+                            "LocalRotation": [
+                                0,
+                                0,
+                                0,
+                                1
+                            ],
+                            "LocalScale": [
+                                1,
+                                1,
+                                1
+                            ]
+                        },
+                        {
+                            "Type": 22,
+                            "Text": "[NOT FOUND]",
+                            "Color": [
+                                0,
+                                0,
+                                0,
+                                0
+                            ],
+                            "X": 0,
+                            "Y": 0,
+                            "W": 1,
+                            "H": 1,
+                            "childOrder": 1
+                        }
+                    ],
+                    "Children": []
+                },
+                {
+                    "UID": 413466001,
+                    "ParentUID": 2112770151,
+                    "PrefabID": 1524961430,
+                    "IsPrefab": true,
+                    "Name": "BuyButton",
                     "IsActive": true,
                     "IsStatic": false,
                     "IsSceneRoot": false,
@@ -5398,10 +4478,10 @@
                         },
                         {
                             "Type": 23,
-                            "X": 0,
-                            "Y": -0.029999999329447746,
-                            "W": 0.079999998211860657,
-                            "H": 0.079999998211860657,
+                            "X": -0.093999996781349182,
+                            "Y": -0.57499998807907104,
+                            "W": 0.17000000178813934,
+                            "H": 0.125,
                             "idler": -2147483648,
                             "idleg": -2147483648,
                             "idleb": -2147483648,
@@ -5415,10 +4495,10 @@
                             "pressedb": -2147483648,
                             "presseda": -2147483648,
                             "pixelCoords": [
-                                723229,
-                                0,
-                                -1,
-                                -1
+                                926364472,
+                                1701719601,
+                                1568171380,
+                                543584032
                             ],
                             "textureCoords": {
                                 "x": 0,
@@ -5426,229 +4506,32 @@
                                 "w": 1,
                                 "h": 1
                             },
-                            "childOrder": 0
-                        }
-                    ],
-                    "Children": []
-                },
-                {
-                    "UID": 1655773636,
-                    "ParentUID": 176662983,
-                    "PrefabID": 1524961430,
-                    "IsPrefab": true,
-                    "Name": "Name Text",
-                    "IsActive": true,
-                    "IsStatic": false,
-                    "IsSceneRoot": false,
-                    "MaintainThroughScenes": false,
-                    "ShowBoundingBoxes": false,
-                    "NavigationInfo": {
-                        "isNavigable": false,
-                        "navigationArea": 0
-                    },
-                    "Components": [
-                        {
-                            "Type": 1,
-                            "LocalPosition": [
-                                0,
-                                0,
-                                0
-                            ],
-                            "LocalRotation": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ],
-                            "LocalScale": [
-                                1,
-                                1,
-                                1
-                            ]
-                        },
-                        {
-                            "Type": 22,
-                            "Text": "Item Name",
-                            "Color": [
-                                1,
-                                1,
-                                1,
-                                1
-                            ],
-                            "X": -0.70999997854232788,
-                            "Y": -0.4699999988079071,
-                            "W": 0.086000002920627594,
-                            "H": 0.0010000000474974513,
-                            "childOrder": 1
-                        }
-                    ],
-                    "Children": []
-                },
-                {
-                    "UID": 937935593,
-                    "ParentUID": 176662983,
-                    "PrefabID": 1524961430,
-                    "IsPrefab": true,
-                    "Name": "Description Text",
-                    "IsActive": true,
-                    "IsStatic": false,
-                    "IsSceneRoot": false,
-                    "MaintainThroughScenes": false,
-                    "ShowBoundingBoxes": false,
-                    "NavigationInfo": {
-                        "isNavigable": false,
-                        "navigationArea": 0
-                    },
-                    "Components": [
-                        {
-                            "Type": 1,
-                            "LocalPosition": [
-                                0,
-                                0,
-                                0
-                            ],
-                            "LocalRotation": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ],
-                            "LocalScale": [
-                                1,
-                                1,
-                                1
-                            ]
-                        },
-                        {
-                            "Type": 22,
-                            "Text": "Item Description",
-                            "Color": [
-                                1,
-                                1,
-                                1,
-                                1
-                            ],
-                            "X": -0.86500000953674316,
-                            "Y": -0.67500001192092896,
-                            "W": 0.035000000149011612,
-                            "H": 0.85100001096725464,
                             "childOrder": 2
-                        }
-                    ],
-                    "Children": []
-                },
-                {
-                    "UID": 433457818,
-                    "ParentUID": 176662983,
-                    "PrefabID": 1524961430,
-                    "IsPrefab": true,
-                    "Name": "Price Text",
-                    "IsActive": true,
-                    "IsStatic": false,
-                    "IsSceneRoot": false,
-                    "MaintainThroughScenes": false,
-                    "ShowBoundingBoxes": false,
-                    "NavigationInfo": {
-                        "isNavigable": false,
-                        "navigationArea": 0
-                    },
-                    "Components": [
-                        {
-                            "Type": 1,
-                            "LocalPosition": [
-                                0,
-                                0,
-                                0
-                            ],
-                            "LocalRotation": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ],
-                            "LocalScale": [
-                                1,
-                                1,
-                                1
-                            ]
                         },
                         {
-                            "Type": 22,
-                            "Text": "Item Price",
-                            "Color": [
-                                1,
-                                1,
-                                1,
-                                1
-                            ],
-                            "X": -0.47499999403953552,
-                            "Y": -0.82999998331069946,
-                            "W": 0.056000001728534698,
-                            "H": 0.0010000000474974513,
-                            "childOrder": 3
+                            "Type": 3,
+                            "Texture": {
+                                "AssetsPath": "Assets\/Textures\/\/UI\/Armorer\/Recurso 141.png",
+                                "AssetsName": "Recurso 141.png",
+                                "LibaryPath": "Library\/Textures\/61670648.netex",
+                                "LibraryFile": "61670648.netex"
+                            },
+                            "Shader": {
+                                "AssetsPath": "Assets\/Shaders\/UIShader.shader",
+                                "AssetsName": "UIShader.shader",
+                                "LibaryPath": "Library\/Shaders\/1025410539.neshader",
+                                "LibraryFile": "1025410539.neshader"
+                            }
                         }
                     ],
                     "Children": []
                 },
                 {
-                    "UID": 1930876322,
-                    "ParentUID": 176662983,
+                    "UID": 303416037,
+                    "ParentUID": 2112770151,
                     "PrefabID": 1524961430,
                     "IsPrefab": true,
-                    "Name": "Rarity Text",
-                    "IsActive": true,
-                    "IsStatic": false,
-                    "IsSceneRoot": false,
-                    "MaintainThroughScenes": false,
-                    "ShowBoundingBoxes": false,
-                    "NavigationInfo": {
-                        "isNavigable": false,
-                        "navigationArea": 0
-                    },
-                    "Components": [
-                        {
-                            "Type": 1,
-                            "LocalPosition": [
-                                0,
-                                0,
-                                0
-                            ],
-                            "LocalRotation": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ],
-                            "LocalScale": [
-                                1,
-                                1,
-                                1
-                            ]
-                        },
-                        {
-                            "Type": 22,
-                            "Text": "Item Rarity",
-                            "Color": [
-                                1,
-                                0,
-                                0,
-                                1
-                            ],
-                            "X": -0.70499998331069946,
-                            "Y": -0.54000002145767212,
-                            "W": 0.061000000685453415,
-                            "H": 0.0010000000474974513,
-                            "childOrder": 4
-                        }
-                    ],
-                    "Children": []
-                },
-                {
-                    "UID": 1513317155,
-                    "ParentUID": 176662983,
-                    "PrefabID": 1524961430,
-                    "IsPrefab": true,
-                    "Name": "ItemImage",
+                    "Name": "Mandooou",
                     "IsActive": true,
                     "IsStatic": false,
                     "IsSceneRoot": false,
@@ -5680,10 +4563,10 @@
                         },
                         {
                             "Type": 21,
-                            "X": -0.86500000953674316,
-                            "Y": -0.55000001192092896,
-                            "W": 0.10499999672174454,
-                            "H": 0.13500000536441803,
+                            "X": -0.63499999046325684,
+                            "Y": -0.45500001311302185,
+                            "W": 0.14000000059604645,
+                            "H": 0.23499999940395355,
                             "imgColor": {
                                 "r": 1,
                                 "g": 1,
@@ -5697,20 +4580,178 @@
                                 "h": 1
                             },
                             "inspectorTextureCoords": {
-                                "x": 176485744,
-                                "y": 179329312,
-                                "w": 0,
-                                "h": 0
+                                "x": 0,
+                                "y": 0,
+                                "w": 128,
+                                "h": 128
+                            },
+                            "childOrder": 3
+                        },
+                        {
+                            "Type": 3,
+                            "Texture": {
+                                "AssetsPath": "Assets\/Textures\/\/UI\/HUBShop\/ConsummeristTendencies2.png",
+                                "AssetsName": "ConsummeristTendencies2.png",
+                                "LibaryPath": "Library\/Textures\/950302656.netex",
+                                "LibraryFile": "950302656.netex"
+                            },
+                            "Shader": {
+                                "AssetsPath": "Assets\/Shaders\/UIShader.shader",
+                                "AssetsName": "UIShader.shader",
+                                "LibaryPath": "Library\/Shaders\/1025410539.neshader",
+                                "LibraryFile": "1025410539.neshader"
+                            }
+                        }
+                    ],
+                    "Children": []
+                },
+                {
+                    "UID": 119390575,
+                    "ParentUID": 2112770151,
+                    "PrefabID": 1524961430,
+                    "IsPrefab": true,
+                    "Name": "Armor",
+                    "IsActive": true,
+                    "IsStatic": false,
+                    "IsSceneRoot": false,
+                    "MaintainThroughScenes": false,
+                    "ShowBoundingBoxes": false,
+                    "NavigationInfo": {
+                        "isNavigable": false,
+                        "navigationArea": 0
+                    },
+                    "Components": [
+                        {
+                            "Type": 1,
+                            "LocalPosition": [
+                                0,
+                                0,
+                                0
+                            ],
+                            "LocalRotation": [
+                                0,
+                                0,
+                                0,
+                                1
+                            ],
+                            "LocalScale": [
+                                1,
+                                1,
+                                1
+                            ]
+                        },
+                        {
+                            "Type": 21,
+                            "X": -0.65499997138977051,
+                            "Y": 0.4050000011920929,
+                            "W": 0.17000000178813934,
+                            "H": 0.2800000011920929,
+                            "imgColor": {
+                                "r": 1,
+                                "g": 1,
+                                "b": 1,
+                                "a": 1
+                            },
+                            "textureCoords": {
+                                "x": 0,
+                                "y": 0,
+                                "w": 1,
+                                "h": 1
+                            },
+                            "inspectorTextureCoords": {
+                                "x": 0,
+                                "y": 0,
+                                "w": 128,
+                                "h": 128
+                            },
+                            "childOrder": 4
+                        },
+                        {
+                            "Type": 3,
+                            "Texture": {
+                                "AssetsPath": "Assets\/Textures\/\/UI\/Armorer\/ArmorUpgrade2.png",
+                                "AssetsName": "ArmorUpgrade2.png",
+                                "LibaryPath": "Library\/Textures\/994399859.netex",
+                                "LibraryFile": "994399859.netex"
+                            },
+                            "Shader": {
+                                "AssetsPath": "Assets\/Shaders\/UIShader.shader",
+                                "AssetsName": "UIShader.shader",
+                                "LibaryPath": "Library\/Shaders\/1025410539.neshader",
+                                "LibraryFile": "1025410539.neshader"
+                            }
+                        }
+                    ],
+                    "Children": []
+                },
+                {
+                    "UID": 1072748268,
+                    "ParentUID": 2112770151,
+                    "PrefabID": 1524961430,
+                    "IsPrefab": true,
+                    "Name": "BlasterUpgrade",
+                    "IsActive": true,
+                    "IsStatic": false,
+                    "IsSceneRoot": false,
+                    "MaintainThroughScenes": false,
+                    "ShowBoundingBoxes": false,
+                    "NavigationInfo": {
+                        "isNavigable": false,
+                        "navigationArea": 0
+                    },
+                    "Components": [
+                        {
+                            "Type": 1,
+                            "LocalPosition": [
+                                0,
+                                0,
+                                0
+                            ],
+                            "LocalRotation": [
+                                0,
+                                0,
+                                0,
+                                1
+                            ],
+                            "LocalScale": [
+                                1,
+                                1,
+                                1
+                            ]
+                        },
+                        {
+                            "Type": 21,
+                            "X": -0.43500000238418579,
+                            "Y": 0.10499999672174454,
+                            "W": 0.16500000655651093,
+                            "H": 0.27500000596046448,
+                            "imgColor": {
+                                "r": 1,
+                                "g": 1,
+                                "b": 1,
+                                "a": 1
+                            },
+                            "textureCoords": {
+                                "x": 0,
+                                "y": 0,
+                                "w": 1,
+                                "h": 1
+                            },
+                            "inspectorTextureCoords": {
+                                "x": 0,
+                                "y": 0,
+                                "w": 128,
+                                "h": 128
                             },
                             "childOrder": 5
                         },
                         {
                             "Type": 3,
                             "Texture": {
-                                "AssetsPath": "Assets\/Textures\/UI\/Shop\/ShopIconArmor.png",
-                                "AssetsName": "ShopIconArmor.png",
-                                "LibaryPath": "Library\/Textures\/739427130.netex",
-                                "LibraryFile": "739427130.netex"
+                                "AssetsPath": "Assets\/Textures\/\/UI\/HUBShop\/GunUpgrade3.png",
+                                "AssetsName": "GunUpgrade3.png",
+                                "LibaryPath": "Library\/Textures\/1345016600.netex",
+                                "LibraryFile": "1345016600.netex"
                             },
                             "Shader": {
                                 "AssetsPath": "Assets\/Shaders\/UIShader.shader",
@@ -5723,11 +4764,11 @@
                     "Children": []
                 },
                 {
-                    "UID": 1687596828,
-                    "ParentUID": 176662983,
+                    "UID": 537889971,
+                    "ParentUID": 2112770151,
                     "PrefabID": 1524961430,
                     "IsPrefab": true,
-                    "Name": "ShopPriceBackground",
+                    "Name": "TextBackground",
                     "IsActive": true,
                     "IsStatic": false,
                     "IsSceneRoot": false,
@@ -5759,10 +4800,10 @@
                         },
                         {
                             "Type": 21,
-                            "X": -0.48500001430511475,
-                            "Y": -0.86000001430511475,
-                            "W": 0.14000000059604645,
-                            "H": 0.094999998807907104,
+                            "X": -0.18000000715255737,
+                            "Y": -0.25499999523162842,
+                            "W": 0.67000001668930054,
+                            "H": 0.4699999988079071,
                             "imgColor": {
                                 "r": 1,
                                 "g": 1,
@@ -5776,20 +4817,20 @@
                                 "h": 1
                             },
                             "inspectorTextureCoords": {
-                                "x": 176485744,
-                                "y": 179329312,
-                                "w": 0,
-                                "h": 0
+                                "x": 0,
+                                "y": 0,
+                                "w": 600,
+                                "h": 256
                             },
                             "childOrder": 6
                         },
                         {
                             "Type": 3,
                             "Texture": {
-                                "AssetsPath": "Assets\/Textures\/UI\/Shop\/ShopPriceTag.png",
-                                "AssetsName": "ShopPriceTag.png",
-                                "LibaryPath": "Library\/Textures\/1341745659.netex",
-                                "LibraryFile": "1341745659.netex"
+                                "AssetsPath": "Assets\/Textures\/\/UI\/Armorer\/ArmorerBackground2.png",
+                                "AssetsName": "ArmorerBackground2.png",
+                                "LibaryPath": "Library\/Textures\/1004150875.netex",
+                                "LibraryFile": "1004150875.netex"
                             },
                             "Shader": {
                                 "AssetsPath": "Assets\/Shaders\/UIShader.shader",
@@ -5802,11 +4843,11 @@
                     "Children": []
                 },
                 {
-                    "UID": 532646279,
-                    "ParentUID": 176662983,
+                    "UID": 1001434148,
+                    "ParentUID": 2112770151,
                     "PrefabID": 1524961430,
                     "IsPrefab": true,
-                    "Name": "ShopBackground",
+                    "Name": "Background",
                     "IsActive": true,
                     "IsStatic": false,
                     "IsSceneRoot": false,
@@ -5838,10 +4879,10 @@
                         },
                         {
                             "Type": 21,
-                            "X": -0.94499999284744263,
-                            "Y": -0.94499999284744263,
-                            "W": 0.65499997138977051,
-                            "H": 0.625,
+                            "X": -0.84299999475479126,
+                            "Y": -0.89999997615814209,
+                            "W": 1.4299999475479126,
+                            "H": 1.8999999761581421,
                             "imgColor": {
                                 "r": 1,
                                 "g": 1,
@@ -5855,20 +4896,20 @@
                                 "h": 1
                             },
                             "inspectorTextureCoords": {
-                                "x": 176485744,
-                                "y": 179329312,
-                                "w": 0,
-                                "h": 0
+                                "x": 0,
+                                "y": 0,
+                                "w": 1300,
+                                "h": 1024
                             },
                             "childOrder": 7
                         },
                         {
                             "Type": 3,
                             "Texture": {
-                                "AssetsPath": "Assets\/Textures\/UI\/Shop\/ShopBackground.png",
-                                "AssetsName": "ShopBackground.png",
-                                "LibaryPath": "Library\/Textures\/1623138519.netex",
-                                "LibraryFile": "1623138519.netex"
+                                "AssetsPath": "Assets\/Textures\/\/UI\/Armorer\/ArmorerBackground1.png",
+                                "AssetsName": "ArmorerBackground1.png",
+                                "LibaryPath": "Library\/Textures\/1437530803.netex",
+                                "LibraryFile": "1437530803.netex"
                             },
                             "Shader": {
                                 "AssetsPath": "Assets\/Shaders\/UIShader.shader",

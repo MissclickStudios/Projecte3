@@ -135,7 +135,7 @@ private:
     float backtrackDuration = 1.0f;
     Timer backtrackTimer;
 
-    
+    bool instantiatedSandstorm = false;
    
 
     // Items
