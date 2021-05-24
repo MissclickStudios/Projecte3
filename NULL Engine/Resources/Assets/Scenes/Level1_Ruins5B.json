@@ -1,5 +1,5 @@
 {
-    "ModTime": 1621865772,
+    "ModTime": 1621868380,
     "Models In Scene": [
         {
             "GameObjectUID": 649823649,
@@ -55,6 +55,11 @@
             "GameObjectUID": 893940997,
             "ModelResourceUID": 1051283831,
             "ModelAssetsPath": "Assets\/Models\/Blockouts\/NewBeta\/Ruins\/Level1_Ruins5.fbx"
+        },
+        {
+            "GameObjectUID": 1727281370,
+            "ModelResourceUID": 299409712,
+            "ModelAssetsPath": "Assets\/Models\/Blockouts\/NewBeta\/NavPlanes\/Lv1_Ruins5_NavPlane.FBX"
         }
     ],
     "Game Objects": [
@@ -78,7 +83,7 @@
                     "Type": 1,
                     "LocalPosition": [
                         164.00045776367188,
-                        -51.386001586914062,
+                        -51.386001586914063,
                         151.61637878417969
                     ],
                     "LocalRotation": [
@@ -173,7 +178,7 @@
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
+            "ShowBoundingBoxes": true,
             "NavigationInfo": {
                 "isNavigable": false,
                 "navigationArea": 0
@@ -685,7 +690,7 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        334.29788208007812,
+                        334.29788208007813,
                         -53.792999267578125,
                         17.096000671386719
                     ],
@@ -1346,7 +1351,7 @@
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": true,
+            "ShowBoundingBoxes": false,
             "NavigationInfo": {
                 "isNavigable": false,
                 "navigationArea": 0
@@ -1602,7 +1607,7 @@
                     "Type": 1,
                     "LocalPosition": [
                         323.25765991210938,
-                        -51.386001586914062,
+                        -51.386001586914063,
                         52.570892333984375
                     ],
                     "LocalRotation": [
@@ -1739,7 +1744,7 @@
                     "Type": 1,
                     "LocalPosition": [
                         35.254550933837891,
-                        -51.385940551757812,
+                        -51.385940551757813,
                         -159.50045776367188
                     ],
                     "LocalRotation": [
@@ -1784,8 +1789,8 @@
             "MaintainThroughScenes": false,
             "ShowBoundingBoxes": false,
             "NavigationInfo": {
-                "isNavigable": false,
-                "navigationArea": 0
+                "isNavigable": true,
+                "navigationArea": 1
             },
             "Components": [
                 {
@@ -2053,7 +2058,7 @@
                     "Type": 1,
                     "LocalPosition": [
                         -94.100997924804688,
-                        -51.386001586914062,
+                        -51.386001586914063,
                         101.91305541992188
                     ],
                     "LocalRotation": [
@@ -2184,7 +2189,7 @@
                     "Type": 1,
                     "LocalPosition": [
                         228.41891479492188,
-                        -460.78640747070312,
+                        -460.78640747070313,
                         -1407.040283203125
                     ],
                     "LocalRotation": [
@@ -2492,8 +2497,8 @@
             "MaintainThroughScenes": false,
             "ShowBoundingBoxes": false,
             "NavigationInfo": {
-                "isNavigable": false,
-                "navigationArea": 0
+                "isNavigable": true,
+                "navigationArea": 1
             },
             "Components": [
                 {
@@ -2573,15 +2578,15 @@
             "MaintainThroughScenes": false,
             "ShowBoundingBoxes": false,
             "NavigationInfo": {
-                "isNavigable": false,
-                "navigationArea": 0
+                "isNavigable": true,
+                "navigationArea": 1
             },
             "Components": [
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        266.13870239257812,
-                        -455.48794555664062,
+                        266.13870239257813,
+                        -455.48794555664063,
                         -1348.5552978515625
                     ],
                     "LocalRotation": [
@@ -2990,15 +2995,15 @@
             "MaintainThroughScenes": false,
             "ShowBoundingBoxes": false,
             "NavigationInfo": {
-                "isNavigable": false,
-                "navigationArea": 0
+                "isNavigable": true,
+                "navigationArea": 1
             },
             "Components": [
                 {
                     "Type": 1,
                     "LocalPosition": [
                         -1393.154052734375,
-                        -492.78201293945312,
+                        -492.78201293945313,
                         -1379.52880859375
                     ],
                     "LocalRotation": [
@@ -3312,6 +3317,59 @@
             ]
         },
         {
+            "UID": 650543851,
+            "ParentUID": 534812533,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Floor",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": true,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        25.256448745727539,
+                        -63.827365875244141,
+                        -14.365649223327637
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 8,
+                    "Is Static": true,
+                    "Filter": "default"
+                },
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 700,
+                    "Size Y": 10,
+                    "Size Z": 500,
+                    "Center X": 0,
+                    "Center Y": 0,
+                    "Center Z": 0
+                }
+            ]
+        },
+        {
             "UID": 651554461,
             "ParentUID": 534812533,
             "PrefabID": 0,
@@ -3513,8 +3571,8 @@
             "MaintainThroughScenes": false,
             "ShowBoundingBoxes": false,
             "NavigationInfo": {
-                "isNavigable": false,
-                "navigationArea": 0
+                "isNavigable": true,
+                "navigationArea": 1
             },
             "Components": [
                 {
@@ -3522,7 +3580,7 @@
                     "LocalPosition": [
                         721.67724609375,
                         -477.2652587890625,
-                        -332.07949829101562
+                        -332.07949829101563
                     ],
                     "LocalRotation": [
                         -0.40777325630187988,
@@ -3911,7 +3969,7 @@
                     "Type": 1,
                     "LocalPosition": [
                         -65.97998046875,
-                        -51.386001586914062,
+                        -51.386001586914063,
                         -188.74656677246094
                     ],
                     "LocalRotation": [
@@ -4146,8 +4204,8 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        110.35696411132812,
-                        -51.386001586914062,
+                        110.35696411132813,
+                        -51.386001586914063,
                         -132.51632690429688
                     ],
                     "LocalRotation": [
@@ -4192,8 +4250,8 @@
             "MaintainThroughScenes": false,
             "ShowBoundingBoxes": false,
             "NavigationInfo": {
-                "isNavigable": false,
-                "navigationArea": 0
+                "isNavigable": true,
+                "navigationArea": 1
             },
             "Components": [
                 {
@@ -4501,8 +4559,8 @@
             "MaintainThroughScenes": false,
             "ShowBoundingBoxes": false,
             "NavigationInfo": {
-                "isNavigable": false,
-                "navigationArea": 0
+                "isNavigable": true,
+                "navigationArea": 1
             },
             "Components": [
                 {
@@ -4668,7 +4726,7 @@
                     "Type": 1,
                     "LocalPosition": [
                         177.62983703613281,
-                        -51.386001586914062,
+                        -51.386001586914063,
                         -100.7879638671875
                     ],
                     "LocalRotation": [
@@ -4703,7 +4761,7 @@
         },
         {
             "UID": 888400124,
-            "ParentUID": 54159650,
+            "ParentUID": 26492497,
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "MainScene",
@@ -5002,8 +5060,8 @@
                     "Type": 1,
                     "LocalPosition": [
                         57.443119049072266,
-                        -51.386001586914062,
-                        -150.54116821289062
+                        -51.386001586914063,
+                        -150.54116821289063
                     ],
                     "LocalRotation": [
                         0,
@@ -5162,8 +5220,8 @@
             "MaintainThroughScenes": false,
             "ShowBoundingBoxes": false,
             "NavigationInfo": {
-                "isNavigable": false,
-                "navigationArea": 0
+                "isNavigable": true,
+                "navigationArea": 1
             },
             "Components": [
                 {
@@ -5590,7 +5648,7 @@
                     "Type": 1,
                     "LocalPosition": [
                         308.61264038085938,
-                        -51.386001586914062,
+                        -51.386001586914063,
                         -12.726905822753906
                     ],
                     "LocalRotation": [
@@ -5643,7 +5701,7 @@
                     "Type": 1,
                     "LocalPosition": [
                         232.29194641113281,
-                        -51.386001586914062,
+                        -51.386001586914063,
                         128.0865478515625
                     ],
                     "LocalRotation": [
@@ -6181,8 +6239,8 @@
             "MaintainThroughScenes": false,
             "ShowBoundingBoxes": false,
             "NavigationInfo": {
-                "isNavigable": false,
-                "navigationArea": 0
+                "isNavigable": true,
+                "navigationArea": 1
             },
             "Components": [
                 {
@@ -6322,7 +6380,7 @@
                     "Type": 1,
                     "LocalPosition": [
                         -137.29295349121094,
-                        -51.386001586914062,
+                        -51.386001586914063,
                         108.80944061279297
                     ],
                     "LocalRotation": [
@@ -6455,7 +6513,7 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        135.48355102539062,
+                        135.48355102539063,
                         -51.386020660400391,
                         160.36991882324219
                     ],
@@ -6509,7 +6567,7 @@
                     "Type": 1,
                     "LocalPosition": [
                         -39.005577087402344,
-                        -51.386001586914062,
+                        -51.386001586914063,
                         113.91591644287109
                     ],
                     "LocalRotation": [
@@ -6640,7 +6698,7 @@
                     "Type": 1,
                     "LocalPosition": [
                         10.101654052734375,
-                        -51.386001586914062,
+                        -51.386001586914063,
                         -186.91648864746094
                     ],
                     "LocalRotation": [
@@ -6808,8 +6866,8 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        215.34854125976562,
-                        -51.386001586914062,
+                        215.34854125976563,
+                        -51.386001586914063,
                         -68.446273803710938
                     ],
                     "LocalRotation": [
@@ -7099,7 +7157,7 @@
                     "Type": 1,
                     "LocalPosition": [
                         81.299079895019531,
-                        -51.386001586914062,
+                        -51.386001586914063,
                         -56.584392547607422
                     ],
                     "LocalRotation": [
@@ -7152,7 +7210,7 @@
                     "Type": 1,
                     "LocalPosition": [
                         265.63665771484375,
-                        -51.386001586914062,
+                        -51.386001586914063,
                         -23.664508819580078
                     ],
                     "LocalRotation": [
@@ -7195,7 +7253,7 @@
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": true,
+            "ShowBoundingBoxes": false,
             "NavigationInfo": {
                 "isNavigable": false,
                 "navigationArea": 0
@@ -7205,7 +7263,7 @@
                     "Type": 1,
                     "LocalPosition": [
                         0,
-                        0,
+                        -68.137077331542969,
                         0
                     ],
                     "LocalRotation": [
@@ -7567,7 +7625,7 @@
                     "Type": 1,
                     "LocalPosition": [
                         40.160942077636719,
-                        -51.386001586914062,
+                        -51.386001586914063,
                         152.51963806152344
                     ],
                     "LocalRotation": [
@@ -7707,7 +7765,7 @@
                     "LocalPosition": [
                         20.126701354980469,
                         -51.386009216308594,
-                        95.468887329101562
+                        95.468887329101563
                     ],
                     "LocalRotation": [
                         0,
@@ -7920,7 +7978,7 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        -118.78469848632812,
+                        -118.78469848632813,
                         -41.321891784667969,
                         134.29960632324219
                     ],
@@ -8368,8 +8426,8 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        20.762100219726562,
-                        -51.386001586914062,
+                        20.762100219726563,
+                        -51.386001586914063,
                         35.878791809082031
                     ],
                     "LocalRotation": [
@@ -8481,12 +8539,87 @@
             ]
         },
         {
-            "UID": 650543851,
-            "ParentUID": 534812533,
+            "UID": 266996064,
+            "ParentUID": 1727281370,
             "PrefabID": 0,
             "IsPrefab": false,
-            "Name": "Floor",
-            "IsActive": true,
+            "Name": "Lv1_Ruins5_NavPlane",
+            "IsActive": false,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": true,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        572.12548828125,
+                        -466.46994018554688,
+                        -84.38946533203125
+                    ],
+                    "LocalRotation": [
+                        -0.70710676908493042,
+                        0,
+                        0,
+                        0.70710676908493042
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 2062006959,
+                    "Name": "Lv1_Ruins5_NavPlane.nemesh",
+                    "Path": "Library\/Meshes\/2062006959.nemesh",
+                    "File": "2062006959.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false,
+                    "Outline": false,
+                    "OutlineThickness": 1,
+                    "OutlineColor": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ]
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 1852174236,
+                        "Color": [
+                            0.80000001192092896,
+                            0.80000001192092896,
+                            0.80000001192092896,
+                            1
+                        ],
+                        "Name": "Lv1_Ruins5_NavPlane.nemat",
+                        "Path": "Library\/Materials\/1852174236.nemat",
+                        "File": "1852174236.nemat"
+                    },
+                    "Shader": {
+                        "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
+                        "AssetsName": "DefaultShader.shader",
+                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
+                        "LibraryFile": "800223282.neshader"
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 1727281370,
+            "ParentUID": 888400124,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Lv1_Ruins5_NavPlane.FBX",
+            "IsActive": false,
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
@@ -8499,43 +8632,27 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        25.256448745727539,
-                        -63.827365875244141,
-                        -14.365649223327637
+                        0,
+                        0.15000000596046448,
+                        0
                     ],
                     "LocalRotation": [
                         0,
+                        0.7071068286895752,
                         0,
-                        0,
-                        1
+                        0.7071068286895752
                     ],
                     "LocalScale": [
-                        1,
-                        1,
-                        1
+                        0.12999999523162842,
+                        0.12999999523162842,
+                        0.12999999523162842
                     ]
-                },
-                {
-                    "Type": 8,
-                    "Is Static": true,
-                    "Filter": "default"
-                },
-                {
-                    "Type": 9,
-                    "Is Trigger": false,
-                    "Show Collider": true,
-                    "Size X": 700,
-                    "Size Y": 10,
-                    "Size Z": 500,
-                    "Center X": 0,
-                    "Center Y": 0,
-                    "Center Z": 0
                 }
             ]
         }
     ],
     "NavMesh": {
-        "UID": 0,
-        "Assets Path": "[NONE]"
+        "UID": 806275127,
+        "Assets Path": "Assets\/Navigation\/Level1_Ruins5B.navmesh"
     }
 } 

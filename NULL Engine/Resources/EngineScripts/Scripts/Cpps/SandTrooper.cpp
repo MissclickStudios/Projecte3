@@ -251,7 +251,7 @@ void Trooper::ManageMovement()
 		if (player)
 		{
 			Player* playerScript = (Player*)player->GetScript("Player");
-			playerScript->currency += Random::LCG::GetBoundedRandomFloat(minCredits, maxCredits);
+			playerScript->currency += Random::LCG::GetBoundedRandomUint(minCredits, maxCredits);
 		}
 		deathTimer.Start();
 		moveState = TrooperState::DEAD;
