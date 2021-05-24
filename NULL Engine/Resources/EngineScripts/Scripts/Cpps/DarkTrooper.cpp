@@ -60,8 +60,8 @@ DarkTrooper* CreateDarkTrooper()
 
 	INSPECTOR_STRING(script->handName);
 
-	INSPECTOR_SLIDER_FLOAT(script->minCredits, 0.f, 1000.f);
-	INSPECTOR_SLIDER_FLOAT(script->maxCredits, 0.f, 1000.f);
+	INSPECTOR_SLIDER_INT(script->minCredits, 0, 1000);
+	INSPECTOR_SLIDER_INT(script->maxCredits, 0, 1000);
 
 	return script;
 }
@@ -257,7 +257,7 @@ void DarkTrooper::ManageMovement()
 		if (player)
 		{
 			Player* playerScript = (Player*)player->GetScript("Player");
-			playerScript->currency += Random::LCG::GetBoundedRandomFloat(minCredits, maxCredits);
+			playerScript->currency += Random::LCG::GetBoundedRandomUint(minCredits, maxCredits);
 		}
 		deathTimer.Start();
 		moveState = DarkTrooperState::DEAD;
