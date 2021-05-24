@@ -5,6 +5,7 @@
 class GameObject;
 class C_BoxCollider;
 class C_AudioSource;
+class GameManager;
 
 class SCRIPTS_API GroguPush : public Object ALLOWED_INHERITANCE
 {
@@ -26,8 +27,6 @@ public:
 
 private:
 
-	std::string gameManager = "Game Manager";
-
 	GameObject* player = nullptr;
 	std::string playerName = "Mandalorian";
 
@@ -38,9 +37,7 @@ private:
 
 	Timer abilityCooldownTimer;
 
-
-
-
+	GameManager* gameManager = nullptr;
 
 public:
 

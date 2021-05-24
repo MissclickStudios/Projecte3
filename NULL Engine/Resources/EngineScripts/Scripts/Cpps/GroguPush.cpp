@@ -7,6 +7,7 @@
 #include "Log.h"
 #include "GameManager.h"
 
+#include "GameManager.h"
 #include "GameObject.h"
 #include "C_Transform.h"
 #include "C_ParticleSystem.h"
@@ -44,6 +45,10 @@ void GroguPush::Start()
 	abilityCollider->SetSize(abilityRadius);
 	abilityCooldownTimer.Start();
 
+	GameObject* tmp = App->scene->GetGameObjectByName("Game Manager");
+	if (tmp != nullptr)
+		gameManager = (GameManager*)tmp->GetScript("GameManager");
+
 }
 
 void GroguPush::Update()
@@ -56,7 +61,7 @@ void GroguPush::Update()
 
 
 
-	if ((App->input->GetKey(SDL_SCANCODE_G) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(SDL_CONTROLLER_BUTTON_LEFTSHOULDER) == ButtonState::BUTTON_DOWN) && (abilityCooldownTimer.ReadSec() > abilityCooldown))
+	if ((App->input->GetKey(SDL_SCANCODE_G) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(SDL_CONTROLLER_BUTTON_LEFTSHOULDER) == ButtonState::BUTTON_DOWN) && (abilityCooldownTimer.ReadSec() > abilityCooldown) && gameManager->storyDialogState.defeatedIG11FirstTime)
 	{
 
 
