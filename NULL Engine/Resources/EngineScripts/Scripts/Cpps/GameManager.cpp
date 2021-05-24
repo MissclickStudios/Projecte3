@@ -192,7 +192,7 @@ void GameManager::Start()
 	if (dialogManager != nullptr)
 	{
 		
-		if (strcmp(App->scene->GetCurrentScene(),"BossL1" ) == 0 )
+		if (strcmp(App->scene->GetCurrentScene(),"bossL1" ) == 0 )
 		{
 			if(!storyDialogState.defeatedIG11FirstTime)
 				dialogManager->StartDialog("1st Conversation IG-11");

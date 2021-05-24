@@ -64,8 +64,6 @@ void CameraMovement::Update()
 {
 	if (player == nullptr)
 		return;
-	
-
 
 	if (gameManagerScript->doCameraCutscene)
 	{
@@ -75,7 +73,7 @@ void CameraMovement::Update()
 	}
 	else if (playerScript->doDieCutscene && playerDestinationPoints != nullptr)
 	{
-		nextPointProgress += (MC_Time::Game::GetDT() * cameraSpeed) / 10;
+		nextPointProgress += (MC_Time::Game::GetDT() * cameraSpeed) / 7;
 		MoveCameraTo(playerDestinationPoints, nextPointProgress);
 		return;
 	}
