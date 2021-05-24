@@ -107,6 +107,11 @@ void DialogManager::Update()
 				}
 			}
 
+			if (App->input->GetGameControllerButton(1) == ButtonState::BUTTON_DOWN)
+			{
+				EndDialog();
+			}
+
 				break;
 		case DialogState::TALKED:
 			//Wait for input, then go to next phrase if there is any. Close dialog if not
@@ -123,11 +128,7 @@ void DialogManager::Update()
 					}
 					else
 					{
-						App->uiSystem->RemoveActiveCanvas(dialogCanvas);
-						state = DialogState::NO_DIALOG;
-
-						mando->SetPlayerInteraction(InteractionType::NONE);
-						//Clear elements
+						EndDialog();
 					}
 			}
 
@@ -218,6 +219,14 @@ DialogSystem* DialogManager::LoadDialogSystem(const char* dialogName)
 DialogState DialogManager::GetDialogState()
 {
 	return state;
+}
+
+void DialogManager::EndDialog()
+{
+	App->uiSystem->RemoveActiveCanvas(dialogCanvas);
+	state = DialogState::NO_DIALOG;
+
+	mando->SetPlayerInteraction(InteractionType::NONE);
 }
 
 bool DialogManager::StartDialog(const char* dialogName)

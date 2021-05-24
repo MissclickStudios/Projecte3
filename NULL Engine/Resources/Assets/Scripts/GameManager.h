@@ -29,8 +29,8 @@ public:
     bool firstTimeHub = false;
     bool talkedToGrogu = false;
 
-    void Save(ParsonNode &node);
-    void Load(ParsonNode &node);
+    void Save(ParsonNode *node);
+    void Load(ParsonNode *node);
     
 };
 
