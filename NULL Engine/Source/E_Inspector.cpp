@@ -2100,6 +2100,7 @@ void E_Inspector::DrawUISliderComponent(C_UI_Slider* slider)
 		}
 
 		ImGui::DragFloat("Max Value", &slider->maxValue);
+		ImGui::DragInt("Num Rects", &slider->numRects);
 		ImGui::DragFloat("Offset", &slider->offset);
 
 		ImGui::Text("Unhovered Unchecked TexCoord (x,y,w,h)");

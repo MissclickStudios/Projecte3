@@ -47,6 +47,10 @@ bool C_UI_Slider::SaveState(ParsonNode& root) const
 	root.SetNumber("W", rect.w);
 	root.SetNumber("H", rect.h);
 
+	root.SetInteger("num rercts", numRects);
+	root.SetNumber("max value", maxValue);
+	root.SetNumber("offset", offset);
+	
 	ParsonArray pixelCoords = root.SetArray("pixelCoords");
 	for (int i = 0; i < 16; ++i)
 		pixelCoords.SetNumber((double)pixelCoord[i]);
@@ -75,6 +79,10 @@ bool C_UI_Slider::LoadState(ParsonNode& root)
 	rect.y = root.GetNumber("Y");
 	rect.w = root.GetNumber("W");
 	rect.h = root.GetNumber("H");
+
+	numRects = root.GetInteger("num rercts");
+	maxValue = root.GetNumber("max value");
+	offset = root.GetNumber("offset");
 
 	ParsonArray pixelCoords = root.GetArray("pixelCoords");
 	if (pixelCoords.ArrayIsValid())
