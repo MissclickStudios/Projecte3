@@ -12,6 +12,7 @@
 #include "C_ParticleSystem.h"
 #include "C_BoxCollider.h"
 #include "C_AudioSource.h"
+#include "C_2DAnimator.h"
 
 #include "GroguPush.h"
 
@@ -39,6 +40,10 @@ void GroguPush::Start()
 {
 	player = App->scene->GetGameObjectByName(playerName.c_str());
 
+	GameObject* a = App->scene->GetGameObjectByName(groguName.c_str());
+	if (a != nullptr)
+		groguImage = (C_2DAnimator*)a->GetComponent<C_2DAnimator>();
+
 	abilityCollider = gameObject->GetComponent<C_BoxCollider>();
 	abilityCollider->SetSize(abilityRadius);
 }
@@ -61,7 +66,7 @@ void GroguPush::Update()
 	if (App->input->GetKey(SDL_SCANCODE_G) == KeyState::KEY_DOWN)
 	{
 		doAbility = true;
-
+		groguImage->PlayAnimation(false, 1);
 		abilityCollider->SetIsActive(true);
 		abilityCollider->SetTrigger(true);
 	}

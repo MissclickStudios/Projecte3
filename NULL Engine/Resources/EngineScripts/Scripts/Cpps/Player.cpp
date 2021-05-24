@@ -1167,6 +1167,7 @@ void Player::ShootIn()
 {
 	currentAnimation	= GetShootAnimation();
 	aimState			= AimState::SHOOT;
+	primaryWeaponImage->PlayAnimation(false, 1);
 }
 
 void Player::Shoot()
@@ -1193,7 +1194,7 @@ void Player::ReloadIn()
 
 void Player::Reload()
 {
-	if (currentWeapon != nullptr && currentWeapon->Reload())
+	if (currentWeapon != nullptr && currentWeapon->Reload())	
 		aimState = AimState::ON_GUARD;
 }
 
@@ -1234,6 +1235,8 @@ void Player::Change()
 		if (secondaryWeapon->weaponModel != nullptr)
 			secondaryWeapon->weaponModel->SetIsActive(false);
 	}
+
+	primaryWeaponImage->PlayAnimation(false, 2);
 
 	aimState = AimState::ON_GUARD;
 }
