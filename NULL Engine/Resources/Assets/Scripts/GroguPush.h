@@ -27,8 +27,6 @@ public:
 
 private:
 
-	std::string gameManager = "Game Manager";
-
 	GameObject* player = nullptr;
 	std::string playerName = "Mandalorian";
 
