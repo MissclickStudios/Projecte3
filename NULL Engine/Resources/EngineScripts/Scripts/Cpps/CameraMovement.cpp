@@ -10,6 +10,7 @@
 #include "GameObject.h"
 #include "C_Transform.h"
 
+#include "GameManager.h"
 #include "CameraMovement.h"
 #include "Entity.h"
 #include "Player.h"
@@ -18,6 +19,7 @@
 #include "MC_Time.h"
 
 #include "M_Input.h"
+#include "EasingFunctions.h"
 
 
 CameraMovement::CameraMovement() : Script()
@@ -44,7 +46,13 @@ CameraMovement* CreateCameraMovement() {
 void CameraMovement::Start()
 {
 	player = App->scene->GetGameObjectByName(playerName.c_str());
-	playerScript = (Player*)player->GetScript("Player");
+	if(player)
+		playerScript = (Player*)player->GetScript("Player");
+
+	gameManagerObject = App->scene->GetGameObjectByName(gameManagerName.c_str());	
+	if (gameManagerObject != nullptr)
+		gameManagerScript = (GameManager*)gameManagerObject->GetScript("GameManager");
+
 	initialRot = gameObject->transform->GetWorldRotation();
 	destinationPoints = App->scene->GetGameObjectByName(destinationPointsName.c_str());
 }
@@ -54,7 +62,7 @@ void CameraMovement::Update()
 	if (player == nullptr)
 		return;
 
-	if (App->input->GetKey(SDL_SCANCODE_M) == KeyState::KEY_REPEAT && destinationPoints != nullptr)
+	if (gameManagerScript->doCameraCutscene)
 	{
 		nextPointProgress += (MC_Time::Game::GetDT() * cameraSpeed);
 		MoveCameraTo(destinationPoints, nextPointProgress);
@@ -98,13 +106,13 @@ void CameraMovement::CameraShake(float duration, float magnitude)
 
 }
 
-bool CameraMovement::MoveCameraTo(GameObject* destination, float progress)
+bool CameraMovement::MoveCameraTo(GameObject* destination, float& progress)
 {
 	if (nextPoint >= destination->childs.size())
 		return true;
 
-	destinationPos = destination->childs[nextPoint]->transform->GetWorldPosition();
-
+	float3 destinationPos = destination->childs[nextPoint]->transform->GetWorldPosition();
+	
 	float3 nextPos = destinationPos.Lerp(gameObject->transform->GetWorldPosition(), 1.0f - progress);
 
 	Quat destinationRot = destination->childs[nextPoint]->transform->GetWorldRotation();
@@ -118,7 +126,7 @@ bool CameraMovement::MoveCameraTo(GameObject* destination, float progress)
 	if (gameObject->transform->GetWorldPosition().Distance(destinationPos) < distanceToTransition)
 	{
 		nextPoint++;
-		nextPointProgress = 0;
+		//nextPointProgress = 0;
 		progress = 0;
 	}
 

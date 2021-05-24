@@ -6,6 +6,7 @@
 #include "MathGeoLib/include/Math/Quat.h"
 
 class Player;
+class GameManager;
 
 class SCRIPTS_API CameraMovement : public Script {
 public:
@@ -17,7 +18,7 @@ public:
 	void CleanUp()override;
 
 	void CameraShake(float duration, float magnitude);
-	bool MoveCameraTo(GameObject* destination, float progress);
+	bool MoveCameraTo(GameObject* destination, float& progress);
 
 	//Shake variables
 	float shakeDuration = 0.0f;
@@ -37,6 +38,12 @@ public:
 	float distanceToTransition = 0.0f;
 	float3 destinationPos;
 	std::string destinationPointsName = "DestinationPoints";
+	//Game Manager
+
+	std::string gameManagerName = "Game Manager";
+	GameObject* gameManagerObject = nullptr;
+	GameManager* gameManagerScript = nullptr;
+
 };
 
 SCRIPTS_FUNCTION CameraMovement* CreateCameraMovement();

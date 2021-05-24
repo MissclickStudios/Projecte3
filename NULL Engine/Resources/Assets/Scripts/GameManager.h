@@ -108,6 +108,8 @@ public:
 
     std::string cameraName = "GameCameraVS2";
 
+    bool doCameraCutscene = false;
+
 private:
 
     GameObject* cameraGameObject = nullptr;
