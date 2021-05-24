@@ -253,6 +253,8 @@ void IG11::ManageMovement()
 		return;
 	}
 
+	Player* tmp = nullptr;
+
 	switch (moveState)
 	{
 	case IG11State::IDLE:
@@ -416,7 +418,7 @@ void IG11::ManageMovement()
 		deathTimer.Start();
 		moveState = IG11State::DEAD;
 		
-		Player* tmp = (Player*)player->GetScript("Payer");
+		tmp = (Player*)player->GetScript("Payer");
 		tmp->hubCurrency += beskarValue;
 
 		gameManager->KilledIG11();
