@@ -857,6 +857,7 @@ void GameManager::GateUpdate()
 
 void GameManager::KilledIG11()
 {
+	
 	LOG("Killed IG11");
 	if (!storyDialogState.defeatedIG11FirstTime)
 	{

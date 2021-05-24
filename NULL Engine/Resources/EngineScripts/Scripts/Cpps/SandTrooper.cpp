@@ -57,8 +57,8 @@ Trooper* CreateTrooper()
 
 	INSPECTOR_STRING(script->handName);
 
-	INSPECTOR_SLIDER_FLOAT(script->minCredits,0.f,1000.f);
-	INSPECTOR_SLIDER_FLOAT(script->maxCredits ,0.f, 1000.f);
+	INSPECTOR_SLIDER_INT(script->minCredits, 0, 1000);
+	INSPECTOR_SLIDER_INT(script->maxCredits, 0, 1000);
 
 	return script;
 }
