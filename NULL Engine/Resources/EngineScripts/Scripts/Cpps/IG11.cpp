@@ -16,6 +16,11 @@
 
 #include "MC_Time.h"
 #include "Random.h"
+#include "C_ParticleSystem.h"
+#include "C_AudioSource.h"
+#include "C_Canvas.h"
+#include "C_UI_Image.h"
+#include "M_UISystem.h"
 
 IG11* CreateIG11()
 {
@@ -77,6 +82,10 @@ IG11* CreateIG11()
 
 	INSPECTOR_SLIDER_INT(script->beskarValue,0,1000);
 
+	//Health Bar
+	INSPECTOR_GAMEOBJECT(script->healthBarCanvasObject);
+	INSPECTOR_STRING(script->lifeBarImageStr);
+
 	return script;
 }
 
@@ -104,6 +113,24 @@ void IG11::Start()
 	//TEMPORAL FIX DO NOT DO THIS!!!!!!!
 
 	SetUp();
+
+	if (healthBarCanvasObject)
+	{
+		healthBarCanvas = healthBarCanvasObject->GetComponent<C_Canvas>();
+		if(healthBarCanvas)
+			App->uiSystem->PushCanvas(healthBarCanvas);
+		for (int i = 0; i < healthBarCanvasObject->childs.size(); ++i)
+		{
+			if (!strcmp(healthBarCanvasObject->childs[i]->GetName(), lifeBarImageStr.c_str())) 
+			{
+
+				healthBarImage = healthBarCanvasObject->childs[i]->GetComponent<C_UI_Image>();
+				if (healthBarImage) 
+					healthMaxW = healthBarImage->GetRect().w;
+				break;
+			}
+		}
+	}
 }
 
 void IG11::SetUp()
@@ -196,6 +223,26 @@ void IG11::OnCollisionEnter(GameObject* object)
 	Player* playerScript = (Player*)object->GetScript("Player");
 	if (playerScript)
 		playerScript->TakeDamage(Damage());
+}
+
+void IG11::TakeDamage(float damage)
+{
+	health -= damage / Defense();
+	if (health < 0.0f)
+		health = 0.0f;
+
+	hitTimer.Start();
+	if (GetParticles("Hit") != nullptr)
+		GetParticles("Hit")->ResumeSpawn();
+
+	if (damageAudio != nullptr)
+		damageAudio->PlayFx(damageAudio->GetEventId());
+
+	if (healthBarImage) 
+	{
+		Rect2D rect = healthBarImage->GetRect();
+		healthBarImage->SetW(healthMaxW * health / maxHealth);
+	}
 }
 
 void IG11::BossPiercing(Effect* effect)
@@ -419,8 +466,11 @@ void IG11::ManageMovement()
 		moveState = IG11State::DEAD;
 		
 		tmp = (Player*)player->GetScript("Payer");
-		tmp->hubCurrency += beskarValue;
+		if(tmp)
+			tmp->hubCurrency += beskarValue;
 
+		if(healthBarCanvas)
+			App->uiSystem->RemoveActiveCanvas(healthBarCanvas);
 		gameManager->KilledIG11();
 
 	case IG11State::DEAD:
