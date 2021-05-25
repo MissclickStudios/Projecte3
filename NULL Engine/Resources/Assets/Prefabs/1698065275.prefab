@@ -1,6 +1,6 @@
 {
-    "ModTime": 1621874067,
-    "UID": 701170517,
+    "ModTime": 1621898028,
+    "UID": 394395948,
     "ParentUID": 888400124,
     "PrefabID": 1698065275,
     "IsPrefab": true,
@@ -18,9 +18,9 @@
         {
             "Type": 1,
             "LocalPosition": [
-                -21.918460845947266,
-                -3.814697265625e-06,
-                -1.1800870895385742
+                -94.311058044433594,
+                -36.340000152587891,
+                20.035995483398438
             ],
             "LocalRotation": [
                 0,
@@ -226,7 +226,7 @@
                 {
                     "Type": 2,
                     "Name": "changeWeaponHealth",
-                    "float": 5
+                    "float": 25
                 },
                 {
                     "Type": 4,
@@ -261,223 +261,8 @@
     ],
     "Children": [
         {
-            "UID": 798100542,
-            "ParentUID": 701170517,
-            "PrefabID": 1698065275,
-            "IsPrefab": true,
-            "Name": "Particles",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
-            "NavigationInfo": {
-                "isNavigable": false,
-                "navigationArea": 0
-            },
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        0,
-                        0
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                }
-            ],
-            "Children": [
-                {
-                    "UID": 1682393207,
-                    "ParentUID": 798100542,
-                    "PrefabID": 1698065275,
-                    "IsPrefab": true,
-                    "Name": "Hit",
-                    "IsActive": true,
-                    "IsStatic": false,
-                    "IsSceneRoot": false,
-                    "MaintainThroughScenes": false,
-                    "ShowBoundingBoxes": false,
-                    "NavigationInfo": {
-                        "isNavigable": false,
-                        "navigationArea": 0
-                    },
-                    "Components": [
-                        {
-                            "Type": 1,
-                            "LocalPosition": [
-                                -0.28352952003479004,
-                                16.732017517089844,
-                                0.820556640625
-                            ],
-                            "LocalRotation": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ],
-                            "LocalScale": [
-                                1,
-                                1,
-                                1
-                            ]
-                        },
-                        {
-                            "Type": 12,
-                            "particleSystemUID": 775549303,
-                            "particleSystemAssetsPath": "Assets\/ParticleSystems\/HITPARTICLE.particles",
-                            "stopSpawn": false,
-                            "tempDelete": false,
-                            "previewEnabled": true,
-                            "stopAndDeleteCheck": false
-                        }
-                    ],
-                    "Children": []
-                },
-                {
-                    "UID": 1330014693,
-                    "ParentUID": 798100542,
-                    "PrefabID": 1698065275,
-                    "IsPrefab": true,
-                    "Name": "Run",
-                    "IsActive": true,
-                    "IsStatic": false,
-                    "IsSceneRoot": false,
-                    "MaintainThroughScenes": false,
-                    "ShowBoundingBoxes": false,
-                    "NavigationInfo": {
-                        "isNavigable": false,
-                        "navigationArea": 0
-                    },
-                    "Components": [
-                        {
-                            "Type": 1,
-                            "LocalPosition": [
-                                -0.19059991836547852,
-                                5.2962088584899902,
-                                -1.5982446670532227
-                            ],
-                            "LocalRotation": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ],
-                            "LocalScale": [
-                                1,
-                                1,
-                                1
-                            ]
-                        },
-                        {
-                            "Type": 12,
-                            "particleSystemUID": 1084813031,
-                            "particleSystemAssetsPath": "Assets\/ParticleSystems\/RUNNINGSMOKE.particles",
-                            "stopSpawn": false,
-                            "tempDelete": false,
-                            "previewEnabled": true,
-                            "stopAndDeleteCheck": false
-                        }
-                    ],
-                    "Children": []
-                }
-            ]
-        },
-        {
-            "UID": 174953528,
-            "ParentUID": 701170517,
-            "PrefabID": 1698065275,
-            "IsPrefab": true,
-            "Name": "DarkTrooperMesh",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": true,
-            "NavigationInfo": {
-                "isNavigable": false,
-                "navigationArea": 0
-            },
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        0,
-                        0
-                    ],
-                    "LocalRotation": [
-                        -0.7071068286895752,
-                        0,
-                        0,
-                        0.70710670948028564
-                    ],
-                    "LocalScale": [
-                        0.20000000298023224,
-                        0.20000000298023224,
-                        0.20000000298023224
-                    ]
-                },
-                {
-                    "Type": 2,
-                    "UID": 758774783,
-                    "Name": "DarkTrooperMesh.nemesh",
-                    "Path": "Library\/Meshes\/758774783.nemesh",
-                    "File": "758774783.nemesh",
-                    "ShowWireframe": false,
-                    "ShowBoundingBox": false,
-                    "Outline": false,
-                    "OutlineThickness": 1,
-                    "OutlineColor": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ]
-                },
-                {
-                    "Type": 3,
-                    "Material": {
-                        "UID": 708934690,
-                        "Color": [
-                            0.80000001192092896,
-                            0.80000001192092896,
-                            0.80000001192092896,
-                            1
-                        ],
-                        "Name": "DarkTrooperMesh.nemat",
-                        "Path": "Library\/Materials\/708934690.nemat",
-                        "File": "708934690.nemat"
-                    },
-                    "Texture": {
-                        "AssetsPath": "Assets\/Textures\/\/Enemies\/DarkTrooper\/darktrooper_elite_texture.png",
-                        "AssetsName": "darktrooper_elite_texture.png",
-                        "LibaryPath": "Library\/Textures\/1835290172.netex",
-                        "LibraryFile": "1835290172.netex"
-                    },
-                    "Shader": {
-                        "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
-                        "AssetsName": "DefaultShader.shader",
-                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
-                        "LibraryFile": "800223282.neshader"
-                    }
-                }
-            ],
-            "Children": []
-        },
-        {
-            "UID": 1690097639,
-            "ParentUID": 701170517,
+            "UID": 1702918598,
+            "ParentUID": 394395948,
             "PrefabID": 1698065275,
             "IsPrefab": true,
             "Name": "Skeleton",
@@ -513,46 +298,8 @@
             ],
             "Children": [
                 {
-                    "UID": 1390504951,
-                    "ParentUID": 1690097639,
-                    "PrefabID": 1698065275,
-                    "IsPrefab": true,
-                    "Name": "Hand",
-                    "IsActive": true,
-                    "IsStatic": false,
-                    "IsSceneRoot": false,
-                    "MaintainThroughScenes": false,
-                    "ShowBoundingBoxes": false,
-                    "NavigationInfo": {
-                        "isNavigable": false,
-                        "navigationArea": 0
-                    },
-                    "Components": [
-                        {
-                            "Type": 1,
-                            "LocalPosition": [
-                                -28.037809371948242,
-                                162.04032897949219,
-                                131.93122863769531
-                            ],
-                            "LocalRotation": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ],
-                            "LocalScale": [
-                                15.384615898132324,
-                                15.384615898132324,
-                                15.384615898132324
-                            ]
-                        }
-                    ],
-                    "Children": []
-                },
-                {
-                    "UID": 512228230,
-                    "ParentUID": 1690097639,
+                    "UID": 1076520413,
+                    "ParentUID": 1702918598,
                     "PrefabID": 1698065275,
                     "IsPrefab": true,
                     "Name": "mixamorig:Hips",
@@ -588,396 +335,8 @@
                     ],
                     "Children": [
                         {
-                            "UID": 306251970,
-                            "ParentUID": 512228230,
-                            "PrefabID": 1698065275,
-                            "IsPrefab": true,
-                            "Name": "mixamorig:LeftUpLeg",
-                            "IsActive": true,
-                            "IsStatic": false,
-                            "IsSceneRoot": false,
-                            "MaintainThroughScenes": false,
-                            "ShowBoundingBoxes": false,
-                            "NavigationInfo": {
-                                "isNavigable": false,
-                                "navigationArea": 0
-                            },
-                            "Components": [
-                                {
-                                    "Type": 1,
-                                    "LocalPosition": [
-                                        6.0584115982055664,
-                                        -2.3366203308105469,
-                                        -0.19234180450439453
-                                    ],
-                                    "LocalRotation": [
-                                        0.27539205551147461,
-                                        0.17497712373733521,
-                                        0.94344305992126465,
-                                        -0.058800064027309418
-                                    ],
-                                    "LocalScale": [
-                                        1,
-                                        1,
-                                        1
-                                    ]
-                                }
-                            ],
-                            "Children": [
-                                {
-                                    "UID": 720307349,
-                                    "ParentUID": 306251970,
-                                    "PrefabID": 1698065275,
-                                    "IsPrefab": true,
-                                    "Name": "mixamorig:LeftLeg",
-                                    "IsActive": true,
-                                    "IsStatic": false,
-                                    "IsSceneRoot": false,
-                                    "MaintainThroughScenes": false,
-                                    "ShowBoundingBoxes": false,
-                                    "NavigationInfo": {
-                                        "isNavigable": false,
-                                        "navigationArea": 0
-                                    },
-                                    "Components": [
-                                        {
-                                            "Type": 1,
-                                            "LocalPosition": [
-                                                0,
-                                                23.237895965576172,
-                                                -4.4408920985006262e-16
-                                            ],
-                                            "LocalRotation": [
-                                                -0.64809882640838623,
-                                                0.083673343062400818,
-                                                -0.035235855728387833,
-                                                0.75612509250640869
-                                            ],
-                                            "LocalScale": [
-                                                1,
-                                                0.99999988079071045,
-                                                0.99999982118606567
-                                            ]
-                                        }
-                                    ],
-                                    "Children": [
-                                        {
-                                            "UID": 1308755109,
-                                            "ParentUID": 720307349,
-                                            "PrefabID": 1698065275,
-                                            "IsPrefab": true,
-                                            "Name": "mixamorig:LeftFoot",
-                                            "IsActive": true,
-                                            "IsStatic": false,
-                                            "IsSceneRoot": false,
-                                            "MaintainThroughScenes": false,
-                                            "ShowBoundingBoxes": false,
-                                            "NavigationInfo": {
-                                                "isNavigable": false,
-                                                "navigationArea": 0
-                                            },
-                                            "Components": [
-                                                {
-                                                    "Type": 1,
-                                                    "LocalPosition": [
-                                                        0,
-                                                        22.568891525268555,
-                                                        0
-                                                    ],
-                                                    "LocalRotation": [
-                                                        0.46886947751045227,
-                                                        -0.029077677056193352,
-                                                        0.17798341810703278,
-                                                        0.86466044187545776
-                                                    ],
-                                                    "LocalScale": [
-                                                        1,
-                                                        0.99999994039535522,
-                                                        1
-                                                    ]
-                                                }
-                                            ],
-                                            "Children": [
-                                                {
-                                                    "UID": 1240907508,
-                                                    "ParentUID": 1308755109,
-                                                    "PrefabID": 1698065275,
-                                                    "IsPrefab": true,
-                                                    "Name": "mixamorig:LeftToeBase",
-                                                    "IsActive": true,
-                                                    "IsStatic": false,
-                                                    "IsSceneRoot": false,
-                                                    "MaintainThroughScenes": false,
-                                                    "ShowBoundingBoxes": false,
-                                                    "NavigationInfo": {
-                                                        "isNavigable": false,
-                                                        "navigationArea": 0
-                                                    },
-                                                    "Components": [
-                                                        {
-                                                            "Type": 1,
-                                                            "LocalPosition": [
-                                                                0,
-                                                                9.5877790451049805,
-                                                                0
-                                                            ],
-                                                            "LocalRotation": [
-                                                                0.35588559508323669,
-                                                                -0.20833247900009155,
-                                                                -0.0040069874376058578,
-                                                                0.91100341081619263
-                                                            ],
-                                                            "LocalScale": [
-                                                                1,
-                                                                0.99999994039535522,
-                                                                1
-                                                            ]
-                                                        }
-                                                    ],
-                                                    "Children": [
-                                                        {
-                                                            "UID": 1428932083,
-                                                            "ParentUID": 1240907508,
-                                                            "PrefabID": 1698065275,
-                                                            "IsPrefab": true,
-                                                            "Name": "mixamorig:LeftToe_End",
-                                                            "IsActive": true,
-                                                            "IsStatic": false,
-                                                            "IsSceneRoot": false,
-                                                            "MaintainThroughScenes": false,
-                                                            "ShowBoundingBoxes": false,
-                                                            "NavigationInfo": {
-                                                                "isNavigable": false,
-                                                                "navigationArea": 0
-                                                            },
-                                                            "Components": [
-                                                                {
-                                                                    "Type": 1,
-                                                                    "LocalPosition": [
-                                                                        -4.4408920985006262e-16,
-                                                                        3.9125797748565674,
-                                                                        2.2204460492503131e-16
-                                                                    ],
-                                                                    "LocalRotation": [
-                                                                        0.70710670948028564,
-                                                                        0,
-                                                                        0,
-                                                                        0.7071068286895752
-                                                                    ],
-                                                                    "LocalScale": [
-                                                                        1,
-                                                                        0.99999994039535522,
-                                                                        0.99999994039535522
-                                                                    ]
-                                                                }
-                                                            ],
-                                                            "Children": []
-                                                        }
-                                                    ]
-                                                }
-                                            ]
-                                        }
-                                    ]
-                                }
-                            ]
-                        },
-                        {
-                            "UID": 508311285,
-                            "ParentUID": 512228230,
-                            "PrefabID": 1698065275,
-                            "IsPrefab": true,
-                            "Name": "mixamorig:RightUpLeg",
-                            "IsActive": true,
-                            "IsStatic": false,
-                            "IsSceneRoot": false,
-                            "MaintainThroughScenes": false,
-                            "ShowBoundingBoxes": false,
-                            "NavigationInfo": {
-                                "isNavigable": false,
-                                "navigationArea": 0
-                            },
-                            "Components": [
-                                {
-                                    "Type": 1,
-                                    "LocalPosition": [
-                                        -6.0584115982055664,
-                                        -2.3366203308105469,
-                                        -0.22606831789016724
-                                    ],
-                                    "LocalRotation": [
-                                        -0.0042968858033418655,
-                                        0.2018200010061264,
-                                        0.97808873653411865,
-                                        -0.050918430089950562
-                                    ],
-                                    "LocalScale": [
-                                        1.0000001192092896,
-                                        1.0000001192092896,
-                                        1
-                                    ]
-                                }
-                            ],
-                            "Children": [
-                                {
-                                    "UID": 356742413,
-                                    "ParentUID": 508311285,
-                                    "PrefabID": 1698065275,
-                                    "IsPrefab": true,
-                                    "Name": "mixamorig:RightLeg",
-                                    "IsActive": true,
-                                    "IsStatic": false,
-                                    "IsSceneRoot": false,
-                                    "MaintainThroughScenes": false,
-                                    "ShowBoundingBoxes": false,
-                                    "NavigationInfo": {
-                                        "isNavigable": false,
-                                        "navigationArea": 0
-                                    },
-                                    "Components": [
-                                        {
-                                            "Type": 1,
-                                            "LocalPosition": [
-                                                8.8817841970012523e-16,
-                                                23.234561920166016,
-                                                -3.3306690738754696e-16
-                                            ],
-                                            "LocalRotation": [
-                                                -0.45010676980018616,
-                                                0.0051612979732453823,
-                                                -0.095050938427448273,
-                                                0.88788658380508423
-                                            ],
-                                            "LocalScale": [
-                                                1,
-                                                1,
-                                                1
-                                            ]
-                                        }
-                                    ],
-                                    "Children": [
-                                        {
-                                            "UID": 1366068500,
-                                            "ParentUID": 356742413,
-                                            "PrefabID": 1698065275,
-                                            "IsPrefab": true,
-                                            "Name": "mixamorig:RightFoot",
-                                            "IsActive": true,
-                                            "IsStatic": false,
-                                            "IsSceneRoot": false,
-                                            "MaintainThroughScenes": false,
-                                            "ShowBoundingBoxes": false,
-                                            "NavigationInfo": {
-                                                "isNavigable": false,
-                                                "navigationArea": 0
-                                            },
-                                            "Components": [
-                                                {
-                                                    "Type": 1,
-                                                    "LocalPosition": [
-                                                        0,
-                                                        22.564289093017578,
-                                                        0
-                                                    ],
-                                                    "LocalRotation": [
-                                                        0.64984309673309326,
-                                                        0.093918301165103912,
-                                                        -0.0171317458152771,
-                                                        0.75404894351959229
-                                                    ],
-                                                    "LocalScale": [
-                                                        1,
-                                                        1,
-                                                        1
-                                                    ]
-                                                }
-                                            ],
-                                            "Children": [
-                                                {
-                                                    "UID": 920440760,
-                                                    "ParentUID": 1366068500,
-                                                    "PrefabID": 1698065275,
-                                                    "IsPrefab": true,
-                                                    "Name": "mixamorig:RightToeBase",
-                                                    "IsActive": true,
-                                                    "IsStatic": false,
-                                                    "IsSceneRoot": false,
-                                                    "MaintainThroughScenes": false,
-                                                    "ShowBoundingBoxes": false,
-                                                    "NavigationInfo": {
-                                                        "isNavigable": false,
-                                                        "navigationArea": 0
-                                                    },
-                                                    "Components": [
-                                                        {
-                                                            "Type": 1,
-                                                            "LocalPosition": [
-                                                                8.8817841970012523e-16,
-                                                                9.6897153854370117,
-                                                                -8.8817841970012523e-16
-                                                            ],
-                                                            "LocalRotation": [
-                                                                0.3452853262424469,
-                                                                0.15267103910446167,
-                                                                -0.016773605719208717,
-                                                                0.92584460973739624
-                                                            ],
-                                                            "LocalScale": [
-                                                                1,
-                                                                1,
-                                                                1
-                                                            ]
-                                                        }
-                                                    ],
-                                                    "Children": [
-                                                        {
-                                                            "UID": 993916195,
-                                                            "ParentUID": 920440760,
-                                                            "PrefabID": 1698065275,
-                                                            "IsPrefab": true,
-                                                            "Name": "mixamorig:RightToe_End",
-                                                            "IsActive": true,
-                                                            "IsStatic": false,
-                                                            "IsSceneRoot": false,
-                                                            "MaintainThroughScenes": false,
-                                                            "ShowBoundingBoxes": false,
-                                                            "NavigationInfo": {
-                                                                "isNavigable": false,
-                                                                "navigationArea": 0
-                                                            },
-                                                            "Components": [
-                                                                {
-                                                                    "Type": 1,
-                                                                    "LocalPosition": [
-                                                                        -1.7763568394002505e-15,
-                                                                        3.9269850254058838,
-                                                                        0
-                                                                    ],
-                                                                    "LocalRotation": [
-                                                                        0.70710670948028564,
-                                                                        0,
-                                                                        0,
-                                                                        0.7071068286895752
-                                                                    ],
-                                                                    "LocalScale": [
-                                                                        1,
-                                                                        0.99999994039535522,
-                                                                        0.99999994039535522
-                                                                    ]
-                                                                }
-                                                            ],
-                                                            "Children": []
-                                                        }
-                                                    ]
-                                                }
-                                            ]
-                                        }
-                                    ]
-                                }
-                            ]
-                        },
-                        {
-                            "UID": 544172623,
-                            "ParentUID": 512228230,
+                            "UID": 662547672,
+                            "ParentUID": 1076520413,
                             "PrefabID": 1698065275,
                             "IsPrefab": true,
                             "Name": "mixamorig:Spine",
@@ -1013,8 +372,8 @@
                             ],
                             "Children": [
                                 {
-                                    "UID": 507208258,
-                                    "ParentUID": 544172623,
+                                    "UID": 194803160,
+                                    "ParentUID": 662547672,
                                     "PrefabID": 1698065275,
                                     "IsPrefab": true,
                                     "Name": "mixamorig:Spine1",
@@ -1050,8 +409,8 @@
                                     ],
                                     "Children": [
                                         {
-                                            "UID": 285028368,
-                                            "ParentUID": 507208258,
+                                            "UID": 1771718775,
+                                            "ParentUID": 194803160,
                                             "PrefabID": 1698065275,
                                             "IsPrefab": true,
                                             "Name": "mixamorig:Spine2",
@@ -1087,124 +446,8 @@
                                             ],
                                             "Children": [
                                                 {
-                                                    "UID": 1678346614,
-                                                    "ParentUID": 285028368,
-                                                    "PrefabID": 1698065275,
-                                                    "IsPrefab": true,
-                                                    "Name": "mixamorig:Neck",
-                                                    "IsActive": true,
-                                                    "IsStatic": false,
-                                                    "IsSceneRoot": false,
-                                                    "MaintainThroughScenes": false,
-                                                    "ShowBoundingBoxes": false,
-                                                    "NavigationInfo": {
-                                                        "isNavigable": false,
-                                                        "navigationArea": 0
-                                                    },
-                                                    "Components": [
-                                                        {
-                                                            "Type": 1,
-                                                            "LocalPosition": [
-                                                                0,
-                                                                6.3049983978271484,
-                                                                4.7621973919831362e-08
-                                                            ],
-                                                            "LocalRotation": [
-                                                                0.10520165413618088,
-                                                                0.12198173999786377,
-                                                                -0.04239683598279953,
-                                                                0.9860302209854126
-                                                            ],
-                                                            "LocalScale": [
-                                                                1,
-                                                                0.99999994039535522,
-                                                                1
-                                                            ]
-                                                        }
-                                                    ],
-                                                    "Children": [
-                                                        {
-                                                            "UID": 2045007932,
-                                                            "ParentUID": 1678346614,
-                                                            "PrefabID": 1698065275,
-                                                            "IsPrefab": true,
-                                                            "Name": "mixamorig:Head",
-                                                            "IsActive": true,
-                                                            "IsStatic": false,
-                                                            "IsSceneRoot": false,
-                                                            "MaintainThroughScenes": false,
-                                                            "ShowBoundingBoxes": false,
-                                                            "NavigationInfo": {
-                                                                "isNavigable": false,
-                                                                "navigationArea": 0
-                                                            },
-                                                            "Components": [
-                                                                {
-                                                                    "Type": 1,
-                                                                    "LocalPosition": [
-                                                                        0,
-                                                                        2.5782394409179688,
-                                                                        0.47334453463554382
-                                                                    ],
-                                                                    "LocalRotation": [
-                                                                        0.15011279284954071,
-                                                                        0.080643437802791595,
-                                                                        0.049089688807725906,
-                                                                        0.98415082693099976
-                                                                    ],
-                                                                    "LocalScale": [
-                                                                        1,
-                                                                        1,
-                                                                        1
-                                                                    ]
-                                                                }
-                                                            ],
-                                                            "Children": [
-                                                                {
-                                                                    "UID": 610501992,
-                                                                    "ParentUID": 2045007932,
-                                                                    "PrefabID": 1698065275,
-                                                                    "IsPrefab": true,
-                                                                    "Name": "mixamorig:HeadTop_End",
-                                                                    "IsActive": true,
-                                                                    "IsStatic": false,
-                                                                    "IsSceneRoot": false,
-                                                                    "MaintainThroughScenes": false,
-                                                                    "ShowBoundingBoxes": false,
-                                                                    "NavigationInfo": {
-                                                                        "isNavigable": false,
-                                                                        "navigationArea": 0
-                                                                    },
-                                                                    "Components": [
-                                                                        {
-                                                                            "Type": 1,
-                                                                            "LocalPosition": [
-                                                                                0,
-                                                                                13.400856018066406,
-                                                                                2.4602921009063721
-                                                                            ],
-                                                                            "LocalRotation": [
-                                                                                0.70710670948028564,
-                                                                                0,
-                                                                                0,
-                                                                                0.7071068286895752
-                                                                            ],
-                                                                            "LocalScale": [
-                                                                                1,
-                                                                                0.99999994039535522,
-                                                                                0.99999994039535522
-                                                                            ]
-                                                                        }
-                                                                    ],
-                                                                    "Children": []
-                                                                }
-                                                            ]
-                                                        }
-                                                    ]
-                                                },
-                                                {
-                                                    "UID": 457718240,
-                                                    "ParentUID": 285028368,
+                                                    "UID": 1254057053,
+                                                    "ParentUID": 1771718775,
                                                     "PrefabID": 1698065275,
                                                     "IsPrefab": true,
                                                     "Name": "mixamorig:RightShoulder",
@@ -1240,8 +483,8 @@
                                                     ],
                                                     "Children": [
                                                         {
-                                                            "UID": 747823799,
-                                                            "ParentUID": 457718240,
+                                                            "UID": 1761879070,
+                                                            "ParentUID": 1254057053,
                                                             "PrefabID": 1698065275,
                                                             "IsPrefab": true,
                                                             "Name": "mixamorig:RightArm",
@@ -1277,8 +520,8 @@
                                                             ],
                                                             "Children": [
                                                                 {
-                                                                    "UID": 535975534,
-                                                                    "ParentUID": 747823799,
+                                                                    "UID": 189212406,
+                                                                    "ParentUID": 1761879070,
                                                                     "PrefabID": 1698065275,
                                                                     "IsPrefab": true,
                                                                     "Name": "mixamorig:RightForeArm",
@@ -1314,8 +557,8 @@
                                                                     ],
                                                                     "Children": [
                                                                         {
-                                                                            "UID": 2106831586,
-                                                                            "ParentUID": 535975534,
+                                                                            "UID": 838680062,
+                                                                            "ParentUID": 189212406,
                                                                             "PrefabID": 1698065275,
                                                                             "IsPrefab": true,
                                                                             "Name": "mixamorig:RightHand",
@@ -1351,8 +594,8 @@
                                                                             ],
                                                                             "Children": [
                                                                                 {
-                                                                                    "UID": 779664663,
-                                                                                    "ParentUID": 2106831586,
+                                                                                    "UID": 105598306,
+                                                                                    "ParentUID": 838680062,
                                                                                     "PrefabID": 1698065275,
                                                                                     "IsPrefab": true,
                                                                                     "Name": "mixamorig:RightHandIndex1",
@@ -1388,8 +631,8 @@
                                                                                     ],
                                                                                     "Children": [
                                                                                         {
-                                                                                            "UID": 1266772390,
-                                                                                            "ParentUID": 779664663,
+                                                                                            "UID": 439434542,
+                                                                                            "ParentUID": 105598306,
                                                                                             "PrefabID": 1698065275,
                                                                                             "IsPrefab": true,
                                                                                             "Name": "mixamorig:RightHandIndex2",
@@ -1425,8 +668,8 @@
                                                                                             ],
                                                                                             "Children": [
                                                                                                 {
-                                                                                                    "UID": 2116409123,
-                                                                                                    "ParentUID": 1266772390,
+                                                                                                    "UID": 1072118753,
+                                                                                                    "ParentUID": 439434542,
                                                                                                     "PrefabID": 1698065275,
                                                                                                     "IsPrefab": true,
                                                                                                     "Name": "mixamorig:RightHandIndex3",
@@ -1462,8 +705,8 @@
                                                                                                     ],
                                                                                                     "Children": [
                                                                                                         {
-                                                                                                            "UID": 520447778,
-                                                                                                            "ParentUID": 2116409123,
+                                                                                                            "UID": 608928022,
+                                                                                                            "ParentUID": 1072118753,
                                                                                                             "PrefabID": 1698065275,
                                                                                                             "IsPrefab": true,
                                                                                                             "Name": "mixamorig:RightHandIndex4",
@@ -1506,8 +749,8 @@
                                                                                     ]
                                                                                 },
                                                                                 {
-                                                                                    "UID": 1233778274,
-                                                                                    "ParentUID": 2106831586,
+                                                                                    "UID": 126238319,
+                                                                                    "ParentUID": 838680062,
                                                                                     "PrefabID": 1698065275,
                                                                                     "IsPrefab": true,
                                                                                     "Name": "Shootgun",
@@ -1588,8 +831,8 @@
                                                                                     "Children": []
                                                                                 },
                                                                                 {
-                                                                                    "UID": 1481434377,
-                                                                                    "ParentUID": 2106831586,
+                                                                                    "UID": 467752160,
+                                                                                    "ParentUID": 838680062,
                                                                                     "PrefabID": 1698065275,
                                                                                     "IsPrefab": true,
                                                                                     "Name": "mixamorig:RightHandThumb1",
@@ -1625,8 +868,8 @@
                                                                                     ],
                                                                                     "Children": [
                                                                                         {
-                                                                                            "UID": 874450172,
-                                                                                            "ParentUID": 1481434377,
+                                                                                            "UID": 192095279,
+                                                                                            "ParentUID": 467752160,
                                                                                             "PrefabID": 1698065275,
                                                                                             "IsPrefab": true,
                                                                                             "Name": "mixamorig:RightHandThumb2",
@@ -1662,8 +905,8 @@
                                                                                             ],
                                                                                             "Children": [
                                                                                                 {
-                                                                                                    "UID": 950748353,
-                                                                                                    "ParentUID": 874450172,
+                                                                                                    "UID": 1596012559,
+                                                                                                    "ParentUID": 192095279,
                                                                                                     "PrefabID": 1698065275,
                                                                                                     "IsPrefab": true,
                                                                                                     "Name": "mixamorig:RightHandThumb3",
@@ -1699,8 +942,8 @@
                                                                                                     ],
                                                                                                     "Children": [
                                                                                                         {
-                                                                                                            "UID": 1623305342,
-                                                                                                            "ParentUID": 950748353,
+                                                                                                            "UID": 506801188,
+                                                                                                            "ParentUID": 1596012559,
                                                                                                             "PrefabID": 1698065275,
                                                                                                             "IsPrefab": true,
                                                                                                             "Name": "mixamorig:RightHandThumb4",
@@ -1751,8 +994,8 @@
                                                     ]
                                                 },
                                                 {
-                                                    "UID": 1997779527,
-                                                    "ParentUID": 285028368,
+                                                    "UID": 1110568860,
+                                                    "ParentUID": 1771718775,
                                                     "PrefabID": 1698065275,
                                                     "IsPrefab": true,
                                                     "Name": "mixamorig:LeftShoulder",
@@ -1788,8 +1031,8 @@
                                                     ],
                                                     "Children": [
                                                         {
-                                                            "UID": 2117858778,
-                                                            "ParentUID": 1997779527,
+                                                            "UID": 811639967,
+                                                            "ParentUID": 1110568860,
                                                             "PrefabID": 1698065275,
                                                             "IsPrefab": true,
                                                             "Name": "mixamorig:LeftArm",
@@ -1825,8 +1068,8 @@
                                                             ],
                                                             "Children": [
                                                                 {
-                                                                    "UID": 626486558,
-                                                                    "ParentUID": 2117858778,
+                                                                    "UID": 1641044192,
+                                                                    "ParentUID": 811639967,
                                                                     "PrefabID": 1698065275,
                                                                     "IsPrefab": true,
                                                                     "Name": "mixamorig:LeftForeArm",
@@ -1862,8 +1105,8 @@
                                                                     ],
                                                                     "Children": [
                                                                         {
-                                                                            "UID": 1852779149,
-                                                                            "ParentUID": 626486558,
+                                                                            "UID": 1882412481,
+                                                                            "ParentUID": 1641044192,
                                                                             "PrefabID": 1698065275,
                                                                             "IsPrefab": true,
                                                                             "Name": "mixamorig:LeftHand",
@@ -1899,8 +1142,8 @@
                                                                             ],
                                                                             "Children": [
                                                                                 {
-                                                                                    "UID": 1029653374,
-                                                                                    "ParentUID": 1852779149,
+                                                                                    "UID": 1709818503,
+                                                                                    "ParentUID": 1882412481,
                                                                                     "PrefabID": 1698065275,
                                                                                     "IsPrefab": true,
                                                                                     "Name": "mixamorig:LeftHandThumb1",
@@ -1936,8 +1179,8 @@
                                                                                     ],
                                                                                     "Children": [
                                                                                         {
-                                                                                            "UID": 912755122,
-                                                                                            "ParentUID": 1029653374,
+                                                                                            "UID": 1527746816,
+                                                                                            "ParentUID": 1709818503,
                                                                                             "PrefabID": 1698065275,
                                                                                             "IsPrefab": true,
                                                                                             "Name": "mixamorig:LeftHandThumb2",
@@ -1973,8 +1216,8 @@
                                                                                             ],
                                                                                             "Children": [
                                                                                                 {
-                                                                                                    "UID": 22292821,
-                                                                                                    "ParentUID": 912755122,
+                                                                                                    "UID": 181370467,
+                                                                                                    "ParentUID": 1527746816,
                                                                                                     "PrefabID": 1698065275,
                                                                                                     "IsPrefab": true,
                                                                                                     "Name": "mixamorig:LeftHandThumb3",
@@ -2010,8 +1253,8 @@
                                                                                                     ],
                                                                                                     "Children": [
                                                                                                         {
-                                                                                                            "UID": 710339435,
-                                                                                                            "ParentUID": 22292821,
+                                                                                                            "UID": 1068699961,
+                                                                                                            "ParentUID": 181370467,
                                                                                                             "PrefabID": 1698065275,
                                                                                                             "IsPrefab": true,
                                                                                                             "Name": "mixamorig:LeftHandThumb4",
@@ -2054,8 +1297,8 @@
                                                                                     ]
                                                                                 },
                                                                                 {
-                                                                                    "UID": 1916456590,
-                                                                                    "ParentUID": 1852779149,
+                                                                                    "UID": 1105442719,
+                                                                                    "ParentUID": 1882412481,
                                                                                     "PrefabID": 1698065275,
                                                                                     "IsPrefab": true,
                                                                                     "Name": "mixamorig:LeftHandIndex1",
@@ -2091,8 +1334,8 @@
                                                                                     ],
                                                                                     "Children": [
                                                                                         {
-                                                                                            "UID": 820697248,
-                                                                                            "ParentUID": 1916456590,
+                                                                                            "UID": 2093349330,
+                                                                                            "ParentUID": 1105442719,
                                                                                             "PrefabID": 1698065275,
                                                                                             "IsPrefab": true,
                                                                                             "Name": "mixamorig:LeftHandIndex2",
@@ -2128,8 +1371,8 @@
                                                                                             ],
                                                                                             "Children": [
                                                                                                 {
-                                                                                                    "UID": 1833892378,
-                                                                                                    "ParentUID": 820697248,
+                                                                                                    "UID": 1678831661,
+                                                                                                    "ParentUID": 2093349330,
                                                                                                     "PrefabID": 1698065275,
                                                                                                     "IsPrefab": true,
                                                                                                     "Name": "mixamorig:LeftHandIndex3",
@@ -2165,8 +1408,8 @@
                                                                                                     ],
                                                                                                     "Children": [
                                                                                                         {
-                                                                                                            "UID": 1209805095,
-                                                                                                            "ParentUID": 1833892378,
+                                                                                                            "UID": 727614217,
+                                                                                                            "ParentUID": 1678831661,
                                                                                                             "PrefabID": 1698065275,
                                                                                                             "IsPrefab": true,
                                                                                                             "Name": "mixamorig:LeftHandIndex4",
@@ -2215,6 +1458,510 @@
                                                             ]
                                                         }
                                                     ]
+                                                },
+                                                {
+                                                    "UID": 1082096720,
+                                                    "ParentUID": 1771718775,
+                                                    "PrefabID": 1698065275,
+                                                    "IsPrefab": true,
+                                                    "Name": "mixamorig:Neck",
+                                                    "IsActive": true,
+                                                    "IsStatic": false,
+                                                    "IsSceneRoot": false,
+                                                    "MaintainThroughScenes": false,
+                                                    "ShowBoundingBoxes": false,
+                                                    "NavigationInfo": {
+                                                        "isNavigable": false,
+                                                        "navigationArea": 0
+                                                    },
+                                                    "Components": [
+                                                        {
+                                                            "Type": 1,
+                                                            "LocalPosition": [
+                                                                0,
+                                                                6.3049983978271484,
+                                                                4.7621973919831362e-08
+                                                            ],
+                                                            "LocalRotation": [
+                                                                0.10520165413618088,
+                                                                0.12198173999786377,
+                                                                -0.04239683598279953,
+                                                                0.9860302209854126
+                                                            ],
+                                                            "LocalScale": [
+                                                                1,
+                                                                0.99999994039535522,
+                                                                1
+                                                            ]
+                                                        }
+                                                    ],
+                                                    "Children": [
+                                                        {
+                                                            "UID": 36959394,
+                                                            "ParentUID": 1082096720,
+                                                            "PrefabID": 1698065275,
+                                                            "IsPrefab": true,
+                                                            "Name": "mixamorig:Head",
+                                                            "IsActive": true,
+                                                            "IsStatic": false,
+                                                            "IsSceneRoot": false,
+                                                            "MaintainThroughScenes": false,
+                                                            "ShowBoundingBoxes": false,
+                                                            "NavigationInfo": {
+                                                                "isNavigable": false,
+                                                                "navigationArea": 0
+                                                            },
+                                                            "Components": [
+                                                                {
+                                                                    "Type": 1,
+                                                                    "LocalPosition": [
+                                                                        0,
+                                                                        2.5782394409179688,
+                                                                        0.47334453463554382
+                                                                    ],
+                                                                    "LocalRotation": [
+                                                                        0.15011279284954071,
+                                                                        0.080643437802791595,
+                                                                        0.049089688807725906,
+                                                                        0.98415082693099976
+                                                                    ],
+                                                                    "LocalScale": [
+                                                                        1,
+                                                                        1,
+                                                                        1
+                                                                    ]
+                                                                }
+                                                            ],
+                                                            "Children": [
+                                                                {
+                                                                    "UID": 1221537458,
+                                                                    "ParentUID": 36959394,
+                                                                    "PrefabID": 1698065275,
+                                                                    "IsPrefab": true,
+                                                                    "Name": "mixamorig:HeadTop_End",
+                                                                    "IsActive": true,
+                                                                    "IsStatic": false,
+                                                                    "IsSceneRoot": false,
+                                                                    "MaintainThroughScenes": false,
+                                                                    "ShowBoundingBoxes": false,
+                                                                    "NavigationInfo": {
+                                                                        "isNavigable": false,
+                                                                        "navigationArea": 0
+                                                                    },
+                                                                    "Components": [
+                                                                        {
+                                                                            "Type": 1,
+                                                                            "LocalPosition": [
+                                                                                0,
+                                                                                13.400856018066406,
+                                                                                2.4602921009063721
+                                                                            ],
+                                                                            "LocalRotation": [
+                                                                                0.70710670948028564,
+                                                                                0,
+                                                                                0,
+                                                                                0.7071068286895752
+                                                                            ],
+                                                                            "LocalScale": [
+                                                                                1,
+                                                                                0.99999994039535522,
+                                                                                0.99999994039535522
+                                                                            ]
+                                                                        }
+                                                                    ],
+                                                                    "Children": []
+                                                                }
+                                                            ]
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "UID": 1048666907,
+                            "ParentUID": 1076520413,
+                            "PrefabID": 1698065275,
+                            "IsPrefab": true,
+                            "Name": "mixamorig:RightUpLeg",
+                            "IsActive": true,
+                            "IsStatic": false,
+                            "IsSceneRoot": false,
+                            "MaintainThroughScenes": false,
+                            "ShowBoundingBoxes": false,
+                            "NavigationInfo": {
+                                "isNavigable": false,
+                                "navigationArea": 0
+                            },
+                            "Components": [
+                                {
+                                    "Type": 1,
+                                    "LocalPosition": [
+                                        -6.0584115982055664,
+                                        -2.3366203308105469,
+                                        -0.22606831789016724
+                                    ],
+                                    "LocalRotation": [
+                                        -0.0042968858033418655,
+                                        0.2018200010061264,
+                                        0.97808873653411865,
+                                        -0.050918430089950562
+                                    ],
+                                    "LocalScale": [
+                                        1.0000001192092896,
+                                        1.0000001192092896,
+                                        1
+                                    ]
+                                }
+                            ],
+                            "Children": [
+                                {
+                                    "UID": 494900785,
+                                    "ParentUID": 1048666907,
+                                    "PrefabID": 1698065275,
+                                    "IsPrefab": true,
+                                    "Name": "mixamorig:RightLeg",
+                                    "IsActive": true,
+                                    "IsStatic": false,
+                                    "IsSceneRoot": false,
+                                    "MaintainThroughScenes": false,
+                                    "ShowBoundingBoxes": false,
+                                    "NavigationInfo": {
+                                        "isNavigable": false,
+                                        "navigationArea": 0
+                                    },
+                                    "Components": [
+                                        {
+                                            "Type": 1,
+                                            "LocalPosition": [
+                                                8.8817841970012523e-16,
+                                                23.234561920166016,
+                                                -3.3306690738754696e-16
+                                            ],
+                                            "LocalRotation": [
+                                                -0.45010676980018616,
+                                                0.0051612979732453823,
+                                                -0.095050938427448273,
+                                                0.88788658380508423
+                                            ],
+                                            "LocalScale": [
+                                                1,
+                                                1,
+                                                1
+                                            ]
+                                        }
+                                    ],
+                                    "Children": [
+                                        {
+                                            "UID": 1682068866,
+                                            "ParentUID": 494900785,
+                                            "PrefabID": 1698065275,
+                                            "IsPrefab": true,
+                                            "Name": "mixamorig:RightFoot",
+                                            "IsActive": true,
+                                            "IsStatic": false,
+                                            "IsSceneRoot": false,
+                                            "MaintainThroughScenes": false,
+                                            "ShowBoundingBoxes": false,
+                                            "NavigationInfo": {
+                                                "isNavigable": false,
+                                                "navigationArea": 0
+                                            },
+                                            "Components": [
+                                                {
+                                                    "Type": 1,
+                                                    "LocalPosition": [
+                                                        0,
+                                                        22.564289093017578,
+                                                        0
+                                                    ],
+                                                    "LocalRotation": [
+                                                        0.64984309673309326,
+                                                        0.093918301165103912,
+                                                        -0.0171317458152771,
+                                                        0.75404894351959229
+                                                    ],
+                                                    "LocalScale": [
+                                                        1,
+                                                        1,
+                                                        1
+                                                    ]
+                                                }
+                                            ],
+                                            "Children": [
+                                                {
+                                                    "UID": 1625479284,
+                                                    "ParentUID": 1682068866,
+                                                    "PrefabID": 1698065275,
+                                                    "IsPrefab": true,
+                                                    "Name": "mixamorig:RightToeBase",
+                                                    "IsActive": true,
+                                                    "IsStatic": false,
+                                                    "IsSceneRoot": false,
+                                                    "MaintainThroughScenes": false,
+                                                    "ShowBoundingBoxes": false,
+                                                    "NavigationInfo": {
+                                                        "isNavigable": false,
+                                                        "navigationArea": 0
+                                                    },
+                                                    "Components": [
+                                                        {
+                                                            "Type": 1,
+                                                            "LocalPosition": [
+                                                                8.8817841970012523e-16,
+                                                                9.6897153854370117,
+                                                                -8.8817841970012523e-16
+                                                            ],
+                                                            "LocalRotation": [
+                                                                0.3452853262424469,
+                                                                0.15267103910446167,
+                                                                -0.016773605719208717,
+                                                                0.92584460973739624
+                                                            ],
+                                                            "LocalScale": [
+                                                                1,
+                                                                1,
+                                                                1
+                                                            ]
+                                                        }
+                                                    ],
+                                                    "Children": [
+                                                        {
+                                                            "UID": 1236900904,
+                                                            "ParentUID": 1625479284,
+                                                            "PrefabID": 1698065275,
+                                                            "IsPrefab": true,
+                                                            "Name": "mixamorig:RightToe_End",
+                                                            "IsActive": true,
+                                                            "IsStatic": false,
+                                                            "IsSceneRoot": false,
+                                                            "MaintainThroughScenes": false,
+                                                            "ShowBoundingBoxes": false,
+                                                            "NavigationInfo": {
+                                                                "isNavigable": false,
+                                                                "navigationArea": 0
+                                                            },
+                                                            "Components": [
+                                                                {
+                                                                    "Type": 1,
+                                                                    "LocalPosition": [
+                                                                        -1.7763568394002505e-15,
+                                                                        3.9269850254058838,
+                                                                        0
+                                                                    ],
+                                                                    "LocalRotation": [
+                                                                        0.70710670948028564,
+                                                                        0,
+                                                                        0,
+                                                                        0.7071068286895752
+                                                                    ],
+                                                                    "LocalScale": [
+                                                                        1,
+                                                                        0.99999994039535522,
+                                                                        0.99999994039535522
+                                                                    ]
+                                                                }
+                                                            ],
+                                                            "Children": []
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "UID": 1795174497,
+                            "ParentUID": 1076520413,
+                            "PrefabID": 1698065275,
+                            "IsPrefab": true,
+                            "Name": "mixamorig:LeftUpLeg",
+                            "IsActive": true,
+                            "IsStatic": false,
+                            "IsSceneRoot": false,
+                            "MaintainThroughScenes": false,
+                            "ShowBoundingBoxes": false,
+                            "NavigationInfo": {
+                                "isNavigable": false,
+                                "navigationArea": 0
+                            },
+                            "Components": [
+                                {
+                                    "Type": 1,
+                                    "LocalPosition": [
+                                        6.0584115982055664,
+                                        -2.3366203308105469,
+                                        -0.19234180450439453
+                                    ],
+                                    "LocalRotation": [
+                                        0.27539205551147461,
+                                        0.17497712373733521,
+                                        0.94344305992126465,
+                                        -0.058800064027309418
+                                    ],
+                                    "LocalScale": [
+                                        1,
+                                        1,
+                                        1
+                                    ]
+                                }
+                            ],
+                            "Children": [
+                                {
+                                    "UID": 555166636,
+                                    "ParentUID": 1795174497,
+                                    "PrefabID": 1698065275,
+                                    "IsPrefab": true,
+                                    "Name": "mixamorig:LeftLeg",
+                                    "IsActive": true,
+                                    "IsStatic": false,
+                                    "IsSceneRoot": false,
+                                    "MaintainThroughScenes": false,
+                                    "ShowBoundingBoxes": false,
+                                    "NavigationInfo": {
+                                        "isNavigable": false,
+                                        "navigationArea": 0
+                                    },
+                                    "Components": [
+                                        {
+                                            "Type": 1,
+                                            "LocalPosition": [
+                                                0,
+                                                23.237895965576172,
+                                                -4.4408920985006262e-16
+                                            ],
+                                            "LocalRotation": [
+                                                -0.64809882640838623,
+                                                0.083673343062400818,
+                                                -0.035235855728387833,
+                                                0.75612509250640869
+                                            ],
+                                            "LocalScale": [
+                                                1,
+                                                0.99999988079071045,
+                                                0.99999982118606567
+                                            ]
+                                        }
+                                    ],
+                                    "Children": [
+                                        {
+                                            "UID": 2025987295,
+                                            "ParentUID": 555166636,
+                                            "PrefabID": 1698065275,
+                                            "IsPrefab": true,
+                                            "Name": "mixamorig:LeftFoot",
+                                            "IsActive": true,
+                                            "IsStatic": false,
+                                            "IsSceneRoot": false,
+                                            "MaintainThroughScenes": false,
+                                            "ShowBoundingBoxes": false,
+                                            "NavigationInfo": {
+                                                "isNavigable": false,
+                                                "navigationArea": 0
+                                            },
+                                            "Components": [
+                                                {
+                                                    "Type": 1,
+                                                    "LocalPosition": [
+                                                        0,
+                                                        22.568891525268555,
+                                                        0
+                                                    ],
+                                                    "LocalRotation": [
+                                                        0.46886947751045227,
+                                                        -0.029077677056193352,
+                                                        0.17798341810703278,
+                                                        0.86466044187545776
+                                                    ],
+                                                    "LocalScale": [
+                                                        1,
+                                                        0.99999994039535522,
+                                                        1
+                                                    ]
+                                                }
+                                            ],
+                                            "Children": [
+                                                {
+                                                    "UID": 1820187500,
+                                                    "ParentUID": 2025987295,
+                                                    "PrefabID": 1698065275,
+                                                    "IsPrefab": true,
+                                                    "Name": "mixamorig:LeftToeBase",
+                                                    "IsActive": true,
+                                                    "IsStatic": false,
+                                                    "IsSceneRoot": false,
+                                                    "MaintainThroughScenes": false,
+                                                    "ShowBoundingBoxes": false,
+                                                    "NavigationInfo": {
+                                                        "isNavigable": false,
+                                                        "navigationArea": 0
+                                                    },
+                                                    "Components": [
+                                                        {
+                                                            "Type": 1,
+                                                            "LocalPosition": [
+                                                                0,
+                                                                9.5877790451049805,
+                                                                0
+                                                            ],
+                                                            "LocalRotation": [
+                                                                0.35588559508323669,
+                                                                -0.20833247900009155,
+                                                                -0.0040069874376058578,
+                                                                0.91100341081619263
+                                                            ],
+                                                            "LocalScale": [
+                                                                1,
+                                                                0.99999994039535522,
+                                                                1
+                                                            ]
+                                                        }
+                                                    ],
+                                                    "Children": [
+                                                        {
+                                                            "UID": 1606055921,
+                                                            "ParentUID": 1820187500,
+                                                            "PrefabID": 1698065275,
+                                                            "IsPrefab": true,
+                                                            "Name": "mixamorig:LeftToe_End",
+                                                            "IsActive": true,
+                                                            "IsStatic": false,
+                                                            "IsSceneRoot": false,
+                                                            "MaintainThroughScenes": false,
+                                                            "ShowBoundingBoxes": false,
+                                                            "NavigationInfo": {
+                                                                "isNavigable": false,
+                                                                "navigationArea": 0
+                                                            },
+                                                            "Components": [
+                                                                {
+                                                                    "Type": 1,
+                                                                    "LocalPosition": [
+                                                                        -4.4408920985006262e-16,
+                                                                        3.9125797748565674,
+                                                                        2.2204460492503131e-16
+                                                                    ],
+                                                                    "LocalRotation": [
+                                                                        0.70710670948028564,
+                                                                        0,
+                                                                        0,
+                                                                        0.7071068286895752
+                                                                    ],
+                                                                    "LocalScale": [
+                                                                        1,
+                                                                        0.99999994039535522,
+                                                                        0.99999994039535522
+                                                                    ]
+                                                                }
+                                                            ],
+                                                            "Children": []
+                                                        }
+                                                    ]
                                                 }
                                             ]
                                         }
@@ -2223,6 +1970,259 @@
                             ]
                         }
                     ]
+                },
+                {
+                    "UID": 67303223,
+                    "ParentUID": 1702918598,
+                    "PrefabID": 1698065275,
+                    "IsPrefab": true,
+                    "Name": "Hand",
+                    "IsActive": true,
+                    "IsStatic": false,
+                    "IsSceneRoot": false,
+                    "MaintainThroughScenes": false,
+                    "ShowBoundingBoxes": false,
+                    "NavigationInfo": {
+                        "isNavigable": false,
+                        "navigationArea": 0
+                    },
+                    "Components": [
+                        {
+                            "Type": 1,
+                            "LocalPosition": [
+                                -28.037809371948242,
+                                162.04032897949219,
+                                131.93122863769531
+                            ],
+                            "LocalRotation": [
+                                0,
+                                0,
+                                0,
+                                1
+                            ],
+                            "LocalScale": [
+                                15.384615898132324,
+                                15.384615898132324,
+                                15.384615898132324
+                            ]
+                        }
+                    ],
+                    "Children": []
+                }
+            ]
+        },
+        {
+            "UID": 1127893144,
+            "ParentUID": 394395948,
+            "PrefabID": 1698065275,
+            "IsPrefab": true,
+            "Name": "DarkTrooperMesh",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": true,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        -0.7071068286895752,
+                        0,
+                        0,
+                        0.70710670948028564
+                    ],
+                    "LocalScale": [
+                        0.20000000298023224,
+                        0.20000000298023224,
+                        0.20000000298023224
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 758774783,
+                    "Name": "DarkTrooperMesh.nemesh",
+                    "Path": "Library\/Meshes\/758774783.nemesh",
+                    "File": "758774783.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false,
+                    "Outline": false,
+                    "OutlineThickness": 1,
+                    "OutlineColor": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ]
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 708934690,
+                        "Color": [
+                            0.80000001192092896,
+                            0.80000001192092896,
+                            0.80000001192092896,
+                            1
+                        ],
+                        "Name": "DarkTrooperMesh.nemat",
+                        "Path": "Library\/Materials\/708934690.nemat",
+                        "File": "708934690.nemat"
+                    },
+                    "Texture": {
+                        "AssetsPath": "Assets\/Textures\/\/Enemies\/DarkTrooper\/darktrooper_elite_texture.png",
+                        "AssetsName": "darktrooper_elite_texture.png",
+                        "LibaryPath": "Library\/Textures\/1835290172.netex",
+                        "LibraryFile": "1835290172.netex"
+                    },
+                    "Shader": {
+                        "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
+                        "AssetsName": "DefaultShader.shader",
+                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
+                        "LibraryFile": "800223282.neshader"
+                    }
+                }
+            ],
+            "Children": []
+        },
+        {
+            "UID": 1068364115,
+            "ParentUID": 394395948,
+            "PrefabID": 1698065275,
+            "IsPrefab": true,
+            "Name": "Particles",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ],
+            "Children": [
+                {
+                    "UID": 1898004822,
+                    "ParentUID": 1068364115,
+                    "PrefabID": 1698065275,
+                    "IsPrefab": true,
+                    "Name": "Run",
+                    "IsActive": true,
+                    "IsStatic": false,
+                    "IsSceneRoot": false,
+                    "MaintainThroughScenes": false,
+                    "ShowBoundingBoxes": false,
+                    "NavigationInfo": {
+                        "isNavigable": false,
+                        "navigationArea": 0
+                    },
+                    "Components": [
+                        {
+                            "Type": 1,
+                            "LocalPosition": [
+                                -0.19059991836547852,
+                                5.2962088584899902,
+                                -1.5982446670532227
+                            ],
+                            "LocalRotation": [
+                                0,
+                                0,
+                                0,
+                                1
+                            ],
+                            "LocalScale": [
+                                1,
+                                1,
+                                1
+                            ]
+                        },
+                        {
+                            "Type": 12,
+                            "particleSystemUID": 1084813031,
+                            "particleSystemAssetsPath": "Assets\/ParticleSystems\/RUNNINGSMOKE.particles",
+                            "stopSpawn": false,
+                            "tempDelete": false,
+                            "previewEnabled": true,
+                            "stopAndDeleteCheck": false
+                        }
+                    ],
+                    "Children": []
+                },
+                {
+                    "UID": 1293235017,
+                    "ParentUID": 1068364115,
+                    "PrefabID": 1698065275,
+                    "IsPrefab": true,
+                    "Name": "Hit",
+                    "IsActive": true,
+                    "IsStatic": false,
+                    "IsSceneRoot": false,
+                    "MaintainThroughScenes": false,
+                    "ShowBoundingBoxes": false,
+                    "NavigationInfo": {
+                        "isNavigable": false,
+                        "navigationArea": 0
+                    },
+                    "Components": [
+                        {
+                            "Type": 1,
+                            "LocalPosition": [
+                                -0.28352952003479004,
+                                16.732017517089844,
+                                0.820556640625
+                            ],
+                            "LocalRotation": [
+                                0,
+                                0,
+                                0,
+                                1
+                            ],
+                            "LocalScale": [
+                                1,
+                                1,
+                                1
+                            ]
+                        },
+                        {
+                            "Type": 12,
+                            "particleSystemUID": 775549303,
+                            "particleSystemAssetsPath": "Assets\/ParticleSystems\/HITPARTICLE.particles",
+                            "stopSpawn": false,
+                            "tempDelete": false,
+                            "previewEnabled": true,
+                            "stopAndDeleteCheck": false
+                        }
+                    ],
+                    "Children": []
                 }
             ]
         }

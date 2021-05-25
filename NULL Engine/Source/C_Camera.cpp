@@ -63,6 +63,8 @@ bool C_Camera::SaveState(ParsonNode& root) const
 
 	root.SetNumber("Type", (uint)GetType());
 
+	root.SetNumber("FarPlane", GetFarPlaneDistance());
+
 	root.SetNumber("MinFOV", minFov);
 	root.SetNumber("MaxFOV", maxFov);
 
@@ -79,6 +81,8 @@ bool C_Camera::LoadState(ParsonNode& root)
 
 	minFov = (uint)root.GetNumber("MinFOV");
 	maxFov = (uint)root.GetNumber("MaxFOV");
+
+	SetFarPlaneDistance(root.GetNumber("FarPlane"));
 
 	isCulling = root.GetBool("Culling");
 	inOrthogonalView = root.GetBool("OrthogonalView");

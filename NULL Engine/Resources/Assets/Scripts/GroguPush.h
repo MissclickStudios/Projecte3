@@ -37,6 +37,7 @@ private:
 
 	Timer abilityCooldownTimer;
 
+
 	GameManager* gameManager = nullptr;
 
 public:

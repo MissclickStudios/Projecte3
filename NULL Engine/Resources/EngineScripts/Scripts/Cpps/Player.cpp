@@ -313,6 +313,7 @@ void Player::SaveState(ParsonNode& playerNode)
 	}
 
 	playerNode.SetInteger("Equiped Gun", (int)equipedGun.uid);
+	LOG("Saved Equiped gun uid : %d", equipedGun.uid);
 	playerNode.SetBool("Using Equiped Gun", usingSecondaryGun);
 	if (blasterWeapon != nullptr)
 		playerNode.SetInteger("Blaster Ammo", blasterWeapon->ammo);
@@ -383,11 +384,13 @@ void Player::LoadState(ParsonNode& playerNode)
 	// TODO: Load correct secondary gun
 	//equipedGunGameObject = App->resourceManager->LoadPrefab(playerNode.GetInteger("Equiped Gun"), App->scene->GetSceneRoot());
 	uint uid = (uint)playerNode.GetInteger("Equiped Gun");
+	LOG("Equiped gun loaded uid : %d", uid);
 	if (uid == NULL)
 		uid = equipedGun.uid;
 	secondaryGunGameObject = App->resourceManager->LoadPrefab(uid, App->scene->GetSceneRoot());
 	if (secondaryGunGameObject != nullptr)
 	{
+		equipedGun.uid = uid;
 		secondaryWeapon = (Weapon*)GetObjectScript(secondaryGunGameObject, ObjectType::WEAPON);
 
 		if (secondaryWeapon != nullptr)
