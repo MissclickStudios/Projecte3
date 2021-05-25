@@ -1,4 +1,3 @@
-#include "C_UI_Text.h"
 #include "Application.h"
 
 #include "GameObject.h"
@@ -15,6 +14,7 @@
 #include "C_Canvas.h"
 #include "C_Transform.h"
 #include "C_Camera.h"
+#include "C_UI_Text.h"
 
 #include "R_Shader.h"
 
@@ -27,7 +27,7 @@
 
 #pragma comment (lib, "Source/Dependencies/FreeType/win32/freetype.lib")
 
-C_UI_Text::C_UI_Text(GameObject* owner, Rect2D rect) : Component(owner, ComponentType::UI_TEXT),
+C_UI_Text::C_UI_Text(GameObject* owner, Rect2D rect) : C_UI(owner, ComponentType::UI_TEXT,false, rect),
 VAO(0),
 VBO(0),
 color(1,0,0,1)
@@ -41,7 +41,13 @@ color(1,0,0,1)
 
 C_UI_Text::~C_UI_Text()
 {
-
+	GameObject* parent = GetOwner()->parent;
+	if (parent)
+	{
+		C_Canvas* canvas = parent->GetComponent<C_Canvas>();
+		if (canvas)
+			canvas->RemoveUiElement(this);
+	}
 }
 
 bool C_UI_Text::Update()
@@ -81,44 +87,40 @@ void C_UI_Text::LoadBuffers()
 
 bool C_UI_Text::SaveState(ParsonNode& root) const
 {
-	bool ret = true;
-
 	root.SetNumber("Type", (uint)GetType());
+	root.SetString("Text", text.c_str());
+	root.SetFloat4("Color", { color.r, color.g, color.b, color.a });
+	root.SetNumber("X", rect.x);
+	root.SetNumber("Y", rect.y);
+	root.SetNumber("W", rect.w);
+	root.SetNumber("H", rect.h);
 
-	ParsonNode textNode = root.SetNode("Text");
-
-	textNode.SetString("Text", text.c_str());
-	float4 newColor = { color.r, color.g, color.b, color.a };
-	textNode.SetFloat4("Color", newColor);
-	textNode.SetNumber("X", GetRect().x);
-	textNode.SetNumber("Y", GetRect().y);
-	textNode.SetNumber("W", GetRect().w);
-	textNode.SetNumber("H", GetRect().h);
-
-	return ret;
+	root.SetInteger("childOrder", childOrder);
+	return true;
 }
 
 bool C_UI_Text::LoadState(ParsonNode& root)
 {
-	bool ret = true;
-
-	ParsonNode textNode = root.GetNode("Text");
-	text = textNode.GetString("Text");
-	float4 newColor = (textNode.GetFloat4("Color"));
+	/*ParsonNode node = root.GetNode("text");
+	text = node.GetString("Text");
+	float4 newColor = (node.GetFloat4("Color"));
 	color = Color(newColor.x, newColor.y, newColor.z, newColor.w);
-	Rect2D r;
-	r.x = textNode.GetNumber("X");
-	r.y = textNode.GetNumber("Y");
-	r.w = textNode.GetNumber("W");
-	r.h = textNode.GetNumber("H");
-	SetRect(r);
+	rect.x = node.GetNumber("X");
+	rect.y = node.GetNumber("Y");
+	rect.w = node.GetNumber("W");
+	rect.h = node.GetNumber("H");*/
 
-	return ret;
-}
+	text = root.GetString("Text");
+	float4 newColor = (root.GetFloat4("Color"));
+	color = Color(newColor.x, newColor.y, newColor.z, newColor.w);
+	rect.x = root.GetNumber("X");
+	rect.y = root.GetNumber("Y");
+	rect.w = root.GetNumber("W");
+	rect.h = root.GetNumber("H");
 
-Rect2D C_UI_Text::GetRect() const
-{
-	return rect;
+	childOrder = root.GetInteger("childOrder");
+
+	return true;
 }
 
 Color C_UI_Text::GetColor() const
@@ -157,31 +159,6 @@ void C_UI_Text::SetColor(Color color)
 	this->color = color;
 }
 
-void C_UI_Text::SetRect(const Rect2D& rect)
-{
-	this->rect = rect;
-}
-
-void C_UI_Text::SetX(const float x)
-{
-	this->rect.x = x;
-}
-
-void C_UI_Text::SetY(const float y)
-{
-	this->rect.y = y;
-}
-
-void C_UI_Text::SetW(const float w)
-{
-	this->rect.w = w;
-}
-
-void C_UI_Text::SetH(const float h)
-{
-	this->rect.h = h;
-}
-
 void C_UI_Text::SetFontSize(const float fontSize)
 {
 	this->fontSize = fontSize;
@@ -198,10 +175,10 @@ void C_UI_Text::SetVSpaceBetween(const float vSpaceBetween)
 }
 
 
-void C_UI_Text::RenderText( )
+void C_UI_Text::Draw2D( )
 {
 	glEnable(GL_CULL_FACE);
-	glEnable(GL_BLEND);
+	glEnable(GL_BLEND); //enabled in draw 2d render ui
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	glUseProgram(rShader->shaderProgramID);
@@ -224,7 +201,7 @@ void C_UI_Text::RenderText( )
 	uint it = 0;
 	bool rowHead = true;
 	std::string::const_iterator c;
-	for (c = text.begin(); c != text.end(); c++)
+	for (c = text.begin(); c != text.end(); ++c)
 	{
 		Character ch = Characters[*c];
 
@@ -278,7 +255,7 @@ void C_UI_Text::RenderText( )
 		}
 	
 
-		it++;
+		++it;
 	}
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);

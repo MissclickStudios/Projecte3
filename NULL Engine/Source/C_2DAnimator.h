@@ -7,8 +7,10 @@
 
 class GameObject;
 class R_Texture;
+class Spritesheet;
 
 typedef unsigned __int32 uint;
+
 
 class MISSCLICK_API C_2DAnimator : public Component
 {
@@ -25,16 +27,12 @@ public:
 	//Plays the animation
 	void PlayAnimation(bool loop, int animationNumber);
 
-	//Stops current animation
-	void StopAnimation();
-
-	//Gets the current id texture of the animation frame
-	uint GetIdFromAnimation();
-
 	void SetAnimationStepTime(int time);
 	int GetAnimationStepTime();
 
 	bool IsAnimationPlaying();
+
+	void SetSpritesheetTexture(R_Texture* spritesheet, int animationNumber);
 
 	void SetAnimationPlayFromStart(bool x);
 	bool GetAnimationPlayFromStart();
@@ -46,10 +44,16 @@ public:
 
 	static inline ComponentType GetType() { return ComponentType::ANIMATOR2D; }  
 
+	Spritesheet*				spritesheet;
+	Spritesheet*				spritesheet2;
+	Spritesheet*				spritesheet3;
+
+	int GetAnimationNumber();
+
+	
 private:
-	uint GetTextureIdFromVector(int index, int animationNum);
 	void LoopAnimation(int animation);
-	int							animationNumberPlaying;
+
 private:
 
 	std::vector<R_Texture*>		animation;
@@ -58,6 +62,8 @@ private:
 	
 	int							animationCounter;
 	uint						animationStepTime;
+
+	int							animationNumberPlaying;
 
 	Timer						animationTimer;
 

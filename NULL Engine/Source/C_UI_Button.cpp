@@ -1,15 +1,11 @@
 #include "Application.h"
-
 #include "GameObject.h"
 
-#include "M_Camera3D.h"
-#include "M_Editor.h"
 #include "M_Scene.h"
-#include "M_UISystem.h"
+#include "M_Input.h"
 
 #include "C_Material.h"
 #include "C_Transform.h"
-#include "C_Camera.h"
 
 #include "M_ResourceManager.h"
 
@@ -17,6 +13,7 @@
 #include "R_Texture.h"
 
 #include "C_UI_Button.h"
+#include "C_Canvas.h"
 
 #include "Dependencies/glew/include/glew.h"
 //#include "OpenGL.h"
@@ -25,126 +22,179 @@
 
 #include "JSONParser.h"
 
-C_UI_Button::C_UI_Button(GameObject* owner, Rect2D rect) : Component(owner, ComponentType::UI_BUTTON)
+C_UI_Button::C_UI_Button(GameObject* owner, Rect2D rect) : C_UI(owner, ComponentType::UI_BUTTON, true, rect), state(UIButtonState::IDLE)
 {
-	state = UIButtonState::IDLE;
-
-	//C_Canvas* canvas = owner->parent->GetComponent<C_Canvas>();
-	
+	//TODO: posarlo en el vector del component canvas !!!!!!!
 	LoadBuffers();
 }
 
 C_UI_Button::~C_UI_Button()
 {
-
+	GameObject* parent = GetOwner()->parent;
+	if (parent)
+	{
+		C_Canvas* canvas = parent->GetComponent<C_Canvas>();
+		if (canvas)
+			canvas->RemoveUiElement(this);
+	}
+	// --- Delete Buffers
+	glDeleteBuffers(1, (GLuint*)&VAO);
+	glDeleteBuffers(1, (GLuint*)&VBO);
 }
 
 void C_UI_Button::LoadBuffers()
 {
-	glGenBuffers(1, &VAO);
-	glBindBuffer(GL_ARRAY_BUFFER, VAO);
+	const float texCoordsBuffer[] = {
+		0.0f, 1.0f, 0.0f, 1.0f,
+		1.0f, 0.0f, 1.0f, 0.0f,
+		0.0f, 0.0f, 0.0f, 0.0f,
 
-	glBufferData(GL_ARRAY_BUFFER, sizeof(coordsBuffer), coordsBuffer, GL_STATIC_DRAW);
+		0.0f, 1.0f, 0.0f, 1.0f,
+		1.0f, 1.0f, 1.0f, 1.0f,
+		1.0f, 0.0f, 1.0f, 0.0f
+	};
+
+	glGenVertexArrays(1, &VAO);
+	glGenBuffers(1, &VBO);
+
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(texCoordsBuffer), texCoordsBuffer, GL_DYNAMIC_DRAW);
+
+	glBindVertexArray(VAO);
+
+	// position attribute
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, (GLvoid*)0);
+
+	// texture coord attribute
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
+	glEnableVertexAttribArray(1);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindVertexArray(0);
 }
 
 
 bool C_UI_Button::Update()
 {
-	bool ret = true;
-
-	if (IsActive() == false)
-		return ret;
-
-	C_Canvas* canvas = GetOwner()->parent->GetComponent<C_Canvas>();
-	if (canvas == nullptr)
-		return ret;
-
-	if (!isInit)
-	{
-		if (canvas->activeButtons.empty())
-		{
-			state = UIButtonState::HOVERED;
-			canvas->selectedButton = this;
-		}
-		else if (state == UIButtonState::HOVERED)
-		{
-			if (canvas->selectedButton != nullptr)
-				canvas->selectedButton->SetState(UIButtonState::IDLE);
-			canvas->selectedButton = this;
-		}
-
-		canvas->activeButtons.push_back(this);
-
-		isInit = true;
-	}
-	return ret;
+	//TODO: check de reparenting !!! (mirar si he canviat de owner) !!!!!!!
+	return true;
 }
 
 bool C_UI_Button::CleanUp()
 {
-	bool ret = true;
+	return true;
+}
 
-	App->uiSystem->DeleteActiveButton(this);
-	
-	return ret;
+void C_UI_Button::HandleInput(C_UI** selectedUi)
+{
+	if (!IsActive())
+		return;
+
+	switch (state)
+	{
+	case UIButtonState::IDLE:
+		if (*selectedUi == nullptr || *selectedUi == this)
+		{
+			state = UIButtonState::HOVERED;
+			*selectedUi = this;
+		}
+		break;
+	case UIButtonState::HOVERED:
+		if (*selectedUi != this)
+		{
+			state = UIButtonState::IDLE;
+			break;
+		}
+		if (App->input->GetKey(SDL_SCANCODE_RETURN) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(0) == ButtonState::BUTTON_DOWN) // TODO: make inputs mappable
+		{
+			state = UIButtonState::PRESSEDIN;
+		}
+		break;
+	case UIButtonState::PRESSEDIN:
+		state = UIButtonState::PRESSED;
+		break;
+	case UIButtonState::PRESSED:
+		if (*selectedUi != this)
+		{
+			state = UIButtonState::IDLE;
+			break;
+		}
+		if (App->input->GetKey(SDL_SCANCODE_RETURN) == KeyState::KEY_UP || App->input->GetGameControllerButton(0) == ButtonState::BUTTON_UP)
+		{
+			state = UIButtonState::RELEASED;
+		}
+		break;
+	case UIButtonState::RELEASED:
+		state = UIButtonState::HOVERED;
+		break;
+	default:
+		state = UIButtonState::IDLE; 
+		break;
+	}
 }
 
 void C_UI_Button::Draw2D()
 {
-	if (GetOwner()->GetComponent<C_Material>() == nullptr) return;
-	Color tempColor;
-
-
-	if (state == UIButtonState::HOVERED)
-		tempColor = Color(1.0f, 1.0f, 1.0f, 1.0f);
-
-	else if (state == UIButtonState::PRESSED)
-		tempColor = Color(1.0f, 0.4f, 0.0f, 1.0f);
-
-	else
-		tempColor = Color(1.0f, 1.0f, 0.0f, 1.0f);
-
-	uint32 id = GetOwner()->GetComponent<C_Material>()->GetTextureID();
-
+	C_Material* cMaterial = GetOwner()->GetComponent<C_Material>();
 	C_Canvas* canvas = GetOwner()->parent->GetComponent<C_Canvas>();
-	if (canvas == nullptr) return;
+	if (cMaterial == nullptr || canvas == nullptr)
+		return;
+	
+	//TODO: Inspector pick color !!!
+	Color tempColor;
+	switch (state)
+	{
+	case UIButtonState::IDLE:
+		tempColor = idle; break;
+	case UIButtonState::HOVERED:
+		tempColor = hovered; break;
+	case UIButtonState::PRESSEDIN:
+		tempColor = pressed; break;
+	case UIButtonState::PRESSED:
+		tempColor = pressed; break;
+	case UIButtonState::RELEASED:
+		tempColor = pressed; break;
+	default:
+		tempColor = idle; break;
+	}
 
-	glEnable(GL_BLEND);
+	if (!cMaterial->GetShader())
+		cMaterial->SetShader(App->resourceManager->GetShader("UIShader"));
 
-	if (!GetOwner()->GetComponent<C_Material>()->GetShader())
-		GetOwner()->GetComponent<C_Material>()->SetShader(App->resourceManager->GetShader("UIShader"));
+	glEnable(GL_BLEND); //enabled in draw 2d render ui
 
-	glUseProgram(GetOwner()->GetComponent<C_Material>()->GetShader()->shaderProgramID);
+	//Canvas position always returns 0,0 for 2d rendering
+	float x = canvas->GetPosition().x + rect.x;
+	float y = canvas->GetPosition().y + rect.y;
 
-	float x = canvas->GetPosition().x + GetRect().x;
-	float y = canvas->GetPosition().y + GetRect().y;
-
+	glUseProgram(cMaterial->GetShader()->shaderProgramID);
 	float4x4 projectionMatrix = float4x4::FromTRS(float3(x, y, 0), Quat::FromEulerXYZ(0, 0, 0), float3(GetRect().w, GetRect().h, 1)).Transposed();
+	glBindTexture(GL_TEXTURE_2D, cMaterial->GetTextureID());
+	cMaterial->GetShader()->SetUniform1i("useColor", (GLint)true);
+	cMaterial->GetShader()->SetUniformMatrix4("projection", projectionMatrix.ptr());
+	cMaterial->GetShader()->SetUniformVec4f("inColor", (GLfloat*)&tempColor);
 
-	glBindTexture(GL_TEXTURE_2D, id);
+	float newCoords[] = {
+		0.0f, 1.0f, textCoord.proportionBeginX, textCoord.proportionFinalY,
+		1.0f, 0.0f, textCoord.proportionFinalX, textCoord.proportionBeginY,
+		0.0f, 0.0f, textCoord.proportionBeginX, textCoord.proportionBeginY,
+												
+		0.0f, 1.0f, textCoord.proportionBeginX, textCoord.proportionFinalY,
+		1.0f, 1.0f, textCoord.proportionFinalX, textCoord.proportionFinalY,
+		1.0f, 0.0f, textCoord.proportionFinalX, textCoord.proportionBeginY
+	};
 
-	GetOwner()->GetComponent<C_Material>()->GetShader()->SetUniform1i("useColor", (GLint)true);
-	GetOwner()->GetComponent<C_Material>()->GetShader()->SetUniformMatrix4("projection", projectionMatrix.ptr());
-	GetOwner()->GetComponent<C_Material>()->GetShader()->SetUniformVec4f("inColor", (GLfloat*)&tempColor);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(newCoords), newCoords);
 
-
-	glBindBuffer(GL_ARRAY_BUFFER, VAO);
-
+	glBindVertexArray(VAO);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 
-
 	glDisable(GL_BLEND);
-
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
+	glBindVertexArray(0);
 	glBindTexture(GL_TEXTURE_2D, 0);
-
 	glUseProgram(0);
-
 }
 
 void C_UI_Button::Draw3D()
@@ -178,110 +228,99 @@ void C_UI_Button::Draw3D()
 
 }
 
-void C_UI_Button::OnPressed()
+void C_UI_Button::ResetInput()
 {
-	SetState(UIButtonState::PRESSED);
-	SetIsPressed(true);
+	state = UIButtonState::IDLE;
 }
 
-void C_UI_Button::OnReleased()
+Frame C_UI_Button::GetTexturePosition(int pixelPosX, int pixelPosY, int pixelWidth, int pixelHeight)
 {
-	SetState(UIButtonState::RELEASED);
-	SetIsPressed(false);
+
+	C_Material* cMaterial = GetOwner()->GetComponent<C_Material>();
+	if (!cMaterial)
+		return { 0, 0, 1, 1 };
+
+	uint32 id = cMaterial->GetTextureID();
+	unsigned int spritesheetPixelWidth, spritesheetPixelHeight = 0; cMaterial->GetTextureSize(spritesheetPixelWidth, spritesheetPixelHeight);
+	if (!spritesheetPixelWidth && !spritesheetPixelHeight)
+		return { 0, 0, 1, 1 };
+
+	Frame frame;
+	frame.proportionBeginX = (float)pixelPosX / spritesheetPixelWidth;
+	frame.proportionFinalX = ((float)pixelPosX + pixelWidth) / spritesheetPixelWidth;
+
+	frame.proportionBeginY = (float)pixelPosY / spritesheetPixelHeight;
+	frame.proportionFinalY = ((float)pixelPosY + pixelHeight) / spritesheetPixelHeight;
+
+	return frame;
 }
 
 bool C_UI_Button::SaveState(ParsonNode& root) const
 {
-	bool ret = true;
-
 	root.SetNumber("Type", (uint)GetType());
 
-	ParsonNode button = root.SetNode("Button");
+	root.SetNumber("X", rect.x);
+	root.SetNumber("Y", rect.y);
+	root.SetNumber("W", rect.w);
+	root.SetNumber("H", rect.h);
 
-	button.SetNumber("X", GetRect().x);
-	button.SetNumber("Y", GetRect().y);
-	button.SetNumber("W", GetRect().w);
-	button.SetNumber("H", GetRect().h);
+	//color
+	root.SetNumber("idler", idle.r); root.SetNumber("idleg", idle.g); root.SetNumber("idleb", idle.b); root.SetNumber("idlea", idle.a);
+	root.SetNumber("hoveredr", hovered.r); root.SetNumber("hoveredg", hovered.g); root.SetNumber("hoveredb", hovered.b); root.SetNumber("hovereda", hovered.a);
+	root.SetNumber("pressedr", pressed.r); root.SetNumber("pressedg", pressed.g); root.SetNumber("pressedb", pressed.b); root.SetNumber("presseda", pressed.a);
+	
+	//textCoords
+	ParsonArray pixelCoords = root.SetArray("pixelCoords");
+	for (int i = 0; i < 4; ++i)
+		pixelCoords.SetNumber((double)pixelCoord[i]);
 
-	if (state == UIButtonState::HOVERED || state == UIButtonState::PRESSED)
-		button.SetBool("IsHovered", true);
-	else
-		button.SetBool("IsHovered", false);
+	ParsonNode node;
+	node = root.SetNode("textureCoords");
+	node.SetNumber("x", textCoord.proportionBeginX); node.SetNumber("y", textCoord.proportionBeginY);
+	node.SetNumber("w", textCoord.proportionFinalX); node.SetNumber("h", textCoord.proportionFinalY);
 
-	return ret;
+	root.SetInteger("childOrder", childOrder);
+	return true;
 }
 
 bool C_UI_Button::LoadState(ParsonNode& root)
 {
-	bool ret = true;
+	/*ParsonNode button = root.GetNode("Button");
+	rect.x = button.GetNumber("X");
+	rect.y = button.GetNumber("Y");
+	rect.w = button.GetNumber("W");
+	rect.h = button.GetNumber("H");*/
 
-	ParsonNode button = root.GetNode("Button");
+	rect.x = root.GetNumber("X");
+	rect.y = root.GetNumber("Y");
+	rect.w = root.GetNumber("W");
+	rect.h = root.GetNumber("H");
 
-	Rect2D r;
+	//color
+	idle.r = root.GetNumber("idler"); idle.g = root.GetNumber("idleg"); idle.b = root.GetNumber("idleb"); idle.a =root.GetNumber("idlea");
+	hovered.r = root.GetNumber("hoveredr"); hovered.g = root.GetNumber("hoveredg"); hovered.b = root.GetNumber("hoveredb"); hovered.a = root.GetNumber("hovereda");
+	pressed.r = root.GetNumber("pressedr"); pressed.g = root.GetNumber("pressedg"); pressed.b = root.GetNumber("pressedb"); pressed.a = root.GetNumber("presseda");
 
-	r.x = button.GetNumber("X");
-	r.y = button.GetNumber("Y");
-	r.w = button.GetNumber("W");
-	r.h = button.GetNumber("H");
+	//textCoords
+	ParsonArray pixelCoords = root.GetArray("pixelCoords");
+	if (pixelCoords.ArrayIsValid())
+		for (int i = 0; i < pixelCoords.size; ++i)
+			pixelCoord[i] = (int)pixelCoords.GetNumber(i);
 
-	SetRect(r);
+	ParsonNode node;
+	node = root.GetNode("textureCoords");
+	if (node.NodeIsValid())
+	{
+		textCoord.proportionBeginX = node.GetNumber("x"); textCoord.proportionBeginY = node.GetNumber("y");
+		textCoord.proportionFinalX = node.GetNumber("w"); textCoord.proportionFinalY = node.GetNumber("h");
+	}
 
-	if (button.GetBool("IsHovered"))
-		state = UIButtonState::HOVERED;
-	else
-		state = UIButtonState::IDLE;
+	childOrder = root.GetInteger("childOrder");
 
-	return ret;
-}
-
-
-Rect2D C_UI_Button::GetRect() const
-{
-	return rect;
+	return true;
 }
 
 UIButtonState C_UI_Button::GetState() const
 {
 	return state;
-}
-
-bool C_UI_Button::IsPressed() const
-{
-	return isPressed;
-}
-
-
-void C_UI_Button::SetRect(const Rect2D& rect)
-{
-	this->rect = rect;
-}
-
-void C_UI_Button::SetState(const UIButtonState& setTo)
-{
-	state = setTo;
-}
-
-void C_UI_Button::SetIsPressed(const bool& setTo)
-{
-	isPressed = setTo;
-}
-
-void C_UI_Button::SetX(const float x)
-{
-	this->rect.x = x;
-}
-
-void C_UI_Button::SetY(const float y)
-{
-	this->rect.y = y;
-}
-
-void C_UI_Button::SetW(const float w)
-{
-	this->rect.w = w;
-}
-
-void C_UI_Button::SetH(const float h)
-{
-	this->rect.h = h;
 }

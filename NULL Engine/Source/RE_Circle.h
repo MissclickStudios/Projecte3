@@ -15,7 +15,8 @@ typedef unsigned int uint;
 class RE_Circle : public Renderer
 {
 public:
-	RE_Circle(float4x4 transform, float3 position, float radius, uint sectors, float lineWidth = 1.0f, Color color = Color(1.0f, 1.0f, 1.0f, 1.0f));
+	RE_Circle(float4x4* transform, float radius, uint sectors, float lineWidth = 1.0f, Color color = Color(1.0f, 1.0f, 1.0f, 1.0f));
+	RE_Circle(float4x4* transform, float radius, uint sectors);
 	~RE_Circle();
 
 	bool Render() override;
@@ -25,8 +26,7 @@ private:
 	void CalculateVertices();
 
 private:
-	float4x4 transform;
-	float3	position;											// World Position of the circle in space.
+	//float4x4 transform;
 	float	radius;												// Distance from the center to the edge of the circle.
 	uint	sectors;											// Amount of vertices that compose the circle. Ex: sectors = 6 --> hexagon.
 

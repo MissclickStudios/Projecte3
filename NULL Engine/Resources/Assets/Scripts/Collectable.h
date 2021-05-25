@@ -16,6 +16,11 @@ public:
 	void Update() override;
 	void CleanUp() override;
 
+	void OnPause() override;
+	virtual void CollectablePause() {}
+	void OnResume() override;
+	virtual void CollectableResume() {}
+
 	void OnCollisionEnter(GameObject* object) override;
 
 	int price = 0;

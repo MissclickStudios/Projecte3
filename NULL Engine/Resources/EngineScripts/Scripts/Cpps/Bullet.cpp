@@ -2,9 +2,9 @@
 
 #include "GameObject.h"
 #include "C_Transform.h"
+#include "C_RigidBody.h"
 
 #include "Weapon.h"
-#include "Entity.h"
 
 Bullet::Bullet() : Object()
 {
@@ -15,6 +15,11 @@ Bullet::Bullet() : Object()
 
 Bullet::~Bullet()
 {
+}
+
+void Bullet::Awake()
+{
+	rigidBody = gameObject->GetComponent<C_RigidBody>();
 }
 
 void Bullet::Update()
@@ -34,6 +39,26 @@ void Bullet::Update()
 	}
 }
 
+void Bullet::CleanUp()
+{
+}
+
+void Bullet::OnPause()
+{
+	lifeTimeTimer.Pause();
+
+	if (rigidBody != nullptr)
+		rigidBody->SetIsActive(false);
+}
+
+void Bullet::OnResume()
+{
+	lifeTimeTimer.Resume();
+
+	if (rigidBody != nullptr)
+		rigidBody->SetIsActive(true);
+}
+
 void Bullet::OnCollisionEnter(GameObject* object)
 {
 	hit = true;
@@ -44,7 +69,7 @@ void Bullet::OnCollisionEnter(GameObject* object)
 
 	entity->TakeDamage(onHitdamage);
 	for (uint i = 0; i < onHitEffects.size(); ++i)
-		entity->AddEffect(onHitEffects[i].Type(), onHitEffects[i].Duration(), onHitEffects[i].Permanent());
+		entity->AddEffect(onHitEffects[i].Type(), onHitEffects[i].Duration(), onHitEffects[i].Permanent(), onHitEffects[i].Power(), onHitEffects[i].Chance(), onHitEffects[i].Direction(), onHitEffects[i].start);
 }
 
 void Bullet::SetShooter(Weapon* shooter, int index)

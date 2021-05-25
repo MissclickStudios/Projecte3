@@ -30,9 +30,6 @@ public:
 	std::string libraryFile;
 	
 	ResourceType type;
-
-private:
-
 };
 
 #endif // !__RESOURCE_BASE_H__

@@ -37,6 +37,7 @@ public:
 	inline float3			GetLinearVelocity() { return linearVel; }
 	inline float3			GetAngularVelocity() { return angularVel; }
 	inline void				SetLinearVelocity(float3 vel) { linearVel = vel; toUpdate = true; }
+	inline void				Set2DVelocity(float2 vel);
 	inline void				SetAngularVelocity(float3 vel) { angularVel = vel; toUpdate = true; }
 
 	void					StopInertia();
@@ -46,7 +47,7 @@ public:
 	inline physx::PxReal	GetAngularDamping() { return angularDamping; }
 	inline physx::PxReal	GetLinearDamping() { return linearDamping; }
 
-	inline void				AddForce(physx::PxVec3 force, physx::PxForceMode::Enum mode) { if (dynamicBody) dynamicBody->addForce(force, mode); }
+	inline void				AddForce(float3 force) { if (dynamicBody) dynamicBody->addForce(physx::PxVec3(force.x, force.y, force.z), physx::PxForceMode::Enum::eFORCE); }
 	inline void				AddTorque(physx::PxVec3 force, physx::PxForceMode::Enum mode) { if (dynamicBody)dynamicBody->addTorque(force, mode); }
 
 	inline void				FrozenPositions(bool& x, bool& y, bool& z) { x = freezePositionX; y = freezePositionY; z = freezePositionZ; }
@@ -71,6 +72,8 @@ public:
 	void MakeDynamic();
 
 	void TransformMovesRigidBody(bool stopInertia);
+
+	void DisableY(bool enable) { disableY = enable; }
 
 private:
 
@@ -103,6 +106,7 @@ private:
 
 	std::string filter = "default";
 	bool toChangeFilter = true;
+	bool disableY = true;
 };
 
 #endif // !__C_RIGIDBODY_H__

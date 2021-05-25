@@ -3,6 +3,7 @@
 #include "ScriptMacros.h"
 
 class GameObject;
+class C_AudioSource;
 
 class SCRIPTS_API Gate : public Script {
 public:
@@ -14,14 +15,20 @@ public:
 	void CleanUp()override;
 
 	void OnCollisionEnter(GameObject* object) override;
-	std::string gameManagerName;
 
+	void Unlock();
+
+	float quoteTimer = 0.f;
+	float quoteDelay = 5.f;
+
+	std::string gameManagerName;
+	bool isLocked = true;
+
+	bool triggeredNextRoom = false;
+
+	C_AudioSource* quote = nullptr;
 private:
-	GameObject* gameManager;
+	GameObject* gameManager = nullptr;
 };
 
-SCRIPTS_FUNCTION Gate* CreateGate() {
-	Gate* script = new Gate();
-	INSPECTOR_STRING(script->gameManagerName);
-	return script;
-}
+SCRIPTS_FUNCTION Gate* CreateGate();

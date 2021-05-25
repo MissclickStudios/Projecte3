@@ -2,14 +2,14 @@
 
 #include "R_NavMesh.h"
 
+
 R_NavMesh::R_NavMesh() : Resource(ResourceType::NAVMESH)
 {
-
+	
 }
 
 R_NavMesh::~R_NavMesh()
 {
-
 }
 
 bool R_NavMesh::CleanUp()
@@ -23,10 +23,22 @@ bool R_NavMesh::SaveMeta(ParsonNode& metaRoot) const
 	
 	// REMEMBER TO GENERATE AN ASSET FILE FOR THIS
 
+
+
 	return true;
 }
 
 bool R_NavMesh::LoadMeta(const ParsonNode& metaRoot)
 {
 	return true;
+}
+
+void R_NavMesh::SetNavMeshName(const char* newName)
+{
+	navMeshName = newName;
+}
+
+const char* R_NavMesh::GetNavMeshName()
+{
+	return navMeshName.c_str();
 }

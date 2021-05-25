@@ -75,6 +75,7 @@ public:																															// --- READ & WRITE METHODS
 	
 	std::string		GetDirectory				(const char* path);																// Ex: "Assets/Models/street/"
 	std::string		GetLastDirectory			(const char* path);																// Ex: "street/"
+	std::string		GetFile						(const char* path);
 	std::string		GetFileExtension			(const char* path);																// Ex: ".FBX"
 	std::string		GetFileAndExtension			(const char* path);																// Ex: "Street_Environment.FBX"
 	std::string		GetLastDirectoryAndFile		(const char* path);																// Ex: "street/Street_Environment.FBX"

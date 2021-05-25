@@ -23,6 +23,12 @@ R_ParticleSystem::~R_ParticleSystem()
 
 bool R_ParticleSystem::CleanUp()
 {
+	for (auto emitter = emitters.begin(); emitter != emitters.end(); ++emitter)
+	{
+		(*emitter).CleanUp();
+	}
+
+	emitters.clear();
 
 	return true;
 }

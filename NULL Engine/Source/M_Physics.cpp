@@ -13,6 +13,8 @@
 
 #include "MemoryManager.h"
 
+#include "MC_Time.h"
+
 #define BOUNCE_THRESHOLD 0.2f
 #define THREADS 4
 
@@ -178,11 +180,12 @@ UpdateStatus M_Physics::Update(float dt)
 	else
 		simulating = false;
 
-	if (scene && simulating)
-	{
-		scene->simulate(dt);
-		scene->fetchResults(true);
-	}
+	if (dt < 0.5f && MC_Time::Game::GetDT() < 0.5f)
+		if (scene && simulating)
+		{
+			scene->simulate(dt);
+			scene->fetchResults(true);
+		}
 
 	return UpdateStatus::CONTINUE;
 }

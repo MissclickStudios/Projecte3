@@ -34,6 +34,12 @@
     <Filter Include="Objects\Helpers">
       <UniqueIdentifier>{d4ef07aa-fbf4-4688-b038-6bc8239b8903}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Objects\Environment">
+      <UniqueIdentifier>{92fbfe23-e66f-4181-9c66-5f899cf2b851}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DialogSystem">
+      <UniqueIdentifier>{ed3459db-f6b8-4548-a1d0-92a6eaf4371e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Scripts\Headers\ScriptMacros.h">
@@ -78,9 +84,6 @@
     <ClInclude Include="..\Assets\Scripts\HUBShopMenuManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Assets\Scripts\WinLoseMenuManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\Assets\Scripts\CameraMovement.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -108,9 +111,6 @@
     <ClInclude Include="..\Assets\Scripts\Bullet.h">
       <Filter>Objects\Base</Filter>
     </ClInclude>
-    <ClInclude Include="Scripts\Helpers\Entity.h">
-      <Filter>Objects\Base</Filter>
-    </ClInclude>
     <ClInclude Include="Scripts\Helpers\Weapon.h">
       <Filter>Objects\Base</Filter>
     </ClInclude>
@@ -128,6 +128,69 @@
     </ClInclude>
     <ClInclude Include="..\Assets\Scripts\DebugMenuManager.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Assets\Scripts\ExplosiveBarrel.h">
+      <Filter>Objects\Environment</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Assets\Scripts\SarlaacTrap.h">
+      <Filter>Objects\Environment</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Assets\Scripts\Turret.h">
+      <Filter>Objects\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Assets\Scripts\DarkTrooper.h">
+      <Filter>Objects\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="Scripts\Helpers\Entity.h">
+      <Filter>Objects\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Assets\Scripts\WinLoseSceneManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Assets\Scripts\QuestManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Assets\Scripts\DialogManager.h">
+      <Filter>DialogSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Assets\Scripts\MoistureVaporator.h">
+      <Filter>Objects\Environment</Filter>
+    </ClInclude>
+    <ClInclude Include="Scripts\Helpers\Items.h">
+      <Filter>Objects\Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Assets\Scripts\GroundItem.h">
+      <Filter>Objects\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Scripts\Helpers\ItemRarity.h">
+      <Filter>Objects\Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Assets\Scripts\InGameShop.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Assets\Scripts\ItemMenuManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Assets\Scripts\Chest.h">
+      <Filter>Objects\Environment</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Assets\Scripts\WeaponItem.h">
+      <Filter>Objects\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Assets\Scripts\Blocky.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Assets\Scripts\MandoMainMenu.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Assets\Scripts\Grogu.h">
+      <Filter>Objects\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Assets\Scripts\GroguPush.h">
+      <Filter>Objects\Environment</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Assets\Scripts\IG12.h">
+      <Filter>Objects\Entities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -156,9 +219,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Scripts\Cpps\ShopMenuManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Scripts\Cpps\WinLoseMenuManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Scripts\Cpps\HUBShopMenuManager.cpp">
@@ -211,6 +271,63 @@
     </ClCompile>
     <ClCompile Include="Scripts\Cpps\DebugMenuManager.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Scripts\Cpps\ExplosiveBarrel.cpp">
+      <Filter>Objects\Environment</Filter>
+    </ClCompile>
+    <ClCompile Include="Scripts\Cpps\SarlaacTrap.cpp">
+      <Filter>Objects\Environment</Filter>
+    </ClCompile>
+    <ClCompile Include="Scripts\Cpps\Turret.cpp">
+      <Filter>Objects\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="Scripts\Cpps\DarkTrooper.cpp">
+      <Filter>Objects\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="Scripts\Cpps\WinLoseSceneManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Scripts\Cpps\QuestManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Scripts\Cpps\DialogManager.cpp">
+      <Filter>DialogSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Scripts\Cpps\MoistureVaporator.cpp">
+      <Filter>Objects\Environment</Filter>
+    </ClCompile>
+    <ClCompile Include="Scripts\Cpps\GroundItem.cpp">
+      <Filter>Objects\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="Scripts\Helpers\Items.cpp">
+      <Filter>Objects\Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="Scripts\Cpps\InGameShop.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Scripts\Cpps\ItemMenuManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Scripts\Cpps\Chest.cpp">
+      <Filter>Objects\Environment</Filter>
+    </ClCompile>
+    <ClCompile Include="Scripts\Cpps\WeaponItem.cpp">
+      <Filter>Objects\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="Scripts\Cpps\Blocky.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Scripts\Cpps\MandoMainMenu.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Scripts\Cpps\Grogu.cpp">
+      <Filter>Objects\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="Scripts\Cpps\GroguPush.cpp">
+      <Filter>Objects\Environment</Filter>
+    </ClCompile>
+    <ClCompile Include="Scripts\Cpps\IG12.cpp">
+      <Filter>Objects\Entities</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

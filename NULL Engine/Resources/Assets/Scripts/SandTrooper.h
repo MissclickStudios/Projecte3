@@ -11,6 +11,7 @@
 #include "MathGeoLib/include/Math/float2.h"
 
 class C_AudioSource;
+class C_NavMeshAgent;
 
 enum class TrooperState
 {
@@ -30,8 +31,11 @@ public:
 	virtual ~Trooper();
 
 	void SetUp() override;
-	void Update() override;
+	void Behavior() override;
 	void CleanUp() override;
+
+	void EntityPause() override;
+	void EntityResume() override;
 
 	void OnCollisionEnter(GameObject* object) override;
 
@@ -61,8 +65,14 @@ public:
 	// Weapons
 	Prefab blaster;
 
+	// Agent 
+	C_NavMeshAgent* agent = nullptr;
+
 	// Audio
 	C_AudioSource* deathAudio = nullptr;
+
+	int minCredits = 0.f;
+	int maxCredits = 0.f;
 
 private:
 

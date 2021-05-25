@@ -1,3 +1,5 @@
+#include "Color.h"
+
 #include "EngineApplication.h"
 #include "M_Editor.h"
 #include "M_Scene.h"
@@ -61,15 +63,17 @@ void E_Hierarchy::PrintGameObjectsOnHierarchy()
 void E_Hierarchy::ProcessGameObject(GameObject* gameObject)
 {	
 	// ------ Setting the tree node's color. ------
-	ImVec4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
-	
-	if (!gameObject->IsActive())														// If the given game object is not active, the text of the tree node will be displayed in GREY.
-	{
-		color = { 0.5f, 0.5f, 0.5f, 1.0f };
-	}
 
-	if (gameObject->isPrefab)
-		color = { 0.6f, 0.6f, 1.0f, 1.0f };
+	ImVec4 color = (gameObject->IsActive()) ? White.C_Array() : Color(0.5f, 0.5f, 0.5f).C_Array();
+
+	if (gameObject->isBone)
+	{
+		color = (gameObject->IsActive()) ? Pink.C_Array() : Color(0.5f, 0.35f, 0.35f).C_Array();
+	}
+	else if (gameObject->isPrefab)
+	{
+		color = (gameObject->IsActive()) ? LightBlue.C_Array() : Color(0.15f, 0.15f, 0.5f).C_Array();
+	}
 
 	ImGui::PushStyleColor(ImGuiCol_Text, color);
 	// --------------------------------------------

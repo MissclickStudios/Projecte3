@@ -1,4 +1,5 @@
 #include "Blurrg.h"
+#include "Random.h"
 
 #include "Application.h"
 #include "M_Scene.h"
@@ -7,6 +8,8 @@
 #include "C_Transform.h"
 #include "C_RigidBody.h"
 #include "C_AudioSource.h"
+#include "C_NavMeshAgent.h"
+#include "C_ParticleSystem.h"
 
 #include "Player.h"
 
@@ -59,6 +62,9 @@ Blurrg* CreateBlurrg()
 	// Rest
 	INSPECTOR_DRAGABLE_FLOAT(script->restDuration);
 
+	INSPECTOR_SLIDER_INT(script->minCredits, 0, 1000);
+	INSPECTOR_SLIDER_INT(script->maxCredits, 0, 1000);
+
 	//// Animations ---
 	//// Movement
 	//INSPECTOR_STRING(script->walkAnimation.name);
@@ -110,9 +116,24 @@ void Blurrg::SetUp()
 				deathAudio = source;
 		}
 	}
+
+
+	agent = gameObject->GetComponent<C_NavMeshAgent>();
+
+	if (agent != nullptr)
+		agent->origin = gameObject->GetComponent<C_Transform>()->GetWorldPosition();
+	
+	// Particles & SFX
+	hitParticles = gameObject->GetComponent<C_ParticleSystem>();
+	(hitParticles != nullptr) ? hitParticles->StopSpawn() : LOG("[ERROR] Blurg Script: Could not find { HIT } Particle System!");
+
+	GameObject* chargeParticlesGO = gameObject->FindChild("Charge");
+	chargeParticles = (chargeParticlesGO != nullptr) ? chargeParticlesGO->GetComponent<C_ParticleSystem>() : nullptr;
+	
+	(chargeParticles != nullptr) ? chargeParticles->StopSpawn() : LOG("[ERROR] Blurg Script: Could not find { CHARGE } Particle System!");
 }
 
-void Blurrg::Update()
+void Blurrg::Behavior()
 {
 	if (state != BlurrgState::DEAD)
 	{
@@ -158,8 +179,8 @@ void Blurrg::Update()
 				chargeAudio->PlayFx(chargeAudio->GetEventId());
 
 			currentAnimation = &chargeAnimation;
-			if (rigidBody)
-				rigidBody->SetLinearVelocity(float3::zero);
+			if (agent != nullptr)
+				agent->StopAndCancelDestination();
 			chargeTimer.Start();
 			state = BlurrgState::CHARGE;
 
@@ -172,8 +193,13 @@ void Blurrg::Update()
 			break;
 		case BlurrgState::DASH_IN:
 			currentAnimation = &dashAnimation;
+			if (agent != nullptr)
+				agent->StopAndCancelDestination();
 			dashTimer.Start();
 			state = BlurrgState::DASH;
+
+			if (chargeParticles != nullptr)
+				chargeParticles->ResumeSpawn();
 
 		case BlurrgState::DASH:
 			Dash();
@@ -182,12 +208,15 @@ void Blurrg::Update()
 				dashTimer.Stop();
 				dashCooldownTimer.Start();
 				state = BlurrgState::REST_IN;
+				
+				if (chargeParticles != nullptr)
+					chargeParticles->StopSpawn();
 			}
 			break;
 		case BlurrgState::REST_IN:
 			currentAnimation = &restAnimation;
-			if (rigidBody)
-				rigidBody->SetLinearVelocity(float3::zero);
+			if (agent != nullptr)
+				agent->StopAndCancelDestination();
 			restTimer.Start();
 			state = BlurrgState::REST;
 
@@ -208,7 +237,8 @@ void Blurrg::Update()
 			if (player)
 			{
 				Player* playerScript = (Player*)player->GetScript("Player");
-				playerScript->currency += 50;
+
+				playerScript->currency += Random::LCG::GetBoundedRandomUint(minCredits,maxCredits);
 			}
 			deathTimer.Start();
 			state = BlurrgState::DEAD;
@@ -241,6 +271,22 @@ void Blurrg::OnCollisionEnter(GameObject* object)
 	}
 }
 
+void Blurrg::EntityPause()
+{
+	chargeTimer.Pause();
+	dashTimer.Pause();
+	dashCooldownTimer.Pause();
+	restTimer.Pause();
+}
+
+void Blurrg::EntityResume()
+{
+	chargeTimer.Resume();
+	dashTimer.Resume();
+	dashCooldownTimer.Resume();
+	restTimer.Resume();
+}
+
 void Blurrg::DistanceToPlayer()
 {
 	if (!player)
@@ -251,6 +297,7 @@ void Blurrg::DistanceToPlayer()
 	playerPosition.y = player->transform->GetWorldPosition().z;
 	position.x = gameObject->transform->GetWorldPosition().x;
 	position.y = gameObject->transform->GetWorldPosition().z;
+
 	moveDirection = playerPosition - position;
 
 	distance = moveDirection.Length();
@@ -269,15 +316,16 @@ void Blurrg::LookAtPlayer()
 
 void Blurrg::Wander()
 {
-	if (rigidBody)
-		rigidBody->SetLinearVelocity(float3::zero);
+	if (agent != nullptr)
+		agent->SetDestination(gameObject->transform->GetWorldPosition());
 }
 
 void Blurrg::Chase()
 {
-	float3 direction = { moveDirection.x, 0.0f, moveDirection.y };
-	if (rigidBody)
-		rigidBody->SetLinearVelocity(direction * ChaseSpeed());
+	if (agent != nullptr) {
+		agent->velocity = ChaseSpeed();
+		agent->SetDestination(player->transform->GetWorldPosition());
+	}
 }
 
 void Blurrg::Dash()
@@ -287,7 +335,9 @@ void Blurrg::Dash()
 	if (decceleration > 1.0f)
 		decceleration = 1.0f;
 
-	float3 direction = { moveDirection.x, 0.0f, moveDirection.y };
-	if (rigidBody)
-		rigidBody->SetLinearVelocity(direction * DashSpeed() * decceleration);
+	if (agent != nullptr) {
+		agent->velocity = DashSpeed() * decceleration;
+		agent->SetDestination(agent->destinationPoint);
+	}
+
 }

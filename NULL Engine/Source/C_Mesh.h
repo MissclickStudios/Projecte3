@@ -1,8 +1,15 @@
 #ifndef __C_MESH_H__
 #define __C_MESH_H__
 
+#include <string>
+#include <vector>
+#include <map>
+
+#include "MathGeoLib/include/Math/float4x4.h"
+
 #include "Component.h"
 #include "Color.h"
+
 namespace math
 {
 	class float3;
@@ -11,6 +18,8 @@ namespace math
 class ParsonNode;
 class GameObject;
 class R_Mesh;
+
+typedef unsigned int uint;
 
 class MISSCLICK_API C_Mesh : public Component
 {
@@ -38,6 +47,7 @@ public:																																// --- MESH SKINNING METHODS
 	R_Mesh*		GetSkinnedMesh			() const;
 	void		GetBoneMapping			(std::map<std::string, GameObject*>& boneMapping);
 	void		GetBoneTranforms		(std::vector<float4x4>& boneTransforms);
+	std::vector<float4x4>* GetBoneTransformsAsPtr();
 
 	bool		RefreshSkinning			();																							// 
 	void		AnimateMesh				();																							// 

@@ -8,6 +8,8 @@
 #include "MathGeoLib/include/Math/float2.h"
 
 class C_AudioSource;
+class C_NavMeshAgent;
+class C_ParticleSystem;
 
 enum class BlurrgState
 {
@@ -31,10 +33,13 @@ public:
 	virtual ~Blurrg();
 
 	void SetUp() override;
-	void Update() override;
+	void Behavior() override;
 	void CleanUp() override;
 
 	void OnCollisionEnter(GameObject* object) override;
+
+	void EntityPause() override;
+	void EntityResume() override;
 
 	// Wander
 	float wanderRadius = 0.0f;
@@ -71,9 +76,19 @@ public:
 	AnimationInfo dashAnimation = { "Dash" };
 	AnimationInfo restAnimation = { "Rest" };
 
+	// Agent 
+	C_NavMeshAgent* agent = nullptr;
+
 	// Audio
 	C_AudioSource* chargeAudio = nullptr;
 	C_AudioSource* deathAudio = nullptr;
+
+	int minCredits = 0.f;
+	int maxCredits = 0.f;
+
+	// Particles & SFX
+	C_ParticleSystem* hitParticles;
+	C_ParticleSystem* chargeParticles;
 
 private:
 

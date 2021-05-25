@@ -15,6 +15,7 @@
 
 class ParsonNode;
 class C_Transform;
+class C_UI;
 
 struct MeshRenderer;
 struct CuboidRenderer;
@@ -85,7 +86,7 @@ public:																									// --- GAME OBJECT GETTERS AND SETTERS
 	void			SetParentUID						(const uint32& parentUID);						// 
 
 public:																									// --- COMPONENT GETTERS AND SETTERS
-	Component*		CreateComponent						(ComponentType type);							// Creates a component of the given type and adds it to the components vector.
+	Component*		CreateComponent						(ComponentType type, bool addComponent = true);	// Creates a component of the given type and adds it to the components vector.
 	bool			DeleteComponent						(Component* componentToDelete);					// Deletes the given component from the Components vector. Returs False on ERROR.
 	void			ReplaceComponent					(Component* newComponent);						// 
 
@@ -93,6 +94,9 @@ public:																									// --- COMPONENT GETTERS AND SETTERS
 	bool							GetAllComponents	(std::vector<Component*>& components) const;	// 
 
 	void*			GetScript							(const char* scriptName);						//
+	void GetUiComponents(std::vector<C_UI*>& uiComponents);
+	C_UI* GetUiComponent();
+	void SetUiChildOrder(int index);
 
 	template<typename T>																				// --- GET COMPONENT TEMPLATED METHOD
 	T* GetComponent() const																				// 
@@ -190,6 +194,10 @@ public:
 	bool			isPrefab = false;																	// Defines if the object is part of a prefav
 	uint			prefabID = 0;																		// Id of the prefab the game object is part of
 
+	//Navigation
+	uint			navigationArea = 0;																	// Describes the navigation of the current game object
+	bool			isNavigable = false;																// Defines is the object is navigable.
+
 private:
 	uint32			uid;																				// Unique IDentifier of this GameObject.
 	std::string		name;																				// Name of this GameObject.
@@ -199,6 +207,8 @@ private:
 	uint32			parent_uid;																			// Only for Serialization purposes. Maybe will be repurposed later.
 
 	bool			maintainThroughScenes;																// Will determine whether or not the GO will be deleted when changing scenes.
+
+
 
 };
 

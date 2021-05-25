@@ -31,17 +31,19 @@
 #include "C_CapsuleCollider.h"
 #include "C_ParticleSystem.h"
 #include "C_NavMeshAgent.h"
-#include "C_PlayerController.h"
-#include "C_BulletBehavior.h"
-#include "C_PropBehavior.h"
-#include "C_CameraBehavior.h"
-#include "C_GateBehavior.h"
+//#include "C_PlayerController.h"
+//#include "C_BulletBehavior.h"
+//#include "C_PropBehavior.h"
+//#include "C_CameraBehavior.h"
+//#include "C_GateBehavior.h"
 
 #include "C_Canvas.h"
-
+#include "C_UI.h"
 #include "C_UI_Image.h"
 #include "C_UI_Text.h"
 #include "C_UI_Button.h"
+#include "C_UI_Checkbox.h"
+#include "C_UI_Slider.h"
 
 #include "C_2DAnimator.h"
 
@@ -123,6 +125,7 @@ bool GameObject::Start()
 
 bool GameObject::Update()
 {
+	OPTICK_CATEGORY("Game Object Update",Optick::Category::Update);
 	bool ret = true;
 
 	for (uint i = 0; i < components.size(); ++i)
@@ -151,8 +154,6 @@ bool GameObject::CleanUp()
 
 bool GameObject::SaveState(ParsonNode& root) const
 {
-	bool ret = true;
-
 	root.SetNumber("UID", uid);
 
 	uint parentUID = (parent != nullptr) ? parent->uid : 0;
@@ -167,6 +168,9 @@ bool GameObject::SaveState(ParsonNode& root) const
 	root.SetBool("IsSceneRoot", isSceneRoot);
 	root.SetBool("MaintainThroughScenes", maintainThroughScenes);
 	root.SetBool("ShowBoundingBoxes", show_bounding_boxes);
+	ParsonNode navNode = root.SetNode("NavigationInfo");
+	navNode.SetBool("isNavigable",isNavigable);
+	navNode.SetInteger("navigationArea", navigationArea);
 
 	ParsonArray componentArray = root.SetArray("Components");
 
@@ -176,18 +180,16 @@ bool GameObject::SaveState(ParsonNode& root) const
 		components[i]->SaveState(componentNode);
 	}
 
-	return ret;
+	return true;
 }
 
 bool GameObject::LoadState(ParsonNode& root)
 {
-	bool ret = true;
-
 	ForceUID((uint)root.GetNumber("UID"));
-	parent_uid = (uint)root.GetNumber("ParentUID");
+	parent_uid	= (uint)root.GetNumber("ParentUID");
 
-	prefabID = (uint)root.GetNumber("PrefabID");
-	isPrefab = root.GetBool("IsPrefab");
+	prefabID	= (uint)root.GetNumber("PrefabID");
+	isPrefab	= root.GetBool("IsPrefab");
 
 	name					= root.GetString("Name");
 	isActive				= root.GetBool("IsActive");
@@ -196,80 +198,57 @@ bool GameObject::LoadState(ParsonNode& root)
 	maintainThroughScenes	= root.GetBool("MaintainThroughScenes");
 	show_bounding_boxes		= root.GetBool("ShowBoundingBoxes");
 
-	// Recalculate AABB and OBB
+	ParsonNode navNode = root.GetNode("NavigationInfo");
+	if (navNode.NodeIsValid()) 
+	{
+		isNavigable = navNode.GetBool("isNavigable");
+		navigationArea = navNode.GetInteger("navigationArea");
+	}
 
 	ParsonArray componentsArray = root.GetArray("Components");
-
 	for (uint i = 0; i < componentsArray.size; ++i)
 	{
 		ParsonNode componentNode = componentsArray.GetNode(i);
-		
 		if (!componentNode.NodeIsValid())
-			continue;
-		
-		ComponentType type	= (ComponentType)((int)componentNode.GetNumber("Type"));
-
-		if (type < (ComponentType)0)
-			continue;
-
-		if (type == ComponentType::TRANSFORM)
 		{
-			GetComponent<C_Transform>()->LoadState(componentNode);
 			continue;
 		}
-		else
+		
+		ComponentType type	= (ComponentType)((int)componentNode.GetNumber("Type"));
+		if (type == ComponentType::NONE)
 		{
-			Component* component = nullptr;
+			continue;
+		}
+		if (type == ComponentType::TRANSFORM)
+		{
+			transform->LoadState(componentNode);
+			continue;
+		}
 
-			switch (type)
+		Component* component = CreateComponent(type, false);
+		if (component != nullptr)
+		{
+			if (component->LoadState(componentNode))
 			{
-			//case COMPONENT_TYPE::TRANSFORM:		{ component = new C_Transform(this); }			break;
-			case ComponentType::MESH:				{ component = new C_Mesh(this); }				break;
-			case ComponentType::MATERIAL:			{ component = new C_Material(this); }			break;
-			case ComponentType::LIGHT:				{ component = new C_Light(this); }				break;
-			case ComponentType::CAMERA:				{ component = new C_Camera(this); } 			break;
-			case ComponentType::ANIMATOR:			{ component = new C_Animator(this); }			break;
-			case ComponentType::ANIMATION:			{ component = new C_Animation(this); }			break;
-			case ComponentType::AUDIOSOURCE:		{ component = new C_AudioSource(this); }		break;
-			case ComponentType::AUDIOLISTENER:		{ component = new C_AudioListener(this); }		break;
-			case ComponentType::SCRIPT:				{ component = new C_Script(this); }				break;
-			case ComponentType::RIGIDBODY:			{ component = new C_RigidBody(this); }			break;
-			case ComponentType::BOX_COLLIDER:		{ component = new C_BoxCollider(this); }		break;
-			case ComponentType::SPHERE_COLLIDER:	{ component = new C_SphereCollider(this); }		break;
-			case ComponentType::CAPSULE_COLLIDER:	{ component = new C_CapsuleCollider(this); }	break;
-			case ComponentType::PLAYER_CONTROLLER:	{ component = new C_PlayerController(this); }	break;
-			case ComponentType::BULLET_BEHAVIOR:	{ component = new C_BulletBehavior(this); }		break;
-			case ComponentType::PROP_BEHAVIOR:		{ component = new C_PropBehavior(this); }		break;
-			case ComponentType::CAMERA_BEHAVIOR:	{ component = new C_CameraBehavior(this); }		break;
-			case ComponentType::GATE_BEHAVIOR:		{ component = new C_GateBehavior(this); }		break;
-			case ComponentType::PARTICLES:			{ component = new C_ParticleSystem(this); }		break;
-			case ComponentType::CANVAS:				{ component = new C_Canvas(this); }				break;
-			case ComponentType::UI_IMAGE:			{ component = new C_UI_Image(this); }			break;
-			case ComponentType::UI_TEXT:			{ component = new C_UI_Text(this); }			break;
-			case ComponentType::UI_BUTTON:			{ component = new C_UI_Button(this); }			break;
-			case ComponentType::ANIMATOR2D:			{ component = new C_2DAnimator(this); }			break;
-			case ComponentType::NAVMESH_AGENT:		{ component = new C_NavMeshAgent(this); }		break;
-			}
+				component->Start();
+				components.push_back(component);
 
-			if (component != nullptr)
-			{
-				if ((component->GetType() == ComponentType::CAMERA) && (App->gameState == GameState::PLAY)) //TODO fix this hardcode
+				if (component->GetType() == ComponentType::CAMERA && App->gameState == GameState::PLAY)
+				{
 					App->camera->SetCurrentCamera((C_Camera*)component);
+				}
+			}
+			else 
+			{
+				LOG("[WARNING] Game Object: Could not Load State of Component { %s } of Game Object { %s }!", component->GetNameFromType(), name.c_str());
 
-				if (component->LoadState(componentNode))
-				{
-					components.push_back(component);
-				}
-				else 
-				{
-					component->CleanUp();
-					delete component;
-				}
+				component->CleanUp();
+				delete component;
 			}
 		}
 	}
 
-	return ret;
+	return true;
 }
 
 // --- GAMEOBJECT METHODS ---
@@ -694,6 +673,12 @@ void GameObject::ForceUID(const uint32& UID)
 
 void GameObject::SetName(const char* newName)
 {
+	if (isBone)
+	{
+		LOG("[WARNING] Game Object: Game Objects that are Animation Bones cannot be renamed!");
+		return;
+	}
+	
 	name = newName;
 }
 
@@ -773,7 +758,7 @@ void GameObject::SetParentUID(const uint32& parentUID)
 }
 
 // --- COMPONENT METHODS ---
-Component* GameObject::CreateComponent(ComponentType type)
+Component* GameObject::CreateComponent(ComponentType type, bool addComponent)
 {
 	Component* component = nullptr;
 
@@ -792,16 +777,11 @@ Component* GameObject::CreateComponent(ComponentType type)
 		LOG("[ERROR] RigidBody Component could not be added to %s! Error: No duplicates allowed!", name.c_str());
 		return nullptr;
 	}
-	if (type == ComponentType::PLAYER_CONTROLLER && GetComponent<C_PlayerController>() != nullptr)
-	{
-		LOG("[ERROR] Player Controller Component could not be added to %s! Error: No duplicates allowed!", name.c_str());
-		return nullptr;
-	}
-	if (type == ComponentType::UI_IMAGE && GetComponent<C_UI_Image>() != nullptr)
-	{
-		LOG("[ERROR] Player Controller Component could not be added to %s! Error: No duplicates allowed!", name.c_str());
-		return nullptr;
-	}
+	//if (type == ComponentType::PLAYER_CONTROLLER && GetComponent<C_PlayerController>() != nullptr)
+	//{
+	//	LOG("[ERROR] Player Controller Component could not be added to %s! Error: No duplicates allowed!", name.c_str());
+	//	return nullptr;
+	//}
 
 	switch(type)
 	{
@@ -818,22 +798,24 @@ Component* GameObject::CreateComponent(ComponentType type)
 	case ComponentType::BOX_COLLIDER:		{ component = new C_BoxCollider(this); }		break;
 	case ComponentType::SPHERE_COLLIDER:	{ component = new C_SphereCollider(this); }		break;
 	case ComponentType::CAPSULE_COLLIDER:	{ component = new C_CapsuleCollider(this); }	break;
-	case ComponentType::PARTICLES: 			{ component = new C_ParticleSystem(this); }			break;
+	case ComponentType::PARTICLE_SYSTEM: 	{ component = new C_ParticleSystem(this); }		break;
 	case ComponentType::CANVAS:				{ component = new C_Canvas(this); }				break;
 	case ComponentType::UI_IMAGE:			{ component = new C_UI_Image(this); }			break;
 	case ComponentType::UI_TEXT:			{ component = new C_UI_Text(this); }			break;
 	case ComponentType::SCRIPT:				{ component = new C_Script(this); }				break;
 	case ComponentType::UI_BUTTON:			{ component = new C_UI_Button(this); }			break;
-	case ComponentType::PLAYER_CONTROLLER:	{ component = new C_PlayerController(this); }	break;
-	case ComponentType::BULLET_BEHAVIOR:	{ component = new C_BulletBehavior(this); }		break;
-	case ComponentType::PROP_BEHAVIOR:		{ component = new C_PropBehavior(this); }		break;
-	case ComponentType::CAMERA_BEHAVIOR:	{ component = new C_CameraBehavior(this); }		break;
-	case ComponentType::GATE_BEHAVIOR:		{ component = new C_GateBehavior(this); }		break;
+	//case ComponentType::PLAYER_CONTROLLER:	{ component = new C_PlayerController(this); }	break;
+	//case ComponentType::BULLET_BEHAVIOR:	{ component = new C_BulletBehavior(this); }		break;
+	//case ComponentType::PROP_BEHAVIOR:		{ component = new C_PropBehavior(this); }		break;
+	//case ComponentType::CAMERA_BEHAVIOR:	{ component = new C_CameraBehavior(this); }		break;
+	//case ComponentType::GATE_BEHAVIOR:		{ component = new C_GateBehavior(this); }		break;
 	case ComponentType::ANIMATOR2D:			{ component = new C_2DAnimator(this); }			break;
 	case ComponentType::NAVMESH_AGENT:		{ component = new C_NavMeshAgent(this); }		break;
+	case ComponentType::UI_CHECKBOX:		{ component = new C_UI_Checkbox(this); }		break;
+	case ComponentType::UI_SLIDER:			{ component = new C_UI_Slider(this); }			break;
 	}
 
-	if (component != nullptr)
+	if (component != nullptr && addComponent)
 		components.push_back(component);
 
 	return component;
@@ -903,7 +885,7 @@ bool GameObject::GetAllComponents(std::vector<Component*>& components) const
 	return components.empty() ? false : true;
 }
 
-void* GameObject::GetScript(const char*scriptName)
+void* GameObject::GetScript(const char* scriptName)
 {
 	for (uint i = 0; i < components.size(); ++i) 
 		if (components[i]->GetType() == ComponentType::SCRIPT) 
@@ -911,6 +893,34 @@ void* GameObject::GetScript(const char*scriptName)
 				return ((C_Script*)components[i])->GetScriptData();
 			
 	return nullptr;
+}
+
+void GameObject::GetUiComponents(std::vector<C_UI*>& uiComponents)
+{
+	for (uint i = 0; i < components.size(); ++i)
+	{																					
+		if (components[i] != nullptr && (components[i]->GetType() == ComponentType::UI_BUTTON || components[i]->GetType() == ComponentType::UI_IMAGE || components[i]->GetType() == ComponentType::UI_TEXT) || components[i]->GetType() == ComponentType::UI_CHECKBOX || components[i]->GetType() == ComponentType::UI_IMAGE || components[i]->GetType() == ComponentType::UI_TEXT || components[i]->GetType() == ComponentType::UI_SLIDER)
+			uiComponents.push_back((C_UI*)components[i]);						
+	}																						
+}
+
+C_UI* GameObject::GetUiComponent()
+{
+	for (uint i = 0; i < components.size(); ++i)
+	{
+		if (components[i] != nullptr && (components[i]->GetType() == ComponentType::UI_BUTTON || components[i]->GetType() == ComponentType::UI_IMAGE || components[i]->GetType() == ComponentType::UI_TEXT || components[i]->GetType() == ComponentType::UI_CHECKBOX || components[i]->GetType() == ComponentType::UI_IMAGE || components[i]->GetType() == ComponentType::UI_TEXT) || components[i]->GetType() == ComponentType::UI_SLIDER)
+			return (C_UI*)components[i];
+	}
+	return nullptr;
+}
+
+void GameObject::SetUiChildOrder(int index)
+{
+	for (uint i = 0; i < components.size(); ++i)
+	{
+		if (components[i] != nullptr && (components[i]->GetType() == ComponentType::UI_BUTTON || components[i]->GetType() == ComponentType::UI_IMAGE || components[i]->GetType() == ComponentType::UI_TEXT || components[i]->GetType() == ComponentType::UI_CHECKBOX))
+			((C_UI*)components[i])->childOrder = index;
+	}
 }
 
 // ---

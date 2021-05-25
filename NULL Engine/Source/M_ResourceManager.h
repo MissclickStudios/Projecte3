@@ -50,6 +50,7 @@ public:																								// --- RESOURCE MANAGER API ---
 	uint			SaveResourceToLibrary			(Resource* resource);							// Saves a resource into the Library. Generates a custom file and a .meta file.
 	uint32			LoadFromLibrary					(const char* assetsPath);						// Loads a resource registered in the Library onto memory. Returns the resource's UID.
 	Resource*		GetResourceFromLibrary			(const char* assetsPath);						// Same as LoadFromLibrary() but it returns the resource instead of its UID.
+	Resource*		GetResourceFromLibrary			(uint32 UID);
 
 	void			DragAndDrop(const char* path);													// 
 
@@ -194,6 +195,8 @@ private:																														// --- ASSETS MONITORING METHODS ---
 
 	bool			DeleteFromAssets				(const char* assetsPath);
 	bool			DeleteFromLibrary				(const char* assetsPath);
+
+	bool			TrimLibrary						();
 
 	bool			GetResourceUIDsFromMeta						(const char* assetsPath, std::vector<uint32>& resourceUids);
 	//bool			GetForcedUIDsFromMeta						(const char* assetsPath, std::map<std::string, uint32>& forcedUIDs);

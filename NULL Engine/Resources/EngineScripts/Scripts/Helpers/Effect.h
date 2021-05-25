@@ -3,12 +3,20 @@
 
 #include "Timer.h"
 
+#include "MathGeoLib/include/Math/float3.h"
+
 // REMEMBER TO ADD A NEW ENTRY ON THE GET EFFECT NAME IF YOU ADD AN EFFECT (down below line 58ish)
 enum class ENGINE_ENUM EffectType
 {
 	NONE = 0,
 	FROZEN,
 	HEAL,
+	MAX_HEALTH_MODIFY,
+	SPEED_MODIFY,
+	STUN,
+	KNOCKBACK,
+	ELECTROCUTE,
+	BOSS_PIERCING,
 	EFFECTS_NUM
 };
 // This has to be the last entry
@@ -19,7 +27,8 @@ class Effect
 {
 public:
 
-	Effect(EffectType type, float duration, bool permanent) : duration(duration), permanent(permanent)
+	Effect(EffectType type, float duration, bool permanent, float power = 0.0f, float chance = 0.0f, float3 direction = float3::zero, bool start = true)
+		: duration(duration), permanent(permanent), power(power), chance(chance), direction(direction), start(start)
 	{
 		if (type != EffectType::EFFECTS_NUM) // This avoids the game crashig if someone requests a EFFECTS_NUM effect by accident
 			this->type = type;
@@ -27,6 +36,8 @@ public:
 		if (permanent)
 			timer.Stop();
 	}
+
+	~Effect() {}
 
 	const bool IsActive() const
 	{ 
@@ -53,10 +64,20 @@ public:
 
 	const bool Permanent() const { return permanent; }
 
+	const float Power() { return power; }
+	const float Chance() { return chance; }
+	const float3 Direction() { return direction; }
+
+	bool start = true;
+
 private:
 
 	EffectType type = EffectType::NONE;
 	bool permanent = false;
 	float duration = 0.0f;
 	Timer timer;
+
+	float power = 0.0f;
+	float chance = 0.0f;
+	float3 direction = float3::zero;
 };

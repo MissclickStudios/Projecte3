@@ -1,6 +1,7 @@
 #include "JSONParser.h"
 #include "Profiler.h"													
-#include "OpenGL.h"														
+//#include "OpenGL.h"
+#include "Dependencies/glew/include/glew.h"
 
 #include "MC_Time.h"
 
@@ -17,14 +18,16 @@
 #include "M_Camera3D.h"													
 #include "M_Input.h"													
 #include "M_FileSystem.h"												
-#include "M_ResourceManager.h"											
-#include "M_Editor.h"													
+#include "M_ResourceManager.h"																								
 #include "M_Scene.h"
+#include "M_Detour.h"
+#include "M_UISystem.h"
 
 #include "R_Mesh.h"														
 #include "R_Material.h"													
 #include "R_Texture.h"
 #include "R_Shader.h"
+#include "R_NavMesh.h"
 
 #include "I_Textures.h"													
 #include "I_Shaders.h"							//TODO: erase
@@ -84,7 +87,6 @@ bool M_Renderer3D::Init(ParsonNode& configuration)
 {
 	LOG("Creating 3D Renderer context");
 	bool ret = true;
-
 	ret = InitOpenGL();																			// Initializing OpenGL. (Context and initial configuration)
 
 	OnResize();																					// Projection matrix recalculation to keep up with the resizing of the window.
@@ -145,6 +147,8 @@ bool M_Renderer3D::Start()
 	defaultSkyBox.CreateSkybox();
 
 	GenScreenBuffer();
+
+	particleShader = App->resourceManager->GetShader("ParticleShader");
 
 	return true;
 }
@@ -417,7 +421,7 @@ bool M_Renderer3D::InitOpenGL()
 		SetGLFlag(GL_ALPHA_TEST, false);
 		glAlphaFunc(GL_GREATER, 0.20f);													// Have alpha test in c_material (color alpha)?
 
-		SetGLFlag(GL_BLEND, false);
+		SetGLFlag(GL_BLEND, true);
 		glBlendEquation(GL_FUNC_ADD);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -683,6 +687,32 @@ void M_Renderer3D::RenderScene()
 		last_ray.Render();
 	}
 
+	if (App->detour->debugDraw && App->detour->navMeshResource != nullptr && App->detour->navMeshResource->navMesh != nullptr) {
+		if (App->detour->renderMeshes.data() != nullptr)
+		{
+			R_Shader* shaderProgram = App->resourceManager->GetShader("DefaultShader");;
+
+			for (int i = 0; i < App->detour->renderMeshes.size(); ++i)
+			{
+
+				glUseProgram(shaderProgram->shaderProgramID);
+
+				shaderProgram->SetUniformMatrix4("modelMatrix", (GLfloat*)float4x4::identity.ptr());
+
+				shaderProgram->SetUniformMatrix4("viewMatrix", App->camera->GetCurrentCamera()->GetViewMatrixTransposed().ptr());
+
+				shaderProgram->SetUniformMatrix4("projectionMatrix", App->camera->GetCurrentCamera()->GetProjectionMatrixTransposed().ptr());
+
+				shaderProgram->SetUniformVec3f("cameraPosition", (GLfloat*)&App->camera->GetCurrentCamera()->GetFrustum().Pos());
+
+				glBindVertexArray(App->detour->renderMeshes[i]->rmesh->VAO);
+				glDrawElements(GL_TRIANGLES, App->detour->renderMeshes[i]->rmesh->indices.size(), GL_UNSIGNED_INT, nullptr);
+				glUseProgram(0);
+				glBindVertexArray(0);	
+			}
+		}
+	}
+
 	//PrimitiveDrawExamples p_ex = PrimitiveDrawExamples();
 	//p_ex.DrawAllExamples();
 
@@ -753,68 +783,38 @@ void M_Renderer3D::RenderUI()
 {
 	OPTICK_CATEGORY("RenderUI", Optick::Category::Rendering)
 	SetTo2DRenderSettings(true);
-
-	C_Canvas* canvas = nullptr;
-	for (auto uiIt = App->scene->GetGameObjects()->cbegin(); uiIt != App->scene->GetGameObjects()->cend(); ++uiIt)
-	{	
-		canvas = (*uiIt)->GetComponent<C_Canvas>();
-		if (canvas != nullptr && canvas->IsActive())
-		{
-			RenderUIComponent((*uiIt));
-
-			if (!canvas->IsInvisible())
-			{
-				if (App->camera->currentCamera != App->camera->masterCamera->GetComponent<C_Camera>())
-					canvas->Draw2D();
-
-				else
-					canvas->Draw3D();
-			}
-		}
-	}
-
-	SetTo2DRenderSettings(false);
-}
-
-void M_Renderer3D::RenderUIComponent(GameObject* gameObject)
-{
-	for (std::vector<GameObject*>::iterator it = gameObject->childs.begin(); it != gameObject->childs.end(); it++)
+	/*
+	if (App->camera->currentCamera != App->camera->masterCamera->GetComponent<C_Camera>())
+		canvas->Draw2D();
+	else
+		canvas->Draw3D();
+	*/
+	if (App->gameState != GameState::PLAY)
 	{
-		if (!(*it)->IsActive())
-			continue;
-
-		C_UI_Image* image = (*it)->GetComponent<C_UI_Image>();
-		if (image != nullptr)
+		const std::vector<C_Canvas*> canvasToDraw = App->uiSystem->GetAllCanvas();
+		for (std::vector<C_Canvas*>::const_iterator it = canvasToDraw.cbegin(); it != canvasToDraw.cend(); ++it)
 		{
-			if (App->camera->currentCamera != App->camera->masterCamera->GetComponent<C_Camera>())
-				image->Draw2D();
-
-			else
-				image->Draw3D();
+			//TODO: DRAW THE UI ELEMENTS ON 3D
+			// SetTo2DRenderSettings(false);
+			//(*rit)->Draw3D(renderCanvas);
+			//SetTo2DRenderSettings(false);
+			if ((*it)->debugDraw)
+				(*it)->Draw2D(renderCanvas);
 		}
-
-		C_UI_Text* text = (*it)->GetComponent<C_UI_Text>();
-		if (text != nullptr)
-		{
-			if (App->camera->currentCamera != App->camera->masterCamera->GetComponent<C_Camera>())
-				text->RenderText();
-		}
-
-		C_UI_Button* button = (*it)->GetComponent<C_UI_Button>();
-		if (button != nullptr)
-		{
-			if (App->camera->currentCamera != App->camera->masterCamera->GetComponent<C_Camera>())
-				button->Draw2D();
-
-			else
-				button->Draw3D();
-		}
-
-		for (std::vector<GameObject*>::iterator childIt = (*it)->childs.begin(); childIt != (*it)->childs.end(); childIt++)
-		{
-			RenderUIComponent(*childIt);
-		}
+		SetTo2DRenderSettings(false);
+		return;
 	}
+	std::list<C_Canvas*> canvasToDraw = App->uiSystem->GetActiveCanvas();
+	for (std::list<C_Canvas*>::reverse_iterator rit = canvasToDraw.rbegin(); rit != canvasToDraw.rend(); ++rit)
+	{
+		//TODO: DRAW THE UI ELEMENTS ON 3D
+		// SetTo2DRenderSettings(false);
+		//(*rit)->Draw3D(renderCanvas);
+		//SetTo2DRenderSettings(false);
+		//if ((*rit)->IsActive())
+		(*rit)->Draw2D(renderCanvas);
+	}
+	SetTo2DRenderSettings(false);
 }
 
 void M_Renderer3D::RenderFramebufferTexture()
@@ -823,7 +823,12 @@ void M_Renderer3D::RenderFramebufferTexture()
 	//glViewport(0, 0, App->window->GetWidth(), App->window->GetHeight());
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	glUseProgram(App->resourceManager->GetShader("ScreenShader")->shaderProgramID);
+	if (!screenShader) screenShader = App->resourceManager->GetShader("ScreenShader");
+
+	glUseProgram(screenShader->shaderProgramID);
+
+	App->scene->DoSceneTransition(screenShader, 1);
+	
 	glBindVertexArray(quadScreenVAO);
 	glDisable(GL_DEPTH_TEST);
 	glBindTexture(GL_TEXTURE_2D, sceneRenderTexture);
@@ -886,11 +891,11 @@ void M_Renderer3D::RenderMeshes()
 {	
 	for (uint i = 0; i < meshRenderers.size(); ++i)
 	{
-		bool temp = meshRenderers[i].cMesh->GetOutlineMesh();
-		if(temp)
-			meshRenderers[i].Render(temp);
+
+		if(meshRenderers[i].cMesh->GetOutlineMesh())
+			meshRenderers[i].Render(true);
 		else
-			meshRenderers[i].Render(temp);
+			meshRenderers[i].Render(false);
 	}
 
 	meshRenderers.clear();
@@ -937,7 +942,9 @@ void M_Renderer3D::RenderSkeletons()
 
 void M_Renderer3D::AddParticle(const float4x4& transform, R_Texture* material, Color color, float distanceToCamera)
 {
-	particles.insert(std::make_pair(distanceToCamera, ParticleRenderer(material, color, transform)));
+	ParticleRenderer pRenderer = ParticleRenderer(material, color, transform);
+	pRenderer.shader = particleShader;
+	particles.insert(std::map<float, ParticleRenderer>::value_type(distanceToCamera, pRenderer));
 }
 
 void M_Renderer3D::RenderParticles()
@@ -1548,7 +1555,7 @@ void M_Renderer3D::GenScreenBuffer()
 	glGenVertexArrays(1, &quadScreenVAO);
 	glBindVertexArray(quadScreenVAO);
 
-	const GLfloat g_quad_vertex_buffer_data[] = {
+	const GLfloat quadVertexBufferData[] = {
 		-1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
 		-1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
 		1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
@@ -1557,10 +1564,10 @@ void M_Renderer3D::GenScreenBuffer()
 		-1.0f,  1.0f, 0.0f, 0.0f, 1.0f
 	};
 
-	GLuint quad_vertexbuffer;
-	glGenBuffers(1, &quad_vertexbuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, quad_vertexbuffer);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(g_quad_vertex_buffer_data), g_quad_vertex_buffer_data, GL_STATIC_DRAW);
+	GLuint quadVertexbuffer;
+	glGenBuffers(1, &quadVertexbuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, quadVertexbuffer);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertexBufferData), quadVertexBufferData, GL_STATIC_DRAW);
 
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 5, (void*)0);
@@ -1597,6 +1604,7 @@ void MeshRenderer::Render(bool outline)
 		return;
 	}
 
+	glEnable(GL_BLEND);
 	glEnable(GL_STENCIL_TEST);
 	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 
@@ -1653,7 +1661,6 @@ void MeshRenderer::Render(bool outline)
 
 void MeshRenderer::RenderOutline(R_Mesh* rMesh)
 {
-
 	glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
 	glStencilMask(0x00);
 
@@ -1713,7 +1720,6 @@ void MeshRenderer::RenderOutline(R_Mesh* rMesh)
 	glStencilFunc(GL_ALWAYS, 1, 0xFF);
 	glEnable(GL_DEPTH_TEST);
 	glDisable(GL_STENCIL_TEST);
-
 }
 
 void MeshRenderer::RenderVertexNormals(const R_Mesh* rMesh)
@@ -1935,6 +1941,11 @@ void MeshRenderer::ApplyShader()
 
 			cMaterial->GetShader()->SetUniformVec3f("cameraPosition", (GLfloat*)&App->camera->GetCurrentCamera()->GetFrustum().Pos());
 			
+
+			cMaterial->GetShader()->SetUniform1f("deltaTime", MC_Time::Game::GetDT());
+
+			cMaterial->GetShader()->SetUniform1f("Time", MC_Time::Game::GetTimeSinceStart());
+
  			//Skybox
 			
 			cMaterial->GetShader()->SetUniform1i("skybox", 11);
@@ -2199,7 +2210,7 @@ transform(transform),
 VAO(0),
 shader(nullptr)
 {
-	shader = App->resourceManager->GetShader("ParticleShader");
+
 }
 
 void ParticleRenderer::LoadBuffers()
@@ -2216,7 +2227,6 @@ void ParticleRenderer::LoadBuffers()
 
 void ParticleRenderer::Render()
 {
-
 	glEnable(GL_BLEND);
 	glEnable(GL_ALPHA_TEST);
 

@@ -25,7 +25,7 @@ enum class ComponentType
 	SPHERE_COLLIDER,										// 
 	CAPSULE_COLLIDER,										// -----------
 
-	PARTICLES,												// --- PARTICLE SYSTEM
+	PARTICLE_SYSTEM,										// --- PARTICLE SYSTEM
 
 	CANVAS,													// --- UI
 
@@ -46,7 +46,10 @@ enum class ComponentType
 
 	ANIMATOR2D,												// --- ANIMATIONS2D
 
-	NAVMESH_AGENT											// --- NAVIGATION
+	NAVMESH_AGENT,											// --- NAVIGATION
+
+	UI_CHECKBOX,
+	UI_SLIDER
 };
 
 class MISSCLICK_API Component

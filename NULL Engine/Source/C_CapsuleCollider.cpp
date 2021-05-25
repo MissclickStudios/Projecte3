@@ -1,5 +1,5 @@
 #include "JSONParser.h"
-
+#include "Profiler.h"
 #include "Application.h"
 #include "M_Physics.h"
 
@@ -24,6 +24,8 @@ C_CapsuleCollider::~C_CapsuleCollider()
 
 bool C_CapsuleCollider::Update()
 {
+	OPTICK_CATEGORY("C_CapsuleCollider Update", Optick::Category::Update);
+
 	if (toUpdate != ColliderUpdateType::NONE)
 	{
 		GetOwner()->GetComponent<C_RigidBody>()->GetRigidBody()->detachShape(*shape);

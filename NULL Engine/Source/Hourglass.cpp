@@ -5,15 +5,6 @@
 #include "Hourglass.h"
 #include "Log.h"
 
-/*Hourglass::Hourglass()
-{
-	hours			= 0;
-	minutes			= 0;
-	seconds			= 0.0f;
-
-	previous_ticks	= 0;
-}*/
-
 Hourglass::Hourglass(uint hours, uchar minutes, float seconds)
 {
 	this->hours		= hours;
@@ -22,24 +13,6 @@ Hourglass::Hourglass(uint hours, uchar minutes, float seconds)
 
 	previousTicks	= 0;
 }
-
-/*void Hourglass::Update()
-{
-	seconds			+= (SDL_GetTicks() - previous_ticks) / 1000.0f;		// Returns the time that has elapsed since the start in seconds.
-	previous_ticks	= SDL_GetTicks();
-
-	if (seconds >= 60.0f)
-	{
-		++minutes;
-		seconds = 0.0f;
-	}
-
-	if (minutes >= 60)
-	{
-		++hours;
-		minutes = 0;
-	}
-}*/
 
 void Hourglass::Update(uint ms)
 {

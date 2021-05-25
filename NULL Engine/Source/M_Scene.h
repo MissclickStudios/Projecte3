@@ -20,12 +20,14 @@ class Resource;
 class R_Scene;
 class R_Model;
 class R_Texture;
+class R_Shader;
 class GameObject;
 class C_Camera;
 
 struct ModelNode;
 
 typedef unsigned __int32 uint32;
+typedef unsigned int uint;
 
 class MISSCLICK_API M_Scene : public Module
 {
@@ -123,6 +125,8 @@ public:																														// --- SCENE LIGHT METHODS
 	void ShowFPS();
 
 	void ScriptChangeScene(const std::string& sceneName);
+
+	void DoSceneTransition(R_Shader* screenShader, float transitionSpeed);
 	
 private:
 	std::vector<GameObject*> gameObjects;
@@ -146,8 +150,11 @@ private:
 
 private:
 	bool nextScene = false;
+	bool noTransitions = false;
+	float transitionProgresion;
 	std::string nextSceneName;
 
+	friend class EngineApplication;
 };
 
 #endif // !__M_SCENE_H__

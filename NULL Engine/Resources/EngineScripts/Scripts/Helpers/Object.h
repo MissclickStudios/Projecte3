@@ -9,7 +9,11 @@ enum class ObjectType
 	ENTITY,
 	WEAPON,
 	BULLET,
-	COLLECTABLE
+	COLLECTABLE,
+	EXPLOSIVE_BARREL,
+	GROUND_ITEM,
+	WEAPON_ITEM,
+	GROGU_ABILITY
 };
 
 class Object : public Script
@@ -33,6 +37,9 @@ public:
 
 	virtual void OnDisable() override {}
 	virtual void OnEnable() override {}
+
+	virtual void OnPause() {}
+	virtual void OnResume() {}
 
 	virtual void OnCollisionEnter(GameObject* object) override {}
 	virtual void OnCollisionRepeat(GameObject* object) override {}

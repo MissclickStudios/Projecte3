@@ -33,12 +33,18 @@ class C_ParticleSystem;
 class C_UI_Image;
 class C_UI_Text;
 class C_UI_Button;
+class C_UI_Checkbox;
+class C_UI_Slider;
 class C_2DAnimator;
 class C_NavMeshAgent;
 
+class ResourceBase;
 class Resource;
 class R_Shader;
 class R_Texture;
+
+class AnimatorTrack;
+class AnimatorClip;
 
 class Emitter;
 
@@ -73,7 +79,6 @@ private:																										// --- DRAW COMPONENT METHODS ---
 	void DrawAudioSourceComponent		(C_AudioSource* cAudioSource);
 	void DrawAudioListenerComponent		(C_AudioListener* cAudioListener);
 	void DrawRigidBodyComponent			(C_RigidBody* cRigidBody);
-	void RigidBodyFilterCombo			(C_RigidBody* cRigidBody);
 	void DrawBoxColliderComponent		(C_BoxCollider* cCollider);
 	void DrawSphereColliderComponent	(C_SphereCollider* cCollider);
 	void DrawCapsuleColliderComponent	(C_CapsuleCollider* cCollider);
@@ -83,35 +88,59 @@ private:																										// --- DRAW COMPONENT METHODS ---
 	void DrawUITextComponent			(C_UI_Text* text);
 	void DrawScriptComponent			(C_Script* cScript);
 	void DrawUIButtonComponent			(C_UI_Button* button);
-	void DrawPlayerControllerComponent	(C_PlayerController* controller);
-	void DrawBulletBehaviorComponent	(C_BulletBehavior* behavior);
-	void DrawPropBehaviorComponent		(C_PropBehavior* behavior);
-	void DrawCameraBehaviorComponent	(C_CameraBehavior* behavior); 
-	void DrawGateBehaviorComponent		(C_GateBehavior* behavior);
+	//void DrawPlayerControllerComponent	(C_PlayerController* controller);
+	//void DrawBulletBehaviorComponent	(C_BulletBehavior* behavior);
+	//void DrawPropBehaviorComponent		(C_PropBehavior* behavior);
+	//void DrawCameraBehaviorComponent	(C_CameraBehavior* behavior); 
+	//void DrawGateBehaviorComponent		(C_GateBehavior* behavior);
 	void DrawAnimator2DComponent		(C_2DAnimator* cAnimator);
 	void DrawNavMeshAgentComponent		(C_NavMeshAgent* cNavMeshAgent);
+	void DrawUICheckboxComponent		(C_UI_Checkbox* checkbox);
+	void DrawUISliderComponent			(C_UI_Slider* slider);
 
-private:																										// --- DRAW COMPONENT UTILITY METHODS ---
-	void AddComponentCombo				(GameObject* selectedGameObject);										// 
-	void DeleteComponentPopup			(GameObject* selectedGameObject);										// 
+private:																														// --- DRAW COMPONENT UTILITY METHODS ---
+	void AddComponentCombo				(GameObject* selectedGameObject);														// 
+	void DeleteComponentPopup			(GameObject* selectedGameObject);														// 
 	void AddUIComponent					(GameObject* selectedGameObject, ComponentType type);
 
 	// COMPONENT BASICS		--------
 	void DrawBasicSettings				(Component* component, const char* state = nullptr);
 
+	// MESH COMPONENT		--------
+	void DisplayMeshSelector			(C_Mesh* cMesh, std::map<std::string, ResourceBase>& meshBases);
+	
 	// MATERIAL COMPONENT	--------
-	void DisplayTextureData				(C_Material* cMaterial);												// Will display the texture's width, height, depth...
-	void TextureDisplay					(C_Material* cMaterial);												// Will display the texture as an image through Dear ImGui.
+	void DisplayMaterial				(C_Material* cMaterial);
+	void DisplayMaterialSelector		(C_Material* cMaterial, std::map<std::string, ResourceBase>& materialBases);
+
+	void DisplayShader					(C_Material* cMaterial);
+	void DisplayShaderSelector			(C_Material* cMaterial, std::map<std::string, ResourceBase>& shaderBases);
+	
+	void DisplayTexture					(C_Material* cMaterial);
+	void DisplayTextureSelector			(C_Material* cMaterial, std::map<std::string, ResourceBase>& textureBases);
+	void DisplayTextureData				(C_Material* cMaterial);																// Will display the texture's width, height, depth...
+	void TextureImageDisplay			(C_Material* cMaterial);																// Will display the texture as an image through Dear ImGui.
 
 	// ANIMATOR COMPONENT	--------
+	void DisplayAnimatorSettings		(C_Animator* cAnimator);
 	void DisplayAnimatorControls		(C_Animator* cAnimator);
+	void DisplayTrackViewer				(C_Animator* cAnimator);
+	void DisplayTrackStats				(AnimatorTrack* track, AnimatorClip* clip);
+
 	void DisplayClipManager				(C_Animator* cAnimator);
 	void ClipCreatorWindow				(C_Animator* cAnimator);
 	void ClipEditorWindow				(C_Animator* cAnimator);
+	
+	void DisplayTrackManager			(C_Animator* cAnimator);
+	void TrackCreatorWindow				(C_Animator* cAnimator);
+	void TrackEditorWindow				(C_Animator* cAnimator);
 
 	// SHADER COMPONENT		--------
 	void TextEditorWindow				();
 	void CallTextEditor					(C_Material* cMaterial);
+
+	// RIGID BODY COMPONENT --------
+	void RigidBodyFilterCombo			(C_RigidBody* cRigidBody);
 
 	// PARTICLE SYSTEM COMPONENT ---
 	void DisplayParticleSystemControls	(C_ParticleSystem* cParticleSystem);
@@ -131,40 +160,36 @@ private:																										// --- DRAW COMPONENT UTILITY METHODS ---
 	void ScriptSelectCombo(C_Script*& cScript, const char* previewValue, bool swapForCurrent);
 
 private:
-	void DrawImportSettings				(Resource* selectedResource);
+	//void DrawImportSettings				(Resource* selectedResource);
 
-	void DrawModelImportSettings		(ModelSettings modelSettings);
-	void DrawMeshImportSettings			(MeshSettings meshSettings);
-	void DrawMaterialImportSettings		(MaterialSettings materialSettings);
-	void DrawTextureImportSettings		(TextureSettings textureSettings);
-	void DrawAnimationImportSettings	(AnimationSettings animationSettings);
+	//void DrawModelImportSettings		(ModelSettings modelSettings);
+	//void DrawMeshImportSettings			(MeshSettings meshSettings);
+	//void DrawMaterialImportSettings		(MaterialSettings materialSettings);
+	//void DrawTextureImportSettings		(TextureSettings textureSettings);
+	//void DrawAnimationImportSettings	(AnimationSettings animationSettings);
 
 private:
+	GameObject* shownGameObject = nullptr;
+	bool		lockGameObject	= false;
+	
 	bool		showDeleteComponentPopup;
+	Component*	componentToDelete;
+	
 	bool		showTextEditorWindow;
 	bool		showSaveEditorPopup;
 	int			componentType;
 
-	int			mapToDisplay;
 	int			billboardingType;
 	int			moduleType;
 
-	Component*	componentToDelete;
-
-	GameObject* shownGameObject = nullptr;
-	bool lockGameObject = false;
+	// Animator Insector Variables
+	bool		trackWasDeleted;
+	bool		clipWasDeleted;
 
 	//Shader inspector utilities
-
-	std::vector<R_Shader*>	allShaders;
-	R_Shader*				shaderToRecompile;
-	TextEditor				editor;
-	std::string				fileToEdit;
-	std::string				shaderName;
-
-	std::vector<R_Texture*>	allTextures;
-	std::string				texName;
-
+	R_Shader*	shaderToRecompile;
+	TextEditor	editor;
+	std::string	fileToEdit;
 };
 
 #endif // !__E_INSPECTOR_H__

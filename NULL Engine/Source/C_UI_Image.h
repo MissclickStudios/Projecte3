@@ -1,20 +1,11 @@
 #ifndef __C_UI_IMAGE_H__
 #define __C_UI_IMAGE_H__
 
-#include <string>
+#include "Spritesheet.h"
+#include "C_UI.h"
+#include "Color.h"
 
-#include "Component.h"
-
-
-const float texCoordsBuffer[] = {
-1, 1,
-1, 0,
-0, 0,
-1,0,
-};
-
-
-class MISSCLICK_API C_UI_Image : public Component
+class MISSCLICK_API C_UI_Image : public C_UI
 {
 public:
 
@@ -32,27 +23,24 @@ public:
 
 	void LoadBuffers();
 
-	void Draw2D();
-	void Draw3D();
+	void HandleInput(C_UI** selectedUi)override;
+	void Draw2D()override;
+	void Draw3D()override;
 
-public:
-
-	Rect2D GetRect() const;
-
-	void SetRect(const Rect2D& rect);
-	void SetX(const float x);
-	void SetY(const float y);
-	void SetW(const float w);
-	void SetH(const float h);
+	void SetColor(unsigned char r, unsigned char g, unsigned char b, unsigned char a);
+	void ResetColor();
 
 private:
-
-	Rect2D rect = { 0,0,1,1 };
-
+	Frame GetTexturePosition(int pixelPosX, int pixelPosY, int pixelWidth, int pixelHeight);
+private:
 	uint VAO;
 	uint VBO;
 
-	R_Shader* rShader;
+	Color color = { 1.0f, 1.0f, 1.0f, 1.0f };
+	int pixelCoord[4];
+	Frame textCoord = { 0, 0, 1, 1 };
+		
+	friend class E_Inspector;
 };
 
 #endif // !__C_UI_IMAGE_H__

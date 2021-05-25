@@ -1,4 +1,5 @@
 #include "SandTrooper.h"
+#include "Random.h"
 
 #include "Application.h"
 #include "M_Scene.h"
@@ -8,6 +9,7 @@
 #include "C_Transform.h"
 #include "C_RigidBody.h"
 #include "C_AudioSource.h"
+#include "C_NavMeshAgent.h"
 
 #include "Player.h"
 
@@ -50,6 +52,13 @@ Trooper* CreateTrooper()
 
 	//Weapons
 	INSPECTOR_PREFAB(script->blaster);
+
+	//Hand Name
+
+	INSPECTOR_STRING(script->handName);
+
+	INSPECTOR_SLIDER_INT(script->minCredits, 0, 1000);
+	INSPECTOR_SLIDER_INT(script->maxCredits, 0, 1000);
 
 	return script;
 }
@@ -104,9 +113,14 @@ void Trooper::SetUp()
 				deathAudio = source;
 		}
 	}
+
+	agent = gameObject->GetComponent<C_NavMeshAgent>();
+
+	if (agent != nullptr)
+		agent->origin = gameObject->GetComponent<C_Transform>()->GetWorldPosition();
 }
 
-void Trooper::Update()
+void Trooper::Behavior()
 {
 	ManageMovement();
 	if (moveState != TrooperState::DEAD)
@@ -119,6 +133,14 @@ void Trooper::CleanUp()
 		blasterGameObject->toDelete = true;
 	blasterGameObject = nullptr;
 	blasterWeapon = nullptr;
+}
+
+void Trooper::EntityPause()
+{
+}
+
+void Trooper::EntityResume()
+{
 }
 
 void Trooper::OnCollisionEnter(GameObject* object)
@@ -137,19 +159,19 @@ void Trooper::DistanceToPlayer()
 	playerPosition.y = player->transform->GetWorldPosition().z;
 	position.x = gameObject->transform->GetWorldPosition().x;
 	position.y = gameObject->transform->GetWorldPosition().z;
+
 	aimDirection = playerPosition - position;
 
 	distance = aimDirection.Length();
 	// TODO: Separate aim and movement once the pathfinding is implemented
-	moveDirection = aimDirection;
-
-	if (!moveDirection.IsZero())
-		moveDirection.Normalize();
 }
 
 void Trooper::LookAtPlayer()
 {
-	float rad = aimDirection.AimedAngle();
+	float2 direction = aimDirection;
+	if (moveState != TrooperState::IDLE)
+		direction = moveDirection;
+	float rad = direction.AimedAngle();
 
 	if (skeleton)
 		skeleton->transform->SetLocalRotation(float3(0, -rad + DegToRad(90), 0));
@@ -172,8 +194,8 @@ void Trooper::ManageMovement()
 	switch (moveState)
 	{
 	case TrooperState::IDLE:
-		if (rigidBody)
-			rigidBody->SetLinearVelocity(float3::zero);
+		if (rigidBody != nullptr)
+			rigidBody->Set2DVelocity(float2::zero);
 		if (aimState == AimState::SHOOT) // Prioritize shooting over moving
 			break;
 		if (distance > chaseDistance)
@@ -224,12 +246,12 @@ void Trooper::ManageMovement()
 			deathAudio->PlayFx(deathAudio->GetEventId());
 
 		currentAnimation = &deathAnimation;
-		if (rigidBody)
+		if (rigidBody != nullptr)
 			rigidBody->SetIsActive(false); // Disable the rigidbody to avoid more interactions with other entities
 		if (player)
 		{
 			Player* playerScript = (Player*)player->GetScript("Player");
-			playerScript->currency += 50;
+			playerScript->currency += Random::LCG::GetBoundedRandomUint(minCredits, maxCredits);
 		}
 		deathTimer.Start();
 		moveState = TrooperState::DEAD;
@@ -265,7 +287,7 @@ void Trooper::ManageAim()
 				currentAnimation = nullptr;
 			aimState = AimState::ON_GUARD;
 				break;
-			case ShootState::WAINTING_FOR_NEXT:
+			case ShootState::WAITING_FOR_NEXT:
 				break;
 			case ShootState::FIRED_PROJECTILE:
 				currentAnimation = nullptr;
@@ -298,20 +320,22 @@ void Trooper::ManageAim()
 
 void Trooper::Patrol()
 {
-	if (rigidBody)
-		rigidBody->SetLinearVelocity(float3::zero);
+	if (agent != nullptr)
+		agent->SetDestination(gameObject->transform->GetWorldPosition());
+
 }
 
 void Trooper::Chase()
 {
-	float3 direction = { moveDirection.x, 0.0f, moveDirection.y };
-	if (rigidBody)
-		rigidBody->SetLinearVelocity(direction * ChaseSpeed());
+	if (agent != nullptr)
+	{
+		agent->SetDestination(player->transform->GetWorldPosition());
+		moveDirection = float2(agent->direction.x, agent->direction.z);
+	}
 }
 
 void Trooper::Flee()
 {
-	float3 direction = { -moveDirection.x, 0.0f, -moveDirection.y };
-	if (rigidBody)
-		rigidBody->SetLinearVelocity(direction * ChaseSpeed());
+	if (agent != nullptr)
+		agent->SetDestination(-player->transform->GetWorldPosition());
 }

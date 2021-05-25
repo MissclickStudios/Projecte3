@@ -7,6 +7,7 @@
 #include "C_UI_Button.h"
 #include "GameObject.h"
 
+#include "GameManager.h"
 #include "Player.h"
 #include "HUBShopMenuManager.h"
 
@@ -28,9 +29,11 @@ void HUBShopMenuManager::Start()
 	if (a != nullptr)
 		buyButton = (C_UI_Button*)a->GetComponent<C_UI_Button>();
 
-	a = App->scene->GetGameObjectByName(beskarTextHubShopName.c_str());
+	a = App->scene->GetGameObjectByName("Game Manager");
 	if (a != nullptr)
-		beskarTextHubShop = (C_UI_Text*)a->GetComponent<C_UI_Text>();
+		gameManager = (GameManager*)a->GetScript("GameManager");
+
+	beskarTextHubShop = (C_UI_Text*)gameObject->GetComponent<C_UI_Text>();
 
 	mando = App->scene->GetGameObjectByName(mandoName.c_str());
 }
@@ -58,6 +61,8 @@ void HUBShopMenuManager::Update()
 				if (playerScript->hubCurrency - beskarCost >= 0)
 				{
 					playerScript->hubCurrency -= beskarCost;
+					
+					gameManager->BoughtFromArmorer(); //Call this whenever player buys any upgrade
 				}
 			}
 		}

@@ -9,6 +9,11 @@
 #include "Blaster.h"
 
 #include "MathGeoLib/include/Math/float2.h"
+#include <string>
+
+class GameManager;
+class C_Canvas;
+class C_UI_Image;
 
 enum class IG11State
 {
@@ -16,8 +21,14 @@ enum class IG11State
 	PATROL,
 	CHASE,
 	FLEE,
-	SPECIAL_ATTACK_IN,
-	SPECIAL_ATTACK,
+	SPIRAL_ATTACK_IN,
+	SPIRAL_ATTACK,
+	U_ATTACK_IN,
+	U_ATTACK,
+	DOUBLE_SPIRAL_ATTACK_IN,
+	DOUBLE_SPIRAL_ATTACK,
+	ROTATE_ATTACK_IN,
+	ROTATE_ATTACK,
 	DEAD_IN,
 	DEAD
 };
@@ -29,11 +40,19 @@ public:
 	IG11();
 	virtual ~IG11();
 
+	void Start() override;
 	void SetUp() override;
-	void Update() override;
+	void Behavior() override;
 	void CleanUp() override;
 
+	void EntityPause() override;
+	void EntityResume() override;
+
 	void OnCollisionEnter(GameObject* object) override;
+	void TakeDamage(float damage)override;
+
+	// Effects
+	void BossPiercing(Effect* effect);
 
 	// Movement
 	std::string playerName = "Mando testbuild";
@@ -60,14 +79,28 @@ public:
 	float attackDistance = 0.0f;
 
 	// Special Attack
-	float specialAttackSpeed = 0.0f;
-	float specialAttackSpins = 0.0f;
-	float specialAttackHp = 0.0f;
-	float specialAttackCooldown = 0.0f;
+	float spiralAttackSpeed = 0.0f;
+	float spiralAttackSpins = 0.0f;
+	float spiralAttackHp = 0.0f;
+	float spiralAttackCooldown = 0.0f;
+
+	float UAttackShots = 0.0f;
+	float UAttackCooldown = 0.0f;
 
 	// Weapons
 	Prefab blaster;
 	Prefab sniper;
+
+	std::string rightHandName;
+	std::string leftHandName;
+
+	float minCredits = 0.f;
+	float maxCredits = 0.f;
+
+	int beskarValue = 10;
+
+	GameObject* healthBarCanvasObject = nullptr;
+	std::string lifeBarImageStr = "BossLife";
 
 private:
 
@@ -81,6 +114,9 @@ private:
 	void ManageMovement();
 	void ManageAim();
 
+	IG11State FirstStageAttacks();
+	IG11State SecondStageAttacks();
+
 	// Movement
 	void Patrol();
 	void Chase();
@@ -89,22 +125,44 @@ private:
 	float distance = 0.0f;
 	float2 moveDirection = float2::zero;
 	float2 aimDirection = float2::zero;
+	float2 secondaryAimDirection = float2::zero;
 
 	GameObject* player = nullptr;
 
-	// Special Attack
-	bool SpecialAttack(); // Rotation attack
+	float baseFireRate = 0.0f;
 
-	Timer specialAttackTimer;
+	// Special Attack
+	bool SpiralAttack();
+	bool UAttack();
+	bool DoubleSpiralAttack();
+	bool RotateAttack();
+
+	Timer spiralAttackTimer;
+	Timer UAttackTimer;
+
 	float2 specialAttackStartAim = float2::zero;
 	float specialAttackRot = 0.0f;
 
+	uint randomAttack = 0;
 	// Weapons
 	GameObject* blasterGameObject = nullptr;
 	Weapon* blasterWeapon = nullptr;
 
 	GameObject* sniperGameObject = nullptr;
 	Weapon* sniperWeapon = nullptr;
+
+	//Hands
+	GameObject* handLeft = nullptr;
+	GameObject* handRight = nullptr;
+
+	//float3 alternativeRight;
+	//float3 alternativeLeft;
+	//Game manager
+	GameManager* gameManager = nullptr;
+
+	C_Canvas* healthBarCanvas = nullptr;
+	C_UI_Image* healthBarImage = nullptr;
+	float healthMaxW = 0.0f;
 
 };
 

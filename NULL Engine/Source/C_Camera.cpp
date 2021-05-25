@@ -63,6 +63,8 @@ bool C_Camera::SaveState(ParsonNode& root) const
 
 	root.SetNumber("Type", (uint)GetType());
 
+	root.SetNumber("FarPlane", GetFarPlaneDistance());
+
 	root.SetNumber("MinFOV", minFov);
 	root.SetNumber("MaxFOV", maxFov);
 
@@ -80,6 +82,8 @@ bool C_Camera::LoadState(ParsonNode& root)
 	minFov = (uint)root.GetNumber("MinFOV");
 	maxFov = (uint)root.GetNumber("MaxFOV");
 
+	SetFarPlaneDistance(root.GetNumber("FarPlane"));
+
 	isCulling = root.GetBool("Culling");
 	inOrthogonalView = root.GetBool("OrthogonalView");
 	hideFrustum	= root.GetBool("HideFrustum");
@@ -92,12 +96,14 @@ void C_Camera::InitFrustum()
 {
 	frustum.SetKind(FrustumSpaceGL, FrustumRightHanded);
 
-	frustum.SetPos(float3(0.0f, 0.0f, 0.0f));
+	/*frustum.SetPos(float3(0.0f, 0.0f, 0.0f));
 	frustum.SetFront(float3::unitZ);
-	frustum.SetUp(float3::unitY);
+	frustum.SetUp(float3::unitY);*/
+	frustum.SetFrame({ 0.0f, 0.0f, 0.0f }, float3::unitZ, float3::unitY);
 
 	frustum.SetViewPlaneDistances(1.0f, 300.0f);
-	frustum.SetPerspective(1.0f, 1.0f);
+	//frustum.SetPerspective(0.785398f, 0.785398f);//45deg
+	frustum.SetPerspective(1.0f, 1.0f);//57deg
 
 	//frustum.SetOrthographic(10.0f, 10.0f);
 	//SetVerticalFOV(90);

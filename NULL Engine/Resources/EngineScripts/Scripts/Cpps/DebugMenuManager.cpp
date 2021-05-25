@@ -6,6 +6,7 @@
 
 #include "M_Input.h"
 #include "M_Scene.h"
+#include "M_UISystem.h"
 
 #include "C_Canvas.h"
 #include "C_UI_Button.h"
@@ -25,14 +26,12 @@ DebugMenuManager::~DebugMenuManager()
 
 void DebugMenuManager::Start()
 {
-	gameManager = App->scene->GetGameObjectByName(gameManagerName.c_str());
+	gameManager = App->scene->GetGameObjectByName("Game Manager"); //This is hardcoded. Too bad!
 	mando = App->scene->GetGameObjectByName(mandoName.c_str());
 
-	GameObject* a = App->scene->GetGameObjectByName(debugMenuCanvasName.c_str());
-	if(a != nullptr)
-		debugMenuCanvas = (C_Canvas*)a->GetComponent<C_Canvas>();
+	debugMenuCanvas = (C_Canvas*)gameObject->GetComponent<C_Canvas>();
 
-	a = App->scene->GetGameObjectByName(godModeName.c_str());
+	GameObject* a = App->scene->GetGameObjectByName(godModeName.c_str());
 	if (a != nullptr)
 		godMode = (C_UI_Button*)a->GetComponent<C_UI_Button>();
 
@@ -70,13 +69,15 @@ void DebugMenuManager::Update()
 	if(debugMenuCanvas != nullptr)
 		if (App->input->GetKey(SDL_SCANCODE_COMMA) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(4) == ButtonState::BUTTON_DOWN)
 		{
-			if (debugMenuCanvas->IsActive())
+			if (canvasActive)
 			{
-				debugMenuCanvas->SetIsActive(false);
+				App->uiSystem->RemoveActiveCanvas(debugMenuCanvas);
+				canvasActive = false;
 			}
 			else
 			{
-				debugMenuCanvas->SetIsActive(true);
+				App->uiSystem->PushCanvas(debugMenuCanvas);
+				canvasActive = true;
 			}
 		}
 

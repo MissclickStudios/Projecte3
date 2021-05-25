@@ -19,7 +19,7 @@ public:
 	bool SaveState(ParsonNode& root) const override;
 	bool LoadState(ParsonNode& root) override;
 
-	static inline ComponentType GetType() { return ComponentType::PARTICLES; }															// Required for templated methods such as GetComponent().
+	static inline ComponentType GetType() { return ComponentType::PARTICLE_SYSTEM; }															// Required for templated methods such as GetComponent().
 
 public:
 	void Reset();

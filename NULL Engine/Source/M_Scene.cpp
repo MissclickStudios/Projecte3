@@ -1,6 +1,7 @@
 #include "Profiler.h"
 #include "MathGeoTransform.h"
 
+#include "MC_Time.h"
 #include "JSONParser.h"
 #include "Random.h"
 
@@ -15,6 +16,7 @@
 #include "M_Editor.h"
 #include "M_ResourceManager.h"
 #include "M_UISystem.h"
+#include "M_Detour.h"
 
 #include "ResourceBase.h"
 #include "Resource.h"
@@ -22,6 +24,8 @@
 #include "R_Mesh.h"
 #include "R_Texture.h"
 #include "R_Scene.h"
+#include "R_Shader.h"
+#include "R_NavMesh.h"
 
 #include "GameObject.h"
 #include "Component.h"
@@ -42,6 +46,7 @@
 #include "M_Scene.h"
 #include "M_ScriptManager.h"
 
+#include "MC_Time.h"
 #include "MemoryManager.h"
 
 M_Scene::M_Scene(bool isActive) : Module("SceneManager", isActive),
@@ -49,7 +54,8 @@ masterRoot				(nullptr),
 sceneRoot				(nullptr),
 animationRoot			(nullptr),
 selectedGameObject		(nullptr),
-cullingCamera			(nullptr)
+cullingCamera			(nullptr),
+transitionProgresion	(0)
 {
 	CreateMasterRoot();
 	CreateSceneRoot("MainScene");
@@ -117,6 +123,7 @@ UpdateStatus M_Scene::Update(float dt)
 	HandleCopyGO();
 
 	// --- Sort GameObjects by Z-Buffer value
+	
 	//UpdateSceneFromRoot(sceneRoot);
 	
 	for (uint i = 0; i < gameObjects.size(); ++i)														// First Pass to Delete or Update the GOs' state.
@@ -171,7 +178,8 @@ UpdateStatus M_Scene::Update(float dt)
 		}
 	}
 	
-	ShowFPS();
+	//ShowFPS();
+
 
 	return UpdateStatus::CONTINUE;
 }
@@ -182,8 +190,16 @@ UpdateStatus M_Scene::PostUpdate(float dt)
 
 	if (nextScene)
 	{
-		LoadScene(nextSceneName.c_str());
-		nextScene = false;
+		if (noTransitions) 
+		{
+			LoadScene(nextSceneName.c_str());
+			nextScene = false;
+		}
+		else if (transitionProgresion >= 1.0f)
+		{
+			LoadScene(nextSceneName.c_str());
+			nextScene = false;
+		}
 	}
 
 	return UpdateStatus::CONTINUE;
@@ -240,9 +256,10 @@ bool M_Scene::LoadConfiguration(ParsonNode& root)
 // -------------- SCENE METHODS --------------
 bool M_Scene::SaveScene(const char* sceneName) const
 {
-	bool ret = true;
-
+	App->uiSystem->SaveCanvasChildrenOrder();
 	ParsonNode rootNode		= ParsonNode();
+
+	rootNode.SetNumber("ModTime", MC_Time::GetUnixTime());
 
 	ParsonArray modelArray = rootNode.SetArray("Models In Scene");
 	for (auto item = models.begin(); item != models.end(); ++item)
@@ -262,6 +279,12 @@ bool M_Scene::SaveScene(const char* sceneName) const
 
 	if (!strcmp(sceneName,AUTOSAVE_FILE_NAME))
 		rootNode.SetString("Autosaved Sene Name", currentScene.c_str());
+		
+	ParsonNode navMeshNode = rootNode.SetNode("NavMesh");
+	R_NavMesh* navMeshResource = (R_NavMesh*)App->detour->getNavMeshResource() ;
+	
+	navMeshNode.SetNumber("UID", (navMeshResource != nullptr) ? navMeshResource->GetUID() : 0);
+	navMeshNode.SetString("Assets Path", (navMeshResource != nullptr) ? navMeshResource->GetAssetsPath() : "[NONE]");
 
 	char* buffer		= nullptr;
 	std::string name	= (sceneName != nullptr) ? sceneName : sceneRoot->GetName();
@@ -294,13 +317,11 @@ bool M_Scene::SaveScene(const char* sceneName) const
 
 	RELEASE_ARRAY(buffer);
 
-	return ret;
+	return true;
 }
 
 bool M_Scene::LoadScene(const char* path)
 {
-	bool ret = true;
-
 	std::string sceneName;
 
 	App->fileSystem->SplitFilePath(path, nullptr, &sceneName);
@@ -318,7 +339,7 @@ bool M_Scene::LoadScene(const char* path)
 		return false;
 	}
 
-	int modTime = App->fileSystem->GetLastModTime(path);
+	
 	std::vector<GameObject*> prefabsToDelete;
 
 	if (buffer != nullptr)
@@ -327,7 +348,7 @@ bool M_Scene::LoadScene(const char* path)
 		if (App->gameState == GameState::PLAY)
 			App->scriptManager->CleanUpScripts();
 		CleanUp();
-		App->uiSystem->CleanUpScene();
+		App->uiSystem->ClearActiveCanvas();
 
 		//std::vector<GameObject*> parentMaintained;
 		//CleanUpCurrentScene(parentMaintained);
@@ -335,6 +356,7 @@ bool M_Scene::LoadScene(const char* path)
 		ParsonNode newRoot			= ParsonNode(buffer);
 		ParsonArray modelsArray		= newRoot.GetArray("Models In Scene");
 		ParsonArray objectsArray	= newRoot.GetArray("Game Objects");
+		int modTime = newRoot.GetNumber("ModTime");
 		RELEASE_ARRAY(buffer);
 
 		if (sceneName == AUTOSAVE_FILE_NAME)
@@ -454,6 +476,13 @@ bool M_Scene::LoadScene(const char* path)
 		
 		tmp.clear();
 		App->renderer->ClearRenderers();
+
+		//Nav Mesh
+		ParsonNode navMeshNode = newRoot.GetNode("NavMesh");
+		uint navMeshUid = navMeshNode.GetNumber("UID");
+		std::string navMeshPath = navMeshNode.GetString("Assets Path");
+
+		App->detour->loadNavMeshFile(navMeshUid, navMeshPath.c_str());
 	}
 
 	for (auto p = prefabsToDelete.begin(); p != prefabsToDelete.end(); ++p)
@@ -481,11 +510,12 @@ bool M_Scene::LoadScene(const char* path)
 
 	LOG("Successfully Loaded Scene: %s", path);
 
+	App->uiSystem->ReorderCanvasChildren();
 	//if (!CheckSceneLight()) AddSceneLight(App->renderer->GenerateSceneLight(Color(1.0f, 1.0f, 1.0f, 1.0f), Color(0.6, 0.6, 0.6, 0.5), Color(0.6, 0.6, 0.6, 0.5), LightType::DIRECTIONAL));
 	if (App->gameState == GameState::PLAY)
 		App->scriptManager->InitScripts();
 
-	return ret;
+	return true;
 }
 
 bool M_Scene::CleanUpCurrentScene(std::vector<GameObject*>& parentMaintained)						// ATTENTION: Look for a way to erase an item in a loop and keep iter. without problems.
@@ -737,10 +767,6 @@ void M_Scene::DeleteGameObject(GameObject* gameObject,  int index)
 	if (gameObject == animationRoot)
 	{
 		animationRoot = nullptr;
-	}
-	if (gameObject->GetComponent<C_UI_Button>() != nullptr)
-	{
-		App->uiSystem->DeleteActiveButton(gameObject->GetComponent<C_UI_Button>());
 	}
 	
 	auto item = models.find(gameObject->GetUID());
@@ -1406,9 +1432,7 @@ void M_Scene::GetPointLights(std::vector<GameObject*>& pointLights)
 
 void M_Scene::NextRoom()
 {
-	
 	nextScene = true;
-	
 }
 
 void M_Scene::HandleCopyGO() //TODO Cntrl + c / Cntrl + v
@@ -1458,6 +1482,17 @@ void M_Scene::ScriptChangeScene(const std::string& sceneName)
 {
 	nextScene = true;
 	nextSceneName = sceneName;
+}
+
+void M_Scene::DoSceneTransition(R_Shader* screenShader, float transitionSpeed)
+{
+	if (nextScene && transitionProgresion < 1.0f)
+		transitionProgresion += MC_Time::Game::GetDT() / transitionSpeed;
+
+	else if (!nextScene &&  transitionProgresion > 0.0f)
+		transitionProgresion -= (MC_Time::Game::GetDT() > 0.1f ? 0 : MC_Time::Game::GetDT() / transitionSpeed);
+
+	screenShader->SetUniform1f("progression", transitionProgresion);
 }
 
 void M_Scene::DeleteSelectedGameObject()

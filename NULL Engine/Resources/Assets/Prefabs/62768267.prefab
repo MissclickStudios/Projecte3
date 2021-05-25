@@ -1,0 +1,656 @@
+{
+    "ModTime": 1621895027,
+    "UID": 2043476571,
+    "ParentUID": 2005580296,
+    "PrefabID": 62768267,
+    "IsPrefab": true,
+    "Name": "HellYEah!",
+    "IsActive": true,
+    "IsStatic": false,
+    "IsSceneRoot": false,
+    "MaintainThroughScenes": false,
+    "ShowBoundingBoxes": true,
+    "NavigationInfo": {
+        "isNavigable": false,
+        "navigationArea": 0
+    },
+    "Components": [
+        {
+            "Type": 1,
+            "LocalPosition": [
+                0,
+                0,
+                0
+            ],
+            "LocalRotation": [
+                0,
+                0,
+                0,
+                1
+            ],
+            "LocalScale": [
+                1,
+                1,
+                1
+            ]
+        }
+    ],
+    "Children": [
+        {
+            "UID": 1117133214,
+            "ParentUID": 2043476571,
+            "PrefabID": 62768267,
+            "IsPrefab": true,
+            "Name": "Item Menu",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        3.814697265625e-06,
+                        7.62939453125e-06
+                    ],
+                    "LocalRotation": [
+                        7.4505823732806675e-09,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        0.99999988079071045
+                    ]
+                },
+                {
+                    "Type": 13,
+                    "Canvas": {
+                        "IsActive": true,
+                        "X": 0,
+                        "Y": 0,
+                        "W": 1.0926049947738647,
+                        "H": 0.5787392258644104
+                    }
+                },
+                {
+                    "Type": 24,
+                    "ResourceUID": 643521645,
+                    "AssetsPath": "Assets\/Scripts\/\/ItemMenuManager.h",
+                    "DataName": "ItemMenuManager",
+                    "HasInspector": true,
+                    "InspectorVariables": [
+                        {
+                            "Type": 5,
+                            "Name": "canvasName",
+                            "string": "Item Menu"
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "buyButtonName",
+                            "string": "Buy Button"
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "nameTextName",
+                            "string": "Name Text"
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "descriptionTextName",
+                            "string": "Description Text"
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "priceTextName",
+                            "string": "Price Text"
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "playerName",
+                            "string": "Mandalorian"
+                        }
+                    ]
+                },
+                {
+                    "Type": 3,
+                    "Texture": {
+                        "AssetsPath": "Assets\/Textures\/\/UI\/Shop\/ShopIconArmor.png",
+                        "AssetsName": "ShopIconArmor.png",
+                        "LibaryPath": "Library\/Textures\/739427130.netex",
+                        "LibraryFile": "739427130.netex"
+                    }
+                }
+            ],
+            "Children": [
+                {
+                    "UID": 1138249235,
+                    "ParentUID": 1117133214,
+                    "PrefabID": 62768267,
+                    "IsPrefab": true,
+                    "Name": "Buy Button",
+                    "IsActive": true,
+                    "IsStatic": false,
+                    "IsSceneRoot": false,
+                    "MaintainThroughScenes": false,
+                    "ShowBoundingBoxes": false,
+                    "NavigationInfo": {
+                        "isNavigable": false,
+                        "navigationArea": 0
+                    },
+                    "Components": [
+                        {
+                            "Type": 1,
+                            "LocalPosition": [
+                                0,
+                                0,
+                                0
+                            ],
+                            "LocalRotation": [
+                                0,
+                                0,
+                                0,
+                                1
+                            ],
+                            "LocalScale": [
+                                1,
+                                1,
+                                1
+                            ]
+                        },
+                        {
+                            "Type": 23,
+                            "X": 0,
+                            "Y": -0.029999999329447746,
+                            "W": 0.079999998211860657,
+                            "H": 0.079999998211860657,
+                            "idler": -2147483648,
+                            "idleg": -2147483648,
+                            "idleb": -2147483648,
+                            "idlea": -2147483648,
+                            "hoveredr": -2147483648,
+                            "hoveredg": -2147483648,
+                            "hoveredb": -2147483648,
+                            "hovereda": -2147483648,
+                            "pressedr": -2147483648,
+                            "pressedg": -2147483648,
+                            "pressedb": -2147483648,
+                            "presseda": -2147483648,
+                            "pixelCoords": [
+                                723229,
+                                0,
+                                -1,
+                                -1
+                            ],
+                            "textureCoords": {
+                                "x": 0,
+                                "y": 0,
+                                "w": 1,
+                                "h": 1
+                            },
+                            "childOrder": 0
+                        }
+                    ],
+                    "Children": []
+                },
+                {
+                    "UID": 1167592988,
+                    "ParentUID": 1117133214,
+                    "PrefabID": 62768267,
+                    "IsPrefab": true,
+                    "Name": "Name Text",
+                    "IsActive": true,
+                    "IsStatic": false,
+                    "IsSceneRoot": false,
+                    "MaintainThroughScenes": false,
+                    "ShowBoundingBoxes": false,
+                    "NavigationInfo": {
+                        "isNavigable": false,
+                        "navigationArea": 0
+                    },
+                    "Components": [
+                        {
+                            "Type": 1,
+                            "LocalPosition": [
+                                0,
+                                0,
+                                0
+                            ],
+                            "LocalRotation": [
+                                0,
+                                0,
+                                0,
+                                1
+                            ],
+                            "LocalScale": [
+                                1,
+                                1,
+                                1
+                            ]
+                        },
+                        {
+                            "Type": 22,
+                            "Text": "Item Name",
+                            "Color": [
+                                1,
+                                1,
+                                1,
+                                1
+                            ],
+                            "X": -0.70999997854232788,
+                            "Y": -0.4699999988079071,
+                            "W": 0.086000002920627594,
+                            "H": 0.0010000000474974513,
+                            "childOrder": 1
+                        }
+                    ],
+                    "Children": []
+                },
+                {
+                    "UID": 1744456433,
+                    "ParentUID": 1117133214,
+                    "PrefabID": 62768267,
+                    "IsPrefab": true,
+                    "Name": "Description Text",
+                    "IsActive": true,
+                    "IsStatic": false,
+                    "IsSceneRoot": false,
+                    "MaintainThroughScenes": false,
+                    "ShowBoundingBoxes": false,
+                    "NavigationInfo": {
+                        "isNavigable": false,
+                        "navigationArea": 0
+                    },
+                    "Components": [
+                        {
+                            "Type": 1,
+                            "LocalPosition": [
+                                0,
+                                0,
+                                0
+                            ],
+                            "LocalRotation": [
+                                0,
+                                0,
+                                0,
+                                1
+                            ],
+                            "LocalScale": [
+                                1,
+                                1,
+                                1
+                            ]
+                        },
+                        {
+                            "Type": 22,
+                            "Text": "Item Description",
+                            "Color": [
+                                1,
+                                1,
+                                1,
+                                1
+                            ],
+                            "X": -0.86500000953674316,
+                            "Y": -0.67500001192092896,
+                            "W": 0.035000000149011612,
+                            "H": 0.85100001096725464,
+                            "childOrder": 2
+                        }
+                    ],
+                    "Children": []
+                },
+                {
+                    "UID": 1828764427,
+                    "ParentUID": 1117133214,
+                    "PrefabID": 62768267,
+                    "IsPrefab": true,
+                    "Name": "Price Text",
+                    "IsActive": true,
+                    "IsStatic": false,
+                    "IsSceneRoot": false,
+                    "MaintainThroughScenes": false,
+                    "ShowBoundingBoxes": false,
+                    "NavigationInfo": {
+                        "isNavigable": false,
+                        "navigationArea": 0
+                    },
+                    "Components": [
+                        {
+                            "Type": 1,
+                            "LocalPosition": [
+                                0,
+                                0,
+                                0
+                            ],
+                            "LocalRotation": [
+                                0,
+                                0,
+                                0,
+                                1
+                            ],
+                            "LocalScale": [
+                                1,
+                                1,
+                                1
+                            ]
+                        },
+                        {
+                            "Type": 22,
+                            "Text": "Item Price",
+                            "Color": [
+                                1,
+                                1,
+                                1,
+                                1
+                            ],
+                            "X": -0.47499999403953552,
+                            "Y": -0.82999998331069946,
+                            "W": 0.056000001728534698,
+                            "H": 0.0010000000474974513,
+                            "childOrder": 3
+                        }
+                    ],
+                    "Children": []
+                },
+                {
+                    "UID": 1561500660,
+                    "ParentUID": 1117133214,
+                    "PrefabID": 62768267,
+                    "IsPrefab": true,
+                    "Name": "Rarity Text",
+                    "IsActive": true,
+                    "IsStatic": false,
+                    "IsSceneRoot": false,
+                    "MaintainThroughScenes": false,
+                    "ShowBoundingBoxes": false,
+                    "NavigationInfo": {
+                        "isNavigable": false,
+                        "navigationArea": 0
+                    },
+                    "Components": [
+                        {
+                            "Type": 1,
+                            "LocalPosition": [
+                                0,
+                                0,
+                                0
+                            ],
+                            "LocalRotation": [
+                                0,
+                                0,
+                                0,
+                                1
+                            ],
+                            "LocalScale": [
+                                1,
+                                1,
+                                1
+                            ]
+                        },
+                        {
+                            "Type": 22,
+                            "Text": "Item Rarity",
+                            "Color": [
+                                1,
+                                0,
+                                0,
+                                1
+                            ],
+                            "X": -0.70499998331069946,
+                            "Y": -0.54000002145767212,
+                            "W": 0.061000000685453415,
+                            "H": 0.0010000000474974513,
+                            "childOrder": 4
+                        }
+                    ],
+                    "Children": []
+                },
+                {
+                    "UID": 1866616759,
+                    "ParentUID": 1117133214,
+                    "PrefabID": 62768267,
+                    "IsPrefab": true,
+                    "Name": "ItemImage",
+                    "IsActive": true,
+                    "IsStatic": false,
+                    "IsSceneRoot": false,
+                    "MaintainThroughScenes": false,
+                    "ShowBoundingBoxes": false,
+                    "NavigationInfo": {
+                        "isNavigable": false,
+                        "navigationArea": 0
+                    },
+                    "Components": [
+                        {
+                            "Type": 1,
+                            "LocalPosition": [
+                                0,
+                                0,
+                                0
+                            ],
+                            "LocalRotation": [
+                                0,
+                                0,
+                                0,
+                                1
+                            ],
+                            "LocalScale": [
+                                1,
+                                1,
+                                1
+                            ]
+                        },
+                        {
+                            "Type": 21,
+                            "X": -0.86500000953674316,
+                            "Y": -0.55000001192092896,
+                            "W": 0.10499999672174454,
+                            "H": 0.13500000536441803,
+                            "imgColor": {
+                                "r": 1,
+                                "g": 1,
+                                "b": 1,
+                                "a": 1
+                            },
+                            "textureCoords": {
+                                "x": 0,
+                                "y": 0,
+                                "w": 1,
+                                "h": 1
+                            },
+                            "inspectorTextureCoords": {
+                                "x": 176485744,
+                                "y": 179329312,
+                                "w": 0,
+                                "h": 0
+                            },
+                            "childOrder": 5
+                        },
+                        {
+                            "Type": 3,
+                            "Texture": {
+                                "AssetsPath": "Assets\/Textures\/\/UI\/Shop\/ShopIconArmor.png",
+                                "AssetsName": "ShopIconArmor.png",
+                                "LibaryPath": "Library\/Textures\/739427130.netex",
+                                "LibraryFile": "739427130.netex"
+                            },
+                            "Shader": {
+                                "AssetsPath": "Assets\/Shaders\/UIShader.shader",
+                                "AssetsName": "UIShader.shader",
+                                "LibaryPath": "Library\/Shaders\/1025410539.neshader",
+                                "LibraryFile": "1025410539.neshader"
+                            }
+                        }
+                    ],
+                    "Children": []
+                },
+                {
+                    "UID": 1976252356,
+                    "ParentUID": 1117133214,
+                    "PrefabID": 62768267,
+                    "IsPrefab": true,
+                    "Name": "ShopPriceBackground",
+                    "IsActive": true,
+                    "IsStatic": false,
+                    "IsSceneRoot": false,
+                    "MaintainThroughScenes": false,
+                    "ShowBoundingBoxes": false,
+                    "NavigationInfo": {
+                        "isNavigable": false,
+                        "navigationArea": 0
+                    },
+                    "Components": [
+                        {
+                            "Type": 1,
+                            "LocalPosition": [
+                                0,
+                                0,
+                                0
+                            ],
+                            "LocalRotation": [
+                                0,
+                                0,
+                                0,
+                                1
+                            ],
+                            "LocalScale": [
+                                1,
+                                1,
+                                1
+                            ]
+                        },
+                        {
+                            "Type": 21,
+                            "X": -0.48500001430511475,
+                            "Y": -0.86000001430511475,
+                            "W": 0.14000000059604645,
+                            "H": 0.094999998807907104,
+                            "imgColor": {
+                                "r": 1,
+                                "g": 1,
+                                "b": 1,
+                                "a": 1
+                            },
+                            "textureCoords": {
+                                "x": 0,
+                                "y": 0,
+                                "w": 1,
+                                "h": 1
+                            },
+                            "inspectorTextureCoords": {
+                                "x": 176485744,
+                                "y": 179329312,
+                                "w": 0,
+                                "h": 0
+                            },
+                            "childOrder": 6
+                        },
+                        {
+                            "Type": 3,
+                            "Texture": {
+                                "AssetsPath": "Assets\/Textures\/\/UI\/Shop\/ShopPriceTag.png",
+                                "AssetsName": "ShopPriceTag.png",
+                                "LibaryPath": "Library\/Textures\/1341745659.netex",
+                                "LibraryFile": "1341745659.netex"
+                            },
+                            "Shader": {
+                                "AssetsPath": "Assets\/Shaders\/UIShader.shader",
+                                "AssetsName": "UIShader.shader",
+                                "LibaryPath": "Library\/Shaders\/1025410539.neshader",
+                                "LibraryFile": "1025410539.neshader"
+                            }
+                        }
+                    ],
+                    "Children": []
+                },
+                {
+                    "UID": 1092206747,
+                    "ParentUID": 1117133214,
+                    "PrefabID": 62768267,
+                    "IsPrefab": true,
+                    "Name": "ShopBackground",
+                    "IsActive": true,
+                    "IsStatic": false,
+                    "IsSceneRoot": false,
+                    "MaintainThroughScenes": false,
+                    "ShowBoundingBoxes": false,
+                    "NavigationInfo": {
+                        "isNavigable": false,
+                        "navigationArea": 0
+                    },
+                    "Components": [
+                        {
+                            "Type": 1,
+                            "LocalPosition": [
+                                0,
+                                0,
+                                0
+                            ],
+                            "LocalRotation": [
+                                0,
+                                0,
+                                0,
+                                1
+                            ],
+                            "LocalScale": [
+                                1,
+                                1,
+                                1
+                            ]
+                        },
+                        {
+                            "Type": 21,
+                            "X": -0.94499999284744263,
+                            "Y": -0.94499999284744263,
+                            "W": 0.65499997138977051,
+                            "H": 0.625,
+                            "imgColor": {
+                                "r": 1,
+                                "g": 1,
+                                "b": 1,
+                                "a": 1
+                            },
+                            "textureCoords": {
+                                "x": 0,
+                                "y": 0,
+                                "w": 1,
+                                "h": 1
+                            },
+                            "inspectorTextureCoords": {
+                                "x": 176485744,
+                                "y": 179329312,
+                                "w": 0,
+                                "h": 0
+                            },
+                            "childOrder": 7
+                        },
+                        {
+                            "Type": 3,
+                            "Texture": {
+                                "AssetsPath": "Assets\/Textures\/\/UI\/Shop\/ShopBackground.png",
+                                "AssetsName": "ShopBackground.png",
+                                "LibaryPath": "Library\/Textures\/1623138519.netex",
+                                "LibraryFile": "1623138519.netex"
+                            },
+                            "Shader": {
+                                "AssetsPath": "Assets\/Shaders\/UIShader.shader",
+                                "AssetsName": "UIShader.shader",
+                                "LibaryPath": "Library\/Shaders\/1025410539.neshader",
+                                "LibraryFile": "1025410539.neshader"
+                            }
+                        }
+                    ],
+                    "Children": []
+                }
+            ]
+        }
+    ]
+} 

@@ -10,7 +10,23 @@
 #include "C_RigidBody.h"
 #include "C_AudioSource.h"
 
+#include "MathGeoLib/include/Math/MathFunc.h"
 #include "Bullet.h"
+
+#include "Random.h"
+
+#include <algorithm>
+
+struct {
+	bool operator()(Perk a, Perk b) const
+	{
+		if (a.Type() >= b.Type())
+			return false;
+		if (a.Type() < b.Type())
+			return true;
+		return false;
+	}
+} perkSort;
 
 struct Projectile
 {
@@ -47,9 +63,15 @@ void Weapon::Start()
 			std::string name = source->GetEventName();
 
 			if (name == "weapon_laser_01")
+			{
 				shootAudio = source;
+				shootAudio->SetVolume(0.5f);
+			}
 			else if (name == "weapon_laser_02_02")
+			{
 				shootAudio = source;
+				shootAudio->SetVolume(0.25f);
+			}
 			else if (name == "weapon_reload_01")
 				reloadAudio = source;
 			else if (name == "weapon_reload_02")
@@ -81,13 +103,36 @@ void Weapon::CleanUp()
 	hand = nullptr;
 }
 
+void Weapon::OnPause()
+{
+	//fireRateTimer.Pause();
+	reloadTimer.Pause();
+
+	WeaponPause();
+}
+
+void Weapon::OnResume()
+{
+	//fireRateTimer.Resume();
+	reloadTimer.Resume();
+
+	WeaponResume();
+}
+
 ShootState Weapon::Shoot(float2 direction)
 {
 	ShootState state = ShootLogic();
 	if (state == ShootState::FIRED_PROJECTILE)
 	{
-		FireProjectile(direction);
-
+		if (projectilesPerShot > 1 && shotSpreadArea > 0)
+		{
+			SpreadProjectiles(direction);
+		}
+		else if (projectilesPerShot != 0)
+		{
+			FireProjectile(direction);
+		}
+		
 		ammo -= projectilesPerShot;
 		if (ammo < 0)
 			ammo = 0;
@@ -115,7 +160,7 @@ bool Weapon::Reload()
 	return false;
 }
 
-void Weapon::SetOwnership(EntityType type, GameObject* hand)
+void Weapon::SetOwnership(EntityType type, GameObject* hand, std::string handName)
 {
 	this->hand = hand;
 
@@ -124,15 +169,15 @@ void Weapon::SetOwnership(EntityType type, GameObject* hand)
 
 	SetUp();
 
+	if (this->hand != nullptr && weaponModelPrefab.uid != NULL)
+	{
+		GameObject* skeletonHand = GetHand(this->hand->parent, handName);
+		if (skeletonHand)
+			weaponModel = App->resourceManager->LoadPrefab(weaponModelPrefab.uid, skeletonHand); // Load the prefab onto a gameobject
+	}
+
 	if (type == EntityType::PLAYER)
 	{
-		if (weaponModelPrefab.uid != NULL)
-		{
-			GameObject* skeletonHand = App->scene->GetGameObjectByName("mixamorig:RightHand");
-			if (skeletonHand)
-				weaponModel = App->resourceManager->LoadPrefab(weaponModelPrefab.uid, skeletonHand); // Load the prefab onto a gameobject
-		}
-
 		if (!projectiles)
 			return;
 		for (uint i = 0; i < projectileNum; ++i)
@@ -163,72 +208,159 @@ void Weapon::ProjectileCollisionReport(int index)
 	projectiles[index]->object->transform->SetLocalPosition(float3::zero);
 }
 
-void Weapon::RefreshPerks()
+void Weapon::RefreshPerks(bool reset)
 {
 	// Reset modifiers and on hit effects to avoid overwritting
 	damageModifier = DEFAULT_MODIFIER;
 	projectileSpeedModifier = DEFAULT_MODIFIER;
 	fireRateModifier = DEFAULT_MODIFIER;
 	reloadTimeModifier = DEFAULT_MODIFIER;
-	maxAmmoModifier = 0.0f;
+	maxAmmoModifier = DEFAULT_MODIFIER;
 	PPSModifier = 0.0f;
+
 	onHitEffects.clear();
 
+	if (reset)
+	{
+		perks.clear();
+		return;
+	}
 	// Apply each perk
 	for (uint i = 0; i < perks.size(); ++i)
-		switch (perks[i])
+		switch (perks[i].Type())
 		{
-		case Perk::DAMAGE_UP:
-			DamageUp();
+		case PerkType::DAMAGE_MODIFY:
+			DamageModify(&perks[i]);
 			break;
-		case Perk::MAXAMMO_UP:
-			MaxAmmoUp();
+		case PerkType::MAXAMMO_MODIFY:
+			MaxAmmoModify(&perks[i]);
 			break;
-		case Perk::FIRERATE_UP:
-			FireRateUp();
+		case PerkType::FIRERATE_MODIFY:
+			FireRateModify(&perks[i]);
 			break;
-		case Perk::FAST_RELOAD:
-			FastReload();
+		case PerkType::RELOAD_TIME_MODIFY:
+			ReloadTimeModify(&perks[i]);
 			break;
-		case Perk::FREEZE_BULLETS:
-			FreezeBullets();
+		case PerkType::BULLET_LIFETIME_MODIFY:
+			BulletLifeTimeModify(&perks[i]);
+			break;
+		case PerkType::SPREAD_MODIFY:
+			SpreadModify(&perks[i]);
+			break;
+		case PerkType::FREEZE_BULLETS:
+			FreezeBullets(&perks[i]);
+			break;
+		case PerkType::STUN_BULLETS:
+			StunBullets(&perks[i]);
+			break;
+		case PerkType::JACKET_BULLETS:
+			JacketBullets(&perks[i]);
 			break;
 		}
 }
 
-void Weapon::AddPerk(Perk perk)
+void Weapon::AddPerk(PerkType type, float amount, float duration)
 {
-	perks.push_back(perk);
+	perks.push_back(Perk(type, amount, duration));
+	std::sort(perks.begin(), perks.end(), perkSort);
 	RefreshPerks();
 }
 
-void Weapon::DamageUp()
+void Weapon::DamageModify(Perk* perk)
 {
-	damageModifier += 1.0f;
+	damageModifier *= perk->Amount();
 }
 
-void Weapon::MaxAmmoUp()
+void Weapon::MaxAmmoModify(Perk* perk)
 {
-	maxAmmoModifier += 10;
+	maxAmmoModifier *= perk->Amount();
 }
 
-void Weapon::FireRateUp()
+void Weapon::FireRateModify(Perk* perk)
 {
-	fireRateModifier -= 0.5f;
-	if (fireRateModifier < 0.1f)
-		fireRateModifier = 0.1f;
+	float requestedFireRate = fireRate * fireRateModifier * perk->Amount();
+	if (requestedFireRate >= fireRateCap)
+		fireRateModifier *= perk->Amount();
 }
 
-void Weapon::FastReload()
+void Weapon::ReloadTimeModify(Perk* perk)
 {
-	reloadTime -= 0.2f;
-	if (reloadTime < 0.1f)
-		reloadTime = 0.1f;
+	float requestedReloadTime = reloadTime * reloadTimeModifier * perk->Amount();
+	if (requestedReloadTime >= reloadTimeCap)
+		reloadTimeModifier *= perk->Amount();
 }
 
-void Weapon::FreezeBullets()
+void Weapon::BulletLifeTimeModify(Perk* perk)
 {
-	onHitEffects.emplace_back(Effect(EffectType::FROZEN, 4.0f, false));
+	bulletLifeTimeModifier *= perk->Amount();
+}
+
+void Weapon::SpreadModify(Perk* perk)
+{
+	spreadRadiusModifier *= perk->Amount();
+}
+
+void Weapon::FreezeBullets(Perk* perk)
+{
+	onHitEffects.emplace_back(Effect(EffectType::FROZEN, perk->Duration(), perk->Amount()));
+}
+
+void Weapon::StunBullets(Perk* perk)
+{
+	onHitEffects.emplace_back(Effect(EffectType::STUN, perk->Duration(), false, 0.0f, perk->Amount()));
+}
+
+void Weapon::JacketBullets(Perk* perk)
+{
+	float extraDamage = Damage() * perk->Amount() - Damage();
+	onHitEffects.emplace_back(Effect(EffectType::BOSS_PIERCING, 0.0f, true, extraDamage));
+}
+
+void Weapon::SpreadProjectiles(float2 direction)
+{
+	float sin = math::Sin(DegToRad(shotSpreadArea));
+
+	float cos = math::Cos(DegToRad(shotSpreadArea));
+
+	float2 initialDirection = direction;
+	for (uint i = 0; i < projectilesPerShot; ++i)
+	{
+		FireProjectile(direction);
+
+		if (i < projectilesPerShot / 2)
+		{
+			direction = float2(cos * direction.x + (-sin * direction.y), sin * direction.x + (cos * direction.y));
+		}
+		else if (i == int(projectilesPerShot / 2))
+		{
+			direction = initialDirection;
+			sin = math::Sin(DegToRad(-shotSpreadArea));
+			cos = math::Cos(DegToRad(-shotSpreadArea));
+
+			direction = float2(cos * direction.x + (-sin * direction.y), sin * direction.x + (cos * direction.y));
+
+		}
+		else if (i >= projectilesPerShot / 2)
+		{
+			direction = float2(cos * direction.x + (-sin * direction.y), sin * direction.x + (cos * direction.y));
+		}
+	}
+}
+
+GameObject* Weapon::GetHand(GameObject* object, std::string handName)
+{
+	for (int i = 0; i < object->childs.size(); ++i)
+	{
+		std::string name = object->childs[i]->GetName();
+		bool check = (name == handName);
+		if (check)
+			return object->childs[i];
+
+		GameObject* output = GetHand(object->childs[i], handName);
+		if (output != nullptr)
+			return output;
+	}
+	return nullptr;
 }
 
 void Weapon::CreateProjectiles()
@@ -308,7 +440,20 @@ void Weapon::FireProjectile(float2 direction)
 
 	float3 position = float3::zero;
 	if (hand)
+	{
 		position = hand->transform->GetWorldPosition();
+		float3 spread = SpreadRadius();
+		if (!spread.IsZero())
+		{
+			float x = Random::LCG::GetBoundedRandomFloat(-spread.x, spread.x);
+			float y = Random::LCG::GetBoundedRandomFloat(-spread.y, spread.y);
+			float z = Random::LCG::GetBoundedRandomFloat(-spread.z, spread.z);
+
+			position.x += x;
+			position.y += y;
+			position.z += z;
+		}
+	}
 
 	if (projectile->object)
 	{

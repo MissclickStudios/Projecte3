@@ -119,6 +119,8 @@ void M_FileSystem::CreateLibraryDirectories()
 	CreateDir(ASSETS_SCRIPTS_PATH);
 	CreateDir(ASSETS_TEXTURES_PATH);
 
+	CreateDir(ASSETS_DIALOGS_PATH);
+
 	CreateDir(LIBRARY_PATH);
 	CreateDir(ANIMATIONS_PATH);
 	CreateDir(BONES_PATH);
@@ -292,6 +294,8 @@ void M_FileSystem::DiscoverAllFilesFiltered(const char* directory, std::vector<s
 		LOG("[ERROR] File System: Could not Discover All Files inside the { %s } directory! Error: Given Directory does not exist.", directory);
 		return;
 	}
+
+	LOG("DiscoverAllFilesFiltered 0");
 	if (filter == nullptr)
 	{
 		std::vector<std::string> directories;
@@ -299,24 +303,30 @@ void M_FileSystem::DiscoverAllFilesFiltered(const char* directory, std::vector<s
 		directories.clear();
 		return;
 	}
-
+	LOG("DiscoverAllFilesFiltered 1");
 	char** fileListing = PHYSFS_enumerateFiles(directory);
-
+	LOG("DiscoverAllFilesFiltered 2");
 	for (char** file = fileListing; *file != nullptr; ++file)
 	{
+		LOG(" Um what path : %s", file);
 		std::string path = directory + std::string("/") + *file;
 
+		LOG(" Try path : %s", path.c_str());
 		if (IsDirectory(path.c_str()))
 		{
+			LOG("path : %s went true", path.c_str());
 			DiscoverAllFilesFiltered(path.c_str(), files, filteredFiles, filter);
 		}
 		else
 		{
+			LOG("path : %s went true", path.c_str());
 			(HasExtension(*file, filter)) ? filteredFiles.push_back(path): files.push_back(path);
 		}
 	}
+	LOG("DiscoverAllFilesFiltered 3");
 
 	PHYSFS_freeList(fileListing);
+	LOG("DiscoverAllFilesFiltered 4");
 }
 
 void M_FileSystem::GetAllFilesWithFilter(const char* directory, std::vector<std::string>& fileList, const char* nameFilter, const char* extFilter) const
@@ -932,16 +942,26 @@ std::string M_FileSystem::GetDirectory(const char* path)
 std::string M_FileSystem::GetLastDirectory(const char* path)
 {	
 	std::string fullPath	= NormalizePath(path);											// Assets/Dir/LastDir/File.extension. Normalized to avoid errors regarding "\".
-	std::string dirPath	= "";
-	std::string lastDir	= "";
+	std::string dirPath		= "";
+	std::string lastDir		= "";
 
 	SplitFilePath(fullPath.c_str(), &dirPath, nullptr, nullptr);							// Assets/Dir/LastDir/
 
-	dirPath			= dirPath.substr(0, dirPath.size() - 1);							// Assets/Dir/LastDir
+	dirPath				= dirPath.substr(0, dirPath.size() - 1);							// Assets/Dir/LastDir
 	uint last_dir_start	= dirPath.find_last_of("/") + 1;									// Getting the position of the "/" before the last directory.
-	lastDir			= dirPath.substr(last_dir_start, dirPath.size()) + "/";			// LastDir/
+	lastDir				= dirPath.substr(last_dir_start, dirPath.size()) + "/";				// LastDir/
 
 	return lastDir;
+}
+
+std::string M_FileSystem::GetFile(const char* path)
+{
+	std::string fullPath	= NormalizePath(path);
+	std::string file		= "";
+	
+	SplitFilePath(fullPath.c_str(), nullptr, &file, nullptr);
+
+	return file;
 }
 
 std::string M_FileSystem::GetFileExtension(const char* path)

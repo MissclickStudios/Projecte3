@@ -44,7 +44,7 @@ playing		(false)
 	durationInSeconds		= (animation != nullptr) ? (duration / animation->GetTicksPerSecond()) : 0.0f;
 }
 
-bool AnimatorClip::StepClip(const float& dt)
+bool AnimatorClip::StepClip(float dt)
 {
 	if (animation == nullptr)
 		return false;
@@ -126,12 +126,12 @@ bool AnimatorClip::ClipIsValid() const
 
 void AnimatorClip::StepClipToPrevKeyframe()
 {
-	tick = (tick != start) ? --tick : end;
+	tick = ((tick + start) > start) ? --tick : (end - start);
 }
 
 void AnimatorClip::StepClipToNextKeyframe()
 {
-	tick = (tick != end) ? ++tick : start;
+	tick = ((tick + start) < end) ? ++tick : 0;
 }
 
 // --- CLIP TIME DATA GET/SET METHODS

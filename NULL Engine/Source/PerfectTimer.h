@@ -18,6 +18,8 @@ public:
 	double	ReadMs		() const;
 	uint64	ReadTicks	() const;
 
+	bool IsActive() { return running; }
+
 private:
 	bool			running;				// Will keep track of whether or not the timer is still active.
 	uint64			startedAt;				// Will keep track of the exact moment at which the timer started running.

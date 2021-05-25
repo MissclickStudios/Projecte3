@@ -24,6 +24,7 @@
 #include "FileSystemDefinitions.h"
 #include "M_FileSystem.h"
 #include "M_Scene.h"
+#include "M_UISystem.h"
 
 #include "C_Transform.h"
 
@@ -66,10 +67,16 @@ bool M_ResourceManager::Init(ParsonNode& configuration)
 
 bool M_ResourceManager::Start()
 {
+	LOG("Starting Resource Manager");
 	RefreshDirectoryFiles(ASSETS_DIRECTORY);
+	LOG("1");
 	RefreshDirectoryFiles(ENGINE_DIRECTORY);
+	LOG("2");
+	//TrimLibrary();
 
 	FindPrefabs();
+
+	LOG("End Start resource manager");
 
 	return true;
 }
@@ -359,6 +366,17 @@ Resource* M_ResourceManager::GetResourceFromLibrary(const char* assetsPath)
 	}
 
 	return resource;
+}
+
+Resource* M_ResourceManager::GetResourceFromLibrary(uint32 UID)
+{
+	auto resourceBase = library.find(UID);
+	if (resourceBase == library.end())
+	{
+		return nullptr;
+	}
+
+	return GetResourceFromLibrary(resourceBase->second.assetsPath.c_str());
 }
 
 void M_ResourceManager::RefreshProjectDirectories()
@@ -934,7 +952,11 @@ void M_ResourceManager::UpdatePrefab(GameObject* gameObject)
 
 void M_ResourceManager::SavePrefab(GameObject* gameObject, uint _prefabId)
 {
+	//Always reorder ui before saving prefabs or scenes
+	App->uiSystem->SaveCanvasChildrenOrder();
 	ParsonNode rootNode;
+
+	rootNode.SetNumber("ModTime", MC_Time::GetUnixTime());
 
 	SavePrefabObject(gameObject,&rootNode);
 
@@ -1032,23 +1054,26 @@ void M_ResourceManager::RefreshDirectoryFiles(const char* directory)
 	std::vector<std::string> filesToUpdate;															// Also update the .meta and reimport all those files that have been modified.
 	std::vector<std::string> filesToDelete;
 
+	LOG("RefreshDirectoryFiles 0");
 	RefreshDirectory(directory, filesToImport, filesToUpdate, filesToDelete);
-
+	LOG("RefreshDirectoryFiles 1");
 	for (uint i = 0; i < filesToDelete.size(); ++i)
 	{
 		//DeleteFromAssets(files_to_delete[i].c_str());
 		DeleteFromLibrary(filesToDelete[i].c_str());
 	}
+	LOG("RefreshDirectoryFiles 2");
 	for (uint i = 0; i < filesToUpdate.size(); ++i)
 	{
 		DeleteFromLibrary(filesToUpdate[i].c_str());
 		ImportFile(filesToUpdate[i].c_str());
 	}
+	LOG("RefreshDirectoryFiles 3");
 	for (uint i = 0; i < filesToImport.size(); ++i)
 	{
 		ImportFile(filesToImport[i].c_str());
 	}
-
+	LOG("RefreshDirectoryFiles 4");
 	filesToDelete.clear();
 	filesToUpdate.clear();
 	filesToImport.clear();
@@ -1067,14 +1092,18 @@ void M_ResourceManager::RefreshDirectory(const char* directory, std::vector<std:
 	std::vector<std::string> metaFiles;
 	std::map<std::string, std::string> filePairs;
 
+	LOG("RefreshDirectory 0");
 	App->fileSystem->DiscoverAllFilesFiltered(directory, assetFiles, metaFiles, DOTLESS_META_EXTENSION);
 
+	LOG("RefreshDirectory 1");
 	FindFilesToImport(assetFiles, metaFiles, filePairs, filesToImport);											// Always call in this order!
+	LOG("RefreshDirectory 2");
 	FindFilesToUpdate(filePairs, filesToUpdate);																// At the very least FindFilesToImport() has to be the first to be called
+	LOG("RefreshDirectory 3");
 	FindFilesToDelete(metaFiles, filePairs, filesToDelete);														// as it is the one to fill file_pairs with asset and meta files!
-
+	LOG("RefreshDirectory 4");
 	LoadValidFilesIntoLibrary(filePairs);																		// Will emplace all valid files' UID & library path into the library map.
-
+	LOG("RefreshDirectory 5");
 	filePairs.clear();
 	metaFiles.clear();
 	assetFiles.clear();
@@ -1241,6 +1270,37 @@ bool M_ResourceManager::DeleteFromLibrary(const char* assetsPath)
 	resourceUids.clear();
 
 	return ret;
+}
+
+bool M_ResourceManager::TrimLibrary()
+{
+	std::vector<std::string> files;
+	std::vector<std::string> directories;
+	App->fileSystem->DiscoverAllFiles(LIBRARY_PATH, files, directories, nullptr);
+
+	std::map<std::string, uint32> fileUIDs;
+	for (auto file = files.cbegin(); file != files.cend(); ++file)
+	{
+		uint32 UID = 0;
+		sscanf(App->fileSystem->GetFile((*file).c_str()).c_str(), "%u", &UID);
+
+		if (UID != 0)
+			fileUIDs.emplace((*file), UID);
+	}
+
+	for (auto UID = fileUIDs.cbegin(); UID != fileUIDs.cend(); ++UID)
+	{
+		if (library.find(UID->second) == library.end())
+		{
+			App->fileSystem->Remove(UID->first.c_str());
+		}
+	}
+
+	fileUIDs.clear();
+	directories.clear();
+	files.clear();
+
+	return true;
 }
 
 bool M_ResourceManager::GetResourceUIDsFromMeta(const char* assetsPath, std::vector<uint32>& resourceUids)
@@ -1606,19 +1666,17 @@ void M_ResourceManager::FindPrefabs()
 	
 	char* buffer = nullptr;
 	std::string fileName;
-	int modTime = 0;
 	for (auto file = files.begin(); file != files.end(); file++)
 	{
 		fileName = ASSETS_PREFABS_PATH + (*file);
 		App->fileSystem->Load(fileName.c_str(), &buffer);
 
 		ParsonNode prefab(buffer);
+		int modTime = prefab.GetNumber("ModTime");
 		RELEASE_ARRAY(buffer);
 
 		std::string id;
 		App->fileSystem->SplitFilePath((*file).c_str(), nullptr, &id);
-
-		modTime = App->fileSystem->GetLastModTime(fileName.c_str());
 		
 		prefabs.emplace(atoi((*file).c_str()), Prefab(atoi((*file).c_str()),prefab.GetString("Name"),modTime));												// atoi()? Will there be any problems if you just emplace(a, b)?
 	}
@@ -1652,7 +1710,7 @@ uint32 M_ResourceManager::ImportFromAssets(const char* assetsPath)
 		case ResourceType::SHADER:			{ success = Importer::Shaders::Import(resource->GetAssetsPath(), (R_Shader*)resource); }	break;
 		case ResourceType::PARTICLE_SYSTEM:	{ success = Importer::ImportParticles(buffer, (R_ParticleSystem*)resource); }				break;
 		case ResourceType::SCRIPT:			{ success = Importer::Scripts::Import(assetsPath, buffer, read, (R_Script*)resource); }		break;
-		case ResourceType::NAVMESH:	{ success = Importer::ImportNavMesh(buffer, (R_NavMesh*)resource); }						break;
+		case ResourceType::NAVMESH:			{ success = Importer::ImportNavMesh(buffer, (R_NavMesh*)resource); }						break;
 		}
 
 		RELEASE_ARRAY(buffer);

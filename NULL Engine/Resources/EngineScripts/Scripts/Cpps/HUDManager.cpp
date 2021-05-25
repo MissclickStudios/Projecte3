@@ -11,6 +11,8 @@
 #include "M_ResourceManager.h"
 #include "C_Material.h"
 #include "R_Texture.h"
+#include "M_UISystem.h"
+#include "Weapon.h"
 
 
 HUDManager::HUDManager() : Script()
@@ -43,21 +45,9 @@ void HUDManager::Start()
 	if (a != nullptr)
 		creditsImage = (C_2DAnimator*)a->GetComponent<C_2DAnimator>();
 
-	a = App->scene->GetGameObjectByName(debugMenuCanvasName.c_str());
-	if (a != nullptr)
-		debugMenuCanvas = (C_Canvas*)a->GetComponent<C_Canvas>();
-
-	a = App->scene->GetGameObjectByName(hubShopCanvasName.c_str());
-	if (a != nullptr)
-		hubShopCanvas = (C_Canvas*)a->GetComponent<C_Canvas>();
-
-	a = App->scene->GetGameObjectByName(hudCanvasName.c_str());
-	if (a != nullptr)
-		hudCanvas = (C_Canvas*)a->GetComponent<C_Canvas>();
-
-	a = App->scene->GetGameObjectByName(pauseMenuCanvasName.c_str());
-	if (a != nullptr)
-		pauseMenuCanvas = (C_Canvas*)a->GetComponent<C_Canvas>();
+	hudCanvas = (C_Canvas*)gameObject->GetComponent<C_Canvas>();
+	if(hudCanvas)
+		App->uiSystem->PushCanvas(hudCanvas);
 
 	a = App->scene->GetGameObjectByName(creditsTextName.c_str());
 	if (a != nullptr)
@@ -87,55 +77,75 @@ void HUDManager::Start()
 	if (a != nullptr)
 		heart3 = (C_Material*)a->GetComponent<C_Material>();
 
+	a = App->scene->GetGameObjectByName(heart1Name.c_str());
+	if (a != nullptr)
+		heart1Image = (C_2DAnimator*)a->GetComponent<C_2DAnimator>();
+
+	a = App->scene->GetGameObjectByName(heart2Name.c_str());
+	if (a != nullptr)
+		heart2Image = (C_2DAnimator*)a->GetComponent<C_2DAnimator>();
+
+	a = App->scene->GetGameObjectByName(heart3Name.c_str());
+	if (a != nullptr)
+		heart3Image = (C_2DAnimator*)a->GetComponent<C_2DAnimator>();
+
+	a = App->scene->GetGameObjectByName(weapon1Name.c_str());
+	if (a != nullptr)
+		weapon1 = a;
+
+	a = App->scene->GetGameObjectByName(weapon2Name.c_str());
+	if (a != nullptr)
+		weapon2 = a;
+
+	a = App->scene->GetGameObjectByName(weapon3Name.c_str());
+	if (a != nullptr)
+		weapon3 = a;
+
+	a = App->scene->GetGameObjectByName(weapon4Name.c_str());
+	if (a != nullptr)
+		weapon4 = a;
+
+
 	fullHeart = (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/UI/HUD/HeartFull.png");
 	emptyHeart = (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/UI/HUD/HeartEmpty.png");
 	halfHeart = (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/UI/HUD/HeartHalf.png");
+
+	health1 = false;
+	health2 = false;
+	health3 = false;
+	health4 = false;
+	health5 = false;
+	health6 = false;
 
 	hitAlready = false;
 }
 
 void HUDManager::Update()
 {
-	//Pau Pedra did this
-	if(debugMenuCanvas != nullptr && hubShopCanvas != nullptr && hudCanvas != nullptr && pauseMenuCanvas != nullptr)
-		if (debugMenuCanvas->IsActive() || hubShopCanvas->IsActive() || pauseMenuCanvas->IsActive())
-		{
-			if (hudCanvas->IsActive())
-				hudCanvas->SetIsActive(false);
-		}
-		else
-		{
-			if(!hudCanvas->IsActive())
-				hudCanvas->SetIsActive(true);
-		}
 
-	if (beskarText != nullptr)
+	if (beskarText != nullptr && player != nullptr)
 	{
-		if (player != nullptr)
-		{
-			std::string tmp = "";
-			tmp += std::to_string(player->hubCurrency).c_str();
-			beskarText->SetText(tmp.c_str());
-		}
+		std::string tmp = "";
+		tmp += std::to_string(player->hubCurrency).c_str();
+		beskarText->SetText(tmp.c_str());
 	}
 
-	if (creditsText != nullptr)
+	if (creditsText != nullptr && player != nullptr)
 	{
-		if (player != nullptr)
-		{
-			std::string tmp = "";
-			tmp += std::to_string(player->currency).c_str();
-			creditsText->SetText(tmp.c_str());
-		}
+
+		std::string tmp = "";
+		tmp += std::to_string(player->currency).c_str();
+		creditsText->SetText(tmp.c_str());
 	}
 
-	if (ammoText != nullptr)
+	if (ammoText != nullptr && player != nullptr)
 	{
-		if (player != nullptr)
+		Weapon* weapon = player->GetCurrentWeapon();
+		if (weapon)
 		{
-			std::string tmp = std::to_string(player->GetCurrentWeapon()->ammo);
-			tmp += " / " ;
-			tmp += std::to_string(player->GetCurrentWeapon()->maxAmmo);
+			std::string tmp = std::to_string(weapon->ammo);
+			tmp += " / ";
+			tmp += std::to_string(weapon->maxAmmo);
 			ammoText->SetText(tmp.c_str());
 		}
 	}
@@ -153,7 +163,7 @@ void HUDManager::Update()
 				hitAlready = true;
 			}
 		}
-
+		/*
 		//Reload primary weapon
 		if (primaryWeaponImage != nullptr)
 		{
@@ -174,6 +184,7 @@ void HUDManager::Update()
 			if (App->input->GetGameControllerButton(1) == ButtonState::BUTTON_DOWN)
 				primaryWeaponImage->PlayAnimation(false, 2);
 		}
+		*/
 /*
 		//Reload secondary weapon
 		if (secondaryWeaponImage != nullptr)
@@ -203,11 +214,11 @@ void HUDManager::Update()
 				creditsImage->PlayAnimation(false, 1);
 		}
 			//Dash animation
-		if (dashImage != nullptr)
-		{
-			if (App->input->GetGameControllerTrigger(0) == ButtonState::BUTTON_DOWN)
-				dashImage->PlayAnimation(false, 1);
-		}
+	//	if (dashImage != nullptr)
+	//	{
+	//		if (App->input->GetGameControllerTrigger(0) == ButtonState::BUTTON_DOWN)
+	//			dashImage->PlayAnimation(false, 1);
+	//	}
 
 		if (!player->hitTimer.IsActive())
 			hitAlready = false;
@@ -226,40 +237,123 @@ void HUDManager::CleanUp()
 		App->resourceManager->FreeResource(emptyHeart->GetUID());
 }
 
+void HUDManager::ManageWeaponHUD()
+{
+	switch (type) 
+	{
+	case WeaponType::BLASTER:
+
+		break;
+	case WeaponType::MINIGUN:
+
+		break;
+	case WeaponType::SHOTGUN:
+
+		break;
+	case WeaponType::SNIPER:
+
+		break;
+	case WeaponType::WEAPON:
+
+		break;
+	}
+
+}
+
 void HUDManager::ManageHeartImage(int hp)
 {
-	
+
 	switch(hp) 
 	{
 	case 0:
 		heart1->SwapTexture(emptyHeart);
 		heart2->SwapTexture(emptyHeart);
 		heart3->SwapTexture(emptyHeart);
+		if (!health1)
+		{
+			heart1Image->PlayAnimation(false, 1);
+			health1 = true;
+		}
+		health2 = false;
+		health3 = false;
+		health4 = false;
+		health5 = false;
+		health6 = false;
 		break;
 	case 1:	  
 		heart1->SwapTexture(halfHeart);
 		heart2->SwapTexture(emptyHeart);
 		heart3->SwapTexture(emptyHeart);
+		if (!health2)
+		{
+		heart1Image->PlayAnimation(false, 2);
+		health2 = true;
+		}
+		health1 = false;
+		health3 = false;
+		health4 = false;
+		health5 = false;
+		health6 = false;
 		break;
 	case 2:	  
 		heart1->SwapTexture(fullHeart);
 		heart2->SwapTexture(emptyHeart);
 		heart3->SwapTexture(emptyHeart);
+		if (!health3)
+		{
+		heart2Image->PlayAnimation(false, 1);
+		health3 = true;
+		}
+		health1 = false;
+		health2 = false;
+		health4 = false;
+		health5 = false;
+		health6 = false;
 		break;
 	case 3:	 
 		heart1->SwapTexture(fullHeart);
 		heart2->SwapTexture(halfHeart);
 		heart3->SwapTexture(emptyHeart);
+		if (!health4)
+		{
+		heart2Image->PlayAnimation(false, 2);
+		health4 = true;
+		}
+		health1 = false;
+		health2 = false;
+		health3 = false;
+		health5 = false;
+		health6 = false;
 		break;
 	case 4:	  
 		heart1->SwapTexture(fullHeart);
 		heart2->SwapTexture(fullHeart);
 		heart3->SwapTexture(emptyHeart);
+		if (!health5)
+		{
+		heart3Image->PlayAnimation(false, 1);
+		health5 = true;
+		}
+		health1 = false;
+		health2 = false;
+		health3 = false;
+		health4 = false;
+		health6 = false;
 		break;
 	case 5:	  
 		heart1->SwapTexture(fullHeart);
 		heart2->SwapTexture(fullHeart);
 		heart3->SwapTexture(halfHeart);
+		if (!health6)
+		{
+		heart3Image->PlayAnimation(false, 2);
+		health6 = true;
+		}
+		health1 = false;
+		health2 = false;
+		health3 = false;
+		health4 = false;
+		health5 = false;
 		break;
 	case 6:		
 		heart1->SwapTexture(fullHeart);
