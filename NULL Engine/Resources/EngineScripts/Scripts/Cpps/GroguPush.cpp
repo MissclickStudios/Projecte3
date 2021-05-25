@@ -16,6 +16,8 @@
 #include "C_RigidBody.h"
 #include "GroguPush.h"
 
+#include "Player.h"
+
 GroguPush* CreateGroguPush()
 {
 	GroguPush* script = new GroguPush();
@@ -49,6 +51,10 @@ void GroguPush::Start()
 	if (tmp != nullptr)
 		gameManager = (GameManager*)tmp->GetScript("GameManager");
 
+	/*tmp = App->scene->GetGameObjectByName(playerName.c_str());
+	if (tmp != nullptr)
+		playerScript = (Player*)tmp->GetScript("Player");*/
+
 }
 
 void GroguPush::Update()
@@ -58,13 +64,8 @@ void GroguPush::Update()
 	abilityCollider->SetTrigger(false);
 	abilityCollider->SetIsActive(false);
 
-
-
-
 	if ((App->input->GetKey(SDL_SCANCODE_G) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(SDL_CONTROLLER_BUTTON_LEFTSHOULDER) == ButtonState::BUTTON_DOWN) && (abilityCooldownTimer.ReadSec() > abilityCooldown) && gameManager->storyDialogState.defeatedIG11FirstTime)
 	{
-
-
 		doAbility = true;
 
 		abilityCollider->SetIsActive(true);
@@ -72,10 +73,8 @@ void GroguPush::Update()
 
 		abilityCooldownTimer.Start();
 
+		//playerScript->SetPlayerInteraction(InteractionType::SIGNAL_GROGU);
 	}
-
-
-
 }
 
 void GroguPush::CleanUp()
