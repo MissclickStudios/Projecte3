@@ -13,6 +13,7 @@ class C_UI_Image;
 class C_UI_Text;
 class C_UI_Button;
 class Player;
+class HUBArmorer;
 
 enum class DialogState
 {
@@ -92,6 +93,8 @@ public:
 	C_UI_Button* dialogButton = nullptr;
 
 	Player* mando = nullptr;
+
+	HUBArmorer* armorer = nullptr;
 
 	std::string dialogCanvasName = "DialogCanvas";
 	std::string speakerImageName = "SpeakerImage";
