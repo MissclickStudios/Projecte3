@@ -69,9 +69,9 @@ bool M_ResourceManager::Start()
 {
 	LOG("Starting Resource Manager");
 	RefreshDirectoryFiles(ASSETS_DIRECTORY);
-	LOG("1");
+
 	RefreshDirectoryFiles(ENGINE_DIRECTORY);
-	LOG("2");
+
 	//TrimLibrary();
 
 	FindPrefabs();
@@ -1054,26 +1054,22 @@ void M_ResourceManager::RefreshDirectoryFiles(const char* directory)
 	std::vector<std::string> filesToUpdate;															// Also update the .meta and reimport all those files that have been modified.
 	std::vector<std::string> filesToDelete;
 
-	LOG("RefreshDirectoryFiles 0");
 	RefreshDirectory(directory, filesToImport, filesToUpdate, filesToDelete);
-	LOG("RefreshDirectoryFiles 1");
+
 	for (uint i = 0; i < filesToDelete.size(); ++i)
 	{
 		//DeleteFromAssets(files_to_delete[i].c_str());
 		DeleteFromLibrary(filesToDelete[i].c_str());
 	}
-	LOG("RefreshDirectoryFiles 2");
 	for (uint i = 0; i < filesToUpdate.size(); ++i)
 	{
 		DeleteFromLibrary(filesToUpdate[i].c_str());
 		ImportFile(filesToUpdate[i].c_str());
 	}
-	LOG("RefreshDirectoryFiles 3");
 	for (uint i = 0; i < filesToImport.size(); ++i)
 	{
 		ImportFile(filesToImport[i].c_str());
 	}
-	LOG("RefreshDirectoryFiles 4");
 	filesToDelete.clear();
 	filesToUpdate.clear();
 	filesToImport.clear();
@@ -1092,18 +1088,16 @@ void M_ResourceManager::RefreshDirectory(const char* directory, std::vector<std:
 	std::vector<std::string> metaFiles;
 	std::map<std::string, std::string> filePairs;
 
-	LOG("RefreshDirectory 0");
 	App->fileSystem->DiscoverAllFilesFiltered(directory, assetFiles, metaFiles, DOTLESS_META_EXTENSION);
 
-	LOG("RefreshDirectory 1");
 	FindFilesToImport(assetFiles, metaFiles, filePairs, filesToImport);											// Always call in this order!
-	LOG("RefreshDirectory 2");
+
 	FindFilesToUpdate(filePairs, filesToUpdate);																// At the very least FindFilesToImport() has to be the first to be called
-	LOG("RefreshDirectory 3");
+
 	FindFilesToDelete(metaFiles, filePairs, filesToDelete);														// as it is the one to fill file_pairs with asset and meta files!
-	LOG("RefreshDirectory 4");
+
 	LoadValidFilesIntoLibrary(filePairs);																		// Will emplace all valid files' UID & library path into the library map.
-	LOG("RefreshDirectory 5");
+
 	filePairs.clear();
 	metaFiles.clear();
 	assetFiles.clear();

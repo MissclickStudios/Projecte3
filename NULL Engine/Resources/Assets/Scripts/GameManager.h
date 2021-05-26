@@ -19,6 +19,18 @@ class PerfectTimer;
 
 struct ItemData;
 
+struct FixedLevelNames
+{
+    std::string hub = "HUB";
+    std::string l1Initial = "InitialL1";
+    std::string l1Shop = "ShopL1";
+    std::string ruinsShop = "Shop_Ruins";
+    std::string l1Boss = "BossL1";
+    std::string ruinsBoss = "Boss_Ruins";
+    std::string winScene = "WinScene";
+    std::string loseScene = "LoseScene";
+};
+
 class StoryDialogData
 {
 public:
@@ -93,6 +105,8 @@ public:
     Prefab groguPrefab;
     Grogu* groguScript = nullptr;
 
+    //Room Name Vars
+    FixedLevelNames levelNames;
     
     
     Prefab mistPlane1;

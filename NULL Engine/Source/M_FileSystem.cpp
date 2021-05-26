@@ -303,30 +303,25 @@ void M_FileSystem::DiscoverAllFilesFiltered(const char* directory, std::vector<s
 		directories.clear();
 		return;
 	}
-	LOG("DiscoverAllFilesFiltered 1");
+
 	char** fileListing = PHYSFS_enumerateFiles(directory);
-	LOG("DiscoverAllFilesFiltered 2");
+
 	for (char** file = fileListing; *file != nullptr; ++file)
 	{
-		LOG(" Um what path : %s", file);
-		std::string path = directory + std::string("/") + *file;
 
-		LOG(" Try path : %s", path.c_str());
+		std::string path = directory + std::string("/") + *file; //This may crash if file name is too long?
+
 		if (IsDirectory(path.c_str()))
 		{
-			LOG("path : %s went true", path.c_str());
 			DiscoverAllFilesFiltered(path.c_str(), files, filteredFiles, filter);
 		}
 		else
 		{
-			LOG("path : %s went true", path.c_str());
 			(HasExtension(*file, filter)) ? filteredFiles.push_back(path): files.push_back(path);
 		}
 	}
-	LOG("DiscoverAllFilesFiltered 3");
 
 	PHYSFS_freeList(fileListing);
-	LOG("DiscoverAllFilesFiltered 4");
 }
 
 void M_FileSystem::GetAllFilesWithFilter(const char* directory, std::vector<std::string>& fileList, const char* nameFilter, const char* extFilter) const
