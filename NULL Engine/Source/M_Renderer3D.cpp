@@ -1,3 +1,5 @@
+#include <algorithm>
+
 #include "JSONParser.h"
 #include "Profiler.h"													
 //#include "OpenGL.h"
@@ -889,6 +891,8 @@ void M_Renderer3D::AddRenderersBatch(const std::vector<MeshRenderer>& meshRender
 
 void M_Renderer3D::RenderMeshes()
 {	
+	std::sort(meshRenderers.cbegin(), meshRenderers.cend(), []() {});
+	
 	for (uint i = 0; i < meshRenderers.size(); ++i)
 	{
 
