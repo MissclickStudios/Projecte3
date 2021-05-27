@@ -891,7 +891,16 @@ void M_Renderer3D::AddRenderersBatch(const std::vector<MeshRenderer>& meshRender
 
 void M_Renderer3D::RenderMeshes()
 {	
-	std::sort(meshRenderers.cbegin(), meshRenderers.cend(), []() {});
+	C_Camera* currentCamera = App->camera->GetCurrentCamera();
+	float3 cameraPos = (currentCamera != nullptr) ? currentCamera->GetFrustum().Pos() : float3::zero;
+	/*std::multimap<float, MeshRenderer> sortedRenderers;
+	for (auto mRenderer = meshRenderers.cbegin(); mRenderer != meshRenderers.cend(); ++mRenderer)
+	{
+		float distanceToCamera = (*mRenderer).transform->GetWorldPosition().DistanceSq(cameraPos);
+		sortedRenderers.emplace(distanceToCamera, (*mRenderer));
+	}*/
+	
+	std::sort(meshRenderers.begin(), meshRenderers.end(), [&cameraPos](MeshRenderer mRendererA, MeshRenderer mRendererB) { return (mRendererA.transform->GetWorldPosition().Distance(cameraPos)) > (mRendererB.transform->GetWorldPosition().Distance(cameraPos)); });
 	
 	for (uint i = 0; i < meshRenderers.size(); ++i)
 	{
@@ -1649,6 +1658,8 @@ void MeshRenderer::Render(bool outline)
 	ClearTextureAndMaterial();																								// Clear the specifications applied in ApplyTextureAndMaterial().
 	ClearDebugParameters();																									// Clear the specifications applied in ApplyDebugParameters().
 
+	/*glDisable(GL_STENCIL_TEST);
+	glDisable(GL_BLEND);*/
 	
 
 	// --- DEBUG DRAW ---
