@@ -23,16 +23,15 @@ public:
 	std::string hubShopCanvasName = "HUBShopCanvas";
 
 	float talkDistance = 10.f;
+
+	bool menuOpen = false;
 private:
 	C_Canvas* hubShopCanvas = nullptr;
 	Player* mando = nullptr;
 	GameManager* gameManager = nullptr;
 	HUBArmorerState state = HUBArmorerState::INACTIVE;
+
+	
 };
 
-SCRIPTS_FUNCTION HUBArmorer* CreateHUBArmorer() {
-	HUBArmorer* script = new HUBArmorer();
-	INSPECTOR_STRING(script->mandoName);
-	INSPECTOR_STRING(script->hubShopCanvasName);
-	return script;
-}
+SCRIPTS_FUNCTION HUBArmorer* CreateHUBArmorer();

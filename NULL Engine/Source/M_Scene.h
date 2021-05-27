@@ -87,6 +87,7 @@ public:																														// --- MASTER ROOT & SCENE ROOT METHODS ---
 	GameObject*		GetMasterRoot						() const;															// 
 
 	const char*		GetCurrentScene						() const;
+	const char*		GetCurrentSceneJson			() const;
 	void			CreateSceneRoot						(const char* sceneName);											//
 	GameObject*		GetSceneRoot						() const;															//
 	void			SetSceneRoot						(GameObject* gameObject);											//

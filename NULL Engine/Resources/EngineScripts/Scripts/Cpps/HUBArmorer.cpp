@@ -48,6 +48,7 @@ void HUBArmorer::Update()
 				if (App->input->GetKey(SDL_SCANCODE_B) == KeyState::KEY_UP || App->input->GetGameControllerButton(0) == ButtonState::BUTTON_UP ) // A/X button on controller
 				{
 					App->uiSystem->PushCanvas(hubShopCanvas);
+					menuOpen = true;
 					state = HUBArmorerState::ACTIVE;
 					gameManager->TalkedToArmorer();
 				}
@@ -58,6 +59,8 @@ void HUBArmorer::Update()
 			if (App->input->GetKey(SDL_SCANCODE_B) == KeyState::KEY_UP || App->input->GetGameControllerButton(1) == ButtonState::BUTTON_UP) // B/Square button on controller
 			{
 				App->uiSystem->RemoveActiveCanvas(hubShopCanvas);
+				mando->SetPlayerInteraction(InteractionType::NONE);
+				menuOpen = false;
 				state = HUBArmorerState::INACTIVE;
 			}
 			break;
@@ -65,4 +68,11 @@ void HUBArmorer::Update()
 			state = HUBArmorerState::INACTIVE; break;
 		}
 	}
+}
+
+HUBArmorer* CreateHUBArmorer() {
+	HUBArmorer* script = new HUBArmorer();
+	INSPECTOR_STRING(script->mandoName);
+	INSPECTOR_STRING(script->hubShopCanvasName);
+	return script;
 }
