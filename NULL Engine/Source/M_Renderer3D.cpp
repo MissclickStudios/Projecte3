@@ -900,7 +900,8 @@ void M_Renderer3D::RenderMeshes()
 		sortedRenderers.emplace(distanceToCamera, (*mRenderer));
 	}*/
 	
-	std::sort(meshRenderers.begin(), meshRenderers.end(), [&cameraPos](MeshRenderer mRendererA, MeshRenderer mRendererB) { return (mRendererA.transform->GetWorldPosition().Distance(cameraPos)) > (mRendererB.transform->GetWorldPosition().Distance(cameraPos)); });
+	//std::sort(meshRenderers.begin(), meshRenderers.end(), [&cameraPos](MeshRenderer mRendererA, MeshRenderer mRendererB) { return (mRendererA.transform->GetWorldPosition().Distance(cameraPos)) > (mRendererB.transform->GetWorldPosition().Distance(cameraPos)); });
+	std::sort(meshRenderers.begin(), meshRenderers.end(), [&cameraPos](MeshRenderer mRendererA, MeshRenderer mRendererB) { return (mRendererA.transform->GetWorldPosition().y) < (mRendererB.transform->GetWorldPosition().y); });
 	
 	for (uint i = 0; i < meshRenderers.size(); ++i)
 	{
