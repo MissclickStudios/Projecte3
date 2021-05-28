@@ -3606,9 +3606,13 @@ void E_Inspector::DisplayEmitterInstances(C_ParticleSystem* cParticleSystem)
 
 				for (auto it = textures.begin(); it != textures.end(); ++it)
 				{
+					
+					if (strstr((*it).assetsPath.c_str(), "Particles") == nullptr)
+						continue;
+
 					bool isSelected = true;
 
-					if(emitter->emitterTexture != nullptr)
+					if (emitter->emitterTexture != nullptr)
 						isSelected = (strcmp(emitter->emitterTexture->GetAssetsPath(), (*it).assetsPath.c_str()) == 0);
 
 					if (ImGui::Selectable(App->fileSystem->GetLastDirectoryAndFile((*it).assetsPath.c_str()).c_str(), isSelected))
@@ -3617,6 +3621,7 @@ void E_Inspector::DisplayEmitterInstances(C_ParticleSystem* cParticleSystem)
 					}
 					if (isSelected)
 						ImGui::SetItemDefaultFocus();
+					
 				}
 				ImGui::EndCombo();
 			}

@@ -294,6 +294,7 @@ void M_FileSystem::DiscoverAllFilesFiltered(const char* directory, std::vector<s
 		LOG("[ERROR] File System: Could not Discover All Files inside the { %s } directory! Error: Given Directory does not exist.", directory);
 		return;
 	}
+
 	if (filter == nullptr)
 	{
 		std::vector<std::string> directories;
@@ -303,10 +304,9 @@ void M_FileSystem::DiscoverAllFilesFiltered(const char* directory, std::vector<s
 	}
 
 	char** fileListing = PHYSFS_enumerateFiles(directory);
-
 	for (char** file = fileListing; *file != nullptr; ++file)
 	{
-		std::string path = directory + std::string("/") + *file;
+		std::string path = directory + std::string("/") + *file;										// This can crash the application if the file path is too long.
 
 		if (IsDirectory(path.c_str()))
 		{

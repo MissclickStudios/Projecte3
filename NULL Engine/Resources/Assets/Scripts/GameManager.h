@@ -19,6 +19,18 @@ class PerfectTimer;
 
 struct ItemData;
 
+struct FixedLevelNames
+{
+    std::string hub = "HUB";
+    std::string l1Initial = "InitialL1";
+    std::string l1Shop = "ShopL1";
+    std::string ruinsShop = "Shop_Ruins";
+    std::string l1Boss = "BossL1";
+    std::string ruinsBoss = "Boss_Ruins";
+    std::string winScene = "WinScene";
+    std::string loseScene = "LoseScene";
+};
+
 class StoryDialogData
 {
 public:
@@ -31,7 +43,20 @@ public:
 
     void Save(ParsonNode *node);
     void Load(ParsonNode *node);
-    
+};
+
+class RunStats
+{
+public:
+    uint attempt = 0;
+    uint runKills = 0;
+    float runPrecision = 0.f;
+    uint runTime = 0;
+    std::string weaponUsed = "Rifle";
+
+    void Save(ParsonNode* node);
+    void Load(ParsonNode* node);
+    void ResetRun();
 };
 
 
@@ -60,6 +85,8 @@ public:
     void KilledIG11();
     void TalkedToArmorer();
     void BoughtFromArmorer();
+
+    void SetUpWinScreen();
 
 private:
     //Level Generator
@@ -93,6 +120,8 @@ public:
     Prefab groguPrefab;
     Grogu* groguScript = nullptr;
 
+    //Room Name Vars
+    FixedLevelNames levelNames;
     
     
     Prefab mistPlane1;
@@ -112,6 +141,9 @@ public:
 
     //Story & dialog vars
     StoryDialogData storyDialogState;
+
+    //Win screen stats
+    RunStats runStats;
 
 private:
 
@@ -135,7 +167,7 @@ private:
     float backtrackDuration = 1.0f;
     Timer backtrackTimer;
 
-    
+    bool instantiatedSandstorm = false;
    
 
     // Items

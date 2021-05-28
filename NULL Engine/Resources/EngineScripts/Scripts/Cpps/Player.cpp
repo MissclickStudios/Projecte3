@@ -313,6 +313,7 @@ void Player::SaveState(ParsonNode& playerNode)
 	}
 
 	playerNode.SetInteger("Equiped Gun", (int)equipedGun.uid);
+	LOG("Saved Equiped gun uid : %d", equipedGun.uid);
 	playerNode.SetBool("Using Equiped Gun", usingSecondaryGun);
 	if (blasterWeapon != nullptr)
 		playerNode.SetInteger("Blaster Ammo", blasterWeapon->ammo);
@@ -383,11 +384,13 @@ void Player::LoadState(ParsonNode& playerNode)
 	// TODO: Load correct secondary gun
 	//equipedGunGameObject = App->resourceManager->LoadPrefab(playerNode.GetInteger("Equiped Gun"), App->scene->GetSceneRoot());
 	uint uid = (uint)playerNode.GetInteger("Equiped Gun");
+	LOG("Equiped gun loaded uid : %d", uid);
 	if (uid == NULL)
 		uid = equipedGun.uid;
 	secondaryGunGameObject = App->resourceManager->LoadPrefab(uid, App->scene->GetSceneRoot());
 	if (secondaryGunGameObject != nullptr)
 	{
+		equipedGun.uid = uid;
 		secondaryWeapon = (Weapon*)GetObjectScript(secondaryGunGameObject, ObjectType::WEAPON);
 
 		if (secondaryWeapon != nullptr)
@@ -580,22 +583,6 @@ void Player::SetPlayerInteraction(InteractionType type, float duration)
 	case InteractionType::OPEN_CHEST:		{ OpenChest(); }	break;
 	case InteractionType::SIGNAL_GROGU:		{ SignalGrogu(); }	break;
 	}
-
-	/*if (duration != 0.0f)
-	{
-		interactionDuration = duration;
-	}
-	else
-	{
-		switch (type)
-		{
-		case InteractionType::TALK:				{ interactionDuration = GetAnimatorClipDuration("Talk"); }			break;
-		case InteractionType::USE:				{ interactionDuration = GetAnimatorClipDuration("Use"); }			break;
-		case InteractionType::BUY:				{ interactionDuration = GetAnimatorClipDuration("Use"); }			break;
-		case InteractionType::OPEN_CHEST:		{ interactionDuration = GetAnimatorClipDuration("OpenChest"); }		break;
-		case InteractionType::SIGNAL_GROGU:		{ interactionDuration = GetAnimatorClipDuration("SignalGrogu"); }	break;
-		}
-	}*/
 }
 
 void Player::AnimatePlayer()
@@ -921,6 +908,7 @@ void Player::ManageMovement()
 		if (health <= 0.0f)
 		{
 			moveState = PlayerState::DEAD_IN;
+			aimState = AimState::IDLE;
 		}
 		else
 		{
@@ -1345,7 +1333,7 @@ void Player::GatherInteractionInputs()
 	
 	if (currentInteraction == InteractionType::NONE)
 	{
-		if (App->input->GetKey(SDL_SCANCODE_G) == KeyState::KEY_DOWN)
+		if (App->input->GetKey(SDL_SCANCODE_G) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(SDL_CONTROLLER_BUTTON_LEFTSHOULDER) == ButtonState::BUTTON_DOWN)
 		{
 			SetPlayerInteraction(InteractionType::SIGNAL_GROGU);
 		}

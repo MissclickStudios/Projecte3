@@ -2,10 +2,14 @@
 #include "ScriptMacros.h"
 #include "MathGeoLib/include/Math/float3.h"
 
+#include "Player.h"
+
 class GameObject;
 class C_BoxCollider;
 class C_AudioSource;
 class GameManager;
+
+class Player;
 
 class SCRIPTS_API GroguPush : public Object ALLOWED_INHERITANCE
 {
@@ -37,7 +41,10 @@ private:
 
 	Timer abilityCooldownTimer;
 
+
 	GameManager* gameManager = nullptr;
+
+	Player* playerScript = nullptr;
 
 public:
 

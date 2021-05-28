@@ -1093,6 +1093,12 @@ const char* M_Scene::GetCurrentScene() const
 	return currentScene.c_str();
 }
 
+const char* M_Scene::GetCurrentSceneJson() const
+{
+	std::string ret = currentScene + "Json";
+	return ret.c_str(); //This might be problematic?
+}
+
 void M_Scene::CreateSceneRoot(const char* sceneName)
 {
 	if (masterRoot == nullptr)

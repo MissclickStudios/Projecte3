@@ -284,6 +284,7 @@
     <ClCompile Include="Source\Timeline.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="resource1.h" />
     <ClInclude Include="Source\CurveEditor.h" />
     <ClInclude Include="Source\Dependencies\ImGuizmo\include\ImGuizmo.h" />
     <ClInclude Include="Source\Dependencies\ImGui\include\imconfig.h" />
@@ -340,6 +341,12 @@
     <ProjectReference Include="EngineCore.vcxproj">
       <Project>{746cc4c3-787f-4b0e-aa66-e388fe3ff4f6}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="MissclickEngine.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Resources\Assets\Icons\MissclickLogo.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

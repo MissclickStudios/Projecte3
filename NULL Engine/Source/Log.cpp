@@ -19,6 +19,11 @@ void log(const char file[], int line, const char* format, ...)
 	sprintf_s(tmpString2, 4096, "\n%s(%d) : %s", file, line, tmpString);
 	OutputDebugString(tmpString2);
 
+	//Leave this here for debugging purposes
+	//FILE* files = fopen("Logs.txt", "a");
+	//fputs(tmpString2, files);
+	//fclose(files);
+
 	if (App != nullptr)
 	{
 		App->AddEditorLog(tmpString2);

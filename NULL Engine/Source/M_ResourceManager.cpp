@@ -238,7 +238,7 @@ uint M_ResourceManager::SaveResourceToLibrary(Resource* resource)
 	case ResourceType::SHADER:			{ written = Importer::Shaders::Save((R_Shader*)resource, &buffer); }			break;
 	case ResourceType::PARTICLE_SYSTEM:	{ written = Importer::Particles::Save((R_ParticleSystem*)resource, &buffer); }	break;
 	case ResourceType::SCRIPT:			{ written = Importer::Scripts::Save((R_Script*)resource, &buffer); }			break;
-	case ResourceType::NAVMESH:	{ written = Importer::Navigation::Save((R_NavMesh*)resource, &buffer); }		break;
+	case ResourceType::NAVMESH:			{ written = Importer::Navigation::Save((R_NavMesh*)resource, &buffer); }		break;
 	}
 
 	RELEASE_ARRAY(buffer);

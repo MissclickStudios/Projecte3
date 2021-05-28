@@ -17,6 +17,7 @@
 #include "GameObject.h"
 
 #include "C_Transform.h"
+#include "C_UI_Text.h"
 
 #include "GameManager.h"
 #include "DialogManager.h"
@@ -43,10 +44,6 @@ GameManager::~GameManager()
 
 void GameManager::Awake()
 {
-	/*level.AddFixedRoom("Start",1 ,1);
-	level.AddFixedRoom("Boss",1 ,15);*/
-
-	//Load de la primera scene?
 	//Check files exist (Maybe in another place)
 	if (enabled) 
 	{
@@ -80,6 +77,8 @@ void GameManager::Awake()
 			//Load story & dialogs
 			storyDialogState.Load(&jsonState);
 
+			runStats.Load(&jsonState);
+
 			//TODO:Spawn player and everything on the level
 			GameObject* playerSpawn = App->scene->GetGameObjectByName(SpawnPointName.c_str());
 			if (playerSpawn != nullptr) 
@@ -88,8 +87,8 @@ void GameManager::Awake()
 				playerGameObject = App->scene->InstantiatePrefab(playerPrefab.uid, App->scene->GetSceneRoot(), spawnPoint,Quat::identity);
 			}
 
-			if(storyDialogState.defeatedIG11FirstTime)
-				groguGameObject = App->scene->InstantiatePrefab(groguPrefab.uid, App->scene->GetSceneRoot(), playerGameObject->transform->GetWorldPosition(), Quat::identity);
+			if(storyDialogState.defeatedIG11FirstTime && playerGameObject!= nullptr)
+				groguGameObject = App->scene->InstantiatePrefab(groguPrefab.uid, App->scene->GetSceneRoot(), playerGameObject->transform->GetLocalPosition(), Quat::identity);
 
 			if (playerSpawn != nullptr && groguGameObject != nullptr && storyDialogState.defeatedIG11FirstTime)
 			{
@@ -98,11 +97,7 @@ void GameManager::Awake()
 				groguGameObject->transform->SetLocalPosition(spawnPoint);
 			}
 
-			if (strcmp(App->scene->GetCurrentScene(), "HUB") != 0)
-			{
-				App->scene->InstantiatePrefab(mistPlane1.uid, App->scene->GetSceneRoot(), mistPlane1Position, Quat::identity);
-				App->scene->InstantiatePrefab(mistPlane2.uid, App->scene->GetSceneRoot(), mistPlane2Position, Quat::identity);
-			}
+			
 
 			backtrackTimer.Start();
 			if (backtrack.size() != 0)
@@ -196,7 +191,6 @@ void GameManager::Start()
 	//Start Dialogs based on scene & Advance Story
 	if (dialogManager != nullptr)
 	{
-		
 		if (strcmp(App->scene->GetCurrentScene(),"bossL1" ) == 0 )
 		{
 			if(!storyDialogState.defeatedIG11FirstTime)
@@ -229,11 +223,22 @@ void GameManager::Start()
 		
 		//dialogManager->StartDialog("GroguHello");
 	}
+
+	if(strcmp(App->scene->GetCurrentScene(), levelNames.loseScene.c_str()) == 0 )
+		SetUpWinScreen();
 		
 }
 
 void GameManager::Update()
 {
+	if(!instantiatedSandstorm)
+		if (strcmp(App->scene->GetCurrentScene(), levelNames.hub.c_str()) != 0 && strcmp(App->scene->GetCurrentScene(), levelNames.loseScene.c_str()) != 0 && strcmp(App->scene->GetCurrentScene(), levelNames.winScene.c_str()) != 0)
+		{
+			App->scene->InstantiatePrefab(mistPlane1.uid, App->scene->GetSceneRoot(), mistPlane1Position, Quat::identity);
+			App->scene->InstantiatePrefab(mistPlane2.uid, App->scene->GetSceneRoot(), mistPlane2Position, Quat::identity);
+			instantiatedSandstorm = true;
+		}
+
 	// --- Handle Camera cutscene
 	if (dialogManager != nullptr)
 	{
@@ -581,6 +586,7 @@ void GameManager::Continue()
 		//Story
 		storyDialogState.Load(&jsonState);
 
+		runStats.Load(&jsonState);
 
 		//TODO:Spawn player and everything on the level
 		if (currentLevel == 1)
@@ -755,6 +761,8 @@ void GameManager::SaveManagerState()
 
 	storyDialogState.Save(&jsonState);
 
+	runStats.Save(&jsonState);
+
 	char* buffer = nullptr;
 	jsonState.SerializeToFile(saveFileName, &buffer);
 	CoreCrossDllHelpers::CoreReleaseBuffer(&buffer);
@@ -892,6 +900,15 @@ void GameManager::BoughtFromArmorer()
 	dialogManager->StartDialog("Pool Conversation Armorer Bought");
 }
 
+void GameManager::SetUpWinScreen()
+{
+	App->scene->GetGameObjectByName("AttemptsText")->GetComponent<C_UI_Text>()->SetText(std::to_string(runStats.attempt).c_str());
+	App->scene->GetGameObjectByName("KillsText")->GetComponent<C_UI_Text>()->SetText(std::to_string(runStats.runKills).c_str());
+	App->scene->GetGameObjectByName("PrecisionText")->GetComponent<C_UI_Text>()->SetText(std::to_string(runStats.runPrecision).c_str());
+	App->scene->GetGameObjectByName("TimeText")->GetComponent<C_UI_Text>()->SetText(std::to_string(runStats.runTime).c_str());
+	App->scene->GetGameObjectByName("WeaponText")->GetComponent<C_UI_Text>()->SetText(runStats.weaponUsed.c_str());
+}
+
 GameManager* CreateGameManager() {
 	GameManager* script = new GameManager();
 
@@ -921,20 +938,49 @@ GameManager* CreateGameManager() {
 
 void StoryDialogData::Save(ParsonNode *node)
 {
-	node->SetBool("visitedHUB", visitedHUB);
-	node->SetBool("defeatedIG11FirstTime", defeatedIG11FirstTime);
-	node->SetBool("defeatedIG12FirstTime", defeatedIG12FirstTime);
-	node->SetBool("talkedToArmorer", talkedToArmorer);
-	node->SetBool("firstTimeHub", firstTimeHub);
-	node->SetBool("talkedToGrogu", talkedToGrogu);
+	ParsonNode storyNode = node->SetNode("StoryDialog");
+	storyNode.SetBool("visitedHUB", visitedHUB);
+	storyNode.SetBool("defeatedIG11FirstTime", defeatedIG11FirstTime);
+	storyNode.SetBool("defeatedIG12FirstTime", defeatedIG12FirstTime);
+	storyNode.SetBool("talkedToArmorer", talkedToArmorer);
+	storyNode.SetBool("firstTimeHub", firstTimeHub);
+	storyNode.SetBool("talkedToGrogu", talkedToGrogu);
 }
 
 void StoryDialogData::Load(ParsonNode *node)
 {
-	visitedHUB = node->GetBool("visitedHUB");
-	defeatedIG11FirstTime = node->GetBool("defeatedIG11FirstTime");
-	defeatedIG12FirstTime = node->GetBool("defeatedIG12FirstTime");
-	talkedToArmorer = node->GetBool("talkedToArmorer");
-	firstTimeHub = node->GetBool("firstTimeHub");
-	talkedToGrogu = node->GetBool("talkedToGrogu");
+	ParsonNode storyNode = node->GetNode("StoryDialog");
+	visitedHUB = storyNode.GetBool("visitedHUB");
+	defeatedIG11FirstTime = storyNode.GetBool("defeatedIG11FirstTime");
+	defeatedIG12FirstTime = storyNode.GetBool("defeatedIG12FirstTime");
+	talkedToArmorer = storyNode.GetBool("talkedToArmorer");
+	firstTimeHub = storyNode.GetBool("firstTimeHub");
+	talkedToGrogu = storyNode.GetBool("talkedToGrogu");
+}
+
+void RunStats::Save(ParsonNode* node)
+{
+	ParsonNode runStateNode = node->SetNode("RunStats");
+	runStateNode.SetInteger("attempt", attempt);
+	runStateNode.SetInteger("runKills", runKills);
+	runStateNode.SetInteger("runTime", runTime);
+	runStateNode.SetNumber("runPrecision", runPrecision);
+	runStateNode.SetString("weaponUsed", weaponUsed.c_str());
+}
+
+void RunStats::Load(ParsonNode* node)
+{
+	ParsonNode runStateNode = node->GetNode("RunStats");
+	attempt = runStateNode.GetInteger("attempt");
+	runKills = runStateNode.GetInteger("runKills");
+	runTime = runStateNode.GetInteger("runTime");
+	runPrecision = runStateNode.GetNumber("runPrecision");
+	weaponUsed = runStateNode.GetString("weaponUsed");
+}
+
+void RunStats::ResetRun()
+{
+	runKills = 0;
+	runTime = 0.f;
+	runPrecision = 0;
 }
