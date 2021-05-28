@@ -47,6 +47,7 @@ public:
 
 class RunStats
 {
+public:
     uint attempt = 0;
     uint runKills = 0;
     float runPrecision = 0.f;
@@ -84,6 +85,8 @@ public:
     void KilledIG11();
     void TalkedToArmorer();
     void BoughtFromArmorer();
+
+    void SetUpWinScreen();
 
 private:
     //Level Generator

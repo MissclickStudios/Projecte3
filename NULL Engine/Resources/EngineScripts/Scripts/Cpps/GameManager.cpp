@@ -17,6 +17,7 @@
 #include "GameObject.h"
 
 #include "C_Transform.h"
+#include "C_UI_Text.h"
 
 #include "GameManager.h"
 #include "DialogManager.h"
@@ -43,10 +44,6 @@ GameManager::~GameManager()
 
 void GameManager::Awake()
 {
-	/*level.AddFixedRoom("Start",1 ,1);
-	level.AddFixedRoom("Boss",1 ,15);*/
-
-	//Load de la primera scene?
 	//Check files exist (Maybe in another place)
 	if (enabled) 
 	{
@@ -79,6 +76,8 @@ void GameManager::Awake()
 
 			//Load story & dialogs
 			storyDialogState.Load(&jsonState);
+
+			runStats.Load(&jsonState);
 
 			//TODO:Spawn player and everything on the level
 			GameObject* playerSpawn = App->scene->GetGameObjectByName(SpawnPointName.c_str());
@@ -192,7 +191,6 @@ void GameManager::Start()
 	//Start Dialogs based on scene & Advance Story
 	if (dialogManager != nullptr)
 	{
-		
 		if (strcmp(App->scene->GetCurrentScene(),"bossL1" ) == 0 )
 		{
 			if(!storyDialogState.defeatedIG11FirstTime)
@@ -225,13 +223,16 @@ void GameManager::Start()
 		
 		//dialogManager->StartDialog("GroguHello");
 	}
+
+	if(strcmp(App->scene->GetCurrentScene(), levelNames.loseScene.c_str()) == 0 )
+		SetUpWinScreen();
 		
 }
 
 void GameManager::Update()
 {
 	if(!instantiatedSandstorm)
-		if (strcmp(App->scene->GetCurrentScene(), "HUB") != 0 && strcmp(App->scene->GetCurrentScene(), "LoseScreen") != 0 && strcmp(App->scene->GetCurrentScene(), "WinScreen") != 0)
+		if (strcmp(App->scene->GetCurrentScene(), levelNames.hub.c_str()) != 0 && strcmp(App->scene->GetCurrentScene(), levelNames.loseScene.c_str()) != 0 && strcmp(App->scene->GetCurrentScene(), levelNames.winScene.c_str()) != 0)
 		{
 			App->scene->InstantiatePrefab(mistPlane1.uid, App->scene->GetSceneRoot(), mistPlane1Position, Quat::identity);
 			App->scene->InstantiatePrefab(mistPlane2.uid, App->scene->GetSceneRoot(), mistPlane2Position, Quat::identity);
@@ -585,6 +586,7 @@ void GameManager::Continue()
 		//Story
 		storyDialogState.Load(&jsonState);
 
+		runStats.Load(&jsonState);
 
 		//TODO:Spawn player and everything on the level
 		if (currentLevel == 1)
@@ -759,6 +761,8 @@ void GameManager::SaveManagerState()
 
 	storyDialogState.Save(&jsonState);
 
+	runStats.Save(&jsonState);
+
 	char* buffer = nullptr;
 	jsonState.SerializeToFile(saveFileName, &buffer);
 	CoreCrossDllHelpers::CoreReleaseBuffer(&buffer);
@@ -894,6 +898,15 @@ void GameManager::BoughtFromArmorer()
 {
 	LOG("Bought from armorer");
 	dialogManager->StartDialog("Pool Conversation Armorer Bought");
+}
+
+void GameManager::SetUpWinScreen()
+{
+	App->scene->GetGameObjectByName("AttemptsText")->GetComponent<C_UI_Text>()->SetText(std::to_string(runStats.attempt).c_str());
+	App->scene->GetGameObjectByName("KillsText")->GetComponent<C_UI_Text>()->SetText(std::to_string(runStats.runKills).c_str());
+	App->scene->GetGameObjectByName("PrecisionText")->GetComponent<C_UI_Text>()->SetText(std::to_string(runStats.runPrecision).c_str());
+	App->scene->GetGameObjectByName("TimeText")->GetComponent<C_UI_Text>()->SetText(std::to_string(runStats.runTime).c_str());
+	App->scene->GetGameObjectByName("WeaponText")->GetComponent<C_UI_Text>()->SetText(runStats.weaponUsed.c_str());
 }
 
 GameManager* CreateGameManager() {
