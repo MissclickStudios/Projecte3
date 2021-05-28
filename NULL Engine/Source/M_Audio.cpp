@@ -111,6 +111,7 @@ UpdateStatus M_Audio::Update(float dt)
 bool M_Audio::CleanUp()
 {
 	TermSoundEngine();
+	delete aSourceBackgroundMusic;
 	return true;
 }
 
