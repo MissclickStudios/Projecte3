@@ -165,6 +165,27 @@ void DialogManager::StartNewLine()
 	speakerText->SetText(currentLine->speakerName.c_str());
 
 	//set speaker image
+	
+	if (strcmp(currentLine->speakerName.c_str(), "Mando"))
+	{
+		//Set image to mando's portrait
+	}
+	if (strcmp(currentLine->speakerName.c_str(), "IG-11"))
+	{
+		//Set image to mando's portrait
+	}
+	if (strcmp(currentLine->speakerName.c_str(), "IG-12"))
+	{
+		//Set image to mando's portrait
+	}
+	if (strcmp(currentLine->speakerName.c_str(), "Grogu"))
+	{
+		//Set image to mando's portrait
+	}
+	if (strcmp(currentLine->speakerName.c_str(), "Gil Jawa"))
+	{
+		//Set image to mando's portrait
+	}
 
 	dialogText->SetText("");
 	currentLineLetter = 0;
