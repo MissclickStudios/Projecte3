@@ -182,7 +182,7 @@ void DialogManager::StartNewLine()
 	{
 		//Set image to mando's portrait
 	}
-	if (strcmp(currentLine->speakerName.c_str(), "Gil Jawa"))
+	if (strcmp(currentLine->speakerName.c_str(), "Greef Jawa"))
 	{
 		//Set image to mando's portrait
 	}

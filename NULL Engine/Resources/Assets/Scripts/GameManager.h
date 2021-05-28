@@ -43,7 +43,19 @@ public:
 
     void Save(ParsonNode *node);
     void Load(ParsonNode *node);
-    
+};
+
+class RunStats
+{
+    uint attempt = 0;
+    uint runKills = 0;
+    float runPrecision = 0.f;
+    uint runTime = 0;
+    std::string weaponUsed = "Rifle";
+
+    void Save(ParsonNode* node);
+    void Load(ParsonNode* node);
+    void ResetRun();
 };
 
 
@@ -126,6 +138,9 @@ public:
 
     //Story & dialog vars
     StoryDialogData storyDialogState;
+
+    //Win screen stats
+    RunStats runStats;
 
 private:
 

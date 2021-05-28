@@ -925,20 +925,49 @@ GameManager* CreateGameManager() {
 
 void StoryDialogData::Save(ParsonNode *node)
 {
-	node->SetBool("visitedHUB", visitedHUB);
-	node->SetBool("defeatedIG11FirstTime", defeatedIG11FirstTime);
-	node->SetBool("defeatedIG12FirstTime", defeatedIG12FirstTime);
-	node->SetBool("talkedToArmorer", talkedToArmorer);
-	node->SetBool("firstTimeHub", firstTimeHub);
-	node->SetBool("talkedToGrogu", talkedToGrogu);
+	ParsonNode storyNode = node->SetNode("StoryDialog");
+	storyNode.SetBool("visitedHUB", visitedHUB);
+	storyNode.SetBool("defeatedIG11FirstTime", defeatedIG11FirstTime);
+	storyNode.SetBool("defeatedIG12FirstTime", defeatedIG12FirstTime);
+	storyNode.SetBool("talkedToArmorer", talkedToArmorer);
+	storyNode.SetBool("firstTimeHub", firstTimeHub);
+	storyNode.SetBool("talkedToGrogu", talkedToGrogu);
 }
 
 void StoryDialogData::Load(ParsonNode *node)
 {
-	visitedHUB = node->GetBool("visitedHUB");
-	defeatedIG11FirstTime = node->GetBool("defeatedIG11FirstTime");
-	defeatedIG12FirstTime = node->GetBool("defeatedIG12FirstTime");
-	talkedToArmorer = node->GetBool("talkedToArmorer");
-	firstTimeHub = node->GetBool("firstTimeHub");
-	talkedToGrogu = node->GetBool("talkedToGrogu");
+	ParsonNode storyNode = node->GetNode("StoryDialog");
+	visitedHUB = storyNode.GetBool("visitedHUB");
+	defeatedIG11FirstTime = storyNode.GetBool("defeatedIG11FirstTime");
+	defeatedIG12FirstTime = storyNode.GetBool("defeatedIG12FirstTime");
+	talkedToArmorer = storyNode.GetBool("talkedToArmorer");
+	firstTimeHub = storyNode.GetBool("firstTimeHub");
+	talkedToGrogu = storyNode.GetBool("talkedToGrogu");
+}
+
+void RunStats::Save(ParsonNode* node)
+{
+	ParsonNode runStateNode = node->SetNode("RunStats");
+	runStateNode.SetInteger("attempt", attempt);
+	runStateNode.SetInteger("runKills", runKills);
+	runStateNode.SetInteger("runTime", runTime);
+	runStateNode.SetNumber("runPrecision", runPrecision);
+	runStateNode.SetString("weaponUsed", weaponUsed.c_str());
+}
+
+void RunStats::Load(ParsonNode* node)
+{
+	ParsonNode runStateNode = node->GetNode("RunStats");
+	attempt = runStateNode.GetInteger("attempt");
+	runKills = runStateNode.GetInteger("runKills");
+	runTime = runStateNode.GetInteger("runTime");
+	runPrecision = runStateNode.GetNumber("runPrecision");
+	weaponUsed = runStateNode.GetString("weaponUsed");
+}
+
+void RunStats::ResetRun()
+{
+	runKills = 0;
+	runTime = 0.f;
+	runPrecision = 0;
 }
