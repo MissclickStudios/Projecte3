@@ -17,6 +17,8 @@ class ParsonNode;
 class C_Transform;
 class C_UI;
 
+class Renderer;
+
 struct MeshRenderer;
 struct CuboidRenderer;
 struct SkeletonRenderer;
@@ -49,6 +51,8 @@ public:
 	void			GetRenderers						(std::vector<MeshRenderer>& meshRenderers, std::vector<CuboidRenderer>& cuboidRenderers, 
 															std::vector<SkeletonRenderer>& skeletonRenderers); // TODO: Get them elsewhere. Scene maybe?
 
+	void			GetRenderers						(std::multimap<float, Renderer*>& renderers);
+
 public:																									// --- PARENT/CHILDS METHODS
 	bool			SetParent							(GameObject* newParent);						// 
 
@@ -62,7 +66,7 @@ public:																									// --- PARENT/CHILDS METHODS
 	void			GetAllChilds						(std::unordered_map<std::string, GameObject*>& children);	// 
 	GameObject*		FindChild							(const char* childName);									// 
 
-	void			GetAllParents						(std::vector<GameObject*>& parents);					// Will return all the GO's parents until parent->isSceneRoot = true;
+	void			GetAllParents						(std::vector<GameObject*>& parents);			// Will return all the GO's parents until parent->isSceneRoot = true;
 
 	void			SetAsPrefab							(uint _prefabID);								//Prefabs
 
@@ -94,9 +98,9 @@ public:																									// --- COMPONENT GETTERS AND SETTERS
 	bool							GetAllComponents	(std::vector<Component*>& components) const;	// 
 
 	void*			GetScript							(const char* scriptName);						//
-	void GetUiComponents(std::vector<C_UI*>& uiComponents);
-	C_UI* GetUiComponent();
-	void SetUiChildOrder(int index);
+	void			GetUiComponents						(std::vector<C_UI*>& uiComponents);				// 
+	C_UI*			GetUiComponent						();												// 
+	void			SetUiChildOrder						(int index);									// 
 
 	template<typename T>																				// --- GET COMPONENT TEMPLATED METHOD
 	T* GetComponent() const																				// 

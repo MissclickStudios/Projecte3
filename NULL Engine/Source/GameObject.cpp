@@ -9,10 +9,15 @@
 
 #include "Application.h"
 #include "M_Renderer3D.h"																				// TMP. Move the Renderers generation elsewhere.
-
 #include "M_Camera3D.h"																					//TEMP. putting the cam if game time
 
 #include "R_Mesh.h"
+#include "R_ParticleSystem.h"
+
+#include "RE_Mesh.h"
+#include "RE_Cuboid.h"
+#include "RE_Skeleton.h"
+#include "RE_Particle.h"
 
 #include "Component.h"
 #include "C_Transform.h"
@@ -399,6 +404,82 @@ void GameObject::GetRenderers(std::vector<MeshRenderer>& meshRenderers, std::vec
 		if (collider && collider->ToShowCollider())
 		{
 			cuboidRenderers.push_back(CuboidRenderer(collider->GetCornerPoints(), CuboidType::COLLIDER));
+		}
+	}
+}
+
+void GameObject::GetRenderers(std::multimap<float, Renderer*>& renderers)
+{
+	float sortingValue = transform->GetWorldPosition().y;													// Create a namespace to handle different calculations for sorting values?
+
+	std::vector<C_Mesh*> cMeshes;	
+	GetComponents<C_Mesh>(cMeshes);
+
+	std::vector<C_ParticleSystem*> cParticles;
+	GetComponents<C_ParticleSystem>(cParticles);
+
+	C_Transform* cTransform = GetComponent<C_Transform>();
+	C_Material* cMaterial	= GetComponent<C_Material>();
+	C_Camera* cCamera		= GetComponent<C_Camera>();
+	C_Animator* cAnimator	= GetComponent<C_Animator>();
+
+	for (uint i = 0; i < cMeshes.size(); ++i)
+	{
+		if (cMeshes[i] != nullptr)
+		{
+			if (cMeshes[i]->IsActive() && cMeshes[i]->GetMesh() != nullptr)
+			{				
+				renderers.emplace(sortingValue, new RE_Mesh(cTransform, cMeshes[i], cMaterial));
+			}
+		}
+	}
+
+	cMeshes.clear();
+
+	for (uint i = 0; i < cParticles.size(); ++i)
+	{
+		if (cParticles[i] != nullptr || cParticles[i]->resource == nullptr)
+			continue;
+
+		if (cParticles[i]->IsActive() /*&& cParticles[i]->resource->texture != nullptr*/)
+		{
+			//renderers.emplace(sortingValue, new RE_Particle())
+		}
+	}
+
+	if (cCamera != nullptr)
+	{
+		if (!cCamera->FrustumIsHidden() && App->gameState != GameState::PLAY)
+		{
+			renderers.emplace(sortingValue, new RE_Cuboid(cCamera->GetFrustumVertices(), Cuboid_Type::FRUSTUM));
+		}
+	}
+
+	if (cAnimator != nullptr)
+	{
+		if (cAnimator->GetShowBones() || App->renderer->GetRenderSkeletons())
+		{
+			renderers.emplace(sortingValue, new RE_Skeleton(cAnimator->GetDisplayBones()));
+		}
+	}
+
+	if ((show_bounding_boxes || App->renderer->GetRenderBoundingBoxes()) && App->gameState != GameState::PLAY)
+	{
+		UpdateBoundingBoxes();																						// Make the call in C_Transform after receiving a dirty flag?
+
+		obb.GetCornerPoints(obb_vertices);
+		aabb.GetCornerPoints(aabb_vertices);
+
+		renderers.emplace(sortingValue, new RE_Cuboid(obb_vertices, Cuboid_Type::OBB));
+		renderers.emplace(sortingValue, new RE_Cuboid(aabb_vertices, Cuboid_Type::AABB));
+	}
+
+	if (App->renderer->GetRenderColliders())
+	{
+		C_BoxCollider* collider = GetComponent<C_BoxCollider>();
+		if (collider && collider->ToShowCollider())
+		{
+			renderers.emplace(sortingValue, new RE_Cuboid(collider->GetCornerPoints(), Cuboid_Type::COLLIDER));
 		}
 	}
 }

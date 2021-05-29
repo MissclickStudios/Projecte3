@@ -188,6 +188,9 @@ public:																											// --- RENDER GEOMETRY
 
 	void			AddRenderersBatch			(const std::vector<MeshRenderer>& meshRenderers, const std::vector<CuboidRenderer>& cuboidRenderers, 
 													const std::vector<SkeletonRenderer>& skeletonRenderers);
+
+	void			AddRenderersBatch			(const std::multimap<float, Renderer*>& renderers);
+
 	void			RenderMeshes				();
 	void			RenderCuboids				();
 	void			RenderRays					();

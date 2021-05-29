@@ -669,6 +669,16 @@ void M_Renderer3D::RenderScene()
 	if (renderWorldAxis)
 		DrawWorldAxis();
 
+	for (auto renderer = renderers.begin(); renderer != renderers.end(); ++renderer)
+	{
+		renderer->second->Render();
+
+		renderer->second->CleanUp();
+		RELEASE(renderer->second);
+	}
+
+	renderers.clear();
+	
 	// TMP
 	/*static float4x4 dbTrnsfrm		= float4x4::FromTRS(float3(0.0f, 10.0f, 0.0f), Quat::FromEulerXYZ(90.0f * DEGTORAD, 0.0f, 0.0f), float3::one);
 	static RE_Circle debugCircle	= RE_Circle(dbTrnsfrm, float3(0.0f, 10.0f, 0.0f), 5.0f, 20, 2.0f);
@@ -676,10 +686,8 @@ void M_Renderer3D::RenderScene()
 	
 	RenderMeshes();
 	RenderCuboids();
-  
 	//RenderRays();
 	RenderSkeletons();
-  
 	RenderParticles();
 
 	
@@ -722,15 +730,11 @@ void M_Renderer3D::RenderScene()
 	{
 		primitives[i]->RenderByIndices();
 	}
-	
-	
 
 	RenderUI();
-	
 
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 	
-
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
@@ -889,6 +893,11 @@ void M_Renderer3D::AddRenderersBatch(const std::vector<MeshRenderer>& meshRender
 	}
 }
 
+void M_Renderer3D::AddRenderersBatch(const std::multimap<float, Renderer*>& renderers)
+{
+	this->renderers = renderers;
+}
+
 void M_Renderer3D::RenderMeshes()
 {	
 	C_Camera* currentCamera = App->camera->GetCurrentCamera();
@@ -1039,6 +1048,8 @@ void M_Renderer3D::DeleteFromMeshRenderers(R_Mesh* rMeshToDelete)
 
 void M_Renderer3D::ClearRenderers()
 {
+	renderers.clear();
+	
 	meshRenderers.clear();
 	cuboidRenderers.clear();
 }

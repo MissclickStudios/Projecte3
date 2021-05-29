@@ -8,7 +8,7 @@ class R_Shader;
 
 typedef unsigned int uint;
 
-const float ParticlesCoords[] = {
+const float Particles_Coords[] = {																// Change later to ParticlesCoords
 	1,	1,
 	1,	0,
 	0,	0,

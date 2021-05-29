@@ -5,7 +5,7 @@
 
 #include "Renderer.h"
 
-enum class Cuboid_Type
+enum class Cuboid_Type													// Change later to CuboidType.
 {
 	NONE,
 	AABB,
