@@ -191,7 +191,7 @@ void GameManager::Start()
 	//Start Dialogs based on scene & Advance Story
 	if (dialogManager != nullptr)
 	{
-		if (strcmp(App->scene->GetCurrentScene(),"bossL1" ) == 0 )
+		if (strcmp(App->scene->GetCurrentScene(),levelNames.l1Boss.c_str()) == 0 )
 		{
 			if(!storyDialogState.defeatedIG11FirstTime)
 				dialogManager->StartDialog("1st Conversation IG-11");
@@ -200,7 +200,7 @@ void GameManager::Start()
 			return;
 		}
 
-		if (strcmp(App->scene->GetCurrentScene(), "Boss_Ruins") == 0)
+		if (strcmp(App->scene->GetCurrentScene(), levelNames.ruinsBoss.c_str()) == 0)
 		{
 			if (!storyDialogState.defeatedIG12FirstTime)
 				dialogManager->StartDialog("1st Conversation IG-11");
@@ -209,7 +209,7 @@ void GameManager::Start()
 			return;
 		}
 
-		if (strcmp(App->scene->GetCurrentScene(), "HUB") == 0)
+		if (strcmp(App->scene->GetCurrentScene(), levelNames.hub.c_str()) == 0)
 		{
 			if (!storyDialogState.firstTimeHub)
 			{
@@ -322,44 +322,43 @@ void GameManager::GenerateNewRun(bool fromMenu)
 			GenerateLevel(); //Nomes quan li donem a new game desde el main menu
 
 			//TODO: Not HardCode the fixed rooms
-			//TODO: inspector support adding fixed room
-			if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + "HUB.json").c_str()))
+			if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + levelNames.hub + ".json").c_str()))
 				//AddFixedRoom("InitialL1", 1, 1);
-				level1.insert(level1.begin(), (std::string(ASSETS_SCENES_PATH) + "HUB.json"));
+				level1.insert(level1.begin(), (std::string(ASSETS_SCENES_PATH) + levelNames.hub + ".json"));
 			//LEVEL2
 			//if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + "InitialL2.json").c_str()))
 			//	AddFixedRoom("InitialL2", 2, 1);
-			if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + "InitialL1.json").c_str()))
+			if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + levelNames.l1Initial + ".json").c_str()))
 				//AddFixedRoom("InitialL1", 1, 1);
-				level1.insert(level1.begin() + 1, (std::string(ASSETS_SCENES_PATH) + "InitialL1.json"));
+				level1.insert(level1.begin() + 1, (std::string(ASSETS_SCENES_PATH) + levelNames.l1Initial + ".json"));
 			//LEVEL2
 			//if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + "InitialL2.json").c_str()))
 			//	AddFixedRoom("InitialL2", 2, 1);
 
-			if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + "ShopL1.json").c_str()))
+			if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + levelNames.l1Shop + ".json").c_str()))
 				//AddFixedRoom("ShopL1", 1, 4);
-				level1.insert(level1.begin() + 6, (std::string(ASSETS_SCENES_PATH) + "ShopL1.json"));
+				level1.insert(level1.begin() + 6, (std::string(ASSETS_SCENES_PATH) + levelNames.l1Shop + ".json"));
 			//LEVEL2
-			if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + "Shop_Ruins.json").c_str()))
-				level1Ruins.insert(level1Ruins.begin() + 3, (std::string(ASSETS_SCENES_PATH) + "Shop_Ruins.json"));
+			if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + levelNames.ruinsShop + ".json").c_str()))
+				level1Ruins.insert(level1Ruins.begin() + 3, (std::string(ASSETS_SCENES_PATH) + levelNames.ruinsShop + ".json"));
 
-			if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + "BossL1.json").c_str()))
+			if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + levelNames.l1Boss + ".json").c_str()))
 				//AddFixedRoom("BossL1", 1, 10);
-				level1.push_back((std::string(ASSETS_SCENES_PATH) + "BossL1.json"));
+				level1.push_back((std::string(ASSETS_SCENES_PATH) + levelNames.l1Boss + ".json"));
 			//LEVEL2
-			if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + "Boss_Ruins.json").c_str()))
+			if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + levelNames.ruinsBoss + ".json").c_str()))
 				//AddFixedRoom("BossL2", 2, 10);
-				level1Ruins.push_back((std::string(ASSETS_SCENES_PATH) + "Boss_Ruins.json"));
+				level1Ruins.push_back((std::string(ASSETS_SCENES_PATH) + levelNames.ruinsBoss + ".json"));
 			//LEVEL2
-			if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + "WinScene.json").c_str()))
-				level1Ruins.push_back((std::string(ASSETS_SCENES_PATH) + "WinScene.json"));
+			if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + levelNames.winScene + ".json").c_str()))
+				level1Ruins.push_back((std::string(ASSETS_SCENES_PATH) + levelNames.winScene + ".json"));
 		}
 		else
 		{
 			//Remove fixed before randomizing
 			for (int i = 0; i < level1.size(); ++i)
 			{
-				if (strstr(level1[i].c_str(), "HUB.json") || strstr(level1[i].c_str(), "InitialL1") || strstr(level1[i].c_str(), "ShopL1") || strstr(level1[i].c_str(), "BossL1"))
+				if (strstr(level1[i].c_str(), (levelNames.hub + ".json").c_str()) || strstr(level1[i].c_str(), (levelNames.l1Initial + ".json").c_str()) || strstr(level1[i].c_str(), (levelNames.l1Shop + ".json").c_str()) || strstr(level1[i].c_str(), (levelNames.l1Boss + ".json").c_str()))
 				{
 					level1.erase(level1.begin() + i);
 					--i;
@@ -367,7 +366,7 @@ void GameManager::GenerateNewRun(bool fromMenu)
 			}
 			for (int i = 0; i < level1Ruins.size(); ++i)
 			{
-				if (strstr(level1Ruins[i].c_str(), "Shop_Ruins") || strstr(level1Ruins[i].c_str(), "Boss_Ruins") || strstr(level1Ruins[i].c_str(), "WinScene"))
+				if (strstr(level1Ruins[i].c_str(), (levelNames.ruinsShop + ".json").c_str()) || strstr(level1Ruins[i].c_str(), (levelNames.ruinsBoss + ".json").c_str()) || strstr(level1Ruins[i].c_str(), (levelNames.winScene + ".json").c_str()))
 				{
 					level1Ruins.erase(level1Ruins.begin() + i);
 					--i;
@@ -378,21 +377,21 @@ void GameManager::GenerateNewRun(bool fromMenu)
 			GenerateLevel();
 
 			//add fixed again
-			if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + "HUB.json").c_str()))
-				level1.insert(level1.begin(), (std::string(ASSETS_SCENES_PATH) + "HUB.json"));
-			if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + "InitialL1.json").c_str()))
-				level1.insert(level1.begin() + 1, (std::string(ASSETS_SCENES_PATH) + "InitialL1.json"));
-			if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + "ShopL1.json").c_str()))
-				level1.insert(level1.begin() + 6, (std::string(ASSETS_SCENES_PATH) + "ShopL1.json"));
-			if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + "BossL1.json").c_str()))
-				level1.push_back((std::string(ASSETS_SCENES_PATH) + "BossL1.json"));
+			if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + levelNames.hub + ".json").c_str()))
+				level1.insert(level1.begin(), (std::string(ASSETS_SCENES_PATH) + levelNames.hub + ".json"));
+			if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + levelNames.l1Initial + ".json").c_str()))
+				level1.insert(level1.begin() + 1, (std::string(ASSETS_SCENES_PATH) + levelNames.l1Initial + ".json"));
+			if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + levelNames.l1Shop + ".json").c_str()))
+				level1.insert(level1.begin() + 6, (std::string(ASSETS_SCENES_PATH) + levelNames.l1Shop + ".json"));
+			if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + levelNames.l1Boss + ".json").c_str()))
+				level1.push_back((std::string(ASSETS_SCENES_PATH) + levelNames.l1Boss + ".json"));
 
-			if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + "Shop_Ruins.json").c_str()))
-				level1Ruins.insert(level1Ruins.begin() + 3, (std::string(ASSETS_SCENES_PATH) + "Shop_Ruins.json"));
-			if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + "Boss_Ruins.json").c_str()))
-				level1Ruins.push_back((std::string(ASSETS_SCENES_PATH) + "Boss_Ruins.json"));
-			if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + "WinScene.json").c_str()))
-				level1Ruins.push_back((std::string(ASSETS_SCENES_PATH) + "WinScene.json"));
+			if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + levelNames.ruinsShop + ".json").c_str()))
+				level1Ruins.insert(level1Ruins.begin() + 3, (std::string(ASSETS_SCENES_PATH) + levelNames.ruinsShop + ".json"));
+			if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + levelNames.ruinsBoss + ".json").c_str()))
+				level1Ruins.push_back((std::string(ASSETS_SCENES_PATH) + levelNames.ruinsBoss + ".json"));
+			if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + levelNames.winScene + ".json").c_str()))
+				level1Ruins.push_back((std::string(ASSETS_SCENES_PATH) + levelNames.winScene + ".json"));
 		}
 
 		SaveManagerState();
