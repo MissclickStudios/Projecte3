@@ -42,9 +42,10 @@ M_Input::M_Input(bool isActive) : Module("Input", isActive)
 	memset(gameController.axis, 0, sizeof(AxisState) * NUM_CONTROLLER_AXIS);				// 0 = AXIS_IDLE
 
 	gameController.id = nullptr;
+	gameController.joystick = nullptr;
 	gameController.index = CONTROLLER_INDEX;
 	gameController.max_axis_input_threshold = 0.5f;
-	gameController.min_axis_input_threshold = 0.2f;
+	gameController.min_axis_input_threshold = 0.15f;
 }
 
 // Destructor
@@ -228,6 +229,7 @@ UpdateStatus M_Input::PreUpdate(float dt)
 					if (SDL_IsGameController(CONTROLLER_INDEX))
 					{
 						gameController.id = SDL_GameControllerOpen(CONTROLLER_INDEX);
+						gameController.joystick = SDL_GameControllerGetJoystick(gameController.id);
 					}
 				}
 				else
@@ -518,11 +520,23 @@ int M_Input::GetGameControllerAxisValue(int id) const
 {
 	if (gameController.id != nullptr) 
 	{
-		if(SDL_GameControllerGetAxis(gameController.id, SDL_GameControllerAxis(id)) < -JOYSTICK_THRESHOLD)
+		if (id < 2)
+		{
+			if (gameController.axis[id] != AxisState::AXIS_IDLE)
+				return SDL_GameControllerGetAxis(gameController.id, SDL_GameControllerAxis(id));
+		}
+		else if (id > 1)
+		{
+			if (SDL_GameControllerGetAxis(gameController.id, SDL_GameControllerAxis(id)) > JOYSTICK_THRESHOLD ||
+				SDL_GameControllerGetAxis(gameController.id, SDL_GameControllerAxis(id)) < -JOYSTICK_THRESHOLD)
+				return SDL_GameControllerGetAxis(gameController.id, SDL_GameControllerAxis(id));
+		}
+			
+		/*if(SDL_GameControllerGetAxis(gameController.id, SDL_GameControllerAxis(id)) < -JOYSTICK_THRESHOLD)
 			return SDL_GameControllerGetAxis(gameController.id, SDL_GameControllerAxis(id));
 
 		if (SDL_GameControllerGetAxis(gameController.id, SDL_GameControllerAxis(id)) > JOYSTICK_THRESHOLD)
-			return SDL_GameControllerGetAxis(gameController.id, SDL_GameControllerAxis(id));
+			return SDL_GameControllerGetAxis(gameController.id, SDL_GameControllerAxis(id));*/
 	}
 
 	return 0;
