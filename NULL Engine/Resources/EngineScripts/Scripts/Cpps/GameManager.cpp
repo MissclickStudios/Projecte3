@@ -186,7 +186,11 @@ void GameManager::Start()
 	if(cameraGameObject != nullptr)
 		cameraScript = (CameraMovement*)cameraGameObject->GetScript("CameraMovement");
 
-	
+	if (strcmp(App->scene->GetCurrentScene(), levelNames.loseScene.c_str()) == 0)
+		SetUpWinScreen();
+
+	if (strcmp(App->scene->GetCurrentScene(), levelNames.l1Initial.c_str()) == 0)
+		runStats.runTime = 0.f;
 
 	//Start Dialogs based on scene & Advance Story
 	if (dialogManager != nullptr)
@@ -218,15 +222,15 @@ void GameManager::Start()
 			}
 			else
 				dialogManager->StartDialog("Pool Conversation Cantine Death");
+
+			//Add attempt
+			runStats.attempt++;
+
 			return;
 		}
 		
 		//dialogManager->StartDialog("GroguHello");
-	}
-
-	if(strcmp(App->scene->GetCurrentScene(), levelNames.loseScene.c_str()) == 0 )
-		SetUpWinScreen();
-		
+	}	
 }
 
 void GameManager::Update()
@@ -265,7 +269,9 @@ void GameManager::Update()
 
 	GateUpdate(); //Checks if gate should be unlocked
 
-	//S'ha de fer alguna manera de avisar l'scene que volem canviar de scene pero no fer-ho imediatament ??? -> si
+	runStats.runTime += MC_Time::Game::GetDT();
+
+	//S'ha de fer alguna manera de avisar l'scene que volem canviar de scene pero no fer-ho imediatament ??? -> si (wtf is this (Pau))
 	//--
 }
 
@@ -486,6 +492,25 @@ void GameManager::GoNextRoom()
 					InitiateLevel(1);
 				}
 			}
+		}
+
+		//kills stats
+		runStats.runKills += enemies.size();
+
+		//Secondary weapon
+		WeaponType weaponType = playerScript->GetSecondaryWeapon()->type;
+
+		switch (weaponType)
+		{
+			case WeaponType::MINIGUN:
+				runStats.weaponUsed = "Minigun";
+				break;
+			case WeaponType::SHOTGUN:
+				runStats.weaponUsed = "Shotgun";
+				break;
+			case WeaponType::SNIPER:
+				runStats.weaponUsed = "Sniper";
+				break;
 		}
 	}
 }
@@ -962,7 +987,7 @@ void RunStats::Save(ParsonNode* node)
 	ParsonNode runStateNode = node->SetNode("RunStats");
 	runStateNode.SetInteger("attempt", attempt);
 	runStateNode.SetInteger("runKills", runKills);
-	runStateNode.SetInteger("runTime", runTime);
+	runStateNode.SetNumber("runTime", runTime);
 	runStateNode.SetNumber("runPrecision", runPrecision);
 	runStateNode.SetString("weaponUsed", weaponUsed.c_str());
 }
@@ -972,7 +997,7 @@ void RunStats::Load(ParsonNode* node)
 	ParsonNode runStateNode = node->GetNode("RunStats");
 	attempt = runStateNode.GetInteger("attempt");
 	runKills = runStateNode.GetInteger("runKills");
-	runTime = runStateNode.GetInteger("runTime");
+	runTime = runStateNode.GetNumber("runTime");
 	runPrecision = runStateNode.GetNumber("runPrecision");
 	weaponUsed = runStateNode.GetString("weaponUsed");
 }
