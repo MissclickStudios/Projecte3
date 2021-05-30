@@ -183,6 +183,10 @@ void IG12::SetUp()
 			}
 		}
 	}
+
+	//Particles and SFX
+	bombingParticles = crosshair->GetComponent<C_ParticleSystem>();
+	(bombingParticles != nullptr) ? bombingParticles->StopSpawn() : LOG("[ERROR] IG12 Script: Could not find { BOMBING } Particle System!");
 }
 
 void IG12::Behavior()
@@ -751,18 +755,28 @@ bool IG12::BombingAttack()
 					playerScript->TakeDamage(Damage());
 			}
 	}
+	else if (bombTimer.IsActive() && bombTimer.ReadSec() >= bombFallingTime * 0.8)
+	{
+		if (bombingParticles != nullptr)
+			bombingParticles->ResumeSpawn();
+	}
 	else if (!bombTimer.IsActive())
 	{
 		playerPosition.x = player->transform->GetWorldPosition().x;
 		playerPosition.y = player->transform->GetWorldPosition().z;
 		bombTimer.Start();
 		bombPosition = CalculateNextBomb(playerPosition.x, playerPosition.y);
+
 		crosshair->transform->SetWorldPosition(float3(bombPosition.x, 5, bombPosition.y));
+		if (bombingParticles != nullptr)
+			bombingParticles->StopSpawn();
 	}
 
 	if (!bombingAttackTimer.IsActive())
 	{
 		crosshair->transform->SetWorldPosition(float3(bombPosition.x, 500, bombPosition.y));
+		if (bombingParticles != nullptr)
+			bombingParticles->StopSpawn();
 		return false;
 	}
 
@@ -822,11 +836,15 @@ bool IG12::BombingAndSpiralAttack()
 		bombTimer.Start();
 		bombPosition = CalculateNextBomb(playerPosition.x, playerPosition.y);
 		crosshair->transform->SetWorldPosition(float3(bombPosition.x, 5, bombPosition.y));
+		if (bombingParticles != nullptr)
+			bombingParticles->ResumeSpawn();
 	}
 
 	if (!bombingAndSpiralAttackTimer.IsActive())
 	{
 		crosshair->transform->SetWorldPosition(float3(bombPosition.x, 500, bombPosition.y));
+		if (bombingParticles != nullptr)
+			bombingParticles->StopSpawn();
 		return false;
 	}
 

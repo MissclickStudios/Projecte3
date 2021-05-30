@@ -108,6 +108,9 @@ public:
 
 	GameObject* healthBarCanvasObject = nullptr;
 	std::string lifeBarImageStr = "BossLife";
+	
+	//partiles and SFX
+	C_ParticleSystem* bombingParticles;
 
 private:
 

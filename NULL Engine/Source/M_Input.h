@@ -11,12 +11,13 @@
 #define MAX_AXIS 32767								
 #define CONTROLLER_INDEX 0							
 #define TRIGGER_INDEX 4		
-#define JOYSTICK_THRESHOLD 8000
+#define JOYSTICK_THRESHOLD 2500
 
 #define LEFT_TRIGGER 0								
 #define RIGHT_TRIGGER 1								
 
 struct _SDL_GameController;
+struct _SDL_Joystick;
 class ParsonNode;
 typedef unsigned int uint;
 
@@ -53,6 +54,7 @@ enum class AxisState
 struct GameController
 {
 	_SDL_GameController*	id;
+	_SDL_Joystick*			joystick;
 	int						index;
 
 	ButtonState*			buttons;
@@ -108,7 +110,7 @@ public:
 
 private:
 
-	GameController  gameController;
+	GameController  gameController; 
 
 	KeyState*		keyboard;
 	KeyState		mouseButtons[MAX_MOUSE_BUTTONS];
