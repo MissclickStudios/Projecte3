@@ -225,6 +225,9 @@ void Player::SetUp()
 
 	uiImageGO				= App->scene->GetGameObjectByName(creditsImageName.c_str());
 	creditsImage			= (uiImageGO != nullptr) ? (C_2DAnimator*)uiImageGO->GetComponent<C_2DAnimator>() : nullptr;
+
+	uiImageGO				= App->scene->GetGameObjectByName(beskarImageName.c_str());
+	beskarImage				= (uiImageGO != nullptr) ? (C_2DAnimator*)uiImageGO->GetComponent<C_2DAnimator>() : nullptr;
 }
 
 void Player::Behavior()

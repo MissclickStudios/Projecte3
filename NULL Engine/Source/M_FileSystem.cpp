@@ -306,7 +306,7 @@ void M_FileSystem::DiscoverAllFilesFiltered(const char* directory, std::vector<s
 	char** fileListing = PHYSFS_enumerateFiles(directory);
 	for (char** file = fileListing; *file != nullptr; ++file)
 	{
-		std::string path = directory + std::string("/") + *file;										// This can crash the application if the file path is too long.
+		std::string path = directory + std::string("/") + *file;										// This can crash the application if the file path is too long. Too bad!
 
 		if (IsDirectory(path.c_str()))
 		{
