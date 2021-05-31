@@ -191,24 +191,31 @@ UpdateStatus M_Physics::Update(float dt)
 }
 
 bool M_Physics::CleanUp()
-{
-	if (controllerManager)
+{	
+	RELEASE(simulationCallback);
+	
+	if (controllerManager != nullptr)
 		controllerManager->release();
-	if (material)
+
+	if (material != nullptr)
 		material->release();
-	if (cooking)
+
+	if (cooking != nullptr)
 		cooking->release();
-	if (scene)
+
+	if (scene != nullptr)
 		scene->release();
-	if (physics)
+
+	if (physics != nullptr)
 		physics->release();
-	if (foundation)
+
+	if (foundation != nullptr)
 		foundation->release();
 
-	controllerManager = nullptr;
-	physics = nullptr;
-	foundation = nullptr;
-	scene = nullptr;
+	controllerManager	= nullptr;
+	physics				= nullptr;
+	foundation			= nullptr;
+	scene				= nullptr;
 
 	return true;
 }

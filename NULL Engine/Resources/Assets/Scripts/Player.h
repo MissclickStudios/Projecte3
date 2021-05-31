@@ -284,6 +284,8 @@ private:
 	float2 moveInput					= float2::zero;
 	float2 aimInput						= float2::zero;
 
+	float2 aimInputThreshold			= float2::zero;
+
 	// Movement
 	void Movement();
 
