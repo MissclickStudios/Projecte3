@@ -15,6 +15,7 @@
 class GameManager;
 class C_Canvas;
 class C_UI_Image;
+class CameraMovement;
 
 enum class IG12State
 {
@@ -111,6 +112,7 @@ public:
 	
 	//partiles and SFX
 	C_ParticleSystem* bombingParticles;
+	bool bombExploding = false;
 
 private:
 
@@ -173,6 +175,7 @@ private:
 	LCG randomGenerator;
 
 	GameManager* gameManager = nullptr;
+	CameraMovement* cameraMovement = nullptr;
 
 	C_Canvas* healthBarCanvas = nullptr;
 	C_UI_Image* healthBarImage = nullptr;

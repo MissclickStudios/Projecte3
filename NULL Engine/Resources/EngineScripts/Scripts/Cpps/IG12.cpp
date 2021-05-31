@@ -12,6 +12,7 @@
 #include "Player.h"
 #include "GameManager.h"
 #include "DialogManager.h"
+#include "CameraMovement.h"
 
 #include "MC_Time.h"
 
@@ -744,8 +745,6 @@ bool IG12::BombingAttack()
 	if (bombTimer.IsActive() && bombTimer.ReadSec() >= bombFallingTime)
 	{
 		bombTimer.Stop();
-		//if (GetParticles("Hit") != nullptr)
-		//	GetParticles("Hit")->ResumeSpawn();
 
 		if(player->transform->GetWorldPosition().x >= bombPosition.x - bombingAttackSmallAreaSide && player->transform->GetWorldPosition().x < bombPosition.x + bombingAttackSmallAreaSide)
 			if (player->transform->GetWorldPosition().z >= bombPosition.y - bombingAttackSmallAreaSide && player->transform->GetWorldPosition().z < bombPosition.y + bombingAttackSmallAreaSide)
@@ -754,12 +753,17 @@ bool IG12::BombingAttack()
 				if (playerScript)
 					playerScript->TakeDamage(Damage());
 			}
+		bombExploding = false;
 	}
-	else if (bombTimer.IsActive() && bombTimer.ReadSec() >= bombFallingTime * 0.8)
+	else if (bombTimer.IsActive() && bombTimer.ReadSec() >= bombFallingTime * 0.9)
 	{
 		if (bombingParticles != nullptr)
 			bombingParticles->ResumeSpawn();
+		if (damageAudio != nullptr)
+			damageAudio->PlayFx(damageAudio->GetEventId());
+		bombExploding = true;
 	}
+
 	else if (!bombTimer.IsActive())
 	{
 		playerPosition.x = player->transform->GetWorldPosition().x;
@@ -789,7 +793,6 @@ float2 IG12::CalculateNextBomb(float x, float y)
 	float bombY = Lerp(y - (bombingAttackBigAreaSide * 0.5), y + (bombingAttackBigAreaSide * 0.5), randomGenerator.Float());
 	return float2(bombX, bombY);
 }
-
 
 bool IG12::BombingAndSpiralAttack()
 {
@@ -829,6 +832,13 @@ bool IG12::BombingAndSpiralAttack()
 					playerScript->TakeDamage(Damage());
 			}
 	}
+	else if (bombTimer.IsActive() && bombTimer.ReadSec() >= bombFallingTime * 0.8)
+	{
+		if (bombingParticles != nullptr)
+			bombingParticles->ResumeSpawn();
+		if (damageAudio != nullptr)
+			damageAudio->PlayFx(damageAudio->GetEventId());
+	}
 	else if (!bombTimer.IsActive())
 	{
 		playerPosition.x = player->transform->GetWorldPosition().x;
@@ -837,7 +847,7 @@ bool IG12::BombingAndSpiralAttack()
 		bombPosition = CalculateNextBomb(playerPosition.x, playerPosition.y);
 		crosshair->transform->SetWorldPosition(float3(bombPosition.x, 5, bombPosition.y));
 		if (bombingParticles != nullptr)
-			bombingParticles->ResumeSpawn();
+			bombingParticles->StopSpawn();
 	}
 
 	if (!bombingAndSpiralAttackTimer.IsActive())
