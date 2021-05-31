@@ -17,6 +17,8 @@ Emitter::Emitter()
 	std::vector<ResourceBase> textures;
 	App->resourceManager->GetResourceBases<R_Texture>(textures);
 	emitterTexture = (R_Texture*)App->resourceManager->GetResourceFromLibrary(textures.begin()->assetsPath.c_str());
+
+	textures.clear();
 }
 
 Emitter::Emitter(const char* name)
@@ -35,9 +37,11 @@ void Emitter::Update(float dt)
 
 void Emitter::CleanUp()
 {
+	LOG("EMITTER CLEANUP");
+
 	for (auto mod = modules.begin(); mod != modules.end(); ++mod)
 	{
-		delete (*mod);
+		RELEASE((*mod));
 	}
 
 	modules.clear();

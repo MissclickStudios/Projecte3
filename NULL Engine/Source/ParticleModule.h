@@ -39,7 +39,7 @@ struct MISSCLICK_API ParticleModule
 	LCG randomGenerator;
 };
 
-struct EmitterBase : ParticleModule
+struct MISSCLICK_API EmitterBase : ParticleModule
 {
 	EmitterBase() : ParticleModule(Type::EMITTER_BASE) {};
 
@@ -52,7 +52,7 @@ struct EmitterBase : ParticleModule
 	float3 origin = float3::zero;
 };
 
-struct EmitterSpawn : ParticleModule
+struct MISSCLICK_API EmitterSpawn : ParticleModule
 {
 	EmitterSpawn() : ParticleModule(Type::EMITTER_SPAWN) {};
 	
@@ -68,7 +68,7 @@ struct EmitterSpawn : ParticleModule
 	bool hideSpawn = false;
 };
 
-struct EmitterArea : ParticleModule
+struct MISSCLICK_API EmitterArea : ParticleModule
 {
 	EmitterArea() : ParticleModule(Type::EMITTER_AREA) {};
 
@@ -91,7 +91,7 @@ struct EmitterArea : ParticleModule
 	bool eraseArea = false;
 };
 
-struct ParticleMovement : ParticleModule
+struct MISSCLICK_API ParticleMovement : ParticleModule
 {
 	ParticleMovement() : ParticleModule(Type::PARTICLE_MOVEMENT) {};
 
@@ -117,7 +117,7 @@ struct ParticleMovement : ParticleModule
 	bool eraseMovement = false;
 };
 
-struct ParticleColor : ParticleModule
+struct MISSCLICK_API ParticleColor : ParticleModule
 {
 	ParticleColor() : ParticleModule(Type::PARTICLE_COLOR) {};
 
@@ -136,7 +136,7 @@ struct ParticleColor : ParticleModule
 	bool eraseColor = false;
 };
 
-struct ParticleLifetime : ParticleModule
+struct MISSCLICK_API ParticleLifetime : ParticleModule
 {
 	ParticleLifetime() : ParticleModule(Type::PARTICLE_LIFETIME) {};
 
@@ -152,7 +152,7 @@ struct ParticleLifetime : ParticleModule
 	bool eraseLifetime = false;
 };
 
-struct ParticleSize : ParticleModule
+struct MISSCLICK_API ParticleSize : ParticleModule
 {
 	ParticleSize() : ParticleModule(Type::PARTICLE_SIZE) {};
 
@@ -185,7 +185,7 @@ struct ParticleSize : ParticleModule
 //	bool eraseRotation = false;
 //};
 
-struct ParticleBillboarding : ParticleModule
+struct MISSCLICK_API ParticleBillboarding : ParticleModule
 {
 	enum class BillboardingType
 	{

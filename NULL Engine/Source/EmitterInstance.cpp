@@ -128,3 +128,22 @@ void EmitterInstance::KillAll()
 	activeParticles = 0;
 }
 
+void EmitterInstance::GetActiveParticles(std::map<float, Particle*>& _activeParticles)
+{
+	for (int i = 0; i < activeParticles; i++)
+	{
+		unsigned int particleIndex = particleIndices[i];
+		Particle* particle = &particles[particleIndex];
+
+		_activeParticles.emplace(particle->distanceToCamera, particle);
+
+		/*float4x4 transform = float4x4::FromTRS(particle->position, particle->worldRotation, float3(particle->size, particle->size, particle->size)).Transposed();
+		App->renderer->AddParticle(transform, emitter->emitterTexture, particle->color, particle->distanceToCamera);*/
+	}
+}
+
+R_Texture* EmitterInstance::GetEmitterTexture()
+{
+	return ((emitter != nullptr) ? emitter->emitterTexture : nullptr);
+}
+

@@ -22,6 +22,8 @@ RE_Skeleton::~RE_Skeleton()
 
 bool RE_Skeleton::Render()
 {
+	glDisable(GL_LIGHTING);
+	
 	GLfloat A[3]	= {};
 	GLfloat B[3]	= {};
 	uint bytes		= sizeof(float) * 3;
@@ -43,6 +45,8 @@ bool RE_Skeleton::Render()
 	glLineWidth(STANDARD_LINE_WIDTH);
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 	
+	glEnable(GL_LIGHTING);
+
 	return true;
 }
 
