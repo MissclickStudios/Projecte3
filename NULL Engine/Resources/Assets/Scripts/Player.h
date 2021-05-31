@@ -165,7 +165,8 @@ public:
 	float ChangeTime()						{ return changeTime / attackSpeedModifier; }
 	void EquipWeapon(Prefab weapon);
 	Weapon* const GetCurrentWeapon() const	{ return currentWeapon; }
-	Weapon* GetSecondaryWeapon() { return secondaryWeapon; };
+	Weapon* GetSecondaryWeapon() { return secondaryWeapon; }
+	bool GetUsingSecondaryGun() { return usingSecondaryGun; }
 
 	float changeTime = 0.0f;
 	Prefab blaster;
