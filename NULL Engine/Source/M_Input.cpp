@@ -542,6 +542,30 @@ int M_Input::GetGameControllerAxisValue(int id) const
 	return 0;
 }
 
+int M_Input::GetGameControllerAxisRaw(int id) const
+{
+	if (gameController.id != nullptr)
+	{
+		if (id < 2)
+		{
+			if (gameController.axis[id] != AxisState::AXIS_IDLE)
+				return SDL_GameControllerGetAxis(gameController.id, SDL_GameControllerAxis(id));
+		}
+		else if (id > 1)
+		{
+			return SDL_GameControllerGetAxis(gameController.id, SDL_GameControllerAxis(id));
+		}
+
+		/*if(SDL_GameControllerGetAxis(gameController.id, SDL_GameControllerAxis(id)) < -JOYSTICK_THRESHOLD)
+			return SDL_GameControllerGetAxis(gameController.id, SDL_GameControllerAxis(id));
+
+		if (SDL_GameControllerGetAxis(gameController.id, SDL_GameControllerAxis(id)) > JOYSTICK_THRESHOLD)
+			return SDL_GameControllerGetAxis(gameController.id, SDL_GameControllerAxis(id));*/
+	}
+
+	return 0;
+}
+
 bool M_Input::WindowSizeWasManipulated(Uint8 windowEvent) const
 {
 	return (windowEvent == SDL_WINDOWEVENT_RESIZED
