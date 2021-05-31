@@ -1,17 +1,22 @@
-#include "Application.h"
-#include "SkyBox.h"
-#include "OpenGL.h"
-#include "M_Camera3D.h"
-#include "C_Camera.h"
-#include "M_ResourceManager.h"
-#include "R_Shader.h"
-#include "M_FileSystem.h"
-
 #include "MathGeoLib/include/Math/float4x4.h"
 #include "MathGeoLib/include/Math/float3x3.h"
 #include "MathGeoLib/include/Math/TransformOps.h"
 
+#include "OpenGL.h"
 #include "DevIL.h"
+
+#include "Macros.h"
+
+#include "Application.h"
+#include "M_Camera3D.h"
+#include "M_ResourceManager.h"
+#include "M_FileSystem.h"
+
+#include "R_Shader.h"
+
+#include "C_Camera.h"
+
+#include "SkyBox.h"
 
 #include "MemoryManager.h"
 
@@ -47,28 +52,27 @@ void Skybox::CreateSkybox()
 
 	for (unsigned int i = 0; i < faces.size(); i++)
 	{
-		char* buffer = nullptr;
-		std::string textureFile = ASSETS_SKYBOX_PATH;
-		textureFile.append(faces[i]);
-		unsigned int size = App->fileSystem->Load(textureFile.data(), &buffer);
+		char* buffer			= nullptr;
+		std::string textureFile = ASSETS_SKYBOX_PATH + faces[i];
+		unsigned int size		= App->fileSystem->Load(textureFile.data(), &buffer);
+		if (size == 0)
+			continue;
 
-		if (size > 0)
+		ILuint id;
+		ilGenImages(1, &id);
+		ilBindImage(id);
+		if (ilLoadL(IL_TYPE_UNKNOWN, (const void*)buffer, size))
 		{
-			ILuint id;
-			ilGenImages(1, &id);
-			ilBindImage(id);
-			if (ilLoadL(IL_TYPE_UNKNOWN, (const void*)buffer, size))
-			{
-				ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE);
-				ILinfo info;
-				iluGetImageInfo(&info);
+			ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE);
+			ILinfo info;
+			iluGetImageInfo(&info);
 
-				glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, info.Width, info.Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, info.Data);
+			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, info.Width, info.Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, info.Data);
 
-				ilDeleteImages(1, &id);
-			}
+			ilDeleteImages(1, &id);
 		}
-		delete[] buffer;
+		
+		RELEASE_ARRAY(buffer);
 	}
 
 

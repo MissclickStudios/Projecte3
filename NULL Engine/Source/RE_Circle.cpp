@@ -42,6 +42,8 @@ bool RE_Circle::Render()
 		return true;
 	}
 
+	glDisable(GL_LIGHTING);
+
 	glLineWidth(lineWidth);
 	glColor4f(color.r, color.g, color.b, color.a);
 	glBegin(GL_LINE_LOOP);
@@ -59,6 +61,8 @@ bool RE_Circle::Render()
 	glEnd();
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 	glLineWidth(lineWidth);
+
+	glEnable(GL_LIGHTING);
 
 	return true;
 }
