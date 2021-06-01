@@ -669,7 +669,7 @@ void M_Renderer3D::RenderScene()
 	if (renderWorldAxis)
 		DrawWorldAxis();
 
-	/*for (auto renderer = renderers.begin(); renderer != renderers.end(); ++renderer)
+	for (auto renderer = renderers.begin(); renderer != renderers.end(); ++renderer)
 	{
 		renderer->second->Render();
 
@@ -677,19 +677,18 @@ void M_Renderer3D::RenderScene()
 		RELEASE(renderer->second);
 	}
 
-	renderers.clear();*/
+	renderers.clear();
 	
 	// TMP
 	/*static float4x4 dbTrnsfrm		= float4x4::FromTRS(float3(0.0f, 10.0f, 0.0f), Quat::FromEulerXYZ(90.0f * DEGTORAD, 0.0f, 0.0f), float3::one);
 	static RE_Circle debugCircle	= RE_Circle(dbTrnsfrm, float3(0.0f, 10.0f, 0.0f), 5.0f, 20, 2.0f);
 	debugCircle.Render();*/
 	
-	RenderMeshes();
+	/*RenderMeshes();
 	RenderCuboids();
 	//RenderRays();
 	RenderSkeletons();
-	RenderParticles();
-
+	RenderParticles();*/
 	
 	if (App->camera->DrawLastRaycast())
 	{
