@@ -27,7 +27,7 @@ public:
 	void Draw2D() override;
 	void Draw3D() override;
 
-	float InputValue(float value, float maxValue = 1);
+	float InputValue(float value, float maxValue = -1, int numSquares = -1);
 	float IncrementOneSquare();
 	float DecrementOneSquare();
 	float GetSliderValue() const;
