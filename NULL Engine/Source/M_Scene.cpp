@@ -135,7 +135,7 @@ UpdateStatus M_Scene::Update(float dt)
 
 	RefreshSceneTransforms();																			// Second pass to make sure that all GOs' World Transform is updated.
 
-	std::multimap<float, Renderer*> renderers;
+	//std::multimap<float, Renderer*> renderers;
 	
 	std::vector<MeshRenderer>		meshRenderers;
 	std::vector<CuboidRenderer>		cuboidRenderers;
@@ -146,20 +146,20 @@ UpdateStatus M_Scene::Update(float dt)
 		{
 			if (GameObjectIsInsideCullingCamera(gameObjects[i]) || gameObjects[i] == cullingCamera->GetOwner())
 			{
-				//gameObjects[i]->GetRenderers(meshRenderers, cuboidRenderers, skeletonRenderers);
-				gameObjects[i]->GetRenderers(App->renderer->renderers);
+				gameObjects[i]->GetRenderers(meshRenderers, cuboidRenderers, skeletonRenderers);
+				//gameObjects[i]->GetRenderers(App->renderer->renderers);
 			}
 		}
 	}
 
-	//App->renderer->AddRenderersBatch(meshRenderers, cuboidRenderers, skeletonRenderers);
+	App->renderer->AddRenderersBatch(meshRenderers, cuboidRenderers, skeletonRenderers);
 	//App->renderer->AddRenderersBatch(renderers);
 	
 	meshRenderers.clear();
 	cuboidRenderers.clear();
 	skeletonRenderers.clear();
 
-	renderers.clear();
+	//renderers.clear();
 	
 	// --- M_SCENE SHORTCUTS
 	if (App->input->GetKey(SDL_SCANCODE_LCTRL) == KeyState::KEY_REPEAT)
