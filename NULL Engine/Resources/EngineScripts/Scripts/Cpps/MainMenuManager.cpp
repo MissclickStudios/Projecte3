@@ -62,6 +62,7 @@ void MainMenuManager::Update()
 	if (playButton && playButton->GetState() == UIButtonState::RELEASED && gameManager != nullptr)
 	{
 		GameManager* gameManagerScript = (GameManager*)gameManager->GetScript("GameManager");
+		gameManagerScript->ResetArmorerItemsLvl();
 		gameManagerScript->GenerateNewRun(true);
 		gameManagerScript->InitiateLevel(1);
 	}
