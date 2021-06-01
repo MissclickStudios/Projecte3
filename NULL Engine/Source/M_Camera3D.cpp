@@ -122,7 +122,7 @@ void M_Camera3D::CreateMasterCamera()
 	masterCamera->CreateComponent(ComponentType::CAMERA);
 	
 	C_Camera* cCamera = masterCamera->GetComponent<C_Camera>();
-	cCamera->SetFarPlaneDistance(1000.0f);
+	cCamera->SetFarPlaneDistance(5000.0f);
 	SetCurrentCamera(cCamera);
 	
 	if (App != nullptr)
