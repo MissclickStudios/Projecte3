@@ -1177,7 +1177,7 @@ void Player::Shoot()
 	{
 	case ShootState::NO_FULLAUTO:		{ currentAnimation = nullptr; aimState = AimState::ON_GUARD; }		break;
 	case ShootState::WAITING_FOR_NEXT:	{ /* DO NOTHING */ }												break;
-	case ShootState::FIRED_PROJECTILE:	{ currentAnimation = nullptr; aimState = AimState::ON_GUARD; }		break;
+	case ShootState::FIRED_PROJECTILE:	{ if (currentWeapon->type != WeaponType::MINIGUN) { currentAnimation = nullptr; aimState = AimState::ON_GUARD; } }		break;
 	case ShootState::RATE_FINISHED:		{ currentAnimation = nullptr; aimState = AimState::ON_GUARD; }		break;
 	case ShootState::NO_AMMO:			{ /*currentAnimation = nullptr;*/ aimState = AimState::RELOAD_IN; }	break;
 	}
