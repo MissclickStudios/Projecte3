@@ -90,8 +90,8 @@ void Weapon::Update()
 
 	if (weaponModel)
 	{
-		weaponModel->transform->SetLocalPosition(position);
-		weaponModel->transform->SetLocalEulerRotation(rotation);
+		weaponModel->transform->SetLocalPosition(defPosition);
+		weaponModel->transform->SetLocalEulerRotation(defRotation);
 		weaponModel->transform->SetLocalScale(scale);
 	}
 }
