@@ -316,7 +316,8 @@ void M_Audio::LoadEventsFromJson()
 		char* buffer = nullptr;
 		unsigned int load = App->fileSystem->Load(path.c_str(), &buffer);
 
-		ParsonNode eventJson = ParsonNode(buffer);	
+		ParsonNode eventJson = ParsonNode(buffer);
+		RELEASE_ARRAY(buffer);
 
 		ParsonNode soundBankInfo = eventJson.GetNode("SoundBanksInfo");
 

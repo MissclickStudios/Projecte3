@@ -691,39 +691,35 @@ uint M_FileSystem::Load(const char* file, char** buffer) const
 	uint ret = 0;
 
 	PHYSFS_file* fsFile = PHYSFS_openRead(file);											// Method that opens the file with the given path for reading.
-
-	if (fsFile != nullptr)
+	
+	if (fsFile == nullptr)
 	{
-		PHYSFS_sint32 size = (PHYSFS_sint32)PHYSFS_fileLength(fsFile);						// Mehtod that returns the length of a file in bytes.
+		LOG("[ERROR] File System: Could not open File { %s }! Error: %s\n", file, PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
+		return ret;
+	}
 
-		if (size > 0)
+	PHYSFS_sint32 size = (PHYSFS_sint32)PHYSFS_fileLength(fsFile);							// Mehtod that returns the length of a file in bytes.
+	if (size > 0)
+	{
+		*buffer = new char[size + 1];
+
+		uint amountRead = (uint)PHYSFS_readBytes(fsFile, *buffer, size);					// Method that returns the amount of objects read and stores the data in the given buffer.
+
+		if (amountRead != size)
 		{
-			*buffer = new char[size + 1];
-
-			uint amountRead = (uint)PHYSFS_readBytes(fsFile, *buffer, size);				// Method that returns the amount of objects read and stores the data in the given buffer.
-			//uint amount_read = (uint)PHYSFS_readBytes(fs_file, *buffer, 1, size);			// PHYSFS_read has been deprecated, now PHYSF_readBytes is the new method to read from a file.
-
-			if (amountRead != size)
-			{
-				LOG("[ERROR] File System: Could not read from File %s! Error: %s\n", file, PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
-				RELEASE_ARRAY(buffer);
-			}
-			else
-			{
-				ret = amountRead;
-
-				(*buffer)[size] = '\0';														// Adding end of file at the end of the buffer.
-			}
+			LOG("[ERROR] File System: Could not read from File %s! Error: %s\n", file, PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
+			RELEASE_ARRAY(buffer);
 		}
-
-		if (PHYSFS_close(fsFile) == (int)PhysfsResult::FAILURE)							// Method that closes a given file previously opened by PhysFS.
+		else
 		{
-			LOG(" [ERROR] File System: Could not close File %s! Error: %s\n", file, PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
+			ret = amountRead;
+			(*buffer)[size] = '\0';															// Adding end of file at the end of the buffer.
 		}
 	}
-	else
+
+	if (PHYSFS_close(fsFile) == (int)PhysfsResult::FAILURE)									// Method that closes a given file previously opened by PhysFS.
 	{
-		LOG("[ERROR] File System: Could not open File %s! Error: %s\n", file, PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
+		LOG(" [ERROR] File System: Could not close File %s! Error: %s\n", file, PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
 	}
 
 	return ret;

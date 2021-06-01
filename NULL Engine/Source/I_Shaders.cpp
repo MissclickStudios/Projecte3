@@ -2,6 +2,7 @@
 #include "OpenGL.h"
 
 #include "FileSystemDefinitions.h"
+#include "Macros.h"
 
 #include "Application.h"
 #include "M_FileSystem.h"
@@ -33,7 +34,7 @@ bool Importer::Shaders::Import(const char* fullPath, R_Shader* shader)
 
 	if (size <= 0)
 	{
-		delete[] buffer;
+		RELEASE_ARRAY(buffer);
 		LOG("Shader File: %s not found or can't be loaded.", fullPath);
 		return false;
 	}
@@ -48,7 +49,7 @@ bool Importer::Shaders::Import(const char* fullPath, R_Shader* shader)
 		shader->fragmentID = ImportFragment(file, shader);
 	}
 
-	delete[] buffer;
+	RELEASE_ARRAY(buffer);
 
 	// Create the Shader Program and link it
 	if (shader->vertexID != 0 && shader->fragmentID != 0)
