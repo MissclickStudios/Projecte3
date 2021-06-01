@@ -146,13 +146,13 @@ UpdateStatus M_Scene::Update(float dt)
 		{
 			if (GameObjectIsInsideCullingCamera(gameObjects[i]) || gameObjects[i] == cullingCamera->GetOwner())
 			{
-				//gameObjects[i]->GetRenderers(meshRenderers, cuboidRenderers, skeletonRenderers);
-				gameObjects[i]->GetRenderers(App->renderer->renderers);
+				gameObjects[i]->GetRenderers(meshRenderers, cuboidRenderers, skeletonRenderers);
+				//gameObjects[i]->GetRenderers(App->renderer->renderers);
 			}
 		}
 	}
 
-	//App->renderer->AddRenderersBatch(meshRenderers, cuboidRenderers, skeletonRenderers);
+	App->renderer->AddRenderersBatch(meshRenderers, cuboidRenderers, skeletonRenderers);
 	//App->renderer->AddRenderersBatch(renderers);
 	
 	meshRenderers.clear();

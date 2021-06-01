@@ -684,11 +684,11 @@ void M_Renderer3D::RenderScene()
 	static RE_Circle debugCircle	= RE_Circle(dbTrnsfrm, float3(0.0f, 10.0f, 0.0f), 5.0f, 20, 2.0f);
 	debugCircle.Render();*/
 	
-	/*RenderMeshes();
+	RenderMeshes();
 	RenderCuboids();
 	//RenderRays();
 	RenderSkeletons();
-	RenderParticles();*/
+	RenderParticles();
 
 	
 	if (App->camera->DrawLastRaycast())
