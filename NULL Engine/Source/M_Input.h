@@ -104,6 +104,8 @@ public:
 	AxisState		GetGameControllerAxis(int id) const;
 	int				GetGameControllerAxisValue(int id) const;
 
+	int				GetGameControllerAxisRaw(int id) const;
+
 	bool			WindowSizeWasManipulated(Uint8 windowEvent) const;										// Uint8 is an SDL typedef for unsigned char.
 
 	void			AddModuleToProcessInput(Module* module);												//Add a module that needs SDL_Events inputs info

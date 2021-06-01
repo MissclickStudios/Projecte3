@@ -22,6 +22,8 @@ RE_Ray::~RE_Ray()
 
 bool RE_Ray::Render()
 {
+	glDisable(GL_LIGHTING);
+	
 	GLfloat A[3] = { ray.a.x, ray.a.y , ray.a.z };
 	GLfloat B[3] = { ray.b.x, ray.b.y , ray.b.z };
 
@@ -38,6 +40,8 @@ bool RE_Ray::Render()
 
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 	
+	glEnable(GL_LIGHTING);
+
 	return true;
 }
 

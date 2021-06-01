@@ -147,13 +147,13 @@ UpdateStatus M_Scene::Update(float dt)
 			if (GameObjectIsInsideCullingCamera(gameObjects[i]) || gameObjects[i] == cullingCamera->GetOwner())
 			{
 				gameObjects[i]->GetRenderers(meshRenderers, cuboidRenderers, skeletonRenderers);
-				//gameObjects[i]->GetRenderers(renderers);
+				//gameObjects[i]->GetRenderers(App->renderer->renderers);
 			}
 		}
 	}
 
 	App->renderer->AddRenderersBatch(meshRenderers, cuboidRenderers, skeletonRenderers);
-	App->renderer->AddRenderersBatch(renderers);
+	//App->renderer->AddRenderersBatch(renderers);
 	
 	meshRenderers.clear();
 	cuboidRenderers.clear();
@@ -207,7 +207,7 @@ UpdateStatus M_Scene::PostUpdate(float dt)
 // Load assets
 bool M_Scene::CleanUp()
 {
-	LOG("Unloading Intro scene");
+	LOG("Unloading { %s } Scene", currentScene.c_str());
 	
 	//App->renderer->ClearRenderers();
 

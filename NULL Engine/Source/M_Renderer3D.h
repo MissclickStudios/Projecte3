@@ -315,15 +315,17 @@ public:
 	//Light					lights[MAX_LIGHTS];																	// 
 	
 	SDL_GLContext			context;																			// 
-	R_Shader*				defaultShader = nullptr;
-	R_Shader*				screenShader = nullptr;
+	R_Shader*				defaultShader	= nullptr;
+	R_Shader*				screenShader	= nullptr;
 	Skybox					defaultSkyBox;
+
+	R_Shader*				particleShader	= nullptr;
+
+	std::multimap<float, Renderer*>		renderers;																// Multimap with distance to camera and Renderers.
 
 	std::vector<Primitive*>	primitives;
 
 private:
-	std::multimap<float, Renderer*>		renderers;																// Multimap with distance to camera and Renderers.
-	
 	std::vector<MeshRenderer>			meshRenderers;
 	std::vector<CuboidRenderer>			cuboidRenderers;
 	std::vector<SkeletonRenderer>		skeletonRenderers;
@@ -380,7 +382,6 @@ private:																										// --- DEBUG VARIABLES ---		// TODO: CREATE A 
 	std::vector<Module*>	PostSceneRenderModules;
 
 	std::map<float, ParticleRenderer> particles;						//map of the particles to render. It is ordered depending on the (float)distance to camera. Allows propper rendering
-	R_Shader* particleShader = nullptr;
 };
 
 #endif // !__M_RENDERER_3D_H__

@@ -1684,42 +1684,40 @@ uint32 M_ResourceManager::ImportFromAssets(const char* assetsPath)
 
 	char* buffer = nullptr;
 	uint read = App->fileSystem->Load(assetsPath, &buffer);
-	if (read > 0)
-	{
-		ResourceType type	= GetTypeFromAssetsExtension(assetsPath);
-		Resource* resource	= CreateResource(type, assetsPath);
-
-		bool success = false;
-		switch (type)
-		{
-		case ResourceType::MODEL:			{ success = Importer::ImportScene(buffer, read, (R_Model*)resource); }						break;
-		case ResourceType::MESH:			{ success = Importer::ImportMesh(buffer, (R_Mesh*)resource); }								break;
-		case ResourceType::TEXTURE:			{ success = Importer::ImportTexture(buffer, read, (R_Texture*)resource); }					break;
-		case ResourceType::SCENE:			{ /*success = HAVE A FUNCTIONAL R_SCENE AND LOAD/SAVE METHODS*/ }							break;
-		case ResourceType::SHADER:			{ success = Importer::Shaders::Import(resource->GetAssetsPath(), (R_Shader*)resource); }	break;
-		case ResourceType::PARTICLE_SYSTEM:	{ success = Importer::ImportParticles(buffer, (R_ParticleSystem*)resource); }				break;
-		case ResourceType::SCRIPT:			{ success = Importer::Scripts::Import(assetsPath, buffer, read, (R_Script*)resource); }		break;
-		case ResourceType::NAVMESH:			{ success = Importer::ImportNavMesh(buffer, (R_NavMesh*)resource); }						break;
-		}
-
-		RELEASE_ARRAY(buffer);
-
-		if (!success)
-		{
-			LOG("[ERROR] Resource Manager: Could not Import File %s! Error: Check for [IMPORTER] errors in the Console Panel.", assetsPath);
-			DeallocateResource(resource);
-			return 0;
-		}
-
-		resourceUid = resource->GetUID();
-		SaveResourceToLibrary(resource);
-		DeallocateResource(resource);
-	}
-	else
+	if (read == 0)
 	{
 		LOG("[ERROR] Resource Manager: Could not Import File %s! Error: File System could not Read the File.", assetsPath);
 		return 0;
 	}
+
+	ResourceType type	= GetTypeFromAssetsExtension(assetsPath);
+	Resource* resource	= CreateResource(type, assetsPath);
+
+	bool success = false;
+	switch (type)
+	{
+	case ResourceType::MODEL:			{ success = Importer::ImportScene(buffer, read, (R_Model*)resource); }						break;
+	case ResourceType::MESH:			{ success = Importer::ImportMesh(buffer, (R_Mesh*)resource); }								break;
+	case ResourceType::TEXTURE:			{ success = Importer::ImportTexture(buffer, read, (R_Texture*)resource); }					break;
+	case ResourceType::SCENE:			{ /*success = HAVE A FUNCTIONAL R_SCENE AND LOAD/SAVE METHODS*/ }							break;
+	case ResourceType::SHADER:			{ success = Importer::Shaders::Import(resource->GetAssetsPath(), (R_Shader*)resource); }	break;
+	case ResourceType::PARTICLE_SYSTEM:	{ success = Importer::ImportParticles(buffer, (R_ParticleSystem*)resource); }				break;
+	case ResourceType::SCRIPT:			{ success = Importer::Scripts::Import(assetsPath, buffer, read, (R_Script*)resource); }		break;
+	case ResourceType::NAVMESH:			{ success = Importer::ImportNavMesh(buffer, (R_NavMesh*)resource); }						break;
+	}
+
+	RELEASE_ARRAY(buffer);
+
+	if (!success)
+	{
+		LOG("[ERROR] Resource Manager: Could not Import File %s! Error: Check for [IMPORTER] errors in the Console Panel.", assetsPath);
+		DeallocateResource(resource);
+		return 0;
+	}
+
+	resourceUid = resource->GetUID();
+	SaveResourceToLibrary(resource);
+	DeallocateResource(resource);
 
 	return resourceUid;
 }

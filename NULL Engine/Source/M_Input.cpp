@@ -1,3 +1,7 @@
+#include "Profiler.h"
+
+#include "Macros.h"
+
 #include "Application.h"																						// ATTENTION: Globals.h already included in Module.h
 #include "M_Window.h"
 #include "M_Renderer3D.h"
@@ -7,7 +11,6 @@
 #include "M_Input.h"
 
 #include "MemoryManager.h"
-#include "Profiler.h"
 
 #define MAX_KEYS 300
 #define MAX_DIR_LENGTH 300
@@ -35,8 +38,8 @@ M_Input::M_Input(bool isActive) : Module("Input", isActive)
 	gameController.buttons = new ButtonState[NUM_CONTROLLER_BUTTONS];
 	memset(gameController.buttons, 0, sizeof(ButtonState) * NUM_CONTROLLER_BUTTONS);		// 0 = BUTTON_IDLE
 
-	gameController.triggers = new ButtonState[NUM_CONTROLLER_TRIGGERS];					// Only 2 triggers are supported for a given game controller.
-	memset(gameController.triggers, 0, sizeof(ButtonState) * NUM_CONTROLLER_TRIGGERS);	// 0 = BUTTON_IDLE
+	gameController.triggers = new ButtonState[NUM_CONTROLLER_TRIGGERS];						// Only 2 triggers are supported for a given game controller.
+	memset(gameController.triggers, 0, sizeof(ButtonState) * NUM_CONTROLLER_TRIGGERS);		// 0 = BUTTON_IDLE
 
 	gameController.axis = new AxisState[NUM_CONTROLLER_AXIS];								// Only 4 axis are supported for a given game controller.
 	memset(gameController.axis, 0, sizeof(AxisState) * NUM_CONTROLLER_AXIS);				// 0 = AXIS_IDLE
@@ -51,7 +54,10 @@ M_Input::M_Input(bool isActive) : Module("Input", isActive)
 // Destructor
 M_Input::~M_Input()
 {
-	delete[] keyboard;
+	RELEASE(keyboard);
+	RELEASE(gameController.buttons);
+	RELEASE(gameController.triggers);
+	RELEASE(gameController.axis);
 }
 
 // Called before render is available
@@ -532,6 +538,30 @@ int M_Input::GetGameControllerAxisValue(int id) const
 				return SDL_GameControllerGetAxis(gameController.id, SDL_GameControllerAxis(id));
 		}
 			
+		/*if(SDL_GameControllerGetAxis(gameController.id, SDL_GameControllerAxis(id)) < -JOYSTICK_THRESHOLD)
+			return SDL_GameControllerGetAxis(gameController.id, SDL_GameControllerAxis(id));
+
+		if (SDL_GameControllerGetAxis(gameController.id, SDL_GameControllerAxis(id)) > JOYSTICK_THRESHOLD)
+			return SDL_GameControllerGetAxis(gameController.id, SDL_GameControllerAxis(id));*/
+	}
+
+	return 0;
+}
+
+int M_Input::GetGameControllerAxisRaw(int id) const
+{
+	if (gameController.id != nullptr)
+	{
+		if (id < 2)
+		{
+			if (gameController.axis[id] != AxisState::AXIS_IDLE)
+				return SDL_GameControllerGetAxis(gameController.id, SDL_GameControllerAxis(id));
+		}
+		else if (id > 1)
+		{
+			return SDL_GameControllerGetAxis(gameController.id, SDL_GameControllerAxis(id));
+		}
+
 		/*if(SDL_GameControllerGetAxis(gameController.id, SDL_GameControllerAxis(id)) < -JOYSTICK_THRESHOLD)
 			return SDL_GameControllerGetAxis(gameController.id, SDL_GameControllerAxis(id));
 
