@@ -186,7 +186,7 @@ void GameManager::Start()
 	if(cameraGameObject != nullptr)
 		cameraScript = (CameraMovement*)cameraGameObject->GetScript("CameraMovement");
 
-	if (strcmp(App->scene->GetCurrentScene(), levelNames.loseScene.c_str()) == 0)
+	if (strcmp(App->scene->GetCurrentScene(), levelNames.winScene.c_str()) == 0)
 		SetUpWinScreen();
 
 	if (strcmp(App->scene->GetCurrentScene(), levelNames.l1Initial.c_str()) == 0)

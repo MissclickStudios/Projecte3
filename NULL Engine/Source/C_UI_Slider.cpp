@@ -155,6 +155,7 @@ void C_UI_Slider::HandleInput(C_UI** selectedUi)
 {
 	if (!IsActive())
 		return;
+
 	if (!hovered) 
 	{
 		if (*selectedUi == nullptr || *selectedUi == this)
@@ -166,16 +167,7 @@ void C_UI_Slider::HandleInput(C_UI** selectedUi)
 	else 
 	{
 		if (*selectedUi != this) 
-		{
 			hovered = false;
-			return;
-		}
-		if (!trackedVariable)
-			return;
-		else if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KeyState::KEY_DOWN || App->input->GetGameControllerAxis(0) == AxisState::POSITIVE_AXIS_DOWN)
-			*trackedVariable += (float)maxValue / (float)numRects;
-		else if (App->input->GetKey(SDL_SCANCODE_LEFT) == KeyState::KEY_DOWN || App->input->GetGameControllerAxis(0) == AxisState::NEGATIVE_AXIS_DOWN)
-			*trackedVariable -= (float)maxValue / (float)numRects;
 	}
 }
 
@@ -201,15 +193,14 @@ void C_UI_Slider::Draw2D()
 	glBindTexture(GL_TEXTURE_2D, id);
 
 	int checkedRects = 0;
-	if (*trackedVariable > maxValue)
-		maxValue = *trackedVariable;
-
-	checkedRects = ((*trackedVariable) * numRects) / maxValue;
+	checkedRects = (value * numRects) / maxValue;
+	if (maxValue <= 0)
+		checkedRects = 0;
 	Frame currentFrame;
 	if (hovered)
 		currentFrame = hoverChecked;
 	else
-		currentFrame = unhoverUnchecked;
+		currentFrame = unhoverChecked;
 
 	for (int i = 0; i < checkedRects; ++i) 
 	{
@@ -274,18 +265,43 @@ void C_UI_Slider::Draw3D()
 {
 }
 
-void C_UI_Slider::InputValue(float* value, float maxValue)
+float C_UI_Slider::InputValue(float value, float maxValue)
 {
-	if (value)
-		return;
+	if (value > maxValue)
+		value = maxValue;
+	this->maxValue = maxValue;
+	int checkedRects = (value * numRects) / maxValue;
+	this->value = (float)numRects / this->maxValue * checkedRects;
+	return this->value;
+}
 
-	if (maxValue != -1)
-		this->maxValue = maxValue;
+float C_UI_Slider::IncrementOneSquare()
+{
+	if(value < maxValue)
+		value += (float)maxValue / (float)numRects;
+	return value;
+}
 
-	trackedVariable = value;
-	int checkedRects = ((*trackedVariable) * numRects) / maxValue;
-	*trackedVariable = (float)numRects / this->maxValue * checkedRects;
+float C_UI_Slider::DecrementOneSquare()
+{
+	if (value > 0) //min 0??
+		value -= (float)maxValue / (float)numRects;
+	return value;
+}
 
+float C_UI_Slider::GetSliderValue() const
+{
+	return value;
+}
+
+bool C_UI_Slider::Hovered() const
+{
+	return hovered;
+}
+
+void C_UI_Slider::Hoverable(bool setTo)
+{
+	interactuable = setTo;
 }
 
 void C_UI_Slider::ResetInput()
