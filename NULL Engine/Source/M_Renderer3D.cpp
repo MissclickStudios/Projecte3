@@ -684,11 +684,11 @@ void M_Renderer3D::RenderScene()
 	static RE_Circle debugCircle	= RE_Circle(dbTrnsfrm, float3(0.0f, 10.0f, 0.0f), 5.0f, 20, 2.0f);
 	debugCircle.Render();*/
 	
-	RenderMeshes();
+	/*RenderMeshes();
 	RenderCuboids();
 	//RenderRays();
 	RenderSkeletons();
-	RenderParticles();
+	RenderParticles();*/
 
 	
 	if (App->camera->DrawLastRaycast())
@@ -1939,47 +1939,33 @@ void MeshRenderer::ApplyShader()
 		App->scene->GetDirLights(dirLights);
 		App->scene->GetPointLights(pointLights);
 
-
-		cMaterial->GetShader() ? shaderProgram = cMaterial->GetShader()->shaderProgramID : shaderProgram;
-
-		shaderProgram ? shaderProgram : shaderProgram = SetDefaultShader(cMaterial);
+		cMaterial->GetShader()	? shaderProgram = cMaterial->GetShader()->shaderProgramID : shaderProgram;
+		shaderProgram			? shaderProgram : shaderProgram = SetDefaultShader(cMaterial);
 
 		glUseProgram(shaderProgram);
 
-		cMaterial->GetTexture() ? cMaterial->GetShader()->SetUniform1i("hasTexture", (GLint)true) : cMaterial->GetShader()->SetUniform1i("hasTexture", (GLint)false);
-
-		cMaterial->GetTakeDamage() ? cMaterial->GetShader()->SetUniform1i("takeDamage", (GLint)true) : cMaterial->GetShader()->SetUniform1i("takeDamage", (GLint)false);
-		
-		!dirLights.empty() ? cMaterial->GetShader()->SetUniform1i("useDirLight", (GLint)true) : cMaterial->GetShader()->SetUniform1i("useDirLight", (GLint)false);
+		cMaterial->GetTexture()		? cMaterial->GetShader()->SetUniform1i("hasTexture", (GLint)true) : cMaterial->GetShader()->SetUniform1i("hasTexture", (GLint)false);
+		cMaterial->GetTakeDamage()	? cMaterial->GetShader()->SetUniform1i("takeDamage", (GLint)true) : cMaterial->GetShader()->SetUniform1i("takeDamage", (GLint)false);
+		!dirLights.empty()			? cMaterial->GetShader()->SetUniform1i("useDirLight", (GLint)true) : cMaterial->GetShader()->SetUniform1i("useDirLight", (GLint)false);
 
 		if (shaderProgram != 0)
 		{
 			//Model
+			cMaterial->GetShader()->SetUniformVec4f("inColor",				(GLfloat*)&cMaterial->GetMaterialColour());
+			cMaterial->GetShader()->SetUniformVec4f("alternateColor",		(GLfloat*)&cMaterial->GetAlternateColour());
+			cMaterial->GetShader()->SetUniformMatrix4("modelMatrix",		transform->GetWorldTransform().Transposed().ptr());
+			cMaterial->GetShader()->SetUniformMatrix4("viewMatrix",			App->camera->GetCurrentCamera()->GetViewMatrixTransposed().ptr());
+			cMaterial->GetShader()->SetUniformMatrix4("projectionMatrix",	App->camera->GetCurrentCamera()->GetProjectionMatrixTransposed().ptr());
+			cMaterial->GetShader()->SetUniformVec3f("cameraPosition",		(GLfloat*)&App->camera->GetCurrentCamera()->GetFrustum().Pos());
 			
-			cMaterial->GetShader()->SetUniformVec4f("inColor", (GLfloat*)&cMaterial->GetMaterialColour());
-
-			cMaterial->GetShader()->SetUniformVec4f("alternateColor", (GLfloat*)&cMaterial->GetAlternateColour());
-
-			cMaterial->GetShader()->SetUniformMatrix4("modelMatrix", transform->GetWorldTransform().Transposed().ptr());
-
-			cMaterial->GetShader()->SetUniformMatrix4("viewMatrix", App->camera->GetCurrentCamera()->GetViewMatrixTransposed().ptr());
-
-			cMaterial->GetShader()->SetUniformMatrix4("projectionMatrix", App->camera->GetCurrentCamera()->GetProjectionMatrixTransposed().ptr());
-
-			cMaterial->GetShader()->SetUniformVec3f("cameraPosition", (GLfloat*)&App->camera->GetCurrentCamera()->GetFrustum().Pos());
-			
-
-			cMaterial->GetShader()->SetUniform1f("deltaTime", MC_Time::Game::GetDT());
-
-			cMaterial->GetShader()->SetUniform1f("Time", MC_Time::Game::GetTimeSinceStart());
+			cMaterial->GetShader()->SetUniform1f("deltaTime",				MC_Time::Game::GetDT());
+			cMaterial->GetShader()->SetUniform1f("Time",					MC_Time::Game::GetTimeSinceStart());
 
  			//Skybox
-			
 			cMaterial->GetShader()->SetUniform1i("skybox", 11);
 
 
 			//ANimations
-
 			cMesh->GetBoneTranforms(boneTransforms);
 			
 			bool check = cMesh->GetSkinnedMesh() != nullptr;
