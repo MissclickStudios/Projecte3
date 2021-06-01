@@ -14,6 +14,7 @@ class C_AudioSource;
 class WwiseObject
 {
 public:
+
 	WwiseObject(unsigned int id, const char* name);
 	~WwiseObject();
 
@@ -81,6 +82,9 @@ public:
 	std::map <std::string, unsigned int> eventMap;
 	std::vector<WwiseObject*> audioListenerList;
 	std::vector<WwiseObject*> audioSourceList;
+
+	float maxSfxVolume = 0.0f;
+	float maxMusicVolume = 0.0f;
 
 private:
 
