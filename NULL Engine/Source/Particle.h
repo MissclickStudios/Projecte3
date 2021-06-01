@@ -4,6 +4,7 @@
 #include "Globals.h"
 #include "Color.h"
 
+#include "Dependencies/MathGeoLib/include/Math/float4x4.h"
 #include "Dependencies/MathGeoLib/include/Math/float3.h"
 #include "Dependencies/MathGeoLib/include/Math/Quat.h"
 
@@ -32,8 +33,10 @@ public:
 
 	void ApplyBillboarding(Billboarding type = Billboarding::NONE);*/
 
+	float4x4* GetTransformAsPtr();
+
 public:
-	
+	float4x4 transform;
 	float3 position;
 	Quat worldRotation;
 

@@ -2,7 +2,7 @@
 
 enum class AimState
 {
-	IDLE,
+	IDLE, //Not aiming
 	ON_GUARD, // must use french accent
 	AIMING,
 	SHOOT_IN,

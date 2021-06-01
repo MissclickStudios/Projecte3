@@ -26,6 +26,13 @@ void Particle::Update(float dt)
 
 }
 
+float4x4* Particle::GetTransformAsPtr()
+{
+    transform = (float4x4::FromTRS(position, worldRotation, float3(size, size, size))).Transposed();
+    
+    return &transform;
+}
+
 //void Particle::ScreenAligned(C_Camera* currentCamera)
 //{
 //	//particleMesh->SetRotation(currentCamera->GetMatrixRotation());

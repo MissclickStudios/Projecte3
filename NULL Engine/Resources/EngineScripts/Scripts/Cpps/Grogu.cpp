@@ -13,6 +13,7 @@
 
 #include "GameManager.h"
 
+#include "MC_Time.h"
 #include "Log.h"
 
 #define MAX_INPUT 32767
@@ -23,10 +24,12 @@ Grogu* CreateGrogu()
 	
 	// Basic Stats
 	INSPECTOR_DRAGABLE_FLOAT(script->speed);
+	INSPECTOR_DRAGABLE_FLOAT(script->verticalSpeed);
 	// Modifiers
 	INSPECTOR_DRAGABLE_FLOAT(script->speedModifier);
 	// Behaviour
 	INSPECTOR_DRAGABLE_FLOAT(script->maxDistanceToMando);
+	INSPECTOR_CHECKBOX_BOOL(script->isLevitationEnabled);
 
 	return script;
 }
@@ -50,6 +53,8 @@ void Grogu::SetUp()
 		rigidBody->FreezeRotationY(true);
 		rigidBody->FreezeRotationZ(true);
 	}
+
+	isGoingUp = false;
 }
 
 void Grogu::Behavior()
@@ -60,6 +65,7 @@ void Grogu::Behavior()
 
 	ManageMovement();
 	ManageRotation();
+	ManageLevitation();
 }
 
 void Grogu::CleanUp()
@@ -112,11 +118,39 @@ void Grogu::ManageRotation()
 	float3 direction = player->transform->GetWorldPosition() - gameObject->transform->GetWorldPosition();
 	direction.Normalize();
 	float2 aimDirection = { direction.x, direction.z };
-
 	float rad = aimDirection.AimedAngle();
-	gameObject->transform->SetLocalRotation(float3(0, -rad + DegToRad(180), 0));
+
+	GameObject* go = App->scene->GetGameObjectByName("Grogu Mesh");
+	if (go != nullptr)
+	{
+		go->transform->SetLocalRotation(float3(0, -rad - DegToRad(60), 0));
+	}
 }
 
+
+void Grogu::ManageLevitation()
+{
+	if (!isLevitationEnabled)
+		return;
+
+	GameObject* go = App->scene->GetGameObjectByName("Grogu Mesh");
+	if (go != nullptr)
+	{
+		if (go->transform->GetWorldPosition().y >= -3)
+			isGoingUp = false;
+		else if (go->transform->GetWorldPosition().y <= -5)
+			isGoingUp = true;
+
+		float3 pos = go->transform->GetWorldPosition();
+
+		if (isGoingUp)
+			pos.y += verticalSpeed * MC_Time::Game::GetDT();
+		else
+			pos.y -= verticalSpeed * MC_Time::Game::GetDT();
+
+		go->transform->SetWorldPosition(pos);
+	}
+}
 void Grogu::Movement()
 {
 	float2 moveDirection = { direction.x, direction.z };

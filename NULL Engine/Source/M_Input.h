@@ -11,12 +11,13 @@
 #define MAX_AXIS 32767								
 #define CONTROLLER_INDEX 0							
 #define TRIGGER_INDEX 4		
-#define JOYSTICK_THRESHOLD 8000
+#define JOYSTICK_THRESHOLD 2500
 
 #define LEFT_TRIGGER 0								
 #define RIGHT_TRIGGER 1								
 
 struct _SDL_GameController;
+struct _SDL_Joystick;
 class ParsonNode;
 typedef unsigned int uint;
 
@@ -53,6 +54,7 @@ enum class AxisState
 struct GameController
 {
 	_SDL_GameController*	id;
+	_SDL_Joystick*			joystick;
 	int						index;
 
 	ButtonState*			buttons;
@@ -102,13 +104,15 @@ public:
 	AxisState		GetGameControllerAxis(int id) const;
 	int				GetGameControllerAxisValue(int id) const;
 
+	int				GetGameControllerAxisRaw(int id) const;
+
 	bool			WindowSizeWasManipulated(Uint8 windowEvent) const;										// Uint8 is an SDL typedef for unsigned char.
 
 	void			AddModuleToProcessInput(Module* module);												//Add a module that needs SDL_Events inputs info
 
 private:
 
-	GameController  gameController;
+	GameController  gameController; 
 
 	KeyState*		keyboard;
 	KeyState		mouseButtons[MAX_MOUSE_BUTTONS];

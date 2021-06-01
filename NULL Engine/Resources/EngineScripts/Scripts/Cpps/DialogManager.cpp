@@ -257,7 +257,7 @@ void DialogManager::EndDialog()
 	App->uiSystem->RemoveActiveCanvas(dialogCanvas);
 	state = DialogState::NO_DIALOG;
 
-	if(!armorer->menuOpen)
+	if(armorer != nullptr && !armorer->menuOpen)
 		mando->SetPlayerInteraction(InteractionType::NONE);
 }
 

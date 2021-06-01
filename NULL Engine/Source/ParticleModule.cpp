@@ -59,8 +59,8 @@ void EmitterSpawn::Save(ParsonNode& node)
 
 void EmitterSpawn::Load(ParsonNode& node)
 {
-	spawnRatio = node.GetNumber("spawnRatio");
-	timer = node.GetNumber("timer");
+	spawnRatio	= node.GetNumber("spawnRatio");
+	timer		= node.GetNumber("timer");
 }
 
 void EmitterSpawn::Spawn(EmitterInstance* emitter, Particle* particle)

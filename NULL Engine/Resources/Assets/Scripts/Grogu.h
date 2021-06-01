@@ -37,7 +37,8 @@ private:
 	// Logic
 	void ManageMovement();
 	void ManageRotation();
-
+	void ManageLevitation();
+	
 	// Actions
 	void Movement();
 
@@ -45,7 +46,10 @@ private:
 
 public:
 	float maxDistanceToMando = 7.0f;
-
+	float verticalSpeed = 0.01f;
+	bool isLevitationEnabled = true;
+private:
+	bool isGoingUp = false;
 };
 
 SCRIPTS_FUNCTION Grogu* CreateGrogu();

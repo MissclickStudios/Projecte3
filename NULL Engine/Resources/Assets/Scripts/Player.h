@@ -165,6 +165,8 @@ public:
 	float ChangeTime()						{ return changeTime / attackSpeedModifier; }
 	void EquipWeapon(Prefab weapon);
 	Weapon* const GetCurrentWeapon() const	{ return currentWeapon; }
+	Weapon* GetSecondaryWeapon() { return secondaryWeapon; }
+	bool GetUsingSecondaryGun() { return usingSecondaryGun; }
 
 	float changeTime = 0.0f;
 	Prefab blaster;
@@ -198,6 +200,7 @@ public:
 	std::string primaryWeaponImageName		= "PrimaryWeapon";
 	std::string dashImageName				= "Dash";
 	std::string creditsImageName			= "Credits";
+	std::string beskarImageName				= "Beskar";
 
 	//HUD Animations
 	C_2DAnimator* mandoImage;
@@ -205,6 +208,7 @@ public:
 	C_2DAnimator* secondaryWeaponImage;
 	C_2DAnimator* dashImage;
 	C_2DAnimator* creditsImage;
+	C_2DAnimator* beskarImage;
 
 	// Controller
 	float joystickThreshold					= 25.0f;
@@ -279,6 +283,8 @@ private:
 	
 	float2 moveInput					= float2::zero;
 	float2 aimInput						= float2::zero;
+
+	float2 aimInputThreshold			= float2::zero;
 
 	// Movement
 	void Movement();

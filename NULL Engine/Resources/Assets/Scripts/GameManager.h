@@ -48,10 +48,11 @@ public:
 class RunStats
 {
 public:
+
     uint attempt = 0;
     uint runKills = 0;
     float runPrecision = 0.f;
-    uint runTime = 0;
+    float runTime = 0;                  //In seconds (uses dt)
     std::string weaponUsed = "Rifle";
 
     void Save(ParsonNode* node);

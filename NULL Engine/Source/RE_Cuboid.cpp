@@ -14,9 +14,8 @@ RE_Cuboid::RE_Cuboid(const float3* vertices, Cuboid_Type cuboidType) : Renderer(
 vertices	(vertices),
 cuboidType	(cuboidType)
 {
-	color		= GetColorByType();
+	color		= GetColorByType();																						// Dirty fix as Render() will only be called once per Renderer.
 	lineWidth	= GetEdgeWidthByType();
-
 }
 
 RE_Cuboid::~RE_Cuboid()
@@ -26,7 +25,9 @@ RE_Cuboid::~RE_Cuboid()
 
 bool RE_Cuboid::Render()
 {
-		// For a Cuboid with vertices ABCDEFGH
+	glDisable(GL_LIGHTING);
+	
+	// For a Cuboid with vertices ABCDEFGH
 	GLfloat* A = (GLfloat*)&vertices[0];
 	GLfloat* B = (GLfloat*)&vertices[1];
 	GLfloat* C = (GLfloat*)&vertices[2];
@@ -78,6 +79,8 @@ bool RE_Cuboid::Render()
 	glLineWidth(STANDARD_LINE_WIDTH);
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 	
+	glEnable(GL_LIGHTING);
+
 	return true;
 }
 

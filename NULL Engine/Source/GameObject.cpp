@@ -12,12 +12,15 @@
 #include "M_Camera3D.h"																					//TEMP. putting the cam if game time
 
 #include "R_Mesh.h"
-#include "R_ParticleSystem.h"
 
 #include "RE_Mesh.h"
 #include "RE_Cuboid.h"
 #include "RE_Skeleton.h"
 #include "RE_Particle.h"
+
+#include "EmitterInstance.h"
+#include "Emitter.h"
+#include "Particle.h"
 
 #include "Component.h"
 #include "C_Transform.h"
@@ -36,12 +39,6 @@
 #include "C_CapsuleCollider.h"
 #include "C_ParticleSystem.h"
 #include "C_NavMeshAgent.h"
-//#include "C_PlayerController.h"
-//#include "C_BulletBehavior.h"
-//#include "C_PropBehavior.h"
-//#include "C_CameraBehavior.h"
-//#include "C_GateBehavior.h"
-
 #include "C_Canvas.h"
 #include "C_UI.h"
 #include "C_UI_Image.h"
@@ -49,7 +46,6 @@
 #include "C_UI_Button.h"
 #include "C_UI_Checkbox.h"
 #include "C_UI_Slider.h"
-
 #include "C_2DAnimator.h"
 
 #include "GameObject.h"
@@ -268,7 +264,8 @@ void GameObject::FreeComponents()
 		RELEASE(components[i]);
 	}
 
-	if(!components.empty()) components.clear();
+	if(!components.empty()) 
+		components.clear();
 }
 
 void GameObject::FreeChilds()
@@ -410,6 +407,9 @@ void GameObject::GetRenderers(std::vector<MeshRenderer>& meshRenderers, std::vec
 
 void GameObject::GetRenderers(std::multimap<float, Renderer*>& renderers)
 {
+	if (toDelete)
+		return;
+	
 	float sortingValue = transform->GetWorldPosition().y;													// Create a namespace to handle different calculations for sorting values?
 
 	std::vector<C_Mesh*> cMeshes;	
@@ -438,12 +438,27 @@ void GameObject::GetRenderers(std::multimap<float, Renderer*>& renderers)
 
 	for (uint i = 0; i < cParticles.size(); ++i)
 	{
-		if (cParticles[i] != nullptr || cParticles[i]->resource == nullptr)
+		if (cParticles[i] == nullptr /*|| cParticles[i]->resource == nullptr*/)
 			continue;
 
-		if (cParticles[i]->IsActive() /*&& cParticles[i]->resource->texture != nullptr*/)
+		if (!cParticles[i]->IsActive() || cParticles[i]->emitterInstances.empty())
+			continue;
+
+		for (auto emInstance = cParticles[i]->emitterInstances.cbegin(); emInstance != cParticles[i]->emitterInstances.cend(); ++emInstance)
 		{
-			//renderers.emplace(sortingValue, new RE_Particle())
+			if ((*emInstance)->stopSpawn || (*emInstance)->GetEmitterTexture() == nullptr)
+				continue;
+
+			std::map<float, Particle*> activeParticles;
+			(*emInstance)->GetActiveParticles(activeParticles);
+
+			for (auto particleItem = activeParticles.cbegin(); particleItem != activeParticles.cend(); ++particleItem)
+			{
+				Particle* particle = particleItem->second;
+				renderers.emplace(sortingValue, new RE_Particle(particle->GetTransformAsPtr(), 1.0f, particle->color, (*emInstance)->GetEmitterTexture(), App->renderer->particleShader));
+			}
+
+			activeParticles.clear();
 		}
 	}
 

@@ -45,7 +45,6 @@ void GroguPush::Start()
 
 	abilityCollider = gameObject->GetComponent<C_BoxCollider>();
 	abilityCollider->SetSize(abilityRadius);
-	abilityCooldownTimer.Start();
 
 	GameObject* tmp = App->scene->GetGameObjectByName("Game Manager");
 	if (tmp != nullptr)
@@ -64,7 +63,15 @@ void GroguPush::Update()
 	abilityCollider->SetTrigger(false);
 	abilityCollider->SetIsActive(false);
 
-	if ((App->input->GetKey(SDL_SCANCODE_G) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(SDL_CONTROLLER_BUTTON_LEFTSHOULDER) == ButtonState::BUTTON_DOWN) && (abilityCooldownTimer.ReadSec() > abilityCooldown) && gameManager->storyDialogState.defeatedIG11FirstTime)
+	if (abilityCooldownTimer.IsActive())
+	{
+		if (abilityCooldownTimer.ReadSec() > abilityCooldown)
+			abilityCooldownTimer.Stop();
+		else
+			return;
+	}
+
+	if ((App->input->GetKey(SDL_SCANCODE_G) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(SDL_CONTROLLER_BUTTON_LEFTSHOULDER) == ButtonState::BUTTON_DOWN) && gameManager->storyDialogState.defeatedIG11FirstTime)
 	{
 		doAbility = true;
 
@@ -122,7 +129,6 @@ void GroguPush::OnTriggerExit(GameObject* object)
 
 	if (entity->type == EntityType::GROGU || entity->type == EntityType::PLAYER)
 		return;
-
 
 	entity->gameObject->GetComponent<C_RigidBody>()->FreezePositionY(false);
 }
