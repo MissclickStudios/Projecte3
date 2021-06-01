@@ -1157,6 +1157,13 @@ void Player::AimIdle()
 
 	if (aimingAimPlane != nullptr)
 		aimingAimPlane->SetIsActive(false);
+	if (currentWeapon == nullptr)
+		return;
+	else if (currentWeapon->type == WeaponType::MINIGUN)
+	{
+		currentWeapon->defPosition = currentWeapon->position;
+		currentWeapon->defRotation = currentWeapon->rotation;
+	}
 }
 
 void Player::OnGuard()
@@ -1171,6 +1178,13 @@ void Player::Aiming()
 
 	if (aimingAimPlane != nullptr)
 		aimingAimPlane->SetIsActive(true);
+	if (currentWeapon == nullptr)
+		return;
+	else if(currentWeapon->type == WeaponType::MINIGUN)
+	{
+		currentWeapon->defPosition = currentWeapon->modifiedPosition;
+		currentWeapon->defRotation = currentWeapon->modifiedRotation;
+	}
 }
 
 void Player::ShootIn()
@@ -1191,7 +1205,19 @@ void Player::Shoot()
 	{
 	case ShootState::NO_FULLAUTO:		{ currentAnimation = nullptr; aimState = AimState::ON_GUARD; }		break;
 	case ShootState::WAITING_FOR_NEXT:	{ /* DO NOTHING */ }												break;
-	case ShootState::FIRED_PROJECTILE:	{ if (currentWeapon->type != WeaponType::MINIGUN) { currentAnimation = nullptr; aimState = AimState::ON_GUARD; } }		break;
+	case ShootState::FIRED_PROJECTILE:	
+	{ 
+		if (currentWeapon->type != WeaponType::MINIGUN)
+		{ 
+			currentAnimation = nullptr; 
+			aimState = AimState::ON_GUARD; 
+		}
+		else
+		{
+			currentWeapon->defPosition = currentWeapon->modifiedPosition;
+			currentWeapon->defRotation = currentWeapon->modifiedRotation;
+		}
+	}		break;
 	case ShootState::RATE_FINISHED:		{ currentAnimation = nullptr; aimState = AimState::ON_GUARD; }		break;
 	case ShootState::NO_AMMO:			{ /*currentAnimation = nullptr;*/ aimState = AimState::RELOAD_IN; }	break;
 	}

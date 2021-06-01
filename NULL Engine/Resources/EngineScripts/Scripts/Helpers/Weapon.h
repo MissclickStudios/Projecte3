@@ -133,6 +133,11 @@ public:
 	float3 rotation = float3::zero;
 	float3 scale = float3::zero;
 
+	float3 modifiedPosition = float3::zero;
+	float3 modifiedRotation = float3::zero;
+
+	float3 defPosition = float3::zero;
+	float3 defRotation = float3::zero;
 	// Projectiles
 	int projectileNum = 0;
 	bool updateProjectiles = false;
