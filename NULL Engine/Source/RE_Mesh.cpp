@@ -348,18 +348,16 @@ void RE_Mesh::ApplyShader()
 	if (cMaterial == nullptr)
 		return;
 
-	uint32 shaderProgram = 0;
+	std::vector<GameObject*> dirLights;																					// This is done each frame per Renderer.
+	std::vector<GameObject*> pointLights;																				// Pass to ptr?
+	App->scene->GetDirLights(dirLights);																				// Leave as is?
+	App->scene->GetPointLights(pointLights);																			// Either way maybe this is not a chokepoint at all.
 
-	std::vector<GameObject*> dirLights;																			// This is done each frame per Renderer.
-	std::vector<GameObject*> pointLights;																		// Pass to ptr?
-	App->scene->GetDirLights(dirLights);																		// Leave as is?
-	App->scene->GetPointLights(pointLights);																	// Either way maybe this is not a chokepoint at all.
-
-	R_Shader* rShader = cMaterial->GetShader();																	// THIS. Having a local R_Shader* will save a lot of unnecessary calls.
-	if (rShader == nullptr)																						// THIS. Finishing early in case there is no shader.
+	R_Shader* rShader = cMaterial->GetShader();																			// THIS. Having a local R_Shader* will save a lot of unnecessary calls.
+	if (rShader == nullptr)																								// THIS. Finishing early in case there is no shader.
 		return;
 
-	shaderProgram = (rShader->shaderProgramID != 0) ? rShader->shaderProgramID : SetDefaultShader(cMaterial);	// THIS. Eliminates one check.
+	uint32 shaderProgram = (rShader->shaderProgramID != 0) ? rShader->shaderProgramID : SetDefaultShader(cMaterial);	// THIS. Eliminates one check.
 	if (shaderProgram == 0)
 		return;
 
@@ -382,7 +380,6 @@ void RE_Mesh::ApplyShader()
 
  	//Skybox
 	rShader->SetUniform1i("skybox", 11);
-
 
 	//Animations
 	bool hasActiveAnimation = (cMesh->GetSkinnedMesh() != nullptr);																		// THIS. Changed the boolean's name.

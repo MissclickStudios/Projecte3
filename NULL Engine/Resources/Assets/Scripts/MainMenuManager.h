@@ -7,6 +7,7 @@ class GameObject;
 class C_Canvas;
 class C_UI_Button;
 class C_UI_Chekbox;
+class C_UI_Slider;
 
 class SCRIPTS_API MainMenuManager : public Script {
 public:
@@ -30,6 +31,7 @@ public:
 	GameObject* fullScreenCheckObject = nullptr;
 	GameObject* vsyncCheckObject = nullptr;
 	GameObject* backButtonObject = nullptr;
+	GameObject* sliderObject = nullptr;
 private:
 	C_Canvas* mainCanvas = nullptr;
 	C_UI_Button* playButton = nullptr;
@@ -41,6 +43,8 @@ private:
 	C_UI_Checkbox* fullScreenCheck = nullptr;
 	C_UI_Checkbox* vsyncCheck = nullptr;
 	C_UI_Button* backButton = nullptr;
+	C_UI_Slider* slider = nullptr;
+	float volume = 0.0f;
 };
 
 SCRIPTS_FUNCTION MainMenuManager* CreateMainMenuManager() {
@@ -56,5 +60,6 @@ SCRIPTS_FUNCTION MainMenuManager* CreateMainMenuManager() {
 	INSPECTOR_GAMEOBJECT(script->vsyncCheckObject);
 	INSPECTOR_GAMEOBJECT(script->mainCanvasObject);
 	INSPECTOR_GAMEOBJECT(script->backButtonObject);
+	INSPECTOR_GAMEOBJECT(script->sliderObject);
 	return script;
 }

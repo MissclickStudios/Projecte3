@@ -2102,7 +2102,16 @@ void E_Inspector::DrawUISliderComponent(C_UI_Slider* slider)
 
 		ImGui::DragFloat("Max Value", &slider->maxValue);
 		ImGui::DragInt("Num Rects", &slider->numRects);
-		ImGui::DragFloat("Offset", &slider->offset);
+		ImGui::DragFloat("Offset", &slider->offset, 1.0f, 0.0f, 1.0f);
+
+		//if (ImGui::DragFloat("Value", &slider->value, 1.0f, 0.0f, slider->maxValue)) 
+		//	slider->InputValue(slider->value, slider->maxValue);
+		if (ImGui::Button("Increase one rect"))
+			slider->IncrementOneSquare();
+		if (ImGui::Button("Decrease one rect"))
+			slider->DecrementOneSquare();
+
+		ImGui::Checkbox("Hovered", &slider->hovered);
 
 		ImGui::Text("Unhovered Unchecked TexCoord (x,y,w,h)");
 		if (ImGui::DragInt4("Unhovered Unchecked", slider->pixelCoord))
