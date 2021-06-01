@@ -98,6 +98,7 @@ bool Timer::IsPaused() const
 {
 	if (!running || pausedAt == 0)
 		return false;
+
 	return true;
 }
 

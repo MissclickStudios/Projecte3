@@ -45,8 +45,10 @@ private:
 	float3 direction = float3::zero;
 
 public:
-	float maxDistanceToMando = 7.0f;
-	float verticalSpeed = 0.01f;
+	float minDistanceToMando = 6.0f;
+	float maxDistanceToMando = 11.0f;
+
+	float verticalSpeed = 1.0f;
 	bool isLevitationEnabled = true;
 private:
 	bool isGoingUp = false;

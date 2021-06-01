@@ -28,6 +28,7 @@ Grogu* CreateGrogu()
 	// Modifiers
 	INSPECTOR_DRAGABLE_FLOAT(script->speedModifier);
 	// Behaviour
+	INSPECTOR_DRAGABLE_FLOAT(script->minDistanceToMando);
 	INSPECTOR_DRAGABLE_FLOAT(script->maxDistanceToMando);
 	INSPECTOR_CHECKBOX_BOOL(script->isLevitationEnabled);
 
@@ -106,7 +107,7 @@ void Grogu::ManageMovement()
 
 		Movement();
 	}
-	else
+	else if(sqrt(deltaPos.x * deltaPos.x + deltaPos.z * deltaPos.z) < minDistanceToMando)
 	{
 		if (rigidBody != nullptr)
 			rigidBody->Set2DVelocity(float2::zero);

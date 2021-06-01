@@ -1191,7 +1191,7 @@ void Player::Shoot()
 	{
 	case ShootState::NO_FULLAUTO:		{ currentAnimation = nullptr; aimState = AimState::ON_GUARD; }		break;
 	case ShootState::WAITING_FOR_NEXT:	{ /* DO NOTHING */ }												break;
-	case ShootState::FIRED_PROJECTILE:	{ currentAnimation = nullptr; aimState = AimState::ON_GUARD; }		break;
+	case ShootState::FIRED_PROJECTILE:	{ if (currentWeapon->type != WeaponType::MINIGUN) { currentAnimation = nullptr; aimState = AimState::ON_GUARD; } }		break;
 	case ShootState::RATE_FINISHED:		{ currentAnimation = nullptr; aimState = AimState::ON_GUARD; }		break;
 	case ShootState::NO_AMMO:			{ /*currentAnimation = nullptr;*/ aimState = AimState::RELOAD_IN; }	break;
 	}
@@ -1362,10 +1362,6 @@ void Player::GatherInteractionInputs()
 	
 	if (currentInteraction == InteractionType::NONE)
 	{
-		if (App->input->GetKey(SDL_SCANCODE_G) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(SDL_CONTROLLER_BUTTON_LEFTSHOULDER) == ButtonState::BUTTON_DOWN)
-		{
-			SetPlayerInteraction(InteractionType::SIGNAL_GROGU);
-		}
 
 		/*if (App->input->GetKey(SDL_SCANCODE_E) == KeyState::KEY_DOWN)
 		{

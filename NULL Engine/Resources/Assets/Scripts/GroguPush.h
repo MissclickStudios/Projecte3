@@ -41,6 +41,10 @@ private:
 
 	Timer abilityCooldownTimer;
 
+	C_ParticleSystem* abilityParticles = nullptr;
+
+	Timer particleTimer;
+	float particleEmitttingTime = 1.f;
 
 	GameManager* gameManager = nullptr;
 
