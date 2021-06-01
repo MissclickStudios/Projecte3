@@ -265,12 +265,18 @@ void C_UI_Slider::Draw3D()
 {
 }
 
-float C_UI_Slider::InputValue(float value, float maxValue)
+float C_UI_Slider::InputValue(float value, float maxValue, int numSquares)
 {
-	if (value > maxValue)
-		value = maxValue;
-	this->maxValue = maxValue;
-	int checkedRects = (value * numRects) / maxValue;
+	if (value < 0)
+		value = 0;
+	if (maxValue >= 0)
+		this->maxValue = maxValue;
+	if (numSquares > 0)
+		numRects = numSquares;
+	if (value > this->maxValue)
+		value = this->maxValue;
+	
+	int checkedRects = (value * numRects) / this->maxValue;
 	this->value = (float)numRects / this->maxValue * checkedRects;
 	return this->value;
 }
@@ -302,6 +308,8 @@ bool C_UI_Slider::Hovered() const
 void C_UI_Slider::Hoverable(bool setTo)
 {
 	interactuable = setTo;
+	if (!interactuable)
+		hovered = false;
 }
 
 void C_UI_Slider::ResetInput()
