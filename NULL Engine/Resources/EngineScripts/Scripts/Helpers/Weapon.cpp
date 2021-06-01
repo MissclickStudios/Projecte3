@@ -169,15 +169,25 @@ void Weapon::SetOwnership(EntityType type, GameObject* hand, std::string handNam
 
 	SetUp();
 
-	if (this->hand != nullptr && weaponModelPrefab.uid != NULL)
+	if (this->hand != nullptr)
 	{
-		GameObject* skeletonHand = GetHand(this->hand->parent, handName);
-		if (skeletonHand)
-			weaponModel = App->resourceManager->LoadPrefab(weaponModelPrefab.uid, skeletonHand); // Load the prefab onto a gameobject
+		if (weaponModelPrefab.uid != NULL)
+		{
+			GameObject* skeletonHand = GetHand(this->hand->parent, handName);
+			if (skeletonHand)
+				weaponModel = App->resourceManager->LoadPrefab(weaponModelPrefab.uid, skeletonHand); // Load the prefab onto a gameobject
+		}
+		
+		if (weaponModel != nullptr)
+			barrel = GetWeaponBarrel(weaponModel, "Barrel");
+		else if (handName == "LHand")
+			barrel = GetWeaponBarrel(this->hand->parent, "SecondaryBarrel");
+		else
+			barrel = GetWeaponBarrel(this->hand->parent, "Barrel");
 	}
 
-	if (weaponModel != nullptr)
-		barrel = GetWeaponBarrel(weaponModel, "Barrel");
+	
+		
 
 	if (type == EntityType::PLAYER)
 	{
