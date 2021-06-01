@@ -16,6 +16,8 @@
 #include "C_RigidBody.h"
 #include "GroguPush.h"
 
+#include "Entity.h"
+
 #include "Player.h"
 
 GroguPush* CreateGroguPush()
@@ -33,6 +35,7 @@ GroguPush::GroguPush() : Object()
 {
 	baseType = ObjectType::GROGU_ABILITY;
 	abilityCooldownTimer.Stop();
+	particleTimer.Stop();
 }
 
 GroguPush::~GroguPush()
@@ -42,6 +45,8 @@ GroguPush::~GroguPush()
 void GroguPush::Start()
 {
 	player = App->scene->GetGameObjectByName(playerName.c_str());
+	if (player != nullptr)
+		playerScript = (Player*)player->GetScript("Player");
 
 	abilityCollider = gameObject->GetComponent<C_BoxCollider>();
 	abilityCollider->SetSize(abilityRadius);
@@ -49,10 +54,9 @@ void GroguPush::Start()
 	GameObject* tmp = App->scene->GetGameObjectByName("Game Manager");
 	if (tmp != nullptr)
 		gameManager = (GameManager*)tmp->GetScript("GameManager");
-
-	/*tmp = App->scene->GetGameObjectByName(playerName.c_str());
-	if (tmp != nullptr)
-		playerScript = (Player*)tmp->GetScript("Player");*/
+	
+	abilityParticles = gameObject->FindChild("Ability")->GetComponent<C_ParticleSystem>();
+	abilityParticles->StopSpawn();
 
 }
 
@@ -62,6 +66,17 @@ void GroguPush::Update()
 
 	abilityCollider->SetTrigger(false);
 	abilityCollider->SetIsActive(false);
+
+	// Particles
+	if (particleTimer.IsActive())
+	{
+		if (particleTimer.ReadSec() > particleEmitttingTime)
+		{
+			particleTimer.Stop();
+
+			abilityParticles->StopSpawn();
+		}
+	}
 
 	if (abilityCooldownTimer.IsActive())
 	{
@@ -79,8 +94,11 @@ void GroguPush::Update()
 		abilityCollider->SetTrigger(true);
 
 		abilityCooldownTimer.Start();
+		particleTimer.Start();
 
-		//playerScript->SetPlayerInteraction(InteractionType::SIGNAL_GROGU);
+		abilityParticles->ResumeSpawn();
+
+		playerScript->SetPlayerInteraction(InteractionType::SIGNAL_GROGU);
 	}
 }
 
@@ -117,8 +135,6 @@ void GroguPush::OnTriggerRepeat(GameObject* object)
 	direction *= currentPower;
 	entity->gameObject->GetComponent<C_RigidBody>()->FreezePositionY(true);
 	entity->AddEffect(EffectType::KNOCKBACK, 0.25f, false, currentPower, 0.f, float3(direction.x, 0.f, direction.y), true);
-
-
 }
 
 void GroguPush::OnTriggerExit(GameObject* object)

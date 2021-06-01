@@ -20,10 +20,10 @@ namespace MC_Time
 	namespace Real
 	{
 		void		MISSCLICK_API InitRealClock			();
-		void		MISSCLICK_API Update					();								// Will update the frame data for the frame it was called on. frame_count, prev_sec_frames, dt..
-		void		MISSCLICK_API DelayUntilFrameCap		(uint frameCap);
+		void		MISSCLICK_API Update				();								// Will update the frame data for the frame it was called on. frame_count, prev_sec_frames, dt..
+		void		MISSCLICK_API DelayUntilFrameCap	(uint frameCap);
 
-		void		MISSCLICK_API StartPerfTimer			();
+		void		MISSCLICK_API StartPerfTimer		();
 		void		MISSCLICK_API StopPerfTimer			();
 		float		MISSCLICK_API PeekPerfTimer			();
 
@@ -35,7 +35,7 @@ namespace MC_Time
 		float		MISSCLICK_API GetTimeSinceStart		();
 		uint32		MISSCLICK_API GetFramesLastSecond	();
 		float		MISSCLICK_API GetAverageFPS			();
-		uint32		MISSCLICK_API GetMsLastFrame			();
+		uint32		MISSCLICK_API GetMsLastFrame		();
 
 		namespace Utilities
 		{
@@ -49,7 +49,7 @@ namespace MC_Time
 
 	namespace Game
 	{
-		void		MISSCLICK_API Update					();
+		void		MISSCLICK_API Update				();
 		
 		void		MISSCLICK_API SetTimeScale			(float newTimeScale);
 		float		MISSCLICK_API GetTimeScale			();
@@ -67,7 +67,7 @@ namespace MC_Time
 		float		MISSCLICK_API GetTimeSinceStart		();
 		uint32		MISSCLICK_API GetFramesLastSecond	();
 		float		MISSCLICK_API GetAverageFPS			();
-		uint32		MISSCLICK_API GetMsLastFrame			();
+		uint32		MISSCLICK_API GetMsLastFrame		();
 
 		namespace Utilities
 		{

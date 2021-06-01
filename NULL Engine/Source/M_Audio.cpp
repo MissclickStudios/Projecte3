@@ -75,7 +75,7 @@ bool M_Audio::Start()
 
 	aSourceBackgroundMusic = new C_AudioSource(App->scene->GetMasterRoot());
 
-	aSourceBackgroundMusic->SetEvent("background");
+	aSourceBackgroundMusic->SetEvent("background", true);
 
 	aSourceBackgroundMusic->PlayFx(aSourceBackgroundMusic->GetEventId());
 	

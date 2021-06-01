@@ -53,7 +53,7 @@ bool C_NavMeshAgent::Update()
 			if (GetOwner()->transform->GetDistanceTo(nextPoint) <= 1.0f)
 			{
 				currentPos = nextPoint;
-				nextPoint = path[++indexPath];
+				nextPoint = path[indexPath++];
 			}
 			
 			if (indexPath > (path.size()-1))
@@ -95,15 +95,9 @@ bool C_NavMeshAgent::LoadState(ParsonNode& root)
 
 bool C_NavMeshAgent::SetDestination(float3 destination)
 {
-	float2 pos = { destination.x, destination.z };
-
-	destinationPoint = { pos.x, 0.0f, pos.y };
-
 	indexPath = 1;
 
 	origin = GetOwner()->transform->GetWorldPosition();
-
-	origin.y = 0.0f;
 
 	currentPos = origin;
 
@@ -143,7 +137,7 @@ bool C_NavMeshAgent::AgentPath(float3 origin, float3 destination)
 
 	App->detour->CalculatePath(origin, destination, path);
 
-	if (path.empty())
+	if (path.size() == 1 || path.empty())
 		hasDestination = false;
 	else
 		hasDestination = true;

@@ -131,7 +131,9 @@ public:
 	C_AudioSource* damageAudio = nullptr;
 
 	// Hand
-	std::string handName;
+	std::string rightHandName;
+
+	std::string leftHandName;
 
 	// Particles
 	std::vector<std::string> particleNames;

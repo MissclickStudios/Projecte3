@@ -35,7 +35,7 @@ Entity::~Entity()
 		delete *effects.begin();
 		effects.erase(effects.begin());
 	}
-	CoreCrossDllHelpers::CoreReleaseString(handName);
+	CoreCrossDllHelpers::CoreReleaseString(rightHandName);
 }
 
 void Entity::Awake()

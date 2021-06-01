@@ -84,7 +84,8 @@ Player* CreatePlayer()
 	INSPECTOR_STRING(script->gameManager);
 
 	// Hand Name
-	INSPECTOR_STRING(script->handName);
+	INSPECTOR_STRING(script->rightHandName);
+	INSPECTOR_STRING(script->leftHandName);
 
 	INSPECTOR_GAMEOBJECT(script->rightHand);
 	INSPECTOR_GAMEOBJECT(script->leftHand);
@@ -363,10 +364,14 @@ void Player::LoadState(ParsonNode& playerNode)
 		for (uint i = 0; i < skeleton->childs.size(); ++i)
 		{
 			std::string name = skeleton->childs[i]->GetName();
-			if (name == "Hand")
+			if (name == "RightHand")
 			{
 				rightHand = skeleton->childs[i];
 				break;
+			}
+			if (name == "LeftHand")
+			{
+				leftHand = skeleton->childs[i];
 			}
 		}
 
@@ -379,7 +384,7 @@ void Player::LoadState(ParsonNode& playerNode)
 		{
 			blasterWeapon->type = WeaponType::BLASTER;
 
-			blasterWeapon->SetOwnership(type, rightHand, handName);
+			blasterWeapon->SetOwnership(type, rightHand, rightHandName);
 			blasterWeapon->ammo = playerNode.GetInteger("Blaster Ammo");
 		}
 	}
@@ -398,7 +403,7 @@ void Player::LoadState(ParsonNode& playerNode)
 
 		if (secondaryWeapon != nullptr)
 		{
-			secondaryWeapon->SetOwnership(type, rightHand, handName);
+			secondaryWeapon->SetOwnership(type, rightHand, rightHandName);
 			int savedAmmo = playerNode.GetInteger("Equiped Gun Ammo");
 			if (savedAmmo > secondaryWeapon->MaxAmmo())
 				savedAmmo = secondaryWeapon->MaxAmmo();
@@ -553,8 +558,17 @@ void Player::EquipWeapon(Prefab weapon)
 
 		if (secondaryWeapon != nullptr)
 		{
-			secondaryWeapon->SetOwnership(type, rightHand, handName);
-			currentWeapon = secondaryWeapon;
+			if (secondaryWeapon->type == WeaponType::MINIGUN)
+			{
+				secondaryWeapon->SetOwnership(type, leftHand, leftHandName);
+				currentWeapon = secondaryWeapon;
+			}
+			else
+			{
+				secondaryWeapon->SetOwnership(type, rightHand, rightHandName);
+				currentWeapon = secondaryWeapon;
+			}
+			
 		}
 	}
 }
@@ -625,7 +639,7 @@ void Player::AnimatePlayer()
 	}
 	else
 	{	
-		//LOG("DIRECTIONS: [%d]::[%d]::[%s]::[%s]", aimDirection, moveDirection, GetAimStateAnimation()->name.c_str(), GetLegsAnimation()->name.c_str());
+		LOG("DIRECTIONS: [%d]::[%d]::[%s]::[%s]", aimDirection, moveDirection, GetAimStateAnimation()->name.c_str(), GetLegsAnimation()->name.c_str());
 		
 		AnimationInfo* torsoInfo	= GetAimStateAnimation();
 		AnimationInfo* legsInfo		= GetMoveStateAnimation();
@@ -1177,7 +1191,7 @@ void Player::Shoot()
 	{
 	case ShootState::NO_FULLAUTO:		{ currentAnimation = nullptr; aimState = AimState::ON_GUARD; }		break;
 	case ShootState::WAITING_FOR_NEXT:	{ /* DO NOTHING */ }												break;
-	case ShootState::FIRED_PROJECTILE:	{ currentAnimation = nullptr; aimState = AimState::ON_GUARD; }		break;
+	case ShootState::FIRED_PROJECTILE:	{ if (currentWeapon->type != WeaponType::MINIGUN) { currentAnimation = nullptr; aimState = AimState::ON_GUARD; } }		break;
 	case ShootState::RATE_FINISHED:		{ currentAnimation = nullptr; aimState = AimState::ON_GUARD; }		break;
 	case ShootState::NO_AMMO:			{ /*currentAnimation = nullptr;*/ aimState = AimState::RELOAD_IN; }	break;
 	}
@@ -1439,7 +1453,7 @@ void Player::Aim()
 		aimVector = aimInput;
 	}
 
-	LOG("Aim vector x = %f , y = %f", aimVector.x, aimVector.y);
+	//LOG("Aim vector x = %f , y = %f", aimVector.x, aimVector.y);
 
 	float rad = aimVector.AimedAngle();
 	

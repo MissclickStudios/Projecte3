@@ -11,6 +11,8 @@
 #include "C_AudioSource.h"
 #include "C_NavMeshAgent.h"
 
+#include "MathGeoLib/include/Math/float2.h"
+
 #include "Player.h"
 
 Trooper* CreateTrooper()
@@ -55,7 +57,7 @@ Trooper* CreateTrooper()
 
 	//Hand Name
 
-	INSPECTOR_STRING(script->handName);
+	INSPECTOR_STRING(script->rightHandName);
 
 	INSPECTOR_SLIDER_INT(script->minCredits, 0, 1000);
 	INSPECTOR_SLIDER_INT(script->maxCredits, 0, 1000);
@@ -163,6 +165,8 @@ void Trooper::DistanceToPlayer()
 	aimDirection = playerPosition - position;
 
 	distance = aimDirection.Length();
+
+	LOG("%f", distance);
 	// TODO: Separate aim and movement once the pathfinding is implemented
 }
 
@@ -215,7 +219,7 @@ void Trooper::ManageMovement()
 		}
 		break;
 	case TrooperState::PATROL:
-		currentAnimation = &walkAnimation;
+		currentAnimation = &idleAnimation;
 		if (distance < chaseDistance)
 		{
 			moveState = TrooperState::CHASE;
@@ -320,8 +324,8 @@ void Trooper::ManageAim()
 
 void Trooper::Patrol()
 {
-	if (agent != nullptr)
-		agent->SetDestination(gameObject->transform->GetWorldPosition());
+	/*if (agent != nullptr)
+		agent->SetDestination(gameObject->transform->GetWorldPosition());*/
 
 }
 
@@ -337,5 +341,14 @@ void Trooper::Chase()
 void Trooper::Flee()
 {
 	if (agent != nullptr)
-		agent->SetDestination(-player->transform->GetWorldPosition());
+	{
+		if (rigidBody != nullptr)
+			rigidBody->Set2DVelocity(-moveDirection * ChaseSpeed());
+
+		//agent->SetDestination(-player->transform->GetWorldPosition());
+		/*float2 magnitude = float2(agent->direction.x, agent->direction.z);
+		float result = 1 / magnitude.Length();
+		moveDirection = -float2(result * magnitude.x, result * magnitude.y);*/
+	}
 }
+

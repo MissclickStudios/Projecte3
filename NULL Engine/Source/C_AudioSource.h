@@ -20,8 +20,8 @@ public:
 	bool SaveState(ParsonNode& root) const override;
 	bool LoadState(ParsonNode& root) override;
 
-	void SetEvent(std::string name, unsigned int id);
-	void SetEvent(std::string name);
+	void SetEvent(std::string name, unsigned int id, bool loop = false);
+	void SetEvent(std::string name, bool loop = false);
 	void GetEvent(std::string* name, unsigned int* id) const;
 	const std::string& GetEventName() const;
 	unsigned int GetEventId() const;
@@ -37,9 +37,9 @@ public:
 
 	float GetVolume();
 	void SetVolume(float volume);
-	
-	bool isPlaying = false;
-	bool isPause = false;
+
+	bool isPlaying = true;
+	bool isLoopeable = false;
 
 private:
 
