@@ -176,6 +176,9 @@ void Weapon::SetOwnership(EntityType type, GameObject* hand, std::string handNam
 			weaponModel = App->resourceManager->LoadPrefab(weaponModelPrefab.uid, skeletonHand); // Load the prefab onto a gameobject
 	}
 
+	if (weaponModel != nullptr)
+		barrel = GetWeaponBarrel(weaponModel, "Barrel");
+
 	if (type == EntityType::PLAYER)
 	{
 		if (!projectiles)
@@ -363,6 +366,22 @@ GameObject* Weapon::GetHand(GameObject* object, std::string handName)
 	return nullptr;
 }
 
+GameObject* Weapon::GetWeaponBarrel(GameObject* object, std::string barrelName)
+{
+	for (int i = 0; i < object->childs.size(); ++i)
+	{
+		std::string name = object->childs[i]->GetName();
+		bool check = (name == barrelName);
+		if (check)
+			return object->childs[i];
+
+		GameObject* output = GetWeaponBarrel(object->childs[i], barrelName);
+		if (output != nullptr)
+			return output;
+	}
+	return nullptr;
+}
+
 void Weapon::CreateProjectiles()
 {
 	DeleteProjectiles();
@@ -439,9 +458,9 @@ void Weapon::FireProjectile(float2 direction)
 		return;
 
 	float3 position = float3::zero;
-	if (hand)
+	if (barrel)
 	{
-		position = hand->transform->GetWorldPosition();
+		position = barrel->transform->GetWorldPosition();
 		float3 spread = SpreadRadius();
 		if (!spread.IsZero())
 		{
