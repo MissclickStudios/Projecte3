@@ -10,6 +10,7 @@
 
 #define BACKTRACK 5
 
+class ParsoNode;
 class GameObject;
 class Gate;
 class CameraMovement;
@@ -89,7 +90,13 @@ public:
 
     void SetUpWinScreen();
 
+    //Called from main menu newgame button
+    void ResetArmorerItemsLvl();
+
 private:
+    //ArmorerItems
+    void SaveArmorerItemLvl(ParsonNode& node);
+    void LoadArmorerItemLvl(ParsonNode& node);
     //Level Generator
     void GenerateLevel();
     void GoPreviousRoom();
@@ -176,6 +183,13 @@ private:
 
     // Chest
     Entity* lastEnemyDead = nullptr;
+
+public:
+    //Armorer Item Lvls
+    unsigned int armorLvl = 0;
+    unsigned int bootsLvl = 0;
+    unsigned int ticketLvl = 0;
+    unsigned int bottleLvl = 0;
 
 };
 
