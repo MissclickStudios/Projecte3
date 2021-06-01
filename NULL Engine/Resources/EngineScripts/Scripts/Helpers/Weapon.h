@@ -122,6 +122,8 @@ public:
 
 	// Visuals
 	GameObject* GetHand(GameObject* object, std::string handName = "");
+	GameObject* GetWeaponBarrel(GameObject* object, std::string barrelName = "");
+
 	Prefab weaponModelPrefab;
 	Prefab projectilePrefab;
 
@@ -151,6 +153,7 @@ protected:
 	PerfectTimer fireRateTimer;
 
 	GameObject* hand = nullptr;
+	GameObject* barrel = nullptr;
 
 	// Reload
 	Timer reloadTimer;
