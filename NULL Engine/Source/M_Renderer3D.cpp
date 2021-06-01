@@ -900,25 +900,22 @@ void M_Renderer3D::AddRenderersBatch(const std::multimap<float, Renderer*>& rend
 
 void M_Renderer3D::RenderMeshes()
 {	
-	C_Camera* currentCamera = App->camera->GetCurrentCamera();
+	/*C_Camera* currentCamera = App->camera->GetCurrentCamera();
 	float3 cameraPos = (currentCamera != nullptr) ? currentCamera->GetFrustum().Pos() : float3::zero;
-	/*std::multimap<float, MeshRenderer> sortedRenderers;
+	std::multimap<float, MeshRenderer> sortedRenderers;
 	for (auto mRenderer = meshRenderers.cbegin(); mRenderer != meshRenderers.cend(); ++mRenderer)
 	{
 		float distanceToCamera = (*mRenderer).transform->GetWorldPosition().DistanceSq(cameraPos);
 		sortedRenderers.emplace(distanceToCamera, (*mRenderer));
-	}*/
+	}
 	
-	//std::sort(meshRenderers.begin(), meshRenderers.end(), [&cameraPos](MeshRenderer mRendererA, MeshRenderer mRendererB) { return (mRendererA.transform->GetWorldPosition().Distance(cameraPos)) > (mRendererB.transform->GetWorldPosition().Distance(cameraPos)); });
-	std::sort(meshRenderers.begin(), meshRenderers.end(), [&cameraPos](MeshRenderer mRendererA, MeshRenderer mRendererB) { return (mRendererA.transform->GetWorldPosition().y) < (mRendererB.transform->GetWorldPosition().y); });
+	std::sort(meshRenderers.begin(), meshRenderers.end(), [&cameraPos](MeshRenderer mRendererA, MeshRenderer mRendererB) { return (mRendererA.transform->GetWorldPosition().Distance(cameraPos)) > (mRendererB.transform->GetWorldPosition().Distance(cameraPos)); });*/
+	
+	std::sort(meshRenderers.begin(), meshRenderers.end(), [](MeshRenderer mRendererA, MeshRenderer mRendererB) { return ((mRendererA.cTransform->GetWorldPosition().y) < (mRendererB.cTransform->GetWorldPosition().y)); });
 	
 	for (uint i = 0; i < meshRenderers.size(); ++i)
 	{
-
-		if(meshRenderers[i].cMesh->GetOutlineMesh())
-			meshRenderers[i].Render(true);
-		else
-			meshRenderers[i].Render(false);
+		meshRenderers[i].Render();
 	}
 
 	meshRenderers.clear();
@@ -1604,25 +1601,19 @@ void M_Renderer3D::GenScreenBuffer()
 
 // --- RENDERER STRUCTURES METHODS ---
 // --- MESH RENDERER METHODS
-MeshRenderer::MeshRenderer(C_Transform* transform, C_Mesh* cMesh,  C_Material* cMaterial) :
-transform	(transform),
+MeshRenderer::MeshRenderer(C_Transform* cTransform, C_Mesh* cMesh,  C_Material* cMaterial) :
+cTransform	(cTransform),
 cMesh		(cMesh),
 cMaterial	(cMaterial)
 {
 
 }
 
-void MeshRenderer::Render(bool outline)
+void MeshRenderer::Render()
 {
+	std::string name = cTransform->GetOwner()->GetName();
+
 	R_Mesh* rMesh = cMesh->GetMesh();
-	
-	std::string name = transform->GetOwner()->GetName();
-
-	if (strcmp(transform->GetOwner()->GetName(), "Blaster") == 0)
-	{
-		LOG("BRUH");
-	}
-
 	if (rMesh == nullptr)
 	{
 		LOG("[ERROR] Renderer 3D: Could not render Mesh! Error: R_Mesh* was nullptr.");
@@ -1634,8 +1625,8 @@ void MeshRenderer::Render(bool outline)
 	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 
 	glClear(GL_STENCIL_BUFFER_BIT);
-
-	if (outline)
+	
+	if (cMesh->GetOutlineMesh())
 	{
 		glStencilFunc(GL_ALWAYS, 1, 0xFF);
 		glStencilMask(0xFF);
@@ -1659,7 +1650,11 @@ void MeshRenderer::Render(bool outline)
 		glBindVertexArray(cMesh->GetSkinnedMesh()->VAO);
 		glDrawElements(GL_TRIANGLES, cMesh->GetSkinnedMesh()->indices.size(), GL_UNSIGNED_INT, nullptr);
 	}
-	if (outline) RenderOutline(rMesh);
+
+	if (cMesh->GetOutlineMesh())
+	{
+		RenderOutline(rMesh);
+	}
 
 	ClearShader();	
 
@@ -1670,16 +1665,11 @@ void MeshRenderer::Render(bool outline)
 	ClearTextureAndMaterial();																								// Clear the specifications applied in ApplyTextureAndMaterial().
 	ClearDebugParameters();																									// Clear the specifications applied in ApplyDebugParameters().
 
-	/*glDisable(GL_STENCIL_TEST);
-	glDisable(GL_BLEND);*/
-	
-
 	// --- DEBUG DRAW ---
 	if (rMesh->drawVertexNormals || App->renderer->GetRenderVertexNormals())
 	{
 		RenderVertexNormals(rMesh);
 	}
-
 	if (rMesh->drawFaceNormals || App->renderer->GetRenderFaceNormals())
 	{
 		RenderFaceNormals(rMesh);
@@ -1691,43 +1681,34 @@ void MeshRenderer::RenderOutline(R_Mesh* rMesh)
 	glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
 	glStencilMask(0x00);
 
-	uint32 shaderProgram = 0;
 	if (cMaterial != nullptr)
 	{
-		R_Shader* tempShader;
-		tempShader = App->resourceManager->GetShader("OutlineShader");
-
-		tempShader ? shaderProgram = tempShader->shaderProgramID : shaderProgram;
-
-		glUseProgram(shaderProgram);
-
+		R_Shader* tempShader = App->resourceManager->GetShader("OutlineShader");
+		uint32 shaderProgram = (tempShader != nullptr) ? tempShader->shaderProgramID : 0;															// THIS
 		if (shaderProgram != 0)
 		{
+			glUseProgram(shaderProgram);																											// THIS
 
-			tempShader->SetUniform1f("outlineThickness", cMesh->GetOutlineThickness());
-
-			tempShader->SetUniformVec4f("outlineColor", (GLfloat*)&cMesh->GetOutlineColor());
-
-			tempShader->SetUniformMatrix4("modelMatrix", transform->GetWorldTransform().Transposed().ptr());
-
-			tempShader->SetUniformMatrix4("viewMatrix", App->camera->GetCurrentCamera()->GetViewMatrixTransposed().ptr());
-
-			tempShader->SetUniformMatrix4("projectionMatrix", App->camera->GetCurrentCamera()->GetProjectionMatrixTransposed().ptr());
+			tempShader->SetUniform1f("outlineThickness",		cMesh->GetOutlineThickness());
+			tempShader->SetUniformVec4f("outlineColor",			(GLfloat*)&cMesh->GetOutlineColor());
+			tempShader->SetUniformMatrix4("modelMatrix",		cTransform->GetWorldTransform().Transposed().ptr());
+			tempShader->SetUniformMatrix4("viewMatrix",			App->camera->GetCurrentCamera()->GetViewMatrixTransposed().ptr());
+			tempShader->SetUniformMatrix4("projectionMatrix",	App->camera->GetCurrentCamera()->GetProjectionMatrixTransposed().ptr());
 
 			//Animations
+			bool hasSkinnedMesh = (cMesh->GetSkinnedMesh() != nullptr);
 
-			cMesh->GetBoneTranforms(boneTransforms);
+			tempShader->SetUniform1i("activeAnimation", hasSkinnedMesh);																			// THIS
 
-			bool check = cMesh->GetSkinnedMesh() != nullptr;
-
-			tempShader->SetUniform1i("activeAnimation", (check));
-
-			if (!boneTransforms.empty())
+			if (hasSkinnedMesh)
 			{
-				tempShader->SetUniformMatrix4("finalBonesMatrices", (GLfloat*)&boneTransforms[0], boneTransforms.size());
+				boneTransforms = cMesh->GetBoneTransformsAsPtr();
+				
+				if ((boneTransforms != nullptr) && !boneTransforms->empty())
+				{
+					tempShader->SetUniformMatrix4("finalBonesMatrices", (GLfloat*)(boneTransforms->begin()->ptr()), boneTransforms->size());
+				}
 			}
-
-			boneTransforms.clear();
 		}
 	}
 
@@ -1741,7 +1722,6 @@ void MeshRenderer::RenderOutline(R_Mesh* rMesh)
 		glBindVertexArray(cMesh->GetSkinnedMesh()->VAO);
 		glDrawElements(GL_TRIANGLES, cMesh->GetSkinnedMesh()->indices.size(), GL_UNSIGNED_INT, nullptr);
 	}
-
 
 	glStencilMask(0xFF);
 	glStencilFunc(GL_ALWAYS, 1, 0xFF);
@@ -1931,91 +1911,97 @@ void MeshRenderer::ClearTextureAndMaterial()
 
 void MeshRenderer::ApplyShader()
 {
-	uint32 shaderProgram = 0;
-	if (cMaterial != nullptr)
+	if (cMaterial == nullptr)
+		return;
+
+	std::vector<GameObject*> dirLights;																					// This is done each frame per Renderer.
+	std::vector<GameObject*> pointLights;																				// Pass to ptr?
+	App->scene->GetDirLights(dirLights);																				// Leave as is?
+	App->scene->GetPointLights(pointLights);																			// Either way maybe this is not a chokepoint at all.
+
+	R_Shader* rShader = cMaterial->GetShader();																			// THIS. Having a local R_Shader* will save a lot of unnecessary calls.
+	if (rShader == nullptr)
 	{
-		std::vector<GameObject*> dirLights;
-		std::vector<GameObject*> pointLights;
-		App->scene->GetDirLights(dirLights);
-		App->scene->GetPointLights(pointLights);
+		SetDefaultShader(cMaterial);																					// THIS. Defaulting to Default Shader in case there is none assigned.
+		rShader = cMaterial->GetShader();
+	}
 
-		cMaterial->GetShader()	? shaderProgram = cMaterial->GetShader()->shaderProgramID : shaderProgram;
-		shaderProgram			? shaderProgram : shaderProgram = SetDefaultShader(cMaterial);
+	uint32 shaderProgram = rShader->shaderProgramID;
+	if (shaderProgram == 0)
+		return;
 
-		glUseProgram(shaderProgram);
+	glUseProgram(shaderProgram);
 
-		cMaterial->GetTexture()		? cMaterial->GetShader()->SetUniform1i("hasTexture", (GLint)true) : cMaterial->GetShader()->SetUniform1i("hasTexture", (GLint)false);
-		cMaterial->GetTakeDamage()	? cMaterial->GetShader()->SetUniform1i("takeDamage", (GLint)true) : cMaterial->GetShader()->SetUniform1i("takeDamage", (GLint)false);
-		!dirLights.empty()			? cMaterial->GetShader()->SetUniform1i("useDirLight", (GLint)true) : cMaterial->GetShader()->SetUniform1i("useDirLight", (GLint)false);
+	(cMaterial->GetTexture() != nullptr)	? rShader->SetUniform1i("hasTexture", (GLint)true)	: rShader->SetUniform1i("hasTexture", (GLint)false);
+	(cMaterial->GetTakeDamage())			? rShader->SetUniform1i("takeDamage", (GLint)true)	: rShader->SetUniform1i("takeDamage", (GLint)false);
+	(!dirLights.empty())					? rShader->SetUniform1i("useDirLight", (GLint)true)	: rShader->SetUniform1i("useDirLight", (GLint)false);
 
-		if (shaderProgram != 0)
-		{
-			//Model
-			cMaterial->GetShader()->SetUniformVec4f("inColor",				(GLfloat*)&cMaterial->GetMaterialColour());
-			cMaterial->GetShader()->SetUniformVec4f("alternateColor",		(GLfloat*)&cMaterial->GetAlternateColour());
-			cMaterial->GetShader()->SetUniformMatrix4("modelMatrix",		transform->GetWorldTransform().Transposed().ptr());
-			cMaterial->GetShader()->SetUniformMatrix4("viewMatrix",			App->camera->GetCurrentCamera()->GetViewMatrixTransposed().ptr());
-			cMaterial->GetShader()->SetUniformMatrix4("projectionMatrix",	App->camera->GetCurrentCamera()->GetProjectionMatrixTransposed().ptr());
-			cMaterial->GetShader()->SetUniformVec3f("cameraPosition",		(GLfloat*)&App->camera->GetCurrentCamera()->GetFrustum().Pos());
-			
-			cMaterial->GetShader()->SetUniform1f("deltaTime",				MC_Time::Game::GetDT());
-			cMaterial->GetShader()->SetUniform1f("Time",					MC_Time::Game::GetTimeSinceStart());
+	//Model
+	rShader->SetUniformVec4f	("inColor",				(GLfloat*)&cMaterial->GetMaterialColour());
+	rShader->SetUniformVec4f	("alternateColor",		(GLfloat*)&cMaterial->GetAlternateColour());
+	rShader->SetUniformMatrix4	("modelMatrix",			cTransform->GetWorldTransform().Transposed().ptr());
+	rShader->SetUniformMatrix4	("viewMatrix",			App->camera->GetCurrentCamera()->GetViewMatrixTransposed().ptr());
+	rShader->SetUniformMatrix4	("projectionMatrix",	App->camera->GetCurrentCamera()->GetProjectionMatrixTransposed().ptr());
+	rShader->SetUniformVec3f	("cameraPosition",		(GLfloat*)&App->camera->GetCurrentCamera()->GetFrustum().Pos());
+	
+	rShader->SetUniform1f		("deltaTime",			MC_Time::Game::GetDT());
+	rShader->SetUniform1f		("Time",				MC_Time::Game::GetTimeSinceStart());
 
- 			//Skybox
-			cMaterial->GetShader()->SetUniform1i("skybox", 11);
+ 	//Skybox
+	rShader->SetUniform1i("skybox", 11);
 
+	//Animations
+	bool hasActiveAnimation = (cMesh->GetSkinnedMesh() != nullptr);																		// THIS. Changed the boolean's name.
+	
+	rShader->SetUniform1i("activeAnimation", hasActiveAnimation);																		
 
-			//ANimations
-			cMesh->GetBoneTranforms(boneTransforms);
-			
-			bool check = cMesh->GetSkinnedMesh() != nullptr;
+	if (hasActiveAnimation)																												// THIS. Now the ops. are done only when needed.
+	{
+		boneTransforms = cMesh->GetBoneTransformsAsPtr();																				// THIS. Get a Ptr instead of the whole vector.
 
-			cMaterial->GetShader()->SetUniform1i("activeAnimation", (check));
-
-			if (!boneTransforms.empty())
-			{				
-				cMaterial->GetShader()->SetUniformMatrix4("finalBonesMatrices", (GLfloat*)&boneTransforms[0], boneTransforms.size());
-			}
-
-			boneTransforms.clear();
-
-			// Light 
-
-			if (!dirLights.empty())
-			{
-				for (uint i = 0; i < dirLights.size(); i++)
-				{
-						cMaterial->GetShader()->SetUniformVec4f("dirLight.diffuse", (GLfloat*)&dirLights[i]->GetComponent<C_Light>()->GetDirectionalLight()->diffuse);
-						cMaterial->GetShader()->SetUniformVec4f("dirLight.ambient", (GLfloat*)&dirLights[i]->GetComponent<C_Light>()->GetDirectionalLight()->ambient);
-						cMaterial->GetShader()->SetUniformVec4f("dirLight.specular", (GLfloat*)&dirLights[i]->GetComponent<C_Light>()->GetDirectionalLight()->specular);
-						cMaterial->GetShader()->SetUniformVec3f("dirLight.direction", (GLfloat*)&dirLights[i]->GetComponent<C_Light>()->GetDirectionalLight()->GetDirection());
-
-						cMaterial->GetShader()->SetUniformVec3f("viewPos", (GLfloat*)&App->camera->GetCurrentCamera()->GetFrustum().Pos());
-				}
-			}
-
-			if (!pointLights.empty())
-			{
-				for (uint i = 0; i < pointLights.size(); i++)
-				{
-					cMaterial->GetShader()->SetUniform1i("numPointLights", pointLights.size());
-					cMaterial->GetShader()->SetUniformVec4f("pointLight[" + std::to_string(i) + "]" + ".diffuse", (GLfloat*)&pointLights[i]->GetComponent<C_Light>()->GetPointLight()->diffuse);
-					cMaterial->GetShader()->SetUniformVec4f("pointLight[" + std::to_string(i) + "]" + ".ambient", (GLfloat*)&pointLights[i]->GetComponent<C_Light>()->GetPointLight()->ambient);
-					cMaterial->GetShader()->SetUniformVec4f("pointLight[" + std::to_string(i) + "]" + ".specular", (GLfloat*)&pointLights[i]->GetComponent<C_Light>()->GetPointLight()->specular);
-					cMaterial->GetShader()->SetUniform1f("pointLight[" + std::to_string(i) + "]" + ".constant", pointLights[i]->GetComponent<C_Light>()->GetPointLight()->GetConstant());
-					cMaterial->GetShader()->SetUniform1f("pointLight[" + std::to_string(i) + "]" + ".linear", pointLights[i]->GetComponent<C_Light>()->GetPointLight()->GetLinear());
-					cMaterial->GetShader()->SetUniform1f("pointLight[" + std::to_string(i) + "]" + ".quadratic", pointLights[i]->GetComponent<C_Light>()->GetPointLight()->GetQuadratic());
-					cMaterial->GetShader()->SetUniformVec3f("pointLight[" + std::to_string(i) + "]" + ".position", (GLfloat*)&pointLights[i]->transform->GetWorldPosition());
-				}
-			}
-
-			if(cMaterial->GetShader()) 
-				Importer::Shaders::SetShaderUniforms(cMaterial->GetShader());
-
-			dirLights.clear();
-			pointLights.clear();
+		if ((boneTransforms != nullptr) && !boneTransforms->empty())																	// THIS. Checking nullptr.
+		{	
+			rShader->SetUniformMatrix4("finalBonesMatrices", (GLfloat*)(boneTransforms->begin()->ptr()), boneTransforms->size());
 		}
 	}
+
+	// Light 
+	if (!dirLights.empty())
+	{
+		for (uint i = 0; i < dirLights.size(); i++)
+		{
+			DirectionalLight* dirLight = dirLights[i]->GetComponent<C_Light>()->GetDirectionalLight();
+			
+			rShader->SetUniformVec4f("dirLight.diffuse",	(GLfloat*)&dirLight->diffuse);
+			rShader->SetUniformVec4f("dirLight.ambient",	(GLfloat*)&dirLight->ambient);
+			rShader->SetUniformVec4f("dirLight.specular",	(GLfloat*)&dirLight->specular);
+			rShader->SetUniformVec3f("dirLight.direction",	(GLfloat*)&dirLight->GetDirection());
+
+			rShader->SetUniformVec3f("viewPos",	(GLfloat*)&App->camera->GetCurrentCamera()->GetFrustum().Pos());
+		}
+	}
+
+	if (!pointLights.empty())
+	{
+		for (uint i = 0; i < pointLights.size(); i++)
+		{
+			PointLight* pointLight = pointLights[i]->GetComponent<C_Light>()->GetPointLight();
+			
+			rShader->SetUniform1i		("numPointLights", pointLights.size());
+			rShader->SetUniformVec4f	("pointLight[" + std::to_string(i) + "].diffuse",		(GLfloat*)&pointLight->diffuse);
+			rShader->SetUniformVec4f	("pointLight[" + std::to_string(i) + "].ambient",		(GLfloat*)&pointLight->ambient);
+			rShader->SetUniformVec4f	("pointLight[" + std::to_string(i) + "].specular",		(GLfloat*)&pointLight->specular);
+			rShader->SetUniform1f		("pointLight[" + std::to_string(i) + "].constant",		pointLight->GetConstant());
+			rShader->SetUniform1f		("pointLight[" + std::to_string(i) + "].linear",		pointLight->GetLinear());
+			rShader->SetUniform1f		("pointLight[" + std::to_string(i) + "].quadratic",		pointLight->GetQuadratic());
+			rShader->SetUniformVec3f	("pointLight[" + std::to_string(i) + "].position",		(GLfloat*)&pointLights[i]->transform->GetWorldPosition());
+		}
+	}
+
+	Importer::Shaders::SetShaderUniforms(rShader);
+
+	dirLights.clear();
+	pointLights.clear();
 }
 
 uint32 MeshRenderer::SetDefaultShader(C_Material* cMaterial)
