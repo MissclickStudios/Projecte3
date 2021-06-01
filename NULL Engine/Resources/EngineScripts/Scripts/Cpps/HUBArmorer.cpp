@@ -53,7 +53,8 @@ void HUBArmorer::Start()
 		if (armorSlider)
 		{
 			armorSlider->Hoverable(false);
-			//armorSlider->InputValue();
+			if(gameManager)
+				armorSlider->InputValue(gameManager->armorLvl, MAX_ITEM_LEVEL);
 		}
 	}
 	if (ticketSliderObject != nullptr) 
@@ -62,16 +63,18 @@ void HUBArmorer::Start()
 		if (ticketSlider)
 		{
 			ticketSlider->Hoverable(false);
-			//ticketSlider->InputValue();
+			if (gameManager)
+				ticketSlider->InputValue(gameManager->ticketLvl, MAX_ITEM_LEVEL);
 		}
 	}
-	if (creditsSliderObject != nullptr)
+	if (bootsSliderObject != nullptr)
 	{
-		creditsSlider = (C_UI_Slider*)creditsSliderObject->GetComponent<C_UI_Slider>();
-		if (creditsSlider)
+		bootsSlider = (C_UI_Slider*)bootsSliderObject->GetComponent<C_UI_Slider>();
+		if (bootsSlider)
 		{
-			creditsSlider->Hoverable(false);
-			//creditsSlider->InputValue();
+			bootsSlider->Hoverable(false);
+			if (gameManager)
+				bootsSlider->InputValue(gameManager->bootsLvl, MAX_ITEM_LEVEL);
 		}
 	}
 	if (bottleSliderObject != nullptr)
@@ -80,19 +83,24 @@ void HUBArmorer::Start()
 		if (bottleSlider)
 		{
 			bottleSlider->Hoverable(false);
-			//bottleSlider->InputValue();
+			if (gameManager)
+				bottleSlider->InputValue(gameManager->bottleLvl, MAX_ITEM_LEVEL);
 		}
 	}
 	if (armorTextObject != nullptr)
-		armortext = (C_UI_Text*)armorTextObject->GetComponent<C_UI_Text>();
+		armorPriceText = (C_UI_Text*)armorTextObject->GetComponent<C_UI_Text>();
 	if (bootsTextObject != nullptr)
-		bootstext = (C_UI_Text*)bootsTextObject->GetComponent<C_UI_Text>();
+		bootsPriceText = (C_UI_Text*)bootsTextObject->GetComponent<C_UI_Text>();
 	if (ticketTextObject != nullptr)
-		tickettext = (C_UI_Text*)ticketTextObject->GetComponent<C_UI_Text>();
+		ticketPriceText = (C_UI_Text*)ticketTextObject->GetComponent<C_UI_Text>();
 	if (bottleTextObject != nullptr)
-		bottletext = (C_UI_Text*)bottleTextObject->GetComponent<C_UI_Text>();
+		bottlePriceText = (C_UI_Text*)bottleTextObject->GetComponent<C_UI_Text>();
 	if (descriptionTextObject != nullptr)
 		descriptionText = (C_UI_Text*)descriptionTextObject->GetComponent<C_UI_Text>();
+	if (creditTextObject != nullptr)
+		creditsText = (C_UI_Text*)creditTextObject->GetComponent<C_UI_Text>();
+	if (beskarTextObject != nullptr)
+		beskarText = (C_UI_Text*)beskarTextObject->GetComponent<C_UI_Text>();
 
 }
 
@@ -122,6 +130,62 @@ void HUBArmorer::Update()
 				mando->SetPlayerInteraction(InteractionType::NONE);
 				menuOpen = false;
 				state = HUBArmorerState::INACTIVE;
+				break;
+			}
+			if (mando) {
+				if (gameManager)
+				{
+					if (armorButton && armorButton->GetState() == UIButtonState::RELEASED)
+					{
+						if (mando->hubCurrency > gameManager->armorLvl && gameManager->armorLvl < MAX_ITEM_LEVEL) 
+						{
+							gameManager->armorLvl = armorSlider->IncrementOneSquare();
+							mando->hubCurrency -= gameManager->armorLvl;
+							armorPriceText->SetText(std::to_string(gameManager->armorLvl).c_str());
+						}
+					}
+					if (bootsButton && bootsButton->GetState() == UIButtonState::RELEASED)
+					{
+						if (mando->hubCurrency > gameManager->bootsLvl && gameManager->bootsLvl < MAX_ITEM_LEVEL)
+						{
+							gameManager->bootsLvl = bootsSlider->IncrementOneSquare();
+							mando->hubCurrency -= gameManager->bootsLvl;
+							bootsPriceText->SetText(std::to_string(gameManager->bootsLvl).c_str());
+						}
+					}
+					if (ticketButton && ticketButton->GetState() == UIButtonState::RELEASED)
+					{
+						if (mando->hubCurrency > gameManager->ticketLvl && gameManager->ticketLvl < MAX_ITEM_LEVEL)
+						{
+							gameManager->ticketLvl = ticketSlider->IncrementOneSquare();
+							mando->hubCurrency -= gameManager->ticketLvl;
+							ticketPriceText->SetText(std::to_string(gameManager->ticketLvl).c_str());
+						}
+					}
+					if (bottleButton && bottleButton->GetState() == UIButtonState::RELEASED)
+					{
+						if (mando->hubCurrency > gameManager->bottleLvl && gameManager->bottleLvl < MAX_ITEM_LEVEL)
+						{
+							gameManager->bottleLvl = bottleSlider->IncrementOneSquare();
+							mando->hubCurrency -= gameManager->bottleLvl;
+							bottlePriceText->SetText(std::to_string(gameManager->bottleLvl).c_str());
+						}
+					}
+				}
+
+				if (beskarText != nullptr)
+				{
+					std::string tmp = "";
+					tmp += std::to_string(mando->hubCurrency).c_str();
+					beskarText->SetText(tmp.c_str());
+				}
+				if (creditsText != nullptr)
+				{
+
+					std::string tmp = "";
+					tmp += std::to_string(mando->currency).c_str();
+					creditsText->SetText(tmp.c_str());
+				}
 			}
 			break;
 		default:
@@ -142,13 +206,15 @@ HUBArmorer* CreateHUBArmorer() {
 	INSPECTOR_GAMEOBJECT(script->bottleButtonObject);
 	INSPECTOR_GAMEOBJECT(script->armorSliderObject);
 	INSPECTOR_GAMEOBJECT(script->ticketSliderObject);
-	INSPECTOR_GAMEOBJECT(script->creditsSliderObject);
+	INSPECTOR_GAMEOBJECT(script->bootsSliderObject);
 	INSPECTOR_GAMEOBJECT(script->bottleSliderObject);
 	INSPECTOR_GAMEOBJECT(script->armorTextObject);
 	INSPECTOR_GAMEOBJECT(script->bootsTextObject);
 	INSPECTOR_GAMEOBJECT(script->ticketTextObject);
 	INSPECTOR_GAMEOBJECT(script->bottleTextObject);
 	INSPECTOR_GAMEOBJECT(script->descriptionTextObject);
+	INSPECTOR_GAMEOBJECT(script->creditTextObject);
+	INSPECTOR_GAMEOBJECT(script->beskarTextObject);
 
 	return script;
 }

@@ -73,6 +73,8 @@ void GameManager::Awake()
 			{
 				level1Ruins.emplace_back(levelArray2.GetString(i));
 			}
+			//itemsArmorer
+			LoadArmorerItemLvl(jsonState);
 
 			//Load story & dialogs
 			storyDialogState.Load(&jsonState);
@@ -404,6 +406,27 @@ void GameManager::GenerateNewRun(bool fromMenu)
 	}
 }
 
+void GameManager::SaveArmorerItemLvl(ParsonNode& node)
+{
+	ParsonNode items = node.SetNode("ArmorerItemLvl");
+	items.SetInteger("armorLvl", armorLvl);
+	items.SetInteger("bootsLvl", bootsLvl);
+	items.SetInteger("ticketLvl", ticketLvl);
+	items.SetInteger("bottleLvl", bottleLvl);
+}
+
+void GameManager::LoadArmorerItemLvl(ParsonNode& node)
+{
+	ParsonNode items = node.GetNode("ArmorerItemLvl");
+	if (items.NodeIsValid()) 
+	{
+		armorLvl = items.GetInteger("armorLvl");
+		bootsLvl = items.GetInteger("bootsLvl");
+		ticketLvl = items.GetInteger("ticketLvl");
+		bottleLvl = items.GetInteger("bottleLvl");
+	}
+}
+
 void GameManager::GenerateLevel()
 {
 	// get a time-based seed
@@ -607,6 +630,10 @@ void GameManager::Continue()
 		{
 			level1Ruins.emplace_back(levelArray2.GetString(i));
 		}
+
+		//itemsArmorer
+		LoadArmorerItemLvl(jsonState);
+
 		//Story
 		storyDialogState.Load(&jsonState);
 
@@ -783,6 +810,9 @@ void GameManager::SaveManagerState()
 		playerScript->SaveState(playerNode);
 	}
 
+	//itemsArmorer
+	SaveArmorerItemLvl(jsonState);
+
 	storyDialogState.Save(&jsonState);
 
 	runStats.Save(&jsonState);
@@ -931,6 +961,25 @@ void GameManager::SetUpWinScreen()
 	App->scene->GetGameObjectByName("PrecisionText")->GetComponent<C_UI_Text>()->SetText(std::to_string(runStats.runPrecision).c_str());
 	App->scene->GetGameObjectByName("TimeText")->GetComponent<C_UI_Text>()->SetText(std::to_string(runStats.runTime).c_str());
 	App->scene->GetGameObjectByName("WeaponText")->GetComponent<C_UI_Text>()->SetText(runStats.weaponUsed.c_str());
+}
+
+void GameManager::ResetArmorerItemsLvl()
+{
+	armorLvl = 0;
+	bootsLvl = 0;
+	ticketLvl = 0;
+	bottleLvl = 0;
+
+	//Load Json state
+	char* buffer = nullptr;
+	App->fileSystem->Load(saveFileName, &buffer);
+	ParsonNode jsonState(buffer);
+	//release Json File
+	CoreCrossDllHelpers::CoreReleaseBuffer(&buffer); buffer = nullptr;
+	SaveArmorerItemLvl(jsonState);
+
+	jsonState.SerializeToFile(saveFileName, &buffer);
+	CoreCrossDllHelpers::CoreReleaseBuffer(&buffer);
 }
 
 GameManager* CreateGameManager() {
