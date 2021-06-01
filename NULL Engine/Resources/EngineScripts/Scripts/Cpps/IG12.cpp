@@ -188,6 +188,11 @@ void IG12::SetUp()
 	//Particles and SFX
 	bombingParticles = crosshair->GetComponent<C_ParticleSystem>();
 	(bombingParticles != nullptr) ? bombingParticles->StopSpawn() : LOG("[ERROR] IG12 Script: Could not find { BOMBING } Particle System!");
+
+	hitParticles = gameObject->GetComponent<C_ParticleSystem>();
+	(hitParticles != nullptr) ? hitParticles->StopSpawn() : LOG("[ERROR] IG12 Script: Could not find { HIT } Particle System!");
+
+	damageAudio = (C_AudioSource*)gameObject->GetComponent<C_AudioSource>();
 }
 
 void IG12::Behavior()
@@ -224,8 +229,8 @@ void IG12::TakeDamage(float damage)
 		health = 0.0f;
 
 	hitTimer.Start();
-	if (GetParticles("Hit") != nullptr)
-		GetParticles("Hit")->ResumeSpawn();
+	if (hitParticles != nullptr)
+		hitParticles->ResumeSpawn();
 
 	if (damageAudio != nullptr)
 		damageAudio->PlayFx(damageAudio->GetEventId());
@@ -337,6 +342,10 @@ void IG12::ManageMovement()
 		else
 			firstStageTimer.Start();
 	}
+
+	if (!hitTimer.IsActive())
+		hitParticles->StopSpawn();
+	
 
 	switch (moveState)
 	{

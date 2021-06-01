@@ -112,6 +112,7 @@ public:
 	
 	//partiles and SFX
 	C_ParticleSystem* bombingParticles;
+	C_ParticleSystem* hitParticles;
 	bool bombExploding = false;
 
 private:
