@@ -1286,6 +1286,7 @@ void Player::GatherMoveInputs()
 void Player::GatherAimInputs()
 {
 	aimState = AimState::IDLE;
+
 	// Controller aim
 	aimInput.x = (float)App->input->GetGameControllerAxisRaw(2); // x right joystick
 	aimInput.y = (float)App->input->GetGameControllerAxisRaw(3); // y right joystick
@@ -1296,16 +1297,11 @@ void Player::GatherAimInputs()
 	// Keyboard aim
 	if ((aimInputThreshold.x == 0) && (aimInputThreshold.y == 0))	// If there was no controller input
 	{
+		aimState = AimState::IDLE;
 		if (App->input->GetKey(SDL_SCANCODE_UP) == KeyState::KEY_REPEAT)	{ aimInput.y = -MAX_INPUT; aimState = AimState::AIMING; }
 		if (App->input->GetKey(SDL_SCANCODE_DOWN) == KeyState::KEY_REPEAT)	{ aimInput.y = MAX_INPUT; aimState = AimState::AIMING; }
 		if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KeyState::KEY_REPEAT)	{ aimInput.x = MAX_INPUT; aimState = AimState::AIMING; }
 		if (App->input->GetKey(SDL_SCANCODE_LEFT) == KeyState::KEY_REPEAT)	{ aimInput.x = -MAX_INPUT; aimState = AimState::AIMING; }
-	}
-
-	//Decide weather to aim or not
-	if ((aimInputThreshold.x == 0) && (aimInputThreshold.y == 0))
-	{
-		aimState = AimState::IDLE;
 	}
 	else
 	{
@@ -1429,11 +1425,14 @@ void Player::Movement()
 
 void Player::Aim()
 {
-	float2 prevAimVector = aimVector;
+	float2 oldAim = aimVector;
 
 	if (aimState == AimState::IDLE || moveState == PlayerState::DASH) // AimState::IDLE means not aiming
 	{
-		aimVector = moveVector;
+		if (!moveVector.IsZero())
+			aimVector = moveVector;
+		else
+			aimVector = oldAim;
 	}
 	else
 	{
@@ -1441,8 +1440,6 @@ void Player::Aim()
 	}
 
 	LOG("Aim vector x = %f , y = %f", aimVector.x, aimVector.y);
-
-	//aimVector = (aimState == AimState::IDLE || moveState == PlayerState::DASH) ? moveVector : aimInput;
 
 	float rad = aimVector.AimedAngle();
 	
