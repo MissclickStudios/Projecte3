@@ -1348,10 +1348,6 @@ void Player::GatherInteractionInputs()
 	
 	if (currentInteraction == InteractionType::NONE)
 	{
-		if (App->input->GetKey(SDL_SCANCODE_G) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(SDL_CONTROLLER_BUTTON_LEFTSHOULDER) == ButtonState::BUTTON_DOWN)
-		{
-			SetPlayerInteraction(InteractionType::SIGNAL_GROGU);
-		}
 
 		/*if (App->input->GetKey(SDL_SCANCODE_E) == KeyState::KEY_DOWN)
 		{
