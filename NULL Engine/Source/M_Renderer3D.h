@@ -62,9 +62,9 @@ const float ParticlesCoords[] = {
 
 struct MeshRenderer
 {
-	MeshRenderer(C_Transform* transform, C_Mesh* cMesh, C_Material* cMaterial);								// Will render the given mesh at the given position with the given mat & tex.
+	MeshRenderer(C_Transform* cTransform, C_Mesh* cMesh, C_Material* cMaterial);								// Will render the given mesh at the given position with the given mat & tex.
 
-	void Render						(bool outline);
+	void Render						();
 
 	void RenderVertexNormals		(const R_Mesh* rMesh);
 	void RenderFaceNormals			(const R_Mesh* rMesh);
@@ -83,9 +83,9 @@ struct MeshRenderer
 	uint32 SetDefaultShader			(C_Material* cMaterial);
 	void ClearShader				();
 
-	std::vector<float4x4> boneTransforms;
+	std::vector<float4x4>* boneTransforms;
 
-	C_Transform*	transform;
+	C_Transform*	cTransform;
 	C_Mesh*			cMesh;
 	C_Material*		cMaterial;
 };

@@ -354,10 +354,13 @@ void RE_Mesh::ApplyShader()
 	App->scene->GetPointLights(pointLights);																			// Either way maybe this is not a chokepoint at all.
 
 	R_Shader* rShader = cMaterial->GetShader();																			// THIS. Having a local R_Shader* will save a lot of unnecessary calls.
-	if (rShader == nullptr)																								// THIS. Finishing early in case there is no shader.
-		return;
+	if (rShader == nullptr)
+	{
+		SetDefaultShader(cMaterial);																					// THIS. Defaulting to Default Shader in case there is none assigned.
+		rShader = cMaterial->GetShader();
+	}
 
-	uint32 shaderProgram = (rShader->shaderProgramID != 0) ? rShader->shaderProgramID : SetDefaultShader(cMaterial);	// THIS. Eliminates one check.
+	uint32 shaderProgram = rShader->shaderProgramID;
 	if (shaderProgram == 0)
 		return;
 
