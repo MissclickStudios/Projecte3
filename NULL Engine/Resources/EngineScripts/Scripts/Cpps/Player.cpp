@@ -384,7 +384,7 @@ void Player::LoadState(ParsonNode& playerNode)
 		{
 			blasterWeapon->type = WeaponType::BLASTER;
 
-			blasterWeapon->SetOwnership(type, rightHand, rightHandName);
+			blasterWeapon->SetOwnership(type, rightHand, rightHandName.c_str());
 			blasterWeapon->ammo = playerNode.GetInteger("Blaster Ammo");
 		}
 	}
@@ -403,7 +403,7 @@ void Player::LoadState(ParsonNode& playerNode)
 
 		if (secondaryWeapon != nullptr)
 		{
-			secondaryWeapon->SetOwnership(type, rightHand, rightHandName);
+			secondaryWeapon->SetOwnership(type, rightHand, rightHandName.c_str());
 			int savedAmmo = playerNode.GetInteger("Equiped Gun Ammo");
 			if (savedAmmo > secondaryWeapon->MaxAmmo())
 				savedAmmo = secondaryWeapon->MaxAmmo();
@@ -560,15 +560,14 @@ void Player::EquipWeapon(Prefab weapon)
 		{
 			if (secondaryWeapon->type == WeaponType::MINIGUN)
 			{
-				secondaryWeapon->SetOwnership(type, leftHand, leftHandName);
+				secondaryWeapon->SetOwnership(type, leftHand, leftHandName.c_str());
 				currentWeapon = secondaryWeapon;
 			}
 			else
 			{
-				secondaryWeapon->SetOwnership(type, rightHand, rightHandName);
+				secondaryWeapon->SetOwnership(type, rightHand, rightHandName.c_str());
 				currentWeapon = secondaryWeapon;
 			}
-			
 		}
 	}
 }
@@ -639,7 +638,7 @@ void Player::AnimatePlayer()
 	}
 	else
 	{	
-		LOG("DIRECTIONS: [%d]::[%d]::[%s]::[%s]", aimDirection, moveDirection, GetAimStateAnimation()->name.c_str(), GetLegsAnimation()->name.c_str());
+		//LOG("DIRECTIONS: [%d]::[%d]::[%s]::[%s]", aimDirection, moveDirection, GetAimStateAnimation()->name.c_str(), GetLegsAnimation()->name.c_str());
 		
 		AnimationInfo* torsoInfo	= GetAimStateAnimation();
 		AnimationInfo* legsInfo		= GetMoveStateAnimation();
@@ -1191,7 +1190,7 @@ void Player::Shoot()
 	{
 	case ShootState::NO_FULLAUTO:		{ currentAnimation = nullptr; aimState = AimState::ON_GUARD; }		break;
 	case ShootState::WAITING_FOR_NEXT:	{ /* DO NOTHING */ }												break;
-	case ShootState::FIRED_PROJECTILE:	{ if (currentWeapon->type != WeaponType::MINIGUN) { currentAnimation = nullptr; aimState = AimState::ON_GUARD; } }		break;
+	case ShootState::FIRED_PROJECTILE:	{ /*if (currentWeapon->type != WeaponType::MINIGUN) { */currentAnimation = nullptr; aimState = AimState::ON_GUARD;/* } */}		break;
 	case ShootState::RATE_FINISHED:		{ currentAnimation = nullptr; aimState = AimState::ON_GUARD; }		break;
 	case ShootState::NO_AMMO:			{ /*currentAnimation = nullptr;*/ aimState = AimState::RELOAD_IN; }	break;
 	}
