@@ -218,6 +218,9 @@ public:
 	GameObject* rightHand					= nullptr;
 	GameObject* leftHand					= nullptr;
 
+	std::string rightHandName				= "";
+	std::string LeftHandName				= "";
+
 	// Items
 	void AddItem(ItemData* item);
 	const std::vector<std::pair<bool, ItemData*>>* const GetItems() const { return &items; }
