@@ -605,15 +605,13 @@ void Player::AnimatePlayer()
 {	
 	if (animator == nullptr)
 		return;
-
-	static bool fromPreview = false;
 	
-	AnimatorTrack* preview = animator->GetTrackAsPtr("Preview");
+	AnimatorTrack* preview		= animator->GetTrackAsPtr("Preview");
+	AnimationInfo* torsoInfo	= GetAimStateAnimation();
+	AnimationInfo* legsInfo		= GetMoveStateAnimation();
 
-	if (GetEntityState() != EntityState::NONE || aimState == AimState::IDLE)											// TAKE INTO ACCOUNT STUN AND KNOCKBACK + LOOK INTO DASH PROBLEMS 
+	if (GetEntityState() != EntityState::NONE || aimState == AimState::IDLE || torsoInfo == nullptr || legsInfo == nullptr)			// TAKE INTO ACCOUNT STUN AND KNOCKBACK + LOOK INTO DASH PROBLEMS 
 	{	
-		fromPreview = true;
-		
 		if (torsoTrack != nullptr)
 		{
 			if (torsoTrack->GetTrackState() != TrackState::STOP)
@@ -639,60 +637,39 @@ void Player::AnimatePlayer()
 	else
 	{	
 		//LOG("DIRECTIONS: [%d]::[%d]::[%s]::[%s]", aimDirection, moveDirection, GetAimStateAnimation()->name.c_str(), GetLegsAnimation()->name.c_str());
-		
-		AnimationInfo* torsoInfo	= GetAimStateAnimation();
-		AnimationInfo* legsInfo		= GetMoveStateAnimation();
-		if (torsoInfo == nullptr || legsInfo == nullptr)
+
+		if (torsoTrack == nullptr || legsTrack == nullptr)
 		{
-			//LOG("DEFAULTING AIMING TO PREVIEW");
-			
-			fromPreview = true;
-
-			AnimatorClip* previewClip = preview->GetCurrentClip();
-
-			if ((previewClip == nullptr) || (previewClip->GetName() != currentAnimation->name))										// If no clip playing or animation/clip changed
-				animator->PlayClip(currentAnimation->track.c_str(), currentAnimation->name.c_str(), currentAnimation->blendTime);
+			LOG("[WARNING] Player Script: torsoTrack or legsTrack was nullptr!");
+			return;
 		}
-		else
-		{	
-			if (fromPreview)																										// Way to reset the hip right before it stops being used.
-			{
-				fromPreview = false;
 
-				AnimatorClip* previewClip = preview->GetCurrentClip();
-
-				if ((previewClip == nullptr) || (previewClip->GetName() != torsoInfo->name))										// If no clip playing or animation/clip changed
-					animator->PlayClip(preview->GetName(), torsoInfo->name.c_str(), torsoInfo->blendTime);
-
-				/*if (hip != nullptr)
-					hip->transform->Rotate()*/
-
-				return;
-			}
+		(hip != nullptr) ? hip->transform->SetLocalRotation(float3::zero) : LOG("OOGA BOOGA NO HIPAROOGA");			// Resetting the hip position.
 			
-			if (torsoTrack == nullptr || legsTrack == nullptr)
+		AnimatorClip* torsoClip = torsoTrack->GetCurrentClip();
+		AnimatorClip* legsClip = legsTrack->GetCurrentClip();
+
+		if (preview->GetTrackState() != TrackState::STOP)
+			preview->Stop();
+
+		if ((torsoClip == nullptr) || (torsoClip->GetName() != torsoInfo->name))
+		{
+			animator->PlayClip(torsoTrack->GetName(), torsoInfo->name.c_str(), torsoInfo->blendTime);
+
+			/*if (torsoTrack->GetTrackState() == TrackState::STOP)
 			{
-				LOG("[WARNING] Player Script: torsoTrack or legsTrack was nullptr!");
-				return;
-			}
-
-			AnimatorClip* torsoClip = torsoTrack->GetCurrentClip();
-			AnimatorClip* legsClip = legsTrack->GetCurrentClip();
-
-			if (preview->GetTrackState() != TrackState::STOP)
-				preview->Stop();
-
-			if ((torsoClip == nullptr) || (torsoClip->GetName() != torsoInfo->name))
-				animator->PlayClip(torsoTrack->GetName(), torsoInfo->name.c_str(), torsoInfo->blendTime);
-
-			if ((legsClip == nullptr) || (legsClip->GetName() != legsInfo->name))
-				animator->PlayClip(legsTrack->GetName(), legsInfo->name.c_str(), legsInfo->blendTime);
-
-			if (torsoTrack->GetTrackState() == TrackState::STOP)
 				torsoTrack->Play();
+			}*/
+		}
 
-			if (legsTrack->GetTrackState() == TrackState::STOP)
+		if ((legsClip == nullptr) || (legsClip->GetName() != legsInfo->name))
+		{
+			animator->PlayClip(legsTrack->GetName(), legsInfo->name.c_str(), legsInfo->blendTime);
+
+			/*if (legsTrack->GetTrackState() == TrackState::STOP)
+			{
 				legsTrack->Play();
+			}*/
 		}
 	}
 }
@@ -1202,14 +1179,14 @@ void Player::Shoot()
 
 	switch (currentWeapon->Shoot(aimVector))
 	{
-	case ShootState::NO_FULLAUTO:		{ currentAnimation = nullptr; aimState = AimState::ON_GUARD; }		break;
+	case ShootState::NO_FULLAUTO:		{ currentAnimation = nullptr; aimState = AimState::IDLE; }		break;
 	case ShootState::WAITING_FOR_NEXT:	{ /* DO NOTHING */ }												break;
 	case ShootState::FIRED_PROJECTILE:	
 	{ 
 		if (currentWeapon->type != WeaponType::MINIGUN)
 		{ 
 			currentAnimation = nullptr; 
-			aimState = AimState::ON_GUARD; 
+			aimState = AimState::IDLE;
 		}
 		else
 		{
@@ -1217,7 +1194,7 @@ void Player::Shoot()
 			currentWeapon->defRotation = currentWeapon->modifiedRotation;
 		}
 	}		break;
-	case ShootState::RATE_FINISHED:		{ currentAnimation = nullptr; aimState = AimState::ON_GUARD; }		break;
+	case ShootState::RATE_FINISHED:		{ currentAnimation = nullptr; aimState = AimState::IDLE; }		break;
 	case ShootState::NO_AMMO:			{ /*currentAnimation = nullptr;*/ aimState = AimState::RELOAD_IN; }	break;
 	}
 }
@@ -1324,7 +1301,6 @@ void Player::GatherMoveInputs()
 
 void Player::GatherAimInputs()
 {
-	aimState = AimState::IDLE;
 
 	// Controller aim
 	aimInput.x = (float)App->input->GetGameControllerAxisRaw(2); // x right joystick
@@ -1336,21 +1312,28 @@ void Player::GatherAimInputs()
 	// Keyboard aim
 	if ((aimInputThreshold.x == 0) && (aimInputThreshold.y == 0))	// If there was no controller input
 	{
-		aimState = AimState::IDLE;
-		if (App->input->GetKey(SDL_SCANCODE_UP) == KeyState::KEY_REPEAT)	{ aimInput.y = -MAX_INPUT; aimState = AimState::AIMING; }
-		if (App->input->GetKey(SDL_SCANCODE_DOWN) == KeyState::KEY_REPEAT)	{ aimInput.y = MAX_INPUT; aimState = AimState::AIMING; }
-		if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KeyState::KEY_REPEAT)	{ aimInput.x = MAX_INPUT; aimState = AimState::AIMING; }
-		if (App->input->GetKey(SDL_SCANCODE_LEFT) == KeyState::KEY_REPEAT)	{ aimInput.x = -MAX_INPUT; aimState = AimState::AIMING; }
+
+		if (App->input->GetKey(SDL_SCANCODE_UP) == KeyState::KEY_REPEAT)	{ aimInput.y = -MAX_INPUT; if (aimState == AimState::IDLE) aimState = AimState::AIMING; }
+		if (App->input->GetKey(SDL_SCANCODE_DOWN) == KeyState::KEY_REPEAT)	{ aimInput.y = MAX_INPUT; if (aimState == AimState::IDLE) aimState = AimState::AIMING; }
+		if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KeyState::KEY_REPEAT)	{ aimInput.x = MAX_INPUT; if (aimState == AimState::IDLE) aimState = AimState::AIMING; }
+		if (App->input->GetKey(SDL_SCANCODE_LEFT) == KeyState::KEY_REPEAT)	{ aimInput.x = -MAX_INPUT; if (aimState == AimState::IDLE) aimState = AimState::AIMING; }
+
+		//Maybe set idle here if no keyboard input?
+
 	}
-	else
+	else //There is input above the threshold
 	{
-		aimState = AimState::AIMING;
+		if(aimState == AimState::IDLE)
+			aimState = AimState::AIMING;
 	}
 	
 	SetAimDirection();
 
-	if (aimState != AimState::IDLE && aimState != AimState::AIMING) // If the player is not on this states, ignore action inputs (shoot, reload, etc.)
+	if (aimState != AimState::IDLE && aimState != AimState::CHANGE && aimState != AimState::RELOAD && aimState != AimState::SHOOT) // If the player is not on this states, ignore action inputs (shoot, reload, etc.)
+	{
+		aimState = AimState::IDLE;
 		return;
+	}
 
 	if (App->input->GetKey(SDL_SCANCODE_F) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(1) == ButtonState::BUTTON_DOWN)
 	{
@@ -1370,7 +1353,6 @@ void Player::GatherAimInputs()
 		return;
 	}
 
-	//aimState = AimState::IDLE;
 }
 
 void Player::GatherInteractionInputs()

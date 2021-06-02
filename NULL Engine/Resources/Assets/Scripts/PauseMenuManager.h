@@ -7,6 +7,7 @@ class GameObject;
 class C_UI_Button;
 class C_UI_Checkbox;
 class C_Canvas;
+class HUDManager;
 
 class SCRIPTS_API PauseMenuManager : public Script {
 public:
@@ -27,8 +28,11 @@ public:
 	std::string optionsFullscreenStr = "FullscreenCheck";
 	std::string optionsVsyncStr = "VsyncCheck";
 	std::string backButtonStr = "BackButton";
+	std::string hudCanvasStr = "HUD";
 
 private:
+	C_Canvas* hudCanvas = nullptr;
+	HUDManager* hudScript = nullptr;
 	C_Canvas* pauseMenuCanvas = nullptr;
 	C_UI_Button* resumeButton = nullptr;
 	C_UI_Button* optionsButton = nullptr;
@@ -60,5 +64,7 @@ SCRIPTS_FUNCTION PauseMenuManager* CreatePauseMenuManager() {
 	INSPECTOR_STRING(script->optionsFullscreenStr);
 	INSPECTOR_STRING(script->optionsVsyncStr);
 	INSPECTOR_STRING(script->backButtonStr);
+	INSPECTOR_STRING(script->hudCanvasStr);
+
 	return script;
 }

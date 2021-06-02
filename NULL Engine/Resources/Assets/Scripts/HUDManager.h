@@ -1,4 +1,5 @@
 #pragma once
+#include <vector>
 #include <string>
 #include "Script.h"
 #include "ScriptMacros.h"
@@ -43,6 +44,9 @@ public:
 	std::string weapon2Name = "pog2";
 	std::string weapon3Name = "pog3";
 	std::string weapon4Name = "pog4";
+
+	std::vector<std::string> disabledScenes;
+	bool enabled = true;
 
 private:
 	C_2DAnimator* mandoImage;
@@ -91,22 +95,4 @@ private:
 	void ManageHeartImage(int hp);
 };
 
-SCRIPTS_FUNCTION HUDManager* CreateHUDManager() {
-	HUDManager* script = new HUDManager();
-	INSPECTOR_STRING(script->mandoImageName);
-	INSPECTOR_STRING(script->secondaryWeaponImageName);
-	INSPECTOR_STRING(script->primaryWeaponImageName);
-	INSPECTOR_STRING(script->dashImageName);
-	INSPECTOR_STRING(script->creditsImageName);
-	INSPECTOR_STRING(script->playerName);
-
-	INSPECTOR_STRING(script->creditsTextName);
-	INSPECTOR_STRING(script->beskarTextName);
-	INSPECTOR_STRING(script->ammoTextName);
-
-	INSPECTOR_STRING(script->weapon1Name);
-	INSPECTOR_STRING(script->weapon2Name);
-	INSPECTOR_STRING(script->weapon3Name);
-	INSPECTOR_STRING(script->weapon4Name);
-	return script;
-}
+SCRIPTS_FUNCTION HUDManager* CreateHUDManager();

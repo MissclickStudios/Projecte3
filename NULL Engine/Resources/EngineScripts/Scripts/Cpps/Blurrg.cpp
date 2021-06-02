@@ -121,7 +121,10 @@ void Blurrg::SetUp()
 	agent = gameObject->GetComponent<C_NavMeshAgent>();
 
 	if (agent != nullptr)
+	{
 		agent->origin = gameObject->GetComponent<C_Transform>()->GetWorldPosition();
+		agent->velocity = ChaseSpeed();
+	}
 	
 	// Particles & SFX
 	hitParticles = gameObject->GetComponent<C_ParticleSystem>();
