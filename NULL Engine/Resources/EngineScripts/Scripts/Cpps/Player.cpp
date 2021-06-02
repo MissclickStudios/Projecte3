@@ -1202,14 +1202,14 @@ void Player::Shoot()
 
 	switch (currentWeapon->Shoot(aimVector))
 	{
-	case ShootState::NO_FULLAUTO:		{ currentAnimation = nullptr; aimState = AimState::ON_GUARD; }		break;
+	case ShootState::NO_FULLAUTO:		{ currentAnimation = nullptr; aimState = AimState::IDLE; }		break;
 	case ShootState::WAITING_FOR_NEXT:	{ /* DO NOTHING */ }												break;
 	case ShootState::FIRED_PROJECTILE:	
 	{ 
 		if (currentWeapon->type != WeaponType::MINIGUN)
 		{ 
 			currentAnimation = nullptr; 
-			aimState = AimState::ON_GUARD; 
+			aimState = AimState::IDLE;
 		}
 		else
 		{
@@ -1217,7 +1217,7 @@ void Player::Shoot()
 			currentWeapon->defRotation = currentWeapon->modifiedRotation;
 		}
 	}		break;
-	case ShootState::RATE_FINISHED:		{ currentAnimation = nullptr; aimState = AimState::ON_GUARD; }		break;
+	case ShootState::RATE_FINISHED:		{ currentAnimation = nullptr; aimState = AimState::IDLE; }		break;
 	case ShootState::NO_AMMO:			{ /*currentAnimation = nullptr;*/ aimState = AimState::RELOAD_IN; }	break;
 	}
 }
@@ -1324,7 +1324,6 @@ void Player::GatherMoveInputs()
 
 void Player::GatherAimInputs()
 {
-	aimState = AimState::IDLE;
 
 	// Controller aim
 	aimInput.x = (float)App->input->GetGameControllerAxisRaw(2); // x right joystick
@@ -1336,20 +1335,24 @@ void Player::GatherAimInputs()
 	// Keyboard aim
 	if ((aimInputThreshold.x == 0) && (aimInputThreshold.y == 0))	// If there was no controller input
 	{
-		aimState = AimState::IDLE;
-		if (App->input->GetKey(SDL_SCANCODE_UP) == KeyState::KEY_REPEAT)	{ aimInput.y = -MAX_INPUT; aimState = AimState::AIMING; }
-		if (App->input->GetKey(SDL_SCANCODE_DOWN) == KeyState::KEY_REPEAT)	{ aimInput.y = MAX_INPUT; aimState = AimState::AIMING; }
-		if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KeyState::KEY_REPEAT)	{ aimInput.x = MAX_INPUT; aimState = AimState::AIMING; }
-		if (App->input->GetKey(SDL_SCANCODE_LEFT) == KeyState::KEY_REPEAT)	{ aimInput.x = -MAX_INPUT; aimState = AimState::AIMING; }
+
+		if (App->input->GetKey(SDL_SCANCODE_UP) == KeyState::KEY_REPEAT)	{ aimInput.y = -MAX_INPUT; if (aimState == AimState::IDLE) aimState = AimState::AIMING; }
+		if (App->input->GetKey(SDL_SCANCODE_DOWN) == KeyState::KEY_REPEAT)	{ aimInput.y = MAX_INPUT; if (aimState == AimState::IDLE) aimState = AimState::AIMING; }
+		if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KeyState::KEY_REPEAT)	{ aimInput.x = MAX_INPUT; if (aimState == AimState::IDLE) aimState = AimState::AIMING; }
+		if (App->input->GetKey(SDL_SCANCODE_LEFT) == KeyState::KEY_REPEAT)	{ aimInput.x = -MAX_INPUT; if (aimState == AimState::IDLE) aimState = AimState::AIMING; }
+
+		//Maybe set idle here if no keyboard input?
+
 	}
 	else
 	{
-		aimState = AimState::AIMING;
+		if(aimState == AimState::IDLE)
+			aimState = AimState::AIMING;
 	}
 	
 	SetAimDirection();
 
-	if (aimState != AimState::IDLE && aimState != AimState::AIMING) // If the player is not on this states, ignore action inputs (shoot, reload, etc.)
+	if (aimState != AimState::IDLE && aimState != AimState::AIMING && aimState != AimState::CHANGE && aimState != AimState::RELOAD && aimState != AimState::SHOOT) // If the player is not on this states, ignore action inputs (shoot, reload, etc.)
 		return;
 
 	if (App->input->GetKey(SDL_SCANCODE_F) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(1) == ButtonState::BUTTON_DOWN)
