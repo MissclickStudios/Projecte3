@@ -41,9 +41,6 @@ private:
 
 	C_Animator* sarlaacAnimator = nullptr;
 
-	C_ParticleSystem* idleParticles		= nullptr;
-	C_ParticleSystem* attackParticles	= nullptr;
-
 	SarlaacState state = SarlaacState::IDLE;
 };
 
