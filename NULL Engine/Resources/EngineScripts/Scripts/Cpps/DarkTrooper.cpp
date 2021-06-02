@@ -130,7 +130,10 @@ void DarkTrooper::SetUp()
 	agent = gameObject->GetComponent<C_NavMeshAgent>();
 
 	if (agent != nullptr)
+	{
 		agent->origin = gameObject->GetComponent<C_Transform>()->GetWorldPosition();
+		agent->velocity = ChaseSpeed();
+	}
 }
 
 void DarkTrooper::Behavior()
@@ -221,7 +224,7 @@ void DarkTrooper::ManageMovement()
 		}
 		break;
 	case DarkTrooperState::PATROL:
-		currentAnimation = &walkAnimation;
+		currentAnimation = &idleAnimation;
 		if (distance < chaseDistance)
 		{
 			moveState = DarkTrooperState::CHASE;
@@ -234,6 +237,11 @@ void DarkTrooper::ManageMovement()
 		if (distance < attackDistance)
 		{
 			moveState = DarkTrooperState::IDLE;
+			break;
+		}
+		if (distance > chaseDistance)
+		{
+			moveState = DarkTrooperState::PATROL;
 			break;
 		}
 		Chase();
@@ -327,11 +335,7 @@ void DarkTrooper::ManageAim()
 void DarkTrooper::Patrol()
 {
 	if (agent != nullptr)
-	{
-		float3 pos = { gameObject->transform->GetWorldPosition().x, 0.0f, gameObject->transform->GetWorldPosition().z };
-
-		agent->SetDestination(pos);
-	}
+		agent->StopAndCancelDestination();
 }
 
 void DarkTrooper::Chase()

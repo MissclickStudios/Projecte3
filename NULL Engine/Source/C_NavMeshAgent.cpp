@@ -39,6 +39,8 @@ bool C_NavMeshAgent::Update()
 	{
 		if (hasDestination)
 		{
+			destinationPoint = path.back();
+
 			nextPoint = path[indexPath];
 
 			direction = nextPoint - currentPos;

@@ -1321,7 +1321,7 @@ void Player::GatherAimInputs()
 		//Maybe set idle here if no keyboard input?
 
 	}
-	else
+	else //There is input above the threshold
 	{
 		if(aimState == AimState::IDLE)
 			aimState = AimState::AIMING;
@@ -1329,8 +1329,11 @@ void Player::GatherAimInputs()
 	
 	SetAimDirection();
 
-	if (aimState != AimState::IDLE && aimState != AimState::AIMING && aimState != AimState::CHANGE && aimState != AimState::RELOAD && aimState != AimState::SHOOT) // If the player is not on this states, ignore action inputs (shoot, reload, etc.)
+	if (aimState != AimState::IDLE && aimState != AimState::CHANGE && aimState != AimState::RELOAD && aimState != AimState::SHOOT) // If the player is not on this states, ignore action inputs (shoot, reload, etc.)
+	{
+		aimState = AimState::IDLE;
 		return;
+	}
 
 	if (App->input->GetKey(SDL_SCANCODE_F) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(1) == ButtonState::BUTTON_DOWN)
 	{
@@ -1350,7 +1353,6 @@ void Player::GatherAimInputs()
 		return;
 	}
 
-	//aimState = AimState::IDLE;
 }
 
 void Player::GatherInteractionInputs()
