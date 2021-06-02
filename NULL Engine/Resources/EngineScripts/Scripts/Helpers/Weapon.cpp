@@ -344,7 +344,7 @@ void Weapon::SpreadProjectiles(float2 direction)
 		{
 			direction = float2(cos * direction.x + (-sin * direction.y), sin * direction.x + (cos * direction.y));
 		}
-		else if (i == int(projectilesPerShot / 2))
+		/*else if (i == int(projectilesPerShot / 2))
 		{
 			direction = initialDirection;
 			sin = math::Sin(DegToRad(-shotSpreadArea));
@@ -352,9 +352,13 @@ void Weapon::SpreadProjectiles(float2 direction)
 
 			direction = float2(cos * direction.x + (-sin * direction.y), sin * direction.x + (cos * direction.y));
 
-		}
+		}*/
 		else if (i >= projectilesPerShot / 2)
 		{
+			direction = initialDirection;
+			sin = math::Sin(DegToRad(-shotSpreadArea));
+			cos = math::Cos(DegToRad(-shotSpreadArea));
+
 			direction = float2(cos * direction.x + (-sin * direction.y), sin * direction.x + (cos * direction.y));
 		}
 	}

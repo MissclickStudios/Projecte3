@@ -146,6 +146,7 @@ public:
 	C_AudioSource* shootAudio = nullptr;
 	C_AudioSource* reloadAudio = nullptr;
 
+	GameObject* barrel = nullptr;
 protected:
 
 	virtual ShootState ShootLogic() = 0;
@@ -158,7 +159,6 @@ protected:
 	PerfectTimer fireRateTimer;
 
 	GameObject* hand = nullptr;
-	GameObject* barrel = nullptr;
 
 	// Reload
 	Timer reloadTimer;

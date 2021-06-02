@@ -13,6 +13,10 @@ Blaster::~Blaster()
 
 void Blaster::SetUp()
 {
+    if (type == WeaponType::SNIPER)
+    {
+        AddPerk(PerkType::STUN_BULLETS, 1.0f, 0.1f);
+    }
 }
 
 ShootState Blaster::ShootLogic()
