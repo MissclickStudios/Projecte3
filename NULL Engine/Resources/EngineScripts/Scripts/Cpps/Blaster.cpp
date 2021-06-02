@@ -78,6 +78,8 @@ SCRIPTS_FUNCTION Blaster* CreateBlaster()
     INSPECTOR_DRAGABLE_FLOAT3(script->rotation);
     INSPECTOR_DRAGABLE_FLOAT3(script->scale);
 
+    INSPECTOR_DRAGABLE_FLOAT3(script->modifiedPosition);
+    INSPECTOR_DRAGABLE_FLOAT3(script->modifiedRotation);
     // Projectiles
     INSPECTOR_DRAGABLE_INT(script->projectileNum);
     INSPECTOR_CHECKBOX_BOOL(script->updateProjectiles);
