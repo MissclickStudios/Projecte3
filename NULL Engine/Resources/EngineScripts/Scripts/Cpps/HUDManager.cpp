@@ -379,3 +379,26 @@ void HUDManager::ManageHeartImage(int hp)
 		break;
 	}
 }
+
+HUDManager* CreateHUDManager()
+{
+	HUDManager* script = new HUDManager();
+	INSPECTOR_STRING(script->mandoImageName);
+	INSPECTOR_STRING(script->secondaryWeaponImageName);
+	INSPECTOR_STRING(script->primaryWeaponImageName);
+	INSPECTOR_STRING(script->dashImageName);
+	INSPECTOR_STRING(script->creditsImageName);
+	INSPECTOR_STRING(script->playerName);
+
+	INSPECTOR_STRING(script->creditsTextName);
+	INSPECTOR_STRING(script->beskarTextName);
+	INSPECTOR_STRING(script->ammoTextName);
+
+	INSPECTOR_STRING(script->weapon1Name);
+	INSPECTOR_STRING(script->weapon2Name);
+	INSPECTOR_STRING(script->weapon3Name);
+	INSPECTOR_STRING(script->weapon4Name);
+
+	INSPECTOR_VECTOR_STRING(script->disabledScenes);
+	return script;
+}

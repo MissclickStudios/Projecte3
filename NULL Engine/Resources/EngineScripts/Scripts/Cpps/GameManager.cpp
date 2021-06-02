@@ -240,8 +240,8 @@ void GameManager::Update()
 	if(!instantiatedSandstorm)
 		if (strcmp(App->scene->GetCurrentScene(), levelNames.hub.c_str()) != 0 && strcmp(App->scene->GetCurrentScene(), levelNames.loseScene.c_str()) != 0 && strcmp(App->scene->GetCurrentScene(), levelNames.winScene.c_str()) != 0)
 		{
-			App->scene->InstantiatePrefab(mistPlane1.uid, App->scene->GetSceneRoot(), mistPlane1Position, Quat::identity);
-			App->scene->InstantiatePrefab(mistPlane2.uid, App->scene->GetSceneRoot(), mistPlane2Position, Quat::identity);
+			App->scene->InstantiatePrefab(mistPlane1.uid, gameObject, mistPlane1Position, Quat::identity);
+			App->scene->InstantiatePrefab(mistPlane2.uid, gameObject, mistPlane2Position, Quat::identity);
 			instantiatedSandstorm = true;
 		}
 
@@ -956,11 +956,25 @@ void GameManager::BoughtFromArmorer()
 
 void GameManager::SetUpWinScreen()
 {
-	App->scene->GetGameObjectByName("AttemptsText")->GetComponent<C_UI_Text>()->SetText(std::to_string(runStats.attempt).c_str());
-	App->scene->GetGameObjectByName("KillsText")->GetComponent<C_UI_Text>()->SetText(std::to_string(runStats.runKills).c_str());
-	App->scene->GetGameObjectByName("PrecisionText")->GetComponent<C_UI_Text>()->SetText(std::to_string(runStats.runPrecision).c_str());
-	App->scene->GetGameObjectByName("TimeText")->GetComponent<C_UI_Text>()->SetText(std::to_string(runStats.runTime).c_str());
-	App->scene->GetGameObjectByName("WeaponText")->GetComponent<C_UI_Text>()->SetText(runStats.weaponUsed.c_str());
+	GameObject* tmp = App->scene->GetGameObjectByName("AttemptsText");
+	if(tmp != nullptr)
+		tmp->GetComponent<C_UI_Text>()->SetText(std::to_string(runStats.attempt).c_str());
+
+	tmp = App->scene->GetGameObjectByName("KillsText");
+	if (tmp != nullptr)
+		tmp->GetComponent<C_UI_Text>()->SetText(std::to_string(runStats.runKills).c_str());
+
+	tmp = App->scene->GetGameObjectByName("PrecisionText");
+	if (tmp != nullptr)
+		tmp->GetComponent<C_UI_Text>()->SetText(std::to_string(runStats.runPrecision).c_str());
+
+	tmp = App->scene->GetGameObjectByName("TimeText");
+	if (tmp != nullptr)
+		tmp->GetComponent<C_UI_Text>()->SetText(std::to_string(runStats.runTime).c_str());
+
+	tmp = App->scene->GetGameObjectByName("WeaponText");
+	if (tmp != nullptr)
+		tmp->GetComponent<C_UI_Text>()->SetText(runStats.weaponUsed.c_str());
 }
 
 void GameManager::ResetArmorerItemsLvl()
