@@ -70,7 +70,7 @@ bool M_ResourceManager::Start()
 	RefreshDirectoryFiles(ASSETS_DIRECTORY);
 	RefreshDirectoryFiles(ENGINE_DIRECTORY);
 
-	//TrimLibrary();
+	TrimLibrary();
 
 	FindPrefabs();
 
@@ -1059,8 +1059,11 @@ void M_ResourceManager::RefreshDirectoryFiles(const char* directory)
 	}
 	for (uint i = 0; i < filesToUpdate.size(); ++i)
 	{
-		DeleteFromLibrary(filesToUpdate[i].c_str());
-		ImportFile(filesToUpdate[i].c_str());
+		if (App->fileSystem->GetFileExtension(filesToUpdate[i].c_str()) == "h")
+		{
+			DeleteFromLibrary(filesToUpdate[i].c_str());
+			ImportFile(filesToUpdate[i].c_str());
+		}
 	}
 	for (uint i = 0; i < filesToImport.size(); ++i)
 	{
