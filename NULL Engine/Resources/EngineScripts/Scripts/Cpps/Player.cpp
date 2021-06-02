@@ -1159,7 +1159,7 @@ void Player::AimIdle()
 		aimingAimPlane->SetIsActive(false);
 	if (currentWeapon == nullptr)
 		return;
-	else if (currentWeapon->type == WeaponType::MINIGUN)
+	else
 	{
 		currentWeapon->defPosition = currentWeapon->position;
 		currentWeapon->defRotation = currentWeapon->rotation;
