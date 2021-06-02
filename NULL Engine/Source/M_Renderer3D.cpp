@@ -123,19 +123,6 @@ bool M_Renderer3D::Init(ParsonNode& configuration)
 	rayColor			= configuration.GetColor("rayColor");
 	boneColor			= configuration.GetColor("boneColor");
 
-	if (App->gameState == GameState::PLAY)
-	{
-		renderWorldGrid		= false;
-		renderWorldAxis		= false;
-		renderWireframes	= false;
-		renderVertexNormals = false;
-		renderFaceNormals	= false;
-		renderBoundingBoxes = false;
-		renderSkeletons		= false;
-		renderColliders		= false;
-		renderCanvas		= false;
-	}
-
 	return ret;
 }
 
@@ -151,6 +138,19 @@ bool M_Renderer3D::Start()
 	GenScreenBuffer();
 
 	particleShader = App->resourceManager->GetShader("ParticleShader");
+
+	if (App->gameState == GameState::PLAY) //Render variables in Build/Game mode
+	{
+		renderWorldGrid = false;
+		renderWorldAxis = false;
+		renderWireframes = false;
+		renderVertexNormals = false;
+		renderFaceNormals = false;
+		renderBoundingBoxes = false;
+		renderSkeletons = false;
+		renderColliders = false;
+		renderCanvas = false;
+	}
 
 	return true;
 }
