@@ -119,7 +119,11 @@ void Trooper::SetUp()
 	agent = gameObject->GetComponent<C_NavMeshAgent>();
 
 	if (agent != nullptr)
+	{
 		agent->origin = gameObject->GetComponent<C_Transform>()->GetWorldPosition();
+		agent->velocity = ChaseSpeed();
+	}
+		
 }
 
 void Trooper::Behavior()
@@ -234,6 +238,11 @@ void Trooper::ManageMovement()
 			moveState = TrooperState::IDLE;
 			break;
 		}
+		if (distance > chaseDistance)
+		{
+			moveState = TrooperState::PATROL;
+			break;
+		}
 		Chase();
 		break;
 	case TrooperState::FLEE:
@@ -324,8 +333,8 @@ void Trooper::ManageAim()
 
 void Trooper::Patrol()
 {
-	/*if (agent != nullptr)
-		agent->SetDestination(gameObject->transform->GetWorldPosition());*/
+	if (agent != nullptr)
+		agent->StopAndCancelDestination();
 
 }
 
@@ -341,14 +350,6 @@ void Trooper::Chase()
 void Trooper::Flee()
 {
 	if (agent != nullptr)
-	{
-		if (rigidBody != nullptr)
-			rigidBody->Set2DVelocity(-moveDirection * ChaseSpeed());
-
-		//agent->SetDestination(-player->transform->GetWorldPosition());
-		/*float2 magnitude = float2(agent->direction.x, agent->direction.z);
-		float result = 1 / magnitude.Length();
-		moveDirection = -float2(result * magnitude.x, result * magnitude.y);*/
-	}
+		agent->SetDestination(-player->transform->GetWorldPosition());
 }
 
