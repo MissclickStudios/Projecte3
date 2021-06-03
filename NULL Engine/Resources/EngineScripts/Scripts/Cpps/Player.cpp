@@ -1277,16 +1277,7 @@ void Player::GatherMoveInputs()
 	moveInput.x = (float)App->input->GetGameControllerAxisValue(0);
 	moveInput.y = (float)App->input->GetGameControllerAxisValue(1);
 
-	// Keyboard movement
-	if (usingKeyboard && !usingGameController)								// If there was keyboard input and no controller input
-	{
-		if (App->input->GetKey(SDL_SCANCODE_W) == KeyState::KEY_REPEAT) { moveInput.y = -MAX_INPUT; }
-		if (App->input->GetKey(SDL_SCANCODE_S) == KeyState::KEY_REPEAT) { moveInput.y = MAX_INPUT; }
-		if (App->input->GetKey(SDL_SCANCODE_D) == KeyState::KEY_REPEAT) { moveInput.x = MAX_INPUT; }
-		if (App->input->GetKey(SDL_SCANCODE_A) == KeyState::KEY_REPEAT) { moveInput.x = -MAX_INPUT; }
-	}
-
-	SetPlayerDirection();
+	LOG("[Keyboard: %s]::[Controller: %s]", (usingKeyboard) ? "True" : "False", (usingGameController) ? "True" : "False");
 
 	if (!dashCooldownTimer.IsActive())
 	{
@@ -1304,16 +1295,26 @@ void Player::GatherMoveInputs()
 		dashCooldownTimer.Stop();
 	}
 
-	if (usingGameController)
+	// Keyboard movement
+	if (usingKeyboard && !usingGameController)								// If there was keyboard input and no controller input
+	{	
+		if (App->input->GetKey(SDL_SCANCODE_W) == KeyState::KEY_REPEAT) { moveInput.y = -MAX_INPUT; moveState = PlayerState::RUN; }
+		if (App->input->GetKey(SDL_SCANCODE_S) == KeyState::KEY_REPEAT) { moveInput.y = MAX_INPUT;	moveState = PlayerState::RUN; }
+		if (App->input->GetKey(SDL_SCANCODE_D) == KeyState::KEY_REPEAT) { moveInput.x = MAX_INPUT;	moveState = PlayerState::RUN; }
+		if (App->input->GetKey(SDL_SCANCODE_A) == KeyState::KEY_REPEAT) { moveInput.x = -MAX_INPUT; moveState = PlayerState::RUN; }
+	}
+	else if (usingGameController)
 	{	
 		bool overWalkThreshold = (moveInput.x > WALK_THRESHOLD) || (-moveInput.x > WALK_THRESHOLD) || (moveInput.y > WALK_THRESHOLD) || (-moveInput.y > WALK_THRESHOLD);
 		
 		moveState = (overWalkThreshold) ? PlayerState::RUN : PlayerState::WALK;
-
-		return;
+	}
+	else
+	{
+		moveState = PlayerState::IDLE;
 	}
 
-	moveState = PlayerState::IDLE;
+	SetPlayerDirection();
 }
 
 void Player::GatherAimInputs()
@@ -1329,7 +1330,7 @@ void Player::GatherAimInputs()
 	//LOG("AIM THRESHOLD	--> [%.3f]::[%.3f]", aimInputThreshold.x, aimInputThreshold.y);
 
 	// Keyboard aim
-	if (abs(aimInputThreshold.x) <= KEYBOARD_THRESHOLD && abs(aimInputThreshold.y) <= KEYBOARD_THRESHOLD)						// If there was no controller input
+	if (/*abs(aimInputThreshold.x) <= KEYBOARD_THRESHOLD && abs(aimInputThreshold.y) <= KEYBOARD_THRESHOLD*/ usingKeyboard && !usingGameController)						// If there was no controller input
 	{
 		if (App->input->GetKey(SDL_SCANCODE_UP) == KeyState::KEY_REPEAT)	{ aimInput.y = -MAX_INPUT;	if (aimState == AimState::IDLE) aimState = AimState::AIMING; }
 		if (App->input->GetKey(SDL_SCANCODE_DOWN) == KeyState::KEY_REPEAT)	{ aimInput.y = MAX_INPUT;	if (aimState == AimState::IDLE) aimState = AimState::AIMING; }
@@ -1340,7 +1341,7 @@ void Player::GatherAimInputs()
 			aimState = AimState::IDLE;
 
 	}
-	else																														//There is input above the threshold
+	else if (usingGameController)																														//There is input above the threshold
 	{
 		aimState = (abs(aimInputThreshold.x) <= AIM_THRESHOLD && abs(aimInputThreshold.y) <= AIM_THRESHOLD) ? AimState::IDLE : AimState::AIMING;
 	}
