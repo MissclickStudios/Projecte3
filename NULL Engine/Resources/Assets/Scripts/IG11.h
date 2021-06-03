@@ -163,7 +163,6 @@ private:
 	C_Canvas* healthBarCanvas = nullptr;
 	C_UI_Image* healthBarImage = nullptr;
 	float healthMaxW = 0.0f;
-
 };
 
 SCRIPTS_FUNCTION IG11* CreateIG11();
