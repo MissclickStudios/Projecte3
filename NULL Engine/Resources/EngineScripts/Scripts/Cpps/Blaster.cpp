@@ -88,5 +88,9 @@ SCRIPTS_FUNCTION Blaster* CreateBlaster()
     INSPECTOR_DRAGABLE_INT(script->projectileNum);
     INSPECTOR_CHECKBOX_BOOL(script->updateProjectiles);
 
+    // Audio
+    INSPECTOR_STRING(script->shootAudioString);
+    INSPECTOR_STRING(script->reloadAudioString);
+
     return script;
 }
