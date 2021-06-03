@@ -35,7 +35,7 @@ Entity::~Entity()
 		delete *effects.begin();
 		effects.erase(effects.begin());
 	}
-	CoreCrossDllHelpers::CoreReleaseString(handName);
+	CoreCrossDllHelpers::CoreReleaseString(rightHandName);
 }
 
 void Entity::Awake()
@@ -89,6 +89,9 @@ void Entity::Start()
 
 void Entity::PreUpdate()
 {
+	if (paused)
+		return;
+
 	if (material != nullptr)
 		material->SetTakeDamage(false);
 
@@ -147,6 +150,9 @@ void Entity::PreUpdate()
 
 void Entity::Update()
 {
+	if (paused)
+		return;
+
 	switch (entityState)
 	{
 	case EntityState::NONE:			{ Behavior(); }									break;
@@ -158,6 +164,9 @@ void Entity::Update()
 
 void Entity::PostUpdate()
 {
+	if (paused)
+		return;
+
 	if (animator != nullptr && currentAnimation != nullptr )
 	{	
 		AnimatorTrack* preview = animator->GetTrackAsPtr("Preview");
@@ -181,22 +190,30 @@ void Entity::PostUpdate()
 
 void Entity::OnPause()
 {
+	paused = true;
 	deathTimer.Pause();
 	stepTimer.Pause();
 
 	if (rigidBody != nullptr)
 		rigidBody->SetIsActive(false);
 
+	for (uint i = 0; i < effects.size(); ++i)
+		effects[i]->Pause();
+
 	EntityPause();
 }
 
 void Entity::OnResume()
 {
+	paused = false;
 	deathTimer.Resume();
 	stepTimer.Resume();
 
 	if (rigidBody != nullptr)
 		rigidBody->SetIsActive(true);
+
+	for (uint i = 0; i < effects.size(); ++i)
+		effects[i]->Resume();
 
 	EntityResume();
 }

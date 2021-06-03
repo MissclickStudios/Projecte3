@@ -82,6 +82,9 @@ void Weapon::Start()
 
 void Weapon::Update()
 {
+	if (paused)
+		return;
+
 	if (updateProjectiles)
 	{
 		updateProjectiles = false;
@@ -90,8 +93,8 @@ void Weapon::Update()
 
 	if (weaponModel)
 	{
-		weaponModel->transform->SetLocalPosition(position);
-		weaponModel->transform->SetLocalEulerRotation(rotation);
+		weaponModel->transform->SetLocalPosition(defPosition);
+		weaponModel->transform->SetLocalEulerRotation(defRotation);
 		weaponModel->transform->SetLocalScale(scale);
 	}
 }
@@ -105,6 +108,7 @@ void Weapon::CleanUp()
 
 void Weapon::OnPause()
 {
+	paused = true;
 	//fireRateTimer.Pause();
 	reloadTimer.Pause();
 
@@ -113,6 +117,7 @@ void Weapon::OnPause()
 
 void Weapon::OnResume()
 {
+	paused = false;
 	//fireRateTimer.Resume();
 	reloadTimer.Resume();
 
@@ -169,15 +174,25 @@ void Weapon::SetOwnership(EntityType type, GameObject* hand, std::string handNam
 
 	SetUp();
 
-	if (this->hand != nullptr && weaponModelPrefab.uid != NULL)
+	if (this->hand != nullptr)
 	{
-		GameObject* skeletonHand = GetHand(this->hand->parent, handName);
-		if (skeletonHand)
-			weaponModel = App->resourceManager->LoadPrefab(weaponModelPrefab.uid, skeletonHand); // Load the prefab onto a gameobject
+		if (weaponModelPrefab.uid != NULL)
+		{
+			GameObject* skeletonHand = GetHand(this->hand->parent, handName);
+			if (skeletonHand)
+				weaponModel = App->resourceManager->LoadPrefab(weaponModelPrefab.uid, skeletonHand); // Load the prefab onto a gameobject
+		}
+		
+		if (weaponModel != nullptr)
+			barrel = GetWeaponBarrel(weaponModel, "Barrel");
+		else if (handName == "LHand")
+			barrel = GetWeaponBarrel(this->hand->parent, "SecondaryBarrel");
+		else
+			barrel = GetWeaponBarrel(this->hand->parent, "Barrel");
 	}
 
-	if (weaponModel != nullptr)
-		barrel = GetWeaponBarrel(weaponModel, "Barrel");
+	
+		
 
 	if (type == EntityType::PLAYER)
 	{
@@ -334,7 +349,7 @@ void Weapon::SpreadProjectiles(float2 direction)
 		{
 			direction = float2(cos * direction.x + (-sin * direction.y), sin * direction.x + (cos * direction.y));
 		}
-		else if (i == int(projectilesPerShot / 2))
+		/*else if (i == int(projectilesPerShot / 2))
 		{
 			direction = initialDirection;
 			sin = math::Sin(DegToRad(-shotSpreadArea));
@@ -342,9 +357,13 @@ void Weapon::SpreadProjectiles(float2 direction)
 
 			direction = float2(cos * direction.x + (-sin * direction.y), sin * direction.x + (cos * direction.y));
 
-		}
+		}*/
 		else if (i >= projectilesPerShot / 2)
 		{
+			direction = initialDirection;
+			sin = math::Sin(DegToRad(-shotSpreadArea));
+			cos = math::Cos(DegToRad(-shotSpreadArea));
+
 			direction = float2(cos * direction.x + (-sin * direction.y), sin * direction.x + (cos * direction.y));
 		}
 	}

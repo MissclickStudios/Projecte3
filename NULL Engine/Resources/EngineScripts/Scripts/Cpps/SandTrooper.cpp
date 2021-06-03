@@ -11,6 +11,8 @@
 #include "C_AudioSource.h"
 #include "C_NavMeshAgent.h"
 
+#include "MathGeoLib/include/Math/float2.h"
+
 #include "Player.h"
 
 Trooper* CreateTrooper()
@@ -55,7 +57,7 @@ Trooper* CreateTrooper()
 
 	//Hand Name
 
-	INSPECTOR_STRING(script->handName);
+	INSPECTOR_STRING(script->rightHandName);
 
 	INSPECTOR_SLIDER_INT(script->minCredits, 0, 1000);
 	INSPECTOR_SLIDER_INT(script->maxCredits, 0, 1000);
@@ -117,7 +119,11 @@ void Trooper::SetUp()
 	agent = gameObject->GetComponent<C_NavMeshAgent>();
 
 	if (agent != nullptr)
+	{
 		agent->origin = gameObject->GetComponent<C_Transform>()->GetWorldPosition();
+		agent->velocity = ChaseSpeed();
+	}
+		
 }
 
 void Trooper::Behavior()
@@ -163,6 +169,8 @@ void Trooper::DistanceToPlayer()
 	aimDirection = playerPosition - position;
 
 	distance = aimDirection.Length();
+
+	LOG("%f", distance);
 	// TODO: Separate aim and movement once the pathfinding is implemented
 }
 
@@ -215,7 +223,7 @@ void Trooper::ManageMovement()
 		}
 		break;
 	case TrooperState::PATROL:
-		currentAnimation = &walkAnimation;
+		currentAnimation = &idleAnimation;
 		if (distance < chaseDistance)
 		{
 			moveState = TrooperState::CHASE;
@@ -228,6 +236,11 @@ void Trooper::ManageMovement()
 		if (distance < attackDistance)
 		{
 			moveState = TrooperState::IDLE;
+			break;
+		}
+		if (distance > chaseDistance)
+		{
+			moveState = TrooperState::PATROL;
 			break;
 		}
 		Chase();
@@ -321,7 +334,7 @@ void Trooper::ManageAim()
 void Trooper::Patrol()
 {
 	if (agent != nullptr)
-		agent->SetDestination(gameObject->transform->GetWorldPosition());
+		agent->StopAndCancelDestination();
 
 }
 
@@ -339,3 +352,4 @@ void Trooper::Flee()
 	if (agent != nullptr)
 		agent->SetDestination(-player->transform->GetWorldPosition());
 }
+

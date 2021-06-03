@@ -73,6 +73,8 @@ void GameManager::Awake()
 			{
 				level1Ruins.emplace_back(levelArray2.GetString(i));
 			}
+			//itemsArmorer
+			LoadArmorerItemLvl(jsonState);
 
 			//Load story & dialogs
 			storyDialogState.Load(&jsonState);
@@ -238,8 +240,8 @@ void GameManager::Update()
 	if(!instantiatedSandstorm)
 		if (strcmp(App->scene->GetCurrentScene(), levelNames.hub.c_str()) != 0 && strcmp(App->scene->GetCurrentScene(), levelNames.loseScene.c_str()) != 0 && strcmp(App->scene->GetCurrentScene(), levelNames.winScene.c_str()) != 0)
 		{
-			App->scene->InstantiatePrefab(mistPlane1.uid, App->scene->GetSceneRoot(), mistPlane1Position, Quat::identity);
-			App->scene->InstantiatePrefab(mistPlane2.uid, App->scene->GetSceneRoot(), mistPlane2Position, Quat::identity);
+			App->scene->InstantiatePrefab(mistPlane1.uid, gameObject, mistPlane1Position, Quat::identity);
+			App->scene->InstantiatePrefab(mistPlane2.uid, gameObject, mistPlane2Position, Quat::identity);
 			instantiatedSandstorm = true;
 		}
 
@@ -401,6 +403,27 @@ void GameManager::GenerateNewRun(bool fromMenu)
 		}
 
 		SaveManagerState();
+	}
+}
+
+void GameManager::SaveArmorerItemLvl(ParsonNode& node)
+{
+	ParsonNode items = node.SetNode("ArmorerItemLvl");
+	items.SetInteger("armorLvl", armorLvl);
+	items.SetInteger("bootsLvl", bootsLvl);
+	items.SetInteger("ticketLvl", ticketLvl);
+	items.SetInteger("bottleLvl", bottleLvl);
+}
+
+void GameManager::LoadArmorerItemLvl(ParsonNode& node)
+{
+	ParsonNode items = node.GetNode("ArmorerItemLvl");
+	if (items.NodeIsValid()) 
+	{
+		armorLvl = items.GetInteger("armorLvl");
+		bootsLvl = items.GetInteger("bootsLvl");
+		ticketLvl = items.GetInteger("ticketLvl");
+		bottleLvl = items.GetInteger("bottleLvl");
 	}
 }
 
@@ -607,6 +630,10 @@ void GameManager::Continue()
 		{
 			level1Ruins.emplace_back(levelArray2.GetString(i));
 		}
+
+		//itemsArmorer
+		LoadArmorerItemLvl(jsonState);
+
 		//Story
 		storyDialogState.Load(&jsonState);
 
@@ -636,6 +663,44 @@ void GameManager::ReturnToMainMenu()
 {
 	std::string menuPath = ASSETS_SCENES_PATH + mainMenuScene + ".json";
 	App->scene->ScriptChangeScene(menuPath.c_str());
+}
+
+void GameManager::Pause()
+{
+	std::vector<GameObject*>* objects = App->scene->GetGameObjects();
+	for (auto go = objects->begin(); go != objects->end(); ++go)
+	{
+		for (uint i = 0; i < (*go)->components.size(); ++i)
+			if ((*go)->components[i]->GetType() == ComponentType::SCRIPT)
+			{
+				C_Script* com = (C_Script*)(*go)->components[i];
+				if (com != nullptr)
+				{
+					void* script = com->GetScriptData();
+					if (script != nullptr)
+						((Script*)script)->OnPause();
+				}
+			}
+	}
+}
+
+void GameManager::Resume()
+{
+	std::vector<GameObject*>* objects = App->scene->GetGameObjects();
+	for (auto go = objects->begin(); go != objects->end(); ++go)
+	{
+		for (uint i = 0; i < (*go)->components.size(); ++i)
+			if ((*go)->components[i]->GetType() == ComponentType::SCRIPT)
+			{
+				C_Script* com = (C_Script*)(*go)->components[i];
+				if (com != nullptr)
+				{
+					void* script = com->GetScriptData();
+					if (script != nullptr)
+						((Script*)script)->OnResume();
+				}
+			}
+	}
 }
 
 void GameManager::AddFixedRoom(std::string name, int level, int position)
@@ -783,6 +848,9 @@ void GameManager::SaveManagerState()
 		playerScript->SaveState(playerNode);
 	}
 
+	//itemsArmorer
+	SaveArmorerItemLvl(jsonState);
+
 	storyDialogState.Save(&jsonState);
 
 	runStats.Save(&jsonState);
@@ -926,11 +994,44 @@ void GameManager::BoughtFromArmorer()
 
 void GameManager::SetUpWinScreen()
 {
-	App->scene->GetGameObjectByName("AttemptsText")->GetComponent<C_UI_Text>()->SetText(std::to_string(runStats.attempt).c_str());
-	App->scene->GetGameObjectByName("KillsText")->GetComponent<C_UI_Text>()->SetText(std::to_string(runStats.runKills).c_str());
-	App->scene->GetGameObjectByName("PrecisionText")->GetComponent<C_UI_Text>()->SetText(std::to_string(runStats.runPrecision).c_str());
-	App->scene->GetGameObjectByName("TimeText")->GetComponent<C_UI_Text>()->SetText(std::to_string(runStats.runTime).c_str());
-	App->scene->GetGameObjectByName("WeaponText")->GetComponent<C_UI_Text>()->SetText(runStats.weaponUsed.c_str());
+	GameObject* tmp = App->scene->GetGameObjectByName("AttemptsText");
+	if(tmp != nullptr)
+		tmp->GetComponent<C_UI_Text>()->SetText(std::to_string(runStats.attempt).c_str());
+
+	tmp = App->scene->GetGameObjectByName("KillsText");
+	if (tmp != nullptr)
+		tmp->GetComponent<C_UI_Text>()->SetText(std::to_string(runStats.runKills).c_str());
+
+	tmp = App->scene->GetGameObjectByName("PrecisionText");
+	if (tmp != nullptr)
+		tmp->GetComponent<C_UI_Text>()->SetText(std::to_string(runStats.runPrecision).c_str());
+
+	tmp = App->scene->GetGameObjectByName("TimeText");
+	if (tmp != nullptr)
+		tmp->GetComponent<C_UI_Text>()->SetText(std::to_string(runStats.runTime).c_str());
+
+	tmp = App->scene->GetGameObjectByName("WeaponText");
+	if (tmp != nullptr)
+		tmp->GetComponent<C_UI_Text>()->SetText(runStats.weaponUsed.c_str());
+}
+
+void GameManager::ResetArmorerItemsLvl()
+{
+	armorLvl = 0;
+	bootsLvl = 0;
+	ticketLvl = 0;
+	bottleLvl = 0;
+
+	//Load Json state
+	char* buffer = nullptr;
+	App->fileSystem->Load(saveFileName, &buffer);
+	ParsonNode jsonState(buffer);
+	//release Json File
+	CoreCrossDllHelpers::CoreReleaseBuffer(&buffer); buffer = nullptr;
+	SaveArmorerItemLvl(jsonState);
+
+	jsonState.SerializeToFile(saveFileName, &buffer);
+	CoreCrossDllHelpers::CoreReleaseBuffer(&buffer);
 }
 
 GameManager* CreateGameManager() {

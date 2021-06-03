@@ -34,6 +34,9 @@ public:
 	bool IsScriptEnabled() const;
 	void SetScriptEnable(const bool& enable);
 
+	virtual void OnPause() {}
+	virtual void OnResume() {}
+
 	virtual void OnCollisionEnter(GameObject* object) {}
 	virtual void OnCollisionRepeat(GameObject* object) {}
 	virtual void OnCollisionExit(GameObject* object) {}

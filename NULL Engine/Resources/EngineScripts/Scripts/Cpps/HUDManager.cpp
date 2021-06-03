@@ -13,6 +13,7 @@
 #include "R_Texture.h"
 #include "M_UISystem.h"
 #include "Weapon.h"
+#include "M_Scene.h"
 
 
 HUDManager::HUDManager() : Script()
@@ -25,194 +26,206 @@ HUDManager::~HUDManager()
 
 void HUDManager::Start()
 {
-	GameObject* a = App->scene->GetGameObjectByName(mandoImageName.c_str());
-	if(a != nullptr)
-		mandoImage = (C_2DAnimator*)a->GetComponent<C_2DAnimator>();
+	for (std::vector<std::string>::const_iterator it = disabledScenes.cbegin(); it != disabledScenes.cend();++it) 
+	{
+		if (!strcmp(App->scene->GetCurrentScene(), (*it).c_str()))
+		{
+			enabled = false;
+			break;
+		}
+	}
+	if (enabled) 
+	{
+		GameObject* a = App->scene->GetGameObjectByName(mandoImageName.c_str());
+		if (a != nullptr)
+			mandoImage = (C_2DAnimator*)a->GetComponent<C_2DAnimator>();
 
-	a = App->scene->GetGameObjectByName(primaryWeaponImageName.c_str());
-	if (a != nullptr)
-		primaryWeaponImage = (C_2DAnimator*)a->GetComponent<C_2DAnimator>();
+		a = App->scene->GetGameObjectByName(primaryWeaponImageName.c_str());
+		if (a != nullptr)
+			primaryWeaponImage = (C_2DAnimator*)a->GetComponent<C_2DAnimator>();
 
-	a = App->scene->GetGameObjectByName(secondaryWeaponImageName.c_str());
-	if (a != nullptr)
-		secondaryWeaponImage = (C_2DAnimator*)a->GetComponent<C_2DAnimator>();
+		a = App->scene->GetGameObjectByName(secondaryWeaponImageName.c_str());
+		if (a != nullptr)
+			secondaryWeaponImage = (C_2DAnimator*)a->GetComponent<C_2DAnimator>();
 
-	a = App->scene->GetGameObjectByName(dashImageName.c_str());
-	if (a != nullptr)
-		dashImage = (C_2DAnimator*)a->GetComponent<C_2DAnimator>();
+		a = App->scene->GetGameObjectByName(dashImageName.c_str());
+		if (a != nullptr)
+			dashImage = (C_2DAnimator*)a->GetComponent<C_2DAnimator>();
 
-	a = App->scene->GetGameObjectByName(creditsImageName.c_str());
-	if (a != nullptr)
-		creditsImage = (C_2DAnimator*)a->GetComponent<C_2DAnimator>();
+		a = App->scene->GetGameObjectByName(creditsImageName.c_str());
+		if (a != nullptr)
+			creditsImage = (C_2DAnimator*)a->GetComponent<C_2DAnimator>();
 
-	hudCanvas = (C_Canvas*)gameObject->GetComponent<C_Canvas>();
-	if(hudCanvas)
-		App->uiSystem->PushCanvas(hudCanvas);
+		hudCanvas = (C_Canvas*)gameObject->GetComponent<C_Canvas>();
+		if (hudCanvas)
+			App->uiSystem->PushCanvas(hudCanvas);
 
-	a = App->scene->GetGameObjectByName(creditsTextName.c_str());
-	if (a != nullptr)
-		creditsText = (C_UI_Text*)a->GetComponent<C_UI_Text>();
+		a = App->scene->GetGameObjectByName(creditsTextName.c_str());
+		if (a != nullptr)
+			creditsText = (C_UI_Text*)a->GetComponent<C_UI_Text>();
 
-	a = App->scene->GetGameObjectByName(beskarTextName.c_str());
-	if (a != nullptr)
-		beskarText = (C_UI_Text*)a->GetComponent<C_UI_Text>();
+		a = App->scene->GetGameObjectByName(beskarTextName.c_str());
+		if (a != nullptr)
+			beskarText = (C_UI_Text*)a->GetComponent<C_UI_Text>();
 
-	a = App->scene->GetGameObjectByName(ammoTextName.c_str());
-	if (a != nullptr)
-		ammoText = (C_UI_Text*)a->GetComponent<C_UI_Text>();
+		a = App->scene->GetGameObjectByName(ammoTextName.c_str());
+		if (a != nullptr)
+			ammoText = (C_UI_Text*)a->GetComponent<C_UI_Text>();
 
-	playerObject = App->scene->GetGameObjectByName(playerName.c_str());
-	if(playerObject != nullptr)
-		player = (Player*)playerObject->GetScript("Player");
+		playerObject = App->scene->GetGameObjectByName(playerName.c_str());
+		if (playerObject != nullptr)
+			player = (Player*)playerObject->GetScript("Player");
 
-	a = App->scene->GetGameObjectByName(heart1Name.c_str());
-	if (a != nullptr)
-		heart1 = (C_Material*)a->GetComponent<C_Material>();
+		a = App->scene->GetGameObjectByName(heart1Name.c_str());
+		if (a != nullptr)
+			heart1 = (C_Material*)a->GetComponent<C_Material>();
 
-	a = App->scene->GetGameObjectByName(heart2Name.c_str());
-	if (a != nullptr)
-		heart2 = (C_Material*)a->GetComponent<C_Material>();
+		a = App->scene->GetGameObjectByName(heart2Name.c_str());
+		if (a != nullptr)
+			heart2 = (C_Material*)a->GetComponent<C_Material>();
 
-	a = App->scene->GetGameObjectByName(heart3Name.c_str());
-	if (a != nullptr)
-		heart3 = (C_Material*)a->GetComponent<C_Material>();
+		a = App->scene->GetGameObjectByName(heart3Name.c_str());
+		if (a != nullptr)
+			heart3 = (C_Material*)a->GetComponent<C_Material>();
 
-	a = App->scene->GetGameObjectByName(heart1Name.c_str());
-	if (a != nullptr)
-		heart1Image = (C_2DAnimator*)a->GetComponent<C_2DAnimator>();
+		a = App->scene->GetGameObjectByName(heart1Name.c_str());
+		if (a != nullptr)
+			heart1Image = (C_2DAnimator*)a->GetComponent<C_2DAnimator>();
 
-	a = App->scene->GetGameObjectByName(heart2Name.c_str());
-	if (a != nullptr)
-		heart2Image = (C_2DAnimator*)a->GetComponent<C_2DAnimator>();
+		a = App->scene->GetGameObjectByName(heart2Name.c_str());
+		if (a != nullptr)
+			heart2Image = (C_2DAnimator*)a->GetComponent<C_2DAnimator>();
 
-	a = App->scene->GetGameObjectByName(heart3Name.c_str());
-	if (a != nullptr)
-		heart3Image = (C_2DAnimator*)a->GetComponent<C_2DAnimator>();
+		a = App->scene->GetGameObjectByName(heart3Name.c_str());
+		if (a != nullptr)
+			heart3Image = (C_2DAnimator*)a->GetComponent<C_2DAnimator>();
 
-	a = App->scene->GetGameObjectByName(weapon1Name.c_str());
-	if (a != nullptr)
-		weapon1 = a;
+		a = App->scene->GetGameObjectByName(weapon1Name.c_str());
+		if (a != nullptr)
+			weapon1 = a;
 
-	a = App->scene->GetGameObjectByName(weapon2Name.c_str());
-	if (a != nullptr)
-		weapon2 = a;
+		a = App->scene->GetGameObjectByName(weapon2Name.c_str());
+		if (a != nullptr)
+			weapon2 = a;
 
-	a = App->scene->GetGameObjectByName(weapon3Name.c_str());
-	if (a != nullptr)
-		weapon3 = a;
+		a = App->scene->GetGameObjectByName(weapon3Name.c_str());
+		if (a != nullptr)
+			weapon3 = a;
 
-	a = App->scene->GetGameObjectByName(weapon4Name.c_str());
-	if (a != nullptr)
-		weapon4 = a;
+		a = App->scene->GetGameObjectByName(weapon4Name.c_str());
+		if (a != nullptr)
+			weapon4 = a;
 
 
-	fullHeart = (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/UI/HUD/HeartFull.png");
-	emptyHeart = (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/UI/HUD/HeartEmpty.png");
-	halfHeart = (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/UI/HUD/HeartHalf.png");
+		fullHeart = (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/UI/HUD/HeartFull.png");
+		emptyHeart = (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/UI/HUD/HeartEmpty.png");
+		halfHeart = (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/Textures/UI/HUD/HeartHalf.png");
 
-	health1 = false;
-	health2 = false;
-	health3 = false;
-	health4 = false;
-	health5 = false;
-	health6 = false;
+		health1 = false;
+		health2 = false;
+		health3 = false;
+		health4 = false;
+		health5 = false;
+		health6 = false;
 
-	hitAlready = false;
+		hitAlready = false;
+	}
 }
 
 void HUDManager::Update()
 {
-
-	if (beskarText != nullptr && player != nullptr)
+	if (enabled) 
 	{
-		std::string tmp = "";
-		tmp += std::to_string(player->hubCurrency).c_str();
-		beskarText->SetText(tmp.c_str());
-	}
-
-	if (creditsText != nullptr && player != nullptr)
-	{
-
-		std::string tmp = "";
-		tmp += std::to_string(player->currency).c_str();
-		creditsText->SetText(tmp.c_str());
-	}
-
-	if (ammoText != nullptr && player != nullptr)
-	{
-		Weapon* weapon = player->GetCurrentWeapon();
-		if (weapon)
+		if (beskarText != nullptr && player != nullptr)
 		{
-			std::string tmp = std::to_string(weapon->ammo);
-			tmp += " / ";
-			tmp += std::to_string(weapon->maxAmmo);
-			ammoText->SetText(tmp.c_str());
+			std::string tmp = "";
+			tmp += std::to_string(player->hubCurrency).c_str();
+			beskarText->SetText(tmp.c_str());
 		}
-	}
 
-	//Santi Did this
-	if(player != nullptr)
-	{
-		
-		//Take damage animation
-		if (mandoImage != nullptr)
+		if (creditsText != nullptr && player != nullptr)
 		{
-			if (player->hitTimer.IsActive() && !hitAlready)
+
+			std::string tmp = "";
+			tmp += std::to_string(player->currency).c_str();
+			creditsText->SetText(tmp.c_str());
+		}
+
+		if (ammoText != nullptr && player != nullptr)
+		{
+			Weapon* weapon = player->GetCurrentWeapon();
+			if (weapon)
 			{
-				mandoImage->PlayAnimation(false, 1);
-				hitAlready = true;
+				std::string tmp = std::to_string(weapon->ammo);
+				tmp += " / ";
+				tmp += std::to_string(weapon->maxAmmo);
+				ammoText->SetText(tmp.c_str());
 			}
 		}
-		/*
-		//Reload primary weapon
-		if (primaryWeaponImage != nullptr)
-		{
-			if (App->input->GetGameControllerButton(2) == ButtonState::BUTTON_DOWN)
-				primaryWeaponImage->PlayAnimation(false, 3);
-		}
 
-		//Shoot primary weapon
-		if (primaryWeaponImage != nullptr)
+		//Santi Did this
+		if (player != nullptr)
 		{
-			if (App->input->GetGameControllerTrigger(1) == ButtonState::BUTTON_REPEAT)
-				primaryWeaponImage->PlayAnimation(false, 1);
-		}
 
-		//Swap primary weapon
-		if (primaryWeaponImage != nullptr)
-		{
-			if (App->input->GetGameControllerButton(1) == ButtonState::BUTTON_DOWN)
-				primaryWeaponImage->PlayAnimation(false, 2);
-		}
-		*/
-/*
-		//Reload secondary weapon
-		if (secondaryWeaponImage != nullptr)
-		{
-			if (player)
-				secondaryWeaponImage->PlayAnimation(false, 1);
-		}
+			//Take damage animation
+			if (mandoImage != nullptr)
+			{
+				if (player->hitTimer.IsActive() && !hitAlready)
+				{
+					mandoImage->PlayAnimation(false, 1);
+					hitAlready = true;
+				}
+			}
+			/*
+			//Reload primary weapon
+			if (primaryWeaponImage != nullptr)
+			{
+				if (App->input->GetGameControllerButton(2) == ButtonState::BUTTON_DOWN)
+					primaryWeaponImage->PlayAnimation(false, 3);
+			}
 
-		//Shoot secondary weapon
-		if (secondaryWeaponImage != nullptr)
-		{
-			if (player)
-				secondaryWeaponImage->PlayAnimation(false, 1);
-		}
+			//Shoot primary weapon
+			if (primaryWeaponImage != nullptr)
+			{
+				if (App->input->GetGameControllerTrigger(1) == ButtonState::BUTTON_REPEAT)
+					primaryWeaponImage->PlayAnimation(false, 1);
+			}
 
-		//Swap secondary weapon
-		if (secondaryWeaponImage != nullptr)
-		{
-			if (player)
-				secondaryWeaponImage->PlayAnimation(false, 1);
-		}
-*/
-		//Get credit animation
-		if (creditsImage != nullptr)
-		{
-			if (player)
-				creditsImage->PlayAnimation(false, 1);
-		}
+			//Swap primary weapon
+			if (primaryWeaponImage != nullptr)
+			{
+				if (App->input->GetGameControllerButton(1) == ButtonState::BUTTON_DOWN)
+					primaryWeaponImage->PlayAnimation(false, 2);
+			}
+			*/
+			/*
+					//Reload secondary weapon
+					if (secondaryWeaponImage != nullptr)
+					{
+						if (player)
+							secondaryWeaponImage->PlayAnimation(false, 1);
+					}
+
+					//Shoot secondary weapon
+					if (secondaryWeaponImage != nullptr)
+					{
+						if (player)
+							secondaryWeaponImage->PlayAnimation(false, 1);
+					}
+
+					//Swap secondary weapon
+					if (secondaryWeaponImage != nullptr)
+					{
+						if (player)
+							secondaryWeaponImage->PlayAnimation(false, 1);
+					}
+			*/
+			//Get credit animation
+			if (creditsImage != nullptr)
+			{
+				if (player)
+					creditsImage->PlayAnimation(false, 1);
+			}
 			//Dash animation
 	//	if (dashImage != nullptr)
 	//	{
@@ -220,21 +233,25 @@ void HUDManager::Update()
 	//			dashImage->PlayAnimation(false, 1);
 	//	}
 
-		if (!player->hitTimer.IsActive())
-			hitAlready = false;
+			if (!player->hitTimer.IsActive())
+				hitAlready = false;
 
-		ManageHeartImage(player->health);
+			ManageHeartImage(player->health);
+		}
 	}
 }
 
 void HUDManager::CleanUp()
 {
-	if (halfHeart != nullptr)
-		App->resourceManager->FreeResource(halfHeart->GetUID());
-	if (fullHeart != nullptr)
-		App->resourceManager->FreeResource(fullHeart->GetUID());
-	if (emptyHeart != nullptr)
-		App->resourceManager->FreeResource(emptyHeart->GetUID());
+	if (enabled) 
+	{
+		if (halfHeart != nullptr)
+			App->resourceManager->FreeResource(halfHeart->GetUID());
+		if (fullHeart != nullptr)
+			App->resourceManager->FreeResource(fullHeart->GetUID());
+		if (emptyHeart != nullptr)
+			App->resourceManager->FreeResource(emptyHeart->GetUID());
+	}
 }
 
 void HUDManager::ManageWeaponHUD()
@@ -361,4 +378,27 @@ void HUDManager::ManageHeartImage(int hp)
 		heart3->SwapTexture(fullHeart);
 		break;
 	}
+}
+
+HUDManager* CreateHUDManager()
+{
+	HUDManager* script = new HUDManager();
+	INSPECTOR_STRING(script->mandoImageName);
+	INSPECTOR_STRING(script->secondaryWeaponImageName);
+	INSPECTOR_STRING(script->primaryWeaponImageName);
+	INSPECTOR_STRING(script->dashImageName);
+	INSPECTOR_STRING(script->creditsImageName);
+	INSPECTOR_STRING(script->playerName);
+
+	INSPECTOR_STRING(script->creditsTextName);
+	INSPECTOR_STRING(script->beskarTextName);
+	INSPECTOR_STRING(script->ammoTextName);
+
+	INSPECTOR_STRING(script->weapon1Name);
+	INSPECTOR_STRING(script->weapon2Name);
+	INSPECTOR_STRING(script->weapon3Name);
+	INSPECTOR_STRING(script->weapon4Name);
+
+	INSPECTOR_VECTOR_STRING(script->disabledScenes);
+	return script;
 }
