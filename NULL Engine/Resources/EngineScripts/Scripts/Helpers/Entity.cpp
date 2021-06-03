@@ -103,7 +103,9 @@ void Entity::PreUpdate()
 	damageModifier = DEFAULT_MODIFIER;
 	defenseModifier = DEFAULT_MODIFIER;
 	cooldownModifier = DEFAULT_MODIFIER;
+	priceModifier = DEFAULT_MODIFIER;
 	entityState = EntityState::NONE;
+	
 
 	// Loop through the Effects and call the respective functions
 	for (uint i = 0; i < effects.size(); ++i)
@@ -112,14 +114,15 @@ void Entity::PreUpdate()
 		{
 			switch (effects[i]->Type())														// Call the corresponding function
 			{
-			case EffectType::FROZEN:			{ Frozen(); }						break;
-			case EffectType::HEAL:				{ Heal(effects[i]); }				break;
-			case EffectType::MAX_HEALTH_MODIFY: { MaxHealthModify(effects[i]); }	break;
-			case EffectType::SPEED_MODIFY:		{ SpeedModify(effects[i]); }		break;
-			case EffectType::STUN:				{ Stun(effects[i]); }				break;
-			case EffectType::KNOCKBACK:			{ KnockBack(effects[i]); }			break;
-			case EffectType::ELECTROCUTE:		{ Electrocute(effects[i]); }		break;
-			case EffectType::BOSS_PIERCING:		{ BossPiercing(effects[i]); }		break;
+			case EffectType::FROZEN:		  { Frozen(effects[i]); }				       break; // oops
+			case EffectType::HEAL:			    { Heal(effects[i]); }				break;
+			case EffectType::MAX_HEALTH_MODIFY: { MaxHealthModify(effects[i]); }break;
+			case EffectType::SPEED_MODIFY:		  { SpeedModify(effects[i]); }		break;
+			case EffectType::STUN:				 { Stun(effects[i]); }			break;
+			case EffectType::KNOCKBACK:			{ KnockBack(effects[i]); }			 break;
+			case EffectType::ELECTROCUTE:	{ Electrocute(effects[i]); }		break;
+			case EffectType::BOSS_PIERCING:{ BossPiercing(effects[i]); } break;
+			case EffectType::PRICE_MODIFY:   { PriceModify(effects[i]); }   break;
 			}
 		}
 		else																				// Delete the effect if it ran out
@@ -287,10 +290,10 @@ bool Entity::IsGrounded()
 	return false;
 }
 
-void Entity::Frozen()
+void Entity::Frozen(Effect* effect)
 {
-	speedModifier /= 2.5;											// /= 2.5f is equivalent to *= 0.4f.
-	attackSpeedModifier /= 2.5;
+	speedModifier *= effect->Power();
+	attackSpeedModifier *= effect->Power();
 
 	if (material != nullptr)
 	{
@@ -308,6 +311,7 @@ void Entity::Heal(Effect* effect)
 void Entity::MaxHealthModify(Effect* effect)
 {
 	maxHealthModifier += effect->Duration();
+	GiveHeal(999999.0f);
 }
 
 void Entity::SpeedModify(Effect* effect)
@@ -361,6 +365,11 @@ void Entity::Electrocute(Effect* effect)
 	}
 
 	entityState = EntityState::ELECTROCUTED;
+}
+
+void Entity::PriceModify(Effect* effect)
+{
+	priceModifier *= effect->Power();
 }
 
 EntityState Entity::GetEntityState()

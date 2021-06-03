@@ -468,7 +468,7 @@ void Player::Reset()
 {
 	currency = 0;
 
-	health = maxHealth;
+	health = MaxHealth();
 
 	while (effects.size())
 	{
@@ -496,28 +496,36 @@ void Player::Reset()
 
 	usingSecondaryGun = false;
 
-	// TODO: ADD THE HUB ITEMS
 	GameObject* object = App->scene->GetGameObjectByName(gameManager.c_str());
 	if (object != nullptr)
 	{
 		GameManager* manager = (GameManager*)object->GetScript("GameManager");
 		if (manager != nullptr)
 		{
+			std::vector<ItemData*> hubItems = manager->GetHubItemPool();
 			if (manager->armorLvl)
 			{
-
+				ItemData* const itemData = Item::FindItem(hubItems, "Durasteel Reinforcement", (ItemRarity)manager->armorLvl);
+				if (itemData != nullptr)
+					AddItem(itemData);
 			}
 			if (manager->bootsLvl)
 			{
-
+				ItemData* const itemData = Item::FindItem(hubItems, "Propulsed Boots", (ItemRarity)manager->bootsLvl);
+				if (itemData != nullptr)
+					AddItem(itemData);
 			}
 			if (manager->ticketLvl)
 			{
-
+				ItemData* const itemData = Item::FindItem(hubItems, "Premium Ticket", (ItemRarity)manager->ticketLvl);
+				if (itemData != nullptr)
+					AddItem(itemData);
 			}
 			if (manager->bottleLvl)
 			{
-
+				ItemData* const itemData = Item::FindItem(hubItems, "Refrigeration Liquid", (ItemRarity)manager->bottleLvl);
+				if (itemData != nullptr)
+					AddItem(itemData);
 			}
 		}
 	}

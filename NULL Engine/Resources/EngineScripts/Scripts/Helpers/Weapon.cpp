@@ -324,7 +324,7 @@ void Weapon::SpreadModify(Perk* perk)
 
 void Weapon::FreezeBullets(Perk* perk)
 {
-	onHitEffects.emplace_back(Effect(EffectType::FROZEN, perk->Duration(), perk->Amount()));
+	onHitEffects.emplace_back(Effect(EffectType::FROZEN, perk->Duration(), false, perk->Amount()));
 }
 
 void Weapon::StunBullets(Perk* perk)

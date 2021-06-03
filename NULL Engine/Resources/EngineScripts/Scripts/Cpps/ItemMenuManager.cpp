@@ -130,7 +130,8 @@ void ItemMenuManager::SetItem(GroundItem* item)
 		if (this->item->item->price > 0)
 		{
 			std::string text = "Price: ";
-			text += std::to_string(this->item->item->price);
+			if (player != nullptr)
+			 text += std::to_string(this->item->item->price * player->priceModifier);
 			text += "      Press Enter/A to pick up";
 			priceText->SetText(text.c_str());
 		}

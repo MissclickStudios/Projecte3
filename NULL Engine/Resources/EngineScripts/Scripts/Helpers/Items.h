@@ -333,6 +333,48 @@ public:
 	float speedIncrease;
 };
 
+class PremiumTicket : public Item
+{
+public:
+
+	PremiumTicket(ItemData* itemData, bool toBuy) : Item(itemData, toBuy)
+	{
+		priceReduction = itemData->power;
+	}
+	virtual ~PremiumTicket() {}
+
+	void PickUp(Player* player)
+	{
+		if (player == nullptr)
+			return;
+
+		player->AddEffect(EffectType::PRICE_MODIFY, true, priceReduction);
+	}
+
+	float priceReduction;
+};
+
+class RefrigerationLiquid : public Item
+{
+public:
+
+	RefrigerationLiquid(ItemData* itemData, bool toBuy) : Item(itemData, toBuy)
+	{
+		cooldownReduction = itemData->power;
+	}
+	virtual ~RefrigerationLiquid() {}
+
+	void PickUp(Player* player)
+	{
+		if (player == nullptr)
+			return;
+
+		//player->AddEffect(EffectType::ABILITY_COOLDOWN_MODIFY, true, cooldownReduction);
+	}
+
+	float cooldownReduction;
+};
+
 class BeskarIngots : public Item
 {
 public:

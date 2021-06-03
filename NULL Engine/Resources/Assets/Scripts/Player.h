@@ -172,7 +172,7 @@ public:
 	Prefab blaster;
 	Prefab equipedGun;
 
-	// Currency
+	// Currency	
 	int currency				= 0;
 	int hubCurrency				= 0;
 
