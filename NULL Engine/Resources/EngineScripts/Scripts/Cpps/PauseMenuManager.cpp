@@ -57,14 +57,20 @@ void PauseMenuManager::Start()
 	{
 		musicSlider = (C_UI_Slider*)go->GetComponent<C_UI_Slider>();
 		if (musicSlider)
-			App->audio->maxMusicVolume = musicSlider->InputValue(App->audio->maxMusicVolume, 5.0f, 10);
+		{
+			App->audio->maxMusicVolume = musicSlider->InputValue(App->audio->maxMusicVolume, 100.0f, 10);
+			App->audio->SetRtcp("maxMusicVolume", App->audio->maxMusicVolume);
+		}
 	}
 	go = App->scene->GetGameObjectByName(fxSliderStr.c_str());
 	if (go != nullptr) 
 	{
 		fxSlider = (C_UI_Slider*)go->GetComponent<C_UI_Slider>();
 		if (fxSlider)
-			App->audio->maxMusicVolume = fxSlider->InputValue(App->audio->maxMusicVolume, 5.0f, 10);
+		{
+			App->audio->maxSfxVolume = fxSlider->InputValue(App->audio->maxSfxVolume, 100.0f, 10);
+			App->audio->SetRtcp("maxSfxVolume", App->audio->maxSfxVolume);
+		}
 	}
 	go = App->scene->GetGameObjectByName(optionsMenuCanvasStr.c_str());
 	if (go)
@@ -163,13 +169,25 @@ void PauseMenuManager::Update()
 
 	//settings
 	if (musicSlider && musicSlider->Hovered() && (App->input->GetKey(SDL_SCANCODE_RIGHT) == KeyState::KEY_DOWN || App->input->GetGameControllerAxis(0) == AxisState::POSITIVE_AXIS_DOWN))
+	{
 		App->audio->maxMusicVolume = musicSlider->IncrementOneSquare();
+		App->audio->SetRtcp("maxMusicVolume", App->audio->maxMusicVolume);
+	}
 	else if (musicSlider && musicSlider->Hovered() && (App->input->GetKey(SDL_SCANCODE_LEFT) == KeyState::KEY_DOWN || App->input->GetGameControllerAxis(0) == AxisState::NEGATIVE_AXIS_DOWN))
+	{
 		App->audio->maxMusicVolume = musicSlider->DecrementOneSquare();
+		App->audio->SetRtcp("maxMusicVolume", App->audio->maxMusicVolume);
+	}
 	if (fxSlider && fxSlider->Hovered() && (App->input->GetKey(SDL_SCANCODE_RIGHT) == KeyState::KEY_DOWN || App->input->GetGameControllerAxis(0) == AxisState::POSITIVE_AXIS_DOWN))
+	{
 		App->audio->maxSfxVolume = fxSlider->IncrementOneSquare();
+		App->audio->SetRtcp("maxSfxVolume", App->audio->maxSfxVolume);
+	}
 	else if (fxSlider && fxSlider->Hovered() && (App->input->GetKey(SDL_SCANCODE_LEFT) == KeyState::KEY_DOWN || App->input->GetGameControllerAxis(0) == AxisState::NEGATIVE_AXIS_DOWN))
+	{
 		App->audio->maxSfxVolume = fxSlider->DecrementOneSquare();
+		App->audio->SetRtcp("maxSfxVolume", App->audio->maxSfxVolume);
+	}
 	if (fullScreenCheck)
 	{
 		if (fullScreenCheck->GetState() == UICheckboxState::PRESSED_UNCHECKED_OUT)

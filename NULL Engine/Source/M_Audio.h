@@ -43,7 +43,7 @@ private:
 
 	std::string name;
 	unsigned int objectId;
-	float volume = 1.0f;
+	float volume = 100.0f;
 	AkVector position;
 	AkVector orientationFront;
 	AkVector orientationUp;
@@ -65,6 +65,7 @@ public:
 	bool		InitSoundEngine();
 	void		TermSoundEngine();
 
+	void		SetRtcp(const char* rtpc, int value);
 	void		SetWwiseState(const char* stateGroup, const char* state);
 
 	void		PauseAll();
@@ -83,8 +84,8 @@ public:
 	std::vector<WwiseObject*> audioListenerList;
 	std::vector<WwiseObject*> audioSourceList;
 
-	float maxSfxVolume = 1.0f;
-	float maxMusicVolume = 1.0f;
+	float maxSfxVolume = 100.0f;
+	float maxMusicVolume = 100.0f;
 
 private:
 
