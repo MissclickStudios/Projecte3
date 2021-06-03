@@ -4,11 +4,16 @@
 #include "M_Scene.h"
 #include "M_UISystem.h"
 
+#include "M_ResourceManager.h"
+#include "R_Texture.h"
+
 #include "GameObject.h"
 #include "C_Transform.h"
 #include "C_Canvas.h"
 #include "C_UI_Button.h"
 #include "C_UI_Text.h"
+#include "C_UI_Image.h"
+#include "C_Material.h"
 
 #include "GroundItem.h"
 #include "Items.h"
@@ -46,6 +51,13 @@ void ItemMenuManager::Start()
 	gameObject = App->scene->GetGameObjectByName(rarityTextName.c_str());
 	if (gameObject != nullptr)
 		rarityText = gameObject->GetComponent<C_UI_Text>();
+
+	gameObject = App->scene->GetGameObjectByName(itemImageName.c_str());
+	if (gameObject != nullptr)
+	{
+		itemImage = gameObject->GetComponent<C_UI_Image>();
+		itemMaterial = gameObject->GetComponent<C_Material>();
+	}
 
 	gameObject = App->scene->GetGameObjectByName(playerName.c_str());
 	if (gameObject != nullptr)
@@ -144,6 +156,14 @@ void ItemMenuManager::SetItem(GroundItem* item)
 			rarityText->SetColor(UNIQUE_COLOR);
 			break;
 		}
+
+		if (itemMaterial != nullptr)
+			if (item->item->texturePath != "")
+			{
+				R_Texture* texture = App->resourceManager->GetResource<R_Texture>(item->item->texturePath.c_str());
+				if (texture != nullptr)
+					itemMaterial->SetTexture(texture);
+			}
 
 		App->uiSystem->PushCanvas(canvas);
 	}

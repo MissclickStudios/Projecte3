@@ -14,6 +14,7 @@ class C_Animator;
 class C_RigidBody;
 class C_AudioSource;
 class C_ParticleSystem;
+class C_NavMeshAgent;
 
 class AnimatorTrack;
 
@@ -129,6 +130,9 @@ public:
 	// Audio
 	C_AudioSource* walkAudio = nullptr;
 	C_AudioSource* damageAudio = nullptr;
+
+	// Agent 
+	C_NavMeshAgent* agent = nullptr;
 
 	// Hand
 	std::string rightHandName;

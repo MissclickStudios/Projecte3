@@ -158,6 +158,16 @@ void DarkTrooper::OnCollisionEnter(GameObject* object)
 		playerScript->TakeDamage(Damage());
 }
 
+void DarkTrooper::EntityPause()
+{
+	if (agent != nullptr)
+		agent->CancelDestination();
+}
+
+void DarkTrooper::EntityResume()
+{
+}
+
 void DarkTrooper::DistanceToPlayer()
 {
 	if (!player)
