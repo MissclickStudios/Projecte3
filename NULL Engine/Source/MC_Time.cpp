@@ -118,7 +118,7 @@ float MC_Time::Real::GetDT()
 // --- GAME CLOCK METHODS ---
 void MC_Time::Game::Update()
 {
-	uint ms = (uint)((float)gameFrameTimer.Read() * timeScale);
+	uint ms = (gameFrameTimer.IsActive()) ? (uint)((float)gameFrameTimer.Read() * timeScale) : 0.0f;
 
 	gameClock.Update(ms);
 	gameFrameData.Update(ms);

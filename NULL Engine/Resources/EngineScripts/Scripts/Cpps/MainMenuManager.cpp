@@ -3,12 +3,14 @@
 #include "C_Canvas.h"
 #include "C_UI_Button.h"
 #include "C_UI_Checkbox.h"
+#include "C_UI_Slider.h"
 #include "GameObject.h"
 #include "MainMenuManager.h"
 #include "GameManager.h"
 #include "M_UISystem.h"
 #include "M_Renderer3D.h"
 #include "M_Window.h"
+#include "M_Input.h"
 
 MainMenuManager::MainMenuManager() : Script()
 {
@@ -45,6 +47,13 @@ void MainMenuManager::Start()
 		vsyncCheck = (C_UI_Checkbox*)vsyncCheckObject->GetComponent<C_UI_Checkbox>();
 	if (backButtonObject != nullptr)
 		backButton = (C_UI_Button*)backButtonObject->GetComponent<C_UI_Button>();
+	if (sliderObject) 
+	{
+		slider = (C_UI_Slider*)sliderObject->GetComponent<C_UI_Slider>();
+		volume = slider->InputValue(volume, 5.0f);
+		//TODO: call cool audio function to change the volume????
+		//slider->Hoverable(false);
+	}
 }
 
 void MainMenuManager::Update()
@@ -53,6 +62,7 @@ void MainMenuManager::Update()
 	if (playButton && playButton->GetState() == UIButtonState::RELEASED && gameManager != nullptr)
 	{
 		GameManager* gameManagerScript = (GameManager*)gameManager->GetScript("GameManager");
+		gameManagerScript->ResetArmorerItemsLvl();
 		gameManagerScript->GenerateNewRun(true);
 		gameManagerScript->InitiateLevel(1);
 	}
@@ -96,4 +106,8 @@ void MainMenuManager::Update()
 		App->uiSystem->PopCanvas();
 		App->uiSystem->PushCanvas(mainCanvas);
 	}
+	if (slider && slider->Hovered() && (App->input->GetKey(SDL_SCANCODE_RIGHT) == KeyState::KEY_DOWN || App->input->GetGameControllerAxis(0) == AxisState::POSITIVE_AXIS_DOWN))
+		volume = slider->IncrementOneSquare(); //TODO: call cool audio function to change the volume????
+	else if (slider && slider->Hovered() && (App->input->GetKey(SDL_SCANCODE_LEFT) == KeyState::KEY_DOWN || App->input->GetGameControllerAxis(0) == AxisState::NEGATIVE_AXIS_DOWN))
+		volume = slider->DecrementOneSquare(); //TODO: call cool audio function to change the volume????
 }

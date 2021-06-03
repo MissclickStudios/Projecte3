@@ -42,7 +42,6 @@ protected:
 	Rect2D rect = { 0,0,1,1 };
 	short childOrder = -1;
 	virtual void ResetInput() {}
-private:
 	bool interactuable = false;
 
 	friend class M_UISystem;

@@ -122,7 +122,7 @@ bool AnimatorTrack::Play()
 {
 	if (currentClip == nullptr && blendingClip == nullptr)
 	{
-		LOG("[ERROR] Animator Track: Could not set Track State to { PLAY }! Error: Both currentClip and blendingClip were nullptr.");
+		//LOG("[ERROR] Animator Track: Could not set Track State to { PLAY }! Error: Both currentClip and blendingClip were nullptr.");
 		return false;
 	}
 

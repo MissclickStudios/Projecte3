@@ -135,8 +135,6 @@ UpdateStatus M_Scene::Update(float dt)
 
 	RefreshSceneTransforms();																			// Second pass to make sure that all GOs' World Transform is updated.
 
-	std::multimap<float, Renderer*> renderers;
-	
 	std::vector<MeshRenderer>		meshRenderers;
 	std::vector<CuboidRenderer>		cuboidRenderers;
 	std::vector<SkeletonRenderer>	skeletonRenderers;
@@ -158,8 +156,6 @@ UpdateStatus M_Scene::Update(float dt)
 	meshRenderers.clear();
 	cuboidRenderers.clear();
 	skeletonRenderers.clear();
-
-	renderers.clear();
 	
 	// --- M_SCENE SHORTCUTS
 	if (App->input->GetKey(SDL_SCANCODE_LCTRL) == KeyState::KEY_REPEAT)

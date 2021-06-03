@@ -13,6 +13,10 @@ Blaster::~Blaster()
 
 void Blaster::SetUp()
 {
+    if (type == WeaponType::SNIPER)
+    {
+        AddPerk(PerkType::STUN_BULLETS, 1.0f, 0.1f);
+    }
 }
 
 ShootState Blaster::ShootLogic()
@@ -74,10 +78,12 @@ SCRIPTS_FUNCTION Blaster* CreateBlaster()
     // Visuals
     INSPECTOR_PREFAB(script->projectilePrefab);
     INSPECTOR_PREFAB(script->weaponModelPrefab);  
-    INSPECTOR_INPUT_FLOAT3(script->position);
-    INSPECTOR_INPUT_FLOAT3(script->rotation);
-    INSPECTOR_INPUT_FLOAT3(script->scale);
+    INSPECTOR_DRAGABLE_FLOAT3(script->position);
+    INSPECTOR_DRAGABLE_FLOAT3(script->rotation);
+    INSPECTOR_DRAGABLE_FLOAT3(script->scale);
 
+    INSPECTOR_DRAGABLE_FLOAT3(script->modifiedPosition);
+    INSPECTOR_DRAGABLE_FLOAT3(script->modifiedRotation);
     // Projectiles
     INSPECTOR_DRAGABLE_INT(script->projectileNum);
     INSPECTOR_CHECKBOX_BOOL(script->updateProjectiles);

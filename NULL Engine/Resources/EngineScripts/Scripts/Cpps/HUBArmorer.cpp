@@ -7,11 +7,15 @@
 #include "C_Transform.h"
 #include "C_Canvas.h"
 #include "C_UI_Button.h"
+#include "C_UI_Text.h"
+#include "C_UI_Slider.h"
 
 #include "GameManager.h"
 #include "GameObject.h"
 #include "Player.h"
 #include "HUBArmorer.h"
+
+#define MAX_ITEM_LEVEL 3
 
 HUBArmorer::HUBArmorer()
 {
@@ -34,6 +38,70 @@ void HUBArmorer::Start()
 	obj = App->scene->GetGameObjectByName("Game Manager");
 	if (obj != nullptr)
 		gameManager = (GameManager*)obj->GetScript("GameManager");
+
+	if (armorButtonObject != nullptr)
+		armorButton = (C_UI_Button*)armorButtonObject->GetComponent<C_UI_Button>();
+	if (bootsButtonObject != nullptr)
+		bootsButton = (C_UI_Button*)bootsButtonObject->GetComponent<C_UI_Button>();
+	if (ticketButtonObject != nullptr)
+		ticketButton = (C_UI_Button*)ticketButtonObject->GetComponent<C_UI_Button>();
+	if (bottleButtonObject != nullptr)
+		bottleButton = (C_UI_Button*)bottleButtonObject->GetComponent<C_UI_Button>();
+	if (armorSliderObject != nullptr) 
+	{
+		armorSlider = (C_UI_Slider*)armorSliderObject->GetComponent<C_UI_Slider>();
+		if (armorSlider)
+		{
+			armorSlider->Hoverable(false);
+			if(gameManager)
+				armorSlider->InputValue(gameManager->armorLvl, MAX_ITEM_LEVEL);
+		}
+	}
+	if (ticketSliderObject != nullptr) 
+	{
+		ticketSlider = (C_UI_Slider*)ticketSliderObject->GetComponent<C_UI_Slider>();
+		if (ticketSlider)
+		{
+			ticketSlider->Hoverable(false);
+			if (gameManager)
+				ticketSlider->InputValue(gameManager->ticketLvl, MAX_ITEM_LEVEL);
+		}
+	}
+	if (bootsSliderObject != nullptr)
+	{
+		bootsSlider = (C_UI_Slider*)bootsSliderObject->GetComponent<C_UI_Slider>();
+		if (bootsSlider)
+		{
+			bootsSlider->Hoverable(false);
+			if (gameManager)
+				bootsSlider->InputValue(gameManager->bootsLvl, MAX_ITEM_LEVEL);
+		}
+	}
+	if (bottleSliderObject != nullptr)
+	{
+		bottleSlider = (C_UI_Slider*)bottleSliderObject->GetComponent<C_UI_Slider>();
+		if (bottleSlider)
+		{
+			bottleSlider->Hoverable(false);
+			if (gameManager)
+				bottleSlider->InputValue(gameManager->bottleLvl, MAX_ITEM_LEVEL);
+		}
+	}
+	if (armorTextObject != nullptr)
+		armorPriceText = (C_UI_Text*)armorTextObject->GetComponent<C_UI_Text>();
+	if (bootsTextObject != nullptr)
+		bootsPriceText = (C_UI_Text*)bootsTextObject->GetComponent<C_UI_Text>();
+	if (ticketTextObject != nullptr)
+		ticketPriceText = (C_UI_Text*)ticketTextObject->GetComponent<C_UI_Text>();
+	if (bottleTextObject != nullptr)
+		bottlePriceText = (C_UI_Text*)bottleTextObject->GetComponent<C_UI_Text>();
+	if (descriptionTextObject != nullptr)
+		descriptionText = (C_UI_Text*)descriptionTextObject->GetComponent<C_UI_Text>();
+	if (creditTextObject != nullptr)
+		creditsText = (C_UI_Text*)creditTextObject->GetComponent<C_UI_Text>();
+	if (beskarTextObject != nullptr)
+		beskarText = (C_UI_Text*)beskarTextObject->GetComponent<C_UI_Text>();
+
 }
 
 void HUBArmorer::Update()
@@ -62,6 +130,62 @@ void HUBArmorer::Update()
 				mando->SetPlayerInteraction(InteractionType::NONE);
 				menuOpen = false;
 				state = HUBArmorerState::INACTIVE;
+				break;
+			}
+			if (mando) {
+				if (gameManager)
+				{
+					if (armorButton && armorButton->GetState() == UIButtonState::RELEASED)
+					{
+						if (mando->hubCurrency > gameManager->armorLvl && gameManager->armorLvl < MAX_ITEM_LEVEL) 
+						{
+							gameManager->armorLvl = armorSlider->IncrementOneSquare();
+							mando->hubCurrency -= gameManager->armorLvl;
+							armorPriceText->SetText(std::to_string(gameManager->armorLvl).c_str());
+						}
+					}
+					if (bootsButton && bootsButton->GetState() == UIButtonState::RELEASED)
+					{
+						if (mando->hubCurrency > gameManager->bootsLvl && gameManager->bootsLvl < MAX_ITEM_LEVEL)
+						{
+							gameManager->bootsLvl = bootsSlider->IncrementOneSquare();
+							mando->hubCurrency -= gameManager->bootsLvl;
+							bootsPriceText->SetText(std::to_string(gameManager->bootsLvl).c_str());
+						}
+					}
+					if (ticketButton && ticketButton->GetState() == UIButtonState::RELEASED)
+					{
+						if (mando->hubCurrency > gameManager->ticketLvl && gameManager->ticketLvl < MAX_ITEM_LEVEL)
+						{
+							gameManager->ticketLvl = ticketSlider->IncrementOneSquare();
+							mando->hubCurrency -= gameManager->ticketLvl;
+							ticketPriceText->SetText(std::to_string(gameManager->ticketLvl).c_str());
+						}
+					}
+					if (bottleButton && bottleButton->GetState() == UIButtonState::RELEASED)
+					{
+						if (mando->hubCurrency > gameManager->bottleLvl && gameManager->bottleLvl < MAX_ITEM_LEVEL)
+						{
+							gameManager->bottleLvl = bottleSlider->IncrementOneSquare();
+							mando->hubCurrency -= gameManager->bottleLvl;
+							bottlePriceText->SetText(std::to_string(gameManager->bottleLvl).c_str());
+						}
+					}
+				}
+
+				if (beskarText != nullptr)
+				{
+					std::string tmp = "";
+					tmp += std::to_string(mando->hubCurrency).c_str();
+					beskarText->SetText(tmp.c_str());
+				}
+				if (creditsText != nullptr)
+				{
+
+					std::string tmp = "";
+					tmp += std::to_string(mando->currency).c_str();
+					creditsText->SetText(tmp.c_str());
+				}
 			}
 			break;
 		default:
@@ -72,7 +196,25 @@ void HUBArmorer::Update()
 
 HUBArmorer* CreateHUBArmorer() {
 	HUBArmorer* script = new HUBArmorer();
+
 	INSPECTOR_STRING(script->mandoName);
 	INSPECTOR_STRING(script->hubShopCanvasName);
+
+	INSPECTOR_GAMEOBJECT(script->armorButtonObject);
+	INSPECTOR_GAMEOBJECT(script->bootsButtonObject);
+	INSPECTOR_GAMEOBJECT(script->ticketButtonObject);
+	INSPECTOR_GAMEOBJECT(script->bottleButtonObject);
+	INSPECTOR_GAMEOBJECT(script->armorSliderObject);
+	INSPECTOR_GAMEOBJECT(script->ticketSliderObject);
+	INSPECTOR_GAMEOBJECT(script->bootsSliderObject);
+	INSPECTOR_GAMEOBJECT(script->bottleSliderObject);
+	INSPECTOR_GAMEOBJECT(script->armorTextObject);
+	INSPECTOR_GAMEOBJECT(script->bootsTextObject);
+	INSPECTOR_GAMEOBJECT(script->ticketTextObject);
+	INSPECTOR_GAMEOBJECT(script->bottleTextObject);
+	INSPECTOR_GAMEOBJECT(script->descriptionTextObject);
+	INSPECTOR_GAMEOBJECT(script->creditTextObject);
+	INSPECTOR_GAMEOBJECT(script->beskarTextObject);
+
 	return script;
 }

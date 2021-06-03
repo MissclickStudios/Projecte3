@@ -112,15 +112,16 @@ private:
 	std::string				organization;											// String that will store the name of the organization behind the development of this application.
 
 	// --- LOAD & SAVE
-	//ParsonNode				config;													// Interface class that will be used to modify .json files with the parson library.
+	//ParsonNode			config;													// Interface class that will be used to modify .json files with the parson library.
 	
 	bool					wantToLoad;												// Will keep track of whether or not the user wants to load a configuration.
 	bool					wantToSave;												// Will keep track of whether or not the user wants to save a configuration.
 
 	// --- HARDWARE INFO
 	HardwareInfo			hardwareInfo;											// All the info/data about the software and the hardware of the system will be extracted from here.
+
 protected:
-	Module* logger;
+	Module*					logger;
 };
 
 extern MISSCLICK_API Application* App;													// Allows to access the Application module from anywhere in the project.

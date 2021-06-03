@@ -34,6 +34,8 @@ color(1,0,0,1)
 {
 	text = "Some Text";
 	rShader = App->resourceManager->GetShader("FontShader");
+	//TODO: we should generate 1 texture ID for each font type !!!!
+	// we should have like a font class that managest the current generated font textures for each different ttf
 	GenerateTextureID("Assets/Fonts/in_game.ttf");
 	LoadBuffers();
 
@@ -48,27 +50,27 @@ C_UI_Text::~C_UI_Text()
 		if (canvas)
 			canvas->RemoveUiElement(this);
 	}
+	// --- Delete Buffers
+	glDeleteBuffers(1, (GLuint*)&VAO);
+	glDeleteBuffers(1, (GLuint*)&VBO);
+
+	for (std::map<char, Character>::iterator c = Characters.begin(); c != Characters.end(); ++c)
+		glDeleteTextures(1, &(*c).second.textureID);
+
+	Characters.clear();
 }
 
 bool C_UI_Text::Update()
 {
-	bool ret = true;
+	//if (IsActive() == false)
+		//return true;
 
-	if (IsActive() == false)
-		return ret;
-
-	C_Canvas* canvas = GetOwner()->parent->GetComponent<C_Canvas>();
-	if (canvas == nullptr)
-		return ret;	
-
-	return ret;
+	return true;
 }
 
 bool C_UI_Text::CleanUp()
 {
-	bool ret = true;
-
-	return ret;
+	return true;
 }
 
 void C_UI_Text::LoadBuffers()
@@ -241,11 +243,7 @@ void C_UI_Text::Draw2D( )
 			char j = text.at(it);
 			std::string converter = " ";
 			char k = converter.at(0);
-			if (j == k && rowHead)
-			{
-				// I know it's weirde but I can't think of another way to do it :/
-			}
-			else
+			if (!(j == k && rowHead))
 			{
 				float adv = ch.advance + hSpaceBetween * 10;
 				x += ((uint)adv >> 6);
@@ -253,7 +251,6 @@ void C_UI_Text::Draw2D( )
 
 			rowHead = false;
 		}
-	
 
 		++it;
 	}
