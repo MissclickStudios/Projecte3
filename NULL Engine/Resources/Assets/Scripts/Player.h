@@ -232,6 +232,9 @@ private:
 	// Inputs
 	bool allowInput = true;
 
+	bool usingKeyboard			= false;
+	bool usingGameController	= false;
+
 	// Set Up
 	void SetUpLegsMatrix();
 

@@ -235,6 +235,9 @@ void Player::Behavior()
 	if (!allowInput)
 		return;
 
+	usingKeyboard		= App->input->KeyboardReceivedInputs();
+	usingGameController = App->input->GameControllerReceivedInputs();
+
 	ManageInteractions();
 	
 	//LOG("[%d]::[%d]::[%d]", (int)moveState, (int)aimState, (int)currentInteraction);
@@ -908,16 +911,6 @@ void Player::ManageInteractions()
 			SetPlayerInteraction(InteractionType::NONE);
 		}
 	}
-
-	/*switch (currentInteraction)
-	{
-	case InteractionType::NONE:				{}					break;
-	case InteractionType::USE:				{ Use(); }			break;
-	case InteractionType::BUY:				{ Buy(); }			break;
-	case InteractionType::TALK:				{ Talk(); }			break;
-	case InteractionType::OPEN_CHEST:		{ OpenChest(); }	break;
-	case InteractionType::SIGNAL_GROGU:		{ SignalGrogu(); }	break;
-	}*/
 }
 
 void Player::ManageMovement()
@@ -1285,7 +1278,7 @@ void Player::GatherMoveInputs()
 	moveInput.y = (float)App->input->GetGameControllerAxisValue(1);
 
 	// Keyboard movement
-	if (moveInput.IsZero())	// If there was no controller input
+	if (usingKeyboard && !usingGameController)								// If there was keyboard input and no controller input
 	{
 		if (App->input->GetKey(SDL_SCANCODE_W) == KeyState::KEY_REPEAT) { moveInput.y = -MAX_INPUT; }
 		if (App->input->GetKey(SDL_SCANCODE_S) == KeyState::KEY_REPEAT) { moveInput.y = MAX_INPUT; }
@@ -1311,7 +1304,7 @@ void Player::GatherMoveInputs()
 		dashCooldownTimer.Stop();
 	}
 
-	if (!moveInput.IsZero())
+	if (usingGameController)
 	{	
 		bool overWalkThreshold = (moveInput.x > WALK_THRESHOLD) || (-moveInput.x > WALK_THRESHOLD) || (moveInput.y > WALK_THRESHOLD) || (-moveInput.y > WALK_THRESHOLD);
 		
@@ -1360,20 +1353,21 @@ void Player::GatherAimInputs()
 		return;
 	}
 
-	if (App->input->GetKey(SDL_SCANCODE_F) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(1) == ButtonState::BUTTON_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_F) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(SDL_CONTROLLER_BUTTON_B) == ButtonState::BUTTON_DOWN)
 	{
 		aimState = AimState::CHANGE_IN;
 		return;
 	}
 
-	if ((App->input->GetKey(SDL_SCANCODE_R) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(2) == ButtonState::BUTTON_DOWN))
+	if ((App->input->GetKey(SDL_SCANCODE_R) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(SDL_CONTROLLER_BUTTON_X) == ButtonState::BUTTON_DOWN))
 	{
 		aimState = AimState::RELOAD_IN;
 		return;
 	}
 
-	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_REPEAT || App->input->GetGameControllerTrigger(1) == ButtonState::BUTTON_REPEAT)
+	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_REPEAT || App->input->GetGameControllerTrigger(RIGHT_TRIGGER) == ButtonState::BUTTON_REPEAT)
 	{
+		LOG("SHOOTIN'");
 		aimState = AimState::SHOOT_IN;
 		return;
 	}
