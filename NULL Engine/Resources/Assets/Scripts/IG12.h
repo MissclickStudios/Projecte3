@@ -96,6 +96,7 @@ public:
 	float bombingAttackBigAreaSide = 0.0f;
 	float bombingAttackSmallAreaSide = 0.0f;
 	float bombFallingTime = 0.0f;
+	float prepareBombingTime = 0.0f;
 
 	// Weapons
 	Prefab blaster;
@@ -157,6 +158,7 @@ private:
 	Timer bombingAttackTimer;
 	Timer bombTimer;
 	Timer bombingAndSpiralAttackTimer;
+	Timer prepareBombing;
 	
 	float2 bombPosition = float2::zero;
 	float2 playerPosition = float2::zero;

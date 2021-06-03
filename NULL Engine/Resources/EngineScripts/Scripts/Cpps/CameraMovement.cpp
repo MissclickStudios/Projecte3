@@ -94,7 +94,7 @@ void CameraMovement::Update()
 	if (playerScript != nullptr & playerScript->hitTimer.IsActive()) 
 		CameraShake(shakeDuration, shakeMagnitude);
 
-	if (ig12Script != nullptr & ig12Script->bombExploding == true)
+	if (ig12Script != nullptr && ig12Script->bombExploding == true)
 		CameraShake(shakeDuration, shakeMagnitude);
 
 	if (gameManagerScript->dialogManager->GetDialogState() == DialogState::NO_DIALOG)

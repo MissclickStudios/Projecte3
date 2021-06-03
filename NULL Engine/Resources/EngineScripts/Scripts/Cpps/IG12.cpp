@@ -84,6 +84,7 @@ IG12* CreateIG12()
 	INSPECTOR_DRAGABLE_FLOAT(script->bombingAttackBigAreaSide);
 	INSPECTOR_DRAGABLE_FLOAT(script->bombingAttackSmallAreaSide);
 	INSPECTOR_DRAGABLE_FLOAT(script->bombFallingTime);
+	INSPECTOR_DRAGABLE_FLOAT(script->prepareBombingTime);
 
 	//Weapons
 	INSPECTOR_PREFAB(script->blaster);
@@ -114,6 +115,7 @@ void IG12::SetUp()
 	firstStageTimer.Stop();
 	secondStageTimer.Stop();
 	bombTimer.Stop();
+	prepareBombing.Stop();
 
 	player = App->scene->GetGameObjectByName(playerName.c_str());
 	userAttackDistance = attackDistance;
@@ -267,7 +269,7 @@ void IG12::LookAtPlayer()
 
 	if (skeleton)
 		skeleton->transform->SetLocalRotation(float3(0, -rad + DegToRad(90), 0));
-}
+} 
 
 void IG12::ManageMovement()
 {
@@ -343,8 +345,9 @@ void IG12::ManageMovement()
 			firstStageTimer.Start();
 	}
 
-	if (!hitTimer.IsActive())
-		hitParticles->StopSpawn();
+	if (hitParticles != nullptr)
+		if(!hitTimer.IsActive())
+			hitParticles->StopSpawn();
 	
 
 	switch (moveState)
@@ -442,10 +445,31 @@ void IG12::ManageMovement()
 		}
 		break;
 	case IG12State::BOMBING_ATTACK_IN:
+		currentAnimation = &specialAnimation;
 		specialAttackStartAim = aimDirection;
 		specialAttackRot = 0.0f;
 		attackDistance = 200.0f;
-		moveState = IG12State::BOMBING_ATTACK;
+		aimState = AimState::IDLE;
+
+		if (blasterWeapon)
+		{
+			blasterWeapon->fireRate = 0.0f;
+			blasterWeapon->ammo = 0;
+		}
+		if (sniperWeapon)
+		{
+			sniperWeapon->fireRate = 0.0f;
+			sniperWeapon->ammo = 0;
+		}
+
+		if (prepareBombing.IsActive() && prepareBombing.ReadSec() >= prepareBombingTime)
+		{
+			prepareBombing.Stop();
+			bombingAttackTimer.Start();
+			attackDistance = userAttackDistance;
+			moveState = IG12State::BOMBING_ATTACK;
+		}
+		break;
 
 	case IG12State::BOMBING_ATTACK:
 		if (!BombingAttack())
@@ -531,9 +555,28 @@ void IG12::ManageMovement()
 	case IG12State::BOMBING_AND_SPIRAL_ATTACK_IN:
 		specialAttackStartAim = aimDirection;
 		specialAttackRot = 0.0f;
+		attackDistance = 200.0f;
+		aimState = AimState::IDLE;
 
-		moveState = IG12State::BOMBING_AND_SPIRAL_ATTACK;
+		if (blasterWeapon)
+		{
+			blasterWeapon->fireRate = 0.0f;
+			blasterWeapon->ammo = 0;
+		}
+		if (sniperWeapon)
+		{
+			sniperWeapon->fireRate = 0.0f;
+			sniperWeapon->ammo = 0;
+		}
 
+		if (prepareBombing.ReadSec() >= prepareBombingTime)
+		{			
+			attackDistance = userAttackDistance;
+			prepareBombing.Stop();
+			bombingAndSpiralAttackTimer.Start();
+			moveState = IG12State::BOMBING_AND_SPIRAL_ATTACK;
+		}
+		break;
 	case IG12State::BOMBING_AND_SPIRAL_ATTACK:
 		if (!BombingAndSpiralAttack())
 		{
@@ -725,7 +768,7 @@ bool IG12::LineAttack()
 {
 	if (blasterWeapon)
 	{
-		blasterWeapon->fireRate = 0.01f;
+		blasterWeapon->fireRate = 0.1f;
 		blasterWeapon->projectilesPerShot = 3;
 		blasterWeapon->ammo = 30;
 		blasterWeapon->shotSpreadArea = 3;
@@ -744,11 +787,15 @@ bool IG12::BombingAttack()
 {
 	if (blasterWeapon)
 	{
-		blasterWeapon->projectilesPerShot = 0;
+		blasterWeapon->fireRate = 0.3f;
+		blasterWeapon->ammo = 20;
+		blasterWeapon->projectilesPerShot = 1;
 	}
 	if (sniperWeapon)
 	{
-		sniperWeapon->projectilesPerShot = 0;	
+		sniperWeapon->fireRate = 0.3f;
+		sniperWeapon->ammo = 20;
+		sniperWeapon->projectilesPerShot = 1;
 	}
 
 	if (bombTimer.IsActive() && bombTimer.ReadSec() >= bombFallingTime)
@@ -764,6 +811,7 @@ bool IG12::BombingAttack()
 			}
 		bombExploding = false;
 	}
+
 	else if (bombTimer.IsActive() && bombTimer.ReadSec() >= bombFallingTime * 0.9)
 	{
 		if (bombingParticles != nullptr)
@@ -877,7 +925,7 @@ void IG12::pickFirstStageAttack()
 
 	if (randAttack <= 1)
 	{
-		bombingAttackTimer.Start();
+		prepareBombing.Start();
 		moveState = IG12State::BOMBING_ATTACK_IN;
 	}
 	else
@@ -894,7 +942,7 @@ void IG12::pickSecondStageAttack()
 
 	if (randAttack <= 1)
 	{
-		bombingAndSpiralAttackTimer.Start();
+		prepareBombing.Start();
 		moveState = IG12State::BOMBING_AND_SPIRAL_ATTACK_IN;
 	}
 	else
