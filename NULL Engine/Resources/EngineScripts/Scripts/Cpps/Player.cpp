@@ -1,6 +1,7 @@
+#include "MathGeoLib/include/Math/float3.h"
 #include "JSONParser.h"
 
-#include "Player.h"
+#include "Log.h"
 
 #include "Application.h"
 #include "M_Input.h"
@@ -9,27 +10,25 @@
 
 #include "GameObject.h"
 #include "C_Transform.h"
-#include "C_RigidBody.h"
+#include "C_Mesh.h"
 #include "C_Material.h"
+#include "C_RigidBody.h"
 #include "C_ParticleSystem.h"
 #include "C_AudioSource.h"
-#include "C_Mesh.h"
-
 #include "C_2DAnimator.h"
-
 #include "C_Animator.h"
 
 #include "GameManager.h"
 
 #include "Items.h"
 
-#include "Log.h"
+#include "Player.h"
 
-#define MAX_INPUT		32767
-#define WALK_THRESHOLD	16384
-#define WALKING_FACTOR	0.5f
-#include "MathGeoLib/include/Math/float3.h"
-
+#define MAX_INPUT			32767.0f
+#define WALK_THRESHOLD		16384.0f
+#define AIM_THRESHOLD		8000.0f
+#define KEYBOARD_THRESHOLD	3500.0f
+#define WALKING_FACTOR		0.5f
 
 Player* CreatePlayer()
 {
@@ -568,6 +567,7 @@ void Player::EquipWeapon(Prefab weapon)
 	{
 		if (secondaryWeapon->weaponModel != nullptr)
 			secondaryWeapon->weaponModel->SetIsActive(false);
+
 		secondaryWeapon = nullptr;
 	}
 	if (secondaryGunGameObject != nullptr)
@@ -576,8 +576,8 @@ void Player::EquipWeapon(Prefab weapon)
 		secondaryGunGameObject = nullptr;
 	}
 
-	secondaryGunGameObject = App->resourceManager->LoadPrefab(weapon.uid, App->scene->GetSceneRoot());
-	equipedGun = weapon;
+	secondaryGunGameObject	= App->resourceManager->LoadPrefab(weapon.uid, App->scene->GetSceneRoot());
+	equipedGun				= weapon;
 	if (secondaryGunGameObject != nullptr)
 	{
 		secondaryWeapon = (Weapon*)GetObjectScript(secondaryGunGameObject, ObjectType::WEAPON);
@@ -1159,9 +1159,8 @@ void Player::AimIdle()
 
 	if (aimingAimPlane != nullptr)
 		aimingAimPlane->SetIsActive(false);
-	if (currentWeapon == nullptr)
-		return;
-	else
+
+	if (currentWeapon != nullptr)
 	{
 		currentWeapon->defPosition = currentWeapon->position;
 		currentWeapon->defRotation = currentWeapon->rotation;
@@ -1180,9 +1179,8 @@ void Player::Aiming()
 
 	if (aimingAimPlane != nullptr)
 		aimingAimPlane->SetIsActive(true);
-	if (currentWeapon == nullptr)
-		return;
-	else if(currentWeapon->type == WeaponType::MINIGUN)
+
+	if (currentWeapon != nullptr)
 	{
 		currentWeapon->defPosition = currentWeapon->modifiedPosition;
 		currentWeapon->defRotation = currentWeapon->modifiedRotation;
@@ -1327,7 +1325,6 @@ void Player::GatherMoveInputs()
 
 void Player::GatherAimInputs()
 {
-
 	// Controller aim
 	aimInput.x = (float)App->input->GetGameControllerAxisRaw(2); // x right joystick
 	aimInput.y = (float)App->input->GetGameControllerAxisRaw(3); // y right joystick
@@ -1335,29 +1332,41 @@ void Player::GatherAimInputs()
 	aimInputThreshold.x = (float)App->input->GetGameControllerAxisValue(2); // x right joystick with threshhold
 	aimInputThreshold.y = (float)App->input->GetGameControllerAxisValue(3); // x right joystick with threshhold
 
+	//LOG("AIM INPUT		--> [%.3f]::[%.3f]", aimInput.x, aimInput.y);
+	//LOG("AIM THRESHOLD	--> [%.3f]::[%.3f]", aimInputThreshold.x, aimInputThreshold.y);
+
 	// Keyboard aim
-	if ((aimInputThreshold.x == 0) && (aimInputThreshold.y == 0))	// If there was no controller input
+	if (abs(aimInputThreshold.x) <= KEYBOARD_THRESHOLD && abs(aimInputThreshold.y) <= KEYBOARD_THRESHOLD)						// If there was no controller input
 	{
+		if (App->input->GetKey(SDL_SCANCODE_UP) == KeyState::KEY_REPEAT)	{ aimInput.y = -MAX_INPUT;	if (aimState == AimState::IDLE) aimState = AimState::AIMING; }
+		if (App->input->GetKey(SDL_SCANCODE_DOWN) == KeyState::KEY_REPEAT)	{ aimInput.y = MAX_INPUT;	if (aimState == AimState::IDLE) aimState = AimState::AIMING; }
+		if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KeyState::KEY_REPEAT)	{ aimInput.x = MAX_INPUT;	if (aimState == AimState::IDLE) aimState = AimState::AIMING; }
+		if (App->input->GetKey(SDL_SCANCODE_LEFT) == KeyState::KEY_REPEAT)	{ aimInput.x = -MAX_INPUT;	if (aimState == AimState::IDLE) aimState = AimState::AIMING; }
 
-		if (App->input->GetKey(SDL_SCANCODE_UP) == KeyState::KEY_REPEAT)	{ aimInput.y = -MAX_INPUT; if (aimState == AimState::IDLE) aimState = AimState::AIMING; }
-		if (App->input->GetKey(SDL_SCANCODE_DOWN) == KeyState::KEY_REPEAT)	{ aimInput.y = MAX_INPUT; if (aimState == AimState::IDLE) aimState = AimState::AIMING; }
-		if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KeyState::KEY_REPEAT)	{ aimInput.x = MAX_INPUT; if (aimState == AimState::IDLE) aimState = AimState::AIMING; }
-		if (App->input->GetKey(SDL_SCANCODE_LEFT) == KeyState::KEY_REPEAT)	{ aimInput.x = -MAX_INPUT; if (aimState == AimState::IDLE) aimState = AimState::AIMING; }
-
-		//Maybe set idle here if no keyboard input?
+		if (abs(aimInput.x) != MAX_INPUT && abs(aimInput.y) != MAX_INPUT)
+			aimState = AimState::IDLE;
 
 	}
-	else //There is input above the threshold
+	else																														//There is input above the threshold
 	{
-		if(aimState == AimState::IDLE)
-			aimState = AimState::AIMING;
+		if (abs(aimInputThreshold.x) <= AIM_THRESHOLD && abs(aimInputThreshold.y) <= AIM_THRESHOLD)
+		{
+			aimState = AimState::IDLE;
+		}
+		else
+		{
+			if (aimState == AimState::IDLE)
+				aimState = AimState::AIMING;
+		}
 	}
 	
 	SetAimDirection();
 
 	if (aimState != AimState::IDLE && aimState != AimState::CHANGE && aimState != AimState::RELOAD && aimState != AimState::SHOOT) // If the player is not on this states, ignore action inputs (shoot, reload, etc.)
 	{
-		aimState = AimState::IDLE;
+		if (aimState != AimState::AIMING)
+			aimState = AimState::IDLE;
+
 		return;
 	}
 
