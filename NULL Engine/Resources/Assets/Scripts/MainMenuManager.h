@@ -46,7 +46,6 @@ private:
 	C_UI_Button* backButton = nullptr;
 	C_UI_Slider* musicSlider = nullptr;
 	C_UI_Slider* fxSlider = nullptr;
-	float volume = 0.0f;
 };
 
 SCRIPTS_FUNCTION MainMenuManager* CreateMainMenuManager() {

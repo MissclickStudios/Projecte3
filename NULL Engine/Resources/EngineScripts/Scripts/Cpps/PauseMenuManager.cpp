@@ -3,10 +3,12 @@
 #include "M_Input.h"
 #include "M_Window.h"
 #include "M_Renderer3D.h"
+#include "M_Audio.h"
 
 #include "C_Canvas.h"
 #include "C_UI_Button.h"
 #include "C_UI_Checkbox.h"
+#include "C_UI_Slider.h"
 #include "GameObject.h"
 #include "M_UISystem.h"
 #include "PauseMenuManager.h"
@@ -50,6 +52,20 @@ void PauseMenuManager::Start()
 		mainMenuButton = (C_UI_Button*)go->GetComponent<C_UI_Button>();
 
 	//settings
+	go = App->scene->GetGameObjectByName(musicSliderStr.c_str());
+	if (go != nullptr) 
+	{
+		musicSlider = (C_UI_Slider*)go->GetComponent<C_UI_Slider>();
+		if (musicSlider)
+			App->audio->maxMusicVolume = musicSlider->InputValue(App->audio->maxMusicVolume, 5.0f, 10);
+	}
+	go = App->scene->GetGameObjectByName(fxSliderStr.c_str());
+	if (go != nullptr) 
+	{
+		fxSlider = (C_UI_Slider*)go->GetComponent<C_UI_Slider>();
+		if (fxSlider)
+			App->audio->maxMusicVolume = fxSlider->InputValue(App->audio->maxMusicVolume, 5.0f, 10);
+	}
 	go = App->scene->GetGameObjectByName(optionsMenuCanvasStr.c_str());
 	if (go)
 		optionsMenuCanvas = (C_Canvas*)go->GetComponent<C_Canvas>();
@@ -146,7 +162,15 @@ void PauseMenuManager::Update()
 	}
 
 	//settings
-	if (fullScreenCheck != nullptr)
+	if (musicSlider && musicSlider->Hovered() && (App->input->GetKey(SDL_SCANCODE_RIGHT) == KeyState::KEY_DOWN || App->input->GetGameControllerAxis(0) == AxisState::POSITIVE_AXIS_DOWN))
+		App->audio->maxMusicVolume = musicSlider->IncrementOneSquare();
+	else if (musicSlider && musicSlider->Hovered() && (App->input->GetKey(SDL_SCANCODE_LEFT) == KeyState::KEY_DOWN || App->input->GetGameControllerAxis(0) == AxisState::NEGATIVE_AXIS_DOWN))
+		App->audio->maxMusicVolume = musicSlider->DecrementOneSquare();
+	if (fxSlider && fxSlider->Hovered() && (App->input->GetKey(SDL_SCANCODE_RIGHT) == KeyState::KEY_DOWN || App->input->GetGameControllerAxis(0) == AxisState::POSITIVE_AXIS_DOWN))
+		App->audio->maxSfxVolume = fxSlider->IncrementOneSquare();
+	else if (fxSlider && fxSlider->Hovered() && (App->input->GetKey(SDL_SCANCODE_LEFT) == KeyState::KEY_DOWN || App->input->GetGameControllerAxis(0) == AxisState::NEGATIVE_AXIS_DOWN))
+		App->audio->maxSfxVolume = fxSlider->DecrementOneSquare();
+	if (fullScreenCheck)
 	{
 		if (fullScreenCheck->GetState() == UICheckboxState::PRESSED_UNCHECKED_OUT)
 			App->window->SetFullscreenDesktop(true);
