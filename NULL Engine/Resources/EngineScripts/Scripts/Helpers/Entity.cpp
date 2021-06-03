@@ -1,5 +1,6 @@
 #include "Entity.h"
-
+#include "Application.h"
+#include "M_Scene.h"
 #include "GameObject.h"
 #include "C_Transform.h"
 #include "C_RigidBody.h"
@@ -47,6 +48,13 @@ void Entity::Awake()
 	animator = gameObject->GetComponent<C_Animator>();
 	currentAnimation = &idleAnimation;
 
+	if (type == EntityType::TURRET)
+	{
+		GameObject* turretHead = App->scene->GetGameObjectByName("HeadMesh");
+		if(turretHead)
+			secondaryMat = turretHead->GetComponent<C_Material>();
+	}
+
 	for (uint i = 0; i < gameObject->childs.size(); ++i)
 	{
 		std::string name = gameObject->childs[i]->GetName();
@@ -59,6 +67,7 @@ void Entity::Awake()
 		{
 			mesh = gameObject->childs[i]->GetComponent<C_Mesh>();
 			material = gameObject->childs[i]->GetComponent<C_Material>();
+			
 		}
 		else if (name == "Particles")
 		{
@@ -94,7 +103,10 @@ void Entity::PreUpdate()
 		return;
 
 	if (material != nullptr)
+	{
+		if(secondaryMat) secondaryMat->SetTakeDamage(false);
 		material->SetTakeDamage(false);
+	}
 
 	// Set modifiers back to the default state
 	maxHealthModifier = 0.0f;
@@ -143,6 +155,12 @@ void Entity::PreUpdate()
 	{
 		material->SetAlternateColour(Color(1, 0, 0, 1));
 		material->SetTakeDamage(true);
+		if (secondaryMat)
+		{
+			secondaryMat->SetAlternateColour(Color(1, 0, 0, 1));
+			secondaryMat->SetTakeDamage(true);
+		}
+
 		if (hitTimer.ReadSec() > hitDuration)
 		{
 			hitTimer.Stop();

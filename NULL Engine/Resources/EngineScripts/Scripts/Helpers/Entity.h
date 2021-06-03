@@ -164,6 +164,7 @@ protected:
 
 	//Material
 	C_Material* material = nullptr;
+	C_Material* secondaryMat = nullptr;
 
 	// Death
 	Timer deathTimer;
