@@ -11,8 +11,9 @@
 
 #include "SarlaacTrap.h"
 
-SarlaacTrap::SarlaacTrap() : Script()
+SarlaacTrap::SarlaacTrap() : Object()
 {
+	baseType = ObjectType::EXPLOSIVE_BARREL; // cant be bothered creating this useless type, i rather prefer shotting myself in the foot than staving myself in the heart
 }
 
 SarlaacTrap::~SarlaacTrap()
@@ -21,27 +22,20 @@ SarlaacTrap::~SarlaacTrap()
 
 void SarlaacTrap::Start()
 {
-
 	sarlaacAnimator = gameObject->GetComponent<C_Animator>();
-
-	GameObject* idleParticlesGO = gameObject->FindChild("Idle");
-	GameObject* attackParticlesGO = gameObject->FindChild("Attack");
-
-	idleParticles = (idleParticlesGO != nullptr) ? idleParticlesGO->GetComponent<C_ParticleSystem>() : nullptr;
-	attackParticles = (attackParticlesGO != nullptr) ? attackParticlesGO->GetComponent<C_ParticleSystem>() : nullptr;
-
-	(idleParticles != nullptr) ? idleParticles->StopSpawn() : LOG("[ERROR] SarlaccTrap Script: Could not find { IDLE } Particle System!");
-	(attackParticles != nullptr) ? attackParticles->StopSpawn() : LOG("[ERROR] SarlaccTrap Script: Could not find { ATTACK } Particle System!");
+	StartMoving();
 }
 
 void SarlaacTrap::Update()
 {	
+	if (paused)
+		return;
+
 	switch (state)
 	{
 
 	case SarlaacState::IDLE:
-		if (idleParticles != nullptr)
-			idleParticles->ResumeSpawn();
+
 		break;
 
 	case SarlaacState::DAMAGING:
@@ -71,9 +65,6 @@ void SarlaacTrap::Update()
 		{
 			state = SarlaacState::IDLE;
 			animationTimer = 0.f;
-
-			if (attackParticles != nullptr)
-				attackParticles->StopSpawn();
 		}
 		else
 		{
@@ -91,6 +82,9 @@ void SarlaacTrap::CleanUp()
 
 void SarlaacTrap::OnTriggerRepeat(GameObject* object)
 {
+	if (paused)
+		return;
+
 	Entity* entity = (Entity*)GetObjectScript(object, ObjectType::ENTITY);
 
 	if (!entity)
@@ -128,12 +122,6 @@ void SarlaacTrap::OnTriggerRepeat(GameObject* object)
 void SarlaacTrap::StartMoving()
 {
 	state = SarlaacState::MOVING;
-
-	if (idleParticles != nullptr)
-		idleParticles->StopSpawn();
-
-	if (attackParticles != nullptr)
-		attackParticles->ResumeSpawn();
 
 	//Animator play clip
 	sarlaacAnimator->PlayClip("Preview",animationName.c_str(), 0u);

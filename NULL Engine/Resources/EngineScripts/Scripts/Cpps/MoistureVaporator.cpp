@@ -30,47 +30,111 @@ void MoistureVaporator::Start()
 	vaporatorObject = gameObject->FindChild(vaporatorObjectName.c_str());
 
 	explosionParticles = gameObject->FindChild("StunParticles")->GetComponent<C_ParticleSystem>();
-
 	explosionParticles->StopSpawn();
 
-	vaporatorCollider = gameObject->GetComponent<C_BoxCollider>();
+	idleParticles = gameObject->FindChild("Idle")->GetComponent<C_ParticleSystem>();
+	idleParticles->ResumeSpawn(); // Not sure what default state is
 
+	vaporatorCollider = gameObject->GetComponent<C_BoxCollider>();
+	vaporatorColliderSize = vaporatorCollider->Size();
+
+	cooldownTimer.Stop();
+	explosionParticlesTimer.Stop();
+
+	state = VaporatorState::IDLE;
 }
 
 void MoistureVaporator::Update()
 {
-	if (exploded)
+	switch (state)
 	{
-		//deactivate mesh, trigger
-		vaporatorCollider->SetIsActive(false);
-		vaporatorCollider->SetSize(vaporatorColliderSize);
-
-		//play particles
-		if (particleTimer < particleEmitttingTime)
+		case VaporatorState::IDLE:
 		{
-			particleTimer += MC_Time::Game::GetDT();
+			break;
 		}
-		else
+		case VaporatorState::STUNNING:
 		{
-			//deactivate everything
-			explosionParticles->StopSpawn();
-			exploded = false;
-			gameObject->SetIsActive(false);
+			// Cooldown 
+			cooldownTimer.Start();
+
+			// Audio
+			explosion->SetEvent("item_barrel_explosion");
+			explosion->SetVolume(5.0f);
+			explosion->PlayFx(explosion->GetEventId());
+
+			// Particles and particle timer 
+			idleParticles->StopSpawn();
+			explosionParticles->ResumeSpawn();
+			explosionParticlesTimer.Start();
+
+			// Collider
+			vaporatorCollider->SetTrigger(false);
+			vaporatorCollider->SetSize(vaporatorColliderSize);
+
+			// State
+			state = VaporatorState::REFRESHING;
+
+			break;
+		}
+		case VaporatorState::REFRESHING:
+		{
+			// Particles
+			if (explosionParticlesTimer.IsActive())
+			{
+				if (explosionParticlesTimer.ReadSec() > particleEmitttingTime)
+				{
+					explosionParticlesTimer.Stop();
+
+					explosionParticles->StopSpawn();
+				}
+			}
+
+			// Cooldown
+			if (cooldownTimer.ReadSec() > cooldown)
+			{
+				cooldownTimer.Stop();
+
+				state = VaporatorState::IDLE;
+
+				idleParticles->ResumeSpawn();
+
+				//TODO: add safety check in case the cd of the particles is greater than the ability's
+			}
+			break;
 		}
 	}
+	//if (exploded)
+	//{
+	//	//deactivate mesh, trigger
+	//	vaporatorCollider->SetIsActive(false);
+	//	vaporatorCollider->SetSize(vaporatorColliderSize);
 
-	if (toExplode)
-	{
-		explosion->SetEvent("item_barrel_explosion");
-		explosion->SetVolume(5.0f);
-		explosion->PlayFx(explosion->GetEventId());
-		vaporatorObject->SetIsActive(false);
+	//	//play particles
+	//	if (particleTimer < particleEmitttingTime)
+	//	{
+	//		particleTimer += MC_Time::Game::GetDT();
+	//	}
+	//	else
+	//	{
+	//		//deactivate everything
+	//		explosionParticles->StopSpawn();
+	//		exploded = false;
+	//		gameObject->SetIsActive(false);
+	//	}
+	//}
 
-		explosionParticles->ResumeSpawn();
+	//if (toExplode)
+	//{
+	//	explosion->SetEvent("item_barrel_explosion");
+	//	explosion->SetVolume(5.0f);
+	//	explosion->PlayFx(explosion->GetEventId());
+	//	vaporatorObject->SetIsActive(false);
 
-		exploded = true;
-		toExplode = false;
-	}
+	//	explosionParticles->ResumeSpawn();
+
+	//	exploded = true;
+	//	toExplode = false;
+	//}
 
 }
 
@@ -81,9 +145,9 @@ void MoistureVaporator::CleanUp()
 
 void MoistureVaporator::OnCollisionEnter(GameObject* object)
 {
-	if (GetObjectScript(object, ObjectType::BULLET) != nullptr)
+	if (GetObjectScript(object, ObjectType::BULLET) != nullptr && state == VaporatorState::IDLE)
 	{
-		toExplode = true;
+		state = VaporatorState::STUNNING;
 		vaporatorCollider->SetTrigger(true);
 		vaporatorCollider->SetSize(stunTriggerSize);
 	}

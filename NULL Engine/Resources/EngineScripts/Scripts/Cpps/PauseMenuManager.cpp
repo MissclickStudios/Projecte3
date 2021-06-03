@@ -12,6 +12,7 @@
 #include "PauseMenuManager.h"
 #include "Player.h"
 #include "GameManager.h"
+#include "HUDManager.h"
 
 PauseMenuManager::PauseMenuManager() : Script()
 {
@@ -25,7 +26,14 @@ void PauseMenuManager::Start()
 {
 	pauseMenuCanvas = (C_Canvas*)gameObject->GetComponent<C_Canvas>();
 
-	GameObject* go = App->scene->GetGameObjectByName(resumeButtonName.c_str());
+	GameObject* go = App->scene->GetGameObjectByName(hudCanvasStr.c_str());
+	if (go != nullptr) 
+	{
+		hudCanvas = go->GetComponent<C_Canvas>();
+		hudScript = (HUDManager*)go->GetScript("HUDManager");
+	}
+
+	go = App->scene->GetGameObjectByName(resumeButtonName.c_str());
 	if (go != nullptr)
 		resumeButton = (C_UI_Button*)go->GetComponent<C_UI_Button>();
 	
@@ -69,11 +77,21 @@ void PauseMenuManager::Update()
 			{
 				App->uiSystem->RemoveActiveCanvas(pauseMenuCanvas);
 				canvasActive = false;
+				GameManager* gameManagerScript = (GameManager*)gameManager->GetScript("GameManager");
+				gameManagerScript->Resume();
+
+				if (hudCanvas && hudScript && hudScript->enabled)
+					App->uiSystem->PushCanvas(hudCanvas);
 			}
 			else 
 			{
+				if (hudCanvas && hudScript && hudScript->enabled)
+					App->uiSystem->RemoveActiveCanvas(hudCanvas);
+
 				App->uiSystem->PushCanvas(pauseMenuCanvas);
 				canvasActive = true;
+				GameManager* gameManagerScript = (GameManager*)gameManager->GetScript("GameManager");
+				gameManagerScript->Pause();
 			}
 		}
 	}
@@ -85,6 +103,11 @@ void PauseMenuManager::Update()
 		{
 			App->uiSystem->RemoveActiveCanvas(pauseMenuCanvas);
 			canvasActive = false;
+			GameManager* gameManagerScript = (GameManager*)gameManager->GetScript("GameManager");
+			gameManagerScript->Resume();
+
+			if (hudCanvas && hudScript && hudScript->enabled)
+				App->uiSystem->PushCanvas(hudCanvas);
 		}
 	}
 
