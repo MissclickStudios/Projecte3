@@ -27,7 +27,7 @@
 #define MAX_INPUT			32767.0f
 #define WALK_THRESHOLD		16384.0f
 #define AIM_THRESHOLD		8000.0f
-#define KEYBOARD_THRESHOLD	3500.0f
+#define KEYBOARD_THRESHOLD	4000.0f
 #define WALKING_FACTOR		0.5f
 
 Player* CreatePlayer()
@@ -1349,24 +1349,14 @@ void Player::GatherAimInputs()
 	}
 	else																														//There is input above the threshold
 	{
-		if (abs(aimInputThreshold.x) <= AIM_THRESHOLD && abs(aimInputThreshold.y) <= AIM_THRESHOLD)
-		{
-			aimState = AimState::IDLE;
-		}
-		else
-		{
-			if (aimState == AimState::IDLE)
-				aimState = AimState::AIMING;
-		}
+		aimState = (abs(aimInputThreshold.x) <= AIM_THRESHOLD && abs(aimInputThreshold.y) <= AIM_THRESHOLD) ? AimState::IDLE : AimState::AIMING;
 	}
 	
 	SetAimDirection();
 
-	if (aimState != AimState::IDLE && aimState != AimState::CHANGE && aimState != AimState::RELOAD && aimState != AimState::SHOOT) // If the player is not on this states, ignore action inputs (shoot, reload, etc.)
+	if (aimState != AimState::IDLE && aimState != AimState::AIMING && aimState != AimState::CHANGE && aimState != AimState::RELOAD && aimState != AimState::SHOOT) // If the player is not on this states, ignore action inputs (shoot, reload, etc.)
 	{
-		if (aimState != AimState::AIMING)
-			aimState = AimState::IDLE;
-
+		aimState = AimState::IDLE;
 		return;
 	}
 
@@ -1387,7 +1377,6 @@ void Player::GatherAimInputs()
 		aimState = AimState::SHOOT_IN;
 		return;
 	}
-
 }
 
 void Player::GatherInteractionInputs()
@@ -1400,7 +1389,6 @@ void Player::GatherInteractionInputs()
 	
 	if (currentInteraction == InteractionType::NONE)
 	{
-
 		/*if (App->input->GetKey(SDL_SCANCODE_E) == KeyState::KEY_DOWN)
 		{
 			SetPlayerInteraction(InteractionType::USE);

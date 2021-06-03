@@ -169,8 +169,6 @@ void Trooper::DistanceToPlayer()
 	aimDirection = playerPosition - position;
 
 	distance = aimDirection.Length();
-
-	LOG("%f", distance);
 	// TODO: Separate aim and movement once the pathfinding is implemented
 }
 
