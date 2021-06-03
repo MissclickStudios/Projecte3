@@ -146,6 +146,9 @@ public:
 	C_AudioSource* shootAudio = nullptr;
 	C_AudioSource* reloadAudio = nullptr;
 
+	std::string shootAudioString = "";
+	std::string reloadAudioString = "";
+
 	GameObject* barrel = nullptr;
 protected:
 

@@ -8,7 +8,6 @@
 #include "MathGeoLib/include/Math/float2.h"
 
 class C_AudioSource;
-class C_NavMeshAgent;
 class C_ParticleSystem;
 
 enum class BlurrgState
@@ -75,9 +74,6 @@ public:
 	AnimationInfo chargeAnimation = { "Charge" };
 	AnimationInfo dashAnimation = { "Dash" };
 	AnimationInfo restAnimation = { "Rest" };
-
-	// Agent 
-	C_NavMeshAgent* agent = nullptr;
 
 	// Audio
 	C_AudioSource* chargeAudio = nullptr;
