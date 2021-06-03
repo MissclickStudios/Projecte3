@@ -83,8 +83,8 @@ public:
 	std::vector<WwiseObject*> audioListenerList;
 	std::vector<WwiseObject*> audioSourceList;
 
-	float maxSfxVolume = 0.0f;
-	float maxMusicVolume = 0.0f;
+	float maxSfxVolume = 1.0f;
+	float maxMusicVolume = 1.0f;
 
 private:
 
