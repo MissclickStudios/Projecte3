@@ -315,7 +315,13 @@ void Player::SaveState(ParsonNode& playerNode)
 		ParsonNode node = effectsArray.SetNode("Effect");
 		node.SetInteger("Type", (int)effects[i]->Type());
 		node.SetNumber("Duration", (double)effects[i]->RemainingDuration());
+		node.SetNumber("Power", effects[i]->Power());
+		node.SetNumber("Chance", effects[i]->Chance());
+		node.SetNumber("DirectionX", effects[i]->Direction().x);
+		node.SetNumber("DirectionY", effects[i]->Direction().y);
+		node.SetNumber("DirectionZ", effects[i]->Direction().z);
 		node.SetBool("Permanent", effects[i]->Permanent());
+		node.SetBool("Start", effects[i]->start);
 	}
 
 	playerNode.SetInteger("Equiped Gun", (int)equipedGun.uid);
@@ -357,9 +363,16 @@ void Player::LoadState(ParsonNode& playerNode)
 		ParsonNode node = effectsArray.GetNode(i);
 		EffectType type = (EffectType)node.GetInteger("Type");
 		float duration = (float)node.GetNumber("Duration");
+		float power = (float)node.GetNumber("Power");
+		float chance = (float)node.GetNumber("Chance");
+		float3 direction;
+		direction.x = (float)node.GetNumber("DirectionX");
+		direction.y = (float)node.GetNumber("DirectionY");
+		direction.z = (float)node.GetNumber("DirectionZ");
 		bool permanent = node.GetBool("Permanent");
+		bool start = node.GetBool("Start");
 
-		AddEffect(type, duration, permanent);
+		AddEffect(type, duration, permanent, power, chance, direction, start);
 	}
 
 	if (skeleton != nullptr)

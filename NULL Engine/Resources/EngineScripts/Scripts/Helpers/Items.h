@@ -327,7 +327,7 @@ public:
 		if (player == nullptr)
 			return;
 
-		player->AddEffect(EffectType::SPEED_MODIFY, speedIncrease, true);
+		player->AddEffect(EffectType::SPEED_MODIFY, 0.0f, true, speedIncrease);
 	}
 
 	float speedIncrease;
@@ -348,7 +348,7 @@ public:
 		if (player == nullptr)
 			return;
 
-		player->AddEffect(EffectType::PRICE_MODIFY, true, priceReduction);
+		player->AddEffect(EffectType::PRICE_MODIFY, 0.0f, true, priceReduction);
 	}
 
 	float priceReduction;

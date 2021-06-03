@@ -105,8 +105,9 @@ void Entity::PreUpdate()
 	cooldownModifier = DEFAULT_MODIFIER;
 	priceModifier = DEFAULT_MODIFIER;
 	entityState = EntityState::NONE;
+	if (agent != nullptr)
+		agent->velocity = Speed();
 	
-
 	// Loop through the Effects and call the respective functions
 	for (uint i = 0; i < effects.size(); ++i)
 	{
@@ -293,6 +294,8 @@ bool Entity::IsGrounded()
 void Entity::Frozen(Effect* effect)
 {
 	speedModifier *= effect->Power();
+	if (agent != nullptr)
+		agent->velocity = Speed();
 	attackSpeedModifier *= effect->Power();
 
 	if (material != nullptr)
@@ -316,7 +319,7 @@ void Entity::MaxHealthModify(Effect* effect)
 
 void Entity::SpeedModify(Effect* effect)
 {
-	speedModifier *= effect->Duration();
+	speedModifier *= effect->Power();
 }
 
 void Entity::Stun(Effect* effect)
@@ -324,10 +327,10 @@ void Entity::Stun(Effect* effect)
 	if (effect->start)
 	{
 		effect->start = false;
-
-		float num = Random::LCG::GetBoundedRandomFloat(0, 100);
-		if (num > effect->Chance())
-			effect->End();
+	
+		//float num = Random::LCG::GetBoundedRandomFloat(0, 100);
+		//if (num > effect->Chance())
+		//	effect->End();
 	}
 	else
 	{
@@ -348,7 +351,6 @@ void Entity::KnockBack(Effect* effect)
 		}
 	}
 
-	//entityState = EntityState::STUNED;
 	entityState = EntityState::KNOCKEDBACK;
 }
 

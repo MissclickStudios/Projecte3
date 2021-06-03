@@ -70,7 +70,7 @@ void ItemMenuManager::Update()
 	{
 		if (buyButton != nullptr && buyButton->GetState() == UIButtonState::PRESSEDIN)
 		{
-			if (player->currency >= item->item->price)
+			if (player->currency >= (int)((float)item->item->price * player->priceModifier))
 			{
 				item->PickUp(player);
 				item = nullptr;
@@ -131,7 +131,7 @@ void ItemMenuManager::SetItem(GroundItem* item)
 		{
 			std::string text = "Price: ";
 			if (player != nullptr)
-			 text += std::to_string(this->item->item->price * player->priceModifier);
+			 text += std::to_string((int)((float)this->item->item->price * player->priceModifier));
 			text += "      Press Enter/A to pick up";
 			priceText->SetText(text.c_str());
 		}
