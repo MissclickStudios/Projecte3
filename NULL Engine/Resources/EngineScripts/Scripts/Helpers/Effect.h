@@ -17,6 +17,7 @@ enum class ENGINE_ENUM EffectType
 	KNOCKBACK,
 	ELECTROCUTE,
 	BOSS_PIERCING,
+	PRICE_MODIFY,
 	EFFECTS_NUM
 };
 // This has to be the last entry

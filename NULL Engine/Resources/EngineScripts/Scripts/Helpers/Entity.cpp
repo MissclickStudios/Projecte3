@@ -1,5 +1,6 @@
 #include "Entity.h"
-
+#include "Application.h"
+#include "M_Scene.h"
 #include "GameObject.h"
 #include "C_Transform.h"
 #include "C_RigidBody.h"
@@ -47,6 +48,13 @@ void Entity::Awake()
 	animator = gameObject->GetComponent<C_Animator>();
 	currentAnimation = &idleAnimation;
 
+	if (type == EntityType::TURRET)
+	{
+		GameObject* turretHead = App->scene->GetGameObjectByName("HeadMesh");
+		if(turretHead)
+			secondaryMat = turretHead->GetComponent<C_Material>();
+	}
+
 	for (uint i = 0; i < gameObject->childs.size(); ++i)
 	{
 		std::string name = gameObject->childs[i]->GetName();
@@ -59,6 +67,7 @@ void Entity::Awake()
 		{
 			mesh = gameObject->childs[i]->GetComponent<C_Mesh>();
 			material = gameObject->childs[i]->GetComponent<C_Material>();
+			
 		}
 		else if (name == "Particles")
 		{
@@ -94,7 +103,10 @@ void Entity::PreUpdate()
 		return;
 
 	if (material != nullptr)
+	{
+		if(secondaryMat) secondaryMat->SetTakeDamage(false);
 		material->SetTakeDamage(false);
+	}
 
 	// Set modifiers back to the default state
 	maxHealthModifier = 0.0f;
@@ -103,8 +115,11 @@ void Entity::PreUpdate()
 	damageModifier = DEFAULT_MODIFIER;
 	defenseModifier = DEFAULT_MODIFIER;
 	cooldownModifier = DEFAULT_MODIFIER;
+	priceModifier = DEFAULT_MODIFIER;
 	entityState = EntityState::NONE;
-
+	if (agent != nullptr)
+		agent->velocity = Speed();
+	
 	// Loop through the Effects and call the respective functions
 	for (uint i = 0; i < effects.size(); ++i)
 	{
@@ -112,14 +127,15 @@ void Entity::PreUpdate()
 		{
 			switch (effects[i]->Type())														// Call the corresponding function
 			{
-			case EffectType::FROZEN:			{ Frozen(); }						break;
-			case EffectType::HEAL:				{ Heal(effects[i]); }				break;
-			case EffectType::MAX_HEALTH_MODIFY: { MaxHealthModify(effects[i]); }	break;
-			case EffectType::SPEED_MODIFY:		{ SpeedModify(effects[i]); }		break;
-			case EffectType::STUN:				{ Stun(effects[i]); }				break;
-			case EffectType::KNOCKBACK:			{ KnockBack(effects[i]); }			break;
-			case EffectType::ELECTROCUTE:		{ Electrocute(effects[i]); }		break;
-			case EffectType::BOSS_PIERCING:		{ BossPiercing(effects[i]); }		break;
+			case EffectType::FROZEN:		  { Frozen(effects[i]); }				       break; // oops
+			case EffectType::HEAL:			    { Heal(effects[i]); }				break;
+			case EffectType::MAX_HEALTH_MODIFY: { MaxHealthModify(effects[i]); }break;
+			case EffectType::SPEED_MODIFY:		  { SpeedModify(effects[i]); }		break;
+			case EffectType::STUN:				 { Stun(effects[i]); }			break;
+			case EffectType::KNOCKBACK:			{ KnockBack(effects[i]); }			 break;
+			case EffectType::ELECTROCUTE:	{ Electrocute(effects[i]); }		break;
+			case EffectType::BOSS_PIERCING:{ BossPiercing(effects[i]); } break;
+			case EffectType::PRICE_MODIFY:   { PriceModify(effects[i]); }   break;
 			}
 		}
 		else																				// Delete the effect if it ran out
@@ -140,6 +156,12 @@ void Entity::PreUpdate()
 	{
 		material->SetAlternateColour(Color(1, 0, 0, 1));
 		material->SetTakeDamage(true);
+		if (secondaryMat)
+		{
+			secondaryMat->SetAlternateColour(Color(1, 0, 0, 1));
+			secondaryMat->SetTakeDamage(true);
+		}
+
 		if (hitTimer.ReadSec() > hitDuration)
 		{
 			hitTimer.Stop();
@@ -287,10 +309,12 @@ bool Entity::IsGrounded()
 	return false;
 }
 
-void Entity::Frozen()
+void Entity::Frozen(Effect* effect)
 {
-	speedModifier /= 2.5;											// /= 2.5f is equivalent to *= 0.4f.
-	attackSpeedModifier /= 2.5;
+	speedModifier *= effect->Power();
+	if (agent != nullptr)
+		agent->velocity = Speed();
+	attackSpeedModifier *= effect->Power();
 
 	if (material != nullptr)
 	{
@@ -308,11 +332,12 @@ void Entity::Heal(Effect* effect)
 void Entity::MaxHealthModify(Effect* effect)
 {
 	maxHealthModifier += effect->Duration();
+	GiveHeal(999999.0f);
 }
 
 void Entity::SpeedModify(Effect* effect)
 {
-	speedModifier *= effect->Duration();
+	speedModifier *= effect->Power();
 }
 
 void Entity::Stun(Effect* effect)
@@ -320,10 +345,10 @@ void Entity::Stun(Effect* effect)
 	if (effect->start)
 	{
 		effect->start = false;
-
-		float num = Random::LCG::GetBoundedRandomFloat(0, 100);
-		if (num > effect->Chance())
-			effect->End();
+	
+		//float num = Random::LCG::GetBoundedRandomFloat(0, 100);
+		//if (num > effect->Chance())
+		//	effect->End();
 	}
 	else
 	{
@@ -344,7 +369,6 @@ void Entity::KnockBack(Effect* effect)
 		}
 	}
 
-	//entityState = EntityState::STUNED;
 	entityState = EntityState::KNOCKEDBACK;
 }
 
@@ -361,6 +385,11 @@ void Entity::Electrocute(Effect* effect)
 	}
 
 	entityState = EntityState::ELECTROCUTED;
+}
+
+void Entity::PriceModify(Effect* effect)
+{
+	priceModifier *= effect->Power();
 }
 
 EntityState Entity::GetEntityState()

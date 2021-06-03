@@ -76,7 +76,7 @@ public:
 	bool IsGrounded();
 
 	// Effect Functions
-	virtual void Frozen();
+	virtual void Frozen(Effect* effect);
 	virtual void Heal(Effect* effect);
 	virtual void MaxHealthModify(Effect* effect);
 	virtual void SpeedModify(Effect* effect);
@@ -84,6 +84,7 @@ public:
 	virtual void KnockBack(Effect* effect);
 	virtual void Electrocute(Effect* effect);
 	virtual void BossPiercing(Effect* effect) {}
+	virtual void PriceModify(Effect* effect);
 	
 	// Type
 	EntityType type = EntityType::ENTITY;
@@ -111,6 +112,7 @@ public:
 	float damageModifier = DEFAULT_MODIFIER;
 	float defenseModifier = DEFAULT_MODIFIER;
 	float cooldownModifier = DEFAULT_MODIFIER;
+	float priceModifier = DEFAULT_MODIFIER;
 
 	// Death
 	float hitDuration = 0.25f;
@@ -162,6 +164,7 @@ protected:
 
 	//Material
 	C_Material* material = nullptr;
+	C_Material* secondaryMat = nullptr;
 
 	// Death
 	Timer deathTimer;

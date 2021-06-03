@@ -10,6 +10,7 @@
 #include "C_ParticleSystem.h"
 #include "C_BoxCollider.h"
 #include "C_AudioSource.h"
+#include "C_RigidBody.h"
 
 #include "ExplosiveBarrel.h"
 
@@ -110,6 +111,16 @@ void ExplosiveBarrel::OnTriggerRepeat(GameObject* object)
 	direction.Normalize();
 	direction *= currentPower;
 
+	entity->gameObject->GetComponent<C_RigidBody>()->FreezePositionY(true);
 	entity->AddEffect(EffectType::KNOCKBACK, 0.75f, false, 0.0f, 0.0f, float3(direction.x, 0.0f, direction.y));
 	entity->TakeDamage(damage);
+}
+
+void ExplosiveBarrel::OnTriggerExit(GameObject* object)
+{
+	Entity* entity = (Entity*)GetObjectScript(object, ObjectType::ENTITY);
+	if (!entity)
+		return;
+
+	entity->gameObject->GetComponent<C_RigidBody>()->FreezePositionY(false);
 }

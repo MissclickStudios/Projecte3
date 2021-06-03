@@ -85,6 +85,7 @@ public:
     void Resume();
 
     std::vector<ItemData*> GetChestItemPool() const { return chestItemPool; };
+    std::vector<ItemData*> GetHubItemPool() const { return hubItemPool; };
 
     //Dialog & Story funtions
     void KilledIG11();
@@ -182,7 +183,9 @@ private:
    
 
     // Items
+    void LoadItemPool(std::vector<ItemData*>& pool, std::string path);
     std::vector<ItemData*> chestItemPool;
+    std::vector<ItemData*> hubItemPool;
 
     // Chest
     Entity* lastEnemyDead = nullptr;

@@ -315,7 +315,13 @@ void Player::SaveState(ParsonNode& playerNode)
 		ParsonNode node = effectsArray.SetNode("Effect");
 		node.SetInteger("Type", (int)effects[i]->Type());
 		node.SetNumber("Duration", (double)effects[i]->RemainingDuration());
+		node.SetNumber("Power", effects[i]->Power());
+		node.SetNumber("Chance", effects[i]->Chance());
+		node.SetNumber("DirectionX", effects[i]->Direction().x);
+		node.SetNumber("DirectionY", effects[i]->Direction().y);
+		node.SetNumber("DirectionZ", effects[i]->Direction().z);
 		node.SetBool("Permanent", effects[i]->Permanent());
+		node.SetBool("Start", effects[i]->start);
 	}
 
 	playerNode.SetInteger("Equiped Gun", (int)equipedGun.uid);
@@ -357,9 +363,16 @@ void Player::LoadState(ParsonNode& playerNode)
 		ParsonNode node = effectsArray.GetNode(i);
 		EffectType type = (EffectType)node.GetInteger("Type");
 		float duration = (float)node.GetNumber("Duration");
+		float power = (float)node.GetNumber("Power");
+		float chance = (float)node.GetNumber("Chance");
+		float3 direction;
+		direction.x = (float)node.GetNumber("DirectionX");
+		direction.y = (float)node.GetNumber("DirectionY");
+		direction.z = (float)node.GetNumber("DirectionZ");
 		bool permanent = node.GetBool("Permanent");
+		bool start = node.GetBool("Start");
 
-		AddEffect(type, duration, permanent);
+		AddEffect(type, duration, permanent, power, chance, direction, start);
 	}
 
 	if (skeleton != nullptr)
@@ -471,7 +484,7 @@ void Player::Reset()
 {
 	currency = 0;
 
-	health = maxHealth;
+	health = MaxHealth();
 
 	while (effects.size())
 	{
@@ -499,28 +512,36 @@ void Player::Reset()
 
 	usingSecondaryGun = false;
 
-	// TODO: ADD THE HUB ITEMS
 	GameObject* object = App->scene->GetGameObjectByName(gameManager.c_str());
 	if (object != nullptr)
 	{
 		GameManager* manager = (GameManager*)object->GetScript("GameManager");
 		if (manager != nullptr)
 		{
+			std::vector<ItemData*> hubItems = manager->GetHubItemPool();
 			if (manager->armorLvl)
 			{
-
+				ItemData* const itemData = Item::FindItem(hubItems, "Durasteel Reinforcement", (ItemRarity)manager->armorLvl);
+				if (itemData != nullptr)
+					AddItem(itemData);
 			}
 			if (manager->bootsLvl)
 			{
-
+				ItemData* const itemData = Item::FindItem(hubItems, "Propulsed Boots", (ItemRarity)manager->bootsLvl);
+				if (itemData != nullptr)
+					AddItem(itemData);
 			}
 			if (manager->ticketLvl)
 			{
-
+				ItemData* const itemData = Item::FindItem(hubItems, "Premium Ticket", (ItemRarity)manager->ticketLvl);
+				if (itemData != nullptr)
+					AddItem(itemData);
 			}
 			if (manager->bottleLvl)
 			{
-
+				ItemData* const itemData = Item::FindItem(hubItems, "Refrigeration Liquid", (ItemRarity)manager->bottleLvl);
+				if (itemData != nullptr)
+					AddItem(itemData);
 			}
 		}
 	}
