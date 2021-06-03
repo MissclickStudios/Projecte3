@@ -7,6 +7,7 @@
 #include "C_Material.h"
 #include "C_AudioSource.h"
 #include "C_Mesh.h"
+#include "C_NavMeshAgent.h"
 
 #include "AnimatorTrack.h"
 
@@ -153,12 +154,26 @@ void Entity::Update()
 	if (paused)
 		return;
 
-	switch (entityState)
+	switch (entityState) // problem?
 	{
-	case EntityState::NONE:			{ Behavior(); }									break;
-	case EntityState::STUNED:		{ currentAnimation = &stunAnimation; }			break;
-	case EntityState::KNOCKEDBACK:	{ currentAnimation = &knockbackAnimation; }		break;
-	case EntityState::ELECTROCUTED: { currentAnimation = &electrocutedAnimation; }	break;
+	case EntityState::NONE: 
+		Behavior(); 
+		break;
+	case EntityState::STUNED:
+		currentAnimation = &stunAnimation;
+		if (agent != nullptr)
+			agent->CancelDestination();
+		break;
+	case EntityState::KNOCKEDBACK:
+		currentAnimation = &knockbackAnimation;
+		if (agent != nullptr)
+			agent->CancelDestination();
+		break;
+	case EntityState::ELECTROCUTED:
+		currentAnimation = &electrocutedAnimation;
+		if (agent != nullptr)
+			agent->CancelDestination();
+		break;
 	}
 }
 
