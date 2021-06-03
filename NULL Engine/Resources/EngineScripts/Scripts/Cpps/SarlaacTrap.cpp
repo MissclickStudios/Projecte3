@@ -11,8 +11,9 @@
 
 #include "SarlaacTrap.h"
 
-SarlaacTrap::SarlaacTrap() : Script()
+SarlaacTrap::SarlaacTrap() : Object()
 {
+	baseType = ObjectType::EXPLOSIVE_BARREL; // cant be bothered creating this useless type, i rather prefer shotting myself in the foot than staving myself in the heart
 }
 
 SarlaacTrap::~SarlaacTrap()
@@ -27,6 +28,9 @@ void SarlaacTrap::Start()
 
 void SarlaacTrap::Update()
 {	
+	if (paused)
+		return;
+
 	switch (state)
 	{
 
@@ -78,6 +82,9 @@ void SarlaacTrap::CleanUp()
 
 void SarlaacTrap::OnTriggerRepeat(GameObject* object)
 {
+	if (paused)
+		return;
+
 	Entity* entity = (Entity*)GetObjectScript(object, ObjectType::ENTITY);
 
 	if (!entity)

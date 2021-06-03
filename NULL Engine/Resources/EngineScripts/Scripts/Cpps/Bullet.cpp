@@ -19,11 +19,15 @@ Bullet::~Bullet()
 
 void Bullet::Awake()
 {
-	rigidBody = gameObject->GetComponent<C_RigidBody>();
 }
 
 void Bullet::Update()
 {
+	if (rigidBody == nullptr)
+		rigidBody = gameObject->GetComponent<C_RigidBody>();
+	if (paused)
+		return;
+
 	if (lifeTimeTimer.ReadSec() >= lifeTime)
 	{
 		lifeTimeTimer.Stop();
@@ -45,6 +49,7 @@ void Bullet::CleanUp()
 
 void Bullet::OnPause()
 {
+	paused = true;
 	lifeTimeTimer.Pause();
 
 	if (rigidBody != nullptr)
@@ -53,6 +58,7 @@ void Bullet::OnPause()
 
 void Bullet::OnResume()
 {
+	paused = false;
 	lifeTimeTimer.Resume();
 
 	if (rigidBody != nullptr)

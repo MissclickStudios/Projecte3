@@ -11,7 +11,7 @@ Object* GetObjectScript(GameObject* gameObject, ObjectType baseType)
             Object* cObj = (Object*)((C_Script*)gameObject->components[i])->GetScriptData();
             if (cObj == nullptr)
                 return nullptr;
-            if (cObj->baseType == baseType)
+            if (cObj->baseType == baseType || (baseType == ObjectType::NONE && cObj->baseType != ObjectType::NONE))
                 return cObj;
         }
     return nullptr;

@@ -57,6 +57,16 @@ public:
 		timer.Stop();	   // so that the next .IsActive() returns a guaranteed false
 	}
 
+	void Pause()
+	{
+		timer.Pause();
+	}
+
+	void Resume()
+	{
+		timer.Resume();
+	}
+
 	const EffectType Type() const { return type; }
 
 	const float Duration() const { return duration; }

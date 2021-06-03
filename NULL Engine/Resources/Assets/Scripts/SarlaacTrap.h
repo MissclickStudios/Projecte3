@@ -1,4 +1,4 @@
-#include "Script.h"
+#include "Object.h"
 #include "ScriptMacros.h"
 #include "MathGeoLib/include/Math/float3.h"
 
@@ -15,7 +15,7 @@ enum class SarlaacState
 	SLEEPING  //Waits for a brief time until going back to IDLE
 };
 
-class SCRIPTS_API SarlaacTrap : public Script {
+class SCRIPTS_API SarlaacTrap : public Object {
 public:
 	SarlaacTrap();
 	~SarlaacTrap();

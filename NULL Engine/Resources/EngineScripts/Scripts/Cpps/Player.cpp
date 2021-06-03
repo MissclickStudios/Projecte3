@@ -496,6 +496,32 @@ void Player::Reset()
 	}
 
 	usingSecondaryGun = false;
+
+	// TODO: ADD THE HUB ITEMS
+	GameObject* object = App->scene->GetGameObjectByName(gameManager.c_str());
+	if (object != nullptr)
+	{
+		GameManager* manager = (GameManager*)object->GetScript("GameManager");
+		if (manager != nullptr)
+		{
+			if (manager->armorLvl)
+			{
+
+			}
+			if (manager->bootsLvl)
+			{
+
+			}
+			if (manager->ticketLvl)
+			{
+
+			}
+			if (manager->bottleLvl)
+			{
+
+			}
+		}
+	}
 }
 
 void Player::EnableInput()

@@ -81,6 +81,9 @@ public:
     void ReturnHub();
     void ReturnToMainMenu();
 
+    void Pause();
+    void Resume();
+
     std::vector<ItemData*> GetChestItemPool() const { return chestItemPool; };
 
     //Dialog & Story funtions

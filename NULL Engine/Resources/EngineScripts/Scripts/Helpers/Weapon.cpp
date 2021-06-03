@@ -82,6 +82,9 @@ void Weapon::Start()
 
 void Weapon::Update()
 {
+	if (paused)
+		return;
+
 	if (updateProjectiles)
 	{
 		updateProjectiles = false;
@@ -105,6 +108,7 @@ void Weapon::CleanUp()
 
 void Weapon::OnPause()
 {
+	paused = true;
 	//fireRateTimer.Pause();
 	reloadTimer.Pause();
 
@@ -113,6 +117,7 @@ void Weapon::OnPause()
 
 void Weapon::OnResume()
 {
+	paused = false;
 	//fireRateTimer.Resume();
 	reloadTimer.Resume();
 

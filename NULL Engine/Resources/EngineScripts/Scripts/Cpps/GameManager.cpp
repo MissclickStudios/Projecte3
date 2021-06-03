@@ -665,6 +665,44 @@ void GameManager::ReturnToMainMenu()
 	App->scene->ScriptChangeScene(menuPath.c_str());
 }
 
+void GameManager::Pause()
+{
+	std::vector<GameObject*>* objects = App->scene->GetGameObjects();
+	for (auto go = objects->begin(); go != objects->end(); ++go)
+	{
+		for (uint i = 0; i < (*go)->components.size(); ++i)
+			if ((*go)->components[i]->GetType() == ComponentType::SCRIPT)
+			{
+				C_Script* com = (C_Script*)(*go)->components[i];
+				if (com != nullptr)
+				{
+					void* script = com->GetScriptData();
+					if (script != nullptr)
+						((Script*)script)->OnPause();
+				}
+			}
+	}
+}
+
+void GameManager::Resume()
+{
+	std::vector<GameObject*>* objects = App->scene->GetGameObjects();
+	for (auto go = objects->begin(); go != objects->end(); ++go)
+	{
+		for (uint i = 0; i < (*go)->components.size(); ++i)
+			if ((*go)->components[i]->GetType() == ComponentType::SCRIPT)
+			{
+				C_Script* com = (C_Script*)(*go)->components[i];
+				if (com != nullptr)
+				{
+					void* script = com->GetScriptData();
+					if (script != nullptr)
+						((Script*)script)->OnResume();
+				}
+			}
+	}
+}
+
 void GameManager::AddFixedRoom(std::string name, int level, int position)
 {
 	int newPosition = position - 1;
