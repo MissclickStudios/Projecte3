@@ -11,6 +11,7 @@
 #include "M_Renderer3D.h"
 #include "M_Window.h"
 #include "M_Input.h"
+#include "M_Audio.h"
 
 MainMenuManager::MainMenuManager() : Script()
 {
@@ -47,12 +48,17 @@ void MainMenuManager::Start()
 		vsyncCheck = (C_UI_Checkbox*)vsyncCheckObject->GetComponent<C_UI_Checkbox>();
 	if (backButtonObject != nullptr)
 		backButton = (C_UI_Button*)backButtonObject->GetComponent<C_UI_Button>();
-	if (sliderObject) 
+	if (musicSliderObject) 
 	{
-		slider = (C_UI_Slider*)sliderObject->GetComponent<C_UI_Slider>();
-		volume = slider->InputValue(volume, 5.0f);
-		//TODO: call cool audio function to change the volume????
-		//slider->Hoverable(false);
+		musicSlider = (C_UI_Slider*)musicSliderObject->GetComponent<C_UI_Slider>();
+		if (musicSlider)
+			App->audio->maxMusicVolume = musicSlider->InputValue(App->audio->maxMusicVolume, 5.0f, 10);
+	}
+	if (fxSliderObject)
+	{
+		fxSlider = (C_UI_Slider*)fxSliderObject->GetComponent<C_UI_Slider>();
+		if (fxSlider)
+			App->audio->maxSfxVolume = fxSlider->InputValue(App->audio->maxSfxVolume, 5.0f, 10);
 	}
 }
 
@@ -106,8 +112,13 @@ void MainMenuManager::Update()
 		App->uiSystem->PopCanvas();
 		App->uiSystem->PushCanvas(mainCanvas);
 	}
-	if (slider && slider->Hovered() && (App->input->GetKey(SDL_SCANCODE_RIGHT) == KeyState::KEY_DOWN || App->input->GetGameControllerAxis(0) == AxisState::POSITIVE_AXIS_DOWN))
-		volume = slider->IncrementOneSquare(); //TODO: call cool audio function to change the volume????
-	else if (slider && slider->Hovered() && (App->input->GetKey(SDL_SCANCODE_LEFT) == KeyState::KEY_DOWN || App->input->GetGameControllerAxis(0) == AxisState::NEGATIVE_AXIS_DOWN))
-		volume = slider->DecrementOneSquare(); //TODO: call cool audio function to change the volume????
+	if (musicSlider && musicSlider->Hovered() && (App->input->GetKey(SDL_SCANCODE_RIGHT) == KeyState::KEY_DOWN || App->input->GetGameControllerAxis(0) == AxisState::POSITIVE_AXIS_DOWN))
+		App->audio->maxMusicVolume = musicSlider->IncrementOneSquare();
+	else if (musicSlider && musicSlider->Hovered() && (App->input->GetKey(SDL_SCANCODE_LEFT) == KeyState::KEY_DOWN || App->input->GetGameControllerAxis(0) == AxisState::NEGATIVE_AXIS_DOWN))
+		App->audio->maxMusicVolume = musicSlider->DecrementOneSquare();
+
+	if (fxSlider && fxSlider->Hovered() && (App->input->GetKey(SDL_SCANCODE_RIGHT) == KeyState::KEY_DOWN || App->input->GetGameControllerAxis(0) == AxisState::POSITIVE_AXIS_DOWN))
+		App->audio->maxSfxVolume = fxSlider->IncrementOneSquare();
+	else if (fxSlider && fxSlider->Hovered() && (App->input->GetKey(SDL_SCANCODE_LEFT) == KeyState::KEY_DOWN || App->input->GetGameControllerAxis(0) == AxisState::NEGATIVE_AXIS_DOWN))
+		App->audio->maxSfxVolume = fxSlider->DecrementOneSquare();
 }
