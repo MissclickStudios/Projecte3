@@ -99,7 +99,7 @@ void GroundItem::OnTriggerRepeat(GameObject* object)
 
 void GroundItem::PickUp(Player* player)
 {
-	player->currency -= item->price;
+	player->currency -= (int)((float)item->price * player->priceModifier);
 	item->PickUp(player);
 	if (item->toSave)
 		player->AddItem(item->data);

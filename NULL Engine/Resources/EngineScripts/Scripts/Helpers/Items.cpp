@@ -29,5 +29,10 @@ Item* Item::CreateItem(ItemData* itemData, bool toBuy)
 		return (Item*)new GalacticCredit(itemData, toBuy);
 	else if (name == "Jacket Bullets")
 		return (Item*)new JacketBullets(itemData, toBuy);
+	else if (name == "Premium Ticket")
+		return (Item*)new PremiumTicket(itemData, toBuy);
+	else if (name == "Refrigeration Liquid")
+		return (Item*)new RefrigerationLiquid(itemData, toBuy);
+	
 	return nullptr;
 }
