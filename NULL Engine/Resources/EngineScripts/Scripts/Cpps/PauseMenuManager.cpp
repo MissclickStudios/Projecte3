@@ -77,6 +77,8 @@ void PauseMenuManager::Update()
 			{
 				App->uiSystem->RemoveActiveCanvas(pauseMenuCanvas);
 				canvasActive = false;
+				GameManager* gameManagerScript = (GameManager*)gameManager->GetScript("GameManager");
+				gameManagerScript->Resume();
 
 				if (hudCanvas && hudScript && hudScript->enabled)
 					App->uiSystem->PushCanvas(hudCanvas);
@@ -88,6 +90,8 @@ void PauseMenuManager::Update()
 
 				App->uiSystem->PushCanvas(pauseMenuCanvas);
 				canvasActive = true;
+				GameManager* gameManagerScript = (GameManager*)gameManager->GetScript("GameManager");
+				gameManagerScript->Pause();
 			}
 		}
 	}
@@ -99,6 +103,8 @@ void PauseMenuManager::Update()
 		{
 			App->uiSystem->RemoveActiveCanvas(pauseMenuCanvas);
 			canvasActive = false;
+			GameManager* gameManagerScript = (GameManager*)gameManager->GetScript("GameManager");
+			gameManagerScript->Resume();
 
 			if (hudCanvas && hudScript && hudScript->enabled)
 				App->uiSystem->PushCanvas(hudCanvas);

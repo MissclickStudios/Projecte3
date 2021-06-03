@@ -1,5 +1,5 @@
 {
-    "ModTime": 1621718641,
+    "ModTime": 1622685250,
     "Models In Scene": [],
     "Game Objects": [
         {
@@ -13,6 +13,10 @@
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
             "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
             "Components": [
                 {
                     "Type": 1,
@@ -35,6 +39,7 @@
                 },
                 {
                     "Type": 5,
+                    "FarPlane": 300,
                     "MinFOV": 1,
                     "MaxFOV": 120,
                     "Culling": false,
@@ -45,7 +50,7 @@
         },
         {
             "UID": 887860156,
-            "ParentUID": 1212908575,
+            "ParentUID": 1474028452,
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "MainScene",
@@ -54,6 +59,10 @@
             "IsSceneRoot": true,
             "MaintainThroughScenes": false,
             "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
             "Components": [
                 {
                     "Type": 1,
@@ -87,6 +96,10 @@
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
             "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
             "Components": [
                 {
                     "Type": 1,
@@ -135,6 +148,11 @@
                             "string": "Assets\/Scenes\/LoseScene.json"
                         },
                         {
+                            "Type": 5,
+                            "Name": "cameraName",
+                            "string": "GameCameraVS2"
+                        },
+                        {
                             "Type": 0,
                             "Name": "l1Easy",
                             "int": 1
@@ -148,15 +166,13 @@
                             "Type": 7,
                             "Name": "level1",
                             "vectorstring": [
-                                "Level1_Room1.json",
-                                "Level1_Room2.json",
-                                "Level1_Room3.json",
-                                "Level1_Room4.json",
-                                "Level1_Room5.json",
-                                "Level1_Room6.json",
-                                "Level1_Room7.json",
-                                "Level1_Room8.json",
-                                "Level1_Room9.json"
+                                "Level1_Room4B.json",
+                                "Level1_Room2B.json",
+                                "Level1_Room1B.json",
+                                "Level1_Room3B.json",
+                                "Level1_Room7B.json",
+                                "Level1_Room6B.json",
+                                "Level1_Room5B.json"
                             ]
                         },
                         {
@@ -173,26 +189,76 @@
                             "Type": 7,
                             "Name": "level1Ruins",
                             "vectorstring": [
-                                "Level1_Ruins1.json",
-                                "Level1_Ruins2.json",
-                                "Level1_Ruins3.json",
-                                "Level1_Ruins4.json",
-                                "Level1_Ruins5.json",
-                                "Level1_Ruins6.json",
-                                "Level1_Ruins7.json"
+                                "Level1_Ruins1B.json",
+                                "Level1_Ruins7B.json",
+                                "Level1_Ruins3B.json",
+                                "Level1_Ruins2B.json",
+                                "Level1_Ruins5B.json",
+                                "Level1_Ruins6B.json",
+                                "Level1_Ruins4B.json"
                             ]
                         },
                         {
                             "Type": 4,
                             "Name": "playerPrefab",
-                            "prefab": 1997884416
+                            "prefab": 813688999
                         },
                         {
                             "Type": 4,
                             "Name": "groguPrefab",
                             "prefab": 13642032
+                        },
+                        {
+                            "Type": 4,
+                            "Name": "chestPrefab",
+                            "prefab": 673064202
+                        },
+                        {
+                            "Type": 0,
+                            "Name": "chestSpawnChance",
+                            "int": 60
+                        },
+                        {
+                            "Type": 4,
+                            "Name": "mistPlane1",
+                            "prefab": 236149164
+                        },
+                        {
+                            "Type": 4,
+                            "Name": "mistPlane2",
+                            "prefab": 0
+                        },
+                        {
+                            "Type": 3,
+                            "Name": "mistPlane1Position",
+                            "float3x": 0,
+                            "float3y": 0,
+                            "float3z": 0
+                        },
+                        {
+                            "Type": 3,
+                            "Name": "mistPlane2Position",
+                            "float3x": 0,
+                            "float3y": 0,
+                            "float3z": 0
                         }
                     ]
+                },
+                {
+                    "Type": 8,
+                    "Is Static": true,
+                    "Filter": " void"
+                },
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 1000,
+                    "Size Y": 100,
+                    "Size Z": 1000,
+                    "Center X": 0,
+                    "Center Y": -75,
+                    "Center Z": 0
                 }
             ]
         },
@@ -207,6 +273,10 @@
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
             "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
             "Components": [
                 {
                     "Type": 1,
@@ -250,6 +320,10 @@
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
             "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
             "Components": [
                 {
                     "Type": 1,
@@ -324,6 +398,10 @@
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
             "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
             "Components": [
                 {
                     "Type": 1,
@@ -375,7 +453,11 @@
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": true,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
             "Components": [
                 {
                     "Type": 1,
@@ -410,13 +492,13 @@
                     },
                     "textureCoords": {
                         "x": 0,
-                        "y": 0,
-                        "w": 1,
-                        "h": 1
+                        "y": -0.18613354861736298,
+                        "w": 0.48137107491493225,
+                        "h": -0.14161907136440277
                     },
                     "inspectorTextureCoords": {
                         "x": 0,
-                        "y": 0,
+                        "y": -945,
                         "w": 1938,
                         "h": 226
                     },
@@ -425,10 +507,10 @@
                 {
                     "Type": 3,
                     "Texture": {
-                        "AssetsPath": "Assets\/Textures\/\/UI\/WinLoseScreen\/LoseTitle.png",
-                        "AssetsName": "LoseTitle.png",
-                        "LibaryPath": "Library\/Textures\/1342867820.netex",
-                        "LibraryFile": "1342867820.netex"
+                        "AssetsPath": "Assets\/Textures\/\/UI\/Atlas.png",
+                        "AssetsName": "Atlas.png",
+                        "LibaryPath": "Library\/Textures\/1238257691.netex",
+                        "LibraryFile": "1238257691.netex"
                     },
                     "Shader": {
                         "AssetsPath": "Assets\/Shaders\/UIShader.shader",
@@ -449,7 +531,11 @@
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
+            "ShowBoundingBoxes": true,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
             "Components": [
                 {
                     "Type": 1,
@@ -483,14 +569,14 @@
                         "a": 1
                     },
                     "textureCoords": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 1,
-                        "h": 1
+                        "x": 0.15350224077701569,
+                        "y": -0.061650581657886505,
+                        "w": 0.557625412940979,
+                        "h": -0.043726611882448196
                     },
                     "inspectorTextureCoords": {
-                        "x": 0,
-                        "y": 0,
+                        "x": 618,
+                        "y": -313,
                         "w": 1627,
                         "h": 91
                     },
@@ -499,10 +585,10 @@
                 {
                     "Type": 3,
                     "Texture": {
-                        "AssetsPath": "Assets\/Textures\/\/UI\/WinLoseScreen\/WinLoseText.png",
-                        "AssetsName": "WinLoseText.png",
-                        "LibaryPath": "Library\/Textures\/1397330002.netex",
-                        "LibraryFile": "1397330002.netex"
+                        "AssetsPath": "Assets\/Textures\/\/UI\/Atlas.png",
+                        "AssetsName": "Atlas.png",
+                        "LibaryPath": "Library\/Textures\/1238257691.netex",
+                        "LibraryFile": "1238257691.netex"
                     },
                     "Shader": {
                         "AssetsPath": "Assets\/Shaders\/UIShader.shader",

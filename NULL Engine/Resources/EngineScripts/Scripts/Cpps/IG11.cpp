@@ -425,7 +425,6 @@ void IG11::ManageMovement()
 				blasterWeapon->fireRate = baseFireRate;
 				blasterWeapon->ammo = 0;
 				blasterWeapon->projectilesPerShot = 1;
-				blasterWeapon->projectileSpeed = 90;
 			}
 			if (sniperWeapon)
 			{
@@ -436,7 +435,6 @@ void IG11::ManageMovement()
 		}
 		break;
 	case IG11State::DOUBLE_SPIRAL_ATTACK_IN:
-		specialAttackStartAim = aimDirection;
 		specialAttackRot = 0.0f;
 
 		moveState = IG11State::DOUBLE_SPIRAL_ATTACK;
@@ -502,55 +500,63 @@ void IG11::ManageAim()
 
 		if (moveState != IG11State::DOUBLE_SPIRAL_ATTACK && moveState != IG11State::ROTATE_ATTACK)
 			secondaryAimDirection = aimDirection;
+		else
+			secondaryAimDirection = -aimDirection;
+
 		if (moveState == IG11State::U_ATTACK)
 			UAttackShots--;
 			
 		if (moveState == IG11State::SPIRAL_ATTACK ||
 			moveState == IG11State::ROTATE_ATTACK ||
-			moveState == IG11State::DOUBLE_SPIRAL_ATTACK) currentAnimation = &specialAnimation;
+			moveState == IG11State::DOUBLE_SPIRAL_ATTACK) 
+				currentAnimation = &specialAnimation;
 
 		if (blasterWeapon != nullptr)
 		{
 			switch (blasterWeapon->Shoot(aimDirection))
 			{
 			case ShootState::NO_FULLAUTO:
-				currentAnimation = nullptr;
+				//currentAnimation = nullptr;
 				aimState = AimState::ON_GUARD;
 				break;
 			case ShootState::WAITING_FOR_NEXT:
 				break;
 			case ShootState::FIRED_PROJECTILE:
-				currentAnimation = nullptr;
+				//currentAnimation = nullptr;
 				aimState = AimState::ON_GUARD;
 				break;
 			case ShootState::RATE_FINISHED:
-				currentAnimation = nullptr;
+				//currentAnimation = nullptr;
 				aimState = AimState::ON_GUARD;
 				break;
 			case ShootState::NO_AMMO:
-				aimState = AimState::RELOAD_IN;
+				if(moveState != IG11State::ROTATE_ATTACK) aimState = AimState::RELOAD_IN;
 				break;
 			}
-			switch (sniperWeapon->Shoot(secondaryAimDirection))
+			if (secondaryAimDirection.ptr() != aimDirection.ptr())
 			{
-			case ShootState::NO_FULLAUTO:
-				currentAnimation = nullptr;
-				aimState = AimState::ON_GUARD;
-				break;
-			case ShootState::WAITING_FOR_NEXT:
-				break;
-			case ShootState::FIRED_PROJECTILE:
-				currentAnimation = nullptr;
-				aimState = AimState::ON_GUARD;
-				break;
-			case ShootState::RATE_FINISHED:
-				currentAnimation = nullptr;
-				aimState = AimState::ON_GUARD;
-				break;
-			case ShootState::NO_AMMO:
-				aimState = AimState::RELOAD_IN;
-				break;
+				switch (sniperWeapon->Shoot(secondaryAimDirection))
+				{
+				case ShootState::NO_FULLAUTO:
+					//currentAnimation = nullptr;
+					aimState = AimState::ON_GUARD;
+					break;
+				case ShootState::WAITING_FOR_NEXT:
+					break;
+				case ShootState::FIRED_PROJECTILE:
+					//currentAnimation = nullptr;
+					aimState = AimState::ON_GUARD;
+					break;
+				case ShootState::RATE_FINISHED:
+					//currentAnimation = nullptr;
+					aimState = AimState::ON_GUARD;
+					break;
+				case ShootState::NO_AMMO:
+					aimState = AimState::RELOAD_IN;
+					break;
+				}
 			}
+			
 		}
 		break;
 	case AimState::RELOAD_IN:
@@ -688,9 +694,9 @@ bool IG11::SpiralAttack()
 
 	if (blasterWeapon)
 	{
-		blasterWeapon->fireRate = 0.05f;
+		blasterWeapon->fireRate = 0.001f;
 		blasterWeapon->ammo = 20;
-		blasterWeapon->projectilesPerShot = 3;
+		blasterWeapon->projectilesPerShot = 1;
 		blasterWeapon->shotSpreadArea = 5;
 	}
 	if (sniperWeapon)
@@ -736,18 +742,19 @@ bool IG11::DoubleSpiralAttack()
 
 	if (blasterWeapon)
 	{
-		blasterWeapon->fireRate = 0.05f;
+		blasterWeapon->fireRate = 0.001f;
 		blasterWeapon->ammo = 20;
-		blasterWeapon->projectilesPerShot = 3;
-		blasterWeapon->shotSpreadArea = 5;
+		blasterWeapon->projectilesPerShot = 2;
+		blasterWeapon->shotSpreadArea = 4;
 	}
 	if (sniperWeapon)
 	{
-		sniperWeapon->fireRate = 0.05f;
+
+		sniperWeapon->fireRate = 0.001f;
 		sniperWeapon->ammo = 20;
-		sniperWeapon->projectilesPerShot = 3;
-		sniperWeapon->shotSpreadArea = 5;
-		secondaryAimDirection = -aimDirection;
+		sniperWeapon->projectilesPerShot = 2;
+		sniperWeapon->shotSpreadArea = 4;
+		
 	}
 
 	if (specialAttackRot >= 360.0f * spiralAttackSpins)
@@ -767,24 +774,22 @@ bool IG11::RotateAttack()
 	aimDirection = { x,y };
 
 	if (blasterWeapon)
-	{
-		blasterWeapon->fireRate = 0.08f;
-		blasterWeapon->projectilesPerShot = 10;
-		blasterWeapon->ammo = 50;
-		blasterWeapon->shotSpreadArea = 40;
-		blasterWeapon->projectileSpeed = 60;
+	{ 
+		blasterWeapon->fireRate = 0.16f;
+		blasterWeapon->projectilesPerShot = 20;
+		blasterWeapon->ammo = 100;
+		blasterWeapon->shotSpreadArea = 30;
 	}
 
 	if (sniperWeapon)
 	{
-		//sniperWeapon->fireRate = 0.3f;
+		sniperWeapon->fireRate = 0.3f;
 		sniperWeapon->projectilesPerShot = 0;
-		//sniperWeapon->ammo = 20;
-		//sniperWeapon->shotSpreadArea = 10;
-		//secondaryAimDirection = -aimDirection;
+		sniperWeapon->ammo = 50;
+		sniperWeapon->shotSpreadArea = 10;
 	}
 
-	if (specialAttackRot >= 360.0f * spiralAttackSpins)
+	if (specialAttackRot >= 360.0f )
 		return false;
 
 	return true;

@@ -1,6 +1,7 @@
+#include "MathGeoLib/include/Math/float3.h"
 #include "JSONParser.h"
 
-#include "Player.h"
+#include "Log.h"
 
 #include "Application.h"
 #include "M_Input.h"
@@ -9,27 +10,25 @@
 
 #include "GameObject.h"
 #include "C_Transform.h"
-#include "C_RigidBody.h"
+#include "C_Mesh.h"
 #include "C_Material.h"
+#include "C_RigidBody.h"
 #include "C_ParticleSystem.h"
 #include "C_AudioSource.h"
-#include "C_Mesh.h"
-
 #include "C_2DAnimator.h"
-
 #include "C_Animator.h"
 
 #include "GameManager.h"
 
 #include "Items.h"
 
-#include "Log.h"
+#include "Player.h"
 
-#define MAX_INPUT		32767
-#define WALK_THRESHOLD	16384
-#define WALKING_FACTOR	0.5f
-#include "MathGeoLib/include/Math/float3.h"
-
+#define MAX_INPUT			32767.0f
+#define WALK_THRESHOLD		16384.0f
+#define AIM_THRESHOLD		8000.0f
+#define KEYBOARD_THRESHOLD	4000.0f
+#define WALKING_FACTOR		0.5f
 
 Player* CreatePlayer()
 {
@@ -496,6 +495,32 @@ void Player::Reset()
 	}
 
 	usingSecondaryGun = false;
+
+	// TODO: ADD THE HUB ITEMS
+	GameObject* object = App->scene->GetGameObjectByName(gameManager.c_str());
+	if (object != nullptr)
+	{
+		GameManager* manager = (GameManager*)object->GetScript("GameManager");
+		if (manager != nullptr)
+		{
+			if (manager->armorLvl)
+			{
+
+			}
+			if (manager->bootsLvl)
+			{
+
+			}
+			if (manager->ticketLvl)
+			{
+
+			}
+			if (manager->bottleLvl)
+			{
+
+			}
+		}
+	}
 }
 
 void Player::EnableInput()
@@ -542,6 +567,7 @@ void Player::EquipWeapon(Prefab weapon)
 	{
 		if (secondaryWeapon->weaponModel != nullptr)
 			secondaryWeapon->weaponModel->SetIsActive(false);
+
 		secondaryWeapon = nullptr;
 	}
 	if (secondaryGunGameObject != nullptr)
@@ -550,8 +576,8 @@ void Player::EquipWeapon(Prefab weapon)
 		secondaryGunGameObject = nullptr;
 	}
 
-	secondaryGunGameObject = App->resourceManager->LoadPrefab(weapon.uid, App->scene->GetSceneRoot());
-	equipedGun = weapon;
+	secondaryGunGameObject	= App->resourceManager->LoadPrefab(weapon.uid, App->scene->GetSceneRoot());
+	equipedGun				= weapon;
 	if (secondaryGunGameObject != nullptr)
 	{
 		secondaryWeapon = (Weapon*)GetObjectScript(secondaryGunGameObject, ObjectType::WEAPON);
@@ -605,15 +631,13 @@ void Player::AnimatePlayer()
 {	
 	if (animator == nullptr)
 		return;
-
-	static bool fromPreview = false;
 	
-	AnimatorTrack* preview = animator->GetTrackAsPtr("Preview");
+	AnimatorTrack* preview		= animator->GetTrackAsPtr("Preview");
+	AnimationInfo* torsoInfo	= GetAimStateAnimation();
+	AnimationInfo* legsInfo		= GetMoveStateAnimation();
 
-	if (GetEntityState() != EntityState::NONE || aimState == AimState::IDLE)											// TAKE INTO ACCOUNT STUN AND KNOCKBACK + LOOK INTO DASH PROBLEMS 
+	if (GetEntityState() != EntityState::NONE || aimState == AimState::IDLE || torsoInfo == nullptr || legsInfo == nullptr)			// TAKE INTO ACCOUNT STUN AND KNOCKBACK + LOOK INTO DASH PROBLEMS 
 	{	
-		fromPreview = true;
-		
 		if (torsoTrack != nullptr)
 		{
 			if (torsoTrack->GetTrackState() != TrackState::STOP)
@@ -639,60 +663,39 @@ void Player::AnimatePlayer()
 	else
 	{	
 		//LOG("DIRECTIONS: [%d]::[%d]::[%s]::[%s]", aimDirection, moveDirection, GetAimStateAnimation()->name.c_str(), GetLegsAnimation()->name.c_str());
-		
-		AnimationInfo* torsoInfo	= GetAimStateAnimation();
-		AnimationInfo* legsInfo		= GetMoveStateAnimation();
-		if (torsoInfo == nullptr || legsInfo == nullptr)
+
+		if (torsoTrack == nullptr || legsTrack == nullptr)
 		{
-			//LOG("DEFAULTING AIMING TO PREVIEW");
-			
-			fromPreview = true;
-
-			AnimatorClip* previewClip = preview->GetCurrentClip();
-
-			if ((previewClip == nullptr) || (previewClip->GetName() != currentAnimation->name))										// If no clip playing or animation/clip changed
-				animator->PlayClip(currentAnimation->track.c_str(), currentAnimation->name.c_str(), currentAnimation->blendTime);
+			LOG("[WARNING] Player Script: torsoTrack or legsTrack was nullptr!");
+			return;
 		}
-		else
-		{	
-			if (fromPreview)																										// Way to reset the hip right before it stops being used.
-			{
-				fromPreview = false;
 
-				AnimatorClip* previewClip = preview->GetCurrentClip();
-
-				if ((previewClip == nullptr) || (previewClip->GetName() != torsoInfo->name))										// If no clip playing or animation/clip changed
-					animator->PlayClip(preview->GetName(), torsoInfo->name.c_str(), torsoInfo->blendTime);
-
-				/*if (hip != nullptr)
-					hip->transform->Rotate()*/
-
-				return;
-			}
+		(hip != nullptr) ? hip->transform->SetLocalRotation(float3::zero) : LOG("OOGA BOOGA NO HIPAROOGA");			// Resetting the hip position.
 			
-			if (torsoTrack == nullptr || legsTrack == nullptr)
+		AnimatorClip* torsoClip = torsoTrack->GetCurrentClip();
+		AnimatorClip* legsClip = legsTrack->GetCurrentClip();
+
+		if (preview->GetTrackState() != TrackState::STOP)
+			preview->Stop();
+
+		if ((torsoClip == nullptr) || (torsoClip->GetName() != torsoInfo->name))
+		{
+			animator->PlayClip(torsoTrack->GetName(), torsoInfo->name.c_str(), torsoInfo->blendTime);
+
+			/*if (torsoTrack->GetTrackState() == TrackState::STOP)
 			{
-				LOG("[WARNING] Player Script: torsoTrack or legsTrack was nullptr!");
-				return;
-			}
-
-			AnimatorClip* torsoClip = torsoTrack->GetCurrentClip();
-			AnimatorClip* legsClip = legsTrack->GetCurrentClip();
-
-			if (preview->GetTrackState() != TrackState::STOP)
-				preview->Stop();
-
-			if ((torsoClip == nullptr) || (torsoClip->GetName() != torsoInfo->name))
-				animator->PlayClip(torsoTrack->GetName(), torsoInfo->name.c_str(), torsoInfo->blendTime);
-
-			if ((legsClip == nullptr) || (legsClip->GetName() != legsInfo->name))
-				animator->PlayClip(legsTrack->GetName(), legsInfo->name.c_str(), legsInfo->blendTime);
-
-			if (torsoTrack->GetTrackState() == TrackState::STOP)
 				torsoTrack->Play();
+			}*/
+		}
 
-			if (legsTrack->GetTrackState() == TrackState::STOP)
+		if ((legsClip == nullptr) || (legsClip->GetName() != legsInfo->name))
+		{
+			animator->PlayClip(legsTrack->GetName(), legsInfo->name.c_str(), legsInfo->blendTime);
+
+			/*if (legsTrack->GetTrackState() == TrackState::STOP)
+			{
 				legsTrack->Play();
+			}*/
 		}
 	}
 }
@@ -1156,9 +1159,8 @@ void Player::AimIdle()
 
 	if (aimingAimPlane != nullptr)
 		aimingAimPlane->SetIsActive(false);
-	if (currentWeapon == nullptr)
-		return;
-	else
+
+	if (currentWeapon != nullptr)
 	{
 		currentWeapon->defPosition = currentWeapon->position;
 		currentWeapon->defRotation = currentWeapon->rotation;
@@ -1177,9 +1179,8 @@ void Player::Aiming()
 
 	if (aimingAimPlane != nullptr)
 		aimingAimPlane->SetIsActive(true);
-	if (currentWeapon == nullptr)
-		return;
-	else if(currentWeapon->type == WeaponType::MINIGUN)
+
+	if (currentWeapon != nullptr)
 	{
 		currentWeapon->defPosition = currentWeapon->modifiedPosition;
 		currentWeapon->defRotation = currentWeapon->modifiedRotation;
@@ -1324,7 +1325,6 @@ void Player::GatherMoveInputs()
 
 void Player::GatherAimInputs()
 {
-
 	// Controller aim
 	aimInput.x = (float)App->input->GetGameControllerAxisRaw(2); // x right joystick
 	aimInput.y = (float)App->input->GetGameControllerAxisRaw(3); // y right joystick
@@ -1332,28 +1332,33 @@ void Player::GatherAimInputs()
 	aimInputThreshold.x = (float)App->input->GetGameControllerAxisValue(2); // x right joystick with threshhold
 	aimInputThreshold.y = (float)App->input->GetGameControllerAxisValue(3); // x right joystick with threshhold
 
+	//LOG("AIM INPUT		--> [%.3f]::[%.3f]", aimInput.x, aimInput.y);
+	//LOG("AIM THRESHOLD	--> [%.3f]::[%.3f]", aimInputThreshold.x, aimInputThreshold.y);
+
 	// Keyboard aim
-	if ((aimInputThreshold.x == 0) && (aimInputThreshold.y == 0))	// If there was no controller input
+	if (abs(aimInputThreshold.x) <= KEYBOARD_THRESHOLD && abs(aimInputThreshold.y) <= KEYBOARD_THRESHOLD)						// If there was no controller input
 	{
+		if (App->input->GetKey(SDL_SCANCODE_UP) == KeyState::KEY_REPEAT)	{ aimInput.y = -MAX_INPUT;	if (aimState == AimState::IDLE) aimState = AimState::AIMING; }
+		if (App->input->GetKey(SDL_SCANCODE_DOWN) == KeyState::KEY_REPEAT)	{ aimInput.y = MAX_INPUT;	if (aimState == AimState::IDLE) aimState = AimState::AIMING; }
+		if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KeyState::KEY_REPEAT)	{ aimInput.x = MAX_INPUT;	if (aimState == AimState::IDLE) aimState = AimState::AIMING; }
+		if (App->input->GetKey(SDL_SCANCODE_LEFT) == KeyState::KEY_REPEAT)	{ aimInput.x = -MAX_INPUT;	if (aimState == AimState::IDLE) aimState = AimState::AIMING; }
 
-		if (App->input->GetKey(SDL_SCANCODE_UP) == KeyState::KEY_REPEAT)	{ aimInput.y = -MAX_INPUT; if (aimState == AimState::IDLE) aimState = AimState::AIMING; }
-		if (App->input->GetKey(SDL_SCANCODE_DOWN) == KeyState::KEY_REPEAT)	{ aimInput.y = MAX_INPUT; if (aimState == AimState::IDLE) aimState = AimState::AIMING; }
-		if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KeyState::KEY_REPEAT)	{ aimInput.x = MAX_INPUT; if (aimState == AimState::IDLE) aimState = AimState::AIMING; }
-		if (App->input->GetKey(SDL_SCANCODE_LEFT) == KeyState::KEY_REPEAT)	{ aimInput.x = -MAX_INPUT; if (aimState == AimState::IDLE) aimState = AimState::AIMING; }
-
-		//Maybe set idle here if no keyboard input?
+		if (abs(aimInput.x) != MAX_INPUT && abs(aimInput.y) != MAX_INPUT)
+			aimState = AimState::IDLE;
 
 	}
-	else
+	else																														//There is input above the threshold
 	{
-		if(aimState == AimState::IDLE)
-			aimState = AimState::AIMING;
+		aimState = (abs(aimInputThreshold.x) <= AIM_THRESHOLD && abs(aimInputThreshold.y) <= AIM_THRESHOLD) ? AimState::IDLE : AimState::AIMING;
 	}
 	
 	SetAimDirection();
 
 	if (aimState != AimState::IDLE && aimState != AimState::AIMING && aimState != AimState::CHANGE && aimState != AimState::RELOAD && aimState != AimState::SHOOT) // If the player is not on this states, ignore action inputs (shoot, reload, etc.)
+	{
+		aimState = AimState::IDLE;
 		return;
+	}
 
 	if (App->input->GetKey(SDL_SCANCODE_F) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(1) == ButtonState::BUTTON_DOWN)
 	{
@@ -1372,8 +1377,6 @@ void Player::GatherAimInputs()
 		aimState = AimState::SHOOT_IN;
 		return;
 	}
-
-	//aimState = AimState::IDLE;
 }
 
 void Player::GatherInteractionInputs()
@@ -1386,7 +1389,6 @@ void Player::GatherInteractionInputs()
 	
 	if (currentInteraction == InteractionType::NONE)
 	{
-
 		/*if (App->input->GetKey(SDL_SCANCODE_E) == KeyState::KEY_DOWN)
 		{
 			SetPlayerInteraction(InteractionType::USE);
