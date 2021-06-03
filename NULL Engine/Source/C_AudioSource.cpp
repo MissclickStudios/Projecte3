@@ -123,6 +123,15 @@ void C_AudioSource::PlayFx(std::string name)
 
 	if (it != App->audio->eventMap.end())
 	{	
+		if (isLoopeable == true)
+		{
+			wwiseObject->SetVolume(App->audio->maxMusicVolume);
+		}
+		else
+		{
+			wwiseObject->SetVolume(App->audio->maxSfxVolume);
+		}
+
 		wwiseObject->PlayEvent(eventId);
 	}
 }

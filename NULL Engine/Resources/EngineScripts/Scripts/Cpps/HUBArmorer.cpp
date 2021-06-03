@@ -18,6 +18,7 @@
 #include "Items.h"
 
 #define MAX_ITEM_LEVEL 3
+#define MAX_ITEM_PRICE 4
 
 HUBArmorer::HUBArmorer()
 {
@@ -99,8 +100,8 @@ void HUBArmorer::Start()
 		bottlePriceText = (C_UI_Text*)bottleTextObject->GetComponent<C_UI_Text>();
 	if (descriptionTextObject != nullptr)
 		descriptionText = (C_UI_Text*)descriptionTextObject->GetComponent<C_UI_Text>();
-	if (creditTextObject != nullptr)
-		creditsText = (C_UI_Text*)creditTextObject->GetComponent<C_UI_Text>();
+	//if (creditTextObject != nullptr)
+	//	creditsText = (C_UI_Text*)creditTextObject->GetComponent<C_UI_Text>();
 	if (beskarTextObject != nullptr)
 		beskarText = (C_UI_Text*)beskarTextObject->GetComponent<C_UI_Text>();
 
@@ -139,11 +140,11 @@ void HUBArmorer::Update()
 				{
 					if (armorButton && armorButton->GetState() == UIButtonState::RELEASED)
 					{
-						if (mando->hubCurrency > gameManager->armorLvl && gameManager->armorLvl < MAX_ITEM_LEVEL) 
+						if (mando->hubCurrency > gameManager->armorLvl && gameManager->armorLvl + 1 < MAX_ITEM_PRICE)
 						{
 							gameManager->armorLvl = armorSlider->IncrementOneSquare();
-							mando->hubCurrency -= gameManager->armorLvl;
-							armorPriceText->SetText(std::to_string(gameManager->armorLvl).c_str());
+							mando->hubCurrency -= gameManager->armorLvl + 1;
+							armorPriceText->SetText(std::to_string(gameManager->armorLvl + 1).c_str());
 							
 							if (mando != nullptr)
 							{
@@ -156,11 +157,11 @@ void HUBArmorer::Update()
 					}
 					if (bootsButton && bootsButton->GetState() == UIButtonState::RELEASED)
 					{
-						if (mando->hubCurrency > gameManager->bootsLvl && gameManager->bootsLvl < MAX_ITEM_LEVEL)
+						if (mando->hubCurrency > gameManager->bootsLvl && gameManager->bootsLvl + 1 < MAX_ITEM_PRICE)
 						{
 							gameManager->bootsLvl = bootsSlider->IncrementOneSquare();
-							mando->hubCurrency -= gameManager->bootsLvl;
-							bootsPriceText->SetText(std::to_string(gameManager->bootsLvl).c_str());
+							mando->hubCurrency -= gameManager->bootsLvl + 1;
+							bootsPriceText->SetText(std::to_string(gameManager->bootsLvl + 1).c_str());
 
 							if (mando != nullptr)
 							{
@@ -173,11 +174,11 @@ void HUBArmorer::Update()
 					}
 					if (ticketButton && ticketButton->GetState() == UIButtonState::RELEASED)
 					{
-						if (mando->hubCurrency > gameManager->ticketLvl && gameManager->ticketLvl < MAX_ITEM_LEVEL)
+						if (mando->hubCurrency > gameManager->ticketLvl && gameManager->ticketLvl + 1 < MAX_ITEM_PRICE)
 						{
 							gameManager->ticketLvl = ticketSlider->IncrementOneSquare();
-							mando->hubCurrency -= gameManager->ticketLvl;
-							ticketPriceText->SetText(std::to_string(gameManager->ticketLvl).c_str());
+							mando->hubCurrency -= gameManager->ticketLvl + 1;
+							ticketPriceText->SetText(std::to_string(gameManager->ticketLvl + 1).c_str());
 
 							if (mando != nullptr)
 							{
@@ -190,11 +191,11 @@ void HUBArmorer::Update()
 					}
 					if (bottleButton && bottleButton->GetState() == UIButtonState::RELEASED)
 					{
-						if (mando->hubCurrency > gameManager->bottleLvl && gameManager->bottleLvl < MAX_ITEM_LEVEL)
+						if (mando->hubCurrency > gameManager->bottleLvl && gameManager->bottleLvl + 1 < MAX_ITEM_PRICE)
 						{
 							gameManager->bottleLvl = bottleSlider->IncrementOneSquare();
-							mando->hubCurrency -= gameManager->bottleLvl;
-							bottlePriceText->SetText(std::to_string(gameManager->bottleLvl).c_str());
+							mando->hubCurrency -= gameManager->bottleLvl + 1;
+							bottlePriceText->SetText(std::to_string(gameManager->bottleLvl + 1).c_str());
 
 							if (mando != nullptr)
 							{
@@ -213,13 +214,13 @@ void HUBArmorer::Update()
 					tmp += std::to_string(mando->hubCurrency).c_str();
 					beskarText->SetText(tmp.c_str());
 				}
-				if (creditsText != nullptr)
-				{
-
-					std::string tmp = "";
-					tmp += std::to_string(mando->currency).c_str();
-					creditsText->SetText(tmp.c_str());
-				}
+				//if (creditsText != nullptr)
+				//{
+				//
+				//	std::string tmp = "";
+				//	tmp += std::to_string(mando->currency).c_str();
+				//	creditsText->SetText(tmp.c_str());
+				//}
 			}
 			break;
 		default:
@@ -247,7 +248,7 @@ HUBArmorer* CreateHUBArmorer() {
 	INSPECTOR_GAMEOBJECT(script->ticketTextObject);
 	INSPECTOR_GAMEOBJECT(script->bottleTextObject);
 	INSPECTOR_GAMEOBJECT(script->descriptionTextObject);
-	INSPECTOR_GAMEOBJECT(script->creditTextObject);
+	//INSPECTOR_GAMEOBJECT(script->creditTextObject);
 	INSPECTOR_GAMEOBJECT(script->beskarTextObject);
 
 	return script;
