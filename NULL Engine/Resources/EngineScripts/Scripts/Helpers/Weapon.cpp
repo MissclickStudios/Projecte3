@@ -48,42 +48,46 @@ Weapon::Weapon() : Object()
 
 Weapon::~Weapon()
 {
+	delete shootAudio;
+	delete reloadAudio;
 }
 
 void Weapon::Start()
 {
 	fireRateTimer.Stop();
 	reloadTimer.Stop();
-
-	for (uint i = 0; i < gameObject->components.size(); ++i)
-	{
-		if (gameObject->components[i]->GetType() == ComponentType::AUDIOSOURCE)
-		{
-			C_AudioSource* source = (C_AudioSource*)gameObject->components[i];
-			std::string name = source->GetEventName();
-
-			if (name == "weapon_laser_01")
-			{
-				shootAudio = source;
-				shootAudio->SetVolume(0.5f);
-			}
-			else if (name == "weapon_laser_02_02")
-			{
-				shootAudio = source;
-				shootAudio->SetVolume(0.25f);
-			}
-			else if (name == "weapon_reload_01")
-				reloadAudio = source;
-			else if (name == "weapon_reload_02")
-				reloadAudio = source;
-		}
-	}
 }
 
 void Weapon::Update()
 {
+	
 	if (paused)
 		return;
+
+	if (shootAudio == nullptr && reloadAudio == nullptr)
+	{
+		shootAudio = new C_AudioSource(gameObject);
+		reloadAudio = new C_AudioSource(gameObject);
+		switch (type)
+		{
+		case WeaponType::BLASTER:
+			shootAudio->SetEvent("blaster_mando_shot");
+			reloadAudio->SetEvent("blaster_mando_reload");
+			break;
+		case WeaponType::SHOTGUN:
+			shootAudio->SetEvent("shotgun_mando_shot");
+			reloadAudio->SetEvent("shotgun_mando_reload");
+			break;
+		case WeaponType::SNIPER:
+			shootAudio->SetEvent("sniper_mando_shot");
+			reloadAudio->SetEvent("sniper_mando_reload");
+			break;
+		case WeaponType::MINIGUN:
+			shootAudio->SetEvent("minigun_mando_shot");
+			reloadAudio->SetEvent("minigun_mando_reload");
+			break;
+		}
+	}
 
 	if (updateProjectiles)
 	{
