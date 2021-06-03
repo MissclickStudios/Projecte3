@@ -280,6 +280,9 @@ void Blurrg::EntityPause()
 	dashTimer.Pause();
 	dashCooldownTimer.Pause();
 	restTimer.Pause();
+
+	if (agent != nullptr)
+		agent->CancelDestination();
 }
 
 void Blurrg::EntityResume()
