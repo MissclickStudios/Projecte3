@@ -18,17 +18,17 @@ public:
 
 	void OnCollisionEnter(GameObject* object) override;
 	GameObject* gameManagerObject = nullptr;
-	GameObject* playerObject = nullptr;
+	std::string playerStr = "Mandalorian";
 	GameObject* popUpCanvasObject = nullptr;
 	GameObject* yesButtonObject = nullptr;
-	GameObject* noButtonObject = nullptr;
+	//GameObject* noButtonObject = nullptr;
 
 private:
 	GameManager* gameManager = nullptr;
 	Player* player = nullptr;
 	C_Canvas* popUpCanvas = nullptr;
 	C_UI_Button* yesButton = nullptr;
-	C_UI_Button* noButton = nullptr;
+	//C_UI_Button* noButton = nullptr;
 
 	bool triggered = false;
 };
