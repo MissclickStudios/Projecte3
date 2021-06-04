@@ -102,7 +102,12 @@ void SarlaacTrap::OnTriggerRepeat(GameObject* object)
 
 		case SarlaacState::DAMAGING:
 
-			entity->TakeDamage(damage);
+			
+
+			if(entity->type == EntityType::PLAYER)
+				entity->TakeDamage(mandoDamage);
+			else
+				entity->TakeDamage(enemyDamage);
 
 			break;
 
@@ -125,4 +130,14 @@ void SarlaacTrap::StartMoving()
 
 	//Animator play clip
 	sarlaacAnimator->PlayClip("Preview",animationName.c_str(), 0u);
+}
+
+SarlaacTrap* CreateSarlaacTrap() {
+	SarlaacTrap* script = new SarlaacTrap();
+	INSPECTOR_INPUT_INT(script->mandoDamage);
+	INSPECTOR_INPUT_INT(script->enemyDamage);
+	INSPECTOR_STRING(script->animationName);
+	INSPECTOR_DRAGABLE_FLOAT(script->activationTime);
+	INSPECTOR_DRAGABLE_FLOAT(script->sleepingTime);
+	return script;
 }
