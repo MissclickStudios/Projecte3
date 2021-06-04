@@ -21,10 +21,10 @@ PlayerItemMenuManager::PlayerItemMenuManager()
 
 PlayerItemMenuManager::~PlayerItemMenuManager()
 {
-	while (itemFrames.size() != 0)
+	while (images.size() != 0)
 	{
-		(*itemFrames.begin())->GetOwner()->toDelete = true;
-		itemFrames.erase(itemFrames.begin());
+		(*images.begin())->GetOwner()->toDelete = true;
+		images.erase(images.begin());
 	}
 }
 
@@ -80,10 +80,10 @@ void PlayerItemMenuManager::Update()
 
 	if (reload)
 	{
-		while (itemFrames.size() != 0)
+		while (images.size() != 0)
 		{
-			(*itemFrames.begin())->GetOwner()->toDelete = true;
-			itemFrames.erase(itemFrames.begin());
+			(*images.begin())->GetOwner()->toDelete = true;
+			images.erase(images.begin());
 		}
 
 		float x = 0.0f;
@@ -120,6 +120,8 @@ void PlayerItemMenuManager::Update()
 						rarityDisplay->SetColor(255, 255, 102, 200);
 						break;
 					}
+
+					images.push_back(rarityDisplay);
 				}
 
 				if (x == 0.0f)
@@ -134,7 +136,7 @@ void PlayerItemMenuManager::Update()
 				R_Texture* texture = App->resourceManager->GetResource<R_Texture>((*items)[i].second->texturePath.c_str());
 				material->SetTexture(texture);
 
-				itemFrames.push_back(itemFrame);
+				images.push_back(itemFrame);
 			}
 		}
 	}

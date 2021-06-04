@@ -1,5 +1,5 @@
 {
-    "ModTime": 1622685590,
+    "ModTime": 1622807334,
     "Models In Scene": [],
     "Game Objects": [
         {
@@ -55,13 +55,17 @@
                         "w": 0.53651267290115356,
                         "h": 0.23793578147888184
                     },
+                    "textureSize": {
+                        "textureWidth": 4026,
+                        "textureHeight": 5077
+                    },
                     "inspectorTextureCoords": {
                         "x": 1027,
                         "y": 154,
                         "w": 1133,
                         "h": 1054
                     },
-                    "childOrder": 3
+                    "childOrder": 9
                 },
                 {
                     "Type": 3,
@@ -82,7 +86,7 @@
         },
         {
             "UID": 371728131,
-            "ParentUID": 1474028452,
+            "ParentUID": 2067667001,
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "MainScene",
@@ -169,6 +173,10 @@
                         "y": 0.035060074180364609,
                         "w": 0.25360158085823059,
                         "h": 0.23675398528575897
+                    },
+                    "textureSize": {
+                        "textureWidth": 4026,
+                        "textureHeight": 5077
                     },
                     "inspectorTextureCoords": {
                         "x": -3,
@@ -293,7 +301,7 @@
                         "X": 0,
                         "Y": 0,
                         "W": 1.0926049947738647,
-                        "H": 0.57210779190063477
+                        "H": 0.5787392258644104
                     }
                 }
             ]
@@ -350,6 +358,10 @@
                         "y": 0.28540477156639099,
                         "w": -0.32364630699157715,
                         "h": 0.43943274021148682
+                    },
+                    "textureSize": {
+                        "textureWidth": 4026,
+                        "textureHeight": 5077
                     },
                     "inspectorTextureCoords": {
                         "x": -1799,
@@ -435,16 +447,10 @@
                         "w": 1627,
                         "h": 91
                     },
-                    "childOrder": 4
+                    "childOrder": 3
                 },
                 {
                     "Type": 3,
-                    "Texture": {
-                        "AssetsPath": "Assets\/Textures\/\/UI\/WinLoseScreen\/WinLoseText.png",
-                        "AssetsName": "WinLoseText.png",
-                        "LibaryPath": "Library\/Textures\/1397330002.netex",
-                        "LibraryFile": "1397330002.netex"
-                    },
                     "Shader": {
                         "AssetsPath": "Assets\/Shaders\/UIShader.shader",
                         "AssetsName": "UIShader.shader",
@@ -506,6 +512,10 @@
                         "y": -0.18455781042575836,
                         "w": -0.13189269602298737,
                         "h": -0.14004333317279816
+                    },
+                    "textureSize": {
+                        "textureWidth": 4026,
+                        "textureHeight": 5077
                     },
                     "inspectorTextureCoords": {
                         "x": -2087,
@@ -575,15 +585,6 @@
                     "Culling": false,
                     "OrthogonalView": false,
                     "HideFrustum": true
-                },
-                {
-                    "Type": 5,
-                    "FarPlane": 300,
-                    "MinFOV": 1,
-                    "MaxFOV": 120,
-                    "Culling": false,
-                    "OrthogonalView": false,
-                    "HideFrustum": false
                 }
             ]
         },
@@ -761,6 +762,266 @@
                     "Center X": 0,
                     "Center Y": -75,
                     "Center Z": 0
+                }
+            ]
+        },
+        {
+            "UID": 672677957,
+            "ParentUID": 546855136,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "AttemptText",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 22,
+                    "Text": "Some Text",
+                    "Color": [
+                        1,
+                        0.5,
+                        0,
+                        1
+                    ],
+                    "X": -0.31999999284744263,
+                    "Y": 0.25,
+                    "W": 0.020999999716877937,
+                    "H": 0.0010000000474974513,
+                    "childOrder": 4
+                }
+            ]
+        },
+        {
+            "UID": 1529248260,
+            "ParentUID": 546855136,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "KillsText",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 22,
+                    "Text": "Some Text",
+                    "Color": [
+                        1,
+                        0.5,
+                        0,
+                        1
+                    ],
+                    "X": -0.44499999284744263,
+                    "Y": 0.085000000894069672,
+                    "W": 0.026000000536441803,
+                    "H": 0.0010000000474974513,
+                    "childOrder": 5
+                }
+            ]
+        },
+        {
+            "UID": 771407632,
+            "ParentUID": 546855136,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "PrecisionText",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 22,
+                    "Text": "Some Text",
+                    "Color": [
+                        1,
+                        0.5,
+                        0,
+                        1
+                    ],
+                    "X": -0.33500000834465027,
+                    "Y": -0.075000002980232239,
+                    "W": 0.030999999493360519,
+                    "H": 0.0010000000474974513,
+                    "childOrder": 6
+                }
+            ]
+        },
+        {
+            "UID": 1611315254,
+            "ParentUID": 546855136,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "TimeText",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 22,
+                    "Text": "Some Text",
+                    "Color": [
+                        1,
+                        0.5,
+                        0,
+                        1
+                    ],
+                    "X": -0.42500001192092896,
+                    "Y": -0.23499999940395355,
+                    "W": 0.046000000089406967,
+                    "H": 0.0010000000474974513,
+                    "childOrder": 7
+                }
+            ]
+        },
+        {
+            "UID": 512517584,
+            "ParentUID": 546855136,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "WeaponText",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": true,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 22,
+                    "Text": "Some Text",
+                    "Color": [
+                        1,
+                        0.5,
+                        0,
+                        1
+                    ],
+                    "X": -0.34999999403953552,
+                    "Y": -0.39500001072883606,
+                    "W": 0.050999999046325684,
+                    "H": 0.0010000000474974513,
+                    "childOrder": 8
                 }
             ]
         }

@@ -127,7 +127,7 @@ void HUBArmorer::Update()
 			}
 			break;
 		case HUBArmorerState::ACTIVE:
-			if (App->input->GetKey(SDL_SCANCODE_B) == KeyState::KEY_UP || App->input->GetGameControllerButton(1) == ButtonState::BUTTON_UP) // B/Square button on controller
+			if (mando->transform->GetDistanceTo(gameObject->transform->GetLocalPosition()) >= talkDistance || App->input->GetKey(SDL_SCANCODE_B) == KeyState::KEY_UP || App->input->GetGameControllerButton(1) == ButtonState::BUTTON_UP) // B/Square button on controller
 			{
 				App->uiSystem->RemoveActiveCanvas(hubShopCanvas);
 				mando->SetPlayerInteraction(InteractionType::NONE);

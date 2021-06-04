@@ -208,8 +208,9 @@ void GameManager::Start()
 
 void GameManager::Update()
 {
-	if(!instantiatedSandstorm)
-		if (strcmp(App->scene->GetCurrentScene(), levelNames.hub.c_str()) != 0 && strcmp(App->scene->GetCurrentScene(), levelNames.loseScene.c_str()) != 0 && strcmp(App->scene->GetCurrentScene(), levelNames.winScene.c_str()) != 0)
+	if(!instantiatedSandstorm) //Instantiate sandstorm
+		if (strcmp(App->scene->GetCurrentScene(), levelNames.hub.c_str()) != 0 && strcmp(App->scene->GetCurrentScene(), levelNames.loseScene.c_str()) != 0 
+			&& strcmp(App->scene->GetCurrentScene(), levelNames.winScene.c_str()) != 0 && strcmp(App->scene->GetCurrentScene(), "MainMenu") != 0)
 		{
 			App->scene->InstantiatePrefab(mistPlane1.uid, gameObject, mistPlane1Position, Quat::identity);
 			App->scene->InstantiatePrefab(mistPlane2.uid, gameObject, mistPlane2Position, Quat::identity);
