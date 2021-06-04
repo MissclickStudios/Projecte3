@@ -13,11 +13,13 @@
 #include "M_ResourceManager.h"
 #include "M_Scene.h"
 #include "M_Input.h"
+#include "M_Audio.h"
 
 #include "GameObject.h"
 
 #include "C_Transform.h"
 #include "C_UI_Text.h"
+#include "C_AudioSource.h"
 
 #include "GameManager.h"
 #include "DialogManager.h"
@@ -99,14 +101,14 @@ void GameManager::Awake()
 				groguGameObject->transform->SetLocalPosition(spawnPoint);
 			}
 
-			
-
 			backtrackTimer.Start();
 			if (backtrack.size() != 0)
 				backtrack.clear();
 
 			LoadItemPool(chestItemPool, "ChestItemPool.json");
 			LoadItemPool(hubItemPool, "HubItemPool.json");
+
+			HandleBackgroundMusic();
 		}
 	}
 
@@ -930,6 +932,34 @@ void GameManager::GateUpdate()
 				}
 			}
 		}
+}
+
+void GameManager::HandleBackgroundMusic()
+{
+	if (App->scene->GetCurrentScene() == levelNames.hub)
+	{
+		App->audio->aSourceBackgroundMusic->StopFx(App->audio->aSourceBackgroundMusic->GetEventId());
+		App->audio->aSourceBackgroundMusic->SetEvent("canteen_music", true);
+	}
+	else if ((App->scene->GetCurrentScene() == levelNames.l1Boss) || (App->scene->GetCurrentScene() == levelNames.ruinsBoss))
+	{
+		App->audio->aSourceBackgroundMusic->StopFx(App->audio->aSourceBackgroundMusic->GetEventId());
+		App->audio->aSourceBackgroundMusic->SetEvent("boss_music", true);
+	}
+	else if (App->scene->GetCurrentScene() == mainMenuScene)
+	{
+		App->audio->aSourceBackgroundMusic->StopFx(App->audio->aSourceBackgroundMusic->GetEventId());
+		App->audio->aSourceBackgroundMusic->SetEvent("menu_music", true);
+	}
+	else
+	{
+		if (App->audio->aSourceBackgroundMusic->GetEventName() != "rooms_music")
+		{
+			App->audio->aSourceBackgroundMusic->StopFx(App->audio->aSourceBackgroundMusic->GetEventId());
+			App->audio->aSourceBackgroundMusic->SetEvent("rooms_music", true);
+		}
+
+	}
 }
 
 void GameManager::LoadItemPool(std::vector<ItemData*>& pool, std::string path)
