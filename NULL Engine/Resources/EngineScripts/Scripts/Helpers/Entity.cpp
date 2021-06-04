@@ -183,6 +183,8 @@ void Entity::Update()
 		break;
 	case EntityState::STUNED:
 		currentAnimation = &stunAnimation;
+		if (rigidBody != nullptr)
+			rigidBody->StopInertia();
 		if (agent != nullptr)
 			agent->CancelDestination();
 		break;
@@ -193,6 +195,8 @@ void Entity::Update()
 		break;
 	case EntityState::ELECTROCUTED:
 		currentAnimation = &electrocutedAnimation;
+		if (rigidBody != nullptr)
+			rigidBody->StopInertia();
 		if (agent != nullptr)
 			agent->CancelDestination();
 		break;
@@ -346,13 +350,13 @@ void Entity::Stun(Effect* effect)
 	{
 		effect->start = false;
 	
-		//float num = Random::LCG::GetBoundedRandomFloat(0, 100);
-		//if (num > effect->Chance())
-		//	effect->End();
+		float num = Random::LCG::GetBoundedRandomFloat(0, 100);
+		if (num > effect->Chance())
+			effect->End();
 	}
 	else
 	{
-		entityState = EntityState::STUNED;
+		entityState = EntityState::ELECTROCUTED;
 	}
 }
 
@@ -364,7 +368,6 @@ void Entity::KnockBack(Effect* effect)
 
 		if (rigidBody != nullptr)
 		{
-			rigidBody->StopInertia();
 			rigidBody->AddForce(effect->Direction());
 		}
 	}
