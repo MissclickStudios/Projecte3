@@ -368,7 +368,6 @@ void Entity::KnockBack(Effect* effect)
 
 		if (rigidBody != nullptr)
 		{
-			rigidBody->StopInertia();
 			rigidBody->AddForce(effect->Direction());
 		}
 	}
