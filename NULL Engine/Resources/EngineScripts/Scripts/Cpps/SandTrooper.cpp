@@ -143,6 +143,8 @@ void Trooper::CleanUp()
 
 void Trooper::EntityPause()
 {
+	if (agent != nullptr)
+		agent->CancelDestination();
 }
 
 void Trooper::EntityResume()

@@ -244,6 +244,28 @@ void IG12::TakeDamage(float damage)
 	}
 }
 
+void IG12::EntityPause()
+{
+	firstStageTimer.Pause();
+	secondStageTimer.Pause();
+	spiralAttackTimer.Pause();
+	lineAttackTimer.Pause();
+	bombingAttackTimer.Pause();
+	bombTimer.Pause();
+	bombingAndSpiralAttackTimer.Pause();
+}
+
+void IG12::EntityResume()
+{
+	firstStageTimer.Resume();
+	secondStageTimer.Resume();
+	spiralAttackTimer.Resume();
+	lineAttackTimer.Resume();
+	bombingAttackTimer.Resume();
+	bombTimer.Resume();
+	bombingAndSpiralAttackTimer.Resume();
+}
+
 void IG12::DistanceToPlayer()
 {
 	if (!player)

@@ -62,7 +62,6 @@ bool C_AudioSource::SaveState(ParsonNode& root) const
 	eventInfoArray.SetString(eventName.c_str());
 	eventInfoArray.SetNumber(eventId);
 
-
 	return true;
 }
 

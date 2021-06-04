@@ -68,7 +68,11 @@ void Weapon::Update()
 	{
 		shootAudio = new C_AudioSource(gameObject);
 		reloadAudio = new C_AudioSource(gameObject);
-		switch (type)
+
+		shootAudio->SetEvent(shootAudioString);
+		reloadAudio->SetEvent(reloadAudioString);
+
+		/*switch (type)
 		{
 		case WeaponType::BLASTER:
 			shootAudio->SetEvent("blaster_mando_shot");
@@ -86,7 +90,8 @@ void Weapon::Update()
 			shootAudio->SetEvent("minigun_mando_shot");
 			reloadAudio->SetEvent("minigun_mando_reload");
 			break;
-		}
+		}*/
+			
 	}
 
 	if (updateProjectiles)
@@ -324,7 +329,7 @@ void Weapon::SpreadModify(Perk* perk)
 
 void Weapon::FreezeBullets(Perk* perk)
 {
-	onHitEffects.emplace_back(Effect(EffectType::FROZEN, perk->Duration(), perk->Amount()));
+	onHitEffects.emplace_back(Effect(EffectType::FROZEN, perk->Duration(), false, perk->Amount()));
 }
 
 void Weapon::StunBullets(Perk* perk)

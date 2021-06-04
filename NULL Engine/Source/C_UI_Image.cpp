@@ -281,28 +281,6 @@ void C_UI_Image::ResetColor()
 	color = Color(1.0f, 1.0f, 1.0f, 1.0f);
 }
 
-Frame C_UI_Image::GetTexturePosition(int pixelPosX, int pixelPosY, int pixelWidth, int pixelHeight)
-{
-
-	C_Material* cMaterial = GetOwner()->GetComponent<C_Material>();
-	if (!cMaterial)
-		return { 0, 0, 1, 1 };
-
-	uint32 id = cMaterial->GetTextureID();
-	unsigned int spritesheetPixelWidth, spritesheetPixelHeight = 0; cMaterial->GetTextureSize(spritesheetPixelWidth, spritesheetPixelHeight);
-	if (!spritesheetPixelWidth && !spritesheetPixelHeight)
-		return { 0, 0, 1, 1 };
-
-	Frame frame;
-	frame.proportionBeginX = (float)pixelPosX / spritesheetPixelWidth;
-	frame.proportionFinalX = ((float)pixelPosX + pixelWidth) / spritesheetPixelWidth;
-
-	frame.proportionBeginY = (float)pixelPosY / spritesheetPixelHeight;
-	frame.proportionFinalY = ((float)pixelPosY + pixelHeight) / spritesheetPixelHeight;
-
-	return frame;
-}
-
 bool C_UI_Image::SaveState(ParsonNode& root) const
 {
 	root.SetNumber("Type", (uint)GetType());
@@ -328,6 +306,18 @@ bool C_UI_Image::SaveState(ParsonNode& root) const
 	textureNode.SetNumber("x", textCoord.proportionBeginX); textureNode.SetNumber("y", textCoord.proportionBeginY);
 	textureNode.SetNumber("w", textCoord.proportionFinalX); textureNode.SetNumber("h", textCoord.proportionFinalY);
 
+	C_Material* cMaterial = GetOwner()->GetComponent<C_Material>();
+	if (cMaterial)
+	{
+		uint32 id = cMaterial->GetTextureID();
+		unsigned int spritesheetPixelWidth, spritesheetPixelHeight = 0; cMaterial->GetTextureSize(spritesheetPixelWidth, spritesheetPixelHeight);
+		if (spritesheetPixelWidth && spritesheetPixelHeight)
+		{
+			ParsonNode size = root.SetNode("textureSize");
+			size.SetInteger("textureWidth", spritesheetPixelWidth);
+			size.SetInteger("textureHeight", spritesheetPixelHeight);
+		}
+	}
 	ParsonNode InsptextCoord;
 	InsptextCoord = root.SetNode("inspectorTextureCoords");
 	InsptextCoord.SetInteger("x", pixelCoord[0]); InsptextCoord.SetInteger("y", pixelCoord[1]);
@@ -356,6 +346,7 @@ bool C_UI_Image::LoadState(ParsonNode& root)
 	if (pixelCoords.ArrayIsValid())
 		for (int i = 0; i < pixelCoords.size; ++i)
 			pixelCoord[i] = (int)pixelCoords.GetNumber(i);*/
+
 	ParsonNode InsptextCoord;
 	InsptextCoord = root.GetNode("inspectorTextureCoords");
 	if (InsptextCoord.NodeIsValid()) 
@@ -372,12 +363,22 @@ bool C_UI_Image::LoadState(ParsonNode& root)
 		color.b = colorNode.GetNumber("b"); color.a = colorNode.GetNumber("a");
 	}
 	
-	ParsonNode node;
-	node = root.GetNode("textureCoords");
-	if (node.NodeIsValid())
+	ParsonNode size = root.GetNode("textureSize");
+	if (size.NodeIsValid())
 	{
-		textCoord.proportionBeginX = node.GetNumber("x"); textCoord.proportionBeginY = node.GetNumber("y");
-		textCoord.proportionFinalX = node.GetNumber("w"); textCoord.proportionFinalY = node.GetNumber("h");
+		int spritesheetPixelWidth = size.GetInteger("textureWidth");
+		int spritesheetPixelHeight = size.GetInteger("textureHeight");
+		textCoord = GetTexturePosition(pixelCoord[0], pixelCoord[1], pixelCoord[2], pixelCoord[3], spritesheetPixelWidth, spritesheetPixelHeight);
+	}
+	else 
+	{
+		ParsonNode node;
+		node = root.GetNode("textureCoords");
+		if (node.NodeIsValid())
+		{
+			textCoord.proportionBeginX = node.GetNumber("x"); textCoord.proportionBeginY = node.GetNumber("y");
+			textCoord.proportionFinalX = node.GetNumber("w"); textCoord.proportionFinalY = node.GetNumber("h");
+		}
 	}
 
 	childOrder = root.GetNumber("childOrder");

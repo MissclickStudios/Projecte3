@@ -21,10 +21,10 @@ PlayerItemMenuManager::PlayerItemMenuManager()
 
 PlayerItemMenuManager::~PlayerItemMenuManager()
 {
-	while (itemFrames.size() != 0)
+	while (images.size() != 0)
 	{
-		(*itemFrames.begin())->GetOwner()->toDelete = true;
-		itemFrames.erase(itemFrames.begin());
+		(*images.begin())->GetOwner()->toDelete = true;
+		images.erase(images.begin());
 	}
 }
 
@@ -80,10 +80,10 @@ void PlayerItemMenuManager::Update()
 
 	if (reload)
 	{
-		while (itemFrames.size() != 0)
+		while (images.size() != 0)
 		{
-			(*itemFrames.begin())->GetOwner()->toDelete = true;
-			itemFrames.erase(itemFrames.begin());
+			(*images.begin())->GetOwner()->toDelete = true;
+			images.erase(images.begin());
 		}
 
 		float x = 0.0f;
@@ -96,6 +96,34 @@ void PlayerItemMenuManager::Update()
 				C_UI_Image* itemFrame = itemFrameGameObject->GetComponent<C_UI_Image>();
 				itemFrame->SetX(menuX + x);
 				itemFrame->SetY(menuY + y);
+				itemFrame->SetColor(255, 255, 255, 200);
+
+				GameObject* rarityDisplayGameObject = App->resourceManager->LoadPrefab(rarityDisplayPrefab.uid, canvas->GetOwner());
+				if (rarityDisplayGameObject != nullptr)
+				{
+					C_UI_Image* rarityDisplay = rarityDisplayGameObject->GetComponent<C_UI_Image>();
+					rarityDisplay->SetX(menuX + x);
+					rarityDisplay->SetY(menuY + y);
+
+					switch ((*items)[i].second->rarity)
+					{
+					case ItemRarity::COMMON:
+						rarityDisplay->SetColor(102, 255, 102, 200);
+						break;
+					case ItemRarity::RARE:
+						rarityDisplay->SetColor(102, 255, 255, 200);
+						break;
+					case ItemRarity::EPIC:
+						rarityDisplay->SetColor(255, 102, 255, 200);
+						break;
+					case ItemRarity::UNIQUE:
+						rarityDisplay->SetColor(255, 255, 102, 200);
+						break;
+					}
+
+					images.push_back(rarityDisplay);
+				}
+
 				if (x == 0.0f)
 					x += separation;
 				else
@@ -103,27 +131,12 @@ void PlayerItemMenuManager::Update()
 					x = 0.0f;
 					y -= spacing;
 				}
-				switch ((*items)[i].second->rarity)
-				{
-				case ItemRarity::COMMON:
-					itemFrame->SetColor(102, 255, 102, 200);
-					break;
-				case ItemRarity::RARE:
-					itemFrame->SetColor(102, 255, 255, 200);
-					break;
-				case ItemRarity::EPIC:
-					itemFrame->SetColor(255, 102, 255, 200);
-					break;
-				case ItemRarity::UNIQUE:
-					itemFrame->SetColor(255, 255, 102, 200);
-					break;
-				}
 
 				C_Material* material = itemFrameGameObject->GetComponent<C_Material>();
 				R_Texture* texture = App->resourceManager->GetResource<R_Texture>((*items)[i].second->texturePath.c_str());
 				material->SetTexture(texture);
 
-				itemFrames.push_back(itemFrame);
+				images.push_back(itemFrame);
 			}
 		}
 	}
@@ -136,6 +149,7 @@ SCRIPTS_FUNCTION PlayerItemMenuManager* CreatePlayerItemMenuManager()
 	PlayerItemMenuManager* script = new PlayerItemMenuManager();
 
 	INSPECTOR_PREFAB(script->itemFramePrefab);
+	INSPECTOR_PREFAB(script->rarityDisplayPrefab);
 	INSPECTOR_STRING(script->playerName);
 
 	INSPECTOR_DRAGABLE_FLOAT(script->menuX);
@@ -143,5 +157,5 @@ SCRIPTS_FUNCTION PlayerItemMenuManager* CreatePlayerItemMenuManager()
 	INSPECTOR_DRAGABLE_FLOAT(script->separation);
 	INSPECTOR_DRAGABLE_FLOAT(script->spacing);
 
-	return script;
+	return script; 
 }

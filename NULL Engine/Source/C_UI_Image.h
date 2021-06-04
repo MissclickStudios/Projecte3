@@ -31,8 +31,6 @@ public:
 	void ResetColor();
 
 private:
-	Frame GetTexturePosition(int pixelPosX, int pixelPosY, int pixelWidth, int pixelHeight);
-private:
 	uint VAO;
 	uint VBO;
 

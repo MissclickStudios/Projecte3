@@ -49,6 +49,9 @@ public:
 	void OnCollisionEnter(GameObject* object) override;
 	void TakeDamage(float damage)override;
 
+	void EntityPause() override;
+	void EntityResume() override;
+
 	// Movement
 	std::string playerName = "Mando testbuild";
 

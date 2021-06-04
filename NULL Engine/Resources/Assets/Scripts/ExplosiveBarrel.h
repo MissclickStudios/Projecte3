@@ -20,6 +20,8 @@ public:
 
 	void OnTriggerRepeat(GameObject* object) override;
 
+	void OnTriggerExit(GameObject* object) override;
+
 	std::string gameManagerName;
 	std::string barrelObjectName;
 

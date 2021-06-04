@@ -26,19 +26,20 @@ public:
 	void Update() override;
 
 	Prefab itemFramePrefab;
+	Prefab rarityDisplayPrefab;
 	std::string playerName = "Mandalorian";
 	std::string canvasName = "PlayerItemMenu";
 
-	float menuX = 0.1f;
-	float menuY = 0.1f;
-	float separation = 0.05f;
-	float spacing = 0.05f;
+	float menuX = 0.75f;
+	float menuY = 0.4f;
+	float separation = 0.1f;
+	float spacing = 0.2f;
 
 	C_Canvas* canvas = nullptr;
 
 private:
 
-	std::vector<C_UI_Image*> itemFrames;
+	std::vector<C_UI_Image*> images;
 	std::vector<std::pair<bool, ItemData*>> lastItems;
 
 	C_UI_Text* nameText = nullptr;

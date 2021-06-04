@@ -1,8 +1,13 @@
 #ifndef __M_INPUT_H__
 #define __M_INPUT_H__
 
-#include "Module.h"
 #include <vector>
+
+#include "SDL/include/SDL_events.h"
+
+#include "Module.h"
+
+#define NUM_MOUSE_BUTTONS 5
 
 #define NUM_CONTROLLER_BUTTONS 15
 #define NUM_CONTROLLER_AXIS 4
@@ -50,7 +55,6 @@ enum class AxisState
 	UNKNOWN_AXIS
 };
 
-
 struct GameController
 {
 	_SDL_GameController*	id;
@@ -63,9 +67,12 @@ struct GameController
 
 	float					max_axis_input_threshold;
 	float					min_axis_input_threshold;
-};
 
-#define MAX_MOUSE_BUTTONS 5
+	int					max_positive_threshold;
+	int					max_negative_threshold;
+	int					min_positive_threshold;
+	int					min_negative_threshold;
+};
 
 class MISSCLICK_API M_Input : public Module
 {
@@ -83,7 +90,7 @@ public:
 	bool			LoadConfiguration(ParsonNode& root) override;
 	bool			SaveConfiguration(ParsonNode& root) const override;
 
-public:
+public:																										// --- MODULE INPUT API
 	KeyState		GetKey(int id) const;
 	bool			GetKey(int id, KeyState state) const;
 	KeyState		GetMouseButton(int id) const;
@@ -108,14 +115,31 @@ public:
 
 	bool			WindowSizeWasManipulated(Uint8 windowEvent) const;										// Uint8 is an SDL typedef for unsigned char.
 
+	bool			KeyboardReceivedInputs();
+	bool			MouseReceivedInputs();
+	bool			GameControllerReceivedInputs();
+
 	void			AddModuleToProcessInput(Module* module);												//Add a module that needs SDL_Events inputs info
 
-private:
+private:																									// --- GATHER INPUT METHODS
+	void			GatherKeyboardInputs();
+	void			GatherMouseInputs();
+	void			GatherGameControllerInputs();
+	
+	UpdateStatus	GatherPollEvents();
 
+	bool	QuitEvent();
+	bool	WindowEvent(SDL_Event* event);
+	void	MouseMotionEvent(SDL_Event* event);
+	void	MouseWheelEvent(SDL_Event* event);
+	void	ControllerDeviceAddedEvent();
+	void	DropFileEvent(SDL_Event* event);
+
+private:
 	GameController  gameController; 
 
 	KeyState*		keyboard;
-	KeyState		mouseButtons[MAX_MOUSE_BUTTONS];
+	KeyState		mouseButtons[NUM_MOUSE_BUTTONS];
 	uint			maxNumScancodes;
 
 	int				mouseX;
@@ -128,6 +152,10 @@ private:
 
 	int				prevMousePosX;
 	int				prevMousePosY;
+
+	bool			keyboardReceivedInput;
+	bool			mouseReceivedInput;
+	bool			gameControllerReceivedInput;
 
 	std::vector<Module*> modulesProcessInput;
 };
