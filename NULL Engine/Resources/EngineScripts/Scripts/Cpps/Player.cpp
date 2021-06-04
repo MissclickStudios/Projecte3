@@ -86,9 +86,14 @@ Player* CreatePlayer()
 	INSPECTOR_STRING(script->rightHandName);
 	INSPECTOR_STRING(script->leftHandName);
 
-	INSPECTOR_GAMEOBJECT(script->rightHand);
-	INSPECTOR_GAMEOBJECT(script->leftHand);
+	// Aim
+	INSPECTOR_STRING(script->idleAimPlaneName);
+	INSPECTOR_STRING(script->aimingAimPlaneName);
 
+	// Animations
+	INSPECTOR_STRING(script->hipName);
+	INSPECTOR_STRING(script->torsoName);
+	INSPECTOR_STRING(script->legsName);
 
 	// Particles & SFX
 	INSPECTOR_VECTOR_STRING(script->particleNames);
@@ -128,12 +133,22 @@ Player::~Player()
 
 void Player::SetUp()
 {
-	if (rightHand == nullptr)
-		LOG("RIOT");
+	rightHand		= gameObject->FindChild(rightHandName.c_str());
+	leftHand		= gameObject->FindChild(leftHandName.c_str());
+	idleAimPlane	= gameObject->FindChild(idleAimPlaneName.c_str());
+	aimingAimPlane	= gameObject->FindChild(aimingAimPlaneName.c_str());
+	hip				= gameObject->FindChild(hipName.c_str());
+	torso			= gameObject->FindChild(torsoName.c_str());
+	legs			= gameObject->FindChild(legsName.c_str());
 
-	if (leftHand == nullptr)
-		LOG("RIOT II");
-	
+	if (rightHand == nullptr)		{ LOG("MISSING RIGHT HAND"); }
+	if (leftHand == nullptr)		{ LOG("MISSING LEFT HAND"); }
+	if (idleAimPlane == nullptr)	{ LOG("MISSING IDLE AIM PLANE"); }
+	if (aimingAimPlane == nullptr)	{ LOG("MISSING AIMING AIM PLANE"); }
+	if (hip == nullptr)				{ LOG("MISSING HIP"); }
+	if (torso == nullptr)			{ LOG("MISSING TORSO"); }
+	if (legs == nullptr)			{ LOG("MISSING LEGS"); }
+
 	dashTimer.Stop();
 	dashCooldownTimer.Stop();
 	invincibilityTimer.Stop();
@@ -158,9 +173,9 @@ void Player::SetUp()
 		legs	= legsTrack->GetRootBone();
 		hip		= animator->GetRootBone();*/
 
-		torso	= App->scene->GetGameObjectByName("Torso");					// Hence, a more hamfisted approach is needed to be able to Set Up the Player properly.
-		legs	= App->scene->GetGameObjectByName("Legs");
-		hip		= App->scene->GetGameObjectByName("mixamorig:Hips");
+		//torso	= App->scene->GetGameObjectByName("Torso");					// Hence, a more hamfisted approach is needed to be able to Set Up the Player properly.
+		//legs	= App->scene->GetGameObjectByName("Legs");
+		//hip		= App->scene->GetGameObjectByName("mixamorig:Hips");
 
 		if (torso == nullptr)
 			LOG("[ERROR] Player Script: Could not retrieve { TORSO } Root Bone! Error: C_AnimatorTrack's GetRootBone() failed.");
@@ -205,8 +220,8 @@ void Player::SetUp()
 	}
 
 	// UI ELEMENTS
-	idleAimPlane	= App->scene->GetGameObjectByName("IdlePlane");
-	aimingAimPlane	= App->scene->GetGameObjectByName("AimingPlane");
+	/*idleAimPlane	= App->scene->GetGameObjectByName("IdlePlane");
+	aimingAimPlane	= App->scene->GetGameObjectByName("AimingPlane");*/
 
 	(idleAimPlane != nullptr)	? idleAimPlane->SetIsActive(true)		: LOG("COULD NOT RETRIEVE IDLE PLANE");
 	(aimingAimPlane != nullptr) ? aimingAimPlane->SetIsActive(false)	: LOG("COULD NOT RETRIEVE AIMING PLANE");
@@ -1306,7 +1321,6 @@ void Player::GatherMoveInputs()
 		{
 			if (!dashTimer.IsActive())
 				moveState = PlayerState::DASH_IN;
-				//moveState = PlayerState::DASH;
 
 			return;
 		}
@@ -1328,13 +1342,15 @@ void Player::GatherMoveInputs()
 	{	
 		if (abs(moveInput.x) > 4000.0f || abs(moveInput.y) > 4000.0f)
 			moveState = (abs(moveInput.x) > WALK_THRESHOLD || abs(moveInput.y) > WALK_THRESHOLD) ? PlayerState::RUN : PlayerState::WALK;
+		else
+			moveState = PlayerState::IDLE;
 	}
 	else
 	{
 		moveState = PlayerState::IDLE;
 	}
 
-	LOG("[X: %.3f]::[Y: %.3f]::[State: %u]", moveInput.x, moveInput.y, (uint)moveState);
+	//LOG("[X: %.3f]::[Y: %.3f]::[State: %u]", moveInput.x, moveInput.y, (uint)moveState);
 
 	SetPlayerDirection();
 }
@@ -1390,7 +1406,6 @@ void Player::GatherAimInputs()
 
 	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_REPEAT || App->input->GetGameControllerTrigger(RIGHT_TRIGGER) == ButtonState::BUTTON_REPEAT)
 	{
-		LOG("SHOOTIN'");
 		aimState = AimState::SHOOT_IN;
 		return;
 	}
@@ -1429,7 +1444,7 @@ void Player::GatherInteractionInputs()
 void Player::SetPlayerDirection()
 {
 	if (moveInput.IsZero())
-	{
+	{	
 		moveDirection = MoveDirection::NONE;
 		return;
 	}
@@ -1470,8 +1485,7 @@ void Player::SetAimDirection()
 
 void Player::Movement()
 {
-	moveVector = moveInput;
-
+	moveVector	= moveInput;																		// This method will only be called if moveState == PlayerState::WALK || PlayerState::RUN.
 	float speed = Speed();
 
 	if (moveState == PlayerState::WALK)
@@ -1489,11 +1503,8 @@ void Player::Aim()
 	float2 oldAim = aimVector;
 
 	if (aimState == AimState::IDLE || moveState == PlayerState::DASH) // AimState::IDLE means not aiming
-	{
-		if (!moveVector.IsZero())
-			aimVector = moveVector;
-		else
-			aimVector = oldAim;
+	{	
+		aimVector = (!moveVector.IsZero()) ? moveVector : oldAim;
 	}
 	else
 	{
