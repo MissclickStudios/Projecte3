@@ -162,6 +162,8 @@ void PauseMenuManager::Update()
 		{
 			Player* playerScript = (Player*)mando->GetScript("Player");
 			playerScript->health = 0;
+			GameManager* gameManagerScript = (GameManager*)gameManager->GetScript("GameManager");
+			gameManagerScript->Resume();
 
 			App->uiSystem->RemoveActiveCanvas(pauseMenuCanvas);
 		}
