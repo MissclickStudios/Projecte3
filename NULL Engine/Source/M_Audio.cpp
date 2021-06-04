@@ -73,9 +73,12 @@ bool M_Audio::Start()
 {
 	LoadEventsFromJson();
 
+	SetRtcp("maxMusicVolume", (int)maxMusicVolume);
+	SetRtcp("maxSfxVolume", (int)maxSfxVolume);
+
 	aSourceBackgroundMusic = new C_AudioSource(App->scene->GetMasterRoot());
 
-	aSourceBackgroundMusic->SetEvent("background", true);
+	aSourceBackgroundMusic->SetEvent("rooms_music", true);
 
 	aSourceBackgroundMusic->PlayFx(aSourceBackgroundMusic->GetEventId());
 	
@@ -349,6 +352,13 @@ void M_Audio::LoadEventsFromJson()
 		}
 		
 	}
+}
+
+void M_Audio::SetRtcp(const char* rtpc, int value)
+{
+	AKRESULT result = AK::SoundEngine::SetRTPCValue(rtpc, value);
+	if (result == AK_Success)
+		LOG("Volume: %d", value);
 }
 
 // Wwise Object

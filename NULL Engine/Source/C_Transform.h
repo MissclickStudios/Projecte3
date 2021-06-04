@@ -37,7 +37,7 @@ public:																				// --- C_TRANSFORM METHODS ---
 	void		SetChildsAsDirty		();											// Will run along the transformations chain and set all children of this component's owner as dirty.
 	void		RefreshTransformsChain	();											// Will update the worldTransform of this component as well as those of it's owner's children (if needed).
 
-	float GetDistanceTo(float3 _position);
+	float		GetDistanceTo			(float3 _position);
 
 public:																				// --- GET/SET LOCAL AND WORLD POSITION, ROTATION AND SCALE
 	float3		GetLocalPosition		() const;									// Returns the position vector of the local transform.
@@ -48,7 +48,7 @@ public:																				// --- GET/SET LOCAL AND WORLD POSITION, ROTATION AND
 	float3		GetWorldPosition		();											// Returns the position vector of the world transform
 	Quat		GetWorldRotation		();											// Returns the rotation quaternion of the world transform. In Radiants.
 	float3		GetWorldEulerRotation	();											// Returns the rotation quaternion of the world transform in Euler Angles. In Radians.
-	float3		GetWorldScale			();											// Returns the scale vector of the world transform
+	float3		GetWorldScale			();											// Returns the scale vector of the world transfor
 
 	void		SetLocalPosition		(const float3& newPosition);				// Sets localPosition to the given vector.			Ex: localPosition	= new_position;
 	void		SetLocalRotation		(const Quat& newRotation);					// Sets localRotation to the given quaternion.		Ex: localRotation	= new_rotation;
