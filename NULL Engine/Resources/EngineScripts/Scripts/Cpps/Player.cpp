@@ -1298,7 +1298,7 @@ void Player::GatherMoveInputs()
 	moveInput.x = (float)App->input->GetGameControllerAxisValue(0);
 	moveInput.y = (float)App->input->GetGameControllerAxisValue(1);
 
-	LOG("[Keyboard: %s]::[Controller: %s]", (usingKeyboard) ? "True" : "False", (usingGameController) ? "True" : "False");
+	//LOG("[Keyboard: %s]::[Controller: %s]", (usingKeyboard) ? "True" : "False", (usingGameController) ? "True" : "False");
 
 	if (!dashCooldownTimer.IsActive())
 	{
@@ -1326,14 +1326,15 @@ void Player::GatherMoveInputs()
 	}
 	else if (usingGameController)
 	{	
-		bool overWalkThreshold = (moveInput.x > WALK_THRESHOLD) || (-moveInput.x > WALK_THRESHOLD) || (moveInput.y > WALK_THRESHOLD) || (-moveInput.y > WALK_THRESHOLD);
-		
-		moveState = (overWalkThreshold) ? PlayerState::RUN : PlayerState::WALK;
+		if (abs(moveInput.x) > 4000.0f || abs(moveInput.y) > 4000.0f)
+			moveState = (abs(moveInput.x) > WALK_THRESHOLD || abs(moveInput.y) > WALK_THRESHOLD) ? PlayerState::RUN : PlayerState::WALK;
 	}
 	else
 	{
 		moveState = PlayerState::IDLE;
 	}
+
+	LOG("[X: %.3f]::[Y: %.3f]::[State: %u]", moveInput.x, moveInput.y, (uint)moveState);
 
 	SetPlayerDirection();
 }

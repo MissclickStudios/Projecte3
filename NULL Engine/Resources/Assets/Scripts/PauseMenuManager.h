@@ -6,6 +6,7 @@
 class GameObject;
 class C_UI_Button;
 class C_UI_Checkbox;
+class C_UI_Slider;
 class C_Canvas;
 class HUDManager;
 
@@ -29,6 +30,8 @@ public:
 	std::string optionsVsyncStr = "VsyncCheck";
 	std::string backButtonStr = "BackButton";
 	std::string hudCanvasStr = "HUD";
+	std::string musicSliderStr = "MusicSlider";
+	std::string fxSliderStr = "EffectsSlider";
 
 private:
 	C_Canvas* hudCanvas = nullptr;
@@ -40,6 +43,8 @@ private:
 	C_UI_Button* mainMenuButton = nullptr;
 
 	C_Canvas* optionsMenuCanvas = nullptr;
+	C_UI_Slider* musicSlider = nullptr;
+	C_UI_Slider* fxSlider = nullptr;
 	C_UI_Checkbox* fullScreenCheck = nullptr;
 	C_UI_Checkbox* vsyncCheck = nullptr;
 	C_UI_Button* backButton = nullptr;
@@ -65,6 +70,8 @@ SCRIPTS_FUNCTION PauseMenuManager* CreatePauseMenuManager() {
 	INSPECTOR_STRING(script->optionsVsyncStr);
 	INSPECTOR_STRING(script->backButtonStr);
 	INSPECTOR_STRING(script->hudCanvasStr);
+	INSPECTOR_STRING(script->musicSliderStr);
+	INSPECTOR_STRING(script->fxSliderStr);
 
 	return script;
 }

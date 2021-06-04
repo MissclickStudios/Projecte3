@@ -277,7 +277,7 @@ float C_UI_Slider::InputValue(float value, float maxValue, int numSquares)
 		value = this->maxValue;
 	
 	int checkedRects = (value * numRects) / this->maxValue;
-	this->value = ((float)numRects) / (this->maxValue * ((float)checkedRects));
+	this->value = checkedRects * (this->maxValue / ((float)numRects));
 	return this->value;
 }
 
