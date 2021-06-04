@@ -112,6 +112,8 @@ private:
     void BackTrackUpdate();
     void GateUpdate();
 
+    void HandleBackgroundMusic();
+
 public:
     std::vector<std::string> level1;
     int l1Easy = -1;
