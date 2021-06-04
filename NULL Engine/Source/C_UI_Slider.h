@@ -36,8 +36,6 @@ public:
 
 private:
 	void ResetInput()override;
-	Frame GetTexturePosition(int pixelPosX, int pixelPosY, int pixelWidth, int pixelHeight);
-	Frame GetTexturePosition(int pixelPosX, int pixelPosY, int pixelWidth, int pixelHeight, int textW, int textH);
 
 private:
 	unsigned int VAO;

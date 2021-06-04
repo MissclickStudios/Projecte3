@@ -281,40 +281,6 @@ void C_UI_Image::ResetColor()
 	color = Color(1.0f, 1.0f, 1.0f, 1.0f);
 }
 
-Frame C_UI_Image::GetTexturePosition(int pixelPosX, int pixelPosY, int pixelWidth, int pixelHeight)
-{
-
-	C_Material* cMaterial = GetOwner()->GetComponent<C_Material>();
-	if (!cMaterial)
-		return { 0, 0, 1, 1 };
-
-	uint32 id = cMaterial->GetTextureID();
-	unsigned int spritesheetPixelWidth, spritesheetPixelHeight = 0; cMaterial->GetTextureSize(spritesheetPixelWidth, spritesheetPixelHeight);
-	if (!spritesheetPixelWidth && !spritesheetPixelHeight)
-		return { 0, 0, 1, 1 };
-
-	Frame frame;
-	frame.proportionBeginX = (float)pixelPosX / spritesheetPixelWidth;
-	frame.proportionFinalX = ((float)pixelPosX + pixelWidth) / spritesheetPixelWidth;
-
-	frame.proportionBeginY = (float)pixelPosY / spritesheetPixelHeight;
-	frame.proportionFinalY = ((float)pixelPosY + pixelHeight) / spritesheetPixelHeight;
-
-	return frame;
-}
-
-Frame C_UI_Image::GetTexturePosition(int pixelPosX, int pixelPosY, int pixelWidth, int pixelHeight, int textW, int textH)
-{
-	Frame frame;
-	frame.proportionBeginX = (float)pixelPosX / textW;
-	frame.proportionFinalX = ((float)pixelPosX + pixelWidth) / textW;
-
-	frame.proportionBeginY = (float)pixelPosY / textH;
-	frame.proportionFinalY = ((float)pixelPosY + pixelHeight) / textH;
-
-	return frame;
-}
-
 bool C_UI_Image::SaveState(ParsonNode& root) const
 {
 	root.SetNumber("Type", (uint)GetType());

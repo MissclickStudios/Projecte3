@@ -2,7 +2,6 @@
 #define __C_UI_CHECKBOX_H__
 
 #include "C_Ui.h"
-#include "Spritesheet.h"
 
 class R_Shader;
 
@@ -51,8 +50,6 @@ public:
 
 private:
 	void ResetInput()override;
-	Frame GetTexturePosition(int pixelPosX, int pixelPosY, int pixelWidth, int pixelHeight);
-	Frame GetTexturePosition(int pixelPosX, int pixelPosY, int pixelWidth, int pixelHeight, int textW, int textH);
 	const char* NameFromState(UICheckboxState state);
 
 private:
