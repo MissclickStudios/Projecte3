@@ -32,7 +32,7 @@ public:
 
 	bool IsAnimationPlaying();
 
-	void SetSpritesheetTexture(R_Texture* spritesheet, int animationNumber);
+	//void SetSpritesheetTexture(R_Texture* spritesheet, int animationNumber);
 
 	void SetAnimationPlayFromStart(bool x);
 	bool GetAnimationPlayFromStart();
@@ -53,12 +53,7 @@ public:
 	
 private:
 	void LoopAnimation(int animation);
-
 private:
-
-	std::vector<R_Texture*>		animation;
-	std::vector<R_Texture*>		animation1;
-	std::vector<R_Texture*>		animation2;
 	
 	int							animationCounter;
 	uint						animationStepTime;

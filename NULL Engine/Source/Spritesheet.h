@@ -31,7 +31,6 @@ public:
 	int spritesheetPixelWidth;
 	int spritesheetPixelHeight;
 private:
-
 	void GetFrameProportions(int row, int column);
 };
 

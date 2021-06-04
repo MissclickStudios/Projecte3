@@ -84,12 +84,11 @@ public:
 	std::vector<WwiseObject*> audioListenerList;
 	std::vector<WwiseObject*> audioSourceList;
 
-	float maxSfxVolume = 100.0f;
-	float maxMusicVolume = 100.0f;
-
-private:
+	float maxSfxVolume = 50.0f;
+	float maxMusicVolume = 50.0f;
 
 	C_AudioSource* aSourceBackgroundMusic = nullptr;
+	
 };
 
 #endif //__AUDIO_H__

@@ -52,6 +52,12 @@ C_2DAnimator::C_2DAnimator(GameObject* owner) : Component(owner, ComponentType::
 
 C_2DAnimator::~C_2DAnimator()
 {
+	if (spritesheet)
+		delete spritesheet;
+	if (spritesheet2)
+		delete spritesheet2;
+	if (spritesheet3)
+		delete spritesheet3;
 }
 
 bool C_2DAnimator::Update()
@@ -150,23 +156,29 @@ bool C_2DAnimator::IsAnimationPlaying()
 	return animationPlaying;
 }
 
-void C_2DAnimator::SetSpritesheetTexture(R_Texture* spritesheet, int animationNumber)
+/*void C_2DAnimator::SetSpritesheetTexture(R_Texture* spritesheet, int animationNumber)
 {
 	switch (animationNumber) 
 	{
 	case 1:
+		if (this->spritesheet)
+			delete this->spritesheet;
 		this->spritesheet = new Spritesheet(spritesheet);
 		break;
 	case 2:
+		if (this->spritesheet2)
+			delete this->spritesheet2;
 		this->spritesheet2 = new Spritesheet(spritesheet);
 		break;
 	case 3:
+		if (this->spritesheet3)
+			delete this->spritesheet3;
 		this->spritesheet3 = new Spritesheet(spritesheet);
 		break;
 	case 0:
 		break;
 	}
-}
+}*/
 
 void C_2DAnimator::SetAnimationPlayFromStart(bool x)
 {
@@ -216,7 +228,7 @@ void C_2DAnimator::ChangeName(const char* name, int animationNum)
 
 void C_2DAnimator::GetAnimationSprites(const char* name, int animationDestination)
 {
-	switch (animationDestination) 
+	/*switch (animationDestination) 
 	{
 	case 1:	
 		animation.clear();
@@ -241,8 +253,44 @@ void C_2DAnimator::GetAnimationSprites(const char* name, int animationDestinatio
 		break;
 	case 0:
 		break;
-	}
+	}*/
 
+	std::vector<R_Texture*>texturesWithName;
+	switch (animationDestination)
+	{
+	case 1:
+		ChangeName(name, 1);
+		if (strcmp(name, ""))
+			App->resourceManager->GetAllTextures(texturesWithName, name);
+		if (!texturesWithName.empty()) 
+		{
+			App->resourceManager->FreeResource(spritesheet->spriteSheet->GetUID());
+			spritesheet->spriteSheet = texturesWithName[0];
+		}
+		break;
+	case 2:
+		ChangeName(name, 2);
+		if (strcmp(name, ""))
+			App->resourceManager->GetAllTextures(texturesWithName, name);
+		if (!texturesWithName.empty()) 
+		{
+			App->resourceManager->FreeResource(spritesheet2->spriteSheet->GetUID());
+			spritesheet2->spriteSheet = texturesWithName[0];
+		}
+		break;
+	case 3:
+		ChangeName(name, 3);
+		if (strcmp(name, ""))
+			App->resourceManager->GetAllTextures(texturesWithName, name);
+		if (!texturesWithName.empty()) 
+		{
+			App->resourceManager->FreeResource(spritesheet3->spriteSheet->GetUID());
+			spritesheet3->spriteSheet = texturesWithName[0];
+		}
+		break;
+	case 0:
+		break;
+	}
 }
 
 void C_2DAnimator::PlayAnimation(bool loop, int animationNumber)
