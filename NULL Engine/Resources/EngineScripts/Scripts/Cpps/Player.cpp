@@ -1334,10 +1334,11 @@ void Player::GatherMoveInputs()
 	// Keyboard movement
 	if (usingKeyboard && !usingGameController)								// If there was keyboard input and no controller input
 	{	
-		if (App->input->GetKey(SDL_SCANCODE_W) == KeyState::KEY_REPEAT) { moveInput.y = -MAX_INPUT; moveState = PlayerState::RUN; }
-		if (App->input->GetKey(SDL_SCANCODE_S) == KeyState::KEY_REPEAT) { moveInput.y = MAX_INPUT;	moveState = PlayerState::RUN; }
-		if (App->input->GetKey(SDL_SCANCODE_D) == KeyState::KEY_REPEAT) { moveInput.x = MAX_INPUT;	moveState = PlayerState::RUN; }
-		if (App->input->GetKey(SDL_SCANCODE_A) == KeyState::KEY_REPEAT) { moveInput.x = -MAX_INPUT; moveState = PlayerState::RUN; }
+		if		(App->input->GetKey(SDL_SCANCODE_W) == KeyState::KEY_REPEAT)	{ moveInput.y = -MAX_INPUT; moveState = PlayerState::RUN; }
+		else if (App->input->GetKey(SDL_SCANCODE_S) == KeyState::KEY_REPEAT)	{ moveInput.y = MAX_INPUT;	moveState = PlayerState::RUN; }
+		else if (App->input->GetKey(SDL_SCANCODE_D) == KeyState::KEY_REPEAT)	{ moveInput.x = MAX_INPUT;	moveState = PlayerState::RUN; }
+		else if (App->input->GetKey(SDL_SCANCODE_A) == KeyState::KEY_REPEAT)	{ moveInput.x = -MAX_INPUT; moveState = PlayerState::RUN; }
+		else																	{ moveState = PlayerState::IDLE; }
 	}
 	else if (usingGameController)
 	{	
