@@ -3,10 +3,12 @@
 #include "M_Input.h"
 #include "M_Window.h"
 #include "M_Renderer3D.h"
+#include "M_Audio.h"
 
 #include "C_Canvas.h"
 #include "C_UI_Button.h"
 #include "C_UI_Checkbox.h"
+#include "C_UI_Slider.h"
 #include "GameObject.h"
 #include "M_UISystem.h"
 #include "PauseMenuManager.h"
@@ -50,6 +52,26 @@ void PauseMenuManager::Start()
 		mainMenuButton = (C_UI_Button*)go->GetComponent<C_UI_Button>();
 
 	//settings
+	go = App->scene->GetGameObjectByName(musicSliderStr.c_str());
+	if (go != nullptr) 
+	{
+		musicSlider = (C_UI_Slider*)go->GetComponent<C_UI_Slider>();
+		if (musicSlider)
+		{
+			App->audio->maxMusicVolume = musicSlider->InputValue(App->audio->maxMusicVolume, 100.0f, 10);
+			App->audio->SetRtcp("maxMusicVolume", App->audio->maxMusicVolume);
+		}
+	}
+	go = App->scene->GetGameObjectByName(fxSliderStr.c_str());
+	if (go != nullptr) 
+	{
+		fxSlider = (C_UI_Slider*)go->GetComponent<C_UI_Slider>();
+		if (fxSlider)
+		{
+			App->audio->maxSfxVolume = fxSlider->InputValue(App->audio->maxMusicVolume, 100.0f, 10);
+			App->audio->SetRtcp("maxSfxVolume", App->audio->maxSfxVolume);
+		}
+	}
 	go = App->scene->GetGameObjectByName(optionsMenuCanvasStr.c_str());
 	if (go)
 		optionsMenuCanvas = (C_Canvas*)go->GetComponent<C_Canvas>();
@@ -82,6 +104,10 @@ void PauseMenuManager::Update()
 
 				if (hudCanvas && hudScript && hudScript->enabled)
 					App->uiSystem->PushCanvas(hudCanvas);
+
+				App->audio->maxMusicVolume += 30.0f;
+				App->audio->SetRtcp("maxMusicVolume", App->audio->maxMusicVolume);
+
 			}
 			else 
 			{
@@ -92,6 +118,9 @@ void PauseMenuManager::Update()
 				canvasActive = true;
 				GameManager* gameManagerScript = (GameManager*)gameManager->GetScript("GameManager");
 				gameManagerScript->Pause();
+
+				App->audio->maxMusicVolume -= 30.0f;
+				App->audio->SetRtcp("maxMusicVolume", App->audio->maxMusicVolume);
 			}
 		}
 	}
@@ -108,6 +137,9 @@ void PauseMenuManager::Update()
 
 			if (hudCanvas && hudScript && hudScript->enabled)
 				App->uiSystem->PushCanvas(hudCanvas);
+
+			App->audio->maxMusicVolume += 30.0f;
+			App->audio->SetRtcp("maxMusicVolume", App->audio->maxMusicVolume);
 		}
 	}
 
@@ -140,13 +172,35 @@ void PauseMenuManager::Update()
 		{
 			Player* playerScript = (Player*)mando->GetScript("Player");
 			playerScript->health = 0;
+			GameManager* gameManagerScript = (GameManager*)gameManager->GetScript("GameManager");
+			gameManagerScript->Resume();
 
 			App->uiSystem->RemoveActiveCanvas(pauseMenuCanvas);
 		}
 	}
 
 	//settings
-	if (fullScreenCheck != nullptr)
+	if (musicSlider && musicSlider->Hovered() && (App->input->GetKey(SDL_SCANCODE_RIGHT) == KeyState::KEY_DOWN || App->input->GetGameControllerAxis(0) == AxisState::POSITIVE_AXIS_DOWN))
+	{
+		App->audio->maxMusicVolume = musicSlider->IncrementOneSquare();
+		App->audio->SetRtcp("maxMusicVolume", App->audio->maxMusicVolume);
+	}
+	else if (musicSlider && musicSlider->Hovered() && (App->input->GetKey(SDL_SCANCODE_LEFT) == KeyState::KEY_DOWN || App->input->GetGameControllerAxis(0) == AxisState::NEGATIVE_AXIS_DOWN))
+	{
+		App->audio->maxMusicVolume = musicSlider->DecrementOneSquare();
+		App->audio->SetRtcp("maxMusicVolume", App->audio->maxMusicVolume);
+	}
+	if (fxSlider && fxSlider->Hovered() && (App->input->GetKey(SDL_SCANCODE_RIGHT) == KeyState::KEY_DOWN || App->input->GetGameControllerAxis(0) == AxisState::POSITIVE_AXIS_DOWN))
+	{
+		App->audio->maxSfxVolume = fxSlider->IncrementOneSquare();
+		App->audio->SetRtcp("maxSfxVolume", App->audio->maxSfxVolume);
+	}
+	else if (fxSlider && fxSlider->Hovered() && (App->input->GetKey(SDL_SCANCODE_LEFT) == KeyState::KEY_DOWN || App->input->GetGameControllerAxis(0) == AxisState::NEGATIVE_AXIS_DOWN))
+	{
+		App->audio->maxSfxVolume = fxSlider->DecrementOneSquare();
+		App->audio->SetRtcp("maxSfxVolume", App->audio->maxSfxVolume);
+	}
+	if (fullScreenCheck)
 	{
 		if (fullScreenCheck->GetState() == UICheckboxState::PRESSED_UNCHECKED_OUT)
 			App->window->SetFullscreenDesktop(true);

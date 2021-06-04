@@ -39,7 +39,7 @@ public:
 
 private:
 
-	std::vector<C_UI_Image*> itemFrames;
+	std::vector<C_UI_Image*> images;
 	std::vector<std::pair<bool, ItemData*>> lastItems;
 
 	C_UI_Text* nameText = nullptr;

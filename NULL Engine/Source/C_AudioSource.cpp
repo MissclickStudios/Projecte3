@@ -62,7 +62,6 @@ bool C_AudioSource::SaveState(ParsonNode& root) const
 	eventInfoArray.SetString(eventName.c_str());
 	eventInfoArray.SetNumber(eventId);
 
-
 	return true;
 }
 
@@ -123,15 +122,6 @@ void C_AudioSource::PlayFx(std::string name)
 
 	if (it != App->audio->eventMap.end())
 	{	
-		if (isLoopeable == true)
-		{
-			wwiseObject->SetVolume(App->audio->maxMusicVolume);
-		}
-		else
-		{
-			wwiseObject->SetVolume(App->audio->maxSfxVolume);
-		}
-
 		wwiseObject->PlayEvent(eventId);
 	}
 }

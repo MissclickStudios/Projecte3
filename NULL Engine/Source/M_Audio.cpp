@@ -73,11 +73,14 @@ bool M_Audio::Start()
 {
 	LoadEventsFromJson();
 
+	SetRtcp("maxMusicVolume", (int)maxMusicVolume);
+	SetRtcp("maxSfxVolume", (int)maxSfxVolume);
+
 	aSourceBackgroundMusic = new C_AudioSource(App->scene->GetMasterRoot());
 
-	aSourceBackgroundMusic->SetEvent("background", true);
+	aSourceBackgroundMusic->SetEvent("rooms_music", true);
 
-	aSourceBackgroundMusic->PlayFx(aSourceBackgroundMusic->GetEventId());
+	//aSourceBackgroundMusic->PlayFx(aSourceBackgroundMusic->GetEventId());
 	
 	return true;
 }
@@ -89,22 +92,22 @@ UpdateStatus M_Audio::Update(float dt)
 
 	//Depending on the engine state pause/play/resume/stop events
 
-	//if (App->gameState == GameState::PLAY || App->gameState == GameState::STEP)
-	//{
-	//	if (!aSourceBackgroundMusic->isPlaying)
-	//		aSourceBackgroundMusic->PlayFx(aSourceBackgroundMusic->GetEventId());
-	//}
-	//if (App->gameState == GameState::PAUSE)
-	//{
-	//	if (aSourceBackgroundMusic->isPlaying)
-	//		aSourceBackgroundMusic->PauseFx(aSourceBackgroundMusic->GetEventId());
-	//}
-	//if (App->gameState == GameState::STOP)
-	//{
-	//	if (aSourceBackgroundMusic->isPlaying)
-	//		aSourceBackgroundMusic->StopFx(aSourceBackgroundMusic->GetEventId());
-	//}
-	//
+	if (App->gameState == GameState::PLAY || App->gameState == GameState::STEP)
+	{
+		if (aSourceBackgroundMusic->isLoopeable == true)
+		{
+			aSourceBackgroundMusic->PlayFx(aSourceBackgroundMusic->GetEventId());
+			aSourceBackgroundMusic->isLoopeable = false;
+		}
+	}
+	if (App->gameState == GameState::STOP)
+	{
+		if (aSourceBackgroundMusic->isLoopeable == false)
+		{
+			aSourceBackgroundMusic->StopFx(aSourceBackgroundMusic->GetEventId());
+		}
+	}
+	
 	return UpdateStatus::CONTINUE;
 }
 
@@ -349,6 +352,13 @@ void M_Audio::LoadEventsFromJson()
 		}
 		
 	}
+}
+
+void M_Audio::SetRtcp(const char* rtpc, int value)
+{
+	AKRESULT result = AK::SoundEngine::SetRTPCValue(rtpc, value);
+	if (result == AK_Success)
+		LOG("Volume: %d", value);
 }
 
 // Wwise Object

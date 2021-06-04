@@ -10,6 +10,7 @@
 #include "C_ParticleSystem.h"
 #include "C_BoxCollider.h"
 #include "C_AudioSource.h"
+#include "C_RigidBody.h"
 
 #include "ExplosiveBarrel.h"
 
@@ -26,25 +27,17 @@ void ExplosiveBarrel::Start()
 {
 	explosion = new C_AudioSource(gameObject);
 
-	gameManager = App->scene->GetGameObjectByName(gameManagerName.c_str());
-	barrelObject = gameObject->FindChild(barrelObjectName.c_str());
-
 	explosionParticles = gameObject->GetComponent<C_ParticleSystem>();
 
 	explosionParticles->StopSpawn();
 
 	barrelCollider = gameObject->GetComponent<C_BoxCollider>();
-
 }
 
 void ExplosiveBarrel::Update()
 {
 	if (exploded)
 	{
-		//deactivate mesh, trigger
-		barrelCollider->SetIsActive(false);
-		barrelCollider->SetSize(barrelColliderSize);
-
 		//play particles
 		if (particleTimer < particleEmitttingTime)
 		{
@@ -59,15 +52,15 @@ void ExplosiveBarrel::Update()
 		}
 	}
 
-	if (toExplode)
+	if (toExplode) //Set collider big to explode / play audio / Play particles
 	{
 		explosion->SetEvent("item_barrel_explosion");
 		explosion->SetVolume(5.0f);
  		explosion->PlayFx(explosion->GetEventId());
-		barrelObject->SetIsActive(false);
 
 		explosionParticles->ResumeSpawn();
 
+		//exploded = true;
 		exploded = true;
 		toExplode = false;
 	}
@@ -84,32 +77,14 @@ void ExplosiveBarrel::OnCollisionEnter(GameObject* object)
 	if (GetObjectScript(object, ObjectType::BULLET) != nullptr)
 	{
 		toExplode = true;
-		barrelCollider->SetTrigger(true);
+		barrelCollider->SetIsActive(false);
 	}
 }
 
-void ExplosiveBarrel::OnTriggerRepeat(GameObject* object)
-{
-	Entity* entity = (Entity*)GetObjectScript(object, ObjectType::ENTITY);
-	if (!entity)
-		return;
-
-	float2 entityPosition, position;
-	entityPosition.x = entity->transform->GetWorldPosition().x;
-	entityPosition.y = entity->transform->GetWorldPosition().z;
-	position.x = gameObject->transform->GetWorldPosition().x;
-	position.y = gameObject->transform->GetWorldPosition().z;
-	float2 direction = entityPosition - position;
-
-	float distance = direction.Length();
-	if (distance < 1.0f)
-		distance = 1.0f;
-
-	float currentPower = power / distance;
-
-	direction.Normalize();
-	direction *= currentPower;
-
-	entity->AddEffect(EffectType::KNOCKBACK, 0.75f, false, 0.0f, 0.0f, float3(direction.x, 0.0f, direction.y));
-	entity->TakeDamage(damage);
+ExplosiveBarrel* CreateExplosiveBarrel() {
+	ExplosiveBarrel* script = new ExplosiveBarrel();
+	INSPECTOR_INPUT_FLOAT3(script->barrelColliderSize);
+	INSPECTOR_INPUT_FLOAT3(script->explosionTriggerSize);
+	INSPECTOR_INPUT_FLOAT(script->particleEmitttingTime);
+	return script;
 }

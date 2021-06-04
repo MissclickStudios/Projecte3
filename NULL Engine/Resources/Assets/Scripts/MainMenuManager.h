@@ -31,7 +31,8 @@ public:
 	GameObject* fullScreenCheckObject = nullptr;
 	GameObject* vsyncCheckObject = nullptr;
 	GameObject* backButtonObject = nullptr;
-	GameObject* sliderObject = nullptr;
+	GameObject* musicSliderObject = nullptr;
+	GameObject* fxSliderObject = nullptr;
 private:
 	C_Canvas* mainCanvas = nullptr;
 	C_UI_Button* playButton = nullptr;
@@ -43,8 +44,8 @@ private:
 	C_UI_Checkbox* fullScreenCheck = nullptr;
 	C_UI_Checkbox* vsyncCheck = nullptr;
 	C_UI_Button* backButton = nullptr;
-	C_UI_Slider* slider = nullptr;
-	float volume = 0.0f;
+	C_UI_Slider* musicSlider = nullptr;
+	C_UI_Slider* fxSlider = nullptr;
 };
 
 SCRIPTS_FUNCTION MainMenuManager* CreateMainMenuManager() {
@@ -60,6 +61,7 @@ SCRIPTS_FUNCTION MainMenuManager* CreateMainMenuManager() {
 	INSPECTOR_GAMEOBJECT(script->vsyncCheckObject);
 	INSPECTOR_GAMEOBJECT(script->mainCanvasObject);
 	INSPECTOR_GAMEOBJECT(script->backButtonObject);
-	INSPECTOR_GAMEOBJECT(script->sliderObject);
+	INSPECTOR_GAMEOBJECT(script->musicSliderObject);
+	INSPECTOR_GAMEOBJECT(script->fxSliderObject);
 	return script;
 }

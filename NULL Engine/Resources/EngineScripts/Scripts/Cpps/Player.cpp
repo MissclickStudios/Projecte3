@@ -86,9 +86,14 @@ Player* CreatePlayer()
 	INSPECTOR_STRING(script->rightHandName);
 	INSPECTOR_STRING(script->leftHandName);
 
-	INSPECTOR_GAMEOBJECT(script->rightHand);
-	INSPECTOR_GAMEOBJECT(script->leftHand);
+	// Aim
+	INSPECTOR_STRING(script->idleAimPlaneName);
+	INSPECTOR_STRING(script->aimingAimPlaneName);
 
+	// Animations
+	INSPECTOR_STRING(script->hipName);
+	INSPECTOR_STRING(script->torsoName);
+	INSPECTOR_STRING(script->legsName);
 
 	// Particles & SFX
 	INSPECTOR_VECTOR_STRING(script->particleNames);
@@ -128,12 +133,22 @@ Player::~Player()
 
 void Player::SetUp()
 {
-	if (rightHand == nullptr)
-		LOG("RIOT");
+	rightHand		= gameObject->FindChild(rightHandName.c_str());
+	leftHand		= gameObject->FindChild(leftHandName.c_str());
+	idleAimPlane	= gameObject->FindChild(idleAimPlaneName.c_str());
+	aimingAimPlane	= gameObject->FindChild(aimingAimPlaneName.c_str());
+	hip				= gameObject->FindChild(hipName.c_str());
+	torso			= gameObject->FindChild(torsoName.c_str());
+	legs			= gameObject->FindChild(legsName.c_str());
 
-	if (leftHand == nullptr)
-		LOG("RIOT II");
-	
+	if (rightHand == nullptr)		{ LOG("MISSING RIGHT HAND"); }
+	if (leftHand == nullptr)		{ LOG("MISSING LEFT HAND"); }
+	if (idleAimPlane == nullptr)	{ LOG("MISSING IDLE AIM PLANE"); }
+	if (aimingAimPlane == nullptr)	{ LOG("MISSING AIMING AIM PLANE"); }
+	if (hip == nullptr)				{ LOG("MISSING HIP"); }
+	if (torso == nullptr)			{ LOG("MISSING TORSO"); }
+	if (legs == nullptr)			{ LOG("MISSING LEGS"); }
+
 	dashTimer.Stop();
 	dashCooldownTimer.Stop();
 	invincibilityTimer.Stop();
@@ -158,9 +173,9 @@ void Player::SetUp()
 		legs	= legsTrack->GetRootBone();
 		hip		= animator->GetRootBone();*/
 
-		torso	= App->scene->GetGameObjectByName("Torso");					// Hence, a more hamfisted approach is needed to be able to Set Up the Player properly.
-		legs	= App->scene->GetGameObjectByName("Legs");
-		hip		= App->scene->GetGameObjectByName("mixamorig:Hips");
+		//torso	= App->scene->GetGameObjectByName("Torso");					// Hence, a more hamfisted approach is needed to be able to Set Up the Player properly.
+		//legs	= App->scene->GetGameObjectByName("Legs");
+		//hip		= App->scene->GetGameObjectByName("mixamorig:Hips");
 
 		if (torso == nullptr)
 			LOG("[ERROR] Player Script: Could not retrieve { TORSO } Root Bone! Error: C_AnimatorTrack's GetRootBone() failed.");
@@ -205,8 +220,8 @@ void Player::SetUp()
 	}
 
 	// UI ELEMENTS
-	idleAimPlane	= App->scene->GetGameObjectByName("IdlePlane");
-	aimingAimPlane	= App->scene->GetGameObjectByName("AimingPlane");
+	/*idleAimPlane	= App->scene->GetGameObjectByName("IdlePlane");
+	aimingAimPlane	= App->scene->GetGameObjectByName("AimingPlane");*/
 
 	(idleAimPlane != nullptr)	? idleAimPlane->SetIsActive(true)		: LOG("COULD NOT RETRIEVE IDLE PLANE");
 	(aimingAimPlane != nullptr) ? aimingAimPlane->SetIsActive(false)	: LOG("COULD NOT RETRIEVE AIMING PLANE");
@@ -315,7 +330,13 @@ void Player::SaveState(ParsonNode& playerNode)
 		ParsonNode node = effectsArray.SetNode("Effect");
 		node.SetInteger("Type", (int)effects[i]->Type());
 		node.SetNumber("Duration", (double)effects[i]->RemainingDuration());
+		node.SetNumber("Power", effects[i]->Power());
+		node.SetNumber("Chance", effects[i]->Chance());
+		node.SetNumber("DirectionX", effects[i]->Direction().x);
+		node.SetNumber("DirectionY", effects[i]->Direction().y);
+		node.SetNumber("DirectionZ", effects[i]->Direction().z);
 		node.SetBool("Permanent", effects[i]->Permanent());
+		node.SetBool("Start", effects[i]->start);
 	}
 
 	playerNode.SetInteger("Equiped Gun", (int)equipedGun.uid);
@@ -357,9 +378,16 @@ void Player::LoadState(ParsonNode& playerNode)
 		ParsonNode node = effectsArray.GetNode(i);
 		EffectType type = (EffectType)node.GetInteger("Type");
 		float duration = (float)node.GetNumber("Duration");
+		float power = (float)node.GetNumber("Power");
+		float chance = (float)node.GetNumber("Chance");
+		float3 direction;
+		direction.x = (float)node.GetNumber("DirectionX");
+		direction.y = (float)node.GetNumber("DirectionY");
+		direction.z = (float)node.GetNumber("DirectionZ");
 		bool permanent = node.GetBool("Permanent");
+		bool start = node.GetBool("Start");
 
-		AddEffect(type, duration, permanent);
+		AddEffect(type, duration, permanent, power, chance, direction, start);
 	}
 
 	if (skeleton != nullptr)
@@ -864,7 +892,7 @@ void Player::AddItem(ItemData* item)
 {
 	for (uint i = 0; i < items.size(); ++i)
 	{
-		if (items[i].first == usingSecondaryGun && items[i].second->name == item->name && items[i].second->rarity <= item->rarity)
+		if (items[i].second->name == item->name && items[i].second->rarity <= item->rarity)
 		{
 			items[i].second = item;
 			ApplyItems();
@@ -877,10 +905,11 @@ void Player::AddItem(ItemData* item)
 
 void Player::ApplyItems()
 {
-	if (currentWeapon == nullptr)
-		return;
+	if (blasterWeapon != nullptr)
+		blasterWeapon->RefreshPerks(true);
+	if (secondaryWeapon != nullptr)
+		secondaryWeapon->RefreshPerks(true);
 
-	currentWeapon->RefreshPerks(true);
 	Item* item = nullptr;
 	for (uint i = 0; i < items.size(); ++i)
 	{
@@ -1158,6 +1187,8 @@ void Player::AimIdle()
 	/*if (idleAimPlane != nullptr)
 		idleAimPlane->SetIsActive(true);*/
 
+	//LOG("IDLING THE AIM PLANE");
+
 	if (aimingAimPlane != nullptr)
 		aimingAimPlane->SetIsActive(false);
 
@@ -1177,6 +1208,8 @@ void Player::Aiming()
 {
 	/*if (idleAimPlane != nullptr)
 		idleAimPlane->SetIsActive(false);*/
+
+	//LOG("AIMING THE AIM PLANE");
 
 	if (aimingAimPlane != nullptr)
 		aimingAimPlane->SetIsActive(true);
@@ -1204,7 +1237,7 @@ void Player::Shoot()
 
 	switch (currentWeapon->Shoot(aimVector))
 	{
-	case ShootState::NO_FULLAUTO:		{ currentAnimation = nullptr; aimState = AimState::IDLE; }		break;
+	case ShootState::NO_FULLAUTO:		{ currentAnimation = nullptr; aimState = AimState::IDLE; }			break;
 	case ShootState::WAITING_FOR_NEXT:	{ /* DO NOTHING */ }												break;
 	case ShootState::FIRED_PROJECTILE:	
 	{ 
@@ -1219,7 +1252,7 @@ void Player::Shoot()
 			currentWeapon->defRotation = currentWeapon->modifiedRotation;
 		}
 	}		break;
-	case ShootState::RATE_FINISHED:		{ currentAnimation = nullptr; aimState = AimState::IDLE; }		break;
+	case ShootState::RATE_FINISHED:		{ currentAnimation = nullptr; aimState = AimState::IDLE; }			break;
 	case ShootState::NO_AMMO:			{ /*currentAnimation = nullptr;*/ aimState = AimState::RELOAD_IN; }	break;
 	}
 }
@@ -1285,7 +1318,7 @@ void Player::GatherMoveInputs()
 	moveInput.x = (float)App->input->GetGameControllerAxisValue(0);
 	moveInput.y = (float)App->input->GetGameControllerAxisValue(1);
 
-	LOG("[Keyboard: %s]::[Controller: %s]", (usingKeyboard) ? "True" : "False", (usingGameController) ? "True" : "False");
+	//LOG("[Keyboard: %s]::[Controller: %s]", (usingKeyboard) ? "True" : "False", (usingGameController) ? "True" : "False");
 
 	if (!dashCooldownTimer.IsActive())
 	{
@@ -1293,7 +1326,6 @@ void Player::GatherMoveInputs()
 		{
 			if (!dashTimer.IsActive())
 				moveState = PlayerState::DASH_IN;
-				//moveState = PlayerState::DASH;
 
 			return;
 		}
@@ -1306,21 +1338,25 @@ void Player::GatherMoveInputs()
 	// Keyboard movement
 	if (usingKeyboard && !usingGameController)								// If there was keyboard input and no controller input
 	{	
-		if (App->input->GetKey(SDL_SCANCODE_W) == KeyState::KEY_REPEAT) { moveInput.y = -MAX_INPUT; moveState = PlayerState::RUN; }
-		if (App->input->GetKey(SDL_SCANCODE_S) == KeyState::KEY_REPEAT) { moveInput.y = MAX_INPUT;	moveState = PlayerState::RUN; }
-		if (App->input->GetKey(SDL_SCANCODE_D) == KeyState::KEY_REPEAT) { moveInput.x = MAX_INPUT;	moveState = PlayerState::RUN; }
-		if (App->input->GetKey(SDL_SCANCODE_A) == KeyState::KEY_REPEAT) { moveInput.x = -MAX_INPUT; moveState = PlayerState::RUN; }
+		if		(App->input->GetKey(SDL_SCANCODE_W) == KeyState::KEY_REPEAT)	{ moveInput.y = -MAX_INPUT; moveState = PlayerState::RUN; }
+		else if (App->input->GetKey(SDL_SCANCODE_S) == KeyState::KEY_REPEAT)	{ moveInput.y = MAX_INPUT;	moveState = PlayerState::RUN; }
+		else if (App->input->GetKey(SDL_SCANCODE_D) == KeyState::KEY_REPEAT)	{ moveInput.x = MAX_INPUT;	moveState = PlayerState::RUN; }
+		else if (App->input->GetKey(SDL_SCANCODE_A) == KeyState::KEY_REPEAT)	{ moveInput.x = -MAX_INPUT; moveState = PlayerState::RUN; }
+		else																	{ moveState = PlayerState::IDLE; }
 	}
 	else if (usingGameController)
 	{	
-		bool overWalkThreshold = (moveInput.x > WALK_THRESHOLD) || (-moveInput.x > WALK_THRESHOLD) || (moveInput.y > WALK_THRESHOLD) || (-moveInput.y > WALK_THRESHOLD);
-		
-		moveState = (overWalkThreshold) ? PlayerState::RUN : PlayerState::WALK;
+		if (abs(moveInput.x) > 4000.0f || abs(moveInput.y) > 4000.0f)
+			moveState = (abs(moveInput.x) > WALK_THRESHOLD || abs(moveInput.y) > WALK_THRESHOLD) ? PlayerState::RUN : PlayerState::WALK;
+		else
+			moveState = PlayerState::IDLE;
 	}
 	else
 	{
 		moveState = PlayerState::IDLE;
 	}
+
+	//LOG("[X: %.3f]::[Y: %.3f]::[State: %u]", moveInput.x, moveInput.y, (uint)moveState);
 
 	SetPlayerDirection();
 }
@@ -1340,18 +1376,19 @@ void Player::GatherAimInputs()
 	// Keyboard aim
 	if (/*abs(aimInputThreshold.x) <= KEYBOARD_THRESHOLD && abs(aimInputThreshold.y) <= KEYBOARD_THRESHOLD*/ usingKeyboard && !usingGameController)						// If there was no controller input
 	{
-		if (App->input->GetKey(SDL_SCANCODE_UP) == KeyState::KEY_REPEAT)	{ aimInput.y = -MAX_INPUT;	if (aimState == AimState::IDLE) aimState = AimState::AIMING; }
-		if (App->input->GetKey(SDL_SCANCODE_DOWN) == KeyState::KEY_REPEAT)	{ aimInput.y = MAX_INPUT;	if (aimState == AimState::IDLE) aimState = AimState::AIMING; }
-		if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KeyState::KEY_REPEAT)	{ aimInput.x = MAX_INPUT;	if (aimState == AimState::IDLE) aimState = AimState::AIMING; }
-		if (App->input->GetKey(SDL_SCANCODE_LEFT) == KeyState::KEY_REPEAT)	{ aimInput.x = -MAX_INPUT;	if (aimState == AimState::IDLE) aimState = AimState::AIMING; }
-
-		if (abs(aimInput.x) != MAX_INPUT && abs(aimInput.y) != MAX_INPUT)
-			aimState = AimState::IDLE;
-
+		if (App->input->GetKey(SDL_SCANCODE_UP) == KeyState::KEY_REPEAT)			{ aimInput.y = -MAX_INPUT;	if (aimState == AimState::IDLE) aimState = AimState::AIMING; }
+		else if (App->input->GetKey(SDL_SCANCODE_DOWN) == KeyState::KEY_REPEAT)		{ aimInput.y = MAX_INPUT;	if (aimState == AimState::IDLE) aimState = AimState::AIMING; }
+		else if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KeyState::KEY_REPEAT)	{ aimInput.x = MAX_INPUT;	if (aimState == AimState::IDLE) aimState = AimState::AIMING; }
+		else if (App->input->GetKey(SDL_SCANCODE_LEFT) == KeyState::KEY_REPEAT)		{ aimInput.x = -MAX_INPUT;	if (aimState == AimState::IDLE) aimState = AimState::AIMING; }
+		else																		{ aimState = AimState::IDLE; }
 	}
 	else if (usingGameController)																														//There is input above the threshold
 	{
 		aimState = (abs(aimInputThreshold.x) <= AIM_THRESHOLD && abs(aimInputThreshold.y) <= AIM_THRESHOLD) ? AimState::IDLE : AimState::AIMING;
+	}
+	else
+	{
+		aimState = AimState::IDLE;
 	}
 	
 	SetAimDirection();
@@ -1376,7 +1413,6 @@ void Player::GatherAimInputs()
 
 	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_REPEAT || App->input->GetGameControllerTrigger(RIGHT_TRIGGER) == ButtonState::BUTTON_REPEAT)
 	{
-		LOG("SHOOTIN'");
 		aimState = AimState::SHOOT_IN;
 		return;
 	}
@@ -1415,7 +1451,7 @@ void Player::GatherInteractionInputs()
 void Player::SetPlayerDirection()
 {
 	if (moveInput.IsZero())
-	{
+	{	
 		moveDirection = MoveDirection::NONE;
 		return;
 	}
@@ -1456,8 +1492,7 @@ void Player::SetAimDirection()
 
 void Player::Movement()
 {
-	moveVector = moveInput;
-
+	moveVector	= moveInput;																		// This method will only be called if moveState == PlayerState::WALK || PlayerState::RUN.
 	float speed = Speed();
 
 	if (moveState == PlayerState::WALK)
@@ -1475,11 +1510,8 @@ void Player::Aim()
 	float2 oldAim = aimVector;
 
 	if (aimState == AimState::IDLE || moveState == PlayerState::DASH) // AimState::IDLE means not aiming
-	{
-		if (!moveVector.IsZero())
-			aimVector = moveVector;
-		else
-			aimVector = oldAim;
+	{	
+		aimVector = (!moveVector.IsZero()) ? moveVector : oldAim;
 	}
 	else
 	{

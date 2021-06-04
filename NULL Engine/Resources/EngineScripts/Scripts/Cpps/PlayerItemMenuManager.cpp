@@ -21,10 +21,10 @@ PlayerItemMenuManager::PlayerItemMenuManager()
 
 PlayerItemMenuManager::~PlayerItemMenuManager()
 {
-	while (itemFrames.size() != 0)
+	while (images.size() != 0)
 	{
-		(*itemFrames.begin())->GetOwner()->toDelete = true;
-		itemFrames.erase(itemFrames.begin());
+		(*images.begin())->GetOwner()->toDelete = true;
+		images.erase(images.begin());
 	}
 }
 
@@ -80,10 +80,10 @@ void PlayerItemMenuManager::Update()
 
 	if (reload)
 	{
-		while (itemFrames.size() != 0)
+		while (images.size() != 0)
 		{
-			(*itemFrames.begin())->GetOwner()->toDelete = true;
-			itemFrames.erase(itemFrames.begin());
+			(*images.begin())->GetOwner()->toDelete = true;
+			images.erase(images.begin());
 		}
 
 		float x = 0.0f;
@@ -108,18 +108,20 @@ void PlayerItemMenuManager::Update()
 					switch ((*items)[i].second->rarity)
 					{
 					case ItemRarity::COMMON:
-						rarityDisplay->SetColor(102, 255, 102, 200);
+						rarityDisplay->SetColor(50, 255, 50, 200);
 						break;
 					case ItemRarity::RARE:
-						rarityDisplay->SetColor(102, 255, 255, 200);
+						rarityDisplay->SetColor(50, 255, 255, 200);
 						break;
 					case ItemRarity::EPIC:
-						rarityDisplay->SetColor(255, 102, 255, 200);
+						rarityDisplay->SetColor(255, 50, 255, 200);
 						break;
 					case ItemRarity::UNIQUE:
-						rarityDisplay->SetColor(255, 255, 102, 200);
+						rarityDisplay->SetColor(255, 255, 50, 200);
 						break;
 					}
+
+					images.push_back(rarityDisplay);
 				}
 
 				if (x == 0.0f)
@@ -134,7 +136,7 @@ void PlayerItemMenuManager::Update()
 				R_Texture* texture = App->resourceManager->GetResource<R_Texture>((*items)[i].second->texturePath.c_str());
 				material->SetTexture(texture);
 
-				itemFrames.push_back(itemFrame);
+				images.push_back(itemFrame);
 			}
 		}
 	}

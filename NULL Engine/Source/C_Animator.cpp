@@ -421,7 +421,7 @@ void C_Animator::FindRootBone(GameObject* child)
 		
 		for (auto childItem = child->childs.cbegin(); childItem != child->childs.cend(); ++childItem)
 		{
-			LOG("CHILD { %s }", (*childItem)->GetName());
+			//LOG("CHILD { %s }", (*childItem)->GetName());
 			
 			if (mapping->find((*childItem)->GetName()) != mapping->end())
 			{

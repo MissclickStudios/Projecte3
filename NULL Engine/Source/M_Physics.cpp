@@ -183,7 +183,7 @@ UpdateStatus M_Physics::Update(float dt)
 	if (dt < 0.5f && MC_Time::Game::GetDT() < 0.5f)
 		if (scene && simulating)
 		{
-			scene->simulate(dt);
+			scene->simulate(MC_Time::Game::GetDT());
 			scene->fetchResults(true);
 		}
 

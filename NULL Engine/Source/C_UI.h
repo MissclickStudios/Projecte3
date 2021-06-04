@@ -2,6 +2,7 @@
 #define __C_UI_H__
 
 #include "Component.h"
+#include "Spritesheet.h"
 
 struct MISSCLICK_API Rect2D
 {
@@ -38,6 +39,9 @@ public:
 	void SetW(const float w);
 	void SetH(const float h);
 
+protected:
+	Frame GetTexturePosition(int pixelPosX, int pixelPosY, int pixelWidth, int pixelHeight);
+	Frame GetTexturePosition(int pixelPosX, int pixelPosY, int pixelWidth, int pixelHeight, int textW, int textH);
 protected:
 	Rect2D rect = { 0,0,1,1 };
 	short childOrder = -1;

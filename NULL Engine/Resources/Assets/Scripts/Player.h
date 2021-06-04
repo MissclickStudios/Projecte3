@@ -165,6 +165,7 @@ public:
 	float ChangeTime()						{ return changeTime / attackSpeedModifier; }
 	void EquipWeapon(Prefab weapon);
 	Weapon* const GetCurrentWeapon() const	{ return currentWeapon; }
+	Weapon* GetPrimaryWeapon() { return blasterWeapon; }
 	Weapon* GetSecondaryWeapon() { return secondaryWeapon; }
 	bool GetUsingSecondaryGun() { return usingSecondaryGun; }
 
@@ -177,14 +178,6 @@ public:
 	int hubCurrency				= 0;
 
 	std::string gameManager		= "Game Manager";
-
-	// AIM HUD
-	GameObject* idleAimPlane	= nullptr;
-	GameObject* aimingAimPlane	= nullptr;
-
-	// Debug
-	void SetGodMode(bool enable);
-	bool GetGodMode()const;
 
 	// Particles and SFX
 	C_ParticleSystem* runParticles			= nullptr;
@@ -214,12 +207,21 @@ public:
 	float joystickThreshold					= 25.0f;
 	float joystickFactor					= 327.67;
 
+	// Aim HUD
+	std::string idleAimPlaneName			= "";
+	std::string aimingAimPlaneName			= "";
+
 	// Hands
 	GameObject* rightHand					= nullptr;
 	GameObject* leftHand					= nullptr;
 
 	std::string rightHandName				= "";
 	std::string LeftHandName				= "";
+	
+	// Animations
+	std::string hipName						= "";
+	std::string torsoName					= "";
+	std::string legsName					= "";
 
 	// Items
 	void AddItem(ItemData* item);
@@ -227,6 +229,10 @@ public:
 
 	//Die cutscene
 	bool doDieCutscene = false;
+
+	// Debug
+	void SetGodMode(bool enable);
+	bool GetGodMode()const;
 
 private:
 	// Inputs
@@ -316,11 +322,6 @@ private:
 	bool usingSecondaryGun				= false;
 	Timer changeTimer;
 
-	GameObject* blasterBarrelTip		= nullptr;
-	GameObject* sniperBarrelTip			= nullptr;
-	GameObject* shotgunBarrelTip		= nullptr;
-	GameObject* minigunBarrelTip		= nullptr;
-
 	GameObject* blasterGameObject		= nullptr;
 	GameObject* secondaryGunGameObject	= nullptr;
 
@@ -333,12 +334,17 @@ private:
 
 	std::vector<std::pair<bool, ItemData*>> items;
 	std::vector<std::pair<bool, ItemData*>> savedItems;
+	
+	// Aim HUD
+	GameObject* idleAimPlane			= nullptr;
+	GameObject* aimingAimPlane			= nullptr;
 
 	// Animations
-	GameObject* hip		= nullptr;
-	GameObject* torso	= nullptr;
-	GameObject* legs	= nullptr;
-	
+	GameObject* hip						= nullptr;
+	GameObject* torso					= nullptr;
+	GameObject* legs					= nullptr;
+
+
 	// Utilities
 	float GetAnimatorClipDuration(const char* clipName);
 
