@@ -102,10 +102,14 @@ public:
 		if (player == nullptr)
 			return;
 
-		Weapon* weapon = player->GetCurrentWeapon();
+		Weapon* weapon = player->GetPrimaryWeapon();
 		if (weapon == nullptr)
 			return;
+		weapon->AddPerk(PerkType::DAMAGE_MODIFY, damageIncrease, 0.0f);
 
+		weapon = player->GetSecondaryWeapon();
+		if (weapon == nullptr)
+			return;
 		weapon->AddPerk(PerkType::DAMAGE_MODIFY, damageIncrease, 0.0f);
 	}
 
@@ -128,10 +132,14 @@ public:
 		if (player == nullptr)
 			return;
 
-		Weapon* weapon = player->GetCurrentWeapon();
+		Weapon* weapon = player->GetPrimaryWeapon();
 		if (weapon == nullptr)
 			return;
+		weapon->AddPerk(PerkType::STUN_BULLETS, stunChance, stunDuration);
 
+		weapon = player->GetSecondaryWeapon();
+		if (weapon == nullptr)
+			return;
 		weapon->AddPerk(PerkType::STUN_BULLETS, stunChance, stunDuration);
 	}
 
@@ -155,10 +163,14 @@ public:
 		if (player == nullptr)
 			return;
 
-		Weapon* weapon = player->GetCurrentWeapon();
+		Weapon* weapon = player->GetPrimaryWeapon();
 		if (weapon == nullptr)
 			return;
+		weapon->AddPerk(PerkType::FREEZE_BULLETS, speedSlow, slowDuration);
 
+		weapon = player->GetSecondaryWeapon();
+		if (weapon == nullptr)
+			return;
 		weapon->AddPerk(PerkType::FREEZE_BULLETS, speedSlow, slowDuration);
 	}
 
@@ -181,10 +193,14 @@ public:
 		if (player == nullptr)
 			return;
 
-		Weapon* weapon = player->GetCurrentWeapon();
+		Weapon* weapon = player->GetPrimaryWeapon();
 		if (weapon == nullptr)
 			return;
+		weapon->AddPerk(PerkType::BULLET_LIFETIME_MODIFY, bulletLifeTimeIncrease, 0.0f);
 
+		weapon = player->GetSecondaryWeapon();
+		if (weapon == nullptr)
+			return;
 		weapon->AddPerk(PerkType::BULLET_LIFETIME_MODIFY, bulletLifeTimeIncrease, 0.0f);
 	}
 
@@ -206,10 +222,14 @@ public:
 		if (player == nullptr)
 			return;
 
-		Weapon* weapon = player->GetCurrentWeapon();
+		Weapon* weapon = player->GetPrimaryWeapon();
 		if (weapon == nullptr)
 			return;
+		weapon->AddPerk(PerkType::FIRERATE_MODIFY, fireRateIncrease, 0.0f);
 
+		weapon = player->GetSecondaryWeapon();
+		if (weapon == nullptr)
+			return;
 		weapon->AddPerk(PerkType::FIRERATE_MODIFY, fireRateIncrease, 0.0f);
 	}
 
@@ -232,10 +252,15 @@ public:
 		if (player == nullptr)
 			return;
 
-		Weapon* weapon = player->GetCurrentWeapon();
+		Weapon* weapon = player->GetPrimaryWeapon();
 		if (weapon == nullptr)
 			return;
+		weapon->AddPerk(PerkType::MAXAMMO_MODIFY, capacityIncrease, 0.0f);
+		weapon->AddPerk(PerkType::RELOAD_TIME_MODIFY, reloadTimeIncrease, 0.0f);
 
+		weapon = player->GetSecondaryWeapon();
+		if (weapon == nullptr)
+			return;
 		weapon->AddPerk(PerkType::MAXAMMO_MODIFY, capacityIncrease, 0.0f);
 		weapon->AddPerk(PerkType::RELOAD_TIME_MODIFY, reloadTimeIncrease, 0.0f);
 	}
@@ -259,10 +284,14 @@ public:
 		if (player == nullptr)
 			return;
 
-		Weapon* weapon = player->GetCurrentWeapon();
+		Weapon* weapon = player->GetPrimaryWeapon();
 		if (weapon == nullptr)
 			return;
+		weapon->AddPerk(PerkType::RELOAD_TIME_MODIFY, reloadTimeDecrease, 0.0f);
 
+		weapon = player->GetSecondaryWeapon();
+		if (weapon == nullptr)
+			return;
 		weapon->AddPerk(PerkType::RELOAD_TIME_MODIFY, reloadTimeDecrease, 0.0f);
 	}
 
@@ -434,10 +463,14 @@ public:
 		if (player == nullptr)
 			return;
 
-		Weapon* weapon = player->GetCurrentWeapon();
+		Weapon* weapon = player->GetPrimaryWeapon();
 		if (weapon == nullptr)
 			return;
+		weapon->AddPerk(PerkType::JACKET_BULLETS, damageMultiplier, 0.0f);
 
+		weapon = player->GetSecondaryWeapon();
+		if (weapon == nullptr)
+			return;
 		weapon->AddPerk(PerkType::JACKET_BULLETS, damageMultiplier, 0.0f);
 	}
 
