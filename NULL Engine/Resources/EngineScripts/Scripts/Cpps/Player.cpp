@@ -877,7 +877,7 @@ void Player::AddItem(ItemData* item)
 {
 	for (uint i = 0; i < items.size(); ++i)
 	{
-		if (items[i].first == usingSecondaryGun && items[i].second->name == item->name && items[i].second->rarity <= item->rarity)
+		if (items[i].second->name == item->name && items[i].second->rarity <= item->rarity)
 		{
 			items[i].second = item;
 			ApplyItems();
@@ -890,10 +890,11 @@ void Player::AddItem(ItemData* item)
 
 void Player::ApplyItems()
 {
-	if (currentWeapon == nullptr)
-		return;
+	if (blasterWeapon != nullptr)
+		blasterWeapon->RefreshPerks(true);
+	if (secondaryWeapon != nullptr)
+		secondaryWeapon->RefreshPerks(true);
 
-	currentWeapon->RefreshPerks(true);
 	Item* item = nullptr;
 	for (uint i = 0; i < items.size(); ++i)
 	{
