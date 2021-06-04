@@ -15,6 +15,7 @@
 #include "DialogManager.h"
 #include "Entity.h"
 #include "Player.h"
+#include "IG12.h"
 
 #include "Random.h"
 #include "MC_Time.h"
@@ -50,6 +51,10 @@ void CameraMovement::Start()
 	player = App->scene->GetGameObjectByName(playerName.c_str());
 	if(player)
 		playerScript = (Player*)player->GetScript("Player");
+
+	 GameObject* ig12 = App->scene->GetGameObjectByName("IG12");
+	 if (ig12)
+		 ig12Script = (IG12*)ig12->GetScript("IG12");
 
 	gameManagerObject = App->scene->GetGameObjectByName(gameManagerName.c_str());	
 	if (gameManagerObject != nullptr)
@@ -91,6 +96,9 @@ void CameraMovement::Update()
 		gameObject->transform->SetLocalRotation(initialRot);
 	
 	if (playerScript != nullptr & playerScript->hitTimer.IsActive()) 
+		CameraShake(shakeDuration, shakeMagnitude);
+
+	if (ig12Script != nullptr && ig12Script->bombExploding == true)
 		CameraShake(shakeDuration, shakeMagnitude);
 
 	if (gameManagerScript->dialogManager->GetDialogState() == DialogState::NO_DIALOG)

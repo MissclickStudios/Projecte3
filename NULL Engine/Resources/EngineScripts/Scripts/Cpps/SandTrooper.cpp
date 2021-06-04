@@ -288,7 +288,6 @@ void Trooper::ManageAim()
 		aimState = AimState::IDLE;
 		break;
 	case AimState::SHOOT_IN:
-		currentAnimation = &shootAnimation;
 		aimState = AimState::SHOOT;
 
 	case AimState::SHOOT:
@@ -316,9 +315,11 @@ void Trooper::ManageAim()
 			}
 		break;
 	case AimState::RELOAD_IN:
+		currentAnimation = &idleAnimation;
 		aimState = AimState::RELOAD;
 
 	case AimState::RELOAD:
+		currentAnimation = &idleAnimation;
 		if (blasterWeapon && blasterWeapon->Reload())
 			aimState = AimState::ON_GUARD;
 		break;

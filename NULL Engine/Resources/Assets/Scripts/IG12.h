@@ -15,6 +15,7 @@
 class GameManager;
 class C_Canvas;
 class C_UI_Image;
+class CameraMovement;
 
 enum class IG12State
 {
@@ -98,6 +99,7 @@ public:
 	float bombingAttackBigAreaSide = 0.0f;
 	float bombingAttackSmallAreaSide = 0.0f;
 	float bombFallingTime = 0.0f;
+	float prepareBombingTime = 0.0f;
 
 	// Weapons
 	Prefab blaster;
@@ -114,6 +116,8 @@ public:
 	
 	//partiles and SFX
 	C_ParticleSystem* bombingParticles;
+	C_ParticleSystem* hitParticles;
+	bool bombExploding = false;
 
 private:
 
@@ -157,6 +161,7 @@ private:
 	Timer bombingAttackTimer;
 	Timer bombTimer;
 	Timer bombingAndSpiralAttackTimer;
+	Timer prepareBombing;
 	
 	float2 bombPosition = float2::zero;
 	float2 playerPosition = float2::zero;
@@ -176,6 +181,7 @@ private:
 	LCG randomGenerator;
 
 	GameManager* gameManager = nullptr;
+	CameraMovement* cameraMovement = nullptr;
 
 	C_Canvas* healthBarCanvas = nullptr;
 	C_UI_Image* healthBarImage = nullptr;

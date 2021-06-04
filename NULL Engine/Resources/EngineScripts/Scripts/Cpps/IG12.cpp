@@ -12,6 +12,7 @@
 #include "Player.h"
 #include "GameManager.h"
 #include "DialogManager.h"
+#include "CameraMovement.h"
 
 #include "MC_Time.h"
 
@@ -83,6 +84,7 @@ IG12* CreateIG12()
 	INSPECTOR_DRAGABLE_FLOAT(script->bombingAttackBigAreaSide);
 	INSPECTOR_DRAGABLE_FLOAT(script->bombingAttackSmallAreaSide);
 	INSPECTOR_DRAGABLE_FLOAT(script->bombFallingTime);
+	INSPECTOR_DRAGABLE_FLOAT(script->prepareBombingTime);
 
 	//Weapons
 	INSPECTOR_PREFAB(script->blaster);
@@ -113,6 +115,7 @@ void IG12::SetUp()
 	firstStageTimer.Stop();
 	secondStageTimer.Stop();
 	bombTimer.Stop();
+	prepareBombing.Stop();
 
 	player = App->scene->GetGameObjectByName(playerName.c_str());
 	userAttackDistance = attackDistance;
@@ -187,6 +190,11 @@ void IG12::SetUp()
 	//Particles and SFX
 	bombingParticles = crosshair->GetComponent<C_ParticleSystem>();
 	(bombingParticles != nullptr) ? bombingParticles->StopSpawn() : LOG("[ERROR] IG12 Script: Could not find { BOMBING } Particle System!");
+
+	hitParticles = gameObject->GetComponent<C_ParticleSystem>();
+	(hitParticles != nullptr) ? hitParticles->StopSpawn() : LOG("[ERROR] IG12 Script: Could not find { HIT } Particle System!");
+
+	damageAudio = (C_AudioSource*)gameObject->GetComponent<C_AudioSource>();
 }
 
 void IG12::Behavior()
@@ -223,8 +231,8 @@ void IG12::TakeDamage(float damage)
 		health = 0.0f;
 
 	hitTimer.Start();
-	if (GetParticles("Hit") != nullptr)
-		GetParticles("Hit")->ResumeSpawn();
+	if (hitParticles != nullptr)
+		hitParticles->ResumeSpawn();
 
 	if (damageAudio != nullptr)
 		damageAudio->PlayFx(damageAudio->GetEventId());
@@ -283,7 +291,7 @@ void IG12::LookAtPlayer()
 
 	if (skeleton)
 		skeleton->transform->SetLocalRotation(float3(0, -rad + DegToRad(90), 0));
-}
+} 
 
 void IG12::ManageMovement()
 {
@@ -358,6 +366,11 @@ void IG12::ManageMovement()
 		else
 			firstStageTimer.Start();
 	}
+
+	if (hitParticles != nullptr)
+		if(!hitTimer.IsActive())
+			hitParticles->StopSpawn();
+	
 
 	switch (moveState)
 	{
@@ -454,10 +467,31 @@ void IG12::ManageMovement()
 		}
 		break;
 	case IG12State::BOMBING_ATTACK_IN:
+		currentAnimation = &specialAnimation;
 		specialAttackStartAim = aimDirection;
 		specialAttackRot = 0.0f;
 		attackDistance = 200.0f;
-		moveState = IG12State::BOMBING_ATTACK;
+		aimState = AimState::IDLE;
+
+		if (blasterWeapon)
+		{
+			blasterWeapon->fireRate = 0.0f;
+			blasterWeapon->ammo = 0;
+		}
+		if (sniperWeapon)
+		{
+			sniperWeapon->fireRate = 0.0f;
+			sniperWeapon->ammo = 0;
+		}
+
+		if (prepareBombing.IsActive() && prepareBombing.ReadSec() >= prepareBombingTime)
+		{
+			prepareBombing.Stop();
+			bombingAttackTimer.Start();
+			attackDistance = userAttackDistance;
+			moveState = IG12State::BOMBING_ATTACK;
+		}
+		break;
 
 	case IG12State::BOMBING_ATTACK:
 		if (!BombingAttack())
@@ -543,9 +577,28 @@ void IG12::ManageMovement()
 	case IG12State::BOMBING_AND_SPIRAL_ATTACK_IN:
 		specialAttackStartAim = aimDirection;
 		specialAttackRot = 0.0f;
+		attackDistance = 200.0f;
+		aimState = AimState::IDLE;
 
-		moveState = IG12State::BOMBING_AND_SPIRAL_ATTACK;
+		if (blasterWeapon)
+		{
+			blasterWeapon->fireRate = 0.0f;
+			blasterWeapon->ammo = 0;
+		}
+		if (sniperWeapon)
+		{
+			sniperWeapon->fireRate = 0.0f;
+			sniperWeapon->ammo = 0;
+		}
 
+		if (prepareBombing.ReadSec() >= prepareBombingTime)
+		{			
+			attackDistance = userAttackDistance;
+			prepareBombing.Stop();
+			bombingAndSpiralAttackTimer.Start();
+			moveState = IG12State::BOMBING_AND_SPIRAL_ATTACK;
+		}
+		break;
 	case IG12State::BOMBING_AND_SPIRAL_ATTACK:
 		if (!BombingAndSpiralAttack())
 		{
@@ -737,7 +790,7 @@ bool IG12::LineAttack()
 {
 	if (blasterWeapon)
 	{
-		blasterWeapon->fireRate = 0.01f;
+		blasterWeapon->fireRate = 0.1f;
 		blasterWeapon->projectilesPerShot = 3;
 		blasterWeapon->ammo = 30;
 		blasterWeapon->shotSpreadArea = 3;
@@ -756,18 +809,20 @@ bool IG12::BombingAttack()
 {
 	if (blasterWeapon)
 	{
-		blasterWeapon->projectilesPerShot = 0;
+		blasterWeapon->fireRate = 0.3f;
+		blasterWeapon->ammo = 20;
+		blasterWeapon->projectilesPerShot = 1;
 	}
 	if (sniperWeapon)
 	{
-		sniperWeapon->projectilesPerShot = 0;	
+		sniperWeapon->fireRate = 0.3f;
+		sniperWeapon->ammo = 20;
+		sniperWeapon->projectilesPerShot = 1;
 	}
 
 	if (bombTimer.IsActive() && bombTimer.ReadSec() >= bombFallingTime)
 	{
 		bombTimer.Stop();
-		//if (GetParticles("Hit") != nullptr)
-		//	GetParticles("Hit")->ResumeSpawn();
 
 		if(player->transform->GetWorldPosition().x >= bombPosition.x - bombingAttackSmallAreaSide && player->transform->GetWorldPosition().x < bombPosition.x + bombingAttackSmallAreaSide)
 			if (player->transform->GetWorldPosition().z >= bombPosition.y - bombingAttackSmallAreaSide && player->transform->GetWorldPosition().z < bombPosition.y + bombingAttackSmallAreaSide)
@@ -776,12 +831,18 @@ bool IG12::BombingAttack()
 				if (playerScript)
 					playerScript->TakeDamage(Damage());
 			}
+		bombExploding = false;
 	}
-	else if (bombTimer.IsActive() && bombTimer.ReadSec() >= bombFallingTime * 0.8)
+
+	else if (bombTimer.IsActive() && bombTimer.ReadSec() >= bombFallingTime * 0.9)
 	{
 		if (bombingParticles != nullptr)
 			bombingParticles->ResumeSpawn();
+		if (damageAudio != nullptr)
+			damageAudio->PlayFx(damageAudio->GetEventId());
+		bombExploding = true;
 	}
+
 	else if (!bombTimer.IsActive())
 	{
 		playerPosition.x = player->transform->GetWorldPosition().x;
@@ -811,7 +872,6 @@ float2 IG12::CalculateNextBomb(float x, float y)
 	float bombY = Lerp(y - (bombingAttackBigAreaSide * 0.5), y + (bombingAttackBigAreaSide * 0.5), randomGenerator.Float());
 	return float2(bombX, bombY);
 }
-
 
 bool IG12::BombingAndSpiralAttack()
 {
@@ -851,6 +911,13 @@ bool IG12::BombingAndSpiralAttack()
 					playerScript->TakeDamage(Damage());
 			}
 	}
+	else if (bombTimer.IsActive() && bombTimer.ReadSec() >= bombFallingTime * 0.8)
+	{
+		if (bombingParticles != nullptr)
+			bombingParticles->ResumeSpawn();
+		if (damageAudio != nullptr)
+			damageAudio->PlayFx(damageAudio->GetEventId());
+	}
 	else if (!bombTimer.IsActive())
 	{
 		playerPosition.x = player->transform->GetWorldPosition().x;
@@ -859,7 +926,7 @@ bool IG12::BombingAndSpiralAttack()
 		bombPosition = CalculateNextBomb(playerPosition.x, playerPosition.y);
 		crosshair->transform->SetWorldPosition(float3(bombPosition.x, 5, bombPosition.y));
 		if (bombingParticles != nullptr)
-			bombingParticles->ResumeSpawn();
+			bombingParticles->StopSpawn();
 	}
 
 	if (!bombingAndSpiralAttackTimer.IsActive())
@@ -880,7 +947,7 @@ void IG12::pickFirstStageAttack()
 
 	if (randAttack <= 1)
 	{
-		bombingAttackTimer.Start();
+		prepareBombing.Start();
 		moveState = IG12State::BOMBING_ATTACK_IN;
 	}
 	else
@@ -897,7 +964,7 @@ void IG12::pickSecondStageAttack()
 
 	if (randAttack <= 1)
 	{
-		bombingAndSpiralAttackTimer.Start();
+		prepareBombing.Start();
 		moveState = IG12State::BOMBING_AND_SPIRAL_ATTACK_IN;
 	}
 	else
