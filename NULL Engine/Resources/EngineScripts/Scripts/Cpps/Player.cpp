@@ -1187,6 +1187,8 @@ void Player::AimIdle()
 	/*if (idleAimPlane != nullptr)
 		idleAimPlane->SetIsActive(true);*/
 
+	//LOG("IDLING THE AIM PLANE");
+
 	if (aimingAimPlane != nullptr)
 		aimingAimPlane->SetIsActive(false);
 
@@ -1206,6 +1208,8 @@ void Player::Aiming()
 {
 	/*if (idleAimPlane != nullptr)
 		idleAimPlane->SetIsActive(false);*/
+
+	//LOG("AIMING THE AIM PLANE");
 
 	if (aimingAimPlane != nullptr)
 		aimingAimPlane->SetIsActive(true);
@@ -1233,7 +1237,7 @@ void Player::Shoot()
 
 	switch (currentWeapon->Shoot(aimVector))
 	{
-	case ShootState::NO_FULLAUTO:		{ currentAnimation = nullptr; aimState = AimState::IDLE; }		break;
+	case ShootState::NO_FULLAUTO:		{ currentAnimation = nullptr; aimState = AimState::IDLE; }			break;
 	case ShootState::WAITING_FOR_NEXT:	{ /* DO NOTHING */ }												break;
 	case ShootState::FIRED_PROJECTILE:	
 	{ 
@@ -1248,7 +1252,7 @@ void Player::Shoot()
 			currentWeapon->defRotation = currentWeapon->modifiedRotation;
 		}
 	}		break;
-	case ShootState::RATE_FINISHED:		{ currentAnimation = nullptr; aimState = AimState::IDLE; }		break;
+	case ShootState::RATE_FINISHED:		{ currentAnimation = nullptr; aimState = AimState::IDLE; }			break;
 	case ShootState::NO_AMMO:			{ /*currentAnimation = nullptr;*/ aimState = AimState::RELOAD_IN; }	break;
 	}
 }
@@ -1372,18 +1376,19 @@ void Player::GatherAimInputs()
 	// Keyboard aim
 	if (/*abs(aimInputThreshold.x) <= KEYBOARD_THRESHOLD && abs(aimInputThreshold.y) <= KEYBOARD_THRESHOLD*/ usingKeyboard && !usingGameController)						// If there was no controller input
 	{
-		if (App->input->GetKey(SDL_SCANCODE_UP) == KeyState::KEY_REPEAT)	{ aimInput.y = -MAX_INPUT;	if (aimState == AimState::IDLE) aimState = AimState::AIMING; }
-		if (App->input->GetKey(SDL_SCANCODE_DOWN) == KeyState::KEY_REPEAT)	{ aimInput.y = MAX_INPUT;	if (aimState == AimState::IDLE) aimState = AimState::AIMING; }
-		if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KeyState::KEY_REPEAT)	{ aimInput.x = MAX_INPUT;	if (aimState == AimState::IDLE) aimState = AimState::AIMING; }
-		if (App->input->GetKey(SDL_SCANCODE_LEFT) == KeyState::KEY_REPEAT)	{ aimInput.x = -MAX_INPUT;	if (aimState == AimState::IDLE) aimState = AimState::AIMING; }
-
-		if (abs(aimInput.x) != MAX_INPUT && abs(aimInput.y) != MAX_INPUT)
-			aimState = AimState::IDLE;
-
+		if (App->input->GetKey(SDL_SCANCODE_UP) == KeyState::KEY_REPEAT)			{ aimInput.y = -MAX_INPUT;	if (aimState == AimState::IDLE) aimState = AimState::AIMING; }
+		else if (App->input->GetKey(SDL_SCANCODE_DOWN) == KeyState::KEY_REPEAT)		{ aimInput.y = MAX_INPUT;	if (aimState == AimState::IDLE) aimState = AimState::AIMING; }
+		else if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KeyState::KEY_REPEAT)	{ aimInput.x = MAX_INPUT;	if (aimState == AimState::IDLE) aimState = AimState::AIMING; }
+		else if (App->input->GetKey(SDL_SCANCODE_LEFT) == KeyState::KEY_REPEAT)		{ aimInput.x = -MAX_INPUT;	if (aimState == AimState::IDLE) aimState = AimState::AIMING; }
+		else																		{ aimState = AimState::IDLE; }
 	}
 	else if (usingGameController)																														//There is input above the threshold
 	{
 		aimState = (abs(aimInputThreshold.x) <= AIM_THRESHOLD && abs(aimInputThreshold.y) <= AIM_THRESHOLD) ? AimState::IDLE : AimState::AIMING;
+	}
+	else
+	{
+		aimState = AimState::IDLE;
 	}
 	
 	SetAimDirection();
