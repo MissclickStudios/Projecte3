@@ -55,7 +55,11 @@ void CameraMovement::Start()
 	if (gameManagerObject != nullptr)
 		gameManagerScript = (GameManager*)gameManagerObject->GetScript("GameManager");
 
-	initialRot = gameObject->transform->GetWorldRotation();
+	initialRot = Quat(-0.4461978,0,0, 0.8949344);
+
+	if(gameObject->parent != nullptr)
+		gameObject->parent->transform->SetLocalRotation(float3(0,0,0));
+
 	destinationPoints = App->scene->GetGameObjectByName(destinationPointsName.c_str());
 	playerDestinationPoints = App->scene->GetGameObjectByName(playerPointsName.c_str());
 }
@@ -83,8 +87,8 @@ void CameraMovement::Update()
 
 	gameObject->transform->SetWorldPosition(position);
 
-	if (!gameObject->transform->GetWorldRotation().Equals(initialRot)) 
-		gameObject->transform->SetWorldRotation(initialRot);
+	if (!gameObject->transform->GetLocalRotation().Equals(initialRot))
+		gameObject->transform->SetLocalRotation(initialRot);
 	
 	if (playerScript != nullptr & playerScript->hitTimer.IsActive()) 
 		CameraShake(shakeDuration, shakeMagnitude);
