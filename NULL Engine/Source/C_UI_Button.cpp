@@ -255,6 +255,18 @@ Frame C_UI_Button::GetTexturePosition(int pixelPosX, int pixelPosY, int pixelWid
 	return frame;
 }
 
+Frame C_UI_Button::GetTexturePosition(int pixelPosX, int pixelPosY, int pixelWidth, int pixelHeight, int textW, int textH)
+{
+	Frame frame;
+	frame.proportionBeginX = (float)pixelPosX / textW;
+	frame.proportionFinalX = ((float)pixelPosX + pixelWidth) / textW;
+
+	frame.proportionBeginY = (float)pixelPosY / textH;
+	frame.proportionFinalY = ((float)pixelPosY + pixelHeight) / textH;
+
+	return frame;
+}
+
 bool C_UI_Button::SaveState(ParsonNode& root) const
 {
 	root.SetNumber("Type", (uint)GetType());
@@ -269,6 +281,18 @@ bool C_UI_Button::SaveState(ParsonNode& root) const
 	root.SetNumber("hoveredr", hovered.r); root.SetNumber("hoveredg", hovered.g); root.SetNumber("hoveredb", hovered.b); root.SetNumber("hovereda", hovered.a);
 	root.SetNumber("pressedr", pressed.r); root.SetNumber("pressedg", pressed.g); root.SetNumber("pressedb", pressed.b); root.SetNumber("presseda", pressed.a);
 	
+	C_Material* cMaterial = GetOwner()->GetComponent<C_Material>();
+	if (cMaterial)
+	{
+		uint32 id = cMaterial->GetTextureID();
+		unsigned int spritesheetPixelWidth, spritesheetPixelHeight = 0; cMaterial->GetTextureSize(spritesheetPixelWidth, spritesheetPixelHeight);
+		if (spritesheetPixelWidth && spritesheetPixelHeight)
+		{
+			ParsonNode size = root.SetNode("textureSize");
+			size.SetInteger("textureWidth", spritesheetPixelWidth);
+			size.SetInteger("textureHeight", spritesheetPixelHeight);
+		}
+	}
 	//textCoords
 	ParsonArray pixelCoords = root.SetArray("pixelCoords");
 	for (int i = 0; i < 4; ++i)
@@ -307,12 +331,22 @@ bool C_UI_Button::LoadState(ParsonNode& root)
 		for (int i = 0; i < pixelCoords.size; ++i)
 			pixelCoord[i] = (int)pixelCoords.GetNumber(i);
 
-	ParsonNode node;
-	node = root.GetNode("textureCoords");
-	if (node.NodeIsValid())
+	ParsonNode size = root.GetNode("textureSize");
+	if (size.NodeIsValid())
 	{
-		textCoord.proportionBeginX = node.GetNumber("x"); textCoord.proportionBeginY = node.GetNumber("y");
-		textCoord.proportionFinalX = node.GetNumber("w"); textCoord.proportionFinalY = node.GetNumber("h");
+		int spritesheetPixelWidth = size.GetInteger("textureWidth");
+		int spritesheetPixelHeight = size.GetInteger("textureHeight");
+		textCoord = GetTexturePosition(pixelCoord[0], pixelCoord[1], pixelCoord[2], pixelCoord[3], spritesheetPixelWidth, spritesheetPixelHeight);
+	}
+	else 
+	{
+		ParsonNode node;
+		node = root.GetNode("textureCoords");
+		if (node.NodeIsValid())
+		{
+			textCoord.proportionBeginX = node.GetNumber("x"); textCoord.proportionBeginY = node.GetNumber("y");
+			textCoord.proportionFinalX = node.GetNumber("w"); textCoord.proportionFinalY = node.GetNumber("h");
+		}
 	}
 
 	childOrder = root.GetInteger("childOrder");

@@ -51,6 +51,19 @@ bool C_UI_Slider::SaveState(ParsonNode& root) const
 	root.SetNumber("max value", maxValue);
 	root.SetNumber("offset", offset);
 	
+	C_Material* cMaterial = GetOwner()->GetComponent<C_Material>();
+	if (cMaterial) 
+	{
+		uint32 id = cMaterial->GetTextureID();
+		unsigned int spritesheetPixelWidth, spritesheetPixelHeight = 0; cMaterial->GetTextureSize(spritesheetPixelWidth, spritesheetPixelHeight);
+		if (spritesheetPixelWidth && spritesheetPixelHeight)
+		{
+			ParsonNode size = root.SetNode("textureSize");
+			size.SetInteger("textureWidth", spritesheetPixelWidth);
+			size.SetInteger("textureHeight", spritesheetPixelHeight);
+		}
+	}
+	
 	ParsonArray pixelCoords = root.SetArray("pixelCoords");
 	for (int i = 0; i < 16; ++i)
 		pixelCoords.SetNumber((double)pixelCoord[i]);
@@ -89,30 +102,43 @@ bool C_UI_Slider::LoadState(ParsonNode& root)
 		for (int i = 0; i < pixelCoords.size; ++i)
 			pixelCoord[i] = (int)pixelCoords.GetNumber(i);
 
-	ParsonNode node;
-	node = root.GetNode("unhover uncheck");
-	if (node.NodeIsValid())
+	ParsonNode size = root.GetNode("textureSize");
+	if (size.NodeIsValid())
 	{
-		unhoverUnchecked.proportionBeginX = node.GetNumber("x"); unhoverUnchecked.proportionBeginY = node.GetNumber("y");
-		unhoverUnchecked.proportionFinalX = node.GetNumber("w"); unhoverUnchecked.proportionFinalY = node.GetNumber("h");
+		int spritesheetPixelWidth = size.GetInteger("textureWidth");
+		int spritesheetPixelHeight = size.GetInteger("textureHeight");
+		unhoverUnchecked = GetTexturePosition(pixelCoord[0], pixelCoord[1], pixelCoord[2], pixelCoord[3], spritesheetPixelWidth, spritesheetPixelHeight);
+		hoverUnchecked = GetTexturePosition(pixelCoord[4], pixelCoord[5], pixelCoord[6], pixelCoord[7], spritesheetPixelWidth, spritesheetPixelHeight);
+		unhoverChecked = GetTexturePosition(pixelCoord[8], pixelCoord[9], pixelCoord[10], pixelCoord[11], spritesheetPixelWidth, spritesheetPixelHeight);
+		hoverChecked = GetTexturePosition(pixelCoord[12], pixelCoord[13], pixelCoord[14], pixelCoord[15], spritesheetPixelWidth, spritesheetPixelHeight);
 	}
-	node = root.GetNode("hover uncheck");
-	if (node.NodeIsValid())
+	else 
 	{
-		hoverUnchecked.proportionBeginX = node.GetNumber("x"); hoverUnchecked.proportionBeginY = node.GetNumber("y");
-		hoverUnchecked.proportionFinalX = node.GetNumber("w"); hoverUnchecked.proportionFinalY = node.GetNumber("h");
-	}
-	node = root.GetNode("unhover check");
-	if (node.NodeIsValid())
-	{
-		unhoverChecked.proportionBeginX = node.GetNumber("x"); unhoverChecked.proportionBeginY = node.GetNumber("y");
-		unhoverChecked.proportionFinalX = node.GetNumber("w"); unhoverChecked.proportionFinalY = node.GetNumber("h");
-	}
-	node = root.GetNode("hover check");
-	if (node.NodeIsValid())
-	{
-		hoverChecked.proportionBeginX = node.GetNumber("x"); hoverChecked.proportionBeginY = node.GetNumber("y");
-		hoverChecked.proportionFinalX = node.GetNumber("w"); hoverChecked.proportionFinalY = node.GetNumber("h");
+		ParsonNode node;
+		node = root.GetNode("unhover uncheck");
+		if (node.NodeIsValid())
+		{
+			unhoverUnchecked.proportionBeginX = node.GetNumber("x"); unhoverUnchecked.proportionBeginY = node.GetNumber("y");
+			unhoverUnchecked.proportionFinalX = node.GetNumber("w"); unhoverUnchecked.proportionFinalY = node.GetNumber("h");
+		}
+		node = root.GetNode("hover uncheck");
+		if (node.NodeIsValid())
+		{
+			hoverUnchecked.proportionBeginX = node.GetNumber("x"); hoverUnchecked.proportionBeginY = node.GetNumber("y");
+			hoverUnchecked.proportionFinalX = node.GetNumber("w"); hoverUnchecked.proportionFinalY = node.GetNumber("h");
+		}
+		node = root.GetNode("unhover check");
+		if (node.NodeIsValid())
+		{
+			unhoverChecked.proportionBeginX = node.GetNumber("x"); unhoverChecked.proportionBeginY = node.GetNumber("y");
+			unhoverChecked.proportionFinalX = node.GetNumber("w"); unhoverChecked.proportionFinalY = node.GetNumber("h");
+		}
+		node = root.GetNode("hover check");
+		if (node.NodeIsValid())
+		{
+			hoverChecked.proportionBeginX = node.GetNumber("x"); hoverChecked.proportionBeginY = node.GetNumber("y");
+			hoverChecked.proportionFinalX = node.GetNumber("w"); hoverChecked.proportionFinalY = node.GetNumber("h");
+		}
 	}
 
 	childOrder = root.GetInteger("childOrder");
@@ -334,6 +360,18 @@ Frame C_UI_Slider::GetTexturePosition(int pixelPosX, int pixelPosY, int pixelWid
 
 	frame.proportionBeginY = (float)pixelPosY / spritesheetPixelHeight;
 	frame.proportionFinalY = ((float)pixelPosY + pixelHeight) / spritesheetPixelHeight;
+
+	return frame;
+}
+
+Frame C_UI_Slider::GetTexturePosition(int pixelPosX, int pixelPosY, int pixelWidth, int pixelHeight, int textW, int textH)
+{
+	Frame frame;
+	frame.proportionBeginX = (float)pixelPosX / textW;
+	frame.proportionFinalX = ((float)pixelPosX + pixelWidth) / textW;
+
+	frame.proportionBeginY = (float)pixelPosY / textH;
+	frame.proportionFinalY = ((float)pixelPosY + pixelHeight) / textH;
 
 	return frame;
 }

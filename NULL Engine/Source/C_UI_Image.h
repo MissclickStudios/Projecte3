@@ -32,6 +32,7 @@ public:
 
 private:
 	Frame GetTexturePosition(int pixelPosX, int pixelPosY, int pixelWidth, int pixelHeight);
+	Frame GetTexturePosition(int pixelPosX, int pixelPosY, int pixelWidth, int pixelHeight, int textW, int textH);
 private:
 	uint VAO;
 	uint VBO;
