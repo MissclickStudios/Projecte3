@@ -8,8 +8,10 @@ class C_AudioSource;
 class Object;
 class ExplosiveBarrel;
 
-class SCRIPTS_API BarrelExplosion : public Object ALLOWED_INHERITANCE {
+class SCRIPTS_API BarrelExplosion : public Object ALLOWED_INHERITANCE 
+{
 public:
+
 	BarrelExplosion();
 	~BarrelExplosion();
 
@@ -20,12 +22,13 @@ public:
 	void OnTriggerRepeat(GameObject* object) override;
 
 	int damage = 0;
-	float power = 2000000.0f;
+	float power = 20.0f;
+
+	bool stun = false;
 
 private:
 
-	C_BoxCollider* explosionCollider = nullptr;
-	ExplosiveBarrel* barrelScript = nullptr;
+	int state = 0;
 };
 
 SCRIPTS_FUNCTION BarrelExplosion* CreateBarrelExplosion();

@@ -110,6 +110,15 @@ void DialogManager::Update()
 					state = DialogState::TALKED;
 					currentLineLetter = 0;
 				}
+				else if (currentLine->lineText.at(currentLineLetter) == *" ")
+				{
+					dialogText->nextWordLetters = 0;
+					for (uint i = currentLineLetter + 1; currentLine->lineText.at(i) != *" "; ++i)
+					{
+						dialogText->nextWordLetters;
+					}
+				}
+					
 			}
 
 			if (App->input->GetGameControllerButton(1) == ButtonState::BUTTON_DOWN || App->input->GetKey(SDL_SCANCODE_BACKSPACE) == KeyState::KEY_DOWN)

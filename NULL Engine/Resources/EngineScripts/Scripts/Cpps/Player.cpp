@@ -26,8 +26,8 @@
 
 #define MAX_INPUT			32767.0f
 #define WALK_THRESHOLD		16384.0f
-#define AIM_THRESHOLD		8000.0f
-#define KEYBOARD_THRESHOLD	4000.0f
+#define AIM_THRESHOLD		8192.0f
+#define JOYSTICK_THRESHOLD	4096.0f
 #define WALKING_FACTOR		0.5f
 
 Player* CreatePlayer()
@@ -1187,8 +1187,10 @@ void Player::AimIdle()
 	/*if (idleAimPlane != nullptr)
 		idleAimPlane->SetIsActive(true);*/
 
-	if (aimingAimPlane != nullptr)
-		aimingAimPlane->SetIsActive(false);
+	//LOG("IDLING THE AIM PLANE");
+
+	/*if (aimingAimPlane != nullptr)
+		aimingAimPlane->SetIsActive(false);*/
 
 	if (currentWeapon != nullptr)
 	{
@@ -1207,8 +1209,10 @@ void Player::Aiming()
 	/*if (idleAimPlane != nullptr)
 		idleAimPlane->SetIsActive(false);*/
 
-	if (aimingAimPlane != nullptr)
-		aimingAimPlane->SetIsActive(true);
+	//LOG("AIMING THE AIM PLANE");
+
+	/*if (aimingAimPlane != nullptr)
+		aimingAimPlane->SetIsActive(true);*/
 
 	if (currentWeapon != nullptr)
 	{
@@ -1233,7 +1237,7 @@ void Player::Shoot()
 
 	switch (currentWeapon->Shoot(aimVector))
 	{
-	case ShootState::NO_FULLAUTO:		{ currentAnimation = nullptr; aimState = AimState::IDLE; }		break;
+	case ShootState::NO_FULLAUTO:		{ currentAnimation = nullptr; aimState = AimState::IDLE; }			break;
 	case ShootState::WAITING_FOR_NEXT:	{ /* DO NOTHING */ }												break;
 	case ShootState::FIRED_PROJECTILE:	
 	{ 
@@ -1248,7 +1252,7 @@ void Player::Shoot()
 			currentWeapon->defRotation = currentWeapon->modifiedRotation;
 		}
 	}		break;
-	case ShootState::RATE_FINISHED:		{ currentAnimation = nullptr; aimState = AimState::IDLE; }		break;
+	case ShootState::RATE_FINISHED:		{ currentAnimation = nullptr; aimState = AimState::IDLE; }			break;
 	case ShootState::NO_AMMO:			{ /*currentAnimation = nullptr;*/ aimState = AimState::RELOAD_IN; }	break;
 	}
 }
@@ -1334,14 +1338,17 @@ void Player::GatherMoveInputs()
 	// Keyboard movement
 	if (usingKeyboard && !usingGameController)								// If there was keyboard input and no controller input
 	{	
-		if (App->input->GetKey(SDL_SCANCODE_W) == KeyState::KEY_REPEAT) { moveInput.y = -MAX_INPUT; moveState = PlayerState::RUN; }
-		if (App->input->GetKey(SDL_SCANCODE_S) == KeyState::KEY_REPEAT) { moveInput.y = MAX_INPUT;	moveState = PlayerState::RUN; }
-		if (App->input->GetKey(SDL_SCANCODE_D) == KeyState::KEY_REPEAT) { moveInput.x = MAX_INPUT;	moveState = PlayerState::RUN; }
-		if (App->input->GetKey(SDL_SCANCODE_A) == KeyState::KEY_REPEAT) { moveInput.x = -MAX_INPUT; moveState = PlayerState::RUN; }
+		if (App->input->GetKey(SDL_SCANCODE_W) == KeyState::KEY_REPEAT)	{ moveInput.y = -MAX_INPUT; moveState = PlayerState::RUN; }
+		if (App->input->GetKey(SDL_SCANCODE_S) == KeyState::KEY_REPEAT)	{ moveInput.y = MAX_INPUT;	moveState = PlayerState::RUN; }
+		if (App->input->GetKey(SDL_SCANCODE_D) == KeyState::KEY_REPEAT)	{ moveInput.x = MAX_INPUT;	moveState = PlayerState::RUN; }
+		if (App->input->GetKey(SDL_SCANCODE_A) == KeyState::KEY_REPEAT)	{ moveInput.x = -MAX_INPUT; moveState = PlayerState::RUN; }
+
+		if (abs(moveInput.x) < MAX_INPUT && abs(moveInput.y) < MAX_INPUT)
+			moveState = PlayerState::IDLE;
 	}
 	else if (usingGameController)
 	{	
-		if (abs(moveInput.x) > 4000.0f || abs(moveInput.y) > 4000.0f)
+		if (abs(moveInput.x) > JOYSTICK_THRESHOLD || abs(moveInput.y) > JOYSTICK_THRESHOLD)
 			moveState = (abs(moveInput.x) > WALK_THRESHOLD || abs(moveInput.y) > WALK_THRESHOLD) ? PlayerState::RUN : PlayerState::WALK;
 		else
 			moveState = PlayerState::IDLE;
@@ -1359,24 +1366,24 @@ void Player::GatherMoveInputs()
 void Player::GatherAimInputs()
 {
 	// Controller aim
-	aimInput.x = (float)App->input->GetGameControllerAxisRaw(2); // x right joystick
-	aimInput.y = (float)App->input->GetGameControllerAxisRaw(3); // y right joystick
+	aimInput.x = (float)App->input->GetGameControllerAxisRaw(2);				// x right joystick
+	aimInput.y = (float)App->input->GetGameControllerAxisRaw(3);				// y right joystick
 
-	aimInputThreshold.x = (float)App->input->GetGameControllerAxisValue(2); // x right joystick with threshhold
-	aimInputThreshold.y = (float)App->input->GetGameControllerAxisValue(3); // x right joystick with threshhold
+	aimInputThreshold.x = (float)App->input->GetGameControllerAxisValue(2);		// x right joystick with threshhold
+	aimInputThreshold.y = (float)App->input->GetGameControllerAxisValue(3);		// y right joystick with threshhold
 
 	//LOG("AIM INPUT		--> [%.3f]::[%.3f]", aimInput.x, aimInput.y);
 	//LOG("AIM THRESHOLD	--> [%.3f]::[%.3f]", aimInputThreshold.x, aimInputThreshold.y);
 
 	// Keyboard aim
-	if (/*abs(aimInputThreshold.x) <= KEYBOARD_THRESHOLD && abs(aimInputThreshold.y) <= KEYBOARD_THRESHOLD*/ usingKeyboard && !usingGameController)						// If there was no controller input
+	if (usingKeyboard && !usingGameController)																											// If there was no controller input
 	{
 		if (App->input->GetKey(SDL_SCANCODE_UP) == KeyState::KEY_REPEAT)	{ aimInput.y = -MAX_INPUT;	if (aimState == AimState::IDLE) aimState = AimState::AIMING; }
 		if (App->input->GetKey(SDL_SCANCODE_DOWN) == KeyState::KEY_REPEAT)	{ aimInput.y = MAX_INPUT;	if (aimState == AimState::IDLE) aimState = AimState::AIMING; }
 		if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KeyState::KEY_REPEAT)	{ aimInput.x = MAX_INPUT;	if (aimState == AimState::IDLE) aimState = AimState::AIMING; }
 		if (App->input->GetKey(SDL_SCANCODE_LEFT) == KeyState::KEY_REPEAT)	{ aimInput.x = -MAX_INPUT;	if (aimState == AimState::IDLE) aimState = AimState::AIMING; }
-
-		if (abs(aimInput.x) != MAX_INPUT && abs(aimInput.y) != MAX_INPUT)
+		
+		if (abs(aimInput.x) < MAX_INPUT && abs(aimInput.y) < MAX_INPUT)
 			aimState = AimState::IDLE;
 
 	}
@@ -1384,10 +1391,14 @@ void Player::GatherAimInputs()
 	{
 		aimState = (abs(aimInputThreshold.x) <= AIM_THRESHOLD && abs(aimInputThreshold.y) <= AIM_THRESHOLD) ? AimState::IDLE : AimState::AIMING;
 	}
-	
+	else
+	{
+		aimState = AimState::IDLE;
+	}
+
 	SetAimDirection();
 
-	if (aimState != AimState::IDLE && aimState != AimState::AIMING && aimState != AimState::CHANGE && aimState != AimState::RELOAD && aimState != AimState::SHOOT) // If the player is not on this states, ignore action inputs (shoot, reload, etc.)
+	if (aimState == AimState::CHANGE_IN || aimState == AimState::RELOAD_IN || aimState == AimState::SHOOT_IN)											// If the player is in this states, ignore action inputs (shoot, reload, etc.)
 	{
 		aimState = AimState::IDLE;
 		return;
@@ -1509,15 +1520,32 @@ void Player::Aim()
 	}
 	else
 	{
-		aimVector = aimInput;
+		aimVector = (abs(aimInput.x) < JOYSTICK_THRESHOLD && abs(aimInput.y) < JOYSTICK_THRESHOLD) ? moveVector : aimInput;
+	}
+
+	if (abs(aimInput.x) < JOYSTICK_THRESHOLD && abs(aimInput.y) < JOYSTICK_THRESHOLD)
+	{
+		if (aimingAimPlane != nullptr)
+			aimingAimPlane->SetIsActive(false);
+	}
+	else
+	{
+		if (aimingAimPlane != nullptr)
+			aimingAimPlane->SetIsActive(true);
 	}
 
 	//LOG("Aim vector x = %f , y = %f", aimVector.x, aimVector.y);
 
 	float rad = aimVector.AimedAngle();
-	
+
 	if (skeleton != nullptr)
 		skeleton->transform->SetLocalRotation(float3(0, -rad + DegToRad(90), 0));
+	
+	/*if (abs(aimVector.x) >= JOYSTICK_THRESHOLD || abs(aimVector.y) >= JOYSTICK_THRESHOLD)					// In case the rotation has to be locked under the JOYSTICK_THRESHOLD.
+	{
+		if (skeleton != nullptr)
+			skeleton->transform->SetLocalRotation(float3(0, -rad + DegToRad(90), 0));
+	}*/
 }
 
 void Player::ApplyDash()
