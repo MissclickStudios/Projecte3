@@ -279,12 +279,13 @@ void Entity::GiveHeal(float amount)
 
 Effect* Entity::AddEffect(EffectType type, float duration, bool permanent, float power, float chance, float3 direction, bool start)
 {
-	// TODO: System to add a max stack to each effect so that more than one can exist at once
 	if (effectCounters[(uint)type]) // Check that this effect is not already on the entity
-		return nullptr;
+		for (uint i = 0; i < effects.size(); ++i) // If it does erase the older one
+			if (effects[i]->Type() == type)
+				effects[i]->End();
 	
 	Effect* output = new Effect(type, duration, permanent, power, chance, direction, start);
-	effects.emplace_back(output); // I use emplace instead of push to avoid unnecessary copies
+	effects.emplace_back(output);
 	++effectCounters[(uint)type]; // Add one to the counter of this effect
 
 	return output;
@@ -329,7 +330,6 @@ void Entity::Heal(Effect* effect)
 void Entity::MaxHealthModify(Effect* effect)
 {
 	maxHealthModifier += effect->Duration();
-	GiveHeal(999999.0f);
 }
 
 void Entity::SpeedModify(Effect* effect)
