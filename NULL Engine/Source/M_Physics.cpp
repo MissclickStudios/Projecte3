@@ -19,23 +19,25 @@
 #define THREADS 4
 
 #ifndef _DEBUG
-#pragma comment(lib, "Source/Dependencies/PhysX_3.4/libx86_/Release_/PhysX3_x86.lib")
-#pragma comment(lib, "Source/Dependencies/PhysX_3.4/libx86_/Release_/PhysX3Common_x86.lib")
-#pragma comment(lib, "Source/Dependencies/PhysX_3.4/libx86_/Release_/PhysX3Extensions.lib")
-#pragma comment(lib, "Source/Dependencies/PhysX_3.4/libx86_/Release_/PxFoundation_x86.lib")
-#pragma comment(lib, "Source/Dependencies/PhysX_3.4/libx86_/Release_/PxPvdSDK_x86.lib")
-#pragma comment(lib, "Source/Dependencies/PhysX_3.4/libx86_/Release_/PhysX3CharacterKinematic_x86.lib")
-#pragma comment(lib, "Source/Dependencies/PhysX_3.4/libx86_/Release_/SceneQuery.lib")
-#pragma comment(lib, "Source/Dependencies/PhysX_3.4/libx86_/Release_/PhysX3Cooking_x86.lib")
+#pragma comment(lib, "Source/Dependencies/PhysX_4.1/libx86/Release/PhysX_32.lib")
+#pragma comment(lib, "Source/Dependencies/PhysX_4.1/libx86/Release/PhysXCommon_32.lib")
+#pragma comment(lib, "Source/Dependencies/PhysX_4.1/libx86/Release/PhysXExtensions_static_32.lib")
+#pragma comment(lib, "Source/Dependencies/PhysX_4.1/libx86/Release/PhysXFoundation_32.lib")
+#pragma comment(lib, "Source/Dependencies/PhysX_4.1/libx86/Release/PhysXPvdSDK_static_32.lib")
+#pragma comment(lib, "Source/Dependencies/PhysX_4.1/libx86/Release/PhysXCharacterKinematic_static_32.lib")
+//#pragma comment(lib, "Source/Dependencies/PhysX_4.1/libx86/Release/PhysXVehicle_static_32.lib")
+#pragma comment(lib, "Source/Dependencies/PhysX_4.1/libx86/Release/PhysXCooking_32.lib")
+//#pragma comment(lib, "Source/Dependencies/PhysX_4.1/libx86/Release/PhysXTask_static_32.lib")
 #else
-#pragma comment(lib, "Source/Dependencies/PhysX_3.4/libx86_/Debug_/PhysX3CommonDEBUG_x86.lib")
-#pragma comment(lib, "Source/Dependencies/PhysX_3.4/libx86_/Debug_/PhysX3DEBUG_x86.lib")
-#pragma comment(lib, "Source/Dependencies/PhysX_3.4/libx86_/Debug_/PhysX3ExtensionsDEBUG.lib")
-#pragma comment(lib, "Source/Dependencies/PhysX_3.4/libx86_/Debug_/PxFoundationDEBUG_x86.lib")
-#pragma comment(lib, "Source/Dependencies/PhysX_3.4/libx86_/Debug_/PxPvdSDKDEBUG_x86.lib")
-#pragma comment(lib, "Source/Dependencies/PhysX_3.4/libx86_/Debug_/PhysX3CharacterKinematicDEBUG_x86.lib")
-#pragma comment(lib, "Source/Dependencies/PhysX_3.4/libx86_/Debug_/SceneQueryDEBUG.lib")
-#pragma comment(lib, "Source/Dependencies/PhysX_3.4/libx86_/Debug_/PhysX3CookingDEBUG_x86.lib")
+#pragma comment(lib, "Source/Dependencies/PhysX_4.1/libx86/Debug/PhysX_32.lib")
+#pragma comment(lib, "Source/Dependencies/PhysX_4.1/libx86/Debug/PhysXCharacterKinematic_static_32.lib")
+#pragma comment(lib, "Source/Dependencies/PhysX_4.1/libx86/Debug/PhysXCommon_32.lib")
+#pragma comment(lib, "Source/Dependencies/PhysX_4.1/libx86/Debug/PhysXCooking_32.lib")
+#pragma comment(lib, "Source/Dependencies/PhysX_4.1/libx86/Debug/PhysXExtensions_static_32.lib")
+#pragma comment(lib, "Source/Dependencies/PhysX_4.1/libx86/Debug/PhysXFoundation_32.lib")
+//#pragma comment(lib, "Source/Dependencies/PhysX_4.1/libx86/Debug/PhysXVehicle_static_32.lib")
+#pragma comment(lib, "Source/Dependencies/PhysX_4.1/libx86/Debug/PhysXPvdSDK_static_32.lib")
+#pragma comment(lib, "Source/Dependencies/PhysX_4.1/libx86/Debug/PhysXTask_static_32.lib")
 #endif // _DEBUG
 
 M_Physics::M_Physics(bool isActive) : Module("physics", isActive)
@@ -111,7 +113,7 @@ bool M_Physics::Start()
 	static physx::PxDefaultErrorCallback gDefaultErrorCallback;
 	static physx::PxDefaultAllocator gDefaultAllocatorCallback;
 
-	foundation = PxCreateFoundation(PX_FOUNDATION_VERSION, gDefaultAllocatorCallback, gDefaultErrorCallback);
+	foundation = PxCreateFoundation(PX_PHYSICS_VERSION, gDefaultAllocatorCallback, gDefaultErrorCallback);
 	if (!foundation)
 	{
 		LOG("[ERROR] Physics Module: PxCreateFoundation failed!");
@@ -143,7 +145,7 @@ bool M_Physics::Start()
 	sceneDesc.gravity = physx::PxVec3(0.0f, -gravity, 0.0f);
 	sceneDesc.bounceThresholdVelocity = gravity* BOUNCE_THRESHOLD;
 	sceneDesc.cpuDispatcher = physx::PxDefaultCpuDispatcherCreate(THREADS);
-	sceneDesc.flags |= physx::PxSceneFlag::eENABLE_KINEMATIC_PAIRS | physx::PxSceneFlag::eENABLE_KINEMATIC_STATIC_PAIRS;
+	//sceneDesc.flags |= physx::PxSceneFlag::eENABLE_KINEMATIC_PAIRS | physx::PxSceneFlag::eENABLE_KINEMATIC_STATIC_PAIRS;
 	sceneDesc.filterShader = customFilterShader;
 	sceneDesc.simulationEventCallback = simulationCallback;
 
