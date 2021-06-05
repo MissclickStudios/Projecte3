@@ -78,27 +78,25 @@ void HUDManager::Start()
 
 		a = App->scene->GetGameObjectByName(heart1Name.c_str());
 		if (a != nullptr)
+		{
 			heart1 = (C_Material*)a->GetComponent<C_Material>();
-
-		a = App->scene->GetGameObjectByName(heart2Name.c_str());
-		if (a != nullptr)
-			heart2 = (C_Material*)a->GetComponent<C_Material>();
-
-		a = App->scene->GetGameObjectByName(heart3Name.c_str());
-		if (a != nullptr)
-			heart3 = (C_Material*)a->GetComponent<C_Material>();
-
-		a = App->scene->GetGameObjectByName(heart1Name.c_str());
-		if (a != nullptr)
 			heart1Image = (C_2DAnimator*)a->GetComponent<C_2DAnimator>();
+		}
 
 		a = App->scene->GetGameObjectByName(heart2Name.c_str());
 		if (a != nullptr)
+		{
+			heart2 = (C_Material*)a->GetComponent<C_Material>();
 			heart2Image = (C_2DAnimator*)a->GetComponent<C_2DAnimator>();
+		}
 
 		a = App->scene->GetGameObjectByName(heart3Name.c_str());
 		if (a != nullptr)
+		{
+			heart3 = (C_Material*)a->GetComponent<C_Material>();
 			heart3Image = (C_2DAnimator*)a->GetComponent<C_2DAnimator>();
+		}
+			
 
 		a = App->scene->GetGameObjectByName(weapon1Name.c_str());
 		if (a != nullptr)
@@ -279,6 +277,9 @@ void HUDManager::ManageWeaponHUD()
 
 void HUDManager::ManageHeartImage(int hp)
 {
+	// Swap hearts textures based on HP
+
+
 
 	switch(hp) 
 	{

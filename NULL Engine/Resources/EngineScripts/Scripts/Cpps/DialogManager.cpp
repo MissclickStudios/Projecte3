@@ -105,7 +105,7 @@ void DialogManager::Update()
 				currentLineLetter++;
 				nextLetterTimer = 0;
 
-				if (currentLineLetter == currentLine->lineText.size() + 1)
+				if (currentLineLetter >= currentLine->lineText.size() + 1)
 				{
 					state = DialogState::TALKED;
 					currentLineLetter = 0;
