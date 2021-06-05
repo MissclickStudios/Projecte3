@@ -127,15 +127,15 @@ void Entity::PreUpdate()
 		{
 			switch (effects[i]->Type())														// Call the corresponding function
 			{
-			case EffectType::FROZEN:		  { Frozen(effects[i]); }				       break; // oops
+			case EffectType::FROZEN:			{ Frozen(effects[i]); }				break;	// oops
 			case EffectType::HEAL:			    { Heal(effects[i]); }				break;
-			case EffectType::MAX_HEALTH_MODIFY: { MaxHealthModify(effects[i]); }break;
-			case EffectType::SPEED_MODIFY:		  { SpeedModify(effects[i]); }		break;
-			case EffectType::STUN:				 { Stun(effects[i]); }			break;
-			case EffectType::KNOCKBACK:			{ KnockBack(effects[i]); }			 break;
-			case EffectType::ELECTROCUTE:	{ Electrocute(effects[i]); }		break;
-			case EffectType::BOSS_PIERCING:{ BossPiercing(effects[i]); } break;
-			case EffectType::PRICE_MODIFY:   { PriceModify(effects[i]); }   break;
+			case EffectType::MAX_HEALTH_MODIFY: { MaxHealthModify(effects[i]); }	break;
+			case EffectType::SPEED_MODIFY:		{ SpeedModify(effects[i]); }		break;
+			case EffectType::STUN:				{ Stun(effects[i]); }				break;
+			case EffectType::KNOCKBACK:			{ KnockBack(effects[i]); }			break;
+			case EffectType::ELECTROCUTE:		{ Electrocute(effects[i]); }		break;
+			case EffectType::BOSS_PIERCING:		{ BossPiercing(effects[i]); }		break;
+			case EffectType::PRICE_MODIFY:		{ PriceModify(effects[i]); }		break;
 			}
 		}
 		else																				// Delete the effect if it ran out
@@ -175,6 +175,9 @@ void Entity::Update()
 {
 	if (paused)
 		return;
+
+	if (health < 0.0f)
+		entityState = EntityState::NONE;
 
 	switch (entityState) // problem?
 	{
