@@ -127,15 +127,15 @@ void Entity::PreUpdate()
 		{
 			switch (effects[i]->Type())														// Call the corresponding function
 			{
-			case EffectType::FROZEN:		  { Frozen(effects[i]); }				       break; // oops
+			case EffectType::FROZEN:			{ Frozen(effects[i]); }				break;	// oops
 			case EffectType::HEAL:			    { Heal(effects[i]); }				break;
-			case EffectType::MAX_HEALTH_MODIFY: { MaxHealthModify(effects[i]); }break;
-			case EffectType::SPEED_MODIFY:		  { SpeedModify(effects[i]); }		break;
-			case EffectType::STUN:				 { Stun(effects[i]); }			break;
-			case EffectType::KNOCKBACK:			{ KnockBack(effects[i]); }			 break;
-			case EffectType::ELECTROCUTE:	{ Electrocute(effects[i]); }		break;
-			case EffectType::BOSS_PIERCING:{ BossPiercing(effects[i]); } break;
-			case EffectType::PRICE_MODIFY:   { PriceModify(effects[i]); }   break;
+			case EffectType::MAX_HEALTH_MODIFY: { MaxHealthModify(effects[i]); }	break;
+			case EffectType::SPEED_MODIFY:		{ SpeedModify(effects[i]); }		break;
+			case EffectType::STUN:				{ Stun(effects[i]); }				break;
+			case EffectType::KNOCKBACK:			{ KnockBack(effects[i]); }			break;
+			case EffectType::ELECTROCUTE:		{ Electrocute(effects[i]); }		break;
+			case EffectType::BOSS_PIERCING:		{ BossPiercing(effects[i]); }		break;
+			case EffectType::PRICE_MODIFY:		{ PriceModify(effects[i]); }		break;
 			}
 		}
 		else																				// Delete the effect if it ran out
@@ -176,30 +176,15 @@ void Entity::Update()
 	if (paused)
 		return;
 
+	if (health < 0.0f)
+		entityState = EntityState::NONE;
+
 	switch (entityState) // problem?
 	{
-	case EntityState::NONE: 
-		Behavior(); 
-		break;
-	case EntityState::STUNED:
-		currentAnimation = &stunAnimation;
-		if (rigidBody != nullptr)
-			rigidBody->StopInertia();
-		if (agent != nullptr)
-			agent->CancelDestination();
-		break;
-	case EntityState::KNOCKEDBACK:
-		currentAnimation = &knockbackAnimation;
-		if (agent != nullptr)
-			agent->CancelDestination();
-		break;
-	case EntityState::ELECTROCUTED:
-		currentAnimation = &electrocutedAnimation;
-		if (rigidBody != nullptr)
-			rigidBody->StopInertia();
-		if (agent != nullptr)
-			agent->CancelDestination();
-		break;
+	case EntityState::NONE:			{ Behavior(); }					break;
+	case EntityState::STUNED:		{ StunnedBehaviour(); }			break;
+	case EntityState::KNOCKEDBACK:	{ KnockedbackBehaviour(); }		break;
+	case EntityState::ELECTROCUTED:	{ ElectrocutedBehaviour(); }	break;
 	}
 }
 
@@ -393,6 +378,36 @@ void Entity::Electrocute(Effect* effect)
 void Entity::PriceModify(Effect* effect)
 {
 	priceModifier *= effect->Power();
+}
+
+void Entity::StunnedBehaviour()
+{
+	currentAnimation = &stunAnimation;
+
+	if (rigidBody != nullptr)
+		rigidBody->StopInertia();
+
+	if (agent != nullptr)
+		agent->CancelDestination();
+}
+
+void Entity::KnockedbackBehaviour()
+{
+	currentAnimation = &knockbackAnimation;
+
+	if (agent != nullptr)
+		agent->CancelDestination();
+}
+
+void Entity::ElectrocutedBehaviour()
+{
+	currentAnimation = &electrocutedAnimation;
+
+	if (rigidBody != nullptr)
+		rigidBody->StopInertia();
+
+	if (agent != nullptr)
+		agent->CancelDestination();
 }
 
 EntityState Entity::GetEntityState()
