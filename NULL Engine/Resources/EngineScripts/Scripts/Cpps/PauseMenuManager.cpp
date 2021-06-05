@@ -105,9 +105,6 @@ void PauseMenuManager::Update()
 				if (hudCanvas && hudScript && hudScript->enabled)
 					App->uiSystem->PushCanvas(hudCanvas);
 
-				App->audio->maxMusicVolume += 30.0f;
-				App->audio->SetRtcp("maxMusicVolume", App->audio->maxMusicVolume);
-
 			}
 			else 
 			{
@@ -118,9 +115,6 @@ void PauseMenuManager::Update()
 				canvasActive = true;
 				GameManager* gameManagerScript = (GameManager*)gameManager->GetScript("GameManager");
 				gameManagerScript->Pause();
-
-				App->audio->maxMusicVolume -= 30.0f;
-				App->audio->SetRtcp("maxMusicVolume", App->audio->maxMusicVolume);
 			}
 		}
 	}
@@ -137,9 +131,6 @@ void PauseMenuManager::Update()
 
 			if (hudCanvas && hudScript && hudScript->enabled)
 				App->uiSystem->PushCanvas(hudCanvas);
-
-			App->audio->maxMusicVolume += 30.0f;
-			App->audio->SetRtcp("maxMusicVolume", App->audio->maxMusicVolume);
 		}
 	}
 
