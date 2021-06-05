@@ -578,7 +578,7 @@ void Player::TakeDamage(float damage)
 	{
 		float damageDealt = 0.0f;
 		if(Defense())
-		 damageDealt = damage / Defense();
+		 damageDealt = 1.0f; // heehee
 		health -= damageDealt;
 
 		if (health < 0.0f)
@@ -1520,10 +1520,10 @@ void Player::Aim()
 	}
 	else
 	{
-		aimVector = (abs(aimInput.x) < JOYSTICK_THRESHOLD && abs(aimInput.y) < JOYSTICK_THRESHOLD) ? moveVector : aimInput;
+		aimVector = (abs(aimInput.x) < AIM_THRESHOLD && abs(aimInput.y) < AIM_THRESHOLD) ? moveVector : aimInput;
 	}
 
-	if (abs(aimInput.x) < JOYSTICK_THRESHOLD && abs(aimInput.y) < JOYSTICK_THRESHOLD)
+	if (abs(aimInput.x) < WALK_THRESHOLD && abs(aimInput.y) < WALK_THRESHOLD)										// Only works with this specific threshold. If it works it works.
 	{
 		if (aimingAimPlane != nullptr)
 			aimingAimPlane->SetIsActive(false);

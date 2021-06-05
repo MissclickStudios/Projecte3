@@ -4,6 +4,7 @@
 #include "M_Input.h"
 #include "M_UISystem.h"
 
+#include "C_Animator.h"
 #include "C_Transform.h"
 #include "C_Canvas.h"
 #include "C_UI_Button.h"
@@ -41,6 +42,10 @@ void HUBArmorer::Start()
 	obj = App->scene->GetGameObjectByName("Game Manager");
 	if (obj != nullptr)
 		gameManager = (GameManager*)obj->GetScript("GameManager");
+
+	obj = gameObject->FindChild("ArmorerModel");
+	if (obj != nullptr)
+		armorerAnimator = obj->GetComponent<C_Animator>();
 
 	if (armorButtonObject != nullptr)
 		armorButton = (C_UI_Button*)armorButtonObject->GetComponent<C_UI_Button>();
@@ -105,6 +110,7 @@ void HUBArmorer::Start()
 	if (beskarTextObject != nullptr)
 		beskarText = (C_UI_Text*)beskarTextObject->GetComponent<C_UI_Text>();
 
+
 }
 
 void HUBArmorer::Update()
@@ -114,6 +120,7 @@ void HUBArmorer::Update()
 		switch (state)
 		{
 		case HUBArmorerState::INACTIVE:
+
 			if (mando->transform->GetDistanceTo(gameObject->transform->GetLocalPosition()) <= talkDistance)
 			{
 				if (App->input->GetKey(SDL_SCANCODE_B) == KeyState::KEY_UP || App->input->GetGameControllerButton(0) == ButtonState::BUTTON_UP ) // A/X button on controller
@@ -123,10 +130,21 @@ void HUBArmorer::Update()
 					state = HUBArmorerState::ACTIVE;
 					gameManager->TalkedToArmorer();
 				}
-				
 			}
+
+			if (armorerAnimator != nullptr)
+			{
+				armorerAnimator->PlayClip("Preview", "Idle", 0.f);
+			}
+
 			break;
 		case HUBArmorerState::ACTIVE:
+
+			if (armorerAnimator != nullptr)
+			{
+				armorerAnimator->PlayClip("Preview", "Talk", 0.f);
+			}
+
 			if (mando->transform->GetDistanceTo(gameObject->transform->GetLocalPosition()) >= talkDistance || App->input->GetKey(SDL_SCANCODE_B) == KeyState::KEY_UP || App->input->GetGameControllerButton(1) == ButtonState::BUTTON_UP) // B/Square button on controller
 			{
 				App->uiSystem->RemoveActiveCanvas(hubShopCanvas);
@@ -135,97 +153,104 @@ void HUBArmorer::Update()
 				state = HUBArmorerState::INACTIVE;
 				break;
 			}
-			if (mando) {
-				if (gameManager)
-				{
-					if (armorButton && armorButton->GetState() == UIButtonState::RELEASED)
-					{
-						if (mando->hubCurrency > gameManager->armorLvl && gameManager->armorLvl + 1 < MAX_ITEM_PRICE)
-						{
-							gameManager->armorLvl = armorSlider->IncrementOneSquare();
-							mando->hubCurrency -= gameManager->armorLvl + 1;
-							armorPriceText->SetText(std::to_string(gameManager->armorLvl + 1).c_str());
-							
-							if (mando != nullptr)
-							{
-								std::vector<ItemData*> hubItems = gameManager->GetHubItemPool();
-								ItemData* const itemData = Item::FindItem(hubItems, "Durasteel Reinforcement", (ItemRarity)gameManager->armorLvl);
-								if (itemData != nullptr)
-									mando->AddItem(itemData);
-							}
-						}
-					}
-					if (bootsButton && bootsButton->GetState() == UIButtonState::RELEASED)
-					{
-						if (mando->hubCurrency > gameManager->bootsLvl && gameManager->bootsLvl + 1 < MAX_ITEM_PRICE)
-						{
-							gameManager->bootsLvl = bootsSlider->IncrementOneSquare();
-							mando->hubCurrency -= gameManager->bootsLvl + 1;
-							bootsPriceText->SetText(std::to_string(gameManager->bootsLvl + 1).c_str());
 
-							if (mando != nullptr)
-							{
-								std::vector<ItemData*> hubItems = gameManager->GetHubItemPool();
-								ItemData* const itemData = Item::FindItem(hubItems, "Propulsed Boots", (ItemRarity)gameManager->bootsLvl);
-								if (itemData != nullptr)
-									mando->AddItem(itemData);
-							}
-						}
-					}
-					if (ticketButton && ticketButton->GetState() == UIButtonState::RELEASED)
-					{
-						if (mando->hubCurrency > gameManager->ticketLvl && gameManager->ticketLvl + 1 < MAX_ITEM_PRICE)
-						{
-							gameManager->ticketLvl = ticketSlider->IncrementOneSquare();
-							mando->hubCurrency -= gameManager->ticketLvl + 1;
-							ticketPriceText->SetText(std::to_string(gameManager->ticketLvl + 1).c_str());
-
-							if (mando != nullptr)
-							{
-								std::vector<ItemData*> hubItems = gameManager->GetHubItemPool();
-								ItemData* const itemData = Item::FindItem(hubItems, "Premium Ticket", (ItemRarity)gameManager->ticketLvl);
-								if (itemData != nullptr)
-									mando->AddItem(itemData);
-							}
-						}
-					}
-					if (bottleButton && bottleButton->GetState() == UIButtonState::RELEASED)
-					{
-						if (mando->hubCurrency > gameManager->bottleLvl && gameManager->bottleLvl + 1 < MAX_ITEM_PRICE)
-						{
-							gameManager->bottleLvl = bottleSlider->IncrementOneSquare();
-							mando->hubCurrency -= gameManager->bottleLvl + 1;
-							bottlePriceText->SetText(std::to_string(gameManager->bottleLvl + 1).c_str());
-
-							if (mando != nullptr)
-							{
-								std::vector<ItemData*> hubItems = gameManager->GetHubItemPool();
-								ItemData* const itemData = Item::FindItem(hubItems, "Refrigeration Liquid", (ItemRarity)gameManager->bottleLvl);
-								if (itemData != nullptr)
-									mando->AddItem(itemData);
-							}
-						}
-					}
-				}
-
-				if (beskarText != nullptr)
-				{
-					std::string tmp = "";
-					tmp += std::to_string(mando->hubCurrency).c_str();
-					beskarText->SetText(tmp.c_str());
-				}
-				//if (creditsText != nullptr)
-				//{
-				//
-				//	std::string tmp = "";
-				//	tmp += std::to_string(mando->currency).c_str();
-				//	creditsText->SetText(tmp.c_str());
-				//}
-			}
+			UpdateMenu();
+			
 			break;
 		default:
 			state = HUBArmorerState::INACTIVE; break;
 		}
+	}
+}
+
+void HUBArmorer::UpdateMenu()
+{
+	if (mando != nullptr) {
+		if (gameManager != nullptr)
+		{
+			if (armorButton != nullptr && armorButton->GetState() == UIButtonState::RELEASED)
+			{
+				if (mando->hubCurrency > gameManager->armorLvl && gameManager->armorLvl + 1 < MAX_ITEM_PRICE)
+				{
+					gameManager->armorLvl = armorSlider->IncrementOneSquare();
+					mando->hubCurrency -= gameManager->armorLvl + 1;
+					armorPriceText->SetText(std::to_string(gameManager->armorLvl + 1).c_str());
+
+					if (mando != nullptr)
+					{
+						std::vector<ItemData*> hubItems = gameManager->GetHubItemPool();
+						ItemData* const itemData = Item::FindItem(hubItems, "Durasteel Reinforcement", (ItemRarity)gameManager->armorLvl);
+						if (itemData != nullptr)
+							mando->AddItem(itemData);
+					}
+				}
+			}
+			if (bootsButton && bootsButton->GetState() == UIButtonState::RELEASED)
+			{
+				if (mando->hubCurrency > gameManager->bootsLvl && gameManager->bootsLvl + 1 < MAX_ITEM_PRICE)
+				{
+					gameManager->bootsLvl = bootsSlider->IncrementOneSquare();
+					mando->hubCurrency -= gameManager->bootsLvl + 1;
+					bootsPriceText->SetText(std::to_string(gameManager->bootsLvl + 1).c_str());
+
+					if (mando != nullptr)
+					{
+						std::vector<ItemData*> hubItems = gameManager->GetHubItemPool();
+						ItemData* const itemData = Item::FindItem(hubItems, "Propulsed Boots", (ItemRarity)gameManager->bootsLvl);
+						if (itemData != nullptr)
+							mando->AddItem(itemData);
+					}
+				}
+			}
+			if (ticketButton && ticketButton->GetState() == UIButtonState::RELEASED)
+			{
+				if (mando->hubCurrency > gameManager->ticketLvl && gameManager->ticketLvl + 1 < MAX_ITEM_PRICE)
+				{
+					gameManager->ticketLvl = ticketSlider->IncrementOneSquare();
+					mando->hubCurrency -= gameManager->ticketLvl + 1;
+					ticketPriceText->SetText(std::to_string(gameManager->ticketLvl + 1).c_str());
+
+					if (mando != nullptr)
+					{
+						std::vector<ItemData*> hubItems = gameManager->GetHubItemPool();
+						ItemData* const itemData = Item::FindItem(hubItems, "Premium Ticket", (ItemRarity)gameManager->ticketLvl);
+						if (itemData != nullptr)
+							mando->AddItem(itemData);
+					}
+				}
+			}
+			if (bottleButton && bottleButton->GetState() == UIButtonState::RELEASED)
+			{
+				if (mando->hubCurrency > gameManager->bottleLvl && gameManager->bottleLvl + 1 < MAX_ITEM_PRICE)
+				{
+					gameManager->bottleLvl = bottleSlider->IncrementOneSquare();
+					mando->hubCurrency -= gameManager->bottleLvl + 1;
+					bottlePriceText->SetText(std::to_string(gameManager->bottleLvl + 1).c_str());
+
+					if (mando != nullptr)
+					{
+						std::vector<ItemData*> hubItems = gameManager->GetHubItemPool();
+						ItemData* const itemData = Item::FindItem(hubItems, "Refrigeration Liquid", (ItemRarity)gameManager->bottleLvl);
+						if (itemData != nullptr)
+							mando->AddItem(itemData);
+					}
+				}
+			}
+		}
+
+		if (beskarText != nullptr)
+		{
+			std::string tmp = "";
+			tmp += std::to_string(mando->hubCurrency).c_str();
+			beskarText->SetText(tmp.c_str());
+		}
+		//if (creditsText != nullptr)
+		//{
+		//
+		//	std::string tmp = "";
+		//	tmp += std::to_string(mando->currency).c_str();
+		//	creditsText->SetText(tmp.c_str());
+		//}
 	}
 }
 

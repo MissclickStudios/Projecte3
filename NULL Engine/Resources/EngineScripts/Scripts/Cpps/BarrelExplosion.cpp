@@ -16,7 +16,7 @@
 
 BarrelExplosion::BarrelExplosion() : Object()
 {
-
+	baseType = ObjectType::COLLECTABLE;
 }
 
 BarrelExplosion::~BarrelExplosion()
