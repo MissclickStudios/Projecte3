@@ -1,7 +1,7 @@
 
 #include "Script.h"
 #include "ScriptMacros.h"
-
+#include "Timer.h"
 #include <vector>
 #include <string>
 
@@ -22,9 +22,6 @@ public:
 	void Update() override;
 
 
-
-
-
 	std::string gameManagerName = "Game Manager";
 	std::string playerName = "Mandalorian";
 
@@ -32,8 +29,11 @@ public:
 	C_Animator* animatorNPC;
 
 
+	Timer abilityCooldownTimer;
 
+	float offset_toStart;
 
+	bool idle_playing = false;
 
 
 };
