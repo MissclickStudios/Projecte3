@@ -281,6 +281,24 @@ void C_UI_Image::ResetColor()
 	color = Color(1.0f, 1.0f, 1.0f, 1.0f);
 }
 
+void C_UI_Image::SetTextureCoordinates(int pixelPosX, int pixelPosY, int pixelWidth, int pixelHeight)
+{
+	C_Material* cMaterial = GetOwner()->GetComponent<C_Material>();
+	if (!cMaterial)
+		return;
+
+	uint32 id = cMaterial->GetTextureID();
+	unsigned int spritesheetPixelWidth, spritesheetPixelHeight = 0; cMaterial->GetTextureSize(spritesheetPixelWidth, spritesheetPixelHeight);
+	if (!spritesheetPixelWidth && !spritesheetPixelHeight)
+		return;
+
+	textCoord.proportionBeginX = (float)pixelPosX / spritesheetPixelWidth;
+	textCoord.proportionFinalX = ((float)pixelPosX + pixelWidth) / spritesheetPixelWidth;
+
+	textCoord.proportionBeginY = (float)pixelPosY / spritesheetPixelHeight;
+	textCoord.proportionFinalY = ((float)pixelPosY + pixelHeight) / spritesheetPixelHeight;
+}
+
 bool C_UI_Image::SaveState(ParsonNode& root) const
 {
 	root.SetNumber("Type", (uint)GetType());
