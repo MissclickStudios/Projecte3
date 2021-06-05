@@ -23,7 +23,10 @@ void NPCidlePlay::Start()
 
 void NPCidlePlay::Update()
 {
-	animatorNPC->PlayClip("Preview", "idleNPC", 0u);
+	if (!idle_playing) {
+		animatorNPC->PlayClip("Preview", "idleNPC", 0u);
+		idle_playing = true;
+	}
 }
 
 
