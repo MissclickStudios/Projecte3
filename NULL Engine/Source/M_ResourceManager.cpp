@@ -1059,7 +1059,8 @@ void M_ResourceManager::RefreshDirectoryFiles(const char* directory)
 	}
 	for (uint i = 0; i < filesToUpdate.size(); ++i)
 	{
-		if (App->fileSystem->GetFileExtension(filesToUpdate[i].c_str()) == "h")
+		if (App->fileSystem->GetFileExtension(filesToUpdate[i].c_str()) == "h" 
+			|| App->fileSystem->GetFileExtension(filesToUpdate[i].c_str()) == ".particles")
 		{
 			DeleteFromLibrary(filesToUpdate[i].c_str());
 			ImportFile(filesToUpdate[i].c_str());
