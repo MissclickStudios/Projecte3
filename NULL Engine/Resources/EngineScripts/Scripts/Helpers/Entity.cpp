@@ -183,22 +183,12 @@ void Entity::Update()
 		break;
 	case EntityState::STUNED:
 		currentAnimation = &stunAnimation;
-		if (rigidBody != nullptr)
-			rigidBody->StopInertia();
-		if (agent != nullptr)
-			agent->CancelDestination();
 		break;
 	case EntityState::KNOCKEDBACK:
 		currentAnimation = &knockbackAnimation;
-		if (agent != nullptr)
-			agent->CancelDestination();
 		break;
 	case EntityState::ELECTROCUTED:
 		currentAnimation = &electrocutedAnimation;
-		if (rigidBody != nullptr)
-			rigidBody->StopInertia();
-		if (agent != nullptr)
-			agent->CancelDestination();
 		break;
 	}
 }
@@ -356,18 +346,26 @@ void Entity::Stun(Effect* effect)
 	}
 	else
 	{
+		if (rigidBody != nullptr)
+			rigidBody->StopInertia();
+		if (agent != nullptr)
+			agent->CancelDestination();
 		entityState = EntityState::ELECTROCUTED;
 	}
 }
 
 void Entity::KnockBack(Effect* effect)
 {
+	if (agent != nullptr)
+		agent->CancelDestination(true);
+
 	if (effect->start)
 	{
 		effect->start = false;
 
 		if (rigidBody != nullptr)
 		{
+			rigidBody->StopInertia();
 			rigidBody->AddForce(effect->Direction());
 		}
 	}
@@ -378,15 +376,12 @@ void Entity::KnockBack(Effect* effect)
 void Entity::Electrocute(Effect* effect)
 {
 	if (effect->start)
-	{
 		effect->start = false;
 
-		if (rigidBody != nullptr)
-		{
-			rigidBody->StopInertia();
-		}
-	}
-
+	if (rigidBody != nullptr)
+		rigidBody->StopInertia();
+	if (agent != nullptr)
+		agent->CancelDestination();
 	entityState = EntityState::ELECTROCUTED;
 }
 

@@ -1,6 +1,6 @@
 {
-    "ModTime": 1622854525,
-    "UID": 1543155995,
+    "ModTime": 1622906351,
+    "UID": 1187486238,
     "ParentUID": 296213747,
     "PrefabID": 1331719244,
     "IsPrefab": true,
@@ -18,9 +18,9 @@
         {
             "Type": 1,
             "LocalPosition": [
-                -28.38817024230957,
-                2.8408756256103516,
-                64.651908874511719
+                4.0997848510742188,
+                2.84086012840271,
+                50.348724365234375
             ],
             "LocalRotation": [
                 0,
@@ -71,6 +71,21 @@
                     "Type": 5,
                     "Name": "explosionAudio",
                     "string": "item_barrel_explosion"
+                },
+                {
+                    "Type": 5,
+                    "Name": "particleName",
+                    "string": "Idle"
+                },
+                {
+                    "Type": 1,
+                    "Name": "reload",
+                    "bool": true
+                },
+                {
+                    "Type": 2,
+                    "Name": "cooldown",
+                    "float": 5
                 }
             ]
         },
@@ -86,12 +101,12 @@
     ],
     "Children": [
         {
-            "UID": 341667122,
-            "ParentUID": 1543155995,
+            "UID": 120824957,
+            "ParentUID": 1187486238,
             "PrefabID": 1331719244,
             "IsPrefab": true,
             "Name": "ElectrocuteObject",
-            "IsActive": false,
+            "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
@@ -146,7 +161,7 @@
                         {
                             "Type": 0,
                             "Name": "damage",
-                            "int": 1
+                            "int": 25
                         },
                         {
                             "Type": 2,
@@ -164,8 +179,94 @@
             "Children": []
         },
         {
-            "UID": 1263452897,
-            "ParentUID": 1543155995,
+            "UID": 1027913943,
+            "ParentUID": 1187486238,
+            "PrefabID": 1331719244,
+            "IsPrefab": true,
+            "Name": "Particles",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -1,
+                        0,
+                        -2.11260986328125
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ],
+            "Children": [
+                {
+                    "UID": 1847503718,
+                    "ParentUID": 1027913943,
+                    "PrefabID": 1331719244,
+                    "IsPrefab": true,
+                    "Name": "Idle",
+                    "IsActive": true,
+                    "IsStatic": false,
+                    "IsSceneRoot": false,
+                    "MaintainThroughScenes": false,
+                    "ShowBoundingBoxes": false,
+                    "NavigationInfo": {
+                        "isNavigable": false,
+                        "navigationArea": 0
+                    },
+                    "Components": [
+                        {
+                            "Type": 1,
+                            "LocalPosition": [
+                                4.4113998413085938,
+                                15.298847198486328,
+                                -3.6357574462890625
+                            ],
+                            "LocalRotation": [
+                                0,
+                                0,
+                                0,
+                                1
+                            ],
+                            "LocalScale": [
+                                1,
+                                1,
+                                1
+                            ]
+                        },
+                        {
+                            "Type": 12,
+                            "particleSystemUID": 2072017682,
+                            "particleSystemAssetsPath": "Assets\/ParticleSystems\/Spark.particles",
+                            "stopSpawn": false,
+                            "tempDelete": false,
+                            "previewEnabled": true,
+                            "stopAndDeleteCheck": false
+                        }
+                    ],
+                    "Children": []
+                }
+            ]
+        },
+        {
+            "UID": 1861416588,
+            "ParentUID": 1187486238,
             "PrefabID": 1331719244,
             "IsPrefab": true,
             "Name": "VaporatorMesh",
@@ -244,92 +345,6 @@
                 }
             ],
             "Children": []
-        },
-        {
-            "UID": 1979610836,
-            "ParentUID": 1543155995,
-            "PrefabID": 1331719244,
-            "IsPrefab": true,
-            "Name": "Particles",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
-            "NavigationInfo": {
-                "isNavigable": false,
-                "navigationArea": 0
-            },
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        -1,
-                        0,
-                        -2.11260986328125
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                }
-            ],
-            "Children": [
-                {
-                    "UID": 685253292,
-                    "ParentUID": 1979610836,
-                    "PrefabID": 1331719244,
-                    "IsPrefab": true,
-                    "Name": "Idle",
-                    "IsActive": true,
-                    "IsStatic": false,
-                    "IsSceneRoot": false,
-                    "MaintainThroughScenes": false,
-                    "ShowBoundingBoxes": false,
-                    "NavigationInfo": {
-                        "isNavigable": false,
-                        "navigationArea": 0
-                    },
-                    "Components": [
-                        {
-                            "Type": 1,
-                            "LocalPosition": [
-                                4.4113998413085938,
-                                15.298847198486328,
-                                -3.6357574462890625
-                            ],
-                            "LocalRotation": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ],
-                            "LocalScale": [
-                                1,
-                                1,
-                                1
-                            ]
-                        },
-                        {
-                            "Type": 12,
-                            "particleSystemUID": 2072017682,
-                            "particleSystemAssetsPath": "Assets\/ParticleSystems\/Spark.particles",
-                            "stopSpawn": false,
-                            "tempDelete": false,
-                            "previewEnabled": true,
-                            "stopAndDeleteCheck": false
-                        }
-                    ],
-                    "Children": []
-                }
-            ]
         }
     ]
 } 
