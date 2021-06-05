@@ -212,7 +212,8 @@ void GameManager::Update()
 {
 	if(!instantiatedSandstorm) //Instantiate sandstorm
 		if (strcmp(App->scene->GetCurrentScene(), levelNames.hub.c_str()) != 0 && strcmp(App->scene->GetCurrentScene(), levelNames.loseScene.c_str()) != 0 
-			&& strcmp(App->scene->GetCurrentScene(), levelNames.winScene.c_str()) != 0 && strcmp(App->scene->GetCurrentScene(), "MainMenu") != 0)
+			&& strcmp(App->scene->GetCurrentScene(), "Credits") != 0 && strcmp(App->scene->GetCurrentScene(), "MainMenu") != 0
+			&& strcmp(App->scene->GetCurrentScene(), levelNames.winScene.c_str()) != 0)
 		{
 			App->scene->InstantiatePrefab(mistPlane1.uid, gameObject, mistPlane1Position, Quat::identity);
 			App->scene->InstantiatePrefab(mistPlane2.uid, gameObject, mistPlane2Position, Quat::identity);
@@ -334,6 +335,9 @@ void GameManager::GenerateNewRun(bool fromMenu)
 			//LEVEL2
 			if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + levelNames.winScene + ".json").c_str()))
 				level1Ruins.push_back((std::string(ASSETS_SCENES_PATH) + levelNames.winScene + ".json"));
+
+			if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + "Credits.json").c_str()))
+				level1Ruins.push_back((std::string(ASSETS_SCENES_PATH) + "Credits.json"));
 		}
 		else
 		{
@@ -374,6 +378,8 @@ void GameManager::GenerateNewRun(bool fromMenu)
 				level1Ruins.push_back((std::string(ASSETS_SCENES_PATH) + levelNames.ruinsBoss + ".json"));
 			if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + levelNames.winScene + ".json").c_str()))
 				level1Ruins.push_back((std::string(ASSETS_SCENES_PATH) + levelNames.winScene + ".json"));
+			if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + "Credits.json").c_str()))
+				level1Ruins.push_back((std::string(ASSETS_SCENES_PATH) + "Credits.json"));
 		}
 
 		SaveManagerState();
@@ -494,11 +500,13 @@ void GameManager::GoNextRoom()
 		//kills stats
 		runStats.runKills += enemies.size();
 
-		//Secondary weapon
-		WeaponType weaponType = playerScript->GetSecondaryWeapon()->type;
-
-		switch (weaponType)
+		if (playerScript != nullptr)
 		{
+			//Secondary weapon
+			WeaponType weaponType = playerScript->GetSecondaryWeapon()->type;
+
+			switch (weaponType)
+			{
 			case WeaponType::MINIGUN:
 				runStats.weaponUsed = "Minigun";
 				break;
@@ -508,6 +516,7 @@ void GameManager::GoNextRoom()
 			case WeaponType::SNIPER:
 				runStats.weaponUsed = "Sniper";
 				break;
+			}
 		}
 	}
 }
