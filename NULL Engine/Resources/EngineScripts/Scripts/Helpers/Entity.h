@@ -85,7 +85,12 @@ public:
 	virtual void Electrocute(Effect* effect);
 	virtual void BossPiercing(Effect* effect) {}
 	virtual void PriceModify(Effect* effect);
-	
+
+	// Other Behaviours
+	void StunnedBehaviour();
+	void KnockedbackBehaviour();
+	void ElectrocutedBehaviour();
+
 	// Type
 	EntityType type = EntityType::ENTITY;
 
