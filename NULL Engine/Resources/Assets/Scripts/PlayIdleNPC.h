@@ -29,7 +29,7 @@ public:
 	C_Animator* animatorNPC;
 
 
-	Timer abilityCooldownTimer;
+	Timer startAnimationTimer;
 
 	float offset_toStart;
 
