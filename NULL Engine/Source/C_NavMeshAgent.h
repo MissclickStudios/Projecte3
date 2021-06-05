@@ -28,9 +28,10 @@ public:
 	static inline ComponentType GetType() { return ComponentType::NAVMESH_AGENT; }								// This is needed to use templeates for functions such as GetComponent<>();
 
 public:
+
 	bool SetDestination(float3 destination);
 	bool HasDestination();
-	void CancelDestination();
+	void CancelDestination(bool dontStopInertiaInTheUpdateFunction = false);
 	void StopAndCancelDestination();
 
 	const float3 GetNextPathPoint() const;
@@ -60,6 +61,8 @@ private:
 	int areaMask = 1;
 
 	int indexPath = 1;
+
+	bool dontStopInertiaInTheUpdateFunction = false; // mad? find a better name and i'll change it
 };
 
 #endif	// !__C_NAVMESH_H__

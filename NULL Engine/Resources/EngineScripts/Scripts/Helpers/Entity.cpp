@@ -181,10 +181,18 @@ void Entity::Update()
 
 	switch (entityState) // problem?
 	{
-	case EntityState::NONE:			{ Behavior(); }					break;
-	case EntityState::STUNED:		{ StunnedBehaviour(); }			break;
-	case EntityState::KNOCKEDBACK:	{ KnockedbackBehaviour(); }		break;
-	case EntityState::ELECTROCUTED:	{ ElectrocutedBehaviour(); }	break;
+	case EntityState::NONE: 
+		Behavior(); 
+		break;
+	case EntityState::STUNED:
+		currentAnimation = &stunAnimation;
+		break;
+	case EntityState::KNOCKEDBACK:
+		currentAnimation = &knockbackAnimation;
+		break;
+	case EntityState::ELECTROCUTED:
+		currentAnimation = &electrocutedAnimation;
+		break;
 	}
 }
 
@@ -341,18 +349,26 @@ void Entity::Stun(Effect* effect)
 	}
 	else
 	{
+		if (rigidBody != nullptr)
+			rigidBody->StopInertia();
+		if (agent != nullptr)
+			agent->CancelDestination();
 		entityState = EntityState::ELECTROCUTED;
 	}
 }
 
 void Entity::KnockBack(Effect* effect)
 {
+	if (agent != nullptr)
+		agent->CancelDestination(true);
+
 	if (effect->start)
 	{
 		effect->start = false;
 
 		if (rigidBody != nullptr)
 		{
+			rigidBody->StopInertia();
 			rigidBody->AddForce(effect->Direction());
 		}
 	}
@@ -363,51 +379,18 @@ void Entity::KnockBack(Effect* effect)
 void Entity::Electrocute(Effect* effect)
 {
 	if (effect->start)
-	{
 		effect->start = false;
 
-		if (rigidBody != nullptr)
-		{
-			rigidBody->StopInertia();
-		}
-	}
-
+	if (rigidBody != nullptr)
+		rigidBody->StopInertia();
+	if (agent != nullptr)
+		agent->CancelDestination();
 	entityState = EntityState::ELECTROCUTED;
 }
 
 void Entity::PriceModify(Effect* effect)
 {
 	priceModifier *= effect->Power();
-}
-
-void Entity::StunnedBehaviour()
-{
-	currentAnimation = &stunAnimation;
-
-	if (rigidBody != nullptr)
-		rigidBody->StopInertia();
-
-	if (agent != nullptr)
-		agent->CancelDestination();
-}
-
-void Entity::KnockedbackBehaviour()
-{
-	currentAnimation = &knockbackAnimation;
-
-	if (agent != nullptr)
-		agent->CancelDestination();
-}
-
-void Entity::ElectrocutedBehaviour()
-{
-	currentAnimation = &electrocutedAnimation;
-
-	if (rigidBody != nullptr)
-		rigidBody->StopInertia();
-
-	if (agent != nullptr)
-		agent->CancelDestination();
 }
 
 EntityState Entity::GetEntityState()

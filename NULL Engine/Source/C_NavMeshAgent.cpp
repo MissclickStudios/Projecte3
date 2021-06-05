@@ -71,7 +71,8 @@ bool C_NavMeshAgent::Update()
 		}
 		else
 		{
-			rigidBody->Set2DVelocity(float2(0.0f,0.0f));
+			if (!dontStopInertiaInTheUpdateFunction)
+				rigidBody->Set2DVelocity(float2(0.0f,0.0f));
 		}
 	}
 
@@ -105,6 +106,8 @@ bool C_NavMeshAgent::SetDestination(float3 destination)
 
 	AgentPath(origin, destination);
 
+	dontStopInertiaInTheUpdateFunction = false;
+
 	return true;
 }
 
@@ -113,8 +116,9 @@ bool C_NavMeshAgent::HasDestination()
 	return hasDestination;
 }
 
-void C_NavMeshAgent::CancelDestination()
+void C_NavMeshAgent::CancelDestination(bool dontStopInertiaInTheUpdateFunction)
 {
+	this->dontStopInertiaInTheUpdateFunction = dontStopInertiaInTheUpdateFunction;
 	hasDestination = false;
 	path.clear();
 	indexPath = 1;
@@ -127,6 +131,8 @@ void C_NavMeshAgent::StopAndCancelDestination()
 	hasDestination = false;
 	if(rigidBody != nullptr)
 		rigidBody->Set2DVelocity({ 0.0f,0.0f });
+
+	dontStopInertiaInTheUpdateFunction = false;
 }
 
 const float3 C_NavMeshAgent::GetNextPathPoint() const
