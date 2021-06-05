@@ -26,17 +26,12 @@ BarrelExplosion::~BarrelExplosion()
 
 void BarrelExplosion::Start()
 {
-	barrelScript = (ExplosiveBarrel*)gameObject->parent->GetScript("ExplosiveBarrel");
-
-	explosionCollider = gameObject->GetComponent<C_BoxCollider>();
-
-	explosionCollider->SetTrigger(true);
-	explosionCollider->SetIsActive(true);
 }
 
 void BarrelExplosion::Update()
 {
-
+	if (state == 1)
+		state = 2;
 }
 
 void BarrelExplosion::CleanUp()
@@ -46,11 +41,16 @@ void BarrelExplosion::CleanUp()
 
 void BarrelExplosion::OnTriggerRepeat(GameObject* object)
 {
+	if (state == 2)
+		return;
+
 	Entity* entity = (Entity*)GetObjectScript(object, ObjectType::ENTITY);
 	if (!entity)
 		return;
 
-	if (barrelScript->toExplode)
+	state = 1;
+
+	if (!stun)
 	{
 		float2 entityPosition, position;
 		entityPosition.x = entity->transform->GetWorldPosition().x;
@@ -70,14 +70,20 @@ void BarrelExplosion::OnTriggerRepeat(GameObject* object)
 
 		entity->gameObject->GetComponent<C_RigidBody>()->FreezePositionY(true);
 		entity->AddEffect(EffectType::KNOCKBACK, 0.75f, false, 0.0f, 0.0f, float3(direction.x, 0.0f, direction.y));
-		entity->TakeDamage(damage);
 	}
+	else
+	{
+		entity->AddEffect(EffectType::STUN, power, false, 0.0f, 100.0f);
+	}
+	entity->TakeDamage(damage);
 }
 
 BarrelExplosion* CreateBarrelExplosion() {
 	BarrelExplosion* script = new BarrelExplosion();
 
 	INSPECTOR_INPUT_INT(script->damage);
+	INSPECTOR_DRAGABLE_FLOAT(script->power);
+	INSPECTOR_CHECKBOX_BOOL(script->stun);
 
 	return script;
 }
