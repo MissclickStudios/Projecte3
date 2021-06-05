@@ -1,7 +1,7 @@
 #ifndef __SIMULATIONCALLBACK_H__
 #define __SIMULATIONCALLBACK_H__
 
-#include "PhysX_3.4/Include/PxPhysicsAPI.h"
+#include "PhysX_4.1/Include/PxPhysicsAPI.h"
 
 class GameObject;
 
