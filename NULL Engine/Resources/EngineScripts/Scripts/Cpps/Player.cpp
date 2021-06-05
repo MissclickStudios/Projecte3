@@ -578,7 +578,7 @@ void Player::TakeDamage(float damage)
 	{
 		float damageDealt = 0.0f;
 		if(Defense())
-		 damageDealt = damage / Defense();
+		 damageDealt = 1.0f; // heehee
 		health -= damageDealt;
 
 		if (health < 0.0f)

@@ -1,7 +1,8 @@
-
-#include "Script.h"
+#include "Object.h"
 #include "ScriptMacros.h"
 #include "MathGeoLib/include/Math/float3.h"
+
+#include "Timer.h"
 
 #include <string>
 
@@ -23,9 +24,16 @@ public:
 
 	void OnCollisionEnter(GameObject* object) override;
 
-	float particleEmitttingTime = 1.f;
+	void OnPause() override;
+	void OnResume() override;
+
+	float particleEmitttingTime = 1.0f;
 
 	std::string explosionName;
+	std::string particleName;
+
+	bool reload = false;
+	float cooldown = 5.0f;
 
 	// Audio
 	C_AudioSource* explosion = nullptr;
@@ -37,10 +45,12 @@ public:
 
 private:
 
-	GameObject* explosionGameObject = nullptr;
+	Timer particleTimer;
+	Timer cooldownTimer;
+
+	C_BoxCollider* explosionCollider = nullptr;
 	C_ParticleSystem* explosionParticles = nullptr;
-	
-	float particleTimer = 0.f;
+	C_ParticleSystem* activeParticles = nullptr;
 };
 
 SCRIPTS_FUNCTION ExplosiveBarrel* CreateExplosiveBarrel();

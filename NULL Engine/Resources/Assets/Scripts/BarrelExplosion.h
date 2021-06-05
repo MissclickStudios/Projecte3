@@ -26,8 +26,6 @@ public:
 
 	bool stun = false;
 
-private:
-
 	int state = 0;
 };
 
