@@ -98,7 +98,9 @@ void MoistureVaporator::Update()
 
 				idleParticles->ResumeSpawn();
 
-				//TODO: add safety check in case the cd of the particles is greater than the ability's
+				// Just in case
+				explosionParticlesTimer.Stop();
+				explosionParticles->StopSpawn();
 			}
 			break;
 		}
