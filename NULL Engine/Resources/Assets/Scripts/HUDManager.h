@@ -67,7 +67,7 @@ private:
 
 	WeaponType type;
 	
-	int halfHeart[4]{ -3899, -658, 134, 124 };
+	int halfHeart[4]{ -3892, -658, 134, 124 };
 	int fullHeart[4]{ -4019, -658, 134, 124 };
 	int emptyHeart[4]{ -220, -531, 134, 124 };
 	int noRender[4]{ -4150, -658, 134, 124 };
