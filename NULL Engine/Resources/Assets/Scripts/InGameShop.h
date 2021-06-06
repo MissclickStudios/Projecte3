@@ -23,6 +23,7 @@ public:
 	int rollAttempts = 100;
 
 	std::vector<std::string> itemNames;
+	std::string stimPackName = "StimPack";
 
 private:
 

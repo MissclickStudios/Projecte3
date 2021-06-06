@@ -106,7 +106,7 @@ void GameManager::Awake()
 				backtrack.clear();
 
 			LoadItemPool(chestItemPool, "ChestItemPool.json");
-			LoadItemPool(chestItemPool, "ShopItemPool.json");
+			LoadItemPool(shopItemPool, "ShopItemPool.json");
 			LoadItemPool(hubItemPool, "HubItemPool.json");
 
 			HandleBackgroundMusic();
