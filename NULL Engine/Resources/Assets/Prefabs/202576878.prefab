@@ -1,6 +1,6 @@
 {
-    "ModTime": 1622906383,
-    "UID": 914798143,
+    "ModTime": 1622996994,
+    "UID": 714737485,
     "ParentUID": 296213747,
     "PrefabID": 202576878,
     "IsPrefab": true,
@@ -18,9 +18,9 @@
         {
             "Type": 1,
             "LocalPosition": [
-                9.7147579193115234,
-                5.6537308692932129,
-                52.064273834228516
+                -8.1376352310180664,
+                5.7010288238525391,
+                59.968517303466797
             ],
             "LocalRotation": [
                 0,
@@ -69,7 +69,7 @@
                 {
                     "Type": 2,
                     "Name": "particleEmitttingTime",
-                    "float": 0.5
+                    "float": 0.20000000298023224
                 },
                 {
                     "Type": 5,
@@ -80,6 +80,11 @@
                     "Type": 5,
                     "Name": "explosionAudio",
                     "string": "item_barrel_explosion"
+                },
+                {
+                    "Type": 5,
+                    "Name": "markerName",
+                    "string": ""
                 },
                 {
                     "Type": 5,
@@ -101,8 +106,8 @@
     ],
     "Children": [
         {
-            "UID": 1397491960,
-            "ParentUID": 914798143,
+            "UID": 1959365218,
+            "ParentUID": 714737485,
             "PrefabID": 202576878,
             "IsPrefab": true,
             "Name": "ExplosionObject",
@@ -179,8 +184,8 @@
             "Children": []
         },
         {
-            "UID": 1271243781,
-            "ParentUID": 914798143,
+            "UID": 1680087290,
+            "ParentUID": 714737485,
             "PrefabID": 202576878,
             "IsPrefab": true,
             "Name": "BarrelMesh",
@@ -259,6 +264,127 @@
                 }
             ],
             "Children": []
+        },
+        {
+            "UID": 868797678,
+            "ParentUID": 714737485,
+            "PrefabID": 202576878,
+            "IsPrefab": true,
+            "Name": "Marker",
+            "IsActive": false,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        1.3062114715576172,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        1,
+                        0,
+                        2.6740158887150756e-07
+                    ],
+                    "LocalScale": [
+                        50,
+                        1,
+                        50
+                    ]
+                }
+            ],
+            "Children": [
+                {
+                    "UID": 1250246331,
+                    "ParentUID": 868797678,
+                    "PrefabID": 202576878,
+                    "IsPrefab": true,
+                    "Name": "Plane001",
+                    "IsActive": false,
+                    "IsStatic": false,
+                    "IsSceneRoot": false,
+                    "MaintainThroughScenes": false,
+                    "ShowBoundingBoxes": false,
+                    "NavigationInfo": {
+                        "isNavigable": false,
+                        "navigationArea": 0
+                    },
+                    "Components": [
+                        {
+                            "Type": 1,
+                            "LocalPosition": [
+                                0,
+                                0,
+                                0
+                            ],
+                            "LocalRotation": [
+                                -0.70710676908493042,
+                                0,
+                                0,
+                                0.70710676908493042
+                            ],
+                            "LocalScale": [
+                                1,
+                                1,
+                                1
+                            ]
+                        },
+                        {
+                            "Type": 2,
+                            "UID": 1016193486,
+                            "Name": "Plane001.nemesh",
+                            "Path": "Library\/Meshes\/1016193486.nemesh",
+                            "File": "1016193486.nemesh",
+                            "ShowWireframe": false,
+                            "ShowBoundingBox": false,
+                            "Outline": false,
+                            "OutlineThickness": 0,
+                            "OutlineColor": [
+                                0,
+                                0,
+                                0,
+                                1
+                            ]
+                        },
+                        {
+                            "Type": 3,
+                            "Material": {
+                                "UID": 1705422038,
+                                "Color": [
+                                    0.70588237047195435,
+                                    0.70588237047195435,
+                                    0.70588237047195435,
+                                    1
+                                ],
+                                "Name": "Plane001.nemat",
+                                "Path": "Library\/Materials\/1705422038.nemat",
+                                "File": "1705422038.nemat"
+                            },
+                            "Texture": {
+                                "AssetsPath": "Assets\/Textures\/Particles\/dot_particle.png",
+                                "AssetsName": "dot_particle.png",
+                                "LibaryPath": "Library\/Textures\/841043181.netex",
+                                "LibraryFile": "841043181.netex"
+                            },
+                            "Shader": {
+                                "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
+                                "AssetsName": "DefaultShader.shader",
+                                "LibaryPath": "Library\/Shaders\/800223282.neshader",
+                                "LibraryFile": "800223282.neshader"
+                            }
+                        }
+                    ],
+                    "Children": []
+                }
+            ]
         }
     ]
 } 

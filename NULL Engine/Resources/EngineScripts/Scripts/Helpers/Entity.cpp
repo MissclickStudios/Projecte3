@@ -240,6 +240,9 @@ void Entity::OnPause()
 	for (uint i = 0; i < effects.size(); ++i)
 		effects[i]->Pause();
 
+	if (animator != nullptr)
+		animator->Pause(true);
+
 	EntityPause();
 }
 
@@ -254,6 +257,9 @@ void Entity::OnResume()
 
 	for (uint i = 0; i < effects.size(); ++i)
 		effects[i]->Resume();
+
+	if (animator != nullptr)
+		animator->Play(true);
 
 	EntityResume();
 }
@@ -286,9 +292,13 @@ void Entity::GiveHeal(float amount)
 Effect* Entity::AddEffect(EffectType type, float duration, bool permanent, float power, float chance, float3 direction, bool start)
 {
 	if (effectCounters[(uint)type]) // Check that this effect is not already on the entity
+	{
+		if (type == EffectType::KNOCKBACK || type == EffectType::STUN)
+			return nullptr;
 		for (uint i = 0; i < effects.size(); ++i) // If it does erase the older one
 			if (effects[i]->Type() == type)
 				effects[i]->End();
+	}
 	
 	Effect* output = new Effect(type, duration, permanent, power, chance, direction, start);
 	effects.emplace_back(output);

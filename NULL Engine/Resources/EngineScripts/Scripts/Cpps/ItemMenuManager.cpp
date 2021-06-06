@@ -70,7 +70,7 @@ void ItemMenuManager::Update()
 	{
 		if (buyButton != nullptr && buyButton->GetState() == UIButtonState::PRESSEDIN)
 		{
-			if (player->currency >= (int)((float)item->item->price * player->priceModifier))
+			if (player->credits >= (int)((float)item->item->price * player->priceModifier))
 			{
 				item->PickUp(player);
 				item = nullptr;

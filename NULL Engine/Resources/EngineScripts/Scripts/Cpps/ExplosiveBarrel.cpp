@@ -43,6 +43,10 @@ void ExplosiveBarrel::Start()
 			explosionCollider->SetIsActive(false);
 	}
 
+	explosionMarker = gameObject->FindChild(markerName.c_str());
+	if (explosionMarker != nullptr)
+		explosionMarker->SetIsActive(false);
+
 	cooldownTimer.Stop();
 }
 
@@ -69,6 +73,9 @@ void ExplosiveBarrel::Update()
 		if (activeParticles != nullptr)
 			activeParticles->StopSpawn();
 
+		if (explosionMarker != nullptr)
+			explosionMarker->SetIsActive(true);
+
 		explosion->SetEvent(explosionAudio.c_str());
 		explosion->SetVolume(5.0f);
 		explosion->PlayFx(explosion->GetEventId());
@@ -84,6 +91,9 @@ void ExplosiveBarrel::Update()
 			explosionCollider->SetIsActive(false);
 			explosionParticles->StopSpawn();
 			particleTimer.Stop();
+
+			if (explosionMarker != nullptr)
+				explosionMarker->SetIsActive(false);
 
 			if (!reload)
 				Deactivate();
@@ -104,12 +114,6 @@ void ExplosiveBarrel::OnCollisionEnter(GameObject* object)
 	{
 		toExplode = true;
 		GameObject* explosionGameObject = gameObject->FindChild(explosionName.c_str());
-		if (explosionGameObject != nullptr)
-		{
-			BarrelExplosion* explosionScript = (BarrelExplosion*)GetObjectScript(explosionGameObject, ObjectType::COLLECTABLE);
-			if (explosionScript != nullptr)
-				explosionScript->state = 0;
-		}
 	}
 }
 
@@ -134,6 +138,7 @@ ExplosiveBarrel* CreateExplosiveBarrel()
 	INSPECTOR_INPUT_FLOAT(script->particleEmitttingTime);
 	INSPECTOR_STRING(script->explosionName);
 	INSPECTOR_STRING(script->explosionAudio);
+	INSPECTOR_STRING(script->markerName);
 	INSPECTOR_STRING(script->particleName);
 	INSPECTOR_CHECKBOX_BOOL(script->reload);
 	INSPECTOR_INPUT_FLOAT(script->cooldown);

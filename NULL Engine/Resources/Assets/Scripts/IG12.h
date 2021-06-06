@@ -119,6 +119,9 @@ public:
 	C_ParticleSystem* hitParticles;
 	bool bombExploding = false;
 
+
+	int beskarValue = 10;
+
 private:
 
 	void DistanceToPlayer();
@@ -186,6 +189,8 @@ private:
 	C_Canvas* healthBarCanvas = nullptr;
 	C_UI_Image* healthBarImage = nullptr;
 	float healthMaxW = 0.0f;
+
+	
 };
 
 SCRIPTS_FUNCTION IG12* CreateIG12();
