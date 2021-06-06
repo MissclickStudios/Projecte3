@@ -1377,11 +1377,11 @@ void Player::GatherMoveInputs()
 void Player::GatherAimInputs()
 {
 	// Controller aim
-	aimInput.x = (float)App->input->GetGameControllerAxisRaw(2);				// x right joystick
-	aimInput.y = (float)App->input->GetGameControllerAxisRaw(3);				// y right joystick
+	aimInput.x = (float)App->input->GetGameControllerAxisRaw(2);												// x right joystick
+	aimInput.y = (float)App->input->GetGameControllerAxisRaw(3);												// y right joystick
 
-	aimInputThreshold.x = (float)App->input->GetGameControllerAxisValue(2);		// x right joystick with threshhold
-	aimInputThreshold.y = (float)App->input->GetGameControllerAxisValue(3);		// y right joystick with threshhold
+	aimInputThreshold.x = (float)App->input->GetGameControllerAxisValue(2);										// x right joystick with threshhold
+	aimInputThreshold.y = (float)App->input->GetGameControllerAxisValue(3);										// y right joystick with threshhold
 
 	//LOG("AIM INPUT		--> [%.3f]::[%.3f]", aimInput.x, aimInput.y);
 	//LOG("AIM THRESHOLD	--> [%.3f]::[%.3f]", aimInputThreshold.x, aimInputThreshold.y);
