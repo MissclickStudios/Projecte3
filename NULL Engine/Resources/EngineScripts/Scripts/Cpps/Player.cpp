@@ -1386,8 +1386,14 @@ void Player::GatherAimInputs()
 	//LOG("AIM INPUT		--> [%.3f]::[%.3f]", aimInput.x, aimInput.y);
 	//LOG("AIM THRESHOLD	--> [%.3f]::[%.3f]", aimInputThreshold.x, aimInputThreshold.y);
 
+	if (aimState != AimState::IDLE && aimState != AimState::AIMING && aimState != AimState::ON_GUARD)			// If the player is in this states, ignore action inputs (shoot, reload, etc.)
+	{
+		// aimState = AimState::IDLE;
+		return;
+	}
+	
 	// Keyboard aim
-	if (usingKeyboard && !usingGameController)																											// If there was no controller input
+	if (usingKeyboard && !usingGameController)																	// If there was no controller input
 	{
 		if (App->input->GetKey(SDL_SCANCODE_UP) == KeyState::KEY_REPEAT)	{ aimInput.y = -MAX_INPUT; }
 		if (App->input->GetKey(SDL_SCANCODE_DOWN) == KeyState::KEY_REPEAT)	{ aimInput.y = MAX_INPUT; }
@@ -1426,12 +1432,6 @@ void Player::GatherAimInputs()
 
 	SetAimDirection();
 
-	if (aimState == AimState::CHANGE_IN || aimState == AimState::RELOAD_IN || aimState == AimState::SHOOT_IN)											// If the player is in this states, ignore action inputs (shoot, reload, etc.)
-	{
-		// aimState = AimState::IDLE;
-		return;
-	}
-
 	if (App->input->GetKey(SDL_SCANCODE_F) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(SDL_CONTROLLER_BUTTON_B) == ButtonState::BUTTON_DOWN)
 	{
 		aimState = AimState::CHANGE_IN;
@@ -1446,9 +1446,7 @@ void Player::GatherAimInputs()
 
 	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_REPEAT || App->input->GetGameControllerTrigger(RIGHT_TRIGGER) == ButtonState::BUTTON_REPEAT)
 	{
-		if (aimState != AimState::CHANGE && aimState != AimState::RELOAD)
-			aimState = AimState::SHOOT_IN;
-
+		aimState = AimState::SHOOT_IN;
 		return;
 	}
 }
