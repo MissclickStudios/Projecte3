@@ -66,6 +66,7 @@ void Chest::OnTriggerRepeat(GameObject* object)
 	if (groundItem == nullptr)
 		return;
 	float3 position = gameObject->transform->GetWorldPosition();
+	position.y += 4.0f;
 	groundItem->transform->SetWorldPosition(position);
 
 	GroundItem* item = (GroundItem*)groundItem->GetScript("GroundItem");
@@ -73,10 +74,12 @@ void Chest::OnTriggerRepeat(GameObject* object)
 		return;
 	item->Awake();
 
-	if (player->health <= stimPackThreshold)
+	float healthDiff = player->MaxHealth() - player->health;
+	if (healthDiff != 0.0f)
 	{
+		int chance = stimPackChance * (healthDiff / player->MaxHealth());
 		uint num = Random::LCG::GetBoundedRandomUint(0, 100);
-		if (num <= stimPackChance && item->AddItemByName(gameManager->GetChestItemPool(), "Stim Pack", ItemRarity::COMMON, false))
+		if (num <= chance && item->AddItemByName(gameManager->GetChestItemPool(), "Stim Pack", ItemRarity::COMMON, false))
 		{
 			Deactivate();
 			return;

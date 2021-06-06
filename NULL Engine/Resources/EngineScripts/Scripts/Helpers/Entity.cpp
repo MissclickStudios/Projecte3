@@ -127,7 +127,7 @@ void Entity::PreUpdate()
 		{
 			switch (effects[i]->Type())														// Call the corresponding function
 			{
-			case EffectType::FROZEN:			{ Frozen(effects[i]); }				break;	// oops
+			case EffectType::FROZEN:			{ Frozen(effects[i]); }				break;
 			case EffectType::HEAL:			    { Heal(effects[i]); }				break;
 			case EffectType::MAX_HEALTH_MODIFY: { MaxHealthModify(effects[i]); }	break;
 			case EffectType::SPEED_MODIFY:		{ SpeedModify(effects[i]); }		break;
@@ -136,6 +136,9 @@ void Entity::PreUpdate()
 			case EffectType::ELECTROCUTE:		{ Electrocute(effects[i]); }		break;
 			case EffectType::BOSS_PIERCING:		{ BossPiercing(effects[i]); }		break;
 			case EffectType::PRICE_MODIFY:		{ PriceModify(effects[i]); }		break;
+			case EffectType::COOLDOWN_MODIFY:
+				CooldownModify(effects[i]); // oops
+				break;
 			}
 		}
 		else																				// Delete the effect if it ran out
@@ -175,6 +178,9 @@ void Entity::Update()
 {
 	if (paused)
 		return;
+
+	if (gameObject->transform->GetLocalPosition().y < -1000)
+		health = 0.0f;
 
 	if (health < 0.0f)
 		entityState = EntityState::NONE;
@@ -279,12 +285,13 @@ void Entity::GiveHeal(float amount)
 
 Effect* Entity::AddEffect(EffectType type, float duration, bool permanent, float power, float chance, float3 direction, bool start)
 {
-	// TODO: System to add a max stack to each effect so that more than one can exist at once
 	if (effectCounters[(uint)type]) // Check that this effect is not already on the entity
-		return nullptr;
+		for (uint i = 0; i < effects.size(); ++i) // If it does erase the older one
+			if (effects[i]->Type() == type)
+				effects[i]->End();
 	
 	Effect* output = new Effect(type, duration, permanent, power, chance, direction, start);
-	effects.emplace_back(output); // I use emplace instead of push to avoid unnecessary copies
+	effects.emplace_back(output);
 	++effectCounters[(uint)type]; // Add one to the counter of this effect
 
 	return output;
@@ -329,7 +336,6 @@ void Entity::Heal(Effect* effect)
 void Entity::MaxHealthModify(Effect* effect)
 {
 	maxHealthModifier += effect->Duration();
-	GiveHeal(999999.0f);
 }
 
 void Entity::SpeedModify(Effect* effect)
@@ -391,6 +397,11 @@ void Entity::Electrocute(Effect* effect)
 void Entity::PriceModify(Effect* effect)
 {
 	priceModifier *= effect->Power();
+}
+
+void Entity::CooldownModify(Effect* effect)
+{
+	cooldownModifier *= effect->Power();
 }
 
 EntityState Entity::GetEntityState()

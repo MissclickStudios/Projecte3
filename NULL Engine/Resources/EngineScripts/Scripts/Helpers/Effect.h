@@ -18,6 +18,7 @@ enum class ENGINE_ENUM EffectType
 	ELECTROCUTE,
 	BOSS_PIERCING,
 	PRICE_MODIFY,
+	COOLDOWN_MODIFY,
 	EFFECTS_NUM
 };
 // This has to be the last entry

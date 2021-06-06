@@ -1,7 +1,7 @@
 {
-    "ModTime": 1622740520,
-    "UID": 346046901,
-    "ParentUID": 2005580296,
+    "ModTime": 1622932410,
+    "UID": 2125493045,
+    "ParentUID": 296213747,
     "PrefabID": 1654173329,
     "IsPrefab": true,
     "Name": "Turret",
@@ -18,9 +18,9 @@
         {
             "Type": 1,
             "LocalPosition": [
-                -0.52066802978515625,
-                2.4698410034179688,
-                -93.115158081054688
+                34.47979736328125,
+                18.334770202636719,
+                0
             ],
             "LocalRotation": [
                 0,
@@ -42,11 +42,11 @@
             "Density": 1,
             "Linear Damping": 0,
             "Angular Damping": 0,
-            "Use Gravity": false,
-            "Is Kinematic": false,
-            "Freeze Position X": false,
+            "Use Gravity": true,
+            "Is Kinematic": true,
+            "Freeze Position X": true,
             "Freeze Position Y": false,
-            "Freeze Position Z": false,
+            "Freeze Position Z": true,
             "Freeze Rotation X": true,
             "Freeze Rotation Y": true,
             "Freeze Rotation Z": true
@@ -59,7 +59,7 @@
             "Size Y": 20,
             "Size Z": 7,
             "Center X": 0,
-            "Center Y": 10,
+            "Center Y": 4,
             "Center Z": -1
         },
         {
@@ -169,90 +169,8 @@
     ],
     "Children": [
         {
-            "UID": 867044344,
-            "ParentUID": 346046901,
-            "PrefabID": 1654173329,
-            "IsPrefab": true,
-            "Name": "Base",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
-            "NavigationInfo": {
-                "isNavigable": false,
-                "navigationArea": 0
-            },
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        0,
-                        0
-                    ],
-                    "LocalRotation": [
-                        -0.70710664987564087,
-                        0,
-                        0,
-                        0.70710694789886475
-                    ],
-                    "LocalScale": [
-                        0.05000000074505806,
-                        0.05000000074505806,
-                        0.05000000074505806
-                    ]
-                },
-                {
-                    "Type": 2,
-                    "UID": 220355391,
-                    "Name": "turret_base.nemesh",
-                    "Path": "Library\/Meshes\/220355391.nemesh",
-                    "File": "220355391.nemesh",
-                    "ShowWireframe": false,
-                    "ShowBoundingBox": false,
-                    "Outline": false,
-                    "OutlineThickness": 1,
-                    "OutlineColor": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ]
-                },
-                {
-                    "Type": 3,
-                    "Material": {
-                        "UID": 1886986290,
-                        "Color": [
-                            0.58823531866073608,
-                            0.58823531866073608,
-                            0.58823531866073608,
-                            1
-                        ],
-                        "Name": "turret_base.nemat",
-                        "Path": "Library\/Materials\/1886986290.nemat",
-                        "File": "1886986290.nemat"
-                    },
-                    "Texture": {
-                        "AssetsPath": "Assets\/Textures\/\/Enemies\/Turet\/turret_droid_complete_AO.png",
-                        "AssetsName": "turret_droid_complete_AO.png",
-                        "LibaryPath": "Library\/Textures\/1157271398.netex",
-                        "LibraryFile": "1157271398.netex"
-                    },
-                    "Shader": {
-                        "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
-                        "AssetsName": "DefaultShader.shader",
-                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
-                        "LibraryFile": "800223282.neshader"
-                    }
-                }
-            ],
-            "Children": []
-        },
-        {
-            "UID": 1027493206,
-            "ParentUID": 346046901,
+            "UID": 730149259,
+            "ParentUID": 2125493045,
             "PrefabID": 1654173329,
             "IsPrefab": true,
             "Name": "Skeleton",
@@ -288,8 +206,46 @@
             ],
             "Children": [
                 {
-                    "UID": 628664140,
-                    "ParentUID": 1027493206,
+                    "UID": 1056803262,
+                    "ParentUID": 730149259,
+                    "PrefabID": 1654173329,
+                    "IsPrefab": true,
+                    "Name": "Hand",
+                    "IsActive": true,
+                    "IsStatic": false,
+                    "IsSceneRoot": false,
+                    "MaintainThroughScenes": false,
+                    "ShowBoundingBoxes": false,
+                    "NavigationInfo": {
+                        "isNavigable": false,
+                        "navigationArea": 0
+                    },
+                    "Components": [
+                        {
+                            "Type": 1,
+                            "LocalPosition": [
+                                0.003144741291180253,
+                                2.1789751052856445,
+                                1.9898421764373779
+                            ],
+                            "LocalRotation": [
+                                0,
+                                0,
+                                0,
+                                1
+                            ],
+                            "LocalScale": [
+                                1,
+                                1,
+                                1
+                            ]
+                        }
+                    ],
+                    "Children": []
+                },
+                {
+                    "UID": 1522846912,
+                    "ParentUID": 730149259,
                     "PrefabID": 1654173329,
                     "IsPrefab": true,
                     "Name": "Head",
@@ -325,8 +281,8 @@
                     ],
                     "Children": [
                         {
-                            "UID": 792278546,
-                            "ParentUID": 628664140,
+                            "UID": 924877525,
+                            "ParentUID": 1522846912,
                             "PrefabID": 1654173329,
                             "IsPrefab": true,
                             "Name": "HeadMesh",
@@ -407,8 +363,8 @@
                             "Children": []
                         },
                         {
-                            "UID": 589246974,
-                            "ParentUID": 628664140,
+                            "UID": 1012743397,
+                            "ParentUID": 1522846912,
                             "PrefabID": 1654173329,
                             "IsPrefab": true,
                             "Name": "Barrel",
@@ -445,46 +401,90 @@
                             "Children": []
                         }
                     ]
-                },
-                {
-                    "UID": 1856678799,
-                    "ParentUID": 1027493206,
-                    "PrefabID": 1654173329,
-                    "IsPrefab": true,
-                    "Name": "Hand",
-                    "IsActive": true,
-                    "IsStatic": false,
-                    "IsSceneRoot": false,
-                    "MaintainThroughScenes": false,
-                    "ShowBoundingBoxes": false,
-                    "NavigationInfo": {
-                        "isNavigable": false,
-                        "navigationArea": 0
-                    },
-                    "Components": [
-                        {
-                            "Type": 1,
-                            "LocalPosition": [
-                                0.003144741291180253,
-                                2.1789751052856445,
-                                1.9898421764373779
-                            ],
-                            "LocalRotation": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ],
-                            "LocalScale": [
-                                1,
-                                1,
-                                1
-                            ]
-                        }
-                    ],
-                    "Children": []
                 }
             ]
+        },
+        {
+            "UID": 889777901,
+            "ParentUID": 2125493045,
+            "PrefabID": 1654173329,
+            "IsPrefab": true,
+            "Name": "Base",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        -0.70710664987564087,
+                        0,
+                        0,
+                        0.70710694789886475
+                    ],
+                    "LocalScale": [
+                        0.05000000074505806,
+                        0.05000000074505806,
+                        0.05000000074505806
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 220355391,
+                    "Name": "turret_base.nemesh",
+                    "Path": "Library\/Meshes\/220355391.nemesh",
+                    "File": "220355391.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false,
+                    "Outline": false,
+                    "OutlineThickness": 1,
+                    "OutlineColor": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ]
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 1886986290,
+                        "Color": [
+                            0.58823531866073608,
+                            0.58823531866073608,
+                            0.58823531866073608,
+                            1
+                        ],
+                        "Name": "turret_base.nemat",
+                        "Path": "Library\/Materials\/1886986290.nemat",
+                        "File": "1886986290.nemat"
+                    },
+                    "Texture": {
+                        "AssetsPath": "Assets\/Textures\/\/Enemies\/Turet\/turret_droid_complete_AO.png",
+                        "AssetsName": "turret_droid_complete_AO.png",
+                        "LibaryPath": "Library\/Textures\/1157271398.netex",
+                        "LibraryFile": "1157271398.netex"
+                    },
+                    "Shader": {
+                        "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
+                        "AssetsName": "DefaultShader.shader",
+                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
+                        "LibraryFile": "800223282.neshader"
+                    }
+                }
+            ],
+            "Children": []
         }
     ]
 } 

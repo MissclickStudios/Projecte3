@@ -181,7 +181,7 @@ void HUBArmorer::UpdateMenu()
 						std::vector<ItemData*> hubItems = gameManager->GetHubItemPool();
 						ItemData* const itemData = Item::FindItem(hubItems, "Durasteel Reinforcement", (ItemRarity)gameManager->armorLvl);
 						if (itemData != nullptr)
-							mando->AddItem(itemData);
+							Item::CreateItem(itemData)->PickUp(mando);
 					}
 				}
 			}
@@ -198,7 +198,7 @@ void HUBArmorer::UpdateMenu()
 						std::vector<ItemData*> hubItems = gameManager->GetHubItemPool();
 						ItemData* const itemData = Item::FindItem(hubItems, "Propulsed Boots", (ItemRarity)gameManager->bootsLvl);
 						if (itemData != nullptr)
-							mando->AddItem(itemData);
+							Item::CreateItem(itemData)->PickUp(mando);
 					}
 				}
 			}
@@ -215,7 +215,7 @@ void HUBArmorer::UpdateMenu()
 						std::vector<ItemData*> hubItems = gameManager->GetHubItemPool();
 						ItemData* const itemData = Item::FindItem(hubItems, "Premium Ticket", (ItemRarity)gameManager->ticketLvl);
 						if (itemData != nullptr)
-							mando->AddItem(itemData);
+							Item::CreateItem(itemData)->PickUp(mando);
 					}
 				}
 			}
@@ -232,7 +232,7 @@ void HUBArmorer::UpdateMenu()
 						std::vector<ItemData*> hubItems = gameManager->GetHubItemPool();
 						ItemData* const itemData = Item::FindItem(hubItems, "Refrigeration Liquid", (ItemRarity)gameManager->bottleLvl);
 						if (itemData != nullptr)
-							mando->AddItem(itemData);
+							Item::CreateItem(itemData)->PickUp(mando);
 					}
 				}
 			}

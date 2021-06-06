@@ -106,6 +106,7 @@ void GameManager::Awake()
 				backtrack.clear();
 
 			LoadItemPool(chestItemPool, "ChestItemPool.json");
+			LoadItemPool(shopItemPool, "ShopItemPool.json");
 			LoadItemPool(hubItemPool, "HubItemPool.json");
 
 			HandleBackgroundMusic();
@@ -462,6 +463,8 @@ void GameManager::GoNextRoom()
 			{
 				if (roomNum < level1.size() - 1)
 				{
+					if (roomNum == 0 && playerScript != nullptr) // this ensures mando starts the run with full health... it's not THAT bad
+						playerScript->GiveHeal(999999.0f);
 					++roomNum;
 					SaveManagerState();
 					App->scene->ScriptChangeScene(level1[roomNum]);
@@ -925,6 +928,7 @@ void GameManager::GateUpdate()
 				if (chest != nullptr && lastEnemyDead != nullptr)
 				{
 					float3 position = lastEnemyDead->transform->GetWorldPosition();
+					position.y += 2.0f;
 					chest->transform->SetWorldPosition(position);
 
 					float2 playerPosition, chestPosition;

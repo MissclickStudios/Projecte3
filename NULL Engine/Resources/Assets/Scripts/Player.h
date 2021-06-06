@@ -96,7 +96,7 @@ public:
 	// Dash
 	float DashSpeed()		{ return dashSpeed * speedModifier; }
 	float DashDuration()	{ return dashDuration / speedModifier; }
-	float DashCooldown()	{ return dashCooldown / cooldownModifier; }
+	float DashCooldown()	{ return dashCooldown * cooldownModifier; }
 	
 	float dashSpeed			= 0.0f;
 	float dashDuration		= 0.0f;

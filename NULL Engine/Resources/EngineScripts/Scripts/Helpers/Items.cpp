@@ -23,11 +23,11 @@ Item* Item::CreateItem(ItemData* itemData, bool toBuy)
 		return (Item*)new DurasteelReinforcement(itemData, toBuy);
 	else if (name == "Propulsed Boots")
 		return (Item*)new PropulsedBoots(itemData, toBuy);
-	else if (name == "Beskar Ingots")
+	else if (name == "Beskar Ingot")
 		return (Item*)new BeskarIngots(itemData, toBuy);
 	else if (name == "Galactic Credit")
 		return (Item*)new GalacticCredit(itemData, toBuy);
-	else if (name == "Jacket Bullets")
+	else if (name == "Full Metal Jacket Bullets")
 		return (Item*)new JacketBullets(itemData, toBuy);
 	else if (name == "Premium Ticket")
 		return (Item*)new PremiumTicket(itemData, toBuy);
