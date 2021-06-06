@@ -324,6 +324,11 @@ void Entity::Frozen(Effect* effect)
 	{
 		material->SetAlternateColour(Color(0, 1, 1, 1));
 		material->SetTakeDamage(true);
+		if (secondaryMat)
+		{
+			secondaryMat->SetAlternateColour(Color(1, 0, 0, 1));
+			secondaryMat->SetTakeDamage(true);
+		}
 	}
 }
 
