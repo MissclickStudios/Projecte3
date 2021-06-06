@@ -928,6 +928,7 @@ void GameManager::GateUpdate()
 				if (chest != nullptr && lastEnemyDead != nullptr)
 				{
 					float3 position = lastEnemyDead->transform->GetWorldPosition();
+					position.y += 2.0f;
 					chest->transform->SetWorldPosition(position);
 
 					float2 playerPosition, chestPosition;

@@ -96,7 +96,7 @@ public:
 	// Dash
 	float DashSpeed()		{ return dashSpeed * speedModifier; }
 	float DashDuration()	{ return dashDuration / speedModifier; }
-	float DashCooldown()	{ return dashCooldown / cooldownModifier; }
+	float DashCooldown()	{ return dashCooldown * cooldownModifier; }
 	
 	float dashSpeed			= 0.0f;
 	float dashDuration		= 0.0f;
@@ -122,6 +122,17 @@ public:
 
 	AnimationInfo mainMenuAnimation			= { "MainMenu" };
 
+	// -- Status Effects
+	AnimationInfo stunnedAnimation			= { "Stun" };
+	AnimationInfo knockedbackAnimation		= { "Knockback"};
+
+	// -- Interactions
+	AnimationInfo talkAnimation				= { "Talk" };
+	AnimationInfo useAnimation				= { "Use" };
+	AnimationInfo openChestAnimation		= { "OpenChest" };
+	AnimationInfo signalGroguAnimation		= { "SignalGrogu" };
+
+	// -- Movement
 	AnimationInfo walkAnimation				= { "Walk" };
 
 	AnimationInfo runForwardsAnimation		= { "RunForwardsLight" };
@@ -133,14 +144,13 @@ public:
 
 	AnimationInfo dashAnimation				= { "Dash" };
 
+	// -- Weapons (Aim/Shoot/Reload/Change)
 	AnimationInfo aimBlasterAnimation		= { "AimBlaster" };
-	//AnimationInfo aimBlasterAnimation		= { "AimBlasterAlt" };
 	AnimationInfo aimSniperAnimation		= { "AimSniper" };
 	AnimationInfo aimMinigunAnimation		= { "AimMinigun" };
 	AnimationInfo aimShotgunAnimation		= { "AimShotgun" };
 
 	AnimationInfo shootBlasterAnimation		= { "ShootBlaster" };
-	//AnimationInfo shootBlasterAnimation		= { "ShootBlasterAlt" };
 	AnimationInfo shootSniperAnimation		= { "ShootSniper"};
 	AnimationInfo shootMinigunAnimation		= { "ShootMinigun" };
 	AnimationInfo shootShotgunAnimation		= { "ShootShotgun" };
@@ -150,15 +160,8 @@ public:
 	AnimationInfo reloadMinigunAnimation	= { "ReloadMinigun" }; 
 	AnimationInfo reloadShotgunAnimation	= { "ReloadShotgun" };
 
-	AnimationInfo stunnedAnimation			= { "Stun" };
-	AnimationInfo knockedbackAnimation		= { "Knockback"};
-	
-	AnimationInfo talkAnimation				= { "Talk" };
-	AnimationInfo useAnimation				= { "Use" };
-	AnimationInfo openChestAnimation		= { "OpenChest" };
-	AnimationInfo signalGroguAnimation		= { "SignalGrogu" };
-
 	AnimationInfo changeWeaponAnimation		= { "ChangeWeapon" };
+
 	AnimationInfo onGuardAnimation			= { "OnGuard" };
 
 	// Weapons
@@ -236,7 +239,7 @@ public:
 
 private:
 	// Inputs
-	bool allowInput = true;
+	bool allowInput				= true;
 
 	bool usingKeyboard			= false;
 	bool usingGameController	= false;
@@ -262,7 +265,6 @@ private:
 
 	// Movement Methods
 	void MoveIdle();
-	void Interact();
 	void Walk();
 	void Run();
 	void DashIn();
