@@ -177,7 +177,7 @@ void HUBArmorer::UpdateMenu()
 				if (mando->beskar > gameManager->armorLvl && gameManager->armorLvl + 1 < MAX_ITEM_PRICE)
 				{
 					gameManager->armorLvl = armorSlider->IncrementOneSquare();
-					mando->SubtractBeskar(gameManager->armorLvl + 1);
+					mando->SubtractBeskar(gameManager->armorLvl);
 					armorPriceText->SetText(std::to_string(gameManager->armorLvl + 1).c_str());
 
 					if (mando != nullptr)
@@ -196,7 +196,7 @@ void HUBArmorer::UpdateMenu()
 				if (mando->beskar > gameManager->bootsLvl && gameManager->bootsLvl + 1 < MAX_ITEM_PRICE)
 				{
 					gameManager->bootsLvl = bootsSlider->IncrementOneSquare();
-					mando->SubtractBeskar(gameManager->bootsLvl + 1);
+					mando->SubtractBeskar(gameManager->bootsLvl);
 					bootsPriceText->SetText(std::to_string(gameManager->bootsLvl + 1).c_str());
 
 					if (mando != nullptr)
@@ -215,7 +215,7 @@ void HUBArmorer::UpdateMenu()
 				if (mando->beskar > gameManager->ticketLvl && gameManager->ticketLvl + 1 < MAX_ITEM_PRICE)
 				{
 					gameManager->ticketLvl = ticketSlider->IncrementOneSquare();
-					mando->SubtractBeskar(gameManager->ticketLvl + 1);
+					mando->SubtractBeskar(gameManager->ticketLvl);
 					ticketPriceText->SetText(std::to_string(gameManager->ticketLvl + 1).c_str());
 
 					if (mando != nullptr)
@@ -235,7 +235,7 @@ void HUBArmorer::UpdateMenu()
 				if (mando->beskar > gameManager->bottleLvl && gameManager->bottleLvl + 1 < MAX_ITEM_PRICE)
 				{
 					gameManager->bottleLvl = bottleSlider->IncrementOneSquare();
-					mando->SubtractBeskar(gameManager->bottleLvl + 1);
+					mando->SubtractBeskar(gameManager->bottleLvl);
 					bottlePriceText->SetText(std::to_string(gameManager->bottleLvl + 1).c_str());
 
 					if (mando != nullptr)

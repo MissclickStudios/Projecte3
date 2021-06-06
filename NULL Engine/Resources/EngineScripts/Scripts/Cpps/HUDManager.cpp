@@ -281,20 +281,25 @@ void HUDManager::SetUpHealth(float hp, int maxHp)
 	if (eaven) 
 	{
 		currentHealthIndex = hp / 2 - 1;
-		hearts[currentHealthIndex]->SetTextureCoordinates(fullHeart[0], fullHeart[1], fullHeart[2], fullHeart[3]);
+		if (hearts[currentHealthIndex] != nullptr)
+			hearts[currentHealthIndex]->SetTextureCoordinates(fullHeart[0], fullHeart[1], fullHeart[2], fullHeart[3]);
 	}
 	else 
 	{
 		currentHealthIndex = hp / 2;
-		hearts[currentHealthIndex]->SetTextureCoordinates(halfHeart[0], halfHeart[1], halfHeart[2], halfHeart[3]);
+		if (hearts[currentHealthIndex] != nullptr)
+			hearts[currentHealthIndex]->SetTextureCoordinates(halfHeart[0], halfHeart[1], halfHeart[2], halfHeart[3]);
 	}
 
 	for (int i = 0; i < currentHealthIndex; ++i)
-		hearts[i]->SetTextureCoordinates(fullHeart[0], fullHeart[1], fullHeart[2], fullHeart[3]);
+		if (hearts[i] != nullptr)
+			hearts[i]->SetTextureCoordinates(fullHeart[0], fullHeart[1], fullHeart[2], fullHeart[3]);
 	for (int i = currentHealthIndex+1; i < (playerMaxHp / 2); ++i)
-		hearts[i]->SetTextureCoordinates(emptyHeart[0], emptyHeart[1], emptyHeart[2], emptyHeart[3]);
+		if (hearts[i] != nullptr)
+			hearts[i]->SetTextureCoordinates(emptyHeart[0], emptyHeart[1], emptyHeart[2], emptyHeart[3]);
 	for (int i = (playerMaxHp/2); i < MAX_HEARTS; ++i)
-		hearts[i]->SetTextureCoordinates(noRender[0], noRender[1], noRender[2], noRender[3]);
+		if (hearts[i] != nullptr)
+			hearts[i]->SetTextureCoordinates(noRender[0], noRender[1], noRender[2], noRender[3]);
 }
 
 /*C_2DAnimator* HUDManager::GetHeartAnimation(int index)
