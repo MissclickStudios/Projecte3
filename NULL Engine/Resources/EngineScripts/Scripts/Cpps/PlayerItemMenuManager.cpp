@@ -43,6 +43,8 @@ void PlayerItemMenuManager::Start()
 
 void PlayerItemMenuManager::Update()
 {
+	if (!strcmp(App->scene->GetCurrentScene(), "HUB"))
+		return;
 	if (itemFramePrefab.uid == NULL)
 		return;
 	if (player == nullptr)
