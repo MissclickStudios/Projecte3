@@ -982,7 +982,7 @@ void GameManager::GateUpdate()
 					if (!direction.IsZero())
 						direction.Normalize();
 					float rad = direction.AimedAngle();
-					chest->transform->SetLocalRotation(float3(Random::LCG::GetBoundedRandomFloat(0.0f, 2.0f), -rad, Random::LCG::GetBoundedRandomFloat(0.0f, 2.0f)));
+					chest->transform->SetLocalRotation(float3(DegToRad(Random::LCG::GetBoundedRandomFloat(0.0f, 10.0f)), -rad, DegToRad(Random::LCG::GetBoundedRandomFloat(0.0f, 10.0f))));
 
 					chest->GetComponent<C_RigidBody>()->TransformMovesRigidBody(false);
 				}

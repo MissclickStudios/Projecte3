@@ -1,11 +1,11 @@
 {
-    "ModTime": 1623007781,
-    "UID": 1611972384,
+    "ModTime": 1623017831,
+    "UID": 2025476349,
     "ParentUID": 888400124,
     "PrefabID": 1654173329,
     "IsPrefab": true,
     "Name": "Turret",
-    "IsActive": false,
+    "IsActive": true,
     "IsStatic": false,
     "IsSceneRoot": false,
     "MaintainThroughScenes": false,
@@ -18,9 +18,9 @@
         {
             "Type": 1,
             "LocalPosition": [
-                34.47979736328125,
-                -4.5010132789611816,
-                0
+                100.533447265625,
+                8.8278312683105469,
+                32.987522125244141
             ],
             "LocalRotation": [
                 0,
@@ -38,8 +38,8 @@
             "Type": 8,
             "Is Static": false,
             "Filter": " enemy",
-            "Mass": 10,
-            "Density": 1,
+            "Mass": 1000,
+            "Density": 100,
             "Linear Damping": 0,
             "Angular Damping": 0,
             "Use Gravity": true,
@@ -77,7 +77,7 @@
                 {
                     "Type": 2,
                     "Name": "health",
-                    "float": -102
+                    "float": 80
                 },
                 {
                     "Type": 2,
@@ -169,12 +169,12 @@
     ],
     "Children": [
         {
-            "UID": 1222890208,
-            "ParentUID": 1611972384,
+            "UID": 901060846,
+            "ParentUID": 2025476349,
             "PrefabID": 1654173329,
             "IsPrefab": true,
             "Name": "Skeleton",
-            "IsActive": false,
+            "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
@@ -206,12 +206,12 @@
             ],
             "Children": [
                 {
-                    "UID": 1033277338,
-                    "ParentUID": 1222890208,
+                    "UID": 1139973327,
+                    "ParentUID": 901060846,
                     "PrefabID": 1654173329,
                     "IsPrefab": true,
                     "Name": "Hand",
-                    "IsActive": false,
+                    "IsActive": true,
                     "IsStatic": false,
                     "IsSceneRoot": false,
                     "MaintainThroughScenes": false,
@@ -244,12 +244,12 @@
                     "Children": []
                 },
                 {
-                    "UID": 213078662,
-                    "ParentUID": 1222890208,
+                    "UID": 1716491371,
+                    "ParentUID": 901060846,
                     "PrefabID": 1654173329,
                     "IsPrefab": true,
                     "Name": "Head",
-                    "IsActive": false,
+                    "IsActive": true,
                     "IsStatic": false,
                     "IsSceneRoot": false,
                     "MaintainThroughScenes": false,
@@ -281,12 +281,12 @@
                     ],
                     "Children": [
                         {
-                            "UID": 400186479,
-                            "ParentUID": 213078662,
+                            "UID": 60515327,
+                            "ParentUID": 1716491371,
                             "PrefabID": 1654173329,
                             "IsPrefab": true,
                             "Name": "HeadMesh",
-                            "IsActive": false,
+                            "IsActive": true,
                             "IsStatic": false,
                             "IsSceneRoot": false,
                             "MaintainThroughScenes": false,
@@ -363,12 +363,12 @@
                             "Children": []
                         },
                         {
-                            "UID": 859257022,
-                            "ParentUID": 213078662,
+                            "UID": 1340252692,
+                            "ParentUID": 1716491371,
                             "PrefabID": 1654173329,
                             "IsPrefab": true,
                             "Name": "Barrel",
-                            "IsActive": false,
+                            "IsActive": true,
                             "IsStatic": false,
                             "IsSceneRoot": false,
                             "MaintainThroughScenes": false,
@@ -405,12 +405,12 @@
             ]
         },
         {
-            "UID": 769647199,
-            "ParentUID": 1611972384,
+            "UID": 1781443526,
+            "ParentUID": 2025476349,
             "PrefabID": 1654173329,
             "IsPrefab": true,
             "Name": "Base",
-            "IsActive": false,
+            "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
             "MaintainThroughScenes": false,
