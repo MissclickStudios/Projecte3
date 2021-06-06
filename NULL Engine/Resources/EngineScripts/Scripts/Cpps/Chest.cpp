@@ -66,6 +66,7 @@ void Chest::OnTriggerRepeat(GameObject* object)
 	if (groundItem == nullptr)
 		return;
 	float3 position = gameObject->transform->GetWorldPosition();
+	position.y += 4.0f;
 	groundItem->transform->SetWorldPosition(position);
 
 	GroundItem* item = (GroundItem*)groundItem->GetScript("GroundItem");
