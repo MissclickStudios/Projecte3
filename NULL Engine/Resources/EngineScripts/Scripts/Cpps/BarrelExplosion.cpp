@@ -30,8 +30,6 @@ void BarrelExplosion::Start()
 
 void BarrelExplosion::Update()
 {
-	if (state == 1)
-		state = 2;
 }
 
 void BarrelExplosion::CleanUp()
@@ -41,15 +39,11 @@ void BarrelExplosion::CleanUp()
 
 void BarrelExplosion::OnTriggerRepeat(GameObject* object)
 {
-	if (state == 2)
-		return;
-
 	Entity* entity = (Entity*)GetObjectScript(object, ObjectType::ENTITY);
 	if (!entity)
 		return;
 
-	state = 1;
-
+	Effect* eff = nullptr;
 	if (!stun)
 	{
 		float2 entityPosition, position;
@@ -68,14 +62,16 @@ void BarrelExplosion::OnTriggerRepeat(GameObject* object)
 		direction.Normalize();
 		direction *= currentPower;
 
-		entity->gameObject->GetComponent<C_RigidBody>()->FreezePositionY(true);
-		entity->AddEffect(EffectType::KNOCKBACK, 0.75f, false, 0.0f, 0.0f, float3(direction.x, 0.0f, direction.y));
+		eff = entity->AddEffect(EffectType::KNOCKBACK, 0.75f, false, 0.0f, 0.0f, float3(direction.x, 0.0f, direction.y));
+		if (eff)
+			entity->gameObject->GetComponent<C_RigidBody>()->FreezePositionY(true);
 	}
 	else
 	{
-		entity->AddEffect(EffectType::STUN, power, false, 0.0f, 100.0f);
+		eff = entity->AddEffect(EffectType::STUN, power, false, 0.0f, 100.0f);
 	}
-	entity->TakeDamage(damage);
+	if (eff != nullptr)
+		entity->TakeDamage(damage);
 }
 
 BarrelExplosion* CreateBarrelExplosion() {

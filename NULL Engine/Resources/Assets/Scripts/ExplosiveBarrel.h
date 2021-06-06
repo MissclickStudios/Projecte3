@@ -30,6 +30,7 @@ public:
 	float particleEmitttingTime = 1.0f;
 
 	std::string explosionName;
+	std::string markerName;
 	std::string particleName;
 
 	bool reload = false;
@@ -50,6 +51,7 @@ private:
 
 	C_BoxCollider* explosionCollider = nullptr;
 	C_ParticleSystem* explosionParticles = nullptr;
+	GameObject* explosionMarker = nullptr;
 	C_ParticleSystem* activeParticles = nullptr;
 };
 
