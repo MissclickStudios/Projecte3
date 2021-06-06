@@ -663,6 +663,10 @@ void Player::SetPlayerInteraction(InteractionType type, float duration)
 	{
 		interactionTimer.Stop();
 		interactionDuration = 0.0f;
+
+		if (rigidBody != nullptr)
+			rigidBody->MakeDynamic();
+
 		return;
 	}
 
@@ -670,7 +674,7 @@ void Player::SetPlayerInteraction(InteractionType type, float duration)
 	aimState	= AimState::IDLE;
 	
 	if (rigidBody != nullptr)
-		rigidBody->StopInertia();
+		rigidBody->MakeStatic();
 
 	switch (currentInteraction)
 	{
@@ -691,7 +695,11 @@ void Player::AnimatePlayer()
 	AnimationInfo* torsoInfo	= GetAimStateAnimation();
 	AnimationInfo* legsInfo		= GetMoveStateAnimation();
 
-	if (GetEntityState() != EntityState::NONE || aimState == AimState::IDLE || torsoInfo == nullptr || legsInfo == nullptr)			// TAKE INTO ACCOUNT STUN AND KNOCKBACK + LOOK INTO DASH PROBLEMS 
+	//LOG("CURRENT:	{ %s }",	(currentAnimation != nullptr) ? currentAnimation->name.c_str() : "NONE");
+	//LOG("TORSO:	  { %s }",		(torsoInfo != nullptr) ? torsoInfo->name.c_str() : "NONE");
+	//LOG("LEGS:	   { %s }",		(legsInfo != nullptr) ? legsInfo->name.c_str() : "NONE");
+
+	if (GetEntityState() != EntityState::NONE || aimState == AimState::IDLE || torsoInfo == nullptr || legsInfo == nullptr)		// TAKE INTO ACCOUNT STUN AND KNOCKBACK + LOOK INTO DASH PROBLEMS 
 	{	
 		if (torsoTrack != nullptr)
 		{
@@ -1463,6 +1471,8 @@ void Player::GatherInteractionInputs()
 	{
 		if (App->input->GetKey(SDL_SCANCODE_RCTRL) == KeyState::KEY_REPEAT)
 		{
+			LOG("ACCESSING DEBUGGE MODDE");
+			
 			if (App->input->GetKey(SDL_SCANCODE_W) == KeyState::KEY_DOWN) { SetPlayerInteraction(InteractionType::TALK); }
 			if (App->input->GetKey(SDL_SCANCODE_A) == KeyState::KEY_DOWN) { SetPlayerInteraction(InteractionType::USE); }
 			if (App->input->GetKey(SDL_SCANCODE_S) == KeyState::KEY_DOWN) { SetPlayerInteraction(InteractionType::OPEN_CHEST); }
