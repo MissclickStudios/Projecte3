@@ -1246,6 +1246,8 @@ void Player::ChangeIn()
 
 void Player::Change()
 {
+	LOG("Change Weapon Time %.3f", ChangeTime());
+	
 	if (changeTimer.ReadSec() < ChangeTime())
 		return;
 	
@@ -1508,8 +1510,8 @@ void Player::Aim()
 	{
 		aimVector = (abs(aimInput.x) < AIM_THRESHOLD && abs( aimInput.y) < AIM_THRESHOLD) ? moveVector : aimInput;
 
-		if (abs(aimInput.x) < AIM_THRESHOLD && abs(aimInput.y) < AIM_THRESHOLD)
-			LOG("USING MOVE VECTOR: moveVector --> { %.3f, %.3f } || aimInput --> { %.3f, %.3f }", moveVector.x, moveVector.y, aimInput.x, aimInput.y);
+		//if (abs(aimInput.x) < AIM_THRESHOLD && abs(aimInput.y) < AIM_THRESHOLD)
+		//	LOG("USING MOVE VECTOR: moveVector --> { %.3f, %.3f } || aimInput --> { %.3f, %.3f }", moveVector.x, moveVector.y, aimInput.x, aimInput.y);
 	}
 
 	if (abs(aimInput.x) < WALK_THRESHOLD && abs(aimInput.y) < WALK_THRESHOLD)										// Only works with this specific threshold. If it works it works.
