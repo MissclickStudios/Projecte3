@@ -11,6 +11,8 @@ class C_UI_Slider;
 class C_UI_Text;
 class GameManager;
 
+class ItemData;
+
 enum class HUBArmorerState: char {
 	ACTIVE,
 	INACTIVE,
@@ -44,6 +46,7 @@ public:
 	GameObject* bootsTextObject = nullptr;
 	GameObject* ticketTextObject = nullptr;
 	GameObject* bottleTextObject = nullptr;
+	GameObject* titleTextObject = nullptr;
 	GameObject* descriptionTextObject = nullptr;
 	GameObject* creditTextObject = nullptr;
 	GameObject* beskarTextObject = nullptr;
@@ -68,10 +71,12 @@ private:
 	C_UI_Text* bootsPriceText = nullptr;
 	C_UI_Text* ticketPriceText = nullptr;
 	C_UI_Text* bottlePriceText = nullptr;
+	C_UI_Text* titleText = nullptr;
 	C_UI_Text* descriptionText = nullptr;
 	C_UI_Text* creditsText = nullptr;
 	C_UI_Text* beskarText = nullptr;
 
+	std::vector<ItemData*> hubItems;
 };
 
 SCRIPTS_FUNCTION HUBArmorer* CreateHUBArmorer();
