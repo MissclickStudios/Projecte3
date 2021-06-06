@@ -16,6 +16,7 @@
 #include "C_Transform.h"
 #include "C_UI_Text.h"
 #include "C_AudioSource.h"
+#include "C_RigidBody.h"
 
 #include "GameManager.h"
 #include "DialogManager.h"
@@ -968,7 +969,7 @@ void GameManager::GateUpdate()
 				if (chest != nullptr && lastEnemyDead != nullptr)
 				{
 					float3 position = lastEnemyDead->transform->GetWorldPosition();
-					position.y += 2.0f;
+					position.y += 10.0f;
 					chest->transform->SetWorldPosition(position);
 
 					float2 playerPosition, chestPosition;
@@ -981,7 +982,9 @@ void GameManager::GateUpdate()
 					if (!direction.IsZero())
 						direction.Normalize();
 					float rad = direction.AimedAngle();
-					chest->transform->SetLocalRotation(float3(0, -rad, 0));
+					chest->transform->SetLocalRotation(float3(Random::LCG::GetBoundedRandomFloat(0.0f, 2.0f), -rad, Random::LCG::GetBoundedRandomFloat(0.0f, 2.0f)));
+
+					chest->GetComponent<C_RigidBody>()->TransformMovesRigidBody(false);
 				}
 			}
 		}
@@ -1043,7 +1046,7 @@ void GameManager::LoadItemPool(std::vector<ItemData*>& pool, std::string path)
 		int minimum = itemNode.GetInteger("Min");
 		int maximum = itemNode.GetInteger("Max");
 		float power = itemNode.GetNumber("Power");
-		float duration = itemNode.GetInteger("Duration");
+		float duration = itemNode.GetNumber("Duration");
 		float chance = itemNode.GetInteger("Chance");
 		std::string texturePath = itemNode.GetString("Texture Path");
 		pool.emplace_back(new ItemData(name, description, price, rarity, power, duration, chance, minimum, maximum, texturePath));

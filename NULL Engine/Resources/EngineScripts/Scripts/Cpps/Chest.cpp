@@ -28,6 +28,10 @@ void Chest::Awake()
 
 void Chest::Update()
 {
+	if (open)
+	{
+		Deactivate();
+	}
 }
 
 void Chest::CleanUp()
@@ -42,7 +46,7 @@ void Chest::OnResume()
 {
 }
 
-void Chest::OnTriggerRepeat(GameObject* object)
+void Chest::OnCollisionEnter(GameObject* object)
 {
 	GameObject* managerObject = App->scene->GetGameObjectByName(gameManagerName.c_str());
 	if (managerObject == nullptr)
@@ -81,7 +85,7 @@ void Chest::OnTriggerRepeat(GameObject* object)
 		uint num = Random::LCG::GetBoundedRandomUint(0, 100);
 		if (num <= chance && item->AddItemByName(gameManager->GetChestItemPool(), "Stim Pack", ItemRarity::COMMON, false))
 		{
-			Deactivate();
+			open = true;
 			return;
 		}
 	}
@@ -113,7 +117,7 @@ void Chest::OnTriggerRepeat(GameObject* object)
 	if (searches >= rollAttempts)
 		item->Deactivate();
 
-	Deactivate();
+	open = true;
 }
 
 SCRIPTS_FUNCTION Chest* CreateChest()
