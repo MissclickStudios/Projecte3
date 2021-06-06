@@ -238,7 +238,7 @@ void Player::Behavior()
 
 		if (moveState != PlayerState::DEAD && moveState != PlayerState::DEAD_OUT)
 		{
-			ManageAim();
+			//ManageAim();
 
 			ManageInvincibility();
 
