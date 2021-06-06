@@ -667,6 +667,9 @@ void Player::SetPlayerInteraction(InteractionType type, float duration)
 		if (rigidBody != nullptr)
 			rigidBody->MakeDynamic();
 
+		if (dashTimer.IsActive())
+			moveState = PlayerState::DASH;
+
 		return;
 	}
 
