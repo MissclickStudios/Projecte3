@@ -515,25 +515,37 @@ void Player::Reset()
 			{
 				ItemData* const itemData = Item::FindItem(hubItems, "Durasteel Reinforcement", (ItemRarity)manager->armorLvl);
 				if (itemData != nullptr)
+				{
 					Item::CreateItem(itemData)->PickUp(this);
+					AddItem(itemData); // yes you have to manually add the item after picking it up, I KNOW... its kinda wack
+				}
 			}
 			if (manager->bootsLvl)
 			{
 				ItemData* const itemData = Item::FindItem(hubItems, "Propulsed Boots", (ItemRarity)manager->bootsLvl);
 				if (itemData != nullptr)
+				{
 					Item::CreateItem(itemData)->PickUp(this);
+					AddItem(itemData);
+				}
 			}
 			if (manager->ticketLvl)
 			{
 				ItemData* const itemData = Item::FindItem(hubItems, "Premium Ticket", (ItemRarity)manager->ticketLvl);
 				if (itemData != nullptr)
+				{
 					Item::CreateItem(itemData)->PickUp(this);
+					AddItem(itemData);
+				}
 			}
 			if (manager->bottleLvl)
 			{
 				ItemData* const itemData = Item::FindItem(hubItems, "Refrigeration Liquid", (ItemRarity)manager->bottleLvl);
 				if (itemData != nullptr)
+				{
 					Item::CreateItem(itemData)->PickUp(this);
+					AddItem(itemData);
+				}
 			}
 		}
 	}
