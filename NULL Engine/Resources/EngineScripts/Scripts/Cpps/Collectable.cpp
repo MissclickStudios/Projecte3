@@ -48,9 +48,9 @@ void Collectable::OnCollisionEnter(GameObject* object)
 	if (!player)
 		return;
 
-	if (player->currency >= price)
+	if (player->credits >= price)
 	{
-		player->currency -= price;
+		player->SubtractCredits(price);
 
 		used = true;
 		Contact(player);
