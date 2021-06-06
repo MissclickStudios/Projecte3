@@ -66,9 +66,6 @@ Turret::~Turret()
 
 void Turret::SetUp()
 {
-	if (rigidBody != nullptr)
-		rigidBody->SetKinematic(false);
-
 	player = App->scene->GetGameObjectByName(playerName.c_str());
 
 	GameObject* hand = nullptr;

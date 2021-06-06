@@ -1,7 +1,7 @@
 {
-    "ModTime": 1622655642,
-    "UID": 1093819561,
-    "ParentUID": 888400124,
+    "ModTime": 1622906351,
+    "UID": 1187486238,
+    "ParentUID": 296213747,
     "PrefabID": 1331719244,
     "IsPrefab": true,
     "Name": "Vaporator",
@@ -18,9 +18,9 @@
         {
             "Type": 1,
             "LocalPosition": [
-                94.08154296875,
-                -62.794853210449219,
-                -124.72866821289063
+                4.0997848510742188,
+                2.84086012840271,
+                50.348724365234375
             ],
             "LocalRotation": [
                 0,
@@ -52,62 +52,221 @@
         },
         {
             "Type": 24,
-            "ResourceUID": 2056065135,
-            "AssetsPath": "Assets\/Scripts\/\/MoistureVaporator.h",
-            "DataName": "MoistureVaporator",
+            "ResourceUID": 128210617,
+            "AssetsPath": "Assets\/Scripts\/\/ExplosiveBarrel.h",
+            "DataName": "ExplosiveBarrel",
             "HasInspector": true,
             "InspectorVariables": [
                 {
                     "Type": 2,
-                    "Name": "stunDuration",
+                    "Name": "particleEmitttingTime",
                     "float": 1
                 },
                 {
                     "Type": 5,
-                    "Name": "gameManagerName",
-                    "string": "Game Manager"
+                    "Name": "explosionName",
+                    "string": "ElectrocuteObject"
                 },
                 {
                     "Type": 5,
-                    "Name": "vaporatorObjectName",
-                    "string": "VaporatorMesh"
+                    "Name": "explosionAudio",
+                    "string": "item_barrel_explosion"
                 },
                 {
-                    "Type": 3,
-                    "Name": "vaporatorColliderSize",
-                    "float3x": 0,
-                    "float3y": 0,
-                    "float3z": 0
+                    "Type": 5,
+                    "Name": "particleName",
+                    "string": "Idle"
                 },
                 {
-                    "Type": 3,
-                    "Name": "stunTriggerSize",
-                    "float3x": 10,
-                    "float3y": 20,
-                    "float3z": 10
-                },
-                {
-                    "Type": 0,
-                    "Name": "damage",
-                    "int": 0
+                    "Type": 1,
+                    "Name": "reload",
+                    "bool": true
                 },
                 {
                     "Type": 2,
                     "Name": "cooldown",
                     "float": 5
-                },
-                {
-                    "Type": 2,
-                    "Name": "particleEmitttingTime",
-                    "float": 1
                 }
             ]
+        },
+        {
+            "Type": 12,
+            "particleSystemUID": 146294263,
+            "particleSystemAssetsPath": "Assets\/ParticleSystems\/VaporatorStunParticles.particles",
+            "stopSpawn": false,
+            "tempDelete": false,
+            "previewEnabled": false,
+            "stopAndDeleteCheck": false
         }
     ],
     "Children": [
         {
-            "UID": 1211346234,
-            "ParentUID": 1093819561,
+            "UID": 120824957,
+            "ParentUID": 1187486238,
+            "PrefabID": 1331719244,
+            "IsPrefab": true,
+            "Name": "ElectrocuteObject",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 8,
+                    "Is Static": true,
+                    "Filter": " void"
+                },
+                {
+                    "Type": 9,
+                    "Is Trigger": true,
+                    "Show Collider": true,
+                    "Size X": 40,
+                    "Size Y": 30,
+                    "Size Z": 40,
+                    "Center X": 0,
+                    "Center Y": 5,
+                    "Center Z": 0
+                },
+                {
+                    "Type": 24,
+                    "ResourceUID": 69873825,
+                    "AssetsPath": "Assets\/Scripts\/\/BarrelExplosion.h",
+                    "DataName": "BarrelExplosion",
+                    "HasInspector": true,
+                    "InspectorVariables": [
+                        {
+                            "Type": 0,
+                            "Name": "damage",
+                            "int": 25
+                        },
+                        {
+                            "Type": 2,
+                            "Name": "power",
+                            "float": 2
+                        },
+                        {
+                            "Type": 1,
+                            "Name": "stun",
+                            "bool": true
+                        }
+                    ]
+                }
+            ],
+            "Children": []
+        },
+        {
+            "UID": 1027913943,
+            "ParentUID": 1187486238,
+            "PrefabID": 1331719244,
+            "IsPrefab": true,
+            "Name": "Particles",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -1,
+                        0,
+                        -2.11260986328125
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ],
+            "Children": [
+                {
+                    "UID": 1847503718,
+                    "ParentUID": 1027913943,
+                    "PrefabID": 1331719244,
+                    "IsPrefab": true,
+                    "Name": "Idle",
+                    "IsActive": true,
+                    "IsStatic": false,
+                    "IsSceneRoot": false,
+                    "MaintainThroughScenes": false,
+                    "ShowBoundingBoxes": false,
+                    "NavigationInfo": {
+                        "isNavigable": false,
+                        "navigationArea": 0
+                    },
+                    "Components": [
+                        {
+                            "Type": 1,
+                            "LocalPosition": [
+                                4.4113998413085938,
+                                15.298847198486328,
+                                -3.6357574462890625
+                            ],
+                            "LocalRotation": [
+                                0,
+                                0,
+                                0,
+                                1
+                            ],
+                            "LocalScale": [
+                                1,
+                                1,
+                                1
+                            ]
+                        },
+                        {
+                            "Type": 12,
+                            "particleSystemUID": 2072017682,
+                            "particleSystemAssetsPath": "Assets\/ParticleSystems\/Spark.particles",
+                            "stopSpawn": false,
+                            "tempDelete": false,
+                            "previewEnabled": true,
+                            "stopAndDeleteCheck": false
+                        }
+                    ],
+                    "Children": []
+                }
+            ]
+        },
+        {
+            "UID": 1861416588,
+            "ParentUID": 1187486238,
             "PrefabID": 1331719244,
             "IsPrefab": true,
             "Name": "VaporatorMesh",
@@ -186,139 +345,6 @@
                 }
             ],
             "Children": []
-        },
-        {
-            "UID": 1641255933,
-            "ParentUID": 1093819561,
-            "PrefabID": 1331719244,
-            "IsPrefab": true,
-            "Name": "Particles",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": true,
-            "NavigationInfo": {
-                "isNavigable": false,
-                "navigationArea": 0
-            },
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        -1,
-                        0,
-                        -2.11260986328125
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                }
-            ],
-            "Children": [
-                {
-                    "UID": 225976193,
-                    "ParentUID": 1641255933,
-                    "PrefabID": 1331719244,
-                    "IsPrefab": true,
-                    "Name": "Idle",
-                    "IsActive": true,
-                    "IsStatic": false,
-                    "IsSceneRoot": false,
-                    "MaintainThroughScenes": false,
-                    "ShowBoundingBoxes": false,
-                    "NavigationInfo": {
-                        "isNavigable": false,
-                        "navigationArea": 0
-                    },
-                    "Components": [
-                        {
-                            "Type": 1,
-                            "LocalPosition": [
-                                4.4113998413085938,
-                                15.298847198486328,
-                                -3.6357574462890625
-                            ],
-                            "LocalRotation": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ],
-                            "LocalScale": [
-                                1,
-                                1,
-                                1
-                            ]
-                        },
-                        {
-                            "Type": 12,
-                            "particleSystemUID": 2072017682,
-                            "particleSystemAssetsPath": "Assets\/ParticleSystems\/Spark.particles",
-                            "stopSpawn": false,
-                            "tempDelete": false,
-                            "previewEnabled": true,
-                            "stopAndDeleteCheck": false
-                        }
-                    ],
-                    "Children": []
-                },
-                {
-                    "UID": 2079955702,
-                    "ParentUID": 1641255933,
-                    "PrefabID": 1331719244,
-                    "IsPrefab": true,
-                    "Name": "StunParticles",
-                    "IsActive": true,
-                    "IsStatic": false,
-                    "IsSceneRoot": false,
-                    "MaintainThroughScenes": false,
-                    "ShowBoundingBoxes": false,
-                    "NavigationInfo": {
-                        "isNavigable": false,
-                        "navigationArea": 0
-                    },
-                    "Components": [
-                        {
-                            "Type": 1,
-                            "LocalPosition": [
-                                0,
-                                33.476829528808594,
-                                0
-                            ],
-                            "LocalRotation": [
-                                0,
-                                0,
-                                0,
-                                1
-                            ],
-                            "LocalScale": [
-                                4.0146446228027344,
-                                4.0146446228027344,
-                                4.0146446228027344
-                            ]
-                        },
-                        {
-                            "Type": 12,
-                            "particleSystemUID": 146294263,
-                            "particleSystemAssetsPath": "Assets\/ParticleSystems\/VaporatorStunParticles.particles",
-                            "stopSpawn": false,
-                            "tempDelete": false,
-                            "previewEnabled": true,
-                            "stopAndDeleteCheck": false
-                        }
-                    ],
-                    "Children": []
-                }
-            ]
         }
     ]
 } 

@@ -106,6 +106,7 @@ void GameManager::Awake()
 				backtrack.clear();
 
 			LoadItemPool(chestItemPool, "ChestItemPool.json");
+			LoadItemPool(shopItemPool, "ShopItemPool.json");
 			LoadItemPool(hubItemPool, "HubItemPool.json");
 
 			HandleBackgroundMusic();
@@ -212,7 +213,8 @@ void GameManager::Update()
 {
 	if(!instantiatedSandstorm) //Instantiate sandstorm
 		if (strcmp(App->scene->GetCurrentScene(), levelNames.hub.c_str()) != 0 && strcmp(App->scene->GetCurrentScene(), levelNames.loseScene.c_str()) != 0 
-			&& strcmp(App->scene->GetCurrentScene(), levelNames.winScene.c_str()) != 0 && strcmp(App->scene->GetCurrentScene(), "MainMenu") != 0)
+			&& strcmp(App->scene->GetCurrentScene(), "Credits") != 0 && strcmp(App->scene->GetCurrentScene(), "MainMenu") != 0
+			&& strcmp(App->scene->GetCurrentScene(), levelNames.winScene.c_str()) != 0)
 		{
 			App->scene->InstantiatePrefab(mistPlane1.uid, gameObject, mistPlane1Position, Quat::identity);
 			App->scene->InstantiatePrefab(mistPlane2.uid, gameObject, mistPlane2Position, Quat::identity);
@@ -334,6 +336,9 @@ void GameManager::GenerateNewRun(bool fromMenu)
 			//LEVEL2
 			if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + levelNames.winScene + ".json").c_str()))
 				level1Ruins.push_back((std::string(ASSETS_SCENES_PATH) + levelNames.winScene + ".json"));
+
+			if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + "Credits.json").c_str()))
+				level1Ruins.push_back((std::string(ASSETS_SCENES_PATH) + "Credits.json"));
 		}
 		else
 		{
@@ -374,6 +379,8 @@ void GameManager::GenerateNewRun(bool fromMenu)
 				level1Ruins.push_back((std::string(ASSETS_SCENES_PATH) + levelNames.ruinsBoss + ".json"));
 			if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + levelNames.winScene + ".json").c_str()))
 				level1Ruins.push_back((std::string(ASSETS_SCENES_PATH) + levelNames.winScene + ".json"));
+			if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + "Credits.json").c_str()))
+				level1Ruins.push_back((std::string(ASSETS_SCENES_PATH) + "Credits.json"));
 		}
 
 		SaveManagerState();
@@ -456,6 +463,8 @@ void GameManager::GoNextRoom()
 			{
 				if (roomNum < level1.size() - 1)
 				{
+					if (roomNum == 0 && playerScript != nullptr) // this ensures mando starts the run with full health... it's not THAT bad
+						playerScript->GiveHeal(999999.0f);
 					++roomNum;
 					SaveManagerState();
 					App->scene->ScriptChangeScene(level1[roomNum]);
@@ -494,11 +503,13 @@ void GameManager::GoNextRoom()
 		//kills stats
 		runStats.runKills += enemies.size();
 
-		//Secondary weapon
-		WeaponType weaponType = playerScript->GetSecondaryWeapon()->type;
-
-		switch (weaponType)
+		if (playerScript != nullptr)
 		{
+			//Secondary weapon
+			WeaponType weaponType = playerScript->GetSecondaryWeapon()->type;
+
+			switch (weaponType)
+			{
 			case WeaponType::MINIGUN:
 				runStats.weaponUsed = "Minigun";
 				break;
@@ -508,6 +519,7 @@ void GameManager::GoNextRoom()
 			case WeaponType::SNIPER:
 				runStats.weaponUsed = "Sniper";
 				break;
+			}
 		}
 	}
 }
@@ -916,6 +928,7 @@ void GameManager::GateUpdate()
 				if (chest != nullptr && lastEnemyDead != nullptr)
 				{
 					float3 position = lastEnemyDead->transform->GetWorldPosition();
+					position.y += 2.0f;
 					chest->transform->SetWorldPosition(position);
 
 					float2 playerPosition, chestPosition;

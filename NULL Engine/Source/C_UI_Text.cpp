@@ -30,6 +30,7 @@
 C_UI_Text::C_UI_Text(GameObject* owner, Rect2D rect) : C_UI(owner, ComponentType::UI_TEXT,false, rect),
 VAO(0),
 VBO(0),
+nextWordLetters(0),
 color(1,0,0,1)
 {
 	text = "Some Text";
@@ -202,10 +203,23 @@ void C_UI_Text::Draw2D( )
 	int i = 0;
 	uint it = 0;
 	bool rowHead = true;
+	float nextWordSize = 0;
 	std::string::const_iterator c;
+	std::string::const_iterator m;
 	for (c = text.begin(); c != text.end(); ++c)
 	{
 		Character ch = Characters[*c];
+		
+		//Calculate next word size
+		 m = c;
+		if (text.at(it) == *" ")
+			for (uint currCh = 0; currCh <= nextWordLetters; ++currCh)
+			{
+				m++;
+				nextWordSize += Characters[*m].size.x;
+			}
+		else
+			nextWordSize = 0;
 
 		glBindTexture(GL_TEXTURE_2D, ch.textureID);
 
@@ -232,7 +246,8 @@ void C_UI_Text::Draw2D( )
 
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 
-		if (x > rect.w * 15000)
+
+		if ((xpos + nextWordSize) >= rect.w * 15000)
 		{
 			rowHead = true;
 			x = 0;

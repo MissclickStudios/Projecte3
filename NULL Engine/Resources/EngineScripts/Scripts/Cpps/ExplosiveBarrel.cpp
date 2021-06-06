@@ -13,6 +13,7 @@
 #include "C_RigidBody.h"
 
 #include "ExplosiveBarrel.h"
+#include "BarrelExplosion.h"
 
 ExplosiveBarrel::ExplosiveBarrel() : Object()
 {
@@ -28,43 +29,68 @@ void ExplosiveBarrel::Start()
 	explosion = new C_AudioSource(gameObject);
 
 	explosionParticles = gameObject->GetComponent<C_ParticleSystem>();
+	GameObject* particleGameObject = gameObject->FindChild(particleName.c_str());
+	if (particleGameObject != nullptr)
+		activeParticles = particleGameObject->GetComponent<C_ParticleSystem>();
 
 	explosionParticles->StopSpawn();
+	
+	GameObject* explosionGameObject = gameObject->FindChild(explosionName.c_str());
+	if (explosionGameObject != nullptr)
+	{
+		explosionCollider = explosionGameObject->GetComponent<C_BoxCollider>();
+		if (explosionCollider != nullptr)
+			explosionCollider->SetIsActive(false);
+	}
 
-	barrelCollider = gameObject->GetComponent<C_BoxCollider>();
+	cooldownTimer.Stop();
 }
 
 void ExplosiveBarrel::Update()
 {
-	if (exploded)
+	if (paused)
+		return;
+
+	if (cooldownTimer.IsActive() && cooldownTimer.ReadSec() > cooldown)
 	{
-		//play particles
-		if (particleTimer < particleEmitttingTime)
-		{
-			particleTimer += MC_Time::Game::GetDT();
-		}
-		else
-		{
-			//deactivate everything
-			explosionParticles->StopSpawn();
-			exploded = false;
-			gameObject->SetIsActive(false);
-		}
+		cooldownTimer.Stop();
+		if (activeParticles != nullptr)
+			activeParticles->ResumeSpawn();
 	}
 
-	if (toExplode) //Set collider big to explode / play audio / Play particles
+
+	if (toExplode)
 	{
-		explosion->SetEvent("item_barrel_explosion");
-		explosion->SetVolume(5.0f);
- 		explosion->PlayFx(explosion->GetEventId());
-
-		explosionParticles->ResumeSpawn();
-
-		//exploded = true;
-		exploded = true;
 		toExplode = false;
-	}
 
+		explosionCollider->SetIsActive(true);
+		explosionParticles->ResumeSpawn();
+		particleTimer.Start();
+		if (activeParticles != nullptr)
+			activeParticles->StopSpawn();
+
+		explosion->SetEvent(explosionAudio.c_str());
+		explosion->SetVolume(5.0f);
+		explosion->PlayFx(explosion->GetEventId());
+
+		exploded = true;
+	} 
+	else if (exploded)
+	{
+		if (particleTimer.ReadSec() > particleEmitttingTime)
+		{
+			exploded = false;
+
+			explosionCollider->SetIsActive(false);
+			explosionParticles->StopSpawn();
+			particleTimer.Stop();
+
+			if (!reload)
+				Deactivate();
+			else
+				cooldownTimer.Start();
+		}
+	}
 }
 
 void ExplosiveBarrel::CleanUp()
@@ -74,17 +100,43 @@ void ExplosiveBarrel::CleanUp()
 
 void ExplosiveBarrel::OnCollisionEnter(GameObject* object)
 {
-	if (GetObjectScript(object, ObjectType::BULLET) != nullptr)
+	if (GetObjectScript(object, ObjectType::BULLET) != nullptr && !cooldownTimer.IsActive())
 	{
 		toExplode = true;
-		barrelCollider->SetIsActive(false);
+		GameObject* explosionGameObject = gameObject->FindChild(explosionName.c_str());
+		if (explosionGameObject != nullptr)
+		{
+			BarrelExplosion* explosionScript = (BarrelExplosion*)GetObjectScript(explosionGameObject, ObjectType::COLLECTABLE);
+			if (explosionScript != nullptr)
+				explosionScript->state = 0;
+		}
 	}
 }
 
-ExplosiveBarrel* CreateExplosiveBarrel() {
+void ExplosiveBarrel::OnPause()
+{
+	paused = true;
+
+	cooldownTimer.Pause();
+}
+
+void ExplosiveBarrel::OnResume()
+{
+	paused = false;
+
+	cooldownTimer.Resume();
+}
+
+ExplosiveBarrel* CreateExplosiveBarrel()
+{
 	ExplosiveBarrel* script = new ExplosiveBarrel();
-	INSPECTOR_INPUT_FLOAT3(script->barrelColliderSize);
-	INSPECTOR_INPUT_FLOAT3(script->explosionTriggerSize);
+
 	INSPECTOR_INPUT_FLOAT(script->particleEmitttingTime);
+	INSPECTOR_STRING(script->explosionName);
+	INSPECTOR_STRING(script->explosionAudio);
+	INSPECTOR_STRING(script->particleName);
+	INSPECTOR_CHECKBOX_BOOL(script->reload);
+	INSPECTOR_INPUT_FLOAT(script->cooldown);
+	
 	return script;
 }

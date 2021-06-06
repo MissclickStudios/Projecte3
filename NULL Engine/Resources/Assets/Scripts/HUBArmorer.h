@@ -4,6 +4,7 @@
 #include "ScriptMacros.h"
 
 class Player;
+class C_Animator;
 class C_Canvas;
 class C_UI_Button;
 class C_UI_Slider;
@@ -21,6 +22,8 @@ public:
 	~HUBArmorer();
 	void Start() override;
 	void Update() override;
+
+	void UpdateMenu();
 
 	std::string mandoName = "Mandalorian"; 
 	std::string hubShopCanvasName = "HUBShopCanvas";
@@ -50,6 +53,8 @@ private:
 	Player* mando = nullptr;
 	GameManager* gameManager = nullptr;
 	HUBArmorerState state = HUBArmorerState::INACTIVE;
+
+	C_Animator* armorerAnimator = nullptr;
 
 	C_UI_Button* armorButton = nullptr;
 	C_UI_Button* bootsButton = nullptr;

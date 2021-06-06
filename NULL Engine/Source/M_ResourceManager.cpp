@@ -1059,7 +1059,9 @@ void M_ResourceManager::RefreshDirectoryFiles(const char* directory)
 	}
 	for (uint i = 0; i < filesToUpdate.size(); ++i)
 	{
-		if (App->fileSystem->GetFileExtension(filesToUpdate[i].c_str()) == "h")
+		std::string extension = App->fileSystem->GetFileExtension(filesToUpdate[i].c_str());
+		
+		if (extension == "h" || extension == "particles" || extension == "navmesh" || extension == "shader")
 		{
 			DeleteFromLibrary(filesToUpdate[i].c_str());
 			ImportFile(filesToUpdate[i].c_str());

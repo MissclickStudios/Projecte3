@@ -29,6 +29,7 @@ public:
 
 	void SetColor(unsigned char r, unsigned char g, unsigned char b, unsigned char a);
 	void ResetColor();
+	void SetTextureCoordinates(int pixelPosX, int pixelPosY, int pixelWidth, int pixelHeight);
 
 private:
 	uint VAO;

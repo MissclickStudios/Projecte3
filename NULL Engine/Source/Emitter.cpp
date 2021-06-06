@@ -6,6 +6,7 @@
 
 #include "ParticleModule.h"
 
+#include "Resource.h"
 #include "R_Texture.h"
 
 #include "Emitter.h"
@@ -57,7 +58,9 @@ void Emitter::Save(ParsonNode& node)
 	uint32 textureUID = (emitterTexture != nullptr) ? emitterTexture->GetUID() : 0;
 	node.SetInteger("textureUID", textureUID);
 	
-	emitterTexture != nullptr ? node.SetString("texturePath", emitterTexture->GetAssetsPath()) : node.SetString("texturePath", "None");
+	if(emitterTexture != nullptr)
+		node.SetString("texturePath", emitterTexture->GetAssetsPath());
+	
 
 	node.SetInteger("maxParticleCount", maxParticleCount);
 
@@ -73,7 +76,7 @@ void Emitter::Load(ParsonNode& node)
 {
 	name = node.GetString("name");
 	
-	std::string path = node.GetString("texturePath");
+	path = node.GetString("texturePath");
 	emitterTexture = (R_Texture*)App->resourceManager->GetResourceFromLibrary(path.c_str());
 
 	maxParticleCount = node.GetInteger("maxParticleCount");

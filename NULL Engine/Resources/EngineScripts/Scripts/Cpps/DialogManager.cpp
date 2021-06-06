@@ -104,12 +104,25 @@ void DialogManager::Update()
 				dialogText->SetText(tmp.c_str());
 				currentLineLetter++;
 				nextLetterTimer = 0;
-
-				if (currentLineLetter == currentLine->lineText.size() + 1)
+				
+				if (currentLineLetter >= currentLine->lineText.size())
 				{
 					state = DialogState::TALKED;
 					currentLineLetter = 0;
 				}
+				else if (currentLine->lineText.at(currentLineLetter) == *" ")
+				{
+					dialogText->nextWordLetters = 0;
+					wordIt = 1;
+					while (currentLine->lineText.at(currentLineLetter + wordIt) != *" ")
+					{
+						if (currentLineLetter + wordIt >= currentLine->lineText.size() - 2)
+							break;						
+						wordIt++;
+						dialogText->nextWordLetters++;
+					}
+				}
+					
 			}
 
 			if (App->input->GetGameControllerButton(1) == ButtonState::BUTTON_DOWN || App->input->GetKey(SDL_SCANCODE_BACKSPACE) == KeyState::KEY_DOWN)

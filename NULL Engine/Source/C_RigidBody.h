@@ -4,7 +4,7 @@
 #include "Component.h"
 
 #include "MathGeoLib/include/Math/float3.h"
-#include "PhysX_3.4/Include/PxPhysicsAPI.h"
+#include "PhysX_4.1/Include/PxPhysicsAPI.h"
 
 class MISSCLICK_API C_RigidBody : public Component
 {
