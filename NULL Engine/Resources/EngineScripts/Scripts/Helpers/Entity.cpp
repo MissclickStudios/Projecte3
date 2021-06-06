@@ -241,7 +241,7 @@ void Entity::OnPause()
 		effects[i]->Pause();
 
 	if (animator != nullptr)
-		animator->Pause();
+		animator->Pause(true);
 
 	EntityPause();
 }
@@ -259,7 +259,7 @@ void Entity::OnResume()
 		effects[i]->Resume();
 
 	if (animator != nullptr)
-		animator->Play();
+		animator->Play(true);
 
 	EntityResume();
 }
