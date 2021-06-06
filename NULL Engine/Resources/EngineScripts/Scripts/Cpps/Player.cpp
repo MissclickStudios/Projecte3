@@ -62,8 +62,8 @@ Player* CreatePlayer()
 	INSPECTOR_DRAGABLE_FLOAT(script->aimingSpeed);
 
 	// Currency
-	INSPECTOR_DRAGABLE_INT(script->currency);
-	INSPECTOR_DRAGABLE_INT(script->hubCurrency);
+	INSPECTOR_DRAGABLE_INT(script->credits);
+	INSPECTOR_DRAGABLE_INT(script->beskar);
 
 	// Dash
 	INSPECTOR_DRAGABLE_FLOAT(script->dashSpeed);
@@ -294,8 +294,8 @@ void Player::EntityResume()
 
 void Player::SaveState(ParsonNode& playerNode)
 {
-	playerNode.SetInteger("Currency", currency);
-	playerNode.SetInteger("Hub Currency", hubCurrency);
+	playerNode.SetInteger("Currency", credits);
+	playerNode.SetInteger("Hub Currency", beskar);
 
 	playerNode.SetNumber("Health", health);
 
@@ -341,8 +341,8 @@ void Player::SaveState(ParsonNode& playerNode)
 
 void Player::LoadState(ParsonNode& playerNode)
 {
-	currency = playerNode.GetInteger("Currency");
-	hubCurrency = playerNode.GetInteger("Hub Currency");
+	credits = playerNode.GetInteger("Currency");
+	beskar = playerNode.GetInteger("Hub Currency");
 
 	health = (float)playerNode.GetNumber("Health");
 
@@ -474,7 +474,7 @@ void Player::LoadState(ParsonNode& playerNode)
 
 void Player::Reset()
 {
-	currency = 0;
+	credits = 0;
 
 	health = MaxHealth();
 
@@ -624,6 +624,34 @@ void Player::EquipWeapon(Prefab weapon)
 			}
 		}
 	}
+}
+
+void Player::GiveCredits(int _credits)
+{
+	credits += _credits;
+	//play HUD credits animation
+	creditsImage->PlayAnimation(false, 1);
+}
+
+void Player::GiveBeskar(int _beskar)
+{
+	beskar += _beskar;
+	//play HUD beskar animation
+	beskarImage->PlayAnimation(false, 1);
+}
+
+void Player::SubtractCredits(int _credits)
+{
+	credits -= _credits;
+	//play HUD credits animation
+	creditsImage->PlayAnimation(false, 1);
+}
+
+void Player::SubtractBeskar(int _beskar)
+{
+	beskar -= _beskar;
+	//play HUD credits animation
+	beskarImage->PlayAnimation(false, 1);
 }
 
 void Player::SetPlayerInteraction(InteractionType type, float duration)
