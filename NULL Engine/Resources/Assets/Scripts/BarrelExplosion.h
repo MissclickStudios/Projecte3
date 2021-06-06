@@ -25,8 +25,6 @@ public:
 	float power = 20.0f;
 
 	bool stun = false;
-
-	int state = 0;
 };
 
 SCRIPTS_FUNCTION BarrelExplosion* CreateBarrelExplosion();

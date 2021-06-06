@@ -62,8 +62,8 @@ Player* CreatePlayer()
 	INSPECTOR_DRAGABLE_FLOAT(script->aimingSpeed);
 
 	// Currency
-	INSPECTOR_DRAGABLE_INT(script->currency);
-	INSPECTOR_DRAGABLE_INT(script->hubCurrency);
+	INSPECTOR_DRAGABLE_INT(script->credits);
+	INSPECTOR_DRAGABLE_INT(script->beskar);
 
 	// Dash
 	INSPECTOR_DRAGABLE_FLOAT(script->dashSpeed);
@@ -294,8 +294,8 @@ void Player::EntityResume()
 
 void Player::SaveState(ParsonNode& playerNode)
 {
-	playerNode.SetInteger("Currency", currency);
-	playerNode.SetInteger("Hub Currency", hubCurrency);
+	playerNode.SetInteger("Currency", credits);
+	playerNode.SetInteger("Hub Currency", beskar);
 
 	playerNode.SetNumber("Health", health);
 
@@ -341,8 +341,8 @@ void Player::SaveState(ParsonNode& playerNode)
 
 void Player::LoadState(ParsonNode& playerNode)
 {
-	currency = playerNode.GetInteger("Currency");
-	hubCurrency = playerNode.GetInteger("Hub Currency");
+	credits = playerNode.GetInteger("Currency");
+	beskar = playerNode.GetInteger("Hub Currency");
 
 	health = (float)playerNode.GetNumber("Health");
 
@@ -474,7 +474,7 @@ void Player::LoadState(ParsonNode& playerNode)
 
 void Player::Reset()
 {
-	currency = 0;
+	credits = 0;
 
 	health = MaxHealth();
 
@@ -624,6 +624,34 @@ void Player::EquipWeapon(Prefab weapon)
 			}
 		}
 	}
+}
+
+void Player::GiveCredits(int _credits)
+{
+	credits += _credits;
+	//play HUD credits animation
+	creditsImage->PlayAnimation(false, 1);
+}
+
+void Player::GiveBeskar(int _beskar)
+{
+	beskar += _beskar;
+	//play HUD beskar animation
+	beskarImage->PlayAnimation(false, 1);
+}
+
+void Player::SubtractCredits(int _credits)
+{
+	credits -= _credits;
+	//play HUD credits animation
+	creditsImage->PlayAnimation(false, 1);
+}
+
+void Player::SubtractBeskar(int _beskar)
+{
+	beskar -= _beskar;
+	//play HUD credits animation
+	beskarImage->PlayAnimation(false, 1);
 }
 
 void Player::SetPlayerInteraction(InteractionType type, float duration)
@@ -1358,8 +1386,14 @@ void Player::GatherAimInputs()
 	//LOG("AIM INPUT		--> [%.3f]::[%.3f]", aimInput.x, aimInput.y);
 	//LOG("AIM THRESHOLD	--> [%.3f]::[%.3f]", aimInputThreshold.x, aimInputThreshold.y);
 
+	if (aimState != AimState::IDLE && aimState != AimState::AIMING && aimState != AimState::ON_GUARD)			// If the player is in this states, ignore action inputs (shoot, reload, etc.)
+	{
+		// aimState = AimState::IDLE;
+		return;
+	}
+	
 	// Keyboard aim
-	if (usingKeyboard && !usingGameController)																											// If there was no controller input
+	if (usingKeyboard && !usingGameController)																	// If there was no controller input
 	{
 		if (App->input->GetKey(SDL_SCANCODE_UP) == KeyState::KEY_REPEAT)	{ aimInput.y = -MAX_INPUT; }
 		if (App->input->GetKey(SDL_SCANCODE_DOWN) == KeyState::KEY_REPEAT)	{ aimInput.y = MAX_INPUT; }
@@ -1398,12 +1432,6 @@ void Player::GatherAimInputs()
 
 	SetAimDirection();
 
-	if (aimState == AimState::CHANGE_IN || aimState == AimState::RELOAD_IN || aimState == AimState::SHOOT_IN)											// If the player is in this states, ignore action inputs (shoot, reload, etc.)
-	{
-		// aimState = AimState::IDLE;
-		return;
-	}
-
 	if (App->input->GetKey(SDL_SCANCODE_F) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(SDL_CONTROLLER_BUTTON_B) == ButtonState::BUTTON_DOWN)
 	{
 		aimState = AimState::CHANGE_IN;
@@ -1418,9 +1446,7 @@ void Player::GatherAimInputs()
 
 	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_REPEAT || App->input->GetGameControllerTrigger(RIGHT_TRIGGER) == ButtonState::BUTTON_REPEAT)
 	{
-		if (aimState != AimState::CHANGE && aimState != AimState::RELOAD)
-			aimState = AimState::SHOOT_IN;
-
+		aimState = AimState::SHOOT_IN;
 		return;
 	}
 }
