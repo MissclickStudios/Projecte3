@@ -42,6 +42,8 @@ void HUBArmorer::Start()
 	obj = App->scene->GetGameObjectByName("Game Manager");
 	if (obj != nullptr)
 		gameManager = (GameManager*)obj->GetScript("GameManager");
+	if (gameManager != nullptr)
+		hubItems = gameManager->GetHubItemPool();
 
 	obj = gameObject->FindChild("ArmorerModel");
 	if (obj != nullptr)
@@ -103,6 +105,8 @@ void HUBArmorer::Start()
 		ticketPriceText = (C_UI_Text*)ticketTextObject->GetComponent<C_UI_Text>();
 	if (bottleTextObject != nullptr)
 		bottlePriceText = (C_UI_Text*)bottleTextObject->GetComponent<C_UI_Text>();
+	if (titleTextObject != nullptr)
+		titleText = (C_UI_Text*)titleTextObject->GetComponent<C_UI_Text>();
 	if (descriptionTextObject != nullptr)
 		descriptionText = (C_UI_Text*)descriptionTextObject->GetComponent<C_UI_Text>();
 	//if (creditTextObject != nullptr)
@@ -173,15 +177,17 @@ void HUBArmorer::UpdateMenu()
 				if (mando->hubCurrency > gameManager->armorLvl && gameManager->armorLvl + 1 < MAX_ITEM_PRICE)
 				{
 					gameManager->armorLvl = armorSlider->IncrementOneSquare();
-					mando->hubCurrency -= gameManager->armorLvl + 1;
+					mando->hubCurrency -= gameManager->armorLvl;
 					armorPriceText->SetText(std::to_string(gameManager->armorLvl + 1).c_str());
 
 					if (mando != nullptr)
 					{
-						std::vector<ItemData*> hubItems = gameManager->GetHubItemPool();
 						ItemData* const itemData = Item::FindItem(hubItems, "Durasteel Reinforcement", (ItemRarity)gameManager->armorLvl);
 						if (itemData != nullptr)
+						{
 							Item::CreateItem(itemData)->PickUp(mando);
+							mando->AddItem(itemData);
+						}
 					}
 				}
 			}
@@ -190,15 +196,17 @@ void HUBArmorer::UpdateMenu()
 				if (mando->hubCurrency > gameManager->bootsLvl && gameManager->bootsLvl + 1 < MAX_ITEM_PRICE)
 				{
 					gameManager->bootsLvl = bootsSlider->IncrementOneSquare();
-					mando->hubCurrency -= gameManager->bootsLvl + 1;
+					mando->hubCurrency -= gameManager->bootsLvl;
 					bootsPriceText->SetText(std::to_string(gameManager->bootsLvl + 1).c_str());
 
 					if (mando != nullptr)
 					{
-						std::vector<ItemData*> hubItems = gameManager->GetHubItemPool();
 						ItemData* const itemData = Item::FindItem(hubItems, "Propulsed Boots", (ItemRarity)gameManager->bootsLvl);
 						if (itemData != nullptr)
+						{
 							Item::CreateItem(itemData)->PickUp(mando);
+							mando->AddItem(itemData);
+						}
 					}
 				}
 			}
@@ -207,15 +215,18 @@ void HUBArmorer::UpdateMenu()
 				if (mando->hubCurrency > gameManager->ticketLvl && gameManager->ticketLvl + 1 < MAX_ITEM_PRICE)
 				{
 					gameManager->ticketLvl = ticketSlider->IncrementOneSquare();
-					mando->hubCurrency -= gameManager->ticketLvl + 1;
+					mando->hubCurrency -= gameManager->ticketLvl;
 					ticketPriceText->SetText(std::to_string(gameManager->ticketLvl + 1).c_str());
 
 					if (mando != nullptr)
 					{
-						std::vector<ItemData*> hubItems = gameManager->GetHubItemPool();
+						
 						ItemData* const itemData = Item::FindItem(hubItems, "Premium Ticket", (ItemRarity)gameManager->ticketLvl);
 						if (itemData != nullptr)
+						{
 							Item::CreateItem(itemData)->PickUp(mando);
+							mando->AddItem(itemData);
+						}
 					}
 				}
 			}
@@ -224,17 +235,55 @@ void HUBArmorer::UpdateMenu()
 				if (mando->hubCurrency > gameManager->bottleLvl && gameManager->bottleLvl + 1 < MAX_ITEM_PRICE)
 				{
 					gameManager->bottleLvl = bottleSlider->IncrementOneSquare();
-					mando->hubCurrency -= gameManager->bottleLvl + 1;
+					mando->hubCurrency -= gameManager->bottleLvl;
 					bottlePriceText->SetText(std::to_string(gameManager->bottleLvl + 1).c_str());
 
 					if (mando != nullptr)
 					{
-						std::vector<ItemData*> hubItems = gameManager->GetHubItemPool();
 						ItemData* const itemData = Item::FindItem(hubItems, "Refrigeration Liquid", (ItemRarity)gameManager->bottleLvl);
 						if (itemData != nullptr)
+						{
 							Item::CreateItem(itemData)->PickUp(mando);
+							mando->AddItem(itemData);
+						}
 					}
 				}
+			}
+			if (armorButton != nullptr && armorButton->GetState() == UIButtonState::HOVERED)
+			{
+				int level = gameManager->armorLvl + 1;
+				if (level == MAX_ITEM_PRICE)
+					level = MAX_ITEM_PRICE - 1;
+				ItemData* const itemData = Item::FindItem(hubItems, "Durasteel Reinforcement", (ItemRarity)level);
+				titleText->SetText(itemData->name.c_str());
+				descriptionText->SetText(itemData->description.c_str());
+			}
+			else if (bootsButton != nullptr && bootsButton->GetState() == UIButtonState::HOVERED)
+			{
+				int level = gameManager->bootsLvl + 1;
+				if (level == MAX_ITEM_PRICE)
+					level = MAX_ITEM_PRICE - 1;
+				ItemData* const itemData = Item::FindItem(hubItems, "Propulsed Boots", (ItemRarity)level);
+				titleText->SetText(itemData->name.c_str());
+				descriptionText->SetText(itemData->description.c_str());
+			}
+			else if (ticketButton != nullptr && ticketButton->GetState() == UIButtonState::HOVERED)
+			{
+				int level = gameManager->armorLvl + 1;
+				if (level == MAX_ITEM_PRICE)
+					level = MAX_ITEM_PRICE - 1;
+				ItemData* const itemData = Item::FindItem(hubItems, "Premium Ticket", (ItemRarity)level);
+				titleText->SetText(itemData->name.c_str());
+				descriptionText->SetText(itemData->description.c_str());
+			}
+			else if (bottleButton != nullptr && bottleButton->GetState() == UIButtonState::HOVERED)
+			{
+				int level = gameManager->bottleLvl + 1;
+				if (level == MAX_ITEM_PRICE)
+					level = MAX_ITEM_PRICE - 1;
+				ItemData* const itemData = Item::FindItem(hubItems, "Refrigeration Liquid", (ItemRarity)level);
+				titleText->SetText(itemData->name.c_str());
+				descriptionText->SetText(itemData->description.c_str());
 			}
 		}
 
@@ -271,7 +320,8 @@ HUBArmorer* CreateHUBArmorer() {
 	INSPECTOR_GAMEOBJECT(script->armorTextObject);
 	INSPECTOR_GAMEOBJECT(script->bootsTextObject);
 	INSPECTOR_GAMEOBJECT(script->ticketTextObject);
-	INSPECTOR_GAMEOBJECT(script->bottleTextObject);
+	INSPECTOR_GAMEOBJECT(script->bottleTextObject); 
+	INSPECTOR_GAMEOBJECT(script->titleTextObject);
 	INSPECTOR_GAMEOBJECT(script->descriptionTextObject);
 	//INSPECTOR_GAMEOBJECT(script->creditTextObject);
 	INSPECTOR_GAMEOBJECT(script->beskarTextObject);

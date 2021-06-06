@@ -104,8 +104,8 @@ void DialogManager::Update()
 				dialogText->SetText(tmp.c_str());
 				currentLineLetter++;
 				nextLetterTimer = 0;
-
-				if (currentLineLetter >= currentLine->lineText.size() + 1)
+				
+				if (currentLineLetter >= currentLine->lineText.size())
 				{
 					state = DialogState::TALKED;
 					currentLineLetter = 0;
@@ -113,9 +113,13 @@ void DialogManager::Update()
 				else if (currentLine->lineText.at(currentLineLetter) == *" ")
 				{
 					dialogText->nextWordLetters = 0;
-					for (uint i = currentLineLetter + 1; currentLine->lineText.at(i) != *" "; ++i)
+					wordIt = 1;
+					while (currentLine->lineText.at(currentLineLetter + wordIt) != *" ")
 					{
-						dialogText->nextWordLetters;
+						if (currentLineLetter + wordIt >= currentLine->lineText.size() - 2)
+							break;						
+						wordIt++;
+						dialogText->nextWordLetters++;
 					}
 				}
 					
